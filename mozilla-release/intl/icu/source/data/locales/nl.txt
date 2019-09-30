@@ -15,60 +15,16 @@ nl{
     NumberElements{
         arab{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
-<<<<<<< HEAD
-                accountingFormat{"#,##0.00 ¤"}
-                currencyFormat{"#,##0.00 ¤"}
-                decimalFormat{"#,##0.###"}
-||||||| merged common ancestors
-                currencyFormat{"#,##0.00 ¤"}
-                decimalFormat{"#,##0.###"}
-=======
->>>>>>> upstream-releases
                 percentFormat{"#,##0 %"}
-<<<<<<< HEAD
-                scientificFormat{"#E0"}
-            }
-            symbols{
-                decimal{"٫"}
-                exponential{"اس"}
-                group{"٬"}
-                infinity{"∞"}
-                list{"؛"}
-                minusSign{"؜-"}
-                nan{"NaN"}
-                perMille{"؉"}
-                percentSign{"٪؜"}
-                plusSign{"؜+"}
-                superscriptingExponent{"×"}
-                timeSeparator{":"}
-||||||| merged common ancestors
-                scientificFormat{"#E0"}
-            }
-            symbols{
-                decimal{"٫"}
-                exponential{"اس"}
-                group{"٬"}
-                infinity{"∞"}
-                list{"؛"}
-                nan{"NaN"}
-                perMille{"؉"}
-                superscriptingExponent{"×"}
-                timeSeparator{":"}
-=======
->>>>>>> upstream-releases
             }
         }
         arabext{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -78,9 +34,7 @@ nl{
         }
         bali{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -94,9 +48,7 @@ nl{
         }
         beng{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -110,9 +62,7 @@ nl{
         }
         brah{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -126,9 +76,7 @@ nl{
         }
         cakm{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -142,9 +90,7 @@ nl{
         }
         cham{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -158,9 +104,7 @@ nl{
         }
         deva{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -174,67 +118,7 @@ nl{
         }
         fullwide{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
-                range{"{0}-{1}"}
-            }
-            patterns{
-                accountingFormat{"¤ #,##0.00;(¤ #,##0.00)"}
-                currencyFormat{"¤ #,##0.00;¤ -#,##0.00"}
-                decimalFormat{"#,##0.###"}
-                percentFormat{"#,##0%"}
-                scientificFormat{"#E0"}
-            }
-            symbols{
-                decimal{","}
-                exponential{"E"}
-                group{"."}
-                infinity{"∞"}
-                list{";"}
-                minusSign{"-"}
-                nan{"NaN"}
-                perMille{"‰"}
-                percentSign{"%"}
-                plusSign{"+"}
-                superscriptingExponent{"×"}
-                timeSeparator{":"}
-            }
-        }
-        gong{
-            miscPatterns{
-                approximately{"~{0}"}
-                atLeast{"{0}+"}
-                atMost{"≤{0}"}
-                range{"{0}-{1}"}
-            }
-            patterns{
-                accountingFormat{"¤ #,##0.00;(¤ #,##0.00)"}
-                currencyFormat{"¤ #,##0.00;¤ -#,##0.00"}
-                decimalFormat{"#,##0.###"}
-                percentFormat{"#,##0%"}
-                scientificFormat{"#E0"}
-            }
-            symbols{
-                decimal{","}
-                exponential{"E"}
-                group{"."}
-                infinity{"∞"}
-                list{";"}
-                minusSign{"-"}
-                nan{"NaN"}
-                perMille{"‰"}
-                percentSign{"%"}
-                plusSign{"+"}
-                superscriptingExponent{"×"}
-                timeSeparator{":"}
-            }
-        }
-        gonm{
-            miscPatterns{
-                approximately{"~{0}"}
-                atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -276,9 +160,7 @@ nl{
         }
         gujr{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -292,9 +174,7 @@ nl{
         }
         guru{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -308,9 +188,7 @@ nl{
         }
         hanidec{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -324,9 +202,7 @@ nl{
         }
         java{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -340,9 +216,7 @@ nl{
         }
         kali{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -356,9 +230,7 @@ nl{
         }
         khmr{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -372,9 +244,7 @@ nl{
         }
         knda{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -388,9 +258,7 @@ nl{
         }
         lana{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -404,9 +272,7 @@ nl{
         }
         lanatham{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -420,9 +286,7 @@ nl{
         }
         laoo{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -615,9 +479,7 @@ nl{
         }
         lepc{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -631,9 +493,7 @@ nl{
         }
         limb{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -657,9 +517,7 @@ nl{
         minimumGroupingDigits{"1"}
         mlym{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -673,9 +531,7 @@ nl{
         }
         mong{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -689,9 +545,7 @@ nl{
         }
         mtei{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -705,9 +559,7 @@ nl{
         }
         mymr{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -721,9 +573,7 @@ nl{
         }
         mymrshan{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -737,9 +587,7 @@ nl{
         }
         nkoo{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -753,9 +601,7 @@ nl{
         }
         olck{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -769,9 +615,7 @@ nl{
         }
         orya{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -785,38 +629,7 @@ nl{
         }
         osma{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
-                range{"{0}-{1}"}
-            }
-            patterns{
-                accountingFormat{"¤ #,##0.00;(¤ #,##0.00)"}
-                currencyFormat{"¤ #,##0.00;¤ -#,##0.00"}
-                decimalFormat{"#,##0.###"}
-                percentFormat{"#,##0%"}
-                scientificFormat{"#E0"}
-            }
-            symbols{
-                decimal{","}
-                exponential{"E"}
-                group{"."}
-                infinity{"∞"}
-                list{";"}
-                minusSign{"-"}
-                nan{"NaN"}
-                perMille{"‰"}
-                percentSign{"%"}
-                plusSign{"+"}
-                superscriptingExponent{"×"}
-                timeSeparator{":"}
-            }
-        }
-        rohg{
-            miscPatterns{
-                approximately{"~{0}"}
-                atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -844,9 +657,7 @@ nl{
         }
         saur{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -860,9 +671,7 @@ nl{
         }
         shrd{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -876,9 +685,7 @@ nl{
         }
         sora{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -892,9 +699,7 @@ nl{
         }
         sund{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -908,9 +713,7 @@ nl{
         }
         takr{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -924,9 +727,7 @@ nl{
         }
         talu{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -940,9 +741,7 @@ nl{
         }
         tamldec{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -956,9 +755,7 @@ nl{
         }
         telu{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -972,9 +769,7 @@ nl{
         }
         thai{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -988,9 +783,7 @@ nl{
         }
         tibt{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -1004,9 +797,7 @@ nl{
         }
         vaii{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -1019,13 +810,7 @@ nl{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.45.14"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -1176,104 +961,6 @@ nl{
                     y{"dd-MM-y – dd-MM-y G"}
                 }
             }
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
         }
         chinese{
             DateTimePatterns{
@@ -1292,17 +979,6 @@ nl{
                 "{1} {0}",
             }
             availableFormats{
-<<<<<<< HEAD
-                Bh{"h B"}
-                Bhm{"h:mm B"}
-                Bhms{"h:mm:ss B"}
-                E{"ccc"}
-                EBhm{"E h:mm B"}
-                EBhms{"E h:mm:ss B"}
-||||||| merged common ancestors
-                E{"ccc"}
-=======
->>>>>>> upstream-releases
                 Ed{"E d"}
                 Gy{"U"}
                 GyMMM{"MMM U"}
@@ -1547,35 +1223,6 @@ nl{
                 "{1} {0}",
             }
             availableFormats{
-<<<<<<< HEAD
-                E{"ccc"}
-                Ed{"E d"}
-                Gy{"y G"}
-                GyMMM{"MMM y G"}
-                GyMMMEd{"E d MMM y G"}
-                GyMMMd{"d MMM y G"}
-                M{"L"}
-                MEd{"E d-M"}
-                MMM{"LLL"}
-                MMMEd{"E d MMM"}
-                MMMMd{"d MMMM"}
-                MMMd{"d MMM"}
-                Md{"d-M"}
-                d{"d"}
-                y{"y G"}
-                yyyy{"y G"}
-                yyyyM{"M-y GGGGG"}
-                yyyyMEd{"E d-M-y GGGGG"}
-                yyyyMMM{"MMM y G"}
-                yyyyMMMEd{"E d MMM y G"}
-                yyyyMMMM{"MMMM y G"}
-                yyyyMMMd{"d MMM y G"}
-                yyyyMd{"d-M-y GGGGG"}
-                yyyyQQQ{"QQQ y G"}
-                yyyyQQQQ{"QQQQ y G"}
-||||||| merged common ancestors
-                E{"ccc"}
-=======
                 Ed{"E d"}
                 Gy{"y G"}
                 GyMMM{"MMM y G"}
@@ -1597,7 +1244,6 @@ nl{
                 yyyyMd{"d-M-y GGGGG"}
                 yyyyQQQ{"QQQ y G"}
                 yyyyQQQQ{"QQQQ y G"}
->>>>>>> upstream-releases
             }
             intervalFormats{
                 Bh{
@@ -1709,179 +1355,6 @@ nl{
                     y{"dd-MM-y – dd-MM-y G"}
                 }
             }
-<<<<<<< HEAD
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-            monthNames{
-                format{
-                    abbreviated{
-                        "Tut",
-                        "Babah",
-                        "Hatur",
-                        "Kiyahk",
-                        "Tubah",
-                        "Amshir",
-                        "Baramhat",
-                        "Baramundah",
-                        "Bashans",
-                        "Ba’unah",
-                        "Abib",
-                        "Misra",
-                        "Nasi",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                        "13",
-                    }
-                    wide{
-                        "Tut",
-                        "Babah",
-                        "Hatur",
-||||||| merged common ancestors
-            monthNames{
-                format{
-                    abbreviated{
-                        "Tut",
-                        "Babah",
-                        "Hatur",
-                        "Kiyahk",
-                        "Tubah",
-                        "Amshir",
-                        "Baramhat",
-                        "Baramundah",
-                        "Bashans",
-                        "Ba’unah",
-                        "Abib",
-                        "Misra",
-                        "Nasi",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                        "13",
-                    }
-                    wide{
-                        "Tut",
-                        "Babah",
-                        "Hatur",
-=======
             monthNames{
                 format{
                     abbreviated{
@@ -1903,7 +1376,6 @@ nl{
                         "Tut",
                         "Babah",
                         "Hatur",
->>>>>>> upstream-releases
                         "Kiyahk",
                         "Tubah",
                         "Amshir",
@@ -1951,56 +1423,6 @@ nl{
             }
         }
         dangi{
-<<<<<<< HEAD
-            DateTimePatterns{
-                "HH:mm:ss zzzz",
-                "HH:mm:ss z",
-                "HH:mm:ss",
-                "HH:mm",
-                "EEEE d MMMM r (U)",
-                "d MMMM r (U)",
-                "d MMM r",
-                "dd-MM-r",
-                "{1} {0}",
-                "{1} 'om' {0}",
-                "{1} 'om' {0}",
-                "{1} {0}",
-                "{1} {0}",
-            }
-            availableFormats{
-                E{"ccc"}
-                Ed{"E d"}
-                Gy{"r (U)"}
-                GyMMM{"MMM r (U)"}
-                GyMMMEd{"E d MMM r (U)"}
-                GyMMMd{"d MMM r"}
-                M{"L"}
-                MEd{"E d-M"}
-                MMM{"LLL"}
-                MMMEd{"E d MMM"}
-                MMMMd{"d MMMM"}
-                MMMd{"d MMM"}
-                Md{"d-M"}
-                UM{"MM U"}
-                UMMM{"MMM U"}
-                UMMMd{"d MMM U"}
-                UMd{"d-MM U"}
-                d{"d"}
-                y{"r (U)"}
-                yMd{"d-M-r"}
-                yyyy{"r (U)"}
-                yyyyM{"M-r"}
-                yyyyMEd{"E d-M-r"}
-                yyyyMMM{"MMM r (U)"}
-                yyyyMMMEd{"E d MMM r (U)"}
-                yyyyMMMM{"MMMM r (U)"}
-                yyyyMMMd{"d MMM r"}
-                yyyyMd{"d-M-r"}
-                yyyyQQQ{"QQQ r (U)"}
-                yyyyQQQQ{"QQQQ r (U)"}
-            }
-||||||| merged common ancestors
-=======
             DateTimePatterns{
                 "HH:mm:ss zzzz",
                 "HH:mm:ss z",
@@ -2044,7 +1466,6 @@ nl{
                 yyyyQQQ{"QQQ r (U)"}
                 yyyyQQQQ{"QQQQ r (U)"}
             }
->>>>>>> upstream-releases
             cyclicNameSets{
                 solarTerms{
                     format{
@@ -2175,104 +1596,6 @@ nl{
                     }
                 }
             }
-<<<<<<< HEAD
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"MM–MM"}
-                }
-                MEd{
-                    M{"MM-dd, E – MM-dd, E"}
-                    d{"MM-dd, E – MM-dd, E"}
-                }
-                MMM{
-                    M{"LLL–LLL"}
-                }
-                MMMEd{
-                    M{"MMM d, E – MMM d, E"}
-                    d{"MMM d, E – MMM d, E"}
-                }
-                MMMd{
-                    M{"MMM d – MMM d"}
-                    d{"MMM d–d"}
-                }
-                Md{
-                    M{"MM-dd – MM-dd"}
-                    d{"MM-dd – MM-dd"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} – {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"U–U"}
-                }
-                yM{
-                    M{"y-MM – y-MM"}
-                    y{"y-MM – y-MM"}
-                }
-                yMEd{
-                    M{"y-MM-dd, E – y-MM-dd, E"}
-                    d{"y-MM-dd, E – y-MM-dd, E"}
-                    y{"y-MM-dd, E – y-MM-dd, E"}
-                }
-                yMMM{
-                    M{"U MMM–MMM"}
-                    y{"U MMM – U MMM"}
-                }
-                yMMMEd{
-                    M{"U MMM d, E – MMM d, E"}
-                    d{"U MMM d, E – MMM d, E"}
-                    y{"U MMM d, E – U MMM d, E"}
-                }
-                yMMMM{
-                    M{"U MMMM–MMMM"}
-                    y{"U MMMM – U MMMM"}
-                }
-                yMMMd{
-                    M{"U MMM d – MMM d"}
-                    d{"U MMM d–d"}
-                    y{"U MMM d – U MMM d"}
-                }
-                yMd{
-                    M{"y-MM-dd – y-MM-dd"}
-                    d{"y-MM-dd – y-MM-dd"}
-                    y{"y-MM-dd – y-MM-dd"}
-                }
-            }
-||||||| merged common ancestors
-=======
             intervalFormats{
                 Bh{
                     B{"h B – h B"}
@@ -2284,7 +1607,6 @@ nl{
                     m{"h:mm–h:mm B"}
                 }
             }
->>>>>>> upstream-releases
             monthNames{
                 format{
                     abbreviated{
@@ -2365,7 +1687,6 @@ nl{
                 "{1} {0}",
             }
             availableFormats{
-                E{"ccc"}
                 Ed{"E d"}
                 Gy{"y G"}
                 GyMMM{"MMM y G"}
@@ -2403,29 +1724,6 @@ nl{
                 }
             }
             intervalFormats{
-<<<<<<< HEAD
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-||||||| merged common ancestors
-                M{
-                    M{"M–M"}
-                }
-=======
                 Bh{
                     B{"h B – h B"}
                     h{"h–h B"}
@@ -2476,7 +1774,6 @@ nl{
                 M{
                     M{"M–M"}
                 }
->>>>>>> upstream-releases
                 MEd{
                     M{"E dd-MM – E dd-MM"}
                     d{"E dd-MM – E dd-MM"}
@@ -2499,36 +1796,7 @@ nl{
                     M{"dd-MM – dd-MM"}
                     d{"dd-MM – dd-MM"}
                 }
-<<<<<<< HEAD
-                d{
-                    d{"d–d"}
-                }
                 fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-||||||| merged common ancestors
-                d{
-                    d{"d–d"}
-                }
-=======
-                fallback{"{0} - {1}"}
->>>>>>> upstream-releases
                 y{
                     y{"y–y G"}
                 }
@@ -3355,42 +2623,6 @@ nl{
                 "{1} {0}",
                 "{1} {0}",
             }
-<<<<<<< HEAD
-            availableFormats{
-                E{"ccc"}
-                Ed{"E d"}
-                Gy{"y G"}
-                GyMMM{"MMM y G"}
-                GyMMMEd{"E d MMM y G"}
-                GyMMMd{"d MMM y G"}
-                M{"L"}
-                MEd{"E d MMM"}
-                MMM{"LLL"}
-                MMMEd{"E d MMM"}
-                MMMMd{"d MMMM"}
-                MMMd{"d MMM"}
-                Md{"d MMM"}
-                d{"d"}
-                y{"y"}
-                yyyy{"y G"}
-                yyyyM{"M-y GGGGG"}
-                yyyyMEd{"E d-M-y GGGGG"}
-                yyyyMMM{"MMM y G"}
-                yyyyMMMEd{"E d MMM y G"}
-                yyyyMMMM{"MMMM y G"}
-                yyyyMMMd{"d MMM y G"}
-                yyyyMd{"d-M-y GGGGG"}
-                yyyyQQQ{"QQQ y G"}
-                yyyyQQQQ{"QQQQ y G"}
-            }
-            eras{
-                abbreviated{
-                    "AM",
-||||||| merged common ancestors
-            eras{
-                abbreviated{
-                    "AM",
-=======
             availableFormats{
                 Ed{"E d"}
                 Gy{"y G"}
@@ -3443,7 +2675,6 @@ nl{
                     G{"MMM y G – MMM y G"}
                     M{"MMM – MMM y G"}
                     y{"MMM y – MMM y G"}
->>>>>>> upstream-releases
                 }
                 GyMMMEd{
                     G{"E d MMM y G – E d MMM y G"}
@@ -3721,444 +2952,6 @@ nl{
                     d{"E dd-MM-y – E dd-MM-y G"}
                     y{"E dd-MM-y – E dd-MM-y G"}
                 }
-<<<<<<< HEAD
-            }
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-            monthNames{
-                format{
-                    abbreviated{
-                        "Tisjrie",
-                        "Chesjwan",
-                        "Kislev",
-                        "Tevet",
-                        "Sjevat",
-                        "Adar A",
-                        "Adar",
-                        "Nisan",
-                        "Ijar",
-                        "Sivan",
-                        "Tammoez",
-                        "Av",
-                        "Elloel",
-                        "Adar B",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                        "13",
-                        "7",
-                    }
-                    wide{
-                        "Tisjrie",
-                        "Chesjwan",
-                        "Kislev",
-                        "Tevet",
-                        "Sjevat",
-                        "Adar A",
-                        "Adar",
-                        "Nisan",
-                        "Ijar",
-                        "Sivan",
-                        "Tammoez",
-                        "Av",
-                        "Elloel",
-                        "Adar B",
-                    }
-||||||| merged common ancestors
-            }
-            monthNames{
-                format{
-                    abbreviated{
-                        "Tisjrie",
-                        "Chesjwan",
-                        "Kislev",
-                        "Tevet",
-                        "Sjevat",
-                        "Adar A",
-                        "Adar",
-                        "Nisan",
-                        "Ijar",
-                        "Sivan",
-                        "Tammoez",
-                        "Av",
-                        "Elloel",
-                        "Adar B",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                        "13",
-                        "7",
-                    }
-                    wide{
-                        "Tisjrie",
-                        "Chesjwan",
-                        "Kislev",
-                        "Tevet",
-                        "Sjevat",
-                        "Adar A",
-                        "Adar",
-                        "Nisan",
-                        "Ijar",
-                        "Sivan",
-                        "Tammoez",
-                        "Av",
-                        "Elloel",
-                        "Adar B",
-                    }
-=======
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
->>>>>>> upstream-releases
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-<<<<<<< HEAD
-            }
-        }
-        indian{
-            DateTimePatterns{
-                "HH:mm:ss zzzz",
-                "HH:mm:ss z",
-                "HH:mm:ss",
-                "HH:mm",
-                "EEEE d MMMM y G",
-                "d MMMM y G",
-                "d MMM y G",
-                "dd-MM-yy GGGGG",
-                "{1} {0}",
-                "{1} 'om' {0}",
-                "{1} 'om' {0}",
-                "{1} {0}",
-                "{1} {0}",
-            }
-            availableFormats{
-                E{"ccc"}
-                Ed{"E d"}
-                Gy{"y G"}
-                GyMMM{"MMM y G"}
-                GyMMMEd{"E d MMM y G"}
-                GyMMMd{"d MMM y G"}
-                M{"L"}
-                MEd{"E d-M"}
-                MMM{"LLL"}
-                MMMEd{"E d MMM"}
-                MMMMd{"d MMMM"}
-                MMMd{"d MMM"}
-                Md{"d-M"}
-                d{"d"}
-                y{"y G"}
-                yyyy{"y G"}
-                yyyyM{"M-y GGGGG"}
-                yyyyMEd{"E d-M-y GGGGG"}
-                yyyyMMM{"MMM y G"}
-                yyyyMMMEd{"E d MMM y G"}
-                yyyyMMMM{"MMMM y G"}
-                yyyyMMMd{"d MMM y G"}
-                yyyyMd{"d-M-y GGGGG"}
-                yyyyQQQ{"QQQ y G"}
-                yyyyQQQQ{"QQQQ y G"}
-            }
-            eras{
-                abbreviated{
-                    "Saka",
-||||||| merged common ancestors
-            }
-        }
-        indian{
-            eras{
-                abbreviated{
-                    "Saka",
-=======
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
->>>>>>> upstream-releases
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-<<<<<<< HEAD
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-||||||| merged common ancestors
-            monthNames{
-                format{
-                    abbreviated{
-                        "Chaitra",
-                        "Vaishakha",
-                        "Jyeshtha",
-                        "Aashaadha",
-                        "Shraavana",
-                        "Bhaadrapada",
-                        "Ashvina",
-                        "Kaartika",
-                        "Agrahayana",
-                        "Pausha",
-                        "Maagha",
-                        "Phaalguna",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                    }
-                    wide{
-                        "Chaitra",
-                        "Vaishakha",
-                        "Jyeshtha",
-                        "Aashaadha",
-                        "Shraavana",
-                        "Bhaadrapada",
-                        "Ashvina",
-                        "Kaartika",
-                        "Agrahayana",
-                        "Pausha",
-                        "Maagha",
-                        "Phaalguna",
-                    }
-=======
-            monthNames{
-                format{
-                    abbreviated{
-                        "Chaitra",
-                        "Vaishakha",
-                        "Jyeshtha",
-                        "Aashaadha",
-                        "Shraavana",
-                        "Bhaadrapada",
-                        "Ashvina",
-                        "Kaartika",
-                        "Agrahayana",
-                        "Pausha",
-                        "Maagha",
-                        "Phaalguna",
-                    }
-                    wide{
-                        "Chaitra",
-                        "Vaishakha",
-                        "Jyeshtha",
-                        "Aashaadha",
-                        "Shraavana",
-                        "Bhaadrapada",
-                        "Ashvina",
-                        "Kaartika",
-                        "Agrahayana",
-                        "Pausha",
-                        "Maagha",
-                        "Phaalguna",
-                    }
->>>>>>> upstream-releases
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
                 yMMM{
                     M{"MMM–MMM y G"}
                     y{"MMM y – MMM y G"}
@@ -4198,20 +2991,6 @@ nl{
                         "Pausha",
                         "Maagha",
                         "Phaalguna",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
                     }
                     wide{
                         "Chaitra",
@@ -4277,7 +3056,6 @@ nl{
                 "{1} {0}",
             }
             availableFormats{
-                E{"ccc"}
                 Ed{"E d"}
                 Gy{"y G"}
                 GyMMM{"MMM y G"}
@@ -4305,107 +3083,6 @@ nl{
                     "Saʻna Hizjria",
                 }
             }
-<<<<<<< HEAD
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-||||||| merged common ancestors
-=======
             intervalFormats{
                 Bh{
                     B{"h B – h B"}
@@ -4516,7 +3193,6 @@ nl{
                     y{"dd-MM-y – dd-MM-y G"}
                 }
             }
->>>>>>> upstream-releases
             monthNames{
                 format{
                     abbreviated{
@@ -4597,7 +3273,6 @@ nl{
                 "{1} {0}",
             }
             availableFormats{
-                E{"ccc"}
                 Ed{"E d"}
                 Gy{"y G"}
                 GyMMM{"MMM y G"}
@@ -4858,12 +3533,7 @@ nl{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
->>>>>>> upstream-releases
                 }
                 narrow{
                     "Taika (645–650)",
@@ -5102,12 +3772,7 @@ nl{
                     "T",
                     "S",
                     "H",
-<<<<<<< HEAD
-                    "Q",
-||||||| merged common ancestors
-=======
                     "R",
->>>>>>> upstream-releases
                 }
                 wide{
                     "Taika (645–650)",
@@ -5346,10 +4011,6 @@ nl{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
                 }
             }
@@ -5461,168 +4122,8 @@ nl{
                     M{"dd-MM-y – dd-MM-y G"}
                     d{"dd-MM-y – dd-MM-y G"}
                     y{"dd-MM-y – dd-MM-y G"}
->>>>>>> upstream-releases
                 }
             }
-<<<<<<< HEAD
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-        }
-        persian{
-            DateTimePatterns{
-                "HH:mm:ss zzzz",
-                "HH:mm:ss z",
-                "HH:mm:ss",
-                "HH:mm",
-                "EEEE d MMMM y G",
-                "d MMMM y G",
-                "d MMM y G",
-                "dd-MM-yy GGGGG",
-                "{1} {0}",
-                "{1} 'om' {0}",
-                "{1} 'om' {0}",
-                "{1} {0}",
-                "{1} {0}",
-            }
-            availableFormats{
-                E{"ccc"}
-                Ed{"E d"}
-                Gy{"y G"}
-                GyMMM{"MMM y G"}
-                GyMMMEd{"E d MMM y G"}
-                GyMMMd{"d MMM y G"}
-                M{"L"}
-                MEd{"E d-M"}
-                MMM{"LLL"}
-                MMMEd{"E d MMM"}
-                MMMMd{"d MMMM"}
-                MMMd{"d MMM"}
-                Md{"d-M"}
-                d{"d"}
-                y{"y G"}
-                yyyy{"y G"}
-                yyyyM{"M-y GGGGG"}
-                yyyyMEd{"E d-M-y GGGGG"}
-                yyyyMMM{"MMM y G"}
-                yyyyMMMEd{"E d MMM y G"}
-                yyyyMMMM{"MMMM y G"}
-                yyyyMMMd{"d MMM y G"}
-                yyyyMd{"d-M-y GGGGG"}
-                yyyyQQQ{"QQQ y G"}
-                yyyyQQQQ{"QQQQ y G"}
-            }
-            eras{
-                abbreviated{
-                    "AP",
-                }
-                narrow{
-                    "AP",
-||||||| merged common ancestors
-        }
-        persian{
-            eras{
-                abbreviated{
-                    "AP",
-                }
-                narrow{
-                    "AP",
-=======
         }
         persian{
             DateTimePatterns{
@@ -5698,7 +4199,6 @@ nl{
                     M{"E d MMM – E d MMM y G"}
                     d{"E d MMM – E d MMM y G"}
                     y{"E d MMM y – E d MMM y G"}
->>>>>>> upstream-releases
                 }
                 GyMMMd{
                     G{"d MMM y G – d MMM y G"}
@@ -5706,203 +4206,11 @@ nl{
                     d{"d–d MMM y G"}
                     y{"d MMM y – d MMM y G"}
                 }
-<<<<<<< HEAD
-            }
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-            monthNames{
-                format{
-                    abbreviated{
-                        "Farvardin",
-                        "Ordibehesht",
-                        "Khordad",
-                        "Tir",
-                        "Mordad",
-                        "Shahrivar",
-                        "Mehr",
-                        "Aban",
-                        "Azar",
-                        "Dey",
-                        "Bahman",
-                        "Esfand",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                    }
-                    wide{
-                        "Farvardin",
-                        "Ordibehesht",
-                        "Khordad",
-                        "Tir",
-                        "Mordad",
-                        "Shahrivar",
-                        "Mehr",
-                        "Aban",
-                        "Azar",
-                        "Dey",
-                        "Bahman",
-                        "Esfand",
-                    }
-||||||| merged common ancestors
-            }
-            monthNames{
-                format{
-                    abbreviated{
-                        "Farvardin",
-                        "Ordibehesht",
-                        "Khordad",
-                        "Tir",
-                        "Mordad",
-                        "Shahrivar",
-                        "Mehr",
-                        "Aban",
-                        "Azar",
-                        "Dey",
-                        "Bahman",
-                        "Esfand",
-                    }
-                    narrow{
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                    }
-                    wide{
-                        "Farvardin",
-                        "Ordibehesht",
-                        "Khordad",
-                        "Tir",
-                        "Mordad",
-                        "Shahrivar",
-                        "Mehr",
-                        "Aban",
-                        "Azar",
-                        "Dey",
-                        "Bahman",
-                        "Esfand",
-                    }
-=======
                 GyMd{
                     G{"d-M-y GGGGG – d-M-y GGGGG"}
                     M{"d-M-y – d-M-y GGGGG"}
                     d{"d-M-y – d-M-y GGGGG"}
                     y{"d-M-y – d-M-y GGGGG"}
->>>>>>> upstream-releases
                 }
                 M{
                     M{"M–M"}
@@ -5984,7 +4292,6 @@ nl{
                 "{1} {0}",
             }
             availableFormats{
-                E{"ccc"}
                 Ed{"E d"}
                 Gy{"y G"}
                 GyMMM{"MMM y G"}
@@ -6021,107 +4328,6 @@ nl{
                     "Minguo",
                 }
             }
-<<<<<<< HEAD
-            intervalFormats{
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-                M{
-                    M{"M–M"}
-                }
-                MEd{
-                    M{"E dd-MM – E dd-MM"}
-                    d{"E dd-MM – E dd-MM"}
-                }
-                MMM{
-                    M{"MMM–MMM"}
-                }
-                MMMEd{
-                    M{"E d MMM – E d MMM"}
-                    d{"E d – E d MMM"}
-                }
-                MMMM{
-                    M{"MMMM–MMMM"}
-                }
-                MMMd{
-                    M{"d MMM – d MMM"}
-                    d{"d–d MMM"}
-                }
-                Md{
-                    M{"dd-MM – dd-MM"}
-                    d{"dd-MM – dd-MM"}
-                }
-                d{
-                    d{"d–d"}
-                }
-                fallback{"{0} - {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
-                y{
-                    y{"y–y G"}
-                }
-                yM{
-                    M{"MM-y – MM-y G"}
-                    y{"MM-y – MM-y G"}
-                }
-                yMEd{
-                    M{"E dd-MM-y – E dd-MM-y G"}
-                    d{"E dd-MM-y – E dd-MM-y G"}
-                    y{"E dd-MM-y – E dd-MM-y G"}
-                }
-                yMMM{
-                    M{"MMM–MMM y G"}
-                    y{"MMM y – MMM y G"}
-                }
-                yMMMEd{
-                    M{"E d MMM – E d MMM y G"}
-                    d{"E d – E d MMM y G"}
-                    y{"E d MMM y – E d MMM y G"}
-                }
-                yMMMM{
-                    M{"MMMM–MMMM y G"}
-                    y{"MMMM y – MMMM y G"}
-                }
-                yMMMd{
-                    M{"d MMM – d MMM y G"}
-                    d{"d–d MMM y G"}
-                    y{"d MMM y – d MMM y G"}
-                }
-                yMd{
-                    M{"dd-MM-y – dd-MM-y G"}
-                    d{"dd-MM-y – dd-MM-y G"}
-                    y{"dd-MM-y – dd-MM-y G"}
-                }
-            }
-||||||| merged common ancestors
-=======
             intervalFormats{
                 Bh{
                     B{"h B – h B"}
@@ -6232,7 +4438,6 @@ nl{
                     y{"dd-MM-y – dd-MM-y G"}
                 }
             }
->>>>>>> upstream-releases
         }
     }
     characterLabel{

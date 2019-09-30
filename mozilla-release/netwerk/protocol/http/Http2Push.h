@@ -26,24 +26,10 @@ namespace net {
 
 class Http2PushTransactionBuffer;
 
-<<<<<<< HEAD
-class Http2PushedStream final : public Http2Stream {
- public:
-  Http2PushedStream(Http2PushTransactionBuffer *aTransaction,
-                    Http2Session *aSession, Http2Stream *aAssociatedStream,
-||||||| merged common ancestors
-class Http2PushedStream final : public Http2Stream
-{
-public:
-  Http2PushedStream(Http2PushTransactionBuffer *aTransaction,
-                    Http2Session *aSession,
-                    Http2Stream *aAssociatedStream,
-=======
 class Http2PushedStream final : public Http2Stream {
  public:
   Http2PushedStream(Http2PushTransactionBuffer* aTransaction,
                     Http2Session* aSession, Http2Stream* aAssociatedStream,
->>>>>>> upstream-releases
                     uint32_t aID,
                     uint64_t aCurrentForegroundTabOuterContentWindowId);
   virtual ~Http2PushedStream() = default;
@@ -57,22 +43,10 @@ class Http2PushedStream final : public Http2Stream {
   MOZ_MUST_USE bool GetHashKey(nsCString& key);
 
   // override of Http2Stream
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult ReadSegments(nsAHttpSegmentReader *, uint32_t,
-                                     uint32_t *) override;
-  MOZ_MUST_USE nsresult WriteSegments(nsAHttpSegmentWriter *, uint32_t,
-                                      uint32_t *) override;
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult ReadSegments(nsAHttpSegmentReader *,
-                                     uint32_t, uint32_t *) override;
-  MOZ_MUST_USE nsresult WriteSegments(nsAHttpSegmentWriter *,
-                                      uint32_t, uint32_t *) override;
-=======
   MOZ_MUST_USE nsresult ReadSegments(nsAHttpSegmentReader*, uint32_t,
                                      uint32_t*) override;
   MOZ_MUST_USE nsresult WriteSegments(nsAHttpSegmentWriter*, uint32_t,
                                       uint32_t*) override;
->>>>>>> upstream-releases
   void AdjustInitialWindow() override;
 
   nsIRequestContext* RequestContext() override { return mRequestContext; };
@@ -100,22 +74,10 @@ class Http2PushedStream final : public Http2Stream {
 
   nsCString& GetRequestString() { return mRequestString; }
 
-<<<<<<< HEAD
- private:
-  Http2Stream
-      *mConsumerStream;  // paired request stream that consumes from
-                         // real http/2 one.. null until a match is made.
-||||||| merged common ancestors
-private:
-
-  Http2Stream *mConsumerStream; // paired request stream that consumes from
-                                // real http/2 one.. null until a match is made.
-=======
  private:
   Http2Stream*
       mConsumerStream;  // paired request stream that consumes from
                         // real http/2 one.. null until a match is made.
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIRequestContext> mRequestContext;
 
@@ -170,13 +132,6 @@ class Http2PushTransactionBuffer final : public nsAHttpTransaction {
   uint32_t mBufferedHTTP1Consumed;
 };
 
-<<<<<<< HEAD
-}  // namespace net
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace net
-} // namespace mozilla
-=======
 class Http2PushedStreamWrapper : public nsISupports {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
@@ -197,6 +152,5 @@ class Http2PushedStreamWrapper : public nsISupports {
 
 }  // namespace net
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_net_Http2Push_Internal_h

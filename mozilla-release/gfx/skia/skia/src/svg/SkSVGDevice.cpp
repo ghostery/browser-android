@@ -21,7 +21,6 @@
 #include "SkImageEncoder.h"
 #include "SkJpegCodec.h"
 #include "SkPaint.h"
-#include "SkPaintPriv.h"
 #include "SkParsePath.h"
 #include "SkPngCodec.h"
 #include "SkShader.h"
@@ -109,7 +108,6 @@ struct Resources {
     SkString fColorFilter;
 };
 
-<<<<<<< HEAD
 // Determine if the paint requires us to reset the viewport.
 // Currently, we do this whenever the paint shader calls
 // for a repeating image.
@@ -123,151 +121,6 @@ bool RequiresViewportReset(const SkPaint& paint) {
 
   if (!image)
     return false;
-||||||| merged common ancestors
-class SVGTextBuilder : SkNoncopyable {
-public:
-    SVGTextBuilder(const void* text, size_t byteLen, const SkPaint& paint, const SkPoint& offset,
-                   unsigned scalarsPerPos, const SkScalar pos[] = nullptr)
-        : fOffset(offset)
-        , fScalarsPerPos(scalarsPerPos)
-        , fPos(pos)
-        , fLastCharWasWhitespace(true) // start off in whitespace mode to strip all leading space
-    {
-        SkASSERT(scalarsPerPos <= 2);
-        SkASSERT(scalarsPerPos == 0 || SkToBool(pos));
-
-        int count = paint.countText(text, byteLen);
-
-        switch(paint.getTextEncoding()) {
-        case SkPaint::kGlyphID_TextEncoding: {
-            SkASSERT(count * sizeof(uint16_t) == byteLen);
-            SkAutoSTArray<64, SkUnichar> unichars(count);
-            paint.glyphsToUnichars((const uint16_t*)text, count, unichars.get());
-            for (int i = 0; i < count; ++i) {
-                this->appendUnichar(unichars[i]);
-            }
-        } break;
-        case SkPaint::kUTF8_TextEncoding: {
-            const char* c8 = reinterpret_cast<const char*>(text);
-            for (int i = 0; i < count; ++i) {
-                this->appendUnichar(SkUTF8_NextUnichar(&c8));
-            }
-            SkASSERT(reinterpret_cast<const char*>(text) + byteLen == c8);
-        } break;
-        case SkPaint::kUTF16_TextEncoding: {
-            const uint16_t* c16 = reinterpret_cast<const uint16_t*>(text);
-            for (int i = 0; i < count; ++i) {
-                this->appendUnichar(SkUTF16_NextUnichar(&c16));
-            }
-            SkASSERT(SkIsAlign2(byteLen));
-            SkASSERT(reinterpret_cast<const uint16_t*>(text) + (byteLen / 2) == c16);
-        } break;
-        case SkPaint::kUTF32_TextEncoding: {
-            SkASSERT(count * sizeof(uint32_t) == byteLen);
-            const uint32_t* c32 = reinterpret_cast<const uint32_t*>(text);
-            for (int i = 0; i < count; ++i) {
-                this->appendUnichar(c32[i]);
-            }
-        } break;
-        default:
-            SK_ABORT("unknown text encoding");
-        }
-
-        if (scalarsPerPos < 2) {
-            SkASSERT(fPosY.isEmpty());
-            fPosY.appendScalar(offset.y()); // DrawText or DrawPosTextH (fixed Y).
-        }
-
-        if (scalarsPerPos < 1) {
-            SkASSERT(fPosX.isEmpty());
-            fPosX.appendScalar(offset.x()); // DrawText (X also fixed).
-        }
-    }
-
-    const SkString& text() const { return fText; }
-    const SkString& posX() const { return fPosX; }
-    const SkString& posY() const { return fPosY; }
-
-private:
-    void appendUnichar(SkUnichar c) {
-        bool discardPos = false;
-        bool isWhitespace = false;
-
-        switch(c) {
-        case ' ':
-        case '\t':
-            // consolidate whitespace to match SVG's xml:space=default munging
-            // (http://www.w3.org/TR/SVG/text.html#WhiteSpace)
-            if (fLastCharWasWhitespace) {
-                discardPos = true;
-            } else {
-                fText.appendUnichar(c);
-            }
-            isWhitespace = true;
-            break;
-        case '\0':
-            // SkPaint::glyphsToUnichars() returns \0 for inconvertible glyphs, but these
-            // are not legal XML characters (http://www.w3.org/TR/REC-xml/#charsets)
-            discardPos = true;
-            isWhitespace = fLastCharWasWhitespace; // preserve whitespace consolidation
-            break;
-        case '&':
-            fText.append("&amp;");
-            break;
-        case '"':
-            fText.append("&quot;");
-            break;
-        case '\'':
-            fText.append("&apos;");
-            break;
-        case '<':
-            fText.append("&lt;");
-            break;
-        case '>':
-            fText.append("&gt;");
-            break;
-        default:
-            fText.appendUnichar(c);
-            break;
-        }
-
-        this->advancePos(discardPos);
-        fLastCharWasWhitespace = isWhitespace;
-    }
-
-    void advancePos(bool discard) {
-        if (!discard && fScalarsPerPos > 0) {
-            fPosX.appendf("%.8g, ", fOffset.x() + fPos[0]);
-            if (fScalarsPerPos > 1) {
-                SkASSERT(fScalarsPerPos == 2);
-                fPosY.appendf("%.8g, ", fOffset.y() + fPos[1]);
-            }
-        }
-        fPos += fScalarsPerPos;
-    }
-
-    const SkPoint&  fOffset;
-    const unsigned  fScalarsPerPos;
-    const SkScalar* fPos;
-
-    SkString fText, fPosX, fPosY;
-    bool     fLastCharWasWhitespace;
-};
-=======
-// Determine if the paint requires us to reset the viewport.
-// Currently, we do this whenever the paint shader calls
-// for a repeating image.
-bool RequiresViewportReset(const SkPaint& paint) {
-  SkShader* shader = paint.getShader();
-  if (!shader)
-    return false;
-
-  SkShader::TileMode xy[2];
-  SkImage* image = shader->isAImage(nullptr, xy);
-
-  if (!image)
-    return false;
->>>>>>> upstream-releases
 
   for (int i = 0; i < 2; i++) {
     if (xy[i] == SkShader::kRepeat_TileMode)
@@ -742,13 +595,7 @@ void SkSVGDevice::AutoElement::addTextAttributes(const SkFont& font) {
 
     SkString familyName;
     SkTHashSet<SkString> familySet;
-<<<<<<< HEAD
-    sk_sp<SkTypeface> tface = SkPaintPriv::RefTypefaceOrDefault(paint);
-||||||| merged common ancestors
-    sk_sp<SkTypeface> tface(paint.getTypeface() ? paint.refTypeface() : SkTypeface::MakeDefault());
-=======
     sk_sp<SkTypeface> tface = font.refTypefaceOrDefault();
->>>>>>> upstream-releases
 
     SkASSERT(tface);
     SkFontStyle style = tface->fontStyle();
@@ -988,27 +835,6 @@ void SkSVGDevice::drawBitmapRect(const SkBitmap& bm, const SkRect* srcOrNull,
     drawBitmapCommon(MxCp(&adjustedMatrix, cs), bm, paint);
 }
 
-<<<<<<< HEAD
-class SVGTextBuilder : SkNoncopyable {
-public:
-    SVGTextBuilder(SkPoint origin, const SkGlyphRun& glyphRun)
-            : fOrigin(origin)
-            , fLastCharWasWhitespace(true) { // start off in whitespace mode to strip all leadingspace
-        const SkPaint& paint = glyphRun.paint();
-        auto runSize = glyphRun.runSize();
-        SkAutoSTArray<64, SkUnichar> unichars(runSize);
-        paint.glyphsToUnichars(glyphRun.shuntGlyphsIDs().data(), runSize, unichars.get());
-        auto positions = glyphRun.positions();
-        for (size_t i = 0; i < runSize; ++i) {
-            this->appendUnichar(unichars[i], positions[i]);
-        }
-    }
-||||||| merged common ancestors
-void SkSVGDevice::drawText(const void* text, size_t len,
-                           SkScalar x, SkScalar y, const SkPaint& paint) {
-    AutoElement elem("text", fWriter, fResourceBucket.get(), MxCp(this), paint);
-    elem.addTextAttributes(paint);
-=======
 class SVGTextBuilder : SkNoncopyable {
 public:
     SVGTextBuilder(SkPoint origin, const SkGlyphRun& glyphRun)
@@ -1022,7 +848,6 @@ public:
             this->appendUnichar(unichars[i], positions[i]);
         }
     }
->>>>>>> upstream-releases
 
     const SkString& text() const { return fText; }
     const SkString& posX() const { return fPosX; }
@@ -1091,21 +916,10 @@ private:
 
 void SkSVGDevice::drawGlyphRunList(const SkGlyphRunList& glyphRunList)  {
 
-<<<<<<< HEAD
-    auto processGlyphRun = [this](SkPoint origin, const SkGlyphRun& glyphRun) {
-        const SkPaint& paint = glyphRun.paint();
-        AutoElement elem("text", fWriter, fResourceBucket.get(), MxCp(this), paint);
-        elem.addTextAttributes(paint);
-||||||| merged common ancestors
-        if (matrix && !matrix->isIdentity()) {
-            textElement.addAttribute("transform", svg_transform(*matrix));
-        }
-=======
     auto processGlyphRun = [this]
                            (SkPoint origin, const SkGlyphRun& glyphRun, const SkPaint& runPaint) {
         AutoElement elem("text", fWriter, fResourceBucket.get(), MxCp(this), runPaint);
         elem.addTextAttributes(glyphRun.font());
->>>>>>> upstream-releases
 
         SVGTextBuilder builder(origin, glyphRun);
         elem.addAttribute("x", builder.posX());
@@ -1113,17 +927,8 @@ void SkSVGDevice::drawGlyphRunList(const SkGlyphRunList& glyphRunList)  {
         elem.addText(builder.text());
     };
 
-<<<<<<< HEAD
-    for (auto& glyphRun : glyphRunList) {
-        processGlyphRun(glyphRunList.origin(), glyphRun);
-||||||| merged common ancestors
-            SVGTextBuilder builder(text, len, paint, SkPoint::Make(0, 0), 0);
-            textPathElement.addText(builder.text());
-        }
-=======
     for (auto& glyphRun : glyphRunList) {
         processGlyphRun(glyphRunList.origin(), glyphRun, glyphRunList.paint());
->>>>>>> upstream-releases
     }
 }
 

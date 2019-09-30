@@ -112,16 +112,8 @@ class SVGAnimationElement : public SVGAnimationElementBase, public SVGTests {
     SVGAnimationElement* const mAnimationElement;
   };
 
-<<<<<<< HEAD
-  HrefTargetTracker mHrefTarget;
-  nsSMILTimedElement mTimedElement;
-||||||| merged common ancestors
-  HrefTargetTracker    mHrefTarget;
-  nsSMILTimedElement   mTimedElement;
-=======
   HrefTargetTracker mHrefTarget;
   mozilla::SMILTimedElement mTimedElement;
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

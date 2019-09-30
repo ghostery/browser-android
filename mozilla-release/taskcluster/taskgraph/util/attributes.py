@@ -138,15 +138,6 @@ def copy_attributes_from_dependent_job(dep_job):
     })
 
     return attributes
-<<<<<<< HEAD
-
-
-def sorted_unique_list(*args):
-    """Join one or more lists, and return a sorted list of unique members"""
-    combined = set().union(*args)
-    return sorted(combined)
-||||||| merged common ancestors
-=======
 
 
 def sorted_unique_list(*args):
@@ -162,4 +153,3 @@ def release_level(project):
     :return six.text_type: One of "production" or "staging".
     """
     return 'production' if project in RELEASE_PROJECTS else 'staging'
->>>>>>> upstream-releases

@@ -235,13 +235,7 @@ impl<'a> ImplDebug<'a> for Item {
                 let inner_type = ctx.resolve_type(inner).canonical_type(ctx);
                 match *inner_type.kind() {
                     TypeKind::Function(ref sig)
-<<<<<<< HEAD
-                        if !sig.can_trivially_derive_debug(ctx) => {
-||||||| merged common ancestors
-                        if !sig.can_trivially_derive_debug() => {
-=======
                         if !sig.function_pointers_can_derive() => {
->>>>>>> upstream-releases
                             Some((format!("{}: FunctionPointer", name), vec![]))
                     }
                     _ => debug_print(name, quote! { #name_ident }),

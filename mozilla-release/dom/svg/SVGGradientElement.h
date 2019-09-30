@@ -47,16 +47,8 @@ class SVGGradientElement : public SVGGradientElementBase {
   // nsIContent
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
-<<<<<<< HEAD
-  virtual nsSVGAnimatedTransformList* GetAnimatedTransformList(
-      uint32_t aFlags = 0) override;
-||||||| merged common ancestors
-  virtual nsSVGAnimatedTransformList*
-    GetAnimatedTransformList(uint32_t aFlags = 0) override;
-=======
   virtual SVGAnimatedTransformList* GetAnimatedTransformList(
       uint32_t aFlags = 0) override;
->>>>>>> upstream-releases
   virtual nsStaticAtom* GetTransformListAttrName() const override {
     return nsGkAtoms::gradientTransform;
   }
@@ -104,29 +96,12 @@ class SVGLinearGradientElement : public SVGLinearGradientElementBase {
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedLength> X1();
-  already_AddRefed<SVGAnimatedLength> Y1();
-  already_AddRefed<SVGAnimatedLength> X2();
-  already_AddRefed<SVGAnimatedLength> Y2();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedLength> X1();
-  already_AddRefed<SVGAnimatedLength> Y1();
-  already_AddRefed<SVGAnimatedLength> X2();
-  already_AddRefed<SVGAnimatedLength> Y2();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedLength> X1();
   already_AddRefed<DOMSVGAnimatedLength> Y1();
   already_AddRefed<DOMSVGAnimatedLength> X2();
   already_AddRefed<DOMSVGAnimatedLength> Y2();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { ATTR_X1, ATTR_Y1, ATTR_X2, ATTR_Y2 };
@@ -154,25 +129,6 @@ class SVGRadialGradientElement : public SVGRadialGradientElementBase {
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedLength> Cx();
-  already_AddRefed<SVGAnimatedLength> Cy();
-  already_AddRefed<SVGAnimatedLength> R();
-  already_AddRefed<SVGAnimatedLength> Fx();
-  already_AddRefed<SVGAnimatedLength> Fy();
-  already_AddRefed<SVGAnimatedLength> Fr();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedLength> Cx();
-  already_AddRefed<SVGAnimatedLength> Cy();
-  already_AddRefed<SVGAnimatedLength> R();
-  already_AddRefed<SVGAnimatedLength> Fx();
-  already_AddRefed<SVGAnimatedLength> Fy();
-  already_AddRefed<SVGAnimatedLength> Fr();
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedLength> Cx();
   already_AddRefed<DOMSVGAnimatedLength> Cy();
   already_AddRefed<DOMSVGAnimatedLength> R();
@@ -181,7 +137,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedLength> Fr();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { ATTR_CX, ATTR_CY, ATTR_R, ATTR_FX, ATTR_FY, ATTR_FR };

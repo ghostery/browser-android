@@ -36,21 +36,10 @@ using namespace mozilla::dom;
 VP8TrackEncoder::VP8TrackEncoder(RefPtr<DriftCompensator> aDriftCompensator,
                                  TrackRate aTrackRate,
                                  FrameDroppingMode aFrameDroppingMode)
-<<<<<<< HEAD
-    : VideoTrackEncoder(aTrackRate, aFrameDroppingMode),
-      mVPXContext(new vpx_codec_ctx_t()),
-      mVPXImageWrapper(new vpx_image_t()) {
-||||||| merged common ancestors
-  : VideoTrackEncoder(aTrackRate, aFrameDroppingMode)
-  , mVPXContext(new vpx_codec_ctx_t())
-  , mVPXImageWrapper(new vpx_image_t())
-{
-=======
     : VideoTrackEncoder(std::move(aDriftCompensator), aTrackRate,
                         aFrameDroppingMode),
       mVPXContext(new vpx_codec_ctx_t()),
       mVPXImageWrapper(new vpx_image_t()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VP8TrackEncoder);
 }
 
@@ -244,7 +233,9 @@ nsresult VP8TrackEncoder::GetEncodedPartitions(EncodedFrameContainer& aData) {
                                  pkt->data.frame.sz);
         break;
       }
-      default: { break; }
+      default: {
+        break;
+      }
     }
     // End of frame
     if ((pkt->data.frame.flags & VPX_FRAME_IS_FRAGMENT) == 0) {
@@ -558,26 +549,11 @@ nsresult VP8TrackEncoder::GetEncodedTrack(EncodedFrameContainer& aData) {
     mEncodingComplete = true;
     // Bug 1243611, keep calling vpx_codec_encode and vpx_codec_get_cx_data
     // until vpx_codec_get_cx_data return null.
-<<<<<<< HEAD
-    do {
-      if (vpx_codec_encode(mVPXContext, nullptr, mEncodedTimestamp, 0, 0,
-                           VPX_DL_REALTIME)) {
-||||||| merged common ancestors
-    do {
-      if (vpx_codec_encode(mVPXContext, nullptr, mEncodedTimestamp,
-                           0, 0, VPX_DL_REALTIME)) {
-=======
     while (true) {
       if (vpx_codec_encode(mVPXContext, nullptr, mEncodedTimestamp, 0, 0,
                            VPX_DL_REALTIME)) {
->>>>>>> upstream-releases
         return NS_ERROR_FAILURE;
       }
-<<<<<<< HEAD
-    } while (NS_SUCCEEDED(GetEncodedPartitions(aData)));
-||||||| merged common ancestors
-    } while(NS_SUCCEEDED(GetEncodedPartitions(aData)));
-=======
       nsresult rv = GetEncodedPartitions(aData);
       if (rv == NS_ERROR_NOT_AVAILABLE) {
         // End-of-stream
@@ -588,7 +564,6 @@ nsresult VP8TrackEncoder::GetEncodedTrack(EncodedFrameContainer& aData) {
         return NS_ERROR_FAILURE;
       }
     }
->>>>>>> upstream-releases
   }
 
   return NS_OK;

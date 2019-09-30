@@ -11,34 +11,12 @@ add_task(async function test_support_toolbar_properties_on_findbar() {
   gBrowser.selectedTab.focus();
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-        },
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar": TOOLBAR_COLOR,
-          "bookmark_text": TOOLBAR_TEXT_COLOR,
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-        },
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar": TOOLBAR_COLOR,
-          "toolbar_text": TOOLBAR_TEXT_COLOR,
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
           toolbar: TOOLBAR_COLOR,
           bookmark_text: TOOLBAR_TEXT_COLOR,
->>>>>>> upstream-releases
         },
       },
     },
@@ -50,21 +28,11 @@ add_task(async function test_support_toolbar_properties_on_findbar() {
   let findbar_button = gFindBar.getElement("highlight");
 
   info("Checking findbar background is set as toolbar color");
-<<<<<<< HEAD
-  Assert.equal(window.getComputedStyle(gFindBar).backgroundColor,
-               hexToCSS(ACCENT_COLOR),
-               "Findbar background color should be the same as toolbar background color.");
-||||||| merged common ancestors
-  Assert.equal(window.getComputedStyle(gFindBar).backgroundColor,
-               hexToCSS(TOOLBAR_COLOR),
-               "Findbar background color should be the same as toolbar background color.");
-=======
   Assert.equal(
     window.getComputedStyle(gFindBar).backgroundColor,
     hexToCSS(ACCENT_COLOR),
     "Findbar background color should be the same as toolbar background color."
   );
->>>>>>> upstream-releases
 
   info("Checking findbar and button text color is set as toolbar text color");
   Assert.equal(
@@ -90,29 +58,6 @@ add_task(async function test_support_toolbar_field_properties_on_findbar() {
   gBrowser.selectedTab.focus();
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-        },
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar_field": TOOLBAR_FIELD_COLOR,
-          "toolbar_field_text": TOOLBAR_FIELD_TEXT_COLOR,
-          "toolbar_field_border": TOOLBAR_FIELD_BORDER_COLOR,
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-        },
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar_field": TOOLBAR_FIELD_COLOR,
-          "toolbar_field_text": TOOLBAR_FIELD_TEXT_COLOR,
-          "toolbar_field_border": TOOLBAR_FIELD_BORDER_COLOR,
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
@@ -120,7 +65,6 @@ add_task(async function test_support_toolbar_field_properties_on_findbar() {
           toolbar_field: TOOLBAR_FIELD_COLOR,
           toolbar_field_text: TOOLBAR_FIELD_TEXT_COLOR,
           toolbar_field_border: TOOLBAR_FIELD_BORDER_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

@@ -20,7 +20,7 @@ class ia2AccessibleHyperlink : public ia2AccessibleAction,
                                public IAccessibleHyperlink {
  public:
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleAction
   FORWARD_IACCESSIBLEACTION(ia2AccessibleAction)

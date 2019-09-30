@@ -11,12 +11,7 @@
 #include "mozilla/CondVar.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/UniquePtr.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "mozilla/TimeStamp.h"
-=======
 #include "mozilla/dom/WorkletImpl.h"
->>>>>>> upstream-releases
 #include "nsThread.h"
 
 class nsIRunnable;
@@ -31,82 +26,25 @@ class WorkletThread final : public nsThread, public nsIObserver {
 
   static already_AddRefed<WorkletThread> Create(WorkletImpl* aWorkletImpl);
 
-<<<<<<< HEAD
-  static bool IsOnWorkletThread();
-||||||| merged common ancestors
-  static WorkletThread*
-  Get();
-=======
   // Threads that call EnsureCycleCollectedJSContext must call
   // DeleteCycleCollectedJSContext::Get() before terminating.  Clients of
   // Create() do not need to do this as Terminate() will ensure this happens.
   static void EnsureCycleCollectedJSContext(JSRuntime* aParentRuntime);
   static void DeleteCycleCollectedJSContext();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void AssertIsOnWorkletThread();
-||||||| merged common ancestors
-  static bool
-  IsOnWorkletThread();
-=======
   static bool IsOnWorkletThread();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult DispatchRunnable(already_AddRefed<nsIRunnable> aRunnable);
-||||||| merged common ancestors
-  static void
-  AssertIsOnWorkletThread();
-=======
   static void AssertIsOnWorkletThread();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void Terminate();
-||||||| merged common ancestors
-  JSContext*
-  GetJSContext() const;
-=======
   nsresult DispatchRunnable(already_AddRefed<nsIRunnable> aRunnable);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  WorkletThread();
-||||||| merged common ancestors
-  nsresult
-  DispatchRunnable(already_AddRefed<nsIRunnable> aRunnable);
-
-  void
-  Terminate();
-
-  DOMHighResTimeStamp
-  TimeStampToDOMHighRes(const TimeStamp& aTimeStamp) const
-  {
-    MOZ_ASSERT(!aTimeStamp.IsNull());
-    TimeDuration duration = aTimeStamp - mCreationTimeStamp;
-    return duration.ToMilliseconds();
-  }
-
-private:
-  WorkletThread();
-=======
   void Terminate();
 
  private:
   explicit WorkletThread(WorkletImpl* aWorkletImpl);
->>>>>>> upstream-releases
   ~WorkletThread();
 
-<<<<<<< HEAD
-  void RunEventLoop(JSRuntime* aParentRuntime);
-||||||| merged common ancestors
-  void
-  RunEventLoop(JSRuntime* aParentRuntime);
-=======
   void RunEventLoop();
->>>>>>> upstream-releases
   class PrimaryRunnable;
 
   void TerminateInternal();
@@ -123,19 +61,9 @@ private:
   NS_IMETHOD
   DelayedDispatch(already_AddRefed<nsIRunnable>, uint32_t) override;
 
-<<<<<<< HEAD
-  bool mExitLoop;  // worklet execution thread
-||||||| merged common ancestors
-  TimeStamp mCreationTimeStamp;
-
-  // Touched only on the worklet thread. This is a raw pointer because it's set
-  // and nullified by RunEventLoop().
-  JSContext* mJSContext;
-=======
   const RefPtr<WorkletImpl> mWorkletImpl;
 
   bool mExitLoop;  // worklet execution thread
->>>>>>> upstream-releases
 
   bool mIsTerminating;  // main thread
 };

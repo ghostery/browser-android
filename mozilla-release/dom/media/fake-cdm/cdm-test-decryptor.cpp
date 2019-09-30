@@ -72,15 +72,7 @@ class TestManager {
   set<string> mTestIDs;
 };
 
-<<<<<<< HEAD
-FakeDecryptor::FakeDecryptor(cdm::Host_9* aHost) : mHost(aHost) {
-||||||| merged common ancestors
-FakeDecryptor::FakeDecryptor(cdm::Host_9* aHost)
-  : mHost(aHost)
-{
-=======
 FakeDecryptor::FakeDecryptor(cdm::Host_10* aHost) : mHost(aHost) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!sInstance);
   sInstance = this;
 }

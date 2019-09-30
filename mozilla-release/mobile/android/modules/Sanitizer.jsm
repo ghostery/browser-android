@@ -20,13 +20,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   OfflineAppCacheHelper: "resource://gre/modules/offlineAppCache.jsm",
   OS: "resource://gre/modules/osfile.jsm",
   ServiceWorkerCleanUp: "resource://gre/modules/ServiceWorkerCleanUp.jsm",
-<<<<<<< HEAD
-  Task: "resource://gre/modules/Task.jsm",
-||||||| merged common ancestors
-  Task: "resource://gre/modules/Task.jsm",
-  TelemetryStopwatch: "resource://gre/modules/TelemetryStopwatch.jsm",
-=======
->>>>>>> upstream-releases
 });
 
 XPCOMUtils.defineLazyServiceGetters(this, {
@@ -109,46 +102,6 @@ Sanitizer.prototype = {
     // while everything else is unchanged.
     cache: {
       clear: function() {
-<<<<<<< HEAD
-        let refObj = {};
-        TelemetryStopwatch.start("FX_SANITIZE_CACHE", refObj);
-
-        try {
-          Services.cache2.clear();
-        } catch (er) {}
-
-        let imageCache = Cc["@mozilla.org/image/tools;1"].getService(Ci.imgITools)
-                                                           .getImgCacheForDocument(null);
-        try {
-          imageCache.clearCache(false); // true=chrome, false=content
-        } catch (er) {}
-
-        return EventDispatcher.instance.sendRequestForResult({ type: "Sanitize:Cache" })
-          .catch((err) => {
-            Cu.reportError(`Java-side cache clearing failed with error: ${err}`);
-          })
-          .then(() => {
-            TelemetryStopwatch.finish("FX_SANITIZE_CACHE", refObj);
-          });
-||||||| merged common ancestors
-        return new Promise(function(resolve, reject) {
-          let refObj = {};
-          TelemetryStopwatch.start("FX_SANITIZE_CACHE", refObj);
-
-          try {
-            Services.cache2.clear();
-          } catch (er) {}
-
-          let imageCache = Cc["@mozilla.org/image/tools;1"].getService(Ci.imgITools)
-                                                           .getImgCacheForDocument(null);
-          try {
-            imageCache.clearCache(false); // true=chrome, false=content
-          } catch (er) {}
-
-          TelemetryStopwatch.finish("FX_SANITIZE_CACHE", refObj);
-          resolve();
-        });
-=======
         let refObj = {};
         TelemetryStopwatch.start("FX_SANITIZE_CACHE", refObj);
 
@@ -173,7 +126,6 @@ Sanitizer.prototype = {
           .then(() => {
             TelemetryStopwatch.finish("FX_SANITIZE_CACHE", refObj);
           });
->>>>>>> upstream-releases
       },
 
       get canClear() {
@@ -280,19 +232,6 @@ Sanitizer.prototype = {
                 item.origin
               );
               let uri = principal.URI;
-<<<<<<< HEAD
-              if (uri.scheme == "http" || uri.scheme == "https" || uri.scheme == "file") {
-                promises.push(new Promise(r => {
-                  let req = quotaManagerService.clearStoragesForPrincipal(principal);
-                  req.callback = () => { r(); };
-                }));
-||||||| merged common ancestors
-              if (uri.scheme == "http" || uri.scheme == "https" || uri.scheme == "file") {
-                promises.push(new Promise(r => {
-                  let req = quotaManagerService.clearStoragesForPrincipal(principal, null, false);
-                  req.callback = () => { r(); };
-                }));
-=======
               if (
                 uri.scheme == "http" ||
                 uri.scheme == "https" ||
@@ -308,7 +247,6 @@ Sanitizer.prototype = {
                     };
                   })
                 );
->>>>>>> upstream-releases
               }
             }
             resolve();

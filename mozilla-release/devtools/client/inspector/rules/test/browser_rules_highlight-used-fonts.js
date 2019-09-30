@@ -59,24 +59,6 @@ const TEST_URI = `
 //   selectBeforePseudoElement: Whether the before pseudo element should be selectd or not
 // }
 const TESTS = [
-<<<<<<< HEAD
-  {baseSelector: "#id1", nb: 3, used: [2]}, // sans-serif
-  {baseSelector: "#id2", nb: 1, used: [0]}, // serif
-  {baseSelector: "#id3", nb: 4, used: [1]}, // monospace
-  {baseSelector: "#id4", nb: 2, used: null},
-  {baseSelector: "#id5", nb: 1, used: [0]}, // monospace
-  {baseSelector: "#id7", nb: 2, used: [1]}, // serif
-  {baseSelector: "#id8", nb: 1, used: null},
-  {baseSelector: "#id9", nb: 2, used: [1], selectBeforePseudoElement: true}, // monospace
-||||||| merged common ancestors
-  {selector: "#id1", nb: 3, used: [2]}, // sans-serif
-  {selector: "#id2", nb: 1, used: [0]}, // serif
-  {selector: "#id3", nb: 4, used: [1]}, // monospace
-  {selector: "#id4", nb: 2, used: null},
-  {selector: "#id5", nb: 1, used: [0]}, // monospace
-  {selector: "#id7", nb: 2, used: [1]}, // serif
-  {selector: "#id8", nb: 1, used: null},
-=======
   { baseSelector: "#id1", nb: 3, used: [2] }, // sans-serif
   { baseSelector: "#id2", nb: 1, used: [0] }, // serif
   { baseSelector: "#id3", nb: 4, used: [1] }, // monospace
@@ -85,48 +67,21 @@ const TESTS = [
   { baseSelector: "#id7", nb: 2, used: [1] }, // serif
   { baseSelector: "#id8", nb: 1, used: null },
   { baseSelector: "#id9", nb: 2, used: [1], selectBeforePseudoElement: true }, // monospace
->>>>>>> upstream-releases
 ];
 
 if (Services.appinfo.OS !== "Linux") {
   // Both georgia and arial are used because the second character can't be rendered with
   // georgia, so the browser falls back. Also, skip this on Linux which has neither of
   // these fonts.
-<<<<<<< HEAD
-  TESTS.push({baseSelector: "#id6", nb: 2, used: [0, 1]});
-||||||| merged common ancestors
-  TESTS.push({selector: "#id6", nb: 2, used: [0, 1]});
-=======
   TESTS.push({ baseSelector: "#id6", nb: 2, used: [0, 1] });
->>>>>>> upstream-releases
 }
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
   const { inspector, view } = await openRuleView();
 
-<<<<<<< HEAD
-  for (const {baseSelector, nb, used, selectBeforePseudoElement} of TESTS) {
-||||||| merged common ancestors
-  for (const {selector, nb, used} of TESTS) {
-=======
   for (const { baseSelector, nb, used, selectBeforePseudoElement } of TESTS) {
->>>>>>> upstream-releases
     const onFontHighlighted = view.once("font-highlighted");
-<<<<<<< HEAD
-
-    if (selectBeforePseudoElement) {
-      // Query the first children node to get the before pseudo element:
-      const baseNode = await getNodeFront(baseSelector, inspector);
-      const pseudoElement =
-          (await inspector.walker.children(baseNode)).nodes[0];
-      await selectNode(pseudoElement, inspector);
-    } else {
-      await selectNode(baseSelector, inspector);
-    }
-||||||| merged common ancestors
-    await selectNode(selector, inspector);
-=======
 
     if (selectBeforePseudoElement) {
       // Query the first children node to get the before pseudo element:
@@ -137,21 +92,12 @@ add_task(async function() {
     } else {
       await selectNode(baseSelector, inspector);
     }
->>>>>>> upstream-releases
     await onFontHighlighted;
 
-<<<<<<< HEAD
-    const selector =
-       !selectBeforePseudoElement ? baseSelector : `${baseSelector}::before`;
-    info(`Looking for fonts in font-family property for: <${selector}>`);
-||||||| merged common ancestors
-    info("Looking for fonts in font-family property in selector " + selector);
-=======
     const selector = !selectBeforePseudoElement
       ? baseSelector
       : `${baseSelector}::before`;
     info(`Looking for fonts in font-family property for: <${selector}>`);
->>>>>>> upstream-releases
 
     const prop = getRuleViewProperty(view, selector, "font-family").valueSpan;
     const fonts = prop.querySelectorAll(".ruleview-font-family");

@@ -18,18 +18,6 @@ add_task(async function test_createBasicCardResponseData_basic() {
     expiryYear: "2017",
     cardSecurityCode: "0123",
   };
-<<<<<<< HEAD
-  let actual = dialogGlobal.paymentDialogWrapper.createBasicCardResponseData(expected);
-  Assert.equal(actual.cardholderName, expected.cardholderName, "Check cardholderName");
-  Assert.equal(actual.cardNumber, expected.cardNumber, "Check cardNumber");
-  Assert.equal(actual.expiryMonth, expected.expiryMonth, "Check expiryMonth");
-  Assert.equal(actual.expiryYear, expected.expiryYear, "Check expiryYear");
-  Assert.equal(actual.cardSecurityCode, expected.cardSecurityCode, "Check cardSecurityCode");
-||||||| merged common ancestors
-  let actual = dialogGlobal.paymentDialogWrapper.createBasicCardResponseData(expected);
-  let expectedSerialized = serializeBasicCardResponseData(expected);
-  Assert.equal(actual.data, expectedSerialized, "Check data");
-=======
   let actual = dialogGlobal.paymentDialogWrapper.createBasicCardResponseData(
     expected
   );
@@ -46,29 +34,17 @@ add_task(async function test_createBasicCardResponseData_basic() {
     expected.cardSecurityCode,
     "Check cardSecurityCode"
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_createBasicCardResponseData_minimal() {
   let expected = {
     cardNumber: "1234567890",
   };
-<<<<<<< HEAD
-  let actual = dialogGlobal.paymentDialogWrapper.createBasicCardResponseData(expected);
-  info(actual.cardNumber);
-  Assert.equal(actual.cardNumber, expected.cardNumber, "Check cardNumber");
-||||||| merged common ancestors
-  let actual = dialogGlobal.paymentDialogWrapper.createBasicCardResponseData(expected);
-  let expectedSerialized = serializeBasicCardResponseData(expected);
-  info(actual.data);
-  Assert.equal(actual.data, expectedSerialized, "Check data");
-=======
   let actual = dialogGlobal.paymentDialogWrapper.createBasicCardResponseData(
     expected
   );
   info(actual.cardNumber);
   Assert.equal(actual.cardNumber, expected.cardNumber, "Check cardNumber");
->>>>>>> upstream-releases
 });
 
 add_task(async function test_createBasicCardResponseData_withoutNumber() {

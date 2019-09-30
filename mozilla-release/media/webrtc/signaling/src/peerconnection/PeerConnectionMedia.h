@@ -48,14 +48,7 @@ class PeerConnectionMedia : public sigslot::has_slots<> {
  public:
   explicit PeerConnectionMedia(PeerConnectionImpl* parent);
 
-<<<<<<< HEAD
-  nsresult Init(const dom::RTCConfiguration& aConfiguration);
-||||||| merged common ancestors
-  PeerConnectionImpl* GetPC() { return mParent; }
-  nsresult Init(const dom::RTCConfiguration& aConfiguration);
-=======
   nsresult Init();
->>>>>>> upstream-releases
   // WARNING: This destroys the object!
   void SelfDestruct();
 
@@ -131,55 +124,10 @@ class PeerConnectionMedia : public sigslot::has_slots<> {
     return mTransceivers;
   }
 
-<<<<<<< HEAD
-  nsPIDOMWindowInner* GetWindow() const;
-
-  void AlpnNegotiated_s(const std::string& aAlpn);
-  static void AlpnNegotiated_m(const std::string& aParentHandle,
-                               const std::string& aAlpn);
-
-  // ICE state signals
-  sigslot::signal1<mozilla::dom::PCImplIceGatheringState>
-      SignalIceGatheringStateChange;
-  sigslot::signal1<mozilla::dom::PCImplIceConnectionState>
-      SignalIceConnectionStateChange;
-  // This passes a candidate:... attribute and transport id
-  // end-of-candidates is signaled with the empty string
-  sigslot::signal2<const std::string&, const std::string&> SignalCandidate;
-  // This passes address, port, transport id of the default candidate.
-  sigslot::signal5<const std::string&, uint16_t, const std::string&, uint16_t,
-                   const std::string&>
-      SignalUpdateDefaultCandidate;
-||||||| merged common ancestors
-  // Add a transport flow
-  void AddTransportFlow(const std::string& aId, bool aRtcp,
-                        const RefPtr<TransportFlow> &aFlow);
-  void RemoveTransportFlow(const std::string& aId, bool aRtcp);
-  void ConnectDtlsListener_s(const RefPtr<TransportFlow>& aFlow);
-  void DtlsConnected_s(TransportLayer* aFlow,
-                       TransportLayer::State state);
-  static void DtlsConnected_m(const std::string& aParentHandle,
-                              bool aPrivacyRequested);
-
-  // ICE state signals
-  sigslot::signal1<mozilla::dom::PCImplIceGatheringState>
-      SignalIceGatheringStateChange;
-  sigslot::signal1<mozilla::dom::PCImplIceConnectionState>
-      SignalIceConnectionStateChange;
-  // This passes a candidate:... attribute and transport id
-  sigslot::signal2<const std::string&, const std::string&> SignalCandidate;
-  // This passes address, port, transport id of the default candidate.
-  sigslot::signal5<const std::string&, uint16_t,
-                   const std::string&, uint16_t, const std::string&>
-      SignalUpdateDefaultCandidate;
-  sigslot::signal1<const std::string&>
-      SignalEndOfLocalCandidates;
-=======
   nsPIDOMWindowInner* GetWindow() const;
 
   void AlpnNegotiated_s(const std::string& aAlpn);
   void AlpnNegotiated_m(const std::string& aAlpn);
->>>>>>> upstream-releases
 
   // TODO: Move to PeerConnectionImpl
   RefPtr<WebRtcCallWrapper> mCall;
@@ -229,33 +177,10 @@ class PeerConnectionMedia : public sigslot::has_slots<> {
   void GatherIfReady();
   void FlushIceCtxOperationQueueIfReady();
   void PerformOrEnqueueIceCtxOperation(nsIRunnable* runnable);
-<<<<<<< HEAD
-  void EnsureIceGathering_s(bool aDefaultRouteOnly);
-  void StartIceChecks_s(bool aIsControlling, bool aIsOfferer, bool aIsIceLite,
-                        const std::vector<std::string>& aIceOptionsList);
-||||||| merged common ancestors
-  void EnsureIceGathering_s(bool aDefaultRouteOnly, bool aProxyOnly);
-  void StartIceChecks_s(bool aIsControlling,
-                        bool aIsOfferer,
-                        bool aIsIceLite,
-                        const std::vector<std::string>& aIceOptionsList);
-=======
   void EnsureIceGathering(bool aDefaultRouteOnly);
->>>>>>> upstream-releases
 
   bool GetPrefDefaultAddressOnly() const;
 
-<<<<<<< HEAD
-  void ConnectSignals();
-||||||| merged common ancestors
-  void ConnectSignals(NrIceCtx *aCtx, NrIceCtx *aOldCtx=nullptr);
-
-  // Process a trickle ICE candidate.
-  void AddIceCandidate_s(const std::string& aCandidate,
-                         const std::string& aTransportId);
-
-  void UpdateNetworkState_s(bool online);
-=======
   void ConnectSignals();
 
   // ICE events
@@ -268,57 +193,7 @@ class PeerConnectionMedia : public sigslot::has_slots<> {
   void IceConnectionStateChange_m(dom::RTCIceConnectionState aState);
   void OnCandidateFound_m(const std::string& aTransportId,
                           const CandidateInfo& aCandidateInfo);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // ICE events
-  void IceGatheringStateChange_s(dom::PCImplIceGatheringState aState);
-  void IceConnectionStateChange_s(dom::PCImplIceConnectionState aState);
-  void OnCandidateFound_s(
-      const std::string& aTransportId,
-      const MediaTransportHandler::CandidateInfo& aCandidateInfo);
-
-  void IceGatheringStateChange_m(dom::PCImplIceGatheringState aState);
-  void IceConnectionStateChange_m(dom::PCImplIceConnectionState aState);
-  void OnCandidateFound_m(
-      const std::string& aTransportId,
-      const MediaTransportHandler::CandidateInfo& aCandidateInfo);
-
-||||||| merged common ancestors
-  // ICE events
-  void IceGatheringStateChange_s(NrIceCtx* ctx,
-                               NrIceCtx::GatheringState state);
-  void IceConnectionStateChange_s(NrIceCtx* ctx,
-                                NrIceCtx::ConnectionState state);
-  void IceStreamReady_s(NrIceMediaStream *aStream);
-  void OnCandidateFound_s(NrIceMediaStream *aStream,
-                          const std::string& aCandidate);
-  void EndOfLocalCandidates(const std::string& aDefaultAddr,
-                            uint16_t aDefaultPort,
-                            const std::string& aDefaultRtcpAddr,
-                            uint16_t aDefaultRtcpPort,
-                            const std::string& aTransportId);
-  void GetDefaultCandidates(const NrIceMediaStream& aStream,
-                            NrIceCandidate* aCandidate,
-                            NrIceCandidate* aRtcpCandidate);
-
-  void IceGatheringStateChange_m(NrIceCtx* ctx,
-                                 NrIceCtx::GatheringState state);
-  void IceConnectionStateChange_m(NrIceCtx* ctx,
-                                  NrIceCtx::ConnectionState state);
-  void OnCandidateFound_m(const std::string& aCandidateLine,
-                          const std::string& aDefaultAddr,
-                          uint16_t aDefaultPort,
-                          const std::string& aDefaultRtcpAddr,
-                          uint16_t aDefaultRtcpPort,
-                          const std::string& aTransportId);
-  void EndOfLocalCandidates_m(const std::string& aDefaultAddr,
-                              uint16_t aDefaultPort,
-                              const std::string& aDefaultRtcpAddr,
-                              uint16_t aDefaultRtcpPort,
-                              const std::string& aTransportId);
-=======
->>>>>>> upstream-releases
   bool IsIceCtxReady() const {
     return mProxyResolveCompleted && mLocalAddrsCompleted;
   }

@@ -129,46 +129,6 @@ LayersBackend GetCompositorBackendType(
 }
 
 WMFVideoMFTManager::WMFVideoMFTManager(
-<<<<<<< HEAD
-    const VideoInfo& aConfig, layers::KnowsCompositor* aKnowsCompositor,
-    layers::ImageContainer* aImageContainer, float aFramerate,
-    const CreateDecoderParams::OptionSet& aOptions, bool aDXVAEnabled)
-    : mVideoInfo(aConfig),
-      mImageSize(aConfig.mImage),
-      mDecodedImageSize(aConfig.mImage),
-      mVideoStride(0),
-      mYUVColorSpace(YUVColorSpace::BT601),
-      mImageContainer(aImageContainer),
-      mKnowsCompositor(aKnowsCompositor),
-      mDXVAEnabled(aDXVAEnabled &&
-                   !aOptions.contains(
-                       CreateDecoderParams::Option::HardwareDecoderNotAllowed)),
-      mFramerate(aFramerate),
-      mLowLatency(aOptions.contains(CreateDecoderParams::Option::LowLatency))
-// mVideoStride, mVideoWidth, mVideoHeight, mUseHwAccel are initialized in
-// Init().
-||||||| merged common ancestors
-  const VideoInfo& aConfig,
-  layers::KnowsCompositor* aKnowsCompositor,
-  layers::ImageContainer* aImageContainer,
-  float aFramerate,
-  const CreateDecoderParams::OptionSet& aOptions,
-  bool aDXVAEnabled)
-  : mVideoInfo(aConfig)
-  , mImageSize(aConfig.mImage)
-  , mDecodedImageSize(aConfig.mImage)
-  , mVideoStride(0)
-  , mYUVColorSpace(YUVColorSpace::BT601)
-  , mImageContainer(aImageContainer)
-  , mKnowsCompositor(aKnowsCompositor)
-  , mDXVAEnabled(aDXVAEnabled &&
-                 !aOptions.contains(
-                   CreateDecoderParams::Option::HardwareDecoderNotAllowed))
-  , mFramerate(aFramerate)
-  , mLowLatency(aOptions.contains(CreateDecoderParams::Option::LowLatency))
-  // mVideoStride, mVideoWidth, mVideoHeight, mUseHwAccel are initialized in
-  // Init().
-=======
     const VideoInfo& aConfig, layers::KnowsCompositor* aKnowsCompositor,
     layers::ImageContainer* aImageContainer, float aFramerate,
     const CreateDecoderParams::OptionSet& aOptions, bool aDXVAEnabled)
@@ -188,7 +148,6 @@ WMFVideoMFTManager::WMFVideoMFTManager(
       mLowLatency(aOptions.contains(CreateDecoderParams::Option::LowLatency))
 // mVideoStride, mVideoWidth, mVideoHeight, mUseHwAccel are initialized in
 // Init().
->>>>>>> upstream-releases
 {
   MOZ_COUNT_CTOR(WMFVideoMFTManager);
 
@@ -483,25 +442,12 @@ class CreateDXVAManagerEvent : public Runnable {
   NS_IMETHOD Run() override {
     NS_ASSERTION(NS_IsMainThread(), "Must be on main thread.");
     const bool deblacklistingForTelemetry =
-<<<<<<< HEAD
-        XRE_IsGPUProcess() &&
-        gfxPrefs::PDMWMFDeblacklistingForTelemetryInGPUProcess();
-||||||| merged common ancestors
-      XRE_IsGPUProcess() && gfxPrefs::PDMWMFDeblacklistingForTelemetryInGPUProcess();
-=======
         XRE_IsGPUProcess() &&
         StaticPrefs::media_wmf_deblacklisting_for_telemetry_in_gpu_process();
->>>>>>> upstream-releases
     nsACString* failureReason = &mFailureReason;
     nsCString secondFailureReason;
     if (mBackend == LayersBackend::LAYERS_D3D11 &&
-<<<<<<< HEAD
-        gfxPrefs::PDMWMFAllowD3D11() && IsWin8OrLater()) {
-||||||| merged common ancestors
-      gfxPrefs::PDMWMFAllowD3D11() && IsWin8OrLater()) {
-=======
         StaticPrefs::media_wmf_dxva_d3d11_enabled() && IsWin8OrLater()) {
->>>>>>> upstream-releases
       const nsCString& blacklistedDLL = FindD3D11BlacklistedDLL();
       if (!deblacklistingForTelemetry && !blacklistedDLL.IsEmpty()) {
         failureReason->AppendPrintf("D3D11 blacklisted with DLL %s",
@@ -568,20 +514,9 @@ bool WMFVideoMFTManager::InitializeDXVA() {
   return mDXVA2Manager != nullptr;
 }
 
-<<<<<<< HEAD
-MediaResult WMFVideoMFTManager::ValidateVideoInfo() {
-  if (mStreamType != H264 || gfxPrefs::PDMWMFAllowUnsupportedResolutions()) {
-||||||| merged common ancestors
-MediaResult
-WMFVideoMFTManager::ValidateVideoInfo()
-{
-  if (mStreamType != H264 ||
-    gfxPrefs::PDMWMFAllowUnsupportedResolutions()) {
-=======
 MediaResult WMFVideoMFTManager::ValidateVideoInfo() {
   if (mStreamType != H264 ||
       StaticPrefs::media_wmf_allow_unsupported_resolutions()) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -650,19 +585,11 @@ MediaResult WMFVideoMFTManager::InitInternal() {
   if (attr) {
     attr->GetUINT32(MF_SA_D3D_AWARE, &aware);
     attr->SetUINT32(CODECAPI_AVDecNumWorkerThreads,
-<<<<<<< HEAD
-                    WMFDecoderModule::GetNumDecoderThreads());
-    if (mLowLatency || gfxPrefs::PDMWMFLowLatencyEnabled()) {
-||||||| merged common ancestors
-      WMFDecoderModule::GetNumDecoderThreads());
-    if (mLowLatency || gfxPrefs::PDMWMFLowLatencyEnabled()) {
-=======
                     WMFDecoderModule::GetNumDecoderThreads());
     bool lowLatency =
         (StaticPrefs::media_wmf_low_latency_enabled() || IsWin10OrLater()) &&
         !StaticPrefs::media_mwf_low_latency_force_disabled();
     if (mLowLatency || lowLatency) {
->>>>>>> upstream-releases
       hr = attr->SetUINT32(CODECAPI_AVLowLatencyMode, TRUE);
       if (SUCCEEDED(hr)) {
         LOG("Enabling Low Latency Mode");
@@ -733,18 +660,9 @@ MediaResult WMFVideoMFTManager::InitInternal() {
       (mUseHwAccel ? "Yes" : "No"));
 
   if (mUseHwAccel) {
-<<<<<<< HEAD
-    hr = mDXVA2Manager->ConfigureForSize(outputType,
-                                         mVideoInfo.ImageRect().width,
-                                         mVideoInfo.ImageRect().height);
-||||||| merged common ancestors
-    hr = mDXVA2Manager->ConfigureForSize(
-      outputType, mVideoInfo.ImageRect().width, mVideoInfo.ImageRect().height);
-=======
     hr = mDXVA2Manager->ConfigureForSize(
         outputType, mColorSpace.refOr(gfx::YUVColorSpace::BT601),
         mVideoInfo.ImageRect().width, mVideoInfo.ImageRect().height);
->>>>>>> upstream-releases
     NS_ENSURE_TRUE(SUCCEEDED(hr),
                    MediaResult(NS_ERROR_DOM_MEDIA_FATAL_ERR,
                                RESULT_DETAIL("Fail to configure image size for "
@@ -1129,18 +1047,8 @@ WMFVideoMFTManager::Output(int64_t aStreamOffset, RefPtr<MediaData>& aOutData) {
         NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
       } else {
         // The stride may have changed, recheck for it.
-<<<<<<< HEAD
-        mYUVColorSpace = GetYUVColorSpace(outputType);
         hr = GetDefaultStride(outputType, mVideoInfo.ImageRect().width,
                               &mVideoStride);
-||||||| merged common ancestors
-        mYUVColorSpace = GetYUVColorSpace(outputType);
-        hr = GetDefaultStride(
-          outputType, mVideoInfo.ImageRect().width, &mVideoStride);
-=======
-        hr = GetDefaultStride(outputType, mVideoInfo.ImageRect().width,
-                              &mVideoStride);
->>>>>>> upstream-releases
         NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
 
         UINT32 width = 0, height = 0;
@@ -1215,19 +1123,9 @@ WMFVideoMFTManager::Output(int64_t aStreamOffset, RefPtr<MediaData>& aOutData) {
   // The VP9 decoder doesn't provide a valid duration. As VP9 doesn't have a
   // concept of pts vs dts and have no latency. We can as such use the last
   // known input duration.
-<<<<<<< HEAD
-  aOutData->mDuration = (mStreamType == VP9 && duration == TimeUnit::Zero())
-                            ? mLastDuration
-                            : duration;
-||||||| merged common ancestors
-  aOutData->mDuration = (mStreamType == VP9 && duration == TimeUnit::Zero())
-                        ? mLastDuration
-                        : duration;
-=======
   if (mStreamType == VP9 && aOutData->mDuration == TimeUnit::Zero()) {
     aOutData->mDuration = mLastDuration;
   }
->>>>>>> upstream-releases
 
   if (mNullOutputCount) {
     mGotValidOutputAfterNullOutput = true;
@@ -1252,22 +1150,10 @@ nsCString WMFVideoMFTManager::GetDescriptionName() const {
   bool hw = IsHardwareAccelerated(failureReason);
   return nsPrintfCString("wmf %s video decoder - %s",
                          hw ? "hardware" : "software",
-<<<<<<< HEAD
-                         hw ? gfxPrefs::PDMWMFUseNV12Format() &&
-                                      gfx::DeviceManagerDx::Get()->CanUseNV12()
-                                  ? "nv12"
-                                  : "rgba32"
-||||||| merged common ancestors
-                         hw ? gfxPrefs::PDMWMFUseNV12Format() &&
-                              gfx::DeviceManagerDx::Get()->CanUseNV12()
-                              ? "nv12"
-                              : "rgba32"
-=======
                          hw ? StaticPrefs::media_wmf_use_nv12_format() &&
                                       gfx::DeviceManagerDx::Get()->CanUseNV12()
                                   ? "nv12"
                                   : "rgba32"
->>>>>>> upstream-releases
                             : "yuv420");
 }
 

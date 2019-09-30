@@ -24,16 +24,8 @@ public:
 
     ~GrMockGpu() override {}
 
-<<<<<<< HEAD
-    GrGpuRTCommandBuffer* getCommandBuffer(
-                                    GrRenderTarget*, GrSurfaceOrigin,
-||||||| merged common ancestors
-    GrGpuRTCommandBuffer* createCommandBuffer(
-                                    GrRenderTarget*, GrSurfaceOrigin,
-=======
     GrGpuRTCommandBuffer* getCommandBuffer(
                                     GrRenderTarget*, GrSurfaceOrigin, const SkRect&,
->>>>>>> upstream-releases
                                     const GrGpuRTCommandBuffer::LoadAndStoreInfo&,
                                     const GrGpuRTCommandBuffer::StencilLoadAndStoreInfo&) override;
 
@@ -67,29 +59,13 @@ private:
     sk_sp<GrTexture> onCreateTexture(const GrSurfaceDesc&, SkBudgeted, const GrMipLevel[],
                                      int mipLevelCount) override;
 
-<<<<<<< HEAD
-    sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership) override;
-||||||| merged common ancestors
-    sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership) override {
-        return nullptr;
-    }
-=======
     sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership, GrWrapCacheable,
                                           GrIOType) override;
->>>>>>> upstream-releases
 
     sk_sp<GrTexture> onWrapRenderableBackendTexture(const GrBackendTexture&,
                                                     int sampleCnt,
-<<<<<<< HEAD
-                                                    GrWrapOwnership) override;
-||||||| merged common ancestors
-                                                    GrWrapOwnership) override {
-        return nullptr;
-    }
-=======
                                                     GrWrapOwnership,
                                                     GrWrapCacheable) override;
->>>>>>> upstream-releases
 
     sk_sp<GrRenderTarget> onWrapBackendRenderTarget(const GrBackendRenderTarget&) override;
 

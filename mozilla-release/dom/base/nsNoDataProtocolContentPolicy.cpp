@@ -23,23 +23,10 @@
 NS_IMPL_ISUPPORTS(nsNoDataProtocolContentPolicy, nsIContentPolicy)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNoDataProtocolContentPolicy::ShouldLoad(nsIURI *aContentLocation,
-                                          nsILoadInfo *aLoadInfo,
-                                          const nsACString &aMimeGuess,
-                                          int16_t *aDecision) {
-||||||| merged common ancestors
-nsNoDataProtocolContentPolicy::ShouldLoad(nsIURI *aContentLocation,
-                                          nsILoadInfo *aLoadInfo,
-                                          const nsACString &aMimeGuess,
-                                          int16_t *aDecision)
-{
-=======
 nsNoDataProtocolContentPolicy::ShouldLoad(nsIURI* aContentLocation,
                                           nsILoadInfo* aLoadInfo,
                                           const nsACString& aMimeGuess,
                                           int16_t* aDecision) {
->>>>>>> upstream-releases
   uint32_t contentType = aLoadInfo->GetExternalContentPolicyType();
 
   MOZ_ASSERT(contentType == nsContentUtils::InternalContentPolicyTypeToExternal(
@@ -80,22 +67,9 @@ nsNoDataProtocolContentPolicy::ShouldLoad(nsIURI* aContentLocation,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNoDataProtocolContentPolicy::ShouldProcess(nsIURI *aContentLocation,
-                                             nsILoadInfo *aLoadInfo,
-                                             const nsACString &aMimeGuess,
-                                             int16_t *aDecision) {
-||||||| merged common ancestors
-nsNoDataProtocolContentPolicy::ShouldProcess(nsIURI *aContentLocation,
-                                             nsILoadInfo* aLoadInfo,
-                                             const nsACString &aMimeGuess,
-                                             int16_t *aDecision)
-{
-=======
 nsNoDataProtocolContentPolicy::ShouldProcess(nsIURI* aContentLocation,
                                              nsILoadInfo* aLoadInfo,
                                              const nsACString& aMimeGuess,
                                              int16_t* aDecision) {
->>>>>>> upstream-releases
   return ShouldLoad(aContentLocation, aLoadInfo, aMimeGuess, aDecision);
 }

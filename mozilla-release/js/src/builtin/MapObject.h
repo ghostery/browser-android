@@ -24,43 +24,6 @@ namespace js {
  *
  * All values except ropes are hashable as-is.
  */
-<<<<<<< HEAD
-class HashableValue {
-  PreBarrieredValue value;
-
- public:
-  struct Hasher {
-    typedef HashableValue Lookup;
-    static HashNumber hash(const Lookup& v,
-                           const mozilla::HashCodeScrambler& hcs) {
-      return v.hash(hcs);
-||||||| merged common ancestors
-class HashableValue
-{
-    PreBarrieredValue value;
-
-  public:
-    struct Hasher {
-        typedef HashableValue Lookup;
-        static HashNumber hash(const Lookup& v, const mozilla::HashCodeScrambler& hcs) {
-            return v.hash(hcs);
-        }
-        static bool match(const HashableValue& k, const Lookup& l) { return k == l; }
-        static bool isEmpty(const HashableValue& v) { return v.value.isMagic(JS_HASH_KEY_EMPTY); }
-        static void makeEmpty(HashableValue* vp) { vp->value = MagicValue(JS_HASH_KEY_EMPTY); }
-    };
-
-    HashableValue() : value(UndefinedValue()) {}
-
-    MOZ_MUST_USE bool setValue(JSContext* cx, HandleValue v);
-    HashNumber hash(const mozilla::HashCodeScrambler& hcs) const;
-    bool operator==(const HashableValue& other) const;
-    HashableValue trace(JSTracer* trc) const;
-    Value get() const { return value.get(); }
-
-    void trace(JSTracer* trc) {
-        TraceEdge(trc, &value, "HashableValue");
-=======
 class HashableValue {
   // This is used for map and set keys. We use OrderedHashTableRef to update all
   // nursery keys on minor GC, so a post barrier is not required here.
@@ -72,7 +35,6 @@ class HashableValue {
     static HashNumber hash(const Lookup& v,
                            const mozilla::HashCodeScrambler& hcs) {
       return v.hash(hcs);
->>>>>>> upstream-releases
     }
     static bool match(const HashableValue& k, const Lookup& l) {
       return k == l;

@@ -2,16 +2,8 @@ import os
 import uuid
 import hashlib
 import time
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-resourcePath = os.getcwd() + "/fetch/sec-metadata/resources/"
-
-=======
 import json
 
->>>>>>> upstream-releases
 def main(request, response):
   ## Get the query parameter (key) from URL ##
   ## Tests will record POST requests (CSP Report) and GET (rest) ##

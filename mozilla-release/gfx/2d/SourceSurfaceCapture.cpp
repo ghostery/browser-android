@@ -48,13 +48,6 @@ SourceSurfaceCapture::SourceSurfaceCapture(
   DrawTargetWillChange();
 }
 
-<<<<<<< HEAD
-SourceSurfaceCapture::~SourceSurfaceCapture() {}
-||||||| merged common ancestors
-SourceSurfaceCapture::~SourceSurfaceCapture()
-{
-}
-=======
 SourceSurfaceCapture::SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner,
                                            SourceSurface* aSurfToOptimize)
     : mOwner{aOwner},
@@ -68,19 +61,10 @@ SourceSurfaceCapture::SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner,
   mFormat = aSurfToOptimize->GetFormat();
   mRefDT = mOwner->mRefDT;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool SourceSurfaceCapture::IsValid() const {
-||||||| merged common ancestors
-bool
-SourceSurfaceCapture::IsValid() const
-{
-=======
 SourceSurfaceCapture::~SourceSurfaceCapture() {}
 
 bool SourceSurfaceCapture::IsValid() const {
->>>>>>> upstream-releases
   // We must either be able to source a command list, or we must have a cached
   // and rasterized surface.
   MutexAutoLock lock(mLock);
@@ -140,19 +124,9 @@ RefPtr<SourceSurface> SourceSurfaceCapture::ResolveImpl(
     }
   }
 
-<<<<<<< HEAD
-  if (!dt) {
-    // Make sure we haven't allocated and aren't leaking something, the code
-    // right anove here should have guaranteed that.
-||||||| merged common ancestors
-  if (!dt) {
-    // Make sure we haven't allocated and aren't leaking something, the code right
-    // anove here should have guaranteed that.
-=======
   if (!dt || !dt->IsValid()) {
     // Make sure we haven't allocated and aren't leaking something, the code
     // right anove here should have guaranteed that.
->>>>>>> upstream-releases
     MOZ_ASSERT(!data);
     return nullptr;
   }

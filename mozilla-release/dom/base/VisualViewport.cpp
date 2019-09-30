@@ -22,33 +22,17 @@ using namespace mozilla;
 using namespace mozilla::dom;
 
 VisualViewport::VisualViewport(nsPIDOMWindowInner* aWindow)
-<<<<<<< HEAD
-    : DOMEventTargetHelper(aWindow) {}
-||||||| merged common ancestors
-  : DOMEventTargetHelper(aWindow)
-{
-}
-=======
     : DOMEventTargetHelper(aWindow) {}
 
 VisualViewport::~VisualViewport() {
   if (mResizeEvent) {
     mResizeEvent->Revoke();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-VisualViewport::~VisualViewport() {}
-||||||| merged common ancestors
-VisualViewport::~VisualViewport()
-{
-}
-=======
   if (mScrollEvent) {
     mScrollEvent->Revoke();
   }
 }
->>>>>>> upstream-releases
 
 /* virtual */
 JSObject* VisualViewport::WrapObject(JSContext* aCx,
@@ -56,19 +40,9 @@ JSObject* VisualViewport::WrapObject(JSContext* aCx,
   return VisualViewport_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-CSSSize VisualViewport::VisualViewportSize() const {
-  CSSSize size = CSSSize(0, 0);
-||||||| merged common ancestors
-CSSSize
-VisualViewport::VisualViewportSize() const
-{
-  CSSSize size = CSSSize(0,0);
-=======
 /* virtual */
 void VisualViewport::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
   EventMessage msg = aVisitor.mEvent->mMessage;
->>>>>>> upstream-releases
 
   aVisitor.mCanHandle = true;
   EventTarget* parentTarget = nullptr;
@@ -129,18 +103,8 @@ double VisualViewport::Scale() const {
 CSSPoint VisualViewport::VisualViewportOffset() const {
   CSSPoint offset = CSSPoint(0, 0);
 
-<<<<<<< HEAD
-  nsIPresShell* presShell = GetPresShell();
-  if (presShell) {
-    offset = CSSPoint::FromAppUnits(presShell->GetVisualViewportOffset());
-||||||| merged common ancestors
-  nsIPresShell* presShell = GetPresShell();
-  if (presShell) {
-      offset = CSSPoint::FromAppUnits(presShell->GetVisualViewportOffset());
-=======
   if (PresShell* presShell = GetPresShell()) {
     offset = CSSPoint::FromAppUnits(presShell->GetVisualViewportOffset());
->>>>>>> upstream-releases
   }
   return offset;
 }
@@ -166,15 +130,7 @@ double VisualViewport::OffsetTop() const {
   return PageTop() - LayoutViewportOffset().Y();
 }
 
-<<<<<<< HEAD
-nsIPresShell* VisualViewport::GetPresShell() const {
-||||||| merged common ancestors
-nsIPresShell*
-VisualViewport::GetPresShell() const
-{
-=======
 Document* VisualViewport::GetDocument() const {
->>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowInner> window = GetOwner();
   if (!window) {
     return nullptr;

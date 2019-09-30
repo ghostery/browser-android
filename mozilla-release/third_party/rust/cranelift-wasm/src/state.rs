@@ -285,28 +285,12 @@ impl TranslationState {
         func: &mut ir::Function,
         index: u32,
         environ: &mut FE,
-<<<<<<< HEAD
-    ) -> GlobalVariable {
-        let index = GlobalIndex::new(index as usize);
-        *self
-            .globals
-            .entry(index)
-            .or_insert_with(|| environ.make_global(func, index))
-||||||| merged common ancestors
-    ) -> GlobalVariable {
-        let index = index as GlobalIndex;
-        *self
-            .globals
-            .entry(index)
-            .or_insert_with(|| environ.make_global(func, index))
-=======
     ) -> WasmResult<GlobalVariable> {
         let index = GlobalIndex::from_u32(index);
         match self.globals.entry(index) {
             Occupied(entry) => Ok(*entry.get()),
             Vacant(entry) => Ok(*entry.insert(environ.make_global(func, index)?)),
         }
->>>>>>> upstream-releases
     }
 
     /// Get the `Heap` reference that should be used to access linear memory `index`.
@@ -316,28 +300,12 @@ impl TranslationState {
         func: &mut ir::Function,
         index: u32,
         environ: &mut FE,
-<<<<<<< HEAD
-    ) -> ir::Heap {
-        let index = MemoryIndex::new(index as usize);
-        *self
-            .heaps
-            .entry(index)
-            .or_insert_with(|| environ.make_heap(func, index))
-||||||| merged common ancestors
-    ) -> ir::Heap {
-        let index = index as MemoryIndex;
-        *self
-            .heaps
-            .entry(index)
-            .or_insert_with(|| environ.make_heap(func, index))
-=======
     ) -> WasmResult<ir::Heap> {
         let index = MemoryIndex::from_u32(index);
         match self.heaps.entry(index) {
             Occupied(entry) => Ok(*entry.get()),
             Vacant(entry) => Ok(*entry.insert(environ.make_heap(func, index)?)),
         }
->>>>>>> upstream-releases
     }
 
     /// Get the `Table` reference that should be used to access table `index`.
@@ -347,28 +315,12 @@ impl TranslationState {
         func: &mut ir::Function,
         index: u32,
         environ: &mut FE,
-<<<<<<< HEAD
-    ) -> ir::Table {
-        let index = TableIndex::new(index as usize);
-        *self
-            .tables
-            .entry(index)
-            .or_insert_with(|| environ.make_table(func, index))
-||||||| merged common ancestors
-    ) -> ir::Table {
-        let index = index as TableIndex;
-        *self
-            .tables
-            .entry(index)
-            .or_insert_with(|| environ.make_table(func, index))
-=======
     ) -> WasmResult<ir::Table> {
         let index = TableIndex::from_u32(index);
         match self.tables.entry(index) {
             Occupied(entry) => Ok(*entry.get()),
             Vacant(entry) => Ok(*entry.insert(environ.make_table(func, index)?)),
         }
->>>>>>> upstream-releases
     }
 
     /// Get the `SigRef` reference that should be used to make an indirect call with signature
@@ -380,21 +332,6 @@ impl TranslationState {
         func: &mut ir::Function,
         index: u32,
         environ: &mut FE,
-<<<<<<< HEAD
-    ) -> (ir::SigRef, usize) {
-        let index = SignatureIndex::new(index as usize);
-        *self.signatures.entry(index).or_insert_with(|| {
-            let sig = environ.make_indirect_sig(func, index);
-            (sig, normal_args(&func.dfg.signatures[sig]))
-        })
-||||||| merged common ancestors
-    ) -> (ir::SigRef, usize) {
-        let index = index as SignatureIndex;
-        *self.signatures.entry(index).or_insert_with(|| {
-            let sig = environ.make_indirect_sig(func, index);
-            (sig, normal_args(&func.dfg.signatures[sig]))
-        })
-=======
     ) -> WasmResult<(ir::SigRef, usize)> {
         let index = SignatureIndex::from_u32(index);
         match self.signatures.entry(index) {
@@ -404,7 +341,6 @@ impl TranslationState {
                 Ok(*entry.insert((sig, normal_args(&func.dfg.signatures[sig]))))
             }
         }
->>>>>>> upstream-releases
     }
 
     /// Get the `FuncRef` reference that should be used to make a direct call to function

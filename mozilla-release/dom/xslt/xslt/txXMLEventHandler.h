@@ -115,70 +115,6 @@ class txAXMLEventHandler {
                                 const int32_t aNsID) = 0;
 };
 
-<<<<<<< HEAD
-#define TX_DECL_TXAXMLEVENTHANDLER                                          \
-  virtual nsresult attribute(nsAtom* aPrefix, nsAtom* aLocalName,           \
-                             nsAtom* aLowercaseLocalName, int32_t aNsID,    \
-                             const nsString& aValue) override;              \
-  virtual nsresult attribute(nsAtom* aPrefix, const nsAString& aLocalName,  \
-                             const int32_t aNsID, const nsString& aValue)   \
-      override;                                                             \
-  virtual nsresult characters(const nsAString& aData, bool aDOE) override;  \
-  virtual nsresult comment(const nsString& aData) override;                 \
-  virtual nsresult endDocument(nsresult aResult = NS_OK) override;          \
-  virtual nsresult endElement() override;                                   \
-  virtual nsresult processingInstruction(const nsString& aTarget,           \
-                                         const nsString& aData) override;   \
-  virtual nsresult startDocument() override;                                \
-  virtual nsresult startElement(nsAtom* aPrefix, nsAtom* aLocalName,        \
-                                nsAtom* aLowercaseLocalName, int32_t aNsID) \
-      override;                                                             \
-  virtual nsresult startElement(nsAtom* aPrefix, const nsAString& aName,    \
-                                const int32_t aNsID) override;
-
-class txAOutputXMLEventHandler : public txAXMLEventHandler {
- public:
-  /**
-   * Gets the Mozilla output document
-   *
-   * @param aDocument the Mozilla output document
-   */
-  virtual void getOutputDocument(nsIDocument** aDocument) = 0;
-||||||| merged common ancestors
-#define TX_DECL_TXAXMLEVENTHANDLER                                           \
-    virtual nsresult attribute(nsAtom* aPrefix, nsAtom* aLocalName,        \
-                               nsAtom* aLowercaseLocalName, int32_t aNsID,  \
-                               const nsString& aValue) override;             \
-    virtual nsresult attribute(nsAtom* aPrefix,                             \
-                               const nsAString& aLocalName,                  \
-                               const int32_t aNsID,                          \
-                               const nsString& aValue) override;             \
-    virtual nsresult characters(const nsAString& aData, bool aDOE) override; \
-    virtual nsresult comment(const nsString& aData) override;                \
-    virtual nsresult endDocument(nsresult aResult = NS_OK) override;         \
-    virtual nsresult endElement() override;                                  \
-    virtual nsresult processingInstruction(const nsString& aTarget,          \
-                                           const nsString& aData) override;  \
-    virtual nsresult startDocument() override;                               \
-    virtual nsresult startElement(nsAtom* aPrefix,                          \
-                                  nsAtom* aLocalName,                       \
-                                  nsAtom* aLowercaseLocalName,              \
-                                  int32_t aNsID) override;                   \
-    virtual nsresult startElement(nsAtom* aPrefix,                          \
-                                  const nsAString& aName,                    \
-                                  const int32_t aNsID) override;
-
-
-class txAOutputXMLEventHandler : public txAXMLEventHandler
-{
-public:
-    /**
-     * Gets the Mozilla output document
-     *
-     * @param aDocument the Mozilla output document
-     */
-    virtual void getOutputDocument(nsIDocument** aDocument) = 0;
-=======
 #define TX_DECL_TXAXMLEVENTHANDLER                                          \
   virtual nsresult attribute(nsAtom* aPrefix, nsAtom* aLocalName,           \
                              nsAtom* aLowercaseLocalName, int32_t aNsID,    \
@@ -207,19 +143,10 @@ class txAOutputXMLEventHandler : public txAXMLEventHandler {
    * @param aDocument the Mozilla output document
    */
   virtual void getOutputDocument(mozilla::dom::Document** aDocument) = 0;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-#define TX_DECL_TXAOUTPUTXMLEVENTHANDLER \
-  virtual void getOutputDocument(nsIDocument** aDocument) override;
-||||||| merged common ancestors
-#define TX_DECL_TXAOUTPUTXMLEVENTHANDLER                        \
-    virtual void getOutputDocument(nsIDocument** aDocument) override;
-=======
 #define TX_DECL_TXAOUTPUTXMLEVENTHANDLER \
   virtual void getOutputDocument(mozilla::dom::Document** aDocument) override;
->>>>>>> upstream-releases
 
 /**
  * Interface used to create the appropriate outputhandler

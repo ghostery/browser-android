@@ -29,203 +29,105 @@ const TESTS = [
     focused: "root.elt",
     activedescendant: "body.tagLine",
     key: "VK_LEFT",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "collapsed",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "collapsed"
-=======
     options: {},
     waitFor: "collapsed",
->>>>>>> upstream-releases
   },
   {
     desc: "Expand body container",
     focused: "root.elt",
     activedescendant: "body.tagLine",
     key: "VK_RIGHT",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "expanded",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "expanded"
-=======
     options: {},
     waitFor: "expanded",
->>>>>>> upstream-releases
   },
   {
     desc: "Select header container",
     focused: "root.elt",
     activedescendant: "header.tagLine",
     key: "VK_DOWN",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "inspector-updated",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "inspector-updated"
-=======
     options: {},
     waitFor: "inspector-updated",
->>>>>>> upstream-releases
   },
   {
     desc: "Expand header container",
     focused: "root.elt",
     activedescendant: "header.tagLine",
     key: "VK_RIGHT",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "expanded",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "expanded"
-=======
     options: {},
     waitFor: "expanded",
->>>>>>> upstream-releases
   },
   {
     desc: "Select text container",
     focused: "root.elt",
     activedescendant: "container-0.tagLine",
     key: "VK_DOWN",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "inspector-updated",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "inspector-updated"
-=======
     options: {},
     waitFor: "inspector-updated",
->>>>>>> upstream-releases
   },
   {
     desc: "Select header container again",
     focused: "root.elt",
     activedescendant: "header.tagLine",
     key: "VK_UP",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "inspector-updated",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "inspector-updated"
-=======
     options: {},
     waitFor: "inspector-updated",
->>>>>>> upstream-releases
   },
   {
     desc: "Collapse header container",
     focused: "root.elt",
     activedescendant: "header.tagLine",
     key: "VK_LEFT",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "collapsed",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "collapsed"
-=======
     options: {},
     waitFor: "collapsed",
->>>>>>> upstream-releases
   },
   {
     desc: "Focus on header container tag",
     focused: "header.focusableElms.0",
     activedescendant: "header.tagLine",
     key: "VK_RETURN",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Remove focus from header container tag",
     focused: "root.elt",
     activedescendant: "header.tagLine",
     key: "VK_ESCAPE",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Focus on header container tag again",
     focused: "header.focusableElms.0",
     activedescendant: "header.tagLine",
     key: "VK_SPACE",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Focus on header id attribute",
     focused: "header.focusableElms.1",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Focus on header class attribute",
     focused: "header.focusableElms.2",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Focus on header new attribute",
     focused: "header.focusableElms.3",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Circle back and focus on header tag again",
     focused: "header.focusableElms.0",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Circle back and focus on header new attribute again",
@@ -260,107 +162,57 @@ const TESTS = [
     focused: "header.focusableElms.0",
     activedescendant: "header.tagLine",
     key: "VK_RIGHT",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "expanded",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "expanded"
-=======
     options: {},
     waitFor: "expanded",
->>>>>>> upstream-releases
   },
   {
     desc: "Activate header tag editor",
     focused: "header.editor.tag.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_RETURN",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Activate header id attribute editor",
     focused: "header.editor.attrList.children.0.children.1.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Deselect text in header id attribute editor",
     focused: "header.editor.attrList.children.0.children.1.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Activate header class attribute editor",
     focused: "header.editor.attrList.children.1.children.1.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Deselect text in header class attribute editor",
     focused: "header.editor.attrList.children.1.children.1.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Activate header new attribute editor",
     focused: "header.editor.newAttr.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Circle back and activate header tag editor again",
     focused: "header.editor.tag.inplaceEditor.input",
     activedescendant: "header.tagLine",
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Circle back and activate header new attribute editor again",
@@ -374,29 +226,15 @@ const TESTS = [
     focused: "header.focusableElms.3",
     activedescendant: "header.tagLine",
     key: "VK_ESCAPE",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Move the selection to body and reset focus to container tree",
     focused: "docBody",
     activedescendant: "body.tagLine",
     key: "VK_UP",
-<<<<<<< HEAD
-    options: { },
-    waitFor: "inspector-updated",
-||||||| merged common ancestors
-    options: { },
-    waitFor: "inspector-updated"
-=======
     options: {},
     waitFor: "inspector-updated",
->>>>>>> upstream-releases
   },
 ];
 

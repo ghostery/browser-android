@@ -55,20 +55,11 @@ class DocAccessible : public HyperTextAccessibleWrap,
   NS_DECL_NSIOBSERVER
   NS_DECL_NSIACCESSIBLEPIVOTOBSERVER
 
-<<<<<<< HEAD
- public:
-  DocAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell);
-||||||| merged common ancestors
-public:
-
-  DocAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell);
-=======
  protected:
   typedef mozilla::dom::Document Document;
 
  public:
   DocAccessible(Document* aDocument, PresShell* aPresShell);
->>>>>>> upstream-releases
 
   // nsIScrollPositionListener
   virtual void ScrollPositionWillChange(nscoord aX, nscoord aY) override {}
@@ -244,22 +235,10 @@ public:
    *          notification is processed.
    * @see   NotificationController::HandleNotification
    */
-<<<<<<< HEAD
-  template <class Class, class Arg>
-  void HandleNotification(Class* aInstance,
-                          typename TNotification<Class, Arg>::Callback aMethod,
-                          Arg* aArg);
-||||||| merged common ancestors
-  template<class Class, class Arg>
-  void HandleNotification(Class* aInstance,
-                          typename TNotification<Class, Arg>::Callback aMethod,
-                          Arg* aArg);
-=======
   template <class Class, class... Args>
   void HandleNotification(
       Class* aInstance,
       typename TNotification<Class, Args...>::Callback aMethod, Args*... aArgs);
->>>>>>> upstream-releases
 
   /**
    * Return the cached accessible by the given DOM node if it's in subtree of
@@ -309,21 +288,8 @@ public:
    * null if the node is in a pruned subtree (eg. aria-hidden or unselected deck
    * panel)
    */
-<<<<<<< HEAD
-  enum { eIgnoreARIAHidden = 0, eNoContainerIfARIAHidden = 1 };
-  Accessible* GetAccessibleOrContainer(
-      nsINode* aNode, int aARIAHiddenFlag = eIgnoreARIAHidden) const;
-||||||| merged common ancestors
-  enum {
-    eIgnoreARIAHidden = 0,
-    eNoContainerIfARIAHidden = 1
-  };
-  Accessible* GetAccessibleOrContainer(nsINode* aNode,
-                                       int aARIAHiddenFlag = eIgnoreARIAHidden) const;
-=======
   Accessible* GetAccessibleOrContainer(nsINode* aNode,
                                        bool aNoContainerIfPruned = false) const;
->>>>>>> upstream-releases
 
   /**
    * Return a container accessible for the given DOM node.
@@ -336,16 +302,8 @@ public:
    * Return an accessible for the given node if any, or an immediate accessible
    * container for it.
    */
-<<<<<<< HEAD
-  Accessible* AccessibleOrTrueContainer(
-      nsINode* aNode, int aARIAHiddenFlag = eIgnoreARIAHidden) const;
-||||||| merged common ancestors
-  Accessible* AccessibleOrTrueContainer(nsINode* aNode,
-                                        int aARIAHiddenFlag = eIgnoreARIAHidden) const;
-=======
   Accessible* AccessibleOrTrueContainer(
       nsINode* aNode, bool aNoContainerIfPruned = false) const;
->>>>>>> upstream-releases
 
   /**
    * Return an accessible for the given node or its first accessible descendant.
@@ -761,17 +719,8 @@ public:
   friend class EventTree;
   friend class NotificationController;
 
-<<<<<<< HEAD
- private:
-  nsIPresShell* mPresShell;
-||||||| merged common ancestors
-private:
-
-  nsIPresShell* mPresShell;
-=======
  private:
   PresShell* mPresShell;
->>>>>>> upstream-releases
 
   // Exclusively owned by IPDL so don't manually delete it!
   DocAccessibleChild* mIPCDoc;

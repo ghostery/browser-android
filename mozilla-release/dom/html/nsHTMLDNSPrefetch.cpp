@@ -94,85 +94,33 @@ nsresult nsHTMLDNSPrefetch::Shutdown() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool nsHTMLDNSPrefetch::IsAllowed(nsIDocument *aDocument) {
-||||||| merged common ancestors
-bool
-nsHTMLDNSPrefetch::IsAllowed (nsIDocument *aDocument)
-{
-=======
 bool nsHTMLDNSPrefetch::IsAllowed(Document* aDocument) {
->>>>>>> upstream-releases
   // There is no need to do prefetch on non UI scenarios such as XMLHttpRequest.
   return aDocument->IsDNSPrefetchAllowed() && aDocument->GetWindow();
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::Prefetch(Link *aElement, uint16_t flags) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::Prefetch(Link *aElement, uint16_t flags)
-{
-=======
 nsresult nsHTMLDNSPrefetch::Prefetch(Link* aElement, uint16_t flags) {
->>>>>>> upstream-releases
   if (!(sInitialized && sPrefetches && sDNSService && sDNSListener))
     return NS_ERROR_NOT_AVAILABLE;
 
   return sPrefetches->Add(flags, aElement);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::PrefetchLow(Link *aElement) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::PrefetchLow(Link *aElement)
-{
-=======
 nsresult nsHTMLDNSPrefetch::PrefetchLow(Link* aElement) {
->>>>>>> upstream-releases
   return Prefetch(aElement, nsIDNSService::RESOLVE_PRIORITY_LOW);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::PrefetchMedium(Link *aElement) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::PrefetchMedium(Link *aElement)
-{
-=======
 nsresult nsHTMLDNSPrefetch::PrefetchMedium(Link* aElement) {
->>>>>>> upstream-releases
   return Prefetch(aElement, nsIDNSService::RESOLVE_PRIORITY_MEDIUM);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::PrefetchHigh(Link *aElement) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::PrefetchHigh(Link *aElement)
-{
-=======
 nsresult nsHTMLDNSPrefetch::PrefetchHigh(Link* aElement) {
->>>>>>> upstream-releases
   return Prefetch(aElement, 0);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::Prefetch(const nsAString &hostname, bool isHttps,
-                                     const OriginAttributes &aOriginAttributes,
-                                     uint16_t flags) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::Prefetch(const nsAString &hostname, bool isHttps,
-                            const OriginAttributes &aOriginAttributes,
-                            uint16_t flags)
-{
-=======
 nsresult nsHTMLDNSPrefetch::Prefetch(const nsAString& hostname, bool isHttps,
                                      const OriginAttributes& aOriginAttributes,
                                      uint16_t flags) {
->>>>>>> upstream-releases
   if (IsNeckoChild()) {
     // We need to check IsEmpty() because net_IsValidHostName()
     // considers empty strings to be valid hostnames
@@ -212,79 +160,35 @@ nsresult nsHTMLDNSPrefetch::Prefetch(const nsAString& hostname, bool isHttps,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::PrefetchLow(
-    const nsAString &hostname, bool isHttps,
-    const OriginAttributes &aOriginAttributes) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::PrefetchLow(const nsAString &hostname, bool isHttps,
-                               const OriginAttributes &aOriginAttributes)
-{
-=======
 nsresult nsHTMLDNSPrefetch::PrefetchLow(
     const nsAString& hostname, bool isHttps,
     const OriginAttributes& aOriginAttributes) {
->>>>>>> upstream-releases
   return Prefetch(hostname, isHttps, aOriginAttributes,
                   nsIDNSService::RESOLVE_PRIORITY_LOW);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::PrefetchMedium(
-    const nsAString &hostname, bool isHttps,
-    const OriginAttributes &aOriginAttributes) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::PrefetchMedium(const nsAString &hostname, bool isHttps,
-                                  const OriginAttributes &aOriginAttributes)
-{
-=======
 nsresult nsHTMLDNSPrefetch::PrefetchMedium(
     const nsAString& hostname, bool isHttps,
     const OriginAttributes& aOriginAttributes) {
->>>>>>> upstream-releases
   return Prefetch(hostname, isHttps, aOriginAttributes,
                   nsIDNSService::RESOLVE_PRIORITY_MEDIUM);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::PrefetchHigh(
-    const nsAString &hostname, bool isHttps,
-    const OriginAttributes &aOriginAttributes) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::PrefetchHigh(const nsAString &hostname, bool isHttps,
-                                const OriginAttributes &aOriginAttributes)
-{
-=======
 nsresult nsHTMLDNSPrefetch::PrefetchHigh(
     const nsAString& hostname, bool isHttps,
     const OriginAttributes& aOriginAttributes) {
->>>>>>> upstream-releases
   return Prefetch(hostname, isHttps, aOriginAttributes, 0);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::CancelPrefetch(Link *aElement, uint16_t flags,
-                                           nsresult aReason) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::CancelPrefetch(Link *aElement,
-                                  uint16_t flags,
-                                  nsresult aReason)
-{
-=======
 nsresult nsHTMLDNSPrefetch::CancelPrefetch(Link* aElement, uint16_t flags,
                                            nsresult aReason) {
->>>>>>> upstream-releases
   if (!(sInitialized && sPrefetches && sDNSService && sDNSListener))
     return NS_ERROR_NOT_AVAILABLE;
 
   nsAutoString hostname;
   aElement->GetHostname(hostname);
 
-  Element *element = aElement->GetElement();
+  Element* element = aElement->GetElement();
   NS_ENSURE_TRUE(element, NS_ERROR_FAILURE);
 
   nsAutoString protocol;
@@ -298,24 +202,10 @@ nsresult nsHTMLDNSPrefetch::CancelPrefetch(Link* aElement, uint16_t flags,
                         aReason);
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::CancelPrefetch(
-    const nsAString &hostname, bool isHttps,
-    const OriginAttributes &aOriginAttributes, uint16_t flags,
-    nsresult aReason) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::CancelPrefetch(const nsAString &hostname, bool isHttps,
-                                  const OriginAttributes &aOriginAttributes,
-                                  uint16_t flags,
-                                  nsresult aReason)
-{
-=======
 nsresult nsHTMLDNSPrefetch::CancelPrefetch(
     const nsAString& hostname, bool isHttps,
     const OriginAttributes& aOriginAttributes, uint16_t flags,
     nsresult aReason) {
->>>>>>> upstream-releases
   // Forward this request to Necko Parent if we're a child process
   if (IsNeckoChild()) {
     // We need to check IsEmpty() because net_IsValidHostName()
@@ -351,51 +241,19 @@ nsresult nsHTMLDNSPrefetch::CancelPrefetch(
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::CancelPrefetchLow(Link *aElement,
-                                              nsresult aReason) {
-  return CancelPrefetch(aElement, nsIDNSService::RESOLVE_PRIORITY_LOW, aReason);
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::CancelPrefetchLow(Link *aElement, nsresult aReason)
-{
-  return CancelPrefetch(aElement, nsIDNSService::RESOLVE_PRIORITY_LOW,
-                        aReason);
-=======
 nsresult nsHTMLDNSPrefetch::CancelPrefetchLow(Link* aElement,
                                               nsresult aReason) {
   return CancelPrefetch(aElement, nsIDNSService::RESOLVE_PRIORITY_LOW, aReason);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::CancelPrefetchLow(
-    const nsAString &hostname, bool isHttps,
-    const OriginAttributes &aOriginAttributes, nsresult aReason) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::CancelPrefetchLow(const nsAString &hostname, bool isHttps,
-                                     const OriginAttributes &aOriginAttributes,
-                                     nsresult aReason)
-{
-=======
 nsresult nsHTMLDNSPrefetch::CancelPrefetchLow(
     const nsAString& hostname, bool isHttps,
     const OriginAttributes& aOriginAttributes, nsresult aReason) {
->>>>>>> upstream-releases
   return CancelPrefetch(hostname, isHttps, aOriginAttributes,
                         nsIDNSService::RESOLVE_PRIORITY_LOW, aReason);
 }
 
-<<<<<<< HEAD
-void nsHTMLDNSPrefetch::LinkDestroyed(Link *aLink) {
-||||||| merged common ancestors
-void
-nsHTMLDNSPrefetch::LinkDestroyed(Link* aLink)
-{
-=======
 void nsHTMLDNSPrefetch::LinkDestroyed(Link* aLink) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLink->IsInDNSPrefetch());
   if (sPrefetches) {
     // Clean up all the possible links at once.
@@ -408,38 +266,16 @@ void nsHTMLDNSPrefetch::LinkDestroyed(Link* aLink) {
 NS_IMPL_ISUPPORTS(nsHTMLDNSPrefetch::nsListener, nsIDNSListener)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLDNSPrefetch::nsListener::OnLookupComplete(nsICancelable *request,
-                                                nsIDNSRecord *rec,
-                                                nsresult status) {
-||||||| merged common ancestors
-nsHTMLDNSPrefetch::nsListener::OnLookupComplete(nsICancelable *request,
-                                              nsIDNSRecord  *rec,
-                                              nsresult       status)
-{
-=======
 nsHTMLDNSPrefetch::nsListener::OnLookupComplete(nsICancelable* request,
                                                 nsIDNSRecord* rec,
                                                 nsresult status) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLDNSPrefetch::nsListener::OnLookupByTypeComplete(nsICancelable *request,
-                                                      nsIDNSByTypeRecord *res,
-                                                      nsresult status) {
-||||||| merged common ancestors
-nsHTMLDNSPrefetch::nsListener::OnLookupByTypeComplete(nsICancelable      *request,
-                                                      nsIDNSByTypeRecord *res,
-                                                      nsresult            status)
-{
-=======
 nsHTMLDNSPrefetch::nsListener::OnLookupByTypeComplete(nsICancelable* request,
                                                       nsIDNSByTypeRecord* res,
                                                       nsresult status) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -473,15 +309,7 @@ void nsHTMLDNSPrefetch::nsDeferrals::Flush() {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLDNSPrefetch::nsDeferrals::Add(uint16_t flags, Link *aElement) {
-||||||| merged common ancestors
-nsresult
-nsHTMLDNSPrefetch::nsDeferrals::Add(uint16_t flags, Link *aElement)
-{
-=======
 nsresult nsHTMLDNSPrefetch::nsDeferrals::Add(uint16_t flags, Link* aElement) {
->>>>>>> upstream-releases
   // The FIFO has no lock, so it can only be accessed on main thread
   NS_ASSERTION(NS_IsMainThread(), "nsDeferrals::Add must be on main thread");
 
@@ -519,7 +347,7 @@ void nsHTMLDNSPrefetch::nsDeferrals::SubmitQueue() {
         nsCOMPtr<nsIURI> hrefURI(link ? link->GetURI() : nullptr);
         bool isLocalResource = false;
         nsresult rv = NS_OK;
-        Element *element = link->GetElement();
+        Element* element = link->GetElement();
 
         hostName.Truncate();
         bool isHttps = false;
@@ -582,15 +410,7 @@ void nsHTMLDNSPrefetch::nsDeferrals::SubmitQueue() {
 
 void nsHTMLDNSPrefetch::nsDeferrals::Activate() {
   // Register as an observer for the document loader
-<<<<<<< HEAD
-  nsCOMPtr<nsIWebProgress> progress =
-      do_GetService(NS_DOCUMENTLOADER_SERVICE_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIWebProgress> progress =
-    do_GetService(NS_DOCUMENTLOADER_SERVICE_CONTRACTID);
-=======
   nsCOMPtr<nsIWebProgress> progress = components::DocLoader::Service();
->>>>>>> upstream-releases
   if (progress)
     progress->AddProgressListener(this, nsIWebProgress::NOTIFY_STATE_DOCUMENT);
 
@@ -616,20 +436,9 @@ void nsHTMLDNSPrefetch::nsDeferrals::RemoveUnboundLinks() {
 
 // nsITimer related method
 
-<<<<<<< HEAD
-void nsHTMLDNSPrefetch::nsDeferrals::Tick(nsITimer *aTimer, void *aClosure) {
-  nsHTMLDNSPrefetch::nsDeferrals *self =
-      (nsHTMLDNSPrefetch::nsDeferrals *)aClosure;
-||||||| merged common ancestors
-void
-nsHTMLDNSPrefetch::nsDeferrals::Tick(nsITimer *aTimer, void *aClosure)
-{
-  nsHTMLDNSPrefetch::nsDeferrals *self = (nsHTMLDNSPrefetch::nsDeferrals *) aClosure;
-=======
 void nsHTMLDNSPrefetch::nsDeferrals::Tick(nsITimer* aTimer, void* aClosure) {
   nsHTMLDNSPrefetch::nsDeferrals* self =
       (nsHTMLDNSPrefetch::nsDeferrals*)aClosure;
->>>>>>> upstream-releases
 
   NS_ASSERTION(NS_IsMainThread(), "nsDeferrals::Tick must be on main thread");
   NS_ASSERTION(self->mTimerArmed, "Timer is not armed");
@@ -645,16 +454,8 @@ void nsHTMLDNSPrefetch::nsDeferrals::Tick(nsITimer* aTimer, void* aClosure) {
 //////////// nsIWebProgressListener methods
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLDNSPrefetch::nsDeferrals::OnStateChange(nsIWebProgress *aWebProgress,
-                                              nsIRequest *aRequest,
-||||||| merged common ancestors
-nsHTMLDNSPrefetch::nsDeferrals::OnStateChange(nsIWebProgress* aWebProgress,
-                                              nsIRequest *aRequest,
-=======
 nsHTMLDNSPrefetch::nsDeferrals::OnStateChange(nsIWebProgress* aWebProgress,
                                               nsIRequest* aRequest,
->>>>>>> upstream-releases
                                               uint32_t progressStateFlags,
                                               nsresult aStatus) {
   // The FIFO has no lock, so it can only be accessed on main thread
@@ -686,36 +487,17 @@ nsHTMLDNSPrefetch::nsDeferrals::OnProgressChange(nsIWebProgress* aProgress,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLDNSPrefetch::nsDeferrals::OnLocationChange(nsIWebProgress *aWebProgress,
-                                                 nsIRequest *aRequest,
-                                                 nsIURI *location,
-                                                 uint32_t aFlags) {
-||||||| merged common ancestors
-nsHTMLDNSPrefetch::nsDeferrals::OnLocationChange(nsIWebProgress* aWebProgress,
-                                                 nsIRequest* aRequest,
-                                                 nsIURI *location,
-                                                 uint32_t aFlags)
-{
-=======
 nsHTMLDNSPrefetch::nsDeferrals::OnLocationChange(nsIWebProgress* aWebProgress,
                                                  nsIRequest* aRequest,
                                                  nsIURI* location,
                                                  uint32_t aFlags) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-nsHTMLDNSPrefetch::nsDeferrals::OnStatusChange(nsIWebProgress *aWebProgress,
-                                               nsIRequest *aRequest,
+nsHTMLDNSPrefetch::nsDeferrals::OnStatusChange(nsIWebProgress* aWebProgress,
+                                               nsIRequest* aRequest,
                                                nsresult aStatus,
-<<<<<<< HEAD
-                                               const char16_t *aMessage) {
-||||||| merged common ancestors
-                                               const char16_t* aMessage)
-{
-=======
                                                const char16_t* aMessage) {
   return NS_OK;
 }
@@ -724,48 +506,21 @@ NS_IMETHODIMP
 nsHTMLDNSPrefetch::nsDeferrals::OnSecurityChange(nsIWebProgress* aWebProgress,
                                                  nsIRequest* aRequest,
                                                  uint32_t aState) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLDNSPrefetch::nsDeferrals::OnSecurityChange(nsIWebProgress *aWebProgress,
-                                                 nsIRequest *aRequest,
-                                                 uint32_t state) {
-||||||| merged common ancestors
-nsHTMLDNSPrefetch::nsDeferrals::OnSecurityChange(nsIWebProgress *aWebProgress,
-                                                 nsIRequest *aRequest,
-                                                 uint32_t aOldState,
-                                                 uint32_t aState,
-                                                 const nsAString& aContentBlockingLogJSON)
-{
-=======
 nsHTMLDNSPrefetch::nsDeferrals::OnContentBlockingEvent(
     nsIWebProgress* aWebProgress, nsIRequest* aRequest, uint32_t aEvent) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 //////////// nsIObserver method
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLDNSPrefetch::nsDeferrals::Observe(nsISupports *subject, const char *topic,
-                                        const char16_t *data) {
-  if (!strcmp(topic, "xpcom-shutdown")) Flush();
-||||||| merged common ancestors
-nsHTMLDNSPrefetch::nsDeferrals::Observe(nsISupports *subject,
-                                        const char *topic,
-                                        const char16_t *data)
-{
-  if (!strcmp(topic, "xpcom-shutdown"))
-    Flush();
-=======
 nsHTMLDNSPrefetch::nsDeferrals::Observe(nsISupports* subject, const char* topic,
                                         const char16_t* data) {
   if (!strcmp(topic, "xpcom-shutdown")) Flush();
->>>>>>> upstream-releases
 
   return NS_OK;
 }

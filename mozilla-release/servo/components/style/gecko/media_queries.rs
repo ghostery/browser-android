@@ -4,10 +4,6 @@
 
 //! Gecko's media-query device and expression representation.
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use app_units::AU_PER_PX;
-=======
 use crate::custom_properties::CssEnvironment;
 use crate::gecko::values::{convert_nscolor_to_rgba, convert_rgba_to_nscolor};
 use crate::gecko_bindings::bindings;
@@ -17,24 +13,8 @@ use crate::properties::ComputedValues;
 use crate::string_cache::Atom;
 use crate::values::computed::font::FontSize;
 use crate::values::{CustomIdent, KeyframesName};
->>>>>>> upstream-releases
 use app_units::Au;
-<<<<<<< HEAD
 use app_units::AU_PER_PX;
-use crate::custom_properties::CssEnvironment;
-use crate::gecko::values::{convert_nscolor_to_rgba, convert_rgba_to_nscolor};
-use crate::gecko_bindings::bindings;
-use crate::gecko_bindings::structs;
-use crate::gecko_bindings::structs::{nsPresContext, RawGeckoPresContextBorrowed};
-use crate::media_queries::MediaType;
-use crate::properties::ComputedValues;
-use crate::string_cache::Atom;
-use crate::values::computed::font::FontSize;
-use crate::values::{CustomIdent, KeyframesName};
-||||||| merged common ancestors
-=======
-use app_units::AU_PER_PX;
->>>>>>> upstream-releases
 use cssparser::RGBA;
 use euclid::Size2D;
 use euclid::TypedScale;

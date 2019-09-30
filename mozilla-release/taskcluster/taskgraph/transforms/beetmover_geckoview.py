@@ -7,29 +7,13 @@ Transform the beetmover task into an actual task description.
 
 from __future__ import absolute_import, print_function, unicode_literals
 
-<<<<<<< HEAD
-import re
-
-from taskgraph.loader.single_dep import schema
-||||||| merged common ancestors
-=======
 from copy import deepcopy
 
 from taskgraph.loader.single_dep import schema
->>>>>>> upstream-releases
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.transforms.beetmover import \
     craft_release_properties as beetmover_craft_release_properties
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
-<<<<<<< HEAD
-from taskgraph.util.schema import resolve_keyed_by, optionally_keyed_by
-from taskgraph.util.scriptworker import (generate_beetmover_artifact_map,
-                                         generate_beetmover_compressed_upstream_artifacts,
-                                         get_worker_type_for_scope)
-||||||| merged common ancestors
-from taskgraph.util.schema import validate_schema, Schema, resolve_keyed_by, optionally_keyed_by
-from taskgraph.util.scriptworker import get_worker_type_for_scope
-=======
 from taskgraph.util.declarative_artifacts import (
     get_geckoview_template_vars,
     get_geckoview_upstream_artifacts,
@@ -38,55 +22,11 @@ from taskgraph.util.declarative_artifacts import (
 from taskgraph.util.schema import resolve_keyed_by, optionally_keyed_by
 from taskgraph.util.scriptworker import (generate_beetmover_artifact_map,
                                          get_worker_type_for_scope)
->>>>>>> upstream-releases
 from taskgraph.transforms.task import task_description_schema
 from voluptuous import Required, Optional
 
 
-<<<<<<< HEAD
-_ARTIFACT_ID_PER_PLATFORM = {
-    'android-aarch64': 'geckoview{update_channel}-arm64-v8a',
-    'android-api-16': 'geckoview{update_channel}-armeabi-v7a',
-    'android-x86': 'geckoview{update_channel}-x86',
-    'android-x86_64': 'geckoview{update_channel}-x86_64',
-}
-
-_MOZ_UPDATE_CHANNEL_PER_BRANCH = {
-    'mozilla-release': '',
-    'mozilla-beta': '-beta',
-    'mozilla-central': '-nightly',
-    'try': '-nightly-try',
-    'maple': '-nightly-maple',
-}
-
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
 beetmover_description_schema = schema.extend({
-||||||| merged common ancestors
-_ARTIFACT_ID_PER_PLATFORM = {
-    'android-aarch64': 'geckoview{update_channel}-arm64-v8a',
-    'android-api-16': 'geckoview{update_channel}-armeabi-v7a',
-    'android-x86': 'geckoview{update_channel}-x86',
-    'android-x86_64': 'geckoview{update_channel}-x86_64',
-}
-
-_MOZ_UPDATE_CHANNEL_PER_BRANCH = {
-    'mozilla-release': '',
-    'mozilla-beta': '-beta',
-    'mozilla-central': '-nightly',
-    'try': '-nightly-try',
-    'maple': '-nightly-maple',
-}
-
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-transforms = TransformSequence()
-
-beetmover_description_schema = Schema({
-    Required('dependent-task'): object,
-=======
-beetmover_description_schema = schema.extend({
->>>>>>> upstream-releases
     Required('depname', default='build'): basestring,
     Optional('label'): basestring,
     Optional('treeherder'): task_description_schema['treeherder'],
@@ -183,14 +123,6 @@ def make_task_worker(config, jobs):
                 )
             )
 
-<<<<<<< HEAD
-        worker = {
-||||||| merged common ancestors
-        build_task = list(job["dependencies"].keys())[0]
-        build_task_ref = "<" + str(build_task) + ">"
-
-        worker = {
-=======
         job['worker'] = {
             'artifact-map': generate_beetmover_artifact_map(
                 config,
@@ -201,42 +133,11 @@ def make_task_worker(config, jobs):
                     job['attributes'].get('update-channel'),
                 )
             ),
->>>>>>> upstream-releases
             'implementation': 'beetmover-maven',
             'release-properties': craft_release_properties(config, job),
-<<<<<<< HEAD
-||||||| merged common ancestors
-            'upstream-artifacts': generate_upstream_artifacts(build_task_ref)
-=======
             'upstream-artifacts': get_geckoview_upstream_artifacts(config, job),
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        upstream_artifacts = generate_beetmover_compressed_upstream_artifacts(job)
-
-        worker['upstream-artifacts'] = upstream_artifacts
-
-        version_groups = re.match(r'(\d+).(\d+).*', config.params['version'])
-        if version_groups:
-            major_version, minor_version = version_groups.groups()
-
-        template_vars = {
-            'artifact_id': worker['release-properties']['artifact-id'],
-            'build_date': config.params['moz_build_date'],
-            'major_version': major_version,
-            'minor_version': minor_version,
-        }
-        worker['artifact-map'] = generate_beetmover_artifact_map(
-            config, job, **template_vars)
-
-        job["worker"] = worker
-
-||||||| merged common ancestors
-        job["worker"] = worker
-
-=======
->>>>>>> upstream-releases
         yield job
 
 

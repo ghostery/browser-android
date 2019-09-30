@@ -13,17 +13,9 @@
 [package]
 edition = "2018"
 name = "rkv"
-<<<<<<< HEAD
-version = "0.5.1"
-authors = ["Richard Newman <rnewman@twinql.com>"]
-||||||| merged common ancestors
-version = "0.4.1"
-authors = ["Richard Newman <rnewman@twinql.com>"]
-=======
 version = "0.9.6"
 authors = ["Richard Newman <rnewman@twinql.com>", "Nan Jiang <najiang@mozilla.com>", "Myk Melez <myk@mykzilla.org>"]
 exclude = ["/tests/envs/*"]
->>>>>>> upstream-releases
 description = "a simple, humane, typed Rust interface to LMDB"
 homepage = "https://github.com/mozilla/rkv"
 readme = "README.md"
@@ -67,13 +59,7 @@ version = "1.0"
 version = "1.7.0"
 
 [dependencies.uuid]
-<<<<<<< HEAD
-version = "0.6"
-||||||| merged common ancestors
-version = "0.5"
-=======
 version = "0.7"
->>>>>>> upstream-releases
 [dev-dependencies.byteorder]
 version = "1"
 

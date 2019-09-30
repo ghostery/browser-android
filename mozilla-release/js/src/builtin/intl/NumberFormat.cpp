@@ -78,18 +78,8 @@ static const JSFunctionSpec numberFormat_methods[] = {
     JS_FN(js_toSource_str, numberFormat_toSource, 0, 0), JS_FS_END};
 
 static const JSPropertySpec numberFormat_properties[] = {
-<<<<<<< HEAD
-    JS_SELF_HOSTED_GET("format", "Intl_NumberFormat_format_get", 0),
-    JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY), JS_PS_END};
-||||||| merged common ancestors
-    JS_SELF_HOSTED_GET("format", "Intl_NumberFormat_format_get", 0),
-    JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY),
-    JS_PS_END
-};
-=======
     JS_SELF_HOSTED_GET("format", "$Intl_NumberFormat_format_get", 0),
     JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY), JS_PS_END};
->>>>>>> upstream-releases
 
 /**
  * 11.2.1 Intl.NumberFormat([ locales [, options]])
@@ -99,22 +89,11 @@ static const JSPropertySpec numberFormat_properties[] = {
 static bool NumberFormat(JSContext* cx, const CallArgs& args, bool construct) {
   // Step 1 (Handled by OrdinaryCreateFromConstructor fallback code).
 
-<<<<<<< HEAD
-  // Step 2 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
-  RootedObject proto(cx);
-  if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-    return false;
-  }
-||||||| merged common ancestors
-    numberFormat->setReservedSlot(NumberFormatObject::INTERNALS_SLOT, NullValue());
-    numberFormat->setReservedSlot(NumberFormatObject::UNUMBER_FORMAT_SLOT, PrivateValue(nullptr));
-=======
   // Step 2 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
   RootedObject proto(cx);
   if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_Null, &proto)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!proto) {
     proto = GlobalObject::getOrCreateNumberFormatPrototype(cx, cx->global());
@@ -468,76 +447,6 @@ static FieldType GetFieldTypeForNumberField(UNumberFormatFields fieldName,
       if (IsNaN(d)) {
         return &JSAtomState::nan;
       }
-<<<<<<< HEAD
-      if (!IsFinite(d)) {
-        return &JSAtomState::infinity;
-      }
-      return &JSAtomState::integer;
-
-    case UNUM_GROUPING_SEPARATOR_FIELD:
-      return &JSAtomState::group;
-
-    case UNUM_DECIMAL_SEPARATOR_FIELD:
-      return &JSAtomState::decimal;
-
-    case UNUM_FRACTION_FIELD:
-      return &JSAtomState::fraction;
-
-    case UNUM_SIGN_FIELD: {
-      // Manual trawling through the ICU call graph appears to indicate that
-      // the basic formatting we request will never include a positive sign.
-      // But this analysis may be mistaken, so don't absolutely trust it.
-      MOZ_ASSERT(!IsNaN(d),
-                 "ICU appearing not to produce positive-sign among fields, "
-                 "plus our coercing all NaNs to one with sign bit unset "
-                 "(i.e. \"positive\"), means we shouldn't reach here with a "
-                 "NaN value");
-      return IsNegative(d) ? &JSAtomState::minusSign : &JSAtomState::plusSign;
-    }
-
-    case UNUM_PERCENT_FIELD:
-      return &JSAtomState::percentSign;
-
-    case UNUM_CURRENCY_FIELD:
-      return &JSAtomState::currency;
-
-    case UNUM_PERMILL_FIELD:
-      MOZ_ASSERT_UNREACHABLE(
-          "unexpected permill field found, even though "
-          "we don't use any user-defined patterns that "
-          "would require a permill field");
-      break;
-
-    case UNUM_EXPONENT_SYMBOL_FIELD:
-    case UNUM_EXPONENT_SIGN_FIELD:
-    case UNUM_EXPONENT_FIELD:
-      MOZ_ASSERT_UNREACHABLE(
-          "exponent field unexpectedly found in "
-          "formatted number, even though UNUM_SCIENTIFIC "
-          "and scientific notation were never requested");
-      break;
-||||||| merged common ancestors
-
-      case UNUM_PERCENT_FIELD:
-        return &JSAtomState::percentSign;
-
-      case UNUM_CURRENCY_FIELD:
-        return &JSAtomState::currency;
-
-      case UNUM_PERMILL_FIELD:
-        MOZ_ASSERT_UNREACHABLE("unexpected permill field found, even though "
-                               "we don't use any user-defined patterns that "
-                               "would require a permill field");
-        break;
-
-      case UNUM_EXPONENT_SYMBOL_FIELD:
-      case UNUM_EXPONENT_SIGN_FIELD:
-      case UNUM_EXPONENT_FIELD:
-        MOZ_ASSERT_UNREACHABLE("exponent field unexpectedly found in "
-                               "formatted number, even though UNUM_SCIENTIFIC "
-                               "and scientific notation were never requested");
-        break;
-=======
       if (!IsFinite(d)) {
         return &JSAtomState::infinity;
       }
@@ -603,7 +512,6 @@ static FieldType GetFieldTypeForNumberField(UNumberFormatFields fieldName,
       break;
 #  endif
 #endif
->>>>>>> upstream-releases
 
 #ifndef U_HIDE_DEPRECATED_API
     case UNUM_FIELD_COUNT:

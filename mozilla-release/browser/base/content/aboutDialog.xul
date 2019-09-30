@@ -33,17 +33,6 @@
 #ifdef XP_MACOSX
 #include macWindow.inc.xul
 #endif
-<<<<<<< HEAD
-
-  <linkset>
-    <link rel="localization" href="branding/brand.ftl"/>
-    <link rel="localization" href="browser/aboutDialog.ftl"/>
-  </linkset>
-
-  <script type="application/javascript" src="chrome://browser/content/aboutDialog.js"/>
-||||||| merged common ancestors
-  <script type="application/javascript" src="chrome://browser/content/aboutDialog.js"/>
-=======
 
   <linkset>
     <html:link rel="localization" href="branding/brand.ftl"/>
@@ -51,7 +40,6 @@
   </linkset>
 
   <script src="chrome://browser/content/aboutDialog.js"/>
->>>>>>> upstream-releases
 #ifdef MOZ_UPDATER
   <script src="chrome://browser/content/aboutDialog-appUpdater.js"/>
 #endif
@@ -65,16 +53,8 @@
           Extended Support Release
         </label>
         <hbox align="baseline">
-<<<<<<< HEAD
-          <label id="version"/>
-          <label id="releasenotes" class="text-link" hidden="true" data-l10n-id="releaseNotes-link"></label>
-||||||| merged common ancestors
-#expand   <label id="version">__MOZ_APP_VERSION_DISPLAY__</label>
-          <label id="releasenotes" class="text-link" hidden="true">&releaseNotes.link;</label>
-=======
           <label id="version"/>
           <label id="releasenotes" is="text-link" hidden="true" data-l10n-id="releaseNotes-link"></label>
->>>>>>> upstream-releases
         </hbox>
 
         <label id="distribution" class="text-blurb"/>
@@ -114,16 +94,8 @@
                 <image class="update-throbber"/>
                 <label data-l10n-id="update-applying"></label>
               </hbox>
-<<<<<<< HEAD
-              <hbox id="downloadFailed" align="center" data-l10n-id="update-failed">
-                <label id="failedLink" class="text-link" data-l10n-name="failed-link"></label>
-||||||| merged common ancestors
-              <hbox id="downloadFailed" align="center">
-                <label>&update.failed.start;</label><label id="failedLink" class="text-link">&update.failed.linkText;</label><label>&update.failed.end;</label>
-=======
               <hbox id="downloadFailed" align="center" data-l10n-id="update-failed">
                 <label id="failedLink" is="text-link" data-l10n-name="failed-link"></label>
->>>>>>> upstream-releases
               </hbox>
               <hbox id="policyDisabled" align="center">
                 <label data-l10n-id="update-adminDisabled"></label>
@@ -134,27 +106,11 @@
               <hbox id="otherInstanceHandlingUpdates" align="center">
                 <label data-l10n-id="update-otherInstanceHandlingUpdates"></label>
               </hbox>
-<<<<<<< HEAD
-              <hbox id="manualUpdate" align="center" data-l10n-id="update-manual">
-                <label id="manualLink" class="text-link" data-l10n-name="manual-link"/>
-||||||| merged common ancestors
-              <hbox id="manualUpdate" align="center">
-                <label>&update.manual.start;</label><label id="manualLink" class="text-link"/><label>&update.manual.end;</label>
-=======
               <hbox id="manualUpdate" align="center" data-l10n-id="update-manual">
                 <label id="manualLink" is="text-link" data-l10n-name="manual-link"/>
->>>>>>> upstream-releases
               </hbox>
-<<<<<<< HEAD
-              <hbox id="unsupportedSystem" align="center" data-l10n-id="update-unsupported">
-                <label id="unsupportedLink" class="text-link" data-l10n-name="unsupported-link"></label>
-||||||| merged common ancestors
-              <hbox id="unsupportedSystem" align="center">
-                <label>&update.unsupported.start;</label><label id="unsupportedLink" class="text-link">&update.unsupported.linkText;</label><label>&update.unsupported.end;</label>
-=======
               <hbox id="unsupportedSystem" align="center" data-l10n-id="update-unsupported">
                 <label id="unsupportedLink" is="text-link" data-l10n-name="unsupported-link"></label>
->>>>>>> upstream-releases
               </hbox>
               <hbox id="restarting" align="center">
                 <image class="update-throbber"/>
@@ -170,69 +126,28 @@
           </description>
 #endif
           <vbox id="experimental" hidden="true">
-<<<<<<< HEAD
-            <description class="text-blurb" id="warningDesc" data-l10n-id="warningDesc-version"></description>
-            <description class="text-blurb" id="communityExperimentalDesc" data-l10n-id="community-exp">
-              <label class="text-link" href="http://www.mozilla.org/" data-l10n-name="community-exp-mozillaLink"></label>
-              <label class="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-exp-creditsLink"></label>
-||||||| merged common ancestors
-            <description class="text-blurb" id="warningDesc">
-              &warningDesc.version;
-            </description>
-            <description class="text-blurb" id="communityExperimentalDesc">
-              &community.exp.start;<label class="text-link" href="http://www.mozilla.org/">&community.exp.mozillaLink;</label>&community.exp.middle;<label class="text-link" useoriginprincipal="true" href="about:credits">&community.exp.creditsLink;</label>&community.exp.end;
-=======
             <description class="text-blurb" id="warningDesc" data-l10n-id="warningDesc-version"></description>
             <description class="text-blurb" id="communityExperimentalDesc" data-l10n-id="community-exp">
               <label is="text-link" href="http://www.mozilla.org/" data-l10n-name="community-exp-mozillaLink"></label>
               <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-exp-creditsLink"></label>
->>>>>>> upstream-releases
             </description>
           </vbox>
-<<<<<<< HEAD
-          <description class="text-blurb" id="communityDesc" data-l10n-id="community-2">
-            <label class="text-link" href="http://www.mozilla.org/" data-l10n-name="community-mozillaLink"></label>
-            <label class="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-creditsLink"></label>
-||||||| merged common ancestors
-          <description class="text-blurb" id="communityDesc">
-            &community.start2;<label class="text-link" href="http://www.mozilla.org/">&community.mozillaLink;</label>&community.middle2;<label class="text-link" useoriginprincipal="true" href="about:credits">&community.creditsLink;</label>&community.end3;
-=======
           <description class="text-blurb" id="communityDesc" data-l10n-id="community-2">
             <label is="text-link" href="http://www.mozilla.org/" data-l10n-name="community-mozillaLink"></label>
             <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-creditsLink"></label>
->>>>>>> upstream-releases
           </description>
-<<<<<<< HEAD
-          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus">
-            <label class="text-link" href="https://donate.mozilla.org/?utm_source=firefox&#38;utm_medium=referral&#38;utm_campaign=firefox_about&#38;utm_content=firefox_about" data-l10n-name="helpus-donateLink"></label>
-            <label class="text-link" href="http://www.mozilla.org/contribute/" data-l10n-name="helpus-getInvolvedLink"></label>
-||||||| merged common ancestors
-          <description class="text-blurb" id="contributeDesc">
-              &helpus.start;<label class="text-link" href="https://donate.mozilla.org/?utm_source=firefox&#38;utm_medium=referral&#38;utm_campaign=firefox_about&#38;utm_content=firefox_about">&helpus.donateLink;</label>&helpus.middle;<label class="text-link" href="http://www.mozilla.org/contribute/">&helpus.getInvolvedLink;</label>&helpus.end;
-=======
           <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus">
             <label is="text-link" href="https://donate.mozilla.org/?utm_source=firefox&#38;utm_medium=referral&#38;utm_campaign=firefox_about&#38;utm_content=firefox_about" data-l10n-name="helpus-donateLink"></label>
             <label is="text-link" href="http://www.mozilla.org/contribute/" data-l10n-name="helpus-getInvolvedLink"></label>
->>>>>>> upstream-releases
           </description>
         </vbox>
       </vbox>
     </hbox>
     <vbox id="bottomBox">
       <hbox pack="center">
-<<<<<<< HEAD
-        <label class="text-link bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"></label>
-        <label class="text-link bottom-link" useoriginprincipal="true" href="about:rights" data-l10n-id="bottomLinks-rights"></label>
-        <label class="text-link bottom-link" href="https://www.mozilla.org/privacy/" data-l10n-id="bottomLinks-privacy"></label>
-||||||| merged common ancestors
-        <label class="text-link bottom-link" useoriginprincipal="true" href="about:license">&bottomLinks.license;</label>
-        <label class="text-link bottom-link" useoriginprincipal="true" href="about:rights">&bottomLinks.rights;</label>
-        <label class="text-link bottom-link" href="https://www.mozilla.org/privacy/">&bottomLinks.privacy;</label>
-=======
         <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"></label>
         <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:rights" data-l10n-id="bottomLinks-rights"></label>
         <label is="text-link" class="bottom-link" href="https://www.mozilla.org/privacy/" data-l10n-id="bottomLinks-privacy"></label>
->>>>>>> upstream-releases
       </hbox>
       <description id="trademark" data-l10n-id="trademarkInfo"></description>
     </vbox>

@@ -39,19 +39,6 @@ async function testWellformedMixedCase(inspector, testActor) {
   EventUtils.sendKey("return", inspector.panelWin);
   await onMutated;
 
-<<<<<<< HEAD
-  await assertAttributes("svg", {
-    "viewBox": "0 0 1 1",
-    "width": "200",
-    "height": "200",
-  }, testActor);
-||||||| merged common ancestors
-  await assertAttributes("svg", {
-    "viewBox": "0 0 1 1",
-    "width": "200",
-    "height": "200"
-  }, testActor);
-=======
   await assertAttributes(
     "svg",
     {
@@ -61,7 +48,6 @@ async function testWellformedMixedCase(inspector, testActor) {
     },
     testActor
   );
->>>>>>> upstream-releases
 }
 
 async function testMalformedMixedCase(inspector, testActor) {
@@ -85,19 +71,6 @@ async function testMalformedMixedCase(inspector, testActor) {
   EventUtils.sendKey("return", inspector.panelWin);
   await onMutated;
 
-<<<<<<< HEAD
-  await assertAttributes("svg", {
-    "viewBox": "<>",
-    "width": "200",
-    "height": "200",
-  }, testActor);
-||||||| merged common ancestors
-  await assertAttributes("svg", {
-    "viewBox": "<>",
-    "width": "200",
-    "height": "200"
-  }, testActor);
-=======
   await assertAttributes(
     "svg",
     {
@@ -107,5 +80,4 @@ async function testMalformedMixedCase(inspector, testActor) {
     },
     testActor
   );
->>>>>>> upstream-releases
 }

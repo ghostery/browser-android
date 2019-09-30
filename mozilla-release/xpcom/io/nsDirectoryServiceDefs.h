@@ -65,67 +65,10 @@
 
 /* Platform Specific Locations */
 
-<<<<<<< HEAD
-#if !defined(XP_UNIX) || defined(MOZ_WIDGET_COCOA)
-#define NS_OS_SYSTEM_DIR "SysD"
-||||||| merged common ancestors
-#if !defined (XP_UNIX) || defined(MOZ_WIDGET_COCOA)
-    #define NS_OS_SYSTEM_DIR                    "SysD"
-=======
 #if !defined(XP_UNIX) || defined(MOZ_WIDGET_COCOA)
 #  define NS_OS_SYSTEM_DIR "SysD"
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-#if defined(MOZ_WIDGET_COCOA)
-#define NS_MAC_USER_LIB_DIR "ULibDir"
-#define NS_OSX_DEFAULT_DOWNLOAD_DIR "DfltDwnld"
-#define NS_OSX_LOCAL_APPLICATIONS_DIR "LocApp"
-#define NS_OSX_USER_PREFERENCES_DIR "UsrPrfs"
-#define NS_OSX_PICTURE_DOCUMENTS_DIR "Pct"
-#elif defined(XP_WIN)
-#define NS_WIN_WINDOWS_DIR "WinD"
-#define NS_WIN_PROGRAM_FILES_DIR "ProgF"
-#define NS_WIN_HOME_DIR NS_OS_HOME_DIR
-#define NS_WIN_PROGRAMS_DIR "Progs"  // User start menu programs directory!
-#define NS_WIN_FAVORITES_DIR "Favs"
-#define NS_WIN_APPDATA_DIR "AppData"
-#define NS_WIN_LOCAL_APPDATA_DIR "LocalAppData"
-#if defined(MOZ_SANDBOX)
-#define NS_WIN_LOCAL_APPDATA_LOW_DIR "LocalAppDataLow"
-#define NS_WIN_LOW_INTEGRITY_TEMP_BASE "LowTmpDBase"
-#endif
-#define NS_WIN_COOKIES_DIR "CookD"
-#define NS_WIN_DEFAULT_DOWNLOAD_DIR "DfltDwnld"
-#elif defined(XP_UNIX)
-#define NS_UNIX_HOME_DIR NS_OS_HOME_DIR
-#define NS_UNIX_DEFAULT_DOWNLOAD_DIR "DfltDwnld"
-||||||| merged common ancestors
-#if defined (MOZ_WIDGET_COCOA)
-  #define NS_MAC_USER_LIB_DIR                 "ULibDir"
-  #define NS_OSX_DEFAULT_DOWNLOAD_DIR         "DfltDwnld"
-  #define NS_OSX_LOCAL_APPLICATIONS_DIR       "LocApp"
-  #define NS_OSX_USER_PREFERENCES_DIR         "UsrPrfs"
-  #define NS_OSX_PICTURE_DOCUMENTS_DIR        "Pct"
-#elif defined (XP_WIN)
-  #define NS_WIN_WINDOWS_DIR                  "WinD"
-  #define NS_WIN_PROGRAM_FILES_DIR            "ProgF"
-  #define NS_WIN_HOME_DIR                     NS_OS_HOME_DIR
-  #define NS_WIN_PROGRAMS_DIR                 "Progs" // User start menu programs directory!
-  #define NS_WIN_FAVORITES_DIR                "Favs"
-  #define NS_WIN_APPDATA_DIR                  "AppData"
-  #define NS_WIN_LOCAL_APPDATA_DIR            "LocalAppData"
-#if defined(MOZ_CONTENT_SANDBOX)
-  #define NS_WIN_LOCAL_APPDATA_LOW_DIR        "LocalAppDataLow"
-  #define NS_WIN_LOW_INTEGRITY_TEMP_BASE      "LowTmpDBase"
-#endif
-  #define NS_WIN_COOKIES_DIR                  "CookD"
-  #define NS_WIN_DEFAULT_DOWNLOAD_DIR         "DfltDwnld"
-#elif defined (XP_UNIX)
-  #define NS_UNIX_HOME_DIR                    NS_OS_HOME_DIR
-  #define NS_UNIX_DEFAULT_DOWNLOAD_DIR        "DfltDwnld"
-=======
 #if defined(MOZ_WIDGET_COCOA)
 #  define NS_MAC_USER_LIB_DIR "ULibDir"
 #  define NS_OSX_DEFAULT_DOWNLOAD_DIR "DfltDwnld"
@@ -149,7 +92,6 @@
 #elif defined(XP_UNIX)
 #  define NS_UNIX_HOME_DIR NS_OS_HOME_DIR
 #  define NS_UNIX_DEFAULT_DOWNLOAD_DIR "DfltDwnld"
->>>>>>> upstream-releases
 #endif
 
 #endif

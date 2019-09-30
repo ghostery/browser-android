@@ -34,20 +34,9 @@ using namespace mozilla::gfx;
 #define THICK_FRACTION_LINE 2.0f
 #define THICK_FRACTION_LINE_MINIMUM_PIXELS 2  // minimum of 2 pixels
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMathMLmfracFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-  return new (aPresShell) nsMathMLmfracFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMathMLmfracFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMathMLmfracFrame(aStyle);
-=======
 nsIFrame* NS_NewMathMLmfracFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell)
       nsMathMLmfracFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmfracFrame)
@@ -171,19 +160,9 @@ nsresult nsMathMLmfracFrame::AttributeChanged(int32_t aNameSpaceID,
                                                   aModType);
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult nsMathMLmfracFrame::MeasureForWidth(
-    DrawTarget* aDrawTarget, ReflowOutput& aDesiredSize) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-nsMathMLmfracFrame::MeasureForWidth(DrawTarget* aDrawTarget,
-                                    ReflowOutput& aDesiredSize)
-{
-=======
 /* virtual */
 nsresult nsMathMLmfracFrame::MeasureForWidth(DrawTarget* aDrawTarget,
                                              ReflowOutput& aDesiredSize) {
->>>>>>> upstream-releases
   return PlaceInternal(aDrawTarget, false, aDesiredSize, true);
 }
 
@@ -195,21 +174,9 @@ nscoord nsMathMLmfracFrame::FixInterFrameSpacing(ReflowOutput& aDesiredSize) {
   return gap;
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult nsMathMLmfracFrame::Place(DrawTarget* aDrawTarget,
-                                                 bool aPlaceOrigin,
-                                                 ReflowOutput& aDesiredSize) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-nsMathMLmfracFrame::Place(DrawTarget*          aDrawTarget,
-                          bool                 aPlaceOrigin,
-                          ReflowOutput& aDesiredSize)
-{
-=======
 /* virtual */
 nsresult nsMathMLmfracFrame::Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
                                    ReflowOutput& aDesiredSize) {
->>>>>>> upstream-releases
   return PlaceInternal(aDrawTarget, aPlaceOrigin, aDesiredSize, false);
 }
 
@@ -602,24 +569,6 @@ nsresult nsMathMLmfracFrame::PlaceInternal(DrawTarget* aDrawTarget,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-class nsDisplayMathMLSlash : public nsDisplayItem {
- public:
-  nsDisplayMathMLSlash(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-                       const nsRect& aRect, nscoord aThickness, bool aRTL)
-      : nsDisplayItem(aBuilder, aFrame),
-        mRect(aRect),
-        mThickness(aThickness),
-        mRTL(aRTL) {
-||||||| merged common ancestors
-class nsDisplayMathMLSlash : public nsDisplayItem {
-public:
-  nsDisplayMathMLSlash(nsDisplayListBuilder* aBuilder,
-                       nsIFrame* aFrame, const nsRect& aRect,
-                       nscoord aThickness, bool aRTL)
-    : nsDisplayItem(aBuilder, aFrame), mRect(aRect), mThickness(aThickness),
-      mRTL(aRTL) {
-=======
 class nsDisplayMathMLSlash : public nsPaintedDisplayItem {
  public:
   nsDisplayMathMLSlash(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
@@ -628,7 +577,6 @@ class nsDisplayMathMLSlash : public nsPaintedDisplayItem {
         mRect(aRect),
         mThickness(aThickness),
         mRTL(aRTL) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayMathMLSlash);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -674,28 +622,6 @@ void nsDisplayMathMLSlash::Paint(nsDisplayListBuilder* aBuilder,
   aDrawTarget.Fill(path, color);
 }
 
-<<<<<<< HEAD
-void nsMathMLmfracFrame::DisplaySlash(nsDisplayListBuilder* aBuilder,
-                                      nsIFrame* aFrame, const nsRect& aRect,
-                                      nscoord aThickness,
-                                      const nsDisplayListSet& aLists) {
-  if (!aFrame->StyleVisibility()->IsVisible() || aRect.IsEmpty()) return;
-
-  aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayMathMLSlash>(
-      aBuilder, aFrame, aRect, aThickness, StyleVisibility()->mDirection));
-||||||| merged common ancestors
-void
-nsMathMLmfracFrame::DisplaySlash(nsDisplayListBuilder* aBuilder,
-                                 nsIFrame* aFrame, const nsRect& aRect,
-                                 nscoord aThickness,
-                                 const nsDisplayListSet& aLists) {
-  if (!aFrame->StyleVisibility()->IsVisible() || aRect.IsEmpty())
-    return;
-
-  aLists.Content()->AppendToTop(
-    MakeDisplayItem<nsDisplayMathMLSlash>(aBuilder, aFrame, aRect, aThickness,
-                                          StyleVisibility()->mDirection));
-=======
 void nsMathMLmfracFrame::DisplaySlash(nsDisplayListBuilder* aBuilder,
                                       nsIFrame* aFrame, const nsRect& aRect,
                                       nscoord aThickness,
@@ -704,5 +630,4 @@ void nsMathMLmfracFrame::DisplaySlash(nsDisplayListBuilder* aBuilder,
 
   aLists.Content()->AppendNewToTop<nsDisplayMathMLSlash>(
       aBuilder, aFrame, aRect, aThickness, StyleVisibility()->mDirection);
->>>>>>> upstream-releases
 }

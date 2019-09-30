@@ -194,40 +194,8 @@ set_config('L10NBASEDIR', l10n_base)
 
 # Default toolkit
 # ==============================================================
-<<<<<<< HEAD
-# Normally, we'd want to use the `default` field on the option, but that
-# requires --target to be resolved at --help time, which requires to run
-# config.guess, which we want to avoid. Even better, we could actually set
-# `choices` depending on the target, but that doesn't pan out for the same
-# reason.
-option('--enable-default-toolkit', nargs=1,
-       choices=('cairo-windows', 'cairo-gtk3', 'cairo-gtk3-wayland',
-                'cairo-cocoa', 'cairo-uikit', 'cairo-android'),
-       help='Select default toolkit')
-
-@depends('--enable-default-toolkit', target, '--help')
-def full_toolkit(value, target, _):
-    # Define possible choices for each platform. The default is the first one
-    # listed when there are several.
-||||||| merged common ancestors
-# Normally, we'd want to use the `default` field on the option, but that
-# requires --target to be resolved at --help time, which requires to run
-# config.guess, which we want to avoid. Even better, we could actually set
-# `choices` depending on the target, but that doesn't pan out for the same
-# reason.
-option('--enable-default-toolkit', nargs=1,
-       choices=('cairo-windows', 'cairo-gtk3', 'cairo-gtk3-wayland',
-                'cairo-cocoa', 'cairo-uikit', 'cairo-android'),
-       help='Select default toolkit')
-
-@depends('--enable-default-toolkit', target, '--help')
-def toolkit(value, target, _):
-    # Define possible choices for each platform. The default is the first one
-    # listed when there are several.
-=======
 @depends(target)
 def toolkit_choices(target):
->>>>>>> upstream-releases
     if target.os == 'WINNT':
         return ('cairo-windows',)
     elif target.os == 'OSX':
@@ -247,21 +215,11 @@ option('--enable-default-toolkit', nargs=1,
        choices=toolkit_choices, default=toolkit_default,
        help='Select default toolkit')
 
-<<<<<<< HEAD
-@depends(full_toolkit)
-||||||| merged common ancestors
-@depends(toolkit)
-def wayland(toolkit):
-    return toolkit == 'cairo-gtk3-wayland'
-
-@depends(toolkit)
-=======
 @depends_if('--enable-default-toolkit')
 def full_toolkit(value):
     return value[0]
 
 @depends(full_toolkit)
->>>>>>> upstream-releases
 def toolkit(toolkit):
     if toolkit == 'cairo-gtk3-wayland':
         widget_toolkit = 'gtk3'
@@ -291,23 +249,6 @@ add_old_configure_assignment('MOZ_X11', True, when=toolkit_gtk)
 
 # Wayland support
 # ==============================================================
-<<<<<<< HEAD
-wayland_headers = pkg_check_modules(
-    'MOZ_WAYLAND', 'gtk+-wayland-3.0 >= 3.10 xkbcommon >= 0.4.1',
-    allow_missing=depends(full_toolkit)(lambda t: t == 'cairo-gtk3'),
-    when=depends(full_toolkit)(lambda t: t in ('cairo-gtk3', 'cairo-gtk3-wayland')))
-
-
-@depends(wayland_headers, toolkit_gtk, artifact_builds)
-def wayland_headers(wayland, toolkit_gtk, artifacts):
-    if toolkit_gtk and artifacts:
-        return True
-    return wayland
-
-||||||| merged common ancestors
-wayland_headers = pkg_check_modules('MOZ_WAYLAND', 'gtk+-wayland-3.0 >= 3.22',
-                                    when=wayland)
-=======
 wayland_headers = pkg_check_modules(
     'MOZ_WAYLAND', 'gtk+-wayland-3.0 >= 3.10 xkbcommon >= 0.4.1 libdrm >= 2.4',
     allow_missing=depends(full_toolkit)(lambda t: t == 'cairo-gtk3'),
@@ -320,7 +261,6 @@ def wayland_headers(wayland, toolkit_gtk, artifacts):
         return True
     return wayland
 
->>>>>>> upstream-releases
 
 set_config('MOZ_WAYLAND', depends_if(wayland_headers)(lambda _: True))
 set_define('MOZ_WAYLAND', depends_if(wayland_headers)(lambda _: True))
@@ -598,14 +538,8 @@ option('--enable-eme',
        nargs='+',
        choices=eme_choices,
        default=eme_default,
-<<<<<<< HEAD
-       help='{Enable|Disable} support for Encrypted Media Extensions')
-||||||| merged common ancestors
-       help='Enable support for Encrypted Media Extensions')
-=======
        when=eme_choices,
        help='{Enable|Disable} support for Encrypted Media Extensions')
->>>>>>> upstream-releases
 
 
 @depends('--enable-eme', fmp4, when=eme_choices)
@@ -938,17 +872,6 @@ def skia_includes(skia):
 
 set_config('SKIA_INCLUDES', skia_includes)
 
-<<<<<<< HEAD
-option('--with-system-webp',
-       help='Use system libwebp (located with pkgconfig)')
-
-system_webp = pkg_check_modules('MOZ_WEBP', 'libwebp >= 1.0.1 libwebpdemux >= 1.0.1',
-                                when='--with-system-webp')
-
-set_config('MOZ_SYSTEM_WEBP', depends(when=system_webp)(lambda: True))
-
-||||||| merged common ancestors
-=======
 option('--with-system-webp',
        help='Use system libwebp (located with pkgconfig)')
 
@@ -957,7 +880,6 @@ system_webp = pkg_check_modules('MOZ_WEBP', 'libwebp >= 1.0.2 libwebpdemux >= 1.
 
 set_config('MOZ_SYSTEM_WEBP', depends(when=system_webp)(lambda: True))
 
->>>>>>> upstream-releases
 # Build Freetype in the tree
 # ==============================================================
 @depends(target, skia_pdf)
@@ -987,15 +909,6 @@ add_old_configure_assignment('FT2_LIBS',
 add_old_configure_assignment('FT2_CFLAGS',
                              ft2_info.cflags)
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-# Mortar
-# ==============================================================
-option('--enable-mortar', help='Enable mortar extension')
-
-set_config('MOZ_MORTAR', True, when='--enable-mortar')
-
-=======
 
 # Remote agent (part of CDP based remote protocol)
 # ==============================================================
@@ -1019,7 +932,6 @@ set_config('ENABLE_REMOTE_AGENT', remote)
 set_define('ENABLE_REMOTE_AGENT', remote)
 
 
->>>>>>> upstream-releases
 # Marionette remote protocol
 # ==============================================================
 #

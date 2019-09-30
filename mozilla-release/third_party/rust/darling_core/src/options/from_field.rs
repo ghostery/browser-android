@@ -19,16 +19,9 @@ impl FromFieldOptions {
             base: OuterFrom::start(di),
             vis: Default::default(),
             ty: Default::default(),
-<<<<<<< HEAD
-        }).parse_attributes(&di.attrs)?
-            .parse_body(&di.data)
-||||||| merged common ancestors
-        }).parse_attributes(&di.attrs)?.parse_body(&di.data)
-=======
         })
         .parse_attributes(&di.attrs)?
         .parse_body(&di.data)
->>>>>>> upstream-releases
     }
 }
 

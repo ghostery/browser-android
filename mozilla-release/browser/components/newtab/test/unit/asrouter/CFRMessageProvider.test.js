@@ -18,20 +18,12 @@ describe("CFRMessageProvider", () => {
     for (const id of REGULAR_IDS) {
       const cohort3 = messages.find(msg => msg.id === `${id}_3`);
       assert.ok(cohort3, `contains three day cohort for ${id}`);
-<<<<<<< HEAD
-      assert.deepEqual(cohort3.frequency, {lifetime: 3}, "three day cohort has the right frequency cap");
-      assert.notInclude(cohort3.targeting, `providerCohorts.cfr`);
-||||||| merged common ancestors
-      assert.deepEqual(cohort3.frequency, {lifetime: 3}, "three day cohort has the right frequency cap");
-      assert.include(cohort3.targeting, `(providerCohorts.cfr == "three_per_day")`);
-=======
       assert.deepEqual(
         cohort3.frequency,
         { lifetime: 3 },
         "three day cohort has the right frequency cap"
       );
       assert.notInclude(cohort3.targeting, `providerCohorts.cfr`);
->>>>>>> upstream-releases
     }
   });
   it("should always have xpinstallEnabled as targeting if it is an addon", () => {

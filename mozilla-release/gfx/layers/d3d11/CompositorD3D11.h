@@ -25,104 +25,37 @@ namespace layers {
 class DeviceAttachmentsD3D11;
 class DiagnosticsD3D11;
 
-<<<<<<< HEAD
-class CompositorD3D11 : public Compositor {
- public:
-  CompositorD3D11(CompositorBridgeParent* aParent,
-                  widget::CompositorWidget* aWidget);
-  ~CompositorD3D11();
-||||||| merged common ancestors
-class CompositorD3D11 : public Compositor
-{
-public:
-  CompositorD3D11(CompositorBridgeParent* aParent, widget::CompositorWidget* aWidget);
-  ~CompositorD3D11();
-=======
 class CompositorD3D11 : public Compositor {
  public:
   CompositorD3D11(CompositorBridgeParent* aParent,
                   widget::CompositorWidget* aWidget);
   virtual ~CompositorD3D11();
->>>>>>> upstream-releases
 
   CompositorD3D11* AsCompositorD3D11() override { return this; }
 
   bool Initialize(nsCString* const out_failureReason) override;
 
-<<<<<<< HEAD
-  virtual TextureFactoryIdentifier GetTextureFactoryIdentifier() override;
-||||||| merged common ancestors
-  virtual TextureFactoryIdentifier
-    GetTextureFactoryIdentifier() override;
-=======
   TextureFactoryIdentifier GetTextureFactoryIdentifier() override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<DataTextureSource> CreateDataTextureSource(
-      TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<DataTextureSource>
-    CreateDataTextureSource(TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
-=======
   already_AddRefed<DataTextureSource> CreateDataTextureSource(
       TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
->>>>>>> upstream-releases
 
   bool CanUseCanvasLayerForSize(const gfx::IntSize& aSize) override;
   int32_t GetMaxTextureSize() const final;
 
-<<<<<<< HEAD
-  virtual void MakeCurrent(MakeCurrentFlags aFlags = 0) override {}
-||||||| merged common ancestors
-  virtual void MakeCurrent(MakeCurrentFlags aFlags = 0)  override {}
-=======
   void MakeCurrent(MakeCurrentFlags aFlags = 0) override {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<CompositingRenderTarget> CreateRenderTarget(
-      const gfx::IntRect& aRect, SurfaceInitMode aInit) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<CompositingRenderTarget>
-    CreateRenderTarget(const gfx::IntRect &aRect,
-                       SurfaceInitMode aInit) override;
-=======
   already_AddRefed<CompositingRenderTarget> CreateRenderTarget(
       const gfx::IntRect& aRect, SurfaceInitMode aInit) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<CompositingRenderTarget>
-  CreateRenderTargetFromSource(const gfx::IntRect& aRect,
-                               const CompositingRenderTarget* aSource,
-                               const gfx::IntPoint& aSourcePoint) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<CompositingRenderTarget>
-    CreateRenderTargetFromSource(const gfx::IntRect& aRect,
-                                 const CompositingRenderTarget* aSource,
-                                 const gfx::IntPoint& aSourcePoint) override;
-=======
   already_AddRefed<CompositingRenderTarget> CreateRenderTargetFromSource(
       const gfx::IntRect& aRect, const CompositingRenderTarget* aSource,
       const gfx::IntPoint& aSourcePoint) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void SetRenderTarget(CompositingRenderTarget* aSurface) override;
-  virtual CompositingRenderTarget* GetCurrentRenderTarget() const override {
-    return mCurrentRT;
-||||||| merged common ancestors
-  virtual void SetRenderTarget(CompositingRenderTarget* aSurface) override;
-  virtual CompositingRenderTarget* GetCurrentRenderTarget() const override
-  {
-    return mCurrentRT;
-=======
   void SetRenderTarget(CompositingRenderTarget* aSurface) override;
   already_AddRefed<CompositingRenderTarget> GetCurrentRenderTarget()
       const override {
     return do_AddRef(mCurrentRT);
->>>>>>> upstream-releases
   }
   already_AddRefed<CompositingRenderTarget> GetWindowRenderTarget()
       const override;
@@ -142,14 +75,7 @@ class CompositorD3D11 : public Compositor {
    * Declare an offset to use when rendering layers. This will be ignored when
    * rendering to a target instead of the screen.
    */
-<<<<<<< HEAD
-  virtual void SetScreenRenderOffset(const ScreenPoint& aOffset) override {
-||||||| merged common ancestors
-  virtual void SetScreenRenderOffset(const ScreenPoint& aOffset) override
-  {
-=======
   void SetScreenRenderOffset(const ScreenPoint& aOffset) override {
->>>>>>> upstream-releases
     if (aOffset.x || aOffset.y) {
       MOZ_CRASH("SetScreenRenderOffset not supported by CompositorD3D11.");
     }
@@ -158,51 +84,21 @@ class CompositorD3D11 : public Compositor {
 
   void ClearRect(const gfx::Rect& aRect) override;
 
-<<<<<<< HEAD
-  virtual void DrawQuad(const gfx::Rect& aRect, const gfx::IntRect& aClipRect,
-                        const EffectChain& aEffectChain, gfx::Float aOpacity,
-                        const gfx::Matrix4x4& aTransform,
-                        const gfx::Rect& aVisibleRect) override;
-||||||| merged common ancestors
-  virtual void DrawQuad(const gfx::Rect &aRect,
-                        const gfx::IntRect &aClipRect,
-                        const EffectChain &aEffectChain,
-                        gfx::Float aOpacity,
-                        const gfx::Matrix4x4& aTransform,
-                        const gfx::Rect& aVisibleRect) override;
-=======
   void DrawQuad(const gfx::Rect& aRect, const gfx::IntRect& aClipRect,
                 const EffectChain& aEffectChain, gfx::Float aOpacity,
                 const gfx::Matrix4x4& aTransform,
                 const gfx::Rect& aVisibleRect) override;
->>>>>>> upstream-releases
 
   /**
    * Start a new frame. If aClipRectIn is null, sets *aClipRectOut to the
    * screen dimensions.
    */
-<<<<<<< HEAD
-  virtual void BeginFrame(const nsIntRegion& aInvalidRegion,
-                          const gfx::IntRect* aClipRectIn,
-                          const gfx::IntRect& aRenderBounds,
-                          const nsIntRegion& aOpaqueRegion,
-                          gfx::IntRect* aClipRectOut = nullptr,
-                          gfx::IntRect* aRenderBoundsOut = nullptr) override;
-||||||| merged common ancestors
-  virtual void BeginFrame(const nsIntRegion& aInvalidRegion,
-                          const gfx::IntRect *aClipRectIn,
-                          const gfx::IntRect& aRenderBounds,
-                          const nsIntRegion& aOpaqueRegion,
-                          gfx::IntRect *aClipRectOut = nullptr,
-                          gfx::IntRect *aRenderBoundsOut = nullptr) override;
-=======
   void BeginFrame(const nsIntRegion& aInvalidRegion,
                   const gfx::IntRect* aClipRectIn,
                   const gfx::IntRect& aRenderBounds,
                   const nsIntRegion& aOpaqueRegion,
                   gfx::IntRect* aClipRectOut = nullptr,
                   gfx::IntRect* aRenderBoundsOut = nullptr) override;
->>>>>>> upstream-releases
 
   void NormalDrawingDone() override;
 
@@ -243,17 +139,11 @@ class CompositorD3D11 : public Compositor {
 
   ID3D11DeviceContext* GetDC() { return mContext; }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   virtual void RequestAllowFrameRecording(bool aWillRecord) override {
     mAllowFrameRecording = aWillRecord;
   }
 
  private:
->>>>>>> upstream-releases
   enum Severity {
     Recoverable,
     DebugAssert,
@@ -283,30 +173,6 @@ private:
                     RefPtr<ID3D11Texture2D>* aOutTexture,
                     RefPtr<ID3D11ShaderResourceView>* aOutView);
 
-<<<<<<< HEAD
-  virtual void DrawTriangles(const nsTArray<gfx::TexturedTriangle>& aTriangles,
-                             const gfx::Rect& aRect,
-                             const gfx::IntRect& aClipRect,
-                             const EffectChain& aEffectChain,
-                             gfx::Float aOpacity,
-                             const gfx::Matrix4x4& aTransform,
-                             const gfx::Rect& aVisibleRect) override;
-
-  template <typename Geometry>
-  void DrawGeometry(const Geometry& aGeometry, const gfx::Rect& aRect,
-||||||| merged common ancestors
-  virtual void DrawTriangles(const nsTArray<gfx::TexturedTriangle>& aTriangles,
-                             const gfx::Rect& aRect,
-                             const gfx::IntRect& aClipRect,
-                             const EffectChain& aEffectChain,
-                             gfx::Float aOpacity,
-                             const gfx::Matrix4x4& aTransform,
-                             const gfx::Rect& aVisibleRect) override;
-
-  template<typename Geometry>
-  void DrawGeometry(const Geometry& aGeometry,
-                    const gfx::Rect& aRect,
-=======
   void DrawTriangles(const nsTArray<gfx::TexturedTriangle>& aTriangles,
                      const gfx::Rect& aRect, const gfx::IntRect& aClipRect,
                      const EffectChain& aEffectChain, gfx::Float aOpacity,
@@ -315,7 +181,6 @@ private:
 
   template <typename Geometry>
   void DrawGeometry(const Geometry& aGeometry, const gfx::Rect& aRect,
->>>>>>> upstream-releases
                     const gfx::IntRect& aClipRect,
                     const EffectChain& aEffectChain, gfx::Float aOpacity,
                     const gfx::Matrix4x4& aTransform,

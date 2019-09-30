@@ -46,19 +46,8 @@ const TEST_URL =
 `);
 
 add_task(async function() {
-<<<<<<< HEAD
-  const {inspector} = await openInspectorForURL(TEST_URL);
-  const {markup} = inspector;
-||||||| merged common ancestors
-  await pushPref("dom.webcomponents.shadowdom.enabled", true);
-  await pushPref("dom.webcomponents.customelements.enabled", true);
-
-  const {inspector} = await openInspectorForURL(TEST_URL);
-  const {markup} = inspector;
-=======
   const { inspector } = await openInspectorForURL(TEST_URL);
   const { markup } = inspector;
->>>>>>> upstream-releases
   const ruleview = inspector.getPanel("ruleview").view;
 
   // <test-component> is a shadow host.

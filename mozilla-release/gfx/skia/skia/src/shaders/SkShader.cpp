@@ -78,44 +78,12 @@ bool SkShaderBase::asLuminanceColor(SkColor* colorPtr) const {
 }
 
 SkShaderBase::Context* SkShaderBase::makeContext(const ContextRec& rec, SkArenaAlloc* alloc) const {
-<<<<<<< HEAD
-    // We always fall back to raster pipeline when perspective is present.
-    if (rec.fMatrix->hasPerspective() ||
-        fLocalMatrix.hasPerspective() ||
-        (rec.fLocalMatrix && rec.fLocalMatrix->hasPerspective()) ||
-        !this->computeTotalInverse(*rec.fMatrix, rec.fLocalMatrix, nullptr)) {
-        return nullptr;
-    }
-
-    return this->onMakeContext(rec, alloc);
-}
-
-SkShaderBase::Context* SkShaderBase::makeBurstPipelineContext(const ContextRec& rec,
-                                                              SkArenaAlloc* alloc) const {
-
-    // Always use vanilla stages for perspective.
-    if (rec.fMatrix->hasPerspective() || fLocalMatrix.hasPerspective()) {
-||||||| merged common ancestors
-    return this->computeTotalInverse(*rec.fMatrix, rec.fLocalMatrix, nullptr)
-        ? this->onMakeContext(rec, alloc)
-        : nullptr;
-}
-
-SkShaderBase::Context* SkShaderBase::makeBurstPipelineContext(const ContextRec& rec,
-                                                              SkArenaAlloc* alloc) const {
-
-    SkASSERT(rec.fPreferredDstType == ContextRec::kPM4f_DstType);
-
-    // Always use vanilla stages for perspective.
-    if (rec.fMatrix->hasPerspective() || fLocalMatrix.hasPerspective()) {
-=======
 #ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
     // We always fall back to raster pipeline when perspective is present.
     if (rec.fMatrix->hasPerspective() ||
         fLocalMatrix.hasPerspective() ||
         (rec.fLocalMatrix && rec.fLocalMatrix->hasPerspective()) ||
         !this->computeTotalInverse(*rec.fMatrix, rec.fLocalMatrix, nullptr)) {
->>>>>>> upstream-releases
         return nullptr;
     }
 
@@ -142,38 +110,8 @@ SkShaderBase::Context::Context(const SkShaderBase& shader, const ContextRec& rec
 
 SkShaderBase::Context::~Context() {}
 
-<<<<<<< HEAD
-void SkShaderBase::Context::shadeSpan4f(int x, int y, SkPMColor4f dst[], int count) {
-    const int N = 128;
-    SkPMColor tmp[N];
-    while (count > 0) {
-        int n = SkTMin(count, N);
-        this->shadeSpan(x, y, tmp, n);
-        for (int i = 0; i < n; ++i) {
-            dst[i] = SkPMColor4f::FromPMColor(tmp[i]);
-        }
-        dst += n;
-        x += n;
-        count -= n;
-    }
-||||||| merged common ancestors
-void SkShaderBase::Context::shadeSpan4f(int x, int y, SkPM4f dst[], int count) {
-    const int N = 128;
-    SkPMColor tmp[N];
-    while (count > 0) {
-        int n = SkTMin(count, N);
-        this->shadeSpan(x, y, tmp, n);
-        for (int i = 0; i < n; ++i) {
-            dst[i] = SkPM4f::FromPMColor(tmp[i]);
-        }
-        dst += n;
-        x += n;
-        count -= n;
-    }
-=======
 bool SkShaderBase::ContextRec::isLegacyCompatible(SkColorSpace* shaderColorSpace) const {
     return sk_can_use_legacy_blits(shaderColorSpace, fDstColorSpace);
->>>>>>> upstream-releases
 }
 
 const SkMatrix& SkShader::getLocalMatrix() const {
@@ -231,13 +169,7 @@ bool SkShaderBase::onAppendStages(const StageRec& rec) const {
         opaquePaint.writable()->setAlpha(SK_AlphaOPAQUE);
     }
 
-<<<<<<< HEAD
-    ContextRec cr(*opaquePaint, rec.fCTM, rec.fLocalM, rec.fDstCS);
-||||||| merged common ancestors
-    ContextRec cr(*opaquePaint, rec.fCTM, rec.fLocalM, ContextRec::kPM4f_DstType, rec.fDstCS);
-=======
     ContextRec cr(*opaquePaint, rec.fCTM, rec.fLocalM, rec.fDstColorType, rec.fDstCS);
->>>>>>> upstream-releases
 
     struct CallbackCtx : SkRasterPipeline_CallbackCtx {
         sk_sp<SkShader> shader;
@@ -250,13 +182,6 @@ bool SkShaderBase::onAppendStages(const StageRec& rec) const {
     cb->fn  = [](SkRasterPipeline_CallbackCtx* self, int active_pixels) {
         auto c = (CallbackCtx*)self;
         int x = (int)c->rgba[0],
-<<<<<<< HEAD
-        y = (int)c->rgba[1];
-        c->ctx->shadeSpan4f(x,y, (SkPMColor4f*)c->rgba, active_pixels);
-||||||| merged common ancestors
-        y = (int)c->rgba[1];
-        c->ctx->shadeSpan4f(x,y, (SkPM4f*)c->rgba, active_pixels);
-=======
             y = (int)c->rgba[1];
         SkPMColor tmp[SkRasterPipeline_kMaxStride];
         c->ctx->shadeSpan(x,y, tmp, active_pixels);
@@ -265,7 +190,6 @@ bool SkShaderBase::onAppendStages(const StageRec& rec) const {
             auto rgba_4f = SkPMColor4f::FromPMColor(tmp[i]);
             memcpy(c->rgba + 4*i, rgba_4f.vec(), 4*sizeof(float));
         }
->>>>>>> upstream-releases
     };
 
     if (cb->ctx) {

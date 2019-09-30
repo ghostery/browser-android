@@ -359,14 +359,7 @@ class nsMutationReceiver : public nsMutationReceiverBase {
                                           nsAtom* aAttribute) override {
     // We can reuse AttributeWillChange implementation.
     AttributeWillChange(aElement, aNameSpaceID, aAttribute,
-<<<<<<< HEAD
-                        mozilla::dom::MutationEvent_Binding::MODIFICATION,
-                        nullptr);
-||||||| merged common ancestors
-                        mozilla::dom::MutationEvent_Binding::MODIFICATION, nullptr);
-=======
                         mozilla::dom::MutationEvent_Binding::MODIFICATION);
->>>>>>> upstream-releases
   }
 
  protected:
@@ -719,32 +712,13 @@ class nsAutoMutationBatch {
 class nsAutoAnimationMutationBatch {
   struct Entry;
 
-<<<<<<< HEAD
- public:
-  explicit nsAutoAnimationMutationBatch(nsIDocument* aDocument) {
-||||||| merged common ancestors
-public:
-  explicit nsAutoAnimationMutationBatch(nsIDocument* aDocument)
-  {
-=======
  public:
   explicit nsAutoAnimationMutationBatch(mozilla::dom::Document* aDocument) {
->>>>>>> upstream-releases
     Init(aDocument);
   }
 
-<<<<<<< HEAD
-  void Init(nsIDocument* aDocument) {
-    if (!aDocument || !aDocument->MayHaveDOMMutationObservers() ||
-||||||| merged common ancestors
-  void Init(nsIDocument* aDocument)
-  {
-    if (!aDocument ||
-        !aDocument->MayHaveDOMMutationObservers() ||
-=======
   void Init(mozilla::dom::Document* aDocument) {
     if (!aDocument || !aDocument->MayHaveDOMMutationObservers() ||
->>>>>>> upstream-releases
         sCurrentBatch) {
       return;
     }

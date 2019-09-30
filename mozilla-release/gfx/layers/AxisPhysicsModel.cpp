@@ -60,21 +60,9 @@ void AxisPhysicsModel::SetPosition(double aPosition) {
   mProgress = 1.0;
 }
 
-<<<<<<< HEAD
-void AxisPhysicsModel::Simulate(const TimeDuration &aDeltaTime) {
-  for (mProgress += aDeltaTime.ToSeconds() / kFixedTimestep; mProgress > 1.0;
-       mProgress -= 1.0) {
-||||||| merged common ancestors
-void
-AxisPhysicsModel::Simulate(const TimeDuration& aDeltaTime)
-{
-  for(mProgress += aDeltaTime.ToSeconds() / kFixedTimestep;
-      mProgress > 1.0; mProgress -= 1.0) {
-=======
 void AxisPhysicsModel::Simulate(const TimeDuration& aDeltaTime) {
   for (mProgress += aDeltaTime.ToSeconds() / kFixedTimestep; mProgress > 1.0;
        mProgress -= 1.0) {
->>>>>>> upstream-releases
     Integrate(kFixedTimestep);
   }
 }
@@ -96,23 +84,10 @@ void AxisPhysicsModel::Integrate(double aDeltaTime) {
   mNextState.v += dvdt * aDeltaTime;
 }
 
-<<<<<<< HEAD
-AxisPhysicsModel::Derivative AxisPhysicsModel::Evaluate(
-    const State &aInitState, double aDeltaTime, const Derivative &aDerivative) {
-  State state(aInitState.p + aDerivative.dp * aDeltaTime,
-              aInitState.v + aDerivative.dv * aDeltaTime);
-||||||| merged common ancestors
-AxisPhysicsModel::Derivative
-AxisPhysicsModel::Evaluate(const State &aInitState, double aDeltaTime,
-                           const Derivative &aDerivative)
-{
-  State state( aInitState.p + aDerivative.dp*aDeltaTime, aInitState.v + aDerivative.dv*aDeltaTime );
-=======
 AxisPhysicsModel::Derivative AxisPhysicsModel::Evaluate(
     const State& aInitState, double aDeltaTime, const Derivative& aDerivative) {
   State state(aInitState.p + aDerivative.dp * aDeltaTime,
               aInitState.v + aDerivative.dv * aDeltaTime);
->>>>>>> upstream-releases
 
   return Derivative(state.v, Acceleration(state));
 }

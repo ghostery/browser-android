@@ -28,13 +28,6 @@ mozilla::dom::ContentParent* ProtocolFuzzerHelper::CreateContentParent(
   cp->GetIPCChannel()->mMonitor = new RefCountedMonitor();
   return cp;
 }
-<<<<<<< HEAD
-}  // namespace ipc
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 
 void ProtocolFuzzerHelper::CompositorBridgeParentSetup() {
   mozilla::layers::CompositorBridgeParent::Setup();
@@ -42,4 +35,3 @@ void ProtocolFuzzerHelper::CompositorBridgeParentSetup() {
 
 }  // namespace ipc
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -561,12 +561,6 @@ ER3(SSL_ERROR_RX_MALFORMED_ESNI_EXTENSION, (SSL_ERROR_BASE + 177),
 
 ER3(SSL_ERROR_MISSING_ESNI_EXTENSION, (SSL_ERROR_BASE + 178),
     "SSL did not receive an ESNI extension")
-<<<<<<< HEAD
-
-ER3(SSL_ERROR_RX_UNEXPECTED_RECORD_TYPE, (SSL_ERROR_BASE + 179),
-    "SSL received an unexpected record type.")
-||||||| merged common ancestors
-=======
 
 ER3(SSL_ERROR_RX_UNEXPECTED_RECORD_TYPE, (SSL_ERROR_BASE + 179),
     "SSL received an unexpected record type.")
@@ -588,4 +582,3 @@ ER3(SSL_ERROR_DC_INVALID_KEY_USAGE, (SSL_ERROR_BASE + 184),
 
 ER3(SSL_ERROR_DC_EXPIRED, (SSL_ERROR_BASE + 185),
     "SSL received a delegated credential that expired.")
->>>>>>> upstream-releases

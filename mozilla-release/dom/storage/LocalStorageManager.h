@@ -101,15 +101,8 @@ class LocalStorageManager final : public nsIDOMStorageManager,
   // Helper for creation of DOM storage objects
   nsresult GetStorageInternal(CreateMode aCreate, mozIDOMWindow* aWindow,
                               nsIPrincipal* aPrincipal,
-<<<<<<< HEAD
-                              const nsAString& aDocumentURI, bool aPrivate,
-||||||| merged common ancestors
-                              const nsAString& aDocumentURI,
-                              bool aPrivate,
-=======
                               nsIPrincipal* aStoragePrincipal,
                               const nsAString& aDocumentURI, bool aPrivate,
->>>>>>> upstream-releases
                               Storage** aRetval);
 
   // Suffix->origin->cache map

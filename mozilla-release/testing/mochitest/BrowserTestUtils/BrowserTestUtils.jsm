@@ -667,37 +667,16 @@ var BrowserTestUtils = {
           }
         }
 
-<<<<<<< HEAD
-        promises.push(TestUtils.topicObserved("browser-delayed-startup-finished",
-                                              subject => subject == win));
-||||||| merged common ancestors
-        let promises = [
-          TestUtils.topicObserved("browser-delayed-startup-finished",
-                                  subject => subject == win),
-        ];
-=======
         promises.push(
           TestUtils.topicObserved(
             "browser-delayed-startup-finished",
             subject => subject == win
           )
         );
->>>>>>> upstream-releases
 
         if (url) {
           let browser = win.gBrowser.selectedBrowser;
 
-<<<<<<< HEAD
-          if (win.gMultiProcessBrowser &&
-              !E10SUtils.canLoadURIInRemoteType(url, browser.remoteType)) {
-||||||| merged common ancestors
-          // Retrieve the given browser's current process type.
-          let process =
-              browser.isRemoteBrowser ? Ci.nsIXULRuntime.PROCESS_TYPE_CONTENT
-              : Ci.nsIXULRuntime.PROCESS_TYPE_DEFAULT;
-          if (win.gMultiProcessBrowser &&
-              !E10SUtils.canLoadURIInProcess(url, process)) {
-=======
           if (
             win.gMultiProcessBrowser &&
             !E10SUtils.canLoadURIInRemoteType(
@@ -707,7 +686,6 @@ var BrowserTestUtils = {
               browser.remoteType /* aPreferredRemoteType */
             )
           ) {
->>>>>>> upstream-releases
             await this.waitForEvent(browser, "XULFrameLoaderCreated");
           }
 
@@ -758,11 +736,6 @@ var BrowserTestUtils = {
     // If the new URI can't load in the browser's current process then we
     // should wait for the new frameLoader to be created. This will happen
     // asynchronously when the browser's remoteness changes.
-<<<<<<< HEAD
-    if (!E10SUtils.canLoadURIInRemoteType(uri, browser.remoteType)) {
-||||||| merged common ancestors
-    if (!E10SUtils.canLoadURIInProcess(uri, process)) {
-=======
     if (
       !E10SUtils.canLoadURIInRemoteType(
         uri,
@@ -770,7 +743,6 @@ var BrowserTestUtils = {
         browser.remoteType
       )
     ) {
->>>>>>> upstream-releases
       await this.waitForEvent(browser, "XULFrameLoaderCreated");
     }
   },
@@ -849,16 +821,10 @@ var BrowserTestUtils = {
     }
     let win = currentWin.OpenBrowserWindow(options);
 
-<<<<<<< HEAD
-    let promises = [this.waitForEvent(win, "focus", true), this.waitForEvent(win, "activate")];
-||||||| merged common ancestors
-    let promises = [this.waitForEvent(win, "focus"), this.waitForEvent(win, "activate")];
-=======
     let promises = [
       this.waitForEvent(win, "focus", true),
       this.waitForEvent(win, "activate"),
     ];
->>>>>>> upstream-releases
 
     // Wait for browser-delayed-startup-finished notification, it indicates
     // that the window has loaded completely and is ready to be used for
@@ -1541,63 +1507,6 @@ var BrowserTestUtils = {
   },
 
   /**
-   *  Versions of EventUtils.jsm synthesizeTouch functions that synthesize a
-   *  touch event in a child process and return promises that resolve when the
-   *  event has fired and completed. Instead of a window, a browser is required
-   *  to be passed to this function.
-   *
-   * @param target
-   *        One of the following:
-   *        - a selector string that identifies the element to target. The syntax is as
-   *          for querySelector.
-   *        - An array of selector strings. Each selector after the first
-   *          selects for an element in the iframe specified by the previous
-   *          selector.
-   *        - a CPOW element (for easier test-conversion).
-   *        - a function to be run in the content process that returns the element to
-   *        target
-   *        - null, in which case the offset is from the content document's edge.
-   * @param {integer} offsetX
-   *        x offset from target's left bounding edge
-   * @param {integer} offsetY
-   *        y offset from target's top bounding edge
-   * @param {Object} event object
-   *        Additional arguments, similar to the EventUtils.jsm version
-   * @param {Browser} browser
-   *        Browser element, must not be null
-   *
-   * @returns {Promise}
-   * @resolves True if the touch event was cancelled.
-   */
-  synthesizeTouch(target, offsetX, offsetY, event, browser) {
-    return new Promise((resolve, reject) => {
-      let mm = browser.messageManager;
-      mm.addMessageListener("Test:SynthesizeTouchDone", function touchMsg(message) {
-        mm.removeMessageListener("Test:SynthesizeTouchDone", touchMsg);
-        if (message.data.hasOwnProperty("defaultPrevented")) {
-          resolve(message.data.defaultPrevented);
-        } else {
-          reject(new Error(message.data.error));
-        }
-      });
-
-      let cpowObject = null;
-      let targetFn = null;
-      if (typeof target == "function") {
-        targetFn = target.toString();
-        target = null;
-      } else if (typeof target != "string" && !Array.isArray(target)) {
-        cpowObject = target;
-        target = null;
-      }
-
-      mm.sendAsyncMessage("Test:SynthesizeTouch",
-                          {target, targetFn, x: offsetX, y: offsetY, event},
-                          {object: cpowObject});
-    });
-  },
-
-  /**
    * Wait for a message to be fired from a particular message manager
    *
    * @param {nsIMessageManager} messageManager
@@ -2069,52 +1978,24 @@ var BrowserTestUtils = {
    *        Resolves to the <xul:notification> that is being shown.
    */
   waitForGlobalNotificationBar(win, notificationValue) {
-<<<<<<< HEAD
-    return this.waitForNotificationInNotificationBox(
-                       win.gHighPriorityNotificationBox, notificationValue);
-||||||| merged common ancestors
-    let notificationBox =
-      win.document.getElementById("high-priority-global-notificationbox");
-    return this.waitForNotificationInNotificationBox(notificationBox,
-                                                     notificationValue);
-=======
     return this.waitForNotificationInNotificationBox(
       win.gHighPriorityNotificationBox,
       notificationValue
     );
->>>>>>> upstream-releases
   },
 
   waitForNotificationInNotificationBox(notificationBox, notificationValue) {
-<<<<<<< HEAD
-    return new Promise((resolve) => {
-      let check = (event) => {
-        return event.target.getAttribute("value") == notificationValue;
-||||||| merged common ancestors
-    return new Promise((resolve) => {
-      let check = (event) => {
-        return event.target.value == notificationValue;
-=======
     return new Promise(resolve => {
       let check = event => {
         return event.target.getAttribute("value") == notificationValue;
->>>>>>> upstream-releases
       };
 
-<<<<<<< HEAD
-      BrowserTestUtils.waitForEvent(notificationBox.stack, "AlertActive",
-                                    false, check).then((event) => {
-||||||| merged common ancestors
-      BrowserTestUtils.waitForEvent(notificationBox, "AlertActive",
-                                    false, check).then((event) => {
-=======
       BrowserTestUtils.waitForEvent(
         notificationBox.stack,
         "AlertActive",
         false,
         check
       ).then(event => {
->>>>>>> upstream-releases
         // The originalTarget of the AlertActive on a notificationbox
         // will be the notification itself.
         resolve(event.originalTarget);

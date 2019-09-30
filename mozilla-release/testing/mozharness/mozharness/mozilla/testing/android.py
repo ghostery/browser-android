@@ -348,21 +348,6 @@ class AndroidMixin(object):
                        EXIT_STATUS_DICT[TBPL_RETRY])
 
     def is_boot_completed(self):
-<<<<<<< HEAD
-        import mozdevice
-        try:
-            out = self.device.get_prop('sys.boot_completed', timeout=30)
-            if out.strip() == '1':
-                return True
-        except ValueError:
-            pass
-        except mozdevice.ADBError:
-            pass
-||||||| merged common ancestors
-        out = self.device.get_prop('sys.boot_completed', timeout=30)
-        if out.strip() == '1':
-            return True
-=======
         import mozdevice
         try:
             out = self.device.get_prop('sys.boot_completed', timeout=30)
@@ -370,7 +355,6 @@ class AndroidMixin(object):
                 return True
         except (ValueError, mozdevice.ADBError, mozdevice.ADBTimeoutError):
             pass
->>>>>>> upstream-releases
         return False
 
     def shell_output(self, cmd):
@@ -630,11 +614,6 @@ class AndroidMixin(object):
         if not self.is_android:
             return
 
-<<<<<<< HEAD
-        for t in self.timers:
-            t.cancel()
-||||||| merged common ancestors
-=======
         for t in self.timers:
             t.cancel()
         if self.worst_status != TBPL_RETRY:
@@ -642,7 +621,6 @@ class AndroidMixin(object):
             self.check_for_tombstones()
         else:
             self.info("ANR and tombstone checks skipped due to TBPL_RETRY")
->>>>>>> upstream-releases
         self.logcat_stop()
         if self.is_emulator:
             self.kill_processes(self.config["emulator_process_name"])

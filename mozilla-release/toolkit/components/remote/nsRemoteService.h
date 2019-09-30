@@ -21,69 +21,30 @@ enum RemoteResult {
   REMOTE_ARG_BAD = 2
 };
 
-<<<<<<< HEAD
-class nsRemoteService final : public nsIRemoteService, public nsIObserver {
- public:
-||||||| merged common ancestors
-class nsRemoteService final : public nsIRemoteService,
-                              public nsIObserver
-{
-public:
-=======
 class nsRemoteService final : public nsIObserver {
  public:
->>>>>>> upstream-releases
   // We will be a static singleton, so don't use the ordinary methods.
   NS_DECL_ISUPPORTS
   NS_DECL_NSIOBSERVER
 
-<<<<<<< HEAD
-  static const char* HandleCommandLine(const char* aBuffer,
-                                       nsIDOMWindow* aWindow,
-                                       uint32_t aTimestamp);
-||||||| merged common ancestors
-  static const char*
-  HandleCommandLine(const char* aBuffer, nsIDOMWindow* aWindow,
-                    uint32_t aTimestamp);
-=======
   explicit nsRemoteService(const char* aProgram);
   void SetProfile(nsACString& aProfile);
 
   void LockStartup();
   void UnlockStartup();
->>>>>>> upstream-releases
 
   RemoteResult StartClient(const char* aDesktopStartupID);
   void StartupServer();
   void ShutdownServer();
 
-<<<<<<< HEAD
-  nsRemoteService() {}
-
  private:
-||||||| merged common ancestors
-  nsRemoteService()
-    {}
-private:
-=======
- private:
->>>>>>> upstream-releases
   ~nsRemoteService();
 
-<<<<<<< HEAD
-  static void SetDesktopStartupIDOrTimestamp(
-      const nsACString& aDesktopStartupID, uint32_t aTimestamp);
-||||||| merged common ancestors
-  static void
-  SetDesktopStartupIDOrTimestamp(const nsACString& aDesktopStartupID,
-                                 uint32_t aTimestamp);
-=======
   mozilla::UniquePtr<nsRemoteServer> mRemoteServer;
   nsProfileLock mRemoteLock;
   nsCOMPtr<nsIFile> mRemoteLockDir;
   nsCString mProgram;
   nsCString mProfile;
->>>>>>> upstream-releases
 };
 
 #endif  // __nsRemoteService_h__

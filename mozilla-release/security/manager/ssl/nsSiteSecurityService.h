@@ -74,19 +74,9 @@ class SiteHPKPState : public nsISiteHPKPState {
                 const OriginAttributes& aOriginAttributes,
                 const nsCString& aStateString);
   SiteHPKPState(const nsCString& aHost,
-<<<<<<< HEAD
-                const OriginAttributes& aOriginAttributes, PRTime aExpireTime,
-                SecurityPropertyState aState, bool aIncludeSubdomains,
-                nsTArray<nsCString>& SHA256keys);
-||||||| merged common ancestors
-                const OriginAttributes& aOriginAttributes,
-                PRTime aExpireTime, SecurityPropertyState aState,
-                bool aIncludeSubdomains, nsTArray<nsCString>& SHA256keys);
-=======
                 const OriginAttributes& aOriginAttributes, PRTime aExpireTime,
                 SecurityPropertyState aState, bool aIncludeSubdomains,
                 const nsTArray<nsCString>& SHA256keys);
->>>>>>> upstream-releases
 
   nsCString mHostname;
   OriginAttributes mOriginAttributes;

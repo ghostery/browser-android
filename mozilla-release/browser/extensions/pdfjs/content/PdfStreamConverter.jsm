@@ -897,17 +897,6 @@ class FindEventManager {
   }
 
   bind() {
-<<<<<<< HEAD
-    this.contentWindow.addEventListener("unload", (evt) => {
-      this.unbind();
-    }, {once: true});
-||||||| merged common ancestors
-    var unload = (evt) => {
-      this.unbind();
-      this.contentWindow.removeEventListener(evt.type, unload);
-    };
-    this.contentWindow.addEventListener("unload", unload);
-=======
     this.contentWindow.addEventListener(
       "unload",
       evt => {
@@ -915,7 +904,6 @@ class FindEventManager {
       },
       { once: true }
     );
->>>>>>> upstream-releases
 
     // We cannot directly attach listeners to for the find events
     // since the FindBar is in the parent process. Instead we're

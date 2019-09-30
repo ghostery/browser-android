@@ -109,17 +109,6 @@ class Bootstrap {
   virtual void XRE_EnableSameExecutableForContentProc() = 0;
 
 #ifdef MOZ_WIDGET_ANDROID
-<<<<<<< HEAD
-  virtual void GeckoStart(JNIEnv* aEnv, char** argv, int argc,
-                          const StaticXREAppData& aAppData) = 0;
-
-  virtual void XRE_SetAndroidChildFds(JNIEnv* aEnv,
-                                      const XRE_AndroidChildFds& fds) = 0;
-||||||| merged common ancestors
-  virtual void GeckoStart(JNIEnv* aEnv, char** argv, int argc, const StaticXREAppData& aAppData) = 0;
-
-  virtual void XRE_SetAndroidChildFds(JNIEnv* aEnv, const XRE_AndroidChildFds& fds) = 0;
-=======
   virtual void GeckoStart(JNIEnv* aEnv, char** argv, int argc,
                           const StaticXREAppData& aAppData) = 0;
 
@@ -128,7 +117,6 @@ class Bootstrap {
 #  ifdef MOZ_PROFILE_GENERATE
   virtual void XRE_WriteLLVMProfData() = 0;
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #ifdef LIBFUZZER
@@ -154,15 +142,9 @@ enum class LibLoadingStrategy {
  */
 #ifdef XPCOM_GLUE
 typedef void (*GetBootstrapType)(Bootstrap::UniquePtr&);
-<<<<<<< HEAD
-Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile = nullptr);
-||||||| merged common ancestors
-Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile=nullptr);
-=======
 Bootstrap::UniquePtr GetBootstrap(
     const char* aXPCOMFile = nullptr,
     LibLoadingStrategy aLibLoadingStrategy = LibLoadingStrategy::NoReadAhead);
->>>>>>> upstream-releases
 #else
 extern "C" NS_EXPORT void NS_FROZENCALL
 XRE_GetBootstrap(Bootstrap::UniquePtr& b);

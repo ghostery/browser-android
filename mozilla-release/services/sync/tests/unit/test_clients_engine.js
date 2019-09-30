@@ -2106,25 +2106,6 @@ add_task(
 );
 
 add_task(async function update_known_stale_clients() {
-<<<<<<< HEAD
-  const makeFakeClient = (id) => ({ id, fxaDeviceId: `fxa-${id}` });
-  const clients = [makeFakeClient("one"), makeFakeClient("two"), makeFakeClient("three")];
-  const stubRemoteClients = sinon.stub(engine._store, "_remoteClients").get(() => {
-    return clients;
-  });
-  const stubFetchFxADevices = sinon.stub(engine, "_fetchFxADevices", () => {
-    engine._knownStaleFxADeviceIds = ["fxa-one", "fxa-two"];
-  });
-||||||| merged common ancestors
-  const makeFakeClient = (id) => ({ id, fxaDeviceId: `fxa-${id}` });
-  const clients = [makeFakeClient("one"), makeFakeClient("two"), makeFakeClient("three")];
-  const stubRemoteClients = sinon.stub(engine._store, "_remoteClients").get(() => {
-    return clients;
-  });
-  const stubRefresh = sinon.stub(engine, "_refreshKnownStaleClients", () => {
-    engine._knownStaleFxADeviceIds = ["fxa-one", "fxa-two"];
-  });
-=======
   const makeFakeClient = id => ({ id, fxaDeviceId: `fxa-${id}` });
   const clients = [
     makeFakeClient("one"),
@@ -2141,7 +2122,6 @@ add_task(async function update_known_stale_clients() {
     .callsFake(() => {
       engine._knownStaleFxADeviceIds = ["fxa-one", "fxa-two"];
     });
->>>>>>> upstream-releases
 
   engine._knownStaleFxADeviceIds = null;
   await engine.updateKnownStaleClients();

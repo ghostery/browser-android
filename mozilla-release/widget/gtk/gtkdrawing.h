@@ -427,14 +427,7 @@ gint moz_gtk_checkbox_get_metrics(gint* indicator_size,
  * isRadio:            [IN] true when requesting metrics for the radio button
  * returns:    pointer to ToggleGTKMetrics struct
  */
-<<<<<<< HEAD
-const ToggleGTKMetrics* GetToggleMetrics(bool isRadio);
-||||||| merged common ancestors
-const ToggleGTKMetrics*
-GetToggleMetrics(bool isRadio);
-=======
 const ToggleGTKMetrics* GetToggleMetrics(WidgetNodeType aWidgetType);
->>>>>>> upstream-releases
 
 /**
  * Get the desired size of a GtkRadioButton
@@ -613,17 +606,9 @@ const ToolbarButtonGTKMetrics* GetToolbarButtonMetrics(
  *
  * returns:    Number of returned entries at aButtonLayout.
  */
-<<<<<<< HEAD
-int GetGtkHeaderBarButtonLayout(WidgetNodeType* aButtonLayout,
-                                int aMaxButtonNums);
-||||||| merged common ancestors
-int
-GetGtkHeaderBarButtonLayout(WidgetNodeType* aButtonLayout, int aMaxButtonNums);
-=======
 int GetGtkHeaderBarButtonLayout(WidgetNodeType* aButtonLayout,
                                 int aMaxButtonNums,
                                 bool* aReversedButtonsPlacement);
->>>>>>> upstream-releases
 
 /**
  * Get size of CSD window extents of given GtkWindow.

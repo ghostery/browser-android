@@ -500,16 +500,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     description: "Local change",
     parent: {
       // So when we last wrote the record to the server, it had these values.
-<<<<<<< HEAD
-      "guid": "2bbd2d8fbc6b",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "2bbd2d8fbc6b",
-      "version": 1,
-=======
       guid: "2bbd2d8fbc6b",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -525,16 +517,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       // This is the incoming record. It has the same values as "parent", so
       // we can deduce the record hasn't actually been changed remotely so we
       // can safely ignore the incoming record and write our local changes.
-<<<<<<< HEAD
-      "guid": "2bbd2d8fbc6b",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "2bbd2d8fbc6b",
-      "version": 1,
-=======
       guid: "2bbd2d8fbc6b",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -547,16 +531,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Remote change",
     parent: {
-<<<<<<< HEAD
-      "guid": "e3680e9f890d",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "e3680e9f890d",
-      "version": 1,
-=======
       guid: "e3680e9f890d",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -567,16 +543,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "e3680e9f890d",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "e3680e9f890d",
-      "version": 1,
-=======
       guid: "e3680e9f890d",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4929001587121045",
     },
@@ -590,16 +558,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "New local field",
     parent: {
-<<<<<<< HEAD
-      "guid": "0cba738b1be0",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "0cba738b1be0",
-      "version": 1,
-=======
       guid: "0cba738b1be0",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -611,16 +571,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "0cba738b1be0",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "0cba738b1be0",
-      "version": 1,
-=======
       guid: "0cba738b1be0",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -634,16 +586,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "New remote field",
     parent: {
-<<<<<<< HEAD
-      "guid": "be3ef97f8285",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "be3ef97f8285",
-      "version": 1,
-=======
       guid: "be3ef97f8285",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -654,16 +598,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "be3ef97f8285",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "be3ef97f8285",
-      "version": 1,
-=======
       guid: "be3ef97f8285",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -678,16 +614,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Deleted field locally",
     parent: {
-<<<<<<< HEAD
-      "guid": "9627322248ec",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "9627322248ec",
-      "version": 1,
-=======
       guid: "9627322248ec",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -699,16 +627,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "9627322248ec",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "9627322248ec",
-      "version": 1,
-=======
       guid: "9627322248ec",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -722,16 +642,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Deleted field remotely",
     parent: {
-<<<<<<< HEAD
-      "guid": "7d7509f3eeb2",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "7d7509f3eeb2",
-      "version": 1,
-=======
       guid: "7d7509f3eeb2",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -744,16 +656,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "7d7509f3eeb2",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "7d7509f3eeb2",
-      "version": 1,
-=======
       guid: "7d7509f3eeb2",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -767,16 +671,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     description: "Local and remote changes to unrelated fields",
     parent: {
       // The last time we wrote this to the server, "cc-exp-month" was 12.
-<<<<<<< HEAD
-      "guid": "e087a06dfc57",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "e087a06dfc57",
-      "version": 1,
-=======
       guid: "e087a06dfc57",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -791,16 +687,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     ],
     remote: {
       // Remotely, we've changed "cc-exp-month" to 1.
-<<<<<<< HEAD
-      "guid": "e087a06dfc57",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "e087a06dfc57",
-      "version": 1,
-=======
       guid: "e087a06dfc57",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 1,
@@ -815,16 +703,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Multiple local changes",
     parent: {
-<<<<<<< HEAD
-      "guid": "340a078c596f",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "340a078c596f",
-      "version": 1,
-=======
       guid: "340a078c596f",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -840,16 +720,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "340a078c596f",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "340a078c596f",
-      "version": 1,
-=======
       guid: "340a078c596f",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-year": 2000,
@@ -867,16 +739,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     // same, so we shouldn't fork.
     description: "Same change to local and remote",
     parent: {
-<<<<<<< HEAD
-      "guid": "0b3a72a1bea2",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "0b3a72a1bea2",
-      "version": 1,
-=======
       guid: "0b3a72a1bea2",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -887,16 +751,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "0b3a72a1bea2",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "0b3a72a1bea2",
-      "version": 1,
-=======
       guid: "0b3a72a1bea2",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4929001587121045",
     },
@@ -910,16 +766,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     description: "Conflicting changes to single field",
     parent: {
       // This is what we last wrote to the sync server.
-<<<<<<< HEAD
-      "guid": "62068784d089",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "62068784d089",
-      "version": 1,
-=======
       guid: "62068784d089",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -932,16 +780,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     ],
     remote: {
       // An incoming record has a different cc-number than any of the above!
-<<<<<<< HEAD
-      "guid": "62068784d089",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "62068784d089",
-      "version": 1,
-=======
       guid: "62068784d089",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4929001587121045",
     },
@@ -961,16 +801,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Conflicting changes to multiple fields",
     parent: {
-<<<<<<< HEAD
-      "guid": "244dbb692e94",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "244dbb692e94",
-      "version": 1,
-=======
       guid: "244dbb692e94",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -983,16 +815,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "244dbb692e94",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "244dbb692e94",
-      "version": 1,
-=======
       guid: "244dbb692e94",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4929001587121045",
       "cc-exp-month": 3,
@@ -1012,16 +836,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Field deleted locally, changed remotely",
     parent: {
-<<<<<<< HEAD
-      "guid": "6fc45e03d19a",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "6fc45e03d19a",
-      "version": 1,
-=======
       guid: "6fc45e03d19a",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -1033,16 +849,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "6fc45e03d19a",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "6fc45e03d19a",
-      "version": 1,
-=======
       guid: "6fc45e03d19a",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 3,
@@ -1061,16 +869,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
   {
     description: "Field changed locally, deleted remotely",
     parent: {
-<<<<<<< HEAD
-      "guid": "fff9fa27fa18",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "fff9fa27fa18",
-      "version": 1,
-=======
       guid: "fff9fa27fa18",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       "cc-exp-month": 12,
@@ -1083,16 +883,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "fff9fa27fa18",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "fff9fa27fa18",
-      "version": 1,
-=======
       guid: "fff9fa27fa18",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
     },
@@ -1114,16 +906,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     description:
       "Created, last modified time reconciliation without local changes",
     parent: {
-<<<<<<< HEAD
-      "guid": "5113f329c42f",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "5113f329c42f",
-      "version": 1,
-=======
       guid: "5113f329c42f",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       timeCreated: 1234,
@@ -1133,16 +917,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     },
     local: [],
     remote: {
-<<<<<<< HEAD
-      "guid": "5113f329c42f",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "5113f329c42f",
-      "version": 1,
-=======
       guid: "5113f329c42f",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       timeCreated: 1200,
@@ -1166,16 +942,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
     description:
       "Created, last modified time reconciliation with local changes",
     parent: {
-<<<<<<< HEAD
-      "guid": "791e5608b80a",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "791e5608b80a",
-      "version": 1,
-=======
       guid: "791e5608b80a",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       timeCreated: 1234,
@@ -1190,16 +958,8 @@ const CREDIT_CARD_RECONCILE_TESTCASES = [
       },
     ],
     remote: {
-<<<<<<< HEAD
-      "guid": "791e5608b80a",
-      "version": 2,
-||||||| merged common ancestors
-      "guid": "791e5608b80a",
-      "version": 1,
-=======
       guid: "791e5608b80a",
       version: 2,
->>>>>>> upstream-releases
       "cc-name": "John Doe",
       "cc-number": "4111111111111111",
       timeCreated: 1300,
@@ -1222,21 +982,6 @@ add_task(async function test_reconcile_unknown_version() {
   let profileStorage = await initProfileStorage(TEST_STORE_FILE_NAME);
 
   // Cross-version reconciliation isn't supported yet. See bug 1377204.
-<<<<<<< HEAD
-  await Assert.rejects(profileStorage.addresses.reconcile({
-    "guid": "31d83d2725ec",
-    "version": 3,
-    "given-name": "Mark",
-    "family-name": "Hammond",
-  }), /Got unknown record version/);
-||||||| merged common ancestors
-  await Assert.rejects(profileStorage.addresses.reconcile({
-    "guid": "31d83d2725ec",
-    "version": 2,
-    "given-name": "Mark",
-    "family-name": "Hammond",
-  }), /Got unknown record version/);
-=======
   await Assert.rejects(
     profileStorage.addresses.reconcile({
       guid: "31d83d2725ec",
@@ -1246,7 +991,6 @@ add_task(async function test_reconcile_unknown_version() {
     }),
     /Got unknown record version/
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_reconcile_idempotent() {

@@ -14,21 +14,9 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-class AltDataOutputStreamChild : public PAltDataOutputStreamChild,
-                                 public nsIOutputStream {
- public:
-||||||| merged common ancestors
-class AltDataOutputStreamChild
-  : public PAltDataOutputStreamChild
-  , public nsIOutputStream
-{
-public:
-=======
 class AltDataOutputStreamChild : public PAltDataOutputStreamChild,
                                  public nsIAsyncOutputStream {
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_DECL_NSIASYNCOUTPUTSTREAM
   NS_DECL_NSIOUTPUTSTREAM

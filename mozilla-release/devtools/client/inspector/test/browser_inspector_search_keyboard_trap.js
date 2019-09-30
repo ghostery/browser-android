@@ -25,19 +25,9 @@ const TEST_DATA = [
     keys: [
       {
         key: "VK_TAB",
-<<<<<<< HEAD
-        options: { },
-      },
-    ],
-||||||| merged common ancestors
-        options: { }
-      }
-    ]
-=======
         options: {},
       },
     ],
->>>>>>> upstream-releases
   },
   {
     desc: "Move focus back to searchbox",
@@ -57,39 +47,17 @@ const TEST_DATA = [
     keys: [
       {
         key: "d",
-<<<<<<< HEAD
-        options: { },
-||||||| merged common ancestors
-        options: { }
-=======
         options: {},
->>>>>>> upstream-releases
       },
       {
         key: "VK_TAB",
-<<<<<<< HEAD
-        options: { },
-||||||| merged common ancestors
-        options: { }
-=======
         options: {},
->>>>>>> upstream-releases
       },
       {
         key: "VK_TAB",
-<<<<<<< HEAD
-        options: { },
-      },
-    ],
-||||||| merged common ancestors
-        options: { }
-      }
-    ]
-=======
         options: {},
       },
     ],
->>>>>>> upstream-releases
   },
   {
     desc: "Move focus back to searchbox",

@@ -142,17 +142,9 @@
 <%helpers:shorthand name="grid-${kind}" sub_properties="grid-${kind}-start grid-${kind}-end"
                     spec="https://drafts.csswg.org/css-grid/#propdef-grid-${kind}"
                     products="gecko">
-<<<<<<< HEAD
-    use crate::values::specified::GridLine;
-    use crate::parser::Parse;
-||||||| merged common ancestors
-    use values::specified::GridLine;
-    use parser::Parse;
-=======
     use crate::values::specified::GridLine;
     use crate::parser::Parse;
     use crate::Zero;
->>>>>>> upstream-releases
 
     // NOTE: Since both the shorthands have the same code, we should (re-)use code from one to implement
     // the other. This might not be a big deal for now, but we should consider looking into this in the future
@@ -193,17 +185,9 @@
                     sub_properties="grid-row-start grid-row-end grid-column-start grid-column-end"
                     spec="https://drafts.csswg.org/css-grid/#propdef-grid-area"
                     products="gecko">
-<<<<<<< HEAD
-    use crate::values::specified::GridLine;
-    use crate::parser::Parse;
-||||||| merged common ancestors
-    use values::specified::GridLine;
-    use parser::Parse;
-=======
     use crate::values::specified::GridLine;
     use crate::parser::Parse;
     use crate::Zero;
->>>>>>> upstream-releases
 
     // The code is the same as `grid-{row,column}` except that this can have four values at most.
     pub fn parse_value<'i, 't>(
@@ -271,27 +255,11 @@
                     products="gecko">
     use crate::parser::Parse;
     use servo_arc::Arc;
-<<<<<<< HEAD
-    use crate::values::{Either, None_};
-    use crate::values::generics::grid::{LineNameList, TrackSize, TrackList, TrackListType};
-    use crate::values::generics::grid::{TrackListValue, concat_serialize_idents};
-    use crate::values::specified::{GridTemplateComponent, GenericGridTemplateComponent};
-    use crate::values::specified::grid::parse_line_names;
-    use crate::values::specified::position::{TemplateAreas, TemplateAreasArc};
-||||||| merged common ancestors
-    use values::{Either, None_};
-    use values::generics::grid::{LineNameList, TrackSize, TrackList, TrackListType};
-    use values::generics::grid::{TrackListValue, concat_serialize_idents};
-    use values::specified::{GridTemplateComponent, GenericGridTemplateComponent};
-    use values::specified::grid::parse_line_names;
-    use values::specified::position::{TemplateAreas, TemplateAreasArc};
-=======
     use crate::values::generics::grid::{TrackSize, TrackList, TrackListType};
     use crate::values::generics::grid::{TrackListValue, concat_serialize_idents};
     use crate::values::specified::{GridTemplateComponent, GenericGridTemplateComponent};
     use crate::values::specified::grid::parse_line_names;
     use crate::values::specified::position::{GridTemplateAreas, TemplateAreas, TemplateAreasArc};
->>>>>>> upstream-releases
 
     /// Parsing for `<grid-template>` shorthand (also used by `grid` shorthand).
     pub fn parse_grid_template<'i, 't>(
@@ -513,27 +481,11 @@
                                     grid-auto-rows grid-auto-columns grid-auto-flow"
                     spec="https://drafts.csswg.org/css-grid/#propdef-grid"
                     products="gecko">
-<<<<<<< HEAD
-    use crate::parser::Parse;
-    use crate::properties::longhands::{grid_auto_columns, grid_auto_rows, grid_auto_flow};
-    use crate::values::{Either, None_};
-    use crate::values::generics::grid::{GridTemplateComponent, TrackListType};
-    use crate::values::specified::{GenericGridTemplateComponent, TrackSize};
-    use crate::values::specified::position::{AutoFlow, GridAutoFlow};
-||||||| merged common ancestors
-    use parser::Parse;
-    use properties::longhands::{grid_auto_columns, grid_auto_rows, grid_auto_flow};
-    use values::{Either, None_};
-    use values::generics::grid::{GridTemplateComponent, TrackListType};
-    use values::specified::{GenericGridTemplateComponent, TrackSize};
-    use values::specified::position::{AutoFlow, GridAutoFlow};
-=======
     use crate::parser::Parse;
     use crate::properties::longhands::{grid_auto_columns, grid_auto_rows, grid_auto_flow};
     use crate::values::generics::grid::{GridTemplateComponent, TrackListType};
     use crate::values::specified::{GenericGridTemplateComponent, TrackSize};
     use crate::values::specified::position::{AutoFlow, GridAutoFlow, GridTemplateAreas};
->>>>>>> upstream-releases
 
     pub fn parse_value<'i, 't>(
         context: &ParserContext,

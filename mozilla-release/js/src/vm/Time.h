@@ -54,21 +54,10 @@ inline void PRMJ_NowShutdown() {}
 
 #if !ENABLE_INTL_API || MOZ_SYSTEM_ICU
 /* Format a time value into a buffer. Same semantics as strftime() */
-<<<<<<< HEAD
-extern size_t PRMJ_FormatTime(char* buf, size_t buflen, const char* fmt,
-                              const PRMJTime* tm, int timeZoneYear,
-                              int offsetInSeconds);
-||||||| merged common ancestors
-extern size_t
-PRMJ_FormatTime(char* buf, size_t buflen, const char* fmt, const PRMJTime* tm,
-                int timeZoneYear, int offsetInSeconds);
-
-=======
 extern size_t PRMJ_FormatTime(char* buf, size_t buflen, const char* fmt,
                               const PRMJTime* tm, int timeZoneYear,
                               int offsetInSeconds);
 #endif
->>>>>>> upstream-releases
 
 /**
  * Requesting the number of cycles from the CPU.
@@ -140,30 +129,12 @@ extern size_t PRMJ_FormatTime(char* buf, size_t buflen, const char* fmt,
 
 #if defined(_WIN32) && (defined(_M_IX86) || defined(_M_AMD64))
 
-<<<<<<< HEAD
-#include <intrin.h>
-static __inline uint64_t ReadTimestampCounter(void) {
-  if (mozilla::recordreplay::IsRecordingOrReplaying()) {
-    return 0;
-  }
-  return __rdtsc();
-||||||| merged common ancestors
-#include <intrin.h>
-static __inline uint64_t
-ReadTimestampCounter(void)
-{
-    if (mozilla::recordreplay::IsRecordingOrReplaying()) {
-        return 0;
-    }
-    return __rdtsc();
-=======
 #  include <intrin.h>
 static __inline uint64_t ReadTimestampCounter(void) {
   if (mozilla::recordreplay::IsRecordingOrReplaying()) {
     return 0;
   }
   return __rdtsc();
->>>>>>> upstream-releases
 }
 
 #elif defined(__i386__)

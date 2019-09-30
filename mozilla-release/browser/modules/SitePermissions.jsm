@@ -88,14 +88,7 @@ const TemporaryPermissions = {
     if (!entry[baseDomain]) {
       entry[baseDomain] = {};
     }
-<<<<<<< HEAD
-    entry[prePath][id] = {timeStamp: Date.now(), state};
-    this.notifyWhenTemporaryPermissionChanged(browser, id, prePath, state);
-||||||| merged common ancestors
-    entry[prePath][id] = {timeStamp: Date.now(), state};
-=======
     entry[baseDomain][id] = { timeStamp: Date.now(), state };
->>>>>>> upstream-releases
   },
 
   // Removes a permission with the specified id for the specified browser.
@@ -104,20 +97,9 @@ const TemporaryPermissions = {
       return;
     }
     let entry = this._stateByBrowser.get(browser);
-<<<<<<< HEAD
-    let prePath = browser.currentURI.prePath;
-    if (entry && entry[prePath]) {
-      delete entry[prePath][id];
-      this.notifyWhenTemporaryPermissionChanged(browser, id, prePath, SitePermissions.UNKNOWN);
-||||||| merged common ancestors
-    let prePath = browser.currentURI.prePath;
-    if (entry && entry[prePath]) {
-      delete entry[prePath][id];
-=======
     let baseDomain = this._uriToBaseDomain(browser.currentURI);
     if (entry[baseDomain]) {
       delete entry[baseDomain][id];
->>>>>>> upstream-releases
     }
   },
 
@@ -158,29 +140,11 @@ const TemporaryPermissions = {
     return permissions;
   },
 
-  // Gets all permissions ID for the specified browser, this method will return
-  // all permissions ID stored in browser without checking current URI.
-  getAllPermissionIds(browser) {
-    let permissions = new Set();
-    let entry = this._stateByBrowser.get(browser);
-    for (let prePath in entry) {
-      for (let id in entry[prePath]) {
-        permissions.add(id);
-      }
-    }
-    return permissions;
-  },
-
   // Clears all permissions for the specified browser.
   // Unlike other methods, this does NOT clear only for
   // the currentURI but the whole browser state.
   clear(browser) {
-    let permissions = this.getAllPermissionIds(browser);
     this._stateByBrowser.delete(browser);
-    for (let permission of permissions) {
-      this.notifyWhenTemporaryPermissionChanged(browser, permission, null,
-                                                SitePermissions.UNKNOWN);
-    }
   },
 
   // Copies the temporary permission state of one browser
@@ -190,20 +154,6 @@ const TemporaryPermissions = {
     if (entry) {
       this._stateByBrowser.set(newBrowser, entry);
     }
-  },
-
-  // If permission has property 'notifyWhenTemporaryPermissionChanged', then
-  // notify browser when the temporary permission changed.
-  notifyWhenTemporaryPermissionChanged(browser, id, prePath, state) {
-    if (!(id in gPermissionObject) ||
-        !gPermissionObject[id].notifyWhenTemporaryPermissionChanged) {
-      return;
-    }
-    browser.messageManager
-           .sendAsyncMessage("TemporaryPermissionChanged",
-                             { permission: id,
-                               prePath,
-                               state });
   },
 };
 
@@ -905,18 +855,6 @@ var SitePermissions = {
    * @return {String} the localized label or null if none is available.
    */
   getPermissionLabel(permissionID) {
-<<<<<<< HEAD
-    if (!(permissionID in gPermissionObject)) {
-      // Permission can't be found.
-      return null;
-    }
-    if ("labelID" in gPermissionObject[permissionID] &&
-        gPermissionObject[permissionID].labelID === null) {
-      // Permission doesn't support having a label.
-      return null;
-    }
-||||||| merged common ancestors
-=======
     if (!(permissionID in gPermissionObject)) {
       // Permission can't be found.
       return null;
@@ -928,7 +866,6 @@ var SitePermissions = {
       // Permission doesn't support having a label.
       return null;
     }
->>>>>>> upstream-releases
     let labelID = gPermissionObject[permissionID].labelID || permissionID;
     return gStringBundle.GetStringFromName("permission." + labelID + ".label");
   },
@@ -1045,15 +982,6 @@ var gPermissionObject = {
 
   "autoplay-media": {
     exactHostMatch: true,
-<<<<<<< HEAD
-    showGloballyBlocked: true,
-    permitTemporaryAllow: true,
-    notifyWhenTemporaryPermissionChanged: true,
-||||||| merged common ancestors
-    showGloballyBlocked: true,
-    permitTemporaryAllow: true,
-=======
->>>>>>> upstream-releases
     getDefault() {
       let pref = Services.prefs.getIntPref(
         "media.autoplay.default",

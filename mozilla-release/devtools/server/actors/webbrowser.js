@@ -659,18 +659,6 @@ BrowserTabList.prototype._onDOMTitleChanged = DevToolsUtils.makeInfallible(
 /**
  * Implement nsIDOMEventListener.
  */
-<<<<<<< HEAD
-BrowserTabList.prototype.handleEvent =
-DevToolsUtils.makeInfallible(function(event) {
-  // If event target has `linkedBrowser`, the event target can be assumed <tab> element.
-  // Else (in Android case), because event target is assumed <browser> element,
-  // use the target as it is.
-  const browser = event.target.linkedBrowser || event.target;
-||||||| merged common ancestors
-BrowserTabList.prototype.handleEvent =
-DevToolsUtils.makeInfallible(function(event) {
-  const browser = event.target.linkedBrowser;
-=======
 BrowserTabList.prototype.handleEvent = DevToolsUtils.makeInfallible(function(
   event
 ) {
@@ -678,7 +666,6 @@ BrowserTabList.prototype.handleEvent = DevToolsUtils.makeInfallible(function(
   // Else (in Android case), because event target is assumed <browser> element,
   // use the target as it is.
   const browser = event.target.linkedBrowser || event.target;
->>>>>>> upstream-releases
   switch (event.type) {
     case "TabOpen":
     case "TabSelect": {
@@ -882,24 +869,9 @@ BrowserAddonList.prototype.onEnabled = function(addon) {
  * AddonManager listener must implement onInstalled.
  */
 BrowserAddonList.prototype.onInstalled = function(addon) {
-<<<<<<< HEAD
-  this._onAddonManagerUpdated();
-||||||| merged common ancestors
-  this._notifyListChanged();
-  this._adjustListener();
-=======
   this._onAddonManagerUpdated();
 };
 
-/**
- * AddonManager listener must implement onOperationCancelled.
- */
-BrowserAddonList.prototype.onOperationCancelled = function(addon) {
-  this._onAddonManagerUpdated();
->>>>>>> upstream-releases
-};
-
-<<<<<<< HEAD
 /**
  * AddonManager listener must implement onOperationCancelled.
  */
@@ -917,19 +889,6 @@ BrowserAddonList.prototype.onUninstalling = function(addon) {
 /**
  * AddonManager listener must implement onUninstalled.
  */
-||||||| merged common ancestors
-=======
-/**
- * AddonManager listener must implement onUninstalling.
- */
-BrowserAddonList.prototype.onUninstalling = function(addon) {
-  this._onAddonManagerUpdated();
-};
-
-/**
- * AddonManager listener must implement onUninstalled.
- */
->>>>>>> upstream-releases
 BrowserAddonList.prototype.onUninstalled = function(addon) {
   this._actorByAddonId.delete(addon.id);
   this._onAddonManagerUpdated();

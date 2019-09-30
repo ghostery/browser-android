@@ -128,21 +128,11 @@ void XMLUtils::normalizePIValue(nsAString& piValue) {
         if (prevCh == '?') {
           piValue.Append(char16_t(' '));
         }
-<<<<<<< HEAD
-        break;
-      }
-      default: { break; }
-||||||| merged common ancestors
-        piValue.Append(ch);
-        prevCh = ch;
-        ++conversionLoop;
-=======
         break;
       }
       default: {
         break;
       }
->>>>>>> upstream-releases
     }
     piValue.Append(ch);
     prevCh = ch;

@@ -2,25 +2,11 @@
 
 use super::enc_tables::{needs_offset, needs_sib_byte};
 use super::registers::RU;
-<<<<<<< HEAD
-use binemit::{bad_encoding, CodeSink, Reloc};
-use ir::condcodes::{CondCode, FloatCC, IntCC};
-use ir::{Ebb, Function, Inst, InstructionData, JumpTable, Opcode, TrapCode};
-use isa::{RegUnit, StackBase, StackBaseMask, StackRef};
-use regalloc::RegDiversions;
-||||||| merged common ancestors
-use binemit::{bad_encoding, CodeSink, Reloc};
-use ir::condcodes::{CondCode, FloatCC, IntCC};
-use ir::{Ebb, Function, Inst, InstructionData, Opcode, TrapCode};
-use isa::{RegUnit, StackBase, StackBaseMask, StackRef};
-use regalloc::RegDiversions;
-=======
 use crate::binemit::{bad_encoding, CodeSink, Reloc};
 use crate::ir::condcodes::{CondCode, FloatCC, IntCC};
 use crate::ir::{Ebb, Function, Inst, InstructionData, JumpTable, Opcode, TrapCode};
 use crate::isa::{RegUnit, StackBase, StackBaseMask, StackRef};
 use crate::regalloc::RegDiversions;
->>>>>>> upstream-releases
 
 include!(concat!(env!("OUT_DIR"), "/binemit-x86.rs"));
 
@@ -348,15 +334,6 @@ fn disp4<CS: CodeSink + ?Sized>(destination: Ebb, func: &Function, sink: &mut CS
     let delta = func.offsets[destination].wrapping_sub(sink.offset() + 4);
     sink.put4(delta);
 }
-<<<<<<< HEAD
-
-/// Emit a four-byte displacement to jump table `jt`.
-fn jt_disp4<CS: CodeSink + ?Sized>(jt: JumpTable, func: &Function, sink: &mut CS) {
-    let delta = func.jt_offsets[jt].wrapping_sub(sink.offset() + 4);
-    sink.put4(delta);
-}
-||||||| merged common ancestors
-=======
 
 /// Emit a four-byte displacement to jump table `jt`.
 fn jt_disp4<CS: CodeSink + ?Sized>(jt: JumpTable, func: &Function, sink: &mut CS) {
@@ -364,4 +341,3 @@ fn jt_disp4<CS: CodeSink + ?Sized>(jt: JumpTable, func: &Function, sink: &mut CS
     sink.put4(delta);
     sink.reloc_jt(Reloc::X86PCRelRodata4, jt);
 }
->>>>>>> upstream-releases

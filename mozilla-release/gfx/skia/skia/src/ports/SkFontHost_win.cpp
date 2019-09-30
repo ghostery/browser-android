@@ -260,15 +260,8 @@ public:
     }
 
 protected:
-<<<<<<< HEAD
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override;
-    sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override;
-||||||| merged common ancestors
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override;
-=======
     std::unique_ptr<SkStreamAsset> onOpenStream(int* ttcIndex) const override;
     sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override;
->>>>>>> upstream-releases
     SkScalerContext* onCreateScalerContext(const SkScalerContextEffects&,
                                            const SkDescriptor*) const override;
     void onFilterRec(SkScalerContextRec*) const override;
@@ -580,16 +573,8 @@ protected:
     bool generateAdvance(SkGlyph* glyph) override;
     void generateMetrics(SkGlyph* glyph) override;
     void generateImage(const SkGlyph& glyph) override;
-<<<<<<< HEAD
-    bool generatePath(SkGlyphID glyph, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-||||||| merged common ancestors
-    void generatePath(SkGlyphID glyph, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-=======
     bool generatePath(SkGlyphID glyph, SkPath* path) override;
     void generateFontMetrics(SkFontMetrics*) override;
->>>>>>> upstream-releases
 
 private:
     DWORD getGDIGlyphPath(SkGlyphID glyph, UINT flags,
@@ -2235,16 +2220,7 @@ void LogFontTypeface::onFilterRec(SkScalerContextRec* rec) const {
         rec->fFlags |= SkScalerContext::kGenA8FromLCD_Flag;
     }
 
-<<<<<<< HEAD
-    unsigned flagsWeDontSupport = SkScalerContext::kVertical_Flag |
-                                  SkScalerContext::kForceAutohinting_Flag |
-||||||| merged common ancestors
-    unsigned flagsWeDontSupport = SkScalerContext::kVertical_Flag |
-                                  SkScalerContext::kDevKernText_Flag |
-                                  SkScalerContext::kForceAutohinting_Flag |
-=======
     unsigned flagsWeDontSupport = SkScalerContext::kForceAutohinting_Flag |
->>>>>>> upstream-releases
                                   SkScalerContext::kEmbeddedBitmapText_Flag |
                                   SkScalerContext::kEmbolden_Flag |
                                   SkScalerContext::kLCD_BGROrder_Flag |

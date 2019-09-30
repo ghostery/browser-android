@@ -928,14 +928,6 @@ add_test(function test_emptyPassword() {
     .finalize();
   Assert.equal(url.spec, "http://z:ppppppppppp@example.com/");
 
-<<<<<<< HEAD
-  url = stringToURL("http://example.com");
-  url = url.mutate().setPassword("").finalize(); // Still empty. Should work.
-||||||| merged common ancestors
-  url = url.mutate().setUsername("").finalize(); // Should clear password too
-  Assert.equal(url.spec, "http://example.com/");
-  url = url.mutate().setPassword("").finalize(); // Still empty. Should work.
-=======
   url = stringToURL("http://example.com");
   url = url
     .mutate()
@@ -1058,7 +1050,6 @@ add_test(function test_emptyUser() {
     .mutate()
     .setPassword("")
     .finalize();
->>>>>>> upstream-releases
   Assert.equal(url.spec, "http://example.com/");
   url = url
     .mutate()
@@ -1107,90 +1098,7 @@ add_test(function test_emptyUser() {
   run_next_test();
 });
 
-<<<<<<< HEAD
-add_test(function test_emptyUser() {
-  let url = stringToURL("http://:a@example.com/path/to/something?query#hash");
-  Assert.equal(url.spec, "http://:a@example.com/path/to/something?query#hash");
-  url = stringToURL("http://:@example.com/path/to/something?query#hash");
-  Assert.equal(url.spec, "http://example.com/path/to/something?query#hash");
-
-  const kurl = stringToURL("http://user:pass@example.com:8888/path/to/something?query#hash");
-  url = kurl.mutate().setUsername("").finalize();
-  Assert.equal(url.spec, "http://:pass@example.com:8888/path/to/something?query#hash");
-  Assert.equal(url.host, "example.com");
-  Assert.equal(url.hostPort, "example.com:8888");
-  Assert.equal(url.filePath, "/path/to/something");
-  Assert.equal(url.query, "query");
-  Assert.equal(url.ref, "hash");
-  url = kurl.mutate().setUserPass(":pass1").finalize();
-  Assert.equal(url.spec, "http://:pass1@example.com:8888/path/to/something?query#hash");
-  Assert.equal(url.host, "example.com");
-  Assert.equal(url.hostPort, "example.com:8888");
-  Assert.equal(url.filePath, "/path/to/something");
-  Assert.equal(url.query, "query");
-  Assert.equal(url.ref, "hash");
-  url = url.mutate().setUsername("user2").finalize();
-  Assert.equal(url.spec, "http://user2:pass1@example.com:8888/path/to/something?query#hash");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUserPass(":pass234").finalize();
-  Assert.equal(url.spec, "http://:pass234@example.com:8888/path/to/something?query#hash");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUserPass("").finalize();
-  Assert.equal(url.spec, "http://example.com:8888/path/to/something?query#hash");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setPassword("pa").finalize();
-  Assert.equal(url.spec, "http://:pa@example.com:8888/path/to/something?query#hash");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUserPass("user:pass").finalize();
-  symmetricEquality(true, url.QueryInterface(Ci.nsIURL), kurl);
-
-  url = stringToURL("http://example.com:8888/path/to/something?query#hash");
-  url = url.mutate().setPassword("pass").finalize();
-  Assert.equal(url.spec, "http://:pass@example.com:8888/path/to/something?query#hash");
-  url = url.mutate().setUsername("").finalize();
-  Assert.equal(url.spec, "http://:pass@example.com:8888/path/to/something?query#hash");
-
-  url = stringToURL("http://example.com:8888");
-  url = url.mutate().setUsername("user").finalize();
-  url = url.mutate().setUsername("").finalize();
-  Assert.equal(url.spec, "http://example.com:8888/");
-
-  url = stringToURL("http://:pass@example.com");
-  Assert.equal(url.spec, "http://:pass@example.com/");
-  url = url.mutate().setPassword("").finalize();
-  Assert.equal(url.spec, "http://example.com/");
-  url = url.mutate().setUserPass("user:pass").finalize();
-  Assert.equal(url.spec, "http://user:pass@example.com/");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUserPass("u:p").finalize();
-  Assert.equal(url.spec, "http://u:p@example.com/");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUserPass("u1:p23").finalize();
-  Assert.equal(url.spec, "http://u1:p23@example.com/");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUsername("u").finalize();
-  Assert.equal(url.spec, "http://u:p23@example.com/");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setPassword("p").finalize();
-  Assert.equal(url.spec, "http://u:p@example.com/");
-  Assert.equal(url.host, "example.com");
-
-  url = url.mutate().setUserPass("u2:p2").finalize();
-  Assert.equal(url.spec, "http://u2:p2@example.com/");
-  Assert.equal(url.host, "example.com");
-  url = url.mutate().setUserPass("u23:p23").finalize();
-  Assert.equal(url.spec, "http://u23:p23@example.com/");
-  Assert.equal(url.host, "example.com");
-
-  run_next_test();
-});
-
-registerCleanupFunction(function () {
-||||||| merged common ancestors
-registerCleanupFunction(function () {
-=======
 registerCleanupFunction(function() {
->>>>>>> upstream-releases
   gPrefs.clearUserPref("network.standard-url.punycode-host");
 });
 

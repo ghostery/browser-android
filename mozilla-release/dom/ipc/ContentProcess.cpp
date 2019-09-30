@@ -11,18 +11,9 @@
 #include "mozilla/Preferences.h"
 #include "mozilla/recordreplay/ParentIPC.h"
 
-<<<<<<< HEAD
-#if defined(XP_MACOSX) && defined(MOZ_CONTENT_SANDBOX)
-#include <stdlib.h>
-#include "mozilla/Sandbox.h"
-||||||| merged common ancestors
-#if defined(XP_MACOSX) && defined(MOZ_CONTENT_SANDBOX)
-#include <stdlib.h>
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
 #  include <stdlib.h>
 #  include "mozilla/Sandbox.h"
->>>>>>> upstream-releases
 #endif
 
 #if (defined(XP_WIN) || defined(XP_MACOSX)) && defined(MOZ_SANDBOX)
@@ -37,18 +28,8 @@ using mozilla::ipc::IOThreadChild;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-#if defined(XP_WIN) && defined(MOZ_CONTENT_SANDBOX)
-static void SetTmpEnvironmentVariable(nsIFile* aValue) {
-||||||| merged common ancestors
-#if defined(XP_WIN) && defined(MOZ_CONTENT_SANDBOX)
-static void
-SetTmpEnvironmentVariable(nsIFile* aValue)
-{
-=======
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)
 static void SetTmpEnvironmentVariable(nsIFile* aValue) {
->>>>>>> upstream-releases
   // Save the TMP environment variable so that is is picked up by GetTempPath().
   // Note that we specifically write to the TMP variable, as that is the first
   // variable that is checked by GetTempPath() to determine its output.
@@ -64,27 +45,11 @@ static void SetTmpEnvironmentVariable(nsIFile* aValue) {
 }
 #endif
 
-<<<<<<< HEAD
-#if defined(XP_WIN) && defined(MOZ_CONTENT_SANDBOX)
-static void SetUpSandboxEnvironment() {
-  MOZ_ASSERT(
-      nsDirectoryService::gService,
-      "SetUpSandboxEnvironment relies on nsDirectoryService being initialized");
-||||||| merged common ancestors
-
-#if defined(XP_WIN) && defined(MOZ_CONTENT_SANDBOX)
-static void
-SetUpSandboxEnvironment()
-{
-  MOZ_ASSERT(nsDirectoryService::gService,
-    "SetUpSandboxEnvironment relies on nsDirectoryService being initialized");
-=======
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)
 static void SetUpSandboxEnvironment() {
   MOZ_ASSERT(
       nsDirectoryService::gService,
       "SetUpSandboxEnvironment relies on nsDirectoryService being initialized");
->>>>>>> upstream-releases
 
   // On Windows, a sandbox-writable temp directory is used whenever the sandbox
   // is enabled.
@@ -112,41 +77,7 @@ static void SetUpSandboxEnvironment() {
 }
 #endif
 
-<<<<<<< HEAD
-#ifdef ANDROID
-static int gPrefsFd = -1;
-static int gPrefMapFd = -1;
-
-void SetPrefsFd(int aFd) { gPrefsFd = aFd; }
-
-void SetPrefMapFd(int aFd) { gPrefMapFd = aFd; }
-#endif
-
 bool ContentProcess::Init(int aArgc, char* aArgv[]) {
-||||||| merged common ancestors
-#ifdef ANDROID
-static int gPrefsFd = -1;
-static int gPrefMapFd = -1;
-
-void
-SetPrefsFd(int aFd)
-{
-  gPrefsFd = aFd;
-}
-
-void
-SetPrefMapFd(int aFd)
-{
-  gPrefMapFd = aFd;
-}
-#endif
-
-bool
-ContentProcess::Init(int aArgc, char* aArgv[])
-{
-=======
-bool ContentProcess::Init(int aArgc, char* aArgv[]) {
->>>>>>> upstream-releases
   Maybe<uint64_t> childID;
   Maybe<bool> isForBrowser;
   Maybe<const char*> parentBuildID;
@@ -158,38 +89,6 @@ bool ContentProcess::Init(int aArgc, char* aArgv[]) {
   nsCOMPtr<nsIFile> profileDir;
 #endif
 
-<<<<<<< HEAD
-  // Parses an arg containing a pointer-sized-integer.
-  auto parseUIntPtrArg = [](char*& aArg) {
-    // ContentParent uses %zu to print a word-sized unsigned integer. So
-    // even though strtoull() returns a long long int, it will fit in a
-    // uintptr_t.
-    return uintptr_t(strtoull(aArg, &aArg, 10));
-  };
-
-#ifdef XP_WIN
-  auto parseHandleArg = [&](char*& aArg) {
-    return HANDLE(parseUIntPtrArg(aArg));
-  };
-#endif
-
-||||||| merged common ancestors
-  // Parses an arg containing a pointer-sized-integer.
-  auto parseUIntPtrArg = [] (char*& aArg) {
-    // ContentParent uses %zu to print a word-sized unsigned integer. So
-    // even though strtoull() returns a long long int, it will fit in a
-    // uintptr_t.
-    return uintptr_t(strtoull(aArg, &aArg, 10));
-  };
-
-#ifdef XP_WIN
-  auto parseHandleArg = [&] (char*& aArg) {
-    return HANDLE(parseUIntPtrArg(aArg));
-  };
-#endif
-
-=======
->>>>>>> upstream-releases
   for (int i = 1; i < aArgc; i++) {
     if (!aArgv[i]) {
       continue;
@@ -266,24 +165,8 @@ bool ContentProcess::Init(int aArgc, char* aArgv[]) {
   }
 
   // Did we find all the mandatory flags?
-<<<<<<< HEAD
-  if (childID.isNothing() || isForBrowser.isNothing() ||
-      prefsHandle.isNothing() || prefsLen.isNothing() ||
-      prefMapHandle.isNothing() || prefMapSize.isNothing() ||
-      schedulerPrefs.isNothing() || parentBuildID.isNothing()) {
-||||||| merged common ancestors
-  if (childID.isNothing() ||
-      isForBrowser.isNothing() ||
-      prefsHandle.isNothing() ||
-      prefsLen.isNothing() ||
-      prefMapHandle.isNothing() ||
-      prefMapSize.isNothing() ||
-      schedulerPrefs.isNothing() ||
-      parentBuildID.isNothing()) {
-=======
   if (childID.isNothing() || isForBrowser.isNothing() ||
       parentBuildID.isNothing()) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -305,20 +188,6 @@ bool ContentProcess::Init(int aArgc, char* aArgv[]) {
   mXREEmbed.Start();
 #if (defined(XP_MACOSX)) && defined(MOZ_SANDBOX)
   mContent.SetProfileDir(profileDir);
-<<<<<<< HEAD
-#if defined(DEBUG)
-  // For WebReplay middleman processes, the sandbox is
-  // started after receiving the SetProcessSandbox message.
-  if (IsContentSandboxEnabled() &&
-      Preferences::GetBool("security.sandbox.content.mac.earlyinit") &&
-      !recordreplay::IsMiddleman()) {
-    AssertMacSandboxEnabled();
-  }
-#endif /* DEBUG */
-#endif /* XP_MACOSX && MOZ_CONTENT_SANDBOX */
-||||||| merged common ancestors
-#endif
-=======
 #  if defined(DEBUG)
   // For WebReplay middleman processes, the sandbox is
   // started after receiving the SetProcessSandbox message.
@@ -329,7 +198,6 @@ bool ContentProcess::Init(int aArgc, char* aArgv[]) {
   }
 #  endif /* DEBUG */
 #endif   /* XP_MACOSX && MOZ_SANDBOX */
->>>>>>> upstream-releases
 
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)
   SetUpSandboxEnvironment();

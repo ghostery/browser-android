@@ -144,29 +144,7 @@ public:
 
     DashType asADash(DashInfo* info) const;
 
-<<<<<<< HEAD
-    static void InitializeFlattenables();
-
-    static SkFlattenable::Type GetFlattenableType() {
-        return kSkPathEffect_Type;
-    }
-
-    SkFlattenable::Type getFlattenableType() const override {
-        return kSkPathEffect_Type;
-    }
-
-    static sk_sp<SkPathEffect> Deserialize(const void* data, size_t size,
-                                          const SkDeserialProcs* procs = nullptr) {
-        return sk_sp<SkPathEffect>(static_cast<SkPathEffect*>(
-                                  SkFlattenable::Deserialize(
-                                  kSkPathEffect_Type, data, size, procs).release()));
-    }
-||||||| merged common ancestors
-    SK_TO_STRING_PUREVIRT()
-    SK_DEFINE_FLATTENABLE_TYPE(SkPathEffect)
-=======
     static void RegisterFlattenables();
->>>>>>> upstream-releases
 
     static SkFlattenable::Type GetFlattenableType() {
         return kSkPathEffect_Type;
@@ -176,11 +154,6 @@ public:
         return kSkPathEffect_Type;
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
-
-=======
     static sk_sp<SkPathEffect> Deserialize(const void* data, size_t size,
                                           const SkDeserialProcs* procs = nullptr) {
         return sk_sp<SkPathEffect>(static_cast<SkPathEffect*>(
@@ -188,7 +161,6 @@ public:
                                   kSkPathEffect_Type, data, size, procs).release()));
     }
 
->>>>>>> upstream-releases
 protected:
     SkPathEffect() {}
 

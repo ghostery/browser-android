@@ -18,43 +18,6 @@ async function callRequestStorageAccess(callback, expectFail) {
 
   let success = true;
   // We only grant storage exceptions when the reject tracker behavior is enabled.
-<<<<<<< HEAD
-  let rejectTrackers = SpecialPowers.Services.prefs.getIntPref("network.cookie.cookieBehavior") ==
-                         SpecialPowers.Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER &&
-                       !isOnContentBlockingAllowList();
-  // With another-tracking.example.net, we're same-eTLD+1, so the first try succeeds.
-  if (origin != "https://another-tracking.example.net") {
-    if (rejectTrackers) {
-      let p;
-      let threw = false;
-      try {
-        p = document.requestStorageAccess();
-      } catch (e) {
-        threw = true;
-      } finally {
-        helper.destruct();
-||||||| merged common ancestors
-  let rejectTrackers = SpecialPowers.Services.prefs.getIntPref("network.cookie.cookieBehavior") ==
-                         SpecialPowers.Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER &&
-                       SpecialPowers.Services.prefs.getBoolPref("browser.contentblocking.enabled") &&
-                       !isOnContentBlockingAllowList();
-  if (rejectTrackers) {
-    let p;
-    let threw = false;
-    try {
-      p = document.requestStorageAccess();
-    } catch (e) {
-      threw = true;
-    } finally {
-      helper.destruct();
-    }
-    ok(!threw, "requestStorageAccess should not throw");
-    try {
-      if (callback) {
-        await p.then(_ => callback(dwu));
-      } else {
-        await p;
-=======
   let rejectTrackers =
     [
       SpecialPowers.Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER,
@@ -74,26 +37,7 @@ async function callRequestStorageAccess(callback, expectFail) {
         threw = true;
       } finally {
         helper.destruct();
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-      ok(!threw, "requestStorageAccess should not throw");
-      try {
-        if (callback) {
-          await p.then(_ => callback(dwu));
-        } else {
-          await p;
-        }
-      } catch (e) {
-        success = false;
-      }
-      ok(!success, "Should not have worked without user interaction");
-||||||| merged common ancestors
-    } catch (e) {
-      success = false;
-    }
-    ok(!success, "Should not have worked without user interaction");
-=======
       ok(!threw, "requestStorageAccess should not throw");
       try {
         if (callback) {
@@ -110,7 +54,6 @@ async function callRequestStorageAccess(callback, expectFail) {
         success = false;
       }
       ok(!success, "Should not have worked without user interaction");
->>>>>>> upstream-releases
 
       await noStorageAccessInitially();
 
@@ -118,25 +61,6 @@ async function callRequestStorageAccess(callback, expectFail) {
 
       helper = dwu.setHandlingUserInput(true);
     }
-<<<<<<< HEAD
-    if (SpecialPowers.Services.prefs.getIntPref("network.cookie.cookieBehavior") ==
-          SpecialPowers.Ci.nsICookieService.BEHAVIOR_ACCEPT &&
-        !isOnContentBlockingAllowList()) {
-      try {
-        if (callback) {
-          await document.requestStorageAccess().then(_ => callback(dwu));
-        } else {
-          await document.requestStorageAccess();
-        }
-      } catch (e) {
-        success = false;
-      } finally {
-        helper.destruct();
-      }
-      ok(success, "Should not have thrown");
-||||||| merged common ancestors
-    ok(success, "Should not have thrown");
-=======
     if (
       SpecialPowers.Services.prefs.getIntPref(
         "network.cookie.cookieBehavior"
@@ -160,7 +84,6 @@ async function callRequestStorageAccess(callback, expectFail) {
         helper.destruct();
       }
       ok(success, "Should not have thrown");
->>>>>>> upstream-releases
 
       await hasStorageAccessInitially();
 
@@ -197,17 +120,6 @@ async function callRequestStorageAccess(callback, expectFail) {
 
   success = !threw && !rejected;
   let hasAccess = await document.hasStorageAccess();
-<<<<<<< HEAD
-  is(hasAccess, success,
-     "Should " + (success ? "" : "not ") + "have storage access now");
-  if (success && rejectTrackers &&
-      window.location.search != "?disableWaitUntilPermission" &&
-      origin != "https://another-tracking.example.net") {
-||||||| merged common ancestors
-  is(hasAccess, success,
-     "Should " + (success ? "" : "not ") + "have storage access now");
-  if (success && rejectTrackers) {
-=======
   is(
     hasAccess,
     success,
@@ -219,7 +131,6 @@ async function callRequestStorageAccess(callback, expectFail) {
     window.location.search != "?disableWaitUntilPermission" &&
     origin != "https://another-tracking.example.net"
   ) {
->>>>>>> upstream-releases
     // Wait until the permission is visible in our process to avoid race
     // conditions.
     await waitUntilPermission(

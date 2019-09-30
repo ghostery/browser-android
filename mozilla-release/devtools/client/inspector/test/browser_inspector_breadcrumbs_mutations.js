@@ -56,31 +56,6 @@ const TEST_DATA = [
       "div#i1111",
     ],
   },
-<<<<<<< HEAD
-  shouldRefresh: false,
-  output: ["html", "body", "article#i1", "div#i11", "div#i111", "div#i1111"],
-}, {
-  desc: "Updating an ID to an displayed element should refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "#i1");
-    await node.modifyAttributes([{
-      attributeName: "id",
-      newValue: "i1-changed",
-    }]);
-||||||| merged common ancestors
-  shouldRefresh: false,
-  output: ["html", "body", "article#i1", "div#i11", "div#i111", "div#i1111"]
-}, {
-  desc: "Updating an ID to an displayed element should refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "#i1");
-    await node.modifyAttributes([{
-      attributeName: "id",
-      newValue: "i1-changed"
-    }]);
-=======
   {
     desc: "Updating an class to a displayed element should refresh",
     setup: function() {},
@@ -102,35 +77,7 @@ const TEST_DATA = [
       "div#i111",
       "div#i1111",
     ],
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  shouldRefresh: true,
-  output: ["html", "body", "article#i1-changed", "div#i11", "div#i111",
-           "div#i1111"],
-}, {
-  desc: "Updating an class to a displayed element should refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "body");
-    await node.modifyAttributes([{
-      attributeName: "class",
-      newValue: "test-class",
-    }]);
-||||||| merged common ancestors
-  shouldRefresh: true,
-  output: ["html", "body", "article#i1-changed", "div#i11", "div#i111",
-           "div#i1111"]
-}, {
-  desc: "Updating an class to a displayed element should refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "body");
-    await node.modifyAttributes([{
-      attributeName: "class",
-      newValue: "test-class"
-    }]);
-=======
   {
     desc:
       "Updating a non id/class attribute to a displayed element should not " +
@@ -154,37 +101,7 @@ const TEST_DATA = [
       "div#i111",
       "div#i1111",
     ],
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  shouldRefresh: true,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"],
-}, {
-  desc: "Updating a non id/class attribute to a displayed element should not " +
-        "refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "#i11");
-    await node.modifyAttributes([{
-      attributeName: "name",
-      newValue: "value",
-    }]);
-||||||| merged common ancestors
-  shouldRefresh: true,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"]
-}, {
-  desc: "Updating a non id/class attribute to a displayed element should not " +
-        "refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "#i11");
-    await node.modifyAttributes([{
-      attributeName: "name",
-      newValue: "value"
-    }]);
-=======
   {
     desc:
       "Moving a child in an element that's not displayed should not refresh",
@@ -204,33 +121,7 @@ const TEST_DATA = [
       "div#i111",
       "div#i1111",
     ],
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"],
-}, {
-  desc: "Moving a child in an element that's not displayed should not refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    // Re-append #i1211 as a last child of #i2.
-    const parent = await walker.querySelector(walker.rootNode, "#i2");
-    const child = await walker.querySelector(walker.rootNode, "#i211");
-    await walker.insertBefore(child, parent);
-||||||| merged common ancestors
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"]
-}, {
-  desc: "Moving a child in an element that's not displayed should not refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    // Re-append #i1211 as a last child of #i2.
-    const parent = await walker.querySelector(walker.rootNode, "#i2");
-    const child = await walker.querySelector(walker.rootNode, "#i211");
-    await walker.insertBefore(child, parent);
-=======
   {
     desc:
       "Moving an undisplayed child in a displayed element should not refresh",
@@ -250,33 +141,7 @@ const TEST_DATA = [
       "div#i111",
       "div#i1111",
     ],
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"],
-}, {
-  desc: "Moving an undisplayed child in a displayed element should not refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    // Re-append #i2 in body (move it to the end).
-    const parent = await walker.querySelector(walker.rootNode, "body");
-    const child = await walker.querySelector(walker.rootNode, "#i2");
-    await walker.insertBefore(child, parent);
-||||||| merged common ancestors
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"]
-}, {
-  desc: "Moving an undisplayed child in a displayed element should not refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    // Re-append #i2 in body (move it to the end).
-    const parent = await walker.querySelector(walker.rootNode, "body");
-    const child = await walker.querySelector(walker.rootNode, "#i2");
-    await walker.insertBefore(child, parent);
-=======
   {
     desc:
       "Updating attributes on an element that's not displayed should not " +
@@ -304,43 +169,7 @@ const TEST_DATA = [
       "div#i111",
       "div#i1111",
     ],
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"],
-}, {
-  desc: "Updating attributes on an element that's not displayed should not " +
-        "refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "#i2");
-    await node.modifyAttributes([{
-      attributeName: "id",
-      newValue: "i2-changed",
-    }, {
-      attributeName: "class",
-      newValue: "test-class",
-    }]);
-||||||| merged common ancestors
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"]
-}, {
-  desc: "Updating attributes on an element that's not displayed should not " +
-        "refresh",
-  setup: function() {},
-  run: async function({walker}) {
-    const node = await walker.querySelector(walker.rootNode, "#i2");
-    await node.modifyAttributes([{
-      attributeName: "id",
-      newValue: "i2-changed"
-    }, {
-      attributeName: "class",
-      newValue: "test-class"
-    }]);
-=======
   {
     desc: "Removing the currently selected node should refresh",
     setup: async function(inspector) {
@@ -351,25 +180,7 @@ const TEST_DATA = [
     },
     shouldRefresh: true,
     output: ["html", "body.test-class"],
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"],
-}, {
-  desc: "Removing the currently selected node should refresh",
-  setup: async function(inspector) {
-    await selectNode("#i2-changed", inspector);
-||||||| merged common ancestors
-  shouldRefresh: false,
-  output: ["html", "body.test-class", "article#i1-changed", "div#i11",
-           "div#i111", "div#i1111"]
-}, {
-  desc: "Removing the currently selected node should refresh",
-  setup: async function(inspector) {
-    await selectNode("#i2-changed", inspector);
-=======
   {
     desc: "Changing the class of the currently selected node should refresh",
     setup: function() {},
@@ -383,7 +194,6 @@ const TEST_DATA = [
     },
     shouldRefresh: true,
     output: ["html", "body.test-class-changed"],
->>>>>>> upstream-releases
   },
   {
     desc: "Changing the id of the currently selected node should refresh",
@@ -399,61 +209,7 @@ const TEST_DATA = [
     shouldRefresh: true,
     output: ["html", "body#new-id.test-class-changed"],
   },
-<<<<<<< HEAD
-  shouldRefresh: true,
-  output: ["html", "body.test-class"],
-}, {
-  desc: "Changing the class of the currently selected node should refresh",
-  setup: function() {},
-  run: async function({selection}) {
-    await selection.nodeFront.modifyAttributes([{
-      attributeName: "class",
-      newValue: "test-class-changed",
-    }]);
-  },
-  shouldRefresh: true,
-  output: ["html", "body.test-class-changed"],
-}, {
-  desc: "Changing the id of the currently selected node should refresh",
-  setup: function() {},
-  run: async function({selection}) {
-    await selection.nodeFront.modifyAttributes([{
-      attributeName: "id",
-      newValue: "new-id",
-    }]);
-  },
-  shouldRefresh: true,
-  output: ["html", "body#new-id.test-class-changed"],
-}];
-||||||| merged common ancestors
-  shouldRefresh: true,
-  output: ["html", "body.test-class"]
-}, {
-  desc: "Changing the class of the currently selected node should refresh",
-  setup: function() {},
-  run: async function({selection}) {
-    await selection.nodeFront.modifyAttributes([{
-      attributeName: "class",
-      newValue: "test-class-changed"
-    }]);
-  },
-  shouldRefresh: true,
-  output: ["html", "body.test-class-changed"]
-}, {
-  desc: "Changing the id of the currently selected node should refresh",
-  setup: function() {},
-  run: async function({selection}) {
-    await selection.nodeFront.modifyAttributes([{
-      attributeName: "id",
-      newValue: "new-id"
-    }]);
-  },
-  shouldRefresh: true,
-  output: ["html", "body#new-id.test-class-changed"]
-}];
-=======
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URI);

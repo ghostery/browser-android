@@ -14,10 +14,6 @@
 //! style system it's kind of pointless in the Stylo case, and only Servo forces
 //! the separation between the style system implementation and everything else.
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use CaseSensitivityExt;
-=======
 use crate::applicable_declarations::ApplicableDeclarationBlock;
 use crate::author_styles::AuthorStyles;
 use crate::context::{PostAnimationTasks, QuirksMode, SharedStyleContext, UpdateAnimationsTasks};
@@ -76,122 +72,8 @@ use crate::stylist::CascadeData;
 use crate::values::computed::font::GenericFontFamily;
 use crate::values::specified::length::FontBaseSize;
 use crate::CaseSensitivityExt;
->>>>>>> upstream-releases
 use app_units::Au;
 use atomic_refcell::{AtomicRefCell, AtomicRefMut};
-<<<<<<< HEAD
-use crate::applicable_declarations::ApplicableDeclarationBlock;
-use crate::author_styles::AuthorStyles;
-use crate::context::{PostAnimationTasks, QuirksMode, SharedStyleContext, UpdateAnimationsTasks};
-use crate::data::ElementData;
-use crate::dom::{LayoutIterator, NodeInfo, OpaqueNode, TDocument, TElement, TNode, TShadowRoot};
-use crate::element_state::{DocumentState, ElementState};
-use crate::font_metrics::{FontMetrics, FontMetricsProvider, FontMetricsQueryResult};
-use crate::gecko::data::GeckoStyleSheet;
-use crate::gecko::global_style_data::GLOBAL_STYLE_DATA;
-use crate::gecko::selector_parser::{NonTSPseudoClass, PseudoElement, SelectorImpl};
-use crate::gecko::snapshot_helpers;
-use crate::gecko_bindings::bindings;
-use crate::gecko_bindings::bindings::Gecko_ElementHasAnimations;
-use crate::gecko_bindings::bindings::Gecko_ElementHasCSSAnimations;
-use crate::gecko_bindings::bindings::Gecko_ElementHasCSSTransitions;
-use crate::gecko_bindings::bindings::Gecko_GetActiveLinkAttrDeclarationBlock;
-use crate::gecko_bindings::bindings::Gecko_GetAnimationEffectCount;
-use crate::gecko_bindings::bindings::Gecko_GetAnimationRule;
-use crate::gecko_bindings::bindings::Gecko_GetExtraContentStyleDeclarations;
-use crate::gecko_bindings::bindings::Gecko_GetHTMLPresentationAttrDeclarationBlock;
-use crate::gecko_bindings::bindings::Gecko_GetStyleAttrDeclarationBlock;
-use crate::gecko_bindings::bindings::Gecko_GetUnvisitedLinkAttrDeclarationBlock;
-use crate::gecko_bindings::bindings::Gecko_GetVisitedLinkAttrDeclarationBlock;
-use crate::gecko_bindings::bindings::Gecko_IsSignificantChild;
-use crate::gecko_bindings::bindings::Gecko_MatchLang;
-use crate::gecko_bindings::bindings::Gecko_UnsetDirtyStyleAttr;
-use crate::gecko_bindings::bindings::Gecko_UpdateAnimations;
-use crate::gecko_bindings::bindings::{Gecko_ElementState, Gecko_GetDocumentLWTheme};
-use crate::gecko_bindings::bindings::{Gecko_SetNodeFlags, Gecko_UnsetNodeFlags};
-use crate::gecko_bindings::structs;
-use crate::gecko_bindings::structs::nsChangeHint;
-use crate::gecko_bindings::structs::nsIDocument_DocumentTheme as DocumentTheme;
-use crate::gecko_bindings::structs::nsRestyleHint;
-use crate::gecko_bindings::structs::EffectCompositor_CascadeLevel as CascadeLevel;
-use crate::gecko_bindings::structs::ELEMENT_HANDLED_SNAPSHOT;
-use crate::gecko_bindings::structs::ELEMENT_HAS_ANIMATION_ONLY_DIRTY_DESCENDANTS_FOR_SERVO;
-use crate::gecko_bindings::structs::ELEMENT_HAS_DIRTY_DESCENDANTS_FOR_SERVO;
-use crate::gecko_bindings::structs::ELEMENT_HAS_SNAPSHOT;
-use crate::gecko_bindings::structs::NODE_DESCENDANTS_NEED_FRAMES;
-use crate::gecko_bindings::structs::NODE_NEEDS_FRAME;
-use crate::gecko_bindings::structs::{nsAtom, nsIContent, nsINode_BooleanFlag};
-use crate::gecko_bindings::structs::{RawGeckoElement, RawGeckoNode, RawGeckoXBLBinding};
-use crate::gecko_bindings::sugar::ownership::{HasArcFFI, HasSimpleFFI};
-use crate::hash::FxHashMap;
-use crate::logical_geometry::WritingMode;
-use crate::media_queries::Device;
-use crate::properties::animated_properties::{AnimationValue, AnimationValueMap};
-use crate::properties::style_structs::Font;
-use crate::properties::{ComputedValues, LonghandId};
-use crate::properties::{Importance, PropertyDeclaration, PropertyDeclarationBlock};
-use crate::rule_tree::CascadeLevel as ServoCascadeLevel;
-use crate::selector_parser::{AttrValue, HorizontalDirection, Lang};
-use crate::shared_lock::Locked;
-use crate::string_cache::{Atom, Namespace, WeakAtom, WeakNamespace};
-use crate::stylist::CascadeData;
-use crate::CaseSensitivityExt;
-||||||| merged common ancestors
-use author_styles::AuthorStyles;
-use context::{PostAnimationTasks, QuirksMode, SharedStyleContext, UpdateAnimationsTasks};
-use data::ElementData;
-use dom::{LayoutIterator, NodeInfo, OpaqueNode, TDocument, TElement, TNode, TShadowRoot};
-use element_state::{DocumentState, ElementState};
-use font_metrics::{FontMetrics, FontMetricsProvider, FontMetricsQueryResult};
-use gecko::data::GeckoStyleSheet;
-use gecko::global_style_data::GLOBAL_STYLE_DATA;
-use gecko::selector_parser::{NonTSPseudoClass, PseudoElement, SelectorImpl};
-use gecko::snapshot_helpers;
-use gecko_bindings::bindings;
-use gecko_bindings::bindings::{Gecko_ElementState, Gecko_GetDocumentLWTheme};
-use gecko_bindings::bindings::{Gecko_GetLastChild, Gecko_GetPreviousSibling, Gecko_GetNextStyleChild};
-use gecko_bindings::bindings::{Gecko_SetNodeFlags, Gecko_UnsetNodeFlags};
-use gecko_bindings::bindings::Gecko_ElementHasAnimations;
-use gecko_bindings::bindings::Gecko_ElementHasCSSAnimations;
-use gecko_bindings::bindings::Gecko_ElementHasCSSTransitions;
-use gecko_bindings::bindings::Gecko_GetActiveLinkAttrDeclarationBlock;
-use gecko_bindings::bindings::Gecko_GetAnimationEffectCount;
-use gecko_bindings::bindings::Gecko_GetAnimationRule;
-use gecko_bindings::bindings::Gecko_GetExtraContentStyleDeclarations;
-use gecko_bindings::bindings::Gecko_GetHTMLPresentationAttrDeclarationBlock;
-use gecko_bindings::bindings::Gecko_GetStyleAttrDeclarationBlock;
-use gecko_bindings::bindings::Gecko_GetUnvisitedLinkAttrDeclarationBlock;
-use gecko_bindings::bindings::Gecko_GetVisitedLinkAttrDeclarationBlock;
-use gecko_bindings::bindings::Gecko_IsSignificantChild;
-use gecko_bindings::bindings::Gecko_MatchLang;
-use gecko_bindings::bindings::Gecko_UnsetDirtyStyleAttr;
-use gecko_bindings::bindings::Gecko_UpdateAnimations;
-use gecko_bindings::structs;
-use gecko_bindings::structs::{RawGeckoElement, RawGeckoNode, RawGeckoXBLBinding};
-use gecko_bindings::structs::{nsAtom, nsIContent, nsINode_BooleanFlag};
-use gecko_bindings::structs::ELEMENT_HANDLED_SNAPSHOT;
-use gecko_bindings::structs::ELEMENT_HAS_ANIMATION_ONLY_DIRTY_DESCENDANTS_FOR_SERVO;
-use gecko_bindings::structs::ELEMENT_HAS_DIRTY_DESCENDANTS_FOR_SERVO;
-use gecko_bindings::structs::ELEMENT_HAS_SNAPSHOT;
-use gecko_bindings::structs::EffectCompositor_CascadeLevel as CascadeLevel;
-use gecko_bindings::structs::NODE_DESCENDANTS_NEED_FRAMES;
-use gecko_bindings::structs::NODE_NEEDS_FRAME;
-use gecko_bindings::structs::nsChangeHint;
-use gecko_bindings::structs::nsIDocument_DocumentTheme as DocumentTheme;
-use gecko_bindings::structs::nsRestyleHint;
-use gecko_bindings::sugar::ownership::{HasArcFFI, HasSimpleFFI};
-use hash::FxHashMap;
-use logical_geometry::WritingMode;
-use media_queries::Device;
-use properties::{ComputedValues, LonghandId};
-use properties::{Importance, PropertyDeclaration, PropertyDeclarationBlock};
-use properties::animated_properties::{AnimationValue, AnimationValueMap};
-use properties::style_structs::Font;
-use rule_tree::CascadeLevel as ServoCascadeLevel;
-use selector_parser::{AttrValue, HorizontalDirection, Lang};
-use selectors::{Element, OpaqueElement};
-=======
->>>>>>> upstream-releases
 use selectors::attr::{AttrSelectorOperation, AttrSelectorOperator};
 use selectors::attr::{CaseSensitivity, NamespaceConstraint};
 use selectors::matching::VisitedHandlingMode;
@@ -512,28 +394,16 @@ impl<'ln> TNode for GeckoNode<'ln> {
 
     #[inline]
     fn last_child(&self) -> Option<Self> {
-<<<<<<< HEAD
-        unsafe { bindings::Gecko_GetLastChild(self.0).map(GeckoNode) }
-||||||| merged common ancestors
-        unsafe { Gecko_GetLastChild(self.0).map(GeckoNode) }
-=======
         unsafe { bindings::Gecko_GetLastChild(self.0).as_ref().map(GeckoNode) }
->>>>>>> upstream-releases
     }
 
     #[inline]
     fn prev_sibling(&self) -> Option<Self> {
-<<<<<<< HEAD
-        unsafe { bindings::Gecko_GetPreviousSibling(self.0).map(GeckoNode) }
-||||||| merged common ancestors
-        unsafe { Gecko_GetPreviousSibling(self.0).map(GeckoNode) }
-=======
         unsafe {
             bindings::Gecko_GetPreviousSibling(self.0)
                 .as_ref()
                 .map(GeckoNode)
         }
->>>>>>> upstream-releases
     }
 
     #[inline]
@@ -650,15 +520,9 @@ impl<'a> Iterator for GeckoChildrenIterator<'a> {
                 // however we can't express this easily with bindgen, and it would
                 // introduce functions with two input lifetimes into bindgen,
                 // which would be out of scope for elision.
-<<<<<<< HEAD
-                bindings::Gecko_GetNextStyleChild(&mut *(it as *mut _)).map(GeckoNode)
-||||||| merged common ancestors
-                Gecko_GetNextStyleChild(&mut *(it as *mut _)).map(GeckoNode)
-=======
                 bindings::Gecko_GetNextStyleChild(&mut *(it as *mut _))
                     .as_ref()
                     .map(GeckoNode)
->>>>>>> upstream-releases
             },
         }
     }
@@ -952,26 +816,8 @@ impl<'le> GeckoElement<'le> {
     /// animation.
     ///
     /// Also this function schedules style flush.
-<<<<<<< HEAD
-    pub unsafe fn note_explicit_hints(
-        &self,
-        restyle_hint: nsRestyleHint,
-        change_hint: nsChangeHint,
-    ) {
-        use crate::gecko::restyle_damage::GeckoRestyleDamage;
-        use crate::invalidation::element::restyle_hints::RestyleHint;
-||||||| merged common ancestors
-    pub unsafe fn note_explicit_hints(
-        &self,
-        restyle_hint: nsRestyleHint,
-        change_hint: nsChangeHint,
-    ) {
-        use gecko::restyle_damage::GeckoRestyleDamage;
-        use invalidation::element::restyle_hints::RestyleHint;
-=======
     pub unsafe fn note_explicit_hints(&self, restyle_hint: RestyleHint, change_hint: nsChangeHint) {
         use crate::gecko::restyle_damage::GeckoRestyleDamage;
->>>>>>> upstream-releases
 
         let damage = GeckoRestyleDamage::new(change_hint);
         debug!(
@@ -1096,22 +942,6 @@ impl<'le> GeckoElement<'le> {
 
         debug_assert_eq!(to.is_some(), from.is_some());
 
-<<<<<<< HEAD
-        combined_duration > 0.0f32 && from != to && from
-            .unwrap()
-            .animate(
-                to.as_ref().unwrap(),
-                Procedure::Interpolate { progress: 0.5 },
-            )
-            .is_ok()
-||||||| merged common ancestors
-        combined_duration > 0.0f32 && from != to && from
-            .unwrap()
-            .animate(
-                to.as_ref().unwrap(),
-                Procedure::Interpolate { progress: 0.5 },
-            ).is_ok()
-=======
         combined_duration > 0.0f32 &&
             from != to &&
             from.unwrap()
@@ -1120,7 +950,6 @@ impl<'le> GeckoElement<'le> {
                     Procedure::Interpolate { progress: 0.5 },
                 )
                 .is_ok()
->>>>>>> upstream-releases
     }
 }
 
@@ -1150,15 +979,7 @@ fn get_animation_rule(
     element: &GeckoElement,
     cascade_level: CascadeLevel,
 ) -> Option<Arc<Locked<PropertyDeclarationBlock>>> {
-<<<<<<< HEAD
-    use crate::gecko_bindings::sugar::ownership::HasSimpleFFI;
     use crate::properties::longhands::ANIMATABLE_PROPERTY_COUNT;
-||||||| merged common ancestors
-    use gecko_bindings::sugar::ownership::HasSimpleFFI;
-    use properties::longhands::ANIMATABLE_PROPERTY_COUNT;
-=======
-    use crate::properties::longhands::ANIMATABLE_PROPERTY_COUNT;
->>>>>>> upstream-releases
 
     // There's a very rough correlation between the number of effects
     // (animations) on an element and the number of properties it is likely to
@@ -1213,15 +1034,7 @@ impl FontMetricsProvider for GeckoFontMetricsProvider {
         GeckoFontMetricsProvider::new()
     }
 
-<<<<<<< HEAD
-    fn get_size(&self, font_name: &Atom, font_family: u8) -> Au {
-        use crate::gecko_bindings::bindings::Gecko_GetBaseSize;
-||||||| merged common ancestors
-    fn get_size(&self, font_name: &Atom, font_family: u8) -> Au {
-        use gecko_bindings::bindings::Gecko_GetBaseSize;
-=======
     fn get_size(&self, font_name: &Atom, font_family: GenericFontFamily) -> Au {
->>>>>>> upstream-releases
         let mut cache = self.font_size_cache.borrow_mut();
         if let Some(sizes) = cache.iter().find(|el| el.0 == *font_name) {
             return sizes.1.size_for_generic(font_family);
@@ -1233,23 +1046,6 @@ impl FontMetricsProvider for GeckoFontMetricsProvider {
 
     fn query(
         &self,
-<<<<<<< HEAD
-        font: &Font,
-        font_size: Au,
-        wm: WritingMode,
-        in_media_query: bool,
-        device: &Device,
-    ) -> FontMetricsQueryResult {
-        use crate::gecko_bindings::bindings::Gecko_GetFontMetrics;
-||||||| merged common ancestors
-        font: &Font,
-        font_size: Au,
-        wm: WritingMode,
-        in_media_query: bool,
-        device: &Device,
-    ) -> FontMetricsQueryResult {
-        use gecko_bindings::bindings::Gecko_GetFontMetrics;
-=======
         context: &crate::values::computed::Context,
         base_size: FontBaseSize,
         orientation: FontMetricsOrientation,
@@ -1275,7 +1071,6 @@ impl FontMetricsProvider for GeckoFontMetricsProvider {
             FontMetricsOrientation::MatchContext => wm.is_vertical() && wm.is_upright(),
             FontMetricsOrientation::Horizontal => false,
         };
->>>>>>> upstream-releases
         let gecko_metrics = unsafe {
             bindings::Gecko_GetFontMetrics(
                 pc,
@@ -1758,16 +1553,6 @@ impl<'le> TElement for GeckoElement<'le> {
 
     /// Process various tasks that are a result of animation-only restyle.
     fn process_post_animation(&self, tasks: PostAnimationTasks) {
-<<<<<<< HEAD
-        use crate::gecko_bindings::structs::nsChangeHint_nsChangeHint_Empty;
-        use crate::gecko_bindings::structs::nsRestyleHint_eRestyle_Subtree;
-
-||||||| merged common ancestors
-        use gecko_bindings::structs::nsChangeHint_nsChangeHint_Empty;
-        use gecko_bindings::structs::nsRestyleHint_eRestyle_Subtree;
-
-=======
->>>>>>> upstream-releases
         debug_assert!(!tasks.is_empty(), "Should be involved a task");
 
         // If display style was changed from none to other, we need to resolve

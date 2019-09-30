@@ -1,19 +1,7 @@
-<<<<<<< HEAD
-use crate::command::{
-    AddonInstallParameters, AddonUninstallParameters, GeckoContextParameters,
-    GeckoExtensionCommand, GeckoExtensionRoute, XblLocatorParameters, CHROME_ELEMENT_KEY,
-    LEGACY_ELEMENT_KEY,
-};
-||||||| merged common ancestors
-use command::{AddonInstallParameters, AddonUninstallParameters, GeckoContextParameters,
-              GeckoExtensionCommand, GeckoExtensionRoute, XblLocatorParameters,
-              CHROME_ELEMENT_KEY, LEGACY_ELEMENT_KEY};
-=======
 use crate::command::{
     AddonInstallParameters, AddonUninstallParameters, GeckoContextParameters,
     GeckoExtensionCommand, GeckoExtensionRoute, XblLocatorParameters, CHROME_ELEMENT_KEY,
 };
->>>>>>> upstream-releases
 use mozprofile::preferences::Pref;
 use mozprofile::profile::Profile;
 use mozrunner::runner::{FirefoxProcess, FirefoxRunner, Runner, RunnerProcess};
@@ -52,13 +40,7 @@ use webdriver::command::WebDriverCommand::{AcceptAlert, AddCookie, NewWindow, Cl
 use webdriver::command::{ActionsParameters, AddCookieParameters, GetNamedCookieParameters,
                          GetParameters, JavascriptCommandParameters, LocatorParameters,
                          NewSessionParameters, SwitchToFrameParameters, SwitchToWindowParameters,
-<<<<<<< HEAD
-                         TimeoutsParameters, WindowRectParameters};
-||||||| merged common ancestors
-                         TakeScreenshotParameters, TimeoutsParameters, WindowRectParameters};
-=======
                          TimeoutsParameters, WindowRectParameters, NewWindowParameters};
->>>>>>> upstream-releases
 use webdriver::command::{WebDriverCommand, WebDriverMessage};
 use webdriver::common::{Cookie, FrameId, WebElement, ELEMENT_KEY, FRAME_KEY, WINDOW_KEY};
 use webdriver::error::{ErrorStatus, WebDriverError, WebDriverResult};
@@ -866,30 +848,14 @@ impl MarionetteCommand {
             ExecuteScript(ref x) => (Some("WebDriver:ExecuteScript"), Some(x.to_marionette())),
             FindElement(ref x) => (Some("WebDriver:FindElement"), Some(x.to_marionette())),
             FindElementElement(ref e, ref x) => {
-<<<<<<< HEAD
-                let mut data = x.to_marionette()?;
-                data.insert("element".to_string(), Value::String(e.id.clone()));
-||||||| merged common ancestors
-                let mut data = try!(x.to_marionette());
-                data.insert("element".to_string(), Value::String(e.id.clone()));
-=======
                 let mut data = x.to_marionette()?;
                 data.insert("element".to_string(), Value::String(e.to_string()));
->>>>>>> upstream-releases
                 (Some("WebDriver:FindElement"), Some(Ok(data)))
             }
             FindElements(ref x) => (Some("WebDriver:FindElements"), Some(x.to_marionette())),
             FindElementElements(ref e, ref x) => {
-<<<<<<< HEAD
-                let mut data = x.to_marionette()?;
-                data.insert("element".to_string(), Value::String(e.id.clone()));
-||||||| merged common ancestors
-                let mut data = try!(x.to_marionette());
-                data.insert("element".to_string(), Value::String(e.id.clone()));
-=======
                 let mut data = x.to_marionette()?;
                 data.insert("element".to_string(), Value::String(e.to_string()));
->>>>>>> upstream-releases
                 (Some("WebDriver:FindElements"), Some(Ok(data)))
             }
             FullscreenWindow => (Some("WebDriver:FullscreenWindow"), None),
@@ -972,14 +938,7 @@ impl MarionetteCommand {
             SwitchToWindow(ref x) => (Some("WebDriver:SwitchToWindow"), Some(x.to_marionette())),
             TakeElementScreenshot(ref e) => {
                 let mut data = Map::new();
-<<<<<<< HEAD
-                data.insert("id".to_string(), Value::String(e.id.clone()));
-||||||| merged common ancestors
-                data.insert("element".to_string(), serde_json::to_value(e)?);
-                // data.insert("id".to_string(), e.id.to_json());
-=======
                 data.insert("id".to_string(), Value::String(e.to_string()));
->>>>>>> upstream-releases
                 data.insert("highlights".to_string(), Value::Array(vec![]));
                 data.insert("full".to_string(), Value::Bool(false));
                 (Some("WebDriver:TakeScreenshot"), Some(Ok(data)))
@@ -1002,19 +961,9 @@ impl MarionetteCommand {
                 UninstallAddon(x) => {
                     (Some("Addon:Uninstall"), Some(x.to_marionette()))
                 }
-<<<<<<< HEAD
-                XblAnonymousByAttribute(e, x) => {
-                    let mut data = x.to_marionette()?;
-                    data.insert("element".to_string(), Value::String(e.id.clone()));
-||||||| merged common ancestors
-                &GeckoExtensionCommand::XblAnonymousByAttribute(ref e, ref x) => {
-                    let mut data = try!(x.to_marionette());
-                    data.insert("element".to_string(), Value::String(e.id.clone()));
-=======
                 XblAnonymousByAttribute(e, x) => {
                     let mut data = x.to_marionette()?;
                     data.insert("element".to_string(), Value::String(e.to_string()));
->>>>>>> upstream-releases
                     (Some("WebDriver:FindElement"), Some(Ok(data)))
                 }
                 XblAnonymousChildren(e) => {
@@ -1527,29 +1476,6 @@ impl ToMarionette for SwitchToWindowParameters {
             "name".to_string(),
             serde_json::to_value(self.handle.clone())?,
         );
-<<<<<<< HEAD
-        Ok(data)
-    }
-}
-
-||||||| merged common ancestors
-        Ok(data)
-    }
-}
-
-impl ToMarionette for TakeScreenshotParameters {
-    fn to_marionette(&self) -> WebDriverResult<Map<String, Value>> {
-        let mut data = Map::new();
-        let element = match self.element {
-            None => Value::Null,
-            Some(ref x) => Value::Object(try!(x.to_marionette())),
-        };
-        data.insert("element".to_string(), element);
-        Ok(data)
-    }
-}
-
-=======
         data.insert(
             "handle".to_string(),
             serde_json::to_value(self.handle.clone())?,
@@ -1558,7 +1484,6 @@ impl ToMarionette for TakeScreenshotParameters {
     }
 }
 
->>>>>>> upstream-releases
 impl ToMarionette for TimeoutsParameters {
     fn to_marionette(&self) -> WebDriverResult<Map<String, Value>> {
         Ok(try_opt!(

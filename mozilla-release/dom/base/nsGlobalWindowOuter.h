@@ -73,15 +73,7 @@ class nsITimeoutHandler;
 class nsIWebBrowserChrome;
 class mozIDOMWindowProxy;
 
-<<<<<<< HEAD
 class nsDocShellLoadState;
-class nsDOMWindowList;
-||||||| merged common ancestors
-class nsDocShellLoadInfo;
-class nsDOMWindowList;
-=======
-class nsDocShellLoadState;
->>>>>>> upstream-releases
 class nsScreen;
 class nsHistory;
 class nsGlobalWindowObserver;
@@ -220,15 +212,8 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
     return (nsGlobalWindowOuter*)(mozilla::dom::EventTarget*)supports;
   }
 
-<<<<<<< HEAD
-  static already_AddRefed<nsGlobalWindowOuter> Create(nsIDocShell* aDocShell,
-                                                      bool aIsChrome);
-||||||| merged common ancestors
-  static already_AddRefed<nsGlobalWindowOuter> Create(nsIDocShell* aDocShell, bool aIsChrome);
-=======
   static already_AddRefed<nsGlobalWindowOuter> Create(nsDocShell* aDocShell,
                                                       bool aIsChrome);
->>>>>>> upstream-releases
 
   // public methods
   nsPIDOMWindowOuter* GetPrivateParent();
@@ -246,25 +231,10 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
   }
 
   // nsIGlobalJSObjectHolder
-<<<<<<< HEAD
-  virtual JSObject* GetGlobalJSObject() override;
-
-  // nsIScriptGlobalObject
-  JSObject* FastGetGlobalJSObject() const { return GetWrapperPreserveColor(); }
-||||||| merged common ancestors
-  virtual JSObject* GetGlobalJSObject() override;
-
-  // nsIScriptGlobalObject
-  JSObject *FastGetGlobalJSObject() const
-  {
-    return GetWrapperPreserveColor();
-  }
-=======
   JSObject* GetGlobalJSObject() final { return GetWrapper(); }
   JSObject* GetGlobalJSObjectPreserveColor() const final {
     return GetWrapperPreserveColor();
   }
->>>>>>> upstream-releases
 
   virtual nsresult EnsureScriptEnvironment() override;
 
@@ -326,23 +296,8 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
       mozilla::dom::EventTarget* aChromeEventHandler) override;
 
   // Outer windows only.
-<<<<<<< HEAD
-  virtual void SetInitialPrincipalToSubject() override;
-
-  virtual PopupControlState PushPopupControlState(PopupControlState state,
-                                                  bool aForce) const override;
-  virtual void PopPopupControlState(PopupControlState state) const override;
-  virtual PopupControlState GetPopupControlState() const override;
-||||||| merged common ancestors
-  virtual void SetInitialPrincipalToSubject() override;
-
-  virtual PopupControlState PushPopupControlState(PopupControlState state, bool aForce) const override;
-  virtual void PopPopupControlState(PopupControlState state) const override;
-  virtual PopupControlState GetPopupControlState() const override;
-=======
   virtual void SetInitialPrincipalToSubject(
       nsIContentSecurityPolicy* aCSP) override;
->>>>>>> upstream-releases
 
   virtual already_AddRefed<nsISupports> SaveWindowState() override;
   virtual nsresult RestoreWindowState(nsISupports* aState) override;
@@ -357,14 +312,7 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
 
   void DetachFromDocShell();
 
-<<<<<<< HEAD
-  virtual nsresult SetNewDocument(nsIDocument* aDocument, nsISupports* aState,
-||||||| merged common ancestors
-  virtual nsresult SetNewDocument(nsIDocument *aDocument,
-                                  nsISupports *aState,
-=======
   virtual nsresult SetNewDocument(Document* aDocument, nsISupports* aState,
->>>>>>> upstream-releases
                                   bool aForceReuseInnerWindow) override;
 
   // Outer windows only.
@@ -464,17 +412,7 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
   };
   friend class TemporarilyDisableDialogs;
 
-<<<<<<< HEAD
   nsIScriptContext* GetContextInternal();
-
-  nsGlobalWindowOuter* GetOuterWindowInternal();
-||||||| merged common ancestors
-  nsIScriptContext *GetContextInternal();
-
-  nsGlobalWindowOuter *GetOuterWindowInternal();
-=======
-  nsIScriptContext* GetContextInternal();
->>>>>>> upstream-releases
 
   nsGlobalWindowInner* GetCurrentInnerWindowInternal() const;
 
@@ -517,31 +455,6 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
 
   bool IsTopLevelWindow();
 
-<<<<<<< HEAD
-  virtual void FirePopupBlockedEvent(
-      nsIDocument* aDoc, nsIURI* aPopupURI, const nsAString& aPopupWindowName,
-      const nsAString& aPopupWindowFeatures) override;
-
-  virtual void NotifyContentBlockingState(unsigned aState, nsIChannel* aChannel,
-                                          bool aBlocked,
-                                          nsIURI* aURIHint) override;
-||||||| merged common ancestors
-  virtual void
-  FirePopupBlockedEvent(nsIDocument* aDoc,
-                        nsIURI* aPopupURI,
-                        const nsAString& aPopupWindowName,
-                        const nsAString& aPopupWindowFeatures) override;
-
-  virtual void
-  NotifyContentBlockingState(unsigned aState,
-                             nsIChannel* aChannel,
-                             bool aBlocked,
-                             nsIURI* aURIHint) override;
-
-  virtual uint32_t GetSerial() override {
-    return mSerial;
-  }
-=======
   virtual void FirePopupBlockedEvent(
       Document* aDoc, nsIURI* aPopupURI, const nsAString& aPopupWindowName,
       const nsAString& aPopupWindowFeatures) override;
@@ -552,7 +465,6 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
       const mozilla::Maybe<
           mozilla::AntiTrackingCommon::StorageAccessGrantedReason>& aReason)
       override;
->>>>>>> upstream-releases
 
   void AddSizeOfIncludingThis(nsWindowSizes& aWindowSizes) const;
 
@@ -608,16 +520,7 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
 
   nsISupports* GetParentObject() { return nullptr; }
 
-<<<<<<< HEAD
-  nsIDocument* GetDocument() { return GetDoc(); }
-||||||| merged common ancestors
-  nsIDocument* GetDocument()
-  {
-    return GetDoc();
-  }
-=======
   Document* GetDocument() { return GetDoc(); }
->>>>>>> upstream-releases
   void GetNameOuter(nsAString& aName);
   void SetNameOuter(const nsAString& aName, mozilla::ErrorResult& aError);
   mozilla::dom::Location* GetLocation() override;
@@ -636,17 +539,10 @@ class nsGlobalWindowOuter final : public mozilla::dom::EventTarget,
   mozilla::dom::Nullable<mozilla::dom::WindowProxyHolder> GetTopOuter();
 
   nsresult GetPrompter(nsIPrompt** aPrompt) override;
-<<<<<<< HEAD
-
- protected:
-||||||| merged common ancestors
-protected:
-=======
 
   RefPtr<mozilla::ThrottledEventQueue> mPostMessageEventQueue;
 
  protected:
->>>>>>> upstream-releases
   nsPIDOMWindowOuter* GetOpenerWindowOuter();
   // Initializes the mWasOffline member variable
   void InitWasOffline();
@@ -661,22 +557,9 @@ protected:
   nsPIDOMWindowOuter* GetScriptableParentOrNull() override;
   mozilla::dom::Element* GetFrameElementOuter(nsIPrincipal& aSubjectPrincipal);
   mozilla::dom::Element* GetFrameElement() override;
-<<<<<<< HEAD
-  already_AddRefed<nsPIDOMWindowOuter> OpenOuter(const nsAString& aUrl,
-                                                 const nsAString& aName,
-                                                 const nsAString& aOptions,
-                                                 mozilla::ErrorResult& aError);
-||||||| merged common ancestors
-  already_AddRefed<nsPIDOMWindowOuter>
-  OpenOuter(const nsAString& aUrl,
-            const nsAString& aName,
-            const nsAString& aOptions,
-            mozilla::ErrorResult& aError);
-=======
   mozilla::dom::Nullable<mozilla::dom::WindowProxyHolder> OpenOuter(
       const nsAString& aUrl, const nsAString& aName, const nsAString& aOptions,
       mozilla::ErrorResult& aError);
->>>>>>> upstream-releases
   nsresult Open(const nsAString& aUrl, const nsAString& aName,
                 const nsAString& aOptions, nsDocShellLoadState* aLoadState,
                 bool aForceNoOpener, nsPIDOMWindowOuter** _retval) override;
@@ -741,27 +624,11 @@ protected:
 
   bool ShouldResistFingerprinting();
 
-<<<<<<< HEAD
-  already_AddRefed<nsPIDOMWindowOuter> OpenDialogOuter(
-      JSContext* aCx, const nsAString& aUrl, const nsAString& aName,
-      const nsAString& aOptions,
-      const mozilla::dom::Sequence<JS::Value>& aExtraArgument,
-      mozilla::ErrorResult& aError);
-||||||| merged common ancestors
-  already_AddRefed<nsPIDOMWindowOuter>
-  OpenDialogOuter(JSContext* aCx,
-                  const nsAString& aUrl,
-                  const nsAString& aName,
-                  const nsAString& aOptions,
-                  const mozilla::dom::Sequence<JS::Value>& aExtraArgument,
-                  mozilla::ErrorResult& aError);
-=======
   mozilla::dom::Nullable<mozilla::dom::WindowProxyHolder> OpenDialogOuter(
       JSContext* aCx, const nsAString& aUrl, const nsAString& aName,
       const nsAString& aOptions,
       const mozilla::dom::Sequence<JS::Value>& aExtraArgument,
       mozilla::ErrorResult& aError);
->>>>>>> upstream-releases
   nsresult OpenDialog(const nsAString& aUrl, const nsAString& aName,
                       const nsAString& aOptions, nsISupports* aExtraArgument,
                       nsPIDOMWindowOuter** _retval) override;
@@ -858,56 +725,6 @@ protected:
                            mozilla::dom::CallerType aCallerType,
                            mozilla::ErrorResult& aError);
 
-<<<<<<< HEAD
-  // Array of idle observers that are notified of idle events.
-  nsTObserverArray<IdleObserverHolder> mIdleObservers;
-
-  // Idle timer used for function callbacks to notify idle observers.
-  nsCOMPtr<nsITimer> mIdleTimer;
-
-  // Idle fuzz time added to idle timer callbacks.
-  uint32_t mIdleFuzzFactor;
-
-  // Index in mArrayIdleObservers
-  // Next idle observer to notify user idle status
-  int32_t mIdleCallbackIndex;
-
-  // If false then the topic is "active"
-  // If true then the topic is "idle"
-  bool mCurrentlyIdle;
-
-  // Set to true when a fuzz time needs to be applied
-  // to active notifications to the idle observer.
-  bool mAddActiveEventFuzzTime;
-
-  nsCOMPtr<nsIIdleService> mIdleService;
-
-||||||| merged common ancestors
-  // Array of idle observers that are notified of idle events.
-  nsTObserverArray<IdleObserverHolder> mIdleObservers;
-
-  // Idle timer used for function callbacks to notify idle observers.
-  nsCOMPtr<nsITimer> mIdleTimer;
-
-  // Idle fuzz time added to idle timer callbacks.
-  uint32_t mIdleFuzzFactor;
-
-  // Index in mArrayIdleObservers
-  // Next idle observer to notify user idle status
-  int32_t mIdleCallbackIndex;
-
-  // If false then the topic is "active"
-  // If true then the topic is "idle"
-  bool mCurrentlyIdle;
-
-  // Set to true when a fuzz time needs to be applied
-  // to active notifications to the idle observer.
-  bool mAddActiveEventFuzzTime;
-
-  nsCOMPtr <nsIIdleService> mIdleService;
-
-=======
->>>>>>> upstream-releases
   RefPtr<mozilla::dom::WakeLock> mWakeLock;
 
   friend class HashchangeCallback;
@@ -1005,13 +822,7 @@ protected:
                         nsPIDOMWindowOuter** aReturn);
 
   // Checks that the channel was loaded by the URI currently loaded in aDoc
-<<<<<<< HEAD
-  static bool SameLoadingURI(nsIDocument* aDoc, nsIChannel* aChannel);
-||||||| merged common ancestors
-  static bool SameLoadingURI(nsIDocument *aDoc, nsIChannel *aChannel);
-=======
   static bool SameLoadingURI(Document* aDoc, nsIChannel* aChannel);
->>>>>>> upstream-releases
 
  public:
   // Helper Functions
@@ -1021,23 +832,11 @@ protected:
   nsresult SecurityCheckURL(const char* aURL, nsIURI** aURI);
 
   bool PopupWhitelisted();
-<<<<<<< HEAD
-  PopupControlState RevisePopupAbuseLevel(PopupControlState);
-  void FireAbuseEvents(const nsAString& aPopupURL,
-                       const nsAString& aPopupWindowName,
-                       const nsAString& aPopupWindowFeatures);
-||||||| merged common ancestors
-  PopupControlState RevisePopupAbuseLevel(PopupControlState);
-  void     FireAbuseEvents(const nsAString &aPopupURL,
-                           const nsAString &aPopupWindowName,
-                           const nsAString &aPopupWindowFeatures);
-=======
   mozilla::dom::PopupBlocker::PopupControlState RevisePopupAbuseLevel(
       mozilla::dom::PopupBlocker::PopupControlState aState);
   void FireAbuseEvents(const nsAString& aPopupURL,
                        const nsAString& aPopupWindowName,
                        const nsAString& aPopupWindowFeatures);
->>>>>>> upstream-releases
 
  private:
   void ReportLargeAllocStatus();
@@ -1119,17 +918,8 @@ protected:
 
   virtual bool ShouldShowFocusRing() override;
 
-<<<<<<< HEAD
-  virtual void SetKeyboardIndicators(
-      UIStateChangeType aShowAccelerators,
-      UIStateChangeType aShowFocusRings) override;
-||||||| merged common ancestors
-  virtual void SetKeyboardIndicators(UIStateChangeType aShowAccelerators,
-                                     UIStateChangeType aShowFocusRings) override;
-=======
   virtual void SetKeyboardIndicators(
       UIStateChangeType aShowFocusRings) override;
->>>>>>> upstream-releases
 
  public:
   virtual already_AddRefed<nsPIWindowRoot> GetTopWindowRoot() override;
@@ -1239,19 +1029,9 @@ protected:
   enum class SecureContextFlags { eDefault, eIgnoreOpener };
   // Called only on outer windows to compute the value that will be returned by
   // IsSecureContext() for the inner window that corresponds to aDocument.
-<<<<<<< HEAD
-  bool ComputeIsSecureContext(
-      nsIDocument* aDocument,
-      SecureContextFlags aFlags = SecureContextFlags::eDefault);
-||||||| merged common ancestors
-  bool ComputeIsSecureContext(nsIDocument* aDocument,
-                              SecureContextFlags aFlags =
-                                SecureContextFlags::eDefault);
-=======
   bool ComputeIsSecureContext(
       Document* aDocument,
       SecureContextFlags aFlags = SecureContextFlags::eDefault);
->>>>>>> upstream-releases
 
   void SetDocShell(nsDocShell* aDocShell);
 
@@ -1319,18 +1099,8 @@ protected:
   // For |window.arguments|, via |openDialog|.
   nsCOMPtr<nsIArray> mArguments;
 
-<<<<<<< HEAD
-  RefPtr<nsDOMWindowList> mFrames;
   RefPtr<nsDOMWindowUtils> mWindowUtils;
   nsString mStatus;
-||||||| merged common ancestors
-  RefPtr<nsDOMWindowList>     mFrames;
-  RefPtr<nsDOMWindowUtils>      mWindowUtils;
-  nsString                      mStatus;
-=======
-  RefPtr<nsDOMWindowUtils> mWindowUtils;
-  nsString mStatus;
->>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::Storage> mLocalStorage;
 
@@ -1420,42 +1190,13 @@ inline nsIScriptContext* nsGlobalWindowOuter::GetContextInternal() {
   return mContext;
 }
 
-<<<<<<< HEAD
-inline nsGlobalWindowOuter* nsGlobalWindowOuter::GetOuterWindowInternal() {
-  return nsGlobalWindowOuter::Cast(GetOuterWindow());
-}
-
 inline nsGlobalWindowInner* nsGlobalWindowOuter::GetCurrentInnerWindowInternal()
     const {
-||||||| merged common ancestors
-inline nsGlobalWindowOuter*
-nsGlobalWindowOuter::GetOuterWindowInternal()
-{
-  return nsGlobalWindowOuter::Cast(GetOuterWindow());
-}
-
-inline nsGlobalWindowInner*
-nsGlobalWindowOuter::GetCurrentInnerWindowInternal() const
-{
-=======
-inline nsGlobalWindowInner* nsGlobalWindowOuter::GetCurrentInnerWindowInternal()
-    const {
->>>>>>> upstream-releases
   return nsGlobalWindowInner::Cast(mInnerWindow);
 }
 
-<<<<<<< HEAD
-inline nsGlobalWindowInner* nsGlobalWindowOuter::EnsureInnerWindowInternal() {
-  return nsGlobalWindowInner::Cast(AsOuter()->EnsureInnerWindow());
-||||||| merged common ancestors
-inline nsGlobalWindowInner*
-nsGlobalWindowOuter::EnsureInnerWindowInternal()
-{
-  return nsGlobalWindowInner::Cast(AsOuter()->EnsureInnerWindow());
-=======
 inline nsGlobalWindowInner* nsGlobalWindowOuter::EnsureInnerWindowInternal() {
   return nsGlobalWindowInner::Cast(EnsureInnerWindow());
->>>>>>> upstream-releases
 }
 
 inline bool nsGlobalWindowOuter::IsTopLevelWindow() {
@@ -1469,20 +1210,9 @@ inline bool nsGlobalWindowOuter::IsFrame() {
   return GetParentInternal() != nullptr;
 }
 
-<<<<<<< HEAD
-inline void nsGlobalWindowOuter::MaybeClearInnerWindow(
-    nsGlobalWindowInner* aExpectedInner) {
-  if (mInnerWindow == aExpectedInner->AsInner()) {
-||||||| merged common ancestors
-inline void
-nsGlobalWindowOuter::MaybeClearInnerWindow(nsGlobalWindowInner* aExpectedInner)
-{
-  if(mInnerWindow == aExpectedInner->AsInner()) {
-=======
 inline void nsGlobalWindowOuter::MaybeClearInnerWindow(
     nsGlobalWindowInner* aExpectedInner) {
   if (mInnerWindow == aExpectedInner) {
->>>>>>> upstream-releases
     mInnerWindow = nullptr;
   }
 }

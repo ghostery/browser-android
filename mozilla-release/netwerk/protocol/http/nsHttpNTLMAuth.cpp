@@ -48,48 +48,17 @@ static const char kTrustedURIs[] = "network.automatic-ntlm-auth.trusted-uris";
 static const char kForceGeneric[] = "network.auth.force-generic-ntlm";
 static const char kSSOinPBmode[] = "network.auth.private-browsing-sso";
 
-<<<<<<< HEAD
 StaticRefPtr<nsHttpNTLMAuth> nsHttpNTLMAuth::gSingleton;
 
-static bool IsNonFqdn(nsIURI *uri) {
-  nsAutoCString host;
-  PRNetAddr addr;
-||||||| merged common ancestors
-static bool
-IsNonFqdn(nsIURI *uri)
-{
-    nsAutoCString host;
-    PRNetAddr addr;
-=======
-StaticRefPtr<nsHttpNTLMAuth> nsHttpNTLMAuth::gSingleton;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (NS_FAILED(uri->GetAsciiHost(host))) return false;
-||||||| merged common ancestors
-    if (NS_FAILED(uri->GetAsciiHost(host)))
-        return false;
-=======
 static bool IsNonFqdn(nsIURI* uri) {
   nsAutoCString host;
   PRNetAddr addr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // return true if host does not contain a dot and is not an ip address
-  return !host.IsEmpty() && !host.Contains('.') &&
-         PR_StringToNetAddr(host.BeginReading(), &addr) != PR_SUCCESS;
-||||||| merged common ancestors
-    // return true if host does not contain a dot and is not an ip address
-    return !host.IsEmpty() && !host.Contains('.') &&
-           PR_StringToNetAddr(host.BeginReading(), &addr) != PR_SUCCESS;
-=======
   if (NS_FAILED(uri->GetAsciiHost(host))) return false;
 
   // return true if host does not contain a dot and is not an ip address
   return !host.IsEmpty() && !host.Contains('.') &&
          PR_StringToNetAddr(host.BeginReading(), &addr) != PR_SUCCESS;
->>>>>>> upstream-releases
 }
 
 // Check to see if we should use our generic (internal) NTLM auth module.
@@ -105,59 +74,6 @@ static bool ForceGenericNTLM() {
 }
 
 // Check to see if we should use default credentials for this host or proxy.
-<<<<<<< HEAD
-static bool CanUseDefaultCredentials(nsIHttpAuthenticableChannel *channel,
-                                     bool isProxyAuth) {
-  nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
-  if (!prefs) {
-    return false;
-  }
-
-  // Proxy should go all the time, it's not considered a privacy leak
-  // to send default credentials to a proxy.
-  if (isProxyAuth) {
-    bool val;
-    if (NS_FAILED(prefs->GetBoolPref(kAllowProxies, &val))) val = false;
-    LOG(("Default credentials allowed for proxy: %d\n", val));
-    return val;
-  }
-
-  // Prevent using default credentials for authentication when we are in the
-  // private browsing mode (but not in "never remember history" mode) and when
-  // not explicitely allowed.  Otherwise, it would cause a privacy data leak.
-  nsCOMPtr<nsIChannel> bareChannel = do_QueryInterface(channel);
-  MOZ_ASSERT(bareChannel);
-
-  if (NS_UsePrivateBrowsing(bareChannel)) {
-    bool ssoInPb;
-    if (NS_SUCCEEDED(prefs->GetBoolPref(kSSOinPBmode, &ssoInPb)) && ssoInPb) {
-      return true;
-    }
-
-    bool dontRememberHistory;
-    if (NS_SUCCEEDED(prefs->GetBoolPref("browser.privatebrowsing.autostart",
-                                        &dontRememberHistory)) &&
-        !dontRememberHistory) {
-      return false;
-||||||| merged common ancestors
-static bool
-CanUseDefaultCredentials(nsIHttpAuthenticableChannel *channel,
-                         bool isProxyAuth)
-{
-    nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
-    if (!prefs) {
-        return false;
-    }
-
-    // Proxy should go all the time, it's not considered a privacy leak
-    // to send default credentials to a proxy.
-    if (isProxyAuth) {
-        bool val;
-        if (NS_FAILED(prefs->GetBoolPref(kAllowProxies, &val)))
-            val = false;
-        LOG(("Default credentials allowed for proxy: %d\n", val));
-        return val;
-=======
 static bool CanUseDefaultCredentials(nsIHttpAuthenticableChannel* channel,
                                      bool isProxyAuth) {
   nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
@@ -184,63 +100,7 @@ static bool CanUseDefaultCredentials(nsIHttpAuthenticableChannel* channel,
     bool ssoInPb;
     if (NS_SUCCEEDED(prefs->GetBoolPref(kSSOinPBmode, &ssoInPb)) && ssoInPb) {
       return true;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  nsCOMPtr<nsIURI> uri;
-  Unused << channel->GetURI(getter_AddRefs(uri));
-
-  bool allowNonFqdn;
-  if (NS_FAILED(prefs->GetBoolPref(kAllowNonFqdn, &allowNonFqdn)))
-    allowNonFqdn = false;
-  if (allowNonFqdn && uri && IsNonFqdn(uri)) {
-    LOG(("Host is non-fqdn, default credentials are allowed\n"));
-    return true;
-  }
-
-  bool isTrustedHost = (uri && auth::URIMatchesPrefPattern(uri, kTrustedURIs));
-  LOG(("Default credentials allowed for host: %d\n", isTrustedHost));
-  return isTrustedHost;
-||||||| merged common ancestors
-
-    // Prevent using default credentials for authentication when we are in the
-    // private browsing mode (but not in "never remember history" mode) and when
-    // not explicitely allowed.  Otherwise, it would cause a privacy data leak.
-    nsCOMPtr<nsIChannel> bareChannel = do_QueryInterface(channel);
-    MOZ_ASSERT(bareChannel);
-
-    if (NS_UsePrivateBrowsing(bareChannel)) {
-        bool ssoInPb;
-        if (NS_SUCCEEDED(prefs->GetBoolPref(kSSOinPBmode, &ssoInPb)) &&
-            ssoInPb) {
-            return true;
-        }
-
-        bool dontRememberHistory;
-        if (NS_SUCCEEDED(prefs->GetBoolPref("browser.privatebrowsing.autostart",
-                                            &dontRememberHistory)) &&
-            !dontRememberHistory) {
-            return false;
-        }
-    }
-
-    nsCOMPtr<nsIURI> uri;
-    Unused << channel->GetURI(getter_AddRefs(uri));
-
-    bool allowNonFqdn;
-    if (NS_FAILED(prefs->GetBoolPref(kAllowNonFqdn, &allowNonFqdn)))
-        allowNonFqdn = false;
-    if (allowNonFqdn && uri && IsNonFqdn(uri)) {
-        LOG(("Host is non-fqdn, default credentials are allowed\n"));
-        return true;
-    }
-
-    bool isTrustedHost = (uri && auth::URIMatchesPrefPattern(uri, kTrustedURIs));
-    LOG(("Default credentials allowed for host: %d\n", isTrustedHost));
-    return isTrustedHost;
-=======
 
     bool dontRememberHistory;
     if (NS_SUCCEEDED(prefs->GetBoolPref("browser.privatebrowsing.autostart",
@@ -264,7 +124,6 @@ static bool CanUseDefaultCredentials(nsIHttpAuthenticableChannel* channel,
   bool isTrustedHost = (uri && auth::URIMatchesPrefPattern(uri, kTrustedURIs));
   LOG(("Default credentials allowed for host: %d\n", isTrustedHost));
   return isTrustedHost;
->>>>>>> upstream-releases
 }
 
 // Dummy class for session state object.  This class doesn't hold any data.
@@ -295,84 +154,6 @@ already_AddRefed<nsIHttpAuthenticator> nsHttpNTLMAuth::GetOrCreate() {
 NS_IMPL_ISUPPORTS(nsHttpNTLMAuth, nsIHttpAuthenticator)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpNTLMAuth::ChallengeReceived(nsIHttpAuthenticableChannel *channel,
-                                  const char *challenge, bool isProxyAuth,
-                                  nsISupports **sessionState,
-                                  nsISupports **continuationState,
-                                  bool *identityInvalid) {
-  LOG(("nsHttpNTLMAuth::ChallengeReceived [ss=%p cs=%p]\n", *sessionState,
-       *continuationState));
-
-  // Use the native NTLM if available
-  mUseNative = true;
-
-  // NOTE: we don't define any session state, but we do use the pointer.
-
-  *identityInvalid = false;
-
-  // Start a new auth sequence if the challenge is exactly "NTLM".
-  // If native NTLM auth apis are available and enabled through prefs,
-  // try to use them.
-  if (PL_strcasecmp(challenge, "NTLM") == 0) {
-    nsCOMPtr<nsIAuthModule> module;
-
-    // Check to see if we should default to our generic NTLM auth module
-    // through UseGenericNTLM. (We use native auth by default if the
-    // system provides it.) If *sessionState is non-null, we failed to
-    // instantiate a native NTLM module the last time, so skip trying again.
-    bool forceGeneric = ForceGenericNTLM();
-    if (!forceGeneric && !*sessionState) {
-      // Check for approved default credentials hosts and proxies. If
-      // *continuationState is non-null, the last authentication attempt
-      // failed so skip default credential use.
-      if (!*continuationState &&
-          CanUseDefaultCredentials(channel, isProxyAuth)) {
-        // Try logging in with the user's default credentials. If
-        // successful, |identityInvalid| is false, which will trigger
-        // a default credentials attempt once we return.
-        module = nsIAuthModule::CreateInstance("sys-ntlm");
-      }
-||||||| merged common ancestors
-nsHttpNTLMAuth::ChallengeReceived(nsIHttpAuthenticableChannel *channel,
-                                  const char     *challenge,
-                                  bool            isProxyAuth,
-                                  nsISupports   **sessionState,
-                                  nsISupports   **continuationState,
-                                  bool           *identityInvalid)
-{
-    LOG(("nsHttpNTLMAuth::ChallengeReceived [ss=%p cs=%p]\n",
-         *sessionState, *continuationState));
-
-    // Use the native NTLM if available
-    mUseNative = true;
-
-    // NOTE: we don't define any session state, but we do use the pointer.
-
-    *identityInvalid = false;
-
-    // Start a new auth sequence if the challenge is exactly "NTLM".
-    // If native NTLM auth apis are available and enabled through prefs,
-    // try to use them.
-    if (PL_strcasecmp(challenge, "NTLM") == 0) {
-        nsCOMPtr<nsISupports> module;
-
-        // Check to see if we should default to our generic NTLM auth module
-        // through UseGenericNTLM. (We use native auth by default if the
-        // system provides it.) If *sessionState is non-null, we failed to
-        // instantiate a native NTLM module the last time, so skip trying again.
-        bool forceGeneric = ForceGenericNTLM();
-        if (!forceGeneric && !*sessionState) {
-            // Check for approved default credentials hosts and proxies. If
-            // *continuationState is non-null, the last authentication attempt
-            // failed so skip default credential use.
-            if (!*continuationState && CanUseDefaultCredentials(channel, isProxyAuth)) {
-                // Try logging in with the user's default credentials. If
-                // successful, |identityInvalid| is false, which will trigger
-                // a default credentials attempt once we return.
-                module = do_CreateInstance(NS_AUTH_MODULE_CONTRACTID_PREFIX "sys-ntlm");
-            }
-=======
 nsHttpNTLMAuth::ChallengeReceived(nsIHttpAuthenticableChannel* channel,
                                   const char* challenge, bool isProxyAuth,
                                   nsISupports** sessionState,
@@ -410,7 +191,6 @@ nsHttpNTLMAuth::ChallengeReceived(nsIHttpAuthenticableChannel* channel,
         // a default credentials attempt once we return.
         module = nsIAuthModule::CreateInstance("sys-ntlm");
       }
->>>>>>> upstream-releases
 #ifdef XP_WIN
       else {
         // Try to use native NTLM and prompt the user for their domain,
@@ -468,57 +248,16 @@ nsHttpNTLMAuth::ChallengeReceived(nsIHttpAuthenticableChannel* channel,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpNTLMAuth::GenerateCredentialsAsync(
-    nsIHttpAuthenticableChannel *authChannel,
-    nsIHttpAuthenticatorCallback *aCallback, const char *challenge,
-    bool isProxyAuth, const char16_t *domain, const char16_t *username,
-    const char16_t *password, nsISupports *sessionState,
-    nsISupports *continuationState, nsICancelable **aCancellable) {
-||||||| merged common ancestors
-nsHttpNTLMAuth::GenerateCredentialsAsync(nsIHttpAuthenticableChannel *authChannel,
-                                         nsIHttpAuthenticatorCallback* aCallback,
-                                         const char *challenge,
-                                         bool isProxyAuth,
-                                         const char16_t *domain,
-                                         const char16_t *username,
-                                         const char16_t *password,
-                                         nsISupports *sessionState,
-                                         nsISupports *continuationState,
-                                         nsICancelable **aCancellable)
-{
-=======
 nsHttpNTLMAuth::GenerateCredentialsAsync(
     nsIHttpAuthenticableChannel* authChannel,
     nsIHttpAuthenticatorCallback* aCallback, const char* challenge,
     bool isProxyAuth, const char16_t* domain, const char16_t* username,
     const char16_t* password, nsISupports* sessionState,
     nsISupports* continuationState, nsICancelable** aCancellable) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel *authChannel,
-                                    const char *challenge, bool isProxyAuth,
-                                    const char16_t *domain,
-                                    const char16_t *user, const char16_t *pass,
-                                    nsISupports **sessionState,
-                                    nsISupports **continuationState,
-                                    uint32_t *aFlags, char **creds)
-||||||| merged common ancestors
-nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel *authChannel,
-                                    const char      *challenge,
-                                    bool             isProxyAuth,
-                                    const char16_t *domain,
-                                    const char16_t *user,
-                                    const char16_t *pass,
-                                    nsISupports    **sessionState,
-                                    nsISupports    **continuationState,
-                                    uint32_t       *aFlags,
-                                    char           **creds)
-=======
 nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
                                     const char* challenge, bool isProxyAuth,
                                     const char16_t* domain,
@@ -526,87 +265,8 @@ nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
                                     nsISupports** sessionState,
                                     nsISupports** continuationState,
                                     uint32_t* aFlags, char** creds)
->>>>>>> upstream-releases
 
 {
-<<<<<<< HEAD
-  LOG(("nsHttpNTLMAuth::GenerateCredentials\n"));
-
-  *creds = nullptr;
-  *aFlags = 0;
-
-  // if user or password is empty, ChallengeReceived returned
-  // identityInvalid = false, that means we are using default user
-  // credentials; see  nsAuthSSPI::Init method for explanation of this
-  // condition
-  if (!user || !pass) *aFlags = USING_INTERNAL_IDENTITY;
-
-  nsresult rv;
-  nsCOMPtr<nsIAuthModule> module = do_QueryInterface(*continuationState, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  void *inBuf, *outBuf;
-  uint32_t inBufLen, outBufLen;
-
-  // initial challenge
-  if (PL_strcasecmp(challenge, "NTLM") == 0) {
-    // NTLM service name format is 'HTTP@host' for both http and https
-    nsCOMPtr<nsIURI> uri;
-    rv = authChannel->GetURI(getter_AddRefs(uri));
-    if (NS_FAILED(rv)) return rv;
-    nsAutoCString serviceName, host;
-    rv = uri->GetAsciiHost(host);
-    if (NS_FAILED(rv)) return rv;
-    serviceName.AppendLiteral("HTTP@");
-    serviceName.Append(host);
-    // initialize auth module
-    uint32_t reqFlags = nsIAuthModule::REQ_DEFAULT;
-    if (isProxyAuth) reqFlags |= nsIAuthModule::REQ_PROXY_AUTH;
-
-    rv = module->Init(serviceName.get(), reqFlags, domain, user, pass);
-    if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    LOG(("nsHttpNTLMAuth::GenerateCredentials\n"));
-
-    *creds = nullptr;
-    *aFlags = 0;
-
-    // if user or password is empty, ChallengeReceived returned
-    // identityInvalid = false, that means we are using default user
-    // credentials; see  nsAuthSSPI::Init method for explanation of this
-    // condition
-    if (!user || !pass)
-        *aFlags = USING_INTERNAL_IDENTITY;
-
-    nsresult rv;
-    nsCOMPtr<nsIAuthModule> module = do_QueryInterface(*continuationState, &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    void *inBuf, *outBuf;
-    uint32_t inBufLen, outBufLen;
-
-    // initial challenge
-    if (PL_strcasecmp(challenge, "NTLM") == 0) {
-        // NTLM service name format is 'HTTP@host' for both http and https
-        nsCOMPtr<nsIURI> uri;
-        rv = authChannel->GetURI(getter_AddRefs(uri));
-        if (NS_FAILED(rv))
-            return rv;
-        nsAutoCString serviceName, host;
-        rv = uri->GetAsciiHost(host);
-        if (NS_FAILED(rv))
-            return rv;
-        serviceName.AppendLiteral("HTTP@");
-        serviceName.Append(host);
-        // initialize auth module
-        uint32_t reqFlags = nsIAuthModule::REQ_DEFAULT;
-        if (isProxyAuth)
-            reqFlags |= nsIAuthModule::REQ_PROXY_AUTH;
-
-        rv = module->Init(serviceName.get(), reqFlags, domain, user, pass);
-        if (NS_FAILED(rv))
-            return rv;
-=======
   LOG(("nsHttpNTLMAuth::GenerateCredentials\n"));
 
   *creds = nullptr;
@@ -643,7 +303,6 @@ nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
 
     rv = module->Init(serviceName.get(), reqFlags, domain, user, pass);
     if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
 // This update enables updated Windows machines (Win7 or patched previous
 // versions) and Linux machines running Samba (updated for Channel
@@ -652,92 +311,6 @@ nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
 //
 // Currently only implemented for Windows, linux support will be landing in
 // a separate patch, update this #ifdef accordingly then.
-<<<<<<< HEAD
-#if defined(XP_WIN) /* || defined (LINUX) */
-    // We should retrieve the server certificate and compute the CBT,
-    // but only when we are using the native NTLM implementation and
-    // not the internal one.
-    // It is a valid case not having the security info object.  This
-    // occures when we connect an https site through an ntlm proxy.
-    // After the ssl tunnel has been created, we get here the second
-    // time and now generate the CBT from now valid security info.
-    nsCOMPtr<nsIChannel> channel = do_QueryInterface(authChannel, &rv);
-    if (NS_FAILED(rv)) return rv;
-
-    nsCOMPtr<nsISupports> security;
-    rv = channel->GetSecurityInfo(getter_AddRefs(security));
-    if (NS_FAILED(rv)) return rv;
-
-    nsCOMPtr<nsITransportSecurityInfo> secInfo = do_QueryInterface(security);
-
-    if (mUseNative && secInfo) {
-      nsCOMPtr<nsIX509Cert> cert;
-      rv = secInfo->GetServerCert(getter_AddRefs(cert));
-      if (NS_FAILED(rv)) return rv;
-
-      uint32_t length;
-      uint8_t *certArray;
-      rv = cert->GetRawDER(&length, &certArray);
-      if (NS_FAILED(rv)) return rv;
-
-      // If there is a server certificate, we pass it along the
-      // first time we call GetNextToken().
-      inBufLen = length;
-      inBuf = certArray;
-    } else {
-      // If there is no server certificate, we don't pass anything.
-      inBufLen = 0;
-      inBuf = nullptr;
-    }
-#else  // Extended protection update is just for Linux and Windows machines.
-    inBufLen = 0;
-    inBuf = nullptr;
-||||||| merged common ancestors
-#if defined (XP_WIN) /* || defined (LINUX) */
-        // We should retrieve the server certificate and compute the CBT,
-        // but only when we are using the native NTLM implementation and
-        // not the internal one.
-        // It is a valid case not having the security info object.  This
-        // occures when we connect an https site through an ntlm proxy.
-        // After the ssl tunnel has been created, we get here the second
-        // time and now generate the CBT from now valid security info.
-        nsCOMPtr<nsIChannel> channel = do_QueryInterface(authChannel, &rv);
-        if (NS_FAILED(rv))
-            return rv;
-
-        nsCOMPtr<nsISupports> security;
-        rv = channel->GetSecurityInfo(getter_AddRefs(security));
-        if (NS_FAILED(rv))
-            return rv;
-
-        nsCOMPtr<nsITransportSecurityInfo> secInfo =
-            do_QueryInterface(security);
-
-        if (mUseNative && secInfo) {
-            nsCOMPtr<nsIX509Cert> cert;
-            rv = secInfo->GetServerCert(getter_AddRefs(cert));
-            if (NS_FAILED(rv))
-                return rv;
-
-            uint32_t length;
-            uint8_t* certArray;
-            rv = cert->GetRawDER(&length, &certArray);
-            if (NS_FAILED(rv))
-                return rv;
-
-            // If there is a server certificate, we pass it along the
-            // first time we call GetNextToken().
-            inBufLen = length;
-            inBuf = certArray;
-        } else {
-            // If there is no server certificate, we don't pass anything.
-            inBufLen = 0;
-            inBuf = nullptr;
-        }
-#else // Extended protection update is just for Linux and Windows machines.
-        inBufLen = 0;
-        inBuf = nullptr;
-=======
 #if defined(XP_WIN) /* || defined (LINUX) */
     // We should retrieve the server certificate and compute the CBT,
     // but only when we are using the native NTLM implementation and
@@ -776,26 +349,7 @@ nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
 #else  // Extended protection update is just for Linux and Windows machines.
     inBufLen = 0;
     inBuf = nullptr;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  } else {
-    // decode challenge; skip past "NTLM " to the start of the base64
-    // encoded data.
-    int len = strlen(challenge);
-    if (len < 6) return NS_ERROR_UNEXPECTED;  // bogus challenge
-    challenge += 5;
-    len -= 5;
-
-    // strip off any padding (see bug 230351)
-    while (challenge[len - 1] == '=') len--;
-
-    // decode into the input secbuffer
-    rv = Base64Decode(challenge, len, (char **)&inBuf, &inBufLen);
-    if (NS_FAILED(rv)) {
-      return rv;
-||||||| merged common ancestors
-=======
   } else {
     // decode challenge; skip past "NTLM " to the start of the base64
     // encoded data.
@@ -811,45 +365,7 @@ nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
     rv = Base64Decode(challenge, len, (char**)&inBuf, &inBufLen);
     if (NS_FAILED(rv)) {
       return rv;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  rv = module->GetNextToken(inBuf, inBufLen, &outBuf, &outBufLen);
-  if (NS_SUCCEEDED(rv)) {
-    // base64 encode data in output buffer and prepend "NTLM "
-    CheckedUint32 credsLen = ((CheckedUint32(outBufLen) + 2) / 3) * 4;
-    credsLen += 5;  // "NTLM "
-    credsLen += 1;  // null terminate
-
-    if (!credsLen.isValid()) {
-      rv = NS_ERROR_FAILURE;
-    } else {
-      *creds = (char *)moz_xmalloc(credsLen.value());
-      memcpy(*creds, "NTLM ", 5);
-      PL_Base64Encode((char *)outBuf, outBufLen, *creds + 5);
-      (*creds)[credsLen.value() - 1] = '\0';  // null terminate
-||||||| merged common ancestors
-    else {
-        // decode challenge; skip past "NTLM " to the start of the base64
-        // encoded data.
-        int len = strlen(challenge);
-        if (len < 6)
-            return NS_ERROR_UNEXPECTED; // bogus challenge
-        challenge += 5;
-        len -= 5;
-
-        // strip off any padding (see bug 230351)
-        while (challenge[len - 1] == '=')
-          len--;
-
-        // decode into the input secbuffer
-        rv = Base64Decode(challenge, len, (char**)&inBuf, &inBufLen);
-        if (NS_FAILED(rv)) {
-            return rv;
-        }
-=======
   }
 
   rv = module->GetNextToken(inBuf, inBufLen, &outBuf, &outBufLen);
@@ -866,43 +382,24 @@ nsHttpNTLMAuth::GenerateCredentials(nsIHttpAuthenticableChannel* authChannel,
       memcpy(*creds, "NTLM ", 5);
       PL_Base64Encode((char*)outBuf, outBufLen, *creds + 5);
       (*creds)[credsLen.value() - 1] = '\0';  // null terminate
->>>>>>> upstream-releases
     }
 
     // OK, we are done with |outBuf|
     free(outBuf);
   }
 
-<<<<<<< HEAD
-  if (inBuf) free(inBuf);
-||||||| merged common ancestors
-    if (inBuf)
-        free(inBuf);
-=======
   // inBuf needs to be freed if it's not pointing into certArray
   if (inBuf && !certArray) {
     free(inBuf);
   }
->>>>>>> upstream-releases
 
   return rv;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpNTLMAuth::GetAuthFlags(uint32_t *flags) {
-  *flags = CONNECTION_BASED | IDENTITY_INCLUDES_DOMAIN | IDENTITY_ENCRYPTED;
-  return NS_OK;
-||||||| merged common ancestors
-nsHttpNTLMAuth::GetAuthFlags(uint32_t *flags)
-{
-    *flags = CONNECTION_BASED | IDENTITY_INCLUDES_DOMAIN | IDENTITY_ENCRYPTED;
-    return NS_OK;
-=======
 nsHttpNTLMAuth::GetAuthFlags(uint32_t* flags) {
   *flags = CONNECTION_BASED | IDENTITY_INCLUDES_DOMAIN | IDENTITY_ENCRYPTED;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 }  // namespace net

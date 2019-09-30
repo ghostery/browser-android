@@ -622,32 +622,19 @@ class TabTracker extends TabTrackerBase {
    *        The tab element which was previously activated.
    * @private
    */
-<<<<<<< HEAD
-  emitActivated(nativeTab, previousTab = undefined) {
-||||||| merged common ancestors
-  emitActivated(nativeTab) {
-=======
   emitActivated(nativeTab, previousTab = undefined) {
     let previousTabIsPrivate, previousTabId;
     if (previousTab && !previousTab.closing) {
       previousTabId = this.getId(previousTab);
       previousTabIsPrivate = isPrivateTab(previousTab);
     }
->>>>>>> upstream-releases
     this.emit("tab-activated", {
       isPrivate: isPrivateTab(nativeTab),
       tabId: this.getId(nativeTab),
-<<<<<<< HEAD
-      previousTabId: previousTab && !previousTab.closing ? this.getId(previousTab) : undefined,
-      windowId: windowTracker.getId(nativeTab.ownerGlobal)});
-||||||| merged common ancestors
-      windowId: windowTracker.getId(nativeTab.ownerGlobal)});
-=======
       previousTabId,
       previousTabIsPrivate,
       windowId: windowTracker.getId(nativeTab.ownerGlobal),
     });
->>>>>>> upstream-releases
   }
 
   /**
@@ -866,20 +853,11 @@ class Tab extends TabBase {
     return this.url && this.url.startsWith(READER_MODE_PREFIX);
   }
 
-<<<<<<< HEAD
-  get successorTabId() {
-    const {successor} = this.nativeTab;
-    return successor ? tabTracker.getId(successor) : -1;
-  }
-
-||||||| merged common ancestors
-=======
   get successorTabId() {
     const { successor } = this.nativeTab;
     return successor ? tabTracker.getId(successor) : -1;
   }
 
->>>>>>> upstream-releases
   /**
    * Converts session store data to an object compatible with the return value
    * of the convert() method, representing that data.

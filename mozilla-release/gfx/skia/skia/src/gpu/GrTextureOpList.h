@@ -48,13 +48,7 @@ public:
      * depending on the type of surface, configs, etc, and the backend-specific
      * limitations.
      */
-<<<<<<< HEAD
-    bool copySurface(GrContext*,
-||||||| merged common ancestors
-    bool copySurface(const GrCaps& caps,
-=======
     bool copySurface(GrRecordingContext*,
->>>>>>> upstream-releases
                      GrSurfaceProxy* dst,
                      GrSurfaceProxy* src,
                      const SkIRect& srcRect,
@@ -62,17 +56,7 @@ public:
 
     GrTextureOpList* asTextureOpList() override { return this; }
 
-<<<<<<< HEAD
     SkDEBUGCODE(void dump(bool printDependencies) const override;)
-
-    SkDEBUGCODE(int numOps() const override { return fRecordedOps.count(); })
-||||||| merged common ancestors
-    SkDEBUGCODE(void dump() const override;)
-
-    SkDEBUGCODE(int numOps() const override { return fRecordedOps.count(); })
-=======
-    SkDEBUGCODE(void dump(bool printDependencies) const override;)
->>>>>>> upstream-releases
 
 private:
     void deleteOp(int index);
@@ -84,12 +68,7 @@ private:
 
     void recordOp(std::unique_ptr<GrOp>);
 
-<<<<<<< HEAD
-    // The memory for the ops in 'fRecordedOps' is actually stored in 'fOpMemoryPool'
-||||||| merged common ancestors
-=======
     // The memory for the ops in 'fOpChains' is actually stored in 'fOpMemoryPool'
->>>>>>> upstream-releases
     SkSTArray<2, std::unique_ptr<GrOp>, true> fRecordedOps;
 
     typedef GrOpList INHERITED;

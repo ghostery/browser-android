@@ -66,7 +66,6 @@ class PreEffectsVisualOverflowCollector : public nsLayoutUtils::BoxCallback {
 
   virtual void AddBox(nsIFrame* aFrame) override {
     nsRect overflow = (aFrame == mCurrentFrame)
-<<<<<<< HEAD
                           ? mCurrentFrameOverflowArea
                           : GetPreEffectsVisualOverflowRect(aFrame, mInReflow);
     mResult.UnionRect(mResult,
@@ -74,26 +73,6 @@ class PreEffectsVisualOverflowCollector : public nsLayoutUtils::BoxCallback {
   }
 
   nsRect GetResult() const { return mResult; }
-||||||| merged common ancestors
-      ? mCurrentFrameOverflowArea
-      : GetPreEffectsVisualOverflowRect(aFrame, mInReflow);
-    mResult.UnionRect(mResult, overflow + aFrame->GetOffsetTo(mFirstContinuation));
-  }
-
-  nsRect GetResult() const {
-    return mResult;
-  }
-
-private:
-=======
-                          ? mCurrentFrameOverflowArea
-                          : GetPreEffectsVisualOverflowRect(aFrame, mInReflow);
-    mResult.UnionRect(mResult,
-                      overflow + aFrame->GetOffsetTo(mFirstContinuation));
-  }
-
-  nsRect GetResult() const { return mResult; }
->>>>>>> upstream-releases
 
  private:
   static nsRect GetPreEffectsVisualOverflowRect(nsIFrame* aFrame,
@@ -116,13 +95,7 @@ private:
     if (nsSVGIntegrationUtils::UsingOverflowAffectingEffects(aFrame) &&
         !aInReflow) {
       nsOverflowAreas* preTransformOverflows =
-<<<<<<< HEAD
-          aFrame->GetProperty(aFrame->PreTransformOverflowAreasProperty());
-||||||| merged common ancestors
-        aFrame->GetProperty(aFrame->PreTransformOverflowAreasProperty());
-=======
           aFrame->GetProperty(nsIFrame::PreTransformOverflowAreasProperty());
->>>>>>> upstream-releases
 
       MOZ_ASSERT(!preTransformOverflows,
                  "GetVisualOverflowRect() won't return the pre-effects rect!");
@@ -196,13 +169,6 @@ bool nsSVGIntegrationUtils::UsingMaskOrClipPathForFrame(
   return style->HasClipPath() || style->HasMask();
 }
 
-<<<<<<< HEAD
-nsPoint nsSVGIntegrationUtils::GetOffsetToBoundingBox(nsIFrame* aFrame) {
-||||||| merged common ancestors
-nsPoint
-nsSVGIntegrationUtils::GetOffsetToBoundingBox(nsIFrame* aFrame)
-{
-=======
 bool nsSVGIntegrationUtils::UsingSimpleClipPathForFrame(
     const nsIFrame* aFrame) {
   const nsStyleSVGReset* style = aFrame->StyleSVGReset();
@@ -220,7 +186,6 @@ bool nsSVGIntegrationUtils::UsingSimpleClipPathForFrame(
 }
 
 nsPoint nsSVGIntegrationUtils::GetOffsetToBoundingBox(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   if ((aFrame->GetStateBits() & NS_FRAME_SVG_LAYOUT)) {
     // Do NOT call GetAllInFlowRectsUnion for SVG - it will get the
     // covered region relative to the nsSVGOuterSVGFrame, which is absolutely
@@ -235,17 +200,8 @@ nsPoint nsSVGIntegrationUtils::GetOffsetToBoundingBox(nsIFrame* aFrame) {
   return -nsLayoutUtils::GetAllInFlowRectsUnion(aFrame, aFrame).TopLeft();
 }
 
-<<<<<<< HEAD
-/* static */ nsSize nsSVGIntegrationUtils::GetContinuationUnionSize(
-    nsIFrame* aNonSVGFrame) {
-||||||| merged common ancestors
-/* static */ nsSize
-nsSVGIntegrationUtils::GetContinuationUnionSize(nsIFrame* aNonSVGFrame)
-{
-=======
 /* static */
 nsSize nsSVGIntegrationUtils::GetContinuationUnionSize(nsIFrame* aNonSVGFrame) {
->>>>>>> upstream-releases
   NS_ASSERTION(!aNonSVGFrame->IsFrameOfType(nsIFrame::eSVG),
                "SVG frames should not get here");
   nsIFrame* firstFrame =
@@ -518,38 +474,16 @@ static void PaintMaskSurface(const PaintFramesParams& aParams,
     // maskFrame != nullptr means we get a SVG mask.
     // maskFrame == nullptr means we get an image mask.
     if (maskFrame) {
-<<<<<<< HEAD
-      Matrix svgMaskMatrix;
-      nsSVGMaskFrame::MaskParams params(
-          maskContext, aParams.frame, cssPxToDevPxMatrix, aOpacity,
-          &svgMaskMatrix, svgReset->mMask.mLayers[i].mMaskMode,
-          aParams.imgParams);
-||||||| merged common ancestors
-      Matrix svgMaskMatrix;
-      nsSVGMaskFrame::MaskParams params(maskContext, aParams.frame,
-                                        cssPxToDevPxMatrix,
-                                        aOpacity, &svgMaskMatrix,
-                                        svgReset->mMask.mLayers[i].mMaskMode,
-                                        aParams.imgParams);
-=======
       nsSVGMaskFrame::MaskParams params(
           maskContext, aParams.frame, cssPxToDevPxMatrix, aOpacity,
           svgReset->mMask.mLayers[i].mMaskMode, aParams.imgParams);
->>>>>>> upstream-releases
       RefPtr<SourceSurface> svgMask = maskFrame->GetMaskForMaskedFrame(params);
       if (svgMask) {
         Matrix tmp = aMaskDT->GetTransform();
         aMaskDT->SetTransform(Matrix());
         aMaskDT->MaskSurface(ColorPattern(Color(0.0, 0.0, 0.0, 1.0)), svgMask,
-<<<<<<< HEAD
-                             Point(0, 0), DrawOptions(1.0, compositionOp));
-||||||| merged common ancestors
-                             Point(0, 0),
-                             DrawOptions(1.0, compositionOp));
-=======
                              Point(0, 0), DrawOptions(1.0, compositionOp));
         aMaskDT->SetTransform(tmp);
->>>>>>> upstream-releases
       }
     } else if (svgReset->mMask.mLayers[i].mImage.IsResolved()) {
       gfxContextMatrixAutoSaveRestore matRestore(maskContext);
@@ -595,29 +529,12 @@ static MaskPaintResult CreateAndPaintMaskSurface(
     gfxMatrix cssPxToDevPxMatrix =
         nsSVGUtils::GetCSSPxToDevPxMatrix(aParams.frame);
     paintResult.opacityApplied = true;
-<<<<<<< HEAD
-    nsSVGMaskFrame::MaskParams params(&ctx, aParams.frame, cssPxToDevPxMatrix,
-                                      aOpacity, &paintResult.maskTransform,
-                                      svgReset->mMask.mLayers[0].mMaskMode,
-                                      aParams.imgParams);
-    paintResult.maskSurface = aMaskFrames[0]->GetMaskForMaskedFrame(params);
-
-||||||| merged common ancestors
-    nsSVGMaskFrame::MaskParams params(&ctx, aParams.frame, cssPxToDevPxMatrix,
-                                      aOpacity, &paintResult.maskTransform,
-                                      svgReset->mMask.mLayers[0].mMaskMode,
-                                      aParams.imgParams);
-    paintResult.maskSurface =
-      aMaskFrames[0]->GetMaskForMaskedFrame(params);
-
-=======
     nsSVGMaskFrame::MaskParams params(
         &ctx, aParams.frame, cssPxToDevPxMatrix, aOpacity,
         svgReset->mMask.mLayers[0].mMaskMode, aParams.imgParams);
     paintResult.maskSurface = aMaskFrames[0]->GetMaskForMaskedFrame(params);
     paintResult.maskTransform = ctx.CurrentMatrix();
     paintResult.maskTransform.Invert();
->>>>>>> upstream-releases
     if (!paintResult.maskSurface) {
       paintResult.transparentBlackMask = true;
     }
@@ -632,21 +549,8 @@ static MaskPaintResult CreateAndPaintMaskSurface(
     return paintResult;
   }
 
-<<<<<<< HEAD
-  if (!ctx.GetDrawTarget()->CanCreateSimilarDrawTarget(maskSurfaceRect.Size(),
-                                                       SurfaceFormat::A8)) {
-    return paintResult;
-  }
-  RefPtr<DrawTarget> maskDT = ctx.GetDrawTarget()->CreateSimilarDrawTarget(
-      maskSurfaceRect.Size(), SurfaceFormat::A8);
-||||||| merged common ancestors
-  RefPtr<DrawTarget> maskDT =
-      ctx.GetDrawTarget()->CreateSimilarDrawTarget(maskSurfaceRect.Size(),
-                                                   SurfaceFormat::A8);
-=======
   RefPtr<DrawTarget> maskDT = ctx.GetDrawTarget()->CreateClippedDrawTarget(
       maskSurfaceRect, SurfaceFormat::A8);
->>>>>>> upstream-releases
   if (!maskDT || !maskDT->IsValid()) {
     return paintResult;
   }
@@ -659,15 +563,7 @@ static MaskPaintResult CreateAndPaintMaskSurface(
 
   // Set context's matrix on maskContext, offset by the maskSurfaceRect's
   // position. This makes sure that we combine the masks in device space.
-<<<<<<< HEAD
-  Matrix maskSurfaceMatrix =
-      ctx.CurrentMatrix() * Matrix::Translation(-aParams.maskRect.TopLeft());
-||||||| merged common ancestors
-  Matrix maskSurfaceMatrix =
-    ctx.CurrentMatrix() * Matrix::Translation(-aParams.maskRect.TopLeft());
-=======
   Matrix maskSurfaceMatrix = ctx.CurrentMatrix();
->>>>>>> upstream-releases
 
   PaintMaskSurface(aParams, maskDT, paintResult.opacityApplied ? aOpacity : 1.0,
                    aSC, aMaskFrames, maskSurfaceMatrix, aOffsetToUserSpace);
@@ -937,21 +833,9 @@ bool nsSVGIntegrationUtils::PaintMask(const PaintFramesParams& aParams) {
     // XXX check return value?
     SVGObserverUtils::GetAndObserveClipPath(firstFrame, &clipPathFrame);
     RefPtr<SourceSurface> maskSurface =
-<<<<<<< HEAD
-        maskUsage.shouldGenerateMaskLayer ? maskTarget->Snapshot() : nullptr;
-    clipPathFrame->PaintClipMask(ctx, frame, cssPxToDevPxMatrix,
-                                 &clipMaskTransform, maskSurface,
-                                 ctx.CurrentMatrix());
-||||||| merged common ancestors
-      maskUsage.shouldGenerateMaskLayer ? maskTarget->Snapshot() : nullptr;
-    clipPathFrame->PaintClipMask(ctx, frame, cssPxToDevPxMatrix,
-                                   &clipMaskTransform, maskSurface,
-                                   ctx.CurrentMatrix());
-=======
         maskUsage.shouldGenerateMaskLayer ? maskTarget->Snapshot() : nullptr;
     clipPathFrame->PaintClipMask(ctx, frame, cssPxToDevPxMatrix, maskSurface,
                                  ctx.CurrentMatrix());
->>>>>>> upstream-releases
   }
 
   return true;
@@ -1052,21 +936,8 @@ void PaintMaskAndClipPathInternal(const PaintFramesParams& aParams,
       matSR.SetContext(&context);
 
       MoveContextOriginToUserSpace(firstFrame, aParams);
-<<<<<<< HEAD
-      Matrix clipMaskTransform;
-      RefPtr<SourceSurface> clipMaskSurface = clipPathFrame->GetClipMask(
-          context, frame, cssPxToDevPxMatrix, &clipMaskTransform, maskSurface,
-          maskTransform);
-||||||| merged common ancestors
-      Matrix clipMaskTransform;
-      RefPtr<SourceSurface> clipMaskSurface =
-        clipPathFrame->GetClipMask(context, frame, cssPxToDevPxMatrix,
-                                   &clipMaskTransform, maskSurface,
-                                  maskTransform);
-=======
       RefPtr<SourceSurface> clipMaskSurface = clipPathFrame->GetClipMask(
           context, frame, cssPxToDevPxMatrix, maskSurface, maskTransform);
->>>>>>> upstream-releases
 
       if (clipMaskSurface) {
         maskSurface = clipMaskSurface;
@@ -1226,22 +1097,6 @@ void nsSVGIntegrationUtils::PaintFilter(const PaintFramesParams& aParams) {
                                      offsets.offsetToUserSpaceInDevPx);
   nsRegion dirtyRegion = aParams.dirtyRect - offsets.offsetToBoundingBox;
 
-<<<<<<< HEAD
-  nsFilterInstance::PaintFilteredFrame(frame, &context, &callback, &dirtyRegion,
-                                       aParams.imgParams, opacity);
-}
-
-bool nsSVGIntegrationUtils::BuildWebRenderFilters(
-    nsIFrame* aFilteredFrame,
-    const mozilla::LayoutDeviceIntRect& aPreFilterBounds,
-    nsTArray<mozilla::wr::WrFilterOp>& aWrFilters,
-    mozilla::LayoutDeviceIntRect& aPostFilterBounds) {
-  return nsFilterInstance::BuildWebRenderFilters(
-      aFilteredFrame, aPreFilterBounds, aWrFilters, aPostFilterBounds);
-||||||| merged common ancestors
-  nsFilterInstance::PaintFilteredFrame(frame, &context, &callback,
-                                       &dirtyRegion, aParams.imgParams, opacity);
-=======
   nsFilterInstance::PaintFilteredFrame(frame, &context, &callback, &dirtyRegion,
                                        aParams.imgParams, opacity);
 }
@@ -1251,7 +1106,6 @@ bool nsSVGIntegrationUtils::BuildWebRenderFilters(
     Maybe<nsRect>& aPostFilterClip) {
   return nsFilterInstance::BuildWebRenderFilters(aFilteredFrame, aWrFilters,
                                                  aPostFilterClip);
->>>>>>> upstream-releases
 }
 
 class PaintFrameCallback : public gfxDrawingCallback {
@@ -1273,22 +1127,6 @@ class PaintFrameCallback : public gfxDrawingCallback {
   uint32_t mFlags;
 };
 
-<<<<<<< HEAD
-bool PaintFrameCallback::operator()(gfxContext* aContext,
-                                    const gfxRect& aFillRect,
-                                    const SamplingFilter aSamplingFilter,
-                                    const gfxMatrix& aTransform) {
-  if (mFrame->GetStateBits() & NS_FRAME_DRAWING_AS_PAINTSERVER) return false;
-||||||| merged common ancestors
-bool
-PaintFrameCallback::operator()(gfxContext* aContext,
-                               const gfxRect& aFillRect,
-                               const SamplingFilter aSamplingFilter,
-                               const gfxMatrix& aTransform)
-{
-  if (mFrame->GetStateBits() & NS_FRAME_DRAWING_AS_PAINTSERVER)
-    return false;
-=======
 bool PaintFrameCallback::operator()(gfxContext* aContext,
                                     const gfxRect& aFillRect,
                                     const SamplingFilter aSamplingFilter,
@@ -1296,7 +1134,6 @@ bool PaintFrameCallback::operator()(gfxContext* aContext,
   if (mFrame->GetStateBits() & NS_FRAME_DRAWING_AS_PAINTSERVER) {
     return false;
   }
->>>>>>> upstream-releases
 
   AutoSetRestorePaintServerState paintServer(mFrame);
 
@@ -1340,18 +1177,8 @@ bool PaintFrameCallback::operator()(gfxContext* aContext,
   if (mFlags & nsSVGIntegrationUtils::FLAG_SYNC_DECODE_IMAGES) {
     flags |= PaintFrameFlags::SyncDecodeImages;
   }
-<<<<<<< HEAD
-  nsLayoutUtils::PaintFrame(aContext, mFrame, dirty, NS_RGBA(0, 0, 0, 0),
-                            nsDisplayListBuilderMode::PAINTING, flags);
-||||||| merged common ancestors
-  nsLayoutUtils::PaintFrame(aContext, mFrame,
-                            dirty, NS_RGBA(0, 0, 0, 0),
-                            nsDisplayListBuilderMode::PAINTING,
-                            flags);
-=======
   nsLayoutUtils::PaintFrame(aContext, mFrame, dirty, NS_RGBA(0, 0, 0, 0),
                             nsDisplayListBuilderMode::Painting, flags);
->>>>>>> upstream-releases
 
   nsIFrame* currentFrame = mFrame;
   while ((currentFrame = currentFrame->GetNextContinuation()) != nullptr) {
@@ -1363,20 +1190,9 @@ bool PaintFrameCallback::operator()(gfxContext* aContext,
     aContext->Multiply(gfxMatrix::Translation(devPxOffset));
     aContext->Multiply(gfxMatrix::Scaling(scaleX, scaleY));
 
-<<<<<<< HEAD
-    nsLayoutUtils::PaintFrame(aContext, currentFrame, dirty - offset,
-                              NS_RGBA(0, 0, 0, 0),
-                              nsDisplayListBuilderMode::PAINTING, flags);
-||||||| merged common ancestors
-    nsLayoutUtils::PaintFrame(aContext, currentFrame,
-                              dirty - offset, NS_RGBA(0, 0, 0, 0),
-                              nsDisplayListBuilderMode::PAINTING,
-                              flags);
-=======
     nsLayoutUtils::PaintFrame(aContext, currentFrame, dirty - offset,
                               NS_RGBA(0, 0, 0, 0),
                               nsDisplayListBuilderMode::Painting, flags);
->>>>>>> upstream-releases
 
     aContext->Restore();
   }
@@ -1386,29 +1202,11 @@ bool PaintFrameCallback::operator()(gfxContext* aContext,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<gfxDrawable>
-nsSVGIntegrationUtils::DrawableFromPaintServer(
-    nsIFrame* aFrame, nsIFrame* aTarget, const nsSize& aPaintServerSize,
-    const IntSize& aRenderSize, const DrawTarget* aDrawTarget,
-    const gfxMatrix& aContextMatrix, uint32_t aFlags) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<gfxDrawable>
-nsSVGIntegrationUtils::DrawableFromPaintServer(nsIFrame*         aFrame,
-                                               nsIFrame*         aTarget,
-                                               const nsSize&     aPaintServerSize,
-                                               const IntSize& aRenderSize,
-                                               const DrawTarget* aDrawTarget,
-                                               const gfxMatrix&  aContextMatrix,
-                                               uint32_t          aFlags)
-{
-=======
 /* static */
 already_AddRefed<gfxDrawable> nsSVGIntegrationUtils::DrawableFromPaintServer(
     nsIFrame* aFrame, nsIFrame* aTarget, const nsSize& aPaintServerSize,
     const IntSize& aRenderSize, const DrawTarget* aDrawTarget,
     const gfxMatrix& aContextMatrix, uint32_t aFlags) {
->>>>>>> upstream-releases
   // aPaintServerSize is the size that would be filled when using
   // background-repeat:no-repeat and background-size:auto. For normal background
   // images, this would be the intrinsic size of the image; for gradients and
@@ -1429,16 +1227,9 @@ already_AddRefed<gfxDrawable> nsSVGIntegrationUtils::DrawableFromPaintServer(
         aTarget, aDrawTarget, aContextMatrix, &nsStyleSVG::mFill, 1.0,
         imgParams, &overrideBounds);
 
-<<<<<<< HEAD
-    if (!pattern) return nullptr;
-||||||| merged common ancestors
-    if (!pattern)
-      return nullptr;
-=======
     if (!pattern) {
       return nullptr;
     }
->>>>>>> upstream-releases
 
     // pattern is now set up to fill aPaintServerSize. But we want it to
     // fill aRenderSize, so we need to add a scaling transform.

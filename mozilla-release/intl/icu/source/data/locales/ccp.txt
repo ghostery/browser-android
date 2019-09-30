@@ -83,13 +83,7 @@ ccp{
         minimumGroupingDigits{"1"}
         native{"cakm"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.88"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

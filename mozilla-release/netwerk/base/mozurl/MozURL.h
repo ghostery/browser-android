@@ -48,46 +48,11 @@ class MozURL final {
   // it will be enclosed in square brackets, such as `[::1]`
   nsDependentCSubstring Host() const { return mozurl_host(this); }
   // Will return the port number, if specified, or -1
-<<<<<<< HEAD
-  int32_t Port() const { return mozurl_port(this); }
-||||||| merged common ancestors
-  int32_t Port() const {
-    return mozurl_port(this);
-  }
-=======
   int32_t Port() const { return mozurl_port(this); }
   int32_t RealPort() const { return mozurl_real_port(this); }
->>>>>>> upstream-releases
   // If the URL's port number is equal to the default port, will only return the
   // hostname, otherwise it will return a string of the form `{host}:{port}`
   // See: https://url.spec.whatwg.org/#default-port
-<<<<<<< HEAD
-  nsDependentCSubstring HostPort() const { return mozurl_host_port(this); }
-  nsDependentCSubstring FilePath() const { return mozurl_filepath(this); }
-  nsDependentCSubstring Path() const { return mozurl_path(this); }
-  nsDependentCSubstring Query() const { return mozurl_query(this); }
-  nsDependentCSubstring Ref() const { return mozurl_fragment(this); }
-  bool HasFragment() const { return mozurl_has_fragment(this); }
-||||||| merged common ancestors
-  nsDependentCSubstring HostPort() const {
-    return mozurl_host_port(this);
-  }
-  nsDependentCSubstring FilePath() const {
-    return mozurl_filepath(this);
-  }
-  nsDependentCSubstring Path() const {
-    return mozurl_path(this);
-  }
-  nsDependentCSubstring Query() const {
-    return mozurl_query(this);
-  }
-  nsDependentCSubstring Ref() const {
-    return mozurl_fragment(this);
-  }
-  bool HasFragment() const {
-    return mozurl_has_fragment(this);
-  }
-=======
   nsDependentCSubstring HostPort() const { return mozurl_host_port(this); }
   nsDependentCSubstring FilePath() const { return mozurl_filepath(this); }
   nsDependentCSubstring Path() const { return mozurl_path(this); }
@@ -95,21 +60,7 @@ class MozURL final {
   nsDependentCSubstring Ref() const { return mozurl_fragment(this); }
   bool HasFragment() const { return mozurl_has_fragment(this); }
   nsDependentCSubstring Directory() const { return mozurl_directory(this); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // WARNING: This does not match the definition of origins in nsIPrincipal for
-  // all URIs.
-  // XXX: Consider bringing these implementations in sync with one-another?
-  void Origin(nsACString& aOrigin) const { mozurl_origin(this, &aOrigin); }
-||||||| merged common ancestors
-  // WARNING: This does not match the definition of origins in nsIPrincipal for
-  // all URIs.
-  // XXX: Consider bringing these implementations in sync with one-another?
-  void Origin(nsACString& aOrigin) const {
-    mozurl_origin(this, &aOrigin);
-  }
-=======
   // This matches the definition of origins and base domains in nsIPrincipal for
   // almost all URIs (some rare file:// URIs don't match and it would be hard to
   // fix them). It definitely matches nsIPrincipal for URIs used in quota
@@ -121,7 +72,6 @@ class MozURL final {
   nsresult BaseDomain(nsACString& aBaseDomain) const {
     return mozurl_base_domain(this, &aBaseDomain);
   }
->>>>>>> upstream-releases
 
   nsresult GetCommonBase(const MozURL* aOther, MozURL** aCommon) const {
     return mozurl_common_base(this, aOther, aCommon);

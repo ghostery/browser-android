@@ -96,25 +96,9 @@ class SchedulerGroup : public LinkedListElement<SchedulerGroup> {
     return mEventCount == 0 ? NoLongerQueued : StillQueued;
   }
 
-<<<<<<< HEAD
-  class Runnable final : public mozilla::Runnable,
-                         public nsIRunnablePriority,
-                         public nsILabelableRunnable {
-   public:
-    Runnable(already_AddRefed<nsIRunnable>&& aRunnable, SchedulerGroup* aGroup,
-||||||| merged common ancestors
-  class Runnable final : public mozilla::Runnable
-                       , public nsIRunnablePriority
-                       , public nsILabelableRunnable
-  {
-  public:
-    Runnable(already_AddRefed<nsIRunnable>&& aRunnable,
-             SchedulerGroup* aGroup,
-=======
   class Runnable final : public mozilla::Runnable, public nsIRunnablePriority {
    public:
     Runnable(already_AddRefed<nsIRunnable>&& aRunnable, SchedulerGroup* aGroup,
->>>>>>> upstream-releases
              dom::DocGroup* aDocGroup);
 
     SchedulerGroup* Group() const { return mGroup; }
@@ -184,14 +168,7 @@ class SchedulerGroup : public LinkedListElement<SchedulerGroup> {
 
   using RunnableEpochQueue = Queue<EpochQueueEntry, 32>;
 
-<<<<<<< HEAD
-  RunnableEpochQueue& GetQueue(mozilla::EventPriority aPriority) {
-||||||| merged common ancestors
-  RunnableEpochQueue& GetQueue(mozilla::EventPriority aPriority)
-  {
-=======
   RunnableEpochQueue& GetQueue(mozilla::EventQueuePriority aPriority) {
->>>>>>> upstream-releases
     return mEventQueues[size_t(aPriority)];
   }
 

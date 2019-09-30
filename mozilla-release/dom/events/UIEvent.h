@@ -50,41 +50,16 @@ class UIEvent : public Event {
                    bool cancelableArg, nsGlobalWindowInner* viewArg,
                    int32_t detailArg);
 
-<<<<<<< HEAD
-  nsPIDOMWindowOuter* GetView() const { return mView; }
-||||||| merged common ancestors
-  nsPIDOMWindowOuter* GetView() const
-  {
-    return mView;
-  }
-=======
   Nullable<WindowProxyHolder> GetView() const {
     if (!mView) {
       return nullptr;
     }
     return WindowProxyHolder(mView->GetBrowsingContext());
   }
->>>>>>> upstream-releases
 
   int32_t Detail() const { return mDetail; }
 
-<<<<<<< HEAD
   int32_t LayerX() const { return GetLayerPoint().x; }
-
-  int32_t LayerY() const { return GetLayerPoint().y; }
-||||||| merged common ancestors
-  int32_t LayerX() const
-  {
-    return GetLayerPoint().x;
-  }
-
-  int32_t LayerY() const
-  {
-    return GetLayerPoint().y;
-  }
-=======
-  int32_t LayerX() const { return GetLayerPoint().x; }
->>>>>>> upstream-releases
 
   int32_t LayerY() const { return GetLayerPoint().y; }
 

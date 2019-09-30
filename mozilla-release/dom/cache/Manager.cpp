@@ -185,19 +185,9 @@ bool IsHeadRequest(const CacheRequest& aRequest,
          aRequest.method().LowerCaseEqualsLiteral("head");
 }
 
-<<<<<<< HEAD
-bool IsHeadRequest(const CacheRequestOrVoid& aRequest,
-                   const CacheQueryParams& aParams) {
-  if (aRequest.type() == CacheRequestOrVoid::TCacheRequest) {
-||||||| merged common ancestors
-bool IsHeadRequest(const CacheRequestOrVoid& aRequest, const CacheQueryParams& aParams)
-{
-  if (aRequest.type() == CacheRequestOrVoid::TCacheRequest) {
-=======
 bool IsHeadRequest(const Maybe<CacheRequest>& aRequest,
                    const CacheQueryParams& aParams) {
   if (aRequest.isSome()) {
->>>>>>> upstream-releases
     return !aParams.ignoreMethod() &&
            aRequest.ref().method().LowerCaseEqualsLiteral("head");
   }
@@ -564,16 +554,8 @@ class Manager::CacheMatchAction final : public Manager::BaseAction {
       aListener->OnOpComplete(std::move(aRv), CacheMatchResult(Nothing()));
     } else {
       mStreamList->Activate(mCacheId);
-<<<<<<< HEAD
-      aListener->OnOpComplete(std::move(aRv), CacheMatchResult(void_t()),
-                              mResponse, mStreamList);
-||||||| merged common ancestors
-      aListener->OnOpComplete(std::move(aRv), CacheMatchResult(void_t()), mResponse,
-                              mStreamList);
-=======
       aListener->OnOpComplete(std::move(aRv), CacheMatchResult(Nothing()),
                               mResponse, mStreamList);
->>>>>>> upstream-releases
     }
     mStreamList = nullptr;
   }
@@ -597,29 +579,6 @@ class Manager::CacheMatchAllAction final : public Manager::BaseAction {
   CacheMatchAllAction(Manager* aManager, ListenerId aListenerId,
                       CacheId aCacheId, const CacheMatchAllArgs& aArgs,
                       StreamList* aStreamList)
-<<<<<<< HEAD
-      : BaseAction(aManager, aListenerId),
-        mCacheId(aCacheId),
-        mArgs(aArgs),
-        mStreamList(aStreamList) {}
-
-  virtual nsresult RunSyncWithDBOnTarget(
-      const QuotaInfo& aQuotaInfo, nsIFile* aDBDir,
-      mozIStorageConnection* aConn) override {
-    nsresult rv = db::CacheMatchAll(aConn, mCacheId, mArgs.requestOrVoid(),
-||||||| merged common ancestors
-    : BaseAction(aManager, aListenerId)
-    , mCacheId(aCacheId)
-    , mArgs(aArgs)
-    , mStreamList(aStreamList)
-  { }
-
-  virtual nsresult
-  RunSyncWithDBOnTarget(const QuotaInfo& aQuotaInfo, nsIFile* aDBDir,
-                        mozIStorageConnection* aConn) override
-  {
-    nsresult rv = db::CacheMatchAll(aConn, mCacheId, mArgs.requestOrVoid(),
-=======
       : BaseAction(aManager, aListenerId),
         mCacheId(aCacheId),
         mArgs(aArgs),
@@ -629,23 +588,14 @@ class Manager::CacheMatchAllAction final : public Manager::BaseAction {
       const QuotaInfo& aQuotaInfo, nsIFile* aDBDir,
       mozIStorageConnection* aConn) override {
     nsresult rv = db::CacheMatchAll(aConn, mCacheId, mArgs.maybeRequest(),
->>>>>>> upstream-releases
                                     mArgs.params(), mSavedResponses);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
 
     for (uint32_t i = 0; i < mSavedResponses.Length(); ++i) {
-<<<<<<< HEAD
-      if (!mSavedResponses[i].mHasBodyId ||
-          IsHeadRequest(mArgs.requestOrVoid(), mArgs.params())) {
-||||||| merged common ancestors
-      if (!mSavedResponses[i].mHasBodyId
-          || IsHeadRequest(mArgs.requestOrVoid(), mArgs.params())) {
-=======
       if (!mSavedResponses[i].mHasBodyId ||
           IsHeadRequest(mArgs.maybeRequest(), mArgs.params())) {
->>>>>>> upstream-releases
         mSavedResponses[i].mHasBodyId = false;
         continue;
       }
@@ -1158,39 +1108,6 @@ class Manager::CacheDeleteAction final : public Manager::BaseAction {
 
 // ----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-class Manager::CacheKeysAction final : public Manager::BaseAction {
- public:
-  CacheKeysAction(Manager* aManager, ListenerId aListenerId, CacheId aCacheId,
-                  const CacheKeysArgs& aArgs, StreamList* aStreamList)
-      : BaseAction(aManager, aListenerId),
-        mCacheId(aCacheId),
-        mArgs(aArgs),
-        mStreamList(aStreamList) {}
-
-  virtual nsresult RunSyncWithDBOnTarget(
-      const QuotaInfo& aQuotaInfo, nsIFile* aDBDir,
-      mozIStorageConnection* aConn) override {
-    nsresult rv = db::CacheKeys(aConn, mCacheId, mArgs.requestOrVoid(),
-||||||| merged common ancestors
-class Manager::CacheKeysAction final : public Manager::BaseAction
-{
-public:
-  CacheKeysAction(Manager* aManager, ListenerId aListenerId,
-                  CacheId aCacheId, const CacheKeysArgs& aArgs,
-                  StreamList* aStreamList)
-    : BaseAction(aManager, aListenerId)
-    , mCacheId(aCacheId)
-    , mArgs(aArgs)
-    , mStreamList(aStreamList)
-  { }
-
-  virtual nsresult
-  RunSyncWithDBOnTarget(const QuotaInfo& aQuotaInfo, nsIFile* aDBDir,
-                        mozIStorageConnection* aConn) override
-  {
-    nsresult rv = db::CacheKeys(aConn, mCacheId, mArgs.requestOrVoid(),
-=======
 class Manager::CacheKeysAction final : public Manager::BaseAction {
  public:
   CacheKeysAction(Manager* aManager, ListenerId aListenerId, CacheId aCacheId,
@@ -1204,23 +1121,14 @@ class Manager::CacheKeysAction final : public Manager::BaseAction {
       const QuotaInfo& aQuotaInfo, nsIFile* aDBDir,
       mozIStorageConnection* aConn) override {
     nsresult rv = db::CacheKeys(aConn, mCacheId, mArgs.maybeRequest(),
->>>>>>> upstream-releases
                                 mArgs.params(), mSavedRequests);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
 
     for (uint32_t i = 0; i < mSavedRequests.Length(); ++i) {
-<<<<<<< HEAD
-      if (!mSavedRequests[i].mHasBodyId ||
-          IsHeadRequest(mArgs.requestOrVoid(), mArgs.params())) {
-||||||| merged common ancestors
-      if (!mSavedRequests[i].mHasBodyId
-          || IsHeadRequest(mArgs.requestOrVoid(), mArgs.params())) {
-=======
       if (!mSavedRequests[i].mHasBodyId ||
           IsHeadRequest(mArgs.maybeRequest(), mArgs.params())) {
->>>>>>> upstream-releases
         mSavedRequests[i].mHasBodyId = false;
         continue;
       }
@@ -1312,16 +1220,8 @@ class Manager::StorageMatchAction final : public Manager::BaseAction {
       aListener->OnOpComplete(std::move(aRv), StorageMatchResult(Nothing()));
     } else {
       mStreamList->Activate(mSavedResponse.mCacheId);
-<<<<<<< HEAD
-      aListener->OnOpComplete(std::move(aRv), StorageMatchResult(void_t()),
-                              mSavedResponse, mStreamList);
-||||||| merged common ancestors
-      aListener->OnOpComplete(std::move(aRv), StorageMatchResult(void_t()), mSavedResponse,
-                              mStreamList);
-=======
       aListener->OnOpComplete(std::move(aRv), StorageMatchResult(Nothing()),
                               mSavedResponse, mStreamList);
->>>>>>> upstream-releases
     }
     mStreamList = nullptr;
   }
@@ -1961,16 +1861,8 @@ Manager::~Manager() {
 
   // Don't spin the event loop in the destructor waiting for the thread to
   // shutdown.  Defer this to the main thread, instead.
-<<<<<<< HEAD
-  MOZ_ALWAYS_SUCCEEDS(NS_DispatchToMainThread(NewRunnableMethod(
-      "nsIThread::Shutdown", ioThread, &nsIThread::Shutdown)));
-||||||| merged common ancestors
-  MOZ_ALWAYS_SUCCEEDS(NS_DispatchToMainThread(NewRunnableMethod("nsIThread::Shutdown",
-                                                                ioThread, &nsIThread::Shutdown)));
-=======
   MOZ_ALWAYS_SUCCEEDS(NS_DispatchToMainThread(NewRunnableMethod(
       "nsIThread::AsyncShutdown", ioThread, &nsIThread::AsyncShutdown)));
->>>>>>> upstream-releases
 }
 
 void Manager::Init(Manager* aOldManager) {

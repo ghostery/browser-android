@@ -12,22 +12,12 @@
 
 namespace mozilla {
 namespace Telemetry {
-<<<<<<< HEAD
-struct ChildEventData;
-}
-}  // namespace mozilla
-||||||| merged common ancestors
-  struct ChildEventData;
-}
-}
-=======
 struct ChildEventData;
 struct EventExtraEntry;
 }  // namespace Telemetry
 }  // namespace mozilla
 
 using mozilla::Telemetry::EventExtraEntry;
->>>>>>> upstream-releases
 
 // This module is internal to Telemetry. It encapsulates Telemetry's
 // event recording and storage logic. It should only be used by

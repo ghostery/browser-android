@@ -158,20 +158,10 @@ static bool CanLoadPlugin(char16ptr_t aBinaryPath) {
         if (((IMAGE_DOS_HEADER*)mapView)->e_magic == IMAGE_DOS_SIGNATURE) {
           long peImageHeaderStart = (((IMAGE_DOS_HEADER*)mapView)->e_lfanew);
           if (peImageHeaderStart != 0L) {
-<<<<<<< HEAD
-            DWORD arch =
-                (((IMAGE_NT_HEADERS*)((LPBYTE)mapView + peImageHeaderStart))
-                     ->FileHeader.Machine);
-#ifdef _M_IX86
-||||||| merged common ancestors
-            DWORD arch = (((IMAGE_NT_HEADERS*)((LPBYTE)mapView + peImageHeaderStart))->FileHeader.Machine);
-#ifdef _M_IX86
-=======
             DWORD arch =
                 (((IMAGE_NT_HEADERS*)((LPBYTE)mapView + peImageHeaderStart))
                      ->FileHeader.Machine);
 #  ifdef _M_IX86
->>>>>>> upstream-releases
             canLoad = (arch == IMAGE_FILE_MACHINE_I386);
 #  elif defined(_M_X64)
             canLoad = (arch == IMAGE_FILE_MACHINE_AMD64);

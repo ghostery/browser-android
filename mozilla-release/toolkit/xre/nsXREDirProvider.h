@@ -144,58 +144,22 @@ class nsXREDirProvider final : public nsIDirectoryServiceProvider2,
   // On OSX, mGREBinDir points to .app/Contents/MacOS
   nsCOMPtr<nsIFile> mGREBinDir;
   // On OSX, mXULAppDir points to .app/Contents/Resources/browser
-<<<<<<< HEAD
   nsCOMPtr<nsIFile> mXULAppDir;
   nsCOMPtr<nsIFile> mProfileDir;
   nsCOMPtr<nsIFile> mProfileLocalDir;
   bool mProfileNotified;
   bool mPrefsInitialized = false;
-#if defined(MOZ_CONTENT_SANDBOX)
-  nsCOMPtr<nsIFile> mContentTempDir;
-  nsCOMPtr<nsIFile> mContentProcessSandboxTempDir;
-#endif
-||||||| merged common ancestors
-  nsCOMPtr<nsIFile>      mXULAppDir;
-  nsCOMPtr<nsIFile>      mProfileDir;
-  nsCOMPtr<nsIFile>      mProfileLocalDir;
-  bool                   mProfileNotified;
-  bool                   mPrefsInitialized = false;
-#if defined(MOZ_CONTENT_SANDBOX)
-  nsCOMPtr<nsIFile>      mContentTempDir;
-  nsCOMPtr<nsIFile>      mContentProcessSandboxTempDir;
-#endif
-=======
-  nsCOMPtr<nsIFile> mXULAppDir;
-  nsCOMPtr<nsIFile> mProfileDir;
-  nsCOMPtr<nsIFile> mProfileLocalDir;
-  bool mProfileNotified;
-  bool mPrefsInitialized = false;
->>>>>>> upstream-releases
 #if defined(MOZ_SANDBOX)
-<<<<<<< HEAD
-  nsCOMPtr<nsIFile> mPluginTempDir;
-  nsCOMPtr<nsIFile> mPluginProcessSandboxTempDir;
-||||||| merged common ancestors
-  nsCOMPtr<nsIFile>      mPluginTempDir;
-  nsCOMPtr<nsIFile>      mPluginProcessSandboxTempDir;
-=======
   nsCOMPtr<nsIFile> mContentTempDir;
   nsCOMPtr<nsIFile> mContentProcessSandboxTempDir;
   nsCOMPtr<nsIFile> mPluginTempDir;
   nsCOMPtr<nsIFile> mPluginProcessSandboxTempDir;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  nsCOMArray<nsIFile> mAppBundleDirectories;
-||||||| merged common ancestors
-  nsCOMArray<nsIFile>    mAppBundleDirectories;
-=======
   nsCOMArray<nsIFile> mAppBundleDirectories;
 
  private:
   static nsresult SetUserDataProfileDirectory(nsCOMPtr<nsIFile>& aFile,
                                               bool aLocal);
->>>>>>> upstream-releases
 };
 
 #endif

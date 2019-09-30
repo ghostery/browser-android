@@ -9,15 +9,6 @@
 async function testTarget(client, target) {
   await target.attach();
 
-<<<<<<< HEAD
-  is(target.hasActor("inspector"), true, "target.hasActor() true when actor exists.");
-  is(target.hasActor("webaudio"), true, "target.hasActor() true when actor exists.");
-  is(target.hasActor("notreal"), false, "target.hasActor() false when actor does not exist.");
-||||||| merged common ancestors
-  is(target.hasActor("timeline"), true, "target.hasActor() true when actor exists.");
-  is(target.hasActor("webaudio"), true, "target.hasActor() true when actor exists.");
-  is(target.hasActor("notreal"), false, "target.hasActor() false when actor does not exist.");
-=======
   is(
     target.hasActor("inspector"),
     true,
@@ -33,7 +24,6 @@ async function testTarget(client, target) {
     false,
     "target.hasActor() false when actor does not exist."
   );
->>>>>>> upstream-releases
   // Create a front to ensure the actor is loaded
   await target.getFront("storage");
 
@@ -100,29 +90,7 @@ async function testTarget(client, target) {
 function test() {
   waitForExplicitFinish();
 
-<<<<<<< HEAD
-  getParentProcessActors((client, front) => {
-    const options = {
-      activeTab: front,
-      client,
-      chrome: true,
-    };
-
-    TargetFactory.forRemoteTab(options).then(testTarget.bind(null, client));
-  });
-||||||| merged common ancestors
-  getParentProcessActors((client, response) => {
-    const options = {
-      form: response,
-      client: client,
-      chrome: true,
-    };
-
-    TargetFactory.forRemoteTab(options).then(testTarget.bind(null, client));
-  });
-=======
   getParentProcessActors(testTarget);
->>>>>>> upstream-releases
 }
 
 function close(target, client) {

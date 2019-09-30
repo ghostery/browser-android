@@ -6,31 +6,13 @@
 //!
 //! [custom]: https://drafts.csswg.org/css-variables/
 
-<<<<<<< HEAD
-use crate::hash::map::Entry;
-use crate::properties::{CSSWideKeyword, CustomDeclarationValue};
-use crate::selector_map::{PrecomputedHashMap, PrecomputedHashSet};
-use crate::Atom;
-||||||| merged common ancestors
-use Atom;
-=======
 use crate::hash::map::Entry;
 use crate::properties::{CSSWideKeyword, CustomDeclaration, CustomDeclarationValue};
 use crate::selector_map::{PrecomputedHashMap, PrecomputedHashSet, PrecomputedHasher};
 use crate::stylesheets::{Origin, PerOrigin};
 use crate::Atom;
->>>>>>> upstream-releases
 use cssparser::{Delimiter, Parser, ParserInput, SourcePosition, Token, TokenSerializationType};
-<<<<<<< HEAD
-use precomputed_hash::PrecomputedHash;
-||||||| merged common ancestors
-use hash::map::Entry;
-use precomputed_hash::PrecomputedHash;
-use properties::{CSSWideKeyword, CustomDeclarationValue};
-use selector_map::{PrecomputedHashMap, PrecomputedHashSet};
-=======
 use indexmap::IndexMap;
->>>>>>> upstream-releases
 use selectors::parser::SelectorParseErrorKind;
 use servo_arc::Arc;
 use smallvec::SmallVec;
@@ -159,274 +141,6 @@ pub type SpecifiedValue = VariableValue;
 /// Both specified and computed values are VariableValues, the difference is
 /// whether var() functions are expanded.
 pub type ComputedValue = VariableValue;
-
-<<<<<<< HEAD
-/// A map that preserves order for the keys, and that is easily indexable.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct OrderedMap<K, V>
-where
-    K: PrecomputedHash + Hash + Eq + Clone,
-{
-    /// Key index.
-    index: Vec<K>,
-    /// Key-value map.
-    values: PrecomputedHashMap<K, V>,
-}
-
-impl<K, V> OrderedMap<K, V>
-where
-    K: Eq + PrecomputedHash + Hash + Clone,
-{
-    /// Creates a new ordered map.
-    pub fn new() -> Self {
-        OrderedMap {
-            index: Vec::new(),
-            values: PrecomputedHashMap::default(),
-        }
-    }
-
-    /// Insert a new key-value pair.
-    ///
-    /// TODO(emilio): Remove unused_mut when Gecko and Servo agree in whether
-    /// it's necessary.
-    #[allow(unused_mut)]
-    pub fn insert(&mut self, key: K, value: V) {
-        let OrderedMap {
-            ref mut index,
-            ref mut values,
-        } = *self;
-        match values.entry(key) {
-            Entry::Vacant(mut entry) => {
-                index.push(entry.key().clone());
-                entry.insert(value);
-            },
-            Entry::Occupied(mut entry) => {
-                entry.insert(value);
-            },
-        }
-    }
-
-    /// Get a value given its key.
-    pub fn get(&self, key: &K) -> Option<&V> {
-        let value = self.values.get(key);
-        debug_assert_eq!(value.is_some(), self.index.contains(key));
-        value
-    }
-
-    /// Get whether there's a value on the map for `key`.
-    pub fn contains_key(&self, key: &K) -> bool {
-        self.values.contains_key(key)
-    }
-
-    /// Get the key located at the given index.
-    pub fn get_key_at(&self, index: u32) -> Option<&K> {
-        self.index.get(index as usize)
-    }
-
-    /// Get an ordered map iterator.
-    pub fn iter<'a>(&'a self) -> OrderedMapIterator<'a, K, V> {
-        OrderedMapIterator {
-            inner: self,
-            pos: 0,
-        }
-    }
-
-    /// Get the count of items in the map.
-    pub fn len(&self) -> usize {
-        debug_assert_eq!(self.values.len(), self.index.len());
-        self.values.len()
-    }
-
-    /// Returns whether this map is empty.
-    pub fn is_empty(&self) -> bool {
-        self.len() == 0
-    }
-
-    /// Remove an item given its key.
-    fn remove<Q: ?Sized>(&mut self, key: &Q) -> Option<V>
-    where
-        K: Borrow<Q>,
-        Q: PrecomputedHash + Hash + Eq,
-    {
-        let index = self.index.iter().position(|k| k.borrow() == key)?;
-        self.index.remove(index);
-        self.values.remove(key)
-    }
-}
-
-/// An iterator for OrderedMap.
-///
-/// The iteration order is determined by the order that the values are
-/// added to the key-value map.
-pub struct OrderedMapIterator<'a, K, V>
-where
-    K: 'a + Eq + PrecomputedHash + Hash + Clone,
-    V: 'a,
-{
-    /// The OrderedMap itself.
-    inner: &'a OrderedMap<K, V>,
-    /// The position of the iterator.
-    pos: usize,
-}
-
-impl<'a, K, V> Iterator for OrderedMapIterator<'a, K, V>
-where
-    K: Eq + PrecomputedHash + Hash + Clone,
-{
-    type Item = (&'a K, &'a V);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let key = self.inner.index.get(self.pos)?;
-
-        self.pos += 1;
-        let value = &self.inner.values[key];
-
-        Some((key, value))
-    }
-||||||| merged common ancestors
-/// A map that preserves order for the keys, and that is easily indexable.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct OrderedMap<K, V>
-where
-    K: PrecomputedHash + Hash + Eq + Clone,
-{
-    /// Key index.
-    index: Vec<K>,
-    /// Key-value map.
-    values: PrecomputedHashMap<K, V>,
-}
-
-impl<K, V> OrderedMap<K, V>
-where
-    K: Eq + PrecomputedHash + Hash + Clone,
-{
-    /// Creates a new ordered map.
-    pub fn new() -> Self {
-        OrderedMap {
-            index: Vec::new(),
-            values: PrecomputedHashMap::default(),
-        }
-    }
-
-    /// Insert a new key-value pair.
-    ///
-    /// TODO(emilio): Remove unused_mut when Gecko and Servo agree in whether
-    /// it's necessary.
-    #[allow(unused_mut)]
-    pub fn insert(&mut self, key: K, value: V) {
-        let OrderedMap {
-            ref mut index,
-            ref mut values,
-        } = *self;
-        match values.entry(key) {
-            Entry::Vacant(mut entry) => {
-                index.push(entry.key().clone());
-                entry.insert(value);
-            },
-            Entry::Occupied(mut entry) => {
-                entry.insert(value);
-            },
-        }
-    }
-
-    /// Get a value given its key.
-    pub fn get(&self, key: &K) -> Option<&V> {
-        let value = self.values.get(key);
-        debug_assert_eq!(value.is_some(), self.index.contains(key));
-        value
-    }
-
-    /// Get whether there's a value on the map for `key`.
-    pub fn contains_key(&self, key: &K) -> bool {
-        self.values.contains_key(key)
-    }
-
-    /// Get the key located at the given index.
-    pub fn get_key_at(&self, index: u32) -> Option<&K> {
-        self.index.get(index as usize)
-    }
-
-    /// Get an ordered map iterator.
-    pub fn iter<'a>(&'a self) -> OrderedMapIterator<'a, K, V> {
-        OrderedMapIterator {
-            inner: self,
-            pos: 0,
-        }
-    }
-
-    /// Get the count of items in the map.
-    pub fn len(&self) -> usize {
-        debug_assert_eq!(self.values.len(), self.index.len());
-        self.values.len()
-    }
-
-    /// Returns whether this map is empty.
-    pub fn is_empty(&self) -> bool {
-        self.len() == 0
-    }
-
-    /// Remove an item given its key.
-    fn remove<Q: ?Sized>(&mut self, key: &Q) -> Option<V>
-    where
-        K: Borrow<Q>,
-        Q: PrecomputedHash + Hash + Eq,
-    {
-        let index = self.index.iter().position(|k| k.borrow() == key)?;
-        self.index.remove(index);
-        self.values.remove(key)
-    }
-
-    fn remove_set<S>(&mut self, set: &::hash::HashSet<K, S>)
-    where
-        S: ::std::hash::BuildHasher,
-    {
-        if set.is_empty() {
-            return;
-        }
-        self.index.retain(|key| !set.contains(key));
-        self.values.retain(|key, _| !set.contains(key));
-        debug_assert_eq!(self.values.len(), self.index.len());
-    }
-}
-
-/// An iterator for OrderedMap.
-///
-/// The iteration order is determined by the order that the values are
-/// added to the key-value map.
-pub struct OrderedMapIterator<'a, K, V>
-where
-    K: 'a + Eq + PrecomputedHash + Hash + Clone,
-    V: 'a,
-{
-    /// The OrderedMap itself.
-    inner: &'a OrderedMap<K, V>,
-    /// The position of the iterator.
-    pos: usize,
-}
-
-impl<'a, K, V> Iterator for OrderedMapIterator<'a, K, V>
-where
-    K: Eq + PrecomputedHash + Hash + Clone,
-{
-    type Item = (&'a K, &'a V);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let key = self.inner.index.get(self.pos)?;
-
-        self.pos += 1;
-        let value = &self.inner.values[key];
-
-        Some((key, value))
-    }
-=======
-/// A struct holding information about the external references to that a custom
-/// property value may have.
-#[derive(Default)]
-struct VarOrEnvReferences {
-    custom_property_references: PrecomputedHashSet<Name>,
-    references_environment: bool,
->>>>>>> upstream-releases
-}
 
 /// A struct holding information about the external references to that a custom
 /// property value may have.
@@ -801,15 +515,6 @@ impl<'a> CustomPropertiesBuilder<'a> {
     }
 
     /// Cascade a given custom property declaration.
-<<<<<<< HEAD
-    pub fn cascade(&mut self, name: &'a Name, specified_value: &CustomDeclarationValue) {
-||||||| merged common ancestors
-    pub fn cascade(
-        &mut self,
-        name: &'a Name,
-        specified_value: &CustomDeclarationValue,
-    ) {
-=======
     pub fn cascade(&mut self, declaration: &'a CustomDeclaration, origin: Origin) {
         let CustomDeclaration {
             ref name,
@@ -820,7 +525,6 @@ impl<'a> CustomPropertiesBuilder<'a> {
             return;
         }
 
->>>>>>> upstream-releases
         let was_already_present = !self.seen.insert(name);
         if was_already_present {
             return;
@@ -1124,14 +828,7 @@ fn substitute_all(custom_properties_map: &mut CustomPropertiesMap, environment: 
 
     // We have to clone the names so that we can mutably borrow the map
     // in the context we create for traversal.
-<<<<<<< HEAD
-    let names = custom_properties_map.index.clone();
-||||||| merged common ancestors
-    let names = custom_properties_map.index.clone();
-    let mut invalid = PrecomputedHashSet::default();
-=======
     let names: Vec<_> = custom_properties_map.keys().cloned().collect();
->>>>>>> upstream-releases
     for name in names.into_iter() {
         let mut context = Context {
             count: 0,
@@ -1310,20 +1007,11 @@ pub fn substitute<'i>(
     let mut input = ParserInput::new(input);
     let mut input = Parser::new(&mut input);
     let mut position = (input.position(), first_token_type);
-<<<<<<< HEAD
-    let empty_map = CustomPropertiesMap::new();
-    let custom_properties = match computed_values_map {
-        Some(m) => &**m,
-        None => &empty_map,
-    };
-||||||| merged common ancestors
-=======
     let empty_map = CustomPropertiesMap::default();
     let custom_properties = match computed_values_map {
         Some(m) => &**m,
         None => &empty_map,
     };
->>>>>>> upstream-releases
     let last_token_type = substitute_block(
         &mut input,
         &mut position,

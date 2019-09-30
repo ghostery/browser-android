@@ -67,26 +67,10 @@ class SimpleChannelCallbacksImpl final : public SimpleChannelCallbacks {
   RefPtr<T> mContext;
 };
 
-<<<<<<< HEAD
-already_AddRefed<nsIChannel> NS_NewSimpleChannelInternal(
-    nsIURI* aURI, nsILoadInfo* aLoadInfo,
-    UniquePtr<SimpleChannelCallbacks>&& aCallbacks);
-||||||| merged common ancestors
-already_AddRefed<nsIChannel>
-NS_NewSimpleChannelInternal(nsIURI* aURI, nsILoadInfo* aLoadInfo, UniquePtr<SimpleChannelCallbacks>&& aCallbacks);
-=======
 class SimpleChannel : public nsBaseChannel {
  public:
   explicit SimpleChannel(UniquePtr<SimpleChannelCallbacks>&& aCallbacks);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-}  // namespace net
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace net
-} // namespace mozilla
-=======
  protected:
   virtual ~SimpleChannel() = default;
 
@@ -119,7 +103,6 @@ already_AddRefed<nsIChannel> NS_NewSimpleChannelInternal(
 
 }  // namespace net
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 /**
  * Creates a simple channel which wraps an input stream created by the given

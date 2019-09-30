@@ -57,17 +57,8 @@ class BasicReadbackLayer : public ReadbackLayer, public BasicImplData {
  protected:
   virtual ~BasicReadbackLayer() { MOZ_COUNT_DTOR(BasicReadbackLayer); }
 
-<<<<<<< HEAD
- public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
-||||||| merged common ancestors
-public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
-  {
-=======
  public:
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ReadbackLayer::SetVisibleRegion(aRegion);

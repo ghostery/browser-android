@@ -131,37 +131,6 @@ def test_manifest_to_json_backslash():
 
     s = SourceFileWithTest("a\\b", "0"*40, item.TestharnessTest)
 
-<<<<<<< HEAD
-    if os.path.sep == "\\":
-        assert m.update([(s, True)]) is True
-
-        assert m.to_json() == {
-            'paths': {
-                'a/b': ('0000000000000000000000000000000000000000', 'testharness')
-            },
-            'version': 5,
-            'url_base': '/',
-            'items': {
-                'testharness': {
-                    'a/b': [['/a/b', {}]]
-                }
-||||||| merged common ancestors
-    if os.path.sep == "\\":
-        assert m.update([s]) is True
-
-        assert m.to_json() == {
-            'paths': {
-                'a/b': ('0000000000000000000000000000000000000000', 'testharness')
-            },
-            'version': 5,
-            'url_base': '/',
-            'items': {
-                'reftest': {},
-                'reftest_node': {},
-                'testharness': {
-                    'a/b': [['/a/b', {}]]
-                }
-=======
     assert m.update([(s, True)]) is True
 
     assert m.to_json() == {
@@ -173,26 +142,9 @@ def test_manifest_to_json_backslash():
         'items': {
             'testharness': {
                 'a/b': [('a/b', {})]
->>>>>>> upstream-releases
             }
         }
-<<<<<<< HEAD
-    else:
-        with pytest.raises(ValueError):
-            # one of these must raise ValueError
-            # the first must return True if it doesn't raise
-            assert m.update([(s, True)]) is True
-            m.to_json()
-||||||| merged common ancestors
-    else:
-        with pytest.raises(ValueError):
-            # one of these must raise ValueError
-            # the first must return True if it doesn't raise
-            assert m.update([s]) is True
-            m.to_json()
-=======
     }
->>>>>>> upstream-releases
 
 
 def test_manifest_from_json_backslash():
@@ -339,23 +291,9 @@ def test_reftest_computation_chain_update_node_change_partial():
 def test_iterpath():
     m = manifest.Manifest()
 
-<<<<<<< HEAD
-    # This has multiple test types from the same file, which isn't really supported,
-    # so pretend they have different hashes
-    sources = [SourceFileWithTest("test1", "0"*40, item.RefTest, [("/test1-ref", "==")]),
-               SourceFileWithTest("test2", "0"*40, item.RefTest, [("/test2-ref", "==")]),
-               SourceFileWithTests("test2", "1"*40, item.TestharnessTest, [("/test2-1.html",),
-                                                                           ("/test2-2.html",)]),
-||||||| merged common ancestors
-    sources = [SourceFileWithTest("test1", "0"*40, item.RefTest, [("/test1-ref", "==")]),
-               SourceFileWithTest("test2", "0"*40, item.RefTest, [("/test2-ref", "==")]),
-               SourceFileWithTests("test2", "0"*40, item.TestharnessTest, [("/test2-1.html",),
-                                                                           ("/test2-2.html",)]),
-=======
     sources = [SourceFileWithTest("test1", "0"*40, item.RefTestNode, references=[("/test1-ref", "==")]),
                SourceFileWithTests("test2", "1"*40, item.TestharnessTest, [("test2-1.html", {}),
                                                                            ("test2-2.html", {})]),
->>>>>>> upstream-releases
                SourceFileWithTest("test3", "0"*40, item.TestharnessTest)]
     m.update([(s, True) for s in sources])
 
@@ -367,30 +305,8 @@ def test_iterpath():
 def test_reftest_node_by_url():
     m = manifest.Manifest()
 
-<<<<<<< HEAD
-    # This has multiple test types from the same file, which isn't really supported,
-    # so pretend they have different hashes
-    sources = [SourceFileWithTest("test1", "0"*40, item.RefTest, [("/test1-ref", "==")]),
-               SourceFileWithTest("test2", "1"*40, item.RefTest, [("/test2-ref", "==")]),
-               SourceFileWithTests("test2", "0"*40, item.TestharnessTest, [("/test2-1.html",),
-                                                                           ("/test2-2.html",)]),
-               SourceFileWithTest("test3", "0"*40, item.TestharnessTest)]
-    m.update([(s, True) for s in sources])
-
-    json = m.to_json()
-||||||| merged common ancestors
-    sources = [SourceFileWithTest("test1", "0"*40, item.RefTest, [("/test1-ref", "==")]),
-               SourceFileWithTest("test2", "0"*40, item.RefTest, [("/test2-ref", "==")]),
-               SourceFileWithTests("test2", "0"*40, item.TestharnessTest, [("/test2-1.html",),
-                                                                           ("/test2-2.html",)]),
-               SourceFileWithTest("test3", "0"*40, item.TestharnessTest)]
-    m.update(sources)
-
-    json = m.to_json()
-=======
     s1 = SourceFileWithTest("test1", "0"*40, item.RefTestNode, references=[("/test2", "==")])
     s2 = SourceFileWithTest("test2", "0"*40, item.RefTestNode, references=[("/test3", "==")])
->>>>>>> upstream-releases
 
     m.update([(s1, True), (s2, True)])
 
@@ -415,60 +331,6 @@ def test_no_update():
     test1 = s1.manifest_items()[1][0]
     test2 = s2.manifest_items()[1][0]
 
-<<<<<<< HEAD
-    assert m.reftest_nodes_by_url == {"/test1": test1,
-                                      "/test2": test2_node}
-    m._reftest_nodes_by_url = None
-    assert m.reftest_nodes_by_url == {"/test1": test1,
-                                      "/test2": test2_node}
-
-
-def test_no_update():
-    m = manifest.Manifest()
-
-    s1 = SourceFileWithTest("test1", "0"*40, item.TestharnessTest)
-    s2 = SourceFileWithTest("test2", "0"*40, item.TestharnessTest)
-
-    m.update([(s1, True), (s2, True)])
-
-    test1 = s1.manifest_items()[1][0]
-    test2 = s2.manifest_items()[1][0]
-
-    assert list(m) == [("testharness", test1.path, {test1}),
-                       ("testharness", test2.path, {test2})]
-
-    s1_1 = SourceFileWithTest("test1", "1"*40, item.TestharnessTest)
-
-    m.update([(s1, True), (s2.rel_path, False)])
-
-    test1_1 = s1_1.manifest_items()[1][0]
-
-    assert list(m) == [("testharness", test1_1.path, {test1_1}),
-                       ("testharness", test2.path, {test2})]
-
-
-def test_no_update_delete():
-    m = manifest.Manifest()
-
-    s1 = SourceFileWithTest("test1", "0"*40, item.TestharnessTest)
-    s2 = SourceFileWithTest("test2", "0"*40, item.TestharnessTest)
-
-    m.update([(s1, True), (s2, True)])
-
-    s1_1 = SourceFileWithTest("test1", "1"*40, item.TestharnessTest)
-
-    m.update([(s1, True)])
-
-    test1_1 = s1_1.manifest_items()[1][0]
-
-    assert list(m) == [("testharness", test1_1.path, {test1_1})]
-||||||| merged common ancestors
-    assert m.reftest_nodes_by_url == {"/test1": test1,
-                                      "/test2": test2_node}
-    m._reftest_nodes_by_url = None
-    assert m.reftest_nodes_by_url == {"/test1": test1,
-                                      "/test2": test2_node}
-=======
     assert list(m) == [("testharness", test1.path, {test1}),
                        ("testharness", test2.path, {test2})]
 
@@ -538,4 +400,3 @@ def test_update_from_json_modified():
         'url_base': '/',
         'version': 6
     }
->>>>>>> upstream-releases

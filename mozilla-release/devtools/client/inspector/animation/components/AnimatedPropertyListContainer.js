@@ -51,71 +51,8 @@ class AnimatedPropertyListContainer extends PureComponent {
 
     return dom.div(
       {
-<<<<<<< HEAD
-        className: `animated-property-list-container ${ animation.state.type }`,
-||||||| merged common ancestors
-        className: `animated-property-list-container ${ animation.state.type }`
-=======
         className: `animated-property-list-container ${animation.state.type}`,
->>>>>>> upstream-releases
       },
-<<<<<<< HEAD
-      ProgressInspectionPanel(
-        {
-          indicator: KeyframesProgressBar(
-            {
-              addAnimationsCurrentTimeListener,
-              animation,
-              getAnimationsCurrentTime,
-              removeAnimationsCurrentTimeListener,
-              simulateAnimationForKeyframesProgressBar,
-              timeScale,
-            }
-          ),
-          list: AnimatedPropertyList(
-            {
-              animation,
-              emitEventForTest,
-              getAnimatedPropertyMap,
-              getComputedStyle,
-              simulateAnimation,
-            }
-          ),
-          ticks: [0, 50, 100].map(position => {
-            const label = getFormatStr("detail.propertiesHeader.percentage", position);
-            return { position, label };
-          }),
-        }
-      )
-||||||| merged common ancestors
-      ProgressInspectionPanel(
-        {
-          indicator: KeyframesProgressBar(
-            {
-              addAnimationsCurrentTimeListener,
-              animation,
-              getAnimationsCurrentTime,
-              removeAnimationsCurrentTimeListener,
-              simulateAnimationForKeyframesProgressBar,
-              timeScale,
-            }
-          ),
-          list: AnimatedPropertyList(
-            {
-              animation,
-              emitEventForTest,
-              getAnimatedPropertyMap,
-              getComputedStyle,
-              simulateAnimation,
-            }
-          ),
-          ticks: [0, 50, 100].map(position => {
-            const label = getFormatStr("detail.propertiesHeader.percentage", position);
-            return { position, label };
-          })
-        }
-      )
-=======
       ProgressInspectionPanel({
         indicator: KeyframesProgressBar({
           addAnimationsCurrentTimeListener,
@@ -140,7 +77,6 @@ class AnimatedPropertyListContainer extends PureComponent {
           return { position, label };
         }),
       })
->>>>>>> upstream-releases
     );
   }
 }

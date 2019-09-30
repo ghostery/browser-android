@@ -367,17 +367,7 @@ var ContentSearch = {
       engines: [],
       currentEngine: await this._currentEngineObj(),
     };
-<<<<<<< HEAD
-    if (uriFlag) {
-      state.currentEngine.iconBuffer = Services.search.defaultEngine.getIconURLBySize(16, 16);
-    }
-||||||| merged common ancestors
-    if (uriFlag) {
-      state.currentEngine.iconBuffer = Services.search.currentEngine.getIconURLBySize(16, 16);
-    }
-=======
 
->>>>>>> upstream-releases
     let pref = Services.prefs.getCharPref("browser.search.hiddenOneOffs");
     let hiddenList = pref ? pref.split(",") : [];
     for (let engine of await Services.search.getVisibleEngines()) {

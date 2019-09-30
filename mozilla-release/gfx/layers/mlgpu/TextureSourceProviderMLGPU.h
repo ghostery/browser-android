@@ -15,25 +15,11 @@ namespace layers {
 class MLGDevice;
 class LayerManagerMLGPU;
 
-<<<<<<< HEAD
-class TextureSourceProviderMLGPU final : public TextureSourceProvider {
- public:
-  TextureSourceProviderMLGPU(LayerManagerMLGPU* aLayerManager,
-                             MLGDevice* aDevice);
-  ~TextureSourceProviderMLGPU() override;
-||||||| merged common ancestors
-class TextureSourceProviderMLGPU final : public TextureSourceProvider
-{
-public:
-  TextureSourceProviderMLGPU(LayerManagerMLGPU* aLayerManager, MLGDevice* aDevice);
-  ~TextureSourceProviderMLGPU() override;
-=======
 class TextureSourceProviderMLGPU final : public TextureSourceProvider {
  public:
   TextureSourceProviderMLGPU(LayerManagerMLGPU* aLayerManager,
                              MLGDevice* aDevice);
   virtual ~TextureSourceProviderMLGPU();
->>>>>>> upstream-releases
 
   already_AddRefed<DataTextureSource> CreateDataTextureSource(
       TextureFlags aFlags) override;

@@ -15,14 +15,7 @@
 #ifndef NSDISPLAYITEMTYPES_H_
 #define NSDISPLAYITEMTYPES_H_
 
-<<<<<<< HEAD
-enum class DisplayItemType {
-||||||| merged common ancestors
-enum class DisplayItemType
-{
-=======
 enum class DisplayItemType : uint8_t {
->>>>>>> upstream-releases
   TYPE_ZERO = 0, /** Spacer so that the first item starts at 1 */
 
 #define DECLARE_DISPLAY_ITEM_TYPE(name, flags) TYPE_##name,
@@ -37,20 +30,10 @@ enum {
   TYPE_BITS = 8
 };
 
-<<<<<<< HEAD
-enum DisplayItemFlags {
-  TYPE_RENDERS_NO_IMAGES = 1 << 0,
-  TYPE_IS_CONTENTFUL = 1 << 1
-||||||| merged common ancestors
-enum DisplayItemFlags
-{
-  TYPE_RENDERS_NO_IMAGES = 1 << 0
-=======
 enum DisplayItemFlags {
   TYPE_RENDERS_NO_IMAGES = 1 << 0,
   TYPE_IS_CONTENTFUL = 1 << 1,
   TYPE_IS_CONTAINER = 1 << 2
->>>>>>> upstream-releases
 };
 
 inline const char* DisplayItemTypeName(DisplayItemType aType) {

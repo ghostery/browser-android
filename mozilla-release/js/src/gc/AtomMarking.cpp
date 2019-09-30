@@ -178,22 +178,6 @@ void AtomMarkingRuntime::markAtomValue(JSContext* cx, const Value& value) {
     if (value.toString()->isAtom()) {
       markAtom(cx, &value.toString()->asAtom());
     }
-<<<<<<< HEAD
-    return;
-  }
-  if (value.isSymbol()) {
-    markAtom(cx, value.toSymbol());
-    return;
-  }
-  MOZ_ASSERT_IF(value.isGCThing(), value.isObject() ||
-                                       value.isPrivateGCThing() ||
-                                       IF_BIGINT(value.isBigInt(), false));
-||||||| merged common ancestors
-    MOZ_ASSERT_IF(value.isGCThing(),
-                  value.isObject() ||
-                  value.isPrivateGCThing() ||
-                  IF_BIGINT(value.isBigInt(), false));
-=======
     return;
   }
   if (value.isSymbol()) {
@@ -203,7 +187,6 @@ void AtomMarkingRuntime::markAtomValue(JSContext* cx, const Value& value) {
   MOZ_ASSERT_IF(value.isGCThing(), value.isObject() ||
                                        value.isPrivateGCThing() ||
                                        value.isBigInt());
->>>>>>> upstream-releases
 }
 
 void AtomMarkingRuntime::adoptMarkedAtoms(Zone* target, Zone* source) {
@@ -284,23 +267,10 @@ bool AtomMarkingRuntime::valueIsMarked(Zone* zone, const Value& value) {
     return atomIsMarked(zone, value.toSymbol());
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT_IF(value.isGCThing(), value.isObject() ||
-                                       value.isPrivateGCThing() ||
-                                       IF_BIGINT(value.isBigInt(), false));
-  return true;
-||||||| merged common ancestors
-    MOZ_ASSERT_IF(value.isGCThing(),
-                  value.isObject() ||
-                  value.isPrivateGCThing() ||
-                  IF_BIGINT(value.isBigInt(), false));
-    return true;
-=======
   MOZ_ASSERT_IF(value.isGCThing(), value.isObject() ||
                                        value.isPrivateGCThing() ||
                                        value.isBigInt());
   return true;
->>>>>>> upstream-releases
 }
 
 #endif  // DEBUG

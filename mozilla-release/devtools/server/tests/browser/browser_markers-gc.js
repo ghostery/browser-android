@@ -10,15 +10,7 @@ const MARKER_NAME = "GarbageCollection";
 
 add_task(async function() {
   const target = await addTabTarget(MAIN_DOMAIN + "doc_force_gc.html");
-<<<<<<< HEAD
   const front = await target.getFront("performance");
-  await front.connect();
-||||||| merged common ancestors
-  const front = target.getFront("performance");
-  await front.connect();
-=======
-  const front = await target.getFront("performance");
->>>>>>> upstream-releases
   const rec = await front.startRecording({ withMarkers: true });
 
   let markers = await waitForMarkerType(front, MARKER_NAME);

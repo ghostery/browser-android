@@ -25,19 +25,9 @@ extern crate core;
 extern crate core_foundation;
 #[cfg(target_os = "macos")]
 extern crate core_graphics;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/lib.rs
-#[cfg(target_os = "windows")]
-extern crate dwrote;
-pub extern crate euclid;
-||||||| merged common ancestors
-#[cfg(target_os = "windows")]
-extern crate dwrote;
-extern crate euclid;
-=======
 #[macro_use]
 extern crate derive_more;
 pub extern crate euclid;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/lib.rs
 #[cfg(feature = "ipc")]
 extern crate ipc_channel;
 #[macro_use]

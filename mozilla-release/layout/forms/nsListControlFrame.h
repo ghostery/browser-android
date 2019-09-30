@@ -76,22 +76,11 @@ class nsListControlFrame final : public nsHTMLScrollFrame,
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* aPrevInFlow) override;
 
-<<<<<<< HEAD
-  virtual void DidReflow(nsPresContext* aPresContext,
-                         const ReflowInput* aReflowInput) override;
-  virtual void DestroyFrom(nsIFrame* aDestructRoot,
-                           PostDestroyData& aPostDestroyData) override;
-||||||| merged common ancestors
-  virtual void DidReflow(nsPresContext*            aPresContext,
-                         const ReflowInput*  aReflowInput) override;
-  virtual void DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData) override;
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual void DidReflow(nsPresContext* aPresContext,
                          const ReflowInput* aReflowInput) override;
   virtual void DestroyFrom(nsIFrame* aDestructRoot,
                            PostDestroyData& aPostDestroyData) override;
->>>>>>> upstream-releases
 
   virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                 const nsDisplayListSet& aLists) override;
@@ -107,19 +96,10 @@ class nsListControlFrame final : public nsHTMLScrollFrame,
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
-<<<<<<< HEAD
-  // nsIFormControlFrame
-  virtual nsresult SetFormProperty(nsAtom* aName,
-                                   const nsAString& aValue) override;
-||||||| merged common ancestors
-    // nsIFormControlFrame
-  virtual nsresult SetFormProperty(nsAtom* aName, const nsAString& aValue) override;
-=======
   // nsIFormControlFrame
   virtual nsresult SetFormProperty(nsAtom* aName,
                                    const nsAString& aValue) override;
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
->>>>>>> upstream-releases
   virtual void SetFocus(bool aOn = true, bool aRepaint = false) override;
 
   virtual mozilla::ScrollStyles GetScrollStyles() const override;
@@ -384,59 +364,6 @@ class nsListControlFrame final : public nsHTMLScrollFrame,
                         nsReflowStatus& aStatus);
 
   // Selection
-<<<<<<< HEAD
-  bool SetOptionsSelectedFromFrame(int32_t aStartIndex, int32_t aEndIndex,
-                                   bool aValue, bool aClearAll);
-  bool ToggleOptionSelectedFromFrame(int32_t aIndex);
-  /**
-   * @note This method might destroy the frame, pres shell and other objects.
-   */
-  bool SingleSelection(int32_t aClickedIndex, bool aDoToggle);
-  bool ExtendedSelection(int32_t aStartIndex, int32_t aEndIndex,
-                         bool aClearAll);
-  /**
-   * @note This method might destroy the frame, pres shell and other objects.
-   */
-  bool PerformSelection(int32_t aClickedIndex, bool aIsShift, bool aIsControl);
-  /**
-   * @note This method might destroy the frame, pres shell and other objects.
-   */
-  bool HandleListSelection(mozilla::dom::Event* aDOMEvent,
-                           int32_t selectedIndex);
-  void InitSelectionRange(int32_t aClickedIndex);
-  MOZ_CAN_RUN_SCRIPT
-  void PostHandleKeyEvent(int32_t aNewIndex, uint32_t aCharCode, bool aIsShift,
-                          bool aIsControlOrMeta);
-
- public:
-||||||| merged common ancestors
-  bool     SetOptionsSelectedFromFrame(int32_t aStartIndex,
-                                       int32_t aEndIndex,
-                                       bool aValue,
-                                       bool aClearAll);
-  bool     ToggleOptionSelectedFromFrame(int32_t aIndex);
-  /**
-   * @note This method might destroy the frame, pres shell and other objects.
-   */
-  bool     SingleSelection(int32_t aClickedIndex, bool aDoToggle);
-  bool     ExtendedSelection(int32_t aStartIndex, int32_t aEndIndex,
-                             bool aClearAll);
-  /**
-   * @note This method might destroy the frame, pres shell and other objects.
-   */
-  bool     PerformSelection(int32_t aClickedIndex, bool aIsShift,
-                            bool aIsControl);
-  /**
-   * @note This method might destroy the frame, pres shell and other objects.
-   */
-  bool     HandleListSelection(mozilla::dom::Event * aDOMEvent,
-                               int32_t selectedIndex);
-  void     InitSelectionRange(int32_t aClickedIndex);
-  void     PostHandleKeyEvent(int32_t aNewIndex, uint32_t aCharCode,
-                              bool aIsShift, bool aIsControlOrMeta);
-
-public:
-=======
   bool SetOptionsSelectedFromFrame(int32_t aStartIndex, int32_t aEndIndex,
                                    bool aValue, bool aClearAll);
   bool ToggleOptionSelectedFromFrame(int32_t aIndex);
@@ -456,7 +383,6 @@ public:
                           bool aIsControlOrMeta);
 
  public:
->>>>>>> upstream-releases
   nsSelectsAreaFrame* GetOptionsContainer() const {
     return static_cast<nsSelectsAreaFrame*>(GetScrolledFrame());
   }

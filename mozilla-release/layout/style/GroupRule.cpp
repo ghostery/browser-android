@@ -64,37 +64,20 @@ void GroupRule::List(FILE* out, int32_t aIndent) const {
 }
 #endif
 
-<<<<<<< HEAD
-/* virtual */ void GroupRule::DropSheetReference() {
-||||||| merged common ancestors
-/* virtual */ void
-GroupRule::DropSheetReference()
-{
-=======
 /* virtual */
 void GroupRule::DropSheetReference() {
->>>>>>> upstream-releases
   if (mRuleList) {
     mRuleList->DropSheetReference();
   }
   Rule::DropSheetReference();
 }
 
-<<<<<<< HEAD
-uint32_t GroupRule::InsertRule(const nsAString& aRule, uint32_t aIndex,
-                               ErrorResult& aRv) {
-||||||| merged common ancestors
-uint32_t
-GroupRule::InsertRule(const nsAString& aRule, uint32_t aIndex, ErrorResult& aRv)
-{
-=======
 uint32_t GroupRule::InsertRule(const nsAString& aRule, uint32_t aIndex,
                                ErrorResult& aRv) {
   if (IsReadOnly()) {
     return 0;
   }
 
->>>>>>> upstream-releases
   StyleSheet* sheet = GetStyleSheet();
   if (NS_WARN_IF(!sheet)) {
     aRv.Throw(NS_ERROR_FAILURE);
@@ -117,19 +100,11 @@ uint32_t GroupRule::InsertRule(const nsAString& aRule, uint32_t aIndex,
   return aIndex;
 }
 
-<<<<<<< HEAD
-void GroupRule::DeleteRule(uint32_t aIndex, ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-GroupRule::DeleteRule(uint32_t aIndex, ErrorResult& aRv)
-{
-=======
 void GroupRule::DeleteRule(uint32_t aIndex, ErrorResult& aRv) {
   if (IsReadOnly()) {
     return;
   }
 
->>>>>>> upstream-releases
   StyleSheet* sheet = GetStyleSheet();
   if (NS_WARN_IF(!sheet)) {
     aRv.Throw(NS_ERROR_FAILURE);

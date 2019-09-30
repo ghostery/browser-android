@@ -99,29 +99,6 @@ DOMSVGNumber::DOMSVGNumber(DOMSVGNumberList* aList, uint8_t aAttrEnum,
 }
 
 DOMSVGNumber::DOMSVGNumber(nsISupports* aParent)
-<<<<<<< HEAD
-    : mList(nullptr),
-      mParent(aParent),
-      mListIndex(0),
-      mAttrEnum(0),
-      mIsAnimValItem(false),
-      mValue(0.0f) {}
-
-float DOMSVGNumber::Value() {
-||||||| merged common ancestors
-  : mList(nullptr)
-  , mParent(aParent)
-  , mListIndex(0)
-  , mAttrEnum(0)
-  , mIsAnimValItem(false)
-  , mValue(0.0f)
-{
-}
-
-float
-DOMSVGNumber::Value()
-{
-=======
     : mList(nullptr),
       mParent(aParent),
       mListIndex(0),
@@ -138,7 +115,6 @@ DOMSVGNumber::DOMSVGNumber(SVGSVGElement* aParent)
       mValue(0.0f) {}
 
 float DOMSVGNumber::Value() {
->>>>>>> upstream-releases
   if (mIsAnimValItem && HasOwner()) {
     Element()->FlushAnimations();  // May make HasOwner() == false
   }
@@ -199,27 +175,10 @@ bool DOMSVGNumber::IndexIsValid() {
 }
 #endif
 
-<<<<<<< HEAD
-JSObject* DOMSVGNumber::WrapObject(JSContext* aCx,
-                                   JS::Handle<JSObject*> aGivenProto) {
-  return dom::SVGNumber_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-DOMSVGNumber::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return dom::SVGNumber_Binding::Wrap(aCx, this, aGivenProto);
-=======
 JSObject* DOMSVGNumber::WrapObject(JSContext* aCx,
                                    JS::Handle<JSObject*> aGivenProto) {
   return SVGNumber_Binding::Wrap(aCx, this, aGivenProto);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

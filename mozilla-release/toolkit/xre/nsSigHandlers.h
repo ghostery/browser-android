@@ -34,15 +34,7 @@
  * 6     -> DAZ  Denormals Are Zero
  * 7..12 ->      Exception mask (see x86 FPU Control Word)
  */
-<<<<<<< HEAD
-#define SSE_STATUS_FLAGS FPU_EXCEPTION_MASK
-#define SSE_EXCEPTION_MASK (FPU_EXCEPTION_MASK << 7)
-||||||| merged common ancestors
-#define SSE_STATUS_FLAGS   FPU_EXCEPTION_MASK
-#define SSE_EXCEPTION_MASK (FPU_EXCEPTION_MASK << 7)
-=======
 #  define SSE_STATUS_FLAGS FPU_EXCEPTION_MASK
 #  define SSE_EXCEPTION_MASK (FPU_EXCEPTION_MASK << 7)
->>>>>>> upstream-releases
 
 #endif

@@ -3,17 +3,6 @@
  */
 /* eslint-disable mozilla/no-arbitrary-setTimeout */
 
-<<<<<<< HEAD
-async function notifyStoragePressure(usage = 100) {
-  let notifyPromise = TestUtils.topicObserved("QuotaManager::StoragePressure", () => true);
-  let usageWrapper = Cc["@mozilla.org/supports-PRUint64;1"]
-                     .createInstance(Ci.nsISupportsPRUint64);
-||||||| merged common ancestors
-function notifyStoragePressure(usage = 100) {
-  let notifyPromise = TestUtils.topicObserved("QuotaManager::StoragePressure", () => true);
-  let usageWrapper = Cc["@mozilla.org/supports-PRUint64;1"]
-                     .createInstance(Ci.nsISupportsPRUint64);
-=======
 async function notifyStoragePressure(usage = 100) {
   let notifyPromise = TestUtils.topicObserved(
     "QuotaManager::StoragePressure",
@@ -22,7 +11,6 @@ async function notifyStoragePressure(usage = 100) {
   let usageWrapper = Cc["@mozilla.org/supports-PRUint64;1"].createInstance(
     Ci.nsISupportsPRUint64
   );
->>>>>>> upstream-releases
   usageWrapper.data = usage;
   Services.obs.notifyObservers(usageWrapper, "QuotaManager::StoragePressure");
   return notifyPromise;
@@ -54,15 +42,6 @@ add_task(async function() {
   // await SpecialPowers.pushPrefEnv({set: [["privacy.reduceTimerPrecision", false]]});
 
   await notifyStoragePressure();
-<<<<<<< HEAD
-  await TestUtils.waitForCondition(() => gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification"));
-  let notification = gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification");
-  ok(notification instanceof XULElement, "Should display storage pressure notification");
-||||||| merged common ancestors
-  let notificationbox = document.getElementById("high-priority-global-notificationbox");
-  let notification = notificationbox.getNotificationWithValue("storage-pressure-notification");
-  ok(notification instanceof XULElement, "Should display storage pressure notification");
-=======
   await TestUtils.waitForCondition(() =>
     gHighPriorityNotificationBox.getNotificationWithValue(
       "storage-pressure-notification"
@@ -75,17 +54,9 @@ add_task(async function() {
     notification instanceof XULElement,
     "Should display storage pressure notification"
   );
->>>>>>> upstream-releases
   notification.close();
 
   await notifyStoragePressure();
-<<<<<<< HEAD
-  notification = gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification");
-  is(notification, null, "Should not display storage pressure notification more than once within the given interval");
-||||||| merged common ancestors
-  notification = notificationbox.getNotificationWithValue("storage-pressure-notification");
-  is(notification, null, "Should not display storage pressure notification more than once within the given interval");
-=======
   notification = gHighPriorityNotificationBox.getNotificationWithValue(
     "storage-pressure-notification"
   );
@@ -94,20 +65,11 @@ add_task(async function() {
     null,
     "Should not display storage pressure notification more than once within the given interval"
   );
->>>>>>> upstream-releases
 
   await new Promise(resolve =>
     setTimeout(resolve, TEST_NOTIFICATION_INTERVAL_MS + 1)
   );
   await notifyStoragePressure();
-<<<<<<< HEAD
-  await TestUtils.waitForCondition(() => gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification"));
-  notification = gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification");
-  ok(notification instanceof XULElement, "Should display storage pressure notification after the given interval");
-||||||| merged common ancestors
-  notification = notificationbox.getNotificationWithValue("storage-pressure-notification");
-  ok(notification instanceof XULElement, "Should display storage pressure notification after the given interval");
-=======
   await TestUtils.waitForCondition(() =>
     gHighPriorityNotificationBox.getNotificationWithValue(
       "storage-pressure-notification"
@@ -120,7 +82,6 @@ add_task(async function() {
     notification instanceof XULElement,
     "Should display storage pressure notification after the given interval"
   );
->>>>>>> upstream-releases
   notification.close();
 });
 
@@ -141,15 +102,6 @@ add_task(async function() {
       "browser.storageManager.pressureNotification.usageThresholdGB"
     );
   await notifyStoragePressure(USAGE_THRESHOLD_BYTES);
-<<<<<<< HEAD
-  await TestUtils.waitForCondition(() => gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification"));
-  let notification = gHighPriorityNotificationBox.getNotificationWithValue("storage-pressure-notification");
-  ok(notification instanceof XULElement, "Should display storage pressure notification");
-||||||| merged common ancestors
-  let notificationbox = document.getElementById("high-priority-global-notificationbox");
-  let notification = notificationbox.getNotificationWithValue("storage-pressure-notification");
-  ok(notification instanceof XULElement, "Should display storage pressure notification");
-=======
   await TestUtils.waitForCondition(() =>
     gHighPriorityNotificationBox.getNotificationWithValue(
       "storage-pressure-notification"
@@ -162,7 +114,6 @@ add_task(async function() {
     notification instanceof XULElement,
     "Should display storage pressure notification"
   );
->>>>>>> upstream-releases
 
   let prefBtn = notification.getElementsByTagName("button")[1];
   let aboutPrefPromise = openAboutPrefPromise();
@@ -200,18 +151,10 @@ add_task(async function() {
       pressureNotificationCount++;
     }
   });
-<<<<<<< HEAD
-  is(pressureNotificationCount, 1, "Should not display the 2nd notification when there is already one");
-  gHighPriorityNotificationBox.removeAllNotifications();
-||||||| merged common ancestors
-  is(pressureNotificationCount, 1, "Should not display the 2nd notification when there is already one");
-  notificationbox.removeAllNotifications();
-=======
   is(
     pressureNotificationCount,
     1,
     "Should not display the 2nd notification when there is already one"
   );
   gHighPriorityNotificationBox.removeAllNotifications();
->>>>>>> upstream-releases
 });

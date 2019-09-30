@@ -136,17 +136,11 @@ add_task(async function test_panelui_opened() {
 add_task(async function test_panelui_customize_to_toolbar() {
   await startCustomizing();
   let navbar = document.getElementById("nav-bar");
-<<<<<<< HEAD
-  simulateItemDrag(document.getElementById("edit-controls"), CustomizableUI.getCustomizationTarget(navbar), "end");
-||||||| merged common ancestors
-  simulateItemDrag(document.getElementById("edit-controls"), navbar.customizationTarget, "end");
-=======
   simulateItemDrag(
     document.getElementById("edit-controls"),
     CustomizableUI.getCustomizationTarget(navbar),
     "end"
   );
->>>>>>> upstream-releases
   await endCustomizing();
 
   // updateEditUIVisibility should be called when customization ends but isn't. See bug 1359790.

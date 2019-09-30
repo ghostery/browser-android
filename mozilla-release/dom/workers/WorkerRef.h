@@ -104,26 +104,11 @@ class WorkerRef {
   std::function<void()> mCallback;
 };
 
-<<<<<<< HEAD
-class WeakWorkerRef final : public WorkerRef {
- public:
-  static already_AddRefed<WeakWorkerRef> Create(
-      WorkerPrivate* aWorkerPrivate,
-      const std::function<void()>& aCallback = nullptr);
-||||||| merged common ancestors
-class WeakWorkerRef final : public WorkerRef
-{
-public:
-  static already_AddRefed<WeakWorkerRef>
-  Create(WorkerPrivate* aWorkerPrivate,
-         const std::function<void()>& aCallback = nullptr);
-=======
 class WeakWorkerRef final : public WorkerRef {
  public:
   static already_AddRefed<WeakWorkerRef> Create(
       WorkerPrivate* aWorkerPrivate,
       std::function<void()>&& aCallback = nullptr);
->>>>>>> upstream-releases
 
   WorkerPrivate* GetPrivate() const;
 
@@ -138,30 +123,6 @@ class WeakWorkerRef final : public WorkerRef {
   void Notify() override;
 };
 
-<<<<<<< HEAD
-class StrongWorkerRef final : public WorkerRef {
- public:
-  static already_AddRefed<StrongWorkerRef> Create(
-      WorkerPrivate* aWorkerPrivate, const char* aName,
-      const std::function<void()>& aCallback = nullptr);
-
-  WorkerPrivate* Private() const;
-
- private:
-||||||| merged common ancestors
-class StrongWorkerRef final : public WorkerRef
-{
-public:
-  static already_AddRefed<StrongWorkerRef>
-  Create(WorkerPrivate* aWorkerPrivate,
-         const char* aName,
-         const std::function<void()>& aCallback = nullptr);
-
-  WorkerPrivate*
-  Private() const;
-
-private:
-=======
 class StrongWorkerRef final : public WorkerRef {
  public:
   static already_AddRefed<StrongWorkerRef> Create(
@@ -186,7 +147,6 @@ class StrongWorkerRef final : public WorkerRef {
   WorkerPrivate* Private() const;
 
  private:
->>>>>>> upstream-releases
   friend class WeakWorkerRef;
   friend class ThreadSafeWorkerRef;
 

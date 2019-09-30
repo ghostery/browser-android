@@ -99,50 +99,6 @@ public:
     // that array.
     sk_sp<GrTextureProxy> refTextureProxy(GrMipMapped willNeedMips);
 
-    /**
-     *  Returns a texture that is safe for use with the params.
-     *
-     * If the size of the returned texture does not match width()/height() then the contents of the
-     * original may have been scaled to fit the texture or the original may have been copied into
-     * a subrect of the copy. 'scaleAdjust' must be  applied to the normalized texture coordinates
-     * in order to correct for the latter case.
-     *
-     * If the GrSamplerState is known to clamp and use kNearest or kBilerp filter mode then the
-     * proxy will always be unscaled and nullptr can be passed for scaleAdjust. There is a weird
-     * contract that if scaleAdjust is not null it must be initialized to {1, 1} before calling
-     * this method. (TODO: Fix this and make this function always initialize scaleAdjust).
-     *
-     * Places the color space of the texture in (*proxyColorSpace).
-     */
-    sk_sp<GrTextureProxy> refTextureProxyForParams(const GrSamplerState&,
-                                                   SkColorSpace* dstColorSpace,
-                                                   sk_sp<SkColorSpace>* proxyColorSpace,
-                                                   SkScalar scaleAdjust[2]);
-
-    sk_sp<GrTextureProxy> refTextureProxyForParams(GrSamplerState::Filter filter,
-                                                   SkColorSpace* dstColorSpace,
-                                                   sk_sp<SkColorSpace>* proxyColorSpace,
-                                                   SkScalar scaleAdjust[2]) {
-        return this->refTextureProxyForParams(
-                GrSamplerState(GrSamplerState::WrapMode::kClamp, filter), dstColorSpace,
-                proxyColorSpace, scaleAdjust);
-    }
-
-    /**
-     * Returns a texture that is safe for use with the dstColorSpace. If willNeedMips is true then
-     * the returned texture is guaranteed to have allocated mip map levels. This can be a
-     * performance win if future draws with the texture require mip maps.
-     *
-     * Places the color space of the texture in (*proxyColorSpace).
-     */
-    // TODO: Once we remove support for npot textures, we should add a flag for must support repeat
-    // wrap mode. To support that flag now would require us to support scaleAdjust array like in
-    // refTextureProxyForParams, however the current public API that uses this call does not expose
-    // that array.
-    sk_sp<GrTextureProxy> refTextureProxy(GrMipMapped willNeedMips,
-                                          SkColorSpace* dstColorSpace,
-                                          sk_sp<SkColorSpace>* proxyColorSpace);
-
     virtual ~GrTextureProducer() {}
 
     int width() const { return fWidth; }
@@ -155,19 +111,10 @@ public:
 protected:
     friend class GrTextureProducer_TestAccess;
 
-<<<<<<< HEAD
-    GrTextureProducer(GrContext* context, int width, int height, bool isAlphaOnly)
-        : fContext(context)
-        , fWidth(width)
-||||||| merged common ancestors
-    GrTextureProducer(int width, int height, bool isAlphaOnly)
-        : fWidth(width)
-=======
     GrTextureProducer(GrRecordingContext* context, int width, int height, bool isAlphaOnly,
                       bool domainNeedsDecal)
         : fContext(context)
         , fWidth(width)
->>>>>>> upstream-releases
         , fHeight(height)
         , fIsAlphaOnly(isAlphaOnly)
         , fDomainNeedsDecal(domainNeedsDecal) {}
@@ -228,30 +175,9 @@ protected:
             const SkRect& domain,
             const GrSamplerState::Filter* filterOrNullForBicubic);
 
-<<<<<<< HEAD
-    GrContext* fContext;
-
-||||||| merged common ancestors
-=======
     GrRecordingContext* context() const { return fContext; }
 
->>>>>>> upstream-releases
 private:
-<<<<<<< HEAD
-    virtual sk_sp<GrTextureProxy> onRefTextureProxyForParams(const GrSamplerState&,
-                                                             SkColorSpace* dstColorSpace,
-                                                             sk_sp<SkColorSpace>* proxyColorSpace,
-                                                             bool willBeMipped,
-                                                             SkScalar scaleAdjust[2]) = 0;
-
-    const int   fWidth;
-    const int   fHeight;
-    const bool  fIsAlphaOnly;
-||||||| merged common ancestors
-    const int   fWidth;
-    const int   fHeight;
-    const bool  fIsAlphaOnly;
-=======
     virtual sk_sp<GrTextureProxy> onRefTextureProxyForParams(const GrSamplerState&,
                                                              bool willBeMipped,
                                                              SkScalar scaleAdjust[2]) = 0;
@@ -263,7 +189,6 @@ private:
     // If true, any domain effect uses kDecal instead of kClamp, and sampler filter uses
     // kClampToBorder instead of kClamp.
     const bool  fDomainNeedsDecal;
->>>>>>> upstream-releases
 
     typedef SkNoncopyable INHERITED;
 };

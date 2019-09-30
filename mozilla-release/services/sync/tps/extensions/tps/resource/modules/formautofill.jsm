@@ -22,19 +22,11 @@ ChromeUtils.defineModuleGetter(
   "resource://formautofill/FormAutofillStorage.jsm"
 );
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "OSKeyStore",
-                               "resource://formautofill/OSKeyStore.jsm");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "MasterPassword",
-                               "resource://formautofill/MasterPassword.jsm");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "OSKeyStore",
   "resource://formautofill/OSKeyStore.jsm"
 );
->>>>>>> upstream-releases
 
 class FormAutofillBase {
   constructor(props, subStorageName, fields) {
@@ -129,13 +121,6 @@ class CreditCard extends FormAutofillBase {
 
   async Find() {
     const storage = await this.getStorage();
-<<<<<<< HEAD
-    await Promise.all(storage._data.map(
-      async entry => entry["cc-number"] = await OSKeyStore.decrypt(entry["cc-number-encrypted"])));
-||||||| merged common ancestors
-    await Promise.all(storage._data.map(
-      async entry => entry["cc-number"] = await MasterPassword.decrypt(entry["cc-number-encrypted"])));
-=======
     await Promise.all(
       storage._data.map(
         async entry =>
@@ -144,7 +129,6 @@ class CreditCard extends FormAutofillBase {
           ))
       )
     );
->>>>>>> upstream-releases
     return storage._data.find(entry => {
       return this._fields.every(field => entry[field] === this.props[field]);
     });

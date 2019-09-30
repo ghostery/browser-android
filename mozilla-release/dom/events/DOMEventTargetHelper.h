@@ -127,37 +127,11 @@ class DOMEventTargetHelper : public dom::EventTarget,
     return mListenerManager && mListenerManager->HasListenersFor(aTypeWithOn);
   }
 
-<<<<<<< HEAD
-  virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindings() override {
-||||||| merged common ancestors
-  virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindings() override
-  {
-=======
   virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindingsInternal() override {
->>>>>>> upstream-releases
     return nsPIDOMWindowOuter::GetFromCurrentInner(GetOwner());
   }
 
-<<<<<<< HEAD
-  nsresult CheckInnerWindowCorrectness() const {
-    NS_ENSURE_STATE(!mHasOrHasHadOwnerWindow || mOwnerWindow);
-    if (mOwnerWindow && !mOwnerWindow->IsCurrentInnerWindow()) {
-      return NS_ERROR_FAILURE;
-    }
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  nsresult CheckInnerWindowCorrectness() const
-  {
-    NS_ENSURE_STATE(!mHasOrHasHadOwnerWindow || mOwnerWindow);
-    if (mOwnerWindow && !mOwnerWindow->IsCurrentInnerWindow()) {
-      return NS_ERROR_FAILURE;
-    }
-    return NS_OK;
-  }
-=======
   nsresult CheckCurrentGlobalCorrectness() const;
->>>>>>> upstream-releases
 
   nsPIDOMWindowInner* GetOwner() const { return mOwnerWindow; }
   // Like GetOwner, but only returns non-null if the window being returned is

@@ -59,27 +59,11 @@ class WidgetTouchEvent;
 // Please see the wiki page for more information.
 // https://wiki.mozilla.org/AccessibleCaret
 //
-<<<<<<< HEAD
-class AccessibleCaretEventHub : public nsIReflowObserver,
-                                public nsIScrollObserver,
-                                public nsSupportsWeakReference {
- public:
-  explicit AccessibleCaretEventHub(nsIPresShell* aPresShell);
-||||||| merged common ancestors
-class AccessibleCaretEventHub
-  : public nsIReflowObserver
-  , public nsIScrollObserver
-  , public nsSupportsWeakReference
-{
-public:
-  explicit AccessibleCaretEventHub(nsIPresShell* aPresShell);
-=======
 class AccessibleCaretEventHub : public nsIReflowObserver,
                                 public nsIScrollObserver,
                                 public nsSupportsWeakReference {
  public:
   explicit AccessibleCaretEventHub(PresShell* aPresShell);
->>>>>>> upstream-releases
   void Init();
   void Terminate();
 
@@ -112,14 +96,7 @@ class AccessibleCaretEventHub : public nsIReflowObserver,
   State* GetState() const;
 
   MOZ_CAN_RUN_SCRIPT
-<<<<<<< HEAD
-  void OnSelectionChange(nsIDocument* aDocument, dom::Selection* aSelection,
-||||||| merged common ancestors
-  void OnSelectionChange(nsIDocument* aDocument,
-                         dom::Selection* aSelection,
-=======
   void OnSelectionChange(dom::Document* aDocument, dom::Selection* aSelection,
->>>>>>> upstream-releases
                          int16_t aReason);
 
  protected:
@@ -223,15 +200,8 @@ class AccessibleCaretEventHub::State {
     return nsEventStatus_eIgnore;
   }
 
-<<<<<<< HEAD
-  virtual nsEventStatus OnRelease(AccessibleCaretEventHub* aContext) {
-||||||| merged common ancestors
-  virtual nsEventStatus OnRelease(AccessibleCaretEventHub* aContext)
-  {
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual nsEventStatus OnRelease(AccessibleCaretEventHub* aContext) {
->>>>>>> upstream-releases
     return nsEventStatus_eIgnore;
   }
 

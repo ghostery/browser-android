@@ -21,28 +21,11 @@ namespace mozilla {
 class TextEditor;
 }  // namespace mozilla
 
-<<<<<<< HEAD
-struct NodeOffset {
-  nsINode* mNode;
-  int32_t mOffset;
-||||||| merged common ancestors
-struct NodeOffset
-{
-  nsINode* mNode;
-  int32_t  mOffset;
-=======
 struct NodeOffset {
   nsCOMPtr<nsINode> mNode;
   int32_t mOffset;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NodeOffset() : mNode(nullptr), mOffset(0) {}
-||||||| merged common ancestors
-  NodeOffset(): mNode(nullptr), mOffset(0) {}
-=======
   NodeOffset() : mOffset(0) {}
->>>>>>> upstream-releases
   NodeOffset(nsINode* aNode, int32_t aOffset)
       : mNode(aNode), mOffset(aOffset) {}
 
@@ -50,19 +33,10 @@ struct NodeOffset {
     return mNode == aOther.mNode && mOffset == aOther.mOffset;
   }
 
-<<<<<<< HEAD
-  bool operator!=(const NodeOffset& aOther) const { return !(*this == aOther); }
-||||||| merged common ancestors
-  bool operator!=(const NodeOffset& aOther) const
-  {
-    return !(*this == aOther);
-  }
-=======
   bool operator!=(const NodeOffset& aOther) const { return !(*this == aOther); }
 
   nsINode* Node() const { return mNode.get(); }
   int32_t Offset() const { return mOffset; }
->>>>>>> upstream-releases
 };
 
 class NodeOffsetRange {
@@ -76,38 +50,11 @@ class NodeOffsetRange {
   NodeOffsetRange(NodeOffset b, NodeOffset e)
       : mBegin(b), mEnd(e), mEmpty(false) {}
 
-<<<<<<< HEAD
-  NodeOffset Begin() { return mBegin; }
-||||||| merged common ancestors
-  NodeOffset Begin()
-  {
-    return mBegin;
-  }
-=======
   NodeOffset Begin() const { return mBegin; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NodeOffset End() { return mEnd; }
-||||||| merged common ancestors
-  NodeOffset End()
-  {
-    return mEnd;
-  }
-=======
   NodeOffset End() const { return mEnd; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool Empty() { return mEmpty; }
-||||||| merged common ancestors
-  bool Empty()
-  {
-    return mEmpty;
-  }
-=======
   bool Empty() const { return mEmpty; }
->>>>>>> upstream-releases
 };
 
 /**
@@ -178,13 +125,7 @@ class MOZ_STACK_CLASS mozInlineSpellWordUtil {
 
  private:
   // cached stuff for the editor, set by Init
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument>         mDocument;
-=======
   RefPtr<mozilla::dom::Document> mDocument;
->>>>>>> upstream-releases
   bool mIsContentEditableOrDesignMode;
 
   // range to check, see SetPosition and SetEnd

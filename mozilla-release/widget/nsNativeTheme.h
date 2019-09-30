@@ -165,12 +165,6 @@ class nsNativeTheme : public nsITimerCallback, public nsINamed {
   // True if it's not a menubar item or menulist item
   bool IsRegularMenuItem(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-  nsIPresShell* GetPresShell(nsIFrame* aFrame);
-||||||| merged common ancestors
-  nsIPresShell *GetPresShell(nsIFrame* aFrame);
-=======
->>>>>>> upstream-releases
   static bool CheckBooleanAttr(nsIFrame* aFrame, nsAtom* aAtom);
   static int32_t CheckIntAttr(nsIFrame* aFrame, nsAtom* aAtom,
                               int32_t defaultValue);

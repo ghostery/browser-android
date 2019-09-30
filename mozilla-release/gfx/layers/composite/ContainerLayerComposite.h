@@ -56,41 +56,17 @@ class ContainerLayerComposite : public ContainerLayer, public LayerComposite {
                      LayerManagerComposite* aManager,
                      const RenderTargetIntRect& aClipRect, Layer* aLayer);
 
-<<<<<<< HEAD
  public:
   explicit ContainerLayerComposite(LayerManagerComposite* aManager);
 
- protected:
-  ~ContainerLayerComposite();
-||||||| merged common ancestors
-protected:
-  ~ContainerLayerComposite();
-=======
- public:
-  explicit ContainerLayerComposite(LayerManagerComposite* aManager);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
  protected:
   virtual ~ContainerLayerComposite();
 
  public:
->>>>>>> upstream-releases
   // LayerComposite Implementation
   Layer* GetLayer() override { return this; }
 
-<<<<<<< HEAD
-  virtual void SetLayerManager(HostLayerManager* aManager) override {
-||||||| merged common ancestors
-  virtual void SetLayerManager(HostLayerManager* aManager) override
-  {
-=======
   void SetLayerManager(HostLayerManager* aManager) override {
->>>>>>> upstream-releases
     LayerComposite::SetLayerManager(aManager);
     mManager = aManager;
     mLastIntermediateSurface = nullptr;
@@ -107,16 +83,8 @@ public:
 
   void Prepare(const RenderTargetIntRect& aClipRect) override;
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const gfx::Matrix4x4& aTransformToSurface) override {
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
-  {
-=======
   void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
->>>>>>> upstream-releases
     DefaultComputeEffectiveTransforms(aTransformToSurface);
   }
 
@@ -141,15 +109,7 @@ public:
     return mSimpleAttrs.GetPostYScale() * mPresShellResolution;
   }
 
-<<<<<<< HEAD
-  virtual const char* Name() const override {
-    return "ContainerLayerComposite";
-  }
-||||||| merged common ancestors
-  virtual const char* Name() const override { return "ContainerLayerComposite"; }
-=======
   const char* Name() const override { return "ContainerLayerComposite"; }
->>>>>>> upstream-releases
   UniquePtr<PreparedData> mPrepared;
 
   RefPtr<CompositingRenderTarget> mLastIntermediateSurface;
@@ -188,29 +148,14 @@ class RefLayerComposite : public RefLayer, public LayerComposite {
  public:
   explicit RefLayerComposite(LayerManagerComposite* aManager);
 
-<<<<<<< HEAD
- protected:
-  ~RefLayerComposite();
-||||||| merged common ancestors
-protected:
-  ~RefLayerComposite();
-=======
  protected:
   virtual ~RefLayerComposite();
->>>>>>> upstream-releases
 
  public:
   /** LayerOGL implementation */
   Layer* GetLayer() override { return this; }
 
-<<<<<<< HEAD
-  virtual void SetLayerManager(HostLayerManager* aManager) override {
-||||||| merged common ancestors
-  virtual void SetLayerManager(HostLayerManager* aManager) override
-  {
-=======
   void SetLayerManager(HostLayerManager* aManager) override {
->>>>>>> upstream-releases
     LayerComposite::SetLayerManager(aManager);
     mManager = aManager;
     mLastIntermediateSurface = nullptr;
@@ -225,16 +170,8 @@ protected:
 
   void Prepare(const RenderTargetIntRect& aClipRect) override;
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const gfx::Matrix4x4& aTransformToSurface) override {
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
-  {
-=======
   void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
->>>>>>> upstream-releases
     DefaultComputeEffectiveTransforms(aTransformToSurface);
   }
 

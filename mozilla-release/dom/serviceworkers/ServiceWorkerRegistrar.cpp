@@ -54,16 +54,8 @@ static const uint32_t kInvalidGeneration = static_cast<uint32_t>(-1);
 
 StaticRefPtr<ServiceWorkerRegistrar> gServiceWorkerRegistrar;
 
-<<<<<<< HEAD
-nsresult GetOrigin(const nsACString& aURL, nsACString& aOrigin) {
-||||||| merged common ancestors
-nsresult
-GetOrigin(const nsACString& aURL, nsACString& aOrigin)
-{
-=======
 nsresult GetOriginAndBaseDomain(const nsACString& aURL, nsACString& aOrigin,
                                 nsACString& aBaseDomain) {
->>>>>>> upstream-releases
   RefPtr<net::MozURL> url;
   nsresult rv = net::MozURL::Init(getter_AddRefs(url), aURL);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -128,16 +120,8 @@ nsresult CreatePrincipalInfo(nsILineInputStream* aStream,
     return rv;
   }
 
-<<<<<<< HEAD
-  aEntry->principal() =
-      mozilla::ipc::ContentPrincipalInfo(attrs, origin, aEntry->scope());
-||||||| merged common ancestors
-  aEntry->principal() =
-    mozilla::ipc::ContentPrincipalInfo(attrs, origin, aEntry->scope());
-=======
   aEntry->principal() = mozilla::ipc::ContentPrincipalInfo(
       attrs, origin, aEntry->scope(), Nothing(), baseDomain);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -164,17 +148,8 @@ void ServiceWorkerRegistrar::Initialize() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ServiceWorkerRegistrar>
-ServiceWorkerRegistrar::Get() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ServiceWorkerRegistrar>
-ServiceWorkerRegistrar::Get()
-{
-=======
 /* static */
 already_AddRefed<ServiceWorkerRegistrar> ServiceWorkerRegistrar::Get() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   MOZ_ASSERT(gServiceWorkerRegistrar);

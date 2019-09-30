@@ -167,30 +167,11 @@ class AudioNode : public DOMEventTargetHelper, public nsSupportsWeakReference {
   // Returns the stream, if any.
   AudioNodeStream* GetStream() const { return mStream; }
 
-<<<<<<< HEAD
-  const nsTArray<InputNode>& InputNodes() const { return mInputNodes; }
-  const nsTArray<RefPtr<AudioNode> >& OutputNodes() const {
-||||||| merged common ancestors
-  const nsTArray<InputNode>& InputNodes() const
-  {
-    return mInputNodes;
-  }
-  const nsTArray<RefPtr<AudioNode> >& OutputNodes() const
-  {
-=======
   const nsTArray<InputNode>& InputNodes() const { return mInputNodes; }
   const nsTArray<RefPtr<AudioNode>>& OutputNodes() const {
->>>>>>> upstream-releases
     return mOutputNodes;
   }
-<<<<<<< HEAD
-  const nsTArray<RefPtr<AudioParam> >& OutputParams() const {
-||||||| merged common ancestors
-  const nsTArray<RefPtr<AudioParam> >& OutputParams() const
-  {
-=======
   const nsTArray<RefPtr<AudioParam>>& OutputParams() const {
->>>>>>> upstream-releases
     return mOutputParams;
   }
 
@@ -221,15 +202,9 @@ class AudioNode : public DOMEventTargetHelper, public nsSupportsWeakReference {
   // during document shutdown.
   AbstractThread* GetAbstractMainThread() const { return mAbstractMainThread; }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   const nsTArray<RefPtr<AudioParam>>& GetAudioParams() const { return mParams; }
 
  private:
->>>>>>> upstream-releases
   // Given:
   //
   // - a DestinationType, that can be an AudioNode or an AudioParam ;
@@ -273,11 +248,6 @@ private:
   // Must not become null until finished.
   RefPtr<AudioNodeStream> mStream;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // The reference pointing out all audio params which belong to this node.
   nsTArray<RefPtr<AudioParam>> mParams;
   // Use this function to create a AudioParam, which will automatically add the
@@ -288,7 +258,6 @@ private:
                         float aMaxValue = std::numeric_limits<float>::max());
 
  private:
->>>>>>> upstream-releases
   // For every InputNode, there is a corresponding entry in mOutputNodes of the
   // InputNode's mInputNode.
   nsTArray<InputNode> mInputNodes;

@@ -31,27 +31,6 @@ class RequestListColumnFile extends Component {
     const {
       item: { urlDetails },
     } = this.props;
-<<<<<<< HEAD
-    const iconClassList = ["requests-file-type-icon"];
-
-    if (cause && (
-        cause.type.includes("img") ||
-        cause.type.includes("image") ||
-        cause.type.includes("beacon"))) {
-      iconClassList.push("file-type-image");
-    } else {
-      iconClassList.push("file-type-general");
-    }
-||||||| merged common ancestors
-    const iconClassList = ["requests-file-type-icon"];
-
-    if (cause && cause.type == "img") {
-      iconClassList.push("file-type-image");
-    } else {
-      iconClassList.push("file-type-general");
-    }
-=======
->>>>>>> upstream-releases
 
     const originalFileURL = urlDetails.url;
     const decodedFileURL = urlDetails.unicodeUrl;

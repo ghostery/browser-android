@@ -40,13 +40,6 @@ mozilla::ipc::IPCResult CompositorWidgetParent::RecvNotifyClientSizeChanged(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-}  // namespace widget
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace widget
-} // namespace mozilla
-=======
 mozilla::ipc::IPCResult
 CompositorWidgetParent::RecvRequestsUpdatingEGLSurface() {
 #ifdef MOZ_WAYLAND
@@ -57,4 +50,3 @@ CompositorWidgetParent::RecvRequestsUpdatingEGLSurface() {
 
 }  // namespace widget
 }  // namespace mozilla
->>>>>>> upstream-releases

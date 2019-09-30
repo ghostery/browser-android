@@ -72,31 +72,14 @@ class PreallocatedProcessManagerImpl final : public nsIObserver {
   bool IsEmpty() const { return !mPreallocatedProcess && !mLaunchInProgress; }
 };
 
-<<<<<<< HEAD
-/* static */ StaticRefPtr<PreallocatedProcessManagerImpl>
-    PreallocatedProcessManagerImpl::sSingleton;
-||||||| merged common ancestors
-/* static */ StaticRefPtr<PreallocatedProcessManagerImpl>
-PreallocatedProcessManagerImpl::sSingleton;
-=======
 /* static */
 StaticRefPtr<PreallocatedProcessManagerImpl>
     PreallocatedProcessManagerImpl::sSingleton;
 /* static */
 uint32_t PreallocatedProcessManagerImpl::sPrelaunchDelayMS = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ PreallocatedProcessManagerImpl*
-PreallocatedProcessManagerImpl::Singleton() {
-||||||| merged common ancestors
-/* static */ PreallocatedProcessManagerImpl*
-PreallocatedProcessManagerImpl::Singleton()
-{
-=======
 /* static */
 PreallocatedProcessManagerImpl* PreallocatedProcessManagerImpl::Singleton() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!sSingleton) {
     sSingleton = new PreallocatedProcessManagerImpl();
@@ -118,18 +101,10 @@ PreallocatedProcessManagerImpl::~PreallocatedProcessManagerImpl() {
   MOZ_RELEASE_ASSERT(!mLaunchInProgress);
 }
 
-<<<<<<< HEAD
-void PreallocatedProcessManagerImpl::Init() {
-||||||| merged common ancestors
-void
-PreallocatedProcessManagerImpl::Init()
-{
-=======
 void PreallocatedProcessManagerImpl::Init() {
   Preferences::AddUintVarCache(&sPrelaunchDelayMS,
                                "dom.ipc.processPrelaunch.delayMs",
                                DEFAULT_ALLOCATE_DELAY);
->>>>>>> upstream-releases
   Preferences::AddStrongObserver(this, "dom.ipc.processPrelaunch.enabled");
   // We have to respect processCount at all time. This is especially important
   // for testing.
@@ -262,22 +237,9 @@ void PreallocatedProcessManagerImpl::AllocateAfterDelay() {
   }
 
   NS_DelayedDispatchToCurrentThread(
-<<<<<<< HEAD
-      NewRunnableMethod("PreallocatedProcessManagerImpl::AllocateOnIdle", this,
-                        &PreallocatedProcessManagerImpl::AllocateOnIdle),
-      Preferences::GetUint("dom.ipc.processPrelaunch.delayMs",
-                           DEFAULT_ALLOCATE_DELAY));
-||||||| merged common ancestors
-    NewRunnableMethod("PreallocatedProcessManagerImpl::AllocateOnIdle",
-                      this,
-                      &PreallocatedProcessManagerImpl::AllocateOnIdle),
-    Preferences::GetUint("dom.ipc.processPrelaunch.delayMs",
-                         DEFAULT_ALLOCATE_DELAY));
-=======
       NewRunnableMethod("PreallocatedProcessManagerImpl::AllocateOnIdle", this,
                         &PreallocatedProcessManagerImpl::AllocateOnIdle),
       sPrelaunchDelayMS);
->>>>>>> upstream-releases
 }
 
 void PreallocatedProcessManagerImpl::AllocateOnIdle() {
@@ -285,21 +247,10 @@ void PreallocatedProcessManagerImpl::AllocateOnIdle() {
     return;
   }
 
-<<<<<<< HEAD
-  NS_IdleDispatchToCurrentThread(
-      NewRunnableMethod("PreallocatedProcessManagerImpl::AllocateNow", this,
-                        &PreallocatedProcessManagerImpl::AllocateNow));
-||||||| merged common ancestors
-  NS_IdleDispatchToCurrentThread(
-    NewRunnableMethod("PreallocatedProcessManagerImpl::AllocateNow",
-                      this,
-                      &PreallocatedProcessManagerImpl::AllocateNow));
-=======
   NS_DispatchToCurrentThreadQueue(
       NewRunnableMethod("PreallocatedProcessManagerImpl::AllocateNow", this,
                         &PreallocatedProcessManagerImpl::AllocateNow),
       EventQueuePriority::Idle);
->>>>>>> upstream-releases
 }
 
 void PreallocatedProcessManagerImpl::AllocateNow() {
@@ -367,58 +318,23 @@ inline PreallocatedProcessManagerImpl* GetPPMImpl() {
   return PreallocatedProcessManagerImpl::Singleton();
 }
 
-<<<<<<< HEAD
-/* static */ void PreallocatedProcessManager::AddBlocker(
-    ContentParent* aParent) {
-||||||| merged common ancestors
-/* static */ void
-PreallocatedProcessManager::AddBlocker(ContentParent* aParent)
-{
-=======
 /* static */
 void PreallocatedProcessManager::AddBlocker(ContentParent* aParent) {
->>>>>>> upstream-releases
   GetPPMImpl()->AddBlocker(aParent);
 }
 
-<<<<<<< HEAD
-/* static */ void PreallocatedProcessManager::RemoveBlocker(
-    ContentParent* aParent) {
-||||||| merged common ancestors
-/* static */ void
-PreallocatedProcessManager::RemoveBlocker(ContentParent* aParent)
-{
-=======
 /* static */
 void PreallocatedProcessManager::RemoveBlocker(ContentParent* aParent) {
->>>>>>> upstream-releases
   GetPPMImpl()->RemoveBlocker(aParent);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ContentParent>
-PreallocatedProcessManager::Take() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ContentParent>
-PreallocatedProcessManager::Take()
-{
-=======
 /* static */
 already_AddRefed<ContentParent> PreallocatedProcessManager::Take() {
->>>>>>> upstream-releases
   return GetPPMImpl()->Take();
 }
 
-<<<<<<< HEAD
-/* static */ bool PreallocatedProcessManager::Provide(ContentParent* aParent) {
-||||||| merged common ancestors
-/* static */ bool
-PreallocatedProcessManager::Provide(ContentParent* aParent)
-{
-=======
 /* static */
 bool PreallocatedProcessManager::Provide(ContentParent* aParent) {
->>>>>>> upstream-releases
   return GetPPMImpl()->Provide(aParent);
 }
 

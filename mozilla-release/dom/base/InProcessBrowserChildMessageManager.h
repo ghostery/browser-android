@@ -33,65 +33,23 @@ namespace dom {
  * and does not use any IPC infrastructure for its message passing.
  */
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.h
-class InProcessTabChildMessageManager final
-    : public ContentFrameMessageManager,
-      public nsMessageManagerScriptExecutor,
-      public nsIInProcessContentFrameMessageManager,
-      public nsSupportsWeakReference,
-      public mozilla::dom::ipc::MessageManagerCallback {
-||||||| merged common ancestors
-class InProcessTabChildMessageManager final : public ContentFrameMessageManager,
-                                              public nsMessageManagerScriptExecutor,
-                                              public nsIInProcessContentFrameMessageManager,
-                                              public nsSupportsWeakReference,
-                                              public mozilla::dom::ipc::MessageManagerCallback
-{
-=======
 class InProcessBrowserChildMessageManager final
     : public ContentFrameMessageManager,
       public nsMessageManagerScriptExecutor,
       public nsIInProcessContentFrameMessageManager,
       public nsSupportsWeakReference,
       public mozilla::dom::ipc::MessageManagerCallback {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.h
   typedef mozilla::dom::ipc::StructuredCloneData StructuredCloneData;
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.h
- private:
-  InProcessTabChildMessageManager(nsIDocShell* aShell, nsIContent* aOwner,
-                                  nsFrameMessageManager* aChrome);
-||||||| merged common ancestors
-private:
-  InProcessTabChildMessageManager(nsIDocShell* aShell, nsIContent* aOwner,
-                                  nsFrameMessageManager* aChrome);
-=======
  private:
   InProcessBrowserChildMessageManager(nsDocShell* aShell, nsIContent* aOwner,
                                       nsFrameMessageManager* aChrome);
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.h
- public:
-  static already_AddRefed<InProcessTabChildMessageManager> Create(
-      nsIDocShell* aShell, nsIContent* aOwner, nsFrameMessageManager* aChrome) {
-    RefPtr<InProcessTabChildMessageManager> mm =
-        new InProcessTabChildMessageManager(aShell, aOwner, aChrome);
-||||||| merged common ancestors
-public:
-  static already_AddRefed<InProcessTabChildMessageManager> Create(nsIDocShell* aShell,
-                                                                  nsIContent* aOwner,
-                                                                  nsFrameMessageManager* aChrome)
-  {
-    RefPtr<InProcessTabChildMessageManager> mm =
-      new InProcessTabChildMessageManager(aShell, aOwner, aChrome);
-=======
  public:
   static already_AddRefed<InProcessBrowserChildMessageManager> Create(
       nsDocShell* aShell, nsIContent* aOwner, nsFrameMessageManager* aChrome) {
     RefPtr<InProcessBrowserChildMessageManager> mm =
         new InProcessBrowserChildMessageManager(aShell, aOwner, aChrome);
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.h
 
     NS_ENSURE_TRUE(mm->Init(), nullptr);
 
@@ -99,43 +57,18 @@ public:
   }
 
   NS_DECL_ISUPPORTS_INHERITED
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.h
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(
-      InProcessTabChildMessageManager, DOMEventTargetHelper)
-||||||| merged common ancestors
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(InProcessTabChildMessageManager,
-                                                         DOMEventTargetHelper)
-=======
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(
       InProcessBrowserChildMessageManager, DOMEventTargetHelper)
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.h
 
   void MarkForCC();
 
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.h
-  virtual already_AddRefed<nsPIDOMWindowOuter> GetContent(
-      ErrorResult& aError) override;
-  virtual already_AddRefed<nsIDocShell> GetDocShell(
-      ErrorResult& aError) override {
-    nsCOMPtr<nsIDocShell> docShell(mDocShell);
-    return docShell.forget();
-||||||| merged common ancestors
-  virtual already_AddRefed<nsPIDOMWindowOuter>
-    GetContent(ErrorResult& aError) override;
-  virtual already_AddRefed<nsIDocShell>
-    GetDocShell(ErrorResult& aError) override
-  {
-    nsCOMPtr<nsIDocShell> docShell(mDocShell);
-    return docShell.forget();
-=======
   Nullable<WindowProxyHolder> GetContent(ErrorResult& aError) override;
   virtual already_AddRefed<nsIDocShell> GetDocShell(
       ErrorResult& aError) override {
     return do_AddRef(mDocShell);
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.h
   }
   virtual already_AddRefed<nsIEventTarget> GetTabEventTarget() override;
   virtual uint64_t ChromeOuterWindowID() override;
@@ -183,16 +116,8 @@ public:
 
   already_AddRefed<nsFrameLoader> GetFrameLoader();
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.h
- protected:
-  virtual ~InProcessTabChildMessageManager();
-||||||| merged common ancestors
-protected:
-  virtual ~InProcessTabChildMessageManager();
-=======
  protected:
   virtual ~InProcessBrowserChildMessageManager();
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.h
 
   RefPtr<nsDocShell> mDocShell;
   bool mLoadingScript;

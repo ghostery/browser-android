@@ -43,14 +43,7 @@ class CrashReporterClient {
 
     InitSingletonWithShmem(shmem);
     Unused << aToplevelProtocol->SendInitCrashReporter(
-<<<<<<< HEAD
-        shmem, CrashReporter::CurrentThreadId());
-||||||| merged common ancestors
-      shmem,
-      CrashReporter::CurrentThreadId());
-=======
         std::move(shmem), CrashReporter::CurrentThreadId());
->>>>>>> upstream-releases
     return true;
   }
 

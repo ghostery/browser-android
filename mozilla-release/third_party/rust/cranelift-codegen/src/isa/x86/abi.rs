@@ -10,26 +10,11 @@ use crate::ir::{
     get_probestack_funcref, AbiParam, ArgumentExtension, ArgumentLoc, ArgumentPurpose, InstBuilder,
     ValueLoc,
 };
-<<<<<<< HEAD
-use isa::{CallConv, RegClass, RegUnit, TargetIsa};
-use regalloc::RegisterSet;
-use result::CodegenResult;
-use stack_layout::layout_stack;
-use std::i32;
-||||||| merged common ancestors
-use isa::{RegClass, RegUnit, TargetIsa};
-use regalloc::RegisterSet;
-use result::CodegenResult;
-use settings::CallConv;
-use stack_layout::layout_stack;
-use std::i32;
-=======
 use crate::isa::{CallConv, RegClass, RegUnit, TargetIsa};
 use crate::regalloc::RegisterSet;
 use crate::result::CodegenResult;
 use crate::stack_layout::layout_stack;
 use core::i32;
->>>>>>> upstream-releases
 use target_lexicon::{PointerWidth, Triple};
 
 /// Argument registers for x86-64
@@ -113,15 +98,8 @@ impl ArgAssigner for Args {
                         RU::r14
                     } else {
                         RU::rsi
-<<<<<<< HEAD
-                    } as RegUnit).into()
-||||||| merged common ancestors
-                    } as RegUnit)
-                        .into()
-=======
                     } as RegUnit)
                     .into();
->>>>>>> upstream-releases
                 }
                 // This is SpiderMonkey's `WasmTableCallSigReg`.
                 ArgumentPurpose::SignatureId => return ArgumentLoc::Reg(RU::r10 as RegUnit).into(),
@@ -221,13 +199,7 @@ pub fn allocatable_registers(_func: &ir::Function, triple: &Triple) -> RegisterS
 }
 
 /// Get the set of callee-saved registers.
-<<<<<<< HEAD
-fn callee_saved_gprs(isa: &TargetIsa, call_conv: CallConv) -> &'static [RU] {
-||||||| merged common ancestors
-fn callee_saved_gprs(isa: &TargetIsa) -> &'static [RU] {
-=======
 fn callee_saved_gprs(isa: &dyn TargetIsa, call_conv: CallConv) -> &'static [RU] {
->>>>>>> upstream-releases
     match isa.triple().pointer_width().unwrap() {
         PointerWidth::U16 => panic!(),
         PointerWidth::U32 => &[RU::rbx, RU::rsi, RU::rdi],
@@ -309,13 +281,7 @@ pub fn prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> Codege
     }
 }
 
-<<<<<<< HEAD
-fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
-||||||| merged common ancestors
-pub fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
-=======
 fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
->>>>>>> upstream-releases
     debug_assert!(
         !isa.flags().probestack_enabled(),
         "baldrdash does not expect cranelift to emit stack probes"
@@ -336,13 +302,7 @@ fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> 
 
 /// Implementation of the fastcall-based Win64 calling convention described at [1]
 /// [1] https://msdn.microsoft.com/en-us/library/ms235286.aspx
-<<<<<<< HEAD
-fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
-||||||| merged common ancestors
-pub fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
-=======
 fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
->>>>>>> upstream-releases
     if isa.triple().pointer_width().unwrap() != PointerWidth::U64 {
         panic!("TODO: windows-fastcall: x86-32 not implemented yet");
     }
@@ -414,13 +374,7 @@ fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> C
 }
 
 /// Insert a System V-compatible prologue and epilogue.
-<<<<<<< HEAD
-fn system_v_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
-||||||| merged common ancestors
-pub fn system_v_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
-=======
 fn system_v_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
->>>>>>> upstream-releases
     // The original 32-bit x86 ELF ABI had a 4-byte aligned stack pointer, but
     // newer versions use a 16-byte aligned stack pointer.
     let stack_align = 16;

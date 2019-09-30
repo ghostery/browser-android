@@ -10,17 +10,9 @@
 #include "mozilla/gfx/GPUProcessManager.h"
 #include "mozilla/gfx/GPUChild.h"
 #include "mozilla/ipc/ProtocolTypes.h"
-<<<<<<< HEAD
-#include "mozilla/ipc/ProtocolUtils.h"  // for IToplevelProtocol
-#include "mozilla/TimeStamp.h"          // for TimeStamp
-||||||| merged common ancestors
-#include "mozilla/ipc/ProtocolUtils.h"       // for IToplevelProtocol
-#include "mozilla/TimeStamp.h"               // for TimeStamp
-=======
 #include "mozilla/ipc/ProtocolUtils.h"  // for IToplevelProtocol
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/TimeStamp.h"  // for TimeStamp
->>>>>>> upstream-releases
 #include "mozilla/Unused.h"
 #include "ProcessUtils.h"
 #include "VRChild.h"
@@ -38,18 +30,6 @@ using namespace mozilla::ipc;
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-VRProcessParent::VRProcessParent()
-    : GeckoChildProcessHost(GeckoProcessType_VR),
-      mTaskFactory(this),
-      mChannelClosed(false) {
-||||||| merged common ancestors
-VRProcessParent::VRProcessParent()
-  : GeckoChildProcessHost(GeckoProcessType_VR),
-    mTaskFactory(this),
-    mChannelClosed(false)
-{
-=======
 VRProcessParent::VRProcessParent(Listener* aListener)
     : GeckoChildProcessHost(GeckoProcessType_VR),
       mTaskFactory(this),
@@ -57,7 +37,6 @@ VRProcessParent::VRProcessParent(Listener* aListener)
       mLaunchPhase(LaunchPhase::Unlaunched),
       mChannelClosed(false),
       mShutdownRequested(false) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRProcessParent);
 }
 
@@ -71,17 +50,9 @@ VRProcessParent::~VRProcessParent() {
   MOZ_COUNT_DTOR(VRProcessParent);
 }
 
-<<<<<<< HEAD
-bool VRProcessParent::Launch() {
-||||||| merged common ancestors
-bool
-VRProcessParent::Launch()
-{
-=======
 bool VRProcessParent::Launch() {
   MOZ_ASSERT(mLaunchPhase == LaunchPhase::Unlaunched);
   MOZ_ASSERT(!mVRChild);
->>>>>>> upstream-releases
   mLaunchThread = NS_GetCurrentThread();
 
   mLaunchPhase = LaunchPhase::Waiting;
@@ -105,13 +76,6 @@ bool VRProcessParent::Launch() {
   return true;
 }
 
-<<<<<<< HEAD
-void VRProcessParent::Shutdown() {
-||||||| merged common ancestors
-void
-VRProcessParent::Shutdown()
-{
-=======
 bool VRProcessParent::WaitForLaunch() {
   if (mLaunchPhase == LaunchPhase::Complete) {
     return !!mVRChild;
@@ -139,7 +103,6 @@ void VRProcessParent::Shutdown() {
   MOZ_ASSERT(!mShutdownRequested);
   mListener = nullptr;
 
->>>>>>> upstream-releases
   if (mVRChild) {
     // The channel might already be closed if we got here unexpectedly.
     if (!mChannelClosed) {
@@ -167,54 +130,20 @@ void VRProcessParent::Shutdown() {
   DestroyProcess();
 }
 
-<<<<<<< HEAD
-static void DelayedDeleteSubprocess(GeckoChildProcessHost* aSubprocess) {
-  XRE_GetIOMessageLoop()->PostTask(
-      mozilla::MakeAndAddRef<DeleteTask<GeckoChildProcessHost>>(aSubprocess));
-||||||| merged common ancestors
-static void
-DelayedDeleteSubprocess(GeckoChildProcessHost* aSubprocess)
-{
-  XRE_GetIOMessageLoop()->
-    PostTask(mozilla::MakeAndAddRef<DeleteTask<GeckoChildProcessHost>>(aSubprocess));
-=======
 void VRProcessParent::DestroyProcess() {
   if (mLaunchThread) {
     mLaunchThread->Dispatch(NS_NewRunnableFunction("DestroyProcessRunnable",
                                                    [this] { Destroy(); }));
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void VRProcessParent::DestroyProcess() {
-  mLaunchThread->Dispatch(NewRunnableFunction("DestroyProcessRunnable",
-                                              DelayedDeleteSubprocess, this));
-}
-||||||| merged common ancestors
-
-void
-VRProcessParent::DestroyProcess()
-{
-  mLaunchThread->Dispatch(NewRunnableFunction("DestroyProcessRunnable", DelayedDeleteSubprocess, this));
-}
-=======
 void VRProcessParent::InitAfterConnect(bool aSucceeded) {
   MOZ_ASSERT(mLaunchPhase == LaunchPhase::Waiting);
   MOZ_ASSERT(!mVRChild);
 
   mLaunchPhase = LaunchPhase::Complete;
   mPrefSerializer = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void VRProcessParent::InitAfterConnect(bool aSucceeded) {
-||||||| merged common ancestors
-void
-VRProcessParent::InitAfterConnect(bool aSucceeded)
-{
-=======
->>>>>>> upstream-releases
   if (aSucceeded) {
     mVRChild = MakeUnique<VRChild>(this);
 
@@ -271,36 +200,16 @@ void VRProcessParent::OnChannelConnected(int32_t peer_pid) {
   NS_DispatchToMainThread(runnable);
 }
 
-<<<<<<< HEAD
-void VRProcessParent::OnChannelConnectedTask() { InitAfterConnect(true); }
-||||||| merged common ancestors
-void
-VRProcessParent::OnChannelConnectedTask()
-{
-  InitAfterConnect(true);
-}
-=======
 void VRProcessParent::OnChannelConnectedTask() {
   if (mLaunchPhase == LaunchPhase::Waiting) {
     InitAfterConnect(true);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void VRProcessParent::OnChannelErrorTask() {
-  MOZ_ASSERT(false, "VR process channel error.");
-||||||| merged common ancestors
-void
-VRProcessParent::OnChannelErrorTask()
-{
-  MOZ_ASSERT(false, "VR process channel error.");
-=======
 void VRProcessParent::OnChannelErrorTask() {
   if (mLaunchPhase == LaunchPhase::Waiting) {
     InitAfterConnect(false);
   }
->>>>>>> upstream-releases
 }
 
 void VRProcessParent::OnChannelClosed() {
@@ -317,27 +226,9 @@ void VRProcessParent::OnChannelClosed() {
   MOZ_ASSERT(!mVRChild);
 }
 
-<<<<<<< HEAD
-base::ProcessId VRProcessParent::OtherPid() { return mVRChild->OtherPid(); }
-||||||| merged common ancestors
-base::ProcessId
-VRProcessParent::OtherPid()
-{
-  return mVRChild->OtherPid();
-}
-=======
 base::ProcessId VRProcessParent::OtherPid() { return mVRChild->OtherPid(); }
 
 bool VRProcessParent::IsConnected() const { return !!mVRChild; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
-}  // namespace gfx
-}  // namespace mozilla
->>>>>>> upstream-releases

@@ -145,25 +145,12 @@ class PermissionDelegateTest : BaseSessionTest() {
         mainSession.delegateDuringNextWait(object : Callbacks.PermissionDelegate {
             // Ensure the content permission is asked first, before the Android permission.
             @AssertCalled(count = 1, order = [1])
-<<<<<<< HEAD
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, callback: GeckoSession.PermissionDelegate.Callback) {
-||||||| merged common ancestors
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, access: String?, callback: GeckoSession.PermissionDelegate.Callback) {
-=======
             override fun onContentPermissionRequest(
                     session: GeckoSession, uri: String?, type: Int,
                     callback: GeckoSession.PermissionDelegate.Callback) {
->>>>>>> upstream-releases
                 assertThat("URI should match", uri, endsWith(HELLO_HTML_PATH))
                 assertThat("Type should match", type,
-<<<<<<< HEAD
-                           equalTo(GeckoSession.PermissionDelegate.PERMISSION_GEOLOCATION))
-||||||| merged common ancestors
-                           equalTo(GeckoSession.PermissionDelegate.PERMISSION_GEOLOCATION))
-                assertThat("Access should be null", access, nullValue())
-=======
                         equalTo(GeckoSession.PermissionDelegate.PERMISSION_GEOLOCATION))
->>>>>>> upstream-releases
                 callback.grant()
             }
 
@@ -193,15 +180,9 @@ class PermissionDelegateTest : BaseSessionTest() {
 
         mainSession.delegateDuringNextWait(object : Callbacks.PermissionDelegate {
             @AssertCalled(count = 1)
-<<<<<<< HEAD
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, callback: GeckoSession.PermissionDelegate.Callback) {
-||||||| merged common ancestors
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, access: String?, callback: GeckoSession.PermissionDelegate.Callback) {
-=======
             override fun onContentPermissionRequest(
                     session: GeckoSession, uri: String?, type: Int,
                     callback: GeckoSession.PermissionDelegate.Callback) {
->>>>>>> upstream-releases
                 callback.reject()
             }
 
@@ -226,25 +207,12 @@ class PermissionDelegateTest : BaseSessionTest() {
 
         mainSession.delegateDuringNextWait(object : Callbacks.PermissionDelegate {
             @AssertCalled(count = 1)
-<<<<<<< HEAD
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, callback: GeckoSession.PermissionDelegate.Callback) {
-||||||| merged common ancestors
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, access: String?, callback: GeckoSession.PermissionDelegate.Callback) {
-=======
             override fun onContentPermissionRequest(
                     session: GeckoSession, uri: String?, type: Int,
                     callback: GeckoSession.PermissionDelegate.Callback) {
->>>>>>> upstream-releases
                 assertThat("URI should match", uri, endsWith(HELLO_HTML_PATH))
                 assertThat("Type should match", type,
-<<<<<<< HEAD
-                           equalTo(GeckoSession.PermissionDelegate.PERMISSION_DESKTOP_NOTIFICATION))
-||||||| merged common ancestors
-                           equalTo(GeckoSession.PermissionDelegate.PERMISSION_DESKTOP_NOTIFICATION))
-                assertThat("Access should be null", access, nullValue())
-=======
                         equalTo(GeckoSession.PermissionDelegate.PERMISSION_DESKTOP_NOTIFICATION))
->>>>>>> upstream-releases
                 callback.grant()
             }
         })
@@ -262,15 +230,9 @@ class PermissionDelegateTest : BaseSessionTest() {
 
         mainSession.delegateDuringNextWait(object : Callbacks.PermissionDelegate {
             @AssertCalled(count = 1)
-<<<<<<< HEAD
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, callback: GeckoSession.PermissionDelegate.Callback) {
-||||||| merged common ancestors
-            override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, access: String?, callback: GeckoSession.PermissionDelegate.Callback) {
-=======
             override fun onContentPermissionRequest(
                     session: GeckoSession, uri: String?, type: Int,
                     callback: GeckoSession.PermissionDelegate.Callback) {
->>>>>>> upstream-releases
                 callback.reject()
             }
         })

@@ -1,10 +1,4 @@
-<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/catch/nested-while-import-catch-eval-script-code-target.js
-// |reftest| module
-||||||| merged common ancestors
-// |reftest| skip module -- dynamic-import is not supported
-=======
 // |reftest| skip-if(!xulRuntime.shell) module -- dynamic-import is not enabled unconditionally
->>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/catch/nested-while-import-catch-eval-script-code-target.js
 // This file was procedurally generated from the following sources:
 // - src/dynamic-import/eval-script-code-target.case
 // - src/dynamic-import/catch/nested-while.template

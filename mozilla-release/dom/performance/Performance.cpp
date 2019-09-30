@@ -40,40 +40,17 @@ namespace dom {
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Performance)
 NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION_INHERITED(Performance, DOMEventTargetHelper,
-                                   mUserEntries, mResourceEntries);
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION_INHERITED(Performance,
-                                   DOMEventTargetHelper,
-                                   mUserEntries,
-                                   mResourceEntries);
-=======
 NS_IMPL_CYCLE_COLLECTION_INHERITED(Performance, DOMEventTargetHelper,
                                    mUserEntries, mResourceEntries,
                                    mSecondaryResourceEntries);
->>>>>>> upstream-releases
 
 NS_IMPL_ADDREF_INHERITED(Performance, DOMEventTargetHelper)
 NS_IMPL_RELEASE_INHERITED(Performance, DOMEventTargetHelper)
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Performance> Performance::CreateForMainThread(
-    nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal,
-    nsDOMNavigationTiming* aDOMTiming, nsITimedChannel* aChannel) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Performance>
-Performance::CreateForMainThread(nsPIDOMWindowInner* aWindow,
-                                 nsIPrincipal* aPrincipal,
-                                 nsDOMNavigationTiming* aDOMTiming,
-                                 nsITimedChannel* aChannel)
-{
-=======
 /* static */
 already_AddRefed<Performance> Performance::CreateForMainThread(
     nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal,
     nsDOMNavigationTiming* aDOMTiming, nsITimedChannel* aChannel) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   RefPtr<Performance> performance =
@@ -82,18 +59,9 @@ already_AddRefed<Performance> Performance::CreateForMainThread(
   return performance.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Performance> Performance::CreateForWorker(
-    WorkerPrivate* aWorkerPrivate) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Performance>
-Performance::CreateForWorker(WorkerPrivate* aWorkerPrivate)
-{
-=======
 /* static */
 already_AddRefed<Performance> Performance::CreateForWorker(
     WorkerPrivate* aWorkerPrivate) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWorkerPrivate);
   aWorkerPrivate->AssertIsOnWorkerThread();
 
@@ -102,43 +70,19 @@ already_AddRefed<Performance> Performance::CreateForWorker(
 }
 
 Performance::Performance(bool aSystemPrincipal)
-<<<<<<< HEAD
-    : mResourceTimingBufferSize(kDefaultResourceTimingBufferSize),
-      mPendingNotificationObserversTask(false),
-      mSystemPrincipal(aSystemPrincipal) {
-||||||| merged common ancestors
-  : mResourceTimingBufferSize(kDefaultResourceTimingBufferSize)
-  , mPendingNotificationObserversTask(false)
-  , mSystemPrincipal(aSystemPrincipal)
-{
-=======
     : mResourceTimingBufferSize(kDefaultResourceTimingBufferSize),
       mPendingNotificationObserversTask(false),
       mPendingResourceTimingBufferFullEvent(false),
       mSystemPrincipal(aSystemPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
 }
 
 Performance::Performance(nsPIDOMWindowInner* aWindow, bool aSystemPrincipal)
-<<<<<<< HEAD
-    : DOMEventTargetHelper(aWindow),
-      mResourceTimingBufferSize(kDefaultResourceTimingBufferSize),
-      mPendingNotificationObserversTask(false),
-      mSystemPrincipal(aSystemPrincipal) {
-||||||| merged common ancestors
-  : DOMEventTargetHelper(aWindow)
-  , mResourceTimingBufferSize(kDefaultResourceTimingBufferSize)
-  , mPendingNotificationObserversTask(false)
-  , mSystemPrincipal(aSystemPrincipal)
-{
-=======
     : DOMEventTargetHelper(aWindow),
       mResourceTimingBufferSize(kDefaultResourceTimingBufferSize),
       mPendingNotificationObserversTask(false),
       mPendingResourceTimingBufferFullEvent(false),
       mSystemPrincipal(aSystemPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 }
 
@@ -281,19 +225,6 @@ void Performance::Mark(const nsAString& aName, ErrorResult& aRv) {
 
 #ifdef MOZ_GECKO_PROFILER
   if (profiler_is_active()) {
-<<<<<<< HEAD
-    nsCOMPtr<EventTarget> et = do_QueryInterface(GetOwner());
-    nsCOMPtr<nsIDocShell> docShell =
-        nsContentUtils::GetDocShellForEventTarget(et);
-    DECLARE_DOCSHELL_AND_HISTORY_ID(docShell);
-    profiler_add_marker("UserTiming", MakeUnique<UserTimingMarkerPayload>(
-                                          aName, TimeStamp::Now(), docShellId,
-                                          docShellHistoryId));
-||||||| merged common ancestors
-    profiler_add_marker(
-      "UserTiming",
-      MakeUnique<UserTimingMarkerPayload>(aName, TimeStamp::Now()));
-=======
     nsCOMPtr<EventTarget> et = do_QueryInterface(GetOwner());
     nsCOMPtr<nsIDocShell> docShell =
         nsContentUtils::GetDocShellForEventTarget(et);
@@ -302,7 +233,6 @@ void Performance::Mark(const nsAString& aName, ErrorResult& aRv) {
         "UserTiming", JS::ProfilingCategoryPair::DOM,
         MakeUnique<UserTimingMarkerPayload>(aName, TimeStamp::Now(), docShellId,
                                             docShellHistoryId));
->>>>>>> upstream-releases
   }
 #endif
 }
@@ -392,21 +322,6 @@ void Performance::Measure(const nsAString& aName,
       endMark.emplace(aEndMark.Value());
     }
 
-<<<<<<< HEAD
-    nsCOMPtr<EventTarget> et = do_QueryInterface(GetOwner());
-    nsCOMPtr<nsIDocShell> docShell =
-        nsContentUtils::GetDocShellForEventTarget(et);
-    DECLARE_DOCSHELL_AND_HISTORY_ID(docShell);
-    profiler_add_marker("UserTiming",
-                        MakeUnique<UserTimingMarkerPayload>(
-                            aName, startMark, endMark, startTimeStamp,
-                            endTimeStamp, docShellId, docShellHistoryId));
-||||||| merged common ancestors
-    profiler_add_marker(
-      "UserTiming",
-      MakeUnique<UserTimingMarkerPayload>(aName, startMark, endMark,
-                                          startTimeStamp, endTimeStamp));
-=======
     nsCOMPtr<EventTarget> et = do_QueryInterface(GetOwner());
     nsCOMPtr<nsIDocShell> docShell =
         nsContentUtils::GetDocShellForEventTarget(et);
@@ -415,7 +330,6 @@ void Performance::Measure(const nsAString& aName,
                         MakeUnique<UserTimingMarkerPayload>(
                             aName, startMark, endMark, startTimeStamp,
                             endTimeStamp, docShellId, docShellHistoryId));
->>>>>>> upstream-releases
   }
 #endif
 }
@@ -462,13 +376,6 @@ void Performance::InsertUserEntry(PerformanceEntry* aEntry) {
   QueueEntry(aEntry);
 }
 
-<<<<<<< HEAD
-void Performance::SetResourceTimingBufferSize(uint64_t aMaxSize) {
-||||||| merged common ancestors
-void
-Performance::SetResourceTimingBufferSize(uint64_t aMaxSize)
-{
-=======
 /*
  * Steps are labeled according to the description found at
  * https://w3c.github.io/resource-timing/#sec-extensions-performance-interface.
@@ -551,17 +458,9 @@ void Performance::BufferEvent() {
 }
 
 void Performance::SetResourceTimingBufferSize(uint64_t aMaxSize) {
->>>>>>> upstream-releases
   mResourceTimingBufferSize = aMaxSize;
 }
 
-<<<<<<< HEAD
-void Performance::InsertResourceEntry(PerformanceEntry* aEntry) {
-||||||| merged common ancestors
-void
-Performance::InsertResourceEntry(PerformanceEntry* aEntry)
-{
-=======
 /*
  * Steps are labeled according to the description found at
  * https://w3c.github.io/resource-timing/#sec-extensions-performance-interface.
@@ -583,7 +482,6 @@ MOZ_ALWAYS_INLINE bool Performance::CanAddResourceTimingEntry() {
  * Add a PerformanceResourceTiming Entry
  */
 void Performance::InsertResourceEntry(PerformanceEntry* aEntry) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aEntry);
 
   if (nsContentUtils::ShouldResistFingerprinting()) {
@@ -606,30 +504,6 @@ void Performance::InsertResourceEntry(PerformanceEntry* aEntry) {
     return;
   }
 
-<<<<<<< HEAD
-  mResourceEntries.InsertElementSorted(aEntry, PerformanceEntryComparator());
-  if (mResourceEntries.Length() == mResourceTimingBufferSize) {
-    // call onresourcetimingbufferfull
-    DispatchBufferFullEvent();
-  }
-  QueueEntry(aEntry);
-}
-
-void Performance::AddObserver(PerformanceObserver* aObserver) {
-||||||| merged common ancestors
-  mResourceEntries.InsertElementSorted(aEntry,
-                                       PerformanceEntryComparator());
-  if (mResourceEntries.Length() == mResourceTimingBufferSize) {
-    // call onresourcetimingbufferfull
-    DispatchBufferFullEvent();
-  }
-  QueueEntry(aEntry);
-}
-
-void
-Performance::AddObserver(PerformanceObserver* aObserver)
-{
-=======
   /*
    * If resource timing buffer full event pending flag is
    * false ...
@@ -657,7 +531,6 @@ Performance::AddObserver(PerformanceObserver* aObserver)
 }
 
 void Performance::AddObserver(PerformanceObserver* aObserver) {
->>>>>>> upstream-releases
   mObservers.AppendElementUnlessExists(aObserver);
 }
 
@@ -683,17 +556,10 @@ class NotifyObserversTask final : public CancelableRunnable {
     MOZ_ASSERT(mPerformance);
   }
 
-<<<<<<< HEAD
-  NS_IMETHOD Run() override {
-||||||| merged common ancestors
-  NS_IMETHOD Run() override
-  {
-=======
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY for now until Runnable::Run is
   // MOZ_CAN_RUN_SCRIPT.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD Run() override {
->>>>>>> upstream-releases
     MOZ_ASSERT(mPerformance);
     RefPtr<Performance> performance(mPerformance);
     performance->NotifyObservers();
@@ -730,14 +596,6 @@ void Performance::QueueEntry(PerformanceEntry* aEntry) {
   if (mObservers.IsEmpty()) {
     return;
   }
-<<<<<<< HEAD
-  NS_OBSERVER_ARRAY_NOTIFY_XPCOM_OBSERVERS(mObservers, PerformanceObserver,
-                                           QueueEntry, (aEntry));
-||||||| merged common ancestors
-  NS_OBSERVER_ARRAY_NOTIFY_XPCOM_OBSERVERS(mObservers,
-                                           PerformanceObserver,
-                                           QueueEntry, (aEntry));
-=======
 
   nsTObserverArray<PerformanceObserver*> interestedObservers;
   nsTObserverArray<PerformanceObserver*>::ForwardIterator observerIt(
@@ -755,7 +613,6 @@ void Performance::QueueEntry(PerformanceEntry* aEntry) {
 
   NS_OBSERVER_ARRAY_NOTIFY_XPCOM_OBSERVERS(
       interestedObservers, PerformanceObserver, QueueEntry, (aEntry));
->>>>>>> upstream-releases
 
   if (!mPendingNotificationObserversTask) {
     RunNotificationObserversTask();

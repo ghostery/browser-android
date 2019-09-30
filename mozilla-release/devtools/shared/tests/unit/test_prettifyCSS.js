@@ -130,37 +130,12 @@ const TESTS_SPACE_INDENT = [
       "}",
     ],
   },
-<<<<<<< HEAD
-
-  { name: "Breaking after commas in selectors",
-    input: "@media screen, print {div, span, input {color: red;}}" +
-           "div, div, input, pre, table {color: blue;}",
-    expected: [
-      "@media screen, print {",
-      " div,",
-      " span,",
-      " input {",
-      "  color: red;",
-      " }",
-      "}",
-      "div,",
-      "div,",
-      "input,",
-      "pre,",
-      "table {",
-      " color: blue;",
-      "}",
-    ],
-  },
-||||||| merged common ancestors
-=======
 
   {
     name: "Multiline comment in CSS",
     input: "/*\n * comment\n */\n#example{display:grid;}",
     expected: ["/*", " * comment", " */", "#example {", " display:grid;", "}"],
   },
->>>>>>> upstream-releases
 ];
 
 function run_test() {

@@ -18,18 +18,9 @@ PtrToIdMap sPtrToIdMap;
 IdToPtrMap sIdToPtrMap;
 #endif  // defined(XP_WIN)
 
-<<<<<<< HEAD
-/* static */ FunctionBrokerParent* FunctionBrokerParent::Create(
-    Endpoint<PFunctionBrokerParent>&& aParentEnd) {
-||||||| merged common ancestors
-/* static */ FunctionBrokerParent*
-FunctionBrokerParent::Create(Endpoint<PFunctionBrokerParent>&& aParentEnd)
-{
-=======
 /* static */
 FunctionBrokerParent* FunctionBrokerParent::Create(
     Endpoint<PFunctionBrokerParent>&& aParentEnd) {
->>>>>>> upstream-releases
   FunctionBrokerThread* thread = FunctionBrokerThread::Create();
   if (!thread) {
     return nullptr;

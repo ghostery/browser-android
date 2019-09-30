@@ -77,35 +77,13 @@ class nsXBLKeyEventHandler : public nsIDOMEventListener {
     mIsBoundToChrome = aIsBoundToChrome;
   }
 
-<<<<<<< HEAD
-  void SetUsingContentXBLScope(bool aUsingContentXBLScope) {
-    mUsingContentXBLScope = aUsingContentXBLScope;
-  }
-
  private:
-||||||| merged common ancestors
-  void SetUsingContentXBLScope(bool aUsingContentXBLScope)
-  {
-    mUsingContentXBLScope = aUsingContentXBLScope;
-  }
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   nsXBLKeyEventHandler();
   virtual ~nsXBLKeyEventHandler();
 
-<<<<<<< HEAD
-  bool ExecuteMatchedHandlers(mozilla::dom::KeyboardEvent* aEvent,
-                              uint32_t aCharCode,
-||||||| merged common ancestors
-  bool ExecuteMatchedHandlers(mozilla::dom::KeyboardEvent* aEvent, uint32_t aCharCode,
-=======
   MOZ_CAN_RUN_SCRIPT
   bool ExecuteMatchedHandlers(mozilla::dom::KeyboardEvent* aEvent,
                               uint32_t aCharCode,
->>>>>>> upstream-releases
                               const IgnoreModifierState& aIgnoreModifierState);
 
   nsTArray<nsXBLPrototypeHandler*> mProtoHandlers;

@@ -4,25 +4,6 @@
 
 //! Specified types for CSS values related to effects.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::effects::BoxShadow as ComputedBoxShadow;
-use crate::values::computed::effects::SimpleShadow as ComputedSimpleShadow;
-use crate::values::computed::NonNegativeNumber as ComputedNonNegativeNumber;
-use crate::values::computed::{Context, ToComputedValue};
-use crate::values::generics::effects::BoxShadow as GenericBoxShadow;
-use crate::values::generics::effects::Filter as GenericFilter;
-use crate::values::generics::effects::SimpleShadow as GenericSimpleShadow;
-use crate::values::generics::NonNegative;
-use crate::values::specified::color::Color;
-use crate::values::specified::length::{Length, NonNegativeLength};
-#[cfg(feature = "gecko")]
-use crate::values::specified::url::SpecifiedUrl;
-use crate::values::specified::{Angle, NumberOrPercentage};
-#[cfg(not(feature = "gecko"))]
-use crate::values::Impossible;
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::computed::effects::BoxShadow as ComputedBoxShadow;
 use crate::values::computed::effects::SimpleShadow as ComputedSimpleShadow;
@@ -41,7 +22,6 @@ use crate::values::specified::{Angle, Number, NumberOrPercentage};
 #[cfg(feature = "servo")]
 use crate::values::Impossible;
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::{self, BasicParseErrorKind, Parser, Token};
 use style_traits::{ParseError, StyleParseErrorKind, ValueParseErrorKind};
 
@@ -134,35 +114,7 @@ impl Parse for NonNegativeFactor {
     }
 }
 
-<<<<<<< HEAD
-impl ToComputedValue for Factor {
-    type ComputedValue = ComputedNonNegativeNumber;
-
-    #[inline]
-    fn to_computed_value(&self, context: &Context) -> Self::ComputedValue {
-        use crate::values::computed::NumberOrPercentage;
-        match self.0.to_computed_value(context) {
-            NumberOrPercentage::Number(n) => n.into(),
-            NumberOrPercentage::Percentage(p) => p.0.into(),
-        }
-    }
-
-||||||| merged common ancestors
-impl ToComputedValue for Factor {
-    type ComputedValue = ComputedNonNegativeNumber;
-
-    #[inline]
-    fn to_computed_value(&self, context: &Context) -> Self::ComputedValue {
-        use values::computed::NumberOrPercentage;
-        match self.0.to_computed_value(context) {
-            NumberOrPercentage::Number(n) => n.into(),
-            NumberOrPercentage::Percentage(p) => p.0.into(),
-        }
-    }
-
-=======
 impl Parse for ZeroToOneFactor {
->>>>>>> upstream-releases
     #[inline]
     fn parse<'i, 't>(
         context: &ParserContext,

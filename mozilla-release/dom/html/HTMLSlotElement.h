@@ -27,19 +27,8 @@ class HTMLSlotElement final : public nsGenericHTMLElement {
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // nsIContent
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument,
-                              nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent) override;
->>>>>>> upstream-releases
 
   virtual nsresult BeforeSetAttr(int32_t aNameSpaceID, nsAtom* aName,
                                  const nsAttrValueOrString* aValue,

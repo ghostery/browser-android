@@ -21,23 +21,6 @@ add_task(async function test_searchOrderJSON() {
   await asyncReInit();
 
   Assert.ok(Services.search.isInitialized, "search initialized");
-<<<<<<< HEAD
-  Assert.equal(Services.search.defaultEngine.name,
-               kTestEngineName, "expected test list JSON default search engine");
-
-  let sortedEngines = Services.search.getEngines();
-  Assert.equal(sortedEngines[0].name, "Test search engine", "First engine should be default");
-  Assert.equal(sortedEngines[1].name, "engine-resourceicon", "Second engine should be resource");
-  Assert.equal(sortedEngines[2].name, "engine-chromeicon", "Third engine should be chrome");
-||||||| merged common ancestors
-  Assert.equal(Services.search.currentEngine.name,
-               kTestEngineName, "expected test list JSON default search engine");
-
-  let sortedEngines = Services.search.getEngines();
-  Assert.equal(sortedEngines[0].name, "Test search engine", "First engine should be default");
-  Assert.equal(sortedEngines[1].name, "engine-resourceicon", "Second engine should be resource");
-  Assert.equal(sortedEngines[2].name, "engine-chromeicon", "Third engine should be chrome");
-=======
   Assert.equal(
     Services.search.defaultEngine.name,
     kTestEngineName,
@@ -60,5 +43,4 @@ add_task(async function test_searchOrderJSON() {
     "engine-chromeicon",
     "Third engine should be chrome"
   );
->>>>>>> upstream-releases
 });

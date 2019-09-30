@@ -65,56 +65,23 @@ void Blob::MakeValidBlobType(nsAString& aType) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ Blob* Blob::Create(nsISupports* aParent, BlobImpl* aImpl) {
-||||||| merged common ancestors
-/* static */ Blob*
-Blob::Create(nsISupports* aParent, BlobImpl* aImpl)
-{
-=======
 /* static */
 Blob* Blob::Create(nsISupports* aParent, BlobImpl* aImpl) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aImpl);
 
   return aImpl->IsFile() ? new File(aParent, aImpl) : new Blob(aParent, aImpl);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Blob> Blob::CreateStringBlob(
-    nsISupports* aParent, const nsACString& aData,
-    const nsAString& aContentType) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Blob>
-Blob::CreateStringBlob(nsISupports* aParent, const nsACString& aData,
-                       const nsAString& aContentType)
-{
-=======
 /* static */
 already_AddRefed<Blob> Blob::CreateStringBlob(nsISupports* aParent,
                                               const nsACString& aData,
                                               const nsAString& aContentType) {
->>>>>>> upstream-releases
   RefPtr<BlobImpl> blobImpl = StringBlobImpl::Create(aData, aContentType);
   RefPtr<Blob> blob = Blob::Create(aParent, blobImpl);
   MOZ_ASSERT(!blob->mImpl->IsFile());
   return blob.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Blob> Blob::CreateMemoryBlob(
-    nsISupports* aParent, void* aMemoryBuffer, uint64_t aLength,
-    const nsAString& aContentType) {
-  RefPtr<Blob> blob = Blob::Create(
-      aParent, new MemoryBlobImpl(aMemoryBuffer, aLength, aContentType));
-||||||| merged common ancestors
-/* static */ already_AddRefed<Blob>
-Blob::CreateMemoryBlob(nsISupports* aParent, void* aMemoryBuffer,
-                       uint64_t aLength, const nsAString& aContentType)
-{
-  RefPtr<Blob> blob = Blob::Create(aParent,
-    new MemoryBlobImpl(aMemoryBuffer, aLength, aContentType));
-=======
 /* static */
 already_AddRefed<Blob> Blob::CreateMemoryBlob(nsISupports* aParent,
                                               void* aMemoryBuffer,
@@ -122,7 +89,6 @@ already_AddRefed<Blob> Blob::CreateMemoryBlob(nsISupports* aParent,
                                               const nsAString& aContentType) {
   RefPtr<Blob> blob = Blob::Create(
       aParent, new MemoryBlobImpl(aMemoryBuffer, aLength, aContentType));
->>>>>>> upstream-releases
   MOZ_ASSERT(!blob->mImpl->IsFile());
   return blob.forget();
 }
@@ -132,14 +98,7 @@ Blob::Blob(nsISupports* aParent, BlobImpl* aImpl)
   MOZ_ASSERT(mImpl);
 }
 
-<<<<<<< HEAD
-Blob::~Blob() {}
-||||||| merged common ancestors
-Blob::~Blob()
-{}
-=======
 Blob::~Blob() = default;
->>>>>>> upstream-releases
 
 bool Blob::IsFile() const { return mImpl->IsFile(); }
 
@@ -192,33 +151,13 @@ already_AddRefed<Blob> Blob::CreateSlice(uint64_t aStart, uint64_t aLength,
   return blob.forget();
 }
 
-<<<<<<< HEAD
-uint64_t Blob::GetSize(ErrorResult& aRv) { return mImpl->GetSize(aRv); }
-||||||| merged common ancestors
-uint64_t
-Blob::GetSize(ErrorResult& aRv)
-{
-  return mImpl->GetSize(aRv);
-}
-=======
 uint64_t Blob::GetSize(ErrorResult& aRv) { return mImpl->GetSize(aRv); }
 
 void Blob::GetType(nsAString& aType) { mImpl->GetType(aType); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void Blob::GetType(nsAString& aType) { mImpl->GetType(aType); }
-||||||| merged common ancestors
-void
-Blob::GetType(nsAString &aType)
-{
-  mImpl->GetType(aType);
-}
-=======
 void Blob::GetBlobImplType(nsAString& aBlobImplType) {
   mImpl->GetBlobImplType(aBlobImplType);
 }
->>>>>>> upstream-releases
 
 already_AddRefed<Blob> Blob::Slice(const Optional<int64_t>& aStart,
                                    const Optional<int64_t>& aEnd,
@@ -259,23 +198,10 @@ JSObject* Blob::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
   return Blob_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Blob> Blob::Constructor(
-    const GlobalObject& aGlobal, const Optional<Sequence<BlobPart>>& aData,
-    const BlobPropertyBag& aBag, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Blob>
-Blob::Constructor(const GlobalObject& aGlobal,
-                  const Optional<Sequence<BlobPart>>& aData,
-                  const BlobPropertyBag& aBag,
-                  ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Blob> Blob::Constructor(
     const GlobalObject& aGlobal, const Optional<Sequence<BlobPart>>& aData,
     const BlobPropertyBag& aBag, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<MultipartBlobImpl> impl = new MultipartBlobImpl();
 
   if (aData.WasPassed()) {
@@ -316,13 +242,6 @@ size_t BindingJSObjectMallocBytes(Blob* aBlob) {
   return aBlob->GetAllocationSize();
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 already_AddRefed<Promise> Blob::Text(ErrorResult& aRv) {
   return ConsumeBody(BodyConsumer::CONSUME_TEXT, aRv);
 }
@@ -443,4 +362,3 @@ void Blob::Stream(JSContext* aCx, JS::MutableHandle<JSObject*> aStream,
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

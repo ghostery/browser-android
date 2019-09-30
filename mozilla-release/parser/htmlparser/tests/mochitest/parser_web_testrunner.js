@@ -78,24 +78,8 @@ function makeTestChecker(input, expected, errors) {
   };
 }
 
-<<<<<<< HEAD
-function makeFragmentTestChecker(input,
-                                 expected,
-                                 errors,
-                                 fragment,
-                                 testframe) {
-  return function() {
-||||||| merged common ancestors
-function makeFragmentTestChecker(input, 
-                                 expected, 
-                                 errors, 
-                                 fragment, 
-                                 testframe) {
-  return function () {
-=======
 function makeFragmentTestChecker(input, expected, errors, fragment, testframe) {
   return function() {
->>>>>>> upstream-releases
     var context;
     if (fragment.startsWith("svg ")) {
       context = document.createElementNS(
@@ -126,37 +110,16 @@ function makeFragmentTestChecker(input, expected, errors, fragment, testframe) {
 
 var testcases;
 function nextTest(testframe) {
-<<<<<<< HEAD
-  var {done, value} = testcases.next();
-||||||| merged common ancestors
-  var test = 0;
-  var {done, value} = testcases.next();
-=======
   var { done, value } = testcases.next();
->>>>>>> upstream-releases
   if (done) {
     SimpleTest.finish();
     return;
   }
   var [input, output, errors, fragment] = value;
   if (fragment) {
-<<<<<<< HEAD
-    asyncRun(makeFragmentTestChecker(input,
-                                     output,
-                                     errors,
-                                     fragment,
-                                     testframe));
-||||||| merged common ancestors
-    asyncRun(makeFragmentTestChecker(input, 
-                                     output, 
-                                     errors, 
-                                     fragment, 
-                                     testframe));
-=======
     asyncRun(
       makeFragmentTestChecker(input, output, errors, fragment, testframe)
     );
->>>>>>> upstream-releases
   } else {
     testframe.onload = makeTestChecker(input, output, errors);
     testframe.srcdoc = input;

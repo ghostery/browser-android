@@ -20,7 +20,6 @@ struct MediaStreamConstraints;
 struct DisplayMediaStreamConstraints;
 struct MediaTrackSupportedConstraints;
 
-<<<<<<< HEAD
 #define MOZILLA_DOM_MEDIADEVICES_IMPLEMENTATION_IID  \
   {                                                  \
     0x2f784d8a, 0x7485, 0x4280, {                    \
@@ -33,31 +32,6 @@ class MediaDevices final : public DOMEventTargetHelper,
  public:
   explicit MediaDevices(nsPIDOMWindowInner* aWindow)
       : DOMEventTargetHelper(aWindow) {}
-||||||| merged common ancestors
-#define MOZILLA_DOM_MEDIADEVICES_IMPLEMENTATION_IID \
-{ 0x2f784d8a, 0x7485, 0x4280, \
- { 0x9a, 0x36, 0x74, 0xa4, 0xd6, 0x71, 0xa6, 0xc8 } }
-
-class MediaDevices final : public DOMEventTargetHelper
-                          ,public DeviceChangeCallback
-{
-public:
-  explicit MediaDevices(nsPIDOMWindowInner* aWindow) :
-    DOMEventTargetHelper(aWindow) {}
-=======
-#define MOZILLA_DOM_MEDIADEVICES_IMPLEMENTATION_IID  \
-  {                                                  \
-    0x2f784d8a, 0x7485, 0x4280, {                    \
-      0x9a, 0x36, 0x74, 0xa4, 0xd6, 0x71, 0xa6, 0xc8 \
-    }                                                \
-  }
-
-class MediaDevices final : public DOMEventTargetHelper,
-                           public DeviceChangeCallback {
- public:
-  explicit MediaDevices(nsPIDOMWindowInner* aWindow)
-      : DOMEventTargetHelper(aWindow) {}
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECLARE_STATIC_IID_ACCESSOR(MOZILLA_DOM_MEDIADEVICES_IMPLEMENTATION_IID)
@@ -72,20 +46,12 @@ class MediaDevices final : public DOMEventTargetHelper,
       const MediaStreamConstraints& aConstraints, CallerType aCallerType,
       ErrorResult& aRv);
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> EnumerateDevices(CallerType aCallerType,
-                                             ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise>
-  EnumerateDevices(CallerType aCallerType, ErrorResult &aRv);
-=======
   already_AddRefed<Promise> EnumerateDevices(CallerType aCallerType,
                                              ErrorResult& aRv);
 
   already_AddRefed<Promise> GetDisplayMedia(
       const DisplayMediaStreamConstraints& aConstraints, CallerType aCallerType,
       ErrorResult& aRv);
->>>>>>> upstream-releases
 
   virtual void OnDeviceChange() override;
 

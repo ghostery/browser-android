@@ -856,50 +856,6 @@ impl Gl for GlesFns {
         panic!("not supported");
     }
 
-<<<<<<< HEAD
-    unsafe fn copy_image_sub_data(&self,
-                                  src_name: GLuint,
-                                  src_target: GLenum,
-                                  src_level: GLint,
-                                  src_x: GLint,
-                                  src_y: GLint,
-                                  src_z: GLint,
-                                  dst_name: GLuint,
-                                  dst_target: GLenum,
-                                  dst_level: GLint,
-                                  dst_x: GLint,
-                                  dst_y: GLint,
-                                  dst_z: GLint,
-                                  src_width: GLsizei,
-                                  src_height: GLsizei,
-                                  src_depth: GLsizei) {
-        self.ffi_gl_.CopyImageSubDataEXT(
-            src_name,
-            src_target,
-            src_level,
-            src_x,
-            src_y,
-            src_z,
-            dst_name,
-            dst_target,
-            dst_level,
-            dst_x,
-            dst_y,
-            dst_z,
-            src_width,
-            src_height,
-            src_depth,
-        );
-    }
-
-    fn invalidate_framebuffer(&self,
-                              target: GLenum,
-                              attachments: &[GLenum]) {
-||||||| merged common ancestors
-    fn invalidate_framebuffer(&self,
-                              target: GLenum,
-                              attachments: &[GLenum]) {
-=======
     unsafe fn copy_image_sub_data(
         &self,
         src_name: GLuint,
@@ -925,7 +881,6 @@ impl Gl for GlesFns {
     }
 
     fn invalidate_framebuffer(&self, target: GLenum, attachments: &[GLenum]) {
->>>>>>> upstream-releases
         unsafe {
             self.ffi_gl_.InvalidateFramebuffer(
                 target,
@@ -1825,46 +1780,6 @@ impl Gl for GlesFns {
         self.ffi_gl_.GetShaderiv(shader, pname, result.as_mut_ptr());
     }
 
-<<<<<<< HEAD
-    fn get_shader_precision_format(&self,
-                                   shader_type: GLuint,
-                                   precision_type: GLuint)
-                                   -> (GLint, GLint, GLint) {
-        let (mut range, mut precision) = match precision_type {
-            // These values are for a 32-bit twos-complement integer format.
-            ffi::LOW_INT |
-            ffi::MEDIUM_INT |
-            ffi::HIGH_INT => ([31, 30], 0),
-
-            // These values are for an IEEE single-precision floating-point format.
-            ffi::LOW_FLOAT |
-            ffi::MEDIUM_FLOAT |
-            ffi::HIGH_FLOAT => ([127, 127], 23),
-
-            _ => unreachable!("invalid precision"),
-        };
-        // This function is sometimes defined even though it's really just
-        // a stub, so we need to set range and precision as if it weren't
-        // defined before calling it. Suppress any error that might occur.
-        unsafe {
-            self.ffi_gl_.GetShaderPrecisionFormat(shader_type,
-                                                  precision_type,
-                                                  range.as_mut_ptr(),
-                                                  &mut precision);
-            let _ = self.ffi_gl_.GetError();
-||||||| merged common ancestors
-    fn get_shader_precision_format(&self,
-                                   shader_type: GLuint,
-                                   precision_type: GLuint)
-                                   -> (GLint, GLint, GLint) {
-        let mut range = [0 as GLint, 0];
-        let mut precision = 0 as GLint;
-        unsafe {
-            self.ffi_gl_.GetShaderPrecisionFormat(shader_type,
-                                                  precision_type,
-                                                  range.as_mut_ptr(),
-                                                  &mut precision);
-=======
     fn get_shader_precision_format(
         &self,
         shader_type: GLuint,
@@ -1890,7 +1805,6 @@ impl Gl for GlesFns {
                 &mut precision,
             );
             let _ = self.ffi_gl_.GetError();
->>>>>>> upstream-releases
         }
 
         (range[0], range[1], precision)

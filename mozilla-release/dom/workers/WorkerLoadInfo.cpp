@@ -78,110 +78,6 @@ inline void SwapToISupportsArray(SmartPtr<T>& aSrc,
   dest->swap(rawSupports);
 }
 
-<<<<<<< HEAD
-}  // namespace
-
-WorkerLoadInfoData::WorkerLoadInfoData()
-    : mLoadFlags(nsIRequest::LOAD_NORMAL),
-      mWindowID(UINT64_MAX),
-      mReferrerPolicy(net::RP_Unset),
-      mFromWindow(false),
-      mEvalAllowed(false),
-      mReportCSPViolations(false),
-      mXHRParamsAllowed(false),
-      mPrincipalIsSystem(false),
-      mStorageAllowed(false),
-      mFirstPartyStorageAccessGranted(false),
-      mServiceWorkersTestingInWindow(false),
-      mSecureContext(eNotSet) {}
-
-nsresult WorkerLoadInfo::SetPrincipalOnMainThread(nsIPrincipal* aPrincipal,
-                                                  nsILoadGroup* aLoadGroup) {
-||||||| merged common ancestors
-} // anonymous
-
-WorkerLoadInfo::WorkerLoadInfo()
-  : mLoadFlags(nsIRequest::LOAD_NORMAL)
-  , mWindowID(UINT64_MAX)
-  , mReferrerPolicy(net::RP_Unset)
-  , mFromWindow(false)
-  , mEvalAllowed(false)
-  , mReportCSPViolations(false)
-  , mXHRParamsAllowed(false)
-  , mPrincipalIsSystem(false)
-  , mStorageAllowed(false)
-  , mFirstPartyStorageAccessGranted(false)
-  , mServiceWorkersTestingInWindow(false)
-{
-  MOZ_COUNT_CTOR(WorkerLoadInfo);
-}
-
-WorkerLoadInfo::~WorkerLoadInfo()
-{
-  MOZ_COUNT_DTOR(WorkerLoadInfo);
-}
-
-void
-WorkerLoadInfo::StealFrom(WorkerLoadInfo& aOther)
-{
-  MOZ_ASSERT(!mBaseURI);
-  aOther.mBaseURI.swap(mBaseURI);
-
-  MOZ_ASSERT(!mResolvedScriptURI);
-  aOther.mResolvedScriptURI.swap(mResolvedScriptURI);
-
-  MOZ_ASSERT(!mPrincipal);
-  aOther.mPrincipal.swap(mPrincipal);
-
-  // mLoadingPrincipal can be null if this is a ServiceWorker.
-  aOther.mLoadingPrincipal.swap(mLoadingPrincipal);
-
-  MOZ_ASSERT(!mScriptContext);
-  aOther.mScriptContext.swap(mScriptContext);
-
-  MOZ_ASSERT(!mWindow);
-  aOther.mWindow.swap(mWindow);
-
-  MOZ_ASSERT(!mCSP);
-  aOther.mCSP.swap(mCSP);
-
-  MOZ_ASSERT(!mChannel);
-  aOther.mChannel.swap(mChannel);
-
-  MOZ_ASSERT(!mLoadGroup);
-  aOther.mLoadGroup.swap(mLoadGroup);
-
-  MOZ_ASSERT(!mInterfaceRequestor);
-  aOther.mInterfaceRequestor.swap(mInterfaceRequestor);
-
-  MOZ_ASSERT(!mPrincipalInfo);
-  mPrincipalInfo = aOther.mPrincipalInfo.forget();
-
-  mDomain = aOther.mDomain;
-  mOrigin = aOther.mOrigin;
-  mServiceWorkerCacheName = aOther.mServiceWorkerCacheName;
-  mServiceWorkerDescriptor = aOther.mServiceWorkerDescriptor;
-  mServiceWorkerRegistrationDescriptor = aOther.mServiceWorkerRegistrationDescriptor;
-  mLoadFlags = aOther.mLoadFlags;
-  mWindowID = aOther.mWindowID;
-  mReferrerPolicy = aOther.mReferrerPolicy;
-  mFromWindow = aOther.mFromWindow;
-  mEvalAllowed = aOther.mEvalAllowed;
-  mReportCSPViolations = aOther.mReportCSPViolations;
-  mXHRParamsAllowed = aOther.mXHRParamsAllowed;
-  mPrincipalIsSystem = aOther.mPrincipalIsSystem;
-  mStorageAllowed = aOther.mStorageAllowed;
-  mFirstPartyStorageAccessGranted = aOther.mFirstPartyStorageAccessGranted;
-  mServiceWorkersTestingInWindow = aOther.mServiceWorkersTestingInWindow;
-  mOriginAttributes = aOther.mOriginAttributes;
-  mParentController = aOther.mParentController;
-}
-
-nsresult
-WorkerLoadInfo::SetPrincipalOnMainThread(nsIPrincipal* aPrincipal,
-                                         nsILoadGroup* aLoadGroup)
-{
-=======
 }  // namespace
 
 WorkerLoadInfoData::WorkerLoadInfoData()
@@ -202,7 +98,6 @@ WorkerLoadInfoData::WorkerLoadInfoData()
 nsresult WorkerLoadInfo::SetPrincipalsAndCSPOnMainThread(
     nsIPrincipal* aPrincipal, nsIPrincipal* aStoragePrincipal,
     nsILoadGroup* aLoadGroup, nsIContentSecurityPolicy* aCsp) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
   MOZ_ASSERT(NS_LoadGroupMatchesPrincipal(aLoadGroup, aPrincipal));
 
@@ -247,21 +142,9 @@ nsresult WorkerLoadInfo::SetPrincipalsAndCSPOnMainThread(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult WorkerLoadInfo::GetPrincipalAndLoadGroupFromChannel(
-    nsIChannel* aChannel, nsIPrincipal** aPrincipalOut,
-    nsILoadGroup** aLoadGroupOut) {
-||||||| merged common ancestors
-nsresult
-WorkerLoadInfo::GetPrincipalAndLoadGroupFromChannel(nsIChannel* aChannel,
-                                                    nsIPrincipal** aPrincipalOut,
-                                                    nsILoadGroup** aLoadGroupOut)
-{
-=======
 nsresult WorkerLoadInfo::GetPrincipalsAndLoadGroupFromChannel(
     nsIChannel* aChannel, nsIPrincipal** aPrincipalOut,
     nsIPrincipal** aStoragePrincipalOut, nsILoadGroup** aLoadGroupOut) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
   MOZ_DIAGNOSTIC_ASSERT(aChannel);
   MOZ_DIAGNOSTIC_ASSERT(aPrincipalOut);
@@ -275,17 +158,10 @@ nsresult WorkerLoadInfo::GetPrincipalsAndLoadGroupFromChannel(
   MOZ_DIAGNOSTIC_ASSERT(ssm);
 
   nsCOMPtr<nsIPrincipal> channelPrincipal;
-<<<<<<< HEAD
-  nsresult rv = ssm->GetChannelResultPrincipal(
-      aChannel, getter_AddRefs(channelPrincipal));
-||||||| merged common ancestors
-  nsresult rv = ssm->GetChannelResultPrincipal(aChannel, getter_AddRefs(channelPrincipal));
-=======
   nsCOMPtr<nsIPrincipal> channelStoragePrincipal;
   nsresult rv = ssm->GetChannelResultPrincipals(
       aChannel, getter_AddRefs(channelPrincipal),
       getter_AddRefs(channelStoragePrincipal));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Every time we call GetChannelResultPrincipal() it will return a different
@@ -350,32 +226,15 @@ nsresult WorkerLoadInfo::GetPrincipalsAndLoadGroupFromChannel(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult WorkerLoadInfo::SetPrincipalFromChannel(nsIChannel* aChannel) {
-||||||| merged common ancestors
-nsresult
-WorkerLoadInfo::SetPrincipalFromChannel(nsIChannel* aChannel)
-{
-=======
 nsresult WorkerLoadInfo::SetPrincipalsAndCSPFromChannel(nsIChannel* aChannel) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
 
   nsCOMPtr<nsIPrincipal> principal;
   nsCOMPtr<nsIPrincipal> storagePrincipal;
   nsCOMPtr<nsILoadGroup> loadGroup;
-<<<<<<< HEAD
-  nsresult rv = GetPrincipalAndLoadGroupFromChannel(
-      aChannel, getter_AddRefs(principal), getter_AddRefs(loadGroup));
-||||||| merged common ancestors
-  nsresult rv = GetPrincipalAndLoadGroupFromChannel(aChannel,
-                                                    getter_AddRefs(principal),
-                                                    getter_AddRefs(loadGroup));
-=======
   nsresult rv = GetPrincipalsAndLoadGroupFromChannel(
       aChannel, getter_AddRefs(principal), getter_AddRefs(storagePrincipal),
       getter_AddRefs(loadGroup));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Workers themselves can have their own CSP - Workers of an opaque origin
@@ -395,18 +254,9 @@ bool WorkerLoadInfo::FinalChannelPrincipalIsValid(nsIChannel* aChannel) {
   nsCOMPtr<nsIPrincipal> principal;
   nsCOMPtr<nsIPrincipal> storagePrincipal;
   nsCOMPtr<nsILoadGroup> loadGroup;
-<<<<<<< HEAD
-  nsresult rv = GetPrincipalAndLoadGroupFromChannel(
-      aChannel, getter_AddRefs(principal), getter_AddRefs(loadGroup));
-||||||| merged common ancestors
-  nsresult rv = GetPrincipalAndLoadGroupFromChannel(aChannel,
-                                                    getter_AddRefs(principal),
-                                                    getter_AddRefs(loadGroup));
-=======
   nsresult rv = GetPrincipalsAndLoadGroupFromChannel(
       aChannel, getter_AddRefs(principal), getter_AddRefs(storagePrincipal),
       getter_AddRefs(loadGroup));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, false);
 
   // Verify that the channel is still a null principal.  We don't care
@@ -499,22 +349,9 @@ bool WorkerLoadInfo::ProxyReleaseMainThreadObjects(
   return ProxyReleaseMainThreadObjects(aWorkerPrivate, nullLoadGroup);
 }
 
-<<<<<<< HEAD
-bool WorkerLoadInfo::ProxyReleaseMainThreadObjects(
-    WorkerPrivate* aWorkerPrivate, nsCOMPtr<nsILoadGroup>& aLoadGroupToCancel) {
-  static const uint32_t kDoomedCount = 10;
-||||||| merged common ancestors
-bool
-WorkerLoadInfo::ProxyReleaseMainThreadObjects(WorkerPrivate* aWorkerPrivate,
-                                              nsCOMPtr<nsILoadGroup>& aLoadGroupToCancel)
-{
-
-  static const uint32_t kDoomedCount = 10;
-=======
 bool WorkerLoadInfo::ProxyReleaseMainThreadObjects(
     WorkerPrivate* aWorkerPrivate, nsCOMPtr<nsILoadGroup>& aLoadGroupToCancel) {
   static const uint32_t kDoomedCount = 11;
->>>>>>> upstream-releases
   nsTArray<nsCOMPtr<nsISupports>> doomed(kDoomedCount);
 
   SwapToISupportsArray(mWindow, doomed);
@@ -558,18 +395,8 @@ WorkerLoadInfo::InterfaceRequestor::InterfaceRequestor(
   mLoadContext = new LoadContext(aPrincipal, baseContext);
 }
 
-<<<<<<< HEAD
-void WorkerLoadInfo::InterfaceRequestor::MaybeAddTabChild(
-    nsILoadGroup* aLoadGroup) {
-||||||| merged common ancestors
-void
-WorkerLoadInfo::
-InterfaceRequestor::MaybeAddTabChild(nsILoadGroup* aLoadGroup)
-{
-=======
 void WorkerLoadInfo::InterfaceRequestor::MaybeAddBrowserChild(
     nsILoadGroup* aLoadGroup) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!aLoadGroup) {
@@ -630,36 +457,14 @@ WorkerLoadInfo::InterfaceRequestor::GetInterface(const nsIID& aIID,
   return NS_NOINTERFACE;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsITabChild>
-WorkerLoadInfo::InterfaceRequestor::GetAnyLiveTabChild() {
-||||||| merged common ancestors
-already_AddRefed<nsITabChild>
-WorkerLoadInfo::
-InterfaceRequestor::GetAnyLiveTabChild()
-{
-=======
 already_AddRefed<nsIBrowserChild>
 WorkerLoadInfo::InterfaceRequestor::GetAnyLiveBrowserChild() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-  // Search our list of known TabChild objects for one that still exists.
-  while (!mTabChildList.IsEmpty()) {
-    nsCOMPtr<nsITabChild> tabChild =
-        do_QueryReferent(mTabChildList.LastElement());
-||||||| merged common ancestors
-  // Search our list of known TabChild objects for one that still exists.
-  while (!mTabChildList.IsEmpty()) {
-    nsCOMPtr<nsITabChild> tabChild =
-      do_QueryReferent(mTabChildList.LastElement());
-=======
   // Search our list of known BrowserChild objects for one that still exists.
   while (!mBrowserChildList.IsEmpty()) {
     nsCOMPtr<nsIBrowserChild> browserChild =
         do_QueryReferent(mBrowserChildList.LastElement());
->>>>>>> upstream-releases
 
     // Does this tab child still exist?  If so, return it.  We are done.  If the
     // PBrowser actor is no longer useful, don't bother returning this tab.

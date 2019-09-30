@@ -16,17 +16,9 @@ struct TestingData {
 
 static bool runOneTest(TestingData& aData);
 
-<<<<<<< HEAD
-TEST(UrlClassifierRiceDeltaDecoder, SingleEncodedValue) {
-  TestingData td = {{99}, {99}, 0};
-||||||| merged common ancestors
-TEST(UrlClassifierRiceDeltaDecoder, SingleEncodedValue) {
-  TestingData td = { { 99 }, { 99 }, 0 };
-=======
 TEST(UrlClassifierRiceDeltaDecoder, SingleEncodedValue)
 {
   TestingData td = {{99}, {99}, 0};
->>>>>>> upstream-releases
 
   ASSERT_TRUE(runOneTest(td));
 }
@@ -34,20 +26,10 @@ TEST(UrlClassifierRiceDeltaDecoder, SingleEncodedValue)
 // In this batch of tests, the encoded data would be like
 // what we originally receive from the network. See comment
 // in |runOneTest| for more detail.
-<<<<<<< HEAD
-TEST(UrlClassifierRiceDeltaDecoder, Empty) {
-  // The following structure and testing data is copied from Chromium source
-  // code:
-||||||| merged common ancestors
-TEST(UrlClassifierRiceDeltaDecoder, Empty) {
-
-  // The following structure and testing data is copied from Chromium source code:
-=======
 TEST(UrlClassifierRiceDeltaDecoder, Empty)
 {
   // The following structure and testing data is copied from Chromium source
   // code:
->>>>>>> upstream-releases
   //
   // https://chromium.googlesource.com/chromium/src.git/+/950f9975599768b6a08c7146cb4befa161be87aa/components/safe_browsing_db/v4_rice_unittest.cc#75
   //

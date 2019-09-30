@@ -138,33 +138,6 @@ class OverflowChangedTracker {
       // then we need to update the parent with the overflow areas of its
       // children.
       if (overflowChanged) {
-<<<<<<< HEAD
-        nsIFrame* parent = frame->GetParent();
-        while (parent && parent != mSubtreeRoot &&
-               parent->Combines3DTransformWithAncestors()) {
-          // Passing frames in between the frame and the establisher of
-          // 3D rendering context.
-          parent = parent->GetParent();
-          MOZ_ASSERT(parent,
-                     "Root frame should never return true for "
-                     "Combines3DTransformWithAncestors");
-        }
-        if (parent && parent != mSubtreeRoot) {
-          Entry* parentEntry =
-              mEntryList.find(Entry(parent, entry->mDepth - 1));
-||||||| merged common ancestors
-        nsIFrame *parent = frame->GetParent();
-        while (parent &&
-               parent != mSubtreeRoot &&
-               parent->Combines3DTransformWithAncestors()) {
-          // Passing frames in between the frame and the establisher of
-          // 3D rendering context.
-          parent = parent->GetParent();
-          MOZ_ASSERT(parent, "Root frame should never return true for Combines3DTransformWithAncestors");
-        }
-        if (parent && parent != mSubtreeRoot) {
-          Entry* parentEntry = mEntryList.find(Entry(parent, entry->mDepth - 1));
-=======
         nsIFrame* parent = frame->GetParent();
 
         // It's possible that the parent is already in a nondisplay context,
@@ -173,7 +146,6 @@ class OverflowChangedTracker {
             parent->FrameMaintainsOverflow()) {
           Entry* parentEntry =
               mEntryList.find(Entry(parent, entry->mDepth - 1));
->>>>>>> upstream-releases
           if (parentEntry) {
             parentEntry->mChangeKind =
                 std::max(parentEntry->mChangeKind, CHILDREN_CHANGED);

@@ -67,33 +67,6 @@ class TRR : public Runnable,
   static const unsigned int kCnameChaseMax = 64;
 
   // when firing off a normal A or AAAA query
-<<<<<<< HEAD
-  explicit TRR(AHostResolver *aResolver, nsHostRecord *aRec, enum TrrType aType)
-      : mozilla::Runnable("TRR"),
-        mRec(aRec),
-        mHostResolver(aResolver),
-        mType(aType),
-        mBodySize(0),
-        mFailed(false),
-        mCnameLoop(kCnameChaseMax),
-        mAllowRFC1918(false),
-        mTxtTtl(UINT32_MAX),
-        mOriginSuffix(aRec->originSuffix) {
-||||||| merged common ancestors
-  explicit TRR(AHostResolver *aResolver,
-               nsHostRecord *aRec,
-               enum TrrType aType)
-    : mozilla::Runnable("TRR")
-    , mRec(aRec)
-    , mHostResolver(aResolver)
-    , mType(aType)
-    , mBodySize(0)
-    , mFailed(false)
-    , mCnameLoop(kCnameChaseMax)
-    , mAllowRFC1918(false)
-    , mTxtTtl(UINT32_MAX)
-  {
-=======
   explicit TRR(AHostResolver* aResolver, nsHostRecord* aRec, enum TrrType aType)
       : mozilla::Runnable("TRR"),
         mRec(aRec),
@@ -105,49 +78,11 @@ class TRR : public Runnable,
         mAllowRFC1918(false),
         mTxtTtl(UINT32_MAX),
         mOriginSuffix(aRec->originSuffix) {
->>>>>>> upstream-releases
     mHost = aRec->host;
     mPB = aRec->pb;
   }
 
   // when following CNAMEs
-<<<<<<< HEAD
-  explicit TRR(AHostResolver *aResolver, nsHostRecord *aRec, nsCString &aHost,
-               enum TrrType &aType, unsigned int aLoopCount, bool aPB)
-      : mozilla::Runnable("TRR"),
-        mHost(aHost),
-        mRec(aRec),
-        mHostResolver(aResolver),
-        mType(aType),
-        mBodySize(0),
-        mFailed(false),
-        mPB(aPB),
-        mCnameLoop(aLoopCount),
-        mAllowRFC1918(false),
-        mTxtTtl(UINT32_MAX),
-        mOriginSuffix(aRec ? aRec->originSuffix : EmptyCString()) {}
-||||||| merged common ancestors
-  explicit TRR(AHostResolver *aResolver,
-               nsHostRecord *aRec,
-               nsCString &aHost,
-               enum TrrType & aType,
-               unsigned int aLoopCount,
-               bool aPB)
-    : mozilla::Runnable("TRR")
-    , mHost(aHost)
-    , mRec(aRec)
-    , mHostResolver(aResolver)
-    , mType(aType)
-    , mBodySize(0)
-    , mFailed(false)
-    , mPB(aPB)
-    , mCnameLoop(aLoopCount)
-    , mAllowRFC1918(false)
-    , mTxtTtl(UINT32_MAX)
-  {
-
-  }
-=======
   explicit TRR(AHostResolver* aResolver, nsHostRecord* aRec, nsCString& aHost,
                enum TrrType& aType, unsigned int aLoopCount, bool aPB)
       : mozilla::Runnable("TRR"),
@@ -162,33 +97,8 @@ class TRR : public Runnable,
         mAllowRFC1918(false),
         mTxtTtl(UINT32_MAX),
         mOriginSuffix(aRec ? aRec->originSuffix : EmptyCString()) {}
->>>>>>> upstream-releases
 
   // used on push
-<<<<<<< HEAD
-  explicit TRR(AHostResolver *aResolver, bool aPB)
-      : mozilla::Runnable("TRR"),
-        mHostResolver(aResolver),
-        mType(TRRTYPE_A),
-        mBodySize(0),
-        mFailed(false),
-        mPB(aPB),
-        mCnameLoop(kCnameChaseMax),
-        mAllowRFC1918(false),
-        mTxtTtl(UINT32_MAX) {}
-||||||| merged common ancestors
-  explicit TRR(AHostResolver *aResolver, bool aPB)
-    : mozilla::Runnable("TRR")
-    , mHostResolver(aResolver)
-    , mType(TRRTYPE_A)
-    , mBodySize(0)
-    , mFailed(false)
-    , mPB(aPB)
-    , mCnameLoop(kCnameChaseMax)
-    , mAllowRFC1918(false)
-    , mTxtTtl(UINT32_MAX)
-  { }
-=======
   explicit TRR(AHostResolver* aResolver, bool aPB)
       : mozilla::Runnable("TRR"),
         mHostResolver(aResolver),
@@ -199,41 +109,8 @@ class TRR : public Runnable,
         mCnameLoop(kCnameChaseMax),
         mAllowRFC1918(false),
         mTxtTtl(UINT32_MAX) {}
->>>>>>> upstream-releases
 
   // to verify a domain
-<<<<<<< HEAD
-  explicit TRR(AHostResolver *aResolver, nsACString &aHost, enum TrrType aType,
-               const nsACString &aOriginSuffix, bool aPB)
-      : mozilla::Runnable("TRR"),
-        mHost(aHost),
-        mRec(nullptr),
-        mHostResolver(aResolver),
-        mType(aType),
-        mBodySize(0),
-        mFailed(false),
-        mPB(aPB),
-        mCnameLoop(kCnameChaseMax),
-        mAllowRFC1918(false),
-        mTxtTtl(UINT32_MAX),
-        mOriginSuffix(aOriginSuffix) {}
-||||||| merged common ancestors
-  explicit TRR(AHostResolver *aResolver,
-               nsACString &aHost,
-               enum TrrType aType,
-               bool aPB)
-    : mozilla::Runnable("TRR")
-    , mHost(aHost)
-    , mHostResolver(aResolver)
-    , mType(aType)
-    , mBodySize(0)
-    , mFailed(false)
-    , mPB(aPB)
-    , mCnameLoop(kCnameChaseMax)
-    , mAllowRFC1918(false)
-    , mTxtTtl(UINT32_MAX)
-  { }
-=======
   explicit TRR(AHostResolver* aResolver, nsACString& aHost, enum TrrType aType,
                const nsACString& aOriginSuffix, bool aPB)
       : mozilla::Runnable("TRR"),
@@ -248,7 +125,6 @@ class TRR : public Runnable,
         mAllowRFC1918(false),
         mTxtTtl(UINT32_MAX),
         mOriginSuffix(aOriginSuffix) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override;
   void Cancel();
@@ -273,19 +149,9 @@ class TRR : public Runnable,
   // other error codes must be used. This distinction is important for the
   // subsequent logic to separate the error reasons.
   nsresult FailData(nsresult error);
-<<<<<<< HEAD
-  nsresult DohDecodeQuery(const nsCString &query, nsCString &host,
-                          enum TrrType &type);
-  nsresult ReceivePush(nsIHttpChannel *pushed, nsHostRecord *pushedRec);
-||||||| merged common ancestors
-  nsresult DohDecodeQuery(const nsCString &query,
-                          nsCString &host, enum TrrType &type);
-  nsresult ReceivePush(nsIHttpChannel *pushed, nsHostRecord *pushedRec);
-=======
   nsresult DohDecodeQuery(const nsCString& query, nsCString& host,
                           enum TrrType& type);
   nsresult ReceivePush(nsIHttpChannel* pushed, nsHostRecord* pushedRec);
->>>>>>> upstream-releases
   nsresult On200Response();
 
   nsCOMPtr<nsIChannel> mChannel;

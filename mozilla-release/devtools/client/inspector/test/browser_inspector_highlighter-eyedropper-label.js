@@ -28,162 +28,56 @@ const TEST_DATA = [
     },
     expectedPositions: { top: false, right: false, left: false },
   },
-<<<<<<< HEAD
-  expectedPositions: {top: false, right: false, left: false},
-}, {
-  desc: "Move the mouse to the center left",
-  getCoordinates: (width, height) => {
-    return {x: 0, y: height / 2};
-||||||| merged common ancestors
-  expectedPositions: {top: false, right: false, left: false}
-}, {
-  desc: "Move the mouse to the center left",
-  getCoordinates: (width, height) => {
-    return {x: 0, y: height / 2};
-=======
   {
     desc: "Move the mouse to the center left",
     getCoordinates: (width, height) => {
       return { x: 0, y: height / 2 };
     },
     expectedPositions: { top: false, right: true, left: false },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: false, right: true, left: false},
-}, {
-  desc: "Move the mouse to the center right",
-  getCoordinates: (width, height) => {
-    return {x: width, y: height / 2};
-||||||| merged common ancestors
-  expectedPositions: {top: false, right: true, left: false}
-}, {
-  desc: "Move the mouse to the center right",
-  getCoordinates: (width, height) => {
-    return {x: width, y: height / 2};
-=======
   {
     desc: "Move the mouse to the center right",
     getCoordinates: (width, height) => {
       return { x: width, y: height / 2 };
     },
     expectedPositions: { top: false, right: false, left: true },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: false, right: false, left: true},
-}, {
-  desc: "Move the mouse to the bottom center",
-  getCoordinates: (width, height) => {
-    return {x: width / 2, y: height};
-||||||| merged common ancestors
-  expectedPositions: {top: false, right: false, left: true}
-}, {
-  desc: "Move the mouse to the bottom center",
-  getCoordinates: (width, height) => {
-    return {x: width / 2, y: height};
-=======
   {
     desc: "Move the mouse to the bottom center",
     getCoordinates: (width, height) => {
       return { x: width / 2, y: height };
     },
     expectedPositions: { top: true, right: false, left: false },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: true, right: false, left: false},
-}, {
-  desc: "Move the mouse to the bottom left",
-  getCoordinates: (width, height) => {
-    return {x: 0, y: height};
-||||||| merged common ancestors
-  expectedPositions: {top: true, right: false, left: false}
-}, {
-  desc: "Move the mouse to the bottom left",
-  getCoordinates: (width, height) => {
-    return {x: 0, y: height};
-=======
   {
     desc: "Move the mouse to the bottom left",
     getCoordinates: (width, height) => {
       return { x: 0, y: height };
     },
     expectedPositions: { top: true, right: true, left: false },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: true, right: true, left: false},
-}, {
-  desc: "Move the mouse to the bottom right",
-  getCoordinates: (width, height) => {
-    return {x: width, y: height};
-||||||| merged common ancestors
-  expectedPositions: {top: true, right: true, left: false}
-}, {
-  desc: "Move the mouse to the bottom right",
-  getCoordinates: (width, height) => {
-    return {x: width, y: height};
-=======
   {
     desc: "Move the mouse to the bottom right",
     getCoordinates: (width, height) => {
       return { x: width, y: height };
     },
     expectedPositions: { top: true, right: false, left: true },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: true, right: false, left: true},
-}, {
-  desc: "Move the mouse to the top left",
-  getCoordinates: (width, height) => {
-    return {x: 0, y: 0};
-||||||| merged common ancestors
-  expectedPositions: {top: true, right: false, left: true}
-}, {
-  desc: "Move the mouse to the top left",
-  getCoordinates: (width, height) => {
-    return {x: 0, y: 0};
-=======
   {
     desc: "Move the mouse to the top left",
     getCoordinates: (width, height) => {
       return { x: 0, y: 0 };
     },
     expectedPositions: { top: false, right: true, left: false },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: false, right: true, left: false},
-}, {
-  desc: "Move the mouse to the top right",
-  getCoordinates: (width, height) => {
-    return {x: width, y: 0};
-||||||| merged common ancestors
-  expectedPositions: {top: false, right: true, left: false}
-}, {
-  desc: "Move the mouse to the top right",
-  getCoordinates: (width, height) => {
-    return {x: width, y: 0};
-=======
   {
     desc: "Move the mouse to the top right",
     getCoordinates: (width, height) => {
       return { x: width, y: 0 };
     },
     expectedPositions: { top: false, right: false, left: true },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  expectedPositions: {top: false, right: false, left: true},
-}];
-||||||| merged common ancestors
-  expectedPositions: {top: false, right: false, left: true}
-}];
-=======
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector, testActor } = await openInspectorForURL(TEST_PAGE);

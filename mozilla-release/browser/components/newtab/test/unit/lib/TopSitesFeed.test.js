@@ -1320,16 +1320,8 @@ describe("Top Sites Feed", () => {
       assert.calledTwice(fakeNewTabUtils.pinnedLinks.pin);
       assert.calledWith(fakeNewTabUtils.pinnedLinks.pin, site1, 2);
       assert.calledWith(fakeNewTabUtils.pinnedLinks.pin, site2, 1);
-<<<<<<< HEAD
-      fakeNewTabUtils.pinnedLinks.pin.resetHistory();
-      feed.insert({data: {index: 2, site: site1, draggedFromIndex: 5}});
-||||||| merged common ancestors
-      fakeNewTabUtils.pinnedLinks.pin.reset();
-      feed.insert({data: {index: 2, site: site1, draggedFromIndex: 5}});
-=======
       fakeNewTabUtils.pinnedLinks.pin.resetHistory();
       feed.insert({ data: { index: 2, site: site1, draggedFromIndex: 5 } });
->>>>>>> upstream-releases
       assert.calledTwice(fakeNewTabUtils.pinnedLinks.pin);
       assert.calledWith(fakeNewTabUtils.pinnedLinks.pin, site1, 2);
       assert.calledWith(fakeNewTabUtils.pinnedLinks.pin, site2, 3);
@@ -1384,17 +1376,10 @@ describe("Top Sites Feed", () => {
   describe("improvesearch.noDefaultSearchTile experiment", () => {
     const NO_DEFAULT_SEARCH_TILE_PREF = "improvesearch.noDefaultSearchTile";
     beforeEach(() => {
-<<<<<<< HEAD
-      sandbox.stub(global.Services.search, "defaultEngine").value({identifier: "google", searchForm: "google.com"});
-||||||| merged common ancestors
-      cachedDefaultSearch = global.Services.search.currentEngine;
-      global.Services.search.currentEngine = {identifier: "google", searchForm: "google.com"};
-=======
       global.Services.search.getDefault = async () => ({
         identifier: "google",
         searchForm: "google.com",
       });
->>>>>>> upstream-releases
       feed.store.state.Prefs.values[NO_DEFAULT_SEARCH_TILE_PREF] = true;
     });
     it("should filter out alexa top 5 search from the default sites", async () => {
@@ -1447,18 +1432,10 @@ describe("Top Sites Feed", () => {
     });
     it("should call refresh and set ._currentSearchHostname to the new engine hostname when the the default search engine has been set", () => {
       sinon.stub(feed, "refresh");
-<<<<<<< HEAD
-      sandbox.stub(global.Services.search, "defaultEngine").value({identifier: "ddg", searchForm: "duckduckgo.com"});
-      feed.observe(null, "browser-search-engine-modified", "engine-current");
-||||||| merged common ancestors
-      global.Services.search.currentEngine = {identifier: "ddg", searchForm: "duckduckgo.com"};
-      feed.observe(null, "browser-search-engine-modified", "engine-current");
-=======
       sandbox
         .stub(global.Services.search, "defaultEngine")
         .value({ identifier: "ddg", searchForm: "duckduckgo.com" });
       feed.observe(null, "browser-search-engine-modified", "engine-default");
->>>>>>> upstream-releases
       assert.equal(feed._currentSearchHostname, "duckduckgo");
       assert.calledOnce(feed.refresh);
     });

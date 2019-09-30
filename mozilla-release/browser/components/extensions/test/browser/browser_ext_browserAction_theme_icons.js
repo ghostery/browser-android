@@ -3,29 +3,13 @@
 "use strict";
 
 const LIGHT_THEME_COLORS = {
-<<<<<<< HEAD
-  "frame": "#FFF",
-  "tab_background_text": "#000",
-||||||| merged common ancestors
-  "accentcolor": "#FFF",
-  "textcolor": "#000",
-=======
   frame: "#FFF",
   tab_background_text: "#000",
->>>>>>> upstream-releases
 };
 
 const DARK_THEME_COLORS = {
-<<<<<<< HEAD
-  "frame": "#000",
-  "tab_background_text": "#FFF",
-||||||| merged common ancestors
-  "accentcolor": "#000",
-  "textcolor": "#FFF",
-=======
   frame: "#000",
   tab_background_text: "#FFF",
->>>>>>> upstream-releases
 };
 
 const TOOLBAR_MAPPING = {
@@ -174,22 +158,10 @@ add_task(async function browseraction_theme_icons_dark_theme() {
 
 add_task(async function browseraction_theme_icons_different_toolbars() {
   let themeData = {
-<<<<<<< HEAD
-    "frame": "#000",
-    "tab_background_text": "#fff",
-    "toolbar": "#fff",
-    "bookmark_text": "#000",
-||||||| merged common ancestors
-    "accentcolor": "#000",
-    "textcolor": "#fff",
-    "toolbar": "#fff",
-    "toolbar_text": "#000",
-=======
     frame: "#000",
     tab_background_text: "#fff",
     toolbar: "#fff",
     bookmark_text: "#000",
->>>>>>> upstream-releases
   };
   await testStaticTheme({
     themeData,

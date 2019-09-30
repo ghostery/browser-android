@@ -72,31 +72,10 @@ def docker_worker_debian_package(config, job, taskdesc):
 
     name = taskdesc['label'].replace('{}-'.format(config.kind), '', 1)
 
-<<<<<<< HEAD
-    docker_repo = 'debian'
-    arch = run.get('arch', 'amd64')
-    if arch != 'amd64':
-        docker_repo = '{}/{}'.format(arch, docker_repo)
-
-||||||| merged common ancestors
-=======
     arch = run.get('arch', 'amd64')
 
->>>>>>> upstream-releases
     worker = taskdesc['worker']
     worker['artifacts'] = []
-<<<<<<< HEAD
-    worker['docker-image'] = '{repo}:{dist}-{date}'.format(
-        repo=docker_repo,
-        dist=run['dist'],
-        date=run['snapshot'][:8])
-    # Retry on apt-get errors.
-    worker['retry-exit-status'] = [100]
-||||||| merged common ancestors
-    worker['docker-image'] = 'debian:{dist}-{date}'.format(
-        dist=run['dist'],
-        date=run['snapshot'][:8])
-=======
     version = {
         'wheezy': 7,
         'jessie': 8,
@@ -110,7 +89,6 @@ def docker_worker_debian_package(config, job, taskdesc):
     worker['docker-image'] = {'in-tree': image}
     # Retry on apt-get errors.
     worker['retry-exit-status'] = [100]
->>>>>>> upstream-releases
 
     add_artifacts(config, job, taskdesc, path='/tmp/artifacts')
 
@@ -175,32 +153,10 @@ def docker_worker_debian_package(config, job, taskdesc):
         '-x',
         '-c',
         # Add sources for packages coming from other package tasks.
-<<<<<<< HEAD
-        'apt-get install -yyq apt-transport-https ca-certificates && '
-        'for task in $PACKAGES; do '
-        '  echo "deb [trusted=yes] https://queue.taskcluster.net/v1/task'
-        '/$task/artifacts/public/build/ debian/" '
-        '>> /etc/apt/sources.list; '
-        'done && '
-        # Install the base utilities required to build debian packages.
-        'apt-get update -o Acquire::Check-Valid-Until=false -q && '
-        'apt-get install -yyq {base_deps} && '
-||||||| merged common ancestors
-        'apt-get install -yyq apt-transport-https ca-certificates && '
-        'for task in $PACKAGES; do '
-        '  echo "deb [trusted=yes] https://queue.taskcluster.net/v1/task'
-        '/$task/runs/0/artifacts/public/build/ debian/" '
-        '>> /etc/apt/sources.list; '
-        'done && '
-        # Install the base utilities required to build debian packages.
-        'apt-get update -o Acquire::Check-Valid-Until=false -q && '
-        'apt-get install -yyq {base_deps} && '
-=======
         '/usr/local/sbin/setup_packages.sh {root_url} $PACKAGES && '
         'apt-get update && '
         # Upgrade packages that might have new versions in package tasks.
         'apt-get dist-upgrade && '
->>>>>>> upstream-releases
         'cd /tmp && '
         # Get, validate and extract the package source.
         '(dget -d -u {src_url} || exit 100) && '
@@ -245,27 +201,6 @@ def docker_worker_debian_package(config, job, taskdesc):
         for p in run['packages']:
             deps[p] = 'packages-{}'.format(p)
 
-<<<<<<< HEAD
-    # Use the command generated above as the base for the index hash.
-    # We rely on it not varying depending on the head_repository or head_rev.
-    digest_data = list(worker['command'])
-    if 'patch' in run:
-        digest_data.append(
-            hash_path(os.path.join(GECKO, 'build', 'debian-packages', run['patch'])))
-
-    if docker_repo != 'debian':
-        digest_data.append(docker_repo)
-
-    if not taskgraph.fast:
-        taskdesc['cache'] = {
-            'type': 'packages.v1',
-            'name': name,
-            'digest-data': digest_data
-        }
-||||||| merged common ancestors
-    add_optimization(config, taskdesc, cache_type='packages.v1',
-                     cache_name=name, digest_data=data)
-=======
     # Use the command generated above as the base for the index hash.
     # We rely on it not varying depending on the head_repository or head_rev.
     digest_data = list(worker['command'])
@@ -279,4 +214,3 @@ def docker_worker_debian_package(config, job, taskdesc):
             'name': name,
             'digest-data': digest_data
         }
->>>>>>> upstream-releases

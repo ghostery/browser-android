@@ -319,32 +319,16 @@ nsCategoryManager::Release() { return 1; }
 
 nsCategoryManager* nsCategoryManager::gCategoryManager;
 
-<<<<<<< HEAD
-/* static */ nsCategoryManager* nsCategoryManager::GetSingleton() {
-||||||| merged common ancestors
-/* static */ nsCategoryManager*
-nsCategoryManager::GetSingleton()
-{
-=======
 /* static */
 nsCategoryManager* nsCategoryManager::GetSingleton() {
->>>>>>> upstream-releases
   if (!gCategoryManager) {
     gCategoryManager = new nsCategoryManager();
   }
   return gCategoryManager;
 }
 
-<<<<<<< HEAD
-/* static */ void nsCategoryManager::Destroy() {
-||||||| merged common ancestors
-/* static */ void
-nsCategoryManager::Destroy()
-{
-=======
 /* static */
 void nsCategoryManager::Destroy() {
->>>>>>> upstream-releases
   // The nsMemoryReporterManager gets destroyed before the nsCategoryManager,
   // so we don't need to unregister the nsCategoryManager as a memory reporter.
   // In debug builds we assert that unregistering fails, as a way (imperfect
@@ -446,28 +430,11 @@ CategoryNotificationRunnable::Run() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
 }  // namespace
 
 void nsCategoryManager::NotifyObservers(const char* aTopic,
                                         const nsACString& aCategoryName,
                                         const nsACString& aEntryName) {
-||||||| merged common ancestors
-} // namespace
-
-
-void
-nsCategoryManager::NotifyObservers(const char* aTopic,
-                                   const nsACString& aCategoryName,
-                                   const nsACString& aEntryName)
-{
-=======
-}  // namespace
-
-void nsCategoryManager::NotifyObservers(const char* aTopic,
-                                        const nsACString& aCategoryName,
-                                        const nsACString& aEntryName) {
->>>>>>> upstream-releases
   if (mSuppressNotifications) {
     return;
   }

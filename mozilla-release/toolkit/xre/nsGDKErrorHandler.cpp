@@ -24,18 +24,8 @@
  * so we have to utilize the Gdk error handler to avoid
  * false alarms in Gtk3.
  */
-<<<<<<< HEAD
-static void GdkErrorHandler(const gchar *log_domain, GLogLevelFlags log_level,
-                            const gchar *message, gpointer user_data) {
-||||||| merged common ancestors
-static void
-GdkErrorHandler(const gchar *log_domain, GLogLevelFlags log_level,
-                const gchar *message,  gpointer user_data)
-{
-=======
 static void GdkErrorHandler(const gchar* log_domain, GLogLevelFlags log_level,
                             const gchar* message, gpointer user_data) {
->>>>>>> upstream-releases
   if (strstr(message, "X Window System error")) {
     XErrorEvent event;
     nsDependentCString buffer(message);
@@ -47,121 +37,55 @@ static void GdkErrorHandler(const gchar* log_domain, GLogLevelFlags log_level,
      */
     NS_NAMED_LITERAL_CSTRING(serialString, "(Details: serial ");
     int32_t start = buffer.Find(serialString);
-<<<<<<< HEAD
-    if (start == kNotFound) MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    if (start == kNotFound)
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     if (start == kNotFound) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     start += serialString.Length();
     errno = 0;
     event.serial = strtol(buffer.BeginReading() + start, &endptr, 10);
-<<<<<<< HEAD
-    if (errno) MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    if (errno)
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     if (errno) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     NS_NAMED_LITERAL_CSTRING(errorCodeString, " error_code ");
-<<<<<<< HEAD
-    if (!StringBeginsWith(Substring(endptr, buffer.EndReading()),
-                          errorCodeString))
-      MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    if (!StringBeginsWith(Substring(endptr, buffer.EndReading()), errorCodeString))
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     if (!StringBeginsWith(Substring(endptr, buffer.EndReading()),
                           errorCodeString)) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     errno = 0;
     event.error_code = strtol(endptr + errorCodeString.Length(), &endptr, 10);
-<<<<<<< HEAD
-    if (errno) MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    if (errno)
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     if (errno) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     NS_NAMED_LITERAL_CSTRING(requestCodeString, " request_code ");
-<<<<<<< HEAD
-    if (!StringBeginsWith(Substring(endptr, buffer.EndReading()),
-                          requestCodeString))
-      MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    if (!StringBeginsWith(Substring(endptr, buffer.EndReading()), requestCodeString))
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     if (!StringBeginsWith(Substring(endptr, buffer.EndReading()),
                           requestCodeString)) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     errno = 0;
-<<<<<<< HEAD
-    event.request_code =
-        strtol(endptr + requestCodeString.Length(), &endptr, 10);
-    if (errno) MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    event.request_code = strtol(endptr + requestCodeString.Length(), &endptr, 10);
-    if (errno)
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     event.request_code =
         strtol(endptr + requestCodeString.Length(), &endptr, 10);
     if (errno) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     NS_NAMED_LITERAL_CSTRING(minorCodeString, " minor_code ");
     start = buffer.Find(minorCodeString, /* aIgnoreCase = */ false,
                         endptr - buffer.BeginReading());
-<<<<<<< HEAD
-    if (!start) MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    if (!start)
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     if (!start) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     errno = 0;
-<<<<<<< HEAD
-    event.minor_code = strtol(
-        buffer.BeginReading() + start + minorCodeString.Length(), nullptr, 10);
-    if (errno) MOZ_CRASH_UNSAFE_OOL(message);
-||||||| merged common ancestors
-    event.minor_code = strtol(buffer.BeginReading() + start + minorCodeString.Length(), nullptr, 10);
-    if (errno)
-      MOZ_CRASH_UNSAFE_OOL(message);
-=======
     event.minor_code = strtol(
         buffer.BeginReading() + start + minorCodeString.Length(), nullptr, 10);
     if (errno) {
       MOZ_CRASH_UNSAFE(message);
     }
->>>>>>> upstream-releases
 
     event.display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
     // Gdk does not provide resource ID

@@ -53,85 +53,6 @@ def get_app_version(product_dir='browser'):
     return get_contents(app_version_path)
 
 
-<<<<<<< HEAD
-# Please keep this list sorted and in sync with taskcluster/docs/parameters.rst
-# Parameters are of the form: {name: default}
-PARAMETERS = {
-    'app_version': get_app_version(),
-    'base_repository': 'https://hg.mozilla.org/mozilla-unified',
-    'build_date': lambda: int(time.time()),
-    'build_number': 1,
-    'do_not_optimize': [],
-    'existing_tasks': {},
-    'filters': ['target_tasks_method'],
-    'head_ref': get_head_ref,
-    'head_repository': 'https://hg.mozilla.org/mozilla-central',
-    'head_rev': get_head_ref,
-    'hg_branch': 'default',
-    'level': '3',
-    'message': '',
-    'moz_build_date': lambda: datetime.now().strftime("%Y%m%d%H%M%S"),
-    'next_version': None,
-    'optimize_target_tasks': True,
-    'owner': 'nobody@mozilla.com',
-    'project': 'mozilla-central',
-    'pushdate': lambda: int(time.time()),
-    'pushlog_id': '0',
-    'release_enable_emefree': False,
-    'release_enable_partners': False,
-    'release_eta': '',
-    'release_history': {},
-    'release_partners': None,
-    'release_partner_config': None,
-    'release_partner_build_number': 1,
-    'release_type': 'nightly',
-    'release_product': None,
-    'required_signoffs': [],
-    'signoff_urls': {},
-    'target_tasks_method': 'default',
-    'try_mode': None,
-    'try_options': None,
-    'try_task_config': None,
-    'version': get_version(),
-||||||| merged common ancestors
-# Please keep this list sorted and in sync with taskcluster/docs/parameters.rst
-# Parameters are of the form: {name: default}
-PARAMETERS = {
-    'app_version': get_app_version(),
-    'base_repository': 'https://hg.mozilla.org/mozilla-unified',
-    'build_date': lambda: int(time.time()),
-    'build_number': 1,
-    'do_not_optimize': [],
-    'existing_tasks': {},
-    'filters': ['check_servo', 'target_tasks_method'],
-    'head_ref': get_head_ref,
-    'head_repository': 'https://hg.mozilla.org/mozilla-central',
-    'head_rev': get_head_ref,
-    'hg_branch': 'default',
-    'level': '3',
-    'message': '',
-    'moz_build_date': lambda: datetime.now().strftime("%Y%m%d%H%M%S"),
-    'next_version': None,
-    'optimize_target_tasks': True,
-    'owner': 'nobody@mozilla.com',
-    'project': 'mozilla-central',
-    'pushdate': lambda: int(time.time()),
-    'pushlog_id': '0',
-    'release_enable_emefree': False,
-    'release_enable_partners': False,
-    'release_eta': '',
-    'release_history': {},
-    'release_partners': None,
-    'release_partner_config': None,
-    'release_partner_build_number': 1,
-    'release_type': 'nightly',
-    'release_product': None,
-    'target_tasks_method': 'default',
-    'try_mode': None,
-    'try_options': None,
-    'try_task_config': None,
-    'version': get_version(),
-=======
 base_schema = {
     Required('app_version'): basestring,
     Required('base_repository'): basestring,
@@ -175,7 +96,6 @@ base_schema = {
     Required('try_options'): Any(None, dict),
     Required('try_task_config'): Any(None, dict),
     Required('version'): basestring,
->>>>>>> upstream-releases
 }
 
 

@@ -21,22 +21,10 @@ add_task(async function init() {
   });
   searchIcon = searchbar.querySelector(".searchbar-search-button");
 
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_hiddenOneOffs_diacritics.js
-  let currentEngine = Services.search.defaultEngine;
-  await promiseNewEngine("testEngine_diacritics.xml", {setAsCurrent: false});
-  registerCleanupFunction(() => {
-    Services.search.defaultEngine = currentEngine;
-||||||| merged common ancestors
-  let currentEngine = Services.search.currentEngine;
-  await promiseNewEngine("testEngine_diacritics.xml", {setAsCurrent: false});
-  registerCleanupFunction(() => {
-    Services.search.currentEngine = currentEngine;
-=======
   let defaultEngine = await Services.search.getDefault();
   await promiseNewEngine("testEngine_diacritics.xml", { setAsCurrent: false });
   registerCleanupFunction(async () => {
     await Services.search.setDefault(defaultEngine);
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_hiddenOneOffs_diacritics.js
     Services.prefs.clearUserPref("browser.search.hiddenOneOffs");
   });
 });

@@ -4,18 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/narrate/VoiceSelect.jsm");
-ChromeUtils.import("resource://gre/modules/narrate/Narrator.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AsyncPrefs.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/narrate/VoiceSelect.jsm");
-ChromeUtils.import("resource://gre/modules/narrate/Narrator.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AsyncPrefs.jsm");
-ChromeUtils.import("resource://gre/modules/TelemetryStopwatch.jsm");
-=======
 const { VoiceSelect } = ChromeUtils.import(
   "resource://gre/modules/narrate/VoiceSelect.jsm"
 );
@@ -26,7 +14,6 @@ const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { AsyncPrefs } = ChromeUtils.import(
   "resource://gre/modules/AsyncPrefs.jsm"
 );
->>>>>>> upstream-releases
 
 var EXPORTED_SYMBOLS = ["NarrateControls"];
 

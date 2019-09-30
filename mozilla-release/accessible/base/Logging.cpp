@@ -40,7 +40,6 @@ struct ModuleRep {
   logging::EModules mModule;
 };
 
-<<<<<<< HEAD
 static ModuleRep sModuleMap[] = {{"docload", logging::eDocLoad},
                                  {"doccreate", logging::eDocCreate},
                                  {"docdestroy", logging::eDocDestroy},
@@ -61,53 +60,6 @@ static ModuleRep sModuleMap[] = {{"docload", logging::eDocLoad},
                                  {"verbose", logging::eVerbose}};
 
 static void EnableLogging(const char* aModulesStr) {
-||||||| merged common ancestors
-static ModuleRep sModuleMap[] = {
-  { "docload", logging::eDocLoad },
-  { "doccreate", logging::eDocCreate },
-  { "docdestroy", logging::eDocDestroy },
-  { "doclifecycle", logging::eDocLifeCycle },
-
-  { "events", logging::eEvents },
-  { "eventTree", logging::eEventTree },
-  { "platforms", logging::ePlatforms },
-  { "text", logging::eText },
-  { "tree", logging::eTree },
-
-  { "DOMEvents", logging::eDOMEvents },
-  { "focus", logging::eFocus },
-  { "selection", logging::eSelection },
-  { "notifications", logging::eNotifications },
-
-  { "stack", logging::eStack },
-  { "verbose", logging::eVerbose }
-};
-
-static void
-EnableLogging(const char* aModulesStr)
-{
-=======
-static ModuleRep sModuleMap[] = {{"docload", logging::eDocLoad},
-                                 {"doccreate", logging::eDocCreate},
-                                 {"docdestroy", logging::eDocDestroy},
-                                 {"doclifecycle", logging::eDocLifeCycle},
-
-                                 {"events", logging::eEvents},
-                                 {"eventTree", logging::eEventTree},
-                                 {"platforms", logging::ePlatforms},
-                                 {"text", logging::eText},
-                                 {"tree", logging::eTree},
-
-                                 {"DOMEvents", logging::eDOMEvents},
-                                 {"focus", logging::eFocus},
-                                 {"selection", logging::eSelection},
-                                 {"notifications", logging::eNotifications},
-
-                                 {"stack", logging::eStack},
-                                 {"verbose", logging::eVerbose}};
-
-static void EnableLogging(const char* aModulesStr) {
->>>>>>> upstream-releases
   sModules = 0;
   if (!aModulesStr) return;
 
@@ -131,27 +83,11 @@ static void EnableLogging(const char* aModulesStr) {
   }
 }
 
-<<<<<<< HEAD
-static void LogDocURI(nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-static void
-LogDocURI(nsIDocument* aDocumentNode)
-{
-=======
 static void LogDocURI(dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   printf("uri: %s", aDocumentNode->GetDocumentURI()->GetSpecOrDefault().get());
 }
 
-<<<<<<< HEAD
-static void LogDocShellState(nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-static void
-LogDocShellState(nsIDocument* aDocumentNode)
-{
-=======
 static void LogDocShellState(dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   printf("docshell busy: ");
 
   nsAutoCString docShellBusy;
@@ -172,15 +108,7 @@ static void LogDocShellState(dom::Document* aDocumentNode) {
   }
 }
 
-<<<<<<< HEAD
-static void LogDocType(nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-static void
-LogDocType(nsIDocument* aDocumentNode)
-{
-=======
 static void LogDocType(dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   if (aDocumentNode->IsActive()) {
     bool isContent = nsCoreUtils::IsContentDocument(aDocumentNode);
     printf("%s document", (isContent ? "content" : "chrome"));
@@ -189,15 +117,7 @@ static void LogDocType(dom::Document* aDocumentNode) {
   }
 }
 
-<<<<<<< HEAD
-static void LogDocShellTree(nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-static void
-LogDocShellTree(nsIDocument* aDocumentNode)
-{
-=======
 static void LogDocShellTree(dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   if (aDocumentNode->IsActive()) {
     nsCOMPtr<nsIDocShellTreeItem> treeItem(aDocumentNode->GetDocShell());
     nsCOMPtr<nsIDocShellTreeItem> parentTreeItem;
@@ -210,28 +130,12 @@ static void LogDocShellTree(dom::Document* aDocumentNode) {
   }
 }
 
-<<<<<<< HEAD
-static void LogDocState(nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-static void
-LogDocState(nsIDocument* aDocumentNode)
-{
-=======
 static void LogDocState(dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   const char* docState = nullptr;
   dom::Document::ReadyState docStateFlag = aDocumentNode->GetReadyStateEnum();
   switch (docStateFlag) {
-<<<<<<< HEAD
-    case nsIDocument::READYSTATE_UNINITIALIZED:
-      docState = "uninitialized";
-||||||| merged common ancestors
-    case nsIDocument::READYSTATE_UNINITIALIZED:
-     docState = "uninitialized";
-=======
     case dom::Document::READYSTATE_UNINITIALIZED:
       docState = "uninitialized";
->>>>>>> upstream-releases
       break;
     case dom::Document::READYSTATE_LOADING:
       docState = "loading";
@@ -260,21 +164,9 @@ static void LogDocState(dom::Document* aDocumentNode) {
   printf(", has %srole content", rootEl ? "" : "no ");
 }
 
-<<<<<<< HEAD
-static void LogPresShell(nsIDocument* aDocumentNode) {
-  nsIPresShell* ps = aDocumentNode->GetShell();
-  printf("presshell: %p", static_cast<void*>(ps));
-||||||| merged common ancestors
-static void
-LogPresShell(nsIDocument* aDocumentNode)
-{
-  nsIPresShell* ps = aDocumentNode->GetShell();
-  printf("presshell: %p", static_cast<void*>(ps));
-=======
 static void LogPresShell(dom::Document* aDocumentNode) {
   PresShell* presShell = aDocumentNode->GetPresShell();
   printf("presshell: %p", static_cast<void*>(presShell));
->>>>>>> upstream-releases
 
   nsIScrollableFrame* sf = nullptr;
   if (presShell) {
@@ -284,31 +176,13 @@ static void LogPresShell(dom::Document* aDocumentNode) {
   printf(", root scroll frame: %p", static_cast<void*>(sf));
 }
 
-<<<<<<< HEAD
-static void LogDocLoadGroup(nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-static void
-LogDocLoadGroup(nsIDocument* aDocumentNode)
-{
-=======
 static void LogDocLoadGroup(dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   nsCOMPtr<nsILoadGroup> loadGroup = aDocumentNode->GetDocumentLoadGroup();
   printf("load group: %p", static_cast<void*>(loadGroup));
 }
 
-<<<<<<< HEAD
-static void LogDocParent(nsIDocument* aDocumentNode) {
-  nsIDocument* parentDoc = aDocumentNode->GetParentDocument();
-||||||| merged common ancestors
-static void
-LogDocParent(nsIDocument* aDocumentNode)
-{
-  nsIDocument* parentDoc = aDocumentNode->GetParentDocument();
-=======
 static void LogDocParent(dom::Document* aDocumentNode) {
   dom::Document* parentDoc = aDocumentNode->GetParentDocument();
->>>>>>> upstream-releases
   printf("parent DOM document: %p", static_cast<void*>(parentDoc));
   if (parentDoc) {
     printf(", parent acc document: %p",
@@ -319,15 +193,7 @@ static void LogDocParent(dom::Document* aDocumentNode) {
   }
 }
 
-<<<<<<< HEAD
-static void LogDocInfo(nsIDocument* aDocumentNode, DocAccessible* aDocument) {
-||||||| merged common ancestors
-static void
-LogDocInfo(nsIDocument* aDocumentNode, DocAccessible* aDocument)
-{
-=======
 static void LogDocInfo(dom::Document* aDocumentNode, DocAccessible* aDocument) {
->>>>>>> upstream-releases
   printf("    DOM document: %p, acc document: %p\n    ",
          static_cast<void*>(aDocumentNode), static_cast<void*>(aDocument));
 
@@ -446,16 +312,9 @@ static void LogRequest(nsIRequest* aRequest) {
     if (loadFlags & nsIChannel::LOAD_TARGETED) printf("targeted; ");
     if (loadFlags & nsIChannel::LOAD_CALL_CONTENT_SNIFFERS)
       printf("call content sniffers; ");
-<<<<<<< HEAD
-    if (loadFlags & nsIChannel::LOAD_CLASSIFY_URI) printf("classify uri; ");
-||||||| merged common ancestors
-    if (loadFlags & nsIChannel::LOAD_CLASSIFY_URI)
-      printf("classify uri; ");
-=======
     if (loadFlags & nsIChannel::LOAD_BYPASS_URL_CLASSIFIER) {
       printf("bypass classify uri; ");
     }
->>>>>>> upstream-releases
   } else {
     printf("    no request");
   }
@@ -538,15 +397,7 @@ void logging::DocLoad(const char* aMsg, nsIWebProgress* aWebProgress,
   MsgEnd();
 }
 
-<<<<<<< HEAD
-void logging::DocLoad(const char* aMsg, nsIDocument* aDocumentNode) {
-||||||| merged common ancestors
-void
-logging::DocLoad(const char* aMsg, nsIDocument* aDocumentNode)
-{
-=======
 void logging::DocLoad(const char* aMsg, dom::Document* aDocumentNode) {
->>>>>>> upstream-releases
   MsgBegin(sDocLoadTitle, "%s", aMsg);
 
   DocAccessible* document = GetExistingDocAccessible(aDocumentNode);
@@ -596,48 +447,20 @@ void logging::DocLoadEventHandled(AccEvent* aEvent) {
   MsgEnd();
 }
 
-<<<<<<< HEAD
-void logging::DocCreate(const char* aMsg, nsIDocument* aDocumentNode,
-                        DocAccessible* aDocument) {
-  DocAccessible* document =
-      aDocument ? aDocument : GetExistingDocAccessible(aDocumentNode);
-||||||| merged common ancestors
-void
-logging::DocCreate(const char* aMsg, nsIDocument* aDocumentNode,
-                   DocAccessible* aDocument)
-{
-  DocAccessible* document = aDocument ?
-    aDocument : GetExistingDocAccessible(aDocumentNode);
-=======
 void logging::DocCreate(const char* aMsg, dom::Document* aDocumentNode,
                         DocAccessible* aDocument) {
   DocAccessible* document =
       aDocument ? aDocument : GetExistingDocAccessible(aDocumentNode);
->>>>>>> upstream-releases
 
   MsgBegin(sDocCreateTitle, "%s", aMsg);
   LogDocInfo(aDocumentNode, document);
   MsgEnd();
 }
 
-<<<<<<< HEAD
-void logging::DocDestroy(const char* aMsg, nsIDocument* aDocumentNode,
-                         DocAccessible* aDocument) {
-  DocAccessible* document =
-      aDocument ? aDocument : GetExistingDocAccessible(aDocumentNode);
-||||||| merged common ancestors
-void
-logging::DocDestroy(const char* aMsg, nsIDocument* aDocumentNode,
-                    DocAccessible* aDocument)
-{
-  DocAccessible* document = aDocument ?
-    aDocument : GetExistingDocAccessible(aDocumentNode);
-=======
 void logging::DocDestroy(const char* aMsg, dom::Document* aDocumentNode,
                          DocAccessible* aDocument) {
   DocAccessible* document =
       aDocument ? aDocument : GetExistingDocAccessible(aDocumentNode);
->>>>>>> upstream-releases
 
   MsgBegin(sDocDestroyTitle, "%s", aMsg);
   LogDocInfo(aDocumentNode, document);
@@ -893,19 +716,9 @@ void logging::Address(const char* aDescr, Accessible* aAcc) {
   }
 
   DocAccessible* doc = aAcc->Document();
-<<<<<<< HEAD
-  nsIDocument* docNode = doc->DocumentNode();
-  printf("    document: %p, node: %p\n", static_cast<void*>(doc),
-         static_cast<void*>(docNode));
-||||||| merged common ancestors
-  nsIDocument* docNode = doc->DocumentNode();
-  printf("    document: %p, node: %p\n",
-         static_cast<void*>(doc), static_cast<void*>(docNode));
-=======
   dom::Document* docNode = doc->DocumentNode();
   printf("    document: %p, node: %p\n", static_cast<void*>(doc),
          static_cast<void*>(docNode));
->>>>>>> upstream-releases
 
   printf("    ");
   LogDocURI(docNode);

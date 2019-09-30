@@ -18,33 +18,13 @@
 using namespace mozilla;
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#undef NOISY_MAX_ELEMENT_SIZE
-#undef REALLY_NOISY_MAX_ELEMENT_SIZE
-#undef NOISY_BLOCK_DIR_MARGINS
-||||||| merged common ancestors
-#undef  NOISY_MAX_ELEMENT_SIZE
-#undef   REALLY_NOISY_MAX_ELEMENT_SIZE
-#undef  NOISY_BLOCK_DIR_MARGINS
-=======
 #  undef NOISY_MAX_ELEMENT_SIZE
 #  undef REALLY_NOISY_MAX_ELEMENT_SIZE
 #  undef NOISY_BLOCK_DIR_MARGINS
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#undef NOISY_MAX_ELEMENT_SIZE
-#undef REALLY_NOISY_MAX_ELEMENT_SIZE
-#undef NOISY_BLOCK_DIR_MARGINS
-||||||| merged common ancestors
-#undef  NOISY_MAX_ELEMENT_SIZE
-#undef   REALLY_NOISY_MAX_ELEMENT_SIZE
-#undef  NOISY_BLOCK_DIR_MARGINS
-=======
 #  undef NOISY_MAX_ELEMENT_SIZE
 #  undef REALLY_NOISY_MAX_ELEMENT_SIZE
 #  undef NOISY_BLOCK_DIR_MARGINS
->>>>>>> upstream-releases
 #endif
 
 nsBlockReflowContext::nsBlockReflowContext(nsPresContext* aPresContext,
@@ -84,18 +64,9 @@ bool nsBlockReflowContext::ComputeCollapsedBStartMargin(
   // caller.
 
 #ifdef NOISY_BLOCKDIR_MARGINS
-<<<<<<< HEAD
-  nsFrame::ListTag(stdout, aRI.mFrame);
-  printf(": %d => %d\n", aRI.ComputedLogicalMargin().BStart(wm),
-         aMargin->get());
-||||||| merged common ancestors
-  nsFrame::ListTag(stdout, aRI.mFrame);
-  printf(": %d => %d\n", aRI.ComputedLogicalMargin().BStart(wm), aMargin->get());
-=======
   aRI.mFrame->ListTag(stdout);
   printf(": %d => %d\n", aRI.ComputedLogicalMargin().BStart(wm),
          aMargin->get());
->>>>>>> upstream-releases
 #endif
 
   bool dirtiedLine = false;
@@ -332,36 +303,16 @@ void nsBlockReflowContext::ReflowBlock(
          CRAZY_SIZE(mMetrics.BSize(mWritingMode))) &&
         !mFrame->GetParent()->IsCrazySizeAssertSuppressed()) {
       printf("nsBlockReflowContext: ");
-<<<<<<< HEAD
-      nsFrame::ListTag(stdout, mFrame);
-      printf(" metrics=%d,%d!\n", mMetrics.ISize(mWritingMode),
-             mMetrics.BSize(mWritingMode));
-||||||| merged common ancestors
-      nsFrame::ListTag(stdout, mFrame);
-      printf(" metrics=%d,%d!\n",
-             mMetrics.ISize(mWritingMode), mMetrics.BSize(mWritingMode));
-=======
       mFrame->ListTag(stdout);
       printf(" metrics=%d,%d!\n", mMetrics.ISize(mWritingMode),
              mMetrics.BSize(mWritingMode));
->>>>>>> upstream-releases
     }
     if ((mMetrics.ISize(mWritingMode) == nscoord(0xdeadbeef)) ||
         (mMetrics.BSize(mWritingMode) == nscoord(0xdeadbeef))) {
       printf("nsBlockReflowContext: ");
-<<<<<<< HEAD
-      nsFrame::ListTag(stdout, mFrame);
-      printf(" didn't set i/b %d,%d!\n", mMetrics.ISize(mWritingMode),
-             mMetrics.BSize(mWritingMode));
-||||||| merged common ancestors
-      nsFrame::ListTag(stdout, mFrame);
-      printf(" didn't set i/b %d,%d!\n",
-             mMetrics.ISize(mWritingMode), mMetrics.BSize(mWritingMode));
-=======
       mFrame->ListTag(stdout);
       printf(" didn't set i/b %d,%d!\n", mMetrics.ISize(mWritingMode),
              mMetrics.BSize(mWritingMode));
->>>>>>> upstream-releases
     }
   }
 #endif
@@ -433,23 +384,11 @@ bool nsBlockReflowContext::PlaceBlock(const ReflowInput& aReflowInput,
     printf("  ");
     mOuterReflowInput.mFrame->ListTag(stdout);
     printf(": ");
-<<<<<<< HEAD
-    nsFrame::ListTag(stdout, mFrame);
-    printf(
-        " -- collapsing block start & end margin together; BStart=%d "
-        "spaceBStart=%d\n",
-        mBCoord, mSpace.BStart(mWritingMode));
-||||||| merged common ancestors
-    nsFrame::ListTag(stdout, mFrame);
-    printf(" -- collapsing block start & end margin together; BStart=%d spaceBStart=%d\n",
-           mBCoord, mSpace.BStart(mWritingMode));
-=======
     mFrame->ListTag(stdout);
     printf(
         " -- collapsing block start & end margin together; BStart=%d "
         "spaceBStart=%d\n",
         mBCoord, mSpace.BStart(mWritingMode));
->>>>>>> upstream-releases
 #endif
     // Section 8.3.1 of CSS 2.1 says that blocks with adjoining
     // "top/bottom" (i.e. block-start/end) margins whose top margin collapses

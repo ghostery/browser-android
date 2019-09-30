@@ -75,15 +75,8 @@ var progressListener = {
   },
 
   onLocationChange(aWebProgress, aRequest, aLocation, aFlags) {},
-<<<<<<< HEAD
-  onSecurityChange(aWebProgress, aRequest, state) {},
-||||||| merged common ancestors
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON) {},
-=======
   onSecurityChange(aWebProgress, aRequest, state) {},
   onContentBlockingEvent(aWebProgress, aRequest, event) {},
->>>>>>> upstream-releases
 
   onStatusChange(aWebProgress, aRequest, aStatus, aMessage) {
     if (aMessage) {

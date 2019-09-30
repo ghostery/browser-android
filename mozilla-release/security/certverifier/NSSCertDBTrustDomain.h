@@ -107,23 +107,11 @@ nsresult BuildRevocationCheckArrays(const UniqueCERTCertificate& cert,
  *        NS_ERROR_FAILURE.
  */
 nsresult BuildRevocationCheckStrings(const CERTCertificate* cert,
-<<<<<<< HEAD
-                                     /*out*/ nsCString& encIssuer,
-                                     /*out*/ nsCString& encSerial,
-                                     /*out*/ nsCString& encSubject,
-                                     /*out*/ nsCString& encPubKey);
-||||||| merged common ancestors
-                              /*out*/ nsCString& encIssuer,
-                              /*out*/ nsCString& encSerial,
-                              /*out*/ nsCString& encSubject,
-                              /*out*/ nsCString& encPubKey);
-=======
                                      /*out*/ nsCString& encIssuer,
                                      /*out*/ nsCString& encSerial,
                                      /*out*/ nsCString& encSubject,
                                      /*out*/ nsCString& encPubKey);
 #endif
->>>>>>> upstream-releases
 
 void SaveIntermediateCerts(const UniqueCERTCertList& certList);
 
@@ -139,36 +127,6 @@ class NSSCertDBTrustDomain : public mozilla::pkix::TrustDomain {
     LocalOnlyOCSPForEV = 4,
   };
 
-<<<<<<< HEAD
-  NSSCertDBTrustDomain(
-      SECTrustType certDBTrustType, OCSPFetching ocspFetching,
-      OCSPCache& ocspCache, void* pinArg, mozilla::TimeDuration ocspTimeoutSoft,
-      mozilla::TimeDuration ocspTimeoutHard, uint32_t certShortLifetimeInDays,
-      CertVerifier::PinningMode pinningMode, unsigned int minRSABits,
-      ValidityCheckingMode validityCheckingMode,
-      CertVerifier::SHA1Mode sha1Mode,
-      NetscapeStepUpPolicy netscapeStepUpPolicy,
-      DistrustedCAPolicy distrustedCAPolicy,
-      const OriginAttributes& originAttributes, UniqueCERTCertList& builtChain,
-      /*optional*/ PinningTelemetryInfo* pinningTelemetryInfo = nullptr,
-      /*optional*/ const char* hostname = nullptr);
-||||||| merged common ancestors
-  NSSCertDBTrustDomain(SECTrustType certDBTrustType, OCSPFetching ocspFetching,
-                       OCSPCache& ocspCache, void* pinArg,
-                       mozilla::TimeDuration ocspTimeoutSoft,
-                       mozilla::TimeDuration ocspTimeoutHard,
-                       uint32_t certShortLifetimeInDays,
-                       CertVerifier::PinningMode pinningMode,
-                       unsigned int minRSABits,
-                       ValidityCheckingMode validityCheckingMode,
-                       CertVerifier::SHA1Mode sha1Mode,
-                       NetscapeStepUpPolicy netscapeStepUpPolicy,
-                       DistrustedCAPolicy distrustedCAPolicy,
-                       const OriginAttributes& originAttributes,
-                       UniqueCERTCertList& builtChain,
-          /*optional*/ PinningTelemetryInfo* pinningTelemetryInfo = nullptr,
-          /*optional*/ const char* hostname = nullptr);
-=======
   NSSCertDBTrustDomain(
       SECTrustType certDBTrustType, OCSPFetching ocspFetching,
       OCSPCache& ocspCache, void* pinArg, mozilla::TimeDuration ocspTimeoutSoft,
@@ -184,7 +142,6 @@ class NSSCertDBTrustDomain : public mozilla::pkix::TrustDomain {
       /*out*/ UniqueCERTCertList& builtChain,
       /*optional*/ PinningTelemetryInfo* pinningTelemetryInfo = nullptr,
       /*optional*/ const char* hostname = nullptr);
->>>>>>> upstream-releases
 
   virtual Result FindIssuer(mozilla::pkix::Input encodedIssuerName,
                             IssuerChecker& checker,
@@ -299,27 +256,15 @@ class NSSCertDBTrustDomain : public mozilla::pkix::TrustDomain {
   DistrustedCAPolicy mDistrustedCAPolicy;
   bool mSawDistrustedCAByPolicyError;
   const OriginAttributes& mOriginAttributes;
-<<<<<<< HEAD
-  UniqueCERTCertList& mBuiltChain;  // non-owning
-||||||| merged common ancestors
-  UniqueCERTCertList& mBuiltChain; // non-owning
-=======
   const Vector<mozilla::pkix::Input>& mThirdPartyRootInputs;  // non-owning
   const Vector<mozilla::pkix::Input>&
       mThirdPartyIntermediateInputs;  // non-owning
   UniqueCERTCertList& mBuiltChain;    // non-owning
->>>>>>> upstream-releases
   PinningTelemetryInfo* mPinningTelemetryInfo;
-<<<<<<< HEAD
-  const char* mHostname;  // non-owning - only used for pinning checks
-||||||| merged common ancestors
-  const char* mHostname; // non-owning - only used for pinning checks
-=======
   const char* mHostname;  // non-owning - only used for pinning checks
 #ifdef MOZ_NEW_CERT_STORAGE
   nsCOMPtr<nsICertStorage> mCertStorage;
 #else
->>>>>>> upstream-releases
   nsCOMPtr<nsICertBlocklist> mCertBlocklist;
 #endif
   CertVerifier::OCSPStaplingStatus mOCSPStaplingStatus;

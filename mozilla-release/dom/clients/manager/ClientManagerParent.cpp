@@ -74,16 +74,6 @@ bool ClientManagerParent::DeallocPClientNavigateOpParent(
   return true;
 }
 
-<<<<<<< HEAD
-PClientSourceParent* ClientManagerParent::AllocPClientSourceParent(
-    const ClientSourceConstructorArgs& aArgs) {
-  return new ClientSourceParent(aArgs);
-||||||| merged common ancestors
-PClientSourceParent*
-ClientManagerParent::AllocPClientSourceParent(const ClientSourceConstructorArgs& aArgs)
-{
-  return new ClientSourceParent(aArgs);
-=======
 PClientSourceParent* ClientManagerParent::AllocPClientSourceParent(
     const ClientSourceConstructorArgs& aArgs) {
   Maybe<ContentParentId> contentParentId;
@@ -94,7 +84,6 @@ PClientSourceParent* ClientManagerParent::AllocPClientSourceParent(
   }
 
   return new ClientSourceParent(aArgs, contentParentId);
->>>>>>> upstream-releases
 }
 
 bool ClientManagerParent::DeallocPClientSourceParent(

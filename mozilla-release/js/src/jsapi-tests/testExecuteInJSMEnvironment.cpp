@@ -12,101 +12,6 @@
 #include "vm/EnvironmentObject.h"
 #include "vm/EnvironmentObject-inl.h"
 
-<<<<<<< HEAD
-BEGIN_TEST(testExecuteInJSMEnvironment_Basic) {
-  static const char src[] =
-      "var output = input;\n"
-      "\n"
-      "a = 1;\n"
-      "var b = 2;\n"
-      "let c = 3;\n"
-      "this.d = 4;\n"
-      "eval('this.e = 5');\n"
-      "(0,eval)('this.f = 6');\n"
-      "(function() { this.g = 7; })();\n"
-      "function f_h() { this.h = 8; }; f_h();\n";
-
-  JS::CompileOptions options(cx);
-  options.setFileAndLine(__FILE__, __LINE__);
-  options.setNoScriptRval(true);
-
-  JS::RootedScript script(cx);
-  CHECK(JS::CompileLatin1ForNonSyntacticScope(cx, options, src, sizeof(src) - 1,
-                                              &script));
-
-  JS::RootedObject varEnv(cx, js::NewJSMEnvironment(cx));
-  JS::RootedObject lexEnv(cx, JS_ExtensibleLexicalEnvironment(varEnv));
-  CHECK(varEnv && varEnv->is<js::NonSyntacticVariablesObject>());
-  CHECK(lexEnv && js::IsExtensibleLexicalEnvironment(lexEnv));
-  CHECK(lexEnv->enclosingEnvironment() == varEnv);
-
-  JS::RootedValue vi(cx, JS::Int32Value(1000));
-  CHECK(JS_SetProperty(cx, varEnv, "input", vi));
-
-  CHECK(js::ExecuteInJSMEnvironment(cx, script, varEnv));
-
-  JS::RootedValue v(cx);
-  CHECK(JS_GetProperty(cx, varEnv, "output", &v) && v == vi);
-  CHECK(JS_GetProperty(cx, varEnv, "a", &v) && v == JS::Int32Value(1));
-  CHECK(JS_GetProperty(cx, varEnv, "b", &v) && v == JS::Int32Value(2));
-  CHECK(JS_GetProperty(cx, lexEnv, "c", &v) && v == JS::Int32Value(3));
-  CHECK(JS_GetProperty(cx, varEnv, "d", &v) && v == JS::Int32Value(4));
-  CHECK(JS_GetProperty(cx, varEnv, "e", &v) && v == JS::Int32Value(5));
-  // TODO: Bug 1396050 will fix this
-  // CHECK(JS_GetProperty(cx, varEnv, "f", &v) && v == JS::Int32Value(6));
-  CHECK(JS_GetProperty(cx, varEnv, "g", &v) && v == JS::Int32Value(7));
-  CHECK(JS_GetProperty(cx, varEnv, "h", &v) && v == JS::Int32Value(8));
-
-  return true;
-||||||| merged common ancestors
-
-BEGIN_TEST(testExecuteInJSMEnvironment_Basic)
-{
-    static const char src[] =
-        "var output = input;\n"
-        "\n"
-        "a = 1;\n"
-        "var b = 2;\n"
-        "let c = 3;\n"
-        "this.d = 4;\n"
-        "eval('this.e = 5');\n"
-        "(0,eval)('this.f = 6');\n"
-        "(function() { this.g = 7; })();\n"
-        "function f_h() { this.h = 8; }; f_h();\n"
-        ;
-
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(__FILE__, __LINE__);
-    options.setNoScriptRval(true);
-
-    JS::RootedScript script(cx);
-    CHECK(JS::CompileLatin1ForNonSyntacticScope(cx, options, src, sizeof(src) - 1, &script));
-
-    JS::RootedObject varEnv(cx, js::NewJSMEnvironment(cx));
-    JS::RootedObject lexEnv(cx, JS_ExtensibleLexicalEnvironment(varEnv));
-    CHECK(varEnv && varEnv->is<js::NonSyntacticVariablesObject>());
-    CHECK(lexEnv && js::IsExtensibleLexicalEnvironment(lexEnv));
-    CHECK(lexEnv->enclosingEnvironment() == varEnv);
-
-    JS::RootedValue vi(cx, JS::Int32Value(1000));
-    CHECK(JS_SetProperty(cx, varEnv, "input", vi));
-
-    CHECK(js::ExecuteInJSMEnvironment(cx, script, varEnv));
-
-    JS::RootedValue v(cx);
-    CHECK(JS_GetProperty(cx, varEnv, "output", &v) && v == vi);
-    CHECK(JS_GetProperty(cx, varEnv, "a", &v) && v == JS::Int32Value(1));
-    CHECK(JS_GetProperty(cx, varEnv, "b", &v) && v == JS::Int32Value(2));
-    CHECK(JS_GetProperty(cx, lexEnv, "c", &v) && v == JS::Int32Value(3));
-    CHECK(JS_GetProperty(cx, varEnv, "d", &v) && v == JS::Int32Value(4));
-    CHECK(JS_GetProperty(cx, varEnv, "e", &v) && v == JS::Int32Value(5));
- // TODO: Bug 1396050 will fix this
- // CHECK(JS_GetProperty(cx, varEnv, "f", &v) && v == JS::Int32Value(6));
-    CHECK(JS_GetProperty(cx, varEnv, "g", &v) && v == JS::Int32Value(7));
-    CHECK(JS_GetProperty(cx, varEnv, "h", &v) && v == JS::Int32Value(8));
-
-    return true;
-=======
 BEGIN_TEST(testExecuteInJSMEnvironment_Basic) {
   static const char src[] =
       "var output = input;\n"
@@ -156,7 +61,6 @@ BEGIN_TEST(testExecuteInJSMEnvironment_Basic) {
   CHECK(JS_GetProperty(cx, varEnv, "h", &v) && v == JS::Int32Value(8));
 
   return true;
->>>>>>> upstream-releases
 }
 END_TEST(testExecuteInJSMEnvironment_Basic);
 
@@ -172,68 +76,24 @@ static bool test_callback(JSContext* cx, unsigned argc, JS::Value* vp) {
 }
 
 static const JSFunctionSpec testFunctions[] = {
-<<<<<<< HEAD
-    JS_FN("callback", test_callback, 0, 0), JS_FS_END};
-||||||| merged common ancestors
-    JS_FN("callback", test_callback, 0, 0),
-    JS_FS_END
-};
-=======
     JS_FN("callback", test_callback, 0, 0), JS_FS_END};
 
 BEGIN_TEST(testExecuteInJSMEnvironment_Callback) {
   static const char src[] = "var output = callback();\n";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BEGIN_TEST(testExecuteInJSMEnvironment_Callback) {
-  static const char src[] = "var output = callback();\n";
-||||||| merged common ancestors
-BEGIN_TEST(testExecuteInJSMEnvironment_Callback)
-{
-    static const char src[] =
-        "var output = callback();\n"
-        ;
-=======
   CHECK(JS_DefineFunctions(cx, global, testFunctions));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CHECK(JS_DefineFunctions(cx, global, testFunctions));
-||||||| merged common ancestors
-    CHECK(JS_DefineFunctions(cx, global, testFunctions));
-=======
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, __LINE__);
   options.setNoScriptRval(true);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::CompileOptions options(cx);
-  options.setFileAndLine(__FILE__, __LINE__);
-  options.setNoScriptRval(true);
-||||||| merged common ancestors
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(__FILE__, __LINE__);
-    options.setNoScriptRval(true);
-=======
   JS::SourceText<mozilla::Utf8Unit> srcBuf;
   CHECK(srcBuf.init(cx, src, mozilla::ArrayLength(src) - 1,
                     JS::SourceOwnership::Borrowed));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::RootedScript script(cx);
-  CHECK(JS::CompileLatin1ForNonSyntacticScope(cx, options, src, sizeof(src) - 1,
-                                              &script));
-||||||| merged common ancestors
-    JS::RootedScript script(cx);
-    CHECK(JS::CompileLatin1ForNonSyntacticScope(cx, options, src, sizeof(src) - 1, &script));
-=======
   JS::RootedScript script(
       cx, JS::CompileForNonSyntacticScopeDontInflate(cx, options, srcBuf));
   CHECK(script);
->>>>>>> upstream-releases
 
   JS::RootedObject nsvo(cx, js::NewJSMEnvironment(cx));
   CHECK(nsvo);

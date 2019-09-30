@@ -9,20 +9,9 @@
 
 #ifdef MOZILLA_INTERNAL_API
 
-<<<<<<< HEAD
-#include "nsDOMNavigationTiming.h"
-#include "nsIDocShell.h"
-#include "nsIWebNavigation.h"
-||||||| merged common ancestors
-#include "nsDOMNavigationTiming.h"
-#include "nsIDocShell.h"
-#include "nsDocShellLoadInfo.h"
-#include "nsIWebNavigation.h"
-=======
 #  include "nsDOMNavigationTiming.h"
 #  include "nsIDocShell.h"
 #  include "nsIWebNavigation.h"
->>>>>>> upstream-releases
 
 /**
  * Load flag for error pages. This uses one of the reserved flag
@@ -39,17 +28,8 @@
  * above 0xffff (e.g. LOAD_FLAGS_BYPASS_CLASSIFIER), since MAKE_LOAD_TYPE would
  * just shift them out anyway.
  */
-<<<<<<< HEAD
-#define EXTRA_LOAD_FLAGS \
-  (LOAD_FLAGS_FIRST_LOAD | LOAD_FLAGS_ALLOW_POPUPS | 0xffff0000)
-||||||| merged common ancestors
-#define EXTRA_LOAD_FLAGS (LOAD_FLAGS_FIRST_LOAD | \
-                          LOAD_FLAGS_ALLOW_POPUPS | \
-                          0xffff0000)
-=======
 #  define EXTRA_LOAD_FLAGS \
     (LOAD_FLAGS_FIRST_LOAD | LOAD_FLAGS_ALLOW_POPUPS | 0xffff0000)
->>>>>>> upstream-releases
 
 /* load types are legal combinations of load commands and flags
  *

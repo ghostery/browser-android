@@ -40,34 +40,6 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=851780
 
   const isDesktop = !/Mobile|Tablet/.test(navigator.userAgent);
 
-<<<<<<< HEAD
-  function checkIfInputIsInputEvent(aEvent, aToDo, aDescription) {
-    if (aToDo) {
-      // Probably, key operation should fire "input" event with InputEvent interface.
-      // See https://github.com/w3c/input-events/issues/88
-      todo(aEvent instanceof InputEvent,
-         `"input" event should be dispatched with InputEvent interface ${aDescription}`);
-    } else {
-      ok(aEvent instanceof InputEvent,
-         `"input" event should be dispatched with InputEvent interface ${aDescription}`);
-    }
-    is(aEvent.cancelable, false,
-       `"input" event should be never cancelable ${aDescription}`);
-    is(aEvent.bubbles, true,
-       `"input" event should always bubble ${aDescription}`);
-  }
-
-  function checkIfInputIsEvent(aEvent, aDescription) {
-    ok(aEvent instanceof Event && !(aEvent instanceof UIEvent),
-       `"input" event should be dispatched with InputEvent interface ${aDescription}`);
-    is(aEvent.cancelable, false,
-       `"input" event should be never cancelable ${aDescription}`);
-    is(aEvent.bubbles, true,
-       `"input" event should always bubble ${aDescription}`);
-  }
-
-||||||| merged common ancestors
-=======
   let expectedInputType = "";
   let expectedData = null;
   function checkIfInputIsInputEvent(aEvent, aToDo, aDescription) {
@@ -101,7 +73,6 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=851780
        `"input" event should always bubble ${aDescription}`);
   }
 
->>>>>>> upstream-releases
   var textareaInput = 0;
   document.getElementById("textarea").oninput = (aEvent) => {
     ++textareaInput;

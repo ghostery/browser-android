@@ -716,184 +716,6 @@ static const XML_Char implicitContext[] = {
   ASCII_s, ASCII_p, ASCII_a, ASCII_c, ASCII_e, '\0'
 };
 
-<<<<<<< HEAD
-
-#if defined(HAVE_GETRANDOM) || defined(HAVE_SYSCALL_GETRANDOM)
-# include <errno.h>
-
-# if defined(HAVE_GETRANDOM)
-#  include <sys/random.h>    /* getrandom */
-# else
-#  include <unistd.h>        /* syscall */
-#  include <sys/syscall.h>   /* SYS_getrandom */
-# endif
-
-/* Obtain entropy on Linux 3.17+ */
-static int
-writeRandomBytes_getrandom(void * target, size_t count) {
-  int success = 0;  /* full count bytes written? */
-  size_t bytesWrittenTotal = 0;
-  const unsigned int getrandomFlags = 0;
-
-  do {
-    void * const currentTarget = (void*)((char*)target + bytesWrittenTotal);
-    const size_t bytesToWrite = count - bytesWrittenTotal;
-
-    const int bytesWrittenMore =
-#if defined(HAVE_GETRANDOM)
-        getrandom(currentTarget, bytesToWrite, getrandomFlags);
-#else
-        syscall(SYS_getrandom, currentTarget, bytesToWrite, getrandomFlags);
-#endif
-
-    if (bytesWrittenMore > 0) {
-      bytesWrittenTotal += bytesWrittenMore;
-      if (bytesWrittenTotal >= count)
-        success = 1;
-    }
-  } while (! success && (errno == EINTR || errno == EAGAIN));
-
-  return success;
-}
-
-#endif  /* defined(HAVE_GETRANDOM) || defined(HAVE_SYSCALL_GETRANDOM) */
-
-
-#ifdef _WIN32
-
-typedef BOOLEAN (APIENTRY *RTLGENRANDOM_FUNC)(PVOID, ULONG);
-
-/* Obtain entropy on Windows XP / Windows Server 2003 and later.
- * Hint on RtlGenRandom and the following article from libsodioum.
- *
- * Michael Howard: Cryptographically Secure Random number on Windows without using CryptoAPI
- * https://blogs.msdn.microsoft.com/michael_howard/2005/01/14/cryptographically-secure-random-number-on-windows-without-using-cryptoapi/
- */
-static int
-writeRandomBytes_RtlGenRandom(void * target, size_t count) {
-  int success = 0;  /* full count bytes written? */
-  const HMODULE advapi32 = LoadLibrary("ADVAPI32.DLL");
-
-  if (advapi32) {
-    const RTLGENRANDOM_FUNC RtlGenRandom
-        = (RTLGENRANDOM_FUNC)GetProcAddress(advapi32, "SystemFunction036");
-    if (RtlGenRandom) {
-      if (RtlGenRandom((PVOID)target, (ULONG)count) == TRUE) {
-        success = 1;
-      }
-    }
-    FreeLibrary(advapi32);
-  }
-
-  return success;
-}
-
-#endif /* _WIN32 */
-
-
-static unsigned long
-gather_time_entropy(void)
-{
-#ifdef _WIN32
-  FILETIME ft;
-  GetSystemTimeAsFileTime(&ft); /* never fails */
-  return ft.dwHighDateTime ^ ft.dwLowDateTime;
-#else
-  struct timeval tv;
-  int gettimeofday_res;
-
-  gettimeofday_res = gettimeofday(&tv, NULL);
-
-#if defined(NDEBUG)
-  (void)gettimeofday_res;
-#else
-  assert (gettimeofday_res == 0);
-#endif /* defined(NDEBUG) */
-
-  /* Microseconds time is <20 bits entropy */
-  return tv.tv_usec;
-#endif
-}
-
-#if defined(HAVE_ARC4RANDOM_BUF) && defined(HAVE_LIBBSD)
-# include <bsd/stdlib.h>
-#endif
-
-static unsigned long
-ENTROPY_DEBUG(const char * label, unsigned long entropy) {
-/* BEGIN MOZILLA CHANGE (don't getenv every time we set up a hash) */
-#if 0
-  const char * const EXPAT_ENTROPY_DEBUG = getenv("EXPAT_ENTROPY_DEBUG");
-  if (EXPAT_ENTROPY_DEBUG && ! strcmp(EXPAT_ENTROPY_DEBUG, "1")) {
-    fprintf(stderr, "Entropy: %s --> 0x%0*lx (%lu bytes)\n",
-        label,
-        (int)sizeof(entropy) * 2, entropy,
-        (unsigned long)sizeof(entropy));
-  }
-#endif
-/* END MOZILLA CHANGE */
-  return entropy;
-}
-
-static unsigned long
-generate_hash_secret_salt(XML_Parser parser)
-{
-  unsigned long entropy;
-  (void)parser;
-#if defined(HAVE_ARC4RANDOM_BUF) || defined(__CloudABI__)
-  (void)gather_time_entropy;
-  arc4random_buf(&entropy, sizeof(entropy));
-  return ENTROPY_DEBUG("arc4random_buf", entropy);
-#else
-  /* Try high quality providers first .. */
-#ifdef _WIN32
-  if (writeRandomBytes_RtlGenRandom((void *)&entropy, sizeof(entropy))) {
-    return ENTROPY_DEBUG("RtlGenRandom", entropy);
-  }
-#elif defined(HAVE_GETRANDOM) || defined(HAVE_SYSCALL_GETRANDOM)
-  if (writeRandomBytes_getrandom((void *)&entropy, sizeof(entropy))) {
-    return ENTROPY_DEBUG("getrandom", entropy);
-  }
-#endif
-  /* .. and self-made low quality for backup: */
-
-  /* Process ID is 0 bits entropy if attacker has local access */
-  entropy = gather_time_entropy() ^ getpid();
-
-  /* Factors are 2^31-1 and 2^61-1 (Mersenne primes M31 and M61) */
-  if (sizeof(unsigned long) == 4) {
-    return ENTROPY_DEBUG("fallback(4)", entropy * 2147483647);
-  } else {
-    return ENTROPY_DEBUG("fallback(8)",
-        entropy * (unsigned long)2305843009213693951);
-  }
-#endif
-}
-
-static unsigned long
-get_hash_secret_salt(XML_Parser parser) {
-  if (parser->m_parentParser != NULL)
-    return get_hash_secret_salt(parser->m_parentParser);
-  return parser->m_hash_secret_salt;
-}
-
-static XML_Bool  /* only valid for root parser */
-startParsing(XML_Parser parser)
-{
-    /* hash functions must be initialized before setContext() is called */
-    if (hash_secret_salt == 0)
-      hash_secret_salt = generate_hash_secret_salt(parser);
-    if (ns) {
-      /* implicit context only set for root parser, since child
-         parsers (i.e. external entity parsers) will inherit it
-      */
-      return setContext(parser, implicitContext);
-    }
-    return XML_TRUE;
-}
-
-||||||| merged common ancestors
-=======
 
 #if defined(HAVE_GETRANDOM) || defined(HAVE_SYSCALL_GETRANDOM)
 # include <errno.h>
@@ -1076,7 +898,6 @@ startParsing(XML_Parser parser)
     return XML_TRUE;
 }
 
->>>>>>> upstream-releases
 XML_Parser XMLCALL
 XML_ParserCreate_MM(const XML_Char *encodingName,
                     const XML_Memory_Handling_Suite *memsuite,
@@ -1389,62 +1210,9 @@ XML_ExternalEntityParserCreate(XML_Parser oldParser,
   XML_Bool oldDefaultExpandInternalEntities;
   XML_Parser oldExternalEntityRefHandlerArg;
 #ifdef XML_DTD
-<<<<<<< HEAD
-  enum XML_ParamEntityParsing oldParamEntityParsing;
-  int oldInEntityValue;
-||||||| merged common ancestors
-  enum XML_ParamEntityParsing oldParamEntityParsing = paramEntityParsing;
-  int oldInEntityValue = prologState.inEntityValue;
-=======
   enum XML_ParamEntityParsing oldParamEntityParsing;
   int oldInEntityValue;
 #endif
-  XML_Bool oldns_triplets;
-  /* Note that the new parser shares the same hash secret as the old
-     parser, so that dtdCopy and copyEntityTable can lookup values
-     from hash tables associated with either parser without us having
-     to worry which hash secrets each table has.
-  */
-  unsigned long oldhash_secret_salt;
-
-  /* Validate the oldParser parameter before we pull everything out of it */
-  if (oldParser == NULL)
-    return NULL;
-
-  /* Stash the original parser contents on the stack */
-  oldDtd = _dtd;
-  oldStartElementHandler = startElementHandler;
-  oldEndElementHandler = endElementHandler;
-  oldCharacterDataHandler = characterDataHandler;
-  oldProcessingInstructionHandler = processingInstructionHandler;
-  oldCommentHandler = commentHandler;
-  oldStartCdataSectionHandler = startCdataSectionHandler;
-  oldEndCdataSectionHandler = endCdataSectionHandler;
-  oldDefaultHandler = defaultHandler;
-  oldUnparsedEntityDeclHandler = unparsedEntityDeclHandler;
-  oldNotationDeclHandler = notationDeclHandler;
-  oldStartNamespaceDeclHandler = startNamespaceDeclHandler;
-  oldEndNamespaceDeclHandler = endNamespaceDeclHandler;
-  oldNotStandaloneHandler = notStandaloneHandler;
-  oldExternalEntityRefHandler = externalEntityRefHandler;
-  oldSkippedEntityHandler = skippedEntityHandler;
-  oldUnknownEncodingHandler = unknownEncodingHandler;
-  oldElementDeclHandler = elementDeclHandler;
-  oldAttlistDeclHandler = attlistDeclHandler;
-  oldEntityDeclHandler = entityDeclHandler;
-  oldXmlDeclHandler = xmlDeclHandler;
-  oldDeclElementType = declElementType;
-
-  oldUserData = userData;
-  oldHandlerArg = handlerArg;
-  oldDefaultExpandInternalEntities = defaultExpandInternalEntities;
-  oldExternalEntityRefHandlerArg = externalEntityRefHandlerArg;
-#ifdef XML_DTD
-  oldParamEntityParsing = paramEntityParsing;
-  oldInEntityValue = prologState.inEntityValue;
->>>>>>> upstream-releases
-#endif
-<<<<<<< HEAD
   XML_Bool oldns_triplets;
   /* Note that the new parser shares the same hash secret as the old
      parser, so that dtdCopy and copyEntityTable can lookup values
@@ -1496,17 +1264,6 @@ XML_ExternalEntityParserCreate(XML_Parser oldParser,
      to worry which hash secrets each table has.
   */
   oldhash_secret_salt = hash_secret_salt;
-||||||| merged common ancestors
-  XML_Bool oldns_triplets = ns_triplets;
-=======
-  oldns_triplets = ns_triplets;
-  /* Note that the new parser shares the same hash secret as the old
-     parser, so that dtdCopy and copyEntityTable can lookup values
-     from hash tables associated with either parser without us having
-     to worry which hash secrets each table has.
-  */
-  oldhash_secret_salt = hash_secret_salt;
->>>>>>> upstream-releases
 
 #ifdef XML_DTD
   if (!context)
@@ -2162,7 +1919,6 @@ XML_Parse(XML_Parser parser, const char *s, int len, int isFinal)
     nLeftOver = s + len - end;
     if (nLeftOver) {
       if (buffer == NULL || nLeftOver > bufferLim - buffer) {
-<<<<<<< HEAD
         /* avoid _signed_ integer overflow */
         char *temp = NULL;
         const int bytesToAllocate = (int)((unsigned)len * 2U);
@@ -2171,46 +1927,6 @@ XML_Parse(XML_Parser parser, const char *s, int len, int isFinal)
                 ? (char *)MALLOC(bytesToAllocate)
                 : (char *)REALLOC(buffer, bytesToAllocate));
         }
-||||||| merged common ancestors
-/* BEGIN MOZILLA CHANGE (check for overflow) */
-#if 0
-        /* FIXME avoid integer overflow */
-        char *temp;
-        temp = (buffer == NULL
-                ? (char *)MALLOC(len * 2)
-                : (char *)REALLOC(buffer, len * 2));
-        if (temp == NULL) {
-          errorCode = XML_ERROR_NO_MEMORY;
-          return XML_STATUS_ERROR;
-        }
-        buffer = temp;
-        if (!buffer) {
-          errorCode = XML_ERROR_NO_MEMORY;
-          eventPtr = eventEndPtr = NULL;
-          processor = errorProcessor;
-          return XML_STATUS_ERROR;
-        }
-        bufferLim = buffer + len * 2;
-#else
-        char *temp;
-        int newLen = len * 2;
-        if (newLen < 0) {
-          errorCode = XML_ERROR_NO_MEMORY;
-          return XML_STATUS_ERROR;
-        }
-        temp = (buffer == NULL
-                ? (char *)MALLOC(newLen)
-                : (char *)REALLOC(buffer, newLen));
-=======
-        /* avoid _signed_ integer overflow */
-        char *temp = NULL;
-        const int bytesToAllocate = (int)((unsigned)len * 2U);
-        if (bytesToAllocate > 0) {
-          temp = (buffer == NULL
-                ? (char *)MALLOC(bytesToAllocate)
-                : (char *)REALLOC(buffer, bytesToAllocate));
-        }
->>>>>>> upstream-releases
         if (temp == NULL) {
           errorCode = XML_ERROR_NO_MEMORY;
           eventPtr = eventEndPtr = NULL;

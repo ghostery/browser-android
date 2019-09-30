@@ -21,16 +21,8 @@ public:
                                                 MTLTextureDescriptor*,
                                                 GrMipMapsStatus);
 
-<<<<<<< HEAD
-    static sk_sp<GrMtlTexture> MakeWrappedTexture(GrMtlGpu*, const GrSurfaceDesc&,
-                                                  id<MTLTexture>);
-||||||| merged common ancestors
-    static sk_sp<GrMtlTexture> MakeWrappedTexture(GrMtlGpu*, const GrSurfaceDesc&,
-                                                  GrWrapOwnership);
-=======
     static sk_sp<GrMtlTexture> MakeWrappedTexture(GrMtlGpu*, const GrSurfaceDesc&, id<MTLTexture>,
                                                   GrWrapCacheable, GrIOType);
->>>>>>> upstream-releases
 
     ~GrMtlTexture() override;
 
@@ -64,16 +56,6 @@ protected:
 
 private:
     enum Wrapped { kWrapped };
-<<<<<<< HEAD
-    GrMtlTexture(GrMtlGpu*, SkBudgeted, const GrSurfaceDesc&, id<MTLTexture>,
-                 GrMipMapsStatus);
-
-    GrMtlTexture(GrMtlGpu*, Wrapped, const GrSurfaceDesc&, id<MTLTexture>, GrMipMapsStatus);
-||||||| merged common ancestors
-    GrMtlTexture(GrMtlGpu*, SkBudgeted, const GrSurfaceDesc&, id<MTLTexture>, GrMipMapsStatus);
-   // GrMtlTexture(GrMtlGpu*, Wrapped, const GrSurfaceDesc&, GrMtlImage::Wrapped wrapped);
-=======
->>>>>>> upstream-releases
 
     GrMtlTexture(GrMtlGpu*, SkBudgeted, const GrSurfaceDesc&, id<MTLTexture>,
                  GrMipMapsStatus);

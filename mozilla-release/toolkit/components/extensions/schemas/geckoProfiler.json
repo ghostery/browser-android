@@ -35,19 +35,6 @@
           "stackwalk",
           "tasktracer",
           "threads",
-<<<<<<< HEAD:mozilla-release/browser/components/extensions/schemas/geckoProfiler.json
-          "trackopts",
-          "jstracer"
-        ]
-      },
-      {
-        "id": "supports",
-        "type": "string",
-        "enum": [
-          "windowLength"
-||||||| merged common ancestors
-          "trackopts"
-=======
           "trackopts",
           "jstracer",
           "jsallocations"
@@ -58,7 +45,6 @@
         "type": "string",
         "enum": [
           "windowLength"
->>>>>>> upstream-releases:mozilla-release/toolkit/components/extensions/schemas/geckoProfiler.json
         ]
       }
     ],

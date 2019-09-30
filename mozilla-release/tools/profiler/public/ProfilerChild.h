@@ -41,16 +41,9 @@ class ProfilerChild final : public PProfilerChild,
   mozilla::ipc::IPCResult RecvStop() override;
   mozilla::ipc::IPCResult RecvPause() override;
   mozilla::ipc::IPCResult RecvResume() override;
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvGatherProfile(
-      GatherProfileResolver&& aResolve) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvGatherProfile(GatherProfileResolver&& aResolve) override;
-=======
   mozilla::ipc::IPCResult RecvGatherProfile(
       GatherProfileResolver&& aResolve) override;
   mozilla::ipc::IPCResult RecvClearAllPages() override;
->>>>>>> upstream-releases
 
   void ActorDestroy(ActorDestroyReason aActorDestroyReason) override;
 

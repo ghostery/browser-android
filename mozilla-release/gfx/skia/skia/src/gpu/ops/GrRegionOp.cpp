@@ -21,85 +21,16 @@
 static const int kVertsPerInstance = 4;
 static const int kIndicesPerInstance = 6;
 
-<<<<<<< HEAD
-static sk_sp<GrGeometryProcessor> make_gp(const GrShaderCaps* shaderCaps,
-                                          const SkMatrix& viewMatrix) {
-||||||| merged common ancestors
-static sk_sp<GrGeometryProcessor> make_gp(const SkMatrix& viewMatrix) {
-=======
 static sk_sp<GrGeometryProcessor> make_gp(const GrShaderCaps* shaderCaps,
                                           const SkMatrix& viewMatrix,
                                           bool wideColor) {
->>>>>>> upstream-releases
     using namespace GrDefaultGeoProcFactory;
-<<<<<<< HEAD
-    return GrDefaultGeoProcFactory::Make(shaderCaps, Color::kPremulGrColorAttribute_Type,
-                                         Coverage::kSolid_Type, LocalCoords::kUsePosition_Type,
-                                         viewMatrix);
-||||||| merged common ancestors
-    return GrDefaultGeoProcFactory::Make(Color::kPremulGrColorAttribute_Type, Coverage::kSolid_Type,
-                                         LocalCoords::kUsePosition_Type, viewMatrix);
-=======
     Color::Type colorType =
         wideColor ? Color::kPremulWideColorAttribute_Type : Color::kPremulGrColorAttribute_Type;
     return GrDefaultGeoProcFactory::Make(shaderCaps, colorType, Coverage::kSolid_Type,
                                          LocalCoords::kUsePosition_Type, viewMatrix);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void tesselate_region(intptr_t vertices,
-                             size_t vertexStride,
-                             GrColor color,
-                             const SkRegion& region) {
-    SkRegion::Iterator iter(region);
-
-    intptr_t verts = vertices;
-    while (!iter.done()) {
-        SkRect rect = SkRect::Make(iter.rect());
-        SkPoint* position = (SkPoint*)verts;
-        SkPointPriv::SetRectTriStrip(position, rect, vertexStride);
-
-        static const int kColorOffset = sizeof(SkPoint);
-        GrColor* vertColor = reinterpret_cast<GrColor*>(verts + kColorOffset);
-        for (int i = 0; i < kVertsPerInstance; i++) {
-            *vertColor = color;
-            vertColor = (GrColor*)((intptr_t)vertColor + vertexStride);
-        }
-
-        verts += vertexStride * kVertsPerInstance;
-        iter.next();
-    }
-}
-
-||||||| merged common ancestors
-static void tesselate_region(intptr_t vertices,
-                             size_t vertexStride,
-                             GrColor color,
-                             const SkRegion& region) {
-    SkRegion::Iterator iter(region);
-
-    intptr_t verts = vertices;
-    while (!iter.done()) {
-        SkRect rect = SkRect::Make(iter.rect());
-        SkPoint* position = (SkPoint*)verts;
-        SkPointPriv::SetRectTriStrip(position, rect.fLeft, rect.fTop, rect.fRight, rect.fBottom,
-                vertexStride);
-
-        static const int kColorOffset = sizeof(SkPoint);
-        GrColor* vertColor = reinterpret_cast<GrColor*>(verts + kColorOffset);
-        for (int i = 0; i < kVertsPerInstance; i++) {
-            *vertColor = color;
-            vertColor = (GrColor*)((intptr_t)vertColor + vertexStride);
-        }
-
-        verts += vertexStride * kVertsPerInstance;
-        iter.next();
-    }
-}
-
-=======
->>>>>>> upstream-releases
 namespace {
 
 class RegionOp final : public GrMeshDrawOp {
@@ -109,22 +40,11 @@ private:
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-                                          const SkMatrix& viewMatrix,
-                                          const SkRegion& region,
-                                          GrAAType aaType,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint, const SkMatrix& viewMatrix,
-                                          const SkRegion& region, GrAAType aaType,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
                                           const SkMatrix& viewMatrix,
                                           const SkRegion& region,
                                           GrAAType aaType,
->>>>>>> upstream-releases
                                           const GrUserStencilSettings* stencilSettings = nullptr) {
         return Helper::FactoryHelper<RegionOp>(context, std::move(paint), viewMatrix, region,
                                                aaType, stencilSettings);
@@ -168,44 +88,20 @@ public:
 
     FixedFunctionFlags fixedFunctionFlags() const override { return fHelper.fixedFunctionFlags(); }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, GrProcessorAnalysisCoverage::kNone,
-                                            &fRegions[0].fColor);
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped,
-                                            GrProcessorAnalysisCoverage::kNone, &fRegions[0].fColor);
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
         return fHelper.finalizeProcessors(
                 caps, clip, fsaaType, GrProcessorAnalysisCoverage::kNone, &fRegions[0].fColor);
->>>>>>> upstream-releases
     }
 
 private:
     void onPrepareDraws(Target* target) override {
-<<<<<<< HEAD
-        sk_sp<GrGeometryProcessor> gp = make_gp(target->caps().shaderCaps(), fViewMatrix);
-||||||| merged common ancestors
-        sk_sp<GrGeometryProcessor> gp = make_gp(fViewMatrix);
-=======
         sk_sp<GrGeometryProcessor> gp = make_gp(target->caps().shaderCaps(), fViewMatrix,
                                                 fWideColor);
->>>>>>> upstream-releases
         if (!gp) {
             SkDebugf("Couldn't create GrGeometryProcessor\n");
             return;
         }
-<<<<<<< HEAD
-        static constexpr size_t kVertexStride = sizeof(GrDefaultGeoProcFactory::PositionColorAttr);
-        SkASSERT(kVertexStride == gp->debugOnly_vertexStride());
-||||||| merged common ancestors
-        SkASSERT(gp->getVertexStride() == sizeof(GrDefaultGeoProcFactory::PositionColorAttr));
-=======
->>>>>>> upstream-releases
 
         int numRegions = fRegions.count();
         int numRects = 0;
@@ -216,21 +112,6 @@ private:
         if (!numRects) {
             return;
         }
-<<<<<<< HEAD
-        sk_sp<const GrBuffer> indexBuffer = target->resourceProvider()->refQuadIndexBuffer();
-        PatternHelper helper(target, GrPrimitiveType::kTriangles, kVertexStride, indexBuffer.get(),
-                             kVertsPerInstance, kIndicesPerInstance, numRects);
-        void* vertices = helper.vertices();
-        if (!vertices || !indexBuffer) {
-||||||| merged common ancestors
-        size_t vertexStride = gp->getVertexStride();
-        sk_sp<const GrBuffer> indexBuffer = target->resourceProvider()->refQuadIndexBuffer();
-        PatternHelper helper(GrPrimitiveType::kTriangles);
-        void* vertices =
-                helper.init(target, vertexStride, indexBuffer.get(), kVertsPerInstance,
-                            kIndicesPerInstance, numRects);
-        if (!vertices || !indexBuffer) {
-=======
         sk_sp<const GrGpuBuffer> indexBuffer = target->resourceProvider()->refQuadIndexBuffer();
         if (!indexBuffer) {
             SkDebugf("Could not allocate indices\n");
@@ -241,21 +122,11 @@ private:
                              numRects);
         GrVertexWriter vertices{helper.vertices()};
         if (!vertices.fPtr) {
->>>>>>> upstream-releases
             SkDebugf("Could not allocate vertices\n");
             return;
         }
 
         for (int i = 0; i < numRegions; i++) {
-<<<<<<< HEAD
-            tesselate_region(verts, kVertexStride, fRegions[i].fColor, fRegions[i].fRegion);
-            int numRectsInRegion = fRegions[i].fRegion.computeRegionComplexity();
-            verts += numRectsInRegion * kVertsPerInstance * kVertexStride;
-||||||| merged common ancestors
-            tesselate_region(verts, vertexStride, fRegions[i].fColor, fRegions[i].fRegion);
-            int numRectsInRegion = fRegions[i].fRegion.computeRegionComplexity();
-            verts += numRectsInRegion * kVertsPerInstance * vertexStride;
-=======
             GrVertexColor color(fRegions[i].fColor, fWideColor);
             SkRegion::Iterator iter(fRegions[i].fRegion);
             while (!iter.done()) {
@@ -263,20 +134,12 @@ private:
                 vertices.writeQuad(GrVertexWriter::TriStripFromRect(rect), color);
                 iter.next();
             }
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        auto pipe = fHelper.makePipeline(target);
-        helper.recordDraw(target, std::move(gp), pipe.fPipeline, pipe.fFixedDynamicState);
-||||||| merged common ancestors
-        helper.recordDraw(target, gp.get(), fHelper.makePipeline(target));
-=======
         helper.recordDraw(target, std::move(gp));
     }
 
     void onExecute(GrOpFlushState* flushState, const SkRect& chainBounds) override {
         fHelper.executeDrawsAndUploads(this, flushState, chainBounds);
->>>>>>> upstream-releases
     }
 
     CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
@@ -290,16 +153,8 @@ private:
         }
 
         fRegions.push_back_n(that->fRegions.count(), that->fRegions.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
-        return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
         fWideColor |= that->fWideColor;
         return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     struct RegionInfo {
@@ -319,24 +174,12 @@ private:
 
 namespace GrRegionOp {
 
-<<<<<<< HEAD
-std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                               GrPaint&& paint,
-                               const SkMatrix& viewMatrix,
-                               const SkRegion& region,
-                               GrAAType aaType,
-                               const GrUserStencilSettings* stencilSettings) {
-||||||| merged common ancestors
-std::unique_ptr<GrDrawOp> Make(GrPaint&& paint, const SkMatrix& viewMatrix, const SkRegion& region,
-                               GrAAType aaType, const GrUserStencilSettings* stencilSettings) {
-=======
 std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                GrPaint&& paint,
                                const SkMatrix& viewMatrix,
                                const SkRegion& region,
                                GrAAType aaType,
                                const GrUserStencilSettings* stencilSettings) {
->>>>>>> upstream-releases
     if (aaType != GrAAType::kNone && aaType != GrAAType::kMSAA) {
         return nullptr;
     }

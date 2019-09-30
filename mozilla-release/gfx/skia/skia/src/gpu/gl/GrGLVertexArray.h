@@ -79,16 +79,9 @@ private:
         }
 
         GrGpuResource::UniqueID   fVertexBufferUniqueID;
-<<<<<<< HEAD
-        GrVertexAttribType        fCPUType;
-        GrSLType                  fGPUType;
-||||||| merged common ancestors
-        GrVertexAttribType        fType;
-=======
         bool                      fUsingCpuBuffer;
         GrVertexAttribType        fCPUType;
         GrSLType                  fGPUType;
->>>>>>> upstream-releases
         GrGLsizei                 fStride;
         const GrGLvoid*           fOffset;
         int                       fDivisor;

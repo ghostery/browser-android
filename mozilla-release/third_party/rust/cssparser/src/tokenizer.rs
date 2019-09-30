@@ -248,21 +248,9 @@ impl<'a> Tokenizer<'a> {
 
     #[inline]
     pub fn see_function(&mut self, name: &str) {
-<<<<<<< HEAD
-        if self.var_or_env_functions == SeenStatus::LookingForThem {
-            if name.eq_ignore_ascii_case("var") ||
-                name.eq_ignore_ascii_case("env")
-            {
-                self.var_or_env_functions = SeenStatus::SeenAtLeastOne;
-||||||| merged common ancestors
-        if self.var_functions == SeenStatus::LookingForThem {
-            if name.eq_ignore_ascii_case("var") {
-                self.var_functions = SeenStatus::SeenAtLeastOne;
-=======
         if self.var_or_env_functions == SeenStatus::LookingForThem {
             if name.eq_ignore_ascii_case("var") || name.eq_ignore_ascii_case("env") {
                 self.var_or_env_functions = SeenStatus::SeenAtLeastOne;
->>>>>>> upstream-releases
             }
         }
     }

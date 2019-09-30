@@ -35,9 +35,6 @@ NTSTATUS NTAPI NtQueryFullAttributesFile(POBJECT_ATTRIBUTES, PVOID);
 NTSTATUS NTAPI LdrLoadDll(PWCHAR filePath, PULONG flags,
                           PUNICODE_STRING moduleFileName, PHANDLE handle);
 NTSTATUS NTAPI LdrUnloadDll(HMODULE);
-<<<<<<< HEAD
-
-enum SECTION_INHERIT { ViewShare = 1, ViewUnmap = 2 };
 
 NTSTATUS NTAPI NtMapViewOfSection(
     HANDLE aSection, HANDLE aProcess, PVOID* aBaseAddress, ULONG_PTR aZeroBits,
@@ -45,34 +42,14 @@ NTSTATUS NTAPI NtMapViewOfSection(
     SECTION_INHERIT aInheritDisposition, ULONG aAllocationType,
     ULONG aProtectionFlags);
 
-||||||| merged common ancestors
-=======
-
-NTSTATUS NTAPI NtMapViewOfSection(
-    HANDLE aSection, HANDLE aProcess, PVOID* aBaseAddress, ULONG_PTR aZeroBits,
-    SIZE_T aCommitSize, PLARGE_INTEGER aSectionOffset, PSIZE_T aViewSize,
-    SECTION_INHERIT aInheritDisposition, ULONG aAllocationType,
-    ULONG aProtectionFlags);
-
->>>>>>> upstream-releases
 // These pointers are disguised as PVOID to avoid pulling in obscure headers
 PVOID NTAPI LdrResolveDelayLoadedAPI(PVOID, PVOID, PVOID, PVOID, PVOID, ULONG);
-<<<<<<< HEAD
-void CALLBACK ProcessCaretEvents(HWINEVENTHOOK, DWORD, HWND, LONG, LONG, DWORD,
-                                 DWORD);
-void __fastcall BaseThreadInitThunk(BOOL aIsInitialThread, void* aStartAddress,
-                                    void* aThreadParam);
-||||||| merged common ancestors
-void CALLBACK ProcessCaretEvents(HWINEVENTHOOK, DWORD, HWND, LONG, LONG, DWORD, DWORD);
-void __fastcall BaseThreadInitThunk(BOOL aIsInitialThread, void* aStartAddress, void* aThreadParam);
-=======
 void CALLBACK ProcessCaretEvents(HWINEVENTHOOK, DWORD, HWND, LONG, LONG, DWORD,
                                  DWORD);
 void __fastcall BaseThreadInitThunk(BOOL aIsInitialThread, void* aStartAddress,
                                     void* aThreadParam);
 
 BOOL WINAPI ApiSetQueryApiSetPresence(PCUNICODE_STRING, PBOOLEAN);
->>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -106,90 +83,13 @@ static payload patched_rotatePayload(payload p) {
 }
 
 // Invoke aFunc by taking aArg's contents and using them as aFunc's arguments
-<<<<<<< HEAD
-template <typename CallableT, typename... Args,
-          typename ArgTuple = Tuple<Args...>, size_t... Indices>
-decltype(auto) Apply(CallableT&& aFunc, ArgTuple&& aArgs,
-                     std::index_sequence<Indices...>) {
-  return std::forward<CallableT>(aFunc)(
-      Get<Indices>(std::forward<ArgTuple>(aArgs))...);
-||||||| merged common ancestors
-template <typename CallableT, typename... Args, typename ArgTuple = Tuple<Args...>, size_t... Indices>
-decltype(auto) Apply(CallableT&& aFunc, ArgTuple&& aArgs, std::index_sequence<Indices...>)
-{
-  return std::forward<CallableT>(aFunc)(Get<Indices>(std::forward<ArgTuple>(aArgs))...);
-=======
 template <typename OrigFuncT, typename... Args,
           typename ArgTuple = Tuple<Args...>, size_t... Indices>
 decltype(auto) Apply(OrigFuncT& aFunc, ArgTuple&& aArgs,
                      std::index_sequence<Indices...>) {
   return aFunc(Get<Indices>(std::forward<ArgTuple>(aArgs))...);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename CallableT>
-bool TestFunction(CallableT aFunc);
-
-#define DEFINE_TEST_FUNCTION(calling_convention)                               \
-  template <template <typename I, typename F> class FuncHookT,                 \
-            typename InterceptorT, typename R, typename... Args,               \
-            typename... TestArgs>                                              \
-  bool TestFunction(                                                           \
-      FuncHookT<InterceptorT, R(calling_convention*)(Args...)>&& aFunc,        \
-      bool (*aPred)(R), TestArgs... aArgs) {                                   \
-    using FuncHookType =                                                       \
-        FuncHookT<InterceptorT, R(calling_convention*)(Args...)>;              \
-    using ArgTuple = Tuple<Args...>;                                           \
-    using Indices = std::index_sequence_for<Args...>;                          \
-    ArgTuple fakeArgs{std::forward<TestArgs>(aArgs)...};                       \
-    return aPred(Apply(std::forward<FuncHookType>(aFunc),                      \
-                       std::forward<ArgTuple>(fakeArgs), Indices()));          \
-  }                                                                            \
-                                                                               \
-  /* Specialization for functions returning void */                            \
-  template <template <typename I, typename F> class FuncHookT,                 \
-            typename InterceptorT, typename... Args, typename PredicateT,      \
-            typename... TestArgs>                                              \
-  bool TestFunction(                                                           \
-      FuncHookT<InterceptorT, void(calling_convention*)(Args...)>&& aFunc,     \
-      PredicateT&& aPred, TestArgs... aArgs) {                                 \
-    using FuncHookType =                                                       \
-        FuncHookT<InterceptorT, void(calling_convention*)(Args...)>;           \
-    using ArgTuple = Tuple<Args...>;                                           \
-    using Indices = std::index_sequence_for<Args...>;                          \
-    ArgTuple fakeArgs{std::forward<TestArgs>(aArgs)...};                       \
-    Apply(std::forward<FuncHookType>(aFunc), std::forward<ArgTuple>(fakeArgs), \
-          Indices());                                                          \
-    return true;                                                               \
-||||||| merged common ancestors
-template <typename CallableT>
-bool TestFunction(CallableT aFunc);
-
-#define DEFINE_TEST_FUNCTION(calling_convention) \
-  template <typename R, typename... Args, typename... TestArgs> \
-  bool TestFunction(WindowsDllInterceptor::FuncHookType<R (calling_convention *)(Args...)>&& aFunc, \
-                    bool (* aPred)(R), TestArgs... aArgs) \
-  { \
-    using FuncHookType = WindowsDllInterceptor::FuncHookType<R (calling_convention *)(Args...)>; \
-    using ArgTuple = Tuple<Args...>; \
-    using Indices = std::index_sequence_for<Args...>; \
-    ArgTuple fakeArgs{ std::forward<TestArgs>(aArgs)... }; \
-    return aPred(Apply(std::forward<FuncHookType>(aFunc), std::forward<ArgTuple>(fakeArgs), Indices())); \
-  } \
-  \
-  /* Specialization for functions returning void */ \
-  template <typename... Args, typename PredicateT, typename... TestArgs> \
-  bool TestFunction(WindowsDllInterceptor::FuncHookType<void (calling_convention *)(Args...)>&& aFunc, \
-                    PredicateT&& aPred, TestArgs... aArgs) \
-  { \
-    using FuncHookType = WindowsDllInterceptor::FuncHookType<void (calling_convention *)(Args...)>; \
-    using ArgTuple = Tuple<Args...>; \
-    using Indices = std::index_sequence_for<Args...>; \
-    ArgTuple fakeArgs{ std::forward<TestArgs>(aArgs)... }; \
-    Apply(std::forward<FuncHookType>(aFunc), std::forward<ArgTuple>(fakeArgs), Indices()); \
-    return true; \
-=======
 #define DEFINE_TEST_FUNCTION(calling_convention)                               \
   template <typename R, typename... Args, typename... TestArgs>                \
   bool TestFunction(R(calling_convention* aFunc)(Args...), bool (*aPred)(R),   \
@@ -212,7 +112,6 @@ bool TestFunction(CallableT aFunc);
     patched_func_called = false;                                               \
     Apply(aFunc, std::forward<ArgTuple>(fakeArgs), Indices());                 \
     return patched_func_called;                                                \
->>>>>>> upstream-releases
   }
 
 // C++11 allows empty arguments to macros. clang works just fine. MSVC does the
@@ -230,25 +129,6 @@ DEFINE_TEST_FUNCTION(__fastcall)
 
 // Test the hooked function against the supplied predicate
 template <typename OrigFuncT, typename PredicateT, typename... Args>
-<<<<<<< HEAD
-bool CheckHook(OrigFuncT& aOrigFunc, const char* aDllName,
-               const char* aFuncName, PredicateT&& aPred, Args... aArgs) {
-  if (TestFunction(std::forward<OrigFuncT>(aOrigFunc),
-                   std::forward<PredicateT>(aPred),
-                   std::forward<Args>(aArgs)...)) {
-    printf(
-        "TEST-PASS | WindowsDllInterceptor | "
-        "Executed hooked function %s from %s\n",
-        aFuncName, aDllName);
-||||||| merged common ancestors
-bool CheckHook(WindowsDllInterceptor::FuncHookType<OrigFuncT> &aOrigFunc,
-               const char* aDllName, const char* aFuncName, PredicateT&& aPred,
-               Args... aArgs)
-{
-  if (TestFunction(std::forward<WindowsDllInterceptor::FuncHookType<OrigFuncT>>(aOrigFunc), std::forward<PredicateT>(aPred), std::forward<Args>(aArgs)...)) {
-    printf("TEST-PASS | WindowsDllInterceptor | "
-           "Executed hooked function %s from %s\n", aFuncName, aDllName);
-=======
 bool CheckHook(OrigFuncT& aOrigFunc, const char* aDllName,
                const char* aFuncName, PredicateT&& aPred, Args... aArgs) {
   if (TestFunction(aOrigFunc, std::forward<PredicateT>(aPred),
@@ -257,7 +137,6 @@ bool CheckHook(OrigFuncT& aOrigFunc, const char* aDllName,
         "TEST-PASS | WindowsDllInterceptor | "
         "Executed hooked function %s from %s\n",
         aFuncName, aDllName);
->>>>>>> upstream-releases
     return true;
   }
   printf(
@@ -391,16 +270,9 @@ bool TestHook(const char (&dll)[N], const char* func, PredicateT&& aPred,
       reinterpret_cast<OrigFuncT>(interceptorFunc.GetFunction()));
 
   if (successful) {
-<<<<<<< HEAD
-    printf("TEST-PASS | WindowsDllInterceptor | Could hook %s from %s\n", func,
-           dll);
-||||||| merged common ancestors
-    printf("TEST-PASS | WindowsDllInterceptor | Could hook %s from %s\n", func, dll);
-=======
     interceptorFunc.SetStub(reinterpret_cast<uintptr_t>(orig_func->GetStub()));
     printf("TEST-PASS | WindowsDllInterceptor | Could hook %s from %s\n", func,
            dll);
->>>>>>> upstream-releases
     if (!aPred) {
       printf(
           "TEST-SKIPPED | WindowsDllInterceptor | "
@@ -409,12 +281,6 @@ bool TestHook(const char (&dll)[N], const char* func, PredicateT&& aPred,
       return true;
     }
 
-<<<<<<< HEAD
-    return CheckHook(*orig_func, dll, func, std::forward<PredicateT>(aPred),
-                     std::forward<Args>(aArgs)...);
-||||||| merged common ancestors
-    return CheckHook(*orig_func, dll, func, std::forward<PredicateT>(aPred), std::forward<Args>(aArgs)...);
-=======
     // Test the DLL function we just hooked.
     HMODULE module = ::LoadLibrary(dll);
     FARPROC funcAddr = ::GetProcAddress(module, func);
@@ -425,16 +291,7 @@ bool TestHook(const char (&dll)[N], const char* func, PredicateT&& aPred,
     return CheckHook(reinterpret_cast<OrigFuncT&>(funcAddr), dll, func,
                      std::forward<PredicateT>(aPred),
                      std::forward<Args>(aArgs)...);
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    printf(
-        "TEST-UNEXPECTED-FAIL | WindowsDllInterceptor | Failed to hook %s from "
-        "%s\n",
-        func, dll);
-||||||| merged common ancestors
-    printf("TEST-UNEXPECTED-FAIL | WindowsDllInterceptor | Failed to hook %s from %s\n", func, dll);
-=======
     printf(
         "TEST-UNEXPECTED-FAIL | WindowsDllInterceptor | Failed to hook %s from "
         "%s\n",
@@ -464,7 +321,6 @@ bool TestHook(const char (&dll)[N], const char* func, PredicateT&& aPred,
         printf("%02hhX%c", code[i], suffix);
       }
     }
->>>>>>> upstream-releases
     return false;
   }
 }
@@ -485,16 +341,9 @@ bool TestDetour(const char (&dll)[N], const char* func, PredicateT&& aPred) {
       reinterpret_cast<OrigFuncT>(interceptorFunc.GetFunction()));
 
   if (successful) {
-<<<<<<< HEAD
-    printf("TEST-PASS | WindowsDllInterceptor | Could detour %s from %s\n",
-           func, dll);
-||||||| merged common ancestors
-    printf("TEST-PASS | WindowsDllInterceptor | Could detour %s from %s\n", func, dll);
-=======
     interceptorFunc.SetStub(reinterpret_cast<uintptr_t>(orig_func->GetStub()));
     printf("TEST-PASS | WindowsDllInterceptor | Could detour %s from %s\n",
            func, dll);
->>>>>>> upstream-releases
     if (!aPred) {
       printf(
           "TEST-SKIPPED | WindowsDllInterceptor | "
@@ -624,112 +473,51 @@ struct Predicates<void(__fastcall*)(Args...)> {
 // Note: When |func| returns void, you must supply |Ignore| and |nullptr| as the
 // |pred| and |comp| arguments, respectively.
 #define TEST_HOOK(dll, func, pred, comp) \
-<<<<<<< HEAD
-  TestHook<decltype(&func)>(#dll, #func, \
-                            &Predicates<decltype(&func)>::pred<comp>)
-||||||| merged common ancestors
-  TestHook<decltype(&func)>(#dll, #func, &Predicates<decltype(&func)>::pred<comp>)
-=======
   TestHook<decltype(&func)>(dll, #func,  \
                             &Predicates<decltype(&func)>::pred<comp>)
->>>>>>> upstream-releases
 
 // We need to special-case functions that return INVALID_HANDLE_VALUE
 // (ie, CreateFile). Our template machinery for comparing values doesn't work
 // with integer constants passed as pointers (well, it works on MSVC, but not
 // clang, because that is not standard-compliant).
-<<<<<<< HEAD
-#define TEST_HOOK_FOR_INVALID_HANDLE_VALUE(dll, func)                   \
-  TestHook<SubstituteForVoidPtr<decltype(&func)>::Type>(                \
-      #dll, #func,                                                      \
-      &Predicates<SubstituteForVoidPtr<decltype(&func)>::Type>::Equals< \
-          uintptr_t(-1)>)
-||||||| merged common ancestors
-#define TEST_HOOK_FOR_INVALID_HANDLE_VALUE(dll, func) \
-  TestHook<SubstituteForVoidPtr<decltype(&func)>::Type>(#dll, #func, &Predicates<SubstituteForVoidPtr<decltype(&func)>::Type>::Equals<uintptr_t(-1)>)
-=======
 #define TEST_HOOK_FOR_INVALID_HANDLE_VALUE(dll, func)                   \
   TestHook<SubstituteForVoidPtr<decltype(&func)>::Type>(                \
       dll, #func,                                                       \
       &Predicates<SubstituteForVoidPtr<decltype(&func)>::Type>::Equals< \
           uintptr_t(-1)>)
->>>>>>> upstream-releases
 
 // This variant allows you to explicitly supply arguments to the hooked function
 // during testing. You want to provide arguments that produce the conditions
 // that induce the function to return a value that is accepted by your
 // predicate.
 #define TEST_HOOK_PARAMS(dll, func, pred, comp, ...) \
-<<<<<<< HEAD
-  TestHook<decltype(&func)>(                         \
-      #dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
-||||||| merged common ancestors
-  TestHook<decltype(&func)>(#dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
-=======
   TestHook<decltype(&func)>(                         \
       dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
->>>>>>> upstream-releases
 
 // This is for cases when we want to hook |func|, but it is unsafe to attempt
 // to execute the function in the context of a test.
-<<<<<<< HEAD
-#define TEST_HOOK_SKIP_EXEC(dll, func)                                        \
-  TestHook<decltype(&func)>(                                                  \
-      #dll, #func,                                                            \
-      reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>( \
-          NULL))
-||||||| merged common ancestors
-#define TEST_HOOK_SKIP_EXEC(dll, func) \
-  TestHook<decltype(&func)>(#dll, #func, reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>(NULL))
-=======
 #define TEST_HOOK_SKIP_EXEC(dll, func)                                        \
   TestHook<decltype(&func)>(                                                  \
       dll, #func,                                                             \
       reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>( \
           NULL))
->>>>>>> upstream-releases
 
 // The following three variants are identical to the previous macros,
 // however the forcibly use a Detour on 32-bit Windows. On 64-bit Windows,
 // these macros are identical to their TEST_HOOK variants.
 #define TEST_DETOUR(dll, func, pred, comp) \
-<<<<<<< HEAD
-  TestDetour<decltype(&func)>(#dll, #func, \
-                              &Predicates<decltype(&func)>::pred<comp>)
-||||||| merged common ancestors
-  TestDetour<decltype(&func)>(#dll, #func, &Predicates<decltype(&func)>::pred<comp>)
-=======
   TestDetour<decltype(&func)>(dll, #func,  \
                               &Predicates<decltype(&func)>::pred<comp>)
->>>>>>> upstream-releases
 
 #define TEST_DETOUR_PARAMS(dll, func, pred, comp, ...) \
-<<<<<<< HEAD
-  TestDetour<decltype(&func)>(                         \
-      #dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
-||||||| merged common ancestors
-  TestDetour<decltype(&func)>(#dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
-=======
   TestDetour<decltype(&func)>(                         \
       dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define TEST_DETOUR_SKIP_EXEC(dll, func)                                      \
-  TestDetour<decltype(&func)>(                                                \
-      #dll, #func,                                                            \
-      reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>( \
-          NULL))
-||||||| merged common ancestors
-#define TEST_DETOUR_SKIP_EXEC(dll, func) \
-  TestDetour<decltype(&func)>(#dll, #func, reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>(NULL))
-=======
 #define TEST_DETOUR_SKIP_EXEC(dll, func)                                      \
   TestDetour<decltype(&func)>(                                                \
       dll, #func,                                                             \
       reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>( \
           NULL))
->>>>>>> upstream-releases
 
 template <typename OrigFuncT, size_t N, typename PredicateT, typename... Args>
 bool MaybeTestHook(const bool cond, const char (&dll)[N], const char* func,
@@ -748,72 +536,26 @@ bool MaybeTestHook(const bool cond, const char (&dll)[N], const char* func,
 
 // Like TEST_HOOK, but the test is only executed when cond is true.
 #define MAYBE_TEST_HOOK(cond, dll, func, pred, comp) \
-<<<<<<< HEAD
-  MaybeTestHook<decltype(&func)>(cond, #dll, #func,  \
-                                 &Predicates<decltype(&func)>::pred<comp>)
-||||||| merged common ancestors
-  MaybeTestHook<decltype(&func)>(cond, #dll, #func, &Predicates<decltype(&func)>::pred<comp>)
-=======
   MaybeTestHook<decltype(&func)>(cond, dll, #func,   \
                                  &Predicates<decltype(&func)>::pred<comp>)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define MAYBE_TEST_HOOK_PARAMS(cond, dll, func, pred, comp, ...)           \
-  MaybeTestHook<decltype(&func)>(cond, #dll, #func,                        \
-                                 &Predicates<decltype(&func)>::pred<comp>, \
-                                 __VA_ARGS__)
-||||||| merged common ancestors
-#define MAYBE_TEST_HOOK_PARAMS(cond, dll, func, pred, comp, ...) \
-  MaybeTestHook<decltype(&func)>(cond, #dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
-=======
 #define MAYBE_TEST_HOOK_PARAMS(cond, dll, func, pred, comp, ...) \
   MaybeTestHook<decltype(&func)>(                                \
       cond, dll, #func, &Predicates<decltype(&func)>::pred<comp>, __VA_ARGS__)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define MAYBE_TEST_HOOK_SKIP_EXEC(cond, dll, func)                            \
-  MaybeTestHook<decltype(&func)>(                                             \
-      cond, #dll, #func,                                                      \
-      reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>( \
-          NULL))
-||||||| merged common ancestors
-#define MAYBE_TEST_HOOK_SKIP_EXEC(cond, dll, func) \
-  MaybeTestHook<decltype(&func)>(cond, #dll, #func, reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>(NULL))
-=======
 #define MAYBE_TEST_HOOK_SKIP_EXEC(cond, dll, func)                            \
   MaybeTestHook<decltype(&func)>(                                             \
       cond, dll, #func,                                                       \
       reinterpret_cast<bool (*)(typename ReturnType<decltype(&func)>::Type)>( \
           NULL))
->>>>>>> upstream-releases
 
 bool ShouldTestTipTsf() {
   if (!IsWin8OrLater()) {
     return false;
   }
 
-<<<<<<< HEAD
-  nsModuleHandle shell32(LoadLibraryW(L"shell32.dll"));
-  if (!shell32) {
-    return true;
-  }
-
-  auto pSHGetKnownFolderPath =
-      reinterpret_cast<decltype(&SHGetKnownFolderPath)>(
-          GetProcAddress(shell32, "SHGetKnownFolderPath"));
-||||||| merged common ancestors
-  nsModuleHandle shell32(LoadLibraryW(L"shell32.dll"));
-  if (!shell32) {
-    return true;
-  }
-
-  auto pSHGetKnownFolderPath = reinterpret_cast<decltype(&SHGetKnownFolderPath)>(GetProcAddress(shell32, "SHGetKnownFolderPath"));
-=======
   mozilla::DynamicallyLinkedFunctionPtr<decltype(&SHGetKnownFolderPath)>
       pSHGetKnownFolderPath(L"shell32.dll", "SHGetKnownFolderPath");
->>>>>>> upstream-releases
   if (!pSHGetKnownFolderPath) {
     return false;
   }
@@ -837,82 +579,6 @@ bool ShouldTestTipTsf() {
   return true;
 }
 
-<<<<<<< HEAD
-#if defined(_M_X64)
-
-// Use VMSharingPolicyUnique for the TenByteInterceptor, as it needs to
-// reserve its trampoline memory in a special location.
-using TenByteInterceptor = mozilla::interceptor::WindowsDllInterceptor<
-    mozilla::interceptor::VMSharingPolicyUnique<
-        mozilla::interceptor::MMPolicyInProcess,
-        mozilla::interceptor::kDefaultTrampolineSize>>;
-
-static TenByteInterceptor::FuncHookType<decltype(&::NtMapViewOfSection)>
-    orig_NtMapViewOfSection;
-
-#endif  // defined(_M_X64)
-
-bool TestTenByteDetour() {
-#if defined(_M_X64)
-  auto pNtMapViewOfSection = reinterpret_cast<decltype(&::NtMapViewOfSection)>(
-      ::GetProcAddress(::GetModuleHandleW(L"ntdll.dll"), "NtMapViewOfSection"));
-  if (!pNtMapViewOfSection) {
-    printf(
-        "TEST-FAILED | WindowsDllInterceptor | "
-        "Failed to resolve ntdll!NtMapViewOfSection\n");
-    return false;
-  }
-
-  {  // Scope for tenByteInterceptor
-    TenByteInterceptor tenByteInterceptor;
-    tenByteInterceptor.TestOnlyDetourInit(
-        L"ntdll.dll",
-        mozilla::interceptor::DetourFlags::eTestOnlyForce10BytePatch);
-    if (!orig_NtMapViewOfSection.SetDetour(tenByteInterceptor,
-                                           "NtMapViewOfSection", nullptr)) {
-      printf(
-          "TEST-FAILED | WindowsDllInterceptor | "
-          "Failed to hook ntdll!NtMapViewOfSection via 10-byte patch\n");
-      return false;
-    }
-
-    auto pred =
-        &Predicates<decltype(&::NtMapViewOfSection)>::Ignore<((NTSTATUS)0)>;
-
-    if (!CheckHook(orig_NtMapViewOfSection, "ntdll.dll", "NtMapViewOfSection",
-                   pred)) {
-      // CheckHook has already printed the error message for us
-      return false;
-    }
-  }
-
-  // Now ensure that our hook cleanup worked
-  NTSTATUS status =
-      pNtMapViewOfSection(nullptr, nullptr, nullptr, 0, 0, nullptr, nullptr,
-                          ((SECTION_INHERIT)0), 0, 0);
-  if (NT_SUCCESS(status)) {
-    printf(
-        "TEST-FAILED | WindowsDllInterceptor | "
-        "Unexpected successful call to ntdll!NtMapViewOfSection after removing "
-        "10-byte hook\n");
-    return false;
-  }
-
-  printf(
-      "TEST-PASS | WindowsDllInterceptor | "
-      "Successfully unhooked ntdll!NtMapViewOfSection via 10-byte patch\n");
-  return true;
-#else
-  return true;
-#endif
-}
-
-extern "C" int wmain(int argc, wchar_t* argv[]) {
-||||||| merged common ancestors
-extern "C"
-int wmain(int argc, wchar_t* argv[])
-{
-=======
 static const wchar_t gEmptyUnicodeStringLiteral[] = L"";
 static UNICODE_STRING gEmptyUnicodeString;
 static BOOLEAN gIsPresent;
@@ -1012,7 +678,6 @@ bool TestShortDetour() {
 }
 
 extern "C" int wmain(int argc, wchar_t* argv[]) {
->>>>>>> upstream-releases
   LARGE_INTEGER start;
   QueryPerformanceCounter(&start);
 
@@ -1066,34 +731,16 @@ extern "C" int wmain(int argc, wchar_t* argv[]) {
 
   p1 = rotatePayload(initial);
 
-<<<<<<< HEAD
-  if (!patched_func_called) {
-    printf(
-        "TEST-PASS | WindowsDllInterceptor | Hook was not called after "
-        "unregistration\n");
-||||||| merged common ancestors
-  if (!patched_func_called) {
-    printf("TEST-PASS | WindowsDllInterceptor | Hook was not called after unregistration\n");
-=======
   if (ShouldTestUnhookFunction != patched_func_called) {
     printf(
         "TEST-PASS | WindowsDllInterceptor | Hook was %scalled after "
         "unregistration\n",
         ShouldTestUnhookFunction ? "not " : "");
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    printf(
-        "TEST-UNEXPECTED-FAIL | WindowsDllInterceptor | Hook was still called "
-        "after unregistration\n");
-||||||| merged common ancestors
-    printf("TEST-UNEXPECTED-FAIL | WindowsDllInterceptor | Hook was still called after unregistration\n");
-=======
     printf(
         "TEST-UNEXPECTED-FAIL | WindowsDllInterceptor | Hook was %scalled "
         "after unregistration\n",
         ShouldTestUnhookFunction ? "" : "not ");
->>>>>>> upstream-releases
     return 1;
   }
 
@@ -1134,62 +781,14 @@ extern "C" int wmain(int argc, wchar_t* argv[]) {
 #if !defined(_M_ARM64)
 #  ifndef MOZ_ASAN
       // Bug 733892: toolkit/crashreporter/nsExceptionHandler.cpp
-<<<<<<< HEAD
-      // This fails on ASan because the ASan runtime already hooked this
-      // function
-      TEST_HOOK(kernel32.dll, SetUnhandledExceptionFilter, Ignore, nullptr) &&
-#endif
-||||||| merged common ancestors
-      // This fails on ASan because the ASan runtime already hooked this function
-      TEST_HOOK(kernel32.dll, SetUnhandledExceptionFilter, Ignore, nullptr) &&
-#endif
-=======
       // This fails on ASan because the ASan runtime already hooked this
       // function
       TEST_HOOK("kernel32.dll", SetUnhandledExceptionFilter, Ignore, nullptr) &&
 #  endif
 #endif  // !defined(_M_ARM64)
->>>>>>> upstream-releases
 #ifdef _M_IX86
       TEST_HOOK_FOR_INVALID_HANDLE_VALUE("kernel32.dll", CreateFileW) &&
 #endif
-<<<<<<< HEAD
-      TEST_HOOK_FOR_INVALID_HANDLE_VALUE(kernel32.dll, CreateFileA) &&
-      TEST_HOOK(kernelbase.dll, QueryDosDeviceW, Equals, 0) &&
-      TEST_DETOUR(user32.dll, CreateWindowExW, Equals, nullptr) &&
-      TEST_HOOK(user32.dll, InSendMessageEx, Equals, ISMEX_NOSEND) &&
-      TEST_HOOK(imm32.dll, ImmGetContext, Equals, nullptr) &&
-      TEST_HOOK(imm32.dll, ImmGetCompositionStringW, Ignore, 0) &&
-      TEST_HOOK_SKIP_EXEC(imm32.dll, ImmSetCandidateWindow) &&
-      TEST_HOOK(imm32.dll, ImmNotifyIME, Equals, 0) &&
-      TEST_HOOK(comdlg32.dll, GetSaveFileNameW, Ignore, FALSE) &&
-      TEST_HOOK(comdlg32.dll, GetOpenFileNameW, Ignore, FALSE) &&
-#ifdef _M_X64
-      TEST_HOOK(user32.dll, GetKeyState, Ignore, 0) &&  // see Bug 1316415
-      TEST_HOOK(ntdll.dll, LdrUnloadDll, NotEquals, 0) &&
-      MAYBE_TEST_HOOK_SKIP_EXEC(IsWin8OrLater(), ntdll.dll,
-                                LdrResolveDelayLoadedAPI) &&
-      MAYBE_TEST_HOOK(!IsWin8OrLater(), kernel32.dll,
-                      RtlInstallFunctionTableCallback, Equals, FALSE) &&
-      TEST_HOOK(comdlg32.dll, PrintDlgW, Ignore, 0) &&
-||||||| merged common ancestors
-      TEST_HOOK_FOR_INVALID_HANDLE_VALUE(kernel32.dll, CreateFileA) &&
-      TEST_HOOK(kernelbase.dll, QueryDosDeviceW, Equals, 0) &&
-      TEST_DETOUR(user32.dll, CreateWindowExW, Equals, nullptr) &&
-      TEST_HOOK(user32.dll, InSendMessageEx, Equals, ISMEX_NOSEND) &&
-      TEST_HOOK(imm32.dll, ImmGetContext, Equals, nullptr) &&
-      TEST_HOOK(imm32.dll, ImmGetCompositionStringW, Ignore, 0) &&
-      TEST_HOOK_SKIP_EXEC(imm32.dll, ImmSetCandidateWindow) &&
-      TEST_HOOK(imm32.dll, ImmNotifyIME, Equals, 0) &&
-      TEST_HOOK(comdlg32.dll, GetSaveFileNameW, Ignore, FALSE) &&
-      TEST_HOOK(comdlg32.dll, GetOpenFileNameW, Ignore, FALSE) &&
-#ifdef _M_X64
-      TEST_HOOK(user32.dll, GetKeyState, Ignore, 0) &&    // see Bug 1316415
-      TEST_HOOK(ntdll.dll, LdrUnloadDll, NotEquals, 0) &&
-      MAYBE_TEST_HOOK_SKIP_EXEC(IsWin8OrLater(), ntdll.dll, LdrResolveDelayLoadedAPI) &&
-      MAYBE_TEST_HOOK(!IsWin8OrLater(), kernel32.dll, RtlInstallFunctionTableCallback, Equals, FALSE) &&
-      TEST_HOOK(comdlg32.dll, PrintDlgW, Ignore, 0) &&
-=======
 #if !defined(_M_ARM64)
       TEST_HOOK_FOR_INVALID_HANDLE_VALUE("kernel32.dll", CreateFileA) &&
 #endif  // !defined(_M_ARM64)
@@ -1211,81 +810,10 @@ extern "C" int wmain(int argc, wchar_t* argv[]) {
                                 LdrResolveDelayLoadedAPI) &&
       MAYBE_TEST_HOOK(!IsWin8OrLater(), "kernel32.dll",
                       RtlInstallFunctionTableCallback, Equals, FALSE) &&
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-      MAYBE_TEST_HOOK(ShouldTestTipTsf(), tiptsf.dll, ProcessCaretEvents,
-                      Ignore, nullptr) &&
-#ifdef _M_IX86
-      TEST_HOOK(user32.dll, SendMessageTimeoutW, Equals, 0) &&
-||||||| merged common ancestors
-      MAYBE_TEST_HOOK(ShouldTestTipTsf(), tiptsf.dll, ProcessCaretEvents, Ignore, nullptr) &&
-#ifdef _M_IX86
-      TEST_HOOK(user32.dll, SendMessageTimeoutW, Equals, 0) &&
-=======
 #if defined(_M_X64)
       TEST_HOOK("comdlg32.dll", PrintDlgW, Ignore, 0) &&
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-      TEST_HOOK(user32.dll, SetCursorPos, NotEquals, FALSE) &&
-      TEST_HOOK(kernel32.dll, TlsAlloc, NotEquals, TLS_OUT_OF_INDEXES) &&
-      TEST_HOOK_PARAMS(kernel32.dll, TlsFree, Equals, FALSE,
-                       TLS_OUT_OF_INDEXES) &&
-      TEST_HOOK(kernel32.dll, CloseHandle, Equals, FALSE) &&
-      TEST_HOOK(kernel32.dll, DuplicateHandle, Equals, FALSE) &&
-
-      TEST_HOOK(wininet.dll, InternetOpenA, NotEquals, nullptr) &&
-      TEST_HOOK(wininet.dll, InternetCloseHandle, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetConnectA, Equals, nullptr) &&
-      TEST_HOOK(wininet.dll, InternetQueryDataAvailable, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetReadFile, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetWriteFile, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetSetOptionA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpAddRequestHeadersA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpOpenRequestA, Equals, nullptr) &&
-      TEST_HOOK(wininet.dll, HttpQueryInfoA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpSendRequestA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpSendRequestExA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpEndRequestA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetQueryOptionA, Equals, FALSE) &&
-
-      TEST_HOOK(sspicli.dll, AcquireCredentialsHandleA, NotEquals, SEC_E_OK) &&
-      TEST_HOOK(sspicli.dll, QueryCredentialsAttributesA, NotEquals,
-                SEC_E_OK) &&
-      TEST_HOOK(sspicli.dll, FreeCredentialsHandle, NotEquals, SEC_E_OK) &&
-
-      TEST_DETOUR_SKIP_EXEC(kernel32.dll, BaseThreadInitThunk) &&
-      TEST_DETOUR_SKIP_EXEC(ntdll.dll, LdrLoadDll) && TestTenByteDetour()) {
-||||||| merged common ancestors
-      TEST_HOOK(user32.dll, SetCursorPos, NotEquals, FALSE) &&
-      TEST_HOOK(kernel32.dll, TlsAlloc, NotEquals, TLS_OUT_OF_INDEXES) &&
-      TEST_HOOK_PARAMS(kernel32.dll, TlsFree, Equals, FALSE, TLS_OUT_OF_INDEXES) &&
-      TEST_HOOK(kernel32.dll, CloseHandle, Equals, FALSE) &&
-      TEST_HOOK(kernel32.dll, DuplicateHandle, Equals, FALSE) &&
-
-      TEST_HOOK(wininet.dll, InternetOpenA, NotEquals, nullptr) &&
-      TEST_HOOK(wininet.dll, InternetCloseHandle, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetConnectA, Equals, nullptr) &&
-      TEST_HOOK(wininet.dll, InternetQueryDataAvailable, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetReadFile, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetWriteFile, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetSetOptionA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpAddRequestHeadersA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpOpenRequestA, Equals, nullptr) &&
-      TEST_HOOK(wininet.dll, HttpQueryInfoA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpSendRequestA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpSendRequestExA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, HttpEndRequestA, Equals, FALSE) &&
-      TEST_HOOK(wininet.dll, InternetQueryOptionA, Equals, FALSE) &&
-
-      TEST_HOOK(sspicli.dll, AcquireCredentialsHandleA, NotEquals, SEC_E_OK) &&
-      TEST_HOOK(sspicli.dll, QueryCredentialsAttributesA, NotEquals, SEC_E_OK) &&
-      TEST_HOOK(sspicli.dll, FreeCredentialsHandle, NotEquals, SEC_E_OK) &&
-
-      TEST_DETOUR_SKIP_EXEC(kernel32.dll, BaseThreadInitThunk) &&
-      TEST_DETOUR_SKIP_EXEC(ntdll.dll, LdrLoadDll)) {
-=======
       MAYBE_TEST_HOOK(ShouldTestTipTsf(), "tiptsf.dll", ProcessCaretEvents,
                       Ignore, nullptr) &&
       TEST_HOOK("user32.dll", SendMessageTimeoutW, Equals, 0) &&
@@ -1324,7 +852,6 @@ extern "C" int wmain(int argc, wchar_t* argv[]) {
                              ApiSetQueryApiSetPresence, Equals, FALSE,
                              &gEmptyUnicodeString, &gIsPresent) &&
       TestShortDetour()) {
->>>>>>> upstream-releases
     printf("TEST-PASS | WindowsDllInterceptor | all checks passed\n");
 
     LARGE_INTEGER end, freq;

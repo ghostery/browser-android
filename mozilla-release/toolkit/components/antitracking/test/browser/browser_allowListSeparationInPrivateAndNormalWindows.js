@@ -45,16 +45,6 @@ AntiTracking.runTest(
   null, // no extra prefs
   false, // run the window.open() test
   false, // run the user interaction test
-<<<<<<< HEAD
-  Ci.nsIWebProgressListener.STATE_COOKIES_BLOCKED_TRACKER, // expect blocking notifications
-  false); // run in a normal window
-
-||||||| merged common ancestors
-  true, // expect blocking notifications
-  false); // run in a normal window
-
-=======
   Ci.nsIWebProgressListener.STATE_COOKIES_BLOCKED_TRACKER, // expect blocking notifications
   false
 ); // run in a normal window
->>>>>>> upstream-releases

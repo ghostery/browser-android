@@ -23,8 +23,6 @@
 
 using namespace mozilla;
 
-using namespace mozilla;
-
 using mozilla::dom::Event;
 using mozilla::dom::CallerType;
 

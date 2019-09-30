@@ -1,18 +1,9 @@
 from __future__ import print_function
 import itertools
 import os
-<<<<<<< HEAD
-import urlparse
-from collections import namedtuple, defaultdict
-from math import ceil
-||||||| merged common ancestors
-import urlparse
-from collections import namedtuple, defaultdict
-=======
 from six.moves.urllib.parse import urljoin
 from collections import namedtuple, defaultdict, deque
 from math import ceil
->>>>>>> upstream-releases
 
 from wptmanifest import serialize
 from wptmanifest.node import (DataNode, ConditionalNode, BinaryExpressionNode,
@@ -114,23 +105,6 @@ class ExpectedManifest(ManifestItem):
         self.test_path = test_path
         self.url_base = url_base
         assert self.url_base is not None
-<<<<<<< HEAD
-        self.modified = False
-        self.boolean_properties = boolean_properties
-        self.property_order = property_order
-        self.update_properties = {
-            "lsan": LsanUpdate(self),
-            "leak-object": LeakObjectUpdate(self),
-            "leak-threshold": LeakThresholdUpdate(self),
-        }
-||||||| merged common ancestors
-        self.modified = False
-        self.boolean_properties = boolean_properties
-        self.property_order = property_order
-        self.update_properties = {
-            "lsan": LsanUpdate(self),
-        }
-=======
         self._modified = False
         self.run_info_properties = run_info_properties
 
@@ -149,7 +123,6 @@ class ExpectedManifest(ManifestItem):
     @modified.setter
     def modified(self, value):
         self._modified = value
->>>>>>> upstream-releases
 
     def append(self, child):
         ManifestItem.append(self, child)
@@ -200,33 +173,6 @@ class ExpectedManifest(ManifestItem):
     def set_leak_threshold(self, run_info, result):
         """Set the result of the test in a particular run
 
-<<<<<<< HEAD
-    def set_leak_object(self, run_info, result):
-        """Set the result of the test in a particular run
-
-        :param run_info: Dictionary of run_info parameters corresponding
-                         to this run
-        :param result: Leaked objects deletec"""
-
-        self.update_properties["leak-object"].set(run_info, result)
-
-    def set_leak_threshold(self, run_info, result):
-        """Set the result of the test in a particular run
-
-        :param run_info: Dictionary of run_info parameters corresponding
-                         to this run
-        :param result: Total number of bytes leaked"""
-
-        self.update_properties["leak-threshold"].set(run_info, result)
-
-    def coalesce_properties(self, stability):
-        for prop_update in self.update_properties.itervalues():
-            prop_update.coalesce(stability)
-||||||| merged common ancestors
-    def coalesce_properties(self, stability):
-        for prop_update in self.update_properties.itervalues():
-            prop_update.coalesce(stability)
-=======
         :param run_info: Dictionary of run_info parameters corresponding
                          to this run
         :param result: Total number of bytes leaked"""
@@ -235,7 +181,6 @@ class ExpectedManifest(ManifestItem):
     def update(self, stability, full_update):
         for prop_update in self.update_properties:
             prop_update.update(stability, full_update)
->>>>>>> upstream-releases
 
 
 class TestNode(ManifestItem):
@@ -696,67 +641,10 @@ class MaxAssertsUpdate(PropertyUpdate):
     value_type = int
     property_builder = build_unconditional_tree
 
-<<<<<<< HEAD
-    def update_value(self, old_value, new_value):
-        new_value = self.value_type(new_value)
-        if old_value is not None:
-            old_value = self.value_type(old_value)
-        if old_value is not None and old_value < new_value:
-            return new_value + 1
-        if old_value is None:
-            return new_value + 1
-        return old_value
-
-    def update_default(self):
-        # Current values
-        values = []
-        current_default = None
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-            if current_default:
-                values.append(int(current_default[0].value))
-        values.extend(item.value for item in self.new)
-        values.extend(item.value for item in
-                      itertools.chain.from_iterable(results for _, results in self.updated))
-        new_value = max(values)
-        return True, new_value
-||||||| merged common ancestors
-    def update_value(self, old_value, new_value):
-        new_value = self.value_type(new_value)
-        if old_value is not None:
-            old_value = self.value_type(old_value)
-        if old_value is not None and old_value < new_value:
-            return new_value + 1
-        if old_value is None:
-            return new_value + 1
-        return old_value
-
-    def update_default(self):
-        """For asserts we always update the default value and never add new conditionals.
-        The value we set as the default is the maximum the current default or one more than the
-        number of asserts we saw in any configuration."""
-        # Current values
-        values = []
-        current_default = None
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-            if current_default:
-                values.append(int(current_default[0].value))
-        values.extend(item.value for item in self.new)
-        values.extend(item.value for item in
-                      itertools.chain.from_iterable(results for _, results in self.updated))
-        new_value = max(values)
-        return True, new_value
-=======
     def updated_value(self, current, new):
         if any(item > current for item in new):
             return max(new) + 1
         return current
->>>>>>> upstream-releases
 
 
 class MinAssertsUpdate(PropertyUpdate):
@@ -765,74 +653,6 @@ class MinAssertsUpdate(PropertyUpdate):
     value_type = int
     property_builder = build_unconditional_tree
 
-<<<<<<< HEAD
-    def update_value(self, old_value, new_value):
-        new_value = self.value_type(new_value)
-        if old_value is not None:
-            old_value = self.value_type(old_value)
-        if old_value is not None and new_value < old_value:
-            return 0
-        if old_value is None:
-            # If we are getting some asserts for the first time, set the minimum to 0
-            return new_value
-        return old_value
-
-    def update_default(self):
-        """For asserts we always update the default value and never add new conditionals.
-        This is either set to the current value or one less than the number of asserts
-        we saw, whichever is lower."""
-        values = []
-        current_default = None
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-        if current_default:
-            values.append(current_default[0].value_as(self.value_type))
-        values.extend(max(0, item.value) for item in self.new)
-        values.extend(max(0, item.value) for item in
-                      itertools.chain.from_iterable(results for _, results in self.updated))
-        new_value = min(values)
-        return True, new_value
-
-
-class AppendOnlyListUpdate(PropertyUpdate):
-    cls_default_value = None
-||||||| merged common ancestors
-    def update_value(self, old_value, new_value):
-        new_value = self.value_type(new_value)
-        if old_value is not None:
-            old_value = self.value_type(old_value)
-        if old_value is not None and new_value < old_value:
-            return 0
-        if old_value is None:
-            # If we are getting some asserts for the first time, set the minimum to 0
-            return new_value
-        return old_value
-
-    def update_default(self):
-        """For asserts we always update the default value and never add new conditionals.
-        This is either set to the current value or one less than the number of asserts
-        we saw, whichever is lower."""
-        values = []
-        current_default = None
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-        if current_default:
-            values.append(current_default[0].value_as(self.value_type))
-        values.extend(max(0, item.value) for item in self.new)
-        values.extend(max(0, item.value) for item in
-                      itertools.chain.from_iterable(results for _, results in self.updated))
-        new_value = min(values)
-        return True, new_value
-
-
-class LsanUpdate(PropertyUpdate):
-    property_name = "lsan-allowed"
-    cls_default_value = None
-=======
     def updated_value(self, current, new):
         if any(item < current for item in new):
             rv = min(new) - 1
@@ -865,23 +685,7 @@ class AppendOnlyListUpdate(PropertyUpdate):
 class LsanUpdate(AppendOnlyListUpdate):
     property_name = "lsan-allowed"
     property_builder = build_unconditional_tree
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    def get_value(self, result):
-        raise NotImplementedError
-||||||| merged common ancestors
-    def get_value(self, result):
-        # If we have an allowed_match that matched, return None
-        # This value is ignored later (because it matches the default)
-        # We do that because then if we allow a failure in foo/__dir__.ini
-        # we don't want to update foo/bar/__dir__.ini with the same rule
-        if result[1]:
-            return None
-        # Otherwise return the topmost stack frame
-        # TODO: there is probably some improvement to be made by looking for a "better" stack frame
-        return result[0][0]
-=======
     def from_result_value(self, result):
         # If we have an allowed_match that matched, return None
         # This value is ignored later (because it matches the default)
@@ -892,214 +696,9 @@ class LsanUpdate(AppendOnlyListUpdate):
         # Otherwise return the topmost stack frame
         # TODO: there is probably some improvement to be made by looking for a "better" stack frame
         return result[0][0]
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    def update_value(self, old_value, new_value):
-        if isinstance(new_value, (str, unicode)):
-            new_value = {new_value}
-        else:
-            new_value = set(new_value)
-        if old_value is None:
-            old_value = set()
-        old_value = set(old_value)
-        return sorted((old_value | new_value) - {None})
-
-    def update_default(self):
-        current_default = None
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-        if current_default:
-            current_default = current_default[0].value
-        new_values = [item.value for item in self.new]
-        new_value = self.update_value(current_default, new_values)
-        return True, new_value if new_value else None
-
-
-class LsanUpdate(AppendOnlyListUpdate):
-    property_name = "lsan-allowed"
-
-    def get_value(self, result):
-        # If we have an allowed_match that matched, return None
-        # This value is ignored later (because it matches the default)
-        # We do that because then if we allow a failure in foo/__dir__.ini
-        # we don't want to update foo/bar/__dir__.ini with the same rule
-        if result[1]:
-            return None
-        # Otherwise return the topmost stack frame
-        # TODO: there is probably some improvement to be made by looking for a "better" stack frame
-        return result[0][0]
-
-
-class LeakObjectUpdate(AppendOnlyListUpdate):
-    property_name = "leak-allowed"
-
-    def get_value(self, result):
-        # If we have an allowed_match that matched, return None
-        if result[1]:
-            return None
-        # Otherwise return the process/object name
-        return result[0]
-
-
-class LeakThresholdUpdate(PropertyUpdate):
-    property_name = "leak-threshold"
-    cls_default_value = []
-
-    def __init__(self, node):
-        PropertyUpdate.__init__(self, node)
-        self.thresholds = {}
-
-    def get_value(self, value):
-        threshold = value[2]
-        key = value[0]
-        self.thresholds[key] = threshold
-        return value[:2]
-
-    def value_type(self, data):
-        if all(isinstance(item, tuple) for item in data):
-            return data
-        values = [item.rsplit(":", 1) for item in data]
-        return [(key, int(float(value))) for key, value in values]
-
-    def update_value(self, old_value, new_value, allow_buffer=True):
-        rv = []
-        old_value = dict(old_value)
-        new_value = dict(self.value_type(new_value))
-        for key in set(new_value.keys()) | set(old_value.keys()):
-            old = old_value.get(key, 0)
-            new = new_value.get(key, 0)
-            threshold = self.thresholds.get(key, 0)
-            # If the value is less than the threshold but there isn't
-            # an old value we must have inherited the threshold from
-            # a parent ini file so don't any anything to this one
-            if not old and new < threshold:
-                continue
-            if old >= new:
-                updated = old
-            else:
-                if allow_buffer:
-                    # Round up to nearest 50 kb
-                    boundary = 50 * 1024
-                    updated = int(boundary * ceil(float(new) / boundary))
-                else:
-                    updated = new
-            rv.append((key, updated))
-        return ["%s:%s" % item for item in sorted(rv)]
-
-    def update_default(self):
-        # Current values
-        current_default = []
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-            current_default = current_default[0].value_as(self.value_type)
-        max_new = {}
-        for item in self.new:
-            key, value = item.value
-            if value > max_new.get(key, 0):
-                max_new[key] = value
-        new_value = self.update_value(current_default,
-                                      max_new.items(),
-                                      allow_buffer=False)
-        return True, new_value
-
-
-def group_conditionals(values, property_order=None, boolean_properties=None):
-    """Given a list of Value objects, return a list of
-    (conditional_node, status) pairs representing the conditional
-    expressions that are required to match each status
-
-    :param values: List of Values
-    :param property_order: List of properties to use in expectation metadata
-                           from most to least significant.
-    :param boolean_properties: Set of properties in property_order that should
-                               be treated as boolean."""
-
-    by_property = defaultdict(set)
-    for run_info, value in values:
-        for prop_name, prop_value in run_info.iteritems():
-            by_property[(prop_name, prop_value)].add(value)
-
-    if property_order is None:
-        property_order = ["debug", "os", "version", "processor", "bits"]
-
-    if boolean_properties is None:
-        boolean_properties = set(["debug"])
-    else:
-        boolean_properties = set(boolean_properties)
-
-    # If we have more than one value, remove any properties that are common
-    # for all the values
-    if len(values) > 1:
-        for key, statuses in by_property.copy().iteritems():
-            if len(statuses) == len(values):
-                del by_property[key]
-        if not by_property:
-            raise ConditionError
-||||||| merged common ancestors
-    def update_value(self, old_value, new_value):
-        if isinstance(new_value, (str, unicode)):
-            new_value = {new_value}
-        else:
-            new_value = set(new_value)
-        if old_value is None:
-            old_value = set()
-        old_value = set(old_value)
-        return sorted((old_value | new_value) - {None})
-
-    def update_default(self):
-        current_default = None
-        if self.property_name in self.node._data:
-            current_default = [item for item in
-                               self.node._data[self.property_name]
-                               if item.condition_node is None]
-        if current_default:
-            current_default = current_default[0].value
-        new_values = [item.value for item in self.new]
-        new_value = self.update_value(current_default, new_values)
-        return True, new_value if new_value else None
-
-
-def group_conditionals(values, property_order=None, boolean_properties=None):
-    """Given a list of Value objects, return a list of
-    (conditional_node, status) pairs representing the conditional
-    expressions that are required to match each status
-
-    :param values: List of Values
-    :param property_order: List of properties to use in expectation metadata
-                           from most to least significant.
-    :param boolean_properties: Set of properties in property_order that should
-                               be treated as boolean."""
-
-    by_property = defaultdict(set)
-    for run_info, value in values:
-        for prop_name, prop_value in run_info.iteritems():
-            by_property[(prop_name, prop_value)].add(value)
-
-    if property_order is None:
-        property_order = ["debug", "os", "version", "processor", "bits"]
-
-    if boolean_properties is None:
-        boolean_properties = set(["debug"])
-    else:
-        boolean_properties = set(boolean_properties)
-
-    # If we have more than one value, remove any properties that are common
-    # for all the values
-    if len(values) > 1:
-        for key, statuses in by_property.copy().iteritems():
-            if len(statuses) == len(values):
-                del by_property[key]
-        if not by_property:
-            raise ConditionError
-=======
     def to_ini_value(self, value):
         return value
->>>>>>> upstream-releases
 
 
 class LeakObjectUpdate(AppendOnlyListUpdate):

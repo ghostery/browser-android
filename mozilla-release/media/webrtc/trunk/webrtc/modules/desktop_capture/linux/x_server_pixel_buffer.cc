@@ -8,30 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_server_pixel_buffer.cc
-#include "modules/desktop_capture/x11/x_server_pixel_buffer.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/x11/x_server_pixel_buffer.h"
-=======
 #include "modules/desktop_capture/linux/x_server_pixel_buffer.h"
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_server_pixel_buffer.cc
 
 #include <string.h>
 #include <sys/shm.h>
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_server_pixel_buffer.cc
-#include "modules/desktop_capture/desktop_frame.h"
-#include "modules/desktop_capture/x11/window_list_utils.h"
-#include "modules/desktop_capture/x11/x_error_trap.h"
-#include "rtc_base/checks.h"
-#include "rtc_base/logging.h"
-
-namespace webrtc {
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/desktop_frame.h"
-#include "webrtc/modules/desktop_capture/x11/x_error_trap.h"
-#include "webrtc/system_wrappers/include/logging.h"
-=======
 #include "modules/desktop_capture/desktop_frame.h"
 #include "modules/desktop_capture/linux/window_list_utils.h"
 #include "modules/desktop_capture/linux/x_error_trap.h"
@@ -39,7 +20,6 @@ namespace webrtc {
 #include "rtc_base/logging.h"
 
 namespace webrtc {
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_server_pixel_buffer.cc
 
 namespace {
 

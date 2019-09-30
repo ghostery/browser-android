@@ -147,20 +147,10 @@ union Utf8Unit {
   //    lucky...
   char mValue = '\0';
 
-<<<<<<< HEAD
- public:
-  explicit constexpr Utf8Unit(char aUnit) : mValue(aUnit) {}
-||||||| merged common ancestors
-public:
-  explicit constexpr Utf8Unit(char aUnit)
-    : mValue(aUnit)
-  {}
-=======
  public:
   Utf8Unit() = default;
 
   explicit constexpr Utf8Unit(char aUnit) : mValue(aUnit) {}
->>>>>>> upstream-releases
 
   explicit constexpr Utf8Unit(unsigned char aUnit)
       : mValue(static_cast<char>(aUnit)) {

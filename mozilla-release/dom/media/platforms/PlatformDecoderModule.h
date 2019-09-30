@@ -151,19 +151,9 @@ struct MOZ_STACK_CLASS CreateDecoderParams final {
 // Used for IPDL serialization.
 // The 'value' have to be the biggest enum from CreateDecoderParams::Option.
 template <>
-<<<<<<< HEAD
-struct MaxEnumValue<::mozilla::CreateDecoderParams::Option> {
-  static constexpr unsigned int value = static_cast<unsigned int>(
-      CreateDecoderParams::Option::HardwareDecoderNotAllowed);
-||||||| merged common ancestors
-struct MaxEnumValue<::mozilla::CreateDecoderParams::Option>
-{
-  static constexpr unsigned int value = static_cast<unsigned int>(CreateDecoderParams::Option::HardwareDecoderNotAllowed);
-=======
 struct MaxEnumValue<::mozilla::CreateDecoderParams::Option> {
   static constexpr unsigned int value =
       static_cast<unsigned int>(CreateDecoderParams::Option::SENTINEL);
->>>>>>> upstream-releases
 };
 
 // The PlatformDecoderModule interface is used by the MediaFormatReader to

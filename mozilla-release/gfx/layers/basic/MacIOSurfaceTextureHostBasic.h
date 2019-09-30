@@ -29,15 +29,7 @@ class MacIOSurfaceTextureSourceBasic : public TextureSourceBasic,
   explicit MacIOSurfaceTextureSourceBasic(MacIOSurface* aSurface);
   virtual ~MacIOSurfaceTextureSourceBasic();
 
-<<<<<<< HEAD
-  virtual const char* Name() const override {
-    return "MacIOSurfaceTextureSourceBasic";
-  }
-||||||| merged common ancestors
-  virtual const char* Name() const override { return "MacIOSurfaceTextureSourceBasic"; }
-=======
   const char* Name() const override { return "MacIOSurfaceTextureSourceBasic"; }
->>>>>>> upstream-releases
 
   TextureSourceBasic* AsSourceBasic() override { return this; }
 
@@ -45,13 +37,7 @@ class MacIOSurfaceTextureSourceBasic : public TextureSourceBasic,
   gfx::SurfaceFormat GetFormat() const override;
   gfx::SourceSurface* GetSurface(gfx::DrawTarget* aTarget) override;
 
-<<<<<<< HEAD
-  virtual void DeallocateDeviceData() override {}
-||||||| merged common ancestors
-  virtual void DeallocateDeviceData() override { }
-=======
   void DeallocateDeviceData() override {}
->>>>>>> upstream-releases
 
  protected:
   RefPtr<MacIOSurface> mSurface;
@@ -81,17 +67,8 @@ class MacIOSurfaceTextureHostBasic : public TextureHost {
     return !!aTexture;
   }
 
-<<<<<<< HEAD
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
-    return nullptr;  // XXX - implement this (for MOZ_DUMP_PAINTING)
-||||||| merged common ancestors
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override
-  {
-    return nullptr; // XXX - implement this (for MOZ_DUMP_PAINTING)
-=======
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
     return nullptr;  // XXX - implement this (for MOZ_DUMP_PAINTING)
->>>>>>> upstream-releases
   }
 
   gfx::IntSize GetSize() const override;

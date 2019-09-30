@@ -14,28 +14,12 @@
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/Unused.h"
 
-<<<<<<< HEAD
-#ifdef XP_UNIX  // {
-#include "mozilla/Preferences.h"
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-||||||| merged common ancestors
-#ifdef XP_UNIX // {
-#include "mozilla/Preferences.h"
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-=======
 #ifdef XP_UNIX  // {
 #  include "mozilla/Preferences.h"
 #  include <fcntl.h>
 #  include <unistd.h>
 #  include <sys/types.h>
 #  include <sys/stat.h>
->>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -121,16 +105,8 @@ void FdWatcher::StopWatching() {
 
 StaticRefPtr<SignalPipeWatcher> SignalPipeWatcher::sSingleton;
 
-<<<<<<< HEAD
-/* static */ SignalPipeWatcher* SignalPipeWatcher::GetSingleton() {
-||||||| merged common ancestors
-/* static */ SignalPipeWatcher*
-SignalPipeWatcher::GetSingleton()
-{
-=======
 /* static */
 SignalPipeWatcher* SignalPipeWatcher::GetSingleton() {
->>>>>>> upstream-releases
   if (!sSingleton) {
     sSingleton = new SignalPipeWatcher();
     sSingleton->Init();
@@ -245,16 +221,8 @@ void SignalPipeWatcher::OnFileCanReadWithoutBlocking(int aFd) {
 
 StaticRefPtr<FifoWatcher> FifoWatcher::sSingleton;
 
-<<<<<<< HEAD
-/* static */ FifoWatcher* FifoWatcher::GetSingleton() {
-||||||| merged common ancestors
-/* static */ FifoWatcher*
-FifoWatcher::GetSingleton()
-{
-=======
 /* static */
 FifoWatcher* FifoWatcher::GetSingleton() {
->>>>>>> upstream-releases
   if (!sSingleton) {
     nsAutoCString dirPath;
     Preferences::GetCString("memory_info_dumper.watch_fifo.directory", dirPath);
@@ -265,16 +233,8 @@ FifoWatcher* FifoWatcher::GetSingleton() {
   return sSingleton;
 }
 
-<<<<<<< HEAD
-/* static */ bool FifoWatcher::MaybeCreate() {
-||||||| merged common ancestors
-/* static */ bool
-FifoWatcher::MaybeCreate()
-{
-=======
 /* static */
 bool FifoWatcher::MaybeCreate() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!XRE_IsParentProcess()) {
@@ -442,21 +402,9 @@ void FifoWatcher::OnFileCanReadWithoutBlocking(int aFd) {
 // In Android case, this function will open a file named aFilename under
 // /data/local/tmp/"aFoldername".
 // Otherwise, it will open a file named aFilename under "NS_OS_TEMP_DIR".
-<<<<<<< HEAD
-/* static */ nsresult nsDumpUtils::OpenTempFile(const nsACString& aFilename,
-                                                nsIFile** aFile,
-                                                const nsACString& aFoldername,
-                                                Mode aMode) {
-||||||| merged common ancestors
-/* static */ nsresult
-nsDumpUtils::OpenTempFile(const nsACString& aFilename, nsIFile** aFile,
-                          const nsACString& aFoldername, Mode aMode)
-{
-=======
 /* static */
 nsresult nsDumpUtils::OpenTempFile(const nsACString& aFilename, nsIFile** aFile,
                                    const nsACString& aFoldername, Mode aMode) {
->>>>>>> upstream-releases
 #ifdef ANDROID
   // For Android, first try the downloads directory which is world-readable
   // rather than the temp directory which is not.

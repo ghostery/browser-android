@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-// |reftest| skip-if(!Intl.hasOwnProperty('ListFormat')) -- Intl.ListFormat is not enabled unconditionally
-// Copyright 2018 Igalia, S.L. All rights reserved.
-// This code is governed by the BSD license found in the LICENSE file.
-
-/*---
-esid: sec-Intl.ListFormat.prototype.resolvedOptions
-description: Verifies the property order for the object returned by resolvedOptions().
-includes: [compareArray.js]
-features: [Intl.ListFormat]
----*/
-
-const options = new Intl.ListFormat().resolvedOptions();
-
-const expected = [
-  "locale",
-  "type",
-  "style",
-];
-
-assert.compareArray(Object.getOwnPropertyNames(options), expected);
-
-reportCompare(0, 0);
-||||||| merged common ancestors
-=======
 // |reftest| skip -- Intl.ListFormat is not supported
 // Copyright 2018 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
@@ -45,4 +20,3 @@ const expected = [
 assert.compareArray(Object.getOwnPropertyNames(options), expected);
 
 reportCompare(0, 0);
->>>>>>> upstream-releases

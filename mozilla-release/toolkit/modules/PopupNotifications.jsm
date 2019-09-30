@@ -374,19 +374,6 @@ PopupNotifications.prototype = {
    *        at a time. If a notification already exists with the given ID, it
    *        will be replaced.
    * @param message
-<<<<<<< HEAD
-   *        A string containing the text to be displayed as the notification
-   *        header.  The string may optionally contain one or two "<>" as a
-   *        placeholder which is later replaced by a host name or an addon name
-   *        that is formatted to look bold, in which case the options.name
-   *        property (as well as options.secondName if passing two "<>"
-   *        placeholders) needs to be specified.
-||||||| merged common ancestors
-   *        A string containing the text to be displayed as the notification header.
-   *        The string may optionally contain "<>" as a  placeholder which is later
-   *        replaced by a host name or an addon name that is formatted to look bold,
-   *        in which case the options.name property needs to be specified.
-=======
    *        A string containing the text to be displayed as the notification
    *        header.  The string may optionally contain one or two "<>" as a
    *        placeholder which is later replaced by a host name or an addon name
@@ -394,7 +381,6 @@ PopupNotifications.prototype = {
    *        property (as well as options.secondName if passing a "<>" and a "{}"
    *        placeholder) needs to be specified. "<>" will be considered as the
    *        first and "{}" as the second placeholder.
->>>>>>> upstream-releases
    * @param anchorID
    *        The ID of the element that should be used as this notification
    *        popup's anchor. May be null, in which case the notification will be
@@ -522,14 +508,6 @@ PopupNotifications.prototype = {
    *                     An optional string formatted to look bold and used in the
    *                     notifiation description header text. Usually a host name or
    *                     addon name.
-<<<<<<< HEAD
-   *        secondName:
-   *                     An optional string formatted to look bold and used in the
-   *                     notification description header text. Usually a host name or
-   *                     addon name. This is similar to name, and only used in case
-   *                     where message contains two "<>" placeholders.
-||||||| merged common ancestors
-=======
    *        secondName:
    *                     An optional string formatted to look bold and used in the
    *                     notification description header text. Usually a host name or
@@ -542,7 +520,6 @@ PopupNotifications.prototype = {
    *                     Esc key is pressed. This should be set to the name of the
    *                     command to run. If not provided, "secondarybuttoncommand"
    *                     will be used.
->>>>>>> upstream-releases
    * @returns the Notification object corresponding to the added notification.
    */
   show: function PopupNotifications_show(
@@ -934,16 +911,6 @@ PopupNotifications.prototype = {
     text.start = array[0] || "";
     text.name = n.options.name || "";
     text.end = array[1] || "";
-<<<<<<< HEAD
-    if (array.length == 3) {
-      text.secondName = n.options.secondName || "";
-      text.secondEnd = array[2] || "";
-    } else if (array.length > 3) {
-      Cu.reportError("Unexpected array length encountered in " +
-                     "_formatDescriptionMessage: " + array.length);
-    }
-||||||| merged common ancestors
-=======
     if (array.length == 3) {
       text.secondName = n.options.secondName || "";
       text.secondEnd = array[2] || "";
@@ -962,7 +929,6 @@ PopupNotifications.prototype = {
           array.length
       );
     }
->>>>>>> upstream-releases
     return text;
   },
 
@@ -993,19 +959,10 @@ PopupNotifications.prototype = {
       popupnotification.setAttribute("label", desc.start);
       popupnotification.setAttribute("name", desc.name);
       popupnotification.setAttribute("endlabel", desc.end);
-<<<<<<< HEAD
-      if (("secondName" in desc) &&
-          ("secondEnd" in desc)) {
-        popupnotification.setAttribute("secondname", desc.secondName);
-        popupnotification.setAttribute("secondendlabel", desc.secondEnd);
-      }
-||||||| merged common ancestors
-=======
       if ("secondName" in desc && "secondEnd" in desc) {
         popupnotification.setAttribute("secondname", desc.secondName);
         popupnotification.setAttribute("secondendlabel", desc.secondEnd);
       }
->>>>>>> upstream-releases
 
       popupnotification.setAttribute("id", popupnotificationID);
       popupnotification.setAttribute("popupid", n.id);
@@ -1019,21 +976,6 @@ PopupNotifications.prototype = {
       );
       if (n.mainAction) {
         popupnotification.setAttribute("buttonlabel", n.mainAction.label);
-<<<<<<< HEAD
-        popupnotification.setAttribute("buttonaccesskey", n.mainAction.accessKey);
-        popupnotification.toggleAttribute("buttonhighlight", !n.mainAction.disableHighlight);
-        popupnotification.setAttribute("buttoncommand", "PopupNotifications._onButtonEvent(event, 'buttoncommand');");
-        popupnotification.setAttribute("dropmarkerpopupshown", "PopupNotifications._onButtonEvent(event, 'dropmarkerpopupshown');");
-        popupnotification.setAttribute("learnmoreclick", "PopupNotifications._onButtonEvent(event, 'learnmoreclick');");
-        popupnotification.setAttribute("menucommand", "PopupNotifications._onMenuCommand(event);");
-||||||| merged common ancestors
-        popupnotification.setAttribute("buttonaccesskey", n.mainAction.accessKey);
-        popupnotification.setAttribute("buttonhighlight", !n.mainAction.disableHighlight);
-        popupnotification.setAttribute("buttoncommand", "PopupNotifications._onButtonEvent(event, 'buttoncommand');");
-        popupnotification.setAttribute("dropmarkerpopupshown", "PopupNotifications._onButtonEvent(event, 'dropmarkerpopupshown');");
-        popupnotification.setAttribute("learnmoreclick", "PopupNotifications._onButtonEvent(event, 'learnmoreclick');");
-        popupnotification.setAttribute("menucommand", "PopupNotifications._onMenuCommand(event);");
-=======
         popupnotification.setAttribute(
           "buttonaccesskey",
           n.mainAction.accessKey
@@ -1058,22 +1000,13 @@ PopupNotifications.prototype = {
           "menucommand",
           "PopupNotifications._onMenuCommand(event);"
         );
->>>>>>> upstream-releases
       } else {
         // Enable the default button to let the user close the popup if the close button is hidden
-<<<<<<< HEAD
-        popupnotification.setAttribute("buttoncommand", "PopupNotifications._onButtonEvent(event, 'buttoncommand');");
-        popupnotification.toggleAttribute("buttonhighlight", true);
-||||||| merged common ancestors
-        popupnotification.setAttribute("buttoncommand", "PopupNotifications._onButtonEvent(event, 'buttoncommand');");
-        popupnotification.setAttribute("buttonhighlight", "true");
-=======
         popupnotification.setAttribute(
           "buttoncommand",
           "PopupNotifications._onButtonEvent(event, 'buttoncommand');"
         );
         popupnotification.toggleAttribute("buttonhighlight", true);
->>>>>>> upstream-releases
         popupnotification.removeAttribute("buttonlabel");
         popupnotification.removeAttribute("buttonaccesskey");
         popupnotification.removeAttribute("dropmarkerpopupshown");

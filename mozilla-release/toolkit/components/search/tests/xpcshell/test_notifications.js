@@ -31,53 +31,6 @@ function create_search_observer(resolve) {
 
     info("Observer: " + data + " for " + engine.name);
 
-<<<<<<< HEAD
-  switch (data) {
-    case "engine-added":
-      let retrievedEngine = Services.search.getEngineByName("Test search engine");
-      Assert.equal(engine, retrievedEngine);
-      Services.search.defaultEngine = engine;
-      Services.search.defaultEngine = engine;
-      executeSoon(function() {
-        Services.search.removeEngine(engine);
-      });
-      break;
-    case "engine-removed":
-      let engineNameOutput = " for Test search engine";
-      expectedLog = expectedLog.map(logLine => logLine + engineNameOutput);
-      info("expectedLog:\n" + expectedLog.join("\n"));
-      info("gTestLog:\n" + gTestLog.join("\n"));
-      for (let i = 0; i < expectedLog.length; i++) {
-        Assert.equal(gTestLog[i], expectedLog[i]);
-      }
-      Assert.equal(gTestLog.length, expectedLog.length);
-      do_test_finished();
-      break;
-  }
-||||||| merged common ancestors
-  switch (data) {
-    case "engine-added":
-      let retrievedEngine = Services.search.getEngineByName("Test search engine");
-      Assert.equal(engine, retrievedEngine);
-      Services.search.defaultEngine = engine;
-      Services.search.currentEngine = engine;
-      executeSoon(function() {
-        Services.search.removeEngine(engine);
-      });
-      break;
-    case "engine-removed":
-      let engineNameOutput = " for Test search engine";
-      expectedLog = expectedLog.map(logLine => logLine + engineNameOutput);
-      info("expectedLog:\n" + expectedLog.join("\n"));
-      info("gTestLog:\n" + gTestLog.join("\n"));
-      for (let i = 0; i < expectedLog.length; i++) {
-        Assert.equal(gTestLog[i], expectedLog[i]);
-      }
-      Assert.equal(gTestLog.length, expectedLog.length);
-      do_test_finished();
-      break;
-  }
-=======
     switch (data) {
       case "engine-added":
         let retrievedEngine = Services.search.getEngineByName(
@@ -102,7 +55,6 @@ function create_search_observer(resolve) {
         break;
     }
   };
->>>>>>> upstream-releases
 }
 
 add_task(async function setup() {

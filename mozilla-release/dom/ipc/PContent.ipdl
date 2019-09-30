@@ -41,14 +41,7 @@ include protocol PPresentation;
 include protocol PURLClassifier;
 include protocol PURLClassifierLocal;
 include protocol PVRManager;
-<<<<<<< HEAD
-include protocol PVideoDecoderManager;
 include protocol PRemoteDecoderManager;
-||||||| merged common ancestors
-include protocol PVideoDecoderManager;
-=======
-include protocol PRemoteDecoderManager;
->>>>>>> upstream-releases
 include protocol PProfiler;
 include protocol PScriptCache;
 include protocol PSessionStorageObserver;
@@ -1126,15 +1119,8 @@ parent:
      *       provided.
      */
     async PContentPermissionRequest(PermissionRequest[] aRequests, Principal aPrincipal,
-<<<<<<< HEAD
-                                    Principal aTopLevelPrincipal, bool aIsHandlingUserInput,
-                                    TabId tabId);
-||||||| merged common ancestors
-                                    bool aIsHandlingUserInput, TabId tabId);
-=======
                                     Principal aTopLevelPrincipal, bool aIsHandlingUserInput,
                                     bool aDocumentHasUserInput, uint64_t aPageLoadTimestamp, TabId tabId);
->>>>>>> upstream-releases
 
     async ShutdownProfile(nsCString aProfile);
 
@@ -1407,19 +1393,8 @@ both:
     /**
      * Notify `push-subscription-modified` observers in the parent and child.
      */
-<<<<<<< HEAD
-    async AttachBrowsingContext(BrowsingContextId aParentContextId,
-                                BrowsingContextId aOpenerId,
-                                BrowsingContextId aContextId,
-                                nsString aName);
-||||||| merged common ancestors
-    async AttachBrowsingContext(BrowsingContextId aParentContextId,
-                                BrowsingContextId aContextId,
-                                nsString aName);
-=======
     async NotifyPushSubscriptionModifiedObservers(nsCString scope,
                                                   Principal principal);
->>>>>>> upstream-releases
 
     /**
      * Send a Push error message to all service worker clients in the parent or
@@ -1450,29 +1425,7 @@ both:
      * should move it to the bfcache allowing it to be re-attached if navigated
      * to.
      */
-<<<<<<< HEAD
-    async DetachBrowsingContext(BrowsingContextId aContextId,
-                                bool aMoveToBFCache);
-
-    /**
-     * Set the opener of browsing context with id 'aContextId' to the
-     * browsing context with id 'aOpenerId'.
-     */
-    async SetOpenerBrowsingContext(BrowsingContextId aContextId,
-                                   BrowsingContextId aOpenerContextId);
-
-both:
-     async AsyncMessage(nsString aMessage, CpowEntry[] aCpows,
-                        Principal aPrincipal, ClonedMessageData aData);
-||||||| merged common ancestors
-    async DetachBrowsingContext(BrowsingContextId aContextId,
-                                bool aMoveToBFCache);
-both:
-     async AsyncMessage(nsString aMessage, CpowEntry[] aCpows,
-                        Principal aPrincipal, ClonedMessageData aData);
-=======
     async DetachBrowsingContext(BrowsingContext aContext);
->>>>>>> upstream-releases
 
     /**
      * Removes all of 'aContext'\'s children, and caches them in the

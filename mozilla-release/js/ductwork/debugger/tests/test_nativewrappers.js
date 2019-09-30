@@ -1,17 +1,5 @@
 function run_test()
 {
-<<<<<<< HEAD
-  ChromeUtils.import("resource://gre/modules/jsdebugger.jsm");
-  ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-  Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-  registerCleanupFunction(() => {
-    Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-  });
-
-||||||| merged common ancestors
-  ChromeUtils.import("resource://gre/modules/jsdebugger.jsm");
-=======
   const {addDebuggerToGlobal} = ChromeUtils.import("resource://gre/modules/jsdebugger.jsm");
   const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
@@ -20,7 +8,6 @@ function run_test()
     Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
   });
 
->>>>>>> upstream-releases
   addDebuggerToGlobal(this);
   var g = testGlobal("test1");
 

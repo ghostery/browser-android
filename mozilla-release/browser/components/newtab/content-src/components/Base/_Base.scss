@@ -22,13 +22,6 @@ main {
   // visible when snippets are visible. Adjust for other spacing.
   padding-bottom: $snippets-container-height - $section-spacing - $base-gutter;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  @media (min-width: $break-point-small) {
-    width: $wrapper-max-width-small;
-  }
-
-=======
   section {
     margin-bottom: $section-spacing;
     position: relative;
@@ -38,7 +31,6 @@ main {
     visibility: hidden;
   }
 
->>>>>>> upstream-releases
   @media (min-width: $break-point-medium) {
     width: $wrapper-max-width-medium;
   }

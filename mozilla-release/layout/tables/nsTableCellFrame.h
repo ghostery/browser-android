@@ -37,13 +37,7 @@ class nsTableCellFrame : public nsContainerFrame,
   typedef mozilla::gfx::DrawTarget DrawTarget;
   typedef mozilla::image::ImgDrawResult ImgDrawResult;
 
-<<<<<<< HEAD
-  friend nsTableCellFrame* NS_NewTableCellFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-  friend nsTableCellFrame* NS_NewTableCellFrame(nsIPresShell*   aPresShell,
-=======
   friend nsTableCellFrame* NS_NewTableCellFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                                 ComputedStyle* aStyle,
                                                 nsTableFrame* aTableFrame);
 

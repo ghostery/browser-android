@@ -29,23 +29,12 @@ XPCOMUtils.defineLazyGetter(this, "DebuggerServer", () => {
   return DebuggerServer;
 });
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyGetter(this, "SocketListener", () => {
-  let { SocketListener } = require("devtools/shared/security/socket");
-  return SocketListener;
-});
-
-GeckoViewUtils.initLogging("RemoteDebugger", this);
-||||||| merged common ancestors
-GeckoViewUtils.initLogging("RemoteDebugger", this);
-=======
 XPCOMUtils.defineLazyGetter(this, "SocketListener", () => {
   const { SocketListener } = require("devtools/shared/security/socket");
   return SocketListener;
 });
 
 const { debug, warn } = GeckoViewUtils.initLogging("RemoteDebugger"); // eslint-disable-line no-unused-vars
->>>>>>> upstream-releases
 
 var GeckoViewRemoteDebugger = {
   observe(aSubject, aTopic, aData) {

@@ -44,29 +44,6 @@ ABIArgGenerator::ABIArgGenerator()
 
 // See the "Parameter Passing" section of the "Procedure Call Standard for the
 // ARM Architecture" documentation.
-<<<<<<< HEAD
-ABIArg ABIArgGenerator::softNext(MIRType type) {
-  switch (type) {
-    case MIRType::Int32:
-    case MIRType::Pointer:
-      if (intRegIndex_ == NumIntArgRegs) {
-        current_ = ABIArg(stackOffset_);
-        stackOffset_ += sizeof(uint32_t);
-||||||| merged common ancestors
-ABIArg
-ABIArgGenerator::softNext(MIRType type)
-{
-    switch (type) {
-      case MIRType::Int32:
-      case MIRType::Pointer:
-        if (intRegIndex_ == NumIntArgRegs) {
-            current_ = ABIArg(stackOffset_);
-            stackOffset_ += sizeof(uint32_t);
-            break;
-        }
-        current_ = ABIArg(Register::FromCode(intRegIndex_));
-        intRegIndex_++;
-=======
 ABIArg ABIArgGenerator::softNext(MIRType type) {
   switch (type) {
     case MIRType::Int32:
@@ -75,7 +52,6 @@ ABIArg ABIArgGenerator::softNext(MIRType type) {
       if (intRegIndex_ == NumIntArgRegs) {
         current_ = ABIArg(stackOffset_);
         stackOffset_ += sizeof(uint32_t);
->>>>>>> upstream-releases
         break;
       }
       current_ = ABIArg(Register::FromCode(intRegIndex_));
@@ -117,48 +93,6 @@ ABIArg ABIArgGenerator::softNext(MIRType type) {
         current_ = ABIArg(stackOffset_);
         stackOffset_ += sizeof(double);
         break;
-<<<<<<< HEAD
-      }
-      current_ = ABIArg(Register::FromCode(intRegIndex_),
-                        Register::FromCode(intRegIndex_ + 1));
-      intRegIndex_ += 2;
-      break;
-    default:
-      MOZ_CRASH("Unexpected argument type");
-  }
-
-  return current_;
-}
-
-ABIArg ABIArgGenerator::hardNext(MIRType type) {
-  switch (type) {
-    case MIRType::Int32:
-    case MIRType::Pointer:
-      if (intRegIndex_ == NumIntArgRegs) {
-        current_ = ABIArg(stackOffset_);
-        stackOffset_ += sizeof(uint32_t);
-||||||| merged common ancestors
-      default:
-        MOZ_CRASH("Unexpected argument type");
-    }
-
-    return current_;
-}
-
-ABIArg
-ABIArgGenerator::hardNext(MIRType type)
-{
-    switch (type) {
-      case MIRType::Int32:
-      case MIRType::Pointer:
-        if (intRegIndex_ == NumIntArgRegs) {
-            current_ = ABIArg(stackOffset_);
-            stackOffset_ += sizeof(uint32_t);
-            break;
-        }
-        current_ = ABIArg(Register::FromCode(intRegIndex_));
-        intRegIndex_++;
-=======
       }
       current_ = ABIArg(Register::FromCode(intRegIndex_),
                         Register::FromCode(intRegIndex_ + 1));
@@ -179,7 +113,6 @@ ABIArg ABIArgGenerator::hardNext(MIRType type) {
       if (intRegIndex_ == NumIntArgRegs) {
         current_ = ABIArg(stackOffset_);
         stackOffset_ += sizeof(uint32_t);
->>>>>>> upstream-releases
         break;
       }
       current_ = ABIArg(Register::FromCode(intRegIndex_));
@@ -800,170 +733,6 @@ static void TraceOneDataRelocation(JSTracer* trc, InstructionIterator iter) {
     MacroAssemblerARM::ma_mov_patch(Imm32(int32_t(ptr)), dest,
                                     Assembler::Always, rs, iter);
 
-<<<<<<< HEAD
-    // L_LDR won't cause any instructions to be updated.
-    if (rs != Assembler::L_LDR) {
-      AutoFlushICache::flush(uintptr_t(iter.cur()), 4);
-      AutoFlushICache::flush(uintptr_t(iter.next()), 4);
-    }
-  }
-}
-
-/* static */ void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
-                                                  CompactBufferReader& reader) {
-  while (reader.more()) {
-    size_t offset = reader.readUnsigned();
-    InstructionIterator iter((Instruction*)(code->raw() + offset));
-    TraceOneDataRelocation(trc, iter);
-  }
-}
-
-void Assembler::copyJumpRelocationTable(uint8_t* dest) {
-  if (jumpRelocations_.length()) {
-    memcpy(dest, jumpRelocations_.buffer(), jumpRelocations_.length());
-  }
-}
-
-void Assembler::copyDataRelocationTable(uint8_t* dest) {
-  if (dataRelocations_.length()) {
-    memcpy(dest, dataRelocations_.buffer(), dataRelocations_.length());
-  }
-}
-
-void Assembler::processCodeLabels(uint8_t* rawCode) {
-  for (const CodeLabel& label : codeLabels_) {
-    Bind(rawCode, label);
-  }
-}
-
-void Assembler::writeCodePointer(CodeLabel* label) {
-  BufferOffset off = writeInst(-1);
-  label->patchAt()->bind(off.getOffset());
-}
-
-void Assembler::Bind(uint8_t* rawCode, const CodeLabel& label) {
-  size_t offset = label.patchAt().offset();
-  size_t target = label.target().offset();
-  *reinterpret_cast<const void**>(rawCode + offset) = rawCode + target;
-}
-
-Assembler::Condition Assembler::InvertCondition(Condition cond) {
-  const uint32_t ConditionInversionBit = 0x10000000;
-  return Condition(ConditionInversionBit ^ cond);
-}
-
-Assembler::Condition Assembler::UnsignedCondition(Condition cond) {
-  switch (cond) {
-    case Zero:
-    case NonZero:
-      return cond;
-    case LessThan:
-    case Below:
-      return Below;
-    case LessThanOrEqual:
-    case BelowOrEqual:
-      return BelowOrEqual;
-    case GreaterThan:
-    case Above:
-      return Above;
-    case AboveOrEqual:
-    case GreaterThanOrEqual:
-      return AboveOrEqual;
-    default:
-      MOZ_CRASH("unexpected condition");
-  }
-}
-
-Assembler::Condition Assembler::ConditionWithoutEqual(Condition cond) {
-  switch (cond) {
-    case LessThan:
-    case LessThanOrEqual:
-      return LessThan;
-    case Below:
-    case BelowOrEqual:
-      return Below;
-    case GreaterThan:
-    case GreaterThanOrEqual:
-      return GreaterThan;
-    case Above:
-    case AboveOrEqual:
-      return Above;
-    default:
-      MOZ_CRASH("unexpected condition");
-  }
-}
-
-Assembler::DoubleCondition Assembler::InvertCondition(DoubleCondition cond) {
-  const uint32_t ConditionInversionBit = 0x10000000;
-  return DoubleCondition(ConditionInversionBit ^ cond);
-}
-
-Imm8::TwoImm8mData Imm8::EncodeTwoImms(uint32_t imm) {
-  // In the ideal case, we are looking for a number that (in binary) looks
-  // like:
-  //   0b((00)*)n_1((00)*)n_2((00)*)
-  //      left  n1   mid  n2
-  //   where both n_1 and n_2 fit into 8 bits.
-  // Since this is being done with rotates, we also need to handle the case
-  // that one of these numbers is in fact split between the left and right
-  // sides, in which case the constant will look like:
-  //   0bn_1a((00)*)n_2((00)*)n_1b
-  //     n1a  mid  n2   rgh    n1b
-  // Also remember, values are rotated by multiples of two, and left, mid or
-  // right can have length zero.
-  uint32_t imm1, imm2;
-  int left = CountLeadingZeroes32(imm) & 0x1E;
-  uint32_t no_n1 = imm & ~(0xff << (24 - left));
-
-  // Not technically needed: this case only happens if we can encode as a
-  // single imm8m. There is a perfectly reasonable encoding in this case, but
-  // we shouldn't encourage people to do things like this.
-  if (no_n1 == 0) {
-    return TwoImm8mData();
-  }
-
-  int mid = CountLeadingZeroes32(no_n1) & 0x1E;
-  uint32_t no_n2 =
-      no_n1 & ~((0xff << ((24 - mid) & 0x1f)) | 0xff >> ((8 + mid) & 0x1f));
-
-  if (no_n2 == 0) {
-    // We hit the easy case, no wraparound.
-    // Note: a single constant *may* look like this.
-    int imm1shift = left + 8;
-    int imm2shift = mid + 8;
-    imm1 = (imm >> (32 - imm1shift)) & 0xff;
-    if (imm2shift >= 32) {
-      imm2shift = 0;
-      // This assert does not always hold, in fact, this would lead to
-      // some incredibly subtle bugs.
-      // assert((imm & 0xff) == no_n1);
-      imm2 = no_n1;
-    } else {
-      imm2 = ((imm >> (32 - imm2shift)) | (imm << imm2shift)) & 0xff;
-      MOZ_ASSERT(((no_n1 >> (32 - imm2shift)) | (no_n1 << imm2shift)) == imm2);
-||||||| merged common ancestors
-    int right = 32 - (CountLeadingZeroes32(no_n2) & 30);
-    // All remaining set bits *must* fit into the lower 8 bits.
-    // The right == 8 case should be handled by the previous case.
-    if (right > 8) {
-        return TwoImm8mData();
-    }
-
-    // Make sure the initial bits that we removed for no_n1 fit into the
-    // 8-(32-right) leftmost bits.
-    if (((imm & (0xff << (24 - left))) << (8 - right)) != 0) {
-        // BUT we may have removed more bits than we needed to for no_n1
-        // 0x04104001 e.g. we can encode 0x104 with a single op, then 0x04000001
-        // with a second, but we try to encode 0x0410000 and find that we need a
-        // second op for 0x4000, and 0x1 cannot be included in the encoding of
-        // 0x04100000.
-        no_n1 = imm & ~((0xff >> (8 - right)) | (0xff << (24 + right)));
-        mid = CountLeadingZeroes32(no_n1) & 30;
-        no_n2 = no_n1  & ~((0xff << ((24 - mid)&31)) | 0xff >> ((8 + mid)&31));
-        if (no_n2 != 0) {
-            return TwoImm8mData();
-        }
-=======
     // L_LDR won't cause any instructions to be updated.
     if (rs != Assembler::L_LDR) {
       AutoFlushICache::flush(uintptr_t(iter.cur()), 4);
@@ -1106,7 +875,6 @@ Imm8::TwoImm8mData Imm8::EncodeTwoImms(uint32_t imm) {
     } else {
       imm2 = ((imm >> (32 - imm2shift)) | (imm << imm2shift)) & 0xff;
       MOZ_ASSERT(((no_n1 >> (32 - imm2shift)) | (no_n1 << imm2shift)) == imm2);
->>>>>>> upstream-releases
     }
     MOZ_ASSERT((imm1shift & 0x1) == 0);
     MOZ_ASSERT((imm2shift & 0x1) == 0);
@@ -1332,134 +1100,6 @@ const js::jit::DoubleEncoder::DoubleEntry js::jit::DoubleEncoder::table[256] = {
 };
 
 // VFPRegister implementation
-<<<<<<< HEAD
-VFPRegister VFPRegister::doubleOverlay(unsigned int which) const {
-  MOZ_ASSERT(!_isInvalid);
-  MOZ_ASSERT(which == 0);
-  if (kind != Double) {
-    return VFPRegister(code_ >> 1, Double);
-  }
-  return *this;
-}
-VFPRegister VFPRegister::singleOverlay(unsigned int which) const {
-  MOZ_ASSERT(!_isInvalid);
-  if (kind == Double) {
-    // There are no corresponding float registers for d16-d31.
-    MOZ_ASSERT(code_ < 16);
-    MOZ_ASSERT(which < 2);
-    return VFPRegister((code_ << 1) + which, Single);
-  }
-  MOZ_ASSERT(which == 0);
-  return VFPRegister(code_, Single);
-}
-
-VFPRegister VFPRegister::sintOverlay(unsigned int which) const {
-  MOZ_ASSERT(!_isInvalid);
-  if (kind == Double) {
-    // There are no corresponding float registers for d16-d31.
-    MOZ_ASSERT(code_ < 16);
-    MOZ_ASSERT(which < 2);
-    return VFPRegister((code_ << 1) + which, Int);
-  }
-  MOZ_ASSERT(which == 0);
-  return VFPRegister(code_, Int);
-}
-VFPRegister VFPRegister::uintOverlay(unsigned int which) const {
-  MOZ_ASSERT(!_isInvalid);
-  if (kind == Double) {
-    // There are no corresponding float registers for d16-d31.
-    MOZ_ASSERT(code_ < 16);
-    MOZ_ASSERT(which < 2);
-    return VFPRegister((code_ << 1) + which, UInt);
-  }
-  MOZ_ASSERT(which == 0);
-  return VFPRegister(code_, UInt);
-}
-
-bool VFPRegister::isInvalid() const { return _isInvalid; }
-
-bool VFPRegister::isMissing() const {
-  MOZ_ASSERT(!_isInvalid);
-  return _isMissing;
-}
-
-bool Assembler::oom() const {
-  return AssemblerShared::oom() || m_buffer.oom() || jumpRelocations_.oom() ||
-         dataRelocations_.oom();
-||||||| merged common ancestors
-VFPRegister
-VFPRegister::doubleOverlay(unsigned int which) const
-{
-    MOZ_ASSERT(!_isInvalid);
-    MOZ_ASSERT(which == 0);
-    if (kind != Double) {
-        return VFPRegister(code_ >> 1, Double);
-    }
-    return *this;
-}
-VFPRegister
-VFPRegister::singleOverlay(unsigned int which) const
-{
-    MOZ_ASSERT(!_isInvalid);
-    if (kind == Double) {
-        // There are no corresponding float registers for d16-d31.
-        MOZ_ASSERT(code_ < 16);
-        MOZ_ASSERT(which < 2);
-        return VFPRegister((code_ << 1) + which, Single);
-    }
-    MOZ_ASSERT(which == 0);
-    return VFPRegister(code_, Single);
-}
-
-VFPRegister
-VFPRegister::sintOverlay(unsigned int which) const
-{
-    MOZ_ASSERT(!_isInvalid);
-    if (kind == Double) {
-        // There are no corresponding float registers for d16-d31.
-        MOZ_ASSERT(code_ < 16);
-        MOZ_ASSERT(which < 2);
-        return VFPRegister((code_ << 1) + which, Int);
-    }
-    MOZ_ASSERT(which == 0);
-    return VFPRegister(code_, Int);
-}
-VFPRegister
-VFPRegister::uintOverlay(unsigned int which) const
-{
-    MOZ_ASSERT(!_isInvalid);
-    if (kind == Double) {
-        // There are no corresponding float registers for d16-d31.
-        MOZ_ASSERT(code_ < 16);
-        MOZ_ASSERT(which < 2);
-        return VFPRegister((code_ << 1) + which, UInt);
-    }
-    MOZ_ASSERT(which == 0);
-    return VFPRegister(code_, UInt);
-}
-
-bool
-VFPRegister::isInvalid() const
-{
-    return _isInvalid;
-}
-
-bool
-VFPRegister::isMissing() const
-{
-    MOZ_ASSERT(!_isInvalid);
-    return _isMissing;
-}
-
-
-bool
-Assembler::oom() const
-{
-    return AssemblerShared::oom() ||
-           m_buffer.oom() ||
-           jumpRelocations_.oom() ||
-           dataRelocations_.oom();
-=======
 VFPRegister VFPRegister::doubleOverlay(unsigned int which) const {
   MOZ_ASSERT(!_isInvalid);
   MOZ_ASSERT(which == 0);
@@ -1517,7 +1157,6 @@ bool VFPRegister::isMissing() const {
 bool Assembler::oom() const {
   return AssemblerShared::oom() || m_buffer.oom() || jumpRelocations_.oom() ||
          dataRelocations_.oom();
->>>>>>> upstream-releases
 }
 
 // Size of the instruction stream, in bytes. Including pools. This function
@@ -1549,21 +1188,9 @@ void Assembler::WriteInstStatic(uint32_t x, uint32_t* dest) {
   *dest = x;
 }
 
-<<<<<<< HEAD
-void Assembler::haltingAlign(int alignment) {
-  // TODO: Implement a proper halting align.
-  nopAlign(alignment);
-||||||| merged common ancestors
-void
-Assembler::haltingAlign(int alignment)
-{
-    // TODO: Implement a proper halting align.
-    nopAlign(alignment);
-=======
 void Assembler::haltingAlign(int alignment) {
   // HLT with payload 0xBAAD
   m_buffer.align(alignment, 0xE1000070 | (0xBAA << 8) | 0xD);
->>>>>>> upstream-releases
 }
 
 void Assembler::nopAlign(int alignment) { m_buffer.align(alignment); }
@@ -1587,40 +1214,16 @@ BufferOffset Assembler::as_mov(Register dest, Operand2 op2, SBit s,
   return as_alu(dest, InvalidReg, op2, OpMov, s, c);
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::as_alu_patch(Register dest, Register src1,
-                                          Operand2 op2, ALUOp op, SBit s,
-                                          Condition c, uint32_t* pos) {
-  WriteInstStatic(EncodeAlu(dest, src1, op2, op, s, c), pos);
-||||||| merged common ancestors
-/* static */ void
-Assembler::as_alu_patch(Register dest, Register src1, Operand2 op2, ALUOp op, SBit s,
-                        Condition c, uint32_t* pos)
-{
-    WriteInstStatic(EncodeAlu(dest, src1, op2, op, s, c), pos);
-=======
 /* static */
 void Assembler::as_alu_patch(Register dest, Register src1, Operand2 op2,
                              ALUOp op, SBit s, Condition c, uint32_t* pos) {
   WriteInstStatic(EncodeAlu(dest, src1, op2, op, s, c), pos);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::as_mov_patch(Register dest, Operand2 op2, SBit s,
-                                          Condition c, uint32_t* pos) {
-  as_alu_patch(dest, InvalidReg, op2, OpMov, s, c, pos);
-||||||| merged common ancestors
-/* static */ void
-Assembler::as_mov_patch(Register dest, Operand2 op2, SBit s, Condition c, uint32_t* pos)
-{
-    as_alu_patch(dest, InvalidReg, op2, OpMov, s, c, pos);
-=======
 /* static */
 void Assembler::as_mov_patch(Register dest, Operand2 op2, SBit s, Condition c,
                              uint32_t* pos) {
   as_alu_patch(dest, InvalidReg, op2, OpMov, s, c, pos);
->>>>>>> upstream-releases
 }
 
 BufferOffset Assembler::as_mvn(Register dest, Operand2 op2, SBit s,
@@ -1736,42 +1339,20 @@ BufferOffset Assembler::as_movw(Register dest, Imm16 imm, Condition c) {
   return writeInst(EncodeMovW(dest, imm, c));
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::as_movw_patch(Register dest, Imm16 imm,
-                                           Condition c, Instruction* pos) {
-  WriteInstStatic(EncodeMovW(dest, imm, c), (uint32_t*)pos);
-||||||| merged common ancestors
-/* static */ void
-Assembler::as_movw_patch(Register dest, Imm16 imm, Condition c, Instruction* pos)
-{
-    WriteInstStatic(EncodeMovW(dest, imm, c), (uint32_t*)pos);
-=======
 /* static */
 void Assembler::as_movw_patch(Register dest, Imm16 imm, Condition c,
                               Instruction* pos) {
   WriteInstStatic(EncodeMovW(dest, imm, c), (uint32_t*)pos);
->>>>>>> upstream-releases
 }
 
 BufferOffset Assembler::as_movt(Register dest, Imm16 imm, Condition c) {
   return writeInst(EncodeMovT(dest, imm, c));
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::as_movt_patch(Register dest, Imm16 imm,
-                                           Condition c, Instruction* pos) {
-  WriteInstStatic(EncodeMovT(dest, imm, c), (uint32_t*)pos);
-||||||| merged common ancestors
-/* static */ void
-Assembler::as_movt_patch(Register dest, Imm16 imm, Condition c, Instruction* pos)
-{
-    WriteInstStatic(EncodeMovT(dest, imm, c), (uint32_t*)pos);
-=======
 /* static */
 void Assembler::as_movt_patch(Register dest, Imm16 imm, Condition c,
                               Instruction* pos) {
   WriteInstStatic(EncodeMovT(dest, imm, c), (uint32_t*)pos);
->>>>>>> upstream-releases
 }
 
 static const int mull_tag = 0x90;
@@ -1840,213 +1421,6 @@ BufferOffset Assembler::as_clz(Register dest, Register src, Condition c) {
 // Data transfer instructions: ldr, str, ldrb, strb. Using an int to
 // differentiate between 8 bits and 32 bits is overkill, but meh.
 
-<<<<<<< HEAD
-static uint32_t EncodeDtr(LoadStore ls, int size, Index mode, Register rt,
-                          DTRAddr addr, Assembler::Condition c) {
-  MOZ_ASSERT(mode == Offset || (rt != addr.getBase() && pc != addr.getBase()));
-  MOZ_ASSERT(size == 32 || size == 8);
-  return 0x04000000 | ls | (size == 8 ? 0x00400000 : 0) | mode | c | RT(rt) |
-         addr.encode();
-}
-
-BufferOffset Assembler::as_dtr(LoadStore ls, int size, Index mode, Register rt,
-                               DTRAddr addr, Condition c) {
-  return writeInst(EncodeDtr(ls, size, mode, rt, addr, c));
-}
-
-/* static */ void Assembler::as_dtr_patch(LoadStore ls, int size, Index mode,
-                                          Register rt, DTRAddr addr,
-                                          Condition c, uint32_t* dest) {
-  WriteInstStatic(EncodeDtr(ls, size, mode, rt, addr, c), dest);
-}
-
-class PoolHintData {
- public:
-  enum LoadType {
-    // Set 0 to bogus, since that is the value most likely to be
-    // accidentally left somewhere.
-    PoolBOGUS = 0,
-    PoolDTR = 1,
-    PoolBranch = 2,
-    PoolVDTR = 3
-  };
-
- private:
-  uint32_t index_ : 16;
-  uint32_t cond_ : 4;
-  uint32_t loadType_ : 2;
-  uint32_t destReg_ : 5;
-  uint32_t destType_ : 1;
-  uint32_t ONES : 4;
-
-  static const uint32_t ExpectedOnes = 0xfu;
-
- public:
-  void init(uint32_t index, Assembler::Condition cond, LoadType lt,
-            Register destReg) {
-    index_ = index;
-    MOZ_ASSERT(index_ == index);
-    cond_ = cond >> 28;
-    MOZ_ASSERT(cond_ == cond >> 28);
-    loadType_ = lt;
-    ONES = ExpectedOnes;
-    destReg_ = destReg.code();
-    destType_ = 0;
-  }
-  void init(uint32_t index, Assembler::Condition cond, LoadType lt,
-            const VFPRegister& destReg) {
-    MOZ_ASSERT(destReg.isFloat());
-    index_ = index;
-    MOZ_ASSERT(index_ == index);
-    cond_ = cond >> 28;
-    MOZ_ASSERT(cond_ == cond >> 28);
-    loadType_ = lt;
-    ONES = ExpectedOnes;
-    destReg_ = destReg.id();
-    destType_ = destReg.isDouble();
-  }
-  Assembler::Condition getCond() const {
-    return Assembler::Condition(cond_ << 28);
-  }
-
-  Register getReg() const { return Register::FromCode(destReg_); }
-  VFPRegister getVFPReg() const {
-    VFPRegister r = VFPRegister(
-        destReg_, destType_ ? VFPRegister::Double : VFPRegister::Single);
-    return r;
-  }
-
-  int32_t getIndex() const { return index_; }
-  void setIndex(uint32_t index) {
-    MOZ_ASSERT(ONES == ExpectedOnes && loadType_ != PoolBOGUS);
-    index_ = index;
-    MOZ_ASSERT(index_ == index);
-  }
-
-  LoadType getLoadType() const {
-    // If this *was* a PoolBranch, but the branch has already been bound
-    // then this isn't going to look like a real poolhintdata, but we still
-    // want to lie about it so everyone knows it *used* to be a branch.
-    if (ONES != ExpectedOnes) {
-      return PoolHintData::PoolBranch;
-    }
-    return static_cast<LoadType>(loadType_);
-  }
-
-  bool isValidPoolHint() const {
-    // Most instructions cannot have a condition that is 0xf. Notable
-    // exceptions are blx and the entire NEON instruction set. For the
-    // purposes of pool loads, and possibly patched branches, the possible
-    // instructions are ldr and b, neither of which can have a condition
-    // code of 0xf.
-    return ONES == ExpectedOnes;
-  }
-||||||| merged common ancestors
-static uint32_t
-EncodeDtr(LoadStore ls, int size, Index mode, Register rt, DTRAddr addr, Assembler::Condition c)
-{
-    MOZ_ASSERT(mode == Offset ||  (rt != addr.getBase() && pc != addr.getBase()));
-    MOZ_ASSERT(size == 32 || size == 8);
-    return 0x04000000 | ls | (size == 8 ? 0x00400000 : 0) | mode | c | RT(rt) | addr.encode();
-}
-
-BufferOffset
-Assembler::as_dtr(LoadStore ls, int size, Index mode, Register rt, DTRAddr addr, Condition c)
-{
-    return writeInst(EncodeDtr(ls, size, mode, rt, addr, c));
-}
-
-/* static */ void
-Assembler::as_dtr_patch(LoadStore ls, int size, Index mode, Register rt, DTRAddr addr, Condition c,
-                        uint32_t* dest)
-{
-    WriteInstStatic(EncodeDtr(ls, size, mode, rt, addr, c), dest);
-}
-
-class PoolHintData
-{
-  public:
-    enum LoadType {
-        // Set 0 to bogus, since that is the value most likely to be
-        // accidentally left somewhere.
-        PoolBOGUS  = 0,
-        PoolDTR    = 1,
-        PoolBranch = 2,
-        PoolVDTR   = 3
-    };
-
-  private:
-    uint32_t   index_    : 16;
-    uint32_t   cond_     : 4;
-    uint32_t   loadType_ : 2;
-    uint32_t   destReg_  : 5;
-    uint32_t   destType_ : 1;
-    uint32_t   ONES     : 4;
-
-    static const uint32_t ExpectedOnes = 0xfu;
-
-  public:
-    void init(uint32_t index, Assembler::Condition cond, LoadType lt, Register destReg) {
-        index_ = index;
-        MOZ_ASSERT(index_ == index);
-        cond_ = cond >> 28;
-        MOZ_ASSERT(cond_ == cond >> 28);
-        loadType_ = lt;
-        ONES = ExpectedOnes;
-        destReg_ = destReg.code();
-        destType_ = 0;
-    }
-    void init(uint32_t index, Assembler::Condition cond, LoadType lt, const VFPRegister& destReg) {
-        MOZ_ASSERT(destReg.isFloat());
-        index_ = index;
-        MOZ_ASSERT(index_ == index);
-        cond_ = cond >> 28;
-        MOZ_ASSERT(cond_ == cond >> 28);
-        loadType_ = lt;
-        ONES = ExpectedOnes;
-        destReg_ = destReg.id();
-        destType_ = destReg.isDouble();
-    }
-    Assembler::Condition getCond() const {
-        return Assembler::Condition(cond_ << 28);
-    }
-
-    Register getReg() const {
-        return Register::FromCode(destReg_);
-    }
-    VFPRegister getVFPReg() const {
-        VFPRegister r = VFPRegister(destReg_, destType_ ? VFPRegister::Double : VFPRegister::Single);
-        return r;
-    }
-
-    int32_t getIndex() const {
-        return index_;
-    }
-    void setIndex(uint32_t index) {
-        MOZ_ASSERT(ONES == ExpectedOnes && loadType_ != PoolBOGUS);
-        index_ = index;
-        MOZ_ASSERT(index_ == index);
-    }
-
-    LoadType getLoadType() const {
-        // If this *was* a PoolBranch, but the branch has already been bound
-        // then this isn't going to look like a real poolhintdata, but we still
-        // want to lie about it so everyone knows it *used* to be a branch.
-        if (ONES != ExpectedOnes) {
-            return PoolHintData::PoolBranch;
-        }
-        return static_cast<LoadType>(loadType_);
-    }
-
-    bool isValidPoolHint() const {
-        // Most instructions cannot have a condition that is 0xf. Notable
-        // exceptions are blx and the entire NEON instruction set. For the
-        // purposes of pool loads, and possibly patched branches, the possible
-        // instructions are ldr and b, neither of which can have a condition
-        // code of 0xf.
-        return ONES == ExpectedOnes;
-    }
-=======
 static uint32_t EncodeDtr(LoadStore ls, int size, Index mode, Register rt,
                           DTRAddr addr, Assembler::Condition c) {
   MOZ_ASSERT(mode == Offset || (rt != addr.getBase() && pc != addr.getBase()));
@@ -2147,7 +1521,6 @@ class PoolHintData {
     // code of 0xf.
     return ONES == ExpectedOnes;
   }
->>>>>>> upstream-releases
 };
 
 union PoolHintPun {
@@ -2218,91 +1591,6 @@ BufferOffset Assembler::allocLiteralLoadEntry(
 // This is also used for instructions that might be resolved into branches,
 // or might not.  If dest==pc then it is effectively a branch.
 
-<<<<<<< HEAD
-BufferOffset Assembler::as_Imm32Pool(Register dest, uint32_t value,
-                                     Condition c) {
-  PoolHintPun php;
-  php.phd.init(0, c, PoolHintData::PoolDTR, dest);
-  BufferOffset offs = allocLiteralLoadEntry(
-      1, 1, php, (uint8_t*)&value, LiteralDoc(value), nullptr, dest == pc);
-  return offs;
-}
-
-/* static */ void Assembler::WritePoolEntry(Instruction* addr, Condition c,
-                                            uint32_t data) {
-  MOZ_ASSERT(addr->is<InstLDR>());
-  *addr->as<InstLDR>()->dest() = data;
-  MOZ_ASSERT(addr->extractCond() == c);
-}
-
-BufferOffset Assembler::as_BranchPool(uint32_t value, RepatchLabel* label,
-                                      const LabelDoc& documentation,
-                                      ARMBuffer::PoolEntry* pe, Condition c) {
-  PoolHintPun php;
-  php.phd.init(0, c, PoolHintData::PoolBranch, pc);
-  BufferOffset ret =
-      allocLiteralLoadEntry(1, 1, php, (uint8_t*)&value, LiteralDoc(), pe,
-                            /* loadToPC = */ true);
-  // If this label is already bound, then immediately replace the stub load
-  // with a correct branch.
-  if (label->bound()) {
-    BufferOffset dest(label);
-    BOffImm offset = dest.diffB<BOffImm>(ret);
-    if (offset.isInvalid()) {
-      m_buffer.fail_bail();
-      return ret;
-    }
-    as_b(offset, c, ret);
-  } else if (!oom()) {
-    label->use(ret.getOffset());
-  }
-||||||| merged common ancestors
-BufferOffset
-Assembler::as_Imm32Pool(Register dest, uint32_t value, Condition c)
-{
-    PoolHintPun php;
-    php.phd.init(0, c, PoolHintData::PoolDTR, dest);
-    BufferOffset offs = allocLiteralLoadEntry(1, 1, php,
-                                              (uint8_t*)&value,
-                                              LiteralDoc(value),
-                                              nullptr,
-                                              dest == pc);
-    return offs;
-}
-
-/* static */ void
-Assembler::WritePoolEntry(Instruction* addr, Condition c, uint32_t data)
-{
-    MOZ_ASSERT(addr->is<InstLDR>());
-    *addr->as<InstLDR>()->dest() = data;
-    MOZ_ASSERT(addr->extractCond() == c);
-}
-
-BufferOffset
-Assembler::as_BranchPool(uint32_t value, RepatchLabel* label,
-                         const LabelDoc& documentation,
-                         ARMBuffer::PoolEntry* pe, Condition c)
-{
-    PoolHintPun php;
-    php.phd.init(0, c, PoolHintData::PoolBranch, pc);
-    BufferOffset ret = allocLiteralLoadEntry(1, 1, php, (uint8_t*)&value,
-                                             LiteralDoc(),
-                                             pe,
-                                             /* loadToPC = */ true);
-    // If this label is already bound, then immediately replace the stub load
-    // with a correct branch.
-    if (label->bound()) {
-        BufferOffset dest(label);
-        BOffImm offset = dest.diffB<BOffImm>(ret);
-        if (offset.isInvalid()) {
-            m_buffer.fail_bail();
-            return ret;
-        }
-        as_b(offset, c, ret);
-    } else if (!oom()) {
-        label->use(ret.getOffset());
-    }
-=======
 BufferOffset Assembler::as_Imm32Pool(Register dest, uint32_t value,
                                      Condition c) {
   PoolHintPun php;
@@ -2338,7 +1626,6 @@ BufferOffset Assembler::as_BranchPool(uint32_t value, RepatchLabel* label,
   } else if (!oom()) {
     label->use(ret.getOffset());
   }
->>>>>>> upstream-releases
 #ifdef JS_DISASM_ARM
   spew_.spewRef(documentation);
 #endif
@@ -2539,29 +1826,6 @@ BufferOffset Assembler::as_b(Label* l, Condition c) {
       return BufferOffset();
     }
 
-<<<<<<< HEAD
-    as_b(BufferOffset(l).diffB<BOffImm>(ret), c, ret);
-#ifdef JS_DISASM_ARM
-    spewBranch(m_buffer.getInstOrNull(ret), refLabel(l));
-#endif
-    return ret;
-  }
-||||||| merged common ancestors
-    BufferOffset ret;
-    if (l->used()) {
-        int32_t old = l->offset();
-        // This will currently throw an assertion if we couldn't actually
-        // encode the offset of the branch.
-        if (!BOffImm::IsInRange(old)) {
-            m_buffer.fail_bail();
-            return ret;
-        }
-        ret = as_b(BOffImm(old), c, l);
-    } else {
-        BOffImm inv;
-        ret = as_b(inv, c, l);
-    }
-=======
     BOffImm offset = BufferOffset(l).diffB<BOffImm>(ret);
     MOZ_RELEASE_ASSERT(!offset.isInvalid(),
                        "Buffer size limit should prevent this");
@@ -2571,48 +1835,11 @@ BufferOffset Assembler::as_b(Label* l, Condition c) {
 #endif
     return ret;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (oom()) {
     return BufferOffset();
   }
 
-  BufferOffset ret;
-  if (l->used()) {
-    int32_t old = l->offset();
-    // This will currently throw an assertion if we couldn't actually
-    // encode the offset of the branch.
-    if (!BOffImm::IsInRange(old)) {
-      m_buffer.fail_bail();
-      return ret;
-    }
-    ret = as_b(BOffImm(old), c, l);
-  } else {
-    BOffImm inv;
-    ret = as_b(inv, c, l);
-  }
-||||||| merged common ancestors
-    if (oom()) {
-        return BufferOffset();
-    }
-=======
-  if (oom()) {
-    return BufferOffset();
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (oom()) {
-    return BufferOffset();
-  }
-
-  l->use(ret.getOffset());
-  return ret;
-||||||| merged common ancestors
-    l->use(ret.getOffset());
-    return ret;
-=======
   BufferOffset ret;
   if (l->used()) {
     int32_t old = l->offset();
@@ -2630,7 +1857,6 @@ BufferOffset Assembler::as_b(Label* l, Condition c) {
 
   l->use(ret.getOffset());
   return ret;
->>>>>>> upstream-releases
 }
 
 BufferOffset Assembler::as_b(BOffImm off, Condition c, BufferOffset inst) {
@@ -2665,76 +1891,10 @@ BufferOffset Assembler::as_bl(Label* l, Condition c) {
       return BufferOffset();
     }
 
-<<<<<<< HEAD
-    BOffImm offset = BufferOffset(l).diffB<BOffImm>(ret);
-    if (offset.isInvalid()) {
-      m_buffer.fail_bail();
-      return BufferOffset();
-    }
-
-    as_bl(offset, c, ret);
-#ifdef JS_DISASM_ARM
-    spewBranch(m_buffer.getInstOrNull(ret), refLabel(l));
-#endif
-    return ret;
-  }
-
-  if (oom()) {
-    return BufferOffset();
-  }
-
-  BufferOffset ret;
-  // See if the list was empty.
-  if (l->used()) {
-    // This will currently throw an assertion if we couldn't actually encode
-    // the offset of the branch.
-    int32_t old = l->offset();
-    if (!BOffImm::IsInRange(old)) {
-      m_buffer.fail_bail();
-      return ret;
-    }
-    ret = as_bl(BOffImm(old), c, l);
-  } else {
-    BOffImm inv;
-    ret = as_bl(inv, c, l);
-  }
-||||||| merged common ancestors
-    BufferOffset ret;
-    // See if the list was empty.
-    if (l->used()) {
-        // This will currently throw an assertion if we couldn't actually encode
-        // the offset of the branch.
-        int32_t old = l->offset();
-        if (!BOffImm::IsInRange(old)) {
-            m_buffer.fail_bail();
-            return ret;
-        }
-        ret = as_bl(BOffImm(old), c, l);
-    } else {
-        BOffImm inv;
-        ret = as_bl(inv, c, l);
-    }
-
-    if (oom()) {
-        return BufferOffset();
-    }
-=======
     BOffImm offset = BufferOffset(l).diffB<BOffImm>(ret);
     MOZ_RELEASE_ASSERT(!offset.isInvalid(),
                        "Buffer size limit should prevent this");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (oom()) {
-    return BufferOffset();
-  }
-
-  l->use(ret.getOffset());
-  return ret;
-||||||| merged common ancestors
-    l->use(ret.getOffset());
-    return ret;
-=======
     as_bl(offset, c, ret);
 #ifdef JS_DISASM_ARM
     spewBranch(m_buffer.getInstOrNull(ret), refLabel(l));
@@ -2764,7 +1924,6 @@ BufferOffset Assembler::as_bl(Label* l, Condition c) {
 
   l->use(ret.getOffset());
   return ret;
->>>>>>> upstream-releases
 }
 
 BufferOffset Assembler::as_bl(BOffImm off, Condition c, BufferOffset inst) {
@@ -2792,26 +1951,11 @@ BufferOffset Assembler::writeVFPInst(vfp_size sz, uint32_t blob) {
   return writeInst(VfpTag | sz | blob);
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::WriteVFPInstStatic(vfp_size sz, uint32_t blob,
-                                                uint32_t* dest) {
-  MOZ_ASSERT((sz & blob) == 0);
-  MOZ_ASSERT((VfpTag & blob) == 0);
-  WriteInstStatic(VfpTag | sz | blob, dest);
-||||||| merged common ancestors
-/* static */ void
-Assembler::WriteVFPInstStatic(vfp_size sz, uint32_t blob, uint32_t* dest)
-{
-    MOZ_ASSERT((sz & blob) == 0);
-    MOZ_ASSERT((VfpTag & blob) == 0);
-    WriteInstStatic(VfpTag | sz | blob, dest);
-=======
 /* static */
 void Assembler::WriteVFPInstStatic(vfp_size sz, uint32_t blob, uint32_t* dest) {
   MOZ_ASSERT((sz & blob) == 0);
   MOZ_ASSERT((VfpTag & blob) == 0);
   WriteInstStatic(VfpTag | sz | blob, dest);
->>>>>>> upstream-releases
 }
 
 // Unityped variants: all registers hold the same (ieee754 single/double)
@@ -2999,25 +2143,11 @@ BufferOffset Assembler::as_vdtr(
   return writeVFPInst(sz, EncodeVdtr(ls, vd, addr, c));
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::as_vdtr_patch(LoadStore ls, VFPRegister vd,
-                                           VFPAddr addr, Condition c,
-                                           uint32_t* dest) {
-  vfp_size sz = vd.isDouble() ? IsDouble : IsSingle;
-  WriteVFPInstStatic(sz, EncodeVdtr(ls, vd, addr, c), dest);
-||||||| merged common ancestors
-/* static */ void
-Assembler::as_vdtr_patch(LoadStore ls, VFPRegister vd, VFPAddr addr, Condition c, uint32_t* dest)
-{
-    vfp_size sz = vd.isDouble() ? IsDouble : IsSingle;
-    WriteVFPInstStatic(sz, EncodeVdtr(ls, vd, addr, c), dest);
-=======
 /* static */
 void Assembler::as_vdtr_patch(LoadStore ls, VFPRegister vd, VFPAddr addr,
                               Condition c, uint32_t* dest) {
   vfp_size sz = vd.isDouble() ? IsDouble : IsSingle;
   WriteVFPInstStatic(sz, EncodeVdtr(ls, vd, addr, c), dest);
->>>>>>> upstream-releases
 }
 
 // VFP's ldm/stm work differently from the standard arm ones. You can only
@@ -3071,70 +2201,6 @@ void Assembler::bind(Label* label, BufferOffset boff) {
 #ifdef JS_DISASM_ARM
   spew_.spewBind(label);
 #endif
-<<<<<<< HEAD
-  if (oom()) {
-    // Ensure we always bind the label. This matches what we do on
-    // x86/x64 and silences the assert in ~Label.
-    label->bind(0);
-    return;
-  }
-
-  if (label->used()) {
-    bool more;
-    // If our caller didn't give us an explicit target to bind to then we
-    // want to bind to the location of the next instruction.
-    BufferOffset dest = boff.assigned() ? boff : nextOffset();
-    BufferOffset b(label);
-    do {
-      BufferOffset next;
-      more = nextLink(b, &next);
-      Instruction branch = *editSrc(b);
-      Condition c = branch.extractCond();
-      BOffImm offset = dest.diffB<BOffImm>(b);
-      if (offset.isInvalid()) {
-        m_buffer.fail_bail();
-        return;
-      }
-      if (branch.is<InstBImm>()) {
-        as_b(offset, c, b);
-      } else if (branch.is<InstBLImm>()) {
-        as_bl(offset, c, b);
-      } else {
-        MOZ_CRASH("crazy fixup!");
-      }
-      b = next;
-    } while (more);
-  }
-  label->bind(nextOffset().getOffset());
-  MOZ_ASSERT(!oom());
-}
-
-void Assembler::bind(RepatchLabel* label) {
-  // It does not seem to be useful to record this label for
-  // disassembly, as the value that is bound to the label is often
-  // effectively garbage and is replaced by something else later.
-  BufferOffset dest = nextOffset();
-  if (label->used() && !oom()) {
-    // If the label has a use, then change this use to refer to the bound
-    // label.
-    BufferOffset branchOff(label->offset());
-    // Since this was created with a RepatchLabel, the value written in the
-    // instruction stream is not branch shaped, it is PoolHintData shaped.
-    Instruction* branch = editSrc(branchOff);
-    PoolHintPun p;
-    p.raw = branch->encode();
-    Condition cond;
-    if (p.phd.isValidPoolHint()) {
-      cond = p.phd.getCond();
-    } else {
-      cond = branch->extractCond();
-||||||| merged common ancestors
-    if (oom()) {
-        // Ensure we always bind the label. This matches what we do on
-        // x86/x64 and silences the assert in ~Label.
-        label->bind(0);
-        return;
-=======
   if (oom()) {
     // Ensure we always bind the label. This matches what we do on
     // x86/x64 and silences the assert in ~Label.
@@ -3189,88 +2255,14 @@ void Assembler::bind(RepatchLabel* label) {
       cond = p.phd.getCond();
     } else {
       cond = branch->extractCond();
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    BOffImm offset = dest.diffB<BOffImm>(branchOff);
-    if (offset.isInvalid()) {
-      m_buffer.fail_bail();
-      return;
-    }
-    as_b(offset, cond, branchOff);
-  }
-  label->bind(dest.getOffset());
-||||||| merged common ancestors
-    if (label->used()) {
-        bool more;
-        // If our caller didn't give us an explicit target to bind to then we
-        // want to bind to the location of the next instruction.
-        BufferOffset dest = boff.assigned() ? boff : nextOffset();
-        BufferOffset b(label);
-        do {
-            BufferOffset next;
-            more = nextLink(b, &next);
-            Instruction branch = *editSrc(b);
-            Condition c = branch.extractCond();
-            BOffImm offset = dest.diffB<BOffImm>(b);
-            if (offset.isInvalid()) {
-                m_buffer.fail_bail();
-                return;
-            }
-            if (branch.is<InstBImm>()) {
-                as_b(offset, c, b);
-            } else if (branch.is<InstBLImm>()) {
-                as_bl(offset, c, b);
-            } else {
-                MOZ_CRASH("crazy fixup!");
-            }
-            b = next;
-        } while (more);
-    }
-    label->bind(nextOffset().getOffset());
-    MOZ_ASSERT(!oom());
-}
-
-void
-Assembler::bind(RepatchLabel* label)
-{
-    // It does not seem to be useful to record this label for
-    // disassembly, as the value that is bound to the label is often
-    // effectively garbage and is replaced by something else later.
-    BufferOffset dest = nextOffset();
-    if (label->used() && !oom()) {
-        // If the label has a use, then change this use to refer to the bound
-        // label.
-        BufferOffset branchOff(label->offset());
-        // Since this was created with a RepatchLabel, the value written in the
-        // instruction stream is not branch shaped, it is PoolHintData shaped.
-        Instruction* branch = editSrc(branchOff);
-        PoolHintPun p;
-        p.raw = branch->encode();
-        Condition cond;
-        if (p.phd.isValidPoolHint()) {
-            cond = p.phd.getCond();
-        } else {
-            cond = branch->extractCond();
-        }
-
-        BOffImm offset = dest.diffB<BOffImm>(branchOff);
-        if (offset.isInvalid()) {
-            m_buffer.fail_bail();
-            return;
-        }
-        as_b(offset, cond, branchOff);
-    }
-    label->bind(dest.getOffset());
-=======
     BOffImm offset = dest.diffB<BOffImm>(branchOff);
     MOZ_RELEASE_ASSERT(!offset.isInvalid(),
                        "Buffer size limit should prevent this");
     as_b(offset, cond, branchOff);
   }
   label->bind(dest.getOffset());
->>>>>>> upstream-releases
 }
 
 void Assembler::retarget(Label* label, Label* target) {
@@ -3600,7 +2592,6 @@ Instruction* InstructionIterator::maybeSkipAutomaticInstructions() {
   }
 }
 
-<<<<<<< HEAD
 Instruction* BufferInstructionIterator::maybeSkipAutomaticInstructions() {
   const PoolHeader* ph;
   // If this is a guard, and the next instruction is a header, always work
@@ -3617,43 +2608,6 @@ Instruction* BufferInstructionIterator::maybeSkipAutomaticInstructions() {
     return next();
   }
   return cur();
-||||||| merged common ancestors
-Instruction*
-BufferInstructionIterator::maybeSkipAutomaticInstructions()
-{
-    const PoolHeader* ph;
-    // If this is a guard, and the next instruction is a header, always work
-    // around the pool. If it isn't a guard, then start looking ahead.
-    if (InstIsGuard(*this, &ph)) {
-        // Don't skip a natural guard.
-        if (ph->isNatural()) {
-            return cur();
-        }
-        advance(sizeof(Instruction) * ph->size());
-        return next();
-    }
-    if (InstIsBNop<BufferInstructionIterator>(*this)) {
-        return next();
-    }
-    return cur();
-=======
-Instruction* BufferInstructionIterator::maybeSkipAutomaticInstructions() {
-  const PoolHeader* ph;
-  // If this is a guard, and the next instruction is a header, always work
-  // around the pool. If it isn't a guard, then start looking ahead.
-  if (InstIsGuard(*this, &ph)) {
-    // Don't skip a natural guard.
-    if (ph->isNatural()) {
-      return cur();
-    }
-    advance(sizeof(Instruction) * ph->size());
-    return next();
-  }
-  if (InstIsBNop<BufferInstructionIterator>(*this)) {
-    return next();
-  }
-  return cur();
->>>>>>> upstream-releases
 }
 
 // Cases to be handled:
@@ -3693,7 +2647,6 @@ Instruction* BufferInstructionIterator::maybeSkipAutomaticInstructions() {
 //    0xdeadbeef
 //    add r4, r4, r4  <= returned value
 
-<<<<<<< HEAD
 Instruction* InstructionIterator::next() {
   const PoolHeader* ph;
 
@@ -3701,30 +2654,6 @@ Instruction* InstructionIterator::next() {
   // move past the current instruction and the pool.
   if (InstIsGuard(cur(), &ph)) {
     advanceRaw(1 + ph->size());
-||||||| merged common ancestors
-Instruction*
-InstructionIterator::next()
-{
-    const PoolHeader* ph;
-
-    // If the current instruction is followed by a pool header,
-    // move past the current instruction and the pool.
-    if (InstIsGuard(cur(), &ph)) {
-        advanceRaw(1 + ph->size());
-        return maybeSkipAutomaticInstructions();
-    }
-
-    // The next instruction is then known to not be a PoolHeader.
-    advanceRaw(1);
-=======
-Instruction* InstructionIterator::next() {
-  const PoolHeader* ph;
-
-  // If the current instruction is followed by a pool header,
-  // move past the current instruction and the pool.
-  if (InstIsGuard(cur(), &ph)) {
-    advanceRaw(1 + ph->size());
->>>>>>> upstream-releases
     return maybeSkipAutomaticInstructions();
   }
 
@@ -3858,78 +2787,6 @@ SecondScratchRegisterScope::SecondScratchRegisterScope(MacroAssembler& masm)
 
 #ifdef JS_DISASM_ARM
 
-<<<<<<< HEAD
-/* static */ void Assembler::disassembleInstruction(const Instruction* i,
-                                                    DisasmBuffer& buffer) {
-  disasm::NameConverter converter;
-  disasm::Disassembler dasm(converter);
-  uint8_t* loc = reinterpret_cast<uint8_t*>(const_cast<uint32_t*>(i->raw()));
-  dasm.InstructionDecode(buffer, loc);
-}
-
-void Assembler::initDisassembler() {
-  // The line is normally laid out like this:
-  //
-  // xxxxxxxx        ldr r, op   ; comment
-  //
-  // where xx...x is the instruction bit pattern.
-  //
-  // Labels are laid out by themselves to line up with the instructions above
-  // and below:
-  //
-  //            nnnn:
-  //
-  // Branch targets are normally on the same line as the branch instruction,
-  // but when they cannot be they will be on a line by themselves, indented
-  // significantly:
-  //
-  //                     -> label
-
-  spew_.setLabelIndent("          ");             // 10
-  spew_.setTargetIndent("                    ");  // 20
-}
-
-void Assembler::finishDisassembler() { spew_.spewOrphans(); }
-||||||| merged common ancestors
-/* static */ void
-Assembler::disassembleInstruction(const Instruction* i, DisasmBuffer& buffer)
-{
-    disasm::NameConverter converter;
-    disasm::Disassembler dasm(converter);
-    uint8_t* loc = reinterpret_cast<uint8_t*>(const_cast<uint32_t*>(i->raw()));
-    dasm.InstructionDecode(buffer, loc);
-}
-
-void
-Assembler::initDisassembler()
-{
-    // The line is normally laid out like this:
-    //
-    // xxxxxxxx        ldr r, op   ; comment
-    //
-    // where xx...x is the instruction bit pattern.
-    //
-    // Labels are laid out by themselves to line up with the instructions above
-    // and below:
-    //
-    //            nnnn:
-    //
-    // Branch targets are normally on the same line as the branch instruction,
-    // but when they cannot be they will be on a line by themselves, indented
-    // significantly:
-    //
-    //                     -> label
-
-    spew_.setLabelIndent("          ");             // 10
-    spew_.setTargetIndent("                    ");  // 20
-}
-
-void
-Assembler::finishDisassembler()
-{
-    spew_.spewOrphans();
-}
-=======
 /* static */
 void Assembler::disassembleInstruction(const Instruction* i,
                                        DisasmBuffer& buffer) {
@@ -3962,7 +2819,6 @@ void Assembler::initDisassembler() {
 }
 
 void Assembler::finishDisassembler() { spew_.spewOrphans(); }
->>>>>>> upstream-releases
 
 // Labels are named as they are encountered by adding names to a
 // table, using the Label address as the key.  This is made tricky by
@@ -3997,53 +2853,11 @@ void Assembler::spewBranch(Instruction* i, const LabelDoc& target) {
     return;
   }
 
-<<<<<<< HEAD
   DisasmBuffer buffer;
   disassembleInstruction(i, buffer);
 
   char labelBuf[128];
   labelBuf[0] = 0;
-||||||| merged common ancestors
-    char labelBuf[128];
-    labelBuf[0] = 0;
-
-    bool haveTarget = target.valid;
-    if (!haveTarget) {
-        SprintfLiteral(labelBuf, "  -> (link-time target)");
-    }
-
-    if (InstBranchImm::IsTHIS(*i)) {
-        InstBranchImm* bimm = InstBranchImm::AsTHIS(*i);
-        BOffImm destOff;
-        bimm->extractImm(&destOff);
-        if (destOff.isInvalid() || haveTarget) {
-            // The target information in the instruction is likely garbage, so remove it.
-            // The target label will in any case be printed if we have it.
-            //
-            // The format of the instruction disassembly is [0-9a-f]{8}\s+\S+\s+.*,
-            // where the \S+ string is the opcode.  Strip everything after the opcode,
-            // and attach the label if we have it.
-            int i;
-            for (i = 8; i < buffer.length() && buffer[i] == ' '; i++) {
-            }
-            for (; i < buffer.length() && buffer[i] != ' '; i++) {
-            }
-            buffer[i] = 0;
-            if (haveTarget) {
-                SprintfLiteral(labelBuf, "  -> %d%s", target.doc,
-                         !target.bound ? "f" : "");
-                haveTarget = false;
-            }
-        }
-    }
-    spew_.spew("%s%s", buffer.start(), labelBuf);
-=======
-  DisasmBuffer buffer;
-  disassembleInstruction(i, buffer);
-
-  char labelBuf[128];
-  labelBuf[0] = 0;
->>>>>>> upstream-releases
 
   bool haveTarget = target.valid;
   if (!haveTarget) {

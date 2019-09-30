@@ -306,16 +306,9 @@ class MarionetteTest(TestingMixin, MercurialScript, TransferMixin,
         if not self.config['e10s']:
             cmd.append('--disable-e10s')
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-        if self.config['headless']:
-            cmd.append('--headless')
-
-=======
         if self.config['enable_webrender']:
             cmd.append('--enable-webrender')
 
->>>>>>> upstream-releases
         cmd.append('--gecko-log=-')
 
         if self.config.get("structured_output"):
@@ -350,11 +343,6 @@ class MarionetteTest(TestingMixin, MercurialScript, TransferMixin,
 
         if self.config['allow_software_gl_layers']:
             env['MOZ_LAYERS_ALLOW_SOFTWARE_GL'] = '1'
-
-        if self.config['headless']:
-            env['MOZ_HEADLESS'] = '1'
-            env['MOZ_HEADLESS_WIDTH'] = self.config['headless_width']
-            env['MOZ_HEADLESS_HEIGHT'] = self.config['headless_height']
 
         if self.config['headless']:
             env['MOZ_HEADLESS'] = '1'

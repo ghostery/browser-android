@@ -239,15 +239,6 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvFillHandlerInfo(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult HandlerServiceParent::RecvExists(
-    const HandlerInfo& aHandlerInfo, bool* exists) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-HandlerServiceParent::RecvExists(const HandlerInfo& aHandlerInfo,
-                                 bool* exists)
-{
-=======
 mozilla::ipc::IPCResult HandlerServiceParent::RecvGetMIMEInfoFromOS(
     const nsCString& aMIMEType, const nsCString& aExtension, nsresult* aRv,
     HandlerInfo* aHandlerInfoData, bool* aFound) {
@@ -281,7 +272,6 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvGetMIMEInfoFromOS(
 
 mozilla::ipc::IPCResult HandlerServiceParent::RecvExists(
     const HandlerInfo& aHandlerInfo, bool* exists) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIHandlerInfo> info(WrapHandlerInfo(aHandlerInfo));
   nsCOMPtr<nsIHandlerService> handlerSvc =
       do_GetService(NS_HANDLERSERVICE_CONTRACTID);
@@ -289,22 +279,12 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvExists(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocol(
-    const nsCString& aProtocolScheme, bool* aHandlerExists) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-HandlerServiceParent::RecvExistsForProtocol(const nsCString& aProtocolScheme,
-                                            bool* aHandlerExists)
-{
-=======
 mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocolOS(
     const nsCString& aProtocolScheme, bool* aHandlerExists) {
   if (aProtocolScheme.Length() > MAX_SCHEME_LENGTH) {
     *aHandlerExists = false;
     return IPC_OK();
   }
->>>>>>> upstream-releases
 #ifdef MOZ_WIDGET_GTK
   // Check the GNOME registry for a protocol handler
   *aHandlerExists = nsGNOMERegistry::HandlerExists(aProtocolScheme.get());
@@ -314,20 +294,6 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocolOS(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult HandlerServiceParent::RecvGetTypeFromExtension(
-    const nsCString& aFileExtension, nsCString* type) {
-  nsCOMPtr<nsIHandlerService> handlerSvc =
-      do_GetService(NS_HANDLERSERVICE_CONTRACTID);
-  handlerSvc->GetTypeFromExtension(aFileExtension, *type);
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-HandlerServiceParent::RecvGetTypeFromExtension(const nsCString& aFileExtension,
-                                               nsCString* type)
-{
-  nsCOMPtr<nsIHandlerService> handlerSvc = do_GetService(NS_HANDLERSERVICE_CONTRACTID);
-  handlerSvc->GetTypeFromExtension(aFileExtension, *type);
-=======
 /*
  * Check if a handler exists for the provided protocol. Check the datastore
  * first and then fallback to checking the OS for a handler.
@@ -358,17 +324,9 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocol(
   MOZ_RELEASE_ASSERT(false, "No implementation on this platform.");
   *aHandlerExists = false;
 #endif
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void HandlerServiceParent::ActorDestroy(ActorDestroyReason aWhy) {}
-||||||| merged common ancestors
-void HandlerServiceParent::ActorDestroy(ActorDestroyReason aWhy)
-{
-}
-=======
 mozilla::ipc::IPCResult HandlerServiceParent::RecvGetTypeFromExtension(
     const nsCString& aFileExtension, nsCString* type) {
   if (aFileExtension.Length() > MAX_EXT_LENGTH) {
@@ -402,4 +360,3 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvGetApplicationDescription(
 }
 
 void HandlerServiceParent::ActorDestroy(ActorDestroyReason aWhy) {}
->>>>>>> upstream-releases

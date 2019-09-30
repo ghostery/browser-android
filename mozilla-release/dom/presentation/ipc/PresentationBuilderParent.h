@@ -28,14 +28,7 @@ class PresentationBuilderParent final
 
   mozilla::ipc::IPCResult RecvSendAnswer(const nsString& aSDP);
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvSendIceCandidate(
-      const nsString& aCandidate) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvSendIceCandidate(const nsString& aCandidate) override;
-=======
   mozilla::ipc::IPCResult RecvSendIceCandidate(const nsString& aCandidate);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvClose(const nsresult& aReason);
 
@@ -43,14 +36,7 @@ class PresentationBuilderParent final
 
   mozilla::ipc::IPCResult RecvOnSessionTransport();
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvOnSessionTransportError(
-      const nsresult& aReason) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvOnSessionTransportError(const nsresult& aReason) override;
-=======
   mozilla::ipc::IPCResult RecvOnSessionTransportError(const nsresult& aReason);
->>>>>>> upstream-releases
 
  private:
   virtual ~PresentationBuilderParent();

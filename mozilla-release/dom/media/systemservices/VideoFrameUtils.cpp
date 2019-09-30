@@ -10,23 +10,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-size_t VideoFrameUtils::TotalRequiredBufferSize(
-    const webrtc::VideoFrame& aVideoFrame) {
-  auto i420 = aVideoFrame.video_frame_buffer()->ToI420();
-  auto height = i420->height();
-  return height * i420->StrideY() + ((height + 1) / 2) * i420->StrideU() +
-         ((height + 1) / 2) * i420->StrideV();
-||||||| merged common ancestors
-size_t
-VideoFrameUtils::TotalRequiredBufferSize(
-                  const webrtc::VideoFrame& aVideoFrame)
-{
-  auto height = aVideoFrame.video_frame_buffer()->height();
-  return height * aVideoFrame.video_frame_buffer()->StrideY() +
-    ((height+1)/2) * aVideoFrame.video_frame_buffer()->StrideU() +
-    ((height+1)/2) * aVideoFrame.video_frame_buffer()->StrideV();
-=======
 uint32_t VideoFrameUtils::TotalRequiredBufferSize(
     const webrtc::VideoFrame& aVideoFrame) {
   auto i420 = aVideoFrame.video_frame_buffer()->ToI420();
@@ -36,7 +19,6 @@ uint32_t VideoFrameUtils::TotalRequiredBufferSize(
                 ((height + 1) / 2) * i420->StrideV();
   MOZ_RELEASE_ASSERT(size < std::numeric_limits<uint32_t>::max());
   return static_cast<uint32_t>(size);
->>>>>>> upstream-releases
 }
 
 void VideoFrameUtils::InitFrameBufferProperties(

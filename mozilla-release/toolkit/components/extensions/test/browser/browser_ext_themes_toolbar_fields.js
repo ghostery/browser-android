@@ -22,42 +22,16 @@ add_task(async function test_support_toolbar_field_properties() {
   const TOOLBAR_FIELD_BORDER = "#aaaaff";
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-=======
       theme: {
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar_field": TOOLBAR_FIELD_BACKGROUND,
-          "toolbar_field_text": TOOLBAR_FIELD_COLOR,
-          "toolbar_field_border": TOOLBAR_FIELD_BORDER,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar_field": TOOLBAR_FIELD_BACKGROUND,
-          "toolbar_field_text": TOOLBAR_FIELD_COLOR,
-          "toolbar_field_border": TOOLBAR_FIELD_BORDER,
-=======
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
           toolbar_field: TOOLBAR_FIELD_BACKGROUND,
           toolbar_field_text: TOOLBAR_FIELD_COLOR,
           toolbar_field_border: TOOLBAR_FIELD_BORDER,
->>>>>>> upstream-releases
         },
       },
     },
@@ -121,28 +95,12 @@ add_task(async function test_support_toolbar_field_brighttext() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar_field": "#fff",
-          "toolbar_field_text": "#000",
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar_field": "#fff",
-          "toolbar_field_text": "#000",
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
           toolbar_field: "#fff",
           toolbar_field_text: "#000",
->>>>>>> upstream-releases
         },
       },
     },
@@ -164,28 +122,12 @@ add_task(async function test_support_toolbar_field_brighttext() {
 
   extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar_field": "#000",
-          "toolbar_field_text": "#fff",
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar_field": "#000",
-          "toolbar_field_text": "#fff",
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
           toolbar_field: "#000",
           toolbar_field_text: "#fff",
->>>>>>> upstream-releases
         },
       },
     },

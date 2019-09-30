@@ -20,21 +20,11 @@ class nsBaseWidget;
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-class UiCompositorControllerChild final
-    : protected PUiCompositorControllerChild {
- public:
-||||||| merged common ancestors
-class UiCompositorControllerChild final : protected PUiCompositorControllerChild
-{
-public:
-=======
 class UiCompositorControllerChild final
     : protected PUiCompositorControllerChild {
   friend class PUiCompositorControllerChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(UiCompositorControllerChild)
 
   static RefPtr<UiCompositorControllerChild> CreateForSameProcess(
@@ -67,23 +57,6 @@ class UiCompositorControllerChild final
   void ActorDestroy(ActorDestroyReason aWhy) override;
   void ActorDealloc() override;
   void ProcessingError(Result aCode, const char* aReason) override;
-<<<<<<< HEAD
-  virtual void HandleFatalError(const char* aMsg) const override;
-  mozilla::ipc::IPCResult RecvToolbarAnimatorMessageFromCompositor(
-      const int32_t& aMessage) override;
-  mozilla::ipc::IPCResult RecvRootFrameMetrics(
-      const ScreenPoint& aScrollOffset, const CSSToScreenScale& aZoom) override;
-  mozilla::ipc::IPCResult RecvScreenPixels(ipc::Shmem&& aMem,
-                                           const ScreenIntSize& aSize) override;
-
- private:
-||||||| merged common ancestors
-  virtual void HandleFatalError(const char* aMsg) const override;
-  mozilla::ipc::IPCResult RecvToolbarAnimatorMessageFromCompositor(const int32_t& aMessage) override;
-  mozilla::ipc::IPCResult RecvRootFrameMetrics(const ScreenPoint& aScrollOffset, const CSSToScreenScale& aZoom) override;
-  mozilla::ipc::IPCResult RecvScreenPixels(ipc::Shmem&& aMem, const ScreenIntSize& aSize) override;
-private:
-=======
   void HandleFatalError(const char* aMsg) const override;
   mozilla::ipc::IPCResult RecvToolbarAnimatorMessageFromCompositor(
       const int32_t& aMessage);
@@ -93,7 +66,6 @@ private:
                                            const ScreenIntSize& aSize);
 
  private:
->>>>>>> upstream-releases
   explicit UiCompositorControllerChild(const uint64_t& aProcessToken);
   virtual ~UiCompositorControllerChild();
   void OpenForSameProcess();

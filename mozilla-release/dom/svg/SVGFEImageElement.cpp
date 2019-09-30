@@ -32,24 +32,10 @@ JSObject* SVGFEImageElement::WrapNode(JSContext* aCx,
   return SVGFEImageElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringInfo SVGFEImageElement::sStringInfo[3] = {
-    {nsGkAtoms::result, kNameSpaceID_None, true},
-    {nsGkAtoms::href, kNameSpaceID_None, true},
-    {nsGkAtoms::href, kNameSpaceID_XLink, true}};
-||||||| merged common ancestors
-nsSVGElement::StringInfo SVGFEImageElement::sStringInfo[3] =
-{
-  { nsGkAtoms::result, kNameSpaceID_None, true },
-  { nsGkAtoms::href, kNameSpaceID_None, true },
-  { nsGkAtoms::href, kNameSpaceID_XLink, true }
-};
-=======
 SVGElement::StringInfo SVGFEImageElement::sStringInfo[3] = {
     {nsGkAtoms::result, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_XLink, true}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsISupports methods
@@ -146,24 +132,9 @@ void SVGFEImageElement::MaybeLoadSVGImage() {
   }
 }
 
-<<<<<<< HEAD
-nsresult SVGFEImageElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      SVGFEImageElementBase::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-SVGFEImageElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv = SVGFEImageElementBase::BindToTree(aDocument, aParent,
-                                                  aBindingParent);
-=======
 nsresult SVGFEImageElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = SVGFEImageElementBase::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsImageLoadingContent::BindToTree(aContext, aParent);
@@ -178,21 +149,9 @@ nsresult SVGFEImageElement::BindToTree(BindContext& aContext,
   return rv;
 }
 
-<<<<<<< HEAD
-void SVGFEImageElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsImageLoadingContent::UnbindFromTree(aDeep, aNullParent);
-  SVGFEImageElementBase::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-SVGFEImageElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsImageLoadingContent::UnbindFromTree(aDeep, aNullParent);
-  SVGFEImageElementBase::UnbindFromTree(aDeep, aNullParent);
-=======
 void SVGFEImageElement::UnbindFromTree(bool aNullParent) {
   nsImageLoadingContent::UnbindFromTree(aNullParent);
   SVGFEImageElementBase::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 }
 
 EventStates SVGFEImageElement::IntrinsicState() const {
@@ -205,15 +164,7 @@ EventStates SVGFEImageElement::IntrinsicState() const {
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEImageElement)
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGFEImageElement::Href() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGFEImageElement::Href()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGFEImageElement::Href() {
->>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -325,28 +276,12 @@ SVGFEImageElement::PreserveAspectRatio() {
   return mPreserveAspectRatio.ToDOMAnimatedPreserveAspectRatio(this);
 }
 
-<<<<<<< HEAD
-SVGAnimatedPreserveAspectRatio* SVGFEImageElement::GetPreserveAspectRatio() {
-||||||| merged common ancestors
-SVGAnimatedPreserveAspectRatio *
-SVGFEImageElement::GetPreserveAspectRatio()
-{
-=======
 SVGAnimatedPreserveAspectRatio*
 SVGFEImageElement::GetAnimatedPreserveAspectRatio() {
->>>>>>> upstream-releases
   return &mPreserveAspectRatio;
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGFEImageElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGFEImageElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGFEImageElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

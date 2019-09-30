@@ -35,16 +35,8 @@ class PaintedLayerComposite : public PaintedLayer, public LayerComposite {
  protected:
   virtual ~PaintedLayerComposite();
 
-<<<<<<< HEAD
- public:
-  virtual void Disconnect() override;
-||||||| merged common ancestors
-public:
-  virtual void Disconnect() override;
-=======
  public:
   void Disconnect() override;
->>>>>>> upstream-releases
 
   CompositableHost* GetCompositableHost() override;
 
@@ -67,14 +59,7 @@ public:
 
   HostLayer* AsHostLayer() override { return this; }
 
-<<<<<<< HEAD
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override {
-||||||| merged common ancestors
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override
-  {
-=======
   void InvalidateRegion(const nsIntRegion& aRegion) override {
->>>>>>> upstream-releases
     MOZ_CRASH("PaintedLayerComposites can't fill invalidated regions");
   }
 

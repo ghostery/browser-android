@@ -9,16 +9,9 @@
 #include <string>
 #include <vector>
 #include "nsString.h"
-<<<<<<< HEAD
-#if defined(MOZ_GECKO_PROFILER)
-#include "shared-libraries.h"
-#endif  // MOZ_GECKO_PROFILER
-||||||| merged common ancestors
-=======
 #if defined(MOZ_GECKO_PROFILER)
 #  include "shared-libraries.h"
 #endif  // MOZ_GECKO_PROFILER
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace Telemetry {
@@ -45,25 +38,13 @@ class ProcessedStack {
     nsString mName;
     nsCString mBreakpadId;
 
-    bool operator==(const Module &other) const;
+    bool operator==(const Module& other) const;
   };
 
-<<<<<<< HEAD
-  const Frame &GetFrame(unsigned aIndex) const;
-  void AddFrame(const Frame &aFrame);
-  const Module &GetModule(unsigned aIndex) const;
-  void AddModule(const Module &aFrame);
-||||||| merged common ancestors
-  const Frame &GetFrame(unsigned aIndex) const;
-  void AddFrame(const Frame& aFrame);
-  const Module &GetModule(unsigned aIndex) const;
-  void AddModule(const Module& aFrame);
-=======
   const Frame& GetFrame(unsigned aIndex) const;
   void AddFrame(const Frame& aFrame);
   const Module& GetModule(unsigned aIndex) const;
   void AddModule(const Module& aFrame);
->>>>>>> upstream-releases
 
   void Clear();
 
@@ -75,31 +56,13 @@ class ProcessedStack {
 // Get the current list of loaded modules, filter and pair it to the provided
 // stack. We let the caller collect the stack since different callers have
 // different needs (current thread X main thread, stopping the thread, etc).
-<<<<<<< HEAD
-ProcessedStack GetStackAndModules(const std::vector<uintptr_t> &aPCs);
-||||||| merged common ancestors
-ProcessedStack
-GetStackAndModules(const std::vector<uintptr_t> &aPCs);
-=======
 ProcessedStack GetStackAndModules(const std::vector<uintptr_t>& aPCs);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// This class optimizes repeated calls to GetStackAndModules.
-class BatchProcessedStackGenerator {
- public:
-  BatchProcessedStackGenerator();
-  ProcessedStack GetStackAndModules(const std::vector<uintptr_t> &aPCs);
-||||||| merged common ancestors
-} // namespace Telemetry
-} // namespace mozilla
-=======
 // This class optimizes repeated calls to GetStackAndModules.
 class BatchProcessedStackGenerator {
  public:
   BatchProcessedStackGenerator();
   ProcessedStack GetStackAndModules(const std::vector<uintptr_t>& aPCs);
->>>>>>> upstream-releases
 
  private:
 #if defined(MOZ_GECKO_PROFILER)

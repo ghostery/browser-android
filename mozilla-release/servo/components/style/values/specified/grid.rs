@@ -5,16 +5,6 @@
 //! CSS handling for the computed value of
 //! [grids](https://drafts.csswg.org/css-grid/)
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::{self, Context, ToComputedValue};
-use crate::values::generics::grid::{GridTemplateComponent, RepeatCount, TrackBreadth};
-use crate::values::generics::grid::{LineNameList, TrackKeyword, TrackRepeat, TrackSize};
-use crate::values::generics::grid::{TrackList, TrackListType, TrackListValue};
-use crate::values::specified::{Integer, LengthOrPercentage};
-use crate::values::{CSSFloat, CustomIdent};
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::computed::{self, Context, ToComputedValue};
 use crate::values::generics::grid::{GridTemplateComponent, RepeatCount, TrackBreadth};
@@ -22,7 +12,6 @@ use crate::values::generics::grid::{LineNameList, TrackRepeat, TrackSize};
 use crate::values::generics::grid::{TrackList, TrackListType, TrackListValue};
 use crate::values::specified::{Integer, LengthPercentage};
 use crate::values::{CSSFloat, CustomIdent};
->>>>>>> upstream-releases
 use cssparser::{ParseError as CssParseError, Parser, Token};
 use std::mem;
 use style_traits::{ParseError, StyleParseErrorKind};
@@ -409,16 +398,8 @@ impl ToComputedValue for TrackList<LengthPercentage, Integer> {
 #[cfg(feature = "gecko")]
 #[inline]
 fn allow_grid_template_subgrids() -> bool {
-<<<<<<< HEAD
-    use crate::gecko_bindings::structs::mozilla;
-    unsafe { mozilla::StaticPrefs_sVarCache_layout_css_grid_template_subgrid_value_enabled }
-||||||| merged common ancestors
-    use gecko_bindings::structs::mozilla;
-    unsafe { mozilla::StaticPrefs_sVarCache_layout_css_grid_template_subgrid_value_enabled }
-=======
     use crate::gecko_bindings::structs::mozilla;
     unsafe { mozilla::StaticPrefs::sVarCache_layout_css_grid_template_subgrid_value_enabled }
->>>>>>> upstream-releases
 }
 
 #[cfg(feature = "servo")]

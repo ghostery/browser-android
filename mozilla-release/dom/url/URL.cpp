@@ -33,20 +33,6 @@ JSObject* URL::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
   return URL_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<URL> URL::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aURL,
-    const Optional<nsAString>& aBase, ErrorResult& aRv) {
-  if (NS_IsMainThread()) {
-    return URLMainThread::Constructor(aGlobal, aURL, aBase, aRv);
-||||||| merged common ancestors
-/* static */ already_AddRefed<URL>
-URL::Constructor(const GlobalObject& aGlobal, const nsAString& aURL,
-                 const Optional<nsAString>& aBase, ErrorResult& aRv)
-{
-  if (NS_IsMainThread()) {
-    return URLMainThread::Constructor(aGlobal, aURL, aBase, aRv);
-=======
 /* static */
 already_AddRefed<URL> URL::Constructor(const GlobalObject& aGlobal,
                                        const nsAString& aURL,
@@ -54,24 +40,11 @@ already_AddRefed<URL> URL::Constructor(const GlobalObject& aGlobal,
                                        ErrorResult& aRv) {
   if (aBase.WasPassed()) {
     return Constructor(aGlobal.GetAsSupports(), aURL, aBase.Value(), aRv);
->>>>>>> upstream-releases
   }
 
   return Constructor(aGlobal.GetAsSupports(), aURL, nullptr, aRv);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<URL> URL::WorkerConstructor(
-    const GlobalObject& aGlobal, const nsAString& aURL, const nsAString& aBase,
-    ErrorResult& aRv) {
-  return URLWorker::Constructor(aGlobal, aURL, aBase, aRv);
-||||||| merged common ancestors
-/* static */ already_AddRefed<URL>
-URL::WorkerConstructor(const GlobalObject& aGlobal, const nsAString& aURL,
-                       const nsAString& aBase, ErrorResult& aRv)
-{
-  return URLWorker::Constructor(aGlobal, aURL, aBase, aRv);
-=======
 /* static */
 already_AddRefed<URL> URL::Constructor(nsISupports* aParent,
                                        const nsAString& aURL,
@@ -105,7 +78,6 @@ already_AddRefed<URL> URL::Constructor(nsISupports* aParent,
   RefPtr<URL> url = new URL(aParent);
   url->SetURI(uri.forget());
   return url.forget();
->>>>>>> upstream-releases
 }
 
 void URL::CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
@@ -173,23 +145,6 @@ void URL::URLSearchParamsUpdated(URLSearchParams* aSearchParams) {
   SetSearchInternal(search);
 }
 
-<<<<<<< HEAD
-#define URL_GETTER(value, func)  \
-  MOZ_ASSERT(mURI);              \
-  value.Truncate();              \
-  nsAutoCString tmp;             \
-  nsresult rv = mURI->func(tmp); \
-  if (NS_SUCCEEDED(rv)) {        \
-    CopyUTF8toUTF16(tmp, value); \
-||||||| merged common ancestors
-#define URL_GETTER( value, func ) \
-  MOZ_ASSERT(mURI);               \
-  value.Truncate();               \
-  nsAutoCString tmp;              \
-  nsresult rv = mURI->func(tmp);  \
-  if (NS_SUCCEEDED(rv)) {         \
-    CopyUTF8toUTF16(tmp, value);  \
-=======
 #define URL_GETTER(value, func)  \
   MOZ_ASSERT(mURI);              \
   value.Truncate();              \
@@ -208,30 +163,12 @@ void URL::SetHref(const nsAString& aHref, ErrorResult& aRv) {
   if (NS_FAILED(rv)) {
     aRv.ThrowTypeError<MSG_INVALID_URL>(aHref);
     return;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-void URL::GetHref(nsAString& aHref) const { URL_GETTER(aHref, GetSpec); }
-||||||| merged common ancestors
-void
-URL::GetHref(nsAString& aHref) const
-{
-  URL_GETTER(aHref, GetSpec);
-}
-=======
   mURI = std::move(uri);
   UpdateURLSearchParams();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void URL::GetProtocol(nsAString& aProtocol) const {
-||||||| merged common ancestors
-void
-URL::GetProtocol(nsAString& aProtocol) const
-{
-=======
 void URL::GetOrigin(nsAString& aOrigin, ErrorResult& aRv) const {
   nsresult rv = nsContentUtils::GetUTFOrigin(GetURI(), aOrigin);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -240,18 +177,10 @@ void URL::GetOrigin(nsAString& aOrigin, ErrorResult& aRv) const {
 }
 
 void URL::GetProtocol(nsAString& aProtocol) const {
->>>>>>> upstream-releases
   URL_GETTER(aProtocol, GetScheme);
   aProtocol.Append(char16_t(':'));
 }
 
-<<<<<<< HEAD
-void URL::GetUsername(nsAString& aUsername) const {
-||||||| merged common ancestors
-void
-URL::GetUsername(nsAString& aUsername) const
-{
-=======
 void URL::SetProtocol(const nsAString& aProtocol, ErrorResult& aRv) {
   nsAString::const_iterator start;
   aProtocol.BeginReading(start);
@@ -289,7 +218,6 @@ void URL::SetProtocol(const nsAString& aProtocol, ErrorResult& aRv) {
 }
 
 void URL::GetUsername(nsAString& aUsername) const {
->>>>>>> upstream-releases
   URL_GETTER(aUsername, GetUsername);
 }
 

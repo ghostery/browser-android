@@ -147,33 +147,6 @@ class ThumbnailHelper final
       return nullptr;
     }
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIPresShell> presShell = presContext->PresShell();
-    RefPtr<gfxContext> context = gfxContext::CreateOrNull(dt);
-    MOZ_ASSERT(context);  // checked the draw target above
-
-    context->SetMatrix(context->CurrentMatrix().PreScale(
-        aZoomFactor * float(aThumbWidth) / aPageRect.width,
-        aZoomFactor * float(aThumbHeight) / aPageRect.height));
-
-    const nsRect drawRect(nsPresContext::CSSPixelsToAppUnits(aPageRect.x),
-                          nsPresContext::CSSPixelsToAppUnits(aPageRect.y),
-                          nsPresContext::CSSPixelsToAppUnits(aPageRect.width),
-                          nsPresContext::CSSPixelsToAppUnits(aPageRect.height));
-    const uint32_t renderDocFlags =
-        nsIPresShell::RENDER_IGNORE_VIEWPORT_SCROLLING |
-        nsIPresShell::RENDER_DOCUMENT_RELATIVE;
-    const nscolor bgColor = NS_RGB(255, 255, 255);
-
-    if (NS_FAILED(presShell->RenderDocument(drawRect, renderDocFlags, bgColor,
-                                            context))) {
-      return nullptr;
-||||||| merged common ancestors
-public:
-    static void Init()
-    {
-        java::ThumbnailHelper::Natives<ThumbnailHelper>::Init();
-=======
     RefPtr<PresShell> presShell = presContext->PresShell();
     RefPtr<gfxContext> context = gfxContext::CreateOrNull(dt);
     MOZ_ASSERT(context);  // checked the draw target above
@@ -195,7 +168,6 @@ public:
     if (NS_FAILED(presShell->RenderDocument(drawRect, renderDocFlags, bgColor,
                                             context))) {
       return nullptr;
->>>>>>> upstream-releases
     }
 
     if (is24bit) {

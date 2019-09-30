@@ -10,11 +10,6 @@ use crate::Zero;
 /// A computed offset-path. The computed value is as specified value.
 ///
 /// https://drafts.fxtf.org/motion-1/#offset-path-property
-<<<<<<< HEAD
-pub use crate::values::specified::motion::OffsetPath;
-||||||| merged common ancestors
-pub use values::specified::motion::OffsetPath;
-=======
 pub use crate::values::specified::motion::OffsetPath;
 
 #[inline]
@@ -59,4 +54,3 @@ impl OffsetRotate {
         }
     }
 }
->>>>>>> upstream-releases

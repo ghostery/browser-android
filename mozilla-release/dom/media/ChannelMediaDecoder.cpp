@@ -75,19 +75,9 @@ void ChannelMediaDecoder::ResourceCallback::NotifyNetworkError(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChannelMediaDecoder::ResourceCallback::TimerCallback(
-    nsITimer* aTimer, void* aClosure) {
-||||||| merged common ancestors
-/* static */ void
-ChannelMediaDecoder::ResourceCallback::TimerCallback(nsITimer* aTimer,
-                                                     void* aClosure)
-{
-=======
 /* static */
 void ChannelMediaDecoder::ResourceCallback::TimerCallback(nsITimer* aTimer,
                                                           void* aClosure) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   ResourceCallback* thiz = static_cast<ResourceCallback*>(aClosure);
   MOZ_ASSERT(thiz->mDecoder);
@@ -399,36 +389,6 @@ void ChannelMediaDecoder::DownloadProgressed() {
                 MediaStatistics stats = GetStatistics(rate, res, pos);
                 return StatsPromise::CreateAndResolve(stats, __func__);
               })
-<<<<<<< HEAD
-      ->Then(mAbstractMainThread, __func__,
-             [=, self = RefPtr<ChannelMediaDecoder>(this)](
-                 MediaStatistics aStats) {
-               if (IsShutdown()) {
-                 return;
-               }
-               mCanPlayThrough = aStats.CanPlayThrough();
-               GetStateMachine()->DispatchCanPlayThrough(mCanPlayThrough);
-               mResource->ThrottleReadahead(ShouldThrottleDownload(aStats));
-               // Update readyState since mCanPlayThrough might have changed.
-               GetOwner()->UpdateReadyState();
-             },
-             []() { MOZ_ASSERT_UNREACHABLE("Promise not resolved"); });
-||||||| merged common ancestors
-    ->Then(
-      mAbstractMainThread,
-      __func__,
-      [ =, self = RefPtr<ChannelMediaDecoder>(this) ](MediaStatistics aStats) {
-        if (IsShutdown()) {
-          return;
-        }
-        mCanPlayThrough = aStats.CanPlayThrough();
-        GetStateMachine()->DispatchCanPlayThrough(mCanPlayThrough);
-        mResource->ThrottleReadahead(ShouldThrottleDownload(aStats));
-        // Update readyState since mCanPlayThrough might have changed.
-        GetOwner()->UpdateReadyState();
-      },
-      []() { MOZ_ASSERT_UNREACHABLE("Promise not resolved"); });
-=======
       ->Then(
           mAbstractMainThread, __func__,
           [=,
@@ -443,7 +403,6 @@ void ChannelMediaDecoder::DownloadProgressed() {
             GetOwner()->UpdateReadyState();
           },
           []() { MOZ_ASSERT_UNREACHABLE("Promise not resolved"); });
->>>>>>> upstream-releases
 }
 
 /* static */ ChannelMediaDecoder::PlaybackRateInfo
@@ -453,17 +412,9 @@ ChannelMediaDecoder::ComputePlaybackRate(const MediaChannelStatistics& aStats,
   MOZ_ASSERT(!NS_IsMainThread());
 
   int64_t length = aResource->GetLength();
-<<<<<<< HEAD
-  if (mozilla::IsFinite<double>(aDuration) && aDuration > 0 && length >= 0) {
-    return {uint32_t(length / aDuration), true};
-||||||| merged common ancestors
-  if (mozilla::IsFinite<double>(aDuration) && aDuration > 0 && length >= 0) {
-    return { uint32_t(length / aDuration), true };
-=======
   if (mozilla::IsFinite<double>(aDuration) && aDuration > 0 && length >= 0 &&
       length / aDuration < UINT32_MAX) {
     return {uint32_t(length / aDuration), true};
->>>>>>> upstream-releases
   }
 
   bool reliable = false;
@@ -471,19 +422,9 @@ ChannelMediaDecoder::ComputePlaybackRate(const MediaChannelStatistics& aStats,
   return {rate, reliable};
 }
 
-<<<<<<< HEAD
-/* static */ void ChannelMediaDecoder::UpdatePlaybackRate(
-    const PlaybackRateInfo& aInfo, BaseMediaResource* aResource) {
-||||||| merged common ancestors
-/* static */ void
-ChannelMediaDecoder::UpdatePlaybackRate(const PlaybackRateInfo& aInfo,
-                                        BaseMediaResource* aResource)
-{
-=======
 /* static */
 void ChannelMediaDecoder::UpdatePlaybackRate(const PlaybackRateInfo& aInfo,
                                              BaseMediaResource* aResource) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
 
   uint32_t rate = aInfo.mRate;
@@ -500,22 +441,10 @@ void ChannelMediaDecoder::UpdatePlaybackRate(const PlaybackRateInfo& aInfo,
   aResource->SetPlaybackRate(rate);
 }
 
-<<<<<<< HEAD
-/* static */ MediaStatistics ChannelMediaDecoder::GetStatistics(
-    const PlaybackRateInfo& aInfo, BaseMediaResource* aRes,
-    int64_t aPlaybackPosition) {
-||||||| merged common ancestors
-/* static */ MediaStatistics
-ChannelMediaDecoder::GetStatistics(const PlaybackRateInfo& aInfo,
-                                   BaseMediaResource* aRes,
-                                   int64_t aPlaybackPosition)
-{
-=======
 /* static */
 MediaStatistics ChannelMediaDecoder::GetStatistics(
     const PlaybackRateInfo& aInfo, BaseMediaResource* aRes,
     int64_t aPlaybackPosition) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
 
   MediaStatistics result;
@@ -572,20 +501,12 @@ already_AddRefed<nsIPrincipal> ChannelMediaDecoder::GetCurrentPrincipal() {
   return mResource ? mResource->GetCurrentPrincipal() : nullptr;
 }
 
-<<<<<<< HEAD
-bool ChannelMediaDecoder::IsTransportSeekable() {
-||||||| merged common ancestors
-bool
-ChannelMediaDecoder::IsTransportSeekable()
-{
-=======
 bool ChannelMediaDecoder::HadCrossOriginRedirects() {
   MOZ_ASSERT(NS_IsMainThread());
   return mResource ? mResource->HadCrossOriginRedirects() : false;
 }
 
 bool ChannelMediaDecoder::IsTransportSeekable() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   return mResource->IsTransportSeekable();
 }
@@ -620,18 +541,8 @@ void ChannelMediaDecoder::MetadataLoaded(
   mResource->SetReadMode(MediaCacheStream::MODE_PLAYBACK);
 }
 
-<<<<<<< HEAD
-nsCString ChannelMediaDecoder::GetDebugInfo() {
-  nsCString str = MediaDecoder::GetDebugInfo();
-||||||| merged common ancestors
-nsCString
-ChannelMediaDecoder::GetDebugInfo()
-{
-  nsCString str = MediaDecoder::GetDebugInfo();
-=======
 void ChannelMediaDecoder::GetDebugInfo(dom::MediaDecoderDebugInfo& aInfo) {
   MediaDecoder::GetDebugInfo(aInfo);
->>>>>>> upstream-releases
   if (mResource) {
     mResource->GetDebugInfo(aInfo.mResource);
   }

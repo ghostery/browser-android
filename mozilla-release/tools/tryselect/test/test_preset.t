@@ -135,21 +135,12 @@ Test preset with fuzzy subcommand
           "test/foo-debug",
           "test/foo-opt"
       ],
-<<<<<<< HEAD
-      "templates": {
-          "env": {
-              "TRY_SELECTOR": "fuzzy"
-          }
-      },
-||||||| merged common ancestors
-=======
       "templates": {
           "env": {
               "TRY_SELECTOR": "fuzzy"
           },
           "rebuild": 5
       },
->>>>>>> upstream-releases
       "version": 1
   }
   
@@ -165,21 +156,12 @@ Test preset with fuzzy subcommand
           "test/foo-debug",
           "test/foo-opt"
       ],
-<<<<<<< HEAD
-      "templates": {
-          "env": {
-              "TRY_SELECTOR": "fuzzy"
-          }
-      },
-||||||| merged common ancestors
-=======
       "templates": {
           "env": {
               "TRY_SELECTOR": "fuzzy"
           },
           "rebuild": 5
       },
->>>>>>> upstream-releases
       "version": 1
   }
   
@@ -198,21 +180,12 @@ Queries can be appended to presets
           "test/foo-debug",
           "test/foo-opt"
       ],
-<<<<<<< HEAD
-      "templates": {
-          "env": {
-              "TRY_SELECTOR": "fuzzy"
-          }
-      },
-||||||| merged common ancestors
-=======
       "templates": {
           "env": {
               "TRY_SELECTOR": "fuzzy"
           },
           "rebuild": 5
       },
->>>>>>> upstream-releases
       "version": 1
   }
   
@@ -227,21 +200,12 @@ Queries can be appended to presets
       "tasks": [
           "test/foo-opt"
       ],
-<<<<<<< HEAD
-      "templates": {
-          "env": {
-              "TRY_SELECTOR": "fuzzy"
-          }
-      },
-||||||| merged common ancestors
-=======
       "templates": {
           "env": {
               "TRY_SELECTOR": "fuzzy"
           },
           "rebuild": 5
       },
->>>>>>> upstream-releases
       "version": 1
   }
   

@@ -61,19 +61,7 @@ class AnimationListContainer extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-<<<<<<< HEAD
-    const {
-      timeScale,
-      sidebarWidth,
-    } = this.props;
-||||||| merged common ancestors
-    const {
-      timeScale,
-      sidebarWidth
-    } = this.props;
-=======
     const { timeScale, sidebarWidth } = this.props;
->>>>>>> upstream-releases
 
     if (
       timeScale.getDuration() !== prevProps.timeScale.getDuration() ||
@@ -175,15 +163,9 @@ class AnimationListContainer extends PureComponent {
 
 const mapStateToProps = state => {
   return {
-<<<<<<< HEAD
-    sidebarWidth: state.animations.sidebarSize ? state.animations.sidebarSize.width : 0,
-||||||| merged common ancestors
-    sidebarWidth: state.animations.sidebarSize ? state.animations.sidebarSize.width : 0
-=======
     sidebarWidth: state.animations.sidebarSize
       ? state.animations.sidebarSize.width
       : 0,
->>>>>>> upstream-releases
   };
 };
 

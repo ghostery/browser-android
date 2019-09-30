@@ -5,6 +5,6 @@
 
 <resources>
 
-    <integer name="assist_launch_icon_res">@drawable/ic_launcher</integer>
+    <integer name="assist_launch_icon_res">@drawable/icon</integer>
 
 </resources>

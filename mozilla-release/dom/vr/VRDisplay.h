@@ -255,72 +255,8 @@ class VREyeParameters final : public nsWrapperCache {
   RefPtr<VRFieldOfView> mFOV;
 };
 
-<<<<<<< HEAD
-class VRSubmitFrameResult final : public nsWrapperCache {
- public:
-  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(VRSubmitFrameResult)
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(VRSubmitFrameResult)
-
-  explicit VRSubmitFrameResult(nsISupports* aParent);
-  static already_AddRefed<VRSubmitFrameResult> Constructor(
-      const GlobalObject& aGlobal, ErrorResult& aRv);
-
-  void Update(uint64_t aFrameNum, const nsACString& aBase64Image);
-  // WebIDL Members
-  double FrameNum() const;
-  void GetBase64Image(nsAString& aImage) const;
-
-  // WebIDL Boilerplate
-  nsISupports* GetParentObject() const { return mParent; }
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-
- protected:
-  ~VRSubmitFrameResult();
-
-  nsCOMPtr<nsISupports> mParent;
-  nsString mBase64Image;
-  uint64_t mFrameNum;
-};
-
 class VRDisplay final : public DOMEventTargetHelper, public nsIObserver {
  public:
-||||||| merged common ancestors
-class VRSubmitFrameResult final : public nsWrapperCache
-{
-public:
-  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(VRSubmitFrameResult)
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(VRSubmitFrameResult)
-
-  explicit VRSubmitFrameResult(nsISupports* aParent);
-  static already_AddRefed<VRSubmitFrameResult> Constructor(const GlobalObject& aGlobal,
-                                                           ErrorResult& aRv);
-
-  void Update(uint64_t aFrameNum, const nsACString& aBase64Image);
-  // WebIDL Members
-  double FrameNum() const;
-  void GetBase64Image(nsAString& aImage) const;
-
-  // WebIDL Boilerplate
-  nsISupports* GetParentObject() const { return mParent; }
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-protected:
-  ~VRSubmitFrameResult();
-
-  nsCOMPtr<nsISupports> mParent;
-  nsString mBase64Image;
-  uint64_t mFrameNum;
-};
-
-class VRDisplay final : public DOMEventTargetHelper
-                      , public nsIObserver
-{
-public:
-=======
-class VRDisplay final : public DOMEventTargetHelper, public nsIObserver {
- public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSIOBSERVER
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(VRDisplay, DOMEventTargetHelper)

@@ -147,14 +147,7 @@ class HTMLAreaElement final : public nsGenericHTMLElement, public Link {
   void ToString(nsAString& aSource);
   void Stringify(nsAString& aResult) { GetHref(aResult); }
 
-<<<<<<< HEAD
-  void NodeInfoChanged(nsIDocument* aOldDoc) final {
-||||||| merged common ancestors
-  void NodeInfoChanged(nsIDocument* aOldDoc) final
-  {
-=======
   void NodeInfoChanged(Document* aOldDoc) final {
->>>>>>> upstream-releases
     ClearHasPendingLinkUpdate();
     nsGenericHTMLElement::NodeInfoChanged(aOldDoc);
   }

@@ -95,63 +95,6 @@ static void setup_vertex_input_state(const GrPrimitiveProcessor& primProc,
     }
 
     // setup attribute descriptions
-<<<<<<< HEAD
-    int vaCount = primProc.numVertexAttributes();
-    int attribIndex = 0;
-    size_t vertexAttributeOffset = 0;
-    for (; attribIndex < vaCount; attribIndex++) {
-        const GrGeometryProcessor::Attribute& attrib = primProc.vertexAttribute(attribIndex);
-        VkVertexInputAttributeDescription& vkAttrib = attributeDesc[attribIndex];
-        vkAttrib.location = attribIndex;  // for now assume location = attribIndex
-        vkAttrib.binding = vertexBinding;
-        vkAttrib.format = attrib_type_to_vkformat(attrib.cpuType());
-        vkAttrib.offset = vertexAttributeOffset;
-        SkASSERT(vkAttrib.offset == primProc.debugOnly_vertexAttributeOffset(attribIndex));
-        vertexAttributeOffset += attrib.sizeAlign4();
-    }
-    SkASSERT(vertexAttributeOffset == primProc.debugOnly_vertexStride());
-
-    int iaCount = primProc.numInstanceAttributes();
-    size_t instanceAttributeOffset = 0;
-    for (int iaIndex = 0; iaIndex < iaCount; ++iaIndex, ++attribIndex) {
-        const GrGeometryProcessor::Attribute& attrib = primProc.instanceAttribute(iaIndex);
-        VkVertexInputAttributeDescription& vkAttrib = attributeDesc[attribIndex];
-        vkAttrib.location = attribIndex;  // for now assume location = attribIndex
-        vkAttrib.binding = instanceBinding;
-        vkAttrib.format = attrib_type_to_vkformat(attrib.cpuType());
-        vkAttrib.offset = instanceAttributeOffset;
-        SkASSERT(vkAttrib.offset == primProc.debugOnly_instanceAttributeOffset(iaIndex));
-        instanceAttributeOffset += attrib.sizeAlign4();
-    }
-    SkASSERT(instanceAttributeOffset == primProc.debugOnly_instanceStride());
-
-    if (primProc.hasVertexAttributes()) {
-        bindingDescs->push_back() = {
-                vertexBinding,
-                (uint32_t) vertexAttributeOffset,
-                VK_VERTEX_INPUT_RATE_VERTEX
-        };
-    }
-    if (primProc.hasInstanceAttributes()) {
-        bindingDescs->push_back() = {
-                instanceBinding,
-                (uint32_t) instanceAttributeOffset,
-                VK_VERTEX_INPUT_RATE_INSTANCE
-        };
-||||||| merged common ancestors
-    int vaCount = primProc.numAttribs();
-    if (vaCount > 0) {
-        for (int attribIndex = 0; attribIndex < vaCount; attribIndex++) {
-            using InputRate = GrPrimitiveProcessor::Attribute::InputRate;
-            const GrGeometryProcessor::Attribute& attrib = primProc.getAttrib(attribIndex);
-            VkVertexInputAttributeDescription& vkAttrib = attributeDesc[attribIndex];
-            vkAttrib.location = attribIndex; // for now assume location = attribIndex
-            vkAttrib.binding = InputRate::kPerInstance == attrib.fInputRate ? instanceBinding
-                                                                            : vertexBinding;
-            vkAttrib.format = attrib_type_to_vkformat(attrib.fType);
-            vkAttrib.offset = attrib.fOffsetInRecord;
-        }
-=======
     int vaCount = primProc.numVertexAttributes();
     int attribIndex = 0;
     size_t vertexAttributeOffset = 0;
@@ -190,7 +133,6 @@ static void setup_vertex_input_state(const GrPrimitiveProcessor& primProc,
                 (uint32_t) instanceAttributeOffset,
                 VK_VERTEX_INPUT_RATE_INSTANCE
         };
->>>>>>> upstream-releases
     }
 
     memset(vertexInputInfo, 0, sizeof(VkPipelineVertexInputStateCreateInfo));
@@ -338,17 +280,9 @@ static void setup_viewport_scissor_state(VkPipelineViewportStateCreateInfo* view
     SkASSERT(viewportInfo->viewportCount == viewportInfo->scissorCount);
 }
 
-<<<<<<< HEAD
-static void setup_multisample_state(const GrPrimitiveProcessor& primProc,
-                                    const GrPipeline& pipeline,
-||||||| merged common ancestors
-static void setup_multisample_state(const GrPipeline& pipeline,
-                                    const GrPrimitiveProcessor& primProc,
-=======
 static void setup_multisample_state(int numColorSamples,
                                     const GrPrimitiveProcessor& primProc,
                                     const GrPipeline& pipeline,
->>>>>>> upstream-releases
                                     const GrCaps* caps,
                                     VkPipelineMultisampleStateCreateInfo* multisampleInfo) {
     memset(multisampleInfo, 0, sizeof(VkPipelineMultisampleStateCreateInfo));
@@ -413,33 +347,6 @@ static VkBlendFactor blend_coeff_to_vk_blend(GrBlendCoeff coeff) {
 
 static VkBlendOp blend_equation_to_vk_blend_op(GrBlendEquation equation) {
     static const VkBlendOp gTable[] = {
-<<<<<<< HEAD
-        // Basic blend ops
-        VK_BLEND_OP_ADD,
-        VK_BLEND_OP_SUBTRACT,
-        VK_BLEND_OP_REVERSE_SUBTRACT,
-
-        // Advanced blend ops
-        VK_BLEND_OP_SCREEN_EXT,
-        VK_BLEND_OP_OVERLAY_EXT,
-        VK_BLEND_OP_DARKEN_EXT,
-        VK_BLEND_OP_LIGHTEN_EXT,
-        VK_BLEND_OP_COLORDODGE_EXT,
-        VK_BLEND_OP_COLORBURN_EXT,
-        VK_BLEND_OP_HARDLIGHT_EXT,
-        VK_BLEND_OP_SOFTLIGHT_EXT,
-        VK_BLEND_OP_DIFFERENCE_EXT,
-        VK_BLEND_OP_EXCLUSION_EXT,
-        VK_BLEND_OP_MULTIPLY_EXT,
-        VK_BLEND_OP_HSL_HUE_EXT,
-        VK_BLEND_OP_HSL_SATURATION_EXT,
-        VK_BLEND_OP_HSL_COLOR_EXT,
-        VK_BLEND_OP_HSL_LUMINOSITY_EXT
-||||||| merged common ancestors
-        VK_BLEND_OP_ADD,               // kAdd_GrBlendEquation
-        VK_BLEND_OP_SUBTRACT,          // kSubtract_GrBlendEquation
-        VK_BLEND_OP_REVERSE_SUBTRACT,  // kReverseSubtract_GrBlendEquation
-=======
         // Basic blend ops
         VK_BLEND_OP_ADD,
         VK_BLEND_OP_SUBTRACT,
@@ -464,7 +371,6 @@ static VkBlendOp blend_equation_to_vk_blend_op(GrBlendEquation equation) {
 
         // Illegal.
         VK_BLEND_OP_ADD,
->>>>>>> upstream-releases
     };
     GR_STATIC_ASSERT(0 == kAdd_GrBlendEquation);
     GR_STATIC_ASSERT(1 == kSubtract_GrBlendEquation);
@@ -594,18 +500,9 @@ static void setup_dynamic_state(VkPipelineDynamicStateCreateInfo* dynamicInfo,
     dynamicInfo->pDynamicStates = dynamicStates;
 }
 
-<<<<<<< HEAD
-GrVkPipeline* GrVkPipeline::Create(GrVkGpu* gpu, const GrPrimitiveProcessor& primProc,
-                                   const GrPipeline& pipeline, const GrStencilSettings& stencil,
-||||||| merged common ancestors
-GrVkPipeline* GrVkPipeline::Create(GrVkGpu* gpu, const GrPipeline& pipeline,
-                                   const GrStencilSettings& stencil,
-                                   const GrPrimitiveProcessor& primProc,
-=======
 GrVkPipeline* GrVkPipeline::Create(GrVkGpu* gpu, int numColorSamples,
                                    const GrPrimitiveProcessor& primProc,
                                    const GrPipeline& pipeline, const GrStencilSettings& stencil,
->>>>>>> upstream-releases
                                    VkPipelineShaderStageCreateInfo* shaderStageInfo,
                                    int shaderStageCount, GrPrimitiveType primitiveType,
                                    VkRenderPass compatibleRenderPass, VkPipelineLayout layout,
@@ -628,13 +525,7 @@ GrVkPipeline* GrVkPipeline::Create(GrVkGpu* gpu, int numColorSamples,
     setup_viewport_scissor_state(&viewportInfo);
 
     VkPipelineMultisampleStateCreateInfo multisampleInfo;
-<<<<<<< HEAD
-    setup_multisample_state(primProc, pipeline, gpu->caps(), &multisampleInfo);
-||||||| merged common ancestors
-    setup_multisample_state(pipeline, primProc, gpu->caps(), &multisampleInfo);
-=======
     setup_multisample_state(numColorSamples, primProc, pipeline, gpu->caps(), &multisampleInfo);
->>>>>>> upstream-releases
 
     // We will only have one color attachment per pipeline.
     VkPipelineColorBlendAttachmentState attachmentStates[1];

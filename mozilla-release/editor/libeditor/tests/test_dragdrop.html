@@ -24,16 +24,6 @@ SimpleTest.waitForExplicitFinish();
 var shouldClear = false;
 window.addEventListener("dragstart", function(event) { if (shouldClear) event.dataTransfer.clearData(); }, true);
 
-<<<<<<< HEAD
-function checkInputEvent(aEvent, aExpectedTarget, aDescription) {
-  ok(aEvent instanceof InputEvent, `"input" event should be dispatched with InputEvent interface ${aDescription}`);
-  is(aEvent.cancelable, false, `"input" event should be never cancelable ${aDescription}`);
-  is(aEvent.bubbles, true, `"input" event should always bubble ${aDescription}`);
-  is(aEvent.target, aExpectedTarget, `"input" event should be fired on the <${aExpectedTarget.tagName.toLowerCase()}> element ${aDescription}`);
-}
-
-||||||| merged common ancestors
-=======
 function checkInputEvent(aEvent, aExpectedTarget, aData, aDataTransfer, aDescription) {
   ok(aEvent instanceof InputEvent, `"input" event should be dispatched with InputEvent interface ${aDescription}`);
   is(aEvent.cancelable, false, `"input" event should be never cancelable ${aDescription}`);
@@ -58,7 +48,6 @@ function checkInputEvent(aEvent, aExpectedTarget, aData, aDataTransfer, aDescrip
   }
 }
 
->>>>>>> upstream-releases
 function doTest() {
   const htmlContextData = { type: "text/_moz_htmlcontext",
                             data: "<html><body></body></html>" };
@@ -127,17 +116,10 @@ function doTest() {
   inputEvents = [];
   synthesizeDrop(text, input, [], "copy");
   is(input.value, "Some Text", "Drag text/html onto input");
-<<<<<<< HEAD
-  is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dropping text/html into empty <input> element');
-  checkInputEvent(inputEvents[0], input, "when dropping text/html into empty <input> element");
-||||||| merged common ancestors
-=======
   is(inputEvents.length, 1,
      'Only one "input" events should be fired when dropping text/html into empty <input> element');
   checkInputEvent(inputEvents[0], input, "Some Text", null,
                   "when dropping text/html into empty <input> element");
->>>>>>> upstream-releases
 
   // -------- Test dragging regular text of text/html to disabled <input>
 
@@ -183,17 +165,10 @@ function doTest() {
   synthesizeDrop(text, input, [[{type: "text/html", data: "Some <b>Bold<b> Text"},
                                 {type: "text/plain", data: "Some Plain Text"}]], "copy");
   is(input.value, "Some Plain Text", "Drag text/html and text/plain onto input");
-<<<<<<< HEAD
-  is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dropping text/plain into empty <input> element');
-  checkInputEvent(inputEvents[0], input, "when dropping text/plain into empty <input> element");
-||||||| merged common ancestors
-=======
   is(inputEvents.length, 1,
      'Only one "input" events should be fired when dropping text/plain into empty <input> element');
   checkInputEvent(inputEvents[0], input, "Some Plain Text", null,
                   "when dropping text/plain into empty <input> element");
->>>>>>> upstream-releases
 
   // -------- Test dragging regular text of text/plain to <textarea>
 
@@ -219,18 +194,11 @@ function doTest() {
   is(contenteditable.childNodes.length, 3, "Drag text/plain onto contenteditable child nodes");
   is(contenteditable.textContent, "This is some editable text.Sample Text",
                                   "Drag text/plain onto contenteditable text");
-<<<<<<< HEAD
-  is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dropping text/plain into contenteditable element');
-  checkInputEvent(inputEvents[0], contenteditable, "when dropping text/plain into contenteditable element");
-||||||| merged common ancestors
-=======
   is(inputEvents.length, 1,
      'Only one "input" events should be fired when dropping text/plain into contenteditable element');
   checkInputEvent(inputEvents[0], contenteditable, null,
                   [{todo: true, type: "text/plain", data: "Sample Text"}],
                   "when dropping text/plain into contenteditable element");
->>>>>>> upstream-releases
 
   // -------- Test dragging regular text of text/html to contenteditable
 
@@ -240,18 +208,11 @@ function doTest() {
   is(contenteditable.childNodes.length, 6, "Drag text/html onto contenteditable child nodes");
   is(contenteditable.childNodes[4].tagName, "I", "Drag text/html onto contenteditable italic");
   is(contenteditable.childNodes[4].textContent, "Italic", "Drag text/html onto contenteditable italic text");
-<<<<<<< HEAD
-  is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dropping text/html into contenteditable element');
-  checkInputEvent(inputEvents[0], contenteditable, "when dropping text/html into contenteditable element");
-||||||| merged common ancestors
-=======
   is(inputEvents.length, 1,
      'Only one "input" events should be fired when dropping text/html into contenteditable element');
   checkInputEvent(inputEvents[0], contenteditable, null,
                   [{todo: true, type: "text/html", data: "Sample <i>Italic</i> Text"}],
                   "when dropping text/html into contenteditable element");
->>>>>>> upstream-releases
 
   // -------- Test dragging contenteditable to <input>
 
@@ -259,20 +220,11 @@ function doTest() {
   inputEvents = [];
   synthesizeDrop(bold, input, [[{type: "text/html", data: "<b>editable</b>"},
                                 {type: "text/plain", data: "editable"}]], "copy");
-<<<<<<< HEAD
-  is(input.value, "Some Plain Texteditable", "Copy text/html and text/plain from contenteditable onto input");
-  is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dragging from contenteditable to <input> element');
-  checkInputEvent(inputEvents[0], input, "when dragging from contenteditable to <input> element");
-||||||| merged common ancestors
-  is(input.value, "Some Plain Texteditable", "Move text/html and text/plain from contenteditable onto input");
-=======
   is(input.value, "Some Plain Texteditable", "Copy text/html and text/plain from contenteditable onto input");
   is(inputEvents.length, 1,
      'Only one "input" events should be fired when dragging from contenteditable to <input> element');
   checkInputEvent(inputEvents[0], input, "editable", null,
                   "when dragging from contenteditable to <input> element");
->>>>>>> upstream-releases
 
   // -------- Test dragging contenteditable to contenteditable
 
@@ -284,19 +236,12 @@ function doTest() {
   is(contenteditable.childNodes.length, 7, "Move text/html and text/plain from contenteditable onto itself child nodes");
   is(contenteditable.childNodes[6].tagName, "I", "Move text/html and text/plain from contenteditable onto itself italic");
   is(contenteditable.childNodes[6].textContent, "Italic", "Move text/html and text/plain from contenteditable onto itself text");
-<<<<<<< HEAD
-  is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dragging (copy) in a contentediable element');
-  checkInputEvent(inputEvents[0], contenteditable, "when dragging (copy) in a contentediable element");
-||||||| merged common ancestors
-=======
   is(inputEvents.length, 1,
      'Only one "input" events should be fired when dragging (copy) in a contentediable element');
   checkInputEvent(inputEvents[0], contenteditable, null,
                   [{type: "text/html", data: "<i>Italic</i>"},
                    {type: "text/plain", data: "Italic"}],
                   "when dragging (copy) in a contentediable element");
->>>>>>> upstream-releases
 
   // We'd test 'move' here as well as 'copy', but that requires knowledge of
   // the source of the drag which drag simulation doesn't provide.
@@ -312,16 +257,6 @@ function doTest() {
   synthesizeDrop(nonEditable, document.getElementById("first"), [], "copy");
   is(document.getElementById("nestedce").textContent, " MiddleFirst letter Middle Last part",
      "Drag non-editable text/html onto contenteditable text");
-<<<<<<< HEAD
-  todo_is(inputEvents.length, 1,
-     'Only one "input" events should be fired when dragging from inner non-editable element to a contentediable element');
-  if (inputEvents.length > 0) {
-    checkInputEvent(inputEvents[0], document.getElementById("nestedce"), "when dragging from inner non-editable element to a contentediable element");
-  }
-
-  document.removeEventListener("input", onInput);
-||||||| merged common ancestors
-=======
   todo_is(inputEvents.length, 1,
      'Only one "input" events should be fired when dragging from inner non-editable element to a contentediable element');
   if (inputEvents.length > 0) {
@@ -333,7 +268,6 @@ function doTest() {
   }
 
   document.removeEventListener("input", onInput);
->>>>>>> upstream-releases
 
   SimpleTest.finish();
 }

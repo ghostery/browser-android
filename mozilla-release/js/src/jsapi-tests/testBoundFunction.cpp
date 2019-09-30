@@ -20,28 +20,12 @@ BEGIN_TEST(testBoundFunction) {
   CHECK(!JS_IsFunctionBound(foofun));
   CHECK(JS_IsFunctionBound(boundfun));
 
-<<<<<<< HEAD
-  CHECK(!JS_GetBoundFunctionTarget(foofun));
-  JSObject* target = JS_GetBoundFunctionTarget(boundfun);
-  CHECK(!!target);
-  CHECK(JS_ObjectIsFunction(cx, target));
-  JS::RootedValue targetVal(cx, JS::ObjectValue(*target));
-  CHECK_SAME(foo, targetVal);
-||||||| merged common ancestors
-    CHECK(!JS_GetBoundFunctionTarget(foofun));
-    JSObject* target = JS_GetBoundFunctionTarget(boundfun);
-    CHECK(!!target);
-    CHECK(JS_ObjectIsFunction(cx, target));
-    JS::RootedValue targetVal(cx, JS::ObjectValue(*target));
-    CHECK_SAME(foo, targetVal);
-=======
   CHECK(!JS_GetBoundFunctionTarget(foofun));
   JSObject* target = JS_GetBoundFunctionTarget(boundfun);
   CHECK(!!target);
   CHECK(JS_ObjectIsFunction(target));
   JS::RootedValue targetVal(cx, JS::ObjectValue(*target));
   CHECK_SAME(foo, targetVal);
->>>>>>> upstream-releases
 
   return true;
 }

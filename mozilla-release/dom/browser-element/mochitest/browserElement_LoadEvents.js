@@ -40,19 +40,6 @@ function runTest() {
     ok(e.isTrusted, "Event should be trusted.");
     ok(!seenLocationChange, "Just one locationchange event.");
     seenLocationChange = true;
-<<<<<<< HEAD
-    ok(seenLoadStart, 'Location change after load start.');
-    ok(!seenLoadEnd, 'Location change before load end.');
-    // XXX: Switched to from ok() to todo_is() in Bug 1467712. Follow up in 1503862
-    // Fails with: event's reported location -
-    //   got "http://example.com/tests/dom/browser-element/mochitest/file_browserElement_LoadEvents.html",
-    //   expected "http://example.com/tests/dom/browser-element/mochitest/file_empty.html"
-    todo_is(e.detail.url, browserElementTestHelpers.emptyPage1, "event's reported location");
-||||||| merged common ancestors
-    ok(seenLoadStart, 'Location change after load start.');
-    ok(!seenLoadEnd, 'Location change before load end.');
-    ok(e.detail.url, browserElementTestHelpers.emptyPage1, "event's reported location");
-=======
     ok(seenLoadStart, "Location change after load start.");
     ok(!seenLoadEnd, "Location change before load end.");
     // XXX: Switched to from ok() to todo_is() in Bug 1467712. Follow up in 1503862
@@ -64,7 +51,6 @@ function runTest() {
       browserElementTestHelpers.emptyPage1,
       "event's reported location"
     );
->>>>>>> upstream-releases
   }
 
   function loadend(e) {
@@ -119,15 +105,6 @@ function runTest2() {
     ok(e.isTrusted, "Event should be trusted.");
     ok(!seenLocationChange, "Just one locationchange event.");
     seenLocationChange = true;
-<<<<<<< HEAD
-    ok(seenLoadStart, 'Location change after load start.');
-    ok(!seenLoadEnd, 'Location change before load end.');
-    is(e.detail.url, browserElementTestHelpers.emptyPage2, "event's reported location");
-||||||| merged common ancestors
-    ok(seenLoadStart, 'Location change after load start.');
-    ok(!seenLoadEnd, 'Location change before load end.');
-    ok(e.detail.url, browserElementTestHelpers.emptyPage2, "event's reported location");
-=======
     ok(seenLoadStart, "Location change after load start.");
     ok(!seenLoadEnd, "Location change before load end.");
     is(
@@ -135,7 +112,6 @@ function runTest2() {
       browserElementTestHelpers.emptyPage2,
       "event's reported location"
     );
->>>>>>> upstream-releases
   });
 
   iframe.addEventListener("mozbrowserloadend", function(e) {

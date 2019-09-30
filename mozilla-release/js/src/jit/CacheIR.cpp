@@ -36,137 +36,6 @@ const char* const js::jit::CacheKindNames[] = {
 #undef DEFINE_KIND
 };
 
-<<<<<<< HEAD
-void CacheIRWriter::assertSameCompartment(JSObject* obj) {
-  cx_->debugOnlyCheck(obj);
-}
-
-StubField CacheIRWriter::readStubFieldForIon(uint32_t offset,
-                                             StubField::Type type) const {
-  size_t index = 0;
-  size_t currentOffset = 0;
-
-  // If we've seen an offset earlier than this before, we know we can start the
-  // search there at least, otherwise, we start the search from the beginning.
-  if (lastOffset_ < offset) {
-    currentOffset = lastOffset_;
-    index = lastIndex_;
-  }
-
-  while (currentOffset != offset) {
-    currentOffset += StubField::sizeInBytes(stubFields_[index].type());
-    index++;
-    MOZ_ASSERT(index < stubFields_.length());
-  }
-
-  MOZ_ASSERT(stubFields_[index].type() == type);
-
-  lastOffset_ = currentOffset;
-  lastIndex_ = index;
-
-  return stubFields_[index];
-}
-
-IRGenerator::IRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                         CacheKind cacheKind, ICState::Mode mode)
-    : writer(cx),
-      cx_(cx),
-      script_(script),
-      pc_(pc),
-      cacheKind_(cacheKind),
-      mode_(mode) {}
-
-GetPropIRGenerator::GetPropIRGenerator(
-    JSContext* cx, HandleScript script, jsbytecode* pc, CacheKind cacheKind,
-    ICState::Mode mode, bool* isTemporarilyUnoptimizable, HandleValue val,
-    HandleValue idVal, HandleValue receiver, GetPropertyResultFlags resultFlags)
-    : IRGenerator(cx, script, pc, cacheKind, mode),
-      val_(val),
-      idVal_(idVal),
-      receiver_(receiver),
-      isTemporarilyUnoptimizable_(isTemporarilyUnoptimizable),
-      resultFlags_(resultFlags),
-      preliminaryObjectAction_(PreliminaryObjectAction::None) {}
-
-static void EmitLoadSlotResult(CacheIRWriter& writer, ObjOperandId holderOp,
-                               NativeObject* holder, Shape* shape) {
-  if (holder->isFixedSlot(shape->slot())) {
-    writer.loadFixedSlotResult(holderOp,
-                               NativeObject::getFixedSlotOffset(shape->slot()));
-  } else {
-    size_t dynamicSlotOffset =
-        holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-    writer.loadDynamicSlotResult(holderOp, dynamicSlotOffset);
-  }
-||||||| merged common ancestors
-void
-CacheIRWriter::assertSameCompartment(JSObject* obj)
-{
-    cx_->debugOnlyCheck(obj);
-}
-
-StubField
-CacheIRWriter::readStubFieldForIon(uint32_t offset, StubField::Type type) const
-{
-    size_t index = 0;
-    size_t currentOffset = 0;
-
-    // If we've seen an offset earlier than this before, we know we can start the search
-    // there at least, otherwise, we start the search from the beginning.
-    if (lastOffset_ < offset) {
-        currentOffset = lastOffset_;
-        index = lastIndex_;
-    }
-
-    while (currentOffset != offset) {
-        currentOffset += StubField::sizeInBytes(stubFields_[index].type());
-        index++;
-        MOZ_ASSERT(index < stubFields_.length());
-    }
-
-    MOZ_ASSERT(stubFields_[index].type() == type);
-
-    lastOffset_ = currentOffset;
-    lastIndex_ = index;
-
-    return stubFields_[index];
-}
-
-IRGenerator::IRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, CacheKind cacheKind,
-                         ICState::Mode mode)
-  : writer(cx),
-    cx_(cx),
-    script_(script),
-    pc_(pc),
-    cacheKind_(cacheKind),
-    mode_(mode)
-{}
-
-GetPropIRGenerator::GetPropIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                       CacheKind cacheKind, ICState::Mode mode,
-                                       bool* isTemporarilyUnoptimizable, HandleValue val,
-                                       HandleValue idVal, HandleValue receiver,
-                                       GetPropertyResultFlags resultFlags)
-  : IRGenerator(cx, script, pc, cacheKind, mode),
-    val_(val),
-    idVal_(idVal),
-    receiver_(receiver),
-    isTemporarilyUnoptimizable_(isTemporarilyUnoptimizable),
-    resultFlags_(resultFlags),
-    preliminaryObjectAction_(PreliminaryObjectAction::None)
-{}
-
-static void
-EmitLoadSlotResult(CacheIRWriter& writer, ObjOperandId holderOp, NativeObject* holder,
-                   Shape* shape)
-{
-    if (holder->isFixedSlot(shape->slot())) {
-        writer.loadFixedSlotResult(holderOp, NativeObject::getFixedSlotOffset(shape->slot()));
-    } else {
-        size_t dynamicSlotOffset = holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-        writer.loadDynamicSlotResult(holderOp, dynamicSlotOffset);
-    }
-=======
 // We need to enter the namespace here so that the definition of
 // CacheIROpFormat::ArgLengths can see CacheIROpFormat::ArgType
 // (without defining None/Id/Field/etc everywhere else in this file.)
@@ -267,7 +136,6 @@ static void EmitLoadSlotResult(CacheIRWriter& writer, ObjOperandId holderOp,
         holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
     writer.loadDynamicSlotResult(holderOp, dynamicSlotOffset);
   }
->>>>>>> upstream-releases
 }
 
 // DOM proxies
@@ -330,7 +198,6 @@ static ProxyStubType GetProxyStubType(JSContext* cx, HandleObject obj,
   return ProxyStubType::DOMUnshadowed;
 }
 
-<<<<<<< HEAD
 static bool ValueToNameOrSymbolId(JSContext* cx, HandleValue idval,
                                   MutableHandleId id, bool* nameOrSymbol) {
   *nameOrSymbol = false;
@@ -347,170 +214,7 @@ static bool ValueToNameOrSymbolId(JSContext* cx, HandleValue idval,
     id.set(JSID_VOID);
     return true;
   }
-||||||| merged common ancestors
-static bool
-ValueToNameOrSymbolId(JSContext* cx, HandleValue idval, MutableHandleId id,
-                      bool* nameOrSymbol)
-{
-    *nameOrSymbol = false;
 
-    if (!idval.isString() && !idval.isSymbol()) {
-        return true;
-    }
-
-    if (!ValueToId<CanGC>(cx, idval, id)) {
-        return false;
-    }
-
-    if (!JSID_IS_STRING(id) && !JSID_IS_SYMBOL(id)) {
-        id.set(JSID_VOID);
-        return true;
-    }
-
-    uint32_t dummy;
-    if (JSID_IS_STRING(id) && JSID_TO_ATOM(id)->isIndex(&dummy)) {
-        id.set(JSID_VOID);
-        return true;
-    }
-=======
-static bool ValueToNameOrSymbolId(JSContext* cx, HandleValue idval,
-                                  MutableHandleId id, bool* nameOrSymbol) {
-  *nameOrSymbol = false;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  uint32_t dummy;
-  if (JSID_IS_STRING(id) && JSID_TO_ATOM(id)->isIndex(&dummy)) {
-    id.set(JSID_VOID);
-||||||| merged common ancestors
-    *nameOrSymbol = true;
-=======
-  if (!idval.isString() && !idval.isSymbol()) {
->>>>>>> upstream-releases
-    return true;
-<<<<<<< HEAD
-  }
-
-  *nameOrSymbol = true;
-  return true;
-}
-||||||| merged common ancestors
-}
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachStub() {
-  // Idempotent ICs should call tryAttachIdempotentStub instead.
-  MOZ_ASSERT(!idempotent());
-
-  AutoAssertNoPendingException aanpe(cx_);
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachStub()
-{
-    // Idempotent ICs should call tryAttachIdempotentStub instead.
-    MOZ_ASSERT(!idempotent());
-
-    AutoAssertNoPendingException aanpe(cx_);
-=======
-  if (!ValueToId<CanGC>(cx, idval, id)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Non-object receivers are a degenerate case, so don't try to attach
-  // stubs. The stubs we do emit will still perform runtime checks and
-  // fallback as needed.
-  if (isSuper() && !receiver_.isObject()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  if (cacheKind_ != CacheKind::GetProp) {
-    MOZ_ASSERT_IF(cacheKind_ == CacheKind::GetPropSuper,
-                  getSuperReceiverValueId().id() == 1);
-    MOZ_ASSERT_IF(cacheKind_ != CacheKind::GetPropSuper,
-                  getElemKeyValueId().id() == 1);
-    writer.setInputOperandId(1);
-  }
-  if (cacheKind_ == CacheKind::GetElemSuper) {
-    MOZ_ASSERT(getSuperReceiverValueId().id() == 2);
-    writer.setInputOperandId(2);
-  }
-
-  RootedId id(cx_);
-  bool nameOrSymbol;
-  if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-    cx_->clearPendingException();
-    return false;
-  }
-||||||| merged common ancestors
-    // Non-object receivers are a degenerate case, so don't try to attach
-    // stubs. The stubs we do emit will still perform runtime checks and
-    // fallback as needed.
-    if (isSuper() && !receiver_.isObject()) {
-        return false;
-    }
-=======
-  if (!JSID_IS_STRING(id) && !JSID_IS_SYMBOL(id)) {
-    id.set(JSID_VOID);
-    return true;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (val_.isObject()) {
-    RootedObject obj(cx_, &val_.toObject());
-    ObjOperandId objId = writer.guardIsObject(valId);
-    if (nameOrSymbol) {
-      if (tryAttachObjectLength(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachNative(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachUnboxed(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachUnboxedExpando(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachTypedObject(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachModuleNamespace(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachWindowProxy(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachCrossCompartmentWrapper(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachXrayCrossCompartmentWrapper(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachFunction(obj, objId, id)) {
-        return true;
-      }
-      if (tryAttachProxy(obj, objId, id)) {
-        return true;
-      }
-||||||| merged common ancestors
-    ValOperandId valId(writer.setInputOperandId(0));
-    if (cacheKind_ != CacheKind::GetProp) {
-        MOZ_ASSERT_IF(cacheKind_ == CacheKind::GetPropSuper, getSuperReceiverValueId().id() == 1);
-        MOZ_ASSERT_IF(cacheKind_ != CacheKind::GetPropSuper, getElemKeyValueId().id() == 1);
-        writer.setInputOperandId(1);
-    }
-    if (cacheKind_ == CacheKind::GetElemSuper) {
-        MOZ_ASSERT(getSuperReceiverValueId().id() == 2);
-        writer.setInputOperandId(2);
-    }
-=======
   uint32_t dummy;
   if (JSID_IS_STRING(id) && JSID_TO_ATOM(id)->isIndex(&dummy)) {
     id.set(JSID_VOID);
@@ -567,90 +271,16 @@ AttachDecision GetPropIRGenerator::tryAttachStub() {
       TRY_ATTACH(tryAttachXrayCrossCompartmentWrapper(obj, objId, id));
       TRY_ATTACH(tryAttachFunction(obj, objId, id));
       TRY_ATTACH(tryAttachProxy(obj, objId, id));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      trackAttached(IRGenerator::NotAttached);
-      return false;
-||||||| merged common ancestors
-    RootedId id(cx_);
-    bool nameOrSymbol;
-    if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-        cx_->clearPendingException();
-        return false;
-=======
       trackAttached(IRGenerator::NotAttached);
       return AttachDecision::NoAction;
->>>>>>> upstream-releases
     }
 
     MOZ_ASSERT(cacheKind_ == CacheKind::GetElem ||
                cacheKind_ == CacheKind::GetElemSuper);
 
-<<<<<<< HEAD
-    if (tryAttachProxyElement(obj, objId)) {
-      return true;
-    }
-||||||| merged common ancestors
-        if (tryAttachProxyElement(obj, objId)) {
-            return true;
-        }
-=======
     TRY_ATTACH(tryAttachProxyElement(obj, objId));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    uint32_t index;
-    Int32OperandId indexId;
-    if (maybeGuardInt32Index(idVal_, getElemKeyValueId(), &index, &indexId)) {
-      if (tryAttachTypedElement(obj, objId, index, indexId)) {
-        return true;
-      }
-      if (tryAttachDenseElement(obj, objId, index, indexId)) {
-        return true;
-      }
-      if (tryAttachDenseElementHole(obj, objId, index, indexId)) {
-        return true;
-      }
-      if (tryAttachSparseElement(obj, objId, index, indexId)) {
-        return true;
-      }
-      if (tryAttachUnboxedElementHole(obj, objId, index, indexId)) {
-        return true;
-      }
-      if (tryAttachArgumentsObjectArg(obj, objId, indexId)) {
-        return true;
-      }
-      if (tryAttachGenericElement(obj, objId, index, indexId)) {
-        return true;
-      }
-||||||| merged common ancestors
-        uint32_t index;
-        Int32OperandId indexId;
-        if (maybeGuardInt32Index(idVal_, getElemKeyValueId(), &index, &indexId)) {
-            if (tryAttachTypedElement(obj, objId, index, indexId)) {
-                return true;
-            }
-            if (tryAttachDenseElement(obj, objId, index, indexId)) {
-                return true;
-            }
-            if (tryAttachDenseElementHole(obj, objId, index, indexId)) {
-                return true;
-            }
-            if (tryAttachUnboxedElementHole(obj, objId, index, indexId)) {
-                return true;
-            }
-            if (tryAttachArgumentsObjectArg(obj, objId, indexId)) {
-                return true;
-            }
-            if (tryAttachGenericElement(obj, objId, index, indexId)) {
-                return true;
-            }
-
-            trackAttached(IRGenerator::NotAttached);
-            return false;
-        }
-=======
     uint32_t index;
     Int32OperandId indexId;
     if (maybeGuardInt32Index(idVal_, getElemKeyValueId(), &index, &indexId)) {
@@ -660,202 +290,61 @@ AttachDecision GetPropIRGenerator::tryAttachStub() {
       TRY_ATTACH(tryAttachSparseElement(obj, objId, index, indexId));
       TRY_ATTACH(tryAttachArgumentsObjectArg(obj, objId, indexId));
       TRY_ATTACH(tryAttachGenericElement(obj, objId, index, indexId));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      trackAttached(IRGenerator::NotAttached);
-      return false;
-||||||| merged common ancestors
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-=======
       trackAttached(IRGenerator::NotAttached);
       return AttachDecision::NoAction;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-||||||| merged common ancestors
-    if (nameOrSymbol) {
-        if (tryAttachPrimitive(valId, id)) {
-            return true;
-        }
-        if (tryAttachStringLength(valId, id)) {
-            return true;
-        }
-        if (tryAttachMagicArgumentsName(valId, id)) {
-            return true;
-        }
-=======
     trackAttached(IRGenerator::NotAttached);
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (nameOrSymbol) {
-    if (tryAttachPrimitive(valId, id)) {
-      return true;
-    }
-    if (tryAttachStringLength(valId, id)) {
-      return true;
-    }
-    if (tryAttachMagicArgumentsName(valId, id)) {
-      return true;
-    }
-||||||| merged common ancestors
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-=======
   if (nameOrSymbol) {
     TRY_ATTACH(tryAttachPrimitive(valId, id));
     TRY_ATTACH(tryAttachStringLength(valId, id));
     TRY_ATTACH(tryAttachMagicArgumentsName(valId, id));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-||||||| merged common ancestors
-    if (idVal_.isInt32()) {
-        ValOperandId indexId = getElemKeyValueId();
-        if (tryAttachStringChar(valId, indexId)) {
-            return true;
-        }
-        if (tryAttachMagicArgument(valId, indexId)) {
-            return true;
-        }
-=======
     trackAttached(IRGenerator::NotAttached);
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (idVal_.isInt32()) {
-    ValOperandId indexId = getElemKeyValueId();
-    if (tryAttachStringChar(valId, indexId)) {
-      return true;
-    }
-    if (tryAttachMagicArgument(valId, indexId)) {
-      return true;
-    }
-||||||| merged common ancestors
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-=======
   if (idVal_.isInt32()) {
     ValOperandId indexId = getElemKeyValueId();
     TRY_ATTACH(tryAttachStringChar(valId, indexId));
     TRY_ATTACH(tryAttachMagicArgument(valId, indexId));
->>>>>>> upstream-releases
 
     trackAttached(IRGenerator::NotAttached);
-<<<<<<< HEAD
-    return false;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-||||||| merged common ancestors
-    return false;
-=======
     return AttachDecision::NoAction;
   }
 
   trackAttached(IRGenerator::NotAttached);
   return AttachDecision::NoAction;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachIdempotentStub() {
-  // For idempotent ICs, only attach stubs which we can be sure have no side
-  // effects and produce a result which the MIR in the calling code is able
-  // to handle, since we do not have a pc to explicitly monitor the result.
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachIdempotentStub()
-{
-    // For idempotent ICs, only attach stubs which we can be sure have no side
-    // effects and produce a result which the MIR in the calling code is able
-    // to handle, since we do not have a pc to explicitly monitor the result.
-=======
 AttachDecision GetPropIRGenerator::tryAttachIdempotentStub() {
   // For idempotent ICs, only attach stubs which we can be sure have no side
   // effects and produce a result which the MIR in the calling code is able
   // to handle, since we do not have a pc to explicitly monitor the result.
->>>>>>> upstream-releases
 
   MOZ_ASSERT(idempotent());
 
   RootedObject obj(cx_, &val_.toObject());
   RootedId id(cx_, NameToId(idVal_.toString()->asAtom().asPropertyName()));
 
-<<<<<<< HEAD
   ValOperandId valId(writer.setInputOperandId(0));
   ObjOperandId objId = writer.guardIsObject(valId);
-  if (tryAttachNative(obj, objId, id)) {
-    return true;
-  }
-||||||| merged common ancestors
-    ValOperandId valId(writer.setInputOperandId(0));
-    ObjOperandId objId = writer.guardIsObject(valId);
-    if (tryAttachNative(obj, objId, id)) {
-        return true;
-    }
-=======
-  ValOperandId valId(writer.setInputOperandId(0));
-  ObjOperandId objId = writer.guardIsObject(valId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Object lengths are supported only if int32 results are allowed.
-  if (tryAttachObjectLength(obj, objId, id)) {
-    return true;
-  }
-||||||| merged common ancestors
-    // Object lengths are supported only if int32 results are allowed.
-    if (tryAttachObjectLength(obj, objId, id)) {
-        return true;
-    }
-=======
   TRY_ATTACH(tryAttachNative(obj, objId, id));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Also support native data properties on DOMProxy prototypes.
-  if (GetProxyStubType(cx_, obj, id) == ProxyStubType::DOMUnshadowed) {
-    return tryAttachDOMProxyUnshadowed(obj, objId, id);
-  }
-||||||| merged common ancestors
-    // Also support native data properties on DOMProxy prototypes.
-    if (GetProxyStubType(cx_, obj, id) == ProxyStubType::DOMUnshadowed) {
-        return tryAttachDOMProxyUnshadowed(obj, objId, id);
-    }
-=======
   // Object lengths are supported only if int32 results are allowed.
   TRY_ATTACH(tryAttachObjectLength(obj, objId, id));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return false;
-||||||| merged common ancestors
-    return false;
-=======
   // Also support native data properties on DOMProxy prototypes.
   if (GetProxyStubType(cx_, obj, id) == ProxyStubType::DOMUnshadowed) {
     return tryAttachDOMProxyUnshadowed(obj, objId, id);
   }
 
   return AttachDecision::NoAction;
->>>>>>> upstream-releases
 }
 
 static bool IsCacheableProtoChain(JSObject* obj, JSObject* holder) {
@@ -888,20 +377,6 @@ static bool IsCacheableGetPropReadSlot(JSObject* obj, JSObject* holder,
   return true;
 }
 
-<<<<<<< HEAD
-static bool IsCacheableGetPropCallNative(JSObject* obj, JSObject* holder,
-                                         Shape* shape) {
-  if (!shape || !IsCacheableProtoChain(obj, holder)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-IsCacheableGetPropCallNative(JSObject* obj, JSObject* holder, Shape* shape)
-{
-    if (!shape || !IsCacheableProtoChain(obj, holder)) {
-        return false;
-    }
-=======
 enum NativeGetPropCacheability {
   CanAttachNone,
   CanAttachReadSlot,
@@ -909,84 +384,28 @@ enum NativeGetPropCacheability {
   CanAttachScriptedGetter,
   CanAttachTemporarilyUnoptimizable
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->hasGetterValue() || !shape->getterValue().isObject()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!shape->hasGetterValue() || !shape->getterValue().isObject()) {
-        return false;
-    }
-=======
 static NativeGetPropCacheability IsCacheableGetPropCall(JSObject* obj,
                                                         JSObject* holder,
                                                         Shape* shape) {
   if (!shape || !IsCacheableProtoChain(obj, holder)) {
     return CanAttachNone;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->getterValue().toObject().is<JSFunction>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!shape->getterValue().toObject().is<JSFunction>()) {
-        return false;
-    }
-=======
   if (!shape->hasGetterValue() || !shape->getterValue().isObject()) {
     return CanAttachNone;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFunction& getter = shape->getterValue().toObject().as<JSFunction>();
-  if (!getter.isNativeWithCppEntry()) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSFunction& getter = shape->getterValue().toObject().as<JSFunction>();
-    if (!getter.isNativeWithCppEntry()) {
-        return false;
-    }
-=======
   if (!shape->getterValue().toObject().is<JSFunction>()) {
     return CanAttachNone;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (getter.isClassConstructor()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (getter.isClassConstructor()) {
-        return false;
-    }
-=======
   JSFunction& getter = shape->getterValue().toObject().as<JSFunction>();
 
   if (getter.isClassConstructor()) {
     return CanAttachNone;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Check for a getter that has jitinfo and whose jitinfo says it's
-  // OK with both inner and outer objects.
-  if (getter.hasJitInfo() && !getter.jitInfo()->needsOuterizedThisObject()) {
-    return true;
-  }
-||||||| merged common ancestors
-    // Check for a getter that has jitinfo and whose jitinfo says it's
-    // OK with both inner and outer objects.
-    if (getter.hasJitInfo() && !getter.jitInfo()->needsOuterizedThisObject()) {
-        return true;
-    }
-=======
   // For getters that need the WindowProxy (instead of the Window) as this
   // object, don't cache if obj is the Window, since our cache will pass that
   // instead of the WindowProxy.
@@ -997,105 +416,22 @@ static NativeGetPropCacheability IsCacheableGetPropCall(JSObject* obj,
       return CanAttachNone;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // For getters that need the WindowProxy (instead of the Window) as this
-  // object, don't cache if obj is the Window, since our cache will pass that
-  // instead of the WindowProxy.
-  return !IsWindow(obj);
-}
-||||||| merged common ancestors
-    // For getters that need the WindowProxy (instead of the Window) as this
-    // object, don't cache if obj is the Window, since our cache will pass that
-    // instead of the WindowProxy.
-    return !IsWindow(obj);
-}
-=======
   if (getter.isBuiltinNative()) {
     return CanAttachNativeGetter;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool IsCacheableGetPropCallScripted(
-    JSObject* obj, JSObject* holder, Shape* shape,
-    bool* isTemporarilyUnoptimizable = nullptr) {
-  if (!shape || !IsCacheableProtoChain(obj, holder)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-IsCacheableGetPropCallScripted(JSObject* obj, JSObject* holder, Shape* shape,
-                               bool* isTemporarilyUnoptimizable = nullptr)
-{
-    if (!shape || !IsCacheableProtoChain(obj, holder)) {
-        return false;
-    }
-=======
   if (getter.hasScript() || getter.isNativeWithJitEntry()) {
     return CanAttachScriptedGetter;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->hasGetterValue() || !shape->getterValue().isObject()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!shape->hasGetterValue() || !shape->getterValue().isObject()) {
-        return false;
-    }
-=======
   if (getter.isInterpretedLazy()) {
     return CanAttachTemporarilyUnoptimizable;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->getterValue().toObject().is<JSFunction>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!shape->getterValue().toObject().is<JSFunction>()) {
-        return false;
-    }
-=======
   return CanAttachNone;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // See IsCacheableGetPropCallNative.
-  if (IsWindow(obj)) {
-    return false;
-  }
-
-  JSFunction& getter = shape->getterValue().toObject().as<JSFunction>();
-  if (getter.isNativeWithCppEntry()) {
-    return false;
-  }
-
-  // Natives with jit entry can use the scripted path.
-  if (getter.isNativeWithJitEntry()) {
-    return true;
-  }
-||||||| merged common ancestors
-    // See IsCacheableGetPropCallNative.
-    if (IsWindow(obj)) {
-        return false;
-    }
-
-    JSFunction& getter = shape->getterValue().toObject().as<JSFunction>();
-    if (getter.isNativeWithCppEntry()) {
-        return false;
-    }
-
-    // Natives with jit entry can use the scripted path.
-    if (getter.isNativeWithJitEntry()) {
-        return true;
-    }
-=======
 static bool CheckHasNoSuchOwnProperty(JSContext* cx, JSObject* obj, jsid id) {
   if (obj->isNative()) {
     // Don't handle proto chains with resolve hooks.
@@ -1112,103 +448,7 @@ static bool CheckHasNoSuchOwnProperty(JSContext* cx, JSObject* obj, jsid id) {
   } else {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!getter.hasScript()) {
-    if (isTemporarilyUnoptimizable) {
-      *isTemporarilyUnoptimizable = true;
-    }
-    return false;
-  }
-||||||| merged common ancestors
-    if (!getter.hasScript()) {
-        if (isTemporarilyUnoptimizable) {
-            *isTemporarilyUnoptimizable = true;
-        }
-        return false;
-    }
-=======
-  return true;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (getter.isClassConstructor()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (getter.isClassConstructor()) {
-        return false;
-    }
-=======
-static bool CheckHasNoSuchProperty(JSContext* cx, JSObject* obj, jsid id) {
-  JSObject* curObj = obj;
-  do {
-    if (!CheckHasNoSuchOwnProperty(cx, curObj, id)) {
-      return false;
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return true;
-}
-
-static bool CheckHasNoSuchOwnProperty(JSContext* cx, JSObject* obj, jsid id) {
-  if (obj->isNative()) {
-    // Don't handle proto chains with resolve hooks.
-    if (ClassMayResolveId(cx->names(), obj->getClass(), id, obj)) {
-      return false;
-    }
-    if (obj->as<NativeObject>().contains(cx, id)) {
-      return false;
-||||||| merged common ancestors
-    return true;
-}
-
-static bool
-CheckHasNoSuchOwnProperty(JSContext* cx, JSObject* obj, jsid id)
-{
-    if (obj->isNative()) {
-        // Don't handle proto chains with resolve hooks.
-        if (ClassMayResolveId(cx->names(), obj->getClass(), id, obj)) {
-            return false;
-        }
-        if (obj->as<NativeObject>().contains(cx, id)) {
-            return false;
-        }
-    } else if (obj->is<UnboxedPlainObject>()) {
-        if (obj->as<UnboxedPlainObject>().containsUnboxedOrExpandoProperty(cx, id)) {
-            return false;
-        }
-    } else if (obj->is<TypedObject>()) {
-        if (obj->as<TypedObject>().typeDescr().hasProperty(cx->names(), id)) {
-            return false;
-        }
-    } else {
-        return false;
-=======
-    if (!curObj->isNative()) {
-      // Non-native objects are only handled as the original receiver.
-      if (curObj != obj) {
-        return false;
-      }
->>>>>>> upstream-releases
-    }
-  } else if (obj->is<UnboxedPlainObject>()) {
-    if (obj->as<UnboxedPlainObject>().containsUnboxedOrExpandoProperty(cx,
-                                                                       id)) {
-      return false;
-    }
-  } else if (obj->is<TypedObject>()) {
-    if (obj->as<TypedObject>().typeDescr().hasProperty(cx->names(), id)) {
-      return false;
-    }
-  } else {
-    return false;
-  }
-
-<<<<<<< HEAD
   return true;
 }
 
@@ -1228,32 +468,6 @@ static bool CheckHasNoSuchProperty(JSContext* cx, JSObject* obj, jsid id) {
 
     curObj = curObj->staticPrototype();
   } while (curObj);
-||||||| merged common ancestors
-    return true;
-}
-
-static bool
-CheckHasNoSuchProperty(JSContext* cx, JSObject* obj, jsid id)
-{
-    JSObject* curObj = obj;
-    do {
-        if (!CheckHasNoSuchOwnProperty(cx, curObj, id)) {
-            return false;
-        }
-
-        if (!curObj->isNative()) {
-            // Non-native objects are only handled as the original receiver.
-            if (curObj != obj) {
-                return false;
-            }
-        }
-
-        curObj = curObj->staticPrototype();
-    } while (curObj);
-=======
-    curObj = curObj->staticPrototype();
-  } while (curObj);
->>>>>>> upstream-releases
 
   return true;
 }
@@ -1306,62 +520,6 @@ static bool IsCacheableNoProperty(JSContext* cx, JSObject* obj,
   return CheckHasNoSuchProperty(cx, obj, id);
 }
 
-<<<<<<< HEAD
-enum NativeGetPropCacheability {
-  CanAttachNone,
-  CanAttachReadSlot,
-  CanAttachCallGetter,
-};
-
-static NativeGetPropCacheability CanAttachNativeGetProp(
-    JSContext* cx, HandleObject obj, HandleId id,
-    MutableHandleNativeObject holder, MutableHandleShape shape, jsbytecode* pc,
-    GetPropertyResultFlags resultFlags, bool* isTemporarilyUnoptimizable) {
-  MOZ_ASSERT(JSID_IS_STRING(id) || JSID_IS_SYMBOL(id));
-
-  // The lookup needs to be universally pure, otherwise we risk calling hooks
-  // out of turn. We don't mind doing this even when purity isn't required,
-  // because we only miss out on shape hashification, which is only a temporary
-  // perf cost. The limits were arbitrarily set, anyways.
-  JSObject* baseHolder = nullptr;
-  PropertyResult prop;
-  if (!LookupPropertyPure(cx, obj, id, &baseHolder, &prop)) {
-    return CanAttachNone;
-  }
-||||||| merged common ancestors
-enum NativeGetPropCacheability {
-    CanAttachNone,
-    CanAttachReadSlot,
-    CanAttachCallGetter,
-};
-
-static NativeGetPropCacheability
-CanAttachNativeGetProp(JSContext* cx, HandleObject obj, HandleId id,
-                       MutableHandleNativeObject holder, MutableHandleShape shape,
-                       jsbytecode* pc, GetPropertyResultFlags resultFlags,
-                       bool* isTemporarilyUnoptimizable)
-{
-    MOZ_ASSERT(JSID_IS_STRING(id) || JSID_IS_SYMBOL(id));
-
-    // The lookup needs to be universally pure, otherwise we risk calling hooks out
-    // of turn. We don't mind doing this even when purity isn't required, because we
-    // only miss out on shape hashification, which is only a temporary perf cost.
-    // The limits were arbitrarily set, anyways.
-    JSObject* baseHolder = nullptr;
-    PropertyResult prop;
-    if (!LookupPropertyPure(cx, obj, id, &baseHolder, &prop)) {
-        return CanAttachNone;
-    }
-
-    MOZ_ASSERT(!holder);
-    if (baseHolder) {
-        if (!baseHolder->isNative()) {
-            return CanAttachNone;
-        }
-        holder.set(&baseHolder->as<NativeObject>());
-    }
-    shape.set(prop.maybeShape());
-=======
 static NativeGetPropCacheability CanAttachNativeGetProp(
     JSContext* cx, HandleObject obj, HandleId id,
     MutableHandleNativeObject holder, MutableHandleShape shape, jsbytecode* pc,
@@ -1377,7 +535,6 @@ static NativeGetPropCacheability CanAttachNativeGetProp(
   if (!LookupPropertyPure(cx, obj, id, &baseHolder, &prop)) {
     return CanAttachNone;
   }
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!holder);
   if (baseHolder) {
@@ -1396,37 +553,12 @@ static NativeGetPropCacheability CanAttachNativeGetProp(
     return CanAttachReadSlot;
   }
 
-<<<<<<< HEAD
-  // Idempotent ICs cannot call getters, see tryAttachIdempotentStub.
-  if (pc && (resultFlags & GetPropertyResultFlags::Monitored)) {
-    if (IsCacheableGetPropCallScripted(obj, holder, shape,
-                                       isTemporarilyUnoptimizable)) {
-      return CanAttachCallGetter;
-    }
-||||||| merged common ancestors
-        if (IsCacheableGetPropCallNative(obj, holder, shape)) {
-            return CanAttachCallGetter;
-        }
-    }
-=======
   // Idempotent ICs cannot call getters, see tryAttachIdempotentStub.
   if (pc && (resultFlags & GetPropertyResultFlags::Monitored)) {
     return IsCacheableGetPropCall(obj, holder, shape);
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (IsCacheableGetPropCallNative(obj, holder, shape)) {
-      return CanAttachCallGetter;
-    }
-  }
 
   return CanAttachNone;
-||||||| merged common ancestors
-    return CanAttachNone;
-=======
-  return CanAttachNone;
->>>>>>> upstream-releases
 }
 
 static void GuardGroupProto(CacheIRWriter& writer, JSObject* obj,
@@ -1446,57 +578,6 @@ static void GuardGroupProto(CacheIRWriter& writer, JSObject* obj,
 }
 
 // Guard that a given object has same class and same OwnProperties (excluding
-<<<<<<< HEAD
-// dense elements and dynamic properties). Returns an OperandId for the unboxed
-// expando if it exists.
-static void TestMatchingReceiver(CacheIRWriter& writer, JSObject* obj,
-                                 ObjOperandId objId,
-                                 Maybe<ObjOperandId>* expandoId) {
-  if (obj->is<UnboxedPlainObject>()) {
-    writer.guardGroupForLayout(objId, obj->group());
-
-    if (UnboxedExpandoObject* expando =
-            obj->as<UnboxedPlainObject>().maybeExpando()) {
-      expandoId->emplace(writer.guardAndLoadUnboxedExpando(objId));
-      writer.guardShapeForOwnProperties(expandoId->ref(),
-                                        expando->lastProperty());
-    } else {
-      writer.guardNoUnboxedExpando(objId);
-    }
-  } else if (obj->is<TypedObject>()) {
-    writer.guardGroupForLayout(objId, obj->group());
-  } else if (obj->is<ProxyObject>()) {
-    writer.guardShapeForClass(objId, obj->as<ProxyObject>().shape());
-  } else {
-    MOZ_ASSERT(obj->is<NativeObject>());
-    writer.guardShapeForOwnProperties(objId,
-                                      obj->as<NativeObject>().lastProperty());
-  }
-||||||| merged common ancestors
-// dense elements and dynamic properties). Returns an OperandId for the unboxed
-// expando if it exists.
-static void
-TestMatchingReceiver(CacheIRWriter& writer, JSObject* obj, ObjOperandId objId,
-                     Maybe<ObjOperandId>* expandoId)
-{
-    if (obj->is<UnboxedPlainObject>()) {
-        writer.guardGroupForLayout(objId, obj->group());
-
-        if (UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando()) {
-            expandoId->emplace(writer.guardAndLoadUnboxedExpando(objId));
-            writer.guardShapeForOwnProperties(expandoId->ref(), expando->lastProperty());
-        } else {
-            writer.guardNoUnboxedExpando(objId);
-        }
-    } else if (obj->is<TypedObject>()) {
-        writer.guardGroupForLayout(objId, obj->group());
-    } else if (obj->is<ProxyObject>()) {
-        writer.guardShapeForClass(objId, obj->as<ProxyObject>().shape());
-    } else {
-        MOZ_ASSERT(obj->is<NativeObject>());
-        writer.guardShapeForOwnProperties(objId, obj->as<NativeObject>().lastProperty());
-    }
-=======
 // dense elements and dynamic properties).
 static void TestMatchingReceiver(CacheIRWriter& writer, JSObject* obj,
                                  ObjOperandId objId) {
@@ -1509,7 +590,6 @@ static void TestMatchingReceiver(CacheIRWriter& writer, JSObject* obj,
     writer.guardShapeForOwnProperties(objId,
                                       obj->as<NativeObject>().lastProperty());
   }
->>>>>>> upstream-releases
 }
 
 // Similar to |TestMatchingReceiver|, but specialized for NativeObject.
@@ -1538,183 +618,6 @@ static void GeneratePrototypeGuardsForReceiver(CacheIRWriter& writer,
   }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  // The following cases already guaranteed the prototype is unchanged.
-  if (obj->is<UnboxedPlainObject>()) {
-    MOZ_ASSERT(!obj->group()->hasUncacheableProto());
-  } else if (obj->is<TypedObject>()) {
-    MOZ_ASSERT(!obj->group()->hasUncacheableProto());
-  } else if (obj->is<ProxyObject>()) {
-    MOZ_ASSERT(!obj->hasUncacheableProto());
-  }
-#endif  // DEBUG
-}
-
-static bool ProtoChainSupportsTeleporting(JSObject* obj, JSObject* holder) {
-  // Any non-delegate should already have been handled since its checks are
-  // always required.
-  MOZ_ASSERT(obj->isDelegate());
-
-  // Prototype chain must have cacheable prototypes to ensure the cached
-  // holder is the current holder.
-  for (JSObject* tmp = obj; tmp != holder; tmp = tmp->staticPrototype()) {
-    if (tmp->hasUncacheableProto()) {
-      return false;
-    }
-  }
-
-  // The holder itself only gets reshaped by teleportation if it is not
-  // marked UNCACHEABLE_PROTO. See: ReshapeForProtoMutation.
-  return !holder->hasUncacheableProto();
-}
-
-static void GeneratePrototypeGuards(CacheIRWriter& writer, JSObject* obj,
-                                    JSObject* holder, ObjOperandId objId) {
-  // Assuming target property is on |holder|, generate appropriate guards to
-  // ensure |holder| is still on the prototype chain of |obj| and we haven't
-  // introduced any shadowing definitions.
-  //
-  // For each item in the proto chain before holder, we must ensure that
-  // [[GetPrototypeOf]] still has the expected result, and that
-  // [[GetOwnProperty]] has no definition of the target property.
-  //
-  //
-  // [SMDOC] Shape Teleporting Optimization
-  // ------------------------------
-  //
-  // Starting with the assumption (and guideline to developers) that mutating
-  // prototypes is an uncommon and fair-to-penalize operation we move cost
-  // from the access side to the mutation side.
-  //
-  // Consider the following proto chain, with B defining a property 'x':
-  //
-  //      D  ->  C  ->  B{x: 3}  ->  A  -> null
-  //
-  // When accessing |D.x| we refer to D as the "receiver", and B as the
-  // "holder". To optimize this access we need to ensure that neither D nor C
-  // has since defined a shadowing property 'x'. Since C is a prototype that
-  // we assume is rarely mutated we would like to avoid checking each time if
-  // new properties are added. To do this we require that everytime C is
-  // mutated that in addition to generating a new shape for itself, it will
-  // walk the proto chain and generate new shapes for those objects on the
-  // chain (B and A). As a result, checking the shape of D and B is
-  // sufficient. Note that we do not care if the shape or properties of A
-  // change since the lookup of 'x' will stop at B.
-  //
-  // The second condition we must verify is that the prototype chain was not
-  // mutated. The same mechanism as above is used. When the prototype link is
-  // changed, we generate a new shape for the object. If the object whose
-  // link we are mutating is itself a prototype, we regenerate shapes down
-  // the chain. This means the same two shape checks as above are sufficient.
-  //
-  // An additional wrinkle is the UNCACHEABLE_PROTO shape flag. This
-  // indicates that the shape no longer implies any specific prototype. As
-  // well, the shape will not be updated by the teleporting optimization.
-  // If any shape from receiver to holder (inclusive) is UNCACHEABLE_PROTO,
-  // we don't apply the optimization.
-  //
-  // See:
-  //  - ReshapeForProtoMutation
-  //  - ReshapeForShadowedProp
-
-  MOZ_ASSERT(holder);
-  MOZ_ASSERT(obj != holder);
-
-  // Only DELEGATE objects participate in teleporting so peel off the first
-  // object in the chain if needed and handle it directly.
-  JSObject* pobj = obj;
-  if (!obj->isDelegate()) {
-    // TestMatchingReceiver does not always ensure the prototype is
-    // unchanged, so generate extra guards as needed.
-    GeneratePrototypeGuardsForReceiver(writer, obj, objId);
-
-    pobj = obj->staticPrototype();
-  }
-  MOZ_ASSERT(pobj->isDelegate());
-
-  // If teleporting is supported for this prototype chain, we are done.
-  if (ProtoChainSupportsTeleporting(pobj, holder)) {
-    return;
-  }
-
-  // If already at the holder, no further proto checks are needed.
-  if (pobj == holder) {
-    return;
-  }
-
-  // NOTE: We could be clever and look for a middle prototype to shape check
-  //       and elide some (but not all) of the group checks. Unless we have
-  //       real-world examples, let's avoid the complexity.
-
-  // Synchronize pobj and protoId.
-  MOZ_ASSERT(pobj == obj || pobj == obj->staticPrototype());
-  ObjOperandId protoId = (pobj == obj) ? objId : writer.loadProto(objId);
-
-  // Guard prototype links from |pobj| to |holder|.
-  while (pobj != holder) {
-    pobj = pobj->staticPrototype();
-    protoId = writer.loadProto(protoId);
-
-    writer.guardSpecificObject(protoId, pobj);
-  }
-}
-
-static void GeneratePrototypeHoleGuards(CacheIRWriter& writer, JSObject* obj,
-                                        ObjOperandId objId,
-                                        bool alwaysGuardFirstProto) {
-  if (alwaysGuardFirstProto || obj->hasUncacheableProto()) {
-    GuardGroupProto(writer, obj, objId);
-  }
-
-  JSObject* pobj = obj->staticPrototype();
-  while (pobj) {
-    ObjOperandId protoId = writer.loadObject(pobj);
-
-    // If shape doesn't imply proto, additional guards are needed.
-    if (pobj->hasUncacheableProto()) {
-      GuardGroupProto(writer, pobj, protoId);
-    }
-
-    // Make sure the shape matches, to avoid non-dense elements or anything
-    // else that is being checked by CanAttachDenseElementHole.
-    writer.guardShape(protoId, pobj->as<NativeObject>().lastProperty());
-
-    // Also make sure there are no dense elements.
-    writer.guardNoDenseElements(protoId);
-
-    pobj = pobj->staticPrototype();
-  }
-||||||| merged common ancestors
-    // The following cases already guaranteed the prototype is unchanged.
-    if (obj->is<UnboxedPlainObject>()) {
-        MOZ_ASSERT(!obj->group()->hasUncacheableProto());
-    } else if (obj->is<TypedObject>()) {
-        MOZ_ASSERT(!obj->group()->hasUncacheableProto());
-    } else if (obj->is<ProxyObject>()) {
-        MOZ_ASSERT(!obj->hasUncacheableProto());
-    }
-#endif // DEBUG
-}
-
-static bool
-ProtoChainSupportsTeleporting(JSObject* obj, JSObject* holder)
-{
-    // Any non-delegate should already have been handled since its checks are
-    // always required.
-    MOZ_ASSERT(obj->isDelegate());
-
-    // Prototype chain must have cacheable prototypes to ensure the cached
-    // holder is the current holder.
-    for (JSObject* tmp = obj; tmp != holder; tmp = tmp->staticPrototype()) {
-        if (tmp->hasUncacheableProto()) {
-            return false;
-        }
-    }
-
-    // The holder itself only gets reshaped by teleportation if it is not
-    // marked UNCACHEABLE_PROTO. See: ReshapeForProtoMutation.
-    return !holder->hasUncacheableProto();
-=======
   // The following cases already guaranteed the prototype is unchanged.
   if (obj->is<TypedObject>()) {
     MOZ_ASSERT(!obj->group()->hasUncacheableProto());
@@ -1872,22 +775,6 @@ static void TestMatchingHolder(CacheIRWriter& writer, JSObject* obj,
 
   writer.guardShapeForOwnProperties(objId,
                                     obj->as<NativeObject>().lastProperty());
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-// Similar to |TestMatchingReceiver|, but for the holder object (when it
-// differs from the receiver). The holder may also be the expando of the
-// receiver if it exists.
-static void TestMatchingHolder(CacheIRWriter& writer, JSObject* obj,
-                               ObjOperandId objId) {
-  // The GeneratePrototypeGuards + TestMatchingHolder checks only support
-  // prototype chains composed of NativeObject (excluding the receiver
-  // itself).
-  MOZ_ASSERT(obj->is<NativeObject>());
-
-  writer.guardShapeForOwnProperties(objId,
-                                    obj->as<NativeObject>().lastProperty());
 }
 
 static bool UncacheableProtoOnChain(JSObject* obj) {
@@ -1899,267 +786,35 @@ static bool UncacheableProtoOnChain(JSObject* obj) {
     obj = obj->staticPrototype();
     if (!obj) {
       return false;
-||||||| merged common ancestors
-static void
-GeneratePrototypeGuards(CacheIRWriter& writer, JSObject* obj, JSObject* holder, ObjOperandId objId)
-{
-    // Assuming target property is on |holder|, generate appropriate guards to
-    // ensure |holder| is still on the prototype chain of |obj| and we haven't
-    // introduced any shadowing definitions.
-    //
-    // For each item in the proto chain before holder, we must ensure that
-    // [[GetPrototypeOf]] still has the expected result, and that
-    // [[GetOwnProperty]] has no definition of the target property.
-    //
-    //
-    // [SMDOC] Shape Teleporting Optimization
-    // ------------------------------
-    //
-    // Starting with the assumption (and guideline to developers) that mutating
-    // prototypes is an uncommon and fair-to-penalize operation we move cost
-    // from the access side to the mutation side.
-    //
-    // Consider the following proto chain, with B defining a property 'x':
-    //
-    //      D  ->  C  ->  B{x: 3}  ->  A  -> null
-    //
-    // When accessing |D.x| we refer to D as the "receiver", and B as the
-    // "holder". To optimize this access we need to ensure that neither D nor C
-    // has since defined a shadowing property 'x'. Since C is a prototype that
-    // we assume is rarely mutated we would like to avoid checking each time if
-    // new properties are added. To do this we require that everytime C is
-    // mutated that in addition to generating a new shape for itself, it will
-    // walk the proto chain and generate new shapes for those objects on the
-    // chain (B and A). As a result, checking the shape of D and B is
-    // sufficient. Note that we do not care if the shape or properties of A
-    // change since the lookup of 'x' will stop at B.
-    //
-    // The second condition we must verify is that the prototype chain was not
-    // mutated. The same mechanism as above is used. When the prototype link is
-    // changed, we generate a new shape for the object. If the object whose
-    // link we are mutating is itself a prototype, we regenerate shapes down
-    // the chain. This means the same two shape checks as above are sufficient.
-    //
-    // An additional wrinkle is the UNCACHEABLE_PROTO shape flag. This
-    // indicates that the shape no longer implies any specific prototype. As
-    // well, the shape will not be updated by the teleporting optimization.
-    // If any shape from receiver to holder (inclusive) is UNCACHEABLE_PROTO,
-    // we don't apply the optimization.
-    //
-    // See:
-    //  - ReshapeForProtoMutation
-    //  - ReshapeForShadowedProp
-
-    MOZ_ASSERT(holder);
-    MOZ_ASSERT(obj != holder);
-
-    // Only DELEGATE objects participate in teleporting so peel off the first
-    // object in the chain if needed and handle it directly.
-    JSObject* pobj = obj;
-    if (!obj->isDelegate()) {
-        // TestMatchingReceiver does not always ensure the prototype is
-        // unchanged, so generate extra guards as needed.
-        GeneratePrototypeGuardsForReceiver(writer, obj, objId);
-
-        pobj = obj->staticPrototype();
-    }
-    MOZ_ASSERT(pobj->isDelegate());
-
-    // If teleporting is supported for this prototype chain, we are done.
-    if (ProtoChainSupportsTeleporting(pobj, holder)) {
-        return;
-=======
-static bool UncacheableProtoOnChain(JSObject* obj) {
-  while (true) {
-    if (obj->hasUncacheableProto()) {
-      return true;
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
 static void ShapeGuardProtoChain(CacheIRWriter& writer, JSObject* obj,
                                  ObjOperandId objId) {
   while (true) {
     // Guard on the proto if the shape does not imply the proto.
     bool guardProto = obj->hasUncacheableProto();
-||||||| merged common ancestors
-    // If already at the holder, no further proto checks are needed.
-    if (pobj == holder) {
-        return;
-    }
-=======
-    obj = obj->staticPrototype();
-    if (!obj) {
-      return false;
-    }
-  }
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     obj = obj->staticPrototype();
     if (!obj && !guardProto) {
       return;
     }
-||||||| merged common ancestors
-    // NOTE: We could be clever and look for a middle prototype to shape check
-    //       and elide some (but not all) of the group checks. Unless we have
-    //       real-world examples, let's avoid the complexity.
-=======
-static void ShapeGuardProtoChain(CacheIRWriter& writer, JSObject* obj,
-                                 ObjOperandId objId) {
-  while (true) {
-    // Guard on the proto if the shape does not imply the proto.
-    bool guardProto = obj->hasUncacheableProto();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     objId = writer.loadProto(objId);
-||||||| merged common ancestors
-    // Synchronize pobj and protoId.
-    MOZ_ASSERT(pobj == obj || pobj == obj->staticPrototype());
-    ObjOperandId protoId = (pobj == obj) ? objId
-                                         : writer.loadProto(objId);
-=======
-    obj = obj->staticPrototype();
-    if (!obj && !guardProto) {
-      return;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (guardProto) {
       writer.guardSpecificObject(objId, obj);
     }
-||||||| merged common ancestors
-    // Guard prototype links from |pobj| to |holder|.
-    while (pobj != holder) {
-        pobj = pobj->staticPrototype();
-        protoId = writer.loadProto(protoId);
-=======
-    objId = writer.loadProto(objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (!obj) {
       return;
-||||||| merged common ancestors
-        writer.guardSpecificObject(protoId, pobj);
-=======
-    if (guardProto) {
-      writer.guardSpecificObject(objId, obj);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
 
     writer.guardShape(objId, obj->as<NativeObject>().shape());
   }
 }
-||||||| merged common ancestors
-}
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// For cross compartment guards we shape-guard the prototype chain to avoid
-// referencing the holder object.
-//
-// This peels off the first layer because it's guarded against obj == holder.
-static void ShapeGuardProtoChainForCrossCompartmentHolder(
-    CacheIRWriter& writer, JSObject* obj, ObjOperandId objId, JSObject* holder,
-    Maybe<ObjOperandId>* holderId) {
-  MOZ_ASSERT(obj != holder);
-  MOZ_ASSERT(holder);
-  while (true) {
-    obj = obj->staticPrototype();
-    MOZ_ASSERT(obj);
-
-    objId = writer.loadProto(objId);
-    if (obj == holder) {
-      TestMatchingHolder(writer, obj, objId);
-      holderId->emplace(objId);
-      return;
-    } else {
-      writer.guardShapeForOwnProperties(objId, obj->as<NativeObject>().shape());
-||||||| merged common ancestors
-static void
-GeneratePrototypeHoleGuards(CacheIRWriter& writer, JSObject* obj, ObjOperandId objId)
-{
-    if (obj->hasUncacheableProto()) {
-        GuardGroupProto(writer, obj, objId);
-=======
-    if (!obj) {
-      return;
->>>>>>> upstream-releases
-    }
-  }
-}
-
-<<<<<<< HEAD
-enum class SlotReadType { Normal, CrossCompartment };
-
-template <SlotReadType MaybeCrossCompartment = SlotReadType::Normal>
-static void EmitReadSlotGuard(CacheIRWriter& writer, JSObject* obj,
-                              JSObject* holder, ObjOperandId objId,
-                              Maybe<ObjOperandId>* holderId) {
-  Maybe<ObjOperandId> expandoId;
-  TestMatchingReceiver(writer, obj, objId, &expandoId);
-
-  if (obj != holder) {
-    if (holder) {
-      if (MaybeCrossCompartment == SlotReadType::CrossCompartment) {
-        // Guard proto chain integrity.
-        // We use a variant of guards that avoid baking in any cross-compartment
-        // object pointers.
-        ShapeGuardProtoChainForCrossCompartmentHolder(writer, obj, objId,
-                                                      holder, holderId);
-      } else {
-        // Guard proto chain integrity.
-        GeneratePrototypeGuards(writer, obj, holder, objId);
-||||||| merged common ancestors
-    JSObject* pobj = obj->staticPrototype();
-    while (pobj) {
-        ObjOperandId protoId = writer.loadObject(pobj);
-
-        // If shape doesn't imply proto, additional guards are needed.
-        if (pobj->hasUncacheableProto()) {
-            GuardGroupProto(writer, pobj, protoId);
-        }
-
-        // Make sure the shape matches, to avoid non-dense elements or anything
-        // else that is being checked by CanAttachDenseElementHole.
-        writer.guardShape(protoId, pobj->as<NativeObject>().lastProperty());
-
-        // Also make sure there are no dense elements.
-        writer.guardNoDenseElements(protoId);
-=======
-    writer.guardShape(objId, obj->as<NativeObject>().shape());
-  }
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-        // Guard on the holder's shape.
-        holderId->emplace(writer.loadObject(holder));
-        TestMatchingHolder(writer, holder, holderId->ref());
-      }
-    } else {
-      // The property does not exist. Guard on everything in the prototype
-      // chain. This is guaranteed to see only Native objects because of
-      // CanAttachNativeGetProp().
-      ShapeGuardProtoChain(writer, obj, objId);
-    }
-  } else if (obj->is<UnboxedPlainObject>()) {
-    holderId->emplace(*expandoId);
-  } else {
-    holderId->emplace(objId);
-  }
-||||||| merged common ancestors
-        pobj = pobj->staticPrototype();
-    }
-=======
 // For cross compartment guards we shape-guard the prototype chain to avoid
 // referencing the holder object.
 //
@@ -2182,46 +837,8 @@ static void ShapeGuardProtoChainForCrossCompartmentHolder(
       writer.guardShapeForOwnProperties(objId, obj->as<NativeObject>().shape());
     }
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <SlotReadType MaybeCrossCompartment = SlotReadType::Normal>
-static void EmitReadSlotResult(CacheIRWriter& writer, JSObject* obj,
-                               JSObject* holder, Shape* shape,
-                               ObjOperandId objId) {
-  Maybe<ObjOperandId> holderId;
-  EmitReadSlotGuard<MaybeCrossCompartment>(writer, obj, holder, objId,
-                                           &holderId);
-
-  if (obj == holder && obj->is<UnboxedPlainObject>()) {
-    holder = obj->as<UnboxedPlainObject>().maybeExpando();
-  }
-
-  // Slot access.
-  if (holder) {
-    MOZ_ASSERT(holderId->valid());
-    EmitLoadSlotResult(writer, *holderId, &holder->as<NativeObject>(), shape);
-  } else {
-    MOZ_ASSERT(holderId.isNothing());
-    writer.loadUndefinedResult();
-  }
-}
-||||||| merged common ancestors
-// Similar to |TestMatchingReceiver|, but for the holder object (when it
-// differs from the receiver). The holder may also be the expando of the
-// receiver if it exists.
-static void
-TestMatchingHolder(CacheIRWriter& writer, JSObject* obj, ObjOperandId objId)
-{
-    // The GeneratePrototypeGuards + TestMatchingHolder checks only support
-    // prototype chains composed of NativeObject (excluding the receiver
-    // itself).
-    MOZ_ASSERT(obj->is<NativeObject>());
-
-    writer.guardShapeForOwnProperties(objId, obj->as<NativeObject>().lastProperty());
-}
-=======
 enum class SlotReadType { Normal, CrossCompartment };
 
 template <SlotReadType MaybeCrossCompartment = SlotReadType::Normal>
@@ -2229,31 +846,7 @@ static void EmitReadSlotGuard(CacheIRWriter& writer, JSObject* obj,
                               JSObject* holder, ObjOperandId objId,
                               Maybe<ObjOperandId>* holderId) {
   TestMatchingReceiver(writer, obj, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void EmitReadSlotReturn(CacheIRWriter& writer, JSObject*,
-                               JSObject* holder, Shape* shape,
-                               bool wrapResult = false) {
-  // Slot access.
-  if (holder) {
-    MOZ_ASSERT(shape);
-    if (wrapResult) {
-      writer.wrapResult();
-||||||| merged common ancestors
-static bool
-UncacheableProtoOnChain(JSObject* obj)
-{
-    while (true) {
-        if (obj->hasUncacheableProto()) {
-            return true;
-        }
-
-        obj = obj->staticPrototype();
-        if (!obj) {
-            return false;
-        }
-=======
   if (obj != holder) {
     if (holder) {
       if (MaybeCrossCompartment == SlotReadType::CrossCompartment) {
@@ -2275,46 +868,12 @@ UncacheableProtoOnChain(JSObject* obj)
       // chain. This is guaranteed to see only Native objects because of
       // CanAttachNativeGetProp().
       ShapeGuardProtoChain(writer, obj, objId);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    writer.typeMonitorResult();
-  } else {
-    // Normally for this op, the result would have to be monitored by TI.
-    // However, since this stub ALWAYS returns UndefinedValue(), and we can be
-    // sure that undefined is already registered with the type-set, this can be
-    // avoided.
-    writer.returnFromIC();
-  }
-||||||| merged common ancestors
-=======
   } else {
     holderId->emplace(objId);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void EmitCallGetterResultNoGuards(CacheIRWriter& writer, JSObject* obj,
-                                         JSObject* holder, Shape* shape,
-                                         ObjOperandId receiverId) {
-  if (IsCacheableGetPropCallNative(obj, holder, shape)) {
-    JSFunction* target = &shape->getterValue().toObject().as<JSFunction>();
-    MOZ_ASSERT(target->isNativeWithCppEntry());
-    writer.callNativeGetterResult(receiverId, target);
-    writer.typeMonitorResult();
-    return;
-  }
-
-  MOZ_ASSERT(IsCacheableGetPropCallScripted(obj, holder, shape));
-||||||| merged common ancestors
-static void
-ShapeGuardProtoChain(CacheIRWriter& writer, JSObject* obj, ObjOperandId objId)
-{
-    while (true) {
-        // Guard on the proto if the shape does not imply the proto.
-        bool guardProto = obj->hasUncacheableProto();
-=======
 template <SlotReadType MaybeCrossCompartment = SlotReadType::Normal>
 static void EmitReadSlotResult(CacheIRWriter& writer, JSObject* obj,
                                JSObject* holder, Shape* shape,
@@ -2332,20 +891,7 @@ static void EmitReadSlotResult(CacheIRWriter& writer, JSObject* obj,
     writer.loadUndefinedResult();
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFunction* target = &shape->getterValue().toObject().as<JSFunction>();
-  MOZ_ASSERT(target->hasJitEntry());
-  writer.callScriptedGetterResult(receiverId, target);
-  writer.typeMonitorResult();
-}
-||||||| merged common ancestors
-        obj = obj->staticPrototype();
-        if (!obj && !guardProto) {
-            return;
-        }
-=======
 static void EmitReadSlotReturn(CacheIRWriter& writer, JSObject*,
                                JSObject* holder, Shape* shape,
                                bool wrapResult = false) {
@@ -2399,22 +945,7 @@ static void EmitCallGetterResultGuards(CacheIRWriter& writer, JSObject* obj,
   // require outerizing).
   if (mode == ICState::Mode::Specialized || IsWindow(obj)) {
     TestMatchingReceiver(writer, obj, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void EmitCallGetterResult(CacheIRWriter& writer, JSObject* obj,
-                                 JSObject* holder, Shape* shape,
-                                 ObjOperandId objId, ObjOperandId receiverId,
-                                 ICState::Mode mode) {
-  // Use the megamorphic guard if we're in megamorphic mode, except if |obj|
-  // is a Window as GuardHasGetterSetter doesn't support this yet (Window may
-  // require outerizing).
-  if (mode == ICState::Mode::Specialized || IsWindow(obj)) {
-    Maybe<ObjOperandId> expandoId;
-    TestMatchingReceiver(writer, obj, objId, &expandoId);
-||||||| merged common ancestors
-        objId = writer.loadProto(objId);
-=======
     if (obj != holder) {
       GeneratePrototypeGuards(writer, obj, holder, objId);
 
@@ -2513,74 +1044,7 @@ AttachDecision GetPropIRGenerator::tryAttachNative(HandleObject obj,
         attachMegamorphicNativeSlot(objId, id, holder == nullptr);
         return AttachDecision::Attach;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (obj != holder) {
-      GeneratePrototypeGuards(writer, obj, holder, objId);
-
-      // Guard on the holder's shape.
-      ObjOperandId holderId = writer.loadObject(holder);
-      TestMatchingHolder(writer, holder, holderId);
-    }
-  } else {
-    writer.guardHasGetterSetter(objId, shape);
-  }
-
-  EmitCallGetterResultNoGuards(writer, obj, holder, shape, receiverId);
-}
-
-static void EmitCallGetterResult(CacheIRWriter& writer, JSObject* obj,
-                                 JSObject* holder, Shape* shape,
-                                 ObjOperandId objId, ICState::Mode mode) {
-  EmitCallGetterResult(writer, obj, holder, shape, objId, objId, mode);
-}
-
-void GetPropIRGenerator::attachMegamorphicNativeSlot(ObjOperandId objId,
-                                                     jsid id,
-                                                     bool handleMissing) {
-  MOZ_ASSERT(mode_ == ICState::Mode::Megamorphic);
-
-  // The stub handles the missing-properties case only if we're seeing one
-  // now, to make sure Ion ICs correctly monitor the undefined type.
-
-  if (cacheKind_ == CacheKind::GetProp ||
-      cacheKind_ == CacheKind::GetPropSuper) {
-    writer.megamorphicLoadSlotResult(objId, JSID_TO_ATOM(id)->asPropertyName(),
-                                     handleMissing);
-  } else {
-    MOZ_ASSERT(cacheKind_ == CacheKind::GetElem ||
-               cacheKind_ == CacheKind::GetElemSuper);
-    writer.megamorphicLoadSlotByValueResult(objId, getElemKeyValueId(),
-                                            handleMissing);
-  }
-  writer.typeMonitorResult();
-
-  trackAttached(handleMissing ? "MegamorphicMissingNativeSlot"
-                              : "MegamorphicNativeSlot");
-}
-
-bool GetPropIRGenerator::tryAttachNative(HandleObject obj, ObjOperandId objId,
-                                         HandleId id) {
-  RootedShape shape(cx_);
-  RootedNativeObject holder(cx_);
-
-  NativeGetPropCacheability type =
-      CanAttachNativeGetProp(cx_, obj, id, &holder, &shape, pc_, resultFlags_,
-                             isTemporarilyUnoptimizable_);
-  switch (type) {
-    case CanAttachNone:
-      return false;
-    case CanAttachReadSlot:
-      if (mode_ == ICState::Mode::Megamorphic) {
-        attachMegamorphicNativeSlot(objId, id, holder == nullptr);
-        return true;
-      }
-||||||| merged common ancestors
-        if (guardProto) {
-            writer.guardSpecificObject(objId, obj);
-        }
-=======
       maybeEmitIdGuard(id);
       if (holder) {
         EnsureTrackPropertyTypes(cx_, holder, id);
@@ -2593,26 +1057,7 @@ bool GetPropIRGenerator::tryAttachNative(HandleObject obj, ObjOperandId objId,
       }
       EmitReadSlotResult(writer, obj, holder, shape, objId);
       EmitReadSlotReturn(writer, obj, holder, shape);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      maybeEmitIdGuard(id);
-      if (holder) {
-        EnsureTrackPropertyTypes(cx_, holder, id);
-        // See the comment in StripPreliminaryObjectStubs.
-        if (IsPreliminaryObject(obj)) {
-          preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-        } else {
-          preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-        }
-      }
-      EmitReadSlotResult(writer, obj, holder, shape, objId);
-      EmitReadSlotReturn(writer, obj, holder, shape);
-||||||| merged common ancestors
-        if (!obj) {
-            return;
-        }
-=======
       trackAttached("NativeSlot");
       return AttachDecision::Attach;
     case CanAttachScriptedGetter:
@@ -2625,127 +1070,15 @@ bool GetPropIRGenerator::tryAttachNative(HandleObject obj, ObjOperandId objId,
       maybeEmitIdGuard(id);
       EmitCallGetterResult(writer, obj, holder, shape, objId, receiverId,
                            mode_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      trackAttached("NativeSlot");
-      return true;
-    case CanAttachCallGetter: {
-      // |super.prop| accesses use a |this| value that differs from lookup
-      // object
-      MOZ_ASSERT(!idempotent());
-      ObjOperandId receiverId =
-          isSuper() ? writer.guardIsObject(getSuperReceiverValueId()) : objId;
-      maybeEmitIdGuard(id);
-      EmitCallGetterResult(writer, obj, holder, shape, objId, receiverId,
-                           mode_);
-
-      trackAttached("NativeGetter");
-      return true;
-||||||| merged common ancestors
-        writer.guardShape(objId, obj->as<NativeObject>().shape());
-=======
       trackAttached("NativeGetter");
       return AttachDecision::Attach;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
   }
 
   MOZ_CRASH("Bad NativeGetPropCacheability");
 }
-||||||| merged common ancestors
-}
-=======
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachWindowProxy(HandleObject obj,
-                                              ObjOperandId objId, HandleId id) {
-  // Attach a stub when the receiver is a WindowProxy and we can do the lookup
-  // on the Window (the global object).
-
-  if (!IsWindowProxy(obj)) {
-    return false;
-  }
-
-  // If we're megamorphic prefer a generic proxy stub that handles a lot more
-  // cases.
-  if (mode_ == ICState::Mode::Megamorphic) {
-    return false;
-  }
-
-  // This must be a WindowProxy for the current Window/global. Else it would
-  // be a cross-compartment wrapper and IsWindowProxy returns false for
-  // those.
-  MOZ_ASSERT(obj->getClass() == cx_->runtime()->maybeWindowProxyClass());
-  MOZ_ASSERT(ToWindowIfWindowProxy(obj) == cx_->global());
-
-  // Now try to do the lookup on the Window (the current global).
-  HandleObject windowObj = cx_->global();
-  RootedShape shape(cx_);
-  RootedNativeObject holder(cx_);
-  NativeGetPropCacheability type =
-      CanAttachNativeGetProp(cx_, windowObj, id, &holder, &shape, pc_,
-                             resultFlags_, isTemporarilyUnoptimizable_);
-  switch (type) {
-    case CanAttachNone:
-      return false;
-
-    case CanAttachReadSlot: {
-      maybeEmitIdGuard(id);
-      writer.guardClass(objId, GuardClassKind::WindowProxy);
-
-      ObjOperandId windowObjId = writer.loadObject(windowObj);
-      EmitReadSlotResult(writer, windowObj, holder, shape, windowObjId);
-      EmitReadSlotReturn(writer, windowObj, holder, shape);
-
-      trackAttached("WindowProxySlot");
-      return true;
-    }
-||||||| merged common ancestors
-// For cross compartment guards we shape-guard the prototype chain to avoid
-// referencing the holder object.
-//
-// This peels off the first layer because it's guarded against obj == holder.
-static void
-ShapeGuardProtoChainForCrossCompartmentHolder(CacheIRWriter& writer, JSObject* obj,
-                                              ObjOperandId objId, JSObject* holder,
-                                              Maybe<ObjOperandId>* holderId)
-{
-    MOZ_ASSERT(obj != holder);
-    MOZ_ASSERT(holder);
-    while (true) {
-        obj = obj->staticPrototype();
-        MOZ_ASSERT(obj);
-
-        objId = writer.loadProto(objId);
-        if (obj == holder) {
-            TestMatchingHolder(writer, obj, objId);
-            holderId->emplace(objId);
-            return;
-        } else {
-            writer.guardShapeForOwnProperties(objId, obj->as<NativeObject>().shape());
-        }
-    }
-}
-=======
-  MOZ_CRASH("Bad NativeGetPropCacheability");
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    case CanAttachCallGetter: {
-      if (!IsCacheableGetPropCallNative(windowObj, holder, shape)) {
-        return false;
-      }
-||||||| merged common ancestors
-enum class SlotReadType {
-    Normal,
-    CrossCompartment
-};
-=======
 bool js::jit::IsWindowProxyForScriptGlobal(JSScript* script, JSObject* obj) {
   if (!IsWindowProxy(obj)) {
     return false;
@@ -2831,76 +1164,12 @@ AttachDecision GetPropIRGenerator::tryAttachWindowProxy(HandleObject obj,
           callee->jitInfo()->needsOuterizedThisObject()) {
         return AttachDecision::NoAction;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // Make sure the native getter is okay with the IC passing the Window
-      // instead of the WindowProxy as |this| value.
-      JSFunction* callee = &shape->getterObject()->as<JSFunction>();
-      MOZ_ASSERT(callee->isNative());
-      if (!callee->hasJitInfo() ||
-          callee->jitInfo()->needsOuterizedThisObject()) {
-        return false;
-      }
-||||||| merged common ancestors
-template <SlotReadType MaybeCrossCompartment = SlotReadType::Normal>
-static void
-EmitReadSlotGuard(CacheIRWriter& writer, JSObject* obj, JSObject* holder,
-                  ObjOperandId objId, Maybe<ObjOperandId>* holderId)
-{
-    Maybe<ObjOperandId> expandoId;
-    TestMatchingReceiver(writer, obj, objId, &expandoId);
-=======
       // If a |super| access, it is not worth the complexity to attach an IC.
       if (isSuper()) {
         return AttachDecision::NoAction;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // If a |super| access, it is not worth the complexity to attach an IC.
-      if (isSuper()) {
-        return false;
-      }
-
-      // Guard the incoming object is a WindowProxy and inline a getter call
-      // based on the Window object.
-      maybeEmitIdGuard(id);
-      writer.guardClass(objId, GuardClassKind::WindowProxy);
-      ObjOperandId windowObjId = writer.loadObject(windowObj);
-      EmitCallGetterResult(writer, windowObj, holder, shape, windowObjId,
-                           mode_);
-
-      trackAttached("WindowProxyGetter");
-      return true;
-||||||| merged common ancestors
-    if (obj != holder) {
-        if (holder) {
-            if (MaybeCrossCompartment == SlotReadType::CrossCompartment) {
-                // Guard proto chain integrity.
-                // We use a variant of guards that avoid baking in any cross-compartment
-                // object pointers.
-                ShapeGuardProtoChainForCrossCompartmentHolder(writer, obj, objId, holder,
-                                                              holderId);
-            } else {
-                // Guard proto chain integrity.
-                GeneratePrototypeGuards(writer, obj, holder, objId);
-
-                // Guard on the holder's shape.
-                holderId->emplace(writer.loadObject(holder));
-                TestMatchingHolder(writer, holder, holderId->ref());
-            }
-        } else {
-            // The property does not exist. Guard on everything in the prototype
-            // chain. This is guaranteed to see only Native objects because of
-            // CanAttachNativeGetProp().
-            ShapeGuardProtoChain(writer, obj, objId);
-        }
-    } else if (obj->is<UnboxedPlainObject>()) {
-        holderId->emplace(*expandoId);
-    } else {
-        holderId->emplace(objId);
-=======
       // Guard the incoming object is a WindowProxy and inline a getter call
       // based on the Window object.
       maybeEmitIdGuard(id);
@@ -2991,133 +1260,6 @@ AttachDecision GetPropIRGenerator::tryAttachCrossCompartmentWrapper(
       if (UncacheableProtoOnChain(unwrapped)) {
         return AttachDecision::NoAction;
       }
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-
-  MOZ_CRASH("Unreachable");
-}
-||||||| merged common ancestors
-}
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachCrossCompartmentWrapper(HandleObject obj,
-                                                          ObjOperandId objId,
-                                                          HandleId id) {
-  // We can only optimize this very wrapper-handler, because others might
-  // have a security policy.
-  if (!IsWrapper(obj) ||
-      Wrapper::wrapperHandler(obj) != &CrossCompartmentWrapper::singleton) {
-    return false;
-  }
-
-  // If we're megamorphic prefer a generic proxy stub that handles a lot more
-  // cases.
-  if (mode_ == ICState::Mode::Megamorphic) {
-    return false;
-  }
-
-  RootedObject unwrapped(cx_, Wrapper::wrappedObject(obj));
-  MOZ_ASSERT(unwrapped == UnwrapOneChecked(obj));
-  MOZ_ASSERT(!IsCrossCompartmentWrapper(unwrapped),
-             "CCWs must not wrap other CCWs");
-
-  // If we allowed different zones we would have to wrap strings.
-  if (unwrapped->compartment()->zone() != cx_->compartment()->zone()) {
-    return false;
-  }
-
-  // Take the unwrapped object's global, and wrap in a
-  // this-compartment wrapper. This is what will be stored in the IC
-  // keep the compartment alive.
-  RootedObject wrappedTargetGlobal(cx_, &unwrapped->nonCCWGlobal());
-  if (!cx_->compartment()->wrap(cx_, &wrappedTargetGlobal)) {
-    cx_->clearPendingException();
-    return false;
-  }
-
-  bool isWindowProxy = false;
-  RootedShape shape(cx_);
-  RootedNativeObject holder(cx_);
-
-  // Enter realm of target since some checks have side-effects
-  // such as de-lazifying type info.
-  {
-    AutoRealm ar(cx_, unwrapped);
-
-    // The first CCW for iframes is almost always wrapping another WindowProxy
-    // so we optimize for that case as well.
-    isWindowProxy = IsWindowProxy(unwrapped);
-    if (isWindowProxy) {
-      MOZ_ASSERT(ToWindowIfWindowProxy(unwrapped) ==
-                 &unwrapped->nonCCWGlobal());
-      unwrapped = cx_->global();
-      MOZ_ASSERT(unwrapped);
-    }
-||||||| merged common ancestors
-template <SlotReadType MaybeCrossCompartment = SlotReadType::Normal>
-static void
-EmitReadSlotResult(CacheIRWriter& writer, JSObject* obj, JSObject* holder,
-                   Shape* shape, ObjOperandId objId)
-{
-    Maybe<ObjOperandId> holderId;
-    EmitReadSlotGuard<MaybeCrossCompartment>(writer, obj, holder, objId, &holderId);
-
-    if (obj == holder && obj->is<UnboxedPlainObject>()) {
-        holder = obj->as<UnboxedPlainObject>().maybeExpando();
-    }
-=======
-  maybeEmitIdGuard(id);
-  writer.guardIsProxy(objId);
-  writer.guardHasProxyHandler(objId, Wrapper::wrapperHandler(obj));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    NativeGetPropCacheability canCache =
-        CanAttachNativeGetProp(cx_, unwrapped, id, &holder, &shape, pc_,
-                               resultFlags_, isTemporarilyUnoptimizable_);
-    if (canCache != CanAttachReadSlot) {
-      return false;
-    }
-||||||| merged common ancestors
-    // Slot access.
-    if (holder) {
-        MOZ_ASSERT(holderId->valid());
-        EmitLoadSlotResult(writer, *holderId, &holder->as<NativeObject>(), shape);
-    } else {
-        MOZ_ASSERT(holderId.isNothing());
-        writer.loadUndefinedResult();
-    }
-}
-=======
-  // Load the object wrapped by the CCW
-  ObjOperandId wrapperTargetId = writer.loadWrapperTarget(objId);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (holder) {
-      // Need to be in the compartment of the holder to
-      // call EnsureTrackPropertyTypes
-      EnsureTrackPropertyTypes(cx_, holder, id);
-      if (unwrapped == holder) {
-        // See the comment in StripPreliminaryObjectStubs.
-        if (IsPreliminaryObject(unwrapped)) {
-          preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-        } else {
-          preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-        }
-      }
-    } else {
-      // UNCACHEABLE_PROTO may result in guards against specific
-      // (cross-compartment) prototype objects, so don't try to attach IC if we
-      // see the flag at all.
-      if (UncacheableProtoOnChain(unwrapped)) {
-        return false;
-      }
     }
   }
 
@@ -3128,44 +1270,6 @@ EmitReadSlotResult(CacheIRWriter& writer, JSObject* obj, JSObject* holder,
   // Load the object wrapped by the CCW
   ObjOperandId wrapperTargetId = writer.loadWrapperTarget(objId);
 
-  // If the compartment of the wrapped object is different we should fail.
-  writer.guardCompartment(wrapperTargetId, wrappedTargetGlobal,
-                          unwrapped->compartment());
-
-  ObjOperandId unwrappedId = wrapperTargetId;
-  if (isWindowProxy) {
-    // For the WindowProxy case also unwrap the inner window.
-    // We avoid loadObject, because storing cross compartment objects in
-    // stubs / JIT code is tricky.
-    writer.guardClass(wrapperTargetId, GuardClassKind::WindowProxy);
-    unwrappedId = writer.loadWrapperTarget(wrapperTargetId);
-  }
-
-  EmitReadSlotResult<SlotReadType::CrossCompartment>(writer, unwrapped, holder,
-                                                     shape, unwrappedId);
-  EmitReadSlotReturn(writer, unwrapped, holder, shape, /* wrapResult = */ true);
-
-  trackAttached("CCWSlot");
-  return true;
-||||||| merged common ancestors
-static void
-EmitReadSlotReturn(CacheIRWriter& writer, JSObject*, JSObject* holder, Shape* shape,
-                   bool wrapResult = false)
-{
-    // Slot access.
-    if (holder) {
-        MOZ_ASSERT(shape);
-        if (wrapResult) {
-            writer.wrapResult();
-        }
-        writer.typeMonitorResult();
-    } else {
-        // Normally for this op, the result would have to be monitored by TI.
-        // However, since this stub ALWAYS returns UndefinedValue(), and we can be sure
-        // that undefined is already registered with the type-set, this can be avoided.
-        writer.returnFromIC();
-    }
-=======
   // If the compartment of the wrapped object is different we should fail.
   writer.guardCompartment(wrapperTargetId, wrappedTargetGlobal,
                           unwrapped->compartment());
@@ -3177,39 +1281,8 @@ EmitReadSlotReturn(CacheIRWriter& writer, JSObject*, JSObject* holder, Shape* sh
 
   trackAttached("CCWSlot");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool GetXrayExpandoShapeWrapper(JSContext* cx, HandleObject xray,
-                                       MutableHandleObject wrapper) {
-  Value v = GetProxyReservedSlot(xray, GetXrayJitInfo()->xrayHolderSlot);
-  if (v.isObject()) {
-    NativeObject* holder = &v.toObject().as<NativeObject>();
-    v = holder->getFixedSlot(GetXrayJitInfo()->holderExpandoSlot);
-    if (v.isObject()) {
-      RootedNativeObject expando(
-          cx, &UncheckedUnwrap(&v.toObject())->as<NativeObject>());
-      wrapper.set(NewWrapperWithObjectShape(cx, expando));
-      return wrapper != nullptr;
-    }
-  }
-  wrapper.set(nullptr);
-  return true;
-}
-||||||| merged common ancestors
-static void
-EmitCallGetterResultNoGuards(CacheIRWriter& writer, JSObject* obj, JSObject* holder,
-                             Shape* shape, ObjOperandId receiverId)
-{
-    if (IsCacheableGetPropCallNative(obj, holder, shape)) {
-        JSFunction* target = &shape->getterValue().toObject().as<JSFunction>();
-        MOZ_ASSERT(target->isNativeWithCppEntry());
-        writer.callNativeGetterResult(receiverId, target);
-        writer.typeMonitorResult();
-        return;
-    }
-=======
 static bool GetXrayExpandoShapeWrapper(JSContext* cx, HandleObject xray,
                                        MutableHandleObject wrapper) {
   Value v = GetProxyReservedSlot(xray, GetXrayJitInfo()->xrayHolderSlot);
@@ -3318,117 +1391,20 @@ AttachDecision GetPropIRGenerator::tryAttachXrayCrossCompartmentWrapper(
     writer.guardXrayExpandoShapeAndDefaultProto(
         protoId, prototypeExpandoShapeWrappers[i]);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachXrayCrossCompartmentWrapper(
-    HandleObject obj, ObjOperandId objId, HandleId id) {
-  if (!IsProxy(obj)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MOZ_ASSERT(IsCacheableGetPropCallScripted(obj, holder, shape));
-=======
   writer.callNativeGetterResult(objId, &getter->as<JSFunction>());
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  XrayJitInfo* info = GetXrayJitInfo();
-  if (!info || !info->isCrossCompartmentXray(GetProxyHandler(obj))) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSFunction* target = &shape->getterValue().toObject().as<JSFunction>();
-    MOZ_ASSERT(target->hasJitEntry());
-    writer.callScriptedGetterResult(receiverId, target);
-    writer.typeMonitorResult();
-}
-=======
   trackAttached("XrayGetter");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!info->compartmentHasExclusiveExpandos(obj)) {
-    return false;
-  }
-||||||| merged common ancestors
-static void
-EmitCallGetterResult(CacheIRWriter& writer, JSObject* obj, JSObject* holder, Shape* shape,
-                     ObjOperandId objId, ObjOperandId receiverId, ICState::Mode mode)
-{
-    // Use the megamorphic guard if we're in megamorphic mode, except if |obj|
-    // is a Window as GuardHasGetterSetter doesn't support this yet (Window may
-    // require outerizing).
-    if (mode == ICState::Mode::Specialized || IsWindow(obj)) {
-        Maybe<ObjOperandId> expandoId;
-        TestMatchingReceiver(writer, obj, objId, &expandoId);
-=======
 AttachDecision GetPropIRGenerator::tryAttachGenericProxy(
     HandleObject obj, ObjOperandId objId, HandleId id, bool handleDOMProxies) {
   MOZ_ASSERT(obj->is<ProxyObject>());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedObject target(cx_, UncheckedUnwrap(obj));
-||||||| merged common ancestors
-        if (obj != holder) {
-            GeneratePrototypeGuards(writer, obj, holder, objId);
-=======
   writer.guardIsProxy(objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedObject expandoShapeWrapper(cx_);
-  if (!GetXrayExpandoShapeWrapper(cx_, obj, &expandoShapeWrapper)) {
-    cx_->recoverFromOutOfMemory();
-    return false;
-  }
-
-  // Look for a getter we can call on the xray or its prototype chain.
-  Rooted<PropertyDescriptor> desc(cx_);
-  RootedObject holder(cx_, obj);
-  AutoObjectVector prototypes(cx_);
-  AutoObjectVector prototypeExpandoShapeWrappers(cx_);
-  while (true) {
-    if (!GetOwnPropertyDescriptor(cx_, holder, id, &desc)) {
-      cx_->clearPendingException();
-      return false;
-    }
-    if (desc.object()) {
-      break;
-    }
-    if (!GetPrototype(cx_, holder, &holder)) {
-      cx_->clearPendingException();
-      return false;
-    }
-    if (!holder || !IsProxy(holder) ||
-        !info->isCrossCompartmentXray(GetProxyHandler(holder))) {
-      return false;
-    }
-    RootedObject prototypeExpandoShapeWrapper(cx_);
-    if (!GetXrayExpandoShapeWrapper(cx_, holder,
-                                    &prototypeExpandoShapeWrapper) ||
-        !prototypes.append(holder) ||
-        !prototypeExpandoShapeWrappers.append(prototypeExpandoShapeWrapper)) {
-      cx_->recoverFromOutOfMemory();
-      return false;
-    }
-  }
-  if (!desc.isAccessorDescriptor()) {
-    return false;
-  }
-||||||| merged common ancestors
-            // Guard on the holder's shape.
-            ObjOperandId holderId = writer.loadObject(holder);
-            TestMatchingHolder(writer, holder, holderId);
-        }
-    } else {
-        writer.guardHasGetterSetter(objId, shape);
-    }
-=======
   if (!handleDOMProxies) {
     // Ensure that the incoming object is not a DOM proxy, so that we can get to
     // the specialized stubs
@@ -3526,65 +1502,11 @@ AttachDecision GetPropIRGenerator::tryAttachDOMProxyExpando(HandleObject obj,
     EmitCallGetterResultNoGuards(writer, expandoObj, expandoObj, propShape,
                                  objId);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedObject getter(cx_, desc.getterObject());
-  if (!getter || !getter->is<JSFunction>() ||
-      !getter->as<JSFunction>().isNative()) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-  writer.guardIsProxy(objId);
-  writer.guardHasProxyHandler(objId, GetProxyHandler(obj));
-
-  // Load the object wrapped by the CCW
-  ObjOperandId wrapperTargetId = writer.loadWrapperTarget(objId);
-
-  // Test the wrapped object's class. The properties held by xrays or their
-  // prototypes will be invariant for objects of a given class, except for
-  // changes due to xray expandos or xray prototype mutations.
-  writer.guardAnyClass(wrapperTargetId, target->getClass());
-
-  // Make sure the expandos on the xray and its prototype chain match up with
-  // what we expect. The expando shape needs to be consistent, to ensure it
-  // has not had any shadowing properties added, and the expando cannot have
-  // any custom prototype (xray prototypes are stable otherwise).
-  //
-  // We can only do this for xrays with exclusive access to their expandos
-  // (as we checked earlier), which store a pointer to their expando
-  // directly. Xrays in other compartments may share their expandos with each
-  // other and a VM call is needed just to find the expando.
-  writer.guardXrayExpandoShapeAndDefaultProto(objId, expandoShapeWrapper);
-  for (size_t i = 0; i < prototypes.length(); i++) {
-    JSObject* proto = prototypes[i];
-    ObjOperandId protoId = writer.loadObject(proto);
-    writer.guardXrayExpandoShapeAndDefaultProto(
-        protoId, prototypeExpandoShapeWrappers[i]);
-  }
-||||||| merged common ancestors
-    EmitCallGetterResultNoGuards(writer, obj, holder, shape, receiverId);
-}
-=======
   trackAttached("DOMProxyExpando");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.callNativeGetterResult(objId, &getter->as<JSFunction>());
-  writer.typeMonitorResult();
-
-  trackAttached("XrayGetter");
-  return true;
-||||||| merged common ancestors
-static void
-EmitCallGetterResult(CacheIRWriter& writer, JSObject* obj, JSObject* holder,
-                     Shape* shape, ObjOperandId objId, ICState::Mode mode)
-{
-    EmitCallGetterResult(writer, obj, holder, shape, objId, objId, mode);
-=======
 AttachDecision GetPropIRGenerator::tryAttachDOMProxyShadowed(HandleObject obj,
                                                              ObjOperandId objId,
                                                              HandleId id) {
@@ -3598,98 +1520,8 @@ AttachDecision GetPropIRGenerator::tryAttachDOMProxyShadowed(HandleObject obj,
 
   trackAttached("DOMProxyShadowed");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachGenericProxy(HandleObject obj,
-                                               ObjOperandId objId, HandleId id,
-                                               bool handleDOMProxies) {
-  MOZ_ASSERT(obj->is<ProxyObject>());
-
-  writer.guardIsProxy(objId);
-
-  if (!handleDOMProxies) {
-    // Ensure that the incoming object is not a DOM proxy, so that we can get to
-    // the specialized stubs
-    writer.guardNotDOMProxy(objId);
-  }
-
-  if (cacheKind_ == CacheKind::GetProp || mode_ == ICState::Mode::Specialized) {
-    MOZ_ASSERT(!isSuper());
-    maybeEmitIdGuard(id);
-    writer.callProxyGetResult(objId, id);
-  } else {
-    // Attach a stub that handles every id.
-    MOZ_ASSERT(cacheKind_ == CacheKind::GetElem);
-    MOZ_ASSERT(mode_ == ICState::Mode::Megamorphic);
-    MOZ_ASSERT(!isSuper());
-    writer.callProxyGetByValueResult(objId, getElemKeyValueId());
-  }
-
-  writer.typeMonitorResult();
-
-  trackAttached("GenericProxy");
-  return true;
-}
-
-ObjOperandId IRGenerator::guardDOMProxyExpandoObjectAndShape(
-    JSObject* obj, ObjOperandId objId, const Value& expandoVal,
-    JSObject* expandoObj) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-
-  // Shape determines Class, so now it must be a DOM proxy.
-  ValOperandId expandoValId;
-  if (expandoVal.isObject()) {
-    expandoValId = writer.loadDOMExpandoValue(objId);
-  } else {
-    expandoValId = writer.loadDOMExpandoValueIgnoreGeneration(objId);
-  }
-
-  // Guard the expando is an object and shape guard.
-  ObjOperandId expandoObjId = writer.guardIsObject(expandoValId);
-  TestMatchingHolder(writer, expandoObj, expandoObjId);
-  return expandoObjId;
-}
-
-bool GetPropIRGenerator::tryAttachDOMProxyExpando(HandleObject obj,
-                                                  ObjOperandId objId,
-                                                  HandleId id) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  RootedValue expandoVal(cx_, GetProxyPrivate(obj));
-  RootedObject expandoObj(cx_);
-  if (expandoVal.isObject()) {
-    expandoObj = &expandoVal.toObject();
-  } else {
-    MOZ_ASSERT(!expandoVal.isUndefined(),
-               "How did a missing expando manage to shadow things?");
-    auto expandoAndGeneration =
-        static_cast<ExpandoAndGeneration*>(expandoVal.toPrivate());
-    MOZ_ASSERT(expandoAndGeneration);
-    expandoObj = &expandoAndGeneration->expando.toObject();
-  }
-
-  // Try to do the lookup on the expando object.
-  RootedNativeObject holder(cx_);
-  RootedShape propShape(cx_);
-  NativeGetPropCacheability canCache =
-      CanAttachNativeGetProp(cx_, expandoObj, id, &holder, &propShape, pc_,
-                             resultFlags_, isTemporarilyUnoptimizable_);
-  if (canCache != CanAttachReadSlot && canCache != CanAttachCallGetter) {
-    return false;
-  }
-  if (!holder) {
-    return false;
-  }
-||||||| merged common ancestors
-void
-GetPropIRGenerator::attachMegamorphicNativeSlot(ObjOperandId objId, jsid id, bool handleMissing)
-{
-    MOZ_ASSERT(mode_ == ICState::Mode::Megamorphic);
-=======
 // Callers are expected to have already guarded on the shape of the
 // object, which guarantees the object is a DOM proxy.
 static void CheckDOMProxyExpandoDoesNotShadow(CacheIRWriter& writer,
@@ -3755,37 +1587,11 @@ AttachDecision GetPropIRGenerator::tryAttachDOMProxyUnshadowed(
     // Found the property on the prototype chain. Treat it like a native
     // getprop.
     GeneratePrototypeGuards(writer, obj, holder, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(holder == expandoObj);
-||||||| merged common ancestors
-    // The stub handles the missing-properties case only if we're seeing one
-    // now, to make sure Ion ICs correctly monitor the undefined type.
-=======
     // Guard on the holder of the property.
     ObjOperandId holderId = writer.loadObject(holder);
     TestMatchingHolder(writer, holder, holderId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-  ObjOperandId expandoObjId =
-      guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
-
-  if (canCache == CanAttachReadSlot) {
-    // Load from the expando's slots.
-    EmitLoadSlotResult(writer, expandoObjId, &expandoObj->as<NativeObject>(),
-                       propShape);
-||||||| merged common ancestors
-    if (cacheKind_ == CacheKind::GetProp || cacheKind_ == CacheKind::GetPropSuper) {
-        writer.megamorphicLoadSlotResult(objId, JSID_TO_ATOM(id)->asPropertyName(),
-                                         handleMissing);
-    } else {
-        MOZ_ASSERT(cacheKind_ == CacheKind::GetElem || cacheKind_ == CacheKind::GetElemSuper);
-        writer.megamorphicLoadSlotByValueResult(objId, getElemKeyValueId(), handleMissing);
-    }
-=======
     if (canCache == CanAttachReadSlot) {
       EmitLoadSlotResult(writer, holderId, holder, shape);
       writer.typeMonitorResult();
@@ -3909,72 +1715,15 @@ AttachDecision GetPropIRGenerator::tryAttachTypedObject(HandleObject obj,
   }
 
   if (monitorLoad) {
->>>>>>> upstream-releases
     writer.typeMonitorResult();
-<<<<<<< HEAD
-  } else {
-    // Call the getter. Note that we pass objId, the DOM proxy, as |this|
-    // and not the expando object.
-    MOZ_ASSERT(canCache == CanAttachCallGetter);
-    EmitCallGetterResultNoGuards(writer, expandoObj, expandoObj, propShape,
-                                 objId);
-  }
-||||||| merged common ancestors
-=======
   } else {
     writer.returnFromIC();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DOMProxyExpando");
-  return true;
-||||||| merged common ancestors
-    trackAttached(handleMissing ? "MegamorphicMissingNativeSlot" : "MegamorphicNativeSlot");
-=======
   trackAttached("TypedObject");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachDOMProxyShadowed(HandleObject obj,
-                                                   ObjOperandId objId,
-                                                   HandleId id) {
-  MOZ_ASSERT(!isSuper());
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachNative(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    RootedShape shape(cx_);
-    RootedNativeObject holder(cx_);
-
-    NativeGetPropCacheability type = CanAttachNativeGetProp(cx_, obj, id, &holder, &shape, pc_,
-                                                            resultFlags_,
-                                                            isTemporarilyUnoptimizable_);
-    switch (type) {
-      case CanAttachNone:
-        return false;
-      case CanAttachReadSlot:
-        if (mode_ == ICState::Mode::Megamorphic) {
-            attachMegamorphicNativeSlot(objId, id, holder == nullptr);
-            return true;
-        }
-
-        maybeEmitIdGuard(id);
-        if (holder) {
-            EnsureTrackPropertyTypes(cx_, holder, id);
-            // See the comment in StripPreliminaryObjectStubs.
-            if (IsPreliminaryObject(obj)) {
-                preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-            } else {
-                preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-            }
-        }
-        EmitReadSlotResult(writer, obj, holder, shape, objId);
-        EmitReadSlotReturn(writer, obj, holder, shape);
-=======
 AttachDecision GetPropIRGenerator::tryAttachObjectLength(HandleObject obj,
                                                          ObjOperandId objId,
                                                          HandleId id) {
@@ -3992,29 +1741,7 @@ AttachDecision GetPropIRGenerator::tryAttachObjectLength(HandleObject obj,
     if (obj->as<ArrayObject>().length() > INT32_MAX) {
       return AttachDecision::NoAction;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-  TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-  writer.callProxyGetResult(objId, id);
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-        trackAttached("NativeSlot");
-        return true;
-      case CanAttachCallGetter: {
-        // |super.prop| accesses use a |this| value that differs from lookup object
-        MOZ_ASSERT(!idempotent());
-        ObjOperandId receiverId = isSuper() ? writer.guardIsObject(getSuperReceiverValueId())
-                                            : objId;
-        maybeEmitIdGuard(id);
-        EmitCallGetterResult(writer, obj, holder, shape, objId, receiverId, mode_);
-
-        trackAttached("NativeGetter");
-        return true;
-      }
-    }
-=======
     maybeEmitIdGuard(id);
     writer.guardClass(objId, GuardClassKind::Array);
     writer.loadInt32ArrayLengthResult(objId);
@@ -4039,83 +1766,10 @@ AttachDecision GetPropIRGenerator::tryAttachObjectLength(HandleObject obj,
     trackAttached("ArgumentsObjectLength");
     return AttachDecision::Attach;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DOMProxyShadowed");
-  return true;
-||||||| merged common ancestors
-    MOZ_CRASH("Bad NativeGetPropCacheability");
-=======
   return AttachDecision::NoAction;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// Callers are expected to have already guarded on the shape of the
-// object, which guarantees the object is a DOM proxy.
-static void CheckDOMProxyExpandoDoesNotShadow(CacheIRWriter& writer,
-                                              JSObject* obj, jsid id,
-                                              ObjOperandId objId) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  Value expandoVal = GetProxyPrivate(obj);
-
-  ValOperandId expandoId;
-  if (!expandoVal.isObject() && !expandoVal.isUndefined()) {
-    auto expandoAndGeneration =
-        static_cast<ExpandoAndGeneration*>(expandoVal.toPrivate());
-    expandoId =
-        writer.loadDOMExpandoValueGuardGeneration(objId, expandoAndGeneration);
-    expandoVal = expandoAndGeneration->expando;
-  } else {
-    expandoId = writer.loadDOMExpandoValue(objId);
-  }
-
-  if (expandoVal.isUndefined()) {
-    // Guard there's no expando object.
-    writer.guardType(expandoId, JSVAL_TYPE_UNDEFINED);
-  } else if (expandoVal.isObject()) {
-    // Guard the proxy either has no expando object or, if it has one, that
-    // the shape matches the current expando object.
-    NativeObject& expandoObj = expandoVal.toObject().as<NativeObject>();
-    MOZ_ASSERT(!expandoObj.containsPure(id));
-    writer.guardDOMExpandoMissingOrGuardShape(expandoId,
-                                              expandoObj.lastProperty());
-  } else {
-    MOZ_CRASH("Invalid expando value");
-  }
-}
-
-bool GetPropIRGenerator::tryAttachDOMProxyUnshadowed(HandleObject obj,
-                                                     ObjOperandId objId,
-                                                     HandleId id) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  RootedObject checkObj(cx_, obj->staticPrototype());
-  if (!checkObj) {
-    return false;
-  }
-
-  RootedNativeObject holder(cx_);
-  RootedShape shape(cx_);
-  NativeGetPropCacheability canCache =
-      CanAttachNativeGetProp(cx_, checkObj, id, &holder, &shape, pc_,
-                             resultFlags_, isTemporarilyUnoptimizable_);
-  if (canCache == CanAttachNone) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachWindowProxy(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    // Attach a stub when the receiver is a WindowProxy and we can do the lookup
-    // on the Window (the global object).
-
-    if (!IsWindowProxy(obj)) {
-        return false;
-    }
-=======
 AttachDecision GetPropIRGenerator::tryAttachFunction(HandleObject obj,
                                                      ObjOperandId objId,
                                                      HandleId id) {
@@ -4140,252 +1794,59 @@ AttachDecision GetPropIRGenerator::tryAttachFunction(HandleObject obj,
     if (fun->hasResolvedLength()) {
       return AttachDecision::NoAction;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-||||||| merged common ancestors
-    // If we're megamorphic prefer a generic proxy stub that handles a lot more
-    // cases.
-    if (mode_ == ICState::Mode::Megamorphic) {
-        return false;
-    }
-=======
     // Lazy functions don't store the length.
     if (fun->isInterpretedLazy()) {
       return AttachDecision::NoAction;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard that our expando object hasn't started shadowing this property.
-  TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-  CheckDOMProxyExpandoDoesNotShadow(writer, obj, id, objId);
-||||||| merged common ancestors
-    // This must be a WindowProxy for the current Window/global. Else it would
-    // be a cross-compartment wrapper and IsWindowProxy returns false for
-    // those.
-    MOZ_ASSERT(obj->getClass() == cx_->runtime()->maybeWindowProxyClass());
-    MOZ_ASSERT(ToWindowIfWindowProxy(obj) == cx_->global());
-
-    // Now try to do the lookup on the Window (the current global).
-    HandleObject windowObj = cx_->global();
-    RootedShape shape(cx_);
-    RootedNativeObject holder(cx_);
-    NativeGetPropCacheability type = CanAttachNativeGetProp(cx_, windowObj, id, &holder, &shape, pc_,
-                                                            resultFlags_,
-                                                            isTemporarilyUnoptimizable_);
-    switch (type) {
-      case CanAttachNone:
-        return false;
-=======
     maybeEmitIdGuard(id);
     writer.guardClass(objId, GuardClassKind::JSFunction);
     writer.loadFunctionLengthResult(objId);
     writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (holder) {
-    // Found the property on the prototype chain. Treat it like a native
-    // getprop.
-    GeneratePrototypeGuards(writer, obj, holder, objId);
-||||||| merged common ancestors
-      case CanAttachReadSlot: {
-        maybeEmitIdGuard(id);
-        writer.guardClass(objId, GuardClassKind::WindowProxy);
-=======
     trackAttached("FunctionLength");
     return AttachDecision::Attach;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Guard on the holder of the property.
-    ObjOperandId holderId = writer.loadObject(holder);
-    TestMatchingHolder(writer, holder, holderId);
-||||||| merged common ancestors
-        ObjOperandId windowObjId = writer.loadObject(windowObj);
-        EmitReadSlotResult(writer, windowObj, holder, shape, windowObjId);
-        EmitReadSlotReturn(writer, windowObj, holder, shape);
-=======
   return AttachDecision::NoAction;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (canCache == CanAttachReadSlot) {
-      EmitLoadSlotResult(writer, holderId, holder, shape);
-      writer.typeMonitorResult();
-    } else {
-      // EmitCallGetterResultNoGuards expects |obj| to be the object the
-      // property is on to do some checks. Since we actually looked at
-      // checkObj, and no extra guards will be generated, we can just
-      // pass that instead.
-      MOZ_ASSERT(canCache == CanAttachCallGetter);
-      MOZ_ASSERT(!isSuper());
-      EmitCallGetterResultNoGuards(writer, checkObj, holder, shape, objId);
-    }
-  } else {
-    // Property was not found on the prototype chain. Deoptimize down to
-    // proxy get call.
-    MOZ_ASSERT(!isSuper());
-    writer.callProxyGetResult(objId, id);
-    writer.typeMonitorResult();
-  }
-||||||| merged common ancestors
-        trackAttached("WindowProxySlot");
-        return true;
-      }
-=======
 AttachDecision GetPropIRGenerator::tryAttachModuleNamespace(HandleObject obj,
                                                             ObjOperandId objId,
                                                             HandleId id) {
   if (!obj->is<ModuleNamespaceObject>()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DOMProxyUnshadowed");
-  return true;
-}
-||||||| merged common ancestors
-      case CanAttachCallGetter: {
-        if (!IsCacheableGetPropCallNative(windowObj, holder, shape)) {
-            return false;
-        }
-=======
   Rooted<ModuleNamespaceObject*> ns(cx_, &obj->as<ModuleNamespaceObject>());
   RootedModuleEnvironmentObject env(cx_);
   RootedShape shape(cx_);
   if (!ns->bindings().lookup(id, env.address(), shape.address())) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachProxy(HandleObject obj, ObjOperandId objId,
-                                        HandleId id) {
-  ProxyStubType type = GetProxyStubType(cx_, obj, id);
-  if (type == ProxyStubType::None) {
-    return false;
-  }
-||||||| merged common ancestors
-        // Make sure the native getter is okay with the IC passing the Window
-        // instead of the WindowProxy as |this| value.
-        JSFunction* callee = &shape->getterObject()->as<JSFunction>();
-        MOZ_ASSERT(callee->isNative());
-        if (!callee->hasJitInfo() || callee->jitInfo()->needsOuterizedThisObject()) {
-            return false;
-        }
-=======
   // Don't emit a stub until the target binding has been initialized.
   if (env->getSlot(shape->slot()).isMagic(JS_UNINITIALIZED_LEXICAL)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The proxy stubs don't currently support |super| access.
-  if (isSuper()) {
-    return false;
-  }
-||||||| merged common ancestors
-        // If a |super| access, it is not worth the complexity to attach an IC.
-        if (isSuper()) {
-            return false;
-        }
-=======
   if (IsIonEnabled(cx_)) {
     EnsureTrackPropertyTypes(cx_, env, shape->propid());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mode_ == ICState::Mode::Megamorphic) {
-    return tryAttachGenericProxy(obj, objId, id, /* handleDOMProxies = */ true);
-  }
-||||||| merged common ancestors
-        // Guard the incoming object is a WindowProxy and inline a getter call based
-        // on the Window object.
-        maybeEmitIdGuard(id);
-        writer.guardClass(objId, GuardClassKind::WindowProxy);
-        ObjOperandId windowObjId = writer.loadObject(windowObj);
-        EmitCallGetterResult(writer, windowObj, holder, shape, windowObjId, mode_);
-=======
   // Check for the specific namespace object.
   maybeEmitIdGuard(id);
   writer.guardSpecificObject(objId, ns);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  switch (type) {
-    case ProxyStubType::None:
-      break;
-    case ProxyStubType::DOMExpando:
-      if (tryAttachDOMProxyExpando(obj, objId, id)) {
-        return true;
-      }
-      if (*isTemporarilyUnoptimizable_) {
-        // Scripted getter without JIT code. Just wait.
-        return false;
-      }
-      MOZ_FALLTHROUGH;  // Fall through to the generic shadowed case.
-    case ProxyStubType::DOMShadowed:
-      return tryAttachDOMProxyShadowed(obj, objId, id);
-    case ProxyStubType::DOMUnshadowed:
-      if (tryAttachDOMProxyUnshadowed(obj, objId, id)) {
-        return true;
-      }
-      if (*isTemporarilyUnoptimizable_) {
-        // Scripted getter without JIT code. Just wait.
-        return false;
-      }
-      return tryAttachGenericProxy(obj, objId, id,
-                                   /* handleDOMProxies = */ true);
-    case ProxyStubType::Generic:
-      return tryAttachGenericProxy(obj, objId, id,
-                                   /* handleDOMProxies = */ false);
-  }
-||||||| merged common ancestors
-        trackAttached("WindowProxyGetter");
-        return true;
-      }
-    }
-=======
   ObjOperandId envId = writer.loadObject(env);
   EmitLoadSlotResult(writer, envId, env, shape);
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_CRASH("Unexpected ProxyStubType");
-||||||| merged common ancestors
-    MOZ_CRASH("Unreachable");
-=======
   trackAttached("ModuleNamespace");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachUnboxed(HandleObject obj, ObjOperandId objId,
-                                          HandleId id) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachCrossCompartmentWrapper(HandleObject obj, ObjOperandId objId,
-                                                     HandleId id)
-{
-    // We can only optimize this very wrapper-handler, because others might
-    // have a security policy.
-    if (!IsWrapper(obj) || Wrapper::wrapperHandler(obj) != &CrossCompartmentWrapper::singleton) {
-        return false;
-    }
-=======
 AttachDecision GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId,
                                                       HandleId id) {
   JSProtoKey protoKey;
@@ -4440,457 +1901,95 @@ AttachDecision GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId,
           EnsureTrackPropertyTypes(cx_, holder, id);
         }
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const UnboxedLayout::Property* property =
-      obj->as<UnboxedPlainObject>().layout().lookup(id);
-  if (!property) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-  writer.guardGroupForLayout(objId, obj->group());
-  writer.loadUnboxedPropertyResult(
-      objId, property->type,
-      UnboxedPlainObject::offsetOfData() + property->offset);
-  if (property->type == JSVAL_TYPE_OBJECT) {
-    writer.typeMonitorResult();
-  } else {
-    writer.returnFromIC();
-  }
-||||||| merged common ancestors
-    // If we're megamorphic prefer a generic proxy stub that handles a lot more
-    // cases.
-    if (mode_ == ICState::Mode::Megamorphic) {
-        return false;
-    }
-=======
       if (val_.isNumber()) {
         writer.guardIsNumber(valId);
       } else {
         writer.guardType(valId, val_.type());
       }
       maybeEmitIdGuard(id);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-||||||| merged common ancestors
-    RootedObject unwrapped(cx_, Wrapper::wrappedObject(obj));
-    MOZ_ASSERT(unwrapped == UnwrapOneChecked(obj));
-    MOZ_ASSERT(!IsCrossCompartmentWrapper(unwrapped),
-               "CCWs must not wrap other CCWs");
-=======
       ObjOperandId protoId = writer.loadObject(proto);
       EmitReadSlotResult(writer, proto, holder, shape, protoId);
       EmitReadSlotReturn(writer, proto, holder, shape);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("Unboxed");
-  return true;
-}
-||||||| merged common ancestors
-    // If we allowed different zones we would have to wrap strings.
-    if (unwrapped->compartment()->zone() != cx_->compartment()->zone()) {
-        return false;
-    }
-=======
       trackAttached("PrimitiveSlot");
       return AttachDecision::Attach;
     }
     case CanAttachScriptedGetter:
     case CanAttachNativeGetter: {
       MOZ_ASSERT(!idempotent());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachUnboxedExpando(HandleObject obj,
-                                                 ObjOperandId objId,
-                                                 HandleId id) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Take the unwrapped object's global, and wrap in a
-    // this-compartment wrapper. This is what will be stored in the IC
-    // keep the compartment alive.
-    RootedObject wrappedTargetGlobal(cx_, &unwrapped->nonCCWGlobal());
-    if (!cx_->compartment()->wrap(cx_, &wrappedTargetGlobal)) {
-        cx_->clearPendingException();
-        return false;
-    }
-=======
       // The primitive stubs don't currently support |super| access.
       if (isSuper()) {
         return AttachDecision::NoAction;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-  if (!expando) {
-    return false;
-  }
-
-  Shape* shape = expando->lookup(cx_, id);
-  if (!shape || !shape->isDataProperty()) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-  EmitReadSlotResult(writer, obj, obj, shape, objId);
-  EmitReadSlotReturn(writer, obj, obj, shape);
-||||||| merged common ancestors
-    bool isWindowProxy = false;
-    RootedShape shape(cx_);
-    RootedNativeObject holder(cx_);
-
-    // Enter realm of target since some checks have side-effects
-    // such as de-lazifying type info.
-    {
-        AutoRealm ar(cx_, unwrapped);
-
-        // The first CCW for iframes is almost always wrapping another WindowProxy
-        // so we optimize for that case as well.
-        isWindowProxy = IsWindowProxy(unwrapped);
-        if (isWindowProxy) {
-            MOZ_ASSERT(ToWindowIfWindowProxy(unwrapped) == &unwrapped->nonCCWGlobal());
-            unwrapped = cx_->global();
-            MOZ_ASSERT(unwrapped);
-        }
-=======
       if (val_.isNumber()) {
         writer.guardIsNumber(valId);
       } else {
         writer.guardType(valId, val_.type());
       }
       maybeEmitIdGuard(id);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("UnboxedExpando");
-  return true;
-}
-||||||| merged common ancestors
-        NativeGetPropCacheability canCache =
-            CanAttachNativeGetProp(cx_, unwrapped, id, &holder, &shape, pc_,
-                                resultFlags_, isTemporarilyUnoptimizable_);
-        if (canCache != CanAttachReadSlot) {
-            return false;
-        }
-=======
       ObjOperandId protoId = writer.loadObject(proto);
       EmitCallGetterByValueResult(writer, proto, holder, shape, protoId, valId,
                                   mode_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static TypedThingLayout GetTypedThingLayout(const Class* clasp) {
-  if (IsTypedArrayClass(clasp)) {
-    return Layout_TypedArray;
-  }
-  if (IsOutlineTypedObjectClass(clasp)) {
-    return Layout_OutlineTypedObject;
-  }
-  if (IsInlineTypedObjectClass(clasp)) {
-    return Layout_InlineTypedObject;
-  }
-  MOZ_CRASH("Bad object class");
-}
-||||||| merged common ancestors
-        if (holder) {
-            // Need to be in the compartment of the holder to
-            // call EnsureTrackPropertyTypes
-            EnsureTrackPropertyTypes(cx_, holder, id);
-            if (unwrapped == holder) {
-                // See the comment in StripPreliminaryObjectStubs.
-                if (IsPreliminaryObject(unwrapped)) {
-                    preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-                } else {
-                    preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-                }
-            }
-        } else {
-            // UNCACHEABLE_PROTO may result in guards against specific (cross-compartment)
-            // prototype objects, so don't try to attach IC if we see the flag at all.
-            if (UncacheableProtoOnChain(unwrapped)) {
-                return false;
-            }
-        }
-    }
-=======
       trackAttached("PrimitiveGetter");
       return AttachDecision::Attach;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachTypedObject(HandleObject obj,
-                                              ObjOperandId objId, HandleId id) {
-  if (!obj->is<TypedObject>()) {
-    return false;
-  }
-
-  if (cx_->zone()->detachedTypedObjects) {
-    return false;
-  }
-
-  TypedObject* typedObj = &obj->as<TypedObject>();
-  if (!typedObj->typeDescr().is<StructTypeDescr>()) {
-    return false;
-  }
-
-  StructTypeDescr* structDescr = &typedObj->typeDescr().as<StructTypeDescr>();
-  size_t fieldIndex;
-  if (!structDescr->fieldIndex(id, &fieldIndex)) {
-    return false;
-  }
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    writer.guardIsProxy(objId);
-    writer.guardHasProxyHandler(objId, Wrapper::wrapperHandler(obj));
-
-    // Load the object wrapped by the CCW
-    ObjOperandId wrapperTargetId = writer.loadWrapperTarget(objId);
-
-    // If the compartment of the wrapped object is different we should fail.
-    writer.guardCompartment(wrapperTargetId, wrappedTargetGlobal, unwrapped->compartment());
-
-    ObjOperandId unwrappedId = wrapperTargetId;
-    if (isWindowProxy) {
-        // For the WindowProxy case also unwrap the inner window.
-        // We avoid loadObject, because storing cross compartment objects in
-        // stubs / JIT code is tricky.
-        writer.guardClass(wrapperTargetId, GuardClassKind::WindowProxy);
-        unwrappedId = writer.loadWrapperTarget(wrapperTargetId);
-    }
-=======
   MOZ_CRASH("Bad NativeGetPropCacheability");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TypeDescr* fieldDescr = &structDescr->fieldDescr(fieldIndex);
-  if (!fieldDescr->is<SimpleTypeDescr>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    EmitReadSlotResult<SlotReadType::CrossCompartment>(writer, unwrapped, holder, shape, unwrappedId);
-    EmitReadSlotReturn(writer, unwrapped, holder, shape, /* wrapResult = */ true);
-=======
 AttachDecision GetPropIRGenerator::tryAttachStringLength(ValOperandId valId,
                                                          HandleId id) {
   if (!val_.isString() || !JSID_IS_ATOM(id, cx_->names().length)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-||||||| merged common ancestors
-    trackAttached("CCWSlot");
-    return true;
-}
-=======
   StringOperandId strId = writer.guardIsString(valId);
   maybeEmitIdGuard(id);
   writer.loadStringLengthResult(strId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t fieldOffset = structDescr->fieldOffset(fieldIndex);
-  uint32_t typeDescr = SimpleTypeDescrKey(&fieldDescr->as<SimpleTypeDescr>());
-||||||| merged common ancestors
-static bool
-GetXrayExpandoShapeWrapper(JSContext* cx, HandleObject xray, MutableHandleObject wrapper)
-{
-    Value v = GetProxyReservedSlot(xray, GetXrayJitInfo()->xrayHolderSlot);
-    if (v.isObject()) {
-        NativeObject* holder = &v.toObject().as<NativeObject>();
-        v = holder->getFixedSlot(GetXrayJitInfo()->holderExpandoSlot);
-        if (v.isObject()) {
-            RootedNativeObject expando(cx, &UncheckedUnwrap(&v.toObject())->as<NativeObject>());
-            wrapper.set(NewWrapperWithObjectShape(cx, expando));
-            return wrapper != nullptr;
-        }
-    }
-    wrapper.set(nullptr);
-    return true;
-}
-=======
   trackAttached("StringLength");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-  writer.guardNoDetachedTypedObjects();
-  writer.guardGroupForLayout(objId, obj->group());
-  writer.loadTypedObjectResult(objId, fieldOffset, layout, typeDescr);
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachXrayCrossCompartmentWrapper(HandleObject obj, ObjOperandId objId,
-                                                         HandleId id)
-{
-    if (!IsProxy(obj)) {
-        return false;
-    }
-=======
 AttachDecision GetPropIRGenerator::tryAttachStringChar(ValOperandId valId,
                                                        ValOperandId indexId) {
   MOZ_ASSERT(idVal_.isInt32());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Only monitor the result if the type produced by this stub might vary.
-  bool monitorLoad = false;
-  if (SimpleTypeDescrKeyIsScalar(typeDescr)) {
-    Scalar::Type type = ScalarTypeFromSimpleTypeDescrKey(typeDescr);
-    monitorLoad = type == Scalar::Uint32;
-  } else {
-    ReferenceType type = ReferenceTypeFromSimpleTypeDescrKey(typeDescr);
-    monitorLoad = type != ReferenceType::TYPE_STRING;
-  }
-||||||| merged common ancestors
-    XrayJitInfo* info = GetXrayJitInfo();
-    if (!info || !info->isCrossCompartmentXray(GetProxyHandler(obj))) {
-        return false;
-    }
-=======
   if (!val_.isString()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (monitorLoad) {
-    writer.typeMonitorResult();
-  } else {
-    writer.returnFromIC();
-  }
-||||||| merged common ancestors
-    if (!info->compartmentHasExclusiveExpandos(obj)) {
-        return false;
-    }
-=======
   int32_t index = idVal_.toInt32();
   if (index < 0) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("TypedObject");
-  return true;
-}
-||||||| merged common ancestors
-    RootedObject target(cx_, UncheckedUnwrap(obj));
-=======
   JSString* str = val_.toString();
   if (size_t(index) >= str->length()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachObjectLength(HandleObject obj,
-                                               ObjOperandId objId,
-                                               HandleId id) {
-  if (!JSID_IS_ATOM(id, cx_->names().length)) {
-    return false;
-  }
-||||||| merged common ancestors
-    RootedObject expandoShapeWrapper(cx_);
-    if (!GetXrayExpandoShapeWrapper(cx_, obj, &expandoShapeWrapper)) {
-        cx_->recoverFromOutOfMemory();
-        return false;
-    }
-=======
   // This follows JSString::getChar, otherwise we fail to attach getChar in a
   // lot of cases.
   if (str->isRope()) {
     JSRope* rope = &str->asRope();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!(resultFlags_ & GetPropertyResultFlags::AllowInt32)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Look for a getter we can call on the xray or its prototype chain.
-    Rooted<PropertyDescriptor> desc(cx_);
-    RootedObject holder(cx_, obj);
-    AutoObjectVector prototypes(cx_);
-    AutoObjectVector prototypeExpandoShapeWrappers(cx_);
-    while (true) {
-        if (!GetOwnPropertyDescriptor(cx_, holder, id, &desc)) {
-            cx_->clearPendingException();
-            return false;
-        }
-        if (desc.object()) {
-            break;
-        }
-        if (!GetPrototype(cx_, holder, &holder)) {
-            cx_->clearPendingException();
-            return false;
-        }
-        if (!holder || !IsProxy(holder) || !info->isCrossCompartmentXray(GetProxyHandler(holder))) {
-            return false;
-        }
-        RootedObject prototypeExpandoShapeWrapper(cx_);
-        if (!GetXrayExpandoShapeWrapper(cx_, holder, &prototypeExpandoShapeWrapper) ||
-            !prototypes.append(holder) ||
-            !prototypeExpandoShapeWrappers.append(prototypeExpandoShapeWrapper))
-        {
-            cx_->recoverFromOutOfMemory();
-            return false;
-        }
-    }
-    if (!desc.isAccessorDescriptor()) {
-        return false;
-    }
-=======
     // Make sure the left side contains the index.
     if (size_t(index) >= rope->leftChild()->length()) {
       return AttachDecision::NoAction;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (obj->is<ArrayObject>()) {
-    // Make sure int32 is added to the TypeSet before we attach a stub, so
-    // the stub can return int32 values without monitoring the result.
-    if (obj->as<ArrayObject>().length() > INT32_MAX) {
-      return false;
-    }
-||||||| merged common ancestors
-    RootedObject getter(cx_, desc.getterObject());
-    if (!getter || !getter->is<JSFunction>() || !getter->as<JSFunction>().isNative()) {
-        return false;
-    }
-=======
     str = rope->leftChild();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    maybeEmitIdGuard(id);
-    writer.guardClass(objId, GuardClassKind::Array);
-    writer.loadInt32ArrayLengthResult(objId);
-    writer.returnFromIC();
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    writer.guardIsProxy(objId);
-    writer.guardHasProxyHandler(objId, GetProxyHandler(obj));
-
-    // Load the object wrapped by the CCW
-    ObjOperandId wrapperTargetId = writer.loadWrapperTarget(objId);
-=======
   if (!str->isLinear() || str->asLinear().latin1OrTwoByteChar(index) >=
                               StaticStrings::UNIT_STATIC_LIMIT) {
     return AttachDecision::NoAction;
@@ -4900,55 +1999,11 @@ bool GetPropIRGenerator::tryAttachObjectLength(HandleObject obj,
   Int32OperandId int32IndexId = writer.guardIsInt32Index(indexId);
   writer.loadStringCharResult(strId, int32IndexId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    trackAttached("ArrayLength");
-    return true;
-  }
-||||||| merged common ancestors
-    // Test the wrapped object's class. The properties held by xrays or their
-    // prototypes will be invariant for objects of a given class, except for
-    // changes due to xray expandos or xray prototype mutations.
-    writer.guardAnyClass(wrapperTargetId, target->getClass());
-=======
   trackAttached("StringChar");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (obj->is<ArgumentsObject>() &&
-      !obj->as<ArgumentsObject>().hasOverriddenLength()) {
-    maybeEmitIdGuard(id);
-    if (obj->is<MappedArgumentsObject>()) {
-      writer.guardClass(objId, GuardClassKind::MappedArguments);
-    } else {
-      MOZ_ASSERT(obj->is<UnmappedArgumentsObject>());
-      writer.guardClass(objId, GuardClassKind::UnmappedArguments);
-    }
-    writer.loadArgumentsObjectLengthResult(objId);
-    writer.returnFromIC();
-||||||| merged common ancestors
-    // Make sure the expandos on the xray and its prototype chain match up with
-    // what we expect. The expando shape needs to be consistent, to ensure it
-    // has not had any shadowing properties added, and the expando cannot have
-    // any custom prototype (xray prototypes are stable otherwise).
-    //
-    // We can only do this for xrays with exclusive access to their expandos
-    // (as we checked earlier), which store a pointer to their expando
-    // directly. Xrays in other compartments may share their expandos with each
-    // other and a VM call is needed just to find the expando.
-    writer.guardXrayExpandoShapeAndDefaultProto(objId, expandoShapeWrapper);
-    for (size_t i = 0; i < prototypes.length(); i++) {
-        JSObject* proto = prototypes[i];
-        ObjOperandId protoId = writer.loadObject(proto);
-        writer.guardXrayExpandoShapeAndDefaultProto(protoId, prototypeExpandoShapeWrappers[i]);
-    }
-
-    writer.callNativeGetterResult(objId, &getter->as<JSFunction>());
-    writer.typeMonitorResult();
-=======
 AttachDecision GetPropIRGenerator::tryAttachMagicArgumentsName(
     ValOperandId valId, HandleId id) {
   if (!val_.isMagic(JS_OPTIMIZED_ARGUMENTS)) {
@@ -4972,174 +2027,41 @@ AttachDecision GetPropIRGenerator::tryAttachMagicArgumentsName(
     writer.loadFrameCalleeResult();
     writer.typeMonitorResult();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    trackAttached("ArgumentsObjectLength");
-    return true;
-  }
-
-  return false;
-||||||| merged common ancestors
-    trackAttached("XrayGetter");
-    return true;
-=======
   trackAttached("MagicArgumentsName");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachFunction(HandleObject obj, ObjOperandId objId,
-                                           HandleId id) {
-  // Function properties are lazily resolved so they might not be defined yet.
-  // And we might end up in a situation where we always have a fresh function
-  // object during the IC generation.
-  if (!obj->is<JSFunction>()) {
-    return false;
-  }
-
-  JSObject* holder = nullptr;
-  PropertyResult prop;
-  // This property exists already, don't attach the stub.
-  if (LookupPropertyPure(cx_, obj, id, &holder, &prop)) {
-    return false;
-  }
-
-  JSFunction* fun = &obj->as<JSFunction>();
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachGenericProxy(HandleObject obj, ObjOperandId objId, HandleId id,
-                                          bool handleDOMProxies)
-{
-    MOZ_ASSERT(obj->is<ProxyObject>());
-
-    writer.guardIsProxy(objId);
-=======
 AttachDecision GetPropIRGenerator::tryAttachMagicArgument(
     ValOperandId valId, ValOperandId indexId) {
   MOZ_ASSERT(idVal_.isInt32());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (JSID_IS_ATOM(id, cx_->names().length)) {
-    // length was probably deleted from the function.
-    if (fun->hasResolvedLength()) {
-      return false;
-    }
-||||||| merged common ancestors
-    if (!handleDOMProxies) {
-        // Ensure that the incoming object is not a DOM proxy, so that we can get to
-        // the specialized stubs
-        writer.guardNotDOMProxy(objId);
-    }
-=======
   if (!val_.isMagic(JS_OPTIMIZED_ARGUMENTS)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Lazy functions don't store the length.
-    if (fun->isInterpretedLazy()) {
-      return false;
-    }
-||||||| merged common ancestors
-    if (cacheKind_ == CacheKind::GetProp || mode_ == ICState::Mode::Specialized) {
-        MOZ_ASSERT(!isSuper());
-        maybeEmitIdGuard(id);
-        writer.callProxyGetResult(objId, id);
-    } else {
-        // Attach a stub that handles every id.
-        MOZ_ASSERT(cacheKind_ == CacheKind::GetElem);
-        MOZ_ASSERT(mode_ == ICState::Mode::Megamorphic);
-        MOZ_ASSERT(!isSuper());
-        writer.callProxyGetByValueResult(objId, getElemKeyValueId());
-    }
-=======
   writer.guardMagicValue(valId, JS_OPTIMIZED_ARGUMENTS);
   writer.guardFrameHasNoArgumentsObject();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    maybeEmitIdGuard(id);
-    writer.guardClass(objId, GuardClassKind::JSFunction);
-    writer.loadFunctionLengthResult(objId);
-    writer.returnFromIC();
-||||||| merged common ancestors
-    writer.typeMonitorResult();
-=======
   Int32OperandId int32IndexId = writer.guardIsInt32Index(indexId);
   writer.loadFrameArgumentResult(int32IndexId);
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    trackAttached("FunctionLength");
-    return true;
-  }
-
-  return false;
-||||||| merged common ancestors
-    trackAttached("GenericProxy");
-    return true;
-=======
   trackAttached("MagicArgument");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachModuleNamespace(HandleObject obj,
-                                                  ObjOperandId objId,
-                                                  HandleId id) {
-  if (!obj->is<ModuleNamespaceObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-ObjOperandId
-IRGenerator::guardDOMProxyExpandoObjectAndShape(JSObject* obj, ObjOperandId objId,
-                                                const Value& expandoVal, JSObject* expandoObj)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-=======
 AttachDecision GetPropIRGenerator::tryAttachArgumentsObjectArg(
     HandleObject obj, ObjOperandId objId, Int32OperandId indexId) {
   if (!obj->is<ArgumentsObject>() ||
       obj->as<ArgumentsObject>().hasOverriddenElement()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Rooted<ModuleNamespaceObject*> ns(cx_, &obj->as<ModuleNamespaceObject>());
-  RootedModuleEnvironmentObject env(cx_);
-  RootedShape shape(cx_);
-  if (!ns->bindings().lookup(id, env.address(), shape.address())) {
-    return false;
-  }
-||||||| merged common ancestors
-    TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-=======
   if (!(resultFlags_ & GetPropertyResultFlags::Monitored)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Don't emit a stub until the target binding has been initialized.
-  if (env->getSlot(shape->slot()).isMagic(JS_UNINITIALIZED_LEXICAL)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Shape determines Class, so now it must be a DOM proxy.
-    ValOperandId expandoValId;
-    if (expandoVal.isObject()) {
-        expandoValId = writer.loadDOMExpandoValue(objId);
-    } else {
-        expandoValId = writer.loadDOMExpandoValueIgnoreGeneration(objId);
-    }
-=======
   if (obj->is<MappedArgumentsObject>()) {
     writer.guardClass(objId, GuardClassKind::MappedArguments);
   } else {
@@ -5149,59 +2071,18 @@ AttachDecision GetPropIRGenerator::tryAttachArgumentsObjectArg(
 
   writer.loadArgumentsObjectArgResult(objId, indexId);
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (IsIonEnabled(cx_)) {
-    EnsureTrackPropertyTypes(cx_, env, shape->propid());
-  }
-||||||| merged common ancestors
-    // Guard the expando is an object and shape guard.
-    ObjOperandId expandoObjId = writer.guardIsObject(expandoValId);
-    TestMatchingHolder(writer, expandoObj, expandoObjId);
-    return expandoObjId;
-}
-=======
   trackAttached("ArgumentsObjectArg");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Check for the specific namespace object.
-  maybeEmitIdGuard(id);
-  writer.guardSpecificObject(objId, ns);
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachDOMProxyExpando(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-=======
 AttachDecision GetPropIRGenerator::tryAttachDenseElement(
     HandleObject obj, ObjOperandId objId, uint32_t index,
     Int32OperandId indexId) {
   if (!obj->isNative()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ObjOperandId envId = writer.loadObject(env);
-  EmitLoadSlotResult(writer, envId, env, shape);
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-    RootedValue expandoVal(cx_, GetProxyPrivate(obj));
-    RootedObject expandoObj(cx_);
-    if (expandoVal.isObject()) {
-        expandoObj = &expandoVal.toObject();
-    } else {
-        MOZ_ASSERT(!expandoVal.isUndefined(),
-                   "How did a missing expando manage to shadow things?");
-        auto expandoAndGeneration = static_cast<ExpandoAndGeneration*>(expandoVal.toPrivate());
-        MOZ_ASSERT(expandoAndGeneration);
-        expandoObj = &expandoAndGeneration->expando.toObject();
-    }
-=======
   NativeObject* nobj = &obj->as<NativeObject>();
   if (!nobj->containsDenseElement(index)) {
     return AttachDecision::NoAction;
@@ -5227,28 +2108,7 @@ static bool CanAttachDenseElementHole(NativeObject* obj, bool ownProp,
       return false;
     }
     allowIndexedReceiver = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("ModuleNamespace");
-  return true;
-}
-||||||| merged common ancestors
-    // Try to do the lookup on the expando object.
-    RootedNativeObject holder(cx_);
-    RootedShape propShape(cx_);
-    NativeGetPropCacheability canCache =
-        CanAttachNativeGetProp(cx_, expandoObj, id, &holder, &propShape, pc_,
-                               resultFlags_, isTemporarilyUnoptimizable_);
-    if (canCache != CanAttachReadSlot && canCache != CanAttachCallGetter) {
-        return false;
-    }
-    if (!holder) {
-        return false;
-    }
-
-    MOZ_ASSERT(holder == expandoObj);
-=======
     if (ClassCanHaveExtraProperties(obj->getClass())) {
       return false;
     }
@@ -5262,143 +2122,29 @@ static bool CanAttachDenseElementHole(NativeObject* obj, bool ownProp,
     if (!proto) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId, HandleId id) {
-  JSValueType primitiveType;
-  RootedNativeObject proto(cx_);
-  if (val_.isString()) {
-    if (JSID_IS_ATOM(id, cx_->names().length)) {
-      // String length is special-cased, see js::GetProperty.
-      return false;
-    }
-    primitiveType = JSVAL_TYPE_STRING;
-    proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_String));
-  } else if (val_.isNumber()) {
-    primitiveType = JSVAL_TYPE_DOUBLE;
-    proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_Number));
-  } else if (val_.isBoolean()) {
-    primitiveType = JSVAL_TYPE_BOOLEAN;
-    proto =
-        MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_Boolean));
-  } else if (val_.isSymbol()) {
-    primitiveType = JSVAL_TYPE_SYMBOL;
-    proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_Symbol));
-  } else {
-    MOZ_ASSERT(val_.isNullOrUndefined() || val_.isMagic());
-    return false;
-  }
-  if (!proto) {
-    return false;
-  }
-
-  RootedShape shape(cx_);
-  RootedNativeObject holder(cx_);
-  NativeGetPropCacheability type =
-      CanAttachNativeGetProp(cx_, proto, id, &holder, &shape, pc_, resultFlags_,
-                             isTemporarilyUnoptimizable_);
-  if (type != CanAttachReadSlot) {
-    return false;
-  }
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    ObjOperandId expandoObjId =
-        guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
-=======
     if (!proto->isNative()) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (holder) {
-    // Instantiate this property, for use during Ion compilation.
-    if (IsIonEnabled(cx_)) {
-      EnsureTrackPropertyTypes(cx_, holder, id);
-||||||| merged common ancestors
-    if (canCache == CanAttachReadSlot) {
-        // Load from the expando's slots.
-        EmitLoadSlotResult(writer, expandoObjId, &expandoObj->as<NativeObject>(), propShape);
-        writer.typeMonitorResult();
-    } else {
-        // Call the getter. Note that we pass objId, the DOM proxy, as |this|
-        // and not the expando object.
-        MOZ_ASSERT(canCache == CanAttachCallGetter);
-        EmitCallGetterResultNoGuards(writer, expandoObj, expandoObj, propShape, objId);
-=======
     // Make sure objects on the prototype don't have dense elements.
     if (proto->as<NativeObject>().getDenseInitializedLength() != 0) {
       return false;
->>>>>>> upstream-releases
     }
-  }
 
-<<<<<<< HEAD
-  writer.guardType(valId, primitiveType);
-  maybeEmitIdGuard(id);
-
-  ObjOperandId protoId = writer.loadObject(proto);
-  EmitReadSlotResult(writer, proto, holder, shape, protoId);
-  EmitReadSlotReturn(writer, proto, holder, shape);
-
-  trackAttached("Primitive");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("DOMProxyExpando");
-    return true;
-}
-=======
     obj = &proto->as<NativeObject>();
   } while (true);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachStringLength(ValOperandId valId,
-                                               HandleId id) {
-  if (!val_.isString() || !JSID_IS_ATOM(id, cx_->names().length)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachDOMProxyShadowed(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    MOZ_ASSERT(!isSuper());
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-=======
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  StringOperandId strId = writer.guardIsString(valId);
-  maybeEmitIdGuard(id);
-  writer.loadStringLengthResult(strId);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-    writer.callProxyGetResult(objId, id);
-    writer.typeMonitorResult();
-=======
 AttachDecision GetPropIRGenerator::tryAttachDenseElementHole(
     HandleObject obj, ObjOperandId objId, uint32_t index,
     Int32OperandId indexId) {
   if (!obj->isNative()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("StringLength");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("DOMProxyShadowed");
-    return true;
-}
-=======
   NativeObject* nobj = &obj->as<NativeObject>();
   if (nobj->containsDenseElement(index)) {
     return AttachDecision::NoAction;
@@ -5406,46 +2152,7 @@ AttachDecision GetPropIRGenerator::tryAttachDenseElementHole(
   if (!CanAttachDenseElementHole(nobj, false)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachStringChar(ValOperandId valId,
-                                             ValOperandId indexId) {
-  MOZ_ASSERT(idVal_.isInt32());
-||||||| merged common ancestors
-// Callers are expected to have already guarded on the shape of the
-// object, which guarantees the object is a DOM proxy.
-static void
-CheckDOMProxyExpandoDoesNotShadow(CacheIRWriter& writer, JSObject* obj, jsid id,
-                                  ObjOperandId objId)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-    Value expandoVal = GetProxyPrivate(obj);
-
-    ValOperandId expandoId;
-    if (!expandoVal.isObject() && !expandoVal.isUndefined()) {
-        auto expandoAndGeneration = static_cast<ExpandoAndGeneration*>(expandoVal.toPrivate());
-        expandoId = writer.loadDOMExpandoValueGuardGeneration(objId, expandoAndGeneration);
-        expandoVal = expandoAndGeneration->expando;
-    } else {
-        expandoId = writer.loadDOMExpandoValue(objId);
-    }
-
-    if (expandoVal.isUndefined()) {
-        // Guard there's no expando object.
-        writer.guardType(expandoId, JSVAL_TYPE_UNDEFINED);
-    } else if (expandoVal.isObject()) {
-        // Guard the proxy either has no expando object or, if it has one, that
-        // the shape matches the current expando object.
-        NativeObject& expandoObj = expandoVal.toObject().as<NativeObject>();
-        MOZ_ASSERT(!expandoObj.containsPure(id));
-        writer.guardDOMExpandoMissingOrGuardShape(expandoId, expandoObj.lastProperty());
-    } else {
-        MOZ_CRASH("Invalid expando value");
-    }
-}
-=======
   // Guard on the shape, to prevent non-dense elements from appearing.
   TestMatchingNativeReceiver(writer, nobj, objId);
   GeneratePrototypeHoleGuards(writer, nobj, objId,
@@ -5456,18 +2163,7 @@ CheckDOMProxyExpandoDoesNotShadow(CacheIRWriter& writer, JSObject* obj, jsid id,
   trackAttached("DenseElementHole");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!val_.isString()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachDOMProxyUnshadowed(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-=======
 AttachDecision GetPropIRGenerator::tryAttachSparseElement(
     HandleObject obj, ObjOperandId objId, uint32_t index,
     Int32OperandId indexId) {
@@ -5475,70 +2171,22 @@ AttachDecision GetPropIRGenerator::tryAttachSparseElement(
     return AttachDecision::NoAction;
   }
   NativeObject* nobj = &obj->as<NativeObject>();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int32_t index = idVal_.toInt32();
-  if (index < 0) {
-    return false;
-  }
-||||||| merged common ancestors
-    RootedObject checkObj(cx_, obj->staticPrototype());
-    if (!checkObj) {
-        return false;
-    }
-=======
   // Stub doesn't handle negative indices.
   if (index > INT_MAX) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSString* str = val_.toString();
-  if (size_t(index) >= str->length()) {
-    return false;
-  }
-||||||| merged common ancestors
-    RootedNativeObject holder(cx_);
-    RootedShape shape(cx_);
-    NativeGetPropCacheability canCache = CanAttachNativeGetProp(cx_, checkObj, id, &holder, &shape,
-                                                                pc_, resultFlags_,
-                                                                isTemporarilyUnoptimizable_);
-    if (canCache == CanAttachNone) {
-        return false;
-    }
-=======
   // We also need to be past the end of the dense capacity, to ensure sparse.
   if (index < nobj->getDenseInitializedLength()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // This follows JSString::getChar, otherwise we fail to attach getChar in a
-  // lot of cases.
-  if (str->isRope()) {
-    JSRope* rope = &str->asRope();
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-=======
   // Only handle Array objects in this stub.
   if (!nobj->is<ArrayObject>()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Make sure the left side contains the index.
-    if (size_t(index) >= rope->leftChild()->length()) {
-      return false;
-    }
-||||||| merged common ancestors
-    // Guard that our expando object hasn't started shadowing this property.
-    TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-    CheckDOMProxyExpandoDoesNotShadow(writer, obj, id, objId);
-=======
   // Here, we ensure that the prototype chain does not define any sparse
   // indexed properties on the shape lineage. This allows us to guard on
   // the shapes up the prototype chain to ensure that no indexed properties
@@ -5552,125 +2200,29 @@ AttachDecision GetPropIRGenerator::tryAttachSparseElement(
       ObjectMayHaveExtraIndexedProperties(nobj->staticPrototype())) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    str = rope->leftChild();
-  }
-||||||| merged common ancestors
-    if (holder) {
-        // Found the property on the prototype chain. Treat it like a native
-        // getprop.
-        GeneratePrototypeGuards(writer, obj, holder, objId);
-=======
   // Ensure that obj is an Array.
   writer.guardClass(objId, GuardClassKind::Array);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!str->isLinear() || str->asLinear().latin1OrTwoByteChar(index) >=
-                              StaticStrings::UNIT_STATIC_LIMIT) {
-    return false;
-  }
-||||||| merged common ancestors
-        // Guard on the holder of the property.
-        ObjOperandId holderId = writer.loadObject(holder);
-        TestMatchingHolder(writer, holder, holderId);
-=======
   // The helper we are going to call only applies to non-dense elements.
   writer.guardIndexGreaterThanDenseInitLength(objId, indexId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  StringOperandId strId = writer.guardIsString(valId);
-  Int32OperandId int32IndexId = writer.guardIsInt32Index(indexId);
-  writer.loadStringCharResult(strId, int32IndexId);
-  writer.returnFromIC();
-||||||| merged common ancestors
-        if (canCache == CanAttachReadSlot) {
-            EmitLoadSlotResult(writer, holderId, holder, shape);
-            writer.typeMonitorResult();
-        } else {
-            // EmitCallGetterResultNoGuards expects |obj| to be the object the
-            // property is on to do some checks. Since we actually looked at
-            // checkObj, and no extra guards will be generated, we can just
-            // pass that instead.
-            MOZ_ASSERT(canCache == CanAttachCallGetter);
-            MOZ_ASSERT(!isSuper());
-            EmitCallGetterResultNoGuards(writer, checkObj, holder, shape, objId);
-        }
-    } else {
-        // Property was not found on the prototype chain. Deoptimize down to
-        // proxy get call.
-        MOZ_ASSERT(!isSuper());
-        writer.callProxyGetResult(objId, id);
-        writer.typeMonitorResult();
-    }
-=======
   // Ensures we are able to efficiently able to map to an integral jsid.
   writer.guardIndexIsNonNegative(indexId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("StringChar");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("DOMProxyUnshadowed");
-    return true;
-}
-=======
   // Shape guard the prototype chain to avoid shadowing indexes from appearing.
   // The helper function also ensures that the index does not appear within the
   // dense element set of the prototypes.
   GeneratePrototypeHoleGuards(writer, nobj, objId,
                               /* alwaysGuardFirstProto = */ true);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachMagicArgumentsName(ValOperandId valId,
-                                                     HandleId id) {
-  if (!val_.isMagic(JS_OPTIMIZED_ARGUMENTS)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachProxy(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    ProxyStubType type = GetProxyStubType(cx_, obj, id);
-    if (type == ProxyStubType::None) {
-        return false;
-    }
-=======
   // At this point, we are guaranteed that the indexed property will not
   // be found on one of the prototypes. We are assured that we only have
   // to check that the receiving object has the property.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!JSID_IS_ATOM(id, cx_->names().length) &&
-      !JSID_IS_ATOM(id, cx_->names().callee)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // The proxy stubs don't currently support |super| access.
-    if (isSuper()) {
-        return false;
-    }
-=======
   writer.callGetSparseElementResult(objId, indexId);
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-  writer.guardMagicValue(valId, JS_OPTIMIZED_ARGUMENTS);
-  writer.guardFrameHasNoArgumentsObject();
-||||||| merged common ancestors
-    if (mode_ == ICState::Mode::Megamorphic) {
-        return tryAttachGenericProxy(obj, objId, id, /* handleDOMProxies = */ true);
-    }
-=======
   trackAttached("GetSparseElement");
   return AttachDecision::Attach;
 }
@@ -5683,81 +2235,18 @@ static bool IsPrimitiveArrayTypedObject(JSObject* obj) {
   return descr.is<ArrayTypeDescr>() &&
          descr.as<ArrayTypeDescr>().elementType().is<ScalarTypeDescr>();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (JSID_IS_ATOM(id, cx_->names().length)) {
-    writer.loadFrameNumActualArgsResult();
-    writer.returnFromIC();
-  } else {
-    MOZ_ASSERT(JSID_IS_ATOM(id, cx_->names().callee));
-    writer.loadFrameCalleeResult();
-    writer.typeMonitorResult();
-  }
-||||||| merged common ancestors
-    switch (type) {
-      case ProxyStubType::None:
-        break;
-      case ProxyStubType::DOMExpando:
-        if (tryAttachDOMProxyExpando(obj, objId, id)) {
-            return true;
-        }
-        if (*isTemporarilyUnoptimizable_) {
-            // Scripted getter without JIT code. Just wait.
-            return false;
-        }
-        MOZ_FALLTHROUGH; // Fall through to the generic shadowed case.
-      case ProxyStubType::DOMShadowed:
-        return tryAttachDOMProxyShadowed(obj, objId, id);
-      case ProxyStubType::DOMUnshadowed:
-        if (tryAttachDOMProxyUnshadowed(obj, objId, id)) {
-            return true;
-        }
-        if (*isTemporarilyUnoptimizable_) {
-            // Scripted getter without JIT code. Just wait.
-            return false;
-        }
-        return tryAttachGenericProxy(obj, objId, id, /* handleDOMProxies = */ true);
-      case ProxyStubType::Generic:
-        return tryAttachGenericProxy(obj, objId, id, /* handleDOMProxies = */ false);
-    }
-=======
 static Scalar::Type PrimitiveArrayTypedObjectType(JSObject* obj) {
   MOZ_ASSERT(IsPrimitiveArrayTypedObject(obj));
   TypeDescr& descr = obj->as<TypedObject>().typeDescr();
   return descr.as<ArrayTypeDescr>().elementType().as<ScalarTypeDescr>().type();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("MagicArgumentsName");
-  return true;
-||||||| merged common ancestors
-    MOZ_CRASH("Unexpected ProxyStubType");
-=======
 static Scalar::Type TypedThingElementType(JSObject* obj) {
   return obj->is<TypedArrayObject>() ? obj->as<TypedArrayObject>().type()
                                      : PrimitiveArrayTypedObjectType(obj);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachMagicArgument(ValOperandId valId,
-                                                ValOperandId indexId) {
-  MOZ_ASSERT(idVal_.isInt32());
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachUnboxed(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-
-    const UnboxedLayout::Property* property = obj->as<UnboxedPlainObject>().layout().lookup(id);
-    if (!property) {
-        return false;
-    }
-=======
 AttachDecision GetPropIRGenerator::tryAttachTypedElement(
     HandleObject obj, ObjOperandId objId, uint32_t index,
     Int32OperandId indexId) {
@@ -5770,38 +2259,13 @@ AttachDecision GetPropIRGenerator::tryAttachTypedElement(
       index >= obj->as<TypedArrayObject>().length()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!val_.isMagic(JS_OPTIMIZED_ARGUMENTS)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!cx_->runtime()->jitSupportsFloatingPoint) {
-        return false;
-    }
-=======
   // BigInt boxing not yet implemented.
   if (obj->is<TypedArrayObject>() &&
       Scalar::isBigIntType(obj->as<TypedArrayObject>().type())) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.guardMagicValue(valId, JS_OPTIMIZED_ARGUMENTS);
-  writer.guardFrameHasNoArgumentsObject();
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    writer.guardGroupForLayout(objId, obj->group());
-    writer.loadUnboxedPropertyResult(objId, property->type,
-                                     UnboxedPlainObject::offsetOfData() + property->offset);
-    if (property->type == JSVAL_TYPE_OBJECT) {
-        writer.typeMonitorResult();
-    } else {
-        writer.returnFromIC();
-    }
-=======
   // Don't attach typed object stubs if the underlying storage could be
   // detached, as the stub will always bail out.
   if (IsPrimitiveArrayTypedObject(obj) && cx_->zone()->detachedTypedObjects) {
@@ -5816,26 +2280,10 @@ AttachDecision GetPropIRGenerator::tryAttachTypedElement(
   } else {
     writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Int32OperandId int32IndexId = writer.guardIsInt32Index(indexId);
-  writer.loadFrameArgumentResult(int32IndexId);
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-    preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-=======
   writer.loadTypedElementResult(objId, indexId, layout,
                                 TypedThingElementType(obj));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("MagicArgument");
-  return true;
-||||||| merged common ancestors
-    trackAttached("Unboxed");
-    return true;
-=======
   // Reading from Uint32Array may produce an int32 now but a double value
   // later, so ensure we monitor the result.
   if (TypedThingElementType(obj) == Scalar::Type::Uint32) {
@@ -5846,43 +2294,15 @@ AttachDecision GetPropIRGenerator::tryAttachTypedElement(
 
   trackAttached("TypedElement");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachArgumentsObjectArg(HandleObject obj,
-                                                     ObjOperandId objId,
-                                                     Int32OperandId indexId) {
-  if (!obj->is<ArgumentsObject>() ||
-      obj->as<ArgumentsObject>().hasOverriddenElement()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachUnboxedExpando(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-=======
 AttachDecision GetPropIRGenerator::tryAttachGenericElement(
     HandleObject obj, ObjOperandId objId, uint32_t index,
     Int32OperandId indexId) {
   if (!obj->isNative()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!(resultFlags_ & GetPropertyResultFlags::Monitored)) {
-    return false;
-  }
-||||||| merged common ancestors
-    UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-    if (!expando) {
-        return false;
-    }
-=======
   // To allow other types to attach in the non-megamorphic case we test the
   // specific matching native receiver; however, once megamorphic we can attach
   // for any native
@@ -5895,50 +2315,19 @@ AttachDecision GetPropIRGenerator::tryAttachGenericElement(
   writer.guardIndexGreaterThanDenseInitLength(objId, indexId);
   writer.callNativeGetElementResult(objId, indexId);
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (obj->is<MappedArgumentsObject>()) {
-    writer.guardClass(objId, GuardClassKind::MappedArguments);
-  } else {
-    MOZ_ASSERT(obj->is<UnmappedArgumentsObject>());
-    writer.guardClass(objId, GuardClassKind::UnmappedArguments);
-  }
-||||||| merged common ancestors
-    Shape* shape = expando->lookup(cx_, id);
-    if (!shape || !shape->isDataProperty()) {
-        return false;
-    }
-=======
   trackAttached(mode_ == ICState::Mode::Megamorphic
                     ? "GenericElementMegamorphic"
                     : "GenericElement");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.loadArgumentsObjectArgResult(objId, indexId);
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    EmitReadSlotResult(writer, obj, obj, shape, objId);
-    EmitReadSlotReturn(writer, obj, obj, shape);
-=======
 AttachDecision GetPropIRGenerator::tryAttachProxyElement(HandleObject obj,
                                                          ObjOperandId objId) {
   if (!obj->is<ProxyObject>()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("ArgumentsObjectArg");
-  return true;
-||||||| merged common ancestors
-    trackAttached("UnboxedExpando");
-    return true;
-=======
   // The proxy stubs don't currently support |super| access.
   if (isSuper()) {
     return AttachDecision::NoAction;
@@ -5958,44 +2347,8 @@ AttachDecision GetPropIRGenerator::tryAttachProxyElement(HandleObject obj,
 
   trackAttached("ProxyElement");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachDenseElement(HandleObject obj,
-                                               ObjOperandId objId,
-                                               uint32_t index,
-                                               Int32OperandId indexId) {
-  if (!obj->isNative()) {
-    return false;
-  }
-
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (!nobj->containsDenseElement(index)) {
-    return false;
-  }
-
-  TestMatchingNativeReceiver(writer, nobj, objId);
-  writer.loadDenseElementResult(objId, indexId);
-  writer.typeMonitorResult();
-
-  trackAttached("DenseElement");
-  return true;
-||||||| merged common ancestors
-static TypedThingLayout
-GetTypedThingLayout(const Class* clasp)
-{
-    if (IsTypedArrayClass(clasp)) {
-        return Layout_TypedArray;
-    }
-    if (IsOutlineTypedObjectClass(clasp)) {
-        return Layout_OutlineTypedObject;
-    }
-    if (IsInlineTypedObjectClass(clasp)) {
-        return Layout_InlineTypedObject;
-    }
-    MOZ_CRASH("Bad object class");
-=======
 void GetPropIRGenerator::trackAttached(const char* name) {
 #ifdef JS_CACHEIR_SPEW
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
@@ -6003,30 +2356,8 @@ void GetPropIRGenerator::trackAttached(const char* name) {
     sp.valueProperty("property", idVal_);
   }
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool CanAttachDenseElementHole(NativeObject* obj, bool ownProp,
-                                      bool allowIndexedReceiver = false) {
-  // Make sure the objects on the prototype don't have any indexed properties
-  // or that such properties can't appear without a shape change.
-  // Otherwise returning undefined for holes would obviously be incorrect,
-  // because we would have to lookup a property on the prototype instead.
-  do {
-    // The first two checks are also relevant to the receiver object.
-    if (!allowIndexedReceiver && obj->isIndexed()) {
-      return false;
-    }
-    allowIndexedReceiver = false;
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachTypedObject(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    if (!obj->is<TypedObject>()) {
-        return false;
-    }
-=======
 void IRGenerator::emitIdGuard(ValOperandId valId, jsid id) {
   if (JSID_IS_SYMBOL(id)) {
     SymbolOperandId symId = writer.guardIsSymbol(valId);
@@ -6037,17 +2368,7 @@ void IRGenerator::emitIdGuard(ValOperandId valId, jsid id) {
     writer.guardSpecificAtom(strId, JSID_TO_ATOM(id));
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (ClassCanHaveExtraProperties(obj->getClass())) {
-      return false;
-    }
-||||||| merged common ancestors
-    if (!cx_->runtime()->jitSupportsFloatingPoint || cx_->zone()->detachedTypedObjects) {
-        return false;
-    }
-=======
 void GetPropIRGenerator::maybeEmitIdGuard(jsid id) {
   if (cacheKind_ == CacheKind::GetProp ||
       cacheKind_ == CacheKind::GetPropSuper) {
@@ -6055,86 +2376,23 @@ void GetPropIRGenerator::maybeEmitIdGuard(jsid id) {
     MOZ_ASSERT(&idVal_.toString()->asAtom() == JSID_TO_ATOM(id));
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Don't need to check prototype for OwnProperty checks
-    if (ownProp) {
-      return true;
-    }
-||||||| merged common ancestors
-    TypedObject* typedObj = &obj->as<TypedObject>();
-    if (!typedObj->typeDescr().is<StructTypeDescr>()) {
-        return false;
-    }
-=======
   MOZ_ASSERT(cacheKind_ == CacheKind::GetElem ||
              cacheKind_ == CacheKind::GetElemSuper);
   emitIdGuard(getElemKeyValueId(), id);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    JSObject* proto = obj->staticPrototype();
-    if (!proto) {
-      break;
-    }
-||||||| merged common ancestors
-    StructTypeDescr* structDescr = &typedObj->typeDescr().as<StructTypeDescr>();
-    size_t fieldIndex;
-    if (!structDescr->fieldIndex(id, &fieldIndex)) {
-        return false;
-    }
-=======
 void SetPropIRGenerator::maybeEmitIdGuard(jsid id) {
   if (cacheKind_ == CacheKind::SetProp) {
     // Constant PropertyName, no guards necessary.
     MOZ_ASSERT(&idVal_.toString()->asAtom() == JSID_TO_ATOM(id));
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (!proto->isNative()) {
-      return false;
-    }
-||||||| merged common ancestors
-    TypeDescr* fieldDescr = &structDescr->fieldDescr(fieldIndex);
-    if (!fieldDescr->is<SimpleTypeDescr>()) {
-        return false;
-    }
-=======
   MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
   emitIdGuard(setElemKeyValueId(), id);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Make sure objects on the prototype don't have dense elements.
-    if (proto->as<NativeObject>().getDenseInitializedLength() != 0) {
-      return false;
-    }
-||||||| merged common ancestors
-    TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-
-    uint32_t fieldOffset = structDescr->fieldOffset(fieldIndex);
-    uint32_t typeDescr = SimpleTypeDescrKey(&fieldDescr->as<SimpleTypeDescr>());
-
-    maybeEmitIdGuard(id);
-    writer.guardNoDetachedTypedObjects();
-    writer.guardGroupForLayout(objId, obj->group());
-    writer.loadTypedObjectResult(objId, fieldOffset, layout, typeDescr);
-
-    // Only monitor the result if the type produced by this stub might vary.
-    bool monitorLoad = false;
-    if (SimpleTypeDescrKeyIsScalar(typeDescr)) {
-        Scalar::Type type = ScalarTypeFromSimpleTypeDescrKey(typeDescr);
-        monitorLoad = type == Scalar::Uint32;
-    } else {
-        ReferenceType type = ReferenceTypeFromSimpleTypeDescrKey(typeDescr);
-        monitorLoad = type != ReferenceType::TYPE_STRING;
-    }
-=======
 GetNameIRGenerator::GetNameIRGenerator(JSContext* cx, HandleScript script,
                                        jsbytecode* pc, ICState::Mode mode,
                                        HandleObject env,
@@ -6150,50 +2408,15 @@ AttachDecision GetNameIRGenerator::tryAttachStub() {
 
   ObjOperandId envId(writer.setInputOperandId(0));
   RootedId id(cx_, NameToId(name_));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    obj = &proto->as<NativeObject>();
-  } while (true);
-||||||| merged common ancestors
-    if (monitorLoad) {
-        writer.typeMonitorResult();
-    } else {
-        writer.returnFromIC();
-    }
-=======
   TRY_ATTACH(tryAttachGlobalNameValue(envId, id));
   TRY_ATTACH(tryAttachGlobalNameGetter(envId, id));
   TRY_ATTACH(tryAttachEnvironmentName(envId, id));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    trackAttached("TypedObject");
-    return true;
-=======
   trackAttached(IRGenerator::NotAttached);
   return AttachDecision::NoAction;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachDenseElementHole(HandleObject obj,
-                                                   ObjOperandId objId,
-                                                   uint32_t index,
-                                                   Int32OperandId indexId) {
-  if (!obj->isNative()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachObjectLength(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    if (!JSID_IS_ATOM(id, cx_->names().length)) {
-        return false;
-    }
-=======
 bool CanAttachGlobalName(JSContext* cx,
                          Handle<LexicalEnvironmentObject*> globalLexical,
                          HandleId id, MutableHandleNativeObject holder,
@@ -6205,21 +2428,7 @@ bool CanAttachGlobalName(JSContext* cx,
     if (shape) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (nobj->containsDenseElement(index)) {
-    return false;
-  }
-  if (!CanAttachDenseElementHole(nobj, false)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!(resultFlags_ & GetPropertyResultFlags::AllowInt32)) {
-        return false;
-    }
-=======
     if (current == globalLexical) {
       current = &globalLexical->global();
     } else {
@@ -6287,323 +2496,79 @@ AttachDecision GetNameIRGenerator::tryAttachGlobalNameValue(ObjOperandId objId,
                                     PropertyResult(shape))) {
       return AttachDecision::NoAction;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard on the shape, to prevent non-dense elements from appearing.
-  TestMatchingNativeReceiver(writer, nobj, objId);
-  GeneratePrototypeHoleGuards(writer, nobj, objId,
-                              /* alwaysGuardFirstProto = */ false);
-  writer.loadDenseElementHoleResult(objId, indexId);
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-    if (obj->is<ArrayObject>()) {
-        // Make sure int32 is added to the TypeSet before we attach a stub, so
-        // the stub can return int32 values without monitoring the result.
-        if (obj->as<ArrayObject>().length() > INT32_MAX) {
-            return false;
-        }
-=======
     // Shape guard for global lexical.
     writer.guardShape(objId, globalLexical->lastProperty());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DenseElementHole");
-  return true;
-}
-||||||| merged common ancestors
-        maybeEmitIdGuard(id);
-        writer.guardClass(objId, GuardClassKind::Array);
-        writer.loadInt32ArrayLengthResult(objId);
-        writer.returnFromIC();
-=======
     // Guard on the shape of the GlobalObject.
     ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
     writer.guardShape(globalId, globalLexical->global().lastProperty());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachSparseElement(HandleObject obj,
-                                                ObjOperandId objId,
-                                                uint32_t index,
-                                                Int32OperandId indexId) {
-  if (!obj->isNative()) {
-    return false;
-  }
-  NativeObject* nobj = &obj->as<NativeObject>();
-||||||| merged common ancestors
-        trackAttached("ArrayLength");
-        return true;
-    }
-=======
     ObjOperandId holderId = globalId;
     if (holder != &globalLexical->global()) {
       // Shape guard holder.
       holderId = writer.loadObject(holder);
       writer.guardShape(holderId, holder->lastProperty());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Stub doesn't handle negative indices.
-  if (index > INT_MAX) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (obj->is<ArgumentsObject>() && !obj->as<ArgumentsObject>().hasOverriddenLength()) {
-        maybeEmitIdGuard(id);
-        if (obj->is<MappedArgumentsObject>()) {
-            writer.guardClass(objId, GuardClassKind::MappedArguments);
-        } else {
-            MOZ_ASSERT(obj->is<UnmappedArgumentsObject>());
-            writer.guardClass(objId, GuardClassKind::UnmappedArguments);
-        }
-        writer.loadArgumentsObjectLengthResult(objId);
-        writer.returnFromIC();
-=======
     EmitLoadSlotResult(writer, holderId, holder, shape);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // We also need to be past the end of the dense capacity, to ensure sparse.
-  if (index < nobj->getDenseInitializedLength()) {
-    return false;
-  }
-||||||| merged common ancestors
-        trackAttached("ArgumentsObjectLength");
-        return true;
-    }
-=======
   writer.typeMonitorResult();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Only handle Array objects in this stub.
-  if (!nobj->is<ArrayObject>()) {
-    return false;
-  }
-
-  // Here, we ensure that the prototype chain does not define any sparse
-  // indexed properties on the shape lineage. This allows us to guard on
-  // the shapes up the prototype chain to ensure that no indexed properties
-  // exist outside of the dense elements.
-  //
-  // The `GeneratePrototypeHoleGuards` call below will guard on the shapes,
-  // as well as ensure that no prototypes contain dense elements, allowing
-  // us to perform a pure shape-search for out-of-bounds integer-indexed
-  // properties on the recevier object.
-  if ((nobj->staticPrototype() != nullptr) &&
-      ObjectMayHaveExtraIndexedProperties(nobj->staticPrototype())) {
-    return false;
-  }
-||||||| merged common ancestors
-    return false;
-}
-=======
   trackAttached("GlobalNameValue");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Ensure that obj is an Array.
-  writer.guardClass(objId, GuardClassKind::Array);
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachFunction(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    // Function properties are lazily resolved so they might not be defined yet.
-    // And we might end up in a situation where we always have a fresh function
-    // object during the IC generation.
-    if (!obj->is<JSFunction>()) {
-        return false;
-    }
-=======
 AttachDecision GetNameIRGenerator::tryAttachGlobalNameGetter(ObjOperandId objId,
                                                              HandleId id) {
   if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The helper we are going to call only applies to non-dense elements.
-  writer.guardIndexGreaterThanDenseInitLength(objId, indexId);
-||||||| merged common ancestors
-    JSObject* holder = nullptr;
-    PropertyResult prop;
-    // This property exists already, don't attach the stub.
-    if (LookupPropertyPure(cx_, obj, id, &holder, &prop)) {
-        return false;
-    }
-=======
   Handle<LexicalEnvironmentObject*> globalLexical =
       env_.as<LexicalEnvironmentObject>();
   MOZ_ASSERT(globalLexical->isGlobal());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Ensures we are able to efficiently able to map to an integral jsid.
-  writer.guardIndexIsNonNegative(indexId);
-||||||| merged common ancestors
-    JSFunction* fun = &obj->as<JSFunction>();
-=======
   RootedNativeObject holder(cx_);
   RootedShape shape(cx_);
   if (!CanAttachGlobalName(cx_, globalLexical, id, &holder, &shape)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Shape guard the prototype chain to avoid shadowing indexes from appearing.
-  // The helper function also ensures that the index does not appear within the
-  // dense element set of the prototypes.
-  GeneratePrototypeHoleGuards(writer, nobj, objId,
-                              /* alwaysGuardFirstProto = */ true);
-||||||| merged common ancestors
-    if (JSID_IS_ATOM(id, cx_->names().length)) {
-        // length was probably deleted from the function.
-        if (fun->hasResolvedLength()) {
-            return false;
-        }
-=======
   if (holder == globalLexical) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // At this point, we are guaranteed that the indexed property will not
-  // be found on one of the prototypes. We are assured that we only have
-  // to check that the receiving object has the property.
-||||||| merged common ancestors
-        // Lazy functions don't store the length.
-        if (fun->isInterpretedLazy()) {
-            return false;
-        }
-=======
   if (IsCacheableGetPropCall(&globalLexical->global(), holder, shape) !=
       CanAttachNativeGetter) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.callGetSparseElementResult(objId, indexId);
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-        maybeEmitIdGuard(id);
-        writer.guardClass(objId, GuardClassKind::JSFunction);
-        writer.loadFunctionLengthResult(objId);
-        writer.returnFromIC();
-=======
   if (IsIonEnabled(cx_)) {
     EnsureTrackPropertyTypes(cx_, holder, id);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("GetSparseElement");
-  return true;
-}
-||||||| merged common ancestors
-        trackAttached("FunctionLength");
-        return true;
-    }
-=======
   // Shape guard for global lexical.
   writer.guardShape(objId, globalLexical->lastProperty());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool IsPrimitiveArrayTypedObject(JSObject* obj) {
-  if (!obj->is<TypedObject>()) {
-    return false;
-  }
-  TypeDescr& descr = obj->as<TypedObject>().typeDescr();
-  return descr.is<ArrayTypeDescr>() &&
-         descr.as<ArrayTypeDescr>().elementType().is<ScalarTypeDescr>();
-}
-||||||| merged common ancestors
-    return false;
-}
-=======
   // Guard on the shape of the GlobalObject.
   ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
   writer.guardShape(globalId, globalLexical->global().lastProperty());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static Scalar::Type PrimitiveArrayTypedObjectType(JSObject* obj) {
-  MOZ_ASSERT(IsPrimitiveArrayTypedObject(obj));
-  TypeDescr& descr = obj->as<TypedObject>().typeDescr();
-  return descr.as<ArrayTypeDescr>().elementType().as<ScalarTypeDescr>().type();
-}
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachModuleNamespace(HandleObject obj, ObjOperandId objId, HandleId id)
-{
-    if (!obj->is<ModuleNamespaceObject>()) {
-        return false;
-    }
-=======
   if (holder != &globalLexical->global()) {
     // Shape guard holder.
     ObjOperandId holderId = writer.loadObject(holder);
     writer.guardShape(holderId, holder->lastProperty());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static Scalar::Type TypedThingElementType(JSObject* obj) {
-  return obj->is<TypedArrayObject>() ? obj->as<TypedArrayObject>().type()
-                                     : PrimitiveArrayTypedObjectType(obj);
-}
-||||||| merged common ancestors
-    Rooted<ModuleNamespaceObject*> ns(cx_, &obj->as<ModuleNamespaceObject>());
-    RootedModuleEnvironmentObject env(cx_);
-    RootedShape shape(cx_);
-    if (!ns->bindings().lookup(id, env.address(), shape.address())) {
-        return false;
-    }
-=======
   EmitCallGetterResultNoGuards(writer, &globalLexical->global(), holder, shape,
                                globalId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachTypedElement(HandleObject obj,
-                                               ObjOperandId objId,
-                                               uint32_t index,
-                                               Int32OperandId indexId) {
-  if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Don't emit a stub until the target binding has been initialized.
-    if (env->getSlot(shape->slot()).isMagic(JS_UNINITIALIZED_LEXICAL)) {
-        return false;
-    }
-=======
   trackAttached("GlobalNameGetter");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Ensure the index is in-bounds so the element type gets monitored.
-  if (obj->is<TypedArrayObject>() &&
-      index >= obj->as<TypedArrayObject>().length()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (IsIonEnabled(cx_)) {
-        EnsureTrackPropertyTypes(cx_, env, shape->propid());
-    }
-=======
 static bool NeedEnvironmentShapeGuard(JSObject* envObj) {
   if (!envObj->is<CallObject>()) {
     return true;
@@ -6618,118 +2583,20 @@ static bool NeedEnvironmentShapeGuard(JSObject* envObj) {
   if (!fun->hasScript() || fun->nonLazyScript()->funHasExtensibleScope()) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Don't attach typed object stubs if the underlying storage could be
-  // detached, as the stub will always bail out.
-  if (IsPrimitiveArrayTypedObject(obj) && cx_->zone()->detachedTypedObjects) {
-    return false;
-  }
-
-  TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-||||||| merged common ancestors
-    // Check for the specific namespace object.
-    maybeEmitIdGuard(id);
-    writer.guardSpecificObject(objId, ns);
-=======
   return false;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (IsPrimitiveArrayTypedObject(obj)) {
-    writer.guardNoDetachedTypedObjects();
-    writer.guardGroupForLayout(objId, obj->group());
-  } else {
-    writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
-  }
-
-  writer.loadTypedElementResult(objId, indexId, layout,
-                                TypedThingElementType(obj));
-
-  // Reading from Uint32Array may produce an int32 now but a double value
-  // later, so ensure we monitor the result.
-  if (TypedThingElementType(obj) == Scalar::Type::Uint32) {
-    writer.typeMonitorResult();
-  } else {
-    writer.returnFromIC();
-  }
-||||||| merged common ancestors
-    ObjOperandId envId = writer.loadObject(env);
-    EmitLoadSlotResult(writer, envId, env, shape);
-    writer.typeMonitorResult();
-=======
 AttachDecision GetNameIRGenerator::tryAttachEnvironmentName(ObjOperandId objId,
                                                             HandleId id) {
   if (IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("TypedElement");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("ModuleNamespace");
-    return true;
-}
-=======
   RootedObject env(cx_, env_);
   RootedShape shape(cx_);
   RootedNativeObject holder(cx_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachUnboxedElementHole(HandleObject obj,
-                                                     ObjOperandId objId,
-                                                     uint32_t index,
-                                                     Int32OperandId indexId) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-
-  // Only support unboxed objects with no elements (i.e. no expando)
-  UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-  if (expando) {
-    return false;
-  }
-
-  if (JSObject* proto = obj->staticPrototype()) {
-    // Start the check at the first object on the [[Prototype]],
-    // which must be native now.
-    if (!proto->isNative()) {
-      return false;
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId, HandleId id)
-{
-    JSValueType primitiveType;
-    RootedNativeObject proto(cx_);
-    if (val_.isString()) {
-        if (JSID_IS_ATOM(id, cx_->names().length)) {
-            // String length is special-cased, see js::GetProperty.
-            return false;
-        }
-        primitiveType = JSVAL_TYPE_STRING;
-        proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_String));
-    } else if (val_.isNumber()) {
-        primitiveType = JSVAL_TYPE_DOUBLE;
-        proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_Number));
-    } else if (val_.isBoolean()) {
-        primitiveType = JSVAL_TYPE_BOOLEAN;
-        proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_Boolean));
-    } else if (val_.isSymbol()) {
-        primitiveType = JSVAL_TYPE_SYMBOL;
-        proto = MaybeNativeObject(cx_->global()->maybeGetPrototype(JSProto_Symbol));
-    } else {
-        MOZ_ASSERT(val_.isNullOrUndefined() || val_.isMagic());
-        return false;
-    }
-    if (!proto) {
-        return false;
-=======
   while (env) {
     if (env->is<GlobalObject>()) {
       shape = env->as<GlobalObject>().lookup(cx_, id);
@@ -6737,50 +2604,14 @@ GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId, HandleId id)
         break;
       }
       return AttachDecision::NoAction;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (proto->as<NativeObject>().getDenseInitializedLength() != 0) {
-      return false;
-||||||| merged common ancestors
-    RootedShape shape(cx_);
-    RootedNativeObject holder(cx_);
-    NativeGetPropCacheability type = CanAttachNativeGetProp(cx_, proto, id, &holder, &shape, pc_,
-                                                            resultFlags_,
-                                                            isTemporarilyUnoptimizable_);
-    if (type != CanAttachReadSlot) {
-        return false;
-=======
     if (!env->is<EnvironmentObject>() || env->is<WithEnvironmentObject>()) {
       return AttachDecision::NoAction;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (!CanAttachDenseElementHole(&proto->as<NativeObject>(), false)) {
-      return false;
-    }
-  }
-||||||| merged common ancestors
-    if (holder) {
-        // Instantiate this property, for use during Ion compilation.
-        if (IsIonEnabled(cx_)) {
-            EnsureTrackPropertyTypes(cx_, holder, id);
-        }
-    }
-=======
     MOZ_ASSERT(!env->hasUncacheableProto());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard on the group and prevent expandos from appearing.
-  Maybe<ObjOperandId> tempId;
-  TestMatchingReceiver(writer, obj, objId, &tempId);
-||||||| merged common ancestors
-    writer.guardType(valId, primitiveType);
-    maybeEmitIdGuard(id);
-=======
     // Check for an 'own' property on the env. There is no need to
     // check the prototype as non-with scopes do not inherit properties
     // from any prototype.
@@ -6788,34 +2619,10 @@ GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId, HandleId id)
     if (shape) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard that the prototype chain has no elements.
-  GeneratePrototypeHoleGuards(writer, obj, objId,
-                              /* alwaysGuardFirstProto = */ false);
-||||||| merged common ancestors
-    ObjOperandId protoId = writer.loadObject(proto);
-    EmitReadSlotResult(writer, proto, holder, shape, protoId);
-    EmitReadSlotReturn(writer, proto, holder, shape);
-=======
     env = env->enclosingEnvironment();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.loadUndefinedResult();
-  // No monitor: We know undefined must be in the typeset already.
-  writer.returnFromIC();
-
-  trackAttached("UnboxedElementHole");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("Primitive");
-    return true;
-}
-=======
   holder = &env->as<NativeObject>();
   if (!IsCacheableGetPropReadSlot(holder, holder, PropertyResult(shape))) {
     return AttachDecision::NoAction;
@@ -6823,87 +2630,18 @@ GetPropIRGenerator::tryAttachPrimitive(ValOperandId valId, HandleId id)
   if (holder->getSlot(shape->slot()).isMagic()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachGenericElement(HandleObject obj,
-                                                 ObjOperandId objId,
-                                                 uint32_t index,
-                                                 Int32OperandId indexId) {
-  if (!obj->isNative()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachStringLength(ValOperandId valId, HandleId id)
-{
-    if (!val_.isString() || !JSID_IS_ATOM(id, cx_->names().length)) {
-        return false;
-    }
-=======
   ObjOperandId lastObjId = objId;
   env = env_;
   while (env) {
     if (NeedEnvironmentShapeGuard(env)) {
       writer.guardShape(lastObjId, env->shape());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // To allow other types to attach in the non-megamorphic case we test the
-  // specific matching native reciever; however, once megamorphic we can attach
-  // for any native
-  if (mode_ == ICState::Mode::Megamorphic) {
-    writer.guardIsNativeObject(objId);
-  } else {
-    NativeObject* nobj = &obj->as<NativeObject>();
-    TestMatchingNativeReceiver(writer, nobj, objId);
-  }
-  writer.guardIndexGreaterThanDenseInitLength(objId, indexId);
-  writer.callNativeGetElementResult(objId, indexId);
-  writer.typeMonitorResult();
-
-  trackAttached(mode_ == ICState::Mode::Megamorphic
-                    ? "GenericElementMegamorphic"
-                    : "GenericElement");
-  return true;
-}
-||||||| merged common ancestors
-    StringOperandId strId = writer.guardIsString(valId);
-    maybeEmitIdGuard(id);
-    writer.loadStringLengthResult(strId);
-    writer.returnFromIC();
-
-    trackAttached("StringLength");
-    return true;
-}
-=======
     if (env == holder) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetPropIRGenerator::tryAttachProxyElement(HandleObject obj,
-                                               ObjOperandId objId) {
-  if (!obj->is<ProxyObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachStringChar(ValOperandId valId, ValOperandId indexId)
-{
-    MOZ_ASSERT(idVal_.isInt32());
-
-    if (!val_.isString()) {
-        return false;
-    }
-
-    int32_t index = idVal_.toInt32();
-    if (index < 0) {
-        return false;
-    }
-=======
     lastObjId = writer.loadEnclosingEnvironment(lastObjId);
     env = env->enclosingEnvironment();
   }
@@ -6921,19 +2659,7 @@ GetPropIRGenerator::tryAttachStringChar(ValOperandId valId, ValOperandId indexId
   trackAttached("EnvironmentName");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The proxy stubs don't currently support |super| access.
-  if (isSuper()) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSString* str = val_.toString();
-    if (size_t(index) >= str->length()) {
-        return false;
-    }
-=======
 void GetNameIRGenerator::trackAttached(const char* name) {
 #ifdef JS_CACHEIR_SPEW
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
@@ -6942,15 +2668,7 @@ void GetNameIRGenerator::trackAttached(const char* name) {
   }
 #endif
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.guardIsProxy(objId);
-||||||| merged common ancestors
-    // This follows JSString::getChar, otherwise we fail to attach getChar in a lot of cases.
-    if (str->isRope()) {
-        JSRope* rope = &str->asRope();
-=======
 BindNameIRGenerator::BindNameIRGenerator(JSContext* cx, HandleScript script,
                                          jsbytecode* pc, ICState::Mode mode,
                                          HandleObject env,
@@ -6958,145 +2676,32 @@ BindNameIRGenerator::BindNameIRGenerator(JSContext* cx, HandleScript script,
     : IRGenerator(cx, script, pc, CacheKind::BindName, mode),
       env_(env),
       name_(name) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // We are not guarding against DOM proxies here, because there is no other
-  // specialized DOM IC we could attach.
-  // We could call maybeEmitIdGuard here and then emit CallProxyGetResult,
-  // but for GetElem we prefer to attach a stub that can handle any Value
-  // so we don't attach a new stub for every id.
-  MOZ_ASSERT(cacheKind_ == CacheKind::GetElem);
-  MOZ_ASSERT(!isSuper());
-  writer.callProxyGetByValueResult(objId, getElemKeyValueId());
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-        // Make sure the left side contains the index.
-        if (size_t(index) >= rope->leftChild()->length()) {
-            return false;
-        }
-=======
 AttachDecision BindNameIRGenerator::tryAttachStub() {
   MOZ_ASSERT(cacheKind_ == CacheKind::BindName);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("ProxyElement");
-  return true;
-}
-||||||| merged common ancestors
-        str = rope->leftChild();
-    }
-=======
   AutoAssertNoPendingException aanpe(cx_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void GetPropIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("base", val_);
-    sp.valueProperty("property", idVal_);
-  }
-#endif
-}
-||||||| merged common ancestors
-    if (!str->isLinear() ||
-        str->asLinear().latin1OrTwoByteChar(index) >= StaticStrings::UNIT_STATIC_LIMIT)
-    {
-        return false;
-    }
-=======
   ObjOperandId envId(writer.setInputOperandId(0));
   RootedId id(cx_, NameToId(name_));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void IRGenerator::emitIdGuard(ValOperandId valId, jsid id) {
-  if (JSID_IS_SYMBOL(id)) {
-    SymbolOperandId symId = writer.guardIsSymbol(valId);
-    writer.guardSpecificSymbol(symId, JSID_TO_SYMBOL(id));
-  } else {
-    MOZ_ASSERT(JSID_IS_ATOM(id));
-    StringOperandId strId = writer.guardIsString(valId);
-    writer.guardSpecificAtom(strId, JSID_TO_ATOM(id));
-  }
-||||||| merged common ancestors
-    StringOperandId strId = writer.guardIsString(valId);
-    Int32OperandId int32IndexId = writer.guardIsInt32Index(indexId);
-    writer.loadStringCharResult(strId, int32IndexId);
-    writer.returnFromIC();
-
-    trackAttached("StringChar");
-    return true;
-=======
   TRY_ATTACH(tryAttachGlobalName(envId, id));
   TRY_ATTACH(tryAttachEnvironmentName(envId, id));
 
   trackAttached(IRGenerator::NotAttached);
   return AttachDecision::NoAction;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GetPropIRGenerator::maybeEmitIdGuard(jsid id) {
-  if (cacheKind_ == CacheKind::GetProp ||
-      cacheKind_ == CacheKind::GetPropSuper) {
-    // Constant PropertyName, no guards necessary.
-    MOZ_ASSERT(&idVal_.toString()->asAtom() == JSID_TO_ATOM(id));
-    return;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachMagicArgumentsName(ValOperandId valId, HandleId id)
-{
-    if (!val_.isMagic(JS_OPTIMIZED_ARGUMENTS)) {
-        return false;
-    }
-
-    if (!JSID_IS_ATOM(id, cx_->names().length) && !JSID_IS_ATOM(id, cx_->names().callee)) {
-        return false;
-    }
-=======
 AttachDecision BindNameIRGenerator::tryAttachGlobalName(ObjOperandId objId,
                                                         HandleId id) {
   if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(cacheKind_ == CacheKind::GetElem ||
-             cacheKind_ == CacheKind::GetElemSuper);
-  emitIdGuard(getElemKeyValueId(), id);
-}
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    writer.guardMagicValue(valId, JS_OPTIMIZED_ARGUMENTS);
-    writer.guardFrameHasNoArgumentsObject();
-=======
   Handle<LexicalEnvironmentObject*> globalLexical =
       env_.as<LexicalEnvironmentObject>();
   MOZ_ASSERT(globalLexical->isGlobal());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void SetPropIRGenerator::maybeEmitIdGuard(jsid id) {
-  if (cacheKind_ == CacheKind::SetProp) {
-    // Constant PropertyName, no guards necessary.
-    MOZ_ASSERT(&idVal_.toString()->asAtom() == JSID_TO_ATOM(id));
-    return;
-  }
-||||||| merged common ancestors
-    if (JSID_IS_ATOM(id, cx_->names().length)) {
-        writer.loadFrameNumActualArgsResult();
-        writer.returnFromIC();
-    } else {
-        MOZ_ASSERT(JSID_IS_ATOM(id, cx_->names().callee));
-        writer.loadFrameCalleeResult();
-        writer.typeMonitorResult();
-    }
-=======
   JSObject* result = nullptr;
   if (Shape* shape = globalLexical->lookup(cx_, id)) {
     // If this is an uninitialized lexical or a const, we need to return a
@@ -7125,87 +2730,17 @@ void SetPropIRGenerator::maybeEmitIdGuard(jsid id) {
     writer.loadObjectResult(globalId);
   }
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-  emitIdGuard(setElemKeyValueId(), id);
-||||||| merged common ancestors
-    trackAttached("MagicArgumentsName");
-    return true;
-=======
   trackAttached("GlobalName");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-GetNameIRGenerator::GetNameIRGenerator(JSContext* cx, HandleScript script,
-                                       jsbytecode* pc, ICState::Mode mode,
-                                       HandleObject env,
-                                       HandlePropertyName name)
-    : IRGenerator(cx, script, pc, CacheKind::GetName, mode),
-      env_(env),
-      name_(name) {}
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachMagicArgument(ValOperandId valId, ValOperandId indexId)
-{
-    MOZ_ASSERT(idVal_.isInt32());
-=======
 AttachDecision BindNameIRGenerator::tryAttachEnvironmentName(ObjOperandId objId,
                                                              HandleId id) {
   if (IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetNameIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::GetName);
-
-  AutoAssertNoPendingException aanpe(cx_);
-
-  ObjOperandId envId(writer.setInputOperandId(0));
-  RootedId id(cx_, NameToId(name_));
-
-  if (tryAttachGlobalNameValue(envId, id)) {
-    return true;
-  }
-  if (tryAttachGlobalNameGetter(envId, id)) {
-    return true;
-  }
-  if (tryAttachEnvironmentName(envId, id)) {
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-}
-||||||| merged common ancestors
-    if (!val_.isMagic(JS_OPTIMIZED_ARGUMENTS)) {
-        return false;
-    }
-
-    writer.guardMagicValue(valId, JS_OPTIMIZED_ARGUMENTS);
-    writer.guardFrameHasNoArgumentsObject();
-
-    Int32OperandId int32IndexId = writer.guardIsInt32Index(indexId);
-    writer.loadFrameArgumentResult(int32IndexId);
-    writer.typeMonitorResult();
-
-    trackAttached("MagicArgument");
-    return true;
-}
-
-bool
-GetPropIRGenerator::tryAttachArgumentsObjectArg(HandleObject obj, ObjOperandId objId,
-                                                Int32OperandId indexId)
-{
-    if (!obj->is<ArgumentsObject>() || obj->as<ArgumentsObject>().hasOverriddenElement()) {
-        return false;
-    }
-=======
   RootedObject env(cx_, env_);
   RootedShape shape(cx_);
   while (true) {
@@ -7215,63 +2750,15 @@ GetPropIRGenerator::tryAttachArgumentsObjectArg(HandleObject obj, ObjOperandId o
     if (env->is<WithEnvironmentObject>()) {
       return AttachDecision::NoAction;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool CanAttachGlobalName(JSContext* cx,
-                         Handle<LexicalEnvironmentObject*> globalLexical,
-                         HandleId id, MutableHandleNativeObject holder,
-                         MutableHandleShape shape) {
-  // The property must be found, and it must be found as a normal data property.
-  RootedNativeObject current(cx, globalLexical);
-  while (true) {
-    shape.set(current->lookup(cx, id));
-    if (shape) {
-      break;
-||||||| merged common ancestors
-    if (!(resultFlags_ & GetPropertyResultFlags::Monitored)) {
-        return false;
-=======
     MOZ_ASSERT(!env->hasUncacheableProto());
 
     // When we reach an unqualified variables object (like the global) we
     // have to stop looking and return that object.
     if (env->isUnqualifiedVarObj()) {
       break;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (current == globalLexical) {
-      current = &globalLexical->global();
-    } else {
-      // In the browser the global prototype chain should be immutable.
-      if (!current->staticPrototypeIsImmutable()) {
-        return false;
-      }
-||||||| merged common ancestors
-    if (obj->is<MappedArgumentsObject>()) {
-        writer.guardClass(objId, GuardClassKind::MappedArguments);
-    } else {
-        MOZ_ASSERT(obj->is<UnmappedArgumentsObject>());
-        writer.guardClass(objId, GuardClassKind::UnmappedArguments);
-    }
-
-    writer.loadArgumentsObjectArgResult(objId, indexId);
-    writer.typeMonitorResult();
-
-    trackAttached("ArgumentsObjectArg");
-    return true;
-}
-
-bool
-GetPropIRGenerator::tryAttachDenseElement(HandleObject obj, ObjOperandId objId,
-                                          uint32_t index, Int32OperandId indexId)
-{
-    if (!obj->isNative()) {
-        return false;
-    }
-=======
     // Check for an 'own' property on the env. There is no need to
     // check the prototype as non-with scopes do not inherit properties
     // from any prototype.
@@ -7297,73 +2784,21 @@ GetPropIRGenerator::tryAttachDenseElement(HandleObject obj, ObjOperandId objId,
     if (NeedEnvironmentShapeGuard(env) && !env->is<GlobalObject>()) {
       writer.guardShape(lastObjId, env->shape());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      JSObject* proto = current->staticPrototype();
-      if (!proto || !proto->is<NativeObject>()) {
-        return false;
-      }
-||||||| merged common ancestors
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (!nobj->containsDenseElement(index)) {
-        return false;
-    }
-=======
     if (env == holder) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      current = &proto->as<NativeObject>();
-    }
-  }
-||||||| merged common ancestors
-    TestMatchingNativeReceiver(writer, nobj, objId);
-    writer.loadDenseElementResult(objId, indexId);
-    writer.typeMonitorResult();
-=======
     lastObjId = writer.loadEnclosingEnvironment(lastObjId);
     env = env->enclosingEnvironment();
   }
   writer.loadObjectResult(lastObjId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  holder.set(current);
-  return true;
-||||||| merged common ancestors
-    trackAttached("DenseElement");
-    return true;
-=======
   trackAttached("EnvironmentName");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetNameIRGenerator::tryAttachGlobalNameValue(ObjOperandId objId,
-                                                  HandleId id) {
-  if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-CanAttachDenseElementHole(NativeObject* obj, bool ownProp, bool allowIndexedReceiver = false)
-{
-    // Make sure the objects on the prototype don't have any indexed properties
-    // or that such properties can't appear without a shape change.
-    // Otherwise returning undefined for holes would obviously be incorrect,
-    // because we would have to lookup a property on the prototype instead.
-    do {
-        // The first two checks are also relevant to the receiver object.
-        if (!allowIndexedReceiver && obj->isIndexed()) {
-            return false;
-        }
-        allowIndexedReceiver = false;
-=======
 void BindNameIRGenerator::trackAttached(const char* name) {
 #ifdef JS_CACHEIR_SPEW
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
@@ -7372,22 +2807,7 @@ void BindNameIRGenerator::trackAttached(const char* name) {
   }
 #endif
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Handle<LexicalEnvironmentObject*> globalLexical =
-      env_.as<LexicalEnvironmentObject>();
-  MOZ_ASSERT(globalLexical->isGlobal());
-||||||| merged common ancestors
-        if (ClassCanHaveExtraProperties(obj->getClass())) {
-            return false;
-        }
-
-        // Don't need to check prototype for OwnProperty checks
-        if (ownProp) {
-            return true;
-        }
-=======
 HasPropIRGenerator::HasPropIRGenerator(JSContext* cx, HandleScript script,
                                        jsbytecode* pc, ICState::Mode mode,
                                        CacheKind cacheKind, HandleValue idVal,
@@ -7532,20 +2952,7 @@ AttachDecision HasPropIRGenerator::tryAttachMegamorphic(ObjOperandId objId,
   trackAttached("MegamorphicHasProp");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedNativeObject holder(cx_);
-  RootedShape shape(cx_);
-  if (!CanAttachGlobalName(cx_, globalLexical, id, &holder, &shape)) {
-    return false;
-  }
-||||||| merged common ancestors
-        JSObject* proto = obj->staticPrototype();
-        if (!proto) {
-            break;
-        }
-=======
 AttachDecision HasPropIRGenerator::tryAttachNative(JSObject* obj,
                                                    ObjOperandId objId, jsid key,
                                                    ValOperandId keyId,
@@ -7554,188 +2961,44 @@ AttachDecision HasPropIRGenerator::tryAttachNative(JSObject* obj,
   if (!prop.isNativeProperty()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The property must be found, and it must be found as a normal data property.
-  if (!shape->isDataProperty()) {
-    return false;
-  }
-||||||| merged common ancestors
-        if (!proto->isNative()) {
-            return false;
-        }
-=======
   if (!IsCacheableProtoChain(obj, holder)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // This might still be an uninitialized lexical.
-  if (holder->getSlot(shape->slot()).isMagic()) {
-    return false;
-  }
-
-  // Instantiate this global property, for use during Ion compilation.
-  if (IsIonEnabled(cx_)) {
-    EnsureTrackPropertyTypes(cx_, holder, id);
-  }
-
-  if (holder == globalLexical) {
-    // There is no need to guard on the shape. Lexical bindings are
-    // non-configurable, and this stub cannot be shared across globals.
-    size_t dynamicSlotOffset =
-        holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-    writer.loadDynamicSlotResult(objId, dynamicSlotOffset);
-  } else {
-    // Check the prototype chain from the global to the holder
-    // prototype. Ignore the global lexical scope as it doesn't figure
-    // into the prototype chain. We guard on the global lexical
-    // scope's shape independently.
-    if (!IsCacheableGetPropReadSlot(&globalLexical->global(), holder,
-                                    PropertyResult(shape))) {
-      return false;
-    }
-||||||| merged common ancestors
-        // Make sure objects on the prototype don't have dense elements.
-        if (proto->as<NativeObject>().getDenseInitializedLength() != 0) {
-            return false;
-        }
-=======
   Maybe<ObjOperandId> tempId;
   emitIdGuard(keyId, key);
   EmitReadSlotGuard(writer, obj, holder, objId, &tempId);
   writer.loadBooleanResult(true);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Shape guard for global lexical.
-    writer.guardShape(objId, globalLexical->lastProperty());
-||||||| merged common ancestors
-        obj = &proto->as<NativeObject>();
-    } while (true);
-=======
   trackAttached("NativeHasProp");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Guard on the shape of the GlobalObject.
-    ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
-    writer.guardShape(globalId, globalLexical->global().lastProperty());
-||||||| merged common ancestors
-    return true;
-}
-=======
 AttachDecision HasPropIRGenerator::tryAttachTypedArray(HandleObject obj,
                                                        ObjOperandId objId,
                                                        Int32OperandId indexId) {
   if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ObjOperandId holderId = globalId;
-    if (holder != &globalLexical->global()) {
-      // Shape guard holder.
-      holderId = writer.loadObject(holder);
-      writer.guardShape(holderId, holder->lastProperty());
-    }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachDenseElementHole(HandleObject obj, ObjOperandId objId,
-                                              uint32_t index, Int32OperandId indexId)
-{
-    if (!obj->isNative()) {
-        return false;
-    }
-=======
   TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EmitLoadSlotResult(writer, holderId, holder, shape);
-  }
-||||||| merged common ancestors
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (nobj->containsDenseElement(index)) {
-        return false;
-    }
-    if (!CanAttachDenseElementHole(nobj, false)) {
-        return false;
-    }
-=======
   if (IsPrimitiveArrayTypedObject(obj)) {
     writer.guardGroupForLayout(objId, obj->group());
   } else {
     writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-    // Guard on the shape, to prevent non-dense elements from appearing.
-    TestMatchingNativeReceiver(writer, nobj, objId);
-    GeneratePrototypeHoleGuards(writer, nobj, objId);
-    writer.loadDenseElementHoleResult(objId, indexId);
-    writer.typeMonitorResult();
-=======
   writer.loadTypedElementExistsResult(objId, indexId, layout);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("GlobalNameValue");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("DenseElementHole");
-    return true;
-}
-=======
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GetNameIRGenerator::tryAttachGlobalNameGetter(ObjOperandId objId,
-                                                   HandleId id) {
-  if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-IsPrimitiveArrayTypedObject(JSObject* obj)
-{
-    if (!obj->is<TypedObject>()) {
-        return false;
-    }
-    TypeDescr& descr = obj->as<TypedObject>().typeDescr();
-    return descr.is<ArrayTypeDescr>() &&
-           descr.as<ArrayTypeDescr>().elementType().is<ScalarTypeDescr>();
-}
-=======
   trackAttached("TypedArrayObject");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Handle<LexicalEnvironmentObject*> globalLexical =
-      env_.as<LexicalEnvironmentObject>();
-  MOZ_ASSERT(globalLexical->isGlobal());
-||||||| merged common ancestors
-static Scalar::Type
-PrimitiveArrayTypedObjectType(JSObject* obj)
-{
-    MOZ_ASSERT(IsPrimitiveArrayTypedObject(obj));
-    TypeDescr& descr = obj->as<TypedObject>().typeDescr();
-    return descr.as<ArrayTypeDescr>().elementType().as<ScalarTypeDescr>().type();
-}
-=======
 AttachDecision HasPropIRGenerator::tryAttachTypedObject(JSObject* obj,
                                                         ObjOperandId objId,
                                                         jsid key,
@@ -7743,60 +3006,11 @@ AttachDecision HasPropIRGenerator::tryAttachTypedObject(JSObject* obj,
   if (!obj->is<TypedObject>()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedNativeObject holder(cx_);
-  RootedShape shape(cx_);
-  if (!CanAttachGlobalName(cx_, globalLexical, id, &holder, &shape)) {
-    return false;
-  }
-
-  if (holder == globalLexical) {
-    return false;
-  }
-
-  if (!IsCacheableGetPropCallNative(&globalLexical->global(), holder, shape)) {
-    return false;
-  }
-
-  if (IsIonEnabled(cx_)) {
-    EnsureTrackPropertyTypes(cx_, holder, id);
-  }
-
-  // Shape guard for global lexical.
-  writer.guardShape(objId, globalLexical->lastProperty());
-
-  // Guard on the shape of the GlobalObject.
-  ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
-  writer.guardShape(globalId, globalLexical->global().lastProperty());
-||||||| merged common ancestors
-=======
   if (!obj->as<TypedObject>().typeDescr().hasProperty(cx_->names(), key)) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (holder != &globalLexical->global()) {
-    // Shape guard holder.
-    ObjOperandId holderId = writer.loadObject(holder);
-    writer.guardShape(holderId, holder->lastProperty());
-  }
-
-  EmitCallGetterResultNoGuards(writer, &globalLexical->global(), holder, shape,
-                               globalId);
-
-  trackAttached("GlobalNameGetter");
-  return true;
-||||||| merged common ancestors
-static Scalar::Type
-TypedThingElementType(JSObject* obj)
-{
-    return obj->is<TypedArrayObject>()
-           ? obj->as<TypedArrayObject>().type()
-           : PrimitiveArrayTypedObjectType(obj);
-=======
   emitIdGuard(keyId, key);
   writer.guardGroupForLayout(objId, obj->group());
   writer.loadBooleanResult(true);
@@ -7804,35 +3018,8 @@ TypedThingElementType(JSObject* obj)
 
   trackAttached("TypedObjectHasProp");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool NeedEnvironmentShapeGuard(JSObject* envObj) {
-  if (!envObj->is<CallObject>()) {
-    return true;
-  }
-
-  // We can skip a guard on the call object if the script's bindings are
-  // guaranteed to be immutable (and thus cannot introduce shadowing
-  // variables). The function might have been relazified under rare
-  // conditions. In that case, we pessimistically create the guard.
-  CallObject* callObj = &envObj->as<CallObject>();
-  JSFunction* fun = &callObj->callee();
-  if (!fun->hasScript() || fun->nonLazyScript()->funHasExtensibleScope()) {
-    return true;
-  }
-
-  return false;
-||||||| merged common ancestors
-static bool
-TypedThingRequiresFloatingPoint(JSObject* obj)
-{
-    Scalar::Type type = TypedThingElementType(obj);
-    return type == Scalar::Uint32 ||
-           type == Scalar::Float32 ||
-           type == Scalar::Float64;
-=======
 AttachDecision HasPropIRGenerator::tryAttachSlotDoesNotExist(
     JSObject* obj, ObjOperandId objId, jsid key, ValOperandId keyId) {
   bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
@@ -7849,52 +3036,14 @@ AttachDecision HasPropIRGenerator::tryAttachSlotDoesNotExist(
 
   trackAttached("DoesNotExist");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GetNameIRGenerator::tryAttachEnvironmentName(ObjOperandId objId,
-                                                  HandleId id) {
-  if (IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachTypedElement(HandleObject obj, ObjOperandId objId,
-                                          uint32_t index, Int32OperandId indexId)
-{
-    if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
-        return false;
-    }
-=======
 AttachDecision HasPropIRGenerator::tryAttachDoesNotExist(HandleObject obj,
                                                          ObjOperandId objId,
                                                          HandleId key,
                                                          ValOperandId keyId) {
   bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedObject env(cx_, env_);
-  RootedShape shape(cx_);
-  RootedNativeObject holder(cx_);
-
-  while (env) {
-    if (env->is<GlobalObject>()) {
-      shape = env->as<GlobalObject>().lookup(cx_, id);
-      if (shape) {
-        break;
-      }
-      return false;
-||||||| merged common ancestors
-    if (!cx_->runtime()->jitSupportsFloatingPoint && TypedThingRequiresFloatingPoint(obj)) {
-        return false;
-    }
-
-    // Ensure the index is in-bounds so the element type gets monitored.
-    if (obj->is<TypedArrayObject>() && index >= obj->as<TypedArrayObject>().length()) {
-        return false;
-=======
   // Check that property doesn't exist on |obj| or it's prototype chain. These
   // checks allow Native/Typed objects with a NativeObject prototype
   // chain. They return NoAction if unknown such as resolve hooks or proxies.
@@ -7905,70 +3054,20 @@ AttachDecision HasPropIRGenerator::tryAttachDoesNotExist(HandleObject obj,
   } else {
     if (!CheckHasNoSuchProperty(cx_, obj, key)) {
       return AttachDecision::NoAction;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-    if (!env->is<EnvironmentObject>() || env->is<WithEnvironmentObject>()) {
-      return false;
-    }
-||||||| merged common ancestors
-    // Don't attach typed object stubs if the underlying storage could be
-    // detached, as the stub will always bail out.
-    if (IsPrimitiveArrayTypedObject(obj) && cx_->zone()->detachedTypedObjects) {
-        return false;
-    }
-=======
   TRY_ATTACH(tryAttachMegamorphic(objId, keyId));
   TRY_ATTACH(tryAttachSlotDoesNotExist(obj, objId, key, keyId));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_ASSERT(!env->hasUncacheableProto());
-||||||| merged common ancestors
-    TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-=======
   return AttachDecision::NoAction;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Check for an 'own' property on the env. There is no need to
-    // check the prototype as non-with scopes do not inherit properties
-    // from any prototype.
-    shape = env->as<NativeObject>().lookup(cx_, id);
-    if (shape) {
-      break;
-    }
-||||||| merged common ancestors
-    if (IsPrimitiveArrayTypedObject(obj)) {
-        writer.guardNoDetachedTypedObjects();
-        writer.guardGroupForLayout(objId, obj->group());
-    } else {
-        writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
-    }
-=======
 AttachDecision HasPropIRGenerator::tryAttachProxyElement(HandleObject obj,
                                                          ObjOperandId objId,
                                                          ValOperandId keyId) {
   bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    env = env->enclosingEnvironment();
-  }
-||||||| merged common ancestors
-    writer.loadTypedElementResult(objId, indexId, layout, TypedThingElementType(obj));
-
-    // Reading from Uint32Array may produce an int32 now but a double value
-    // later, so ensure we monitor the result.
-    if (TypedThingElementType(obj) == Scalar::Type::Uint32) {
-        writer.typeMonitorResult();
-    } else {
-        writer.returnFromIC();
-    }
-=======
   if (!obj->is<ProxyObject>()) {
     return AttachDecision::NoAction;
   }
@@ -7976,185 +3075,45 @@ AttachDecision HasPropIRGenerator::tryAttachProxyElement(HandleObject obj,
   writer.guardIsProxy(objId);
   writer.callProxyHasPropResult(objId, keyId, hasOwn);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  holder = &env->as<NativeObject>();
-  if (!IsCacheableGetPropReadSlot(holder, holder, PropertyResult(shape))) {
-    return false;
-  }
-  if (holder->getSlot(shape->slot()).isMagic()) {
-    return false;
-  }
-||||||| merged common ancestors
-    trackAttached("TypedElement");
-    return true;
-}
-=======
   trackAttached("ProxyHasProp");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ObjOperandId lastObjId = objId;
-  env = env_;
-  while (env) {
-    if (NeedEnvironmentShapeGuard(env)) {
-      writer.guardShape(lastObjId, env->maybeShape());
-    }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachUnboxedElementHole(HandleObject obj, ObjOperandId objId,
-                                                uint32_t index, Int32OperandId indexId)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-=======
 AttachDecision HasPropIRGenerator::tryAttachStub() {
   MOZ_ASSERT(cacheKind_ == CacheKind::In || cacheKind_ == CacheKind::HasOwn);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (env == holder) {
-      break;
-    }
-||||||| merged common ancestors
-    // Only support unboxed objects with no elements (i.e. no expando)
-    UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-    if (expando) {
-        return false;
-    }
-=======
   AutoAssertNoPendingException aanpe(cx_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    lastObjId = writer.loadEnclosingEnvironment(lastObjId);
-    env = env->enclosingEnvironment();
-  }
-||||||| merged common ancestors
-    if (JSObject* proto = obj->staticPrototype()) {
-        // Start the check at the first object on the [[Prototype]],
-        // which must be native now.
-        if (!proto->isNative()) {
-            return false;
-        }
-=======
   // NOTE: Argument order is PROPERTY, OBJECT
   ValOperandId keyId(writer.setInputOperandId(0));
   ValOperandId valId(writer.setInputOperandId(1));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (holder->isFixedSlot(shape->slot())) {
-    writer.loadEnvironmentFixedSlotResult(
-        lastObjId, NativeObject::getFixedSlotOffset(shape->slot()));
-  } else {
-    size_t dynamicSlotOffset =
-        holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-    writer.loadEnvironmentDynamicSlotResult(lastObjId, dynamicSlotOffset);
-  }
-  writer.typeMonitorResult();
-||||||| merged common ancestors
-        if (proto->as<NativeObject>().getDenseInitializedLength() != 0) {
-            return false;
-        }
-=======
   if (!val_.isObject()) {
     trackAttached(IRGenerator::NotAttached);
     return AttachDecision::NoAction;
   }
   RootedObject obj(cx_, &val_.toObject());
   ObjOperandId objId = writer.guardIsObject(valId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("EnvironmentName");
-  return true;
-}
-||||||| merged common ancestors
-        if (!CanAttachDenseElementHole(&proto->as<NativeObject>(), false)) {
-            return false;
-        }
-    }
-=======
   // Optimize Proxies
   TRY_ATTACH(tryAttachProxyElement(obj, objId, keyId));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void GetNameIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("base", ObjectValue(*env_));
-    sp.valueProperty("property", StringValue(name_));
-  }
-#endif
-}
-||||||| merged common ancestors
-    // Guard on the group and prevent expandos from appearing.
-    Maybe<ObjOperandId> tempId;
-    TestMatchingReceiver(writer, obj, objId, &tempId);
-=======
   RootedId id(cx_);
   bool nameOrSymbol;
   if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
     cx_->clearPendingException();
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BindNameIRGenerator::BindNameIRGenerator(JSContext* cx, HandleScript script,
-                                         jsbytecode* pc, ICState::Mode mode,
-                                         HandleObject env,
-                                         HandlePropertyName name)
-    : IRGenerator(cx, script, pc, CacheKind::BindName, mode),
-      env_(env),
-      name_(name) {}
-||||||| merged common ancestors
-    // Guard that the prototype chain has no elements.
-    GeneratePrototypeHoleGuards(writer, obj, objId);
-=======
   if (nameOrSymbol) {
     TRY_ATTACH(tryAttachNamedProp(obj, objId, id, keyId));
     TRY_ATTACH(tryAttachDoesNotExist(obj, objId, id, keyId));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BindNameIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::BindName);
-||||||| merged common ancestors
-    writer.loadUndefinedResult();
-    // No monitor: We know undefined must be in the typeset already.
-    writer.returnFromIC();
-=======
     trackAttached(IRGenerator::NotAttached);
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AutoAssertNoPendingException aanpe(cx_);
-
-  ObjOperandId envId(writer.setInputOperandId(0));
-  RootedId id(cx_, NameToId(name_));
-
-  if (tryAttachGlobalName(envId, id)) {
-    return true;
-  }
-  if (tryAttachEnvironmentName(envId, id)) {
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-||||||| merged common ancestors
-    trackAttached("UnboxedElementHole");
-    return true;
-=======
   uint32_t index;
   Int32OperandId indexId;
   if (maybeGuardInt32Index(idVal_, keyId, &index, &indexId)) {
@@ -8178,23 +3137,8 @@ void HasPropIRGenerator::trackAttached(const char* name) {
     sp.valueProperty("property", idVal_);
   }
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BindNameIRGenerator::tryAttachGlobalName(ObjOperandId objId, HandleId id) {
-  if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachGenericElement(HandleObject obj, ObjOperandId objId,
-                                            uint32_t index, Int32OperandId indexId)
-{
-    if (!obj->isNative()) {
-        return false;
-    }
-=======
 bool IRGenerator::maybeGuardInt32Index(const Value& index, ValOperandId indexId,
                                        uint32_t* int32Index,
                                        Int32OperandId* int32IndexId) {
@@ -8208,108 +3152,22 @@ bool IRGenerator::maybeGuardInt32Index(const Value& index, ValOperandId indexId,
         return false;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Handle<LexicalEnvironmentObject*> globalLexical =
-      env_.as<LexicalEnvironmentObject>();
-  MOZ_ASSERT(globalLexical->isGlobal());
-
-  JSObject* result = nullptr;
-  if (Shape* shape = globalLexical->lookup(cx_, id)) {
-    // If this is an uninitialized lexical or a const, we need to return a
-    // RuntimeLexicalErrorObject.
-    if (globalLexical->getSlot(shape->slot()).isMagic() || !shape->writable()) {
-      return false;
-    }
-    result = globalLexical;
-  } else {
-    result = &globalLexical->global();
-  }
-
-  if (result == globalLexical) {
-    // Lexical bindings are non-configurable so we can just return the
-    // global lexical.
-    writer.loadObjectResult(objId);
-  } else {
-    // If the property exists on the global and is non-configurable, it cannot
-    // be shadowed by the lexical scope so we can just return the global without
-    // a shape guard.
-    Shape* shape = result->as<GlobalObject>().lookup(cx_, id);
-    if (!shape || shape->configurable()) {
-      writer.guardShape(objId, globalLexical->lastProperty());
-||||||| merged common ancestors
-    // To allow other types to attach in the non-megamorphic case we test the specific
-    // matching native reciever; however, once megamorphic we can attach for any native
-    if (mode_ == ICState::Mode::Megamorphic) {
-        writer.guardIsNativeObject(objId);
-    } else {
-        NativeObject* nobj = &obj->as<NativeObject>();
-        TestMatchingNativeReceiver(writer, nobj, objId);
-=======
     if (indexSigned < 0) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
-    writer.loadObjectResult(globalId);
-  }
-  writer.returnFromIC();
-||||||| merged common ancestors
-    writer.guardIndexGreaterThanDenseInitLength(objId, indexId);
-    writer.callNativeGetElementResult(objId, indexId);
-    writer.typeMonitorResult();
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("GlobalName");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached(mode_ == ICState::Mode::Megamorphic
-                  ? "GenericElementMegamorphic": "GenericElement");
-    return true;
-}
-=======
     *int32Index = uint32_t(indexSigned);
     *int32IndexId = writer.guardIsInt32Index(indexId);
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BindNameIRGenerator::tryAttachEnvironmentName(ObjOperandId objId,
-                                                   HandleId id) {
-  if (IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-    return false;
-  }
-||||||| merged common ancestors
-=======
   if (index.isString()) {
     int32_t indexSigned = GetIndexFromString(index.toString());
     if (indexSigned < 0) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedObject env(cx_, env_);
-  RootedShape shape(cx_);
-  while (true) {
-    if (!env->is<GlobalObject>() && !env->is<EnvironmentObject>()) {
-      return false;
-    }
-    if (env->is<WithEnvironmentObject>()) {
-      return false;
-||||||| merged common ancestors
-bool
-GetPropIRGenerator::tryAttachProxyElement(HandleObject obj, ObjOperandId objId)
-{
-    if (!obj->is<ProxyObject>()) {
-        return false;
-=======
     StringOperandId strId = writer.guardIsString(indexId);
     *int32Index = uint32_t(indexSigned);
     *int32IndexId = writer.guardAndGetIndexFromString(strId);
@@ -8376,37 +3234,12 @@ AttachDecision SetPropIRGenerator::tryAttachStub() {
         return AttachDecision::Deferred;
       }
       return AttachDecision::NoAction;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    MOZ_ASSERT(!env->hasUncacheableProto());
-
-    // When we reach an unqualified variables object (like the global) we
-    // have to stop looking and return that object.
-    if (env->isUnqualifiedVarObj()) {
-      break;
-||||||| merged common ancestors
-    // The proxy stubs don't currently support |super| access.
-    if (isSuper()) {
-        return false;
-=======
     if (IsPropertySetOp(JSOp(*pc_))) {
       TRY_ATTACH(tryAttachProxyElement(obj, objId, rhsValId));
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    // Check for an 'own' property on the env. There is no need to
-    // check the prototype as non-with scopes do not inherit properties
-    // from any prototype.
-    shape = env->as<NativeObject>().lookup(cx_, id);
-    if (shape) {
-      break;
-    }
-||||||| merged common ancestors
-    writer.guardIsProxy(objId);
-=======
     uint32_t index;
     Int32OperandId indexId;
     if (maybeGuardInt32Index(idVal_, setElemKeyValueId(), &index, &indexId)) {
@@ -8460,62 +3293,12 @@ static bool CanAttachNativeSetSlot(JSContext* cx, JSOp op, HandleObject obj,
   if (!obj->isNative()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    env = env->enclosingEnvironment();
-  }
-||||||| merged common ancestors
-    // We are not guarding against DOM proxies here, because there is no other
-    // specialized DOM IC we could attach.
-    // We could call maybeEmitIdGuard here and then emit CallProxyGetResult,
-    // but for GetElem we prefer to attach a stub that can handle any Value
-    // so we don't attach a new stub for every id.
-    MOZ_ASSERT(cacheKind_ == CacheKind::GetElem);
-    MOZ_ASSERT(!isSuper());
-    writer.callProxyGetByValueResult(objId, getElemKeyValueId());
-    writer.typeMonitorResult();
-=======
   propShape.set(LookupShapeForSetSlot(op, &obj->as<NativeObject>(), id));
   if (!propShape) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // If this is an uninitialized lexical or a const, we need to return a
-  // RuntimeLexicalErrorObject.
-  RootedNativeObject holder(cx_, &env->as<NativeObject>());
-  if (shape && holder->is<EnvironmentObject>() &&
-      (holder->getSlot(shape->slot()).isMagic() || !shape->writable())) {
-    return false;
-  }
-
-  ObjOperandId lastObjId = objId;
-  env = env_;
-  while (env) {
-    if (NeedEnvironmentShapeGuard(env) && !env->is<GlobalObject>()) {
-      writer.guardShape(lastObjId, env->maybeShape());
-    }
-
-    if (env == holder) {
-      break;
-    }
-
-    lastObjId = writer.loadEnclosingEnvironment(lastObjId);
-    env = env->enclosingEnvironment();
-  }
-  writer.loadObjectResult(lastObjId);
-  writer.returnFromIC();
-
-  trackAttached("EnvironmentName");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("ProxyElement");
-    return true;
-}
-=======
   ObjectGroup* group = JSObject::getGroup(cx, obj);
   if (!group) {
     cx->recoverFromOutOfMemory();
@@ -8631,15 +3414,7 @@ AttachDecision SetPropIRGenerator::tryAttachTypedObjectProperty(
     writer.storeTypedObjectScalarProperty(objId, fieldOffset, layout, type,
                                           rhsId);
     writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void BindNameIRGenerator::trackAttached(const char* name) {
-||||||| merged common ancestors
-void
-GetPropIRGenerator::trackAttached(const char* name)
-{
-=======
     trackAttached("TypedObject");
     return AttachDecision::Attach;
   }
@@ -8669,121 +3444,35 @@ GetPropIRGenerator::trackAttached(const char* name)
 }
 
 void SetPropIRGenerator::trackAttached(const char* name) {
->>>>>>> upstream-releases
 #ifdef JS_CACHEIR_SPEW
-<<<<<<< HEAD
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("base", ObjectValue(*env_));
-    sp.valueProperty("property", StringValue(name_));
-  }
-||||||| merged common ancestors
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("base", val_);
-        sp.valueProperty("property", idVal_);
-    }
-=======
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
     sp.opcodeProperty("op", JSOp(*pc_));
     sp.valueProperty("base", lhsVal_);
     sp.valueProperty("property", idVal_);
     sp.valueProperty("value", rhsVal_);
   }
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-HasPropIRGenerator::HasPropIRGenerator(JSContext* cx, HandleScript script,
-                                       jsbytecode* pc, ICState::Mode mode,
-                                       CacheKind cacheKind, HandleValue idVal,
-                                       HandleValue val)
-    : IRGenerator(cx, script, pc, cacheKind, mode), val_(val), idVal_(idVal) {}
-||||||| merged common ancestors
-void
-IRGenerator::emitIdGuard(ValOperandId valId, jsid id)
-{
-    if (JSID_IS_SYMBOL(id)) {
-        SymbolOperandId symId = writer.guardIsSymbol(valId);
-        writer.guardSpecificSymbol(symId, JSID_TO_SYMBOL(id));
-    } else {
-        MOZ_ASSERT(JSID_IS_ATOM(id));
-        StringOperandId strId = writer.guardIsString(valId);
-        writer.guardSpecificAtom(strId, JSID_TO_ATOM(id));
-    }
-}
-=======
 static bool IsCacheableSetPropCallNative(JSObject* obj, JSObject* holder,
                                          Shape* shape) {
   if (!shape || !IsCacheableProtoChain(obj, holder)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachDense(HandleObject obj, ObjOperandId objId,
-                                        uint32_t index,
-                                        Int32OperandId indexId) {
-  if (!obj->isNative()) {
-    return false;
-  }
-||||||| merged common ancestors
-void
-GetPropIRGenerator::maybeEmitIdGuard(jsid id)
-{
-    if (cacheKind_ == CacheKind::GetProp || cacheKind_ == CacheKind::GetPropSuper) {
-        // Constant PropertyName, no guards necessary.
-        MOZ_ASSERT(&idVal_.toString()->asAtom() == JSID_TO_ATOM(id));
-        return;
-    }
-=======
   if (!shape->hasSetterValue()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (!nobj->containsDenseElement(index)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MOZ_ASSERT(cacheKind_ == CacheKind::GetElem || cacheKind_ == CacheKind::GetElemSuper);
-    emitIdGuard(getElemKeyValueId(), id);
-}
-=======
   if (!shape->setterObject() || !shape->setterObject()->is<JSFunction>()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard shape to ensure object class is NativeObject.
-  TestMatchingNativeReceiver(writer, nobj, objId);
-  writer.loadDenseElementExistsResult(objId, indexId);
-  writer.returnFromIC();
-||||||| merged common ancestors
-void
-SetPropIRGenerator::maybeEmitIdGuard(jsid id)
-{
-    if (cacheKind_ == CacheKind::SetProp) {
-        // Constant PropertyName, no guards necessary.
-        MOZ_ASSERT(&idVal_.toString()->asAtom() == JSID_TO_ATOM(id));
-        return;
-    }
-=======
   JSFunction& setter = shape->setterObject()->as<JSFunction>();
   if (!setter.isBuiltinNative()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DenseHasProp");
-  return true;
-||||||| merged common ancestors
-    MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-    emitIdGuard(setElemKeyValueId(), id);
-=======
   if (setter.isClassConstructor()) {
     return false;
   }
@@ -8793,97 +3482,27 @@ SetPropIRGenerator::maybeEmitIdGuard(jsid id)
   }
 
   return !IsWindow(obj);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachDenseHole(HandleObject obj,
-                                            ObjOperandId objId, uint32_t index,
-                                            Int32OperandId indexId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-  if (!obj->isNative()) {
-    return false;
-  }
-||||||| merged common ancestors
-GetNameIRGenerator::GetNameIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                       ICState::Mode mode, HandleObject env,
-                                       HandlePropertyName name)
-  : IRGenerator(cx, script, pc, CacheKind::GetName, mode),
-    env_(env),
-    name_(name)
-{}
-=======
 static bool IsCacheableSetPropCallScripted(
     JSObject* obj, JSObject* holder, Shape* shape,
     bool* isTemporarilyUnoptimizable = nullptr) {
   if (!shape || !IsCacheableProtoChain(obj, holder)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (nobj->containsDenseElement(index)) {
-    return false;
-  }
-  if (!CanAttachDenseElementHole(nobj, hasOwn)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetNameIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::GetName);
-=======
   if (IsWindow(obj)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard shape to ensure class is NativeObject and to prevent non-dense
-  // elements being added. Also ensures prototype doesn't change if dynamic
-  // checks aren't emitted.
-  TestMatchingNativeReceiver(writer, nobj, objId);
-||||||| merged common ancestors
-    AutoAssertNoPendingException aanpe(cx_);
-=======
   if (!shape->hasSetterValue()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Generate prototype guards if needed. This includes monitoring that
-  // properties were not added in the chain.
-  if (!hasOwn) {
-    GeneratePrototypeHoleGuards(writer, nobj, objId,
-                                /* alwaysGuardFirstProto = */ false);
-  }
-||||||| merged common ancestors
-    ObjOperandId envId(writer.setInputOperandId(0));
-    RootedId id(cx_, NameToId(name_));
-=======
   if (!shape->setterObject() || !shape->setterObject()->is<JSFunction>()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.loadDenseElementHoleExistsResult(objId, indexId);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    if (tryAttachGlobalNameValue(envId, id)) {
-        return true;
-    }
-    if (tryAttachGlobalNameGetter(envId, id)) {
-        return true;
-    }
-    if (tryAttachEnvironmentName(envId, id)) {
-        return true;
-    }
-=======
   JSFunction& setter = shape->setterObject()->as<JSFunction>();
   if (setter.isBuiltinNative()) {
     return false;
@@ -8900,137 +3519,40 @@ GetNameIRGenerator::tryAttachStub()
     }
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DenseHasPropHole");
-  return true;
-||||||| merged common ancestors
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-=======
   if (setter.isClassConstructor()) {
     return false;
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachSparse(HandleObject obj, ObjOperandId objId,
-                                         Int32OperandId indexId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-||||||| merged common ancestors
-bool
-CanAttachGlobalName(JSContext* cx, Handle<LexicalEnvironmentObject*> globalLexical, HandleId id,
-                    MutableHandleNativeObject holder, MutableHandleShape shape)
-{
-    // The property must be found, and it must be found as a normal data property.
-    RootedNativeObject current(cx, globalLexical);
-    while (true) {
-        shape.set(current->lookup(cx, id));
-        if (shape) {
-            break;
-        }
-=======
 static bool CanAttachSetter(JSContext* cx, jsbytecode* pc, HandleObject obj,
                             HandleId id, MutableHandleObject holder,
                             MutableHandleShape propShape,
                             bool* isTemporarilyUnoptimizable) {
   // Don't attach a setter stub for ops like JSOP_INITELEM.
   MOZ_ASSERT(IsPropertySetOp(JSOp(*pc)));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!obj->isNative()) {
-    return false;
-  }
-  if (!obj->as<NativeObject>().isIndexed()) {
-    return false;
-  }
-  if (!CanAttachDenseElementHole(&obj->as<NativeObject>(), hasOwn,
-                                 /* allowIndexedReceiver = */ true)) {
-    return false;
-  }
-||||||| merged common ancestors
-        if (current == globalLexical) {
-            current = &globalLexical->global();
-        } else {
-            // In the browser the global prototype chain should be immutable.
-            if (!current->staticPrototypeIsImmutable()) {
-                return false;
-            }
-=======
   PropertyResult prop;
   if (!LookupPropertyPure(cx, obj, id, holder.address(), &prop)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Guard that this is a native object.
-  writer.guardIsNativeObject(objId);
-||||||| merged common ancestors
-            JSObject* proto = current->staticPrototype();
-            if (!proto || !proto->is<NativeObject>()) {
-                return false;
-            }
-=======
   if (prop.isNonNativeProperty()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Generate prototype guards if needed. This includes monitoring that
-  // properties were not added in the chain.
-  if (!hasOwn) {
-    GeneratePrototypeHoleGuards(writer, obj, objId,
-                                /* alwaysGuardFirstProto = */ true);
-  }
-||||||| merged common ancestors
-            current = &proto->as<NativeObject>();
-        }
-    }
-=======
   propShape.set(prop.maybeShape());
   if (!IsCacheableSetPropCallScripted(obj, holder, propShape,
                                       isTemporarilyUnoptimizable) &&
       !IsCacheableSetPropCallNative(obj, holder, propShape)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Because of the prototype guard we know that the prototype chain
-  // does not include any dense or sparse (i.e indexed) properties.
-  writer.callObjectHasSparseElementResult(objId, indexId);
-  writer.returnFromIC();
-
-  trackAttached("Sparse");
   return true;
-||||||| merged common ancestors
-    holder.set(current);
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachNamedProp(HandleObject obj,
-                                            ObjOperandId objId, HandleId key,
-                                            ValOperandId keyId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-||||||| merged common ancestors
-bool
-GetNameIRGenerator::tryAttachGlobalNameValue(ObjOperandId objId, HandleId id)
-{
-    if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-        return false;
-    }
-=======
 static void EmitCallSetterNoGuards(CacheIRWriter& writer, JSObject* obj,
                                    JSObject* holder, Shape* shape,
                                    ObjOperandId objId, ValOperandId rhsId) {
@@ -9070,204 +3592,58 @@ AttachDecision SetPropIRGenerator::tryAttachSetter(HandleObject obj,
   // require outerizing).
   if (mode_ == ICState::Mode::Specialized || IsWindow(obj)) {
     TestMatchingReceiver(writer, obj, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSObject* holder = nullptr;
-  PropertyResult prop;
-||||||| merged common ancestors
-    Handle<LexicalEnvironmentObject*> globalLexical = env_.as<LexicalEnvironmentObject>();
-    MOZ_ASSERT(globalLexical->isGlobal());
-=======
     if (obj != holder) {
       GeneratePrototypeGuards(writer, obj, holder, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (hasOwn) {
-    if (!LookupOwnPropertyPure(cx_, obj, key, &prop)) {
-      return false;
-||||||| merged common ancestors
-    RootedNativeObject holder(cx_);
-    RootedShape shape(cx_);
-    if (!CanAttachGlobalName(cx_, globalLexical, id, &holder, &shape)) {
-        return false;
-=======
       // Guard on the holder's shape.
       ObjOperandId holderId = writer.loadObject(holder);
       TestMatchingHolder(writer, holder, holderId);
->>>>>>> upstream-releases
     }
   } else {
     writer.guardHasGetterSetter(objId, propShape);
   }
 
-<<<<<<< HEAD
-    holder = obj;
-  } else {
-    if (!LookupPropertyPure(cx_, obj, key, &holder, &prop)) {
-      return false;
-    }
-  }
-  if (!prop) {
-    return false;
-  }
-||||||| merged common ancestors
-    // The property must be found, and it must be found as a normal data property.
-    if (!shape->isDataProperty()) {
-        return false;
-    }
-=======
   EmitCallSetterNoGuards(writer, obj, holder, propShape, objId, rhsId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (tryAttachMegamorphic(objId, keyId)) {
-    return true;
-  }
-  if (tryAttachNative(obj, objId, key, keyId, prop, holder)) {
-    return true;
-  }
-  if (tryAttachUnboxed(obj, objId, key, keyId)) {
-    return true;
-  }
-  if (tryAttachTypedObject(obj, objId, key, keyId)) {
-    return true;
-  }
-  if (tryAttachUnboxedExpando(obj, objId, key, keyId)) {
-    return true;
-  }
-||||||| merged common ancestors
-    // This might still be an uninitialized lexical.
-    if (holder->getSlot(shape->slot()).isMagic()) {
-        return false;
-    }
-=======
   trackAttached("Setter");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return false;
-}
-||||||| merged common ancestors
-    // Instantiate this global property, for use during Ion compilation.
-    if (IsIonEnabled(cx_)) {
-        EnsureTrackPropertyTypes(cx_, holder, id);
-    }
-=======
 AttachDecision SetPropIRGenerator::tryAttachSetArrayLength(HandleObject obj,
                                                            ObjOperandId objId,
                                                            HandleId id,
                                                            ValOperandId rhsId) {
   // Don't attach an array length stub for ops like JSOP_INITELEM.
   MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachMegamorphic(ObjOperandId objId,
-                                              ValOperandId keyId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-||||||| merged common ancestors
-    if (holder == globalLexical) {
-        // There is no need to guard on the shape. Lexical bindings are
-        // non-configurable, and this stub cannot be shared across globals.
-        size_t dynamicSlotOffset = holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-        writer.loadDynamicSlotResult(objId, dynamicSlotOffset);
-    } else {
-        // Check the prototype chain from the global to the holder
-        // prototype. Ignore the global lexical scope as it doesn't figure
-        // into the prototype chain. We guard on the global lexical
-        // scope's shape independently.
-        if (!IsCacheableGetPropReadSlot(&globalLexical->global(), holder, PropertyResult(shape))) {
-            return false;
-        }
-=======
   if (!obj->is<ArrayObject>() || !JSID_IS_ATOM(id, cx_->names().length) ||
       !obj->as<ArrayObject>().lengthIsWritable()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mode_ != ICState::Mode::Megamorphic) {
-    return false;
-  }
-||||||| merged common ancestors
-        // Shape guard for global lexical.
-        writer.guardShape(objId, globalLexical->lastProperty());
-=======
   maybeEmitIdGuard(id);
   writer.guardClass(objId, GuardClassKind::Array);
   writer.callSetArrayLength(objId, IsStrictSetPC(pc_), rhsId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.megamorphicHasPropResult(objId, keyId, hasOwn);
-  writer.returnFromIC();
-  trackAttached("MegamorphicHasProp");
-  return true;
-}
-||||||| merged common ancestors
-        // Guard on the shape of the GlobalObject.
-        ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
-        writer.guardShape(globalId, globalLexical->global().lastProperty());
-=======
   trackAttached("SetArrayLength");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachNative(JSObject* obj, ObjOperandId objId,
-                                         jsid key, ValOperandId keyId,
-                                         PropertyResult prop,
-                                         JSObject* holder) {
-  if (!prop.isNativeProperty()) {
-    return false;
-  }
-||||||| merged common ancestors
-        ObjOperandId holderId = globalId;
-        if (holder != &globalLexical->global()) {
-            // Shape guard holder.
-            holderId = writer.loadObject(holder);
-            writer.guardShape(holderId, holder->lastProperty());
-        }
-=======
 AttachDecision SetPropIRGenerator::tryAttachSetDenseElement(
     HandleObject obj, ObjOperandId objId, uint32_t index,
     Int32OperandId indexId, ValOperandId rhsId) {
   if (!obj->isNative()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!IsCacheableProtoChain(obj, holder)) {
-    return false;
-  }
-||||||| merged common ancestors
-        EmitLoadSlotResult(writer, holderId, holder, shape);
-    }
-=======
   NativeObject* nobj = &obj->as<NativeObject>();
   if (!nobj->containsDenseElement(index) ||
       nobj->getElementsHeader()->isFrozen()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Maybe<ObjOperandId> tempId;
-  emitIdGuard(keyId, key);
-  EmitReadSlotGuard(writer, obj, holder, objId, &tempId);
-  writer.loadBooleanResult(true);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    writer.typeMonitorResult();
-=======
   // Don't optimize INITELEM (DefineProperty) on non-extensible objects: when
   // the elements are sealed, we have to throw an exception. Note that we have
   // to check !isExtensible instead of denseElementsAreSealed because sealing
@@ -9275,67 +3651,18 @@ AttachDecision SetPropIRGenerator::tryAttachSetDenseElement(
   if (IsPropertyInitOp(JSOp(*pc_)) && !nobj->isExtensible()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("NativeHasProp");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("GlobalNameValue");
-    return true;
-}
-=======
   if (typeCheckInfo_.needsTypeBarrier()) {
     writer.guardGroupForTypeBarrier(objId, nobj->group());
   }
   TestMatchingNativeReceiver(writer, nobj, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachUnboxed(JSObject* obj, ObjOperandId objId,
-                                          jsid key, ValOperandId keyId) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetNameIRGenerator::tryAttachGlobalNameGetter(ObjOperandId objId, HandleId id)
-{
-    if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-        return false;
-    }
-=======
   writer.storeDenseElement(objId, indexId, rhsId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const UnboxedLayout::Property* prop =
-      obj->as<UnboxedPlainObject>().layout().lookup(key);
-  if (!prop) {
-    return false;
-  }
-||||||| merged common ancestors
-    Handle<LexicalEnvironmentObject*> globalLexical = env_.as<LexicalEnvironmentObject>();
-    MOZ_ASSERT(globalLexical->isGlobal());
-=======
   // Type inference uses JSID_VOID for the element types.
   typeCheckInfo_.set(nobj->group(), JSID_VOID);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  emitIdGuard(keyId, key);
-  writer.guardGroupForLayout(objId, obj->group());
-  writer.loadBooleanResult(true);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    RootedNativeObject holder(cx_);
-    RootedShape shape(cx_);
-    if (!CanAttachGlobalName(cx_, globalLexical, id, &holder, &shape)) {
-        return false;
-    }
-=======
   trackAttached("SetDenseElement");
   return AttachDecision::Attach;
 }
@@ -9348,85 +3675,29 @@ static bool CanAttachAddElement(NativeObject* obj, bool isInit) {
     if (obj->isIndexed()) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("UnboxedHasProp");
-  return true;
-}
-||||||| merged common ancestors
-    if (holder == globalLexical) {
-        return false;
-    }
-=======
     const Class* clasp = obj->getClass();
     if (clasp != &ArrayObject::class_ &&
         (clasp->getAddProperty() || clasp->getResolve() ||
          clasp->getOpsLookupProperty() || clasp->getOpsSetProperty())) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachUnboxedExpando(JSObject* obj,
-                                                 ObjOperandId objId, jsid key,
-                                                 ValOperandId keyId) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!IsCacheableGetPropCallNative(&globalLexical->global(), holder, shape)) {
-        return false;
-    }
-=======
     // If we're initializing a property instead of setting one, the objects
     // on the prototype are not relevant.
     if (isInit) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-  if (!expando) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (IsIonEnabled(cx_)) {
-        EnsureTrackPropertyTypes(cx_, holder, id);
-    }
-=======
     JSObject* proto = obj->staticPrototype();
     if (!proto) {
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Shape* shape = expando->lookup(cx_, key);
-  if (!shape) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Shape guard for global lexical.
-    writer.guardShape(objId, globalLexical->lastProperty());
-=======
     if (!proto->isNative()) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Maybe<ObjOperandId> tempId;
-  emitIdGuard(keyId, key);
-  EmitReadSlotGuard(writer, obj, obj, objId, &tempId);
-  writer.loadBooleanResult(true);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    // Guard on the shape of the GlobalObject.
-    ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
-    writer.guardShape(globalId, globalLexical->global().lastProperty());
-=======
     // We have to make sure the proto has no non-writable (frozen) elements
     // because we're not allowed to shadow them. There are a few cases to
     // consider:
@@ -9650,95 +3921,26 @@ AttachDecision SetPropIRGenerator::tryAttachSetTypedElement(
   } else {
     writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("UnboxedExpandoHasProp");
-  return true;
-}
-||||||| merged common ancestors
-    if (holder != &globalLexical->global()) {
-        // Shape guard holder.
-        ObjOperandId holderId = writer.loadObject(holder);
-        writer.guardShape(holderId, holder->lastProperty());
-    }
-=======
   writer.storeTypedElement(objId, indexId, rhsId, layout, elementType,
                            handleOutOfBounds);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachTypedArray(HandleObject obj,
-                                             ObjOperandId objId,
-                                             Int32OperandId indexId) {
-  if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
-    return false;
-  }
-||||||| merged common ancestors
-    EmitCallGetterResultNoGuards(writer, &globalLexical->global(), holder, shape, globalId);
-=======
   if (handleOutOfBounds) {
     attachedTypedArrayOOBStub_ = true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-||||||| merged common ancestors
-    trackAttached("GlobalNameGetter");
-    return true;
-}
-=======
   trackAttached(handleOutOfBounds ? "SetTypedElementOOB" : "SetTypedElement");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (IsPrimitiveArrayTypedObject(obj)) {
-    writer.guardGroupForLayout(objId, obj->group());
-  } else {
-    writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
-  }
-||||||| merged common ancestors
-static bool
-NeedEnvironmentShapeGuard(JSObject* envObj)
-{
-    if (!envObj->is<CallObject>()) {
-        return true;
-    }
-=======
 AttachDecision SetPropIRGenerator::tryAttachGenericProxy(
     HandleObject obj, ObjOperandId objId, HandleId id, ValOperandId rhsId,
     bool handleDOMProxies) {
   MOZ_ASSERT(obj->is<ProxyObject>());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.loadTypedElementExistsResult(objId, indexId, layout);
-||||||| merged common ancestors
-    // We can skip a guard on the call object if the script's bindings are
-    // guaranteed to be immutable (and thus cannot introduce shadowing
-    // variables). The function might have been relazified under rare
-    // conditions. In that case, we pessimistically create the guard.
-    CallObject* callObj = &envObj->as<CallObject>();
-    JSFunction* fun = &callObj->callee();
-    if (!fun->hasScript() || fun->nonLazyScript()->funHasExtensibleScope()) {
-        return true;
-    }
-=======
   writer.guardIsProxy(objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.returnFromIC();
-
-  trackAttached("TypedArrayObject");
-  return true;
-||||||| merged common ancestors
-    return false;
-=======
   if (!handleDOMProxies) {
     // Ensure that the incoming object is not a DOM proxy, so that we can
     // get to the specialized stubs. If handleDOMProxies is true, we were
@@ -9762,118 +3964,30 @@ AttachDecision SetPropIRGenerator::tryAttachGenericProxy(
 
   trackAttached("GenericProxy");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachTypedObject(JSObject* obj, ObjOperandId objId,
-                                              jsid key, ValOperandId keyId) {
-  if (!obj->is<TypedObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GetNameIRGenerator::tryAttachEnvironmentName(ObjOperandId objId, HandleId id)
-{
-    if (IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-        return false;
-    }
-=======
 AttachDecision SetPropIRGenerator::tryAttachDOMProxyShadowed(
     HandleObject obj, ObjOperandId objId, HandleId id, ValOperandId rhsId) {
   MOZ_ASSERT(IsCacheableDOMProxy(obj));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!obj->as<TypedObject>().typeDescr().hasProperty(cx_->names(), key)) {
-    return false;
-  }
-
-  emitIdGuard(keyId, key);
-  writer.guardGroupForLayout(objId, obj->group());
-  writer.loadBooleanResult(true);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    RootedObject env(cx_, env_);
-    RootedShape shape(cx_);
-    RootedNativeObject holder(cx_);
-
-    while (env) {
-        if (env->is<GlobalObject>()) {
-            shape = env->as<GlobalObject>().lookup(cx_, id);
-            if (shape) {
-                break;
-            }
-            return false;
-        }
-=======
   maybeEmitIdGuard(id);
   TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
   writer.callProxySet(objId, id, rhsId, IsStrictSetPC(pc_));
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("TypedObjectHasProp");
-  return true;
-}
-||||||| merged common ancestors
-        if (!env->is<EnvironmentObject>() || env->is<WithEnvironmentObject>()) {
-            return false;
-        }
-=======
   trackAttached("DOMProxyShadowed");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachSlotDoesNotExist(JSObject* obj,
-                                                   ObjOperandId objId, jsid key,
-                                                   ValOperandId keyId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-||||||| merged common ancestors
-        MOZ_ASSERT(!env->hasUncacheableProto());
-=======
 AttachDecision SetPropIRGenerator::tryAttachDOMProxyUnshadowed(
     HandleObject obj, ObjOperandId objId, HandleId id, ValOperandId rhsId) {
   MOZ_ASSERT(IsCacheableDOMProxy(obj));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  emitIdGuard(keyId, key);
-  if (hasOwn) {
-    Maybe<ObjOperandId> tempId;
-    TestMatchingReceiver(writer, obj, objId, &tempId);
-  } else {
-    Maybe<ObjOperandId> tempId;
-    EmitReadSlotGuard(writer, obj, nullptr, objId, &tempId);
-  }
-  writer.loadBooleanResult(false);
-  writer.returnFromIC();
-||||||| merged common ancestors
-        // Check for an 'own' property on the env. There is no need to
-        // check the prototype as non-with scopes do not inherit properties
-        // from any prototype.
-        shape = env->as<NativeObject>().lookup(cx_, id);
-        if (shape) {
-            break;
-        }
-=======
   RootedObject proto(cx_, obj->staticPrototype());
   if (!proto) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("DoesNotExist");
-  return true;
-}
-||||||| merged common ancestors
-        env = env->enclosingEnvironment();
-    }
-=======
   RootedObject holder(cx_);
   RootedShape propShape(cx_);
   bool isTemporarilyUnoptimizable = false;
@@ -9882,150 +3996,32 @@ AttachDecision SetPropIRGenerator::tryAttachDOMProxyUnshadowed(
     return isTemporarilyUnoptimizable ? AttachDecision::TemporarilyUnoptimizable
                                       : AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachDoesNotExist(HandleObject obj,
-                                               ObjOperandId objId, HandleId key,
-                                               ValOperandId keyId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-  // Check that property doesn't exist on |obj| or it's prototype chain. These
-  // checks allow Native/Unboxed/Typed objects with a NativeObject prototype
-  // chain. They return false if unknown such as resolve hooks or proxies.
-  if (hasOwn) {
-    if (!CheckHasNoSuchOwnProperty(cx_, obj, key)) {
-      return false;
-    }
-  } else {
-    if (!CheckHasNoSuchProperty(cx_, obj, key)) {
-      return false;
-    }
-  }
-||||||| merged common ancestors
-    holder = &env->as<NativeObject>();
-    if (!IsCacheableGetPropReadSlot(holder, holder, PropertyResult(shape))) {
-        return false;
-    }
-    if (holder->getSlot(shape->slot()).isMagic()) {
-        return false;
-    }
-=======
   maybeEmitIdGuard(id);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (tryAttachMegamorphic(objId, keyId)) {
-    return true;
-  }
-  if (tryAttachSlotDoesNotExist(obj, objId, key, keyId)) {
-    return true;
-  }
-||||||| merged common ancestors
-    ObjOperandId lastObjId = objId;
-    env = env_;
-    while (env) {
-        if (NeedEnvironmentShapeGuard(env)) {
-            writer.guardShape(lastObjId, env->maybeShape());
-        }
-=======
   // Guard that our expando object hasn't started shadowing this property.
   TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
   CheckDOMProxyExpandoDoesNotShadow(writer, obj, id, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return false;
-}
-||||||| merged common ancestors
-        if (env == holder) {
-            break;
-        }
-=======
   GeneratePrototypeGuards(writer, obj, holder, objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachProxyElement(HandleObject obj,
-                                               ObjOperandId objId,
-                                               ValOperandId keyId) {
-  bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-||||||| merged common ancestors
-        lastObjId = writer.loadEnclosingEnvironment(lastObjId);
-        env = env->enclosingEnvironment();
-    }
-=======
   // Guard on the holder of the property.
   ObjOperandId holderId = writer.loadObject(holder);
   TestMatchingHolder(writer, holder, holderId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!obj->is<ProxyObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (holder->isFixedSlot(shape->slot())) {
-        writer.loadEnvironmentFixedSlotResult(lastObjId, NativeObject::getFixedSlotOffset(shape->slot()));
-    } else {
-        size_t dynamicSlotOffset = holder->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-        writer.loadEnvironmentDynamicSlotResult(lastObjId, dynamicSlotOffset);
-    }
-    writer.typeMonitorResult();
-=======
   // EmitCallSetterNoGuards expects |obj| to be the object the property is
   // on to do some checks. Since we actually looked at proto, and no extra
   // guards will be generated, we can just pass that instead.
   EmitCallSetterNoGuards(writer, proto, holder, propShape, objId, rhsId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.guardIsProxy(objId);
-  writer.callProxyHasPropResult(objId, keyId, hasOwn);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    trackAttached("EnvironmentName");
-    return true;
-}
-=======
   trackAttached("DOMProxyUnshadowed");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("ProxyHasProp");
-  return true;
-}
-||||||| merged common ancestors
-void
-GetNameIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("base", ObjectValue(*env_));
-        sp.valueProperty("property", StringValue(name_));
-    }
-#endif
-}
-=======
 AttachDecision SetPropIRGenerator::tryAttachDOMProxyExpando(
     HandleObject obj, ObjOperandId objId, HandleId id, ValOperandId rhsId) {
   MOZ_ASSERT(IsCacheableDOMProxy(obj));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool HasPropIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::In || cacheKind_ == CacheKind::HasOwn);
-||||||| merged common ancestors
-BindNameIRGenerator::BindNameIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                         ICState::Mode mode, HandleObject env,
-                                         HandlePropertyName name)
-  : IRGenerator(cx, script, pc, CacheKind::BindName, mode),
-    env_(env),
-    name_(name)
-{}
-=======
   RootedValue expandoVal(cx_, GetProxyPrivate(obj));
   RootedObject expandoObj(cx_);
   if (expandoVal.isObject()) {
@@ -10040,31 +4036,14 @@ BindNameIRGenerator::BindNameIRGenerator(JSContext* cx, HandleScript script, jsb
   }
 
   bool isTemporarilyUnoptimizable = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AutoAssertNoPendingException aanpe(cx_);
-||||||| merged common ancestors
-bool
-BindNameIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::BindName);
-=======
   RootedShape propShape(cx_);
   if (CanAttachNativeSetSlot(cx_, JSOp(*pc_), expandoObj, id,
                              &isTemporarilyUnoptimizable, &propShape)) {
     maybeEmitIdGuard(id);
     ObjOperandId expandoObjId =
         guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // NOTE: Argument order is PROPERTY, OBJECT
-  ValOperandId keyId(writer.setInputOperandId(0));
-  ValOperandId valId(writer.setInputOperandId(1));
-||||||| merged common ancestors
-    AutoAssertNoPendingException aanpe(cx_);
-=======
     NativeObject* nativeExpandoObj = &expandoObj->as<NativeObject>();
     writer.guardGroupForTypeBarrier(expandoObjId, nativeExpandoObj->group());
     typeCheckInfo_.set(nativeExpandoObj->group(), id);
@@ -10083,19 +4062,7 @@ BindNameIRGenerator::tryAttachStub()
     // |this|.
     maybeEmitIdGuard(id);
     guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!val_.isObject()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-  RootedObject obj(cx_, &val_.toObject());
-  ObjOperandId objId = writer.guardIsObject(valId);
-||||||| merged common ancestors
-    ObjOperandId envId(writer.setInputOperandId(0));
-    RootedId id(cx_, NameToId(name_));
-=======
     MOZ_ASSERT(holder == expandoObj);
     EmitCallSetterNoGuards(writer, expandoObj, expandoObj, propShape, objId,
                            rhsId);
@@ -10236,28 +4203,7 @@ bool SetPropIRGenerator::canAttachAddSlotStub(HandleObject obj, HandleId id) {
   // allocation.
   if (obj->is<JSFunction>() && JSID_IS_ATOM(id, cx_->names().prototype)) {
     MOZ_ASSERT(ClassMayResolveId(cx_->names(), obj->getClass(), id, obj));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Optimize Proxies
-  if (tryAttachProxyElement(obj, objId, keyId)) {
-    return true;
-  }
-
-  RootedId id(cx_);
-  bool nameOrSymbol;
-  if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-    cx_->clearPendingException();
-    return false;
-  }
-
-  if (nameOrSymbol) {
-    if (tryAttachNamedProp(obj, objId, id, keyId)) {
-      return true;
-||||||| merged common ancestors
-    if (tryAttachGlobalName(envId, id)) {
-        return true;
-=======
     // We check group->maybeInterpretedFunction() here and guard on the
     // group. The group is unique for a particular function so this ensures
     // we don't add the default prototype property to functions that don't
@@ -10266,15 +4212,7 @@ bool SetPropIRGenerator::canAttachAddSlotStub(HandleObject obj, HandleId id) {
     if (!obj->group()->maybeInterpretedFunction() ||
         !fun->needsPrototypeProperty()) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (tryAttachDoesNotExist(obj, objId, id, keyId)) {
-      return true;
-||||||| merged common ancestors
-    if (tryAttachEnvironmentName(envId, id)) {
-        return true;
-=======
 
     // If property exists this isn't an "add"
     if (fun->lookupPure(id)) {
@@ -10288,7 +4226,6 @@ bool SetPropIRGenerator::canAttachAddSlotStub(HandleObject obj, HandleId id) {
     }
     if (prop) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
@@ -10297,19 +4234,6 @@ bool SetPropIRGenerator::canAttachAddSlotStub(HandleObject obj, HandleId id) {
     return false;
   }
 
-<<<<<<< HEAD
-  uint32_t index;
-  Int32OperandId indexId;
-  if (maybeGuardInt32Index(idVal_, keyId, &index, &indexId)) {
-    if (tryAttachDense(obj, objId, index, indexId)) {
-      return true;
-||||||| merged common ancestors
-bool
-BindNameIRGenerator::tryAttachGlobalName(ObjOperandId objId, HandleId id)
-{
-    if (!IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-        return false;
-=======
   // Also watch out for addProperty hooks. Ignore the Array addProperty hook,
   // because it doesn't do anything for non-index properties.
   DebugOnly<uint32_t> index;
@@ -10324,102 +4248,7 @@ BindNameIRGenerator::tryAttachGlobalName(ObjOperandId objId, HandleId id)
        proto = proto->staticPrototype()) {
     if (!proto->isNative()) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (tryAttachDenseHole(obj, objId, index, indexId)) {
-      return true;
-    }
-    if (tryAttachTypedArray(obj, objId, indexId)) {
-      return true;
-    }
-    if (tryAttachSparse(obj, objId, indexId)) {
-      return true;
-    }
-||||||| merged common ancestors
-
-    Handle<LexicalEnvironmentObject*> globalLexical = env_.as<LexicalEnvironmentObject>();
-    MOZ_ASSERT(globalLexical->isGlobal());
-
-    JSObject* result = nullptr;
-    if (Shape* shape = globalLexical->lookup(cx_, id)) {
-        // If this is an uninitialized lexical or a const, we need to return a
-        // RuntimeLexicalErrorObject.
-        if (globalLexical->getSlot(shape->slot()).isMagic() || !shape->writable()) {
-            return false;
-        }
-        result = globalLexical;
-    } else {
-        result = &globalLexical->global();
-    }
-
-    if (result == globalLexical) {
-        // Lexical bindings are non-configurable so we can just return the
-        // global lexical.
-        writer.loadObjectResult(objId);
-    } else {
-        // If the property exists on the global and is non-configurable, it cannot be
-        // shadowed by the lexical scope so we can just return the global without a
-        // shape guard.
-        Shape* shape = result->as<GlobalObject>().lookup(cx_, id);
-        if (!shape || shape->configurable()) {
-            writer.guardShape(objId, globalLexical->lastProperty());
-        }
-        ObjOperandId globalId = writer.loadEnclosingEnvironment(objId);
-        writer.loadObjectResult(globalId);
-    }
-    writer.returnFromIC();
-
-    trackAttached("GlobalName");
-    return true;
-}
-
-bool
-BindNameIRGenerator::tryAttachEnvironmentName(ObjOperandId objId, HandleId id)
-{
-    if (IsGlobalOp(JSOp(*pc_)) || script_->hasNonSyntacticScope()) {
-        return false;
-    }
-
-    RootedObject env(cx_, env_);
-    RootedShape shape(cx_);
-    while (true) {
-        if (!env->is<GlobalObject>() && !env->is<EnvironmentObject>()) {
-            return false;
-        }
-        if (env->is<WithEnvironmentObject>()) {
-            return false;
-        }
-
-        MOZ_ASSERT(!env->hasUncacheableProto());
-
-        // When we reach an unqualified variables object (like the global) we
-        // have to stop looking and return that object.
-        if (env->isUnqualifiedVarObj()) {
-            break;
-        }
-
-        // Check for an 'own' property on the env. There is no need to
-        // check the prototype as non-with scopes do not inherit properties
-        // from any prototype.
-        shape = env->as<NativeObject>().lookup(cx_, id);
-        if (shape) {
-            break;
-        }
-
-        env = env->enclosingEnvironment();
-    }
-
-    // If this is an uninitialized lexical or a const, we need to return a
-    // RuntimeLexicalErrorObject.
-    RootedNativeObject holder(cx_, &env->as<NativeObject>());
-    if (shape &&
-        holder->is<EnvironmentObject>() &&
-        (holder->getSlot(shape->slot()).isMagic() || !shape->writable()))
-    {
-        return false;
-    }
-=======
 
     // If prototype defines this property in a non-plain way, don't optimize.
     Shape* protoShape = proto->as<NativeObject>().lookup(cx_, id);
@@ -10600,30 +4429,7 @@ AttachDecision InstanceOfIRGenerator::tryAttachStub() {
     trackAttached(IRGenerator::NotAttached);
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-||||||| merged common ancestors
-    ObjOperandId lastObjId = objId;
-    env = env_;
-    while (env) {
-        if (NeedEnvironmentShapeGuard(env) && !env->is<GlobalObject>()) {
-            writer.guardShape(lastObjId, env->maybeShape());
-        }
-
-        if (env == holder) {
-            break;
-        }
-
-        lastObjId = writer.loadEnclosingEnvironment(lastObjId);
-        env = env->enclosingEnvironment();
-    }
-    writer.loadObjectResult(lastObjId);
-    writer.returnFromIC();
-=======
   Value funProto = cx_->global()->getPrototype(JSProto_Function);
   if (!funProto.isObject() || fun->staticPrototype() != &funProto.toObject()) {
     trackAttached(IRGenerator::NotAttached);
@@ -10638,15 +4444,7 @@ AttachDecision InstanceOfIRGenerator::tryAttachStub() {
   }
 
   uint32_t slot = shape->slot();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-||||||| merged common ancestors
-    trackAttached("EnvironmentName");
-    return true;
-=======
   MOZ_ASSERT(fun->numFixedSlots() == 0, "Stub code relies on this");
   if (!fun->getSlot(slot).isObject()) {
     trackAttached(IRGenerator::NotAttached);
@@ -10673,101 +4471,17 @@ AttachDecision InstanceOfIRGenerator::tryAttachStub() {
   writer.returnFromIC();
   trackAttached("InstanceOf");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void HasPropIRGenerator::trackAttached(const char* name) {
-||||||| merged common ancestors
-void
-BindNameIRGenerator::trackAttached(const char* name)
-{
-=======
 void InstanceOfIRGenerator::trackAttached(const char* name) {
->>>>>>> upstream-releases
 #ifdef JS_CACHEIR_SPEW
-<<<<<<< HEAD
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("base", val_);
-    sp.valueProperty("property", idVal_);
-  }
-||||||| merged common ancestors
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("base", ObjectValue(*env_));
-        sp.valueProperty("property", StringValue(name_));
-    }
-=======
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
     sp.valueProperty("lhs", lhsVal_);
     sp.valueProperty("rhs", ObjectValue(*rhsObj_));
   }
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-bool IRGenerator::maybeGuardInt32Index(const Value& index, ValOperandId indexId,
-                                       uint32_t* int32Index,
-                                       Int32OperandId* int32IndexId) {
-  if (index.isNumber()) {
-    int32_t indexSigned;
-    if (index.isInt32()) {
-      indexSigned = index.toInt32();
-    } else {
-      // We allow negative zero here.
-      if (!mozilla::NumberEqualsInt32(index.toDouble(), &indexSigned)) {
-        return false;
-      }
-    }
-||||||| merged common ancestors
-HasPropIRGenerator::HasPropIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                       ICState::Mode mode, CacheKind cacheKind,
-                                       HandleValue idVal, HandleValue val)
-  : IRGenerator(cx, script, pc, cacheKind, mode),
-    val_(val),
-    idVal_(idVal)
-{ }
-
-bool
-HasPropIRGenerator::tryAttachDense(HandleObject obj, ObjOperandId objId,
-                                   uint32_t index, Int32OperandId indexId)
-{
-    if (!obj->isNative()) {
-        return false;
-    }
-
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (!nobj->containsDenseElement(index)) {
-        return false;
-    }
-
-    // Guard shape to ensure object class is NativeObject.
-    TestMatchingNativeReceiver(writer, nobj, objId);
-    writer.loadDenseElementExistsResult(objId, indexId);
-    writer.returnFromIC();
-
-    trackAttached("DenseHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachDenseHole(HandleObject obj, ObjOperandId objId,
-                                       uint32_t index, Int32OperandId indexId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    if (!obj->isNative()) {
-        return false;
-    }
-
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (nobj->containsDenseElement(index)) {
-        return false;
-    }
-    if (!CanAttachDenseElementHole(nobj, hasOwn)) {
-        return false;
-    }
-=======
 TypeOfIRGenerator::TypeOfIRGenerator(JSContext* cx, HandleScript script,
                                      jsbytecode* pc, ICState::Mode mode,
                                      HandleValue value)
@@ -10799,24 +4513,7 @@ AttachDecision TypeOfIRGenerator::tryAttachPrimitive(ValOperandId valId) {
   if (!val_.isPrimitive()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (indexSigned < 0) {
-      return false;
-    }
-||||||| merged common ancestors
-    // Guard shape to ensure class is NativeObject and to prevent non-dense
-    // elements being added. Also ensures prototype doesn't change if dynamic
-    // checks aren't emitted.
-    TestMatchingNativeReceiver(writer, nobj, objId);
-
-    // Generate prototype guards if needed. This includes monitoring that
-    // properties were not added in the chain.
-    if (!hasOwn) {
-        GeneratePrototypeHoleGuards(writer, nobj, objId);
-    }
-=======
   if (val_.isNumber()) {
     writer.guardIsNumber(valId);
   } else {
@@ -10828,21 +4525,7 @@ AttachDecision TypeOfIRGenerator::tryAttachPrimitive(ValOperandId valId) {
   trackAttached("Primitive");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    *int32Index = uint32_t(indexSigned);
-    *int32IndexId = writer.guardIsInt32Index(indexId);
-    return true;
-  }
-||||||| merged common ancestors
-    writer.loadDenseElementHoleExistsResult(objId, indexId);
-    writer.returnFromIC();
-
-    trackAttached("DenseHasPropHole");
-    return true;
-}
-=======
 AttachDecision TypeOfIRGenerator::tryAttachObject(ValOperandId valId) {
   if (!val_.isObject()) {
     return AttachDecision::NoAction;
@@ -10854,33 +4537,7 @@ AttachDecision TypeOfIRGenerator::tryAttachObject(ValOperandId valId) {
   trackAttached("Object");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (index.isString()) {
-    int32_t indexSigned = GetIndexFromString(index.toString());
-    if (indexSigned < 0) {
-      return false;
-    }
-||||||| merged common ancestors
-bool
-HasPropIRGenerator::tryAttachSparse(HandleObject obj, ObjOperandId objId,
-                                    Int32OperandId indexId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    if (!obj->isNative()) {
-        return false;
-    }
-    if (!obj->as<NativeObject>().isIndexed()) {
-        return false;
-    }
-    if (!CanAttachDenseElementHole(&obj->as<NativeObject>(), hasOwn,
-        /* allowIndexedReceiver = */ true))
-    {
-        return false;
-    }
-=======
 GetIteratorIRGenerator::GetIteratorIRGenerator(JSContext* cx,
                                                HandleScript script,
                                                jsbytecode* pc,
@@ -10890,93 +4547,7 @@ GetIteratorIRGenerator::GetIteratorIRGenerator(JSContext* cx,
 
 AttachDecision GetIteratorIRGenerator::tryAttachStub() {
   MOZ_ASSERT(cacheKind_ == CacheKind::GetIterator);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    StringOperandId strId = writer.guardIsString(indexId);
-    *int32Index = uint32_t(indexSigned);
-    *int32IndexId = writer.guardAndGetIndexFromString(strId);
-    return true;
-  }
-
-  return false;
-}
-
-SetPropIRGenerator::SetPropIRGenerator(
-    JSContext* cx, HandleScript script, jsbytecode* pc, CacheKind cacheKind,
-    ICState::Mode mode, bool* isTemporarilyUnoptimizable, HandleValue lhsVal,
-    HandleValue idVal, HandleValue rhsVal, bool needsTypeBarrier,
-    bool maybeHasExtraIndexedProps)
-    : IRGenerator(cx, script, pc, cacheKind, mode),
-      lhsVal_(lhsVal),
-      idVal_(idVal),
-      rhsVal_(rhsVal),
-      isTemporarilyUnoptimizable_(isTemporarilyUnoptimizable),
-      typeCheckInfo_(cx, needsTypeBarrier),
-      preliminaryObjectAction_(PreliminaryObjectAction::None),
-      attachedTypedArrayOOBStub_(false),
-      maybeHasExtraIndexedProps_(maybeHasExtraIndexedProps) {}
-
-bool SetPropIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-
-  ValOperandId objValId(writer.setInputOperandId(0));
-  ValOperandId rhsValId;
-  if (cacheKind_ == CacheKind::SetProp) {
-    rhsValId = ValOperandId(writer.setInputOperandId(1));
-  } else {
-    MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-    MOZ_ASSERT(setElemKeyValueId().id() == 1);
-    writer.setInputOperandId(1);
-    rhsValId = ValOperandId(writer.setInputOperandId(2));
-  }
-
-  RootedId id(cx_);
-  bool nameOrSymbol;
-  if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-    cx_->clearPendingException();
-    return false;
-  }
-||||||| merged common ancestors
-    // Guard that this is a native object.
-    writer.guardIsNativeObject(objId);
-
-    // Generate prototype guards if needed. This includes monitoring that
-    // properties were not added in the chain.
-    if (!hasOwn) {
-        // If GeneratePrototypeHoleGuards below won't add guards for prototype,
-        // we should add our own since we aren't guarding shape.
-        if (!obj->hasUncacheableProto()) {
-            GuardGroupProto(writer, obj, objId);
-        }
-
-        GeneratePrototypeHoleGuards(writer, obj, objId);
-    }
-
-    // Because of the prototype guard we know that the prototype chain
-    // does not include any dense or sparse (i.e indexed) properties.
-    writer.callObjectHasSparseElementResult(objId, indexId);
-    writer.returnFromIC();
-
-    trackAttached("Sparse");
-    return true;
-}
-
-
-bool
-HasPropIRGenerator::tryAttachNamedProp(HandleObject obj, ObjOperandId objId,
-                                       HandleId key, ValOperandId keyId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    JSObject* holder = nullptr;
-    PropertyResult prop;
-
-    if (hasOwn) {
-        if (!LookupOwnPropertyPure(cx_, obj, key, &prop)) {
-            return false;
-        }
-=======
   AutoAssertNoPendingException aanpe(cx_);
 
   if (mode_ == ICState::Mode::Megamorphic) {
@@ -11007,329 +4578,10 @@ AttachDecision GetIteratorIRGenerator::tryAttachNativeIterator(
   }
 
   MOZ_ASSERT(obj->isNative());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (lhsVal_.isObject()) {
-    RootedObject obj(cx_, &lhsVal_.toObject());
-||||||| merged common ancestors
-        holder = obj;
-    } else {
-        if (!LookupPropertyPure(cx_, obj, key, &holder, &prop)) {
-            return false;
-        }
-    }
-    if (!prop) {
-        return false;
-    }
-=======
   // Guard on the receiver's shape.
   TestMatchingNativeReceiver(writer, &obj->as<NativeObject>(), objId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ObjOperandId objId = writer.guardIsObject(objValId);
-    if (IsPropertySetOp(JSOp(*pc_))) {
-      if (tryAttachMegamorphicSetElement(obj, objId, rhsValId)) {
-        return true;
-      }
-    }
-    if (nameOrSymbol) {
-      if (tryAttachNativeSetSlot(obj, objId, id, rhsValId)) {
-        return true;
-      }
-      if (tryAttachUnboxedExpandoSetSlot(obj, objId, id, rhsValId)) {
-        return true;
-      }
-      if (tryAttachUnboxedProperty(obj, objId, id, rhsValId)) {
-        return true;
-      }
-      if (tryAttachTypedObjectProperty(obj, objId, id, rhsValId)) {
-        return true;
-      }
-      if (IsPropertySetOp(JSOp(*pc_))) {
-        if (tryAttachSetArrayLength(obj, objId, id, rhsValId)) {
-          return true;
-        }
-        if (tryAttachSetter(obj, objId, id, rhsValId)) {
-          return true;
-        }
-        if (tryAttachWindowProxy(obj, objId, id, rhsValId)) {
-          return true;
-        }
-        if (tryAttachProxy(obj, objId, id, rhsValId)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    if (IsPropertySetOp(JSOp(*pc_))) {
-      if (tryAttachProxyElement(obj, objId, rhsValId)) {
-        return true;
-      }
-||||||| merged common ancestors
-    if (tryAttachMegamorphic(objId, keyId)) {
-        return true;
-    }
-    if (tryAttachNative(obj, objId, key, keyId, prop, holder)) {
-        return true;
-    }
-    if (tryAttachUnboxed(obj, objId, key, keyId)) {
-        return true;
-    }
-    if (tryAttachTypedObject(obj, objId, key, keyId)) {
-        return true;
-    }
-    if (tryAttachUnboxedExpando(obj, objId, key, keyId)) {
-        return true;
-    }
-
-    return false;
-}
-
-bool
-HasPropIRGenerator::tryAttachMegamorphic(ObjOperandId objId, ValOperandId keyId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    if (mode_ != ICState::Mode::Megamorphic) {
-        return false;
-    }
-
-    writer.megamorphicHasPropResult(objId, keyId, hasOwn);
-    writer.returnFromIC();
-    trackAttached("MegamorphicHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachNative(JSObject* obj, ObjOperandId objId, jsid key,
-                                    ValOperandId keyId, PropertyResult prop, JSObject* holder)
-{
-    if (!prop.isNativeProperty()) {
-        return false;
-    }
-
-    if (!IsCacheableProtoChain(obj, holder)) {
-        return false;
-    }
-
-    Maybe<ObjOperandId> tempId;
-    emitIdGuard(keyId, key);
-    EmitReadSlotGuard(writer, obj, holder, objId, &tempId);
-    writer.loadBooleanResult(true);
-    writer.returnFromIC();
-
-    trackAttached("NativeHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachUnboxed(JSObject* obj, ObjOperandId objId,
-                                     jsid key, ValOperandId keyId)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-
-    const UnboxedLayout::Property* prop = obj->as<UnboxedPlainObject>().layout().lookup(key);
-    if (!prop) {
-        return false;
-    }
-
-    emitIdGuard(keyId, key);
-    writer.guardGroupForLayout(objId, obj->group());
-    writer.loadBooleanResult(true);
-    writer.returnFromIC();
-
-    trackAttached("UnboxedHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachUnboxedExpando(JSObject* obj, ObjOperandId objId,
-                                            jsid key, ValOperandId keyId)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-
-    UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-    if (!expando) {
-        return false;
-    }
-
-    Shape* shape = expando->lookup(cx_, key);
-    if (!shape) {
-        return false;
-    }
-
-    Maybe<ObjOperandId> tempId;
-    emitIdGuard(keyId, key);
-    EmitReadSlotGuard(writer, obj, obj, objId, &tempId);
-    writer.loadBooleanResult(true);
-    writer.returnFromIC();
-
-    trackAttached("UnboxedExpandoHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachTypedArray(HandleObject obj, ObjOperandId objId,
-                                        Int32OperandId indexId)
-{
-    if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
-        return false;
-    }
-
-    TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-
-    if (IsPrimitiveArrayTypedObject(obj)) {
-        writer.guardGroupForLayout(objId, obj->group());
-    } else {
-        writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
-    }
-
-    writer.loadTypedElementExistsResult(objId, indexId, layout);
-
-    writer.returnFromIC();
-
-    trackAttached("TypedArrayObject");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachTypedObject(JSObject* obj, ObjOperandId objId,
-                                         jsid key, ValOperandId keyId)
-{
-    if (!obj->is<TypedObject>()) {
-        return false;
-    }
-
-    if (!obj->as<TypedObject>().typeDescr().hasProperty(cx_->names(), key)) {
-        return false;
-    }
-
-    emitIdGuard(keyId, key);
-    writer.guardGroupForLayout(objId, obj->group());
-    writer.loadBooleanResult(true);
-    writer.returnFromIC();
-
-    trackAttached("TypedObjectHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachSlotDoesNotExist(JSObject* obj, ObjOperandId objId,
-                                              jsid key, ValOperandId keyId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    emitIdGuard(keyId, key);
-    if (hasOwn) {
-        Maybe<ObjOperandId> tempId;
-        TestMatchingReceiver(writer, obj, objId, &tempId);
-    } else {
-        Maybe<ObjOperandId> tempId;
-        EmitReadSlotGuard(writer, obj, nullptr, objId, &tempId);
-    }
-    writer.loadBooleanResult(false);
-    writer.returnFromIC();
-
-    trackAttached("DoesNotExist");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachDoesNotExist(HandleObject obj, ObjOperandId objId,
-                                          HandleId key, ValOperandId keyId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    // Check that property doesn't exist on |obj| or it's prototype chain. These
-    // checks allow Native/Unboxed/Typed objects with a NativeObject prototype
-    // chain. They return false if unknown such as resolve hooks or proxies.
-    if (hasOwn) {
-        if (!CheckHasNoSuchOwnProperty(cx_, obj, key)) {
-            return false;
-        }
-    } else {
-        if (!CheckHasNoSuchProperty(cx_, obj, key)) {
-            return false;
-        }
-    }
-
-    if (tryAttachMegamorphic(objId, keyId)) {
-        return true;
-    }
-    if (tryAttachSlotDoesNotExist(obj, objId, key, keyId)) {
-        return true;
-    }
-
-    return false;
-}
-
-bool
-HasPropIRGenerator::tryAttachProxyElement(HandleObject obj, ObjOperandId objId,
-                                          ValOperandId keyId)
-{
-    bool hasOwn = (cacheKind_ == CacheKind::HasOwn);
-
-    if (!obj->is<ProxyObject>()) {
-        return false;
-    }
-
-    writer.guardIsProxy(objId);
-    writer.callProxyHasPropResult(objId, keyId, hasOwn);
-    writer.returnFromIC();
-
-    trackAttached("ProxyHasProp");
-    return true;
-}
-
-bool
-HasPropIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::In ||
-               cacheKind_ == CacheKind::HasOwn);
-
-    AutoAssertNoPendingException aanpe(cx_);
-
-    // NOTE: Argument order is PROPERTY, OBJECT
-    ValOperandId keyId(writer.setInputOperandId(0));
-    ValOperandId valId(writer.setInputOperandId(1));
-
-    if (!val_.isObject()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-    RootedObject obj(cx_, &val_.toObject());
-    ObjOperandId objId = writer.guardIsObject(valId);
-
-    // Optimize Proxies
-    if (tryAttachProxyElement(obj, objId, keyId)) {
-        return true;
-    }
-
-    RootedId id(cx_);
-    bool nameOrSymbol;
-    if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-        cx_->clearPendingException();
-        return false;
-    }
-
-    if (nameOrSymbol) {
-        if (tryAttachNamedProp(obj, objId, id, keyId)) {
-            return true;
-        }
-        if (tryAttachDoesNotExist(obj, objId, id, keyId)) {
-            return true;
-        }
-
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-=======
   // Ensure the receiver has no dense elements.
   writer.guardNoDenseElements(objId);
 
@@ -12021,253 +5273,10 @@ AttachDecision CallIRGenerator::tryAttachCallNative(HandleFunction calleeFunc) {
     } else {
       // If callee is a class constructor, we have to throw.
       writer.guardNotClassConstructor(calleeObjId);
->>>>>>> upstream-releases
     }
     writer.callAnyNativeFunction(calleeObjId, argcId, flags);
   }
 
-<<<<<<< HEAD
-    uint32_t index;
-    Int32OperandId indexId;
-    if (maybeGuardInt32Index(idVal_, setElemKeyValueId(), &index, &indexId)) {
-      if (tryAttachSetDenseElement(obj, objId, index, indexId, rhsValId)) {
-        return true;
-      }
-      if (tryAttachSetDenseElementHole(obj, objId, index, indexId, rhsValId)) {
-        return true;
-      }
-      if (tryAttachSetTypedElement(obj, objId, index, indexId, rhsValId)) {
-        return true;
-      }
-      if (tryAttachAddOrUpdateSparseElement(obj, objId, index, indexId,
-                                            rhsValId)) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  }
-  return false;
-}
-
-static void EmitStoreSlotAndReturn(CacheIRWriter& writer, ObjOperandId objId,
-                                   NativeObject* nobj, Shape* shape,
-                                   ValOperandId rhsId) {
-  if (nobj->isFixedSlot(shape->slot())) {
-    size_t offset = NativeObject::getFixedSlotOffset(shape->slot());
-    writer.storeFixedSlot(objId, offset, rhsId);
-  } else {
-    size_t offset = nobj->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-    writer.storeDynamicSlot(objId, offset, rhsId);
-  }
-  writer.returnFromIC();
-}
-
-static Shape* LookupShapeForSetSlot(JSOp op, NativeObject* obj, jsid id) {
-  Shape* shape = obj->lookupPure(id);
-  if (!shape || !shape->isDataProperty() || !shape->writable()) {
-    return nullptr;
-  }
-
-  // If this is an op like JSOP_INITELEM / [[DefineOwnProperty]], the
-  // property's attributes may have to be changed too, so make sure it's a
-  // simple data property.
-  if (IsPropertyInitOp(op) &&
-      (!shape->configurable() || !shape->enumerable())) {
-    return nullptr;
-  }
-
-  return shape;
-}
-
-static bool CanAttachNativeSetSlot(JSContext* cx, JSOp op, HandleObject obj,
-                                   HandleId id,
-                                   bool* isTemporarilyUnoptimizable,
-                                   MutableHandleShape propShape) {
-  if (!obj->isNative()) {
-    return false;
-  }
-||||||| merged common ancestors
-    uint32_t index;
-    Int32OperandId indexId;
-    if (maybeGuardInt32Index(idVal_, keyId, &index, &indexId)) {
-        if (tryAttachDense(obj, objId, index, indexId)) {
-            return true;
-        }
-        if (tryAttachDenseHole(obj, objId, index, indexId)) {
-            return true;
-        }
-        if (tryAttachTypedArray(obj, objId, indexId)) {
-            return true;
-        }
-        if (tryAttachSparse(obj, objId, indexId)) {
-            return true;
-        }
-
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-}
-
-void
-HasPropIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("base", val_);
-        sp.valueProperty("property", idVal_);
-    }
-#endif
-}
-
-bool
-IRGenerator::maybeGuardInt32Index(const Value& index, ValOperandId indexId,
-                                  uint32_t* int32Index, Int32OperandId* int32IndexId)
-{
-    if (index.isNumber()) {
-        int32_t indexSigned;
-        if (index.isInt32()) {
-            indexSigned = index.toInt32();
-        } else {
-            // We allow negative zero here.
-            if (!mozilla::NumberEqualsInt32(index.toDouble(), &indexSigned)) {
-                return false;
-            }
-            if (!cx_->runtime()->jitSupportsFloatingPoint) {
-                return false;
-            }
-        }
-
-        if (indexSigned < 0) {
-            return false;
-        }
-
-        *int32Index = uint32_t(indexSigned);
-        *int32IndexId = writer.guardIsInt32Index(indexId);
-        return true;
-    }
-
-    if (index.isString()) {
-        int32_t indexSigned = GetIndexFromString(index.toString());
-        if (indexSigned < 0) {
-            return false;
-        }
-
-        StringOperandId strId = writer.guardIsString(indexId);
-        *int32Index = uint32_t(indexSigned);
-        *int32IndexId = writer.guardAndGetIndexFromString(strId);
-        return true;
-    }
-
-    return false;
-}
-
-SetPropIRGenerator::SetPropIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                       CacheKind cacheKind, ICState::Mode mode,
-                                       bool* isTemporarilyUnoptimizable,
-                                       HandleValue lhsVal, HandleValue idVal, HandleValue rhsVal,
-                                       bool needsTypeBarrier, bool maybeHasExtraIndexedProps)
-  : IRGenerator(cx, script, pc, cacheKind, mode),
-    lhsVal_(lhsVal),
-    idVal_(idVal),
-    rhsVal_(rhsVal),
-    isTemporarilyUnoptimizable_(isTemporarilyUnoptimizable),
-    typeCheckInfo_(cx, needsTypeBarrier),
-    preliminaryObjectAction_(PreliminaryObjectAction::None),
-    attachedTypedArrayOOBStub_(false),
-    maybeHasExtraIndexedProps_(maybeHasExtraIndexedProps)
-{}
-
-bool
-SetPropIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-
-    ValOperandId objValId(writer.setInputOperandId(0));
-    ValOperandId rhsValId;
-    if (cacheKind_ == CacheKind::SetProp) {
-        rhsValId = ValOperandId(writer.setInputOperandId(1));
-    } else {
-        MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-        MOZ_ASSERT(setElemKeyValueId().id() == 1);
-        writer.setInputOperandId(1);
-        rhsValId = ValOperandId(writer.setInputOperandId(2));
-    }
-
-    RootedId id(cx_);
-    bool nameOrSymbol;
-    if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-        cx_->clearPendingException();
-        return false;
-    }
-
-    if (lhsVal_.isObject()) {
-        RootedObject obj(cx_, &lhsVal_.toObject());
-
-        ObjOperandId objId = writer.guardIsObject(objValId);
-        if (IsPropertySetOp(JSOp(*pc_))) {
-            if (tryAttachMegamorphicSetElement(obj, objId, rhsValId)) {
-                return true;
-            }
-        }
-        if (nameOrSymbol) {
-            if (tryAttachNativeSetSlot(obj, objId, id, rhsValId)) {
-                return true;
-            }
-            if (tryAttachUnboxedExpandoSetSlot(obj, objId, id, rhsValId)) {
-                return true;
-            }
-            if (tryAttachUnboxedProperty(obj, objId, id, rhsValId)) {
-                return true;
-            }
-            if (tryAttachTypedObjectProperty(obj, objId, id, rhsValId)) {
-                return true;
-            }
-            if (IsPropertySetOp(JSOp(*pc_))) {
-                if (tryAttachSetArrayLength(obj, objId, id, rhsValId)) {
-                    return true;
-                }
-                if (tryAttachSetter(obj, objId, id, rhsValId)) {
-                    return true;
-                }
-                if (tryAttachWindowProxy(obj, objId, id, rhsValId)) {
-                    return true;
-                }
-                if (tryAttachProxy(obj, objId, id, rhsValId)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        if (IsPropertySetOp(JSOp(*pc_))) {
-            if (tryAttachProxyElement(obj, objId, rhsValId)) {
-                return true;
-            }
-        }
-
-        uint32_t index;
-        Int32OperandId indexId;
-        if (maybeGuardInt32Index(idVal_, setElemKeyValueId(), &index, &indexId)) {
-            if (tryAttachSetDenseElement(obj, objId, index, indexId, rhsValId)) {
-                return true;
-            }
-            if (tryAttachSetDenseElementHole(obj, objId, index, indexId, rhsValId)) {
-                return true;
-            }
-            if (tryAttachSetTypedElement(obj, objId, index, indexId, rhsValId)) {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-    return false;
-}
-=======
   writer.typeMonitorResult();
 
   if (templateObj) {
@@ -12365,36 +5374,7 @@ AttachDecision CallIRGenerator::tryAttachCallHook(HandleObject calleeObj) {
 
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  propShape.set(LookupShapeForSetSlot(op, &obj->as<NativeObject>(), id));
-  if (!propShape) {
-    return false;
-  }
-||||||| merged common ancestors
-static void
-EmitStoreSlotAndReturn(CacheIRWriter& writer, ObjOperandId objId, NativeObject* nobj, Shape* shape,
-                       ValOperandId rhsId)
-{
-    if (nobj->isFixedSlot(shape->slot())) {
-        size_t offset = NativeObject::getFixedSlotOffset(shape->slot());
-        writer.storeFixedSlot(objId, offset, rhsId);
-    } else {
-        size_t offset = nobj->dynamicSlotIndex(shape->slot()) * sizeof(Value);
-        writer.storeDynamicSlot(objId, offset, rhsId);
-    }
-    writer.returnFromIC();
-}
-
-static Shape*
-LookupShapeForSetSlot(JSOp op, NativeObject* obj, jsid id)
-{
-    Shape* shape = obj->lookupPure(id);
-    if (!shape || !shape->isDataProperty() || !shape->writable()) {
-        return nullptr;
-    }
-=======
 AttachDecision CallIRGenerator::tryAttachStub() {
   AutoAssertNoPendingException aanpe(cx_);
 
@@ -12414,87 +5394,14 @@ AttachDecision CallIRGenerator::tryAttachStub() {
     default:
       return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ObjectGroup* group = JSObject::getGroup(cx, obj);
-  if (!group) {
-    cx->recoverFromOutOfMemory();
-    return false;
-  }
-
-  // For some property writes, such as the initial overwrite of global
-  // properties, TI will not mark the property as having been
-  // overwritten. Don't attach a stub in this case, so that we don't
-  // execute another write to the property without TI seeing that write.
-  EnsureTrackPropertyTypes(cx, obj, id);
-  if (!PropertyHasBeenMarkedNonConstant(obj, id)) {
-    *isTemporarilyUnoptimizable = true;
-    return false;
-  }
-||||||| merged common ancestors
-    // If this is an op like JSOP_INITELEM / [[DefineOwnProperty]], the
-    // property's attributes may have to be changed too, so make sure it's a
-    // simple data property.
-    if (IsPropertyInitOp(op) && (!shape->configurable() || !shape->enumerable())) {
-        return nullptr;
-    }
-=======
   MOZ_ASSERT(mode_ != ICState::Mode::Generic);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-}
-||||||| merged common ancestors
-    return shape;
-}
-=======
   // Ensure callee is a function.
   if (!callee_.isObject()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool SetPropIRGenerator::tryAttachNativeSetSlot(HandleObject obj,
-                                                ObjOperandId objId, HandleId id,
-                                                ValOperandId rhsId) {
-  RootedShape propShape(cx_);
-  if (!CanAttachNativeSetSlot(cx_, JSOp(*pc_), obj, id,
-                              isTemporarilyUnoptimizable_, &propShape)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-CanAttachNativeSetSlot(JSContext* cx, JSOp op, HandleObject obj, HandleId id,
-                       bool* isTemporarilyUnoptimizable, MutableHandleShape propShape)
-{
-    if (!obj->isNative()) {
-        return false;
-    }
-
-    propShape.set(LookupShapeForSetSlot(op, &obj->as<NativeObject>(), id));
-    if (!propShape) {
-        return false;
-    }
-
-    ObjectGroup* group = JSObject::getGroup(cx, obj);
-    if (!group) {
-        cx->recoverFromOutOfMemory();
-        return false;
-    }
-
-    // For some property writes, such as the initial overwrite of global
-    // properties, TI will not mark the property as having been
-    // overwritten. Don't attach a stub in this case, so that we don't
-    // execute another write to the property without TI seeing that write.
-    EnsureTrackPropertyTypes(cx, obj, id);
-    if (!PropertyHasBeenMarkedNonConstant(obj, id)) {
-        *isTemporarilyUnoptimizable = true;
-        return false;
-    }
-=======
   RootedObject calleeObj(cx_, &callee_.toObject());
   if (!calleeObj->is<JSFunction>()) {
     return tryAttachCallHook(calleeObj);
@@ -12511,71 +5418,7 @@ CanAttachNativeSetSlot(JSContext* cx, JSOp op, HandleObject obj, HandleId id,
   if (calleeFunc->isNative()) {
     return tryAttachCallNative(calleeFunc);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mode_ == ICState::Mode::Megamorphic && cacheKind_ == CacheKind::SetProp) {
-    writer.megamorphicStoreSlot(objId, JSID_TO_ATOM(id)->asPropertyName(),
-                                rhsId, typeCheckInfo_.needsTypeBarrier());
-    writer.returnFromIC();
-    trackAttached("MegamorphicNativeSlot");
-    return true;
-  }
-
-  maybeEmitIdGuard(id);
-
-  // If we need a property type barrier (always in Baseline, sometimes in
-  // Ion), guard on both the shape and the group. If Ion knows the property
-  // types match, we don't need the group guard.
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (typeCheckInfo_.needsTypeBarrier()) {
-    writer.guardGroupForTypeBarrier(objId, nobj->group());
-  }
-  TestMatchingNativeReceiver(writer, nobj, objId);
-
-  if (IsPreliminaryObject(obj)) {
-    preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-  } else {
-    preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-  }
-||||||| merged common ancestors
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachNativeSetSlot(HandleObject obj, ObjOperandId objId, HandleId id,
-                                           ValOperandId rhsId)
-{
-    RootedShape propShape(cx_);
-    if (!CanAttachNativeSetSlot(cx_, JSOp(*pc_), obj, id, isTemporarilyUnoptimizable_, &propShape)) {
-        return false;
-    }
-
-    if (mode_ == ICState::Mode::Megamorphic && cacheKind_ == CacheKind::SetProp) {
-        writer.megamorphicStoreSlot(objId, JSID_TO_ATOM(id)->asPropertyName(), rhsId,
-                                    typeCheckInfo_.needsTypeBarrier());
-        writer.returnFromIC();
-        trackAttached("MegamorphicNativeSlot");
-        return true;
-    }
-
-    maybeEmitIdGuard(id);
-
-    // If we need a property type barrier (always in Baseline, sometimes in
-    // Ion), guard on both the shape and the group. If Ion knows the property
-    // types match, we don't need the group guard.
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (typeCheckInfo_.needsTypeBarrier()) {
-        writer.guardGroupForTypeBarrier(objId, nobj->group());
-    }
-    TestMatchingNativeReceiver(writer, nobj, objId);
-
-    if (IsPreliminaryObject(obj)) {
-        preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-    } else {
-        preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-    }
-=======
   return AttachDecision::NoAction;
 }
 
@@ -12608,15 +5451,7 @@ static const Class shapeContainerClass = {"ShapeContainer",
                                           JSCLASS_HAS_RESERVED_SLOTS(1)};
 
 static const size_t SHAPE_CONTAINER_SLOT = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typeCheckInfo_.set(nobj->group(), id);
-  EmitStoreSlotAndReturn(writer, objId, nobj, propShape, rhsId);
-||||||| merged common ancestors
-    typeCheckInfo_.set(nobj->group(), id);
-    EmitStoreSlotAndReturn(writer, objId, nobj, propShape, rhsId);
-=======
 JSObject* jit::NewWrapperWithObjectShape(JSContext* cx,
                                          HandleNativeObject obj) {
   MOZ_ASSERT(cx->compartment() != obj->compartment());
@@ -12697,183 +5532,51 @@ AttachDecision CompareIRGenerator::tryAttachSymbol(ValOperandId lhsId,
   if (!lhsVal_.isSymbol() || !rhsVal_.isSymbol()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("NativeSlot");
-  return true;
-}
-||||||| merged common ancestors
-    trackAttached("NativeSlot");
-    return true;
-}
-=======
   SymbolOperandId lhsSymId = writer.guardIsSymbol(lhsId);
   SymbolOperandId rhsSymId = writer.guardIsSymbol(rhsId);
   writer.compareSymbolResult(op_, lhsSymId, rhsSymId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool SetPropIRGenerator::tryAttachUnboxedExpandoSetSlot(HandleObject obj,
-                                                        ObjOperandId objId,
-                                                        HandleId id,
-                                                        ValOperandId rhsId) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-SetPropIRGenerator::tryAttachUnboxedExpandoSetSlot(HandleObject obj, ObjOperandId objId,
-                                                   HandleId id, ValOperandId rhsId)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-=======
   trackAttached("Symbol");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-  if (!expando) {
-    return false;
-  }
-||||||| merged common ancestors
-    UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-    if (!expando) {
-        return false;
-    }
-=======
 AttachDecision CompareIRGenerator::tryAttachStrictDifferentTypes(
     ValOperandId lhsId, ValOperandId rhsId) {
   MOZ_ASSERT(IsEqualityOp(op_));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Shape* propShape = LookupShapeForSetSlot(JSOp(*pc_), expando, id);
-  if (!propShape) {
-    return false;
-  }
-||||||| merged common ancestors
-    Shape* propShape = LookupShapeForSetSlot(JSOp(*pc_), expando, id);
-    if (!propShape) {
-        return false;
-    }
-=======
   if (op_ != JSOP_STRICTEQ && op_ != JSOP_STRICTNE) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-=======
   // Probably can't hit some of these.
   if (SameType(lhsVal_, rhsVal_) ||
       (lhsVal_.isNumber() && rhsVal_.isNumber())) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Maybe<ObjOperandId> expandoId;
-  TestMatchingReceiver(writer, obj, objId, &expandoId);
-||||||| merged common ancestors
-    Maybe<ObjOperandId> expandoId;
-    TestMatchingReceiver(writer, obj, objId, &expandoId);
-=======
   // Compare tags
   ValueTagOperandId lhsTypeId = writer.loadValueTag(lhsId);
   ValueTagOperandId rhsTypeId = writer.loadValueTag(rhsId);
   writer.guardTagNotEqual(lhsTypeId, rhsTypeId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Property types must be added to the unboxed object's group, not the
-  // expando's group (it has unknown properties).
-  typeCheckInfo_.set(obj->group(), id);
-  EmitStoreSlotAndReturn(writer, expandoId.ref(), expando, propShape, rhsId);
-||||||| merged common ancestors
-    // Property types must be added to the unboxed object's group, not the
-    // expando's group (it has unknown properties).
-    typeCheckInfo_.set(obj->group(), id);
-    EmitStoreSlotAndReturn(writer, expandoId.ref(), expando, propShape, rhsId);
-=======
   // Now that we've passed the guard, we know differing types, so return the
   // bool result.
   writer.loadBooleanResult(op_ == JSOP_STRICTNE ? true : false);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("UnboxedExpando");
-  return true;
-||||||| merged common ancestors
-    trackAttached("UnboxedExpando");
-    return true;
-=======
   trackAttached("StrictDifferentTypes");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void EmitGuardUnboxedPropertyType(CacheIRWriter& writer,
-                                         JSValueType propType,
-                                         ValOperandId valId) {
-  if (propType == JSVAL_TYPE_OBJECT) {
-    // Unboxed objects store NullValue as nullptr object.
-    writer.guardIsObjectOrNull(valId);
-  } else {
-    writer.guardType(valId, propType);
-  }
-}
-||||||| merged common ancestors
-static void
-EmitGuardUnboxedPropertyType(CacheIRWriter& writer, JSValueType propType, ValOperandId valId)
-{
-    if (propType == JSVAL_TYPE_OBJECT) {
-        // Unboxed objects store NullValue as nullptr object.
-        writer.guardIsObjectOrNull(valId);
-    } else {
-        writer.guardType(valId, propType);
-    }
-}
-=======
 AttachDecision CompareIRGenerator::tryAttachInt32(ValOperandId lhsId,
                                                   ValOperandId rhsId) {
   if ((!lhsVal_.isInt32() && !lhsVal_.isBoolean()) ||
       (!rhsVal_.isInt32() && !rhsVal_.isBoolean())) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool SetPropIRGenerator::tryAttachUnboxedProperty(HandleObject obj,
-                                                  ObjOperandId objId,
-                                                  HandleId id,
-                                                  ValOperandId rhsId) {
-  if (!obj->is<UnboxedPlainObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-SetPropIRGenerator::tryAttachUnboxedProperty(HandleObject obj, ObjOperandId objId, HandleId id,
-                                             ValOperandId rhsId)
-{
-    if (!obj->is<UnboxedPlainObject>()) {
-        return false;
-    }
-
-    if (!cx_->runtime()->jitSupportsFloatingPoint) {
-        return false;
-    }
-=======
   Int32OperandId lhsIntId = lhsVal_.isBoolean() ? writer.guardIsBoolean(lhsId)
                                                 : writer.guardIsInt32(lhsId);
   Int32OperandId rhsIntId = rhsVal_.isBoolean() ? writer.guardIsBoolean(rhsId)
@@ -12883,67 +5586,20 @@ SetPropIRGenerator::tryAttachUnboxedProperty(HandleObject obj, ObjOperandId objI
   // tryAttachStrictDifferentTypes
   MOZ_ASSERT_IF(op_ == JSOP_STRICTEQ || op_ == JSOP_STRICTNE,
                 lhsVal_.isInt32() == rhsVal_.isInt32());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const UnboxedLayout::Property* property =
-      obj->as<UnboxedPlainObject>().layout().lookup(id);
-  if (!property) {
-    return false;
-  }
-||||||| merged common ancestors
-    const UnboxedLayout::Property* property = obj->as<UnboxedPlainObject>().layout().lookup(id);
-    if (!property) {
-        return false;
-    }
-=======
   writer.compareInt32Result(op_, lhsIntId, rhsIntId);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-  writer.guardGroupForLayout(objId, obj->group());
-  EmitGuardUnboxedPropertyType(writer, property->type, rhsId);
-  writer.storeUnboxedProperty(
-      objId, property->type,
-      UnboxedPlainObject::offsetOfData() + property->offset, rhsId);
-  writer.returnFromIC();
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    writer.guardGroupForLayout(objId, obj->group());
-    EmitGuardUnboxedPropertyType(writer, property->type, rhsId);
-    writer.storeUnboxedProperty(objId, property->type,
-                                UnboxedPlainObject::offsetOfData() + property->offset,
-                                rhsId);
-    writer.returnFromIC();
-=======
   trackAttached(lhsVal_.isBoolean() ? "Boolean" : "Int32");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typeCheckInfo_.set(obj->group(), id);
-  preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-||||||| merged common ancestors
-    typeCheckInfo_.set(obj->group(), id);
-    preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-=======
 AttachDecision CompareIRGenerator::tryAttachNumber(ValOperandId lhsId,
                                                    ValOperandId rhsId) {
   if (!lhsVal_.isNumber() || !rhsVal_.isNumber()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  trackAttached("Unboxed");
-  return true;
-||||||| merged common ancestors
-    trackAttached("Unboxed");
-    return true;
-=======
   writer.guardIsNumber(lhsId);
   writer.guardIsNumber(rhsId);
   writer.compareDoubleResult(op_, lhsId, rhsId);
@@ -12951,40 +5607,8 @@ AttachDecision CompareIRGenerator::tryAttachNumber(ValOperandId lhsId,
 
   trackAttached("Number");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool SetPropIRGenerator::tryAttachTypedObjectProperty(HandleObject obj,
-                                                      ObjOperandId objId,
-                                                      HandleId id,
-                                                      ValOperandId rhsId) {
-  if (!obj->is<TypedObject>()) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-SetPropIRGenerator::tryAttachTypedObjectProperty(HandleObject obj, ObjOperandId objId, HandleId id,
-                                                 ValOperandId rhsId)
-{
-    if (!obj->is<TypedObject>()) {
-        return false;
-    }
-
-    if (!cx_->runtime()->jitSupportsFloatingPoint || cx_->zone()->detachedTypedObjects) {
-        return false;
-    }
-
-    if (!obj->as<TypedObject>().typeDescr().is<StructTypeDescr>()) {
-        return false;
-    }
-
-    StructTypeDescr* structDescr = &obj->as<TypedObject>().typeDescr().as<StructTypeDescr>();
-    size_t fieldIndex;
-    if (!structDescr->fieldIndex(id, &fieldIndex)) {
-        return false;
-    }
-=======
 AttachDecision CompareIRGenerator::tryAttachObjectUndefined(
     ValOperandId lhsId, ValOperandId rhsId) {
   if (!(lhsVal_.isNullOrUndefined() && rhsVal_.isObject()) &&
@@ -13002,31 +5626,11 @@ AttachDecision CompareIRGenerator::tryAttachObjectUndefined(
   ObjOperandId objOperand = writer.guardIsObject(obj);
   writer.compareObjectUndefinedNullResult(op_, objOperand);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (cx_->zone()->detachedTypedObjects) {
-    return false;
-  }
-||||||| merged common ancestors
-    TypeDescr* fieldDescr = &structDescr->fieldDescr(fieldIndex);
-    if (!fieldDescr->is<SimpleTypeDescr>()) {
-        return false;
-    }
-=======
   trackAttached("ObjectUndefined");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!obj->as<TypedObject>().typeDescr().is<StructTypeDescr>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    uint32_t fieldOffset = structDescr->fieldOffset(fieldIndex);
-    TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-=======
 // Handle NumberUndefined comparisons
 AttachDecision CompareIRGenerator::tryAttachNumberUndefined(
     ValOperandId lhsId, ValOperandId rhsId) {
@@ -13034,64 +5638,21 @@ AttachDecision CompareIRGenerator::tryAttachNumberUndefined(
       !(rhsVal_.isUndefined() && lhsVal_.isNumber())) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  StructTypeDescr* structDescr =
-      &obj->as<TypedObject>().typeDescr().as<StructTypeDescr>();
-  size_t fieldIndex;
-  if (!structDescr->fieldIndex(id, &fieldIndex)) {
-    return false;
-  }
-||||||| merged common ancestors
-    maybeEmitIdGuard(id);
-    writer.guardNoDetachedTypedObjects();
-    writer.guardGroupForLayout(objId, obj->group());
-=======
   lhsVal_.isNumber() ? writer.guardIsNumber(lhsId)
                      : writer.guardIsUndefined(lhsId);
   rhsVal_.isNumber() ? writer.guardIsNumber(rhsId)
                      : writer.guardIsUndefined(rhsId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TypeDescr* fieldDescr = &structDescr->fieldDescr(fieldIndex);
-  if (!fieldDescr->is<SimpleTypeDescr>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    typeCheckInfo_.set(obj->group(), id);
-=======
   // Comparing a number with undefined will always be true for NE/STRICTNE,
   // and always be false for other compare ops.
   writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t fieldOffset = structDescr->fieldOffset(fieldIndex);
-  TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-||||||| merged common ancestors
-    // Scalar types can always be stored without a type update stub.
-    if (fieldDescr->is<ScalarTypeDescr>()) {
-        Scalar::Type type = fieldDescr->as<ScalarTypeDescr>().type();
-        writer.storeTypedObjectScalarProperty(objId, fieldOffset, layout, type, rhsId);
-        writer.returnFromIC();
-=======
   trackAttached("NumberUndefined");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  maybeEmitIdGuard(id);
-  writer.guardNoDetachedTypedObjects();
-  writer.guardGroupForLayout(objId, obj->group());
-||||||| merged common ancestors
-        trackAttached("TypedObject");
-        return true;
-    }
-=======
 // Handle Primitive x {undefined,null} equality comparisons
 AttachDecision CompareIRGenerator::tryAttachPrimitiveUndefined(
     ValOperandId lhsId, ValOperandId rhsId) {
@@ -13132,85 +5693,17 @@ AttachDecision CompareIRGenerator::tryAttachPrimitiveUndefined(
         return;
     }
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typeCheckInfo_.set(obj->group(), id);
-||||||| merged common ancestors
-    // For reference types, guard on the RHS type first, so that
-    // StoreTypedObjectReferenceProperty is infallible.
-    ReferenceType type = fieldDescr->as<ReferenceTypeDescr>().type();
-    switch (type) {
-      case ReferenceType::TYPE_ANY:
-        break;
-      case ReferenceType::TYPE_OBJECT:
-        writer.guardIsObjectOrNull(rhsId);
-        break;
-      case ReferenceType::TYPE_STRING:
-        writer.guardType(rhsId, JSVAL_TYPE_STRING);
-        break;
-    }
-=======
   isPrimitive(lhsVal_) ? guardPrimitive(lhsVal_, lhsId)
                        : writer.guardIsNullOrUndefined(lhsId);
   isPrimitive(rhsVal_) ? guardPrimitive(rhsVal_, rhsId)
                        : writer.guardIsNullOrUndefined(rhsId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Scalar types can always be stored without a type update stub.
-  if (fieldDescr->is<ScalarTypeDescr>()) {
-    Scalar::Type type = fieldDescr->as<ScalarTypeDescr>().type();
-    writer.storeTypedObjectScalarProperty(objId, fieldOffset, layout, type,
-                                          rhsId);
-    writer.returnFromIC();
-||||||| merged common ancestors
-    writer.storeTypedObjectReferenceProperty(objId, fieldOffset, layout, type, rhsId);
-    writer.returnFromIC();
-=======
   // Comparing a primitive with undefined/null will always be true for
   // NE/STRICTNE, and always be false for other compare ops.
   writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    trackAttached("TypedObject");
-    return true;
-  }
-
-  // For reference types, guard on the RHS type first, so that
-  // StoreTypedObjectReferenceProperty is infallible.
-  ReferenceType type = fieldDescr->as<ReferenceTypeDescr>().type();
-  switch (type) {
-    case ReferenceType::TYPE_ANY:
-      break;
-    case ReferenceType::TYPE_OBJECT:
-      writer.guardIsObjectOrNull(rhsId);
-      break;
-    case ReferenceType::TYPE_STRING:
-      writer.guardType(rhsId, JSVAL_TYPE_STRING);
-      break;
-  }
-
-  writer.storeTypedObjectReferenceProperty(objId, fieldOffset, layout, type,
-                                           rhsId);
-  writer.returnFromIC();
-
-  trackAttached("TypedObject");
-  return true;
-}
-
-void SetPropIRGenerator::trackAttached(const char* name) {
-||||||| merged common ancestors
-    trackAttached("TypedObject");
-    return true;
-}
-
-void
-SetPropIRGenerator::trackAttached(const char* name)
-{
-=======
   trackAttached("PrimitiveUndefined");
   return AttachDecision::Attach;
 }
@@ -13333,114 +5826,15 @@ AttachDecision CompareIRGenerator::tryAttachStub() {
 }
 
 void CompareIRGenerator::trackAttached(const char* name) {
->>>>>>> upstream-releases
 #ifdef JS_CACHEIR_SPEW
-<<<<<<< HEAD
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.opcodeProperty("op", JSOp(*pc_));
-    sp.valueProperty("base", lhsVal_);
-    sp.valueProperty("property", idVal_);
-    sp.valueProperty("value", rhsVal_);
-  }
-||||||| merged common ancestors
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.opcodeProperty("op", JSOp(*pc_));
-        sp.valueProperty("base", lhsVal_);
-        sp.valueProperty("property", idVal_);
-        sp.valueProperty("value", rhsVal_);
-    }
-=======
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
     sp.valueProperty("lhs", lhsVal_);
     sp.valueProperty("rhs", rhsVal_);
     sp.opcodeProperty("op", op_);
   }
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-static bool IsCacheableSetPropCallNative(JSObject* obj, JSObject* holder,
-                                         Shape* shape) {
-  if (!shape || !IsCacheableProtoChain(obj, holder)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-IsCacheableSetPropCallNative(JSObject* obj, JSObject* holder, Shape* shape)
-{
-    if (!shape || !IsCacheableProtoChain(obj, holder)) {
-        return false;
-    }
-
-    if (!shape->hasSetterValue()) {
-        return false;
-    }
-
-    if (!shape->setterObject() || !shape->setterObject()->is<JSFunction>()) {
-        return false;
-    }
-
-    JSFunction& setter = shape->setterObject()->as<JSFunction>();
-    if (!setter.isNativeWithCppEntry()) {
-        return false;
-    }
-
-    if (setter.isClassConstructor()) {
-        return false;
-    }
-
-    if (setter.hasJitInfo() && !setter.jitInfo()->needsOuterizedThisObject()) {
-        return true;
-    }
-
-    return !IsWindow(obj);
-}
-
-static bool
-IsCacheableSetPropCallScripted(JSObject* obj, JSObject* holder, Shape* shape,
-                               bool* isTemporarilyUnoptimizable = nullptr)
-{
-    if (!shape || !IsCacheableProtoChain(obj, holder)) {
-        return false;
-    }
-
-    if (IsWindow(obj)) {
-        return false;
-    }
-
-    if (!shape->hasSetterValue()) {
-        return false;
-    }
-
-    if (!shape->setterObject() || !shape->setterObject()->is<JSFunction>()) {
-        return false;
-    }
-
-    JSFunction& setter = shape->setterObject()->as<JSFunction>();
-    if (setter.isNativeWithCppEntry()) {
-        return false;
-    }
-
-    // Natives with jit entry can use the scripted path.
-    if (setter.isNativeWithJitEntry()) {
-        return true;
-    }
-
-    if (!setter.hasScript()) {
-        if (isTemporarilyUnoptimizable) {
-            *isTemporarilyUnoptimizable = true;
-        }
-        return false;
-    }
-
-    if (setter.isClassConstructor()) {
-        return false;
-    }
-
-    return true;
-}
-=======
 ToBoolIRGenerator::ToBoolIRGenerator(JSContext* cx, HandleScript script,
                                      jsbytecode* pc, ICState::Mode mode,
                                      HandleValue val)
@@ -13532,37 +5926,12 @@ AttachDecision ToBoolIRGenerator::tryAttachNullOrUndefined() {
   trackAttached("ToBoolNullOrUndefined");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->hasSetterValue()) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-CanAttachSetter(JSContext* cx, jsbytecode* pc, HandleObject obj, HandleId id,
-                MutableHandleObject holder, MutableHandleShape propShape,
-                bool* isTemporarilyUnoptimizable)
-{
-    // Don't attach a setter stub for ops like JSOP_INITELEM.
-    MOZ_ASSERT(IsPropertySetOp(JSOp(*pc)));
-=======
 AttachDecision ToBoolIRGenerator::tryAttachObject() {
   if (!val_.isObject()) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->setterObject() || !shape->setterObject()->is<JSFunction>()) {
-    return false;
-  }
-||||||| merged common ancestors
-    PropertyResult prop;
-    if (!LookupPropertyPure(cx, obj, id, holder.address(), &prop)) {
-        return false;
-    }
-=======
   ValOperandId valId(writer.setInputOperandId(0));
   ObjOperandId objId = writer.guardIsObject(valId);
   writer.loadObjectTruthyResult(objId);
@@ -13570,38 +5939,14 @@ AttachDecision ToBoolIRGenerator::tryAttachObject() {
   trackAttached("ToBoolObject");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFunction& setter = shape->setterObject()->as<JSFunction>();
-  if (!setter.isNativeWithCppEntry()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (prop.isNonNativeProperty()) {
-        return false;
-    }
-=======
 GetIntrinsicIRGenerator::GetIntrinsicIRGenerator(JSContext* cx,
                                                  HandleScript script,
                                                  jsbytecode* pc,
                                                  ICState::Mode mode,
                                                  HandleValue val)
     : IRGenerator(cx, script, pc, CacheKind::GetIntrinsic, mode), val_(val) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (setter.isClassConstructor()) {
-    return false;
-  }
-||||||| merged common ancestors
-    propShape.set(prop.maybeShape());
-    if (!IsCacheableSetPropCallScripted(obj, holder, propShape, isTemporarilyUnoptimizable) &&
-        !IsCacheableSetPropCallNative(obj, holder, propShape))
-    {
-        return false;
-    }
-=======
 void GetIntrinsicIRGenerator::trackAttached(const char* name) {
 #ifdef JS_CACHEIR_SPEW
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
@@ -13609,28 +5954,7 @@ void GetIntrinsicIRGenerator::trackAttached(const char* name) {
   }
 #endif
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (setter.hasJitInfo() && !setter.jitInfo()->needsOuterizedThisObject()) {
-    return true;
-  }
-||||||| merged common ancestors
-    return true;
-}
-
-static void
-EmitCallSetterNoGuards(CacheIRWriter& writer, JSObject* obj, JSObject* holder,
-                       Shape* shape, ObjOperandId objId, ValOperandId rhsId)
-{
-    if (IsCacheableSetPropCallNative(obj, holder, shape)) {
-        JSFunction* target = &shape->setterValue().toObject().as<JSFunction>();
-        MOZ_ASSERT(target->isNativeWithCppEntry());
-        writer.callNativeSetter(objId, target, rhsId);
-        writer.returnFromIC();
-        return;
-    }
-=======
 AttachDecision GetIntrinsicIRGenerator::tryAttachStub() {
   AutoAssertNoPendingException aanpe(cx_);
   writer.loadValueResult(val_);
@@ -13647,18 +5971,7 @@ UnaryArithIRGenerator::UnaryArithIRGenerator(JSContext* cx, HandleScript script,
       op_(op),
       val_(val),
       res_(res) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return !IsWindow(obj);
-||||||| merged common ancestors
-    MOZ_ASSERT(IsCacheableSetPropCallScripted(obj, holder, shape));
-
-    JSFunction* target = &shape->setterValue().toObject().as<JSFunction>();
-    MOZ_ASSERT(target->hasJitEntry());
-    writer.callScriptedSetter(objId, target, rhsId);
-    writer.returnFromIC();
-=======
 void UnaryArithIRGenerator::trackAttached(const char* name) {
 #ifdef JS_CACHEIR_SPEW
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
@@ -13761,29 +6074,8 @@ void BinaryArithIRGenerator::trackAttached(const char* name) {
     sp.valueProperty("lhs", lhs_);
   }
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool IsCacheableSetPropCallScripted(
-    JSObject* obj, JSObject* holder, Shape* shape,
-    bool* isTemporarilyUnoptimizable = nullptr) {
-  if (!shape || !IsCacheableProtoChain(obj, holder)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-SetPropIRGenerator::tryAttachSetter(HandleObject obj, ObjOperandId objId, HandleId id,
-                                    ValOperandId rhsId)
-{
-    RootedObject holder(cx_);
-    RootedShape propShape(cx_);
-    if (!CanAttachSetter(cx_, pc_, obj, id, &holder, &propShape, isTemporarilyUnoptimizable_)) {
-        return false;
-    }
-
-    maybeEmitIdGuard(id);
-=======
 AttachDecision BinaryArithIRGenerator::tryAttachStub() {
   AutoAssertNoPendingException aanpe(cx_);
   // Arithmetic operations with Int32 operands
@@ -14072,86 +6364,23 @@ AttachDecision BinaryArithIRGenerator::tryAttachStringConcat() {
 
   ValOperandId lhsId(writer.setInputOperandId(0));
   ValOperandId rhsId(writer.setInputOperandId(1));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (IsWindow(obj)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Use the megamorphic guard if we're in megamorphic mode, except if |obj|
-    // is a Window as GuardHasGetterSetter doesn't support this yet (Window may
-    // require outerizing).
-    if (mode_ == ICState::Mode::Specialized || IsWindow(obj)) {
-        Maybe<ObjOperandId> expandoId;
-        TestMatchingReceiver(writer, obj, objId, &expandoId);
-=======
   StringOperandId lhsStrId = writer.guardIsString(lhsId);
   StringOperandId rhsStrId = writer.guardIsString(rhsId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->hasSetterValue()) {
-    return false;
-  }
-||||||| merged common ancestors
-        if (obj != holder) {
-            GeneratePrototypeGuards(writer, obj, holder, objId);
-=======
   writer.callStringConcatResult(lhsStrId, rhsStrId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!shape->setterObject() || !shape->setterObject()->is<JSFunction>()) {
-    return false;
-  }
-||||||| merged common ancestors
-            // Guard on the holder's shape.
-            ObjOperandId holderId = writer.loadObject(holder);
-            TestMatchingHolder(writer, holder, holderId);
-        }
-    } else {
-        writer.guardHasGetterSetter(objId, propShape);
-    }
-=======
   writer.returnFromIC();
   trackAttached("BinaryArith.StringConcat");
   return AttachDecision::Attach;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFunction& setter = shape->setterObject()->as<JSFunction>();
-  if (setter.isNativeWithCppEntry()) {
-    return false;
-  }
-||||||| merged common ancestors
-    EmitCallSetterNoGuards(writer, obj, holder, propShape, objId, rhsId);
-=======
 AttachDecision BinaryArithIRGenerator::tryAttachStringObjectConcat() {
   // Only Addition
   if (op_ != JSOP_ADD) {
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Natives with jit entry can use the scripted path.
-  if (setter.isNativeWithJitEntry()) {
-    return true;
-  }
-||||||| merged common ancestors
-    trackAttached("Setter");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachSetArrayLength(HandleObject obj, ObjOperandId objId, HandleId id,
-                                            ValOperandId rhsId)
-{
-    // Don't attach an array length stub for ops like JSOP_INITELEM.
-    MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-=======
   // Check Guards
   if (!(lhs_.isObject() && rhs_.isString()) &&
       !(lhs_.isString() && rhs_.isObject()))
@@ -14159,3738 +6388,7 @@ SetPropIRGenerator::tryAttachSetArrayLength(HandleObject obj, ObjOperandId objId
 
   ValOperandId lhsId(writer.setInputOperandId(0));
   ValOperandId rhsId(writer.setInputOperandId(1));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!setter.hasScript()) {
-    if (isTemporarilyUnoptimizable) {
-      *isTemporarilyUnoptimizable = true;
-    }
-    return false;
-  }
-
-  if (setter.isClassConstructor()) {
-    return false;
-  }
-
-  return true;
-}
-
-static bool CanAttachSetter(JSContext* cx, jsbytecode* pc, HandleObject obj,
-                            HandleId id, MutableHandleObject holder,
-                            MutableHandleShape propShape,
-                            bool* isTemporarilyUnoptimizable) {
-  // Don't attach a setter stub for ops like JSOP_INITELEM.
-  MOZ_ASSERT(IsPropertySetOp(JSOp(*pc)));
-
-  PropertyResult prop;
-  if (!LookupPropertyPure(cx, obj, id, holder.address(), &prop)) {
-    return false;
-  }
-
-  if (prop.isNonNativeProperty()) {
-    return false;
-  }
-
-  propShape.set(prop.maybeShape());
-  if (!IsCacheableSetPropCallScripted(obj, holder, propShape,
-                                      isTemporarilyUnoptimizable) &&
-      !IsCacheableSetPropCallNative(obj, holder, propShape)) {
-    return false;
-  }
-
-  return true;
-}
-
-static void EmitCallSetterNoGuards(CacheIRWriter& writer, JSObject* obj,
-                                   JSObject* holder, Shape* shape,
-                                   ObjOperandId objId, ValOperandId rhsId) {
-  if (IsCacheableSetPropCallNative(obj, holder, shape)) {
-    JSFunction* target = &shape->setterValue().toObject().as<JSFunction>();
-    MOZ_ASSERT(target->isNativeWithCppEntry());
-    writer.callNativeSetter(objId, target, rhsId);
-    writer.returnFromIC();
-    return;
-  }
-
-  MOZ_ASSERT(IsCacheableSetPropCallScripted(obj, holder, shape));
-
-  JSFunction* target = &shape->setterValue().toObject().as<JSFunction>();
-  MOZ_ASSERT(target->hasJitEntry());
-  writer.callScriptedSetter(objId, target, rhsId);
-  writer.returnFromIC();
-}
-
-bool SetPropIRGenerator::tryAttachSetter(HandleObject obj, ObjOperandId objId,
-                                         HandleId id, ValOperandId rhsId) {
-  RootedObject holder(cx_);
-  RootedShape propShape(cx_);
-  if (!CanAttachSetter(cx_, pc_, obj, id, &holder, &propShape,
-                       isTemporarilyUnoptimizable_)) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-
-  // Use the megamorphic guard if we're in megamorphic mode, except if |obj|
-  // is a Window as GuardHasGetterSetter doesn't support this yet (Window may
-  // require outerizing).
-  if (mode_ == ICState::Mode::Specialized || IsWindow(obj)) {
-    Maybe<ObjOperandId> expandoId;
-    TestMatchingReceiver(writer, obj, objId, &expandoId);
-
-    if (obj != holder) {
-      GeneratePrototypeGuards(writer, obj, holder, objId);
-
-      // Guard on the holder's shape.
-      ObjOperandId holderId = writer.loadObject(holder);
-      TestMatchingHolder(writer, holder, holderId);
-    }
-  } else {
-    writer.guardHasGetterSetter(objId, propShape);
-  }
-
-  EmitCallSetterNoGuards(writer, obj, holder, propShape, objId, rhsId);
-
-  trackAttached("Setter");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachSetArrayLength(HandleObject obj,
-                                                 ObjOperandId objId,
-                                                 HandleId id,
-                                                 ValOperandId rhsId) {
-  // Don't attach an array length stub for ops like JSOP_INITELEM.
-  MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-  if (!obj->is<ArrayObject>() || !JSID_IS_ATOM(id, cx_->names().length) ||
-      !obj->as<ArrayObject>().lengthIsWritable()) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-  writer.guardClass(objId, GuardClassKind::Array);
-  writer.callSetArrayLength(objId, IsStrictSetPC(pc_), rhsId);
-  writer.returnFromIC();
-
-  trackAttached("SetArrayLength");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachSetDenseElement(HandleObject obj,
-                                                  ObjOperandId objId,
-                                                  uint32_t index,
-                                                  Int32OperandId indexId,
-                                                  ValOperandId rhsId) {
-  if (!obj->isNative()) {
-    return false;
-  }
-
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (!nobj->containsDenseElement(index) ||
-      nobj->getElementsHeader()->isFrozen()) {
-    return false;
-  }
-
-  // Don't optimize INITELEM (DefineProperty) on non-extensible objects: when
-  // the elements are sealed, we have to throw an exception. Note that we have
-  // to check !isExtensible instead of denseElementsAreSealed because sealing
-  // a (non-extensible) object does not necessarily trigger a Shape change.
-  if (IsPropertyInitOp(JSOp(*pc_)) && !nobj->isExtensible()) {
-    return false;
-  }
-
-  if (typeCheckInfo_.needsTypeBarrier()) {
-    writer.guardGroupForTypeBarrier(objId, nobj->group());
-  }
-  TestMatchingNativeReceiver(writer, nobj, objId);
-
-  writer.storeDenseElement(objId, indexId, rhsId);
-  writer.returnFromIC();
-
-  // Type inference uses JSID_VOID for the element types.
-  typeCheckInfo_.set(nobj->group(), JSID_VOID);
-
-  trackAttached("SetDenseElement");
-  return true;
-}
-
-static bool CanAttachAddElement(NativeObject* obj, bool isInit) {
-  // Make sure the objects on the prototype don't have any indexed properties
-  // or that such properties can't appear without a shape change.
-  do {
-    // The first two checks are also relevant to the receiver object.
-    if (obj->isIndexed()) {
-      return false;
-    }
-
-    const Class* clasp = obj->getClass();
-    if (clasp != &ArrayObject::class_ &&
-        (clasp->getAddProperty() || clasp->getResolve() ||
-         clasp->getOpsLookupProperty() || clasp->getOpsSetProperty())) {
-      return false;
-    }
-
-    // If we're initializing a property instead of setting one, the objects
-    // on the prototype are not relevant.
-    if (isInit) {
-      break;
-    }
-
-    JSObject* proto = obj->staticPrototype();
-    if (!proto) {
-      break;
-    }
-
-    if (!proto->isNative()) {
-      return false;
-    }
-
-    // We have to make sure the proto has no non-writable (frozen) elements
-    // because we're not allowed to shadow them. There are a few cases to
-    // consider:
-    //
-    // * If the proto is extensible, its Shape will change when it's made
-    //   non-extensible.
-    //
-    // * If the proto is already non-extensible, no new elements will be
-    //   added, so if there are no elements now it doesn't matter if the
-    //   object is frozen later on.
-    NativeObject* nproto = &proto->as<NativeObject>();
-    if (!nproto->isExtensible() && nproto->getDenseInitializedLength() > 0) {
-      return false;
-    }
-
-    obj = nproto;
-  } while (true);
-
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachSetDenseElementHole(HandleObject obj,
-                                                      ObjOperandId objId,
-                                                      uint32_t index,
-                                                      Int32OperandId indexId,
-                                                      ValOperandId rhsId) {
-  if (!obj->isNative() || rhsVal_.isMagic(JS_ELEMENTS_HOLE)) {
-    return false;
-  }
-
-  JSOp op = JSOp(*pc_);
-  MOZ_ASSERT(IsPropertySetOp(op) || IsPropertyInitOp(op));
-
-  if (op == JSOP_INITHIDDENELEM) {
-    return false;
-  }
-
-  NativeObject* nobj = &obj->as<NativeObject>();
-  if (!nobj->isExtensible()) {
-    return false;
-  }
-
-  MOZ_ASSERT(!nobj->getElementsHeader()->isFrozen(),
-             "Extensible objects should not have frozen elements");
-
-  uint32_t initLength = nobj->getDenseInitializedLength();
-
-  // Optimize if we're adding an element at initLength or writing to a hole.
-  //
-  // In the case where index > initLength, we need noteHasDenseAdd to be called
-  // to ensure Ion is aware that writes have occurred to-out-of-bound indexes
-  // before.
-  bool isAdd = index == initLength;
-  bool isHoleInBounds =
-      index < initLength && !nobj->containsDenseElement(index);
-  if (!isAdd && !isHoleInBounds) {
-    return false;
-  }
-
-  // Can't add new elements to arrays with non-writable length.
-  if (isAdd && nobj->is<ArrayObject>() &&
-      !nobj->as<ArrayObject>().lengthIsWritable()) {
-    return false;
-  }
-
-  // Typed arrays don't have dense elements.
-  if (nobj->is<TypedArrayObject>()) {
-    return false;
-  }
-
-  // Check for other indexed properties or class hooks.
-  if (!CanAttachAddElement(nobj, IsPropertyInitOp(op))) {
-    return false;
-  }
-
-  if (typeCheckInfo_.needsTypeBarrier()) {
-    writer.guardGroupForTypeBarrier(objId, nobj->group());
-  }
-  TestMatchingNativeReceiver(writer, nobj, objId);
-
-  // Also shape guard the proto chain, unless this is an INITELEM or we know
-  // the proto chain has no indexed props.
-  if (IsPropertySetOp(op) && maybeHasExtraIndexedProps_) {
-    ShapeGuardProtoChain(writer, obj, objId);
-  }
-
-  writer.storeDenseElementHole(objId, indexId, rhsId, isAdd);
-  writer.returnFromIC();
-
-  // Type inference uses JSID_VOID for the element types.
-  typeCheckInfo_.set(nobj->group(), JSID_VOID);
-
-  trackAttached(isAdd ? "AddDenseElement" : "StoreDenseElementHole");
-  return true;
-}
-
-// Add an IC for adding or updating a sparse array element.
-bool SetPropIRGenerator::tryAttachAddOrUpdateSparseElement(
-    HandleObject obj, ObjOperandId objId, uint32_t index,
-    Int32OperandId indexId, ValOperandId rhsId) {
-  JSOp op = JSOp(*pc_);
-  MOZ_ASSERT(IsPropertySetOp(op) || IsPropertyInitOp(op));
-
-  if (op != JSOP_SETELEM && op != JSOP_STRICTSETELEM) {
-    return false;
-  }
-
-  if (!obj->isNative()) {
-    return false;
-  }
-  NativeObject* nobj = &obj->as<NativeObject>();
-
-  // We cannot attach a stub to a non-extensible object
-  if (!nobj->isExtensible()) {
-    return false;
-  }
-
-  // Stub doesn't handle negative indices.
-  if (index > INT_MAX) {
-    return false;
-  }
-
-  // We also need to be past the end of the dense capacity, to ensure sparse.
-  if (index < nobj->getDenseInitializedLength()) {
-    return false;
-  }
-
-  // Only handle Array objects in this stub.
-  if (!nobj->is<ArrayObject>()) {
-    return false;
-  }
-  ArrayObject* aobj = &nobj->as<ArrayObject>();
-
-  // Don't attach if we're adding to an array with non-writable length.
-  bool isAdd = (index >= aobj->length());
-  if (isAdd && !aobj->lengthIsWritable()) {
-    return false;
-  }
-
-  // Indexed properties on the prototype chain aren't handled by the helper.
-  if ((aobj->staticPrototype() != nullptr) &&
-      ObjectMayHaveExtraIndexedProperties(aobj->staticPrototype())) {
-    return false;
-  }
-
-  // Ensure we are still talking about an array class.
-  writer.guardClass(objId, GuardClassKind::Array);
-
-  // The helper we are going to call only applies to non-dense elements.
-  writer.guardIndexGreaterThanDenseInitLength(objId, indexId);
-
-  // Guard extensible: We may be trying to add a new element, and so we'd best
-  // be able to do so safely.
-  writer.guardIsExtensible(objId);
-
-  // Ensures we are able to efficiently able to map to an integral jsid.
-  writer.guardIndexIsNonNegative(indexId);
-
-  // Shape guard the prototype chain to avoid shadowing indexes from appearing.
-  // Guard the prototype of the receiver explicitly, because the receiver's
-  // shape is not being guarded as a proxy for that.
-  GuardGroupProto(writer, obj, objId);
-
-  // Dense elements may appear on the prototype chain (and prototypes may
-  // have a different notion of which elements are dense), but they can
-  // only be data properties, so our specialized Set handler is ok to bind
-  // to them.
-  ShapeGuardProtoChain(writer, obj, objId);
-
-  // Ensure that if we're adding an element to the object, the object's
-  // length is writable.
-  writer.guardIndexIsValidUpdateOrAdd(objId, indexId);
-
-  writer.callAddOrUpdateSparseElementHelper(
-      objId, indexId, rhsId,
-      /* strict = */ op == JSOP_STRICTSETELEM);
-  writer.returnFromIC();
-
-  trackAttached("AddOrUpdateSparseElement");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachSetTypedElement(HandleObject obj,
-                                                  ObjOperandId objId,
-                                                  uint32_t index,
-                                                  Int32OperandId indexId,
-                                                  ValOperandId rhsId) {
-  if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
-    return false;
-  }
-
-  if (!rhsVal_.isNumber()) {
-    return false;
-  }
-
-  bool handleOutOfBounds = false;
-  if (obj->is<TypedArrayObject>()) {
-    handleOutOfBounds = (index >= obj->as<TypedArrayObject>().length());
-  } else {
-    // Typed objects throw on out of bounds accesses. Don't attach
-    // a stub in this case.
-    if (index >= obj->as<TypedObject>().length()) {
-      return false;
-    }
-
-    // Don't attach stubs if the underlying storage for typed objects
-    // in the zone could be detached, as the stub will always bail out.
-    if (cx_->zone()->detachedTypedObjects) {
-      return false;
-    }
-  }
-
-  Scalar::Type elementType = TypedThingElementType(obj);
-  TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-
-  if (IsPrimitiveArrayTypedObject(obj)) {
-    writer.guardNoDetachedTypedObjects();
-    writer.guardGroupForLayout(objId, obj->group());
-  } else {
-    writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
-  }
-
-  writer.storeTypedElement(objId, indexId, rhsId, layout, elementType,
-                           handleOutOfBounds);
-  writer.returnFromIC();
-
-  if (handleOutOfBounds) {
-    attachedTypedArrayOOBStub_ = true;
-  }
-
-  trackAttached(handleOutOfBounds ? "SetTypedElementOOB" : "SetTypedElement");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachGenericProxy(HandleObject obj,
-                                               ObjOperandId objId, HandleId id,
-                                               ValOperandId rhsId,
-                                               bool handleDOMProxies) {
-  MOZ_ASSERT(obj->is<ProxyObject>());
-
-  writer.guardIsProxy(objId);
-
-  if (!handleDOMProxies) {
-    // Ensure that the incoming object is not a DOM proxy, so that we can
-    // get to the specialized stubs. If handleDOMProxies is true, we were
-    // unable to attach a specialized DOM stub, so we just handle all
-    // proxies here.
-    writer.guardNotDOMProxy(objId);
-  }
-
-  if (cacheKind_ == CacheKind::SetProp || mode_ == ICState::Mode::Specialized) {
-    maybeEmitIdGuard(id);
-    writer.callProxySet(objId, id, rhsId, IsStrictSetPC(pc_));
-  } else {
-    // Attach a stub that handles every id.
-    MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-    MOZ_ASSERT(mode_ == ICState::Mode::Megamorphic);
-    writer.callProxySetByValue(objId, setElemKeyValueId(), rhsId,
-                               IsStrictSetPC(pc_));
-  }
-
-  writer.returnFromIC();
-
-  trackAttached("GenericProxy");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachDOMProxyShadowed(HandleObject obj,
-                                                   ObjOperandId objId,
-                                                   HandleId id,
-                                                   ValOperandId rhsId) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  maybeEmitIdGuard(id);
-  TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-  writer.callProxySet(objId, id, rhsId, IsStrictSetPC(pc_));
-  writer.returnFromIC();
-
-  trackAttached("DOMProxyShadowed");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachDOMProxyUnshadowed(HandleObject obj,
-                                                     ObjOperandId objId,
-                                                     HandleId id,
-                                                     ValOperandId rhsId) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  RootedObject proto(cx_, obj->staticPrototype());
-  if (!proto) {
-    return false;
-  }
-
-  RootedObject holder(cx_);
-  RootedShape propShape(cx_);
-  if (!CanAttachSetter(cx_, pc_, proto, id, &holder, &propShape,
-                       isTemporarilyUnoptimizable_)) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-
-  // Guard that our expando object hasn't started shadowing this property.
-  TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-  CheckDOMProxyExpandoDoesNotShadow(writer, obj, id, objId);
-
-  GeneratePrototypeGuards(writer, obj, holder, objId);
-
-  // Guard on the holder of the property.
-  ObjOperandId holderId = writer.loadObject(holder);
-  TestMatchingHolder(writer, holder, holderId);
-
-  // EmitCallSetterNoGuards expects |obj| to be the object the property is
-  // on to do some checks. Since we actually looked at proto, and no extra
-  // guards will be generated, we can just pass that instead.
-  EmitCallSetterNoGuards(writer, proto, holder, propShape, objId, rhsId);
-
-  trackAttached("DOMProxyUnshadowed");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachDOMProxyExpando(HandleObject obj,
-                                                  ObjOperandId objId,
-                                                  HandleId id,
-                                                  ValOperandId rhsId) {
-  MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-  RootedValue expandoVal(cx_, GetProxyPrivate(obj));
-  RootedObject expandoObj(cx_);
-  if (expandoVal.isObject()) {
-    expandoObj = &expandoVal.toObject();
-  } else {
-    MOZ_ASSERT(!expandoVal.isUndefined(),
-               "How did a missing expando manage to shadow things?");
-    auto expandoAndGeneration =
-        static_cast<ExpandoAndGeneration*>(expandoVal.toPrivate());
-    MOZ_ASSERT(expandoAndGeneration);
-    expandoObj = &expandoAndGeneration->expando.toObject();
-  }
-
-  RootedShape propShape(cx_);
-  if (CanAttachNativeSetSlot(cx_, JSOp(*pc_), expandoObj, id,
-                             isTemporarilyUnoptimizable_, &propShape)) {
-    maybeEmitIdGuard(id);
-    ObjOperandId expandoObjId =
-        guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
-
-    NativeObject* nativeExpandoObj = &expandoObj->as<NativeObject>();
-    writer.guardGroupForTypeBarrier(expandoObjId, nativeExpandoObj->group());
-    typeCheckInfo_.set(nativeExpandoObj->group(), id);
-
-    EmitStoreSlotAndReturn(writer, expandoObjId, nativeExpandoObj, propShape,
-                           rhsId);
-    trackAttached("DOMProxyExpandoSlot");
-    return true;
-  }
-
-  RootedObject holder(cx_);
-  if (CanAttachSetter(cx_, pc_, expandoObj, id, &holder, &propShape,
-                      isTemporarilyUnoptimizable_)) {
-    // Note that we don't actually use the expandoObjId here after the
-    // shape guard. The DOM proxy (objId) is passed to the setter as
-    // |this|.
-    maybeEmitIdGuard(id);
-    guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
-
-    MOZ_ASSERT(holder == expandoObj);
-    EmitCallSetterNoGuards(writer, expandoObj, expandoObj, propShape, objId,
-                           rhsId);
-    trackAttached("DOMProxyExpandoSetter");
-    return true;
-  }
-
-  return false;
-}
-
-bool SetPropIRGenerator::tryAttachProxy(HandleObject obj, ObjOperandId objId,
-                                        HandleId id, ValOperandId rhsId) {
-  // Don't attach a proxy stub for ops like JSOP_INITELEM.
-  MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-  ProxyStubType type = GetProxyStubType(cx_, obj, id);
-  if (type == ProxyStubType::None) {
-    return false;
-  }
-
-  if (mode_ == ICState::Mode::Megamorphic) {
-    return tryAttachGenericProxy(obj, objId, id, rhsId,
-                                 /* handleDOMProxies = */ true);
-  }
-
-  switch (type) {
-    case ProxyStubType::None:
-      break;
-    case ProxyStubType::DOMExpando:
-      if (tryAttachDOMProxyExpando(obj, objId, id, rhsId)) {
-        return true;
-      }
-      if (*isTemporarilyUnoptimizable_) {
-        // Scripted setter without JIT code. Just wait.
-        return false;
-      }
-      MOZ_FALLTHROUGH;  // Fall through to the generic shadowed case.
-    case ProxyStubType::DOMShadowed:
-      return tryAttachDOMProxyShadowed(obj, objId, id, rhsId);
-    case ProxyStubType::DOMUnshadowed:
-      if (tryAttachDOMProxyUnshadowed(obj, objId, id, rhsId)) {
-        return true;
-      }
-      if (*isTemporarilyUnoptimizable_) {
-        // Scripted setter without JIT code. Just wait.
-        return false;
-      }
-      return tryAttachGenericProxy(obj, objId, id, rhsId,
-                                   /* handleDOMProxies = */ true);
-    case ProxyStubType::Generic:
-      return tryAttachGenericProxy(obj, objId, id, rhsId,
-                                   /* handleDOMProxies = */ false);
-  }
-
-  MOZ_CRASH("Unexpected ProxyStubType");
-}
-
-bool SetPropIRGenerator::tryAttachProxyElement(HandleObject obj,
-                                               ObjOperandId objId,
-                                               ValOperandId rhsId) {
-  // Don't attach a proxy stub for ops like JSOP_INITELEM.
-  MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-  if (!obj->is<ProxyObject>()) {
-    return false;
-  }
-
-  writer.guardIsProxy(objId);
-
-  // Like GetPropIRGenerator::tryAttachProxyElement, don't check for DOM
-  // proxies here as we don't have specialized DOM stubs for this.
-  MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-  writer.callProxySetByValue(objId, setElemKeyValueId(), rhsId,
-                             IsStrictSetPC(pc_));
-  writer.returnFromIC();
-
-  trackAttached("ProxyElement");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachMegamorphicSetElement(HandleObject obj,
-                                                        ObjOperandId objId,
-                                                        ValOperandId rhsId) {
-  MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-  if (mode_ != ICState::Mode::Megamorphic || cacheKind_ != CacheKind::SetElem) {
-    return false;
-  }
-
-  // The generic proxy stubs are faster.
-  if (obj->is<ProxyObject>()) {
-    return false;
-  }
-
-  writer.megamorphicSetElement(objId, setElemKeyValueId(), rhsId,
-                               IsStrictSetPC(pc_));
-  writer.returnFromIC();
-
-  trackAttached("MegamorphicSetElement");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachWindowProxy(HandleObject obj,
-                                              ObjOperandId objId, HandleId id,
-                                              ValOperandId rhsId) {
-  // Attach a stub when the receiver is a WindowProxy and we can do the set
-  // on the Window (the global object).
-
-  if (!IsWindowProxy(obj)) {
-    return false;
-  }
-
-  // If we're megamorphic prefer a generic proxy stub that handles a lot more
-  // cases.
-  if (mode_ == ICState::Mode::Megamorphic) {
-    return false;
-  }
-
-  // This must be a WindowProxy for the current Window/global. Else it would
-  // be a cross-compartment wrapper and IsWindowProxy returns false for
-  // those.
-  MOZ_ASSERT(obj->getClass() == cx_->runtime()->maybeWindowProxyClass());
-  MOZ_ASSERT(ToWindowIfWindowProxy(obj) == cx_->global());
-
-  // Now try to do the set on the Window (the current global).
-  Handle<GlobalObject*> windowObj = cx_->global();
-
-  RootedShape propShape(cx_);
-  if (!CanAttachNativeSetSlot(cx_, JSOp(*pc_), windowObj, id,
-                              isTemporarilyUnoptimizable_, &propShape)) {
-    return false;
-  }
-
-  maybeEmitIdGuard(id);
-
-  writer.guardClass(objId, GuardClassKind::WindowProxy);
-  ObjOperandId windowObjId = writer.loadObject(windowObj);
-
-  writer.guardShape(windowObjId, windowObj->lastProperty());
-  writer.guardGroupForTypeBarrier(windowObjId, windowObj->group());
-  typeCheckInfo_.set(windowObj->group(), id);
-
-  EmitStoreSlotAndReturn(writer, windowObjId, windowObj, propShape, rhsId);
-
-  trackAttached("WindowProxySlot");
-  return true;
-}
-
-bool SetPropIRGenerator::tryAttachAddSlotStub(HandleObjectGroup oldGroup,
-                                              HandleShape oldShape) {
-  ValOperandId objValId(writer.setInputOperandId(0));
-  ValOperandId rhsValId;
-  if (cacheKind_ == CacheKind::SetProp) {
-    rhsValId = ValOperandId(writer.setInputOperandId(1));
-  } else {
-    MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-    MOZ_ASSERT(setElemKeyValueId().id() == 1);
-    writer.setInputOperandId(1);
-    rhsValId = ValOperandId(writer.setInputOperandId(2));
-  }
-
-  RootedId id(cx_);
-  bool nameOrSymbol;
-  if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-    cx_->clearPendingException();
-    return false;
-  }
-
-  if (!lhsVal_.isObject() || !nameOrSymbol) {
-    return false;
-  }
-
-  RootedObject obj(cx_, &lhsVal_.toObject());
-
-  PropertyResult prop;
-  JSObject* holder;
-  if (!LookupPropertyPure(cx_, obj, id, &holder, &prop)) {
-    return false;
-  }
-  if (obj != holder) {
-    return false;
-  }
-
-  Shape* propShape = nullptr;
-  NativeObject* holderOrExpando = nullptr;
-
-  if (obj->isNative()) {
-    propShape = prop.shape();
-    holderOrExpando = &obj->as<NativeObject>();
-  } else {
-    if (!obj->is<UnboxedPlainObject>()) {
-      return false;
-    }
-    UnboxedExpandoObject* expando =
-        obj->as<UnboxedPlainObject>().maybeExpando();
-    if (!expando) {
-      return false;
-    }
-    propShape = expando->lookupPure(id);
-    if (!propShape) {
-      return false;
-    }
-    holderOrExpando = expando;
-  }
-
-  MOZ_ASSERT(propShape);
-
-  // The property must be the last added property of the object.
-  if (holderOrExpando->lastProperty() != propShape) {
-    return false;
-  }
-
-  // Object must be extensible, oldShape must be immediate parent of
-  // current shape.
-  if (!obj->nonProxyIsExtensible() || propShape->previous() != oldShape) {
-    return false;
-  }
-
-  // Basic shape checks.
-  if (propShape->inDictionary() || !propShape->isDataProperty() ||
-      !propShape->writable()) {
-    return false;
-  }
-
-  // Watch out for resolve hooks.
-  if (ClassMayResolveId(cx_->names(), obj->getClass(), id, obj)) {
-    // The JSFunction resolve hook defines a (non-configurable and
-    // non-enumerable) |prototype| property on certain functions. Scripts
-    // often assign a custom |prototype| object and we want to optimize
-    // this |prototype| set and eliminate the default object allocation.
-    //
-    // We check group->maybeInterpretedFunction() here and guard on the
-    // group. The group is unique for a particular function so this ensures
-    // we don't add the default prototype property to functions that don't
-    // have it.
-    if (!obj->is<JSFunction>() || !JSID_IS_ATOM(id, cx_->names().prototype) ||
-        !oldGroup->maybeInterpretedFunction() ||
-        !obj->as<JSFunction>().needsPrototypeProperty()) {
-      return false;
-    }
-    MOZ_ASSERT(!propShape->configurable());
-    MOZ_ASSERT(!propShape->enumerable());
-  }
-
-  // Also watch out for addProperty hooks. Ignore the Array addProperty hook,
-  // because it doesn't do anything for non-index properties.
-  DebugOnly<uint32_t> index;
-  MOZ_ASSERT_IF(obj->is<ArrayObject>(), !IdIsIndex(id, &index));
-  if (!obj->is<ArrayObject>() && obj->getClass()->getAddProperty()) {
-    return false;
-  }
-
-  // Walk up the object prototype chain and ensure that all prototypes are
-  // native, and that all prototypes have no setter defined on the property.
-  for (JSObject* proto = obj->staticPrototype(); proto;
-       proto = proto->staticPrototype()) {
-    if (!proto->isNative()) {
-      return false;
-    }
-
-    // If prototype defines this property in a non-plain way, don't optimize.
-    Shape* protoShape = proto->as<NativeObject>().lookup(cx_, id);
-    if (protoShape && !protoShape->hasDefaultSetter()) {
-      return false;
-    }
-
-    // Otherwise, if there's no such property, watch out for a resolve hook
-    // that would need to be invoked and thus prevent inlining of property
-    // addition. Allow the JSFunction resolve hook as it only defines plain
-    // data properties and we don't need to invoke it for objects on the
-    // proto chain.
-    if (ClassMayResolveId(cx_->names(), proto->getClass(), id, proto) &&
-        !proto->is<JSFunction>()) {
-      return false;
-    }
-  }
-
-  ObjOperandId objId = writer.guardIsObject(objValId);
-  maybeEmitIdGuard(id);
-
-  // In addition to guarding for type barrier, we need this group guard (or
-  // shape guard below) to ensure class is unchanged.
-  MOZ_ASSERT(!oldGroup->hasUncacheableClass() || obj->is<ShapedObject>());
-  writer.guardGroupForTypeBarrier(objId, oldGroup);
-
-  // If we are adding a property to an object for which the new script
-  // properties analysis hasn't been performed yet, make sure the stub fails
-  // after we run the analysis as a group change may be required here. The
-  // group change is not required for correctness but improves type
-  // information elsewhere.
-  AutoSweepObjectGroup sweep(oldGroup);
-  if (oldGroup->newScript(sweep) && !oldGroup->newScript(sweep)->analyzed()) {
-    writer.guardGroupHasUnanalyzedNewScript(oldGroup);
-    MOZ_ASSERT(IsPreliminaryObject(obj));
-    preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-  } else {
-    preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-  }
-
-  // Shape guard the holder.
-  ObjOperandId holderId = objId;
-  if (!obj->isNative()) {
-    MOZ_ASSERT(obj->as<UnboxedPlainObject>().maybeExpando());
-    holderId = writer.guardAndLoadUnboxedExpando(objId);
-  }
-  writer.guardShape(holderId, oldShape);
-
-  ShapeGuardProtoChain(writer, obj, objId);
-
-  ObjectGroup* newGroup = obj->group();
-
-  // Check if we have to change the object's group. If we're adding an
-  // unboxed expando property, we pass the expando object to AddAndStore*Slot.
-  // That's okay because we only have to do a group change if the object is a
-  // PlainObject.
-  bool changeGroup = oldGroup != newGroup;
-  MOZ_ASSERT_IF(changeGroup, obj->is<PlainObject>());
-
-  if (holderOrExpando->isFixedSlot(propShape->slot())) {
-    size_t offset = NativeObject::getFixedSlotOffset(propShape->slot());
-    writer.addAndStoreFixedSlot(holderId, offset, rhsValId, propShape,
-                                changeGroup, newGroup);
-    trackAttached("AddSlot");
-  } else {
-    size_t offset =
-        holderOrExpando->dynamicSlotIndex(propShape->slot()) * sizeof(Value);
-    uint32_t numOldSlots = NativeObject::dynamicSlotsCount(oldShape);
-    uint32_t numNewSlots = NativeObject::dynamicSlotsCount(propShape);
-    if (numOldSlots == numNewSlots) {
-      writer.addAndStoreDynamicSlot(holderId, offset, rhsValId, propShape,
-                                    changeGroup, newGroup);
-      trackAttached("AddSlot");
-    } else {
-      MOZ_ASSERT(numNewSlots > numOldSlots);
-      writer.allocateAndStoreDynamicSlot(holderId, offset, rhsValId, propShape,
-                                         changeGroup, newGroup, numNewSlots);
-      trackAttached("AllocateSlot");
-    }
-  }
-  writer.returnFromIC();
-
-  typeCheckInfo_.set(oldGroup, id);
-  return true;
-}
-
-InstanceOfIRGenerator::InstanceOfIRGenerator(JSContext* cx, HandleScript script,
-                                             jsbytecode* pc, ICState::Mode mode,
-                                             HandleValue lhs, HandleObject rhs)
-    : IRGenerator(cx, script, pc, CacheKind::InstanceOf, mode),
-      lhsVal_(lhs),
-      rhsObj_(rhs) {}
-
-bool InstanceOfIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::InstanceOf);
-  AutoAssertNoPendingException aanpe(cx_);
-
-  // Ensure RHS is a function -- could be a Proxy, which the IC isn't prepared
-  // to handle.
-  if (!rhsObj_->is<JSFunction>()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  HandleFunction fun = rhsObj_.as<JSFunction>();
-
-  if (fun->isBoundFunction()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  // If the user has supplied their own @@hasInstance method we shouldn't
-  // clobber it.
-  if (!js::FunctionHasDefaultHasInstance(fun, cx_->wellKnownSymbols())) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  // Refuse to optimize any function whose [[Prototype]] isn't
-  // Function.prototype.
-  if (!fun->hasStaticPrototype() || fun->hasUncacheableProto()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  Value funProto = cx_->global()->getPrototype(JSProto_Function);
-  if (!funProto.isObject() || fun->staticPrototype() != &funProto.toObject()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  // Ensure that the function's prototype slot is the same.
-  Shape* shape = fun->lookupPure(cx_->names().prototype);
-  if (!shape || !shape->isDataProperty()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  uint32_t slot = shape->slot();
-
-  MOZ_ASSERT(fun->numFixedSlots() == 0, "Stub code relies on this");
-  if (!fun->getSlot(slot).isObject()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  JSObject* prototypeObject = &fun->getSlot(slot).toObject();
-
-  // Abstract Objects
-  ValOperandId lhs(writer.setInputOperandId(0));
-  ValOperandId rhs(writer.setInputOperandId(1));
-
-  ObjOperandId rhsId = writer.guardIsObject(rhs);
-  writer.guardShape(rhsId, fun->lastProperty());
-
-  // Load prototypeObject into the cache -- consumed twice in the IC
-  ObjOperandId protoId = writer.loadObject(prototypeObject);
-  // Ensure that rhs[slot] == prototypeObject.
-  writer.guardFunctionPrototype(rhsId, slot, protoId);
-
-  // Needn't guard LHS is object, because the actual stub can handle that
-  // and correctly return false.
-  writer.loadInstanceOfObjectResult(lhs, protoId, slot);
-  writer.returnFromIC();
-  trackAttached("InstanceOf");
-  return true;
-}
-
-void InstanceOfIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("lhs", lhsVal_);
-    sp.valueProperty("rhs", ObjectValue(*rhsObj_));
-  }
-#endif
-}
-
-TypeOfIRGenerator::TypeOfIRGenerator(JSContext* cx, HandleScript script,
-                                     jsbytecode* pc, ICState::Mode mode,
-                                     HandleValue value)
-    : IRGenerator(cx, script, pc, CacheKind::TypeOf, mode), val_(value) {}
-
-bool TypeOfIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::TypeOf);
-
-  AutoAssertNoPendingException aanpe(cx_);
-
-  ValOperandId valId(writer.setInputOperandId(0));
-
-  if (tryAttachPrimitive(valId)) {
-    return true;
-  }
-
-  MOZ_ALWAYS_TRUE(tryAttachObject(valId));
-  return true;
-}
-
-bool TypeOfIRGenerator::tryAttachPrimitive(ValOperandId valId) {
-  if (!val_.isPrimitive()) {
-    return false;
-  }
-
-  if (val_.isNumber()) {
-    writer.guardIsNumber(valId);
-  } else {
-    writer.guardType(valId, val_.extractNonDoubleType());
-  }
-
-  writer.loadStringResult(TypeName(js::TypeOfValue(val_), cx_->names()));
-  writer.returnFromIC();
-
-  return true;
-}
-
-bool TypeOfIRGenerator::tryAttachObject(ValOperandId valId) {
-  if (!val_.isObject()) {
-    return false;
-  }
-
-  ObjOperandId objId = writer.guardIsObject(valId);
-  writer.loadTypeOfObjectResult(objId);
-  writer.returnFromIC();
-
-  return true;
-}
-
-GetIteratorIRGenerator::GetIteratorIRGenerator(JSContext* cx,
-                                               HandleScript script,
-                                               jsbytecode* pc,
-                                               ICState::Mode mode,
-                                               HandleValue value)
-    : IRGenerator(cx, script, pc, CacheKind::GetIterator, mode), val_(value) {}
-
-bool GetIteratorIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::GetIterator);
-
-  AutoAssertNoPendingException aanpe(cx_);
-
-  if (mode_ == ICState::Mode::Megamorphic) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  if (!val_.isObject()) {
-    return false;
-  }
-
-  RootedObject obj(cx_, &val_.toObject());
-
-  ObjOperandId objId = writer.guardIsObject(valId);
-  if (tryAttachNativeIterator(objId, obj)) {
-    trackAttached("GetIterator");
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-}
-
-bool GetIteratorIRGenerator::tryAttachNativeIterator(ObjOperandId objId,
-                                                     HandleObject obj) {
-  MOZ_ASSERT(JSOp(*pc_) == JSOP_ITER);
-
-  PropertyIteratorObject* iterobj = LookupInIteratorCache(cx_, obj);
-  if (!iterobj) {
-    return false;
-  }
-
-  MOZ_ASSERT(obj->isNative() || obj->is<UnboxedPlainObject>());
-
-  // Guard on the receiver's shape/group.
-  Maybe<ObjOperandId> expandoId;
-  TestMatchingReceiver(writer, obj, objId, &expandoId);
-
-  // Ensure the receiver or its expando object has no dense elements.
-  if (obj->isNative()) {
-    writer.guardNoDenseElements(objId);
-  } else if (expandoId) {
-    writer.guardNoDenseElements(*expandoId);
-  }
-
-  // Do the same for the objects on the proto chain.
-  GeneratePrototypeHoleGuards(writer, obj, objId,
-                              /* alwaysGuardFirstProto = */ false);
-
-  ObjOperandId iterId = writer.guardAndGetIterator(
-      objId, iterobj, &ObjectRealm::get(obj).enumerators);
-  writer.loadObjectResult(iterId);
-  writer.returnFromIC();
-
-  return true;
-}
-
-void GetIteratorIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("val", val_);
-  }
-#endif
-}
-
-CallIRGenerator::CallIRGenerator(JSContext* cx, HandleScript script,
-                                 jsbytecode* pc, JSOp op, ICState::Mode mode,
-                                 uint32_t argc, HandleValue callee,
-                                 HandleValue thisval, HandleValueArray args)
-    : IRGenerator(cx, script, pc, CacheKind::Call, mode),
-      op_(op),
-      argc_(argc),
-      callee_(callee),
-      thisval_(thisval),
-      args_(args),
-      typeCheckInfo_(cx, /* needsTypeBarrier = */ true),
-      cacheIRStubKind_(BaselineCacheIRStubKind::Regular) {}
-
-bool CallIRGenerator::tryAttachStringSplit() {
-  // Only optimize StringSplitString(str, str)
-  if (argc_ != 2 || !args_[0].isString() || !args_[1].isString()) {
-    return false;
-  }
-
-  // Just for now: if they're both atoms, then do not optimize using
-  // CacheIR and allow the legacy "ConstStringSplit" BaselineIC optimization
-  // to proceed.
-  if (args_[0].toString()->isAtom() && args_[1].toString()->isAtom()) {
-    return false;
-  }
-
-  // Get the object group to use for this location.
-  RootedObjectGroup group(cx_,
-                          ObjectGroupRealm::getStringSplitStringGroup(cx_));
-  if (!group) {
-    return false;
-  }
-
-  Int32OperandId argcId(writer.setInputOperandId(0));
-
-  // Ensure argc == 1.
-  writer.guardSpecificInt32Immediate(argcId, 2);
-
-  // 2 arguments.  Stack-layout here is (bottom to top):
-  //
-  //  3: Callee
-  //  2: ThisValue
-  //  1: Arg0
-  //  0: Arg1 <-- Top of stack
-
-  // Ensure callee is the |String_split| native function.
-  ValOperandId calleeValId = writer.loadStackValue(3);
-  ObjOperandId calleeObjId = writer.guardIsObject(calleeValId);
-  writer.guardIsNativeFunction(calleeObjId, js::intrinsic_StringSplitString);
-
-  // Ensure arg0 is a string.
-  ValOperandId arg0ValId = writer.loadStackValue(1);
-  StringOperandId arg0StrId = writer.guardIsString(arg0ValId);
-
-  // Ensure arg1 is a string.
-  ValOperandId arg1ValId = writer.loadStackValue(0);
-  StringOperandId arg1StrId = writer.guardIsString(arg1ValId);
-
-  // Call custom string splitter VM-function.
-  writer.callStringSplitResult(arg0StrId, arg1StrId, group);
-  writer.typeMonitorResult();
-
-  cacheIRStubKind_ = BaselineCacheIRStubKind::Monitored;
-  trackAttached("StringSplitString");
-
-  TypeScript::Monitor(cx_, script_, pc_, TypeSet::ObjectType(group));
-
-  return true;
-}
-
-bool CallIRGenerator::tryAttachArrayPush() {
-  // Only optimize on obj.push(val);
-  if (argc_ != 1 || !thisval_.isObject()) {
-    return false;
-  }
-
-  // Where |obj| is a native array.
-  RootedObject thisobj(cx_, &thisval_.toObject());
-  if (!thisobj->is<ArrayObject>()) {
-    return false;
-  }
-
-  if (thisobj->hasLazyGroup()) {
-    return false;
-  }
-
-  RootedArrayObject thisarray(cx_, &thisobj->as<ArrayObject>());
-
-  // And the object group for the array is not collecting preliminary objects.
-  AutoSweepObjectGroup sweep(thisobj->group());
-  if (thisobj->group()->maybePreliminaryObjects(sweep)) {
-    return false;
-  }
-
-  // Check for other indexed properties or class hooks.
-  if (!CanAttachAddElement(thisarray, /* isInit = */ false)) {
-    return false;
-  }
-
-  // Can't add new elements to arrays with non-writable length.
-  if (!thisarray->lengthIsWritable()) {
-    return false;
-  }
-
-  // Check that array is extensible.
-  if (!thisarray->isExtensible()) {
-    return false;
-  }
-
-  MOZ_ASSERT(!thisarray->getElementsHeader()->isFrozen(),
-             "Extensible arrays should not have frozen elements");
-  MOZ_ASSERT(thisarray->lengthIsWritable());
-
-  // After this point, we can generate code fine.
-
-  // Generate code.
-  Int32OperandId argcId(writer.setInputOperandId(0));
-
-  // Ensure argc == 1.
-  writer.guardSpecificInt32Immediate(argcId, 1);
-
-  // 1 argument only.  Stack-layout here is (bottom to top):
-  //
-  //  2: Callee
-  //  1: ThisValue
-  //  0: Arg0 <-- Top of stack.
-
-  // Guard callee is the |js::array_push| native function.
-  ValOperandId calleeValId = writer.loadStackValue(2);
-  ObjOperandId calleeObjId = writer.guardIsObject(calleeValId);
-  writer.guardIsNativeFunction(calleeObjId, js::array_push);
-
-  // Guard this is an array object.
-  ValOperandId thisValId = writer.loadStackValue(1);
-  ObjOperandId thisObjId = writer.guardIsObject(thisValId);
-
-  // This is a soft assert, documenting the fact that we pass 'true'
-  // for needsTypeBarrier when constructing typeCheckInfo_ for CallIRGenerator.
-  // Can be removed safely if the assumption becomes false.
-  MOZ_ASSERT(typeCheckInfo_.needsTypeBarrier());
-
-  // Guard that the group and shape matches.
-  if (typeCheckInfo_.needsTypeBarrier()) {
-    writer.guardGroupForTypeBarrier(thisObjId, thisobj->group());
-  }
-  TestMatchingNativeReceiver(writer, thisarray, thisObjId);
-
-  // Guard proto chain shapes.
-  ShapeGuardProtoChain(writer, thisobj, thisObjId);
-
-  // arr.push(x) is equivalent to arr[arr.length] = x for regular arrays.
-  ValOperandId argId = writer.loadStackValue(0);
-  writer.arrayPush(thisObjId, argId);
-
-  writer.returnFromIC();
-
-  // Set the type-check info, and the stub kind to Updated
-  typeCheckInfo_.set(thisobj->group(), JSID_VOID);
-
-  cacheIRStubKind_ = BaselineCacheIRStubKind::Updated;
-
-  trackAttached("ArrayPush");
-  return true;
-}
-
-bool CallIRGenerator::tryAttachArrayJoin() {
-  // Only handle argc <= 1.
-  if (argc_ > 1) {
-    return false;
-  }
-
-  // Only optimize on obj.join(...);
-  if (!thisval_.isObject()) {
-    return false;
-  }
-
-  // Where |obj| is a native array.
-  RootedObject thisobj(cx_, &thisval_.toObject());
-  if (!thisobj->is<ArrayObject>()) {
-    return false;
-  }
-
-  RootedArrayObject thisarray(cx_, &thisobj->as<ArrayObject>());
-
-  // And the array is of length 0 or 1.
-  if (thisarray->length() > 1) {
-    return false;
-  }
-
-  // And the array is packed.
-  if (thisarray->getDenseInitializedLength() != thisarray->length()) {
-    return false;
-  }
-
-  // We don't need to worry about indexed properties because we can perform
-  // hole check manually.
-
-  // Generate code.
-  Int32OperandId argcId(writer.setInputOperandId(0));
-
-  // if 0 arguments:
-  //  1: Callee
-  //  0: ThisValue <-- Top of stack.
-  //
-  // if 1 argument:
-  //  2: Callee
-  //  1: ThisValue
-  //  0: Arg0 [optional] <-- Top of stack.
-
-  // Guard callee is the |js::array_join| native function.
-  uint32_t calleeIndex = (argc_ == 0) ? 1 : 2;
-  ValOperandId calleeValId = writer.loadStackValue(calleeIndex);
-  ObjOperandId calleeObjId = writer.guardIsObject(calleeValId);
-  writer.guardIsNativeFunction(calleeObjId, js::array_join);
-
-  if (argc_ == 1) {
-    // If argcount is 1, guard that the argument is a string.
-    ValOperandId argValId = writer.loadStackValue(0);
-    writer.guardIsString(argValId);
-  }
-
-  // Guard this is an array object.
-  uint32_t thisIndex = (argc_ == 0) ? 0 : 1;
-  ValOperandId thisValId = writer.loadStackValue(thisIndex);
-  ObjOperandId thisObjId = writer.guardIsObject(thisValId);
-  writer.guardClass(thisObjId, GuardClassKind::Array);
-
-  // Do the join.
-  writer.arrayJoinResult(thisObjId);
-
-  writer.returnFromIC();
-
-  // The result of this stub does not need to be monitored because it will
-  // always return a string.  We will add String to the stack typeset when
-  // attaching this stub.
-
-  // Set the stub kind to Regular
-  cacheIRStubKind_ = BaselineCacheIRStubKind::Regular;
-
-  trackAttached("ArrayJoin");
-  return true;
-}
-
-bool CallIRGenerator::tryAttachIsSuspendedGenerator() {
-  // The IsSuspendedGenerator intrinsic is only called in
-  // self-hosted code, so it's safe to assume we have a single
-  // argument and the callee is our intrinsic.
-
-  MOZ_ASSERT(argc_ == 1);
-
-  // Stack layout here is (bottom to top):
-  //  2: Callee
-  //  1: ThisValue
-  //  0: Arg <-- Top of stack.
-  // We only care about the argument.
-  ValOperandId valId = writer.loadStackValue(0);
-
-  // Check whether the argument is a suspended generator.
-  // We don't need guards, because IsSuspendedGenerator returns
-  // false for values that are not generator objects.
-  writer.callIsSuspendedGeneratorResult(valId);
-  writer.returnFromIC();
-
-  // This stub does not need to be monitored, because it always
-  // returns Boolean. The stack typeset will be updated when we
-  // attach the stub.
-  cacheIRStubKind_ = BaselineCacheIRStubKind::Regular;
-
-  trackAttached("IsSuspendedGenerator");
-  return true;
-}
-
-bool CallIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-
-  // Only optimize on JSOP_CALL or JSOP_CALL_IGNORES_RV.  No fancy business for
-  // now.
-  if ((op_ != JSOP_CALL) && (op_ != JSOP_CALL_IGNORES_RV)) {
-    return false;
-  }
-
-  // Only optimize when the mode is Specialized.
-  if (mode_ != ICState::Mode::Specialized) {
-    return false;
-  }
-
-  // Ensure callee is a function.
-  if (!callee_.isObject() || !callee_.toObject().is<JSFunction>()) {
-    return false;
-  }
-
-  RootedFunction calleeFunc(cx_, &callee_.toObject().as<JSFunction>());
-
-  // Check for native-function optimizations.
-  if (calleeFunc->isNative()) {
-    if (calleeFunc->native() == js::intrinsic_StringSplitString) {
-      if (tryAttachStringSplit()) {
-        return true;
-      }
-    }
-
-    if (calleeFunc->native() == js::array_push) {
-      if (tryAttachArrayPush()) {
-        return true;
-      }
-    }
-
-    if (calleeFunc->native() == js::array_join) {
-      if (tryAttachArrayJoin()) {
-        return true;
-      }
-    }
-    if (calleeFunc->native() == intrinsic_IsSuspendedGenerator) {
-      if (tryAttachIsSuspendedGenerator()) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-void CallIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("callee", callee_);
-    sp.valueProperty("thisval", thisval_);
-    sp.valueProperty("argc", Int32Value(argc_));
-  }
-#endif
-}
-
-// Class which holds a shape pointer for use when caches might reference data in
-// other zones.
-static const Class shapeContainerClass = {"ShapeContainer",
-                                          JSCLASS_HAS_RESERVED_SLOTS(1)};
-
-static const size_t SHAPE_CONTAINER_SLOT = 0;
-
-JSObject* jit::NewWrapperWithObjectShape(JSContext* cx,
-                                         HandleNativeObject obj) {
-  MOZ_ASSERT(cx->compartment() != obj->compartment());
-
-  RootedObject wrapper(cx);
-  {
-    AutoRealm ar(cx, obj);
-    wrapper = NewBuiltinClassInstance(cx, &shapeContainerClass);
-    if (!obj) {
-      return nullptr;
-    }
-    wrapper->as<NativeObject>().setSlot(
-        SHAPE_CONTAINER_SLOT, PrivateGCThingValue(obj->lastProperty()));
-  }
-  if (!JS_WrapObject(cx, &wrapper)) {
-    return nullptr;
-  }
-  MOZ_ASSERT(IsWrapper(wrapper));
-  return wrapper;
-}
-
-void jit::LoadShapeWrapperContents(MacroAssembler& masm, Register obj,
-                                   Register dst, Label* failure) {
-  masm.loadPtr(Address(obj, ProxyObject::offsetOfReservedSlots()), dst);
-  Address privateAddr(dst, detail::ProxyReservedSlots::offsetOfPrivateSlot());
-  masm.branchTestObject(Assembler::NotEqual, privateAddr, failure);
-  masm.unboxObject(privateAddr, dst);
-  masm.unboxNonDouble(
-      Address(dst, NativeObject::getFixedSlotOffset(SHAPE_CONTAINER_SLOT)), dst,
-      JSVAL_TYPE_PRIVATE_GCTHING);
-}
-
-CompareIRGenerator::CompareIRGenerator(JSContext* cx, HandleScript script,
-                                       jsbytecode* pc, ICState::Mode mode,
-                                       JSOp op, HandleValue lhsVal,
-                                       HandleValue rhsVal)
-    : IRGenerator(cx, script, pc, CacheKind::Compare, mode),
-      op_(op),
-      lhsVal_(lhsVal),
-      rhsVal_(rhsVal) {}
-
-bool CompareIRGenerator::tryAttachString(ValOperandId lhsId,
-                                         ValOperandId rhsId) {
-  MOZ_ASSERT(IsEqualityOp(op_));
-
-  if (!lhsVal_.isString() || !rhsVal_.isString()) {
-    return false;
-  }
-
-  StringOperandId lhsStrId = writer.guardIsString(lhsId);
-  StringOperandId rhsStrId = writer.guardIsString(rhsId);
-  writer.compareStringResult(op_, lhsStrId, rhsStrId);
-  writer.returnFromIC();
-
-  trackAttached("String");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachObject(ValOperandId lhsId,
-                                         ValOperandId rhsId) {
-  MOZ_ASSERT(IsEqualityOp(op_));
-
-  if (!lhsVal_.isObject() || !rhsVal_.isObject()) {
-    return false;
-  }
-
-  ObjOperandId lhsObjId = writer.guardIsObject(lhsId);
-  ObjOperandId rhsObjId = writer.guardIsObject(rhsId);
-  writer.compareObjectResult(op_, lhsObjId, rhsObjId);
-  writer.returnFromIC();
-
-  trackAttached("Object");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachSymbol(ValOperandId lhsId,
-                                         ValOperandId rhsId) {
-  MOZ_ASSERT(IsEqualityOp(op_));
-
-  if (!lhsVal_.isSymbol() || !rhsVal_.isSymbol()) {
-    return false;
-  }
-
-  SymbolOperandId lhsSymId = writer.guardIsSymbol(lhsId);
-  SymbolOperandId rhsSymId = writer.guardIsSymbol(rhsId);
-  writer.compareSymbolResult(op_, lhsSymId, rhsSymId);
-  writer.returnFromIC();
-
-  trackAttached("Symbol");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachStrictDifferentTypes(ValOperandId lhsId,
-                                                       ValOperandId rhsId) {
-  MOZ_ASSERT(IsEqualityOp(op_));
-
-  if (op_ != JSOP_STRICTEQ && op_ != JSOP_STRICTNE) {
-    return false;
-  }
-
-  // Probably can't hit some of these.
-  if (SameType(lhsVal_, rhsVal_) ||
-      (lhsVal_.isNumber() && rhsVal_.isNumber())) {
-    return false;
-  }
-
-  // Compare tags
-  ValueTagOperandId lhsTypeId = writer.loadValueTag(lhsId);
-  ValueTagOperandId rhsTypeId = writer.loadValueTag(rhsId);
-  writer.guardTagNotEqual(lhsTypeId, rhsTypeId);
-
-  // Now that we've passed the guard, we know differing types, so return the
-  // bool result.
-  writer.loadBooleanResult(op_ == JSOP_STRICTNE ? true : false);
-  writer.returnFromIC();
-
-  trackAttached("StrictDifferentTypes");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachInt32(ValOperandId lhsId,
-                                        ValOperandId rhsId) {
-  if ((!lhsVal_.isInt32() && !lhsVal_.isBoolean()) ||
-      (!rhsVal_.isInt32() && !rhsVal_.isBoolean())) {
-    return false;
-  }
-
-  Int32OperandId lhsIntId = lhsVal_.isBoolean() ? writer.guardIsBoolean(lhsId)
-                                                : writer.guardIsInt32(lhsId);
-  Int32OperandId rhsIntId = rhsVal_.isBoolean() ? writer.guardIsBoolean(rhsId)
-                                                : writer.guardIsInt32(rhsId);
-
-  // Strictly different types should have been handed by
-  // tryAttachStrictDifferentTypes
-  MOZ_ASSERT_IF(op_ == JSOP_STRICTEQ || op_ == JSOP_STRICTNE,
-                lhsVal_.isInt32() == rhsVal_.isInt32());
-
-  writer.compareInt32Result(op_, lhsIntId, rhsIntId);
-  writer.returnFromIC();
-
-  trackAttached(lhsVal_.isBoolean() ? "Boolean" : "Int32");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachNumber(ValOperandId lhsId,
-                                         ValOperandId rhsId) {
-  if (!lhsVal_.isNumber() || !rhsVal_.isNumber()) {
-    return false;
-  }
-
-  writer.guardIsNumber(lhsId);
-  writer.guardIsNumber(rhsId);
-  writer.compareDoubleResult(op_, lhsId, rhsId);
-  writer.returnFromIC();
-
-  trackAttached("Number");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachObjectUndefined(ValOperandId lhsId,
-                                                  ValOperandId rhsId) {
-  if (!(lhsVal_.isNullOrUndefined() && rhsVal_.isObject()) &&
-      !(rhsVal_.isNullOrUndefined() && lhsVal_.isObject()))
-    return false;
-
-  if (op_ != JSOP_EQ && op_ != JSOP_NE) {
-    return false;
-  }
-
-  ValOperandId obj = rhsVal_.isObject() ? rhsId : lhsId;
-  ValOperandId undefOrNull = rhsVal_.isObject() ? lhsId : rhsId;
-
-  writer.guardIsNullOrUndefined(undefOrNull);
-  ObjOperandId objOperand = writer.guardIsObject(obj);
-  writer.compareObjectUndefinedNullResult(op_, objOperand);
-  writer.returnFromIC();
-
-  trackAttached("ObjectUndefined");
-  return true;
-}
-
-// Handle NumberUndefined comparisons
-bool CompareIRGenerator::tryAttachNumberUndefined(ValOperandId lhsId,
-                                                  ValOperandId rhsId) {
-  if (!(lhsVal_.isUndefined() && rhsVal_.isNumber()) &&
-      !(rhsVal_.isUndefined() && lhsVal_.isNumber())) {
-    return false;
-  }
-
-  lhsVal_.isNumber() ? writer.guardIsNumber(lhsId)
-                     : writer.guardIsUndefined(lhsId);
-  rhsVal_.isNumber() ? writer.guardIsNumber(rhsId)
-                     : writer.guardIsUndefined(rhsId);
-
-  // Comparing a number with undefined will always be true for NE/STRICTNE,
-  // and always be false for other compare ops.
-  writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
-  writer.returnFromIC();
-
-  trackAttached("NumberUndefined");
-  return true;
-}
-
-// Handle Primitive x {undefined,null} equality comparisons
-bool CompareIRGenerator::tryAttachPrimitiveUndefined(ValOperandId lhsId,
-                                                     ValOperandId rhsId) {
-  MOZ_ASSERT(IsEqualityOp(op_));
-
-  // The set of primitive cases we want to handle here (excluding null,
-  // undefined)
-  auto isPrimitive = [](HandleValue& x) {
-    return x.isString() || x.isSymbol() || x.isBoolean() || x.isNumber();
-  };
-
-  if (!(lhsVal_.isNullOrUndefined() && isPrimitive(rhsVal_)) &&
-      !(rhsVal_.isNullOrUndefined() && isPrimitive(lhsVal_))) {
-    return false;
-  }
-
-  auto guardPrimitive = [&](HandleValue v, ValOperandId id) {
-    if (v.isNumber()) {
-      writer.guardIsNumber(id);
-      return;
-    }
-    switch (v.extractNonDoubleType()) {
-      case JSVAL_TYPE_BOOLEAN:
-        writer.guardIsBoolean(id);
-        return;
-      case JSVAL_TYPE_SYMBOL:
-        writer.guardIsSymbol(id);
-        return;
-      case JSVAL_TYPE_STRING:
-        writer.guardIsString(id);
-        return;
-      default:
-        MOZ_CRASH("unexpected type");
-        return;
-    }
-  };
-
-  isPrimitive(lhsVal_) ? guardPrimitive(lhsVal_, lhsId)
-                       : writer.guardIsNullOrUndefined(lhsId);
-  isPrimitive(rhsVal_) ? guardPrimitive(rhsVal_, rhsId)
-                       : writer.guardIsNullOrUndefined(rhsId);
-
-  // Comparing a primitive with undefined/null will always be true for
-  // NE/STRICTNE, and always be false for other compare ops.
-  writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
-  writer.returnFromIC();
-
-  trackAttached("PrimitiveUndefined");
-  return true;
-}
-
-// Handle {null/undefined} x {null,undefined} equality comparisons
-bool CompareIRGenerator::tryAttachNullUndefined(ValOperandId lhsId,
-                                                ValOperandId rhsId) {
-  if (!lhsVal_.isNullOrUndefined() || !rhsVal_.isNullOrUndefined()) {
-    return false;
-  }
-
-  if (op_ == JSOP_EQ || op_ == JSOP_NE) {
-    writer.guardIsNullOrUndefined(lhsId);
-    writer.guardIsNullOrUndefined(rhsId);
-    // Sloppy equality means we actually only care about the op:
-    writer.loadBooleanResult(op_ == JSOP_EQ);
-    trackAttached("SloppyNullUndefined");
-  } else {
-    // Strict equality only hits this branch, and only in the
-    // undef {!,=}==  undef and null {!,=}== null cases.
-    // The other cases should have hit compareStrictlyDifferentTypes.
-    MOZ_ASSERT(lhsVal_.isNull() == rhsVal_.isNull());
-    lhsVal_.isNull() ? writer.guardIsNull(lhsId)
-                     : writer.guardIsUndefined(lhsId);
-    rhsVal_.isNull() ? writer.guardIsNull(rhsId)
-                     : writer.guardIsUndefined(rhsId);
-    writer.loadBooleanResult(op_ == JSOP_STRICTEQ);
-    trackAttached("StrictNullUndefinedEquality");
-  }
-
-  writer.returnFromIC();
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachStringNumber(ValOperandId lhsId,
-                                               ValOperandId rhsId) {
-  // Ensure String x Number
-  if (!(lhsVal_.isString() && rhsVal_.isNumber()) &&
-      !(rhsVal_.isString() && lhsVal_.isNumber())) {
-    return false;
-  }
-
-  // Case should have been handled by tryAttachStrictlDifferentTypes
-  MOZ_ASSERT(op_ != JSOP_STRICTEQ && op_ != JSOP_STRICTNE);
-
-  auto createGuards = [&](HandleValue v, ValOperandId vId) {
-    if (v.isString()) {
-      StringOperandId strId = writer.guardIsString(vId);
-      return writer.guardAndGetNumberFromString(strId);
-    }
-    MOZ_ASSERT(v.isNumber());
-    writer.guardIsNumber(vId);
-    return vId;
-  };
-
-  ValOperandId lhsGuardedId = createGuards(lhsVal_, lhsId);
-  ValOperandId rhsGuardedId = createGuards(rhsVal_, rhsId);
-  writer.compareDoubleResult(op_, lhsGuardedId, rhsGuardedId);
-  writer.returnFromIC();
-
-  trackAttached("StringNumber");
-  return true;
-}
-
-bool CompareIRGenerator::tryAttachStub() {
-  MOZ_ASSERT(cacheKind_ == CacheKind::Compare);
-  MOZ_ASSERT(IsEqualityOp(op_) || op_ == JSOP_LE || op_ == JSOP_LT ||
-             op_ == JSOP_GE || op_ == JSOP_GT);
-
-  AutoAssertNoPendingException aanpe(cx_);
-
-  constexpr uint8_t lhsIndex = 0;
-  constexpr uint8_t rhsIndex = 1;
-
-  static_assert(lhsIndex == 0 && rhsIndex == 1,
-                "Indexes relied upon by baseline inspector");
-
-  ValOperandId lhsId(writer.setInputOperandId(lhsIndex));
-  ValOperandId rhsId(writer.setInputOperandId(rhsIndex));
-
-  // For sloppy equality ops, there are cases this IC does not handle:
-  // - {Symbol} x {Null, Undefined, String, Bool, Number}.
-  // - {String} x {Null, Undefined, Symbol, Bool, Number}.
-  // - {Bool} x {Double}.
-  // - {Object} x {String, Symbol, Bool, Number}.
-  if (IsEqualityOp(op_)) {
-    if (tryAttachString(lhsId, rhsId)) {
-      return true;
-    }
-    if (tryAttachObject(lhsId, rhsId)) {
-      return true;
-    }
-    if (tryAttachSymbol(lhsId, rhsId)) {
-      return true;
-    }
-
-    // Handle the special case of Object compared to null/undefined.
-    // This is special due to the IsHTMLDDA internal slot semantic,
-    if (tryAttachObjectUndefined(lhsId, rhsId)) {
-      return true;
-    }
-
-    // This covers -strict- equality/inequality using a type tag check, so
-    // catches all different type pairs outside of Numbers, which cannot be
-    // checked on tags alone.
-    if (tryAttachStrictDifferentTypes(lhsId, rhsId)) {
-      return true;
-    }
-
-    // These checks should come after tryAttachStrictDifferentTypes since it
-    // handles strict inequality with a more generic IC.
-    if (tryAttachPrimitiveUndefined(lhsId, rhsId)) {
-      return true;
-    }
-
-    if (tryAttachNullUndefined(lhsId, rhsId)) {
-      return true;
-    }
-  }
-
-  // This should preceed the Int32/Number cases to allow
-  // them to not concern themselves with handling undefined
-  // or null.
-  if (tryAttachNumberUndefined(lhsId, rhsId)) {
-    return true;
-  }
-
-  // We want these to be last, to allow us to bypass the
-  // strictly-different-types cases in the below attachment code
-  if (tryAttachInt32(lhsId, rhsId)) {
-    return true;
-  }
-  if (tryAttachNumber(lhsId, rhsId)) {
-    return true;
-  }
-
-  if (tryAttachStringNumber(lhsId, rhsId)) {
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-}
-
-void CompareIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("lhs", lhsVal_);
-    sp.valueProperty("rhs", rhsVal_);
-    sp.opcodeProperty("op", op_);
-  }
-#endif
-}
-
-ToBoolIRGenerator::ToBoolIRGenerator(JSContext* cx, HandleScript script,
-                                     jsbytecode* pc, ICState::Mode mode,
-                                     HandleValue val)
-    : IRGenerator(cx, script, pc, CacheKind::ToBool, mode), val_(val) {}
-
-void ToBoolIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("val", val_);
-  }
-#endif
-}
-
-bool ToBoolIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-
-  if (tryAttachInt32()) {
-    return true;
-  }
-  if (tryAttachDouble()) {
-    return true;
-  }
-  if (tryAttachString()) {
-    return true;
-  }
-  if (tryAttachNullOrUndefined()) {
-    return true;
-  }
-  if (tryAttachObject()) {
-    return true;
-  }
-  if (tryAttachSymbol()) {
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-}
-
-bool ToBoolIRGenerator::tryAttachInt32() {
-  if (!val_.isInt32()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  writer.guardType(valId, JSVAL_TYPE_INT32);
-  writer.loadInt32TruthyResult(valId);
-  writer.returnFromIC();
-  trackAttached("ToBoolInt32");
-  return true;
-}
-
-bool ToBoolIRGenerator::tryAttachDouble() {
-  if (!val_.isDouble()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  writer.guardType(valId, JSVAL_TYPE_DOUBLE);
-  writer.loadDoubleTruthyResult(valId);
-  writer.returnFromIC();
-  trackAttached("ToBoolDouble");
-  return true;
-}
-
-bool ToBoolIRGenerator::tryAttachSymbol() {
-  if (!val_.isSymbol()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  writer.guardType(valId, JSVAL_TYPE_SYMBOL);
-  writer.loadBooleanResult(true);
-  writer.returnFromIC();
-  trackAttached("ToBoolSymbol");
-  return true;
-}
-
-bool ToBoolIRGenerator::tryAttachString() {
-  if (!val_.isString()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  StringOperandId strId = writer.guardIsString(valId);
-  writer.loadStringTruthyResult(strId);
-  writer.returnFromIC();
-  trackAttached("ToBoolString");
-  return true;
-}
-
-bool ToBoolIRGenerator::tryAttachNullOrUndefined() {
-  if (!val_.isNullOrUndefined()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!obj->is<ArrayObject>() ||
-        !JSID_IS_ATOM(id, cx_->names().length) ||
-        !obj->as<ArrayObject>().lengthIsWritable())
-    {
-        return false;
-    }
-
-    maybeEmitIdGuard(id);
-    writer.guardClass(objId, GuardClassKind::Array);
-    writer.callSetArrayLength(objId, IsStrictSetPC(pc_), rhsId);
-    writer.returnFromIC();
-
-    trackAttached("SetArrayLength");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachSetDenseElement(HandleObject obj, ObjOperandId objId, uint32_t index,
-                                             Int32OperandId indexId, ValOperandId rhsId)
-{
-    if (!obj->isNative()) {
-        return false;
-    }
-
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (!nobj->containsDenseElement(index) || nobj->getElementsHeader()->isFrozen()) {
-        return false;
-    }
-
-    // Don't optimize INITELEM (DefineProperty) on non-extensible objects: when
-    // the elements are sealed, we have to throw an exception. Note that we have
-    // to check !isExtensible instead of denseElementsAreSealed because sealing
-    // a (non-extensible) object does not necessarily trigger a Shape change.
-    if (IsPropertyInitOp(JSOp(*pc_)) && !nobj->isExtensible()) {
-        return false;
-    }
-
-    if (typeCheckInfo_.needsTypeBarrier()) {
-        writer.guardGroupForTypeBarrier(objId, nobj->group());
-    }
-    TestMatchingNativeReceiver(writer, nobj, objId);
-
-    writer.storeDenseElement(objId, indexId, rhsId);
-    writer.returnFromIC();
-
-    // Type inference uses JSID_VOID for the element types.
-    typeCheckInfo_.set(nobj->group(), JSID_VOID);
-
-    trackAttached("SetDenseElement");
-    return true;
-}
-
-static bool
-CanAttachAddElement(NativeObject* obj, bool isInit)
-{
-    // Make sure the objects on the prototype don't have any indexed properties
-    // or that such properties can't appear without a shape change.
-    do {
-        // The first two checks are also relevant to the receiver object.
-        if (obj->isIndexed()) {
-            return false;
-        }
-
-        const Class* clasp = obj->getClass();
-        if (clasp != &ArrayObject::class_ &&
-            (clasp->getAddProperty() ||
-             clasp->getResolve() ||
-             clasp->getOpsLookupProperty() ||
-             clasp->getOpsSetProperty()))
-        {
-            return false;
-        }
-
-        // If we're initializing a property instead of setting one, the objects
-        // on the prototype are not relevant.
-        if (isInit) {
-            break;
-        }
-
-        JSObject* proto = obj->staticPrototype();
-        if (!proto) {
-            break;
-        }
-
-        if (!proto->isNative()) {
-            return false;
-        }
-
-        // We have to make sure the proto has no non-writable (frozen) elements
-        // because we're not allowed to shadow them. There are a few cases to
-        // consider:
-        //
-        // * If the proto is extensible, its Shape will change when it's made
-        //   non-extensible.
-        //
-        // * If the proto is already non-extensible, no new elements will be
-        //   added, so if there are no elements now it doesn't matter if the
-        //   object is frozen later on.
-        NativeObject* nproto = &proto->as<NativeObject>();
-        if (!nproto->isExtensible() && nproto->getDenseInitializedLength() > 0) {
-            return false;
-        }
-
-        obj = nproto;
-    } while (true);
-
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachSetDenseElementHole(HandleObject obj, ObjOperandId objId,
-                                                 uint32_t index, Int32OperandId indexId,
-                                                 ValOperandId rhsId)
-{
-    if (!obj->isNative() || rhsVal_.isMagic(JS_ELEMENTS_HOLE)) {
-        return false;
-    }
-
-    JSOp op = JSOp(*pc_);
-    MOZ_ASSERT(IsPropertySetOp(op) || IsPropertyInitOp(op));
-
-    if (op == JSOP_INITHIDDENELEM) {
-        return false;
-    }
-
-    NativeObject* nobj = &obj->as<NativeObject>();
-    if (!nobj->isExtensible()) {
-        return false;
-    }
-
-    MOZ_ASSERT(!nobj->getElementsHeader()->isFrozen(),
-               "Extensible objects should not have frozen elements");
-
-    uint32_t initLength = nobj->getDenseInitializedLength();
-
-    // Optimize if we're adding an element at initLength or writing to a hole.
-    //
-    // In the case where index > initLength, we need noteHasDenseAdd to be called
-    // to ensure Ion is aware that writes have occurred to-out-of-bound indexes before.
-    bool isAdd = index == initLength;
-    bool isHoleInBounds = index < initLength && !nobj->containsDenseElement(index);
-    if (!isAdd && !isHoleInBounds) {
-        return false;
-    }
-
-    // Can't add new elements to arrays with non-writable length.
-    if (isAdd && nobj->is<ArrayObject>() && !nobj->as<ArrayObject>().lengthIsWritable()) {
-        return false;
-    }
-
-    // Typed arrays don't have dense elements.
-    if (nobj->is<TypedArrayObject>()) {
-        return false;
-    }
-
-    // Check for other indexed properties or class hooks.
-    if (!CanAttachAddElement(nobj, IsPropertyInitOp(op))) {
-        return false;
-    }
-
-    if (typeCheckInfo_.needsTypeBarrier()) {
-        writer.guardGroupForTypeBarrier(objId, nobj->group());
-    }
-    TestMatchingNativeReceiver(writer, nobj, objId);
-
-    // Also shape guard the proto chain, unless this is an INITELEM or we know
-    // the proto chain has no indexed props.
-    if (IsPropertySetOp(op) && maybeHasExtraIndexedProps_) {
-        ShapeGuardProtoChain(writer, obj, objId);
-    }
-
-    writer.storeDenseElementHole(objId, indexId, rhsId, isAdd);
-    writer.returnFromIC();
-
-    // Type inference uses JSID_VOID for the element types.
-    typeCheckInfo_.set(nobj->group(), JSID_VOID);
-
-    trackAttached(isAdd ? "AddDenseElement" : "StoreDenseElementHole");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachSetTypedElement(HandleObject obj, ObjOperandId objId,
-                                             uint32_t index, Int32OperandId indexId,
-                                             ValOperandId rhsId)
-{
-    if (!obj->is<TypedArrayObject>() && !IsPrimitiveArrayTypedObject(obj)) {
-        return false;
-    }
-
-    if (!rhsVal_.isNumber()) {
-        return false;
-    }
-
-    if (!cx_->runtime()->jitSupportsFloatingPoint && TypedThingRequiresFloatingPoint(obj)) {
-        return false;
-    }
-
-    bool handleOutOfBounds = false;
-    if (obj->is<TypedArrayObject>()) {
-        handleOutOfBounds = (index >= obj->as<TypedArrayObject>().length());
-    } else {
-        // Typed objects throw on out of bounds accesses. Don't attach
-        // a stub in this case.
-        if (index >= obj->as<TypedObject>().length()) {
-            return false;
-        }
-
-        // Don't attach stubs if the underlying storage for typed objects
-        // in the zone could be detached, as the stub will always bail out.
-        if (cx_->zone()->detachedTypedObjects) {
-            return false;
-        }
-    }
-
-    Scalar::Type elementType = TypedThingElementType(obj);
-    TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
-
-    if (IsPrimitiveArrayTypedObject(obj)) {
-        writer.guardNoDetachedTypedObjects();
-        writer.guardGroupForLayout(objId, obj->group());
-    } else {
-        writer.guardShapeForClass(objId, obj->as<TypedArrayObject>().shape());
-    }
-
-    writer.storeTypedElement(objId, indexId, rhsId, layout, elementType, handleOutOfBounds);
-    writer.returnFromIC();
-
-    if (handleOutOfBounds) {
-        attachedTypedArrayOOBStub_ = true;
-    }
-
-    trackAttached(handleOutOfBounds ? "SetTypedElementOOB" : "SetTypedElement");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachGenericProxy(HandleObject obj, ObjOperandId objId, HandleId id,
-                                          ValOperandId rhsId, bool handleDOMProxies)
-{
-    MOZ_ASSERT(obj->is<ProxyObject>());
-
-    writer.guardIsProxy(objId);
-
-    if (!handleDOMProxies) {
-        // Ensure that the incoming object is not a DOM proxy, so that we can
-        // get to the specialized stubs. If handleDOMProxies is true, we were
-        // unable to attach a specialized DOM stub, so we just handle all
-        // proxies here.
-        writer.guardNotDOMProxy(objId);
-    }
-
-    if (cacheKind_ == CacheKind::SetProp || mode_ == ICState::Mode::Specialized) {
-        maybeEmitIdGuard(id);
-        writer.callProxySet(objId, id, rhsId, IsStrictSetPC(pc_));
-    } else {
-        // Attach a stub that handles every id.
-        MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-        MOZ_ASSERT(mode_ == ICState::Mode::Megamorphic);
-        writer.callProxySetByValue(objId, setElemKeyValueId(), rhsId, IsStrictSetPC(pc_));
-    }
-
-    writer.returnFromIC();
-
-    trackAttached("GenericProxy");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachDOMProxyShadowed(HandleObject obj, ObjOperandId objId, HandleId id,
-                                              ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-    maybeEmitIdGuard(id);
-    TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-    writer.callProxySet(objId, id, rhsId, IsStrictSetPC(pc_));
-    writer.returnFromIC();
-
-    trackAttached("DOMProxyShadowed");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachDOMProxyUnshadowed(HandleObject obj, ObjOperandId objId, HandleId id,
-                                                ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-    RootedObject proto(cx_, obj->staticPrototype());
-    if (!proto) {
-        return false;
-    }
-
-    RootedObject holder(cx_);
-    RootedShape propShape(cx_);
-    if (!CanAttachSetter(cx_, pc_, proto, id, &holder, &propShape, isTemporarilyUnoptimizable_)) {
-        return false;
-    }
-
-    maybeEmitIdGuard(id);
-
-    // Guard that our expando object hasn't started shadowing this property.
-    TestMatchingProxyReceiver(writer, &obj->as<ProxyObject>(), objId);
-    CheckDOMProxyExpandoDoesNotShadow(writer, obj, id, objId);
-
-    GeneratePrototypeGuards(writer, obj, holder, objId);
-
-    // Guard on the holder of the property.
-    ObjOperandId holderId = writer.loadObject(holder);
-    TestMatchingHolder(writer, holder, holderId);
-
-    // EmitCallSetterNoGuards expects |obj| to be the object the property is
-    // on to do some checks. Since we actually looked at proto, and no extra
-    // guards will be generated, we can just pass that instead.
-    EmitCallSetterNoGuards(writer, proto, holder, propShape, objId, rhsId);
-
-    trackAttached("DOMProxyUnshadowed");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachDOMProxyExpando(HandleObject obj, ObjOperandId objId, HandleId id,
-                                             ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsCacheableDOMProxy(obj));
-
-    RootedValue expandoVal(cx_, GetProxyPrivate(obj));
-    RootedObject expandoObj(cx_);
-    if (expandoVal.isObject()) {
-        expandoObj = &expandoVal.toObject();
-    } else {
-        MOZ_ASSERT(!expandoVal.isUndefined(),
-                   "How did a missing expando manage to shadow things?");
-        auto expandoAndGeneration = static_cast<ExpandoAndGeneration*>(expandoVal.toPrivate());
-        MOZ_ASSERT(expandoAndGeneration);
-        expandoObj = &expandoAndGeneration->expando.toObject();
-    }
-
-    RootedShape propShape(cx_);
-    if (CanAttachNativeSetSlot(cx_, JSOp(*pc_), expandoObj, id, isTemporarilyUnoptimizable_,
-                               &propShape))
-    {
-        maybeEmitIdGuard(id);
-        ObjOperandId expandoObjId =
-            guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
-
-        NativeObject* nativeExpandoObj = &expandoObj->as<NativeObject>();
-        writer.guardGroupForTypeBarrier(expandoObjId, nativeExpandoObj->group());
-        typeCheckInfo_.set(nativeExpandoObj->group(), id);
-
-        EmitStoreSlotAndReturn(writer, expandoObjId, nativeExpandoObj, propShape, rhsId);
-        trackAttached("DOMProxyExpandoSlot");
-        return true;
-    }
-
-    RootedObject holder(cx_);
-    if (CanAttachSetter(cx_, pc_, expandoObj, id, &holder, &propShape,
-                        isTemporarilyUnoptimizable_))
-    {
-        // Note that we don't actually use the expandoObjId here after the
-        // shape guard. The DOM proxy (objId) is passed to the setter as
-        // |this|.
-        maybeEmitIdGuard(id);
-        guardDOMProxyExpandoObjectAndShape(obj, objId, expandoVal, expandoObj);
-
-        MOZ_ASSERT(holder == expandoObj);
-        EmitCallSetterNoGuards(writer, expandoObj, expandoObj, propShape, objId, rhsId);
-        trackAttached("DOMProxyExpandoSetter");
-        return true;
-    }
-
-    return false;
-}
-
-bool
-SetPropIRGenerator::tryAttachProxy(HandleObject obj, ObjOperandId objId, HandleId id,
-                                   ValOperandId rhsId)
-{
-    // Don't attach a proxy stub for ops like JSOP_INITELEM.
-    MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-    ProxyStubType type = GetProxyStubType(cx_, obj, id);
-    if (type == ProxyStubType::None) {
-        return false;
-    }
-
-    if (mode_ == ICState::Mode::Megamorphic) {
-        return tryAttachGenericProxy(obj, objId, id, rhsId, /* handleDOMProxies = */ true);
-    }
-
-    switch (type) {
-      case ProxyStubType::None:
-        break;
-      case ProxyStubType::DOMExpando:
-        if (tryAttachDOMProxyExpando(obj, objId, id, rhsId)) {
-            return true;
-        }
-        if (*isTemporarilyUnoptimizable_) {
-            // Scripted setter without JIT code. Just wait.
-            return false;
-        }
-        MOZ_FALLTHROUGH; // Fall through to the generic shadowed case.
-      case ProxyStubType::DOMShadowed:
-        return tryAttachDOMProxyShadowed(obj, objId, id, rhsId);
-      case ProxyStubType::DOMUnshadowed:
-        if (tryAttachDOMProxyUnshadowed(obj, objId, id, rhsId)) {
-            return true;
-        }
-        if (*isTemporarilyUnoptimizable_) {
-            // Scripted setter without JIT code. Just wait.
-            return false;
-        }
-        return tryAttachGenericProxy(obj, objId, id, rhsId, /* handleDOMProxies = */ true);
-      case ProxyStubType::Generic:
-        return tryAttachGenericProxy(obj, objId, id, rhsId, /* handleDOMProxies = */ false);
-    }
-
-    MOZ_CRASH("Unexpected ProxyStubType");
-}
-
-bool
-SetPropIRGenerator::tryAttachProxyElement(HandleObject obj, ObjOperandId objId, ValOperandId rhsId)
-{
-    // Don't attach a proxy stub for ops like JSOP_INITELEM.
-    MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-    if (!obj->is<ProxyObject>()) {
-        return false;
-    }
-
-    writer.guardIsProxy(objId);
-
-    // Like GetPropIRGenerator::tryAttachProxyElement, don't check for DOM
-    // proxies here as we don't have specialized DOM stubs for this.
-    MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-    writer.callProxySetByValue(objId, setElemKeyValueId(), rhsId, IsStrictSetPC(pc_));
-    writer.returnFromIC();
-
-    trackAttached("ProxyElement");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachMegamorphicSetElement(HandleObject obj, ObjOperandId objId,
-                                                   ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsPropertySetOp(JSOp(*pc_)));
-
-    if (mode_ != ICState::Mode::Megamorphic || cacheKind_ != CacheKind::SetElem) {
-        return false;
-    }
-
-    // The generic proxy stubs are faster.
-    if (obj->is<ProxyObject>()) {
-        return false;
-    }
-
-    writer.megamorphicSetElement(objId, setElemKeyValueId(), rhsId, IsStrictSetPC(pc_));
-    writer.returnFromIC();
-
-    trackAttached("MegamorphicSetElement");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachWindowProxy(HandleObject obj, ObjOperandId objId, HandleId id,
-                                         ValOperandId rhsId)
-{
-    // Attach a stub when the receiver is a WindowProxy and we can do the set
-    // on the Window (the global object).
-
-    if (!IsWindowProxy(obj)) {
-        return false;
-    }
-
-    // If we're megamorphic prefer a generic proxy stub that handles a lot more
-    // cases.
-    if (mode_ == ICState::Mode::Megamorphic) {
-        return false;
-    }
-
-    // This must be a WindowProxy for the current Window/global. Else it would
-    // be a cross-compartment wrapper and IsWindowProxy returns false for
-    // those.
-    MOZ_ASSERT(obj->getClass() == cx_->runtime()->maybeWindowProxyClass());
-    MOZ_ASSERT(ToWindowIfWindowProxy(obj) == cx_->global());
-
-    // Now try to do the set on the Window (the current global).
-    Handle<GlobalObject*> windowObj = cx_->global();
-
-    RootedShape propShape(cx_);
-    if (!CanAttachNativeSetSlot(cx_, JSOp(*pc_), windowObj, id, isTemporarilyUnoptimizable_,
-                                &propShape))
-    {
-        return false;
-    }
-
-    maybeEmitIdGuard(id);
-
-    writer.guardClass(objId, GuardClassKind::WindowProxy);
-    ObjOperandId windowObjId = writer.loadObject(windowObj);
-
-    writer.guardShape(windowObjId, windowObj->lastProperty());
-    writer.guardGroupForTypeBarrier(windowObjId, windowObj->group());
-    typeCheckInfo_.set(windowObj->group(), id);
-
-    EmitStoreSlotAndReturn(writer, windowObjId, windowObj, propShape, rhsId);
-
-    trackAttached("WindowProxySlot");
-    return true;
-}
-
-bool
-SetPropIRGenerator::tryAttachAddSlotStub(HandleObjectGroup oldGroup, HandleShape oldShape)
-{
-    ValOperandId objValId(writer.setInputOperandId(0));
-    ValOperandId rhsValId;
-    if (cacheKind_ == CacheKind::SetProp) {
-        rhsValId = ValOperandId(writer.setInputOperandId(1));
-    } else {
-        MOZ_ASSERT(cacheKind_ == CacheKind::SetElem);
-        MOZ_ASSERT(setElemKeyValueId().id() == 1);
-        writer.setInputOperandId(1);
-        rhsValId = ValOperandId(writer.setInputOperandId(2));
-    }
-
-    RootedId id(cx_);
-    bool nameOrSymbol;
-    if (!ValueToNameOrSymbolId(cx_, idVal_, &id, &nameOrSymbol)) {
-        cx_->clearPendingException();
-        return false;
-    }
-
-    if (!lhsVal_.isObject() || !nameOrSymbol) {
-        return false;
-    }
-
-    RootedObject obj(cx_, &lhsVal_.toObject());
-
-    PropertyResult prop;
-    JSObject* holder;
-    if (!LookupPropertyPure(cx_, obj, id, &holder, &prop)) {
-        return false;
-    }
-    if (obj != holder) {
-        return false;
-    }
-
-    Shape* propShape = nullptr;
-    NativeObject* holderOrExpando = nullptr;
-
-    if (obj->isNative()) {
-        propShape = prop.shape();
-        holderOrExpando = &obj->as<NativeObject>();
-    } else {
-        if (!obj->is<UnboxedPlainObject>()) {
-            return false;
-        }
-        UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
-        if (!expando) {
-            return false;
-        }
-        propShape = expando->lookupPure(id);
-        if (!propShape) {
-            return false;
-        }
-        holderOrExpando = expando;
-    }
-
-    MOZ_ASSERT(propShape);
-
-    // The property must be the last added property of the object.
-    if (holderOrExpando->lastProperty() != propShape) {
-        return false;
-    }
-
-    // Object must be extensible, oldShape must be immediate parent of
-    // current shape.
-    if (!obj->nonProxyIsExtensible() || propShape->previous() != oldShape) {
-        return false;
-    }
-
-    // Basic shape checks.
-    if (propShape->inDictionary() ||
-        !propShape->isDataProperty() ||
-        !propShape->writable())
-    {
-        return false;
-    }
-
-    // Watch out for resolve hooks.
-    if (ClassMayResolveId(cx_->names(), obj->getClass(), id, obj)) {
-        // The JSFunction resolve hook defines a (non-configurable and
-        // non-enumerable) |prototype| property on certain functions. Scripts
-        // often assign a custom |prototype| object and we want to optimize
-        // this |prototype| set and eliminate the default object allocation.
-        //
-        // We check group->maybeInterpretedFunction() here and guard on the
-        // group. The group is unique for a particular function so this ensures
-        // we don't add the default prototype property to functions that don't
-        // have it.
-        if (!obj->is<JSFunction>() ||
-            !JSID_IS_ATOM(id, cx_->names().prototype) ||
-            !oldGroup->maybeInterpretedFunction() ||
-            !obj->as<JSFunction>().needsPrototypeProperty())
-        {
-            return false;
-        }
-        MOZ_ASSERT(!propShape->configurable());
-        MOZ_ASSERT(!propShape->enumerable());
-    }
-
-    // Also watch out for addProperty hooks. Ignore the Array addProperty hook,
-    // because it doesn't do anything for non-index properties.
-    DebugOnly<uint32_t> index;
-    MOZ_ASSERT_IF(obj->is<ArrayObject>(), !IdIsIndex(id, &index));
-    if (!obj->is<ArrayObject>() && obj->getClass()->getAddProperty()) {
-        return false;
-    }
-
-    // Walk up the object prototype chain and ensure that all prototypes are
-    // native, and that all prototypes have no setter defined on the property.
-    for (JSObject* proto = obj->staticPrototype(); proto; proto = proto->staticPrototype()) {
-        if (!proto->isNative()) {
-            return false;
-        }
-
-        // If prototype defines this property in a non-plain way, don't optimize.
-        Shape* protoShape = proto->as<NativeObject>().lookup(cx_, id);
-        if (protoShape && !protoShape->hasDefaultSetter()) {
-            return false;
-        }
-
-        // Otherwise, if there's no such property, watch out for a resolve hook
-        // that would need to be invoked and thus prevent inlining of property
-        // addition. Allow the JSFunction resolve hook as it only defines plain
-        // data properties and we don't need to invoke it for objects on the
-        // proto chain.
-        if (ClassMayResolveId(cx_->names(), proto->getClass(), id, proto) &&
-            !proto->is<JSFunction>())
-        {
-            return false;
-        }
-    }
-
-    ObjOperandId objId = writer.guardIsObject(objValId);
-    maybeEmitIdGuard(id);
-
-    // In addition to guarding for type barrier, we need this group guard (or
-    // shape guard below) to ensure class is unchanged.
-    MOZ_ASSERT(!oldGroup->hasUncacheableClass() || obj->is<ShapedObject>());
-    writer.guardGroupForTypeBarrier(objId, oldGroup);
-
-    // If we are adding a property to an object for which the new script
-    // properties analysis hasn't been performed yet, make sure the stub fails
-    // after we run the analysis as a group change may be required here. The
-    // group change is not required for correctness but improves type
-    // information elsewhere.
-    AutoSweepObjectGroup sweep(oldGroup);
-    if (oldGroup->newScript(sweep) && !oldGroup->newScript(sweep)->analyzed()) {
-        writer.guardGroupHasUnanalyzedNewScript(oldGroup);
-        MOZ_ASSERT(IsPreliminaryObject(obj));
-        preliminaryObjectAction_ = PreliminaryObjectAction::NotePreliminary;
-    } else {
-        preliminaryObjectAction_ = PreliminaryObjectAction::Unlink;
-    }
-
-    // Shape guard the holder.
-    ObjOperandId holderId = objId;
-    if (!obj->isNative()) {
-        MOZ_ASSERT(obj->as<UnboxedPlainObject>().maybeExpando());
-        holderId = writer.guardAndLoadUnboxedExpando(objId);
-    }
-    writer.guardShape(holderId, oldShape);
-
-    ShapeGuardProtoChain(writer, obj, objId);
-
-    ObjectGroup* newGroup = obj->group();
-
-    // Check if we have to change the object's group. If we're adding an
-    // unboxed expando property, we pass the expando object to AddAndStore*Slot.
-    // That's okay because we only have to do a group change if the object is a
-    // PlainObject.
-    bool changeGroup = oldGroup != newGroup;
-    MOZ_ASSERT_IF(changeGroup, obj->is<PlainObject>());
-
-    if (holderOrExpando->isFixedSlot(propShape->slot())) {
-        size_t offset = NativeObject::getFixedSlotOffset(propShape->slot());
-        writer.addAndStoreFixedSlot(holderId, offset, rhsValId, propShape,
-                                    changeGroup, newGroup);
-        trackAttached("AddSlot");
-    } else {
-        size_t offset = holderOrExpando->dynamicSlotIndex(propShape->slot()) * sizeof(Value);
-        uint32_t numOldSlots = NativeObject::dynamicSlotsCount(oldShape);
-        uint32_t numNewSlots = NativeObject::dynamicSlotsCount(propShape);
-        if (numOldSlots == numNewSlots) {
-            writer.addAndStoreDynamicSlot(holderId, offset, rhsValId, propShape,
-                                          changeGroup, newGroup);
-            trackAttached("AddSlot");
-        } else {
-            MOZ_ASSERT(numNewSlots > numOldSlots);
-            writer.allocateAndStoreDynamicSlot(holderId, offset, rhsValId, propShape,
-                                               changeGroup, newGroup, numNewSlots);
-            trackAttached("AllocateSlot");
-        }
-    }
-    writer.returnFromIC();
-
-    typeCheckInfo_.set(oldGroup, id);
-    return true;
-}
-
-InstanceOfIRGenerator::InstanceOfIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                            ICState::Mode mode, HandleValue lhs, HandleObject rhs)
-  : IRGenerator(cx, script, pc, CacheKind::InstanceOf, mode),
-    lhsVal_(lhs),
-    rhsObj_(rhs)
-{ }
-
-bool
-InstanceOfIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::InstanceOf);
-    AutoAssertNoPendingException aanpe(cx_);
-
-    // Ensure RHS is a function -- could be a Proxy, which the IC isn't prepared to handle.
-    if (!rhsObj_->is<JSFunction>()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    HandleFunction fun = rhsObj_.as<JSFunction>();
-
-    if (fun->isBoundFunction()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    // If the user has supplied their own @@hasInstance method we shouldn't
-    // clobber it.
-    if (!js::FunctionHasDefaultHasInstance(fun, cx_->wellKnownSymbols())) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    // Refuse to optimize any function whose [[Prototype]] isn't
-    // Function.prototype.
-    if (!fun->hasStaticPrototype() || fun->hasUncacheableProto()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    Value funProto = cx_->global()->getPrototype(JSProto_Function);
-    if (!funProto.isObject() || fun->staticPrototype() != &funProto.toObject()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    // Ensure that the function's prototype slot is the same.
-    Shape* shape = fun->lookupPure(cx_->names().prototype);
-    if (!shape || !shape->isDataProperty()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    uint32_t slot = shape->slot();
-
-    MOZ_ASSERT(fun->numFixedSlots() == 0, "Stub code relies on this");
-    if (!fun->getSlot(slot).isObject()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    JSObject* prototypeObject = &fun->getSlot(slot).toObject();
-
-    // Abstract Objects
-    ValOperandId lhs(writer.setInputOperandId(0));
-    ValOperandId rhs(writer.setInputOperandId(1));
-
-    ObjOperandId rhsId = writer.guardIsObject(rhs);
-    writer.guardShape(rhsId, fun->lastProperty());
-
-    // Load prototypeObject into the cache -- consumed twice in the IC
-    ObjOperandId protoId = writer.loadObject(prototypeObject);
-    // Ensure that rhs[slot] == prototypeObject.
-    writer.guardFunctionPrototype(rhsId, slot, protoId);
-
-    // Needn't guard LHS is object, because the actual stub can handle that
-    // and correctly return false.
-    writer.loadInstanceOfObjectResult(lhs, protoId, slot);
-    writer.returnFromIC();
-    trackAttached("InstanceOf");
-    return true;
-}
-
-void
-InstanceOfIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("lhs", lhsVal_);
-        sp.valueProperty("rhs", ObjectValue(*rhsObj_));
-    }
-#endif
-}
-
-TypeOfIRGenerator::TypeOfIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                     ICState::Mode mode, HandleValue value)
-  : IRGenerator(cx, script, pc, CacheKind::TypeOf, mode),
-    val_(value)
-{ }
-
-bool
-TypeOfIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::TypeOf);
-
-    AutoAssertNoPendingException aanpe(cx_);
-
-    ValOperandId valId(writer.setInputOperandId(0));
-
-    if (tryAttachPrimitive(valId)) {
-        return true;
-    }
-
-    MOZ_ALWAYS_TRUE(tryAttachObject(valId));
-    return true;
-}
-
-bool
-TypeOfIRGenerator::tryAttachPrimitive(ValOperandId valId)
-{
-    if (!val_.isPrimitive()) {
-        return false;
-    }
-
-    if (val_.isNumber()) {
-        writer.guardIsNumber(valId);
-    } else {
-        writer.guardType(valId,  val_.extractNonDoubleType());
-    }
-
-    writer.loadStringResult(TypeName(js::TypeOfValue(val_), cx_->names()));
-    writer.returnFromIC();
-
-    return true;
-}
-
-bool
-TypeOfIRGenerator::tryAttachObject(ValOperandId valId)
-{
-    if (!val_.isObject()) {
-        return false;
-    }
-
-    ObjOperandId objId = writer.guardIsObject(valId);
-    writer.loadTypeOfObjectResult(objId);
-    writer.returnFromIC();
-
-    return true;
-}
-
-GetIteratorIRGenerator::GetIteratorIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                               ICState::Mode mode, HandleValue value)
-  : IRGenerator(cx, script, pc, CacheKind::GetIterator, mode),
-    val_(value)
-{ }
-
-bool
-GetIteratorIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::GetIterator);
-
-    AutoAssertNoPendingException aanpe(cx_);
-
-    if (mode_ == ICState::Mode::Megamorphic) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-    if (!val_.isObject()) {
-        return false;
-    }
-
-    RootedObject obj(cx_, &val_.toObject());
-
-    ObjOperandId objId = writer.guardIsObject(valId);
-    if (tryAttachNativeIterator(objId, obj)) {
-      trackAttached("GetIterator");
-      return true;
-    }
-
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-}
-
-bool
-GetIteratorIRGenerator::tryAttachNativeIterator(ObjOperandId objId, HandleObject obj)
-{
-    MOZ_ASSERT(JSOp(*pc_) == JSOP_ITER);
-
-    PropertyIteratorObject* iterobj = LookupInIteratorCache(cx_, obj);
-    if (!iterobj) {
-        return false;
-    }
-
-    MOZ_ASSERT(obj->isNative() || obj->is<UnboxedPlainObject>());
-
-    // Guard on the receiver's shape/group.
-    Maybe<ObjOperandId> expandoId;
-    TestMatchingReceiver(writer, obj, objId, &expandoId);
-
-    // Ensure the receiver or its expando object has no dense elements.
-    if (obj->isNative()) {
-        writer.guardNoDenseElements(objId);
-    } else if (expandoId) {
-        writer.guardNoDenseElements(*expandoId);
-    }
-
-    // Do the same for the objects on the proto chain.
-    GeneratePrototypeHoleGuards(writer, obj, objId);
-
-    ObjOperandId iterId =
-        writer.guardAndGetIterator(objId, iterobj, &ObjectRealm::get(obj).enumerators);
-    writer.loadObjectResult(iterId);
-    writer.returnFromIC();
-
-    return true;
-}
-
-void
-GetIteratorIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("val", val_);
-    }
-#endif
-}
-
-CallIRGenerator::CallIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, JSOp op,
-                                 ICState::Mode mode, uint32_t argc,
-                                 HandleValue callee, HandleValue thisval, HandleValueArray args)
-  : IRGenerator(cx, script, pc, CacheKind::Call, mode),
-    op_(op),
-    argc_(argc),
-    callee_(callee),
-    thisval_(thisval),
-    args_(args),
-    typeCheckInfo_(cx, /* needsTypeBarrier = */ true),
-    cacheIRStubKind_(BaselineCacheIRStubKind::Regular)
-{ }
-
-bool
-CallIRGenerator::tryAttachStringSplit()
-{
-    // Only optimize StringSplitString(str, str)
-    if (argc_ != 2 || !args_[0].isString() || !args_[1].isString()) {
-        return false;
-    }
-
-    // Just for now: if they're both atoms, then do not optimize using
-    // CacheIR and allow the legacy "ConstStringSplit" BaselineIC optimization
-    // to proceed.
-    if (args_[0].toString()->isAtom() && args_[1].toString()->isAtom()) {
-        return false;
-    }
-
-    // Get the object group to use for this location.
-    RootedObjectGroup group(cx_, ObjectGroupRealm::getStringSplitStringGroup(cx_));
-    if (!group) {
-        return false;
-    }
-
-    Int32OperandId argcId(writer.setInputOperandId(0));
-
-    // Ensure argc == 1.
-    writer.guardSpecificInt32Immediate(argcId, 2);
-
-    // 2 arguments.  Stack-layout here is (bottom to top):
-    //
-    //  3: Callee
-    //  2: ThisValue
-    //  1: Arg0
-    //  0: Arg1 <-- Top of stack
-
-    // Ensure callee is the |String_split| native function.
-    ValOperandId calleeValId = writer.loadStackValue(3);
-    ObjOperandId calleeObjId = writer.guardIsObject(calleeValId);
-    writer.guardIsNativeFunction(calleeObjId, js::intrinsic_StringSplitString);
-
-    // Ensure arg0 is a string.
-    ValOperandId arg0ValId = writer.loadStackValue(1);
-    StringOperandId arg0StrId = writer.guardIsString(arg0ValId);
-
-    // Ensure arg1 is a string.
-    ValOperandId arg1ValId = writer.loadStackValue(0);
-    StringOperandId arg1StrId = writer.guardIsString(arg1ValId);
-
-    // Call custom string splitter VM-function.
-    writer.callStringSplitResult(arg0StrId, arg1StrId, group);
-    writer.typeMonitorResult();
-
-    cacheIRStubKind_ = BaselineCacheIRStubKind::Monitored;
-    trackAttached("StringSplitString");
-
-    TypeScript::Monitor(cx_, script_, pc_, TypeSet::ObjectType(group));
-
-    return true;
-}
-
-bool
-CallIRGenerator::tryAttachArrayPush()
-{
-    // Only optimize on obj.push(val);
-    if (argc_ != 1 || !thisval_.isObject()) {
-        return false;
-    }
-
-    // Where |obj| is a native array.
-    RootedObject thisobj(cx_, &thisval_.toObject());
-    if (!thisobj->is<ArrayObject>()) {
-        return false;
-    }
-
-    RootedArrayObject thisarray(cx_, &thisobj->as<ArrayObject>());
-
-    // And the object group for the array is not collecting preliminary objects.
-    AutoSweepObjectGroup sweep(thisobj->group());
-    if (thisobj->group()->maybePreliminaryObjects(sweep)) {
-        return false;
-    }
-
-    // Check for other indexed properties or class hooks.
-    if (!CanAttachAddElement(thisarray, /* isInit = */ false)) {
-        return false;
-    }
-
-    // Can't add new elements to arrays with non-writable length.
-    if (!thisarray->lengthIsWritable()) {
-        return false;
-    }
-
-    // Check that array is extensible.
-    if (!thisarray->isExtensible()) {
-        return false;
-    }
-
-    MOZ_ASSERT(!thisarray->getElementsHeader()->isFrozen(),
-               "Extensible arrays should not have frozen elements");
-    MOZ_ASSERT(thisarray->lengthIsWritable());
-
-    // After this point, we can generate code fine.
-
-    // Generate code.
-    Int32OperandId argcId(writer.setInputOperandId(0));
-
-    // Ensure argc == 1.
-    writer.guardSpecificInt32Immediate(argcId, 1);
-
-    // 1 argument only.  Stack-layout here is (bottom to top):
-    //
-    //  2: Callee
-    //  1: ThisValue
-    //  0: Arg0 <-- Top of stack.
-
-    // Guard callee is the |js::array_push| native function.
-    ValOperandId calleeValId = writer.loadStackValue(2);
-    ObjOperandId calleeObjId = writer.guardIsObject(calleeValId);
-    writer.guardIsNativeFunction(calleeObjId, js::array_push);
-
-    // Guard this is an array object.
-    ValOperandId thisValId = writer.loadStackValue(1);
-    ObjOperandId thisObjId = writer.guardIsObject(thisValId);
-
-    // This is a soft assert, documenting the fact that we pass 'true'
-    // for needsTypeBarrier when constructing typeCheckInfo_ for CallIRGenerator.
-    // Can be removed safely if the assumption becomes false.
-    MOZ_ASSERT(typeCheckInfo_.needsTypeBarrier());
-
-    // Guard that the group and shape matches.
-    if (typeCheckInfo_.needsTypeBarrier()) {
-        writer.guardGroupForTypeBarrier(thisObjId, thisobj->group());
-    }
-    TestMatchingNativeReceiver(writer, thisarray, thisObjId);
-
-    // Guard proto chain shapes.
-    ShapeGuardProtoChain(writer, thisobj, thisObjId);
-
-    // arr.push(x) is equivalent to arr[arr.length] = x for regular arrays.
-    ValOperandId argId = writer.loadStackValue(0);
-    writer.arrayPush(thisObjId, argId);
-
-    writer.returnFromIC();
-
-    // Set the type-check info, and the stub kind to Updated
-    typeCheckInfo_.set(thisobj->group(), JSID_VOID);
-
-    cacheIRStubKind_ = BaselineCacheIRStubKind::Updated;
-
-    trackAttached("ArrayPush");
-    return true;
-}
-
-bool
-CallIRGenerator::tryAttachArrayJoin()
-{
-    // Only handle argc <= 1.
-    if (argc_ > 1) {
-        return false;
-    }
-
-    // Only optimize on obj.join(...);
-    if (!thisval_.isObject()) {
-        return false;
-    }
-
-    // Where |obj| is a native array.
-    RootedObject thisobj(cx_, &thisval_.toObject());
-    if (!thisobj->is<ArrayObject>()) {
-        return false;
-    }
-
-    RootedArrayObject thisarray(cx_, &thisobj->as<ArrayObject>());
-
-    // And the array is of length 0 or 1.
-    if (thisarray->length() > 1) {
-        return false;
-    }
-
-    // And the array is packed.
-    if (thisarray->getDenseInitializedLength() != thisarray->length()) {
-        return false;
-    }
-
-    // We don't need to worry about indexed properties because we can perform
-    // hole check manually.
-
-    // Generate code.
-    Int32OperandId argcId(writer.setInputOperandId(0));
-
-    // if 0 arguments:
-    //  1: Callee
-    //  0: ThisValue <-- Top of stack.
-    //
-    // if 1 argument:
-    //  2: Callee
-    //  1: ThisValue
-    //  0: Arg0 [optional] <-- Top of stack.
-
-    // Guard callee is the |js::array_join| native function.
-    uint32_t calleeIndex = (argc_ == 0) ? 1 : 2;
-    ValOperandId calleeValId = writer.loadStackValue(calleeIndex);
-    ObjOperandId calleeObjId = writer.guardIsObject(calleeValId);
-    writer.guardIsNativeFunction(calleeObjId, js::array_join);
-
-    if (argc_ == 1) {
-        // If argcount is 1, guard that the argument is a string.
-        ValOperandId argValId = writer.loadStackValue(0);
-        writer.guardIsString(argValId);
-    }
-
-    // Guard this is an array object.
-    uint32_t thisIndex = (argc_ == 0) ? 0 : 1;
-    ValOperandId thisValId = writer.loadStackValue(thisIndex);
-    ObjOperandId thisObjId = writer.guardIsObject(thisValId);
-    writer.guardClass(thisObjId, GuardClassKind::Array);
-
-    // Do the join.
-    writer.arrayJoinResult(thisObjId);
-
-    writer.returnFromIC();
-
-    // The result of this stub does not need to be monitored because it will
-    // always return a string.  We will add String to the stack typeset when
-    // attaching this stub.
-
-    // Set the stub kind to Regular
-    cacheIRStubKind_ = BaselineCacheIRStubKind::Regular;
-
-    trackAttached("ArrayJoin");
-    return true;
-}
-
-bool
-CallIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-
-    // Only optimize on JSOP_CALL or JSOP_CALL_IGNORES_RV.  No fancy business for now.
-    if ((op_ != JSOP_CALL) && (op_ != JSOP_CALL_IGNORES_RV)) {
-        return false;
-    }
-
-    // Only optimize when the mode is Specialized.
-    if (mode_ != ICState::Mode::Specialized) {
-        return false;
-    }
-
-    // Ensure callee is a function.
-    if (!callee_.isObject() || !callee_.toObject().is<JSFunction>()) {
-        return false;
-    }
-
-    RootedFunction calleeFunc(cx_, &callee_.toObject().as<JSFunction>());
-
-    // Check for native-function optimizations.
-    if (calleeFunc->isNative()) {
-        if (calleeFunc->native() == js::intrinsic_StringSplitString) {
-            if (tryAttachStringSplit()) {
-                return true;
-            }
-        }
-
-        if (calleeFunc->native() == js::array_push) {
-            if (tryAttachArrayPush()) {
-                return true;
-            }
-        }
-
-        if (calleeFunc->native() == js::array_join) {
-            if (tryAttachArrayJoin()) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-void
-CallIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("callee", callee_);
-        sp.valueProperty("thisval", thisval_);
-        sp.valueProperty("argc", Int32Value(argc_));
-    }
-#endif
-}
-
-// Class which holds a shape pointer for use when caches might reference data in other zones.
-static const Class shapeContainerClass = {
-    "ShapeContainer",
-    JSCLASS_HAS_RESERVED_SLOTS(1)
-};
-
-static const size_t SHAPE_CONTAINER_SLOT = 0;
-
-JSObject*
-jit::NewWrapperWithObjectShape(JSContext* cx, HandleNativeObject obj)
-{
-    MOZ_ASSERT(cx->compartment() != obj->compartment());
-
-    RootedObject wrapper(cx);
-    {
-        AutoRealm ar(cx, obj);
-        wrapper = NewBuiltinClassInstance(cx, &shapeContainerClass);
-        if (!obj) {
-            return nullptr;
-        }
-        wrapper->as<NativeObject>().setSlot(SHAPE_CONTAINER_SLOT, PrivateGCThingValue(obj->lastProperty()));
-    }
-    if (!JS_WrapObject(cx, &wrapper)) {
-        return nullptr;
-    }
-    MOZ_ASSERT(IsWrapper(wrapper));
-    return wrapper;
-}
-
-void
-jit::LoadShapeWrapperContents(MacroAssembler& masm, Register obj, Register dst, Label* failure)
-{
-    masm.loadPtr(Address(obj, ProxyObject::offsetOfReservedSlots()), dst);
-    Address privateAddr(dst, detail::ProxyReservedSlots::offsetOfPrivateSlot());
-    masm.branchTestObject(Assembler::NotEqual, privateAddr, failure);
-    masm.unboxObject(privateAddr, dst);
-    masm.unboxNonDouble(Address(dst, NativeObject::getFixedSlotOffset(SHAPE_CONTAINER_SLOT)), dst,
-                        JSVAL_TYPE_PRIVATE_GCTHING);
-}
-
-CompareIRGenerator::CompareIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc,
-                                       ICState::Mode mode, JSOp op,
-                                       HandleValue lhsVal, HandleValue rhsVal)
-  : IRGenerator(cx, script, pc, CacheKind::Compare, mode),
-    op_(op), lhsVal_(lhsVal), rhsVal_(rhsVal)
-{ }
-
-bool
-CompareIRGenerator::tryAttachString(ValOperandId lhsId, ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsEqualityOp(op_));
-
-    if (!lhsVal_.isString() || !rhsVal_.isString()) {
-        return false;
-    }
-
-    StringOperandId lhsStrId = writer.guardIsString(lhsId);
-    StringOperandId rhsStrId = writer.guardIsString(rhsId);
-    writer.compareStringResult(op_, lhsStrId, rhsStrId);
-    writer.returnFromIC();
-
-    trackAttached("String");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachObject(ValOperandId lhsId, ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsEqualityOp(op_));
-
-    if (!lhsVal_.isObject() || !rhsVal_.isObject()) {
-        return false;
-    }
-
-    ObjOperandId lhsObjId = writer.guardIsObject(lhsId);
-    ObjOperandId rhsObjId = writer.guardIsObject(rhsId);
-    writer.compareObjectResult(op_, lhsObjId, rhsObjId);
-    writer.returnFromIC();
-
-    trackAttached("Object");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachSymbol(ValOperandId lhsId, ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsEqualityOp(op_));
-
-    if (!lhsVal_.isSymbol() || !rhsVal_.isSymbol()) {
-        return false;
-    }
-
-    SymbolOperandId lhsSymId = writer.guardIsSymbol(lhsId);
-    SymbolOperandId rhsSymId = writer.guardIsSymbol(rhsId);
-    writer.compareSymbolResult(op_, lhsSymId, rhsSymId);
-    writer.returnFromIC();
-
-    trackAttached("Symbol");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachStrictDifferentTypes(ValOperandId lhsId, ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsEqualityOp(op_));
-
-    if (op_ != JSOP_STRICTEQ && op_ != JSOP_STRICTNE) {
-        return false;
-    }
-
-    // Probably can't hit some of these.
-    if (SameType(lhsVal_, rhsVal_) || (lhsVal_.isNumber() && rhsVal_.isNumber())) {
-        return false;
-    }
-
-    // Compare tags
-    ValueTagOperandId lhsTypeId = writer.loadValueTag(lhsId);
-    ValueTagOperandId rhsTypeId = writer.loadValueTag(rhsId);
-    writer.guardTagNotEqual(lhsTypeId, rhsTypeId);
-
-    // Now that we've passed the guard, we know differing types, so return the bool result.
-    writer.loadBooleanResult(op_ == JSOP_STRICTNE ? true : false);
-    writer.returnFromIC();
-
-    trackAttached("StrictDifferentTypes");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachInt32(ValOperandId lhsId, ValOperandId rhsId)
-{
-    if ((!lhsVal_.isInt32() && !lhsVal_.isBoolean()) ||
-        (!rhsVal_.isInt32() && !rhsVal_.isBoolean()))
-    {
-        return false;
-    }
-
-    Int32OperandId lhsIntId = lhsVal_.isBoolean() ? writer.guardIsBoolean(lhsId)
-                                                  : writer.guardIsInt32(lhsId);
-    Int32OperandId rhsIntId = rhsVal_.isBoolean() ? writer.guardIsBoolean(rhsId)
-                                                  : writer.guardIsInt32(rhsId);
-
-    // Strictly different types should have been handed by
-    // tryAttachStrictDifferentTypes
-    MOZ_ASSERT_IF(op_ == JSOP_STRICTEQ || op_ == JSOP_STRICTNE,
-                  lhsVal_.isInt32() == rhsVal_.isInt32());
-
-    writer.compareInt32Result(op_, lhsIntId, rhsIntId);
-    writer.returnFromIC();
-
-    trackAttached(lhsVal_.isBoolean() ? "Boolean" : "Int32");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachNumber(ValOperandId lhsId, ValOperandId rhsId)
-{
-    if (!cx_->runtime()->jitSupportsFloatingPoint) {
-        return false;
-    }
-
-    if (!lhsVal_.isNumber() || !rhsVal_.isNumber()) {
-        return false;
-    }
-
-    writer.guardIsNumber(lhsId);
-    writer.guardIsNumber(rhsId);
-    writer.compareDoubleResult(op_, lhsId, rhsId);
-    writer.returnFromIC();
-
-    trackAttached("Number");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachObjectUndefined(ValOperandId lhsId, ValOperandId rhsId)
-{
-    if (!(lhsVal_.isNullOrUndefined() && rhsVal_.isObject()) &&
-        !(rhsVal_.isNullOrUndefined() && lhsVal_.isObject()))
-        return false;
-
-    if (op_ != JSOP_EQ && op_ != JSOP_NE) {
-        return false;
-    }
-
-    ValOperandId obj = rhsVal_.isObject() ? rhsId : lhsId;
-    ValOperandId undefOrNull = rhsVal_.isObject() ? lhsId : rhsId;
-
-    writer.guardIsNullOrUndefined(undefOrNull);
-    ObjOperandId objOperand = writer.guardIsObject(obj);
-    writer.compareObjectUndefinedNullResult(op_, objOperand);
-    writer.returnFromIC();
-
-    trackAttached("ObjectUndefined");
-    return true;
-}
-
-// Handle NumberUndefined comparisons
-bool
-CompareIRGenerator::tryAttachNumberUndefined(ValOperandId lhsId, ValOperandId rhsId)
-{
-    if (!(lhsVal_.isUndefined() && rhsVal_.isNumber()) &&
-        !(rhsVal_.isUndefined() && lhsVal_.isNumber()))
-    {
-        return false;
-    }
-
-    lhsVal_.isNumber() ? writer.guardIsNumber(lhsId) : writer.guardIsUndefined(lhsId);
-    rhsVal_.isNumber() ? writer.guardIsNumber(rhsId) : writer.guardIsUndefined(rhsId);
-
-    // Comparing a number with undefined will always be true for NE/STRICTNE,
-    // and always be false for other compare ops.
-    writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
-    writer.returnFromIC();
-
-    trackAttached("NumberUndefined");
-    return true;
-}
-
-// Handle Primitive x {undefined,null} equality comparisons
-bool
-CompareIRGenerator::tryAttachPrimitiveUndefined(ValOperandId lhsId, ValOperandId rhsId)
-{
-    MOZ_ASSERT(IsEqualityOp(op_));
-
-    // The set of primitive cases we want to handle here (excluding null, undefined)
-    auto isPrimitive = [](HandleValue& x) {
-        return x.isString() || x.isSymbol() || x.isBoolean() || x.isNumber();
-    };
-
-    if (!(lhsVal_.isNullOrUndefined() && isPrimitive(rhsVal_)) &&
-        !(rhsVal_.isNullOrUndefined() && isPrimitive(lhsVal_)))
-    {
-        return false;
-    }
-
-    auto guardPrimitive = [&](HandleValue v, ValOperandId id) {
-        if (v.isNumber()) {
-            writer.guardIsNumber(id);
-            return;
-        }
-        switch (v.extractNonDoubleType()) {
-          case JSVAL_TYPE_BOOLEAN:
-            writer.guardIsBoolean(id);
-            return;
-          case JSVAL_TYPE_SYMBOL:
-            writer.guardIsSymbol(id);
-            return;
-          case JSVAL_TYPE_STRING:
-            writer.guardIsString(id);
-            return;
-          default:
-            MOZ_CRASH("unexpected type");
-            return;
-        }
-    };
-
-    isPrimitive(lhsVal_) ? guardPrimitive(lhsVal_, lhsId)
-                         : writer.guardIsNullOrUndefined(lhsId);
-    isPrimitive(rhsVal_) ? guardPrimitive(rhsVal_, rhsId)
-                         : writer.guardIsNullOrUndefined(rhsId);
-
-    // Comparing a primitive with undefined/null will always be true for NE/STRICTNE,
-    // and always be false for other compare ops.
-    writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
-    writer.returnFromIC();
-
-    trackAttached("PrimitiveUndefined");
-    return true;
-}
-
-// Handle {null/undefined} x {null,undefined} equality comparisons
-bool
-CompareIRGenerator::tryAttachNullUndefined(ValOperandId lhsId, ValOperandId rhsId)
-{
-    if (!lhsVal_.isNullOrUndefined() || !rhsVal_.isNullOrUndefined()) {
-        return false;
-    }
-
-    if (op_ == JSOP_EQ || op_ == JSOP_NE) {
-        writer.guardIsNullOrUndefined(lhsId);
-        writer.guardIsNullOrUndefined(rhsId);
-        // Sloppy equality means we actually only care about the op:
-        writer.loadBooleanResult(op_ == JSOP_EQ);
-        trackAttached("SloppyNullUndefined");
-    } else {
-        // Strict equality only hits this branch, and only in the
-        // undef {!,=}==  undef and null {!,=}== null cases.
-        // The other cases should have hit compareStrictlyDifferentTypes.
-        MOZ_ASSERT(lhsVal_.isNull() == rhsVal_.isNull());
-        lhsVal_.isNull() ? writer.guardIsNull(lhsId) : writer.guardIsUndefined(lhsId);
-        rhsVal_.isNull() ? writer.guardIsNull(rhsId) : writer.guardIsUndefined(rhsId);
-        writer.loadBooleanResult(op_ == JSOP_STRICTEQ);
-        trackAttached("StrictNullUndefinedEquality");
-    }
-
-    writer.returnFromIC();
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachStringNumber(ValOperandId lhsId, ValOperandId rhsId)
-{
-    // Ensure String x Number
-    if (!(lhsVal_.isString() && rhsVal_.isNumber()) &&
-        !(rhsVal_.isString() && lhsVal_.isNumber()))
-    {
-        return false;
-    }
-
-    // Case should have been handled by tryAttachStrictlDifferentTypes
-    MOZ_ASSERT(op_ != JSOP_STRICTEQ && op_ != JSOP_STRICTNE);
-
-    auto createGuards = [&](HandleValue v, ValOperandId vId) {
-        if (v.isString()) {
-            StringOperandId strId = writer.guardIsString(vId);
-            return writer.guardAndGetNumberFromString(strId);
-        }
-        MOZ_ASSERT(v.isNumber());
-        writer.guardIsNumber(vId);
-        return vId;
-    };
-
-    ValOperandId lhsGuardedId = createGuards(lhsVal_, lhsId);
-    ValOperandId rhsGuardedId = createGuards(rhsVal_, rhsId);
-    writer.compareDoubleResult(op_, lhsGuardedId, rhsGuardedId);
-    writer.returnFromIC();
-
-    trackAttached("StringNumber");
-    return true;
-}
-
-bool
-CompareIRGenerator::tryAttachStub()
-{
-    MOZ_ASSERT(cacheKind_ == CacheKind::Compare);
-    MOZ_ASSERT(IsEqualityOp(op_) ||
-               op_ == JSOP_LE || op_ == JSOP_LT ||
-               op_ == JSOP_GE || op_ == JSOP_GT);
-
-    AutoAssertNoPendingException aanpe(cx_);
-
-    constexpr uint8_t lhsIndex = 0;
-    constexpr uint8_t rhsIndex = 1;
-
-    static_assert(lhsIndex == 0 && rhsIndex == 1,
-        "Indexes relied upon by baseline inspector");
-
-    ValOperandId lhsId(writer.setInputOperandId(lhsIndex));
-    ValOperandId rhsId(writer.setInputOperandId(rhsIndex));
-
-    // For sloppy equality ops, there are cases this IC does not handle:
-    // - {Symbol} x {Null, Undefined, String, Bool, Number}.
-    // - {String} x {Null, Undefined, Symbol, Bool, Number}.
-    // - {Bool} x {Double}.
-    // - {Object} x {String, Symbol, Bool, Number}.
-    if (IsEqualityOp(op_)) {
-        if (tryAttachString(lhsId, rhsId)) {
-            return true;
-        }
-        if (tryAttachObject(lhsId, rhsId)) {
-            return true;
-        }
-        if (tryAttachSymbol(lhsId, rhsId)) {
-            return true;
-        }
-
-        // Handle the special case of Object compared to null/undefined.
-        // This is special due to the IsHTMLDDA internal slot semantic,
-        if (tryAttachObjectUndefined(lhsId, rhsId)) {
-            return true;
-        }
-
-        // This covers -strict- equality/inequality using a type tag check, so catches all
-        // different type pairs outside of Numbers, which cannot be checked on tags alone.
-        if (tryAttachStrictDifferentTypes(lhsId, rhsId)) {
-            return true;
-        }
-
-        // These checks should come after tryAttachStrictDifferentTypes since it handles
-        // strict inequality with a more generic IC.
-        if (tryAttachPrimitiveUndefined(lhsId, rhsId)) {
-            return true;
-        }
-
-        if (tryAttachNullUndefined(lhsId, rhsId)) {
-            return true;
-        }
-    }
-
-    // This should preceed the Int32/Number cases to allow
-    // them to not concern themselves with handling undefined
-    // or null.
-    if (tryAttachNumberUndefined(lhsId, rhsId)) {
-        return true;
-    }
-
-    // We want these to be last, to allow us to bypass the
-    // strictly-different-types cases in the below attachment code
-    if (tryAttachInt32(lhsId, rhsId)) {
-        return true;
-    }
-    if (tryAttachNumber(lhsId, rhsId)) {
-        return true;
-    }
-
-    if (tryAttachStringNumber(lhsId, rhsId)) {
-        return true;
-    }
-
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-}
-
-void
-CompareIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("lhs", lhsVal_);
-        sp.valueProperty("rhs", rhsVal_);
-        sp.opcodeProperty("op", op_);
-    }
-#endif
-}
-
-ToBoolIRGenerator::ToBoolIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
-                                     HandleValue val)
-  : IRGenerator(cx, script, pc, CacheKind::ToBool, mode),
-    val_(val)
-{}
-
-void
-ToBoolIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("val", val_);
-    }
-#endif
-}
-
-bool
-ToBoolIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-
-    if (tryAttachInt32()) {
-        return true;
-    }
-    if (tryAttachDouble()) {
-        return true;
-    }
-    if (tryAttachString()) {
-        return true;
-    }
-    if (tryAttachNullOrUndefined()) {
-        return true;
-    }
-    if (tryAttachObject()) {
-        return true;
-    }
-    if (tryAttachSymbol()) {
-        return true;
-    }
-
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-}
-
-bool
-ToBoolIRGenerator::tryAttachInt32()
-{
-    if (!val_.isInt32()) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-    writer.guardType(valId, JSVAL_TYPE_INT32);
-    writer.loadInt32TruthyResult(valId);
-    writer.returnFromIC();
-    trackAttached("ToBoolInt32");
-    return true;
-}
-
-bool
-ToBoolIRGenerator::tryAttachDouble()
-{
-    if (!val_.isDouble() || !cx_->runtime()->jitSupportsFloatingPoint) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-    writer.guardType(valId, JSVAL_TYPE_DOUBLE);
-    writer.loadDoubleTruthyResult(valId);
-    writer.returnFromIC();
-    trackAttached("ToBoolDouble");
-    return true;
-}
-
-bool
-ToBoolIRGenerator::tryAttachSymbol()
-{
-    if (!val_.isSymbol()) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-    writer.guardType(valId, JSVAL_TYPE_SYMBOL);
-    writer.loadBooleanResult(true);
-    writer.returnFromIC();
-    trackAttached("ToBoolSymbol");
-    return true;
-}
-
-bool
-ToBoolIRGenerator::tryAttachString()
-{
-    if (!val_.isString()) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-    StringOperandId strId = writer.guardIsString(valId);
-    writer.loadStringTruthyResult(strId);
-    writer.returnFromIC();
-    trackAttached("ToBoolString");
-    return true;
-}
-
-bool
-ToBoolIRGenerator::tryAttachNullOrUndefined()
-{
-    if (!val_.isNullOrUndefined()) {
-        return false;
-    }
-=======
   // This guard is actually overly tight, as the runtime
   // helper can handle lhs or rhs being a string, so long
   // as the other is an object.
@@ -17901,900 +6399,33 @@ ToBoolIRGenerator::tryAttachNullOrUndefined()
     writer.guardIsObject(lhsId);
     writer.guardIsString(rhsId);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ValOperandId valId(writer.setInputOperandId(0));
-  writer.guardIsNullOrUndefined(valId);
-  writer.loadBooleanResult(false);
-  writer.returnFromIC();
-  trackAttached("ToBoolNullOrUndefined");
-  return true;
-}
-
-bool ToBoolIRGenerator::tryAttachObject() {
-  if (!val_.isObject()) {
-    return false;
-  }
-||||||| merged common ancestors
-    ValOperandId valId(writer.setInputOperandId(0));
-    writer.guardIsNullOrUndefined(valId);
-    writer.loadBooleanResult(false);
-    writer.returnFromIC();
-    trackAttached("ToBoolNullOrUndefined");
-    return true;
-}
-
-bool
-ToBoolIRGenerator::tryAttachObject()
-{
-    if (!val_.isObject()) {
-        return false;
-    }
-=======
   writer.callStringObjectConcatResult(lhsId, rhsId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ValOperandId valId(writer.setInputOperandId(0));
-  ObjOperandId objId = writer.guardIsObject(valId);
-  writer.loadObjectTruthyResult(objId);
-  writer.returnFromIC();
-  trackAttached("ToBoolObject");
-  return true;
-||||||| merged common ancestors
-    ValOperandId valId(writer.setInputOperandId(0));
-    ObjOperandId objId = writer.guardIsObject(valId);
-    writer.loadObjectTruthyResult(objId);
-    writer.returnFromIC();
-    trackAttached("ToBoolObject");
-    return true;
-=======
   writer.returnFromIC();
   trackAttached("BinaryArith.StringObjectConcat");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-GetIntrinsicIRGenerator::GetIntrinsicIRGenerator(JSContext* cx,
-                                                 HandleScript script,
-                                                 jsbytecode* pc,
-                                                 ICState::Mode mode,
-                                                 HandleValue val)
-    : IRGenerator(cx, script, pc, CacheKind::GetIntrinsic, mode), val_(val) {}
-
-void GetIntrinsicIRGenerator::trackAttached(const char* name) {
-||||||| merged common ancestors
-GetIntrinsicIRGenerator::GetIntrinsicIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
-                                                 HandleValue val)
-  : IRGenerator(cx, script, pc, CacheKind::GetIntrinsic, mode)
-  , val_(val)
-{}
-
-void
-GetIntrinsicIRGenerator::trackAttached(const char* name)
-{
-=======
 NewObjectIRGenerator::NewObjectIRGenerator(JSContext* cx, HandleScript script,
                                            jsbytecode* pc, ICState::Mode mode,
                                            JSOp op, HandleObject templateObj)
     : IRGenerator(cx, script, pc, CacheKind::NewObject, mode),
->>>>>>> upstream-releases
 #ifdef JS_CACHEIR_SPEW
-<<<<<<< HEAD
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("val", val_);
-  }
-||||||| merged common ancestors
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("val", val_);
-    }
-=======
       op_(op),
->>>>>>> upstream-releases
 #endif
       templateObject_(templateObj) {
   MOZ_ASSERT(templateObject_);
 }
 
-<<<<<<< HEAD
-bool GetIntrinsicIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-  writer.loadValueResult(val_);
-  writer.returnFromIC();
-  trackAttached("GetIntrinsic");
-  return true;
-}
-
-UnaryArithIRGenerator::UnaryArithIRGenerator(JSContext* cx, HandleScript script,
-                                             jsbytecode* pc, ICState::Mode mode,
-                                             JSOp op, HandleValue val,
-                                             HandleValue res)
-    : IRGenerator(cx, script, pc, CacheKind::UnaryArith, mode),
-      op_(op),
-      val_(val),
-      res_(res) {}
-
-void UnaryArithIRGenerator::trackAttached(const char* name) {
-||||||| merged common ancestors
-bool
-GetIntrinsicIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-    writer.loadValueResult(val_);
-    writer.returnFromIC();
-    trackAttached("GetIntrinsic");
-    return true;
-}
-
-UnaryArithIRGenerator::UnaryArithIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
-                                             JSOp op, HandleValue val, HandleValue res)
-  : IRGenerator(cx, script, pc, CacheKind::UnaryArith, mode),
-    op_(op),
-    val_(val),
-    res_(res)
-{ }
-
-void
-UnaryArithIRGenerator::trackAttached(const char* name)
-{
-=======
 void NewObjectIRGenerator::trackAttached(const char* name) {
->>>>>>> upstream-releases
-#ifdef JS_CACHEIR_SPEW
-<<<<<<< HEAD
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.valueProperty("val", val_);
-    sp.valueProperty("res", res_);
-  }
-||||||| merged common ancestors
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.valueProperty("val", val_);
-        sp.valueProperty("res", res_);
-    }
-=======
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.opcodeProperty("op", op_);
-  }
->>>>>>> upstream-releases
-#endif
-}
-
-<<<<<<< HEAD
-bool UnaryArithIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-  if (tryAttachInt32()) {
-    return true;
-  }
-  if (tryAttachNumber()) {
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-}
-
-bool UnaryArithIRGenerator::tryAttachInt32() {
-  if (!val_.isInt32() || !res_.isInt32()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-
-  Int32OperandId intId = writer.guardIsInt32(valId);
-  switch (op_) {
-    case JSOP_BITNOT:
-      writer.int32NotResult(intId);
-      trackAttached("UnaryArith.Int32Not");
-      break;
-    case JSOP_NEG:
-      writer.int32NegationResult(intId);
-      trackAttached("UnaryArith.Int32Neg");
-      break;
-    default:
-      MOZ_CRASH("Unexected OP");
-  }
-
-  writer.returnFromIC();
-  return true;
-}
-
-bool UnaryArithIRGenerator::tryAttachNumber() {
-  if (!val_.isNumber() || !res_.isNumber()) {
-    return false;
-  }
-
-  ValOperandId valId(writer.setInputOperandId(0));
-  writer.guardIsNumber(valId);
-  Int32OperandId truncatedId;
-  switch (op_) {
-    case JSOP_BITNOT:
-      truncatedId = writer.truncateDoubleToUInt32(valId);
-      writer.int32NotResult(truncatedId);
-      trackAttached("UnaryArith.DoubleNot");
-      break;
-    case JSOP_NEG:
-      writer.doubleNegationResult(valId);
-      trackAttached("UnaryArith.DoubleNeg");
-      break;
-    default:
-      MOZ_CRASH("Unexpected OP");
-  }
-
-  writer.returnFromIC();
-  return true;
-}
-
-BinaryArithIRGenerator::BinaryArithIRGenerator(
-    JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
-    JSOp op, HandleValue lhs, HandleValue rhs, HandleValue res)
-    : IRGenerator(cx, script, pc, CacheKind::BinaryArith, mode),
-      op_(op),
-      lhs_(lhs),
-      rhs_(rhs),
-      res_(res) {}
-
-void BinaryArithIRGenerator::trackAttached(const char* name) {
 #ifdef JS_CACHEIR_SPEW
   if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
     sp.opcodeProperty("op", op_);
-    sp.valueProperty("rhs", rhs_);
-    sp.valueProperty("lhs", lhs_);
   }
 #endif
 }
 
-bool BinaryArithIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-  // Arithmetic operations with Int32 operands
-  if (tryAttachInt32()) {
-    return true;
-  }
-  // Bitwise operations with Int32 operands
-  if (tryAttachBitwise()) {
-    return true;
-  }
-
-  // Arithmetic operations with Double operands. This needs to come after
-  // tryAttachInt32, as the guards overlap, and we'd prefer to attach the
-  // more specialized Int32 IC if it is possible.
-  if (tryAttachDouble()) {
-    return true;
-  }
-
-  // String x String
-  if (tryAttachStringConcat()) {
-    return true;
-  }
-
-  // String x Object
-  if (tryAttachStringObjectConcat()) {
-    return true;
-  }
-
-  if (tryAttachStringNumberConcat()) {
-    return true;
-  }
-
-  trackAttached(IRGenerator::NotAttached);
-  return false;
-}
-
-bool BinaryArithIRGenerator::tryAttachBitwise() {
-  // Only bit-wise and shifts.
-  if (op_ != JSOP_BITOR && op_ != JSOP_BITXOR && op_ != JSOP_BITAND &&
-      op_ != JSOP_LSH && op_ != JSOP_RSH && op_ != JSOP_URSH) {
-    return false;
-  }
-
-  // Check guard conditions
-  if (!(lhs_.isNumber() || lhs_.isBoolean()) ||
-      !(rhs_.isNumber() || rhs_.isBoolean())) {
-    return false;
-  }
-
-  // All ops, with the exception of URSH produce Int32 values.
-  MOZ_ASSERT_IF(op_ != JSOP_URSH, res_.isInt32());
-
-  ValOperandId lhsId(writer.setInputOperandId(0));
-  ValOperandId rhsId(writer.setInputOperandId(1));
-
-  // Convert type into int32 for the bitwise/shift operands.
-  auto guardToInt32 = [&](ValOperandId id, HandleValue val) {
-    if (val.isInt32()) {
-      return writer.guardIsInt32(id);
-    }
-    if (val.isBoolean()) {
-      return writer.guardIsBoolean(id);
-    }
-    MOZ_ASSERT(val.isDouble());
-    writer.guardType(id, JSVAL_TYPE_DOUBLE);
-    return writer.truncateDoubleToUInt32(id);
-  };
-
-  Int32OperandId lhsIntId = guardToInt32(lhsId, lhs_);
-  Int32OperandId rhsIntId = guardToInt32(rhsId, rhs_);
-
-  switch (op_) {
-    case JSOP_BITOR:
-      writer.int32BitOrResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Bitwise.BitOr");
-      break;
-    case JSOP_BITXOR:
-      writer.int32BitXOrResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Bitwise.BitXOr");
-      break;
-    case JSOP_BITAND:
-      writer.int32BitAndResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Bitwise.BitAnd");
-      break;
-    case JSOP_LSH:
-      writer.int32LeftShiftResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Bitwise.LeftShift");
-      break;
-    case JSOP_RSH:
-      writer.int32RightShiftResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Bitwise.RightShift");
-      break;
-    case JSOP_URSH:
-      writer.int32URightShiftResult(lhsIntId, rhsIntId, res_.isDouble());
-      trackAttached("BinaryArith.Bitwise.UnsignedRightShift");
-      break;
-    default:
-      MOZ_CRASH("Unhandled op in tryAttachBitwise");
-  }
-
-  writer.returnFromIC();
-  return true;
-}
-
-bool BinaryArithIRGenerator::tryAttachDouble() {
-  // Check valid opcodes
-  if (op_ != JSOP_ADD && op_ != JSOP_SUB && op_ != JSOP_MUL &&
-      op_ != JSOP_DIV && op_ != JSOP_MOD) {
-    return false;
-  }
-
-  // Check guard conditions
-  if (!lhs_.isNumber() || !rhs_.isNumber()) {
-    return false;
-  }
-
-  ValOperandId lhsId(writer.setInputOperandId(0));
-  ValOperandId rhsId(writer.setInputOperandId(1));
-
-  writer.guardIsNumber(lhsId);
-  writer.guardIsNumber(rhsId);
-
-  switch (op_) {
-    case JSOP_ADD:
-      writer.doubleAddResult(lhsId, rhsId);
-      trackAttached("BinaryArith.Double.Add");
-      break;
-    case JSOP_SUB:
-      writer.doubleSubResult(lhsId, rhsId);
-      trackAttached("BinaryArith.Double.Sub");
-      break;
-    case JSOP_MUL:
-      writer.doubleMulResult(lhsId, rhsId);
-      trackAttached("BinaryArith.Double.Mul");
-      break;
-    case JSOP_DIV:
-      writer.doubleDivResult(lhsId, rhsId);
-      trackAttached("BinaryArith.Double.Div");
-      break;
-    case JSOP_MOD:
-      writer.doubleModResult(lhsId, rhsId);
-      trackAttached("BinaryArith.Double.Mod");
-      break;
-    default:
-      MOZ_CRASH("Unhandled Op");
-  }
-  writer.returnFromIC();
-  return true;
-}
-
-bool BinaryArithIRGenerator::tryAttachInt32() {
-  // Check guard conditions
-  if (!(lhs_.isInt32() || lhs_.isBoolean()) ||
-      !(rhs_.isInt32() || rhs_.isBoolean())) {
-    return false;
-  }
-
-  // These ICs will failure() if result can't be encoded in an Int32:
-  // If sample result is not Int32, we should avoid IC.
-  if (!res_.isInt32()) {
-    return false;
-  }
-
-  if (op_ != JSOP_ADD && op_ != JSOP_SUB && op_ != JSOP_MUL &&
-      op_ != JSOP_DIV && op_ != JSOP_MOD) {
-    return false;
-  }
-
-  ValOperandId lhsId(writer.setInputOperandId(0));
-  ValOperandId rhsId(writer.setInputOperandId(1));
-
-  auto guardToInt32 = [&](ValOperandId id, HandleValue v) {
-    if (v.isInt32()) {
-      return writer.guardIsInt32(id);
-    }
-    MOZ_ASSERT(v.isBoolean());
-    return writer.guardIsBoolean(id);
-  };
-
-  Int32OperandId lhsIntId = guardToInt32(lhsId, lhs_);
-  Int32OperandId rhsIntId = guardToInt32(rhsId, rhs_);
-
-  switch (op_) {
-    case JSOP_ADD:
-      writer.int32AddResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Int32.Add");
-      break;
-    case JSOP_SUB:
-      writer.int32SubResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Int32.Sub");
-      break;
-    case JSOP_MUL:
-      writer.int32MulResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Int32.Mul");
-      break;
-    case JSOP_DIV:
-      writer.int32DivResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Int32.Div");
-      break;
-    case JSOP_MOD:
-      writer.int32ModResult(lhsIntId, rhsIntId);
-      trackAttached("BinaryArith.Int32.Mod");
-      break;
-    default:
-      MOZ_CRASH("Unhandled op in tryAttachInt32");
-  }
-
-  writer.returnFromIC();
-  return true;
-}
-
-bool BinaryArithIRGenerator::tryAttachStringNumberConcat() {
-  // Only Addition
-  if (op_ != JSOP_ADD) {
-    return false;
-  }
-
-  if (!(lhs_.isString() && rhs_.isNumber()) &&
-      !(lhs_.isNumber() && rhs_.isString())) {
-    return false;
-  }
-
-  ValOperandId lhsId(writer.setInputOperandId(0));
-  ValOperandId rhsId(writer.setInputOperandId(1));
-
-  auto guardToString = [&](ValOperandId id, HandleValue v) {
-    if (v.isString()) {
-      return writer.guardIsString(id);
-    }
-    if (v.isInt32()) {
-      Int32OperandId intId = writer.guardIsInt32(id);
-      return writer.callInt32ToString(intId);
-    }
-    // At this point we are creating an IC that will handle
-    // both Int32 and Double cases.
-    MOZ_ASSERT(v.isNumber());
-    writer.guardIsNumber(id);
-    return writer.callNumberToString(id);
-  };
-
-  StringOperandId lhsStrId = guardToString(lhsId, lhs_);
-  StringOperandId rhsStrId = guardToString(rhsId, rhs_);
-
-  writer.callStringConcatResult(lhsStrId, rhsStrId);
-
-  writer.returnFromIC();
-  trackAttached("BinaryArith.StringNumberConcat");
-  return true;
-}
-
-bool BinaryArithIRGenerator::tryAttachStringConcat() {
-  // Only Addition
-  if (op_ != JSOP_ADD) {
-    return false;
-  }
-
-  // Check guards
-  if (!lhs_.isString() || !rhs_.isString()) {
-    return false;
-  }
-
-  ValOperandId lhsId(writer.setInputOperandId(0));
-  ValOperandId rhsId(writer.setInputOperandId(1));
-
-  StringOperandId lhsStrId = writer.guardIsString(lhsId);
-  StringOperandId rhsStrId = writer.guardIsString(rhsId);
-||||||| merged common ancestors
-bool
-UnaryArithIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-    if (tryAttachInt32()) {
-        return true;
-    }
-    if (tryAttachNumber()) {
-        return true;
-    }
-
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-}
-
-bool
-UnaryArithIRGenerator::tryAttachInt32()
-{
-    if (!val_.isInt32() || !res_.isInt32()) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-
-    Int32OperandId intId = writer.guardIsInt32(valId);
-    switch (op_) {
-      case JSOP_BITNOT:
-        writer.int32NotResult(intId);
-        trackAttached("UnaryArith.Int32Not");
-        break;
-      case JSOP_NEG:
-        writer.int32NegationResult(intId);
-        trackAttached("UnaryArith.Int32Neg");
-        break;
-      default:
-        MOZ_CRASH("Unexected OP");
-    }
-
-    writer.returnFromIC();
-    return true;
-}
-
-bool
-UnaryArithIRGenerator::tryAttachNumber()
-{
-    if (!val_.isNumber() || !res_.isNumber() || !cx_->runtime()->jitSupportsFloatingPoint) {
-        return false;
-    }
-
-    ValOperandId valId(writer.setInputOperandId(0));
-    writer.guardIsNumber(valId);
-    Int32OperandId truncatedId;
-    switch (op_) {
-      case JSOP_BITNOT:
-        truncatedId = writer.truncateDoubleToUInt32(valId);
-        writer.int32NotResult(truncatedId);
-        trackAttached("UnaryArith.DoubleNot");
-        break;
-      case JSOP_NEG:
-        writer.doubleNegationResult(valId);
-        trackAttached("UnaryArith.DoubleNeg");
-        break;
-      default:
-        MOZ_CRASH("Unexpected OP");
-    }
-
-    writer.returnFromIC();
-    return true;
-}
-
-BinaryArithIRGenerator::BinaryArithIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
-                                               JSOp op, HandleValue lhs, HandleValue rhs, HandleValue res)
-  : IRGenerator(cx, script, pc, CacheKind::BinaryArith, mode),
-    op_(op),
-    lhs_(lhs),
-    rhs_(rhs),
-    res_(res)
-{ }
-
-void
-BinaryArithIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.opcodeProperty("op", op_);
-        sp.valueProperty("rhs", rhs_);
-        sp.valueProperty("lhs", lhs_);
-    }
-#endif
-}
-
-bool
-BinaryArithIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-    // Arithmetic operations with Int32 operands
-    if (tryAttachInt32()) {
-        return true;
-    }
-    // Bitwise operations with Int32 operands
-    if (tryAttachBitwise()) {
-        return true;
-    }
-
-    // Arithmetic operations with Double operands. This needs to come after
-    // tryAttachInt32, as the guards overlap, and we'd prefer to attach the
-    // more specialized Int32 IC if it is possible.
-    if (tryAttachDouble()) {
-        return true;
-    }
-
-    // String x String
-    if (tryAttachStringConcat()) {
-        return true;
-    }
-
-    // String x Object
-    if (tryAttachStringObjectConcat()) {
-        return true;
-    }
-
-    if (tryAttachStringNumberConcat()) {
-        return true;
-    }
-
-
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-}
-
-bool
-BinaryArithIRGenerator::tryAttachBitwise()
-{
-    // Only bit-wise and shifts.
-    if (op_ != JSOP_BITOR && op_ != JSOP_BITXOR && op_ != JSOP_BITAND &&
-        op_ != JSOP_LSH && op_ != JSOP_RSH && op_ != JSOP_URSH)
-    {
-        return false;
-    }
-
-    // Check guard conditions
-    if (!(lhs_.isNumber() || lhs_.isBoolean()) ||
-        !(rhs_.isNumber() || rhs_.isBoolean()))
-    {
-        return false;
-    }
-
-    // All ops, with the exception of URSH produce Int32 values.
-    MOZ_ASSERT_IF(op_ != JSOP_URSH, res_.isInt32());
-
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
-
-    // Convert type into int32 for the bitwise/shift operands.
-    auto guardToInt32 = [&](ValOperandId id, HandleValue val) {
-        if (val.isInt32()) {
-            return writer.guardIsInt32(id);
-        }
-        if (val.isBoolean()) {
-            return writer.guardIsBoolean(id);
-        }
-        MOZ_ASSERT(val.isDouble());
-        writer.guardType(id, JSVAL_TYPE_DOUBLE);
-        return writer.truncateDoubleToUInt32(id);
-    };
-
-    Int32OperandId lhsIntId = guardToInt32(lhsId, lhs_);
-    Int32OperandId rhsIntId = guardToInt32(rhsId, rhs_);
-
-    switch (op_) {
-      case JSOP_BITOR:
-        writer.int32BitOrResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Bitwise.BitOr");
-        break;
-      case JSOP_BITXOR:
-        writer.int32BitXOrResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Bitwise.BitXOr");
-        break;
-      case JSOP_BITAND:
-        writer.int32BitAndResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Bitwise.BitAnd");
-        break;
-      case JSOP_LSH:
-        writer.int32LeftShiftResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Bitwise.LeftShift");
-        break;
-      case JSOP_RSH:
-        writer.int32RightShiftResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Bitwise.RightShift");
-        break;
-      case JSOP_URSH:
-        writer.int32URightShiftResult(lhsIntId, rhsIntId, res_.isDouble());
-        trackAttached("BinaryArith.Bitwise.UnsignedRightShift");
-        break;
-      default:
-        MOZ_CRASH("Unhandled op in tryAttachBitwise");
-    }
-
-    writer.returnFromIC();
-    return true;
-}
-
-bool
-BinaryArithIRGenerator::tryAttachDouble()
-{
-    // Check valid opcodes
-    if (op_ != JSOP_ADD && op_ != JSOP_SUB &&
-        op_ != JSOP_MUL && op_ != JSOP_DIV &&
-        op_ != JSOP_MOD)
-    {
-        return false;
-    }
-
-    // Check guard conditions
-    if (!lhs_.isNumber() || !rhs_.isNumber()) {
-        return false;
-    }
-
-    if (!cx_->runtime()->jitSupportsFloatingPoint) {
-        return false;
-    }
-
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
-
-    writer.guardIsNumber(lhsId);
-    writer.guardIsNumber(rhsId);
-
-    switch (op_) {
-       case JSOP_ADD:
-        writer.doubleAddResult(lhsId, rhsId);
-        trackAttached("BinaryArith.Double.Add");
-        break;
-      case JSOP_SUB:
-        writer.doubleSubResult(lhsId, rhsId);
-        trackAttached("BinaryArith.Double.Sub");
-        break;
-      case JSOP_MUL:
-        writer.doubleMulResult(lhsId, rhsId);
-        trackAttached("BinaryArith.Double.Mul");
-        break;
-      case JSOP_DIV:
-        writer.doubleDivResult(lhsId, rhsId);
-        trackAttached("BinaryArith.Double.Div");
-        break;
-      case JSOP_MOD:
-        writer.doubleModResult(lhsId, rhsId);
-        trackAttached("BinaryArith.Double.Mod");
-        break;
-      default:
-        MOZ_CRASH("Unhandled Op");
-    }
-    writer.returnFromIC();
-    return true;
-}
-
-bool
-BinaryArithIRGenerator::tryAttachInt32()
-{
-    // Check guard conditions
-    if (!(lhs_.isInt32() || lhs_.isBoolean()) ||
-        !(rhs_.isInt32() || rhs_.isBoolean()))
-    {
-        return false;
-    }
-
-    // These ICs will failure() if result can't be encoded in an Int32:
-    // If sample result is not Int32, we should avoid IC.
-    if (!res_.isInt32()) {
-        return false;
-    }
-
-    if (op_ != JSOP_ADD && op_ != JSOP_SUB && op_ != JSOP_MUL && op_ != JSOP_DIV &&
-        op_ != JSOP_MOD)
-    {
-        return false;
-    }
-
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
-
-    auto guardToInt32 = [&](ValOperandId id, HandleValue v) {
-        if (v.isInt32()) {
-            return writer.guardIsInt32(id);
-        }
-        MOZ_ASSERT(v.isBoolean());
-        return writer.guardIsBoolean(id);
-    };
-
-    Int32OperandId lhsIntId = guardToInt32(lhsId, lhs_);
-    Int32OperandId rhsIntId = guardToInt32(rhsId, rhs_);
-
-    switch (op_) {
-      case JSOP_ADD:
-        writer.int32AddResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Int32.Add");
-        break;
-      case JSOP_SUB:
-        writer.int32SubResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Int32.Sub");
-        break;
-      case JSOP_MUL:
-        writer.int32MulResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Int32.Mul");
-        break;
-      case JSOP_DIV:
-        writer.int32DivResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Int32.Div");
-        break;
-      case JSOP_MOD:
-        writer.int32ModResult(lhsIntId, rhsIntId);
-        trackAttached("BinaryArith.Int32.Mod");
-        break;
-      default:
-        MOZ_CRASH("Unhandled op in tryAttachInt32");
-    }
-
-    writer.returnFromIC();
-    return true;
-}
-
-
-bool
-BinaryArithIRGenerator::tryAttachStringNumberConcat()
-{
-    // Only Addition
-    if (op_ != JSOP_ADD) {
-        return false;
-    }
-
-    if (!(lhs_.isString() && rhs_.isNumber()) &&
-        !(lhs_.isNumber() && rhs_.isString()))
-    {
-        return false;
-    }
-
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
-
-    auto guardToString = [&](ValOperandId id, HandleValue v) {
-        if (v.isString()) {
-            return writer.guardIsString(id);
-        }
-        if (v.isInt32()) {
-            Int32OperandId intId = writer.guardIsInt32(id);
-            return writer.callInt32ToString(intId);
-        }
-        // At this point we are creating an IC that will handle
-        // both Int32 and Double cases.
-        MOZ_ASSERT(v.isNumber());
-        writer.guardIsNumber(id);
-        return writer.callNumberToString(id);
-    };
-
-    StringOperandId lhsStrId = guardToString(lhsId, lhs_);
-    StringOperandId rhsStrId = guardToString(rhsId, rhs_);
-
-    writer.callStringConcatResult(lhsStrId, rhsStrId);
-
-    writer.returnFromIC();
-    trackAttached("BinaryArith.StringNumberConcat");
-    return true;
-}
-
-bool
-BinaryArithIRGenerator::tryAttachStringConcat()
-{
-    // Only Addition
-    if (op_ != JSOP_ADD) {
-        return false;
-    }
-
-    // Check guards
-    if (!lhs_.isString() || !rhs_.isString()) {
-        return false;
-    }
-
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
-
-    StringOperandId lhsStrId = writer.guardIsString(lhsId);
-    StringOperandId rhsStrId = writer.guardIsString(rhsId);
-=======
 AttachDecision NewObjectIRGenerator::tryAttachStub() {
   AutoAssertNoPendingException aanpe(cx_);
   if (templateObject_->as<PlainObject>().hasDynamicSlots()) {
@@ -18814,223 +6445,26 @@ AttachDecision NewObjectIRGenerator::tryAttachStub() {
     trackAttached(IRGenerator::NotAttached);
     return AttachDecision::NoAction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.callStringConcatResult(lhsStrId, rhsStrId);
-||||||| merged common ancestors
-    writer.callStringConcatResult(lhsStrId, rhsStrId);
-=======
   writer.guardNoAllocationMetadataBuilder();
   writer.guardObjectGroupNotPretenured(templateObject_->group());
   writer.loadNewObjectFromTemplateResult(templateObject_);
   writer.returnFromIC();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.returnFromIC();
-  trackAttached("BinaryArith.StringConcat");
-  return true;
-||||||| merged common ancestors
-    writer.returnFromIC();
-    trackAttached("BinaryArith.StringConcat");
-    return true;
-=======
   trackAttached("NewObjectWithTemplate");
   return AttachDecision::Attach;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BinaryArithIRGenerator::tryAttachStringObjectConcat() {
-  // Only Addition
-  if (op_ != JSOP_ADD) {
-    return false;
-  }
-
-  // Check Guards
-  if (!(lhs_.isObject() && rhs_.isString()) &&
-      !(lhs_.isString() && rhs_.isObject()))
-    return false;
-
-  ValOperandId lhsId(writer.setInputOperandId(0));
-  ValOperandId rhsId(writer.setInputOperandId(1));
-
-  // This guard is actually overly tight, as the runtime
-  // helper can handle lhs or rhs being a string, so long
-  // as the other is an object.
-  if (lhs_.isString()) {
-    writer.guardIsString(lhsId);
-    writer.guardIsObject(rhsId);
-  } else {
-    writer.guardIsObject(lhsId);
-    writer.guardIsString(rhsId);
-  }
-||||||| merged common ancestors
-bool
-BinaryArithIRGenerator::tryAttachStringObjectConcat()
-{
-    // Only Addition
-    if (op_ != JSOP_ADD) {
-        return false;
-    }
-
-    // Check Guards
-    if (!(lhs_.isObject() && rhs_.isString()) &&
-        !(lhs_.isString() && rhs_.isObject()))
-        return false;
-
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
-
-    // This guard is actually overly tight, as the runtime
-    // helper can handle lhs or rhs being a string, so long
-    // as the other is an object.
-    if (lhs_.isString()) {
-        writer.guardIsString(lhsId);
-        writer.guardIsObject(rhsId);
-    } else {
-        writer.guardIsObject(lhsId);
-        writer.guardIsString(rhsId);
-    }
-=======
 #ifdef JS_SIMULATOR
 bool js::jit::CallAnyNative(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   RootedObject calleeObj(cx, &args.callee());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.callStringObjectConcatResult(lhsId, rhsId);
-||||||| merged common ancestors
-    writer.callStringObjectConcatResult(lhsId, rhsId);
-=======
   MOZ_ASSERT(calleeObj->is<JSFunction>());
   RootedFunction calleeFunc(cx, &calleeObj->as<JSFunction>());
   MOZ_ASSERT(calleeFunc->isNative());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  writer.returnFromIC();
-  trackAttached("BinaryArith.StringObjectConcat");
-  return true;
-}
-
-NewObjectIRGenerator::NewObjectIRGenerator(JSContext* cx, HandleScript script,
-                                           jsbytecode* pc, ICState::Mode mode,
-                                           JSOp op, HandleObject templateObj)
-    : IRGenerator(cx, script, pc, CacheKind::NewObject, mode),
-#ifdef JS_CACHEIR_SPEW
-      op_(op),
-#endif
-      templateObject_(templateObj) {
-  MOZ_ASSERT(templateObject_);
-||||||| merged common ancestors
-    writer.returnFromIC();
-    trackAttached("BinaryArith.StringObjectConcat");
-    return true;
-}
-
-NewObjectIRGenerator::NewObjectIRGenerator(JSContext* cx, HandleScript script,
-                                           jsbytecode* pc, ICState::Mode mode, JSOp op,
-                                           HandleObject templateObj)
-  : IRGenerator(cx, script, pc, CacheKind::NewObject, mode),
-#ifdef JS_CACHEIR_SPEW
-    op_(op),
-#endif
-    templateObject_(templateObj)
-{
-    MOZ_ASSERT(templateObject_);
-=======
   JSNative native = calleeFunc->native();
   return native(cx, args.length(), args.base());
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-
-void NewObjectIRGenerator::trackAttached(const char* name) {
-#ifdef JS_CACHEIR_SPEW
-  if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-    sp.opcodeProperty("op", op_);
-  }
-||||||| merged common ancestors
-
-void
-NewObjectIRGenerator::trackAttached(const char* name)
-{
-#ifdef JS_CACHEIR_SPEW
-    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
-        sp.opcodeProperty("op", op_);
-    }
-=======
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-}
-
-bool NewObjectIRGenerator::tryAttachStub() {
-  AutoAssertNoPendingException aanpe(cx_);
-  if (!templateObject_->is<UnboxedPlainObject>() &&
-      templateObject_->as<PlainObject>().hasDynamicSlots()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  // Don't attach stub if group is pretenured, as the stub
-  // won't succeed.
-  AutoSweepObjectGroup sweep(templateObject_->group());
-  if (templateObject_->group()->shouldPreTenure(sweep)) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-  // Stub doesn't support metadata builder
-  if (cx_->realm()->hasAllocationMetadataBuilder()) {
-    trackAttached(IRGenerator::NotAttached);
-    return false;
-  }
-
-  writer.guardNoAllocationMetadataBuilder();
-  writer.guardObjectGroupNotPretenured(templateObject_->group());
-  writer.loadNewObjectFromTemplateResult(templateObject_);
-  writer.returnFromIC();
-
-  trackAttached("NewObjectWithTemplate");
-  return true;
-}
-||||||| merged common ancestors
-}
-
-bool
-NewObjectIRGenerator::tryAttachStub()
-{
-    AutoAssertNoPendingException aanpe(cx_);
-    if (!templateObject_->is<UnboxedPlainObject>() &&
-        templateObject_->as<PlainObject>().hasDynamicSlots())
-    {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    // Don't attach stub if group is pretenured, as the stub
-    // won't succeed.
-    AutoSweepObjectGroup sweep(templateObject_->group());
-    if (templateObject_->group()->shouldPreTenure(sweep)) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-    // Stub doesn't support metadata builder
-    if (cx_->realm()->hasAllocationMetadataBuilder()) {
-        trackAttached(IRGenerator::NotAttached);
-        return false;
-    }
-
-    writer.guardNoAllocationMetadataBuilder();
-    writer.guardObjectGroupNotPretenured(templateObject_->group());
-    writer.loadNewObjectFromTemplateResult(templateObject_);
-    writer.returnFromIC();
-
-    trackAttached("NewObjectWithTemplate");
-    return true;
-}
-=======
->>>>>>> upstream-releases

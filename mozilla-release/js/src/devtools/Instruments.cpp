@@ -14,48 +14,22 @@
 // There are now 2 paths to the DTPerformanceSession framework. We try to load
 // the one contained in /Applications/Xcode.app first, falling back to the one
 // contained in /Library/Developer/4.0/Instruments.
-<<<<<<< HEAD
-#define DTPerformanceLibraryPath                                   \
-  "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/" \
-  "DTPerformanceSession.framework/Versions/Current/DTPerformanceSession"
-#define OldDTPerformanceLibraryPath                \
-  "/Library/Developer/4.0/Instruments/Frameworks/" \
-  "DTPerformanceSession.framework/Versions/Current/DTPerformanceSession"
-||||||| merged common ancestors
-#define DTPerformanceLibraryPath "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/DTPerformanceSession.framework/Versions/Current/DTPerformanceSession"
-#define OldDTPerformanceLibraryPath "/Library/Developer/4.0/Instruments/Frameworks/DTPerformanceSession.framework/Versions/Current/DTPerformanceSession"
-=======
 #  define DTPerformanceLibraryPath                                   \
     "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/" \
     "DTPerformanceSession.framework/Versions/Current/DTPerformanceSession"
 #  define OldDTPerformanceLibraryPath                \
     "/Library/Developer/4.0/Instruments/Frameworks/" \
     "DTPerformanceSession.framework/Versions/Current/DTPerformanceSession"
->>>>>>> upstream-releases
 
 extern "C" {
 
 typedef CFTypeRef DTPerformanceSessionRef;
 
-<<<<<<< HEAD
-#define DTPerformanceSession_TimeProfiler \
-  "com.apple.instruments.dtps.timeprofiler"
-||||||| merged common ancestors
-#define DTPerformanceSession_TimeProfiler               "com.apple.instruments.dtps.timeprofiler"
-=======
 #  define DTPerformanceSession_TimeProfiler \
     "com.apple.instruments.dtps.timeprofiler"
->>>>>>> upstream-releases
 // DTPerformanceSession_Option_SamplingInterval is measured in microseconds
-<<<<<<< HEAD
-#define DTPerformanceSession_Option_SamplingInterval \
-  "com.apple.instruments.dtps.option.samplinginterval"
-||||||| merged common ancestors
-#define DTPerformanceSession_Option_SamplingInterval    "com.apple.instruments.dtps.option.samplinginterval"
-=======
 #  define DTPerformanceSession_Option_SamplingInterval \
     "com.apple.instruments.dtps.option.samplinginterval"
->>>>>>> upstream-releases
 
 typedef void (*dtps_errorcallback_t)(CFStringRef, CFErrorRef);
 typedef DTPerformanceSessionRef (*DTPerformanceSessionCreateFunction)(
@@ -94,23 +68,6 @@ class AutoReleased {
   T mTypeRef;
 };
 
-<<<<<<< HEAD
-#define DTPERFORMANCE_SYMBOLS               \
-  SYMBOL(DTPerformanceSessionCreate)        \
-  SYMBOL(DTPerformanceSessionAddInstrument) \
-  SYMBOL(DTPerformanceSessionIsRecording)   \
-  SYMBOL(DTPerformanceSessionStart)         \
-  SYMBOL(DTPerformanceSessionStop)          \
-  SYMBOL(DTPerformanceSessionSave)
-||||||| merged common ancestors
-#define DTPERFORMANCE_SYMBOLS \
-  SYMBOL(DTPerformanceSessionCreate) \
-  SYMBOL(DTPerformanceSessionAddInstrument) \
-  SYMBOL(DTPerformanceSessionIsRecording) \
-  SYMBOL(DTPerformanceSessionStart) \
-  SYMBOL(DTPerformanceSessionStop) \
-  SYMBOL(DTPerformanceSessionSave)
-=======
 #  define DTPERFORMANCE_SYMBOLS               \
     SYMBOL(DTPerformanceSessionCreate)        \
     SYMBOL(DTPerformanceSessionAddInstrument) \
@@ -118,16 +75,8 @@ class AutoReleased {
     SYMBOL(DTPerformanceSessionStart)         \
     SYMBOL(DTPerformanceSessionStop)          \
     SYMBOL(DTPerformanceSessionSave)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define SYMBOL(_sym) _sym##Function _sym = nullptr;
-||||||| merged common ancestors
-#define SYMBOL(_sym) \
-  _sym##Function _sym = nullptr;
-=======
 #  define SYMBOL(_sym) _sym##Function _sym = nullptr;
->>>>>>> upstream-releases
 
 DTPERFORMANCE_SYMBOLS
 
@@ -155,23 +104,6 @@ bool LoadDTPerformanceLibrary() {
     }
   }
 
-<<<<<<< HEAD
-#define SYMBOL(_sym)                                                           \
-  _sym = reinterpret_cast<_sym##Function>(dlsym(DTPerformanceLibrary, #_sym)); \
-  if (!_sym) {                                                                 \
-    dlclose(DTPerformanceLibrary);                                             \
-    DTPerformanceLibrary = nullptr;                                            \
-    return false;                                                              \
-  }
-||||||| merged common ancestors
-#define SYMBOL(_sym) \
-  _sym = reinterpret_cast<_sym##Function>(dlsym(DTPerformanceLibrary, #_sym)); \
-  if (!_sym) { \
-    dlclose(DTPerformanceLibrary); \
-    DTPerformanceLibrary = nullptr; \
-    return false; \
-  }
-=======
 #  define SYMBOL(_sym)                                                        \
     _sym =                                                                    \
         reinterpret_cast<_sym##Function>(dlsym(DTPerformanceLibrary, #_sym)); \
@@ -180,7 +112,6 @@ bool LoadDTPerformanceLibrary() {
       DTPerformanceLibrary = nullptr;                                         \
       return false;                                                           \
     }
->>>>>>> upstream-releases
 
   DTPERFORMANCE_SYMBOLS
 
@@ -200,21 +131,9 @@ bool Error(CFErrorRef error) {
     CFRelease(gSession);
     gSession = nullptr;
   }
-<<<<<<< HEAD
-#ifdef DEBUG
-  AutoReleased<CFDataRef> data = CFStringCreateExternalRepresentation(
-      nullptr, CFErrorCopyDescription(error), kCFStringEncodingUTF8, '?');
-||||||| merged common ancestors
-#ifdef DEBUG
-  AutoReleased<CFDataRef> data =
-    CFStringCreateExternalRepresentation(nullptr,
-                                         CFErrorCopyDescription(error),
-                                         kCFStringEncodingUTF8, '?');
-=======
 #  ifdef DEBUG
   AutoReleased<CFDataRef> data = CFStringCreateExternalRepresentation(
       nullptr, CFErrorCopyDescription(error), kCFStringEncodingUTF8, '?');
->>>>>>> upstream-releases
   if (data != nullptr) {
     printf("%.*s\n\n", (int)CFDataGetLength(data), CFDataGetBytePtr(data));
   }

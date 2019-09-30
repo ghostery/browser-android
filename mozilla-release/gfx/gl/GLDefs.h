@@ -22,20 +22,6 @@ bool CheckContextLost(const GLContext* gl);
 
 // clang-format off
 
-namespace mozilla {
-namespace gl {
-class GLContext;
-bool CheckContextLost(const GLContext* gl);
-}  // namespace gl
-}  // namespace mozilla
-
-#define MOZ_GL_ASSERT(glContext, expr) \
-  MOZ_ASSERT((expr) || mozilla::gl::CheckContextLost(glContext))
-
-// -
-
-// clang-format off
-
 // TODO: use official constant names instead of followed ones.
 
 // IMG_texture_compression_pvrtc

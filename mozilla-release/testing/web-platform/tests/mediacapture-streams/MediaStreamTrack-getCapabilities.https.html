@@ -3,66 +3,6 @@
 <script src=/resources/testharness.js></script>
 <script src=/resources/testharnessreport.js></script>
 <script>
-<<<<<<< HEAD
-
-const audioProperties = [
-  {name: "volume", type: "number"},
-  {name: "sampleRate", type: "number"},
-  {name: "sampleSize", type: "number"},
-  {name: "echoCancellation", type: "boolean"},
-  {name: "autoGainControl", type: "boolean"},
-  {name: "noiseSuppression", type: "boolean"},
-  {name: "latency", type: "number"},
-  {name: "channelCount", type: "number"},
-  {name: "deviceId", type: "string"},
-  {name: "groupId", type: "string"}
-];
-
-const videoProperties = [
-  {name: "width", type: "number"},
-  {name: "height", type: "number"},
-  {name: "aspectRatio", type: "number"},
-  {name: "frameRate", type: "number"},
-  {name: "facingMode", type: "enum-any", validValues: ["user", "environment", "left", "right"]},
-  {name: "resizeMode", type: "enum-all", validValues: ["none", "crop-and-scale"]},
-  {name: "deviceId", type: "string"},
-  {name: "groupId", type: "string"},
-];
-
-function verifyBooleanCapability(capability) {
-  assert_less_than_equal(capability.length, 2);
-  capability.forEach(c => assert_equals(typeof c, "boolean"));
-}
-
-function verifyNumberCapability(capability) {
-    assert_equals(typeof capability, "object");
-    assert_equals(Object.keys(capability).length, 2);
-    assert_true(capability.hasOwnProperty('min'));
-    assert_true(capability.hasOwnProperty('max'));
-    assert_less_than_equal(capability.min, capability.max);
-}
-
-// Verify that any value provided by an enum capability is in the set of valid
-// values.
-function verifyEnumAnyCapability(capability, enumMembers) {
-  capability.forEach(c => {
-    assert_equals(typeof c, "string");
-    assert_in_array(c, enumMembers);
-||||||| merged common ancestors
-  promise_test(() => {
-  return navigator.mediaDevices.getUserMedia({audio: true, video: true})
-    .then(stream => {
-      var audioCapabilities = stream.getAudioTracks()[0].getCapabilities();
-      var videoCapabilities = stream.getVideoTracks()[0].getCapabilities();
-      assert_true(undefined !== audioCapabilities.deviceId, "MediaTrackCapabilities's deviceId should exist for an audio track.");
-      assert_true(undefined !== audioCapabilities.groupId, "MediaTrackCapabilities's groupId should exist for an audio track.");
-      assert_true(undefined !== audioCapabilities.echoCancellation, "MediaTrackCapabilities's echoCancellation should exist for an audio track.");
-      assert_true(undefined !== audioCapabilities.autoGainControl, "MediaTrackCapabilities's autoGainControl should exist for an audio track.");
-      assert_true(undefined !== audioCapabilities.noiseSuppression, "MediaTrackCapabilities's noiseSuppression should exist for an audio track.");
-      assert_true(undefined !== videoCapabilities.deviceId, "MediaTrackCapabilities's deviceId should exist for a video track.");
-      assert_true(undefined !== videoCapabilities.groupId, "MediaTrackCapabilities's groupId should exist for a video track.");
-    });
-=======
 
 const audioProperties = [
   {name: "sampleRate", type: "number"},
@@ -106,7 +46,6 @@ function verifyEnumAnyCapability(capability, enumMembers) {
   capability.forEach(c => {
     assert_equals(typeof c, "string");
     assert_in_array(c, enumMembers);
->>>>>>> upstream-releases
   });
 }
 

@@ -41,15 +41,6 @@ public:
 
     SkRect computeFastBounds(const SkRect&) const override;
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkBlurImageFilter.cpp
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkBlurImageFilterImpl)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkBlurImageFilterImpl)
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkBlurImageFilter.cpp
 protected:
     void flatten(SkWriteBuffer&) const override;
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,

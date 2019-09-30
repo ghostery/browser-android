@@ -5,14 +5,9 @@
 .mypy_cache/
 .pytest_cache/
 .tox/
-<<<<<<< HEAD
-.coverage*
-||||||| merged common ancestors
-=======
 .virtualenv/
 _venv/
 _virtualenv/
->>>>>>> upstream-releases
 
 # Node
 node_modules/
@@ -20,18 +15,6 @@ node_modules/
 # WPT repo stuff
 .wptcache/
 /MANIFEST.json
-<<<<<<< HEAD
-.wptcache/
-/config.json
-||||||| merged common ancestors
-
-testharness_runner.html
-!/testharness_runner.html
-!/tools/wptrunner/wptrunner/testharness_runner.html
-
-_certs
-config.json
-=======
 /_certs
 /config.json
 
@@ -39,7 +22,6 @@ config.json
 /tools/certs/0*.pem
 /tools/certs/index.txt*
 /tools/certs/serial*
->>>>>>> upstream-releases
 
 # Various OS/editor specific files
 *#

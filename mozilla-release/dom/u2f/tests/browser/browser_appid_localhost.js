@@ -24,19 +24,11 @@ function promiseU2FRegister(tab, app_id) {
   /* eslint-enable no-shadow */
 }
 
-<<<<<<< HEAD
-add_task(async function () {
-  // By default, proxies don't apply to localhost. We need them to for this test, though:
-  await SpecialPowers.pushPrefEnv({set: [["network.proxy.no_proxies_on", ""]]});
-||||||| merged common ancestors
-add_task(async function () {
-=======
 add_task(async function() {
   // By default, proxies don't apply to localhost. We need them to for this test, though:
   await SpecialPowers.pushPrefEnv({
     set: [["network.proxy.allow_hijacking_localhost", true]],
   });
->>>>>>> upstream-releases
   // Enable the soft token.
   Services.prefs.setBoolPref("security.webauth.u2f", true);
   Services.prefs.setBoolPref(

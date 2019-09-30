@@ -27,16 +27,8 @@
 #  include "mozilla/mscom/EnsureMTA.h"
 HRESULT RegisterPassthruProxy();
 #else
-<<<<<<< HEAD
-#include <stdlib.h>
-#endif  // defined(MOZILLA_INTERNAL_API)
-||||||| merged common ancestors
-#include <stdlib.h>
-#endif // defined(MOZILLA_INTERNAL_API)
-=======
 #  include <stdlib.h>
 #endif  // defined(MOZILLA_INTERNAL_API)
->>>>>>> upstream-releases
 
 #include <oaidl.h>
 #include <objidl.h>
@@ -310,16 +302,7 @@ RegisteredProxy::RegisteredProxy(ITypeLib* aTypeLib)
   AddToRegistry(this);
 }
 
-<<<<<<< HEAD
-RegisteredProxy::~RegisteredProxy() {
-  DeleteFromRegistry(this);
-||||||| merged common ancestors
-RegisteredProxy::~RegisteredProxy()
-{
-  DeleteFromRegistry(this);
-=======
 void RegisteredProxy::Clear() {
->>>>>>> upstream-releases
   if (mTypeLib) {
     mTypeLib->lpVtbl->Release(mTypeLib);
     mTypeLib = nullptr;
@@ -350,12 +333,6 @@ void RegisteredProxy::Clear() {
   }
 }
 
-<<<<<<< HEAD
-RegisteredProxy::RegisteredProxy(RegisteredProxy&& aOther) {
-||||||| merged common ancestors
-RegisteredProxy::RegisteredProxy(RegisteredProxy&& aOther)
-{
-=======
 RegisteredProxy::~RegisteredProxy() {
   DeleteFromRegistry(this);
   Clear();
@@ -371,22 +348,13 @@ RegisteredProxy::RegisteredProxy(RegisteredProxy&& aOther)
       mIsRegisteredInMTA(false)
 #endif  // defined(MOZILLA_INTERNAL_API)
 {
->>>>>>> upstream-releases
   *this = std::forward<RegisteredProxy>(aOther);
   AddToRegistry(this);
 }
 
-<<<<<<< HEAD
-RegisteredProxy& RegisteredProxy::operator=(RegisteredProxy&& aOther) {
-||||||| merged common ancestors
-RegisteredProxy&
-RegisteredProxy::operator=(RegisteredProxy&& aOther)
-{
-=======
 RegisteredProxy& RegisteredProxy::operator=(RegisteredProxy&& aOther) {
   Clear();
 
->>>>>>> upstream-releases
   mModule = aOther.mModule;
   aOther.mModule = 0;
   mClassObject = aOther.mClassObject;
@@ -440,16 +408,8 @@ static CRITICAL_SECTION* GetMutex() {
   return &mutex;
 }
 
-<<<<<<< HEAD
-/* static */ bool RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo) {
-||||||| merged common ancestors
-/* static */ bool
-RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo)
-{
-=======
 /* static */
 bool RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo) {
->>>>>>> upstream-releases
   AutoCriticalSection lock(GetMutex());
 
   if (!sRegistry) {
@@ -465,16 +425,8 @@ bool RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ void RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy) {
-||||||| merged common ancestors
-/* static */ void
-RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy)
-{
-=======
 /* static */
 void RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aProxy);
 
   AutoCriticalSection lock(GetMutex());
@@ -493,16 +445,8 @@ void RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy) {
   MOZ_ALWAYS_TRUE(sRegistry->emplaceBack(aProxy));
 }
 
-<<<<<<< HEAD
-/* static */ void RegisteredProxy::DeleteFromRegistry(RegisteredProxy* aProxy) {
-||||||| merged common ancestors
-/* static */ void
-RegisteredProxy::DeleteFromRegistry(RegisteredProxy* aProxy)
-{
-=======
 /* static */
 void RegisteredProxy::DeleteFromRegistry(RegisteredProxy* aProxy) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aProxy);
 
   AutoCriticalSection lock(GetMutex());

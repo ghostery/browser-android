@@ -408,16 +408,8 @@ class TCPConnection {
   }
 
   log_(msg) {
-<<<<<<< HEAD
-    let dir = (msg.origin == Message.Origin.Client ? "->" : "<-");
-    logger.debug(`${this.id} ${dir} ${msg}`);
-||||||| merged common ancestors
-    let dir = (msg.origin == Message.Origin.Client ? "->" : "<-");
-    logger.trace(`${this.id} ${dir} ${msg}`);
-=======
     let dir = msg.origin == Message.Origin.Client ? "->" : "<-";
     logger.debug(`${this.id} ${dir} ${msg}`);
->>>>>>> upstream-releases
   }
 
   toString() {

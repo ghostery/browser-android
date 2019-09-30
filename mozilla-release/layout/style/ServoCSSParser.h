@@ -22,40 +22,12 @@ struct nsCSSRect;
 struct nsTimingFunction;
 struct RawServoDeclarationBlock;
 
-<<<<<<< HEAD
-using RawGeckoGfxMatrix4x4 = mozilla::gfx::Float[16];
-
-namespace mozilla {
-namespace css {
-class Loader;
-}  // namespace css
-}  // namespace mozilla
-
-||||||| merged common ancestors
-using RawGeckoGfxMatrix4x4 = mozilla::gfx::Float[16];
-
-namespace mozilla {
-namespace css {
-class Loader;
-} // namespace css
-} // namespace mozilla
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 
 class ServoStyleSet;
 class SharedFontList;
 struct URLExtraData;
 
-<<<<<<< HEAD
-class ServoCSSParser {
- public:
-||||||| merged common ancestors
-class ServoCSSParser
-{
-public:
-=======
 namespace css {
 class Loader;
 }
@@ -66,7 +38,6 @@ class Document;
 
 class ServoCSSParser {
  public:
->>>>>>> upstream-releases
   using ParsingEnvironment = nsDOMCSSDeclaration::ParsingEnvironment;
 
   /**

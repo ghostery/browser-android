@@ -49,16 +49,8 @@ SharedMemory::SharedMemory() : mAllocSize(0), mMappedSize(0) {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ size_t SharedMemory::PageAlignedSize(size_t aSize) {
-||||||| merged common ancestors
-/*static*/ size_t
-SharedMemory::PageAlignedSize(size_t aSize)
-{
-=======
 /*static*/
 size_t SharedMemory::PageAlignedSize(size_t aSize) {
->>>>>>> upstream-releases
   size_t pageSize = SystemPageSize();
   size_t nPagesNeeded = size_t(ceil(double(aSize) / double(pageSize)));
   return pageSize * nPagesNeeded;
@@ -80,16 +72,8 @@ void SharedMemory::Unmapped() {
   mMappedSize = 0;
 }
 
-<<<<<<< HEAD
-/*static*/ void SharedMemory::Destroyed() {
-||||||| merged common ancestors
-/*static*/ void
-SharedMemory::Destroyed()
-{
-=======
 /*static*/
 void SharedMemory::Destroyed() {
->>>>>>> upstream-releases
   MOZ_ASSERT(gShmemAllocated >= mAllocSize,
              "Can't destroy more than allocated");
   gShmemAllocated -= mAllocSize;

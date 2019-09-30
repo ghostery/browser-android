@@ -409,36 +409,17 @@ nsresult nsXBLProtoImplField::InstallField(
   JS::Rooted<JS::Value> result(cx);
   JS::CompileOptions options(cx);
   options.setFileAndLine(uriSpec.get(), mLineNumber);
-<<<<<<< HEAD
-  JS::AutoObjectVector scopeChain(cx);
-  if (!nsJSUtils::GetScopeChainForXBL(cx, boundElement, aProtoBinding,
-                                      scopeChain)) {
-||||||| merged common ancestors
-  JS::AutoObjectVector scopeChain(cx);
-  if (!nsJSUtils::GetScopeChainForXBL(cx, boundElement, aProtoBinding, scopeChain)) {
-=======
   JS::RootedVector<JSObject*> scopeChain(cx);
   if (!nsJSUtils::GetScopeChainForXBL(cx, boundElement, aProtoBinding,
                                       &scopeChain)) {
->>>>>>> upstream-releases
     return NS_ERROR_OUT_OF_MEMORY;
   }
   rv = NS_OK;
   {
     nsJSUtils::ExecutionContext exec(cx, scopeObject);
     exec.SetScopeChain(scopeChain);
-<<<<<<< HEAD
-    exec.CompileAndExec(options,
-                        nsDependentString(mFieldText, mFieldTextLength));
-    rv = exec.ExtractReturnValue(&result);
-||||||| merged common ancestors
-    exec.CompileAndExec(options, nsDependentString(mFieldText,
-                                                   mFieldTextLength));
-    rv = exec.ExtractReturnValue(&result);
-=======
     exec.Compile(options, nsDependentString(mFieldText, mFieldTextLength));
     rv = exec.ExecScript(&result);
->>>>>>> upstream-releases
   }
 
   if (NS_FAILED(rv)) {

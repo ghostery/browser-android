@@ -65,24 +65,11 @@ class nsJSThunk : public nsIInputStream {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_FORWARD_SAFE_NSIINPUTSTREAM(mInnerStream)
 
-<<<<<<< HEAD
-  nsresult Init(nsIURI* uri);
-  nsresult EvaluateScript(nsIChannel* aChannel, PopupControlState aPopupState,
-                          uint32_t aExecutionPolicy,
-                          nsPIDOMWindowInner* aOriginalInnerWindow);
-||||||| merged common ancestors
-    nsresult Init(nsIURI* uri);
-    nsresult EvaluateScript(nsIChannel *aChannel,
-                            PopupControlState aPopupState,
-                            uint32_t aExecutionPolicy,
-                            nsPIDOMWindowInner *aOriginalInnerWindow);
-=======
   nsresult Init(nsIURI* uri);
   nsresult EvaluateScript(
       nsIChannel* aChannel,
       mozilla::dom::PopupBlocker::PopupControlState aPopupState,
       uint32_t aExecutionPolicy, nsPIDOMWindowInner* aOriginalInnerWindow);
->>>>>>> upstream-releases
 
  protected:
   virtual ~nsJSThunk();
@@ -142,76 +129,6 @@ static nsIScriptGlobalObject* GetGlobalObject(nsIChannel* aChannel) {
   return global;
 }
 
-<<<<<<< HEAD
-nsresult nsJSThunk::EvaluateScript(nsIChannel* aChannel,
-                                   PopupControlState aPopupState,
-                                   uint32_t aExecutionPolicy,
-                                   nsPIDOMWindowInner* aOriginalInnerWindow) {
-  if (aExecutionPolicy == nsIScriptChannel::NO_EXECUTION) {
-    // Nothing to do here.
-    return NS_ERROR_DOM_RETVAL_UNDEFINED;
-  }
-||||||| merged common ancestors
-nsresult nsJSThunk::EvaluateScript(nsIChannel *aChannel,
-                                   PopupControlState aPopupState,
-                                   uint32_t aExecutionPolicy,
-                                   nsPIDOMWindowInner *aOriginalInnerWindow)
-{
-    if (aExecutionPolicy == nsIScriptChannel::NO_EXECUTION) {
-        // Nothing to do here.
-        return NS_ERROR_DOM_RETVAL_UNDEFINED;
-    }
-
-    NS_ENSURE_ARG_POINTER(aChannel);
-
-    // Get principal of code for execution
-    nsCOMPtr<nsISupports> owner;
-    aChannel->GetOwner(getter_AddRefs(owner));
-    nsCOMPtr<nsIPrincipal> principal = do_QueryInterface(owner);
-    if (!principal) {
-        nsCOMPtr<nsILoadInfo> loadInfo;
-        aChannel->GetLoadInfo(getter_AddRefs(loadInfo));
-        if (loadInfo && loadInfo->GetForceInheritPrincipal()) {
-            principal = loadInfo->FindPrincipalToInherit(aChannel);
-        } else {
-            // No execution without a principal!
-            NS_ASSERTION(!owner, "Non-principal owner?");
-            NS_WARNING("No principal to execute JS with");
-            return NS_ERROR_DOM_RETVAL_UNDEFINED;
-        }
-    }
-
-    nsresult rv;
-
-    // CSP check: javascript: URIs disabled unless "inline" scripts are
-    // allowed.
-    nsCOMPtr<nsIContentSecurityPolicy> csp;
-    rv = principal->GetCsp(getter_AddRefs(csp));
-    NS_ENSURE_SUCCESS(rv, rv);
-    if (csp) {
-        bool allowsInlineScript = true;
-        rv = csp->GetAllowsInline(nsIContentPolicy::TYPE_SCRIPT,
-                                  EmptyString(), // aNonce
-                                  true,          // aParserCreated
-                                  nullptr,       // aElement,
-                                  nullptr,       // nsICSPEventListener
-                                  EmptyString(), // aContent
-                                  0,             // aLineNumber
-                                  0,             // aColumnNumber
-                                  &allowsInlineScript);
-
-        //return early if inline scripts are not allowed
-        if (!allowsInlineScript) {
-          return NS_ERROR_DOM_RETVAL_UNDEFINED;
-        }
-    }
-
-    // Get the global object we should be running on.
-    nsIScriptGlobalObject* global = GetGlobalObject(aChannel);
-    if (!global) {
-        return NS_ERROR_FAILURE;
-    }
-=======
 nsresult nsJSThunk::EvaluateScript(
     nsIChannel* aChannel,
     mozilla::dom::PopupBlocker::PopupControlState aPopupState,
@@ -284,198 +201,28 @@ nsresult nsJSThunk::EvaluateScript(
   if (!global) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ENSURE_ARG_POINTER(aChannel);
-
-  // Get principal of code for execution
-  nsCOMPtr<nsISupports> owner;
-  aChannel->GetOwner(getter_AddRefs(owner));
-  nsCOMPtr<nsIPrincipal> principal = do_QueryInterface(owner);
-  if (!principal) {
-    nsCOMPtr<nsILoadInfo> loadInfo;
-    aChannel->GetLoadInfo(getter_AddRefs(loadInfo));
-    if (loadInfo && loadInfo->GetForceInheritPrincipal()) {
-      principal = loadInfo->FindPrincipalToInherit(aChannel);
-    } else {
-      // No execution without a principal!
-      NS_ASSERTION(!owner, "Non-principal owner?");
-      NS_WARNING("No principal to execute JS with");
-      return NS_ERROR_DOM_RETVAL_UNDEFINED;
-    }
-  }
-||||||| merged common ancestors
-    // Sandboxed document check: javascript: URI's are disabled
-    // in a sandboxed document unless 'allow-scripts' was specified.
-    nsIDocument* doc = aOriginalInnerWindow->GetExtantDoc();
-    if (doc && doc->HasScriptsBlockedBySandbox()) {
-        return NS_ERROR_DOM_RETVAL_UNDEFINED;
-    }
-=======
   // Make sure we still have the same inner window as we used to.
   nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(global);
   nsPIDOMWindowInner* innerWin = win->GetCurrentInnerWindow();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv;
-||||||| merged common ancestors
-    // Push our popup control state
-    nsAutoPopupStatePusher popupStatePusher(aPopupState);
-
-    // Make sure we still have the same inner window as we used to.
-    nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(global);
-    nsPIDOMWindowInner *innerWin = win->GetCurrentInnerWindow();
-=======
   if (innerWin != aOriginalInnerWindow) {
     return NS_ERROR_UNEXPECTED;
   }
 
   mozilla::dom::Document* targetDoc = innerWin->GetExtantDoc();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // CSP check: javascript: URIs disabled unless "inline" scripts are
-  // allowed.
-  nsCOMPtr<nsIContentSecurityPolicy> csp;
-  rv = principal->GetCsp(getter_AddRefs(csp));
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (csp) {
-    bool allowsInlineScript = true;
-    rv = csp->GetAllowsInline(nsIContentPolicy::TYPE_SCRIPT,
-                              EmptyString(),  // aNonce
-                              true,           // aParserCreated
-                              nullptr,        // aElement,
-                              nullptr,        // nsICSPEventListener
-                              EmptyString(),  // aContent
-                              0,              // aLineNumber
-                              0,              // aColumnNumber
-                              &allowsInlineScript);
-
-    // return early if inline scripts are not allowed
-    if (!allowsInlineScript) {
-      return NS_ERROR_DOM_RETVAL_UNDEFINED;
-    }
-  }
-||||||| merged common ancestors
-    if (innerWin != aOriginalInnerWindow) {
-        return NS_ERROR_UNEXPECTED;
-    }
-=======
   // Sandboxed document check: javascript: URI execution is disabled
   // in a sandboxed document unless 'allow-scripts' was specified.
   if (targetDoc && targetDoc->HasScriptsBlockedBySandbox()) {
     return NS_ERROR_DOM_RETVAL_UNDEFINED;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Get the global object we should be running on.
-  nsIScriptGlobalObject* global = GetGlobalObject(aChannel);
-  if (!global) {
-    return NS_ERROR_FAILURE;
-  }
-||||||| merged common ancestors
-    nsCOMPtr<nsIScriptGlobalObject> innerGlobal = do_QueryInterface(innerWin);
-=======
   // Push our popup control state
   AutoPopupStatePusher popupStatePusher(aPopupState);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Sandboxed document check: javascript: URI's are disabled
-  // in a sandboxed document unless 'allow-scripts' was specified.
-  nsIDocument* doc = aOriginalInnerWindow->GetExtantDoc();
-  if (doc && doc->HasScriptsBlockedBySandbox()) {
-    return NS_ERROR_DOM_RETVAL_UNDEFINED;
-  }
-||||||| merged common ancestors
-    mozilla::DebugOnly<nsCOMPtr<nsIDOMWindow>> domWindow(do_QueryInterface(global, &rv));
-    if (NS_FAILED(rv)) {
-        return NS_ERROR_FAILURE;
-    }
-=======
   nsCOMPtr<nsIScriptGlobalObject> innerGlobal = do_QueryInterface(innerWin);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Push our popup control state
-  nsAutoPopupStatePusher popupStatePusher(aPopupState);
-||||||| merged common ancestors
-    // So far so good: get the script context from its owner.
-    nsCOMPtr<nsIScriptContext> scriptContext = global->GetContext();
-    if (!scriptContext)
-        return NS_ERROR_FAILURE;
-=======
-  // So far so good: get the script context from its owner.
-  nsCOMPtr<nsIScriptContext> scriptContext = global->GetContext();
-  if (!scriptContext) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Make sure we still have the same inner window as we used to.
-  nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(global);
-  nsPIDOMWindowInner* innerWin = win->GetCurrentInnerWindow();
-||||||| merged common ancestors
-    nsAutoCString script(mScript);
-    // Unescape the script
-    NS_UnescapeURL(script);
-=======
-  nsAutoCString script(mScript);
-  // Unescape the script
-  NS_UnescapeURL(script);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (innerWin != aOriginalInnerWindow) {
-    return NS_ERROR_UNEXPECTED;
-  }
-||||||| merged common ancestors
-=======
-  // New script entry point required, due to the "Create a script" step of
-  // http://www.whatwg.org/specs/web-apps/current-work/#javascript-protocol
-  mozilla::nsAutoMicroTask mt;
-  AutoEntryScript aes(innerGlobal, "javascript: URI", true);
-  JSContext* cx = aes.cx();
-  JS::Rooted<JSObject*> globalJSObject(cx, innerGlobal->GetGlobalJSObject());
-  NS_ENSURE_TRUE(globalJSObject, NS_ERROR_UNEXPECTED);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsCOMPtr<nsIScriptGlobalObject> innerGlobal = do_QueryInterface(innerWin);
-||||||| merged common ancestors
-    // New script entry point required, due to the "Create a script" step of
-    // http://www.whatwg.org/specs/web-apps/current-work/#javascript-protocol
-    mozilla::nsAutoMicroTask mt;
-    AutoEntryScript aes(innerGlobal, "javascript: URI", true);
-    JSContext* cx = aes.cx();
-    JS::Rooted<JSObject*> globalJSObject(cx, innerGlobal->GetGlobalJSObject());
-    NS_ENSURE_TRUE(globalJSObject, NS_ERROR_UNEXPECTED);
-=======
-  //-- Don't execute unless the script principal subsumes the
-  //   principal of the context.
-  nsIPrincipal* objectPrincipal =
-      nsContentUtils::ObjectPrincipal(globalJSObject);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  mozilla::DebugOnly<nsCOMPtr<nsIDOMWindow>> domWindow(
-      do_QueryInterface(global, &rv));
-  if (NS_FAILED(rv)) {
-    return NS_ERROR_FAILURE;
-  }
-||||||| merged common ancestors
-    //-- Don't execute unless the script principal subsumes the
-    //   principal of the context.
-    nsIPrincipal* objectPrincipal = nsContentUtils::ObjectPrincipal(globalJSObject);
-=======
-  bool subsumes;
-  rv = principal->Subsumes(objectPrincipal, &subsumes);
-  if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // So far so good: get the script context from its owner.
   nsCOMPtr<nsIScriptContext> scriptContext = global->GetContext();
   if (!scriptContext) return NS_ERROR_FAILURE;
@@ -504,39 +251,12 @@ nsresult nsJSThunk::EvaluateScript(
   if (!subsumes) {
     return NS_ERROR_DOM_RETVAL_UNDEFINED;
   }
-||||||| merged common ancestors
-    bool subsumes;
-    rv = principal->Subsumes(objectPrincipal, &subsumes);
-    if (NS_FAILED(rv))
-        return rv;
-=======
-  if (!subsumes) {
-    return NS_ERROR_DOM_RETVAL_UNDEFINED;
-  }
->>>>>>> upstream-releases
 
   // Fail if someone tries to execute in a global with system principal.
   if (nsContentUtils::IsSystemPrincipal(objectPrincipal)) {
     return NS_ERROR_DOM_SECURITY_ERR;
   }
 
-<<<<<<< HEAD
-  JS::Rooted<JS::Value> v(cx, JS::UndefinedValue());
-  // Finally, we have everything needed to evaluate the expression.
-  JS::CompileOptions options(cx);
-  options.setFileAndLine(mURL.get(), 1);
-  {
-    nsJSUtils::ExecutionContext exec(cx, globalJSObject);
-    exec.SetCoerceToString(true);
-    exec.CompileAndExec(options, NS_ConvertUTF8toUTF16(script));
-    rv = exec.ExtractReturnValue(&v);
-  }
-||||||| merged common ancestors
-    // Fail if someone tries to execute in a global with system principal.
-    if (nsContentUtils::IsSystemPrincipal(objectPrincipal)) {
-        return NS_ERROR_DOM_SECURITY_ERR;
-    }
-=======
   JS::Rooted<JS::Value> v(cx, JS::UndefinedValue());
   // Finally, we have everything needed to evaluate the expression.
   JS::CompileOptions options(cx);
@@ -547,7 +267,6 @@ nsresult nsJSThunk::EvaluateScript(
     exec.Compile(options, NS_ConvertUTF8toUTF16(script));
     rv = exec.ExecScript(&v);
   }
->>>>>>> upstream-releases
 
   js::AssertSameCompartment(cx, v);
 
@@ -579,16 +298,6 @@ nsresult nsJSThunk::EvaluateScript(
       bytes = ToNewUTF8String(result, &bytesLen);
       charset = &utf8Charset;
     }
-<<<<<<< HEAD
-    aChannel->SetContentCharset(*charset);
-    if (bytes)
-      rv = NS_NewByteInputStream(getter_AddRefs(mInnerStream), bytes, bytesLen,
-                                 NS_ASSIGNMENT_ADOPT);
-    else
-      rv = NS_ERROR_OUT_OF_MEMORY;
-  }
-||||||| merged common ancestors
-=======
     aChannel->SetContentCharset(*charset);
     if (bytes)
       rv = NS_NewByteInputStream(getter_AddRefs(mInnerStream),
@@ -597,7 +306,6 @@ nsresult nsJSThunk::EvaluateScript(
     else
       rv = NS_ERROR_OUT_OF_MEMORY;
   }
->>>>>>> upstream-releases
 
   return rv;
 }
@@ -607,106 +315,6 @@ nsresult nsJSThunk::EvaluateScript(
 class nsJSChannel : public nsIChannel,
                     public nsIStreamListener,
                     public nsIScriptChannel,
-<<<<<<< HEAD
-                    public nsIPropertyBag2 {
- public:
-  nsJSChannel();
-
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIREQUEST
-  NS_DECL_NSICHANNEL
-  NS_DECL_NSIREQUESTOBSERVER
-  NS_DECL_NSISTREAMLISTENER
-  NS_DECL_NSISCRIPTCHANNEL
-  NS_FORWARD_SAFE_NSIPROPERTYBAG(mPropertyBag)
-  NS_FORWARD_SAFE_NSIPROPERTYBAG2(mPropertyBag)
-
-  nsresult Init(nsIURI* aURI, nsILoadInfo* aLoadInfo);
-
-  // Actually evaluate the script.
-  void EvaluateScript();
-
- protected:
-  virtual ~nsJSChannel();
-
-  nsresult StopAll();
-
-  void NotifyListener();
-
-  void CleanupStrongRefs();
-
- protected:
-  nsCOMPtr<nsIChannel> mStreamChannel;
-  nsCOMPtr<nsIPropertyBag2> mPropertyBag;
-  nsCOMPtr<nsIStreamListener> mListener;              // Our final listener
-  nsCOMPtr<nsPIDOMWindowInner> mOriginalInnerWindow;  // The inner window our
-                                                      // load started against.
-  // If we blocked onload on a document in AsyncOpen2, this is the document we
-  // did it on.
-  nsCOMPtr<nsIDocument> mDocumentOnloadBlockedOn;
-
-  nsresult mStatus;  // Our status
-
-  nsLoadFlags mLoadFlags;
-  nsLoadFlags mActualLoadFlags;  // See AsyncOpen2
-
-  RefPtr<nsJSThunk> mIOThunk;
-  PopupControlState mPopupState;
-  uint32_t mExecutionPolicy;
-  bool mIsAsync;
-  bool mIsActive;
-  bool mOpenedStreamChannel;
-||||||| merged common ancestors
-                    public nsIPropertyBag2
-{
-public:
-    nsJSChannel();
-
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSIREQUEST
-    NS_DECL_NSICHANNEL
-    NS_DECL_NSIREQUESTOBSERVER
-    NS_DECL_NSISTREAMLISTENER
-    NS_DECL_NSISCRIPTCHANNEL
-    NS_FORWARD_SAFE_NSIPROPERTYBAG(mPropertyBag)
-    NS_FORWARD_SAFE_NSIPROPERTYBAG2(mPropertyBag)
-
-    nsresult Init(nsIURI *aURI, nsILoadInfo* aLoadInfo);
-
-    // Actually evaluate the script.
-    void EvaluateScript();
-
-protected:
-    virtual ~nsJSChannel();
-
-    nsresult StopAll();
-
-    void NotifyListener();
-
-    void CleanupStrongRefs();
-
-protected:
-    nsCOMPtr<nsIChannel>    mStreamChannel;
-    nsCOMPtr<nsIPropertyBag2> mPropertyBag;
-    nsCOMPtr<nsIStreamListener> mListener;  // Our final listener
-    nsCOMPtr<nsPIDOMWindowInner> mOriginalInnerWindow;  // The inner window our load
-                                                        // started against.
-    // If we blocked onload on a document in AsyncOpen2, this is the document we
-    // did it on.
-    nsCOMPtr<nsIDocument>   mDocumentOnloadBlockedOn;
-
-    nsresult mStatus; // Our status
-
-    nsLoadFlags             mLoadFlags;
-    nsLoadFlags             mActualLoadFlags; // See AsyncOpen2
-
-    RefPtr<nsJSThunk>     mIOThunk;
-    PopupControlState       mPopupState;
-    uint32_t                mExecutionPolicy;
-    bool                    mIsAsync;
-    bool                    mIsActive;
-    bool                    mOpenedStreamChannel;
-=======
                     public nsIPropertyBag2 {
  public:
   nsJSChannel();
@@ -755,59 +363,8 @@ protected:
   bool mIsAsync;
   bool mIsActive;
   bool mOpenedStreamChannel;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-nsJSChannel::nsJSChannel()
-    : mStatus(NS_OK),
-      mLoadFlags(LOAD_NORMAL),
-      mActualLoadFlags(LOAD_NORMAL),
-      mPopupState(openOverridden),
-      mExecutionPolicy(NO_EXECUTION),
-      mIsAsync(true),
-      mIsActive(false),
-      mOpenedStreamChannel(false) {}
-
-nsJSChannel::~nsJSChannel() {}
-
-nsresult nsJSChannel::StopAll() {
-  nsresult rv = NS_ERROR_UNEXPECTED;
-  nsCOMPtr<nsIWebNavigation> webNav;
-  NS_QueryNotificationCallbacks(mStreamChannel, webNav);
-
-  NS_ASSERTION(webNav, "Can't get nsIWebNavigation from channel!");
-  if (webNav) {
-    rv = webNav->Stop(nsIWebNavigation::STOP_ALL);
-  }
-||||||| merged common ancestors
-nsJSChannel::nsJSChannel() :
-    mStatus(NS_OK),
-    mLoadFlags(LOAD_NORMAL),
-    mActualLoadFlags(LOAD_NORMAL),
-    mPopupState(openOverridden),
-    mExecutionPolicy(NO_EXECUTION),
-    mIsAsync(true),
-    mIsActive(false),
-    mOpenedStreamChannel(false)
-{
-}
-
-nsJSChannel::~nsJSChannel()
-{
-}
-
-nsresult nsJSChannel::StopAll()
-{
-    nsresult rv = NS_ERROR_UNEXPECTED;
-    nsCOMPtr<nsIWebNavigation> webNav;
-    NS_QueryNotificationCallbacks(mStreamChannel, webNav);
-
-    NS_ASSERTION(webNav, "Can't get nsIWebNavigation from channel!");
-    if (webNav) {
-        rv = webNav->Stop(nsIWebNavigation::STOP_ALL);
-    }
-=======
 nsJSChannel::nsJSChannel()
     : mStatus(NS_OK),
       mLoadFlags(LOAD_NORMAL),
@@ -829,7 +386,6 @@ nsresult nsJSChannel::StopAll() {
   if (webNav) {
     rv = webNav->Stop(nsIWebNavigation::STOP_ALL);
   }
->>>>>>> upstream-releases
 
   return rv;
 }
@@ -940,66 +496,20 @@ NS_IMETHODIMP
 nsJSChannel::GetURI(nsIURI** aURI) { return mStreamChannel->GetURI(aURI); }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::Open(nsIInputStream** aResult) {
-  nsresult rv = mIOThunk->EvaluateScript(
-      mStreamChannel, mPopupState, mExecutionPolicy, mOriginalInnerWindow);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsJSChannel::Open(nsIInputStream **aResult)
-{
-    nsresult rv = mIOThunk->EvaluateScript(mStreamChannel, mPopupState,
-                                           mExecutionPolicy,
-                                           mOriginalInnerWindow);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsJSChannel::Open(nsIInputStream** aStream) {
   nsCOMPtr<nsIStreamListener> listener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return mStreamChannel->Open(aResult);
-}
-||||||| merged common ancestors
-    return mStreamChannel->Open(aResult);
-}
-=======
   rv = mIOThunk->EvaluateScript(mStreamChannel, mPopupState, mExecutionPolicy,
                                 mOriginalInnerWindow);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJSChannel::Open2(nsIInputStream** aStream) {
-  nsCOMPtr<nsIStreamListener> listener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return Open(aStream);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJSChannel::Open2(nsIInputStream** aStream)
-{
-    nsCOMPtr<nsIStreamListener> listener;
-    nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-    NS_ENSURE_SUCCESS(rv, rv);
-    return Open(aStream);
-=======
   return mStreamChannel->Open(aStream);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::AsyncOpen(nsIStreamListener* aListener, nsISupports* aContext) {
-||||||| merged common ancestors
-nsJSChannel::AsyncOpen(nsIStreamListener *aListener, nsISupports *aContext)
-{
-=======
 nsJSChannel::AsyncOpen(nsIStreamListener* aListener) {
   NS_ENSURE_ARG(aListener);
 
@@ -1008,43 +518,14 @@ nsJSChannel::AsyncOpen(nsIStreamListener* aListener) {
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   NS_ENSURE_SUCCESS(rv, rv);
 
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-  {
-    nsCOMPtr<nsILoadInfo> loadInfo = nsIChannel::GetLoadInfo();
-||||||| merged common ancestors
-    {
-    nsCOMPtr<nsILoadInfo> loadInfo = nsIChannel::GetLoadInfo();
-=======
   {
     nsCOMPtr<nsILoadInfo> loadInfo = nsIChannel::LoadInfo();
->>>>>>> upstream-releases
     MOZ_ASSERT(!loadInfo || loadInfo->GetSecurityMode() == 0 ||
-<<<<<<< HEAD
-                   loadInfo->GetInitialSecurityCheckDone(),
-               "security flags in loadInfo but asyncOpen2() not called");
-  }
-||||||| merged common ancestors
-               loadInfo->GetInitialSecurityCheckDone(),
-               "security flags in loadInfo but asyncOpen2() not called");
-    }
-=======
                    loadInfo->GetInitialSecurityCheckDone(),
                "security flags in loadInfo but asyncOpen() not called");
   }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  MOZ_RELEASE_ASSERT(!aContext, "please call AsyncOpen2()");
-
-  NS_ENSURE_ARG(aListener);
-||||||| merged common ancestors
-    MOZ_RELEASE_ASSERT(!aContext, "please call AsyncOpen2()");
-
-    NS_ENSURE_ARG(aListener);
-=======
->>>>>>> upstream-releases
 
   // First make sure that we have a usable inner window; we'll want to make
   // sure that we execute against that inner and no other.
@@ -1075,30 +556,6 @@ nsJSChannel::AsyncOpen(nsIStreamListener* aListener) {
   mActualLoadFlags = mLoadFlags;
   mLoadFlags |= LOAD_BACKGROUND;
 
-<<<<<<< HEAD
-  // Add the javascript channel to its loadgroup so that we know if
-  // network loads were canceled or not...
-  nsCOMPtr<nsILoadGroup> loadGroup;
-  mStreamChannel->GetLoadGroup(getter_AddRefs(loadGroup));
-  if (loadGroup) {
-    nsresult rv = loadGroup->AddRequest(this, nullptr);
-    if (NS_FAILED(rv)) {
-      mIsActive = false;
-      CleanupStrongRefs();
-      return rv;
-||||||| merged common ancestors
-    // Add the javascript channel to its loadgroup so that we know if
-    // network loads were canceled or not...
-    nsCOMPtr<nsILoadGroup> loadGroup;
-    mStreamChannel->GetLoadGroup(getter_AddRefs(loadGroup));
-    if (loadGroup) {
-        nsresult rv = loadGroup->AddRequest(this, nullptr);
-        if (NS_FAILED(rv)) {
-            mIsActive = false;
-            CleanupStrongRefs();
-            return rv;
-        }
-=======
   // Add the javascript channel to its loadgroup so that we know if
   // network loads were canceled or not...
   nsCOMPtr<nsILoadGroup> loadGroup;
@@ -1109,7 +566,6 @@ nsJSChannel::AsyncOpen(nsIStreamListener* aListener) {
       mIsActive = false;
       CleanupStrongRefs();
       return rv;
->>>>>>> upstream-releases
     }
   }
 
@@ -1130,12 +586,7 @@ nsJSChannel::AsyncOpen(nsIStreamListener* aListener) {
     mDocumentOnloadBlockedOn->BlockOnload();
   }
 
-<<<<<<< HEAD
-  mPopupState = win->GetPopupControlState();
-||||||| merged common ancestors
-=======
   mPopupState = mozilla::dom::PopupBlocker::GetPopupControlState();
->>>>>>> upstream-releases
 
   void (nsJSChannel::*method)();
   const char* name;
@@ -1164,79 +615,24 @@ nsJSChannel::AsyncOpen(nsIStreamListener* aListener) {
       return mStatus;
     }
 
-<<<<<<< HEAD
-    // We're returning success from asyncOpen2(), but we didn't open a
-    // stream channel.  We'll have to notify ourselves, but make sure to do
-    // it asynchronously.
-    method = &nsJSChannel::NotifyListener;
-    name = "nsJSChannel::NotifyListener";
-  }
-||||||| merged common ancestors
-    nsCOMPtr<nsIRunnable> runnable = mozilla::NewRunnableMethod(name, this, method);
-    nsGlobalWindowInner* window = nsGlobalWindowInner::Cast(mOriginalInnerWindow);
-    nsresult rv = window->Dispatch(mozilla::TaskCategory::Other, runnable.forget());
-=======
     // We're returning success from asyncOpen(), but we didn't open a
     // stream channel.  We'll have to notify ourselves, but make sure to do
     // it asynchronously.
     method = &nsJSChannel::NotifyListener;
     name = "nsJSChannel::NotifyListener";
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIRunnable> runnable =
-      mozilla::NewRunnableMethod(name, this, method);
-  nsGlobalWindowInner* window = nsGlobalWindowInner::Cast(mOriginalInnerWindow);
-  nsresult rv =
-      window->Dispatch(mozilla::TaskCategory::Other, runnable.forget());
-
-  if (NS_FAILED(rv)) {
-    loadGroup->RemoveRequest(this, nullptr, rv);
-    mIsActive = false;
-    CleanupStrongRefs();
-  }
-  return rv;
-}
-||||||| merged common ancestors
-    if (NS_FAILED(rv)) {
-        loadGroup->RemoveRequest(this, nullptr, rv);
-        mIsActive = false;
-        CleanupStrongRefs();
-    }
-    return rv;
-}
-=======
   nsCOMPtr<nsIRunnable> runnable =
       mozilla::NewRunnableMethod(name, this, method);
   nsGlobalWindowInner* window = nsGlobalWindowInner::Cast(mOriginalInnerWindow);
   rv = window->Dispatch(mozilla::TaskCategory::Other, runnable.forget());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJSChannel::AsyncOpen2(nsIStreamListener* aListener) {
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return AsyncOpen(listener, nullptr);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJSChannel::AsyncOpen2(nsIStreamListener *aListener)
-{
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return AsyncOpen(listener, nullptr);
-=======
   if (NS_FAILED(rv)) {
     loadGroup->RemoveRequest(this, nullptr, rv);
     mIsActive = false;
     CleanupStrongRefs();
   }
   return rv;
->>>>>>> upstream-releases
 }
 
 void nsJSChannel::EvaluateScript() {
@@ -1321,7 +717,6 @@ void nsJSChannel::EvaluateScript() {
     }
   }
 
-<<<<<<< HEAD
   if (NS_FAILED(mStatus)) {
     if (mIsAsync) {
       NotifyListener();
@@ -1329,53 +724,6 @@ void nsJSChannel::EvaluateScript() {
     return;
   }
 
-  mStatus = mStreamChannel->AsyncOpen2(this);
-  if (NS_SUCCEEDED(mStatus)) {
-    // mStreamChannel will call OnStartRequest and OnStopRequest on
-    // us, so we'll be sure to call them on our listener.
-    mOpenedStreamChannel = true;
-
-    // Now readd ourselves to the loadgroup so we can receive
-    // cancellation notifications.
-    mIsActive = true;
-    if (loadGroup) {
-      mStatus = loadGroup->AddRequest(this, nullptr);
-||||||| merged common ancestors
-    mStatus = mStreamChannel->AsyncOpen2(this);
-    if (NS_SUCCEEDED(mStatus)) {
-        // mStreamChannel will call OnStartRequest and OnStopRequest on
-        // us, so we'll be sure to call them on our listener.
-        mOpenedStreamChannel = true;
-
-        // Now readd ourselves to the loadgroup so we can receive
-        // cancellation notifications.
-        mIsActive = true;
-        if (loadGroup) {
-            mStatus = loadGroup->AddRequest(this, nullptr);
-
-            // If AddRequest failed, that's OK.  The key is to make sure we get
-            // cancelled if needed, and that call just canceled us if it
-            // failed.  We'll still get notified by the stream channel when it
-            // finishes.
-        }
-=======
-  if (NS_FAILED(mStatus)) {
-    if (mIsAsync) {
-      NotifyListener();
-    }
-    return;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      // If AddRequest failed, that's OK.  The key is to make sure we get
-      // cancelled if needed, and that call just canceled us if it
-      // failed.  We'll still get notified by the stream channel when it
-      // finishes.
-||||||| merged common ancestors
-    } else if (mIsAsync) {
-        NotifyListener();
-=======
   mStatus = mStreamChannel->AsyncOpen(this);
   if (NS_SUCCEEDED(mStatus)) {
     // mStreamChannel will call OnStartRequest and OnStopRequest on
@@ -1392,7 +740,6 @@ void nsJSChannel::EvaluateScript() {
       // cancelled if needed, and that call just canceled us if it
       // failed.  We'll still get notified by the stream channel when it
       // finishes.
->>>>>>> upstream-releases
     }
 
   } else if (mIsAsync) {
@@ -1400,21 +747,9 @@ void nsJSChannel::EvaluateScript() {
   }
 }
 
-<<<<<<< HEAD
-void nsJSChannel::NotifyListener() {
-  mListener->OnStartRequest(this, nullptr);
-  mListener->OnStopRequest(this, nullptr, mStatus);
-||||||| merged common ancestors
-void
-nsJSChannel::NotifyListener()
-{
-    mListener->OnStartRequest(this, nullptr);
-    mListener->OnStopRequest(this, nullptr, mStatus);
-=======
 void nsJSChannel::NotifyListener() {
   mListener->OnStartRequest(this);
   mListener->OnStopRequest(this, mStatus);
->>>>>>> upstream-releases
 
   CleanupStrongRefs();
 }
@@ -1456,35 +791,11 @@ nsJSChannel::SetLoadFlags(nsLoadFlags aLoadFlags) {
     bogusLoadBackground = !loadGroupIsBackground;
   }
 
-<<<<<<< HEAD
-  // Classifying a javascript: URI doesn't help us, and requires
-  // NSS to boot, which we don't have in content processes.  See
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=617838.
-  aLoadFlags &= ~LOAD_CLASSIFY_URI;
-
   // Since the javascript channel is never the actual channel that
   // any data is loaded through, don't ever set the
   // LOAD_DOCUMENT_URI flag on it, since that could lead to two
   // 'document channels' in the loadgroup if a javascript: URL is
   // loaded while a document is being loaded in the same window.
-||||||| merged common ancestors
-    // Classifying a javascript: URI doesn't help us, and requires
-    // NSS to boot, which we don't have in content processes.  See
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=617838.
-    aLoadFlags &= ~LOAD_CLASSIFY_URI;
-
-    // Since the javascript channel is never the actual channel that
-    // any data is loaded through, don't ever set the
-    // LOAD_DOCUMENT_URI flag on it, since that could lead to two
-    // 'document channels' in the loadgroup if a javascript: URL is
-    // loaded while a document is being loaded in the same window.
-=======
-  // Since the javascript channel is never the actual channel that
-  // any data is loaded through, don't ever set the
-  // LOAD_DOCUMENT_URI flag on it, since that could lead to two
-  // 'document channels' in the loadgroup if a javascript: URL is
-  // loaded while a document is being loaded in the same window.
->>>>>>> upstream-releases
 
   // XXXbz this, and a whole lot of other hackery, could go away if we'd just
   // cancel the current document load on javascript: load start like IE does.
@@ -1552,18 +863,9 @@ nsJSChannel::GetLoadInfo(nsILoadInfo** aLoadInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
-  return mStreamChannel->SetLoadInfo(aLoadInfo);
-||||||| merged common ancestors
-nsJSChannel::SetLoadInfo(nsILoadInfo* aLoadInfo)
-{
-    return mStreamChannel->SetLoadInfo(aLoadInfo);
-=======
 nsJSChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
   MOZ_RELEASE_ASSERT(aLoadInfo, "loadinfo can't be null");
   return mStreamChannel->SetLoadInfo(aLoadInfo);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1642,74 +944,23 @@ nsJSChannel::SetContentLength(int64_t aContentLength) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
-||||||| merged common ancestors
-nsJSChannel::OnStartRequest(nsIRequest* aRequest,
-                            nsISupports* aContext)
-{
-    NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
-=======
 nsJSChannel::OnStartRequest(nsIRequest* aRequest) {
   NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return mListener->OnStartRequest(this, aContext);
-||||||| merged common ancestors
-    return mListener->OnStartRequest(this, aContext);
-=======
   return mListener->OnStartRequest(this);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                             nsIInputStream* aInputStream, uint64_t aOffset,
-                             uint32_t aCount) {
-  NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
-||||||| merged common ancestors
-nsJSChannel::OnDataAvailable(nsIRequest* aRequest,
-                             nsISupports* aContext,
-                             nsIInputStream* aInputStream,
-                             uint64_t aOffset,
-                             uint32_t aCount)
-{
-    NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
-=======
 nsJSChannel::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInputStream,
                              uint64_t aOffset, uint32_t aCount) {
   NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return mListener->OnDataAvailable(this, aContext, aInputStream, aOffset,
-                                    aCount);
-||||||| merged common ancestors
-    return mListener->OnDataAvailable(this, aContext, aInputStream, aOffset,
-                                      aCount);
-=======
   return mListener->OnDataAvailable(this, aInputStream, aOffset, aCount);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                           nsresult aStatus) {
-  NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
-||||||| merged common ancestors
-nsJSChannel::OnStopRequest(nsIRequest* aRequest,
-                           nsISupports* aContext,
-                           nsresult aStatus)
-{
-    NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
-=======
 nsJSChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
   NS_ENSURE_TRUE(aRequest == mStreamChannel, NS_ERROR_UNEXPECTED);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIStreamListener> listener = mListener;
 
@@ -1720,13 +971,7 @@ nsJSChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
     aStatus = mStatus;
   }
 
-<<<<<<< HEAD
-  nsresult rv = listener->OnStopRequest(this, aContext, aStatus);
-||||||| merged common ancestors
-    nsresult rv = listener->OnStopRequest(this, aContext, aStatus);
-=======
   nsresult rv = listener->OnStopRequest(this, aStatus);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsILoadGroup> loadGroup;
   mStreamChannel->GetLoadGroup(getter_AddRefs(loadGroup));
@@ -1766,16 +1011,6 @@ nsJSChannel::SetExecuteAsync(bool aIsAsync) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSChannel::GetExecuteAsync(bool* aIsAsync) {
-  *aIsAsync = mIsAsync;
-  return NS_OK;
-||||||| merged common ancestors
-nsJSChannel::GetExecuteAsync(bool* aIsAsync)
-{
-    *aIsAsync = mIsAsync;
-    return NS_OK;
-=======
 nsJSChannel::GetExecuteAsync(bool* aIsAsync) {
   *aIsAsync = mIsAsync;
   return NS_OK;
@@ -1786,7 +1021,6 @@ bool nsJSChannel::GetIsDocumentLoad() {
   nsLoadFlags flags;
   mStreamChannel->GetLoadFlags(&flags);
   return flags & LOAD_DOCUMENT_URI;
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1813,19 +1047,8 @@ nsresult nsJSProtocolHandler::Create(nsISupports* aOuter, REFNSIID aIID,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsJSProtocolHandler::EnsureUTF8Spec(const nsCString& aSpec,
-                                             const char* aCharset,
-                                             nsACString& aUTF8Spec) {
-||||||| merged common ancestors
-nsresult
-nsJSProtocolHandler::EnsureUTF8Spec(const nsCString& aSpec, const char *aCharset,
-                                    nsACString &aUTF8Spec)
-{
-=======
 /* static */ nsresult nsJSProtocolHandler::EnsureUTF8Spec(
     const nsCString& aSpec, const char* aCharset, nsACString& aUTF8Spec) {
->>>>>>> upstream-releases
   aUTF8Spec.Truncate();
 
   nsresult rv;
@@ -1835,15 +1058,8 @@ nsJSProtocolHandler::EnsureUTF8Spec(const nsCString& aSpec, const char *aCharset
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsAutoString uStr;
-<<<<<<< HEAD
-  rv = mTextToSubURI->UnEscapeNonAsciiURI(nsDependentCString(aCharset), aSpec,
-                                          uStr);
-||||||| merged common ancestors
-  rv = mTextToSubURI->UnEscapeNonAsciiURI(nsDependentCString(aCharset), aSpec, uStr);
-=======
   rv = txtToSubURI->UnEscapeNonAsciiURI(nsDependentCString(aCharset), aSpec,
                                         uStr);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (!IsASCII(uStr)) {
@@ -1879,58 +1095,6 @@ nsJSProtocolHandler::GetProtocolFlags(uint32_t* result) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJSProtocolHandler::NewURI(const nsACString& aSpec, const char* aCharset,
-                            nsIURI* aBaseURI, nsIURI** result) {
-  nsresult rv = NS_OK;
-
-  // javascript: URLs (currently) have no additional structure beyond that
-  // provided by standard URLs, so there is no "outer" object given to
-  // CreateInstance.
-
-  NS_MutateURI mutator(new nsJSURI::Mutator());
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  mutator.Apply(NS_MutatorMethod(&nsIJSURIMutator::SetBase, base));
-  if (!aCharset || !nsCRT::strcasecmp("UTF-8", aCharset)) {
-    mutator.SetSpec(aSpec);
-  } else {
-    nsAutoCString utf8Spec;
-    rv = EnsureUTF8Spec(PromiseFlatCString(aSpec), aCharset, utf8Spec);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJSProtocolHandler::NewURI(const nsACString &aSpec,
-                            const char *aCharset,
-                            nsIURI *aBaseURI,
-                            nsIURI **result)
-{
-    nsresult rv = NS_OK;
-
-    // javascript: URLs (currently) have no additional structure beyond that
-    // provided by standard URLs, so there is no "outer" object given to
-    // CreateInstance.
-
-    NS_MutateURI mutator(new nsJSURI::Mutator());
-    nsCOMPtr<nsIURI> base(aBaseURI);
-    mutator.Apply(NS_MutatorMethod(&nsIJSURIMutator::SetBase, base));
-    if (!aCharset || !nsCRT::strcasecmp("UTF-8", aCharset)) {
-        mutator.SetSpec(aSpec);
-    } else {
-        nsAutoCString utf8Spec;
-        rv = EnsureUTF8Spec(PromiseFlatCString(aSpec), aCharset, utf8Spec);
-        if (NS_FAILED(rv)) {
-            return rv;
-        }
-        if (utf8Spec.IsEmpty()) {
-            mutator.SetSpec(aSpec);
-        } else {
-            mutator.SetSpec(utf8Spec);
-        }
-    }
-
-    nsCOMPtr<nsIURI> url;
-    rv = mutator.Finalize(url);
-=======
 /* static */ nsresult nsJSProtocolHandler::CreateNewURI(const nsACString& aSpec,
                                                         const char* aCharset,
                                                         nsIURI* aBaseURI,
@@ -1949,32 +1113,15 @@ nsJSProtocolHandler::NewURI(const nsACString &aSpec,
   } else {
     nsAutoCString utf8Spec;
     rv = EnsureUTF8Spec(PromiseFlatCString(aSpec), aCharset, utf8Spec);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
-<<<<<<< HEAD
-      return rv;
-||||||| merged common ancestors
-        return rv;
-=======
       return rv;
     }
     if (utf8Spec.IsEmpty()) {
       mutator.SetSpec(aSpec);
     } else {
       mutator.SetSpec(utf8Spec);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (utf8Spec.IsEmpty()) {
-      mutator.SetSpec(aSpec);
-    } else {
-      mutator.SetSpec(utf8Spec);
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIURI> url;
   rv = mutator.Finalize(url);
@@ -1987,27 +1134,9 @@ nsJSProtocolHandler::NewURI(const nsACString &aSpec,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSProtocolHandler::NewChannel2(nsIURI* uri, nsILoadInfo* aLoadInfo,
-                                 nsIChannel** result) {
-  nsresult rv;
-||||||| merged common ancestors
-nsJSProtocolHandler::NewChannel2(nsIURI* uri,
-                                 nsILoadInfo* aLoadInfo,
-                                 nsIChannel** result)
-{
-    nsresult rv;
-
-    NS_ENSURE_ARG_POINTER(uri);
-    RefPtr<nsJSChannel> channel = new nsJSChannel();
-    if (!channel) {
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-=======
 nsJSProtocolHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
                                 nsIChannel** result) {
   nsresult rv;
->>>>>>> upstream-releases
 
   NS_ENSURE_ARG_POINTER(uri);
   RefPtr<nsJSChannel> channel = new nsJSChannel();
@@ -2015,7 +1144,6 @@ nsJSProtocolHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
     return NS_ERROR_OUT_OF_MEMORY;
   }
 
-<<<<<<< HEAD
   rv = channel->Init(uri, aLoadInfo);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -2023,33 +1151,6 @@ nsJSProtocolHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
     channel.forget(result);
   }
   return rv;
-}
-||||||| merged common ancestors
-    if (NS_SUCCEEDED(rv)) {
-        channel.forget(result);
-    }
-    return rv;
-}
-=======
-  rv = channel->Init(uri, aLoadInfo);
-  NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJSProtocolHandler::NewChannel(nsIURI* uri, nsIChannel** result) {
-  return NewChannel2(uri, nullptr, result);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJSProtocolHandler::NewChannel(nsIURI* uri, nsIChannel* *result)
-{
-    return NewChannel2(uri, nullptr, result);
-=======
-  if (NS_SUCCEEDED(rv)) {
-    channel.forget(result);
-  }
-  return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2122,48 +1223,20 @@ nsJSURI::Write(nsIObjectOutputStream* aStream) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// nsIIPCSerializableURI
-void nsJSURI::Serialize(mozilla::ipc::URIParams& aParams) {
-  using namespace mozilla::ipc;
-||||||| merged common ancestors
-// nsIIPCSerializableURI
-void
-nsJSURI::Serialize(mozilla::ipc::URIParams& aParams)
-{
-    using namespace mozilla::ipc;
-=======
 NS_IMETHODIMP_(void) nsJSURI::Serialize(mozilla::ipc::URIParams& aParams) {
   using namespace mozilla::ipc;
->>>>>>> upstream-releases
 
   JSURIParams jsParams;
   URIParams simpleParams;
 
   mozilla::net::nsSimpleURI::Serialize(simpleParams);
 
-<<<<<<< HEAD
-  jsParams.simpleParams() = simpleParams;
-  if (mBaseURI) {
-    SerializeURI(mBaseURI, jsParams.baseURI());
-  } else {
-    jsParams.baseURI() = mozilla::void_t();
-  }
-||||||| merged common ancestors
-    jsParams.simpleParams() = simpleParams;
-    if (mBaseURI) {
-        SerializeURI(mBaseURI, jsParams.baseURI());
-    } else {
-        jsParams.baseURI() = mozilla::void_t();
-    }
-=======
   jsParams.simpleParams() = simpleParams;
   if (mBaseURI) {
     SerializeURI(mBaseURI, jsParams.baseURI());
   } else {
     jsParams.baseURI() = mozilla::Nothing();
   }
->>>>>>> upstream-releases
 
   aParams = jsParams;
 }
@@ -2179,28 +1252,12 @@ bool nsJSURI::Deserialize(const mozilla::ipc::URIParams& aParams) {
   const JSURIParams& jsParams = aParams.get_JSURIParams();
   mozilla::net::nsSimpleURI::Deserialize(jsParams.simpleParams());
 
-<<<<<<< HEAD
-  if (jsParams.baseURI().type() != OptionalURIParams::Tvoid_t) {
-    mBaseURI = DeserializeURI(jsParams.baseURI().get_URIParams());
-  } else {
-    mBaseURI = nullptr;
-  }
-  return true;
-||||||| merged common ancestors
-    if (jsParams.baseURI().type() != OptionalURIParams::Tvoid_t) {
-        mBaseURI = DeserializeURI(jsParams.baseURI().get_URIParams());
-    } else {
-        mBaseURI = nullptr;
-    }
-    return true;
-=======
   if (jsParams.baseURI().isSome()) {
     mBaseURI = DeserializeURI(jsParams.baseURI().ref());
   } else {
     mBaseURI = nullptr;
   }
   return true;
->>>>>>> upstream-releases
 }
 
 // nsSimpleURI methods:
@@ -2227,28 +1284,12 @@ nsJSURI::Mutate(nsIURIMutator** aMutator) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult nsJSURI::EqualsInternal(
-    nsIURI* aOther, mozilla::net::nsSimpleURI::RefHandlingEnum aRefHandlingMode,
-    bool* aResult) {
-  NS_ENSURE_ARG_POINTER(aOther);
-  MOZ_ASSERT(aResult, "null pointer for outparam");
-||||||| merged common ancestors
-/* virtual */ nsresult
-nsJSURI::EqualsInternal(nsIURI* aOther,
-                        mozilla::net::nsSimpleURI::RefHandlingEnum aRefHandlingMode,
-                        bool* aResult)
-{
-    NS_ENSURE_ARG_POINTER(aOther);
-    MOZ_ASSERT(aResult, "null pointer for outparam");
-=======
 /* virtual */
 nsresult nsJSURI::EqualsInternal(
     nsIURI* aOther, mozilla::net::nsSimpleURI::RefHandlingEnum aRefHandlingMode,
     bool* aResult) {
   NS_ENSURE_ARG_POINTER(aOther);
   MOZ_ASSERT(aResult, "null pointer for outparam");
->>>>>>> upstream-releases
 
   RefPtr<nsJSURI> otherJSURI;
   nsresult rv = aOther->QueryInterface(kJSURICID, getter_AddRefs(otherJSURI));

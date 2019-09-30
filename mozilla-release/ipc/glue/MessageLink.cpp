@@ -38,16 +38,7 @@ using namespace std;
 namespace mozilla {
 namespace ipc {
 
-<<<<<<< HEAD
-MessageLink::MessageLink(MessageChannel *aChan) : mChan(aChan) {}
-||||||| merged common ancestors
-MessageLink::MessageLink(MessageChannel *aChan)
-  : mChan(aChan)
-{
-}
-=======
 MessageLink::MessageLink(MessageChannel* aChan) : mChan(aChan) {}
->>>>>>> upstream-releases
 
 MessageLink::~MessageLink() {
 #ifdef DEBUG
@@ -55,27 +46,11 @@ MessageLink::~MessageLink() {
 #endif
 }
 
-<<<<<<< HEAD
-ProcessLink::ProcessLink(MessageChannel *aChan)
-    : MessageLink(aChan),
-      mTransport(nullptr),
-      mIOLoop(nullptr),
-      mExistingListener(nullptr) {}
-||||||| merged common ancestors
-ProcessLink::ProcessLink(MessageChannel *aChan)
-  : MessageLink(aChan)
-  , mTransport(nullptr)
-  , mIOLoop(nullptr)
-  , mExistingListener(nullptr)
-{
-}
-=======
 ProcessLink::ProcessLink(MessageChannel* aChan)
     : MessageLink(aChan),
       mTransport(nullptr),
       mIOLoop(nullptr),
       mExistingListener(nullptr) {}
->>>>>>> upstream-releases
 
 ProcessLink::~ProcessLink() {
 #ifdef DEBUG
@@ -85,20 +60,9 @@ ProcessLink::~ProcessLink() {
 #endif
 }
 
-<<<<<<< HEAD
-void ProcessLink::Open(mozilla::ipc::Transport *aTransport,
-                       MessageLoop *aIOLoop, Side aSide) {
-  mChan->AssertWorkerThread();
-||||||| merged common ancestors
-void
-ProcessLink::Open(mozilla::ipc::Transport* aTransport, MessageLoop *aIOLoop, Side aSide)
-{
-    mChan->AssertWorkerThread();
-=======
 void ProcessLink::Open(mozilla::ipc::Transport* aTransport,
                        MessageLoop* aIOLoop, Side aSide) {
   mChan->AssertWorkerThread();
->>>>>>> upstream-releases
 
   MOZ_ASSERT(aTransport, "need transport layer");
 
@@ -167,57 +131,19 @@ void ProcessLink::Open(mozilla::ipc::Transport* aTransport,
   }
 }
 
-<<<<<<< HEAD
-void ProcessLink::EchoMessage(Message *msg) {
-  mChan->AssertWorkerThread();
-  mChan->mMonitor->AssertCurrentThreadOwns();
-||||||| merged common ancestors
-void
-ProcessLink::EchoMessage(Message *msg)
-{
-    mChan->AssertWorkerThread();
-    mChan->mMonitor->AssertCurrentThreadOwns();
-=======
 void ProcessLink::EchoMessage(Message* msg) {
   mChan->AssertWorkerThread();
   mChan->mMonitor->AssertCurrentThreadOwns();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mIOLoop->PostTask(NewNonOwningRunnableMethod<Message *>(
-      "ipc::ProcessLink::OnEchoMessage", this, &ProcessLink::OnEchoMessage,
-      msg));
-  // OnEchoMessage takes ownership of |msg|
-||||||| merged common ancestors
-    mIOLoop->PostTask(
-      NewNonOwningRunnableMethod<Message*>("ipc::ProcessLink::OnEchoMessage",
-                                           this,
-                                           &ProcessLink::OnEchoMessage,
-                                           msg));
-    // OnEchoMessage takes ownership of |msg|
-=======
   mIOLoop->PostTask(NewNonOwningRunnableMethod<Message*>(
       "ipc::ProcessLink::OnEchoMessage", this, &ProcessLink::OnEchoMessage,
       msg));
   // OnEchoMessage takes ownership of |msg|
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ProcessLink::SendMessage(Message *msg) {
-  if (msg->size() > IPC::Channel::kMaximumMessageSize) {
-    CrashReporter::AnnotateCrashReport(
-||||||| merged common ancestors
-void
-ProcessLink::SendMessage(Message *msg)
-{
-    if (msg->size() > IPC::Channel::kMaximumMessageSize) {
-      CrashReporter::AnnotateCrashReport(
-=======
 void ProcessLink::SendMessage(Message* msg) {
   if (msg->size() > IPC::Channel::kMaximumMessageSize) {
     CrashReporter::AnnotateCrashReport(
->>>>>>> upstream-releases
         CrashReporter::Annotation::IPCMessageName,
         nsDependentCString(msg->name()));
     CrashReporter::AnnotateCrashReport(
@@ -231,13 +157,7 @@ void ProcessLink::SendMessage(Message* msg) {
   }
   mChan->mMonitor->AssertCurrentThreadOwns();
 
-<<<<<<< HEAD
-  mIOLoop->PostTask(NewNonOwningRunnableMethod<Message *>(
-||||||| merged common ancestors
-    mIOLoop->PostTask(NewNonOwningRunnableMethod<Message*>(
-=======
   mIOLoop->PostTask(NewNonOwningRunnableMethod<Message*>(
->>>>>>> upstream-releases
       "IPC::Channel::Send", mTransport, &Transport::Send, msg));
 }
 
@@ -249,42 +169,6 @@ void ProcessLink::SendClose() {
       "ipc::ProcessLink::OnCloseChannel", this, &ProcessLink::OnCloseChannel));
 }
 
-<<<<<<< HEAD
-ThreadLink::ThreadLink(MessageChannel *aChan, MessageChannel *aTargetChan)
-    : MessageLink(aChan), mTargetChan(aTargetChan) {}
-
-ThreadLink::~ThreadLink() {
-  MOZ_ASSERT(mChan);
-  MOZ_ASSERT(mChan->mMonitor);
-  MonitorAutoLock lock(*mChan->mMonitor);
-
-  // Bug 848949: We need to prevent the other side
-  // from sending us any more messages to avoid Use-After-Free.
-  // The setup here is as shown:
-  //
-  //          (Us)         (Them)
-  //       MessageChannel  MessageChannel
-  //         |  ^     \ /     ^ |
-  //         |  |      X      | |
-  //         v  |     / \     | v
-  //        ThreadLink   ThreadLink
-  //
-  // We want to null out the diagonal link from their ThreadLink
-  // to our MessageChannel.  Note that we must hold the monitor so
-  // that we do this atomically with respect to them trying to send
-  // us a message.  Since the channels share the same monitor this
-  // also protects against the two ~ThreadLink() calls racing.
-  if (mTargetChan) {
-    MOZ_ASSERT(mTargetChan->mLink);
-    static_cast<ThreadLink *>(mTargetChan->mLink)->mTargetChan = nullptr;
-  }
-  mTargetChan = nullptr;
-||||||| merged common ancestors
-ThreadLink::ThreadLink(MessageChannel *aChan, MessageChannel *aTargetChan)
-  : MessageLink(aChan),
-    mTargetChan(aTargetChan)
-{
-=======
 ThreadLink::ThreadLink(MessageChannel* aChan, MessageChannel* aTargetChan)
     : MessageLink(aChan), mTargetChan(aTargetChan) {}
 
@@ -314,40 +198,18 @@ ThreadLink::~ThreadLink() {
     static_cast<ThreadLink*>(mTargetChan->mLink)->mTargetChan = nullptr;
   }
   mTargetChan = nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ThreadLink::EchoMessage(Message *msg) {
-  mChan->AssertWorkerThread();
-  mChan->mMonitor->AssertCurrentThreadOwns();
-||||||| merged common ancestors
-ThreadLink::~ThreadLink()
-{
-    MOZ_ASSERT(mChan);
-    MOZ_ASSERT(mChan->mMonitor);
-    MonitorAutoLock lock(*mChan->mMonitor);
-=======
 void ThreadLink::EchoMessage(Message* msg) {
   mChan->AssertWorkerThread();
   mChan->mMonitor->AssertCurrentThreadOwns();
->>>>>>> upstream-releases
 
   mChan->OnMessageReceivedFromLink(std::move(*msg));
   delete msg;
 }
 
-<<<<<<< HEAD
-void ThreadLink::SendMessage(Message *msg) {
-  if (!mChan->mIsPostponingSends) {
-||||||| merged common ancestors
-void
-ThreadLink::EchoMessage(Message *msg)
-{
-=======
 void ThreadLink::SendMessage(Message* msg) {
   if (!mChan->mIsPostponingSends) {
->>>>>>> upstream-releases
     mChan->AssertWorkerThread();
   }
   mChan->mMonitor->AssertCurrentThreadOwns();
@@ -384,47 +246,17 @@ uint32_t ThreadLink::Unsound_NumQueuedMessages() const {
 // The methods below run in the context of the IO thread
 //
 
-<<<<<<< HEAD
-void ProcessLink::OnMessageReceived(Message &&msg) {
-  AssertIOThread();
-  NS_ASSERTION(mChan->mChannelState != ChannelError, "Shouldn't get here!");
-  MonitorAutoLock lock(*mChan->mMonitor);
-  mChan->OnMessageReceivedFromLink(std::move(msg));
-||||||| merged common ancestors
-void
-ProcessLink::OnMessageReceived(Message&& msg)
-{
-    AssertIOThread();
-    NS_ASSERTION(mChan->mChannelState != ChannelError, "Shouldn't get here!");
-    MonitorAutoLock lock(*mChan->mMonitor);
-    mChan->OnMessageReceivedFromLink(std::move(msg));
-=======
 void ProcessLink::OnMessageReceived(Message&& msg) {
   AssertIOThread();
   NS_ASSERTION(mChan->mChannelState != ChannelError, "Shouldn't get here!");
   MonitorAutoLock lock(*mChan->mMonitor);
   mChan->OnMessageReceivedFromLink(std::move(msg));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ProcessLink::OnEchoMessage(Message *msg) {
-  AssertIOThread();
-  OnMessageReceived(std::move(*msg));
-  delete msg;
-||||||| merged common ancestors
-void
-ProcessLink::OnEchoMessage(Message* msg)
-{
-    AssertIOThread();
-    OnMessageReceived(std::move(*msg));
-    delete msg;
-=======
 void ProcessLink::OnEchoMessage(Message* msg) {
   AssertIOThread();
   OnMessageReceived(std::move(*msg));
   delete msg;
->>>>>>> upstream-releases
 }
 
 void ProcessLink::OnChannelOpened() {
@@ -523,13 +355,7 @@ void ProcessLink::OnCloseChannel() {
 
   MonitorAutoLock lock(*mChan->mMonitor);
 
-<<<<<<< HEAD
-  DebugOnly<IPC::Channel::Listener *> previousListener =
-||||||| merged common ancestors
-    DebugOnly<IPC::Channel::Listener*> previousListener =
-=======
   DebugOnly<IPC::Channel::Listener*> previousListener =
->>>>>>> upstream-releases
       mTransport->set_listener(mExistingListener);
 
   // OnChannelError may have reset the listener already.

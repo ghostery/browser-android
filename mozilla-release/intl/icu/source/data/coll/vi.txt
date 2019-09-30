@@ -13,13 +13,7 @@ vi{
                 "&o<ô<<<Ô<ơ<<<Ơ"
                 "&u<ư<<<Ư"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         traditional{
             Sequence{
@@ -38,13 +32,7 @@ vi{
                 "&T<th<<<Th<<<TH<tr<<<Tr<<<TR"
                 "&u<ư<<<Ư"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

@@ -21,17 +21,6 @@ from .generator import TaskGraphGenerator
 from .parameters import Parameters, get_version, get_app_version
 from .taskgraph import TaskGraph
 from .try_option_syntax import parse_message
-<<<<<<< HEAD
-from .util.schema import validate_schema, Schema
-from taskgraph.util.hg import get_hg_revision_branch
-from taskgraph.util.partials import populate_release_history
-from taskgraph.util.yaml import load_yaml
-from voluptuous import Required, Optional
-||||||| merged common ancestors
-from taskgraph.util.hg import get_hg_revision_branch
-from taskgraph.util.partials import populate_release_history
-from taskgraph.util.yaml import load_yaml
-=======
 from .util.hg import get_hg_revision_branch, get_hg_commit_message
 from .util.partials import populate_release_history
 from .util.schema import validate_schema, Schema
@@ -39,7 +28,6 @@ from .util.taskcluster import get_artifact
 from .util.taskgraph import find_decision_task, find_existing_tasks_from_previous_kinds
 from .util.yaml import load_yaml
 from voluptuous import Required, Optional
->>>>>>> upstream-releases
 
 
 logger = logging.getLogger(__name__)
@@ -94,15 +82,6 @@ PER_PROJECT_PARAMETERS = {
         'release_type': 'esr60',
     },
 
-<<<<<<< HEAD
-    'comm-central': {
-        'target_tasks_method': 'default',
-        'optimize_target_tasks': True,
-        'release_type': 'nightly',
-    },
-
-||||||| merged common ancestors
-=======
     'mozilla-esr68': {
         'target_tasks_method': 'mozilla_esr68_tasks',
         'release_type': 'esr68',
@@ -113,7 +92,6 @@ PER_PROJECT_PARAMETERS = {
         'release_type': 'nightly',
     },
 
->>>>>>> upstream-releases
     'comm-beta': {
         'target_tasks_method': 'mozilla_beta_tasks',
         'release_type': 'beta',
@@ -139,19 +117,6 @@ PER_PROJECT_PARAMETERS = {
     }
 }
 
-<<<<<<< HEAD
-try_task_config_schema = Schema({
-    Required('tasks'): [basestring],
-    Optional('templates'): {basestring: object},
-})
-
-
-try_task_config_schema_v2 = Schema({
-    Optional('parameters'): {basestring: object},
-})
-
-||||||| merged common ancestors
-=======
 try_task_config_schema = Schema({
     Required('tasks'): [basestring],
     Optional('templates'): {basestring: object},
@@ -163,7 +128,6 @@ try_task_config_schema_v2 = Schema({
     Optional('parameters'): {basestring: object},
 })
 
->>>>>>> upstream-releases
 
 def full_task_graph_to_runnable_jobs(full_task_json):
     runnable_jobs = {}
@@ -398,18 +362,10 @@ def set_try_config(parameters, task_config_file):
             parameters['try_mode'] = 'try_task_config'
             parameters['try_task_config'] = task_config
         elif task_config_version == 2:
-<<<<<<< HEAD
-            validate_schema(
-                try_task_config_schema_v2, task_config,
-                "Invalid v1 `try_task_config.json`.",
-            )
-||||||| merged common ancestors
-=======
             validate_schema(
                 try_task_config_schema_v2, task_config,
                 "Invalid v2 `try_task_config.json`.",
             )
->>>>>>> upstream-releases
             parameters.update(task_config['parameters'])
             return
         else:

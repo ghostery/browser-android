@@ -135,16 +135,9 @@ def write_test_settings_json(args, test_details, oskey):
             "type": test_details['type'],
             "cold": test_details['cold'],
             "test_url": test_url,
-<<<<<<< HEAD
-            "page_cycles": int(test_details['page_cycles']),
-            "host": args.host,
-||||||| merged common ancestors
-            "page_cycles": int(test_details['page_cycles'])
-=======
             "expected_browser_cycles": test_details['expected_browser_cycles'],
             "page_cycles": int(test_details['page_cycles']),
             "host": args.host,
->>>>>>> upstream-releases
         }
     }
 
@@ -174,17 +167,6 @@ def write_test_settings_json(args, test_details, oskey):
     # support optional subtest unit/lower_is_better fields
     val = test_details.get('subtest_unit', test_settings['raptor-options']['unit'])
     test_settings['raptor-options']['subtest_unit'] = val
-<<<<<<< HEAD
-    val = test_details.get('subtest_lower_is_better',
-                           test_settings['raptor-options']['lower_is_better'])
-    if val == "false":
-        test_settings['raptor-options']['subtest_lower_is_better'] = False
-    else:
-        test_settings['raptor-options']['subtest_lower_is_better'] = True
-||||||| merged common ancestors
-    val = test_details.get('subtest_lower', test_settings['raptor-options']['lower_is_better'])
-    test_settings['raptor-options']['subtest_lower_is_better'] = val
-=======
     subtest_lower_is_better = test_details.get('subtest_lower_is_better', None)
 
     if subtest_lower_is_better is None:
@@ -197,32 +179,10 @@ def write_test_settings_json(args, test_details, oskey):
 
     if test_details.get("alert_change_type", None) is not None:
         test_settings['raptor-options']['alert_change_type'] = test_details['alert_change_type']
->>>>>>> upstream-releases
 
     if test_details.get("alert_threshold", None) is not None:
         test_settings['raptor-options']['alert_threshold'] = float(test_details['alert_threshold'])
 
-<<<<<<< HEAD
-    # if gecko profiling is enabled, write profiling settings for webext
-    if test_details.get("gecko_profile", False):
-        test_settings['raptor-options']['gecko_profile'] = True
-        # when profiling, if webRender is enabled we need to set that, so
-        # the runner can add the web render threads to gecko profiling
-        test_settings['raptor-options']['gecko_profile_interval'] = \
-            float(test_details.get("gecko_profile_interval", 0))
-        test_settings['raptor-options']['gecko_profile_entries'] = \
-            float(test_details.get("gecko_profile_entries", 0))
-        if str(os.getenv('MOZ_WEBRENDER')) == '1':
-            test_settings['raptor-options']['webrender_enabled'] = True
-
-    if test_details.get("newtab_per_cycle", None) is not None:
-        test_settings['raptor-options']['newtab_per_cycle'] = \
-            bool(test_details['newtab_per_cycle'])
-
-    settings_file = os.path.join(tests_dir, test_details['name'] + '.json')
-||||||| merged common ancestors
-    settings_file = os.path.join(tests_dir, test_details['name'] + '.json')
-=======
     if test_details.get("screen_capture", None) is not None:
         test_settings['raptor-options']['screen_capture'] = test_details.get("screen_capture")
 
@@ -263,7 +223,6 @@ def write_test_settings_json(args, test_details, oskey):
         os.mkdir(os.path.join(tests_dir, 'json'))
 
     settings_file = os.path.join(jsons_dir, test_details['name'] + '.json')
->>>>>>> upstream-releases
     try:
         with open(settings_file, 'w') as out_file:
             json.dump(test_settings, out_file, indent=4, ensure_ascii=False)
@@ -315,35 +274,6 @@ def get_raptor_test_list(args, oskey):
                 # subtest comes from matching test ini file name, so add it
                 tests_to_run.append(next_test)
 
-<<<<<<< HEAD
-    # go through each test and set the page-cycles and page-timeout, and some config flags
-    # the page-cycles value in the INI can be overriden when debug-mode enabled, when
-    # gecko-profiling enabled, or when --page-cycles cmd line arg was used (that overrides all)
-    for next_test in tests_to_run:
-        LOG.info("configuring settings for test %s" % next_test['name'])
-        max_page_cycles = next_test['page_cycles']
-        if args.gecko_profile is True:
-            next_test['gecko_profile'] = True
-            LOG.info("gecko-profiling enabled")
-            max_page_cycles = 3
-        if args.debug_mode is True:
-            next_test['debug_mode'] = True
-            LOG.info("debug-mode enabled")
-            max_page_cycles = 2
-        if args.page_cycles is not None:
-            next_test['page_cycles'] = args.page_cycles
-            LOG.info("set page-cycles to %d as specified on cmd line" % args.page_cycles)
-        else:
-            if int(next_test['page_cycles']) > max_page_cycles:
-                next_test['page_cycles'] = max_page_cycles
-                LOG.info("page-cycles set to %d" % next_test['page_cycles'])
-        # if --page-timeout was provided on the command line, use that instead of INI
-        if args.page_timeout is not None:
-            LOG.info("setting page-timeout to %d as specified on cmd line" % args.page_timeout)
-            next_test['page_timeout'] = args.page_timeout
-
-||||||| merged common ancestors
-=======
     # go through each test and set the page-cycles and page-timeout, and some config flags
     # the page-cycles value in the INI can be overriden when debug-mode enabled, when
     # gecko-profiling enabled, or when --page-cycles cmd line arg was used (that overrides all)
@@ -444,7 +374,6 @@ def get_raptor_test_list(args, oskey):
                 # remove the 'hero =' line since no longer measuring hero
                 del next_test['hero']
 
->>>>>>> upstream-releases
     # write out .json test setting files for the control server to read and send to web ext
     if len(tests_to_run) != 0:
         for test in tests_to_run:

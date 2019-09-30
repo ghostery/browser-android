@@ -51,18 +51,9 @@ class nsSVGPaintServerFrame : public nsSVGContainerFrame {
  protected:
   typedef mozilla::gfx::DrawTarget DrawTarget;
 
-<<<<<<< HEAD
-  nsSVGPaintServerFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsSVGContainerFrame(aStyle, aID) {
-||||||| merged common ancestors
-  nsSVGPaintServerFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsSVGContainerFrame(aStyle, aID)
-  {
-=======
   nsSVGPaintServerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                         ClassID aID)
       : nsSVGContainerFrame(aStyle, aPresContext, aID) {
->>>>>>> upstream-releases
     AddStateBits(NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -79,30 +70,12 @@ class nsSVGPaintServerFrame : public nsSVGContainerFrame {
    *   that surfaces of the correct size can be created. (SVG gradients are
    *   vector based, so it's not used there.)
    */
-<<<<<<< HEAD
-  virtual already_AddRefed<gfxPattern> GetPaintServerPattern(
-      nsIFrame* aSource, const DrawTarget* aDrawTarget,
-      const gfxMatrix& aContextMatrix,
-      nsStyleSVGPaint nsStyleSVG::*aFillOrStroke, float aOpacity,
-      imgDrawingParams& aImgParams,
-      const gfxRect* aOverrideBounds = nullptr) = 0;
-||||||| merged common ancestors
-  virtual already_AddRefed<gfxPattern>
-    GetPaintServerPattern(nsIFrame *aSource,
-                          const DrawTarget* aDrawTarget,
-                          const gfxMatrix& aContextMatrix,
-                          nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
-                          float aOpacity,
-                          imgDrawingParams& aImgParams,
-                          const gfxRect* aOverrideBounds = nullptr) = 0;
-=======
   virtual already_AddRefed<gfxPattern> GetPaintServerPattern(
       nsIFrame* aSource, const DrawTarget* aDrawTarget,
       const gfxMatrix& aContextMatrix,
       mozilla::StyleSVGPaint nsStyleSVG::*aFillOrStroke, float aOpacity,
       imgDrawingParams& aImgParams,
       const gfxRect* aOverrideBounds = nullptr) = 0;
->>>>>>> upstream-releases
 
   // nsIFrame methods:
   virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,

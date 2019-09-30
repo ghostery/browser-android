@@ -25,36 +25,15 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewProgressFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsProgressFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewProgressFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsProgressFrame(aStyle);
-=======
 nsIFrame* NS_NewProgressFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsProgressFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsProgressFrame)
 
-<<<<<<< HEAD
-nsProgressFrame::nsProgressFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID), mBarDiv(nullptr) {}
-||||||| merged common ancestors
-nsProgressFrame::nsProgressFrame(ComputedStyle* aStyle)
-  : nsContainerFrame(aStyle, kClassID)
-  , mBarDiv(nullptr)
-{
-}
-=======
 nsProgressFrame::nsProgressFrame(ComputedStyle* aStyle,
                                  nsPresContext* aPresContext)
     : nsContainerFrame(aStyle, aPresContext, kClassID), mBarDiv(nullptr) {}
->>>>>>> upstream-releases
 
 nsProgressFrame::~nsProgressFrame() {}
 

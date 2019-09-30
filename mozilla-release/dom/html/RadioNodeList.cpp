@@ -15,18 +15,9 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* virtual */ JSObject* RadioNodeList::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-RadioNodeList::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* RadioNodeList::WrapObject(JSContext* aCx,
                                     JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return RadioNodeList_Binding::Wrap(aCx, this, aGivenProto);
 }
 

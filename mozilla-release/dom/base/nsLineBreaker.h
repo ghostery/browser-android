@@ -261,23 +261,11 @@ class nsLineBreaker {
 
   AutoTArray<char16_t, 100> mCurrentWord;
   // All the items that contribute to mCurrentWord
-<<<<<<< HEAD
-  AutoTArray<TextItem, 2> mTextItems;
-  nsAtom* mCurrentWordLanguage;
-  bool mCurrentWordContainsMixedLang;
-  bool mCurrentWordContainsComplexChar;
-||||||| merged common ancestors
-  AutoTArray<TextItem,2>    mTextItems;
-  nsAtom*                    mCurrentWordLanguage;
-  bool                        mCurrentWordContainsMixedLang;
-  bool                        mCurrentWordContainsComplexChar;
-=======
   AutoTArray<TextItem, 2> mTextItems;
   nsAtom* mCurrentWordLanguage;
   bool mCurrentWordContainsMixedLang;
   bool mCurrentWordContainsComplexChar;
   bool mScriptIsChineseOrJapanese;
->>>>>>> upstream-releases
 
   // True if the previous character was breakable whitespace
   bool mAfterBreakableSpace;
@@ -285,11 +273,6 @@ class nsLineBreaker {
   // a run of breakable whitespace ends here
   bool mBreakHere;
   // line break mode by "word-break" style
-<<<<<<< HEAD
-  uint8_t mWordBreak;
-||||||| merged common ancestors
-  uint8_t                     mWordBreak;
-=======
   mozilla::intl::LineBreaker::WordBreak mWordBreak;
   // strictness of break rules, from line-break property
   mozilla::intl::LineBreaker::Strictness mStrictness;
@@ -298,7 +281,6 @@ class nsLineBreaker {
   // start using a linebreaker, but it may be set to true if the line-breaker
   // has been explicitly flushed mid-word.
   bool mWordContinuation;
->>>>>>> upstream-releases
 };
 
 #endif /*NSLINEBREAKER_H_*/

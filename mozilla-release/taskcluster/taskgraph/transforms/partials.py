@@ -57,19 +57,7 @@ def make_task_description(config, jobs):
         treeherder.setdefault('kind', 'build')
         treeherder.setdefault('tier', 1)
 
-<<<<<<< HEAD
-        dependent_kind = str(dep_job.kind)
-        dependencies = {dependent_kind: dep_job.label}
-||||||| merged common ancestors
-        dependent_kind = str(dep_job.kind)
-        dependencies = {dependent_kind: dep_job.label}
-        signing_dependencies = dep_job.dependencies
-        # This is so we get the build task etc in our dependencies to
-        # have better beetmover support.
-        dependencies.update(signing_dependencies)
-=======
         dependencies = {dep_job.kind: dep_job.label}
->>>>>>> upstream-releases
 
         attributes = copy_attributes_from_dependent_job(dep_job)
         locale = dep_job.attributes.get('locale')
@@ -88,40 +76,14 @@ def make_task_description(config, jobs):
         if not builds:
             continue
 
-<<<<<<< HEAD
-        dep_task_ref = '<{}>'.format(dependent_kind)
-
-||||||| merged common ancestors
-        signing_task = None
-        for dependency in sorted(dependencies.keys()):
-            if 'repackage-signing-l10n' in dependency:
-                signing_task = dependency
-                break
-            if 'repackage-signing' in dependency:
-                signing_task = dependency
-                break
-        signing_task_ref = '<{}>'.format(signing_task)
-
-=======
->>>>>>> upstream-releases
         extra = {'funsize': {'partials': list()}}
         update_number = 1
-<<<<<<< HEAD
-        artifact_path = "{}{}".format(
-            get_taskcluster_artifact_prefix(dep_job, dep_task_ref, locale=locale),
-            'target.complete.mar'
-||||||| merged common ancestors
-        artifact_path = "{}{}".format(
-            get_taskcluster_artifact_prefix(dep_job, signing_task_ref, locale=locale),
-            'target.complete.mar'
-=======
 
         locale_suffix = ''
         if locale:
             locale_suffix = '{}/'.format(locale)
         artifact_path = "<{}/{}/{}target.complete.mar>".format(
             dep_job.kind, get_artifact_prefix(dep_job), locale_suffix,
->>>>>>> upstream-releases
         )
         for build in sorted(builds):
             partial_info = {

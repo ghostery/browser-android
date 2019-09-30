@@ -41,17 +41,9 @@
 #define DISABLE_ASSERTS_FOR_FUZZING 0
 
 #if DISABLE_ASSERTS_FOR_FUZZING
-<<<<<<< HEAD
-#define ASSERT_UNLESS_FUZZING(...) \
-  do {                             \
-  } while (0)
-||||||| merged common ancestors
-#define ASSERT_UNLESS_FUZZING(...) do { } while (0)
-=======
 #  define ASSERT_UNLESS_FUZZING(...) \
     do {                             \
     } while (0)
->>>>>>> upstream-releases
 #else
 #  define ASSERT_UNLESS_FUZZING(...) MOZ_ASSERT(false, __VA_ARGS__)
 #endif

@@ -9,16 +9,6 @@ replace-with = 'vendored-sources'
 
 [source."https://github.com/servo/serde"]
 git = "https://github.com/servo/serde"
-<<<<<<< HEAD
-branch = "deserialize_from_enums9"
-replace-with = "vendored-sources"
-
-[source."https://github.com/retep998/winapi-rs"]
-git = "https://github.com/froydnj/winapi-rs"
-branch = "aarch64"
-||||||| merged common ancestors
-branch = "deserialize_from_enums8"
-=======
 branch = "deserialize_from_enums10"
 replace-with = "vendored-sources"
 
@@ -35,7 +25,6 @@ replace-with = "vendored-sources"
 [source."https://github.com/CraneStation/Cranelift"]
 git = "https://github.com/CraneStation/Cranelift"
 rev = "312516a69da03dc06eace32f61412389a8dcadf3"
->>>>>>> upstream-releases
 replace-with = "vendored-sources"
 
 [source.vendored-sources]

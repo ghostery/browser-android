@@ -22,89 +22,33 @@ class nsAsyncStreamCopier final : public nsIAsyncStreamCopier,
   NS_DECL_NSIREQUEST
   NS_DECL_NSIASYNCSTREAMCOPIER
 
-<<<<<<< HEAD
-  // nsIAsyncStreamCopier2
-  // We declare it by hand instead of NS_DECL_NSIASYNCSTREAMCOPIER2
-  // as nsIAsyncStreamCopier2 duplicates methods of nsIAsyncStreamCopier
-  NS_IMETHOD Init(nsIInputStream *aSource, nsIOutputStream *aSink,
-                  nsIEventTarget *aTarget, uint32_t aChunkSize,
-                  bool aCloseSource, bool aCloseSink) override;
-||||||| merged common ancestors
-    // nsIAsyncStreamCopier2
-    // We declare it by hand instead of NS_DECL_NSIASYNCSTREAMCOPIER2
-    // as nsIAsyncStreamCopier2 duplicates methods of nsIAsyncStreamCopier
-    NS_IMETHOD Init(nsIInputStream *aSource,
-                    nsIOutputStream *aSink,
-                    nsIEventTarget *aTarget,
-                    uint32_t aChunkSize,
-                    bool aCloseSource,
-                    bool aCloseSink) override;
-=======
   // nsIAsyncStreamCopier2
   // We declare it by hand instead of NS_DECL_NSIASYNCSTREAMCOPIER2
   // as nsIAsyncStreamCopier2 duplicates methods of nsIAsyncStreamCopier
   NS_IMETHOD Init(nsIInputStream* aSource, nsIOutputStream* aSink,
                   nsIEventTarget* aTarget, uint32_t aChunkSize,
                   bool aCloseSource, bool aCloseSink) override;
->>>>>>> upstream-releases
 
   nsAsyncStreamCopier();
 
   //-------------------------------------------------------------------------
   // these methods may be called on any thread
 
-<<<<<<< HEAD
-  bool IsComplete(nsresult *status = nullptr);
-  void Complete(nsresult status);
-||||||| merged common ancestors
-    bool IsComplete(nsresult *status = nullptr);
-    void   Complete(nsresult status);
-=======
   bool IsComplete(nsresult* status = nullptr);
   void Complete(nsresult status);
->>>>>>> upstream-releases
 
  private:
   virtual ~nsAsyncStreamCopier();
 
-<<<<<<< HEAD
-  nsresult InitInternal(nsIInputStream *source, nsIOutputStream *sink,
-                        nsIEventTarget *target, uint32_t chunkSize,
-                        bool closeSource, bool closeSink);
-||||||| merged common ancestors
-    nsresult InitInternal(nsIInputStream *source,
-                          nsIOutputStream *sink,
-                          nsIEventTarget *target,
-                          uint32_t chunkSize,
-                          bool closeSource,
-                          bool closeSink);
-=======
   nsresult InitInternal(nsIInputStream* source, nsIOutputStream* sink,
                         nsIEventTarget* target, uint32_t chunkSize,
                         bool closeSource, bool closeSink);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void OnAsyncCopyComplete(void *, nsresult);
-||||||| merged common ancestors
-    static void OnAsyncCopyComplete(void *, nsresult);
-=======
   static void OnAsyncCopyComplete(void*, nsresult);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void AsyncCopyInternal();
-  nsresult ApplyBufferingPolicy();
-  nsIRequest *AsRequest();
-||||||| merged common ancestors
-    void AsyncCopyInternal();
-    nsresult ApplyBufferingPolicy();
-    nsIRequest* AsRequest();
-=======
   void AsyncCopyInternal();
   nsresult ApplyBufferingPolicy();
   nsIRequest* AsRequest();
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIInputStream> mSource;
   nsCOMPtr<nsIOutputStream> mSink;

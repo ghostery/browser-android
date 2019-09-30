@@ -4,15 +4,8 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
-<<<<<<< HEAD
-from moztest.resolve import TestResolver
-from mozversioncontrol import HgRepository, GitRepository
-||||||| merged common ancestors
-from mozversioncontrol import HgRepository, GitRepository
-=======
 import os
 
->>>>>>> upstream-releases
 import pytest
 import yaml
 from mock import MagicMock
@@ -36,15 +29,6 @@ def tg(request):
 
     tasks = {t['label']: Task(**t) for t in tasks}
     return TaskGraph(tasks, Graph(tasks.keys(), set()))
-
-
-@pytest.fixture
-def patch_resolver(monkeypatch):
-    def inner(suites, tests):
-        def fake_test_metadata(*args, **kwargs):
-            return suites, tests
-        monkeypatch.setattr(TestResolver, 'resolve_metadata', fake_test_metadata)
-    return inner
 
 
 @pytest.fixture

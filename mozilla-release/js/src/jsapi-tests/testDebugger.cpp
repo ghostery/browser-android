@@ -10,71 +10,6 @@
 
 using namespace js;
 
-<<<<<<< HEAD
-BEGIN_TEST(testDebugger_newScriptHook) {
-  // Test that top-level indirect eval fires the newScript hook.
-  CHECK(JS_DefineDebuggerObject(cx, global));
-  JS::RealmOptions options;
-  JS::RootedObject g(cx, JS_NewGlobalObject(cx, getGlobalClass(), nullptr,
-                                            JS::FireOnNewGlobalHook, options));
-  CHECK(g);
-  {
-    JSAutoRealm ar(cx, g);
-    CHECK(JS::InitRealmStandardClasses(cx));
-  }
-
-  JS::RootedObject gWrapper(cx, g);
-  CHECK(JS_WrapObject(cx, &gWrapper));
-  JS::RootedValue v(cx, JS::ObjectValue(*gWrapper));
-  CHECK(JS_SetProperty(cx, global, "g", v));
-
-  EXEC(
-      "var dbg = Debugger(g);\n"
-      "var hits = 0;\n"
-      "dbg.onNewScript = function (s) {\n"
-      "    hits += Number(s instanceof Debugger.Script);\n"
-      "};\n");
-
-  // Since g is a debuggee, g.eval should trigger newScript, regardless of
-  // what scope object we use to enter the compartment.
-  //
-  // Scripts are associated with the global where they're compiled, so we
-  // deliver them only to debuggers that are watching that particular global.
-  //
-  return testIndirectEval(g, "Math.abs(0)");
-||||||| merged common ancestors
-BEGIN_TEST(testDebugger_newScriptHook)
-{
-    // Test that top-level indirect eval fires the newScript hook.
-    CHECK(JS_DefineDebuggerObject(cx, global));
-    JS::RealmOptions options;
-    JS::RootedObject g(cx, JS_NewGlobalObject(cx, getGlobalClass(), nullptr,
-                                              JS::FireOnNewGlobalHook, options));
-    CHECK(g);
-    {
-        JSAutoRealm ar(cx, g);
-        CHECK(JS::InitRealmStandardClasses(cx));
-    }
-
-    JS::RootedObject gWrapper(cx, g);
-    CHECK(JS_WrapObject(cx, &gWrapper));
-    JS::RootedValue v(cx, JS::ObjectValue(*gWrapper));
-    CHECK(JS_SetProperty(cx, global, "g", v));
-
-    EXEC("var dbg = Debugger(g);\n"
-         "var hits = 0;\n"
-         "dbg.onNewScript = function (s) {\n"
-         "    hits += Number(s instanceof Debugger.Script);\n"
-         "};\n");
-
-    // Since g is a debuggee, g.eval should trigger newScript, regardless of
-    // what scope object we use to enter the compartment.
-    //
-    // Scripts are associated with the global where they're compiled, so we
-    // deliver them only to debuggers that are watching that particular global.
-    //
-    return testIndirectEval(g, "Math.abs(0)");
-=======
 BEGIN_TEST(testDebugger_newScriptHook) {
   // Test that top-level indirect eval fires the newScript hook.
   CHECK(JS_DefineDebuggerObject(cx, global));
@@ -102,7 +37,6 @@ BEGIN_TEST(testDebugger_newScriptHook) {
   // deliver them only to debuggers that are watching that particular global.
   //
   return testIndirectEval(g, "Math.abs(0)");
->>>>>>> upstream-releases
 }
 
 bool testIndirectEval(JS::HandleObject global, const char* code) {

@@ -94,24 +94,6 @@ static int __stdcall PrepareAndDispatch(baz* self, uint32_t methodIndex,
   return out;
 }
 
-<<<<<<< HEAD
-#ifndef __GNUC__
-static __declspec(naked) void SharedStub(void) {
-  __asm {
-        push ebp  // set up simple stack frame
-        mov  ebp, esp  // stack has: ebp/vtbl_index/retaddr/this/args
-        push ecx  // make room for a ptr
-        lea  eax, [ebp-4]  // pointer to stackBytesToPop
-||||||| merged common ancestors
-#ifndef __GNUC__
-static __declspec(naked) void SharedStub(void)
-{
-    __asm {
-        push ebp            // set up simple stack frame
-        mov  ebp, esp       // stack has: ebp/vtbl_index/retaddr/this/args
-        push ecx            // make room for a ptr
-        lea  eax, [ebp-4]   // pointer to stackBytesToPop
-=======
 #  ifndef __GNUC__
 static __declspec(naked) void SharedStub(void) {
   __asm {
@@ -119,7 +101,6 @@ static __declspec(naked) void SharedStub(void) {
         mov  ebp, esp  // stack has: ebp/vtbl_index/retaddr/this/args
         push ecx  // make room for a ptr
         lea  eax, [ebp-4]  // pointer to stackBytesToPop
->>>>>>> upstream-releases
         push eax
         lea  ecx, [ebp+16]  // pointer to args
         push ecx
@@ -139,56 +120,6 @@ static __declspec(naked) void SharedStub(void) {
 }
 
 // these macros get expanded (many times) in the file #included below
-<<<<<<< HEAD
-#define STUB_ENTRY(n)                                     \
-  __declspec(naked) nsresult __stdcall baz::callme##n() { \
-    __asm push n __asm jmp SharedStub                     \
-  }
-
-#else /* __GNUC__ */
-
-#define STUB_ENTRY(n)                                            \
-  nsresult __stdcall baz::callme##n() {                          \
-    uint32_t *args, stackBytesToPop;                             \
-    int result = 0;                                              \
-    baz* obj;                                                    \
-    __asm__ __volatile__(                                        \
-        "leal   0x0c(%%ebp), %0\n\t" /* args */                  \
-        "movl   0x08(%%ebp), %1\n\t" /* this */                  \
-        : "=r"(args), "=r"(obj));                                \
-    result = PrepareAndDispatch(obj, n, args, &stackBytesToPop); \
-    fprintf(stdout, "stub returning: %d\n", result);             \
-    fprintf(stdout, "bytes to pop:  %d\n", stackBytesToPop);     \
-    return result;                                               \
-  }
-
-#endif /* ! __GNUC__ */
-||||||| merged common ancestors
-#define STUB_ENTRY(n) \
-__declspec(naked) nsresult __stdcall baz::callme##n() \
-{ __asm push n __asm jmp SharedStub }
-
-#else /* __GNUC__ */
-
-#define STUB_ENTRY(n) \
-nsresult __stdcall baz::callme##n() \
-{ \
-  uint32_t *args, stackBytesToPop; \
-  int result = 0; \
-  baz *obj; \
-  __asm__ __volatile__ ( \
-    "leal   0x0c(%%ebp), %0\n\t"    /* args */ \
-    "movl   0x08(%%ebp), %1\n\t"    /* this */ \
-    : "=r" (args), \
-      "=r" (obj)); \
-  result = PrepareAndDispatch(obj, n, args,&stackBytesToPop); \
-    fprintf(stdout, "stub returning: %d\n", result); \
-    fprintf(stdout, "bytes to pop:  %d\n", stackBytesToPop); \
-    return result; \
-}
-
-#endif /* ! __GNUC__ */
-=======
 #    define STUB_ENTRY(n)                                     \
       __declspec(naked) nsresult __stdcall baz::callme##n() { \
         __asm push n __asm jmp SharedStub                     \
@@ -212,7 +143,6 @@ nsresult __stdcall baz::callme##n() \
       }
 
 #  endif /* ! __GNUC__ */
->>>>>>> upstream-releases
 
 #else
 /***************************************************************************/
@@ -236,43 +166,6 @@ static int PrepareAndDispatch(baz* self, uint32_t methodIndex, uint32_t* args) {
   return 1;
 }
 
-<<<<<<< HEAD
-#define STUB_ENTRY(n)                                      \
-  nsresult baz::callme##n() {                              \
-    void* method = PrepareAndDispatch;                     \
-    nsresult result;                                       \
-    __asm__ __volatile__(                                  \
-        "leal   0x0c(%%ebp), %%ecx\n\t" /* args */         \
-        "pushl  %%ecx\n\t"                                 \
-        "pushl  $" #n                                      \
-        "\n\t"                          /* method index */ \
-        "movl   0x08(%%ebp), %%ecx\n\t" /* this */         \
-        "pushl  %%ecx\n\t"                                 \
-        "call   *%%edx" /* PrepareAndDispatch */           \
-        : "=a"(result)  /* %0 */                           \
-        : "d"(method)   /* %1 */                           \
-        : "memory");                                       \
-    return result;                                         \
-  }
-||||||| merged common ancestors
-#define STUB_ENTRY(n) \
-nsresult baz::callme##n() \
-{ \
-  void* method = PrepareAndDispatch; \
-  nsresult result; \
-  __asm__ __volatile__( \
-    "leal   0x0c(%%ebp), %%ecx\n\t"    /* args */ \
-    "pushl  %%ecx\n\t" \
-    "pushl  $"#n"\n\t"                 /* method index */ \
-    "movl   0x08(%%ebp), %%ecx\n\t"    /* this */ \
-    "pushl  %%ecx\n\t" \
-    "call   *%%edx"                    /* PrepareAndDispatch */ \
-    : "=a" (result)     /* %0 */ \
-    : "d" (method)      /* %1 */ \
-    : "memory" ); \
-    return result; \
-}
-=======
 #  define STUB_ENTRY(n)                                      \
     nsresult baz::callme##n() {                              \
       void* method = PrepareAndDispatch;                     \
@@ -290,7 +183,6 @@ nsresult baz::callme##n() \
           : "memory");                                       \
       return result;                                         \
     }
->>>>>>> upstream-releases
 
 #endif
 /***************************************************************************/

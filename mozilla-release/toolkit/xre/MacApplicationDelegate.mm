@@ -318,40 +318,8 @@ void ProcessPendingGetURLAppleEvents() {
     NSString* urlString = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
     NSURL* url = [NSURL URLWithString:urlString];
 
-<<<<<<< HEAD
-    [self openURL:url];
-  }
-  else if ([event eventClass] == kCoreEventClass && [event eventID] == kAEOpenDocuments) {
-||||||| merged common ancestors
-    // don't open chrome URLs
-    NSString* schemeString = [[NSURL URLWithString:urlString] scheme];
-    if (!schemeString ||
-        [schemeString compare:@"chrome"
-                      options:NSCaseInsensitiveSearch
-                        range:NSMakeRange(0, [schemeString length])] == NSOrderedSame) {
-      return;
-    }
-
-    // Add the URL to any command line we're currently setting up.
-    if (CommandLineServiceMac::AddURLToCurrentCommandLine([urlString UTF8String]))
-      return;
-
-    nsCOMPtr<nsICommandLineRunner> cmdLine(new nsCommandLine());
-    nsCOMPtr<nsIFile> workingDir;
-    nsresult rv = NS_GetSpecialDirectory(NS_OS_CURRENT_WORKING_DIR, getter_AddRefs(workingDir));
-    if (NS_FAILED(rv))
-      return;
-    const char *argv[3] = {nullptr, "-url", [urlString UTF8String]};
-    rv = cmdLine->Init(3, argv, workingDir, nsICommandLine::STATE_REMOTE_EXPLICIT);
-    if (NS_FAILED(rv))
-      return;
-    rv = cmdLine->Run();
-  }
-  else if ([event eventClass] == kCoreEventClass && [event eventID] == kAEOpenDocuments) {
-=======
     [self openURL:url];
   } else if ([event eventClass] == kCoreEventClass && [event eventID] == kAEOpenDocuments) {
->>>>>>> upstream-releases
     NSAppleEventDescriptor* fileListDescriptor = [event paramDescriptorForKeyword:keyDirectObject];
     if (!fileListDescriptor) return;
 
@@ -370,65 +338,6 @@ void ProcessPendingGetURLAppleEvents() {
   }
 }
 
-<<<<<<< HEAD
-- (BOOL)application:(NSApplication*)application
-    willContinueUserActivityWithType:(NSString*)userActivityType
-{
-  return [userActivityType isEqualToString:NSUserActivityTypeBrowsingWeb];
-}
-
-- (BOOL)application:(NSApplication*)application
-   continueUserActivity:(NSUserActivity*)userActivity
-     restorationHandler:(void (^)(NSArray*))restorationHandler
-{
-  if (![userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-    return NO;
-  }
-
-  return [self openURL:userActivity.webpageURL];
-}
-
-- (void)application:(NSApplication*)application
-    didFailToContinueUserActivityWithType:(NSString*)userActivityType
-                                    error:(NSError*)error
-{
-  NSLog(@"Failed to continue user activity %@: %@", userActivityType, error);
-}
-
-- (BOOL)openURL:(NSURL*)url
-{
-  if (!url || !url.scheme || [url.scheme caseInsensitiveCompare:@"chrome"] == NSOrderedSame) {
-    return NO;
-  }
-
-  const char* const urlString = [[url absoluteString] UTF8String];
-  // Add the URL to any command line we're currently setting up.
-  if (CommandLineServiceMac::AddURLToCurrentCommandLine(urlString)) {
-    return NO;
-  }
-
-  nsCOMPtr<nsICommandLineRunner> cmdLine(new nsCommandLine());
-  nsCOMPtr<nsIFile> workingDir;
-  nsresult rv = NS_GetSpecialDirectory(NS_OS_CURRENT_WORKING_DIR,
-                                       getter_AddRefs(workingDir));
-  if (NS_FAILED(rv)) {
-    return NO;
-  }
-  const char* argv[3] = {nullptr, "-url", urlString};
-  rv = cmdLine->Init(3, argv, workingDir, nsICommandLine::STATE_REMOTE_EXPLICIT);
-  if (NS_FAILED(rv)) {
-    return NO;
-  }
-  rv = cmdLine->Run();
-  if (NS_FAILED(rv)) {
-    return NO;
-  }
-
-  return YES;
-}
-
-||||||| merged common ancestors
-=======
 - (BOOL)application:(NSApplication*)application
     willContinueUserActivityWithType:(NSString*)userActivityType {
   return [userActivityType isEqualToString:NSUserActivityTypeBrowsingWeb];
@@ -480,5 +389,4 @@ void ProcessPendingGetURLAppleEvents() {
   return YES;
 }
 
->>>>>>> upstream-releases
 @end

@@ -27,96 +27,6 @@ JSObject* SVGTextPathElement::WrapNode(JSContext* aCx,
   return SVGTextPathElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthInfo SVGTextPathElement::sLengthInfo[2] = {
-    // from SVGTextContentElement:
-    {nsGkAtoms::textLength, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::XY},
-    // from SVGTextPathElement:
-    {nsGkAtoms::startOffset, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::X}};
-
-nsSVGEnumMapping SVGTextPathElement::sMethodMap[] = {
-    {nsGkAtoms::align, TEXTPATH_METHODTYPE_ALIGN},
-    {nsGkAtoms::stretch, TEXTPATH_METHODTYPE_STRETCH},
-    {nullptr, 0}};
-
-nsSVGEnumMapping SVGTextPathElement::sSpacingMap[] = {
-    {nsGkAtoms::_auto, TEXTPATH_SPACINGTYPE_AUTO},
-    {nsGkAtoms::exact, TEXTPATH_SPACINGTYPE_EXACT},
-    {nullptr, 0}};
-
-nsSVGEnumMapping SVGTextPathElement::sSideMap[] = {
-    {nsGkAtoms::left, TEXTPATH_SIDETYPE_LEFT},
-    {nsGkAtoms::right, TEXTPATH_SIDETYPE_RIGHT},
-    {nullptr, 0}};
-
-nsSVGElement::EnumInfo SVGTextPathElement::sEnumInfo[4] = {
-    // from SVGTextContentElement:
-    {nsGkAtoms::lengthAdjust, sLengthAdjustMap, LENGTHADJUST_SPACING},
-    // from SVGTextPathElement:
-    {nsGkAtoms::method, sMethodMap, TEXTPATH_METHODTYPE_ALIGN},
-    {nsGkAtoms::spacing, sSpacingMap, TEXTPATH_SPACINGTYPE_EXACT},
-    {nsGkAtoms::side_, sSideMap, TEXTPATH_SIDETYPE_LEFT}};
-
-nsSVGElement::StringInfo SVGTextPathElement::sStringInfo[2] = {
-    {nsGkAtoms::href, kNameSpaceID_None, true},
-    {nsGkAtoms::href, kNameSpaceID_XLink, true}};
-||||||| merged common ancestors
-nsSVGElement::LengthInfo SVGTextPathElement::sLengthInfo[2] =
-{
-  // from SVGTextContentElement:
-  { nsGkAtoms::textLength, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::XY },
-  // from SVGTextPathElement:
-  { nsGkAtoms::startOffset, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X }
-};
-
-nsSVGEnumMapping SVGTextPathElement::sMethodMap[] = {
-  {nsGkAtoms::align, TEXTPATH_METHODTYPE_ALIGN},
-  {nsGkAtoms::stretch, TEXTPATH_METHODTYPE_STRETCH},
-  {nullptr, 0}
-};
-
-nsSVGEnumMapping SVGTextPathElement::sSpacingMap[] = {
-  {nsGkAtoms::_auto, TEXTPATH_SPACINGTYPE_AUTO},
-  {nsGkAtoms::exact, TEXTPATH_SPACINGTYPE_EXACT},
-  {nullptr, 0}
-};
-
-nsSVGEnumMapping SVGTextPathElement::sSideMap[] = {
-  {nsGkAtoms::left, TEXTPATH_SIDETYPE_LEFT},
-  {nsGkAtoms::right, TEXTPATH_SIDETYPE_RIGHT},
-  {nullptr, 0}
-};
-
-nsSVGElement::EnumInfo SVGTextPathElement::sEnumInfo[4] =
-{
-  // from SVGTextContentElement:
-  { nsGkAtoms::lengthAdjust,
-    sLengthAdjustMap,
-    LENGTHADJUST_SPACING
-  },
-  // from SVGTextPathElement:
-  { nsGkAtoms::method,
-    sMethodMap,
-    TEXTPATH_METHODTYPE_ALIGN
-  },
-  { nsGkAtoms::spacing,
-    sSpacingMap,
-    TEXTPATH_SPACINGTYPE_EXACT
-  },
-  { nsGkAtoms::side_,
-    sSideMap,
-    TEXTPATH_SIDETYPE_LEFT
-  }
-};
-
-nsSVGElement::StringInfo SVGTextPathElement::sStringInfo[2] =
-{
-  { nsGkAtoms::href, kNameSpaceID_None, true },
-  { nsGkAtoms::href, kNameSpaceID_XLink, true }
-};
-=======
 SVGElement::LengthInfo SVGTextPathElement::sLengthInfo[2] = {
     // from SVGTextContentElement:
     {nsGkAtoms::textLength, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
@@ -151,7 +61,6 @@ SVGElement::EnumInfo SVGTextPathElement::sEnumInfo[4] = {
 SVGElement::StringInfo SVGTextPathElement::sStringInfo[2] = {
     {nsGkAtoms::href, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_XLink, true}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
@@ -173,15 +82,7 @@ void SVGTextPathElement::HrefAsString(nsAString& aHref) {
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGTextPathElement)
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGTextPathElement::Href() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGTextPathElement::Href()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGTextPathElement::Href() {
->>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -189,51 +90,19 @@ already_AddRefed<DOMSVGAnimatedString> SVGTextPathElement::Href() {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGTextPathElement::StartOffset() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGTextPathElement::StartOffset()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGTextPathElement::StartOffset() {
->>>>>>> upstream-releases
   return mLengthAttributes[STARTOFFSET].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedEnumeration> SVGTextPathElement::Method() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedEnumeration>
-SVGTextPathElement::Method()
-{
-=======
 already_AddRefed<DOMSVGAnimatedEnumeration> SVGTextPathElement::Method() {
->>>>>>> upstream-releases
   return mEnumAttributes[METHOD].ToDOMAnimatedEnum(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedEnumeration> SVGTextPathElement::Spacing() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedEnumeration>
-SVGTextPathElement::Spacing()
-{
-=======
 already_AddRefed<DOMSVGAnimatedEnumeration> SVGTextPathElement::Spacing() {
->>>>>>> upstream-releases
   return mEnumAttributes[SPACING].ToDOMAnimatedEnum(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedEnumeration> SVGTextPathElement::Side() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedEnumeration>
-SVGTextPathElement::Side()
-{
-=======
 already_AddRefed<DOMSVGAnimatedEnumeration> SVGTextPathElement::Side() {
->>>>>>> upstream-releases
   return mEnumAttributes[SIDE].ToDOMAnimatedEnum(this);
 }
 
@@ -253,43 +122,16 @@ SVGTextPathElement::IsAttributeMapped(const nsAtom* name) const {
 //----------------------------------------------------------------------
 // SVGElement overrides
 
-<<<<<<< HEAD
-nsSVGElement::LengthAttributesInfo SVGTextPathElement::GetLengthInfo() {
-||||||| merged common ancestors
-nsSVGElement::LengthAttributesInfo
-SVGTextPathElement::GetLengthInfo()
-{
-=======
 SVGElement::LengthAttributesInfo SVGTextPathElement::GetLengthInfo() {
->>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
 
-<<<<<<< HEAD
-nsSVGElement::EnumAttributesInfo SVGTextPathElement::GetEnumInfo() {
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
-||||||| merged common ancestors
-nsSVGElement::EnumAttributesInfo
-SVGTextPathElement::GetEnumInfo()
-{
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
-                            ArrayLength(sEnumInfo));
-=======
 SVGElement::EnumAttributesInfo SVGTextPathElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGTextPathElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGTextPathElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGTextPathElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

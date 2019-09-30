@@ -27,46 +27,19 @@ namespace gfx {
 
 RefPtr<ID2D1Factory1> D2DFactory();
 
-<<<<<<< HEAD
-static inline D2D1_POINT_2F D2DPoint(const Point &aPoint) {
-||||||| merged common ancestors
-static inline D2D1_POINT_2F D2DPoint(const Point &aPoint)
-{
-=======
 static inline D2D1_POINT_2F D2DPoint(const Point& aPoint) {
->>>>>>> upstream-releases
   return D2D1::Point2F(aPoint.x, aPoint.y);
 }
 
-<<<<<<< HEAD
-static inline D2D1_SIZE_U D2DIntSize(const IntSize &aSize) {
-||||||| merged common ancestors
-static inline D2D1_SIZE_U D2DIntSize(const IntSize &aSize)
-{
-=======
 static inline D2D1_SIZE_U D2DIntSize(const IntSize& aSize) {
->>>>>>> upstream-releases
   return D2D1::SizeU(aSize.width, aSize.height);
 }
 
 template <typename T>
-<<<<<<< HEAD
-static inline D2D1_RECT_F D2DRect(const T &aRect) {
-||||||| merged common ancestors
-static inline D2D1_RECT_F D2DRect(const T &aRect)
-{
-=======
 static inline D2D1_RECT_F D2DRect(const T& aRect) {
->>>>>>> upstream-releases
   return D2D1::RectF(aRect.X(), aRect.Y(), aRect.XMost(), aRect.YMost());
 }
 
-<<<<<<< HEAD
-static inline D2D1_EXTEND_MODE D2DExtend(ExtendMode aExtendMode, Axis aAxis) {
-||||||| merged common ancestors
-static inline D2D1_EXTEND_MODE D2DExtend(ExtendMode aExtendMode, Axis aAxis)
-{
-=======
 static inline D2D1_ROUNDED_RECT D2DRoundedRect(const RoundedRect& aRect) {
   return D2D1::RoundedRect(D2DRect(aRect.rect),
                            aRect.corners.BottomLeft().width,
@@ -74,7 +47,6 @@ static inline D2D1_ROUNDED_RECT D2DRoundedRect(const RoundedRect& aRect) {
 }
 
 static inline D2D1_EXTEND_MODE D2DExtend(ExtendMode aExtendMode, Axis aAxis) {
->>>>>>> upstream-releases
   D2D1_EXTEND_MODE extend;
   switch (aExtendMode) {
     case ExtendMode::REPEAT:
@@ -120,14 +92,7 @@ static inline D2D1_INTERPOLATION_MODE D2DInterpolationMode(
   }
 }
 
-<<<<<<< HEAD
-static inline D2D1_MATRIX_5X4_F D2DMatrix5x4(const Matrix5x4 &aMatrix) {
-||||||| merged common ancestors
-static inline D2D1_MATRIX_5X4_F D2DMatrix5x4(const Matrix5x4 &aMatrix)
-{
-=======
 static inline D2D1_MATRIX_5X4_F D2DMatrix5x4(const Matrix5x4& aMatrix) {
->>>>>>> upstream-releases
   return D2D1::Matrix5x4F(aMatrix._11, aMatrix._12, aMatrix._13, aMatrix._14,
                           aMatrix._21, aMatrix._22, aMatrix._23, aMatrix._24,
                           aMatrix._31, aMatrix._32, aMatrix._33, aMatrix._34,
@@ -135,14 +100,7 @@ static inline D2D1_MATRIX_5X4_F D2DMatrix5x4(const Matrix5x4& aMatrix) {
                           aMatrix._51, aMatrix._52, aMatrix._53, aMatrix._54);
 }
 
-<<<<<<< HEAD
-static inline D2D1_VECTOR_3F D2DVector3D(const Point3D &aPoint) {
-||||||| merged common ancestors
-static inline D2D1_VECTOR_3F D2DVector3D(const Point3D &aPoint)
-{
-=======
 static inline D2D1_VECTOR_3F D2DVector3D(const Point3D& aPoint) {
->>>>>>> upstream-releases
   return D2D1::Vector3F(aPoint.x, aPoint.y, aPoint.z);
 }
 
@@ -155,70 +113,19 @@ static inline D2D1_ANTIALIAS_MODE D2DAAMode(AntialiasMode aMode) {
   }
 }
 
-<<<<<<< HEAD
-static inline D2D1_MATRIX_3X2_F D2DMatrix(const Matrix &aTransform) {
-  return D2D1::Matrix3x2F(aTransform._11, aTransform._12, aTransform._21,
-                          aTransform._22, aTransform._31, aTransform._32);
-||||||| merged common ancestors
-static inline D2D1_MATRIX_3X2_F D2DMatrix(const Matrix &aTransform)
-{
-  return D2D1::Matrix3x2F(aTransform._11, aTransform._12,
-                          aTransform._21, aTransform._22,
-                          aTransform._31, aTransform._32);
-=======
 static inline D2D1_MATRIX_3X2_F D2DMatrix(const Matrix& aTransform) {
   return D2D1::Matrix3x2F(aTransform._11, aTransform._12, aTransform._21,
                           aTransform._22, aTransform._31, aTransform._32);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline D2D1_COLOR_F D2DColor(const Color &aColor) {
-||||||| merged common ancestors
-static inline D2D1_COLOR_F D2DColor(const Color &aColor)
-{
-=======
 static inline D2D1_COLOR_F D2DColor(const Color& aColor) {
->>>>>>> upstream-releases
   return D2D1::ColorF(aColor.r, aColor.g, aColor.b, aColor.a);
 }
 
-<<<<<<< HEAD
-static inline IntSize ToIntSize(const D2D1_SIZE_U &aSize) {
-||||||| merged common ancestors
-static inline IntSize ToIntSize(const D2D1_SIZE_U &aSize)
-{
-=======
 static inline IntSize ToIntSize(const D2D1_SIZE_U& aSize) {
->>>>>>> upstream-releases
   return IntSize(aSize.width, aSize.height);
 }
 
-<<<<<<< HEAD
-static inline SurfaceFormat ToPixelFormat(const D2D1_PIXEL_FORMAT &aFormat) {
-  switch (aFormat.format) {
-    case DXGI_FORMAT_A8_UNORM:
-    case DXGI_FORMAT_R8_UNORM:
-      return SurfaceFormat::A8;
-    case DXGI_FORMAT_B8G8R8A8_UNORM:
-      if (aFormat.alphaMode == D2D1_ALPHA_MODE_IGNORE) {
-        return SurfaceFormat::B8G8R8X8;
-      } else {
-        return SurfaceFormat::B8G8R8A8;
-      }
-    default:
-||||||| merged common ancestors
-static inline SurfaceFormat ToPixelFormat(const D2D1_PIXEL_FORMAT &aFormat)
-{
-  switch(aFormat.format) {
-  case DXGI_FORMAT_A8_UNORM:
-  case DXGI_FORMAT_R8_UNORM:
-    return SurfaceFormat::A8;
-  case DXGI_FORMAT_B8G8R8A8_UNORM:
-    if (aFormat.alphaMode == D2D1_ALPHA_MODE_IGNORE) {
-      return SurfaceFormat::B8G8R8X8;
-    } else {
-=======
 static inline SurfaceFormat ToPixelFormat(const D2D1_PIXEL_FORMAT& aFormat) {
   switch (aFormat.format) {
     case DXGI_FORMAT_A8_UNORM:
@@ -231,49 +138,21 @@ static inline SurfaceFormat ToPixelFormat(const D2D1_PIXEL_FORMAT& aFormat) {
         return SurfaceFormat::B8G8R8A8;
       }
     default:
->>>>>>> upstream-releases
       return SurfaceFormat::B8G8R8A8;
   }
 }
 
-<<<<<<< HEAD
-static inline Rect ToRect(const D2D1_RECT_F &aRect) {
-  return Rect(aRect.left, aRect.top, aRect.right - aRect.left,
-              aRect.bottom - aRect.top);
-||||||| merged common ancestors
-static inline Rect ToRect(const D2D1_RECT_F &aRect)
-{
-  return Rect(aRect.left, aRect.top, aRect.right - aRect.left, aRect.bottom - aRect.top);
-=======
 static inline Rect ToRect(const D2D1_RECT_F& aRect) {
   return Rect(aRect.left, aRect.top, aRect.right - aRect.left,
               aRect.bottom - aRect.top);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline Matrix ToMatrix(const D2D1_MATRIX_3X2_F &aTransform) {
-  return Matrix(aTransform._11, aTransform._12, aTransform._21, aTransform._22,
-||||||| merged common ancestors
-static inline Matrix ToMatrix(const D2D1_MATRIX_3X2_F &aTransform)
-{
-  return Matrix(aTransform._11, aTransform._12,
-                aTransform._21, aTransform._22,
-=======
 static inline Matrix ToMatrix(const D2D1_MATRIX_3X2_F& aTransform) {
   return Matrix(aTransform._11, aTransform._12, aTransform._21, aTransform._22,
->>>>>>> upstream-releases
                 aTransform._31, aTransform._32);
 }
 
-<<<<<<< HEAD
-static inline Point ToPoint(const D2D1_POINT_2F &aPoint) {
-||||||| merged common ancestors
-static inline Point ToPoint(const D2D1_POINT_2F &aPoint)
-{
-=======
 static inline Point ToPoint(const D2D1_POINT_2F& aPoint) {
->>>>>>> upstream-releases
   return Point(aPoint.x, aPoint.y);
 }
 
@@ -421,28 +300,13 @@ static inline D2D1_PRIMITIVE_BLEND D2DPrimitiveBlendMode(CompositionOp aOp) {
   }
 }
 
-<<<<<<< HEAD
-static inline bool IsPatternSupportedByD2D(const Pattern &aPattern) {
-||||||| merged common ancestors
-static inline bool IsPatternSupportedByD2D(const Pattern &aPattern)
-{
-=======
 static inline bool IsPatternSupportedByD2D(const Pattern& aPattern) {
->>>>>>> upstream-releases
   if (aPattern.GetType() != PatternType::RADIAL_GRADIENT) {
     return true;
   }
 
-<<<<<<< HEAD
-  const RadialGradientPattern *pat =
-      static_cast<const RadialGradientPattern *>(&aPattern);
-||||||| merged common ancestors
-  const RadialGradientPattern *pat =
-    static_cast<const RadialGradientPattern*>(&aPattern);
-=======
   const RadialGradientPattern* pat =
       static_cast<const RadialGradientPattern*>(&aPattern);
->>>>>>> upstream-releases
 
   if (pat->mRadius1 != 0) {
     return false;
@@ -471,24 +335,10 @@ struct ShaderConstantRectD3D10 {
       : mX(aX), mY(aY), mWidth(aWidth), mHeight(aHeight) {}
 
   // For easy passing to SetVertexShaderConstantF.
-<<<<<<< HEAD
-  operator float *() { return &mX; }
-||||||| merged common ancestors
-  operator float* () { return &mX; }
-=======
   operator float*() { return &mX; }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-static inline DWRITE_MATRIX DWriteMatrixFromMatrix(Matrix &aMatrix) {
-||||||| merged common ancestors
-static inline DWRITE_MATRIX
-DWriteMatrixFromMatrix(Matrix &aMatrix)
-{
-=======
 static inline DWRITE_MATRIX DWriteMatrixFromMatrix(Matrix& aMatrix) {
->>>>>>> upstream-releases
   DWRITE_MATRIX mat;
   mat.m11 = aMatrix._11;
   mat.m12 = aMatrix._12;
@@ -532,36 +382,15 @@ class AutoDWriteGlyphRun : public DWRITE_GLYPH_RUN {
   UINT16 mAutoIndices[kNumAutoGlyphs];
 };
 
-<<<<<<< HEAD
-static inline void DWriteGlyphRunFromGlyphs(const GlyphBuffer &aGlyphs,
-                                            ScaledFontDWrite *aFont,
-                                            AutoDWriteGlyphRun *run) {
-||||||| merged common ancestors
-static inline void
-DWriteGlyphRunFromGlyphs(const GlyphBuffer &aGlyphs, ScaledFontDWrite *aFont, AutoDWriteGlyphRun *run)
-{
-=======
 static inline void DWriteGlyphRunFromGlyphs(const GlyphBuffer& aGlyphs,
                                             ScaledFontDWrite* aFont,
                                             AutoDWriteGlyphRun* run) {
->>>>>>> upstream-releases
   run->allocate(aGlyphs.mNumGlyphs);
 
-<<<<<<< HEAD
-  FLOAT *advances = const_cast<FLOAT *>(run->glyphAdvances);
-  UINT16 *indices = const_cast<UINT16 *>(run->glyphIndices);
-  DWRITE_GLYPH_OFFSET *offsets =
-      const_cast<DWRITE_GLYPH_OFFSET *>(run->glyphOffsets);
-||||||| merged common ancestors
-  FLOAT *advances = const_cast<FLOAT*>(run->glyphAdvances);
-  UINT16 *indices = const_cast<UINT16*>(run->glyphIndices);
-  DWRITE_GLYPH_OFFSET *offsets = const_cast<DWRITE_GLYPH_OFFSET*>(run->glyphOffsets);
-=======
   FLOAT* advances = const_cast<FLOAT*>(run->glyphAdvances);
   UINT16* indices = const_cast<UINT16*>(run->glyphIndices);
   DWRITE_GLYPH_OFFSET* offsets =
       const_cast<DWRITE_GLYPH_OFFSET*>(run->glyphOffsets);
->>>>>>> upstream-releases
 
   memset(advances, 0, sizeof(FLOAT) * aGlyphs.mNumGlyphs);
   for (unsigned int i = 0; i < aGlyphs.mNumGlyphs; i++) {
@@ -577,33 +406,15 @@ static inline void DWriteGlyphRunFromGlyphs(const GlyphBuffer& aGlyphs,
   run->isSideways = FALSE;
 }
 
-<<<<<<< HEAD
-static inline already_AddRefed<ID2D1Geometry> ConvertRectToGeometry(
-    const D2D1_RECT_F &aRect) {
-||||||| merged common ancestors
-static inline already_AddRefed<ID2D1Geometry>
-ConvertRectToGeometry(const D2D1_RECT_F& aRect)
-{
-=======
 static inline already_AddRefed<ID2D1Geometry> ConvertRectToGeometry(
     const D2D1_RECT_F& aRect) {
->>>>>>> upstream-releases
   RefPtr<ID2D1RectangleGeometry> rectGeom;
   D2DFactory()->CreateRectangleGeometry(&aRect, getter_AddRefs(rectGeom));
   return rectGeom.forget();
 }
 
-<<<<<<< HEAD
-static inline already_AddRefed<ID2D1Geometry> GetTransformedGeometry(
-    ID2D1Geometry *aGeometry, const D2D1_MATRIX_3X2_F &aTransform) {
-||||||| merged common ancestors
-static inline already_AddRefed<ID2D1Geometry>
-GetTransformedGeometry(ID2D1Geometry *aGeometry, const D2D1_MATRIX_3X2_F &aTransform)
-{
-=======
 static inline already_AddRefed<ID2D1Geometry> GetTransformedGeometry(
     ID2D1Geometry* aGeometry, const D2D1_MATRIX_3X2_F& aTransform) {
->>>>>>> upstream-releases
   RefPtr<ID2D1PathGeometry> tmpGeometry;
   D2DFactory()->CreatePathGeometry(getter_AddRefs(tmpGeometry));
   RefPtr<ID2D1GeometrySink> currentSink;
@@ -614,17 +425,8 @@ static inline already_AddRefed<ID2D1Geometry> GetTransformedGeometry(
   return tmpGeometry.forget();
 }
 
-<<<<<<< HEAD
-static inline already_AddRefed<ID2D1Geometry> IntersectGeometry(
-    ID2D1Geometry *aGeometryA, ID2D1Geometry *aGeometryB) {
-||||||| merged common ancestors
-static inline already_AddRefed<ID2D1Geometry>
-IntersectGeometry(ID2D1Geometry *aGeometryA, ID2D1Geometry *aGeometryB)
-{
-=======
 static inline already_AddRefed<ID2D1Geometry> IntersectGeometry(
     ID2D1Geometry* aGeometryA, ID2D1Geometry* aGeometryB) {
->>>>>>> upstream-releases
   RefPtr<ID2D1PathGeometry> pathGeom;
   D2DFactory()->CreatePathGeometry(getter_AddRefs(pathGeom));
   RefPtr<ID2D1GeometrySink> sink;
@@ -636,17 +438,8 @@ static inline already_AddRefed<ID2D1Geometry> IntersectGeometry(
   return pathGeom.forget();
 }
 
-<<<<<<< HEAD
-static inline already_AddRefed<ID2D1StrokeStyle> CreateStrokeStyleForOptions(
-    const StrokeOptions &aStrokeOptions) {
-||||||| merged common ancestors
-static inline already_AddRefed<ID2D1StrokeStyle>
-CreateStrokeStyleForOptions(const StrokeOptions &aStrokeOptions)
-{
-=======
 static inline already_AddRefed<ID2D1StrokeStyle> CreateStrokeStyleForOptions(
     const StrokeOptions& aStrokeOptions) {
->>>>>>> upstream-releases
   RefPtr<ID2D1StrokeStyle> style;
 
   D2D1_CAP_STYLE capStyle;
@@ -719,26 +512,11 @@ static inline already_AddRefed<ID2D1StrokeStyle> CreateStrokeStyleForOptions(
 // This creates a (partially) uploaded bitmap for a DataSourceSurface. It
 // uploads the minimum requirement and possibly downscales. It adjusts the
 // input Matrix to compensate.
-<<<<<<< HEAD
-static inline already_AddRefed<ID2D1Bitmap> CreatePartialBitmapForSurface(
-    DataSourceSurface *aSurface, const Matrix &aDestinationTransform,
-    const IntSize &aDestinationSize, ExtendMode aExtendMode,
-    Matrix &aSourceTransform, ID2D1RenderTarget *aRT,
-    const IntRect *aSourceRect = nullptr) {
-||||||| merged common ancestors
-static inline already_AddRefed<ID2D1Bitmap>
-CreatePartialBitmapForSurface(DataSourceSurface *aSurface, const Matrix &aDestinationTransform,
-                              const IntSize &aDestinationSize, ExtendMode aExtendMode,
-                              Matrix &aSourceTransform, ID2D1RenderTarget *aRT,
-                              const IntRect* aSourceRect = nullptr)
-{
-=======
 static inline already_AddRefed<ID2D1Bitmap> CreatePartialBitmapForSurface(
     DataSourceSurface* aSurface, const Matrix& aDestinationTransform,
     const IntSize& aDestinationSize, ExtendMode aExtendMode,
     Matrix& aSourceTransform, ID2D1RenderTarget* aRT,
     const IntRect* aSourceRect = nullptr) {
->>>>>>> upstream-releases
   RefPtr<ID2D1Bitmap> bitmap;
 
   // This is where things get complicated. The source surface was
@@ -895,61 +673,30 @@ static inline already_AddRefed<ID2D1Bitmap> CreatePartialBitmapForSurface(
   }
 }
 
-<<<<<<< HEAD
-static inline void AddRectToSink(ID2D1GeometrySink *aSink,
-                                 const D2D1_RECT_F &aRect) {
-  aSink->BeginFigure(D2D1::Point2F(aRect.left, aRect.top),
-                     D2D1_FIGURE_BEGIN_FILLED);
-||||||| merged common ancestors
-static inline void AddRectToSink(ID2D1GeometrySink* aSink, const D2D1_RECT_F& aRect)
-{
-  aSink->BeginFigure(D2D1::Point2F(aRect.left, aRect.top), D2D1_FIGURE_BEGIN_FILLED);
-=======
 static inline void AddRectToSink(ID2D1GeometrySink* aSink,
                                  const D2D1_RECT_F& aRect) {
   aSink->BeginFigure(D2D1::Point2F(aRect.left, aRect.top),
                      D2D1_FIGURE_BEGIN_FILLED);
->>>>>>> upstream-releases
   aSink->AddLine(D2D1::Point2F(aRect.right, aRect.top));
   aSink->AddLine(D2D1::Point2F(aRect.right, aRect.bottom));
   aSink->AddLine(D2D1::Point2F(aRect.left, aRect.bottom));
   aSink->EndFigure(D2D1_FIGURE_END_CLOSED);
 }
 
-<<<<<<< HEAD
-class DCCommandSink : public ID2D1CommandSink {
- public:
-  explicit DCCommandSink(ID2D1DeviceContext *aCtx) : mCtx(aCtx) {}
-||||||| merged common ancestors
-class DCCommandSink : public ID2D1CommandSink
-{
-public:
-  explicit DCCommandSink(ID2D1DeviceContext* aCtx) : mCtx(aCtx)
-  {
-  }
-=======
 class DCCommandSink : public ID2D1CommandSink {
  public:
   explicit DCCommandSink(ID2D1DeviceContext* aCtx) : mCtx(aCtx) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  HRESULT STDMETHODCALLTYPE QueryInterface(const IID &aIID, void **aPtr) {
-||||||| merged common ancestors
-  HRESULT STDMETHODCALLTYPE QueryInterface(const IID &aIID, void **aPtr)
-  {
-=======
   HRESULT STDMETHODCALLTYPE QueryInterface(const IID& aIID, void** aPtr) {
->>>>>>> upstream-releases
     if (!aPtr) {
       return E_POINTER;
     }
 
     if (aIID == IID_IUnknown) {
-      *aPtr = static_cast<IUnknown *>(this);
+      *aPtr = static_cast<IUnknown*>(this);
       return S_OK;
     } else if (aIID == IID_ID2D1CommandSink) {
-      *aPtr = static_cast<ID2D1CommandSink *>(this);
+      *aPtr = static_cast<ID2D1CommandSink*>(this);
       return S_OK;
     }
 
@@ -985,28 +732,13 @@ class DCCommandSink : public ID2D1CommandSink {
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP SetTextRenderingParams(
-      _In_opt_ IDWriteRenderingParams *textRenderingParams) {
-||||||| merged common ancestors
-  STDMETHODIMP SetTextRenderingParams(_In_opt_ IDWriteRenderingParams *textRenderingParams)
-  {
-=======
   STDMETHODIMP SetTextRenderingParams(
       _In_opt_ IDWriteRenderingParams* textRenderingParams) {
->>>>>>> upstream-releases
     mCtx->SetTextRenderingParams(textRenderingParams);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP SetTransform(_In_ CONST D2D1_MATRIX_3X2_F *transform) {
-||||||| merged common ancestors
-  STDMETHODIMP  SetTransform(_In_ CONST D2D1_MATRIX_3X2_F *transform)
-  {
-=======
   STDMETHODIMP SetTransform(_In_ CONST D2D1_MATRIX_3X2_F* transform) {
->>>>>>> upstream-releases
     mCtx->SetTransform(transform);
     return S_OK;
   }
@@ -1021,160 +753,52 @@ class DCCommandSink : public ID2D1CommandSink {
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP Clear(_In_opt_ CONST D2D1_COLOR_F *color) {
-||||||| merged common ancestors
-  STDMETHODIMP Clear(_In_opt_ CONST D2D1_COLOR_F *color)
-  {
-=======
   STDMETHODIMP Clear(_In_opt_ CONST D2D1_COLOR_F* color) {
->>>>>>> upstream-releases
     mCtx->Clear(color);
     return S_OK;
   }
 
   STDMETHODIMP DrawGlyphRun(
-<<<<<<< HEAD
-      D2D1_POINT_2F baselineOrigin, _In_ CONST DWRITE_GLYPH_RUN *glyphRun,
-      _In_opt_ CONST DWRITE_GLYPH_RUN_DESCRIPTION *glyphRunDescription,
-      _In_ ID2D1Brush *foregroundBrush, DWRITE_MEASURING_MODE measuringMode) {
-||||||| merged common ancestors
-      D2D1_POINT_2F baselineOrigin,
-      _In_ CONST DWRITE_GLYPH_RUN *glyphRun,
-      _In_opt_ CONST DWRITE_GLYPH_RUN_DESCRIPTION *glyphRunDescription,
-      _In_ ID2D1Brush *foregroundBrush,
-      DWRITE_MEASURING_MODE measuringMode
-    )
-  {
-=======
       D2D1_POINT_2F baselineOrigin, _In_ CONST DWRITE_GLYPH_RUN* glyphRun,
       _In_opt_ CONST DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,
       _In_ ID2D1Brush* foregroundBrush, DWRITE_MEASURING_MODE measuringMode) {
->>>>>>> upstream-releases
     mCtx->DrawGlyphRun(baselineOrigin, glyphRun, glyphRunDescription,
                        foregroundBrush, measuringMode);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP DrawLine(D2D1_POINT_2F point0, D2D1_POINT_2F point1,
-                        _In_ ID2D1Brush *brush, FLOAT strokeWidth,
-                        _In_opt_ ID2D1StrokeStyle *strokeStyle) {
-||||||| merged common ancestors
-  STDMETHODIMP DrawLine(
-      D2D1_POINT_2F point0,
-      D2D1_POINT_2F point1,
-      _In_ ID2D1Brush *brush,
-      FLOAT strokeWidth,
-      _In_opt_ ID2D1StrokeStyle *strokeStyle
-    )
-  {
-=======
   STDMETHODIMP DrawLine(D2D1_POINT_2F point0, D2D1_POINT_2F point1,
                         _In_ ID2D1Brush* brush, FLOAT strokeWidth,
                         _In_opt_ ID2D1StrokeStyle* strokeStyle) {
->>>>>>> upstream-releases
     mCtx->DrawLine(point0, point1, brush, strokeWidth, strokeStyle);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP DrawGeometry(_In_ ID2D1Geometry *geometry,
-                            _In_ ID2D1Brush *brush, FLOAT strokeWidth,
-                            _In_opt_ ID2D1StrokeStyle *strokeStyle) {
-||||||| merged common ancestors
-  STDMETHODIMP DrawGeometry(
-      _In_ ID2D1Geometry *geometry,
-      _In_ ID2D1Brush *brush,
-      FLOAT strokeWidth,
-      _In_opt_ ID2D1StrokeStyle *strokeStyle
-    )
-  {
-=======
   STDMETHODIMP DrawGeometry(_In_ ID2D1Geometry* geometry,
                             _In_ ID2D1Brush* brush, FLOAT strokeWidth,
                             _In_opt_ ID2D1StrokeStyle* strokeStyle) {
->>>>>>> upstream-releases
     mCtx->DrawGeometry(geometry, brush, strokeWidth, strokeStyle);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP DrawRectangle(_In_ CONST D2D1_RECT_F *rect,
-                             _In_ ID2D1Brush *brush, FLOAT strokeWidth,
-                             _In_opt_ ID2D1StrokeStyle *strokeStyle) {
-||||||| merged common ancestors
-  STDMETHODIMP DrawRectangle(
-      _In_ CONST D2D1_RECT_F *rect,
-      _In_ ID2D1Brush *brush,
-      FLOAT strokeWidth,
-      _In_opt_ ID2D1StrokeStyle *strokeStyle
-    )
-  {
-=======
   STDMETHODIMP DrawRectangle(_In_ CONST D2D1_RECT_F* rect,
                              _In_ ID2D1Brush* brush, FLOAT strokeWidth,
                              _In_opt_ ID2D1StrokeStyle* strokeStyle) {
->>>>>>> upstream-releases
     mCtx->DrawRectangle(rect, brush, strokeWidth, strokeStyle);
     return S_OK;
   }
 
   STDMETHODIMP DrawBitmap(
-<<<<<<< HEAD
-      _In_ ID2D1Bitmap *bitmap,
-      _In_opt_ CONST D2D1_RECT_F *destinationRectangle, FLOAT opacity,
-||||||| merged common ancestors
-      _In_ ID2D1Bitmap *bitmap,
-      _In_opt_ CONST D2D1_RECT_F *destinationRectangle,
-      FLOAT opacity,
-=======
       _In_ ID2D1Bitmap* bitmap,
       _In_opt_ CONST D2D1_RECT_F* destinationRectangle, FLOAT opacity,
->>>>>>> upstream-releases
       D2D1_INTERPOLATION_MODE interpolationMode,
-<<<<<<< HEAD
-      _In_opt_ CONST D2D1_RECT_F *sourceRectangle,
-      _In_opt_ CONST D2D1_MATRIX_4X4_F *perspectiveTransform) {
-    mCtx->DrawBitmap(bitmap, destinationRectangle, opacity, interpolationMode,
-                     sourceRectangle, perspectiveTransform);
-||||||| merged common ancestors
-      _In_opt_ CONST D2D1_RECT_F *sourceRectangle,
-      _In_opt_ CONST D2D1_MATRIX_4X4_F *perspectiveTransform
-    )
-  {
-    mCtx->DrawBitmap(bitmap, destinationRectangle, opacity,
-                     interpolationMode, sourceRectangle,
-                     perspectiveTransform);
-=======
       _In_opt_ CONST D2D1_RECT_F* sourceRectangle,
       _In_opt_ CONST D2D1_MATRIX_4X4_F* perspectiveTransform) {
     mCtx->DrawBitmap(bitmap, destinationRectangle, opacity, interpolationMode,
                      sourceRectangle, perspectiveTransform);
->>>>>>> upstream-releases
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP DrawImage(_In_ ID2D1Image *image,
-                         _In_opt_ CONST D2D1_POINT_2F *targetOffset,
-                         _In_opt_ CONST D2D1_RECT_F *imageRectangle,
-                         D2D1_INTERPOLATION_MODE interpolationMode,
-                         D2D1_COMPOSITE_MODE compositeMode) {
-    mCtx->DrawImage(image, targetOffset, imageRectangle, interpolationMode,
-                    compositeMode);
-||||||| merged common ancestors
-  STDMETHODIMP DrawImage(
-      _In_ ID2D1Image *image,
-      _In_opt_ CONST D2D1_POINT_2F *targetOffset,
-      _In_opt_ CONST D2D1_RECT_F *imageRectangle,
-      D2D1_INTERPOLATION_MODE interpolationMode,
-      D2D1_COMPOSITE_MODE compositeMode
-    )
-  {
-    mCtx->DrawImage(image, targetOffset, imageRectangle,
-                    interpolationMode, compositeMode);
-=======
   STDMETHODIMP DrawImage(_In_ ID2D1Image* image,
                          _In_opt_ CONST D2D1_POINT_2F* targetOffset,
                          _In_opt_ CONST D2D1_RECT_F* imageRectangle,
@@ -1182,133 +806,50 @@ class DCCommandSink : public ID2D1CommandSink {
                          D2D1_COMPOSITE_MODE compositeMode) {
     mCtx->DrawImage(image, targetOffset, imageRectangle, interpolationMode,
                     compositeMode);
->>>>>>> upstream-releases
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP DrawGdiMetafile(_In_ ID2D1GdiMetafile *gdiMetafile,
-                               _In_opt_ CONST D2D1_POINT_2F *targetOffset) {
-||||||| merged common ancestors
-  STDMETHODIMP DrawGdiMetafile(
-      _In_ ID2D1GdiMetafile *gdiMetafile,
-      _In_opt_ CONST D2D1_POINT_2F *targetOffset
-    )
-  {
-=======
   STDMETHODIMP DrawGdiMetafile(_In_ ID2D1GdiMetafile* gdiMetafile,
                                _In_opt_ CONST D2D1_POINT_2F* targetOffset) {
->>>>>>> upstream-releases
     mCtx->DrawGdiMetafile(gdiMetafile, targetOffset);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP FillMesh(_In_ ID2D1Mesh *mesh, _In_ ID2D1Brush *brush) {
-||||||| merged common ancestors
-  STDMETHODIMP FillMesh(
-      _In_ ID2D1Mesh *mesh,
-      _In_ ID2D1Brush *brush
-    )
-  {
-=======
   STDMETHODIMP FillMesh(_In_ ID2D1Mesh* mesh, _In_ ID2D1Brush* brush) {
->>>>>>> upstream-releases
     mCtx->FillMesh(mesh, brush);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP FillOpacityMask(_In_ ID2D1Bitmap *opacityMask,
-                               _In_ ID2D1Brush *brush,
-                               _In_opt_ CONST D2D1_RECT_F *destinationRectangle,
-                               _In_opt_ CONST D2D1_RECT_F *sourceRectangle) {
-||||||| merged common ancestors
-  STDMETHODIMP FillOpacityMask(
-      _In_ ID2D1Bitmap *opacityMask,
-      _In_ ID2D1Brush *brush,
-      _In_opt_ CONST D2D1_RECT_F *destinationRectangle,
-      _In_opt_ CONST D2D1_RECT_F *sourceRectangle
-    )
-  {
-=======
   STDMETHODIMP FillOpacityMask(_In_ ID2D1Bitmap* opacityMask,
                                _In_ ID2D1Brush* brush,
                                _In_opt_ CONST D2D1_RECT_F* destinationRectangle,
                                _In_opt_ CONST D2D1_RECT_F* sourceRectangle) {
->>>>>>> upstream-releases
     mCtx->FillOpacityMask(opacityMask, brush, destinationRectangle,
                           sourceRectangle);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP FillGeometry(_In_ ID2D1Geometry *geometry,
-                            _In_ ID2D1Brush *brush,
-                            _In_opt_ ID2D1Brush *opacityBrush) {
-||||||| merged common ancestors
-  STDMETHODIMP FillGeometry(
-      _In_ ID2D1Geometry *geometry,
-      _In_ ID2D1Brush *brush,
-      _In_opt_ ID2D1Brush *opacityBrush
-    )
-  {
-=======
   STDMETHODIMP FillGeometry(_In_ ID2D1Geometry* geometry,
                             _In_ ID2D1Brush* brush,
                             _In_opt_ ID2D1Brush* opacityBrush) {
->>>>>>> upstream-releases
     mCtx->FillGeometry(geometry, brush, opacityBrush);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP FillRectangle(_In_ CONST D2D1_RECT_F *rect,
-                             _In_ ID2D1Brush *brush) {
-||||||| merged common ancestors
-  STDMETHODIMP FillRectangle(
-      _In_ CONST D2D1_RECT_F *rect,
-      _In_ ID2D1Brush *brush
-    )
-  {
-=======
   STDMETHODIMP FillRectangle(_In_ CONST D2D1_RECT_F* rect,
                              _In_ ID2D1Brush* brush) {
->>>>>>> upstream-releases
     mCtx->FillRectangle(rect, brush);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP PushAxisAlignedClip(_In_ CONST D2D1_RECT_F *clipRect,
-                                   D2D1_ANTIALIAS_MODE antialiasMode) {
-||||||| merged common ancestors
-  STDMETHODIMP PushAxisAlignedClip(
-      _In_ CONST D2D1_RECT_F *clipRect,
-      D2D1_ANTIALIAS_MODE antialiasMode
-    )
-  {
-=======
   STDMETHODIMP PushAxisAlignedClip(_In_ CONST D2D1_RECT_F* clipRect,
                                    D2D1_ANTIALIAS_MODE antialiasMode) {
->>>>>>> upstream-releases
     mCtx->PushAxisAlignedClip(clipRect, antialiasMode);
     return S_OK;
   }
 
-<<<<<<< HEAD
-  STDMETHODIMP PushLayer(_In_ CONST D2D1_LAYER_PARAMETERS1 *layerParameters1,
-                         _In_opt_ ID2D1Layer *layer) {
-||||||| merged common ancestors
-  STDMETHODIMP PushLayer(
-      _In_ CONST D2D1_LAYER_PARAMETERS1 *layerParameters1,
-      _In_opt_ ID2D1Layer *layer
-    )
-  {
-=======
   STDMETHODIMP PushLayer(_In_ CONST D2D1_LAYER_PARAMETERS1* layerParameters1,
                          _In_opt_ ID2D1Layer* layer) {
->>>>>>> upstream-releases
     mCtx->PushLayer(layerParameters1, layer);
     return S_OK;
   }
@@ -1323,16 +864,9 @@ class DCCommandSink : public ID2D1CommandSink {
     return S_OK;
   }
 
-  ID2D1DeviceContext *mCtx;
+  ID2D1DeviceContext* mCtx;
 };
 
-<<<<<<< HEAD
-}  // namespace gfx
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 class MOZ_STACK_CLASS AutoRestoreFP final {
  public:
   AutoRestoreFP() {
@@ -1422,6 +956,5 @@ class StreamingGeometrySink : public ID2D1SimplifiedGeometrySink {
 
 }  // namespace gfx
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* MOZILLA_GFX_HELPERSD2D_H_ */

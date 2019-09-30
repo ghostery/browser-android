@@ -33,18 +33,6 @@
 // returned from the gethash server. They are not serialized,
 // only cached until the next update.
 
-<<<<<<< HEAD
-// Name of the persistent PrefixSet storage
-#define PREFIXSET_SUFFIX ".pset"
-
-#define V2_CACHE_DURATION_SEC (15 * 60)
-||||||| merged common ancestors
-// Name of the persistent PrefixSet storage
-#define PREFIXSET_SUFFIX  ".pset"
-
-#define V2_CACHE_DURATION_SEC (15 * 60)
-=======
->>>>>>> upstream-releases
 
 // MOZ_LOG=UrlClassifierDbService:5
 extern mozilla::LazyLogModule gUrlClassifierDbServiceLog;
@@ -106,13 +94,6 @@ static nsresult WriteValue(nsIOutputStream* aOutputStream, const T& aValue) {
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
-<<<<<<< HEAD
-static void CStringToHexString(const nsACString& aIn, nsACString& aOut) {
-||||||| merged common ancestors
-static
-void CStringToHexString(const nsACString& aIn, nsACString& aOut)
-{
-=======
   // Write out the value.
   auto valueReadPtr = ValueTraits<T>::ReadPtr(aValue);
   uint32_t written;
@@ -157,7 +138,6 @@ static nsresult ReadValue(nsIInputStream* aInputStream, T& aValue) {
 }
 
 void CStringToHexString(const nsACString& aIn, nsACString& aOut) {
->>>>>>> upstream-releases
   static const char* const lut = "0123456789ABCDEF";
 
   size_t len = aIn.Length();
@@ -358,13 +338,6 @@ void LookupCache::ClearAll() {
   mPrimed = false;
 }
 
-<<<<<<< HEAD
-void LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache) const {
-||||||| merged common ancestors
-void
-LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache) const
-{
-=======
 nsresult LookupCache::ClearPrefixes() {
   // Clear by seting a empty map
   PrefixStringMap map;
@@ -378,7 +351,6 @@ bool LookupCache::IsEmpty() const {
 }
 
 void LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCache);
 
   RefPtr<nsUrlClassifierCacheInfo> info = new nsUrlClassifierCacheInfo;
@@ -419,16 +391,8 @@ void LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache) const {
   info.forget(aCache);
 }
 
-<<<<<<< HEAD
-/* static */ bool LookupCache::IsCanonicalizedIP(const nsACString& aHost) {
-||||||| merged common ancestors
-/* static */ bool
-LookupCache::IsCanonicalizedIP(const nsACString& aHost)
-{
-=======
 /* static */
 bool LookupCache::IsCanonicalizedIP(const nsACString& aHost) {
->>>>>>> upstream-releases
   // The canonicalization process will have left IP addresses in dotted
   // decimal with no surprises.
   uint32_t i1, i2, i3, i4;
@@ -441,18 +405,9 @@ bool LookupCache::IsCanonicalizedIP(const nsACString& aHost) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult LookupCache::GetLookupFragments(
-    const nsACString& aSpec, nsTArray<nsCString>* aFragments)
-||||||| merged common ancestors
-/* static */ nsresult
-LookupCache::GetLookupFragments(const nsACString& aSpec,
-                                nsTArray<nsCString>* aFragments)
-=======
 /* static */
 nsresult LookupCache::GetLookupFragments(const nsACString& aSpec,
                                          nsTArray<nsCString>* aFragments)
->>>>>>> upstream-releases
 
 {
   aFragments->Clear();
@@ -553,124 +508,7 @@ nsresult LookupCache::GetLookupFragments(const nsACString& aSpec,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult LookupCache::GetHostKeys(const nsACString& aSpec,
-                                               nsTArray<nsCString>* aHostKeys) {
-  nsACString::const_iterator begin, end, iter;
-  aSpec.BeginReading(begin);
-  aSpec.EndReading(end);
-
-  iter = begin;
-  if (!FindCharInReadable('/', iter, end)) {
-    return NS_OK;
-  }
-
-  const nsACString& host = Substring(begin, iter);
-
-  if (IsCanonicalizedIP(host)) {
-    nsCString* key = aHostKeys->AppendElement();
-    if (!key) return NS_ERROR_OUT_OF_MEMORY;
-
-    key->Assign(host);
-    key->AppendLiteral("/");
-    return NS_OK;
-  }
-
-  nsTArray<nsCString> hostComponents;
-  ParseString(PromiseFlatCString(host), '.', hostComponents);
-
-  if (hostComponents.Length() < 2) {
-    // no host or toplevel host, this won't match anything in the db
-    return NS_OK;
-  }
-
-  // First check with two domain components
-  int32_t last = int32_t(hostComponents.Length()) - 1;
-  nsCString* lookupHost = aHostKeys->AppendElement();
-  if (!lookupHost) return NS_ERROR_OUT_OF_MEMORY;
-
-  lookupHost->Assign(hostComponents[last - 1]);
-  lookupHost->AppendLiteral(".");
-  lookupHost->Append(hostComponents[last]);
-  lookupHost->AppendLiteral("/");
-
-  // Now check with three domain components
-  if (hostComponents.Length() > 2) {
-    nsCString* lookupHost2 = aHostKeys->AppendElement();
-    if (!lookupHost2) return NS_ERROR_OUT_OF_MEMORY;
-    lookupHost2->Assign(hostComponents[last - 2]);
-    lookupHost2->AppendLiteral(".");
-    lookupHost2->Append(*lookupHost);
-  }
-
-  return NS_OK;
-}
-
 nsresult LookupCache::LoadPrefixSet() {
-||||||| merged common ancestors
-/* static */ nsresult
-LookupCache::GetHostKeys(const nsACString& aSpec,
-                         nsTArray<nsCString>* aHostKeys)
-{
-  nsACString::const_iterator begin, end, iter;
-  aSpec.BeginReading(begin);
-  aSpec.EndReading(end);
-
-  iter = begin;
-  if (!FindCharInReadable('/', iter, end)) {
-    return NS_OK;
-  }
-
-  const nsACString& host = Substring(begin, iter);
-
-  if (IsCanonicalizedIP(host)) {
-    nsCString *key = aHostKeys->AppendElement();
-    if (!key)
-      return NS_ERROR_OUT_OF_MEMORY;
-
-    key->Assign(host);
-    key->AppendLiteral("/");
-    return NS_OK;
-  }
-
-  nsTArray<nsCString> hostComponents;
-  ParseString(PromiseFlatCString(host), '.', hostComponents);
-
-  if (hostComponents.Length() < 2) {
-    // no host or toplevel host, this won't match anything in the db
-    return NS_OK;
-  }
-
-  // First check with two domain components
-  int32_t last = int32_t(hostComponents.Length()) - 1;
-  nsCString *lookupHost = aHostKeys->AppendElement();
-  if (!lookupHost)
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  lookupHost->Assign(hostComponents[last - 1]);
-  lookupHost->AppendLiteral(".");
-  lookupHost->Append(hostComponents[last]);
-  lookupHost->AppendLiteral("/");
-
-  // Now check with three domain components
-  if (hostComponents.Length() > 2) {
-    nsCString *lookupHost2 = aHostKeys->AppendElement();
-    if (!lookupHost2)
-      return NS_ERROR_OUT_OF_MEMORY;
-    lookupHost2->Assign(hostComponents[last - 2]);
-    lookupHost2->AppendLiteral(".");
-    lookupHost2->Append(*lookupHost);
-  }
-
-  return NS_OK;
-}
-
-nsresult
-LookupCache::LoadPrefixSet()
-{
-=======
-nsresult LookupCache::LoadPrefixSet() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> psFile;
   nsresult rv = mStoreDirectory->Clone(getter_AddRefs(psFile));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -710,43 +548,12 @@ nsresult LookupCache::LoadPrefixSet() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-#if defined(DEBUG)
-static nsCString GetFormattedTimeString(int64_t aCurTimeSec) {
-  PRExplodedTime pret;
-  PR_ExplodeTime(aCurTimeSec * PR_USEC_PER_SEC, PR_GMTParameters, &pret);
-
-  return nsPrintfCString("%04d-%02d-%02d %02d:%02d:%02d UTC", pret.tm_year,
-                         pret.tm_month + 1, pret.tm_mday, pret.tm_hour,
-                         pret.tm_min, pret.tm_sec);
-||||||| merged common ancestors
-#if defined(DEBUG)
-static
-nsCString GetFormattedTimeString(int64_t aCurTimeSec)
-{
-  PRExplodedTime pret;
-  PR_ExplodeTime(aCurTimeSec * PR_USEC_PER_SEC, PR_GMTParameters, &pret);
-
-  return nsPrintfCString(
-         "%04d-%02d-%02d %02d:%02d:%02d UTC",
-         pret.tm_year, pret.tm_month + 1, pret.tm_mday,
-         pret.tm_hour, pret.tm_min, pret.tm_sec);
-=======
 size_t LookupCache::SizeOfPrefixSet() const {
   return mVLPrefixSet->SizeOfIncludingThis(moz_malloc_size_of);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void LookupCache::DumpCache() const {
-||||||| merged common ancestors
-void
-LookupCache::DumpCache() const
-{
-=======
 #if defined(DEBUG)
 void LookupCache::DumpCache() const {
->>>>>>> upstream-releases
   if (!LOG_ENABLED()) {
     return;
   }
@@ -772,19 +579,6 @@ void LookupCache::DumpCache() const {
 }
 #endif
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::Init() {
-  mPrefixSet = new nsUrlClassifierPrefixSet();
-  nsresult rv = mPrefixSet->Init(mTableName);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::Init()
-{
-  mPrefixSet = new nsUrlClassifierPrefixSet();
-  nsresult rv = mPrefixSet->Init(mTableName);
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsresult LookupCache::StoreToFile(nsCOMPtr<nsIFile>& aFile) {
   NS_ENSURE_ARG_POINTER(aFile);
 
@@ -815,7 +609,6 @@ nsresult LookupCache::StoreToFile(nsCOMPtr<nsIFile>& aFile) {
   // Write header
   Header header;
   GetHeader(header);
->>>>>>> upstream-releases
 
   rv = WriteValue(out, header);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -846,20 +639,8 @@ nsresult LookupCache::StoreToFile(nsCOMPtr<nsIFile>& aFile) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::Open() {
-  nsresult rv = LookupCache::Open();
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::Open()
-{
-  nsresult rv = LookupCache::Open();
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsresult LookupCache::LoadFromFile(nsCOMPtr<nsIFile>& aFile) {
   NS_ENSURE_ARG_POINTER(aFile);
->>>>>>> upstream-releases
 
   Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_VLPS_FILELOAD_TIME> timer;
 
@@ -923,19 +704,6 @@ nsresult LookupCache::LoadFromFile(nsCOMPtr<nsIFile>& aFile) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void LookupCacheV2::ClearAll() {
-  LookupCache::ClearAll();
-  mUpdateCompletions.Clear();
-}
-||||||| merged common ancestors
-void
-LookupCacheV2::ClearAll()
-{
-  LookupCache::ClearAll();
-  mUpdateCompletions.Clear();
-}
-=======
 // This function assumes CRC32 checksum is in the end of the input stream
 nsresult LookupCache::VerifyCRC32(nsCOMPtr<nsIInputStream>& aIn) {
   nsCOMPtr<nsISeekableStream> seekIn = do_QueryInterface(aIn);
@@ -943,29 +711,12 @@ nsresult LookupCache::VerifyCRC32(nsCOMPtr<nsIInputStream>& aIn) {
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::Has(const Completion& aCompletion, bool* aHas,
-                            uint32_t* aMatchLength, bool* aConfirmed) {
-  *aHas = *aConfirmed = false;
-  *aMatchLength = 0;
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::Has(const Completion& aCompletion,
-                   bool* aHas,
-                   uint32_t* aMatchLength,
-                   bool* aConfirmed)
-{
-  *aHas = *aConfirmed = false;
-  *aMatchLength = 0;
-=======
   uint64_t len;
   rv = aIn->Available(&len);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
 
   uint32_t calculateCrc32 = ~0;
 
@@ -996,59 +747,21 @@ LookupCacheV2::Has(const Completion& aCompletion,
     return rv;
   }
 
-<<<<<<< HEAD
-  LOG(("Probe in %s: %X, has %d, confirmed %d", mTableName.get(), prefix, *aHas,
-       *aConfirmed));
-||||||| merged common ancestors
-  LOG(("Probe in %s: %X, has %d, confirmed %d",
-       mTableName.get(), prefix, *aHas, *aConfirmed));
-=======
   if (crc32 != calculateCrc32) {
     return NS_ERROR_FILE_CORRUPTED;
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool LookupCacheV2::IsEmpty() const {
-  bool isEmpty;
-  mPrefixSet->IsEmpty(&isEmpty);
-  return isEmpty;
-}
-||||||| merged common ancestors
-bool
-LookupCacheV2::IsEmpty() const
-{
-  bool isEmpty;
-  mPrefixSet->IsEmpty(&isEmpty);
-  return isEmpty;
-}
-=======
 nsresult LookupCacheV2::Has(const Completion& aCompletion, bool* aHas,
                             uint32_t* aMatchLength, bool* aConfirmed) {
   *aHas = *aConfirmed = false;
   *aMatchLength = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::Build(AddPrefixArray& aAddPrefixes,
-                              AddCompleteArray& aAddCompletes) {
-  Telemetry::Accumulate(Telemetry::URLCLASSIFIER_LC_COMPLETIONS,
-                        static_cast<uint32_t>(aAddCompletes.Length()));
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::Build(AddPrefixArray& aAddPrefixes,
-                     AddCompleteArray& aAddCompletes)
-{
-  Telemetry::Accumulate(Telemetry::URLCLASSIFIER_LC_COMPLETIONS,
-                        static_cast<uint32_t>(aAddCompletes.Length()));
-=======
   uint32_t length = 0;
   nsDependentCSubstring fullhash;
   fullhash.Rebind((const char*)aCompletion.buf, COMPLETE_SIZE);
->>>>>>> upstream-releases
 
   uint32_t prefix = aCompletion.ToUint32();
 
@@ -1093,19 +806,6 @@ nsresult LookupCacheV2::GetPrefixes(FallibleTArray<uint32_t>& aAddPrefixes) {
   return mVLPrefixSet->GetFixedLengthPrefixes(&aAddPrefixes, nullptr);
 }
 
-<<<<<<< HEAD
-void LookupCacheV2::AddGethashResultToCache(
-    const AddCompleteArray& aAddCompletes, const MissPrefixArray& aMissPrefixes,
-    int64_t aExpirySec) {
-  int64_t defaultExpirySec = PR_Now() / PR_USEC_PER_SEC + V2_CACHE_DURATION_SEC;
-||||||| merged common ancestors
-void
-LookupCacheV2::AddGethashResultToCache(const AddCompleteArray& aAddCompletes,
-                                       const MissPrefixArray& aMissPrefixes,
-                                       int64_t aExpirySec)
-{
-  int64_t defaultExpirySec = PR_Now() / PR_USEC_PER_SEC + V2_CACHE_DURATION_SEC;
-=======
 nsresult LookupCacheV2::GetPrefixes(FallibleTArray<uint32_t>& aAddPrefixes,
                                     FallibleTArray<nsCString>& aAddCompletes) {
   if (!mPrimed) {
@@ -1122,7 +822,6 @@ void LookupCacheV2::AddGethashResultToCache(
     int64_t aExpirySec) {
   static const int64_t CACHE_DURATION_SEC = 15 * 60;
   int64_t defaultExpirySec = PR_Now() / PR_USEC_PER_SEC + CACHE_DURATION_SEC;
->>>>>>> upstream-releases
   if (aExpirySec != 0) {
     defaultExpirySec = aExpirySec;
   }
@@ -1147,32 +846,10 @@ void LookupCacheV2::AddGethashResultToCache(
   }
 }
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::ReadCompletions() {
-  HashStore store(mTableName, mProvider, mRootStoreDirectory);
-
-  nsresult rv = store.Open();
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  mUpdateCompletions.Clear();
-  const AddCompleteArray& addComplete = store.AddCompletes();
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::ReadCompletions()
-{
-  HashStore store(mTableName, mProvider, mRootStoreDirectory);
-
-  nsresult rv = store.Open();
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  mUpdateCompletions.Clear();
-  const AddCompleteArray& addComplete = store.AddCompletes();
-=======
 void LookupCacheV2::GetHeader(Header& aHeader) {
   aHeader.magic = LookupCacheV2::VLPSET_MAGIC;
   aHeader.version = LookupCacheV2::VLPSET_VERSION;
 }
->>>>>>> upstream-releases
 
 nsresult LookupCacheV2::SanityCheck(const Header& aHeader) {
   if (aHeader.magic != LookupCacheV2::VLPSET_MAGIC) {
@@ -1186,126 +863,27 @@ nsresult LookupCacheV2::SanityCheck(const Header& aHeader) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::ClearPrefixes() {
-  return mPrefixSet->SetPrefixes(nullptr, 0);
-}
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::ClearPrefixes()
-{
-  return mPrefixSet->SetPrefixes(nullptr, 0);
-}
-=======
 nsresult LookupCacheV2::LoadLegacyFile() {
   // Because mozilla Safe Browsing v2 server only includes completions
   // in the update, we can simplify this function by only loading .sbtore
   if (!mProvider.EqualsLiteral("mozilla")) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::StoreToFile(nsCOMPtr<nsIFile>& aFile) {
-  return mPrefixSet->StoreToFile(aFile);
-}
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::StoreToFile(nsCOMPtr<nsIFile>& aFile)
-{
-  return mPrefixSet->StoreToFile(aFile);
-}
-=======
   HashStore store(mTableName, mProvider, mRootStoreDirectory);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::LoadFromFile(nsCOMPtr<nsIFile>& aFile) {
-  return mPrefixSet->LoadFromFile(aFile);
-}
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::LoadFromFile(nsCOMPtr<nsIFile>& aFile)
-{
-  return mPrefixSet->LoadFromFile(aFile);
-}
-=======
   // Support loading version 3 HashStore.
   nsresult rv = store.Open(3);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-size_t LookupCacheV2::SizeOfPrefixSet() const {
-  return mPrefixSet->SizeOfIncludingThis(moz_malloc_size_of);
-}
-||||||| merged common ancestors
-size_t
-LookupCacheV2::SizeOfPrefixSet() const
-{
-  return mPrefixSet->SizeOfIncludingThis(moz_malloc_size_of);
-}
-=======
   AddPrefixArray prefix;
   AddCompleteArray addComplete;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef DEBUG
-template <class T>
-static void EnsureSorted(T* aArray) {
-  typename T::elem_type* start = aArray->Elements();
-  typename T::elem_type* end = aArray->Elements() + aArray->Length();
-  typename T::elem_type* iter = start;
-  typename T::elem_type* previous = start;
-
-  while (iter != end) {
-    previous = iter;
-    ++iter;
-    if (iter != end) {
-      MOZ_ASSERT(*previous <= *iter);
-    }
-  }
-  return;
-}
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-template <class T>
-static void EnsureSorted(T* aArray)
-{
-  typename T::elem_type* start = aArray->Elements();
-  typename T::elem_type* end = aArray->Elements() + aArray->Length();
-  typename T::elem_type* iter = start;
-  typename T::elem_type* previous = start;
-
-  while (iter != end) {
-    previous = iter;
-    ++iter;
-    if (iter != end) {
-      MOZ_ASSERT(*previous <= *iter);
-    }
-  }
-  return;
-}
-#endif
-=======
   rv = store.ReadCompletionsLegacyV3(addComplete);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult LookupCacheV2::ConstructPrefixSet(AddPrefixArray& aAddPrefixes) {
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_PS_CONSTRUCT_TIME> timer;
-||||||| merged common ancestors
-nsresult
-LookupCacheV2::ConstructPrefixSet(AddPrefixArray& aAddPrefixes)
-{
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_PS_CONSTRUCT_TIME> timer;
-=======
   return Build(prefix, addComplete);
 }
->>>>>>> upstream-releases
 
 nsresult LookupCacheV2::ClearLegacyFile() {
   nsCOMPtr<nsIFile> file;
@@ -1337,18 +915,6 @@ nsresult LookupCacheV2::ClearLegacyFile() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-#if defined(DEBUG)
-void LookupCacheV2::DumpCompletions() const {
-  if (!LOG_ENABLED()) return;
-||||||| merged common ancestors
-#if defined(DEBUG)
-void
-LookupCacheV2::DumpCompletions() const
-{
-  if (!LOG_ENABLED())
-    return;
-=======
 nsCString LookupCacheV2::GetPrefixSetSuffix() const {
   return NS_LITERAL_CSTRING(".vlpset");
 }
@@ -1361,7 +927,6 @@ nsresult LookupCacheV2::LoadMozEntries() {
   if (!IsEmpty() || IsPrimed()) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   nsTArray<nsLiteralCString> entries;
 

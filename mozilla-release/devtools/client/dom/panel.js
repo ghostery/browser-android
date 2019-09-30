@@ -175,21 +175,10 @@ DomPanel.prototype = {
   getRootGrip: async function() {
     // Attach Console. It might involve RDP communication, so wait
     // asynchronously for the result
-<<<<<<< HEAD
-    const { result } = await this.target.activeConsole.evaluateJSAsync("window");
-    return result;
-||||||| merged common ancestors
-    this.target.activeConsole.evaluateJSAsync("window", res => {
-      deferred.resolve(res.result);
-    });
-
-    return deferred.promise;
-=======
     const { result } = await this.target.activeConsole.evaluateJSAsync(
       "window"
     );
     return result;
->>>>>>> upstream-releases
   },
 
   postContentMessage: function(type, args) {

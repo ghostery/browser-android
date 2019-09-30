@@ -19,25 +19,10 @@ WebGLExtensionDebugShaders::~WebGLExtensionDebugShaders() {}
 // If no source has been defined, compileShader() has not been called, or the
 // translation has failed for shader, an empty string is returned; otherwise,
 // return the translated source.
-<<<<<<< HEAD
-void WebGLExtensionDebugShaders::GetTranslatedShaderSource(
-    const WebGLShader& shader, nsAString& retval) const {
-  retval.SetIsVoid(true);
-  if (mIsLost) return;
-||||||| merged common ancestors
-void
-WebGLExtensionDebugShaders::GetTranslatedShaderSource(const WebGLShader& shader,
-                                                      nsAString& retval) const
-{
-    retval.SetIsVoid(true);
-    if (mIsLost)
-        return;
-=======
 void WebGLExtensionDebugShaders::GetTranslatedShaderSource(
     const WebGLShader& shader, nsAString& retval) const {
   retval.SetIsVoid(true);
   if (mIsLost || !mContext) return;
->>>>>>> upstream-releases
 
   const WebGLContext::FuncScope funcScope(*mContext,
                                           "getShaderTranslatedSource");

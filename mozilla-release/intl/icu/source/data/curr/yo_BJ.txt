@@ -247,11 +247,6 @@ yo_BJ{
             "Dɔla ti Orílɛ́ède Siibabuwe",
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.53"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Currencies%narrow{
         BRL{"R$"}
         CNY{"¥"}
@@ -283,5 +278,4 @@ yo_BJ{
         other{"{0} {1}"}
     }
     Version{"2.1.48.77"}
->>>>>>> upstream-releases
 }

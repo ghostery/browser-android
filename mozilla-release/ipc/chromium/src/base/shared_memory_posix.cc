@@ -82,24 +82,12 @@ bool SharedMemory::AppendPosixShmPrefix(std::string* str, pid_t pid) {
   if (kSnap) {
     StringAppendF(str, "snap.%s.", kSnap);
   }
-<<<<<<< HEAD
-#endif  // OS_LINUX
-||||||| merged common ancestors
-#endif // OS_LINUX
-=======
 #  endif  // OS_LINUX
->>>>>>> upstream-releases
   // Hopefully the "implementation defined" name length limit is long
   // enough for this.
   StringAppendF(str, "org.mozilla.ipc.%d.", static_cast<int>(pid));
   return true;
-<<<<<<< HEAD
-#endif  // !ANDROID && !SHM_ANON
-||||||| merged common ancestors
-#endif // !ANDROID && !SHM_ANON
-=======
 #endif    // !ANDROID && !SHM_ANON
->>>>>>> upstream-releases
 }
 
 bool SharedMemory::Create(size_t size) {
@@ -168,17 +156,8 @@ bool SharedMemory::Create(size_t size) {
   return true;
 }
 
-<<<<<<< HEAD
-bool SharedMemory::Map(size_t bytes) {
-  if (mapped_file_ == -1) return false;
-||||||| merged common ancestors
-bool SharedMemory::Map(size_t bytes) {
-  if (mapped_file_ == -1)
-    return false;
-=======
 bool SharedMemory::Map(size_t bytes, void* fixed_address) {
   if (mapped_file_ == -1) return false;
->>>>>>> upstream-releases
 
   // Don't use MAP_FIXED when a fixed_address was specified, since that can
   // replace pages that are alread mapped at that address.
@@ -186,14 +165,7 @@ bool SharedMemory::Map(size_t bytes, void* fixed_address) {
       mmap(fixed_address, bytes, PROT_READ | (read_only_ ? 0 : PROT_WRITE),
            MAP_SHARED, mapped_file_, 0);
 
-<<<<<<< HEAD
-  if (memory_) max_size_ = bytes;
-||||||| merged common ancestors
-  if (memory_)
-    max_size_ = bytes;
-=======
   bool mmap_succeeded = memory_ != MAP_FAILED;
->>>>>>> upstream-releases
 
   DCHECK(mmap_succeeded) << "Call to mmap failed, errno=" << errno;
 

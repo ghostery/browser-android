@@ -16,16 +16,11 @@
   <simpleelement id="two" style="-moz-user-focus: normal;"/>
   <simpleelement id="three" disabled="true" style="-moz-user-focus: normal;"/>
   <button id="four"/>
-<<<<<<< HEAD
-  <inherited-element foo="fuagra"></inherited-element>
-||||||| merged common ancestors
-=======
   <inherited-element-declarative foo="fuagra" empty-string=""></inherited-element-declarative>
   <inherited-element-derived foo="fuagra"></inherited-element-derived>
   <inherited-element-shadowdom-declarative foo="fuagra" empty-string=""></inherited-element-shadowdom-declarative>
   <inherited-element-imperative foo="fuagra" empty-string=""></inherited-element-imperative>
   <inherited-element-beforedomloaded foo="fuagra" empty-string=""></inherited-element-beforedomloaded>
->>>>>>> upstream-releases
 
   <!-- test code running before page load goes here -->
   <script type="application/javascript"><![CDATA[
@@ -65,12 +60,7 @@
     testBaseControlMixin();
     testBaseText();
     testParseXULToFragment();
-<<<<<<< HEAD
-    testInherits();
-||||||| merged common ancestors
-=======
     testInheritAttributes();
->>>>>>> upstream-releases
     await testCustomInterface();
 
     let htmlWin = await new Promise(resolve => {
@@ -278,53 +268,6 @@
        "attribute inheritance: base class attribute is not applied in derived class that overrides it");
     ok(derivedEl.label.hasAttribute("renamedfoo"),
        "attribute inheritance: attribute defined in derived class is present");
-  }
-
-  function testInherits() {
-    class InheritsElement extends MozXULElement {
-      static get observedAttributes() {
-        return [ "label", "foo", "boo", "bar" ];
-      }
-
-      attributeChangedCallback(name, oldValue, newValue) {
-        if (this.label && oldValue != newValue) {
-          this.inherit();
-        }
-      }
-
-      inherit() {
-        for (let attr of [ "text=label", "foo", "boo", "bardo=bar" ]) {
-          this.inheritAttribute(this.label, attr);
-        }
-      }
-
-      connectedCallback() {
-        this.append(MozXULElement.parseXULToFragment(`<label />`));
-        this.label = this.querySelector("label");
-        this.inherit();
-      }
-    }
-
-    customElements.define("inherited-element", InheritsElement);
-    let el = document.querySelector("inherited-element");
-    ok(el, "element exists");
-
-    is(el.label.getAttribute("foo"), "fuagra", "predefined attribute @foo");
-    ok(!el.label.hasAttribute("boo"), "predefined attribute @boo");
-    ok(!el.label.hasAttribute("bardo"), "predefined attribute @bardo");
-    ok(!el.label.textContent, "predefined attribute @label");
-
-    el.setAttribute("boo", "boo-test");
-    is(el.label.getAttribute("boo"), "boo-test",
-       "attribute inheritance: boo");
-
-    el.setAttribute("label", "label-test");
-    is(el.label.textContent, "label-test",
-       "attribute inheritance: text=label attribute change");
-
-    el.setAttribute("bar", "bar-test");
-    is(el.label.getAttribute("bardo"), "bar-test",
-       "attribute inheritance: bardo=bar");
   }
 
   async function testCustomInterface() {

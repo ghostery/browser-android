@@ -244,44 +244,6 @@ GeckoViewPermission.prototype = {
         type: "GeckoView:ContentPermission",
         uri: aRequest.principal.URI.displaySpec,
         perm: perm.type,
-<<<<<<< HEAD
-    }).then(granted => {
-      if (!granted) {
-        return false;
-      }
-      // Ask for app permission after asking for content permission.
-      if (perm.type === "geolocation") {
-        return this.getAppPermissions(dispatcher, [PERM_ACCESS_FINE_LOCATION]);
-      }
-      return true;
-    }).catch(error => {
-      Cu.reportError("Permission error: " + error);
-      return /* granted */ false;
-    }).then(granted => {
-      (granted ? aRequest.allow : aRequest.cancel)();
-      // Manually release the target request here to facilitate garbage collection.
-      aRequest = undefined;
-    });
-||||||| merged common ancestors
-        access: perm.access !== "unused" ? perm.access : null,
-    }).then(granted => {
-      if (!granted) {
-        return false;
-      }
-      // Ask for app permission after asking for content permission.
-      if (perm.type === "geolocation") {
-        return this.getAppPermissions(dispatcher, [PERM_ACCESS_FINE_LOCATION]);
-      }
-      return true;
-    }).catch(error => {
-      Cu.reportError("Permission error: " + error);
-      return /* granted */ false;
-    }).then(granted => {
-      (granted ? aRequest.allow : aRequest.cancel)();
-      // Manually release the target request here to facilitate garbage collection.
-      aRequest = undefined;
-    });
-=======
       })
       .then(granted => {
         if (!granted) {
@@ -304,7 +266,6 @@ GeckoViewPermission.prototype = {
         // Manually release the target request here to facilitate garbage collection.
         aRequest = undefined;
       });
->>>>>>> upstream-releases
   },
 };
 

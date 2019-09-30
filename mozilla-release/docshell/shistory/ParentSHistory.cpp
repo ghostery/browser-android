@@ -25,18 +25,8 @@ nsDocShell* ParentSHistory::GetDocShell() {
   return nsDocShell::Cast(mFrameLoader->GetExistingDocShell());
 }
 
-<<<<<<< HEAD
-TabParent* ParentSHistory::GetTabParent() {
-  return static_cast<TabParent*>(mFrameLoader->GetRemoteBrowser());
-||||||| merged common ancestors
-TabParent*
-ParentSHistory::GetTabParent()
-{
-  return static_cast<TabParent*>(mFrameLoader->GetRemoteBrowser());
-=======
 BrowserParent* ParentSHistory::GetBrowserParent() {
   return mFrameLoader->GetBrowserParent();
->>>>>>> upstream-releases
 }
 
 already_AddRefed<ChildSHistory> ParentSHistory::GetChildIfSameProcess() {

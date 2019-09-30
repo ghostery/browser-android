@@ -14,19 +14,9 @@
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class nsIContentChild;
-class nsIContentParent;
-}  // namespace dom
-||||||| merged common ancestors
-class nsIContentChild;
-class nsIContentParent;
-}
-=======
 class ContentChild;
 class ContentParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 namespace ipc {
 
@@ -37,16 +27,8 @@ class PBackgroundParent;
 // work in both the child and parent.
 already_AddRefed<nsIInputStream> DeserializeIPCStream(const IPCStream& aValue);
 
-<<<<<<< HEAD
-already_AddRefed<nsIInputStream> DeserializeIPCStream(
-    const OptionalIPCStream& aValue);
-||||||| merged common ancestors
-already_AddRefed<nsIInputStream>
-DeserializeIPCStream(const OptionalIPCStream& aValue);
-=======
 already_AddRefed<nsIInputStream> DeserializeIPCStream(
     const Maybe<IPCStream>& aValue);
->>>>>>> upstream-releases
 
 // RAII helper class that serializes an nsIInputStream into an IPCStream struct.
 // Any file descriptor or PChildToParentStream actors are automatically managed
@@ -138,17 +120,8 @@ already_AddRefed<nsIInputStream> DeserializeIPCStream(
 //       with complex ipdl structures.  For example, you may want to create an
 //       array of RAII AutoIPCStream objects or build your own wrapping
 //       RAII object to handle other actors that need to be cleaned up.
-<<<<<<< HEAD
-class AutoIPCStream final {
-  OptionalIPCStream mInlineValue;
-||||||| merged common ancestors
-class AutoIPCStream final
-{
-  OptionalIPCStream mInlineValue;
-=======
 class AutoIPCStream final {
   Maybe<IPCStream> mInlineValue;
->>>>>>> upstream-releases
   IPCStream* mValue;
   Maybe<IPCStream>* mOptionalValue;
   bool mTaken;
@@ -156,16 +129,8 @@ class AutoIPCStream final {
 
   bool IsSet() const;
 
-<<<<<<< HEAD
- public:
-  // Implicitly create an OptionalIPCStream value.  Either
-||||||| merged common ancestors
-public:
-  // Implicitly create an OptionalIPCStream value.  Either
-=======
  public:
   // Implicitly create an Maybe<IPCStream> value.  Either
->>>>>>> upstream-releases
   // TakeValue() or TakeOptionalValue() can be used.
   explicit AutoIPCStream(bool aDelayedStart = false);
 
@@ -183,14 +148,7 @@ public:
   // Serialize the input stream or create a SendStream actor using the PContent
   // manager.  If neither of these succeed, then crash.  This should only be
   // used on the main thread.
-<<<<<<< HEAD
-  bool Serialize(nsIInputStream* aStream, dom::nsIContentChild* aManager);
-||||||| merged common ancestors
-  bool
-  Serialize(nsIInputStream* aStream, dom::nsIContentChild* aManager);
-=======
   bool Serialize(nsIInputStream* aStream, dom::ContentChild* aManager);
->>>>>>> upstream-releases
 
   // Serialize the input stream or create a SendStream actor using the
   // PBackground manager.  If neither of these succeed, then crash.  This can
@@ -198,16 +156,8 @@ public:
   bool Serialize(nsIInputStream* aStream, PBackgroundChild* aManager);
 
   // Serialize the input stream.
-<<<<<<< HEAD
-  MOZ_MUST_USE bool Serialize(nsIInputStream* aStream,
-                              dom::nsIContentParent* aManager);
-||||||| merged common ancestors
-  MOZ_MUST_USE bool
-  Serialize(nsIInputStream* aStream, dom::nsIContentParent* aManager);
-=======
   MOZ_MUST_USE bool Serialize(nsIInputStream* aStream,
                               dom::ContentParent* aManager);
->>>>>>> upstream-releases
 
   // Serialize the input stream.
   MOZ_MUST_USE bool Serialize(nsIInputStream* aStream,
@@ -219,23 +169,10 @@ public:
   // to the other side.
   IPCStream& TakeValue();
 
-<<<<<<< HEAD
-  // Get the OptionalIPCStream value.  This will assert if
-  // the value has already been taken.  This should only be called if the value
-  // is being, or has already been, sent to the other side.
-  OptionalIPCStream& TakeOptionalValue();
-||||||| merged common ancestors
-  // Get the OptionalIPCStream value.  This will assert if
-  // the value has already been taken.  This should only be called if the value
-  // is being, or has already been, sent to the other side.
-  OptionalIPCStream&
-  TakeOptionalValue();
-=======
   // Get the Maybe<IPCStream> value. This will assert if the value has already
   // been taken. This should only be called if the value is being, or has
   // already been, sent to the other side.
   Maybe<IPCStream>& TakeOptionalValue();
->>>>>>> upstream-releases
 
  private:
   AutoIPCStream(const AutoIPCStream& aOther) = delete;
@@ -243,17 +180,8 @@ public:
   AutoIPCStream& operator=(const AutoIPCStream&& aOther) = delete;
 };
 
-<<<<<<< HEAD
-template <>
-struct IPDLParamTraits<nsIInputStream> {
-||||||| merged common ancestors
-template<>
-struct IPDLParamTraits<nsIInputStream>
-{
-=======
 template <>
 struct IPDLParamTraits<nsIInputStream*> {
->>>>>>> upstream-releases
   static void Write(IPC::Message* aMsg, IProtocol* aActor,
                     nsIInputStream* aParam);
   static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,

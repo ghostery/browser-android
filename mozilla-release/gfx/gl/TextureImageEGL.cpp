@@ -143,22 +143,10 @@ void TextureImageEGL::Resize(const gfx::IntSize& aSize) {
 bool TextureImageEGL::BindTexImage() {
   if (mBound && !ReleaseTexImage()) return false;
 
-<<<<<<< HEAD
-  auto* egl = gl::GLLibraryEGL::Get();
-  EGLBoolean success = egl->fBindTexImage(EGL_DISPLAY(), (EGLSurface)mSurface,
-                                          LOCAL_EGL_BACK_BUFFER);
-||||||| merged common ancestors
-    auto* egl = gl::GLLibraryEGL::Get();
-    EGLBoolean success =
-        egl->fBindTexImage(EGL_DISPLAY(),
-                           (EGLSurface)mSurface,
-                           LOCAL_EGL_BACK_BUFFER);
-=======
   const auto& gle = GLContextEGL::Cast(mGLContext);
   const auto& egl = gle->mEgl;
   EGLBoolean success = egl->fBindTexImage(egl->Display(), (EGLSurface)mSurface,
                                           LOCAL_EGL_BACK_BUFFER);
->>>>>>> upstream-releases
 
   if (success == LOCAL_EGL_FALSE) return false;
 
@@ -169,22 +157,10 @@ bool TextureImageEGL::BindTexImage() {
 bool TextureImageEGL::ReleaseTexImage() {
   if (!mBound) return true;
 
-<<<<<<< HEAD
-  auto* egl = gl::GLLibraryEGL::Get();
-  EGLBoolean success = egl->fReleaseTexImage(
-      EGL_DISPLAY(), (EGLSurface)mSurface, LOCAL_EGL_BACK_BUFFER);
-||||||| merged common ancestors
-    auto* egl = gl::GLLibraryEGL::Get();
-    EGLBoolean success =
-        egl->fReleaseTexImage(EGL_DISPLAY(),
-                              (EGLSurface)mSurface,
-                              LOCAL_EGL_BACK_BUFFER);
-=======
   const auto& gle = GLContextEGL::Cast(mGLContext);
   const auto& egl = gle->mEgl;
   EGLBoolean success = egl->fReleaseTexImage(
       egl->Display(), (EGLSurface)mSurface, LOCAL_EGL_BACK_BUFFER);
->>>>>>> upstream-releases
 
   if (success == LOCAL_EGL_FALSE) return false;
 
@@ -195,20 +171,10 @@ bool TextureImageEGL::ReleaseTexImage() {
 void TextureImageEGL::DestroyEGLSurface(void) {
   if (!mSurface) return;
 
-<<<<<<< HEAD
-  auto* egl = gl::GLLibraryEGL::Get();
-  egl->fDestroySurface(EGL_DISPLAY(), mSurface);
-  mSurface = nullptr;
-||||||| merged common ancestors
-    auto* egl = gl::GLLibraryEGL::Get();
-    egl->fDestroySurface(EGL_DISPLAY(), mSurface);
-    mSurface = nullptr;
-=======
   const auto& gle = GLContextEGL::Cast(mGLContext);
   const auto& egl = gle->mEgl;
   egl->fDestroySurface(egl->Display(), mSurface);
   mSurface = nullptr;
->>>>>>> upstream-releases
 }
 
 already_AddRefed<TextureImage> CreateTextureImageEGL(

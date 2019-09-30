@@ -10,41 +10,20 @@
  *  +--------+----------------+---------------------------+
  */
 
-<<<<<<< HEAD
-.sidebar-runtime-item__container {
-  font-size: 0.8em;
-||||||| merged common ancestors
-.sidebar-runtime-item {
-  font-size: 0.8em;
-=======
 .sidebar-runtime-item__container {
   box-sizing: border-box;
   height: var(--category-height);
->>>>>>> upstream-releases
   align-items: center;
   display: grid;
-<<<<<<< HEAD
-  grid-column-gap: var(--base-distance);
-  grid-template-columns: calc(var(--base-distance) * 6) 1fr auto;
-  height: 100%;
-||||||| merged common ancestors
-  grid-column-gap: var(--base-distance);
-  grid-template-columns: 20px 1fr auto;
-=======
   grid-column-gap: var(--base-unit);
   grid-template-columns: calc(var(--base-unit) * 6) 1fr auto;
   font-size: var(--body-20-font-size);
   font-weight: var(--body-20-font-weight);
->>>>>>> upstream-releases
 }
 
 .sidebar-runtime-item__icon {
   fill: currentColor;
   -moz-context-properties: fill;
-<<<<<<< HEAD
-||||||| merged common ancestors
-  margin-inline-end: var(--base-distance);
-=======
 }
 
 .sidebar-runtime-item__runtime {
@@ -59,5 +38,4 @@
 
 .sidebar-runtime-item__message:first-of-type {
   margin-block-start: calc(var(--base-unit) * -1);
->>>>>>> upstream-releases
 }

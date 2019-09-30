@@ -17,16 +17,9 @@
 #include "vk/GrVkExtensions.h"
 
 GrVkCaps::GrVkCaps(const GrContextOptions& contextOptions, const GrVkInterface* vkInterface,
-<<<<<<< HEAD
-                   VkPhysicalDevice physDev, const VkPhysicalDeviceFeatures2& features,
-                   uint32_t instanceVersion, const GrVkExtensions& extensions)
-||||||| merged common ancestors
-                   VkPhysicalDevice physDev, uint32_t featureFlags, uint32_t extensionFlags)
-=======
                    VkPhysicalDevice physDev, const VkPhysicalDeviceFeatures2& features,
                    uint32_t instanceVersion, uint32_t physicalDeviceVersion,
                    const GrVkExtensions& extensions)
->>>>>>> upstream-releases
     : INHERITED(contextOptions) {
 
     /**************************************************************************
@@ -56,13 +49,7 @@ GrVkCaps::GrVkCaps(const GrContextOptions& contextOptions, const GrVkInterface* 
 
     fShaderCaps.reset(new GrShaderCaps(contextOptions));
 
-<<<<<<< HEAD
-    this->init(contextOptions, vkInterface, physDev, features, extensions);
-||||||| merged common ancestors
-    this->init(contextOptions, vkInterface, physDev, featureFlags, extensionFlags);
-=======
     this->init(contextOptions, vkInterface, physDev, features, physicalDeviceVersion, extensions);
->>>>>>> upstream-releases
 }
 
 bool GrVkCaps::initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc,
@@ -87,131 +74,6 @@ bool GrVkCaps::initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc*
     return true;
 }
 
-<<<<<<< HEAD
-bool GrVkCaps::canCopyImage(GrPixelConfig dstConfig, int dstSampleCnt, GrSurfaceOrigin dstOrigin,
-                            GrPixelConfig srcConfig, int srcSampleCnt,
-                            GrSurfaceOrigin srcOrigin) const {
-    if ((dstSampleCnt > 1 || srcSampleCnt > 1) && dstSampleCnt != srcSampleCnt) {
-        return false;
-    }
-
-    // We require that all vulkan GrSurfaces have been created with transfer_dst and transfer_src
-    // as image usage flags.
-    if (srcOrigin != dstOrigin || GrBytesPerPixel(srcConfig) != GrBytesPerPixel(dstConfig)) {
-        return false;
-    }
-
-    if (this->shaderCaps()->configOutputSwizzle(srcConfig) !=
-        this->shaderCaps()->configOutputSwizzle(dstConfig)) {
-        return false;
-    }
-
-    return true;
-}
-
-bool GrVkCaps::canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCnt, bool dstIsLinear,
-                             GrPixelConfig srcConfig, int srcSampleCnt, bool srcIsLinear) const {
-    // We require that all vulkan GrSurfaces have been created with transfer_dst and transfer_src
-    // as image usage flags.
-    if (!this->configCanBeDstofBlit(dstConfig, dstIsLinear) ||
-        !this->configCanBeSrcofBlit(srcConfig, srcIsLinear)) {
-        return false;
-    }
-
-    if (this->shaderCaps()->configOutputSwizzle(srcConfig) !=
-        this->shaderCaps()->configOutputSwizzle(dstConfig)) {
-        return false;
-    }
-
-    // We cannot blit images that are multisampled. Will need to figure out if we can blit the
-    // resolved msaa though.
-    if (dstSampleCnt > 1 || srcSampleCnt > 1) {
-        return false;
-    }
-
-    return true;
-}
-
-bool GrVkCaps::canCopyAsResolve(GrPixelConfig dstConfig, int dstSampleCnt,
-                                GrSurfaceOrigin dstOrigin, GrPixelConfig srcConfig,
-                                int srcSampleCnt, GrSurfaceOrigin srcOrigin) const {
-    // The src surface must be multisampled.
-    if (srcSampleCnt <= 1) {
-        return false;
-    }
-
-    // The dst must not be multisampled.
-    if (dstSampleCnt > 1) {
-        return false;
-    }
-
-    // Surfaces must have the same format.
-    if (dstConfig != srcConfig) {
-        return false;
-    }
-
-    // Surfaces must have the same origin.
-    if (srcOrigin != dstOrigin) {
-        return false;
-    }
-
-    return true;
-}
-
-bool GrVkCaps::canCopyAsDraw(GrPixelConfig dstConfig, bool dstIsRenderable,
-                             GrPixelConfig srcConfig, bool srcIsTextureable) const {
-    // TODO: Make copySurfaceAsDraw handle the swizzle
-    if (this->shaderCaps()->configOutputSwizzle(srcConfig) !=
-        this->shaderCaps()->configOutputSwizzle(dstConfig)) {
-        return false;
-    }
-
-    // Make sure the dst is a render target and the src is a texture.
-    if (!dstIsRenderable || !srcIsTextureable) {
-        return false;
-    }
-
-    return true;
-}
-
-bool GrVkCaps::canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
-                              const SkIRect& srcRect, const SkIPoint& dstPoint) const {
-    GrSurfaceOrigin dstOrigin = dst->origin();
-    GrSurfaceOrigin srcOrigin = src->origin();
-
-    GrPixelConfig dstConfig = dst->config();
-    GrPixelConfig srcConfig = src->config();
-
-    // TODO: Figure out a way to track if we've wrapped a linear texture in a proxy (e.g.
-    // PromiseImage which won't get instantiated right away. Does this need a similar thing like the
-    // tracking of external or rectangle textures in GL? For now we don't create linear textures
-    // internally, and I don't believe anyone is wrapping them.
-    bool srcIsLinear = false;
-    bool dstIsLinear = false;
-
-    int dstSampleCnt = 0;
-    int srcSampleCnt = 0;
-    if (const GrRenderTargetProxy* rtProxy = dst->asRenderTargetProxy()) {
-        dstSampleCnt = rtProxy->numColorSamples();
-    }
-    if (const GrRenderTargetProxy* rtProxy = src->asRenderTargetProxy()) {
-        srcSampleCnt = rtProxy->numColorSamples();
-    }
-    SkASSERT((dstSampleCnt > 0) == SkToBool(dst->asRenderTargetProxy()));
-    SkASSERT((srcSampleCnt > 0) == SkToBool(src->asRenderTargetProxy()));
-
-    return this->canCopyImage(dstConfig, dstSampleCnt, dstOrigin,
-                              srcConfig, srcSampleCnt, srcOrigin) ||
-           this->canCopyAsBlit(dstConfig, dstSampleCnt, dstIsLinear,
-                               srcConfig, srcSampleCnt, srcIsLinear) ||
-           this->canCopyAsResolve(dstConfig, dstSampleCnt, dstOrigin,
-                                  srcConfig, srcSampleCnt, srcOrigin) ||
-           this->canCopyAsDraw(dstConfig, dstSampleCnt > 0,
-                               srcConfig, SkToBool(src->asTextureProxy()));
-}
-
-||||||| merged common ancestors
-=======
 bool GrVkCaps::canCopyImage(GrPixelConfig dstConfig, int dstSampleCnt, GrSurfaceOrigin dstOrigin,
                             GrPixelConfig srcConfig, int srcSampleCnt,
                             GrSurfaceOrigin srcOrigin) const {
@@ -367,17 +229,9 @@ template<typename T> T* get_extension_feature_struct(const VkPhysicalDeviceFeatu
     return nullptr;
 }
 
->>>>>>> upstream-releases
 void GrVkCaps::init(const GrContextOptions& contextOptions, const GrVkInterface* vkInterface,
-<<<<<<< HEAD
-                    VkPhysicalDevice physDev, const VkPhysicalDeviceFeatures2& features,
-                    const GrVkExtensions& extensions) {
-||||||| merged common ancestors
-                    VkPhysicalDevice physDev, uint32_t featureFlags, uint32_t extensionFlags) {
-=======
                     VkPhysicalDevice physDev, const VkPhysicalDeviceFeatures2& features,
                     uint32_t physicalDeviceVersion, const GrVkExtensions& extensions) {
->>>>>>> upstream-releases
 
     VkPhysicalDeviceProperties properties;
     GR_VK_CALL(vkInterface, GetPhysicalDeviceProperties(physDev, &properties));
@@ -385,90 +239,6 @@ void GrVkCaps::init(const GrContextOptions& contextOptions, const GrVkInterface*
     VkPhysicalDeviceMemoryProperties memoryProperties;
     GR_VK_CALL(vkInterface, GetPhysicalDeviceMemoryProperties(physDev, &memoryProperties));
 
-<<<<<<< HEAD
-    uint32_t physicalDeviceVersion = properties.apiVersion;
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        extensions.hasExtension(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME, 1)) {
-        fSupportsPhysicalDeviceProperties2 = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        extensions.hasExtension(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME, 1)) {
-        fSupportsMemoryRequirements2 = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        extensions.hasExtension(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME, 1)) {
-        fSupportsBindMemory2 = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        extensions.hasExtension(VK_KHR_MAINTENANCE1_EXTENSION_NAME, 1)) {
-        fSupportsMaintenance1 = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        extensions.hasExtension(VK_KHR_MAINTENANCE2_EXTENSION_NAME, 1)) {
-        fSupportsMaintenance2 = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        extensions.hasExtension(VK_KHR_MAINTENANCE3_EXTENSION_NAME, 1)) {
-        fSupportsMaintenance3 = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        (extensions.hasExtension(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME, 1) &&
-         this->supportsMemoryRequirements2())) {
-        fSupportsDedicatedAllocation = true;
-    }
-
-    if (physicalDeviceVersion >= VK_MAKE_VERSION(1, 1, 0) ||
-        (extensions.hasExtension(VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME, 1) &&
-         this->supportsPhysicalDeviceProperties2() &&
-         extensions.hasExtension(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME, 1) &&
-         this->supportsDedicatedAllocation())) {
-        fSupportsExternalMemory = true;
-    }
-
-#ifdef SK_BUILD_FOR_ANDROID
-    // Currently Adreno devices are not supporting the QUEUE_FAMILY_FOREIGN_EXTENSION, so until they
-    // do we don't explicitly require it here even the spec says it is required.
-    if (extensions.hasExtension(
-            VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME, 2) &&
-       /* extensions.hasExtension(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, 1) &&*/
-        this->supportsExternalMemory() &&
-        this->supportsBindMemory2()) {
-        fSupportsAndroidHWBExternalMemory = true;
-        fSupportsAHardwareBufferImages = true;
-    }
-#endif
-
-    this->initGrCaps(vkInterface, physDev, properties, memoryProperties, features, extensions);
-    this->initShaderCaps(properties, features);
-
-    if (!contextOptions.fDisableDriverCorrectnessWorkarounds) {
-#if defined(SK_CPU_X86)
-        // We need to do this before initing the config table since it uses fSRGBSupport
-        if (kImagination_VkVendor == properties.vendorID) {
-            fSRGBSupport = false;
-        }
-#endif
-    }
-
-    if (kQualcomm_VkVendor == properties.vendorID) {
-        // A "clear" load for the CCPR atlas runs faster on QC than a "discard" load followed by a
-        // scissored clear.
-        // On NVIDIA and Intel, the discard load followed by clear is faster.
-        // TODO: Evaluate on ARM, Imagination, and ATI.
-        fPreferFullscreenClears = true;
-    }
-
-||||||| merged common ancestors
-    this->initGrCaps(properties, memoryProperties, featureFlags);
-    this->initShaderCaps(properties, featureFlags);
-=======
     SkASSERT(physicalDeviceVersion <= properties.apiVersion);
 
     if (extensions.hasExtension(VK_KHR_SWAPCHAIN_EXTENSION_NAME, 1)) {
@@ -570,7 +340,6 @@ void GrVkCaps::init(const GrContextOptions& contextOptions, const GrVkInterface*
         fPreferFullscreenClears = true;
     }
 
->>>>>>> upstream-releases
     this->initConfigTable(vkInterface, physDev, properties);
     this->initStencilFormat(vkInterface, physDev);
 
@@ -603,33 +372,10 @@ void GrVkCaps::applyDriverCorrectnessWorkarounds(const VkPhysicalDevicePropertie
     }
 #endif
 
-<<<<<<< HEAD
-#if defined(SK_BUILD_FOR_WIN)
-    if (kNvidia_VkVendor == properties.vendorID || kIntel_VkVendor == properties.vendorID) {
-        fMustSleepOnTearDown = true;
-    }
-#elif defined(SK_BUILD_FOR_ANDROID)
-    if (kImagination_VkVendor == properties.vendorID) {
-        fMustSleepOnTearDown = true;
-    }
-#endif
-
     // AMD seems to have issues binding new VkPipelines inside a secondary command buffer.
     // Current workaround is to use a different secondary command buffer for each new VkPipeline.
     if (kAMD_VkVendor == properties.vendorID) {
         fNewCBOnPipelineChange = true;
-||||||| merged common ancestors
-    if (kQualcomm_VkVendor == properties.vendorID ||
-        kARM_VkVendor == properties.vendorID) {
-        fSupportsCopiesAsDraws = false;
-        // We require copies as draws to support cross context textures.
-        fCrossContextTextureSupport = false;
-=======
-    // AMD seems to have issues binding new VkPipelines inside a secondary command buffer.
-    // Current workaround is to use a different secondary command buffer for each new VkPipeline.
-    if (kAMD_VkVendor == properties.vendorID) {
-        fNewCBOnPipelineChange = true;
->>>>>>> upstream-releases
     }
 
     // On Mali galaxy s7 we see lots of rendering issues when we suballocate VkImages.
@@ -683,38 +429,9 @@ int get_max_sample_count(VkSampleCountFlags flags) {
     return 64;
 }
 
-<<<<<<< HEAD
-template<typename T> T* get_extension_feature_struct(const VkPhysicalDeviceFeatures2& features,
-                                                     VkStructureType type) {
-    // All Vulkan structs that could be part of the features chain will start with the
-    // structure type followed by the pNext pointer. We cast to the CommonVulkanHeader
-    // so we can get access to the pNext for the next struct.
-    struct CommonVulkanHeader {
-        VkStructureType sType;
-        void*           pNext;
-    };
-
-    void* pNext = features.pNext;
-    while (pNext) {
-        CommonVulkanHeader* header = static_cast<CommonVulkanHeader*>(pNext);
-        if (header->sType == type) {
-            return static_cast<T*>(pNext);
-        }
-        pNext = header->pNext;
-    }
-    return nullptr;
-}
-
 void GrVkCaps::initGrCaps(const GrVkInterface* vkInterface,
                           VkPhysicalDevice physDev,
                           const VkPhysicalDeviceProperties& properties,
-||||||| merged common ancestors
-void GrVkCaps::initGrCaps(const VkPhysicalDeviceProperties& properties,
-=======
-void GrVkCaps::initGrCaps(const GrVkInterface* vkInterface,
-                          VkPhysicalDevice physDev,
-                          const VkPhysicalDeviceProperties& properties,
->>>>>>> upstream-releases
                           const VkPhysicalDeviceMemoryProperties& memoryProperties,
                           const VkPhysicalDeviceFeatures2& features,
                           const GrVkExtensions& extensions) {
@@ -746,12 +463,6 @@ void GrVkCaps::initGrCaps(const GrVkInterface* vkInterface,
     fMapBufferFlags = kCanMap_MapFlag | kSubset_MapFlag;
 
     fOversizedStencilSupport = true;
-<<<<<<< HEAD
-    fSampleShadingSupport = features.features.sampleRateShading;
-||||||| merged common ancestors
-    fSampleShadingSupport = SkToBool(featureFlags & kSampleRateShading_GrVkFeatureFlag);
-=======
->>>>>>> upstream-releases
 
     if (extensions.hasExtension(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, 2) &&
         this->supportsPhysicalDeviceProperties2()) {
@@ -1063,14 +774,6 @@ static GrPixelConfig validate_image_info(VkFormat format, SkColorType ct, bool h
             }
             break;
         case kRGB_888x_SkColorType:
-<<<<<<< HEAD
-            if (VK_FORMAT_R8G8B8_UNORM == format) {
-                *config = kRGB_888_GrPixelConfig;
-            }
-            break;
-||||||| merged common ancestors
-            return false;
-=======
             if (VK_FORMAT_R8G8B8_UNORM == format) {
                 return kRGB_888_GrPixelConfig;
             }
@@ -1078,7 +781,6 @@ static GrPixelConfig validate_image_info(VkFormat format, SkColorType ct, bool h
                 return kRGB_888X_GrPixelConfig;
             }
             break;
->>>>>>> upstream-releases
         case kBGRA_8888_SkColorType:
             if (VK_FORMAT_B8G8R8A8_UNORM == format) {
                 return kBGRA_8888_GrPixelConfig;
@@ -1087,19 +789,10 @@ static GrPixelConfig validate_image_info(VkFormat format, SkColorType ct, bool h
             }
             break;
         case kRGBA_1010102_SkColorType:
-<<<<<<< HEAD
-            if (VK_FORMAT_A2B10G10R10_UNORM_PACK32 == format) {
-                *config = kRGBA_1010102_GrPixelConfig;
-            }
-            break;
-||||||| merged common ancestors
-            return false;
-=======
             if (VK_FORMAT_A2B10G10R10_UNORM_PACK32 == format) {
                 return kRGBA_1010102_GrPixelConfig;
             }
             break;
->>>>>>> upstream-releases
         case kRGB_101010x_SkColorType:
             return kUnknown_GrPixelConfig;
         case kGray_8_SkColorType:
@@ -1122,76 +815,30 @@ static GrPixelConfig validate_image_info(VkFormat format, SkColorType ct, bool h
                 return kRGBA_float_GrPixelConfig;
             }
             break;
-        case kRGBA_F32_SkColorType:
-            if (VK_FORMAT_R32G32B32A32_SFLOAT == format) {
-                *config = kRGBA_float_GrPixelConfig;
-            }
-            break;
     }
 
     return kUnknown_GrPixelConfig;
 }
 
-<<<<<<< HEAD
-bool GrVkCaps::validateBackendTexture(const GrBackendTexture& tex, SkColorType ct,
-                                      GrPixelConfig* config) const {
-    GrVkImageInfo imageInfo;
-    if (!tex.getVkImageInfo(&imageInfo)) {
-        return false;
-||||||| merged common ancestors
-bool GrVkCaps::validateBackendTexture(const GrBackendTexture& tex, SkColorType ct,
-                                      GrPixelConfig* config) const {
-    const GrVkImageInfo* imageInfo = tex.getVkImageInfo();
-    if (!imageInfo) {
-        return false;
-=======
 GrPixelConfig GrVkCaps::validateBackendRenderTarget(const GrBackendRenderTarget& rt,
                                                     SkColorType ct) const {
     GrVkImageInfo imageInfo;
     if (!rt.getVkImageInfo(&imageInfo)) {
         return kUnknown_GrPixelConfig;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    return validate_image_info(imageInfo.fFormat, ct, config);
-||||||| merged common ancestors
-
-    return validate_image_info(imageInfo->fFormat, ct, config);
-=======
     return validate_image_info(imageInfo.fFormat, ct, imageInfo.fYcbcrConversionInfo.isValid());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GrVkCaps::validateBackendRenderTarget(const GrBackendRenderTarget& rt, SkColorType ct,
-                                           GrPixelConfig* config) const {
-    GrVkImageInfo imageInfo;
-    if (!rt.getVkImageInfo(&imageInfo)) {
-        return false;
-||||||| merged common ancestors
-bool GrVkCaps::validateBackendRenderTarget(const GrBackendRenderTarget& rt, SkColorType ct,
-                                           GrPixelConfig* config) const {
-    const GrVkImageInfo* imageInfo = rt.getVkImageInfo();
-    if (!imageInfo) {
-        return false;
-=======
 GrPixelConfig GrVkCaps::getConfigFromBackendFormat(const GrBackendFormat& format,
                                                    SkColorType ct) const {
     const VkFormat* vkFormat = format.getVkFormat();
     const GrVkYcbcrConversionInfo* ycbcrInfo = format.getVkYcbcrConversionInfo();
     if (!vkFormat || !ycbcrInfo) {
         return kUnknown_GrPixelConfig;
->>>>>>> upstream-releases
     }
     return validate_image_info(*vkFormat, ct, ycbcrInfo->isValid());
 }
 
-<<<<<<< HEAD
-    return validate_image_info(imageInfo.fFormat, ct, config);
-||||||| merged common ancestors
-    return validate_image_info(imageInfo->fFormat, ct, config);
-=======
 static GrPixelConfig get_yuva_config(VkFormat vkFormat) {
     switch (vkFormat) {
         case VK_FORMAT_R8_UNORM:
@@ -1207,7 +854,6 @@ static GrPixelConfig get_yuva_config(VkFormat vkFormat) {
         default:
             return kUnknown_GrPixelConfig;
     }
->>>>>>> upstream-releases
 }
 
 GrPixelConfig GrVkCaps::getYUVAConfigFromBackendFormat(const GrBackendFormat& format) const {
@@ -1230,13 +876,4 @@ GrBackendFormat GrVkCaps::getBackendFormatFromGrColorType(GrColorType ct,
     }
     return GrBackendFormat::MakeVk(format);
 }
-
-#ifdef GR_TEST_UTILS
-GrBackendFormat GrVkCaps::onCreateFormatFromBackendTexture(
-        const GrBackendTexture& backendTex) const {
-    GrVkImageInfo vkInfo;
-    SkAssertResult(backendTex.getVkImageInfo(&vkInfo));
-    return GrBackendFormat::MakeVk(vkInfo.fFormat);
-}
-#endif
 

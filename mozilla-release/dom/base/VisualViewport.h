@@ -14,18 +14,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* Visual Viewport API spec:
- * https://wicg.github.io/visual-viewport/#the-visualviewport-interface */
-class VisualViewport final : public mozilla::DOMEventTargetHelper {
- public:
-||||||| merged common ancestors
-/* Visual Viewport API spec:  https://wicg.github.io/visual-viewport/#the-visualviewport-interface */
-class VisualViewport final: public mozilla::DOMEventTargetHelper
-{
-
-public:
-=======
 class PresShell;
 
 namespace dom {
@@ -34,7 +22,6 @@ namespace dom {
  * https://wicg.github.io/visual-viewport/#the-visualviewport-interface */
 class VisualViewport final : public mozilla::DOMEventTargetHelper {
  public:
->>>>>>> upstream-releases
   explicit VisualViewport(nsPIDOMWindowInner* aWindow);
 
   double OffsetLeft() const;
@@ -55,12 +42,6 @@ class VisualViewport final : public mozilla::DOMEventTargetHelper {
   void PostScrollEvent(const nsPoint& aPrevVisualOffset,
                        const nsPoint& aPrevLayoutOffset);
 
-<<<<<<< HEAD
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   // These two events are modelled after the ScrollEvent class in
   // nsGfxScrollFrame.h.
   class VisualViewportResizeEvent : public Runnable {
@@ -70,13 +51,7 @@ class VisualViewport final : public mozilla::DOMEventTargetHelper {
                               nsPresContext* aPresContext);
     bool HasPresContext(nsPresContext* aContext) const;
     void Revoke();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
    private:
     VisualViewport* mViewport;
     WeakPtr<nsPresContext> mPresContext;
@@ -111,7 +86,6 @@ private:
   };
 
  private:
->>>>>>> upstream-releases
   virtual ~VisualViewport();
 
   MOZ_CAN_RUN_SCRIPT CSSSize VisualViewportSize() const;

@@ -33,16 +33,8 @@ class nsICacheEntry;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-namespace dom {
-class TabParent;
-||||||| merged common ancestors
-namespace dom{
-class TabParent;
-=======
 namespace dom {
 class BrowserParent;
->>>>>>> upstream-releases
 class PBrowserOrId;
 }  // namespace dom
 
@@ -109,19 +101,9 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
     }
   }
 
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult OpenAlternativeOutputStream(const nsACString& type,
-                                                    int64_t predictedSize,
-                                                    nsIOutputStream** _retval);
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult OpenAlternativeOutputStream(const nsACString & type,
-                                                    int64_t predictedSize,
-                                                    nsIOutputStream * *_retval);
-=======
   MOZ_MUST_USE nsresult
   OpenAlternativeOutputStream(const nsACString& type, int64_t predictedSize,
                               nsIAsyncOutputStream** _retval);
->>>>>>> upstream-releases
 
   // Callbacks for each asynchronous tasks required in AsyncOpen
   // procedure, will call InvokeAsyncOpen when all the expected
@@ -155,109 +137,6 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
   MOZ_MUST_USE bool ConnectChannel(const uint32_t& channelId,
                                    const bool& shouldIntercept);
 
-<<<<<<< HEAD
-  MOZ_MUST_USE bool DoAsyncOpen(
-      const URIParams& uri, const OptionalURIParams& originalUri,
-      const OptionalURIParams& docUri, const OptionalURIParams& referrerUri,
-      const uint32_t& referrerPolicy,
-      const OptionalURIParams& internalRedirectUri,
-      const OptionalURIParams& topWindowUri, const uint32_t& loadFlags,
-      const RequestHeaderTuples& requestHeaders, const nsCString& requestMethod,
-      const OptionalIPCStream& uploadStream, const bool& uploadStreamHasHeaders,
-      const int16_t& priority, const uint32_t& classOfService,
-      const uint8_t& redirectionLimit, const bool& allowSTS,
-      const uint32_t& thirdPartyFlags, const bool& doResumeAt,
-      const uint64_t& startPos, const nsCString& entityID,
-      const bool& chooseApplicationCache, const nsCString& appCacheClientID,
-      const bool& allowSpdy, const bool& allowAltSvc,
-      const bool& beConservative, const uint32_t& tlsFlags,
-      const OptionalLoadInfoArgs& aLoadInfoArgs,
-      const OptionalHttpResponseHead& aSynthesizedResponseHead,
-      const nsCString& aSecurityInfoSerialization, const uint32_t& aCacheKey,
-      const uint64_t& aRequestContextID,
-      const OptionalCorsPreflightArgs& aCorsPreflightArgs,
-      const uint32_t& aInitialRwin, const bool& aBlockAuthPrompt,
-      const bool& aSuspendAfterSynthesizeResponse,
-      const bool& aAllowStaleCacheContent, const nsCString& aContentTypeHint,
-      const uint32_t& aCorsMode, const uint32_t& aRedirectMode,
-      const uint64_t& aChannelId, const nsString& aIntegrityMetadata,
-      const uint64_t& aContentWindowId,
-      const ArrayOfStringPairs& aPreferredAlternativeTypes,
-      const uint64_t& aTopLevelOuterContentWindowId,
-      const TimeStamp& aLaunchServiceWorkerStart,
-      const TimeStamp& aLaunchServiceWorkerEnd,
-      const TimeStamp& aDispatchFetchEventStart,
-      const TimeStamp& aDispatchFetchEventEnd,
-      const TimeStamp& aHandleFetchEventStart,
-      const TimeStamp& aHandleFetchEventEnd,
-      const bool& aForceMainDocumentChannel,
-      const TimeStamp& aNavigationStartTimeStamp);
-
-  virtual mozilla::ipc::IPCResult RecvSetPriority(
-      const int16_t& priority) override;
-  virtual mozilla::ipc::IPCResult RecvSetClassOfService(
-      const uint32_t& cos) override;
-  virtual mozilla::ipc::IPCResult RecvSetCacheTokenCachedCharset(
-      const nsCString& charset) override;
-||||||| merged common ancestors
-  MOZ_MUST_USE bool
-  DoAsyncOpen(const URIParams&           uri,
-              const OptionalURIParams&   originalUri,
-              const OptionalURIParams&   docUri,
-              const OptionalURIParams&   referrerUri,
-              const uint32_t&            referrerPolicy,
-              const OptionalURIParams&   internalRedirectUri,
-              const OptionalURIParams&   topWindowUri,
-              const uint32_t&            loadFlags,
-              const RequestHeaderTuples& requestHeaders,
-              const nsCString&           requestMethod,
-              const OptionalIPCStream&   uploadStream,
-              const bool&                uploadStreamHasHeaders,
-              const int16_t&             priority,
-              const uint32_t&            classOfService,
-              const uint8_t&             redirectionLimit,
-              const bool&                allowSTS,
-              const uint32_t&            thirdPartyFlags,
-              const bool&                doResumeAt,
-              const uint64_t&            startPos,
-              const nsCString&           entityID,
-              const bool&                chooseApplicationCache,
-              const nsCString&           appCacheClientID,
-              const bool&                allowSpdy,
-              const bool&                allowAltSvc,
-              const bool&                beConservative,
-              const uint32_t&            tlsFlags,
-              const OptionalLoadInfoArgs& aLoadInfoArgs,
-              const OptionalHttpResponseHead& aSynthesizedResponseHead,
-              const nsCString&           aSecurityInfoSerialization,
-              const uint32_t&            aCacheKey,
-              const uint64_t&            aRequestContextID,
-              const OptionalCorsPreflightArgs& aCorsPreflightArgs,
-              const uint32_t&            aInitialRwin,
-              const bool&                aBlockAuthPrompt,
-              const bool&                aSuspendAfterSynthesizeResponse,
-              const bool&                aAllowStaleCacheContent,
-              const nsCString&           aContentTypeHint,
-              const uint32_t&            aCorsMode,
-              const uint32_t&            aRedirectMode,
-              const uint64_t&            aChannelId,
-              const nsString&            aIntegrityMetadata,
-              const uint64_t&            aContentWindowId,
-              const ArrayOfStringPairs&  aPreferredAlternativeTypes,
-              const uint64_t&            aTopLevelOuterContentWindowId,
-              const TimeStamp&           aLaunchServiceWorkerStart,
-              const TimeStamp&           aLaunchServiceWorkerEnd,
-              const TimeStamp&           aDispatchFetchEventStart,
-              const TimeStamp&           aDispatchFetchEventEnd,
-              const TimeStamp&           aHandleFetchEventStart,
-              const TimeStamp&           aHandleFetchEventEnd,
-              const bool&                aForceMainDocumentChannel,
-              const TimeStamp&           aNavigationStartTimeStamp);
-
-  virtual mozilla::ipc::IPCResult RecvSetPriority(const int16_t& priority) override;
-  virtual mozilla::ipc::IPCResult RecvSetClassOfService(const uint32_t& cos) override;
-  virtual mozilla::ipc::IPCResult RecvSetCacheTokenCachedCharset(const nsCString& charset) override;
-=======
   MOZ_MUST_USE bool DoAsyncOpen(
       const URIParams& uri, const Maybe<URIParams>& originalUri,
       const Maybe<URIParams>& docUri, nsIReferrerInfo* aReferrerInfo,
@@ -302,33 +181,9 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
       const uint32_t& cos) override;
   virtual mozilla::ipc::IPCResult RecvSetCacheTokenCachedCharset(
       const nsCString& charset) override;
->>>>>>> upstream-releases
   virtual mozilla::ipc::IPCResult RecvSuspend() override;
   virtual mozilla::ipc::IPCResult RecvResume() override;
   virtual mozilla::ipc::IPCResult RecvCancel(const nsresult& status) override;
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvRedirect2Verify(
-      const nsresult& result, const RequestHeaderTuples& changedHeaders,
-      const ChildLoadInfoForwarderArgs& aLoadInfoForwarder,
-      const uint32_t& loadFlags, const uint32_t& referrerPolicy,
-      const OptionalURIParams& aReferrerURI,
-      const OptionalURIParams& apiRedirectUri,
-      const OptionalCorsPreflightArgs& aCorsPreflightArgs,
-      const bool& aChooseAppcache) override;
-  virtual mozilla::ipc::IPCResult RecvDocumentChannelCleanup(
-      const bool& clearCacheEntry) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvRedirect2Verify(const nsresult& result,
-                                                      const RequestHeaderTuples& changedHeaders,
-                                                      const ChildLoadInfoForwarderArgs& aLoadInfoForwarder,
-                                                      const uint32_t& loadFlags,
-                                                      const uint32_t& referrerPolicy,
-                                                      const OptionalURIParams& aReferrerURI,
-                                                      const OptionalURIParams& apiRedirectUri,
-                                                      const OptionalCorsPreflightArgs& aCorsPreflightArgs,
-                                                      const bool& aChooseAppcache) override;
-  virtual mozilla::ipc::IPCResult RecvDocumentChannelCleanup(const bool& clearCacheEntry) override;
-=======
   virtual mozilla::ipc::IPCResult RecvRedirect2Verify(
       const nsresult& result, const RequestHeaderTuples& changedHeaders,
       const ChildLoadInfoForwarderArgs& aLoadInfoForwarder,
@@ -338,7 +193,6 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
       const bool& aChooseAppcache) override;
   virtual mozilla::ipc::IPCResult RecvDocumentChannelCleanup(
       const bool& clearCacheEntry) override;
->>>>>>> upstream-releases
   virtual mozilla::ipc::IPCResult RecvMarkOfflineCacheEntryAsForeign() override;
   virtual mozilla::ipc::IPCResult RecvDivertOnDataAvailable(
       const nsCString& data, const uint64_t& offset,
@@ -346,24 +200,12 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
   virtual mozilla::ipc::IPCResult RecvDivertOnStopRequest(
       const nsresult& statusCode) override;
   virtual mozilla::ipc::IPCResult RecvDivertComplete() override;
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvCrossProcessRedirectDone(
-      const nsresult& aResult) override;
-  virtual mozilla::ipc::IPCResult RecvRemoveCorsPreflightCacheEntry(
-      const URIParams& uri,
-      const mozilla::ipc::PrincipalInfo& requestingPrincipal) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvCrossProcessRedirectDone(const nsresult& aResult) override;
-  virtual mozilla::ipc::IPCResult RecvRemoveCorsPreflightCacheEntry(const URIParams& uri,
-                                                                    const mozilla::ipc::PrincipalInfo& requestingPrincipal) override;
-=======
   virtual mozilla::ipc::IPCResult RecvCrossProcessRedirectDone(
       const nsresult& aResult,
       const mozilla::Maybe<LoadInfoArgs>& aLoadInfoArgs) override;
   virtual mozilla::ipc::IPCResult RecvRemoveCorsPreflightCacheEntry(
       const URIParams& uri,
       const mozilla::ipc::PrincipalInfo& requestingPrincipal) override;
->>>>>>> upstream-releases
   virtual mozilla::ipc::IPCResult RecvBytesRead(const int32_t& aCount) override;
   virtual mozilla::ipc::IPCResult RecvOpenOriginalCacheInputStream() override;
   virtual mozilla::ipc::IPCResult RecvOpenAltDataCacheInputStream(
@@ -379,17 +221,6 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
   friend class HttpChannelParentListener;
   RefPtr<mozilla::dom::BrowserParent> mBrowserParent;
 
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult ReportSecurityMessage(
-      const nsAString& aMessageTag, const nsAString& aMessageCategory) override;
-  nsresult LogBlockedCORSRequest(const nsAString& aMessage,
-                                 const nsACString& aCategory) override;
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult
-  ReportSecurityMessage(const nsAString& aMessageTag,
-                        const nsAString& aMessageCategory) override;
-  nsresult LogBlockedCORSRequest(const nsAString& aMessage, const nsACString& aCategory) override;
-=======
   MOZ_MUST_USE nsresult ReportSecurityMessage(
       const nsAString& aMessageTag, const nsAString& aMessageCategory) override;
   nsresult LogBlockedCORSRequest(const nsAString& aMessage,
@@ -397,7 +228,6 @@ class HttpChannelParent final : public nsIInterfaceRequestor,
   nsresult LogMimeTypeMismatch(const nsACString& aMessageName, bool aWarning,
                                const nsAString& aURL,
                                const nsAString& aContentType) override;
->>>>>>> upstream-releases
 
   // Calls SendDeleteSelf and sets mIPCClosed to true because we should not
   // send any more messages after that. Bug 1274886

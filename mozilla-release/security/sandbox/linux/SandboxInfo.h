@@ -24,31 +24,13 @@ class SandboxInfo {
 
   enum Flags {
     // System call filtering; kernel config option CONFIG_SECCOMP_FILTER.
-<<<<<<< HEAD
-    kHasSeccompBPF = 1 << 0,
-    // Config flag MOZ_CONTENT_SANDBOX; runtime
-    // mozilla::IsContentSandboxEnabled().
-||||||| merged common ancestors
-    kHasSeccompBPF     = 1 << 0,
-    // Config flag MOZ_CONTENT_SANDBOX; runtime
-    // mozilla::IsContentSandboxEnabled().
-=======
     kHasSeccompBPF = 1 << 0,
     // Whether to use a sandbox for content processes; env var
     // MOZ_DISABLE_CONTENT_SANDBOX
->>>>>>> upstream-releases
     kEnabledForContent = 1 << 1,
-<<<<<<< HEAD
-    // Config flag MOZ_GMP_SANDBOX; env var MOZ_DISABLE_GMP_SANDBOX.
-    kEnabledForMedia = 1 << 2,
-||||||| merged common ancestors
-    // Config flag MOZ_GMP_SANDBOX; env var MOZ_DISABLE_GMP_SANDBOX.
-    kEnabledForMedia   = 1 << 2,
-=======
     // Whether to use a sandbox for GMP processes; env var
     // MOZ_DISABLE_GMP_SANDBOX.
     kEnabledForMedia = 1 << 2,
->>>>>>> upstream-releases
     // Env var MOZ_SANDBOX_LOGGING.
     kVerbose = 1 << 3,
     // Kernel can atomically set system call filtering on entire thread group.

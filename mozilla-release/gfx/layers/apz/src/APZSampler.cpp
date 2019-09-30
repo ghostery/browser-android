@@ -56,36 +56,18 @@ void APZSampler::SetWebRenderWindowId(const wr::WindowId& aWindowId) {
   (*sWindowIdMap)[wr::AsUint64(aWindowId)] = this;
 }
 
-<<<<<<< HEAD
-/*static*/ void APZSampler::SetSamplerThread(const wr::WrWindowId& aWindowId) {
-||||||| merged common ancestors
-/*static*/ void
-APZSampler::SetSamplerThread(const wr::WrWindowId& aWindowId)
-{
-=======
 /*static*/
 void APZSampler::SetSamplerThread(const wr::WrWindowId& aWindowId) {
->>>>>>> upstream-releases
   if (RefPtr<APZSampler> sampler = GetSampler(aWindowId)) {
     MutexAutoLock lock(sampler->mThreadIdLock);
     sampler->mSamplerThreadId = Some(PlatformThread::CurrentId());
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void APZSampler::SampleForWebRender(const wr::WrWindowId& aWindowId,
-                                               wr::Transaction* aTransaction) {
-||||||| merged common ancestors
-/*static*/ void
-APZSampler::SampleForWebRender(const wr::WrWindowId& aWindowId,
-                               wr::Transaction* aTransaction)
-{
-=======
 /*static*/
 void APZSampler::SampleForWebRender(const wr::WrWindowId& aWindowId,
                                     wr::Transaction* aTransaction,
                                     const wr::DocumentId& aRenderRootId) {
->>>>>>> upstream-releases
   if (RefPtr<APZSampler> sampler = GetSampler(aWindowId)) {
     wr::TransactionWrapper txn(aTransaction);
     sampler->SampleForWebRender(txn, wr::RenderRootFromId(aRenderRootId));
@@ -98,16 +80,8 @@ void APZSampler::SetSampleTime(const TimeStamp& aSampleTime) {
   mSampleTime = aSampleTime;
 }
 
-<<<<<<< HEAD
-void APZSampler::SampleForWebRender(wr::TransactionWrapper& aTxn) {
-||||||| merged common ancestors
-void
-APZSampler::SampleForWebRender(wr::TransactionWrapper& aTxn)
-{
-=======
 void APZSampler::SampleForWebRender(wr::TransactionWrapper& aTxn,
                                     wr::RenderRoot aRenderRoot) {
->>>>>>> upstream-releases
   AssertOnSamplerThread();
   TimeStamp sampleTime;
   {  // scope lock
@@ -178,30 +152,14 @@ ParentLayerPoint APZSampler::GetCurrentAsyncScrollOffset(
       AsyncPanZoomController::eForCompositing);
 }
 
-<<<<<<< HEAD
-AsyncTransform APZSampler::GetCurrentAsyncTransform(
-    const LayerMetricsWrapper& aLayer) {
-||||||| merged common ancestors
-AsyncTransform
-APZSampler::GetCurrentAsyncTransform(const LayerMetricsWrapper& aLayer)
-{
-=======
 AsyncTransform APZSampler::GetCurrentAsyncTransform(
     const LayerMetricsWrapper& aLayer, AsyncTransformComponents aComponents) {
->>>>>>> upstream-releases
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   AssertOnSamplerThread();
 
   MOZ_ASSERT(aLayer.GetApzc());
-<<<<<<< HEAD
-  return aLayer.GetApzc()->GetCurrentAsyncTransform(
-      AsyncPanZoomController::eForCompositing);
-||||||| merged common ancestors
-  return aLayer.GetApzc()->GetCurrentAsyncTransform(AsyncPanZoomController::eForCompositing);
-=======
   return aLayer.GetApzc()->GetCurrentAsyncTransform(
       AsyncPanZoomController::eForCompositing, aComponents);
->>>>>>> upstream-releases
 }
 
 AsyncTransform APZSampler::GetCurrentAsyncTransformForFixedAdjustment(
@@ -256,13 +214,6 @@ bool APZSampler::HasUnusedAsyncTransform(const LayerMetricsWrapper& aLayer) {
               .IsIdentity();
 }
 
-<<<<<<< HEAD
-void APZSampler::AssertOnSamplerThread() const {
-||||||| merged common ancestors
-void
-APZSampler::AssertOnSamplerThread() const
-{
-=======
 ScrollableLayerGuid APZSampler::GetGuid(const LayerMetricsWrapper& aLayer) {
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   AssertOnSamplerThread();
@@ -272,7 +223,6 @@ ScrollableLayerGuid APZSampler::GetGuid(const LayerMetricsWrapper& aLayer) {
 }
 
 void APZSampler::AssertOnSamplerThread() const {
->>>>>>> upstream-releases
   if (APZThreadUtils::GetThreadAssertionsEnabled()) {
     MOZ_ASSERT(IsSamplerThread());
   }
@@ -290,18 +240,9 @@ bool APZSampler::IsSamplerThread() const {
   return CompositorThreadHolder::IsInCompositorThread();
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<APZSampler> APZSampler::GetSampler(
-    const wr::WrWindowId& aWindowId) {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<APZSampler>
-APZSampler::GetSampler(const wr::WrWindowId& aWindowId)
-{
-=======
 /*static*/
 already_AddRefed<APZSampler> APZSampler::GetSampler(
     const wr::WrWindowId& aWindowId) {
->>>>>>> upstream-releases
   RefPtr<APZSampler> sampler;
   StaticMutexAutoLock lock(sWindowIdLock);
   if (sWindowIdMap) {
@@ -320,23 +261,11 @@ void apz_register_sampler(mozilla::wr::WrWindowId aWindowId) {
   mozilla::layers::APZSampler::SetSamplerThread(aWindowId);
 }
 
-<<<<<<< HEAD
-void apz_sample_transforms(mozilla::wr::WrWindowId aWindowId,
-                           mozilla::wr::Transaction* aTransaction) {
-  mozilla::layers::APZSampler::SampleForWebRender(aWindowId, aTransaction);
-||||||| merged common ancestors
-void
-apz_sample_transforms(mozilla::wr::WrWindowId aWindowId,
-                      mozilla::wr::Transaction *aTransaction)
-{
-  mozilla::layers::APZSampler::SampleForWebRender(aWindowId, aTransaction);
-=======
 void apz_sample_transforms(mozilla::wr::WrWindowId aWindowId,
                            mozilla::wr::Transaction* aTransaction,
                            mozilla::wr::DocumentId aDocumentId) {
   mozilla::layers::APZSampler::SampleForWebRender(aWindowId, aTransaction,
                                                   aDocumentId);
->>>>>>> upstream-releases
 }
 
 void apz_deregister_sampler(mozilla::wr::WrWindowId aWindowId) {}

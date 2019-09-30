@@ -467,18 +467,9 @@ bool nsTextFragment::Append(const char16_t* aBuffer, uint32_t aLength,
   return true;
 }
 
-<<<<<<< HEAD
-/* virtual */ size_t nsTextFragment::SizeOfExcludingThis(
-    mozilla::MallocSizeOf aMallocSizeOf) const {
-||||||| merged common ancestors
-/* virtual */ size_t
-nsTextFragment::SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
-{
-=======
 /* virtual */
 size_t nsTextFragment::SizeOfExcludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) const {
->>>>>>> upstream-releases
   if (Is2b()) {
     return m2b->SizeOfIncludingThisIfUnshared(aMallocSizeOf);
   }

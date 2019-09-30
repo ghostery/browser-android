@@ -9,19 +9,6 @@ const {
 } = require("devtools/client/shared/vendor/react");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
-<<<<<<< HEAD
-const {div, button} = dom;
-
-const DebugTargetInfo =
-  createFactory(require("devtools/client/framework/components/DebugTargetInfo"));
-const MenuButton = createFactory(require("devtools/client/shared/components/menu/MenuButton"));
-const ToolboxTabs = createFactory(require("devtools/client/framework/components/ToolboxTabs"));
-||||||| merged common ancestors
-const {div, button} = dom;
-
-const MenuButton = createFactory(require("devtools/client/shared/components/menu/MenuButton"));
-const ToolboxTabs = createFactory(require("devtools/client/framework/components/ToolboxTabs"));
-=======
 const { div, button } = dom;
 
 const DebugTargetInfo = createFactory(
@@ -33,7 +20,6 @@ const MenuButton = createFactory(
 const ToolboxTabs = createFactory(
   require("devtools/client/framework/components/ToolboxTabs")
 );
->>>>>>> upstream-releases
 
 loader.lazyGetter(this, "MeatballMenu", function() {
   return createFactory(
@@ -54,9 +40,6 @@ loader.lazyGetter(this, "WebReplayPlayer", function() {
   return createFactory(
     require("devtools/client/webreplay/components/WebReplayPlayer")
   );
-});
-loader.lazyGetter(this, "WebReplayPlayer", function() {
-  return createFactory(require("devtools/client/webreplay/components/WebReplayPlayer"));
 });
 
 loader.lazyRequireGetter(
@@ -136,19 +119,11 @@ class ToolboxToolbar extends Component {
       // Because in the component we cannot compare the visibility since the
       // button definition instance in toolboxButtons will be unchanged.
       visibleToolboxButtonCount: PropTypes.number,
-<<<<<<< HEAD
-      // Flag whether need to show DebugTargetInfo.
-      showDebugTargetInfo: PropTypes.bool,
-      // Device description for DebugTargetInfo component.
-      deviceDescription: PropTypes.object,
-||||||| merged common ancestors
-=======
       // Data to show debug target info, if needed
       debugTargetData: PropTypes.shape({
         runtimeInfo: PropTypes.object.isRequired,
         targetType: PropTypes.string.isRequired,
       }),
->>>>>>> upstream-releases
     };
   }
 
@@ -444,25 +419,6 @@ class ToolboxToolbar extends Component {
 
     const closeButton = canCloseToolbox
       ? button({
-<<<<<<< HEAD
-        id: closeButtonId,
-        onFocus: () => focusButton(closeButtonId),
-        className: "devtools-button",
-        title: L10N.getStr("toolbox.closebutton.tooltip"),
-        onClick: () => closeToolbox(),
-        tabIndex: focusedButton === "toolbox-close" ? "0" : "-1",
-      })
-||||||| merged common ancestors
-        id: closeButtonId,
-        onFocus: () => focusButton(closeButtonId),
-        className: "devtools-button",
-        title: L10N.getStr("toolbox.closebutton.tooltip"),
-        onClick: () => {
-          closeToolbox();
-        },
-        tabIndex: focusedButton === "toolbox-close" ? "0" : "-1",
-      })
-=======
           id: closeButtonId,
           onFocus: () => focusButton(closeButtonId),
           className: "devtools-button",
@@ -470,7 +426,6 @@ class ToolboxToolbar extends Component {
           onClick: () => closeToolbox(),
           tabIndex: focusedButton === "toolbox-close" ? "0" : "-1",
         })
->>>>>>> upstream-releases
       : null;
 
     return div({ id: "toolbox-controls" }, meatballMenuButton, closeButton);
@@ -481,12 +436,7 @@ class ToolboxToolbar extends Component {
    * render functions for how each of the sections is rendered.
    */
   render() {
-<<<<<<< HEAD
-    const {deviceDescription, L10N, showDebugTargetInfo, toolbox} = this.props;
-||||||| merged common ancestors
-=======
     const { L10N, debugTargetData, toolbox } = this.props;
->>>>>>> upstream-releases
     const classnames = ["devtools-tabbar"];
     const startButtons = this.renderToolboxButtonsStart();
     const endButtons = this.renderToolboxButtonsEnd();
@@ -498,18 +448,8 @@ class ToolboxToolbar extends Component {
       classnames.push("devtools-tabbar-has-end");
     }
 
-<<<<<<< HEAD
-    const toolbar = this.props.canRender
-      ? (
-        div(
-||||||| merged common ancestors
-    return this.props.canRender
-      ? (
-        div(
-=======
     const toolbar = this.props.canRender
       ? div(
->>>>>>> upstream-releases
           {
             className: classnames.join(" "),
           },
@@ -519,25 +459,6 @@ class ToolboxToolbar extends Component {
           this.renderToolboxControls()
         )
       : div({ className: classnames.join(" ") });
-<<<<<<< HEAD
-
-    const debugTargetInfo =
-      showDebugTargetInfo ? DebugTargetInfo({ deviceDescription, L10N, toolbox }) : null;
-
-    if (toolbox.target.canRewind) {
-      return div(
-        {},
-        WebReplayPlayer({
-          toolbox: toolbox,
-        }),
-        debugTargetInfo,
-        toolbar,
-      );
-    }
-
-    return div({}, debugTargetInfo, toolbar);
-||||||| merged common ancestors
-=======
 
     const debugTargetInfo = debugTargetData
       ? DebugTargetInfo({ debugTargetData, L10N, toolbox })
@@ -555,7 +476,6 @@ class ToolboxToolbar extends Component {
     }
 
     return div({}, debugTargetInfo, toolbar);
->>>>>>> upstream-releases
   }
 }
 

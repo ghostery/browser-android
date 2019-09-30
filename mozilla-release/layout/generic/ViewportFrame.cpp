@@ -26,20 +26,9 @@
 using namespace mozilla;
 typedef nsAbsoluteContainingBlock::AbsPosReflowFlags AbsPosReflowFlags;
 
-<<<<<<< HEAD
-ViewportFrame* NS_NewViewportFrame(nsIPresShell* aPresShell,
-                                   ComputedStyle* aStyle) {
-  return new (aPresShell) ViewportFrame(aStyle);
-||||||| merged common ancestors
-ViewportFrame*
-NS_NewViewportFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) ViewportFrame(aStyle);
-=======
 ViewportFrame* NS_NewViewportFrame(PresShell* aPresShell,
                                    ComputedStyle* aStyle) {
   return new (aPresShell) ViewportFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(ViewportFrame)
@@ -61,22 +50,10 @@ void ViewportFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
   }
 }
 
-<<<<<<< HEAD
-void ViewportFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
-                                     const nsDisplayListSet& aLists) {
-  AUTO_PROFILER_LABEL("ViewportFrame::BuildDisplayList", GRAPHICS);
-||||||| merged common ancestors
-void
-ViewportFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
-                                const nsDisplayListSet& aLists)
-{
-  AUTO_PROFILER_LABEL("ViewportFrame::BuildDisplayList", GRAPHICS);
-=======
 void ViewportFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                      const nsDisplayListSet& aLists) {
   AUTO_PROFILER_LABEL("ViewportFrame::BuildDisplayList",
                       GRAPHICS_DisplayListBuilding);
->>>>>>> upstream-releases
 
   if (nsIFrame* kid = mFrames.FirstChild()) {
     // make the kid's BorderBackground our own. This ensures that the canvas
@@ -84,34 +61,6 @@ void ViewportFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     // below negative z-index elements.
     BuildDisplayListForChild(aBuilder, kid, aLists);
   }
-<<<<<<< HEAD
-
-  nsDisplayList topLayerList;
-  BuildDisplayListForTopLayer(aBuilder, &topLayerList);
-  if (!topLayerList.IsEmpty()) {
-    // Wrap the whole top layer in a single item with maximum z-index,
-    // and append it at the very end, so that it stays at the topmost.
-    nsDisplayWrapList* wrapList =
-        MakeDisplayItem<nsDisplayWrapList>(aBuilder, this, &topLayerList);
-    wrapList->SetOverrideZIndex(
-        std::numeric_limits<decltype(wrapList->ZIndex())>::max());
-    aLists.PositionedDescendants()->AppendToTop(wrapList);
-  }
-||||||| merged common ancestors
-
-  nsDisplayList topLayerList;
-  BuildDisplayListForTopLayer(aBuilder, &topLayerList);
-  if (!topLayerList.IsEmpty()) {
-    // Wrap the whole top layer in a single item with maximum z-index,
-    // and append it at the very end, so that it stays at the topmost.
-    nsDisplayWrapList* wrapList =
-      MakeDisplayItem<nsDisplayWrapList>(aBuilder, this, &topLayerList);
-    wrapList->SetOverrideZIndex(
-      std::numeric_limits<decltype(wrapList->ZIndex())>::max());
-    aLists.PositionedDescendants()->AppendToTop(wrapList);
-  }
-=======
->>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
@@ -157,42 +106,18 @@ static void BuildDisplayListForTopLayerFrame(nsDisplayListBuilder* aBuilder,
     asrSetter.SetCurrentActiveScrolledRoot(
         savedOutOfFlowData->mContainingBlockActiveScrolledRoot);
   }
-<<<<<<< HEAD
-  nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
-      aBuilder, aFrame, visible, dirty,
-      aBuilder->IsAtRootOfPseudoStackingContext());
-||||||| merged common ancestors
-  nsDisplayListBuilder::AutoBuildingDisplayList
-    buildingForChild(aBuilder, aFrame, visible, dirty,
-                     aBuilder->IsAtRootOfPseudoStackingContext());
-=======
   nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
       aBuilder, aFrame, visible, dirty);
->>>>>>> upstream-releases
 
   nsDisplayList list;
   aFrame->BuildDisplayListForStackingContext(aBuilder, &list);
   aList->AppendToTop(&list);
 }
 
-<<<<<<< HEAD
-void ViewportFrame::BuildDisplayListForTopLayer(nsDisplayListBuilder* aBuilder,
-                                                nsDisplayList* aList) {
-  nsIDocument* doc = PresContext()->Document();
-  nsTArray<Element*> fullscreenStack = doc->GetFullscreenStack();
-||||||| merged common ancestors
-void
-ViewportFrame::BuildDisplayListForTopLayer(nsDisplayListBuilder* aBuilder,
-                                           nsDisplayList* aList)
-{
-  nsIDocument* doc = PresContext()->Document();
-  nsTArray<Element*> fullscreenStack = doc->GetFullscreenStack();
-=======
 void ViewportFrame::BuildDisplayListForTopLayer(nsDisplayListBuilder* aBuilder,
                                                 nsDisplayList* aList) {
   nsTArray<Element*> fullscreenStack =
       PresContext()->Document()->GetFullscreenStack();
->>>>>>> upstream-releases
   for (Element* elem : fullscreenStack) {
     if (nsIFrame* frame = elem->GetPrimaryFrame()) {
       // There are two cases where an element in fullscreen is not in
@@ -266,17 +191,8 @@ void ViewportFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
 }
 #endif
 
-<<<<<<< HEAD
-/* virtual */ nscoord ViewportFrame::GetMinISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-ViewportFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord ViewportFrame::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_MIN_INLINE_SIZE(this, result);
   if (mFrames.IsEmpty())
@@ -287,17 +203,8 @@ nscoord ViewportFrame::GetMinISize(gfxContext* aRenderingContext) {
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord ViewportFrame::GetPrefISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-ViewportFrame::GetPrefISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord ViewportFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_PREF_INLINE_SIZE(this, result);
   if (mFrames.IsEmpty())
@@ -342,19 +249,6 @@ nsRect ViewportFrame::AdjustReflowInputAsContainingBlock(
   // Layout fixed position elements to the visual viewport size if and only if
   // it has been set and it is larger than the computed size, otherwise use the
   // computed size.
-<<<<<<< HEAD
-  nsRect rect(0, 0, aReflowInput->ComputedWidth(),
-              aReflowInput->ComputedHeight());
-  nsIPresShell* ps = PresShell();
-  if (ps->IsVisualViewportSizeSet() &&
-      rect.Size() < ps->GetVisualViewportSize()) {
-    rect.SizeTo(ps->GetVisualViewportSize());
-||||||| merged common ancestors
-  nsRect rect(0, 0, aReflowInput->ComputedWidth(), aReflowInput->ComputedHeight());
-  nsIPresShell* ps = PresShell();
-  if (ps->IsVisualViewportSizeSet() && rect.Size() < ps->GetVisualViewportSize()) {
-    rect.SizeTo(ps->GetVisualViewportSize());
-=======
   nsRect rect(0, 0, aReflowInput->ComputedWidth(),
               aReflowInput->ComputedHeight());
   mozilla::PresShell* presShell = PresShell();
@@ -366,7 +260,6 @@ nsRect ViewportFrame::AdjustReflowInputAsContainingBlock(
   const nsSize layoutViewportSize = presShell->GetLayoutViewportSize();
   if (rect.Size() < layoutViewportSize) {
     rect.SizeTo(layoutViewportSize);
->>>>>>> upstream-releases
   }
   return rect;
 }
@@ -453,21 +346,10 @@ void ViewportFrame::Reflow(nsPresContext* aPresContext,
 
     nsRect rect = AdjustReflowInputAsContainingBlock(&reflowInput);
     AbsPosReflowFlags flags =
-<<<<<<< HEAD
-        AbsPosReflowFlags::eCBWidthAndHeightChanged;  // XXX could be optimized
-    GetAbsoluteContainingBlock()->Reflow(this, aPresContext, reflowInput,
-                                         aStatus, rect, flags,
-                                         /* aOverflowAreas = */ nullptr);
-||||||| merged common ancestors
-      AbsPosReflowFlags::eCBWidthAndHeightChanged; // XXX could be optimized
-    GetAbsoluteContainingBlock()->Reflow(this, aPresContext, reflowInput, aStatus,
-                                         rect, flags, overflowAreas);
-=======
         AbsPosReflowFlags::CBWidthAndHeightChanged;  // XXX could be optimized
     GetAbsoluteContainingBlock()->Reflow(this, aPresContext, reflowInput,
                                          aStatus, rect, flags,
                                          /* aOverflowAreas = */ nullptr);
->>>>>>> upstream-releases
   }
 
   if (mFrames.NotEmpty()) {
@@ -487,51 +369,10 @@ void ViewportFrame::Reflow(nsPresContext* aPresContext,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aDesiredSize);
 }
 
-<<<<<<< HEAD
 void ViewportFrame::UpdateStyle(ServoRestyleState& aRestyleState) {
-  nsAtom* pseudo = Style()->GetPseudo();
-||||||| merged common ancestors
-bool
-ViewportFrame::ComputeCustomOverflow(nsOverflowAreas& aOverflowAreas)
-{
-  nsIScrollableFrame* rootScrollFrame =
-    PresShell()->GetRootScrollFrameAsScrollable();
-  if (rootScrollFrame && !rootScrollFrame->IsIgnoringViewportClipping()) {
-    return false;
-  }
-
-  return nsContainerFrame::ComputeCustomOverflow(aOverflowAreas);
-}
-
-void
-ViewportFrame::UpdateStyle(ServoRestyleState& aRestyleState)
-{
- nsAtom* pseudo = Style()->GetPseudo();
-=======
-void ViewportFrame::UpdateStyle(ServoRestyleState& aRestyleState) {
->>>>>>> upstream-releases
   RefPtr<ComputedStyle> newStyle =
-<<<<<<< HEAD
-      aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(pseudo,
-                                                                  nullptr);
-
-  // We're special because we have a null GetContent(), so don't call things
-  // like UpdateStyleOfOwnedChildFrame that try to append changes for the
-  // content to the change list.  Nor do we computed a changehint, since we have
-  // no way to apply it anyway.
-  newStyle->ResolveSameStructsAs(Style());
-||||||| merged common ancestors
-    aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(pseudo, nullptr);
-
-  // We're special because we have a null GetContent(), so don't call things
-  // like UpdateStyleOfOwnedChildFrame that try to append changes for the
-  // content to the change list.  Nor do we computed a changehint, since we have
-  // no way to apply it anyway.
-  newStyle->ResolveSameStructsAs(Style());
-=======
       aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(
           Style()->GetPseudoType(), nullptr);
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!GetNextContinuation(), "Viewport has continuations?");
   SetComputedStyle(newStyle);

@@ -37,17 +37,8 @@ class CSSPseudoElement final : public nsWrapperCache {
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
 
-<<<<<<< HEAD
-  CSSPseudoElementType GetType() const { return mPseudoType; }
-  void GetType(nsString& aRetVal) const {
-||||||| merged common ancestors
-  CSSPseudoElementType GetType() const { return mPseudoType; }
-  void GetType(nsString& aRetVal) const
-  {
-=======
   PseudoStyleType GetType() const { return mPseudoType; }
   void GetType(nsString& aRetVal) const {
->>>>>>> upstream-releases
     MOZ_ASSERT(nsCSSPseudoElements::GetPseudoAtom(mPseudoType),
                "All pseudo-types allowed by this class should have a"
                " corresponding atom");
@@ -58,17 +49,8 @@ class CSSPseudoElement final : public nsWrapperCache {
     aRetVal.Append(
         nsDependentAtomString(nsCSSPseudoElements::GetPseudoAtom(mPseudoType)));
   }
-<<<<<<< HEAD
-  already_AddRefed<Element> ParentElement() const {
-    RefPtr<Element> retVal(mParentElement);
-||||||| merged common ancestors
-  already_AddRefed<Element> ParentElement() const
-  {
-    RefPtr<Element> retVal(mParentElement);
-=======
   already_AddRefed<dom::Element> Element() const {
     RefPtr<dom::Element> retVal(mOriginatingElement);
->>>>>>> upstream-releases
     return retVal.forget();
   }
 
@@ -83,30 +65,12 @@ class CSSPseudoElement final : public nsWrapperCache {
   // property on |aElement|. If there is no CSSPseudoElement for the specified
   // pseudo-type on element, a new CSSPseudoElement will be created and stored
   // on the element.
-<<<<<<< HEAD
-  static already_AddRefed<CSSPseudoElement> GetCSSPseudoElement(
-      Element* aElement, CSSPseudoElementType aType);
-||||||| merged common ancestors
-  static already_AddRefed<CSSPseudoElement>
-    GetCSSPseudoElement(Element* aElement, CSSPseudoElementType aType);
-=======
   static already_AddRefed<CSSPseudoElement> GetCSSPseudoElement(
       dom::Element* aElement, PseudoStyleType aType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  // Only ::before and ::after are supported.
-  CSSPseudoElement(Element* aElement, CSSPseudoElementType aType);
-||||||| merged common ancestors
-private:
-  // Only ::before and ::after are supported.
-  CSSPseudoElement(Element* aElement, CSSPseudoElementType aType);
-=======
  private:
   // Only ::before, ::after and ::marker are supported.
   CSSPseudoElement(dom::Element* aElement, PseudoStyleType aType);
->>>>>>> upstream-releases
 
   static nsAtom* GetCSSPseudoElementPropertyAtom(PseudoStyleType aType);
 

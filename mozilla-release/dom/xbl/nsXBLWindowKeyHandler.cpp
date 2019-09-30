@@ -245,25 +245,10 @@ void nsXBLWindowKeyHandler::RemoveKeyboardEventListenersFrom(
       TrustedEventsAtSystemGroupBubble());
 }
 
-<<<<<<< HEAD
-/* static */ KeyboardMap nsXBLWindowKeyHandler::CollectKeyboardShortcuts() {
-  nsXBLPrototypeHandler* handlers =
-      ShortcutKeys::GetHandlers(HandlerType::eBrowser);
-||||||| merged common ancestors
-/* static */ KeyboardMap
-nsXBLWindowKeyHandler::CollectKeyboardShortcuts()
-{
-  // Load the XBL handlers
-  EnsureSpecialDocInfo();
-
-  nsXBLPrototypeHandler* handlers = nullptr;
-  sXBLSpecialDocInfo->GetHandlers(NS_LITERAL_CSTRING("browser"), &handlers);
-=======
 /* static */
 KeyboardMap nsXBLWindowKeyHandler::CollectKeyboardShortcuts() {
   nsXBLPrototypeHandler* handlers =
       ShortcutKeys::GetHandlers(HandlerType::eBrowser);
->>>>>>> upstream-releases
 
   // Convert the handlers into keyboard shortcuts, using an AutoTArray with
   // the maximum amount of shortcuts used on any platform to minimize

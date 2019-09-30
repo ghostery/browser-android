@@ -199,32 +199,12 @@ bool NS_IsLower(char aChar) {
 
 #ifndef XPCOM_GLUE_AVOID_NSPR
 
-<<<<<<< HEAD
-void NS_MakeRandomString(char* aBuf, int32_t aBufLen) {
-#define TABLE_SIZE 36
-  static const char table[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-                               'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-                               's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0',
-                               '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-||||||| merged common ancestors
-void
-NS_MakeRandomString(char* aBuf, int32_t aBufLen)
-{
-#define TABLE_SIZE 36
-  static const char table[] = {
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-    'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
-    '4', '5', '6', '7', '8', '9'
-  };
-=======
 void NS_MakeRandomString(char* aBuf, int32_t aBufLen) {
 #  define TABLE_SIZE 36
   static const char table[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
                                'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
                                's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0',
                                '1', '2', '3', '4', '5', '6', '7', '8', '9'};
->>>>>>> upstream-releases
 
   // turn PR_Now() into milliseconds since epoch
   // and salt rand with that.
@@ -247,29 +227,11 @@ void NS_MakeRandomString(char* aBuf, int32_t aBufLen) {
 #endif
 
 #ifdef HAVE_VA_COPY
-<<<<<<< HEAD
-#define VARARGS_ASSIGN(foo, bar) VA_COPY(foo, bar)
-||||||| merged common ancestors
-#define VARARGS_ASSIGN(foo, bar)        VA_COPY(foo,bar)
-=======
 #  define VARARGS_ASSIGN(foo, bar) VA_COPY(foo, bar)
->>>>>>> upstream-releases
 #elif defined(HAVE_VA_LIST_AS_ARRAY)
-<<<<<<< HEAD
-#define VARARGS_ASSIGN(foo, bar) foo[0] = bar[0]
-||||||| merged common ancestors
-#define VARARGS_ASSIGN(foo, bar)     foo[0] = bar[0]
-=======
 #  define VARARGS_ASSIGN(foo, bar) foo[0] = bar[0]
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define VARARGS_ASSIGN(foo, bar) (foo) = (bar)
-||||||| merged common ancestors
-#define VARARGS_ASSIGN(foo, bar)     (foo) = (bar)
-=======
 #  define VARARGS_ASSIGN(foo, bar) (foo) = (bar)
->>>>>>> upstream-releases
 #endif
 
 #if defined(XP_WIN)

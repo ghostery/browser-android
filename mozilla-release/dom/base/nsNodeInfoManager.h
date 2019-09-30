@@ -26,14 +26,6 @@ class nsWindowSizes;
 template <class T>
 struct already_AddRefed;
 
-<<<<<<< HEAD
-class nsNodeInfoManager final {
- private:
-||||||| merged common ancestors
-class nsNodeInfoManager final
-{
-private:
-=======
 namespace mozilla {
 namespace dom {
 class Document;
@@ -42,7 +34,6 @@ class Document;
 
 class nsNodeInfoManager final {
  private:
->>>>>>> upstream-releases
   ~nsNodeInfoManager();
 
  public:
@@ -55,13 +46,7 @@ class nsNodeInfoManager final {
   /**
    * Initialize the nodeinfo manager with a document.
    */
-<<<<<<< HEAD
-  nsresult Init(nsIDocument* aDocument);
-||||||| merged common ancestors
-  nsresult Init(nsIDocument *aDocument);
-=======
   nsresult Init(mozilla::dom::Document*);
->>>>>>> upstream-releases
 
   /**
    * Release the reference to the document, this will be called when
@@ -101,16 +86,7 @@ class nsNodeInfoManager final {
    * Retrieve a pointer to the document that owns this node info
    * manager.
    */
-<<<<<<< HEAD
-  nsIDocument* GetDocument() const { return mDocument; }
-||||||| merged common ancestors
-  nsIDocument* GetDocument() const
-  {
-    return mDocument;
-  }
-=======
   mozilla::dom::Document* GetDocument() const { return mDocument; }
->>>>>>> upstream-releases
 
   /**
    * Gets the principal of the document this nodeinfo manager belongs to.
@@ -146,16 +122,8 @@ class nsNodeInfoManager final {
 
   void AddSizeOfIncludingThis(nsWindowSizes& aSizes) const;
 
-<<<<<<< HEAD
- protected:
-  friend class nsIDocument;
-||||||| merged common ancestors
-protected:
-  friend class nsIDocument;
-=======
  protected:
   friend class mozilla::dom::Document;
->>>>>>> upstream-releases
   friend class nsXULPrototypeDocument;
 
   /**
@@ -191,13 +159,7 @@ protected:
   };
 
   nsDataHashtable<NodeInfoInnerKey, mozilla::dom::NodeInfo*> mNodeInfoHash;
-<<<<<<< HEAD
-  nsIDocument* MOZ_NON_OWNING_REF mDocument;  // WEAK
-||||||| merged common ancestors
-  nsIDocument * MOZ_NON_OWNING_REF mDocument; // WEAK
-=======
   mozilla::dom::Document* MOZ_NON_OWNING_REF mDocument;  // WEAK
->>>>>>> upstream-releases
   uint32_t mNonDocumentNodeInfos;
   nsCOMPtr<nsIPrincipal> mPrincipal;  // Never null after Init() succeeds.
   nsCOMPtr<nsIPrincipal> mDefaultPrincipal;  // Never null after Init() succeeds

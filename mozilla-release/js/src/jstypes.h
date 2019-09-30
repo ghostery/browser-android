@@ -39,56 +39,20 @@
  * should not. STATIC_JS_API is used to build JS as a static library.
  */
 #if defined(STATIC_JS_API)
-<<<<<<< HEAD
-#define JS_PUBLIC_API
-#define JS_PUBLIC_DATA
-#define JS_FRIEND_API
-#define JS_FRIEND_DATA
-||||||| merged common ancestors
-#  define JS_PUBLIC_API(t)   t
-#  define JS_PUBLIC_DATA(t)  t
-#  define JS_FRIEND_API(t)   t
-#  define JS_FRIEND_DATA(t)  t
-=======
 #  define JS_PUBLIC_API
 #  define JS_PUBLIC_DATA
 #  define JS_FRIEND_API
 #  define JS_FRIEND_DATA
->>>>>>> upstream-releases
 #elif defined(EXPORT_JS_API) || defined(STATIC_EXPORTABLE_JS_API)
-<<<<<<< HEAD
-#define JS_PUBLIC_API MOZ_EXPORT
-#define JS_PUBLIC_DATA MOZ_EXPORT
-#define JS_FRIEND_API MOZ_EXPORT
-#define JS_FRIEND_DATA MOZ_EXPORT
-||||||| merged common ancestors
-#  define JS_PUBLIC_API(t)   MOZ_EXPORT t
-#  define JS_PUBLIC_DATA(t)  MOZ_EXPORT t
-#  define JS_FRIEND_API(t)    MOZ_EXPORT t
-#  define JS_FRIEND_DATA(t)   MOZ_EXPORT t
-=======
 #  define JS_PUBLIC_API MOZ_EXPORT
 #  define JS_PUBLIC_DATA MOZ_EXPORT
 #  define JS_FRIEND_API MOZ_EXPORT
 #  define JS_FRIEND_DATA MOZ_EXPORT
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define JS_PUBLIC_API MOZ_IMPORT_API
-#define JS_PUBLIC_DATA MOZ_IMPORT_DATA
-#define JS_FRIEND_API MOZ_IMPORT_API
-#define JS_FRIEND_DATA MOZ_IMPORT_DATA
-||||||| merged common ancestors
-#  define JS_PUBLIC_API(t)   MOZ_IMPORT_API t
-#  define JS_PUBLIC_DATA(t)  MOZ_IMPORT_DATA t
-#  define JS_FRIEND_API(t)   MOZ_IMPORT_API t
-#  define JS_FRIEND_DATA(t)  MOZ_IMPORT_DATA t
-=======
 #  define JS_PUBLIC_API MOZ_IMPORT_API
 #  define JS_PUBLIC_DATA MOZ_IMPORT_DATA
 #  define JS_FRIEND_API MOZ_IMPORT_API
 #  define JS_FRIEND_DATA MOZ_IMPORT_DATA
->>>>>>> upstream-releases
 #endif
 
 #if defined(_MSC_VER) && defined(_M_IX86)
@@ -112,9 +76,9 @@
 // the latest stable gcc, you have rs=jwalden to bump it to the next gcc minor
 // or major version as needed, e.g. (8, 2, 0) to (8, 3, 0).
 #if MOZ_IS_GCC
-#if !MOZ_GCC_VERSION_AT_LEAST(8, 2, 0)
-#define JS_BROKEN_GCC_ATTRIBUTE_WARNING
-#endif
+#  if !MOZ_GCC_VERSION_AT_LEAST(8, 2, 0)
+#    define JS_BROKEN_GCC_ATTRIBUTE_WARNING
+#  endif
 #endif
 
 /***********************************************************************
@@ -144,35 +108,15 @@
 ** DESCRIPTION:
 **      Commonly used macros for operations on compatible types.
 ***********************************************************************/
-<<<<<<< HEAD
-#define JS_HOWMANY(x, y) (((x) + (y)-1) / (y))
-#define JS_ROUNDUP(x, y) (JS_HOWMANY(x, y) * (y))
-||||||| merged common ancestors
-#define JS_HOWMANY(x,y) (((x)+(y)-1)/(y))
-#define JS_ROUNDUP(x,y) (JS_HOWMANY(x,y)*(y))
-=======
 #define JS_HOWMANY(x, y) (((x) + (y)-1) / (y))
 #define JS_ROUNDUP(x, y) (JS_HOWMANY(x, y) * (y))
 #define JS_ROUNDDOWN(x, y) (((x) / (y)) * (y))
 #define JS_ROUND(x, y) ((((x) + (y) / 2) / (y)) * (y))
->>>>>>> upstream-releases
 
 #if defined(JS_64BIT)
-<<<<<<< HEAD
-#define JS_BITS_PER_WORD 64
-||||||| merged common ancestors
-# define JS_BITS_PER_WORD 64
-=======
 #  define JS_BITS_PER_WORD 64
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define JS_BITS_PER_WORD 32
-||||||| merged common ancestors
-# define JS_BITS_PER_WORD 32
-=======
 #  define JS_BITS_PER_WORD 32
->>>>>>> upstream-releases
 #endif
 
 /***********************************************************************

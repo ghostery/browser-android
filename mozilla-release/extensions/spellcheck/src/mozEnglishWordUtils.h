@@ -25,16 +25,8 @@ class mozEnglishWordUtils final {
    * remaining in the string. This should really be folded into the
    * Line/WordBreaker.
    */
-<<<<<<< HEAD
-  nsresult FindNextWord(const char16_t* word, uint32_t length, uint32_t offset,
-                        int32_t* begin, int32_t* end);
-||||||| merged common ancestors
-  nsresult FindNextWord(const char16_t* word, uint32_t length,
-                        uint32_t offset, int32_t* begin, int32_t* end);
-=======
   bool FindNextWord(const nsAString& aWord, uint32_t offset, int32_t* begin,
                     int32_t* end);
->>>>>>> upstream-releases
 
  protected:
   virtual ~mozEnglishWordUtils();

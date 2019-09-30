@@ -88,21 +88,11 @@ add_task(async function test_support_theme_frame_inactive() {
 
   // Now we'll open a new window to see if the inactive browser accent color changed
   let window2 = await BrowserTestUtils.openNewBrowserWindow();
-<<<<<<< HEAD
-  Assert.equal(style.backgroundColor, "rgb(" + FRAME_COLOR_INACTIVE.join(", ") + ")",
-               `Inactive window background color should be ${FRAME_COLOR_INACTIVE}`);
-||||||| merged common ancestors
-  await transitionPromise;
-
-  Assert.equal(style.backgroundColor, "rgb(" + FRAME_COLOR_INACTIVE.join(", ") + ")",
-               `Inactive window background color should be ${FRAME_COLOR_INACTIVE}`);
-=======
   Assert.equal(
     style.backgroundColor,
     "rgb(" + FRAME_COLOR_INACTIVE.join(", ") + ")",
     `Inactive window background color should be ${FRAME_COLOR_INACTIVE}`
   );
->>>>>>> upstream-releases
 
   await BrowserTestUtils.closeWindow(window2);
   await extension.unload();

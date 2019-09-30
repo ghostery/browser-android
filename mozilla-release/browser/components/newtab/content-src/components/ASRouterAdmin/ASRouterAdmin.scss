@@ -126,17 +126,6 @@
     }
   }
 
-  .sourceLabel {
-    background: $grey-20;
-    padding: 2px 5px;
-    border-radius: 3px;
-
-    &.isDisabled {
-      background: $email-input-invalid;
-      color: $red-60;
-    }
-  }
-
   .message-item {
     &:first-child td {
       border-top: 1px solid $border-color;
@@ -204,24 +193,6 @@
     overflow: auto;
     font-family: $monospace;
   }
-<<<<<<< HEAD
-
-  .errorState {
-    border: 1px solid $red-60;
-  }
-
-  .helpLink {
-    padding: 10px;
-    display: flex;
-    background: $yellow-50;
-    border-radius: 3px;
-
-    a {
-      text-decoration: underline;
-    }
-  }
-||||||| merged common ancestors
-=======
 
   .errorState {
     border: 1px solid $red-60;
@@ -252,5 +223,4 @@
   .modalOverlayInner {
     height: 80%;
   }
->>>>>>> upstream-releases
 }

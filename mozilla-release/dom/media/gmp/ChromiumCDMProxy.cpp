@@ -22,47 +22,18 @@ ChromiumCDMProxy::ChromiumCDMProxy(dom::MediaKeys* aKeys,
                                    GMPCrashHelper* aCrashHelper,
                                    bool aDistinctiveIdentifierRequired,
                                    bool aPersistentStateRequired,
-<<<<<<< HEAD
-                                   nsIEventTarget* aMainThread)
-    : CDMProxy(aKeys, aKeySystem, aDistinctiveIdentifierRequired,
-               aPersistentStateRequired, aMainThread),
-      mCrashHelper(aCrashHelper),
-      mCDMMutex("ChromiumCDMProxy"),
-      mGMPThread(GetGMPAbstractThread()) {
-||||||| merged common ancestors
-                                   nsIEventTarget* aMainThread)
-  : CDMProxy(aKeys,
-             aKeySystem,
-             aDistinctiveIdentifierRequired,
-             aPersistentStateRequired,
-             aMainThread)
-  , mCrashHelper(aCrashHelper)
-  , mCDMMutex("ChromiumCDMProxy")
-  , mGMPThread(GetGMPAbstractThread())
-{
-=======
                                    nsISerialEventTarget* aMainThread)
     : CDMProxy(aKeys, aKeySystem, aDistinctiveIdentifierRequired,
                aPersistentStateRequired, aMainThread),
       mCrashHelper(aCrashHelper),
       mCDMMutex("ChromiumCDMProxy"),
       mGMPThread(GetGMPAbstractThread()) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 }
 
-<<<<<<< HEAD
-ChromiumCDMProxy::~ChromiumCDMProxy() { MOZ_COUNT_DTOR(ChromiumCDMProxy); }
-||||||| merged common ancestors
-ChromiumCDMProxy::~ChromiumCDMProxy()
-{
-  MOZ_COUNT_DTOR(ChromiumCDMProxy);
-}
-=======
 ChromiumCDMProxy::~ChromiumCDMProxy() {
   EME_LOG("ChromiumCDMProxy::~ChromiumCDMProxy(this=%p)", this);
 }
->>>>>>> upstream-releases
 
 void ChromiumCDMProxy::Init(PromiseId aPromiseId, const nsAString& aOrigin,
                             const nsAString& aTopLevelOrigin,
@@ -73,27 +44,12 @@ void ChromiumCDMProxy::Init(PromiseId aPromiseId, const nsAString& aOrigin,
 
   NS_ENSURE_TRUE_VOID(!mKeys.IsNull());
 
-<<<<<<< HEAD
-  EME_LOG(
-      "ChromiumCDMProxy::Init (pid=%u, origin=%s, topLevelOrigin=%s, gmp=%s)",
-      aPromiseId, NS_ConvertUTF16toUTF8(aOrigin).get(),
-      NS_ConvertUTF16toUTF8(aTopLevelOrigin).get(),
-      NS_ConvertUTF16toUTF8(aGMPName).get());
-||||||| merged common ancestors
-  EME_LOG(
-    "ChromiumCDMProxy::Init (pid=%u, origin=%s, topLevelOrigin=%s, gmp=%s)",
-    aPromiseId,
-    NS_ConvertUTF16toUTF8(aOrigin).get(),
-    NS_ConvertUTF16toUTF8(aTopLevelOrigin).get(),
-    NS_ConvertUTF16toUTF8(aGMPName).get());
-=======
   EME_LOG("ChromiumCDMProxy::Init(this=%p, pid=%" PRIu32
           ", origin=%s, topLevelOrigin=%s, "
           "gmp=%s)",
           this, aPromiseId, NS_ConvertUTF16toUTF8(aOrigin).get(),
           NS_ConvertUTF16toUTF8(aTopLevelOrigin).get(),
           NS_ConvertUTF16toUTF8(aGMPName).get());
->>>>>>> upstream-releases
 
   if (!mGMPThread) {
     RejectPromise(
@@ -122,48 +78,6 @@ void ChromiumCDMProxy::Init(PromiseId aPromiseId, const nsAString& aOrigin,
             gmp::GeckoMediaPluginService::GetGeckoMediaPluginService();
         if (!service) {
           self->RejectPromise(
-<<<<<<< HEAD
-              aPromiseId, NS_ERROR_DOM_INVALID_STATE_ERR,
-              NS_LITERAL_CSTRING("Couldn't get GeckoMediaPluginService in "
-                                 "ChromiumCDMProxy::Init"));
-          return;
-        }
-        RefPtr<gmp::GetCDMParentPromise> promise =
-            service->GetCDM(nodeId, {keySystem}, helper);
-        promise->Then(
-            thread, __func__,
-            [self, aPromiseId, thread](RefPtr<gmp::ChromiumCDMParent> cdm) {
-              // service->GetCDM succeeded
-              self->mCallback =
-                  MakeUnique<ChromiumCDMCallbackProxy>(self, self->mMainThread);
-              cdm->Init(self->mCallback.get(),
-                        self->mDistinctiveIdentifierRequired,
-                        self->mPersistentStateRequired, self->mMainThread)
-                  ->Then(thread, __func__,
-                         [self, aPromiseId, cdm](bool /* unused */) {
-                           // CDM init succeeded
-                           {
-                             MutexAutoLock lock(self->mCDMMutex);
-                             self->mCDM = cdm;
-                           }
-                           self->OnCDMCreated(aPromiseId);
-                         },
-                         [self, aPromiseId](MediaResult aResult) {
-                           // CDM init failed
-                           self->RejectPromise(aPromiseId, aResult.Code(),
-                                               aResult.Message());
-                         });
-            },
-            [self, aPromiseId](MediaResult rv) {
-              // service->GetCDM failed
-              self->RejectPromise(aPromiseId, rv.Code(), rv.Description());
-            });
-      }));
-||||||| merged common ancestors
-            aPromiseId, rv.Code(), rv.Description());
-        });
-    }));
-=======
               aPromiseId, NS_ERROR_DOM_INVALID_STATE_ERR,
               NS_LITERAL_CSTRING("Couldn't get GeckoMediaPluginService in "
                                  "ChromiumCDMProxy::Init"));
@@ -213,47 +127,14 @@ void ChromiumCDMProxy::Init(PromiseId aPromiseId, const nsAString& aOrigin,
               self->RejectPromise(aPromiseId, rv.Code(), rv.Description());
             });
       }));
->>>>>>> upstream-releases
 
   mGMPThread->Dispatch(task.forget());
 }
 
-<<<<<<< HEAD
-void ChromiumCDMProxy::OnCDMCreated(uint32_t aPromiseId) {
-  EME_LOG("ChromiumCDMProxy::OnCDMCreated(pid=%u) isMainThread=%d this=%p",
-          aPromiseId, NS_IsMainThread(), this);
-
-  if (!NS_IsMainThread()) {
-    mMainThread->Dispatch(NewRunnableMethod<PromiseId>(
-                              "ChromiumCDMProxy::OnCDMCreated", this,
-                              &ChromiumCDMProxy::OnCDMCreated, aPromiseId),
-                          NS_DISPATCH_NORMAL);
-    return;
-  }
-||||||| merged common ancestors
-void
-ChromiumCDMProxy::OnCDMCreated(uint32_t aPromiseId)
-{
-  EME_LOG("ChromiumCDMProxy::OnCDMCreated(pid=%u) isMainThread=%d this=%p",
-          aPromiseId,
-          NS_IsMainThread(),
-          this);
-
-  if (!NS_IsMainThread()) {
-    mMainThread->Dispatch(
-      NewRunnableMethod<PromiseId>("ChromiumCDMProxy::OnCDMCreated",
-                                   this,
-                                   &ChromiumCDMProxy::OnCDMCreated,
-                                   aPromiseId),
-      NS_DISPATCH_NORMAL);
-    return;
-  }
-=======
 void ChromiumCDMProxy::OnCDMCreated(uint32_t aPromiseId) {
   EME_LOG("ChromiumCDMProxy::OnCDMCreated(this=%p, pid=%" PRIu32
           ") isMainThread=%d",
           this, aPromiseId, NS_IsMainThread());
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (mKeys.IsNull()) {
     return;
@@ -329,26 +210,12 @@ void ChromiumCDMProxy::CreateSession(uint32_t aCreateSessionToken,
                                      const nsAString& aInitDataType,
                                      nsTArray<uint8_t>& aInitData) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG(
-      "ChromiumCDMProxy::CreateSession(token=%u, type=%d, pid=%u) "
-      "initDataLen=%zu",
-      aCreateSessionToken, (int)aSessionType, aPromiseId, aInitData.Length());
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::CreateSession(token=%u, type=%d, pid=%u) "
-          "initDataLen=%zu",
-          aCreateSessionToken,
-          (int)aSessionType,
-          aPromiseId,
-          aInitData.Length());
-=======
   EME_LOG("ChromiumCDMProxy::CreateSession(this=%p, token=%" PRIu32
           ", type=%d, pid=%" PRIu32
           ") "
           "initDataLen=%zu",
           this, aCreateSessionToken, (int)aSessionType, aPromiseId,
           aInitData.Length());
->>>>>>> upstream-releases
 
   uint32_t sessionType = ToCDMSessionType(aSessionType);
   uint32_t initDataType = ToCDMInitDataType(aInitDataType);
@@ -388,18 +255,9 @@ void ChromiumCDMProxy::LoadSession(PromiseId aPromiseId,
 void ChromiumCDMProxy::SetServerCertificate(PromiseId aPromiseId,
                                             nsTArray<uint8_t>& aCert) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::SetServerCertificate(pid=%u) certLen=%zu",
-          aPromiseId, aCert.Length());
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::SetServerCertificate(pid=%u) certLen=%zu",
-          aPromiseId,
-          aCert.Length());
-=======
   EME_LOG("ChromiumCDMProxy::SetServerCertificate(this=%p, pid=%" PRIu32
           ") certLen=%zu",
           this, aPromiseId, aCert.Length());
->>>>>>> upstream-releases
 
   RefPtr<gmp::ChromiumCDMParent> cdm = GetCDMParent();
   if (!cdm) {
@@ -418,19 +276,10 @@ void ChromiumCDMProxy::UpdateSession(const nsAString& aSessionId,
                                      PromiseId aPromiseId,
                                      nsTArray<uint8_t>& aResponse) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::UpdateSession(sid='%s', pid=%u) responseLen=%zu",
-          NS_ConvertUTF16toUTF8(aSessionId).get(), aPromiseId,
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::UpdateSession(sid='%s', pid=%u) responseLen=%zu",
-          NS_ConvertUTF16toUTF8(aSessionId).get(),
-          aPromiseId,
-=======
   EME_LOG("ChromiumCDMProxy::UpdateSession(this=%p, sid='%s', pid=%" PRIu32
           ") "
           "responseLen=%zu",
           this, NS_ConvertUTF16toUTF8(aSessionId).get(), aPromiseId,
->>>>>>> upstream-releases
           aResponse.Length());
 
   RefPtr<gmp::ChromiumCDMParent> cdm = GetCDMParent();
@@ -449,17 +298,8 @@ void ChromiumCDMProxy::UpdateSession(const nsAString& aSessionId,
 void ChromiumCDMProxy::CloseSession(const nsAString& aSessionId,
                                     PromiseId aPromiseId) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::CloseSession(sid='%s', pid=%u)",
-          NS_ConvertUTF16toUTF8(aSessionId).get(), aPromiseId);
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::CloseSession(sid='%s', pid=%u)",
-          NS_ConvertUTF16toUTF8(aSessionId).get(),
-          aPromiseId);
-=======
   EME_LOG("ChromiumCDMProxy::CloseSession(this=%p, sid='%s', pid=%" PRIu32 ")",
           this, NS_ConvertUTF16toUTF8(aSessionId).get(), aPromiseId);
->>>>>>> upstream-releases
 
   RefPtr<gmp::ChromiumCDMParent> cdm = GetCDMParent();
   if (!cdm) {
@@ -476,17 +316,8 @@ void ChromiumCDMProxy::CloseSession(const nsAString& aSessionId,
 void ChromiumCDMProxy::RemoveSession(const nsAString& aSessionId,
                                      PromiseId aPromiseId) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::RemoveSession(sid='%s', pid=%u)",
-          NS_ConvertUTF16toUTF8(aSessionId).get(), aPromiseId);
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::RemoveSession(sid='%s', pid=%u)",
-          NS_ConvertUTF16toUTF8(aSessionId).get(),
-          aPromiseId);
-=======
   EME_LOG("ChromiumCDMProxy::RemoveSession(this=%p, sid='%s', pid=%" PRIu32 ")",
           this, NS_ConvertUTF16toUTF8(aSessionId).get(), aPromiseId);
->>>>>>> upstream-releases
 
   RefPtr<gmp::ChromiumCDMParent> cdm = GetCDMParent();
   if (!cdm) {
@@ -502,42 +333,10 @@ void ChromiumCDMProxy::RemoveSession(const nsAString& aSessionId,
 
 void ChromiumCDMProxy::Shutdown() {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::Shutdown()");
-  mKeys.Clear();
-  RefPtr<gmp::ChromiumCDMParent> cdm;
-  {
-    MutexAutoLock lock(mCDMMutex);
-    cdm.swap(mCDM);
-  }
-  if (cdm) {
-    // We need to keep this proxy alive until the parent has finished its
-    // Shutdown (as it may still try to use the proxy until then).
-    RefPtr<ChromiumCDMProxy> self(this);
-    nsCOMPtr<nsIRunnable> task = NS_NewRunnableFunction(
-        "ChromiumCDMProxy::Shutdown", [self, cdm]() { cdm->Shutdown(); });
-    mGMPThread->Dispatch(task.forget());
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::Shutdown()");
-  mKeys.Clear();
-  RefPtr<gmp::ChromiumCDMParent> cdm;
-  {
-    MutexAutoLock lock(mCDMMutex);
-    cdm.swap(mCDM);
-  }
-  if (cdm) {
-    // We need to keep this proxy alive until the parent has finished its
-    // Shutdown (as it may still try to use the proxy until then).
-    RefPtr<ChromiumCDMProxy> self(this);
-    nsCOMPtr<nsIRunnable> task = NS_NewRunnableFunction(
-      "ChromiumCDMProxy::Shutdown", [self, cdm]() { cdm->Shutdown(); });
-    mGMPThread->Dispatch(task.forget());
-=======
   EME_LOG("ChromiumCDMProxy::Shutdown(this=%p) mCDM=%p, mIsShutdown=%s", this,
           mCDM.get(), mIsShutdown ? "true" : "false");
   if (mIsShutdown) {
     return;
->>>>>>> upstream-releases
   }
   mIsShutdown = true;
   mKeys.Clear();
@@ -554,20 +353,10 @@ void ChromiumCDMProxy::RejectPromise(PromiseId aId, nsresult aCode,
         NS_DISPATCH_NORMAL);
     return;
   }
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::RejectPromise(pid=%u, code=0x%x, reason='%s')",
-          aId, static_cast<uint32_t>(aCode), aReason.get());
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::RejectPromise(pid=%u, code=0x%x, reason='%s')",
-          aId,
-          static_cast<uint32_t>(aCode),
-          aReason.get());
-=======
   EME_LOG("ChromiumCDMProxy::RejectPromise(this=%p, pid=%" PRIu32
           ", code=0x%x, "
           "reason='%s')",
           this, aId, static_cast<uint32_t>(aCode), aReason.get());
->>>>>>> upstream-releases
   if (!mKeys.IsNull()) {
     mKeys->RejectPromise(aId, aCode, aReason);
   }
@@ -596,18 +385,9 @@ const nsCString& ChromiumCDMProxy::GetNodeId() const { return mNodeId; }
 void ChromiumCDMProxy::OnSetSessionId(uint32_t aCreateSessionToken,
                                       const nsAString& aSessionId) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::OnSetSessionId(token=%u, sid='%s')",
-          aCreateSessionToken, NS_ConvertUTF16toUTF8(aSessionId).get());
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::OnSetSessionId(token=%u, sid='%s')",
-          aCreateSessionToken,
-          NS_ConvertUTF16toUTF8(aSessionId).get());
-=======
   EME_LOG("ChromiumCDMProxy::OnSetSessionId(this=%p, token=%" PRIu32
           ", sid='%s')",
           this, aCreateSessionToken, NS_ConvertUTF16toUTF8(aSessionId).get());
->>>>>>> upstream-releases
 
   if (mKeys.IsNull()) {
     return;
@@ -738,18 +518,9 @@ RefPtr<DecryptPromise> ChromiumCDMProxy::Decrypt(MediaRawData* aSample) {
 void ChromiumCDMProxy::GetStatusForPolicy(PromiseId aPromiseId,
                                           const nsAString& aMinHdcpVersion) {
   MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-  EME_LOG("ChromiumCDMProxy::GetStatusForPolicy(pid=%u) minHdcpVersion=%s",
-          aPromiseId, NS_ConvertUTF16toUTF8(aMinHdcpVersion).get());
-||||||| merged common ancestors
-  EME_LOG("ChromiumCDMProxy::GetStatusForPolicy(pid=%u) minHdcpVersion=%s",
-          aPromiseId,
-          NS_ConvertUTF16toUTF8(aMinHdcpVersion).get());
-=======
   EME_LOG("ChromiumCDMProxy::GetStatusForPolicy(this=%p, pid=%" PRIu32
           ") minHdcpVersion=%s",
           this, aPromiseId, NS_ConvertUTF16toUTF8(aMinHdcpVersion).get());
->>>>>>> upstream-releases
 
   RefPtr<gmp::ChromiumCDMParent> cdm = GetCDMParent();
   if (!cdm) {

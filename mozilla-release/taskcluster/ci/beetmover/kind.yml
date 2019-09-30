@@ -40,14 +40,8 @@ not-for-build-platforms:
 
 job-template:
     shipping-phase: promote
-<<<<<<< HEAD
-    attributes:
-        artifact_map: taskcluster/taskgraph/manifests/fennec_nightly.yml
-||||||| merged common ancestors
-=======
     attributes:
         artifact_map:
             by-release-type:
                 beta|release.*|esr.*: taskcluster/taskgraph/manifests/fennec_candidates.yml
                 default: taskcluster/taskgraph/manifests/fennec_nightly.yml
->>>>>>> upstream-releases

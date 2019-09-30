@@ -16,20 +16,10 @@
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class PBrowserParent;
-class PBrowserChild;
-}  // namespace dom
-||||||| merged common ancestors
-  class PBrowserParent;
-  class PBrowserChild;
-} // namespace dom
-=======
 class PBrowserParent;
 class PBrowserChild;
 class PBrowserBridgeParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 class WidgetPointerEvent;
 class WidgetPointerEventHolder final {
@@ -107,26 +97,6 @@ class WidgetMouseEventBase : public WidgetInputEvent {
 
  protected:
   WidgetMouseEventBase()
-<<<<<<< HEAD
-      : button(0),
-        buttons(0),
-        pressure(0),
-        hitCluster(false)
-        // Including MouseEventBinding.h here leads to an include loop, so
-        // we have to hardcode MouseEvent_Binding::MOZ_SOURCE_MOUSE.
-        ,
-        inputSource(/* MouseEvent_Binding::MOZ_SOURCE_MOUSE = */ 1) {}
-||||||| merged common ancestors
-    : button(0)
-    , buttons(0)
-    , pressure(0)
-    , hitCluster(false)
-    // Including MouseEventBinding.h here leads to an include loop, so
-    // we have to hardcode MouseEvent_Binding::MOZ_SOURCE_MOUSE.
-    , inputSource(/* MouseEvent_Binding::MOZ_SOURCE_MOUSE = */ 1)
-  {
-  }
-=======
       : mPressure(0),
         mButton(0),
         mButtons(0),
@@ -134,36 +104,9 @@ class WidgetMouseEventBase : public WidgetInputEvent {
         mHitCluster(false) {}
   // Including MouseEventBinding.h here leads to an include loop, so
   // we have to hardcode MouseEvent_Binding::MOZ_SOURCE_MOUSE.
->>>>>>> upstream-releases
 
   WidgetMouseEventBase(bool aIsTrusted, EventMessage aMessage,
                        nsIWidget* aWidget, EventClassID aEventClassID)
-<<<<<<< HEAD
-      : WidgetInputEvent(aIsTrusted, aMessage, aWidget, aEventClassID),
-        button(0),
-        buttons(0),
-        pressure(0),
-        hitCluster(false)
-        // Including MouseEventBinding.h here leads to an include loop, so
-        // we have to hardcode MouseEvent_Binding::MOZ_SOURCE_MOUSE.
-        ,
-        inputSource(/* MouseEvent_Binding::MOZ_SOURCE_MOUSE = */ 1) {}
-
- public:
-||||||| merged common ancestors
-    : WidgetInputEvent(aIsTrusted, aMessage, aWidget, aEventClassID)
-    , button(0)
-    , buttons(0)
-    , pressure(0)
-    , hitCluster(false)
-    // Including MouseEventBinding.h here leads to an include loop, so
-    // we have to hardcode MouseEvent_Binding::MOZ_SOURCE_MOUSE.
-    , inputSource(/* MouseEvent_Binding::MOZ_SOURCE_MOUSE = */ 1)
- {
- }
-
-public:
-=======
       : WidgetInputEvent(aIsTrusted, aMessage, aWidget, aEventClassID),
         mPressure(0),
         mButton(0),
@@ -174,71 +117,21 @@ public:
   // we have to hardcode MouseEvent_Binding::MOZ_SOURCE_MOUSE.
 
  public:
->>>>>>> upstream-releases
   virtual WidgetMouseEventBase* AsMouseEventBase() override { return this; }
 
   virtual WidgetEvent* Duplicate() const override {
     MOZ_CRASH("WidgetMouseEventBase must not be most-subclass");
   }
 
-<<<<<<< HEAD
-  enum buttonType {
-    eNoButton = -1,
-    eLeftButton = 0,
-    eMiddleButton = 1,
-    eRightButton = 2
-  };
-||||||| merged common ancestors
-  enum buttonType
-  {
-    eNoButton     = -1,
-    eLeftButton   = 0,
-    eMiddleButton = 1,
-    eRightButton  = 2
-  };
-=======
   // ID of the canvas HitRegion
   nsString mRegion;
 
   // Finger or touch pressure of event. It ranges between 0.0 and 1.0.
   float mPressure;
 
->>>>>>> upstream-releases
   // Pressed button ID of mousedown or mouseup event.
   // This is set only when pressing a button causes the event.
-<<<<<<< HEAD
-  int16_t button;
-
-  enum buttonsFlag {
-    eNoButtonFlag = 0x00,
-    eLeftButtonFlag = 0x01,
-    eRightButtonFlag = 0x02,
-    eMiddleButtonFlag = 0x04,
-    // typicall, "back" button being left side of 5-button
-    // mice, see "buttons" attribute document of DOM3 Events.
-    e4thButtonFlag = 0x08,
-    // typicall, "forward" button being right side of 5-button
-    // mice, see "buttons" attribute document of DOM3 Events.
-    e5thButtonFlag = 0x10
-  };
-||||||| merged common ancestors
-  int16_t button;
-
-  enum buttonsFlag {
-    eNoButtonFlag     = 0x00,
-    eLeftButtonFlag   = 0x01,
-    eRightButtonFlag  = 0x02,
-    eMiddleButtonFlag = 0x04,
-    // typicall, "back" button being left side of 5-button
-    // mice, see "buttons" attribute document of DOM3 Events.
-    e4thButtonFlag    = 0x08,
-    // typicall, "forward" button being right side of 5-button
-    // mice, see "buttons" attribute document of DOM3 Events.
-    e5thButtonFlag    = 0x10
-  };
-=======
   int16_t mButton;
->>>>>>> upstream-releases
 
   // Flags of all pressed buttons at the event fired.
   // This is set at any mouse event, don't be confused with |mButton|.
@@ -280,17 +173,8 @@ public:
   /**
    * Returns true if left click event.
    */
-<<<<<<< HEAD
-  bool IsLeftClickEvent() const {
-    return mMessage == eMouseClick && button == eLeftButton;
-||||||| merged common ancestors
-  bool IsLeftClickEvent() const
-  {
-    return mMessage == eMouseClick && button == eLeftButton;
-=======
   bool IsLeftClickEvent() const {
     return mMessage == eMouseClick && mButton == MouseButton::eLeft;
->>>>>>> upstream-releases
   }
 };
 
@@ -317,48 +201,6 @@ class WidgetMouseEvent : public WidgetMouseEventBase,
 
  protected:
   WidgetMouseEvent()
-<<<<<<< HEAD
-      : mReason(eReal),
-        mContextMenuTrigger(eNormal),
-        mExitFrom(eChild),
-        mIgnoreRootScrollFrame(false),
-        mClickCount(0) {}
-
-  WidgetMouseEvent(bool aIsTrusted, EventMessage aMessage, nsIWidget* aWidget,
-                   EventClassID aEventClassID, Reason aReason)
-      : WidgetMouseEventBase(aIsTrusted, aMessage, aWidget, aEventClassID),
-        mReason(aReason),
-        mContextMenuTrigger(eNormal),
-        mExitFrom(eChild),
-        mIgnoreRootScrollFrame(false),
-        mClickCount(0) {}
-
- public:
-||||||| merged common ancestors
-    : mReason(eReal)
-    , mContextMenuTrigger(eNormal)
-    , mExitFrom(eChild)
-    , mIgnoreRootScrollFrame(false)
-    , mClickCount(0)
-  {
-  }
-
-  WidgetMouseEvent(bool aIsTrusted,
-                   EventMessage aMessage,
-                   nsIWidget* aWidget,
-                   EventClassID aEventClassID,
-                   Reason aReason)
-    : WidgetMouseEventBase(aIsTrusted, aMessage, aWidget, aEventClassID)
-    , mReason(aReason)
-    , mContextMenuTrigger(eNormal)
-    , mExitFrom(eChild)
-    , mIgnoreRootScrollFrame(false)
-    , mClickCount(0)
-  {
-  }
-
-public:
-=======
       : mReason(eReal),
         mContextMenuTrigger(eNormal),
         mExitFrom(eChild),
@@ -377,28 +219,11 @@ public:
         mUseLegacyNonPrimaryDispatch(false) {}
 
  public:
->>>>>>> upstream-releases
   virtual WidgetMouseEvent* AsMouseEvent() override { return this; }
 
   WidgetMouseEvent(bool aIsTrusted, EventMessage aMessage, nsIWidget* aWidget,
                    Reason aReason,
                    ContextMenuTrigger aContextMenuTrigger = eNormal)
-<<<<<<< HEAD
-      : WidgetMouseEventBase(aIsTrusted, aMessage, aWidget, eMouseEventClass),
-        mReason(aReason),
-        mContextMenuTrigger(aContextMenuTrigger),
-        mExitFrom(eChild),
-        mIgnoreRootScrollFrame(false),
-        mClickCount(0) {
-||||||| merged common ancestors
-    : WidgetMouseEventBase(aIsTrusted, aMessage, aWidget, eMouseEventClass)
-    , mReason(aReason)
-    , mContextMenuTrigger(aContextMenuTrigger)
-    , mExitFrom(eChild)
-    , mIgnoreRootScrollFrame(false)
-    , mClickCount(0)
-  {
-=======
       : WidgetMouseEventBase(aIsTrusted, aMessage, aWidget, eMouseEventClass),
         mReason(aReason),
         mContextMenuTrigger(aContextMenuTrigger),
@@ -406,7 +231,6 @@ public:
         mIgnoreRootScrollFrame(false),
         mClickCount(0),
         mUseLegacyNonPrimaryDispatch(false) {
->>>>>>> upstream-releases
     if (aMessage == eContextMenu) {
       mButton = (mContextMenuTrigger == eNormal) ? MouseButton::eRight
                                                  : MouseButton::eLeft;
@@ -416,21 +240,10 @@ public:
 #ifdef DEBUG
   virtual ~WidgetMouseEvent() {
     NS_WARNING_ASSERTION(
-<<<<<<< HEAD
-        mMessage != eContextMenu ||
-            button ==
-                ((mContextMenuTrigger == eNormal) ? eRightButton : eLeftButton),
-        "Wrong button set to eContextMenu event?");
-||||||| merged common ancestors
-      mMessage != eContextMenu ||
-      button == ((mContextMenuTrigger == eNormal) ? eRightButton : eLeftButton),
-      "Wrong button set to eContextMenu event?");
-=======
         mMessage != eContextMenu ||
             mButton == ((mContextMenuTrigger == eNormal) ? MouseButton::eRight
                                                          : MouseButton::eLeft),
         "Wrong button set to eContextMenu event?");
->>>>>>> upstream-releases
   }
 #endif
 
@@ -473,18 +286,11 @@ public:
   // Otherwise, this must be 0.
   uint32_t mClickCount;
 
-<<<<<<< HEAD
-  void AssignMouseEventData(const WidgetMouseEvent& aEvent, bool aCopyTargets) {
-||||||| merged common ancestors
-  void AssignMouseEventData(const WidgetMouseEvent& aEvent, bool aCopyTargets)
-  {
-=======
   // Indicates whether the event should dispatch click events for non-primary
   // mouse buttons on window and document.
   bool mUseLegacyNonPrimaryDispatch;
 
   void AssignMouseEventData(const WidgetMouseEvent& aEvent, bool aCopyTargets) {
->>>>>>> upstream-releases
     AssignMouseEventBaseData(aEvent, aCopyTargets);
     AssignPointerHelperData(aEvent, /* aCopyCoalescedEvents */ true);
 

@@ -9,25 +9,13 @@ EXTRA_JS_MODULES += [
     'UrlbarController.jsm',
     'UrlbarEventBufferer.jsm',
     'UrlbarInput.jsm',
-<<<<<<< HEAD
-    'UrlbarMatch.jsm',
     'UrlbarMuxerUnifiedComplete.jsm',
-||||||| merged common ancestors
-    'UrlbarMatch.jsm',
-=======
-    'UrlbarMuxerUnifiedComplete.jsm',
->>>>>>> upstream-releases
     'UrlbarPrefs.jsm',
     'UrlbarProviderExtension.jsm',
     'UrlbarProviderOpenTabs.jsm',
     'UrlbarProvidersManager.jsm',
-<<<<<<< HEAD
-    'UrlbarProviderUnifiedComplete.jsm',
-||||||| merged common ancestors
-=======
     'UrlbarProviderUnifiedComplete.jsm',
     'UrlbarResult.jsm',
->>>>>>> upstream-releases
     'UrlbarTokenizer.jsm',
     'UrlbarUtils.jsm',
     'UrlbarValueFormatter.jsm',

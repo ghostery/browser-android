@@ -95,21 +95,6 @@ class WebProgressChild {
 
     json.state = aState;
     json.secInfo = this.getSecInfoAsString();
-<<<<<<< HEAD
-
-    json.matchedList = null;
-    if (aRequest && aRequest instanceof Ci.nsIClassifiedChannel) {
-      json.matchedList = aRequest.matchedList;
-    }
-||||||| merged common ancestors
-    json.contentBlockingLogJSON = aContentBlockingLogJSON;
-
-    json.matchedList = null;
-    if (aRequest && aRequest instanceof Ci.nsIClassifiedChannel) {
-      json.matchedList = aRequest.matchedList;
-    }
-=======
->>>>>>> upstream-releases
 
     this._send("Content:SecurityChange", json);
   }

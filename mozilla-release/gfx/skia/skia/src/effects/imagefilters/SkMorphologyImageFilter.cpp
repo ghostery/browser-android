@@ -10,7 +10,6 @@
 #include "SkBitmap.h"
 #include "SkColorData.h"
 #include "SkColorSpaceXformer.h"
-#include "SkFlattenablePriv.h"
 #include "SkImageFilterPriv.h"
 #include "SkReadBuffer.h"
 #include "SkRect.h"
@@ -474,16 +473,10 @@ static sk_sp<SkSpecialImage> apply_morphology(
     sk_sp<GrTextureProxy> srcTexture(input->asTextureProxyRef(context));
     SkASSERT(srcTexture);
     sk_sp<SkColorSpace> colorSpace = sk_ref_sp(outputProperties.colorSpace());
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkMorphologyImageFilter.cpp
-    GrPixelConfig config = SkColorType2GrPixelConfig(outputProperties.colorType());
-||||||| merged common ancestors
-    GrPixelConfig config = GrRenderableConfigForColorSpace(colorSpace.get());
-=======
     SkColorType colorType = outputProperties.colorType();
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(colorType);
     GrPixelConfig config = SkColorType2GrPixelConfig(colorType);
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkMorphologyImageFilter.cpp
 
     // setup new clip
     const GrFixedClip clip(SkIRect::MakeWH(srcTexture->width(), srcTexture->height()));
@@ -494,18 +487,9 @@ static sk_sp<SkSpecialImage> apply_morphology(
     SkASSERT(radius.width() > 0 || radius.height() > 0);
 
     if (radius.fWidth > 0) {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkMorphologyImageFilter.cpp
-        sk_sp<GrRenderTargetContext> dstRTContext(
-            context->contextPriv().makeDeferredRenderTargetContext(
-                SkBackingFit::kApprox, rect.width(), rect.height(), config, colorSpace));
-||||||| merged common ancestors
-        sk_sp<GrRenderTargetContext> dstRTContext(context->makeDeferredRenderTargetContext(
-            SkBackingFit::kApprox, rect.width(), rect.height(), config, colorSpace));
-=======
         sk_sp<GrRenderTargetContext> dstRTContext(
             context->priv().makeDeferredRenderTargetContext(
                 format, SkBackingFit::kApprox, rect.width(), rect.height(), config, colorSpace));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkMorphologyImageFilter.cpp
         if (!dstRTContext) {
             return nullptr;
         }
@@ -522,18 +506,9 @@ static sk_sp<SkSpecialImage> apply_morphology(
         srcRect = dstRect;
     }
     if (radius.fHeight > 0) {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkMorphologyImageFilter.cpp
-        sk_sp<GrRenderTargetContext> dstRTContext(
-            context->contextPriv().makeDeferredRenderTargetContext(
-                SkBackingFit::kApprox, rect.width(), rect.height(), config, colorSpace));
-||||||| merged common ancestors
-        sk_sp<GrRenderTargetContext> dstRTContext(context->makeDeferredRenderTargetContext(
-            SkBackingFit::kApprox, rect.width(), rect.height(), config, colorSpace));
-=======
         sk_sp<GrRenderTargetContext> dstRTContext(
             context->priv().makeDeferredRenderTargetContext(
                 format, SkBackingFit::kApprox, rect.width(), rect.height(), config, colorSpace));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkMorphologyImageFilter.cpp
         if (!dstRTContext) {
             return nullptr;
         }

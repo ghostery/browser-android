@@ -12,30 +12,6 @@ using namespace mozilla::hal;
 namespace mozilla {
 namespace hal_impl {
 
-<<<<<<< HEAD
-bool SetProcessPrioritySupported() { return true; }
-
-void SetProcessPriority(int aPid, ProcessPriority aPriority) {
-  HAL_LOG("WindowsProcessPriority - SetProcessPriority(%d, %s)\n", aPid,
-          ProcessPriorityToString(aPriority));
-
-  nsAutoHandle processHandle(
-      ::OpenProcess(PROCESS_SET_INFORMATION, FALSE, aPid));
-||||||| merged common ancestors
-bool
-SetProcessPrioritySupported()
-{
-  return true;
-}
-
-void
-SetProcessPriority(int aPid, ProcessPriority aPriority)
-{
-  HAL_LOG("WindowsProcessPriority - SetProcessPriority(%d, %s)\n",
-          aPid, ProcessPriorityToString(aPriority));
-
-  nsAutoHandle processHandle(::OpenProcess(PROCESS_SET_INFORMATION, FALSE, aPid));
-=======
 bool SetProcessPrioritySupported() { return true; }
 
 void SetProcessPriority(int aPid, ProcessPriority aPriority) {
@@ -50,7 +26,6 @@ void SetProcessPriority(int aPid, ProcessPriority aPriority) {
                   ::GetLastError());
   }
 #endif  // DEBUG
->>>>>>> upstream-releases
   MOZ_ASSERT(processHandle);
   if (processHandle) {
     DWORD priority = NORMAL_PRIORITY_CLASS;

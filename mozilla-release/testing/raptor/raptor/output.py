@@ -145,16 +145,10 @@ class Output(object):
                     subtests, vals = self.parseWASMGodotOutput(test)
                 elif 'wasm-misc' in test.measurements:
                     subtests, vals = self.parseWASMMiscOutput(test)
-<<<<<<< HEAD
-                elif 'wasm-godot' in test.measurements:
-                    subtests, vals = self.parseWASMGodotOutput(test)
-||||||| merged common ancestors
-=======
                 elif 'webaudio' in test.measurements:
                     subtests, vals = self.parseWebaudioOutput(test)
                 elif 'youtube-playbackperf-test' in test.measurements:
                     subtests, vals = self.parseYoutubePlaybackPerformanceOutput(test)
->>>>>>> upstream-releases
                 suite['subtests'] = subtests
 
             else:
@@ -489,45 +483,6 @@ class Output(object):
         names.sort(reverse=True)
         for name in names:
             _subtests[name]['value'] = filters.median(_subtests[name]['replicates'])
-            subtests.append(_subtests[name])
-            vals.append([_subtests[name]['value'], name])
-
-        return subtests, vals
-
-    def parseWASMGodotOutput(self, test):
-        '''
-            {u'wasm-godot': [
-                {
-                  "name": "wasm-instantiate",
-                  "time": 349
-                },{
-                  "name": "engine-instantiate",
-                  "time": 1263
-                ...
-                }]}
-        '''
-        _subtests = {}
-        data = test.measurements['wasm-godot']
-        print (data)
-        for page_cycle in data:
-            for item in page_cycle[0]:
-                # for each pagecycle, build a list of subtests and append all related replicates
-                sub = item['name']
-                if sub not in _subtests.keys():
-                    # subtest not added yet, first pagecycle, so add new one
-                    _subtests[sub] = {'unit': test.subtest_unit,
-                                      'alertThreshold': float(test.alert_threshold),
-                                      'lowerIsBetter': test.subtest_lower_is_better,
-                                      'name': sub,
-                                      'replicates': []}
-                _subtests[sub]['replicates'].append(item['time'])
-
-        vals = []
-        subtests = []
-        names = _subtests.keys()
-        names.sort(reverse=True)
-        for name in names:
-            _subtests[name]['value'] = filter.median(_subtests[name]['replicates'])
             subtests.append(_subtests[name])
             vals.append([_subtests[name]['value'], name])
 
@@ -888,16 +843,6 @@ class Output(object):
 
         # when gecko_profiling, we don't want results ingested by Perfherder
         extra_opts = self.summarized_results['suites'][0].get('extraOptions', [])
-<<<<<<< HEAD
-        if 'gecko_profile' not in extra_opts:
-            LOG.info("PERFHERDER_DATA: %s" % json.dumps(self.summarized_results))
-        else:
-            LOG.info("gecko profiling enabled - not posting results for perfherder")
-||||||| merged common ancestors
-        if 'geckoProfile' not in extra_opts:
-            LOG.info("PERFHERDER_DATA: %s" % json.dumps(self.summarized_results))
-
-=======
         test_type = self.summarized_results['suites'][0].get('type', '')
 
         output_perf_data = True
@@ -923,7 +868,6 @@ class Output(object):
             else:
                 LOG.info("supporting data measurements exist - only posting those to perfherder")
 
->>>>>>> upstream-releases
         json.dump(self.summarized_results, open(results_path, 'w'), indent=2,
                   sort_keys=True)
         LOG.info("results can also be found locally at: %s" % results_path)
@@ -1038,14 +982,6 @@ class Output(object):
         return filters.mean(results)
 
     @classmethod
-    def wasm_godot_score(cls, val_list):
-        """
-        wasm_godot_score: first-interactive mean
-        """
-        results = [i for i, j in val_list if j == 'first-interactive']
-        return filter.mean(results)
-
-    @classmethod
     def stylebench_score(cls, val_list):
         """
         stylebench_score: https://bug-172968-attachments.webkit.org/attachment.cgi?id=319888
@@ -1134,18 +1070,12 @@ class Output(object):
             return self.assorted_dom_score(vals)
         elif testname.startswith('raptor-wasm-misc'):
             return self.wasm_misc_score(vals)
-<<<<<<< HEAD
-        elif testname.startswith('raptor-wasm-godot'):
-            return self.wasm_godot_score(vals)
-||||||| merged common ancestors
-=======
         elif testname.startswith('raptor-wasm-godot'):
             return self.wasm_godot_score(vals)
         elif testname.startswith('raptor-youtube-playback'):
             return self.youtube_playback_performance_score(vals)
         elif testname.startswith('supporting_data'):
             return self.supporting_data_total(vals)
->>>>>>> upstream-releases
         elif len(vals) > 1:
             return round(filters.geometric_mean([i for i, j in vals]), 2)
         else:

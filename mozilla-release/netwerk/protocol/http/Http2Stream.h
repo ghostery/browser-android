@@ -61,31 +61,19 @@ class Http2Stream : public nsAHttpSegmentReader,
   stateType HTTPState() { return mState; }
   void SetHTTPState(stateType val) { mState = val; }
 
-<<<<<<< HEAD
-  virtual MOZ_MUST_USE nsresult ReadSegments(nsAHttpSegmentReader *, uint32_t,
-                                             uint32_t *);
-  virtual MOZ_MUST_USE nsresult WriteSegments(nsAHttpSegmentWriter *, uint32_t,
-                                              uint32_t *);
-||||||| merged common ancestors
-  virtual MOZ_MUST_USE nsresult ReadSegments(nsAHttpSegmentReader *,
-                                             uint32_t, uint32_t *);
-  virtual MOZ_MUST_USE nsresult WriteSegments(nsAHttpSegmentWriter *,
-                                              uint32_t, uint32_t *);
-=======
   virtual MOZ_MUST_USE nsresult ReadSegments(nsAHttpSegmentReader*, uint32_t,
                                              uint32_t*);
   virtual MOZ_MUST_USE nsresult WriteSegments(nsAHttpSegmentWriter*, uint32_t,
                                               uint32_t*);
->>>>>>> upstream-releases
   virtual bool DeferCleanup(nsresult status);
 
   // The consumer stream is the synthetic pull stream hooked up to this stream
   // http2PushedStream overrides it
   virtual Http2Stream* GetConsumerStream() { return nullptr; };
 
-  const nsCString &Origin() const { return mOrigin; }
-  const nsCString &Host() const { return mHeaderHost; }
-  const nsCString &Path() const { return mHeaderPath; }
+  const nsCString& Origin() const { return mOrigin; }
+  const nsCString& Host() const { return mHeaderHost; }
+  const nsCString& Path() const { return mHeaderPath; }
 
   bool RequestBlockedOnRead() {
     return static_cast<bool>(mRequestBlockedOnRead);
@@ -93,17 +81,8 @@ class Http2Stream : public nsAHttpSegmentReader,
 
   bool HasRegisteredID() { return mStreamID != 0; }
 
-<<<<<<< HEAD
-  nsAHttpTransaction *Transaction() { return mTransaction; }
-  virtual nsIRequestContext *RequestContext() {
-||||||| merged common ancestors
-  nsAHttpTransaction *Transaction() { return mTransaction; }
-  virtual nsIRequestContext *RequestContext()
-  {
-=======
   nsAHttpTransaction* Transaction() { return mTransaction; }
   virtual nsIRequestContext* RequestContext() {
->>>>>>> upstream-releases
     return mTransaction ? mTransaction->RequestContext() : nullptr;
   }
 
@@ -139,30 +118,12 @@ class Http2Stream : public nsAHttpSegmentReader,
   void UpdateTransportReadEvents(uint32_t count);
 
   // NS_ERROR_ABORT terminates stream, other failure terminates session
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult ConvertResponseHeaders(Http2Decompressor *,
-                                               nsACString &, nsACString &,
-                                               int32_t &);
-  MOZ_MUST_USE nsresult ConvertPushHeaders(Http2Decompressor *, nsACString &,
-                                           nsACString &);
-  MOZ_MUST_USE nsresult ConvertResponseTrailers(Http2Decompressor *,
-                                                nsACString &);
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult ConvertResponseHeaders(Http2Decompressor *,
-                                               nsACString &,
-                                               nsACString &, int32_t &);
-  MOZ_MUST_USE nsresult ConvertPushHeaders(Http2Decompressor *, nsACString &,
-                                           nsACString &);
-  MOZ_MUST_USE nsresult ConvertResponseTrailers(Http2Decompressor *,
-                                                nsACString &);
-=======
   MOZ_MUST_USE nsresult ConvertResponseHeaders(Http2Decompressor*, nsACString&,
                                                nsACString&, int32_t&);
   MOZ_MUST_USE nsresult ConvertPushHeaders(Http2Decompressor*, nsACString&,
                                            nsACString&);
   MOZ_MUST_USE nsresult ConvertResponseTrailers(Http2Decompressor*,
                                                 nsACString&);
->>>>>>> upstream-releases
 
   bool AllowFlowControlledWrite();
   void UpdateServerReceiveWindow(int32_t delta);
@@ -220,28 +181,11 @@ class Http2Stream : public nsAHttpSegmentReader,
   void TopLevelOuterContentWindowIdChangedInternal(
       uint64_t windowId);  // For use by pushed streams only
 
-<<<<<<< HEAD
- protected:
-  static void CreatePushHashKey(
-      const nsCString &scheme, const nsCString &hostHeader,
-      const mozilla::OriginAttributes &originAttributes, uint64_t serial,
-      const nsACString &pathInfo, nsCString &outOrigin, nsCString &outKey);
-||||||| merged common ancestors
-protected:
-  static void CreatePushHashKey(const nsCString &scheme,
-                                const nsCString &hostHeader,
-                                const mozilla::OriginAttributes &originAttributes,
-                                uint64_t serial,
-                                const nsACString& pathInfo,
-                                nsCString &outOrigin,
-                                nsCString &outKey);
-=======
  protected:
   static void CreatePushHashKey(
       const nsCString& scheme, const nsCString& hostHeader,
       const mozilla::OriginAttributes& originAttributes, uint64_t serial,
       const nsACString& pathInfo, nsCString& outOrigin, nsCString& outKey);
->>>>>>> upstream-releases
 
   // These internal states track request generation
   enum upstreamStateType {
@@ -260,16 +204,8 @@ protected:
   // These are temporary state variables to hold the argument to
   // Read/WriteSegments so it can be accessed by On(read/write)segment
   // further up the stack.
-<<<<<<< HEAD
-  nsAHttpSegmentReader *mSegmentReader;
-  nsAHttpSegmentWriter *mSegmentWriter;
-||||||| merged common ancestors
-  nsAHttpSegmentReader        *mSegmentReader;
-  nsAHttpSegmentWriter        *mSegmentWriter;
-=======
   nsAHttpSegmentReader* mSegmentReader;
   nsAHttpSegmentWriter* mSegmentWriter;
->>>>>>> upstream-releases
 
   nsCString mOrigin;
   nsCString mHeaderHost;
@@ -300,24 +236,11 @@ protected:
   void ChangeState(enum upstreamStateType);
 
   virtual void AdjustInitialWindow();
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult TransmitFrame(const char *, uint32_t *,
-                                      bool forceCommitment);
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult TransmitFrame(const char *, uint32_t *, bool forceCommitment);
-=======
   MOZ_MUST_USE nsresult TransmitFrame(const char*, uint32_t*,
                                       bool forceCommitment);
->>>>>>> upstream-releases
 
   // The underlying socket transport object is needed to propogate some events
-<<<<<<< HEAD
-  nsISocketTransport *mSocketTransport;
-||||||| merged common ancestors
-  nsISocketTransport         *mSocketTransport;
-=======
   nsISocketTransport* mSocketTransport;
->>>>>>> upstream-releases
 
   uint8_t mPriorityWeight;       // h2 weight
   uint32_t mPriorityDependency;  // h2 stream id this one depends on
@@ -327,27 +250,14 @@ protected:
  private:
   friend class nsAutoPtr<Http2Stream>;
 
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult ParseHttpRequestHeaders(const char *, uint32_t,
-                                                uint32_t *);
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult ParseHttpRequestHeaders(const char *, uint32_t, uint32_t *);
-=======
   MOZ_MUST_USE nsresult ParseHttpRequestHeaders(const char*, uint32_t,
                                                 uint32_t*);
->>>>>>> upstream-releases
   MOZ_MUST_USE nsresult GenerateOpen();
 
   void AdjustPushedPriority();
   void GenerateDataFrameHeader(uint32_t, bool);
 
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult BufferInput(uint32_t, uint32_t *);
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult BufferInput(uint32_t , uint32_t *);
-=======
   MOZ_MUST_USE nsresult BufferInput(uint32_t, uint32_t*);
->>>>>>> upstream-releases
 
   // The underlying HTTP transaction. This pointer is used as the key
   // in the Http2Session mStreamTransactionHash so it is important to
@@ -455,12 +365,6 @@ protected:
   /// connect tunnels
  public:
   bool IsTunnel() { return mIsTunnel; }
-<<<<<<< HEAD
-
- private:
-||||||| merged common ancestors
-private:
-=======
   // TODO - remove as part of bug 1564120 fix?
   // This method saves the key the tunnel was registered under, so that when the
   // associated transaction connection info hash key changes, we still find it
@@ -468,23 +372,12 @@ private:
   nsCString& RegistrationKey();
 
  private:
->>>>>>> upstream-releases
   void ClearTransactionsBlockedOnTunnel();
   void MapStreamToPlainText();
   void MapStreamToHttpConnection(int32_t httpResponseCode = -1);
 
   bool mIsTunnel;
   bool mPlainTextTunnel;
-<<<<<<< HEAD
-
-  /// websockets
- public:
-  bool IsWebsocket() { return mIsWebsocket; }
-
- private:
-  bool mIsWebsocket;
-||||||| merged common ancestors
-=======
   nsCString mRegistrationKey;
 
   /// websockets
@@ -493,7 +386,6 @@ private:
 
  private:
   bool mIsWebsocket;
->>>>>>> upstream-releases
 };
 
 }  // namespace net

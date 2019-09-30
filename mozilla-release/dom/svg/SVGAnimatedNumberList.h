@@ -19,14 +19,8 @@ class SMILValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD
-}  // namespace dom
-||||||| merged common ancestors
-} // namespace dom
-=======
 class SVGElement;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * Class SVGAnimatedNumberList
@@ -67,26 +61,10 @@ class SVGAnimatedNumberList {
     return mAnimVal ? *mAnimVal : mBaseVal;
   }
 
-<<<<<<< HEAD
-  nsresult SetAnimValue(const SVGNumberList& aValue, nsSVGElement* aElement,
-                        uint32_t aAttrEnum);
-||||||| merged common ancestors
-  nsresult SetAnimValue(const SVGNumberList& aValue,
-                        nsSVGElement *aElement,
-                        uint32_t aAttrEnum);
-=======
   nsresult SetAnimValue(const SVGNumberList& aNewAnimValue,
                         dom::SVGElement* aElement, uint32_t aAttrEnum);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ClearAnimValue(nsSVGElement* aElement, uint32_t aAttrEnum);
-||||||| merged common ancestors
-  void ClearAnimValue(nsSVGElement *aElement,
-                      uint32_t aAttrEnum);
-=======
   void ClearAnimValue(dom::SVGElement* aElement, uint32_t aAttrEnum);
->>>>>>> upstream-releases
 
   // Returns true if the animated value of this list has been explicitly
   // set (either by animation, or by taking on the base value which has been
@@ -95,33 +73,12 @@ class SVGAnimatedNumberList {
   // usable, and represents the default base value of the attribute.
   bool IsExplicitlySet() const { return !!mAnimVal || mIsBaseSet; }
 
-<<<<<<< HEAD
   bool IsAnimating() const { return !!mAnimVal; }
 
-  UniquePtr<nsISMILAttr> ToSMILAttr(nsSVGElement* aSVGElement,
-                                    uint8_t aAttrEnum);
-||||||| merged common ancestors
-  bool IsAnimating() const {
-    return !!mAnimVal;
-  }
-
-  UniquePtr<nsISMILAttr> ToSMILAttr(nsSVGElement* aSVGElement,
-                                    uint8_t aAttrEnum);
-=======
-  bool IsAnimating() const { return !!mAnimVal; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-
-=======
   UniquePtr<SMILAttr> ToSMILAttr(dom::SVGElement* aSVGElement,
                                  uint8_t aAttrEnum);
 
  private:
->>>>>>> upstream-releases
   // mAnimVal is a pointer to allow us to determine if we're being animated or
   // not. Making it a non-pointer member and using mAnimVal.IsEmpty() to check
   // if we're animating is not an option, since that would break animation *to*
@@ -131,64 +88,24 @@ private:
   nsAutoPtr<SVGNumberList> mAnimVal;
   bool mIsBaseSet;
 
-<<<<<<< HEAD
-  struct SMILAnimatedNumberList : public nsISMILAttr {
-   public:
-||||||| merged common ancestors
-  struct SMILAnimatedNumberList : public nsISMILAttr
-  {
-  public:
-=======
   struct SMILAnimatedNumberList : public SMILAttr {
    public:
->>>>>>> upstream-releases
     SMILAnimatedNumberList(SVGAnimatedNumberList* aVal,
-<<<<<<< HEAD
-                           nsSVGElement* aSVGElement, uint8_t aAttrEnum)
-        : mVal(aVal), mElement(aSVGElement), mAttrEnum(aAttrEnum) {}
-
-    // These will stay alive because a nsISMILAttr only lives as long
-||||||| merged common ancestors
-                           nsSVGElement* aSVGElement,
-                           uint8_t aAttrEnum)
-      : mVal(aVal)
-      , mElement(aSVGElement)
-      , mAttrEnum(aAttrEnum)
-    {}
-
-    // These will stay alive because a nsISMILAttr only lives as long
-=======
                            dom::SVGElement* aSVGElement, uint8_t aAttrEnum)
         : mVal(aVal), mElement(aSVGElement), mAttrEnum(aAttrEnum) {}
 
     // These will stay alive because a SMILAttr only lives as long
->>>>>>> upstream-releases
     // as the Compositing step, and DOM elements don't get a chance to
     // die during that.
     SVGAnimatedNumberList* mVal;
     dom::SVGElement* mElement;
     uint8_t mAttrEnum;
 
-<<<<<<< HEAD
-    // nsISMILAttr methods
-    virtual nsresult ValueFromString(
-        const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
-        nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
-    virtual nsSMILValue GetBaseValue() const override;
-||||||| merged common ancestors
-    // nsISMILAttr methods
-    virtual nsresult ValueFromString(const nsAString& aStr,
-                                     const dom::SVGAnimationElement* aSrcElement,
-                                     nsSMILValue& aValue,
-                                     bool& aPreventCachingOfSandwich) const override;
-    virtual nsSMILValue GetBaseValue() const override;
-=======
     // SMILAttr methods
     virtual nsresult ValueFromString(
         const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
         SMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
     virtual SMILValue GetBaseValue() const override;
->>>>>>> upstream-releases
     virtual void ClearAnimValue() override;
     virtual nsresult SetAnimValue(const SMILValue& aValue) override;
   };

@@ -784,15 +784,8 @@ class CCacheStats(object):
     STATS_KEYS = [
         # (key, description)
         # Refer to stats.c in ccache project for all the descriptions.
-<<<<<<< HEAD
-        ('stats_zeroed', 'stats zero time'), # Old name prior to ccache 3.4
-        ('stats_zeroed', 'stats zeroed'),
-||||||| merged common ancestors
-        ('stats_zero_time', 'stats zero time'),
-=======
         ('stats_zeroed', 'stats zero time'),  # Old name prior to ccache 3.4
         ('stats_zeroed', 'stats zeroed'),
->>>>>>> upstream-releases
         ('stats_updated', 'stats updated'),
         ('cache_hit_direct', 'cache hit (direct)'),
         ('cache_hit_preprocessed', 'cache hit (preprocessed)'),
@@ -1022,92 +1015,6 @@ class BuildDriver(MozbuildObject):
                 if directory.startswith('/'):
                     directory = directory[1:]
 
-<<<<<<< HEAD
-            def build_out_of_date(output, dep_file):
-                if not os.path.isfile(output):
-                    print(" Output reference file not found: %s" % output)
-                    return True
-                if not os.path.isfile(dep_file):
-                    print(" Configure dependency file not found: %s" % dep_file)
-                    return True
-
-                deps = []
-                with open(dep_file, 'r') as fh:
-                    deps = fh.read().splitlines()
-
-                mtime = os.path.getmtime(output)
-                for f in deps:
-                    try:
-                        dep_mtime = os.path.getmtime(f)
-                    except OSError as e:
-                        if e.errno == errno.ENOENT:
-                            print(" Configure input not found: %s" % f)
-                            return True
-                        raise
-                    if dep_mtime > mtime:
-                        print(" %s is out of date with respect to %s" % (output, f))
-                        return True
-                return False
-
-            def backend_out_of_date(backend_file):
-                if not os.path.isfile(backend_file):
-                    return True
-
-                # Check if any of our output files have been removed since
-                # we last built the backend, re-generate the backend if
-                # so.
-                outputs = []
-                with open(backend_file, 'r') as fh:
-                    outputs = fh.read().splitlines()
-                for output in outputs:
-                    if not os.path.isfile(mozpath.join(self.topobjdir, output)):
-                        return True
-
-                dep_file = '%s.in' % backend_file
-                return build_out_of_date(backend_file, dep_file)
-
-||||||| merged common ancestors
-            def build_out_of_date(output, dep_file):
-                if not os.path.isfile(output):
-                    return True
-                if not os.path.isfile(dep_file):
-                    return True
-
-                deps = []
-                with open(dep_file, 'r') as fh:
-                    deps = fh.read().splitlines()
-
-                mtime = os.path.getmtime(output)
-                for f in deps:
-                    try:
-                        dep_mtime = os.path.getmtime(f)
-                    except OSError as e:
-                        if e.errno == errno.ENOENT:
-                            return True
-                        raise
-                    if dep_mtime > mtime:
-                        return True
-                return False
-
-            def backend_out_of_date(backend_file):
-                if not os.path.isfile(backend_file):
-                    return True
-
-                # Check if any of our output files have been removed since
-                # we last built the backend, re-generate the backend if
-                # so.
-                outputs = []
-                with open(backend_file, 'r') as fh:
-                    outputs = fh.read().splitlines()
-                for output in outputs:
-                    if not os.path.isfile(mozpath.join(self.topobjdir, output)):
-                        return True
-
-                dep_file = '%s.in' % backend_file
-                return build_out_of_date(backend_file, dep_file)
-
-=======
->>>>>>> upstream-releases
             monitor.start_resource_recording()
 
             self.mach_context.command_attrs['clobber'] = False

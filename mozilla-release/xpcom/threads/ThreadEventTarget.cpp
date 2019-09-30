@@ -136,18 +136,9 @@ ThreadEventTarget::Dispatch(already_AddRefed<nsIRunnable> aEvent,
     //     that to tell us when the event has been processed.
 
     RefPtr<nsThreadSyncDispatch> wrapper =
-<<<<<<< HEAD
-        new nsThreadSyncDispatch(current.forget(), event.take());
-    bool success = mSink->PutEvent(do_AddRef(wrapper),
-                                   EventPriority::Normal);  // hold a ref
-||||||| merged common ancestors
-      new nsThreadSyncDispatch(current.forget(), event.take());
-    bool success = mSink->PutEvent(do_AddRef(wrapper), EventPriority::Normal); // hold a ref
-=======
         new nsThreadSyncDispatch(current.forget(), event.take());
     bool success = mSink->PutEvent(do_AddRef(wrapper),
                                    EventQueuePriority::Normal);  // hold a ref
->>>>>>> upstream-releases
     if (!success) {
       // PutEvent leaked the wrapper runnable object on failure, so we
       // explicitly release this object once for that. Note that this
@@ -163,19 +154,9 @@ ThreadEventTarget::Dispatch(already_AddRefed<nsIRunnable> aEvent,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  NS_ASSERTION(aFlags == NS_DISPATCH_NORMAL || aFlags == NS_DISPATCH_AT_END,
-               "unexpected dispatch flags");
-  if (!mSink->PutEvent(event.take(), EventPriority::Normal)) {
-||||||| merged common ancestors
-  NS_ASSERTION(aFlags == NS_DISPATCH_NORMAL ||
-               aFlags == NS_DISPATCH_AT_END, "unexpected dispatch flags");
-  if (!mSink->PutEvent(event.take(), EventPriority::Normal)) {
-=======
   NS_ASSERTION(aFlags == NS_DISPATCH_NORMAL || aFlags == NS_DISPATCH_AT_END,
                "unexpected dispatch flags");
   if (!mSink->PutEvent(event.take(), EventQueuePriority::Normal)) {
->>>>>>> upstream-releases
     return NS_ERROR_UNEXPECTED;
   }
   // Delay to encourage the receiving task to run before we do work.

@@ -95,13 +95,8 @@ private:
         kMin_SpecialIntrinsic,
         kMix_SpecialIntrinsic,
         kMod_SpecialIntrinsic,
-<<<<<<< HEAD
-        kSaturate_SpecialIntrinsic,
-||||||| merged common ancestors
-=======
         kDFdy_SpecialIntrinsic,
         kSaturate_SpecialIntrinsic,
->>>>>>> upstream-releases
         kSubpassLoad_SpecialIntrinsic,
         kTexture_SpecialIntrinsic,
     };

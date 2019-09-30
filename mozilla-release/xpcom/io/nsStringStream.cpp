@@ -51,82 +51,26 @@ class nsStringInputStream final : public nsIStringInputStream,
   NS_DECL_NSIIPCSERIALIZABLEINPUTSTREAM
   NS_DECL_NSICLONEABLEINPUTSTREAM
 
-<<<<<<< HEAD
-  nsStringInputStream() : mOffset(0) { Clear(); }
-||||||| merged common ancestors
-  nsStringInputStream()
-    : mOffset(0)
-  {
-    Clear();
-  }
-=======
   nsStringInputStream() : mOffset(0), mMon("nsStringInputStream") { Clear(); }
->>>>>>> upstream-releases
 
   nsresult Init(nsCString&& aString);
 
-<<<<<<< HEAD
- private:
-  ~nsStringInputStream() {}
-||||||| merged common ancestors
-private:
-  ~nsStringInputStream()
-  {
-  }
-=======
   nsresult Init(nsTArray<uint8_t>&& aArray);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t Length() const { return mData.Length(); }
-||||||| merged common ancestors
-  uint32_t Length() const
-  {
-    return mData.Length();
-  }
-=======
  private:
   ~nsStringInputStream() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t LengthRemaining() const { return Length() - mOffset; }
-||||||| merged common ancestors
-  uint32_t LengthRemaining() const
-  {
-    return Length() - mOffset;
-  }
-=======
   template <typename M>
   void SerializeInternal(InputStreamParams& aParams, bool aDelayedStart,
                          uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void Clear() { mData.SetIsVoid(true); }
-||||||| merged common ancestors
-  void Clear()
-  {
-    mData.SetIsVoid(true);
-  }
-=======
   uint32_t Length() const { return mData.Length(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool Closed() { return mData.IsVoid(); }
-||||||| merged common ancestors
-  bool Closed()
-  {
-    return mData.IsVoid();
-  }
-=======
   uint32_t LengthRemaining() const { return Length() - mOffset; }
 
   void Clear() { mData.SetIsVoid(true); }
 
   bool Closed() { return mData.IsVoid(); }
->>>>>>> upstream-releases
 
   nsDependentCSubstring mData;
   uint32_t mOffset;
@@ -137,18 +81,10 @@ private:
   mozilla::ReentrantMonitor mMon;
 };
 
-<<<<<<< HEAD
-nsresult nsStringInputStream::Init(nsCString&& aString) {
-||||||| merged common ancestors
-nsresult
-nsStringInputStream::Init(nsCString&& aString)
-{
-=======
 nsresult nsStringInputStream::Init(nsCString&& aString) {
   ReentrantMonitorAutoEnter lock(mMon);
 
   mArray.reset();
->>>>>>> upstream-releases
   if (!mData.Assign(std::move(aString), fallible)) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
@@ -203,16 +139,9 @@ nsStringInputStream::GetType(uint16_t* aType) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::GetData(nsACString& data) {
-||||||| merged common ancestors
-nsStringInputStream::GetData(nsACString& data)
-{
-=======
 nsStringInputStream::GetData(nsACString& data) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   // The stream doesn't have any data when it is closed.  We could fake it
   // and return an empty string here, but it seems better to keep this return
   // value consistent with the behavior of the other 'getter' methods.
@@ -225,17 +154,10 @@ nsStringInputStream::GetData(nsACString& data) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::SetData(const nsACString& aData) {
-||||||| merged common ancestors
-nsStringInputStream::SetData(const nsACString& aData)
-{
-=======
 nsStringInputStream::SetData(const nsACString& aData) {
   ReentrantMonitorAutoEnter lock(mMon);
 
   mArray.reset();
->>>>>>> upstream-releases
   if (NS_WARN_IF(!mData.Assign(aData, fallible))) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
@@ -255,16 +177,9 @@ nsStringInputStream::ToString(char** aResult) {
 /////////
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::SetData(const char* aData, int32_t aDataLen) {
-||||||| merged common ancestors
-nsStringInputStream::SetData(const char* aData, int32_t aDataLen)
-{
-=======
 nsStringInputStream::SetData(const char* aData, int32_t aDataLen) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aData)) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -279,12 +194,6 @@ nsStringInputStream::SetData(const char* aData, int32_t aDataLen) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::AdoptData(char* aData, int32_t aDataLen) {
-||||||| merged common ancestors
-nsStringInputStream::AdoptData(char* aData, int32_t aDataLen)
-{
-=======
 nsStringInputStream::SetUTF8Data(const nsACString& aData) {
   return nsStringInputStream::SetData(aData);
 }
@@ -293,7 +202,6 @@ NS_IMETHODIMP
 nsStringInputStream::AdoptData(char* aData, int32_t aDataLen) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aData)) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -304,16 +212,9 @@ nsStringInputStream::AdoptData(char* aData, int32_t aDataLen) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::ShareData(const char* aData, int32_t aDataLen) {
-||||||| merged common ancestors
-nsStringInputStream::ShareData(const char* aData, int32_t aDataLen)
-{
-=======
 nsStringInputStream::ShareData(const char* aData, int32_t aDataLen) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aData)) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -329,16 +230,9 @@ nsStringInputStream::ShareData(const char* aData, int32_t aDataLen) {
 }
 
 NS_IMETHODIMP_(size_t)
-<<<<<<< HEAD
-nsStringInputStream::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) {
-||||||| merged common ancestors
-nsStringInputStream::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf)
-{
-=======
 nsStringInputStream::SizeOfIncludingThisIfUnshared(MallocSizeOf aMallocSizeOf) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   size_t n = aMallocSizeOf(this);
   n += mData.SizeOfExcludingThisIfUnshared(aMallocSizeOf);
   return n;
@@ -359,31 +253,17 @@ nsStringInputStream::SizeOfIncludingThisEvenIfShared(
 /////////
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::Close() {
-||||||| merged common ancestors
-nsStringInputStream::Close()
-{
-=======
 nsStringInputStream::Close() {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   Clear();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::Available(uint64_t* aLength) {
-||||||| merged common ancestors
-nsStringInputStream::Available(uint64_t* aLength)
-{
-=======
 nsStringInputStream::Available(uint64_t* aLength) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   NS_ASSERTION(aLength, "null ptr");
 
   if (Closed()) {
@@ -402,16 +282,9 @@ nsStringInputStream::Read(char* aBuf, uint32_t aCount, uint32_t* aReadCount) {
 
 NS_IMETHODIMP
 nsStringInputStream::ReadSegments(nsWriteSegmentFun aWriter, void* aClosure,
-<<<<<<< HEAD
-                                  uint32_t aCount, uint32_t* aResult) {
-||||||| merged common ancestors
-                                  uint32_t aCount, uint32_t* aResult)
-{
-=======
                                   uint32_t aCount, uint32_t* aResult) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   NS_ASSERTION(aResult, "null ptr");
   NS_ASSERTION(Length() >= mOffset, "bad stream state");
 
@@ -452,16 +325,9 @@ nsStringInputStream::IsNonBlocking(bool* aNonBlocking) {
 /////////
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::Seek(int32_t aWhence, int64_t aOffset) {
-||||||| merged common ancestors
-nsStringInputStream::Seek(int32_t aWhence, int64_t aOffset)
-{
-=======
 nsStringInputStream::Seek(int32_t aWhence, int64_t aOffset) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   if (Closed()) {
     return NS_BASE_STREAM_CLOSED;
   }
@@ -492,16 +358,9 @@ nsStringInputStream::Seek(int32_t aWhence, int64_t aOffset) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::SetEOF() {
-||||||| merged common ancestors
-nsStringInputStream::SetEOF()
-{
-=======
 nsStringInputStream::SetEOF() {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   if (Closed()) {
     return NS_BASE_STREAM_CLOSED;
   }
@@ -515,16 +374,9 @@ nsStringInputStream::SetEOF() {
 /////////
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::Tell(int64_t* aOutWhere) {
-||||||| merged common ancestors
-nsStringInputStream::Tell(int64_t* aOutWhere)
-{
-=======
 nsStringInputStream::Tell(int64_t* aOutWhere) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   if (Closed()) {
     return NS_BASE_STREAM_CLOSED;
   }
@@ -537,15 +389,6 @@ nsStringInputStream::Tell(int64_t* aOutWhere) {
 // nsIIPCSerializableInputStream implementation
 /////////
 
-<<<<<<< HEAD
-void nsStringInputStream::Serialize(InputStreamParams& aParams,
-                                    FileDescriptorArray& /* aFDs */) {
-||||||| merged common ancestors
-void
-nsStringInputStream::Serialize(InputStreamParams& aParams,
-                               FileDescriptorArray& /* aFDs */)
-{
-=======
 void nsStringInputStream::Serialize(InputStreamParams& aParams,
                                     FileDescriptorArray& /* aFDs */,
                                     bool aDelayedStart, uint32_t aMaxSize,
@@ -596,7 +439,6 @@ void nsStringInputStream::SerializeInternal(InputStreamParams& aParams,
 
   *aSizeUsed = Length();
 
->>>>>>> upstream-releases
   StringInputStreamParams params;
   params.data() = PromiseFlatCString(mData);
   aParams = params;
@@ -619,20 +461,6 @@ bool nsStringInputStream::Deserialize(const InputStreamParams& aParams,
   return true;
 }
 
-<<<<<<< HEAD
-Maybe<uint64_t> nsStringInputStream::ExpectedSerializedLength() {
-  return Some(static_cast<uint64_t>(Length()));
-}
-
-||||||| merged common ancestors
-Maybe<uint64_t>
-nsStringInputStream::ExpectedSerializedLength()
-{
-  return Some(static_cast<uint64_t>(Length()));
-}
-
-=======
->>>>>>> upstream-releases
 /////////
 // nsICloneableInputStream implementation
 /////////
@@ -644,16 +472,9 @@ nsStringInputStream::GetCloneable(bool* aCloneableOut) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStringInputStream::Clone(nsIInputStream** aCloneOut) {
-||||||| merged common ancestors
-nsStringInputStream::Clone(nsIInputStream** aCloneOut)
-{
-=======
 nsStringInputStream::Clone(nsIInputStream** aCloneOut) {
   ReentrantMonitorAutoEnter lock(mMon);
 
->>>>>>> upstream-releases
   RefPtr<nsStringInputStream> ref = new nsStringInputStream();
   nsresult rv = ref->SetData(mData);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -667,21 +488,9 @@ nsStringInputStream::Clone(nsIInputStream** aCloneOut) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
-                               const char* aStringToRead, int32_t aLength,
-                               nsAssignmentType aAssignment) {
-||||||| merged common ancestors
-nsresult
-NS_NewByteInputStream(nsIInputStream** aStreamResult,
-                      const char* aStringToRead, int32_t aLength,
-                      nsAssignmentType aAssignment)
-{
-=======
 nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
                                Span<const char> aStringToRead,
                                nsAssignmentType aAssignment) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStreamResult, "null out ptr");
 
   RefPtr<nsStringInputStream> stream = new nsStringInputStream();
@@ -711,15 +520,6 @@ nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult NS_NewCStringInputStream(nsIInputStream** aStreamResult,
-                                  const nsACString& aStringToRead) {
-||||||| merged common ancestors
-nsresult
-NS_NewCStringInputStream(nsIInputStream** aStreamResult,
-                         const nsACString& aStringToRead)
-{
-=======
 nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
                                nsTArray<uint8_t>&& aArray) {
   MOZ_ASSERT(aStreamResult, "null out ptr");
@@ -737,7 +537,6 @@ nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
 
 nsresult NS_NewCStringInputStream(nsIInputStream** aStreamResult,
                                   const nsACString& aStringToRead) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStreamResult, "null out ptr");
 
   RefPtr<nsStringInputStream> stream = new nsStringInputStream();

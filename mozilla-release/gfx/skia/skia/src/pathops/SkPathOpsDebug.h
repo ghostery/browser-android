@@ -20,34 +20,6 @@ class SkOpAngle;
 class SkOpCoincidence;
 class SkOpContour;
 class SkOpContourHead;
-<<<<<<< HEAD
-class SkOpPtT;
-class SkOpSegment;
-class SkOpSpan;
-class SkOpSpanBase;
-struct SkDPoint;
-struct SkDLine;
-struct SkDQuad;
-struct SkDConic;
-struct SkDCubic;
-template<typename TCurve, typename OppCurve> class SkTSect;
-
-// dummy classes to fool msvs Visual Studio 2018 Immediate Window
-#define DummyClasses(a, b) \
-class SkDebugTCoincident##a##b; \
-class SkDebugTSect##a##b; \
-class SkDebugTSpan##a##b
-
-DummyClasses(Quad, Quad);
-DummyClasses(Conic, Quad);
-DummyClasses(Conic, Conic);
-DummyClasses(Cubic, Quad);
-DummyClasses(Cubic, Conic);
-DummyClasses(Cubic, Cubic);
-
-#undef DummyClasses
-||||||| merged common ancestors
-=======
 class SkOpPtT;
 class SkOpSegment;
 class SkOpSpan;
@@ -76,7 +48,6 @@ DummyClasses(Cubic, Conic);
 DummyClasses(Cubic, Cubic);
 
 #undef DummyClasses
->>>>>>> upstream-releases
 
 #ifdef SK_RELEASE
 #define FORCE_RELEASE 1
@@ -408,87 +379,8 @@ public:
    static void DumpGlitchType(GlitchType );
 #endif
 
-<<<<<<< HEAD
 };
 
-// Visual Studio 2017 does not permit calling member functions from the Immediate Window.
-// Global functions work fine, however. Use globals within a namespace rather than
-// static members inside a class.
-namespace SkOpDebug {
-    const SkOpAngle* AngleAngle(const SkOpAngle*, int id);
-    SkOpContour* AngleContour(SkOpAngle*, int id);
-    const SkOpPtT* AnglePtT(const SkOpAngle*, int id);
-    const SkOpSegment* AngleSegment(const SkOpAngle*, int id);
-    const SkOpSpanBase* AngleSpan(const SkOpAngle*, int id);
-
-    const SkOpAngle* ContourAngle(SkOpContour*, int id);
-    SkOpContour* ContourContour(SkOpContour*, int id);
-    const SkOpPtT* ContourPtT(SkOpContour*, int id);
-    const SkOpSegment* ContourSegment(SkOpContour*, int id);
-    const SkOpSpanBase* ContourSpan(SkOpContour*, int id);
-
-    const SkOpAngle* CoincidenceAngle(SkOpCoincidence*, int id);
-    SkOpContour* CoincidenceContour(SkOpCoincidence*, int id);
-    const SkOpPtT* CoincidencePtT(SkOpCoincidence*, int id);
-    const SkOpSegment* CoincidenceSegment(SkOpCoincidence*, int id);
-    const SkOpSpanBase* CoincidenceSpan(SkOpCoincidence*, int id);
-
-    const SkOpAngle* PtTAngle(const SkOpPtT*, int id);
-    SkOpContour* PtTContour(SkOpPtT*, int id);
-    const SkOpPtT* PtTPtT(const SkOpPtT*, int id);
-    const SkOpSegment* PtTSegment(const SkOpPtT*, int id);
-    const SkOpSpanBase* PtTSpan(const SkOpPtT*, int id);
-
-    const SkOpAngle* SegmentAngle(const SkOpSegment*, int id);
-    SkOpContour* SegmentContour(SkOpSegment*, int id);
-    const SkOpPtT* SegmentPtT(const SkOpSegment*, int id);
-    const SkOpSegment* SegmentSegment(const SkOpSegment*, int id);
-    const SkOpSpanBase* SegmentSpan(const SkOpSegment*, int id);
-
-    const SkOpAngle* SpanAngle(const SkOpSpanBase*, int id);
-    SkOpContour* SpanContour(SkOpSpanBase*, int id);
-    const SkOpPtT* SpanPtT(const SkOpSpanBase*, int id);
-    const SkOpSegment* SpanSegment(const SkOpSpanBase*, int id);
-    const SkOpSpanBase* SpanSpan(const SkOpSpanBase*, int id);
-||||||| merged common ancestors
-    static bool gRunFail;
-    static bool gVeryVerbose;
-
-#if DEBUG_DUMP_VERIFY
-    static bool gDumpOp;
-    static bool gVerifyOp;
-=======
-};
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-#if DEBUG_DUMP_VERIFY
-    void DumpOp(const SkPath& one, const SkPath& two, SkPathOp op,
-            const char* testName);
-    void DumpOp(FILE* file, const SkPath& one, const SkPath& two, SkPathOp op,
-            const char* testName);
-    void DumpSimplify(const SkPath& path, const char* testName);
-    void DumpSimplify(FILE* file, const SkPath& path, const char* testName);
-    void ReportOpFail(const SkPath& one, const SkPath& two, SkPathOp op);
-    void ReportSimplifyFail(const SkPath& path);
-    void VerifyOp(const SkPath& one, const SkPath& two, SkPathOp op,
-        const SkPath& result);
-    void VerifySimplify(const SkPath& path, const SkPath& result);
-#endif
-||||||| merged common ancestors
-    static void DumpOp(const SkPath& one, const SkPath& two, SkPathOp op,
-            const char* testName);
-    static void DumpOp(FILE* file, const SkPath& one, const SkPath& two, SkPathOp op,
-            const char* testName);
-    static void DumpSimplify(const SkPath& path, const char* testName);
-    static void DumpSimplify(FILE* file, const SkPath& path, const char* testName);
-    static void ReportOpFail(const SkPath& one, const SkPath& two, SkPathOp op);
-    static void ReportSimplifyFail(const SkPath& path);
-    static void VerifyOp(const SkPath& one, const SkPath& two, SkPathOp op,
-        const SkPath& result);
-    static void VerifySimplify(const SkPath& path, const SkPath& result);
-#endif
-=======
 // Visual Studio 2017 does not permit calling member functions from the Immediate Window.
 // Global functions work fine, however. Use globals rather than static members inside a class.
 const SkOpAngle* AngleAngle(const SkOpAngle*, int id);
@@ -526,95 +418,7 @@ SkOpContour* SpanContour(SkOpSpanBase*, int id);
 const SkOpPtT* SpanPtT(const SkOpSpanBase*, int id);
 const SkOpSegment* SpanSegment(const SkOpSpanBase*, int id);
 const SkOpSpanBase* SpanSpan(const SkOpSpanBase*, int id);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // global path dumps for msvs Visual Studio 17 to use from Immediate Window
-    void Dump(const SkOpContour& );
-    void DumpAll(const SkOpContour& );
-    void DumpAngles(const SkOpContour& );
-    void DumpContours(const SkOpContour& );
-    void DumpContoursAll(const SkOpContour& );
-    void DumpContoursAngles(const SkOpContour& );
-    void DumpContoursPts(const SkOpContour& );
-    void DumpContoursPt(const SkOpContour& , int segmentID);
-    void DumpContoursSegment(const SkOpContour& , int segmentID);
-    void DumpContoursSpan(const SkOpContour& , int segmentID);
-    void DumpContoursSpans(const SkOpContour& );
-    void DumpPt(const SkOpContour& , int );
-    void DumpPts(const SkOpContour& , const char* prefix = "seg");
-    void DumpSegment(const SkOpContour& , int );
-    void DumpSegments(const SkOpContour& , const char* prefix = "seg", SkPathOp op = (SkPathOp) -1);
-    void DumpSpan(const SkOpContour& , int );
-    void DumpSpans(const SkOpContour& );
-
-    void Dump(const SkOpSegment& );
-    void DumpAll(const SkOpSegment& );
-    void DumpAngles(const SkOpSegment& );
-    void DumpCoin(const SkOpSegment& );
-    void DumpPts(const SkOpSegment& , const char* prefix = "seg");
-
-    void Dump(const SkOpPtT& );
-    void DumpAll(const SkOpPtT& );
-
-    void Dump(const SkOpSpanBase& );
-    void DumpCoin(const SkOpSpanBase& );
-    void DumpAll(const SkOpSpanBase& );
-
-    void DumpCoin(const SkOpSpan& );
-    bool DumpSpan(const SkOpSpan& );
-
-    void Dump(const SkDConic& );
-    void DumpID(const SkDConic& , int id);
-
-    void Dump(const SkDCubic& );
-    void DumpID(const SkDCubic& , int id);
-
-    void Dump(const SkDLine& );
-    void DumpID(const SkDLine& , int id);
-
-    void Dump(const SkDQuad& );
-    void DumpID(const SkDQuad& , int id);
-
-    void Dump(const SkDPoint& );
-
-    void Dump(const SkOpAngle& );
-
-// dummy declarations to fool msvs Visual Studio 2018 Immediate Window
-#define DummyDeclarations(a, b)                                      \
-    void Dump(const SkDebugTCoincident##a##b& );                     \
-                                                                     \
-    void Dump(const SkDebugTSect##a##b& );                           \
-    void DumpBoth(const SkDebugTSect##a##b& , SkDebugTSect##a##b* ); \
-    void DumpBounded(const SkDebugTSect##a##b& , int id);            \
-    void DumpBounds(const SkDebugTSect##a##b& );                     \
-    void DumpCoin(const SkDebugTSect##a##b& );                       \
-    void DumpCoinCurves(const SkDebugTSect##a##b& );                 \
-    void DumpCurves(const SkDebugTSect##a##b& );                     \
-                                                                     \
-    void Dump(const SkDebugTSpan##a##b& );                           \
-    void DumpAll(const SkDebugTSpan##a##b& );                        \
-    void DumpBounded(const SkDebugTSpan##a##b& , int id);            \
-    void DumpBounds(const SkDebugTSpan##a##b& );                     \
-    void DumpCoin(const SkDebugTSpan##a##b& )
-
-    DummyDeclarations(Quad, Quad);
-    DummyDeclarations(Conic, Quad);
-    DummyDeclarations(Conic, Conic);
-    DummyDeclarations(Cubic, Quad);
-    DummyDeclarations(Cubic, Conic);
-    DummyDeclarations(Cubic, Cubic);
-#undef DummyDeclarations
-}
-||||||| merged common ancestors
-#if DEBUG_ACTIVE_SPANS
-    static SkString gActiveSpans;
-#endif
-
-};
-
-struct SkDQuad;
-=======
 #if DEBUG_DUMP_VERIFY
 void DumpOp(const SkPath& one, const SkPath& two, SkPathOp op,
         const char* testName);
@@ -679,7 +483,6 @@ void DumpID(const SkDQuad& , int id);
 void Dump(const SkDPoint& );
 
 void Dump(const SkOpAngle& );
->>>>>>> upstream-releases
 
 // generates tools/path_sorter.htm and path_visualizer.htm compatible data
 void DumpQ(const SkDQuad& quad1, const SkDQuad& quad2, int testNo);

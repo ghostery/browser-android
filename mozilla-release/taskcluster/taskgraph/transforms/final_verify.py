@@ -24,33 +24,6 @@ def add_command(config, tasks):
                 final_verify_configs.append(
                     "<{}/public/build/update-verify.cfg>".format(upstream),
                 )
-<<<<<<< HEAD
-        task['run'] = {
-            'using': 'run-task',
-            'command': {
-                'task-reference': 'cd /builds/worker/checkouts/gecko && '
-                                  'tools/update-verify/release/final-verification.sh '
-                                  + ' '.join(final_verify_configs),
-            },
-            'sparse-profile': 'update-verify',
-        }
-        for thing in ("BUILD_TOOLS_REPO",):
-            thing = "worker.env.{}".format(thing)
-            resolve_keyed_by(task, thing, thing, **config.params)
-||||||| merged common ancestors
-        task["worker"]["command"] = [
-            "/bin/bash",
-            "-c",
-            {
-                "task-reference": "hg clone $BUILD_TOOLS_REPO tools && cd tools/release && " +
-                                  "./final-verification.sh " +
-                                  " ".join(final_verify_configs)
-            }
-        ]
-        for thing in ("BUILD_TOOLS_REPO",):
-            thing = "worker.env.{}".format(thing)
-            resolve_keyed_by(task, thing, thing, **config.params)
-=======
         task['run'] = {
             'using': 'run-task',
             'command': {
@@ -60,5 +33,4 @@ def add_command(config, tasks):
             },
             'sparse-profile': 'update-verify',
         }
->>>>>>> upstream-releases
         yield task

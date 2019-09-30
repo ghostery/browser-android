@@ -91,32 +91,14 @@ nsresult AsyncScriptCompiler::Start(
     nsIPrincipal* aPrincipal) {
   mCharset = aOptions.mCharset;
 
-<<<<<<< HEAD
-  mOptions.setNoScriptRval(!aOptions.mHasReturnValue)
-      .setCanLazilyParse(aOptions.mLazilyParse);
-||||||| merged common ancestors
-    mOptions.setNoScriptRval(!aOptions.mHasReturnValue)
-            .setCanLazilyParse(aOptions.mLazilyParse);
-=======
   CompileOptions options(aCx);
   options.setFile(mURL.get())
       .setNoScriptRval(!aOptions.mHasReturnValue)
       .setCanLazilyParse(aOptions.mLazilyParse);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (NS_WARN_IF(!mOptions.setFile(aCx, mURL.get()))) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-||||||| merged common ancestors
-    if (NS_WARN_IF(!mOptions.setFile(aCx, mURL.get()))) {
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-=======
   if (NS_WARN_IF(!mOptions.copy(aCx, options))) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIURI> uri;
   nsresult rv = NS_NewURI(getter_AddRefs(uri), mURL);
@@ -132,13 +114,7 @@ nsresult AsyncScriptCompiler::Start(
   rv = NS_NewIncrementalStreamLoader(getter_AddRefs(loader), this);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  return channel->AsyncOpen2(loader);
-||||||| merged common ancestors
-    return channel->AsyncOpen2(loader);
-=======
   return channel->AsyncOpen(loader);
->>>>>>> upstream-releases
 }
 
 static void OffThreadScriptLoaderCallback(JS::OffThreadToken* aToken,
@@ -151,37 +127,9 @@ static void OffThreadScriptLoaderCallback(JS::OffThreadToken* aToken,
   SystemGroup::Dispatch(TaskCategory::Other, scriptCompiler.forget());
 }
 
-<<<<<<< HEAD
-bool AsyncScriptCompiler::StartCompile(JSContext* aCx) {
-  Rooted<JSObject*> global(aCx, mGlobalObject->GetGlobalJSObject());
-||||||| merged common ancestors
-bool
-AsyncScriptCompiler::StartCompile(JSContext* aCx)
-{
-    Rooted<JSObject*> global(aCx, mGlobalObject->GetGlobalJSObject());
-
-    JS::SourceBufferHolder srcBuf(std::move(mScriptText), mScriptLength);
-    if (JS::CanCompileOffThread(aCx, mOptions, mScriptLength)) {
-        if (!JS::CompileOffThread(aCx, mOptions, srcBuf,
-                                  OffThreadScriptLoaderCallback,
-                                  static_cast<void*>(this))) {
-            return false;
-        }
-
-        NS_ADDREF(this);
-        return true;
-    }
-=======
 bool AsyncScriptCompiler::StartCompile(JSContext* aCx) {
   Rooted<JSObject*> global(aCx, mGlobalObject->GetGlobalJSObject());
 
-  JS::SourceText<char16_t> srcBuf;
-  if (!srcBuf.init(aCx, std::move(mScriptText), mScriptLength)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   JS::SourceText<char16_t> srcBuf;
   if (!srcBuf.init(aCx, std::move(mScriptText), mScriptLength)) {
     return false;
@@ -192,47 +140,16 @@ bool AsyncScriptCompiler::StartCompile(JSContext* aCx) {
                               OffThreadScriptLoaderCallback,
                               static_cast<void*>(this))) {
       return false;
-||||||| merged common ancestors
-    Rooted<JSScript*> script(aCx);
-    if (!JS::Compile(aCx, mOptions, srcBuf, &script)) {
-        return false;
-=======
-  if (JS::CanCompileOffThread(aCx, mOptions, mScriptLength)) {
-    if (!JS::CompileOffThread(aCx, mOptions, srcBuf,
-                              OffThreadScriptLoaderCallback,
-                              static_cast<void*>(this))) {
-      return false;
->>>>>>> upstream-releases
     }
 
     NS_ADDREF(this);
     return true;
   }
 
-<<<<<<< HEAD
-  Rooted<JSScript*> script(aCx);
-  if (!JS::Compile(aCx, mOptions, srcBuf, &script)) {
-    return false;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-AsyncScriptCompiler::Run()
-{
-    AutoJSAPI jsapi;
-    if (jsapi.Init(mGlobalObject)) {
-        FinishCompile(jsapi.cx());
-    } else {
-        jsapi.Init();
-        JS::CancelOffThreadScript(jsapi.cx(), mToken);
-
-        mPromise->MaybeReject(NS_ERROR_FAILURE);
-    }
-=======
   Rooted<JSScript*> script(aCx, JS::Compile(aCx, mOptions, srcBuf));
   if (!script) {
     return false;
   }
->>>>>>> upstream-releases
 
   Finish(aCx, script);
   return true;
@@ -269,30 +186,12 @@ void AsyncScriptCompiler::Finish(JSContext* aCx, Handle<JSScript*> aScript) {
   mPromise->MaybeResolve(result);
 }
 
-<<<<<<< HEAD
-void AsyncScriptCompiler::Reject(JSContext* aCx) {
-  RootedValue value(aCx, JS::UndefinedValue());
-  if (JS_GetPendingException(aCx, &value)) {
-    JS_ClearPendingException(aCx);
-  }
-  mPromise->MaybeReject(aCx, value);
-||||||| merged common ancestors
-void
-AsyncScriptCompiler::Reject(JSContext* aCx)
-{
-    RootedValue value(aCx, JS::UndefinedValue());
-    if (JS_GetPendingException(aCx, &value)) {
-        JS_ClearPendingException(aCx);
-    }
-    mPromise->MaybeReject(aCx, value);
-=======
 void AsyncScriptCompiler::Reject(JSContext* aCx) {
   RootedValue value(aCx, JS::UndefinedValue());
   if (JS_GetPendingException(aCx, &value)) {
     JS_ClearPendingException(aCx);
   }
   mPromise->MaybeReject(value);
->>>>>>> upstream-releases
 }
 
 void AsyncScriptCompiler::Reject(JSContext* aCx, const char* aMsg) {
@@ -352,54 +251,6 @@ AsyncScriptCompiler::OnStreamComplete(nsIIncrementalStreamLoader* aLoader,
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Promise> ChromeUtils::CompileScript(
-    GlobalObject& aGlobal, const nsAString& aURL,
-    const CompileScriptOptionsDictionary& aOptions, ErrorResult& aRv) {
-  nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
-  MOZ_ASSERT(global);
-
-  RefPtr<Promise> promise = Promise::Create(global, aRv);
-  if (aRv.Failed()) {
-    return nullptr;
-  }
-
-  NS_ConvertUTF16toUTF8 url(aURL);
-  RefPtr<AsyncScriptCompiler> compiler =
-      new AsyncScriptCompiler(aGlobal.Context(), global, url, promise);
-
-  nsresult rv = compiler->Start(aGlobal.Context(), aOptions,
-                                aGlobal.GetSubjectPrincipal());
-  if (NS_FAILED(rv)) {
-    promise->MaybeReject(rv);
-  }
-
-  return promise.forget();
-||||||| merged common ancestors
-/* static */ already_AddRefed<Promise>
-ChromeUtils::CompileScript(GlobalObject& aGlobal,
-                           const nsAString& aURL,
-                           const CompileScriptOptionsDictionary& aOptions,
-                           ErrorResult& aRv)
-{
-    nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
-    MOZ_ASSERT(global);
-
-    RefPtr<Promise> promise = Promise::Create(global, aRv);
-    if (aRv.Failed()) {
-        return nullptr;
-    }
-
-    NS_ConvertUTF16toUTF8 url(aURL);
-    RefPtr<AsyncScriptCompiler> compiler = new AsyncScriptCompiler(aGlobal.Context(), global, url, promise);
-
-    nsresult rv = compiler->Start(aGlobal.Context(), aOptions, aGlobal.GetSubjectPrincipal());
-    if (NS_FAILED(rv)) {
-        promise->MaybeReject(rv);
-    }
-
-    return promise.forget();
-=======
 /* static */
 already_AddRefed<Promise> ChromeUtils::CompileScript(
     GlobalObject& aGlobal, const nsAString& aURL,
@@ -423,7 +274,6 @@ already_AddRefed<Promise> ChromeUtils::CompileScript(
   }
 
   return promise.forget();
->>>>>>> upstream-releases
 }
 
 PrecompiledScript::PrecompiledScript(nsISupports* aParent,
@@ -439,45 +289,8 @@ PrecompiledScript::PrecompiledScript(nsISupports* aParent,
   mozilla::HoldJSObjects(this);
 };
 
-<<<<<<< HEAD
 PrecompiledScript::~PrecompiledScript() { mozilla::DropJSObjects(this); }
 
-void PrecompiledScript::ExecuteInGlobal(JSContext* aCx, HandleObject aGlobal,
-                                        MutableHandleValue aRval,
-                                        ErrorResult& aRv) {
-  {
-    RootedObject targetObj(aCx, JS_FindCompilationScope(aCx, aGlobal));
-    JSAutoRealm ar(aCx, targetObj);
-||||||| merged common ancestors
-PrecompiledScript::~PrecompiledScript()
-{
-    mozilla::DropJSObjects(this);
-}
-=======
-PrecompiledScript::~PrecompiledScript() { mozilla::DropJSObjects(this); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    Rooted<JSScript*> script(aCx, mScript);
-    if (!JS::CloneAndExecuteScript(aCx, script, aRval)) {
-      aRv.NoteJSContextException(aCx);
-      return;
-||||||| merged common ancestors
-void
-PrecompiledScript::ExecuteInGlobal(JSContext* aCx, HandleObject aGlobal,
-                                   MutableHandleValue aRval,
-                                   ErrorResult& aRv)
-{
-    {
-        RootedObject targetObj(aCx, JS_FindCompilationScope(aCx, aGlobal));
-        JSAutoRealm ar(aCx, targetObj);
-
-        Rooted<JSScript*> script(aCx, mScript);
-        if (!JS::CloneAndExecuteScript(aCx, script, aRval)) {
-            aRv.NoteJSContextException(aCx);
-            return;
-        }
-=======
 void PrecompiledScript::ExecuteInGlobal(JSContext* aCx, HandleObject aGlobal,
                                         MutableHandleValue aRval,
                                         ErrorResult& aRv) {
@@ -489,7 +302,6 @@ void PrecompiledScript::ExecuteInGlobal(JSContext* aCx, HandleObject aGlobal,
     if (!JS::CloneAndExecuteScript(aCx, script, aRval)) {
       aRv.NoteJSContextException(aCx);
       return;
->>>>>>> upstream-releases
     }
   }
 

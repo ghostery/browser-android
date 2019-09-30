@@ -184,18 +184,11 @@ const SELECT_INHERITED_COLORS_ON_OPTIONS_DONT_GET_UNIQUE_RULES_IF_RULE_SET_ON_SE
 
 function getSystemColor(color) {
   // Need to convert system color to RGB color.
-<<<<<<< HEAD
-  let textarea = document.createElementNS("http://www.w3.org/1999/xhtml", "textarea");
-  textarea.style.display = "none";
-||||||| merged common ancestors
-  let textarea = document.createElementNS("http://www.w3.org/1999/xhtml", "textarea");
-=======
   let textarea = document.createElementNS(
     "http://www.w3.org/1999/xhtml",
     "textarea"
   );
   textarea.style.display = "none";
->>>>>>> upstream-releases
   textarea.style.color = color;
   document.documentElement.appendChild(textarea);
   let computed = getComputedStyle(textarea).color;
@@ -226,20 +219,12 @@ function testOptionColors(index, item, menulist) {
   }
 
   if (expected.unstyled) {
-<<<<<<< HEAD
-    ok(!item.hasAttribute("customoptionstyling"),
-      `Item ${index} should not have any custom option styling: ${item.outerHTML}`);
-||||||| merged common ancestors
-    ok(!item.hasAttribute("customoptionstyling"),
-      `Item ${index} should not have any custom option styling`);
-=======
     ok(
       !item.hasAttribute("customoptionstyling"),
       `Item ${index} should not have any custom option styling: ${
         item.outerHTML
       }`
     );
->>>>>>> upstream-releases
   } else {
     is(
       getComputedStyle(item).color,

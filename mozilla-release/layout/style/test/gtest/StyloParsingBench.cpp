@@ -87,16 +87,8 @@ MOZ_GTEST_BENCH(Stylo, Servo_StyleSheet_FromUTF8Bytes_Bench,
                 [] { ServoParsingBench(nullptr); });
 
 MOZ_GTEST_BENCH(Stylo, Servo_StyleSheet_FromUTF8Bytes_Bench_UseCounters, [] {
-<<<<<<< HEAD
-  UniquePtr<StyleUseCounters> counters(Servo_UseCounters_Create());
-  ServoParsingBench(counters.get());
-||||||| merged common ancestors
-    UniquePtr<StyleUseCounters> counters(Servo_UseCounters_Create());
-    ServoParsingBench(counters.get());
-=======
   UniquePtr<StyleUseCounters> counters = Servo_UseCounters_Create().Consume();
   ServoParsingBench(counters.get());
->>>>>>> upstream-releases
 });
 
 MOZ_GTEST_BENCH(Stylo, Servo_DeclarationBlock_SetPropertyById_Bench,

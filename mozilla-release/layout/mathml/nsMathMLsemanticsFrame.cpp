@@ -16,21 +16,10 @@ using namespace mozilla;
 // <semantics> -- associate annotations with a MathML expression
 //
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMathMLsemanticsFrame(nsIPresShell* aPresShell,
-                                     ComputedStyle* aStyle) {
-  return new (aPresShell) nsMathMLsemanticsFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMathMLsemanticsFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMathMLsemanticsFrame(aStyle);
-=======
 nsIFrame* NS_NewMathMLsemanticsFrame(PresShell* aPresShell,
                                      ComputedStyle* aStyle) {
   return new (aPresShell)
       nsMathMLsemanticsFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLsemanticsFrame)

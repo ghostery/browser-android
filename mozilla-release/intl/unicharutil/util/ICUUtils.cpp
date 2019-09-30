@@ -92,22 +92,10 @@ void ICUUtils::LanguageTagIterForContent::GetNext(nsACString& aBCP47LangTag) {
   aBCP47LangTag.Truncate();  // Signal iterator exhausted
 }
 
-<<<<<<< HEAD
-/* static */ bool ICUUtils::LocalizeNumber(double aValue,
-                                           LanguageTagIterForContent& aLangTags,
-                                           nsAString& aLocalizedValue) {
-||||||| merged common ancestors
-/* static */ bool
-ICUUtils::LocalizeNumber(double aValue,
-                         LanguageTagIterForContent& aLangTags,
-                         nsAString& aLocalizedValue)
-{
-=======
 /* static */
 bool ICUUtils::LocalizeNumber(double aValue,
                               LanguageTagIterForContent& aLangTags,
                               nsAString& aLocalizedValue) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLangTags.IsAtStart(), "Don't call Next() before passing");
 
   static const int32_t kBufferSize = 256;
@@ -118,16 +106,8 @@ bool ICUUtils::LocalizeNumber(double aValue,
   aLangTags.GetNext(langTag);
   while (!langTag.IsEmpty()) {
     UErrorCode status = U_ZERO_ERROR;
-<<<<<<< HEAD
-    AutoCloseUNumberFormat format(
-        unum_open(UNUM_DECIMAL, nullptr, 0, langTag.get(), nullptr, &status));
-||||||| merged common ancestors
-    AutoCloseUNumberFormat format(unum_open(UNUM_DECIMAL, nullptr, 0,
-                                            langTag.get(), nullptr, &status));
-=======
     UniqueUNumberFormat format(
         unum_open(UNUM_DECIMAL, nullptr, 0, langTag.get(), nullptr, &status));
->>>>>>> upstream-releases
     // Since unum_setAttribute have no UErrorCode parameter, we have to
     // check error status.
     if (U_FAILURE(status)) {
@@ -139,26 +119,11 @@ bool ICUUtils::LocalizeNumber(double aValue,
     // ICU default is a maximum of 3 significant fractional digits. We don't
     // want that limit, so we set it to the maximum that a double can represent
     // (14-16 decimal fractional digits).
-<<<<<<< HEAD
-    unum_setAttribute(format, UNUM_MAX_FRACTION_DIGITS, 16);
-    int32_t length = unum_formatDouble(format, aValue, buffer, kBufferSize,
-                                       nullptr, &status);
-    NS_ASSERTION(length < kBufferSize && status != U_BUFFER_OVERFLOW_ERROR &&
-                     status != U_STRING_NOT_TERMINATED_WARNING,
-||||||| merged common ancestors
-    unum_setAttribute(format, UNUM_MAX_FRACTION_DIGITS, 16);
-    int32_t length = unum_formatDouble(format, aValue, buffer, kBufferSize,
-                                       nullptr, &status);
-    NS_ASSERTION(length < kBufferSize &&
-                 status != U_BUFFER_OVERFLOW_ERROR &&
-                 status != U_STRING_NOT_TERMINATED_WARNING,
-=======
     unum_setAttribute(format.get(), UNUM_MAX_FRACTION_DIGITS, 16);
     int32_t length = unum_formatDouble(format.get(), aValue, buffer,
                                        kBufferSize, nullptr, &status);
     NS_ASSERTION(length < kBufferSize && status != U_BUFFER_OVERFLOW_ERROR &&
                      status != U_STRING_NOT_TERMINATED_WARNING,
->>>>>>> upstream-releases
                  "Need a bigger buffer?!");
     if (U_SUCCESS(status)) {
       ICUUtils::AssignUCharArrayToString(buffer, length, aLocalizedValue);
@@ -169,19 +134,9 @@ bool ICUUtils::LocalizeNumber(double aValue,
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ double ICUUtils::ParseNumber(
-    nsAString& aValue, LanguageTagIterForContent& aLangTags) {
-||||||| merged common ancestors
-/* static */ double
-ICUUtils::ParseNumber(nsAString& aValue,
-                      LanguageTagIterForContent& aLangTags)
-{
-=======
 /* static */
 double ICUUtils::ParseNumber(nsAString& aValue,
                              LanguageTagIterForContent& aLangTags) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLangTags.IsAtStart(), "Don't call Next() before passing");
 
   if (aValue.IsEmpty()) {
@@ -194,38 +149,17 @@ double ICUUtils::ParseNumber(nsAString& aValue,
   aLangTags.GetNext(langTag);
   while (!langTag.IsEmpty()) {
     UErrorCode status = U_ZERO_ERROR;
-<<<<<<< HEAD
-    AutoCloseUNumberFormat format(
-        unum_open(UNUM_DECIMAL, nullptr, 0, langTag.get(), nullptr, &status));
-    if (!LocaleNumberGroupingIsEnabled()) {
-      unum_setAttribute(format.rwget(), UNUM_GROUPING_USED, UBool(0));
-    }
-||||||| merged common ancestors
-    AutoCloseUNumberFormat format(unum_open(UNUM_DECIMAL, nullptr, 0,
-                                            langTag.get(), nullptr, &status));
-=======
     UniqueUNumberFormat format(
         unum_open(UNUM_DECIMAL, nullptr, 0, langTag.get(), nullptr, &status));
     if (!LocaleNumberGroupingIsEnabled()) {
       unum_setAttribute(format.get(), UNUM_GROUPING_USED, UBool(0));
     }
->>>>>>> upstream-releases
     int32_t parsePos = 0;
     static_assert(sizeof(UChar) == 2 && sizeof(nsAString::char_type) == 2,
                   "Unexpected character size - the following cast is unsafe");
-<<<<<<< HEAD
-    double val =
-        unum_parseDouble(format, (const UChar*)PromiseFlatString(aValue).get(),
-                         length, &parsePos, &status);
-||||||| merged common ancestors
-    double val = unum_parseDouble(format,
-                                  (const UChar*)PromiseFlatString(aValue).get(),
-                                  length, &parsePos, &status);
-=======
     double val = unum_parseDouble(format.get(),
                                   (const UChar*)PromiseFlatString(aValue).get(),
                                   length, &parsePos, &status);
->>>>>>> upstream-releases
     if (U_SUCCESS(status) && parsePos == (int32_t)length) {
       return val;
     }
@@ -234,21 +168,9 @@ double ICUUtils::ParseNumber(nsAString& aValue,
   return std::numeric_limits<float>::quiet_NaN();
 }
 
-<<<<<<< HEAD
-/* static */ void ICUUtils::AssignUCharArrayToString(UChar* aICUString,
-                                                     int32_t aLength,
-                                                     nsAString& aMozString) {
-||||||| merged common ancestors
-/* static */ void
-ICUUtils::AssignUCharArrayToString(UChar* aICUString,
-                                   int32_t aLength,
-                                   nsAString& aMozString)
-{
-=======
 /* static */
 void ICUUtils::AssignUCharArrayToString(UChar* aICUString, int32_t aLength,
                                         nsAString& aMozString) {
->>>>>>> upstream-releases
   // Both ICU's UnicodeString and Mozilla's nsAString use UTF-16, so we can
   // cast here.
 
@@ -260,16 +182,8 @@ void ICUUtils::AssignUCharArrayToString(UChar* aICUString, int32_t aLength,
   NS_ASSERTION((int32_t)aMozString.Length() == aLength, "Conversion failed");
 }
 
-<<<<<<< HEAD
-/* static */ nsresult ICUUtils::UErrorToNsResult(const UErrorCode aErrorCode) {
-||||||| merged common ancestors
-/* static */ nsresult
-ICUUtils::UErrorToNsResult(const UErrorCode aErrorCode)
-{
-=======
 /* static */
 nsresult ICUUtils::UErrorToNsResult(const UErrorCode aErrorCode) {
->>>>>>> upstream-releases
   if (U_SUCCESS(aErrorCode)) {
     return NS_OK;
   }

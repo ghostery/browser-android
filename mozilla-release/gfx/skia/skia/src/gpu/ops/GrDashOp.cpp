@@ -8,13 +8,6 @@
 #include "GrDashOp.h"
 #include "GrAppliedClip.h"
 #include "GrCaps.h"
-<<<<<<< HEAD
-#include "GrContext.h"
-#include "GrContextPriv.h"
-||||||| merged common ancestors
-#include "GrContext.h"
-=======
->>>>>>> upstream-releases
 #include "GrCoordTransform.h"
 #include "GrDefaultGeoProcFactory.h"
 #include "GrDrawOpTest.h"
@@ -216,37 +209,16 @@ public:
         SkScalar fPerpendicularScale;
     };
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-                                          const LineData& geometry,
-                                          SkPaint::Cap cap,
-                                          AAMode aaMode, bool fullDash,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint, const LineData& geometry,
-                                          SkPaint::Cap cap, AAMode aaMode, bool fullDash,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
                                           const LineData& geometry,
                                           SkPaint::Cap cap,
                                           AAMode aaMode, bool fullDash,
->>>>>>> upstream-releases
                                           const GrUserStencilSettings* stencilSettings) {
-<<<<<<< HEAD
-        GrOpMemoryPool* pool = context->contextPriv().opMemoryPool();
-
-        return pool->allocate<DashOp>(std::move(paint), geometry, cap,
-                                      aaMode, fullDash, stencilSettings);
-||||||| merged common ancestors
-        return std::unique_ptr<GrDrawOp>(
-                new DashOp(std::move(paint), geometry, cap, aaMode, fullDash, stencilSettings));
-=======
         GrOpMemoryPool* pool = context->priv().opMemoryPool();
 
         return pool->allocate<DashOp>(std::move(paint), geometry, cap,
                                       aaMode, fullDash, stencilSettings);
->>>>>>> upstream-releases
     }
 
     const char* name() const override { return "DashOp"; }
@@ -285,36 +257,16 @@ public:
         return flags;
     }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
->>>>>>> upstream-releases
         GrProcessorAnalysisCoverage coverage;
         if (AAMode::kNone == fAAMode && !clip->numClipCoverageFragmentProcessors()) {
             coverage = GrProcessorAnalysisCoverage::kNone;
         } else {
             coverage = GrProcessorAnalysisCoverage::kSingleChannel;
         }
-<<<<<<< HEAD
-        auto analysis = fProcessorSet.finalize(fColor, coverage, clip, false, caps, &fColor);
-        fDisallowCombineOnTouchOrOverlap = analysis.requiresDstTexture() ||
-                                           (fProcessorSet.xferProcessor() &&
-                                            fProcessorSet.xferProcessor()->xferBarrierType(caps));
-||||||| merged common ancestors
-        auto analysis = fProcessorSet.finalize(fColor, coverage, clip, false, caps, dstIsClamped,
-                                               &fColor);
-        fDisallowCombineOnTouchOrOverlap = analysis.requiresDstTexture() ||
-                                           (fProcessorSet.xferProcessor() &&
-                                            fProcessorSet.xferProcessor()->xferBarrierType(caps));
-=======
         auto analysis = fProcessorSet.finalize(
                 fColor, coverage, clip, fStencilSettings, fsaaType, caps, &fColor);
->>>>>>> upstream-releases
         fUsesLocalCoords = analysis.usesLocalCoords();
         return analysis;
     }
@@ -325,15 +277,7 @@ private:
     DashOp(GrPaint&& paint, const LineData& geometry, SkPaint::Cap cap, AAMode aaMode,
            bool fullDash, const GrUserStencilSettings* stencilSettings)
             : INHERITED(ClassID())
-<<<<<<< HEAD
-            , fColor(paint.getColor())
-||||||| merged common ancestors
-            , fColor(paint.getColor())
-            , fAllowsSRGBInputs(paint.getAllowSRGBInputs())
-            , fDisableSRGBOutputConversion(paint.getDisableOutputConversionToSRGB())
-=======
             , fColor(paint.getColor4f())
->>>>>>> upstream-releases
             , fFullDash(fullDash)
             , fCap(cap)
             , fAAMode(aaMode)
@@ -626,27 +570,9 @@ private:
             return;
         }
 
-<<<<<<< HEAD
-        size_t vertexStride;
-        if (fullDash) {
-            vertexStride =
-                    SkPaint::kRound_Cap == fCap ? sizeof(DashCircleVertex) : sizeof(DashLineVertex);
-        } else {
-            vertexStride = sizeof(SkPoint);
-        }
-        SkASSERT(vertexStride == gp->debugOnly_vertexStride());
-        QuadHelper helper(target, vertexStride, totalRectCount);
-        void* vertices = helper.vertices();
-        if (!vertices) {
-||||||| merged common ancestors
-        QuadHelper helper;
-        void* vertices = helper.init(target, gp->getVertexStride(), totalRectCount);
-        if (!vertices) {
-=======
         QuadHelper helper(target, gp->vertexStride(), totalRectCount);
         GrVertexWriter vertices{ helper.vertices() };
         if (!vertices.fPtr) {
->>>>>>> upstream-releases
             return;
         }
 
@@ -656,111 +582,39 @@ private:
 
             if (!draws[i].fLineDone) {
                 if (fullDash) {
-<<<<<<< HEAD
-                    setup_dashed_rect(
-                            rects[rectIndex], vertices, curVIdx, geom.fSrcRotInv,
-                            draws[i].fStartOffset, draws[i].fDevBloatX, draws[i].fDevBloatY,
-                            draws[i].fLineLength, draws[i].fHalfDevStroke, draws[i].fIntervals[0],
-                            draws[i].fIntervals[1], draws[i].fStrokeWidth, capType, vertexStride);
-||||||| merged common ancestors
-                    setup_dashed_rect(rects[rectIndex], vertices, curVIdx, geom.fSrcRotInv,
-                                      draws[i].fStartOffset, draws[i].fDevBloatX,
-                                      draws[i].fDevBloatY, draws[i].fLineLength,
-                                      draws[i].fHalfDevStroke, draws[i].fIntervals[0],
-                                      draws[i].fIntervals[1], draws[i].fStrokeWidth,
-                                      capType, gp->getVertexStride());
-=======
                     setup_dashed_rect(
                             rects[rectIndex], vertices, geom.fSrcRotInv,
                             draws[i].fStartOffset, draws[i].fDevBloatX, draws[i].fDevBloatY,
                             draws[i].fLineLength, draws[i].fHalfDevStroke, draws[i].fIntervals[0],
                             draws[i].fIntervals[1], draws[i].fStrokeWidth, capType);
->>>>>>> upstream-releases
                 } else {
-<<<<<<< HEAD
-                    SkPoint* verts = reinterpret_cast<SkPoint*>(vertices);
-                    setup_dashed_rect_pos(rects[rectIndex], curVIdx, geom.fSrcRotInv, verts);
-||||||| merged common ancestors
-                    SkPoint* verts = reinterpret_cast<SkPoint*>(vertices);
-                    SkASSERT(gp->getVertexStride() == sizeof(SkPoint));
-                    setup_dashed_rect_pos(rects[rectIndex], curVIdx, geom.fSrcRotInv, verts);
-=======
                     vertices.writeQuad(GrQuad::MakeFromRect(rects[rectIndex], geom.fSrcRotInv));
->>>>>>> upstream-releases
                 }
             }
             rectIndex++;
 
             if (draws[i].fHasStartRect) {
                 if (fullDash) {
-<<<<<<< HEAD
-                    setup_dashed_rect(
-                            rects[rectIndex], vertices, curVIdx, geom.fSrcRotInv,
-                            draws[i].fStartOffset, draws[i].fDevBloatX, draws[i].fDevBloatY,
-                            draws[i].fIntervals[0], draws[i].fHalfDevStroke, draws[i].fIntervals[0],
-                            draws[i].fIntervals[1], draws[i].fStrokeWidth, capType, vertexStride);
-||||||| merged common ancestors
-                    setup_dashed_rect(rects[rectIndex], vertices, curVIdx, geom.fSrcRotInv,
-                                      draws[i].fStartOffset, draws[i].fDevBloatX,
-                                      draws[i].fDevBloatY, draws[i].fIntervals[0],
-                                      draws[i].fHalfDevStroke, draws[i].fIntervals[0],
-                                      draws[i].fIntervals[1], draws[i].fStrokeWidth, capType,
-                                      gp->getVertexStride());
-=======
                     setup_dashed_rect(
                             rects[rectIndex], vertices, geom.fSrcRotInv,
                             draws[i].fStartOffset, draws[i].fDevBloatX, draws[i].fDevBloatY,
                             draws[i].fIntervals[0], draws[i].fHalfDevStroke, draws[i].fIntervals[0],
                             draws[i].fIntervals[1], draws[i].fStrokeWidth, capType);
->>>>>>> upstream-releases
                 } else {
-<<<<<<< HEAD
-                    SkPoint* verts = reinterpret_cast<SkPoint*>(vertices);
-                    setup_dashed_rect_pos(rects[rectIndex], curVIdx, geom.fSrcRotInv, verts);
-||||||| merged common ancestors
-                    SkPoint* verts = reinterpret_cast<SkPoint*>(vertices);
-                    SkASSERT(gp->getVertexStride() == sizeof(SkPoint));
-                    setup_dashed_rect_pos(rects[rectIndex], curVIdx, geom.fSrcRotInv, verts);
-=======
                     vertices.writeQuad(GrQuad::MakeFromRect(rects[rectIndex], geom.fSrcRotInv));
->>>>>>> upstream-releases
                 }
             }
             rectIndex++;
 
             if (draws[i].fHasEndRect) {
                 if (fullDash) {
-<<<<<<< HEAD
-                    setup_dashed_rect(
-                            rects[rectIndex], vertices, curVIdx, geom.fSrcRotInv,
-                            draws[i].fStartOffset, draws[i].fDevBloatX, draws[i].fDevBloatY,
-                            draws[i].fIntervals[0], draws[i].fHalfDevStroke, draws[i].fIntervals[0],
-                            draws[i].fIntervals[1], draws[i].fStrokeWidth, capType, vertexStride);
-||||||| merged common ancestors
-                    setup_dashed_rect(rects[rectIndex], vertices, curVIdx, geom.fSrcRotInv,
-                                      draws[i].fStartOffset, draws[i].fDevBloatX,
-                                      draws[i].fDevBloatY, draws[i].fIntervals[0],
-                                      draws[i].fHalfDevStroke, draws[i].fIntervals[0],
-                                      draws[i].fIntervals[1], draws[i].fStrokeWidth, capType,
-                                      gp->getVertexStride());
-=======
                     setup_dashed_rect(
                             rects[rectIndex], vertices, geom.fSrcRotInv,
                             draws[i].fStartOffset, draws[i].fDevBloatX, draws[i].fDevBloatY,
                             draws[i].fIntervals[0], draws[i].fHalfDevStroke, draws[i].fIntervals[0],
                             draws[i].fIntervals[1], draws[i].fStrokeWidth, capType);
->>>>>>> upstream-releases
                 } else {
-<<<<<<< HEAD
-                    SkPoint* verts = reinterpret_cast<SkPoint*>(vertices);
-                    setup_dashed_rect_pos(rects[rectIndex], curVIdx, geom.fSrcRotInv, verts);
-||||||| merged common ancestors
-                    SkPoint* verts = reinterpret_cast<SkPoint*>(vertices);
-                    SkASSERT(gp->getVertexStride() == sizeof(SkPoint));
-                    setup_dashed_rect_pos(rects[rectIndex], curVIdx, geom.fSrcRotInv, verts);
-=======
                     vertices.writeQuad(GrQuad::MakeFromRect(rects[rectIndex], geom.fSrcRotInv));
->>>>>>> upstream-releases
                 }
             }
             rectIndex++;
@@ -773,44 +627,14 @@ private:
         if (AAMode::kCoverageWithMSAA == fAAMode) {
             pipelineFlags |= GrPipeline::kHWAntialias_Flag;
         }
-<<<<<<< HEAD
-        auto pipe = target->makePipeline(pipelineFlags, std::move(fProcessorSet),
-                                         target->detachAppliedClip());
-        helper.recordDraw(target, std::move(gp), pipe.fPipeline, pipe.fFixedDynamicState);
-||||||| merged common ancestors
-        if (fDisableSRGBOutputConversion) {
-            pipelineFlags |= GrPipeline::kDisableOutputConversionToSRGB_Flag;
-        }
-        if (fAllowsSRGBInputs) {
-            pipelineFlags |= GrPipeline::kAllowSRGBInputs_Flag;
-        }
-        const GrPipeline* pipeline = target->makePipeline(pipelineFlags, std::move(fProcessorSet),
-                                                          target->detachAppliedClip());
-        helper.recordDraw(target, gp.get(), pipeline);
-=======
         flushState->executeDrawsAndUploadsForMeshDrawOp(
                 this, chainBounds, std::move(fProcessorSet), pipelineFlags, fStencilSettings);
->>>>>>> upstream-releases
     }
 
     CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
         DashOp* that = t->cast<DashOp>();
         if (fProcessorSet != that->fProcessorSet) {
-<<<<<<< HEAD
             return CombineResult::kCannotCombine;
-        }
-        if (fDisallowCombineOnTouchOrOverlap &&
-            GrRectsTouchOrOverlap(this->bounds(), that->bounds())) {
-            return CombineResult::kCannotCombine;
-||||||| merged common ancestors
-            return false;
-        }
-        if (fDisallowCombineOnTouchOrOverlap &&
-            GrRectsTouchOrOverlap(this->bounds(), that->bounds())) {
-            return false;
-=======
-            return CombineResult::kCannotCombine;
->>>>>>> upstream-releases
         }
 
         if (this->aaMode() != that->aaMode()) {
@@ -835,15 +659,7 @@ private:
         }
 
         fLines.push_back_n(that->fLines.count(), that->fLines.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
         return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
-        return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     const SkPMColor4f& color() const { return fColor; }
@@ -856,17 +672,7 @@ private:
     static const int kIndicesPerDash = 6;
 
     SkSTArray<1, LineData, true> fLines;
-<<<<<<< HEAD
-    GrColor fColor;
-    bool fDisallowCombineOnTouchOrOverlap : 1;
-||||||| merged common ancestors
-    GrColor fColor;
-    bool fAllowsSRGBInputs : 1;
-    bool fDisableSRGBOutputConversion : 1;
-    bool fDisallowCombineOnTouchOrOverlap : 1;
-=======
     SkPMColor4f fColor;
->>>>>>> upstream-releases
     bool fUsesLocalCoords : 1;
     bool fFullDash : 1;
     // We use 3 bits for this 3-value enum because MSVS makes the underlying types signed.
@@ -878,15 +684,8 @@ private:
     typedef GrMeshDrawOp INHERITED;
 };
 
-<<<<<<< HEAD
-std::unique_ptr<GrDrawOp> GrDashOp::MakeDashLineOp(GrContext* context,
-                                                   GrPaint&& paint,
-||||||| merged common ancestors
-std::unique_ptr<GrDrawOp> GrDashOp::MakeDashLineOp(GrPaint&& paint,
-=======
 std::unique_ptr<GrDrawOp> GrDashOp::MakeDashLineOp(GrRecordingContext* context,
                                                    GrPaint&& paint,
->>>>>>> upstream-releases
                                                    const SkMatrix& viewMatrix,
                                                    const SkPoint pts[2],
                                                    AAMode aaMode,
@@ -985,47 +784,20 @@ private:
     DashingCircleEffect(const SkPMColor4f&, AAMode aaMode, const SkMatrix& localMatrix,
                         bool usesLocalCoords);
 
-<<<<<<< HEAD
-    const Attribute& onVertexAttribute(int i) const override {
-        return IthAttribute(i, kInPosition, kInDashParams, kInCircleParams);
-    }
-
-    GrColor             fColor;
-||||||| merged common ancestors
-    GrColor             fColor;
-=======
     SkPMColor4f         fColor;
->>>>>>> upstream-releases
     SkMatrix            fLocalMatrix;
     bool                fUsesLocalCoords;
     AAMode              fAAMode;
-<<<<<<< HEAD
-
-    static constexpr Attribute kInPosition =
-            {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
-    static constexpr Attribute kInDashParams =
-            {"inDashParams", kFloat3_GrVertexAttribType, kHalf3_GrSLType};
-    static constexpr Attribute kInCircleParams =
-            {"inCircleParams", kFloat2_GrVertexAttribType, kHalf2_GrSLType};
-||||||| merged common ancestors
-    const Attribute*    fInPosition;
-    const Attribute*    fInDashParams;
-    const Attribute*    fInCircleParams;
-=======
 
     Attribute fInPosition;
     Attribute fInDashParams;
     Attribute fInCircleParams;
->>>>>>> upstream-releases
 
     GR_DECLARE_GEOMETRY_PROCESSOR_TEST
 
     friend class GLDashingCircleEffect;
     typedef GrGeometryProcessor INHERITED;
 };
-constexpr GrPrimitiveProcessor::Attribute DashingCircleEffect::kInPosition;
-constexpr GrPrimitiveProcessor::Attribute DashingCircleEffect::kInDashParams;
-constexpr GrPrimitiveProcessor::Attribute DashingCircleEffect::kInCircleParams;
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -1070,49 +842,25 @@ void GLDashingCircleEffect::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
     // XY are dashPos, Z is dashInterval
     GrGLSLVarying dashParams(kHalf3_GrSLType);
     varyingHandler->addVarying("DashParam", &dashParams);
-<<<<<<< HEAD
-    vertBuilder->codeAppendf("%s = %s;", dashParams.vsOut(), dce.kInDashParams.name());
-||||||| merged common ancestors
-    vertBuilder->codeAppendf("%s = %s;", dashParams.vsOut(), dce.inDashParams()->fName);
-=======
     vertBuilder->codeAppendf("%s = %s;", dashParams.vsOut(), dce.fInDashParams.name());
->>>>>>> upstream-releases
 
     // x refers to circle radius - 0.5, y refers to cicle's center x coord
     GrGLSLVarying circleParams(kHalf2_GrSLType);
     varyingHandler->addVarying("CircleParams", &circleParams);
-<<<<<<< HEAD
-    vertBuilder->codeAppendf("%s = %s;", circleParams.vsOut(), dce.kInCircleParams.name());
-||||||| merged common ancestors
-    vertBuilder->codeAppendf("%s = %s;", circleParams.vsOut(), dce.inCircleParams()->fName);
-=======
     vertBuilder->codeAppendf("%s = %s;", circleParams.vsOut(), dce.fInCircleParams.name());
->>>>>>> upstream-releases
 
     GrGLSLFPFragmentBuilder* fragBuilder = args.fFragBuilder;
     // Setup pass through color
     this->setupUniformColor(fragBuilder, uniformHandler, args.fOutputColor, &fColorUniform);
 
     // Setup position
-<<<<<<< HEAD
-    this->writeOutputPosition(vertBuilder, gpArgs, dce.kInPosition.name());
-||||||| merged common ancestors
-    this->writeOutputPosition(vertBuilder, gpArgs, dce.inPosition()->fName);
-=======
     this->writeOutputPosition(vertBuilder, gpArgs, dce.fInPosition.name());
->>>>>>> upstream-releases
 
     // emit transforms
     this->emitTransforms(vertBuilder,
                          varyingHandler,
                          uniformHandler,
-<<<<<<< HEAD
-                         dce.kInPosition.asShaderVar(),
-||||||| merged common ancestors
-                         dce.inPosition()->asShaderVar(),
-=======
                          dce.fInPosition.asShaderVar(),
->>>>>>> upstream-releases
                          dce.localMatrix(),
                          args.fFPCoordTransformHandler);
 
@@ -1184,18 +932,10 @@ DashingCircleEffect::DashingCircleEffect(const SkPMColor4f& color,
     , fLocalMatrix(localMatrix)
     , fUsesLocalCoords(usesLocalCoords)
     , fAAMode(aaMode) {
-<<<<<<< HEAD
-    this->setVertexAttributeCnt(3);
-||||||| merged common ancestors
-    fInPosition = &this->addVertexAttrib("inPosition", kFloat2_GrVertexAttribType);
-    fInDashParams = &this->addVertexAttrib("inDashParams", kHalf3_GrVertexAttribType);
-    fInCircleParams = &this->addVertexAttrib("inCircleParams", kHalf2_GrVertexAttribType);
-=======
     fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
     fInDashParams = {"inDashParams", kFloat3_GrVertexAttribType, kHalf3_GrSLType};
     fInCircleParams = {"inCircleParams", kFloat2_GrVertexAttribType, kHalf2_GrSLType};
     this->setVertexAttributes(&fInPosition, 3);
->>>>>>> upstream-releases
 }
 
 GR_DEFINE_GEOMETRY_PROCESSOR_TEST(DashingCircleEffect);
@@ -1249,38 +989,14 @@ private:
     DashingLineEffect(const SkPMColor4f&, AAMode aaMode, const SkMatrix& localMatrix,
                       bool usesLocalCoords);
 
-<<<<<<< HEAD
-    const Attribute& onVertexAttribute(int i) const override {
-        return IthAttribute(i, kInPosition, kInDashParams, kInRectParams);
-    }
-
-    GrColor             fColor;
-||||||| merged common ancestors
-    GrColor             fColor;
-=======
     SkPMColor4f         fColor;
->>>>>>> upstream-releases
     SkMatrix            fLocalMatrix;
     bool                fUsesLocalCoords;
     AAMode              fAAMode;
-<<<<<<< HEAD
-
-    static constexpr Attribute kInPosition =
-            {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
-    static constexpr Attribute kInDashParams =
-            {"inDashParams", kFloat3_GrVertexAttribType, kHalf3_GrSLType};
-    static constexpr Attribute kInRectParams =
-            {"inRect", kFloat4_GrVertexAttribType, kHalf4_GrSLType};
-||||||| merged common ancestors
-    const Attribute*    fInPosition;
-    const Attribute*    fInDashParams;
-    const Attribute*    fInRectParams;
-=======
 
     Attribute fInPosition;
     Attribute fInDashParams;
     Attribute fInRect;
->>>>>>> upstream-releases
 
     GR_DECLARE_GEOMETRY_PROCESSOR_TEST
 
@@ -1288,9 +1004,6 @@ private:
 
     typedef GrGeometryProcessor INHERITED;
 };
-constexpr GrPrimitiveProcessor::Attribute DashingLineEffect::kInPosition;
-constexpr GrPrimitiveProcessor::Attribute DashingLineEffect::kInDashParams;
-constexpr GrPrimitiveProcessor::Attribute DashingLineEffect::kInRectParams;
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -1328,50 +1041,26 @@ void GLDashingLineEffect::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
     // XY refers to dashPos, Z is the dash interval length
     GrGLSLVarying inDashParams(kFloat3_GrSLType);
     varyingHandler->addVarying("DashParams", &inDashParams);
-<<<<<<< HEAD
-    vertBuilder->codeAppendf("%s = %s;", inDashParams.vsOut(), de.kInDashParams.name());
-||||||| merged common ancestors
-    vertBuilder->codeAppendf("%s = %s;", inDashParams.vsOut(), de.inDashParams()->fName);
-=======
     vertBuilder->codeAppendf("%s = %s;", inDashParams.vsOut(), de.fInDashParams.name());
->>>>>>> upstream-releases
 
     // The rect uniform's xyzw refer to (left + 0.5, top + 0.5, right - 0.5, bottom - 0.5),
     // respectively.
     GrGLSLVarying inRectParams(kFloat4_GrSLType);
     varyingHandler->addVarying("RectParams", &inRectParams);
-<<<<<<< HEAD
-    vertBuilder->codeAppendf("%s = %s;", inRectParams.vsOut(), de.kInRectParams.name());
-||||||| merged common ancestors
-    vertBuilder->codeAppendf("%s = %s;", inRectParams.vsOut(), de.inRectParams()->fName);
-=======
     vertBuilder->codeAppendf("%s = %s;", inRectParams.vsOut(), de.fInRect.name());
->>>>>>> upstream-releases
 
     GrGLSLFPFragmentBuilder* fragBuilder = args.fFragBuilder;
     // Setup pass through color
     this->setupUniformColor(fragBuilder, uniformHandler, args.fOutputColor, &fColorUniform);
 
     // Setup position
-<<<<<<< HEAD
-    this->writeOutputPosition(vertBuilder, gpArgs, de.kInPosition.name());
-||||||| merged common ancestors
-    this->writeOutputPosition(vertBuilder, gpArgs, de.inPosition()->fName);
-=======
     this->writeOutputPosition(vertBuilder, gpArgs, de.fInPosition.name());
->>>>>>> upstream-releases
 
     // emit transforms
     this->emitTransforms(vertBuilder,
                          varyingHandler,
                          uniformHandler,
-<<<<<<< HEAD
-                         de.kInPosition.asShaderVar(),
-||||||| merged common ancestors
-                         de.inPosition()->asShaderVar(),
-=======
                          de.fInPosition.asShaderVar(),
->>>>>>> upstream-releases
                          de.localMatrix(),
                          args.fFPCoordTransformHandler);
 
@@ -1467,18 +1156,10 @@ DashingLineEffect::DashingLineEffect(const SkPMColor4f& color,
     , fLocalMatrix(localMatrix)
     , fUsesLocalCoords(usesLocalCoords)
     , fAAMode(aaMode) {
-<<<<<<< HEAD
-    this->setVertexAttributeCnt(3);
-||||||| merged common ancestors
-    fInPosition = &this->addVertexAttrib("inPosition", kFloat2_GrVertexAttribType);
-    fInDashParams = &this->addVertexAttrib("inDashParams", kHalf3_GrVertexAttribType);
-    fInRectParams = &this->addVertexAttrib("inRect", kHalf4_GrVertexAttribType);
-=======
     fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
     fInDashParams = {"inDashParams", kFloat3_GrVertexAttribType, kHalf3_GrSLType};
     fInRect = {"inRect", kFloat4_GrVertexAttribType, kHalf4_GrSLType};
     this->setVertexAttributes(&fInPosition, 3);
->>>>>>> upstream-releases
 }
 
 GR_DEFINE_GEOMETRY_PROCESSOR_TEST(DashingLineEffect);

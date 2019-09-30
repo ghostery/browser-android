@@ -85,16 +85,8 @@ typedef struct NPClass NPClass;
 
 typedef char NPUTF8;
 typedef struct _NPString {
-<<<<<<< HEAD
-  const NPUTF8 *UTF8Characters;
-  uint32_t UTF8Length;
-||||||| merged common ancestors
-    const NPUTF8 *UTF8Characters;
-    uint32_t UTF8Length;
-=======
   const NPUTF8* UTF8Characters;
   uint32_t UTF8Length;
->>>>>>> upstream-releases
 } NPString;
 
 typedef enum {
@@ -108,25 +100,6 @@ typedef enum {
 } NPVariantType;
 
 typedef struct _NPVariant {
-<<<<<<< HEAD
-  NPVariantType type;
-  union {
-    bool boolValue;
-    int32_t intValue;
-    double doubleValue;
-    NPString stringValue;
-    NPObject *objectValue;
-  } value;
-||||||| merged common ancestors
-    NPVariantType type;
-    union {
-        bool boolValue;
-        int32_t intValue;
-        double doubleValue;
-        NPString stringValue;
-        NPObject *objectValue;
-    } value;
-=======
   NPVariantType type;
   union {
     bool boolValue;
@@ -135,7 +108,6 @@ typedef struct _NPVariant {
     NPString stringValue;
     NPObject* objectValue;
   } value;
->>>>>>> upstream-releases
 } NPVariant;
 
 /*
@@ -275,34 +247,6 @@ typedef bool (*NPInvokeFunctionPtr)(NPObject* npobj, NPIdentifier name,
 typedef bool (*NPInvokeDefaultFunctionPtr)(NPObject* npobj,
                                            const NPVariant* args,
                                            uint32_t argCount,
-<<<<<<< HEAD
-                                           NPVariant *result);
-typedef bool (*NPHasPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name);
-typedef bool (*NPGetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
-                                         NPVariant *result);
-typedef bool (*NPSetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
-                                         const NPVariant *value);
-typedef bool (*NPRemovePropertyFunctionPtr)(NPObject *npobj, NPIdentifier name);
-typedef bool (*NPEnumerationFunctionPtr)(NPObject *npobj, NPIdentifier **value,
-                                         uint32_t *count);
-typedef bool (*NPConstructFunctionPtr)(NPObject *npobj, const NPVariant *args,
-                                       uint32_t argCount, NPVariant *result);
-||||||| merged common ancestors
-                                           NPVariant *result);
-typedef bool (*NPHasPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name);
-typedef bool (*NPGetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
-                                         NPVariant *result);
-typedef bool (*NPSetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
-                                         const NPVariant *value);
-typedef bool (*NPRemovePropertyFunctionPtr)(NPObject *npobj,
-                                            NPIdentifier name);
-typedef bool (*NPEnumerationFunctionPtr)(NPObject *npobj, NPIdentifier **value,
-                                         uint32_t *count);
-typedef bool (*NPConstructFunctionPtr)(NPObject *npobj,
-                                       const NPVariant *args,
-                                       uint32_t argCount,
-                                       NPVariant *result);
-=======
                                            NPVariant* result);
 typedef bool (*NPHasPropertyFunctionPtr)(NPObject* npobj, NPIdentifier name);
 typedef bool (*NPGetPropertyFunctionPtr)(NPObject* npobj, NPIdentifier name,
@@ -314,7 +258,6 @@ typedef bool (*NPEnumerationFunctionPtr)(NPObject* npobj, NPIdentifier** value,
                                          uint32_t* count);
 typedef bool (*NPConstructFunctionPtr)(NPObject* npobj, const NPVariant* args,
                                        uint32_t argCount, NPVariant* result);
->>>>>>> upstream-releases
 
 /*
     NPObjects returned by create, retain, invoke, and getProperty pass
@@ -367,25 +310,11 @@ struct NPClass {
   ((npclass)->structVersion >= NP_CLASS_STRUCT_VERSION_CTOR)
 
 struct NPObject {
-<<<<<<< HEAD
-  NPClass *_class;
-  uint32_t referenceCount;
-  /*
-   * Additional space may be allocated here by types of NPObjects
-   */
-||||||| merged common ancestors
-    NPClass *_class;
-    uint32_t referenceCount;
-    /*
-     * Additional space may be allocated here by types of NPObjects
-     */
-=======
   NPClass* _class;
   uint32_t referenceCount;
   /*
    * Additional space may be allocated here by types of NPObjects
    */
->>>>>>> upstream-releases
 };
 
 /*

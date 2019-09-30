@@ -141,15 +141,7 @@ jobs:
           - mozilla-central
       when:
           by-project:
-<<<<<<< HEAD
-              mozilla-central: [{hour: 10, minute: 0}]
-              # No default
-||||||| merged common ancestors
               mozilla-central: [{hour: 10, minute: 30}]
-              # No default
-=======
-              mozilla-central: [{hour: 10, minute: 30}]
->>>>>>> upstream-releases
 
     - name: bouncer-check
       job:

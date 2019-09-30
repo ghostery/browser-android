@@ -51,23 +51,7 @@ async function performTests() {
   ok(popup.isOpen, "popup is open");
 
   const popupItems = popup.getItems().map(e => e.label);
-<<<<<<< HEAD
-  const expectedPopupItems = [
-    "item00",
-    "item1",
-    "item2",
-    "item3",
-  ];
-||||||| merged common ancestors
-  const expectedPopupItems = [
-    "item0",
-    "item1",
-    "item2",
-    "item3",
-  ];
-=======
   const expectedPopupItems = ["item00", "item1", "item2", "item3"];
->>>>>>> upstream-releases
 
   is(popup.itemCount, expectedPopupItems.length, "popup.itemCount is correct");
   is(
@@ -79,13 +63,7 @@ async function performTests() {
 
   EventUtils.synthesizeKey("KEY_ArrowUp");
 
-<<<<<<< HEAD
-  let prefix = jsterm.getInputValue().replace(/[\S]/g, " ");
-||||||| merged common ancestors
-  const prefix = jsterm.getInputValue().replace(/[\S]/g, " ");
-=======
   let prefix = getInputValue(hud).replace(/[\S]/g, " ");
->>>>>>> upstream-releases
   is(popup.selectedIndex, 3, "index 3 is selected");
   is(popup.selectedItem.label, "item3", "item3 is selected");
   checkInputCompletionValue(
@@ -147,29 +125,6 @@ async function performTests() {
 
   // At this point the completion suggestion should be accepted.
   ok(!popup.isOpen, "popup is not open");
-<<<<<<< HEAD
-  is(jsterm.getInputValue(), "window.foo.item3",
-     "completion was successful after KEY_Tab");
-  ok(!getJsTermCompletionValue(jsterm), "completeNode is empty");
-
-  info("Check that hitting Home hides the completion text when the popup is hidden");
-  await setInputValueForAutocompletion(jsterm, "window.foo.item0");
-  prefix = jsterm.getInputValue().replace(/[\S]/g, " ");
-  checkJsTermCompletionValue(jsterm, prefix + "0", "completeNode has expected value");
-  EventUtils.synthesizeKey("KEY_Home");
-  checkJsTermCompletionValue(jsterm, "", "completeNode was cleared after hitting Home");
-
-  info("Check that hitting End hides the completion text when the popup is hidden");
-  await setInputValueForAutocompletion(jsterm, "window.foo.item0");
-  prefix = jsterm.getInputValue().replace(/[\S]/g, " ");
-  checkJsTermCompletionValue(jsterm, prefix + "0", "completeNode has expected value");
-  EventUtils.synthesizeKey("KEY_End");
-  checkJsTermCompletionValue(jsterm, "", "completeNode was cleared after hitting End");
-||||||| merged common ancestors
-  is(jsterm.getInputValue(), "window.foo.item3",
-     "completion was successful after KEY_Tab");
-  ok(!getJsTermCompletionValue(jsterm), "completeNode is empty");
-=======
   is(
     getInputValue(hud),
     "window.foo.item3",
@@ -214,5 +169,4 @@ async function performTests() {
     "",
     "completeNode was cleared after hitting End"
   );
->>>>>>> upstream-releases
 }

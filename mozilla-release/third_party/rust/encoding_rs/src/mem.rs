@@ -687,15 +687,7 @@ pub fn is_utf16_latin1(buffer: &[u16]) -> bool {
 /// Returns `true` if the input is invalid UTF-8 or the input contains an
 /// RTL character. Returns `false` if the input is valid UTF-8 and contains
 /// no RTL characters.
-<<<<<<< HEAD
-#[cfg_attr(
-    feature = "cargo-clippy",
-    allow(collapsible_if, cyclomatic_complexity)
-)]
-||||||| merged common ancestors
-=======
 #[cfg_attr(feature = "cargo-clippy", allow(collapsible_if, cyclomatic_complexity))]
->>>>>>> upstream-releases
 #[inline]
 pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
     // As of rustc 1.25.0-nightly (73ac5d6a8 2018-01-11), this is faster
@@ -774,20 +766,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                         // two-byte starting with 0xD7 and above is bidi
                         0xE1 | 0xE3...0xEC | 0xEE => {
                             // Three-byte normal
-<<<<<<< HEAD
-                            let second = unsafe { *(src.get_unchecked(read + 1)) };
-                            let third = unsafe { *(src.get_unchecked(read + 2)) };
-                            if ((UTF8_DATA.table[usize::from(second)] & unsafe {
-                                *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80))
-                            }) | (third >> 6))
-                                != 2
-||||||| merged common ancestors
-                            let second = bytes[read + 1];
-                            let third = bytes[read + 2];
-                            if ((UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL)
-                                | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                                != 0
-=======
                             let second = unsafe { *(src.get_unchecked(read + 1)) };
                             let third = unsafe { *(src.get_unchecked(read + 2)) };
                             if ((UTF8_DATA.table[usize::from(second)]
@@ -796,7 +774,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                                 })
                                 | (third >> 6))
                                 != 2
->>>>>>> upstream-releases
                             {
                                 return true;
                             }
@@ -804,20 +781,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                         }
                         0xE2 => {
                             // Three-byte normal, potentially bidi
-<<<<<<< HEAD
-                            let second = unsafe { *(src.get_unchecked(read + 1)) };
-                            let third = unsafe { *(src.get_unchecked(read + 2)) };
-                            if ((UTF8_DATA.table[usize::from(second)] & unsafe {
-                                *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80))
-                            }) | (third >> 6))
-                                != 2
-||||||| merged common ancestors
-                            let second = bytes[read + 1];
-                            let third = bytes[read + 2];
-                            if ((UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL)
-                                | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                                != 0
-=======
                             let second = unsafe { *(src.get_unchecked(read + 1)) };
                             let third = unsafe { *(src.get_unchecked(read + 2)) };
                             if ((UTF8_DATA.table[usize::from(second)]
@@ -826,7 +789,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                                 })
                                 | (third >> 6))
                                 != 2
->>>>>>> upstream-releases
                             {
                                 return true;
                             }
@@ -843,20 +805,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                         }
                         0xEF => {
                             // Three-byte normal, potentially bidi
-<<<<<<< HEAD
-                            let second = unsafe { *(src.get_unchecked(read + 1)) };
-                            let third = unsafe { *(src.get_unchecked(read + 2)) };
-                            if ((UTF8_DATA.table[usize::from(second)] & unsafe {
-                                *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80))
-                            }) | (third >> 6))
-                                != 2
-||||||| merged common ancestors
-                            let second = bytes[read + 1];
-                            let third = bytes[read + 2];
-                            if ((UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL)
-                                | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                                != 0
-=======
                             let second = unsafe { *(src.get_unchecked(read + 1)) };
                             let third = unsafe { *(src.get_unchecked(read + 2)) };
                             if ((UTF8_DATA.table[usize::from(second)]
@@ -865,7 +813,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                                 })
                                 | (third >> 6))
                                 != 2
->>>>>>> upstream-releases
                             {
                                 return true;
                             }
@@ -894,21 +841,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                         }
                         0xE0 => {
                             // Three-byte special lower bound, potentially bidi
-<<<<<<< HEAD
-                            let second = unsafe { *(src.get_unchecked(read + 1)) };
-                            let third = unsafe { *(src.get_unchecked(read + 2)) };
-                            if ((UTF8_DATA.table[usize::from(second)] & unsafe {
-                                *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80))
-                            }) | (third >> 6))
-                                != 2
-||||||| merged common ancestors
-                            let second = bytes[read + 1];
-                            let third = bytes[read + 2];
-                            if ((UTF8_TRAIL_INVALID[second as usize]
-                                & UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL)
-                                | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                                != 0
-=======
                             let second = unsafe { *(src.get_unchecked(read + 1)) };
                             let third = unsafe { *(src.get_unchecked(read + 2)) };
                             if ((UTF8_DATA.table[usize::from(second)]
@@ -917,7 +849,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                                 })
                                 | (third >> 6))
                                 != 2
->>>>>>> upstream-releases
                             {
                                 return true;
                             }
@@ -929,21 +860,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                         }
                         0xED => {
                             // Three-byte special upper bound
-<<<<<<< HEAD
-                            let second = unsafe { *(src.get_unchecked(read + 1)) };
-                            let third = unsafe { *(src.get_unchecked(read + 2)) };
-                            if ((UTF8_DATA.table[usize::from(second)] & unsafe {
-                                *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80))
-                            }) | (third >> 6))
-                                != 2
-||||||| merged common ancestors
-                            let second = bytes[read + 1];
-                            let third = bytes[read + 2];
-                            if ((UTF8_TRAIL_INVALID[second as usize]
-                                & UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL)
-                                | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                                != 0
-=======
                             let second = unsafe { *(src.get_unchecked(read + 1)) };
                             let third = unsafe { *(src.get_unchecked(read + 2)) };
                             if ((UTF8_DATA.table[usize::from(second)]
@@ -952,7 +868,6 @@ pub fn is_utf8_bidi(buffer: &[u8]) -> bool {
                                 })
                                 | (third >> 6))
                                 != 2
->>>>>>> upstream-releases
                             {
                                 return true;
                             }
@@ -1738,13 +1653,7 @@ pub fn convert_utf16_to_utf8_partial(src: &[u16], dst: &mut [u8]) -> (usize, usi
 /// `as_bytes_mut()` on `&mut str`.
 #[inline(always)]
 pub fn convert_utf16_to_utf8(src: &[u16], dst: &mut [u8]) -> usize {
-<<<<<<< HEAD
-    assert!(dst.len() > src.len() * 3);
-||||||| merged common ancestors
-    assert!(dst.len() >= src.len() * 3 + 1);
-=======
     assert!(dst.len() >= src.len() * 3);
->>>>>>> upstream-releases
     let (read, written) = convert_utf16_to_utf8_partial(src, dst);
     debug_assert_eq!(read, src.len());
     written
@@ -1789,13 +1698,7 @@ pub fn convert_utf16_to_str_partial(src: &[u16], dst: &mut str) -> (usize, usize
 /// Panics if the destination buffer is shorter than stated above.
 #[inline(always)]
 pub fn convert_utf16_to_str(src: &[u16], dst: &mut str) -> usize {
-<<<<<<< HEAD
-    assert!(dst.len() > src.len() * 3);
-||||||| merged common ancestors
-    assert!(dst.len() >= src.len() * 3 + 1);
-=======
     assert!(dst.len() >= src.len() * 3);
->>>>>>> upstream-releases
     let (read, written) = convert_utf16_to_str_partial(src, dst);
     debug_assert_eq!(read, src.len());
     written

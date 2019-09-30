@@ -50,21 +50,11 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/EventListenerManager.h"
 #include "mozilla/dom/DragEvent.h"
-<<<<<<< HEAD
-#include "mozilla/dom/Event.h"     // for Event
-#include "mozilla/dom/File.h"      // for input type=file
-#include "mozilla/dom/FileList.h"  // for input type=file
-||||||| merged common ancestors
-#include "mozilla/dom/Event.h" // for Event
-#include "mozilla/dom/File.h" // for input type=file
-#include "mozilla/dom/FileList.h" // for input type=file
-=======
 #include "mozilla/dom/Event.h"     // for Event
 #include "mozilla/dom/File.h"      // for input type=file
 #include "mozilla/dom/FileList.h"  // for input type=file
 #include "mozilla/dom/LoadURIOptionsBinding.h"
 #include "mozilla/PresShell.h"
->>>>>>> upstream-releases
 #include "mozilla/TextEvents.h"
 
 using namespace mozilla;
@@ -294,14 +284,7 @@ nsDocShellTreeOwner::GetPrimaryContentShell(nsIDocShellTreeItem** aShell) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocShellTreeOwner::TabParentAdded(nsITabParent* aTab, bool aPrimary) {
-||||||| merged common ancestors
-nsDocShellTreeOwner::TabParentAdded(nsITabParent* aTab, bool aPrimary)
-{
-=======
 nsDocShellTreeOwner::RemoteTabAdded(nsIRemoteTab* aTab, bool aPrimary) {
->>>>>>> upstream-releases
   if (mTreeOwner) {
     return mTreeOwner->RemoteTabAdded(aTab, aPrimary);
   }
@@ -317,14 +300,7 @@ nsDocShellTreeOwner::RemoteTabAdded(nsIRemoteTab* aTab, bool aPrimary) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocShellTreeOwner::TabParentRemoved(nsITabParent* aTab) {
-||||||| merged common ancestors
-nsDocShellTreeOwner::TabParentRemoved(nsITabParent* aTab)
-{
-=======
 nsDocShellTreeOwner::RemoteTabRemoved(nsIRemoteTab* aTab) {
->>>>>>> upstream-releases
   if (mTreeOwner) {
     return mTreeOwner->RemoteTabRemoved(aTab);
   }
@@ -337,14 +313,7 @@ nsDocShellTreeOwner::RemoteTabRemoved(nsIRemoteTab* aTab) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocShellTreeOwner::GetPrimaryTabParent(nsITabParent** aTab) {
-||||||| merged common ancestors
-nsDocShellTreeOwner::GetPrimaryTabParent(nsITabParent** aTab)
-{
-=======
 nsDocShellTreeOwner::GetPrimaryRemoteTab(nsIRemoteTab** aTab) {
->>>>>>> upstream-releases
   if (mTreeOwner) {
     return mTreeOwner->GetPrimaryRemoteTab(aTab);
   }
@@ -460,17 +429,8 @@ nsDocShellTreeOwner::GetTabCount(uint32_t* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocShellTreeOwner::GetHasPrimaryContent(bool* aResult) {
-  *aResult = mPrimaryTabParent || mPrimaryContentShell;
-||||||| merged common ancestors
-nsDocShellTreeOwner::GetHasPrimaryContent(bool* aResult)
-{
-  *aResult = mPrimaryTabParent || mPrimaryContentShell;
-=======
 nsDocShellTreeOwner::GetHasPrimaryContent(bool* aResult) {
   *aResult = mPrimaryRemoteTab || mPrimaryContentShell;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -721,15 +681,6 @@ nsDocShellTreeOwner::OnStateChange(nsIWebProgress* aProgress,
 
 NS_IMETHODIMP
 nsDocShellTreeOwner::OnLocationChange(nsIWebProgress* aWebProgress,
-<<<<<<< HEAD
-                                      nsIRequest* aRequest, nsIURI* aURI,
-                                      uint32_t aFlags) {
-||||||| merged common ancestors
-                                      nsIRequest* aRequest,
-                                      nsIURI* aURI,
-                                      uint32_t aFlags)
-{
-=======
                                       nsIRequest* aRequest, nsIURI* aURI,
                                       uint32_t aFlags) {
   if (mChromeTooltipListener && aWebProgress &&
@@ -737,7 +688,6 @@ nsDocShellTreeOwner::OnLocationChange(nsIWebProgress* aWebProgress,
       mChromeTooltipListener->WebProgressShowedTooltip(aWebProgress)) {
     mChromeTooltipListener->HideTooltip();
   }
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -750,15 +700,6 @@ nsDocShellTreeOwner::OnStatusChange(nsIWebProgress* aWebProgress,
 
 NS_IMETHODIMP
 nsDocShellTreeOwner::OnSecurityChange(nsIWebProgress* aWebProgress,
-<<<<<<< HEAD
-                                      nsIRequest* aRequest, uint32_t aState) {
-||||||| merged common ancestors
-                                      nsIRequest* aRequest,
-                                      uint32_t aOldState,
-                                      uint32_t aState,
-                                      const nsAString& aContentBlockingLogJSON)
-{
-=======
                                       nsIRequest* aRequest, uint32_t aState) {
   return NS_OK;
 }
@@ -767,7 +708,6 @@ NS_IMETHODIMP
 nsDocShellTreeOwner::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
                                             nsIRequest* aRequest,
                                             uint32_t aEvent) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -937,23 +877,9 @@ nsDocShellTreeOwner::HandleEvent(Event* aEvent) {
   } else if (eventType.EqualsLiteral("drop")) {
     nsIWebNavigation* webnav = static_cast<nsIWebNavigation*>(mWebBrowser);
 
-<<<<<<< HEAD
-    uint32_t linksCount;
-    nsIDroppedLinkItem** links;
-    if (webnav && NS_SUCCEEDED(handler->DropLinks(dragEvent, true, &linksCount,
-                                                  &links))) {
-      if (linksCount >= 1) {
-||||||| merged common ancestors
-    uint32_t linksCount;
-    nsIDroppedLinkItem** links;
-    if (webnav &&
-        NS_SUCCEEDED(handler->DropLinks(dragEvent, true, &linksCount, &links))) {
-      if (linksCount >= 1) {
-=======
     nsTArray<RefPtr<nsIDroppedLinkItem>> links;
     if (webnav && NS_SUCCEEDED(handler->DropLinks(dragEvent, true, links))) {
       if (links.Length() >= 1) {
->>>>>>> upstream-releases
         nsCOMPtr<nsIPrincipal> triggeringPrincipal;
         handler->GetTriggeringPrincipal(dragEvent,
                                         getter_AddRefs(triggeringPrincipal));
@@ -961,47 +887,16 @@ nsDocShellTreeOwner::HandleEvent(Event* aEvent) {
           nsCOMPtr<nsIWebBrowserChrome> webBrowserChrome =
               GetWebBrowserChrome();
           if (webBrowserChrome) {
-<<<<<<< HEAD
-            nsCOMPtr<nsITabChild> tabChild =
-                do_QueryInterface(webBrowserChrome);
-            if (tabChild) {
-              nsresult rv = tabChild->RemoteDropLinks(linksCount, links);
-              for (uint32_t i = 0; i < linksCount; i++) {
-                NS_RELEASE(links[i]);
-              }
-              free(links);
-||||||| merged common ancestors
-            nsCOMPtr<nsITabChild> tabChild = do_QueryInterface(webBrowserChrome);
-            if (tabChild) {
-              nsresult rv = tabChild->RemoteDropLinks(linksCount, links);
-              for (uint32_t i = 0; i < linksCount; i++) {
-                NS_RELEASE(links[i]);
-              }
-              free(links);
-=======
             nsCOMPtr<nsIBrowserChild> browserChild =
                 do_QueryInterface(webBrowserChrome);
             if (browserChild) {
               nsresult rv = browserChild->RemoteDropLinks(links);
->>>>>>> upstream-releases
               return rv;
             }
           }
           nsAutoString url;
           if (NS_SUCCEEDED(links[0]->GetUrl(url))) {
             if (!url.IsEmpty()) {
-<<<<<<< HEAD
-#ifndef ANDROID
-              MOZ_ASSERT(triggeringPrincipal,
-                         "nsDocShellTreeOwner::HandleEvent: Need a valid "
-                         "triggeringPrincipal");
-#endif
-              webnav->LoadURI(url, 0, nullptr, nullptr, nullptr,
-                              triggeringPrincipal);
-||||||| merged common ancestors
-              webnav->LoadURI(url, 0, nullptr, nullptr, nullptr,
-                              triggeringPrincipal);
-=======
 #ifndef ANDROID
               MOZ_ASSERT(triggeringPrincipal,
                          "nsDocShellTreeOwner::HandleEvent: Need a valid "
@@ -1013,7 +908,6 @@ nsDocShellTreeOwner::HandleEvent(Event* aEvent) {
               handler->GetCSP(dragEvent, getter_AddRefs(csp));
               loadURIOptions.mCsp = csp;
               webnav->LoadURI(url, loadURIOptions);
->>>>>>> upstream-releases
             }
           }
         }
@@ -1365,22 +1259,8 @@ void ChromeTooltipListener::sTooltipCallback(nsITimer* aTimer,
     // find those short of groveling for the presentation in that docshell and
     // finding the screen coords of its toplevel widget...
     nsCOMPtr<nsIDocShell> docShell =
-<<<<<<< HEAD
-        do_GetInterface(static_cast<nsIWebBrowser*>(self->mWebBrowser));
-    nsCOMPtr<nsIPresShell> shell;
-    if (docShell) {
-      shell = docShell->GetPresShell();
-    }
-||||||| merged common ancestors
-      do_GetInterface(static_cast<nsIWebBrowser*>(self->mWebBrowser));
-    nsCOMPtr<nsIPresShell> shell;
-    if (docShell) {
-      shell = docShell->GetPresShell();
-    }
-=======
         do_GetInterface(static_cast<nsIWebBrowser*>(self->mWebBrowser));
     RefPtr<PresShell> presShell = docShell ? docShell->GetPresShell() : nullptr;
->>>>>>> upstream-releases
 
     nsIWidget* widget = nullptr;
     if (presShell) {

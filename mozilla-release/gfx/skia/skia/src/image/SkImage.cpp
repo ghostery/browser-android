@@ -226,19 +226,11 @@ bool SkImage::asLegacyBitmap(SkBitmap* bitmap, LegacyBitmapMode ) const {
     return as_IB(this)->onAsLegacyBitmap(bitmap);
 }
 
-<<<<<<< HEAD
-sk_sp<SkCachedData> SkImage_Base::getPlanes(SkYUVSizeInfo*, SkYUVColorSpace*,const void*[3]) {
-    return nullptr;
-}
-
-||||||| merged common ancestors
-=======
 sk_sp<SkCachedData> SkImage_Base::getPlanes(SkYUVASizeInfo*, SkYUVAIndex[4],
                                             SkYUVColorSpace*, const void*[4]) {
     return nullptr;
 }
 
->>>>>>> upstream-releases
 bool SkImage_Base::onAsLegacyBitmap(SkBitmap* bitmap) const {
     // As the base-class, all we can do is make a copy (regardless of mode).
     // Subclasses that want to be more optimal should override.
@@ -278,37 +270,20 @@ sk_sp<SkImage> SkImage::makeWithFilter(GrContext* grContext,
     if (!filter || !outSubset || !offset || !this->bounds().contains(subset)) {
         return nullptr;
     }
-<<<<<<< HEAD
-    SkColorType colorType = as_IB(this)->onImageInfo().colorType();
-    SkColorSpace* colorSpace = as_IB(this)->onImageInfo().colorSpace();
-    sk_sp<SkSpecialImage> srcSpecialImage = SkSpecialImage::MakeFromImage(
-        subset, sk_ref_sp(const_cast<SkImage*>(this)), colorSpace);
-||||||| merged common ancestors
-    SkColorSpace* colorSpace = as_IB(this)->onImageInfo().colorSpace();
-    sk_sp<SkSpecialImage> srcSpecialImage = SkSpecialImage::MakeFromImage(
-        subset, sk_ref_sp(const_cast<SkImage*>(this)), colorSpace);
-=======
     sk_sp<SkSpecialImage> srcSpecialImage =
 #if SK_SUPPORT_GPU
         SkSpecialImage::MakeFromImage(grContext, subset, sk_ref_sp(const_cast<SkImage*>(this)));
 #else
         SkSpecialImage::MakeFromImage(nullptr, subset, sk_ref_sp(const_cast<SkImage*>(this)));
 #endif
->>>>>>> upstream-releases
     if (!srcSpecialImage) {
         return nullptr;
     }
 
     sk_sp<SkImageFilterCache> cache(
         SkImageFilterCache::Create(SkImageFilterCache::kDefaultTransientSize));
-<<<<<<< HEAD
-    SkImageFilter::OutputProperties outputProperties(colorType, colorSpace);
-||||||| merged common ancestors
-    SkImageFilter::OutputProperties outputProperties(colorSpace);
-=======
     SkImageFilter::OutputProperties outputProperties(as_IB(this)->onImageInfo().colorType(),
                                                      as_IB(this)->onImageInfo().colorSpace());
->>>>>>> upstream-releases
     SkImageFilter::Context context(SkMatrix::I(), clipBounds, cache.get(), outputProperties);
 
     sk_sp<SkSpecialImage> result = filter->filterImage(srcSpecialImage.get(), context, offset);
@@ -352,18 +327,6 @@ sk_sp<SkImage> SkImage::makeColorSpace(sk_sp<SkColorSpace> target) const {
         return sk_ref_sp(const_cast<SkImage*>(this));
     }
 
-<<<<<<< HEAD
-    // TODO: We might consider making this a deferred conversion?
-    return as_IB(this)->onMakeColorSpace(std::move(target));
-||||||| merged common ancestors
-    SkColorType targetColorType = kN32_SkColorType;
-    if (SkTransferFunctionBehavior::kRespect == premulBehavior && target->gammaIsLinear()) {
-        targetColorType = kRGBA_F16_SkColorType;
-    }
-
-    // TODO: We might consider making this a deferred conversion?
-    return as_IB(this)->onMakeColorSpace(std::move(target), targetColorType, premulBehavior);
-=======
     // CONTEXT TODO: propagate the context parameter to the top-level API
 #if SK_SUPPORT_GPU
     return as_IB(this)->onMakeColorTypeAndColorSpace(as_IB(this)->context(),
@@ -396,7 +359,6 @@ sk_sp<SkImage> SkImage::makeColorTypeAndColorSpace(SkColorType targetColorType,
     return as_IB(this)->onMakeColorTypeAndColorSpace(nullptr,
 #endif
                                                      targetColorType, std::move(targetColorSpace));
->>>>>>> upstream-releases
 }
 
 sk_sp<SkImage> SkImage::makeNonTextureImage() const {

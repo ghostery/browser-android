@@ -16,14 +16,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   E10SUtils: "resource://gre/modules/E10SUtils.jsm",
   EventDispatcher: "resource://gre/modules/Messaging.jsm",
   GeckoViewUtils: "resource://gre/modules/GeckoViewUtils.jsm",
-<<<<<<< HEAD
   HistogramStopwatch: "resource://gre/modules/GeckoViewTelemetry.jsm",
-  Services: "resource://gre/modules/Services.jsm",
-||||||| merged common ancestors
-  Services: "resource://gre/modules/Services.jsm",
-=======
-  HistogramStopwatch: "resource://gre/modules/GeckoViewTelemetry.jsm",
->>>>>>> upstream-releases
 });
 
 XPCOMUtils.defineLazyGetter(this, "WindowEventDispatcher", () =>
@@ -45,14 +38,6 @@ var ModuleManager = {
   },
 
   init(aBrowser, aModules) {
-<<<<<<< HEAD
-    const MODULES_INIT_PROBE =
-      new HistogramStopwatch("GV_STARTUP_MODULES_MS", aBrowser);
-
-    MODULES_INIT_PROBE.start();
-
-||||||| merged common ancestors
-=======
     const MODULES_INIT_PROBE = new HistogramStopwatch(
       "GV_STARTUP_MODULES_MS",
       aBrowser
@@ -60,7 +45,6 @@ var ModuleManager = {
 
     MODULES_INIT_PROBE.start();
 
->>>>>>> upstream-releases
     const initData = this._initData;
     this._browser = aBrowser;
     this._settings = initData.settings;
@@ -136,72 +120,6 @@ var ModuleManager = {
     this._modules.forEach(aCallback, this);
   },
 
-<<<<<<< HEAD
-  updateRemoteTypeForURI(aURI) {
-    const currentType =
-        this.browser.getAttribute("remoteType") || E10SUtils.NOT_REMOTE;
-    const remoteType = E10SUtils.getRemoteTypeForURI(
-        aURI, this.settings.useMultiprocess,
-        currentType, this.browser.currentURI);
-
-    debug `updateRemoteType: uri=${aURI} currentType=${currentType}
-                             remoteType=${remoteType}`;
-
-    if (currentType === remoteType) {
-      // We're already using a child process of the correct type.
-      return false;
-    }
-
-    if (remoteType !== E10SUtils.NOT_REMOTE &&
-        !this.settings.useMultiprocess) {
-      warn `Tried to create a remote browser in non-multiprocess mode`;
-      return false;
-    }
-
-    // Now we're switching the remoteness (value of "remote" attr).
-
-    this.forEach(module => {
-      if (module.enabled && module.impl) {
-        module.impl.onDisable();
-      }
-    });
-
-    this.forEach(module => {
-      if (module.impl) {
-        module.impl.onDestroyBrowser();
-      }
-    });
-
-    const parent = this.browser.parentNode;
-    this.browser.remove();
-    if (remoteType) {
-      this.browser.setAttribute("remote", "true");
-      this.browser.setAttribute("remoteType", remoteType);
-    } else {
-      this.browser.setAttribute("remote", "false");
-      this.browser.removeAttribute("remoteType");
-    }
-
-    this.forEach(module => {
-      if (module.impl) {
-        module.impl.onInitBrowser();
-      }
-    });
-
-    parent.appendChild(this.browser);
-
-    this.forEach(module => {
-      if (module.enabled && module.impl) {
-        module.impl.onEnable();
-      }
-    });
-
-    this.browser.focus();
-    return true;
-  },
-
-||||||| merged common ancestors
-=======
   updateRemoteTypeForURI(aURI) {
     const currentType = this.browser.remoteType || E10SUtils.NOT_REMOTE;
     const remoteType = E10SUtils.getRemoteTypeForURI(
@@ -275,7 +193,6 @@ var ModuleManager = {
     return true;
   },
 
->>>>>>> upstream-releases
   _updateSettings(aSettings) {
     Object.assign(this._settings, aSettings);
     this._frozenSettings = Object.freeze(Object.assign({}, this._settings));
@@ -509,16 +426,6 @@ function createBrowser() {
   browser.setAttribute("type", "content");
   browser.setAttribute("primary", "true");
   browser.setAttribute("flex", "1");
-<<<<<<< HEAD
-
-  const settings = window.arguments[0].QueryInterface(Ci.nsIAndroidView).initData.settings;
-  if (settings.useMultiprocess) {
-    browser.setAttribute("remote", "true");
-    browser.setAttribute("remoteType", E10SUtils.DEFAULT_REMOTE_TYPE);
-  }
-
-||||||| merged common ancestors
-=======
 
   const settings = window.arguments[0].QueryInterface(Ci.nsIAndroidView)
     .initData.settings;
@@ -527,7 +434,6 @@ function createBrowser() {
     browser.setAttribute("remoteType", E10SUtils.DEFAULT_REMOTE_TYPE);
   }
 
->>>>>>> upstream-releases
   return browser;
 }
 
@@ -560,131 +466,45 @@ function startup() {
         frameScript: "chrome://geckoview/content/GeckoViewMediaChild.js",
       },
     },
-<<<<<<< HEAD
-  }, {
-    name: "GeckoViewContent",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewContent.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewContentChild.js",
-    },
-  }, {
-    name: "GeckoViewMedia",
-    onEnable: {
-      resource: "resource://gre/modules/GeckoViewMedia.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewMediaChild.js",
-||||||| merged common ancestors
-  }, {
-    name: "GeckoViewContent",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewContent.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewContent.js",
-=======
     {
       name: "GeckoViewNavigation",
       onInit: {
         resource: "resource://gre/modules/GeckoViewNavigation.jsm",
         frameScript: "chrome://geckoview/content/GeckoViewNavigationChild.js",
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-  }, {
-    name: "GeckoViewNavigation",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewNavigation.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewNavigationChild.js",
-||||||| merged common ancestors
-  }, {
-    name: "GeckoViewNavigation",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewNavigation.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewNavigationContent.js",
-=======
     {
       name: "GeckoViewProgress",
       onEnable: {
         resource: "resource://gre/modules/GeckoViewProgress.jsm",
         frameScript: "chrome://geckoview/content/GeckoViewProgressChild.js",
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-  }, {
-    name: "GeckoViewProgress",
-    onEnable: {
-      resource: "resource://gre/modules/GeckoViewProgress.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewProgressChild.js",
-||||||| merged common ancestors
-  }, {
-    name: "GeckoViewProgress",
-    onEnable: {
-      resource: "resource://gre/modules/GeckoViewProgress.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewProgressContent.js",
-=======
     {
       name: "GeckoViewScroll",
       onEnable: {
         frameScript: "chrome://geckoview/content/GeckoViewScrollChild.js",
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-  }, {
-    name: "GeckoViewScroll",
-    onEnable: {
-      frameScript: "chrome://geckoview/content/GeckoViewScrollChild.js",
-||||||| merged common ancestors
-  }, {
-    name: "GeckoViewScroll",
-    onEnable: {
-      frameScript: "chrome://geckoview/content/GeckoViewScrollContent.js",
-=======
     {
       name: "GeckoViewSelectionAction",
       onEnable: {
         frameScript:
           "chrome://geckoview/content/GeckoViewSelectionActionChild.js",
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-  }, {
-    name: "GeckoViewSelectionAction",
-    onEnable: {
-      frameScript: "chrome://geckoview/content/GeckoViewSelectionActionChild.js",
-||||||| merged common ancestors
-  }, {
-    name: "GeckoViewSelectionAction",
-    onEnable: {
-      frameScript: "chrome://geckoview/content/GeckoViewSelectionActionContent.js",
-=======
     {
       name: "GeckoViewSettings",
       onInit: {
         resource: "resource://gre/modules/GeckoViewSettings.jsm",
         frameScript: "chrome://geckoview/content/GeckoViewSettingsChild.js",
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-  }, {
-    name: "GeckoViewSettings",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewSettings.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewSettingsChild.js",
-||||||| merged common ancestors
-  }, {
-    name: "GeckoViewSettings",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewSettings.jsm",
-      frameScript: "chrome://geckoview/content/GeckoViewContentSettings.js",
-=======
     {
       name: "GeckoViewTab",
       onInit: {
         resource: "resource://gre/modules/GeckoViewTab.jsm",
       },
->>>>>>> upstream-releases
     },
     {
       name: "GeckoViewContentBlocking",

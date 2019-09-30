@@ -139,43 +139,6 @@ static_assert(MAX_WORKERS_PER_DOMAIN >= 1,
 #define GC_REQUEST_OBSERVER_TOPIC "child-gc-request"
 #define CC_REQUEST_OBSERVER_TOPIC "child-cc-request"
 #define MEMORY_PRESSURE_OBSERVER_TOPIC "memory-pressure"
-<<<<<<< HEAD
-
-#define BROADCAST_ALL_WORKERS(_func, ...)                         \
-  PR_BEGIN_MACRO                                                  \
-  AssertIsOnMainThread();                                         \
-                                                                  \
-  AutoTArray<WorkerPrivate*, 100> workers;                        \
-  {                                                               \
-    MutexAutoLock lock(mMutex);                                   \
-                                                                  \
-    AddAllTopLevelWorkersToArray(workers);                        \
-  }                                                               \
-                                                                  \
-  if (!workers.IsEmpty()) {                                       \
-    for (uint32_t index = 0; index < workers.Length(); index++) { \
-      workers[index]->_func(__VA_ARGS__);                         \
-    }                                                             \
-  }                                                               \
-||||||| merged common ancestors
-
-#define BROADCAST_ALL_WORKERS(_func, ...)                                      \
-  PR_BEGIN_MACRO                                                               \
-    AssertIsOnMainThread();                                                    \
-                                                                               \
-    AutoTArray<WorkerPrivate*, 100> workers;                                   \
-    {                                                                          \
-      MutexAutoLock lock(mMutex);                                              \
-                                                                               \
-      AddAllTopLevelWorkersToArray(workers);                                   \
-    }                                                                          \
-                                                                               \
-    if (!workers.IsEmpty()) {                                                  \
-      for (uint32_t index = 0; index < workers.Length(); index++) {            \
-        workers[index]-> _func (__VA_ARGS__);                                  \
-      }                                                                        \
-    }                                                                          \
-=======
 #define LOW_MEMORY_DATA "low-memory"
 #define LOW_MEMORY_ONGOING_DATA "low-memory-ongoing"
 #define MEMORY_PRESSURE_STOP_OBSERVER_TOPIC "memory-pressure-stop"
@@ -196,7 +159,6 @@ static_assert(MAX_WORKERS_PER_DOMAIN >= 1,
       workers[index]->_func(__VA_ARGS__);                         \
     }                                                             \
   }                                                               \
->>>>>>> upstream-releases
   PR_END_MACRO
 
 // Prefixes for observing preference changes.
@@ -329,44 +291,12 @@ void LoadContextOptions(const char* aPrefName, void* /* aClosure */) {
           GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_baselinejit")))
       .setWasmIon(GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_ionjit")))
 #ifdef ENABLE_WASM_CRANELIFT
-<<<<<<< HEAD
-      .setWasmForceCranelift(
-          GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_cranelift")))
-||||||| merged common ancestors
-                .setWasmForceCranelift(GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_cranelift")))
-=======
       .setWasmCranelift(
           GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_cranelift")))
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-#ifdef ENABLE_WASM_GC
-      .setWasmGc(GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_gc")))
-||||||| merged common ancestors
-#ifdef ENABLE_WASM_GC
-                .setWasmGc(GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_gc")))
-=======
 #ifdef ENABLE_WASM_REFTYPES
       .setWasmGc(GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_gc")))
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-      .setThrowOnAsmJSValidationFailure(GetWorkerPref<bool>(
-          NS_LITERAL_CSTRING("throw_on_asmjs_validation_failure")))
-      .setBaseline(GetWorkerPref<bool>(NS_LITERAL_CSTRING("baselinejit")))
-      .setIon(GetWorkerPref<bool>(NS_LITERAL_CSTRING("ion")))
-      .setNativeRegExp(GetWorkerPref<bool>(NS_LITERAL_CSTRING("native_regexp")))
-      .setAsyncStack(GetWorkerPref<bool>(NS_LITERAL_CSTRING("asyncstack")))
-      .setWerror(GetWorkerPref<bool>(NS_LITERAL_CSTRING("werror")))
-||||||| merged common ancestors
-                .setThrowOnAsmJSValidationFailure(GetWorkerPref<bool>(
-                      NS_LITERAL_CSTRING("throw_on_asmjs_validation_failure")))
-                .setBaseline(GetWorkerPref<bool>(NS_LITERAL_CSTRING("baselinejit")))
-                .setIon(GetWorkerPref<bool>(NS_LITERAL_CSTRING("ion")))
-                .setNativeRegExp(GetWorkerPref<bool>(NS_LITERAL_CSTRING("native_regexp")))
-                .setAsyncStack(GetWorkerPref<bool>(NS_LITERAL_CSTRING("asyncstack")))
-                .setWerror(GetWorkerPref<bool>(NS_LITERAL_CSTRING("werror")))
-=======
       .setWasmVerbose(GetWorkerPref<bool>(NS_LITERAL_CSTRING("wasm_verbose")))
       .setThrowOnAsmJSValidationFailure(GetWorkerPref<bool>(
           NS_LITERAL_CSTRING("throw_on_asmjs_validation_failure")))
@@ -375,7 +305,6 @@ void LoadContextOptions(const char* aPrefName, void* /* aClosure */) {
       .setNativeRegExp(GetWorkerPref<bool>(NS_LITERAL_CSTRING("native_regexp")))
       .setAsyncStack(GetWorkerPref<bool>(NS_LITERAL_CSTRING("asyncstack")))
       .setWerror(GetWorkerPref<bool>(NS_LITERAL_CSTRING("werror")))
->>>>>>> upstream-releases
 #ifdef FUZZING
       .setFuzzing(GetWorkerPref<bool>(NS_LITERAL_CSTRING("fuzzing.enabled")))
 #endif
@@ -574,16 +503,8 @@ void LoadJSGCMemoryOptions(const char* aPrefName, void* /* aClosure */) {
     if (memPrefName == matchName || (gRuntimeServiceDuringInit && index == 9)) {
       int32_t prefValue = GetWorkerPref(matchName, -1);
       uint32_t value =
-<<<<<<< HEAD
-          (prefValue <= 0 || prefValue >= 100000) ? 0 : uint32_t(prefValue);
-      UpdateOtherJSGCMemoryOption(rts, JSGC_SLICE_TIME_BUDGET, value);
-||||||| merged common ancestors
-        (prefValue <= 0 || prefValue >= 100000) ? 0 : uint32_t(prefValue);
-      UpdateOtherJSGCMemoryOption(rts, JSGC_SLICE_TIME_BUDGET, value);
-=======
           (prefValue <= 0 || prefValue >= 100000) ? 0 : uint32_t(prefValue);
       UpdateOtherJSGCMemoryOption(rts, JSGC_SLICE_TIME_BUDGET_MS, value);
->>>>>>> upstream-releases
       continue;
     }
 
@@ -749,94 +670,6 @@ void CTypesActivityCallback(JSContext* aCx, js::CTypesActivityType aType) {
   }
 }
 
-<<<<<<< HEAD
-static nsIPrincipal* GetPrincipalForAsmJSCacheOp() {
-  WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
-  if (!workerPrivate) {
-    return nullptr;
-  }
-
-  // asmjscache::OpenEntryForX guarnatee to only access the given nsIPrincipal
-  // from the main thread.
-  return workerPrivate->GetPrincipalDontAssertMainThread();
-}
-
-static bool AsmJSCacheOpenEntryForRead(JS::Handle<JSObject*> aGlobal,
-                                       const char16_t* aBegin,
-                                       const char16_t* aLimit, size_t* aSize,
-                                       const uint8_t** aMemory,
-                                       intptr_t* aHandle) {
-  nsIPrincipal* principal = GetPrincipalForAsmJSCacheOp();
-  if (!principal) {
-    return false;
-  }
-
-  return asmjscache::OpenEntryForRead(principal, aBegin, aLimit, aSize, aMemory,
-                                      aHandle);
-}
-
-static JS::AsmJSCacheResult AsmJSCacheOpenEntryForWrite(
-    JS::Handle<JSObject*> aGlobal, const char16_t* aBegin, const char16_t* aEnd,
-    size_t aSize, uint8_t** aMemory, intptr_t* aHandle) {
-  nsIPrincipal* principal = GetPrincipalForAsmJSCacheOp();
-  if (!principal) {
-    return JS::AsmJSCache_InternalError;
-  }
-
-  return asmjscache::OpenEntryForWrite(principal, aBegin, aEnd, aSize, aMemory,
-                                       aHandle);
-}
-
-||||||| merged common ancestors
-static nsIPrincipal*
-GetPrincipalForAsmJSCacheOp()
-{
-  WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
-  if (!workerPrivate) {
-    return nullptr;
-  }
-
-  // asmjscache::OpenEntryForX guarnatee to only access the given nsIPrincipal
-  // from the main thread.
-  return workerPrivate->GetPrincipalDontAssertMainThread();
-}
-
-static bool
-AsmJSCacheOpenEntryForRead(JS::Handle<JSObject*> aGlobal,
-                           const char16_t* aBegin,
-                           const char16_t* aLimit,
-                           size_t* aSize,
-                           const uint8_t** aMemory,
-                           intptr_t *aHandle)
-{
-  nsIPrincipal* principal = GetPrincipalForAsmJSCacheOp();
-  if (!principal) {
-    return false;
-  }
-
-  return asmjscache::OpenEntryForRead(principal, aBegin, aLimit, aSize, aMemory,
-                                      aHandle);
-}
-
-static JS::AsmJSCacheResult
-AsmJSCacheOpenEntryForWrite(JS::Handle<JSObject*> aGlobal,
-                            const char16_t* aBegin,
-                            const char16_t* aEnd,
-                            size_t aSize,
-                            uint8_t** aMemory,
-                            intptr_t* aHandle)
-{
-  nsIPrincipal* principal = GetPrincipalForAsmJSCacheOp();
-  if (!principal) {
-    return JS::AsmJSCache_InternalError;
-  }
-
-  return asmjscache::OpenEntryForWrite(principal, aBegin, aEnd, aSize, aMemory,
-                                       aHandle);
-}
-
-=======
->>>>>>> upstream-releases
 // JSDispatchableRunnables are WorkerRunnables used to dispatch JS::Dispatchable
 // back to their worker thread. A WorkerRunnable is used for two reasons:
 //
@@ -961,25 +794,6 @@ bool InitJSContextForWorker(WorkerPrivate* aWorkerPrivate,
       ContentSecurityPolicyAllows};
   JS_SetSecurityCallbacks(aWorkerCx, &securityCallbacks);
 
-<<<<<<< HEAD
-  // Set up the asm.js cache callbacks
-  static const JS::AsmJSCacheOps asmJSCacheOps = {
-      AsmJSCacheOpenEntryForRead, asmjscache::CloseEntryForRead,
-      AsmJSCacheOpenEntryForWrite, asmjscache::CloseEntryForWrite};
-  JS::SetAsmJSCacheOps(aWorkerCx, &asmJSCacheOps);
-
-||||||| merged common ancestors
-  // Set up the asm.js cache callbacks
-  static const JS::AsmJSCacheOps asmJSCacheOps = {
-    AsmJSCacheOpenEntryForRead,
-    asmjscache::CloseEntryForRead,
-    AsmJSCacheOpenEntryForWrite,
-    asmjscache::CloseEntryForWrite
-  };
-  JS::SetAsmJSCacheOps(aWorkerCx, &asmJSCacheOps);
-
-=======
->>>>>>> upstream-releases
   // A WorkerPrivate lives strictly longer than its JSRuntime so we can safely
   // store a raw pointer as the callback's closure argument on the JSRuntime.
   JS::InitDispatchToEventLoop(aWorkerCx, DispatchToEventLoop,
@@ -1004,19 +818,6 @@ bool InitJSContextForWorker(WorkerPrivate* aWorkerPrivate,
   return true;
 }
 
-<<<<<<< HEAD
-static bool PreserveWrapper(JSContext* cx, JS::HandleObject obj) {
-  MOZ_ASSERT(cx);
-  MOZ_ASSERT(obj);
-  MOZ_ASSERT(mozilla::dom::IsDOMObject(obj));
-||||||| merged common ancestors
-static bool
-PreserveWrapper(JSContext *cx, JS::HandleObject obj)
-{
-    MOZ_ASSERT(cx);
-    MOZ_ASSERT(obj);
-    MOZ_ASSERT(mozilla::dom::IsDOMObject(obj));
-=======
 static bool PreserveWrapper(JSContext* cx, JS::HandleObject obj) {
   MOZ_ASSERT(cx);
   MOZ_ASSERT(obj);
@@ -1024,16 +825,9 @@ static bool PreserveWrapper(JSContext* cx, JS::HandleObject obj) {
 
   return mozilla::dom::TryPreserveWrapper(obj);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return mozilla::dom::TryPreserveWrapper(obj);
-||||||| merged common ancestors
-    return mozilla::dom::TryPreserveWrapper(obj);
-=======
 static bool IsWorkerDebuggerGlobalOrSandbox(JSObject* aGlobal) {
   return IsWorkerDebuggerGlobal(aGlobal) || IsWorkerDebuggerSandbox(aGlobal);
->>>>>>> upstream-releases
 }
 
 JSObject* Wrap(JSContext* cx, JS::HandleObject existing, JS::HandleObject obj) {
@@ -1143,17 +937,10 @@ class WorkerJSContext final : public mozilla::CycleCollectedJSContext {
     SetTargetedMicroTaskRecursionDepth(2);
   }
 
-<<<<<<< HEAD
-  ~WorkerJSContext() {
-||||||| merged common ancestors
-  ~WorkerJSContext()
-  {
-=======
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY because otherwise we have to annotate the
   // SpiderMonkey JS::JobQueue's destructor as MOZ_CAN_RUN_SCRIPT, which is a
   // bit of a pain.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY ~WorkerJSContext() {
->>>>>>> upstream-releases
     MOZ_COUNT_DTOR_INHERITED(WorkerJSContext, CycleCollectedJSContext);
     JSContext* cx = MaybeContext();
     if (!cx) {
@@ -1481,26 +1268,12 @@ bool RuntimeService::RegisterWorker(WorkerPrivate* aWorkerPrivate) {
       Navigator::AppName(mNavigatorProperties.mAppName,
                          aWorkerPrivate->GetPrincipal(),
                          false /* aUsePrefOverriddenValue */);
-<<<<<<< HEAD
-      if (NS_FAILED(
-              Navigator::GetAppVersion(mNavigatorProperties.mAppVersion,
-                                       false /* aUsePrefOverriddenValue */)) ||
-          NS_FAILED(
-              Navigator::GetPlatform(mNavigatorProperties.mPlatform,
-                                     false /* aUsePrefOverriddenValue */))) {
-||||||| merged common ancestors
-      if (NS_FAILED(Navigator::GetAppVersion(mNavigatorProperties.mAppVersion,
-                                             false /* aUsePrefOverriddenValue */)) ||
-          NS_FAILED(Navigator::GetPlatform(mNavigatorProperties.mPlatform,
-                                           false /* aUsePrefOverriddenValue */))) {
-=======
       if (NS_FAILED(Navigator::GetAppVersion(
               mNavigatorProperties.mAppVersion, aWorkerPrivate->GetPrincipal(),
               false /* aUsePrefOverriddenValue */)) ||
           NS_FAILED(Navigator::GetPlatform(
               mNavigatorProperties.mPlatform, aWorkerPrivate->GetPrincipal(),
               false /* aUsePrefOverriddenValue */))) {
->>>>>>> upstream-releases
         UnregisterWorker(aWorkerPrivate);
         return false;
       }
@@ -2256,18 +2029,9 @@ void RuntimeService::PropagateFirstPartyStorageAccessGranted(
     nsPIDOMWindowInner* aWindow) {
   AssertIsOnMainThread();
   MOZ_ASSERT(aWindow);
-<<<<<<< HEAD
-  MOZ_ASSERT(StaticPrefs::network_cookie_cookieBehavior() ==
-             nsICookieService::BEHAVIOR_REJECT_TRACKER);
-||||||| merged common ancestors
-  MOZ_ASSERT(StaticPrefs::network_cookie_cookieBehavior() ==
-               nsICookieService::BEHAVIOR_REJECT_TRACKER &&
-             AntiTrackingCommon::ShouldHonorContentBlockingCookieRestrictions());
-=======
   MOZ_ASSERT_IF(
       aWindow->GetExtantDoc(),
       aWindow->GetExtantDoc()->CookieSettings()->GetRejectThirdPartyTrackers());
->>>>>>> upstream-releases
 
   nsTArray<WorkerPrivate*> workers;
   GetWorkersForWindow(aWindow, workers);
@@ -2359,19 +2123,11 @@ void RuntimeService::UpdateAllWorkerGCZeal() {
 }
 #endif
 
-<<<<<<< HEAD
-void RuntimeService::GarbageCollectAllWorkers(bool aShrinking) {
-||||||| merged common ancestors
-void
-RuntimeService::GarbageCollectAllWorkers(bool aShrinking)
-{
-=======
 void RuntimeService::SetLowMemoryStateAllWorkers(bool aState) {
   BROADCAST_ALL_WORKERS(SetLowMemoryState, aState);
 }
 
 void RuntimeService::GarbageCollectAllWorkers(bool aShrinking) {
->>>>>>> upstream-releases
   BROADCAST_ALL_WORKERS(GarbageCollect, aShrinking);
 }
 
@@ -2690,18 +2446,9 @@ void ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow) {
 void PropagateFirstPartyStorageAccessGrantedToWorkers(
     nsPIDOMWindowInner* aWindow) {
   AssertIsOnMainThread();
-<<<<<<< HEAD
-  MOZ_ASSERT(StaticPrefs::network_cookie_cookieBehavior() ==
-             nsICookieService::BEHAVIOR_REJECT_TRACKER);
-||||||| merged common ancestors
-  MOZ_ASSERT(StaticPrefs::network_cookie_cookieBehavior() ==
-               nsICookieService::BEHAVIOR_REJECT_TRACKER &&
-             AntiTrackingCommon::ShouldHonorContentBlockingCookieRestrictions());
-=======
   MOZ_ASSERT_IF(
       aWindow->GetExtantDoc(),
       aWindow->GetExtantDoc()->CookieSettings()->GetRejectThirdPartyTrackers());
->>>>>>> upstream-releases
 
   RuntimeService* runtime = RuntimeService::GetService();
   if (runtime) {
@@ -2774,13 +2521,6 @@ JSObject* GetCurrentThreadWorkerGlobal() {
   return scope->GetGlobalJSObject();
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // dom namespace
-} // mozilla namespace
-=======
 JSObject* GetCurrentThreadWorkerDebuggerGlobal() {
   WorkerPrivate* wp = GetCurrentThreadWorkerPrivate();
   if (!wp) {
@@ -2795,4 +2535,3 @@ JSObject* GetCurrentThreadWorkerDebuggerGlobal() {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

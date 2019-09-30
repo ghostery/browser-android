@@ -2,23 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-use crate::cg;
-||||||| merged common ancestors
-use cg;
-=======
->>>>>>> upstream-releases
 use darling::util::Override;
-<<<<<<< HEAD
-use proc_macro2::TokenStream;
-use quote::{ToTokens, TokenStreamExt};
-||||||| merged common ancestors
-use quote::{ToTokens, Tokens};
-=======
 use derive_common::cg;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, TokenStreamExt};
->>>>>>> upstream-releases
 use syn::{self, Data, Path, WhereClause};
 use synstructure::{BindingInfo, Structure, VariantInfo};
 
@@ -188,14 +175,8 @@ fn derive_single_field_expr(
     field: &BindingInfo,
     attrs: CssFieldAttrs,
     where_clause: &mut Option<WhereClause>,
-<<<<<<< HEAD
-) -> TokenStream {
-||||||| merged common ancestors
-) -> Tokens {
-=======
     bindings: &[BindingInfo],
 ) -> TokenStream {
->>>>>>> upstream-releases
     let mut expr = if attrs.iterable {
         if let Some(if_empty) = attrs.if_empty {
             return quote! {

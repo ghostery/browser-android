@@ -11,17 +11,8 @@ use crate::parser::SelectorImpl;
 use std::fmt::Debug;
 use std::ptr::NonNull;
 
-<<<<<<< HEAD
-/// Opaque representation of an Element, for identity comparisons.
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
-||||||| merged common ancestors
-/// Opaque representation of an Element, for identity comparisons. We use
-/// NonZeroPtrMut to get the NonZero optimization.
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
-=======
 /// Opaque representation of an Element, for identity comparisons.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
->>>>>>> upstream-releases
 pub struct OpaqueElement(NonNull<()>);
 
 unsafe impl Send for OpaqueElement {}

@@ -17,64 +17,27 @@
 
 #include <gtk/gtkversion.h>
 
-<<<<<<< HEAD
-static inline void gtk_widget_set_mapped(GtkWidget *widget, gboolean mapped) {
-||||||| merged common ancestors
-static inline void
-gtk_widget_set_mapped(GtkWidget *widget, gboolean mapped)
-{
-=======
 static inline void gtk_widget_set_mapped(GtkWidget* widget, gboolean mapped) {
->>>>>>> upstream-releases
   if (mapped)
     GTK_WIDGET_SET_FLAGS(widget, GTK_MAPPED);
   else
     GTK_WIDGET_UNSET_FLAGS(widget, GTK_MAPPED);
 }
 
-<<<<<<< HEAD
-static inline gboolean gtk_widget_get_mapped(GtkWidget *widget) {
-  return GTK_WIDGET_MAPPED(widget);
-||||||| merged common ancestors
-static inline gboolean
-gtk_widget_get_mapped(GtkWidget *widget)
-{
-  return GTK_WIDGET_MAPPED (widget);
-=======
 static inline gboolean gtk_widget_get_mapped(GtkWidget* widget) {
   return GTK_WIDGET_MAPPED(widget);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline void gtk_widget_set_realized(GtkWidget *widget,
-                                           gboolean realized) {
-||||||| merged common ancestors
-static inline void
-gtk_widget_set_realized(GtkWidget *widget, gboolean realized)
-{
-=======
 static inline void gtk_widget_set_realized(GtkWidget* widget,
                                            gboolean realized) {
->>>>>>> upstream-releases
   if (realized)
     GTK_WIDGET_SET_FLAGS(widget, GTK_REALIZED);
   else
     GTK_WIDGET_UNSET_FLAGS(widget, GTK_REALIZED);
 }
 
-<<<<<<< HEAD
-static inline gboolean gtk_widget_get_realized(GtkWidget *widget) {
-  return GTK_WIDGET_REALIZED(widget);
-||||||| merged common ancestors
-static inline gboolean
-gtk_widget_get_realized(GtkWidget *widget)
-{
-  return GTK_WIDGET_REALIZED (widget);
-=======
 static inline gboolean gtk_widget_get_realized(GtkWidget* widget) {
   return GTK_WIDGET_REALIZED(widget);
->>>>>>> upstream-releases
 }
 
 #endif /* GTKWIDGET_WRAPPER_H */

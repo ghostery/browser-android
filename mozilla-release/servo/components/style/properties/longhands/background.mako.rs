@@ -14,18 +14,9 @@ ${helpers.predefined_type(
     spec="https://drafts.csswg.org/css-backgrounds/#background-color",
     animation_value_type="AnimatedColor",
     ignored_when_colors_disabled=True,
-<<<<<<< HEAD
-    allow_quirks=True,
-    flags="APPLIES_TO_FIRST_LETTER APPLIES_TO_FIRST_LINE APPLIES_TO_PLACEHOLDER \
-           CAN_ANIMATE_ON_COMPOSITOR",
-||||||| merged common ancestors
-    allow_quirks=True,
-    flags="APPLIES_TO_FIRST_LETTER APPLIES_TO_FIRST_LINE APPLIES_TO_PLACEHOLDER",
-=======
     allow_quirks="Yes",
     flags="APPLIES_TO_CUE APPLIES_TO_FIRST_LETTER APPLIES_TO_FIRST_LINE APPLIES_TO_PLACEHOLDER \
            CAN_ANIMATE_ON_COMPOSITOR",
->>>>>>> upstream-releases
 )}
 
 ${helpers.predefined_type(

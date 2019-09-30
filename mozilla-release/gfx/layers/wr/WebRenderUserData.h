@@ -51,37 +51,18 @@ class WebRenderBackgroundData {
   wr::ColorF mColor;
 };
 
-<<<<<<< HEAD
-class WebRenderUserData {
- public:
-  typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>>
-      WebRenderUserDataRefTable;
-||||||| merged common ancestors
-class WebRenderUserData
-{
-public:
-  typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData> > WebRenderUserDataRefTable;
-=======
 /// Parent class for arbitrary WebRender-specific data that can be associated
 /// to an nsFrame.
 class WebRenderUserData {
  public:
   typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>>
       WebRenderUserDataRefTable;
->>>>>>> upstream-releases
 
   static bool SupportsAsyncUpdate(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-  static bool ProcessInvalidateForImage(nsIFrame* aFrame,
-                                        DisplayItemType aType);
-
-||||||| merged common ancestors
-=======
   static bool ProcessInvalidateForImage(nsIFrame* aFrame, DisplayItemType aType,
                                         ContainerProducerID aProducerId);
 
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(WebRenderUserData)
 
   WebRenderUserData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
@@ -142,24 +123,6 @@ struct WebRenderUserDataKey {
   WebRenderUserData::UserDataType mType;
 };
 
-<<<<<<< HEAD
-typedef nsRefPtrHashtable<
-    nsGenericHashKey<mozilla::layers::WebRenderUserDataKey>, WebRenderUserData>
-    WebRenderUserDataTable;
-
-/// Holds some data used to share TextureClient/ImageClient with the parent
-/// process except if used with blob images (watch your step).
-class WebRenderImageData : public WebRenderUserData {
- public:
-  WebRenderImageData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
-||||||| merged common ancestors
-typedef nsRefPtrHashtable<nsGenericHashKey<mozilla::layers::WebRenderUserDataKey>, WebRenderUserData> WebRenderUserDataTable;
-
-class WebRenderImageData : public WebRenderUserData
-{
-public:
-  WebRenderImageData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
-=======
 typedef nsRefPtrHashtable<
     nsGenericHashKey<mozilla::layers::WebRenderUserDataKey>, WebRenderUserData>
     WebRenderUserDataTable;
@@ -171,22 +134,13 @@ class WebRenderImageData : public WebRenderUserData {
   WebRenderImageData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
   WebRenderImageData(RenderRootStateManager* aManager, uint32_t aDisplayItemKey,
                      nsIFrame* aFrame);
->>>>>>> upstream-releases
   virtual ~WebRenderImageData();
 
   WebRenderImageData* AsImageData() override { return this; }
   UserDataType GetType() override { return UserDataType::eImage; }
   static UserDataType Type() { return UserDataType::eImage; }
-<<<<<<< HEAD
-  virtual Maybe<wr::ImageKey> GetImageKey() { return mKey; }
-  void SetImageKey(const wr::ImageKey& aKey);
-||||||| merged common ancestors
-  Maybe<wr::ImageKey> GetKey() { return mKey; }
-  void SetKey(const wr::ImageKey& aKey);
-=======
   Maybe<wr::ImageKey> GetImageKey() { return mKey; }
   void SetImageKey(const wr::ImageKey& aKey);
->>>>>>> upstream-releases
   already_AddRefed<ImageClient> GetImageClient();
 
   Maybe<wr::ImageKey> UpdateImageKey(ImageContainer* aContainer,
@@ -202,30 +156,11 @@ class WebRenderImageData : public WebRenderUserData {
 
   void CreateImageClientIfNeeded();
 
-<<<<<<< HEAD
-  bool IsAsync() { return mPipelineId.isSome(); }
-||||||| merged common ancestors
-  bool IsAsync()
-  {
-    return mPipelineId.isSome();
-  }
-=======
   bool IsAsync() { return mPipelineId.isSome(); }
 
   bool UsingSharedSurface(ContainerProducerID aProducerId) const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool IsAsyncAnimatedImage() const;
-
- protected:
-  virtual void ClearImageKey();
-||||||| merged common ancestors
-protected:
   void ClearImageKey();
-=======
-  void ClearImageKey();
->>>>>>> upstream-releases
 
  protected:
   Maybe<wr::ImageKey> mKey;
@@ -240,26 +175,6 @@ protected:
   bool mOwnsKey;
 };
 
-<<<<<<< HEAD
-/// Used for fallback rendering.
-///
-/// In most cases this uses blob images but it can also render on the content
-/// side directly into a texture.
-///
-/// TODO(nical) It would be much better to separate the two use cases into
-/// separate classes and not have the blob image related code inherit from
-/// WebRenderImageData (the current code only works if we carefully use a subset
-/// of the parent code).
-class WebRenderFallbackData : public WebRenderImageData {
- public:
-  WebRenderFallbackData(WebRenderLayerManager* aWRManager,
-                        nsDisplayItem* aItem);
-||||||| merged common ancestors
-class WebRenderFallbackData : public WebRenderImageData
-{
-public:
-  WebRenderFallbackData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
-=======
 /// Used for fallback rendering.
 ///
 /// In most cases this uses blob images but it can also render on the content
@@ -267,7 +182,6 @@ public:
 class WebRenderFallbackData : public WebRenderUserData {
  public:
   WebRenderFallbackData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
->>>>>>> upstream-releases
   virtual ~WebRenderFallbackData();
 
   WebRenderFallbackData* AsFallbackData() override { return this; }
@@ -276,16 +190,6 @@ class WebRenderFallbackData : public WebRenderUserData {
 
   void SetInvalid(bool aInvalid) { mInvalid = aInvalid; }
   bool IsInvalid() { return mInvalid; }
-<<<<<<< HEAD
-  void SetFonts(const std::vector<RefPtr<gfx::ScaledFont>>& aFonts) {
-    mFonts = aFonts;
-  }
-  Maybe<wr::BlobImageKey> GetBlobImageKey() { return mBlobKey; }
-  virtual Maybe<wr::ImageKey> GetImageKey() override;
-  void SetBlobImageKey(const wr::BlobImageKey& aKey);
-||||||| merged common ancestors
-  void SetFonts(const std::vector<RefPtr<gfx::ScaledFont>>& aFonts) { mFonts = aFonts; }
-=======
   void SetFonts(const std::vector<RefPtr<gfx::ScaledFont>>& aFonts) {
     mFonts = aFonts;
   }
@@ -296,20 +200,9 @@ class WebRenderFallbackData : public WebRenderUserData {
   /// Create a WebRenderImageData to manage the image we are about to render
   /// into.
   WebRenderImageData* PaintIntoImage();
->>>>>>> upstream-releases
 
   std::vector<RefPtr<gfx::SourceSurface>> mExternalSurfaces;
-<<<<<<< HEAD
-
- protected:
-  virtual void ClearImageKey() override;
-
-  Maybe<wr::BlobImageKey> mBlobKey;
-||||||| merged common ancestors
-protected:
-=======
   RefPtr<BasicLayerManager> mBasicLayerManager;
->>>>>>> upstream-releases
   nsAutoPtr<nsDisplayItemGeometry> mGeometry;
   nsRect mBounds;
   nsRect mBuildingRect;
@@ -326,22 +219,10 @@ protected:
   bool mInvalid;
 };
 
-<<<<<<< HEAD
-class WebRenderAnimationData : public WebRenderUserData {
- public:
-  WebRenderAnimationData(WebRenderLayerManager* aWRManager,
-                         nsDisplayItem* aItem);
-||||||| merged common ancestors
-class WebRenderAnimationData : public WebRenderUserData
-{
-public:
-  WebRenderAnimationData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
-=======
 class WebRenderAnimationData : public WebRenderUserData {
  public:
   WebRenderAnimationData(RenderRootStateManager* aManager,
                          nsDisplayItem* aItem);
->>>>>>> upstream-releases
   virtual ~WebRenderAnimationData();
 
   UserDataType GetType() override { return UserDataType::eAnimation; }
@@ -352,20 +233,9 @@ class WebRenderAnimationData : public WebRenderUserData {
   AnimationInfo mAnimationInfo;
 };
 
-<<<<<<< HEAD
-class WebRenderCanvasData : public WebRenderUserData {
- public:
-  WebRenderCanvasData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
-||||||| merged common ancestors
-class WebRenderCanvasData : public WebRenderUserData
-{
-public:
-  WebRenderCanvasData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
-=======
 class WebRenderCanvasData : public WebRenderUserData {
  public:
   WebRenderCanvasData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
->>>>>>> upstream-releases
   virtual ~WebRenderCanvasData();
 
   WebRenderCanvasData* AsCanvasData() override { return this; }

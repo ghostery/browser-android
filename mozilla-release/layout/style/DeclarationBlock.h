@@ -85,16 +85,9 @@ class DeclarationBlock final {
   /**
    * Copy |this|, if necessary to ensure that it can be modified.
    */
-<<<<<<< HEAD
-  already_AddRefed<DeclarationBlock> EnsureMutable() {
-||||||| merged common ancestors
-  already_AddRefed<DeclarationBlock> EnsureMutable()
-  {
-=======
   already_AddRefed<DeclarationBlock> EnsureMutable() {
     MOZ_ASSERT(!OwnerIsReadOnly());
 
->>>>>>> upstream-releases
     if (!IsDirty()) {
       // In stylo, the old DeclarationBlock is stored in element's rule node
       // tree directly, to avoid new values replacing the DeclarationBlock in
@@ -146,15 +139,6 @@ class DeclarationBlock final {
     return c.mHTMLCSSStyleSheet;
   }
 
-<<<<<<< HEAD
-  static already_AddRefed<DeclarationBlock> FromCssText(
-      const nsAString& aCssText, URLExtraData* aExtraData,
-      nsCompatibility aMode, css::Loader* aLoader);
-||||||| merged common ancestors
-  static already_AddRefed<DeclarationBlock>
-  FromCssText(const nsAString& aCssText, URLExtraData* aExtraData,
-              nsCompatibility aMode, css::Loader* aLoader);
-=======
   bool IsReadOnly() const;
 
   size_t SizeofIncludingThis(MallocSizeOf);
@@ -162,7 +146,6 @@ class DeclarationBlock final {
   static already_AddRefed<DeclarationBlock> FromCssText(
       const nsAString& aCssText, URLExtraData* aExtraData,
       nsCompatibility aMode, css::Loader* aLoader);
->>>>>>> upstream-releases
 
   RawServoDeclarationBlock* Raw() const { return mRaw; }
   RawServoDeclarationBlock* const* RefRaw() const {
@@ -172,36 +155,16 @@ class DeclarationBlock final {
     return reinterpret_cast<RawServoDeclarationBlock* const*>(&mRaw);
   }
 
-<<<<<<< HEAD
-  const RawServoDeclarationBlockStrong* RefRawStrong() const {
-||||||| merged common ancestors
-  const RawServoDeclarationBlockStrong* RefRawStrong() const
-  {
-=======
   const StyleStrong<RawServoDeclarationBlock>* RefRawStrong() const {
->>>>>>> upstream-releases
     static_assert(sizeof(RefPtr<RawServoDeclarationBlock>) ==
                       sizeof(RawServoDeclarationBlock*),
                   "RefPtr should just be a pointer");
-<<<<<<< HEAD
-    static_assert(
-        sizeof(RefPtr<RawServoDeclarationBlock>) ==
-            sizeof(RawServoDeclarationBlockStrong),
-        "RawServoDeclarationBlockStrong should be the same as RefPtr");
-    return reinterpret_cast<const RawServoDeclarationBlockStrong*>(&mRaw);
-||||||| merged common ancestors
-    static_assert(sizeof(RefPtr<RawServoDeclarationBlock>) ==
-                  sizeof(RawServoDeclarationBlockStrong),
-                  "RawServoDeclarationBlockStrong should be the same as RefPtr");
-    return reinterpret_cast<const RawServoDeclarationBlockStrong*>(&mRaw);
-=======
     static_assert(
         sizeof(RefPtr<RawServoDeclarationBlock>) ==
             sizeof(StyleStrong<RawServoDeclarationBlock>),
         "RawServoDeclarationBlockStrong should be the same as RefPtr");
     return reinterpret_cast<const StyleStrong<RawServoDeclarationBlock>*>(
         &mRaw);
->>>>>>> upstream-releases
   }
 
   void ToString(nsAString& aResult) const {

@@ -21,23 +21,6 @@ const TEST_DATA = [
       await testActor.setAttribute("#node1", "newattr", "newattrval");
     },
     check: async function(inspector) {
-<<<<<<< HEAD
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok([...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrval\""
-          && attr.dataset.value === "newattrval"
-          && attr.dataset.attr === "newattr";
-      }), "newattr attribute found");
-    },
-||||||| merged common ancestors
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok([...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrval\""
-          && attr.dataset.value === "newattrval"
-          && attr.dataset.attr === "newattr";
-      }), "newattr attribute found");
-    }
-=======
       const { editor } = await getContainerForSelector("#node1", inspector);
       ok(
         [...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
@@ -50,7 +33,6 @@ const TEST_DATA = [
         "newattr attribute found"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Removing an attribute",
@@ -58,19 +40,6 @@ const TEST_DATA = [
       await testActor.removeAttribute("#node1", "newattr");
     },
     check: async function(inspector) {
-<<<<<<< HEAD
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok(![...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrval\"";
-      }), "newattr attribute removed");
-    },
-||||||| merged common ancestors
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok(![...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrval\"";
-      }), "newattr attribute removed");
-    }
-=======
       const { editor } = await getContainerForSelector("#node1", inspector);
       ok(
         ![...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
@@ -79,7 +48,6 @@ const TEST_DATA = [
         "newattr attribute removed"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Re-adding an attribute",
@@ -87,23 +55,6 @@ const TEST_DATA = [
       await testActor.setAttribute("#node1", "newattr", "newattrval");
     },
     check: async function(inspector) {
-<<<<<<< HEAD
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok([...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrval\""
-          && attr.dataset.value === "newattrval"
-          && attr.dataset.attr === "newattr";
-      }), "newattr attribute found");
-    },
-||||||| merged common ancestors
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok([...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrval\""
-          && attr.dataset.value === "newattrval"
-          && attr.dataset.attr === "newattr";
-      }), "newattr attribute found");
-    }
-=======
       const { editor } = await getContainerForSelector("#node1", inspector);
       ok(
         [...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
@@ -116,7 +67,6 @@ const TEST_DATA = [
         "newattr attribute found"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Changing an attribute",
@@ -124,23 +74,6 @@ const TEST_DATA = [
       await testActor.setAttribute("#node1", "newattr", "newattrchanged");
     },
     check: async function(inspector) {
-<<<<<<< HEAD
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok([...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrchanged\""
-          && attr.dataset.value === "newattrchanged"
-          && attr.dataset.attr === "newattr";
-      }), "newattr attribute found");
-    },
-||||||| merged common ancestors
-      const {editor} = await getContainerForSelector("#node1", inspector);
-      ok([...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
-        return attr.textContent.trim() === "newattr=\"newattrchanged\""
-          && attr.dataset.value === "newattrchanged"
-          && attr.dataset.attr === "newattr";
-      }), "newattr attribute found");
-    }
-=======
       const { editor } = await getContainerForSelector("#node1", inspector);
       ok(
         [...editor.attrList.querySelectorAll(".attreditor")].some(attr => {
@@ -153,7 +86,6 @@ const TEST_DATA = [
         "newattr attribute found"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Adding another attribute does not rerender unchanged attributes",
@@ -194,19 +126,11 @@ const TEST_DATA = [
         "[data-attr=newattr]"
       );
       ok(newAttrContainer, "attribute-container for 'newattr' found");
-<<<<<<< HEAD
-      ok(newAttrContainer.beforeMutationFlag, "attribute-container same as earlier");
-    },
-||||||| merged common ancestors
-      ok(newAttrContainer.beforeMutationFlag, "attribute-container same as earlier");
-    }
-=======
       ok(
         newAttrContainer.beforeMutationFlag,
         "attribute-container same as earlier"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Adding ::after element",
@@ -218,17 +142,6 @@ const TEST_DATA = [
       `);
     },
     check: async function(inspector) {
-<<<<<<< HEAD
-      const {children} = await getContainerForSelector("#node1", inspector);
-      is(children.childNodes.length, 2,
-        "Node1 now has 2 children (text child and ::after");
-    },
-||||||| merged common ancestors
-      const {children} = await getContainerForSelector("#node1", inspector);
-      is(children.childNodes.length, 2,
-        "Node1 now has 2 children (text child and ::after");
-    }
-=======
       const { children } = await getContainerForSelector("#node1", inspector);
       is(
         children.childNodes.length,
@@ -236,7 +149,6 @@ const TEST_DATA = [
         "Node1 now has 2 children (text child and ::after"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Removing ::after element",
@@ -262,22 +174,12 @@ const TEST_DATA = [
       ok(container.inlineTextChild, "Has single text child.");
       ok(!container.canExpand, "Can't expand container with inlineTextChild.");
       ok(!container.inlineTextChild.canExpand, "Can't expand inlineTextChild.");
-<<<<<<< HEAD
-      is(container.editor.elt.querySelector(".text").textContent.trim(),
-         "newtext", "Single text child editor updated.");
-    },
-||||||| merged common ancestors
-      is(container.editor.elt.querySelector(".text").textContent.trim(),
-         "newtext", "Single text child editor updated.");
-    }
-=======
       is(
         container.editor.elt.querySelector(".text").textContent.trim(),
         "newtext",
         "Single text child editor updated."
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Adding a second text child",
@@ -365,22 +267,12 @@ const TEST_DATA = [
       is(openTags[0].textContent.trim(), "div", "The first tag is a div");
       is(openTags[1].textContent.trim(), "span", "The second tag is a span");
 
-<<<<<<< HEAD
-      is(container.children.querySelector(".text").textContent.trim(), "foo",
-        "The span's textcontent is correct");
-    },
-||||||| merged common ancestors
-      is(container.children.querySelector(".text").textContent.trim(), "foo",
-        "The span's textcontent is correct");
-    }
-=======
       is(
         container.children.querySelector(".text").textContent.trim(),
         "foo",
         "The span's textcontent is correct"
       );
     },
->>>>>>> upstream-releases
   },
   {
     desc: "Removing child nodes",
@@ -470,19 +362,6 @@ const TEST_DATA = [
       );
 
       const node18 = node20Children.childNodes[1];
-<<<<<<< HEAD
-      is(node18.querySelector(".open .attreditor .attr-value")
-               .textContent.trim(),
-         "node18", "Node20's second child is indeed node18");
-    },
-  },
-||||||| merged common ancestors
-      is(node18.querySelector(".open .attreditor .attr-value")
-               .textContent.trim(),
-         "node18", "Node20's second child is indeed node18");
-    }
-  }
-=======
       is(
         node18
           .querySelector(".open .attreditor .attr-value")
@@ -492,7 +371,6 @@ const TEST_DATA = [
       );
     },
   },
->>>>>>> upstream-releases
 ];
 
 add_task(async function() {

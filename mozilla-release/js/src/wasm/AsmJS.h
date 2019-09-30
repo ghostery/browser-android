@@ -61,15 +61,6 @@ using AsmJSParser = frontend::Parser<frontend::FullParseHandler, Unit>;
 // indeterminate amount and the entire function should be reparsed from the
 // beginning.
 
-<<<<<<< HEAD
-extern MOZ_MUST_USE bool CompileAsmJS(JSContext* cx, AsmJSParser& parser,
-                                      frontend::ParseNode* stmtList,
-                                      bool* validated);
-||||||| merged common ancestors
-extern MOZ_MUST_USE bool
-CompileAsmJS(JSContext* cx, AsmJSParser& parser, frontend::ParseNode* stmtList,
-             bool* validated);
-=======
 extern MOZ_MUST_USE bool CompileAsmJS(JSContext* cx,
                                       AsmJSParser<mozilla::Utf8Unit>& parser,
                                       frontend::ParseNode* stmtList,
@@ -79,7 +70,6 @@ extern MOZ_MUST_USE bool CompileAsmJS(JSContext* cx,
                                       AsmJSParser<char16_t>& parser,
                                       frontend::ParseNode* stmtList,
                                       bool* validated);
->>>>>>> upstream-releases
 
 // asm.js module/export queries:
 
@@ -95,56 +85,20 @@ extern bool InstantiateAsmJS(JSContext* cx, unsigned argc, JS::Value* vp);
 
 // asm.js testing natives:
 
-<<<<<<< HEAD
 extern bool IsAsmJSCompilationAvailable(JSContext* cx, unsigned argc,
                                         JS::Value* vp);
 
 extern bool IsAsmJSModule(JSContext* cx, unsigned argc, JS::Value* vp);
-||||||| merged common ancestors
-extern bool
-IsAsmJSCompilationAvailable(JSContext* cx, unsigned argc, JS::Value* vp);
-
-extern bool
-IsAsmJSModule(JSContext* cx, unsigned argc, JS::Value* vp);
-=======
-extern bool IsAsmJSCompilationAvailable(JSContext* cx, unsigned argc,
-                                        JS::Value* vp);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-extern bool IsAsmJSModuleLoadedFromCache(JSContext* cx, unsigned argc,
-                                         Value* vp);
-||||||| merged common ancestors
-extern bool
-IsAsmJSModuleLoadedFromCache(JSContext* cx, unsigned argc, Value* vp);
-=======
-extern bool IsAsmJSModule(JSContext* cx, unsigned argc, JS::Value* vp);
->>>>>>> upstream-releases
 
 extern bool IsAsmJSFunction(JSContext* cx, unsigned argc, JS::Value* vp);
 
 // asm.js toString/toSource support:
 
-<<<<<<< HEAD
-extern JSString* AsmJSFunctionToString(JSContext* cx, HandleFunction fun);
-||||||| merged common ancestors
-extern JSString*
-AsmJSFunctionToString(JSContext* cx, HandleFunction fun);
-=======
 extern JSString* AsmJSFunctionToString(JSContext* cx,
                                        JS::Handle<JSFunction*> fun);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JSString* AsmJSModuleToString(JSContext* cx, HandleFunction fun,
-                                     bool isToSource);
-||||||| merged common ancestors
-extern JSString*
-AsmJSModuleToString(JSContext* cx, HandleFunction fun, bool isToSource);
-=======
 extern JSString* AsmJSModuleToString(JSContext* cx, JS::Handle<JSFunction*> fun,
                                      bool isToSource);
->>>>>>> upstream-releases
 
 // asm.js heap:
 
@@ -152,10 +106,4 @@ extern bool IsValidAsmJSHeapLength(uint32_t length);
 
 }  // namespace js
 
-<<<<<<< HEAD
-#endif  // asmjs_asmjs_h
-||||||| merged common ancestors
-#endif // asmjs_asmjs_h
-=======
 #endif  // wasm_AsmJS_h
->>>>>>> upstream-releases

@@ -70,220 +70,46 @@ inline uint32_t ConvertNumber<uint32_t, float>(float src) {
   return JS::ToUint32(src);
 }
 
-<<<<<<< HEAD
-template <>
-inline int8_t ConvertNumber<int8_t, double>(double src) {
-  return JS::ToInt8(src);
-||||||| merged common ancestors
-template<> inline int8_t
-ConvertNumber<int8_t, double>(double src)
-{
-    return JS::ToInt8(src);
-=======
 template <>
 inline int64_t ConvertNumber<int64_t, float>(float src) {
   return JS::ToInt64(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <>
-inline uint8_t ConvertNumber<uint8_t, double>(double src) {
-  return JS::ToUint8(src);
-||||||| merged common ancestors
-template<>
-inline uint8_t
-ConvertNumber<uint8_t, double>(double src)
-{
-    return JS::ToUint8(src);
-=======
 template <>
 inline uint64_t ConvertNumber<uint64_t, float>(float src) {
   return JS::ToUint64(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <>
-inline uint8_clamped ConvertNumber<uint8_clamped, double>(double src) {
-  return uint8_clamped(src);
-||||||| merged common ancestors
-template<>
-inline uint8_clamped
-ConvertNumber<uint8_clamped, double>(double src)
-{
-    return uint8_clamped(src);
-=======
 template <>
 inline int8_t ConvertNumber<int8_t, double>(double src) {
   return JS::ToInt8(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <>
-inline int16_t ConvertNumber<int16_t, double>(double src) {
-  return JS::ToInt16(src);
-||||||| merged common ancestors
-template<>
-inline int16_t
-ConvertNumber<int16_t, double>(double src)
-{
-    return JS::ToInt16(src);
-=======
 template <>
 inline uint8_t ConvertNumber<uint8_t, double>(double src) {
   return JS::ToUint8(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <>
-inline uint16_t ConvertNumber<uint16_t, double>(double src) {
-  return JS::ToUint16(src);
-||||||| merged common ancestors
-template<>
-inline uint16_t
-ConvertNumber<uint16_t, double>(double src)
-{
-    return JS::ToUint16(src);
-=======
 template <>
 inline uint8_clamped ConvertNumber<uint8_clamped, double>(double src) {
   return uint8_clamped(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <>
-inline int32_t ConvertNumber<int32_t, double>(double src) {
-  return JS::ToInt32(src);
-||||||| merged common ancestors
-template<>
-inline int32_t
-ConvertNumber<int32_t, double>(double src)
-{
-    return JS::ToInt32(src);
-=======
 template <>
 inline int16_t ConvertNumber<int16_t, double>(double src) {
   return JS::ToInt16(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <>
-inline uint32_t ConvertNumber<uint32_t, double>(double src) {
-  return JS::ToUint32(src);
-||||||| merged common ancestors
-template<>
-inline uint32_t
-ConvertNumber<uint32_t, double>(double src)
-{
-    return JS::ToUint32(src);
-=======
 template <>
 inline uint16_t ConvertNumber<uint16_t, double>(double src) {
   return JS::ToUint16(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename To, typename From>
-inline To ConvertNumber(From src) {
-  static_assert(
-      !mozilla::IsFloatingPoint<From>::value ||
-          (mozilla::IsFloatingPoint<From>::value &&
-           mozilla::IsFloatingPoint<To>::value),
-      "conversion from floating point to int should have been handled by "
-      "specializations above");
-  return To(src);
-||||||| merged common ancestors
-template<typename To, typename From>
-inline To
-ConvertNumber(From src)
-{
-    static_assert(!mozilla::IsFloatingPoint<From>::value ||
-                  (mozilla::IsFloatingPoint<From>::value && mozilla::IsFloatingPoint<To>::value),
-                  "conversion from floating point to int should have been handled by "
-                  "specializations above");
-    return To(src);
-=======
 template <>
 inline int32_t ConvertNumber<int32_t, double>(double src) {
   return JS::ToInt32(src);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename NativeType>
-struct TypeIDOfType;
-template <>
-struct TypeIDOfType<int8_t> {
-  static const Scalar::Type id = Scalar::Int8;
-};
-template <>
-struct TypeIDOfType<uint8_t> {
-  static const Scalar::Type id = Scalar::Uint8;
-};
-template <>
-struct TypeIDOfType<int16_t> {
-  static const Scalar::Type id = Scalar::Int16;
-};
-template <>
-struct TypeIDOfType<uint16_t> {
-  static const Scalar::Type id = Scalar::Uint16;
-};
-template <>
-struct TypeIDOfType<int32_t> {
-  static const Scalar::Type id = Scalar::Int32;
-};
-template <>
-struct TypeIDOfType<uint32_t> {
-  static const Scalar::Type id = Scalar::Uint32;
-};
-template <>
-struct TypeIDOfType<float> {
-  static const Scalar::Type id = Scalar::Float32;
-};
-template <>
-struct TypeIDOfType<double> {
-  static const Scalar::Type id = Scalar::Float64;
-};
-template <>
-struct TypeIDOfType<uint8_clamped> {
-  static const Scalar::Type id = Scalar::Uint8Clamped;
-};
-||||||| merged common ancestors
-template<typename NativeType> struct TypeIDOfType;
-template<> struct TypeIDOfType<int8_t> { static const Scalar::Type id = Scalar::Int8; };
-template<> struct TypeIDOfType<uint8_t> { static const Scalar::Type id = Scalar::Uint8; };
-template<> struct TypeIDOfType<int16_t> { static const Scalar::Type id = Scalar::Int16; };
-template<> struct TypeIDOfType<uint16_t> { static const Scalar::Type id = Scalar::Uint16; };
-template<> struct TypeIDOfType<int32_t> { static const Scalar::Type id = Scalar::Int32; };
-template<> struct TypeIDOfType<uint32_t> { static const Scalar::Type id = Scalar::Uint32; };
-template<> struct TypeIDOfType<float> { static const Scalar::Type id = Scalar::Float32; };
-template<> struct TypeIDOfType<double> { static const Scalar::Type id = Scalar::Float64; };
-template<> struct TypeIDOfType<uint8_clamped> { static const Scalar::Type id = Scalar::Uint8Clamped; };
-
-class SharedOps
-{
-  public:
-    template<typename T>
-    static T load(SharedMem<T*> addr) {
-        return js::jit::AtomicOperations::loadSafeWhenRacy(addr);
-    }
-
-    template<typename T>
-    static void store(SharedMem<T*> addr, T value) {
-        js::jit::AtomicOperations::storeSafeWhenRacy(addr, value);
-    }
-
-    template<typename T>
-    static void memcpy(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-        js::jit::AtomicOperations::memcpySafeWhenRacy(dest, src, size);
-    }
-=======
 template <>
 inline uint32_t ConvertNumber<uint32_t, double>(double src) {
   return JS::ToUint32(src);
@@ -298,51 +124,7 @@ template <>
 inline uint64_t ConvertNumber<uint64_t, double>(double src) {
   return JS::ToUint64(src);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class SharedOps {
- public:
-  template <typename T>
-  static T load(SharedMem<T*> addr) {
-    return js::jit::AtomicOperations::loadSafeWhenRacy(addr);
-  }
-
-  template <typename T>
-  static void store(SharedMem<T*> addr, T value) {
-    js::jit::AtomicOperations::storeSafeWhenRacy(addr, value);
-  }
-
-  template <typename T>
-  static void memcpy(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-    js::jit::AtomicOperations::memcpySafeWhenRacy(dest, src, size);
-  }
-
-  template <typename T>
-  static void memmove(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-    js::jit::AtomicOperations::memmoveSafeWhenRacy(dest, src, size);
-  }
-
-  template <typename T>
-  static void podCopy(SharedMem<T*> dest, SharedMem<T*> src, size_t nelem) {
-    js::jit::AtomicOperations::podCopySafeWhenRacy(dest, src, nelem);
-  }
-
-  template <typename T>
-  static void podMove(SharedMem<T*> dest, SharedMem<T*> src, size_t nelem) {
-    js::jit::AtomicOperations::podMoveSafeWhenRacy(dest, src, nelem);
-  }
-
-  static SharedMem<void*> extract(TypedArrayObject* obj) {
-    return obj->dataPointerEither();
-  }
-};
-||||||| merged common ancestors
-    template<typename T>
-    static void memmove(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-        js::jit::AtomicOperations::memmoveSafeWhenRacy(dest, src, size);
-    }
-=======
 template <typename To, typename From>
 inline To ConvertNumber(From src) {
   static_assert(
@@ -353,63 +135,7 @@ inline To ConvertNumber(From src) {
       "specializations above");
   return To(src);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class UnsharedOps {
- public:
-  template <typename T>
-  static T load(SharedMem<T*> addr) {
-    return *addr.unwrapUnshared();
-  }
-
-  template <typename T>
-  static void store(SharedMem<T*> addr, T value) {
-    *addr.unwrapUnshared() = value;
-  }
-
-  template <typename T>
-  static void memcpy(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-    ::memcpy(dest.unwrapUnshared(), src.unwrapUnshared(), size);
-  }
-
-  template <typename T>
-  static void memmove(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-    ::memmove(dest.unwrapUnshared(), src.unwrapUnshared(), size);
-  }
-
-  template <typename T>
-  static void podCopy(SharedMem<T*> dest, SharedMem<T*> src, size_t nelem) {
-    // std::copy_n better matches the argument values/types of this
-    // function, but as noted below it allows the input/output ranges to
-    // overlap.  std::copy does not, so use it so the compiler has extra
-    // ability to optimize.
-    const auto* first = src.unwrapUnshared();
-    const auto* last = first + nelem;
-    auto* result = dest.unwrapUnshared();
-    std::copy(first, last, result);
-  }
-
-  template <typename T>
-  static void podMove(SharedMem<T*> dest, SharedMem<T*> src, size_t n) {
-    // std::copy_n copies from |src| to |dest| starting from |src|, so
-    // input/output ranges *may* permissibly overlap, as this function
-    // allows.
-    const auto* start = src.unwrapUnshared();
-    auto* result = dest.unwrapUnshared();
-    std::copy_n(start, n, result);
-  }
-
-  static SharedMem<void*> extract(TypedArrayObject* obj) {
-    return SharedMem<void*>::unshared(obj->dataPointerUnshared());
-  }
-};
-||||||| merged common ancestors
-    template<typename T>
-    static void podCopy(SharedMem<T*> dest, SharedMem<T*> src, size_t nelem) {
-        js::jit::AtomicOperations::podCopySafeWhenRacy(dest, src, nelem);
-    }
-=======
 template <typename NativeType>
 struct TypeIDOfType;
 template <>
@@ -467,40 +193,7 @@ struct TypeIDOfType<uint8_clamped> {
   static const Scalar::Type id = Scalar::Uint8Clamped;
   static const JSProtoKey protoKey = JSProto_Uint8ClampedArray;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename T, typename Ops>
-class ElementSpecific {
- public:
-  /*
-   * Copy |source|'s elements into |target|, starting at |target[offset]|.
-   * Act as if the assignments occurred from a fresh copy of |source|, in
-   * case the two memory ranges overlap.
-   */
-  static bool setFromTypedArray(Handle<TypedArrayObject*> target,
-                                Handle<TypedArrayObject*> source,
-                                uint32_t offset) {
-    // WARNING: |source| may be an unwrapped typed array from a different
-    // compartment. Proceed with caution!
-
-    MOZ_ASSERT(TypeIDOfType<T>::id == target->type(),
-               "calling wrong setFromTypedArray specialization");
-    MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-    MOZ_ASSERT(!source->hasDetachedBuffer(), "source isn't detached");
-
-    MOZ_ASSERT(offset <= target->length());
-    MOZ_ASSERT(source->length() <= target->length() - offset);
-
-    if (TypedArrayObject::sameBuffer(target, source)) {
-      return setFromOverlappingTypedArray(target, source, offset);
-    }
-||||||| merged common ancestors
-    template<typename T>
-    static void podMove(SharedMem<T*> dest, SharedMem<T*> src, size_t nelem) {
-        js::jit::AtomicOperations::podMoveSafeWhenRacy(dest, src, nelem);
-    }
-=======
 class SharedOps {
  public:
   template <typename T>
@@ -537,18 +230,7 @@ class SharedOps {
     return obj->dataPointerEither();
   }
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    SharedMem<T*> dest =
-        target->dataPointerEither().template cast<T*>() + offset;
-    uint32_t count = source->length();
-||||||| merged common ancestors
-    static SharedMem<void*> extract(TypedArrayObject* obj) {
-        return obj->dataPointerEither();
-    }
-};
-=======
 class UnsharedOps {
  public:
   template <typename T>
@@ -597,21 +279,7 @@ class UnsharedOps {
     return SharedMem<void*>::unshared(obj->dataPointerUnshared());
   }
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (source->type() == target->type()) {
-      Ops::podCopy(dest, source->dataPointerEither().template cast<T*>(),
-                   count);
-      return true;
-||||||| merged common ancestors
-class UnsharedOps
-{
-  public:
-    template<typename T>
-    static T load(SharedMem<T*> addr) {
-        return *addr.unwrapUnshared();
-=======
 template <typename T, typename Ops>
 class ElementSpecific {
  public:
@@ -636,76 +304,8 @@ class ElementSpecific {
 
     if (TypedArrayObject::sameBuffer(target, source)) {
       return setFromOverlappingTypedArray(target, source, offset);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    SharedMem<void*> data = Ops::extract(source);
-    switch (source->type()) {
-      case Scalar::Int8: {
-        SharedMem<int8_t*> src = data.cast<int8_t*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Uint8:
-      case Scalar::Uint8Clamped: {
-        SharedMem<uint8_t*> src = data.cast<uint8_t*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Int16: {
-        SharedMem<int16_t*> src = data.cast<int16_t*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Uint16: {
-        SharedMem<uint16_t*> src = data.cast<uint16_t*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Int32: {
-        SharedMem<int32_t*> src = data.cast<int32_t*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Uint32: {
-        SharedMem<uint32_t*> src = data.cast<uint32_t*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Float32: {
-        SharedMem<float*> src = data.cast<float*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      case Scalar::Float64: {
-        SharedMem<double*> src = data.cast<double*>();
-        for (uint32_t i = 0; i < count; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-        }
-        break;
-      }
-      default:
-        MOZ_CRASH("setFromTypedArray with a typed array with bogus type");
-||||||| merged common ancestors
-    template<typename T>
-    static void store(SharedMem<T*> addr, T value) {
-        *addr.unwrapUnshared() = value;
-=======
     SharedMem<T*> dest =
         target->dataPointerEither().template cast<T*>() + offset;
     uint32_t count = source->length();
@@ -714,56 +314,8 @@ class ElementSpecific {
       Ops::podCopy(dest, source->dataPointerEither().template cast<T*>(),
                    count);
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    return true;
-  }
-
-  /*
-   * Copy |source[0]| to |source[len]| (exclusive) elements into the typed
-   * array |target|, starting at index |offset|.  |source| must not be a
-   * typed array.
-   */
-  static bool setFromNonTypedArray(JSContext* cx,
-                                   Handle<TypedArrayObject*> target,
-                                   HandleObject source, uint32_t len,
-                                   uint32_t offset = 0) {
-    MOZ_ASSERT(target->type() == TypeIDOfType<T>::id,
-               "target type and NativeType must match");
-    MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-    MOZ_ASSERT(!source->is<TypedArrayObject>(),
-               "use setFromTypedArray instead of this method");
-
-    uint32_t i = 0;
-    if (source->isNative()) {
-      // Attempt fast-path infallible conversion of dense elements up to
-      // the first potentially side-effectful lookup or conversion.
-      uint32_t bound =
-          Min(source->as<NativeObject>().getDenseInitializedLength(), len);
-
-      SharedMem<T*> dest =
-          target->dataPointerEither().template cast<T*>() + offset;
-
-      MOZ_ASSERT(!canConvertInfallibly(MagicValue(JS_ELEMENTS_HOLE)),
-                 "the following loop must abort on holes");
-
-      const Value* srcValues = source->as<NativeObject>().getDenseElements();
-      for (; i < bound; i++) {
-        if (!canConvertInfallibly(srcValues[i])) {
-          break;
-        }
-        Ops::store(dest + i, infallibleValueToNative(srcValues[i]));
-      }
-      if (i == len) {
-        return true;
-      }
-||||||| merged common ancestors
-    template<typename T>
-    static void memcpy(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-        ::memcpy(dest.unwrapUnshared(), src.unwrapUnshared(), size);
-=======
     SharedMem<void*> data = Ops::extract(source);
     switch (source->type()) {
       case Scalar::Int8: {
@@ -839,37 +391,8 @@ class ElementSpecific {
       }
       default:
         MOZ_CRASH("setFromTypedArray with a typed array with bogus type");
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    // Convert and copy any remaining elements generically.
-    RootedValue v(cx);
-    for (; i < len; i++) {
-      if (!GetElement(cx, source, source, i, &v)) {
-        return false;
-      }
-
-      T n;
-      if (!valueToNative(cx, v, &n)) {
-        return false;
-      }
-
-      len = Min(len, target->length());
-      if (i >= len) {
-        break;
-      }
-
-      // Compute every iteration in case getElement/valueToNative
-      // detaches the underlying array buffer or GC moves the data.
-      SharedMem<T*> dest =
-          target->dataPointerEither().template cast<T*>() + offset + i;
-      Ops::store(dest, n);
-||||||| merged common ancestors
-    template<typename T>
-    static void memmove(SharedMem<T*> dest, SharedMem<T*> src, size_t size) {
-        ::memmove(dest.unwrapUnshared(), src.unwrapUnshared(), size);
-=======
     return true;
   }
 
@@ -911,51 +434,8 @@ class ElementSpecific {
       if (i == len) {
         return true;
       }
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    return true;
-  }
-
-  /*
-   * Copy |source| into the typed array |target|.
-   */
-  static bool initFromIterablePackedArray(JSContext* cx,
-                                          Handle<TypedArrayObject*> target,
-                                          HandleArrayObject source) {
-    MOZ_ASSERT(target->type() == TypeIDOfType<T>::id,
-               "target type and NativeType must match");
-    MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-    MOZ_ASSERT(IsPackedArray(source), "source array must be packed");
-    MOZ_ASSERT(source->getDenseInitializedLength() <= target->length());
-
-    uint32_t len = source->getDenseInitializedLength();
-    uint32_t i = 0;
-
-    // Attempt fast-path infallible conversion of dense elements up to the
-    // first potentially side-effectful conversion.
-
-    SharedMem<T*> dest = target->dataPointerEither().template cast<T*>();
-
-    const Value* srcValues = source->getDenseElements();
-    for (; i < len; i++) {
-      if (!canConvertInfallibly(srcValues[i])) {
-        break;
-      }
-      Ops::store(dest + i, infallibleValueToNative(srcValues[i]));
-||||||| merged common ancestors
-    template<typename T>
-    static void podCopy(SharedMem<T*> dest, SharedMem<T*> src, size_t nelem) {
-        // std::copy_n better matches the argument values/types of this
-        // function, but as noted below it allows the input/output ranges to
-        // overlap.  std::copy does not, so use it so the compiler has extra
-        // ability to optimize.
-        const auto* first = src.unwrapUnshared();
-        const auto* last = first + nelem;
-        auto* result = dest.unwrapUnshared();
-        std::copy(first, last, result);
-=======
     // Convert and copy any remaining elements generically.
     RootedValue v(cx);
     for (; i < len; i++) {
@@ -978,22 +458,7 @@ class ElementSpecific {
       SharedMem<T*> dest =
           target->dataPointerEither().template cast<T*>() + offset + i;
       Ops::store(dest, n);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (i == len) {
-      return true;
-||||||| merged common ancestors
-
-    template<typename T>
-    static void podMove(SharedMem<T*> dest, SharedMem<T*> src, size_t n) {
-        // std::copy_n copies from |src| to |dest| starting from |src|, so
-        // input/output ranges *may* permissibly overlap, as this function
-        // allows.
-        const auto* start = src.unwrapUnshared();
-        auto* result = dest.unwrapUnshared();
-        std::copy_n(start, n, result);
-=======
 
     return true;
   }
@@ -1027,25 +492,13 @@ class ElementSpecific {
     }
     if (i == len) {
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    // Convert any remaining elements by first collecting them into a
-    // temporary list, and then copying them into the typed array.
-    AutoValueVector values(cx);
-    if (!values.append(srcValues + i, len - i)) {
-      return false;
-||||||| merged common ancestors
-    static SharedMem<void*> extract(TypedArrayObject* obj) {
-        return SharedMem<void*>::unshared(obj->dataPointerUnshared());
-=======
     // Convert any remaining elements by first collecting them into a
     // temporary list, and then copying them into the typed array.
     RootedValueVector values(cx);
     if (!values.append(srcValues + i, len - i)) {
       return false;
->>>>>>> upstream-releases
     }
 
     RootedValue v(cx);
@@ -1062,76 +515,6 @@ class ElementSpecific {
       // buffer.
       MOZ_ASSERT(i < target->length());
 
-<<<<<<< HEAD
-      // Compute every iteration in case GC moves the data.
-      SharedMem<T*> newDest = target->dataPointerEither().template cast<T*>();
-      Ops::store(newDest + i, n);
-||||||| merged common ancestors
-        SharedMem<void*> data = Ops::extract(source);
-        switch (source->type()) {
-          case Scalar::Int8: {
-            SharedMem<int8_t*> src = data.cast<int8_t*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Uint8:
-          case Scalar::Uint8Clamped: {
-            SharedMem<uint8_t*> src = data.cast<uint8_t*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Int16: {
-            SharedMem<int16_t*> src = data.cast<int16_t*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Uint16: {
-            SharedMem<uint16_t*> src = data.cast<uint16_t*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Int32: {
-            SharedMem<int32_t*> src = data.cast<int32_t*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Uint32: {
-            SharedMem<uint32_t*> src = data.cast<uint32_t*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Float32: {
-            SharedMem<float*> src = data.cast<float*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          case Scalar::Float64: {
-            SharedMem<double*> src = data.cast<double*>();
-            for (uint32_t i = 0; i < count; ++i) {
-                Ops::store(dest++, ConvertNumber<T>(Ops::load(src++)));
-            }
-            break;
-          }
-          default:
-            MOZ_CRASH("setFromTypedArray with a typed array with bogus type");
-        }
-
-        return true;
-=======
       // Compute every iteration in case GC moves the data.
       SharedMem<T*> newDest = target->dataPointerEither().template cast<T*>();
       Ops::store(newDest + i, n);
@@ -1166,148 +549,8 @@ class ElementSpecific {
       SharedMem<T*> src = source->dataPointerEither().template cast<T*>();
       Ops::podMove(dest, src, len);
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    return true;
-  }
-
- private:
-  static bool setFromOverlappingTypedArray(Handle<TypedArrayObject*> target,
-                                           Handle<TypedArrayObject*> source,
-                                           uint32_t offset) {
-    // WARNING: |source| may be an unwrapped typed array from a different
-    // compartment. Proceed with caution!
-
-    MOZ_ASSERT(TypeIDOfType<T>::id == target->type(),
-               "calling wrong setFromTypedArray specialization");
-    MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-    MOZ_ASSERT(!source->hasDetachedBuffer(), "source isn't detached");
-    MOZ_ASSERT(TypedArrayObject::sameBuffer(target, source),
-               "the provided arrays don't actually overlap, so it's "
-               "undesirable to use this method");
-
-    MOZ_ASSERT(offset <= target->length());
-    MOZ_ASSERT(source->length() <= target->length() - offset);
-
-    SharedMem<T*> dest =
-        target->dataPointerEither().template cast<T*>() + offset;
-    uint32_t len = source->length();
-
-    if (source->type() == target->type()) {
-      SharedMem<T*> src = source->dataPointerEither().template cast<T*>();
-      Ops::podMove(dest, src, len);
-      return true;
-    }
-
-    // Copy |source| in case it overlaps the target elements being set.
-    size_t sourceByteLen = len * source->bytesPerElement();
-    void* data = target->zone()->template pod_malloc<uint8_t>(sourceByteLen);
-    if (!data) {
-      return false;
-    }
-    Ops::memcpy(SharedMem<void*>::unshared(data), source->dataPointerEither(),
-                sourceByteLen);
-
-    switch (source->type()) {
-      case Scalar::Int8: {
-        int8_t* src = static_cast<int8_t*>(data);
-        for (uint32_t i = 0; i < len; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(*src++));
-||||||| merged common ancestors
-    /*
-     * Copy |source[0]| to |source[len]| (exclusive) elements into the typed
-     * array |target|, starting at index |offset|.  |source| must not be a
-     * typed array.
-     */
-    static bool
-    setFromNonTypedArray(JSContext* cx, Handle<TypedArrayObject*> target, HandleObject source,
-                         uint32_t len, uint32_t offset = 0)
-    {
-        MOZ_ASSERT(target->type() == TypeIDOfType<T>::id,
-                   "target type and NativeType must match");
-        MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-        MOZ_ASSERT(!source->is<TypedArrayObject>(),
-                   "use setFromTypedArray instead of this method");
-
-        uint32_t i = 0;
-        if (source->isNative()) {
-            // Attempt fast-path infallible conversion of dense elements up to
-            // the first potentially side-effectful lookup or conversion.
-            uint32_t bound = Min(source->as<NativeObject>().getDenseInitializedLength(), len);
-
-            SharedMem<T*> dest = target->dataPointerEither().template cast<T*>() + offset;
-
-            MOZ_ASSERT(!canConvertInfallibly(MagicValue(JS_ELEMENTS_HOLE)),
-                       "the following loop must abort on holes");
-
-            const Value* srcValues = source->as<NativeObject>().getDenseElements();
-            for (; i < bound; i++) {
-                if (!canConvertInfallibly(srcValues[i])) {
-                    break;
-                }
-                Ops::store(dest + i, infallibleValueToNative(srcValues[i]));
-            }
-            if (i == len) {
-                return true;
-            }
-        }
-
-        // Convert and copy any remaining elements generically.
-        RootedValue v(cx);
-        for (; i < len; i++) {
-            if (!GetElement(cx, source, source, i, &v)) {
-                return false;
-            }
-
-            T n;
-            if (!valueToNative(cx, v, &n)) {
-                return false;
-            }
-
-            len = Min(len, target->length());
-            if (i >= len) {
-                break;
-            }
-
-            // Compute every iteration in case getElement/valueToNative
-            // detaches the underlying array buffer or GC moves the data.
-            SharedMem<T*> dest = target->dataPointerEither().template cast<T*>() + offset + i;
-            Ops::store(dest, n);
-        }
-
-        return true;
-    }
-
-    /*
-     * Copy |source| into the typed array |target|.
-     */
-    static bool
-    initFromIterablePackedArray(JSContext* cx, Handle<TypedArrayObject*> target,
-                                HandleArrayObject source)
-    {
-        MOZ_ASSERT(target->type() == TypeIDOfType<T>::id,
-                   "target type and NativeType must match");
-        MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-        MOZ_ASSERT(IsPackedArray(source), "source array must be packed");
-        MOZ_ASSERT(source->getDenseInitializedLength() <= target->length());
-
-        uint32_t len = source->getDenseInitializedLength();
-        uint32_t i = 0;
-
-        // Attempt fast-path infallible conversion of dense elements up to the
-        // first potentially side-effectful conversion.
-
-        SharedMem<T*> dest = target->dataPointerEither().template cast<T*>();
-
-        const Value* srcValues = source->getDenseElements();
-        for (; i < len; i++) {
-            if (!canConvertInfallibly(srcValues[i])) {
-                break;
-            }
-            Ops::store(dest + i, infallibleValueToNative(srcValues[i]));
-=======
     // Copy |source| in case it overlaps the target elements being set.
     size_t sourceByteLen = len * source->bytesPerElement();
     void* data = target->zone()->template pod_malloc<uint8_t>(sourceByteLen);
@@ -1337,156 +580,41 @@ class ElementSpecific {
         int16_t* src = static_cast<int16_t*>(data);
         for (uint32_t i = 0; i < len; ++i) {
           Ops::store(dest++, ConvertNumber<T>(*src++));
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        break;
-      }
-      case Scalar::Uint8:
-      case Scalar::Uint8Clamped: {
-        uint8_t* src = static_cast<uint8_t*>(data);
-        for (uint32_t i = 0; i < len; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(*src++));
-||||||| merged common ancestors
-        if (i == len) {
-            return true;
-=======
         break;
       }
       case Scalar::Uint16: {
         uint16_t* src = static_cast<uint16_t*>(data);
         for (uint32_t i = 0; i < len; ++i) {
           Ops::store(dest++, ConvertNumber<T>(*src++));
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        break;
-      }
-      case Scalar::Int16: {
-        int16_t* src = static_cast<int16_t*>(data);
-        for (uint32_t i = 0; i < len; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(*src++));
-||||||| merged common ancestors
-
-        // Convert any remaining elements by first collecting them into a
-        // temporary list, and then copying them into the typed array.
-        AutoValueVector values(cx);
-        if (!values.append(srcValues + i, len - i)) {
-            return false;
-=======
         break;
       }
       case Scalar::Int32: {
         int32_t* src = static_cast<int32_t*>(data);
         for (uint32_t i = 0; i < len; ++i) {
           Ops::store(dest++, ConvertNumber<T>(*src++));
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        break;
-      }
-      case Scalar::Uint16: {
-        uint16_t* src = static_cast<uint16_t*>(data);
-        for (uint32_t i = 0; i < len; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(*src++));
-||||||| merged common ancestors
-
-        RootedValue v(cx);
-        for (uint32_t j = 0; j < values.length(); i++, j++) {
-            v = values[j];
-
-            T n;
-            if (!valueToNative(cx, v, &n)) {
-                return false;
-            }
-
-            // |target| is a newly allocated typed array and not yet visible to
-            // content script, so valueToNative can't detach the underlying
-            // buffer.
-            MOZ_ASSERT(i < target->length());
-
-            // Compute every iteration in case GC moves the data.
-            SharedMem<T*> newDest = target->dataPointerEither().template cast<T*>();
-            Ops::store(newDest + i, n);
-=======
         break;
       }
       case Scalar::Uint32: {
         uint32_t* src = static_cast<uint32_t*>(data);
         for (uint32_t i = 0; i < len; ++i) {
           Ops::store(dest++, ConvertNumber<T>(*src++));
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        break;
-      }
-      case Scalar::Int32: {
-        int32_t* src = static_cast<int32_t*>(data);
-        for (uint32_t i = 0; i < len; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(*src++));
-||||||| merged common ancestors
-
-        return true;
-    }
-
-  private:
-    static bool
-    setFromOverlappingTypedArray(Handle<TypedArrayObject*> target,
-                                 Handle<TypedArrayObject*> source,
-                                 uint32_t offset)
-    {
-        // WARNING: |source| may be an unwrapped typed array from a different
-        // compartment. Proceed with caution!
-
-        MOZ_ASSERT(TypeIDOfType<T>::id == target->type(),
-                   "calling wrong setFromTypedArray specialization");
-        MOZ_ASSERT(!target->hasDetachedBuffer(), "target isn't detached");
-        MOZ_ASSERT(!source->hasDetachedBuffer(), "source isn't detached");
-        MOZ_ASSERT(TypedArrayObject::sameBuffer(target, source),
-                   "the provided arrays don't actually overlap, so it's "
-                   "undesirable to use this method");
-
-        MOZ_ASSERT(offset <= target->length());
-        MOZ_ASSERT(source->length() <= target->length() - offset);
-
-        SharedMem<T*> dest = target->dataPointerEither().template cast<T*>() + offset;
-        uint32_t len = source->length();
-
-        if (source->type() == target->type()) {
-            SharedMem<T*> src = source->dataPointerEither().template cast<T*>();
-            Ops::podMove(dest, src, len);
-            return true;
-=======
         break;
       }
       case Scalar::BigInt64: {
         int64_t* src = static_cast<int64_t*>(data);
         for (uint32_t i = 0; i < len; ++i) {
           Ops::store(dest++, ConvertNumber<T>(*src++));
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        break;
-      }
-      case Scalar::Uint32: {
-        uint32_t* src = static_cast<uint32_t*>(data);
-        for (uint32_t i = 0; i < len; ++i) {
-          Ops::store(dest++, ConvertNumber<T>(*src++));
-||||||| merged common ancestors
-
-        // Copy |source| in case it overlaps the target elements being set.
-        size_t sourceByteLen = len * source->bytesPerElement();
-        void* data = target->zone()->template pod_malloc<uint8_t>(sourceByteLen);
-        if (!data) {
-            return false;
-=======
         break;
       }
       case Scalar::BigUint64: {
         uint64_t* src = static_cast<uint64_t*>(data);
         for (uint32_t i = 0; i < len; ++i) {
           Ops::store(dest++, ConvertNumber<T>(*src++));
->>>>>>> upstream-releases
         }
         break;
       }
@@ -1509,17 +637,6 @@ class ElementSpecific {
             "setFromOverlappingTypedArray with a typed array with bogus type");
     }
 
-<<<<<<< HEAD
-    js_free(data);
-    return true;
-  }
-||||||| merged common ancestors
-    static bool
-    canConvertInfallibly(const Value& v)
-    {
-        return v.isNumber() || v.isBoolean() || v.isNull() || v.isUndefined();
-    }
-=======
     js_free(data);
     return true;
   }
@@ -1561,122 +678,34 @@ class ElementSpecific {
     if (v.isNull()) {
       return T(0);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool canConvertInfallibly(const Value& v) {
-    return v.isNumber() || v.isBoolean() || v.isNull() || v.isUndefined();
-  }
-||||||| merged common ancestors
-    static T
-    infallibleValueToNative(const Value& v)
-    {
-        if (v.isInt32()) {
-            return T(v.toInt32());
-        }
-        if (v.isDouble()) {
-            return doubleToNative(v.toDouble());
-        }
-        if (v.isBoolean()) {
-            return T(v.toBoolean());
-        }
-        if (v.isNull()) {
-            return T(0);
-        }
-=======
     MOZ_ASSERT(v.isUndefined());
     return TypeIsFloatingPoint<T>() ? T(JS::GenericNaN()) : T(0);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static T infallibleValueToNative(const Value& v) {
-    if (v.isInt32()) {
-      return T(v.toInt32());
-    }
-    if (v.isDouble()) {
-      return doubleToNative(v.toDouble());
-    }
-    if (v.isBoolean()) {
-      return T(v.toBoolean());
-    }
-    if (v.isNull()) {
-      return T(0);
-    }
-||||||| merged common ancestors
-        MOZ_ASSERT(v.isUndefined());
-        return TypeIsFloatingPoint<T>() ? T(JS::GenericNaN()) : T(0);
-    }
-=======
   static bool valueToNative(JSContext* cx, HandleValue v, T* result) {
     MOZ_ASSERT(!v.isMagic());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_ASSERT(v.isUndefined());
-    return TypeIsFloatingPoint<T>() ? T(JS::GenericNaN()) : T(0);
-  }
-||||||| merged common ancestors
-    static bool
-    valueToNative(JSContext* cx, HandleValue v, T* result)
-    {
-        MOZ_ASSERT(!v.isMagic());
-=======
     if (MOZ_LIKELY(canConvertInfallibly(v))) {
       *result = infallibleValueToNative(v);
       return true;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool valueToNative(JSContext* cx, HandleValue v, T* result) {
-    MOZ_ASSERT(!v.isMagic());
-||||||| merged common ancestors
-        if (MOZ_LIKELY(canConvertInfallibly(v))) {
-            *result = infallibleValueToNative(v);
-            return true;
-        }
-=======
     if (std::is_same<T, int64_t>::value) {
       JS_TRY_VAR_OR_RETURN_FALSE(cx, *result, ToBigInt64(cx, v));
       return true;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (MOZ_LIKELY(canConvertInfallibly(v))) {
-      *result = infallibleValueToNative(v);
-      return true;
-    }
-||||||| merged common ancestors
-        double d;
-        MOZ_ASSERT(v.isString() || v.isObject() || v.isSymbol());
-        if (!(v.isString() ? StringToNumber(cx, v.toString(), &d) : ToNumber(cx, v, &d))) {
-            return false;
-        }
-=======
     if (std::is_same<T, uint64_t>::value) {
       JS_TRY_VAR_OR_RETURN_FALSE(cx, *result, ToBigUint64(cx, v));
       return true;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    double d;
-    MOZ_ASSERT(v.isString() || v.isObject() || v.isSymbol());
-    if (!(v.isString() ? StringToNumber(cx, v.toString(), &d)
-                       : ToNumber(cx, v, &d))) {
-      return false;
-||||||| merged common ancestors
-        *result = doubleToNative(d);
-        return true;
-=======
     double d;
     MOZ_ASSERT(v.isString() || v.isObject() || v.isSymbol() || v.isBigInt());
     if (!(v.isString() ? StringToNumber(cx, v.toString(), &d)
                        : ToNumber(cx, v, &d))) {
       return false;
->>>>>>> upstream-releases
     }
 
     *result = doubleToNative(d);
@@ -1693,39 +722,8 @@ class ElementSpecific {
       // canonicalize NaN values in more-deterministic builds.
       d = JS::CanonicalizeNaN(d);
 #endif
-<<<<<<< HEAD
       return T(d);
     }
-    if (MOZ_UNLIKELY(mozilla::IsNaN(d))) {
-      return T(0);
-||||||| merged common ancestors
-            return T(d);
-        }
-        if (MOZ_UNLIKELY(mozilla::IsNaN(d))) {
-            return T(0);
-        }
-        if (TypeIDOfType<T>::id == Scalar::Uint8Clamped) {
-            return T(d);
-        }
-        if (TypeIsUnsigned<T>()) {
-            return T(JS::ToUint32(d));
-        }
-        return T(JS::ToInt32(d));
-=======
-      return T(d);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (TypeIDOfType<T>::id == Scalar::Uint8Clamped) {
-      return T(d);
-    }
-    if (TypeIsUnsigned<T>()) {
-      return T(JS::ToUint32(d));
-    }
-    return T(JS::ToInt32(d));
-  }
-||||||| merged common ancestors
-=======
     if (MOZ_UNLIKELY(mozilla::IsNaN(d))) {
       return T(0);
     }
@@ -1737,7 +735,6 @@ class ElementSpecific {
     }
     return T(JS::ToInt32(d));
   }
->>>>>>> upstream-releases
 };
 
 /* static */ gc::AllocKind js::TypedArrayObject::AllocKindForLazyBuffer(

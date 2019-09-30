@@ -6,34 +6,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-ChromeUtils.defineModuleGetter(this, "AddonManager",
-                                  "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "BrowserUtils",
-                                  "resource://gre/modules/BrowserUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "DeferredTask",
-                                  "resource://gre/modules/DeferredTask.jsm");
-ChromeUtils.defineModuleGetter(this, "ExtensionSettingsStore",
-                                  "resource://gre/modules/ExtensionSettingsStore.jsm");
-
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-ChromeUtils.defineModuleGetter(this, "AddonManager",
-                                  "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "BrowserUtils",
-                                  "resource://gre/modules/BrowserUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "DeferredTask",
-                                  "resource://gre/modules/DeferredTask.jsm");
-ChromeUtils.defineModuleGetter(this, "ExtensionSettingsStore",
-                                  "resource://gre/modules/ExtensionSettingsStore.jsm");
-
-XPCOMUtils.defineLazyPreferenceGetter(this, "contentBlockingUiEnabled",
-                                      "browser.contentblocking.ui.enabled");
-
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "AddonManager",
@@ -55,7 +27,6 @@ ChromeUtils.defineModuleGetter(
   "resource://gre/modules/ExtensionSettingsStore.jsm"
 );
 
->>>>>>> upstream-releases
 const PREF_SETTING_TYPE = "prefs";
 const PROXY_KEY = "proxy.settings";
 const API_PROXY_PREFS = [

@@ -16,12 +16,6 @@ using namespace mozilla::dom;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(SVGAnimatedInteger, mSVGElement)
-||||||| merged common ancestors
-NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(SVGAnimatedInteger,
-                                               mSVGElement)
-=======
 /* Implementation */
 
 static SVGAttrTearoffTable<SVGAnimatedInteger,
@@ -110,7 +104,6 @@ nsresult SVGAnimatedInteger::SMILInteger::ValueFromString(
     const nsAString& aStr, const dom::SVGAnimationElement* /*aSrcElement*/,
     SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
   int32_t val;
->>>>>>> upstream-releases
 
   if (!SVGContentUtils::ParseInteger(aStr, val)) {
     return NS_ERROR_DOM_SYNTAX_ERR;
@@ -137,16 +130,6 @@ void SVGAnimatedInteger::SMILInteger::ClearAnimValue() {
   }
 }
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedInteger::WrapObject(JSContext* aCx,
-                                         JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedInteger_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedInteger::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedInteger_Binding::Wrap(aCx, this, aGivenProto);
-=======
 nsresult SVGAnimatedInteger::SMILInteger::SetAnimValue(
     const SMILValue& aValue) {
   NS_ASSERTION(aValue.mType == SMILIntegerType::Singleton(),
@@ -155,15 +138,6 @@ nsresult SVGAnimatedInteger::SMILInteger::SetAnimValue(
     mVal->SetAnimValue(int(aValue.mU.mInt), mSVGElement);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

@@ -7,19 +7,11 @@ const Telemetry = require("devtools/client/shared/telemetry");
 const telemetry = new Telemetry();
 const { NodePicker } = require("devtools/shared/fronts/inspector/node-picker");
 const TELEMETRY_EYEDROPPER_OPENED = "DEVTOOLS_EYEDROPPER_OPENED_COUNT";
-<<<<<<< HEAD
-const TELEMETRY_EYEDROPPER_OPENED_MENU = "DEVTOOLS_MENU_EYEDROPPER_OPENED_COUNT";
-const SHOW_ALL_ANONYMOUS_CONTENT_PREF = "devtools.inspector.showAllAnonymousContent";
-const SHOW_UA_SHADOW_ROOTS_PREF = "devtools.inspector.showUserAgentShadowRoots";
-||||||| merged common ancestors
-const TELEMETRY_EYEDROPPER_OPENED_MENU = "DEVTOOLS_MENU_EYEDROPPER_OPENED_COUNT";
-=======
 const TELEMETRY_EYEDROPPER_OPENED_MENU =
   "DEVTOOLS_MENU_EYEDROPPER_OPENED_COUNT";
 const SHOW_ALL_ANONYMOUS_CONTENT_PREF =
   "devtools.inspector.showAllAnonymousContent";
 const SHOW_UA_SHADOW_ROOTS_PREF = "devtools.inspector.showUserAgentShadowRoots";
->>>>>>> upstream-releases
 
 const {
   FrontClassWithSpec,
@@ -33,17 +25,6 @@ const {
 
 const Services = require("Services");
 const defer = require("devtools/shared/defer");
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "nodeConstants",
-  "devtools/shared/dom-node-constants");
-loader.lazyRequireGetter(this, "Selection",
-  "devtools/client/framework/selection", true);
-loader.lazyRequireGetter(this, "flags",
-  "devtools/shared/flags");
-||||||| merged common ancestors
-loader.lazyRequireGetter(this, "nodeConstants",
-  "devtools/shared/dom-node-constants");
-=======
 loader.lazyRequireGetter(
   this,
   "nodeConstants",
@@ -56,7 +37,6 @@ loader.lazyRequireGetter(
   true
 );
 loader.lazyRequireGetter(this, "flags", "devtools/shared/flags");
->>>>>>> upstream-releases
 
 /**
  * Client side of the DOM walker.
@@ -185,32 +165,6 @@ class WalkerFront extends FrontClassWithSpec(walkerSpec) {
     return super.querySelector(queryNode, selector).then(response => {
       return response.node;
     });
-<<<<<<< HEAD
-  }, {
-    impl: "_querySelector",
-  }),
-
-  gripToNodeFront: async function(grip) {
-    const response = await this.getNodeActorFromObjectActor(grip.actor);
-    const nodeFront = response ? response.node : null;
-    if (!nodeFront) {
-      throw new Error("The ValueGrip passed could not be translated to a NodeFront");
-    }
-    return nodeFront;
-  },
-||||||| merged common ancestors
-  }, {
-    impl: "_querySelector",
-  }),
-
-  getNodeActorFromObjectActor: custom(function(objectActorID) {
-    return this._getNodeActorFromObjectActor(objectActorID).then(response => {
-      return response ? response.node : null;
-    });
-  }, {
-    impl: "_getNodeActorFromObjectActor",
-  }),
-=======
   }
 
   async gripToNodeFront(grip) {
@@ -223,7 +177,6 @@ class WalkerFront extends FrontClassWithSpec(walkerSpec) {
     }
     return nodeFront;
   }
->>>>>>> upstream-releases
 
   getNodeActorFromWindowID(windowID) {
     return super.getNodeActorFromWindowID(windowID).then(response => {
@@ -508,61 +461,13 @@ registerFront(WalkerFront);
  * Client side of the inspector actor, which is used to create
  * inspector-related actors, including the walker.
  */
-<<<<<<< HEAD
-var InspectorFront = FrontClassWithSpec(inspectorSpec, {
-  initialize: async function(client, tabForm) {
-    Front.prototype.initialize.call(this, client);
-    this.actorID = tabForm.inspectorActor;
-    this._client = client;
-||||||| merged common ancestors
-var InspectorFront = FrontClassWithSpec(inspectorSpec, {
-  initialize: function(client, tabForm) {
-    Front.prototype.initialize.call(this, client);
-    this.actorID = tabForm.inspectorActor;
-=======
 class InspectorFront extends FrontClassWithSpec(inspectorSpec) {
   constructor(client) {
     super(client);
 
     this._client = client;
->>>>>>> upstream-releases
     this._highlighters = new Map();
 
-<<<<<<< HEAD
-    // XXX: This is the first actor type in its hierarchy to use the protocol
-    // library, so we're going to self-own on the client side for now.
-    this.manage(this);
-
-    // async initialization
-    await Promise.all([
-      this._getWalker(),
-      this._getHighlighter(),
-    ]);
-
-    this.selection = new Selection(this.walker);
-  },
-
-  _getWalker: async function() {
-    const showAllAnonymousContent = Services.prefs.getBoolPref(
-      SHOW_ALL_ANONYMOUS_CONTENT_PREF);
-    const showUserAgentShadowRoots = Services.prefs.getBoolPref(
-      SHOW_UA_SHADOW_ROOTS_PREF);
-    this.walker = await this.getWalker({
-      showAllAnonymousContent,
-      showUserAgentShadowRoots,
-    });
-  },
-
-  _getHighlighter: async function() {
-    const autohide = !flags.testing;
-    this.highlighter = await this.getHighlighter(autohide);
-  },
-||||||| merged common ancestors
-    // XXX: This is the first actor type in its hierarchy to use the protocol
-    // library, so we're going to self-own on the client side for now.
-    this.manage(this);
-  },
-=======
     // Attribute name from which to retrieve the actorID out of the target actor's form
     this.formAttributeName = "inspectorActor";
   }
@@ -596,25 +501,9 @@ class InspectorFront extends FrontClassWithSpec(inspectorSpec) {
     const autohide = !flags.testing;
     this.highlighter = await this.getHighlighter(autohide);
   }
->>>>>>> upstream-releases
 
   hasHighlighter(type) {
     return this._highlighters.has(type);
-<<<<<<< HEAD
-  },
-
-  destroy: function() {
-    // Selection isn't a Front and so isn't managed by InspectorFront
-    // and has to be destroyed manually
-    this.selection.destroy();
-    // Highlighter fronts are managed by InspectorFront and so will be
-    // automatically destroyed. But we have to clear the `_highlighters`
-    // Map as well as explicitly call `finalize` request on all of them.
-||||||| merged common ancestors
-  },
-
-  destroy: function() {
-=======
   }
 
   destroy() {
@@ -624,19 +513,9 @@ class InspectorFront extends FrontClassWithSpec(inspectorSpec) {
     // Highlighter fronts are managed by InspectorFront and so will be
     // automatically destroyed. But we have to clear the `_highlighters`
     // Map as well as explicitly call `finalize` request on all of them.
->>>>>>> upstream-releases
     this.destroyHighlighters();
-<<<<<<< HEAD
-    Front.prototype.destroy.call(this);
-  },
-||||||| merged common ancestors
-    delete this.walker;
-    Front.prototype.destroy.call(this);
-  },
-=======
     super.destroy();
   }
->>>>>>> upstream-releases
 
   destroyHighlighters() {
     for (const type of this._highlighters.keys()) {
@@ -671,46 +550,10 @@ class InspectorFront extends FrontClassWithSpec(inspectorSpec) {
       this._highlighters.set(type, front);
     }
     return front;
-<<<<<<< HEAD
-  },
-
-  pickColorFromPage: custom(async function(options) {
-    await this._pickColorFromPage(options);
-||||||| merged common ancestors
-  },
-
-  getWalker: custom(function(options = {}) {
-    return this._getWalker(options).then(walker => {
-      this.walker = walker;
-      return walker;
-    });
-  }, {
-    impl: "_getWalker",
-  }),
-
-  getPageStyle: custom(function() {
-    return this._getPageStyle().then(pageStyle => {
-      // We need a walker to understand node references from the
-      // node style.
-      if (this.walker) {
-        return pageStyle;
-      }
-      return this.getWalker().then(() => {
-        return pageStyle;
-      });
-    });
-  }, {
-    impl: "_getPageStyle",
-  }),
-
-  pickColorFromPage: custom(async function(options) {
-    await this._pickColorFromPage(options);
-=======
   }
 
   async pickColorFromPage(options) {
     await super.pickColorFromPage(options);
->>>>>>> upstream-releases
     if (options && options.fromMenu) {
       telemetry.getHistogramById(TELEMETRY_EYEDROPPER_OPENED_MENU).add(true);
     } else {

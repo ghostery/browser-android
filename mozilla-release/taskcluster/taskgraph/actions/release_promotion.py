@@ -11,15 +11,7 @@ import os
 
 from .registry import register_callback_action
 
-<<<<<<< HEAD
-from .util import find_decision_task, find_existing_tasks_from_previous_kinds
 from taskgraph.util.hg import find_hg_revision_push_info
-||||||| merged common ancestors
-from .util import find_decision_task, find_existing_tasks_from_previous_kinds
-from taskgraph.util.hg import find_hg_revision_pushlog_id
-=======
-from taskgraph.util.hg import find_hg_revision_push_info
->>>>>>> upstream-releases
 from taskgraph.util.taskcluster import get_artifact
 from taskgraph.util.taskgraph import find_decision_task, find_existing_tasks_from_previous_kinds
 from taskgraph.util.partials import populate_release_history
@@ -33,9 +25,6 @@ from taskgraph.taskgraph import TaskGraph
 from taskgraph.decision import taskgraph_decision
 from taskgraph.parameters import Parameters
 from taskgraph.util.attributes import RELEASE_PROMOTION_PROJECTS, release_level
-
-
-RELEASE_PROMOTION_SIGNOFFS = ('mar-signing', )
 
 
 RELEASE_PROMOTION_SIGNOFFS = ('mar-signing', )
@@ -229,19 +218,6 @@ def get_flavors(graph_config, param):
             'release_enable_emefree': {
                 'type': 'boolean',
                 'description': 'Toggle for creating EME-free repacks',
-            },
-            'required_signoffs': {
-                'type': 'array',
-                'description': ('The flavor of release promotion to perform.'),
-                'items': {
-                    'enum': RELEASE_PROMOTION_SIGNOFFS,
-                }
-            },
-            'signoff_urls': {
-                'type': 'object',
-                'default': {},
-                'additionalProperties': False,
-                'properties': get_signoff_properties(),
             },
             'required_signoffs': {
                 'type': 'array',

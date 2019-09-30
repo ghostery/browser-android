@@ -36,17 +36,8 @@ class ProfilerParentTracker final {
 
 UniquePtr<ProfilerParentTracker> ProfilerParentTracker::sInstance;
 
-<<<<<<< HEAD
-/* static */ void ProfilerParentTracker::StartTracking(
-    ProfilerParent* aProfilerParent) {
-||||||| merged common ancestors
-/* static */ void
-ProfilerParentTracker::StartTracking(ProfilerParent* aProfilerParent)
-{
-=======
 /* static */
 void ProfilerParentTracker::StartTracking(ProfilerParent* aProfilerParent) {
->>>>>>> upstream-releases
   if (!sInstance) {
     sInstance = MakeUnique<ProfilerParentTracker>();
     ClearOnShutdown(&sInstance);
@@ -54,34 +45,16 @@ void ProfilerParentTracker::StartTracking(ProfilerParent* aProfilerParent) {
   sInstance->mProfilerParents.AppendElement(aProfilerParent);
 }
 
-<<<<<<< HEAD
-/* static */ void ProfilerParentTracker::StopTracking(ProfilerParent* aParent) {
-||||||| merged common ancestors
-/* static */ void
-ProfilerParentTracker::StopTracking(ProfilerParent* aParent)
-{
-=======
 /* static */
 void ProfilerParentTracker::StopTracking(ProfilerParent* aParent) {
->>>>>>> upstream-releases
   if (sInstance) {
     sInstance->mProfilerParents.RemoveElement(aParent);
   }
 }
 
-<<<<<<< HEAD
-template <typename FuncType>
-/* static */ void ProfilerParentTracker::Enumerate(FuncType aIterFunc) {
-||||||| merged common ancestors
-template<typename FuncType>
-/* static */ void
-ProfilerParentTracker::Enumerate(FuncType aIterFunc)
-{
-=======
 template <typename FuncType>
 /* static */
 void ProfilerParentTracker::Enumerate(FuncType aIterFunc) {
->>>>>>> upstream-releases
   if (sInstance) {
     for (ProfilerParent* profilerParent : sInstance->mProfilerParents) {
       if (!profilerParent->mDestroyed) {
@@ -111,18 +84,9 @@ ProfilerParentTracker::~ProfilerParentTracker() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ Endpoint<PProfilerChild> ProfilerParent::CreateForProcess(
-    base::ProcessId aOtherPid) {
-||||||| merged common ancestors
-/* static */ Endpoint<PProfilerChild>
-ProfilerParent::CreateForProcess(base::ProcessId aOtherPid)
-{
-=======
 /* static */
 Endpoint<PProfilerChild> ProfilerParent::CreateForProcess(
     base::ProcessId aOtherPid) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
   Endpoint<PProfilerParent> parent;
   Endpoint<PProfilerChild> child;
@@ -174,16 +138,7 @@ void ProfilerParent::Init() {
     ProfilerInitParams ipcParams;
     ipcParams.enabled() = true;
     ipcParams.entries() = entries;
-<<<<<<< HEAD
-    if (duration.isSome()) {
-      ipcParams.duration() = duration.value();
-    } else {
-      ipcParams.duration() = mozilla::null_t();
-    }
-||||||| merged common ancestors
-=======
     ipcParams.duration() = duration;
->>>>>>> upstream-releases
     ipcParams.interval() = interval;
     ipcParams.features() = features;
 
@@ -217,17 +172,8 @@ ProfilerParent::GatherProfiles() {
   return results;
 }
 
-<<<<<<< HEAD
-/* static */ void ProfilerParent::ProfilerStarted(
-    nsIProfilerStartParams* aParams) {
-||||||| merged common ancestors
-/* static */ void
-ProfilerParent::ProfilerStarted(nsIProfilerStartParams* aParams)
-{
-=======
 /* static */
 void ProfilerParent::ProfilerStarted(nsIProfilerStartParams* aParams) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return;
   }
@@ -236,22 +182,12 @@ void ProfilerParent::ProfilerStarted(nsIProfilerStartParams* aParams) {
   double duration;
   ipcParams.enabled() = true;
   aParams->GetEntries(&ipcParams.entries());
-<<<<<<< HEAD
-  aParams->GetDuration(&duration);
-  if (duration > 0.0) {
-    ipcParams.duration() = duration;
-  } else {
-    ipcParams.duration() = mozilla::null_t();
-  }
-||||||| merged common ancestors
-=======
   aParams->GetDuration(&duration);
   if (duration > 0.0) {
     ipcParams.duration() = Some(duration);
   } else {
     ipcParams.duration() = Nothing();
   }
->>>>>>> upstream-releases
   aParams->GetInterval(&ipcParams.interval());
   aParams->GetFeatures(&ipcParams.features());
   ipcParams.filters() = aParams->GetFilters();
@@ -261,16 +197,8 @@ void ProfilerParent::ProfilerStarted(nsIProfilerStartParams* aParams) {
   });
 }
 
-<<<<<<< HEAD
-/* static */ void ProfilerParent::ProfilerStopped() {
-||||||| merged common ancestors
-/* static */ void
-ProfilerParent::ProfilerStopped()
-{
-=======
 /* static */
 void ProfilerParent::ProfilerStopped() {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return;
   }
@@ -280,16 +208,8 @@ void ProfilerParent::ProfilerStopped() {
   });
 }
 
-<<<<<<< HEAD
-/* static */ void ProfilerParent::ProfilerPaused() {
-||||||| merged common ancestors
-/* static */ void
-ProfilerParent::ProfilerPaused()
-{
-=======
 /* static */
 void ProfilerParent::ProfilerPaused() {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return;
   }
@@ -299,16 +219,8 @@ void ProfilerParent::ProfilerPaused() {
   });
 }
 
-<<<<<<< HEAD
-/* static */ void ProfilerParent::ProfilerResumed() {
-||||||| merged common ancestors
-/* static */ void
-ProfilerParent::ProfilerResumed()
-{
-=======
 /* static */
 void ProfilerParent::ProfilerResumed() {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return;
   }
@@ -318,13 +230,6 @@ void ProfilerParent::ProfilerResumed() {
   });
 }
 
-<<<<<<< HEAD
-void ProfilerParent::ActorDestroy(ActorDestroyReason aActorDestroyReason) {
-||||||| merged common ancestors
-void
-ProfilerParent::ActorDestroy(ActorDestroyReason aActorDestroyReason)
-{
-=======
 /* static */
 void ProfilerParent::ClearAllPages() {
   if (!NS_IsMainThread()) {
@@ -337,21 +242,10 @@ void ProfilerParent::ClearAllPages() {
 }
 
 void ProfilerParent::ActorDestroy(ActorDestroyReason aActorDestroyReason) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
   mDestroyed = true;
 }
 
-<<<<<<< HEAD
-void ProfilerParent::DeallocPProfilerParent() { mSelfRef = nullptr; }
-||||||| merged common ancestors
-void
-ProfilerParent::DeallocPProfilerParent()
-{
-  mSelfRef = nullptr;
-}
-=======
 void ProfilerParent::ActorDealloc() { mSelfRef = nullptr; }
->>>>>>> upstream-releases
 
 }  // namespace mozilla

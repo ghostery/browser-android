@@ -16,22 +16,11 @@ class MultiTouchInput;
 namespace layers {
 
 // TouchCounter simply tracks the number of active touch points. Feed it
-<<<<<<< HEAD:mozilla-release/gfx/layers/apz/src/TouchCounter.h
-// your input events to update the internal state.
-class TouchCounter {
- public:
-||||||| merged common ancestors
-// your input events to update the internal state.
-class TouchCounter
-{
-public:
-=======
 // your input events to update the internal state. Generally you should
 // only be calling one of the Update functions, depending on which type
 // of touch inputs you have access to.
 class TouchCounter {
  public:
->>>>>>> upstream-releases:mozilla-release/gfx/layers/apz/util/TouchCounter.h
   TouchCounter();
   void Update(const MultiTouchInput& aInput);
   void Update(const WidgetTouchEvent& aEvent);

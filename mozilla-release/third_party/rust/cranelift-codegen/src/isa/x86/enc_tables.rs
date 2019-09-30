@@ -1,31 +1,6 @@
 //! Encoding tables for x86 ISAs.
 
 use super::registers::*;
-<<<<<<< HEAD
-use bitset::BitSet;
-use cursor::{Cursor, FuncCursor};
-use flowgraph::ControlFlowGraph;
-use ir::condcodes::IntCC;
-use ir::{self, Function, Inst, InstBuilder};
-use isa;
-use isa::constraints::*;
-use isa::enc_tables::*;
-use isa::encoding::base_size;
-use isa::encoding::RecipeSizing;
-use isa::RegUnit;
-use regalloc::RegDiversions;
-||||||| merged common ancestors
-use bitset::BitSet;
-use cursor::{Cursor, FuncCursor};
-use flowgraph::ControlFlowGraph;
-use ir::condcodes::IntCC;
-use ir::{self, InstBuilder};
-use isa;
-use isa::constraints::*;
-use isa::enc_tables::*;
-use isa::encoding::RecipeSizing;
-use predicates;
-=======
 use crate::bitset::BitSet;
 use crate::cursor::{Cursor, FuncCursor};
 use crate::flowgraph::ControlFlowGraph;
@@ -38,88 +13,10 @@ use crate::isa::encoding::base_size;
 use crate::isa::encoding::RecipeSizing;
 use crate::isa::RegUnit;
 use crate::regalloc::RegDiversions;
->>>>>>> upstream-releases
 
 include!(concat!(env!("OUT_DIR"), "/encoding-x86.rs"));
 include!(concat!(env!("OUT_DIR"), "/legalize-x86.rs"));
 
-<<<<<<< HEAD
-pub fn needs_sib_byte(reg: RegUnit) -> bool {
-    reg == RU::r12 as RegUnit || reg == RU::rsp as RegUnit
-}
-pub fn needs_offset(reg: RegUnit) -> bool {
-    reg == RU::r13 as RegUnit || reg == RU::rbp as RegUnit
-}
-pub fn needs_sib_byte_or_offset(reg: RegUnit) -> bool {
-    needs_sib_byte(reg) || needs_offset(reg)
-}
-
-fn additional_size_if(
-    op_index: usize,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-    condition_func: fn(RegUnit) -> bool,
-) -> u8 {
-    let addr_reg = divert.reg(func.dfg.inst_args(inst)[op_index], &func.locations);
-    if condition_func(addr_reg) {
-        1
-    } else {
-        0
-    }
-}
-
-fn size_plus_maybe_offset_for_in_reg_0(
-    sizing: &RecipeSizing,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-) -> u8 {
-    sizing.base_size + additional_size_if(0, inst, divert, func, needs_offset)
-}
-fn size_plus_maybe_offset_for_in_reg_1(
-    sizing: &RecipeSizing,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-) -> u8 {
-    sizing.base_size + additional_size_if(1, inst, divert, func, needs_offset)
-}
-fn size_plus_maybe_sib_for_in_reg_0(
-    sizing: &RecipeSizing,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-) -> u8 {
-    sizing.base_size + additional_size_if(0, inst, divert, func, needs_sib_byte)
-}
-fn size_plus_maybe_sib_for_in_reg_1(
-    sizing: &RecipeSizing,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-) -> u8 {
-    sizing.base_size + additional_size_if(1, inst, divert, func, needs_sib_byte)
-}
-fn size_plus_maybe_sib_or_offset_for_in_reg_0(
-    sizing: &RecipeSizing,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-) -> u8 {
-    sizing.base_size + additional_size_if(0, inst, divert, func, needs_sib_byte_or_offset)
-}
-fn size_plus_maybe_sib_or_offset_for_in_reg_1(
-    sizing: &RecipeSizing,
-    inst: Inst,
-    divert: &RegDiversions,
-    func: &Function,
-) -> u8 {
-    sizing.base_size + additional_size_if(1, inst, divert, func, needs_sib_byte_or_offset)
-}
-
-||||||| merged common ancestors
-=======
 pub fn needs_sib_byte(reg: RegUnit) -> bool {
     reg == RU::r12 as RegUnit || reg == RU::rsp as RegUnit
 }
@@ -213,7 +110,6 @@ fn maybe_iconst_imm(pos: &FuncCursor, value: ir::Value) -> Option<i64> {
     }
 }
 
->>>>>>> upstream-releases
 /// Expand the `sdiv` and `srem` instructions using `x86_sdivmodx`.
 fn expand_sdivrem(
     inst: ir::Inst,

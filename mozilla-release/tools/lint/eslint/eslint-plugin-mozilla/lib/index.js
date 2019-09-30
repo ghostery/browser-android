@@ -23,18 +23,9 @@ module.exports = {
     "browser-window": require("../lib/environments/browser-window.js"),
     "chrome-worker": require("../lib/environments/chrome-worker.js"),
     "frame-script": require("../lib/environments/frame-script.js"),
-<<<<<<< HEAD
-    "jsm": require("../lib/environments/jsm.js"),
-    "simpletest": require("../lib/environments/simpletest.js"),
-    "privileged": require("../lib/environments/privileged.js"),
-||||||| merged common ancestors
-    "jsm": require("../lib/environments/jsm.js"),
-    "simpletest": require("../lib/environments/simpletest.js"),
-=======
     jsm: require("../lib/environments/jsm.js"),
     simpletest: require("../lib/environments/simpletest.js"),
     privileged: require("../lib/environments/privileged.js"),
->>>>>>> upstream-releases
   },
   processors: {
     ".xml": require("../lib/processors/xbl-bindings"),

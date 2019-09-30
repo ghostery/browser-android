@@ -22,21 +22,7 @@ const IID IID_IDataObjCollection = {
  * Class nsDataObjCollection
  */
 
-<<<<<<< HEAD
-nsDataObjCollection::nsDataObjCollection() : m_cRef(0) {}
-||||||| merged common ancestors
-nsDataObjCollection::nsDataObjCollection()
-  : m_cRef(0)
-{
-}
-
-nsDataObjCollection::~nsDataObjCollection()
-{
-  mDataObjects.Clear();
-}
-=======
 nsDataObjCollection::nsDataObjCollection() {}
->>>>>>> upstream-releases
 
 nsDataObjCollection::~nsDataObjCollection() { mDataObjects.Clear(); }
 
@@ -55,19 +41,9 @@ STDMETHODIMP nsDataObjCollection::QueryInterface(REFIID riid, void** ppv) {
     AddRef();
     return NOERROR;
   }
-<<<<<<< HEAD
-  // offer to operate asynchronously (required by nsDragService)
-  if (IID_IAsyncOperation == riid) {
-    *ppv = static_cast<IAsyncOperation*>(this);
-||||||| merged common ancestors
-  //offer to operate asynchronously (required by nsDragService)
-  if (IID_IAsyncOperation == riid) {
-    *ppv = static_cast<IAsyncOperation*>(this);
-=======
   // offer to operate asynchronously (required by nsDragService)
   if (IID_IDataObjectAsyncCapability == riid) {
     *ppv = static_cast<IDataObjectAsyncCapability*>(this);
->>>>>>> upstream-releases
     AddRef();
     return NOERROR;
   }

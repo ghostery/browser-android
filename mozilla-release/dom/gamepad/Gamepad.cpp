@@ -36,43 +36,6 @@ void Gamepad::UpdateTimestamp() {
   }
 }
 
-<<<<<<< HEAD
-Gamepad::Gamepad(nsISupports* aParent, const nsAString& aID, uint32_t aIndex,
-                 uint32_t aHashKey, GamepadMappingType aMapping,
-                 GamepadHand aHand, uint32_t aDisplayID, uint32_t aNumButtons,
-                 uint32_t aNumAxes, uint32_t aNumHaptics)
-    : mParent(aParent),
-      mID(aID),
-      mIndex(aIndex),
-      mHashKey(aHashKey),
-      mDisplayId(aDisplayID),
-      mMapping(aMapping),
-      mHand(aHand),
-      mConnected(true),
-      mButtons(aNumButtons),
-      mAxes(aNumAxes),
-      mTimestamp(0) {
-||||||| merged common ancestors
-Gamepad::Gamepad(nsISupports* aParent,
-                 const nsAString& aID, uint32_t aIndex,
-                 uint32_t aHashKey,
-                 GamepadMappingType aMapping,
-                 GamepadHand aHand,
-                 uint32_t aDisplayID, uint32_t aNumButtons,
-                 uint32_t aNumAxes, uint32_t aNumHaptics)
-  : mParent(aParent),
-    mID(aID),
-    mIndex(aIndex),
-    mHashKey(aHashKey),
-    mDisplayId(aDisplayID),
-    mMapping(aMapping),
-    mHand(aHand),
-    mConnected(true),
-    mButtons(aNumButtons),
-    mAxes(aNumAxes),
-    mTimestamp(0)
-{
-=======
 Gamepad::Gamepad(nsISupports* aParent, const nsAString& aID, uint32_t aIndex,
                  uint32_t aHashKey, GamepadMappingType aMapping,
                  GamepadHand aHand, uint32_t aDisplayID, uint32_t aNumButtons,
@@ -90,7 +53,6 @@ Gamepad::Gamepad(nsISupports* aParent, const nsAString& aID, uint32_t aIndex,
       mButtons(aNumButtons),
       mAxes(aNumAxes),
       mTimestamp(0) {
->>>>>>> upstream-releases
   for (unsigned i = 0; i < aNumButtons; i++) {
     mButtons.InsertElementAt(i, new GamepadButton(mParent));
   }
@@ -141,15 +103,6 @@ void Gamepad::SetPose(const GamepadPoseState& aPose) {
   UpdateTimestamp();
 }
 
-<<<<<<< HEAD
-void Gamepad::SetHand(GamepadHand aHand) { mHand = aHand; }
-||||||| merged common ancestors
-void
-Gamepad::SetHand(GamepadHand aHand)
-{
-  mHand = aHand;
-}
-=======
 void Gamepad::SetLightIndicatorType(uint32_t aLightIndex,
                                     GamepadLightIndicatorType aType) {
   mLightIndicators[aLightIndex]->SetType(aType);
@@ -175,19 +128,8 @@ void Gamepad::SetTouchEvent(uint32_t aTouchIndex,
   mTouchEvents[aTouchIndex]->SetTouchState(touchState);
   UpdateTimestamp();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void Gamepad::SyncState(Gamepad* aOther) {
-  const char* kGamepadExtEnabledPref = "dom.gamepad.extensions.enabled";
-||||||| merged common ancestors
-void
-Gamepad::SyncState(Gamepad* aOther)
-{
-  const char* kGamepadExtEnabledPref = "dom.gamepad.extensions.enabled";
-=======
 void Gamepad::SetHand(GamepadHand aHand) { mHand = aHand; }
->>>>>>> upstream-releases
 
 void Gamepad::SyncState(Gamepad* aOther) {
   if (mButtons.Length() != aOther->mButtons.Length() ||
@@ -236,34 +178,16 @@ void Gamepad::SyncState(Gamepad* aOther) {
 
 already_AddRefed<Gamepad> Gamepad::Clone(nsISupports* aParent) {
   RefPtr<Gamepad> out =
-<<<<<<< HEAD
-      new Gamepad(aParent, mID, mIndex, mHashKey, mMapping, mHand, mDisplayId,
-                  mButtons.Length(), mAxes.Length(), mHapticActuators.Length());
-||||||| merged common ancestors
-    new Gamepad(aParent, mID, mIndex, mHashKey, mMapping,
-                mHand, mDisplayId, mButtons.Length(), mAxes.Length(),
-                mHapticActuators.Length());
-=======
       new Gamepad(aParent, mID, mIndex, mHashKey, mMapping, mHand, mDisplayId,
                   mButtons.Length(), mAxes.Length(), mHapticActuators.Length(),
                   mLightIndicators.Length(), mTouchEvents.Length());
->>>>>>> upstream-releases
   out->SyncState(this);
   return out.forget();
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* Gamepad::WrapObject(JSContext* aCx,
-                                            JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-Gamepad::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* Gamepad::WrapObject(JSContext* aCx,
                               JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return Gamepad_Binding::Wrap(aCx, this, aGivenProto);
 }
 

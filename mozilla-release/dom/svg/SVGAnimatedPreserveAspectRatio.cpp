@@ -36,24 +36,6 @@ JSObject* DOMSVGAnimatedPreserveAspectRatio::WrapObject(
 
 /* Implementation */
 
-<<<<<<< HEAD
-static nsSVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio,
-                             DOMSVGAnimatedPreserveAspectRatio>
-    sSVGAnimatedPAspectRatioTearoffTable;
-static nsSVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio,
-                             DOMSVGPreserveAspectRatio>
-    sBaseSVGPAspectRatioTearoffTable;
-static nsSVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio,
-                             DOMSVGPreserveAspectRatio>
-    sAnimSVGPAspectRatioTearoffTable;
-||||||| merged common ancestors
-static nsSVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio, DOMSVGAnimatedPreserveAspectRatio>
-  sSVGAnimatedPAspectRatioTearoffTable;
-static nsSVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio, DOMSVGPreserveAspectRatio>
-  sBaseSVGPAspectRatioTearoffTable;
-static nsSVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio, DOMSVGPreserveAspectRatio>
-  sAnimSVGPAspectRatioTearoffTable;
-=======
 static SVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio,
                            DOMSVGAnimatedPreserveAspectRatio>
     sSVGAnimatedPAspectRatioTearoffTable;
@@ -63,7 +45,6 @@ static SVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio,
 static SVGAttrTearoffTable<SVGAnimatedPreserveAspectRatio,
                            DOMSVGPreserveAspectRatio>
     sAnimSVGPAspectRatioTearoffTable;
->>>>>>> upstream-releases
 
 already_AddRefed<DOMSVGPreserveAspectRatio>
 DOMSVGAnimatedPreserveAspectRatio::BaseVal() {
@@ -97,19 +78,8 @@ DOMSVGAnimatedPreserveAspectRatio::AnimVal() {
   return domAnimVal.forget();
 }
 
-<<<<<<< HEAD
-nsresult SVGAnimatedPreserveAspectRatio::SetBaseValueString(
-    const nsAString& aValueAsString, nsSVGElement* aSVGElement,
-    bool aDoSetAttr) {
-||||||| merged common ancestors
-nsresult
-SVGAnimatedPreserveAspectRatio::SetBaseValueString(
-  const nsAString &aValueAsString, nsSVGElement *aSVGElement, bool aDoSetAttr)
-{
-=======
 nsresult SVGAnimatedPreserveAspectRatio::SetBaseValueString(
     const nsAString& aValueAsString, SVGElement* aSVGElement, bool aDoSetAttr) {
->>>>>>> upstream-releases
   SVGPreserveAspectRatio val;
   nsresult res = SVGPreserveAspectRatio::FromString(aValueAsString, &val);
   if (NS_FAILED(res)) {
@@ -141,18 +111,8 @@ void SVGAnimatedPreserveAspectRatio::GetBaseValueString(
   mBaseVal.ToString(aValueAsString);
 }
 
-<<<<<<< HEAD
-void SVGAnimatedPreserveAspectRatio::SetBaseValue(
-    const SVGPreserveAspectRatio& aValue, nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-void
-SVGAnimatedPreserveAspectRatio::SetBaseValue(const SVGPreserveAspectRatio &aValue,
-                                             nsSVGElement *aSVGElement)
-{
-=======
 void SVGAnimatedPreserveAspectRatio::SetBaseValue(
     const SVGPreserveAspectRatio& aValue, SVGElement* aSVGElement) {
->>>>>>> upstream-releases
   if (mIsBaseSet && mBaseVal == aValue) {
     return;
   }
@@ -179,18 +139,8 @@ static uint64_t PackPreserveAspectRatio(const SVGPreserveAspectRatio& par) {
   return packed;
 }
 
-<<<<<<< HEAD
-void SVGAnimatedPreserveAspectRatio::SetAnimValue(uint64_t aPackedValue,
-                                                  nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-void
-SVGAnimatedPreserveAspectRatio::SetAnimValue(uint64_t aPackedValue,
-                                             nsSVGElement *aSVGElement)
-{
-=======
 void SVGAnimatedPreserveAspectRatio::SetAnimValue(uint64_t aPackedValue,
                                                   SVGElement* aSVGElement) {
->>>>>>> upstream-releases
   if (mIsAnimated && PackPreserveAspectRatio(mAnimVal) == aPackedValue) {
     return;
   }
@@ -202,14 +152,7 @@ void SVGAnimatedPreserveAspectRatio::SetAnimValue(uint64_t aPackedValue,
 
 already_AddRefed<DOMSVGAnimatedPreserveAspectRatio>
 SVGAnimatedPreserveAspectRatio::ToDOMAnimatedPreserveAspectRatio(
-<<<<<<< HEAD
-    nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-  nsSVGElement *aSVGElement)
-{
-=======
     SVGElement* aSVGElement) {
->>>>>>> upstream-releases
   RefPtr<DOMSVGAnimatedPreserveAspectRatio> domAnimatedPAspectRatio =
       sSVGAnimatedPAspectRatioTearoffTable.GetTearoff(this);
   if (!domAnimatedPAspectRatio) {
@@ -225,44 +168,18 @@ DOMSVGAnimatedPreserveAspectRatio::~DOMSVGAnimatedPreserveAspectRatio() {
   sSVGAnimatedPAspectRatioTearoffTable.RemoveTearoff(mVal);
 }
 
-<<<<<<< HEAD
-UniquePtr<nsISMILAttr> SVGAnimatedPreserveAspectRatio::ToSMILAttr(
-    nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-UniquePtr<nsISMILAttr>
-SVGAnimatedPreserveAspectRatio::ToSMILAttr(nsSVGElement *aSVGElement)
-{
-=======
 UniquePtr<SMILAttr> SVGAnimatedPreserveAspectRatio::ToSMILAttr(
     SVGElement* aSVGElement) {
->>>>>>> upstream-releases
   return MakeUnique<SMILPreserveAspectRatio>(this, aSVGElement);
 }
 
 // typedef for inner class, to make function signatures shorter below:
 typedef SVGAnimatedPreserveAspectRatio::SMILPreserveAspectRatio
-<<<<<<< HEAD
-    SMILPreserveAspectRatio;
-
-nsresult SMILPreserveAspectRatio::ValueFromString(
-    const nsAString& aStr, const SVGAnimationElement* /*aSrcElement*/,
-    nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const {
-||||||| merged common ancestors
-  SMILPreserveAspectRatio;
-
-nsresult
-SMILPreserveAspectRatio::ValueFromString(const nsAString& aStr,
-                                         const SVGAnimationElement* /*aSrcElement*/,
-                                         nsSMILValue& aValue,
-                                         bool& aPreventCachingOfSandwich) const
-{
-=======
     SMILPreserveAspectRatio;
 
 nsresult SMILPreserveAspectRatio::ValueFromString(
     const nsAString& aStr, const SVGAnimationElement* /*aSrcElement*/,
     SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
->>>>>>> upstream-releases
   SVGPreserveAspectRatio par;
   nsresult res = SVGPreserveAspectRatio::FromString(aStr, &par);
   NS_ENSURE_SUCCESS(res, res);
@@ -274,18 +191,8 @@ nsresult SMILPreserveAspectRatio::ValueFromString(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsSMILValue SMILPreserveAspectRatio::GetBaseValue() const {
-  nsSMILValue val(SMILEnumType::Singleton());
-||||||| merged common ancestors
-nsSMILValue
-SMILPreserveAspectRatio::GetBaseValue() const
-{
-  nsSMILValue val(SMILEnumType::Singleton());
-=======
 SMILValue SMILPreserveAspectRatio::GetBaseValue() const {
   SMILValue val(SMILEnumType::Singleton());
->>>>>>> upstream-releases
   val.mU.mUint = PackPreserveAspectRatio(mVal->GetBaseValue());
   return val;
 }
@@ -298,15 +205,7 @@ void SMILPreserveAspectRatio::ClearAnimValue() {
   }
 }
 
-<<<<<<< HEAD
-nsresult SMILPreserveAspectRatio::SetAnimValue(const nsSMILValue& aValue) {
-||||||| merged common ancestors
-nsresult
-SMILPreserveAspectRatio::SetAnimValue(const nsSMILValue& aValue)
-{
-=======
 nsresult SMILPreserveAspectRatio::SetAnimValue(const SMILValue& aValue) {
->>>>>>> upstream-releases
   NS_ASSERTION(aValue.mType == SMILEnumType::Singleton(),
                "Unexpected type to assign animated value");
   if (aValue.mType == SMILEnumType::Singleton()) {

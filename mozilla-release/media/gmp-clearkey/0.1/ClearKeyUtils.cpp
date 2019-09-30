@@ -86,20 +86,9 @@ static void IncrementIV(vector<uint8_t>& aIV) {
   BigEndian::writeUint64(&aIV[8], BigEndian::readUint64(&aIV[8]) + 1);
 }
 
-<<<<<<< HEAD
-/* static */ void ClearKeyUtils::DecryptAES(const vector<uint8_t>& aKey,
-                                            vector<uint8_t>& aData,
-                                            vector<uint8_t>& aIV) {
-||||||| merged common ancestors
-/* static */ void
-ClearKeyUtils::DecryptAES(const vector<uint8_t>& aKey,
-                          vector<uint8_t>& aData, vector<uint8_t>& aIV)
-{
-=======
 /* static */
 void ClearKeyUtils::DecryptAES(const vector<uint8_t>& aKey,
                                vector<uint8_t>& aData, vector<uint8_t>& aIV) {
->>>>>>> upstream-releases
   assert(aIV.size() == CENC_KEY_LEN);
   assert(aKey.size() == CENC_KEY_LEN);
 
@@ -167,22 +156,10 @@ static bool EncodeBase64Web(vector<uint8_t> aBinary, string& aEncoded) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void ClearKeyUtils::MakeKeyRequest(const vector<KeyId>& aKeyIDs,
-                                                string& aOutRequest,
-                                                SessionType aSessionType) {
-||||||| merged common ancestors
-/* static */ void
-ClearKeyUtils::MakeKeyRequest(const vector<KeyId>& aKeyIDs,
-                              string& aOutRequest,
-                              SessionType aSessionType)
-{
-=======
 /* static */
 void ClearKeyUtils::MakeKeyRequest(const vector<KeyId>& aKeyIDs,
                                    string& aOutRequest,
                                    SessionType aSessionType) {
->>>>>>> upstream-releases
   assert(aKeyIDs.size() && aOutRequest.empty());
 
   aOutRequest.append("{\"kids\":[");
@@ -424,23 +401,10 @@ static bool ParseKeys(ParserContext& aCtx, vector<KeyIdPair>& aOutKeys) {
   return GetNextSymbol(aCtx) == ']';
 }
 
-<<<<<<< HEAD
-/* static */ bool ClearKeyUtils::ParseJWK(const uint8_t* aKeyData,
-                                          uint32_t aKeyDataSize,
-                                          vector<KeyIdPair>& aOutKeys,
-                                          SessionType aSessionType) {
-||||||| merged common ancestors
-/* static */ bool
-ClearKeyUtils::ParseJWK(const uint8_t* aKeyData, uint32_t aKeyDataSize,
-                        vector<KeyIdPair>& aOutKeys,
-                        SessionType aSessionType)
-{
-=======
 /* static */
 bool ClearKeyUtils::ParseJWK(const uint8_t* aKeyData, uint32_t aKeyDataSize,
                              vector<KeyIdPair>& aOutKeys,
                              SessionType aSessionType) {
->>>>>>> upstream-releases
   ParserContext ctx;
   ctx.mIter = aKeyData;
   ctx.mEnd = aKeyData + aKeyDataSize;
@@ -508,23 +472,10 @@ static bool ParseKeyIds(ParserContext& aCtx, vector<KeyId>& aOutKeyIds) {
   return GetNextSymbol(aCtx) == ']';
 }
 
-<<<<<<< HEAD
-/* static */ bool ClearKeyUtils::ParseKeyIdsInitData(
-    const uint8_t* aInitData, uint32_t aInitDataSize,
-    vector<KeyId>& aOutKeyIds) {
-||||||| merged common ancestors
-
-/* static */ bool
-ClearKeyUtils::ParseKeyIdsInitData(const uint8_t* aInitData,
-                                   uint32_t aInitDataSize,
-                                   vector<KeyId>& aOutKeyIds)
-{
-=======
 /* static */
 bool ClearKeyUtils::ParseKeyIdsInitData(const uint8_t* aInitData,
                                         uint32_t aInitDataSize,
                                         vector<KeyId>& aOutKeyIds) {
->>>>>>> upstream-releases
   ParserContext ctx;
   ctx.mIter = aInitData;
   ctx.mEnd = aInitData + aInitDataSize;
@@ -577,17 +528,8 @@ bool ClearKeyUtils::ParseKeyIdsInitData(const uint8_t* aInitData,
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool ClearKeyUtils::IsValidSessionId(const char* aBuff,
-                                                  uint32_t aLength) {
-||||||| merged common ancestors
-/* static */ bool
-ClearKeyUtils::IsValidSessionId(const char* aBuff, uint32_t aLength)
-{
-=======
 /* static */
 bool ClearKeyUtils::IsValidSessionId(const char* aBuff, uint32_t aLength) {
->>>>>>> upstream-releases
   if (aLength > 10) {
     // 10 is the max number of characters in UINT32_MAX when
     // represented as a string; ClearKey session ids are integers.

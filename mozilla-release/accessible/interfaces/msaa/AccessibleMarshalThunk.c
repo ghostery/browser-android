@@ -6,32 +6,12 @@
 
 #include "ISimpleDOM.h"
 
-<<<<<<< HEAD
-HRESULT STDMETHODCALLTYPE ISimpleDOMNode_get_localInterface_Proxy(
-    ISimpleDOMNode *This, void **localInterface) {
-||||||| merged common ancestors
-HRESULT STDMETHODCALLTYPE
-ISimpleDOMNode_get_localInterface_Proxy(ISimpleDOMNode * This,
-                                        void **localInterface)
-{
-=======
 HRESULT STDMETHODCALLTYPE ISimpleDOMNode_get_localInterface_Proxy(
     ISimpleDOMNode* This, void** localInterface) {
->>>>>>> upstream-releases
   return E_NOTIMPL;
 }
 
-<<<<<<< HEAD
-HRESULT STDMETHODCALLTYPE ISimpleDOMNode_get_localInterface_Stub(
-    ISimpleDOMNode *This, IUnknown **localInterface) {
-||||||| merged common ancestors
-HRESULT STDMETHODCALLTYPE
-ISimpleDOMNode_get_localInterface_Stub(ISimpleDOMNode * This,
-                                       IUnknown **localInterface)
-{
-=======
 HRESULT STDMETHODCALLTYPE ISimpleDOMNode_get_localInterface_Stub(
     ISimpleDOMNode* This, IUnknown** localInterface) {
->>>>>>> upstream-releases
   return E_NOTIMPL;
 }

@@ -531,21 +531,10 @@ class CheckedInt {
   }
 
   /** @returns the actual value */
-<<<<<<< HEAD
-  T value() const {
-    MOZ_ASSERT(
-        mIsValid,
-        "Invalid checked integer (division by zero or integer overflow)");
-||||||| merged common ancestors
-  T value() const
-  {
-    MOZ_ASSERT(mIsValid, "Invalid checked integer (division by zero or integer overflow)");
-=======
   T value() const {
     MOZ_DIAGNOSTIC_ASSERT(
         mIsValid,
         "Invalid checked integer (division by zero or integer overflow)");
->>>>>>> upstream-releases
     return mValue;
   }
 
@@ -670,30 +659,6 @@ class CheckedInt {
   }
 
 #if MOZ_HAS_BUILTIN_OP_OVERFLOW
-<<<<<<< HEAD
-#define MOZ_CHECKEDINT_BASIC_BINARY_OPERATOR2(NAME, OP, FUN)      \
-  template <typename T>                                           \
-  inline CheckedInt<T> operator OP(const CheckedInt<T>& aLhs,     \
-                                   const CheckedInt<T>& aRhs) {   \
-    T result;                                                     \
-    if (FUN(aLhs.mValue, aRhs.mValue, &result)) {                 \
-      return CheckedInt<T>(0, false);                             \
-    }                                                             \
-    return CheckedInt<T>(result, aLhs.mIsValid && aRhs.mIsValid); \
-  }
-||||||| merged common ancestors
-#define MOZ_CHECKEDINT_BASIC_BINARY_OPERATOR2(NAME, OP, FUN)                  \
-  template<typename T>                                                        \
-  inline CheckedInt<T>                                                        \
-  operator OP(const CheckedInt<T>& aLhs, const CheckedInt<T>& aRhs)           \
-  {                                                                           \
-    T result;                                                                 \
-    if (FUN(aLhs.mValue, aRhs.mValue, &result)) {                             \
-      return CheckedInt<T>(0, false);                                         \
-    }                                                                         \
-    return CheckedInt<T>(result, aLhs.mIsValid && aRhs.mIsValid);             \
-  }
-=======
 #  define MOZ_CHECKEDINT_BASIC_BINARY_OPERATOR2(NAME, OP, FUN)      \
     template <typename T>                                           \
     inline CheckedInt<T> operator OP(const CheckedInt<T>& aLhs,     \
@@ -704,7 +669,6 @@ class CheckedInt {
       }                                                             \
       return CheckedInt<T>(result, aLhs.mIsValid && aRhs.mIsValid); \
     }
->>>>>>> upstream-releases
 MOZ_CHECKEDINT_BASIC_BINARY_OPERATOR2(Add, +, __builtin_add_overflow)
 MOZ_CHECKEDINT_BASIC_BINARY_OPERATOR2(Sub, -, __builtin_sub_overflow)
 MOZ_CHECKEDINT_BASIC_BINARY_OPERATOR2(Mul, *, __builtin_mul_overflow)

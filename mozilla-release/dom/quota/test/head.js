@@ -58,15 +58,7 @@ function triggerMainCommand(popup, win) {
   EventUtils.synthesizeMouseAtCenter(notification.button, {}, win);
 }
 
-<<<<<<< HEAD
-async function triggerSecondaryCommand(popup, actionIndex, win)
-{
-||||||| merged common ancestors
-function triggerSecondaryCommand(popup, win)
-{
-=======
 async function triggerSecondaryCommand(popup, actionIndex, win) {
->>>>>>> upstream-releases
   if (!win) {
     win = window;
   }
@@ -75,23 +67,6 @@ async function triggerSecondaryCommand(popup, actionIndex, win) {
   let notifications = popup.childNodes;
   ok(notifications.length > 0, "at least one notification displayed");
   let notification = notifications[0];
-<<<<<<< HEAD
-
-  if (!actionIndex) {
-    await EventUtils.synthesizeMouseAtCenter(notification.secondaryButton, {}, win);
-  } else {
-    // Click the dropmarker arrow and wait for the menu to show up.
-    let dropdownPromise =
-      BrowserTestUtils.waitForEvent(notification.menupopup, "popupshown");
-    await EventUtils.synthesizeMouseAtCenter(notification.menubutton, {});
-    await dropdownPromise;
-
-    let actionMenuItem = notification.querySelectorAll("menuitem")[actionIndex - 1];
-    await EventUtils.synthesizeMouseAtCenter(actionMenuItem, {});
-  }
-||||||| merged common ancestors
-  EventUtils.synthesizeMouseAtCenter(notification.secondaryButton, {}, win);
-=======
 
   if (!actionIndex) {
     await EventUtils.synthesizeMouseAtCenter(
@@ -113,7 +88,6 @@ async function triggerSecondaryCommand(popup, actionIndex, win) {
     ];
     await EventUtils.synthesizeMouseAtCenter(actionMenuItem, {});
   }
->>>>>>> upstream-releases
 }
 
 function dismissNotification(popup, win) {

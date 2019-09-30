@@ -45,19 +45,9 @@ class nsITraceableChannel;
 
 namespace mozilla {
 namespace dom {
-<<<<<<< HEAD
-class nsIContentParent;
-class Element;
-}  // namespace dom
-||||||| merged common ancestors
-  class nsIContentParent;
-  class Element;
-} // namespace dom
-=======
 class ContentParent;
 class Element;
 }  // namespace dom
->>>>>>> upstream-releases
 namespace extensions {
 
 namespace detail {
@@ -133,22 +123,11 @@ class ChannelWrapper final : public DOMEventTargetHelper,
 
   void Die();
 
-<<<<<<< HEAD
-  static already_AddRefed<extensions::ChannelWrapper> Get(
-      const dom::GlobalObject& global, nsIChannel* channel);
-  static already_AddRefed<extensions::ChannelWrapper> GetRegisteredChannel(
-      const dom::GlobalObject& global, uint64_t aChannelId,
-      const WebExtensionPolicy& aAddon, nsITabParent* aTabParent);
-||||||| merged common ancestors
-  static already_AddRefed<extensions::ChannelWrapper> Get(const dom::GlobalObject& global, nsIChannel* channel);
-  static already_AddRefed<extensions::ChannelWrapper> GetRegisteredChannel(const dom::GlobalObject& global, uint64_t aChannelId, const WebExtensionPolicy& aAddon, nsITabParent* aTabParent);
-=======
   static already_AddRefed<extensions::ChannelWrapper> Get(
       const dom::GlobalObject& global, nsIChannel* channel);
   static already_AddRefed<extensions::ChannelWrapper> GetRegisteredChannel(
       const dom::GlobalObject& global, uint64_t aChannelId,
       const WebExtensionPolicy& aAddon, nsIRemoteTab* aBrowserParent);
->>>>>>> upstream-releases
 
   uint64_t Id() const { return mId; }
 
@@ -168,27 +147,11 @@ class ChannelWrapper final : public DOMEventTargetHelper,
   void GetContentType(nsCString& aContentType) const;
   void SetContentType(const nsACString& aContentType);
 
-<<<<<<< HEAD
-  void RegisterTraceableChannel(const WebExtensionPolicy& aAddon,
-                                nsITabParent* aTabParent);
-||||||| merged common ancestors
-=======
   void RegisterTraceableChannel(const WebExtensionPolicy& aAddon,
                                 nsIRemoteTab* aBrowserParent);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  already_AddRefed<nsITraceableChannel> GetTraceableChannel(
-      nsAtom* aAddonId, dom::nsIContentParent* aContentParent) const;
-||||||| merged common ancestors
-  void RegisterTraceableChannel(const WebExtensionPolicy& aAddon, nsITabParent* aTabParent);
-
-  already_AddRefed<nsITraceableChannel> GetTraceableChannel(nsAtom* aAddonId, dom::nsIContentParent* aContentParent) const;
-
-=======
   already_AddRefed<nsITraceableChannel> GetTraceableChannel(
       nsAtom* aAddonId, dom::ContentParent* aContentParent) const;
->>>>>>> upstream-releases
 
   void GetMethod(nsCString& aRetVal) const;
 
@@ -342,28 +305,11 @@ class ChannelWrapper final : public DOMEventTargetHelper,
   bool mSuspended = false;
   bool mResponseStarted = false;
 
-<<<<<<< HEAD
-  nsInterfaceHashtable<nsPtrHashKey<const nsAtom>, nsITabParent> mAddonEntries;
-
-  class RequestListener final : public nsIStreamListener,
-                                public nsIThreadRetargetableStreamListener {
-   public:
-||||||| merged common ancestors
-
-  nsInterfaceHashtable<nsPtrHashKey<const nsAtom>, nsITabParent> mAddonEntries;
-
-
-  class RequestListener final : public nsIStreamListener
-                              , public nsIThreadRetargetableStreamListener
-  {
-  public:
-=======
   nsInterfaceHashtable<nsPtrHashKey<const nsAtom>, nsIRemoteTab> mAddonEntries;
 
   class RequestListener final : public nsIStreamListener,
                                 public nsIThreadRetargetableStreamListener {
    public:
->>>>>>> upstream-releases
     NS_DECL_THREADSAFE_ISUPPORTS
     NS_DECL_NSIREQUESTOBSERVER
     NS_DECL_NSISTREAMLISTENER

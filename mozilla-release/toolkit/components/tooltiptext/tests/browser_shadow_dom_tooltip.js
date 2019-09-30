@@ -1,16 +1,7 @@
 /* eslint-disable mozilla/no-arbitrary-setTimeout */
 
 add_task(async function setup() {
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv(
-    {"set": [["ui.tooltipDelay", 0]]});
-||||||| merged common ancestors
-  await SpecialPowers.pushPrefEnv(
-    {"set": [["ui.tooltipDelay", 0],
-             ["dom.webcomponents.shadowdom.enabled", true]]});
-=======
   await SpecialPowers.pushPrefEnv({ set: [["ui.tooltipDelay", 0]] });
->>>>>>> upstream-releases
 });
 
 add_task(async function test_title_in_shadow_dom() {

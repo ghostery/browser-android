@@ -30,18 +30,10 @@
       // Compute the distance from the right/bottom edge of the visual
       // viewport to the same edge of the layout viewport and add the desired
       // offset to that.
-<<<<<<< HEAD
-      const layout = (visual + scrollbarWidth);
-      return layout - (visual / RESOLUTION) + OFFSET_CSS_PX;
-||||||| merged common ancestors
-      const layout = (visual + scrollbarWidth) * RESOLUTION;
-      return layout - visual + OFFSET_SCREEN_PX;
-=======
       // We can ignore scrollbar width here since the scrollbar is layouted at
       // the right/bottom edge of this content, not of this window in the case
       // of containerful scrolling.
       return visual - (visual / RESOLUTION) + OFFSET_CSS_PX;
->>>>>>> upstream-releases
     }
 
     function* test(testDriver) {

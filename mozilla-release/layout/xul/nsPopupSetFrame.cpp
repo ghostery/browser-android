@@ -18,18 +18,8 @@
 
 typedef mozilla::ComputedStyle ComputedStyle;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewPopupSetFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsPopupSetFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewPopupSetFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsPopupSetFrame(aStyle);
-=======
 nsIFrame* NS_NewPopupSetFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsPopupSetFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsPopupSetFrame)

@@ -21,14 +21,9 @@
 
 #include "gc/GC-inl.h"
 #include "gc/Marking-inl.h"
-<<<<<<< HEAD
-#include "vm/JSScript-inl.h"
-||||||| merged common ancestors
-=======
 #include "gc/Nursery-inl.h"
 #include "gc/WeakMap-inl.h"
 #include "vm/JSScript-inl.h"
->>>>>>> upstream-releases
 #include "vm/Realm-inl.h"
 
 using namespace js;
@@ -36,81 +31,6 @@ using namespace js::gc;
 
 Zone* const Zone::NotOnList = reinterpret_cast<Zone*>(1);
 
-<<<<<<< HEAD
-JS::Zone::Zone(JSRuntime* rt)
-    : JS::shadow::Zone(rt, &rt->gc.marker),
-      // Note: don't use |this| before initializing helperThreadUse_!
-      // ProtectedData checks in CheckZone::check may read this field.
-      helperThreadUse_(HelperThreadUse::None),
-      helperThreadOwnerContext_(nullptr),
-      debuggers(this, nullptr),
-      uniqueIds_(this),
-      suppressAllocationMetadataBuilder(this, false),
-      arenas(this),
-      tenuredAllocsSinceMinorGC_(0),
-      types(this),
-      gcWeakMapList_(this),
-      compartments_(),
-      gcGrayRoots_(this),
-      gcWeakRefs_(this),
-      weakCaches_(this),
-      gcWeakKeys_(this, SystemAllocPolicy(), rt->randomHashCodeScrambler()),
-      typeDescrObjects_(this, this),
-      markedAtoms_(this),
-      atomCache_(this),
-      externalStringCache_(this),
-      functionToStringCache_(this),
-      keepAtomsCount(this, 0),
-      purgeAtomsDeferred(this, 0),
-      usage(&rt->gc.usage),
-      threshold(),
-      gcDelayBytes(0),
-      tenuredStrings(this, 0),
-      allocNurseryStrings(this, true),
-      propertyTree_(this, this),
-      baseShapes_(this, this),
-      initialShapes_(this, this),
-      nurseryShapes_(this),
-      data(this, nullptr),
-      isSystem(this, false),
-||||||| merged common ancestors
-JS::Zone::Zone(JSRuntime* rt)
-  : JS::shadow::Zone(rt, &rt->gc.marker),
-    // Note: don't use |this| before initializing helperThreadUse_!
-    // ProtectedData checks in CheckZone::check may read this field.
-    helperThreadUse_(HelperThreadUse::None),
-    helperThreadOwnerContext_(nullptr),
-    debuggers(this, nullptr),
-    uniqueIds_(this),
-    suppressAllocationMetadataBuilder(this, false),
-    arenas(this),
-    tenuredAllocsSinceMinorGC_(0),
-    types(this),
-    gcWeakMapList_(this),
-    compartments_(),
-    gcGrayRoots_(this),
-    gcWeakRefs_(this),
-    weakCaches_(this),
-    gcWeakKeys_(this, SystemAllocPolicy(), rt->randomHashCodeScrambler()),
-    typeDescrObjects_(this, this),
-    markedAtoms_(this),
-    atomCache_(this),
-    externalStringCache_(this),
-    functionToStringCache_(this),
-    keepAtomsCount(this, 0),
-    purgeAtomsDeferred(this, 0),
-    usage(&rt->gc.usage),
-    threshold(),
-    gcDelayBytes(0),
-    tenuredStrings(this, 0),
-    allocNurseryStrings(this, true),
-    propertyTree_(this, this),
-    baseShapes_(this, this),
-    initialShapes_(this, this),
-    nurseryShapes_(this),
-    data(this, nullptr),
-    isSystem(this, false),
-=======
 ZoneAllocator::ZoneAllocator(JSRuntime* rt)
     : JS::shadow::Zone(rt, &rt->gc.marker),
       zoneSize(&rt->gc.heapSize),
@@ -122,123 +42,21 @@ ZoneAllocator::ZoneAllocator(JSRuntime* rt)
 }
 
 ZoneAllocator::~ZoneAllocator() {
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-      gcLastSweepGroupIndex(0),
-||||||| merged common ancestors
-    gcLastSweepGroupIndex(0),
-=======
   if (runtimeFromAnyThread()->gc.shutdownCollectedEverything()) {
     gcMallocTracker.checkEmptyOnDestroy();
     MOZ_ASSERT(zoneSize.gcBytes() == 0);
     MOZ_ASSERT(gcMallocBytes.gcBytes() == 0);
   }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-      jitZone_(this, nullptr),
-      gcScheduled_(false),
-      gcScheduledSaved_(false),
-      gcPreserveCode_(false),
-      keepShapeTables_(this, false),
-      listNext_(NotOnList) {
-  /* Ensure that there are no vtables to mess us up here. */
-  MOZ_ASSERT(reinterpret_cast<JS::shadow::Zone*>(this) ==
-             static_cast<JS::shadow::Zone*>(this));
-
-  AutoLockGC lock(rt);
-  threshold.updateAfterGC(8192, GC_NORMAL, rt->gc.tunables,
-                          rt->gc.schedulingState, lock);
-  setGCMaxMallocBytes(rt->gc.tunables.maxMallocBytes(), lock);
-  jitCodeCounter.setMax(jit::MaxCodeBytesPerProcess * 0.8, lock);
 }
-
-Zone::~Zone() {
-  MOZ_ASSERT(helperThreadUse_ == HelperThreadUse::None);
-
-  JSRuntime* rt = runtimeFromAnyThread();
-  if (this == rt->gc.systemZone) {
-    rt->gc.systemZone = nullptr;
-  }
-
-  js_delete(debuggers.ref());
-  js_delete(jitZone_.ref());
-||||||| merged common ancestors
-    jitZone_(this, nullptr),
-    gcScheduled_(false),
-    gcScheduledSaved_(false),
-    gcPreserveCode_(false),
-    keepShapeTables_(this, false),
-    listNext_(NotOnList)
-{
-    /* Ensure that there are no vtables to mess us up here. */
-    MOZ_ASSERT(reinterpret_cast<JS::shadow::Zone*>(this) ==
-               static_cast<JS::shadow::Zone*>(this));
-
-    AutoLockGC lock(rt);
-    threshold.updateAfterGC(8192, GC_NORMAL, rt->gc.tunables, rt->gc.schedulingState, lock);
-    setGCMaxMallocBytes(rt->gc.tunables.maxMallocBytes(), lock);
-    jitCodeCounter.setMax(jit::MaxCodeBytesPerProcess * 0.8, lock);
-}
-
-Zone::~Zone()
-{
-    MOZ_ASSERT(helperThreadUse_ == HelperThreadUse::None);
-
-    JSRuntime* rt = runtimeFromAnyThread();
-    if (this == rt->gc.systemZone) {
-        rt->gc.systemZone = nullptr;
-    }
-
-    js_delete(debuggers.ref());
-    js_delete(jitZone_.ref());
-=======
-}
->>>>>>> upstream-releases
 
 void ZoneAllocator::fixupAfterMovingGC() {
 #ifdef DEBUG
-<<<<<<< HEAD
-  // Avoid assertions failures warning that not everything has been destroyed
-  // if the embedding leaked GC things.
-  if (!rt->gc.shutdownCollectedEverything()) {
-    gcWeakMapList().clear();
-    regExps().clear();
-  }
-||||||| merged common ancestors
-    // Avoid assertions failures warning that not everything has been destroyed
-    // if the embedding leaked GC things.
-    if (!rt->gc.shutdownCollectedEverything()) {
-        gcWeakMapList().clear();
-        regExps().clear();
-    }
-=======
   gcMallocTracker.fixupAfterMovingGC();
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-bool Zone::init(bool isSystemArg) {
-  isSystem = isSystemArg;
-  regExps_.ref() = make_unique<RegExpZone>(this);
-  return regExps_.ref() && gcWeakKeys().init();
-||||||| merged common ancestors
-bool
-Zone::init(bool isSystemArg)
-{
-    isSystem = isSystemArg;
-    regExps_.ref() = make_unique<RegExpZone>(this);
-    return regExps_.ref() && gcWeakKeys().init();
-}
-
-void
-Zone::setNeedsIncrementalBarrier(bool needs)
-{
-    MOZ_ASSERT_IF(needs, canCollect());
-    needsIncrementalBarrier_ = needs;
-=======
 void js::ZoneAllocator::updateAllGCMallocCountersOnGCStart() {
   gcMallocCounter.updateOnGCStart();
   jitCodeCounter.updateOnGCStart();
@@ -249,19 +67,8 @@ void js::ZoneAllocator::updateAllGCMallocCountersOnGCEnd(
   auto& gc = runtimeFromAnyThread()->gc;
   gcMallocCounter.updateOnGCEnd(gc.tunables, lock);
   jitCodeCounter.updateOnGCEnd(gc.tunables, lock);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::setNeedsIncrementalBarrier(bool needs) {
-  MOZ_ASSERT_IF(needs, canCollect());
-  needsIncrementalBarrier_ = needs;
-||||||| merged common ancestors
-void
-Zone::beginSweepTypes(bool releaseTypes)
-{
-    types.beginSweep(releaseTypes);
-=======
 void js::ZoneAllocator::updateAllGCThresholds(GCRuntime& gc,
                                               JSGCInvocationKind invocationKind,
                                               const js::AutoLockGC& lock) {
@@ -269,138 +76,14 @@ void js::ZoneAllocator::updateAllGCThresholds(GCRuntime& gc,
                           gc.schedulingState, lock);
   gcMallocThreshold.updateAfterGC(gcMallocBytes.gcBytes(),
                                   gc.tunables.maxMallocBytes(), lock);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::beginSweepTypes() { types.beginSweep(); }
-||||||| merged common ancestors
-Zone::DebuggerVector*
-Zone::getOrCreateDebuggers(JSContext* cx)
-{
-    if (debuggers) {
-        return debuggers;
-    }
-=======
 js::gc::TriggerKind js::ZoneAllocator::shouldTriggerGCForTooMuchMalloc() {
   auto& gc = runtimeFromAnyThread()->gc;
   return std::max(gcMallocCounter.shouldTriggerGC(gc.tunables),
                   jitCodeCounter.shouldTriggerGC(gc.tunables));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Zone::DebuggerVector* Zone::getOrCreateDebuggers(JSContext* cx) {
-  if (debuggers) {
-    return debuggers;
-  }
-
-  debuggers = js_new<DebuggerVector>();
-  if (!debuggers) {
-    ReportOutOfMemory(cx);
-  }
-  return debuggers;
-}
-
-void Zone::sweepBreakpoints(FreeOp* fop) {
-  if (fop->runtime()->debuggerList().isEmpty()) {
-    return;
-  }
-
-  /*
-   * Sweep all compartments in a zone at the same time, since there is no way
-   * to iterate over the scripts belonging to a single compartment in a zone.
-   */
-
-  MOZ_ASSERT(isGCSweepingOrCompacting());
-  for (auto iter = cellIter<JSScript>(); !iter.done(); iter.next()) {
-    JSScript* script = iter;
-    if (!script->hasAnyBreakpointsOrStepMode()) {
-      continue;
-    }
-
-    bool scriptGone = IsAboutToBeFinalizedUnbarriered(&script);
-    MOZ_ASSERT(script == iter);
-    for (unsigned i = 0; i < script->length(); i++) {
-      BreakpointSite* site = script->getBreakpointSite(script->offsetToPC(i));
-      if (!site) {
-        continue;
-      }
-
-      Breakpoint* nextbp;
-      for (Breakpoint* bp = site->firstBreakpoint(); bp; bp = nextbp) {
-        nextbp = bp->nextInSite();
-        GCPtrNativeObject& dbgobj = bp->debugger->toJSObjectRef();
-
-        // If we are sweeping, then we expect the script and the
-        // debugger object to be swept in the same sweep group, except
-        // if the breakpoint was added after we computed the sweep
-        // groups. In this case both script and debugger object must be
-        // live.
-        MOZ_ASSERT_IF(isGCSweeping() && dbgobj->zone()->isCollecting(),
-                      dbgobj->zone()->isGCSweeping() ||
-                          (!scriptGone && dbgobj->asTenured().isMarkedAny()));
-
-        bool dying = scriptGone || IsAboutToBeFinalized(&dbgobj);
-        MOZ_ASSERT_IF(!dying, !IsAboutToBeFinalized(&bp->getHandlerRef()));
-        if (dying) {
-          bp->destroy(fop);
-||||||| merged common ancestors
-    debuggers = js_new<DebuggerVector>();
-    if (!debuggers) {
-        ReportOutOfMemory(cx);
-    }
-    return debuggers;
-}
-
-void
-Zone::sweepBreakpoints(FreeOp* fop)
-{
-    if (fop->runtime()->debuggerList().isEmpty()) {
-        return;
-    }
-
-    /*
-     * Sweep all compartments in a zone at the same time, since there is no way
-     * to iterate over the scripts belonging to a single compartment in a zone.
-     */
-
-    MOZ_ASSERT(isGCSweepingOrCompacting());
-    for (auto iter = cellIter<JSScript>(); !iter.done(); iter.next()) {
-        JSScript* script = iter;
-        if (!script->hasAnyBreakpointsOrStepMode()) {
-            continue;
-        }
-
-        bool scriptGone = IsAboutToBeFinalizedUnbarriered(&script);
-        MOZ_ASSERT(script == iter);
-        for (unsigned i = 0; i < script->length(); i++) {
-            BreakpointSite* site = script->getBreakpointSite(script->offsetToPC(i));
-            if (!site) {
-                continue;
-            }
-
-            Breakpoint* nextbp;
-            for (Breakpoint* bp = site->firstBreakpoint(); bp; bp = nextbp) {
-                nextbp = bp->nextInSite();
-                GCPtrNativeObject& dbgobj = bp->debugger->toJSObjectRef();
-
-                // If we are sweeping, then we expect the script and the
-                // debugger object to be swept in the same sweep group, except
-                // if the breakpoint was added after we computed the sweep
-                // groups. In this case both script and debugger object must be
-                // live.
-                MOZ_ASSERT_IF(isGCSweeping() && dbgobj->zone()->isCollecting(),
-                              dbgobj->zone()->isGCSweeping() ||
-                              (!scriptGone && dbgobj->asTenured().isMarkedAny()));
-
-                bool dying = scriptGone || IsAboutToBeFinalized(&dbgobj);
-                MOZ_ASSERT_IF(!dying, !IsAboutToBeFinalized(&bp->getHandlerRef()));
-                if (dying) {
-                    bp->destroy(fop);
-                }
-            }
-=======
 JS::Zone::Zone(JSRuntime* rt)
     : ZoneAllocator(rt),
       // Note: don't use |this| before initializing helperThreadUse_!
@@ -538,12 +221,7 @@ void Zone::sweepBreakpoints(FreeOp* fop) {
         MOZ_ASSERT_IF(!dying, !IsAboutToBeFinalized(&bp->getHandlerRef()));
         if (dying) {
           bp->destroy(fop);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      }
-||||||| merged common ancestors
-=======
       }
     }
   }
@@ -660,37 +338,9 @@ void Zone::discardJitCode(FreeOp* fop,
       if (jit::JitScript* jitScript = script.unbarrieredGet()->jitScript()) {
         MOZ_ASSERT(!jitScript->active());
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (RealmsInZoneIter realms(this); !realms.done(); realms.next()) {
-    for (wasm::Instance* instance : realms->wasm.instances()) {
-      if (!instance->debugEnabled()) {
-        continue;
-      }
-      if (!IsAboutToBeFinalized(&instance->object_)) {
-        continue;
-      }
-      instance->debug().clearAllBreakpoints(fop, instance->objectUnbarriered());
-||||||| merged common ancestors
-    for (RealmsInZoneIter realms(this); !realms.done(); realms.next()) {
-        for (wasm::Instance* instance : realms->wasm.instances()) {
-            if (!instance->debugEnabled()) {
-                continue;
-            }
-            if (!IsAboutToBeFinalized(&instance->object_)) {
-                continue;
-            }
-            instance->debug().clearAllBreakpoints(fop, instance->objectUnbarriered());
-        }
-=======
     // Mark JitScripts on the stack as active.
     jit::MarkActiveJitScripts(this);
   }
@@ -795,28 +445,11 @@ bool Zone::hasMarkedRealms() {
   for (RealmsInZoneIter realm(this); !realm.done(); realm.next()) {
     if (realm->marked()) {
       return true;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   }
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::sweepWeakMaps() {
-  /* Finalize unreachable (key,value) pairs in all weak maps. */
-  WeakMapBase::sweepZone(this);
-||||||| merged common ancestors
-void
-Zone::sweepWeakMaps()
-{
-    /* Finalize unreachable (key,value) pairs in all weak maps. */
-    WeakMapBase::sweepZone(this);
-=======
 bool Zone::canCollect() {
   // The atoms zone cannot be collected while off-thread parsing is taking
   // place.
@@ -827,23 +460,8 @@ bool Zone::canCollect() {
   // Zones that will be or are currently used by other threads cannot be
   // collected.
   return !createdForHelperThread();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::discardJitCode(FreeOp* fop, bool discardBaselineCode,
-                          bool releaseTypes) {
-  if (!jitZone()) {
-    return;
-  }
-||||||| merged common ancestors
-void
-Zone::discardJitCode(FreeOp* fop, bool discardBaselineCode)
-{
-    if (!jitZone()) {
-        return;
-    }
-=======
 void Zone::notifyObservingDebuggers() {
   MOZ_ASSERT(JS::RuntimeHeapIsCollecting(),
              "This method should be called during GC.");
@@ -856,49 +474,17 @@ void Zone::notifyObservingDebuggers() {
     if (!global) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (isPreservingCode()) {
-    return;
-  }
-||||||| merged common ancestors
-    if (isPreservingCode()) {
-        return;
-    }
-=======
     GlobalObject::DebuggerVector* dbgs = global->getDebuggers();
     if (!dbgs) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (discardBaselineCode) {
-||||||| merged common ancestors
-    if (discardBaselineCode) {
-=======
     for (GlobalObject::DebuggerVector::Range r = dbgs->all(); !r.empty();
          r.popFront()) {
       if (!r.front().unbarrieredGet()->debuggeeIsBeingCollected(
               rt->gc.majorGCCount())) {
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-    /* Assert no baseline scripts are marked as active. */
-    for (auto script = cellIter<JSScript>(); !script.done(); script.next()) {
-      MOZ_ASSERT_IF(script->hasBaselineScript(),
-                    !script->baselineScript()->active());
-||||||| merged common ancestors
-        /* Assert no baseline scripts are marked as active. */
-        for (auto script = cellIter<JSScript>(); !script.done(); script.next()) {
-            MOZ_ASSERT_IF(script->hasBaselineScript(), !script->baselineScript()->active());
-        }
-#endif
-
-        /* Mark baseline scripts on the stack as active. */
-        jit::MarkActiveBaselineScripts(this);
-=======
         fprintf(stderr,
                 "OOM while notifying observing Debuggers of a GC: The "
                 "onGarbageCollection\n"
@@ -906,163 +492,29 @@ void Zone::notifyObservingDebuggers() {
 #endif
         return;
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-=======
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    /* Mark baseline scripts on the stack as active. */
-    jit::MarkActiveBaselineScripts(this);
-  }
-||||||| merged common ancestors
-    /* Only mark OSI points if code is being discarded. */
-    jit::InvalidateAll(fop, this);
-
-    for (auto script = cellIter<JSScript>(); !script.done(); script.next())  {
-        jit::FinishInvalidation(fop, script);
-=======
 bool Zone::isOnList() const { return listNext_ != NotOnList; }
 
 Zone* Zone::nextZone() const {
   MOZ_ASSERT(isOnList());
   return listNext_;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /* Only mark OSI points if code is being discarded. */
-  jit::InvalidateAll(fop, this);
-||||||| merged common ancestors
-        /*
-         * Discard baseline script if it's not marked as active. Note that
-         * this also resets the active flag.
-         */
-        if (discardBaselineCode) {
-            jit::FinishDiscardBaselineScript(fop, script);
-        }
-=======
 void Zone::clearTables() {
   MOZ_ASSERT(regExps().empty());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (auto script = cellIter<JSScript>(); !script.done(); script.next()) {
-    jit::FinishInvalidation(fop, script);
-||||||| merged common ancestors
-        /*
-         * Warm-up counter for scripts are reset on GC. After discarding code we
-         * need to let it warm back up to get information such as which
-         * opcodes are setting array holes or accessing getter properties.
-         */
-        script->resetWarmUpCounter();
-
-        /*
-         * Make it impossible to use the control flow graphs cached on the
-         * BaselineScript. They get deleted.
-         */
-        if (script->hasBaselineScript()) {
-            script->baselineScript()->setControlFlowGraph(nullptr);
-        }
-    }
-=======
   baseShapes().clear();
   initialShapes().clear();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    /*
-     * Discard baseline script if it's not marked as active. Note that
-     * this also resets the active flag.
-     */
-    if (discardBaselineCode) {
-      jit::FinishDiscardBaselineScript(fop, script);
-    }
-||||||| merged common ancestors
-    /*
-     * When scripts contains pointers to nursery things, the store buffer
-     * can contain entries that point into the optimized stub space. Since
-     * this method can be called outside the context of a GC, this situation
-     * could result in us trying to mark invalid store buffer entries.
-     *
-     * Defer freeing any allocated blocks until after the next minor GC.
-     */
-    if (discardBaselineCode) {
-        jitZone()->optimizedStubSpace()->freeAllAfterMinorGC(this);
-        jitZone()->purgeIonCacheIRStubInfo();
-    }
-=======
 void Zone::fixupAfterMovingGC() {
   ZoneAllocator::fixupAfterMovingGC();
   fixupInitialShapeTable();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    /*
-     * Warm-up counter for scripts are reset on GC. After discarding code we
-     * need to let it warm back up to get information such as which
-     * opcodes are setting array holes or accessing getter properties.
-     */
-    script->resetWarmUpCounter();
-
-    /*
-     * Make it impossible to use the control flow graphs cached on the
-     * BaselineScript. They get deleted.
-     */
-    if (script->hasBaselineScript()) {
-      script->baselineScript()->setControlFlowGraph(nullptr);
-    }
-
-    // Try to release the script's TypeScript. This should happen after
-    // releasing JIT code because we can't do this when the script still has
-    // JIT code.
-    if (releaseTypes) {
-      script->maybeReleaseTypes();
-    }
-
-    // The optimizedStubSpace will be purged below so make sure ICScript
-    // doesn't point into it. We do this after (potentially) releasing types
-    // because TypeScript contains the ICScript* and there's no need to
-    // purge stubs if we just destroyed the Typescript.
-    if (discardBaselineCode && script->hasICScript()) {
-      script->icScript()->purgeOptimizedStubs(script);
-    }
-  }
-
-  /*
-   * When scripts contains pointers to nursery things, the store buffer
-   * can contain entries that point into the optimized stub space. Since
-   * this method can be called outside the context of a GC, this situation
-   * could result in us trying to mark invalid store buffer entries.
-   *
-   * Defer freeing any allocated blocks until after the next minor GC.
-   */
-  if (discardBaselineCode) {
-    jitZone()->optimizedStubSpace()->freeAllAfterMinorGC(this);
-    jitZone()->purgeIonCacheIRStubInfo();
-  }
-
-  /*
-   * Free all control flow graphs that are cached on BaselineScripts.
-   * Assuming this happens on the main thread and all control flow
-   * graph reads happen on the main thread, this is safe.
-   */
-  jitZone()->cfgSpace()->lifoAlloc().freeAll();
-||||||| merged common ancestors
-    /*
-     * Free all control flow graphs that are cached on BaselineScripts.
-     * Assuming this happens on the main thread and all control flow
-     * graph reads happen on the main thread, this is safe.
-     */
-    jitZone()->cfgSpace()->lifoAlloc().freeAll();
-=======
 bool Zone::addTypeDescrObject(JSContext* cx, HandleObject obj) {
   // Type descriptor objects are always tenured so we don't need post barriers
   // on the set.
@@ -1074,24 +526,8 @@ bool Zone::addTypeDescrObject(JSContext* cx, HandleObject obj) {
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#ifdef JSGC_HASH_TABLE_CHECKS
-void JS::Zone::checkUniqueIdTableAfterMovingGC() {
-  for (auto r = uniqueIds().all(); !r.empty(); r.popFront()) {
-    js::gc::CheckGCThingAfterMovingGC(r.front().key());
-  }
-||||||| merged common ancestors
-#ifdef JSGC_HASH_TABLE_CHECKS
-void
-JS::Zone::checkUniqueIdTableAfterMovingGC()
-{
-    for (auto r = uniqueIds().all(); !r.empty(); r.popFront()) {
-        js::gc::CheckGCThingAfterMovingGC(r.front().key());
-    }
-=======
 void Zone::deleteEmptyCompartment(JS::Compartment* comp) {
   MOZ_ASSERT(comp->zone() == this);
   MOZ_ASSERT(arenas.checkEmptyArenaLists());
@@ -1106,104 +542,30 @@ void Zone::deleteEmptyCompartment(JS::Compartment* comp) {
   comp->destroy(fop);
 
   compartments().clear();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint64_t Zone::gcNumber() {
-  // Zones in use by exclusive threads are not collected, and threads using
-  // them cannot access the main runtime's gcNumber without racing.
-  return usedByHelperThread() ? 0 : runtimeFromMainThread()->gc.gcNumber();
-||||||| merged common ancestors
-uint64_t
-Zone::gcNumber()
-{
-    // Zones in use by exclusive threads are not collected, and threads using
-    // them cannot access the main runtime's gcNumber without racing.
-    return usedByHelperThread() ? 0 : runtimeFromMainThread()->gc.gcNumber();
-=======
 void Zone::setHelperThreadOwnerContext(JSContext* cx) {
   MOZ_ASSERT_IF(cx, TlsContext.get() == cx);
   helperThreadOwnerContext_ = cx;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-js::jit::JitZone* Zone::createJitZone(JSContext* cx) {
-  MOZ_ASSERT(!jitZone_);
-||||||| merged common ancestors
-js::jit::JitZone*
-Zone::createJitZone(JSContext* cx)
-{
-    MOZ_ASSERT(!jitZone_);
-=======
 bool Zone::ownedByCurrentHelperThread() {
   MOZ_ASSERT(usedByHelperThread());
   MOZ_ASSERT(TlsContext.get());
   return helperThreadOwnerContext_ == TlsContext.get();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!cx->runtime()->getJitRuntime(cx)) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    if (!cx->runtime()->getJitRuntime(cx)) {
-        return nullptr;
-    }
-=======
 void Zone::releaseAtoms() {
   MOZ_ASSERT(hasKeptAtoms());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  UniquePtr<jit::JitZone> jitZone(cx->new_<js::jit::JitZone>());
-  if (!jitZone) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    UniquePtr<jit::JitZone> jitZone(cx->new_<js::jit::JitZone>());
-    if (!jitZone) {
-        return nullptr;
-    }
-=======
   keepAtomsCount--;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  jitZone_ = jitZone.release();
-  return jitZone_;
-||||||| merged common ancestors
-    jitZone_ = jitZone.release();
-    return jitZone_;
-=======
   if (!hasKeptAtoms() && purgeAtomsDeferred) {
     purgeAtomsDeferred = false;
     purgeAtomCache();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool Zone::hasMarkedRealms() {
-  for (RealmsInZoneIter realm(this); !realm.done(); realm.next()) {
-    if (realm->marked()) {
-      return true;
-    }
-  }
-  return false;
-||||||| merged common ancestors
-bool
-Zone::hasMarkedRealms()
-{
-    for (RealmsInZoneIter realm(this); !realm.done(); realm.next()) {
-        if (realm->marked()) {
-            return true;
-        }
-    }
-    return false;
-=======
 void Zone::purgeAtomCacheOrDefer() {
   if (hasKeptAtoms()) {
     purgeAtomsDeferred = true;
@@ -1211,40 +573,12 @@ void Zone::purgeAtomCacheOrDefer() {
   }
 
   purgeAtomCache();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool Zone::canCollect() {
-  // The atoms zone cannot be collected while off-thread parsing is taking
-  // place.
-  if (isAtomsZone()) {
-    return !runtimeFromAnyThread()->hasHelperThreadZones();
-  }
-||||||| merged common ancestors
-bool
-Zone::canCollect()
-{
-    // The atoms zone cannot be collected while off-thread parsing is taking
-    // place.
-    if (isAtomsZone()) {
-        return !runtimeFromAnyThread()->hasHelperThreadZones();
-    }
-=======
 void Zone::purgeAtomCache() {
   MOZ_ASSERT(!hasKeptAtoms());
   MOZ_ASSERT(!purgeAtomsDeferred);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Zones that will be or are currently used by other threads cannot be
-  // collected.
-  return !createdForHelperThread();
-||||||| merged common ancestors
-    // Zones that will be or are currently used by other threads cannot be
-    // collected.
-    return !createdForHelperThread();
-=======
   atomCache().clearAndCompact();
 
   // Also purge the dtoa caches so that subsequent lookups populate atom
@@ -1252,20 +586,8 @@ void Zone::purgeAtomCache() {
   for (RealmsInZoneIter r(this); !r.done(); r.next()) {
     r->dtoaCache.purge();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::notifyObservingDebuggers() {
-  JSRuntime* rt = runtimeFromMainThread();
-  JSContext* cx = rt->mainContextFromOwnThread();
-||||||| merged common ancestors
-void
-Zone::notifyObservingDebuggers()
-{
-    JSRuntime* rt = runtimeFromMainThread();
-    JSContext* cx = rt->mainContextFromOwnThread();
-=======
 void Zone::traceAtomCache(JSTracer* trc) {
   MOZ_ASSERT(hasKeptAtoms());
   for (auto r = atomCache().all(); !r.empty(); r.popFront()) {
@@ -1274,21 +596,7 @@ void Zone::traceAtomCache(JSTracer* trc) {
     MOZ_ASSERT(r.front().asPtrUnbarriered() == atom);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (RealmsInZoneIter realms(this); !realms.done(); realms.next()) {
-    RootedGlobalObject global(cx, realms->unsafeUnbarrieredMaybeGlobal());
-    if (!global) {
-      continue;
-    }
-||||||| merged common ancestors
-    for (RealmsInZoneIter realms(this); !realms.done(); realms.next()) {
-        RootedGlobalObject global(cx, realms->unsafeUnbarrieredMaybeGlobal());
-        if (!global) {
-            continue;
-        }
-=======
 void* ZoneAllocator::onOutOfMemory(js::AllocFunction allocFunc,
                                    arena_id_t arena, size_t nbytes,
                                    void* reallocPtr) {
@@ -1298,19 +606,7 @@ void* ZoneAllocator::onOutOfMemory(js::AllocFunction allocFunc,
   return runtimeFromMainThread()->onOutOfMemory(allocFunc, arena, nbytes,
                                                 reallocPtr);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    GlobalObject::DebuggerVector* dbgs = global->getDebuggers();
-    if (!dbgs) {
-      continue;
-    }
-||||||| merged common ancestors
-        GlobalObject::DebuggerVector* dbgs = global->getDebuggers();
-        if (!dbgs) {
-            continue;
-        }
-=======
 void ZoneAllocator::reportAllocationOverflow() const {
   js::ReportAllocationOverflow(nullptr);
 }
@@ -1337,35 +633,8 @@ void ZoneAllocator::maybeTriggerGCForTooMuchMalloc(
 
   counter.recordTrigger(trigger);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    for (GlobalObject::DebuggerVector::Range r = dbgs->all(); !r.empty();
-         r.popFront()) {
-      if (!r.front()->debuggeeIsBeingCollected(rt->gc.majorGCCount())) {
-||||||| merged common ancestors
-        for (GlobalObject::DebuggerVector::Range r = dbgs->all(); !r.empty(); r.popFront()) {
-            if (!r.front()->debuggeeIsBeingCollected(rt->gc.majorGCCount())) {
-=======
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-        fprintf(stderr,
-                "OOM while notifying observing Debuggers of a GC: The "
-                "onGarbageCollection\n"
-                "hook will not be fired for this GC for some Debuggers!\n");
-#endif
-        return;
-      }
-||||||| merged common ancestors
-                fprintf(stderr,
-                        "OOM while notifying observing Debuggers of a GC: The onGarbageCollection\n"
-                        "hook will not be fired for this GC for some Debuggers!\n");
-#endif
-                return;
-            }
-        }
-=======
 
 void MemoryTracker::adopt(MemoryTracker& other) {
   LockGuard<Mutex> lock(mutex);
@@ -1375,27 +644,10 @@ void MemoryTracker::adopt(MemoryTracker& other) {
   for (auto r = other.map.all(); !r.empty(); r.popFront()) {
     if (!map.put(r.front().key(), r.front().value())) {
       oomUnsafe.crash("MemoryTracker::adopt");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-}
-||||||| merged common ancestors
-}
-=======
   }
   other.map.clear();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool Zone::isOnList() const { return listNext_ != NotOnList; }
-||||||| merged common ancestors
-bool
-Zone::isOnList() const
-{
-    return listNext_ != NotOnList;
-}
-=======
   // There may still be ZoneAllocPolicies associated with the old zone since
   // some are not destroyed until the zone itself dies. Instead check there is
   // no memory associated with them and clear their zone pointer in debug builds
@@ -1406,19 +658,7 @@ Zone::isOnList() const
   }
   other.policyMap.clear();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Zone* Zone::nextZone() const {
-  MOZ_ASSERT(isOnList());
-  return listNext_;
-||||||| merged common ancestors
-Zone*
-Zone::nextZone() const
-{
-    MOZ_ASSERT(isOnList());
-    return listNext_;
-=======
 static const char* MemoryUseName(MemoryUse use) {
   switch (use) {
 #  define DEFINE_CASE(Name) \
@@ -1429,18 +669,8 @@ static const char* MemoryUseName(MemoryUse use) {
   }
 
   MOZ_CRASH("Unknown memory use");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::clearTables() {
-  MOZ_ASSERT(regExps().empty());
-||||||| merged common ancestors
-void
-Zone::clearTables()
-{
-    MOZ_ASSERT(regExps().empty());
-=======
 MemoryTracker::MemoryTracker() : mutex(mutexid::MemoryTracker) {}
 
 void MemoryTracker::checkEmptyOnDestroy() {
@@ -1462,66 +692,22 @@ void MemoryTracker::checkEmptyOnDestroy() {
       fprintf(stderr, "  %p 0x%zx\n", r.front().key(), r.front().value());
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  baseShapes().clear();
-  initialShapes().clear();
-||||||| merged common ancestors
-    baseShapes().clear();
-    initialShapes().clear();
-=======
   MOZ_ASSERT(ok);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::fixupAfterMovingGC() { fixupInitialShapeTable(); }
-||||||| merged common ancestors
-void
-Zone::fixupAfterMovingGC()
-{
-    fixupInitialShapeTable();
-}
-=======
 inline bool MemoryTracker::allowMultipleAssociations(MemoryUse use) const {
   // For most uses only one association is possible for each GC thing. Allow a
   // one-to-many relationship only where necessary.
   return use == MemoryUse::RegExpSharedBytecode ||
          use == MemoryUse::BreakpointSite || use == MemoryUse::ForOfPICStub;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool Zone::addTypeDescrObject(JSContext* cx, HandleObject obj) {
-  // Type descriptor objects are always tenured so we don't need post barriers
-  // on the set.
-  MOZ_ASSERT(!IsInsideNursery(obj));
-||||||| merged common ancestors
-bool
-Zone::addTypeDescrObject(JSContext* cx, HandleObject obj)
-{
-    // Type descriptor objects are always tenured so we don't need post barriers
-    // on the set.
-    MOZ_ASSERT(!IsInsideNursery(obj));
-=======
 void MemoryTracker::trackMemory(Cell* cell, size_t nbytes, MemoryUse use) {
   MOZ_ASSERT(cell->isTenured());
 
   LockGuard<Mutex> lock(mutex);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!typeDescrObjects().put(obj)) {
-    ReportOutOfMemory(cx);
-    return false;
-  }
-||||||| merged common ancestors
-    if (!typeDescrObjects().put(obj)) {
-        ReportOutOfMemory(cx);
-        return false;
-    }
-=======
   Key key{cell, use};
   AutoEnterOOMUnsafeRegion oomUnsafe;
   auto ptr = map.lookupForAdd(key);
@@ -1533,30 +719,12 @@ void MemoryTracker::trackMemory(Cell* cell, size_t nbytes, MemoryUse use) {
     ptr->value() += nbytes;
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   if (!map.add(ptr, key, nbytes)) {
     oomUnsafe.crash("MemoryTracker::noteExternalAlloc");
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::deleteEmptyCompartment(JS::Compartment* comp) {
-  MOZ_ASSERT(comp->zone() == this);
-  MOZ_ASSERT(arenas.checkEmptyArenaLists());
-||||||| merged common ancestors
-void
-Zone::deleteEmptyCompartment(JS::Compartment* comp)
-{
-    MOZ_ASSERT(comp->zone() == this);
-    MOZ_ASSERT(arenas.checkEmptyArenaLists());
-=======
 void MemoryTracker::untrackMemory(Cell* cell, size_t nbytes, MemoryUse use) {
   MOZ_ASSERT(cell->isTenured());
 
@@ -1568,68 +736,28 @@ void MemoryTracker::untrackMemory(Cell* cell, size_t nbytes, MemoryUse use) {
     MOZ_CRASH_UNSAFE_PRINTF("Association not found: %p 0x%zx %s", cell, nbytes,
                             MemoryUseName(use));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(compartments().length() == 1);
-  MOZ_ASSERT(compartments()[0] == comp);
-  MOZ_ASSERT(comp->realms().length() == 1);
-||||||| merged common ancestors
-    MOZ_ASSERT(compartments().length() == 1);
-    MOZ_ASSERT(compartments()[0] == comp);
-    MOZ_ASSERT(comp->realms().length() == 1);
-=======
   if (!allowMultipleAssociations(use) && ptr->value() != nbytes) {
     MOZ_CRASH_UNSAFE_PRINTF(
         "Association for %p %s has different size: "
         "expected 0x%zx but got 0x%zx",
         cell, MemoryUseName(use), ptr->value(), nbytes);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Realm* realm = comp->realms()[0];
-  FreeOp* fop = runtimeFromMainThread()->defaultFreeOp();
-  realm->destroy(fop);
-  comp->destroy(fop);
-||||||| merged common ancestors
-    Realm* realm = comp->realms()[0];
-    FreeOp* fop = runtimeFromMainThread()->defaultFreeOp();
-    realm->destroy(fop);
-    comp->destroy(fop);
-=======
   if (ptr->value() < nbytes) {
     MOZ_CRASH_UNSAFE_PRINTF(
         "Association for %p %s size is too small: "
         "expected at least 0x%zx but got 0x%zx",
         cell, MemoryUseName(use), nbytes, ptr->value());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  compartments().clear();
-||||||| merged common ancestors
-    compartments().clear();
-=======
   ptr->value() -= nbytes;
 
   if (ptr->value() == 0) {
     map.remove(ptr);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::setHelperThreadOwnerContext(JSContext* cx) {
-  MOZ_ASSERT_IF(cx, TlsContext.get() == cx);
-  helperThreadOwnerContext_ = cx;
-||||||| merged common ancestors
-void
-Zone::setHelperThreadOwnerContext(JSContext* cx)
-{
-    MOZ_ASSERT_IF(cx, TlsContext.get() == cx);
-    helperThreadOwnerContext_ = cx;
-=======
 void MemoryTracker::swapMemory(Cell* a, Cell* b, MemoryUse use) {
   MOZ_ASSERT(a->isTenured());
   MOZ_ASSERT(b->isTenured());
@@ -1647,22 +775,8 @@ void MemoryTracker::swapMemory(Cell* a, Cell* b, MemoryUse use) {
   if ((sa && !map.put(kb, sa)) || (sb && !map.put(ka, sb))) {
     oomUnsafe.crash("MemoryTracker::swapTrackedMemory");
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool Zone::ownedByCurrentHelperThread() {
-  MOZ_ASSERT(usedByHelperThread());
-  MOZ_ASSERT(TlsContext.get());
-  return helperThreadOwnerContext_ == TlsContext.get();
-||||||| merged common ancestors
-bool
-Zone::ownedByCurrentHelperThread()
-{
-    MOZ_ASSERT(usedByHelperThread());
-    MOZ_ASSERT(TlsContext.get());
-    return helperThreadOwnerContext_ == TlsContext.get();
-=======
 size_t MemoryTracker::getAndRemoveEntry(const Key& key,
                                         LockGuard<Mutex>& lock) {
   auto ptr = map.lookup(key);
@@ -1673,74 +787,25 @@ size_t MemoryTracker::getAndRemoveEntry(const Key& key,
   size_t size = ptr->value();
   map.remove(ptr);
   return size;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::releaseAtoms() {
-  MOZ_ASSERT(hasKeptAtoms());
-||||||| merged common ancestors
-void Zone::releaseAtoms()
-{
-    MOZ_ASSERT(hasKeptAtoms());
-=======
 void MemoryTracker::registerPolicy(ZoneAllocPolicy* policy) {
   LockGuard<Mutex> lock(mutex);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  keepAtomsCount--;
-||||||| merged common ancestors
-    keepAtomsCount--;
-=======
   auto ptr = policyMap.lookupForAdd(policy);
   if (ptr) {
     MOZ_CRASH_UNSAFE_PRINTF("ZoneAllocPolicy %p already registeredd", policy);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!hasKeptAtoms() && purgeAtomsDeferred) {
-    purgeAtomsDeferred = false;
-    purgeAtomCache();
-  }
-||||||| merged common ancestors
-    if (!hasKeptAtoms() && purgeAtomsDeferred) {
-        purgeAtomsDeferred = false;
-        purgeAtomCache();
-    }
-=======
   AutoEnterOOMUnsafeRegion oomUnsafe;
   if (!policyMap.add(ptr, policy, 0)) {
     oomUnsafe.crash("MemoryTracker::incTrackedPolicyMemory");
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::purgeAtomCacheOrDefer() {
-  if (hasKeptAtoms()) {
-    purgeAtomsDeferred = true;
-    return;
-  }
-||||||| merged common ancestors
-void
-Zone::purgeAtomCacheOrDefer()
-{
-    if (hasKeptAtoms()) {
-        purgeAtomsDeferred = true;
-        return;
-    }
-=======
 void MemoryTracker::unregisterPolicy(ZoneAllocPolicy* policy) {
   LockGuard<Mutex> lock(mutex);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  purgeAtomCache();
-||||||| merged common ancestors
-    purgeAtomCache();
-=======
   auto ptr = policyMap.lookup(policy);
   if (!ptr) {
     MOZ_CRASH_UNSAFE_PRINTF("ZoneAllocPolicy %p not found", policy);
@@ -1752,71 +817,19 @@ void MemoryTracker::unregisterPolicy(ZoneAllocPolicy* policy) {
   }
 
   policyMap.remove(ptr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::purgeAtomCache() {
-  MOZ_ASSERT(!hasKeptAtoms());
-  MOZ_ASSERT(!purgeAtomsDeferred);
-||||||| merged common ancestors
-void
-Zone::purgeAtomCache()
-{
-    MOZ_ASSERT(!hasKeptAtoms());
-    MOZ_ASSERT(!purgeAtomsDeferred);
-=======
 void MemoryTracker::incPolicyMemory(ZoneAllocPolicy* policy, size_t nbytes) {
   LockGuard<Mutex> lock(mutex);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  atomCache().clearAndCompact();
-||||||| merged common ancestors
-    atomCache().clearAndCompact();
-=======
   auto ptr = policyMap.lookup(policy);
   if (!ptr) {
     MOZ_CRASH_UNSAFE_PRINTF("ZoneAllocPolicy %p not found", policy);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Also purge the dtoa caches so that subsequent lookups populate atom
-  // cache too.
-  for (RealmsInZoneIter r(this); !r.done(); r.next()) {
-    r->dtoaCache.purge();
-  }
-||||||| merged common ancestors
-    // Also purge the dtoa caches so that subsequent lookups populate atom
-    // cache too.
-    for (RealmsInZoneIter r(this); !r.done(); r.next()) {
-        r->dtoaCache.purge();
-    }
-=======
   ptr->value() += nbytes;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::traceAtomCache(JSTracer* trc) {
-  MOZ_ASSERT(hasKeptAtoms());
-  for (auto r = atomCache().all(); !r.empty(); r.popFront()) {
-    JSAtom* atom = r.front().asPtrUnbarriered();
-    TraceRoot(trc, &atom, "kept atom");
-    MOZ_ASSERT(r.front().asPtrUnbarriered() == atom);
-  }
-||||||| merged common ancestors
-void
-Zone::traceAtomCache(JSTracer* trc)
-{
-    MOZ_ASSERT(hasKeptAtoms());
-    for (auto r = atomCache().all(); !r.empty(); r.popFront()) {
-        JSAtom* atom = r.front().asPtrUnbarriered();
-        TraceRoot(trc, &atom, "kept atom");
-        MOZ_ASSERT(r.front().asPtrUnbarriered() == atom);
-    }
-=======
 void MemoryTracker::decPolicyMemory(ZoneAllocPolicy* policy, size_t nbytes) {
   LockGuard<Mutex> lock(mutex);
 
@@ -1834,25 +847,8 @@ void MemoryTracker::decPolicyMemory(ZoneAllocPolicy* policy, size_t nbytes) {
   }
 
   value -= nbytes;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void* Zone::onOutOfMemory(js::AllocFunction allocFunc, size_t nbytes,
-                          void* reallocPtr) {
-  if (!js::CurrentThreadCanAccessRuntime(runtime_)) {
-    return nullptr;
-  }
-  return runtimeFromMainThread()->onOutOfMemory(allocFunc, nbytes, reallocPtr);
-||||||| merged common ancestors
-void*
-Zone::onOutOfMemory(js::AllocFunction allocFunc, size_t nbytes, void* reallocPtr)
-{
-    if (!js::CurrentThreadCanAccessRuntime(runtime_)) {
-        return nullptr;
-    }
-    return runtimeFromMainThread()->onOutOfMemory(allocFunc, nbytes, reallocPtr);
-=======
 void MemoryTracker::fixupAfterMovingGC() {
   // Update the table after we move GC things. We don't use MovableCellHasher
   // because that would create a difference between debug and release builds.
@@ -1864,18 +860,8 @@ void MemoryTracker::fixupAfterMovingGC() {
       e.rekeyFront(Key{cell, key.use()});
     }
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Zone::reportAllocationOverflow() { js::ReportAllocationOverflow(nullptr); }
-||||||| merged common ancestors
-void
-Zone::reportAllocationOverflow()
-{
-    js::ReportAllocationOverflow(nullptr);
-}
-=======
 inline MemoryTracker::Key::Key(Cell* cell, MemoryUse use)
     : cell_(uint64_t(cell)), use_(uint64_t(use)) {
 #  ifdef JS_64BIT
@@ -1885,152 +871,36 @@ inline MemoryTracker::Key::Key(Cell* cell, MemoryUse use)
   MOZ_ASSERT(this->cell() == cell);
   MOZ_ASSERT(this->use() == use);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void JS::Zone::maybeTriggerGCForTooMuchMalloc(js::gc::MemoryCounter& counter,
-                                              TriggerKind trigger) {
-  JSRuntime* rt = runtimeFromAnyThread();
-
-  if (!js::CurrentThreadCanAccessRuntime(rt)) {
-    return;
-  }
-||||||| merged common ancestors
-void
-JS::Zone::maybeTriggerGCForTooMuchMalloc(js::gc::MemoryCounter& counter, TriggerKind trigger)
-{
-    JSRuntime* rt = runtimeFromAnyThread();
-
-    if (!js::CurrentThreadCanAccessRuntime(rt)) {
-        return;
-    }
-=======
 inline Cell* MemoryTracker::Key::cell() const {
   return reinterpret_cast<Cell*>(cell_);
 }
 inline MemoryUse MemoryTracker::Key::use() const {
   return static_cast<MemoryUse>(use_);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool wouldInterruptGC = rt->gc.isIncrementalGCInProgress() && !isCollecting();
-  if (wouldInterruptGC && !counter.shouldResetIncrementalGC(rt->gc.tunables)) {
-    return;
-  }
-||||||| merged common ancestors
-    bool wouldInterruptGC = rt->gc.isIncrementalGCInProgress() && !isCollecting();
-    if (wouldInterruptGC && !counter.shouldResetIncrementalGC(rt->gc.tunables)) {
-        return;
-    }
-=======
 inline HashNumber MemoryTracker::Hasher::hash(const Lookup& l) {
   return mozilla::HashGeneric(DefaultHasher<Cell*>::hash(l.cell()),
                               DefaultHasher<unsigned>::hash(unsigned(l.use())));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!rt->gc.triggerZoneGC(this, JS::gcreason::TOO_MUCH_MALLOC,
-                            counter.bytes(), counter.maxBytes())) {
-    return;
-  }
-||||||| merged common ancestors
-    if (!rt->gc.triggerZoneGC(this, JS::gcreason::TOO_MUCH_MALLOC,
-                              counter.bytes(), counter.maxBytes()))
-    {
-        return;
-    }
-=======
 inline bool MemoryTracker::Hasher::match(const Key& k, const Lookup& l) {
   return k.cell() == l.cell() && k.use() == l.use();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  counter.recordTrigger(trigger);
-||||||| merged common ancestors
-    counter.recordTrigger(trigger);
-=======
 inline void MemoryTracker::Hasher::rekey(Key& k, const Key& newKey) {
   k = newKey;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-ZoneList::ZoneList() : head(nullptr), tail(nullptr) {}
-||||||| merged common ancestors
-ZoneList::ZoneList()
-  : head(nullptr), tail(nullptr)
-{}
-=======
 #endif  // DEBUG
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-ZoneList::ZoneList(Zone* zone) : head(zone), tail(zone) {
-  MOZ_RELEASE_ASSERT(!zone->isOnList());
-  zone->listNext_ = nullptr;
-}
-||||||| merged common ancestors
-ZoneList::ZoneList(Zone* zone)
-  : head(zone), tail(zone)
-{
-    MOZ_RELEASE_ASSERT(!zone->isOnList());
-    zone->listNext_ = nullptr;
-}
-=======
 ZoneList::ZoneList() : head(nullptr), tail(nullptr) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-ZoneList::~ZoneList() { MOZ_ASSERT(isEmpty()); }
-||||||| merged common ancestors
-ZoneList::~ZoneList()
-{
-    MOZ_ASSERT(isEmpty());
-}
-=======
 ZoneList::ZoneList(Zone* zone) : head(zone), tail(zone) {
   MOZ_RELEASE_ASSERT(!zone->isOnList());
   zone->listNext_ = nullptr;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void ZoneList::check() const {
-#ifdef DEBUG
-  MOZ_ASSERT((head == nullptr) == (tail == nullptr));
-  if (!head) {
-    return;
-  }
-
-  Zone* zone = head;
-  for (;;) {
-    MOZ_ASSERT(zone && zone->isOnList());
-    if (zone == tail) break;
-    zone = zone->listNext_;
-  }
-  MOZ_ASSERT(!zone->listNext_);
-||||||| merged common ancestors
-void
-ZoneList::check() const
-{
-#ifdef DEBUG
-    MOZ_ASSERT((head == nullptr) == (tail == nullptr));
-    if (!head) {
-        return;
-    }
-
-    Zone* zone = head;
-    for (;;) {
-        MOZ_ASSERT(zone && zone->isOnList());
-        if  (zone == tail)
-            break;
-        zone = zone->listNext_;
-    }
-    MOZ_ASSERT(!zone->listNext_);
-=======
 ZoneList::~ZoneList() { MOZ_ASSERT(isEmpty()); }
 
 void ZoneList::check() const {
@@ -2047,7 +917,6 @@ void ZoneList::check() const {
     zone = zone->listNext_;
   }
   MOZ_ASSERT(!zone->listNext_);
->>>>>>> upstream-releases
 #endif
 }
 
@@ -2064,42 +933,13 @@ void ZoneList::append(Zone* zone) {
   transferFrom(singleZone);
 }
 
-<<<<<<< HEAD
-void ZoneList::transferFrom(ZoneList& other) {
-  check();
-  other.check();
-  MOZ_ASSERT(tail != other.tail);
-||||||| merged common ancestors
-void
-ZoneList::transferFrom(ZoneList& other)
-{
-    check();
-    other.check();
-    MOZ_ASSERT(tail != other.tail);
-=======
 void ZoneList::transferFrom(ZoneList& other) {
   check();
   other.check();
   if (!other.head) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (tail) {
-    tail->listNext_ = other.head;
-  } else {
-    head = other.head;
-  }
-  tail = other.tail;
-||||||| merged common ancestors
-    if (tail) {
-        tail->listNext_ = other.head;
-    } else {
-        head = other.head;
-    }
-    tail = other.tail;
-=======
   MOZ_ASSERT(tail != other.tail);
 
   if (tail) {
@@ -2108,7 +948,6 @@ void ZoneList::transferFrom(ZoneList& other) {
     head = other.head;
   }
   tail = other.tail;
->>>>>>> upstream-releases
 
   other.head = nullptr;
   other.tail = nullptr;

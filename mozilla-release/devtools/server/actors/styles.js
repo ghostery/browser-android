@@ -13,42 +13,6 @@ const TrackChangeEmitter = require("devtools/server/actors/utils/track-change-em
 
 // This will also add the "stylesheet" actor type for protocol.js to recognize
 
-<<<<<<< HEAD
-const {pageStyleSpec, styleRuleSpec, ELEMENT_STYLE} = require("devtools/shared/specs/styles");
-
-loader.lazyRequireGetter(this, "CssLogic", "devtools/server/actors/inspector/css-logic", true);
-loader.lazyRequireGetter(this, "SharedCssLogic", "devtools/shared/inspector/css-logic");
-loader.lazyRequireGetter(this, "getDefinedGeometryProperties",
-  "devtools/server/actors/highlighters/geometry-editor", true);
-loader.lazyRequireGetter(this, "isCssPropertyKnown",
-  "devtools/server/actors/css-properties", true);
-loader.lazyRequireGetter(this, "parseNamedDeclarations",
-  "devtools/shared/css/parsing-utils", true);
-loader.lazyRequireGetter(this, "UPDATE_PRESERVING_RULES",
-  "devtools/server/actors/stylesheets", true);
-loader.lazyRequireGetter(this, "UPDATE_GENERAL",
-  "devtools/server/actors/stylesheets", true);
-loader.lazyRequireGetter(this, "findCssSelector",
-  "devtools/shared/inspector/css-logic", true);
-loader.lazyRequireGetter(this, "CSSRuleTypeName",
-  "devtools/shared/inspector/css-logic", true);
-||||||| merged common ancestors
-const {pageStyleSpec, styleRuleSpec, ELEMENT_STYLE} = require("devtools/shared/specs/styles");
-
-loader.lazyRequireGetter(this, "CssLogic", "devtools/server/actors/inspector/css-logic", true);
-loader.lazyRequireGetter(this, "SharedCssLogic", "devtools/shared/inspector/css-logic");
-loader.lazyRequireGetter(this, "getDefinedGeometryProperties",
-  "devtools/server/actors/highlighters/geometry-editor", true);
-loader.lazyRequireGetter(this, "isCssPropertyKnown",
-  "devtools/server/actors/css-properties", true);
-loader.lazyRequireGetter(this, "parseNamedDeclarations",
-  "devtools/shared/css/parsing-utils", true);
-loader.lazyRequireGetter(this, "UPDATE_PRESERVING_RULES",
-  "devtools/server/actors/stylesheets", true);
-loader.lazyRequireGetter(this, "UPDATE_GENERAL",
-  "devtools/server/actors/stylesheets", true);
-loader.lazyRequireGetter(this, "findCssSelector", "devtools/shared/inspector/css-logic", true);
-=======
 const {
   pageStyleSpec,
   styleRuleSpec,
@@ -120,7 +84,6 @@ loader.lazyRequireGetter(
   "devtools/shared/inspector/css-logic",
   true
 );
->>>>>>> upstream-releases
 
 loader.lazyGetter(this, "PSEUDO_ELEMENTS", () => {
   return InspectorUtils.getCSSPseudoElementNames();
@@ -202,25 +165,9 @@ var PageStyleActor = protocol.ActorClassWithSpec(pageStyleSpec, {
     return this.inspector.conn;
   },
 
-<<<<<<< HEAD
   get ownerWindow() {
     return this.inspector.targetActor.window;
   },
-
-  form: function(detail) {
-    if (detail === "actorid") {
-      return this.actorID;
-    }
-||||||| merged common ancestors
-  form: function(detail) {
-    if (detail === "actorid") {
-      return this.actorID;
-    }
-=======
-  get ownerWindow() {
-    return this.inspector.targetActor.window;
-  },
->>>>>>> upstream-releases
 
   form: function() {
     // We need to use CSS from the inspected window in order to use CSS.supports() and
@@ -429,17 +376,6 @@ var PageStyleActor = protocol.ActorClassWithSpec(pageStyleSpec, {
     const contentDocument = actualNode.ownerDocument;
     // We don't get fonts for a node, but for a range
     const rng = contentDocument.createRange();
-<<<<<<< HEAD
-    const isPseudoElement =
-      Boolean(CssLogic.getBindingElementAndPseudo(actualNode).pseudo);
-    if (isPseudoElement) {
-      rng.selectNodeContents(actualNode);
-    } else {
-      rng.selectNode(actualNode);
-    }
-||||||| merged common ancestors
-    rng.selectNodeContents(actualNode);
-=======
     const isPseudoElement = Boolean(
       CssLogic.getBindingElementAndPseudo(actualNode).pseudo
     );
@@ -448,7 +384,6 @@ var PageStyleActor = protocol.ActorClassWithSpec(pageStyleSpec, {
     } else {
       rng.selectNode(actualNode);
     }
->>>>>>> upstream-releases
     const fonts = InspectorUtils.getUsedFontFaces(rng);
     const fontsArray = [];
 
@@ -1180,22 +1115,11 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
     if (CSSRule.isInstance(item)) {
       this.type = item.type;
       this.rawRule = item;
-<<<<<<< HEAD
-      this._computeRuleIndex();
-      if ((this.type === CSSRule.STYLE_RULE ||
-           this.type === CSSRule.KEYFRAME_RULE) &&
-          this.rawRule.parentStyleSheet) {
-||||||| merged common ancestors
-      if ((this.type === CSSRule.STYLE_RULE ||
-           this.type === CSSRule.KEYFRAME_RULE) &&
-          this.rawRule.parentStyleSheet) {
-=======
       this._computeRuleIndex();
       if (
         SUPPORTED_RULE_TYPES.includes(this.type) &&
         this.rawRule.parentStyleSheet
       ) {
->>>>>>> upstream-releases
         this.line = InspectorUtils.getRelativeRuleLine(this.rawRule);
         this.column = InspectorUtils.getRuleColumn(this.rawRule);
         this._parentSheet = this.rawRule.parentStyleSheet;
@@ -1347,96 +1271,6 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
         href:
           this.sheetActor.href || this.sheetActor.window.location.toString(),
         id: this.sheetActor.actorID,
-        index: this.sheetActor.styleSheetIndex,
-        // Whether the stylesheet lives in a different frame than the host document.
-        isFramed: this.sheetActor.ownerWindow !== this.sheetActor.window,
-      };
-      // Used to differentiate between changes to rules with identical selectors.
-      data.ruleIndex = this._ruleIndex;
-    }
-
-    return data;
-  },
-
-  /**
-   * Return an array with StyleRuleActor instances for each of this rule's ancestor rules
-   * (@media, @supports, @keyframes, etc) obtained by recursively reading rule.parentRule.
-   * If the rule has no ancestors, return an empty array.
-   *
-   * @return {Array}
-   */
-  get ancestorRules() {
-    const ancestors = [];
-    let rule = this.rawRule;
-
-    while (rule.parentRule) {
-      ancestors.push(this.pageStyle._styleRef(rule.parentRule));
-      rule = rule.parentRule;
-    }
-
-    return ancestors;
-  },
-
-  /**
-   * Return an object with information about this rule used for tracking changes.
-   * It will be decorated with information about a CSS change before being tracked.
-   *
-   * It contains:
-   * - the rule selector (or generated selectror for inline styles)
-   * - the rule's host stylesheet (or element for inline styles)
-   * - the rule's ancestor rules (@media, @supports, @keyframes), if any
-   * - the rule's position within its ancestor tree, if any
-   *
-   * @return {Object}
-   */
-  get metadata() {
-    const data = {};
-    // Collect information about the rule's ancestors (@media, @supports, @keyframes).
-    // Used to show context for this change in the UI and to match the rule for undo/redo.
-    data.ancestors = this.ancestorRules.map(rule => {
-      return {
-        // Rule type as number defined by CSSRule.type (ex: 4, 7, 12)
-        // @see https://developer.mozilla.org/en-US/docs/Web/API/CSSRule
-        type: rule.rawRule.type,
-        // Rule type as human-readable string (ex: "@media", "@supports", "@keyframes")
-        typeName: CSSRuleTypeName[rule.rawRule.type],
-        // Conditions of @media and @supports rules (ex: "min-width: 1em")
-        conditionText: rule.rawRule.conditionText,
-        // Name of @keyframes rule; refrenced by the animation-name CSS property.
-        name: rule.rawRule.name,
-        // Selector of individual @keyframe rule within a @keyframes rule (ex: 0%, 100%).
-        keyText: rule.rawRule.keyText,
-        // Array with the indexes of this rule and its ancestors within the CSS rule tree.
-        ruleIndex: rule._ruleIndex,
-      };
-    });
-
-    // For changes in element style attributes, generate a unique selector.
-    if (this.type === ELEMENT_STYLE) {
-      // findCssSelector() fails on XUL documents. Catch and silently ignore that error.
-      try {
-        data.selector = findCssSelector(this.rawNode);
-      } catch (err) {}
-
-      data.source = {
-        type: "element",
-        // Used to differentiate between elements which match the same generated selector
-        // but live in different documents (ex: host document and iframe).
-        href: this.rawNode.baseURI,
-        // Element style attributes don't have a rule index; use the generated selector.
-        index: data.selector,
-        // Whether the element lives in a different frame than the host document.
-        isFramed: this.rawNode.ownerGlobal !== this.pageStyle.ownerWindow,
-      };
-      data.ruleIndex = 0;
-    } else {
-      data.selector = (this.type === CSSRule.KEYFRAME_RULE)
-        ? this.rawRule.keyText
-        : this.rawRule.selectorText;
-      data.source = {
-        // Inline stylesheets have a null href; Use window URL instead.
-        type: this.sheetActor.href ? "stylesheet" : "inline",
-        href: this.sheetActor.href || this.sheetActor.window.location.toString(),
         index: this.sheetActor.styleSheetIndex,
         // Whether the stylesheet lives in a different frame than the host document.
         isFramed: this.sheetActor.ownerWindow !== this.sheetActor.window,
@@ -1859,22 +1693,12 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
       this.logDeclarationChange(mod);
       if (mod.type === "set") {
         tempElement.style.setProperty(mod.name, mod.value, mod.priority || "");
-<<<<<<< HEAD
-        this.rawStyle.setProperty(mod.name,
-          tempElement.style.getPropertyValue(mod.name), mod.priority || "");
-      } else if (mod.type === "remove" || mod.type === "disable") {
-||||||| merged common ancestors
-        this.rawStyle.setProperty(mod.name,
-          tempElement.style.getPropertyValue(mod.name), mod.priority || "");
-      } else if (mod.type === "remove") {
-=======
         this.rawStyle.setProperty(
           mod.name,
           tempElement.style.getPropertyValue(mod.name),
           mod.priority || ""
         );
       } else if (mod.type === "remove" || mod.type === "disable") {
->>>>>>> upstream-releases
         this.rawStyle.removeProperty(mod.name);
       }
     }
@@ -1956,51 +1780,6 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
    * @param {Object} change
    *        Data about a modification to a declaration. @see |modifyProperties()|
    */
-<<<<<<< HEAD
-  logDeclarationChange(change) {
-    // Position of the declaration within its rule.
-    const index = change.index;
-    // Destructure properties from the previous CSS declaration at this index, if any,
-    // to new variable names to indicate the previous state.
-    let {
-      value: prevValue,
-      name: prevName,
-      priority: prevPriority,
-      commentOffsets,
-    } = this._declarations[index] || {};
-    // A declaration is disabled if it has a `commentOffsets` array.
-    // Here we type coerce the value to a boolean with double-bang (!!)
-    const prevDisabled = !!commentOffsets;
-    // Append the "!important" string if defined in the previous priority flag.
-    prevValue = (prevValue && prevPriority) ? `${prevValue} !important` : prevValue;
-
-    const data = this.metadata;
-||||||| merged common ancestors
-  logChange(change) {
-    const prevValue = this._declarations[change.index]
-      ? this._declarations[change.index].value
-      : null;
-    const prevName = this._declarations[change.index]
-      ? this._declarations[change.index].name
-      : null;
-
-    // Metadata about a change.
-    const data = {};
-    data.type = change.type;
-    data.selector = this.rawRule.selectorText;
-
-    // For inline style changes, generate a unique selector and pass the node tag.
-    if (this.type === ELEMENT_STYLE) {
-      data.tag = this.rawNode.tagName;
-      data.href = "inline";
-      // findCssSelector() fails on XUL documents. Catch and silently ignore that error.
-      try {
-        data.selector = findCssSelector(this.rawNode);
-      } catch (err) {}
-    } else {
-      data.href = this._parentSheet.href || "inline stylesheet";
-    }
-=======
   logDeclarationChange(change) {
     // Position of the declaration within its rule.
     const index = change.index;
@@ -2020,7 +1799,6 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
       prevValue && prevPriority ? `${prevValue} !important` : prevValue;
 
     const data = this.metadata;
->>>>>>> upstream-releases
 
     switch (change.type) {
       case "set":
@@ -2029,20 +1807,6 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
         // Otherwise, a new declaration is being created or the value of an existing
         // declaration is being updated. In that case, use the provided `change.name`.
         const name = change.newName ? change.newName : change.name;
-<<<<<<< HEAD
-        // Append the "!important" string if defined in the incoming priority flag.
-        const newValue = change.priority ? `${change.value} !important` : change.value;
-        // Reuse the previous value string, when the property is renamed.
-        // Otherwise, use the incoming value string.
-        const value = change.newName ? prevValue : newValue;
-
-        data.add = [{ property: name, value, index }];
-||||||| merged common ancestors
-        // Reuse the previous value when the property is being renamed.
-        const value = change.newName ? prevValue : change.value;
-
-        data.add = { property: name, value };
-=======
         // Append the "!important" string if defined in the incoming priority flag.
         const newValue = change.priority
           ? `${change.value} !important`
@@ -2052,7 +1816,6 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
         const value = change.newName ? prevValue : newValue;
 
         data.add = [{ property: name, value, index }];
->>>>>>> upstream-releases
         // If there is a previous value, log its removal together with the previous
         // property name. Using the previous name handles the case for renaming a property
         // and is harmless when updating an existing value (the name stays the same).
@@ -2085,54 +1848,7 @@ var StyleRuleActor = protocol.ActorClassWithSpec(styleRuleSpec, {
         break;
     }
 
-<<<<<<< HEAD
     TrackChangeEmitter.trackChange(data);
-  },
-
-  /**
-   * Helper method for tracking CSS changes. Logs the change of this rule's selector as
-   * two operations: a rule removal, including its CSS declarations, using the old
-   * selector and a rule addition using the new selector.
-   *
-   * @param {String} oldSelector
-   *        This rule's previous selector.
-   * @param {String} newSelector
-   *        This rule's new selector.
-   */
-  logSelectorChange(oldSelector, newSelector) {
-    // Build a collection of CSS declarations existing on this rule.
-    const declarations = this._declarations.reduce((acc, decl, index) => {
-      acc.push({
-        property: decl.name,
-        value: decl.priority ? decl.value + " !important" : decl.value,
-        index,
-      });
-      return acc;
-    }, []);
-
-    // Logging two distinct operations to remove the old rule and add a new one.
-    // TODO: Make TrackChangeEmitter support transactions so these two operations are
-    // grouped together when implementing undo/redo.
-    TrackChangeEmitter.trackChange({
-      ...this.metadata,
-      type: "rule-remove",
-      add: null,
-      remove: declarations,
-      selector: oldSelector,
-    });
-
-    TrackChangeEmitter.trackChange({
-      ...this.metadata,
-      type: "rule-add",
-      add: declarations,
-      remove: null,
-      selector: newSelector,
-    });
-||||||| merged common ancestors
-    this.emit("track-change", data);
-=======
-    TrackChangeEmitter.trackChange(data);
->>>>>>> upstream-releases
   },
 
   /**

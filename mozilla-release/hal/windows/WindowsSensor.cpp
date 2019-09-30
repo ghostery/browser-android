@@ -35,11 +35,11 @@ class SensorEvent final : public ISensorEvents {
     return count;
   }
 
-  STDMETHODIMP QueryInterface(REFIID iid, void **ppv) {
+  STDMETHODIMP QueryInterface(REFIID iid, void** ppv) {
     if (iid == IID_IUnknown) {
-      *ppv = static_cast<IUnknown *>(this);
+      *ppv = static_cast<IUnknown*>(this);
     } else if (iid == IID_ISensorEvents) {
-      *ppv = static_cast<ISensorEvents *>(this);
+      *ppv = static_cast<ISensorEvents*>(this);
     } else {
       return E_NOINTERFACE;
     }
@@ -49,15 +49,8 @@ class SensorEvent final : public ISensorEvents {
 
   // ISensorEvents interface
 
-<<<<<<< HEAD
-  STDMETHODIMP OnEvent(ISensor *aSensor, REFGUID aId,
-                       IPortableDeviceValues *aData) {
-||||||| merged common ancestors
-  STDMETHODIMP OnEvent(ISensor *aSensor, REFGUID aId, IPortableDeviceValues *aData) {
-=======
   STDMETHODIMP OnEvent(ISensor* aSensor, REFGUID aId,
                        IPortableDeviceValues* aData) {
->>>>>>> upstream-releases
     return S_OK;
   }
 

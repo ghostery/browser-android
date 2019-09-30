@@ -18,15 +18,8 @@
 
 class SkExecutor;
 
-<<<<<<< HEAD
-#if SK_SUPPORT_GPU
-struct GrContextOptions {
-||||||| merged common ancestors
-struct GrContextOptions {
-=======
 #if SK_SUPPORT_GPU
 struct SK_API GrContextOptions {
->>>>>>> upstream-releases
     enum class Enable {
         /** Forces an option to be disabled. */
         kNo,
@@ -140,19 +133,6 @@ struct SK_API GrContextOptions {
     bool fAvoidStencilBuffers = false;
 
     /**
-     * When specifing new data for a vertex/index buffer that replaces old data Ganesh can give
-     * a hint to the driver that the previous data will not be used in future draws like this:
-     *  glBufferData(GL_..._BUFFER, size, NULL, usage);       //<--hint, NULL means
-     *  glBufferSubData(GL_..._BUFFER, 0, lessThanSize, data) //   old data can't be
-     *                                                        //   used again.
-     * However, this can be an unoptimization on some platforms, esp. Chrome.
-     * Chrome's cmd buffer will create a new allocation and memset the whole thing
-     * to zero (for security reasons).
-     * Defaults to the value of GR_GL_USE_BUFFER_DATA_NULL_HINT #define (which is, by default, 1).
-     */
-    Enable fUseGLBufferDataNullHint = Enable::kDefault;
-
-    /**
      * If true, texture fetches from mip-mapped textures will be biased to read larger MIP levels.
      * This has the effect of sharpening those textures, at the cost of some aliasing, and possible
      * performance impact.
@@ -245,25 +225,7 @@ struct SK_API GrContextOptions {
     /**
      * Include or exclude specific GPU path renderers.
      */
-<<<<<<< HEAD
     GpuPathRenderers fGpuPathRenderers = GpuPathRenderers::kAll;
-
-    /**
-     * Disables using multiple texture units to batch multiple images into a single draw on
-     * supported GPUs.
-     */
-    bool fDisableImageMultitexturing = false;
-||||||| merged common ancestors
-    GpuPathRenderers fGpuPathRenderers = GpuPathRenderers::kDefault;
-
-    /**
-     * Disables using multiple texture units to batch multiple images into a single draw on
-     * supported GPUs.
-     */
-    bool fDisableImageMultitexturing = false;
-=======
-    GpuPathRenderers fGpuPathRenderers = GpuPathRenderers::kAll;
->>>>>>> upstream-releases
 #endif
 
 #if SK_SUPPORT_ATLAS_TEXT

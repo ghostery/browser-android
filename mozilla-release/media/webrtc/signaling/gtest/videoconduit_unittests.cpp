@@ -866,24 +866,11 @@ TEST_F(VideoConduitTest, TestConfigureSendMediaCodecSimulcastScreenshare) {
   encoding3.constraints.scaleDownBy = 4;
 
   VideoCodecConfig codecConfig(120, "VP8", constraints);
-<<<<<<< HEAD
-  codecConfig.mSimulcastEncodings.push_back(encoding);
-  codecConfig.mSimulcastEncodings.push_back(encoding2);
-  codecConfig.mSimulcastEncodings.push_back(encoding3);
-  ec =
-      mVideoConduit->ConfigureCodecMode(webrtc::VideoCodecMode::kScreensharing);
-||||||| merged common ancestors
-  codecConfig.mSimulcastEncodings.push_back(encoding);
-  codecConfig.mSimulcastEncodings.push_back(encoding2);
-  codecConfig.mSimulcastEncodings.push_back(encoding3);
-  ec = mVideoConduit->ConfigureCodecMode(webrtc::VideoCodecMode::kScreensharing);
-=======
   codecConfig.mEncodings.push_back(encoding);
   codecConfig.mEncodings.push_back(encoding2);
   codecConfig.mEncodings.push_back(encoding3);
   ec =
       mVideoConduit->ConfigureCodecMode(webrtc::VideoCodecMode::kScreensharing);
->>>>>>> upstream-releases
   ASSERT_EQ(ec, kMediaConduitNoError);
   ec = mVideoConduit->ConfigureSendMediaCodec(&codecConfig);
   ASSERT_EQ(ec, kMediaConduitNoError);
@@ -897,16 +884,8 @@ TEST_F(VideoConduitTest, TestConfigureSendMediaCodecSimulcastScreenshare) {
 TEST_F(VideoConduitTest, TestReconfigureReceiveMediaCodecs) {
   MediaConduitErrorCode ec;
   EncodingConstraints constraints;
-<<<<<<< HEAD
-  VideoCodecConfig::SimulcastEncoding encoding;
-  std::vector<UniquePtr<mozilla::VideoCodecConfig>> codecs;
-||||||| merged common ancestors
-  VideoCodecConfig::SimulcastEncoding encoding;
-  std::vector<VideoCodecConfig*> codecs;
-=======
   VideoCodecConfig::Encoding encoding;
   std::vector<UniquePtr<mozilla::VideoCodecConfig>> codecs;
->>>>>>> upstream-releases
 
   WebrtcGmpPCHandleSetter setter("hi there");
 

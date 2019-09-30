@@ -271,16 +271,8 @@ class Chrome(BrowserSetup):
                 install = self.prompt_install("chromedriver")
 
                 if install:
-<<<<<<< HEAD
-                    logger.info("Downloading chromedriver")
-                    webdriver_binary = self.browser.install_webdriver(dest=self.venv.bin_path)
-||||||| merged common ancestors
-                    print("Downloading chromedriver")
-                    webdriver_binary = self.browser.install_webdriver(dest=self.venv.bin_path)
-=======
                     logger.info("Downloading chromedriver")
                     webdriver_binary = self.browser.install_webdriver(dest=self.venv.bin_path, browser_binary=kwargs["binary"])
->>>>>>> upstream-releases
             else:
                 logger.info("Using webdriver binary %s" % webdriver_binary)
 
@@ -291,23 +283,8 @@ class Chrome(BrowserSetup):
         if kwargs["browser_channel"] == "dev":
             logger.info("Automatically turning on experimental features for Chrome Dev")
             kwargs["binary_args"].append("--enable-experimental-web-platform-features")
-<<<<<<< HEAD
-            # TODO(foolip): remove after unified plan is enabled on Chrome stable
-            kwargs["binary_args"].append("--enable-features=RTCUnifiedPlanByDefault")
-
-        # Allow audio autoplay without a user gesture.
-        kwargs["binary_args"].append("--autoplay-policy=no-user-gesture-required")
-
-        # Allow WebRTC tests to call getUserMedia.
-        kwargs["binary_args"] += ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"]
-||||||| merged common ancestors
-
-        # Allow WebRTC tests to call getUserMedia.
-        kwargs["binary_args"] += ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"]
-=======
             # HACK(Hexcles): work around https://github.com/web-platform-tests/wpt/issues/16448
             kwargs["webdriver_args"].append("--disable-build-check")
->>>>>>> upstream-releases
 
 
 class ChromeAndroid(BrowserSetup):
@@ -540,23 +517,6 @@ def setup_logging(kwargs, default_config=None):
 
     global logger
 
-<<<<<<< HEAD
-    # Use the grouped formatter by default where mozlog 3.9+ is installed
-    if default_config is None:
-        if hasattr(mozlog.formatters, "GroupingFormatter"):
-            default_formatter = "grouped"
-        else:
-            default_formatter = "mach"
-        default_config = {default_formatter: sys.stdout}
-    wptrunner.setup_logging(kwargs, default_config)
-    logger = wptrunner.logger
-
-
-def setup_wptrunner(venv, prompt=True, install_browser=False, **kwargs):
-    from wptrunner import wptcommandline
-
-||||||| merged common ancestors
-=======
     # Use the grouped formatter by default where mozlog 3.9+ is installed
     if default_config is None:
         if hasattr(mozlog.formatters, "GroupingFormatter"):
@@ -572,7 +532,6 @@ def setup_wptrunner(venv, prompt=True, install_browser=False, **kwargs):
 def setup_wptrunner(venv, prompt=True, install_browser=False, **kwargs):
     from wptrunner import wptcommandline
 
->>>>>>> upstream-releases
     kwargs = utils.Kwargs(kwargs.iteritems())
 
     product_parts = kwargs["product"].split(":")
@@ -613,22 +572,6 @@ def setup_wptrunner(venv, prompt=True, install_browser=False, **kwargs):
 
     if kwargs["channel"]:
         channel = install.get_channel(kwargs["product"], kwargs["channel"])
-<<<<<<< HEAD
-        if channel is not None:
-            if channel != kwargs["channel"]:
-                logger.info("Interpreting channel '%s' as '%s'" % (kwargs["channel"],
-                                                                   channel))
-            kwargs["browser_channel"] = channel
-        else:
-            logger.info("Valid channels for %s not known; using argument unmodified" % kwargs["product"])
-    del kwargs["channel"]
-||||||| merged common ancestors
-        if channel != kwargs["channel"]:
-            logger.info("Interpreting channel '%s' as '%s'" % (kwargs["channel"],
-                                                               channel))
-        kwargs["browser_channel"] = channel
-    del kwargs["channel"]
-=======
         if channel is not None:
             if channel != kwargs["channel"]:
                 logger.info("Interpreting channel '%s' as '%s'" % (kwargs["channel"],
@@ -638,7 +581,6 @@ def setup_wptrunner(venv, prompt=True, install_browser=False, **kwargs):
             logger.info("Valid channels for %s not known; using argument unmodified" % kwargs["product"])
             kwargs["browser_channel"] = kwargs["channel"]
         del kwargs["channel"]
->>>>>>> upstream-releases
 
     if install_browser:
         logger.info("Installing browser")
@@ -659,13 +601,6 @@ def setup_wptrunner(venv, prompt=True, install_browser=False, **kwargs):
         kwargs["browser_version"] = setup_cls.browser.version(binary=kwargs.get("binary"),
                                                               webdriver_binary=kwargs.get("webdriver_binary"))
 
-<<<<<<< HEAD
-    kwargs['browser_version'] = setup_cls.browser.version(binary=kwargs.get("binary"),
-                                                          webdriver_binary=kwargs.get("webdriver_binary"))
-||||||| merged common ancestors
-    kwargs['browser_version'] = setup_cls.browser.version(kwargs.get("binary"))
-=======
->>>>>>> upstream-releases
     return kwargs
 
 

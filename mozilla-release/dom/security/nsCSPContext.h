@@ -37,123 +37,6 @@ namespace mozilla {
 namespace dom {
 class Element;
 }
-<<<<<<< HEAD
-}  // namespace mozilla
-
-class nsCSPContext : public nsIContentSecurityPolicy {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSICONTENTSECURITYPOLICY
-  NS_DECL_NSISERIALIZABLE
-
- protected:
-  virtual ~nsCSPContext();
-
- public:
-  nsCSPContext();
-
-  /**
-   * SetRequestContext() needs to be called before the innerWindowID
-   * is initialized on the document. Use this function to call back to
-   * flush queued up console messages and initalize the innerWindowID.
-   */
-  void flushConsoleMessages();
-
-  void logToConsole(const char* aName, const char16_t** aParams,
-                    uint32_t aParamsLength, const nsAString& aSourceName,
-                    const nsAString& aSourceLine, uint32_t aLineNumber,
-                    uint32_t aColumnNumber, uint32_t aSeverityFlag);
-
-  /**
-   * Construct SecurityPolicyViolationEventInit structure.
-   *
-   * @param aBlockedURI
-   *        A nsIURI: the source of the violation.
-   * @param aOriginalUri
-   *        The original URI if the blocked content is a redirect, else null
-   * @param aViolatedDirective
-   *        the directive that was violated (string).
-   * @param aSourceFile
-   *        name of the file containing the inline script violation
-   * @param aScriptSample
-   *        a sample of the violating inline script
-   * @param aLineNum
-   *        source line number of the violation (if available)
-   * @param aColumnNum
-   *        source column number of the violation (if available)
-   * @param aViolationEventInit
-   *        The output
-   */
-  nsresult GatherSecurityPolicyViolationEventData(
-      nsIURI* aBlockedURI, const nsACString& aBlockedString,
-      nsIURI* aOriginalURI, nsAString& aViolatedDirective,
-      uint32_t aViolatedPolicyIndex, nsAString& aSourceFile,
-      nsAString& aScriptSample, uint32_t aLineNum, uint32_t aColumnNum,
-||||||| merged common ancestors
-}
-
-class nsCSPContext : public nsIContentSecurityPolicy
-{
-  public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSICONTENTSECURITYPOLICY
-    NS_DECL_NSISERIALIZABLE
-
-  protected:
-    virtual ~nsCSPContext();
-
-  public:
-    nsCSPContext();
-
-    /**
-     * SetRequestContext() needs to be called before the innerWindowID
-     * is initialized on the document. Use this function to call back to
-     * flush queued up console messages and initalize the innerWindowID.
-     */
-    void flushConsoleMessages();
-
-    void logToConsole(const char* aName,
-                      const char16_t** aParams,
-                      uint32_t aParamsLength,
-                      const nsAString& aSourceName,
-                      const nsAString& aSourceLine,
-                      uint32_t aLineNumber,
-                      uint32_t aColumnNumber,
-                      uint32_t aSeverityFlag);
-
-
-
-    /**
-     * Construct SecurityPolicyViolationEventInit structure.
-     *
-     * @param aBlockedURI
-     *        A nsIURI: the source of the violation.
-     * @param aOriginalUri
-     *        The original URI if the blocked content is a redirect, else null
-     * @param aViolatedDirective
-     *        the directive that was violated (string).
-     * @param aSourceFile
-     *        name of the file containing the inline script violation
-     * @param aScriptSample
-     *        a sample of the violating inline script
-     * @param aLineNum
-     *        source line number of the violation (if available)
-     * @param aColumnNum
-     *        source column number of the violation (if available)
-     * @param aViolationEventInit
-     *        The output
-     */
-    nsresult GatherSecurityPolicyViolationEventData(
-      nsIURI* aBlockedURI,
-      const nsACString& aBlockedString,
-      nsIURI* aOriginalURI,
-      nsAString& aViolatedDirective,
-      uint32_t aViolatedPolicyIndex,
-      nsAString& aSourceFile,
-      nsAString& aScriptSample,
-      uint32_t aLineNum,
-      uint32_t aColumnNum,
-=======
 namespace ipc {
 class ContentSecurityPolicy;
 }
@@ -217,7 +100,6 @@ class nsCSPContext : public nsIContentSecurityPolicy {
       nsIURI* aOriginalURI, nsAString& aViolatedDirective,
       uint32_t aViolatedPolicyIndex, nsAString& aSourceFile,
       nsAString& aScriptSample, uint32_t aLineNum, uint32_t aColumnNum,
->>>>>>> upstream-releases
       mozilla::dom::SecurityPolicyViolationEventInit& aViolationEventInit);
 
   nsresult SendReports(
@@ -256,88 +138,6 @@ class nsCSPContext : public nsIContentSecurityPolicy {
     return std::max(
         mozilla::StaticPrefs::security_csp_reporting_script_sample_max_length(),
         0);
-<<<<<<< HEAD
-  }
-
- private:
-  bool permitsInternal(CSPDirective aDir,
-                       mozilla::dom::Element* aTriggeringElement,
-                       nsICSPEventListener* aCSPEventListener,
-                       nsIURI* aContentLocation, nsIURI* aOriginalURIIfRedirect,
-                       const nsAString& aNonce, bool aIsPreload, bool aSpecific,
-                       bool aSendViolationReports,
-                       bool aSendContentLocationInViolationReports,
-                       bool aParserCreated);
-
-  // helper to report inline script/style violations
-  void reportInlineViolation(nsContentPolicyType aContentType,
-                             mozilla::dom::Element* aTriggeringElement,
-                             nsICSPEventListener* aCSPEventListener,
-                             const nsAString& aNonce, const nsAString& aContent,
-                             const nsAString& aViolatedDirective,
-                             uint32_t aViolatedPolicyIndex,
-                             uint32_t aLineNumber, uint32_t aColumnNumber);
-
-  nsString mReferrer;
-  uint64_t mInnerWindowID;  // used for web console logging
-  nsTArray<nsCSPPolicy*> mPolicies;
-  nsCOMPtr<nsIURI> mSelfURI;
-  nsCOMPtr<nsILoadGroup> mCallingChannelLoadGroup;
-  nsWeakPtr mLoadingContext;
-  // The CSP hangs off the principal, so let's store a raw pointer of the
-  // principal to avoid memory leaks. Within the destructor of the principal we
-  // explicitly set mLoadingPrincipal to null.
-  nsIPrincipal* mLoadingPrincipal;
-
-  // helper members used to queue up web console messages till
-  // the windowID becomes available. see flushConsoleMessages()
-  nsTArray<ConsoleMsgQueueElem> mConsoleMsgQueue;
-  bool mQueueUpMessages;
-  nsCOMPtr<nsIEventTarget> mEventTarget;
-||||||| merged common ancestors
-    }
-
-  private:
-    bool permitsInternal(CSPDirective aDir,
-                         mozilla::dom::Element* aTriggeringElement,
-                         nsICSPEventListener* aCSPEventListener,
-                         nsIURI* aContentLocation,
-                         nsIURI* aOriginalURIIfRedirect,
-                         const nsAString& aNonce,
-                         bool aIsPreload,
-                         bool aSpecific,
-                         bool aSendViolationReports,
-                         bool aSendContentLocationInViolationReports,
-                         bool aParserCreated);
-
-    // helper to report inline script/style violations
-    void reportInlineViolation(nsContentPolicyType aContentType,
-                               mozilla::dom::Element* aTriggeringElement,
-                               nsICSPEventListener* aCSPEventListener,
-                               const nsAString& aNonce,
-                               const nsAString& aContent,
-                               const nsAString& aViolatedDirective,
-                               uint32_t aViolatedPolicyIndex,
-                               uint32_t aLineNumber,
-                               uint32_t aColumnNumber);
-
-    nsString                                   mReferrer;
-    uint64_t                                   mInnerWindowID; // used for web console logging
-    nsTArray<nsCSPPolicy*>                     mPolicies;
-    nsCOMPtr<nsIURI>                           mSelfURI;
-    nsCOMPtr<nsILoadGroup>                     mCallingChannelLoadGroup;
-    nsWeakPtr                                  mLoadingContext;
-    // The CSP hangs off the principal, so let's store a raw pointer of the principal
-    // to avoid memory leaks. Within the destructor of the principal we explicitly
-    // set mLoadingPrincipal to null.
-    nsIPrincipal*                              mLoadingPrincipal;
-
-    // helper members used to queue up web console messages till
-    // the windowID becomes available. see flushConsoleMessages()
-    nsTArray<ConsoleMsgQueueElem>              mConsoleMsgQueue;
-    bool                                       mQueueUpMessages;
-    nsCOMPtr<nsIEventTarget>                   mEventTarget;
-=======
   }
 
  private:
@@ -380,7 +180,6 @@ class nsCSPContext : public nsIContentSecurityPolicy {
   nsTArray<ConsoleMsgQueueElem> mConsoleMsgQueue;
   bool mQueueUpMessages;
   nsCOMPtr<nsIEventTarget> mEventTarget;
->>>>>>> upstream-releases
 };
 
 // Class that listens to violation report transmission and logs errors.

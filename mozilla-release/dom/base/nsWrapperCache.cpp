@@ -17,19 +17,9 @@ using namespace mozilla;
 using namespace mozilla::dom;
 
 #ifdef DEBUG
-<<<<<<< HEAD
-/* static */ bool nsWrapperCache::HasJSObjectMovedOp(JSObject* aWrapper) {
-  return js::HasObjectMovedOp(aWrapper);
-||||||| merged common ancestors
-/* static */ bool
-nsWrapperCache::HasJSObjectMovedOp(JSObject* aWrapper)
-{
-    return js::HasObjectMovedOp(aWrapper);
-=======
 /* static */
 bool nsWrapperCache::HasJSObjectMovedOp(JSObject* aWrapper) {
   return js::HasObjectMovedOp(aWrapper);
->>>>>>> upstream-releases
 }
 #endif
 

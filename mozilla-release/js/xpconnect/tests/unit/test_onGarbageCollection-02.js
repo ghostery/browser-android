@@ -18,22 +18,11 @@ let fired2 = false;
 dbg1.memory.onGarbageCollection = _ => fired1 = true;
 dbg2.memory.onGarbageCollection = _ => fired2 = true;
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-||||||| merged common ancestors
-=======
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
->>>>>>> upstream-releases
 function reset() {
   fired1 = false;
   fired2 = false;

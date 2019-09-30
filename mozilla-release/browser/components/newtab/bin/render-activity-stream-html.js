@@ -77,33 +77,6 @@ function writeFiles(destPath, filesMap, options) {
 }
 
 const STATIC_FILES = new Map([
-<<<<<<< HEAD
-  ["activity-stream-debug.html", ({options}) => templateHTML(options)],
-  ["activity-stream-initial-state.js", ({state}) => templateJs("gActivityStreamPrerenderedState", "static", state)],
-  ["activity-stream-prerendered-debug.html", ({html, options}) => templateHTML(options, html)],
-]);
-
-const LOCALIZED_FILES = new Map([
-  ["activity-stream-prerendered.html", ({html, options}) => templateHTML(options, html)],
-  ["activity-stream-prerendered-noscripts.html", ({html, options}) => templateHTML(Object.assign({}, options, {noscripts: true}), html)],
-  ["activity-stream-strings.js", ({options: {locale, strings}}) => templateJs("gActivityStreamStrings", locale, strings)],
-  ["activity-stream.html", ({options}) => templateHTML(options)],
-  ["activity-stream-noscripts.html", ({options}) => templateHTML(Object.assign({}, options, {noscripts: true}))],
-||||||| merged common ancestors
-  ["activity-stream-debug.html", ({options}) => templateHTML(options)],
-  ["activity-stream-debug-noscripts.html", ({options}) => templateHTML(Object.assign({}, options, {noscripts: true}))],
-  ["activity-stream-initial-state.js", ({state}) => templateJs("gActivityStreamPrerenderedState", "static", state)],
-  ["activity-stream-prerendered-debug.html", ({html, options}) => templateHTML(options, html)],
-  ["activity-stream-prerendered-debug-noscripts.html", ({html, options}) => templateHTML(Object.assign({}, options, {noscripts: true}), html)],
-]);
-
-const LOCALIZED_FILES = new Map([
-  ["activity-stream-prerendered.html", ({html, options}) => templateHTML(options, html)],
-  ["activity-stream-prerendered-noscripts.html", ({html, options}) => templateHTML(Object.assign({}, options, {noscripts: true}), html)],
-  ["activity-stream-strings.js", ({options: {locale, strings}}) => templateJs("gActivityStreamStrings", locale, strings)],
-  ["activity-stream.html", ({options}) => templateHTML(options)],
-  ["activity-stream-noscripts.html", ({options}) => templateHTML(Object.assign({}, options, {noscripts: true}))],
-=======
   ["activity-stream.html", ({ options }) => templateHTML(options)],
   [
     "activity-stream-debug.html",
@@ -114,7 +87,6 @@ const LOCALIZED_FILES = new Map([
     ({ options }) =>
       templateHTML(Object.assign({}, options, { noscripts: true })),
   ],
->>>>>>> upstream-releases
 ]);
 
 /**

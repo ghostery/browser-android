@@ -232,27 +232,12 @@ class ShadowLayerForwarder final : public LayersIPCActor,
   /**
    * See CompositableForwarder::UseTextures
    */
-<<<<<<< HEAD
-  virtual void UseTextures(
-      CompositableClient* aCompositable,
-      const nsTArray<TimedTextureClient>& aTextures) override;
-  virtual void UseComponentAlphaTextures(
-      CompositableClient* aCompositable, TextureClient* aClientOnBlack,
-      TextureClient* aClientOnWhite) override;
-||||||| merged common ancestors
-  virtual void UseTextures(CompositableClient* aCompositable,
-                           const nsTArray<TimedTextureClient>& aTextures) override;
-  virtual void UseComponentAlphaTextures(CompositableClient* aCompositable,
-                                         TextureClient* aClientOnBlack,
-                                         TextureClient* aClientOnWhite) override;
-=======
   void UseTextures(CompositableClient* aCompositable,
                    const nsTArray<TimedTextureClient>& aTextures,
                    const Maybe<wr::RenderRoot>& aRenderRoot) override;
   void UseComponentAlphaTextures(CompositableClient* aCompositable,
                                  TextureClient* aClientOnBlack,
                                  TextureClient* aClientOnWhite) override;
->>>>>>> upstream-releases
 
   /**
    * Used for debugging to tell the compositor how long this frame took to
@@ -268,24 +253,13 @@ class ShadowLayerForwarder final : public LayersIPCActor,
   bool EndTransaction(const nsIntRegion& aRegionToClear, TransactionId aId,
                       bool aScheduleComposite, uint32_t aPaintSequenceNumber,
                       bool aIsRepeatTransaction,
-<<<<<<< HEAD
-                      const mozilla::VsyncId& aVsyncId,
-||||||| merged common ancestors
-=======
                       const mozilla::VsyncId& aVsyncId,
                       const mozilla::TimeStamp& aVsyncTime,
->>>>>>> upstream-releases
                       const mozilla::TimeStamp& aRefreshStart,
                       const mozilla::TimeStamp& aTransactionStart,
-<<<<<<< HEAD
-                      const nsCString& aURL, bool* aSent);
-||||||| merged common ancestors
-                      bool* aSent);
-=======
                       bool aContainsSVG, const nsCString& aURL, bool* aSent,
                       const InfallibleTArray<CompositionPayload>& aPayload =
                           InfallibleTArray<CompositionPayload>());
->>>>>>> upstream-releases
 
   /**
    * Set an actor through which layer updates will be pushed.
@@ -382,20 +356,9 @@ class ShadowLayerForwarder final : public LayersIPCActor,
                               gfxContentType aContent,
                               SurfaceDescriptor* aBuffer) override;
 
-<<<<<<< HEAD
-  virtual bool AllocSurfaceDescriptorWithCaps(
-      const gfx::IntSize& aSize, gfxContentType aContent, uint32_t aCaps,
-      SurfaceDescriptor* aBuffer) override;
-||||||| merged common ancestors
-  virtual bool AllocSurfaceDescriptorWithCaps(const gfx::IntSize& aSize,
-                                              gfxContentType aContent,
-                                              uint32_t aCaps,
-                                              SurfaceDescriptor* aBuffer) override;
-=======
   bool AllocSurfaceDescriptorWithCaps(const gfx::IntSize& aSize,
                                       gfxContentType aContent, uint32_t aCaps,
                                       SurfaceDescriptor* aBuffer) override;
->>>>>>> upstream-releases
 
   void DestroySurfaceDescriptor(SurfaceDescriptor* aSurface) override;
 

@@ -178,17 +178,9 @@ nsresult PaymentRequestService::LaunchUIAction(const nsAString& aRequestId,
       rv = uiService->ClosePayment(aRequestId);
       break;
     }
-<<<<<<< HEAD
-    default: { return NS_ERROR_FAILURE; }
-||||||| merged common ancestors
-    default : {
-      return NS_ERROR_FAILURE;
-    }
-=======
     default: {
       return NS_ERROR_FAILURE;
     }
->>>>>>> upstream-releases
   }
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
@@ -342,7 +334,9 @@ nsresult PaymentRequestService::RequestPayment(
           aRequestId, IPCPaymentActionRequest::TIPCPaymentUpdateActionRequest);
       break;
     }
-    default: { return NS_ERROR_FAILURE; }
+    default: {
+      return NS_ERROR_FAILURE;
+    }
   }
   return NS_OK;
 }
@@ -428,7 +422,9 @@ PaymentRequestService::RespondPayment(nsIPaymentActionResponse* aResponse) {
       mRequestQueue.RemoveElement(request);
       break;
     }
-    default: { break; }
+    default: {
+      break;
+    }
   }
   return NS_OK;
 }

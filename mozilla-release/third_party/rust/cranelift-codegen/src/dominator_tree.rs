@@ -1,24 +1,5 @@
 //! A Dominator Tree represented as mappings of Ebbs to their immediate dominator.
 
-<<<<<<< HEAD
-use entity::SecondaryMap;
-use flowgraph::{BasicBlock, ControlFlowGraph};
-use ir::instructions::BranchInfo;
-use ir::{Ebb, ExpandedProgramPoint, Function, Inst, Layout, ProgramOrder, Value};
-use packed_option::PackedOption;
-use std::cmp;
-use std::cmp::Ordering;
-use std::mem;
-||||||| merged common ancestors
-use entity::EntityMap;
-use flowgraph::{BasicBlock, ControlFlowGraph};
-use ir::instructions::BranchInfo;
-use ir::{Ebb, ExpandedProgramPoint, Function, Inst, Layout, ProgramOrder, Value};
-use packed_option::PackedOption;
-use std::cmp;
-use std::cmp::Ordering;
-use std::mem;
-=======
 use crate::entity::SecondaryMap;
 use crate::flowgraph::{BasicBlock, ControlFlowGraph};
 use crate::ir::instructions::BranchInfo;
@@ -28,7 +9,6 @@ use crate::timing;
 use core::cmp;
 use core::cmp::Ordering;
 use core::mem;
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// RPO numbers are not first assigned in a contiguous way but as multiples of STRIDE, to leave

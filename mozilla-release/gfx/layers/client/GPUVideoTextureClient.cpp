@@ -13,25 +13,10 @@ namespace layers {
 
 using namespace gfx;
 
-<<<<<<< HEAD
-GPUVideoTextureData::GPUVideoTextureData(
-    dom::VideoDecoderManagerChild* aManager,
-    const SurfaceDescriptorGPUVideo& aSD, const gfx::IntSize& aSize)
-    : mManager(aManager), mSD(aSD), mSize(aSize) {}
-||||||| merged common ancestors
-GPUVideoTextureData::GPUVideoTextureData(dom::VideoDecoderManagerChild* aManager,
-                                         const SurfaceDescriptorGPUVideo& aSD,
-                                         const gfx::IntSize& aSize)
-  : mManager(aManager)
-  , mSD(aSD)
-  , mSize(aSize)
-{}
-=======
 GPUVideoTextureData::GPUVideoTextureData(RemoteDecoderManagerChild* aManager,
                                          const SurfaceDescriptorGPUVideo& aSD,
                                          const gfx::IntSize& aSize)
     : mManager(aManager), mSD(aSD), mSize(aSize) {}
->>>>>>> upstream-releases
 
 GPUVideoTextureData::~GPUVideoTextureData() {}
 

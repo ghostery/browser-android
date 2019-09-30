@@ -63,33 +63,6 @@ struct nsGenConNode : public mozilla::LinkedListElement<nsGenConNode> {
 
  protected:
   void CheckFrameAssertions() {
-<<<<<<< HEAD
-    NS_ASSERTION(
-        mContentIndex < int32_t(mPseudoFrame->StyleContent()->ContentCount()),
-        "index out of range");
-    // We allow negative values of mContentIndex for 'counter-reset' and
-    // 'counter-increment'.
-
-    NS_ASSERTION(
-        mContentIndex < 0 ||
-            mPseudoFrame->Style()->GetPseudo() ==
-                nsCSSPseudoElements::before() ||
-            mPseudoFrame->Style()->GetPseudo() == nsCSSPseudoElements::after(),
-        "not :before/:after generated content and not counter change");
-||||||| merged common ancestors
-    NS_ASSERTION(mContentIndex <
-                   int32_t(mPseudoFrame->StyleContent()->ContentCount()),
-                 "index out of range");
-      // We allow negative values of mContentIndex for 'counter-reset' and
-      // 'counter-increment'.
-
-    NS_ASSERTION(mContentIndex < 0 ||
-                 mPseudoFrame->Style()->GetPseudo() ==
-                   nsCSSPseudoElements::before() ||
-                 mPseudoFrame->Style()->GetPseudo() ==
-                   nsCSSPseudoElements::after(),
-                 "not :before/:after generated content and not counter change");
-=======
     NS_ASSERTION(
         mContentIndex < int32_t(mPseudoFrame->StyleContent()->ContentCount()) ||
             // Special-case for the use node created for the legacy markers,
@@ -110,7 +83,6 @@ struct nsGenConNode : public mozilla::LinkedListElement<nsGenConNode> {
                      mPseudoFrame->Style()->GetPseudoType() ==
                          mozilla::PseudoStyleType::marker,
                  "not CSS generated content and not counter change");
->>>>>>> upstream-releases
     NS_ASSERTION(mContentIndex < 0 ||
                      mPseudoFrame->GetStateBits() & NS_FRAME_GENERATED_CONTENT,
                  "not generated content and not counter change");

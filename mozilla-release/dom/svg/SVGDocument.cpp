@@ -48,15 +48,7 @@ nsresult SVGDocument::Clone(dom::NodeInfo* aNodeInfo, nsINode** aResult) const {
 ////////////////////////////////////////////////////////////////////////
 // Exported creation functions
 
-<<<<<<< HEAD
-nsresult NS_NewSVGDocument(nsIDocument** aInstancePtrResult) {
-||||||| merged common ancestors
-nsresult
-NS_NewSVGDocument(nsIDocument** aInstancePtrResult)
-{
-=======
 nsresult NS_NewSVGDocument(Document** aInstancePtrResult) {
->>>>>>> upstream-releases
   RefPtr<SVGDocument> doc = new SVGDocument();
 
   nsresult rv = doc->Init();

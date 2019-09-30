@@ -110,13 +110,8 @@ $genIType clamp($genIType x, $genIType minVal, $genIType maxVal);
 $genIType clamp($genIType x, int minVal, int maxVal);
 //$genUType clamp($genUType x, $genUType minVal, $genUType maxVal);
 //$genUType clamp($genUType x, uint minVal, uint maxVal);
-<<<<<<< HEAD
-$genType saturate($genType x);
-||||||| merged common ancestors
-=======
 $genType saturate($genType x);
 $genHType saturate($genHType x);
->>>>>>> upstream-releases
 $genType mix($genType x, $genType y, $genType a);
 $genType mix($genType x, $genType y, float a);
 $genHType mix($genHType x, $genHType y, $genHType a);

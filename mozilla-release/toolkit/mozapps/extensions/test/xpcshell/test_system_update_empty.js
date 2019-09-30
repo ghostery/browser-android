@@ -135,13 +135,7 @@ add_task(async function() {
       let setup = TEST_CONDITIONS[setupName];
       let test = TESTS[testName];
 
-<<<<<<< HEAD
-        await execSystemAddonTest(setupName, setup, test, distroDir);
-||||||| merged common ancestors
-        await execSystemAddonTest(setupName, setup, test, distroDir, root, testserver);
-=======
       await execSystemAddonTest(setupName, setup, test, distroDir);
->>>>>>> upstream-releases
     }
   }
 });

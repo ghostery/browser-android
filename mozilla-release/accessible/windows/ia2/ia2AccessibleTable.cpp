@@ -135,29 +135,14 @@ ia2AccessibleTable::get_columnIndex(long aCellIdx, long* aColIdx) {
   if (!aColIdx) return E_INVALIDARG;
 
   *aColIdx = 0;
-<<<<<<< HEAD
-  if (!mTable) return CO_E_OBJNOTCONNECTED;
-||||||| merged common ancestors
-  if (!mTable)
-    return CO_E_OBJNOTCONNECTED;
-=======
   if (!mTable) return CO_E_OBJNOTCONNECTED;
 
   if (aCellIdx < 0) {
     return E_INVALIDARG;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (aCellIdx < 0 || static_cast<uint32_t>(aCellIdx) >=
-                          mTable->ColCount() * mTable->RowCount())
-||||||| merged common ancestors
-  if (aCellIdx < 0 ||
-      static_cast<uint32_t>(aCellIdx) >= mTable->ColCount() * mTable->RowCount())
-=======
   long colIdx = mTable->ColIndexAt(aCellIdx);
   if (colIdx == -1) {  // Indicates an error.
->>>>>>> upstream-releases
     return E_INVALIDARG;
   }
 
@@ -266,15 +251,7 @@ ia2AccessibleTable::get_rowIndex(long aCellIdx, long* aRowIdx) {
   *aRowIdx = 0;
   if (!mTable) return CO_E_OBJNOTCONNECTED;
 
-<<<<<<< HEAD
-  if (aCellIdx < 0 || static_cast<uint32_t>(aCellIdx) >=
-                          mTable->ColCount() * mTable->RowCount())
-||||||| merged common ancestors
-  if (aCellIdx < 0 ||
-      static_cast<uint32_t>(aCellIdx) >= mTable->ColCount() * mTable->RowCount())
-=======
   if (aCellIdx < 0) {
->>>>>>> upstream-releases
     return E_INVALIDARG;
   }
 
@@ -439,15 +416,7 @@ ia2AccessibleTable::get_rowColumnExtentsAtIndex(long aCellIdx, long* aRowIdx,
   *aIsSelected = false;
   if (!mTable) return CO_E_OBJNOTCONNECTED;
 
-<<<<<<< HEAD
-  if (aCellIdx < 0 || static_cast<uint32_t>(aCellIdx) >=
-                          mTable->ColCount() * mTable->RowCount())
-||||||| merged common ancestors
-  if (aCellIdx < 0 ||
-      static_cast<uint32_t>(aCellIdx) >= mTable->ColCount() * mTable->RowCount())
-=======
   if (aCellIdx < 0) {
->>>>>>> upstream-releases
     return E_INVALIDARG;
   }
 

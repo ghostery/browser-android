@@ -75,15 +75,7 @@ struct nsProtocolInfo {
 
 // Return the channel's proxy URI, or if it doesn't exist, the
 // channel's main URI.
-<<<<<<< HEAD
-static nsresult GetProxyURI(nsIChannel *channel, nsIURI **aOut) {
-||||||| merged common ancestors
-static nsresult
-GetProxyURI(nsIChannel *channel, nsIURI **aOut)
-{
-=======
 static nsresult GetProxyURI(nsIChannel* channel, nsIURI** aOut) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   nsCOMPtr<nsIURI> proxyURI;
   nsCOMPtr<nsIHttpChannelInternal> httpChannel(do_QueryInterface(channel));
@@ -103,42 +95,16 @@ static nsresult GetProxyURI(nsIChannel* channel, nsIURI** aOut) {
 //-----------------------------------------------------------------------------
 
 nsProtocolProxyService::FilterLink::FilterLink(uint32_t p,
-<<<<<<< HEAD
-                                               nsIProtocolProxyFilter *f)
-    : position(p), filter(f), channelFilter(nullptr) {
-  LOG(("nsProtocolProxyService::FilterLink::FilterLink %p, filter=%p", this,
-       f));
-||||||| merged common ancestors
-                                               nsIProtocolProxyFilter *f)
-  : position(p), filter(f), channelFilter(nullptr)
-{
-  LOG(("nsProtocolProxyService::FilterLink::FilterLink %p, filter=%p", this, f));
-=======
                                                nsIProtocolProxyFilter* f)
     : position(p), filter(f), channelFilter(nullptr) {
   LOG(("nsProtocolProxyService::FilterLink::FilterLink %p, filter=%p", this,
        f));
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-nsProtocolProxyService::FilterLink::FilterLink(
-    uint32_t p, nsIProtocolProxyChannelFilter *cf)
-    : position(p), filter(nullptr), channelFilter(cf) {
-  LOG(("nsProtocolProxyService::FilterLink::FilterLink %p, channel-filter=%p",
-       this, cf));
-||||||| merged common ancestors
-nsProtocolProxyService::FilterLink::FilterLink(uint32_t p,
-                                               nsIProtocolProxyChannelFilter *cf)
-  : position(p), filter(nullptr), channelFilter(cf)
-{
-  LOG(("nsProtocolProxyService::FilterLink::FilterLink %p, channel-filter=%p", this, cf));
-=======
 nsProtocolProxyService::FilterLink::FilterLink(
     uint32_t p, nsIProtocolProxyChannelFilter* cf)
     : position(p), filter(nullptr), channelFilter(cf) {
   LOG(("nsProtocolProxyService::FilterLink::FilterLink %p, channel-filter=%p",
        this, cf));
->>>>>>> upstream-releases
 }
 
 nsProtocolProxyService::FilterLink::~FilterLink() {
@@ -150,33 +116,6 @@ nsProtocolProxyService::FilterLink::~FilterLink() {
 // The nsPACManCallback portion of this implementation should be run
 // on the main thread - so call nsPACMan::AsyncGetProxyForURI() with
 // a true mainThreadResponse parameter.
-<<<<<<< HEAD
-class nsAsyncResolveRequest final : public nsIRunnable,
-                                    public nsPACManCallback,
-                                    public nsICancelable {
- public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-
-  nsAsyncResolveRequest(nsProtocolProxyService *pps, nsIChannel *channel,
-                        uint32_t aResolveFlags,
-                        nsIProtocolProxyCallback *callback)
-      : mStatus(NS_OK),
-        mDispatched(false),
-        mResolveFlags(aResolveFlags),
-        mPPS(pps),
-        mXPComPPS(pps),
-        mChannel(channel),
-        mCallback(callback) {
-    NS_ASSERTION(mCallback, "null callback");
-  }
-||||||| merged common ancestors
-class nsAsyncResolveRequest final : public nsIRunnable
-                                  , public nsPACManCallback
-                                  , public nsICancelable
-{
-public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-=======
 class nsAsyncResolveRequest final : public nsIRunnable,
                                     public nsPACManCallback,
                                     public nsICancelable {
@@ -195,7 +134,6 @@ class nsAsyncResolveRequest final : public nsIRunnable,
         mCallback(callback) {
     NS_ASSERTION(mCallback, "null callback");
   }
->>>>>>> upstream-releases
 
  private:
   ~nsAsyncResolveRequest() {
@@ -226,155 +164,6 @@ class nsAsyncResolveRequest final : public nsIRunnable,
     }
   }
 
-<<<<<<< HEAD
-  // Helper class to loop over all registered asynchronous filters.
-  // There is a cycle between nsAsyncResolveRequest and this class that
-  // is broken after the last filter has called back on this object.
-  class AsyncApplyFilters final : public nsIProxyProtocolFilterResult,
-                                  public nsIRunnable,
-                                  public nsICancelable {
-    // The reference counter is thread-safe, but the processing logic is
-    // considered single thread only.  We want the counter be thread safe,
-    // since this class can be released on a background thread.
-    NS_DECL_THREADSAFE_ISUPPORTS
-    NS_DECL_NSIPROXYPROTOCOLFILTERRESULT
-    NS_DECL_NSIRUNNABLE
-    NS_DECL_NSICANCELABLE
-
-    typedef std::function<nsresult(nsAsyncResolveRequest *, nsIProxyInfo *,
-                                   bool)>
-        Callback;
-
-    explicit AsyncApplyFilters(nsProtocolInfo &aInfo,
-                               Callback const &aCallback);
-    // This method starts the processing or filters.  If all of them
-    // answer synchronously (call back from within applyFilters) this method
-    // will return immediately and the returning result will carry return
-    // result of the callback given in constructor.
-    // This method is looping the registered filters (that have been copied
-    // locally) as long as an answer from a filter is obtained synchronously.
-    // Note that filters are processed serially to let them build a list
-    // of proxy info.
-    nsresult AsyncProcess(nsAsyncResolveRequest *aRequest);
-
-   private:
-    typedef nsProtocolProxyService::FilterLink FilterLink;
-
-    virtual ~AsyncApplyFilters();
-    // Processes the next filter and loops until a filter is successfully
-    // called on or it has called back to us.
-    nsresult ProcessNextFilter();
-    // Called after the last filter has been processed (=called back or failed
-    // to be called on)
-    nsresult Finish();
-
-    nsProtocolInfo mInfo;
-    // This is nullified before we call back on the request or when
-    // Cancel() on this object has been called to break the cycle
-    // and signal to stop.
-    RefPtr<nsAsyncResolveRequest> mRequest;
-    Callback mCallback;
-    // A shallow snapshot of filters as they were registered at the moment
-    // we started to process filters for the given resolve request.
-    nsTArray<RefPtr<FilterLink>> mFiltersCopy;
-
-    nsTArray<RefPtr<FilterLink>>::index_type mNextFilterIndex;
-    // true when we are calling ProcessNextFilter() from inside AsyncProcess(),
-    // false otherwise.
-    bool mProcessingInLoop;
-    // true after a filter called back to us with a result, dropped to false
-    // just before we call a filter.
-    bool mFilterCalledBack;
-
-    // This keeps the initial value we pass to the first filter in line and also
-    // collects the result from each filter call.
-    nsCOMPtr<nsIProxyInfo> mProxyInfo;
-
-    // The logic is written as non-thread safe, assert single-thread usage.
-    nsCOMPtr<nsIEventTarget> mProcessingThread;
-  };
-
- public:
-  nsresult ProcessLocally(nsProtocolInfo &info, nsIProxyInfo *pi,
-                          bool isSyncOK) {
-    SetResult(NS_OK, pi);
-
-    auto consumeFiltersResult = [isSyncOK](nsAsyncResolveRequest *ctx,
-                                           nsIProxyInfo *pi,
-                                           bool aCalledAsync) -> nsresult {
-      ctx->SetResult(NS_OK, pi);
-      if (isSyncOK || aCalledAsync) {
-        ctx->Run();
-        return NS_OK;
-      }
-
-      return ctx->DispatchCallback();
-||||||| merged common ancestors
-    // Helper class to loop over all registered asynchronous filters.
-    // There is a cycle between nsAsyncResolveRequest and this class that
-    // is broken after the last filter has called back on this object.
-    class AsyncApplyFilters final
-      : public nsIProxyProtocolFilterResult
-      , public nsIRunnable
-      , public nsICancelable
-    {
-      // The reference counter is thread-safe, but the processing logic is
-      // considered single thread only.  We want the counter be thread safe,
-      // since this class can be released on a background thread.
-      NS_DECL_THREADSAFE_ISUPPORTS
-      NS_DECL_NSIPROXYPROTOCOLFILTERRESULT
-      NS_DECL_NSIRUNNABLE
-      NS_DECL_NSICANCELABLE
-
-      typedef std::function<nsresult(nsAsyncResolveRequest*, nsIProxyInfo*, bool)> Callback;
-
-      explicit AsyncApplyFilters(nsProtocolInfo& aInfo, Callback const& aCallback);
-      // This method starts the processing or filters.  If all of them
-      // answer synchronously (call back from within applyFilters) this method
-      // will return immediately and the returning result will carry return
-      // result of the callback given in constructor.
-      // This method is looping the registered filters (that have been copied
-      // locally) as long as an answer from a filter is obtained synchronously.
-      // Note that filters are processed serially to let them build a list
-      // of proxy info.
-      nsresult AsyncProcess(nsAsyncResolveRequest* aRequest);
-
-    private:
-      typedef nsProtocolProxyService::FilterLink FilterLink;
-
-      virtual ~AsyncApplyFilters();
-      // Processes the next filter and loops until a filter is successfully
-      // called on or it has called back to us.
-      nsresult ProcessNextFilter();
-      // Called after the last filter has been processed (=called back or failed to
-      // be called on)
-      nsresult Finish();
-
-      nsProtocolInfo mInfo;
-      // This is nullified before we call back on the request or when
-      // Cancel() on this object has been called to break the cycle
-      // and signal to stop.
-      RefPtr<nsAsyncResolveRequest> mRequest;
-      Callback mCallback;
-      // A shallow snapshot of filters as they were registered at the moment
-      // we started to process filters for the given resolve request.
-      nsTArray<RefPtr<FilterLink>> mFiltersCopy;
-
-      nsTArray<RefPtr<FilterLink>>::index_type mNextFilterIndex;
-      // true when we are calling ProcessNextFilter() from inside AsyncProcess(),
-      // false otherwise.
-      bool mProcessingInLoop;
-      // true after a filter called back to us with a result, dropped to false
-      // just before we call a filter.
-      bool mFilterCalledBack;
-
-      // This keeps the initial value we pass to the first filter in line and also
-      // collects the result from each filter call.
-      nsCOMPtr<nsIProxyInfo> mProxyInfo;
-
-      // The logic is written as non-thread safe, assert single-thread usage.
-      nsCOMPtr<nsIEventTarget> mProcessingThread;
-=======
   // Helper class to loop over all registered asynchronous filters.
   // There is a cycle between nsAsyncResolveRequest and this class that
   // is broken after the last filter has called back on this object.
@@ -456,7 +245,6 @@ class nsAsyncResolveRequest final : public nsIRunnable,
       }
 
       return ctx->DispatchCallback();
->>>>>>> upstream-releases
     };
 
     mAsyncFilterApplier = new AsyncApplyFilters(info, consumeFiltersResult);
@@ -464,20 +252,10 @@ class nsAsyncResolveRequest final : public nsIRunnable,
     return mAsyncFilterApplier->AsyncProcess(this);
   }
 
-<<<<<<< HEAD
-  void SetResult(nsresult status, nsIProxyInfo *pi) {
-    mStatus = status;
-    mProxyInfo = pi;
-  }
-||||||| merged common ancestors
-          return ctx->DispatchCallback();
-        };
-=======
   void SetResult(nsresult status, nsIProxyInfo* pi) {
     mStatus = status;
     mProxyInfo = pi;
   }
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     if (mCallback) DoCallback();
@@ -514,32 +292,6 @@ class nsAsyncResolveRequest final : public nsIRunnable,
     return rv;
   }
 
-<<<<<<< HEAD
- private:
-  // Called asynchronously, so we do not need to post another PLEvent
-  // before calling DoCallback.
-  void OnQueryComplete(nsresult status, const nsACString &pacString,
-                       const nsACString &newPACURL) override {
-    // If we've already called DoCallback then, nothing more to do.
-    if (!mCallback) return;
-
-    // Provided we haven't been canceled...
-    if (mStatus == NS_OK) {
-      mStatus = status;
-      mPACString = pacString;
-      mPACURL = newPACURL;
-    }
-
-    // In the cancelation case, we may still have another PLEvent in
-    // the queue that wants to call DoCallback.  No need to wait for
-    // it, just run the callback now.
-    DoCallback();
-  }
-||||||| merged common ancestors
-        mCallback = nullptr;  // break possible reference cycle
-        return rv;
-    }
-=======
  private:
   // Called asynchronously, so we do not need to post another PLEvent
   // before calling DoCallback.
@@ -560,63 +312,7 @@ class nsAsyncResolveRequest final : public nsIRunnable,
     // it, just run the callback now.
     DoCallback();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void DoCallback() {
-    bool pacAvailable = true;
-    if (mStatus == NS_ERROR_NOT_AVAILABLE && !mProxyInfo) {
-      // If the PAC service is not avail (e.g. failed pac load
-      // or shutdown) then we will be going direct. Make that
-      // mapping now so that any filters are still applied.
-      mPACString = NS_LITERAL_CSTRING("DIRECT;");
-      mStatus = NS_OK;
-
-      LOG(("pac not available, use DIRECT\n"));
-      pacAvailable = false;
-    }
-
-    // Generate proxy info from the PAC string if appropriate
-    if (NS_SUCCEEDED(mStatus) && !mProxyInfo && !mPACString.IsEmpty()) {
-      mPPS->ProcessPACString(mPACString, mResolveFlags,
-                             getter_AddRefs(mProxyInfo));
-      nsCOMPtr<nsIURI> proxyURI;
-      GetProxyURI(mChannel, getter_AddRefs(proxyURI));
-
-      // Now apply proxy filters
-      nsProtocolInfo info;
-      mStatus = mPPS->GetProtocolInfo(proxyURI, &info);
-
-      auto consumeFiltersResult = [pacAvailable](nsAsyncResolveRequest *self,
-                                                 nsIProxyInfo *pi,
-                                                 bool async) -> nsresult {
-        LOG(("DoCallback::consumeFiltersResult this=%p, pi=%p, async=%d", self,
-             pi, async));
-
-        self->mProxyInfo = pi;
-
-        if (pacAvailable) {
-          // if !pacAvailable, it was already logged above
-          LOG(("pac thread callback %s\n", self->mPACString.get()));
-||||||| merged common ancestors
-private:
-
-    // Called asynchronously, so we do not need to post another PLEvent
-    // before calling DoCallback.
-    void OnQueryComplete(nsresult status,
-                         const nsACString &pacString,
-                         const nsACString &newPACURL) override
-    {
-        // If we've already called DoCallback then, nothing more to do.
-        if (!mCallback)
-            return;
-
-        // Provided we haven't been canceled...
-        if (mStatus == NS_OK) {
-            mStatus = status;
-            mPACString = pacString;
-            mPACURL = newPACURL;
-=======
   void DoCallback() {
     bool pacAvailable = true;
     if (mStatus == NS_ERROR_NOT_AVAILABLE && !mProxyInfo) {
@@ -652,7 +348,6 @@ private:
         if (pacAvailable) {
           // if !pacAvailable, it was already logged above
           LOG(("pac thread callback %s\n", self->mPACString.get()));
->>>>>>> upstream-releases
         }
 
         if (NS_SUCCEEDED(self->mStatus)) {
@@ -662,46 +357,9 @@ private:
         self->mCallback->OnProxyAvailable(self, self->mChannel,
                                           self->mProxyInfo, self->mStatus);
 
-<<<<<<< HEAD
         return NS_OK;
       };
 
-      if (NS_SUCCEEDED(mStatus)) {
-        mAsyncFilterApplier = new AsyncApplyFilters(info, consumeFiltersResult);
-        // This may call consumeFiltersResult() directly.
-        mAsyncFilterApplier->AsyncProcess(this);
-        return;
-      }
-
-      consumeFiltersResult(this, nullptr, false);
-    } else if (NS_SUCCEEDED(mStatus) && !mPACURL.IsEmpty()) {
-      LOG(("pac thread callback indicates new pac file load\n"));
-||||||| merged common ancestors
-        // We are on the main thread now and don't need these any more so
-        // release them to avoid having to proxy them back to the main thread
-        // in the dtor
-        mCallback = nullptr;  // in case the callback holds an owning ref to us
-        mPPS = nullptr;
-        mXPComPPS = nullptr;
-        mChannel = nullptr;
-        mProxyInfo = nullptr;
-    }
-=======
-        return NS_OK;
-      };
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      nsCOMPtr<nsIURI> proxyURI;
-      GetProxyURI(mChannel, getter_AddRefs(proxyURI));
-||||||| merged common ancestors
-private:
-    nsresult  mStatus;
-    nsCString mPACString;
-    nsCString mPACURL;
-    bool      mDispatched;
-    uint32_t  mResolveFlags;
-=======
       if (NS_SUCCEEDED(mStatus)) {
         mAsyncFilterApplier = new AsyncApplyFilters(info, consumeFiltersResult);
         // This may call consumeFiltersResult() directly.
@@ -727,48 +385,7 @@ private:
 
       if (NS_FAILED(rv))
         mCallback->OnProxyAvailable(this, mChannel, nullptr, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // trigger load of new pac url
-      nsresult rv = mPPS->ConfigureFromPAC(mPACURL, false);
-      if (NS_SUCCEEDED(rv)) {
-        // now that the load is triggered, we can resubmit the query
-        RefPtr<nsAsyncResolveRequest> newRequest =
-            new nsAsyncResolveRequest(mPPS, mChannel, mResolveFlags, mCallback);
-        rv = mPPS->mPACMan->AsyncGetProxyForURI(proxyURI, newRequest, true);
-      }
-
-      if (NS_FAILED(rv))
-        mCallback->OnProxyAvailable(this, mChannel, nullptr, rv);
-||||||| merged common ancestors
-    nsProtocolProxyService            *mPPS;
-    nsCOMPtr<nsIProtocolProxyService>  mXPComPPS;
-    nsCOMPtr<nsIChannel>               mChannel;
-    nsCOMPtr<nsIProtocolProxyCallback> mCallback;
-    nsCOMPtr<nsIProxyInfo>             mProxyInfo;
-=======
-      // do not call onproxyavailable() in SUCCESS case - the newRequest will
-      // take care of that
-    } else {
-      LOG(("pac thread callback did not provide information %" PRIX32 "\n",
-           static_cast<uint32_t>(mStatus)));
-      if (NS_SUCCEEDED(mStatus)) mPPS->MaybeDisableDNSPrefetch(mProxyInfo);
-      mCallback->OnProxyAvailable(this, mChannel, mProxyInfo, mStatus);
-    }
-
-    // We are on the main thread now and don't need these any more so
-    // release them to avoid having to proxy them back to the main thread
-    // in the dtor
-    mCallback = nullptr;  // in case the callback holds an owning ref to us
-    mPPS = nullptr;
-    mXPComPPS = nullptr;
-    mChannel = nullptr;
-    mProxyInfo = nullptr;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
       // do not call onproxyavailable() in SUCCESS case - the newRequest will
       // take care of that
     } else {
@@ -788,23 +405,6 @@ private:
     mProxyInfo = nullptr;
   }
 
- private:
-  nsresult mStatus;
-  nsCString mPACString;
-  nsCString mPACURL;
-  bool mDispatched;
-  uint32_t mResolveFlags;
-
-  nsProtocolProxyService *mPPS;
-  nsCOMPtr<nsIProtocolProxyService> mXPComPPS;
-  nsCOMPtr<nsIChannel> mChannel;
-  nsCOMPtr<nsIProtocolProxyCallback> mCallback;
-  nsCOMPtr<nsIProxyInfo> mProxyInfo;
-
-  RefPtr<AsyncApplyFilters> mAsyncFilterApplier;
-||||||| merged common ancestors
-    RefPtr<AsyncApplyFilters> mAsyncFilterApplier;
-=======
  private:
   nsresult mStatus;
   nsCString mPACString;
@@ -819,36 +419,11 @@ private:
   nsCOMPtr<nsIProxyInfo> mProxyInfo;
 
   RefPtr<AsyncApplyFilters> mAsyncFilterApplier;
->>>>>>> upstream-releases
 };
 
 NS_IMPL_ISUPPORTS(nsAsyncResolveRequest, nsICancelable, nsIRunnable)
 
 NS_IMPL_ISUPPORTS(nsAsyncResolveRequest::AsyncApplyFilters,
-<<<<<<< HEAD
-                  nsIProxyProtocolFilterResult, nsICancelable, nsIRunnable)
-
-nsAsyncResolveRequest::AsyncApplyFilters::AsyncApplyFilters(
-    nsProtocolInfo &aInfo, Callback const &aCallback)
-    : mInfo(aInfo),
-      mCallback(aCallback),
-      mNextFilterIndex(0),
-      mProcessingInLoop(false),
-      mFilterCalledBack(false) {
-||||||| merged common ancestors
-                  nsIProxyProtocolFilterResult,
-                  nsICancelable,
-                  nsIRunnable)
-
-nsAsyncResolveRequest::AsyncApplyFilters::AsyncApplyFilters(nsProtocolInfo& aInfo,
-                                                            Callback const& aCallback)
-  : mInfo(aInfo)
-  , mCallback(aCallback)
-  , mNextFilterIndex(0)
-  , mProcessingInLoop(false)
-  , mFilterCalledBack(false)
-{
-=======
                   nsIProxyProtocolFilterResult, nsICancelable, nsIRunnable)
 
 nsAsyncResolveRequest::AsyncApplyFilters::AsyncApplyFilters(
@@ -858,7 +433,6 @@ nsAsyncResolveRequest::AsyncApplyFilters::AsyncApplyFilters(
       mNextFilterIndex(0),
       mProcessingInLoop(false),
       mFilterCalledBack(false) {
->>>>>>> upstream-releases
   LOG(("AsyncApplyFilters %p", this));
 }
 
@@ -870,17 +444,8 @@ nsAsyncResolveRequest::AsyncApplyFilters::~AsyncApplyFilters() {
   MOZ_ASSERT(!mFiltersCopy.Length());
 }
 
-<<<<<<< HEAD
-nsresult nsAsyncResolveRequest::AsyncApplyFilters::AsyncProcess(
-    nsAsyncResolveRequest *aRequest) {
-||||||| merged common ancestors
-nsresult
-nsAsyncResolveRequest::AsyncApplyFilters::AsyncProcess(nsAsyncResolveRequest * aRequest)
-{
-=======
 nsresult nsAsyncResolveRequest::AsyncApplyFilters::AsyncProcess(
     nsAsyncResolveRequest* aRequest) {
->>>>>>> upstream-releases
   LOG(("AsyncApplyFilters::AsyncProcess %p for req %p", this, aRequest));
 
   MOZ_ASSERT(!mRequest, "AsyncApplyFilters started more than once!");
@@ -955,16 +520,8 @@ nsresult nsAsyncResolveRequest::AsyncApplyFilters::ProcessNextFilter() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAsyncResolveRequest::AsyncApplyFilters::OnProxyFilterResult(
-    nsIProxyInfo *aProxyInfo) {
-||||||| merged common ancestors
-nsAsyncResolveRequest::AsyncApplyFilters::OnProxyFilterResult(nsIProxyInfo* aProxyInfo)
-{
-=======
 nsAsyncResolveRequest::AsyncApplyFilters::OnProxyFilterResult(
     nsIProxyInfo* aProxyInfo) {
->>>>>>> upstream-releases
   LOG(("AsyncApplyFilters::OnProxyFilterResult %p pi=%p", this, aProxyInfo));
 
   MOZ_ASSERT(mProcessingThread && mProcessingThread->IsOnCurrentThread());
@@ -1046,39 +603,6 @@ nsAsyncResolveRequest::AsyncApplyFilters::Cancel(nsresult reason) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// Bug 1366133: make GetPACURI off-main-thread since it may hang on Windows
-// platform
-class AsyncGetPACURIRequest final : public nsIRunnable {
- public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-
-  using CallbackFunc = nsresult (nsProtocolProxyService::*)(bool, bool,
-                                                            nsresult,
-                                                            const nsACString &);
-
-  AsyncGetPACURIRequest(nsProtocolProxyService *aService,
-                        CallbackFunc aCallback,
-                        nsISystemProxySettings *aSystemProxySettings,
-                        bool aMainThreadOnly, bool aForceReload,
-                        bool aResetPACThread)
-      : mIsMainThreadOnly(aMainThreadOnly),
-        mService(aService),
-        mServiceHolder(do_QueryObject(aService)),
-        mCallback(aCallback),
-        mSystemProxySettings(aSystemProxySettings),
-        mForceReload(aForceReload),
-        mResetPACThread(aResetPACThread) {
-    MOZ_ASSERT(NS_IsMainThread());
-    Unused << mIsMainThreadOnly;
-  }
-||||||| merged common ancestors
-// Bug 1366133: make GetPACURI off-main-thread since it may hang on Windows platform
-class AsyncGetPACURIRequest final : public nsIRunnable
-{
-public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-=======
 // Bug 1366133: make GetPACURI off-main-thread since it may hang on Windows
 // platform
 class AsyncGetPACURIRequest final : public nsIRunnable {
@@ -1104,7 +628,6 @@ class AsyncGetPACURIRequest final : public nsIRunnable {
     MOZ_ASSERT(NS_IsMainThread());
     Unused << mIsMainThreadOnly;
   }
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(NS_IsMainThread() == mIsMainThreadOnly);
@@ -1112,22 +635,6 @@ class AsyncGetPACURIRequest final : public nsIRunnable {
     nsCString pacUri;
     nsresult rv = mSystemProxySettings->GetPACURI(pacUri);
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIRunnable> event =
-        NewNonOwningCancelableRunnableMethod<bool, bool, nsresult, nsCString>(
-            "AsyncGetPACURIRequestCallback", mService, mCallback, mForceReload,
-            mResetPACThread, rv, pacUri);
-
-    return NS_DispatchToMainThread(event);
-  }
-||||||| merged common ancestors
-private:
-    ~AsyncGetPACURIRequest()
-    {
-        NS_ReleaseOnMainThreadSystemGroup(
-          "AsyncGetPACURIRequest::mServiceHolder", mServiceHolder.forget());
-    }
-=======
     nsCOMPtr<nsIRunnable> event =
         NewNonOwningCancelableRunnableMethod<bool, bool, nsresult, nsCString>(
             "AsyncGetPACURIRequestCallback", mService, mCallback, mForceReload,
@@ -1141,38 +648,13 @@ private:
     NS_ReleaseOnMainThreadSystemGroup("AsyncGetPACURIRequest::mServiceHolder",
                                       mServiceHolder.forget());
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- private:
-  ~AsyncGetPACURIRequest() {
-    NS_ReleaseOnMainThreadSystemGroup("AsyncGetPACURIRequest::mServiceHolder",
-                                      mServiceHolder.forget());
-  }
 
   bool mIsMainThreadOnly;
-||||||| merged common ancestors
-    bool mIsMainThreadOnly;
-=======
-  bool mIsMainThreadOnly;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsProtocolProxyService *mService;  // ref-count is hold by mServiceHolder
-  nsCOMPtr<nsIProtocolProxyService2> mServiceHolder;
-  CallbackFunc mCallback;
-  nsCOMPtr<nsISystemProxySettings> mSystemProxySettings;
-||||||| merged common ancestors
-    nsProtocolProxyService* mService; // ref-count is hold by mServiceHolder
-    nsCOMPtr<nsIProtocolProxyService2> mServiceHolder;
-    CallbackFunc mCallback;
-    nsCOMPtr<nsISystemProxySettings> mSystemProxySettings;
-=======
   nsProtocolProxyService* mService;  // ref-count is hold by mServiceHolder
   nsCOMPtr<nsIProtocolProxyService2> mServiceHolder;
   CallbackFunc mCallback;
   nsCOMPtr<nsISystemProxySettings> mSystemProxySettings;
->>>>>>> upstream-releases
 
   bool mForceReload;
   bool mResetPACThread;
@@ -1187,59 +669,6 @@ NS_IMPL_ISUPPORTS(AsyncGetPACURIRequest, nsIRunnable)
 //
 // NOTE: we do the byte swapping here to minimize overall swapping.
 //
-<<<<<<< HEAD
-static void proxy_MaskIPv6Addr(PRIPv6Addr &addr, uint16_t mask_len) {
-  if (mask_len == 128) return;
-
-  if (mask_len > 96) {
-    addr.pr_s6_addr32[3] =
-        PR_htonl(PR_ntohl(addr.pr_s6_addr32[3]) & (~0L << (128 - mask_len)));
-  } else if (mask_len > 64) {
-    addr.pr_s6_addr32[3] = 0;
-    addr.pr_s6_addr32[2] =
-        PR_htonl(PR_ntohl(addr.pr_s6_addr32[2]) & (~0L << (96 - mask_len)));
-  } else if (mask_len > 32) {
-    addr.pr_s6_addr32[3] = 0;
-    addr.pr_s6_addr32[2] = 0;
-    addr.pr_s6_addr32[1] =
-        PR_htonl(PR_ntohl(addr.pr_s6_addr32[1]) & (~0L << (64 - mask_len)));
-  } else {
-    addr.pr_s6_addr32[3] = 0;
-    addr.pr_s6_addr32[2] = 0;
-    addr.pr_s6_addr32[1] = 0;
-    addr.pr_s6_addr32[0] =
-        PR_htonl(PR_ntohl(addr.pr_s6_addr32[0]) & (~0L << (32 - mask_len)));
-  }
-||||||| merged common ancestors
-static void
-proxy_MaskIPv6Addr(PRIPv6Addr &addr, uint16_t mask_len)
-{
-    if (mask_len == 128)
-        return;
-
-    if (mask_len > 96) {
-        addr.pr_s6_addr32[3] = PR_htonl(
-                PR_ntohl(addr.pr_s6_addr32[3]) & (~0L << (128 - mask_len)));
-    }
-    else if (mask_len > 64) {
-        addr.pr_s6_addr32[3] = 0;
-        addr.pr_s6_addr32[2] = PR_htonl(
-                PR_ntohl(addr.pr_s6_addr32[2]) & (~0L << (96 - mask_len)));
-    }
-    else if (mask_len > 32) {
-        addr.pr_s6_addr32[3] = 0;
-        addr.pr_s6_addr32[2] = 0;
-        addr.pr_s6_addr32[1] = PR_htonl(
-                PR_ntohl(addr.pr_s6_addr32[1]) & (~0L << (64 - mask_len)));
-    }
-    else {
-        addr.pr_s6_addr32[3] = 0;
-        addr.pr_s6_addr32[2] = 0;
-        addr.pr_s6_addr32[1] = 0;
-        addr.pr_s6_addr32[0] = PR_htonl(
-                PR_ntohl(addr.pr_s6_addr32[0]) & (~0L << (32 - mask_len)));
-    }
-=======
 static void proxy_MaskIPv6Addr(PRIPv6Addr& addr, uint16_t mask_len) {
   if (mask_len == 128) return;
 
@@ -1262,39 +691,8 @@ static void proxy_MaskIPv6Addr(PRIPv6Addr& addr, uint16_t mask_len) {
     addr.pr_s6_addr32[0] =
         PR_htonl(PR_ntohl(addr.pr_s6_addr32[0]) & (~0L << (32 - mask_len)));
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void proxy_GetStringPref(nsIPrefBranch *aPrefBranch, const char *aPref,
-                                nsCString &aResult) {
-  nsAutoCString temp;
-  nsresult rv = aPrefBranch->GetCharPref(aPref, temp);
-  if (NS_FAILED(rv))
-    aResult.Truncate();
-  else {
-    aResult.Assign(temp);
-    // all of our string prefs are hostnames, so we should remove any
-    // whitespace characters that the user might have unknowingly entered.
-    aResult.StripWhitespace();
-  }
-||||||| merged common ancestors
-static void
-proxy_GetStringPref(nsIPrefBranch *aPrefBranch,
-                    const char    *aPref,
-                    nsCString     &aResult)
-{
-    nsAutoCString temp;
-    nsresult rv = aPrefBranch->GetCharPref(aPref, temp);
-    if (NS_FAILED(rv))
-        aResult.Truncate();
-    else {
-        aResult.Assign(temp);
-        // all of our string prefs are hostnames, so we should remove any
-        // whitespace characters that the user might have unknowingly entered.
-        aResult.StripWhitespace();
-    }
-=======
 static void proxy_GetStringPref(nsIPrefBranch* aPrefBranch, const char* aPref,
                                 nsCString& aResult) {
   nsAutoCString temp;
@@ -1307,31 +705,8 @@ static void proxy_GetStringPref(nsIPrefBranch* aPrefBranch, const char* aPref,
     // whitespace characters that the user might have unknowingly entered.
     aResult.StripWhitespace();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void proxy_GetIntPref(nsIPrefBranch *aPrefBranch, const char *aPref,
-                             int32_t &aResult) {
-  int32_t temp;
-  nsresult rv = aPrefBranch->GetIntPref(aPref, &temp);
-  if (NS_FAILED(rv))
-    aResult = -1;
-  else
-    aResult = temp;
-||||||| merged common ancestors
-static void
-proxy_GetIntPref(nsIPrefBranch *aPrefBranch,
-                 const char    *aPref,
-                 int32_t       &aResult)
-{
-    int32_t temp;
-    nsresult rv = aPrefBranch->GetIntPref(aPref, &temp);
-    if (NS_FAILED(rv))
-        aResult = -1;
-    else
-        aResult = temp;
-=======
 static void proxy_GetIntPref(nsIPrefBranch* aPrefBranch, const char* aPref,
                              int32_t& aResult) {
   int32_t temp;
@@ -1340,31 +715,8 @@ static void proxy_GetIntPref(nsIPrefBranch* aPrefBranch, const char* aPref,
     aResult = -1;
   else
     aResult = temp;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void proxy_GetBoolPref(nsIPrefBranch *aPrefBranch, const char *aPref,
-                              bool &aResult) {
-  bool temp;
-  nsresult rv = aPrefBranch->GetBoolPref(aPref, &temp);
-  if (NS_FAILED(rv))
-    aResult = false;
-  else
-    aResult = temp;
-||||||| merged common ancestors
-static void
-proxy_GetBoolPref(nsIPrefBranch *aPrefBranch,
-                 const char    *aPref,
-                 bool          &aResult)
-{
-    bool temp;
-    nsresult rv = aPrefBranch->GetBoolPref(aPref, &temp);
-    if (NS_FAILED(rv))
-        aResult = false;
-    else
-        aResult = temp;
-=======
 static void proxy_GetBoolPref(nsIPrefBranch* aPrefBranch, const char* aPref,
                               bool& aResult) {
   bool temp;
@@ -1373,7 +725,6 @@ static void proxy_GetBoolPref(nsIPrefBranch* aPrefBranch, const char* aPref,
     aResult = false;
   else
     aResult = temp;
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------------
@@ -1400,52 +751,6 @@ NS_IMPL_CI_INTERFACE_GETTER(nsProtocolProxyService, nsIProtocolProxyService,
                             nsIProtocolProxyService2)
 
 nsProtocolProxyService::nsProtocolProxyService()
-<<<<<<< HEAD
-    : mFilterLocalHosts(false),
-      mProxyConfig(PROXYCONFIG_DIRECT),
-      mHTTPProxyPort(-1),
-      mFTPProxyPort(-1),
-      mHTTPSProxyPort(-1),
-      mSOCKSProxyPort(-1),
-      mSOCKSProxyVersion(4),
-      mSOCKSProxyRemoteDNS(false),
-      mProxyOverTLS(true),
-      mWPADOverDHCPEnabled(false),
-      mPACMan(nullptr),
-      mSessionStart(PR_Now()),
-      mFailedProxyTimeout(30 * 60)  // 30 minute default
-      ,
-      mIsShutdown(false) {}
-
-nsProtocolProxyService::~nsProtocolProxyService() {
-  // These should have been cleaned up in our Observe method.
-  NS_ASSERTION(mHostFiltersArray.Length() == 0 && mFilters.Length() == 0 &&
-                   mPACMan == nullptr,
-               "what happened to xpcom-shutdown?");
-||||||| merged common ancestors
-    : mFilterLocalHosts(false)
-    , mProxyConfig(PROXYCONFIG_DIRECT)
-    , mHTTPProxyPort(-1)
-    , mFTPProxyPort(-1)
-    , mHTTPSProxyPort(-1)
-    , mSOCKSProxyPort(-1)
-    , mSOCKSProxyVersion(4)
-    , mSOCKSProxyRemoteDNS(false)
-    , mProxyOverTLS(true)
-    , mWPADOverDHCPEnabled(false)
-    , mPACMan(nullptr)
-    , mSessionStart(PR_Now())
-    , mFailedProxyTimeout(30 * 60) // 30 minute default
-    , mIsShutdown(false)
-{
-}
-
-nsProtocolProxyService::~nsProtocolProxyService()
-{
-    // These should have been cleaned up in our Observe method.
-    NS_ASSERTION(mHostFiltersArray.Length() == 0 && mFilters.Length() == 0 &&
-                 mPACMan == nullptr, "what happened to xpcom-shutdown?");
-=======
     : mFilterLocalHosts(false),
       mProxyConfig(PROXYCONFIG_DIRECT),
       mHTTPProxyPort(-1),
@@ -1468,7 +773,6 @@ nsProtocolProxyService::~nsProtocolProxyService() {
   NS_ASSERTION(mHostFiltersArray.Length() == 0 && mFilters.Length() == 0 &&
                    mPACMan == nullptr,
                "what happened to xpcom-shutdown?");
->>>>>>> upstream-releases
 }
 
 // nsProtocolProxyService methods
@@ -1563,27 +867,11 @@ nsresult nsProtocolProxyService::AsyncConfigureFromPAC(bool aForceReload,
   return mProxySettingTarget->Dispatch(req, nsIEventTarget::DISPATCH_NORMAL);
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::OnAsyncGetPACURI(bool aForceReload,
-                                                  bool aResetPACThread,
-                                                  nsresult aResult,
-                                                  const nsACString &aUri) {
-  MOZ_ASSERT(NS_IsMainThread());
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::OnAsyncGetPACURI(bool aForceReload,
-                                         bool aResetPACThread,
-                                         nsresult aResult,
-                                         const nsACString& aUri)
-{
-    MOZ_ASSERT(NS_IsMainThread());
-=======
 nsresult nsProtocolProxyService::OnAsyncGetPACURI(bool aForceReload,
                                                   bool aResetPACThread,
                                                   nsresult aResult,
                                                   const nsACString& aUri) {
   MOZ_ASSERT(NS_IsMainThread());
->>>>>>> upstream-releases
 
   if (aResetPACThread) {
     ResetPACThread();
@@ -1597,30 +885,6 @@ nsresult nsProtocolProxyService::OnAsyncGetPACURI(bool aForceReload,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::Observe(nsISupports *aSubject, const char *aTopic,
-                                const char16_t *aData) {
-  if (strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0) {
-    mIsShutdown = true;
-    // cleanup
-    mHostFiltersArray.Clear();
-    mFilters.Clear();
-||||||| merged common ancestors
-nsProtocolProxyService::Observe(nsISupports     *aSubject,
-                                const char      *aTopic,
-                                const char16_t *aData)
-{
-    if (strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0) {
-        mIsShutdown = true;
-        // cleanup
-        mHostFiltersArray.Clear();
-        mFilters.Clear();
-
-        if (mPACMan) {
-            mPACMan->Shutdown();
-            mPACMan = nullptr;
-        }
-=======
 nsProtocolProxyService::Observe(nsISupports* aSubject, const char* aTopic,
                                 const char16_t* aData) {
   if (strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0) {
@@ -1628,7 +892,6 @@ nsProtocolProxyService::Observe(nsISupports* aSubject, const char* aTopic,
     // cleanup
     mHostFiltersArray.Clear();
     mFilters.Clear();
->>>>>>> upstream-releases
 
     if (mPACMan) {
       mPACMan->Shutdown();
@@ -1644,28 +907,12 @@ nsProtocolProxyService::Observe(nsISupports* aSubject, const char* aTopic,
       obs->RemoveObserver(this, NS_NETWORK_LINK_TOPIC);
       obs->RemoveObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID);
     }
-<<<<<<< HEAD
-
-  } else if (strcmp(aTopic, NS_NETWORK_LINK_TOPIC) == 0) {
-    nsCString converted = NS_ConvertUTF16toUTF8(aData);
-    const char *state = converted.get();
-    if (!strcmp(state, NS_NETWORK_LINK_DATA_CHANGED)) {
-      ReloadNetworkPAC();
-||||||| merged common ancestors
-    else {
-        NS_ASSERTION(strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID) == 0,
-                     "what is this random observer event?");
-        nsCOMPtr<nsIPrefBranch> prefs = do_QueryInterface(aSubject);
-        if (prefs)
-            PrefsChanged(prefs, NS_LossyConvertUTF16toASCII(aData).get());
-=======
 
   } else if (strcmp(aTopic, NS_NETWORK_LINK_TOPIC) == 0) {
     nsCString converted = NS_ConvertUTF16toUTF8(aData);
     const char* state = converted.get();
     if (!strcmp(state, NS_NETWORK_LINK_DATA_CHANGED)) {
       ReloadNetworkPAC();
->>>>>>> upstream-releases
     }
   } else {
     NS_ASSERTION(strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID) == 0,
@@ -1676,84 +923,6 @@ nsProtocolProxyService::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::PrefsChanged(nsIPrefBranch *prefBranch,
-                                          const char *pref) {
-  nsresult rv = NS_OK;
-  bool reloadPAC = false;
-  nsAutoCString tempString;
-
-  if (!pref || !strcmp(pref, PROXY_PREF("type"))) {
-    int32_t type = -1;
-    rv = prefBranch->GetIntPref(PROXY_PREF("type"), &type);
-    if (NS_SUCCEEDED(rv)) {
-      // bug 115720 - for ns4.x backwards compatibility
-      if (type == PROXYCONFIG_DIRECT4X) {
-        type = PROXYCONFIG_DIRECT;
-        // Reset the type so that the dialog looks correct, and we
-        // don't have to handle this case everywhere else
-        // I'm paranoid about a loop of some sort - only do this
-        // if we're enumerating all prefs, and ignore any error
-        if (!pref) prefBranch->SetIntPref(PROXY_PREF("type"), type);
-      } else if (type >= PROXYCONFIG_COUNT) {
-        LOG(("unknown proxy type: %" PRId32 "; assuming direct\n", type));
-        type = PROXYCONFIG_DIRECT;
-      }
-      mProxyConfig = type;
-      reloadPAC = true;
-    }
-
-    if (mProxyConfig == PROXYCONFIG_SYSTEM) {
-      mSystemProxySettings = do_GetService(NS_SYSTEMPROXYSETTINGS_CONTRACTID);
-      if (!mSystemProxySettings) mProxyConfig = PROXYCONFIG_DIRECT;
-      ResetPACThread();
-    } else {
-      if (mSystemProxySettings) {
-        mSystemProxySettings = nullptr;
-        ResetPACThread();
-      }
-||||||| merged common ancestors
-void
-nsProtocolProxyService::PrefsChanged(nsIPrefBranch *prefBranch,
-                                     const char    *pref)
-{
-    nsresult rv = NS_OK;
-    bool reloadPAC = false;
-    nsAutoCString tempString;
-
-    if (!pref || !strcmp(pref, PROXY_PREF("type"))) {
-        int32_t type = -1;
-        rv = prefBranch->GetIntPref(PROXY_PREF("type"), &type);
-        if (NS_SUCCEEDED(rv)) {
-            // bug 115720 - for ns4.x backwards compatibility
-            if (type == PROXYCONFIG_DIRECT4X) {
-                type = PROXYCONFIG_DIRECT;
-                // Reset the type so that the dialog looks correct, and we
-                // don't have to handle this case everywhere else
-                // I'm paranoid about a loop of some sort - only do this
-                // if we're enumerating all prefs, and ignore any error
-                if (!pref)
-                    prefBranch->SetIntPref(PROXY_PREF("type"), type);
-            } else if (type >= PROXYCONFIG_COUNT) {
-                LOG(("unknown proxy type: %" PRId32 "; assuming direct\n", type));
-                type = PROXYCONFIG_DIRECT;
-            }
-            mProxyConfig = type;
-            reloadPAC = true;
-        }
-
-        if (mProxyConfig == PROXYCONFIG_SYSTEM) {
-            mSystemProxySettings = do_GetService(NS_SYSTEMPROXYSETTINGS_CONTRACTID);
-            if (!mSystemProxySettings)
-                mProxyConfig = PROXYCONFIG_DIRECT;
-            ResetPACThread();
-        } else {
-            if (mSystemProxySettings) {
-                mSystemProxySettings = nullptr;
-                ResetPACThread();
-            }
-        }
-=======
 void nsProtocolProxyService::PrefsChanged(nsIPrefBranch* prefBranch,
                                           const char* pref) {
   nsresult rv = NS_OK;
@@ -1778,17 +947,8 @@ void nsProtocolProxyService::PrefsChanged(nsIPrefBranch* prefBranch,
       }
       mProxyConfig = type;
       reloadPAC = true;
->>>>>>> upstream-releases
     }
-  }
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("http")))
-    proxy_GetStringPref(prefBranch, PROXY_PREF("http"), mHTTPProxyHost);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("http")))
-        proxy_GetStringPref(prefBranch, PROXY_PREF("http"), mHTTPProxyHost);
-=======
     if (mProxyConfig == PROXYCONFIG_SYSTEM) {
       mSystemProxySettings = do_GetService(NS_SYSTEMPROXYSETTINGS_CONTRACTID);
       if (!mSystemProxySettings) mProxyConfig = PROXYCONFIG_DIRECT;
@@ -1800,140 +960,31 @@ void nsProtocolProxyService::PrefsChanged(nsIPrefBranch* prefBranch,
       }
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("http_port")))
-    proxy_GetIntPref(prefBranch, PROXY_PREF("http_port"), mHTTPProxyPort);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("http_port")))
-        proxy_GetIntPref(prefBranch, PROXY_PREF("http_port"), mHTTPProxyPort);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("http")))
     proxy_GetStringPref(prefBranch, PROXY_PREF("http"), mHTTPProxyHost);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("ssl")))
-    proxy_GetStringPref(prefBranch, PROXY_PREF("ssl"), mHTTPSProxyHost);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("ssl")))
-        proxy_GetStringPref(prefBranch, PROXY_PREF("ssl"), mHTTPSProxyHost);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("http_port")))
     proxy_GetIntPref(prefBranch, PROXY_PREF("http_port"), mHTTPProxyPort);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("ssl_port")))
-    proxy_GetIntPref(prefBranch, PROXY_PREF("ssl_port"), mHTTPSProxyPort);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("ssl_port")))
-        proxy_GetIntPref(prefBranch, PROXY_PREF("ssl_port"), mHTTPSProxyPort);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("ssl")))
     proxy_GetStringPref(prefBranch, PROXY_PREF("ssl"), mHTTPSProxyHost);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("ftp")))
-    proxy_GetStringPref(prefBranch, PROXY_PREF("ftp"), mFTPProxyHost);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("ftp")))
-        proxy_GetStringPref(prefBranch, PROXY_PREF("ftp"), mFTPProxyHost);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("ssl_port")))
     proxy_GetIntPref(prefBranch, PROXY_PREF("ssl_port"), mHTTPSProxyPort);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("ftp_port")))
-    proxy_GetIntPref(prefBranch, PROXY_PREF("ftp_port"), mFTPProxyPort);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("ftp_port")))
-        proxy_GetIntPref(prefBranch, PROXY_PREF("ftp_port"), mFTPProxyPort);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("ftp")))
     proxy_GetStringPref(prefBranch, PROXY_PREF("ftp"), mFTPProxyHost);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("socks")))
-    proxy_GetStringPref(prefBranch, PROXY_PREF("socks"), mSOCKSProxyTarget);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("socks")))
-        proxy_GetStringPref(prefBranch, PROXY_PREF("socks"), mSOCKSProxyTarget);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("ftp_port")))
     proxy_GetIntPref(prefBranch, PROXY_PREF("ftp_port"), mFTPProxyPort);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("socks_port")))
-    proxy_GetIntPref(prefBranch, PROXY_PREF("socks_port"), mSOCKSProxyPort);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("socks_port")))
-        proxy_GetIntPref(prefBranch, PROXY_PREF("socks_port"), mSOCKSProxyPort);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("socks")))
     proxy_GetStringPref(prefBranch, PROXY_PREF("socks"), mSOCKSProxyTarget);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("socks_version"))) {
-    int32_t version;
-    proxy_GetIntPref(prefBranch, PROXY_PREF("socks_version"), version);
-    // make sure this preference value remains sane
-    if (version == 5)
-      mSOCKSProxyVersion = 5;
-    else
-      mSOCKSProxyVersion = 4;
-  }
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("socks_version"))) {
-        int32_t version;
-        proxy_GetIntPref(prefBranch, PROXY_PREF("socks_version"), version);
-        // make sure this preference value remains sane
-        if (version == 5)
-            mSOCKSProxyVersion = 5;
-        else
-            mSOCKSProxyVersion = 4;
-    }
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("socks_port")))
     proxy_GetIntPref(prefBranch, PROXY_PREF("socks_port"), mSOCKSProxyPort);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("socks_remote_dns")))
-    proxy_GetBoolPref(prefBranch, PROXY_PREF("socks_remote_dns"),
-                      mSOCKSProxyRemoteDNS);
-
-  if (!pref || !strcmp(pref, PROXY_PREF("proxy_over_tls"))) {
-    proxy_GetBoolPref(prefBranch, PROXY_PREF("proxy_over_tls"), mProxyOverTLS);
-  }
-
-  if (!pref || !strcmp(pref, PROXY_PREF("enable_wpad_over_dhcp"))) {
-    proxy_GetBoolPref(prefBranch, PROXY_PREF("enable_wpad_over_dhcp"),
-                      mWPADOverDHCPEnabled);
-    reloadPAC = reloadPAC || mProxyConfig == PROXYCONFIG_WPAD;
-  }
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("socks_remote_dns")))
-        proxy_GetBoolPref(prefBranch, PROXY_PREF("socks_remote_dns"),
-                          mSOCKSProxyRemoteDNS);
-
-    if (!pref || !strcmp(pref, PROXY_PREF("proxy_over_tls"))) {
-        proxy_GetBoolPref(prefBranch, PROXY_PREF("proxy_over_tls"),
-                          mProxyOverTLS);
-    }
-
-    if (!pref || !strcmp(pref, PROXY_PREF("enable_wpad_over_dhcp"))) {
-        proxy_GetBoolPref(prefBranch, PROXY_PREF("enable_wpad_over_dhcp"),
-                          mWPADOverDHCPEnabled);
-        reloadPAC = reloadPAC || mProxyConfig == PROXYCONFIG_WPAD;
-    }
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("socks_version"))) {
     int32_t version;
     proxy_GetIntPref(prefBranch, PROXY_PREF("socks_version"), version);
@@ -1943,220 +994,47 @@ void nsProtocolProxyService::PrefsChanged(nsIPrefBranch* prefBranch,
     else
       mSOCKSProxyVersion = 4;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("failover_timeout")))
-    proxy_GetIntPref(prefBranch, PROXY_PREF("failover_timeout"),
-                     mFailedProxyTimeout);
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("failover_timeout")))
-        proxy_GetIntPref(prefBranch, PROXY_PREF("failover_timeout"),
-                         mFailedProxyTimeout);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("socks_remote_dns")))
     proxy_GetBoolPref(prefBranch, PROXY_PREF("socks_remote_dns"),
                       mSOCKSProxyRemoteDNS);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!pref || !strcmp(pref, PROXY_PREF("no_proxies_on"))) {
-    rv = prefBranch->GetCharPref(PROXY_PREF("no_proxies_on"), tempString);
-    if (NS_SUCCEEDED(rv)) LoadHostFilters(tempString);
-  }
-||||||| merged common ancestors
-    if (!pref || !strcmp(pref, PROXY_PREF("no_proxies_on"))) {
-        rv = prefBranch->GetCharPref(PROXY_PREF("no_proxies_on"), tempString);
-        if (NS_SUCCEEDED(rv))
-            LoadHostFilters(tempString);
-    }
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("proxy_over_tls"))) {
     proxy_GetBoolPref(prefBranch, PROXY_PREF("proxy_over_tls"), mProxyOverTLS);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // We're done if not using something that could give us a PAC URL
-  // (PAC, WPAD or System)
-  if (mProxyConfig != PROXYCONFIG_PAC && mProxyConfig != PROXYCONFIG_WPAD &&
-      mProxyConfig != PROXYCONFIG_SYSTEM)
-    return;
-||||||| merged common ancestors
-    // We're done if not using something that could give us a PAC URL
-    // (PAC, WPAD or System)
-    if (mProxyConfig != PROXYCONFIG_PAC && mProxyConfig != PROXYCONFIG_WPAD &&
-        mProxyConfig != PROXYCONFIG_SYSTEM)
-        return;
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("enable_wpad_over_dhcp"))) {
     proxy_GetBoolPref(prefBranch, PROXY_PREF("enable_wpad_over_dhcp"),
                       mWPADOverDHCPEnabled);
     reloadPAC = reloadPAC || mProxyConfig == PROXYCONFIG_WPAD;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // OK, we need to reload the PAC file if:
-  //  1) network.proxy.type changed, or
-  //  2) network.proxy.autoconfig_url changed and PAC is configured
-
-  if (!pref || !strcmp(pref, PROXY_PREF("autoconfig_url"))) reloadPAC = true;
-
-  if (reloadPAC) {
-    tempString.Truncate();
-    if (mProxyConfig == PROXYCONFIG_PAC) {
-      prefBranch->GetCharPref(PROXY_PREF("autoconfig_url"), tempString);
-      if (mPACMan && !mPACMan->IsPACURI(tempString)) {
-        LOG(("PAC Thread URI Changed - Reset Pac Thread"));
-        ResetPACThread();
-      }
-    } else if (mProxyConfig == PROXYCONFIG_WPAD) {
-      LOG(("Auto-detecting proxy - Reset Pac Thread"));
-      ResetPACThread();
-    } else if (mSystemProxySettings) {
-      // Get System Proxy settings if available
-      AsyncConfigureFromPAC(false, false);
-    }
-    if (!tempString.IsEmpty() || mProxyConfig == PROXYCONFIG_WPAD) {
-      ConfigureFromPAC(tempString, false);
-    }
-  }
-}
-||||||| merged common ancestors
-    // OK, we need to reload the PAC file if:
-    //  1) network.proxy.type changed, or
-    //  2) network.proxy.autoconfig_url changed and PAC is configured
-
-    if (!pref || !strcmp(pref, PROXY_PREF("autoconfig_url")))
-        reloadPAC = true;
-
-    if (reloadPAC) {
-        tempString.Truncate();
-        if (mProxyConfig == PROXYCONFIG_PAC) {
-            prefBranch->GetCharPref(PROXY_PREF("autoconfig_url"), tempString);
-            if (mPACMan && !mPACMan->IsPACURI(tempString)) {
-                LOG(("PAC Thread URI Changed - Reset Pac Thread"));
-                ResetPACThread();
-            }
-        } else if (mProxyConfig == PROXYCONFIG_WPAD) {
-            LOG(("Auto-detecting proxy - Reset Pac Thread"));
-            ResetPACThread();
-        } else if (mSystemProxySettings) {
-            // Get System Proxy settings if available
-            AsyncConfigureFromPAC(false, false);
-        }
-        if (!tempString.IsEmpty() || mProxyConfig == PROXYCONFIG_WPAD) {
-            ConfigureFromPAC(tempString, false);
-        }
-    }
-}
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("allow_hijacking_localhost"))) {
     proxy_GetBoolPref(prefBranch, PROXY_PREF("allow_hijacking_localhost"),
                       mAllowHijackingLocalhost);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool nsProtocolProxyService::CanUseProxy(nsIURI *aURI, int32_t defaultPort) {
-  if (mHostFiltersArray.Length() == 0 && !mFilterLocalHosts) return true;
-||||||| merged common ancestors
-bool
-nsProtocolProxyService::CanUseProxy(nsIURI *aURI, int32_t defaultPort)
-{
-    if (mHostFiltersArray.Length() == 0 && !mFilterLocalHosts)
-        return true;
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("failover_timeout")))
     proxy_GetIntPref(prefBranch, PROXY_PREF("failover_timeout"),
                      mFailedProxyTimeout);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int32_t port;
-  nsAutoCString host;
-||||||| merged common ancestors
-    int32_t port;
-    nsAutoCString host;
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("no_proxies_on"))) {
     rv = prefBranch->GetCharPref(PROXY_PREF("no_proxies_on"), tempString);
     if (NS_SUCCEEDED(rv)) LoadHostFilters(tempString);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv = aURI->GetAsciiHost(host);
-  if (NS_FAILED(rv) || host.IsEmpty()) return false;
-||||||| merged common ancestors
-    nsresult rv = aURI->GetAsciiHost(host);
-    if (NS_FAILED(rv) || host.IsEmpty())
-        return false;
-=======
   // We're done if not using something that could give us a PAC URL
   // (PAC, WPAD or System)
   if (mProxyConfig != PROXYCONFIG_PAC && mProxyConfig != PROXYCONFIG_WPAD &&
       mProxyConfig != PROXYCONFIG_SYSTEM)
     return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = aURI->GetPort(&port);
-  if (NS_FAILED(rv)) return false;
-  if (port == -1) port = defaultPort;
-||||||| merged common ancestors
-    rv = aURI->GetPort(&port);
-    if (NS_FAILED(rv))
-        return false;
-    if (port == -1)
-        port = defaultPort;
-=======
   // OK, we need to reload the PAC file if:
   //  1) network.proxy.type changed, or
   //  2) network.proxy.autoconfig_url changed and PAC is configured
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PRNetAddr addr;
-  bool is_ipaddr = (PR_StringToNetAddr(host.get(), &addr) == PR_SUCCESS);
-||||||| merged common ancestors
-    PRNetAddr addr;
-    bool is_ipaddr = (PR_StringToNetAddr(host.get(), &addr) == PR_SUCCESS);
-=======
   if (!pref || !strcmp(pref, PROXY_PREF("autoconfig_url"))) reloadPAC = true;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PRIPv6Addr ipv6;
-  if (is_ipaddr) {
-    // convert parsed address to IPv6
-    if (addr.raw.family == PR_AF_INET) {
-      // convert to IPv4-mapped address
-      PR_ConvertIPv4AddrToIPv6(addr.inet.ip, &ipv6);
-    } else if (addr.raw.family == PR_AF_INET6) {
-      // copy the address
-      memcpy(&ipv6, &addr.ipv6.ip, sizeof(PRIPv6Addr));
-    } else {
-      NS_WARNING("unknown address family");
-      return true;  // allow proxying
-||||||| merged common ancestors
-    PRIPv6Addr ipv6;
-    if (is_ipaddr) {
-        // convert parsed address to IPv6
-        if (addr.raw.family == PR_AF_INET) {
-            // convert to IPv4-mapped address
-            PR_ConvertIPv4AddrToIPv6(addr.inet.ip, &ipv6);
-        }
-        else if (addr.raw.family == PR_AF_INET6) {
-            // copy the address
-            memcpy(&ipv6, &addr.ipv6.ip, sizeof(PRIPv6Addr));
-        }
-        else {
-            NS_WARNING("unknown address family");
-            return true; // allow proxying
-        }
-=======
   if (reloadPAC) {
     tempString.Truncate();
     if (mProxyConfig == PROXYCONFIG_PAC) {
@@ -2174,32 +1052,10 @@ nsProtocolProxyService::CanUseProxy(nsIURI *aURI, int32_t defaultPort)
     }
     if (!tempString.IsEmpty() || mProxyConfig == PROXYCONFIG_WPAD) {
       ConfigureFromPAC(tempString, false);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Don't use proxy for local hosts (plain hostname, no dots)
-  if ((!is_ipaddr && mFilterLocalHosts && !host.Contains('.')) ||
-      host.EqualsLiteral("127.0.0.1") || host.EqualsLiteral("::1")) {
-    LOG(("Not using proxy for this local host [%s]!\n", host.get()));
-    return false;  // don't allow proxying
-  }
-||||||| merged common ancestors
-    // Don't use proxy for local hosts (plain hostname, no dots)
-    if ((!is_ipaddr && mFilterLocalHosts && !host.Contains('.')) ||
-        host.EqualsLiteral("127.0.0.1") ||
-        host.EqualsLiteral("::1")) {
-        LOG(("Not using proxy for this local host [%s]!\n", host.get()));
-        return false; // don't allow proxying
-    }
-=======
 bool nsProtocolProxyService::CanUseProxy(nsIURI* aURI, int32_t defaultPort) {
   int32_t port;
   nsAutoCString host;
@@ -2228,17 +1084,7 @@ bool nsProtocolProxyService::CanUseProxy(nsIURI* aURI, int32_t defaultPort) {
       return true;  // allow proxying
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int32_t index = -1;
-  while (++index < int32_t(mHostFiltersArray.Length())) {
-    HostInfo *hinfo = mHostFiltersArray[index];
-||||||| merged common ancestors
-    int32_t index = -1;
-    while (++index < int32_t(mHostFiltersArray.Length())) {
-        HostInfo *hinfo = mHostFiltersArray[index];
-=======
   // Don't use proxy for local hosts (plain hostname, no dots)
   if ((!is_ipaddr && mFilterLocalHosts && !host.Contains('.')) ||
       (!mAllowHijackingLocalhost &&
@@ -2247,126 +1093,14 @@ bool nsProtocolProxyService::CanUseProxy(nsIURI* aURI, int32_t defaultPort) {
     LOG(("Not using proxy for this local host [%s]!\n", host.get()));
     return false;  // don't allow proxying
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (is_ipaddr != hinfo->is_ipaddr) continue;
-    if (hinfo->port && hinfo->port != port) continue;
-||||||| merged common ancestors
-        if (is_ipaddr != hinfo->is_ipaddr)
-            continue;
-        if (hinfo->port && hinfo->port != port)
-            continue;
-=======
   int32_t index = -1;
   while (++index < int32_t(mHostFiltersArray.Length())) {
     HostInfo* hinfo = mHostFiltersArray[index];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (is_ipaddr) {
-      // generate masked version of target IPv6 address
-      PRIPv6Addr masked;
-      memcpy(&masked, &ipv6, sizeof(PRIPv6Addr));
-      proxy_MaskIPv6Addr(masked, hinfo->ip.mask_len);
-
-      // check for a match
-      if (memcmp(&masked, &hinfo->ip.addr, sizeof(PRIPv6Addr)) == 0)
-        return false;  // proxy disallowed
-    } else {
-      uint32_t host_len = host.Length();
-      uint32_t filter_host_len = hinfo->name.host_len;
-
-      if (host_len >= filter_host_len) {
-        //
-        // compare last |filter_host_len| bytes of target hostname.
-        //
-        const char *host_tail = host.get() + host_len - filter_host_len;
-        if (!PL_strncasecmp(host_tail, hinfo->name.host, filter_host_len)) {
-          // If the tail of the host string matches the filter
-
-          if (filter_host_len > 0 && hinfo->name.host[0] == '.') {
-            // If the filter was of the form .foo.bar.tld, all such
-            // matches are correct
-            return false;  // proxy disallowed
-          }
-||||||| merged common ancestors
-        if (is_ipaddr) {
-            // generate masked version of target IPv6 address
-            PRIPv6Addr masked;
-            memcpy(&masked, &ipv6, sizeof(PRIPv6Addr));
-            proxy_MaskIPv6Addr(masked, hinfo->ip.mask_len);
-=======
     if (is_ipaddr != hinfo->is_ipaddr) continue;
     if (hinfo->port && hinfo->port != port) continue;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-          // abc-def.example.org should not match def.example.org
-          // however, *.def.example.org should match .def.example.org
-          // We check that the filter doesn't start with a `.`. If it does,
-          // then the strncasecmp above should suffice. If it doesn't,
-          // then we should only consider it a match if the strncasecmp happened
-          // at a subdomain boundary
-          if (host_len > filter_host_len && *(host_tail - 1) == '.') {
-            // If the host was something.foo.bar.tld and the filter
-            // was foo.bar.tld, it's still a match.
-            // the character right before the tail must be a
-            // `.` for this to work
-            return false;  // proxy disallowed
-          }
-
-          if (host_len == filter_host_len) {
-            // If the host and filter are of the same length,
-            // they should match
-            return false;  // proxy disallowed
-          }
-||||||| merged common ancestors
-            // check for a match
-            if (memcmp(&masked, &hinfo->ip.addr, sizeof(PRIPv6Addr)) == 0)
-                return false; // proxy disallowed
-        }
-        else {
-            uint32_t host_len = host.Length();
-            uint32_t filter_host_len = hinfo->name.host_len;
-
-            if (host_len >= filter_host_len) {
-                //
-                // compare last |filter_host_len| bytes of target hostname.
-                //
-                const char *host_tail = host.get() + host_len - filter_host_len;
-                if (!PL_strncasecmp(host_tail, hinfo->name.host, filter_host_len)) {
-                    // If the tail of the host string matches the filter
-
-                    if (filter_host_len > 0 && hinfo->name.host[0] == '.') {
-                        // If the filter was of the form .foo.bar.tld, all such
-                        // matches are correct
-                        return false; // proxy disallowed
-                    }
-
-                    // abc-def.example.org should not match def.example.org
-                    // however, *.def.example.org should match .def.example.org
-                    // We check that the filter doesn't start with a `.`. If it does,
-                    // then the strncasecmp above should suffice. If it doesn't,
-                    // then we should only consider it a match if the strncasecmp happened
-                    // at a subdomain boundary
-                    if (host_len > filter_host_len && *(host_tail - 1) == '.') {
-                            // If the host was something.foo.bar.tld and the filter
-                            // was foo.bar.tld, it's still a match.
-                            // the character right before the tail must be a
-                            // `.` for this to work
-                            return false; // proxy disallowed
-                    }
-
-                    if (host_len == filter_host_len) {
-                        // If the host and filter are of the same length,
-                        // they should match
-                        return false; // proxy disallowed
-                    }
-                }
-
-            }
-=======
     if (is_ipaddr) {
       // generate masked version of target IPv6 address
       PRIPv6Addr masked;
@@ -2413,7 +1147,6 @@ bool nsProtocolProxyService::CanUseProxy(nsIURI* aURI, int32_t defaultPort) {
             // they should match
             return false;  // proxy disallowed
           }
->>>>>>> upstream-releases
         }
       }
     }
@@ -2423,65 +1156,6 @@ bool nsProtocolProxyService::CanUseProxy(nsIURI* aURI, int32_t defaultPort) {
 
 // kProxyType\* may be referred to externally in
 // nsProxyInfo in order to compare by string pointer
-<<<<<<< HEAD
-const char kProxyType_HTTP[] = "http";
-const char kProxyType_HTTPS[] = "https";
-const char kProxyType_PROXY[] = "proxy";
-const char kProxyType_SOCKS[] = "socks";
-const char kProxyType_SOCKS4[] = "socks4";
-const char kProxyType_SOCKS5[] = "socks5";
-const char kProxyType_DIRECT[] = "direct";
-
-const char *nsProtocolProxyService::ExtractProxyInfo(const char *start,
-                                                     uint32_t aResolveFlags,
-                                                     nsProxyInfo **result) {
-  *result = nullptr;
-  uint32_t flags = 0;
-
-  // see BNF in ProxyAutoConfig.h and notes in nsISystemProxySettings.idl
-
-  // find end of proxy info delimiter
-  const char *end = start;
-  while (*end && *end != ';') ++end;
-
-  // find end of proxy type delimiter
-  const char *sp = start;
-  while (sp < end && *sp != ' ' && *sp != '\t') ++sp;
-
-  uint32_t len = sp - start;
-  const char *type = nullptr;
-  switch (len) {
-||||||| merged common ancestors
-const char kProxyType_HTTP[]    = "http";
-const char kProxyType_HTTPS[]   = "https";
-const char kProxyType_PROXY[]   = "proxy";
-const char kProxyType_SOCKS[]   = "socks";
-const char kProxyType_SOCKS4[]  = "socks4";
-const char kProxyType_SOCKS5[]  = "socks5";
-const char kProxyType_DIRECT[]  = "direct";
-
-const char *
-nsProtocolProxyService::ExtractProxyInfo(const char *start,
-                                         uint32_t aResolveFlags,
-                                         nsProxyInfo **result)
-{
-    *result = nullptr;
-    uint32_t flags = 0;
-
-    // see BNF in ProxyAutoConfig.h and notes in nsISystemProxySettings.idl
-
-    // find end of proxy info delimiter
-    const char *end = start;
-    while (*end && *end != ';') ++end;
-
-    // find end of proxy type delimiter
-    const char *sp = start;
-    while (sp < end && *sp != ' ' && *sp != '\t') ++sp;
-
-    uint32_t len = sp - start;
-    const char *type = nullptr;
-    switch (len) {
-=======
 const char kProxyType_HTTP[] = "http";
 const char kProxyType_HTTPS[] = "https";
 const char kProxyType_PROXY[] = "proxy";
@@ -2509,7 +1183,6 @@ const char* nsProtocolProxyService::ExtractProxyInfo(const char* start,
   uint32_t len = sp - start;
   const char* type = nullptr;
   switch (len) {
->>>>>>> upstream-releases
     case 4:
       if (PL_strncasecmp(start, kProxyType_HTTP, 5) == 0) {
         type = kProxyType_HTTP;
@@ -2558,83 +1231,6 @@ const char* nsProtocolProxyService::ExtractProxyInfo(const char* start,
       port = 1080;
     }
 
-<<<<<<< HEAD
-    nsProxyInfo *pi = new nsProxyInfo();
-    pi->mType = type;
-    pi->mFlags = flags;
-    pi->mResolveFlags = aResolveFlags;
-    pi->mTimeout = mFailedProxyTimeout;
-
-    // www.foo.com:8080 and http://www.foo.com:8080
-    nsDependentCSubstring maybeURL(start, end - start);
-    nsCOMPtr<nsIURI> pacURI;
-
-    nsAutoCString urlHost;
-    if (NS_SUCCEEDED(NS_NewURI(getter_AddRefs(pacURI), maybeURL)) &&
-        NS_SUCCEEDED(pacURI->GetAsciiHost(urlHost)) && !urlHost.IsEmpty()) {
-      // http://www.example.com:8080
-
-      pi->mHost = urlHost;
-
-      int32_t tPort;
-      if (NS_SUCCEEDED(pacURI->GetPort(&tPort)) && tPort != -1) {
-        port = tPort;
-      }
-      pi->mPort = port;
-    } else {
-      // www.example.com:8080
-      if (start < end) {
-        host = start;
-        hostEnd = strchr(host, ':');
-        if (!hostEnd || hostEnd > end) {
-          hostEnd = end;
-          // no port, so assume default
-        } else {
-          port = atoi(hostEnd + 1);
-||||||| merged common ancestors
-        nsProxyInfo *pi = new nsProxyInfo();
-        pi->mType = type;
-        pi->mFlags = flags;
-        pi->mResolveFlags = aResolveFlags;
-        pi->mTimeout = mFailedProxyTimeout;
-
-        // www.foo.com:8080 and http://www.foo.com:8080
-        nsDependentCSubstring maybeURL(start, end - start);
-        nsCOMPtr<nsIURI> pacURI;
-
-        nsAutoCString urlHost;
-        if (NS_SUCCEEDED(NS_NewURI(getter_AddRefs(pacURI), maybeURL)) &&
-            NS_SUCCEEDED(pacURI->GetAsciiHost(urlHost)) &&
-            !urlHost.IsEmpty()) {
-            // http://www.example.com:8080
-
-            pi->mHost = urlHost;
-
-            int32_t tPort;
-            if (NS_SUCCEEDED(pacURI->GetPort(&tPort)) && tPort != -1) {
-                port = tPort;
-            }
-            pi->mPort = port;
-        }
-        else {
-            // www.example.com:8080
-            if (start < end) {
-                host = start;
-                hostEnd = strchr(host, ':');
-                if (!hostEnd || hostEnd > end) {
-                    hostEnd = end;
-                    // no port, so assume default
-                }
-                else {
-                    port = atoi(hostEnd + 1);
-                }
-            }
-            // YES, it is ok to specify a null proxy host.
-            if (host) {
-                pi->mHost.Assign(host, hostEnd - host);
-                pi->mPort = port;
-            }
-=======
     nsProxyInfo* pi = new nsProxyInfo();
     pi->mType = type;
     pi->mFlags = flags;
@@ -2667,7 +1263,6 @@ const char* nsProtocolProxyService::ExtractProxyInfo(const char* start,
           // no port, so assume default
         } else {
           port = atoi(hostEnd + 1);
->>>>>>> upstream-releases
         }
       }
       // YES, it is ok to specify a null proxy host.
@@ -2683,27 +1278,6 @@ const char* nsProtocolProxyService::ExtractProxyInfo(const char* start,
   return end;
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::GetProxyKey(nsProxyInfo *pi, nsCString &key) {
-  key.AssignASCII(pi->mType);
-  if (!pi->mHost.IsEmpty()) {
-    key.Append(' ');
-    key.Append(pi->mHost);
-    key.Append(':');
-    key.AppendInt(pi->mPort);
-  }
-||||||| merged common ancestors
-void
-nsProtocolProxyService::GetProxyKey(nsProxyInfo *pi, nsCString &key)
-{
-    key.AssignASCII(pi->mType);
-    if (!pi->mHost.IsEmpty()) {
-        key.Append(' ');
-        key.Append(pi->mHost);
-        key.Append(':');
-        key.AppendInt(pi->mPort);
-    }
-=======
 void nsProtocolProxyService::GetProxyKey(nsProxyInfo* pi, nsCString& key) {
   key.AssignASCII(pi->mType);
   if (!pi->mHost.IsEmpty()) {
@@ -2712,7 +1286,6 @@ void nsProtocolProxyService::GetProxyKey(nsProxyInfo* pi, nsCString& key) {
     key.Append(':');
     key.AppendInt(pi->mPort);
   }
->>>>>>> upstream-releases
 }
 
 uint32_t nsProtocolProxyService::SecondsSinceSessionStart() {
@@ -2728,41 +1301,15 @@ uint32_t nsProtocolProxyService::SecondsSinceSessionStart() {
   return uint32_t(diff);
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::EnableProxy(nsProxyInfo *pi) {
-  nsAutoCString key;
-  GetProxyKey(pi, key);
-  mFailedProxies.Remove(key);
-||||||| merged common ancestors
-void
-nsProtocolProxyService::EnableProxy(nsProxyInfo *pi)
-{
-    nsAutoCString key;
-    GetProxyKey(pi, key);
-    mFailedProxies.Remove(key);
-=======
 void nsProtocolProxyService::EnableProxy(nsProxyInfo* pi) {
   nsAutoCString key;
   GetProxyKey(pi, key);
   mFailedProxies.Remove(key);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::DisableProxy(nsProxyInfo *pi) {
-  nsAutoCString key;
-  GetProxyKey(pi, key);
-||||||| merged common ancestors
-void
-nsProtocolProxyService::DisableProxy(nsProxyInfo *pi)
-{
-    nsAutoCString key;
-    GetProxyKey(pi, key);
-=======
 void nsProtocolProxyService::DisableProxy(nsProxyInfo* pi) {
   nsAutoCString key;
   GetProxyKey(pi, key);
->>>>>>> upstream-releases
 
   uint32_t dsec = SecondsSinceSessionStart();
 
@@ -2785,21 +1332,9 @@ void nsProtocolProxyService::DisableProxy(nsProxyInfo* pi) {
   mFailedProxies.Put(key, dsec);
 }
 
-<<<<<<< HEAD
-bool nsProtocolProxyService::IsProxyDisabled(nsProxyInfo *pi) {
-  nsAutoCString key;
-  GetProxyKey(pi, key);
-||||||| merged common ancestors
-bool
-nsProtocolProxyService::IsProxyDisabled(nsProxyInfo *pi)
-{
-    nsAutoCString key;
-    GetProxyKey(pi, key);
-=======
 bool nsProtocolProxyService::IsProxyDisabled(nsProxyInfo* pi) {
   nsAutoCString key;
   GetProxyKey(pi, key);
->>>>>>> upstream-releases
 
   uint32_t val;
   if (!mFailedProxies.Get(key, &val)) return false;
@@ -2815,26 +1350,11 @@ bool nsProtocolProxyService::IsProxyDisabled(nsProxyInfo* pi) {
   return true;
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::SetupPACThread(
-    nsIEventTarget *mainThreadEventTarget) {
-  if (mIsShutdown) {
-    return NS_ERROR_FAILURE;
-  }
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::SetupPACThread(nsIEventTarget *mainThreadEventTarget)
-{
-    if (mIsShutdown) {
-        return NS_ERROR_FAILURE;
-    }
-=======
 nsresult nsProtocolProxyService::SetupPACThread(
     nsIEventTarget* mainThreadEventTarget) {
   if (mIsShutdown) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   if (mPACMan) return NS_OK;
 
@@ -2864,24 +1384,10 @@ nsresult nsProtocolProxyService::ResetPACThread() {
   return SetupPACThread();
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::ConfigureFromPAC(const nsCString &spec,
-                                                  bool forceReload) {
-  nsresult rv = SetupPACThread();
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::ConfigureFromPAC(const nsCString &spec,
-                                         bool forceReload)
-{
-    nsresult rv = SetupPACThread();
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsresult nsProtocolProxyService::ConfigureFromPAC(const nsCString& spec,
                                                   bool forceReload) {
   nsresult rv = SetupPACThread();
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   bool autodetect = spec.IsEmpty();
   if (!forceReload && ((!autodetect && mPACMan->IsPACURI(spec)) ||
@@ -2895,25 +1401,6 @@ nsresult nsProtocolProxyService::ConfigureFromPAC(const nsCString& spec,
   return mPACMan->LoadPACFromURI(spec);
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::ProcessPACString(const nsCString &pacString,
-                                              uint32_t aResolveFlags,
-                                              nsIProxyInfo **result) {
-  if (pacString.IsEmpty()) {
-    *result = nullptr;
-    return;
-  }
-||||||| merged common ancestors
-void
-nsProtocolProxyService::ProcessPACString(const nsCString &pacString,
-                                         uint32_t aResolveFlags,
-                                         nsIProxyInfo **result)
-{
-    if (pacString.IsEmpty()) {
-        *result = nullptr;
-        return;
-    }
-=======
 void nsProtocolProxyService::ProcessPACString(const nsCString& pacString,
                                               uint32_t aResolveFlags,
                                               nsIProxyInfo** result) {
@@ -2921,15 +1408,8 @@ void nsProtocolProxyService::ProcessPACString(const nsCString& pacString,
     *result = nullptr;
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const char *proxies = pacString.get();
-||||||| merged common ancestors
-    const char *proxies = pacString.get();
-=======
   const char* proxies = pacString.get();
->>>>>>> upstream-releases
 
   nsProxyInfo *pi = nullptr, *first = nullptr, *last = nullptr;
   while (*proxies) {
@@ -2983,50 +1463,6 @@ nsProtocolProxyService::ReloadPAC() {
 // the main thread is blocking on that condvar -
 //  so call nsPACMan::AsyncGetProxyForURI() with
 // a false mainThreadResponse parameter.
-<<<<<<< HEAD
-class nsAsyncBridgeRequest final : public nsPACManCallback {
-  NS_DECL_THREADSAFE_ISUPPORTS
-
-  nsAsyncBridgeRequest()
-      : mMutex("nsDeprecatedCallback"),
-        mCondVar(mMutex, "nsDeprecatedCallback"),
-        mStatus(NS_OK),
-        mCompleted(false) {}
-
-  void OnQueryComplete(nsresult status, const nsACString &pacString,
-                       const nsACString &newPACURL) override {
-    MutexAutoLock lock(mMutex);
-    mCompleted = true;
-    mStatus = status;
-    mPACString = pacString;
-    mPACURL = newPACURL;
-    mCondVar.Notify();
-  }
-||||||| merged common ancestors
-class nsAsyncBridgeRequest final  : public nsPACManCallback
-{
-    NS_DECL_THREADSAFE_ISUPPORTS
-
-     nsAsyncBridgeRequest()
-        : mMutex("nsDeprecatedCallback")
-        , mCondVar(mMutex, "nsDeprecatedCallback")
-        , mStatus(NS_OK)
-        , mCompleted(false)
-    {
-    }
-
-    void OnQueryComplete(nsresult status,
-                          const nsACString &pacString,
-                          const nsACString &newPACURL) override
-    {
-        MutexAutoLock lock(mMutex);
-        mCompleted = true;
-        mStatus = status;
-        mPACString = pacString;
-        mPACURL = newPACURL;
-        mCondVar.Notify();
-    }
-=======
 class nsAsyncBridgeRequest final : public nsPACManCallback {
   NS_DECL_THREADSAFE_ISUPPORTS
 
@@ -3045,7 +1481,6 @@ class nsAsyncBridgeRequest final : public nsPACManCallback {
     mPACURL = newPACURL;
     mCondVar.Notify();
   }
->>>>>>> upstream-releases
 
   void Lock() { mMutex.Lock(); }
   void Unlock() { mMutex.Unlock(); }
@@ -3066,31 +1501,12 @@ class nsAsyncBridgeRequest final : public nsPACManCallback {
 };
 NS_IMPL_ISUPPORTS0(nsAsyncBridgeRequest)
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::AsyncResolveInternal(
-    nsIChannel *channel, uint32_t flags, nsIProtocolProxyCallback *callback,
-    nsICancelable **result, bool isSyncOK,
-    nsIEventTarget *mainThreadEventTarget) {
-  NS_ENSURE_ARG_POINTER(channel);
-  NS_ENSURE_ARG_POINTER(callback);
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::AsyncResolveInternal(nsIChannel *channel, uint32_t flags,
-                                             nsIProtocolProxyCallback *callback,
-                                             nsICancelable **result,
-                                             bool isSyncOK,
-                                             nsIEventTarget *mainThreadEventTarget)
-{
-    NS_ENSURE_ARG_POINTER(channel);
-    NS_ENSURE_ARG_POINTER(callback);
-=======
 nsresult nsProtocolProxyService::AsyncResolveInternal(
     nsIChannel* channel, uint32_t flags, nsIProtocolProxyCallback* callback,
     nsICancelable** result, bool isSyncOK,
     nsIEventTarget* mainThreadEventTarget) {
   NS_ENSURE_ARG_POINTER(channel);
   NS_ENSURE_ARG_POINTER(callback);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIURI> uri;
   nsresult rv = GetProxyURI(channel, getter_AddRefs(uri));
@@ -3148,82 +1564,15 @@ nsresult nsProtocolProxyService::AsyncResolveInternal(
 
 // nsIProtocolProxyService
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::AsyncResolve2(nsIChannel *channel, uint32_t flags,
-                                      nsIProtocolProxyCallback *callback,
-                                      nsIEventTarget *mainThreadEventTarget,
-                                      nsICancelable **result) {
-  return AsyncResolveInternal(channel, flags, callback, result, true,
-                              mainThreadEventTarget);
-||||||| merged common ancestors
-nsProtocolProxyService::AsyncResolve2(nsIChannel *channel, uint32_t flags,
-                                      nsIProtocolProxyCallback *callback,
-                                      nsIEventTarget *mainThreadEventTarget,
-                                      nsICancelable **result)
-{
-    return AsyncResolveInternal(channel, flags, callback,
-                                result, true, mainThreadEventTarget);
-=======
 nsProtocolProxyService::AsyncResolve2(nsIChannel* channel, uint32_t flags,
                                       nsIProtocolProxyCallback* callback,
                                       nsIEventTarget* mainThreadEventTarget,
                                       nsICancelable** result) {
   return AsyncResolveInternal(channel, flags, callback, result, true,
                               mainThreadEventTarget);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::AsyncResolve(nsISupports *channelOrURI, uint32_t flags,
-                                     nsIProtocolProxyCallback *callback,
-                                     nsIEventTarget *mainThreadEventTarget,
-                                     nsICancelable **result) {
-  nsresult rv;
-  // Check if we got a channel:
-  nsCOMPtr<nsIChannel> channel = do_QueryInterface(channelOrURI);
-  if (!channel) {
-    nsCOMPtr<nsIURI> uri = do_QueryInterface(channelOrURI);
-    if (!uri) {
-      return NS_ERROR_NO_INTERFACE;
-    }
-
-    // creating a temporary channel from the URI which is not
-    // used to perform any network loads, hence its safe to
-    // use systemPrincipal as the loadingPrincipal.
-    rv = NS_NewChannel(getter_AddRefs(channel), uri,
-                       nsContentUtils::GetSystemPrincipal(),
-                       nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                       nsIContentPolicy::TYPE_OTHER);
-    NS_ENSURE_SUCCESS(rv, rv);
-  }
-||||||| merged common ancestors
-nsProtocolProxyService::AsyncResolve(nsISupports *channelOrURI, uint32_t flags,
-                                     nsIProtocolProxyCallback *callback,
-                                     nsIEventTarget *mainThreadEventTarget,
-                                     nsICancelable **result)
-{
-
-    nsresult rv;
-    // Check if we got a channel:
-    nsCOMPtr<nsIChannel> channel = do_QueryInterface(channelOrURI);
-    if (!channel) {
-        nsCOMPtr<nsIURI> uri = do_QueryInterface(channelOrURI);
-        if (!uri) {
-            return NS_ERROR_NO_INTERFACE;
-        }
-
-        // creating a temporary channel from the URI which is not
-        // used to perform any network loads, hence its safe to
-        // use systemPrincipal as the loadingPrincipal.
-        rv = NS_NewChannel(getter_AddRefs(channel),
-                           uri,
-                           nsContentUtils::GetSystemPrincipal(),
-                           nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                           nsIContentPolicy::TYPE_OTHER);
-        NS_ENSURE_SUCCESS(rv, rv);
-    }
-=======
 nsProtocolProxyService::AsyncResolve(nsISupports* channelOrURI, uint32_t flags,
                                      nsIProtocolProxyCallback* callback,
                                      nsIEventTarget* mainThreadEventTarget,
@@ -3246,36 +1595,12 @@ nsProtocolProxyService::AsyncResolve(nsISupports* channelOrURI, uint32_t flags,
                        nsIContentPolicy::TYPE_OTHER);
     NS_ENSURE_SUCCESS(rv, rv);
   }
->>>>>>> upstream-releases
 
   return AsyncResolveInternal(channel, flags, callback, result, false,
                               mainThreadEventTarget);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::NewProxyInfo(const nsACString &aType,
-                                     const nsACString &aHost, int32_t aPort,
-                                     uint32_t aFlags, uint32_t aFailoverTimeout,
-                                     nsIProxyInfo *aFailoverProxy,
-                                     nsIProxyInfo **aResult) {
-  return NewProxyInfoWithAuth(aType, aHost, aPort, EmptyCString(),
-                              EmptyCString(), aFlags, aFailoverTimeout,
-                              aFailoverProxy, aResult);
-||||||| merged common ancestors
-nsProtocolProxyService::NewProxyInfo(const nsACString &aType,
-                                     const nsACString &aHost,
-                                     int32_t aPort,
-                                     uint32_t aFlags,
-                                     uint32_t aFailoverTimeout,
-                                     nsIProxyInfo *aFailoverProxy,
-                                     nsIProxyInfo **aResult)
-{
-    return NewProxyInfoWithAuth(aType, aHost, aPort,
-                                EmptyCString(), EmptyCString(),
-                                aFlags, aFailoverTimeout,
-                                aFailoverProxy, aResult);
-=======
 nsProtocolProxyService::NewProxyInfo(
     const nsACString& aType, const nsACString& aHost, int32_t aPort,
     const nsACString& aProxyAuthorizationHeader,
@@ -3286,55 +1611,9 @@ nsProtocolProxyService::NewProxyInfo(
                               EmptyCString(), aProxyAuthorizationHeader,
                               aConnectionIsolationKey, aFlags, aFailoverTimeout,
                               aFailoverProxy, aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::NewProxyInfoWithAuth(
-    const nsACString &aType, const nsACString &aHost, int32_t aPort,
-    const nsACString &aUsername, const nsACString &aPassword, uint32_t aFlags,
-    uint32_t aFailoverTimeout, nsIProxyInfo *aFailoverProxy,
-    nsIProxyInfo **aResult) {
-  static const char *types[] = {kProxyType_HTTP, kProxyType_HTTPS,
-                                kProxyType_SOCKS, kProxyType_SOCKS4,
-                                kProxyType_DIRECT};
-
-  // resolve type; this allows us to avoid copying the type string into each
-  // proxy info instance.  we just reference the string literals directly :)
-  const char *type = nullptr;
-  for (auto &t : types) {
-    if (aType.LowerCaseEqualsASCII(t)) {
-      type = t;
-      break;
-||||||| merged common ancestors
-nsProtocolProxyService::NewProxyInfoWithAuth(const nsACString &aType,
-                                             const nsACString &aHost,
-                                             int32_t aPort,
-                                             const nsACString &aUsername,
-                                             const nsACString &aPassword,
-                                             uint32_t aFlags,
-                                             uint32_t aFailoverTimeout,
-                                             nsIProxyInfo *aFailoverProxy,
-                                             nsIProxyInfo **aResult)
-{
-    static const char *types[] = {
-        kProxyType_HTTP,
-        kProxyType_HTTPS,
-        kProxyType_SOCKS,
-        kProxyType_SOCKS4,
-        kProxyType_DIRECT
-    };
-
-    // resolve type; this allows us to avoid copying the type string into each
-    // proxy info instance.  we just reference the string literals directly :)
-    const char* type = nullptr;
-    for (auto& t : types) {
-      if (aType.LowerCaseEqualsASCII(t)) {
-        type = t;
-        break;
-      }
-=======
 nsProtocolProxyService::NewProxyInfoWithAuth(
     const nsACString& aType, const nsACString& aHost, int32_t aPort,
     const nsACString& aUsername, const nsACString& aPassword,
@@ -3353,7 +1632,6 @@ nsProtocolProxyService::NewProxyInfoWithAuth(
     if (aType.LowerCaseEqualsASCII(t)) {
       type = t;
       break;
->>>>>>> upstream-releases
     }
   }
   NS_ENSURE_TRUE(type, NS_ERROR_INVALID_ARG);
@@ -3365,86 +1643,13 @@ nsProtocolProxyService::NewProxyInfoWithAuth(
     return NS_ERROR_NOT_IMPLEMENTED;
   }
 
-<<<<<<< HEAD
-  return NewProxyInfo_Internal(type, aHost, aPort, aUsername, aPassword, aFlags,
-                               aFailoverTimeout, aFailoverProxy, 0, aResult);
-||||||| merged common ancestors
-    return NewProxyInfo_Internal(type, aHost, aPort,
-                                 aUsername, aPassword,
-                                 aFlags, aFailoverTimeout,
-                                 aFailoverProxy, 0, aResult);
-=======
   return NewProxyInfo_Internal(type, aHost, aPort, aUsername, aPassword,
                                aProxyAuthorizationHeader,
                                aConnectionIsolationKey, aFlags,
                                aFailoverTimeout, aFailoverProxy, 0, aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::GetFailoverForProxy(nsIProxyInfo *aProxy, nsIURI *aURI,
-                                            nsresult aStatus,
-                                            nsIProxyInfo **aResult) {
-  // We only support failover when a PAC file is configured, either
-  // directly or via system settings
-  if (mProxyConfig != PROXYCONFIG_PAC && mProxyConfig != PROXYCONFIG_WPAD &&
-      mProxyConfig != PROXYCONFIG_SYSTEM)
-    return NS_ERROR_NOT_AVAILABLE;
-
-  // Verify that |aProxy| is one of our nsProxyInfo objects.
-  nsCOMPtr<nsProxyInfo> pi = do_QueryInterface(aProxy);
-  NS_ENSURE_ARG(pi);
-  // OK, the QI checked out.  We can proceed.
-
-  // Remember that this proxy is down.
-  DisableProxy(pi);
-
-  // NOTE: At this point, we might want to prompt the user if we have
-  //       not already tried going DIRECT.  This is something that the
-  //       classic codebase supported; however, IE6 does not prompt.
-
-  if (!pi->mNext) return NS_ERROR_NOT_AVAILABLE;
-
-  LOG(("PAC failover from %s %s:%d to %s %s:%d\n", pi->mType, pi->mHost.get(),
-       pi->mPort, pi->mNext->mType, pi->mNext->mHost.get(), pi->mNext->mPort));
-
-  NS_ADDREF(*aResult = pi->mNext);
-  return NS_OK;
-||||||| merged common ancestors
-nsProtocolProxyService::GetFailoverForProxy(nsIProxyInfo  *aProxy,
-                                            nsIURI        *aURI,
-                                            nsresult       aStatus,
-                                            nsIProxyInfo **aResult)
-{
-    // We only support failover when a PAC file is configured, either
-    // directly or via system settings
-    if (mProxyConfig != PROXYCONFIG_PAC && mProxyConfig != PROXYCONFIG_WPAD &&
-        mProxyConfig != PROXYCONFIG_SYSTEM)
-        return NS_ERROR_NOT_AVAILABLE;
-
-    // Verify that |aProxy| is one of our nsProxyInfo objects.
-    nsCOMPtr<nsProxyInfo> pi = do_QueryInterface(aProxy);
-    NS_ENSURE_ARG(pi);
-    // OK, the QI checked out.  We can proceed.
-
-    // Remember that this proxy is down.
-    DisableProxy(pi);
-
-    // NOTE: At this point, we might want to prompt the user if we have
-    //       not already tried going DIRECT.  This is something that the
-    //       classic codebase supported; however, IE6 does not prompt.
-
-    if (!pi->mNext)
-        return NS_ERROR_NOT_AVAILABLE;
-
-    LOG(("PAC failover from %s %s:%d to %s %s:%d\n",
-        pi->mType, pi->mHost.get(), pi->mPort,
-        pi->mNext->mType, pi->mNext->mHost.get(), pi->mNext->mPort));
-
-    NS_ADDREF(*aResult = pi->mNext);
-    return NS_OK;
-=======
 nsProtocolProxyService::GetFailoverForProxy(nsIProxyInfo* aProxy, nsIURI* aURI,
                                             nsresult aStatus,
                                             nsIProxyInfo** aResult) {
@@ -3473,46 +1678,27 @@ nsProtocolProxyService::GetFailoverForProxy(nsIProxyInfo* aProxy, nsIURI* aURI,
 
   NS_ADDREF(*aResult = pi->mNext);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 namespace {  // anon
 
 class ProxyFilterPositionComparator {
   typedef RefPtr<nsProtocolProxyService::FilterLink> FilterLinkRef;
-<<<<<<< HEAD
-
- public:
-  bool Equals(const FilterLinkRef &a, const FilterLinkRef &b) const {
-||||||| merged common ancestors
-public:
-  bool Equals(const FilterLinkRef& a, const FilterLinkRef& b) const {
-=======
 
  public:
   bool Equals(const FilterLinkRef& a, const FilterLinkRef& b) const {
->>>>>>> upstream-releases
     return a->position == b->position;
   }
-  bool LessThan(const FilterLinkRef &a, const FilterLinkRef &b) const {
+  bool LessThan(const FilterLinkRef& a, const FilterLinkRef& b) const {
     return a->position < b->position;
   }
 };
 
 class ProxyFilterObjectComparator {
   typedef RefPtr<nsProtocolProxyService::FilterLink> FilterLinkRef;
-<<<<<<< HEAD
-
- public:
-  bool Equals(const FilterLinkRef &link, const nsISupports *obj) const {
-||||||| merged common ancestors
-public:
-  bool Equals(const FilterLinkRef& link, const nsISupports* obj) const {
-=======
 
  public:
   bool Equals(const FilterLinkRef& link, const nsISupports* obj) const {
->>>>>>> upstream-releases
     return obj == nsCOMPtr<nsISupports>(do_QueryInterface(link->filter)) ||
            obj == nsCOMPtr<nsISupports>(do_QueryInterface(link->channelFilter));
   }
@@ -3520,18 +1706,8 @@ public:
 
 }  // namespace
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::InsertFilterLink(RefPtr<FilterLink> &&link) {
-  LOG(("nsProtocolProxyService::InsertFilterLink filter=%p", link.get()));
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::InsertFilterLink(RefPtr<FilterLink>&& link)
-{
-    LOG(("nsProtocolProxyService::InsertFilterLink filter=%p", link.get()));
-=======
 nsresult nsProtocolProxyService::InsertFilterLink(RefPtr<FilterLink>&& link) {
   LOG(("nsProtocolProxyService::InsertFilterLink filter=%p", link.get()));
->>>>>>> upstream-releases
 
   if (mIsShutdown) {
     return NS_ERROR_FAILURE;
@@ -3543,59 +1719,26 @@ nsresult nsProtocolProxyService::InsertFilterLink(RefPtr<FilterLink>&& link) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::RegisterFilter(nsIProtocolProxyFilter *filter,
-                                       uint32_t position) {
-  UnregisterFilter(filter);  // remove this filter if we already have it
-||||||| merged common ancestors
-nsProtocolProxyService::RegisterFilter(nsIProtocolProxyFilter *filter,
-                                       uint32_t position)
-{
-    UnregisterFilter(filter); // remove this filter if we already have it
-=======
 nsProtocolProxyService::RegisterFilter(nsIProtocolProxyFilter* filter,
                                        uint32_t position) {
   UnregisterFilter(filter);  // remove this filter if we already have it
->>>>>>> upstream-releases
 
   RefPtr<FilterLink> link = new FilterLink(position, filter);
   return InsertFilterLink(std::move(link));
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::RegisterChannelFilter(
-    nsIProtocolProxyChannelFilter *channelFilter, uint32_t position) {
-  UnregisterChannelFilter(
-      channelFilter);  // remove this filter if we already have it
-||||||| merged common ancestors
-nsProtocolProxyService::RegisterChannelFilter(nsIProtocolProxyChannelFilter *channelFilter,
-                                              uint32_t position)
-{
-    UnregisterChannelFilter(channelFilter);  // remove this filter if we already have it
-=======
 nsProtocolProxyService::RegisterChannelFilter(
     nsIProtocolProxyChannelFilter* channelFilter, uint32_t position) {
   UnregisterChannelFilter(
       channelFilter);  // remove this filter if we already have it
->>>>>>> upstream-releases
 
   RefPtr<FilterLink> link = new FilterLink(position, channelFilter);
   return InsertFilterLink(std::move(link));
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::RemoveFilterLink(nsISupports *givenObject) {
-  LOG(("nsProtocolProxyService::RemoveFilterLink target=%p", givenObject));
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::RemoveFilterLink(nsISupports* givenObject)
-{
-    LOG(("nsProtocolProxyService::RemoveFilterLink target=%p", givenObject));
-=======
 nsresult nsProtocolProxyService::RemoveFilterLink(nsISupports* givenObject) {
   LOG(("nsProtocolProxyService::RemoveFilterLink target=%p", givenObject));
->>>>>>> upstream-releases
 
   return mFilters.RemoveElement(givenObject, ProxyFilterObjectComparator())
              ? NS_OK
@@ -3603,153 +1746,26 @@ nsresult nsProtocolProxyService::RemoveFilterLink(nsISupports* givenObject) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::UnregisterFilter(nsIProtocolProxyFilter *filter) {
-  // QI to nsISupports so we can safely test object identity.
-  nsCOMPtr<nsISupports> givenObject = do_QueryInterface(filter);
-  return RemoveFilterLink(givenObject);
-||||||| merged common ancestors
-nsProtocolProxyService::UnregisterFilter(nsIProtocolProxyFilter *filter)
-{
-    // QI to nsISupports so we can safely test object identity.
-    nsCOMPtr<nsISupports> givenObject = do_QueryInterface(filter);
-    return RemoveFilterLink(givenObject);
-=======
 nsProtocolProxyService::UnregisterFilter(nsIProtocolProxyFilter* filter) {
   // QI to nsISupports so we can safely test object identity.
   nsCOMPtr<nsISupports> givenObject = do_QueryInterface(filter);
   return RemoveFilterLink(givenObject);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::UnregisterChannelFilter(
-    nsIProtocolProxyChannelFilter *channelFilter) {
-  // QI to nsISupports so we can safely test object identity.
-  nsCOMPtr<nsISupports> givenObject = do_QueryInterface(channelFilter);
-  return RemoveFilterLink(givenObject);
-||||||| merged common ancestors
-nsProtocolProxyService::UnregisterChannelFilter(nsIProtocolProxyChannelFilter *channelFilter)
-{
-    // QI to nsISupports so we can safely test object identity.
-    nsCOMPtr<nsISupports> givenObject = do_QueryInterface(channelFilter);
-    return RemoveFilterLink(givenObject);
-=======
 nsProtocolProxyService::UnregisterChannelFilter(
     nsIProtocolProxyChannelFilter* channelFilter) {
   // QI to nsISupports so we can safely test object identity.
   nsCOMPtr<nsISupports> givenObject = do_QueryInterface(channelFilter);
   return RemoveFilterLink(givenObject);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProtocolProxyService::GetProxyConfigType(uint32_t *aProxyConfigType) {
-||||||| merged common ancestors
-nsProtocolProxyService::GetProxyConfigType(uint32_t* aProxyConfigType)
-{
-=======
 nsProtocolProxyService::GetProxyConfigType(uint32_t* aProxyConfigType) {
->>>>>>> upstream-releases
   *aProxyConfigType = mProxyConfig;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::LoadHostFilters(const nsACString &aFilters) {
-  if (mIsShutdown) {
-    return;
-  }
-
-  // check to see the owners flag? /!?/ TODO
-  if (mHostFiltersArray.Length() > 0) {
-    mHostFiltersArray.Clear();
-  }
-
-  if (aFilters.IsEmpty()) {
-    return;
-  }
-
-  //
-  // filter  = ( host | domain | ipaddr ["/" mask] ) [":" port]
-  // filters = filter *( "," LWS filter)
-  //
-  // Reset mFilterLocalHosts - will be set to true if "<local>" is in pref
-  // string
-  mFilterLocalHosts = false;
-
-  mozilla::Tokenizer t(aFilters);
-  mozilla::Tokenizer::Token token;
-  bool eof = false;
-  // while (*filters) {
-  while (!eof) {
-    // skip over spaces and ,
-    t.SkipWhites();
-    while (t.CheckChar(',')) {
-      t.SkipWhites();
-    }
-
-    nsAutoCString portStr;
-    nsAutoCString hostStr;
-    nsAutoCString maskStr;
-    t.Record();
-
-    bool parsingIPv6 = false;
-    bool parsingPort = false;
-    bool parsingMask = false;
-    while (t.Next(token)) {
-      if (token.Equals(mozilla::Tokenizer::Token::EndOfFile())) {
-        eof = true;
-        break;
-      }
-      if (token.Equals(mozilla::Tokenizer::Token::Char(',')) ||
-          token.Type() == mozilla::Tokenizer::TOKEN_WS) {
-        break;
-      }
-
-      if (token.Equals(mozilla::Tokenizer::Token::Char('['))) {
-        parsingIPv6 = true;
-        continue;
-      }
-
-      if (!parsingIPv6 && token.Equals(mozilla::Tokenizer::Token::Char(':'))) {
-        // Port is starting. Claim the previous as host.
-        if (parsingMask) {
-          t.Claim(maskStr);
-        } else {
-          t.Claim(hostStr);
-        }
-        t.Record();
-        parsingPort = true;
-        continue;
-      } else if (token.Equals(mozilla::Tokenizer::Token::Char('/'))) {
-        t.Claim(hostStr);
-        t.Record();
-        parsingMask = true;
-        continue;
-      } else if (token.Equals(mozilla::Tokenizer::Token::Char(']'))) {
-        parsingIPv6 = false;
-        continue;
-      }
-    }
-    if (!parsingPort && !parsingMask) {
-      t.Claim(hostStr);
-    } else if (parsingPort) {
-      t.Claim(portStr);
-    } else if (parsingMask) {
-      t.Claim(maskStr);
-    } else {
-      NS_WARNING("Could not parse this rule");
-      continue;
-||||||| merged common ancestors
-void
-nsProtocolProxyService::LoadHostFilters(const nsACString& aFilters)
-{
-    if (mIsShutdown) {
-        return;
-=======
 void nsProtocolProxyService::LoadHostFilters(const nsACString& aFilters) {
   if (mIsShutdown) {
     return;
@@ -3835,7 +1851,6 @@ void nsProtocolProxyService::LoadHostFilters(const nsACString& aFilters) {
     } else {
       NS_WARNING("Could not parse this rule");
       continue;
->>>>>>> upstream-releases
     }
 
     if (hostStr.IsEmpty()) {
@@ -3853,33 +1868,9 @@ void nsProtocolProxyService::LoadHostFilters(const nsACString& aFilters) {
       continue;
     }
 
-<<<<<<< HEAD
-    // For all other host filters, create HostInfo object and add to list
-    HostInfo *hinfo = new HostInfo();
-    nsresult rv = NS_OK;
-||||||| merged common ancestors
-    //
-    // filter  = ( host | domain | ipaddr ["/" mask] ) [":" port]
-    // filters = filter *( "," LWS filter)
-    //
-    // Reset mFilterLocalHosts - will be set to true if "<local>" is in pref string
-    mFilterLocalHosts = false;
-
-    mozilla::Tokenizer t(aFilters);
-    mozilla::Tokenizer::Token token;
-    bool eof = false;
-    // while (*filters) {
-    while (!eof) {
-        // skip over spaces and ,
-        t.SkipWhites();
-        while (t.CheckChar(',')) {
-            t.SkipWhites();
-        }
-=======
     // For all other host filters, create HostInfo object and add to list
     HostInfo* hinfo = new HostInfo();
     nsresult rv = NS_OK;
->>>>>>> upstream-releases
 
     int32_t port = portStr.ToInteger(&rv);
     if (NS_FAILED(rv)) {
@@ -3975,23 +1966,10 @@ void nsProtocolProxyService::LoadHostFilters(const nsACString& aFilters) {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::GetProtocolInfo(nsIURI *uri,
-                                                 nsProtocolInfo *info) {
-  MOZ_ASSERT(uri, "URI is null");
-  MOZ_ASSERT(info, "info is null");
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::GetProtocolInfo(nsIURI *uri, nsProtocolInfo *info)
-{
-    MOZ_ASSERT(uri, "URI is null");
-    MOZ_ASSERT(info, "info is null");
-=======
 nsresult nsProtocolProxyService::GetProtocolInfo(nsIURI* uri,
                                                  nsProtocolInfo* info) {
   MOZ_ASSERT(uri, "URI is null");
   MOZ_ASSERT(info, "info is null");
->>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -4012,41 +1990,6 @@ nsresult nsProtocolProxyService::GetProtocolInfo(nsIURI* uri,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::NewProxyInfo_Internal(
-    const char *aType, const nsACString &aHost, int32_t aPort,
-    const nsACString &aUsername, const nsACString &aPassword, uint32_t aFlags,
-    uint32_t aFailoverTimeout, nsIProxyInfo *aFailoverProxy,
-    uint32_t aResolveFlags, nsIProxyInfo **aResult) {
-  if (aPort <= 0) aPort = -1;
-
-  nsCOMPtr<nsProxyInfo> failover;
-  if (aFailoverProxy) {
-    failover = do_QueryInterface(aFailoverProxy);
-    NS_ENSURE_ARG(failover);
-  }
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::NewProxyInfo_Internal(const char *aType,
-                                              const nsACString &aHost,
-                                              int32_t aPort,
-                                              const nsACString &aUsername,
-                                              const nsACString &aPassword,
-                                              uint32_t aFlags,
-                                              uint32_t aFailoverTimeout,
-                                              nsIProxyInfo *aFailoverProxy,
-                                              uint32_t aResolveFlags,
-                                              nsIProxyInfo **aResult)
-{
-    if (aPort <= 0)
-        aPort = -1;
-
-    nsCOMPtr<nsProxyInfo> failover;
-    if (aFailoverProxy) {
-        failover = do_QueryInterface(aFailoverProxy);
-        NS_ENSURE_ARG(failover);
-    }
-=======
 nsresult nsProtocolProxyService::NewProxyInfo_Internal(
     const char* aType, const nsACString& aHost, int32_t aPort,
     const nsACString& aUsername, const nsACString& aPassword,
@@ -4061,44 +2004,7 @@ nsresult nsProtocolProxyService::NewProxyInfo_Internal(
     failover = do_QueryInterface(aFailoverProxy);
     NS_ENSURE_ARG(failover);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsProxyInfo *proxyInfo = new nsProxyInfo();
-  if (!proxyInfo) return NS_ERROR_OUT_OF_MEMORY;
-
-  proxyInfo->mType = aType;
-  proxyInfo->mHost = aHost;
-  proxyInfo->mPort = aPort;
-  proxyInfo->mUsername = aUsername;
-  proxyInfo->mPassword = aPassword;
-  proxyInfo->mFlags = aFlags;
-  proxyInfo->mResolveFlags = aResolveFlags;
-  proxyInfo->mTimeout =
-      aFailoverTimeout == UINT32_MAX ? mFailedProxyTimeout : aFailoverTimeout;
-  failover.swap(proxyInfo->mNext);
-
-  NS_ADDREF(*aResult = proxyInfo);
-  return NS_OK;
-||||||| merged common ancestors
-    nsProxyInfo *proxyInfo = new nsProxyInfo();
-    if (!proxyInfo)
-        return NS_ERROR_OUT_OF_MEMORY;
-
-    proxyInfo->mType = aType;
-    proxyInfo->mHost = aHost;
-    proxyInfo->mPort = aPort;
-    proxyInfo->mUsername = aUsername;
-    proxyInfo->mPassword = aPassword;
-    proxyInfo->mFlags = aFlags;
-    proxyInfo->mResolveFlags = aResolveFlags;
-    proxyInfo->mTimeout = aFailoverTimeout == UINT32_MAX
-        ? mFailedProxyTimeout : aFailoverTimeout;
-    failover.swap(proxyInfo->mNext);
-
-    NS_ADDREF(*aResult = proxyInfo);
-    return NS_OK;
-=======
   nsProxyInfo* proxyInfo = new nsProxyInfo();
   if (!proxyInfo) return NS_ERROR_OUT_OF_MEMORY;
 
@@ -4117,33 +2023,14 @@ nsresult nsProtocolProxyService::NewProxyInfo_Internal(
 
   NS_ADDREF(*aResult = proxyInfo);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsProtocolProxyService::Resolve_Internal(nsIChannel *channel,
-                                                  const nsProtocolInfo &info,
-                                                  uint32_t flags,
-                                                  bool *usePACThread,
-                                                  nsIProxyInfo **result) {
-  NS_ENSURE_ARG_POINTER(channel);
-||||||| merged common ancestors
-nsresult
-nsProtocolProxyService::Resolve_Internal(nsIChannel *channel,
-                                         const nsProtocolInfo &info,
-                                         uint32_t flags,
-                                         bool *usePACThread,
-                                         nsIProxyInfo **result)
-{
-    NS_ENSURE_ARG_POINTER(channel);
-=======
 nsresult nsProtocolProxyService::Resolve_Internal(nsIChannel* channel,
                                                   const nsProtocolInfo& info,
                                                   uint32_t flags,
                                                   bool* usePACThread,
                                                   nsIProxyInfo** result) {
   NS_ENSURE_ARG_POINTER(channel);
->>>>>>> upstream-releases
 
   *usePACThread = false;
   *result = nullptr;
@@ -4241,46 +2128,6 @@ nsresult nsProtocolProxyService::Resolve_Internal(nsIChannel* channel,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  // If we aren't in manual proxy configuration mode then we don't
-  // want to honor any manual specific prefs that might be still set
-  if (mProxyConfig != PROXYCONFIG_MANUAL) return NS_OK;
-
-  // proxy info values for manual configuration mode
-  const char *type = nullptr;
-  const nsACString *host = nullptr;
-  int32_t port = -1;
-
-  uint32_t proxyFlags = 0;
-
-  if ((flags & RESOLVE_PREFER_SOCKS_PROXY) && !mSOCKSProxyTarget.IsEmpty() &&
-      (IsHostLocalTarget(mSOCKSProxyTarget) || mSOCKSProxyPort > 0)) {
-    host = &mSOCKSProxyTarget;
-    if (mSOCKSProxyVersion == 4)
-      type = kProxyType_SOCKS4;
-    else
-      type = kProxyType_SOCKS;
-    port = mSOCKSProxyPort;
-    if (mSOCKSProxyRemoteDNS)
-      proxyFlags |= nsIProxyInfo::TRANSPARENT_PROXY_RESOLVES_HOST;
-  } else if ((flags & RESOLVE_PREFER_HTTPS_PROXY) &&
-||||||| merged common ancestors
-    uint32_t proxyFlags = 0;
-
-    if ((flags & RESOLVE_PREFER_SOCKS_PROXY) &&
-        !mSOCKSProxyTarget.IsEmpty() &&
-        (IsHostLocalTarget(mSOCKSProxyTarget) || mSOCKSProxyPort > 0)) {
-      host = &mSOCKSProxyTarget;
-      if (mSOCKSProxyVersion == 4)
-          type = kProxyType_SOCKS4;
-      else
-          type = kProxyType_SOCKS;
-      port = mSOCKSProxyPort;
-      if (mSOCKSProxyRemoteDNS)
-          proxyFlags |= nsIProxyInfo::TRANSPARENT_PROXY_RESOLVES_HOST;
-    }
-    else if ((flags & RESOLVE_PREFER_HTTPS_PROXY) &&
-=======
   // If we aren't in manual proxy configuration mode then we don't
   // want to honor any manual specific prefs that might be still set
   if (mProxyConfig != PROXYCONFIG_MANUAL) return NS_OK;
@@ -4303,7 +2150,6 @@ nsresult nsProtocolProxyService::Resolve_Internal(nsIChannel* channel,
     if (mSOCKSProxyRemoteDNS)
       proxyFlags |= nsIProxyInfo::TRANSPARENT_PROXY_RESOLVES_HOST;
   } else if ((flags & RESOLVE_PREFER_HTTPS_PROXY) &&
->>>>>>> upstream-releases
              !mHTTPSProxyHost.IsEmpty() && mHTTPSProxyPort > 0) {
     host = &mHTTPSProxyHost;
     type = kProxyType_HTTP;
@@ -4338,50 +2184,19 @@ nsresult nsProtocolProxyService::Resolve_Internal(nsIChannel* channel,
       proxyFlags |= nsIProxyInfo::TRANSPARENT_PROXY_RESOLVES_HOST;
   }
 
-<<<<<<< HEAD
-  if (type) {
-    rv =
-        NewProxyInfo_Internal(type, *host, port, EmptyCString(), EmptyCString(),
-                              proxyFlags, UINT32_MAX, nullptr, flags, result);
-    if (NS_FAILED(rv)) return rv;
-  }
-||||||| merged common ancestors
-    if (type) {
-        rv = NewProxyInfo_Internal(type, *host, port,
-                                   EmptyCString(), EmptyCString(),
-                                   proxyFlags, UINT32_MAX, nullptr, flags,
-                                   result);
-        if (NS_FAILED(rv))
-            return rv;
-    }
-=======
   if (type) {
     rv = NewProxyInfo_Internal(type, *host, port, EmptyCString(),
                                EmptyCString(), EmptyCString(), EmptyCString(),
                                proxyFlags, UINT32_MAX, nullptr, flags, result);
     if (NS_FAILED(rv)) return rv;
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::MaybeDisableDNSPrefetch(nsIProxyInfo *aProxy) {
-  // Disable Prefetch in the DNS service if a proxy is in use.
-  if (!aProxy) return;
-||||||| merged common ancestors
-void
-nsProtocolProxyService::MaybeDisableDNSPrefetch(nsIProxyInfo *aProxy)
-{
-    // Disable Prefetch in the DNS service if a proxy is in use.
-    if (!aProxy)
-        return;
-=======
 void nsProtocolProxyService::MaybeDisableDNSPrefetch(nsIProxyInfo* aProxy) {
   // Disable Prefetch in the DNS service if a proxy is in use.
   if (!aProxy) return;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsProxyInfo> pi = do_QueryInterface(aProxy);
   if (!pi || !pi->mType || pi->mType == kProxyType_DIRECT) return;
@@ -4395,57 +2210,16 @@ void nsProtocolProxyService::MaybeDisableDNSPrefetch(nsIProxyInfo* aProxy) {
   pdns->SetPrefetchEnabled(false);
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::CopyFilters(nsTArray<RefPtr<FilterLink>> &aCopy) {
-  MOZ_ASSERT(aCopy.Length() == 0);
-  aCopy.AppendElements(mFilters);
-||||||| merged common ancestors
-void
-nsProtocolProxyService::CopyFilters(nsTArray<RefPtr<FilterLink>>& aCopy)
-{
-    MOZ_ASSERT(aCopy.Length() == 0);
-    aCopy.AppendElements(mFilters);
-=======
 void nsProtocolProxyService::CopyFilters(nsTArray<RefPtr<FilterLink>>& aCopy) {
   MOZ_ASSERT(aCopy.Length() == 0);
   aCopy.AppendElements(mFilters);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool nsProtocolProxyService::ApplyFilter(
-    FilterLink const *filterLink, nsIChannel *channel,
-    const nsProtocolInfo &info, nsCOMPtr<nsIProxyInfo> list,
-    nsIProxyProtocolFilterResult *callback) {
-  nsresult rv;
-||||||| merged common ancestors
-bool
-nsProtocolProxyService::ApplyFilter(FilterLink const* filterLink,
-                                    nsIChannel *channel,
-                                    const nsProtocolInfo &info,
-                                    nsCOMPtr<nsIProxyInfo> list,
-                                    nsIProxyProtocolFilterResult* callback)
-{
-    nsresult rv;
-
-    // We prune the proxy list prior to invoking each filter.  This may be
-    // somewhat inefficient, but it seems like a good idea since we want each
-    // filter to "see" a valid proxy list.
-    PruneProxyInfo(info, list);
-
-    if (filterLink->filter) {
-      nsCOMPtr<nsIURI> uri;
-      Unused << GetProxyURI(channel, getter_AddRefs(uri));
-      if (!uri) {
-        return false;
-      }
-=======
 bool nsProtocolProxyService::ApplyFilter(
     FilterLink const* filterLink, nsIChannel* channel,
     const nsProtocolInfo& info, nsCOMPtr<nsIProxyInfo> list,
     nsIProxyProtocolFilterResult* callback) {
   nsresult rv;
->>>>>>> upstream-releases
 
   // We prune the proxy list prior to invoking each filter.  This may be
   // somewhat inefficient, but it seems like a good idea since we want each
@@ -4471,67 +2245,12 @@ bool nsProtocolProxyService::ApplyFilter(
   return false;
 }
 
-<<<<<<< HEAD
-void nsProtocolProxyService::PruneProxyInfo(const nsProtocolInfo &info,
-                                            nsIProxyInfo **list) {
-  if (!*list) return;
-||||||| merged common ancestors
-void
-nsProtocolProxyService::PruneProxyInfo(const nsProtocolInfo &info,
-                                       nsIProxyInfo **list)
-{
-    if (!*list)
-        return;
-=======
 void nsProtocolProxyService::PruneProxyInfo(const nsProtocolInfo& info,
                                             nsIProxyInfo** list) {
   if (!*list) return;
->>>>>>> upstream-releases
 
   LOG(("nsProtocolProxyService::PruneProxyInfo ENTER list=%p", *list));
 
-<<<<<<< HEAD
-  nsProxyInfo *head = nullptr;
-  CallQueryInterface(*list, &head);
-  if (!head) {
-    MOZ_ASSERT_UNREACHABLE("nsIProxyInfo must QI to nsProxyInfo");
-    return;
-  }
-  NS_RELEASE(*list);
-
-  // Pruning of disabled proxies works like this:
-  //   - If all proxies are disabled, return the full list
-  //   - Otherwise, remove the disabled proxies.
-  //
-  // Pruning of disallowed proxies works like this:
-  //   - If the protocol handler disallows the proxy, then we disallow it.
-
-  // Start by removing all disallowed proxies if required:
-  if (!(info.flags & nsIProtocolHandler::ALLOWS_PROXY_HTTP)) {
-    nsProxyInfo *last = nullptr, *iter = head;
-    while (iter) {
-      if ((iter->Type() == kProxyType_HTTP) ||
-          (iter->Type() == kProxyType_HTTPS)) {
-        // reject!
-        if (last)
-          last->mNext = iter->mNext;
-        else
-          head = iter->mNext;
-        nsProxyInfo *next = iter->mNext;
-        iter->mNext = nullptr;
-        iter->Release();
-        iter = next;
-      } else {
-        last = iter;
-        iter = iter->mNext;
-      }
-||||||| merged common ancestors
-    nsProxyInfo *head = nullptr;
-    CallQueryInterface(*list, &head);
-    if (!head) {
-        MOZ_ASSERT_UNREACHABLE("nsIProxyInfo must QI to nsProxyInfo");
-        return;
-=======
   nsProxyInfo* head = nullptr;
   CallQueryInterface(*list, &head);
   if (!head) {
@@ -4566,7 +2285,6 @@ void nsProtocolProxyService::PruneProxyInfo(const nsProtocolInfo& info,
         last = iter;
         iter = iter->mNext;
       }
->>>>>>> upstream-releases
     }
     if (!head) {
       return;
@@ -4579,95 +2297,14 @@ void nsProtocolProxyService::PruneProxyInfo(const nsProtocolInfo& info,
 
   bool allNonDirectProxiesDisabled = true;
 
-<<<<<<< HEAD
-  nsProxyInfo *iter;
-  for (iter = head; iter; iter = iter->mNext) {
-    if (!IsProxyDisabled(iter) && iter->mType != kProxyType_DIRECT) {
-      allNonDirectProxiesDisabled = false;
-      break;
-||||||| merged common ancestors
-    nsProxyInfo *iter;
-    for (iter = head; iter; iter = iter->mNext) {
-        if (!IsProxyDisabled(iter)) {
-            allDisabled = false;
-            break;
-        }
-=======
   nsProxyInfo* iter;
   for (iter = head; iter; iter = iter->mNext) {
     if (!IsProxyDisabled(iter) && iter->mType != kProxyType_DIRECT) {
       allNonDirectProxiesDisabled = false;
       break;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  if (allNonDirectProxiesDisabled) {
-    LOG(("All proxies are disabled, so trying all again"));
-  } else {
-    // remove any disabled proxies.
-    nsProxyInfo *last = nullptr;
-    for (iter = head; iter;) {
-      if (IsProxyDisabled(iter)) {
-        // reject!
-        nsProxyInfo *reject = iter;
-
-        iter = iter->mNext;
-        if (last)
-          last->mNext = iter;
-        else
-          head = iter;
-
-        reject->mNext = nullptr;
-        NS_RELEASE(reject);
-        continue;
-      }
-
-      // since we are about to use this proxy, make sure it is not on
-      // the disabled proxy list.  we'll add it back to that list if
-      // we have to (in GetFailoverForProxy).
-      //
-      // XXX(darin): It might be better to do this as a final pass.
-      //
-      EnableProxy(iter);
-
-      last = iter;
-      iter = iter->mNext;
-||||||| merged common ancestors
-    if (allDisabled) {
-        LOG(("All proxies are disabled, so trying all again"));
-    } else {
-        // remove any disabled proxies.
-        nsProxyInfo *last = nullptr;
-        for (iter = head; iter; ) {
-            if (IsProxyDisabled(iter)) {
-                // reject!
-                nsProxyInfo *reject = iter;
-
-                iter = iter->mNext;
-                if (last)
-                    last->mNext = iter;
-                else
-                    head = iter;
-
-                reject->mNext = nullptr;
-                NS_RELEASE(reject);
-                continue;
-            }
-
-            // since we are about to use this proxy, make sure it is not on
-            // the disabled proxy list.  we'll add it back to that list if
-            // we have to (in GetFailoverForProxy).
-            //
-            // XXX(darin): It might be better to do this as a final pass.
-            //
-            EnableProxy(iter);
-
-            last = iter;
-            iter = iter->mNext;
-        }
-=======
   if (allNonDirectProxiesDisabled) {
     LOG(("All proxies are disabled, so trying all again"));
   } else {
@@ -4699,7 +2336,6 @@ void nsProtocolProxyService::PruneProxyInfo(const nsProtocolInfo& info,
 
       last = iter;
       iter = iter->mNext;
->>>>>>> upstream-releases
     }
   }
 

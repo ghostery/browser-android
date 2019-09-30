@@ -8,15 +8,8 @@ job-defaults:
     instance-size: xlarge
     virtualization:
         by-test-platform:
-<<<<<<< HEAD
-            windows10-64-qr/.*: virtual-with-gpu
-            windows10-64/.*: virtual-with-gpu
-||||||| merged common ancestors
-            windows10-64-qr/.*: hardware
-=======
             windows10-64(?:-pgo|-shippable)?-qr/.*: virtual-with-gpu
             windows10-64/.*: virtual-with-gpu
->>>>>>> upstream-releases
             default: virtual
     allow-software-gl-layers: false
     mozharness:

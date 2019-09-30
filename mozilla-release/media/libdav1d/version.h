@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-/* auto-generated, do not edit */
-#define DAV1D_VERSION "0.0.1"
-||||||| merged common ancestors
-=======
 /*
  * Copyright © 2019, VideoLAN and dav1d authors
  * All rights reserved.
@@ -37,4 +32,3 @@
 #define DAV1D_API_VERSION_PATCH 0
 
 #endif /* DAV1D_VERSION_H */
->>>>>>> upstream-releases

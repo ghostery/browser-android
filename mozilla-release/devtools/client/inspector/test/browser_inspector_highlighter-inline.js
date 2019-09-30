@@ -53,22 +53,10 @@ add_task(async function() {
     );
 
     const expectedContentRect = {
-<<<<<<< HEAD
-      p1: {x: Infinity, y: Infinity},
-      p2: {x: -Infinity, y: Infinity},
-      p3: {x: -Infinity, y: -Infinity},
-      p4: {x: Infinity, y: -Infinity},
-||||||| merged common ancestors
-      p1: {x: Infinity, y: Infinity},
-      p2: {x: -Infinity, y: Infinity},
-      p3: {x: -Infinity, y: -Infinity},
-      p4: {x: Infinity, y: -Infinity}
-=======
       p1: { x: Infinity, y: Infinity },
       p2: { x: -Infinity, y: Infinity },
       p3: { x: -Infinity, y: -Infinity },
       p4: { x: Infinity, y: -Infinity },
->>>>>>> upstream-releases
     };
     for (const { p1, p2, p3, p4 } of data.content) {
       expectedContentRect.p1.x = Math.min(expectedContentRect.p1.x, p1.x);

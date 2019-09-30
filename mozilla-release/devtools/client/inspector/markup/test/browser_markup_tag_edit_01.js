@@ -9,21 +9,6 @@
 loadHelperScript("helper_attributes_test_runner.js");
 
 const TEST_URL = URL_ROOT + "doc_markup_edit.html";
-<<<<<<< HEAD
-var TEST_DATA = [{
-  desc: "Change an attribute",
-  node: "#node1",
-  originalAttributes: {
-    id: "node1",
-    class: "node1",
-||||||| merged common ancestors
-var TEST_DATA = [{
-  desc: "Change an attribute",
-  node: "#node1",
-  originalAttributes: {
-    id: "node1",
-    class: "node1"
-=======
 var TEST_DATA = [
   {
     desc: "Change an attribute",
@@ -38,37 +23,7 @@ var TEST_DATA = [
       id: "node1",
       class: "changednode1",
     },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  name: "class",
-  value: 'class="changednode1"',
-  expectedAttributes: {
-    id: "node1",
-    class: "changednode1",
-  },
-}, {
-  desc: "Try changing an attribute to a quote (\") - this should result " +
-        "in it being set to an empty string",
-  node: "#node22",
-  originalAttributes: {
-    id: "node22",
-    class: "unchanged",
-||||||| merged common ancestors
-  name: "class",
-  value: 'class="changednode1"',
-  expectedAttributes: {
-    id: "node1",
-    class: "changednode1"
-  }
-}, {
-  desc: "Try changing an attribute to a quote (\") - this should result " +
-        "in it being set to an empty string",
-  node: "#node22",
-  originalAttributes: {
-    id: "node22",
-    class: "unchanged"
-=======
   {
     desc:
       'Try changing an attribute to a quote (") - this should result ' +
@@ -84,35 +39,7 @@ var TEST_DATA = [
       id: "node22",
       class: "",
     },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  name: "class",
-  value: 'class="""',
-  expectedAttributes: {
-    id: "node22",
-    class: "",
-  },
-}, {
-  desc: "Remove an attribute",
-  node: "#node4",
-  originalAttributes: {
-    id: "node4",
-    class: "node4",
-||||||| merged common ancestors
-  name: "class",
-  value: 'class="""',
-  expectedAttributes: {
-    id: "node22",
-    class: ""
-  }
-}, {
-  desc: "Remove an attribute",
-  node: "#node4",
-  originalAttributes: {
-    id: "node4",
-    class: "node4"
-=======
   {
     desc: "Remove an attribute",
     node: "#node4",
@@ -125,31 +52,7 @@ var TEST_DATA = [
     expectedAttributes: {
       id: "node4",
     },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  name: "class",
-  value: "",
-  expectedAttributes: {
-    id: "node4",
-  },
-}, {
-  desc: "Try add attributes by adding to an existing attribute's entry",
-  node: "#node24",
-  originalAttributes: {
-    id: "node24",
-||||||| merged common ancestors
-  name: "class",
-  value: "",
-  expectedAttributes: {
-    id: "node4"
-  }
-}, {
-  desc: "Try add attributes by adding to an existing attribute's entry",
-  node: "#node24",
-  originalAttributes: {
-    id: "node24"
-=======
   {
     desc: "Try add attributes by adding to an existing attribute's entry",
     node: "#node24",
@@ -162,27 +65,8 @@ var TEST_DATA = [
       id: "node24",
       class: "",
     },
->>>>>>> upstream-releases
   },
-<<<<<<< HEAD
-  name: "id",
-  value: 'id="node24" class="""',
-  expectedAttributes: {
-    id: "node24",
-    class: "",
-  },
-}];
-||||||| merged common ancestors
-  name: "id",
-  value: 'id="node24" class="""',
-  expectedAttributes: {
-    id: "node24",
-    class: ""
-  }
-}];
-=======
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector, testActor } = await openInspectorForURL(TEST_URL);

@@ -15,13 +15,7 @@
 #include "mozilla/dom/MemoryReportRequest.h"
 #include "mozilla/gfx/gfxVars.h"
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include "mozilla/gfx/DeviceManagerDx.h"
-||||||| merged common ancestors
-# include "mozilla/gfx/DeviceManagerDx.h"
-=======
 #  include "mozilla/gfx/DeviceManagerDx.h"
->>>>>>> upstream-releases
 #endif
 #include "mozilla/ipc/CrashReporterHost.h"
 #include "mozilla/layers/APZInputBridgeChild.h"
@@ -43,52 +37,7 @@ GPUChild::GPUChild(GPUProcessHost* aHost) : mHost(aHost), mGPUReady(false) {
   MOZ_COUNT_CTOR(GPUChild);
 }
 
-<<<<<<< HEAD
 GPUChild::~GPUChild() { MOZ_COUNT_DTOR(GPUChild); }
-
-void GPUChild::Init() {
-  // Build a list of prefs the GPU process will need. Note that because we
-  // limit the GPU process to prefs contained in gfxPrefs, we can simplify
-  // the message in two ways: one, we only need to send its index in gfxPrefs
-  // rather than its name, and two, we only need to send prefs that don't
-  // have their default value.
-  nsTArray<GfxPrefSetting> prefs;
-  for (auto pref : gfxPrefs::all()) {
-    if (pref->HasDefaultValue()) {
-      continue;
-    }
-
-    GfxPrefValue value;
-    pref->GetCachedValue(&value);
-    prefs.AppendElement(GfxPrefSetting(pref->Index(), value));
-  }
-||||||| merged common ancestors
-GPUChild::~GPUChild()
-{
-  MOZ_COUNT_DTOR(GPUChild);
-}
-
-void
-GPUChild::Init()
-{
-  // Build a list of prefs the GPU process will need. Note that because we
-  // limit the GPU process to prefs contained in gfxPrefs, we can simplify
-  // the message in two ways: one, we only need to send its index in gfxPrefs
-  // rather than its name, and two, we only need to send prefs that don't
-  // have their default value.
-  nsTArray<GfxPrefSetting> prefs;
-  for (auto pref : gfxPrefs::all()) {
-    if (pref->HasDefaultValue()) {
-      continue;
-    }
-
-    GfxPrefValue value;
-    pref->GetCachedValue(&value);
-    prefs.AppendElement(GfxPrefSetting(pref->Index(), value));
-  }
-=======
-GPUChild::~GPUChild() { MOZ_COUNT_DTOR(GPUChild); }
->>>>>>> upstream-releases
 
 void GPUChild::Init() {
   nsTArray<GfxVarUpdate> updates = gfxVars::FetchNonDefaultVars();
@@ -206,14 +155,6 @@ mozilla::ipc::IPCResult GPUChild::RecvCreateVRProcess() {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUChild::RecvNotifyUiObservers(
-    const nsCString& aTopic) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUChild::RecvNotifyUiObservers(const nsCString& aTopic)
-{
-=======
 mozilla::ipc::IPCResult GPUChild::RecvShutdownVRProcess() {
   // Make sure stopping VR process at the main process
   MOZ_ASSERT(XRE_IsParentProcess());
@@ -226,7 +167,6 @@ mozilla::ipc::IPCResult GPUChild::RecvShutdownVRProcess() {
 
 mozilla::ipc::IPCResult GPUChild::RecvNotifyUiObservers(
     const nsCString& aTopic) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIObserverService> obsSvc = mozilla::services::GetObserverService();
   MOZ_ASSERT(obsSvc);
   if (obsSvc) {
@@ -281,24 +221,10 @@ mozilla::ipc::IPCResult GPUChild::RecvNotifyDeviceReset(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-bool GPUChild::SendRequestMemoryReport(const uint32_t& aGeneration,
-                                       const bool& aAnonymize,
-                                       const bool& aMinimizeMemoryUsage,
-                                       const MaybeFileDesc& aDMDFile) {
-||||||| merged common ancestors
-bool
-GPUChild::SendRequestMemoryReport(const uint32_t& aGeneration,
-                                  const bool& aAnonymize,
-                                  const bool& aMinimizeMemoryUsage,
-                                  const MaybeFileDesc& aDMDFile)
-{
-=======
 bool GPUChild::SendRequestMemoryReport(const uint32_t& aGeneration,
                                        const bool& aAnonymize,
                                        const bool& aMinimizeMemoryUsage,
                                        const Maybe<FileDescriptor>& aDMDFile) {
->>>>>>> upstream-releases
   mMemoryReportRequest = MakeUnique<MemoryReportRequestHost>(aGeneration);
   Unused << PGPUChild::SendRequestMemoryReport(aGeneration, aAnonymize,
                                                aMinimizeMemoryUsage, aDMDFile);
@@ -386,16 +312,8 @@ class DeferredDeleteGPUChild : public Runnable {
   UniquePtr<GPUChild> mChild;
 };
 
-<<<<<<< HEAD
-/* static */ void GPUChild::Destroy(UniquePtr<GPUChild>&& aChild) {
-||||||| merged common ancestors
-/* static */ void
-GPUChild::Destroy(UniquePtr<GPUChild>&& aChild)
-{
-=======
 /* static */
 void GPUChild::Destroy(UniquePtr<GPUChild>&& aChild) {
->>>>>>> upstream-releases
   NS_DispatchToMainThread(new DeferredDeleteGPUChild(std::move(aChild)));
 }
 

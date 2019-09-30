@@ -1767,25 +1767,6 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
        "Curve25519", CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
     ODE(SEC_OID_TLS13_KEA_ANY,
         "TLS 1.3 fake key exchange", CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
-<<<<<<< HEAD
-
-    OD(x509ExtKeyUsageAnyUsage, SEC_OID_X509_ANY_EXT_KEY_USAGE,
-       "Any Extended Key Usage",
-       CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
-    OD(pkixExtendedKeyUsageIPsecIKE,
-       SEC_OID_EXT_KEY_USAGE_IPSEC_IKE,
-       "IPsec IKE Certificate",
-       CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
-    OD(ipsecIKEEnd,
-       SEC_OID_IPSEC_IKE_END,
-       "IPsec IKE End",
-       CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
-    OD(ipsecIKEIntermediate,
-       SEC_OID_IPSEC_IKE_INTERMEDIATE,
-       "IPsec IKE Intermediate",
-       CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
-||||||| merged common ancestors
-=======
 
     OD(x509ExtKeyUsageAnyUsage, SEC_OID_X509_ANY_EXT_KEY_USAGE,
        "Any Extended Key Usage",
@@ -1814,7 +1795,6 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
        SEC_OID_EXT_KEY_USAGE_IPSEC_USER,
        "IPsec User",
        CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
->>>>>>> upstream-releases
 };
 
 /* PRIVATE EXTENDED SECOID Table

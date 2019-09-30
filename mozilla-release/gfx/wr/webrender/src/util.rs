@@ -15,83 +15,9 @@ use std::sync::Arc;
 use std::mem::replace;
 
 
-
 // Matches the definition of SK_ScalarNearlyZero in Skia.
 const NEARLY_ZERO: f32 = 1.0 / 4096.0;
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/util.rs
-/// A typesafe helper that separates new value construction from
-/// vector growing, allowing LLVM to ideally construct the element in place.
-pub struct Allocation<'a, T: 'a> {
-    vec: &'a mut Vec<T>,
-    index: usize,
-}
-
-impl<'a, T> Allocation<'a, T> {
-    // writing is safe because alloc() ensured enough capacity
-    // and `Allocation` holds a mutable borrow to prevent anyone else
-    // from breaking this invariant.
-    #[inline(always)]
-    pub fn init(self, value: T) -> usize {
-        unsafe {
-            ptr::write(self.vec.as_mut_ptr().add(self.index), value);
-            self.vec.set_len(self.index + 1);
-        }
-        self.index
-    }
-}
-
-/// An entry into a vector, similar to `std::collections::hash_map::Entry`.
-pub enum VecEntry<'a, T: 'a> {
-    Vacant(Allocation<'a, T>),
-    Occupied(&'a mut T),
-}
-
-impl<'a, T> VecEntry<'a, T> {
-    #[inline(always)]
-    pub fn set(self, value: T) {
-        match self {
-            VecEntry::Vacant(alloc) => { alloc.init(value); }
-            VecEntry::Occupied(slot) => { *slot = value; }
-        }
-    }
-}
-
-pub trait VecHelper<T> {
-    /// Growns the vector by a single entry, returning the allocation.
-    fn alloc(&mut self) -> Allocation<T>;
-    /// Either returns an existing elemenet, or grows the vector by one.
-    /// Doesn't expect indices to be higher than the current length.
-    fn entry(&mut self, index: usize) -> VecEntry<T>;
-}
-
-impl<T> VecHelper<T> for Vec<T> {
-    fn alloc(&mut self) -> Allocation<T> {
-        let index = self.len();
-        if self.capacity() == index {
-            self.reserve(1);
-        }
-        Allocation {
-            vec: self,
-            index,
-        }
-    }
-
-    fn entry(&mut self, index: usize) -> VecEntry<T> {
-        if index < self.len() {
-            VecEntry::Occupied(unsafe {
-                self.get_unchecked_mut(index)
-            })
-        } else {
-            assert_eq!(index, self.len());
-            VecEntry::Vacant(self.alloc())
-        }
-    }
-}
-
-
-||||||| merged common ancestors
-=======
 /// A typesafe helper that separates new value construction from
 /// vector growing, allowing LLVM to ideally construct the element in place.
 pub struct Allocation<'a, T: 'a> {
@@ -183,7 +109,6 @@ impl<T> VecHelper<T> for Vec<T> {
 }
 
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/util.rs
 // Represents an optimized transform where there is only
 // a scale and translation (which are guaranteed to maintain
 // an axis align rectangle under transformation). The
@@ -800,24 +725,6 @@ impl<Src, Dst> FastTransform<Src, Dst> {
         }
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/util.rs
-    /// Return true if this is an identity transform
-    pub fn is_identity(&self)-> bool {
-        match *self {
-            FastTransform::Offset(offset) => {
-                offset == TypedVector2D::zero()
-            }
-            FastTransform::Transform { ref transform, .. } => {
-                *transform == TypedTransform3D::identity()
-            }
-        }
-    }
-
-    #[inline(always)]
-||||||| merged common ancestors
-    #[inline(always)]
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/util.rs
     pub fn pre_mul<NewSrc>(
         &self,
         other: &FastTransform<NewSrc, Src>
@@ -1026,21 +933,6 @@ where
         }
     }
 }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/util.rs
-
-/// Clear a vector for re-use, while retaining the backing memory buffer. May shrink the buffer
-/// if it's currently much larger than was actually used.
-pub fn recycle_vec<T>(vec: &mut Vec<T>) {
-    if vec.capacity() > 2 * vec.len() {
-        // Reduce capacity of the buffer if it is a lot larger than it needs to be. This prevents
-        // a frame with exceptionally large allocations to cause subsequent frames to retain
-        // more memory than they need.
-        vec.shrink_to_fit();
-    }
-    vec.clear();
-}
-||||||| merged common ancestors
-=======
 
 
 #[derive(Debug)]
@@ -1300,4 +1192,3 @@ pub fn clamp_to_scale_factor(val: f32, round_down: bool) -> f32 {
         scale
     }
 }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/util.rs

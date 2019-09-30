@@ -26,31 +26,6 @@ export function asyncStoreHelper(root: string, mappings: Object) {
     return Array.isArray(mappings[key]) ? mappings[key][1] : null;
   }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/asyncStoreHelper.js
-  Object.keys(mappings).map(key =>
-    Object.defineProperty(store, key, {
-      async get() {
-        const value = await asyncStorage.getItem(
-          `${root}.${getMappingKey(key)}`
-        );
-        return value || getMappingDefaultValue(key);
-      },
-      set(value) {
-        return asyncStorage.setItem(`${root}.${getMappingKey(key)}`, value);
-      }
-    })
-  );
-||||||| merged common ancestors
-  Object.keys(mappings).map(key => Object.defineProperty(store, key, {
-    async get() {
-      const value = await _asyncStorage2.default.getItem(`${root}.${getMappingKey(key)}`);
-      return value || getMappingDefaultValue(key);
-    },
-
-    set(value) {
-      return _asyncStorage2.default.setItem(`${root}.${getMappingKey(key)}`, value);
-    }
-=======
   Object.keys(mappings).map(key =>
     Object.defineProperty(store, key, {
       async get() {
@@ -64,7 +39,6 @@ export function asyncStoreHelper(root: string, mappings: Object) {
       },
     })
   );
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/asyncStoreHelper.js
 
   store = new Proxy(store, {
     set: function(target, property, value, receiver) {

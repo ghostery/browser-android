@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-||||||| merged common ancestors
-=======
 const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
->>>>>>> upstream-releases
 let tgt = {};
 
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);

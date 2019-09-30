@@ -428,29 +428,5 @@ already_AddRefed<SapiService> SapiService::GetInstanceForService() {
   return sapiService.forget();
 }
 
-<<<<<<< HEAD
-void SapiService::Shutdown() {
-  if (!sSingleton) {
-    return;
-  }
-  sSingleton = nullptr;
-}
-
 }  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-void
-SapiService::Shutdown()
-{
-  if (!sSingleton) {
-    return;
-  }
-  sSingleton = nullptr;
-}
-
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
-}  // namespace mozilla
->>>>>>> upstream-releases

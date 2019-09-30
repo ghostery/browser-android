@@ -10,17 +10,9 @@
 [Exposed=(Window,Worker,AudioWorklet)]
 interface MessagePort : EventTarget {
   [Throws]
-<<<<<<< HEAD
-  void postMessage(any message, sequence<object> transferable);
-  [Throws]
-  void postMessage(any message, optional PostMessageOptions options);
-||||||| merged common ancestors
-  void postMessage(any message, optional sequence<object> transferable = []);
-=======
   void postMessage(any message, sequence<object> transferable);
   [Throws]
   void postMessage(any message, optional PostMessageOptions options = {});
->>>>>>> upstream-releases
 
   void start();
   void close();

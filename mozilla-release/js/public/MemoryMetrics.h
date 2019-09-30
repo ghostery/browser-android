@@ -559,158 +559,6 @@ struct RuntimeSizes {
 #undef FOR_EACH_SIZE
 };
 
-<<<<<<< HEAD
-struct UnusedGCThingSizes {
-#define FOR_EACH_SIZE(MACRO)                      \
-  MACRO(Other, GCHeapUnused, object)              \
-  MACRO(Other, GCHeapUnused, script)              \
-  MACRO(Other, GCHeapUnused, lazyScript)          \
-  MACRO(Other, GCHeapUnused, shape)               \
-  MACRO(Other, GCHeapUnused, baseShape)           \
-  MACRO(Other, GCHeapUnused, objectGroup)         \
-  MACRO(Other, GCHeapUnused, string)              \
-  MACRO(Other, GCHeapUnused, symbol)              \
-  IF_BIGINT(MACRO(Other, GCHeapUnused, bigInt), ) \
-  MACRO(Other, GCHeapUnused, jitcode)             \
-  MACRO(Other, GCHeapUnused, scope)               \
-  MACRO(Other, GCHeapUnused, regExpShared)
-
-  UnusedGCThingSizes() : FOR_EACH_SIZE(ZERO_SIZE) dummy() {}
-
-  UnusedGCThingSizes(UnusedGCThingSizes&& other)
-      : FOR_EACH_SIZE(COPY_OTHER_SIZE) dummy() {}
-
-  void addToKind(JS::TraceKind kind, intptr_t n) {
-    switch (kind) {
-      case JS::TraceKind::Object:
-        object += n;
-        break;
-      case JS::TraceKind::String:
-        string += n;
-        break;
-      case JS::TraceKind::Symbol:
-        symbol += n;
-        break;
-#ifdef ENABLE_BIGINT
-      case JS::TraceKind::BigInt:
-        bigInt += n;
-        break;
-#endif
-      case JS::TraceKind::Script:
-        script += n;
-        break;
-      case JS::TraceKind::Shape:
-        shape += n;
-        break;
-      case JS::TraceKind::BaseShape:
-        baseShape += n;
-        break;
-      case JS::TraceKind::JitCode:
-        jitcode += n;
-        break;
-      case JS::TraceKind::LazyScript:
-        lazyScript += n;
-        break;
-      case JS::TraceKind::ObjectGroup:
-        objectGroup += n;
-        break;
-      case JS::TraceKind::Scope:
-        scope += n;
-        break;
-      case JS::TraceKind::RegExpShared:
-        regExpShared += n;
-        break;
-      default:
-        MOZ_CRASH("Bad trace kind for UnusedGCThingSizes");
-    }
-  }
-
-  void addSizes(const UnusedGCThingSizes& other){FOR_EACH_SIZE(ADD_OTHER_SIZE)}
-
-  size_t totalSize() const {
-    size_t n = 0;
-    FOR_EACH_SIZE(ADD_SIZE_TO_N)
-    return n;
-  }
-
-  void addToTabSizes(JS::TabSizes* sizes) const {
-    FOR_EACH_SIZE(ADD_TO_TAB_SIZES)
-  }
-
-  void addToServoSizes(JS::ServoSizes* sizes) const {
-      FOR_EACH_SIZE(ADD_TO_SERVO_SIZES)}
-
-  FOR_EACH_SIZE(DECL_SIZE) int dummy;  // present just to absorb the trailing
-                                       // comma from FOR_EACH_SIZE(ZERO_SIZE)
-||||||| merged common ancestors
-struct UnusedGCThingSizes
-{
-#define FOR_EACH_SIZE(macro) \
-    macro(Other, GCHeapUnused, object) \
-    macro(Other, GCHeapUnused, script) \
-    macro(Other, GCHeapUnused, lazyScript) \
-    macro(Other, GCHeapUnused, shape) \
-    macro(Other, GCHeapUnused, baseShape) \
-    macro(Other, GCHeapUnused, objectGroup) \
-    macro(Other, GCHeapUnused, string) \
-    macro(Other, GCHeapUnused, symbol) \
-    IF_BIGINT(macro(Other, GCHeapUnused, bigInt),) \
-    macro(Other, GCHeapUnused, jitcode) \
-    macro(Other, GCHeapUnused, scope) \
-    macro(Other, GCHeapUnused, regExpShared)
-
-    UnusedGCThingSizes()
-      : FOR_EACH_SIZE(ZERO_SIZE)
-        dummy()
-    {}
-
-    UnusedGCThingSizes(UnusedGCThingSizes&& other)
-      : FOR_EACH_SIZE(COPY_OTHER_SIZE)
-        dummy()
-    {}
-
-    void addToKind(JS::TraceKind kind, intptr_t n) {
-        switch (kind) {
-          case JS::TraceKind::Object:       object += n;       break;
-          case JS::TraceKind::String:       string += n;       break;
-          case JS::TraceKind::Symbol:       symbol += n;       break;
-#ifdef ENABLE_BIGINT
-          case JS::TraceKind::BigInt:       bigInt += n;       break;
-#endif
-          case JS::TraceKind::Script:       script += n;       break;
-          case JS::TraceKind::Shape:        shape += n;        break;
-          case JS::TraceKind::BaseShape:    baseShape += n;    break;
-          case JS::TraceKind::JitCode:      jitcode += n;      break;
-          case JS::TraceKind::LazyScript:   lazyScript += n;   break;
-          case JS::TraceKind::ObjectGroup:  objectGroup += n;  break;
-          case JS::TraceKind::Scope:        scope += n;        break;
-          case JS::TraceKind::RegExpShared: regExpShared += n; break;
-          default:
-            MOZ_CRASH("Bad trace kind for UnusedGCThingSizes");
-        }
-    }
-
-    void addSizes(const UnusedGCThingSizes& other) {
-        FOR_EACH_SIZE(ADD_OTHER_SIZE)
-    }
-
-    size_t totalSize() const {
-        size_t n = 0;
-        FOR_EACH_SIZE(ADD_SIZE_TO_N)
-        return n;
-    }
-
-    void addToTabSizes(JS::TabSizes *sizes) const {
-        FOR_EACH_SIZE(ADD_TO_TAB_SIZES)
-    }
-
-    void addToServoSizes(JS::ServoSizes *sizes) const {
-        FOR_EACH_SIZE(ADD_TO_SERVO_SIZES)
-    }
-
-    FOR_EACH_SIZE(DECL_SIZE)
-    int dummy;  // present just to absorb the trailing comma from FOR_EACH_SIZE(ZERO_SIZE)
-=======
 struct UnusedGCThingSizes {
 #define FOR_EACH_SIZE(MACRO)              \
   MACRO(Other, GCHeapUnused, object)      \
@@ -791,72 +639,10 @@ struct UnusedGCThingSizes {
 
   FOR_EACH_SIZE(DECL_SIZE) int dummy;  // present just to absorb the trailing
                                        // comma from FOR_EACH_SIZE(ZERO_SIZE)
->>>>>>> upstream-releases
 
 #undef FOR_EACH_SIZE
 };
 
-<<<<<<< HEAD
-struct ZoneStats {
-#define FOR_EACH_SIZE(MACRO)                               \
-  MACRO(Other, GCHeapUsed, symbolsGCHeap)                  \
-  IF_BIGINT(MACRO(Other, GCHeapUsed, bigIntsGCHeap), )     \
-  IF_BIGINT(MACRO(Other, MallocHeap, bigIntsMallocHeap), ) \
-  MACRO(Other, GCHeapAdmin, gcHeapArenaAdmin)              \
-  MACRO(Other, GCHeapUsed, lazyScriptsGCHeap)              \
-  MACRO(Other, MallocHeap, lazyScriptsMallocHeap)          \
-  MACRO(Other, GCHeapUsed, jitCodesGCHeap)                 \
-  MACRO(Other, GCHeapUsed, objectGroupsGCHeap)             \
-  MACRO(Other, MallocHeap, objectGroupsMallocHeap)         \
-  MACRO(Other, GCHeapUsed, scopesGCHeap)                   \
-  MACRO(Other, MallocHeap, scopesMallocHeap)               \
-  MACRO(Other, GCHeapUsed, regExpSharedsGCHeap)            \
-  MACRO(Other, MallocHeap, regExpSharedsMallocHeap)        \
-  MACRO(Other, MallocHeap, typePool)                       \
-  MACRO(Other, MallocHeap, regexpZone)                     \
-  MACRO(Other, MallocHeap, jitZone)                        \
-  MACRO(Other, MallocHeap, baselineStubsOptimized)         \
-  MACRO(Other, MallocHeap, cachedCFG)                      \
-  MACRO(Other, MallocHeap, uniqueIdMap)                    \
-  MACRO(Other, MallocHeap, shapeTables)                    \
-  MACRO(Other, MallocHeap, compartmentObjects)             \
-  MACRO(Other, MallocHeap, crossCompartmentWrappersTables) \
-  MACRO(Other, MallocHeap, compartmentsPrivateData)
-
-  ZoneStats()
-      : FOR_EACH_SIZE(ZERO_SIZE) unusedGCThings(),
-||||||| merged common ancestors
-struct ZoneStats
-{
-#define FOR_EACH_SIZE(macro) \
-    macro(Other,   GCHeapUsed,  symbolsGCHeap) \
-    IF_BIGINT(macro(Other,   GCHeapUsed,  bigIntsGCHeap),) \
-    IF_BIGINT(macro(Other,   MallocHeap,  bigIntsMallocHeap),) \
-    macro(Other,   GCHeapAdmin, gcHeapArenaAdmin) \
-    macro(Other,   GCHeapUsed,  lazyScriptsGCHeap) \
-    macro(Other,   MallocHeap,  lazyScriptsMallocHeap) \
-    macro(Other,   GCHeapUsed,  jitCodesGCHeap) \
-    macro(Other,   GCHeapUsed,  objectGroupsGCHeap) \
-    macro(Other,   MallocHeap,  objectGroupsMallocHeap) \
-    macro(Other,   GCHeapUsed,  scopesGCHeap) \
-    macro(Other,   MallocHeap,  scopesMallocHeap) \
-    macro(Other,   GCHeapUsed,  regExpSharedsGCHeap) \
-    macro(Other,   MallocHeap,  regExpSharedsMallocHeap) \
-    macro(Other,   MallocHeap,  typePool) \
-    macro(Other,   MallocHeap,  regexpZone) \
-    macro(Other,   MallocHeap,  jitZone) \
-    macro(Other,   MallocHeap,  baselineStubsOptimized) \
-    macro(Other,   MallocHeap,  cachedCFG) \
-    macro(Other,   MallocHeap,  uniqueIdMap) \
-    macro(Other,   MallocHeap,  shapeTables) \
-    macro(Other,   MallocHeap,  compartmentObjects) \
-    macro(Other,   MallocHeap,  crossCompartmentWrappersTables) \
-    macro(Other,   MallocHeap,  compartmentsPrivateData)
-
-    ZoneStats()
-      : FOR_EACH_SIZE(ZERO_SIZE)
-        unusedGCThings(),
-=======
 struct ZoneStats {
 #define FOR_EACH_SIZE(MACRO)                               \
   MACRO(Other, GCHeapUsed, symbolsGCHeap)                  \
@@ -885,7 +671,6 @@ struct ZoneStats {
 
   ZoneStats()
       : FOR_EACH_SIZE(ZERO_SIZE) unusedGCThings(),
->>>>>>> upstream-releases
         stringInfo(),
         shapeInfo(),
         extra(),
@@ -974,69 +759,6 @@ struct ZoneStats {
 #undef FOR_EACH_SIZE
 };
 
-<<<<<<< HEAD
-struct RealmStats {
-  // We assume that |objectsPrivate| is on the malloc heap, but it's not
-  // actually guaranteed. But for Servo, at least, it's a moot point because
-  // it doesn't provide an ObjectPrivateVisitor so the value will always be
-  // zero.
-#define FOR_EACH_SIZE(MACRO)                                  \
-  MACRO(Private, MallocHeap, objectsPrivate)                  \
-  MACRO(Other, GCHeapUsed, scriptsGCHeap)                     \
-  MACRO(Other, MallocHeap, scriptsMallocHeapData)             \
-  MACRO(Other, MallocHeap, baselineData)                      \
-  MACRO(Other, MallocHeap, baselineStubsFallback)             \
-  MACRO(Other, MallocHeap, ionData)                           \
-  MACRO(Other, MallocHeap, typeInferenceTypeScripts)          \
-  MACRO(Other, MallocHeap, typeInferenceAllocationSiteTables) \
-  MACRO(Other, MallocHeap, typeInferenceArrayTypeTables)      \
-  MACRO(Other, MallocHeap, typeInferenceObjectTypeTables)     \
-  MACRO(Other, MallocHeap, realmObject)                       \
-  MACRO(Other, MallocHeap, realmTables)                       \
-  MACRO(Other, MallocHeap, innerViewsTable)                   \
-  MACRO(Other, MallocHeap, lazyArrayBuffersTable)             \
-  MACRO(Other, MallocHeap, objectMetadataTable)               \
-  MACRO(Other, MallocHeap, savedStacksSet)                    \
-  MACRO(Other, MallocHeap, varNamesSet)                       \
-  MACRO(Other, MallocHeap, nonSyntacticLexicalScopesTable)    \
-  MACRO(Other, MallocHeap, jitRealm)                          \
-  MACRO(Other, MallocHeap, scriptCountsMap)
-
-  RealmStats()
-      : FOR_EACH_SIZE(ZERO_SIZE) classInfo(),
-||||||| merged common ancestors
-struct RealmStats
-{
-    // We assume that |objectsPrivate| is on the malloc heap, but it's not
-    // actually guaranteed. But for Servo, at least, it's a moot point because
-    // it doesn't provide an ObjectPrivateVisitor so the value will always be
-    // zero.
-#define FOR_EACH_SIZE(macro) \
-    macro(Private, MallocHeap, objectsPrivate) \
-    macro(Other,   GCHeapUsed, scriptsGCHeap) \
-    macro(Other,   MallocHeap, scriptsMallocHeapData) \
-    macro(Other,   MallocHeap, baselineData) \
-    macro(Other,   MallocHeap, baselineStubsFallback) \
-    macro(Other,   MallocHeap, ionData) \
-    macro(Other,   MallocHeap, typeInferenceTypeScripts) \
-    macro(Other,   MallocHeap, typeInferenceAllocationSiteTables) \
-    macro(Other,   MallocHeap, typeInferenceArrayTypeTables) \
-    macro(Other,   MallocHeap, typeInferenceObjectTypeTables) \
-    macro(Other,   MallocHeap, realmObject) \
-    macro(Other,   MallocHeap, realmTables) \
-    macro(Other,   MallocHeap, innerViewsTable) \
-    macro(Other,   MallocHeap, lazyArrayBuffersTable) \
-    macro(Other,   MallocHeap, objectMetadataTable) \
-    macro(Other,   MallocHeap, savedStacksSet) \
-    macro(Other,   MallocHeap, varNamesSet) \
-    macro(Other,   MallocHeap, nonSyntacticLexicalScopesTable) \
-    macro(Other,   MallocHeap, jitRealm) \
-    macro(Other,   MallocHeap, scriptCountsMap)
-
-    RealmStats()
-      : FOR_EACH_SIZE(ZERO_SIZE)
-        classInfo(),
-=======
 struct RealmStats {
   // We assume that |objectsPrivate| is on the malloc heap, but it's not
   // actually guaranteed. But for Servo, at least, it's a moot point because
@@ -1066,7 +788,6 @@ struct RealmStats {
 
   RealmStats()
       : FOR_EACH_SIZE(ZERO_SIZE) classInfo(),
->>>>>>> upstream-releases
         extra(),
         allClasses(nullptr),
         notableClasses(),
@@ -1235,25 +956,11 @@ extern JS_PUBLIC_API bool CollectRuntimeStats(JSContext* cx,
                                               ObjectPrivateVisitor* opv,
                                               bool anonymize);
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API size_t SystemRealmCount(JSContext* cx);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(size_t)
-SystemRealmCount(JSContext* cx);
-=======
 extern JS_PUBLIC_API size_t SystemCompartmentCount(JSContext* cx);
 extern JS_PUBLIC_API size_t UserCompartmentCount(JSContext* cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API size_t UserRealmCount(JSContext* cx);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(size_t)
-UserRealmCount(JSContext* cx);
-=======
 extern JS_PUBLIC_API size_t SystemRealmCount(JSContext* cx);
 extern JS_PUBLIC_API size_t UserRealmCount(JSContext* cx);
->>>>>>> upstream-releases
 
 extern JS_PUBLIC_API size_t PeakSizeOfTemporary(const JSContext* cx);
 

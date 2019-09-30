@@ -56,55 +56,6 @@ bool ForOfEmitter::emitInitialize(const Maybe<uint32_t>& forPos) {
       //            [stack] NEXT ITER
       return false;
     }
-<<<<<<< HEAD
-  }
-
-  int32_t iterDepth = bce_->stackDepth;
-
-  // For-of loops have the iterator next method, the iterator itself, and
-  // the result.value on the stack.
-  // Push an undefined to balance the stack.
-  if (!bce_->emit1(JSOP_UNDEFINED)) {
-    //              [stack] NEXT ITER UNDEF
-    return false;
-  }
-
-  loopInfo_.emplace(bce_, iterDepth, allowSelfHostedIter_, iterKind_);
-
-  // Annotate so IonMonkey can find the loop-closing jump.
-  if (!bce_->newSrcNote(SRC_FOR_OF, &noteIndex_)) {
-    return false;
-  }
-
-  if (!loopInfo_->emitEntryJump(bce_)) {
-    //              [stack] NEXT ITER UNDEF
-    return false;
-  }
-
-  if (!loopInfo_->emitLoopHead(bce_, Nothing())) {
-    //              [stack] NEXT ITER UNDEF
-    return false;
-  }
-
-  // If the loop had an escaping lexical declaration, replace the current
-  // environment with an dead zoned one to implement TDZ semantics.
-  if (headLexicalEmitterScope_) {
-    // The environment chain only includes an environment for the for-of
-    // loop head *if* a scope binding is captured, thereby requiring
-    // recreation each iteration. If a lexical scope exists for the head,
-    // it must be the innermost one. If that scope has closed-over
-    // bindings inducing an environment, recreate the current environment.
-    MOZ_ASSERT(headLexicalEmitterScope_ == bce_->innermostEmitterScope());
-    MOZ_ASSERT(headLexicalEmitterScope_->scope(bce_)->kind() ==
-               ScopeKind::Lexical);
-
-    if (headLexicalEmitterScope_->hasEnvironment()) {
-      if (!bce_->emit1(JSOP_RECREATELEXICALENV)) {
-        //          [stack] NEXT ITER UNDEF
-||||||| merged common ancestors
-
-    if (!loopInfo_->emitLoopHead(bce_, Nothing())) {  // NEXT ITER UNDEF
-=======
   }
 
   int32_t iterDepth = bce_->bytecodeSection().stackDepth();
@@ -149,7 +100,6 @@ bool ForOfEmitter::emitInitialize(const Maybe<uint32_t>& forPos) {
     if (headLexicalEmitterScope_->hasEnvironment()) {
       if (!bce_->emit1(JSOP_RECREATELEXICALENV)) {
         //          [stack] NEXT ITER UNDEF
->>>>>>> upstream-releases
         return false;
       }
     }
@@ -161,13 +111,7 @@ bool ForOfEmitter::emitInitialize(const Maybe<uint32_t>& forPos) {
   }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  loopDepth_ = bce_->stackDepth;
-||||||| merged common ancestors
-    loopDepth_ = bce_->stackDepth;
-=======
   loopDepth_ = bce_->bytecodeSection().stackDepth();
->>>>>>> upstream-releases
 #endif
 
   // Make sure this code is attributed to the "for".
@@ -251,19 +195,9 @@ bool ForOfEmitter::emitInitialize(const Maybe<uint32_t>& forPos) {
 bool ForOfEmitter::emitBody() {
   MOZ_ASSERT(state_ == State::Initialize);
 
-<<<<<<< HEAD
-  MOZ_ASSERT(bce_->stackDepth == loopDepth_,
-             "the stack must be balanced around the initializing "
-             "operation");
-||||||| merged common ancestors
-    MOZ_ASSERT(bce_->stackDepth == loopDepth_,
-               "the stack must be balanced around the initializing "
-               "operation");
-=======
   MOZ_ASSERT(bce_->bytecodeSection().stackDepth() == loopDepth_,
              "the stack must be balanced around the initializing "
              "operation");
->>>>>>> upstream-releases
 
   // Remove VALUE from the stack to release it.
   if (!bce_->emit1(JSOP_POP)) {
@@ -284,28 +218,14 @@ bool ForOfEmitter::emitBody() {
 bool ForOfEmitter::emitEnd(const Maybe<uint32_t>& iteratedPos) {
   MOZ_ASSERT(state_ == State::Body);
 
-<<<<<<< HEAD
-  MOZ_ASSERT(bce_->stackDepth == loopDepth_,
-             "the stack must be balanced around the for-of body");
-||||||| merged common ancestors
-    MOZ_ASSERT(bce_->stackDepth == loopDepth_,
-               "the stack must be balanced around the for-of body");
-=======
   MOZ_ASSERT(bce_->bytecodeSection().stackDepth() == loopDepth_,
              "the stack must be balanced around the for-of body");
->>>>>>> upstream-releases
 
   if (!loopInfo_->emitEndCodeNeedingIteratorClose(bce_)) {
     return false;
   }
 
-<<<<<<< HEAD
-  loopInfo_->setContinueTarget(bce_->offset());
-||||||| merged common ancestors
-    loopInfo_->setContinueTarget(bce_->offset());
-=======
   loopInfo_->setContinueTarget(bce_->bytecodeSection().offset());
->>>>>>> upstream-releases
 
   // We use the iterated value's position to attribute JSOP_LOOPENTRY,
   // which corresponds to the iteration protocol.
@@ -324,13 +244,7 @@ bool ForOfEmitter::emitEnd(const Maybe<uint32_t>& iteratedPos) {
     return false;
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT(bce_->stackDepth == loopDepth_);
-||||||| merged common ancestors
-    MOZ_ASSERT(bce_->stackDepth == loopDepth_);
-=======
   MOZ_ASSERT(bce_->bytecodeSection().stackDepth() == loopDepth_);
->>>>>>> upstream-releases
 
   // Let Ion know where the closing jump of this loop is.
   if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::ForOf::BackJumpOffset,
@@ -342,24 +256,11 @@ bool ForOfEmitter::emitEnd(const Maybe<uint32_t>& iteratedPos) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (!bce_->addTryNote(JSTRY_FOR_OF, bce_->stackDepth, loopInfo_->headOffset(),
-                        loopInfo_->breakTargetOffset())) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!bce_->tryNoteList.append(JSTRY_FOR_OF, bce_->stackDepth, loopInfo_->headOffset(),
-                                  loopInfo_->breakTargetOffset()))
-    {
-        return false;
-    }
-=======
   if (!bce_->addTryNote(JSTRY_FOR_OF, bce_->bytecodeSection().stackDepth(),
                         loopInfo_->headOffset(),
                         loopInfo_->breakTargetOffset())) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!bce_->emitPopN(3)) {
     //              [stack]

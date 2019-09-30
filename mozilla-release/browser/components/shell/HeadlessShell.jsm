@@ -64,21 +64,11 @@ function loadContentWindow(browser, url) {
         if (flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT) {
           return;
         }
-<<<<<<< HEAD
-        // Ignore the initial about:blank
-        if (uri != location.spec) {
-          return;
-        }
-        let contentWindow = docShell.domWindow;
-||||||| merged common ancestors
-        let contentWindow = docShell.domWindow;
-=======
         // Ignore the initial about:blank, unless about:blank is requested
         if (location.spec == "about:blank" && uri.spec != "about:blank") {
           return;
         }
 
->>>>>>> upstream-releases
         progressListeners.delete(progressListener);
         webProgress.removeProgressListener(progressListener);
         resolve();

@@ -43,36 +43,14 @@ class HTMLAnchorElement final : public nsGenericHTMLElement, public Link {
   // DOM memory reporter participant
   NS_DECL_ADDSIZEOFEXCLUDINGTHIS
 
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-  virtual bool IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
-                               int32_t* aTabIndex) override;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-  virtual bool IsHTMLFocusable(bool aWithMouse, bool *aIsFocusable, int32_t *aTabIndex) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent = true) override;
   virtual bool IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
                                int32_t* aTabIndex) override;
->>>>>>> upstream-releases
 
   void GetEventTargetParent(EventChainPreVisitor& aVisitor) override;
-<<<<<<< HEAD
-  virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
-||||||| merged common ancestors
-  virtual nsresult PostHandleEvent(
-                     EventChainPostVisitor& aVisitor) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
->>>>>>> upstream-releases
   virtual bool IsLink(nsIURI** aURI) const override;
   virtual void GetLinkTarget(nsAString& aTarget) override;
   virtual already_AddRefed<nsIURI> GetHrefURI() const override;
@@ -197,14 +175,7 @@ class HTMLAnchorElement final : public nsGenericHTMLElement, public Link {
   void Stringify(nsAString& aResult) { GetHref(aResult); }
   void ToString(nsAString& aSource);
 
-<<<<<<< HEAD
-  void NodeInfoChanged(nsIDocument* aOldDoc) final {
-||||||| merged common ancestors
-  void NodeInfoChanged(nsIDocument* aOldDoc) final
-  {
-=======
   void NodeInfoChanged(Document* aOldDoc) final {
->>>>>>> upstream-releases
     ClearHasPendingLinkUpdate();
     nsGenericHTMLElement::NodeInfoChanged(aOldDoc);
   }

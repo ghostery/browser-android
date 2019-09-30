@@ -46,31 +46,6 @@
     <vbox id="storage-tree"/>
     <splitter class="devtools-side-splitter"/>
     <vbox flex="1">
-<<<<<<< HEAD
-      <hbox id="storage-toolbar" class="devtools-toolbar">
-        <button id="add-button"
-                class="devtools-button add-button"></button>
-        <button id="refresh-button"
-                class="devtools-button refresh-button"></button>
-        <spacer flex="1"/>
-        <textbox id="storage-searchbox"
-                 class="devtools-filterinput"
-                 placeholder="&searchBox.placeholder;"/>
-        <button class="devtools-button sidebar-toggle" hidden="true"></button>
-||||||| merged common ancestors
-      <hbox id="storage-toolbar" class="devtools-toolbar">
-        <button id="add-button"
-                class="devtools-button add-button"></button>
-        <button id="refresh-button"
-                class="devtools-button refresh-button"></button>
-        <spacer flex="1"/>
-        <textbox id="storage-searchbox"
-                 class="devtools-filterinput"
-                 type="search"
-                 timeout="200"
-                 placeholder="&searchBox.placeholder;"/>
-        <button class="devtools-button sidebar-toggle" hidden="true"></button>
-=======
       <hbox id="storage-toolbar" class="devtools-toolbar devtools-input-toolbar">
         <html:input id="storage-searchbox"
                     class="devtools-filterinput"
@@ -81,7 +56,6 @@
         <html:button id="refresh-button"
                 class="devtools-button refresh-button"></html:button>
         <html:button class="devtools-button sidebar-toggle" hidden="true"></html:button>
->>>>>>> upstream-releases
       </hbox>
       <vbox id="storage-table" class="theme-sidebar" flex="1"/>
     </vbox>

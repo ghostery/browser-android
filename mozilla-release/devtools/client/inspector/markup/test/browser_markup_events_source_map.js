@@ -20,19 +20,7 @@ const TEST_DATA = [
       {
         type: "click",
         filename: "webpack:///events_original.js:7",
-<<<<<<< HEAD
-        attributes: [
-          "Bubbling",
-          "DOM2",
-        ],
-||||||| merged common ancestors
-        attributes: [
-          "Bubbling",
-          "DOM2"
-        ],
-=======
         attributes: ["Bubbling", "DOM2"],
->>>>>>> upstream-releases
         handler: `function clickme() {
   console.log("clickme");
 }`,

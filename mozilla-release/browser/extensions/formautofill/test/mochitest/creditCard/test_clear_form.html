@@ -64,19 +64,6 @@ async function checkIsFormCleared(patch = {}) {
 async function confirmClear(selector) {
   info("Await for clearing input");
   let promise = new Promise(resolve =>
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/mochitest/test_clear_form.html
-    document.querySelector(selector).addEventListener("input", (event) => {
-      ok(event instanceof InputEvent,
-         '"input" event should be dispatched with InputEvent interface');
-      is(event.cancelable, false,
-         '"input" event should be never cancelable');
-      is(event.bubbles, true,
-         '"input" event should always bubble');
-      resolve();
-    }, {once: true})
-||||||| merged common ancestors
-    document.querySelector(selector).addEventListener("input", resolve, {once: true})
-=======
     document.querySelector(selector).addEventListener("input", (event) => {
       ok(event instanceof InputEvent,
          '"input" event should be dispatched with InputEvent interface');
@@ -92,7 +79,6 @@ async function confirmClear(selector) {
          "dataTransfer value should be null");
       resolve();
     }, {once: true})
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/mochitest/creditCard/test_clear_form.html
   );
   synthesizeKey("KEY_Enter");
   await promise;

@@ -14,23 +14,10 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DeclarationBlock> DeclarationBlock::FromCssText(
-    const nsAString& aCssText, URLExtraData* aExtraData, nsCompatibility aMode,
-    css::Loader* aLoader) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<DeclarationBlock>
-DeclarationBlock::FromCssText(const nsAString& aCssText,
-                              URLExtraData* aExtraData,
-                              nsCompatibility aMode,
-                              css::Loader* aLoader)
-{
-=======
 /* static */
 already_AddRefed<DeclarationBlock> DeclarationBlock::FromCssText(
     const nsAString& aCssText, URLExtraData* aExtraData, nsCompatibility aMode,
     css::Loader* aLoader) {
->>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 value(aCssText);
   RefPtr<RawServoDeclarationBlock> raw =
       Servo_ParseStyleAttribute(&value, aExtraData, aMode, aLoader).Consume();
@@ -38,11 +25,6 @@ already_AddRefed<DeclarationBlock> DeclarationBlock::FromCssText(
   return decl.forget();
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 MOZ_DEFINE_MALLOC_SIZE_OF(ServoDeclarationBlockMallocSizeOf)
 MOZ_DEFINE_MALLOC_ENCLOSING_SIZE_OF(ServoDeclarationBlockEnclosingSizeOf)
 
@@ -60,4 +42,3 @@ bool DeclarationBlock::OwnerIsReadOnly() const {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

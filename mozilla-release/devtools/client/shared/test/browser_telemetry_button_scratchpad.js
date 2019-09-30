@@ -106,16 +106,10 @@ function delayedClicks(node, clicks) {
 function checkResults() {
   // For help generating these tests use generateTelemetryTests("DEVTOOLS_SCRATCHPAD_")
   // here.
-<<<<<<< HEAD
-  checkTelemetry("DEVTOOLS_SCRATCHPAD_WINDOW_OPENED_COUNT", "", {0: 4, 1: 0}, "array");
-||||||| merged common ancestors
-  checkTelemetry("DEVTOOLS_SCRATCHPAD_WINDOW_OPENED_COUNT", "", [4, 0, 0], "array");
-=======
   checkTelemetry(
     "DEVTOOLS_SCRATCHPAD_WINDOW_OPENED_COUNT",
     "",
     { 0: 4, 1: 0 },
     "array"
   );
->>>>>>> upstream-releases
 }

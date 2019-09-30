@@ -42,32 +42,7 @@ namespace {
  * used.  ScopeStringPrefixMode allows the caller to specify the desired
  * behavior.
  */
-<<<<<<< HEAD
 enum ScopeStringPrefixMode { eUseDirectory, eUsePath };
-
-nsresult GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
-                                      ScopeStringPrefixMode aPrefixMode) {
-  nsresult rv = aScriptURI->GetPrePath(aPrefix);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-||||||| merged common ancestors
-enum ScopeStringPrefixMode {
-  eUseDirectory,
-  eUsePath
-};
-
-nsresult
-GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
-                             ScopeStringPrefixMode aPrefixMode)
-{
-  nsresult rv = aScriptURI->GetPrePath(aPrefix);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-=======
-enum ScopeStringPrefixMode { eUseDirectory, eUsePath };
->>>>>>> upstream-releases
 
 nsresult GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
                                       ScopeStringPrefixMode aPrefixMode) {
@@ -165,33 +140,11 @@ class ServiceWorkerUpdateJob::ContinueInstallRunnable final
 };
 
 ServiceWorkerUpdateJob::ServiceWorkerUpdateJob(
-<<<<<<< HEAD
-    nsIPrincipal* aPrincipal, const nsACString& aScope,
-    const nsACString& aScriptSpec, nsILoadGroup* aLoadGroup,
-    ServiceWorkerUpdateViaCache aUpdateViaCache)
-    : ServiceWorkerJob(Type::Update, aPrincipal, aScope, aScriptSpec),
-      mLoadGroup(aLoadGroup),
-      mUpdateViaCache(aUpdateViaCache),
-      mOnFailure(OnFailure::DoNothing) {}
-||||||| merged common ancestors
-    nsIPrincipal* aPrincipal,
-    const nsACString& aScope,
-    const nsACString& aScriptSpec,
-    nsILoadGroup* aLoadGroup,
-    ServiceWorkerUpdateViaCache aUpdateViaCache)
-  : ServiceWorkerJob(Type::Update, aPrincipal, aScope, aScriptSpec)
-  , mLoadGroup(aLoadGroup)
-  , mUpdateViaCache(aUpdateViaCache)
-  , mOnFailure(OnFailure::DoNothing)
-{
-}
-=======
     nsIPrincipal* aPrincipal, const nsACString& aScope,
     const nsACString& aScriptSpec, ServiceWorkerUpdateViaCache aUpdateViaCache)
     : ServiceWorkerJob(Type::Update, aPrincipal, aScope, aScriptSpec),
       mUpdateViaCache(aUpdateViaCache),
       mOnFailure(OnFailure::DoNothing) {}
->>>>>>> upstream-releases
 
 already_AddRefed<ServiceWorkerRegistrationInfo>
 ServiceWorkerUpdateJob::GetRegistration() const {
@@ -201,34 +154,11 @@ ServiceWorkerUpdateJob::GetRegistration() const {
 }
 
 ServiceWorkerUpdateJob::ServiceWorkerUpdateJob(
-<<<<<<< HEAD
-    Type aType, nsIPrincipal* aPrincipal, const nsACString& aScope,
-    const nsACString& aScriptSpec, nsILoadGroup* aLoadGroup,
-    ServiceWorkerUpdateViaCache aUpdateViaCache)
-    : ServiceWorkerJob(aType, aPrincipal, aScope, aScriptSpec),
-      mLoadGroup(aLoadGroup),
-      mUpdateViaCache(aUpdateViaCache),
-      mOnFailure(serviceWorkerScriptCache::OnFailure::DoNothing) {}
-||||||| merged common ancestors
-    Type aType,
-    nsIPrincipal* aPrincipal,
-    const nsACString& aScope,
-    const nsACString& aScriptSpec,
-    nsILoadGroup* aLoadGroup,
-    ServiceWorkerUpdateViaCache aUpdateViaCache)
-  : ServiceWorkerJob(aType, aPrincipal, aScope, aScriptSpec)
-  , mLoadGroup(aLoadGroup)
-  , mUpdateViaCache(aUpdateViaCache)
-  , mOnFailure(serviceWorkerScriptCache::OnFailure::DoNothing)
-{
-}
-=======
     Type aType, nsIPrincipal* aPrincipal, const nsACString& aScope,
     const nsACString& aScriptSpec, ServiceWorkerUpdateViaCache aUpdateViaCache)
     : ServiceWorkerJob(aType, aPrincipal, aScope, aScriptSpec),
       mUpdateViaCache(aUpdateViaCache),
       mOnFailure(serviceWorkerScriptCache::OnFailure::DoNothing) {}
->>>>>>> upstream-releases
 
 ServiceWorkerUpdateJob::~ServiceWorkerUpdateJob() {}
 
@@ -354,20 +284,9 @@ void ServiceWorkerUpdateJob::Update() {
 
   RefPtr<CompareCallback> callback = new CompareCallback(this);
 
-<<<<<<< HEAD
-  nsresult rv = serviceWorkerScriptCache::Compare(
-      mRegistration, mPrincipal, cacheName, NS_ConvertUTF8toUTF16(mScriptSpec),
-      callback, mLoadGroup);
-||||||| merged common ancestors
-  nsresult rv =
-    serviceWorkerScriptCache::Compare(mRegistration, mPrincipal, cacheName,
-                                      NS_ConvertUTF8toUTF16(mScriptSpec),
-                                      callback, mLoadGroup);
-=======
   nsresult rv = serviceWorkerScriptCache::Compare(
       mRegistration, mPrincipal, cacheName, NS_ConvertUTF8toUTF16(mScriptSpec),
       callback);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     FailUpdateJob(rv);
     return;
@@ -462,12 +381,6 @@ void ServiceWorkerUpdateJob::ComparisonResult(nsresult aStatus,
     nsAutoString message;
     NS_ConvertUTF8toUTF16 reportScope(mRegistration->Scope());
     NS_ConvertUTF8toUTF16 reportMaxPrefix(maxPrefix);
-<<<<<<< HEAD
-    const char16_t* params[] = {reportScope.get(), reportMaxPrefix.get()};
-||||||| merged common ancestors
-    const char16_t* params[] = { reportScope.get(), reportMaxPrefix.get() };
-=======
->>>>>>> upstream-releases
 
     rv = nsContentUtils::FormatLocalizedString(
         message, nsContentUtils::eDOM_PROPERTIES,

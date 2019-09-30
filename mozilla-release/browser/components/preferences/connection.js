@@ -40,13 +40,8 @@ Preferences.addAll([
   { id: "network.proxy.backup.socks_port", type: "int" },
   { id: "network.trr.mode", type: "int" },
   { id: "network.trr.uri", type: "string" },
-<<<<<<< HEAD
-  { id: "network.trr.custom_uri", "type": "string" },
-||||||| merged common ancestors
-=======
   { id: "network.trr.resolvers", type: "string" },
   { id: "network.trr.custom_uri", type: "string" },
->>>>>>> upstream-releases
 ]);
 
 window.addEventListener(
@@ -95,13 +90,6 @@ window.addEventListener(
 
 var gConnectionsDialog = {
   beforeAccept() {
-<<<<<<< HEAD
-    if (document.getElementById("customDnsOverHttpsUrlRadio").selected) {
-      Services.prefs.setStringPref("network.trr.uri", document.getElementById("customDnsOverHttpsInput").value);
-    }
-
-||||||| merged common ancestors
-=======
     let dnsOverHttpsResolverChoice = document.getElementById(
       "networkDnsOverHttpsResolverChoices"
     ).value;
@@ -121,7 +109,6 @@ var gConnectionsDialog = {
       );
     }
 
->>>>>>> upstream-releases
     var proxyTypePref = Preferences.get("network.proxy.type");
     if (proxyTypePref.value == 2) {
       this.doAutoconfigURLFixup();
@@ -214,13 +201,7 @@ var gConnectionsDialog = {
     autologinProxyPref.disabled =
       proxyTypePref.value == 0 || autologinProxyPref.locked;
     var noProxiesPref = Preferences.get("network.proxy.no_proxies_on");
-<<<<<<< HEAD
-    noProxiesPref.disabled = proxyTypePref.value == 0;
-||||||| merged common ancestors
-    noProxiesPref.disabled = proxyTypePref.value != 1;
-=======
     noProxiesPref.disabled = proxyTypePref.value == 0 || noProxiesPref.locked;
->>>>>>> upstream-releases
 
     var autoconfigURLPref = Preferences.get("network.proxy.autoconfig_url");
     autoconfigURLPref.disabled =
@@ -480,23 +461,6 @@ var gConnectionsDialog = {
     return trrModeCheckbox.checked ? 2 : 0;
   },
 
-<<<<<<< HEAD
-  updateDnsOverHttpsUI() {
-    // Disable the custom url input box if the parent checkbox and custom radio button attached to it is not selected.
-    // Disable the custom radio button if the parent checkbox is not selected.
-    let parentCheckbox = document.getElementById("networkDnsOverHttps");
-    let customDnsOverHttpsUrlRadio = document.getElementById("customDnsOverHttpsUrlRadio");
-    let customDnsOverHttpsInput = document.getElementById("customDnsOverHttpsInput");
-    customDnsOverHttpsInput.disabled = !parentCheckbox.checked || !customDnsOverHttpsUrlRadio.selected;
-    customDnsOverHttpsUrlRadio.disabled = !parentCheckbox.checked;
-||||||| merged common ancestors
-  writeDnsOverHttpsUri() {
-    // called to update pref with user input
-    let input = document.getElementById("networkDnsOverHttpsUrl");
-    let uriString = input.value.trim();
-    // turn an empty string into `undefined` to clear the pref back to the default
-    return uriString.length ? uriString : undefined;
-=======
   updateDnsOverHttpsUI() {
     // init and update of the UI must wait until the pref values are ready
     if (!this._areTrrPrefsReady) {
@@ -559,24 +523,9 @@ var gConnectionsDialog = {
     for (let element of this.getDnsOverHttpsControls()) {
       element.disabled = disabled;
     }
->>>>>>> upstream-releases
   },
 
   initDnsOverHttpsUI() {
-<<<<<<< HEAD
-    let defaultDnsOverHttpsUrlRadio = document.getElementById("defaultDnsOverHttpsUrlRadio");
-    let defaultPrefUrl = Preferences.get("network.trr.uri").defaultValue;
-    document.l10n.setAttributes(defaultDnsOverHttpsUrlRadio, "connection-dns-over-https-url-default", {
-      url: defaultPrefUrl,
-    });
-    defaultDnsOverHttpsUrlRadio.value = defaultPrefUrl;
-    let radioGroup = document.getElementById("DnsOverHttpsUrlRadioGroup");
-    radioGroup.selectedIndex = Preferences.get("network.trr.uri").hasUserValue ? 1 : 0;
-    this.updateDnsOverHttpsUI();
-||||||| merged common ancestors
-    let input = document.getElementById("networkDnsOverHttpsUrl");
-    input.placeholder = Preferences.get("network.trr.uri").defaultValue;
-=======
     let resolvers = this.dnsOverHttpsResolvers;
     let defaultURI = Preferences.get("network.trr.uri").defaultValue;
     let currentURI = Preferences.get("network.trr.uri").value;
@@ -623,6 +572,5 @@ var gConnectionsDialog = {
       this.updateDnsOverHttpsUI();
       document.getElementById("networkDnsOverHttps").disabled = false;
     }
->>>>>>> upstream-releases
   },
 };

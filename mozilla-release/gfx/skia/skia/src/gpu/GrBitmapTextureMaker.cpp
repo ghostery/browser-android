@@ -61,15 +61,8 @@ sk_sp<GrTextureProxy> GrBitmapTextureMaker::refOriginalTextureProxy(bool willBeM
             if (!willBeMipped || GrMipMapped::kYes == proxy->mipMapped()) {
                 SkASSERT(proxy->origin() == kTopLeft_GrSurfaceOrigin);
                 if (fOriginalKey.isValid()) {
-<<<<<<< HEAD
-                    GrInstallBitmapUniqueKeyInvalidator(
-                            fOriginalKey, proxyProvider->contextUniqueID(), fBitmap.pixelRef());
-||||||| merged common ancestors
-                    GrInstallBitmapUniqueKeyInvalidator(fOriginalKey, fBitmap.pixelRef());
-=======
                     GrInstallBitmapUniqueKeyInvalidator(
                             fOriginalKey, proxyProvider->contextID(), fBitmap.pixelRef());
->>>>>>> upstream-releases
                 }
                 return proxy;
             }
@@ -94,15 +87,8 @@ sk_sp<GrTextureProxy> GrBitmapTextureMaker::refOriginalTextureProxy(bool willBeM
                 SkASSERT(proxy->getUniqueKey() == fOriginalKey);
                 proxyProvider->removeUniqueKeyFromProxy(proxy.get());
                 proxyProvider->assignUniqueKeyToProxy(fOriginalKey, mippedProxy.get());
-<<<<<<< HEAD
-                GrInstallBitmapUniqueKeyInvalidator(fOriginalKey, proxyProvider->contextUniqueID(),
-                                                    fBitmap.pixelRef());
-||||||| merged common ancestors
-                GrInstallBitmapUniqueKeyInvalidator(fOriginalKey, fBitmap.pixelRef());
-=======
                 GrInstallBitmapUniqueKeyInvalidator(fOriginalKey, proxyProvider->contextID(),
                                                     fBitmap.pixelRef());
->>>>>>> upstream-releases
             }
             return mippedProxy;
         }

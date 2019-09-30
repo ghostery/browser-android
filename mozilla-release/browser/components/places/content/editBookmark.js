@@ -246,39 +246,6 @@ var gEditItemOverlay = {
       this.uninitPanel(false);
     }
 
-<<<<<<< HEAD
-    this.transactionPromises = [];
-
-    let { parentGuid, isItem, isURI,
-          isBookmark, bulkTagging, uris,
-          visibleRows, focusedElement,
-          onPanelReady } = this._setPaneInfo(aInfo);
-
-    let showOrCollapse =
-      (rowId, isAppropriateForInput, nameInHiddenRows = null) => {
-        let visible = isAppropriateForInput;
-        if (visible && "hiddenRows" in aInfo && nameInHiddenRows)
-          visible &= !aInfo.hiddenRows.includes(nameInHiddenRows);
-        if (visible)
-          visibleRows.add(rowId);
-        return !(this._element(rowId).collapsed = !visible);
-      };
-||||||| merged common ancestors
-    let { parentGuid, isItem, isURI,
-          isBookmark, bulkTagging, uris,
-          visibleRows, focusedElement,
-          onPanelReady } = this._setPaneInfo(aInfo);
-
-    let showOrCollapse =
-      (rowId, isAppropriateForInput, nameInHiddenRows = null) => {
-        let visible = isAppropriateForInput;
-        if (visible && "hiddenRows" in aInfo && nameInHiddenRows)
-          visible &= !aInfo.hiddenRows.includes(nameInHiddenRows);
-        if (visible)
-          visibleRows.add(rowId);
-        return !(this._element(rowId).collapsed = !visible);
-      };
-=======
     this.transactionPromises = [];
 
     let {
@@ -307,7 +274,6 @@ var gEditItemOverlay = {
       }
       return !(this._element(rowId).collapsed = !visible);
     };
->>>>>>> upstream-releases
 
     if (showOrCollapse("nameRow", !bulkTagging, "name")) {
       this._initNamePicker();
@@ -535,23 +501,6 @@ var gEditItemOverlay = {
     this._folderMenuList.disabled = this.readOnly;
   },
 
-<<<<<<< HEAD
-  _onFolderListSelected() {
-    // Set a selectedGuid attribute to show special icons
-    let folderGuid = this.selectedFolderGuid;
-    if (folderGuid) {
-      this._folderMenuList.setAttribute("selectedGuid", folderGuid);
-    } else {
-      this._folderMenuList.removeAttribute("selectedGuid");
-    }
-  },
-
-  QueryInterface:
-  ChromeUtils.generateQI([Ci.nsINavBookmarkObserver]),
-||||||| merged common ancestors
-  QueryInterface:
-  ChromeUtils.generateQI([Ci.nsINavBookmarkObserver]),
-=======
   _onFolderListSelected() {
     // Set a selectedGuid attribute to show special icons
     let folderGuid = this.selectedFolderGuid;
@@ -563,7 +512,6 @@ var gEditItemOverlay = {
   },
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsINavBookmarkObserver]),
->>>>>>> upstream-releases
 
   _element(aID) {
     return document.getElementById("editBMPanel_" + aID);
@@ -662,15 +610,6 @@ var gEditItemOverlay = {
     let setTags = async () => {
       let promises = [];
       if (removedTags.length > 0) {
-<<<<<<< HEAD
-        let promise = PlacesTransactions.Untag({ urls: aURIs, tags: removedTags })
-                                        .transact().catch(Cu.reportError);
-        this.transactionPromises.push(promise);
-        promises.push(promise);
-||||||| merged common ancestors
-        await PlacesTransactions.Untag({ urls: aURIs, tags: removedTags })
-                                .transact();
-=======
         let promise = PlacesTransactions.Untag({
           urls: aURIs,
           tags: removedTags,
@@ -679,22 +618,8 @@ var gEditItemOverlay = {
           .catch(Cu.reportError);
         this.transactionPromises.push(promise);
         promises.push(promise);
->>>>>>> upstream-releases
       }
       if (newTags.length > 0) {
-<<<<<<< HEAD
-        let promise = PlacesTransactions.Tag({ urls: aURIs, tags: newTags })
-                                        .transact().catch(Cu.reportError);
-        this.transactionPromises.push(promise);
-        promises.push(promise);
-      }
-      // Don't use Promise.all because we want these to be executed in order.
-      for (let promise of promises) {
-        await promise;
-||||||| merged common ancestors
-        await PlacesTransactions.Tag({ urls: aURIs, tags: newTags })
-                                .transact();
-=======
         let promise = PlacesTransactions.Tag({ urls: aURIs, tags: newTags })
           .transact()
           .catch(Cu.reportError);
@@ -704,7 +629,6 @@ var gEditItemOverlay = {
       // Don't use Promise.all because we want these to be executed in order.
       for (let promise of promises) {
         await promise;
->>>>>>> upstream-releases
       }
     };
 
@@ -796,23 +720,12 @@ var gEditItemOverlay = {
     }
 
     this._mayUpdateFirstEditField("namePicker");
-<<<<<<< HEAD
-    let promise = PlacesTransactions.EditTitle({ guid: this._paneInfo.itemGuid,
-                                                 title: this._namePicker.value })
-                                    .transact();
-    this.transactionPromises.push(promise.catch(Cu.reportError));
-    await promise;
-||||||| merged common ancestors
-    await PlacesTransactions.EditTitle({ guid: this._paneInfo.itemGuid,
-                                         title: this._namePicker.value }).transact();
-=======
     let promise = PlacesTransactions.EditTitle({
       guid: this._paneInfo.itemGuid,
       title: this._namePicker.value,
     }).transact();
     this.transactionPromises.push(promise.catch(Cu.reportError));
     await promise;
->>>>>>> upstream-releases
   },
 
   onLocationFieldChange() {
@@ -833,19 +746,11 @@ var gEditItemOverlay = {
     }
 
     let guid = this._paneInfo.itemGuid;
-<<<<<<< HEAD
-    this.transactionPromises.push(PlacesTransactions.EditUrl({ guid, url: newURI })
-                                                    .transact().catch(Cu.reportError));
-||||||| merged common ancestors
-    PlacesTransactions.EditUrl({ guid, url: newURI })
-                      .transact().catch(Cu.reportError);
-=======
     this.transactionPromises.push(
       PlacesTransactions.EditUrl({ guid, url: newURI })
         .transact()
         .catch(Cu.reportError)
     );
->>>>>>> upstream-releases
   },
 
   onKeywordFieldChange() {
@@ -857,19 +762,11 @@ var gEditItemOverlay = {
     let keyword = (this._keyword = this._keywordField.value);
     let postData = this._paneInfo.postData;
     let guid = this._paneInfo.itemGuid;
-<<<<<<< HEAD
-    this.transactionPromises.push(PlacesTransactions.EditKeyword({ guid, keyword, postData, oldKeyword })
-                                                    .transact().catch(Cu.reportError));
-||||||| merged common ancestors
-    PlacesTransactions.EditKeyword({ guid, keyword, postData, oldKeyword })
-                      .transact().catch(Cu.reportError);
-=======
     this.transactionPromises.push(
       PlacesTransactions.EditKeyword({ guid, keyword, postData, oldKeyword })
         .transact()
         .catch(Cu.reportError)
     );
->>>>>>> upstream-releases
   },
 
   toggleFolderTreeVisibility() {
@@ -878,37 +775,19 @@ var gEditItemOverlay = {
     expander.classList.toggle("expander-up", folderTreeRow.collapsed);
     expander.classList.toggle("expander-down", !folderTreeRow.collapsed);
     if (!folderTreeRow.collapsed) {
-<<<<<<< HEAD
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextdown"));
-||||||| merged common ancestors
-      expander.className = "expander-down";
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextdown"));
-=======
       expander.setAttribute(
         "tooltiptext",
         expander.getAttribute("tooltiptextdown")
       );
->>>>>>> upstream-releases
       folderTreeRow.collapsed = true;
       this._element("chooseFolderSeparator").hidden = this._element(
         "chooseFolderMenuItem"
       ).hidden = false;
     } else {
-<<<<<<< HEAD
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextup"));
-||||||| merged common ancestors
-      expander.className = "expander-up";
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextup"));
-=======
       expander.setAttribute(
         "tooltiptext",
         expander.getAttribute("tooltiptextup")
       );
->>>>>>> upstream-releases
       folderTreeRow.collapsed = false;
 
       // XXXmano: Ideally we would only do this once, but for some odd reason,
@@ -979,21 +858,11 @@ var gEditItemOverlay = {
 
     // Move the item
     let containerGuid = this._folderMenuList.selectedItem.folderGuid;
-<<<<<<< HEAD
-    if (this._paneInfo.parentGuid != containerGuid &&
-        this._paneInfo.itemGuid != containerGuid) {
-      let promise = PlacesTransactions.Move({
-||||||| merged common ancestors
-    if (this._paneInfo.parentGuid != containerGuid &&
-        this._paneInfo.itemGuid != containerGuid) {
-      await PlacesTransactions.Move({
-=======
     if (
       this._paneInfo.parentGuid != containerGuid &&
       this._paneInfo.itemGuid != containerGuid
     ) {
       let promise = PlacesTransactions.Move({
->>>>>>> upstream-releases
         guid: this._paneInfo.itemGuid,
         newParentGuid: containerGuid,
       }).transact();
@@ -1093,19 +962,10 @@ var gEditItemOverlay = {
     expander.classList.toggle("expander-up", tagsSelectorRow.collapsed);
     expander.classList.toggle("expander-down", !tagsSelectorRow.collapsed);
     if (tagsSelectorRow.collapsed) {
-<<<<<<< HEAD
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextup"));
-||||||| merged common ancestors
-      expander.className = "expander-up";
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextup"));
-=======
       expander.setAttribute(
         "tooltiptext",
         expander.getAttribute("tooltiptextup")
       );
->>>>>>> upstream-releases
       tagsSelectorRow.collapsed = false;
       await this._rebuildTagsSelectorList();
 
@@ -1113,19 +973,10 @@ var gEditItemOverlay = {
       tagsSelector.addEventListener("mousedown", this);
       tagsSelector.addEventListener("keypress", this);
     } else {
-<<<<<<< HEAD
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextdown"));
-||||||| merged common ancestors
-      expander.className = "expander-down";
-      expander.setAttribute("tooltiptext",
-                            expander.getAttribute("tooltiptextdown"));
-=======
       expander.setAttribute(
         "tooltiptext",
         expander.getAttribute("tooltiptextdown")
       );
->>>>>>> upstream-releases
       tagsSelectorRow.collapsed = true;
 
       // This is a no-op if we've removed the listener.
@@ -1197,22 +1048,6 @@ var gEditItemOverlay = {
             this.toggleItemCheckbox(item);
           }
         }
-<<<<<<< HEAD
-      }
-      break;
-    case "unload":
-      this.uninitPanel(false);
-      break;
-    case "select":
-      this._onFolderListSelected();
-      break;
-||||||| merged common ancestors
-      }
-      break;
-    case "unload":
-      this.uninitPanel(false);
-      break;
-=======
         break;
       case "unload":
         this.uninitPanel(false);
@@ -1220,7 +1055,6 @@ var gEditItemOverlay = {
       case "select":
         this._onFolderListSelected();
         break;
->>>>>>> upstream-releases
     }
   },
 

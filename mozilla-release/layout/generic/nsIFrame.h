@@ -80,34 +80,6 @@
 
 /**
  * New rules of reflow:
-<<<<<<< HEAD
- * 1. you get a WillReflow() followed by a Reflow() followed by a DidReflow() in
- * order (no separate pass over the tree)
- * 2. it's the parent frame's responsibility to size/position the child's view
- * (not the child frame's responsibility as it is today) during reflow (and
- * before sending the DidReflow() notification)
- * 3. positioning of child frames (and their views) is done on the way down the
- * tree, and sizing of child frames (and their views) on the way back up
- * 4. if you move a frame (outside of the reflow process, or after reflowing
- * it), then you must make sure that its view (or its child frame's views) are
- * re-positioned as well. It's reasonable to not position the view until after
- * all reflowing the entire line, for example, but the frame should still be
- * positioned and sized (and the view sized) during the reflow (i.e., before
- * sending the DidReflow() notification)
-||||||| merged common ancestors
- * 1. you get a WillReflow() followed by a Reflow() followed by a DidReflow() in order
- *    (no separate pass over the tree)
- * 2. it's the parent frame's responsibility to size/position the child's view (not
- *    the child frame's responsibility as it is today) during reflow (and before
- *    sending the DidReflow() notification)
- * 3. positioning of child frames (and their views) is done on the way down the tree,
- *    and sizing of child frames (and their views) on the way back up
- * 4. if you move a frame (outside of the reflow process, or after reflowing it),
- *    then you must make sure that its view (or its child frame's views) are re-positioned
- *    as well. It's reasonable to not position the view until after all reflowing the
- *    entire line, for example, but the frame should still be positioned and sized (and
- *    the view sized) during the reflow (i.e., before sending the DidReflow() notification)
-=======
  * 1. you get a WillReflow() followed by a Reflow() followed by a DidReflow() in
  *    order (no separate pass over the tree)
  * 2. it's the parent frame's responsibility to size/position the child's view
@@ -121,7 +93,6 @@
  *    after all reflowing the entire line, for example, but the frame should
  *    still be positioned and sized (and the view sized) during the reflow
  *    (i.e., before sending the DidReflow() notification)
->>>>>>> upstream-releases
  * 5. the view system handles moving of widgets, i.e., it's not our problem
  */
 
@@ -169,58 +140,17 @@ class EffectSet;
 namespace layers {
 class Layer;
 class LayerManager;
-<<<<<<< HEAD
-}  // namespace layers
-||||||| merged common ancestors
-} // namespace layers
-=======
 }  // namespace layers
 
 namespace layout {
 class ScrollAnchorContainer;
 }  // namespace layout
->>>>>>> upstream-releases
 
 namespace dom {
 class Selection;
-<<<<<<< HEAD
 }  // namespace dom
 
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-
-} // namespace mozilla
-
-/**
- * Indication of how the frame can be split. This is used when doing runaround
- * of floats, and when pulling up child frames from a next-in-flow.
- *
- * The choices are splittable, not splittable at all, and splittable in
- * a non-rectangular fashion. This last type only applies to block-level
- * elements, and indicates whether splitting can be used when doing runaround.
- * If you can split across page boundaries, but you expect each continuing
- * frame to be the same width then return frSplittable and not
- * frSplittableNonRectangular.
- *
- * @see #GetSplittableType()
- */
-typedef uint32_t nsSplittableType;
-
-#define NS_FRAME_NOT_SPLITTABLE             0   // Note: not a bit!
-#define NS_FRAME_SPLITTABLE                 0x1
-#define NS_FRAME_SPLITTABLE_NON_RECTANGULAR 0x3
-
-#define NS_FRAME_IS_SPLITTABLE(type)\
-  (0 != ((type) & NS_FRAME_SPLITTABLE))
-
-#define NS_FRAME_IS_NOT_SPLITTABLE(type)\
-  (0 == ((type) & NS_FRAME_SPLITTABLE))
-=======
-}  // namespace dom
-
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 
@@ -440,34 +370,14 @@ std::ostream& operator<<(std::ostream& aStream, const nsReflowStatus& aStatus);
  * actually been set (this is the initial state of newly-created frames).
  */
 
-<<<<<<< HEAD
-// max delta we can store
-#define NS_FRAME_OVERFLOW_DELTA_MAX 0xfe
-||||||| merged common ancestors
-#define NS_FRAME_OVERFLOW_NONE    0x00000000 // there are no overflow rects;
-                                             // code relies on this being
-                                             // the all-zero value
-=======
 // max delta we can store
 #define NS_FRAME_OVERFLOW_DELTA_MAX 0xfe
 
 // there are no overflow rects; code relies on this being the all-zero value
 #define NS_FRAME_OVERFLOW_NONE 0x00000000
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-// there are no overflow rects; code relies on this being the all-zero value
-#define NS_FRAME_OVERFLOW_NONE 0x00000000
 
 // overflow is stored as a separate rect property
 #define NS_FRAME_OVERFLOW_LARGE 0x000000ff
-||||||| merged common ancestors
-#define NS_FRAME_OVERFLOW_LARGE   0x000000ff // overflow is stored as a
-                                             // separate rect property
-=======
-// overflow is stored as a separate rect property
-#define NS_FRAME_OVERFLOW_LARGE 0x000000ff
->>>>>>> upstream-releases
 
 /**
  * nsBidiLevel is the type of the level values in our Unicode Bidi
@@ -542,40 +452,18 @@ enum nsBidiDirection {
 namespace mozilla {
 
 // https://drafts.csswg.org/css-align-3/#baseline-sharing-group
-<<<<<<< HEAD
-enum BaselineSharingGroup {
-||||||| merged common ancestors
-enum BaselineSharingGroup
-{
-=======
 enum class BaselineSharingGroup {
->>>>>>> upstream-releases
   // NOTE Used as an array index so must be 0 and 1.
   First = 0,
   Last = 1,
 };
 
 // Loosely: https://drafts.csswg.org/css-align-3/#shared-alignment-context
-<<<<<<< HEAD
-enum class AlignmentContext {
-  eInline,
-  eTable,
-  eFlexbox,
-  eGrid,
-||||||| merged common ancestors
-enum class AlignmentContext
-{
-  eInline,
-  eTable,
-  eFlexbox,
-  eGrid,
-=======
 enum class AlignmentContext {
   Inline,
   Table,
   Flexbox,
   Grid,
->>>>>>> upstream-releases
 };
 
 /*
@@ -591,27 +479,6 @@ struct IntrinsicSize {
   IntrinsicSize(nscoord aWidth, nscoord aHeight)
       : width(Some(aWidth)), height(Some(aHeight)) {}
 
-<<<<<<< HEAD
-  IntrinsicSize() : width(eStyleUnit_None), height(eStyleUnit_None) {}
-  IntrinsicSize(const IntrinsicSize& rhs)
-      : width(rhs.width), height(rhs.height) {}
-  IntrinsicSize& operator=(const IntrinsicSize& rhs) {
-    width = rhs.width;
-    height = rhs.height;
-    return *this;
-  }
-||||||| merged common ancestors
-  IntrinsicSize()
-    : width(eStyleUnit_None), height(eStyleUnit_None)
-  {}
-  IntrinsicSize(const IntrinsicSize& rhs)
-    : width(rhs.width), height(rhs.height)
-  {}
-  IntrinsicSize& operator=(const IntrinsicSize& rhs) {
-    width = rhs.width; height = rhs.height; return *this;
-  }
-=======
->>>>>>> upstream-releases
   bool operator==(const IntrinsicSize& rhs) {
     return width == rhs.width && height == rhs.height;
   }
@@ -706,58 +573,6 @@ class nsIFrame : public nsQueryFrame {
 
   NS_DECL_QUERYFRAME_TARGET(nsIFrame)
 
-<<<<<<< HEAD
-  explicit nsIFrame(ClassID aID)
-      : mRect(),
-        mContent(nullptr),
-        mComputedStyle(nullptr),
-        mParent(nullptr),
-        mNextSibling(nullptr),
-        mPrevSibling(nullptr),
-        mState(NS_FRAME_FIRST_REFLOW | NS_FRAME_IS_DIRTY),
-        mClass(aID),
-        mMayHaveRoundedCorners(false),
-        mHasImageRequest(false),
-        mHasFirstLetterChild(false),
-        mParentIsWrapperAnonBox(false),
-        mIsWrapperBoxNeedingRestyle(false),
-        mReflowRequestedForCharDataChange(false),
-        mForceDescendIntoIfVisible(false),
-        mBuiltDisplayList(false),
-        mFrameIsModified(false),
-        mHasOverrideDirtyRegion(false),
-        mMayHaveWillChangeBudget(false),
-        mIsPrimaryFrame(false),
-        mMayHaveTransformAnimation(false),
-        mMayHaveOpacityAnimation(false),
-        mAllDescendantsAreInvisible(false) {
-||||||| merged common ancestors
-  explicit nsIFrame(ClassID aID)
-    : mRect()
-    , mContent(nullptr)
-    , mComputedStyle(nullptr)
-    , mParent(nullptr)
-    , mNextSibling(nullptr)
-    , mPrevSibling(nullptr)
-    , mState(NS_FRAME_FIRST_REFLOW | NS_FRAME_IS_DIRTY)
-    , mClass(aID)
-    , mMayHaveRoundedCorners(false)
-    , mHasImageRequest(false)
-    , mHasFirstLetterChild(false)
-    , mParentIsWrapperAnonBox(false)
-    , mIsWrapperBoxNeedingRestyle(false)
-    , mReflowRequestedForCharDataChange(false)
-    , mForceDescendIntoIfVisible(false)
-    , mBuiltDisplayList(false)
-    , mFrameIsModified(false)
-    , mHasOverrideDirtyRegion(false)
-    , mMayHaveWillChangeBudget(false)
-    , mIsPrimaryFrame(false)
-    , mMayHaveTransformAnimation(false)
-    , mMayHaveOpacityAnimation(false)
-    , mAllDescendantsAreInvisible(false)
-  {
-=======
   explicit nsIFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                     ClassID aID)
       : mRect(),
@@ -788,29 +603,12 @@ class nsIFrame : public nsQueryFrame {
         mInScrollAnchorChain(false) {
     MOZ_ASSERT(mComputedStyle);
     MOZ_ASSERT(mPresContext);
->>>>>>> upstream-releases
     mozilla::PodZero(&mOverflow);
   }
 
-<<<<<<< HEAD
-  nsPresContext* PresContext() const { return Style()->PresContextForFrame(); }
-||||||| merged common ancestors
-  nsPresContext* PresContext() const {
-    return Style()->PresContextForFrame();
-  }
-=======
   nsPresContext* PresContext() const { return mPresContext; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsIPresShell* PresShell() const { return PresContext()->PresShell(); }
-||||||| merged common ancestors
-  nsIPresShell* PresShell() const {
-    return PresContext()->PresShell();
-  }
-=======
   mozilla::PresShell* PresShell() const { return PresContext()->PresShell(); }
->>>>>>> upstream-releases
 
   /**
    * Called to initialize the frame. This is called immediately after creating
@@ -984,13 +782,6 @@ class nsIFrame : public nsQueryFrame {
    */
   void SetComputedStyleWithoutNotification(ComputedStyle* aStyle) {
     if (aStyle != mComputedStyle) {
-<<<<<<< HEAD
-      MOZ_DIAGNOSTIC_ASSERT(PresShell() ==
-                            aStyle->PresContextForFrame()->PresShell());
-||||||| merged common ancestors
-      MOZ_DIAGNOSTIC_ASSERT(PresShell() == aStyle->PresContextForFrame()->PresShell());
-=======
->>>>>>> upstream-releases
       mComputedStyle = aStyle;
     }
   }
@@ -1671,15 +1462,8 @@ class nsIFrame : public nsQueryFrame {
    * Return true if the frame has a CSS2 'vertical-align' baseline.
    * If it has, then the returned baseline is the distance from the block-
    * axis border-box start edge.
-<<<<<<< HEAD
-   * @note This method should only be used in AlignmentContext::eInline
-   * contexts.
-||||||| merged common ancestors
-   * @note This method should only be used in AlignmentContext::eInline contexts.
-=======
    * @note This method should only be used in AlignmentContext::Inline
    * contexts.
->>>>>>> upstream-releases
    * @note The returned value is only valid when reflow is not needed.
    * @note You should only call this on frames with a WM that's parallel to aWM.
    * @param aWM the writing-mode of the alignment context
@@ -1942,18 +1726,11 @@ class nsIFrame : public nsQueryFrame {
                                 const nsDisplayListSet& aLists,
                                 uint32_t aFlags = 0);
 
-<<<<<<< HEAD
-  bool RefusedAsyncAnimation() const {
-||||||| merged common ancestors
-  bool RefusedAsyncAnimation() const
-  {
-=======
   void BuildDisplayListForSimpleChild(nsDisplayListBuilder* aBuilder,
                                       nsIFrame* aChild,
                                       const nsDisplayListSet& aLists);
 
   bool RefusedAsyncAnimation() const {
->>>>>>> upstream-releases
     return GetProperty(RefusedAsyncAnimationProperty());
   }
 
@@ -1993,19 +1770,10 @@ class nsIFrame : public nsQueryFrame {
    *   If a caller already have one, pass it in can save property look up
    *   time; otherwise, just leave it as nullptr.
    */
-<<<<<<< HEAD
-  bool HasOpacity(mozilla::EffectSet* aEffectSet = nullptr) const {
-    return HasOpacityInternal(1.0f, aEffectSet);
-||||||| merged common ancestors
-  bool HasOpacity(mozilla::EffectSet* aEffectSet = nullptr) const
-  {
-    return HasOpacityInternal(1.0f, aEffectSet);
-=======
   bool HasOpacity(const nsStyleDisplay* aStyleDisplay,
                   const nsStyleEffects* aStyleEffects,
                   mozilla::EffectSet* aEffectSet = nullptr) const {
     return HasOpacityInternal(1.0f, aStyleDisplay, aStyleEffects, aEffectSet);
->>>>>>> upstream-releases
   }
   /**
    * Returns true if the frame is translucent for display purposes.
@@ -2018,16 +1786,9 @@ class nsIFrame : public nsQueryFrame {
    *   If a caller already have one, pass it in can save property look up
    *   time; otherwise, just leave it as nullptr.
    */
-<<<<<<< HEAD
-  bool HasVisualOpacity(mozilla::EffectSet* aEffectSet = nullptr) const {
-||||||| merged common ancestors
-  bool HasVisualOpacity(mozilla::EffectSet* aEffectSet = nullptr) const
-  {
-=======
   bool HasVisualOpacity(const nsStyleDisplay* aStyleDisplay,
                         const nsStyleEffects* aStyleEffects,
                         mozilla::EffectSet* aEffectSet = nullptr) const {
->>>>>>> upstream-releases
     // Treat an opacity value of 0.99 and above as opaque.  This is an
     // optimization aimed at Web content which use opacity:0.99 as a hint for
     // creating a stacking context only.
@@ -2252,14 +2013,7 @@ class nsIFrame : public nsQueryFrame {
   /**
    * Get the cursor for a given frame.
    */
-<<<<<<< HEAD
-  virtual nsresult GetCursor(const nsPoint& aPoint, Cursor& aCursor) = 0;
-||||||| merged common ancestors
-  virtual nsresult  GetCursor(const nsPoint&  aPoint,
-                              Cursor&         aCursor) = 0;
-=======
   virtual mozilla::Maybe<Cursor> GetCursor(const nsPoint&);
->>>>>>> upstream-releases
 
   /**
    * Get a point (in the frame's coordinate space) given an offset into
@@ -2876,30 +2630,12 @@ class nsIFrame : public nsQueryFrame {
     // Spaces preceding a caret at the end of a line should not be trimmed
     DontTrim,
   };
-<<<<<<< HEAD
-  virtual RenderedText GetRenderedText(
-      uint32_t aStartOffset = 0, uint32_t aEndOffset = UINT32_MAX,
-      TextOffsetType aOffsetType = TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
-      TrailingWhitespace aTrimTrailingWhitespace =
-          TrailingWhitespace::TRIM_TRAILING_WHITESPACE) {
-    return RenderedText();
-  }
-||||||| merged common ancestors
-  virtual RenderedText GetRenderedText(uint32_t aStartOffset = 0,
-                                       uint32_t aEndOffset = UINT32_MAX,
-                                       TextOffsetType aOffsetType =
-                                           TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
-                                       TrailingWhitespace aTrimTrailingWhitespace =
-                                           TrailingWhitespace::TRIM_TRAILING_WHITESPACE)
-  { return RenderedText(); }
-=======
   virtual RenderedText GetRenderedText(
       uint32_t aStartOffset = 0, uint32_t aEndOffset = UINT32_MAX,
       TextOffsetType aOffsetType = TextOffsetType::OffsetsInContentText,
       TrailingWhitespace aTrimTrailingWhitespace = TrailingWhitespace::Trim) {
     return RenderedText();
   }
->>>>>>> upstream-releases
 
   /**
    * Returns true if the frame contains any non-collapsed characters.
@@ -3063,16 +2799,6 @@ class nsIFrame : public nsQueryFrame {
     return sLayoutFrameTypes[uint8_t(mClass)];
   }
 
-<<<<<<< HEAD
-#define FRAME_TYPE(name_)                             \
-  bool Is##name_##Frame() const {                     \
-    return Type() == mozilla::LayoutFrameType::name_; \
-||||||| merged common ancestors
-#define FRAME_TYPE(name_)                                                      \
-  bool Is##name_##Frame() const                                                \
-  {                                                                            \
-    return Type() == mozilla::LayoutFrameType::name_;                          \
-=======
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wtype-limits"
@@ -3082,7 +2808,6 @@ class nsIFrame : public nsQueryFrame {
   bool Is##name_##Frame() const {                                    \
     return uint8_t(mClass) >= uint8_t(ClassID::first_class_##_id) && \
            uint8_t(mClass) <= uint8_t(ClassID::last_class_##_id);    \
->>>>>>> upstream-releases
   }
 #include "mozilla/FrameTypeList.h"
 #undef FRAME_TYPE
@@ -3134,59 +2859,25 @@ class nsIFrame : public nsQueryFrame {
     eReplacedContainsBlock = 1 << 8,
     // A frame that participates in inline reflow, i.e., one that
     // requires ReflowInput::mLineLayout.
-<<<<<<< HEAD
-    eLineParticipant = 1 << 9,
-    eXULBox = 1 << 10,
-    eCanContainOverflowContainers = 1 << 11,
-    eBlockFrame = 1 << 12,
-    eTablePart = 1 << 13,
-||||||| merged common ancestors
-    eLineParticipant =                  1 << 9,
-    eXULBox =                           1 << 10,
-    eCanContainOverflowContainers =     1 << 11,
-    eBlockFrame =                       1 << 12,
-    eTablePart =                        1 << 13,
-=======
     eLineParticipant = 1 << 9,
     eXULBox = 1 << 10,
     eCanContainOverflowContainers = 1 << 11,
     eTablePart = 1 << 12,
->>>>>>> upstream-releases
     // If this bit is set, the frame doesn't allow ignorable whitespace as
     // children. For example, the whitespace between <table>\n<tr>\n<td>
     // will be excluded during the construction of children.
-<<<<<<< HEAD
-    eExcludesIgnorableWhitespace = 1 << 14,
-    eSupportsCSSTransforms = 1 << 15,
-||||||| merged common ancestors
-    eExcludesIgnorableWhitespace =      1 << 14,
-    eSupportsCSSTransforms =            1 << 15,
-=======
     eExcludesIgnorableWhitespace = 1 << 13,
     eSupportsCSSTransforms = 1 << 14,
->>>>>>> upstream-releases
 
     // A replaced element that has replaced-element sizing
     // characteristics (i.e., like images or iframes), as opposed to
     // inline-block sizing characteristics (like form controls).
-<<<<<<< HEAD
-    eReplacedSizing = 1 << 16,
-||||||| merged common ancestors
-    eReplacedSizing =                   1 << 16,
-=======
     eReplacedSizing = 1 << 15,
->>>>>>> upstream-releases
 
     // Does this frame class support 'contain: layout' and
     // 'contain:paint' (supporting one is equivalent to supporting the
     // other).
-<<<<<<< HEAD
-    eSupportsContainLayoutAndPaint = 1 << 17,
-||||||| merged common ancestors
-    eSupportsContainLayoutAndPaint =    1 << 17,
-=======
     eSupportsContainLayoutAndPaint = 1 << 16,
->>>>>>> upstream-releases
 
     // These are to allow nsFrame::Init to assert that IsFrameOfType
     // implementations all call the base class method.  They are only
@@ -4143,14 +3834,7 @@ class nsIFrame : public nsQueryFrame {
   /**
    * @return true if we painted @aPresShell during the last repaint.
    */
-<<<<<<< HEAD
-  bool DidPaintPresShell(nsIPresShell* aShell) {
-||||||| merged common ancestors
-  bool DidPaintPresShell(nsIPresShell* aShell)
-  {
-=======
   bool DidPaintPresShell(mozilla::PresShell* aPresShell) {
->>>>>>> upstream-releases
     for (nsWeakPtr& item : *PaintedPresShellList()) {
       RefPtr<mozilla::PresShell> presShell = do_QueryReferent(item);
       if (presShell == aPresShell) {
@@ -4248,25 +3932,6 @@ class nsIFrame : public nsQueryFrame {
   inline bool IsAbsPosContainingBlock() const;
   inline bool IsFixedPosContainingBlock() const;
   inline bool IsRelativelyPositioned() const;
-<<<<<<< HEAD
-  inline bool IsAbsolutelyPositioned(
-      const nsStyleDisplay* aStyleDisplay = nullptr) const;
-
-  // Does this frame have "column-span: all" style.
-  //
-  // Note this only checks computed style, but not testing whether the
-  // containing block formatting context was established by a multicol.
-  // Callers need to consider NS_FRAME_HAS_MULTI_COLUMN_ANCESTOR to check
-  // whether multi-column effects apply or not, or use
-  // IsColumnSpanInMulticolSubtree().
-  inline bool IsColumnSpan() const;
-
-  // Like IsColumnSpan(), but this also checks whether the frame has a
-  // multi-column ancestor or not.
-  inline bool IsColumnSpanInMulticolSubtree() const;
-||||||| merged common ancestors
-  inline bool IsAbsolutelyPositioned(const nsStyleDisplay* aStyleDisplay = nullptr) const;
-=======
   inline bool IsStickyPositioned() const;
   inline bool IsAbsolutelyPositioned(
       const nsStyleDisplay* aStyleDisplay = nullptr) const;
@@ -4282,7 +3947,6 @@ class nsIFrame : public nsQueryFrame {
   // Like IsColumnSpan(), but this also checks whether the frame has a
   // multi-column ancestor or not.
   inline bool IsColumnSpanInMulticolSubtree() const;
->>>>>>> upstream-releases
 
   /**
    * Returns the vertical-align value to be used for layout, if it is one
@@ -4452,25 +4116,6 @@ class nsIFrame : public nsQueryFrame {
   }
 
   /**
-<<<<<<< HEAD
-   * Helper function - computes the content-box inline size for aCoord.
-   */
-  nscoord ComputeISizeValue(gfxContext* aRenderingContext,
-                            nscoord aContainingBlockISize,
-                            nscoord aContentEdgeToBoxSizing,
-                            nscoord aBoxSizingToMarginEdge,
-                            const nsStyleCoord& aCoord,
-                            ComputeSizeFlags aFlags = eDefault);
-||||||| merged common ancestors
-   * Helper function - computes the content-box inline size for aCoord.
-   */
-  nscoord ComputeISizeValue(gfxContext*         aRenderingContext,
-                            nscoord             aContainingBlockISize,
-                            nscoord             aContentEdgeToBoxSizing,
-                            nscoord             aBoxSizingToMarginEdge,
-                            const nsStyleCoord& aCoord,
-                            ComputeSizeFlags    aFlags = eDefault);
-=======
    * Helper function - computes the content-box inline size for aSize.
    */
   nscoord ComputeISizeValue(gfxContext* aRenderingContext,
@@ -4504,7 +4149,6 @@ class nsIFrame : public nsQueryFrame {
                              aContentEdgeToBoxSizing, aBoxSizingToMarginEdge,
                              aSize.AsExtremumLength(), aFlags);
   }
->>>>>>> upstream-releases
 
   DisplayItemDataArray& DisplayItemData() { return mDisplayItemData; }
   const DisplayItemDataArray& DisplayItemData() const {
@@ -4519,20 +4163,10 @@ class nsIFrame : public nsQueryFrame {
   bool HasDisplayItem(uint32_t aKey);
   void DiscardOldItems();
 
-<<<<<<< HEAD
-  bool ForceDescendIntoIfVisible() { return mForceDescendIntoIfVisible; }
-  void SetForceDescendIntoIfVisible(bool aForce) {
-    mForceDescendIntoIfVisible = aForce;
-  }
-||||||| merged common ancestors
-  bool ForceDescendIntoIfVisible() { return mForceDescendIntoIfVisible; }
-  void SetForceDescendIntoIfVisible(bool aForce) { mForceDescendIntoIfVisible = aForce; }
-=======
   bool ForceDescendIntoIfVisible() const { return mForceDescendIntoIfVisible; }
   void SetForceDescendIntoIfVisible(bool aForce) {
     mForceDescendIntoIfVisible = aForce;
   }
->>>>>>> upstream-releases
 
   bool BuiltDisplayList() { return mBuiltDisplayList; }
   void SetBuiltDisplayList(bool aBuilt) { mBuiltDisplayList = aBuilt; }
@@ -4588,16 +4222,9 @@ class nsIFrame : public nsQueryFrame {
   nsRect mRect;
   nsCOMPtr<nsIContent> mContent;
   RefPtr<ComputedStyle> mComputedStyle;
-<<<<<<< HEAD
-
- private:
-||||||| merged common ancestors
-private:
-=======
 
  private:
   nsPresContext* const mPresContext;
->>>>>>> upstream-releases
   nsContainerFrame* mParent;
   nsIFrame* mNextSibling;  // doubly-linked list of frames
   nsIFrame* mPrevSibling;  // Do not touch outside SetNextSibling!
@@ -4778,19 +4405,10 @@ private:
    */
   bool mAllDescendantsAreInvisible : 1;
 
-<<<<<<< HEAD
- protected:
-  // There is a 1-bit gap left here.
-||||||| merged common ancestors
-protected:
-
-  // There is a 1-bit gap left here.
-=======
   /**
    * True if we are or contain the scroll anchor for a scrollable frame.
    */
   bool mInScrollAnchorChain : 1;
->>>>>>> upstream-releases
 
  protected:
   // Helpers
@@ -4891,38 +4509,16 @@ protected:
       mAtStart = false;
     }
   };
-<<<<<<< HEAD
-  virtual FrameSearchResult PeekOffsetWord(bool aForward,
-                                           bool aWordSelectEatSpace,
-                                           bool aIsKeyboardSelect,
-                                           int32_t* aOffset,
-                                           PeekWordState* aState) = 0;
-||||||| merged common ancestors
-  virtual FrameSearchResult PeekOffsetWord(bool aForward, bool aWordSelectEatSpace, bool aIsKeyboardSelect,
-                                int32_t* aOffset, PeekWordState* aState) = 0;
-=======
   virtual FrameSearchResult PeekOffsetWord(
       bool aForward, bool aWordSelectEatSpace, bool aIsKeyboardSelect,
       int32_t* aOffset, PeekWordState* aState, bool aTrimSpaces) = 0;
->>>>>>> upstream-releases
 
   /**
    * Search for the first paragraph boundary before or after the given position
-<<<<<<< HEAD
-   * @param  aPos See description in nsFrameSelection.h. The following fields
-   * are used by this method: Input: mDirection Output: mResultContent,
-   * mContentOffset
-||||||| merged common ancestors
-   * @param  aPos See description in nsFrameSelection.h. The following fields are
-   *              used by this method:
-   *              Input: mDirection
-   *              Output: mResultContent, mContentOffset
-=======
    * @param  aPos See description in nsFrameSelection.h. The following fields
    *              are used by this method:
    *              Input: mDirection
    *              Output: mResultContent, mContentOffset
->>>>>>> upstream-releases
    */
   nsresult PeekOffsetParagraph(nsPeekOffsetStruct* aPos);
 
@@ -4993,57 +4589,6 @@ protected:
   static void IndentBy(FILE* out, int32_t aIndent) {
     while (--aIndent >= 0) fputs("  ", out);
   }
-<<<<<<< HEAD
-  void ListTag(FILE* out) const { ListTag(out, this); }
-  static void ListTag(FILE* out, const nsIFrame* aFrame) {
-    nsAutoCString t;
-    ListTag(t, aFrame);
-    fputs(t.get(), out);
-  }
-  static void ListTag(FILE* out, const nsFrameList& aFrameList) {
-    for (nsIFrame* frame : aFrameList) {
-      ListTag(out, frame);
-    }
-  }
-  void ListTag(nsACString& aTo) const;
-  nsAutoCString ListTag() const {
-    nsAutoCString tag;
-    ListTag(tag);
-    return tag;
-  }
-  static void ListTag(nsACString& aTo, const nsIFrame* aFrame);
-  void ListGeneric(nsACString& aTo, const char* aPrefix = "",
-                   uint32_t aFlags = 0) const;
-  enum {TRAVERSE_SUBDOCUMENT_FRAMES = 0x01};
-  virtual void List(FILE* out = stderr, const char* aPrefix = "",
-                    uint32_t aFlags = 0) const;
-||||||| merged common ancestors
-  void ListTag(FILE* out) const {
-    ListTag(out, this);
-  }
-  static void ListTag(FILE* out, const nsIFrame* aFrame) {
-    nsAutoCString t;
-    ListTag(t, aFrame);
-    fputs(t.get(), out);
-  }
-  static void ListTag(FILE* out, const nsFrameList& aFrameList) {
-    for (nsIFrame* frame : aFrameList) {
-      ListTag(out, frame);
-    }
-  }
-  void ListTag(nsACString& aTo) const;
-  nsAutoCString ListTag() const {
-    nsAutoCString tag;
-    ListTag(tag);
-    return tag;
-  }
-  static void ListTag(nsACString& aTo, const nsIFrame* aFrame);
-  void ListGeneric(nsACString& aTo, const char* aPrefix = "", uint32_t aFlags = 0) const;
-  enum {
-    TRAVERSE_SUBDOCUMENT_FRAMES = 0x01
-  };
-  virtual void List(FILE* out = stderr, const char* aPrefix = "", uint32_t aFlags = 0) const;
-=======
   void ListTag(FILE* out) const { fputs(ListTag().get(), out); }
   nsAutoCString ListTag() const;
   void ListGeneric(nsACString& aTo, const char* aPrefix = "",
@@ -5054,7 +4599,6 @@ protected:
   virtual void ListWithMatchedRules(FILE* out = stderr,
                                     const char* aPrefix = "") const;
   void ListMatchedRules(FILE* out, const char* aPrefix) const;
->>>>>>> upstream-releases
   /**
    * lists the frames beginning from the root frame
    * - calls root frame's List(...)

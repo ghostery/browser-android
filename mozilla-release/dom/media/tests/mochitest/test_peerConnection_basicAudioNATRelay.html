@@ -12,59 +12,6 @@ createHTML({
   title: "Basic audio-only peer connection with port dependent NAT"
 });
 
-<<<<<<< HEAD
-  var test;
-  runNetworkTest(options => {
-    SpecialPowers.pushPrefEnv(
-      {
-        'set': [
-          ['media.peerconnection.nat_simulator.filtering_type', 'PORT_DEPENDENT'],
-          ['media.peerconnection.nat_simulator.mapping_type', 'PORT_DEPENDENT']
-        ]
-      }, function (options) {
-        options = options || {};
-        options.expectedLocalCandidateType = "srflx";
-        options.expectedRemoteCandidateType = "relay";
-        // If both have TURN, it is a toss-up which one will end up using a
-        // relay.
-        options.turn_disabled_local = true;
-        test = new PeerConnectionTest(options);
-        // Make sure we don't end up choosing the wrong thing due to delays in
-        // trickle. Once we are willing to accept trickle after ICE success, we
-        // can maybe wait a bit to allow things to stabilize.
-        // TODO(bug 1238249)
-        makeOffererNonTrickle(test.chain);
-        makeAnswererNonTrickle(test.chain);
-        test.setMediaConstraints([{audio: true}], [{audio: true}]);
-        test.run();
-      })
-||||||| merged common ancestors
-  var test;
-  runNetworkTest(options => {
-    SpecialPowers.pushPrefEnv(
-      {
-        'set': [
-          ['media.peerconnection.nat_simulator.filtering_type', 'PORT_DEPENDENT'],
-          ['media.peerconnection.nat_simulator.mapping_type', 'PORT_DEPENDENT']
-        ]
-      }, function (options) {
-        options = options || {};
-        options.expectedLocalCandidateType = "serverreflexive";
-        options.expectedRemoteCandidateType = "relayed";
-        // If both have TURN, it is a toss-up which one will end up using a
-        // relay.
-        options.turn_disabled_local = true;
-        test = new PeerConnectionTest(options);
-        // Make sure we don't end up choosing the wrong thing due to delays in
-        // trickle. Once we are willing to accept trickle after ICE success, we
-        // can maybe wait a bit to allow things to stabilize.
-        // TODO(bug 1238249)
-        makeOffererNonTrickle(test.chain);
-        makeAnswererNonTrickle(test.chain);
-        test.setMediaConstraints([{audio: true}], [{audio: true}]);
-        test.run();
-      })
-=======
 // This test uses the NAT simulator, which doesn't work in https, so we turn
 // on getUserMedia in http, which requires a reload.
 if (!("mediaDevices" in navigator)) {
@@ -90,7 +37,6 @@ if (!("mediaDevices" in navigator)) {
     makeAnswererNonTrickle(test.chain);
     test.setMediaConstraints([{audio: true}], [{audio: true}]);
     test.run();
->>>>>>> upstream-releases
   }, { useIceServer: true });
 }
 </script>

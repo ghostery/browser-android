@@ -122,18 +122,12 @@ class Blob : public nsIMutable,
   nsresult GetSendInfo(nsIInputStream** aBody, uint64_t* aContentLength,
                        nsACString& aContentType, nsACString& aCharset) const;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   void Stream(JSContext* aCx, JS::MutableHandle<JSObject*> aStream,
               ErrorResult& aRv);
   already_AddRefed<Promise> Text(ErrorResult& aRv);
   already_AddRefed<Promise> ArrayBuffer(ErrorResult& aRv);
 
  protected:
->>>>>>> upstream-releases
   // File constructor should never be used directly. Use Blob::Create instead.
   Blob(nsISupports* aParent, BlobImpl* aImpl);
   virtual ~Blob();

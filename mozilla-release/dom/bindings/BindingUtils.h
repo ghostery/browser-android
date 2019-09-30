@@ -52,35 +52,12 @@ enum UseCounter : int16_t;
 namespace dom {
 class CustomElementReactionsStack;
 class MessageManagerGlobal;
-<<<<<<< HEAD
-template <typename KeyType, typename ValueType>
-class Record;
-
-nsresult UnwrapArgImpl(JSContext* cx, JS::Handle<JSObject*> src,
-                       const nsIID& iid, void** ppArg);
-||||||| merged common ancestors
-template<typename KeyType, typename ValueType> class Record;
-
-nsresult
-UnwrapArgImpl(JSContext* cx, JS::Handle<JSObject*> src, const nsIID& iid,
-              void** ppArg);
-=======
 template <typename KeyType, typename ValueType>
 class Record;
 class WindowProxyHolder;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult UnwrapWindowProxyImpl(JSContext* cx, JS::Handle<JSObject*> src,
-                               nsPIDOMWindowOuter** ppArg);
-||||||| merged common ancestors
-nsresult
-UnwrapWindowProxyImpl(JSContext* cx, JS::Handle<JSObject*> src,
-                      nsPIDOMWindowOuter** ppArg);
-=======
 nsresult UnwrapArgImpl(JSContext* cx, JS::Handle<JSObject*> src,
                        const nsIID& iid, void** ppArg);
->>>>>>> upstream-releases
 
 /** Convert a jsval to an XPCOM pointer. Caller must not assume that src will
     keep the XPCOM pointer rooted. */
@@ -91,25 +68,8 @@ inline nsresult UnwrapArg(JSContext* cx, JS::Handle<JSObject*> src,
                        reinterpret_cast<void**>(ppArg));
 }
 
-<<<<<<< HEAD
-template <>
-inline nsresult UnwrapArg<nsPIDOMWindowOuter>(JSContext* cx,
-                                              JS::Handle<JSObject*> src,
-                                              nsPIDOMWindowOuter** ppArg) {
-  return UnwrapWindowProxyImpl(cx, src, ppArg);
-}
-||||||| merged common ancestors
-template <>
-inline nsresult
-UnwrapArg<nsPIDOMWindowOuter>(JSContext* cx, JS::Handle<JSObject*> src,
-                              nsPIDOMWindowOuter** ppArg)
-{
-  return UnwrapWindowProxyImpl(cx, src, ppArg);
-}
-=======
 nsresult UnwrapWindowProxyArg(JSContext* cx, JS::Handle<JSObject*> src,
                               WindowProxyHolder& ppArg);
->>>>>>> upstream-releases
 
 bool ThrowInvalidThis(JSContext* aCx, const JS::CallArgs& aArgs,
                       bool aSecurityError, const char* aInterfaceName);
@@ -212,15 +172,8 @@ inline bool IsDOMObject(JSObject* obj) {
 // properly unwrap the object.
 #define UNWRAP_MAYBE_CROSS_ORIGIN_OBJECT(Interface, obj, value, cx)          \
   mozilla::dom::UnwrapObject<mozilla::dom::prototypes::id::Interface,        \
-<<<<<<< HEAD
-                             mozilla::dom::Interface##_Binding::NativeType>( \
-      obj, value)
-||||||| merged common ancestors
-    mozilla::dom::Interface##_Binding::NativeType>(obj, value)
-=======
                              mozilla::dom::Interface##_Binding::NativeType>( \
       obj, value, cx)
->>>>>>> upstream-releases
 
 // Test whether the given object is an instance of the given interface.
 #define IS_INSTANCE_OF(Interface, obj)                                       \
@@ -262,18 +215,6 @@ inline bool IsDOMObject(JSObject* obj) {
 // only matters if mayBeWrapper is true; if it's false just pass nullptr for
 // the cx arg.
 namespace binding_detail {
-<<<<<<< HEAD
-template <class T, bool mayBeWrapper, typename U, typename V>
-MOZ_ALWAYS_INLINE nsresult UnwrapObjectInternal(V& obj, U& value,
-                                                prototypes::ID protoID,
-                                                uint32_t protoDepth) {
-||||||| merged common ancestors
-template <class T, bool mayBeWrapper, typename U, typename V>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObjectInternal(V& obj, U& value, prototypes::ID protoID,
-                     uint32_t protoDepth)
-{
-=======
 template <class T, bool mayBeWrapper, typename U, typename V, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObjectInternal(V& obj, U& value,
                                                 prototypes::ID protoID,
@@ -283,7 +224,6 @@ MOZ_ALWAYS_INLINE nsresult UnwrapObjectInternal(V& obj, U& value,
                     IsSame<CxType, decltype(nullptr)>::value,
                 "Unexpected CxType");
 
->>>>>>> upstream-releases
   /* First check to see whether we have a DOM object */
   const DOMJSClass* domClass = GetDOMClass(obj);
   if (domClass) {
@@ -302,13 +242,6 @@ MOZ_ALWAYS_INLINE nsresult UnwrapObjectInternal(V& obj, U& value,
     return NS_ERROR_XPC_BAD_CONVERT_JS;
   }
 
-<<<<<<< HEAD
-  JSObject* unwrappedObj =
-      js::CheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
-||||||| merged common ancestors
-  JSObject* unwrappedObj =
-    js::CheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
-=======
   JSObject* unwrappedObj;
   if (IsSame<CxType, decltype(nullptr)>::value) {
     unwrappedObj = js::CheckedUnwrapStatic(obj);
@@ -316,7 +249,6 @@ MOZ_ALWAYS_INLINE nsresult UnwrapObjectInternal(V& obj, U& value,
     unwrappedObj =
         js::CheckedUnwrapDynamic(obj, cx, /* stopAtWindowProxy = */ false);
   }
->>>>>>> upstream-releases
   if (!unwrappedObj) {
     return NS_ERROR_XPC_SECURITY_MANAGER_VETO;
   }
@@ -341,16 +273,8 @@ MOZ_ALWAYS_INLINE nsresult UnwrapObjectInternal(V& obj, U& value,
   // stored in there, with arbitrary consequences) and invalidate the
   // "unwrappedObj" pointer.
   T* tempValue = nullptr;
-<<<<<<< HEAD
-  nsresult rv = UnwrapObjectInternal<T, false>(unwrappedObj, tempValue, protoID,
-                                               protoDepth);
-||||||| merged common ancestors
-  nsresult rv = UnwrapObjectInternal<T, false>(unwrappedObj, tempValue,
-                                               protoID, protoDepth);
-=======
   nsresult rv = UnwrapObjectInternal<T, false>(unwrappedObj, tempValue, protoID,
                                                protoDepth, nullptr);
->>>>>>> upstream-releases
   if (NS_SUCCEEDED(rv)) {
     // It's very important to not update "obj" with the "unwrappedObj" value
     // until we know the unwrap has succeeded.  Otherwise, in a situation in
@@ -401,142 +325,49 @@ struct MutableValueHandleWrapper {
 }  // namespace binding_detail
 
 // UnwrapObject overloads that ensure we have a MutableHandle to keep it alive.
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult UnwrapObject(JS::MutableHandle<JSObject*> obj,
-                                        U& value) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObject(JS::MutableHandle<JSObject*> obj, U& value)
-{
-=======
 template <prototypes::ID PrototypeID, class T, typename U, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObject(JS::MutableHandle<JSObject*> obj,
                                         U& value, CxType cx) {
->>>>>>> upstream-releases
   binding_detail::MutableObjectHandleWrapper wrapper(obj);
   return binding_detail::UnwrapObjectInternal<T, true>(
-<<<<<<< HEAD
-      wrapper, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    wrapper, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       wrapper, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth, cx);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult UnwrapObject(JS::MutableHandle<JS::Value> obj,
-                                        U& value) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObject(JS::MutableHandle<JS::Value> obj, U& value)
-{
-=======
 template <prototypes::ID PrototypeID, class T, typename U, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObject(JS::MutableHandle<JS::Value> obj,
                                         U& value, CxType cx) {
->>>>>>> upstream-releases
   MOZ_ASSERT(obj.isObject());
   binding_detail::MutableValueHandleWrapper wrapper(obj);
   return binding_detail::UnwrapObjectInternal<T, true>(
-<<<<<<< HEAD
-      wrapper, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    wrapper, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       wrapper, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth, cx);
->>>>>>> upstream-releases
 }
 
 // UnwrapObject overloads that ensure we have a strong ref to keep it alive.
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult UnwrapObject(JSObject* obj, RefPtr<U>& value) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObject(JSObject* obj, RefPtr<U>& value)
-{
-=======
 template <prototypes::ID PrototypeID, class T, typename U, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObject(JSObject* obj, RefPtr<U>& value,
                                         CxType cx) {
->>>>>>> upstream-releases
   return binding_detail::UnwrapObjectInternal<T, true>(
-<<<<<<< HEAD
-      obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth, cx);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult UnwrapObject(JSObject* obj, nsCOMPtr<U>& value) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObject(JSObject* obj, nsCOMPtr<U>& value)
-{
-=======
 template <prototypes::ID PrototypeID, class T, typename U, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObject(JSObject* obj, nsCOMPtr<U>& value,
                                         CxType cx) {
->>>>>>> upstream-releases
   return binding_detail::UnwrapObjectInternal<T, true>(
-<<<<<<< HEAD
-      obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth, cx);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult UnwrapObject(JSObject* obj,
-                                        OwningNonNull<U>& value) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObject(JSObject* obj, OwningNonNull<U>& value)
-{
-=======
 template <prototypes::ID PrototypeID, class T, typename U, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObject(JSObject* obj, OwningNonNull<U>& value,
                                         CxType cx) {
->>>>>>> upstream-releases
   return binding_detail::UnwrapObjectInternal<T, true>(
-<<<<<<< HEAD
-      obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth, cx);
->>>>>>> upstream-releases
 }
 
 // An UnwrapObject overload that just calls one of the JSObject* ones.
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult UnwrapObject(JS::Handle<JS::Value> obj, U& value) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T, typename U>
-MOZ_ALWAYS_INLINE nsresult
-UnwrapObject(JS::Handle<JS::Value> obj, U& value)
-{
-=======
 template <prototypes::ID PrototypeID, class T, typename U, typename CxType>
 MOZ_ALWAYS_INLINE nsresult UnwrapObject(JS::Handle<JS::Value> obj, U& value,
                                         CxType cx) {
->>>>>>> upstream-releases
   MOZ_ASSERT(obj.isObject());
   return UnwrapObject<PrototypeID, T>(&obj.toObject(), value, cx);
 }
@@ -557,15 +388,6 @@ MOZ_ALWAYS_INLINE void AssertStaticUnwrapOK() {
                 "aware version of IS_INSTANCE_OF");
 }
 
-<<<<<<< HEAD
-template <prototypes::ID PrototypeID, class T>
-MOZ_ALWAYS_INLINE bool IsInstanceOf(JSObject* obj) {
-||||||| merged common ancestors
-template<prototypes::ID PrototypeID, class T>
-MOZ_ALWAYS_INLINE bool
-IsInstanceOf(JSObject* obj)
-{
-=======
 namespace binding_detail {
 // This function is just here so we can do some static asserts in a centralized
 // place instead of putting them in every single UnwrapObject overload.
@@ -580,16 +402,9 @@ MOZ_ALWAYS_INLINE nsresult UnwrapObjectWithCrossOriginAsserts(V&& obj,
 template <prototypes::ID PrototypeID, class T>
 MOZ_ALWAYS_INLINE bool IsInstanceOf(JSObject* obj) {
   AssertStaticUnwrapOK<PrototypeID>();
->>>>>>> upstream-releases
   void* ignored;
   nsresult unwrapped = binding_detail::UnwrapObjectInternal<T, true>(
-<<<<<<< HEAD
-      obj, ignored, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    obj, ignored, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       obj, ignored, PrototypeID, PrototypeTraits<PrototypeID>::Depth, nullptr);
->>>>>>> upstream-releases
   return NS_SUCCEEDED(unwrapped);
 }
 
@@ -597,13 +412,7 @@ template <prototypes::ID PrototypeID, class T, typename U>
 MOZ_ALWAYS_INLINE nsresult UnwrapNonWrapperObject(JSObject* obj, U& value) {
   MOZ_ASSERT(!js::IsWrapper(obj));
   return binding_detail::UnwrapObjectInternal<T, false>(
-<<<<<<< HEAD
-      obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-||||||| merged common ancestors
-    obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth);
-=======
       obj, value, PrototypeID, PrototypeTraits<PrototypeID>::Depth, nullptr);
->>>>>>> upstream-releases
 }
 
 MOZ_ALWAYS_INLINE bool IsConvertibleToDictionary(JS::Handle<JS::Value> val) {
@@ -920,34 +729,6 @@ struct NamedConstructor {
  * interface object will be defined on the given global with property name
  * |name|, which must also be non-null.
  */
-<<<<<<< HEAD
-// clang-format on
-void CreateInterfaceObjects(
-    JSContext* cx, JS::Handle<JSObject*> global,
-    JS::Handle<JSObject*> protoProto, const js::Class* protoClass,
-    JS::Heap<JSObject*>* protoCache, const char* toStringTag,
-    JS::Handle<JSObject*> interfaceProto, const js::Class* constructorClass,
-    unsigned ctorNargs, const NamedConstructor* namedConstructors,
-    JS::Heap<JSObject*>* constructorCache,
-    const NativeProperties* regularProperties,
-    const NativeProperties* chromeOnlyProperties, const char* name,
-    bool defineOnGlobal, const char* const* unscopableNames, bool isGlobal);
-||||||| merged common ancestors
-void
-CreateInterfaceObjects(JSContext* cx, JS::Handle<JSObject*> global,
-                       JS::Handle<JSObject*> protoProto,
-                       const js::Class* protoClass, JS::Heap<JSObject*>* protoCache,
-                       const char* toStringTag,
-                       JS::Handle<JSObject*> interfaceProto,
-                       const js::Class* constructorClass,
-                       unsigned ctorNargs, const NamedConstructor* namedConstructors,
-                       JS::Heap<JSObject*>* constructorCache,
-                       const NativeProperties* regularProperties,
-                       const NativeProperties* chromeOnlyProperties,
-                       const char* name, bool defineOnGlobal,
-                       const char* const* unscopableNames,
-                       bool isGlobal);
-=======
 // clang-format on
 void CreateInterfaceObjects(
     JSContext* cx, JS::Handle<JSObject*> global,
@@ -960,7 +741,6 @@ void CreateInterfaceObjects(
     const NativeProperties* chromeOnlyProperties, const char* name,
     bool defineOnGlobal, const char* const* unscopableNames, bool isGlobal,
     const char* const* legacyWindowAliases);
->>>>>>> upstream-releases
 
 /**
  * Define the properties (regular and chrome-only) on obj.
@@ -997,31 +777,13 @@ bool DefineUnforgeableAttributes(JSContext* cx, JS::Handle<JSObject*> obj,
   typedef char no[2]
 
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#define HAS_MEMBER_CHECK(_name) \
-  template <typename V>         \
-  static yes& Check##_name(char(*)[(&V::_name == 0) + 1])
-||||||| merged common ancestors
-#define HAS_MEMBER_CHECK(_name)                                           \
-  template<typename V> static yes& Check##_name(char (*)[(&V::_name == 0) + 1])
-=======
 #  define HAS_MEMBER_CHECK(_name) \
     template <typename V>         \
     static yes& Check##_name(char(*)[(&V::_name == 0) + 1])
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define HAS_MEMBER_CHECK(_name) \
-  template <typename V>         \
-  static yes& Check##_name(char(*)[sizeof(&V::_name) + 1])
-||||||| merged common ancestors
-#define HAS_MEMBER_CHECK(_name)                                           \
-  template<typename V> static yes& Check##_name(char (*)[sizeof(&V::_name) + 1])
-=======
 #  define HAS_MEMBER_CHECK(_name) \
     template <typename V>         \
     static yes& Check##_name(char(*)[sizeof(&V::_name) + 1])
->>>>>>> upstream-releases
 #endif
 
 #define HAS_MEMBER(_memberName, _valueName) \
@@ -1392,20 +1154,11 @@ inline bool WrapNewBindingNonWrapperCachedObject(
     JS::Rooted<JSObject*> scope(cx, scopeArg);
     JS::Rooted<JSObject*> proto(cx, givenProto);
     if (js::IsWrapper(scope)) {
-<<<<<<< HEAD
-      scope = js::CheckedUnwrap(scope, /* stopAtWindowProxy = */ false);
-      if (!scope) return false;
-||||||| merged common ancestors
-      scope = js::CheckedUnwrap(scope, /* stopAtWindowProxy = */ false);
-      if (!scope)
-        return false;
-=======
       // We are working in the Realm of cx and will be producing our reflector
       // there, so we need to succeed if that realm has access to the scope.
       scope =
           js::CheckedUnwrapDynamic(scope, cx, /* stopAtWindowProxy = */ false);
       if (!scope) return false;
->>>>>>> upstream-releases
       ar.emplace(cx, scope);
       if (!JS_WrapObject(cx, &proto)) {
         return false;
@@ -1459,20 +1212,11 @@ inline bool WrapNewBindingNonWrapperCachedObject(
     JS::Rooted<JSObject*> scope(cx, scopeArg);
     JS::Rooted<JSObject*> proto(cx, givenProto);
     if (js::IsWrapper(scope)) {
-<<<<<<< HEAD
-      scope = js::CheckedUnwrap(scope, /* stopAtWindowProxy = */ false);
-      if (!scope) return false;
-||||||| merged common ancestors
-      scope = js::CheckedUnwrap(scope, /* stopAtWindowProxy = */ false);
-      if (!scope)
-        return false;
-=======
       // We are working in the Realm of cx and will be producing our reflector
       // there, so we need to succeed if that realm has access to the scope.
       scope =
           js::CheckedUnwrapDynamic(scope, cx, /* stopAtWindowProxy = */ false);
       if (!scope) return false;
->>>>>>> upstream-releases
       ar.emplace(cx, scope);
       if (!JS_WrapObject(cx, &proto)) {
         return false;
@@ -1632,22 +1376,8 @@ inline mozilla::dom::ReflectionScope GetReflectionScope(
   return aParentObject.mReflectionScope;
 }
 
-<<<<<<< HEAD
 template <class T>
 inline void ClearWrapper(T* p, nsWrapperCache* cache, JSObject* obj) {
-  JS::AutoAssertGCCallback inCallback;
-
-||||||| merged common ancestors
-template<class T>
-inline void
-ClearWrapper(T* p, nsWrapperCache* cache, JSObject* obj)
-{
-  JS::AutoAssertGCCallback inCallback;
-
-=======
-template <class T>
-inline void ClearWrapper(T* p, nsWrapperCache* cache, JSObject* obj) {
->>>>>>> upstream-releases
   // Skip clearing the wrapper when replaying. This method is called during
   // finalization of |obj|, and when replaying a strong reference is kept on
   // the contents of the cache: since |obj| is being finalized, the cache
@@ -1661,22 +1391,10 @@ inline void ClearWrapper(T* p, nsWrapperCache* cache, JSObject* obj) {
   }
 }
 
-<<<<<<< HEAD
-template <class T>
-inline void ClearWrapper(T* p, void*, JSObject* obj) {
-  JS::AutoAssertGCCallback inCallback;
-||||||| merged common ancestors
-template<class T>
-inline void
-ClearWrapper(T* p, void*, JSObject* obj)
-{
-  JS::AutoAssertGCCallback inCallback;
-=======
 template <class T>
 inline void ClearWrapper(T* p, void*, JSObject* obj) {
   // QueryInterface to nsWrapperCache can't GC, we hope.
   JS::AutoSuppressGCAnalysis nogc;
->>>>>>> upstream-releases
 
   // Skip clearing the wrapper when replaying, for the same reason as in the
   // overload above: |p| may have been deleted and we cannot QI it.
@@ -1895,36 +1613,8 @@ static inline JSObject* FindAssociatedGlobal(
   obj = JS::GetNonCCWObjectGlobal(obj);
 
   switch (scope) {
-<<<<<<< HEAD
-    case mozilla::dom::ReflectionScope::XBL: {
-      // If scope is set to XBLScope, it means that the canonical reflector for
-      // this native object should live in the content XBL scope. Note that we
-      // never put anonymous content inside an add-on scope.
-      if (xpc::IsInContentXBLScope(obj)) {
-        return obj;
-      }
-      JS::Rooted<JSObject*> rootedObj(cx, obj);
-      JSObject* xblScope = xpc::GetXBLScope(cx, rootedObj);
-      MOZ_ASSERT_IF(xblScope, JS_IsGlobalObject(xblScope));
-      MOZ_ASSERT(JS::ObjectIsNotGray(xblScope));
-      return xblScope;
-||||||| merged common ancestors
-    case mozilla::dom::ReflectionScope::XBL: {
-      // If scope is set to XBLScope, it means that the canonical reflector for this
-      // native object should live in the content XBL scope. Note that we never put
-      // anonymous content inside an add-on scope.
-      if (xpc::IsInContentXBLScope(obj)) {
-        return obj;
-      }
-      JS::Rooted<JSObject*> rootedObj(cx, obj);
-      JSObject* xblScope = xpc::GetXBLScope(cx, rootedObj);
-      MOZ_ASSERT_IF(xblScope, JS_IsGlobalObject(xblScope));
-      MOZ_ASSERT(JS::ObjectIsNotGray(xblScope));
-      return xblScope;
-=======
     case mozilla::dom::ReflectionScope::NAC: {
       return xpc::NACScope(obj);
->>>>>>> upstream-releases
     }
 
     case mozilla::dom::ReflectionScope::UAWidget: {
@@ -2098,38 +1788,14 @@ struct WantsQueryInterface {
   }
 };
 
-<<<<<<< HEAD
-void GetInterfaceImpl(JSContext* aCx, nsIInterfaceRequestor* aRequestor,
-                      nsWrapperCache* aCache, nsIJSID* aIID,
-                      JS::MutableHandle<JS::Value> aRetval,
-                      ErrorResult& aError);
-||||||| merged common ancestors
-void
-GetInterfaceImpl(JSContext* aCx, nsIInterfaceRequestor* aRequestor,
-                 nsWrapperCache* aCache, nsIJSID* aIID,
-                 JS::MutableHandle<JS::Value> aRetval, ErrorResult& aError);
-=======
 void GetInterfaceImpl(JSContext* aCx, nsIInterfaceRequestor* aRequestor,
                       nsWrapperCache* aCache, JS::Handle<JS::Value> aIID,
                       JS::MutableHandle<JS::Value> aRetval,
                       ErrorResult& aError);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <class T>
-void GetInterface(JSContext* aCx, T* aThis, nsIJSID* aIID,
-                  JS::MutableHandle<JS::Value> aRetval, ErrorResult& aError) {
-||||||| merged common ancestors
-template<class T>
-void
-GetInterface(JSContext* aCx, T* aThis, nsIJSID* aIID,
-             JS::MutableHandle<JS::Value> aRetval, ErrorResult& aError)
-{
-=======
 template <class T>
 void GetInterface(JSContext* aCx, T* aThis, JS::Handle<JS::Value> aIID,
                   JS::MutableHandle<JS::Value> aRetval, ErrorResult& aError) {
->>>>>>> upstream-releases
   GetInterfaceImpl(aCx, aThis, aThis, aIID, aRetval, aError);
 }
 
@@ -2149,28 +1815,10 @@ bool HasPropertyOnPrototype(JSContext* cx, JS::Handle<JSObject*> proxy,
 // shadowPrototypeProperties is false then skip properties that are also
 // present on the proto chain of proxy.  If shadowPrototypeProperties is true,
 // then the "proxy" argument is ignored.
-<<<<<<< HEAD
-bool AppendNamedPropertyIds(JSContext* cx, JS::Handle<JSObject*> proxy,
-                            nsTArray<nsString>& names,
-                            bool shadowPrototypeProperties,
-                            JS::AutoIdVector& props);
-||||||| merged common ancestors
-bool
-AppendNamedPropertyIds(JSContext* cx, JS::Handle<JSObject*> proxy,
-                       nsTArray<nsString>& names,
-                       bool shadowPrototypeProperties, JS::AutoIdVector& props);
-
-enum StringificationBehavior {
-  eStringify,
-  eEmpty,
-  eNull
-};
-=======
 bool AppendNamedPropertyIds(JSContext* cx, JS::Handle<JSObject*> proxy,
                             nsTArray<nsString>& names,
                             bool shadowPrototypeProperties,
                             JS::MutableHandleVector<jsid> props);
->>>>>>> upstream-releases
 
 enum StringificationBehavior { eStringify, eEmpty, eNull };
 
@@ -2422,56 +2070,6 @@ void DoTraceSequence(JSTracer* trc, InfallibleTArray<T>& seq) {
 }
 
 // Rooter class for sequences; this is what we mostly use in the codegen
-<<<<<<< HEAD
-template <typename T>
-class MOZ_RAII SequenceRooter final : private JS::CustomAutoRooter {
- public:
-  SequenceRooter(JSContext* aCx,
-                 FallibleTArray<T>* aSequence MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-        mFallibleArray(aSequence),
-        mSequenceType(eFallibleArray) {}
-
-  SequenceRooter(JSContext* aCx,
-                 InfallibleTArray<T>* aSequence MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-        mInfallibleArray(aSequence),
-        mSequenceType(eInfallibleArray) {}
-
-  SequenceRooter(JSContext* aCx, Nullable<nsTArray<T>>* aSequence
-                                     MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-        mNullableArray(aSequence),
-        mSequenceType(eNullableArray) {}
-||||||| merged common ancestors
-template<typename T>
-class MOZ_RAII SequenceRooter final : private JS::CustomAutoRooter
-{
-public:
-  SequenceRooter(JSContext *aCx, FallibleTArray<T>* aSequence
-                 MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-      mFallibleArray(aSequence),
-      mSequenceType(eFallibleArray)
-  {
-  }
-
-  SequenceRooter(JSContext *aCx, InfallibleTArray<T>* aSequence
-                 MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-      mInfallibleArray(aSequence),
-      mSequenceType(eInfallibleArray)
-  {
-  }
-
-  SequenceRooter(JSContext *aCx, Nullable<nsTArray<T> >* aSequence
-                 MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-      mNullableArray(aSequence),
-      mSequenceType(eNullableArray)
-  {
-  }
-=======
 template <typename T>
 class MOZ_RAII SequenceRooter final : private JS::CustomAutoRooter {
  public:
@@ -2495,7 +2093,6 @@ class MOZ_RAII SequenceRooter final : private JS::CustomAutoRooter {
       : JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
         mNullableArray(aSequence),
         mSequenceType(eNullableArray) {}
->>>>>>> upstream-releases
 
  private:
   enum SequenceType { eInfallibleArray, eFallibleArray, eNullableArray };
@@ -2523,42 +2120,6 @@ class MOZ_RAII SequenceRooter final : private JS::CustomAutoRooter {
 };
 
 // Rooter class for Record; this is what we mostly use in the codegen.
-<<<<<<< HEAD
-template <typename K, typename V>
-class MOZ_RAII RecordRooter final : private JS::CustomAutoRooter {
- public:
-  RecordRooter(JSContext* aCx,
-               Record<K, V>* aRecord MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-        mRecord(aRecord),
-        mRecordType(eRecord) {}
-
-  RecordRooter(JSContext* aCx,
-               Nullable<Record<K, V>>* aRecord MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-        mNullableRecord(aRecord),
-        mRecordType(eNullableRecord) {}
-||||||| merged common ancestors
-template<typename K, typename V>
-class MOZ_RAII RecordRooter final : private JS::CustomAutoRooter
-{
-public:
-  RecordRooter(JSContext *aCx, Record<K, V>* aRecord
-               MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-      mRecord(aRecord),
-      mRecordType(eRecord)
-  {
-  }
-
-  RecordRooter(JSContext *aCx, Nullable<Record<K, V>>* aRecord
-                 MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    : JS::CustomAutoRooter(aCx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
-      mNullableRecord(aRecord),
-      mRecordType(eNullableRecord)
-  {
-  }
-=======
 template <typename K, typename V>
 class MOZ_RAII RecordRooter final : private JS::CustomAutoRooter {
  public:
@@ -2575,7 +2136,6 @@ class MOZ_RAII RecordRooter final : private JS::CustomAutoRooter {
       : JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT),
         mNullableRecord(aRecord),
         mRecordType(eNullableRecord) {}
->>>>>>> upstream-releases
 
  private:
   enum RecordType { eRecord, eNullableRecord };
@@ -2599,25 +2159,6 @@ class MOZ_RAII RecordRooter final : private JS::CustomAutoRooter {
   RecordType mRecordType;
 };
 
-<<<<<<< HEAD
-template <typename T>
-class MOZ_RAII RootedUnion : public T, private JS::CustomAutoRooter {
- public:
-  explicit RootedUnion(JSContext* cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : T(),
-        JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT) {}
-||||||| merged common ancestors
-template<typename T>
-class MOZ_RAII RootedUnion : public T,
-                             private JS::CustomAutoRooter
-{
-public:
-  explicit RootedUnion(JSContext* cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM) :
-    T(),
-    JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT)
-  {
-  }
-=======
 template <typename T>
 class MOZ_RAII RootedUnion : public T, private JS::CustomAutoRooter {
  public:
@@ -2625,36 +2166,18 @@ class MOZ_RAII RootedUnion : public T, private JS::CustomAutoRooter {
   explicit RootedUnion(const CX& cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
       : T(),
         JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT) {}
->>>>>>> upstream-releases
 
   virtual void trace(JSTracer* trc) override { this->TraceUnion(trc); }
 };
 
 template <typename T>
 class MOZ_STACK_CLASS NullableRootedUnion : public Nullable<T>,
-<<<<<<< HEAD
-                                            private JS::CustomAutoRooter {
- public:
-  explicit NullableRootedUnion(JSContext* cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : Nullable<T>(),
-        JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT) {}
-||||||| merged common ancestors
-                                            private JS::CustomAutoRooter
-{
-public:
-  explicit NullableRootedUnion(JSContext* cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM) :
-    Nullable<T>(),
-    JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT)
-  {
-  }
-=======
                                             private JS::CustomAutoRooter {
  public:
   template <typename CX>
   explicit NullableRootedUnion(const CX& cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
       : Nullable<T>(),
         JS::CustomAutoRooter(cx MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT) {}
->>>>>>> upstream-releases
 
   virtual void trace(JSTracer* trc) override {
     if (!this->IsNull()) {
@@ -2668,18 +2191,9 @@ inline bool IdEquals(jsid id, const char* string) {
          JS_FlatStringEqualsAscii(JSID_TO_FLAT_STRING(id), string);
 }
 
-<<<<<<< HEAD
-inline bool AddStringToIDVector(JSContext* cx, JS::AutoIdVector& vector,
-                                const char* name) {
-||||||| merged common ancestors
-inline bool
-AddStringToIDVector(JSContext* cx, JS::AutoIdVector& vector, const char* name)
-{
-=======
 inline bool AddStringToIDVector(JSContext* cx,
                                 JS::MutableHandleVector<jsid> vector,
                                 const char* name) {
->>>>>>> upstream-releases
   return vector.growBy(1) &&
          AtomizeAndPinJSString(cx, *(vector[vector.length() - 1]).address(),
                                name);
@@ -2737,20 +2251,9 @@ bool XrayDefineProperty(JSContext* cx, JS::Handle<JSObject*> wrapper,
  *     interface or interface prototype object.
  * flags are JSITER_* flags.
  */
-<<<<<<< HEAD
-bool XrayOwnPropertyKeys(JSContext* cx, JS::Handle<JSObject*> wrapper,
-                         JS::Handle<JSObject*> obj, unsigned flags,
-                         JS::AutoIdVector& props);
-||||||| merged common ancestors
-bool
-XrayOwnPropertyKeys(JSContext* cx, JS::Handle<JSObject*> wrapper,
-                    JS::Handle<JSObject*> obj,
-                    unsigned flags, JS::AutoIdVector& props);
-=======
 bool XrayOwnPropertyKeys(JSContext* cx, JS::Handle<JSObject*> wrapper,
                          JS::Handle<JSObject*> obj, unsigned flags,
                          JS::MutableHandleVector<jsid> props);
->>>>>>> upstream-releases
 
 /**
  * Returns the prototype to use for an Xray for a DOM object, wrapped in cx's
@@ -2926,17 +2429,6 @@ const nsAString& NonNullHelper(const binding_detail::FakeString& aArg) {
   return aArg;
 }
 
-<<<<<<< HEAD
-// Reparent the wrapper of aObj to whatever its native now thinks its
-// parent should be.
-void ReparentWrapper(JSContext* aCx, JS::Handle<JSObject*> aObj,
-                     ErrorResult& aError);
-||||||| merged common ancestors
-// Reparent the wrapper of aObj to whatever its native now thinks its
-// parent should be.
-void
-ReparentWrapper(JSContext* aCx, JS::Handle<JSObject*> aObj, ErrorResult& aError);
-=======
 // Given a DOM reflector aObj, give its underlying DOM object a reflector in
 // whatever global that underlying DOM object now thinks it should be in.  If
 // this is in a different compartment from aObj, aObj will become a
@@ -2947,7 +2439,6 @@ ReparentWrapper(JSContext* aCx, JS::Handle<JSObject*> aObj, ErrorResult& aError)
 // On entry to this method, aCx and aObj must be same-compartment.
 void UpdateReflectorGlobal(JSContext* aCx, JS::Handle<JSObject*> aObj,
                            ErrorResult& aError);
->>>>>>> upstream-releases
 
 /**
  * Used to implement the Symbol.hasInstance property of an interface object.
@@ -3080,41 +2571,17 @@ class MOZ_STACK_CLASS BindingJSObjectCreator {
     }
   }
 
-<<<<<<< HEAD
-  void CreateProxyObject(JSContext* aCx, const js::Class* aClass,
-                         const DOMProxyHandler* aHandler,
-                         JS::Handle<JSObject*> aProto, T* aNative,
-                         JS::Handle<JS::Value> aExpandoValue,
-                         JS::MutableHandle<JSObject*> aReflector) {
-||||||| merged common ancestors
-  void
-  CreateProxyObject(JSContext* aCx, const js::Class* aClass,
-                    const DOMProxyHandler* aHandler,
-                    JS::Handle<JSObject*> aProto, T* aNative,
-                    JS::Handle<JS::Value> aExpandoValue,
-                    JS::MutableHandle<JSObject*> aReflector)
-  {
-=======
   void CreateProxyObject(JSContext* aCx, const js::Class* aClass,
                          const DOMProxyHandler* aHandler,
                          JS::Handle<JSObject*> aProto, bool aLazyProto,
                          T* aNative, JS::Handle<JS::Value> aExpandoValue,
                          JS::MutableHandle<JSObject*> aReflector) {
->>>>>>> upstream-releases
     js::ProxyOptions options;
     options.setClass(aClass);
-<<<<<<< HEAD
-    aReflector.set(
-        js::NewProxyObject(aCx, aHandler, aExpandoValue, aProto, options));
-||||||| merged common ancestors
-    aReflector.set(js::NewProxyObject(aCx, aHandler, aExpandoValue, aProto,
-                                      options));
-=======
     options.setLazyProto(aLazyProto);
 
     aReflector.set(
         js::NewProxyObject(aCx, aHandler, aExpandoValue, aProto, options));
->>>>>>> upstream-releases
     if (aReflector) {
       js::SetProxyReservedSlot(aReflector, DOM_OBJECT_SLOT,
                                JS::PrivateValue(aNative));
@@ -3312,15 +2779,9 @@ bool ResolveGlobal(JSContext* aCx, JS::Handle<JSObject*> aObj,
 
 bool MayResolveGlobal(const JSAtomState& aNames, jsid aId, JSObject* aMaybeObj);
 
-<<<<<<< HEAD
-bool EnumerateGlobal(JSContext* aCx, JS::HandleObject aObj,
-                     JS::AutoIdVector& aProperties, bool aEnumerableOnly);
-||||||| merged common ancestors
-=======
 bool EnumerateGlobal(JSContext* aCx, JS::HandleObject aObj,
                      JS::MutableHandleVector<jsid> aProperties,
                      bool aEnumerableOnly);
->>>>>>> upstream-releases
 
 struct CreateGlobalOptionsGeneric {
   static void TraceGlobal(JSTracer* aTrc, JSObject* aObj) {
@@ -3607,16 +3068,6 @@ bool GetSetlikeBackingObject(JSContext* aCx, JS::Handle<JSObject*> aObj,
                              bool* aBackingObjCreated);
 
 // Get the desired prototype object for an object construction from the given
-<<<<<<< HEAD
-// CallArgs.  Null is returned if the default prototype should be used.
-bool GetDesiredProto(JSContext* aCx, const JS::CallArgs& aCallArgs,
-                     JS::MutableHandle<JSObject*> aDesiredProto);
-||||||| merged common ancestors
-// CallArgs.  Null is returned if the default prototype should be used.
-bool
-GetDesiredProto(JSContext* aCx, const JS::CallArgs& aCallArgs,
-                JS::MutableHandle<JSObject*> aDesiredProto);
-=======
 // CallArgs.  The CallArgs must be for a constructor call.  The
 // aProtoId/aCreator arguments are used to get a default if we don't find a
 // prototype on the newTarget of the callargs.
@@ -3624,7 +3075,6 @@ bool GetDesiredProto(JSContext* aCx, const JS::CallArgs& aCallArgs,
                      prototypes::id::ID aProtoId,
                      CreateInterfaceObjectsMethod aCreator,
                      JS::MutableHandle<JSObject*> aDesiredProto);
->>>>>>> upstream-releases
 
 // This function is expected to be called from the constructor function for an
 // HTML or XUL element interface; the global/callargs need to be whatever was
@@ -3636,29 +3086,11 @@ already_AddRefed<Element> CreateXULOrHTMLElement(
 void SetDocumentAndPageUseCounter(JSObject* aObject, UseCounter aUseCounter);
 
 // Warnings
-<<<<<<< HEAD
-void DeprecationWarning(JSContext* aCx, JSObject* aObject,
-                        nsIDocument::DeprecatedOperations aOperation);
-||||||| merged common ancestors
-void
-DeprecationWarning(JSContext* aCx, JSObject* aObject,
-                   nsIDocument::DeprecatedOperations aOperation);
-=======
 void DeprecationWarning(JSContext* aCx, JSObject* aObject,
                         Document::DeprecatedOperations aOperation);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void DeprecationWarning(const GlobalObject& aGlobal,
-                        nsIDocument::DeprecatedOperations aOperation);
-||||||| merged common ancestors
-void
-DeprecationWarning(const GlobalObject& aGlobal,
-                   nsIDocument::DeprecatedOperations aOperation);
-=======
 void DeprecationWarning(const GlobalObject& aGlobal,
                         Document::DeprecatedOperations aOperation);
->>>>>>> upstream-releases
 
 // A callback to perform funToString on an interface object
 JSString* InterfaceObjectToString(JSContext* aCx, JS::Handle<JSObject*> aObject,

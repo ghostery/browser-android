@@ -22,28 +22,12 @@
 // needed for the low-level capability interface.  They're part of the
 // stable syscall ABI, so it's safe to include them here.
 #ifndef _LINUX_CAPABILITY_VERSION_3
-<<<<<<< HEAD
-#define _LINUX_CAPABILITY_VERSION_3 0x20080522
-#define _LINUX_CAPABILITY_U32S_3 2
-||||||| merged common ancestors
-#define _LINUX_CAPABILITY_VERSION_3  0x20080522
-#define _LINUX_CAPABILITY_U32S_3     2
-=======
 #  define _LINUX_CAPABILITY_VERSION_3 0x20080522
 #  define _LINUX_CAPABILITY_U32S_3 2
->>>>>>> upstream-releases
 #endif
 #ifndef CAP_TO_INDEX
-<<<<<<< HEAD
-#define CAP_TO_INDEX(x) ((x) >> 5)
-#define CAP_TO_MASK(x) (1 << ((x)&31))
-||||||| merged common ancestors
-#define CAP_TO_INDEX(x)     ((x) >> 5)
-#define CAP_TO_MASK(x)      (1 << ((x) & 31))
-=======
 #  define CAP_TO_INDEX(x) ((x) >> 5)
 #  define CAP_TO_MASK(x) (1 << ((x)&31))
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {

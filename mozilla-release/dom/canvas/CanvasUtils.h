@@ -50,15 +50,8 @@ void DoDrawImageSecurityCheck(dom::HTMLCanvasElement* aCanvasElement,
 bool HasDrawWindowPrivilege(JSContext* aCx, JSObject* aObj);
 
 // Check site-specific permission and display prompt if appropriate.
-<<<<<<< HEAD
-bool IsImageExtractionAllowed(nsIDocument* aDocument, JSContext* aCx,
-                              nsIPrincipal& aPrincipal);
-||||||| merged common ancestors
-bool IsImageExtractionAllowed(nsIDocument *aDocument, JSContext *aCx, nsIPrincipal& aPrincipal);
-=======
 bool IsImageExtractionAllowed(dom::Document* aDocument, JSContext* aCx,
                               nsIPrincipal& aPrincipal);
->>>>>>> upstream-releases
 
 // Make a double out of |v|, treating undefined values as 0.0 (for
 // the sake of sparse arrays).  Return true iff coercion
@@ -146,15 +139,6 @@ nsresult JSValToDashArray(JSContext* cx, const JS::Value& patternArray,
       if (!(CoerceDouble(elt, &d) && FloatValidate(d) && d >= 0.0)) {
         // Pattern elements must be finite "numbers" >= 0.
         return NS_ERROR_INVALID_ARG;
-<<<<<<< HEAD
-      } else if (d > 0.0) {
-        haveNonzeroElement = true;
-      }
-      if (!dashes.AppendElement(d, mozilla::fallible)) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
-||||||| merged common ancestors
-=======
       } else if (d > 0.0) {
         haveNonzeroElement = true;
       }
@@ -166,18 +150,6 @@ nsresult JSValToDashArray(JSContext* cx, const JS::Value& patternArray,
     if (dashes.Length() > 0 && !haveNonzeroElement) {
       // An all-zero pattern makes no sense.
       return NS_ERROR_ILLEGAL_VALUE;
->>>>>>> upstream-releases
-    }
-  } else if (!(patternArray.isUndefined() || patternArray.isNull())) {
-    // undefined and null mean "reset to no dash".  Any other
-    // random garbage is a type error.
-    return NS_ERROR_INVALID_ARG;
-  }
-
-<<<<<<< HEAD
-    if (dashes.Length() > 0 && !haveNonzeroElement) {
-      // An all-zero pattern makes no sense.
-      return NS_ERROR_ILLEGAL_VALUE;
     }
   } else if (!(patternArray.isUndefined() || patternArray.isNull())) {
     // undefined and null mean "reset to no dash".  Any other
@@ -186,11 +158,6 @@ nsresult JSValToDashArray(JSContext* cx, const JS::Value& patternArray,
   }
 
   return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -207,13 +174,6 @@ void DashArrayToJSVal(nsTArray<T>& dashes, JSContext* cx,
   }
 }
 
-<<<<<<< HEAD
-}  // namespace CanvasUtils
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace CanvasUtils
-} // namespace mozilla
-=======
 // returns true if write-only mode must used for this principal based on
 // the incumbent global.
 bool CheckWriteOnlySecurity(bool aCORSUsed, nsIPrincipal* aPrincipal,
@@ -221,6 +181,5 @@ bool CheckWriteOnlySecurity(bool aCORSUsed, nsIPrincipal* aPrincipal,
 
 }  // namespace CanvasUtils
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* _CANVASUTILS_H_ */

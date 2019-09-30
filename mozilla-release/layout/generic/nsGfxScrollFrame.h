@@ -82,16 +82,6 @@ class ScrollFrameHelper : public nsIReflowCallback {
   void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                         const nsDisplayListSet& aLists);
 
-<<<<<<< HEAD
-  void AppendScrollPartsTo(nsDisplayListBuilder* aBuilder,
-                           const nsDisplayListSet& aLists, bool aCreateLayer,
-                           bool aPositioned);
-||||||| merged common ancestors
-  void AppendScrollPartsTo(nsDisplayListBuilder*   aBuilder,
-                           const nsDisplayListSet& aLists,
-                           bool                    aCreateLayer,
-                           bool                    aPositioned);
-=======
   // Add display items for the top-layer (which includes things like
   // the fullscreen element, its backdrop, and text selection carets)
   // to |aLists|.
@@ -107,7 +97,6 @@ class ScrollFrameHelper : public nsIReflowCallback {
   void AppendScrollPartsTo(nsDisplayListBuilder* aBuilder,
                            const nsDisplayListSet& aLists, bool aCreateLayer,
                            bool aPositioned);
->>>>>>> upstream-releases
 
   bool GetBorderRadii(const nsSize& aFrameSize, const nsSize& aBorderArea,
                       Sides aSkipSides, nscoord aRadii[8]) const;
@@ -130,137 +119,6 @@ class ScrollFrameHelper : public nsIReflowCallback {
   bool IsSmoothScrollingEnabled();
 
   /**
-<<<<<<< HEAD
-   * This class handles the dispatching of scroll events to content.
-   *
-   * Scroll events are posted to the refresh driver via
-   * nsRefreshDriver::PostScrollEvent(), and they are fired during a refresh
-   * driver tick, after running requestAnimationFrame callbacks but before
-   * the style flush. This allows rAF callbacks to perform scrolling and have
-   * that scrolling be reflected on the same refresh driver tick, while at
-   * the same time allowing scroll event listeners to make style changes and
-   * have those style changes be reflected on the same refresh driver tick.
-   *
-   * ScrollEvents cannot be refresh observers, because none of the existing
-   * categories of refresh observers (FlushType::Style, FlushType::Layout,
-   * and FlushType::Display) are run at the desired time in a refresh driver
-   * tick. They behave similarly to refresh observers in that their presence
-   * causes the refresh driver to tick.
-   *
-   * ScrollEvents are one-shot runnables; the refresh driver drops them after
-   * running them.
-   */
-  class ScrollEvent : public Runnable {
-   public:
-    NS_DECL_NSIRUNNABLE
-    explicit ScrollEvent(ScrollFrameHelper* aHelper);
-    void Revoke() { mHelper = nullptr; }
-
-   private:
-    ScrollFrameHelper* mHelper;
-  };
-
-  class ScrollEndEvent : public Runnable {
-   public:
-    NS_DECL_NSIRUNNABLE
-    explicit ScrollEndEvent(ScrollFrameHelper* aHelper);
-    void Revoke() { mHelper = nullptr; }
-
-   private:
-    ScrollFrameHelper* mHelper;
-  };
-
-  class AsyncScrollPortEvent : public Runnable {
-   public:
-    NS_DECL_NSIRUNNABLE
-    explicit AsyncScrollPortEvent(ScrollFrameHelper* helper)
-        : Runnable("ScrollFrameHelper::AsyncScrollPortEvent"),
-          mHelper(helper) {}
-    void Revoke() { mHelper = nullptr; }
-
-   private:
-    ScrollFrameHelper* mHelper;
-  };
-
-  class ScrolledAreaEvent : public Runnable {
-   public:
-    NS_DECL_NSIRUNNABLE
-    explicit ScrolledAreaEvent(ScrollFrameHelper* helper)
-        : Runnable("ScrollFrameHelper::ScrolledAreaEvent"), mHelper(helper) {}
-    void Revoke() { mHelper = nullptr; }
-
-   private:
-    ScrollFrameHelper* mHelper;
-  };
-
-  /**
-||||||| merged common ancestors
-   * This class handles the dispatching of scroll events to content.
-   *
-   * Scroll events are posted to the refresh driver via
-   * nsRefreshDriver::PostScrollEvent(), and they are fired during a refresh
-   * driver tick, after running requestAnimationFrame callbacks but before
-   * the style flush. This allows rAF callbacks to perform scrolling and have
-   * that scrolling be reflected on the same refresh driver tick, while at
-   * the same time allowing scroll event listeners to make style changes and
-   * have those style changes be reflected on the same refresh driver tick.
-   *
-   * ScrollEvents cannot be refresh observers, because none of the existing
-   * categories of refresh observers (FlushType::Style, FlushType::Layout,
-   * and FlushType::Display) are run at the desired time in a refresh driver
-   * tick. They behave similarly to refresh observers in that their presence
-   * causes the refresh driver to tick.
-   *
-   * ScrollEvents are one-shot runnables; the refresh driver drops them after
-   * running them.
-   */
-  class ScrollEvent : public Runnable {
-  public:
-    NS_DECL_NSIRUNNABLE
-    explicit ScrollEvent(ScrollFrameHelper* aHelper);
-    void Revoke() { mHelper = nullptr; }
-  private:
-    ScrollFrameHelper* mHelper;
-  };
-
-  class ScrollEndEvent : public Runnable {
-  public:
-    NS_DECL_NSIRUNNABLE
-    explicit ScrollEndEvent(ScrollFrameHelper* aHelper);
-    void Revoke() { mHelper = nullptr; }
-  private:
-    ScrollFrameHelper* mHelper;
-  };
-
-  class AsyncScrollPortEvent : public Runnable {
-  public:
-    NS_DECL_NSIRUNNABLE
-    explicit AsyncScrollPortEvent(ScrollFrameHelper* helper)
-      : Runnable("ScrollFrameHelper::AsyncScrollPortEvent")
-      , mHelper(helper)
-    {
-    }
-    void Revoke() { mHelper = nullptr; }
-  private:
-    ScrollFrameHelper *mHelper;
-  };
-
-  class ScrolledAreaEvent : public Runnable {
-  public:
-    NS_DECL_NSIRUNNABLE
-    explicit ScrolledAreaEvent(ScrollFrameHelper* helper)
-      : Runnable("ScrollFrameHelper::ScrolledAreaEvent")
-      , mHelper(helper)
-    {
-    }
-    void Revoke() { mHelper = nullptr; }
-  private:
-    ScrollFrameHelper *mHelper;
-  };
-
-  /**
-=======
->>>>>>> upstream-releases
    * @note This method might destroy the frame, pres shell and other objects.
    */
   void FinishReflowForScrollbar(mozilla::dom::Element* aElement, nscoord aMinXY,
@@ -311,39 +169,13 @@ class ScrollFrameHelper : public nsIReflowCallback {
     pt.y = mScrollPort.y - mScrolledFrame->GetPosition().y;
     return pt;
   }
-<<<<<<< HEAD
-  nsPoint GetApzScrollPosition() const { return mApzScrollPos; }
-  nsRect GetScrollRange() const;
-||||||| merged common ancestors
-  nsRect GetScrollRange() const;
-=======
   nsPoint GetApzScrollPosition() const { return mApzScrollPos; }
   nsRect GetLayoutScrollRange() const;
->>>>>>> upstream-releases
   // Get the scroll range assuming the viewport has size (aWidth, aHeight).
   nsRect GetScrollRange(nscoord aWidth, nscoord aHeight) const;
   nsSize GetVisualViewportSize() const;
   nsPoint GetVisualViewportOffset() const;
-<<<<<<< HEAD
-  void ScrollSnap(
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::SMOOTH_MSD);
-  void ScrollSnap(
-      const nsPoint& aDestination,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::SMOOTH_MSD);
-||||||| merged common ancestors
-  void ScrollSnap(nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::SMOOTH_MSD);
-  void ScrollSnap(const nsPoint &aDestination,
-                  nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::SMOOTH_MSD);
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  nsRect GetScrollRangeForClamping() const;
-||||||| merged common ancestors
-protected:
-  nsRect GetScrollRangeForClamping() const;
-=======
   /**
    * Return the 'optimal viewing region' [1] as a rect suitable for use by
    * scroll anchoring. This rect is in the same coordinate space as
@@ -352,13 +184,7 @@ protected:
    * [1] https://drafts.csswg.org/css-scroll-snap-1/#optimal-viewing-region
    */
   nsRect GetVisualOptimalViewingRect() const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   /**
    * For LTR frames, this is the same as GetVisualViewportOffset().
    * For RTL frames, we take the offset from the top right corner of the frame
@@ -383,7 +209,6 @@ public:
   nsRect GetVisualScrollRange() const;
 
  public:
->>>>>>> upstream-releases
   static void AsyncScrollCallback(ScrollFrameHelper* aInstance,
                                   mozilla::TimeStamp aTime);
   static void AsyncSmoothMSDScrollCallback(ScrollFrameHelper* aInstance,
@@ -394,44 +219,18 @@ public:
    * aScrollPosition. Null means only aScrollPosition is allowed.
    * This is a closed-ended range --- aRange.XMost()/aRange.YMost() are allowed.
    */
-<<<<<<< HEAD
-  void ScrollTo(nsPoint aScrollPosition, nsIScrollableFrame::ScrollMode aMode,
-                nsAtom* aOrigin = nullptr, const nsRect* aRange = nullptr,
-                nsIScrollbarMediator::ScrollSnapMode aSnap =
-                    nsIScrollbarMediator::DISABLE_SNAP);
-||||||| merged common ancestors
-  void ScrollTo(nsPoint aScrollPosition, nsIScrollableFrame::ScrollMode aMode,
-                const nsRect* aRange = nullptr,
-                nsIScrollbarMediator::ScrollSnapMode aSnap
-                  = nsIScrollbarMediator::DISABLE_SNAP) {
-    ScrollToWithOrigin(aScrollPosition, aMode, nsGkAtoms::other, aRange,
-                       aSnap);
-  }
-=======
   void ScrollTo(nsPoint aScrollPosition, ScrollMode aMode,
                 nsAtom* aOrigin = nullptr, const nsRect* aRange = nullptr,
                 nsIScrollbarMediator::ScrollSnapMode aSnap =
                     nsIScrollbarMediator::DISABLE_SNAP);
->>>>>>> upstream-releases
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
-<<<<<<< HEAD
-  void ScrollToCSSPixels(
-      const CSSIntPoint& aScrollPosition,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr);
-||||||| merged common ancestors
-  void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
-                         nsIScrollableFrame::ScrollMode aMode
-                           = nsIScrollableFrame::INSTANT);
-=======
   void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
                          ScrollMode aMode = ScrollMode::Instant,
                          nsIScrollbarMediator::ScrollSnapMode aSnap =
                              nsIScrollbarMediator::DEFAULT,
                          nsAtom* aOrigin = nullptr);
->>>>>>> upstream-releases
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
@@ -451,20 +250,6 @@ public:
   void ScrollBy(nsIntPoint aDelta, nsIScrollableFrame::ScrollUnit aUnit,
                 ScrollMode aMode, nsIntPoint* aOverflow,
                 nsAtom* aOrigin = nullptr,
-<<<<<<< HEAD
-                nsIScrollableFrame::ScrollMomentum aMomentum =
-                    nsIScrollableFrame::NOT_MOMENTUM,
-                nsIScrollbarMediator::ScrollSnapMode aSnap =
-                    nsIScrollbarMediator::DISABLE_SNAP);
-  void ScrollByCSSPixels(
-      const CSSIntPoint& aDelta,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr);
-||||||| merged common ancestors
-                nsIScrollableFrame::ScrollMomentum aMomentum = nsIScrollableFrame::NOT_MOMENTUM,
-                nsIScrollbarMediator::ScrollSnapMode aSnap
-                  = nsIScrollbarMediator::DISABLE_SNAP);
-=======
                 nsIScrollableFrame::ScrollMomentum aMomentum =
                     nsIScrollableFrame::NOT_MOMENTUM,
                 nsIScrollbarMediator::ScrollSnapMode aSnap =
@@ -474,7 +259,6 @@ public:
                          nsAtom* aOrigin = nullptr,
                          nsIScrollbarMediator::ScrollSnapMode aSnap =
                              nsIScrollbarMediator::DEFAULT);
->>>>>>> upstream-releases
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
@@ -493,16 +277,9 @@ public:
    * been updated to a valid snapping position.
    */
   bool GetSnapPointForDestination(nsIScrollableFrame::ScrollUnit aUnit,
-<<<<<<< HEAD
-                                  nsPoint aStartPos, nsPoint& aDestination);
-||||||| merged common ancestors
-                                  nsPoint aStartPos,
-                                  nsPoint &aDestination);
-=======
                                   nsPoint aStartPos, nsPoint& aDestination);
 
   nsMargin GetScrollPadding() const;
->>>>>>> upstream-releases
 
   nsSize GetLineScrollAmount() const;
   nsSize GetPageScrollAmount() const;
@@ -571,15 +348,6 @@ public:
     return frame->StyleVisibility()->mDirection == NS_STYLE_DIRECTION_LTR;
   }
 
-<<<<<<< HEAD
- private:
-  nsIFrame* GetFrameForDir() const;  // helper for Is{Physical,Bidi}LTR to find
-                                     // the frame whose directionality we use
-
- public:
-||||||| merged common ancestors
-public:
-=======
  private:
   nsIFrame* GetFrameForDir() const;  // helper for Is{Physical,Bidi}LTR to find
                                      // the frame whose directionality we use
@@ -600,7 +368,6 @@ public:
   bool NeedsScrollSnap() const;
 
  public:
->>>>>>> upstream-releases
   bool IsScrollbarOnRight() const;
   bool IsScrollingActive(nsDisplayListBuilder* aBuilder) const;
   bool IsMaybeAsynchronouslyScrolled() const {
@@ -628,18 +395,9 @@ public:
   // adjust the scrollbar rectangle aRect to account for any visible resizer.
   // aHasResizer specifies if there is a content resizer, however this method
   // will also check if a widget resizer is present as well.
-<<<<<<< HEAD
-  void AdjustScrollbarRectForResizer(nsIFrame* aFrame,
-                                     nsPresContext* aPresContext, nsRect& aRect,
-                                     bool aHasResizer, bool aVertical);
-||||||| merged common ancestors
-  void AdjustScrollbarRectForResizer(nsIFrame* aFrame, nsPresContext* aPresContext,
-                                     nsRect& aRect, bool aHasResizer, bool aVertical);
-=======
   void AdjustScrollbarRectForResizer(
       nsIFrame* aFrame, nsPresContext* aPresContext, nsRect& aRect,
       bool aHasResizer, mozilla::layers::ScrollDirection aDirection);
->>>>>>> upstream-releases
   // returns true if a resizer should be visible
   bool HasResizer() { return mResizerBox && !mCollapsedResizer; }
   void LayoutScrollbars(nsBoxLayoutState& aState, const nsRect& aContentArea,
@@ -732,25 +490,10 @@ public:
   void ThumbMoved(nsScrollbarFrame* aScrollbar, nscoord aOldPos,
                   nscoord aNewPos);
   void ScrollbarReleased(nsScrollbarFrame* aScrollbar);
-<<<<<<< HEAD
-  void ScrollByUnit(nsScrollbarFrame* aScrollbar,
-                    nsIScrollableFrame::ScrollMode aMode, int32_t aDirection,
-                    nsIScrollableFrame::ScrollUnit aUnit,
-                    nsIScrollbarMediator::ScrollSnapMode aSnap =
-                        nsIScrollbarMediator::DISABLE_SNAP);
-||||||| merged common ancestors
-  void ScrollByUnit(nsScrollbarFrame* aScrollbar,
-                    nsIScrollableFrame::ScrollMode aMode,
-                    int32_t aDirection,
-                    nsIScrollableFrame::ScrollUnit aUnit,
-                    nsIScrollbarMediator::ScrollSnapMode aSnap
-                      = nsIScrollbarMediator::DISABLE_SNAP);
-=======
   void ScrollByUnit(nsScrollbarFrame* aScrollbar, ScrollMode aMode,
                     int32_t aDirection, nsIScrollableFrame::ScrollUnit aUnit,
                     nsIScrollbarMediator::ScrollSnapMode aSnap =
                         nsIScrollbarMediator::DISABLE_SNAP);
->>>>>>> upstream-releases
   bool ShouldSuppressScrollbarRepaints() const {
     return mSuppressScrollbarRepaints;
   }
@@ -831,38 +574,18 @@ public:
   nsPoint mDestination;
 
   // A goal position to try to scroll to as content loads. As long as mLastPos
-<<<<<<< HEAD
-  // matches the current logical scroll position, we try to scroll to
-  // mRestorePos after every reflow --- because after each time content is
-  // loaded/added to the scrollable element, there will be a reflow.
-||||||| merged common ancestors
-  // matches the current logical scroll position, we try to scroll to mRestorePos
-  // after every reflow --- because after each time content is loaded/added to the
-  // scrollable element, there will be a reflow.
-=======
   // matches the current logical scroll position, we try to scroll to
   // mRestorePos after every reflow --- because after each time content is
   // loaded/added to the scrollable element, there will be a reflow.
   // Note that for frames where layout and visual viewport aren't one and the
   // same thing, this scroll position will be the logical scroll position of
   // the *visual* viewport, as its position will be more relevant to the user.
->>>>>>> upstream-releases
   nsPoint mRestorePos;
-<<<<<<< HEAD
-  // The last logical position we scrolled to while trying to restore
-  // mRestorePos, or 0,0 when this is a new frame. Set to -1,-1 once we've
-  // scrolled for any reason other than trying to restore mRestorePos.
-||||||| merged common ancestors
-  // The last logical position we scrolled to while trying to restore mRestorePos, or
-  // 0,0 when this is a new frame. Set to -1,-1 once we've scrolled for any reason
-  // other than trying to restore mRestorePos.
-=======
   // The last logical position we scrolled to while trying to restore
   // mRestorePos, or 0,0 when this is a new frame. Set to -1,-1 once we've
   // scrolled for any reason other than trying to restore mRestorePos.
   // Just as with mRestorePos, this position will be the logical position of
   // the *visual* viewport where available.
->>>>>>> upstream-releases
   nsPoint mLastPos;
 
   // The latest scroll position we've sent or received from APZ. This
@@ -886,21 +609,6 @@ public:
   // Timer to remove the displayport some time after scrolling has stopped
   nsCOMPtr<nsITimer> mDisplayPortExpiryTimer;
 
-<<<<<<< HEAD
-  bool mNeverHasVerticalScrollbar : 1;
-  bool mNeverHasHorizontalScrollbar : 1;
-  bool mHasVerticalScrollbar : 1;
-  bool mHasHorizontalScrollbar : 1;
-  bool mFrameIsUpdatingScrollbar : 1;
-  bool mDidHistoryRestore : 1;
-||||||| merged common ancestors
-  bool mNeverHasVerticalScrollbar:1;
-  bool mNeverHasHorizontalScrollbar:1;
-  bool mHasVerticalScrollbar:1;
-  bool mHasHorizontalScrollbar:1;
-  bool mFrameIsUpdatingScrollbar:1;
-  bool mDidHistoryRestore:1;
-=======
   ScrollAnchorContainer mAnchor;
 
   bool mAllowScrollOriginDowngrade : 1;
@@ -911,7 +619,6 @@ public:
   bool mHasHorizontalScrollbar : 1;
   bool mFrameIsUpdatingScrollbar : 1;
   bool mDidHistoryRestore : 1;
->>>>>>> upstream-releases
   // Is this the scrollframe for the document's viewport?
   bool mIsRoot : 1;
   // True if we should clip all descendants, false if we should only clip
@@ -984,11 +691,6 @@ public:
   bool mHasOutOfFlowContentInsideFilter : 1;
 
   // True if we don't want the scrollbar to repaint itself right now.
-<<<<<<< HEAD
-  bool mSuppressScrollbarRepaints : 1;
-||||||| merged common ancestors
-  bool mSuppressScrollbarRepaints:1;
-=======
   bool mSuppressScrollbarRepaints : 1;
 
   // True if we are using the minimum scale size instead of ICB for scroll port.
@@ -996,7 +698,6 @@ public:
 
   // True if the minimum scale size has been changed since the last reflow.
   bool mMinimumScaleSizeChanged : 1;
->>>>>>> upstream-releases
 
   mozilla::layout::ScrollVelocityQueue mVelocityQueue;
 
@@ -1023,18 +724,8 @@ public:
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
-<<<<<<< HEAD
-  void ScrollToWithOrigin(nsPoint aScrollPosition,
-                          nsIScrollableFrame::ScrollMode aMode,
-                          nsAtom* aOrigin,  // nullptr indicates "other" origin
-||||||| merged common ancestors
-  void ScrollToWithOrigin(nsPoint aScrollPosition,
-                          nsIScrollableFrame::ScrollMode aMode,
-                          nsAtom *aOrigin, // nullptr indicates "other" origin
-=======
   void ScrollToWithOrigin(nsPoint aScrollPosition, ScrollMode aMode,
                           nsAtom* aOrigin,  // nullptr indicates "other" origin
->>>>>>> upstream-releases
                           const nsRect* aRange,
                           nsIScrollbarMediator::ScrollSnapMode aSnap =
                               nsIScrollbarMediator::DISABLE_SNAP);
@@ -1103,20 +794,8 @@ class nsHTMLScrollFrame : public nsContainerFrame,
   bool TryLayout(ScrollReflowInput* aState, ReflowOutput* aKidMetrics,
                  bool aAssumeVScroll, bool aAssumeHScroll, bool aForce);
   bool ScrolledContentDependsOnHeight(ScrollReflowInput* aState);
-<<<<<<< HEAD
-  void ReflowScrolledFrame(ScrollReflowInput* aState, bool aAssumeHScroll,
-                           bool aAssumeVScroll, ReflowOutput* aMetrics,
-                           bool aFirstPass);
-||||||| merged common ancestors
-  void ReflowScrolledFrame(ScrollReflowInput* aState,
-                           bool aAssumeHScroll,
-                           bool aAssumeVScroll,
-                           ReflowOutput* aMetrics,
-                           bool aFirstPass);
-=======
   void ReflowScrolledFrame(ScrollReflowInput* aState, bool aAssumeHScroll,
                            bool aAssumeVScroll, ReflowOutput* aMetrics);
->>>>>>> upstream-releases
   void ReflowContents(ScrollReflowInput* aState,
                       const ReflowOutput& aDesiredSize);
   void PlaceScrollArea(ScrollReflowInput& aState,
@@ -1136,15 +815,9 @@ class nsHTMLScrollFrame : public nsContainerFrame,
 
   virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
                       const ReflowInput& aReflowInput,
-<<<<<<< HEAD
-                      nsReflowStatus& aStatus) override;
-||||||| merged common ancestors
-                      nsReflowStatus&          aStatus) override;
-=======
                       nsReflowStatus& aStatus) override;
   virtual void DidReflow(nsPresContext* aPresContext,
                          const ReflowInput* aReflowInput) override;
->>>>>>> upstream-releases
 
   virtual bool ComputeCustomOverflow(nsOverflowAreas& aOverflowAreas) override {
     return mHelper.ComputeCustomOverflow(aOverflowAreas);
@@ -1274,25 +947,6 @@ class nsHTMLScrollFrame : public nsContainerFrame,
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
-<<<<<<< HEAD
-  virtual void ScrollToCSSPixels(
-      const CSSIntPoint& aScrollPosition,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr) override {
-    mHelper.ScrollToCSSPixels(aScrollPosition, aMode, aOrigin);
-  }
-  virtual void ScrollToCSSPixelsApproximate(
-      const mozilla::CSSPoint& aScrollPosition,
-      nsAtom* aOrigin = nullptr) override {
-||||||| merged common ancestors
-  virtual void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
-                                 nsIScrollableFrame::ScrollMode aMode
-                                   = nsIScrollableFrame::INSTANT) override {
-    mHelper.ScrollToCSSPixels(aScrollPosition, aMode);
-  }
-  virtual void ScrollToCSSPixelsApproximate(const mozilla::CSSPoint& aScrollPosition,
-                                            nsAtom* aOrigin = nullptr) override {
-=======
   virtual void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
                                  ScrollMode aMode = ScrollMode::Instant,
                                  nsIScrollbarMediator::ScrollSnapMode aSnap =
@@ -1303,7 +957,6 @@ class nsHTMLScrollFrame : public nsContainerFrame,
   virtual void ScrollToCSSPixelsApproximate(
       const mozilla::CSSPoint& aScrollPosition,
       nsAtom* aOrigin = nullptr) override {
->>>>>>> upstream-releases
     mHelper.ScrollToCSSPixelsApproximate(aScrollPosition, aOrigin);
   }
   /**
@@ -1317,32 +970,6 @@ class nsHTMLScrollFrame : public nsContainerFrame,
    */
   virtual void ScrollBy(nsIntPoint aDelta, ScrollUnit aUnit, ScrollMode aMode,
                         nsIntPoint* aOverflow, nsAtom* aOrigin = nullptr,
-<<<<<<< HEAD
-                        nsIScrollableFrame::ScrollMomentum aMomentum =
-                            nsIScrollableFrame::NOT_MOMENTUM,
-                        nsIScrollbarMediator::ScrollSnapMode aSnap =
-                            nsIScrollbarMediator::DISABLE_SNAP) override {
-    mHelper.ScrollBy(aDelta, aUnit, aMode, aOverflow, aOrigin, aMomentum,
-                     aSnap);
-  }
-  virtual void ScrollByCSSPixels(
-      const CSSIntPoint& aDelta,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr) override {
-    mHelper.ScrollByCSSPixels(aDelta, aMode, aOrigin);
-  }
-  virtual void ScrollSnap() override { mHelper.ScrollSnap(); }
-||||||| merged common ancestors
-                        nsIScrollableFrame::ScrollMomentum aMomentum = nsIScrollableFrame::NOT_MOMENTUM,
-                        nsIScrollbarMediator::ScrollSnapMode aSnap
-                          = nsIScrollbarMediator::DISABLE_SNAP)
-                        override {
-    mHelper.ScrollBy(aDelta, aUnit, aMode, aOverflow, aOrigin, aMomentum, aSnap);
-  }
-  virtual void ScrollSnap() override {
-    mHelper.ScrollSnap();
-  }
-=======
                         nsIScrollableFrame::ScrollMomentum aMomentum =
                             nsIScrollableFrame::NOT_MOMENTUM,
                         nsIScrollbarMediator::ScrollSnapMode aSnap =
@@ -1358,7 +985,6 @@ class nsHTMLScrollFrame : public nsContainerFrame,
     mHelper.ScrollByCSSPixels(aDelta, aMode, aOrigin, aSnap);
   }
   virtual void ScrollSnap() override { mHelper.ScrollSnap(); }
->>>>>>> upstream-releases
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
@@ -1587,32 +1213,13 @@ class nsHTMLScrollFrame : public nsContainerFrame,
   virtual mozilla::a11y::AccType AccessibleType() override;
 #endif
 
-<<<<<<< HEAD
- protected:
-  nsHTMLScrollFrame(ComputedStyle* aStyle, bool aIsRoot)
-      : nsHTMLScrollFrame(aStyle, kClassID, aIsRoot) {}
-||||||| merged common ancestors
-protected:
-  nsHTMLScrollFrame(ComputedStyle* aStyle, bool aIsRoot)
-    : nsHTMLScrollFrame(aStyle, kClassID, aIsRoot)
-  {}
-=======
  protected:
   nsHTMLScrollFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                     bool aIsRoot)
       : nsHTMLScrollFrame(aStyle, aPresContext, kClassID, aIsRoot) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsHTMLScrollFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID, bool aIsRoot);
-||||||| merged common ancestors
-  nsHTMLScrollFrame(ComputedStyle* aStyle,
-                    nsIFrame::ClassID aID,
-                    bool aIsRoot);
-=======
   nsHTMLScrollFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                     nsIFrame::ClassID aID, bool aIsRoot);
->>>>>>> upstream-releases
   void SetSuppressScrollbarUpdate(bool aSuppress) {
     mHelper.mSuppressScrollbarUpdate = aSuppress;
   }
@@ -1829,25 +1436,6 @@ class nsXULScrollFrame final : public nsBoxFrame,
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
-<<<<<<< HEAD
-  virtual void ScrollToCSSPixels(
-      const CSSIntPoint& aScrollPosition,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr) override {
-    mHelper.ScrollToCSSPixels(aScrollPosition, aMode, aOrigin);
-  }
-  virtual void ScrollToCSSPixelsApproximate(
-      const mozilla::CSSPoint& aScrollPosition,
-      nsAtom* aOrigin = nullptr) override {
-||||||| merged common ancestors
-  virtual void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
-                                 nsIScrollableFrame::ScrollMode aMode
-                                   = nsIScrollableFrame::INSTANT) override {
-    mHelper.ScrollToCSSPixels(aScrollPosition, aMode);
-  }
-  virtual void ScrollToCSSPixelsApproximate(const mozilla::CSSPoint& aScrollPosition,
-                                            nsAtom* aOrigin = nullptr) override {
-=======
   virtual void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
                                  ScrollMode aMode = ScrollMode::Instant,
                                  nsIScrollbarMediator::ScrollSnapMode aSnap =
@@ -1858,7 +1446,6 @@ class nsXULScrollFrame final : public nsBoxFrame,
   virtual void ScrollToCSSPixelsApproximate(
       const mozilla::CSSPoint& aScrollPosition,
       nsAtom* aOrigin = nullptr) override {
->>>>>>> upstream-releases
     mHelper.ScrollToCSSPixelsApproximate(aScrollPosition, aOrigin);
   }
   virtual CSSIntPoint GetScrollPositionCSSPixels() override {
@@ -1869,32 +1456,6 @@ class nsXULScrollFrame final : public nsBoxFrame,
    */
   virtual void ScrollBy(nsIntPoint aDelta, ScrollUnit aUnit, ScrollMode aMode,
                         nsIntPoint* aOverflow, nsAtom* aOrigin = nullptr,
-<<<<<<< HEAD
-                        nsIScrollableFrame::ScrollMomentum aMomentum =
-                            nsIScrollableFrame::NOT_MOMENTUM,
-                        nsIScrollbarMediator::ScrollSnapMode aSnap =
-                            nsIScrollbarMediator::DISABLE_SNAP) override {
-    mHelper.ScrollBy(aDelta, aUnit, aMode, aOverflow, aOrigin, aMomentum,
-                     aSnap);
-  }
-  virtual void ScrollByCSSPixels(
-      const CSSIntPoint& aDelta,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr) override {
-    mHelper.ScrollByCSSPixels(aDelta, aMode, aOrigin);
-  }
-  virtual void ScrollSnap() override { mHelper.ScrollSnap(); }
-||||||| merged common ancestors
-                        nsIScrollableFrame::ScrollMomentum aMomentum = nsIScrollableFrame::NOT_MOMENTUM,
-                        nsIScrollbarMediator::ScrollSnapMode aSnap
-                          = nsIScrollbarMediator::DISABLE_SNAP)
-                        override {
-    mHelper.ScrollBy(aDelta, aUnit, aMode, aOverflow, aOrigin, aMomentum, aSnap);
-  }
-  virtual void ScrollSnap() override {
-    mHelper.ScrollSnap();
-  }
-=======
                         nsIScrollableFrame::ScrollMomentum aMomentum =
                             nsIScrollableFrame::NOT_MOMENTUM,
                         nsIScrollbarMediator::ScrollSnapMode aSnap =
@@ -1910,7 +1471,6 @@ class nsXULScrollFrame final : public nsBoxFrame,
     mHelper.ScrollByCSSPixels(aDelta, aMode, aOrigin, aSnap);
   }
   virtual void ScrollSnap() override { mHelper.ScrollSnap(); }
->>>>>>> upstream-releases
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    */
@@ -2142,16 +1702,8 @@ class nsXULScrollFrame final : public nsBoxFrame,
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
-<<<<<<< HEAD
- protected:
-  nsXULScrollFrame(ComputedStyle* aStyle, bool aIsRoot,
-||||||| merged common ancestors
-protected:
-  nsXULScrollFrame(ComputedStyle* aStyle, bool aIsRoot,
-=======
  protected:
   nsXULScrollFrame(ComputedStyle*, nsPresContext*, bool aIsRoot,
->>>>>>> upstream-releases
                    bool aClipAllDescendants);
 
   void ClampAndSetBounds(nsBoxLayoutState& aState, nsRect& aRect,

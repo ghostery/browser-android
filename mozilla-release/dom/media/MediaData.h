@@ -181,17 +181,8 @@ class AlignedBuffer {
   // Size in bytes of extra space allocated for padding.
   static size_t AlignmentPaddingSize() { return AlignmentOffset() * 2; }
 
-<<<<<<< HEAD
-  void PopFront(size_t aSize) {
-    MOZ_ASSERT(mLength >= aSize);
-||||||| merged common ancestors
-  void PopFront(size_t aSize)
-  {
-    MOZ_ASSERT(mLength >= aSize);
-=======
   void PopFront(size_t aSize) {
     MOZ_DIAGNOSTIC_ASSERT(mLength >= aSize, "Popping too many frames");
->>>>>>> upstream-releases
     PodMove(mData, mData + aSize, mLength - aSize);
     mLength -= aSize;
   }
@@ -260,42 +251,6 @@ class MediaData {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(MediaData)
 
-<<<<<<< HEAD
-  enum Type { AUDIO_DATA = 0, VIDEO_DATA, RAW_DATA, NULL_DATA };
-
-  MediaData(Type aType, int64_t aOffset, const media::TimeUnit& aTimestamp,
-            const media::TimeUnit& aDuration, uint32_t aFrames)
-      : mType(aType),
-        mOffset(aOffset),
-        mTime(aTimestamp),
-        mTimecode(aTimestamp),
-        mDuration(aDuration),
-        mFrames(aFrames),
-        mKeyframe(false) {}
-||||||| merged common ancestors
-  enum Type
-  {
-    AUDIO_DATA = 0,
-    VIDEO_DATA,
-    RAW_DATA,
-    NULL_DATA
-  };
-
-  MediaData(Type aType,
-            int64_t aOffset,
-            const media::TimeUnit& aTimestamp,
-            const media::TimeUnit& aDuration,
-            uint32_t aFrames)
-    : mType(aType)
-    , mOffset(aOffset)
-    , mTime(aTimestamp)
-    , mTimecode(aTimestamp)
-    , mDuration(aDuration)
-    , mFrames(aFrames)
-    , mKeyframe(false)
-  {
-  }
-=======
   enum class Type { AUDIO_DATA = 0, VIDEO_DATA, RAW_DATA, NULL_DATA };
   static const char* TypeToStr(Type aType) {
     switch (aType) {
@@ -311,7 +266,6 @@ class MediaData {
         MOZ_CRASH("bad value");
     }
   }
->>>>>>> upstream-releases
 
   MediaData(Type aType, int64_t aOffset, const media::TimeUnit& aTimestamp,
             const media::TimeUnit& aDuration)
@@ -342,16 +296,6 @@ class MediaData {
 
   media::TimeUnit GetEndTime() const { return mTime + mDuration; }
 
-<<<<<<< HEAD
-  bool AdjustForStartTime(int64_t aStartTime) {
-    mTime = mTime - media::TimeUnit::FromMicroseconds(aStartTime);
-    return !mTime.IsNegative();
-||||||| merged common ancestors
-  bool AdjustForStartTime(int64_t aStartTime)
-  {
-    mTime = mTime - media::TimeUnit::FromMicroseconds(aStartTime);
-    return !mTime.IsNegative();
-=======
   // Return true if the adjusted time is valid. Caller should handle error when
   // the result is invalid.
   virtual bool AdjustForStartTime(const media::TimeUnit& aStartTime) {
@@ -360,7 +304,6 @@ class MediaData {
       NS_WARNING("Negative start time after time-adjustment!");
     }
     return mTime.IsValid();
->>>>>>> upstream-releases
   }
 
   template <typename ReturnType>
@@ -375,25 +318,8 @@ class MediaData {
     return static_cast<ReturnType*>(this);
   }
 
-<<<<<<< HEAD
- protected:
-  MediaData(Type aType, uint32_t aFrames)
-      : mType(aType), mOffset(0), mFrames(aFrames), mKeyframe(false) {}
-||||||| merged common ancestors
-protected:
-  MediaData(Type aType, uint32_t aFrames)
-    : mType(aType)
-    , mOffset(0)
-    , mFrames(aFrames)
-    , mKeyframe(false)
-  {
-  }
-
-  virtual ~MediaData() { }
-=======
  protected:
   explicit MediaData(Type aType) : mType(aType), mOffset(0), mKeyframe(false) {}
->>>>>>> upstream-releases
 
   virtual ~MediaData() {}
 };
@@ -404,81 +330,21 @@ class NullData : public MediaData {
  public:
   NullData(int64_t aOffset, const media::TimeUnit& aTime,
            const media::TimeUnit& aDuration)
-<<<<<<< HEAD
-      : MediaData(NULL_DATA, aOffset, aTime, aDuration, 0) {}
-||||||| merged common ancestors
-    : MediaData(NULL_DATA, aOffset, aTime, aDuration, 0)
-  {
-  }
-=======
       : MediaData(Type::NULL_DATA, aOffset, aTime, aDuration) {}
->>>>>>> upstream-releases
 
   static const Type sType = Type::NULL_DATA;
 };
 
 // Holds chunk a decoded audio frames.
-<<<<<<< HEAD
-class AudioData : public MediaData {
- public:
-  AudioData(int64_t aOffset, const media::TimeUnit& aTime,
-            const media::TimeUnit& aDuration, uint32_t aFrames,
-            AlignedAudioBuffer&& aData, uint32_t aChannels, uint32_t aRate,
-            uint32_t aChannelMap = AudioConfig::ChannelLayout::UNKNOWN_MAP)
-      : MediaData(sType, aOffset, aTime, aDuration, aFrames),
-        mChannels(aChannels),
-        mChannelMap(aChannelMap),
-        mRate(aRate),
-        mAudioData(std::move(aData)) {}
-||||||| merged common ancestors
-class AudioData : public MediaData
-{
-public:
-
-  AudioData(int64_t aOffset,
-            const media::TimeUnit& aTime,
-            const media::TimeUnit& aDuration,
-            uint32_t aFrames,
-            AlignedAudioBuffer&& aData,
-            uint32_t aChannels,
-            uint32_t aRate,
-            uint32_t aChannelMap = AudioConfig::ChannelLayout::UNKNOWN_MAP)
-    : MediaData(sType, aOffset, aTime, aDuration, aFrames)
-    , mChannels(aChannels)
-    , mChannelMap(aChannelMap)
-    , mRate(aRate)
-    , mAudioData(std::move(aData))
-  {
-  }
-=======
 class AudioData : public MediaData {
  public:
   AudioData(int64_t aOffset, const media::TimeUnit& aTime,
             AlignedAudioBuffer&& aData, uint32_t aChannels, uint32_t aRate,
             uint32_t aChannelMap = AudioConfig::ChannelLayout::UNKNOWN_MAP);
->>>>>>> upstream-releases
 
   static const Type sType = Type::AUDIO_DATA;
   static const char* sTypeName;
 
-<<<<<<< HEAD
-  // Creates a new AudioData identical to aOther, but with a different
-  // specified timestamp and duration. All data from aOther is copied
-  // into the new AudioData but the audio data which is transferred.
-  // After such call, the original aOther is unusable.
-  static already_AddRefed<AudioData> TransferAndUpdateTimestampAndDuration(
-      AudioData* aOther, const media::TimeUnit& aTimestamp,
-      const media::TimeUnit& aDuration);
-||||||| merged common ancestors
-  // Creates a new AudioData identical to aOther, but with a different
-  // specified timestamp and duration. All data from aOther is copied
-  // into the new AudioData but the audio data which is transferred.
-  // After such call, the original aOther is unusable.
-  static already_AddRefed<AudioData>
-  TransferAndUpdateTimestampAndDuration(AudioData* aOther,
-                                        const media::TimeUnit& aTimestamp,
-                                        const media::TimeUnit& aDuration);
-=======
   // Access the buffer as a Span.
   Span<AudioDataValue> Data() const;
 
@@ -496,7 +362,6 @@ class AudioData : public MediaData {
   // Get the internal audio buffer to be moved. After this call the original
   // AudioData will be emptied and can't be used again.
   AlignedAudioBuffer MoveableData();
->>>>>>> upstream-releases
 
   size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
 
@@ -531,20 +396,10 @@ class AudioData : public MediaData {
   media::TimeUnit mOriginalTime;
   // mFrames frames, each with mChannels values
   AlignedAudioBuffer mAudioData;
-<<<<<<< HEAD
-
- protected:
-  ~AudioData() {}
-||||||| merged common ancestors
-
-protected:
-  ~AudioData() { }
-=======
   Maybe<media::TimeInterval> mTrimWindow;
   // Amount of frames for contained data.
   uint32_t mFrames;
   size_t mDataOffset = 0;
->>>>>>> upstream-releases
 };
 
 namespace layers {
@@ -668,20 +523,6 @@ class VideoData : public MediaData {
   media::TimeUnit mNextKeyFrameTime;
 };
 
-<<<<<<< HEAD
-class CryptoTrack {
- public:
-  CryptoTrack() : mValid(false), mMode(0), mIVSize(0) {}
-  bool mValid;
-  int32_t mMode;
-||||||| merged common ancestors
-class CryptoTrack
-{
-public:
-  CryptoTrack() : mValid(false), mMode(0), mIVSize(0) { }
-  bool mValid;
-  int32_t mMode;
-=======
 enum class CryptoScheme : uint8_t {
   None,
   Cenc,
@@ -696,7 +537,6 @@ class CryptoTrack {
         mCryptByteBlock(0),
         mSkipByteBlock(0) {}
   CryptoScheme mCryptoScheme;
->>>>>>> upstream-releases
   int32_t mIVSize;
   nsTArray<uint8_t> mKeyId;
   uint8_t mCryptByteBlock;

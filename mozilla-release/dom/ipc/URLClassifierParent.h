@@ -16,18 +16,6 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-template <typename BaseProtocol>
-class URLClassifierParentBase : public nsIURIClassifierCallback,
-                                public BaseProtocol {
- public:
-||||||| merged common ancestors
-template<typename BaseProtocol>
-class URLClassifierParentBase : public nsIURIClassifierCallback,
-                                public BaseProtocol
-{
-public:
-=======
 //////////////////////////////////////////////////////////////
 // URLClassifierParent
 
@@ -39,26 +27,14 @@ class URLClassifierParent : public nsIURIClassifierCallback,
   mozilla::ipc::IPCResult StartClassify(nsIPrincipal* aPrincipal,
                                         bool* aSuccess);
 
->>>>>>> upstream-releases
   // nsIURIClassifierCallback.
   NS_IMETHOD OnClassifyComplete(nsresult aErrorCode, const nsACString& aList,
                                 const nsACString& aProvider,
                                 const nsACString& aFullHash) override {
     if (mIPCOpen) {
-<<<<<<< HEAD
-      ClassifierInfo info = ClassifierInfo(
-          nsCString(aList), nsCString(aProvider), nsCString(aFullHash));
-      Unused << BaseProtocol::Send__delete__(this, info, aErrorCode);
-||||||| merged common ancestors
-      ClassifierInfo info = ClassifierInfo(nsCString(aList),
-                                           nsCString(aProvider),
-                                           nsCString(aFullHash));
-      Unused << BaseProtocol::Send__delete__(this, info, aErrorCode);
-=======
       ClassifierInfo info = ClassifierInfo(
           nsCString(aList), nsCString(aProvider), nsCString(aFullHash));
       Unused << Send__delete__(this, Some(info), aErrorCode);
->>>>>>> upstream-releases
     }
     return NS_OK;
   }
@@ -70,46 +46,7 @@ class URLClassifierParent : public nsIURIClassifierCallback,
     }
   }
 
-<<<<<<< HEAD
- protected:
-  ~URLClassifierParentBase() = default;
-  bool mIPCOpen = true;
-};
-
-//////////////////////////////////////////////////////////////
-// URLClassifierParent
-
-class URLClassifierParent
-    : public URLClassifierParentBase<PURLClassifierParent> {
- public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-
-  mozilla::ipc::IPCResult StartClassify(nsIPrincipal* aPrincipal,
-                                        bool aUseTrackingProtection,
-                                        bool* aSuccess);
-
  private:
-||||||| merged common ancestors
-protected:
-  ~URLClassifierParentBase() = default;
-  bool mIPCOpen = true;
-};
-
-//////////////////////////////////////////////////////////////
-// URLClassifierParent
-
-class URLClassifierParent : public URLClassifierParentBase<PURLClassifierParent>
-{
-public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-
-  mozilla::ipc::IPCResult StartClassify(nsIPrincipal* aPrincipal,
-                                        bool aUseTrackingProtection,
-                                        bool* aSuccess);
-private:
-=======
- private:
->>>>>>> upstream-releases
   ~URLClassifierParent() = default;
 
   // Override PURLClassifierParent::ActorDestroy. We seem to unable to
@@ -122,27 +59,11 @@ private:
 //////////////////////////////////////////////////////////////
 // URLClassifierLocalParent
 
-<<<<<<< HEAD
-class URLClassifierLocalParent
-    : public URLClassifierParentBase<PURLClassifierLocalParent> {
- public:
-||||||| merged common ancestors
-class URLClassifierLocalParent : public URLClassifierParentBase<PURLClassifierLocalParent>
-{
-public:
-=======
 class URLClassifierLocalParent : public nsIUrlClassifierFeatureCallback,
                                  public PURLClassifierLocalParent {
  public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult StartClassify(nsIURI* aURI,
-                                        const nsACString& aTables);
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult StartClassify(nsIURI* aURI, const nsACString& aTables);
-=======
   mozilla::ipc::IPCResult StartClassify(
       nsIURI* aURI, const nsTArray<IPCURLClassifierFeature>& aFeatureNames);
 
@@ -150,7 +71,6 @@ class URLClassifierLocalParent : public nsIUrlClassifierFeatureCallback,
   NS_IMETHOD
   OnClassifyComplete(
       const nsTArray<RefPtr<nsIUrlClassifierFeatureResult>>& aResults) override;
->>>>>>> upstream-releases
 
  private:
   ~URLClassifierLocalParent() = default;

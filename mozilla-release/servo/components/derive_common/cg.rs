@@ -10,11 +10,6 @@ use syn::{GenericArgument, GenericParam, Ident, Path};
 use syn::{PathArguments, PathSegment, QSelf, Type, TypeArray};
 use syn::{TypeParam, TypeParen, TypePath, TypeSlice, TypeTuple};
 use syn::{Variant, WherePredicate};
-<<<<<<< HEAD:mozilla-release/servo/components/style_derive/cg.rs
-use synstructure::{self, BindStyle, BindingInfo, VariantAst, VariantInfo};
-||||||| merged common ancestors
-use synstructure::{self, BindingInfo, BindStyle, VariantAst, VariantInfo};
-=======
 use synstructure::{self, BindStyle, BindingInfo, VariantAst, VariantInfo};
 
 /// Given an input type which has some where clauses already, like:
@@ -80,7 +75,6 @@ pub fn propagate_clauses_to_output_type(
             .push(parse_quote!(<#ty as #trait_path>::#trait_output: #bounds))
     }
 }
->>>>>>> upstream-releases:mozilla-release/servo/components/derive_common/cg.rs
 
 pub fn add_predicate(where_clause: &mut Option<syn::WhereClause>, pred: WherePredicate) {
     where_clause
@@ -302,22 +296,10 @@ pub fn ref_pattern<'a>(
 ) -> (TokenStream, Vec<BindingInfo<'a>>) {
     let mut v = variant.clone();
     v.bind_with(|_| BindStyle::Ref);
-<<<<<<< HEAD:mozilla-release/servo/components/style_derive/cg.rs
-    v.bindings_mut().iter_mut().for_each(|b| {
-        b.binding = Ident::new(&format!("{}_{}", b.binding, prefix), Span::call_site())
-    });
-    (v.pat(), v.bindings().iter().cloned().collect())
-||||||| merged common ancestors
-    v.bindings_mut()
-        .iter_mut()
-        .for_each(|b| b.binding = Ident::from(format!("{}_{}", b.binding, prefix)));
-    (v.pat(), v.bindings().iter().cloned().collect())
-=======
     v.bindings_mut().iter_mut().for_each(|b| {
         b.binding = Ident::new(&format!("{}_{}", b.binding, prefix), Span::call_site())
     });
     (v.pat(), v.bindings().to_vec())
->>>>>>> upstream-releases:mozilla-release/servo/components/derive_common/cg.rs
 }
 
 pub fn value<'a>(variant: &'a VariantInfo, prefix: &str) -> (TokenStream, Vec<BindingInfo<'a>>) {

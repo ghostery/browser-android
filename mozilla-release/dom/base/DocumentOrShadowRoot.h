@@ -45,19 +45,9 @@ class DocumentOrShadowRoot {
     ShadowRoot,
   };
 
-<<<<<<< HEAD
- public:
-  explicit DocumentOrShadowRoot(nsIDocument&);
-  explicit DocumentOrShadowRoot(mozilla::dom::ShadowRoot&);
-||||||| merged common ancestors
-public:
-  explicit DocumentOrShadowRoot(nsIDocument&);
-  explicit DocumentOrShadowRoot(mozilla::dom::ShadowRoot&);
-=======
  public:
   explicit DocumentOrShadowRoot(Document&);
   explicit DocumentOrShadowRoot(ShadowRoot&);
->>>>>>> upstream-releases
 
   // Unusual argument naming is because of cycle collection macros.
   static void Traverse(DocumentOrShadowRoot* tmp,
@@ -126,35 +116,11 @@ public:
   Element* ElementFromPointHelper(float aX, float aY,
                                   bool aIgnoreRootScrollFrame,
                                   bool aFlushLayout);
-<<<<<<< HEAD
-  enum ElementsFromPointFlags {
-    IGNORE_ROOT_SCROLL_FRAME = 1,
-    FLUSH_LAYOUT = 2,
-    IS_ELEMENT_FROM_POINT = 4
-  };
-||||||| merged common ancestors
-  enum ElementsFromPointFlags
-  {
-    IGNORE_ROOT_SCROLL_FRAME = 1,
-    FLUSH_LAYOUT = 2,
-    IS_ELEMENT_FROM_POINT = 4
-  };
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ElementsFromPointHelper(
-      float aX, float aY, uint32_t aFlags,
-      nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
-||||||| merged common ancestors
-  void ElementsFromPointHelper(float aX, float aY, uint32_t aFlags,
-                               nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
-=======
   void NodesFromRect(float aX, float aY, float aTopSize, float aRightSize,
                      float aBottomSize, float aLeftSize,
                      bool aIgnoreRootScrollFrame, bool aFlushLayout,
                      bool aOnlyVisible, nsTArray<RefPtr<nsINode>>&);
->>>>>>> upstream-releases
 
   /**
    * This gets fired when the element that an id refers to changes.
@@ -231,33 +197,16 @@ public:
   nsRadioGroupStruct* GetRadioGroup(const nsAString& aName) const;
   nsRadioGroupStruct* GetOrCreateRadioGroup(const nsAString& aName);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   nsIContent* Retarget(nsIContent* aContent) const;
 
  protected:
->>>>>>> upstream-releases
   // Returns the reference to the sheet, if found in mStyleSheets.
   already_AddRefed<StyleSheet> RemoveSheet(StyleSheet& aSheet);
   void InsertSheetAt(size_t aIndex, StyleSheet& aSheet);
 
   void AddSizeOfExcludingThis(nsWindowSizes&) const;
   void AddSizeOfOwnedSheetArrayExcludingThis(
-<<<<<<< HEAD
       nsWindowSizes&, const nsTArray<RefPtr<StyleSheet>>&) const;
-
-  nsIContent* Retarget(nsIContent* aContent) const;
-||||||| merged common ancestors
-      nsWindowSizes&,
-      const nsTArray<RefPtr<StyleSheet>>&) const;
-
-  nsIContent* Retarget(nsIContent* aContent) const;
-=======
-      nsWindowSizes&, const nsTArray<RefPtr<StyleSheet>>&) const;
->>>>>>> upstream-releases
 
   /**
    * If focused element's subtree root is this document or shadow root, return

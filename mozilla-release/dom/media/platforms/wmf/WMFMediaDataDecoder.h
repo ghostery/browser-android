@@ -35,26 +35,12 @@ class MFTManager {
   // MP4Reader.
   virtual HRESULT Output(int64_t aStreamOffset, RefPtr<MediaData>& aOutput) = 0;
 
-<<<<<<< HEAD
-  virtual void Flush() {
-||||||| merged common ancestors
-  virtual void Flush()
-  {
-=======
   void Flush() {
->>>>>>> upstream-releases
     mDecoder->Flush();
     mSeekTargetThreshold.reset();
   }
 
-<<<<<<< HEAD
-  virtual void Drain() {
-||||||| merged common ancestors
-  virtual void Drain()
-  {
-=======
   void Drain() {
->>>>>>> upstream-releases
     if (FAILED(mDecoder->SendMFTMessage(MFT_MESSAGE_COMMAND_DRAIN, 0))) {
       NS_WARNING("Failed to send DRAIN command to MFT");
     }
@@ -71,21 +57,12 @@ class MFTManager {
 
   virtual nsCString GetDescriptionName() const = 0;
 
-<<<<<<< HEAD
-  virtual void SetSeekThreshold(const media::TimeUnit& aTime) {
-    mSeekTargetThreshold = Some(aTime);
-||||||| merged common ancestors
-  virtual void SetSeekThreshold(const media::TimeUnit& aTime)
-  {
-    mSeekTargetThreshold = Some(aTime);
-=======
   virtual void SetSeekThreshold(const media::TimeUnit& aTime) {
     if (aTime.IsValid()) {
       mSeekTargetThreshold = Some(aTime);
     } else {
       mSeekTargetThreshold.reset();
     }
->>>>>>> upstream-releases
   }
 
   virtual MediaDataDecoder::ConversionRequired NeedsConversion() const {

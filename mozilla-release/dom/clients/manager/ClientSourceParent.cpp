@@ -201,27 +201,6 @@ bool ClientSourceParent::DeallocPClientSourceOpParent(
   return true;
 }
 
-<<<<<<< HEAD
-ClientSourceParent::ClientSourceParent(const ClientSourceConstructorArgs& aArgs)
-    : mClientInfo(aArgs.id(), aArgs.type(), aArgs.principalInfo(),
-                  aArgs.creationTime()),
-      mService(ClientManagerService::GetOrCreateInstance()),
-      mExecutionReady(false),
-      mFrozen(false) {}
-
-ClientSourceParent::~ClientSourceParent() {
-||||||| merged common ancestors
-ClientSourceParent::ClientSourceParent(const ClientSourceConstructorArgs& aArgs)
-  : mClientInfo(aArgs.id(), aArgs.type(), aArgs.principalInfo(), aArgs.creationTime())
-  , mService(ClientManagerService::GetOrCreateInstance())
-  , mExecutionReady(false)
-  , mFrozen(false)
-{
-}
-
-ClientSourceParent::~ClientSourceParent()
-{
-=======
 ClientSourceParent::ClientSourceParent(
     const ClientSourceConstructorArgs& aArgs,
     const Maybe<ContentParentId>& aContentParentId)
@@ -233,7 +212,6 @@ ClientSourceParent::ClientSourceParent(
       mFrozen(false) {}
 
 ClientSourceParent::~ClientSourceParent() {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(mHandleList.IsEmpty());
 
   mExecutionReadyPromise.RejectIfExists(NS_ERROR_FAILURE, __func__);

@@ -1010,19 +1010,9 @@ This reports the user's interaction with Activity Stream Router.
   "impression_id": "n/a",
   "locale": "en-US",
   "source": "CFR",
-<<<<<<< HEAD
-  // message_id could be the ID of the recommendation, such as "wikipedia_addon"
-  "message_id": "wikipedia_addon",
-  "event": "[INSTALL | BLOCK | DISMISS | RATIONALE | LEARN_MORE | CLICK_DOORHANGER | MANAGE]"
-||||||| merged common ancestors
-  // message_id could be the ID of the recommendation, such as "amazon_addon"
-  "message_id": "amazon_addon",
-  "event": "[INSTALL | BLOCK | DISMISS | RATIONALE | LEARN_MORE | CLICK_DOORHANGER | MANAGE]"
-=======
   // message_id could be the ID of the recommendation, such as "wikipedia_addon"
   "message_id": "wikipedia_addon",
   "event": "[IMPRESSION | INSTALL | PIN | BLOCK | DISMISS | RATIONALE | LEARN_MORE | CLICK | CLICK_DOORHANGER | MANAGE]"
->>>>>>> upstream-releases
 }
 ```
 

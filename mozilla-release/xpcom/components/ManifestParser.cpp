@@ -155,24 +155,11 @@ void LogMessageWithContext(FileLocation& aFile, uint32_t aLineNumber,
     return;
   }
 
-<<<<<<< HEAD
-  nsresult rv = error->Init(
-      NS_ConvertUTF8toUTF16(formatted.get()), NS_ConvertUTF8toUTF16(file),
-      EmptyString(), aLineNumber, 0, nsIScriptError::warningFlag,
-      "chrome registration", false /* from private window */);
-||||||| merged common ancestors
-  nsresult rv = error->Init(NS_ConvertUTF8toUTF16(formatted.get()),
-                            NS_ConvertUTF8toUTF16(file), EmptyString(),
-                            aLineNumber, 0, nsIScriptError::warningFlag,
-                            "chrome registration",
-                            false /* from private window */);
-=======
   nsresult rv = error->Init(
       NS_ConvertUTF8toUTF16(formatted.get()), NS_ConvertUTF8toUTF16(file),
       EmptyString(), aLineNumber, 0, nsIScriptError::warningFlag,
       "chrome registration", false /* from private window */,
       true /* from chrome context */);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return;
   }
@@ -467,19 +454,9 @@ void ParseManifest(NSLocationType aType, FileLocation& aFile, char* aBuf,
 
   nsAutoString osVersion;
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#pragma warning(push)
-#pragma warning(disable : 4996)  // VC12+ deprecates GetVersionEx
-  OSVERSIONINFO info = {sizeof(OSVERSIONINFO)};
-||||||| merged common ancestors
-#pragma warning(push)
-#pragma warning(disable:4996) // VC12+ deprecates GetVersionEx
-  OSVERSIONINFO info = { sizeof(OSVERSIONINFO) };
-=======
 #  pragma warning(push)
 #  pragma warning(disable : 4996)  // VC12+ deprecates GetVersionEx
   OSVERSIONINFO info = {sizeof(OSVERSIONINFO)};
->>>>>>> upstream-releases
   if (GetVersionEx(&info)) {
     nsTextFormatter::ssprintf(osVersion, u"%ld.%ld", info.dwMajorVersion,
                               info.dwMinorVersion);

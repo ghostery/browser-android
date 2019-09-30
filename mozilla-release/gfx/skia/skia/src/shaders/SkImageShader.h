@@ -23,15 +23,6 @@ public:
 
     bool isOpaque() const override;
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkImageShader)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkImageShader)
-
-=======
->>>>>>> upstream-releases
 #if SK_SUPPORT_GPU
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif

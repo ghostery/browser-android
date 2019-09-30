@@ -5,13 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #ifdef MOZ_VALGRIND
-<<<<<<< HEAD
-#include <valgrind/memcheck.h>
-||||||| merged common ancestors
-# include <valgrind/memcheck.h>
-=======
 #  include <valgrind/memcheck.h>
->>>>>>> upstream-releases
 #endif
 
 #include "jstypes.h"
@@ -77,28 +71,12 @@ static inline void TraceExactStackRootList(JSTracer* trc,
   }
 }
 
-<<<<<<< HEAD
-static inline void TraceStackRoots(JSTracer* trc,
-                                   JS::RootedListHeads& stackRoots) {
-#define TRACE_ROOTS(name, type, _)                                    \
-  TraceExactStackRootList<type*>(trc, stackRoots[JS::RootKind::name], \
-                                 "exact-" #name);
-  JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
-||||||| merged common ancestors
-static inline void
-TraceStackRoots(JSTracer* trc, JS::RootedListHeads& stackRoots)
-{
-#define TRACE_ROOTS(name, type, _) \
-    TraceExactStackRootList<type*>(trc, stackRoots[JS::RootKind::name], "exact-" #name);
-JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
-=======
 static inline void TraceStackRoots(JSTracer* trc,
                                    JS::RootedListHeads& stackRoots) {
 #define TRACE_ROOTS(name, type, _, _1)                                \
   TraceExactStackRootList<type*>(trc, stackRoots[JS::RootKind::name], \
                                  "exact-" #name);
   JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
->>>>>>> upstream-releases
 #undef TRACE_ROOTS
   TraceExactStackRootList<jsid>(trc, stackRoots[JS::RootKind::Id], "exact-id");
   TraceExactStackRootList<Value>(trc, stackRoots[JS::RootKind::Value],
@@ -129,26 +107,11 @@ static inline void TracePersistentRootedList(
   }
 }
 
-<<<<<<< HEAD
-void JSRuntime::tracePersistentRoots(JSTracer* trc) {
-#define TRACE_ROOTS(name, type, _)                                           \
-  TracePersistentRootedList<type*>(trc, heapRoots.ref()[JS::RootKind::name], \
-                                   "persistent-" #name);
-  JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
-||||||| merged common ancestors
-void
-JSRuntime::tracePersistentRoots(JSTracer* trc)
-{
-#define TRACE_ROOTS(name, type, _) \
-    TracePersistentRootedList<type*>(trc, heapRoots.ref()[JS::RootKind::name], "persistent-" #name);
-JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
-=======
 void JSRuntime::tracePersistentRoots(JSTracer* trc) {
 #define TRACE_ROOTS(name, type, _, _1)                                       \
   TracePersistentRootedList<type*>(trc, heapRoots.ref()[JS::RootKind::name], \
                                    "persistent-" #name);
   JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
->>>>>>> upstream-releases
 #undef TRACE_ROOTS
   TracePersistentRootedList<jsid>(trc, heapRoots.ref()[JS::RootKind::Id],
                                   "persistent-id");
@@ -176,24 +139,10 @@ static void FinishPersistentRootedChain(
   }
 }
 
-<<<<<<< HEAD
-void JSRuntime::finishPersistentRoots() {
-#define FINISH_ROOT_LIST(name, type, _) \
-  FinishPersistentRootedChain<type*>(heapRoots.ref()[JS::RootKind::name]);
-  JS_FOR_EACH_TRACEKIND(FINISH_ROOT_LIST)
-||||||| merged common ancestors
-void
-JSRuntime::finishPersistentRoots()
-{
-#define FINISH_ROOT_LIST(name, type, _)                                 \
-    FinishPersistentRootedChain<type*>(heapRoots.ref()[JS::RootKind::name]);
-JS_FOR_EACH_TRACEKIND(FINISH_ROOT_LIST)
-=======
 void JSRuntime::finishPersistentRoots() {
 #define FINISH_ROOT_LIST(name, type, _, _1) \
   FinishPersistentRootedChain<type*>(heapRoots.ref()[JS::RootKind::name]);
   JS_FOR_EACH_TRACEKIND(FINISH_ROOT_LIST)
->>>>>>> upstream-releases
 #undef FINISH_ROOT_LIST
   FinishPersistentRootedChain<jsid>(heapRoots.ref()[JS::RootKind::Id]);
   FinishPersistentRootedChain<Value>(heapRoots.ref()[JS::RootKind::Value]);
@@ -210,38 +159,6 @@ inline void AutoGCRooter::trace(JSTracer* trc) {
       return;
 
 #if defined(JS_BUILD_BINAST)
-<<<<<<< HEAD
-    case Tag::BinParser:
-      frontend::TraceBinParser(trc, this);
-      return;
-#endif  // defined(JS_BUILD_BINAST)
-
-    case Tag::ValueArray: {
-      /*
-       * We don't know the template size parameter, but we can safely treat it
-       * as an AutoValueArray<1> because the length is stored separately.
-       */
-      AutoValueArray<1>* array = static_cast<AutoValueArray<1>*>(this);
-      TraceRootRange(trc, array->length(), array->begin(),
-                     "js::AutoValueArray");
-      return;
-    }
-||||||| merged common ancestors
-      case Tag::BinParser:
-        frontend::TraceBinParser(trc, this);
-        return;
-#endif // defined(JS_BUILD_BINAST)
-
-      case Tag::ValueArray: {
-        /*
-         * We don't know the template size parameter, but we can safely treat it
-         * as an AutoValueArray<1> because the length is stored separately.
-         */
-        AutoValueArray<1>* array = static_cast<AutoValueArray<1>*>(this);
-        TraceRootRange(trc, array->length(), array->begin(), "js::AutoValueArray");
-        return;
-      }
-=======
     case Tag::BinASTParser:
       frontend::TraceBinASTParser(trc, this);
       return;
@@ -257,7 +174,6 @@ inline void AutoGCRooter::trace(JSTracer* trc) {
                      "js::AutoValueArray");
       return;
     }
->>>>>>> upstream-releases
 
     case Tag::Wrapper: {
       /*
@@ -301,47 +217,18 @@ inline void AutoGCRooter::trace(JSTracer* trc) {
   MOZ_CRASH("Bad AutoGCRooter::Tag");
 }
 
-<<<<<<< HEAD
-/* static */ void AutoGCRooter::traceAll(JSContext* cx, JSTracer* trc) {
-  for (AutoGCRooter* gcr = cx->autoGCRooters_; gcr; gcr = gcr->down) {
-    gcr->trace(trc);
-  }
-||||||| merged common ancestors
-/* static */ void
-AutoGCRooter::traceAll(JSContext* cx, JSTracer* trc)
-{
-    for (AutoGCRooter* gcr = cx->autoGCRooters_; gcr; gcr = gcr->down) {
-        gcr->trace(trc);
-    }
-=======
 /* static */
 void AutoGCRooter::traceAll(JSContext* cx, JSTracer* trc) {
   for (AutoGCRooter* gcr = cx->autoGCRooters_; gcr; gcr = gcr->down) {
     gcr->trace(trc);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void AutoGCRooter::traceAllWrappers(JSContext* cx, JSTracer* trc) {
-  for (AutoGCRooter* gcr = cx->autoGCRooters_; gcr; gcr = gcr->down) {
-    if (gcr->tag_ == Tag::WrapperVector || gcr->tag_ == Tag::Wrapper) {
-      gcr->trace(trc);
-||||||| merged common ancestors
-/* static */ void
-AutoGCRooter::traceAllWrappers(JSContext* cx, JSTracer* trc)
-{
-    for (AutoGCRooter* gcr = cx->autoGCRooters_; gcr; gcr = gcr->down) {
-        if (gcr->tag_ == Tag::WrapperVector || gcr->tag_ == Tag::Wrapper) {
-            gcr->trace(trc);
-        }
-=======
 /* static */
 void AutoGCRooter::traceAllWrappers(JSContext* cx, JSTracer* trc) {
   for (AutoGCRooter* gcr = cx->autoGCRooters_; gcr; gcr = gcr->down) {
     if (gcr->tag_ == Tag::WrapperVector || gcr->tag_ == Tag::Wrapper) {
       gcr->trace(trc);
->>>>>>> upstream-releases
     }
   }
 }
@@ -476,10 +363,6 @@ void js::gc::GCRuntime::traceRuntimeCommon(JSTracer* trc,
       const RootEntry& entry = r.front();
       TraceRoot(trc, entry.key(), entry.value());
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   }
 
   // Trace runtime global roots.
@@ -490,57 +373,10 @@ void js::gc::GCRuntime::traceRuntimeCommon(JSTracer* trc,
 
   // Trace the shared Intl data.
   rt->traceSharedIntlData(trc);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Trace runtime global roots.
-  TracePersistentRooted(rt, trc);
-||||||| merged common ancestors
-    // Trace runtime global roots.
-    TracePersistentRooted(rt, trc);
-=======
   // Trace the JSContext.
   rt->mainContextFromOwnThread()->trace(trc);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Trace the self-hosting global compartment.
-  rt->traceSelfHostingGlobal(trc);
-||||||| merged common ancestors
-    // Trace the self-hosting global compartment.
-    rt->traceSelfHostingGlobal(trc);
-=======
-  // Trace all realm roots, but not the realm itself; it is traced via the
-  // parent pointer if traceRoots actually traces anything.
-  for (RealmsIter r(rt); !r.done(); r.next()) {
-    r->traceRoots(trc, traceOrMark);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Trace the shared Intl data.
-  rt->traceSharedIntlData(trc);
-||||||| merged common ancestors
-    // Trace the shared Intl data.
-    rt->traceSharedIntlData(trc);
-=======
-  // Trace helper thread roots.
-  HelperThreadState().trace(trc);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Trace the JSContext.
-  rt->mainContextFromOwnThread()->trace(trc);
-||||||| merged common ancestors
-    // Trace the JSContext.
-    rt->mainContextFromOwnThread()->trace(trc);
-=======
-  // Trace the embedding's black and gray roots.
-  if (!JS::RuntimeHeapIsMinorCollecting()) {
-    gcstats::AutoPhase ap(stats(), gcstats::PhaseKind::MARK_EMBEDDING);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Trace all realm roots, but not the realm itself; it is traced via the
   // parent pointer if traceRoots actually traces anything.
   for (RealmsIter r(rt); !r.done(); r.next()) {
@@ -567,26 +403,6 @@ void js::gc::GCRuntime::traceRuntimeCommon(JSTracer* trc,
     for (size_t i = 0; i < blackRootTracers.ref().length(); i++) {
       const Callback<JSTraceDataOp>& e = blackRootTracers.ref()[i];
       (*e.op)(trc, e.data);
-||||||| merged common ancestors
-    // Trace all realm roots, but not the realm itself; it is traced via the
-    // parent pointer if traceRoots actually traces anything.
-    for (RealmsIter r(rt); !r.done(); r.next()) {
-        r->traceRoots(trc, traceOrMark);
-=======
-    // The analysis doesn't like the function pointers below.
-    JS::AutoSuppressGCAnalysis nogc;
-
-    /*
-     * The embedding can register additional roots here.
-     *
-     * We don't need to trace these in a minor GC because all pointers into
-     * the nursery should be in the store buffer, and we want to avoid the
-     * time taken to trace all these roots.
-     */
-    for (size_t i = 0; i < blackRootTracers.ref().length(); i++) {
-      const Callback<JSTraceDataOp>& e = blackRootTracers.ref()[i];
-      (*e.op)(trc, e.data);
->>>>>>> upstream-releases
     }
 
     /* During GC, we don't trace gray roots at this stage. */
@@ -599,27 +415,6 @@ void js::gc::GCRuntime::traceRuntimeCommon(JSTracer* trc,
 }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-class AssertNoRootsTracer : public JS::CallbackTracer {
-  void onChild(const JS::GCCellPtr& thing) override {
-    MOZ_CRASH("There should not be any roots after finishRoots");
-  }
-
- public:
-  AssertNoRootsTracer(JSRuntime* rt, WeakMapTraceKind weakTraceKind)
-      : JS::CallbackTracer(rt, weakTraceKind) {}
-||||||| merged common ancestors
-class AssertNoRootsTracer : public JS::CallbackTracer
-{
-    void onChild(const JS::GCCellPtr& thing) override {
-        MOZ_CRASH("There should not be any roots after finishRoots");
-    }
-
-  public:
-    AssertNoRootsTracer(JSRuntime* rt, WeakMapTraceKind weakTraceKind)
-      : JS::CallbackTracer(rt, weakTraceKind)
-    {}
-=======
 class AssertNoRootsTracer final : public JS::CallbackTracer {
   void onChild(const JS::GCCellPtr& thing) override {
     MOZ_CRASH("There should not be any roots after finishRoots");
@@ -628,7 +423,6 @@ class AssertNoRootsTracer final : public JS::CallbackTracer {
  public:
   AssertNoRootsTracer(JSRuntime* rt, WeakMapTraceKind weakTraceKind)
       : JS::CallbackTracer(rt, weakTraceKind) {}
->>>>>>> upstream-releases
 };
 #endif  // DEBUG
 
@@ -666,7 +460,6 @@ void js::gc::GCRuntime::finishRoots() {
 
 // Append traced things to a buffer on the zone for use later in the GC.
 // See the comment in GCRuntime.h above grayBufferState for details.
-<<<<<<< HEAD
 class BufferGrayRootsTracer final : public JS::CallbackTracer {
   // Set to false if we OOM while buffering gray roots.
   bool bufferingGrayRootsFailed;
@@ -675,169 +468,29 @@ class BufferGrayRootsTracer final : public JS::CallbackTracer {
   void onStringEdge(JSString** stringp) override { bufferRoot(*stringp); }
   void onScriptEdge(JSScript** scriptp) override { bufferRoot(*scriptp); }
   void onSymbolEdge(JS::Symbol** symbolp) override { bufferRoot(*symbolp); }
-#ifdef ENABLE_BIGINT
   void onBigIntEdge(JS::BigInt** bip) override { bufferRoot(*bip); }
-#endif
-||||||| merged common ancestors
-class BufferGrayRootsTracer final : public JS::CallbackTracer
-{
-    // Set to false if we OOM while buffering gray roots.
-    bool bufferingGrayRootsFailed;
 
-    void onObjectEdge(JSObject** objp) override { bufferRoot(*objp); }
-    void onStringEdge(JSString** stringp) override { bufferRoot(*stringp); }
-    void onScriptEdge(JSScript** scriptp) override { bufferRoot(*scriptp); }
-    void onSymbolEdge(JS::Symbol** symbolp) override { bufferRoot(*symbolp); }
-#ifdef ENABLE_BIGINT
-    void onBigIntEdge(JS::BigInt** bip) override { bufferRoot(*bip); }
-#endif
-=======
-class BufferGrayRootsTracer final : public JS::CallbackTracer {
-  // Set to false if we OOM while buffering gray roots.
-  bool bufferingGrayRootsFailed;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   void onChild(const JS::GCCellPtr& thing) override {
     MOZ_CRASH("Unexpected gray root kind");
   }
-||||||| merged common ancestors
-    void onChild(const JS::GCCellPtr& thing) override {
-        MOZ_CRASH("Unexpected gray root kind");
-    }
-=======
-  void onObjectEdge(JSObject** objp) override { bufferRoot(*objp); }
-  void onStringEdge(JSString** stringp) override { bufferRoot(*stringp); }
-  void onScriptEdge(JSScript** scriptp) override { bufferRoot(*scriptp); }
-  void onSymbolEdge(JS::Symbol** symbolp) override { bufferRoot(*symbolp); }
-  void onBigIntEdge(JS::BigInt** bip) override { bufferRoot(*bip); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   template <typename T>
   inline void bufferRoot(T* thing);
-||||||| merged common ancestors
-    template <typename T> inline void bufferRoot(T* thing);
-=======
-  void onChild(const JS::GCCellPtr& thing) override {
-    MOZ_CRASH("Unexpected gray root kind");
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
  public:
   explicit BufferGrayRootsTracer(JSRuntime* rt)
       : JS::CallbackTracer(rt), bufferingGrayRootsFailed(false) {}
-||||||| merged common ancestors
-  public:
-    explicit BufferGrayRootsTracer(JSRuntime* rt)
-      : JS::CallbackTracer(rt), bufferingGrayRootsFailed(false)
-    {}
-=======
-  template <typename T>
-  inline void bufferRoot(T* thing);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   bool failed() const { return bufferingGrayRootsFailed; }
   void setFailed() { bufferingGrayRootsFailed = true; }
-||||||| merged common ancestors
-    bool failed() const { return bufferingGrayRootsFailed; }
-    void setFailed() { bufferingGrayRootsFailed = true; }
-=======
- public:
-  explicit BufferGrayRootsTracer(JSRuntime* rt)
-      : JS::CallbackTracer(rt), bufferingGrayRootsFailed(false) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 #ifdef DEBUG
   TracerKind getTracerKind() const override {
     return TracerKind::GrayBuffering;
   }
 #endif
 };
-||||||| merged common ancestors
-#ifdef DEBUG
-    TracerKind getTracerKind() const override { return TracerKind::GrayBuffering; }
-#endif
-};
-=======
-  bool failed() const { return bufferingGrayRootsFailed; }
-  void setFailed() { bufferingGrayRootsFailed = true; }
->>>>>>> upstream-releases
 
-#ifdef DEBUG
-<<<<<<< HEAD
-// Return true if this trace is happening on behalf of gray buffering during
-// the marking phase of incremental GC.
-bool js::IsBufferGrayRootsTracer(JSTracer* trc) {
-  return trc->isCallbackTracer() &&
-         trc->asCallbackTracer()->getTracerKind() ==
-             JS::CallbackTracer::TracerKind::GrayBuffering;
-}
-||||||| merged common ancestors
-// Return true if this trace is happening on behalf of gray buffering during
-// the marking phase of incremental GC.
-bool
-js::IsBufferGrayRootsTracer(JSTracer* trc)
-{
-    return trc->isCallbackTracer() &&
-           trc->asCallbackTracer()->getTracerKind() == JS::CallbackTracer::TracerKind::GrayBuffering;
-}
-=======
-  TracerKind getTracerKind() const override {
-    return TracerKind::GrayBuffering;
-  }
->>>>>>> upstream-releases
-#endif
-};
-
-<<<<<<< HEAD
-void js::gc::GCRuntime::bufferGrayRoots() {
-  // Precondition: the state has been reset to "unused" after the last GC
-  //               and the zone's buffers have been cleared.
-  MOZ_ASSERT(grayBufferState == GrayBufferState::Unused);
-  for (GCZonesIter zone(rt); !zone.done(); zone.next()) {
-    MOZ_ASSERT(zone->gcGrayRoots().empty());
-  }
-
-  BufferGrayRootsTracer grayBufferer(rt);
-  if (JSTraceDataOp op = grayRootTracer.op) {
-    (*op)(&grayBufferer, grayRootTracer.data);
-  }
-
-  // Propagate the failure flag from the marker to the runtime.
-  if (grayBufferer.failed()) {
-    grayBufferState = GrayBufferState::Failed;
-    resetBufferedGrayRoots();
-  } else {
-    grayBufferState = GrayBufferState::Okay;
-  }
-||||||| merged common ancestors
-void
-js::gc::GCRuntime::bufferGrayRoots()
-{
-    // Precondition: the state has been reset to "unused" after the last GC
-    //               and the zone's buffers have been cleared.
-    MOZ_ASSERT(grayBufferState == GrayBufferState::Unused);
-    for (GCZonesIter zone(rt); !zone.done(); zone.next()) {
-        MOZ_ASSERT(zone->gcGrayRoots().empty());
-    }
-
-    BufferGrayRootsTracer grayBufferer(rt);
-    if (JSTraceDataOp op = grayRootTracer.op) {
-        (*op)(&grayBufferer, grayRootTracer.data);
-    }
-
-    // Propagate the failure flag from the marker to the runtime.
-    if (grayBufferer.failed()) {
-      grayBufferState = GrayBufferState::Failed;
-      resetBufferedGrayRoots();
-    } else {
-      grayBufferState = GrayBufferState::Okay;
-    }
-=======
 void js::gc::GCRuntime::bufferGrayRoots() {
   // Precondition: the state has been reset to "unused" after the last GC
   //               and the zone's buffers have been cleared.
@@ -858,56 +511,9 @@ void js::gc::GCRuntime::bufferGrayRoots() {
   } else {
     grayBufferState = GrayBufferState::Okay;
   }
->>>>>>> upstream-releases
 }
 
 template <typename T>
-<<<<<<< HEAD
-inline void BufferGrayRootsTracer::bufferRoot(T* thing) {
-  MOZ_ASSERT(JS::RuntimeHeapIsBusy());
-  MOZ_ASSERT(thing);
-  // Check if |thing| is corrupt by calling a method that touches the heap.
-  MOZ_ASSERT(thing->getTraceKind() != JS::TraceKind(0xff));
-
-  TenuredCell* tenured = &thing->asTenured();
-
-  // This is run from a helper thread while the mutator is paused so we have
-  // to use *FromAnyThread methods here.
-  Zone* zone = tenured->zoneFromAnyThread();
-  if (zone->isCollectingFromAnyThread()) {
-    // See the comment on SetMaybeAliveFlag to see why we only do this for
-    // objects and scripts. We rely on gray root buffering for this to work,
-    // but we only need to worry about uncollected dead compartments during
-    // incremental GCs (when we do gray root buffering).
-    SetMaybeAliveFlag(thing);
-
-    if (!zone->gcGrayRoots().append(tenured)) {
-      bufferingGrayRootsFailed = true;
-||||||| merged common ancestors
-inline void
-BufferGrayRootsTracer::bufferRoot(T* thing)
-{
-    MOZ_ASSERT(JS::RuntimeHeapIsBusy());
-    MOZ_ASSERT(thing);
-    // Check if |thing| is corrupt by calling a method that touches the heap.
-    MOZ_ASSERT(thing->getTraceKind() != JS::TraceKind(0xff));
-
-    TenuredCell* tenured = &thing->asTenured();
-
-    // This is run from a helper thread while the mutator is paused so we have
-    // to use *FromAnyThread methods here.
-    Zone* zone = tenured->zoneFromAnyThread();
-    if (zone->isCollectingFromAnyThread()) {
-        // See the comment on SetMaybeAliveFlag to see why we only do this for
-        // objects and scripts. We rely on gray root buffering for this to work,
-        // but we only need to worry about uncollected dead compartments during
-        // incremental GCs (when we do gray root buffering).
-        SetMaybeAliveFlag(thing);
-
-        if (!zone->gcGrayRoots().append(tenured)) {
-            bufferingGrayRootsFailed = true;
-        }
-=======
 inline void BufferGrayRootsTracer::bufferRoot(T* thing) {
   MOZ_ASSERT(JS::RuntimeHeapIsBusy());
   MOZ_ASSERT(thing);
@@ -928,80 +534,30 @@ inline void BufferGrayRootsTracer::bufferRoot(T* thing) {
 
     if (!zone->gcGrayRoots().Append(tenured)) {
       bufferingGrayRootsFailed = true;
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-void GCRuntime::markBufferedGrayRoots(JS::Zone* zone) {
-  MOZ_ASSERT(grayBufferState == GrayBufferState::Okay);
-  MOZ_ASSERT(zone->isGCMarkingGray() || zone->isGCCompacting());
-||||||| merged common ancestors
-void
-GCRuntime::markBufferedGrayRoots(JS::Zone* zone)
-{
-    MOZ_ASSERT(grayBufferState == GrayBufferState::Okay);
-    MOZ_ASSERT(zone->isGCMarkingGray() || zone->isGCCompacting());
-=======
 void GCRuntime::markBufferedGrayRoots(JS::Zone* zone) {
   MOZ_ASSERT(grayBufferState == GrayBufferState::Okay);
   MOZ_ASSERT(zone->isGCMarkingBlackAndGray() || zone->isGCCompacting());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto& roots = zone->gcGrayRoots();
-  if (roots.empty()) {
-    return;
-  }
-||||||| merged common ancestors
-    auto& roots = zone->gcGrayRoots();
-    if (roots.empty()) {
-        return;
-    }
-=======
   auto& roots = zone->gcGrayRoots();
   if (roots.IsEmpty()) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (size_t i = 0; i < roots.length(); i++) {
-    Cell* cell = roots[i];
-||||||| merged common ancestors
-    for (size_t i = 0; i < roots.length(); i++) {
-        Cell* cell = roots[i];
-=======
   for (auto iter = roots.Iter(); !iter.Done(); iter.Next()) {
     Cell* cell = iter.Get();
->>>>>>> upstream-releases
 
     // Bug 1203273: Check for bad pointers on OSX and output diagnostics.
 #if defined(XP_DARWIN) && defined(MOZ_DIAGNOSTIC_ASSERT_ENABLED)
-<<<<<<< HEAD
-    auto addr = uintptr_t(cell);
-    if (addr < ChunkSize || addr % CellAlignBytes != 0) {
-      MOZ_CRASH_UNSAFE_PRINTF(
-          "Bad GC thing pointer in gray root buffer: %p at index %zu of %zu, "
-          "address %p",
-          cell, i, roots.length(), &roots[i]);
-    }
-||||||| merged common ancestors
-        auto addr = uintptr_t(cell);
-        if (addr < ChunkSize || addr % CellAlignBytes != 0) {
-            MOZ_CRASH_UNSAFE_PRINTF(
-                "Bad GC thing pointer in gray root buffer: %p at index %zu of %zu, address %p",
-                cell, i, roots.length(), &roots[i]);
-        }
-=======
     auto addr = uintptr_t(cell);
     if (addr < ChunkSize || addr % CellAlignBytes != 0) {
       MOZ_CRASH_UNSAFE_PRINTF(
           "Bad GC thing pointer in gray root buffer: %p at address %p", cell,
           &iter.Get());
     }
->>>>>>> upstream-releases
 #else
     MOZ_ASSERT(IsCellPointerValid(cell));
 #endif
@@ -1011,24 +567,6 @@ void GCRuntime::markBufferedGrayRoots(JS::Zone* zone) {
   }
 }
 
-<<<<<<< HEAD
-void GCRuntime::resetBufferedGrayRoots() const {
-  MOZ_ASSERT(
-      grayBufferState != GrayBufferState::Okay,
-      "Do not clear the gray buffers unless we are Failed or becoming Unused");
-  for (GCZonesIter zone(rt); !zone.done(); zone.next()) {
-    zone->gcGrayRoots().clearAndFree();
-  }
-||||||| merged common ancestors
-void
-GCRuntime::resetBufferedGrayRoots() const
-{
-    MOZ_ASSERT(grayBufferState != GrayBufferState::Okay,
-               "Do not clear the gray buffers unless we are Failed or becoming Unused");
-    for (GCZonesIter zone(rt); !zone.done(); zone.next()) {
-        zone->gcGrayRoots().clearAndFree();
-    }
-=======
 void GCRuntime::resetBufferedGrayRoots() const {
   MOZ_ASSERT(
       grayBufferState != GrayBufferState::Okay,
@@ -1036,7 +574,6 @@ void GCRuntime::resetBufferedGrayRoots() const {
   for (GCZonesIter zone(rt); !zone.done(); zone.next()) {
     zone->gcGrayRoots().Clear();
   }
->>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API void JS::AddPersistentRoot(JS::RootingContext* cx, RootKind kind,

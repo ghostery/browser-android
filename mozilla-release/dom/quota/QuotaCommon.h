@@ -24,21 +24,6 @@
 #define USING_QUOTA_NAMESPACE using namespace mozilla::dom::quota;
 
 #define DSSTORE_FILE_NAME ".DS_Store"
-<<<<<<< HEAD
-
-#define QM_WARNING(...)                                                      \
-  do {                                                                       \
-    nsPrintfCString str(__VA_ARGS__);                                        \
-    mozilla::dom::quota::ReportInternalError(__FILE__, __LINE__, str.get()); \
-    NS_WARNING(str.get());                                                   \
-||||||| merged common ancestors
-
-#define QM_WARNING(...)                                                        \
-  do {                                                                         \
-    nsPrintfCString str(__VA_ARGS__);                                          \
-    mozilla::dom::quota::ReportInternalError(__FILE__, __LINE__, str.get());   \
-    NS_WARNING(str.get());                                                     \
-=======
 #define DESKTOP_FILE_NAME ".desktop"
 #define DESKTOP_INI_FILE_NAME "desktop.ini"
 #define THUMBS_DB_FILE_NAME "thumbs.db"
@@ -48,7 +33,6 @@
     nsPrintfCString str(__VA_ARGS__);                                        \
     mozilla::dom::quota::ReportInternalError(__FILE__, __LINE__, str.get()); \
     NS_WARNING(str.get());                                                   \
->>>>>>> upstream-releases
   } while (0)
 
 // Telemetry probes to collect number of failure during the initialization.
@@ -95,14 +79,6 @@ class nsIEventTarget;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-class BackgroundThreadObject {
- protected:
-||||||| merged common ancestors
-class BackgroundThreadObject
-{
-protected:
-=======
 class LogModule;
 
 namespace dom {
@@ -120,7 +96,6 @@ extern const nsLiteralCString kExternalError;
 
 class BackgroundThreadObject {
  protected:
->>>>>>> upstream-releases
   nsCOMPtr<nsIEventTarget> mOwningThread;
 
  public:
@@ -140,12 +115,6 @@ class BackgroundThreadObject {
   explicit BackgroundThreadObject(nsIEventTarget* aOwningThread);
 };
 
-<<<<<<< HEAD
-void AssertIsOnIOThread();
-||||||| merged common ancestors
-void
-AssertIsOnIOThread();
-=======
 void AssertIsOnIOThread();
 
 void AssertCurrentThreadOwnsQuotaMutex();
@@ -153,34 +122,12 @@ void AssertCurrentThreadOwnsQuotaMutex();
 bool IsOnIOThread();
 
 void ReportInternalError(const char* aFile, uint32_t aLine, const char* aStr);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void AssertCurrentThreadOwnsQuotaMutex();
-||||||| merged common ancestors
-void
-AssertCurrentThreadOwnsQuotaMutex();
-=======
 LogModule* GetQuotaManagerLogger();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool IsOnIOThread();
-||||||| merged common ancestors
-bool
-IsOnIOThread();
-=======
 void SanitizeCString(nsACString& aString);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void ReportInternalError(const char* aFile, uint32_t aLine, const char* aStr);
-||||||| merged common ancestors
-void
-ReportInternalError(const char* aFile, uint32_t aLine, const char* aStr);
-=======
 void SanitizeOrigin(nsACString& aOrigin);
->>>>>>> upstream-releases
 
 }  // namespace quota
 }  // namespace dom

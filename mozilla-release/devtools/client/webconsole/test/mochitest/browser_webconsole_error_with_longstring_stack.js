@@ -22,22 +22,6 @@ add_task(async function() {
   const errorNode = msgNode.querySelector(".objectBox-stackTrace");
   ok(errorNode, "The error object is logged as expected");
   ok(errorNode.textContent.includes("longString stack"));
-<<<<<<< HEAD
-
-  info("Wait until the stacktrace gets rendered");
-  const stackTraceElement = await waitFor(() => errorNode.querySelector(".frames"));
-
-  ok(stackTraceElement, "There's a stacktrace element");
-  ok(stackTraceElement.querySelectorAll(".frame .title").length > 0,
-    "Frames functions are displayed");
-  ok(stackTraceElement.querySelectorAll(".frame .location").length > 0,
-    "Frames location are displayed");
-||||||| merged common ancestors
-  ok(errorNode.querySelectorAll(".objectBox-stackTrace-fn").length > 0,
-    "Frames functions are displayed");
-  ok(errorNode.querySelectorAll(".objectBox-stackTrace-location").length > 0,
-    "Frames location are displayed");
-=======
 
   info("Wait until the stacktrace gets rendered");
   const stackTraceElement = await waitFor(() =>
@@ -53,5 +37,4 @@ add_task(async function() {
     stackTraceElement.querySelectorAll(".frame .location").length > 0,
     "Frames location are displayed"
   );
->>>>>>> upstream-releases
 });

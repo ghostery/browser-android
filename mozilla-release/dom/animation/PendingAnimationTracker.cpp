@@ -10,14 +10,7 @@
 #include "mozilla/dom/AnimationTimeline.h"
 #include "mozilla/dom/Nullable.h"
 #include "nsIFrame.h"
-<<<<<<< HEAD
-#include "nsIPresShell.h"
 #include "nsTransitionManager.h"  // For CSSTransition
-||||||| merged common ancestors
-#include "nsIPresShell.h"
-=======
-#include "nsTransitionManager.h"  // For CSSTransition
->>>>>>> upstream-releases
 
 using mozilla::dom::Nullable;
 
@@ -103,31 +96,6 @@ void PendingAnimationTracker::TriggerPendingAnimationsNow() {
   mHasPlayPendingGeometricAnimations = CheckState::Absent;
 }
 
-<<<<<<< HEAD
-static bool IsTransition(const Animation& aAnimation) {
-  const dom::CSSTransition* transition = aAnimation.AsCSSTransition();
-  return transition && transition->IsTiedToMarkup();
-}
-
-void PendingAnimationTracker::MarkAnimationsThatMightNeedSynchronization() {
-  // We only set mHasPlayPendingGeometricAnimations to "present" in this method
-  // and nowhere else. After setting the state to "present", if there is any
-  // change to the set of play-pending animations we will reset
-  // mHasPlayPendingGeometricAnimations to either "indeterminate" or "absent".
-  //
-  // As a result, if mHasPlayPendingGeometricAnimations is "present", we can
-  // assume that this method has already been called for the current set of
-  // play-pending animations and it is not necessary to run this method again.
-||||||| merged common ancestors
-void
-PendingAnimationTracker::MarkAnimationsThatMightNeedSynchronization()
-{
-  // We only ever set mHasPlayPendingGeometricAnimations to 'present' in
-  // HasPlayPendingGeometricAnimations(). So, if it is 'present' already,
-  // (i.e. before calling HasPlayPendingGeometricAnimations()) we can assume
-  // that this method has already been called for the current set of
-  // play-pending animations and it is not necessary to run again.
-=======
 static bool IsTransition(const dom::Animation& aAnimation) {
   const dom::CSSTransition* transition = aAnimation.AsCSSTransition();
   return transition && transition->IsTiedToMarkup();
@@ -142,7 +110,6 @@ void PendingAnimationTracker::MarkAnimationsThatMightNeedSynchronization() {
   // As a result, if mHasPlayPendingGeometricAnimations is "present", we can
   // assume that this method has already been called for the current set of
   // play-pending animations and it is not necessary to run this method again.
->>>>>>> upstream-releases
   //
   // If mHasPlayPendingGeometricAnimations is "absent", then we can also skip
   // the body of this method since there are no notifications to be sent.

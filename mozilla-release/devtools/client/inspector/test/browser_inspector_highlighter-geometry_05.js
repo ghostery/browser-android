@@ -13,121 +13,6 @@ const TEST_URL = URL_ROOT + "doc_inspector_highlighter-geometry_02.html";
 const ID = "geometry-editor-";
 const HIGHLIGHTER_TYPE = "GeometryEditorHighlighter";
 
-<<<<<<< HEAD
-const TEST_DATA = [{
-  selector: "body",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: false,
-  hasVisibleArrowsAndHandlers: false,
-}, {
-  selector: "h1",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: false,
-  hasVisibleArrowsAndHandlers: false,
-}, {
-  selector: ".absolute",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true,
-}, {
-  selector: "#absolute-container",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: false,
-}, {
-  selector: ".absolute-bottom-right",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true,
-}, {
-  selector: ".absolute-width-margin",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true,
-}, {
-  selector: ".absolute-all-4",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true,
-}, {
-  selector: ".relative",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true,
-}, {
-  selector: ".static",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: false,
-  hasVisibleArrowsAndHandlers: false,
-}, {
-  selector: ".static-size",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: false,
-}, {
-  selector: ".fixed",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true,
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  selector: "body",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: false,
-  hasVisibleArrowsAndHandlers: false
-}, {
-  selector: "h1",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: false,
-  hasVisibleArrowsAndHandlers: false
-}, {
-  selector: ".absolute",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true
-}, {
-  selector: "#absolute-container",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: false
-}, {
-  selector: ".absolute-bottom-right",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true
-}, {
-  selector: ".absolute-width-margin",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true
-}, {
-  selector: ".absolute-all-4",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true
-}, {
-  selector: ".relative",
-  isOffsetParentVisible: true,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true
-}, {
-  selector: ".static",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: false,
-  hasVisibleArrowsAndHandlers: false
-}, {
-  selector: ".static-size",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: false
-}, {
-  selector: ".fixed",
-  isOffsetParentVisible: false,
-  isCurrentNodeVisible: true,
-  hasVisibleArrowsAndHandlers: true
-}];
-=======
 const TEST_DATA = [
   {
     selector: "body",
@@ -196,7 +81,6 @@ const TEST_DATA = [
     hasVisibleArrowsAndHandlers: true,
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const helper = await openInspectorForURL(TEST_URL).then(

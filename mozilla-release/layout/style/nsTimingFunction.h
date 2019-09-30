@@ -20,26 +20,9 @@ struct nsTimingFunction {
       : mTiming(mozilla::StyleComputedTimingFunction::CubicBezier(x1, y1, x2,
                                                                   y2)) {}
 
-<<<<<<< HEAD
-  bool IsLinear() const {
-    return mTiming.IsKeyword() &&
-           mTiming.keyword._0 == mozilla::StyleTimingKeyword::Linear;
-||||||| merged common ancestors
-  enum class Keyword { Implicit, Explicit };
-
-  nsTimingFunction(Type aType, uint32_t aStepsOrFrames)
-    : mType(aType)
-  {
-    MOZ_ASSERT(mType == Type::StepStart ||
-               mType == Type::StepEnd ||
-               mType == Type::Frames,
-               "wrong type");
-    mStepsOrFrames = aStepsOrFrames;
-=======
   bool IsLinear() const {
     return mTiming.IsKeyword() &&
            mTiming.AsKeyword() == mozilla::StyleTimingKeyword::Linear;
->>>>>>> upstream-releases
   }
 
   bool operator==(const nsTimingFunction& aOther) const {

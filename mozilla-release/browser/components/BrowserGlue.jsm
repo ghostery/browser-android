@@ -312,16 +312,6 @@ let LEGACY_ACTORS = {
     },
   },
 
-  SearchTelemetry: {
-    child: {
-      module: "resource:///actors/SearchTelemetryChild.jsm",
-      events: {
-        DOMContentLoaded: {},
-        "pageshow": {mozSystemGroup: true},
-      },
-    },
-  },
-
   ShieldFrame: {
     child: {
       module: "resource://normandy-content/ShieldFrameChild.jsm",
@@ -480,23 +470,10 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   BookmarkJSONUtils: "resource://gre/modules/BookmarkJSONUtils.jsm",
   BrowserUsageTelemetry: "resource:///modules/BrowserUsageTelemetry.jsm",
   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.jsm",
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-  ContentClick: "resource:///modules/ContentClick.jsm",
-  ContextualIdentityService: "resource://gre/modules/ContextualIdentityService.jsm",
-  CustomizableUI: "resource:///modules/CustomizableUI.jsm",
-  DateTimePickerParent: "resource://gre/modules/DateTimePickerParent.jsm",
-  Discovery: "resource:///modules/Discovery.jsm",
-||||||| merged common ancestors
-  ContentClick: "resource:///modules/ContentClick.jsm",
-  ContextualIdentityService: "resource://gre/modules/ContextualIdentityService.jsm",
-  CustomizableUI: "resource:///modules/CustomizableUI.jsm",
-  DateTimePickerParent: "resource://gre/modules/DateTimePickerParent.jsm",
-=======
   ContextualIdentityService:
     "resource://gre/modules/ContextualIdentityService.jsm",
   Corroborate: "resource://gre/modules/Corroborate.jsm",
   Discovery: "resource:///modules/Discovery.jsm",
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   ExtensionsUI: "resource:///modules/ExtensionsUI.jsm",
   FxAccounts: "resource://gre/modules/FxAccounts.jsm",
   HomePage: "resource:///modules/HomePage.jsm",
@@ -1054,9 +1031,7 @@ BrowserGlue.prototype = {
         break;
       case "shield-init-complete":
         this._shieldInitComplete = true;
-        /* Cliqz start o/
         this._sendMainPingCentrePing();
-        /o Cliqz end */
         break;
     }
   },
@@ -1159,15 +1134,6 @@ BrowserGlue.prototype = {
     os.removeObserver(this, "xpi-signature-changed");
     os.removeObserver(this, "sync-ui-state:update");
     os.removeObserver(this, "shield-init-complete");
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-
-    Services.prefs.removeObserver("privacy.trackingprotection.enabled", this._matchCBCategory);
-    Services.prefs.removeObserver("privacy.trackingprotection.pbmode.enabled", this._matchCBCategory);
-    Services.prefs.removeObserver("urlclassifier.trackingTable", this._matchCBCategory);
-    Services.prefs.removeObserver("network.cookie.cookieBehavior", this._matchCBCategory);
-    Services.prefs.removeObserver(ContentBlockingCategoriesPrefs.PREF_CB_CATEGORY, this._updateCBCategory);
-||||||| merged common ancestors
-=======
 
     Services.prefs.removeObserver(
       "permissions.eventTelemetry.enabled",
@@ -1193,7 +1159,6 @@ BrowserGlue.prototype = {
       "browser.contentblocking.features.strict",
       this._setPrefExpectationsAndUpdate
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   },
 
   // runs on startup, before the first command line handler is invoked
@@ -1231,101 +1196,6 @@ BrowserGlue.prototype = {
 
     SessionStore.init();
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    let vendorShortName = gBrandBundle.GetStringFromName("vendorShortName");
-
-    LightweightThemeManager.addBuiltInTheme({
-      id: "firefox-compact-light@mozilla.org",
-      name: gBrowserBundle.GetStringFromName("lightTheme.name"),
-      description: gBrowserBundle.GetStringFromName("lightTheme.description"),
-      iconURL: "resource:///chrome/browser/content/browser/defaultthemes/light.icon.svg",
-      textcolor: "rgb(24, 25, 26)",
-      icon_color: "rgb(24, 25, 26, 0.7)",
-      accentcolor: "#E3E4E6",
-      popup: "#fff",
-      popup_text: "#0c0c0d",
-      popup_border: "#ccc",
-      tab_line: "#0a84ff",
-      toolbarColor: "#f5f6f7",
-      toolbar_bottom_separator: "#ccc",
-      toolbar_field: "#fff",
-      toolbar_field_border: "#ccc",
-      author: vendorShortName,
-    });
-    LightweightThemeManager.addBuiltInTheme({
-      id: "firefox-compact-dark@mozilla.org",
-      name: gBrowserBundle.GetStringFromName("darkTheme.name"),
-      description: gBrowserBundle.GetStringFromName("darkTheme.description"),
-      iconURL: "resource:///chrome/browser/content/browser/defaultthemes/dark.icon.svg",
-      textcolor: "rgb(249, 249, 250)",
-      icon_color: "rgb(249, 249, 250, 0.7)",
-      accentcolor: "hsl(240, 5%, 5%)",
-      popup: "#4a4a4f",
-      popup_text: "rgb(249, 249, 250)",
-      popup_border: "#27272b",
-      tab_line: "#0a84ff",
-      toolbarColor: "hsl(240, 1%, 20%)",
-      toolbar_bottom_separator: "hsl(240, 5%, 5%)",
-      toolbar_field: "rgb(71, 71, 73)",
-      toolbar_field_border: "rgba(249, 249, 250, 0.2)",
-      toolbar_field_separator: "#5F6670",
-      toolbar_field_text: "rgb(249, 249, 250)",
-      ntp_background: "#2A2A2E",
-      ntp_text: "rgb(249, 249, 250)",
-      sidebar: "#38383D",
-      sidebar_text: "rgb(249, 249, 250)",
-      sidebar_border: "rgba(255, 255, 255, 0.1)",
-      author: vendorShortName,
-    }, {
-      useInDarkMode: true,
-    });
-||||||| merged common ancestors
-    let vendorShortName = gBrandBundle.GetStringFromName("vendorShortName");
-
-    LightweightThemeManager.addBuiltInTheme({
-      id: "firefox-compact-light@mozilla.org",
-      name: gBrowserBundle.GetStringFromName("lightTheme.name"),
-      description: gBrowserBundle.GetStringFromName("lightTheme.description"),
-      iconURL: "resource:///chrome/browser/content/browser/defaultthemes/light.icon.svg",
-      textcolor: "#18191a",
-      accentcolor: "#E3E4E6",
-      popup: "#fff",
-      popup_text: "#0c0c0d",
-      popup_border: "#ccc",
-      tab_line: "#0a84ff",
-      toolbarColor: "#f5f6f7",
-      toolbar_bottom_separator: "#ccc",
-      toolbar_field: "#fff",
-      toolbar_field_border: "#ccc",
-      author: vendorShortName,
-    });
-    LightweightThemeManager.addBuiltInTheme({
-      id: "firefox-compact-dark@mozilla.org",
-      name: gBrowserBundle.GetStringFromName("darkTheme.name"),
-      description: gBrowserBundle.GetStringFromName("darkTheme.description"),
-      iconURL: "resource:///chrome/browser/content/browser/defaultthemes/dark.icon.svg",
-      textcolor: "rgb(249, 249, 250)",
-      accentcolor: "hsl(240, 5%, 5%)",
-      popup: "#4a4a4f",
-      popup_text: "rgb(249, 249, 250)",
-      popup_border: "#27272b",
-      tab_line: "#0a84ff",
-      toolbarColor: "hsl(240, 1%, 20%)",
-      toolbar_bottom_separator: "hsl(240, 5%, 5%)",
-      toolbar_field: "rgb(71, 71, 73)",
-      toolbar_field_border: "rgba(249, 249, 250, 0.2)",
-      toolbar_field_separator: "#5F6670",
-      toolbar_field_text: "rgb(249, 249, 250)",
-      ntp_background: "#2A2A2E",
-      ntp_text: "rgb(249, 249, 250)",
-      sidebar: "#38383D",
-      sidebar_text: "rgb(249, 249, 250)",
-      sidebar_border: "rgba(255, 255, 255, 0.1)",
-      author: vendorShortName,
-    }, {
-      useInDarkMode: true,
-    });
-=======
     AddonManager.maybeInstallBuiltinAddon(
       "firefox-compact-light@mozilla.org",
       "1.0",
@@ -1336,7 +1206,6 @@ BrowserGlue.prototype = {
       "1.0",
       "resource:///modules/themes/dark/"
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
 
     Normandy.init();
 
@@ -1525,16 +1394,6 @@ BrowserGlue.prototype = {
       },
     ];
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    win.gNotificationBox.appendNotification(message, "slow-startup",
-      "chrome://browser/skin/slowStartup-16.png",
-      win.gNotificationBox.PRIORITY_INFO_LOW, buttons);
-||||||| merged common ancestors
-    let nb = win.document.getElementById("global-notificationbox");
-    nb.appendNotification(message, "slow-startup",
-                          "chrome://browser/skin/slowStartup-16.png",
-                          nb.PRIORITY_INFO_LOW, buttons);
-=======
     win.gNotificationBox.appendNotification(
       message,
       "slow-startup",
@@ -1542,7 +1401,6 @@ BrowserGlue.prototype = {
       win.gNotificationBox.PRIORITY_INFO_LOW,
       buttons
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   },
 
   /**
@@ -1599,16 +1457,6 @@ BrowserGlue.prototype = {
       },
     ];
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    win.gNotificationBox.appendNotification(message, "reset-profile-notification",
-      "chrome://global/skin/icons/question-16.png",
-      win.gNotificationBox.PRIORITY_INFO_LOW, buttons);
-||||||| merged common ancestors
-    let nb = win.document.getElementById("global-notificationbox");
-    nb.appendNotification(message, "reset-profile-notification",
-                          "chrome://global/skin/icons/question-16.png",
-                          nb.PRIORITY_INFO_LOW, buttons);
-=======
     win.gNotificationBox.appendNotification(
       message,
       "reset-profile-notification",
@@ -1616,7 +1464,6 @@ BrowserGlue.prototype = {
       win.gNotificationBox.PRIORITY_INFO_LOW,
       buttons
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   },
 
   _notifyUnsignedAddonsDisabled() {
@@ -1642,15 +1489,6 @@ BrowserGlue.prototype = {
       },
     ];
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    win.gHighPriorityNotificationBox.appendNotification(message,
-      "unsigned-addons-disabled", "",
-      win.gHighPriorityNotificationBox.PRIORITY_WARNING_MEDIUM, buttons);
-||||||| merged common ancestors
-    let nb = win.document.getElementById("high-priority-global-notificationbox");
-    nb.appendNotification(message, "unsigned-addons-disabled", "",
-                          nb.PRIORITY_WARNING_MEDIUM, buttons);
-=======
     win.gHighPriorityNotificationBox.appendNotification(
       message,
       "unsigned-addons-disabled",
@@ -1658,7 +1496,6 @@ BrowserGlue.prototype = {
       win.gHighPriorityNotificationBox.PRIORITY_WARNING_MEDIUM,
       buttons
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   },
 
   _firstWindowTelemetry(aWindow) {
@@ -1793,26 +1630,6 @@ BrowserGlue.prototype = {
     this._collectStartupConditionsTelemetry();
 
     // Set the default favicon size for UI views that use the page-icon protocol.
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    PlacesUtils.favicons.setDefaultIconURIPreferredSize(16 * aWindow.devicePixelRatio);
-
-    this._matchCBCategory();
-    Services.prefs.addObserver("privacy.trackingprotection.enabled", this._matchCBCategory);
-    Services.prefs.addObserver("privacy.trackingprotection.pbmode.enabled", this._matchCBCategory);
-    Services.prefs.addObserver("urlclassifier.trackingTable", this._matchCBCategory);
-    Services.prefs.addObserver("network.cookie.cookieBehavior", this._matchCBCategory);
-    Services.prefs.addObserver(ContentBlockingCategoriesPrefs.PREF_CB_CATEGORY, this._updateCBCategory);
-  },
-
-  _matchCBCategory() {
-    ContentBlockingCategoriesPrefs.matchCBCategory();
-  },
-
-  _updateCBCategory() {
-    ContentBlockingCategoriesPrefs.updateCBCategory();
-||||||| merged common ancestors
-    PlacesUtils.favicons.setDefaultIconURIPreferredSize(16 * aWindow.devicePixelRatio);
-=======
     PlacesUtils.favicons.setDefaultIconURIPreferredSize(
       16 * aWindow.devicePixelRatio
     );
@@ -1844,7 +1661,6 @@ BrowserGlue.prototype = {
       "browser.contentblocking.features.strict",
       this._setPrefExpectationsAndUpdate
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   },
 
   _updateAutoplayPref() {
@@ -1887,15 +1703,6 @@ BrowserGlue.prototype = {
     }
   },
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-||||||| merged common ancestors
-    let fastBlockEnabled = Services.prefs.getBoolPref("browser.fastblock.enabled");
-    Services.telemetry.scalarSet("contentblocking.fastblock_enabled", fastBlockEnabled);
-
-    let contentBlockingEnabled = Services.prefs.getBoolPref("browser.contentblocking.enabled");
-    Services.telemetry.scalarSet("contentblocking.enabled", contentBlockingEnabled);
-
-=======
   _recordContentBlockingTelemetry() {
     let recordIdentityPopupEvents = Services.prefs.prefHasUserValue(
       "security.identitypopup.recordEventElemetry"
@@ -1929,7 +1736,6 @@ BrowserGlue.prototype = {
     );
     Services.telemetry.getHistogramById("COOKIE_BEHAVIOR").add(cookieBehavior);
 
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
     let exceptions = 0;
     for (let permission of Services.perms.enumerator) {
       if (permission.type == "trackingprotection") {
@@ -2094,20 +1900,7 @@ BrowserGlue.prototype = {
     this._windowsWereRestored = true;
 
     BrowserUsageTelemetry.init();
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
     SearchTelemetry.init();
-
-    // Show update notification, if needed.
-    if (Services.prefs.prefHasUserValue("app.update.postupdate"))
-      this._showUpdateNotification();
-||||||| merged common ancestors
-
-    // Show update notification, if needed.
-    if (Services.prefs.prefHasUserValue("app.update.postupdate"))
-      this._showUpdateNotification();
-=======
-    SearchTelemetry.init();
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
 
     ExtensionsUI.init();
 
@@ -2191,14 +1984,6 @@ BrowserGlue.prototype = {
    * to the other ones scheduled together.
    */
   _scheduleStartupIdleTasks() {
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    Services.tm.idleDispatchToMainThread(async () => {
-      await ContextualIdentityService.load();
-      Discovery.update();
-||||||| merged common ancestors
-    Services.tm.idleDispatchToMainThread(() => {
-      ContextualIdentityService.load();
-=======
     Services.tm.idleDispatchToMainThread(async () => {
       await ContextualIdentityService.load();
       Discovery.update();
@@ -2221,7 +2006,6 @@ BrowserGlue.prototype = {
         this._togglePermissionPromptTelemetry
       );
       this._togglePermissionPromptTelemetry();
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
     });
 
     Services.tm.idleDispatchToMainThread(() => {
@@ -2429,108 +2213,9 @@ BrowserGlue.prototype = {
     }
 
     // browser.warnOnQuit is a hidden global boolean to override all quit prompts
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    if (!Services.prefs.getBoolPref("browser.warnOnQuit"))
-      return;
-
-    // If we're going to automatically restore the session, only warn if the user asked for that.
-    let sessionWillBeRestored = Services.prefs.getIntPref("browser.startup.page") == 3 ||
-                                Services.prefs.getBoolPref("browser.sessionstore.resume_session_once");
-    // In the sessionWillBeRestored case, we only check the sessionstore-specific pref:
-    if (sessionWillBeRestored) {
-      if (!Services.prefs.getBoolPref("browser.sessionstore.warnOnQuit", false)) {
-        return;
-      }
-    // Otherwise, we check browser.tabs.warnOnClose
-    } else if (!Services.prefs.getBoolPref("browser.tabs.warnOnClose")) {
-||||||| merged common ancestors
-    // browser.showQuitWarning specifically covers quitting
-    // browser.tabs.warnOnClose is the global "warn when closing multiple tabs" pref
-
-    var sessionWillBeRestored = Services.prefs.getIntPref("browser.startup.page") == 3 ||
-                                Services.prefs.getBoolPref("browser.sessionstore.resume_session_once");
-    if (sessionWillBeRestored || !Services.prefs.getBoolPref("browser.warnOnQuit") ||
-        !Services.prefs.getBoolPref("browser.tabs.warnOnClose"))
-=======
     if (!Services.prefs.getBoolPref("browser.warnOnQuit")) {
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
       return;
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
     }
-
-    let win = BrowserWindowTracker.getTopWindow();
-
-    let warningMessage;
-    // More than 1 window. Compose our own message.
-    if (windowcount > 1) {
-      let tabSubstring = gTabbrowserBundle.GetStringFromName("tabs.closeWarningMultipleWindowsTabSnippet");
-      tabSubstring = PluralForm.get(pagecount, tabSubstring).replace(/#1/, pagecount);
-
-      let stringID = sessionWillBeRestored ? "tabs.closeWarningMultipleWindowsSessionRestore"
-                                           : "tabs.closeWarningMultipleWindows";
-      let windowString = gTabbrowserBundle.GetStringFromName(stringID);
-      windowString = PluralForm.get(windowcount, windowString).replace(/#1/, windowcount);
-      warningMessage = windowString.replace(/%(?:1\$)?S/i, tabSubstring);
-    } else {
-      let stringID = sessionWillBeRestored ? "tabs.closeWarningMultipleSessionRestore"
-                                           : "tabs.closeWarningMultiple";
-      warningMessage = gTabbrowserBundle.GetStringFromName(stringID);
-      warningMessage = PluralForm.get(pagecount, warningMessage).replace("#1", pagecount);
-    }
-
-    let warnOnClose = {value: true};
-    let titleId = AppConstants.platform == "win" ? "tabs.closeAndQuitTitleTabsWin"
-                                                 : "tabs.closeAndQuitTitleTabs";
-    let flags = (Services.prompt.BUTTON_TITLE_IS_STRING * Services.prompt.BUTTON_POS_0) +
-      (Services.prompt.BUTTON_TITLE_CANCEL * Services.prompt.BUTTON_POS_1);
-    // Only display the checkbox in the non-sessionrestore case.
-    let checkboxLabel = !sessionWillBeRestored ?
-      gTabbrowserBundle.GetStringFromName("tabs.closeWarningPromptMe") : null;
-
-    // buttonPressed will be 0 for closing, 1 for cancel (don't close/quit)
-    let buttonPressed = Services.prompt.confirmEx(win,
-      gTabbrowserBundle.GetStringFromName(titleId),
-      warningMessage, flags,
-      gTabbrowserBundle.GetStringFromName("tabs.closeButtonMultiple"),
-      null, null,
-      checkboxLabel,
-      warnOnClose);
-    // If the user has unticked the box, and has confirmed closing, stop showing
-    // the warning.
-    if (!sessionWillBeRestored && buttonPressed == 0 && !warnOnClose.value) {
-      Services.prefs.setBoolPref("browser.tabs.warnOnClose", false);
-    }
-    aCancelQuit.data = buttonPressed != 0;
-  },
-
-  _showUpdateNotification: function BG__showUpdateNotification() {
-    Services.prefs.clearUserPref("app.update.postupdate");
-||||||| merged common ancestors
-
-    let win = BrowserWindowTracker.getTopWindow();
-
-    // warnAboutClosingTabs checks browser.tabs.warnOnClose and returns if it's
-    // ok to close the window. It doesn't actually close the window.
-    if (windowcount == 1) {
-      aCancelQuit.data =
-        !win.gBrowser.warnAboutClosingTabs(pagecount, win.gBrowser.closingTabsEnum.ALL);
-    } else {
-      // More than 1 window. Compose our own message.
-      let tabSubstring = gTabbrowserBundle.GetStringFromName("tabs.closeWarningMultipleWindowsTabSnippet");
-      tabSubstring = PluralForm.get(pagecount, tabSubstring).replace(/#1/, pagecount);
-      let windowString = gTabbrowserBundle.GetStringFromName("tabs.closeWarningMultipleWindows");
-      windowString = PluralForm.get(windowcount, windowString).replace(/#1/, windowcount);
-      windowString = windowString.replace(/%(?:1\$)?S/i, tabSubstring);
-      aCancelQuit.data =
-        !win.gBrowser.warnAboutClosingTabs(pagecount, win.gBrowser.closingTabsEnum.ALL, windowString);
-    }
-  },
-
-  _showUpdateNotification: function BG__showUpdateNotification() {
-    Services.prefs.clearUserPref("app.update.postupdate");
-=======
-    }
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
 
     // If we're going to automatically restore the session, only warn if the user asked for that.
     let sessionWillBeRestored =
@@ -2548,116 +2233,7 @@ BrowserGlue.prototype = {
       return;
     }
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    var actions = update.getProperty("actions");
-    if (!actions || actions.includes("silent"))
-      return;
-
-    var appName = gBrandBundle.GetStringFromName("brandShortName");
-
-    function getNotifyString(aPropData) {
-      var propValue = update.getProperty(aPropData.propName);
-      if (!propValue) {
-        if (aPropData.prefName)
-          propValue = Services.urlFormatter.formatURLPref(aPropData.prefName);
-        else if (aPropData.stringParams)
-          propValue = gBrowserBundle.formatStringFromName(aPropData.stringName,
-                                                          aPropData.stringParams,
-                                                          aPropData.stringParams.length);
-        else
-          propValue = gBrowserBundle.GetStringFromName(aPropData.stringName);
-      }
-      return propValue;
-    }
-
-    if (actions.includes("showNotification")) {
-      let text = getNotifyString({propName: "notificationText",
-                                  stringName: "puNotifyText",
-                                  stringParams: [appName]});
-      let url = getNotifyString({propName: "notificationURL",
-                                 prefName: "startup.homepage_override_url"});
-      let label = getNotifyString({propName: "notificationButtonLabel",
-                                   stringName: "pu.notifyButton.label"});
-      let key = getNotifyString({propName: "notificationButtonAccessKey",
-                                 stringName: "pu.notifyButton.accesskey"});
-
-      let win = BrowserWindowTracker.getTopWindow();
-
-      let buttons = [
-                      {
-                        label,
-                        accessKey: key,
-                        popup:     null,
-                        callback(aNotificationBar, aButton) {
-                          win.openTrustedLinkIn(url, "tab");
-                        },
-                      },
-                    ];
-
-      win.gHighPriorityNotificationBox.appendNotification(text,
-        "post-update-notification", null,
-        win.gHighPriorityNotificationBox.PRIORITY_INFO_LOW, buttons);
-    }
-
-    if (!actions.includes("showAlert"))
-      return;
-||||||| merged common ancestors
-    var actions = update.getProperty("actions");
-    if (!actions || actions.includes("silent"))
-      return;
-
-    var appName = gBrandBundle.GetStringFromName("brandShortName");
-
-    function getNotifyString(aPropData) {
-      var propValue = update.getProperty(aPropData.propName);
-      if (!propValue) {
-        if (aPropData.prefName)
-          propValue = Services.urlFormatter.formatURLPref(aPropData.prefName);
-        else if (aPropData.stringParams)
-          propValue = gBrowserBundle.formatStringFromName(aPropData.stringName,
-                                                          aPropData.stringParams,
-                                                          aPropData.stringParams.length);
-        else
-          propValue = gBrowserBundle.GetStringFromName(aPropData.stringName);
-      }
-      return propValue;
-    }
-
-    if (actions.includes("showNotification")) {
-      let text = getNotifyString({propName: "notificationText",
-                                  stringName: "puNotifyText",
-                                  stringParams: [appName]});
-      let url = getNotifyString({propName: "notificationURL",
-                                 prefName: "startup.homepage_override_url"});
-      let label = getNotifyString({propName: "notificationButtonLabel",
-                                   stringName: "pu.notifyButton.label"});
-      let key = getNotifyString({propName: "notificationButtonAccessKey",
-                                 stringName: "pu.notifyButton.accesskey"});
-
-      let win = BrowserWindowTracker.getTopWindow();
-      let notifyBox = win.document.getElementById("high-priority-global-notificationbox");
-
-      let buttons = [
-                      {
-                        label,
-                        accessKey: key,
-                        popup:     null,
-                        callback(aNotificationBar, aButton) {
-                          win.openTrustedLinkIn(url, "tab");
-                        },
-                      },
-                    ];
-
-      notifyBox.appendNotification(text, "post-update-notification",
-                                   null, notifyBox.PRIORITY_INFO_LOW,
-                                   buttons);
-    }
-
-    if (!actions.includes("showAlert"))
-      return;
-=======
     let win = BrowserWindowTracker.getTopWindow();
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
 
     let warningMessage;
     // More than 1 window. Compose our own message.
@@ -3095,13 +2671,7 @@ BrowserGlue.prototype = {
   _migrateUI: function BG__migrateUI() {
     // Use an increasing number to keep track of the current migration state.
     // Completely unrelated to the current Firefox release number.
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    const UI_VERSION = 77;
-||||||| merged common ancestors
-    const UI_VERSION = 76;
-=======
     const UI_VERSION = 86;
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
     const BROWSER_DOCURL = AppConstants.BROWSER_CHROME_URL;
 
     let currentUIVersion;
@@ -3399,17 +2969,6 @@ BrowserGlue.prototype = {
       }
     }
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    if (currentUIVersion < 77) {
-      // Remove currentset from all the toolbars
-      let toolbars = ["nav-bar", "PersonalToolbar", "TabsToolbar", "toolbar-menubar"];
-      for (let toolbarId of toolbars) {
-        xulStore.removeValue(BROWSER_DOCURL, toolbarId, "currentset");
-      }
-    }
-
-||||||| merged common ancestors
-=======
     if (currentUIVersion < 77) {
       // Remove currentset from all the toolbars
       let toolbars = [
@@ -3511,7 +3070,6 @@ BrowserGlue.prototype = {
       Services.prefs.clearUserPref("media.autoplay.allow-muted");
     }
 
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
     // Update the migration version.
     Services.prefs.setIntPref("browser.migration.version", UI_VERSION);
   },
@@ -3987,17 +3545,6 @@ BrowserGlue.prototype = {
           );
         },
       },
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-    }];
-
-    win.gNotificationBox.appendNotification(message, "flash-hang", null,
-      win.gNotificationBox.PRIORITY_INFO_MEDIUM, buttons);
-||||||| merged common ancestors
-    }];
-    let nb = win.document.getElementById("global-notificationbox");
-    nb.appendNotification(message, "flash-hang", null,
-                          nb.PRIORITY_INFO_MEDIUM, buttons);
-=======
     ];
 
     win.gNotificationBox.appendNotification(
@@ -4007,7 +3554,6 @@ BrowserGlue.prototype = {
       win.gNotificationBox.PRIORITY_INFO_MEDIUM,
       buttons
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
   },
 
   _updateFxaBadges() {
@@ -4236,111 +3782,6 @@ var ContentBlockingCategoriesPrefs = {
   },
 };
 
-var ContentBlockingCategoriesPrefs = {
-  PREF_CB_CATEGORY: "browser.contentblocking.category",
-  // The prefs inside CATEGORY_PREFS set expected value for each CB category.
-  // A null value means that pref is default.
-  CATEGORY_PREFS: {
-    strict: [
-      ["urlclassifier.trackingTable", null],
-      ["network.cookie.cookieBehavior", Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-      ["privacy.trackingprotection.pbmode.enabled", true],
-      ["privacy.trackingprotection.enabled", true],
-    ],
-    standard: [
-      ["urlclassifier.trackingTable", null],
-      ["network.cookie.cookieBehavior", null],
-      ["privacy.trackingprotection.pbmode.enabled", null],
-      ["privacy.trackingprotection.enabled", null],
-    ],
-  },
-  switchingCategory: false,
-
-  /**
-   * Checks if CB prefs match perfectly with one of our pre-defined categories.
-   */
-  prefsMatch(category) {
-    // The category pref must be either unset, or match.
-    if (Services.prefs.prefHasUserValue(this.PREF_CB_CATEGORY) &&
-        Services.prefs.getStringPref(this.PREF_CB_CATEGORY) != category) {
-      return false;
-    }
-    for (let [pref, value] of this.CATEGORY_PREFS[category]) {
-      if (!value) {
-        if (Services.prefs.prefHasUserValue(pref)) {
-          return false;
-        }
-      } else {
-        let prefType = Services.prefs.getPrefType(pref);
-        if ((prefType == Services.prefs.PREF_BOOL && Services.prefs.getBoolPref(pref) != value) ||
-            (prefType == Services.prefs.PREF_INT && Services.prefs.getIntPref(pref) != value) ||
-            (prefType == Services.prefs.PREF_STRING && Services.prefs.getStringPref(pref) != value)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  },
-
-  matchCBCategory() {
-    if (this.switchingCategory) {
-      return;
-    }
-    // If PREF_CB_CATEGORY is not set match users to a Content Blocking category. Check if prefs fit
-    // perfectly into strict or standard, otherwise match with custom. If PREF_CB_CATEGORY has previously been set,
-    // a change of one of these prefs necessarily puts us in "custom".
-    if (this.prefsMatch("standard")) {
-      Services.prefs.setStringPref(this.PREF_CB_CATEGORY, "standard");
-    } else if (this.prefsMatch("strict")) {
-      Services.prefs.setStringPref(this.PREF_CB_CATEGORY, "strict");
-    } else {
-      Services.prefs.setStringPref(this.PREF_CB_CATEGORY, "custom");
-    }
-  },
-
-  updateCBCategory() {
-    if (this.switchingCategory || !Services.prefs.prefHasUserValue(this.PREF_CB_CATEGORY)) {
-      return;
-    }
-    // Turn on switchingCategory flag, to ensure that when the individual prefs that change as a result
-    // of the category change do not trigger yet another category change.
-    this.switchingCategory = true;
-    let value = Services.prefs.getStringPref(this.PREF_CB_CATEGORY);
-    this.setPrefsToCategory(value);
-    this.switchingCategory = false;
-  },
-
-  /**
-   * Sets all user-exposed content blocking preferences to values that match the selected category.
-   */
-  setPrefsToCategory(category) {
-    // Leave prefs as they were if we are switching to "custom" category.
-    if (category == "custom") {
-      return;
-    }
-
-    for (let [pref, value] of this.CATEGORY_PREFS[category]) {
-      if (!Services.prefs.prefIsLocked(pref)) {
-        if (!value) {
-          Services.prefs.clearUserPref(pref);
-        } else {
-          switch (Services.prefs.getPrefType(pref)) {
-          case Services.prefs.PREF_BOOL:
-            Services.prefs.setBoolPref(pref, value);
-            break;
-          case Services.prefs.PREF_INT:
-            Services.prefs.setIntPref(pref, value);
-            break;
-          case Services.prefs.PREF_STRING:
-            Services.prefs.setStringPref(pref, value);
-            break;
-          }
-        }
-      }
-    }
-  },
-};
-
 /**
  * ContentPermissionIntegration is responsible for showing the user
  * simple permission prompts when content requests additional
@@ -4384,9 +3825,6 @@ const ContentPermissionIntegration = {
       }
       case "midi": {
         return new PermissionUI.MIDIPermissionPrompt(request);
-      }
-      case "storage-access": {
-        return new PermissionUI.StorageAccessPermissionPrompt(request);
       }
       case "storage-access": {
         return new PermissionUI.StorageAccessPermissionPrompt(request);
@@ -4610,25 +4048,6 @@ var DefaultBrowserCheck = {
         "setDefaultBrowserNotNow.accesskey"
       );
 
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-      this._createPopup(win, {
-        label: notNowButton,
-        accesskey: notNowButtonKey,
-      }, {
-        label: neverLabel,
-        accesskey: neverKey,
-      });
-||||||| merged common ancestors
-      let notificationBox = win.document.getElementById("high-priority-global-notificationbox");
-
-      this._createPopup(win, {
-        label: notNowButton,
-        accesskey: notNowButtonKey,
-      }, {
-        label: neverLabel,
-        accesskey: neverKey,
-      });
-=======
       this._createPopup(
         win,
         {
@@ -4640,7 +4059,6 @@ var DefaultBrowserCheck = {
           accesskey: neverKey,
         }
       );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
 
       let buttons = [
         {
@@ -4662,14 +4080,6 @@ var DefaultBrowserCheck = {
       let iconURL = "chrome://branding/content/icon" + iconPixels + ".png";
       const priority = win.gHighPriorityNotificationBox.PRIORITY_WARNING_HIGH;
       let callback = this._onNotificationEvent.bind(this);
-<<<<<<< HEAD:mozilla-release/browser/components/nsBrowserGlue.js
-      this._notification = win.gHighPriorityNotificationBox.appendNotification(
-        promptMessage, "default-browser", iconURL, priority, buttons, callback);
-||||||| merged common ancestors
-      this._notification = notificationBox.appendNotification(promptMessage, "default-browser",
-                                                              iconURL, priority, buttons,
-                                                              callback);
-=======
       this._notification = win.gHighPriorityNotificationBox.appendNotification(
         promptMessage,
         "default-browser",
@@ -4678,7 +4088,6 @@ var DefaultBrowserCheck = {
         buttons,
         callback
       );
->>>>>>> upstream-releases:mozilla-release/browser/components/BrowserGlue.jsm
     } else {
       // Modal prompt
       let promptTitle = shellBundle.getString("setDefaultBrowserTitle");

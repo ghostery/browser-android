@@ -38,35 +38,9 @@ public:
     virtual bool isPathRendering() const override { return true; }
 
 private:
-<<<<<<< HEAD
-    const Attribute& onVertexAttribute(int i) const final {
-        SK_ABORT("No vertex attributes");
-        static constexpr Attribute kBogus;
-        return kBogus;
-    }
-||||||| merged common ancestors
-    GrPathProcessor(GrColor, const SkMatrix& viewMatrix, const SkMatrix& localMatrix);
-=======
     GrPathProcessor(const SkPMColor4f&, const SkMatrix& viewMatrix, const SkMatrix& localMatrix);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    const Attribute& onInstanceAttribute(int i) const final {
-        SK_ABORT("No instanced attributes");
-        static constexpr Attribute kBogus;
-        return kBogus;
-    }
-
-    GrPathProcessor(GrColor, const SkMatrix& viewMatrix, const SkMatrix& localMatrix);
-
-    GrColor fColor;
-||||||| merged common ancestors
-    bool hasExplicitLocalCoords() const override { return false; }
-
-    GrColor fColor;
-=======
     SkPMColor4f fColor;
->>>>>>> upstream-releases
     const SkMatrix fViewMatrix;
     const SkMatrix fLocalMatrix;
 

@@ -143,19 +143,10 @@ def backfill_action(parameters, graph_config, input, task_group_id, task_id):
                     if gpu_required:
                         verify_args.append('--gpu-required')
 
-<<<<<<< HEAD
-                    if 'testPath' in input:
-                        task.task['payload']['env']['MOZHARNESS_TEST_PATHS'] = json.dums({
-                            task.task['extra']['suite']['flavor']: input['testPath']
-                        })
-||||||| merged common ancestors
-                    task.task['payload']['env']['MOZHARNESS_TEST_PATHS'] = input.get('testPath')
-=======
                     if 'testPath' in input:
                         task.task['payload']['env']['MOZHARNESS_TEST_PATHS'] = json.dumps({
                             task.task['extra']['suite']['flavor']: [input['testPath']]
                         })
->>>>>>> upstream-releases
 
                     cmd_parts = task.task['payload']['command']
                     keep_args = ['--installer-url', '--download-symbols', '--test-packages-url']
@@ -191,20 +182,10 @@ def backfill_action(parameters, graph_config, input, task_group_id, task_id):
                     del task.task['extra']['treeherder']['groupSymbol']
                 return task
 
-<<<<<<< HEAD
-            times = input.get('times', 1)
-            for i in xrange(times):
-                create_tasks([label], full_task_graph, label_to_taskid,
-                             push_params, push_decision_task_id, push, modifier=modifier)
-||||||| merged common ancestors
-            create_tasks([label], full_task_graph, label_to_taskid,
-                         push_params, push_decision_task_id, push, modifier=modifier)
-=======
             times = input.get('times', 1)
             for i in xrange(times):
                 create_tasks(graph_config, [label], full_task_graph, label_to_taskid,
                              push_params, push_decision_task_id, push, modifier=modifier)
->>>>>>> upstream-releases
             backfill_pushes.append(push)
         else:
             logging.info('Could not find {} on {}. Skipping.'.format(label, push))

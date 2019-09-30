@@ -4,19 +4,9 @@
 
 // https://html.spec.whatwg.org/#dom-window-customelements
 interface CustomElementRegistry {
-<<<<<<< HEAD
-  [CEReactions, Throws, UseCounter]
-  void define(DOMString name, Function functionConstructor,
-              optional ElementDefinitionOptions options);
-||||||| merged common ancestors
-  [CEReactions, Throws]
-  void define(DOMString name, Function functionConstructor,
-              optional ElementDefinitionOptions options);
-=======
   [CEReactions, Throws, UseCounter]
   void define(DOMString name, CustomElementConstructor functionConstructor,
               optional ElementDefinitionOptions options = {});
->>>>>>> upstream-releases
   [ChromeOnly, Throws]
   void setElementCreationCallback(DOMString name, CustomElementCreationCallback callback);
   any get(DOMString name);

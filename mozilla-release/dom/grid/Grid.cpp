@@ -38,25 +38,6 @@ Grid::Grid(nsISupports* aParent, nsGridContainerFrame* aFrame)
   nsGridContainerFrame::ImplicitNamedAreas* implicitAreas =
       aFrame->GetImplicitNamedAreas();
   if (implicitAreas) {
-<<<<<<< HEAD
-    for (auto iter = implicitAreas->Iter(); !iter.Done(); iter.Next()) {
-      auto& areaInfo = iter.Data();
-      namesSeen.PutEntry(areaInfo.mName);
-      GridArea* area = new GridArea(
-          this, areaInfo.mName, GridDeclaration::Implicit, areaInfo.mRowStart,
-          areaInfo.mRowEnd, areaInfo.mColumnStart, areaInfo.mColumnEnd);
-||||||| merged common ancestors
-    for (auto iter = implicitAreas->Iter(); !iter.Done(); iter.Next()) {
-      auto& areaInfo = iter.Data();
-      namesSeen.PutEntry(areaInfo.mName);
-      GridArea* area = new GridArea(this,
-                                    areaInfo.mName,
-                                    GridDeclaration::Implicit,
-                                    areaInfo.mRowStart,
-                                    areaInfo.mRowEnd,
-                                    areaInfo.mColumnStart,
-                                    areaInfo.mColumnEnd);
-=======
     for (auto iter = implicitAreas->iter(); !iter.done(); iter.next()) {
       auto& areaInfo = iter.get().value();
       namesSeen.PutEntry(areaInfo.name.AsAtom());
@@ -64,7 +45,6 @@ Grid::Grid(nsISupports* aParent, nsGridContainerFrame* aFrame)
           new GridArea(this, areaInfo.name.AsAtom(), GridDeclaration::Implicit,
                        areaInfo.rows.start, areaInfo.rows.end,
                        areaInfo.columns.start, areaInfo.columns.end);
->>>>>>> upstream-releases
       mAreas.AppendElement(area);
     }
   }
@@ -72,29 +52,6 @@ Grid::Grid(nsISupports* aParent, nsGridContainerFrame* aFrame)
   // Add explicit areas next, as long as they don't have the same name
   // as the implicit areas, because the implicit values override what was
   // initially available in the explicit areas.
-<<<<<<< HEAD
-  nsGridContainerFrame::ExplicitNamedAreas* explicitAreas =
-      aFrame->GetExplicitNamedAreas();
-  if (explicitAreas) {
-    for (auto& areaInfo : *explicitAreas) {
-      if (!namesSeen.Contains(areaInfo.mName)) {
-        GridArea* area = new GridArea(
-            this, areaInfo.mName, GridDeclaration::Explicit, areaInfo.mRowStart,
-            areaInfo.mRowEnd, areaInfo.mColumnStart, areaInfo.mColumnEnd);
-||||||| merged common ancestors
-  nsGridContainerFrame::ExplicitNamedAreas* explicitAreas =
-    aFrame->GetExplicitNamedAreas();
-  if (explicitAreas) {
-    for (auto& areaInfo : *explicitAreas) {
-      if (!namesSeen.Contains(areaInfo.mName)) {
-        GridArea* area = new GridArea(this,
-                                      areaInfo.mName,
-                                      GridDeclaration::Explicit,
-                                      areaInfo.mRowStart,
-                                      areaInfo.mRowEnd,
-                                      areaInfo.mColumnStart,
-                                      areaInfo.mColumnEnd);
-=======
   if (auto* explicitAreas = aFrame->GetExplicitNamedAreas()) {
     for (auto& areaInfo : explicitAreas->AsSpan()) {
       if (!namesSeen.Contains(areaInfo.name.AsAtom())) {
@@ -102,7 +59,6 @@ Grid::Grid(nsISupports* aParent, nsGridContainerFrame* aFrame)
             this, areaInfo.name.AsAtom(), GridDeclaration::Explicit,
             areaInfo.rows.start, areaInfo.rows.end, areaInfo.columns.start,
             areaInfo.columns.end);
->>>>>>> upstream-releases
         mAreas.AppendElement(area);
       }
     }

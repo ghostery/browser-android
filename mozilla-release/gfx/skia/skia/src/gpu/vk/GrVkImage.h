@@ -11,13 +11,8 @@
 #include "GrBackendSurface.h"
 #include "GrTexture.h"
 #include "GrTypesPriv.h"
-<<<<<<< HEAD
-#include "GrVkImageLayout.h"
-||||||| merged common ancestors
-=======
 #include "GrVkImageLayout.h"
 #include "GrVkResource.h"
->>>>>>> upstream-releases
 #include "SkTypes.h"
 #include "vk/GrVkTypes.h"
 
@@ -29,21 +24,6 @@ private:
     class Resource;
 
 public:
-<<<<<<< HEAD
-    GrVkImage(const GrVkImageInfo& info, sk_sp<GrVkImageLayout> layout,
-              GrBackendObjectOwnership ownership)
-            : fInfo(info)
-            , fInitialQueueFamily(info.fCurrentQueueFamily)
-            , fLayout(std::move(layout))
-            , fIsBorrowed(GrBackendObjectOwnership::kBorrowed == ownership) {
-        SkASSERT(fLayout->getImageLayout() == fInfo.fImageLayout);
-        if (fIsBorrowed) {
-||||||| merged common ancestors
-    GrVkImage(const GrVkImageInfo& info, GrBackendObjectOwnership ownership)
-        : fInfo(info)
-        , fIsBorrowed(GrBackendObjectOwnership::kBorrowed == ownership) {
-        if (fIsBorrowed) {
-=======
     GrVkImage(const GrVkImageInfo& info, sk_sp<GrVkImageLayout> layout,
               GrBackendObjectOwnership ownership, bool forSecondaryCB = false)
             : fInfo(info)
@@ -54,7 +34,6 @@ public:
         if (forSecondaryCB) {
             fResource = nullptr;
         } else if (fIsBorrowed) {
->>>>>>> upstream-releases
             fResource = new BorrowedResource(info.fImage, info.fAlloc, info.fImageTiling);
         } else {
             fResource = new Resource(info.fImage, info.fAlloc, info.fImageTiling);
@@ -112,19 +91,6 @@ public:
                         VkImageLayout newLayout,
                         VkAccessFlags dstAccessMask,
                         VkPipelineStageFlags dstStageMask,
-<<<<<<< HEAD
-                        bool byRegion,
-                        bool releaseFamilyQueue = false);
-
-    // This simply updates our tracking of the image layout and does not actually do any gpu work.
-    // This is only used for mip map generation where we are manually changing the layouts as we
-    // blit each layer, and then at the end need to update our tracking.
-    void updateImageLayout(VkImageLayout newLayout) {
-        fLayout->setImageLayout(newLayout);
-    }
-||||||| merged common ancestors
-                        bool byRegion);
-=======
                         bool byRegion,
                         bool releaseFamilyQueue = false);
 
@@ -141,7 +107,6 @@ public:
         SkASSERT(fResource);
         fLayout->setImageLayout(newLayout);
     }
->>>>>>> upstream-releases
 
     struct ImageDesc {
         VkImageType         fImageType;
@@ -184,33 +149,15 @@ public:
     void setCurrentQueueFamilyToGraphicsQueue(GrVkGpu* gpu);
 #endif
 
-    // Helpers to use for setting the layout of the VkImage
-    static VkPipelineStageFlags LayoutToPipelineSrcStageFlags(const VkImageLayout layout);
-    static VkAccessFlags LayoutToSrcAccessMask(const VkImageLayout layout);
-
 protected:
     void releaseImage(GrVkGpu* gpu);
     void abandonImage();
     bool hasResource() const { return fResource; }
 
-<<<<<<< HEAD
-    void setNewResource(VkImage image, const GrVkAlloc& alloc, VkImageTiling tiling);
-
     GrVkImageInfo          fInfo;
     uint32_t               fInitialQueueFamily;
     sk_sp<GrVkImageLayout> fLayout;
     bool                   fIsBorrowed;
-||||||| merged common ancestors
-    void setNewResource(VkImage image, const GrVkAlloc& alloc, VkImageTiling tiling);
-
-    GrVkImageInfo   fInfo;
-    bool            fIsBorrowed;
-=======
-    GrVkImageInfo          fInfo;
-    uint32_t               fInitialQueueFamily;
-    sk_sp<GrVkImageLayout> fLayout;
-    bool                   fIsBorrowed;
->>>>>>> upstream-releases
 
 private:
     class Resource : public GrVkResource {

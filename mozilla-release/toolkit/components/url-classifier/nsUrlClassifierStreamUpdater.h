@@ -51,36 +51,16 @@ class nsUrlClassifierStreamUpdater final
   void DownloadDone();
 
   // Disallow copy constructor
-  nsUrlClassifierStreamUpdater(nsUrlClassifierStreamUpdater &);
+  nsUrlClassifierStreamUpdater(nsUrlClassifierStreamUpdater&);
 
   nsresult AddRequestBody(const nsACString& aRequestBody);
 
   // Fetches an update for a single table.
-<<<<<<< HEAD
-  nsresult FetchUpdate(nsIURI *aURI, const nsACString &aRequest,
-                       bool aIsPostRequest, const nsACString &aTable);
-||||||| merged common ancestors
-  nsresult FetchUpdate(nsIURI *aURI,
-                       const nsACString &aRequest,
-                       bool aIsPostRequest,
-                       const nsACString &aTable);
-=======
   nsresult FetchUpdate(nsIURI* aURI, const nsACString& aRequest,
                        bool aIsPostRequest, const nsACString& aTable);
->>>>>>> upstream-releases
   // Dumb wrapper so we don't have to create URIs.
-<<<<<<< HEAD
-  nsresult FetchUpdate(const nsACString &aURI, const nsACString &aRequest,
-                       bool aIsPostRequest, const nsACString &aTable);
-||||||| merged common ancestors
-  nsresult FetchUpdate(const nsACString &aURI,
-                       const nsACString &aRequest,
-                       bool aIsPostRequest,
-                       const nsACString &aTable);
-=======
   nsresult FetchUpdate(const nsACString& aURI, const nsACString& aRequest,
                        bool aIsPostRequest, const nsACString& aTable);
->>>>>>> upstream-releases
 
   // Fetches the next table, from mPendingUpdates.
   nsresult FetchNext();
@@ -97,25 +77,6 @@ class nsUrlClassifierStreamUpdater final
     nsCOMPtr<nsIUrlClassifierCallback> mDownloadErrorCallback;
   };
   // Utility function to create an update request.
-<<<<<<< HEAD
-  void BuildUpdateRequest(const nsACString &aRequestTables,
-                          const nsACString &aRequestPayload,
-                          bool aIsPostRequest, const nsACString &aUpdateUrl,
-                          nsIUrlClassifierCallback *aSuccessCallback,
-                          nsIUrlClassifierCallback *aUpdateErrorCallback,
-                          nsIUrlClassifierCallback *aDownloadErrorCallback,
-                          UpdateRequest *aRequest);
-||||||| merged common ancestors
-  void
-  BuildUpdateRequest(const nsACString &aRequestTables,
-                     const nsACString &aRequestPayload,
-                     bool aIsPostRequest,
-                     const nsACString &aUpdateUrl,
-                     nsIUrlClassifierCallback *aSuccessCallback,
-                     nsIUrlClassifierCallback *aUpdateErrorCallback,
-                     nsIUrlClassifierCallback *aDownloadErrorCallback,
-                     UpdateRequest* aRequest);
-=======
   void BuildUpdateRequest(const nsACString& aRequestTables,
                           const nsACString& aRequestPayload,
                           bool aIsPostRequest, const nsACString& aUpdateUrl,
@@ -123,7 +84,6 @@ class nsUrlClassifierStreamUpdater final
                           nsIUrlClassifierCallback* aUpdateErrorCallback,
                           nsIUrlClassifierCallback* aDownloadErrorCallback,
                           UpdateRequest* aRequest);
->>>>>>> upstream-releases
 
   bool mIsUpdating;
   bool mInitialized;

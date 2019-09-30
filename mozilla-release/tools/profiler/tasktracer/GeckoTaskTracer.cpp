@@ -385,18 +385,8 @@ void StartLogging() {
 
 void StopLogging() { SetLogStarted(false); }
 
-<<<<<<< HEAD
-UniquePtr<nsTArray<nsCString>> GetLoggedData(TimeStamp aTimeStamp) {
-  auto result = MakeUnique<nsTArray<nsCString>>();
-||||||| merged common ancestors
-UniquePtr<nsTArray<nsCString>>
-GetLoggedData(TimeStamp aTimeStamp)
-{
-  auto result = MakeUnique<nsTArray<nsCString>>();
-=======
 UniquePtr<Vector<nsCString>> GetLoggedData(TimeStamp aTimeStamp) {
   auto result = MakeUnique<Vector<nsCString>>();
->>>>>>> upstream-releases
 
   // TODO: This is called from a signal handler. Use semaphore instead.
   StaticMutexAutoLock lock(sMutex);
@@ -414,17 +404,9 @@ UniquePtr<Vector<nsCString>> GetLoggedData(TimeStamp aTimeStamp) {
 
     nsTArray<nsCString>& strs = info->mStrs;
     for (TraceInfoLogNode* node = info->mLogsHead; node; node = node->mNext) {
-<<<<<<< HEAD
-      TraceInfoLogType& log = node->mLog;
-      nsCString& buffer = *result->AppendElement();
-||||||| merged common ancestors
-      TraceInfoLogType &log = node->mLog;
-      nsCString &buffer = *result->AppendElement();
-=======
       TraceInfoLogType& log = node->mLog;
       MOZ_RELEASE_ASSERT(result->append(nsCString()));
       nsCString& buffer = result->back();
->>>>>>> upstream-releases
 
       switch (log.mType) {
         case ACTION_DISPATCH:

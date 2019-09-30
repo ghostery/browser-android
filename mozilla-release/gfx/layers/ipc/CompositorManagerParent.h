@@ -40,64 +40,27 @@ class CompositorManagerParent final : public PCompositorManagerParent {
                                           bool aUseExternalSurfaceSize,
                                           const gfx::IntSize& aSurfaceSize);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvAddSharedSurface(
-      const wr::ExternalImageId& aId,
-      const SurfaceDescriptorShared& aDesc) override;
-  mozilla::ipc::IPCResult RecvRemoveSharedSurface(
-      const wr::ExternalImageId& aId) override;
-  mozilla::ipc::IPCResult RecvReportSharedSurfacesMemory(
-      ReportSharedSurfacesMemoryResolver&&) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvAddSharedSurface(const wr::ExternalImageId& aId,
-                                               const SurfaceDescriptorShared& aDesc) override;
-  mozilla::ipc::IPCResult RecvRemoveSharedSurface(const wr::ExternalImageId& aId) override;
-  mozilla::ipc::IPCResult RecvReportSharedSurfacesMemory(ReportSharedSurfacesMemoryResolver&&) override;
-=======
   mozilla::ipc::IPCResult RecvAddSharedSurface(
       const wr::ExternalImageId& aId, const SurfaceDescriptorShared& aDesc);
   mozilla::ipc::IPCResult RecvRemoveSharedSurface(
       const wr::ExternalImageId& aId);
   mozilla::ipc::IPCResult RecvReportSharedSurfacesMemory(
       ReportSharedSurfacesMemoryResolver&&);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvNotifyMemoryPressure();
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvReportMemory(
-      ReportMemoryResolver&&) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvReportMemory(ReportMemoryResolver&&) override;
-=======
   mozilla::ipc::IPCResult RecvReportMemory(ReportMemoryResolver&&);
->>>>>>> upstream-releases
 
   void BindComplete(bool aIsRoot);
   void ActorDestroy(ActorDestroyReason aReason) override;
 
-<<<<<<< HEAD
-  bool DeallocPCompositorBridgeParent(PCompositorBridgeParent* aActor) override;
-  PCompositorBridgeParent* AllocPCompositorBridgeParent(
-      const CompositorBridgeOptions& aOpt) override;
-||||||| merged common ancestors
-  bool DeallocPCompositorBridgeParent(PCompositorBridgeParent* aActor) override;
-  PCompositorBridgeParent* AllocPCompositorBridgeParent(const CompositorBridgeOptions& aOpt) override;
-=======
   bool DeallocPCompositorBridgeParent(PCompositorBridgeParent* aActor);
   PCompositorBridgeParent* AllocPCompositorBridgeParent(
       const CompositorBridgeOptions& aOpt);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   static void NotifyWebRenderError(wr::WebRenderError aError);
 
  private:
->>>>>>> upstream-releases
   static StaticRefPtr<CompositorManagerParent> sInstance;
   static StaticMutex sMutex;
 

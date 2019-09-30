@@ -23,41 +23,18 @@ using namespace mozilla;
 
 static const char16_t kSqrChar = char16_t(0x221A);
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMathMLmrootFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-  return new (aPresShell) nsMathMLmrootFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMathMLmrootFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMathMLmrootFrame(aStyle);
-=======
 nsIFrame* NS_NewMathMLmrootFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell)
       nsMathMLmrootFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmrootFrame)
 
-<<<<<<< HEAD
-nsMathMLmrootFrame::nsMathMLmrootFrame(ComputedStyle* aStyle)
-    : nsMathMLContainerFrame(aStyle, kClassID), mSqrChar(), mBarRect() {}
-||||||| merged common ancestors
-nsMathMLmrootFrame::nsMathMLmrootFrame(ComputedStyle* aStyle) :
-  nsMathMLContainerFrame(aStyle, kClassID),
-  mSqrChar(),
-  mBarRect()
-{
-}
-=======
 nsMathMLmrootFrame::nsMathMLmrootFrame(ComputedStyle* aStyle,
                                        nsPresContext* aPresContext)
     : nsMathMLContainerFrame(aStyle, aPresContext, kClassID),
       mSqrChar(),
       mBarRect() {}
->>>>>>> upstream-releases
 
 nsMathMLmrootFrame::~nsMathMLmrootFrame() {}
 
@@ -363,18 +340,9 @@ void nsMathMLmrootFrame::Reflow(nsPresContext* aPresContext,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aDesiredSize);
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsMathMLmrootFrame::GetIntrinsicISizeMetrics(
-    gfxContext* aRenderingContext, ReflowOutput& aDesiredSize) {
-||||||| merged common ancestors
-/* virtual */ void
-nsMathMLmrootFrame::GetIntrinsicISizeMetrics(gfxContext* aRenderingContext, ReflowOutput& aDesiredSize)
-{
-=======
 /* virtual */
 void nsMathMLmrootFrame::GetIntrinsicISizeMetrics(gfxContext* aRenderingContext,
                                                   ReflowOutput& aDesiredSize) {
->>>>>>> upstream-releases
   nsIFrame* baseFrame = mFrames.FirstChild();
   nsIFrame* indexFrame = nullptr;
   if (baseFrame) indexFrame = baseFrame->GetNextSibling();

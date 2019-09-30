@@ -19,31 +19,11 @@ class SourceSurfaceDual : public SourceSurface {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(SourceSurfaceDual, override)
 
-<<<<<<< HEAD
-  SourceSurfaceDual(DrawTarget *aDTA, DrawTarget *aDTB)
-      : mA(aDTA->Snapshot()), mB(aDTB->Snapshot()) {}
-||||||| merged common ancestors
-  SourceSurfaceDual(DrawTarget *aDTA, DrawTarget *aDTB)
-    : mA(aDTA->Snapshot())
-    , mB(aDTB->Snapshot())
-  { }
-=======
   SourceSurfaceDual(DrawTarget* aDTA, DrawTarget* aDTB)
       : mA(aDTA->Snapshot()), mB(aDTB->Snapshot()) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  SourceSurfaceDual(SourceSurface *aSourceA, SourceSurface *aSourceB)
-      : mA(aSourceA), mB(aSourceB) {}
-||||||| merged common ancestors
-  SourceSurfaceDual(SourceSurface *aSourceA, SourceSurface *aSourceB)
-    : mA(aSourceA)
-    , mB(aSourceB)
-  { }
-=======
   SourceSurfaceDual(SourceSurface* aSourceA, SourceSurface* aSourceB)
       : mA(aSourceA), mB(aSourceB) {}
->>>>>>> upstream-releases
 
   virtual SurfaceType GetType() const override { return SurfaceType::DUAL_DT; }
   virtual IntSize GetSize() const override { return mA->GetSize(); }
@@ -56,7 +36,7 @@ class SourceSurfaceDual : public SourceSurface {
     return mA->GetDataSurface();
   }
 
-  SourceSurface *GetFirstSurface() {
+  SourceSurface* GetFirstSurface() {
     MOZ_ASSERT(mA->GetType() == mB->GetType());
     return mA;
   }

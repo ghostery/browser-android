@@ -232,13 +232,7 @@ ps{
         minimumGroupingDigits{"1"}
         native{"arabext"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         default{"persian"}
         generic{
@@ -1506,41 +1500,6 @@ ps{
         US{"امريکايي"}
         metric{"مېټرک"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -1569,5 +1528,4 @@ ps{
             }
         }
     }
->>>>>>> upstream-releases
 }

@@ -11,37 +11,6 @@
 #include "GLContextProvider.h"  // for GLContextProvider
 #include "GLContext.h"          // for GLContext
 #include "GLUploadHelpers.h"
-<<<<<<< HEAD
-#include "Layers.h"                 // for WriteSnapshotToDumpFile
-#include "LayerScope.h"             // for LayerScope
-#include "gfxCrashReporterUtils.h"  // for ScopedGfxFeatureReporter
-#include "gfxEnv.h"                 // for gfxEnv
-#include "gfxPlatform.h"            // for gfxPlatform
-#include "gfxPrefs.h"               // for gfxPrefs
-#include "gfxRect.h"                // for gfxRect
-#include "gfxUtils.h"               // for gfxUtils, etc
-#include "mozilla/ArrayUtils.h"     // for ArrayLength
-#include "mozilla/Preferences.h"    // for Preferences
-#include "mozilla/gfx/BasePoint.h"  // for BasePoint
-#include "mozilla/gfx/Matrix.h"     // for Matrix4x4, Matrix
-#include "mozilla/gfx/Triangle.h"   // for Triangle
-#include "mozilla/gfx/gfxVars.h"    // for gfxVars
-||||||| merged common ancestors
-#include "Layers.h"                     // for WriteSnapshotToDumpFile
-#include "LayerScope.h"                 // for LayerScope
-#include "gfxCrashReporterUtils.h"      // for ScopedGfxFeatureReporter
-#include "gfxEnv.h"                     // for gfxEnv
-#include "gfxPlatform.h"                // for gfxPlatform
-#include "gfxPrefs.h"                   // for gfxPrefs
-#include "gfxRect.h"                    // for gfxRect
-#include "gfxUtils.h"                   // for gfxUtils, etc
-#include "mozilla/ArrayUtils.h"         // for ArrayLength
-#include "mozilla/Preferences.h"        // for Preferences
-#include "mozilla/gfx/BasePoint.h"      // for BasePoint
-#include "mozilla/gfx/Matrix.h"         // for Matrix4x4, Matrix
-#include "mozilla/gfx/Triangle.h"       // for Triangle
-#include "mozilla/gfx/gfxVars.h"        // for gfxVars
-=======
 #include "Layers.h"                 // for WriteSnapshotToDumpFile
 #include "LayerScope.h"             // for LayerScope
 #include "gfxCrashReporterUtils.h"  // for ScopedGfxFeatureReporter
@@ -56,7 +25,6 @@
 #include "mozilla/gfx/Matrix.h"     // for Matrix4x4, Matrix
 #include "mozilla/gfx/Triangle.h"   // for Triangle
 #include "mozilla/gfx/gfxVars.h"    // for gfxVars
->>>>>>> upstream-releases
 #include "mozilla/layers/ImageDataSerializer.h"
 #include "mozilla/layers/LayerManagerComposite.h"  // for LayerComposite, etc
 #include "mozilla/layers/CompositingRenderTargetOGL.h"
@@ -65,34 +33,11 @@
 #include "mozilla/layers/TextureHostOGL.h"  // for TextureSourceOGL, etc
 #include "mozilla/layers/PTextureParent.h"  // for OtherPid() on PTextureParent
 #ifdef XP_DARWIN
-<<<<<<< HEAD
-#include "mozilla/layers/TextureSync.h"  // for TextureSync::etc.
-||||||| merged common ancestors
-#include "mozilla/layers/TextureSync.h" // for TextureSync::etc.
-=======
 #  include "mozilla/layers/TextureSync.h"  // for TextureSync::etc.
->>>>>>> upstream-releases
 #endif
 #include "mozilla/mozalloc.h"  // for operator delete, etc
 #include "nsAppRunner.h"
 #include "nsAString.h"
-<<<<<<< HEAD
-#include "nsIConsoleService.h"      // for nsIConsoleService, etc
-#include "nsIWidget.h"              // for nsIWidget
-#include "nsLiteralString.h"        // for NS_LITERAL_STRING
-#include "nsMathUtils.h"            // for NS_roundf
-#include "nsRect.h"                 // for mozilla::gfx::IntRect
-#include "nsServiceManagerUtils.h"  // for do_GetService
-#include "nsString.h"               // for nsString, nsAutoCString, etc
-||||||| merged common ancestors
-#include "nsIConsoleService.h"          // for nsIConsoleService, etc
-#include "nsIWidget.h"                  // for nsIWidget
-#include "nsLiteralString.h"            // for NS_LITERAL_STRING
-#include "nsMathUtils.h"                // for NS_roundf
-#include "nsRect.h"                     // for mozilla::gfx::IntRect
-#include "nsServiceManagerUtils.h"      // for do_GetService
-#include "nsString.h"                   // for nsString, nsAutoCString, etc
-=======
 #include "nsIConsoleService.h"      // for nsIConsoleService, etc
 #include "nsIWidget.h"              // for nsIWidget
 #include "nsLiteralString.h"        // for NS_LITERAL_STRING
@@ -101,7 +46,6 @@
 #include "nsServiceManagerUtils.h"  // for do_GetService
 #include "nsString.h"               // for nsString, nsAutoCString, etc
 #include "OGLShaderProgram.h"       // for ShaderProgramOGL, etc
->>>>>>> upstream-releases
 #include "ScopedGLHelpers.h"
 #include "GLReadTexImageHelper.h"
 #include "GLBlitTextureImageHelper.h"
@@ -139,16 +83,8 @@ class AsyncReadbackBufferOGL final : public AsyncReadbackBuffer {
     mGL->fPixelStorei(LOCAL_GL_PACK_ALIGNMENT, 1);
   }
 
-<<<<<<< HEAD
- protected:
-  ~AsyncReadbackBufferOGL() override;
-||||||| merged common ancestors
-protected:
-  ~AsyncReadbackBufferOGL() override;
-=======
  protected:
   virtual ~AsyncReadbackBufferOGL();
->>>>>>> upstream-releases
 
  private:
   GLContext* mGL;
@@ -217,16 +153,6 @@ bool AsyncReadbackBufferOGL::MapAndCopyInto(DataSourceSurface* aSurface,
   return true;
 }
 
-<<<<<<< HEAD
-static void BindMaskForProgram(ShaderProgramOGL* aProgram,
-                               TextureSourceOGL* aSourceMask, GLenum aTexUnit,
-                               const gfx::Matrix4x4& aTransform) {
-||||||| merged common ancestors
-static void
-BindMaskForProgram(ShaderProgramOGL* aProgram, TextureSourceOGL* aSourceMask,
-                   GLenum aTexUnit, const gfx::Matrix4x4& aTransform)
-{
-=======
 PerUnitTexturePoolOGL::PerUnitTexturePoolOGL(gl::GLContext* aGL)
     : mTextureTarget(0),  // zero is never a valid texture target
       mGL(aGL) {}
@@ -236,7 +162,6 @@ PerUnitTexturePoolOGL::~PerUnitTexturePoolOGL() { DestroyTextures(); }
 static void BindMaskForProgram(ShaderProgramOGL* aProgram,
                                TextureSourceOGL* aSourceMask, GLenum aTexUnit,
                                const gfx::Matrix4x4& aTransform) {
->>>>>>> upstream-releases
   MOZ_ASSERT(LOCAL_GL_TEXTURE0 <= aTexUnit && aTexUnit <= LOCAL_GL_TEXTURE31);
   aSourceMask->BindTexture(aTexUnit, gfx::SamplingFilter::LINEAR);
   aProgram->SetMaskTextureUnit(aTexUnit - LOCAL_GL_TEXTURE0);
@@ -302,15 +227,8 @@ already_AddRefed<mozilla::gl::GLContext> CompositorOGL::CreateContext() {
 #ifdef XP_WIN
   if (gfxEnv::LayersPreferEGL()) {
     printf_stderr("Trying GL layers...\n");
-<<<<<<< HEAD
-    context =
-        gl::GLContextProviderEGL::CreateForCompositorWidget(mWidget, false);
-||||||| merged common ancestors
-    context = gl::GLContextProviderEGL::CreateForCompositorWidget(mWidget, false);
-=======
     context = gl::GLContextProviderEGL::CreateForCompositorWidget(
         mWidget, /* aWebRender */ false, /* aForceAccelerated */ false);
->>>>>>> upstream-releases
   }
 #endif
 
@@ -327,18 +245,10 @@ already_AddRefed<mozilla::gl::GLContext> CompositorOGL::CreateContext() {
   }
 
   if (!context) {
-<<<<<<< HEAD
-    context = gl::GLContextProvider::CreateForCompositorWidget(
-        mWidget, gfxVars::RequiresAcceleratedGLContextForCompositorOGL());
-||||||| merged common ancestors
-    context = gl::GLContextProvider::CreateForCompositorWidget(mWidget,
-                gfxVars::RequiresAcceleratedGLContextForCompositorOGL());
-=======
     context = gl::GLContextProvider::CreateForCompositorWidget(
         mWidget,
         /* aWebRender */ false,
         gfxVars::RequiresAcceleratedGLContextForCompositorOGL());
->>>>>>> upstream-releases
   }
 
   if (!context) {
@@ -755,34 +665,14 @@ void CompositorOGL::SetRenderTarget(CompositingRenderTarget* aSurface) {
   PrepareViewport(mCurrentRenderTarget);
 }
 
-<<<<<<< HEAD
-CompositingRenderTarget* CompositorOGL::GetCurrentRenderTarget() const {
-  return mCurrentRenderTarget;
-||||||| merged common ancestors
-CompositingRenderTarget*
-CompositorOGL::GetCurrentRenderTarget() const
-{
-  return mCurrentRenderTarget;
-=======
 already_AddRefed<CompositingRenderTarget>
 CompositorOGL::GetCurrentRenderTarget() const {
   return do_AddRef(mCurrentRenderTarget);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-CompositingRenderTarget* CompositorOGL::GetWindowRenderTarget() const {
-  return mWindowRenderTarget;
-||||||| merged common ancestors
-CompositingRenderTarget*
-CompositorOGL::GetWindowRenderTarget() const
-{
-  return mWindowRenderTarget;
-=======
 already_AddRefed<CompositingRenderTarget> CompositorOGL::GetWindowRenderTarget()
     const {
   return do_AddRef(mWindowRenderTarget);
->>>>>>> upstream-releases
 }
 
 already_AddRefed<AsyncReadbackBuffer> CompositorOGL::CreateAsyncReadbackBuffer(
@@ -914,24 +804,6 @@ void CompositorOGL::BeginFrame(const nsIntRegion& aInvalidRegion,
     aClipRectOut->SetRect(0, 0, width, height);
   }
 
-<<<<<<< HEAD
-#if defined(MOZ_WIDGET_ANDROID)
-  if ((mSurfaceOrigin.x > 0) || (mSurfaceOrigin.y > 0)) {
-    mGLContext->fClearColor(gfxPrefs::CompositorOverrideClearColorR(),
-                            gfxPrefs::CompositorOverrideClearColorG(),
-                            gfxPrefs::CompositorOverrideClearColorB(),
-                            gfxPrefs::CompositorOverrideClearColorA());
-  } else {
-    mGLContext->fClearColor(mClearColor.r, mClearColor.g, mClearColor.b,
-                            mClearColor.a);
-  }
-#else
-  mGLContext->fClearColor(mClearColor.r, mClearColor.g, mClearColor.b,
-                          mClearColor.a);
-#endif  // defined(MOZ_WIDGET_ANDROID)
-||||||| merged common ancestors
-  mGLContext->fClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
-=======
 #if defined(MOZ_WIDGET_ANDROID)
   if ((mSurfaceOrigin.x > 0) || (mSurfaceOrigin.y > 0)) {
     mGLContext->fClearColor(
@@ -947,7 +819,6 @@ void CompositorOGL::BeginFrame(const nsIntRegion& aInvalidRegion,
   mGLContext->fClearColor(mClearColor.r, mClearColor.g, mClearColor.b,
                           mClearColor.a);
 #endif  // defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
   mGLContext->fClear(LOCAL_GL_COLOR_BUFFER_BIT | LOCAL_GL_DEPTH_BUFFER_BIT);
 }
 
@@ -1363,16 +1234,8 @@ void CompositorOGL::DrawGeometry(const Geometry& aGeometry,
 
   // Only apply DEAA to quads that have been transformed such that aliasing
   // could be visible
-<<<<<<< HEAD
-  bool bEnableAA =
-      gfxPrefs::LayersDEAAEnabled() && !aTransform.Is2DIntegerTranslation();
-||||||| merged common ancestors
-  bool bEnableAA = gfxPrefs::LayersDEAAEnabled() &&
-                   !aTransform.Is2DIntegerTranslation();
-=======
   bool bEnableAA = StaticPrefs::layers_deaa_enabled() &&
                    !aTransform.Is2DIntegerTranslation();
->>>>>>> upstream-releases
 
   bool colorMatrix = aEffectChain.mSecondaryEffects[EffectTypes::COLOR_MATRIX];
   ShaderConfigOGL config =
@@ -1685,25 +1548,11 @@ void CompositorOGL::DrawGeometry(const Geometry& aGeometry,
       // that cancels the other one out.
       didSetBlendMode = SetBlendMode(gl(), blendMode);
       BindAndDrawGeometry(program, aGeometry);
-<<<<<<< HEAD
-    } break;
-    case EffectTypes::COMPONENT_ALPHA: {
-      MOZ_ASSERT(gfxPrefs::ComponentAlphaEnabled());
-      MOZ_ASSERT(blendMode == gfx::CompositionOp::OP_OVER,
-                 "Can't support blend modes with component alpha!");
-||||||| merged common ancestors
-    }
-    break;
-  case EffectTypes::COMPONENT_ALPHA: {
-      MOZ_ASSERT(gfxPrefs::ComponentAlphaEnabled());
-      MOZ_ASSERT(blendMode == gfx::CompositionOp::OP_OVER, "Can't support blend modes with component alpha!");
-=======
     } break;
     case EffectTypes::COMPONENT_ALPHA: {
       MOZ_ASSERT(StaticPrefs::layers_componentalpha_enabled());
       MOZ_ASSERT(blendMode == gfx::CompositionOp::OP_OVER,
                  "Can't support blend modes with component alpha!");
->>>>>>> upstream-releases
       EffectComponentAlpha* effectComponentAlpha =
           static_cast<EffectComponentAlpha*>(aEffectChain.mPrimaryEffect.get());
       TextureSourceOGL* sourceOnWhite =
@@ -2124,18 +1973,8 @@ GLuint CompositorOGL::GetTemporaryTexture(GLenum aTarget, GLenum aUnit) {
   return mTexturePool->GetTexture(aTarget, aUnit);
 }
 
-<<<<<<< HEAD
-bool CompositorOGL::SupportsTextureDirectMapping() {
-  if (!gfxPrefs::AllowTextureDirectMapping()) {
-||||||| merged common ancestors
-bool
-CompositorOGL::SupportsTextureDirectMapping()
-{
-  if (!gfxPrefs::AllowTextureDirectMapping()) {
-=======
 bool CompositorOGL::SupportsTextureDirectMapping() {
   if (!StaticPrefs::gfx_allow_texture_direct_mapping()) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -2188,15 +2027,6 @@ void PerUnitTexturePoolOGL::DestroyTextures() {
   mTextures.SetLength(0);
 }
 
-<<<<<<< HEAD
-bool CompositorOGL::SupportsLayerGeometry() const {
-  return gfxPrefs::OGLLayerGeometry();
-||||||| merged common ancestors
-bool
-CompositorOGL::SupportsLayerGeometry() const
-{
-  return gfxPrefs::OGLLayerGeometry();
-=======
 bool CompositorOGL::SupportsLayerGeometry() const {
   return StaticPrefs::layers_geometry_opengl_enabled();
 }
@@ -2217,7 +2047,6 @@ void CompositorOGL::UnregisterTextureSource(TextureSource* aTextureSource) {
   }
   mRegisteredTextureSources.erase(aTextureSource);
 #endif
->>>>>>> upstream-releases
 }
 
 }  // namespace layers

@@ -93,21 +93,10 @@ void JsepTrack::EnsureSsrcs(SsrcGenerator& ssrcGenerator) {
   }
 }
 
-<<<<<<< HEAD
-void JsepTrack::PopulateCodecs(
-    const std::vector<UniquePtr<JsepCodecDescription>>& prototype) {
-  for (const auto& prototypeCodec : prototype) {
-||||||| merged common ancestors
-void
-JsepTrack::PopulateCodecs(const std::vector<JsepCodecDescription*>& prototype)
-{
-  for (const JsepCodecDescription* prototypeCodec : prototype) {
-=======
 void JsepTrack::PopulateCodecs(
     const std::vector<UniquePtr<JsepCodecDescription>>& prototype) {
   mPrototypeCodecs.clear();
   for (const auto& prototypeCodec : prototype) {
->>>>>>> upstream-releases
     if (prototypeCodec->mType == mType) {
       mPrototypeCodecs.emplace_back(prototypeCodec->Clone());
       mPrototypeCodecs.back()->mDirection = mDirection;
@@ -117,20 +106,9 @@ void JsepTrack::PopulateCodecs(
   EnsureNoDuplicatePayloadTypes(&mPrototypeCodecs);
 }
 
-<<<<<<< HEAD
-void JsepTrack::AddToOffer(SsrcGenerator& ssrcGenerator, bool encodeTrackId,
-                           SdpMediaSection* offer) {
-  AddToMsection(mPrototypeCodecs, encodeTrackId, offer);
-||||||| merged common ancestors
-void
-JsepTrack::AddToOffer(SsrcGenerator& ssrcGenerator, SdpMediaSection* offer)
-{
-  AddToMsection(mPrototypeCodecs.values, offer);
-=======
 void JsepTrack::AddToOffer(SsrcGenerator& ssrcGenerator,
                            SdpMediaSection* offer) {
   AddToMsection(mPrototypeCodecs, offer);
->>>>>>> upstream-releases
 
   if (mDirection == sdp::kSend) {
     std::vector<JsConstraints> constraints;
@@ -141,48 +119,18 @@ void JsepTrack::AddToOffer(SsrcGenerator& ssrcGenerator,
   }
 }
 
-<<<<<<< HEAD
-void JsepTrack::AddToAnswer(const SdpMediaSection& offer,
-                            SsrcGenerator& ssrcGenerator, bool encodeTrackId,
-                            SdpMediaSection* answer) {
-||||||| merged common ancestors
-void
-JsepTrack::AddToAnswer(const SdpMediaSection& offer,
-                       SsrcGenerator& ssrcGenerator,
-                       SdpMediaSection* answer)
-{
-=======
 void JsepTrack::AddToAnswer(const SdpMediaSection& offer,
                             SsrcGenerator& ssrcGenerator,
                             SdpMediaSection* answer) {
->>>>>>> upstream-releases
   // We do not modify mPrototypeCodecs here, since we're only creating an
   // answer. Once offer/answer concludes, we will update mPrototypeCodecs.
-<<<<<<< HEAD
-  std::vector<UniquePtr<JsepCodecDescription>> codecs;
-  codecs = GetCodecClones();
-  NegotiateCodecs(offer, &codecs);
-  if (codecs.empty()) {
-||||||| merged common ancestors
-  PtrVector<JsepCodecDescription> codecs;
-  codecs.values = GetCodecClones();
-  NegotiateCodecs(offer, &codecs.values);
-  if (codecs.values.empty()) {
-=======
   std::vector<UniquePtr<JsepCodecDescription>> codecs =
       NegotiateCodecs(offer, true);
   if (codecs.empty()) {
->>>>>>> upstream-releases
     return;
   }
 
-<<<<<<< HEAD
-  AddToMsection(codecs, encodeTrackId, answer);
-||||||| merged common ancestors
-  AddToMsection(codecs.values, answer);
-=======
   AddToMsection(codecs, answer);
->>>>>>> upstream-releases
 
   if (mDirection == sdp::kSend) {
     std::vector<JsConstraints> constraints;
@@ -219,20 +167,9 @@ bool JsepTrack::SetJsConstraints(
   return constraintsChanged;
 }
 
-<<<<<<< HEAD
-void JsepTrack::AddToMsection(
-    const std::vector<UniquePtr<JsepCodecDescription>>& codecs,
-    bool encodeTrackId, SdpMediaSection* msection) {
-||||||| merged common ancestors
-void
-JsepTrack::AddToMsection(const std::vector<JsepCodecDescription*>& codecs,
-                         SdpMediaSection* msection)
-{
-=======
 void JsepTrack::AddToMsection(
     const std::vector<UniquePtr<JsepCodecDescription>>& codecs,
     SdpMediaSection* msection) {
->>>>>>> upstream-releases
   MOZ_ASSERT(msection->GetMediaType() == mType);
   MOZ_ASSERT(!codecs.empty());
 
@@ -243,22 +180,10 @@ void JsepTrack::AddToMsection(
   if ((mDirection == sdp::kSend) && (mType != SdpMediaSection::kApplication) &&
       msection->IsSending()) {
     if (mStreamIds.empty()) {
-      msection->AddMsid("-", encodeTrackId ? mTrackId : "");
+      msection->AddMsid("-", mTrackId);
     } else {
       for (const std::string& streamId : mStreamIds) {
-<<<<<<< HEAD
-        msection->AddMsid(streamId, encodeTrackId ? mTrackId : "");
-        // TODO(bug 1402912) Interop hack; older Firefox barfs if there is more
-        // than one msid. Remove when safe.
-        break;
-||||||| merged common ancestors
         msection->AddMsid(streamId, mTrackId);
-        // TODO(bug 1402912) Interop hack; older Firefox barfs if there is more
-        // than one msid. Remove when safe.
-        break;
-=======
-        msection->AddMsid(streamId, mTrackId);
->>>>>>> upstream-releases
       }
     }
   }
@@ -450,61 +375,18 @@ static bool CompareCodec(const UniquePtr<JsepCodecDescription>& lhs,
   return lhs->mStronglyPreferred && !rhs->mStronglyPreferred;
 }
 
-<<<<<<< HEAD
-void JsepTrack::NegotiateCodecs(
-    const SdpMediaSection& remote,
-    std::vector<UniquePtr<JsepCodecDescription>>* codecs,
-    std::map<std::string, std::string>* formatChanges) const {
-  MOZ_ASSERT(codecs->size());
-  std::vector<UniquePtr<JsepCodecDescription>> unnegotiatedCodecs;
-  std::swap(unnegotiatedCodecs, *codecs);
-||||||| merged common ancestors
-void
-JsepTrack::NegotiateCodecs(
-    const SdpMediaSection& remote,
-    std::vector<JsepCodecDescription*>* codecs,
-    std::map<std::string, std::string>* formatChanges) const
-{
-  MOZ_ASSERT(codecs->size());
-  PtrVector<JsepCodecDescription> unnegotiatedCodecs;
-  std::swap(unnegotiatedCodecs.values, *codecs);
-=======
 std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
     const SdpMediaSection& remote, bool isOffer) {
   std::vector<UniquePtr<JsepCodecDescription>> negotiatedCodecs;
   std::vector<UniquePtr<JsepCodecDescription>> newPrototypeCodecs;
->>>>>>> upstream-releases
 
   // Outer loop establishes the remote side's preference
   for (const std::string& fmt : remote.GetFormats()) {
-<<<<<<< HEAD
-    for (auto& codec : unnegotiatedCodecs) {
-||||||| merged common ancestors
-    for (size_t i = 0; i < unnegotiatedCodecs.values.size(); ++i) {
-      JsepCodecDescription* codec = unnegotiatedCodecs.values[i];
-=======
     for (auto& codec : mPrototypeCodecs) {
->>>>>>> upstream-releases
       if (!codec || !codec->mEnabled || !codec->Matches(fmt, remote)) {
         continue;
       }
 
-<<<<<<< HEAD
-      std::string originalFormat = codec->mDefaultPt;
-      if (codec->Negotiate(fmt, remote)) {
-        if (formatChanges) {
-          (*formatChanges)[originalFormat] = codec->mDefaultPt;
-        }
-        codecs->push_back(std::move(codec));
-||||||| merged common ancestors
-      std::string originalFormat = codec->mDefaultPt;
-      if(codec->Negotiate(fmt, remote)) {
-        codecs->push_back(codec);
-        unnegotiatedCodecs.values[i] = nullptr;
-        if (formatChanges) {
-          (*formatChanges)[originalFormat] = codec->mDefaultPt;
-        }
-=======
       // First codec of ours that matches. See if we can negotiate it.
       UniquePtr<JsepCodecDescription> clone(codec->Clone());
       if (clone->Negotiate(fmt, remote, isOffer)) {
@@ -515,7 +397,6 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
         // negotiated codecs to be placed up front in the future.
         newPrototypeCodecs.emplace_back(std::move(codec));
         negotiatedCodecs.emplace_back(std::move(clone));
->>>>>>> upstream-releases
         break;
       }
     }
@@ -539,13 +420,7 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
   JsepAudioCodecDescription* dtmf = nullptr;
   // We can safely cast here since JsepTrack has a MediaType and only codecs
   // that match that MediaType (kAudio or kVideo) are added.
-<<<<<<< HEAD
-  for (auto& codec : *codecs) {
-||||||| merged common ancestors
-  for (auto codec : *codecs) {
-=======
   for (auto& codec : negotiatedCodecs) {
->>>>>>> upstream-releases
     if (codec->mName == "red") {
       red = static_cast<JsepVideoCodecDescription*>(codec.get());
     } else if (codec->mName == "ulpfec") {
@@ -563,13 +438,7 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
     std::swap(unnegotiatedEncodings, red->mRedundantEncodings);
     for (auto redundantPt : unnegotiatedEncodings) {
       std::string pt = std::to_string(redundantPt);
-<<<<<<< HEAD
-      for (const auto& codec : *codecs) {
-||||||| merged common ancestors
-      for (auto codec : *codecs) {
-=======
       for (const auto& codec : negotiatedCodecs) {
->>>>>>> upstream-releases
         if (pt == codec->mDefaultPt) {
           red->mRedundantEncodings.push_back(redundantPt);
           break;
@@ -582,13 +451,7 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
   // a rtcpfb attr). If we see both red and ulpfec codecs, we enable FEC
   // on all the other codecs.
   if (red && ulpfec) {
-<<<<<<< HEAD
-    for (auto& codec : *codecs) {
-||||||| merged common ancestors
-    for (auto codec : *codecs) {
-=======
     for (auto& codec : negotiatedCodecs) {
->>>>>>> upstream-releases
       if (codec->mName != "red" && codec->mName != "ulpfec") {
         JsepVideoCodecDescription* videoCodec =
             static_cast<JsepVideoCodecDescription*>(codec.get());
@@ -602,13 +465,7 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
   // rtcpfb attr). If we see the telephone-event codec, we enabled dtmf
   // support on all the other audio codecs.
   if (dtmf) {
-<<<<<<< HEAD
-    for (auto& codec : *codecs) {
-||||||| merged common ancestors
-    for (auto codec : *codecs) {
-=======
     for (auto& codec : negotiatedCodecs) {
->>>>>>> upstream-releases
       JsepAudioCodecDescription* audioCodec =
           static_cast<JsepAudioCodecDescription*>(codec.get());
       audioCodec->mDtmfEnabled = true;
@@ -617,57 +474,6 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
 
   // Make sure strongly preferred codecs are up front, overriding the remote
   // side's preference.
-<<<<<<< HEAD
-  std::stable_sort(codecs->begin(), codecs->end(), CompareCodec);
-
-  // TODO(bug 814227): Remove this once we're ready to put multiple codecs in an
-  // answer.  For now, remove all but the first codec unless the red codec
-  // exists, in which case we include the others per RFC 5109, section 14.2.
-  if (!codecs->empty() && !red) {
-    std::vector<UniquePtr<JsepCodecDescription>> codecsToKeep;
-
-    bool foundPreferredCodec = false;
-    for (auto& codec : *codecs) {
-      if (codec.get() == dtmf) {
-        codecsToKeep.push_back(std::move(codec));
-        // TODO: keep ulpfec when we enable it in Bug 875922
-        // } else if (codec.get() == ulpfec) {
-        //   codecsToKeep.push_back(std::move(codec));
-      } else if (!foundPreferredCodec) {
-        codecsToKeep.insert(codecsToKeep.begin(), std::move(codec));
-        foundPreferredCodec = true;
-      }
-    }
-
-    *codecs = std::move(codecsToKeep);
-  }
-||||||| merged common ancestors
-  std::stable_sort(codecs->begin(), codecs->end(), CompareCodec);
-
-  // TODO(bug 814227): Remove this once we're ready to put multiple codecs in an
-  // answer.  For now, remove all but the first codec unless the red codec
-  // exists, in which case we include the others per RFC 5109, section 14.2.
-  if (!codecs->empty() && !red) {
-    std::vector<JsepCodecDescription*> codecsToKeep;
-
-    bool foundPreferredCodec = false;
-    for (auto codec: *codecs) {
-      if (codec == dtmf) {
-        codecsToKeep.push_back(codec);
-      // TODO: keep ulpfec when we enable it in Bug 875922
-      // } else if (codec == ulpfec) {
-      //   codecsToKeep.push_back(codec);
-      } else if (!foundPreferredCodec) {
-        codecsToKeep.insert(codecsToKeep.begin(), codec);
-        foundPreferredCodec = true;
-      } else {
-        delete codec;
-      }
-    }
-
-    *codecs = codecsToKeep;
-  }
-=======
   std::stable_sort(negotiatedCodecs.begin(), negotiatedCodecs.end(),
                    CompareCodec);
 
@@ -684,65 +490,12 @@ std::vector<UniquePtr<JsepCodecDescription>> JsepTrack::NegotiateCodecs(
   }
 
   return negotiatedCodecs;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void JsepTrack::Negotiate(const SdpMediaSection& answer,
-                          const SdpMediaSection& remote) {
-  std::vector<UniquePtr<JsepCodecDescription>> negotiatedCodecs;
-  negotiatedCodecs = GetCodecClones();
-
-  std::map<std::string, std::string> formatChanges;
-  NegotiateCodecs(remote, &negotiatedCodecs, &formatChanges);
-
-  // Use |formatChanges| to update mPrototypeCodecs
-  size_t insertPos = 0;
-  for (auto& codec : mPrototypeCodecs) {
-    if (formatChanges.count(codec->mDefaultPt)) {
-      // Update the payload type to what was negotiated
-      codec->mDefaultPt = formatChanges[codec->mDefaultPt];
-      // Move this negotiated codec up front
-      std::swap(mPrototypeCodecs[insertPos], codec);
-      ++insertPos;
-    }
-  }
-
-  EnsureNoDuplicatePayloadTypes(&mPrototypeCodecs);
-||||||| merged common ancestors
-void
-JsepTrack::Negotiate(const SdpMediaSection& answer,
-                     const SdpMediaSection& remote)
-{
-  PtrVector<JsepCodecDescription> negotiatedCodecs;
-  negotiatedCodecs.values = GetCodecClones();
-
-  std::map<std::string, std::string> formatChanges;
-  NegotiateCodecs(remote,
-                  &negotiatedCodecs.values,
-                  &formatChanges);
-
-  // Use |formatChanges| to update mPrototypeCodecs
-  size_t insertPos = 0;
-  for (size_t i = 0; i < mPrototypeCodecs.values.size(); ++i) {
-    if (formatChanges.count(mPrototypeCodecs.values[i]->mDefaultPt)) {
-      // Update the payload type to what was negotiated
-      mPrototypeCodecs.values[i]->mDefaultPt =
-        formatChanges[mPrototypeCodecs.values[i]->mDefaultPt];
-      // Move this negotiated codec up front
-      std::swap(mPrototypeCodecs.values[insertPos],
-                mPrototypeCodecs.values[i]);
-      ++insertPos;
-    }
-  }
-
-  EnsureNoDuplicatePayloadTypes(&mPrototypeCodecs.values);
-=======
 void JsepTrack::Negotiate(const SdpMediaSection& answer,
                           const SdpMediaSection& remote) {
   std::vector<UniquePtr<JsepCodecDescription>> negotiatedCodecs =
       NegotiateCodecs(remote, &answer != &remote);
->>>>>>> upstream-releases
 
   UniquePtr<JsepTrackNegotiatedDetails> negotiatedDetails =
       MakeUnique<JsepTrackNegotiatedDetails>();

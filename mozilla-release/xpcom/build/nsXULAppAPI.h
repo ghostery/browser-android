@@ -361,43 +361,6 @@ XRE_API(void, XRE_TermEmbedding, ())
  * @param aINIFile The INI file to parse
  * @param aAppData The nsXREAppData structure to fill.
  */
-<<<<<<< HEAD
-XRE_API(nsresult, XRE_ParseAppData,
-        (nsIFile * aINIFile, mozilla::XREAppData& aAppData))
-
-enum GeckoProcessType {
-  GeckoProcessType_Default = 0,
-
-  GeckoProcessType_Plugin,
-  GeckoProcessType_Content,
-
-  GeckoProcessType_IPDLUnitTest,
-
-  GeckoProcessType_GMPlugin,  // Gecko Media Plugin
-
-  GeckoProcessType_GPU,  // GPU and compositor process
-  GeckoProcessType_VR,   // VR process
-  GeckoProcessType_RDD,  // RDD (RemoteDataDecoder process)
-||||||| merged common ancestors
-XRE_API(nsresult,
-        XRE_ParseAppData, (nsIFile* aINIFile,
-                           mozilla::XREAppData& aAppData))
-
-enum GeckoProcessType
-{
-  GeckoProcessType_Default = 0,
-
-  GeckoProcessType_Plugin,
-  GeckoProcessType_Content,
-
-  GeckoProcessType_IPDLUnitTest,
-
-  GeckoProcessType_GMPlugin, // Gecko Media Plugin
-
-  GeckoProcessType_GPU,      // GPU and compositor process
-  GeckoProcessType_PDFium,   // Gecko PDFium process
-  GeckoProcessType_VR,       // VR process
-=======
 XRE_API(nsresult, XRE_ParseAppData,
         (nsIFile * aINIFile, mozilla::XREAppData& aAppData))
 
@@ -406,48 +369,24 @@ enum GeckoProcessType {
   GeckoProcessType_##enum_name,
 #include "mozilla/GeckoProcessTypes.h"
 #undef GECKO_PROCESS_TYPE
->>>>>>> upstream-releases
   GeckoProcessType_End,
   GeckoProcessType_Invalid = GeckoProcessType_End
 };
 
 static const char* const kGeckoProcessTypeString[] = {
-<<<<<<< HEAD
-    "default",          "plugin", "tab", "ipdlunittest",
-    "geckomediaplugin", "gpu",    "vr",  "rdd"};
-||||||| merged common ancestors
-  "default",
-  "plugin",
-  "tab",
-  "ipdlunittest",
-  "geckomediaplugin",
-  "gpu",
-  "pdfium",
-  "vr"
-};
-=======
 #define GECKO_PROCESS_TYPE(enum_name, string_name, xre_name, bin_type) \
   string_name,
 #include "mozilla/GeckoProcessTypes.h"
 #undef GECKO_PROCESS_TYPE
 };
->>>>>>> upstream-releases
 
 static_assert(MOZ_ARRAY_LENGTH(kGeckoProcessTypeString) == GeckoProcessType_End,
               "Array length mismatch");
 
-<<<<<<< HEAD
-XRE_API(const char*, XRE_ChildProcessTypeToString,
-        (GeckoProcessType aProcessType))
-||||||| merged common ancestors
-XRE_API(const char*,
-        XRE_ChildProcessTypeToString, (GeckoProcessType aProcessType))
-=======
 XRE_API(const char*, XRE_ChildProcessTypeToString,
         (GeckoProcessType aProcessType))
 XRE_API(const char*, XRE_ChildProcessTypeToAnnotation,
         (GeckoProcessType aProcessType))
->>>>>>> upstream-releases
 
 #if defined(MOZ_WIDGET_ANDROID)
 struct XRE_AndroidChildFds {
@@ -462,23 +401,7 @@ XRE_API(void, XRE_SetAndroidChildFds,
         (JNIEnv * env, const XRE_AndroidChildFds& fds))
 #endif  // defined(MOZ_WIDGET_ANDROID)
 
-<<<<<<< HEAD
 XRE_API(void, XRE_SetProcessType, (const char* aProcessTypeString))
-
-// Used in the "master" parent process hosting the crash server
-XRE_API(bool, XRE_TakeMinidumpForChild,
-        (uint32_t aChildPid, nsIFile** aDump, uint32_t* aSequence))
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_SetProcessType, (const char* aProcessTypeString))
-
-// Used in the "master" parent process hosting the crash server
-XRE_API(bool,
-        XRE_TakeMinidumpForChild, (uint32_t aChildPid, nsIFile** aDump,
-                                   uint32_t* aSequence))
-=======
-XRE_API(void, XRE_SetProcessType, (const char* aProcessTypeString))
->>>>>>> upstream-releases
 
 // Used in child processes.
 #if defined(XP_WIN)
@@ -514,54 +437,17 @@ XRE_API(bool, XRE_IsE10sParentProcess, ())
  * the e10s parent process or called in the main process when e10s is
  * disabled.
  */
-<<<<<<< HEAD
-XRE_API(bool, XRE_IsParentProcess, ())
-
-XRE_API(bool, XRE_IsContentProcess, ())
-
-XRE_API(bool, XRE_IsGPUProcess, ())
-
-XRE_API(bool, XRE_IsRDDProcess, ())
-||||||| merged common ancestors
-XRE_API(bool,
-        XRE_IsParentProcess, ())
-
-XRE_API(bool,
-        XRE_IsContentProcess, ())
-
-XRE_API(bool,
-        XRE_IsGPUProcess, ())
-=======
 #define GECKO_PROCESS_TYPE(enum_name, string_name, xre_name, bin_type) \
   XRE_API(bool, XRE_Is##xre_name##Process, ())
 #include "mozilla/GeckoProcessTypes.h"
 #undef GECKO_PROCESS_TYPE
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(bool, XRE_IsVRProcess, ())
-
-XRE_API(bool, XRE_IsPluginProcess, ())
-||||||| merged common ancestors
-XRE_API(bool,
-        XRE_IsVRProcess, ())
-
-XRE_API(bool,
-        XRE_IsPluginProcess, ())
-=======
 XRE_API(bool, XRE_IsSocketProcess, ())
->>>>>>> upstream-releases
 
 /**
  * Returns true if the appshell should run its own native event loop. Returns
  * false if we should rely solely on the Gecko event loop.
  */
-<<<<<<< HEAD
-XRE_API(bool, XRE_UseNativeEventProcessing, ())
-||||||| merged common ancestors
-XRE_API(bool,
-        XRE_UseNativeEventProcessing, ())
-=======
 XRE_API(bool, XRE_UseNativeEventProcessing, ())
 
 #if defined(XP_WIN)
@@ -571,7 +457,6 @@ XRE_API(bool, XRE_UseNativeEventProcessing, ())
  */
 XRE_API(bool, XRE_Win32kCallsAllowed, ())
 #endif
->>>>>>> upstream-releases
 
 typedef void (*MainFunction)(void* aData);
 
@@ -589,96 +474,30 @@ XRE_API(nsresult, XRE_DeinitCommandLine, ())
 
 class MessageLoop;
 
-<<<<<<< HEAD
-XRE_API(void, XRE_ShutdownChildProcess, ())
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_ShutdownChildProcess, ())
-=======
 XRE_API(void, XRE_ShutdownChildProcess, ())
 
 XRE_API(MessageLoop*, XRE_GetIOMessageLoop, ())
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(MessageLoop*, XRE_GetIOMessageLoop, ())
-||||||| merged common ancestors
-XRE_API(MessageLoop*,
-        XRE_GetIOMessageLoop, ())
-=======
 XRE_API(bool, XRE_SendTestShellCommand,
         (JSContext * aCx, JSString* aCommand, JS::Value* aCallback))
 XRE_API(bool, XRE_ShutdownTestShell, ())
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(bool, XRE_SendTestShellCommand,
-        (JSContext * aCx, JSString* aCommand, JS::Value* aCallback))
-XRE_API(bool, XRE_ShutdownTestShell, ())
-||||||| merged common ancestors
-XRE_API(bool,
-        XRE_SendTestShellCommand, (JSContext* aCx,
-                                   JSString* aCommand,
-                                   JS::Value* aCallback))
-XRE_API(bool,
-        XRE_ShutdownTestShell, ())
-=======
 XRE_API(void, XRE_InstallX11ErrorHandler, ())
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(void, XRE_InstallX11ErrorHandler, ())
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_InstallX11ErrorHandler, ())
-=======
 XRE_API(void, XRE_TelemetryAccumulate, (int aID, uint32_t aSample))
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(void, XRE_TelemetryAccumulate, (int aID, uint32_t aSample))
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_TelemetryAccumulate, (int aID, uint32_t aSample))
-=======
 XRE_API(void, XRE_StartupTimelineRecord, (int aEvent, mozilla::TimeStamp aWhen))
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(void, XRE_StartupTimelineRecord, (int aEvent, mozilla::TimeStamp aWhen))
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_StartupTimelineRecord, (int aEvent, mozilla::TimeStamp aWhen))
-=======
 XRE_API(void, XRE_InitOmnijar, (nsIFile * aGreOmni, nsIFile* aAppOmni))
 XRE_API(void, XRE_StopLateWriteChecks, (void))
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(void, XRE_InitOmnijar, (nsIFile * aGreOmni, nsIFile* aAppOmni))
-XRE_API(void, XRE_StopLateWriteChecks, (void))
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_InitOmnijar, (nsIFile* aGreOmni,
-                          nsIFile* aAppOmni))
-XRE_API(void,
-        XRE_StopLateWriteChecks, (void))
-=======
 XRE_API(void, XRE_EnableSameExecutableForContentProc, ())
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-XRE_API(void, XRE_EnableSameExecutableForContentProc, ())
-||||||| merged common ancestors
-XRE_API(void,
-        XRE_EnableSameExecutableForContentProc, ())
-=======
 namespace mozilla {
 enum class BinPathType { Self, PluginContainer };
 }
 XRE_API(mozilla::BinPathType, XRE_GetChildProcBinPathType,
         (GeckoProcessType aProcessType));
->>>>>>> upstream-releases
 
 XRE_API(int, XRE_XPCShellMain,
         (int argc, char** argv, char** envp, const XREShellData* aShellData))

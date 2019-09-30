@@ -23,14 +23,6 @@ class BoxContext;
 class BoxReader;
 class Moof;
 
-<<<<<<< HEAD
-class Mvhd : public Atom {
- public:
-||||||| merged common ancestors
-class Mvhd : public Atom
-{
-public:
-=======
 // Used to track the CTS end time of the last sample of a track
 // in the preceeding Moof, so that we can smooth tracks' timestamps
 // across Moofs.
@@ -43,7 +35,6 @@ struct TrackEndCts {
 
 class Mvhd : public Atom {
  public:
->>>>>>> upstream-releases
   Mvhd()
       : mCreationTime(0), mModificationTime(0), mTimescale(0), mDuration(0) {}
   explicit Mvhd(Box& aBox);
@@ -205,16 +196,6 @@ class Sbgp final : public Atom  // SampleToGroup box.
   Result<Ok, nsresult> Parse(Box& aBox);
 };
 
-<<<<<<< HEAD
-struct CencSampleEncryptionInfoEntry final {
- public:
-  CencSampleEncryptionInfoEntry() {}
-||||||| merged common ancestors
-struct CencSampleEncryptionInfoEntry final
-{
-public:
-  CencSampleEncryptionInfoEntry() { }
-=======
 // Stores information form CencSampleEncryptionInformationGroupEntry (seig).
 // Cenc here refers to the common encryption standard, rather than the specific
 // cenc scheme from that standard. This structure is used for all encryption
@@ -222,7 +203,6 @@ public:
 struct CencSampleEncryptionInfoEntry final {
  public:
   CencSampleEncryptionInfoEntry() {}
->>>>>>> upstream-releases
 
   Result<Ok, nsresult> Init(BoxReader& aReader);
 
@@ -246,25 +226,6 @@ class Sgpd final : public Atom  // SampleGroupDescription box.
   Result<Ok, nsresult> Parse(Box& aBox);
 };
 
-<<<<<<< HEAD
-class AuxInfo {
- public:
-  AuxInfo(int64_t aMoofOffset, Saiz& aSaiz, Saio& aSaio);
-
- private:
-  int64_t mMoofOffset;
-  Saiz& mSaiz;
-  Saio& mSaio;
-||||||| merged common ancestors
-class AuxInfo {
-public:
-  AuxInfo(int64_t aMoofOffset, Saiz& aSaiz, Saio& aSaio);
-
-private:
-  int64_t mMoofOffset;
-  Saiz& mSaiz;
-  Saio& mSaio;
-=======
 // Audio/video entries from the sample description box (stsd). We only need to
 // store if these are encrypted, so do not need a specialized class for
 // different audio and video data. Currently most of the parsing of these
@@ -272,20 +233,8 @@ private:
 // these are encrypted when parsing the track fragment header (tfhd).
 struct SampleDescriptionEntry {
   bool mIsEncryptedEntry = false;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-class Moof final : public Atom {
- public:
-  Moof(Box& aBox, Trex& aTrex, Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts,
-       Sinf& aSinf, uint64_t* aDecoderTime, bool aIsAudio);
-||||||| merged common ancestors
-class Moof final : public Atom
-{
-public:
-  Moof(Box& aBox, Trex& aTrex, Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts, Sinf& aSinf, uint64_t* aDecoderTime, bool aIsAudio);
-=======
 // Used to indicate in variants if all tracks should be parsed.
 struct ParseAllTracks {};
 
@@ -297,7 +246,6 @@ class Moof final : public Atom {
        Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts, Sinf& aSinf,
        uint64_t* aDecodeTime, bool aIsAudio,
        nsTArray<TrackEndCts>& aTracksEndCts);
->>>>>>> upstream-releases
   bool GetAuxInfo(AtomType aType, FallibleTArray<MediaByteRange>* aByteRanges);
   void FixRounding(const Moof& aMoof);
 
@@ -315,36 +263,12 @@ class Moof final : public Atom {
   FallibleTArray<Saio> mSaios;
   nsTArray<nsTArray<uint8_t>> mPsshes;
 
-<<<<<<< HEAD
- private:
-  // aDecodeTime is updated to the end of the parsed TRAF on return.
-  void ParseTraf(Box& aBox, Trex& aTrex, Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts,
-                 Sinf& aSinf, uint64_t* aDecodeTime, bool aIsAudio);
-||||||| merged common ancestors
-private:
-    // aDecodeTime is updated to the end of the parsed TRAF on return.
-  void ParseTraf(Box& aBox, Trex& aTrex, Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts, Sinf& aSinf, uint64_t* aDecodeTime, bool aIsAudio);
-=======
  private:
   // aDecodeTime is updated to the end of the parsed TRAF on return.
   void ParseTraf(Box& aBox, const TrackParseMode& aTrackParseMode, Trex& aTrex,
                  Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts, Sinf& aSinf,
                  uint64_t* aDecodeTime, bool aIsAudio);
->>>>>>> upstream-releases
   // aDecodeTime is updated to the end of the parsed TRUN on return.
-<<<<<<< HEAD
-  Result<Ok, nsresult> ParseTrun(Box& aBox, Tfhd& aTfhd, Mvhd& aMvhd,
-                                 Mdhd& aMdhd, Edts& aEdts,
-                                 uint64_t* aDecodeTime, bool aIsAudio);
-  void ParseSaiz(Box& aBox);
-  void ParseSaio(Box& aBox);
-  bool ProcessCenc();
-||||||| merged common ancestors
-  Result<Ok, nsresult> ParseTrun(Box& aBox, Tfhd& aTfhd, Mvhd& aMvhd, Mdhd& aMdhd, Edts& aEdts, uint64_t* aDecodeTime, bool aIsAudio);
-  void ParseSaiz(Box& aBox);
-  void ParseSaio(Box& aBox);
-  bool ProcessCenc();
-=======
   Result<Ok, nsresult> ParseTrun(Box& aBox, Mvhd& aMvhd, Mdhd& aMdhd,
                                  Edts& aEdts, uint64_t* aDecodeTime,
                                  bool aIsAudio);
@@ -355,37 +279,11 @@ private:
   // from that standard. I.e. this function is used to handle up auxiliary
   // information from the cenc and cbcs schemes.
   bool ProcessCencAuxInfo(AtomType aScheme);
->>>>>>> upstream-releases
   uint64_t mMaxRoundingError;
 };
 
 DDLoggedTypeDeclName(MoofParser);
 
-<<<<<<< HEAD
-class MoofParser : public DecoderDoctorLifeLogger<MoofParser> {
- public:
-  MoofParser(ByteStream* aSource, uint32_t aTrackId, bool aIsAudio)
-      : mSource(aSource),
-        mOffset(0),
-        mTrex(aTrackId),
-        mIsAudio(aIsAudio),
-        mLastDecodeTime(0) {
-    // Setting the mTrex.mTrackId to 0 is a nasty work around for calculating
-    // the composition range for MSE. We need an array of tracks.
-||||||| merged common ancestors
-class MoofParser : public DecoderDoctorLifeLogger<MoofParser>
-{
-public:
-  MoofParser(ByteStream* aSource, uint32_t aTrackId, bool aIsAudio)
-    : mSource(aSource)
-    , mOffset(0)
-    , mTrex(aTrackId)
-    , mIsAudio(aIsAudio)
-    , mLastDecodeTime(0)
-  {
-    // Setting the mTrex.mTrackId to 0 is a nasty work around for calculating
-    // the composition range for MSE. We need an array of tracks.
-=======
 class MoofParser : public DecoderDoctorLifeLogger<MoofParser> {
  public:
   MoofParser(ByteStream* aSource, const TrackParseMode& aTrackParseMode,
@@ -401,7 +299,6 @@ class MoofParser : public DecoderDoctorLifeLogger<MoofParser> {
     // the composition range for MSE that causes the parser to parse multiple
     // tracks. Ideally we'd store an array of tracks with different metadata
     // for each.
->>>>>>> upstream-releases
     DDLINKCHILD("source", aSource);
   }
   bool RebuildFragmentedIndex(const mozilla::MediaByteRangeSet& aByteRanges);

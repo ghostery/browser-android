@@ -200,28 +200,6 @@ nsEventStatus AndroidDynamicToolbarAnimator::ReceiveInputEvent(
           }
           mControllerLastDragDirection = direction;
         }
-<<<<<<< HEAD
-        // NOTE: gfxPrefs::ToolbarScrollThreshold() returns a percentage as an
-        // int32_t. So multiply it by 0.01f to convert.
-        const uint32_t dragThreshold =
-            Abs(std::lround(0.01f * gfxPrefs::ToolbarScrollThreshold() *
-                            mControllerCompositionHeight));
-        if ((Abs(mControllerTotalDistance.value) > dragThreshold) &&
-            (delta != 0)) {
-          mControllerDragThresholdReached = true;
-          status = ProcessTouchDelta(aApz, currentToolbarState, delta,
-                                     multiTouch.mTime);
-        }
-        mControllerLastEventTimeStamp = multiTouch.mTime;
-||||||| merged common ancestors
-        mControllerLastDragDirection = direction;
-      }
-      // NOTE: gfxPrefs::ToolbarScrollThreshold() returns a percentage as an int32_t. So multiply it by 0.01f to convert.
-      const uint32_t dragThreshold = Abs(std::lround(0.01f * gfxPrefs::ToolbarScrollThreshold() * mControllerCompositionHeight));
-      if ((Abs(mControllerTotalDistance.value) > dragThreshold) && (delta != 0)) {
-        mControllerDragThresholdReached = true;
-        status = ProcessTouchDelta(aApz, currentToolbarState, delta, multiTouch.mTime);
-=======
         // NOTE: StaticPrefs::browser_ui_scroll_toolbar_threshold() returns a
         // percentage as an int32_t. So multiply it by 0.01f to convert.
         const uint32_t dragThreshold = Abs(std::lround(
@@ -234,7 +212,6 @@ nsEventStatus AndroidDynamicToolbarAnimator::ReceiveInputEvent(
                                      multiTouch.mTime);
         }
         mControllerLastEventTimeStamp = multiTouch.mTime;
->>>>>>> upstream-releases
       }
       break;
     }

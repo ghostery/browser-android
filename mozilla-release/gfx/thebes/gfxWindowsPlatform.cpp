@@ -516,20 +516,8 @@ bool gfxWindowsPlatform::HandleDeviceReset() {
 BackendPrefsData gfxWindowsPlatform::GetBackendPrefs() const {
   BackendPrefsData data;
 
-<<<<<<< HEAD
-  data.mCanvasBitmask =
-      BackendTypeBit(BackendType::CAIRO) | BackendTypeBit(BackendType::SKIA);
-  data.mContentBitmask =
-      BackendTypeBit(BackendType::CAIRO) | BackendTypeBit(BackendType::SKIA);
-||||||| merged common ancestors
-  data.mCanvasBitmask = BackendTypeBit(BackendType::CAIRO) |
-                        BackendTypeBit(BackendType::SKIA);
-  data.mContentBitmask = BackendTypeBit(BackendType::CAIRO) |
-                         BackendTypeBit(BackendType::SKIA);
-=======
   data.mCanvasBitmask = BackendTypeBit(BackendType::SKIA);
   data.mContentBitmask = BackendTypeBit(BackendType::SKIA);
->>>>>>> upstream-releases
   data.mCanvasDefault = BackendType::SKIA;
   data.mContentDefault = BackendType::SKIA;
 
@@ -595,34 +583,10 @@ void gfxWindowsPlatform::UpdateRenderMode() {
   }
 }
 
-<<<<<<< HEAD
-bool gfxWindowsPlatform::AllowOpenGLCanvas() {
-  // OpenGL canvas is not supported on windows
-  return false;
-}
-
 mozilla::gfx::BackendType gfxWindowsPlatform::GetContentBackendFor(
     mozilla::layers::LayersBackend aLayers) {
   mozilla::gfx::BackendType defaultBackend =
       gfxPlatform::GetDefaultContentBackend();
-||||||| merged common ancestors
-bool
-gfxWindowsPlatform::AllowOpenGLCanvas()
-{
-  // OpenGL canvas is not supported on windows
-  return false;
-}
-
-mozilla::gfx::BackendType
-gfxWindowsPlatform::GetContentBackendFor(mozilla::layers::LayersBackend aLayers)
-{
-  mozilla::gfx::BackendType defaultBackend = gfxPlatform::GetDefaultContentBackend();
-=======
-mozilla::gfx::BackendType gfxWindowsPlatform::GetContentBackendFor(
-    mozilla::layers::LayersBackend aLayers) {
-  mozilla::gfx::BackendType defaultBackend =
-      gfxPlatform::GetDefaultContentBackend();
->>>>>>> upstream-releases
   if (aLayers == LayersBackend::LAYERS_D3D11) {
     return defaultBackend;
   }
@@ -1053,26 +1017,6 @@ void gfxWindowsPlatform::GetPlatformCMSOutputProfile(void*& mem,
   if (!res) return;
 
 #ifdef _WIN32
-<<<<<<< HEAD
-  qcms_data_from_unicode_path(str, &mem, &mem_size);
-
-#ifdef DEBUG_tor
-  if (mem_size > 0)
-    fprintf(stderr, "ICM profile read from %s successfully\n",
-            NS_ConvertUTF16toUTF8(str).get());
-#endif  // DEBUG_tor
-#endif  // _WIN32
-||||||| merged common ancestors
-    qcms_data_from_unicode_path(str, &mem, &mem_size);
-
-#ifdef DEBUG_tor
-    if (mem_size > 0)
-        fprintf(stderr,
-                "ICM profile read from %s successfully\n",
-                NS_ConvertUTF16toUTF8(str).get());
-#endif // DEBUG_tor
-#endif // _WIN32
-=======
   qcms_data_from_unicode_path(str, &mem, &mem_size);
 
 #  ifdef DEBUG_tor
@@ -1081,10 +1025,8 @@ void gfxWindowsPlatform::GetPlatformCMSOutputProfile(void*& mem,
             NS_ConvertUTF16toUTF8(str).get());
 #  endif  // DEBUG_tor
 #endif    // _WIN32
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 void gfxWindowsPlatform::GetDLLVersion(char16ptr_t aDLLPath,
                                        nsAString& aVersion) {
   DWORD versInfoSize, vers[4] = {0};
@@ -1124,220 +1066,6 @@ void gfxWindowsPlatform::GetDLLVersion(char16ptr_t aDLLPath,
   aVersion.Assign(NS_ConvertUTF8toUTF16(buf));
 }
 
-void gfxWindowsPlatform::GetCleartypeParams(
-    nsTArray<ClearTypeParameterInfo>& aParams) {
-  HKEY hKey, subKey;
-  DWORD i, rv, size, type;
-  WCHAR displayName[256], subkeyName[256];
-
-  aParams.Clear();
-
-  // construct subkeys based on HKLM subkeys, assume they are same for HKCU
-  rv =
-      RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Avalon.Graphics",
-                    0, KEY_READ, &hKey);
-
-  if (rv != ERROR_SUCCESS) {
-    return;
-  }
-
-  // enumerate over subkeys
-  for (i = 0, rv = ERROR_SUCCESS; rv != ERROR_NO_MORE_ITEMS; i++) {
-    size = ArrayLength(displayName);
-    rv = RegEnumKeyExW(hKey, i, displayName, &size, nullptr, nullptr, nullptr,
-                       nullptr);
-    if (rv != ERROR_SUCCESS) {
-      continue;
-    }
-
-    ClearTypeParameterInfo ctinfo;
-    ctinfo.displayName.Assign(displayName);
-||||||| merged common ancestors
-void
-gfxWindowsPlatform::GetDLLVersion(char16ptr_t aDLLPath, nsAString& aVersion)
-{
-    DWORD versInfoSize, vers[4] = {0};
-    // version info not available case
-    aVersion.AssignLiteral(u"0.0.0.0");
-    versInfoSize = GetFileVersionInfoSizeW(aDLLPath, nullptr);
-    AutoTArray<BYTE,512> versionInfo;
-
-    if (versInfoSize == 0 ||
-        !versionInfo.AppendElements(uint32_t(versInfoSize)))
-    {
-        return;
-    }
-
-    if (!GetFileVersionInfoW(aDLLPath, 0, versInfoSize,
-           LPBYTE(versionInfo.Elements())))
-    {
-        return;
-    }
-
-    UINT len = 0;
-    VS_FIXEDFILEINFO *fileInfo = nullptr;
-    if (!VerQueryValue(LPBYTE(versionInfo.Elements()), TEXT("\\"),
-           (LPVOID *)&fileInfo, &len) ||
-        len == 0 ||
-        fileInfo == nullptr)
-    {
-        return;
-    }
-
-    DWORD fileVersMS = fileInfo->dwFileVersionMS;
-    DWORD fileVersLS = fileInfo->dwFileVersionLS;
-
-    vers[0] = HIWORD(fileVersMS);
-    vers[1] = LOWORD(fileVersMS);
-    vers[2] = HIWORD(fileVersLS);
-    vers[3] = LOWORD(fileVersLS);
-
-    char buf[256];
-    SprintfLiteral(buf, "%u.%u.%u.%u", vers[0], vers[1], vers[2], vers[3]);
-    aVersion.Assign(NS_ConvertUTF8toUTF16(buf));
-}
-
-void
-gfxWindowsPlatform::GetCleartypeParams(nsTArray<ClearTypeParameterInfo>& aParams)
-{
-    HKEY  hKey, subKey;
-    DWORD i, rv, size, type;
-    WCHAR displayName[256], subkeyName[256];
-
-    aParams.Clear();
-
-    // construct subkeys based on HKLM subkeys, assume they are same for HKCU
-    rv = RegOpenKeyExW(HKEY_LOCAL_MACHINE,
-                       L"Software\\Microsoft\\Avalon.Graphics",
-                       0, KEY_READ, &hKey);
-
-    if (rv != ERROR_SUCCESS) {
-        return;
-    }
-
-    // enumerate over subkeys
-    for (i = 0, rv = ERROR_SUCCESS; rv != ERROR_NO_MORE_ITEMS; i++) {
-        size = ArrayLength(displayName);
-        rv = RegEnumKeyExW(hKey, i, displayName, &size,
-                           nullptr, nullptr, nullptr, nullptr);
-        if (rv != ERROR_SUCCESS) {
-            continue;
-        }
-
-        ClearTypeParameterInfo ctinfo;
-        ctinfo.displayName.Assign(displayName);
-=======
-void gfxWindowsPlatform::GetDLLVersion(char16ptr_t aDLLPath,
-                                       nsAString& aVersion) {
-  DWORD versInfoSize, vers[4] = {0};
-  // version info not available case
-  aVersion.AssignLiteral(u"0.0.0.0");
-  versInfoSize = GetFileVersionInfoSizeW(aDLLPath, nullptr);
-  AutoTArray<BYTE, 512> versionInfo;
-
-  if (versInfoSize == 0 ||
-      !versionInfo.AppendElements(uint32_t(versInfoSize))) {
-    return;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    DWORD subrv, value;
-    bool foundData = false;
-||||||| merged common ancestors
-        DWORD subrv, value;
-        bool foundData = false;
-=======
-  if (!GetFileVersionInfoW(aDLLPath, 0, versInfoSize,
-                           LPBYTE(versionInfo.Elements()))) {
-    return;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    swprintf_s(subkeyName, ArrayLength(subkeyName),
-               L"Software\\Microsoft\\Avalon.Graphics\\%s", displayName);
-||||||| merged common ancestors
-        swprintf_s(subkeyName, ArrayLength(subkeyName),
-                   L"Software\\Microsoft\\Avalon.Graphics\\%s", displayName);
-=======
-  UINT len = 0;
-  VS_FIXEDFILEINFO* fileInfo = nullptr;
-  if (!VerQueryValue(LPBYTE(versionInfo.Elements()), TEXT("\\"),
-                     (LPVOID*)&fileInfo, &len) ||
-      len == 0 || fileInfo == nullptr) {
-    return;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    // subkey for gamma, pixel structure
-    subrv = RegOpenKeyExW(HKEY_LOCAL_MACHINE, subkeyName, 0, KEY_QUERY_VALUE,
-                          &subKey);
-||||||| merged common ancestors
-        // subkey for gamma, pixel structure
-        subrv = RegOpenKeyExW(HKEY_LOCAL_MACHINE,
-                              subkeyName, 0, KEY_QUERY_VALUE, &subKey);
-=======
-  DWORD fileVersMS = fileInfo->dwFileVersionMS;
-  DWORD fileVersLS = fileInfo->dwFileVersionLS;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (subrv == ERROR_SUCCESS) {
-      size = sizeof(value);
-      subrv = RegQueryValueExW(subKey, L"GammaLevel", nullptr, &type,
-                               (LPBYTE)&value, &size);
-      if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-        foundData = true;
-        ctinfo.gamma = value;
-      }
-||||||| merged common ancestors
-        if (subrv == ERROR_SUCCESS) {
-            size = sizeof(value);
-            subrv = RegQueryValueExW(subKey, L"GammaLevel", nullptr, &type,
-                                     (LPBYTE)&value, &size);
-            if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-                foundData = true;
-                ctinfo.gamma = value;
-            }
-=======
-  vers[0] = HIWORD(fileVersMS);
-  vers[1] = LOWORD(fileVersMS);
-  vers[2] = HIWORD(fileVersLS);
-  vers[3] = LOWORD(fileVersLS);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      size = sizeof(value);
-      subrv = RegQueryValueExW(subKey, L"PixelStructure", nullptr, &type,
-                               (LPBYTE)&value, &size);
-      if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-        foundData = true;
-        ctinfo.pixelStructure = value;
-      }
-||||||| merged common ancestors
-            size = sizeof(value);
-            subrv = RegQueryValueExW(subKey, L"PixelStructure", nullptr, &type,
-                                     (LPBYTE)&value, &size);
-            if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-                foundData = true;
-                ctinfo.pixelStructure = value;
-            }
-=======
-  char buf[256];
-  SprintfLiteral(buf, "%u.%u.%u.%u", vers[0], vers[1], vers[2], vers[3]);
-  aVersion.Assign(NS_ConvertUTF8toUTF16(buf));
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      RegCloseKey(subKey);
-    }
-||||||| merged common ancestors
-            RegCloseKey(subKey);
-        }
-=======
 static BOOL CALLBACK AppendClearTypeParams(HMONITOR aMonitor, HDC, LPRECT,
                                            LPARAM aContext) {
   MONITORINFOEXW monitorInfo;
@@ -1345,99 +1073,27 @@ static BOOL CALLBACK AppendClearTypeParams(HMONITOR aMonitor, HDC, LPRECT,
   if (!GetMonitorInfoW(aMonitor, &monitorInfo)) {
     return TRUE;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // subkey for cleartype level, enhanced contrast
-    subrv = RegOpenKeyExW(HKEY_CURRENT_USER, subkeyName, 0, KEY_QUERY_VALUE,
-                          &subKey);
-
-    if (subrv == ERROR_SUCCESS) {
-      size = sizeof(value);
-      subrv = RegQueryValueExW(subKey, L"ClearTypeLevel", nullptr, &type,
-                               (LPBYTE)&value, &size);
-      if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-        foundData = true;
-        ctinfo.clearTypeLevel = value;
-      }
-||||||| merged common ancestors
-        // subkey for cleartype level, enhanced contrast
-        subrv = RegOpenKeyExW(HKEY_CURRENT_USER,
-                              subkeyName, 0, KEY_QUERY_VALUE, &subKey);
-
-        if (subrv == ERROR_SUCCESS) {
-            size = sizeof(value);
-            subrv = RegQueryValueExW(subKey, L"ClearTypeLevel", nullptr, &type,
-                                     (LPBYTE)&value, &size);
-            if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-                foundData = true;
-                ctinfo.clearTypeLevel = value;
-            }
-=======
   ClearTypeParameterInfo ctinfo;
   ctinfo.displayName.Assign(monitorInfo.szDevice);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      size = sizeof(value);
-      subrv = RegQueryValueExW(subKey, L"EnhancedContrastLevel", nullptr, &type,
-                               (LPBYTE)&value, &size);
-      if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-        foundData = true;
-        ctinfo.enhancedContrast = value;
-      }
-||||||| merged common ancestors
-            size = sizeof(value);
-            subrv = RegQueryValueExW(subKey, L"EnhancedContrastLevel",
-                                     nullptr, &type, (LPBYTE)&value, &size);
-            if (subrv == ERROR_SUCCESS && type == REG_DWORD) {
-                foundData = true;
-                ctinfo.enhancedContrast = value;
-            }
-=======
   RefPtr<IDWriteRenderingParams> renderingParams;
   HRESULT hr = Factory::GetDWriteFactory()->CreateMonitorRenderingParams(
       aMonitor, getter_AddRefs(renderingParams));
   if (FAILED(hr)) {
     return TRUE;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      RegCloseKey(subKey);
-    }
-||||||| merged common ancestors
-            RegCloseKey(subKey);
-        }
-=======
   ctinfo.gamma = renderingParams->GetGamma() * 1000;
   ctinfo.pixelStructure = renderingParams->GetPixelGeometry();
   ctinfo.clearTypeLevel = renderingParams->GetClearTypeLevel() * 100;
   ctinfo.enhancedContrast = renderingParams->GetEnhancedContrast() * 100;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (foundData) {
-      aParams.AppendElement(ctinfo);
-    }
-  }
-||||||| merged common ancestors
-        if (foundData) {
-            aParams.AppendElement(ctinfo);
-        }
-    }
-=======
   auto* params = reinterpret_cast<nsTArray<ClearTypeParameterInfo>*>(aContext);
   params->AppendElement(ctinfo);
   return TRUE;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RegCloseKey(hKey);
-||||||| merged common ancestors
-    RegCloseKey(hKey);
-=======
 void gfxWindowsPlatform::GetCleartypeParams(
     nsTArray<ClearTypeParameterInfo>& aParams) {
   aParams.Clear();
@@ -1446,7 +1102,6 @@ void gfxWindowsPlatform::GetCleartypeParams(
   }
   EnumDisplayMonitors(nullptr, nullptr, AppendClearTypeParams,
                       reinterpret_cast<LPARAM>(&aParams));
->>>>>>> upstream-releases
 }
 
 void gfxWindowsPlatform::FontsPrefsChanged(const char* aPref) {
@@ -1474,47 +1129,6 @@ void gfxWindowsPlatform::FontsPrefsChanged(const char* aPref) {
 
 #define ENHANCED_CONTRAST_VALUE_NAME L"EnhancedContrastLevel"
 
-<<<<<<< HEAD
-void gfxWindowsPlatform::SetupClearTypeParams() {
-  if (DWriteEnabled()) {
-    // any missing prefs will default to invalid (-1) and be ignored;
-    // out-of-range values will also be ignored
-    FLOAT gamma = -1.0;
-    FLOAT contrast = -1.0;
-    FLOAT level = -1.0;
-    int geometry = -1;
-    int mode = -1;
-    int32_t value;
-    if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_GAMMA, &value))) {
-      if (value >= 1000 && value <= 2200) {
-        gamma = FLOAT(value / 1000.0);
-      }
-    }
-||||||| merged common ancestors
-void
-gfxWindowsPlatform::SetupClearTypeParams()
-{
-    if (DWriteEnabled()) {
-        // any missing prefs will default to invalid (-1) and be ignored;
-        // out-of-range values will also be ignored
-        FLOAT gamma = -1.0;
-        FLOAT contrast = -1.0;
-        FLOAT level = -1.0;
-        int geometry = -1;
-        int mode = -1;
-        int32_t value;
-        if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_GAMMA, &value))) {
-            if (value >= 1000 && value <= 2200) {
-                gamma = FLOAT(value / 1000.0);
-            }
-        }
-
-        if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_CONTRAST, &value))) {
-            if (value >= 0 && value <= 1000) {
-                contrast = FLOAT(value / 100.0);
-            }
-        }
-=======
 void gfxWindowsPlatform::SetupClearTypeParams() {
   if (DWriteEnabled()) {
     // any missing prefs will default to invalid (-1) and be ignored;
@@ -1537,64 +1151,20 @@ void gfxWindowsPlatform::SetupClearTypeParams() {
         contrast = FLOAT(value / 100.0);
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (NS_SUCCEEDED(
-            Preferences::GetInt(GFX_CLEARTYPE_PARAMS_CONTRAST, &value))) {
-      if (value >= 0 && value <= 1000) {
-        contrast = FLOAT(value / 100.0);
-      }
-    }
-||||||| merged common ancestors
-        if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_LEVEL, &value))) {
-            if (value >= 0 && value <= 100) {
-                level = FLOAT(value / 100.0);
-            }
-        }
-=======
     if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_LEVEL, &value))) {
       if (value >= 0 && value <= 100) {
         level = FLOAT(value / 100.0);
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_LEVEL, &value))) {
-      if (value >= 0 && value <= 100) {
-        level = FLOAT(value / 100.0);
-      }
-    }
-||||||| merged common ancestors
-        if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_STRUCTURE, &value))) {
-            if (value >= 0 && value <= 2) {
-                geometry = value;
-            }
-        }
-=======
     if (NS_SUCCEEDED(
             Preferences::GetInt(GFX_CLEARTYPE_PARAMS_STRUCTURE, &value))) {
       if (value >= 0 && value <= 2) {
         geometry = value;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (NS_SUCCEEDED(
-            Preferences::GetInt(GFX_CLEARTYPE_PARAMS_STRUCTURE, &value))) {
-      if (value >= 0 && value <= 2) {
-        geometry = value;
-      }
-    }
-||||||| merged common ancestors
-        if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_MODE, &value))) {
-            if (value >= 0 && value <= 5) {
-                mode = value;
-            }
-        }
-=======
     if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_MODE, &value))) {
       if (value >= 0 && value <= 5) {
         mode = value;
@@ -1615,30 +1185,7 @@ void gfxWindowsPlatform::SetupClearTypeParams() {
         mMeasuringMode = DWRITE_MEASURING_MODE_NATURAL;
         break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (NS_SUCCEEDED(Preferences::GetInt(GFX_CLEARTYPE_PARAMS_MODE, &value))) {
-      if (value >= 0 && value <= 5) {
-        mode = value;
-      }
-    }
-||||||| merged common ancestors
-        cairo_dwrite_set_cleartype_params(gamma, contrast, level, geometry, mode);
-
-        switch (mode) {
-        case DWRITE_RENDERING_MODE_ALIASED:
-        case DWRITE_RENDERING_MODE_CLEARTYPE_GDI_CLASSIC:
-            mMeasuringMode = DWRITE_MEASURING_MODE_GDI_CLASSIC;
-            break;
-        case DWRITE_RENDERING_MODE_CLEARTYPE_GDI_NATURAL:
-            mMeasuringMode = DWRITE_MEASURING_MODE_GDI_NATURAL;
-            break;
-        default:
-            mMeasuringMode = DWRITE_MEASURING_MODE_NATURAL;
-            break;
-        }
-=======
     RefPtr<IDWriteRenderingParams> defaultRenderingParams;
     Factory::GetDWriteFactory()->CreateRenderingParams(
         getter_AddRefs(defaultRenderingParams));
@@ -1655,210 +1202,46 @@ void gfxWindowsPlatform::SetupClearTypeParams() {
         }
         RegCloseKey(hKey);
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    cairo_dwrite_set_cleartype_params(gamma, contrast, level, geometry, mode);
-
-    switch (mode) {
-      case DWRITE_RENDERING_MODE_ALIASED:
-      case DWRITE_RENDERING_MODE_CLEARTYPE_GDI_CLASSIC:
-        mMeasuringMode = DWRITE_MEASURING_MODE_GDI_CLASSIC;
-        break;
-      case DWRITE_RENDERING_MODE_CLEARTYPE_GDI_NATURAL:
-        mMeasuringMode = DWRITE_MEASURING_MODE_GDI_NATURAL;
-        break;
-      default:
-        mMeasuringMode = DWRITE_MEASURING_MODE_NATURAL;
-        break;
-    }
-||||||| merged common ancestors
-        RefPtr<IDWriteRenderingParams> defaultRenderingParams;
-        Factory::GetDWriteFactory()->CreateRenderingParams(getter_AddRefs(defaultRenderingParams));
-        // For EnhancedContrast, we override the default if the user has not set it
-        // in the registry (by using the ClearType Tuner).
-        if (contrast < 0.0 || contrast > 10.0) {
-            HKEY hKey;
-            LONG res = RegOpenKeyExW(DISPLAY1_REGISTRY_KEY,
-                                     0, KEY_READ, &hKey);
-            if (res == ERROR_SUCCESS) {
-                res = RegQueryValueExW(hKey, ENHANCED_CONTRAST_VALUE_NAME,
-                                       nullptr, nullptr, nullptr, nullptr);
-                if (res == ERROR_SUCCESS) {
-                    contrast = defaultRenderingParams->GetEnhancedContrast();
-                }
-                RegCloseKey(hKey);
-            }
-=======
       if (contrast < 0.0 || contrast > 10.0) {
         contrast = 1.0;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    RefPtr<IDWriteRenderingParams> defaultRenderingParams;
-    Factory::GetDWriteFactory()->CreateRenderingParams(
-        getter_AddRefs(defaultRenderingParams));
-    // For EnhancedContrast, we override the default if the user has not set it
-    // in the registry (by using the ClearType Tuner).
-    if (contrast < 0.0 || contrast > 10.0) {
-      HKEY hKey;
-      LONG res = RegOpenKeyExW(DISPLAY1_REGISTRY_KEY, 0, KEY_READ, &hKey);
-      if (res == ERROR_SUCCESS) {
-        res = RegQueryValueExW(hKey, ENHANCED_CONTRAST_VALUE_NAME, nullptr,
-                               nullptr, nullptr, nullptr);
-        if (res == ERROR_SUCCESS) {
-          contrast = defaultRenderingParams->GetEnhancedContrast();
-        }
-        RegCloseKey(hKey);
-      }
-||||||| merged common ancestors
-            if (contrast < 0.0 || contrast > 10.0) {
-                contrast = 1.0;
-            }
-        }
-=======
     // For parameters that have not been explicitly set,
     // we copy values from default params (or our overridden value for contrast)
     if (gamma < 1.0 || gamma > 2.2) {
       gamma = defaultRenderingParams->GetGamma();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (contrast < 0.0 || contrast > 10.0) {
-        contrast = 1.0;
-      }
-    }
-||||||| merged common ancestors
-        // For parameters that have not been explicitly set,
-        // we copy values from default params (or our overridden value for contrast)
-        if (gamma < 1.0 || gamma > 2.2) {
-            gamma = defaultRenderingParams->GetGamma();
-        }
-=======
     if (level < 0.0 || level > 1.0) {
       level = defaultRenderingParams->GetClearTypeLevel();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // For parameters that have not been explicitly set,
-    // we copy values from default params (or our overridden value for contrast)
-    if (gamma < 1.0 || gamma > 2.2) {
-      gamma = defaultRenderingParams->GetGamma();
-    }
-||||||| merged common ancestors
-        if (level < 0.0 || level > 1.0) {
-            level = defaultRenderingParams->GetClearTypeLevel();
-        }
-=======
     DWRITE_PIXEL_GEOMETRY dwriteGeometry =
         static_cast<DWRITE_PIXEL_GEOMETRY>(geometry);
     DWRITE_RENDERING_MODE renderMode = static_cast<DWRITE_RENDERING_MODE>(mode);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (level < 0.0 || level > 1.0) {
-      level = defaultRenderingParams->GetClearTypeLevel();
-    }
-||||||| merged common ancestors
-        DWRITE_PIXEL_GEOMETRY dwriteGeometry =
-          static_cast<DWRITE_PIXEL_GEOMETRY>(geometry);
-        DWRITE_RENDERING_MODE renderMode =
-          static_cast<DWRITE_RENDERING_MODE>(mode);
-=======
     if (dwriteGeometry < DWRITE_PIXEL_GEOMETRY_FLAT ||
         dwriteGeometry > DWRITE_PIXEL_GEOMETRY_BGR) {
       dwriteGeometry = defaultRenderingParams->GetPixelGeometry();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    DWRITE_PIXEL_GEOMETRY dwriteGeometry =
-        static_cast<DWRITE_PIXEL_GEOMETRY>(geometry);
-    DWRITE_RENDERING_MODE renderMode = static_cast<DWRITE_RENDERING_MODE>(mode);
-||||||| merged common ancestors
-        if (dwriteGeometry < DWRITE_PIXEL_GEOMETRY_FLAT ||
-            dwriteGeometry > DWRITE_PIXEL_GEOMETRY_BGR) {
-            dwriteGeometry = defaultRenderingParams->GetPixelGeometry();
-        }
-=======
     Factory::SetBGRSubpixelOrder(dwriteGeometry == DWRITE_PIXEL_GEOMETRY_BGR);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (dwriteGeometry < DWRITE_PIXEL_GEOMETRY_FLAT ||
-        dwriteGeometry > DWRITE_PIXEL_GEOMETRY_BGR) {
-      dwriteGeometry = defaultRenderingParams->GetPixelGeometry();
-    }
-||||||| merged common ancestors
-        if (renderMode < DWRITE_RENDERING_MODE_DEFAULT ||
-            renderMode > DWRITE_RENDERING_MODE_CLEARTYPE_NATURAL_SYMMETRIC) {
-            renderMode = defaultRenderingParams->GetRenderingMode();
-        }
-=======
     if (renderMode < DWRITE_RENDERING_MODE_DEFAULT ||
         renderMode > DWRITE_RENDERING_MODE_CLEARTYPE_NATURAL_SYMMETRIC) {
       renderMode = defaultRenderingParams->GetRenderingMode();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (renderMode < DWRITE_RENDERING_MODE_DEFAULT ||
-        renderMode > DWRITE_RENDERING_MODE_CLEARTYPE_NATURAL_SYMMETRIC) {
-      renderMode = defaultRenderingParams->GetRenderingMode();
-    }
-||||||| merged common ancestors
-        mRenderingParams[TEXT_RENDERING_NO_CLEARTYPE] = defaultRenderingParams;
-=======
     mRenderingParams[TEXT_RENDERING_NO_CLEARTYPE] = defaultRenderingParams;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    mRenderingParams[TEXT_RENDERING_NO_CLEARTYPE] = defaultRenderingParams;
-||||||| merged common ancestors
-        HRESULT hr = Factory::GetDWriteFactory()->CreateCustomRenderingParams(
-            gamma, contrast, level, dwriteGeometry, renderMode,
-            getter_AddRefs(mRenderingParams[TEXT_RENDERING_NORMAL]));
-        if (FAILED(hr) || !mRenderingParams[TEXT_RENDERING_NORMAL]) {
-            mRenderingParams[TEXT_RENDERING_NORMAL] = defaultRenderingParams;
-        }
-=======
     HRESULT hr = Factory::GetDWriteFactory()->CreateCustomRenderingParams(
         gamma, contrast, level, dwriteGeometry, renderMode,
         getter_AddRefs(mRenderingParams[TEXT_RENDERING_NORMAL]));
     if (FAILED(hr) || !mRenderingParams[TEXT_RENDERING_NORMAL]) {
       mRenderingParams[TEXT_RENDERING_NORMAL] = defaultRenderingParams;
     }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    HRESULT hr = Factory::GetDWriteFactory()->CreateCustomRenderingParams(
-        gamma, contrast, level, dwriteGeometry, renderMode,
-        getter_AddRefs(mRenderingParams[TEXT_RENDERING_NORMAL]));
-    if (FAILED(hr) || !mRenderingParams[TEXT_RENDERING_NORMAL]) {
-      mRenderingParams[TEXT_RENDERING_NORMAL] = defaultRenderingParams;
-||||||| merged common ancestors
-        hr = Factory::GetDWriteFactory()->CreateCustomRenderingParams(
-            gamma, contrast, level,
-            dwriteGeometry, DWRITE_RENDERING_MODE_CLEARTYPE_GDI_CLASSIC,
-            getter_AddRefs(mRenderingParams[TEXT_RENDERING_GDI_CLASSIC]));
-        if (FAILED(hr) || !mRenderingParams[TEXT_RENDERING_GDI_CLASSIC]) {
-            mRenderingParams[TEXT_RENDERING_GDI_CLASSIC] =
-                defaultRenderingParams;
-        }
-=======
-    hr = Factory::GetDWriteFactory()->CreateCustomRenderingParams(
-        gamma, contrast, level, dwriteGeometry,
-        DWRITE_RENDERING_MODE_CLEARTYPE_GDI_CLASSIC,
-        getter_AddRefs(mRenderingParams[TEXT_RENDERING_GDI_CLASSIC]));
-    if (FAILED(hr) || !mRenderingParams[TEXT_RENDERING_GDI_CLASSIC]) {
-      mRenderingParams[TEXT_RENDERING_GDI_CLASSIC] = defaultRenderingParams;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
 
     hr = Factory::GetDWriteFactory()->CreateCustomRenderingParams(
         gamma, contrast, level, dwriteGeometry,
@@ -1868,10 +1251,6 @@ void gfxWindowsPlatform::SetupClearTypeParams() {
       mRenderingParams[TEXT_RENDERING_GDI_CLASSIC] = defaultRenderingParams;
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 }
 
 ReadbackManagerD3D11* gfxWindowsPlatform::GetReadbackManager() {
@@ -1996,16 +1375,8 @@ void gfxWindowsPlatform::InitializeD3D11Config() {
   InitializeAdvancedLayersConfig();
 }
 
-<<<<<<< HEAD
-/* static */ void gfxWindowsPlatform::InitializeAdvancedLayersConfig() {
-||||||| merged common ancestors
-/* static */ void
-gfxWindowsPlatform::InitializeAdvancedLayersConfig()
-{
-=======
 /* static */
 void gfxWindowsPlatform::InitializeAdvancedLayersConfig() {
->>>>>>> upstream-releases
   // Only enable Advanced Layers if D3D11 succeeded.
   if (!gfxConfig::IsEnabled(Feature::D3D11_COMPOSITING)) {
     return;
@@ -2013,19 +1384,9 @@ void gfxWindowsPlatform::InitializeAdvancedLayersConfig() {
 
   FeatureState& al = gfxConfig::GetFeature(Feature::ADVANCED_LAYERS);
   al.SetDefaultFromPref(
-<<<<<<< HEAD
-      gfxPrefs::GetAdvancedLayersEnabledDoNotUseDirectlyPrefName(),
-      true /* aIsEnablePref */,
-      gfxPrefs::GetAdvancedLayersEnabledDoNotUseDirectlyPrefDefault());
-||||||| merged common ancestors
-    gfxPrefs::GetAdvancedLayersEnabledDoNotUseDirectlyPrefName(),
-    true /* aIsEnablePref */,
-    gfxPrefs::GetAdvancedLayersEnabledDoNotUseDirectlyPrefDefault());
-=======
       StaticPrefs::GetPrefName_layers_mlgpu_enabled_do_not_use_directly(),
       true /* aIsEnablePref */,
       StaticPrefs::GetPrefDefault_layers_mlgpu_enabled_do_not_use_directly());
->>>>>>> upstream-releases
 
   // Windows 7 has an extra pref since it uses totally different buffer paths
   // that haven't been performance tested yet.
@@ -2049,18 +1410,9 @@ void gfxWindowsPlatform::InitializeAdvancedLayersConfig() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void gfxWindowsPlatform::RecordContentDeviceFailure(
-    TelemetryDeviceCode aDevice) {
-||||||| merged common ancestors
-/* static */ void
-gfxWindowsPlatform::RecordContentDeviceFailure(TelemetryDeviceCode aDevice)
-{
-=======
 /* static */
 void gfxWindowsPlatform::RecordContentDeviceFailure(
     TelemetryDeviceCode aDevice) {
->>>>>>> upstream-releases
   // If the parent process fails to acquire a device, we record this
   // normally as part of the environment. The exceptional case we're
   // looking for here is when the parent process successfully acquires
@@ -2073,13 +1425,6 @@ void gfxWindowsPlatform::RecordContentDeviceFailure(
                         uint32_t(aDevice));
 }
 
-<<<<<<< HEAD
-void gfxWindowsPlatform::InitializeDevices() {
-||||||| merged common ancestors
-void
-gfxWindowsPlatform::InitializeDevices()
-{
-=======
 void gfxWindowsPlatform::RecordStartupTelemetry() {
   if (!XRE_IsParentProcess()) {
     return;
@@ -2114,7 +1459,6 @@ bool gfxWindowsPlatform::DevicesInitialized() { return mInitializedDevices; }
 void gfxWindowsPlatform::InitializeDevices() {
   MOZ_ASSERT(NS_IsMainThread());
 
->>>>>>> upstream-releases
   if (XRE_IsParentProcess()) {
     // If we're the UI process, and the GPU process is enabled, then we don't
     // initialize any DirectX devices. We do leave them enabled in gfxConfig
@@ -2199,19 +1543,9 @@ void gfxWindowsPlatform::InitializeD2DConfig() {
     return;
   }
 
-<<<<<<< HEAD
-  d2d1.SetDefaultFromPref(gfxPrefs::GetDirect2DDisabledPrefName(), false,
-                          gfxPrefs::GetDirect2DDisabledPrefDefault());
-||||||| merged common ancestors
-  d2d1.SetDefaultFromPref(
-    gfxPrefs::GetDirect2DDisabledPrefName(),
-    false,
-    gfxPrefs::GetDirect2DDisabledPrefDefault());
-=======
   d2d1.SetDefaultFromPref(StaticPrefs::GetPrefName_gfx_direct2d_disabled(),
                           false,
                           StaticPrefs::GetPrefDefault_gfx_direct2d_disabled());
->>>>>>> upstream-releases
 
   nsCString message;
   nsCString failureId;
@@ -2410,7 +1744,6 @@ class D3DVsyncSource final : public VsyncSource {
       if (!mVsyncEnabled) {
         return;
       }
-<<<<<<< HEAD
       mVsyncEnabled = false;
     }
 
@@ -2419,40 +1752,7 @@ class D3DVsyncSource final : public VsyncSource {
       MonitorAutoLock lock(mVsyncEnabledLock);
       return mVsyncEnabled;
     }
-||||||| merged common ancestors
-=======
-      mVsyncEnabled = false;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    virtual TimeDuration GetVsyncRate() override { return mVsyncRate; }
-||||||| merged common ancestors
-      void ScheduleSoftwareVsync(TimeStamp aVsyncTimestamp)
-      {
-        MOZ_ASSERT(IsInVsyncThread());
-        NS_WARNING("DwmComposition dynamically disabled, falling back to software timers");
-=======
-    virtual bool IsVsyncEnabled() override {
-      MOZ_ASSERT(NS_IsMainThread());
-      MonitorAutoLock lock(mVsyncEnabledLock);
-      return mVsyncEnabled;
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    void ScheduleSoftwareVsync(TimeStamp aVsyncTimestamp) {
-      MOZ_ASSERT(IsInVsyncThread());
-      NS_WARNING(
-          "DwmComposition dynamically disabled, falling back to software "
-          "timers");
-||||||| merged common ancestors
-        TimeStamp nextVsync = aVsyncTimestamp + mVsyncRate;
-        TimeDuration delay = nextVsync - TimeStamp::Now();
-        if (delay.ToMilliseconds() < 0) {
-          delay = mozilla::TimeDuration::FromMilliseconds(0);
-        }
-=======
     virtual TimeDuration GetVsyncRate() override { return mVsyncRate; }
 
     void ScheduleSoftwareVsync(TimeStamp aVsyncTimestamp) {
@@ -2460,7 +1760,6 @@ class D3DVsyncSource final : public VsyncSource {
       NS_WARNING(
           "DwmComposition dynamically disabled, falling back to software "
           "timers");
->>>>>>> upstream-releases
 
       TimeStamp nextVsync = aVsyncTimestamp + mVsyncRate;
       TimeDuration delay = nextVsync - TimeStamp::Now();
@@ -2530,86 +1829,29 @@ class D3DVsyncSource final : public VsyncSource {
         vsync = now;
       }
 
-<<<<<<< HEAD
       return vsync;
     }
 
     void VBlankLoop() {
       MOZ_ASSERT(IsInVsyncThread());
       MOZ_ASSERT(sizeof(int64_t) == sizeof(QPC_TIME));
-||||||| merged common ancestors
-      void VBlankLoop()
-      {
-        MOZ_ASSERT(IsInVsyncThread());
-        MOZ_ASSERT(sizeof(int64_t) == sizeof(QPC_TIME));
-=======
-      return vsync;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
       TimeStamp vsync = TimeStamp::Now();
       mPrevVsync = TimeStamp();
       TimeStamp flushTime = TimeStamp::Now();
       TimeDuration longVBlank = mVsyncRate * 2;
-||||||| merged common ancestors
-        TimeStamp vsync = TimeStamp::Now();
-        mPrevVsync = TimeStamp();
-        TimeStamp flushTime = TimeStamp::Now();
-        TimeDuration longVBlank = mVsyncRate * 2;
-=======
-    void VBlankLoop() {
-      MOZ_ASSERT(IsInVsyncThread());
-      MOZ_ASSERT(sizeof(int64_t) == sizeof(QPC_TIME));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
       for (;;) {
         {  // scope lock
           MonitorAutoLock lock(mVsyncEnabledLock);
           if (!mVsyncEnabled) return;
         }
-||||||| merged common ancestors
-        for (;;) {
-          { // scope lock
-            MonitorAutoLock lock(mVsyncEnabledLock);
-            if (!mVsyncEnabled) return;
-          }
-=======
-      TimeStamp vsync = TimeStamp::Now();
-      mPrevVsync = TimeStamp();
-      TimeStamp flushTime = TimeStamp::Now();
-      TimeDuration longVBlank = mVsyncRate * 2;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
         // Large parts of gecko assume that the refresh driver timestamp
         // must be <= Now() and cannot be in the future.
         MOZ_ASSERT(vsync <= TimeStamp::Now());
         Display::NotifyVsync(vsync);
-||||||| merged common ancestors
-          // Large parts of gecko assume that the refresh driver timestamp
-          // must be <= Now() and cannot be in the future.
-          MOZ_ASSERT(vsync <= TimeStamp::Now());
-          Display::NotifyVsync(vsync);
 
-          // DwmComposition can be dynamically enabled/disabled
-          // so we have to check every time that it's available.
-          // When it is unavailable, we fallback to software but will try
-          // to get back to dwm rendering once it's re-enabled
-          if (!gfxWindowsPlatform::GetPlatform()->DwmCompositionEnabled()) {
-            ScheduleSoftwareVsync(vsync);
-            return;
-          }
-=======
-      for (;;) {
-        {  // scope lock
-          MonitorAutoLock lock(mVsyncEnabledLock);
-          if (!mVsyncEnabled) return;
-        }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
         // DwmComposition can be dynamically enabled/disabled
         // so we have to check every time that it's available.
         // When it is unavailable, we fallback to software but will try
@@ -2618,23 +1860,7 @@ class D3DVsyncSource final : public VsyncSource {
           ScheduleSoftwareVsync(vsync);
           return;
         }
-||||||| merged common ancestors
-          // Using WaitForVBlank, the whole system dies because WaitForVBlank
-          // only works if it's run on the same thread as the Present();
-          HRESULT hr = DwmFlush();
-          if (!SUCCEEDED(hr)) {
-            // DWMFlush isn't working, fallback to software vsync.
-            ScheduleSoftwareVsync(TimeStamp::Now());
-            return;
-          }
-=======
-        // Large parts of gecko assume that the refresh driver timestamp
-        // must be <= Now() and cannot be in the future.
-        MOZ_ASSERT(vsync <= TimeStamp::Now());
-        Display::NotifyVsync(vsync);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
         // Using WaitForVBlank, the whole system dies because WaitForVBlank
         // only works if it's run on the same thread as the Present();
         HRESULT hr = DwmFlush();
@@ -2643,37 +1869,7 @@ class D3DVsyncSource final : public VsyncSource {
           ScheduleSoftwareVsync(TimeStamp::Now());
           return;
         }
-||||||| merged common ancestors
-          TimeStamp now = TimeStamp::Now();
-          TimeDuration flushDiff = now - flushTime;
-          flushTime = now;
-          if ((flushDiff > longVBlank) || mPrevVsync.IsNull()) {
-            // Our vblank took longer than 2 intervals, readjust our timestamps
-            vsync = GetVBlankTime();
-            mPrevVsync = vsync;
-          } else {
-            // Instead of giving the actual vsync time, a constant interval
-            // between vblanks instead of the noise generated via hardware
-            // is actually what we want. Most apps just care about the diff
-            // between vblanks to animate, so a clean constant interval is
-            // smoother.
-            vsync = mPrevVsync + mVsyncRate;
-            if (vsync > now) {
-              // DWMFlush woke up very early, so readjust our times again
-              vsync = GetVBlankTime();
-            }
-=======
-        // DwmComposition can be dynamically enabled/disabled
-        // so we have to check every time that it's available.
-        // When it is unavailable, we fallback to software but will try
-        // to get back to dwm rendering once it's re-enabled
-        if (!gfxWindowsPlatform::GetPlatform()->DwmCompositionEnabled()) {
-          ScheduleSoftwareVsync(vsync);
-          return;
-        }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
         TimeStamp now = TimeStamp::Now();
         TimeDuration flushDiff = now - flushTime;
         flushTime = now;
@@ -2692,167 +1888,42 @@ class D3DVsyncSource final : public VsyncSource {
             // DWMFlush woke up very early, so readjust our times again
             vsync = GetVBlankTime();
           }
-||||||| merged common ancestors
-            if (vsync <= mPrevVsync) {
-              vsync = TimeStamp::Now();
-            }
-=======
-        // Using WaitForVBlank, the whole system dies because WaitForVBlank
-        // only works if it's run on the same thread as the Present();
-        HRESULT hr = DwmFlush();
-        if (!SUCCEEDED(hr)) {
-          // DWMFlush isn't working, fallback to software vsync.
-          ScheduleSoftwareVsync(TimeStamp::Now());
-          return;
-        }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
           if (vsync <= mPrevVsync) {
             vsync = TimeStamp::Now();
           }
-||||||| merged common ancestors
-            if ((now - vsync).ToMilliseconds() > 2.0) {
-              // Account for time drift here where vsync never quite catches up to
-              // Now and we'd fall ever so slightly further behind Now().
-              vsync = GetVBlankTime();
-            }
-=======
-        TimeStamp now = TimeStamp::Now();
-        TimeDuration flushDiff = now - flushTime;
-        flushTime = now;
-        if ((flushDiff > longVBlank) || mPrevVsync.IsNull()) {
-          // Our vblank took longer than 2 intervals, readjust our timestamps
-          vsync = GetVBlankTime();
-          mPrevVsync = vsync;
-        } else {
-          // Instead of giving the actual vsync time, a constant interval
-          // between vblanks instead of the noise generated via hardware
-          // is actually what we want. Most apps just care about the diff
-          // between vblanks to animate, so a clean constant interval is
-          // smoother.
-          vsync = mPrevVsync + mVsyncRate;
-          if (vsync > now) {
-            // DWMFlush woke up very early, so readjust our times again
-            vsync = GetVBlankTime();
-          }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
           if ((now - vsync).ToMilliseconds() > 2.0) {
             // Account for time drift here where vsync never quite catches up to
             // Now and we'd fall ever so slightly further behind Now().
             vsync = GetVBlankTime();
-||||||| merged common ancestors
-            mPrevVsync = vsync;
-=======
-          if (vsync <= mPrevVsync) {
-            vsync = TimeStamp::Now();
->>>>>>> upstream-releases
           }
 
-<<<<<<< HEAD
           mPrevVsync = vsync;
         }
       }  // end for
     }
-||||||| merged common ancestors
-    private:
-      virtual ~D3DVsyncDisplay()
-      {
-        MOZ_ASSERT(NS_IsMainThread());
-      }
-=======
-          if ((now - vsync).ToMilliseconds() > 2.0) {
-            // Account for time drift here where vsync never quite catches up to
-            // Now and we'd fall ever so slightly further behind Now().
-            vsync = GetVBlankTime();
-          }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
    private:
     virtual ~D3DVsyncDisplay() { MOZ_ASSERT(NS_IsMainThread()); }
-||||||| merged common ancestors
-      bool IsInVsyncThread()
-      {
-        return mVsyncThread->thread_id() == PlatformThread::CurrentId();
-      }
-=======
-          mPrevVsync = vsync;
-        }
-      }  // end for
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     bool IsInVsyncThread() {
       return mVsyncThread->thread_id() == PlatformThread::CurrentId();
     }
-||||||| merged common ancestors
-      TimeStamp mPrevVsync;
-      Monitor mVsyncEnabledLock;
-      base::Thread* mVsyncThread;
-      TimeDuration mVsyncRate;
-      bool mVsyncEnabled;
-  }; // end d3dvsyncdisplay
-=======
-   private:
-    virtual ~D3DVsyncDisplay() { MOZ_ASSERT(NS_IsMainThread()); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     TimeStamp mPrevVsync;
     Monitor mVsyncEnabledLock;
     base::Thread* mVsyncThread;
     TimeDuration mVsyncRate;
     bool mVsyncEnabled;
   };  // end d3dvsyncdisplay
-||||||| merged common ancestors
-  D3DVsyncSource()
-  {
-    mPrimaryDisplay = new D3DVsyncDisplay();
-  }
-=======
-    bool IsInVsyncThread() {
-      return mVsyncThread->thread_id() == PlatformThread::CurrentId();
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  D3DVsyncSource() { mPrimaryDisplay = new D3DVsyncDisplay(); }
-||||||| merged common ancestors
-  virtual Display& GetGlobalDisplay() override
-  {
-    return *mPrimaryDisplay;
-  }
-=======
-    TimeStamp mPrevVsync;
-    Monitor mVsyncEnabledLock;
-    base::Thread* mVsyncThread;
-    TimeDuration mVsyncRate;
-    bool mVsyncEnabled;
-  };  // end d3dvsyncdisplay
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual Display& GetGlobalDisplay() override { return *mPrimaryDisplay; }
-
- private:
-  virtual ~D3DVsyncSource() {}
-||||||| merged common ancestors
-private:
-  virtual ~D3DVsyncSource()
-  {
-  }
-=======
   D3DVsyncSource() { mPrimaryDisplay = new D3DVsyncDisplay(); }
 
   virtual Display& GetGlobalDisplay() override { return *mPrimaryDisplay; }
 
  private:
   virtual ~D3DVsyncSource() = default;
->>>>>>> upstream-releases
   RefPtr<D3DVsyncDisplay> mPrimaryDisplay;
 };  // end D3DVsyncSource
 
@@ -2871,22 +1942,10 @@ gfxWindowsPlatform::CreateHardwareVsyncSource() {
   return d3dVsyncSource.forget();
 }
 
-<<<<<<< HEAD
-void gfxWindowsPlatform::GetAcceleratedCompositorBackends(
-    nsTArray<LayersBackend>& aBackends) {
-  if (gfxConfig::IsEnabled(Feature::OPENGL_COMPOSITING) &&
-      gfxPrefs::LayersPreferOpenGL()) {
-||||||| merged common ancestors
-void
-gfxWindowsPlatform::GetAcceleratedCompositorBackends(nsTArray<LayersBackend>& aBackends)
-{
-  if (gfxConfig::IsEnabled(Feature::OPENGL_COMPOSITING) && gfxPrefs::LayersPreferOpenGL()) {
-=======
 void gfxWindowsPlatform::GetAcceleratedCompositorBackends(
     nsTArray<LayersBackend>& aBackends) {
   if (gfxConfig::IsEnabled(Feature::OPENGL_COMPOSITING) &&
       StaticPrefs::layers_prefer_opengl()) {
->>>>>>> upstream-releases
     aBackends.AppendElement(LayersBackend::LAYERS_OPENGL);
   }
 
@@ -2961,19 +2020,11 @@ void gfxWindowsPlatform::BuildContentDeviceData(ContentDeviceData* aOut) {
   }
 }
 
-<<<<<<< HEAD
-bool gfxWindowsPlatform::SupportsPluginDirectDXGIDrawing() {
-||||||| merged common ancestors
-bool
-gfxWindowsPlatform::SupportsPluginDirectDXGIDrawing()
-{
-=======
 bool gfxWindowsPlatform::SupportsPluginDirectDXGIDrawing() {
   // Ensure devices initialization for plugin's DXGISurface. The devices are
   // lazily initialized with WebRender to reduce memory usage.
   EnsureDevicesInitialized();
 
->>>>>>> upstream-releases
   DeviceManagerDx* dm = DeviceManagerDx::Get();
   if (!dm->GetContentDevice() || !dm->TextureSharingWorks()) {
     return false;

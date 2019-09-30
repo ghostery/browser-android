@@ -36,30 +36,6 @@ KeyboardShortcut::KeyboardShortcut(KeyboardInput::KeyboardEventType aEventType,
                                    uint32_t aKeyCode, uint32_t aCharCode,
                                    Modifiers aModifiers,
                                    Modifiers aModifiersMask)
-<<<<<<< HEAD
-    : mKeyCode(aKeyCode),
-      mCharCode(aCharCode),
-      mModifiers(aModifiers),
-      mModifiersMask(aModifiersMask),
-      mEventType(aEventType),
-      mDispatchToContent(true) {}
-
-/* static */ void KeyboardShortcut::AppendHardcodedShortcuts(
-    nsTArray<KeyboardShortcut>& aShortcuts) {
-||||||| merged common ancestors
-  : mKeyCode(aKeyCode)
-  , mCharCode(aCharCode)
-  , mModifiers(aModifiers)
-  , mModifiersMask(aModifiersMask)
-  , mEventType(aEventType)
-  , mDispatchToContent(true)
-{
-}
-
-/* static */ void
-KeyboardShortcut::AppendHardcodedShortcuts(nsTArray<KeyboardShortcut>& aShortcuts)
-{
-=======
     : mKeyCode(aKeyCode),
       mCharCode(aCharCode),
       mModifiers(aModifiers),
@@ -70,7 +46,6 @@ KeyboardShortcut::AppendHardcodedShortcuts(nsTArray<KeyboardShortcut>& aShortcut
 /* static */
 void KeyboardShortcut::AppendHardcodedShortcuts(
     nsTArray<KeyboardShortcut>& aShortcuts) {
->>>>>>> upstream-releases
   // Tab
   KeyboardShortcut tab1;
   tab1.mDispatchToContent = true;

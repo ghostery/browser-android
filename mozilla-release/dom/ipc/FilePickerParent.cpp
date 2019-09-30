@@ -126,20 +126,9 @@ FilePickerParent::IORunnable::Run() {
 
 void FilePickerParent::IORunnable::Destroy() { mFilePickerParent = nullptr; }
 
-<<<<<<< HEAD
-void FilePickerParent::SendFilesOrDirectories(
-    const nsTArray<BlobImplOrString>& aData) {
-  nsIContentParent* parent = TabParent::GetFrom(Manager())->Manager();
-||||||| merged common ancestors
-void
-FilePickerParent::SendFilesOrDirectories(const nsTArray<BlobImplOrString>& aData)
-{
-  nsIContentParent* parent = TabParent::GetFrom(Manager())->Manager();
-=======
 void FilePickerParent::SendFilesOrDirectories(
     const nsTArray<BlobImplOrString>& aData) {
   ContentParent* parent = BrowserParent::GetFrom(Manager())->Manager();
->>>>>>> upstream-releases
 
   if (mMode == nsIFilePicker::modeGetFolder) {
     MOZ_ASSERT(aData.Length() <= 1);
@@ -247,27 +236,6 @@ bool FilePickerParent::CreateFilePicker() {
   return NS_SUCCEEDED(mFilePicker->Init(window, mTitle, mMode));
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult FilePickerParent::RecvOpen(
-    const int16_t& aSelectedType, const bool& aAddToRecentDocs,
-    const nsString& aDefaultFile, const nsString& aDefaultExtension,
-    InfallibleTArray<nsString>&& aFilters,
-    InfallibleTArray<nsString>&& aFilterNames,
-    const nsString& aDisplayDirectory, const nsString& aDisplaySpecialDirectory,
-    const nsString& aOkButtonLabel) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-FilePickerParent::RecvOpen(const int16_t& aSelectedType,
-                           const bool& aAddToRecentDocs,
-                           const nsString& aDefaultFile,
-                           const nsString& aDefaultExtension,
-                           InfallibleTArray<nsString>&& aFilters,
-                           InfallibleTArray<nsString>&& aFilterNames,
-                           const nsString& aDisplayDirectory,
-                           const nsString& aDisplaySpecialDirectory,
-                           const nsString& aOkButtonLabel)
-{
-=======
 mozilla::ipc::IPCResult FilePickerParent::RecvOpen(
     const int16_t& aSelectedType, const bool& aAddToRecentDocs,
     const nsString& aDefaultFile, const nsString& aDefaultExtension,
@@ -275,7 +243,6 @@ mozilla::ipc::IPCResult FilePickerParent::RecvOpen(
     InfallibleTArray<nsString>&& aFilterNames,
     InfallibleTArray<nsString>&& aRawFilters, const nsString& aDisplayDirectory,
     const nsString& aDisplaySpecialDirectory, const nsString& aOkButtonLabel) {
->>>>>>> upstream-releases
   if (!CreateFilePicker()) {
     Unused << Send__delete__(this, void_t(), nsIFilePicker::returnCancel);
     return IPC_OK();

@@ -256,75 +256,15 @@ void LIRGenerator::visitWasmUnsignedToFloat32(MWasmUnsignedToFloat32* ins) {
   define(lir, ins);
 }
 
-<<<<<<< HEAD
-void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
-  MDefinition* base = ins->base();
-  MOZ_ASSERT(base->type() == MIRType::Int32);
-||||||| merged common ancestors
-void
-LIRGenerator::visitWasmLoad(MWasmLoad* ins)
-{
-    MDefinition* base = ins->base();
-    MOZ_ASSERT(base->type() == MIRType::Int32);
-
-    MDefinition* memoryBase = ins->memoryBase();
-    MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
-
-    if (ins->access().type() == Scalar::Int64 && ins->access().isAtomic()) {
-        auto* lir = new(alloc()) LWasmAtomicLoadI64(useRegister(memoryBase),
-                                                    useRegister(base),
-                                                    tempFixed(ecx),
-                                                    tempFixed(ebx));
-        defineInt64Fixed(lir, ins, LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                                    LAllocation(AnyRegister(eax))));
-        return;
-    }
-=======
 // If the base is a constant, and it is zero or its offset is zero, then
 // code generation will fold the values into the access.  Allocate the
 // pointer to a register only if that can't happen.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* memoryBase = ins->memoryBase();
-  MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
-||||||| merged common ancestors
-    // If the base is a constant, and it is zero or its offset is zero, then
-    // code generation will fold the values into the access.  Allocate the
-    // pointer to a register only if that can't happen.
-=======
 static bool OptimizableConstantAccess(MDefinition* base,
                                       const wasm::MemoryAccessDesc& access) {
   MOZ_ASSERT(base->isConstant());
   MOZ_ASSERT(base->type() == MIRType::Int32);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (ins->access().type() == Scalar::Int64 && ins->access().isAtomic()) {
-    auto* lir = new (alloc())
-        LWasmAtomicLoadI64(useRegister(memoryBase), useRegister(base),
-                           tempFixed(ecx), tempFixed(ebx));
-    defineInt64Fixed(lir, ins,
-                     LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                      LAllocation(AnyRegister(eax))));
-    return;
-  }
-
-  // If the base is a constant, and it is zero or its offset is zero, then
-  // code generation will fold the values into the access.  Allocate the
-  // pointer to a register only if that can't happen.
-||||||| merged common ancestors
-    LAllocation baseAlloc;
-    if (!base->isConstant() || !(base->toConstant()->isInt32(0) || ins->access().offset() == 0)) {
-        baseAlloc = ins->type() == MIRType::Int64 ? useRegister(base) : useRegisterAtStart(base);
-    }
-
-    if (ins->type() != MIRType::Int64) {
-        auto* lir = new(alloc()) LWasmLoad(baseAlloc, useRegisterAtStart(memoryBase));
-        define(lir, ins);
-        return;
-    }
-=======
   if (!(base->toConstant()->isInt32(0) || access.offset() == 0)) {
     return false;
   }
@@ -372,51 +312,13 @@ void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
     define(lir, ins);
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  LAllocation baseAlloc;
-  if (!base->isConstant() ||
-      !(base->toConstant()->isInt32(0) || ins->access().offset() == 0)) {
-    baseAlloc = ins->type() == MIRType::Int64 ? useRegister(base)
-                                              : useRegisterAtStart(base);
-  }
-||||||| merged common ancestors
-    // "AtStart" register usage does not work for the 64-bit case because we
-    // clobber two registers for the result and may need two registers for a
-    // scaled address; we can't guarantee non-interference.
-=======
   // "AtStart" register usage does not work for the 64-bit case because we
   // clobber two registers for the result and may need two registers for a
   // scaled address; we can't guarantee non-interference.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (ins->type() != MIRType::Int64) {
-    auto* lir =
-        new (alloc()) LWasmLoad(baseAlloc, useRegisterAtStart(memoryBase));
-    define(lir, ins);
-    return;
-  }
-||||||| merged common ancestors
-    auto* lir = new(alloc()) LWasmLoadI64(baseAlloc, useRegister(memoryBase));
-=======
   auto* lir = new (alloc()) LWasmLoadI64(baseAlloc, useRegister(memoryBase));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // "AtStart" register usage does not work for the 64-bit case because we
-  // clobber two registers for the result and may need two registers for a
-  // scaled address; we can't guarantee non-interference.
-||||||| merged common ancestors
-    Scalar::Type accessType = ins->access().type();
-    if (accessType == Scalar::Int8 || accessType == Scalar::Int16 || accessType == Scalar::Int32) {
-        // We use cdq to sign-extend the result and cdq demands these registers.
-        defineInt64Fixed(lir, ins, LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                                    LAllocation(AnyRegister(eax))));
-        return;
-    }
-=======
   Scalar::Type accessType = ins->access().type();
   if (accessType == Scalar::Int8 || accessType == Scalar::Int16 ||
       accessType == Scalar::Int32) {
@@ -426,67 +328,10 @@ void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
                                       LAllocation(AnyRegister(eax))));
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto* lir = new (alloc()) LWasmLoadI64(baseAlloc, useRegister(memoryBase));
-||||||| merged common ancestors
-    defineInt64(lir, ins);
-}
-=======
   defineInt64(lir, ins);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Scalar::Type accessType = ins->access().type();
-  if (accessType == Scalar::Int8 || accessType == Scalar::Int16 ||
-      accessType == Scalar::Int32) {
-    // We use cdq to sign-extend the result and cdq demands these registers.
-    defineInt64Fixed(lir, ins,
-                     LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                      LAllocation(AnyRegister(eax))));
-    return;
-  }
-||||||| merged common ancestors
-void
-LIRGenerator::visitWasmStore(MWasmStore* ins)
-{
-    MDefinition* base = ins->base();
-    MOZ_ASSERT(base->type() == MIRType::Int32);
-
-    MDefinition* memoryBase = ins->memoryBase();
-    MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
-
-    if (ins->access().type() == Scalar::Int64 && ins->access().isAtomic()) {
-        auto* lir = new(alloc()) LWasmAtomicStoreI64(useRegister(memoryBase),
-                                                     useRegister(base),
-                                                     useInt64Fixed(ins->value(),
-                                                                   Register64(ecx, ebx)),
-                                                     tempFixed(edx),
-                                                     tempFixed(eax));
-        add(lir, ins);
-        return;
-    }
-=======
-void LIRGenerator::visitWasmStore(MWasmStore* ins) {
-  MDefinition* base = ins->base();
-  MOZ_ASSERT(base->type() == MIRType::Int32);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  defineInt64(lir, ins);
-}
-||||||| merged common ancestors
-    // If the base is a constant, and it is zero or its offset is zero, then
-    // code generation will fold the values into the access.  Allocate the
-    // pointer to a register only if that can't happen.
-=======
-  MDefinition* memoryBase = ins->memoryBase();
-  MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 void LIRGenerator::visitWasmStore(MWasmStore* ins) {
   MDefinition* base = ins->base();
   MOZ_ASSERT(base->type() == MIRType::Int32);
@@ -499,106 +344,7 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
         LWasmAtomicStoreI64(useRegister(memoryBase), useRegister(base),
                             useInt64Fixed(ins->value(), Register64(ecx, ebx)),
                             tempFixed(edx), tempFixed(eax));
-||||||| merged common ancestors
-    LAllocation baseAlloc;
-    if (!base->isConstant() || !(base->toConstant()->isInt32(0) || ins->access().offset() == 0)) {
-        baseAlloc = useRegisterAtStart(base);
-    }
-
-    LAllocation valueAlloc;
-    switch (ins->access().type()) {
-      case Scalar::Int8: case Scalar::Uint8:
-        // See comment for LIRGeneratorX86::useByteOpRegister.
-        valueAlloc = useFixed(ins->value(), eax);
-        break;
-      case Scalar::Int16: case Scalar::Uint16:
-      case Scalar::Int32: case Scalar::Uint32:
-      case Scalar::Float32: case Scalar::Float64:
-        // For now, don't allow constant values. The immediate operand affects
-        // instruction layout which affects patching.
-        valueAlloc = useRegisterAtStart(ins->value());
-        break;
-      case Scalar::Int64: {
-        LInt64Allocation valueAlloc = useInt64RegisterAtStart(ins->value());
-        auto* lir = new(alloc()) LWasmStoreI64(baseAlloc, valueAlloc,
-                                               useRegisterAtStart(memoryBase));
-        add(lir, ins);
-        return;
-      }
-      case Scalar::Uint8Clamped:
-      case Scalar::MaxTypedArrayViewType:
-        MOZ_CRASH("unexpected array type");
-    }
-
-    auto* lir = new(alloc()) LWasmStore(baseAlloc, valueAlloc, useRegisterAtStart(memoryBase));
-=======
-  if (ins->access().type() == Scalar::Int64 && ins->access().isAtomic()) {
-    auto* lir = new (alloc())
-        LWasmAtomicStoreI64(useRegister(memoryBase), useRegister(base),
-                            useInt64Fixed(ins->value(), Register64(ecx, ebx)),
-                            tempFixed(edx), tempFixed(eax));
->>>>>>> upstream-releases
     add(lir, ins);
-<<<<<<< HEAD
-    return;
-  }
-
-  // If the base is a constant, and it is zero or its offset is zero, then
-  // code generation will fold the values into the access.  Allocate the
-  // pointer to a register only if that can't happen.
-
-  LAllocation baseAlloc;
-  if (!base->isConstant() ||
-      !(base->toConstant()->isInt32(0) || ins->access().offset() == 0)) {
-    baseAlloc = useRegisterAtStart(base);
-  }
-
-  LAllocation valueAlloc;
-  switch (ins->access().type()) {
-    case Scalar::Int8:
-    case Scalar::Uint8:
-      // See comment for LIRGeneratorX86::useByteOpRegister.
-      valueAlloc = useFixed(ins->value(), eax);
-      break;
-    case Scalar::Int16:
-    case Scalar::Uint16:
-    case Scalar::Int32:
-    case Scalar::Uint32:
-    case Scalar::Float32:
-    case Scalar::Float64:
-      // For now, don't allow constant values. The immediate operand affects
-      // instruction layout which affects patching.
-      valueAlloc = useRegisterAtStart(ins->value());
-      break;
-    case Scalar::Int64: {
-      LInt64Allocation valueAlloc = useInt64RegisterAtStart(ins->value());
-      auto* lir = new (alloc())
-          LWasmStoreI64(baseAlloc, valueAlloc, useRegisterAtStart(memoryBase));
-      add(lir, ins);
-      return;
-||||||| merged common ancestors
-}
-
-void
-LIRGenerator::visitWasmCompareExchangeHeap(MWasmCompareExchangeHeap* ins)
-{
-    MDefinition* base = ins->base();
-    MOZ_ASSERT(base->type() == MIRType::Int32);
-
-    MDefinition* memoryBase = ins->memoryBase();
-    MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
-
-    if (ins->access().type() == Scalar::Int64) {
-        auto* lir = new(alloc()) LWasmCompareExchangeI64(useRegister(memoryBase),
-                                                         useRegister(base),
-                                                         useInt64Fixed(ins->oldValue(),
-                                                                       Register64(edx, eax)),
-                                                         useInt64Fixed(ins->newValue(),
-                                                                       Register64(ecx, ebx)));
-        defineInt64Fixed(lir, ins, LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                                    LAllocation(AnyRegister(eax))));
-        return;
-=======
     return;
   }
 
@@ -630,115 +376,7 @@ LIRGenerator::visitWasmCompareExchangeHeap(MWasmCompareExchangeHeap* ins)
           LWasmStoreI64(baseAlloc, valueAlloc, useRegisterAtStart(memoryBase));
       add(lir, ins);
       return;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    case Scalar::Uint8Clamped:
-    case Scalar::MaxTypedArrayViewType:
-      MOZ_CRASH("unexpected array type");
-  }
-
-  auto* lir = new (alloc())
-      LWasmStore(baseAlloc, valueAlloc, useRegisterAtStart(memoryBase));
-  add(lir, ins);
-}
-
-void LIRGenerator::visitWasmCompareExchangeHeap(MWasmCompareExchangeHeap* ins) {
-  MDefinition* base = ins->base();
-  MOZ_ASSERT(base->type() == MIRType::Int32);
-
-  MDefinition* memoryBase = ins->memoryBase();
-  MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
-
-  if (ins->access().type() == Scalar::Int64) {
-    auto* lir = new (alloc()) LWasmCompareExchangeI64(
-        useRegister(memoryBase), useRegister(base),
-        useInt64Fixed(ins->oldValue(), Register64(edx, eax)),
-        useInt64Fixed(ins->newValue(), Register64(ecx, ebx)));
-    defineInt64Fixed(lir, ins,
-                     LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                      LAllocation(AnyRegister(eax))));
-    return;
-  }
-
-  MOZ_ASSERT(ins->access().type() < Scalar::Float32);
-
-  bool byteArray = byteSize(ins->access().type()) == 1;
-
-  // Register allocation:
-  //
-  // The output may not be used, but eax will be clobbered regardless
-  // so pin the output to eax.
-  //
-  // oldval must be in a register.
-  //
-  // newval must be in a register.  If the source is a byte array
-  // then newval must be a register that has a byte size: this must
-  // be ebx, ecx, or edx (eax is taken).
-  //
-  // Bug #1077036 describes some optimization opportunities.
-
-  const LAllocation oldval = useRegister(ins->oldValue());
-  const LAllocation newval =
-      byteArray ? useFixed(ins->newValue(), ebx) : useRegister(ins->newValue());
-
-  LWasmCompareExchangeHeap* lir = new (alloc()) LWasmCompareExchangeHeap(
-      useRegister(base), oldval, newval, useRegister(memoryBase));
-
-  lir->setAddrTemp(temp());
-  defineFixed(lir, ins, LAllocation(AnyRegister(eax)));
-}
-
-void LIRGenerator::visitWasmAtomicExchangeHeap(MWasmAtomicExchangeHeap* ins) {
-  MDefinition* memoryBase = ins->memoryBase();
-  MOZ_ASSERT(memoryBase->type() == MIRType::Pointer);
-
-  if (ins->access().type() == Scalar::Int64) {
-    MDefinition* base = ins->base();
-    auto* lir = new (alloc()) LWasmAtomicExchangeI64(
-        useRegister(memoryBase), useRegister(base),
-        useInt64Fixed(ins->value(), Register64(ecx, ebx)), ins->access());
-    defineInt64Fixed(lir, ins,
-                     LInt64Allocation(LAllocation(AnyRegister(edx)),
-                                      LAllocation(AnyRegister(eax))));
-    return;
-  }
-
-  const LAllocation base = useRegister(ins->base());
-  const LAllocation value = useRegister(ins->value());
-
-  LWasmAtomicExchangeHeap* lir = new (alloc())
-      LWasmAtomicExchangeHeap(base, value, useRegister(memoryBase));
-
-  lir->setAddrTemp(temp());
-  if (byteSize(ins->access().type()) == 1) {
-||||||| merged common ancestors
-
-    MOZ_ASSERT(ins->access().type() < Scalar::Float32);
-
-    bool byteArray = byteSize(ins->access().type()) == 1;
-
-    // Register allocation:
-    //
-    // The output may not be used, but eax will be clobbered regardless
-    // so pin the output to eax.
-    //
-    // oldval must be in a register.
-    //
-    // newval must be in a register.  If the source is a byte array
-    // then newval must be a register that has a byte size: this must
-    // be ebx, ecx, or edx (eax is taken).
-    //
-    // Bug #1077036 describes some optimization opportunities.
-
-    const LAllocation oldval = useRegister(ins->oldValue());
-    const LAllocation newval = byteArray ? useFixed(ins->newValue(), ebx) : useRegister(ins->newValue());
-
-    LWasmCompareExchangeHeap* lir =
-        new(alloc()) LWasmCompareExchangeHeap(useRegister(base), oldval, newval, useRegister(memoryBase));
-
-    lir->setAddrTemp(temp());
-=======
     case Scalar::Uint8Clamped:
     case Scalar::BigInt64:
     case Scalar::BigUint64:
@@ -820,7 +458,6 @@ void LIRGenerator::visitWasmAtomicExchangeHeap(MWasmAtomicExchangeHeap* ins) {
 
   lir->setAddrTemp(temp());
   if (byteSize(ins->access().type()) == 1) {
->>>>>>> upstream-releases
     defineFixed(lir, ins, LAllocation(AnyRegister(eax)));
   } else {
     define(lir, ins);

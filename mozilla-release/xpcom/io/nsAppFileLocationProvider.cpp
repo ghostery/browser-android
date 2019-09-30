@@ -30,16 +30,8 @@
 // come from localizable resources
 
 #if defined(MOZ_WIDGET_COCOA)
-<<<<<<< HEAD
-#define APP_REGISTRY_NAME NS_LITERAL_CSTRING("Application Registry")
-#define ESSENTIAL_FILES NS_LITERAL_CSTRING("Essential Files")
-||||||| merged common ancestors
-#define APP_REGISTRY_NAME NS_LITERAL_CSTRING("Application Registry")
-#define ESSENTIAL_FILES   NS_LITERAL_CSTRING("Essential Files")
-=======
 #  define APP_REGISTRY_NAME NS_LITERAL_CSTRING("Application Registry")
 #  define ESSENTIAL_FILES NS_LITERAL_CSTRING("Essential Files")
->>>>>>> upstream-releases
 #elif defined(XP_WIN)
 #  define APP_REGISTRY_NAME NS_LITERAL_CSTRING("registry.dat")
 #else
@@ -54,24 +46,10 @@
 #define NS_USER_PLUGINS_DIR "UserPlugins"
 
 #ifdef MOZ_WIDGET_COCOA
-<<<<<<< HEAD
-#define NS_MACOSX_USER_PLUGIN_DIR "OSXUserPlugins"
-#define NS_MACOSX_LOCAL_PLUGIN_DIR "OSXLocalPlugins"
-||||||| merged common ancestors
-#define NS_MACOSX_USER_PLUGIN_DIR   "OSXUserPlugins"
-#define NS_MACOSX_LOCAL_PLUGIN_DIR  "OSXLocalPlugins"
-=======
 #  define NS_MACOSX_USER_PLUGIN_DIR "OSXUserPlugins"
 #  define NS_MACOSX_LOCAL_PLUGIN_DIR "OSXLocalPlugins"
->>>>>>> upstream-releases
 #elif XP_UNIX
-<<<<<<< HEAD
-#define NS_SYSTEM_PLUGINS_DIR "SysPlugins"
-||||||| merged common ancestors
-#define NS_SYSTEM_PLUGINS_DIR       "SysPlugins"
-=======
 #  define NS_SYSTEM_PLUGINS_DIR "SysPlugins"
->>>>>>> upstream-releases
 #endif
 
 #define DEFAULTS_DIR_NAME NS_LITERAL_CSTRING("defaults")
@@ -197,29 +175,6 @@ nsAppFileLocationProvider::GetFile(const char* aProp, bool* aPersistent,
   else if (nsCRT::strcmp(aProp, NS_SYSTEM_PLUGINS_DIR) == 0) {
 #    ifdef ENABLE_SYSTEM_EXTENSION_DIRS
     static const char* const sysLPlgDir =
-<<<<<<< HEAD
-#if defined(HAVE_USR_LIB64_DIR) && defined(__LP64__)
-        "/usr/lib64/mozilla/plugins";
-#elif defined(__OpenBSD__) || defined(__FreeBSD__)
-        "/usr/local/lib/mozilla/plugins";
-#else
-        "/usr/lib/mozilla/plugins";
-#endif
-    rv = NS_NewNativeLocalFile(nsDependentCString(sysLPlgDir), false,
-                               getter_AddRefs(localFile));
-#else
-||||||| merged common ancestors
-#if defined(HAVE_USR_LIB64_DIR) && defined(__LP64__)
-      "/usr/lib64/mozilla/plugins";
-#elif defined(__OpenBSD__) || defined (__FreeBSD__)
-      "/usr/local/lib/mozilla/plugins";
-#else
-      "/usr/lib/mozilla/plugins";
-#endif
-    rv = NS_NewNativeLocalFile(nsDependentCString(sysLPlgDir),
-                               false, getter_AddRefs(localFile));
-#else
-=======
 #      if defined(HAVE_USR_LIB64_DIR) && defined(__LP64__)
         "/usr/lib64/mozilla/plugins";
 #      elif defined(__OpenBSD__) || defined(__FreeBSD__)
@@ -230,7 +185,6 @@ nsAppFileLocationProvider::GetFile(const char* aProp, bool* aPersistent,
     rv = NS_NewNativeLocalFile(nsDependentCString(sysLPlgDir), false,
                                getter_AddRefs(localFile));
 #    else
->>>>>>> upstream-releases
     rv = NS_ERROR_FAILURE;
 #    endif
   }
@@ -544,22 +498,6 @@ nsAppFileLocationProvider::GetFiles(const char* aProp,
                                  NS_MACOSX_LOCAL_PLUGIN_DIR, nullptr};
     *aResult = new nsAppDirectoryEnumerator(this, keys);
 #else
-<<<<<<< HEAD
-#ifdef XP_UNIX
-    static const char* keys[] = {nullptr, NS_USER_PLUGINS_DIR,
-                                 NS_APP_PLUGINS_DIR, NS_SYSTEM_PLUGINS_DIR,
-                                 nullptr};
-#else
-    static const char* keys[] = {nullptr, NS_USER_PLUGINS_DIR,
-                                 NS_APP_PLUGINS_DIR, nullptr};
-#endif
-||||||| merged common ancestors
-#ifdef XP_UNIX
-    static const char* keys[] = { nullptr, NS_USER_PLUGINS_DIR, NS_APP_PLUGINS_DIR, NS_SYSTEM_PLUGINS_DIR, nullptr };
-#else
-    static const char* keys[] = { nullptr, NS_USER_PLUGINS_DIR, NS_APP_PLUGINS_DIR, nullptr };
-#endif
-=======
 #  ifdef XP_UNIX
     static const char* keys[] = {nullptr, NS_USER_PLUGINS_DIR,
                                  NS_APP_PLUGINS_DIR, NS_SYSTEM_PLUGINS_DIR,
@@ -568,7 +506,6 @@ nsAppFileLocationProvider::GetFiles(const char* aProp,
     static const char* keys[] = {nullptr, NS_USER_PLUGINS_DIR,
                                  NS_APP_PLUGINS_DIR, nullptr};
 #  endif
->>>>>>> upstream-releases
     if (!keys[0] && !(keys[0] = PR_GetEnv("MOZ_PLUGIN_PATH"))) {
       static const char nullstr = 0;
       keys[0] = &nullstr;

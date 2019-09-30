@@ -36,20 +36,9 @@ ScriptElement::ScriptAvailable(nsresult aResult, nsIScriptElement* aElement,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult ScriptElement::FireErrorEvent() {
-  nsCOMPtr<nsIContent> cont = do_QueryInterface((nsIScriptElement*)this);
-||||||| merged common ancestors
-/* virtual */ nsresult
-ScriptElement::FireErrorEvent()
-{
-  nsCOMPtr<nsIContent> cont =
-    do_QueryInterface((nsIScriptElement*) this);
-=======
 /* virtual */
 nsresult ScriptElement::FireErrorEvent() {
   nsCOMPtr<nsIContent> cont = do_QueryInterface((nsIScriptElement*)this);
->>>>>>> upstream-releases
 
   return nsContentUtils::DispatchTrustedEvent(cont->OwnerDoc(), cont,
                                               NS_LITERAL_STRING("error"),

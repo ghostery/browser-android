@@ -12,42 +12,6 @@
 namespace mozilla {
 
 /** \class ScopedGfxFeatureReporter
-<<<<<<< HEAD
- *
- * On creation, adds "FeatureName?" to AppNotes
- * On destruction, adds "FeatureName-", or "FeatureName+" if you called
- * SetSuccessful().
- *
- * Any such string is added at most once to AppNotes, and is subsequently
- * skipped.
- *
- * This ScopedGfxFeatureReporter class is designed to be fool-proof to use in
- * functions that have many exit points. We don't want to encourage having
- * function with many exit points. It just happens that our graphics features
- * initialization functions are like that.
- */
-class ScopedGfxFeatureReporter {
- public:
-  explicit ScopedGfxFeatureReporter(const char *aFeature, bool aForce = false)
-      : mFeature(aFeature), mStatusChar('-'), mStatusNumber(0) {
-||||||| merged common ancestors
-  *
-  * On creation, adds "FeatureName?" to AppNotes
-  * On destruction, adds "FeatureName-", or "FeatureName+" if you called SetSuccessful().
-  *
-  * Any such string is added at most once to AppNotes, and is subsequently skipped.
-  *
-  * This ScopedGfxFeatureReporter class is designed to be fool-proof to use in functions that
-  * have many exit points. We don't want to encourage having function with many exit points.
-  * It just happens that our graphics features initialization functions are like that.
-  */
-class ScopedGfxFeatureReporter
-{
-public:
-  explicit ScopedGfxFeatureReporter(const char *aFeature, bool aForce = false)
-    : mFeature(aFeature), mStatusChar('-'), mStatusNumber(0)
-  {
-=======
  *
  * On creation, adds "FeatureName?" to AppNotes
  * On destruction, adds "FeatureName-", or "FeatureName+" if you called
@@ -65,7 +29,6 @@ class ScopedGfxFeatureReporter {
  public:
   explicit ScopedGfxFeatureReporter(const char* aFeature, bool aForce = false)
       : mFeature(aFeature), mStatusChar('-'), mStatusNumber(0) {
->>>>>>> upstream-releases
     WriteAppNote(aForce ? '!' : '?', 0);
   }
   ~ScopedGfxFeatureReporter() { WriteAppNote(mStatusChar, mStatusNumber); }
@@ -75,20 +38,12 @@ class ScopedGfxFeatureReporter {
     mStatusNumber = aNumber;
   }
 
-  static void AppNote(const nsACString &aMessage);
+  static void AppNote(const nsACString& aMessage);
 
   class AppNoteWritingRunnable;
 
-<<<<<<< HEAD
- protected:
-  const char *mFeature;
-||||||| merged common ancestors
-protected:
-  const char *mFeature;
-=======
  protected:
   const char* mFeature;
->>>>>>> upstream-releases
   char mStatusChar;
   int32_t mStatusNumber;
 

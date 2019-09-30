@@ -348,10 +348,6 @@ add_task(async function test_signature_whitelists() {
   add_telemetry_count(expected.local, NO_LIST, 1);
   add_telemetry_count(expected.reason, NonBinaryFile, 1);
 
-  let expected = get_telemetry_snapshot();
-  add_telemetry_count(expected.local, NO_LIST, 1);
-  add_telemetry_count(expected.reason, NonBinaryFile, 1);
-
   // Use BackgroundFileSaver to extract the signature on Windows.
   let destFile = FileTestUtils.getTempFile(TEST_FILE_NAME_1);
 
@@ -370,15 +366,6 @@ add_task(async function test_signature_whitelists() {
 
   // evil.com is not on the allowlist, but this binary is signed by an entity
   // whose certificate information is on the allowlist.
-<<<<<<< HEAD
-  await promiseQueryReputation({sourceURI: createURI("http://evil.com"),
-                                signatureInfo: saver.signatureInfo,
-                                fileSize: 12}, expected);
-||||||| merged common ancestors
-  await promiseQueryReputation({sourceURI: createURI("http://evil.com"),
-                                signatureInfo: saver.signatureInfo,
-                                fileSize: 12}, false);
-=======
   await promiseQueryReputation(
     {
       sourceURI: createURI("http://evil.com"),
@@ -387,28 +374,10 @@ add_task(async function test_signature_whitelists() {
     },
     expected
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_blocked_binary() {
   // We should reach the remote server for a verdict.
-<<<<<<< HEAD
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             true);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/download");
-
-  let expected = get_telemetry_snapshot();
-  expected.shouldBlock++;
-  add_telemetry_count(expected.local, NO_LIST, 1);
-  add_telemetry_count(expected.reason, VerdictDangerous, 1);
-
-||||||| merged common ancestors
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             true);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/download");
-=======
   Services.prefs.setBoolPref(remoteEnabledPref, true);
   Services.prefs.setCharPref(appRepURLPref, "http://localhost:4444/download");
 
@@ -417,17 +386,7 @@ add_task(async function test_blocked_binary() {
   add_telemetry_count(expected.local, NO_LIST, 1);
   add_telemetry_count(expected.reason, VerdictDangerous, 1);
 
->>>>>>> upstream-releases
   // evil.com should return a malware verdict from the remote server.
-<<<<<<< HEAD
-  await promiseQueryReputation({sourceURI: createURI("http://evil.com"),
-                                suggestedFileName: "noop.bat",
-                                fileSize: 12}, expected);
-||||||| merged common ancestors
-  await promiseQueryReputation({sourceURI: createURI("http://evil.com"),
-                                suggestedFileName: "noop.bat",
-                                fileSize: 12}, true);
-=======
   await promiseQueryReputation(
     {
       sourceURI: createURI("http://evil.com"),
@@ -436,33 +395,10 @@ add_task(async function test_blocked_binary() {
     },
     expected
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_non_binary() {
   // We should not reach the remote server for a verdict for non-binary files.
-<<<<<<< HEAD
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             true);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/throw");
-
-  let expected = get_telemetry_snapshot();
-  add_telemetry_count(expected.local, NO_LIST, 1);
-  add_telemetry_count(expected.reason, NonBinaryFile, 1);
-
-  await promiseQueryReputation({sourceURI: createURI("http://evil.com"),
-                                suggestedFileName: "noop.txt",
-                                fileSize: 12}, expected);
-||||||| merged common ancestors
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             true);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/throw");
-  await promiseQueryReputation({sourceURI: createURI("http://evil.com"),
-                                suggestedFileName: "noop.txt",
-                                fileSize: 12}, false);
-=======
   Services.prefs.setBoolPref(remoteEnabledPref, true);
   Services.prefs.setCharPref(appRepURLPref, "http://localhost:4444/throw");
 
@@ -478,27 +414,10 @@ add_task(async function test_non_binary() {
     },
     expected
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_good_binary() {
   // We should reach the remote server for a verdict.
-<<<<<<< HEAD
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             true);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/download");
-
-  let expected = get_telemetry_snapshot();
-  add_telemetry_count(expected.local, NO_LIST, 1);
-  add_telemetry_count(expected.reason, VerdictSafe, 1);
-
-||||||| merged common ancestors
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             true);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/download");
-=======
   Services.prefs.setBoolPref(remoteEnabledPref, true);
   Services.prefs.setCharPref(appRepURLPref, "http://localhost:4444/download");
 
@@ -506,17 +425,7 @@ add_task(async function test_good_binary() {
   add_telemetry_count(expected.local, NO_LIST, 1);
   add_telemetry_count(expected.reason, VerdictSafe, 1);
 
->>>>>>> upstream-releases
   // mozilla.com should return a not-guilty verdict from the remote server.
-<<<<<<< HEAD
-  await promiseQueryReputation({sourceURI: createURI("http://mozilla.com"),
-                                suggestedFileName: "noop.bat",
-                                fileSize: 12}, expected);
-||||||| merged common ancestors
-  await promiseQueryReputation({sourceURI: createURI("http://mozilla.com"),
-                                suggestedFileName: "noop.bat",
-                                fileSize: 12}, false);
-=======
   await promiseQueryReputation(
     {
       sourceURI: createURI("http://mozilla.com"),
@@ -525,33 +434,10 @@ add_task(async function test_good_binary() {
     },
     expected
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_disabled() {
   // Explicitly disable remote checks
-<<<<<<< HEAD
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             false);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/throw");
-
-  let expected = get_telemetry_snapshot();
-  add_telemetry_count(expected.local, NO_LIST, 1);
-  add_telemetry_count(expected.reason, RemoteLookupDisabled, 1);
-
-  let query = {sourceURI: createURI("http://example.com"),
-               suggestedFileName: "noop.bat",
-               fileSize: 12};
-||||||| merged common ancestors
-  Services.prefs.setBoolPref(remoteEnabledPref,
-                             false);
-  Services.prefs.setCharPref(appRepURLPref,
-                             "http://localhost:4444/throw");
-  let query = {sourceURI: createURI("http://example.com"),
-               suggestedFileName: "noop.bat",
-               fileSize: 12};
-=======
   Services.prefs.setBoolPref(remoteEnabledPref, false);
   Services.prefs.setCharPref(appRepURLPref, "http://localhost:4444/throw");
 
@@ -564,28 +450,7 @@ add_task(async function test_disabled() {
     suggestedFileName: "noop.bat",
     fileSize: 12,
   };
->>>>>>> upstream-releases
   await new Promise(resolve => {
-<<<<<<< HEAD
-    gAppRep.queryReputation(query,
-      function onComplete(aShouldBlock, aStatus) {
-        // We should be getting NS_ERROR_NOT_AVAILABLE if the service is disabled
-        Assert.equal(Cr.NS_ERROR_NOT_AVAILABLE, aStatus);
-        Assert.ok(!aShouldBlock);
-        check_telemetry(expected);
-        resolve(true);
-      }
-    );
-||||||| merged common ancestors
-    gAppRep.queryReputation(query,
-      function onComplete(aShouldBlock, aStatus) {
-        // We should be getting NS_ERROR_NOT_AVAILABLE if the service is disabled
-        Assert.equal(Cr.NS_ERROR_NOT_AVAILABLE, aStatus);
-        Assert.ok(!aShouldBlock);
-        resolve(true);
-      }
-    );
-=======
     gAppRep.queryReputation(query, function onComplete(aShouldBlock, aStatus) {
       // We should be getting NS_ERROR_NOT_AVAILABLE if the service is disabled
       Assert.equal(Cr.NS_ERROR_NOT_AVAILABLE, aStatus);
@@ -593,7 +458,6 @@ add_task(async function test_disabled() {
       check_telemetry(expected);
       resolve(true);
     });
->>>>>>> upstream-releases
   });
 });
 
@@ -601,20 +465,6 @@ add_task(async function test_disabled_through_lists() {
   Services.prefs.setBoolPref(remoteEnabledPref, false);
   Services.prefs.setCharPref(appRepURLPref, "http://localhost:4444/download");
   Services.prefs.setCharPref("urlclassifier.downloadBlockTable", "");
-<<<<<<< HEAD
-
-  let expected = get_telemetry_snapshot();
-  add_telemetry_count(expected.local, NO_LIST, 1);
-  add_telemetry_count(expected.reason, RemoteLookupDisabled, 1);
-
-  let query = {sourceURI: createURI("http://example.com"),
-               suggestedFileName: "noop.bat",
-               fileSize: 12};
-||||||| merged common ancestors
-  let query = {sourceURI: createURI("http://example.com"),
-               suggestedFileName: "noop.bat",
-               fileSize: 12};
-=======
 
   let expected = get_telemetry_snapshot();
   add_telemetry_count(expected.local, NO_LIST, 1);
@@ -625,28 +475,7 @@ add_task(async function test_disabled_through_lists() {
     suggestedFileName: "noop.bat",
     fileSize: 12,
   };
->>>>>>> upstream-releases
   await new Promise(resolve => {
-<<<<<<< HEAD
-    gAppRep.queryReputation(query,
-      function onComplete(aShouldBlock, aStatus) {
-        // We should be getting NS_ERROR_NOT_AVAILABLE if the service is disabled
-        Assert.equal(Cr.NS_ERROR_NOT_AVAILABLE, aStatus);
-        Assert.ok(!aShouldBlock);
-        check_telemetry(expected);
-        resolve(true);
-      }
-    );
-||||||| merged common ancestors
-    gAppRep.queryReputation(query,
-      function onComplete(aShouldBlock, aStatus) {
-        // We should be getting NS_ERROR_NOT_AVAILABLE if the service is disabled
-        Assert.equal(Cr.NS_ERROR_NOT_AVAILABLE, aStatus);
-        Assert.ok(!aShouldBlock);
-        resolve(true);
-      }
-    );
-=======
     gAppRep.queryReputation(query, function onComplete(aShouldBlock, aStatus) {
       // We should be getting NS_ERROR_NOT_AVAILABLE if the service is disabled
       Assert.equal(Cr.NS_ERROR_NOT_AVAILABLE, aStatus);
@@ -654,7 +483,6 @@ add_task(async function test_disabled_through_lists() {
       check_telemetry(expected);
       resolve(true);
     });
->>>>>>> upstream-releases
   });
 });
 add_task(async function test_teardown() {

@@ -13,19 +13,9 @@ TEST_F(APZCTreeManagerTester, ScrollablePaintedLayers) {
   ScopedLayerTreeRegistration registration(manager, LayersId{0}, root, mcc);
 
   // both layers have the same scrollId
-<<<<<<< HEAD
-  SetScrollableFrameMetrics(layers[1], ScrollableLayerGuid::START_SCROLL_ID);
-  SetScrollableFrameMetrics(layers[2], ScrollableLayerGuid::START_SCROLL_ID);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-  SetScrollableFrameMetrics(layers[1], FrameMetrics::START_SCROLL_ID);
-  SetScrollableFrameMetrics(layers[2], FrameMetrics::START_SCROLL_ID);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
   SetScrollableFrameMetrics(layers[1], ScrollableLayerGuid::START_SCROLL_ID);
   SetScrollableFrameMetrics(layers[2], ScrollableLayerGuid::START_SCROLL_ID);
   manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
 
   TestAsyncPanZoomController* nullAPZC = nullptr;
   // so they should have the same APZC
@@ -35,38 +25,16 @@ TEST_F(APZCTreeManagerTester, ScrollablePaintedLayers) {
   EXPECT_EQ(ApzcOf(layers[1]), ApzcOf(layers[2]));
 
   // Change the scrollId of layers[1], and verify the APZC changes
-<<<<<<< HEAD
-  SetScrollableFrameMetrics(layers[1],
-                            ScrollableLayerGuid::START_SCROLL_ID + 1);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-  SetScrollableFrameMetrics(layers[1], FrameMetrics::START_SCROLL_ID + 1);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
   SetScrollableFrameMetrics(layers[1],
                             ScrollableLayerGuid::START_SCROLL_ID + 1);
   manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
   EXPECT_NE(ApzcOf(layers[1]), ApzcOf(layers[2]));
 
-<<<<<<< HEAD
-  // Change the scrollId of layers[2] to match that of layers[1], ensure we get
-  // the same APZC for both again
-  SetScrollableFrameMetrics(layers[2],
-                            ScrollableLayerGuid::START_SCROLL_ID + 1);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-  // Change the scrollId of layers[2] to match that of layers[1], ensure we get the same
-  // APZC for both again
-  SetScrollableFrameMetrics(layers[2], FrameMetrics::START_SCROLL_ID + 1);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
   // Change the scrollId of layers[2] to match that of layers[1], ensure we get
   // the same APZC for both again
   SetScrollableFrameMetrics(layers[2],
                             ScrollableLayerGuid::START_SCROLL_ID + 1);
   manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
   EXPECT_EQ(ApzcOf(layers[1]), ApzcOf(layers[2]));
 }
 
@@ -146,10 +114,6 @@ TEST_F(APZCTreeManagerTester, Bug1198900) {
   manager->ReceiveInputEvent(swi, nullptr, &blockId);
   manager->ContentReceivedInputBlock(blockId, /* preventDefault= */ true);
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 
 // The next two tests check that APZ clamps the scroll offset it composites even
 // if the main thread fails to do so. (The main thread will always clamp its
@@ -219,4 +183,3 @@ TEST_F(APZCTreeManagerTester, Bug1557424) {
   compositedScrollOffset = apzc->GetCompositedScrollOffset();
   EXPECT_EQ(CSSPoint(200, 200), compositedScrollOffset);
 }
->>>>>>> upstream-releases

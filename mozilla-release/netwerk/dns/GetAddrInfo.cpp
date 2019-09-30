@@ -275,21 +275,10 @@ _GetAddrInfo_Portable(const nsACString& aCanonHost, uint16_t aAddressFamily,
     canonName.Assign(PR_GetCanonNameFromAddrInfo(prai));
   }
 
-<<<<<<< HEAD
-  bool filterNameCollision =
-      !(aFlags & nsHostResolver::RES_ALLOW_NAME_COLLISION);
-  nsAutoPtr<AddrInfo> ai(new AddrInfo(aCanonHost, prai, disableIPv4,
-                                      filterNameCollision, canonName));
-||||||| merged common ancestors
-  bool filterNameCollision = !(aFlags & nsHostResolver::RES_ALLOW_NAME_COLLISION);
-  nsAutoPtr<AddrInfo> ai(new AddrInfo(aCanonHost, prai, disableIPv4,
-                                      filterNameCollision, canonName));
-=======
   bool filterNameCollision =
       !(aFlags & nsHostResolver::RES_ALLOW_NAME_COLLISION);
   RefPtr<AddrInfo> ai(new AddrInfo(aCanonHost, prai, disableIPv4,
                                    filterNameCollision, canonName));
->>>>>>> upstream-releases
   PR_FreeAddrInfo(prai);
   if (ai->mAddresses.isEmpty()) {
     return NS_ERROR_UNKNOWN_HOST;

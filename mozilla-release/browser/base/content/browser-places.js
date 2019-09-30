@@ -619,22 +619,7 @@ var PlacesCommandHook = {
   },
 
   searchBookmarks() {
-<<<<<<< HEAD
-    focusAndSelectUrlBar();
-    gURLBar.typeRestrictToken(UrlbarTokenizer.RESTRICT.BOOKMARK);
-||||||| merged common ancestors
-    focusAndSelectUrlBar();
-    for (let char of ["*", " "]) {
-      let code = char.charCodeAt(0);
-      gURLBar.inputField.dispatchEvent(new KeyboardEvent("keypress", {
-        keyCode: code,
-        charCode: code,
-        bubbles: true,
-      }));
-    }
-=======
     gURLBar.search(UrlbarTokenizer.RESTRICT.BOOKMARK);
->>>>>>> upstream-releases
   },
 };
 
@@ -1275,23 +1260,6 @@ var LibraryUI = {
 
     let animatableBox = document.getElementById("library-animatable-box");
     let navBar = document.getElementById("nav-bar");
-<<<<<<< HEAD
-    let libraryIcon = document.getAnonymousElementByAttribute(libraryButton, "class", "toolbarbutton-icon");
-    let iconBounds = window.windowUtils.getBoundsWithoutFlushing(libraryIcon);
-    let libraryBounds = window.windowUtils.getBoundsWithoutFlushing(libraryButton);
-
-    animatableBox.style.setProperty("--library-button-height", libraryBounds.height + "px");
-||||||| merged common ancestors
-    let libraryIcon = document.getAnonymousElementByAttribute(libraryButton, "class", "toolbarbutton-icon");
-    let dwu = window.windowUtils;
-    let iconBounds = dwu.getBoundsWithoutFlushing(libraryIcon);
-    let libraryBounds = dwu.getBoundsWithoutFlushing(libraryButton);
-    let toolboxBounds = dwu.getBoundsWithoutFlushing(gNavToolbox);
-
-    animatableBox.style.setProperty("--toolbox-y", toolboxBounds.y + "px");
-    animatableBox.style.setProperty("--library-button-y", libraryBounds.y + "px");
-    animatableBox.style.setProperty("--library-button-height", libraryBounds.height + "px");
-=======
     let iconBounds = window.windowUtils.getBoundsWithoutFlushing(
       libraryButton.icon
     );
@@ -1303,7 +1271,6 @@ var LibraryUI = {
       "--library-button-height",
       libraryBounds.height + "px"
     );
->>>>>>> upstream-releases
     animatableBox.style.setProperty("--library-icon-x", iconBounds.x + "px");
     if (navBar.hasAttribute("brighttext")) {
       animatableBox.setAttribute("brighttext", "true");

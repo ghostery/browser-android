@@ -38,26 +38,6 @@ add_task(async function alt_left_click_test() {
 add_task(async function shift_left_click_test() {
   info("Running test: Shift left click");
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_locationBarCommand.js
-  let destinationURL = "http://" + TEST_VALUE + "/";
-  let newWindowPromise = BrowserTestUtils.waitForNewWindow({url: destinationURL});
-  triggerCommand(true, {shiftKey: true});
-  let win = await newWindowPromise;
-
-||||||| merged common ancestors
-  let newWindowPromise = BrowserTestUtils.waitForNewWindow();
-  triggerCommand(true, {shiftKey: true});
-  let win = await newWindowPromise;
-
-  // Wait for the initial browser to load.
-  let browser = win.gBrowser.selectedBrowser;
-  let destinationURL = "http://" + TEST_VALUE + "/";
-  await Promise.all([
-    BrowserTestUtils.browserLoaded(browser),
-    BrowserTestUtils.waitForLocationChange(win.gBrowser, destinationURL),
-  ]);
-
-=======
   let destinationURL = "http://" + TEST_VALUE + "/";
   let newWindowPromise = BrowserTestUtils.waitForNewWindow({
     url: destinationURL,
@@ -65,7 +45,6 @@ add_task(async function shift_left_click_test() {
   await triggerCommand("click", { shiftKey: true });
   let win = await newWindowPromise;
 
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_locationBarCommand.js
   info("URL should be loaded in a new window");
   is(gURLBar.value, "", "Urlbar reverted to original value");
   await promiseCheckChildNoFocusedElement(gBrowser.selectedBrowser);

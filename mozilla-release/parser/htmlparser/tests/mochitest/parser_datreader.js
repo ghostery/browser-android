@@ -13,30 +13,14 @@
 /**
  * A few utility functions.
  */
-<<<<<<< HEAD
-function log(entry) {
-
-}
-||||||| merged common ancestors
-function log(entry) {
-    
-}
-=======
 function log(entry) {}
->>>>>>> upstream-releases
 
 function startsWith(s, s2) {
   return s.indexOf(s2) == 0;
 }
 
 function trimString(s) {
-<<<<<<< HEAD
-  return (s.replace(/^\s+/, "").replace(/\s+$/, ""));
-||||||| merged common ancestors
-  return(s.replace(/^\s+/,'').replace(/\s+$/,''));
-=======
   return s.replace(/^\s+/, "").replace(/\s+$/, "");
->>>>>>> upstream-releases
 }
 
 /**
@@ -58,13 +42,7 @@ function parseTestcase(testcase) {
       break;
     }
     log(lines);
-<<<<<<< HEAD
-    throw "Unknown test format.";
-||||||| merged common ancestors
-    throw "Unknown test format."
-=======
     throw new Error("Unknown test format.");
->>>>>>> upstream-releases
   }
 
   var input = [];
@@ -135,23 +113,11 @@ function docToTestOutput(doc) {
  * @param an element
  */
 function createFragmentWalker(elt) {
-<<<<<<< HEAD
-  return elt.ownerDocument.createTreeWalker(elt, NodeFilter.SHOW_ALL,
-    function(node) {
-      return elt == node ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
-    });
-||||||| merged common ancestors
-  return elt.ownerDocument.createTreeWalker(elt, NodeFilter.SHOW_ALL,
-    function (node) {
-      return elt == node ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
-    });
-=======
   return elt.ownerDocument.createTreeWalker(elt, NodeFilter.SHOW_ALL, function(
     node
   ) {
     return elt == node ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
   });
->>>>>>> upstream-releases
 }
 
 /**
@@ -202,15 +168,6 @@ function addLevels(walker, buf, indent) {
               valuesByName[name] = attrs[i].value;
             }
             var keys = Object.keys(valuesByName).sort();
-<<<<<<< HEAD
-            for (let i = 0; i < keys.length; ++i) {
-              buf += "\n" + indent + "  " + keys[i] +
-                     "=\"" + valuesByName[keys[i]] + "\"";
-||||||| merged common ancestors
-            for (var i = 0; i < keys.length; ++i) {
-              buf += "\n" + indent + "  " + keys[i] + 
-                     "=\"" + valuesByName[keys[i]] +"\"";
-=======
             for (let i = 0; i < keys.length; ++i) {
               buf +=
                 "\n" +
@@ -220,7 +177,6 @@ function addLevels(walker, buf, indent) {
                 '="' +
                 valuesByName[keys[i]] +
                 '"';
->>>>>>> upstream-releases
             }
           }
           break;

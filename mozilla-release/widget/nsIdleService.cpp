@@ -624,13 +624,6 @@ bool nsIdleService::UsePollMode() {
   return PollIdleTime(&dummy);
 }
 
-<<<<<<< HEAD
-void nsIdleService::StaticIdleTimerCallback(nsITimer* aTimer, void* aClosure) {
-||||||| merged common ancestors
-void
-nsIdleService::StaticIdleTimerCallback(nsITimer* aTimer, void* aClosure)
-{
-=======
 nsresult nsIdleService::GetDisabled(bool* aResult) {
   *aResult = mDisabled;
   return NS_OK;
@@ -642,7 +635,6 @@ nsresult nsIdleService::SetDisabled(bool aDisabled) {
 }
 
 void nsIdleService::StaticIdleTimerCallback(nsITimer* aTimer, void* aClosure) {
->>>>>>> upstream-releases
   static_cast<nsIdleService*>(aClosure)->IdleTimerCallback();
 }
 

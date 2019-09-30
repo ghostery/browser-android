@@ -735,17 +735,8 @@ double ADTSTrackDemuxer::AverageFrameLength() const {
   return 0.0;
 }
 
-<<<<<<< HEAD
-/* static */ bool ADTSDemuxer::ADTSSniffer(const uint8_t* aData,
-                                           const uint32_t aLength) {
-||||||| merged common ancestors
-/* static */ bool
-ADTSDemuxer::ADTSSniffer(const uint8_t* aData, const uint32_t aLength)
-{
-=======
 /* static */
 bool ADTSDemuxer::ADTSSniffer(const uint8_t* aData, const uint32_t aLength) {
->>>>>>> upstream-releases
   if (aLength < 7) {
     return false;
   }

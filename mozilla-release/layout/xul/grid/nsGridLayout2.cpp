@@ -19,41 +19,12 @@
 #include "nsSprocketLayout.h"
 #include "mozilla/ReflowInput.h"
 
-<<<<<<< HEAD
-nsresult NS_NewGridLayout2(nsIPresShell* aPresShell, nsBoxLayout** aNewLayout) {
-  *aNewLayout = new nsGridLayout2(aPresShell);
-||||||| merged common ancestors
-nsresult
-NS_NewGridLayout2( nsIPresShell* aPresShell, nsBoxLayout** aNewLayout)
-{
-  *aNewLayout = new nsGridLayout2(aPresShell);
-=======
 nsresult NS_NewGridLayout2(nsBoxLayout** aNewLayout) {
   *aNewLayout = new nsGridLayout2();
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aNewLayout);
 
   return NS_OK;
-<<<<<<< HEAD
 }
-
-nsGridLayout2::nsGridLayout2(nsIPresShell* aPresShell) : nsStackLayout() {}
-
-nsGridLayout2::~nsGridLayout2() {}
-||||||| merged common ancestors
-
-}
-
-nsGridLayout2::nsGridLayout2(nsIPresShell* aPresShell):nsStackLayout()
-{
-}
-
-nsGridLayout2::~nsGridLayout2()
-{
-}
-=======
-}
->>>>>>> upstream-releases
 
 // static
 void nsGridLayout2::AddOffset(nsIFrame* aChild, nsSize& aSize) {

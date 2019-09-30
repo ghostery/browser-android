@@ -26,16 +26,8 @@ class nsCheckSummedOutputStream : public nsBufferedOutputStream {
   nsCheckSummedOutputStream() {}
 
   NS_IMETHOD Finish() override;
-<<<<<<< HEAD
-  NS_IMETHOD Write(const char *buf, uint32_t count, uint32_t *result) override;
-  NS_IMETHOD Init(nsIOutputStream *stream, uint32_t bufferSize) override;
-||||||| merged common ancestors
-  NS_IMETHOD Write(const char *buf, uint32_t count, uint32_t *result) override;
-  NS_IMETHOD Init(nsIOutputStream* stream, uint32_t bufferSize) override;
-=======
   NS_IMETHOD Write(const char* buf, uint32_t count, uint32_t* result) override;
   NS_IMETHOD Init(nsIOutputStream* stream, uint32_t bufferSize) override;
->>>>>>> upstream-releases
 
  protected:
   virtual ~nsCheckSummedOutputStream() { nsBufferedOutputStream::Close(); }
@@ -45,38 +37,6 @@ class nsCheckSummedOutputStream : public nsBufferedOutputStream {
 };
 
 // returns a file output stream which can be QI'ed to nsIFileOutputStream.
-<<<<<<< HEAD
-inline nsresult NS_NewCheckSummedOutputStream(nsIOutputStream **result,
-                                              nsIFile *file) {
-  nsCOMPtr<nsIOutputStream> localOutFile;
-  nsresult rv =
-      NS_NewSafeLocalFileOutputStream(getter_AddRefs(localOutFile), file,
-                                      PR_WRONLY | PR_TRUNCATE | PR_CREATE_FILE);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsCOMPtr<nsIBufferedOutputStream> out = new nsCheckSummedOutputStream();
-  rv = out->Init(localOutFile, nsCheckSummedOutputStream::CHECKSUM_SIZE);
-  if (NS_SUCCEEDED(rv)) {
-    out.forget(result);
-  }
-  return rv;
-||||||| merged common ancestors
-inline nsresult
-NS_NewCheckSummedOutputStream(nsIOutputStream **result,
-                              nsIFile         *file)
-{
-    nsCOMPtr<nsIOutputStream> localOutFile;
-    nsresult rv = NS_NewSafeLocalFileOutputStream(getter_AddRefs(localOutFile), file,
-                                                  PR_WRONLY | PR_TRUNCATE | PR_CREATE_FILE);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsCOMPtr<nsIBufferedOutputStream> out = new nsCheckSummedOutputStream();
-    rv = out->Init(localOutFile, nsCheckSummedOutputStream::CHECKSUM_SIZE);
-    if (NS_SUCCEEDED(rv)) {
-      out.forget(result);
-    }
-    return rv;
-=======
 inline nsresult NS_NewCheckSummedOutputStream(nsIOutputStream** result,
                                               nsIFile* file) {
   nsCOMPtr<nsIOutputStream> localOutFile;
@@ -123,7 +83,6 @@ inline nsresult NS_NewCrc32OutputStream(
     bufferOutput.forget(aResult);
   }
   return rv;
->>>>>>> upstream-releases
 }
 
 #endif

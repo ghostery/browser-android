@@ -35,33 +35,6 @@
  * definitions match the actual type sizes seen at compile time.
  */
 #if defined(ANDROID) && !defined(__LP64__)
-<<<<<<< HEAD
-#undef PRIdPTR      /* intptr_t  */
-#define PRIdPTR "d" /* intptr_t  */
-#undef PRIiPTR      /* intptr_t  */
-#define PRIiPTR "i" /* intptr_t  */
-#undef PRIoPTR      /* uintptr_t */
-#define PRIoPTR "o" /* uintptr_t */
-#undef PRIuPTR      /* uintptr_t */
-#define PRIuPTR "u" /* uintptr_t */
-#undef PRIxPTR      /* uintptr_t */
-#define PRIxPTR "x" /* uintptr_t */
-#undef PRIXPTR      /* uintptr_t */
-#define PRIXPTR "X" /* uintptr_t */
-||||||| merged common ancestors
-#  undef  PRIdPTR      /* intptr_t  */
-#  define PRIdPTR "d"  /* intptr_t  */
-#  undef  PRIiPTR      /* intptr_t  */
-#  define PRIiPTR "i"  /* intptr_t  */
-#  undef  PRIoPTR      /* uintptr_t */
-#  define PRIoPTR "o"  /* uintptr_t */
-#  undef  PRIuPTR      /* uintptr_t */
-#  define PRIuPTR "u"  /* uintptr_t */
-#  undef  PRIxPTR      /* uintptr_t */
-#  define PRIxPTR "x"  /* uintptr_t */
-#  undef  PRIXPTR      /* uintptr_t */
-#  define PRIXPTR "X"  /* uintptr_t */
-=======
 #  undef PRIdPTR      /* intptr_t  */
 #  define PRIdPTR "d" /* intptr_t  */
 #  undef PRIiPTR      /* intptr_t  */
@@ -74,7 +47,6 @@
 #  define PRIxPTR "x" /* uintptr_t */
 #  undef PRIXPTR      /* uintptr_t */
 #  define PRIXPTR "X" /* uintptr_t */
->>>>>>> upstream-releases
 #endif
 
 /*
@@ -83,57 +55,6 @@
  * as long and unsigned long.
  */
 #if defined(ANDROID) && defined(__LP64__)
-<<<<<<< HEAD
-#undef PRIdFAST16         /* int_fast16_t */
-#define PRIdFAST16 PRId64 /* int_fast16_t */
-#undef PRIiFAST16         /* int_fast16_t */
-#define PRIiFAST16 PRIi64 /* int_fast16_t */
-#undef PRIoFAST16         /* uint_fast16_t */
-#define PRIoFAST16 PRIo64 /* uint_fast16_t */
-#undef PRIuFAST16         /* uint_fast16_t */
-#define PRIuFAST16 PRIu64 /* uint_fast16_t */
-#undef PRIxFAST16         /* uint_fast16_t */
-#define PRIxFAST16 PRIx64 /* uint_fast16_t */
-#undef PRIXFAST16         /* uint_fast16_t */
-#define PRIXFAST16 PRIX64 /* uint_fast16_t */
-#undef PRIdFAST32         /* int_fast32_t */
-#define PRIdFAST32 PRId64 /* int_fast32_t */
-#undef PRIiFAST32         /* int_fast32_t */
-#define PRIiFAST32 PRIi64 /* int_fast32_t */
-#undef PRIoFAST32         /* uint_fast32_t */
-#define PRIoFAST32 PRIo64 /* uint_fast32_t */
-#undef PRIuFAST32         /* uint_fast32_t */
-#define PRIuFAST32 PRIu64 /* uint_fast32_t */
-#undef PRIxFAST32         /* uint_fast32_t */
-#define PRIxFAST32 PRIx64 /* uint_fast32_t */
-#undef PRIXFAST32         /* uint_fast32_t */
-#define PRIXFAST32 PRIX64 /* uint_fast32_t */
-||||||| merged common ancestors
-#  undef  PRIdFAST16         /* int_fast16_t */
-#  define PRIdFAST16 PRId64  /* int_fast16_t */
-#  undef  PRIiFAST16         /* int_fast16_t */
-#  define PRIiFAST16 PRIi64  /* int_fast16_t */
-#  undef  PRIoFAST16         /* uint_fast16_t */
-#  define PRIoFAST16 PRIo64  /* uint_fast16_t */
-#  undef  PRIuFAST16         /* uint_fast16_t */
-#  define PRIuFAST16 PRIu64  /* uint_fast16_t */
-#  undef  PRIxFAST16         /* uint_fast16_t */
-#  define PRIxFAST16 PRIx64  /* uint_fast16_t */
-#  undef  PRIXFAST16         /* uint_fast16_t */
-#  define PRIXFAST16 PRIX64  /* uint_fast16_t */
-#  undef  PRIdFAST32         /* int_fast32_t */
-#  define PRIdFAST32 PRId64  /* int_fast32_t */
-#  undef  PRIiFAST32         /* int_fast32_t */
-#  define PRIiFAST32 PRIi64  /* int_fast32_t */
-#  undef  PRIoFAST32         /* uint_fast32_t */
-#  define PRIoFAST32 PRIo64  /* uint_fast32_t */
-#  undef  PRIuFAST32         /* uint_fast32_t */
-#  define PRIuFAST32 PRIu64  /* uint_fast32_t */
-#  undef  PRIxFAST32         /* uint_fast32_t */
-#  define PRIxFAST32 PRIx64  /* uint_fast32_t */
-#  undef  PRIXFAST32         /* uint_fast32_t */
-#  define PRIXFAST32 PRIX64  /* uint_fast32_t */
-=======
 #  undef PRIdFAST16         /* int_fast16_t */
 #  define PRIdFAST16 PRId64 /* int_fast16_t */
 #  undef PRIiFAST16         /* int_fast16_t */
@@ -158,7 +79,6 @@
 #  define PRIxFAST32 PRIx64 /* uint_fast32_t */
 #  undef PRIXFAST32         /* uint_fast32_t */
 #  define PRIXFAST32 PRIX64 /* uint_fast32_t */
->>>>>>> upstream-releases
 #endif
 
 #endif /* mozilla_IntegerPrintfMacros_h_ */

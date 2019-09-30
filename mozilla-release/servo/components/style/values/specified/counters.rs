@@ -5,23 +5,6 @@
 //! Specified types for counter properties.
 
 #[cfg(feature = "servo")]
-<<<<<<< HEAD
-use crate::computed_values::list_style_type::T as ListStyleType;
-use crate::parser::{Parse, ParserContext};
-use crate::values::generics::counters as generics;
-use crate::values::generics::counters::CounterIncrement as GenericCounterIncrement;
-use crate::values::generics::counters::CounterPair;
-use crate::values::generics::counters::CounterReset as GenericCounterReset;
-#[cfg(feature = "gecko")]
-use crate::values::generics::CounterStyleOrNone;
-use crate::values::specified::url::SpecifiedImageUrl;
-#[cfg(feature = "gecko")]
-use crate::values::specified::Attr;
-use crate::values::specified::Integer;
-use crate::values::CustomIdent;
-||||||| merged common ancestors
-use computed_values::list_style_type::T as ListStyleType;
-=======
 use crate::computed_values::list_style_type::T as ListStyleType;
 use crate::parser::{Parse, ParserContext};
 use crate::values::generics::counters as generics;
@@ -35,7 +18,6 @@ use crate::values::specified::url::SpecifiedImageUrl;
 use crate::values::specified::Attr;
 use crate::values::specified::Integer;
 use crate::values::CustomIdent;
->>>>>>> upstream-releases
 use cssparser::{Parser, Token};
 use selectors::parser::SelectorParseErrorKind;
 use style_traits::{ParseError, StyleParseErrorKind};

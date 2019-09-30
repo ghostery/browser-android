@@ -53,17 +53,11 @@ class nsScriptErrorBase : public nsIScriptError {
 
   void AddNote(nsIScriptErrorNote* note);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   static bool ComputeIsFromPrivateWindow(nsGlobalWindowInner* aWindow);
 
   static bool ComputeIsFromChromeContext(nsGlobalWindowInner* aWindow);
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsScriptErrorBase();
 
   void InitializeOnMainThread();

@@ -20,35 +20,6 @@ class nsView;
 struct nsPoint;
 
 namespace mozilla {
-<<<<<<< HEAD
-namespace dom {
-class Element;
-}  // namespace dom
-namespace layers {
-class LayerTransactionChild;
-class WebRenderBridgeChild;
-}  // namespace layers
-}  // namespace mozilla
-
-class nsTranslationNodeList final : public nsITranslationNodeList {
- public:
-  nsTranslationNodeList() {
-||||||| merged common ancestors
-  namespace dom {
-    class Element;
-  } // namespace dom
-  namespace layers {
-    class LayerTransactionChild;
-    class WebRenderBridgeChild;
-  } // namespace layers
-} // namespace mozilla
-
-class nsTranslationNodeList final : public nsITranslationNodeList
-{
-public:
-  nsTranslationNodeList()
-  {
-=======
 class PresShell;
 namespace dom {
 class Document;
@@ -63,7 +34,6 @@ class WebRenderBridgeChild;
 class nsTranslationNodeList final : public nsITranslationNodeList {
  public:
   nsTranslationNodeList() {
->>>>>>> upstream-releases
     mNodes.SetCapacity(1000);
     mNodeIsRoot.SetCapacity(1000);
     mLength = 0;
@@ -115,54 +85,6 @@ class nsDOMWindowUtils final : public nsIDOMWindowUtils,
   mozilla::layers::CompositorBridgeChild* GetCompositorBridge();
 
   // Until callers are annotated.
-<<<<<<< HEAD
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  NS_IMETHOD SendMouseEventCommon(
-      const nsAString& aType, float aX, float aY, int32_t aButton,
-      int32_t aClickCount, int32_t aModifiers, bool aIgnoreRootScrollFrame,
-      float aPressure, unsigned short aInputSourceArg, uint32_t aIdentifier,
-      bool aToWindow, bool* aPreventDefault, bool aIsDOMEventSynthesized,
-      bool aIsWidgetEventSynthesized, int32_t aButtons);
-
-  NS_IMETHOD SendTouchEventCommon(const nsAString& aType,
-                                  uint32_t* aIdentifiers, int32_t* aXs,
-                                  int32_t* aYs, uint32_t* aRxs, uint32_t* aRys,
-                                  float* aRotationAngles, float* aForces,
-                                  uint32_t aCount, int32_t aModifiers,
-                                  bool aIgnoreRootScrollFrame, bool aToWindow,
-                                  bool* aPreventDefault);
-||||||| merged common ancestors
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  NS_IMETHOD SendMouseEventCommon(const nsAString& aType,
-                                  float aX,
-                                  float aY,
-                                  int32_t aButton,
-                                  int32_t aClickCount,
-                                  int32_t aModifiers,
-                                  bool aIgnoreRootScrollFrame,
-                                  float aPressure,
-                                  unsigned short aInputSourceArg,
-                                  uint32_t aIdentifier,
-                                  bool aToWindow,
-                                  bool *aPreventDefault,
-                                  bool aIsDOMEventSynthesized,
-                                  bool aIsWidgetEventSynthesized,
-                                  int32_t aButtons);
-
-  NS_IMETHOD SendTouchEventCommon(const nsAString& aType,
-                                  uint32_t* aIdentifiers,
-                                  int32_t* aXs,
-                                  int32_t* aYs,
-                                  uint32_t* aRxs,
-                                  uint32_t* aRys,
-                                  float* aRotationAngles,
-                                  float* aForces,
-                                  uint32_t aCount,
-                                  int32_t aModifiers,
-                                  bool aIgnoreRootScrollFrame,
-                                  bool aToWindow,
-                                  bool* aPreventDefault);
-=======
   MOZ_CAN_RUN_SCRIPT
   NS_IMETHOD SendMouseEventCommon(
       const nsAString& aType, float aX, float aY, int32_t aButton,
@@ -179,7 +101,6 @@ class nsDOMWindowUtils final : public nsIDOMWindowUtils,
       const nsTArray<float>& aRotationAngles, const nsTArray<float>& aForces,
       int32_t aModifiers, bool aIgnoreRootScrollFrame, bool aToWindow,
       bool* aPreventDefault);
->>>>>>> upstream-releases
 };
 
 #endif

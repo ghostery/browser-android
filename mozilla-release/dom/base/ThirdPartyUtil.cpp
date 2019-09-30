@@ -21,16 +21,9 @@
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/dom/Document.h"
 #include "mozilla/Logging.h"
-<<<<<<< HEAD
-#include "mozilla/Unused.h"
-#include "nsPIDOMWindow.h"
-||||||| merged common ancestors
-#include "nsPIDOMWindow.h"
-=======
 #include "mozilla/StaticPtr.h"
 #include "mozilla/Unused.h"
 #include "nsGlobalWindowOuter.h"
->>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(ThirdPartyUtil, mozIThirdPartyUtil)
 
@@ -41,13 +34,6 @@ static mozilla::LazyLogModule gThirdPartyLog("thirdPartyUtil");
 #undef LOG
 #define LOG(args) MOZ_LOG(gThirdPartyLog, mozilla::LogLevel::Debug, args)
 
-<<<<<<< HEAD
-nsresult ThirdPartyUtil::Init() {
-||||||| merged common ancestors
-nsresult
-ThirdPartyUtil::Init()
-{
-=======
 static mozilla::StaticRefPtr<ThirdPartyUtil> gService;
 
 // static
@@ -59,7 +45,6 @@ void ThirdPartyUtil::Startup() {
 }
 
 nsresult ThirdPartyUtil::Init() {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(NS_IsMainThread(), NS_ERROR_NOT_AVAILABLE);
 
   MOZ_ASSERT(!gService);
@@ -120,17 +105,8 @@ nsCString ThirdPartyUtil::GetBaseDomainFromWindow(nsPIDOMWindowOuter* aWindow) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ThirdPartyUtil::GetURIFromWindow(mozIDOMWindowProxy* aWin, nsIURI** result) {
-  nsresult rv;
-||||||| merged common ancestors
-ThirdPartyUtil::GetURIFromWindow(mozIDOMWindowProxy* aWin, nsIURI** result)
-{
-  nsresult rv;
-=======
 ThirdPartyUtil::GetPrincipalFromWindow(mozIDOMWindowProxy* aWin,
                                        nsIPrincipal** result) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIScriptObjectPrincipal> scriptObjPrin = do_QueryInterface(aWin);
   if (!scriptObjPrin) {
     return NS_ERROR_INVALID_ARG;
@@ -189,20 +165,6 @@ ThirdPartyUtil::IsThirdPartyWindow(mozIDOMWindowProxy* aWindow, nsIURI* aURI,
 
   bool result;
 
-<<<<<<< HEAD
-  // Get the URI of the window, and its base domain.
-  nsresult rv;
-  nsCOMPtr<nsIURI> currentURI;
-  rv = GetURIFromWindow(aWindow, getter_AddRefs(currentURI));
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-  // Get the URI of the window, and its base domain.
-  nsresult rv;
-  nsCOMPtr<nsIURI> currentURI;
-  rv = GetURIFromWindow(aWindow, getter_AddRefs(currentURI));
-  if (NS_FAILED(rv))
-    return rv;
-=======
   nsCString bottomDomain =
       GetBaseDomainFromWindow(nsPIDOMWindowOuter::From(aWindow));
   if (bottomDomain.IsEmpty()) {
@@ -213,40 +175,19 @@ ThirdPartyUtil::IsThirdPartyWindow(mozIDOMWindowProxy* aWindow, nsIURI* aURI,
     if (NS_FAILED(rv)) {
       return rv;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCString bottomDomain;
-  rv = GetBaseDomain(currentURI, bottomDomain);
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-  nsCString bottomDomain;
-  rv = GetBaseDomain(currentURI, bottomDomain);
-  if (NS_FAILED(rv))
-    return rv;
-=======
     rv = GetBaseDomain(currentURI, bottomDomain);
     if (NS_FAILED(rv)) {
       return rv;
     }
   }
->>>>>>> upstream-releases
 
   // Ignore about:blank URIs here since they have no domain and attempting to
   // compare against them will fail.
   if (aURI && !NS_IsAboutBlank(aURI)) {
     // Determine whether aURI is foreign with respect to currentURI.
-<<<<<<< HEAD
-    rv = IsThirdPartyInternal(bottomDomain, aURI, &result);
-    if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    rv = IsThirdPartyInternal(bottomDomain, aURI, &result);
-    if (NS_FAILED(rv))
-      return rv;
-=======
     nsresult rv = IsThirdPartyInternal(bottomDomain, aURI, &result);
     if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
     if (result) {
       *aResult = true;
@@ -254,16 +195,7 @@ ThirdPartyUtil::IsThirdPartyWindow(mozIDOMWindowProxy* aWindow, nsIURI* aURI,
     }
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsPIDOMWindowOuter> current = nsPIDOMWindowOuter::From(aWindow),
-                               parent;
-  nsCOMPtr<nsIURI> parentURI;
-||||||| merged common ancestors
-  nsCOMPtr<nsPIDOMWindowOuter> current = nsPIDOMWindowOuter::From(aWindow), parent;
-  nsCOMPtr<nsIURI> parentURI;
-=======
   nsPIDOMWindowOuter* current = nsPIDOMWindowOuter::From(aWindow);
->>>>>>> upstream-releases
   do {
     // We use GetScriptableParent rather than GetParent because we consider
     // <iframe mozbrowser> to be a top-level frame.
@@ -279,20 +211,6 @@ ThirdPartyUtil::IsThirdPartyWindow(mozIDOMWindowProxy* aWindow, nsIURI* aURI,
       return NS_OK;
     }
 
-<<<<<<< HEAD
-    rv = GetURIFromWindow(parent, getter_AddRefs(parentURI));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    rv = IsThirdPartyInternal(bottomDomain, parentURI, &result);
-    if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    rv = GetURIFromWindow(parent, getter_AddRefs(parentURI));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    rv = IsThirdPartyInternal(bottomDomain, parentURI, &result);
-    if (NS_FAILED(rv))
-      return rv;
-=======
     nsCString parentDomain = GetBaseDomainFromWindow(parent);
     if (parentDomain.IsEmpty()) {
       // We may have an about:blank window here.  Fall back to the slower code
@@ -308,7 +226,6 @@ ThirdPartyUtil::IsThirdPartyWindow(mozIDOMWindowProxy* aWindow, nsIURI* aURI,
     } else {
       result = IsThirdPartyInternal(bottomDomain, parentDomain);
     }
->>>>>>> upstream-releases
 
     if (result) {
       *aResult = true;
@@ -373,26 +290,6 @@ ThirdPartyUtil::IsThirdPartyChannel(nsIChannel* aChannel, nsIURI* aURI,
         // Check if the channel itself is third-party to its own requestor.
         // Unforunately, we have to go through the loading principal.
         nsCOMPtr<nsIURI> parentURI;
-<<<<<<< HEAD
-        rv = loadInfo->LoadingPrincipal()->GetURI(getter_AddRefs(parentURI));
-        if (NS_SUCCEEDED(rv) && parentURI) {
-          // We may have a principal like the system principal here which does
-          // not have a URI.
-          rv = IsThirdPartyInternal(channelDomain, parentURI, &parentIsThird);
-          if (NS_FAILED(rv)) {
-            return rv;
-          }
-        } else {
-          NS_WARNING(
-              "Found a principal with no URI, assuming third-party request");
-          parentIsThird = true;
-        }
-||||||| merged common ancestors
-        loadInfo->LoadingPrincipal()->GetURI(getter_AddRefs(parentURI));
-        rv = IsThirdPartyInternal(channelDomain, parentURI, &parentIsThird);
-        if (NS_FAILED(rv))
-          return rv;
-=======
         rv = loadInfo->LoadingPrincipal()->GetURI(getter_AddRefs(parentURI));
         if (NS_SUCCEEDED(rv) && parentURI) {
           // We may have a principal like the system principal here which does
@@ -405,7 +302,6 @@ ThirdPartyUtil::IsThirdPartyChannel(nsIChannel* aChannel, nsIURI* aURI,
           // Found a principal with no URI, assuming third-party request
           parentIsThird = true;
         }
->>>>>>> upstream-releases
       }
     } else {
       NS_WARNING(
@@ -427,17 +323,9 @@ ThirdPartyUtil::IsThirdPartyChannel(nsIChannel* aChannel, nsIURI* aURI,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ThirdPartyUtil::GetTopWindowForChannel(nsIChannel* aChannel,
-                                       mozIDOMWindowProxy** aWin) {
-||||||| merged common ancestors
-ThirdPartyUtil::GetTopWindowForChannel(nsIChannel* aChannel, mozIDOMWindowProxy** aWin)
-{
-=======
 ThirdPartyUtil::GetTopWindowForChannel(nsIChannel* aChannel,
                                        nsIURI* aURIBeingLoaded,
                                        mozIDOMWindowProxy** aWin) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aWin);
 
   // Find the associated window and its parent window.

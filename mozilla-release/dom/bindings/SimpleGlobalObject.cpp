@@ -74,15 +74,7 @@ static const js::ClassOps SimpleGlobalClassOps = {
 };
 
 static const js::ClassExtension SimpleGlobalClassExtension = {
-<<<<<<< HEAD
-    nullptr, SimpleGlobal_moved};
-||||||| merged common ancestors
-  nullptr,
-  SimpleGlobal_moved
-};
-=======
     SimpleGlobal_moved};
->>>>>>> upstream-releases
 
 const js::Class SimpleGlobalClass = {
     "",

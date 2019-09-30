@@ -569,15 +569,6 @@ add_task(async function custom_context_menus() {
     "Should keep own context menu wrapped now that we're in the panel."
   );
 
-<<<<<<< HEAD
-  simulateItemDrag(widget, CustomizableUI.getCustomizationTarget(document.getElementById("nav-bar")));
-  is(widget.getAttribute("context"), "", "Should not have own context menu when back in toolbar because we're still customizing.");
-  is(widget.getAttribute("wrapped-context"), expectedContext, "Should keep own context menu wrapped now that we're back in the toolbar.");
-||||||| merged common ancestors
-  simulateItemDrag(widget, document.getElementById("nav-bar").customizationTarget);
-  is(widget.getAttribute("context"), "", "Should not have own context menu when back in toolbar because we're still customizing.");
-  is(widget.getAttribute("wrapped-context"), expectedContext, "Should keep own context menu wrapped now that we're back in the toolbar.");
-=======
   simulateItemDrag(
     widget,
     CustomizableUI.getCustomizationTarget(document.getElementById("nav-bar"))
@@ -592,7 +583,6 @@ add_task(async function custom_context_menus() {
     expectedContext,
     "Should keep own context menu wrapped now that we're back in the toolbar."
   );
->>>>>>> upstream-releases
 
   await endCustomizing();
   is(

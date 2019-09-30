@@ -32,37 +32,6 @@ using namespace mozilla::dom;
 NS_IMPL_CYCLE_COLLECTION_CLASS(ShadowRoot)
 
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(ShadowRoot, DocumentFragment)
-<<<<<<< HEAD
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mStyleSheets)
-  for (StyleSheet* sheet : tmp->mStyleSheets) {
-    // mServoStyles keeps another reference to it if applicable.
-    if (sheet->IsApplicable()) {
-      MOZ_ASSERT(tmp->mServoStyles);
-      NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "mServoStyles->sheets[i]");
-      cb.NoteXPCOMChild(sheet);
-    }
-  }
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDOMStyleSheets)
-  for (auto iter = tmp->mIdentifierMap.ConstIter(); !iter.Done(); iter.Next()) {
-    iter.Get()->Traverse(&cb);
-  }
-||||||| merged common ancestors
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mStyleSheets)
-  for (StyleSheet* sheet : tmp->mStyleSheets) {
-    // mServoStyles keeps another reference to it if applicable.
-    if (sheet->IsApplicable()) {
-      MOZ_ASSERT(tmp->mServoStyles);
-      NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "mServoStyles->sheets[i]");
-      cb.NoteXPCOMChild(sheet);
-    }
-  }
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDOMStyleSheets)
-  for (auto iter = tmp->mIdentifierMap.ConstIter(); !iter.Done();
-       iter.Next()) {
-    iter.Get()->Traverse(&cb);
-  }
-=======
->>>>>>> upstream-releases
   DocumentOrShadowRoot::Traverse(tmp, cb);
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
@@ -163,15 +132,8 @@ nsresult ShadowRoot::Bind() {
     OwnerDoc()->AddComposedDocShadowRoot(*this);
   }
 
-<<<<<<< HEAD
-  for (nsIContent* child = GetFirstChild(); child;
-||||||| merged common ancestors
-  for (nsIContent* child = GetFirstChild();
-       child;
-=======
   BindContext context(*this);
   for (nsIContent* child = GetFirstChild(); child;
->>>>>>> upstream-releases
        child = child->GetNextSibling()) {
     nsresult rv = child->BindToTree(context, *this);
     NS_ENSURE_SUCCESS(rv, rv);
@@ -221,13 +183,6 @@ void ShadowRoot::InvalidateStyleAndLayoutOnSubtree(Element* aElement) {
   presShell->DestroyFramesForAndRestyle(aElement);
 }
 
-<<<<<<< HEAD
-void ShadowRoot::AddSlot(HTMLSlotElement* aSlot) {
-||||||| merged common ancestors
-void
-ShadowRoot::AddSlot(HTMLSlotElement* aSlot)
-{
-=======
 void ShadowRoot::PartAdded(const Element& aPart) {
   MOZ_ASSERT(aPart.HasPartAttribute());
   MOZ_ASSERT(!mParts.Contains(&aPart));
@@ -241,7 +196,6 @@ void ShadowRoot::PartRemoved(const Element& aPart) {
 }
 
 void ShadowRoot::AddSlot(HTMLSlotElement* aSlot) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSlot);
 
   // Note that if name attribute missing, the slot is a default slot.
@@ -391,19 +345,6 @@ void ShadowRoot::RuleChanged(StyleSheet& aSheet, css::Rule*) {
   ApplicableRulesChanged();
 }
 
-<<<<<<< HEAD
-void ShadowRoot::ApplicableRulesChanged() {
-  nsIDocument* doc = GetComposedDoc();
-  if (!doc) {
-    return;
-||||||| merged common ancestors
-void
-ShadowRoot::ApplicableRulesChanged()
-{
-  nsIDocument* doc = GetComposedDoc();
-  if (!doc) {
-    return;
-=======
 // We don't need to do anything else than forwarding to the document if
 // necessary.
 void ShadowRoot::StyleSheetCloned(StyleSheet& aSheet) {
@@ -411,7 +352,6 @@ void ShadowRoot::StyleSheetCloned(StyleSheet& aSheet) {
     if (PresShell* shell = doc->GetPresShell()) {
       shell->StyleSet()->StyleSheetCloned(aSheet);
     }
->>>>>>> upstream-releases
   }
 }
 
@@ -497,35 +437,15 @@ void ShadowRoot::RemoveSheet(StyleSheet* aSheet) {
   }
 }
 
-<<<<<<< HEAD
-void ShadowRoot::AddToIdTable(Element* aElement, nsAtom* aId) {
-  nsIdentifierMapEntry* entry = mIdentifierMap.PutEntry(aId);
-||||||| merged common ancestors
-void
-ShadowRoot::AddToIdTable(Element* aElement, nsAtom* aId)
-{
-  nsIdentifierMapEntry* entry = mIdentifierMap.PutEntry(aId);
-=======
 void ShadowRoot::AddToIdTable(Element* aElement, nsAtom* aId) {
   IdentifierMapEntry* entry = mIdentifierMap.PutEntry(aId);
->>>>>>> upstream-releases
   if (entry) {
     entry->AddIdElement(aElement);
   }
 }
 
-<<<<<<< HEAD
-void ShadowRoot::RemoveFromIdTable(Element* aElement, nsAtom* aId) {
-  nsIdentifierMapEntry* entry = mIdentifierMap.GetEntry(aId);
-||||||| merged common ancestors
-void
-ShadowRoot::RemoveFromIdTable(Element* aElement, nsAtom* aId)
-{
-  nsIdentifierMapEntry* entry = mIdentifierMap.GetEntry(aId);
-=======
 void ShadowRoot::RemoveFromIdTable(Element* aElement, nsAtom* aId) {
   IdentifierMapEntry* entry = mIdentifierMap.GetEntry(aId);
->>>>>>> upstream-releases
   if (entry) {
     entry->RemoveIdElement(aElement);
     if (entry->IsEmpty()) {
@@ -543,16 +463,8 @@ void ShadowRoot::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
   // https://dom.spec.whatwg.org/#ref-for-get-the-parent%E2%91%A6
   if (!aVisitor.mEvent->mFlags.mComposed) {
     nsCOMPtr<nsIContent> originalTarget =
-<<<<<<< HEAD
-        do_QueryInterface(aVisitor.mEvent->mOriginalTarget);
-    if (originalTarget->GetContainingShadow() == this) {
-||||||| merged common ancestors
-      do_QueryInterface(aVisitor.mEvent->mOriginalTarget);
-    if (originalTarget->GetContainingShadow() == this) {
-=======
         do_QueryInterface(aVisitor.mEvent->mOriginalTarget);
     if (originalTarget && originalTarget->GetContainingShadow() == this) {
->>>>>>> upstream-releases
       // If we do stop propagation, we still want to propagate
       // the event to chrome (nsPIDOMWindow::GetParentTarget()).
       // The load event is special in that we don't ever propagate it
@@ -580,17 +492,8 @@ ShadowRoot::SlotAssignment ShadowRoot::SlotAssignmentFor(nsIContent* aContent) {
   nsAutoString slotName;
   // Note that if slot attribute is missing, assign it to the first default
   // slot, if exists.
-<<<<<<< HEAD
-  if (aContent->IsElement()) {
-    aContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::slot,
-                                   slotName);
-||||||| merged common ancestors
-  if (aContent->IsElement()) {
-    aContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::slot, slotName);
-=======
   if (Element* element = Element::FromNode(aContent)) {
     element->GetAttr(kNameSpaceID_None, nsGkAtoms::slot, slotName);
->>>>>>> upstream-releases
   }
 
   SlotArray* slots = mSlotMap.Get(slotName);

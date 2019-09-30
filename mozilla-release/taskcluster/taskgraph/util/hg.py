@@ -16,33 +16,6 @@ PUSHLOG_TMPL = '{}/json-pushes?version=2&changeset={}&tipsonly=1&full=1'
 def find_hg_revision_push_info(repository, revision):
     """Given the parameters for this action and a revision, find the
     pushlog_id of the revision."""
-<<<<<<< HEAD
-    pushlog_url = PUSHLOG_TMPL.format(repository, revision)
-
-    def query_pushlog(url):
-        r = requests.get(pushlog_url, timeout=60)
-        r.raise_for_status()
-        return r
-    r = retry(
-        query_pushlog, args=(pushlog_url,),
-        attempts=5, sleeptime=10,
-    )
-    pushes = r.json()['pushes']
-    if len(pushes) != 1:
-        raise RuntimeError(
-            "Unable to find a single pushlog_id for {} revision {}: {}".format(
-                repository, revision, pushes
-||||||| merged common ancestors
-    repo_param = '{}head_repository'.format(graph_config['project-repo-param-prefix'])
-    pushlog_url = PUSHLOG_TMPL.format(parameters[repo_param], revision)
-    r = requests.get(pushlog_url)
-    r.raise_for_status()
-    pushes = r.json()['pushes'].keys()
-    if len(pushes) != 1:
-        raise RuntimeError(
-            "Unable to find a single pushlog_id for {} revision {}: {}".format(
-                parameters['head_repository'], revision, pushes
-=======
     pushlog_url = PUSHLOG_TMPL.format(repository, revision)
 
     def extract_pushes(response_json):
@@ -52,16 +25,7 @@ def find_hg_revision_push_info(repository, revision):
                 "Found {} pushlog_ids, expected 1, for {} revision {}: {}".format(
                     len(pushes), repository, revision, pushes
                 )
->>>>>>> upstream-releases
             )
-<<<<<<< HEAD
-        )
-    pushid = pushes.keys()[0]
-    return {'pushdate': pushes[pushid]['date'], 'pushid': pushid}
-||||||| merged common ancestors
-        )
-    return pushes[0]
-=======
         return pushes
 
     def query_pushlog(url):
@@ -79,7 +43,6 @@ def find_hg_revision_push_info(repository, revision):
         'pushid': pushid,
         'user': pushes[pushid]['user'],
     }
->>>>>>> upstream-releases
 
 
 def get_hg_revision_branch(root, revision):

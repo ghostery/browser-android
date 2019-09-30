@@ -150,22 +150,12 @@ class Performance : public DOMEventTargetHelper {
 
   // When kDefaultResourceTimingBufferSize is increased or removed, these should
   // be changed to use SegmentedVector
-<<<<<<< HEAD
-  AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize>
-      mUserEntries;
-  AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize>
-      mResourceEntries;
-||||||| merged common ancestors
-  AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize> mUserEntries;
-  AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize> mResourceEntries;
-=======
   AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize>
       mUserEntries;
   AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize>
       mResourceEntries;
   AutoTArray<RefPtr<PerformanceEntry>, kDefaultResourceTimingBufferSize>
       mSecondaryResourceEntries;
->>>>>>> upstream-releases
 
   uint64_t mResourceTimingBufferSize;
   bool mPendingNotificationObserversTask;

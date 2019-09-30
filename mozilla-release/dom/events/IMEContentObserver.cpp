@@ -834,19 +834,9 @@ bool IMEContentObserver::OnMouseButtonEvent(nsPresContext* aPresContext,
   notification.mMouseButtonEventData.mCursorPos.Set(
       charAtPt.mRefPoint.ToUnknownPoint());
   notification.mMouseButtonEventData.mCharRect.Set(
-<<<<<<< HEAD
-      charAtPt.mReply.mRect.ToUnknownRect());
-  notification.mMouseButtonEventData.mButton = aMouseEvent->button;
-  notification.mMouseButtonEventData.mButtons = aMouseEvent->buttons;
-||||||| merged common ancestors
-    charAtPt.mReply.mRect.ToUnknownRect());
-  notification.mMouseButtonEventData.mButton = aMouseEvent->button;
-  notification.mMouseButtonEventData.mButtons = aMouseEvent->buttons;
-=======
       charAtPt.mReply.mRect.ToUnknownRect());
   notification.mMouseButtonEventData.mButton = aMouseEvent->mButton;
   notification.mMouseButtonEventData.mButtons = aMouseEvent->mButtons;
->>>>>>> upstream-releases
   notification.mMouseButtonEventData.mModifiers = aMouseEvent->mModifiers;
 
   nsresult rv = IMEStateManager::NotifyIME(notification, mWidget);
@@ -1095,26 +1085,10 @@ void IMEContentObserver::ContentRemoved(nsIContent* aChild,
   MaybeNotifyIMEOfTextChange(data);
 }
 
-<<<<<<< HEAD
-void IMEContentObserver::AttributeWillChange(dom::Element* aElement,
-                                             int32_t aNameSpaceID,
-                                             nsAtom* aAttribute,
-                                             int32_t aModType,
-                                             const nsAttrValue* aNewValue) {
-||||||| merged common ancestors
-void
-IMEContentObserver::AttributeWillChange(dom::Element* aElement,
-                                        int32_t aNameSpaceID,
-                                        nsAtom* aAttribute,
-                                        int32_t aModType,
-                                        const nsAttrValue* aNewValue)
-{
-=======
 void IMEContentObserver::AttributeWillChange(dom::Element* aElement,
                                              int32_t aNameSpaceID,
                                              nsAtom* aAttribute,
                                              int32_t aModType) {
->>>>>>> upstream-releases
   if (!NeedsTextChangeNotification()) {
     return;
   }
@@ -2134,15 +2108,7 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(IMEContentObserver::DocumentObserver)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(IMEContentObserver::DocumentObserver)
 
-<<<<<<< HEAD
-void IMEContentObserver::DocumentObserver::Observe(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-IMEContentObserver::DocumentObserver::Observe(nsIDocument* aDocument)
-{
-=======
 void IMEContentObserver::DocumentObserver::Observe(Document* aDocument) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
 
   // Guarantee that aDocument won't be destroyed during a call of
@@ -2183,15 +2149,7 @@ void IMEContentObserver::DocumentObserver::Destroy() {
   mIMEContentObserver = nullptr;
 }
 
-<<<<<<< HEAD
-void IMEContentObserver::DocumentObserver::BeginUpdate(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-IMEContentObserver::DocumentObserver::BeginUpdate(nsIDocument* aDocument)
-{
-=======
 void IMEContentObserver::DocumentObserver::BeginUpdate(Document* aDocument) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(Destroyed()) || NS_WARN_IF(!IsObserving())) {
     return;
   }
@@ -2199,15 +2157,7 @@ void IMEContentObserver::DocumentObserver::BeginUpdate(Document* aDocument) {
   mIMEContentObserver->BeginDocumentUpdate();
 }
 
-<<<<<<< HEAD
-void IMEContentObserver::DocumentObserver::EndUpdate(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-IMEContentObserver::DocumentObserver::EndUpdate(nsIDocument* aDocument)
-{
-=======
 void IMEContentObserver::DocumentObserver::EndUpdate(Document* aDocument) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(Destroyed()) || NS_WARN_IF(!IsObserving()) ||
       NS_WARN_IF(!IsUpdating())) {
     return;

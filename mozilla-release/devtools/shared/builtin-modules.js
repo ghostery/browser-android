@@ -23,17 +23,10 @@ const systemPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
 // Steal various globals only available in JSM scope (and not Sandbox one)
 const {
   console,
-<<<<<<< HEAD
-  DOMPoint,
-  DOMQuad,
-  DOMRect,
-||||||| merged common ancestors
-=======
   DebuggerNotificationObserver,
   DOMPoint,
   DOMQuad,
   DOMRect,
->>>>>>> upstream-releases
   HeapSnapshot,
   NamedNodeMap,
   NodeFilter,
@@ -339,18 +332,11 @@ exports.globals = {
     factory(this.require, this.exports, this.module);
   },
   DOMParser,
-<<<<<<< HEAD
-  DOMPoint,
-  DOMQuad,
-  DOMRect,
-||||||| merged common ancestors
-=======
   DOMPoint,
   DOMQuad,
   NamedNodeMap,
   NodeFilter,
   DOMRect,
->>>>>>> upstream-releases
   Element,
   Event,
   FileReader,

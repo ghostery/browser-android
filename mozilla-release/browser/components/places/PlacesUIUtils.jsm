@@ -634,31 +634,17 @@ var PlacesUIUtils = {
    * @throws if placesNode is not a folder result node or views is invalid.
    * @return true if placesNode is a read-only folder, false otherwise.
    */
-<<<<<<< HEAD
-  isFolderReadOnly(placesNode) {
-    if (typeof placesNode != "object" || !PlacesUtils.nodeIsFolder(placesNode)) {
-||||||| merged common ancestors
-  isFolderReadOnly(placesNode, view) {
-    if (typeof placesNode != "object" || !PlacesUtils.nodeIsFolder(placesNode)) {
-=======
   isFolderReadOnly(placesNode) {
     if (
       typeof placesNode != "object" ||
       !PlacesUtils.nodeIsFolder(placesNode)
     ) {
->>>>>>> upstream-releases
       throw new Error("invalid value for placesNode");
     }
 
-<<<<<<< HEAD
-    return PlacesUtils.getConcreteItemId(placesNode) == PlacesUtils.placesRootId;
-||||||| merged common ancestors
-    return false;
-=======
     return (
       PlacesUtils.getConcreteItemId(placesNode) == PlacesUtils.placesRootId
     );
->>>>>>> upstream-releases
   },
 
   /** aItemsToOpen needs to be an array of objects of the form:
@@ -717,42 +703,6 @@ var PlacesUIUtils = {
     });
   },
 
-<<<<<<< HEAD
-  openContainerNodeInTabs:
-  function PUIU_openContainerInTabs(aNode, aEvent, aView) {
-    let window = aView.ownerWindow;
-
-    let urlsToOpen = PlacesUtils.getURLsForContainerNode(aNode);
-    if (OpenInTabsUtils.confirmOpenInTabs(urlsToOpen.length, window)) {
-      this._openTabset(urlsToOpen, aEvent, window);
-||||||| merged common ancestors
-  openLiveMarkNodesInTabs:
-  function PUIU_openLiveMarkNodesInTabs(aNode, aEvent, aView) {
-    let window = aView.ownerWindow;
-
-    PlacesUtils.livemarks.getLivemark({id: aNode.itemId})
-      .then(aLivemark => {
-        let urlsToOpen = [];
-
-        let nodes = aLivemark.getNodesForContainer(aNode);
-        for (let node of nodes) {
-          urlsToOpen.push({uri: node.uri, isBookmark: false});
-        }
-
-        if (OpenInTabsUtils.confirmOpenInTabs(urlsToOpen.length, window)) {
-          this._openTabset(urlsToOpen, aEvent, window);
-        }
-      }, Cu.reportError);
-  },
-
-  openContainerNodeInTabs:
-  function PUIU_openContainerInTabs(aNode, aEvent, aView) {
-    let window = aView.ownerWindow;
-
-    let urlsToOpen = PlacesUtils.getURLsForContainerNode(aNode);
-    if (OpenInTabsUtils.confirmOpenInTabs(urlsToOpen.length, window)) {
-      this._openTabset(urlsToOpen, aEvent, window);
-=======
   /**
    * Loads a selected node's or nodes' URLs in tabs,
    * warning the user when lots of URLs are being opened
@@ -782,7 +732,6 @@ var PlacesUIUtils = {
           });
         }
       }
->>>>>>> upstream-releases
     }
     if (OpenInTabsUtils.confirmOpenInTabs(urlsToOpen.length, window)) {
       this._openTabset(urlsToOpen, event, window);

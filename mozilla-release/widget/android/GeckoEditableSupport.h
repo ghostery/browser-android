@@ -21,18 +21,10 @@ namespace mozilla {
 
 class TextComposition;
 
-<<<<<<< HEAD
-namespace dom {
-class TabChild;
-}
-
-||||||| merged common ancestors
-=======
 namespace dom {
 class BrowserChild;
 }
 
->>>>>>> upstream-releases
 namespace widget {
 
 class GeckoEditableSupport final
@@ -116,173 +108,6 @@ class GeckoEditableSupport final
     } else {
       return aDispatcher->BeginNativeInputTransaction();
     }
-<<<<<<< HEAD
-  }
-
-  virtual ~GeckoEditableSupport() {}
-
-  RefPtr<TextComposition> GetComposition() const;
-  bool RemoveComposition(RemoveCompositionFlag aFlag = COMMIT_IME_COMPOSITION);
-  void SendIMEDummyKeyEvent(nsIWidget* aWidget, EventMessage msg);
-  void AddIMETextChange(const IMETextChange& aChange);
-  void PostFlushIMEChanges();
-  void FlushIMEChanges(FlushChangesFlag aFlags = FLUSH_FLAG_NONE);
-  void FlushIMEText(FlushChangesFlag aFlags = FLUSH_FLAG_NONE);
-  void AsyncNotifyIME(int32_t aNotification);
-  void UpdateCompositionRects();
-  bool DoReplaceText(int32_t aStart, int32_t aEnd, jni::String::Param aText);
-  bool DoUpdateComposition(int32_t aStart, int32_t aEnd, int32_t aFlags);
-  void NotifyIMEContext(const InputContext& aContext,
-                        const InputContextAction& aAction);
-
- public:
-  template <typename Functor>
-  static void OnNativeCall(Functor&& aCall) {
-    struct IMEEvent : nsAppShell::LambdaEvent<Functor> {
-      explicit IMEEvent(Functor&& l)
-          : nsAppShell::LambdaEvent<Functor>(std::move(l)) {}
-
-      bool IsUIEvent() const override {
-        using GES = GeckoEditableSupport;
-        if (this->lambda.IsTarget(&GES::OnKeyEvent) ||
-            this->lambda.IsTarget(&GES::OnImeReplaceText) ||
-            this->lambda.IsTarget(&GES::OnImeUpdateComposition)) {
-          return true;
-        }
-        return false;
-      }
-
-      void Run() override {
-        if (!this->lambda.GetNativeObject()) {
-          // Ignore stale calls after disposal.
-          jni::GetGeckoThreadEnv()->ExceptionClear();
-          return;
-        }
-        nsAppShell::LambdaEvent<Functor>::Run();
-      }
-    };
-    nsAppShell::PostEvent(mozilla::MakeUnique<IMEEvent>(std::move(aCall)));
-  }
-
-  static void SetOnTabChild(dom::TabChild* aTabChild);
-
-  // Constructor for main process GeckoEditableChild.
-  GeckoEditableSupport(nsWindow::NativePtr<GeckoEditableSupport>* aPtr,
-                       nsWindow* aWindow,
-                       java::GeckoEditableChild::Param aEditableChild)
-      : mIsRemote(!aWindow),
-        mWindow(aPtr, aWindow),
-        mEditable(aEditableChild),
-        mEditableAttached(!mIsRemote),
-        mIMERanges(new TextRangeArray()),
-        mIMEMaskEventsCount(1)  // Mask IME events since there's no focus yet
-        ,
-        mIMEFocusCount(0),
-        mIMEDelaySynchronizeReply(false),
-        mIMEActiveSynchronizeCount(0),
-        mIMESelectionChanged(false),
-        mIMETextChangedDuringFlush(false),
-        mIMEMonitorCursor(false) {
-    ObservePrefs();
-  }
-
-  // Constructor for content process GeckoEditableChild.
-  explicit GeckoEditableSupport(java::GeckoEditableChild::Param aEditableChild)
-      : GeckoEditableSupport(nullptr, nullptr, aEditableChild) {}
-
-  NS_DECL_ISUPPORTS
-
-  // TextEventDispatcherListener methods
-  NS_IMETHOD NotifyIME(TextEventDispatcher* aTextEventDispatcher,
-                       const IMENotification& aNotification) override;
-
-  NS_IMETHOD_(IMENotificationRequests) GetIMENotificationRequests() override;
-
-  NS_IMETHOD_(void)
-  OnRemovedFrom(TextEventDispatcher* aTextEventDispatcher) override;
-
-  NS_IMETHOD_(void)
-  WillDispatchKeyboardEvent(TextEventDispatcher* aTextEventDispatcher,
-                            WidgetKeyboardEvent& aKeyboardEvent,
-                            uint32_t aIndexOfKeypress, void* aData) override;
-
-  void SetInputContext(const InputContext& aContext,
-                       const InputContextAction& aAction);
-
-  InputContext GetInputContext();
-
-  // GeckoEditableChild methods
-  using EditableBase::AttachNative;
-  using EditableBase::DisposeNative;
-
-  const java::GeckoEditableChild::Ref& GetJavaEditable() { return mEditable; }
-
-  void OnDetach(already_AddRefed<Runnable> aDisposer) {
-    RefPtr<GeckoEditableSupport> self(this);
-    nsAppShell::PostEvent([this, self, disposer = RefPtr<Runnable>(aDisposer)] {
-      mEditableAttached = false;
-      disposer->Run();
-    });
-  }
-
-  // Transfer to a new parent.
-  void TransferParent(jni::Object::Param aEditableParent);
-
-  // Handle an Android KeyEvent.
-  void OnKeyEvent(int32_t aAction, int32_t aKeyCode, int32_t aScanCode,
-                  int32_t aMetaState, int32_t aKeyPressMetaState, int64_t aTime,
-                  int32_t aDomPrintableKeyValue, int32_t aRepeatCount,
-                  int32_t aFlags, bool aIsSynthesizedImeKey,
-                  jni::Object::Param originalEvent);
-
-  // Synchronize Gecko thread with the InputConnection thread.
-  void OnImeSynchronize();
-
-  // Replace a range of text with new text.
-  void OnImeReplaceText(int32_t aStart, int32_t aEnd, jni::String::Param aText);
-
-  // Add styling for a range within the active composition.
-  void OnImeAddCompositionRange(int32_t aStart, int32_t aEnd,
-                                int32_t aRangeType, int32_t aRangeStyle,
-                                int32_t aRangeLineStyle, bool aRangeBoldLine,
-                                int32_t aRangeForeColor,
-                                int32_t aRangeBackColor,
-                                int32_t aRangeLineColor);
-
-  // Update styling for the active composition using previous-added ranges.
-  void OnImeUpdateComposition(int32_t aStart, int32_t aEnd, int32_t aFlags);
-
-  // Set cursor mode whether IME requests
-  void OnImeRequestCursorUpdates(int aRequestMode);
-||||||| merged common ancestors
-
-    // Handle an Android KeyEvent.
-    void OnKeyEvent(int32_t aAction, int32_t aKeyCode, int32_t aScanCode,
-                    int32_t aMetaState, int32_t aKeyPressMetaState,
-                    int64_t aTime, int32_t aDomPrintableKeyValue,
-                    int32_t aRepeatCount, int32_t aFlags,
-                    bool aIsSynthesizedImeKey,
-                    jni::Object::Param originalEvent);
-
-    // Synchronize Gecko thread with the InputConnection thread.
-    void OnImeSynchronize();
-
-    // Replace a range of text with new text.
-    void OnImeReplaceText(int32_t aStart, int32_t aEnd,
-                          jni::String::Param aText);
-
-    // Add styling for a range within the active composition.
-    void OnImeAddCompositionRange(int32_t aStart, int32_t aEnd,
-            int32_t aRangeType, int32_t aRangeStyle, int32_t aRangeLineStyle,
-            bool aRangeBoldLine, int32_t aRangeForeColor,
-            int32_t aRangeBackColor, int32_t aRangeLineColor);
-
-    // Update styling for the active composition using previous-added ranges.
-    void OnImeUpdateComposition(int32_t aStart, int32_t aEnd, int32_t aFlags);
-
-    // Set cursor mode whether IME requests
-    void OnImeRequestCursorUpdates(int aRequestMode);
-=======
   }
 
   virtual ~GeckoEditableSupport() {}
@@ -421,7 +246,6 @@ class GeckoEditableSupport final
 
   // Set cursor mode whether IME requests
   void OnImeRequestCursorUpdates(int aRequestMode);
->>>>>>> upstream-releases
 };
 
 }  // namespace widget

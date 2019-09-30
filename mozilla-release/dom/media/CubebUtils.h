@@ -60,25 +60,10 @@ uint32_t AndroidGetAudioOutputSampleRate();
 uint32_t AndroidGetAudioOutputFramesPerBuffer();
 #  endif
 
-<<<<<<< HEAD
-#ifdef ENABLE_SET_CUBEB_BACKEND
-void ForceSetCubebContext(cubeb* aCubebContext);
-#endif
-}  // namespace CubebUtils
-}  // namespace mozilla
-||||||| merged common ancestors
-#ifdef ENABLE_SET_CUBEB_BACKEND
-void
-ForceSetCubebContext(cubeb* aCubebContext);
-#endif
-} // namespace CubebUtils
-} // namespace mozilla
-=======
 #  ifdef ENABLE_SET_CUBEB_BACKEND
 void ForceSetCubebContext(cubeb* aCubebContext);
 #  endif
 }  // namespace CubebUtils
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // CubebUtils_h_

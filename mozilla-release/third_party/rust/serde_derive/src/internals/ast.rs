@@ -1,7 +1,5 @@
 //! A Serde ast, parsed from the Syn ast and ready to generate Rust code.
 
-//! A Serde ast, parsed from the Syn ast and ready to generate Rust code.
-
 use internals::attr;
 use internals::check;
 use internals::{Ctxt, Derive};
@@ -67,19 +65,12 @@ pub enum Style {
 }
 
 impl<'a> Container<'a> {
-<<<<<<< HEAD
-    /// Convert the raw Syn ast into a parsed container object, collecting errors in `cx`.
-    pub fn from_ast(cx: &Ctxt, item: &'a syn::DeriveInput, derive: Derive) -> Container<'a> {
-||||||| merged common ancestors
-    pub fn from_ast(cx: &Ctxt, item: &'a syn::DeriveInput, derive: Derive) -> Container<'a> {
-=======
     /// Convert the raw Syn ast into a parsed container object, collecting errors in `cx`.
     pub fn from_ast(
         cx: &Ctxt,
         item: &'a syn::DeriveInput,
         derive: Derive,
     ) -> Option<Container<'a>> {
->>>>>>> upstream-releases
         let mut attrs = attr::Container::from_ast(cx, item);
 
         let mut data = match item.data {
@@ -277,5 +268,6 @@ fn fields_from_ast<'a>(
             attrs: attr::Field::from_ast(cx, i, field, attrs, container_default),
             ty: &field.ty,
             original: field,
-        }).collect()
+        })
+        .collect()
 }

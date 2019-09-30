@@ -73,25 +73,11 @@
 #include "WebExecutorSupport.h"
 
 #ifdef DEBUG_ANDROID_EVENTS
-<<<<<<< HEAD
-#define EVLOG(args...) ALOG(args)
-||||||| merged common ancestors
-#define EVLOG(args...)  ALOG(args)
-=======
 #  define EVLOG(args...) ALOG(args)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define EVLOG(args...) \
-  do {                 \
-  } while (0)
-||||||| merged common ancestors
-#define EVLOG(args...) do { } while (0)
-=======
 #  define EVLOG(args...) \
     do {                 \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla;
@@ -151,65 +137,6 @@ class GeckoThreadSupport final
       return;
     }
 
-<<<<<<< HEAD
-    OriginAttributes attrs;
-    nsCOMPtr<nsIPrincipal> principal =
-        BasePrincipal::CreateCodebasePrincipal(uri, attrs);
-    specConn->SpeculativeConnect2(uri, principal, nullptr);
-  }
-
-  static void WaitOnGecko() {
-    struct NoOpRunnable : Runnable {
-      NoOpRunnable() : Runnable("NoOpRunnable") {}
-      NS_IMETHOD Run() override { return NS_OK; }
-    };
-
-    struct NoOpEvent : nsAppShell::Event {
-      void Run() override {
-        // We cannot call NS_DispatchToMainThread from within
-        // WaitOnGecko itself because the thread that is calling
-        // WaitOnGecko may not be an nsThread, and may not be able to do
-        // a sync dispatch.
-        NS_DispatchToMainThread(do_AddRef(new NoOpRunnable()),
-                                NS_DISPATCH_SYNC);
-      }
-    };
-    nsAppShell::SyncRunEvent(NoOpEvent());
-  }
-
-  static void OnPause() {
-    MOZ_ASSERT(NS_IsMainThread());
-
-    sPauseCount++;
-    // If sPauseCount is now 1, we just crossed the threshold from "resumed"
-    // "paused". so we should notify observers and so on.
-    if (sPauseCount != 1) {
-      return;
-||||||| merged common ancestors
-    static void OnResume()
-    {
-        MOZ_ASSERT(NS_IsMainThread());
-
-        sPauseCount--;
-        // If sPauseCount is now 0, we just crossed the threshold from "paused"
-        // to "resumed", so we should notify observers and so on.
-        if (sPauseCount != 0) {
-            return;
-        }
-
-        // If we are OOM killed with the disk cache enabled, the entire
-        // cache will be cleared (bug 105843), so shut down cache on backgrounding
-        // and re-init here
-        if (nsCacheService::GlobalInstance()) {
-            nsCacheService::GlobalInstance()->Init();
-        }
-
-        // We didn't return from one of our own activities, so restore
-        // to foreground status
-        nsCOMPtr<nsIObserverService> obsServ =
-            mozilla::services::GetObserverService();
-        obsServ->NotifyObservers(nullptr, "application-foreground", nullptr);
-=======
     OriginAttributes attrs;
     nsCOMPtr<nsIPrincipal> principal =
         BasePrincipal::CreateCodebasePrincipal(uri, attrs);
@@ -244,7 +171,6 @@ class GeckoThreadSupport final
     // "paused". so we should notify observers and so on.
     if (sPauseCount != 1) {
       return;
->>>>>>> upstream-releases
     }
 
     nsCOMPtr<nsIObserverService> obsServ =
@@ -287,40 +213,6 @@ class GeckoThreadSupport final
       nsCacheService::GlobalInstance()->Init();
     }
 
-<<<<<<< HEAD
-    // We didn't return from one of our own activities, so restore
-    // to foreground status
-    nsCOMPtr<nsIObserverService> obsServ =
-        mozilla::services::GetObserverService();
-    obsServ->NotifyObservers(nullptr, "application-foreground", nullptr);
-  }
-
-  static void CreateServices(jni::String::Param aCategory,
-                             jni::String::Param aData) {
-    MOZ_ASSERT(NS_IsMainThread());
-
-    nsCString category(aCategory->ToCString());
-
-    NS_CreateServicesFromCategory(category.get(),
-                                  nullptr,  // aOrigin
-                                  category.get(),
-                                  aData ? aData->ToString().get() : nullptr);
-  }
-
-  static int64_t RunUiThreadCallback() { return RunAndroidUiTasks(); }
-
-  static void ForceQuit() {
-    nsCOMPtr<nsIAppStartup> appStartup =
-        do_GetService(NS_APPSTARTUP_CONTRACTID);
-
-    if (appStartup) {
-      appStartup->Quit(nsIAppStartup::eForceQuit);
-||||||| merged common ancestors
-    static void Crash()
-    {
-        printf_stderr("Intentionally crashing...\n");
-        MOZ_CRASH("intentional crash");
-=======
     // We didn't return from one of our own activities, so restore
     // to foreground status
     nsCOMPtr<nsIObserverService> obsServ =
@@ -347,7 +239,6 @@ class GeckoThreadSupport final
 
     if (appStartup) {
       appStartup->Quit(nsIAppStartup::eForceQuit);
->>>>>>> upstream-releases
     }
   }
 
@@ -503,66 +394,6 @@ nsAppShell::nsAppShell()
     return;
   }
 
-<<<<<<< HEAD
-  if (jni::IsAvailable()) {
-    ScreenManager& screenManager = ScreenManager::GetSingleton();
-    screenManager.SetHelper(mozilla::MakeUnique<ScreenHelperAndroid>());
-
-    // Initialize JNI and Set the corresponding state in GeckoThread.
-    AndroidBridge::ConstructBridge();
-    GeckoAppShellSupport::Init();
-    GeckoThreadSupport::Init();
-    mozilla::GeckoBatteryManager::Init();
-    mozilla::GeckoNetworkManager::Init();
-    mozilla::GeckoProcessManager::Init();
-    mozilla::GeckoScreenOrientation::Init();
-    mozilla::GeckoSystemStateListener::Init();
-    mozilla::PrefsHelper::Init();
-    mozilla::widget::Telemetry::Init();
-    mozilla::widget::WebExecutorSupport::Init();
-    nsWindow::InitNatives();
-
-    if (jni::IsFennec()) {
-      BrowserLocaleManagerSupport::Init();
-      mozilla::ANRReporter::Init();
-      mozilla::MemoryMonitor::Init();
-      mozilla::ThumbnailHelper::Init();
-    }
-
-    java::GeckoThread::SetState(java::GeckoThread::State::JNI_READY());
-
-    CreateAndroidUiThread();
-  }
-||||||| merged common ancestors
-    if (jni::IsAvailable()) {
-        ScreenManager& screenManager = ScreenManager::GetSingleton();
-        screenManager.SetHelper(mozilla::MakeUnique<ScreenHelperAndroid>());
-
-        // Initialize JNI and Set the corresponding state in GeckoThread.
-        AndroidBridge::ConstructBridge();
-        GeckoAppShellSupport::Init();
-        GeckoThreadSupport::Init();
-        mozilla::GeckoBatteryManager::Init();
-        mozilla::GeckoNetworkManager::Init();
-        mozilla::GeckoProcessManager::Init();
-        mozilla::GeckoScreenOrientation::Init();
-        mozilla::GeckoSystemStateListener::Init();
-        mozilla::PrefsHelper::Init();
-        nsWindow::InitNatives();
-
-        if (jni::IsFennec()) {
-            BrowserLocaleManagerSupport::Init();
-            mozilla::ANRReporter::Init();
-            mozilla::MemoryMonitor::Init();
-            mozilla::widget::Telemetry::Init();
-            mozilla::ThumbnailHelper::Init();
-        }
-
-        java::GeckoThread::SetState(java::GeckoThread::State::JNI_READY());
-
-        CreateAndroidUiThread();
-    }
-=======
   if (jni::IsAvailable()) {
     ScreenManager& screenManager = ScreenManager::GetSingleton();
     screenManager.SetHelper(mozilla::MakeUnique<ScreenHelperAndroid>());
@@ -594,7 +425,6 @@ nsAppShell::nsAppShell()
 
     CreateAndroidUiThread();
   }
->>>>>>> upstream-releases
 
   sPowerManagerService = do_GetService(POWERMANAGERSERVICE_CONTRACTID);
 
@@ -640,16 +470,6 @@ void nsAppShell::RecordLatencies() {
     return;
   }
 
-<<<<<<< HEAD
-  const mozilla::Telemetry::HistogramID timeIDs[] = {
-      mozilla::Telemetry::HistogramID::FENNEC_LOOP_UI_LATENCY,
-      mozilla::Telemetry::HistogramID::FENNEC_LOOP_OTHER_LATENCY};
-||||||| merged common ancestors
-    const mozilla::Telemetry::HistogramID timeIDs[] = {
-        mozilla::Telemetry::HistogramID::FENNEC_LOOP_UI_LATENCY,
-        mozilla::Telemetry::HistogramID::FENNEC_LOOP_OTHER_LATENCY
-    };
-=======
   const mozilla::Telemetry::HistogramID timeIDs[] = {
       mozilla::Telemetry::HistogramID::FENNEC_LOOP_UI_LATENCY,
       mozilla::Telemetry::HistogramID::FENNEC_LOOP_OTHER_LATENCY};
@@ -665,51 +485,6 @@ void nsAppShell::RecordLatencies() {
     if (!Queue::sLatencyCount[i]) {
       continue;
     }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  static_assert(ArrayLength(Queue::sLatencyCount) == Queue::LATENCY_COUNT,
-                "Count array length mismatch");
-  static_assert(ArrayLength(Queue::sLatencyTime) == Queue::LATENCY_COUNT,
-                "Time array length mismatch");
-  static_assert(ArrayLength(timeIDs) == Queue::LATENCY_COUNT,
-                "Time ID array length mismatch");
-
-  for (size_t i = 0; i < Queue::LATENCY_COUNT; i++) {
-    if (!Queue::sLatencyCount[i]) {
-      continue;
-||||||| merged common ancestors
-    static_assert(ArrayLength(Queue::sLatencyCount) == Queue::LATENCY_COUNT,
-                  "Count array length mismatch");
-    static_assert(ArrayLength(Queue::sLatencyTime) == Queue::LATENCY_COUNT,
-                  "Time array length mismatch");
-    static_assert(ArrayLength(timeIDs) == Queue::LATENCY_COUNT,
-                  "Time ID array length mismatch");
-
-    for (size_t i = 0; i < Queue::LATENCY_COUNT; i++) {
-        if (!Queue::sLatencyCount[i]) {
-            continue;
-        }
-
-        const uint64_t time = Queue::sLatencyTime[i] / 1000ull /
-                              Queue::sLatencyCount[i];
-        if (time) {
-            mozilla::Telemetry::Accumulate(
-                    timeIDs[i], uint32_t(std::min<uint64_t>(UINT32_MAX, time)));
-        }
-
-        // Reset latency counts.
-        Queue::sLatencyCount[i] = 0;
-        Queue::sLatencyTime[i] = 0;
-=======
-    const uint64_t time =
-        Queue::sLatencyTime[i] / 1000ull / Queue::sLatencyCount[i];
-    if (time) {
-      mozilla::Telemetry::Accumulate(
-          timeIDs[i], uint32_t(std::min<uint64_t>(UINT32_MAX, time)));
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
 
     const uint64_t time =
         Queue::sLatencyTime[i] / 1000ull / Queue::sLatencyCount[i];
@@ -722,14 +497,6 @@ void nsAppShell::RecordLatencies() {
     Queue::sLatencyCount[i] = 0;
     Queue::sLatencyTime[i] = 0;
   }
-||||||| merged common ancestors
-=======
-
-    // Reset latency counts.
-    Queue::sLatencyCount[i] = 0;
-    Queue::sLatencyTime[i] = 0;
-  }
->>>>>>> upstream-releases
 }
 
 #define PREFNAME_COALESCE_TOUCHES "dom.event.touch.coalescing.enabled"
@@ -764,7 +531,6 @@ nsresult nsAppShell::Init() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
 nsAppShell::Observe(nsISupports* aSubject, const char* aTopic,
                     const char16_t* aData) {
   bool removeObserver = false;
@@ -792,274 +558,6 @@ nsAppShell::Observe(nsISupports* aSubject, const char* aTopic,
     NS_CreateServicesFromCategory("browser-delayed-startup-finished", nullptr,
                                   "browser-delayed-startup-finished");
 
-  } else if (!strcmp(aTopic, "profile-after-change")) {
-    if (jni::IsAvailable()) {
-      java::GeckoThread::SetState(java::GeckoThread::State::PROFILE_READY());
-
-      // Gecko on Android follows the Android app model where it never
-      // stops until it is killed by the system or told explicitly to
-      // quit. Therefore, we should *not* exit Gecko when there is no
-      // window or the last window is closed. nsIAppStartup::Quit will
-      // still force Gecko to exit.
-      nsCOMPtr<nsIAppStartup> appStartup =
-          do_GetService(NS_APPSTARTUP_CONTRACTID);
-      if (appStartup) {
-        appStartup->EnterLastWindowClosingSurvivalArea();
-      }
-    }
-    removeObserver = true;
-
-  } else if (!strcmp(aTopic, "chrome-document-loaded")) {
-    // Set the global ready state and enable the window event dispatcher
-    // for this particular GeckoView.
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aSubject);
-    MOZ_ASSERT(doc);
-    if (const RefPtr<nsWindow> window = nsWindow::From(doc->GetWindow())) {
-      if (jni::IsAvailable()) {
-        // When our first window has loaded, assume any JS
-        // initialization has run and set Gecko to ready.
-        java::GeckoThread::CheckAndSetState(
-            java::GeckoThread::State::PROFILE_READY(),
-            java::GeckoThread::State::RUNNING());
-      }
-      window->OnGeckoViewReady();
-    }
-  } else if (!strcmp(aTopic, "quit-application")) {
-    if (jni::IsAvailable()) {
-      const bool restarting =
-          aData && NS_LITERAL_STRING("restart").Equals(aData);
-      java::GeckoThread::SetState(restarting
-                                      ? java::GeckoThread::State::RESTARTING()
-                                      : java::GeckoThread::State::EXITING());
-    }
-    removeObserver = true;
-||||||| merged common ancestors
-nsAppShell::Observe(nsISupports* aSubject,
-                    const char* aTopic,
-                    const char16_t* aData)
-{
-    bool removeObserver = false;
-
-    if (!strcmp(aTopic, "xpcom-shutdown")) {
-        {
-            // Release any thread waiting for a sync call to finish.
-            mozilla::MutexAutoLock shellLock(*sAppShellLock);
-            mSyncRunQuit = true;
-            mSyncRunFinished.NotifyAll();
-        }
-        // We need to ensure no observers stick around after XPCOM shuts down
-        // or we'll see crashes, as the app shell outlives XPConnect.
-        mObserversHash.Clear();
-        return nsBaseAppShell::Observe(aSubject, aTopic, aData);
-
-    } else if (!strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID) &&
-               aData &&
-               nsDependentString(aData).Equals(NS_LITERAL_STRING(PREFNAME_COALESCE_TOUCHES))) {
-        mAllowCoalescingTouches = Preferences::GetBool(PREFNAME_COALESCE_TOUCHES, true);
-        return NS_OK;
-
-    } else if (!strcmp(aTopic, "browser-delayed-startup-finished")) {
-        NS_CreateServicesFromCategory("browser-delayed-startup-finished", nullptr,
-                                      "browser-delayed-startup-finished");
-
-    } else if (!strcmp(aTopic, "profile-after-change")) {
-        if (jni::IsAvailable()) {
-            java::GeckoThread::SetState(
-                    java::GeckoThread::State::PROFILE_READY());
-
-            // Gecko on Android follows the Android app model where it never
-            // stops until it is killed by the system or told explicitly to
-            // quit. Therefore, we should *not* exit Gecko when there is no
-            // window or the last window is closed. nsIAppStartup::Quit will
-            // still force Gecko to exit.
-            nsCOMPtr<nsIAppStartup> appStartup =
-                do_GetService(NS_APPSTARTUP_CONTRACTID);
-            if (appStartup) {
-                appStartup->EnterLastWindowClosingSurvivalArea();
-            }
-        }
-        removeObserver = true;
-
-    } else if (!strcmp(aTopic, "chrome-document-loaded")) {
-        // Set the global ready state and enable the window event dispatcher
-        // for this particular GeckoView.
-        nsCOMPtr<nsIDocument> doc = do_QueryInterface(aSubject);
-        MOZ_ASSERT(doc);
-        nsCOMPtr<nsIWidget> widget =
-            widget::WidgetUtils::DOMWindowToWidget(doc->GetWindow());
-
-        // `widget` may be one of several different types in the parent
-        // process, including the Android nsWindow, PuppetWidget, etc. To
-        // ensure that we only accept the Android nsWindow, we check that the
-        // widget is a top-level window and that its NS_NATIVE_WIDGET value is
-        // non-null, which is not the case for non-native widgets like
-        // PuppetWidget.
-        if (widget &&
-            widget->WindowType() == nsWindowType::eWindowType_toplevel &&
-            widget->GetNativeData(NS_NATIVE_WIDGET) == widget) {
-            if (jni::IsAvailable()) {
-                // When our first window has loaded, assume any JS
-                // initialization has run and set Gecko to ready.
-                java::GeckoThread::CheckAndSetState(
-                        java::GeckoThread::State::PROFILE_READY(),
-                        java::GeckoThread::State::RUNNING());
-            }
-            const auto window = static_cast<nsWindow*>(widget.get());
-            window->OnGeckoViewReady();
-        }
-    } else if (!strcmp(aTopic, "quit-application")) {
-        if (jni::IsAvailable()) {
-            const bool restarting =
-                    aData && NS_LITERAL_STRING("restart").Equals(aData);
-            java::GeckoThread::SetState(
-                    restarting ?
-                    java::GeckoThread::State::RESTARTING() :
-                    java::GeckoThread::State::EXITING());
-        }
-        removeObserver = true;
-
-    } else if (!strcmp(aTopic, "quit-application-granted")) {
-        if (jni::IsAvailable()) {
-            // We are told explicitly to quit, perhaps due to
-            // nsIAppStartup::Quit being called. We should release our hold on
-            // nsIAppStartup and let it continue to quit.
-            nsCOMPtr<nsIAppStartup> appStartup =
-                do_GetService(NS_APPSTARTUP_CONTRACTID);
-            if (appStartup) {
-                appStartup->ExitLastWindowClosingSurvivalArea();
-            }
-        }
-        removeObserver = true;
-
-    } else if (!strcmp(aTopic, "nsPref:changed")) {
-        if (jni::IsAvailable()) {
-            mozilla::PrefsHelper::OnPrefChange(aData);
-        }
-
-    } else if (!strcmp(aTopic, "content-document-global-created")) {
-        // Associate the PuppetWidget of the newly-created TabChild with a
-        // GeckoEditableChild instance.
-        MOZ_ASSERT(!XRE_IsParentProcess());
-
-        nsCOMPtr<mozIDOMWindowProxy> domWindow = do_QueryInterface(aSubject);
-        MOZ_ASSERT(domWindow);
-        nsCOMPtr<nsIWidget> domWidget = widget::WidgetUtils::DOMWindowToWidget(
-                nsPIDOMWindowOuter::From(domWindow));
-        NS_ENSURE_TRUE(domWidget, NS_OK);
-
-        dom::ContentChild* contentChild = dom::ContentChild::GetSingleton();
-        dom::TabChild* tabChild = domWidget->GetOwningTabChild();
-        RefPtr<widget::PuppetWidget> widget(tabChild->WebWidget());
-        NS_ENSURE_TRUE(contentChild && tabChild && widget, NS_OK);
-
-        widget::TextEventDispatcherListener* listener =
-                widget->GetNativeTextEventDispatcherListener();
-        if (listener && listener !=
-                static_cast<widget::TextEventDispatcherListener*>(widget)) {
-            // We already set a listener before.
-            return NS_OK;
-        }
-
-        // Get the content/tab ID in order to get the correct
-        // IGeckoEditableParent object, which GeckoEditableChild uses to
-        // communicate with the parent process.
-        const uint64_t contentId = contentChild->GetID();
-        const uint64_t tabId = tabChild->GetTabId();
-        NS_ENSURE_TRUE(contentId && tabId, NS_OK);
-
-        auto editableParent = java::GeckoServiceChildProcess::GetEditableParent(
-                contentId, tabId);
-        NS_ENSURE_TRUE(editableParent, NS_OK);
-
-        auto editableChild = java::GeckoEditableChild::New(editableParent);
-        NS_ENSURE_TRUE(editableChild, NS_OK);
-
-        RefPtr<widget::GeckoEditableSupport> editableSupport =
-                new widget::GeckoEditableSupport(editableChild);
-
-        // Tell PuppetWidget to use our listener for IME operations.
-        widget->SetNativeTextEventDispatcherListener(editableSupport);
-    }
-=======
-nsAppShell::Observe(nsISupports* aSubject, const char* aTopic,
-                    const char16_t* aData) {
-  bool removeObserver = false;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  } else if (!strcmp(aTopic, "quit-application-granted")) {
-    if (jni::IsAvailable()) {
-      // We are told explicitly to quit, perhaps due to
-      // nsIAppStartup::Quit being called. We should release our hold on
-      // nsIAppStartup and let it continue to quit.
-      nsCOMPtr<nsIAppStartup> appStartup =
-          do_GetService(NS_APPSTARTUP_CONTRACTID);
-      if (appStartup) {
-        appStartup->ExitLastWindowClosingSurvivalArea();
-      }
-    }
-    removeObserver = true;
-
-  } else if (!strcmp(aTopic, "nsPref:changed")) {
-    if (jni::IsAvailable()) {
-      mozilla::PrefsHelper::OnPrefChange(aData);
-    }
-||||||| merged common ancestors
-    if (removeObserver) {
-        nsCOMPtr<nsIObserverService> obsServ =
-            mozilla::services::GetObserverService();
-        if (obsServ) {
-            obsServ->RemoveObserver(this, aTopic);
-        }
-    }
-    return NS_OK;
-}
-=======
-  if (!strcmp(aTopic, "xpcom-shutdown")) {
-    {
-      // Release any thread waiting for a sync call to finish.
-      mozilla::MutexAutoLock shellLock(*sAppShellLock);
-      mSyncRunQuit = true;
-      mSyncRunFinished.NotifyAll();
-    }
-    // We need to ensure no observers stick around after XPCOM shuts down
-    // or we'll see crashes, as the app shell outlives XPConnect.
-    mObserversHash.Clear();
-    return nsBaseAppShell::Observe(aSubject, aTopic, aData);
-
-  } else if (!strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID) && aData &&
-             nsDependentString(aData).Equals(
-                 NS_LITERAL_STRING(PREFNAME_COALESCE_TOUCHES))) {
-    mAllowCoalescingTouches =
-        Preferences::GetBool(PREFNAME_COALESCE_TOUCHES, true);
-    return NS_OK;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  } else if (!strcmp(aTopic, "content-document-global-created")) {
-    // Associate the PuppetWidget of the newly-created TabChild with a
-    // GeckoEditableChild instance.
-    MOZ_ASSERT(!XRE_IsParentProcess());
-||||||| merged common ancestors
-bool
-nsAppShell::ProcessNextNativeEvent(bool mayWait)
-{
-    EVLOG("nsAppShell::ProcessNextNativeEvent %d", mayWait);
-=======
-  } else if (!strcmp(aTopic, "browser-delayed-startup-finished")) {
-    NS_CreateServicesFromCategory("browser-delayed-startup-finished", nullptr,
-                                  "browser-delayed-startup-finished");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    nsCOMPtr<mozIDOMWindowProxy> domWindow = do_QueryInterface(aSubject);
-    MOZ_ASSERT(domWindow);
-    nsCOMPtr<nsIWidget> domWidget = widget::WidgetUtils::DOMWindowToWidget(
-        nsPIDOMWindowOuter::From(domWindow));
-    NS_ENSURE_TRUE(domWidget, NS_OK);
-||||||| merged common ancestors
-    AUTO_PROFILER_LABEL("nsAppShell::ProcessNextNativeEvent", OTHER);
-=======
   } else if (!strcmp(aTopic, "profile-after-change")) {
     if (jni::IsAvailable()) {
       java::GeckoThread::SetState(java::GeckoThread::State::PROFILE_READY());
@@ -1100,13 +598,7 @@ nsAppShell::ProcessNextNativeEvent(bool mayWait)
                                       : java::GeckoThread::State::EXITING());
     }
     removeObserver = true;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    widget::GeckoEditableSupport::SetOnTabChild(domWidget->GetOwningTabChild());
-||||||| merged common ancestors
-    mozilla::UniquePtr<Event> curEvent;
-=======
   } else if (!strcmp(aTopic, "quit-application-granted")) {
     if (jni::IsAvailable()) {
       // We are told explicitly to quit, perhaps due to
@@ -1118,60 +610,12 @@ nsAppShell::ProcessNextNativeEvent(bool mayWait)
       }
     }
     removeObserver = true;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  } else if (!strcmp(aTopic, "geckoview-content-global-transferred")) {
-    // We're transferring to a new GeckoEditableParent, so notify the
-    // existing GeckoEditableChild instance associated with the docshell.
-    nsCOMPtr<nsIDocShell> docShell = do_QueryInterface(aSubject);
-    widget::GeckoEditableSupport::SetOnTabChild(
-        dom::TabChild::GetFrom(docShell));
-  }
-
-  if (removeObserver) {
-    nsCOMPtr<nsIObserverService> obsServ =
-        mozilla::services::GetObserverService();
-    if (obsServ) {
-      obsServ->RemoveObserver(this, aTopic);
-||||||| merged common ancestors
-    {
-        curEvent = mEventQueue.Pop(/* mayWait */ false);
-
-        if (!curEvent && mayWait) {
-            // This processes messages in the Android Looper. Note that we only
-            // get here if the normal Gecko event loop has been awoken
-            // (bug 750713). Looper messages effectively have the lowest
-            // priority because we only process them before we're about to
-            // wait for new events.
-            if (jni::IsAvailable() && XRE_IsParentProcess() &&
-                    AndroidBridge::Bridge()->PumpMessageLoop()) {
-                return true;
-            }
-
-            AUTO_PROFILER_LABEL("nsAppShell::ProcessNextNativeEvent:Wait",
-                                IDLE);
-            mozilla::BackgroundHangMonitor().NotifyWait();
-
-            curEvent = mEventQueue.Pop(/* mayWait */ true);
-        }
-=======
   } else if (!strcmp(aTopic, "nsPref:changed")) {
     if (jni::IsAvailable()) {
       mozilla::PrefsHelper::OnPrefChange(aData);
->>>>>>> upstream-releases
     }
-  }
-  return NS_OK;
-}
 
-<<<<<<< HEAD
-bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
-  EVLOG("nsAppShell::ProcessNextNativeEvent %d", mayWait);
-||||||| merged common ancestors
-    if (!curEvent)
-        return false;
-=======
   } else if (!strcmp(aTopic, "content-document-global-created")) {
     // Associate the PuppetWidget of the newly-created BrowserChild with a
     // GeckoEditableChild instance.
@@ -1182,13 +626,7 @@ bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
     nsCOMPtr<nsIWidget> domWidget = widget::WidgetUtils::DOMWindowToWidget(
         nsPIDOMWindowOuter::From(domWindow));
     NS_ENSURE_TRUE(domWidget, NS_OK);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AUTO_PROFILER_LABEL("nsAppShell::ProcessNextNativeEvent", OTHER);
-||||||| merged common ancestors
-    mozilla::BackgroundHangMonitor().NotifyActivity();
-=======
     widget::GeckoEditableSupport::SetOnBrowserChild(
         domWidget->GetOwningBrowserChild());
 
@@ -1199,15 +637,7 @@ bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
     widget::GeckoEditableSupport::SetOnBrowserChild(
         dom::BrowserChild::GetFrom(docShell));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::UniquePtr<Event> curEvent;
-||||||| merged common ancestors
-    curEvent->Run();
-    return true;
-}
-=======
   if (removeObserver) {
     nsCOMPtr<nsIObserverService> obsServ =
         mozilla::services::GetObserverService();
@@ -1217,76 +647,14 @@ bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
   }
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  {
-    curEvent = mEventQueue.Pop(/* mayWait */ false);
-||||||| merged common ancestors
-void
-nsAppShell::SyncRunEvent(Event&& event,
-                         UniquePtr<Event>(*eventFactory)(UniquePtr<Event>&&))
-{
-    // Perform the call on the Gecko thread in a separate lambda, and wait
-    // on the monitor on the current thread.
-    MOZ_ASSERT(!NS_IsMainThread());
-=======
 bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
   EVLOG("nsAppShell::ProcessNextNativeEvent %d", mayWait);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (!curEvent && mayWait) {
-      // This processes messages in the Android Looper. Note that we only
-      // get here if the normal Gecko event loop has been awoken
-      // (bug 750713). Looper messages effectively have the lowest
-      // priority because we only process them before we're about to
-      // wait for new events.
-      if (jni::IsAvailable() && XRE_IsParentProcess() &&
-          AndroidBridge::Bridge()->PumpMessageLoop()) {
-        return true;
-      }
-
-      AUTO_PROFILER_LABEL("nsAppShell::ProcessNextNativeEvent:Wait", IDLE);
-      mozilla::BackgroundHangMonitor().NotifyWait();
-||||||| merged common ancestors
-    // This is the lock to check that app shell is still alive,
-    // and to wait on for the sync call to complete.
-    mozilla::MutexAutoLock shellLock(*sAppShellLock);
-    nsAppShell* const appShell = sAppShell;
-=======
   AUTO_PROFILER_LABEL("nsAppShell::ProcessNextNativeEvent", OTHER);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      AUTO_PROFILER_THREAD_SLEEP;
-      curEvent = mEventQueue.Pop(/* mayWait */ true);
-    }
-  }
-||||||| merged common ancestors
-    if (MOZ_UNLIKELY(!appShell)) {
-        // Post-shutdown.
-        return;
-    }
-=======
   mozilla::UniquePtr<Event> curEvent;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!curEvent) return false;
-||||||| merged common ancestors
-    bool finished = false;
-    auto runAndNotify = [&event, &finished] {
-        nsAppShell* const appShell = nsAppShell::Get();
-        if (MOZ_UNLIKELY(!appShell || appShell->mSyncRunQuit)) {
-            return;
-        }
-        event.Run();
-        finished = true;
-        mozilla::MutexAutoLock shellLock(*sAppShellLock);
-        appShell->mSyncRunFinished.NotifyAll();
-    };
-=======
   {
     curEvent = mEventQueue.Pop(/* mayWait */ false);
 
@@ -1300,104 +668,23 @@ bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
           AndroidBridge::Bridge()->PumpMessageLoop()) {
         return true;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::BackgroundHangMonitor().NotifyActivity();
-||||||| merged common ancestors
-    UniquePtr<Event> runAndNotifyEvent = mozilla::MakeUnique<
-            LambdaEvent<decltype(runAndNotify)>>(std::move(runAndNotify));
-=======
       AUTO_PROFILER_LABEL("nsAppShell::ProcessNextNativeEvent:Wait", IDLE);
       mozilla::BackgroundHangMonitor().NotifyWait();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  curEvent->Run();
-  return true;
-}
-
-void nsAppShell::SyncRunEvent(
-    Event&& event, UniquePtr<Event> (*eventFactory)(UniquePtr<Event>&&)) {
-  // Perform the call on the Gecko thread in a separate lambda, and wait
-  // on the monitor on the current thread.
-  MOZ_ASSERT(!NS_IsMainThread());
-||||||| merged common ancestors
-    if (eventFactory) {
-        runAndNotifyEvent = (*eventFactory)(std::move(runAndNotifyEvent));
-    }
-=======
       AUTO_PROFILER_THREAD_SLEEP;
       curEvent = mEventQueue.Pop(/* mayWait */ true);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // This is the lock to check that app shell is still alive,
-  // and to wait on for the sync call to complete.
-  mozilla::MutexAutoLock shellLock(*sAppShellLock);
-  nsAppShell* const appShell = sAppShell;
-||||||| merged common ancestors
-    appShell->mEventQueue.Post(std::move(runAndNotifyEvent));
-=======
   if (!curEvent) return false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (MOZ_UNLIKELY(!appShell)) {
-    // Post-shutdown.
-    return;
-  }
-
-  bool finished = false;
-  auto runAndNotify = [&event, &finished] {
-    nsAppShell* const appShell = nsAppShell::Get();
-    if (MOZ_UNLIKELY(!appShell || appShell->mSyncRunQuit)) {
-      return;
-    }
-    event.Run();
-    finished = true;
-    mozilla::MutexAutoLock shellLock(*sAppShellLock);
-    appShell->mSyncRunFinished.NotifyAll();
-  };
-
-  UniquePtr<Event> runAndNotifyEvent =
-      mozilla::MakeUnique<LambdaEvent<decltype(runAndNotify)>>(
-          std::move(runAndNotify));
-
-  if (eventFactory) {
-    runAndNotifyEvent = (*eventFactory)(std::move(runAndNotifyEvent));
-  }
-
-  appShell->mEventQueue.Post(std::move(runAndNotifyEvent));
-
-  while (!finished && MOZ_LIKELY(sAppShell && !sAppShell->mSyncRunQuit)) {
-    appShell->mSyncRunFinished.Wait();
-  }
-||||||| merged common ancestors
-    while (!finished && MOZ_LIKELY(sAppShell && !sAppShell->mSyncRunQuit)) {
-        appShell->mSyncRunFinished.Wait();
-    }
-=======
   mozilla::BackgroundHangMonitor().NotifyActivity();
 
   curEvent->Run();
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIURI> nsAppShell::ResolveURI(const nsCString& aUriStr) {
-  nsCOMPtr<nsIIOService> ioServ = do_GetIOService();
-  nsCOMPtr<nsIURI> uri;
-||||||| merged common ancestors
-already_AddRefed<nsIURI>
-nsAppShell::ResolveURI(const nsCString& aUriStr)
-{
-    nsCOMPtr<nsIIOService> ioServ = do_GetIOService();
-    nsCOMPtr<nsIURI> uri;
-=======
 bool nsAppShell::SyncRunEvent(
     Event&& event, UniquePtr<Event> (*eventFactory)(UniquePtr<Event>&&),
     const TimeDuration timeout) {
@@ -1414,19 +701,7 @@ bool nsAppShell::SyncRunEvent(
     // Post-shutdown.
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (NS_SUCCEEDED(
-          ioServ->NewURI(aUriStr, nullptr, nullptr, getter_AddRefs(uri)))) {
-    return uri.forget();
-  }
-||||||| merged common ancestors
-    if (NS_SUCCEEDED(ioServ->NewURI(aUriStr, nullptr,
-                                    nullptr, getter_AddRefs(uri)))) {
-        return uri.forget();
-    }
-=======
   bool finished = false;
   auto runAndNotify = [&event, &finished] {
     nsAppShell* const appShell = nsAppShell::Get();
@@ -1439,23 +714,7 @@ bool nsAppShell::SyncRunEvent(
     appShell->mSyncRunFinished.NotifyAll();
     return finished;
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIURIFixup> fixup = do_GetService(NS_URIFIXUP_CONTRACTID);
-  if (fixup && NS_SUCCEEDED(fixup->CreateFixupURI(aUriStr, 0, nullptr,
-                                                  getter_AddRefs(uri)))) {
-    return uri.forget();
-  }
-  return nullptr;
-||||||| merged common ancestors
-    nsCOMPtr<nsIURIFixup> fixup = do_GetService(NS_URIFIXUP_CONTRACTID);
-    if (fixup && NS_SUCCEEDED(
-            fixup->CreateFixupURI(aUriStr, 0, nullptr, getter_AddRefs(uri)))) {
-        return uri.forget();
-    }
-    return nullptr;
-=======
   UniquePtr<Event> runAndNotifyEvent =
       mozilla::MakeUnique<LambdaEvent<decltype(runAndNotify)>>(
           std::move(runAndNotify));
@@ -1471,24 +730,8 @@ bool nsAppShell::SyncRunEvent(
   }
 
   return finished;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsAppShell::AddObserver(const nsAString& aObserverKey,
-                                 nsIObserver* aObserver) {
-  NS_ASSERTION(aObserver != nullptr,
-               "nsAppShell::AddObserver: aObserver is null!");
-  mObserversHash.Put(aObserverKey, aObserver);
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsAppShell::AddObserver(const nsAString &aObserverKey, nsIObserver *aObserver)
-{
-    NS_ASSERTION(aObserver != nullptr, "nsAppShell::AddObserver: aObserver is null!");
-    mObserversHash.Put(aObserverKey, aObserver);
-    return NS_OK;
-=======
 already_AddRefed<nsIURI> nsAppShell::ResolveURI(const nsCString& aUriStr) {
   nsCOMPtr<nsIIOService> ioServ = do_GetIOService();
   nsCOMPtr<nsIURI> uri;
@@ -1512,7 +755,6 @@ nsresult nsAppShell::AddObserver(const nsAString& aObserverKey,
                "nsAppShell::AddObserver: aObserver is null!");
   mObserversHash.Put(aObserverKey, aObserver);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 // Used by IPC code

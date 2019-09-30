@@ -44,42 +44,6 @@ class SkWStream;
 */
 class SK_API SkPicture : public SkRefCnt {
 public:
-<<<<<<< HEAD
-
-    /** Recreates SkPicture that was serialized into a stream. Returns constructed SkPicture
-        if successful; otherwise, returns nullptr. Fails if data does not permit
-        constructing valid SkPicture.
-
-        procs.fPictureProc permits supplying a custom function to decode SkPicture.
-        If procs.fPictureProc is nullptr, default decoding is used. procs.fPictureCtx
-        may be used to provide user context to procs.fPictureProc; procs.fPictureProc
-        is called with a pointer to data, data byte length, and user context.
-
-        @param stream  container for serial data
-        @param procs   custom serial data decoders; may be nullptr
-        @return        SkPicture constructed from stream data
-    */
-    static sk_sp<SkPicture> MakeFromStream(SkStream* stream,
-                                           const SkDeserialProcs* procs = nullptr);
-
-    /** Recreates SkPicture that was serialized into data. Returns constructed SkPicture
-        if successful; otherwise, returns nullptr. Fails if data does not permit
-        constructing valid SkPicture.
-
-        procs.fPictureProc permits supplying a custom function to decode SkPicture.
-        If procs.fPictureProc is nullptr, default decoding is used. procs.fPictureCtx
-        may be used to provide user context to procs.fPictureProc; procs.fPictureProc
-        is called with a pointer to data, data byte length, and user context.
-
-        @param data   container for serial data
-        @param procs  custom serial data decoders; may be nullptr
-        @return       SkPicture constructed from data
-    */
-    static sk_sp<SkPicture> MakeFromData(const SkData* data,
-                                         const SkDeserialProcs* procs = nullptr);
-
-||||||| merged common ancestors
-=======
 
     /** Recreates SkPicture that was serialized into a stream. Returns constructed SkPicture
         if successful; otherwise, returns nullptr. Fails if data does not permit
@@ -113,7 +77,6 @@ public:
     static sk_sp<SkPicture> MakeFromData(const SkData* data,
                                          const SkDeserialProcs* procs = nullptr);
 
->>>>>>> upstream-releases
     /**
 
         @param data   pointer to serial data
@@ -181,72 +144,12 @@ public:
     */
     virtual SkRect cullRect() const = 0;
 
-<<<<<<< HEAD
     /** Returns a non-zero value unique among SkPicture in Skia process.
 
-        @return  identifier for SkPicture
-    */
-    uint32_t uniqueID() const;
-||||||| merged common ancestors
-    /** Returns a non-zero value unique among all pictures. */
-    uint32_t uniqueID() const;
-=======
-    /** Returns a non-zero value unique among SkPicture in Skia process.
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    /** Returns storage containing SkData describing SkPicture, using optional custom
-        encoders.
-||||||| merged common ancestors
-    sk_sp<SkData> serialize(const SkSerialProcs* = nullptr) const;
-    void serialize(SkWStream*, const SkSerialProcs* = nullptr) const;
-=======
         @return  identifier for SkPicture
     */
     uint32_t uniqueID() const { return fUniqueID; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        procs.fPictureProc permits supplying a custom function to encode SkPicture.
-        If procs.fPictureProc is nullptr, default encoding is used. procs.fPictureCtx
-        may be used to provide user context to procs.fPictureProc; procs.fPictureProc
-        is called with a pointer to SkPicture and user context.
-
-        @param procs  custom serial data encoders; may be nullptr
-        @return       storage containing serialized SkPicture
-    */
-    sk_sp<SkData> serialize(const SkSerialProcs* procs = nullptr) const;
-
-    /** Writes picture to stream, using optional custom encoders.
-
-        procs.fPictureProc permits supplying a custom function to encode SkPicture.
-        If procs.fPictureProc is nullptr, default encoding is used. procs.fPictureCtx
-        may be used to provide user context to procs.fPictureProc; procs.fPictureProc
-        is called with a pointer to SkPicture and user context.
-
-        @param stream  writable serial data stream
-        @param procs   custom serial data encoders; may be nullptr
-    */
-    void serialize(SkWStream* stream, const SkSerialProcs* procs = nullptr) const;
-
-    /** Returns a placeholder SkPicture. Result does not draw, and contains only
-        cull SkRect, a hint of its bounds. Result is immutable; it cannot be changed
-        later. Result identifier is unique.
-
-        Returned placeholder can be intercepted during playback to insert other
-        commands into SkCanvas draw stream.
-
-        @param cull  placeholder dimensions
-        @return      placeholder with unique identifier
-    */
-||||||| merged common ancestors
-    /**
-     * Return a placeholder SkPicture.
-     * This placeholder does not draw anything itself.  It has a distinct uniqueID()
-     * (just like all SkPictures) and will always be visible to SkSerialProcs.
-     * @param cull the placeholder's dimensions
-     */
-=======
     /** Returns storage containing SkData describing SkPicture, using optional custom
         encoders.
 
@@ -282,7 +185,6 @@ public:
         @param cull  placeholder dimensions
         @return      placeholder with unique identifier
     */
->>>>>>> upstream-releases
     static sk_sp<SkPicture> MakePlaceholder(SkRect cull);
 
     /** Returns the approximate number of operations in SkPicture. Returned value
@@ -358,12 +260,6 @@ private:
     // V59: No more LocalSpace option on PictureImageFilter
     // V60: Remove flags in picture header
     // V61: Change SkDrawPictureRec to take two colors rather than two alphas
-<<<<<<< HEAD
-    // V62: Don't negate size of custom encoded images (don't write origin x,y either)
-    // V63: Store image bounds (including origin) instead of just width/height to support subsets
-    // V64: Remove occluder feature from blur maskFilter
-||||||| merged common ancestors
-=======
     // V62: Don't negate size of custom encoded images (don't write origin x,y either)
     // V63: Store image bounds (including origin) instead of just width/height to support subsets
     // V64: Remove occluder feature from blur maskFilter
@@ -371,21 +267,12 @@ private:
     // V66: Add saveBehind
     // V67: Blobs serialize fonts instead of paints
     // V68: Paint doesn't serialize font-related stuff
->>>>>>> upstream-releases
 
     // Only SKPs within the min/current picture version range (inclusive) can be read.
     static const uint32_t     MIN_PICTURE_VERSION = 56;     // august 2017
-<<<<<<< HEAD
-    static const uint32_t CURRENT_PICTURE_VERSION = 65;
-
-    static_assert(MIN_PICTURE_VERSION <= 62, "Remove kFontAxes_bad from SkFontDescriptor.cpp");
-||||||| merged common ancestors
-    static const uint32_t CURRENT_PICTURE_VERSION = 61;
-=======
     static const uint32_t CURRENT_PICTURE_VERSION = 68;
 
     static_assert(MIN_PICTURE_VERSION <= 62, "Remove kFontAxes_bad from SkFontDescriptor.cpp");
->>>>>>> upstream-releases
 
     static bool IsValidPictInfo(const struct SkPictInfo& info);
     static sk_sp<SkPicture> Forwardport(const struct SkPictInfo&,

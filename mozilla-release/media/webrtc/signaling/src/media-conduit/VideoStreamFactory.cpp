@@ -159,16 +159,8 @@ std::vector<webrtc::VideoStream> VideoStreamFactory::CreateEncoderStreams(
       outHeight = height;
     } else {
       float effectiveScaleDownBy =
-<<<<<<< HEAD
-          simulcastEncoding.constraints.scaleDownBy /
-          mCodecConfig.mSimulcastEncodings[0].constraints.scaleDownBy;
-||||||| merged common ancestors
-        simulcastEncoding.constraints.scaleDownBy /
-        mCodecConfig.mSimulcastEncodings[0].constraints.scaleDownBy;
-=======
           encoding.constraints.scaleDownBy /
           mCodecConfig.mEncodings[0].constraints.scaleDownBy;
->>>>>>> upstream-releases
       MOZ_ASSERT(effectiveScaleDownBy >= 1.0);
       mSimulcastAdapter->OnScaleResolutionBy(
           effectiveScaleDownBy > 1.0
@@ -214,20 +206,9 @@ std::vector<webrtc::VideoStream> VideoStreamFactory::CreateEncoderStreams(
     // We want to ensure this picks up the current framerate, so indirect
     video_stream.max_framerate = mSendingFramerate;
 
-<<<<<<< HEAD
-    SelectBitrates(video_stream.width, video_stream.height, mMinBitrate,
-                   mStartBitrate, simulcastEncoding.constraints.maxBr,
-                   mPrefMaxBitrate, mNegotiatedMaxBitrate, video_stream);
-||||||| merged common ancestors
-    SelectBitrates(
-      video_stream.width, video_stream.height,
-      mMinBitrate, mStartBitrate, simulcastEncoding.constraints.maxBr,
-      mPrefMaxBitrate, mNegotiatedMaxBitrate, video_stream);
-=======
     SelectBitrates(video_stream.width, video_stream.height, mMinBitrate,
                    mStartBitrate, encoding.constraints.maxBr, mPrefMaxBitrate,
                    mNegotiatedMaxBitrate, video_stream);
->>>>>>> upstream-releases
 
     video_stream.max_qp = kQpMax;
     video_stream.SetRid(encoding.rid);

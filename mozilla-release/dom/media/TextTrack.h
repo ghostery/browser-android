@@ -100,11 +100,6 @@ class TextTrack final : public DOMEventTargetHelper {
 
   bool IsLoaded();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // Called when associated cue's active flag has been changed, and then we
   // would add or remove the cue to the active cue list.
   void NotifyCueActiveStateChanged(TextTrackCue* aCue);
@@ -122,7 +117,6 @@ private:
   void ClearAllCues();
 
  private:
->>>>>>> upstream-releases
   ~TextTrack();
 
   HTMLMediaElement* GetMediaElement() const;

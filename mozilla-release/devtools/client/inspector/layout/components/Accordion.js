@@ -80,25 +80,6 @@ class Accordion extends PureComponent {
         span({ className: "truncate" }, item.header)
       ),
 
-<<<<<<< HEAD
-      (created[i] || opened[i]) ?
-        div(
-          { className: "_content",
-            style: { display: opened[i] ? "block" : "none" },
-          },
-          createElement(item.component, item.componentProps || {})
-        ) :
-        null
-||||||| merged common ancestors
-      (created[i] || opened[i]) ?
-        div(
-          { className: "_content",
-            style: { display: opened[i] ? "block" : "none" }
-          },
-          createElement(item.component, item.componentProps || {})
-        ) :
-        null
-=======
       created[i] || opened[i]
         ? div(
             {
@@ -108,7 +89,6 @@ class Accordion extends PureComponent {
             createElement(item.component, item.componentProps || {})
           )
         : null
->>>>>>> upstream-releases
     );
   }
 

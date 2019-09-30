@@ -5,59 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MozPromise_h_)
-<<<<<<< HEAD
-#define MozPromise_h_
-
-#include "mozilla/Logging.h"
-#include "mozilla/Maybe.h"
-#include "mozilla/Mutex.h"
-#include "mozilla/Monitor.h"
-#include "mozilla/RefPtr.h"
-#include "mozilla/Tuple.h"
-#include "mozilla/TypeTraits.h"
-#include "mozilla/Variant.h"
-
-#include "nsISerialEventTarget.h"
-#include "nsTArray.h"
-#include "nsThreadUtils.h"
-
-#if MOZ_DIAGNOSTIC_ASSERT_ENABLED
-#define PROMISE_DEBUG
-#endif
-
-#ifdef PROMISE_DEBUG
-#define PROMISE_ASSERT MOZ_RELEASE_ASSERT
-#else
-#define PROMISE_ASSERT(...) \
-  do {                      \
-  } while (0)
-#endif
-||||||| merged common ancestors
-#define MozPromise_h_
-
-#include "mozilla/Logging.h"
-#include "mozilla/Maybe.h"
-#include "mozilla/Mutex.h"
-#include "mozilla/Monitor.h"
-#include "mozilla/RefPtr.h"
-#include "mozilla/Tuple.h"
-#include "mozilla/TypeTraits.h"
-#include "mozilla/Variant.h"
-
-#include "nsISerialEventTarget.h"
-#include "nsTArray.h"
-#include "nsThreadUtils.h"
-
-#if MOZ_DIAGNOSTIC_ASSERT_ENABLED
-#define PROMISE_DEBUG
-#endif
-
-#ifdef PROMISE_DEBUG
-#define PROMISE_ASSERT MOZ_RELEASE_ASSERT
-#else
-#define PROMISE_ASSERT(...) do { } while (0)
-#endif
-=======
 #  define MozPromise_h_
 
 #  include "mozilla/Logging.h"
@@ -84,7 +31,6 @@
       do {                      \
       } while (0)
 #  endif
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -272,24 +218,6 @@ class MozPromise : public MozPromiseBase {
   // MozPromise is the public type, and never constructed directly. Construct
   // a MozPromise::Private, defined below.
   MozPromise(const char* aCreationSite, bool aIsCompletionPromise)
-<<<<<<< HEAD
-      : mCreationSite(aCreationSite),
-        mMutex("MozPromise Mutex"),
-        mHaveRequest(false),
-        mIsCompletionPromise(aIsCompletionPromise)
-#ifdef PROMISE_DEBUG
-        ,
-        mMagic4(&mMutex)
-#endif
-||||||| merged common ancestors
-    : mCreationSite(aCreationSite)
-    , mMutex("MozPromise Mutex")
-    , mHaveRequest(false)
-    , mIsCompletionPromise(aIsCompletionPromise)
-#ifdef PROMISE_DEBUG
-    , mMagic4(&mMutex)
-#endif
-=======
       : mCreationSite(aCreationSite),
         mMutex("MozPromise Mutex"),
         mHaveRequest(false),
@@ -298,7 +226,6 @@ class MozPromise : public MozPromiseBase {
         ,
         mMagic4(&mMutex)
 #  endif
->>>>>>> upstream-releases
   {
     PROMISE_LOG("%s creating MozPromise (%p)", mCreationSite, this);
   }
@@ -409,20 +336,6 @@ class MozPromise : public MozPromiseBase {
     RefPtr<AllPromiseHolder> holder = new AllPromiseHolder(aPromises.Length());
     RefPtr<AllPromiseType> promise = holder->Promise();
     for (size_t i = 0; i < aPromises.Length(); ++i) {
-<<<<<<< HEAD
-      aPromises[i]->Then(aProcessingTarget, __func__,
-                         [holder, i](ResolveValueType aResolveValue) -> void {
-                           holder->Resolve(i, std::move(aResolveValue));
-                         },
-                         [holder](RejectValueType aRejectValue) -> void {
-                           holder->Reject(std::move(aRejectValue));
-                         });
-||||||| merged common ancestors
-      aPromises[i]->Then(aProcessingTarget, __func__,
-        [holder, i] (ResolveValueType aResolveValue) -> void { holder->Resolve(i, std::move(aResolveValue)); },
-        [holder] (RejectValueType aRejectValue) -> void { holder->Reject(std::move(aRejectValue)); }
-      );
-=======
       aPromises[i]->Then(
           aProcessingTarget, __func__,
           [holder, i](ResolveValueType aResolveValue) -> void {
@@ -431,7 +344,6 @@ class MozPromise : public MozPromiseBase {
           [holder](RejectValueType aRejectValue) -> void {
             holder->Reject(std::move(aRejectValue));
           });
->>>>>>> upstream-releases
     }
     return promise;
   }
@@ -496,17 +408,8 @@ class MozPromise : public MozPromiseBase {
       MOZ_ASSERT(aResponseTarget);
     }
 
-<<<<<<< HEAD
-#ifdef PROMISE_DEBUG
-    ~ThenValueBase() {
-||||||| merged common ancestors
-#ifdef PROMISE_DEBUG
-    ~ThenValueBase()
-    {
-=======
 #  ifdef PROMISE_DEBUG
     ~ThenValueBase() {
->>>>>>> upstream-releases
       mMagic1 = 0;
       mMagic2 = 0;
     }
@@ -577,18 +480,9 @@ class MozPromise : public MozPromiseBase {
       DoResolveOrRejectInternal(aValue);
     }
 
-<<<<<<< HEAD
-    nsCOMPtr<nsISerialEventTarget>
-        mResponseTarget;  // May be released on any thread.
-#ifdef PROMISE_DEBUG
-||||||| merged common ancestors
-    nsCOMPtr<nsISerialEventTarget> mResponseTarget; // May be released on any thread.
-#ifdef PROMISE_DEBUG
-=======
     nsCOMPtr<nsISerialEventTarget>
         mResponseTarget;  // May be released on any thread.
 #  ifdef PROMISE_DEBUG
->>>>>>> upstream-releases
     uint32_t mMagic1 = sMagic;
 #  endif
     const char* mCallSite;

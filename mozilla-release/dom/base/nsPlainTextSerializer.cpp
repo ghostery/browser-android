@@ -258,15 +258,6 @@ bool nsPlainTextSerializer::IsIgnorableRubyAnnotation(nsAtom* aTag) {
     return false;
   }
 
-<<<<<<< HEAD
-  return aTag == nsGkAtoms::rp || aTag == nsGkAtoms::rt ||
-         aTag == nsGkAtoms::rtc;
-||||||| merged common ancestors
-  return
-    aTag == nsGkAtoms::rp ||
-    aTag == nsGkAtoms::rt ||
-    aTag == nsGkAtoms::rtc;
-=======
   return aTag == nsGkAtoms::rp || aTag == nsGkAtoms::rt ||
          aTag == nsGkAtoms::rtc;
 }
@@ -282,7 +273,6 @@ static bool IsDisplayNone(Element* aElement) {
 static bool IsIgnorableScriptOrStyle(Element* aElement) {
   return aElement->IsAnyOfHTMLElements(nsGkAtoms::script, nsGkAtoms::style) &&
          IsDisplayNone(aElement);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -448,17 +438,8 @@ nsPlainTextSerializer::Flush(nsAString& aStr) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPlainTextSerializer::AppendDocumentStart(nsIDocument* aDocument,
-                                           nsAString& aStr) {
-||||||| merged common ancestors
-nsPlainTextSerializer::AppendDocumentStart(nsIDocument *aDocument,
-                                           nsAString& aStr)
-{
-=======
 nsPlainTextSerializer::AppendDocumentStart(Document* aDocument,
                                            nsAString& aStr) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -908,14 +889,7 @@ nsresult nsPlainTextSerializer::DoCloseContainer(nsAtom* aTag) {
     mLineBreakDue = true;
   } else if (aTag == nsGkAtoms::q) {
     Write(NS_LITERAL_STRING("\""));
-<<<<<<< HEAD
-  } else if (IsElementBlock(mElement) && aTag != nsGkAtoms::script) {
-||||||| merged common ancestors
-  }
-  else if (IsElementBlock(mElement) && aTag != nsGkAtoms::script) {
-=======
   } else if (IsElementBlock(mElement)) {
->>>>>>> upstream-releases
     // All other blocks get 1 vertical space after them
     // in formatted mode, otherwise 0.
     // This is hard. Sometimes 0 is a better number, but
@@ -993,24 +967,6 @@ bool nsPlainTextSerializer::MustSuppressLeaf() {
     return true;
   }
 
-<<<<<<< HEAD
-  if (mTagStackIndex > 0 &&
-      (mTagStack[mTagStackIndex - 1] == nsGkAtoms::script ||
-       mTagStack[mTagStackIndex - 1] == nsGkAtoms::style)) {
-    // Don't output the contents of <script> or <style> tags;
-    return true;
-  }
-
-||||||| merged common ancestors
-  if (mTagStackIndex > 0 &&
-      (mTagStack[mTagStackIndex-1] == nsGkAtoms::script ||
-       mTagStack[mTagStackIndex-1] == nsGkAtoms::style)) {
-    // Don't output the contents of <script> or <style> tags;
-    return true;
-  }
-
-=======
->>>>>>> upstream-releases
   return false;
 }
 

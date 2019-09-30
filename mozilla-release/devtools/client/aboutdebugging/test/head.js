@@ -190,13 +190,7 @@ function getTabList(document) {
   );
 }
 
-<<<<<<< HEAD
-async function installAddon({document, path, file, name}) {
-||||||| merged common ancestors
-async function installAddon({document, path, file, name, isWebExtension}) {
-=======
 async function installAddon({ document, path, file, name }) {
->>>>>>> upstream-releases
   // Mock the file picker to select a test addon
   const MockFilePicker = SpecialPowers.MockFilePicker;
   MockFilePicker.init(window);

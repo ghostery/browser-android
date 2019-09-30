@@ -42,19 +42,8 @@ using namespace mozilla::layout;
 using namespace mozilla::gfx;
 using namespace mozilla::layers;
 
-<<<<<<< HEAD
-nsCanvasFrame* NS_NewCanvasFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-  return new (aPresShell) nsCanvasFrame(aStyle);
-||||||| merged common ancestors
-nsCanvasFrame*
-NS_NewCanvasFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsCanvasFrame(aStyle);
-=======
 nsCanvasFrame* NS_NewCanvasFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsCanvasFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsCanvasFrame)
@@ -367,27 +356,11 @@ already_AddRefed<Layer> nsDisplayCanvasBackgroundColor::BuildLayer(
   return layer.forget();
 }
 
-<<<<<<< HEAD
-bool nsDisplayCanvasBackgroundColor::CreateWebRenderCommands(
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const StackingContextHelper& aSc, WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder) {
-||||||| merged common ancestors
-bool
-nsDisplayCanvasBackgroundColor::CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                                        mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                                        const StackingContextHelper& aSc,
-                                                        WebRenderLayerManager* aManager,
-                                                        nsDisplayListBuilder* aDisplayListBuilder)
-{
-=======
 bool nsDisplayCanvasBackgroundColor::CreateWebRenderCommands(
     mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
     const StackingContextHelper& aSc, RenderRootStateManager* aManager,
     nsDisplayListBuilder* aDisplayListBuilder) {
->>>>>>> upstream-releases
   ContainerLayerParameters parameter;
 
   nsCanvasFrame* frame = static_cast<nsCanvasFrame*>(mFrame);
@@ -465,23 +438,10 @@ void nsDisplayCanvasThemedBackground::Paint(nsDisplayListBuilder* aBuilder,
  *
  * The only reason this can't use nsDisplayGeneric is overriding GetBounds.
  */
-<<<<<<< HEAD
-class nsDisplayCanvasFocus : public nsDisplayItem {
- public:
-  nsDisplayCanvasFocus(nsDisplayListBuilder* aBuilder, nsCanvasFrame* aFrame)
-      : nsDisplayItem(aBuilder, aFrame) {
-||||||| merged common ancestors
-class nsDisplayCanvasFocus : public nsDisplayItem {
-public:
-  nsDisplayCanvasFocus(nsDisplayListBuilder* aBuilder, nsCanvasFrame *aFrame)
-    : nsDisplayItem(aBuilder, aFrame)
-  {
-=======
 class nsDisplayCanvasFocus : public nsPaintedDisplayItem {
  public:
   nsDisplayCanvasFocus(nsDisplayListBuilder* aBuilder, nsCanvasFrame* aFrame)
       : nsPaintedDisplayItem(aBuilder, aFrame) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayCanvasFocus);
   }
   virtual ~nsDisplayCanvasFocus() { MOZ_COUNT_DTOR(nsDisplayCanvasFocus); }
@@ -531,16 +491,8 @@ void nsCanvasFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
         aBuilder, this);
 
     if (isThemed) {
-<<<<<<< HEAD
-      aLists.BorderBackground()->AppendToTop(
-          MakeDisplayItem<nsDisplayCanvasThemedBackground>(aBuilder, this));
-||||||| merged common ancestors
-      aLists.BorderBackground()->AppendToTop(
-        MakeDisplayItem<nsDisplayCanvasThemedBackground>(aBuilder, this));
-=======
       aLists.BorderBackground()
           ->AppendNewToTop<nsDisplayCanvasThemedBackground>(aBuilder, this);
->>>>>>> upstream-releases
       return;
     }
 
@@ -573,18 +525,9 @@ void nsCanvasFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
 
       if (bgData.shouldFixToViewport) {
         auto* displayData = aBuilder->GetCurrentFixedBackgroundDisplayData();
-<<<<<<< HEAD
-        nsDisplayListBuilder::AutoBuildingDisplayList buildingDisplayList(
-            aBuilder, this, aBuilder->GetVisibleRect(),
-            aBuilder->GetDirtyRect(), false);
-||||||| merged common ancestors
-        nsDisplayListBuilder::AutoBuildingDisplayList
-          buildingDisplayList(aBuilder, this, aBuilder->GetVisibleRect(), aBuilder->GetDirtyRect(), false);
-=======
         nsDisplayListBuilder::AutoBuildingDisplayList buildingDisplayList(
             aBuilder, this, aBuilder->GetVisibleRect(),
             aBuilder->GetDirtyRect());
->>>>>>> upstream-releases
 
         DisplayListClipState::AutoSaveRestore clipState(aBuilder);
         nsDisplayListBuilder::AutoCurrentActiveScrolledRootSetter asrSetter(
@@ -605,14 +548,6 @@ void nsCanvasFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
         {
           DisplayListClipState::AutoSaveRestore bgImageClip(aBuilder);
           bgImageClip.Clear();
-<<<<<<< HEAD
-          bgItem =
-              MakeDisplayItem<nsDisplayCanvasBackgroundImage>(aBuilder, bgData);
-          bgItem->SetDependentFrame(aBuilder, dependentFrame);
-||||||| merged common ancestors
-          bgItem = MakeDisplayItem<nsDisplayCanvasBackgroundImage>(aBuilder, bgData);
-          bgItem->SetDependentFrame(aBuilder, dependentFrame);
-=======
           bgItem = MakeDisplayItem<nsDisplayCanvasBackgroundImage>(
               aBuilder, this, bgData);
           if (bgItem) {
@@ -623,29 +558,9 @@ void nsCanvasFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
           thisItemList.AppendToTop(
               nsDisplayFixedPosition::CreateForFixedBackground(aBuilder, this,
                                                                bgItem, i));
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        thisItemList.AppendToTop(
-            nsDisplayFixedPosition::CreateForFixedBackground(aBuilder, this,
-                                                             bgItem, i));
-||||||| merged common ancestors
-        thisItemList.AppendToTop(
-          nsDisplayFixedPosition::CreateForFixedBackground(aBuilder, this, bgItem, i));
-=======
->>>>>>> upstream-releases
 
       } else {
-<<<<<<< HEAD
-        nsDisplayCanvasBackgroundImage* bgItem =
-            MakeDisplayItem<nsDisplayCanvasBackgroundImage>(aBuilder, bgData);
-        bgItem->SetDependentFrame(aBuilder, dependentFrame);
-        thisItemList.AppendToTop(bgItem);
-||||||| merged common ancestors
-        nsDisplayCanvasBackgroundImage* bgItem = MakeDisplayItem<nsDisplayCanvasBackgroundImage>(aBuilder, bgData);
-        bgItem->SetDependentFrame(aBuilder, dependentFrame);
-        thisItemList.AppendToTop(bgItem);
-=======
         nsDisplayCanvasBackgroundImage* bgItem =
             MakeDisplayItem<nsDisplayCanvasBackgroundImage>(aBuilder, this,
                                                             bgData);
@@ -653,25 +568,13 @@ void nsCanvasFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
           bgItem->SetDependentFrame(aBuilder, dependentFrame);
           thisItemList.AppendToTop(bgItem);
         }
->>>>>>> upstream-releases
       }
 
       if (layers.mLayers[i].mBlendMode != NS_STYLE_BLEND_NORMAL) {
         DisplayListClipState::AutoSaveRestore blendClip(aBuilder);
-<<<<<<< HEAD
-        thisItemList.AppendToTop(MakeDisplayItem<nsDisplayBlendMode>(
-            aBuilder, this, &thisItemList, layers.mLayers[i].mBlendMode,
-            thisItemASR, i + 1));
-||||||| merged common ancestors
-        thisItemList.AppendToTop(
-          MakeDisplayItem<nsDisplayBlendMode>(aBuilder, this, &thisItemList,
-                                              layers.mLayers[i].mBlendMode,
-                                              thisItemASR, i + 1));
-=======
         thisItemList.AppendNewToTop<nsDisplayBlendMode>(
             aBuilder, this, &thisItemList, layers.mLayers[i].mBlendMode,
             thisItemASR, i + 1);
->>>>>>> upstream-releases
       }
       aLists.BorderBackground()->AppendToTop(&thisItemList);
     }
@@ -714,15 +617,7 @@ void nsCanvasFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   // Only paint the focus if we're visible
   if (!StyleVisibility()->IsVisible()) return;
 
-<<<<<<< HEAD
-  aLists.Outlines()->AppendToTop(
-      MakeDisplayItem<nsDisplayCanvasFocus>(aBuilder, this));
-||||||| merged common ancestors
-  aLists.Outlines()->AppendToTop(
-    MakeDisplayItem<nsDisplayCanvasFocus>(aBuilder, this));
-=======
   aLists.Outlines()->AppendNewToTop<nsDisplayCanvasFocus>(aBuilder, this);
->>>>>>> upstream-releases
 }
 
 void nsCanvasFrame::PaintFocus(DrawTarget* aDrawTarget, nsPoint aPt) {
@@ -739,42 +634,13 @@ void nsCanvasFrame::PaintFocus(DrawTarget* aDrawTarget, nsPoint aPt) {
   // XXX use the root frame foreground color, but should we find BODY frame
   // for HTML documents?
   nsIFrame* root = mFrames.FirstChild();
-<<<<<<< HEAD
-  const nsStyleColor* color = root ? root->StyleColor() : StyleColor();
-  if (!color) {
-    NS_ERROR("current color cannot be found");
-    return;
-  }
-
-  nsCSSRendering::PaintFocus(PresContext(), aDrawTarget, focusRect,
-                             color->mColor);
-||||||| merged common ancestors
-  const nsStyleColor* color = root ? root->StyleColor() : StyleColor();
-  if (!color) {
-    NS_ERROR("current color cannot be found");
-    return;
-  }
-
-  nsCSSRendering::PaintFocus(PresContext(), aDrawTarget,
-                             focusRect, color->mColor);
-=======
   const auto* text = root ? root->StyleText() : StyleText();
   nsCSSRendering::PaintFocus(PresContext(), aDrawTarget, focusRect,
                              text->mColor.ToColor());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsCanvasFrame::GetMinISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsCanvasFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsCanvasFrame::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_MIN_INLINE_SIZE(this, result);
   if (mFrames.IsEmpty())
@@ -784,17 +650,8 @@ nscoord nsCanvasFrame::GetMinISize(gfxContext* aRenderingContext) {
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsCanvasFrame::GetPrefISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsCanvasFrame::GetPrefISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsCanvasFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_PREF_INLINE_SIZE(this, result);
   if (mFrames.IsEmpty())

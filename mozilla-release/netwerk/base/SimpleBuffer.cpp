@@ -12,14 +12,7 @@ namespace net {
 
 SimpleBuffer::SimpleBuffer() : mStatus(NS_OK), mAvailable(0) {}
 
-<<<<<<< HEAD
-nsresult SimpleBuffer::Write(char *src, size_t len) {
-||||||| merged common ancestors
-nsresult SimpleBuffer::Write(char *src, size_t len)
-{
-=======
 nsresult SimpleBuffer::Write(char* src, size_t len) {
->>>>>>> upstream-releases
   NS_ASSERT_OWNINGTHREAD(SimpleBuffer);
   if (NS_FAILED(mStatus)) {
     return mStatus;
@@ -51,30 +44,15 @@ nsresult SimpleBuffer::Write(char* src, size_t len) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-size_t SimpleBuffer::Read(char *dest, size_t maxLen) {
-||||||| merged common ancestors
-size_t SimpleBuffer::Read(char *dest, size_t maxLen)
-{
-=======
 size_t SimpleBuffer::Read(char* dest, size_t maxLen) {
->>>>>>> upstream-releases
   NS_ASSERT_OWNINGTHREAD(SimpleBuffer);
   if (NS_FAILED(mStatus)) {
     return 0;
   }
 
   size_t rv = 0;
-<<<<<<< HEAD
-  for (SimpleBufferPage *p = mBufferList.getFirst(); p && (rv < maxLen);
-       p = mBufferList.getFirst()) {
-||||||| merged common ancestors
-  for (SimpleBufferPage *p = mBufferList.getFirst();
-       p && (rv < maxLen); p = mBufferList.getFirst()) {
-=======
   for (SimpleBufferPage* p = mBufferList.getFirst(); p && (rv < maxLen);
        p = mBufferList.getFirst()) {
->>>>>>> upstream-releases
     size_t avail = p->mWriteOffset - p->mReadOffset;
     size_t toRead = std::min(avail, (maxLen - rv));
     memcpy(dest + rv, p->mBuffer + p->mReadOffset, toRead);

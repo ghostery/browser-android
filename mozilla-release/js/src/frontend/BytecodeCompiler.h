@@ -121,16 +121,6 @@ MOZ_MUST_USE bool CompileLazyBinASTFunction(JSContext* cx,
 
 #endif  // JS_BUILD_BINAST
 
-<<<<<<< HEAD
-ModuleObject* CompileModule(JSContext* cx,
-                            const JS::ReadOnlyCompileOptions& options,
-                            JS::SourceText<char16_t>& srcBuf);
-||||||| merged common ancestors
-ModuleObject*
-CompileModule(JSContext* cx, const JS::ReadOnlyCompileOptions& options,
-              JS::SourceBufferHolder& srcBuf, LifoAlloc& alloc,
-              ScriptSourceObject** sourceObjectOut = nullptr);
-=======
 // Compile a module of the given source using the given options.
 ModuleObject* CompileModule(JSContext* cx,
                             const JS::ReadOnlyCompileOptions& options,
@@ -138,17 +128,7 @@ ModuleObject* CompileModule(JSContext* cx,
 ModuleObject* CompileModule(JSContext* cx,
                             const JS::ReadOnlyCompileOptions& options,
                             JS::SourceText<mozilla::Utf8Unit>& srcBuf);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-ModuleObject* CompileModule(JSContext* cx,
-                            const JS::ReadOnlyCompileOptions& options,
-                            JS::SourceText<char16_t>& srcBuf,
-                            ScriptSourceObject** sourceObjectOut);
-||||||| merged common ancestors
-MOZ_MUST_USE bool
-CompileLazyFunction(JSContext* cx, Handle<LazyScript*> lazy, const char16_t* chars, size_t length);
-=======
 // Parse a module of the given source.  This is an internal API; if you want to
 // compile a module as a user, use CompileModule above.
 ModuleObject* ParseModule(JSContext* cx,
@@ -159,7 +139,6 @@ ModuleObject* ParseModule(JSContext* cx,
                           const JS::ReadOnlyCompileOptions& options,
                           JS::SourceText<mozilla::Utf8Unit>& srcBuf,
                           ScriptSourceObject** sourceObjectOut);
->>>>>>> upstream-releases
 
 //
 // Compile a single function. The source in srcBuf must match the ECMA-262
@@ -228,19 +207,9 @@ void TraceParser(JSTracer* trc, JS::AutoGCRooter* parser);
 
 #if defined(JS_BUILD_BINAST)
 
-<<<<<<< HEAD
-/* Trace all GC things reachable from binjs parser. Defined in
- * BinASTParserPerTokenizer.cpp. */
-void TraceBinParser(JSTracer* trc, JS::AutoGCRooter* parser);
-||||||| merged common ancestors
-/* Trace all GC things reachable from binjs parser. Defined in BinSource.cpp. */
-void
-TraceBinParser(JSTracer* trc, JS::AutoGCRooter* parser);
-=======
 /* Trace all GC things reachable from binjs parser. Defined in
  * BinASTParserPerTokenizer.cpp. */
 void TraceBinASTParser(JSTracer* trc, JS::AutoGCRooter* parser);
->>>>>>> upstream-releases
 
 #endif  // defined(JS_BUILD_BINAST)
 

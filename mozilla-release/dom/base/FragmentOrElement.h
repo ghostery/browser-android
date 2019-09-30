@@ -114,14 +114,7 @@ class FragmentOrElement : public nsIContent {
    * If there are listeners for DOMNodeInserted event, fires the event on all
    * aNodes
    */
-<<<<<<< HEAD
-  static void FireNodeInserted(nsIDocument* aDoc, nsINode* aParent,
-||||||| merged common ancestors
-  static void FireNodeInserted(nsIDocument* aDoc,
-                               nsINode* aParent,
-=======
   static void FireNodeInserted(Document* aDoc, nsINode* aParent,
->>>>>>> upstream-releases
                                nsTArray<nsCOMPtr<nsIContent> >& aNodes);
 
   NS_DECL_CYCLE_COLLECTION_SKIPPABLE_SCRIPT_HOLDER_CLASS_INHERITED(

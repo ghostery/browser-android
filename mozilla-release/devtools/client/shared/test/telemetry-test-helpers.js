@@ -101,32 +101,16 @@ class TelemetryHelpers {
         }
         break;
       case "scalar":
-<<<<<<< HEAD
-        const scalars =
-          Services.telemetry.getSnapshotForScalars("main", false).parent;
-||||||| merged common ancestors
-        const scalars =
-          Services.telemetry.snapshotScalars(OPTIN, false).parent;
-=======
         const scalars = Services.telemetry.getSnapshotForScalars("main", false)
           .parent;
->>>>>>> upstream-releases
 
         is(scalars[histId], expected, `${histId} correct`);
         break;
       case "keyedscalar":
-<<<<<<< HEAD
-        const keyedScalars =
-          Services.telemetry.getSnapshotForKeyedScalars("main", false).parent;
-||||||| merged common ancestors
-        const keyedScalars =
-          Services.telemetry.snapshotKeyedScalars(OPTIN, false).parent;
-=======
         const keyedScalars = Services.telemetry.getSnapshotForKeyedScalars(
           "main",
           false
         ).parent;
->>>>>>> upstream-releases
         const value = keyedScalars[histId][key];
 
         msg = key ? `${histId}["${key}"] correct.` : `${histId} correct.`;
@@ -145,35 +129,6 @@ class TelemetryHelpers {
    */
   generateTelemetryTests(prefix = "") {
     // Get all histograms and scalars
-<<<<<<< HEAD
-    const histograms =
-      Services.telemetry.getSnapshotForHistograms("main", true).parent;
-    const keyedHistograms =
-      Services.telemetry.getSnapshotForKeyedHistograms("main", true).parent;
-    const scalars =
-      Services.telemetry.getSnapshotForScalars("main", false).parent;
-    const keyedScalars =
-      Services.telemetry.getSnapshotForKeyedScalars("main", false).parent;
-    const allHistograms = Object.assign({},
-                                        histograms,
-                                        keyedHistograms,
-                                        scalars,
-                                        keyedScalars);
-||||||| merged common ancestors
-    const histograms =
-      Services.telemetry.snapshotHistograms(OPTIN, true, false).parent;
-    const keyedHistograms =
-      Services.telemetry.snapshotKeyedHistograms(OPTIN, true, false).parent;
-    const scalars =
-      Services.telemetry.snapshotScalars(OPTIN, false).parent;
-    const keyedScalars =
-      Services.telemetry.snapshotKeyedScalars(OPTIN, false).parent;
-    const allHistograms = Object.assign({},
-                                        histograms,
-                                        keyedHistograms,
-                                        scalars,
-                                        keyedScalars);
-=======
     const histograms = Services.telemetry.getSnapshotForHistograms("main", true)
       .parent;
     const keyedHistograms = Services.telemetry.getSnapshotForKeyedHistograms(
@@ -193,7 +148,6 @@ class TelemetryHelpers {
       scalars,
       keyedScalars
     );
->>>>>>> upstream-releases
     // Get all keys
     const histIds = Object.keys(allHistograms).filter(histId =>
       histId.startsWith(prefix)
@@ -219,18 +173,10 @@ class TelemetryHelpers {
           // Scalar
           dump(`checkTelemetry("${histId}", "", ${snapshot}, "scalar");\n`);
         }
-<<<<<<< HEAD
-      } else if (typeof snapshot.histogram_type !== "undefined" &&
-                typeof snapshot.values !== "undefined") {
-||||||| merged common ancestors
-      } else if (typeof snapshot.histogram_type !== "undefined" &&
-                typeof snapshot.counts !== "undefined") {
-=======
       } else if (
         typeof snapshot.histogram_type !== "undefined" &&
         typeof snapshot.values !== "undefined"
       ) {
->>>>>>> upstream-releases
         // Histogram
         const actual = snapshot.values;
 

@@ -33,35 +33,9 @@ class LoadContext final : public nsILoadContext, public nsIInterfaceRequestor {
   NS_DECL_NSILOADCONTEXT
   NS_DECL_NSIINTERFACEREQUESTOR
 
-<<<<<<< HEAD
-  // appId/inIsolatedMozBrowser arguments override those in
-  // SerializedLoadContext provided by child process.
-||||||| merged common ancestors
-  // appId/inIsolatedMozBrowser arguments override those in SerializedLoadContext
-  // provided by child process.
-=======
   // inIsolatedMozBrowser argumentsoverrides that in
   // SerializedLoadContext provided by child process.
->>>>>>> upstream-releases
   LoadContext(const IPC::SerializedLoadContext& aToCopy,
-<<<<<<< HEAD
-              dom::Element* aTopFrameElement, OriginAttributes& aAttrs)
-      : mTopFrameElement(do_GetWeakReference(aTopFrameElement)),
-        mNestedFrameId(0),
-        mIsContent(aToCopy.mIsContent),
-        mUseRemoteTabs(aToCopy.mUseRemoteTabs),
-        mUseTrackingProtection(aToCopy.mUseTrackingProtection),
-        mOriginAttributes(aAttrs)
-||||||| merged common ancestors
-              dom::Element* aTopFrameElement,
-              OriginAttributes& aAttrs)
-    : mTopFrameElement(do_GetWeakReference(aTopFrameElement))
-    , mNestedFrameId(0)
-    , mIsContent(aToCopy.mIsContent)
-    , mUseRemoteTabs(aToCopy.mUseRemoteTabs)
-    , mUseTrackingProtection(aToCopy.mUseTrackingProtection)
-    , mOriginAttributes(aAttrs)
-=======
               dom::Element* aTopFrameElement, OriginAttributes& aAttrs)
       : mTopFrameElement(do_GetWeakReference(aTopFrameElement)),
         mNestedFrameId(0),
@@ -69,49 +43,15 @@ class LoadContext final : public nsILoadContext, public nsIInterfaceRequestor {
         mUseRemoteTabs(aToCopy.mUseRemoteTabs),
         mUseRemoteSubframes(aToCopy.mUseRemoteSubframes),
         mUseTrackingProtection(aToCopy.mUseTrackingProtection),
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-        ,
-        mIsNotNull(aToCopy.mIsNotNull)
-||||||| merged common ancestors
-    , mIsNotNull(aToCopy.mIsNotNull)
-=======
         mIsNotNull(aToCopy.mIsNotNull),
->>>>>>> upstream-releases
 #endif
         mOriginAttributes(aAttrs) {
   }
 
-<<<<<<< HEAD
-  // appId/inIsolatedMozBrowser arguments override those in
-  // SerializedLoadContext provided by child process.
-||||||| merged common ancestors
-  // appId/inIsolatedMozBrowser arguments override those in SerializedLoadContext
-  // provided by child process.
-=======
   // inIsolatedMozBrowser argument overrides that in
   // SerializedLoadContext provided by child process.
->>>>>>> upstream-releases
   LoadContext(const IPC::SerializedLoadContext& aToCopy,
-<<<<<<< HEAD
-              uint64_t aNestedFrameId, OriginAttributes& aAttrs)
-      : mTopFrameElement(nullptr),
-        mNestedFrameId(aNestedFrameId),
-        mIsContent(aToCopy.mIsContent),
-        mUseRemoteTabs(aToCopy.mUseRemoteTabs),
-        mUseTrackingProtection(aToCopy.mUseTrackingProtection),
-        mOriginAttributes(aAttrs)
-||||||| merged common ancestors
-              uint64_t aNestedFrameId,
-              OriginAttributes& aAttrs)
-    : mTopFrameElement(nullptr)
-    , mNestedFrameId(aNestedFrameId)
-    , mIsContent(aToCopy.mIsContent)
-    , mUseRemoteTabs(aToCopy.mUseRemoteTabs)
-    , mUseTrackingProtection(aToCopy.mUseTrackingProtection)
-    , mOriginAttributes(aAttrs)
-=======
               uint64_t aNestedFrameId, OriginAttributes& aAttrs)
       : mTopFrameElement(nullptr),
         mNestedFrameId(aNestedFrameId),
@@ -119,44 +59,12 @@ class LoadContext final : public nsILoadContext, public nsIInterfaceRequestor {
         mUseRemoteTabs(aToCopy.mUseRemoteTabs),
         mUseRemoteSubframes(aToCopy.mUseRemoteSubframes),
         mUseTrackingProtection(aToCopy.mUseTrackingProtection),
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-        ,
-        mIsNotNull(aToCopy.mIsNotNull)
-||||||| merged common ancestors
-    , mIsNotNull(aToCopy.mIsNotNull)
-=======
         mIsNotNull(aToCopy.mIsNotNull),
->>>>>>> upstream-releases
 #endif
         mOriginAttributes(aAttrs) {
   }
 
-<<<<<<< HEAD
-  LoadContext(dom::Element* aTopFrameElement, bool aIsContent,
-              bool aUsePrivateBrowsing, bool aUseRemoteTabs,
-              bool aUseTrackingProtection, const OriginAttributes& aAttrs)
-      : mTopFrameElement(do_GetWeakReference(aTopFrameElement)),
-        mNestedFrameId(0),
-        mIsContent(aIsContent),
-        mUseRemoteTabs(aUseRemoteTabs),
-        mUseTrackingProtection(aUseTrackingProtection),
-        mOriginAttributes(aAttrs)
-||||||| merged common ancestors
-  LoadContext(dom::Element* aTopFrameElement,
-              bool aIsContent,
-              bool aUsePrivateBrowsing,
-              bool aUseRemoteTabs,
-              bool aUseTrackingProtection,
-              const OriginAttributes& aAttrs)
-    : mTopFrameElement(do_GetWeakReference(aTopFrameElement))
-    , mNestedFrameId(0)
-    , mIsContent(aIsContent)
-    , mUseRemoteTabs(aUseRemoteTabs)
-    , mUseTrackingProtection(aUseTrackingProtection)
-    , mOriginAttributes(aAttrs)
-=======
   LoadContext(dom::Element* aTopFrameElement, bool aIsContent,
               bool aUsePrivateBrowsing, bool aUseRemoteTabs,
               bool aUseRemoteSubframes, bool aUseTrackingProtection,
@@ -167,64 +75,24 @@ class LoadContext final : public nsILoadContext, public nsIInterfaceRequestor {
         mUseRemoteTabs(aUseRemoteTabs),
         mUseRemoteSubframes(aUseRemoteSubframes),
         mUseTrackingProtection(aUseTrackingProtection),
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-        ,
-        mIsNotNull(true)
-||||||| merged common ancestors
-    , mIsNotNull(true)
-=======
         mIsNotNull(true),
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  {
-    MOZ_DIAGNOSTIC_ASSERT(aUsePrivateBrowsing ==
-                          (aAttrs.mPrivateBrowsingId > 0));
-||||||| merged common ancestors
-  {
-    MOZ_DIAGNOSTIC_ASSERT(aUsePrivateBrowsing == (aAttrs.mPrivateBrowsingId > 0));
-=======
         mOriginAttributes(aAttrs) {
     MOZ_DIAGNOSTIC_ASSERT(aUsePrivateBrowsing ==
                           (aAttrs.mPrivateBrowsingId > 0));
->>>>>>> upstream-releases
   }
 
   // Constructor taking reserved origin attributes.
   explicit LoadContext(OriginAttributes& aAttrs)
-<<<<<<< HEAD
-      : mTopFrameElement(nullptr),
-        mNestedFrameId(0),
-        mIsContent(false),
-        mUseRemoteTabs(false),
-        mUseTrackingProtection(false),
-        mOriginAttributes(aAttrs)
-||||||| merged common ancestors
-    : mTopFrameElement(nullptr)
-    , mNestedFrameId(0)
-    , mIsContent(false)
-    , mUseRemoteTabs(false)
-    , mUseTrackingProtection(false)
-    , mOriginAttributes(aAttrs)
-=======
       : mTopFrameElement(nullptr),
         mNestedFrameId(0),
         mIsContent(false),
         mUseRemoteTabs(false),
         mUseRemoteSubframes(false),
         mUseTrackingProtection(false),
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-        ,
-        mIsNotNull(true)
-||||||| merged common ancestors
-    , mIsNotNull(true)
-=======
         mIsNotNull(true),
->>>>>>> upstream-releases
 #endif
         mOriginAttributes(aAttrs) {
   }

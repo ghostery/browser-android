@@ -20,19 +20,8 @@ JSObject* SVGFEDistantLightElement::WrapNode(
   return SVGFEDistantLightElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::NumberInfo SVGFEDistantLightElement::sNumberInfo[2] = {
-    {nsGkAtoms::azimuth, 0, false}, {nsGkAtoms::elevation, 0, false}};
-||||||| merged common ancestors
-nsSVGElement::NumberInfo SVGFEDistantLightElement::sNumberInfo[2] =
-{
-  { nsGkAtoms::azimuth,   0, false },
-  { nsGkAtoms::elevation, 0, false }
-};
-=======
 SVGElement::NumberInfo SVGFEDistantLightElement::sNumberInfo[2] = {
     {nsGkAtoms::azimuth, 0, false}, {nsGkAtoms::elevation, 0, false}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
@@ -60,42 +49,18 @@ LightType SVGFEDistantLightElement::ComputeLightAttributes(
   return LightType::Distant;
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedNumber> SVGFEDistantLightElement::Azimuth() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedNumber>
-SVGFEDistantLightElement::Azimuth()
-{
-=======
 already_AddRefed<DOMSVGAnimatedNumber> SVGFEDistantLightElement::Azimuth() {
->>>>>>> upstream-releases
   return mNumberAttributes[AZIMUTH].ToDOMAnimatedNumber(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedNumber> SVGFEDistantLightElement::Elevation() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedNumber>
-SVGFEDistantLightElement::Elevation()
-{
-=======
 already_AddRefed<DOMSVGAnimatedNumber> SVGFEDistantLightElement::Elevation() {
->>>>>>> upstream-releases
   return mNumberAttributes[ELEVATION].ToDOMAnimatedNumber(this);
 }
 
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::NumberAttributesInfo SVGFEDistantLightElement::GetNumberInfo() {
-||||||| merged common ancestors
-nsSVGElement::NumberAttributesInfo
-SVGFEDistantLightElement::GetNumberInfo()
-{
-=======
 SVGElement::NumberAttributesInfo SVGFEDistantLightElement::GetNumberInfo() {
->>>>>>> upstream-releases
   return NumberAttributesInfo(mNumberAttributes, sNumberInfo,
                               ArrayLength(sNumberInfo));
 }

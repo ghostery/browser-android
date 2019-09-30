@@ -71,25 +71,11 @@ nsArrayBase::IndexOf(uint32_t aStartIndex, nsISupports* aElement,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsArrayBase::ScriptedEnumerate(nsIJSIID* aElemIID, uint8_t aArgc,
-                               nsISimpleEnumerator** aResult) {
-  if (aArgc > 0 && aElemIID) {
-    return NS_NewArrayEnumerator(aResult, static_cast<nsIArray*>(this),
-                                 *aElemIID->GetID());
-||||||| merged common ancestors
-nsArrayBase::ScriptedEnumerate(nsIJSIID* aElemIID, uint8_t aArgc,
-                               nsISimpleEnumerator** aResult)
-{
-  if (aArgc > 0 && aElemIID) {
-    return NS_NewArrayEnumerator(aResult, static_cast<nsIArray*>(this), *aElemIID->GetID());
-=======
 nsArrayBase::ScriptedEnumerate(const nsIID& aElemIID, uint8_t aArgc,
                                nsISimpleEnumerator** aResult) {
   if (aArgc > 0) {
     return NS_NewArrayEnumerator(aResult, static_cast<nsIArray*>(this),
                                  aElemIID);
->>>>>>> upstream-releases
   }
   return NS_NewArrayEnumerator(aResult, static_cast<nsIArray*>(this));
 }

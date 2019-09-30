@@ -121,10 +121,6 @@ class GeckoViewAutoFill {
             .map(attr => ({ [attr.localName]: attr.value }))
         ),
         origin: element.ownerDocument.location.origin,
-<<<<<<< HEAD
-        autofillhint: "",
-||||||| merged common ancestors
-=======
         autofillhint: "",
         bounds: {
           left: bounds.left,
@@ -132,7 +128,6 @@ class GeckoViewAutoFill {
           right: bounds.right,
           bottom: bounds.bottom,
         },
->>>>>>> upstream-releases
       };
 
       if (element === usernameField) {
@@ -145,14 +140,6 @@ class GeckoViewAutoFill {
       return info;
     };
 
-<<<<<<< HEAD
-    let [usernameField] =
-      LoginManagerContent.getUserNameAndPasswordFields(aFormLike.elements[0]);
-
-    const rootInfo = getInfo(aFormLike.rootElement, null, undefined, null);
-||||||| merged common ancestors
-    const rootInfo = getInfo(aFormLike.rootElement, null, undefined);
-=======
     // Get password field to get better form data via LoginManagerContent.
     let passwordField;
     for (const field of aFormLike.elements) {
@@ -170,17 +157,7 @@ class GeckoViewAutoFill {
     );
 
     const rootInfo = getInfo(aFormLike.rootElement, null, undefined, null);
->>>>>>> upstream-releases
     rootInfo.root = rootInfo.id;
-<<<<<<< HEAD
-    rootInfo.children = aFormLike.elements
-        .filter(element => (!usernameField || element.type != "text" ||
-                            element == usernameField))
-        .map(element => getInfo(element, rootInfo.id, rootInfo.id, usernameField));
-||||||| merged common ancestors
-    rootInfo.children = aFormLike.elements.map(
-        element => getInfo(element, rootInfo.id, rootInfo.id));
-=======
     rootInfo.children = aFormLike.elements
       .filter(
         element =>
@@ -189,7 +166,6 @@ class GeckoViewAutoFill {
       .map(element =>
         getInfo(element, rootInfo.id, rootInfo.id, usernameField)
       );
->>>>>>> upstream-releases
 
     this._eventDispatcher.dispatch("GeckoView:AddAutoFill", rootInfo, {
       onSuccess: responses => {
@@ -205,29 +181,12 @@ class GeckoViewAutoFill {
           const element = entry && entry.get();
           const value = responses[id] || "";
 
-<<<<<<< HEAD
-          if (element instanceof window.HTMLInputElement &&
-              !element.disabled && element.parentElement) {
-            element.setUserInput(value);
-||||||| merged common ancestors
-          if (element instanceof window.HTMLInputElement &&
-              !element.disabled && element.parentElement) {
-            element.value = value;
-
-            // Fire both "input" and "change" events.
-            element.dispatchEvent(new element.ownerGlobal.Event(
-                "input", { bubbles: true }));
-            element.dispatchEvent(new element.ownerGlobal.Event(
-                "change", { bubbles: true }));
-
-=======
           if (
             element instanceof window.HTMLInputElement &&
             !element.disabled &&
             element.parentElement
           ) {
             element.setUserInput(value);
->>>>>>> upstream-releases
             if (winUtils && element.value === value) {
               // Add highlighting for autofilled fields.
               winUtils.addManuallyManagedState(element, AUTOFILL_STATE);

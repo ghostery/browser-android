@@ -27,26 +27,10 @@ ExternalHelperAppChild::~ExternalHelperAppChild() {}
 // nsIStreamListener
 //-----------------------------------------------------------------------------
 NS_IMETHODIMP
-<<<<<<< HEAD
-ExternalHelperAppChild::OnDataAvailable(nsIRequest *request, nsISupports *ctx,
-                                        nsIInputStream *input, uint64_t offset,
-                                        uint32_t count) {
-  if (NS_FAILED(mStatus)) return mStatus;
-||||||| merged common ancestors
-ExternalHelperAppChild::OnDataAvailable(nsIRequest *request,
-                                        nsISupports *ctx,
-                                        nsIInputStream *input,
-                                        uint64_t offset,
-                                        uint32_t count)
-{
-  if (NS_FAILED(mStatus))
-    return mStatus;
-=======
 ExternalHelperAppChild::OnDataAvailable(nsIRequest* request,
                                         nsIInputStream* input, uint64_t offset,
                                         uint32_t count) {
   if (NS_FAILED(mStatus)) return mStatus;
->>>>>>> upstream-releases
 
   static uint32_t const kCopyChunkSize = 128 * 1024;
   uint32_t toRead = std::min<uint32_t>(count, kCopyChunkSize);
@@ -76,17 +60,8 @@ ExternalHelperAppChild::OnDataAvailable(nsIRequest* request,
 //////////////////////////////////////////////////////////////////////////////
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ExternalHelperAppChild::OnStartRequest(nsIRequest *request, nsISupports *ctx) {
-  nsresult rv = mHandler->OnStartRequest(request, ctx);
-||||||| merged common ancestors
-ExternalHelperAppChild::OnStartRequest(nsIRequest *request, nsISupports *ctx)
-{
-  nsresult rv = mHandler->OnStartRequest(request, ctx);
-=======
 ExternalHelperAppChild::OnStartRequest(nsIRequest* request) {
   nsresult rv = mHandler->OnStartRequest(request);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, NS_ERROR_UNEXPECTED);
 
   // Calling OnStartRequest could cause mHandler to close the window it was
@@ -115,17 +90,7 @@ ExternalHelperAppChild::OnStartRequest(nsIRequest* request) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ExternalHelperAppChild::OnStopRequest(nsIRequest *request, nsISupports *ctx,
-                                      nsresult status) {
-||||||| merged common ancestors
-ExternalHelperAppChild::OnStopRequest(nsIRequest *request,
-                                      nsISupports *ctx,
-                                      nsresult status)
-{
-=======
 ExternalHelperAppChild::OnStopRequest(nsIRequest* request, nsresult status) {
->>>>>>> upstream-releases
   // mHandler can be null if we diverted the request to the parent
   if (mHandler) {
     nsresult rv = mHandler->OnStopRequest(request, status);
@@ -136,20 +101,9 @@ ExternalHelperAppChild::OnStopRequest(nsIRequest* request, nsresult status) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult ExternalHelperAppChild::DivertToParent(
-    nsIDivertableChannel *divertable, nsIRequest *request, TabChild *tabChild) {
-||||||| merged common ancestors
-nsresult
-ExternalHelperAppChild::DivertToParent(nsIDivertableChannel *divertable,
-                                       nsIRequest *request,
-                                       TabChild *tabChild)
-{
-=======
 nsresult ExternalHelperAppChild::DivertToParent(
     nsIDivertableChannel* divertable, nsIRequest* request,
     BrowserChild* browserChild) {
->>>>>>> upstream-releases
   // nsIDivertable must know about content conversions before being diverted.
   MOZ_ASSERT(mHandler);
   mHandler->MaybeApplyDecodingForExtension(request);
@@ -170,17 +124,8 @@ nsresult ExternalHelperAppChild::DivertToParent(
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult ExternalHelperAppChild::RecvCancel(
-    const nsresult &aStatus) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-ExternalHelperAppChild::RecvCancel(const nsresult& aStatus)
-{
-=======
 mozilla::ipc::IPCResult ExternalHelperAppChild::RecvCancel(
     const nsresult& aStatus) {
->>>>>>> upstream-releases
   mStatus = aStatus;
   return IPC_OK();
 }

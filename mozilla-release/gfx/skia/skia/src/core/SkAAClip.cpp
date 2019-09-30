@@ -6,33 +6,17 @@
  */
 
 #include "SkAAClip.h"
-<<<<<<< HEAD
 
-#include "SkAtomics.h"
-||||||| merged common ancestors
-#include "SkAtomics.h"
-=======
-
->>>>>>> upstream-releases
 #include "SkBlitter.h"
 #include "SkColorData.h"
 #include "SkMacros.h"
 #include "SkPath.h"
 #include "SkRectPriv.h"
 #include "SkScan.h"
-<<<<<<< HEAD
-#include "SkTo.h"
-#include "SkUTF.h"
-
-#include <utility>
-||||||| merged common ancestors
-#include "SkUtils.h"
-=======
 #include "SkTo.h"
 #include "SkUTF.h"
 #include <atomic>
 #include <utility>
->>>>>>> upstream-releases
 
 class AutoAAClipValidate {
 public:

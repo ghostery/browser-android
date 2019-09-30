@@ -21,13 +21,6 @@ import java.util.Map;
 import java.lang.StringBuffer;
 import java.lang.Math;
 
-<<<<<<< HEAD
-import org.mozilla.geckoview.CompositorController;
-||||||| merged common ancestors
-import org.mozilla.gecko.GeckoThread;
-import org.mozilla.gecko.gfx.CompositorController;
-=======
->>>>>>> upstream-releases
 import org.mozilla.gecko.gfx.PanningPerfAPI;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;

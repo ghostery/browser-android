@@ -11,29 +11,6 @@
 //! If any values in a virtual register are spilled, they will use the same stack slot. This avoids
 //! memory-to-memory copies when a spilled value is passed as an EBB argument.
 
-<<<<<<< HEAD
-use dbg::DisplayList;
-use dominator_tree::DominatorTreePreorder;
-use entity::EntityRef;
-use entity::{EntityList, ListPool};
-use entity::{Keys, PrimaryMap, SecondaryMap};
-use ir::{Function, Value};
-use packed_option::PackedOption;
-use ref_slice::ref_slice;
-use std::cmp::Ordering;
-use std::fmt;
-||||||| merged common ancestors
-use dbg::DisplayList;
-use dominator_tree::DominatorTreePreorder;
-use entity::EntityRef;
-use entity::{EntityList, ListPool};
-use entity::{EntityMap, Keys, PrimaryMap};
-use ir::{Function, Value};
-use packed_option::PackedOption;
-use ref_slice::ref_slice;
-use std::cmp::Ordering;
-use std::fmt;
-=======
 use crate::dbg::DisplayList;
 use crate::dominator_tree::DominatorTreePreorder;
 use crate::entity::entity_impl;
@@ -44,7 +21,6 @@ use crate::packed_option::PackedOption;
 use crate::ref_slice::ref_slice;
 use core::cmp::Ordering;
 use core::fmt;
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// A virtual register reference.

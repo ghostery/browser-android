@@ -30,14 +30,7 @@ class X11TextureHost : public TextureHost {
  public:
   X11TextureHost(TextureFlags aFlags, const SurfaceDescriptorX11& aDescriptor);
 
-<<<<<<< HEAD
-  virtual void SetTextureSourceProvider(
-      TextureSourceProvider* aProvider) override;
-||||||| merged common ancestors
-  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
-=======
   void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
->>>>>>> upstream-releases
 
   bool Lock() override;
 
@@ -45,15 +38,7 @@ class X11TextureHost : public TextureHost {
 
   gfx::IntSize GetSize() const override;
 
-<<<<<<< HEAD
-  virtual bool BindTextureSource(
-      CompositableTextureSourceRef& aTexture) override {
-||||||| merged common ancestors
-  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override
-  {
-=======
   bool BindTextureSource(CompositableTextureSourceRef& aTexture) override {
->>>>>>> upstream-releases
     aTexture = mTextureSource;
     return !!aTexture;
   }
@@ -64,21 +49,9 @@ class X11TextureHost : public TextureHost {
   const char* Name() override { return "X11TextureHost"; }
 #endif
 
-<<<<<<< HEAD
- protected:
-  virtual void UpdatedInternal(const nsIntRegion*) override {
-    if (mTextureSource) mTextureSource->Updated();
-||||||| merged common ancestors
-protected:
-  virtual void UpdatedInternal(const nsIntRegion*) override
-  {
-    if (mTextureSource)
-      mTextureSource->Updated();
-=======
  protected:
   void UpdatedInternal(const nsIntRegion*) override {
     if (mTextureSource) mTextureSource->Updated();
->>>>>>> upstream-releases
   }
 
   RefPtr<Compositor> mCompositor;

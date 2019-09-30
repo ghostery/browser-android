@@ -88,24 +88,10 @@ add_task(async function test_setup() {
 
 for (let engine of SEARCH_ENGINE_DETAILS) {
   add_task(async function() {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_searchEngine_behaviors.js
-    let previouslySelectedEngine = Services.search.defaultEngine;
-||||||| merged common ancestors
-    let previouslySelectedEngine = Services.search.currentEngine;
-=======
     let previouslySelectedEngine = await Services.search.getDefault();
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_searchEngine_behaviors.js
 
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_searchEngine_behaviors.js
-    registerCleanupFunction(function() {
-      Services.search.defaultEngine = previouslySelectedEngine;
-||||||| merged common ancestors
-    registerCleanupFunction(function() {
-      Services.search.currentEngine = previouslySelectedEngine;
-=======
     registerCleanupFunction(async function() {
       await Services.search.setDefault(previouslySelectedEngine);
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_searchEngine_behaviors.js
     });
 
     await testSearchEngine(engine);
@@ -116,13 +102,7 @@ async function testSearchEngine(engineDetails) {
   let engine = Services.search.getEngineByName(engineDetails.name);
   Assert.ok(engine, `${engineDetails.name} is installed`);
 
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_searchEngine_behaviors.js
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-=======
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_searchEngine_behaviors.js
   engine.alias = engineDetails.alias;
 
   let base = engineDetails.baseURL;

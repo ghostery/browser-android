@@ -240,20 +240,7 @@ nsresult NS_NewUnionEnumerator(nsISimpleEnumerator** aResult,
   } else if (!aSecondEnumerator) {
     *aResult = aFirstEnumerator;
   } else {
-<<<<<<< HEAD
     auto* enumer = new nsUnionEnumerator(aFirstEnumerator, aSecondEnumerator);
-    if (!enumer) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-||||||| merged common ancestors
-    auto* enumer = new nsUnionEnumerator(aFirstEnumerator,
-                                         aSecondEnumerator);
-    if (!enumer) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-=======
-    auto* enumer = new nsUnionEnumerator(aFirstEnumerator, aSecondEnumerator);
->>>>>>> upstream-releases
     *aResult = enumer;
   }
   NS_ADDREF(*aResult);

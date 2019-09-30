@@ -27,36 +27,8 @@ HTMLDialogElement::~HTMLDialogElement() {}
 
 NS_IMPL_ELEMENT_CLONE(HTMLDialogElement)
 
-<<<<<<< HEAD
-bool HTMLDialogElement::IsDialogEnabled() {
-  static bool isDialogEnabled = false;
-  static bool added = false;
-
-  if (!added) {
-    Preferences::AddBoolVarCache(&isDialogEnabled,
-                                 "dom.dialog_element.enabled");
-    added = true;
-  }
-
-  return isDialogEnabled;
-||||||| merged common ancestors
-bool
-HTMLDialogElement::IsDialogEnabled()
-{
-  static bool isDialogEnabled = false;
-  static bool added = false;
-
-  if (!added) {
-    Preferences::AddBoolVarCache(&isDialogEnabled,
-                                 "dom.dialog_element.enabled");
-    added = true;
-  }
-
-  return isDialogEnabled;
-=======
 bool HTMLDialogElement::IsDialogEnabled() {
   return StaticPrefs::dom_dialog_element_enabled();
->>>>>>> upstream-releases
 }
 
 void HTMLDialogElement::Close(

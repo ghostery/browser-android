@@ -734,25 +734,9 @@
       }
       this.hidden = true;
 
-<<<<<<< HEAD
-    let event = document.createEvent("Events");
-    event.initEvent("findbarclose", true, false);
-    this.dispatchEvent(event);
-
-    // 'focusContent()' iterates over all listeners in the chrome
-    // process, so we need to call it from here.
-    this.browser.finder.focusContent();
-    this.browser.finder.onFindbarClose();
-||||||| merged common ancestors
-    // 'focusContent()' iterates over all listeners in the chrome
-    // process, so we need to call it from here.
-    this.browser.finder.focusContent();
-    this.browser.finder.onFindbarClose();
-=======
       let event = document.createEvent("Events");
       event.initEvent("findbarclose", true, false);
       this.dispatchEvent(event);
->>>>>>> upstream-releases
 
       // 'focusContent()' iterates over all listeners in the chrome
       // process, so we need to call it from here.

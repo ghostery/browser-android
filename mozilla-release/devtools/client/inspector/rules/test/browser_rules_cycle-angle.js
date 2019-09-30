@@ -33,35 +33,6 @@ async function checkAngleCycling(container, view) {
   // turn
   is(valueNode.textContent, "1turn", "Angle displayed as a turn value.");
 
-<<<<<<< HEAD
-  const tests = [{
-    value: "360deg",
-    comment: "Angle displayed as a degree value.",
-  }, {
-    value: `${Math.round(Math.PI * 2 * 10000) / 10000}rad`,
-    comment: "Angle displayed as a radian value.",
-  }, {
-    value: "400grad",
-    comment: "Angle displayed as a gradian value.",
-  }, {
-    value: "1turn",
-    comment: "Angle displayed as a turn value again.",
-  }];
-||||||| merged common ancestors
-  const tests = [{
-    value: "360deg",
-    comment: "Angle displayed as a degree value."
-  }, {
-    value: `${Math.round(Math.PI * 2 * 10000) / 10000}rad`,
-    comment: "Angle displayed as a radian value."
-  }, {
-    value: "400grad",
-    comment: "Angle displayed as a gradian value."
-  }, {
-    value: "1turn",
-    comment: "Angle displayed as a turn value again."
-  }];
-=======
   const tests = [
     {
       value: "360deg",
@@ -80,7 +51,6 @@ async function checkAngleCycling(container, view) {
       comment: "Angle displayed as a turn value again.",
     },
   ];
->>>>>>> upstream-releases
 
   for (const test of tests) {
     await checkSwatchShiftClick(container, win, test.value, test.comment);
@@ -123,17 +93,6 @@ async function checkSwatchShiftClick(container, win, expectedValue, comment) {
   const valueNode = container.querySelector(".ruleview-angle");
 
   const onUnitChange = swatch.once("unit-change");
-<<<<<<< HEAD
-  EventUtils.synthesizeMouseAtCenter(swatch, {
-    type: "mousedown",
-    shiftKey: true,
-  }, win);
-||||||| merged common ancestors
-  EventUtils.synthesizeMouseAtCenter(swatch, {
-    type: "mousedown",
-    shiftKey: true
-  }, win);
-=======
   EventUtils.synthesizeMouseAtCenter(
     swatch,
     {
@@ -142,7 +101,6 @@ async function checkSwatchShiftClick(container, win, expectedValue, comment) {
     },
     win
   );
->>>>>>> upstream-releases
   await onUnitChange;
   is(valueNode.textContent, expectedValue, comment);
 }

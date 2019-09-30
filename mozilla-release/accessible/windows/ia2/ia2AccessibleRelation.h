@@ -19,32 +19,13 @@
 namespace mozilla {
 namespace a11y {
 
-<<<<<<< HEAD
-class ia2AccessibleRelation final : public IAccessibleRelation {
- public:
-  ia2AccessibleRelation(RelationType aType, Relation *aRel);
-||||||| merged common ancestors
-class ia2AccessibleRelation final : public IAccessibleRelation
-{
-public:
-  ia2AccessibleRelation(RelationType aType, Relation* aRel);
-=======
 class ia2AccessibleRelation final : public IAccessibleRelation {
  public:
   ia2AccessibleRelation(RelationType aType, Relation* aRel);
->>>>>>> upstream-releases
 
   ia2AccessibleRelation(RelationType aType,
-<<<<<<< HEAD
-                        nsTArray<RefPtr<Accessible>> &&aTargets)
-      : mType(aType), mTargets(std::move(aTargets)) {}
-||||||| merged common ancestors
-                        nsTArray<RefPtr<Accessible>>&& aTargets) :
-    mType(aType), mTargets(std::move(aTargets)) {}
-=======
                         nsTArray<RefPtr<Accessible>>&& aTargets)
       : mType(aType), mTargets(std::move(aTargets)) {}
->>>>>>> upstream-releases
 
   // IUnknown
   DECL_IUNKNOWN
@@ -72,16 +53,8 @@ class ia2AccessibleRelation final : public IAccessibleRelation {
 
  private:
   ia2AccessibleRelation();
-<<<<<<< HEAD
-  ia2AccessibleRelation(const ia2AccessibleRelation &);
-  ia2AccessibleRelation &operator=(const ia2AccessibleRelation &);
-||||||| merged common ancestors
-  ia2AccessibleRelation(const ia2AccessibleRelation&);
-  ia2AccessibleRelation& operator = (const ia2AccessibleRelation&);
-=======
   ia2AccessibleRelation(const ia2AccessibleRelation&);
   ia2AccessibleRelation& operator=(const ia2AccessibleRelation&);
->>>>>>> upstream-releases
 
   RelationType mType;
   nsTArray<RefPtr<Accessible>> mTargets;
@@ -96,15 +69,8 @@ const WCHAR* const IA2_RELATION_NULL = L"";
 #define RELATIONTYPE(geckoType, name, atkType, msaaType, ia2Type) \
   std::pair<RelationType, const WCHAR* const>(RelationType::geckoType, ia2Type),
 
-<<<<<<< HEAD
-static const std::pair<RelationType, const WCHAR *const> sRelationTypePairs[] =
-    {
-||||||| merged common ancestors
-static const std::pair<RelationType, const WCHAR *const> sRelationTypePairs[] = {
-=======
 static const std::pair<RelationType, const WCHAR* const> sRelationTypePairs[] =
     {
->>>>>>> upstream-releases
 #include "RelationTypeMap.h"
 };
 

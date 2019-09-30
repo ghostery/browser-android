@@ -9,11 +9,6 @@ import six
 from collections import OrderedDict
 from six import iteritems
 
-<<<<<<< HEAD
-from ..manifest import manifest
-||||||| merged common ancestors
-from ..manifest import manifest, update
-=======
 try:
     from ..manifest import manifest
 except ValueError:
@@ -41,7 +36,6 @@ if MYPY:
     from typing import Text
     from typing import Tuple
     from typing import Union
->>>>>>> upstream-releases
 
 here = os.path.dirname(__file__)
 wpt_root = os.path.abspath(os.path.join(here, os.pardir, os.pardir))
@@ -229,54 +223,12 @@ def _in_repo_root(full_path):
     return len(path_components) < 2
 
 
-<<<<<<< HEAD
-def _init_manifest_cache():
-    c = {}
-
-    def load(manifest_path=None):
-        if manifest_path is None:
-            manifest_path = os.path.join(wpt_root, "MANIFEST.json")
-        if c.get(manifest_path):
-            return c[manifest_path]
-        # cache at most one path:manifest
-        c.clear()
-        wpt_manifest = manifest.load_and_update(wpt_root, manifest_path, "/",
-                                                update=True)
-        c[manifest_path] = wpt_manifest
-        return c[manifest_path]
-    return load
-
-
-load_manifest = _init_manifest_cache()
-||||||| merged common ancestors
-def _init_manifest_cache():
-    c = {}
-
-    def load(manifest_path=None):
-        if manifest_path is None:
-            manifest_path = os.path.join(wpt_root, "MANIFEST.json")
-        if c.get(manifest_path):
-            return c[manifest_path]
-        # cache at most one path:manifest
-        c.clear()
-        wpt_manifest = manifest.load(wpt_root, manifest_path)
-        if wpt_manifest is None:
-            wpt_manifest = manifest.Manifest()
-        update.update(wpt_root, wpt_manifest)
-        c[manifest_path] = wpt_manifest
-        return c[manifest_path]
-    return load
-
-
-load_manifest = _init_manifest_cache()
-=======
 def load_manifest(manifest_path=None, manifest_update=True):
     # type: (Optional[str], bool) -> manifest.Manifest
     if manifest_path is None:
         manifest_path = os.path.join(wpt_root, "MANIFEST.json")
     return manifest.load_and_update(wpt_root, manifest_path, "/",
                                     update=manifest_update)
->>>>>>> upstream-releases
 
 
 def affected_testfiles(files_changed,  # type: Iterable[Text]
@@ -345,18 +297,6 @@ def affected_testfiles(files_changed,  # type: Iterable[Text]
                     break
         return affected
 
-<<<<<<< HEAD
-    def affected_by_interfaces(file_contents):
-        if len(interfaces_changed_names) > 0:
-            if 'idlharness.js' in file_contents:
-                for interface in interfaces_changed_names:
-                    regex = '[\'"]' + interface + '(\\.idl)?[\'"]'
-                    if re.search(regex, file_contents):
-                        return True
-        return False
-
-||||||| merged common ancestors
-=======
     def affected_by_interfaces(file_contents):
         # type: (Union[bytes, Text]) -> bool
         if len(interfaces_changed_names) > 0:
@@ -367,7 +307,6 @@ def affected_testfiles(files_changed,  # type: Iterable[Text]
                         return True
         return False
 
->>>>>>> upstream-releases
     for root, dirs, fnames in os.walk(wpt_root):
         # Walk top_level_subdir looking for test files containing either the
         # relative filepath or absolute filepath to the changed files.

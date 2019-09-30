@@ -68,30 +68,10 @@ static nsresult AddNonJSSizeOfWindowAndItsDescendents(
   }
 
   // Measure this window's descendents.
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < length; i++) {
-    nsCOMPtr<nsPIDOMWindowOuter> child = frames->IndexedGetter(i);
-    NS_ENSURE_STATE(child);
-
-    nsGlobalWindowOuter* childWin = nsGlobalWindowOuter::Cast(child);
-
-    nsresult rv = AddNonJSSizeOfWindowAndItsDescendents(childWin, aSizes);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  for (uint32_t i = 0; i < length; i++) {
-      nsCOMPtr<nsPIDOMWindowOuter> child = frames->IndexedGetter(i);
-      NS_ENSURE_STATE(child);
-
-      nsGlobalWindowOuter* childWin = nsGlobalWindowOuter::Cast(child);
-
-      nsresult rv = AddNonJSSizeOfWindowAndItsDescendents(childWin, aSizes);
-      NS_ENSURE_SUCCESS(rv, rv);
-=======
   for (const auto& frame : bc->GetChildren()) {
     if (auto* childWin = nsGlobalWindowOuter::Cast(frame->GetDOMWindow())) {
       MOZ_TRY(AddNonJSSizeOfWindowAndItsDescendents(childWin, aSizes));
     }
->>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -110,16 +90,8 @@ static nsresult NonJSSizeOfTab(nsPIDOMWindowOuter* aWindow, size_t* aDomSize,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void nsWindowMemoryReporter::Init() {
-||||||| merged common ancestors
-/* static */ void
-nsWindowMemoryReporter::Init()
-{
-=======
 /* static */
 void nsWindowMemoryReporter::Init() {
->>>>>>> upstream-releases
   MOZ_ASSERT(!sWindowReporter);
   sWindowReporter = new nsWindowMemoryReporter();
   ClearOnShutdown(&sWindowReporter);
@@ -139,16 +111,8 @@ void nsWindowMemoryReporter::Init() {
   RegisterGhostWindowsDistinguishedAmount(GhostWindowsDistinguishedAmount);
 }
 
-<<<<<<< HEAD
-/* static */ nsWindowMemoryReporter* nsWindowMemoryReporter::Get() {
-||||||| merged common ancestors
-/* static */ nsWindowMemoryReporter*
-nsWindowMemoryReporter::Get()
-{
-=======
 /* static */
 nsWindowMemoryReporter* nsWindowMemoryReporter::Get() {
->>>>>>> upstream-releases
   return sWindowReporter;
 }
 
@@ -366,18 +330,11 @@ static void CollectWindowReports(nsGlobalWindowInner* aWindow,
   REPORT_SIZE("/layout/style-sheets", mLayoutStyleSheetsSize,
               "Memory used by document style sheets within a window.");
 
-<<<<<<< HEAD
-  REPORT_SIZE("/layout/shadow-dom/style-sheets",
-              mLayoutShadowDomStyleSheetsSize,
-||||||| merged common ancestors
-  REPORT_SIZE("/layout/shadow-dom/style-sheets", mLayoutShadowDomStyleSheetsSize,
-=======
   REPORT_SIZE("/layout/svg-mapped-declarations", mLayoutSvgMappedDeclarations,
               "Memory used by mapped declarations of SVG elements");
 
   REPORT_SIZE("/layout/shadow-dom/style-sheets",
               mLayoutShadowDomStyleSheetsSize,
->>>>>>> upstream-releases
               "Memory used by Shadow DOM style sheets within a window.");
 
   // TODO(emilio): We might want to split this up between invalidation map /
@@ -421,17 +378,8 @@ static void CollectWindowReports(nsGlobalWindowInner* aWindow,
   REPORT_SIZE("/layout/style-sets/other", mLayoutStyleSetsOther,
               "Memory used by other parts of style sets within a window.");
 
-<<<<<<< HEAD
-  REPORT_SIZE("/layout/element-data-objects", mLayoutElementDataObjects,
-              "Memory used for ElementData objects, but not the things"
-||||||| merged common ancestors
-  REPORT_SIZE("/layout/element-data-objects",
-              mLayoutElementDataObjects,
-              "Memory used for ElementData objects, but not the things"
-=======
   REPORT_SIZE("/layout/element-data-objects", mLayoutElementDataObjects,
               "Memory used for ElementData objects, but not the things "
->>>>>>> upstream-releases
               "hanging off them.");
 
   REPORT_SIZE("/layout/text-runs", mLayoutTextRunsSize,
@@ -920,16 +868,8 @@ void nsWindowMemoryReporter::CheckForGhostWindows(
       Telemetry::ScalarID::MEMORYREPORTER_MAX_GHOST_WINDOWS, mGhostWindowCount);
 }
 
-<<<<<<< HEAD
-/* static */ int64_t nsWindowMemoryReporter::GhostWindowsDistinguishedAmount() {
-||||||| merged common ancestors
-/* static */ int64_t
-nsWindowMemoryReporter::GhostWindowsDistinguishedAmount()
-{
-=======
 /* static */
 int64_t nsWindowMemoryReporter::GhostWindowsDistinguishedAmount() {
->>>>>>> upstream-releases
   return sWindowReporter->mGhostWindowCount;
 }
 
@@ -941,16 +881,8 @@ void nsWindowMemoryReporter::KillCheckTimer() {
 }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-/* static */ void nsWindowMemoryReporter::UnlinkGhostWindows() {
-||||||| merged common ancestors
-/* static */ void
-nsWindowMemoryReporter::UnlinkGhostWindows()
-{
-=======
 /* static */
 void nsWindowMemoryReporter::UnlinkGhostWindows() {
->>>>>>> upstream-releases
   if (!sWindowReporter) {
     return;
   }

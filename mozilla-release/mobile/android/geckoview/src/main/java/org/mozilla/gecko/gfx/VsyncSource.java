@@ -7,19 +7,10 @@ package org.mozilla.gecko.gfx;
 
 import android.content.Context;
 import android.hardware.display.DisplayManager;
-<<<<<<< HEAD
-import android.os.Handler;
-import android.os.Looper;
-||||||| merged common ancestors
-import android.os.HandlerThread;
-import android.os.Process;
-import android.util.Log;
-=======
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.RequiresApi;
->>>>>>> upstream-releases
 import android.view.Choreographer;
 import android.view.Display;
 import org.mozilla.gecko.annotation.WrapForJNI;

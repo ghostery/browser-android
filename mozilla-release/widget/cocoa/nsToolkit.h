@@ -30,16 +30,8 @@ class nsToolkit {
   static nsresult SwizzleMethods(Class aClass, SEL orgMethod, SEL posedMethod,
                                  bool classMethods = false);
 
-<<<<<<< HEAD
-  void RegisterForAllProcessMouseEvents();
-  void UnregisterAllProcessMouseEventHandlers();
-||||||| merged common ancestors
-  void               RegisterForAllProcessMouseEvents();
-  void               UnregisterAllProcessMouseEventHandlers();
-=======
   void MonitorAllProcessMouseEvents();
   void StopMonitoringAllProcessMouseEvents();
->>>>>>> upstream-releases
 
  protected:
   nsresult RegisterForSleepWakeNotifications();
@@ -51,15 +43,7 @@ class nsToolkit {
   CFRunLoopSourceRef mSleepWakeNotificationRLS;
   io_object_t mPowerNotifier;
 
-<<<<<<< HEAD
-  CFMachPortRef mEventTapPort;
-  CFRunLoopSourceRef mEventTapRLS;
-||||||| merged common ancestors
-  CFMachPortRef      mEventTapPort;
-  CFRunLoopSourceRef mEventTapRLS;
-=======
   id mAllProcessMouseMonitor;
->>>>>>> upstream-releases
 };
 
 #endif  // nsToolkit_h_

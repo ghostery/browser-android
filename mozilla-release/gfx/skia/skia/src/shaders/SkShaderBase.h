@@ -9,16 +9,9 @@
 #define SkShaderBase_DEFINED
 
 #include "SkFilterQuality.h"
-#include "SkFlattenablePriv.h"
 #include "SkMask.h"
 #include "SkMatrix.h"
-<<<<<<< HEAD
 #include "SkNoncopyable.h"
-#include "SkPM4f.h"
-||||||| merged common ancestors
-=======
-#include "SkNoncopyable.h"
->>>>>>> upstream-releases
 #include "SkShader.h"
 #include "SkTLazy.h"
 
@@ -70,33 +63,17 @@ public:
      */
     struct ContextRec {
         ContextRec(const SkPaint& paint, const SkMatrix& matrix, const SkMatrix* localM,
-<<<<<<< HEAD
-                   SkColorSpace* dstColorSpace)
-||||||| merged common ancestors
-                   DstType dstType, SkColorSpace* dstColorSpace)
-=======
                    SkColorType dstColorType, SkColorSpace* dstColorSpace)
->>>>>>> upstream-releases
             : fPaint(&paint)
             , fMatrix(&matrix)
             , fLocalMatrix(localM)
-<<<<<<< HEAD
-||||||| merged common ancestors
-            , fPreferredDstType(dstType)
-=======
             , fDstColorType(dstColorType)
->>>>>>> upstream-releases
             , fDstColorSpace(dstColorSpace) {}
 
         const SkPaint*  fPaint;            // the current paint associated with the draw
         const SkMatrix* fMatrix;           // the current matrix in the canvas
         const SkMatrix* fLocalMatrix;      // optional local matrix
-<<<<<<< HEAD
-||||||| merged common ancestors
-        const DstType   fPreferredDstType; // the "natural" client dest type
-=======
         SkColorType     fDstColorType;     // the color type of the dest surface
->>>>>>> upstream-releases
         SkColorSpace*   fDstColorSpace;    // the color space of the dest surface (if any)
 
         bool isLegacyCompatible(SkColorSpace* shadersColorSpace) const;
@@ -124,20 +101,6 @@ public:
          */
         virtual void shadeSpan(int x, int y, SkPMColor[], int count) = 0;
 
-<<<<<<< HEAD
-        virtual void shadeSpan4f(int x, int y, SkPMColor4f[], int count);
-
-        // Notification from blitter::blitMask in case we need to see the non-alpha channels
-        virtual void set3DMask(const SkMask*) {}
-
-||||||| merged common ancestors
-        virtual void shadeSpan4f(int x, int y, SkPM4f[], int count);
-
-        // Notification from blitter::blitMask in case we need to see the non-alpha channels
-        virtual void set3DMask(const SkMask*) {}
-
-=======
->>>>>>> upstream-releases
     protected:
         // Reference to shader, so we don't have to dupe information.
         const SkShaderBase& fShader;
@@ -208,26 +171,9 @@ public:
     // If this returns false, then we draw nothing (do not fall back to shader context)
     bool appendStages(const StageRec&) const;
 
-<<<<<<< HEAD
     bool SK_WARN_UNUSED_RESULT computeTotalInverse(const SkMatrix& ctm,
                                                    const SkMatrix* outerLocalMatrix,
                                                    SkMatrix* totalInverse) const;
-
-    // Returns the total local matrix for this shader:
-    //
-    //   M = postLocalMatrix x shaderLocalMatrix x preLocalMatrix
-    //
-    SkTCopyOnFirstWrite<SkMatrix> totalLocalMatrix(const SkMatrix* preLocalMatrix,
-                                                   const SkMatrix* postLocalMatrix = nullptr) const;
-||||||| merged common ancestors
-    bool computeTotalInverse(const SkMatrix& ctm,
-                             const SkMatrix* outerLocalMatrix,
-                             SkMatrix* totalInverse) const;
-=======
-    bool SK_WARN_UNUSED_RESULT computeTotalInverse(const SkMatrix& ctm,
-                                                   const SkMatrix* outerLocalMatrix,
-                                                   SkMatrix* totalInverse) const;
->>>>>>> upstream-releases
 
     // Returns the total local matrix for this shader:
     //
@@ -240,15 +186,6 @@ public:
         return nullptr;
     }
 
-<<<<<<< HEAD
-    SK_DEFINE_FLATTENABLE_TYPE(SkShaderBase)
-    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
-||||||| merged common ancestors
-    SK_TO_STRING_VIRT()
-
-    SK_DEFINE_FLATTENABLE_TYPE(SkShaderBase)
-    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
-=======
     static Type GetFlattenableType() { return kSkShaderBase_Type; }
     Type getFlattenableType() const override { return GetFlattenableType(); }
 
@@ -258,7 +195,6 @@ public:
                 SkFlattenable::Deserialize(GetFlattenableType(), data, size, procs).release()));
     }
     static void RegisterFlattenables();
->>>>>>> upstream-releases
 
 protected:
     SkShaderBase(const SkMatrix* localMatrix = nullptr);

@@ -23,20 +23,10 @@ class StyleSheet;
 
 namespace dom {
 
-<<<<<<< HEAD
-class MediaList final : public nsISupports, public nsWrapperCache {
- public:
-||||||| merged common ancestors
-class MediaList final : public nsISupports
-                      , public nsWrapperCache
-{
-public:
-=======
 class Document;
 
 class MediaList final : public nsISupports, public nsWrapperCache {
  public:
->>>>>>> upstream-releases
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(MediaList)
 

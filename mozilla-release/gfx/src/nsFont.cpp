@@ -21,46 +21,14 @@ using namespace mozilla;
 nsFont::nsFont(const FontFamilyList& aFontlist, nscoord aSize)
     : fontlist(aFontlist), size(aSize) {}
 
-<<<<<<< HEAD
-nsFont::nsFont(FontFamilyType aGenericType, nscoord aSize)
-    : fontlist(aGenericType), size(aSize) {}
-||||||| merged common ancestors
-nsFont::nsFont(FontFamilyType aGenericType, nscoord aSize)
-  : fontlist(aGenericType)
-  , size(aSize)
-{
-}
-=======
 nsFont::nsFont(StyleGenericFontFamily aGenericType, nscoord aSize)
     : fontlist(aGenericType), size(aSize) {}
->>>>>>> upstream-releases
 
 nsFont::nsFont(const nsFont& aOther) = default;
 
-<<<<<<< HEAD
-nsFont::nsFont() {}
-||||||| merged common ancestors
-nsFont::nsFont()
-{
-}
-=======
-nsFont::~nsFont() {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 nsFont::~nsFont() {}
 
 bool nsFont::Equals(const nsFont& aOther) const {
-||||||| merged common ancestors
-nsFont::~nsFont()
-{
-}
-
-bool nsFont::Equals(const nsFont& aOther) const
-{
-=======
-bool nsFont::Equals(const nsFont& aOther) const {
->>>>>>> upstream-releases
   return CalcDifference(aOther) == MaxDifference::eNone;
 }
 

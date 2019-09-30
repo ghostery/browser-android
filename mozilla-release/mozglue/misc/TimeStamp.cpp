@@ -41,32 +41,6 @@ struct TimeStampInitialization {
   ~TimeStampInitialization() { TimeStamp::Shutdown(); };
 };
 
-<<<<<<< HEAD
-static bool sFuzzyfoxEnabled;
-
-/* static */ bool TimeStamp::GetFuzzyfoxEnabled() { return sFuzzyfoxEnabled; }
-
-/* static */ void TimeStamp::SetFuzzyfoxEnabled(bool aValue) {
-  sFuzzyfoxEnabled = aValue;
-}
-
-// These variables store the frozen time (as a TimeStamp) for FuzzyFox that
-// will be reported if FuzzyFox is enabled.
-// We overload the top bit of sCanonicalNow and sCanonicalGTC to
-// indicate if a Timestamp is a fuzzed timestamp (bit set) or not
-// (bit unset).
-#ifdef XP_WIN
-static Atomic<uint64_t> sCanonicalGTC;
-static Atomic<uint64_t> sCanonicalQPC;
-static Atomic<bool> sCanonicalHasQPC;
-#else
-static Atomic<uint64_t> sCanonicalNowTimeStamp;
-#endif
-static Atomic<int64_t> sCanonicalNowTime;
-// This variable stores the frozen time (as ms since the epoch) for FuzzyFox
-// to report if FuzzyFox is enabled.
-||||||| merged common ancestors
-=======
 static bool sFuzzyfoxEnabled;
 
 /* static */
@@ -90,7 +64,6 @@ static Atomic<uint64_t> sCanonicalNowTimeStamp;
 static Atomic<int64_t> sCanonicalNowTime;
 // This variable stores the frozen time (as ms since the epoch) for FuzzyFox
 // to report if FuzzyFox is enabled.
->>>>>>> upstream-releases
 static TimeStampInitialization sInitOnce;
 
 MFBT_API TimeStamp TimeStamp::ProcessCreation(bool* aIsInconsistent) {

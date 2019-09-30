@@ -140,10 +140,6 @@ mod tests {
     use crate::common::Date;
     use crate::test::check_serialize;
     use serde_json;
-<<<<<<< HEAD
-||||||| merged common ancestors
-    use test::check_serialize;
-=======
 
     #[test]
     fn test_json_new_window_response() {
@@ -155,7 +151,6 @@ mod tests {
 
         check_serialize(&json, &data);
     }
->>>>>>> upstream-releases
 
     #[test]
     fn test_json_close_window_response() {

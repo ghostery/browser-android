@@ -19,106 +19,31 @@ struct AnimationValue;
 class DeclarationBlock;
 namespace dom {
 class Element;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
 }  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
 
 /*
  * SMILCSSValueType: Represents a SMIL-animated CSS value.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-class nsSMILCSSValueType : public nsISMILType {
- public:
-  typedef mozilla::dom::Element Element;
-  typedef mozilla::AnimationValue AnimationValue;
-||||||| merged common ancestors
-class nsSMILCSSValueType : public nsISMILType
-{
-public:
-  typedef mozilla::dom::Element Element;
-  typedef mozilla::AnimationValue AnimationValue;
-=======
 class SMILCSSValueType : public SMILType {
  public:
   // Singleton for SMILValue objects to hold onto.
   static SMILCSSValueType sSingleton;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-  // Singleton for nsSMILValue objects to hold onto.
-  static nsSMILCSSValueType sSingleton;
-
- protected:
-  // nsISMILType Methods
-||||||| merged common ancestors
-  // Singleton for nsSMILValue objects to hold onto.
-  static nsSMILCSSValueType sSingleton;
-
-protected:
-  // nsISMILType Methods
-=======
  protected:
   // SMILType Methods
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
   // -------------------
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-  void Init(nsSMILValue& aValue) const override;
-  void Destroy(nsSMILValue&) const override;
-  nsresult Assign(nsSMILValue& aDest, const nsSMILValue& aSrc) const override;
-  bool IsEqual(const nsSMILValue& aLeft,
-               const nsSMILValue& aRight) const override;
-  nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-||||||| merged common ancestors
-  void     Init(nsSMILValue& aValue) const override;
-  void     Destroy(nsSMILValue&) const override;
-  nsresult Assign(nsSMILValue& aDest,
-                  const nsSMILValue& aSrc) const override;
-  bool     IsEqual(const nsSMILValue& aLeft,
-                   const nsSMILValue& aRight) const override;
-  nsresult Add(nsSMILValue& aDest,
-               const nsSMILValue& aValueToAdd,
-=======
   void Init(SMILValue& aValue) const override;
   void Destroy(SMILValue&) const override;
   nsresult Assign(SMILValue& aDest, const SMILValue& aSrc) const override;
   bool IsEqual(const SMILValue& aLeft, const SMILValue& aRight) const override;
   nsresult Add(SMILValue& aDest, const SMILValue& aValueToAdd,
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
                uint32_t aCount) const override;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-  nsresult SandwichAdd(nsSMILValue& aDest,
-                       const nsSMILValue& aValueToAdd) const override;
-  nsresult ComputeDistance(const nsSMILValue& aFrom, const nsSMILValue& aTo,
-||||||| merged common ancestors
-  nsresult SandwichAdd(nsSMILValue& aDest,
-                       const nsSMILValue& aValueToAdd) const override;
-  nsresult ComputeDistance(const nsSMILValue& aFrom,
-                           const nsSMILValue& aTo,
-=======
   nsresult SandwichAdd(SMILValue& aDest,
                        const SMILValue& aValueToAdd) const override;
   nsresult ComputeDistance(const SMILValue& aFrom, const SMILValue& aTo,
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
                            double& aDistance) const override;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-  nsresult Interpolate(const nsSMILValue& aStartVal, const nsSMILValue& aEndVal,
-                       double aUnitDistance,
-                       nsSMILValue& aResult) const override;
-||||||| merged common ancestors
-  nsresult Interpolate(const nsSMILValue& aStartVal,
-                       const nsSMILValue& aEndVal,
-                       double aUnitDistance,
-                       nsSMILValue& aResult) const override;
-=======
   nsresult Interpolate(const SMILValue& aStartVal, const SMILValue& aEndVal,
                        double aUnitDistance, SMILValue& aResult) const override;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
 
  public:
   // Helper Methods
@@ -146,19 +71,9 @@ protected:
    * @pre  aValue.IsNull()
    * @post aValue.IsNull() || aValue.mType == SMILCSSValueType::sSingleton
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-  static void ValueFromString(nsCSSPropertyID aPropID, Element* aTargetElement,
-                              const nsAString& aString, nsSMILValue& aValue,
-||||||| merged common ancestors
-  static void ValueFromString(nsCSSPropertyID aPropID,
-                              Element* aTargetElement,
-                              const nsAString& aString,
-                              nsSMILValue& aValue,
-=======
   static void ValueFromString(nsCSSPropertyID aPropID,
                               dom::Element* aTargetElement,
                               const nsAString& aString, SMILValue& aValue,
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h
                               bool* aIsContextSensitive);
 
   /**
@@ -213,12 +128,6 @@ protected:
   constexpr SMILCSSValueType() = default;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSValueType.h
-#endif  // NS_SMILCSSVALUETYPE_H_
-||||||| merged common ancestors
-#endif // NS_SMILCSSVALUETYPE_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILCSSValueType_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSValueType.h

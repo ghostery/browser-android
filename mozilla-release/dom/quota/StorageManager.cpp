@@ -142,24 +142,10 @@ class PersistentStoragePermissionRequest final
   PersistentStoragePermissionRequest(nsIPrincipal* aPrincipal,
                                      nsPIDOMWindowInner* aWindow,
                                      Promise* aPromise)
-<<<<<<< HEAD
-      : ContentPermissionRequestBase(aPrincipal, aIsHandlingUserInput, aWindow,
-                                     NS_LITERAL_CSTRING("dom.storageManager"),
-                                     NS_LITERAL_CSTRING("persistent-storage")),
-        mPromise(aPromise) {
-||||||| merged common ancestors
-    : mPrincipal(aPrincipal)
-    , mWindow(aWindow)
-    , mIsHandlingUserInput(aIsHandlingUserInput)
-    , mPromise(aPromise)
-  {
-    MOZ_ASSERT(aPrincipal);
-=======
       : ContentPermissionRequestBase(aPrincipal, aWindow,
                                      NS_LITERAL_CSTRING("dom.storageManager"),
                                      NS_LITERAL_CSTRING("persistent-storage")),
         mPromise(aPromise) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aWindow);
     MOZ_ASSERT(aPromise);
   }
@@ -273,18 +259,7 @@ already_AddRefed<Promise> ExecuteOpOnMainOrWorkerThread(
 
       case RequestResolver::Type::Persist: {
         RefPtr<PersistentStoragePermissionRequest> request =
-<<<<<<< HEAD
-            new PersistentStoragePermissionRequest(
-                principal, window, EventStateManager::IsHandlingUserInput(),
-                promise);
-||||||| merged common ancestors
-          new PersistentStoragePermissionRequest(principal,
-                                                 window,
-                                                 EventStateManager::IsHandlingUserInput(),
-                                                 promise);
-=======
             new PersistentStoragePermissionRequest(principal, window, promise);
->>>>>>> upstream-releases
 
         // In private browsing mode, no permission prompt.
         if (nsContentUtils::IsInPrivateBrowsing(doc)) {
@@ -632,25 +607,6 @@ bool PersistedWorkerMainThreadRunnable::MainThreadRun() {
 nsresult PersistentStoragePermissionRequest::Start() {
   MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-  PromptResult pr;
-  nsresult rv = ShowPrompt(pr);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  if (pr == PromptResult::Granted) {
-    return Allow(JS::UndefinedHandleValue);
-  }
-  if (pr == PromptResult::Denied) {
-||||||| merged common ancestors
-  // Grant permission if pref'ed on.
-  if (Preferences::GetBool("dom.storageManager.prompt.testing", false)) {
-    if (Preferences::GetBool("dom.storageManager.prompt.testing.allow",
-                             false)) {
-      return Allow(JS::UndefinedHandleValue);
-    }
-
-=======
   PromptResult pr;
 #ifdef MOZ_WIDGET_ANDROID
   // on Android calling `ShowPrompt` here calls
@@ -669,14 +625,12 @@ nsresult PersistentStoragePermissionRequest::Start() {
     return Allow(JS::UndefinedHandleValue);
   }
   if (pr == PromptResult::Denied) {
->>>>>>> upstream-releases
     return Cancel();
   }
 
   return nsContentPermissionUtils::AskPermission(this, mWindow);
 }
 
-<<<<<<< HEAD
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED_0(
     PersistentStoragePermissionRequest, ContentPermissionRequestBase)
 
@@ -685,71 +639,6 @@ NS_IMPL_CYCLE_COLLECTION_INHERITED(PersistentStoragePermissionRequest,
 
 NS_IMETHODIMP
 PersistentStoragePermissionRequest::Cancel() {
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTING_ADDREF(PersistentStoragePermissionRequest)
-NS_IMPL_CYCLE_COLLECTING_RELEASE(PersistentStoragePermissionRequest)
-
-NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(PersistentStoragePermissionRequest)
-  NS_INTERFACE_MAP_ENTRY(nsIContentPermissionRequest)
-  NS_INTERFACE_MAP_ENTRY(nsISupports)
-NS_INTERFACE_MAP_END
-
-NS_IMPL_CYCLE_COLLECTION(PersistentStoragePermissionRequest, mWindow, mPromise)
-
-NS_IMETHODIMP
-PersistentStoragePermissionRequest::GetPrincipal(nsIPrincipal** aPrincipal)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aPrincipal);
-  MOZ_ASSERT(mPrincipal);
-
-  NS_ADDREF(*aPrincipal = mPrincipal);
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-PersistentStoragePermissionRequest::GetIsHandlingUserInput(bool* aIsHandlingUserInput)
-{
-  *aIsHandlingUserInput = mIsHandlingUserInput;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-PersistentStoragePermissionRequest::GetWindow(mozIDOMWindow** aRequestingWindow)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aRequestingWindow);
-  MOZ_ASSERT(mWindow);
-
-  NS_ADDREF(*aRequestingWindow = mWindow);
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-PersistentStoragePermissionRequest::GetElement(Element** aElement)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aElement);
-
-  *aElement = nullptr;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-PersistentStoragePermissionRequest::Cancel()
-{
-=======
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED_0(
-    PersistentStoragePermissionRequest, ContentPermissionRequestBase)
-
-NS_IMPL_CYCLE_COLLECTION_INHERITED(PersistentStoragePermissionRequest,
-                                   ContentPermissionRequestBase, mPromise)
-
-NS_IMETHODIMP
-PersistentStoragePermissionRequest::Cancel() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mPromise);
 

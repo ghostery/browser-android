@@ -56,12 +56,7 @@ GrGLCaps::GrGLCaps(const GrContextOptions& contextOptions,
     fPartialFBOReadIsSlow = false;
     fMipMapLevelAndLodControlSupport = false;
     fRGBAToBGRAReadbackConversionsAreSlow = false;
-<<<<<<< HEAD
-    fUseBufferDataNullHint = SkToBool(GR_GL_USE_BUFFER_DATA_NULL_HINT);
-||||||| merged common ancestors
-=======
     fUseBufferDataNullHint = false;
->>>>>>> upstream-releases
     fDoManualMipmapping = false;
     fClearToBoundaryValuesIsBroken = false;
     fClearTextureSupport = false;
@@ -69,14 +64,8 @@ GrGLCaps::GrGLCaps(const GrContextOptions& contextOptions,
     fDisallowTexSubImageForUnormConfigTexturesEverBoundToFBO = false;
     fUseDrawInsteadOfAllRenderTargetWrites = false;
     fRequiresCullFaceEnableDisableWhenDrawingLinesAfterNonLines = false;
-<<<<<<< HEAD
-    fRequiresFlushBetweenNonAndInstancedDraws = false;
-    fDetachStencilFromMSAABuffersBeforeReadPixels = false;
-||||||| merged common ancestors
-=======
     fDetachStencilFromMSAABuffersBeforeReadPixels = false;
     fDontSetBaseOrMaxLevelForExternalTextures = false;
->>>>>>> upstream-releases
     fProgramBinarySupport = false;
     fSamplerObjectSupport = false;
     fFBFetchRequiresEnablePerSample = false;
@@ -238,26 +227,9 @@ void GrGLCaps::init(const GrContextOptions& contextOptions,
     fBindUniformLocationSupport = ctxInfo.hasExtension("GL_CHROMIUM_bind_uniform_location");
 
     if (kGL_GrGLStandard == standard) {
-<<<<<<< HEAD
-        if (version >= GR_GL_VER(3, 1) || ctxInfo.hasExtension("GL_ARB_texture_rectangle") ||
-            ctxInfo.hasExtension("GL_ANGLE_texture_rectangle")) {
-            // We also require textureSize() support for rectangle 2D samplers which was added in
-            // GLSL 1.40.
-            if (ctxInfo.glslGeneration() >= k140_GrGLSLGeneration) {
-                fRectangleTextureSupport = true;
-            }
-||||||| merged common ancestors
-        if (version >= GR_GL_VER(3, 1) || ctxInfo.hasExtension("GL_ARB_texture_rectangle")) {
-            // We also require textureSize() support for rectangle 2D samplers which was added in
-            // GLSL 1.40.
-            if (ctxInfo.glslGeneration() >= k140_GrGLSLGeneration) {
-                fRectangleTextureSupport = true;
-            }
-=======
         if (version >= GR_GL_VER(3, 1) || ctxInfo.hasExtension("GL_ARB_texture_rectangle") ||
             ctxInfo.hasExtension("GL_ANGLE_texture_rectangle")) {
             fRectangleTextureSupport = true;
->>>>>>> upstream-releases
         }
     } else {
         // Command buffer exposes this in GL ES context for Chromium reasons,
@@ -319,20 +291,10 @@ void GrGLCaps::init(const GrContextOptions& contextOptions,
     // vis-versa.
     fRGBAToBGRAReadbackConversionsAreSlow = isMESA || isMAC;
 
-<<<<<<< HEAD
-    if (GrContextOptions::Enable::kNo == contextOptions.fUseGLBufferDataNullHint) {
-        fUseBufferDataNullHint = false;
-    } else if (GrContextOptions::Enable::kYes == contextOptions.fUseGLBufferDataNullHint) {
-        fUseBufferDataNullHint = true;
-    }
-
-||||||| merged common ancestors
-=======
     // Chrome's command buffer will zero out a buffer if null is passed to glBufferData to
     // avoid letting an application see uninitialized memory.
     fUseBufferDataNullHint = !kIsWebGL && kChromium_GrGLDriver != ctxInfo.driver();
 
->>>>>>> upstream-releases
     if (kGL_GrGLStandard == standard) {
         if (version >= GR_GL_VER(4,4) || ctxInfo.hasExtension("GL_ARB_clear_texture")) {
             fClearTextureSupport = true;
@@ -629,15 +591,6 @@ void GrGLCaps::init(const GrContextOptions& contextOptions,
     } else if (version >= GR_GL_VER(3, 0)) {
         fProgramBinarySupport = true;
     }
-<<<<<<< HEAD
-    if (fProgramBinarySupport) {
-        GrGLint count;
-        GR_GL_GetIntegerv(gli, GR_GL_NUM_PROGRAM_BINARY_FORMATS, &count);
-        fProgramBinarySupport = count > 0;
-    }
-||||||| merged common ancestors
-
-=======
     if (fProgramBinarySupport) {
         GrGLint count;
         GR_GL_GetIntegerv(gli, GR_GL_NUM_PROGRAM_BINARY_FORMATS, &count);
@@ -649,7 +602,6 @@ void GrGLCaps::init(const GrContextOptions& contextOptions,
     } else {
         fSamplerObjectSupport = version >= GR_GL_VER(3,0);
     }
->>>>>>> upstream-releases
     // Requires fTextureRedSupport, fTextureSwizzleSupport, msaa support, ES compatibility have
     // already been detected.
     this->initConfigTable(contextOptions, ctxInfo, gli, shaderCaps);
@@ -863,12 +815,6 @@ void GrGLCaps::initGLSL(const GrGLContextInfo& ctxInfo, const GrGLInterface* gli
 
     shaderCaps->fFloatIs32Bits = is_float_fp32(ctxInfo, gli, GR_GL_HIGH_FLOAT);
     shaderCaps->fHalfIs32Bits = is_float_fp32(ctxInfo, gli, GR_GL_MEDIUM_FLOAT);
-<<<<<<< HEAD
-
-    // Unsigned integers only supported in and after GLSL 1.30.
-    shaderCaps->fUnsignedSupport = ctxInfo.glslGeneration() >= k130_GrGLSLGeneration;
-||||||| merged common ancestors
-=======
 
     // Unsigned integers only supported in and after GLSL 1.30.
     shaderCaps->fUnsignedSupport = ctxInfo.glslGeneration() >= k130_GrGLSLGeneration;
@@ -878,7 +824,6 @@ void GrGLCaps::initGLSL(const GrGLContextInfo& ctxInfo, const GrGLInterface* gli
     } else {
         shaderCaps->fBuiltinFMASupport = ctxInfo.glslGeneration() >= k320es_GrGLSLGeneration;
     }
->>>>>>> upstream-releases
 }
 
 bool GrGLCaps::hasPathRenderingSupport(const GrGLContextInfo& ctxInfo, const GrGLInterface* gli) {
@@ -1217,17 +1162,8 @@ void GrGLCaps::onDumpJSON(SkJSONWriter* writer) const {
     writer->appendBool("Texture swizzle support", fTextureSwizzleSupport);
     writer->appendBool("BGRA to RGBA readback conversions are slow",
                        fRGBAToBGRAReadbackConversionsAreSlow);
-<<<<<<< HEAD
-    writer->appendBool("Use buffer data null hint", fUseBufferDataNullHint);
-    writer->appendBool("Draw To clear color", fUseDrawToClearColor);
-    writer->appendBool("Draw To clear stencil clip", fUseDrawToClearStencilClip);
-||||||| merged common ancestors
-    writer->appendBool("Draw To clear color", fUseDrawToClearColor);
-    writer->appendBool("Draw To clear stencil clip", fUseDrawToClearStencilClip);
-=======
     writer->appendBool("Use buffer data null hint", fUseBufferDataNullHint);
 
->>>>>>> upstream-releases
     writer->appendBool("Intermediate texture for partial updates of unorm textures ever bound to FBOs",
                        fDisallowTexSubImageForUnormConfigTexturesEverBoundToFBO);
     writer->appendBool("Intermediate texture for all updates of textures bound to FBOs",
@@ -1294,14 +1230,8 @@ bool GrGLCaps::getReadPixelsFormat(GrPixelConfig surfaceConfig, GrPixelConfig ex
     return true;
 }
 
-<<<<<<< HEAD
-void GrGLCaps::getRenderbufferFormat(GrPixelConfig config, GrGLenum* internalFormat) const {
-||||||| merged common ancestors
-bool GrGLCaps::getRenderbufferFormat(GrPixelConfig config, GrGLenum* internalFormat) const {
-=======
 void GrGLCaps::getRenderbufferFormat(GrPixelConfig config, GrGLenum* internalFormat) const {
     SkASSERT(!GrPixelConfigIsCompressed(config));
->>>>>>> upstream-releases
     *internalFormat = fConfigTable[config].fFormats.fInternalFormatRenderbuffer;
 }
 
@@ -1511,19 +1441,8 @@ void GrGLCaps::initConfigTable(const GrContextOptions& contextOptions,
         // We require some form of FBO support and all GLs with FBO support can render to RGBA8
         fConfigTable[kRGBA_8888_GrPixelConfig].fFlags |= allRenderFlags;
     } else {
-<<<<<<< HEAD
-        bool isWebGL = false;
-        // hack for skbug:8378
-        #if IS_WEBGL==1
-        isWebGL = true;
-        #endif
-        if (isWebGL || version >= GR_GL_VER(3,0) || ctxInfo.hasExtension("GL_OES_rgb8_rgba8") ||
-||||||| merged common ancestors
-        if (version >= GR_GL_VER(3,0) || ctxInfo.hasExtension("GL_OES_rgb8_rgba8") ||
-=======
         // hack for skbug:8378 - assume support on WebGL.
         if (kIsWebGL || version >= GR_GL_VER(3,0) || ctxInfo.hasExtension("GL_OES_rgb8_rgba8") ||
->>>>>>> upstream-releases
             ctxInfo.hasExtension("GL_ARM_rgba8")) {
             fConfigTable[kRGBA_8888_GrPixelConfig].fFlags |= allRenderFlags;
         }
@@ -1533,45 +1452,6 @@ void GrGLCaps::initConfigTable(const GrContextOptions& contextOptions,
     }
     fConfigTable[kRGBA_8888_GrPixelConfig].fSwizzle = GrSwizzle::RGBA();
 
-<<<<<<< HEAD
-    fConfigTable[kRGB_888_GrPixelConfig].fFormats.fBaseInternalFormat = GR_GL_RGB;
-    fConfigTable[kRGB_888_GrPixelConfig].fFormats.fSizedInternalFormat = GR_GL_RGB8;
-    // Our external RGB data always has a byte where alpha would be. When calling read pixels we
-    // want to read to kRGB_888x color type and ensure that gets 0xFF written. Using GL_RGB would
-    // read back unaligned 24bit RGB color values. Note that this all a bit moot as we don't
-    // currently expect to ever read back GrColorType::kRGB_888x because our implementation of
-    // supportedReadPixelsColorType never returns it.
-    fConfigTable[kRGB_888_GrPixelConfig].fFormats.fExternalFormat[kReadPixels_ExternalFormatUsage] = GR_GL_RGBA;
-    fConfigTable[kRGB_888_GrPixelConfig].fFormats.fExternalType = GR_GL_UNSIGNED_BYTE;
-    fConfigTable[kRGB_888_GrPixelConfig].fFormatType = kNormalizedFixedPoint_FormatType;
-    fConfigTable[kRGB_888_GrPixelConfig].fFlags = ConfigInfo::kTextureable_Flag;
-    if (kGL_GrGLStandard == standard) {
-        // Even in OpenGL 4.6 GL_RGB8 is required to be color renderable but not required to be a
-        // supported render buffer format. Since we usually use render buffers for MSAA on non-ES GL
-        // we don't support MSAA for GL_RGB8. On 4.2+ we could check using
-        // glGetInternalFormativ(GL_RENDERBUFFER, GL_RGB8, GL_INTERNALFORMAT_SUPPORTED, ...) if this
-        // becomes an issue.
-        // This also would probably work in mixed-samples mode where there is no MSAA color buffer
-        // but we don't support that just for simplicity's sake.
-        fConfigTable[kRGB_888_GrPixelConfig].fFlags |= nonMSAARenderFlags;
-    } else {
-        // 3.0 and the extension support this as a render buffer format.
-        if (version >= GR_GL_VER(3, 0) || ctxInfo.hasExtension("GL_OES_rgb8_rgba8")) {
-            fConfigTable[kRGB_888_GrPixelConfig].fFlags |= allRenderFlags;
-        }
-    }
-    if (texStorageSupported) {
-        fConfigTable[kRGB_888_GrPixelConfig].fFlags |= ConfigInfo::kCanUseTexStorage_Flag;
-    }
-    fConfigTable[kRGB_888_GrPixelConfig].fSwizzle = GrSwizzle::RGBA();
-    if (disableRGB8ForMali400) {
-        fConfigTable[kRGB_888_GrPixelConfig].fFlags = 0;
-    }
-
-    fConfigTable[kBGRA_8888_GrPixelConfig].fFormats.fExternalFormat[kReadPixels_ExternalFormatUsage] =
-||||||| merged common ancestors
-    fConfigTable[kBGRA_8888_GrPixelConfig].fFormats.fExternalFormat[kOther_ExternalFormatUsage] =
-=======
     fConfigTable[kRGB_888_GrPixelConfig].fFormats.fBaseInternalFormat = GR_GL_RGB;
     fConfigTable[kRGB_888_GrPixelConfig].fFormats.fSizedInternalFormat = GR_GL_RGB8;
     // Our external RGB data always has a byte where alpha would be. When calling read pixels we
@@ -1635,7 +1515,6 @@ void GrGLCaps::initConfigTable(const GrContextOptions& contextOptions,
     fConfigTable[kRG_88_GrPixelConfig].fSwizzle = GrSwizzle::RGRG();
 
     fConfigTable[kBGRA_8888_GrPixelConfig].fFormats.fExternalFormat[kReadPixels_ExternalFormatUsage] =
->>>>>>> upstream-releases
         GR_GL_BGRA;
     fConfigTable[kBGRA_8888_GrPixelConfig].fFormats.fExternalType  = GR_GL_UNSIGNED_BYTE;
     fConfigTable[kBGRA_8888_GrPixelConfig].fFormatType = kNormalizedFixedPoint_FormatType;
@@ -1899,35 +1778,15 @@ void GrGLCaps::initConfigTable(const GrContextOptions& contextOptions,
     grayRedInfo.fSwizzle = GrSwizzle::RRRA();
     grayRedInfo.fFlags = ConfigInfo::kTextureable_Flag;
 
-<<<<<<< HEAD
-    // Leaving Gray8 as non-renderable, to keep things simple and match raster. However, we do
-    // enable the FBOColorAttachment_Flag so that we can bind it to an FBO for copies.
-    grayRedInfo.fFlags |= ConfigInfo::kFBOColorAttachment_Flag;;
-    if (kStandard_MSFBOType == this->msFBOType() && kGL_GrGLStandard == standard &&
-        !disableGrayLumFBOForMesa) {
-||||||| merged common ancestors
-#if 0 // Leaving Gray8 as non-renderable, to keep things simple and match raster. Needs to be
-      // updated to support Gray8_as_Lum and Gray8_as_red if this is ever enabled.
-    if (this->textureRedSupport() ||
-        (kDesktop_ARB_MSFBOType == this->msFBOType() &&
-         ctxInfo.renderer() != kOSMesa_GrGLRenderer)) {
-=======
     // Leaving Gray8 as non-renderable, to keep things simple and match raster. However, we do
     // enable the FBOColorAttachment_Flag so that we can bind it to an FBO for copies.
     grayRedInfo.fFlags |= ConfigInfo::kFBOColorAttachment_Flag;
     if (kStandard_MSFBOType == this->msFBOType() && kGL_GrGLStandard == standard &&
         !disableGrayLumFBOForMesa) {
->>>>>>> upstream-releases
         // desktop ARB extension/3.0+ supports LUMINANCE8 as renderable.
         // However, osmesa fails if it used even when GL_ARB_framebuffer_object is present.
         // Core profile removes LUMINANCE8 support, but we should have chosen R8 in that case.
-<<<<<<< HEAD
-        grayLumInfo.fFlags |= ConfigInfo::kFBOColorAttachment_Flag;;
-||||||| merged common ancestors
-        fConfigTable[kGray_8_GrPixelConfig].fFlags |= allRenderFlags;
-=======
         grayLumInfo.fFlags |= ConfigInfo::kFBOColorAttachment_Flag;
->>>>>>> upstream-releases
     }
     if (texStorageSupported && !isCommandBufferES2) {
         if (!disableR8TexStorageForANGLEGL) {
@@ -2269,192 +2128,6 @@ void GrGLCaps::initConfigTable(const GrContextOptions& contextOptions,
 #endif
 }
 
-<<<<<<< HEAD
-bool GrGLCaps::canCopyTexSubImage(GrPixelConfig dstConfig, bool dstHasMSAARenderBuffer,
-                                  bool dstIsTextureable, bool dstIsGLTexture2D,
-                                  GrSurfaceOrigin dstOrigin,
-                                  GrPixelConfig srcConfig, bool srcHasMSAARenderBuffer,
-                                  bool srcIsTextureable, bool srcIsGLTexture2D,
-                                  GrSurfaceOrigin srcOrigin) const {
-    // Table 3.9 of the ES2 spec indicates the supported formats with CopyTexSubImage
-    // and BGRA isn't in the spec. There doesn't appear to be any extension that adds it. Perhaps
-    // many drivers would allow it to work, but ANGLE does not.
-    if (kGLES_GrGLStandard == fStandard && this->bgraIsInternalFormat() &&
-        (kBGRA_8888_GrPixelConfig == dstConfig || kBGRA_8888_GrPixelConfig == srcConfig)) {
-        return false;
-    }
-
-    // CopyTexSubImage is invalid or doesn't copy what we want when we have msaa render buffers.
-    if (dstHasMSAARenderBuffer || srcHasMSAARenderBuffer) {
-        return false;
-    }
-
-    // CopyTex(Sub)Image writes to a texture and we have no way of dynamically wrapping a RT in a
-    // texture.
-    if (!dstIsTextureable) {
-        return false;
-    }
-
-    // Check that we could wrap the source in an FBO, that the dst is TEXTURE_2D, that no mirroring
-    // is required
-    if (this->canConfigBeFBOColorAttachment(srcConfig) &&
-        (!srcIsTextureable || srcIsGLTexture2D) &&
-        dstIsGLTexture2D &&
-        dstOrigin == srcOrigin) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool GrGLCaps::canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCnt,
-                             bool dstIsTextureable, bool dstIsGLTexture2D,
-                             GrSurfaceOrigin dstOrigin,
-                             GrPixelConfig srcConfig, int srcSampleCnt,
-                             bool srcIsTextureable, bool srcIsGLTexture2D,
-                             GrSurfaceOrigin srcOrigin, const SkRect& srcBounds,
-                             const SkIRect& srcRect, const SkIPoint& dstPoint) const {
-    auto blitFramebufferFlags = this->blitFramebufferSupportFlags();
-    if (!this->canConfigBeFBOColorAttachment(dstConfig) ||
-        !this->canConfigBeFBOColorAttachment(srcConfig)) {
-        return false;
-    }
-
-    if (dstIsTextureable && !dstIsGLTexture2D) {
-        return false;
-    }
-    if (srcIsTextureable && !srcIsGLTexture2D) {
-        return false;
-    }
-
-    if (GrGLCaps::kNoSupport_BlitFramebufferFlag & blitFramebufferFlags) {
-        return false;
-    }
-    if (GrGLCaps::kNoScalingOrMirroring_BlitFramebufferFlag & blitFramebufferFlags) {
-        // We would mirror to compensate for origin changes. Note that copySurface is
-        // specified such that the src and dst rects are the same.
-        if (dstOrigin != srcOrigin) {
-            return false;
-        }
-    }
-
-    if (GrGLCaps::kResolveMustBeFull_BlitFrambufferFlag & blitFramebufferFlags) {
-        if (srcSampleCnt > 1) {
-            if (1 == dstSampleCnt) {
-                return false;
-            }
-            if (SkRect::Make(srcRect) != srcBounds) {
-                return false;
-            }
-        }
-    }
-
-    if (GrGLCaps::kNoMSAADst_BlitFramebufferFlag & blitFramebufferFlags) {
-        if (dstSampleCnt > 1) {
-            return false;
-        }
-    }
-
-    if (GrGLCaps::kNoFormatConversion_BlitFramebufferFlag & blitFramebufferFlags) {
-        if (dstConfig != srcConfig) {
-            return false;
-        }
-    } else if (GrGLCaps::kNoFormatConversionForMSAASrc_BlitFramebufferFlag & blitFramebufferFlags) {
-        if (srcSampleCnt > 1 && dstConfig != srcConfig) {
-            return false;
-        }
-    }
-
-    if (GrGLCaps::kRectsMustMatchForMSAASrc_BlitFramebufferFlag & blitFramebufferFlags) {
-        if (srcSampleCnt > 1) {
-            if (dstPoint.fX != srcRect.fLeft || dstPoint.fY != srcRect.fTop) {
-                return false;
-            }
-            if (dstOrigin != srcOrigin) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-bool GrGLCaps::canCopyAsDraw(GrPixelConfig dstConfig, bool srcIsTextureable) const {
-    return this->canConfigBeFBOColorAttachment(dstConfig) && srcIsTextureable;
-}
-
-static bool has_msaa_render_buffer(const GrSurfaceProxy* surf, const GrGLCaps& glCaps) {
-    const GrRenderTargetProxy* rt = surf->asRenderTargetProxy();
-    if (!rt) {
-        return false;
-    }
-    // A RT has a separate MSAA renderbuffer if:
-    // 1) It's multisampled
-    // 2) We're using an extension with separate MSAA renderbuffers
-    // 3) It's not FBO 0, which is special and always auto-resolves
-    return rt->numColorSamples() > 1 &&
-           glCaps.usesMSAARenderBuffers() &&
-           !rt->rtPriv().glRTFBOIDIs0();
-}
-
-bool GrGLCaps::canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
-                              const SkIRect& srcRect, const SkIPoint& dstPoint) const {
-    GrSurfaceOrigin dstOrigin = dst->origin();
-    GrSurfaceOrigin srcOrigin = src->origin();
-
-    GrPixelConfig dstConfig = dst->config();
-    GrPixelConfig srcConfig = src->config();
-
-    int dstSampleCnt = 0;
-    int srcSampleCnt = 0;
-    if (const GrRenderTargetProxy* rtProxy = dst->asRenderTargetProxy()) {
-        dstSampleCnt = rtProxy->numColorSamples();
-    }
-    if (const GrRenderTargetProxy* rtProxy = src->asRenderTargetProxy()) {
-        srcSampleCnt = rtProxy->numColorSamples();
-    }
-    SkASSERT((dstSampleCnt > 0) == SkToBool(dst->asRenderTargetProxy()));
-    SkASSERT((srcSampleCnt > 0) == SkToBool(src->asRenderTargetProxy()));
-
-    // None of our copy methods can handle a swizzle. TODO: Make copySurfaceAsDraw handle the
-    // swizzle.
-    if (this->shaderCaps()->configOutputSwizzle(src->config()) !=
-        this->shaderCaps()->configOutputSwizzle(dst->config())) {
-        return false;
-    }
-
-    const GrTextureProxy* dstTex = dst->asTextureProxy();
-    const GrTextureProxy* srcTex = src->asTextureProxy();
-
-    bool dstIsTex2D = dstTex ? (dstTex->textureType() == GrTextureType::k2D) : false;
-    bool srcIsTex2D = srcTex ? (srcTex->textureType() == GrTextureType::k2D) : false;
-
-    // One of the possible requirements for copy as blit is that the srcRect must match the bounds
-    // of the src surface. If we have a approx fit surface we can't know for sure what the src
-    // bounds will be at this time. Thus we assert that if we say we can copy as blit and the src is
-    // approx that we also can copy as draw. Therefore when it comes time to do the copy we will
-    // know we will at least be able to do it as a draw.
-#ifdef SK_DEBUG
-    if (this->canCopyAsBlit(dstConfig, dstSampleCnt, SkToBool(dstTex),
-                            dstIsTex2D, dstOrigin, srcConfig, srcSampleCnt, SkToBool(srcTex),
-                            srcIsTex2D, srcOrigin, src->getBoundsRect(), srcRect, dstPoint) &&
-        !src->priv().isExact()) {
-        SkASSERT(this->canCopyAsDraw(dstConfig, SkToBool(srcTex)));
-    }
-#endif
-
-    return this->canCopyTexSubImage(dstConfig, has_msaa_render_buffer(dst, *this),
-                                    SkToBool(dstTex), dstIsTex2D, dstOrigin,
-                                    srcConfig, has_msaa_render_buffer(src, *this),
-                                    SkToBool(srcTex), srcIsTex2D, srcOrigin) ||
-           this->canCopyAsBlit(dstConfig, dstSampleCnt, SkToBool(dstTex),
-                               dstIsTex2D, dstOrigin, srcConfig, srcSampleCnt, SkToBool(srcTex),
-                               srcIsTex2D, srcOrigin, src->getBoundsRect(), srcRect,
-                               dstPoint) ||
-           this->canCopyAsDraw(dstConfig, SkToBool(srcTex));
-}
-
-||||||| merged common ancestors
-=======
 bool GrGLCaps::canCopyTexSubImage(GrPixelConfig dstConfig, bool dstHasMSAARenderBuffer,
                                   bool dstIsTextureable, bool dstIsGLTexture2D,
                                   GrSurfaceOrigin dstOrigin,
@@ -2638,7 +2311,6 @@ bool GrGLCaps::onCanCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy*
            this->canCopyAsDraw(dstConfig, SkToBool(srcTex));
 }
 
->>>>>>> upstream-releases
 bool GrGLCaps::initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc,
                                   GrSurfaceOrigin* origin, bool* rectsMustMatch,
                                   bool* disallowSubrect) const {
@@ -2832,22 +2504,11 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
     // full screen clears
     // crbug.com/773107 - On MacBook Pros, a wide range of Intel GPUs don't always
     // perform full screen clears.
-<<<<<<< HEAD
-    // Update on 4/4/2018 - This appears to be fixed on driver 10.30.12 on a macOS 10.13.2 on a
-    // Retina MBP Early 2015 with Iris 6100. It is possibly fixed on earlier drivers as well.
-    if (kIntel_GrGLVendor == ctxInfo.vendor() &&
-        ctxInfo.driverVersion() < GR_GL_DRIVER_VER(10, 30, 12)) {
-        fUseDrawToClearColor = true;
-||||||| merged common ancestors
-    if (kIntel_GrGLVendor == ctxInfo.vendor()) {
-        fUseDrawToClearColor = true;
-=======
     // Update on 4/4/2018 - This appears to be fixed on driver 10.30.12 on a macOS 10.13.2 on a
     // Retina MBP Early 2015 with Iris 6100. It is possibly fixed on earlier drivers as well.
     if (kIntel_GrGLVendor == ctxInfo.vendor() &&
         ctxInfo.driverVersion() < GR_GL_DRIVER_VER(10, 30, 12)) {
         fPerformColorClearsAsDraws = true;
->>>>>>> upstream-releases
     }
 #endif
 
@@ -2862,34 +2523,17 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
     if (kAdreno430_GrGLRenderer == ctxInfo.renderer() ||
         kAdreno4xx_other_GrGLRenderer == ctxInfo.renderer()) {
         // This is known to be fixed sometime between driver 145.0 and 219.0
-<<<<<<< HEAD
-        if (ctxInfo.driverVersion() <= GR_GL_DRIVER_VER(219, 0, 0)) {
-            fUseDrawToClearStencilClip = true;
-||||||| merged common ancestors
-        if (ctxInfo.driverVersion() <= GR_GL_DRIVER_VER(219, 0)) {
-            fUseDrawToClearStencilClip = true;
-=======
         if (ctxInfo.driverVersion() <= GR_GL_DRIVER_VER(219, 0, 0)) {
             fPerformStencilClearsAsDraws = true;
->>>>>>> upstream-releases
         }
         fDisallowTexSubImageForUnormConfigTexturesEverBoundToFBO = true;
     }
 
-<<<<<<< HEAD
-    if (fDriverBugWorkarounds.gl_clear_broken) {
-        fUseDrawToClearColor = true;
-        fUseDrawToClearStencilClip = true;
-    }
-
-||||||| merged common ancestors
-=======
     if (fDriverBugWorkarounds.gl_clear_broken) {
         fPerformColorClearsAsDraws = true;
         fPerformStencilClearsAsDraws = true;
     }
 
->>>>>>> upstream-releases
     // This was reproduced on the following configurations:
     // - A Galaxy J5 (Adreno 306) running Android 6 with driver 140.0
     // - A Nexus 7 2013 (Adreno 320) running Android 5 with driver 104.0
@@ -2903,24 +2547,6 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
         fRequiresCullFaceEnableDisableWhenDrawingLinesAfterNonLines = true;
     }
 
-<<<<<<< HEAD
-    if (kIntelSkylake_GrGLRenderer == ctxInfo.renderer() ||
-        (kANGLE_GrGLRenderer == ctxInfo.renderer() &&
-         GrGLANGLERenderer::kSkylake == ctxInfo.angleRenderer())) {
-        fRequiresFlushBetweenNonAndInstancedDraws = true;
-    }
-
-    // This was reproduced on a Pixel 1, but the unit test + config + options that exercise it are
-    // only tested on very specific bots. The driver claims that ReadPixels is an invalid operation
-    // when reading from an auto-resolving MSAA framebuffer that has stencil attached.
-    if (kQualcomm_GrGLDriver == ctxInfo.driver()) {
-        fDetachStencilFromMSAABuffersBeforeReadPixels = true;
-    }
-
-||||||| merged common ancestors
-    // Our Chromebook with kPowerVRRogue_GrGLRenderer seems to crash when glDrawArraysInstanced is
-    // given 1 << 15 or more instances.
-=======
     // This was reproduced on a Pixel 1, but the unit test + config + options that exercise it are
     // only tested on very specific bots. The driver claims that ReadPixels is an invalid operation
     // when reading from an auto-resolving MSAA framebuffer that has stencil attached.
@@ -2929,7 +2555,6 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
     }
 
     // TODO: Don't apply this on iOS?
->>>>>>> upstream-releases
     if (kPowerVRRogue_GrGLRenderer == ctxInfo.renderer()) {
         // Our Chromebook with kPowerVRRogue_GrGLRenderer crashes on large instanced draws. The
         // current minimum number of instances observed to crash is somewhere between 2^14 and 2^15.
@@ -3054,16 +2679,9 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
 #endif
 
     // We've seen Adreno 3xx devices produce incorrect (flipped) values for gl_FragCoord, in some
-<<<<<<< HEAD
-    // (rare) situations. It's sporadic, and mostly on older drivers.
-||||||| merged common ancestors
-    // (rare) situations. It's sporadic, and mostly on older drivers. It also seems to be the case
-    // that the interpolation of vertex shader outputs is quite inaccurate.
-=======
     // (rare) situations. It's sporadic, and mostly on older drivers. Additionally, old Adreno
     // compilers (see crbug.com/skia/4078) crash when accessing .zw of gl_FragCoord, so just bypass
     // using gl_FragCoord at all to get around it.
->>>>>>> upstream-releases
     if (kAdreno3xx_GrGLRenderer == ctxInfo.renderer()) {
         shaderCaps->fCanUseFragCoord = false;
     }
@@ -3149,30 +2767,6 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
             fDiscardRenderTargetSupport = false;
             fInvalidateFBType = kNone_InvalidateFBType;
     }
-<<<<<<< HEAD
-
-    // Many ES3 drivers only advertise the ES2 image_external extension, but support the _essl3
-    // extension, and require that it be enabled to work with ESSL3. Other devices require the ES2
-    // extension to be enabled, even when using ESSL3. Enabling both extensions fixes both cases.
-    // skbug.com/7713
-    if (ctxInfo.hasExtension("GL_OES_EGL_image_external") &&
-        ctxInfo.glslGeneration() >= k330_GrGLSLGeneration &&
-        !shaderCaps->fExternalTextureSupport) { // i.e. Missing the _essl3 extension
-        shaderCaps->fExternalTextureSupport = true;
-        shaderCaps->fExternalTextureExtensionString = "GL_OES_EGL_image_external";
-        shaderCaps->fSecondExternalTextureExtensionString = "GL_OES_EGL_image_external_essl3";
-    }
-
-#ifdef SK_BUILD_FOR_IOS
-    // iOS drivers appear to implement TexSubImage by creating a staging buffer, and copying
-    // UNPACK_ROW_LENGTH * height bytes. That's unsafe in several scenarios, and the simplest fix
-    // is to just blacklist the feature.
-    // https://github.com/flutter/flutter/issues/16718
-    // https://bugreport.apple.com/web/?problemID=39948888
-    fUnpackRowLengthSupport = false;
-#endif
-||||||| merged common ancestors
-=======
 
     // Many ES3 drivers only advertise the ES2 image_external extension, but support the _essl3
     // extension, and require that it be enabled to work with ESSL3. Other devices require the ES2
@@ -3214,7 +2808,6 @@ void GrGLCaps::applyDriverCorrectnessWorkarounds(const GrGLContextInfo& ctxInfo,
     // the client never changes them either.
     fDontSetBaseOrMaxLevelForExternalTextures = true;
 #endif
->>>>>>> upstream-releases
 }
 
 void GrGLCaps::onApplyOptionsOverrides(const GrContextOptions& options) {
@@ -3226,23 +2819,7 @@ void GrGLCaps::onApplyOptionsOverrides(const GrContextOptions& options) {
         SkASSERT(!fDisallowTexSubImageForUnormConfigTexturesEverBoundToFBO);
         SkASSERT(!fUseDrawInsteadOfAllRenderTargetWrites);
         SkASSERT(!fRequiresCullFaceEnableDisableWhenDrawingLinesAfterNonLines);
-<<<<<<< HEAD
-        SkASSERT(!fRequiresFlushBetweenNonAndInstancedDraws);
         SkASSERT(!fDetachStencilFromMSAABuffersBeforeReadPixels);
-    }
-    if (GrContextOptions::Enable::kNo == options.fUseDrawInsteadOfGLClear) {
-        fUseDrawToClearColor = false;
-    } else if (GrContextOptions::Enable::kYes == options.fUseDrawInsteadOfGLClear) {
-        fUseDrawToClearColor = true;
-||||||| merged common ancestors
-    }
-    if (GrContextOptions::Enable::kNo == options.fUseDrawInsteadOfGLClear) {
-        fUseDrawToClearColor = false;
-    } else if (GrContextOptions::Enable::kYes == options.fUseDrawInsteadOfGLClear) {
-        fUseDrawToClearColor = true;
-=======
-        SkASSERT(!fDetachStencilFromMSAABuffersBeforeReadPixels);
->>>>>>> upstream-releases
     }
     if (options.fDoManualMipmapping) {
         fDoManualMipmapping = true;
@@ -3271,46 +2848,6 @@ bool GrGLCaps::onSurfaceSupportsWritePixels(const GrSurface* surface) const {
     return true;
 }
 
-<<<<<<< HEAD
-bool GrGLCaps::surfaceSupportsReadPixels(const GrSurface* surface) const {
-    if (auto tex = static_cast<const GrGLTexture*>(surface->asTexture())) {
-        // We don't support reading pixels directly from EXTERNAL textures as it would require
-        // binding the texture to a FBO.
-        if (tex->target() == GR_GL_TEXTURE_EXTERNAL) {
-            return false;
-        }
-    }
-    return true;
-}
-
-GrColorType GrGLCaps::supportedReadPixelsColorType(GrPixelConfig config,
-                                                   GrColorType dstColorType) const {
-    // For now, we mostly report the read back format that is required by the ES spec without
-    // checking for implementation allowed formats or consider laxer rules in non-ES GL. TODO: Relax
-    // this as makes sense to increase performance and correctness.
-    switch (fConfigTable[config].fFormatType) {
-        case kNormalizedFixedPoint_FormatType:
-            return GrColorType::kRGBA_8888;
-        case kFloat_FormatType:
-            if ((kAlpha_half_GrPixelConfig == config ||
-                 kAlpha_half_as_Red_GrPixelConfig == config) &&
-                GrColorType::kAlpha_F16 == dstColorType) {
-                return GrColorType::kAlpha_F16;
-            }
-            // And similar for full float RG.
-            if (kRG_float_GrPixelConfig == config && GrColorType::kRG_F32 == dstColorType) {
-                return GrColorType::kRG_F32;
-            }
-            return GrColorType::kRGBA_F32;
-    }
-    return GrColorType::kUnknown;
-||||||| merged common ancestors
-bool GrGLCaps::onIsMixedSamplesSupportedForRT(const GrBackendRenderTarget& backendRT) const {
-    const GrGLFramebufferInfo* fbInfo = backendRT.getGLFramebufferInfo();
-    SkASSERT(fbInfo);
-    // Mixed samples are not supported for FBO 0;
-    return fbInfo->fFBOID != 0;
-=======
 bool GrGLCaps::surfaceSupportsReadPixels(const GrSurface* surface) const {
     if (auto tex = static_cast<const GrGLTexture*>(surface->asTexture())) {
         // We don't support reading pixels directly from EXTERNAL textures as it would require
@@ -3346,7 +2883,6 @@ GrColorType GrGLCaps::supportedReadPixelsColorType(GrPixelConfig config,
             return GrColorType::kRGBA_F32;
     }
     return GrColorType::kUnknown;
->>>>>>> upstream-releases
 }
 
 bool GrGLCaps::onIsWindowRectanglesSupportedForRT(const GrBackendRenderTarget& backendRT) const {
@@ -3420,21 +2956,12 @@ GrPixelConfig validate_sized_format(GrGLenum format, SkColorType ct, GrGLStandar
             }
             break;
         case kRGB_888x_SkColorType:
-<<<<<<< HEAD
-            if (GR_GL_RGB8 == format) {
-                *config = kRGB_888_GrPixelConfig;
-            }
-            break;
-||||||| merged common ancestors
-            return false;
-=======
             if (GR_GL_RGB8 == format) {
                 return kRGB_888_GrPixelConfig;
             } else if (GR_GL_RGBA8 == format) {
                 return kRGB_888X_GrPixelConfig;
             }
             break;
->>>>>>> upstream-releases
         case kBGRA_8888_SkColorType:
             if (GR_GL_RGBA8 == format) {
                 if (kGL_GrGLStandard == standard) {
@@ -3449,19 +2976,10 @@ GrPixelConfig validate_sized_format(GrGLenum format, SkColorType ct, GrGLStandar
             }
             break;
         case kRGBA_1010102_SkColorType:
-<<<<<<< HEAD
-            if (GR_GL_RGB10_A2 == format) {
-                *config = kRGBA_1010102_GrPixelConfig;
-            }
-            break;
-||||||| merged common ancestors
-            return false;
-=======
             if (GR_GL_RGB10_A2 == format) {
                 return kRGBA_1010102_GrPixelConfig;
             }
             break;
->>>>>>> upstream-releases
         case kRGB_101010x_SkColorType:
             break;
         case kGray_8_SkColorType:
@@ -3486,58 +3004,20 @@ GrPixelConfig validate_sized_format(GrGLenum format, SkColorType ct, GrGLStandar
                 return kRGBA_float_GrPixelConfig;
             }
             break;
-        case kRGBA_F32_SkColorType:
-            if (GR_GL_RGBA32F == format) {
-                *config = kRGBA_float_GrPixelConfig;
-            }
-            break;
     }
 
     return kUnknown_GrPixelConfig;
 }
 
-<<<<<<< HEAD
-bool GrGLCaps::validateBackendTexture(const GrBackendTexture& tex, SkColorType ct,
-                                      GrPixelConfig* config) const {
-    GrGLTextureInfo texInfo;
-    if (!tex.getGLTextureInfo(&texInfo)) {
-        return false;
-||||||| merged common ancestors
-bool GrGLCaps::validateBackendTexture(const GrBackendTexture& tex, SkColorType ct,
-                                      GrPixelConfig* config) const {
-    const GrGLTextureInfo* texInfo = tex.getGLTextureInfo();
-    if (!texInfo) {
-        return false;
-=======
 GrPixelConfig GrGLCaps::validateBackendRenderTarget(const GrBackendRenderTarget& rt,
                                                     SkColorType ct) const {
     GrGLFramebufferInfo fbInfo;
     if (!rt.getGLFramebufferInfo(&fbInfo)) {
         return kUnknown_GrPixelConfig;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return validate_sized_format(texInfo.fFormat, ct, config, fStandard);
-||||||| merged common ancestors
-    return validate_sized_format(texInfo->fFormat, ct, config, fStandard);
-=======
     return validate_sized_format(fbInfo.fFormat, ct, fStandard);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GrGLCaps::validateBackendRenderTarget(const GrBackendRenderTarget& rt, SkColorType ct,
-                                           GrPixelConfig* config) const {
-    GrGLFramebufferInfo fbInfo;
-    if (!rt.getGLFramebufferInfo(&fbInfo)) {
-        return false;
-||||||| merged common ancestors
-bool GrGLCaps::validateBackendRenderTarget(const GrBackendRenderTarget& rt, SkColorType ct,
-                                           GrPixelConfig* config) const {
-    const GrGLFramebufferInfo* fbInfo = rt.getGLFramebufferInfo();
-    if (!fbInfo) {
-        return false;
-=======
 GrPixelConfig GrGLCaps::getConfigFromBackendFormat(const GrBackendFormat& format,
                                                    SkColorType ct) const {
     const GrGLenum* glFormat = format.getGLFormat();
@@ -3569,16 +3049,9 @@ static GrPixelConfig get_yuva_config(GrGLenum format) {
         case GR_GL_BGRA8:
             config = kBGRA_8888_GrPixelConfig;
             break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return validate_sized_format(fbInfo.fFormat, ct, config, fStandard);
-||||||| merged common ancestors
-    return validate_sized_format(fbInfo->fFormat, ct, config, fStandard);
-=======
 
     return config;
->>>>>>> upstream-releases
 }
 
 GrPixelConfig GrGLCaps::getYUVAConfigFromBackendFormat(const GrBackendFormat& format) const {
@@ -3589,18 +3062,6 @@ GrPixelConfig GrGLCaps::getYUVAConfigFromBackendFormat(const GrBackendFormat& fo
     return get_yuva_config(*glFormat);
 }
 
-<<<<<<< HEAD
-#ifdef GR_TEST_UTILS
-GrBackendFormat GrGLCaps::onCreateFormatFromBackendTexture(
-        const GrBackendTexture& backendTex) const {
-    GrGLTextureInfo glInfo;
-    SkAssertResult(backendTex.getGLTextureInfo(&glInfo));
-    return GrBackendFormat::MakeGL(glInfo.fFormat, glInfo.fTarget);
-}
-#endif
-||||||| merged common ancestors
-
-=======
 GrBackendFormat GrGLCaps::getBackendFormatFromGrColorType(GrColorType ct,
                                                           GrSRGBEncoded srgbEncoded) const {
     GrPixelConfig config = GrColorTypeToPixelConfig(ct, srgbEncoded);
@@ -3610,4 +3071,3 @@ GrBackendFormat GrGLCaps::getBackendFormatFromGrColorType(GrColorType ct,
     return GrBackendFormat::MakeGL(this->configSizedInternalFormat(config), GR_GL_TEXTURE_2D);
 }
 
->>>>>>> upstream-releases

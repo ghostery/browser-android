@@ -30,29 +30,6 @@ using namespace layers;
 AppleVTDecoder::AppleVTDecoder(const VideoInfo& aConfig, TaskQueue* aTaskQueue,
                                layers::ImageContainer* aImageContainer,
                                CreateDecoderParams::OptionSet aOptions)
-<<<<<<< HEAD
-    : mExtraData(aConfig.mExtraData),
-      mPictureWidth(aConfig.mImage.width),
-      mPictureHeight(aConfig.mImage.height),
-      mDisplayWidth(aConfig.mDisplay.width),
-      mDisplayHeight(aConfig.mDisplay.height),
-      mTaskQueue(aTaskQueue),
-      mMaxRefFrames(aOptions.contains(CreateDecoderParams::Option::LowLatency)
-                        ? 0
-                        : H264::ComputeMaxRefFrames(aConfig.mExtraData)),
-      mImageContainer(aImageContainer)
-||||||| merged common ancestors
-  : mExtraData(aConfig.mExtraData)
-  , mPictureWidth(aConfig.mImage.width)
-  , mPictureHeight(aConfig.mImage.height)
-  , mDisplayWidth(aConfig.mDisplay.width)
-  , mDisplayHeight(aConfig.mDisplay.height)
-  , mTaskQueue(aTaskQueue)
-  , mMaxRefFrames(aOptions.contains(CreateDecoderParams::Option::LowLatency)
-                    ? 0
-                    : H264::ComputeMaxRefFrames(aConfig.mExtraData))
-  , mImageContainer(aImageContainer)
-=======
     : mExtraData(aConfig.mExtraData),
       mPictureWidth(aConfig.mImage.width),
       mPictureHeight(aConfig.mImage.height),
@@ -64,7 +41,6 @@ AppleVTDecoder::AppleVTDecoder(const VideoInfo& aConfig, TaskQueue* aTaskQueue,
                         ? 0
                         : H264::ComputeMaxRefFrames(aConfig.mExtraData)),
       mImageContainer(aImageContainer)
->>>>>>> upstream-releases
 #ifdef MOZ_WIDGET_UIKIT
       ,
       mUseSoftwareImages(true)
@@ -269,24 +245,12 @@ AppleVTDecoder::AppleFrameRef* AppleVTDecoder::CreateAppleFrameRef(
   return new AppleFrameRef(*aSample);
 }
 
-<<<<<<< HEAD
-void AppleVTDecoder::SetSeekThreshold(const media::TimeUnit& aTime) {
-  LOG("SetSeekThreshold %lld", aTime.ToMicroseconds());
-  mSeekTargetThreshold = Some(aTime);
-||||||| merged common ancestors
-void
-AppleVTDecoder::SetSeekThreshold(const media::TimeUnit& aTime)
-{
-  LOG("SetSeekThreshold %lld", aTime.ToMicroseconds());
-  mSeekTargetThreshold = Some(aTime);
-=======
 void AppleVTDecoder::SetSeekThreshold(const media::TimeUnit& aTime) {
   if (aTime.IsValid()) {
     mSeekTargetThreshold = Some(aTime);
   } else {
     mSeekTargetThreshold.reset();
   }
->>>>>>> upstream-releases
 }
 
 //
@@ -410,18 +374,9 @@ void AppleVTDecoder::OutputFrame(CVPixelBufferRef aImage,
     buffer.mPlanes[2].mOffset = 0;
     buffer.mPlanes[2].mSkip = 0;
 
-<<<<<<< HEAD
-    gfx::IntRect visible = gfx::IntRect(0, 0, mPictureWidth, mPictureHeight);
-||||||| merged common ancestors
-    gfx::IntRect visible = gfx::IntRect(0,
-                                        0,
-                                        mPictureWidth,
-                                        mPictureHeight);
-=======
     buffer.mYUVColorSpace = mColorSpace;
 
     gfx::IntRect visible = gfx::IntRect(0, 0, mPictureWidth, mPictureHeight);
->>>>>>> upstream-releases
 
     // Copy the image data into our own format.
     data = VideoData::CreateAndCopyData(
@@ -591,21 +546,9 @@ CFDictionaryRef AppleVTDecoder::CreateOutputConfiguration() {
 
 #ifndef MOZ_WIDGET_UIKIT
   // Output format type:
-<<<<<<< HEAD
-  SInt32 PixelFormatTypeValue = kCVPixelFormatType_422YpCbCr8;
-  AutoCFRelease<CFNumberRef> PixelFormatTypeNumber = CFNumberCreate(
-      kCFAllocatorDefault, kCFNumberSInt32Type, &PixelFormatTypeValue);
-||||||| merged common ancestors
-  SInt32 PixelFormatTypeValue = kCVPixelFormatType_422YpCbCr8;
-  AutoCFRelease<CFNumberRef> PixelFormatTypeNumber =
-    CFNumberCreate(kCFAllocatorDefault,
-                   kCFNumberSInt32Type,
-                   &PixelFormatTypeValue);
-=======
   SInt32 PixelFormatTypeValue = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
   AutoCFRelease<CFNumberRef> PixelFormatTypeNumber = CFNumberCreate(
       kCFAllocatorDefault, kCFNumberSInt32Type, &PixelFormatTypeValue);
->>>>>>> upstream-releases
   // Construct IOSurface Properties
   const void* IOSurfaceKeys[] = {MacIOSurfaceLib::kPropIsGlobal};
   const void* IOSurfaceValues[] = {kCFBooleanTrue};

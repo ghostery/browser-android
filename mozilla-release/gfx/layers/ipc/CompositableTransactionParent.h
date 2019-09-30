@@ -35,24 +35,11 @@ class CompositableParentManager : public HostIPCAllocator {
 
   uint64_t GetFwdTransactionId() { return mFwdTransactionId; }
 
-<<<<<<< HEAD
-  RefPtr<CompositableHost> AddCompositable(const CompositableHandle& aHandle,
-                                           const TextureInfo& aInfo,
-                                           bool aUseWebRender);
-  RefPtr<CompositableHost> FindCompositable(const CompositableHandle& aHandle);
-||||||| merged common ancestors
-  RefPtr<CompositableHost> AddCompositable(
-    const CompositableHandle& aHandle,
-    const TextureInfo& aInfo,
-    bool aUseWebRender);
-  RefPtr<CompositableHost> FindCompositable(const CompositableHandle& aHandle);
-=======
   RefPtr<CompositableHost> AddCompositable(const CompositableHandle& aHandle,
                                            const TextureInfo& aInfo,
                                            bool aUseWebRender);
   RefPtr<CompositableHost> FindCompositable(
       const CompositableHandle& aHandle, bool aAllowDisablingWebRender = false);
->>>>>>> upstream-releases
 
  protected:
   /**

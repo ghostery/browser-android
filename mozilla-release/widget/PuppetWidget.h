@@ -32,16 +32,8 @@
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class TabChild;
-}  // namespace dom
-||||||| merged common ancestors
-class TabChild;
-} // namespace dom
-=======
 class BrowserChild;
 }  // namespace dom
->>>>>>> upstream-releases
 
 namespace widget {
 
@@ -64,16 +56,8 @@ class PuppetWidget : public nsBaseWidget,
   // The width and height of the "widget" are clamped to this.
   static const size_t kMaxDimension;
 
-<<<<<<< HEAD
- public:
-  explicit PuppetWidget(TabChild* aTabChild);
-||||||| merged common ancestors
-public:
-  explicit PuppetWidget(TabChild* aTabChild);
-=======
  public:
   explicit PuppetWidget(BrowserChild* aBrowserChild);
->>>>>>> upstream-releases
 
  protected:
   virtual ~PuppetWidget();
@@ -141,14 +125,6 @@ public:
 #endif
 
   // PuppetWidgets don't have any concept of titles.
-<<<<<<< HEAD
-  virtual nsresult SetTitle(const nsAString& aTitle) override {
-    return NS_ERROR_UNEXPECTED;
-  }
-||||||| merged common ancestors
-  virtual nsresult SetTitle(const nsAString& aTitle) override
-  { return NS_ERROR_UNEXPECTED; }
-=======
   virtual nsresult SetTitle(const nsAString& aTitle) override {
     return NS_ERROR_UNEXPECTED;
   }
@@ -159,20 +135,10 @@ public:
   virtual LayoutDeviceIntPoint WidgetToScreenOffset() override {
     return GetWindowPosition() + GetChromeOffset();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override {
-    return GetWindowPosition() + GetChromeOffset();
-  }
-||||||| merged common ancestors
-  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override
-  { return GetWindowPosition() + GetChromeOffset(); }
-=======
   virtual LayoutDeviceIntPoint TopLevelWidgetToScreenOffset() override {
     return GetWindowPosition();
   }
->>>>>>> upstream-releases
 
   int32_t RoundsWidgetCoordinatesTo() override;
 
@@ -182,27 +148,12 @@ public:
   virtual nsresult DispatchEvent(WidgetGUIEvent* aEvent,
                                  nsEventStatus& aStatus) override;
   nsEventStatus DispatchInputEvent(WidgetInputEvent* aEvent) override;
-<<<<<<< HEAD
-  void SetConfirmedTargetAPZC(
-      uint64_t aInputBlockId,
-      const nsTArray<ScrollableLayerGuid>& aTargets) const override;
-  void UpdateZoomConstraints(
-      const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
-      const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
-||||||| merged common ancestors
-  void SetConfirmedTargetAPZC(uint64_t aInputBlockId,
-                              const nsTArray<ScrollableLayerGuid>& aTargets) const override;
-  void UpdateZoomConstraints(const uint32_t& aPresShellId,
-                             const FrameMetrics::ViewID& aViewId,
-                             const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
-=======
   void SetConfirmedTargetAPZC(
       uint64_t aInputBlockId,
       const nsTArray<SLGuidAndRenderRoot>& aTargets) const override;
   void UpdateZoomConstraints(
       const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
       const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
->>>>>>> upstream-releases
   bool AsyncPanZoomEnabled() const override;
 
   virtual void GetEditCommands(
@@ -254,18 +205,8 @@ public:
     mNativeTextEventDispatcherListener = aListener;
   }
 
-<<<<<<< HEAD
-  virtual void SetCursor(nsCursor aCursor) override;
-  virtual nsresult SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                             uint32_t aHotspotY) override;
-||||||| merged common ancestors
-  virtual void SetCursor(nsCursor aCursor) override;
-  virtual nsresult SetCursor(imgIContainer* aCursor,
-                             uint32_t aHotspotX, uint32_t aHotspotY) override;
-=======
   virtual void SetCursor(nsCursor aDefaultCursor, imgIContainer* aCustomCursor,
                          uint32_t aHotspotX, uint32_t aHotspotY) override;
->>>>>>> upstream-releases
 
   virtual void ClearCachedCursor() override;
 
@@ -301,22 +242,11 @@ public:
 
   virtual LayoutDeviceIntRect GetScreenBounds() override;
 
-<<<<<<< HEAD
-  virtual MOZ_MUST_USE nsresult StartPluginIME(
-      const mozilla::WidgetKeyboardEvent& aKeyboardEvent, int32_t aPanelX,
-      int32_t aPanelY, nsString& aCommitted) override;
-||||||| merged common ancestors
-  virtual MOZ_MUST_USE nsresult
-  StartPluginIME(const mozilla::WidgetKeyboardEvent& aKeyboardEvent,
-                 int32_t aPanelX, int32_t aPanelY,
-                 nsString& aCommitted) override;
-=======
   virtual LayoutDeviceIntSize GetCompositionSize() override;
 
   virtual MOZ_MUST_USE nsresult StartPluginIME(
       const mozilla::WidgetKeyboardEvent& aKeyboardEvent, int32_t aPanelX,
       int32_t aPanelY, nsString& aCommitted) override;
->>>>>>> upstream-releases
 
   virtual void SetPluginFocused(bool& aFocused) override;
   virtual void DefaultProcOfPluginEvent(

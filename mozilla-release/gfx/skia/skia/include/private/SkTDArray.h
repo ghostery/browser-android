@@ -101,16 +101,8 @@ public:
 
     T*        begin() { return fArray; }
     const T*  begin() const { return fArray; }
-<<<<<<< HEAD
-    const T* cbegin() const { return fArray; }
     T*        end() { return fArray ? fArray + fCount : nullptr; }
-||||||| merged common ancestors
-    T*  end() { return fArray ? fArray + fCount : nullptr; }
-=======
-    T*        end() { return fArray ? fArray + fCount : nullptr; }
->>>>>>> upstream-releases
     const T*  end() const { return fArray ? fArray + fCount : nullptr; }
-    const T* cend() const { return fArray ? fArray + fCount : nullptr; }
 
     T&  operator[](int index) {
         SkASSERT(index < fCount);

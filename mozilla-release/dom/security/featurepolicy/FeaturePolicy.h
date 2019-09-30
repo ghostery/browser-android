@@ -87,20 +87,9 @@ class FeaturePolicy final : public nsISupports, public nsWrapperCache {
 
   // Sets the declarative part of the policy. This can be from the HTTP header
   // or for the 'allow' HTML attribute.
-<<<<<<< HEAD
-  void SetDeclaredPolicy(nsIDocument* aDocument, const nsAString& aPolicyString,
-                         nsIPrincipal* aSelfOrigin, nsIPrincipal* aSrcOrigin);
-||||||| merged common ancestors
-  void
-  SetDeclaredPolicy(nsIDocument* aDocument,
-                    const nsAString& aPolicyString,
-                    nsIPrincipal* aSelfOrigin,
-                    nsIPrincipal* aSrcOrigin);
-=======
   void SetDeclaredPolicy(mozilla::dom::Document* aDocument,
                          const nsAString& aPolicyString,
                          nsIPrincipal* aSelfOrigin, nsIPrincipal* aSrcOrigin);
->>>>>>> upstream-releases
 
   // This method creates a policy for aFeatureName allowing it to '*' if it
   // doesn't exist yet. It's used by HTMLIFrameElement to enable features by

@@ -26,20 +26,7 @@ use core::fmt;
 use core::str;
 use failure_derive::Fail;
 use std::boxed::Box;
-<<<<<<< HEAD
-use std::fmt;
-use std::str;
 use std::string::{String, ToString};
-
-// TODO: Remove this workaround once https://github.com/rust-lang/rust/issues/27747 is done.
-#[cfg(not(feature = "std"))]
-use std::slice::SliceConcatExt;
-||||||| merged common ancestors
-use std::fmt;
-use std::str;
-=======
-use std::string::{String, ToString};
->>>>>>> upstream-releases
 
 /// A string-based configurator for settings groups.
 ///
@@ -120,14 +107,6 @@ fn parse_bool_value(value: &str) -> SetResult<bool> {
 fn parse_enum_value(value: &str, choices: &[&str]) -> SetResult<u8> {
     match choices.iter().position(|&tag| tag == value) {
         Some(idx) => Ok(idx as u8),
-<<<<<<< HEAD
-        None => Err(SetError::BadValue(format!(
-            "any among {}",
-            choices.join(", ")
-        ))),
-||||||| merged common ancestors
-        None => Err(SetError::BadValue),
-=======
         None => {
             // TODO: Use `join` instead of this code, once
             // https://github.com/rust-lang/rust/issues/27747 is resolved.
@@ -143,7 +122,6 @@ fn parse_enum_value(value: &str, choices: &[&str]) -> SetResult<u8> {
             }
             Err(SetError::BadValue(format!("any among {}", all_choices)))
         }
->>>>>>> upstream-releases
     }
 }
 
@@ -414,14 +392,7 @@ mod tests {
              allones_funcaddrs = false\n\
              probestack_enabled = true\n\
              probestack_func_adjusts_sp = false\n\
-<<<<<<< HEAD
-             probestack_size_log2 = 12\n\
              jump_tables_enabled = true\n"
-||||||| merged common ancestors
-             probestack_size_log2 = 12\n"
-=======
-             jump_tables_enabled = true\n"
->>>>>>> upstream-releases
         );
         assert_eq!(f.opt_level(), super::OptLevel::Default);
         assert_eq!(f.enable_simd(), true);

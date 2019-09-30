@@ -148,16 +148,6 @@ describe("SubmitFormSnippet", () => {
 
       assert.calledOnce(wrapper.props().onDismiss);
     });
-<<<<<<< HEAD
-    it("should send a DISMISS event ping", () => {
-      wrapper.setState({expanded: true});
-
-      wrapper.find(".ASRouterButton.secondary").simulate("click");
-
-      assert.equal(wrapper.props().sendUserActionTelemetry.firstCall.args[0].event, "DISMISS");
-    });
-||||||| merged common ancestors
-=======
     it("should send a DISMISS event ping", () => {
       wrapper.setState({ expanded: true });
 
@@ -168,7 +158,6 @@ describe("SubmitFormSnippet", () => {
         "DISMISS"
       );
     });
->>>>>>> upstream-releases
     it("should render hidden inputs + email input", () => {
       wrapper.setState({ expanded: true });
 
@@ -182,16 +171,6 @@ describe("SubmitFormSnippet", () => {
       assert.isTrue(wrapper.state().expanded);
       assert.isTrue(wrapper.find("form").exists());
     });
-<<<<<<< HEAD
-    it("should submit telemetry when the action button is clicked", () => {
-      assert.isFalse(wrapper.find("form").exists());
-
-      wrapper.find(".ASRouterButton").simulate("click");
-
-      assert.equal(wrapper.props().sendUserActionTelemetry.firstCall.args[0].value, "scene1-button-learn-more");
-    });
-||||||| merged common ancestors
-=======
     it("should submit telemetry when the action button is clicked", () => {
       assert.isFalse(wrapper.find("form").exists());
 
@@ -202,7 +181,6 @@ describe("SubmitFormSnippet", () => {
         "scene1-button-learn-more"
       );
     });
->>>>>>> upstream-releases
     it("should submit form data when submitted", () => {
       sandbox.stub(window, "fetch").resolves(fetchOk);
       wrapper.setState({ expanded: true });

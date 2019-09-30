@@ -85,22 +85,6 @@ this.storage = class extends ExtensionAPI {
         return dbPromise;
       }
 
-<<<<<<< HEAD
-      const persisted = context.extension.hasPermission("unlimitedStorage");
-      dbPromise = ExtensionStorageIDB.open(storagePrincipal, persisted).catch(err => {
-        // Reset the cached promise if it has been rejected, so that the next
-        // API call is going to retry to open the DB.
-        dbPromise = null;
-        throw err;
-      });
-||||||| merged common ancestors
-      dbPromise = ExtensionStorageIDB.open(storagePrincipal).catch(err => {
-        // Reset the cached promise if it has been rejected, so that the next
-        // API call is going to retry to open the DB.
-        dbPromise = null;
-        throw err;
-      });
-=======
       const persisted = context.extension.hasPermission("unlimitedStorage");
       dbPromise = ExtensionStorageIDB.open(storagePrincipal, persisted).catch(
         err => {
@@ -110,7 +94,6 @@ this.storage = class extends ExtensionAPI {
           throw err;
         }
       );
->>>>>>> upstream-releases
 
       return dbPromise;
     }

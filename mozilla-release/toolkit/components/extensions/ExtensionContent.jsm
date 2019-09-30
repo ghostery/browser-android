@@ -23,37 +23,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   WebNavigationFrames: "resource://gre/modules/WebNavigationFrames.jsm",
 });
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyServiceGetter(this, "styleSheetService",
-                                   "@mozilla.org/content/style-sheet-service;1",
-                                   "nsIStyleSheetService");
-
-XPCOMUtils.defineLazyServiceGetter(this, "processScript",
-                                   "@mozilla.org/webextensions/extension-process-script;1");
-
-const Timer = Components.Constructor("@mozilla.org/timer;1", "nsITimer", "initWithCallback");
-
-ChromeUtils.import("resource://gre/modules/ExtensionChild.jsm");
-ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
-||||||| merged common ancestors
-XPCOMUtils.defineLazyServiceGetter(this, "styleSheetService",
-                                   "@mozilla.org/content/style-sheet-service;1",
-                                   "nsIStyleSheetService");
-
-XPCOMUtils.defineLazyServiceGetter(this, "processScript",
-                                   "@mozilla.org/webextensions/extension-process-script;1");
-
-const DocumentEncoder = Components.Constructor(
-  "@mozilla.org/layout/documentEncoder;1?type=text/plain",
-  "nsIDocumentEncoder", "init");
-
-const Timer = Components.Constructor("@mozilla.org/timer;1", "nsITimer", "initWithCallback");
-
-ChromeUtils.import("resource://gre/modules/ExtensionChild.jsm");
-ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
-=======
 XPCOMUtils.defineLazyServiceGetter(
   this,
   "styleSheetService",
@@ -76,7 +45,6 @@ const { ExtensionCommon } = ChromeUtils.import(
 const { ExtensionUtils } = ChromeUtils.import(
   "resource://gre/modules/ExtensionUtils.jsm"
 );
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGlobalGetters(this, ["crypto", "TextEncoder"]);
 
@@ -713,17 +681,11 @@ class UserScript extends Script {
       // Notify listeners subscribed to the userScripts.onBeforeScript API event,
       // to allow extension API script to provide its custom APIs to the userScript.
       if (apiScript) {
-<<<<<<< HEAD
-        context.userScriptsEvents.emit("on-before-script", this.scriptMetadata, userScriptSandbox);
-||||||| merged common ancestors
-        this.injectUserScriptAPIs(userScriptSandbox, context);
-=======
         context.userScriptsEvents.emit(
           "on-before-script",
           this.scriptMetadata,
           userScriptSandbox
         );
->>>>>>> upstream-releases
       }
 
       for (let script of sandboxScripts) {
@@ -1182,19 +1144,12 @@ var ExtensionContent = {
       // and since it's hosted by emscripten, and therefore can't shrink
       // its heap after it's grown, it has a performance cost.
       // So we send plain text instead.
-<<<<<<< HEAD
-      let encoder = Cu.createDocumentEncoder("text/plain");
-      encoder.init(doc, "text/plain", Ci.nsIDocumentEncoder.SkipInvisibleContent);
-||||||| merged common ancestors
-      let encoder = new DocumentEncoder(doc, "text/plain", Ci.nsIDocumentEncoder.SkipInvisibleContent);
-=======
       let encoder = Cu.createDocumentEncoder("text/plain");
       encoder.init(
         doc,
         "text/plain",
         Ci.nsIDocumentEncoder.SkipInvisibleContent
       );
->>>>>>> upstream-releases
       let text = encoder.encodeToStringWithMaxLength(60 * 1024);
 
       let encoding = doc.characterSet;

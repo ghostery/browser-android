@@ -45,18 +45,8 @@ NS_IMPL_ISUPPORTS(CacheEntryHandle, nsICacheEntry)
 
 // CacheEntryHandle
 
-<<<<<<< HEAD
-CacheEntryHandle::CacheEntryHandle(CacheEntry *aEntry)
-    : mEntry(aEntry), mClosed(false) {
-||||||| merged common ancestors
-CacheEntryHandle::CacheEntryHandle(CacheEntry* aEntry)
-: mEntry(aEntry)
-, mClosed(false)
-{
-=======
 CacheEntryHandle::CacheEntryHandle(CacheEntry* aEntry)
     : mEntry(aEntry), mClosed(false) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   if (!mEntry->HandlesCount()) {
     // CacheEntry.mHandlesCount must go from zero to one only under
@@ -92,16 +82,8 @@ CacheEntryHandle::~CacheEntryHandle() {
 
 // CacheEntry::Callback
 
-<<<<<<< HEAD
-CacheEntry::Callback::Callback(CacheEntry *aEntry,
-                               nsICacheEntryOpenCallback *aCallback,
-||||||| merged common ancestors
-CacheEntry::Callback::Callback(CacheEntry* aEntry,
-                               nsICacheEntryOpenCallback *aCallback,
-=======
 CacheEntry::Callback::Callback(CacheEntry* aEntry,
                                nsICacheEntryOpenCallback* aCallback,
->>>>>>> upstream-releases
                                bool aReadOnly, bool aCheckOnAnyThread,
                                bool aSecret)
     : mEntry(aEntry),
@@ -123,31 +105,6 @@ CacheEntry::Callback::Callback(CacheEntry* aEntry,
   mEntry->AddHandleRef();
 }
 
-<<<<<<< HEAD
-CacheEntry::Callback::Callback(CacheEntry *aEntry,
-                               bool aDoomWhenFoundInPinStatus)
-    : mEntry(aEntry),
-      mReadOnly(false),
-      mRevalidating(false),
-      mCheckOnAnyThread(true),
-      mRecheckAfterWrite(false),
-      mNotWanted(false),
-      mSecret(false),
-      mDoomWhenFoundPinned(aDoomWhenFoundInPinStatus == true),
-      mDoomWhenFoundNonPinned(aDoomWhenFoundInPinStatus == false) {
-||||||| merged common ancestors
-CacheEntry::Callback::Callback(CacheEntry* aEntry, bool aDoomWhenFoundInPinStatus)
-: mEntry(aEntry)
-, mReadOnly(false)
-, mRevalidating(false)
-, mCheckOnAnyThread(true)
-, mRecheckAfterWrite(false)
-, mNotWanted(false)
-, mSecret(false)
-, mDoomWhenFoundPinned(aDoomWhenFoundInPinStatus == true)
-, mDoomWhenFoundNonPinned(aDoomWhenFoundInPinStatus == false)
-{
-=======
 CacheEntry::Callback::Callback(CacheEntry* aEntry,
                                bool aDoomWhenFoundInPinStatus)
     : mEntry(aEntry),
@@ -159,40 +116,11 @@ CacheEntry::Callback::Callback(CacheEntry* aEntry,
       mSecret(false),
       mDoomWhenFoundPinned(aDoomWhenFoundInPinStatus == true),
       mDoomWhenFoundNonPinned(aDoomWhenFoundInPinStatus == false) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(CacheEntry::Callback);
   MOZ_ASSERT(mEntry->HandlesCount());
   mEntry->AddHandleRef();
 }
 
-<<<<<<< HEAD
-CacheEntry::Callback::Callback(CacheEntry::Callback const &aThat)
-    : mEntry(aThat.mEntry),
-      mCallback(aThat.mCallback),
-      mTarget(aThat.mTarget),
-      mReadOnly(aThat.mReadOnly),
-      mRevalidating(aThat.mRevalidating),
-      mCheckOnAnyThread(aThat.mCheckOnAnyThread),
-      mRecheckAfterWrite(aThat.mRecheckAfterWrite),
-      mNotWanted(aThat.mNotWanted),
-      mSecret(aThat.mSecret),
-      mDoomWhenFoundPinned(aThat.mDoomWhenFoundPinned),
-      mDoomWhenFoundNonPinned(aThat.mDoomWhenFoundNonPinned) {
-||||||| merged common ancestors
-CacheEntry::Callback::Callback(CacheEntry::Callback const &aThat)
-: mEntry(aThat.mEntry)
-, mCallback(aThat.mCallback)
-, mTarget(aThat.mTarget)
-, mReadOnly(aThat.mReadOnly)
-, mRevalidating(aThat.mRevalidating)
-, mCheckOnAnyThread(aThat.mCheckOnAnyThread)
-, mRecheckAfterWrite(aThat.mRecheckAfterWrite)
-, mNotWanted(aThat.mNotWanted)
-, mSecret(aThat.mSecret)
-, mDoomWhenFoundPinned(aThat.mDoomWhenFoundPinned)
-, mDoomWhenFoundNonPinned(aThat.mDoomWhenFoundNonPinned)
-{
-=======
 CacheEntry::Callback::Callback(CacheEntry::Callback const& aThat)
     : mEntry(aThat.mEntry),
       mCallback(aThat.mCallback),
@@ -205,7 +133,6 @@ CacheEntry::Callback::Callback(CacheEntry::Callback const& aThat)
       mSecret(aThat.mSecret),
       mDoomWhenFoundPinned(aThat.mDoomWhenFoundPinned),
       mDoomWhenFoundNonPinned(aThat.mDoomWhenFoundNonPinned) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(CacheEntry::Callback);
 
   // The counter may go from zero to non-null only under the service lock
@@ -221,18 +148,8 @@ CacheEntry::Callback::~Callback() {
   MOZ_COUNT_DTOR(CacheEntry::Callback);
 }
 
-<<<<<<< HEAD
-void CacheEntry::Callback::ExchangeEntry(CacheEntry *aEntry) {
-  if (mEntry == aEntry) return;
-||||||| merged common ancestors
-void CacheEntry::Callback::ExchangeEntry(CacheEntry* aEntry)
-{
-  if (mEntry == aEntry)
-    return;
-=======
 void CacheEntry::Callback::ExchangeEntry(CacheEntry* aEntry) {
   if (mEntry == aEntry) return;
->>>>>>> upstream-releases
 
   // The counter may go from zero to non-null only under the service lock
   // but here we expect it to be already positive.
@@ -242,14 +159,7 @@ void CacheEntry::Callback::ExchangeEntry(CacheEntry* aEntry) {
   mEntry = aEntry;
 }
 
-<<<<<<< HEAD
-bool CacheEntry::Callback::DeferDoom(bool *aDoom) const {
-||||||| merged common ancestors
-bool CacheEntry::Callback::DeferDoom(bool *aDoom) const
-{
-=======
 bool CacheEntry::Callback::DeferDoom(bool* aDoom) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(mEntry->mPinningKnown);
 
   if (MOZ_UNLIKELY(mDoomWhenFoundNonPinned) ||
@@ -265,14 +175,7 @@ bool CacheEntry::Callback::DeferDoom(bool* aDoom) const {
   return false;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::Callback::OnCheckThread(bool *aOnCheckThread) const {
-||||||| merged common ancestors
-nsresult CacheEntry::Callback::OnCheckThread(bool *aOnCheckThread) const
-{
-=======
 nsresult CacheEntry::Callback::OnCheckThread(bool* aOnCheckThread) const {
->>>>>>> upstream-releases
   if (!mCheckOnAnyThread) {
     // Check we are on the target
     return mTarget->IsOnCurrentThread(aOnCheckThread);
@@ -283,14 +186,7 @@ nsresult CacheEntry::Callback::OnCheckThread(bool* aOnCheckThread) const {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::Callback::OnAvailThread(bool *aOnAvailThread) const {
-||||||| merged common ancestors
-nsresult CacheEntry::Callback::OnAvailThread(bool *aOnAvailThread) const
-{
-=======
 nsresult CacheEntry::Callback::OnAvailThread(bool* aOnAvailThread) const {
->>>>>>> upstream-releases
   return mTarget->IsOnCurrentThread(aOnAvailThread);
 }
 
@@ -304,59 +200,6 @@ uint64_t CacheEntry::GetNextId() {
   return ++id;
 }
 
-<<<<<<< HEAD
-CacheEntry::CacheEntry(const nsACString &aStorageID, const nsACString &aURI,
-                       const nsACString &aEnhanceID, bool aUseDisk,
-                       bool aSkipSizeCheck, bool aPin)
-    : mFrecency(0),
-      mSortingExpirationTime(uint32_t(-1)),
-      mLock("CacheEntry"),
-      mFileStatus(NS_ERROR_NOT_INITIALIZED),
-      mURI(aURI),
-      mEnhanceID(aEnhanceID),
-      mStorageID(aStorageID),
-      mUseDisk(aUseDisk),
-      mSkipSizeCheck(aSkipSizeCheck),
-      mIsDoomed(false),
-      mSecurityInfoLoaded(false),
-      mPreventCallbacks(false),
-      mHasData(false),
-      mPinned(aPin),
-      mPinningKnown(false),
-      mState(NOTLOADED),
-      mRegistration(NEVERREGISTERED),
-      mWriter(nullptr),
-      mUseCount(0),
-      mCacheEntryId(GetNextId()) {
-||||||| merged common ancestors
-CacheEntry::CacheEntry(const nsACString& aStorageID,
-                       const nsACString& aURI,
-                       const nsACString& aEnhanceID,
-                       bool aUseDisk,
-                       bool aSkipSizeCheck,
-                       bool aPin)
-: mFrecency(0)
-, mSortingExpirationTime(uint32_t(-1))
-, mLock("CacheEntry")
-, mFileStatus(NS_ERROR_NOT_INITIALIZED)
-, mURI(aURI)
-, mEnhanceID(aEnhanceID)
-, mStorageID(aStorageID)
-, mUseDisk(aUseDisk)
-, mSkipSizeCheck(aSkipSizeCheck)
-, mIsDoomed(false)
-, mSecurityInfoLoaded(false)
-, mPreventCallbacks(false)
-, mHasData(false)
-, mPinned(aPin)
-, mPinningKnown(false)
-, mState(NOTLOADED)
-, mRegistration(NEVERREGISTERED)
-, mWriter(nullptr)
-, mUseCount(0)
-, mCacheEntryId(GetNextId())
-{
-=======
 CacheEntry::CacheEntry(const nsACString& aStorageID, const nsACString& aURI,
                        const nsACString& aEnhanceID, bool aUseDisk,
                        bool aSkipSizeCheck, bool aPin)
@@ -380,7 +223,6 @@ CacheEntry::CacheEntry(const nsACString& aStorageID, const nsACString& aURI,
       mWriter(nullptr),
       mUseCount(0),
       mCacheEntryId(GetNextId()) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::CacheEntry [this=%p]", this));
 
   mService = CacheStorageService::Self();
@@ -391,14 +233,7 @@ CacheEntry::CacheEntry(const nsACString& aStorageID, const nsACString& aURI,
 
 CacheEntry::~CacheEntry() { LOG(("CacheEntry::~CacheEntry [this=%p]", this)); }
 
-<<<<<<< HEAD
-char const *CacheEntry::StateString(uint32_t aState) {
-||||||| merged common ancestors
-char const * CacheEntry::StateString(uint32_t aState)
-{
-=======
 char const* CacheEntry::StateString(uint32_t aState) {
->>>>>>> upstream-releases
   switch (aState) {
     case NOTLOADED:
       return "NOTLOADED";
@@ -417,44 +252,18 @@ char const* CacheEntry::StateString(uint32_t aState) {
   return "?";
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::HashingKeyWithStorage(nsACString &aResult) const {
-||||||| merged common ancestors
-nsresult CacheEntry::HashingKeyWithStorage(nsACString &aResult) const
-{
-=======
 nsresult CacheEntry::HashingKeyWithStorage(nsACString& aResult) const {
->>>>>>> upstream-releases
   return HashingKey(mStorageID, mEnhanceID, mURI, aResult);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::HashingKey(nsACString &aResult) const {
-||||||| merged common ancestors
-nsresult CacheEntry::HashingKey(nsACString &aResult) const
-{
-=======
 nsresult CacheEntry::HashingKey(nsACString& aResult) const {
->>>>>>> upstream-releases
   return HashingKey(EmptyCString(), mEnhanceID, mURI, aResult);
 }
 
 // static
-<<<<<<< HEAD
-nsresult CacheEntry::HashingKey(const nsACString &aStorageID,
-                                const nsACString &aEnhanceID, nsIURI *aURI,
-                                nsACString &aResult) {
-||||||| merged common ancestors
-nsresult CacheEntry::HashingKey(const nsACString& aStorageID,
-                                const nsACString& aEnhanceID,
-                                nsIURI* aURI,
-                                nsACString &aResult)
-{
-=======
 nsresult CacheEntry::HashingKey(const nsACString& aStorageID,
                                 const nsACString& aEnhanceID, nsIURI* aURI,
                                 nsACString& aResult) {
->>>>>>> upstream-releases
   nsAutoCString spec;
   nsresult rv = aURI->GetAsciiSpec(spec);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -463,23 +272,10 @@ nsresult CacheEntry::HashingKey(const nsACString& aStorageID,
 }
 
 // static
-<<<<<<< HEAD
-nsresult CacheEntry::HashingKey(const nsACString &aStorageID,
-                                const nsACString &aEnhanceID,
-                                const nsACString &aURISpec,
-                                nsACString &aResult) {
-||||||| merged common ancestors
-nsresult CacheEntry::HashingKey(const nsACString& aStorageID,
-                                const nsACString& aEnhanceID,
-                                const nsACString& aURISpec,
-                                nsACString &aResult)
-{
-=======
 nsresult CacheEntry::HashingKey(const nsACString& aStorageID,
                                 const nsACString& aEnhanceID,
                                 const nsACString& aURISpec,
                                 nsACString& aResult) {
->>>>>>> upstream-releases
   /**
    * This key is used to salt hash that is a base for disk file name.
    * Changing it will cause we will not be able to find files on disk.
@@ -498,22 +294,10 @@ nsresult CacheEntry::HashingKey(const nsACString& aStorageID,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void CacheEntry::AsyncOpen(nsICacheEntryOpenCallback *aCallback,
-                           uint32_t aFlags) {
-  LOG(("CacheEntry::AsyncOpen [this=%p, state=%s, flags=%d, callback=%p]", this,
-       StateString(mState), aFlags, aCallback));
-||||||| merged common ancestors
-void CacheEntry::AsyncOpen(nsICacheEntryOpenCallback* aCallback, uint32_t aFlags)
-{
-  LOG(("CacheEntry::AsyncOpen [this=%p, state=%s, flags=%d, callback=%p]",
-    this, StateString(mState), aFlags, aCallback));
-=======
 void CacheEntry::AsyncOpen(nsICacheEntryOpenCallback* aCallback,
                            uint32_t aFlags) {
   LOG(("CacheEntry::AsyncOpen [this=%p, state=%s, flags=%d, callback=%p]", this,
        StateString(mState), aFlags, aCallback));
->>>>>>> upstream-releases
 
   bool readonly = aFlags & nsICacheStorage::OPEN_READONLY;
   bool bypassIfBusy = aFlags & nsICacheStorage::OPEN_BYPASS_IF_BUSY;
@@ -536,17 +320,8 @@ void CacheEntry::AsyncOpen(nsICacheEntryOpenCallback* aCallback,
   }
 }
 
-<<<<<<< HEAD
-bool CacheEntry::Open(Callback &aCallback, bool aTruncate, bool aPriority,
-                      bool aBypassIfBusy) {
-||||||| merged common ancestors
-bool CacheEntry::Open(Callback & aCallback, bool aTruncate,
-                      bool aPriority, bool aBypassIfBusy)
-{
-=======
 bool CacheEntry::Open(Callback& aCallback, bool aTruncate, bool aPriority,
                       bool aBypassIfBusy) {
->>>>>>> upstream-releases
   mozilla::MutexAutoLock lock(mLock);
 
   // Check state under the lock
@@ -735,17 +510,8 @@ NS_IMETHODIMP CacheEntry::OnFileDoomed(nsresult aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-already_AddRefed<CacheEntryHandle> CacheEntry::ReopenTruncated(
-    bool aMemoryOnly, nsICacheEntryOpenCallback *aCallback) {
-||||||| merged common ancestors
-already_AddRefed<CacheEntryHandle> CacheEntry::ReopenTruncated(bool aMemoryOnly,
-                                                               nsICacheEntryOpenCallback* aCallback)
-{
-=======
 already_AddRefed<CacheEntryHandle> CacheEntry::ReopenTruncated(
     bool aMemoryOnly, nsICacheEntryOpenCallback* aCallback) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::ReopenTruncated [this=%p]", this));
 
   mLock.AssertCurrentThreadOwns();
@@ -801,14 +567,7 @@ already_AddRefed<CacheEntryHandle> CacheEntry::ReopenTruncated(
   return writeHandle.forget();
 }
 
-<<<<<<< HEAD
-void CacheEntry::TransferCallbacks(CacheEntry &aFromEntry) {
-||||||| merged common ancestors
-void CacheEntry::TransferCallbacks(CacheEntry & aFromEntry)
-{
-=======
 void CacheEntry::TransferCallbacks(CacheEntry& aFromEntry) {
->>>>>>> upstream-releases
   mozilla::MutexAutoLock lock(mLock);
 
   LOG(("CacheEntry::TransferCallbacks [entry=%p, from=%p]", this, &aFromEntry));
@@ -828,14 +587,7 @@ void CacheEntry::TransferCallbacks(CacheEntry& aFromEntry) {
   }
 }
 
-<<<<<<< HEAD
-void CacheEntry::RememberCallback(Callback &aCallback) {
-||||||| merged common ancestors
-void CacheEntry::RememberCallback(Callback & aCallback)
-{
-=======
 void CacheEntry::RememberCallback(Callback& aCallback) {
->>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
 
   LOG(("CacheEntry::RememberCallback [this=%p, cb=%p, state=%s]", this,
@@ -935,20 +687,9 @@ bool CacheEntry::InvokeCallbacks(bool aReadOnly) {
   return true;
 }
 
-<<<<<<< HEAD
-bool CacheEntry::InvokeCallback(Callback &aCallback) {
-  LOG(("CacheEntry::InvokeCallback [this=%p, state=%s, cb=%p]", this,
-       StateString(mState), aCallback.mCallback.get()));
-||||||| merged common ancestors
-bool CacheEntry::InvokeCallback(Callback & aCallback)
-{
-  LOG(("CacheEntry::InvokeCallback [this=%p, state=%s, cb=%p]",
-    this, StateString(mState), aCallback.mCallback.get()));
-=======
 bool CacheEntry::InvokeCallback(Callback& aCallback) {
   LOG(("CacheEntry::InvokeCallback [this=%p, state=%s, cb=%p]", this,
        StateString(mState), aCallback.mCallback.get()));
->>>>>>> upstream-releases
 
   mLock.AssertCurrentThreadOwns();
 
@@ -1068,26 +809,12 @@ bool CacheEntry::InvokeCallback(Callback& aCallback) {
   return true;
 }
 
-<<<<<<< HEAD
-void CacheEntry::InvokeAvailableCallback(Callback const &aCallback) {
-  LOG(
-      ("CacheEntry::InvokeAvailableCallback [this=%p, state=%s, cb=%p, r/o=%d, "
-       "n/w=%d]",
-       this, StateString(mState), aCallback.mCallback.get(),
-       aCallback.mReadOnly, aCallback.mNotWanted));
-||||||| merged common ancestors
-void CacheEntry::InvokeAvailableCallback(Callback const & aCallback)
-{
-  LOG(("CacheEntry::InvokeAvailableCallback [this=%p, state=%s, cb=%p, r/o=%d, n/w=%d]",
-    this, StateString(mState), aCallback.mCallback.get(), aCallback.mReadOnly, aCallback.mNotWanted));
-=======
 void CacheEntry::InvokeAvailableCallback(Callback const& aCallback) {
   LOG(
       ("CacheEntry::InvokeAvailableCallback [this=%p, state=%s, cb=%p, r/o=%d, "
        "n/w=%d]",
        this, StateString(mState), aCallback.mCallback.get(),
        aCallback.mReadOnly, aCallback.mNotWanted));
->>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -1174,39 +901,16 @@ void CacheEntry::InvokeAvailableCallback(Callback const& aCallback) {
   LOG(("  writing/revalidating"));
 }
 
-<<<<<<< HEAD
-void CacheEntry::OnFetched(Callback const &aCallback) {
-||||||| merged common ancestors
-void CacheEntry::OnFetched(Callback const & aCallback)
-{
-=======
 void CacheEntry::OnFetched(Callback const& aCallback) {
->>>>>>> upstream-releases
   if (NS_SUCCEEDED(mFileStatus) && !aCallback.mSecret) {
     // Let the last-fetched and fetch-count properties be updated.
     mFile->OnFetched();
   }
 }
 
-<<<<<<< HEAD
-CacheEntryHandle *CacheEntry::NewHandle() { return new CacheEntryHandle(this); }
-||||||| merged common ancestors
-CacheEntryHandle* CacheEntry::NewHandle()
-{
-  return new CacheEntryHandle(this);
-}
-=======
 CacheEntryHandle* CacheEntry::NewHandle() { return new CacheEntryHandle(this); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-CacheEntryHandle *CacheEntry::NewWriteHandle() {
-||||||| merged common ancestors
-CacheEntryHandle* CacheEntry::NewWriteHandle()
-{
-=======
 CacheEntryHandle* CacheEntry::NewWriteHandle() {
->>>>>>> upstream-releases
   mozilla::MutexAutoLock lock(mLock);
 
   // Ignore the OPEN_SECRETLY flag on purpose here, which should actually be
@@ -1216,19 +920,9 @@ CacheEntryHandle* CacheEntry::NewWriteHandle() {
   return (mWriter = NewHandle());
 }
 
-<<<<<<< HEAD
-void CacheEntry::OnHandleClosed(CacheEntryHandle const *aHandle) {
-  LOG(("CacheEntry::OnHandleClosed [this=%p, state=%s, handle=%p]", this,
-       StateString(mState), aHandle));
-||||||| merged common ancestors
-void CacheEntry::OnHandleClosed(CacheEntryHandle const* aHandle)
-{
-  LOG(("CacheEntry::OnHandleClosed [this=%p, state=%s, handle=%p]", this, StateString(mState), aHandle));
-=======
 void CacheEntry::OnHandleClosed(CacheEntryHandle const* aHandle) {
   LOG(("CacheEntry::OnHandleClosed [this=%p, state=%s, handle=%p]", this,
        StateString(mState), aHandle));
->>>>>>> upstream-releases
 
   mozilla::MutexAutoLock lock(mLock);
 
@@ -1328,14 +1022,7 @@ uint32_t CacheEntry::GetMetadataMemoryConsumption() {
 
 // nsICacheEntry
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetPersistent(bool *aPersistToDisk) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetPersistent(bool *aPersistToDisk)
-{
-=======
 nsresult CacheEntry::GetPersistent(bool* aPersistToDisk) {
->>>>>>> upstream-releases
   // No need to sync when only reading.
   // When consumer needs to be consistent with state of the memory storage
   // entries table, then let it use GetUseDisk getter that must be called under
@@ -1344,102 +1031,46 @@ nsresult CacheEntry::GetPersistent(bool* aPersistToDisk) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetKey(nsACString &aKey) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetKey(nsACString & aKey)
-{
-=======
 nsresult CacheEntry::GetKey(nsACString& aKey) {
->>>>>>> upstream-releases
   aKey.Assign(mURI);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetCacheEntryId(uint64_t *aCacheEntryId) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetCacheEntryId(uint64_t *aCacheEntryId)
-{
-=======
 nsresult CacheEntry::GetCacheEntryId(uint64_t* aCacheEntryId) {
->>>>>>> upstream-releases
   *aCacheEntryId = mCacheEntryId;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetFetchCount(int32_t *aFetchCount) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetFetchCount(int32_t *aFetchCount)
-{
-=======
 nsresult CacheEntry::GetFetchCount(int32_t* aFetchCount) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
-  return mFile->GetFetchCount(reinterpret_cast<uint32_t *>(aFetchCount));
+  return mFile->GetFetchCount(reinterpret_cast<uint32_t*>(aFetchCount));
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetLastFetched(uint32_t *aLastFetched) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetLastFetched(uint32_t *aLastFetched)
-{
-=======
 nsresult CacheEntry::GetLastFetched(uint32_t* aLastFetched) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
   return mFile->GetLastFetched(aLastFetched);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetLastModified(uint32_t *aLastModified) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetLastModified(uint32_t *aLastModified)
-{
-=======
 nsresult CacheEntry::GetLastModified(uint32_t* aLastModified) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
   return mFile->GetLastModified(aLastModified);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetExpirationTime(uint32_t *aExpirationTime) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetExpirationTime(uint32_t *aExpirationTime)
-{
-=======
 nsresult CacheEntry::GetExpirationTime(uint32_t* aExpirationTime) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
   return mFile->GetExpirationTime(aExpirationTime);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetOnStartTime(uint64_t *aTime) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetOnStartTime(uint64_t *aTime)
-{
-=======
 nsresult CacheEntry::GetOnStartTime(uint64_t* aTime) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
   return mFile->GetOnStartTime(aTime);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetOnStopTime(uint64_t *aTime) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetOnStopTime(uint64_t *aTime)
-{
-=======
 nsresult CacheEntry::GetOnStopTime(uint64_t* aTime) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
   return mFile->GetOnStopTime(aTime);
 }
@@ -1452,12 +1083,6 @@ nsresult CacheEntry::SetNetworkTimes(uint64_t aOnStartTime,
   return NS_ERROR_NOT_AVAILABLE;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetIsForcedValid(bool *aIsForcedValid) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetIsForcedValid(bool *aIsForcedValid)
-{
-=======
 nsresult CacheEntry::SetContentType(uint8_t aContentType) {
   NS_ENSURE_ARG_MAX(aContentType, nsICacheEntry::CONTENT_TYPE_LAST - 1);
 
@@ -1475,7 +1100,6 @@ nsresult CacheEntry::AddBaseDomainAccess(uint32_t aSiteID) {
 }
 
 nsresult CacheEntry::GetIsForcedValid(bool* aIsForcedValid) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aIsForcedValid);
 
   MOZ_ASSERT(mState > LOADING);
@@ -1526,45 +1150,21 @@ nsresult CacheEntry::SetExpirationTime(uint32_t aExpirationTime) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::OpenInputStream(int64_t offset, nsIInputStream **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::OpenInputStream(int64_t offset, nsIInputStream * *_retval)
-{
-=======
 nsresult CacheEntry::OpenInputStream(int64_t offset, nsIInputStream** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::OpenInputStream [this=%p]", this));
   return OpenInputStreamInternal(offset, nullptr, _retval);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::OpenAlternativeInputStream(const nsACString &type,
-                                                nsIInputStream **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::OpenAlternativeInputStream(const nsACString & type, nsIInputStream * *_retval)
-{
-=======
 nsresult CacheEntry::OpenAlternativeInputStream(const nsACString& type,
                                                 nsIInputStream** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::OpenAlternativeInputStream [this=%p, type=%s]", this,
        PromiseFlatCString(type).get()));
   return OpenInputStreamInternal(0, PromiseFlatCString(type).get(), _retval);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::OpenInputStreamInternal(int64_t offset,
-                                             const char *aAltDataType,
-                                             nsIInputStream **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::OpenInputStreamInternal(int64_t offset, const char *aAltDataType, nsIInputStream * *_retval)
-{
-=======
 nsresult CacheEntry::OpenInputStreamInternal(int64_t offset,
                                              const char* aAltDataType,
                                              nsIInputStream** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::OpenInputStreamInternal [this=%p]", this));
 
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
@@ -1607,16 +1207,8 @@ nsresult CacheEntry::OpenInputStreamInternal(int64_t offset,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::OpenOutputStream(int64_t offset, int64_t predictedSize,
-                                      nsIOutputStream **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::OpenOutputStream(int64_t offset, int64_t predictedSize, nsIOutputStream * *_retval)
-{
-=======
 nsresult CacheEntry::OpenOutputStream(int64_t offset, int64_t predictedSize,
                                       nsIOutputStream** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::OpenOutputStream [this=%p]", this));
 
   nsresult rv;
@@ -1647,18 +1239,9 @@ nsresult CacheEntry::OpenOutputStream(int64_t offset, int64_t predictedSize,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::OpenAlternativeOutputStream(const nsACString &type,
-                                                 int64_t predictedSize,
-                                                 nsIOutputStream **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::OpenAlternativeOutputStream(const nsACString & type, int64_t predictedSize, nsIOutputStream * *_retval)
-{
-=======
 nsresult CacheEntry::OpenAlternativeOutputStream(
     const nsACString& type, int64_t predictedSize,
     nsIAsyncOutputStream** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::OpenAlternativeOutputStream [this=%p, type=%s]", this,
        PromiseFlatCString(type).get()));
 
@@ -1681,36 +1264,17 @@ nsresult CacheEntry::OpenAlternativeOutputStream(
     return NS_ERROR_FILE_TOO_BIG;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIOutputStream> stream;
-  rv = mFile->OpenAlternativeOutputStream(
-      nullptr, PromiseFlatCString(type).get(), getter_AddRefs(stream));
-||||||| merged common ancestors
-  nsCOMPtr<nsIOutputStream> stream;
-  rv = mFile->OpenAlternativeOutputStream(nullptr,
-                                          PromiseFlatCString(type).get(),
-                                          getter_AddRefs(stream));
-=======
   nsCOMPtr<nsIAsyncOutputStream> stream;
   rv = mFile->OpenAlternativeOutputStream(
       nullptr, PromiseFlatCString(type).get(), getter_AddRefs(stream));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   stream.swap(*_retval);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::OpenOutputStreamInternal(int64_t offset,
-                                              nsIOutputStream **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::OpenOutputStreamInternal(int64_t offset, nsIOutputStream * *_retval)
-{
-=======
 nsresult CacheEntry::OpenOutputStreamInternal(int64_t offset,
                                               nsIOutputStream** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::OpenOutputStreamInternal [this=%p]", this));
 
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
@@ -1753,14 +1317,7 @@ nsresult CacheEntry::OpenOutputStreamInternal(int64_t offset,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetSecurityInfo(nsISupports **aSecurityInfo) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetSecurityInfo(nsISupports * *aSecurityInfo)
-{
-=======
 nsresult CacheEntry::GetSecurityInfo(nsISupports** aSecurityInfo) {
->>>>>>> upstream-releases
   {
     mozilla::MutexAutoLock lock(mLock);
     if (mSecurityInfoLoaded) {
@@ -1794,14 +1351,7 @@ nsresult CacheEntry::GetSecurityInfo(nsISupports** aSecurityInfo) {
 
   return NS_OK;
 }
-<<<<<<< HEAD
-nsresult CacheEntry::SetSecurityInfo(nsISupports *aSecurityInfo) {
-||||||| merged common ancestors
-nsresult CacheEntry::SetSecurityInfo(nsISupports *aSecurityInfo)
-{
-=======
 nsresult CacheEntry::SetSecurityInfo(nsISupports* aSecurityInfo) {
->>>>>>> upstream-releases
   nsresult rv;
 
   NS_ENSURE_SUCCESS(mFileStatus, mFileStatus);
@@ -1828,14 +1378,7 @@ nsresult CacheEntry::SetSecurityInfo(nsISupports* aSecurityInfo) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetStorageDataSize(uint32_t *aStorageDataSize) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetStorageDataSize(uint32_t *aStorageDataSize)
-{
-=======
 nsresult CacheEntry::GetStorageDataSize(uint32_t* aStorageDataSize) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aStorageDataSize);
 
   int64_t dataSize;
@@ -1847,14 +1390,7 @@ nsresult CacheEntry::GetStorageDataSize(uint32_t* aStorageDataSize) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::AsyncDoom(nsICacheEntryDoomCallback *aCallback) {
-||||||| merged common ancestors
-nsresult CacheEntry::AsyncDoom(nsICacheEntryDoomCallback *aCallback)
-{
-=======
 nsresult CacheEntry::AsyncDoom(nsICacheEntryDoomCallback* aCallback) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::AsyncDoom [this=%p]", this));
 
   {
@@ -1879,40 +1415,19 @@ nsresult CacheEntry::AsyncDoom(nsICacheEntryDoomCallback* aCallback) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetMetaDataElement(const char *aKey, char **aRetval) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetMetaDataElement(const char * aKey, char * *aRetval)
-{
-=======
 nsresult CacheEntry::GetMetaDataElement(const char* aKey, char** aRetval) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
   return mFile->GetElement(aKey, aRetval);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::SetMetaDataElement(const char *aKey, const char *aValue) {
-||||||| merged common ancestors
-nsresult CacheEntry::SetMetaDataElement(const char * aKey, const char * aValue)
-{
-=======
 nsresult CacheEntry::SetMetaDataElement(const char* aKey, const char* aValue) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
   return mFile->SetElement(aKey, aValue);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::VisitMetaData(nsICacheEntryMetaDataVisitor *aVisitor) {
-||||||| merged common ancestors
-nsresult CacheEntry::VisitMetaData(nsICacheEntryMetaDataVisitor *aVisitor)
-{
-=======
 nsresult CacheEntry::VisitMetaData(nsICacheEntryMetaDataVisitor* aVisitor) {
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(mFileStatus, NS_ERROR_NOT_AVAILABLE);
 
   return mFile->VisitMetaData(aVisitor);
@@ -1959,15 +1474,7 @@ nsresult CacheEntry::SetValid() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::Recreate(bool aMemoryOnly, nsICacheEntry **_retval) {
-||||||| merged common ancestors
-nsresult CacheEntry::Recreate(bool aMemoryOnly,
-                                   nsICacheEntry **_retval)
-{
-=======
 nsresult CacheEntry::Recreate(bool aMemoryOnly, nsICacheEntry** _retval) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::Recreate [this=%p, state=%s]", this, StateString(mState)));
 
   mozilla::MutexAutoLock lock(mLock);
@@ -1982,14 +1489,7 @@ nsresult CacheEntry::Recreate(bool aMemoryOnly, nsICacheEntry** _retval) {
   return NS_ERROR_NOT_AVAILABLE;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetDataSize(int64_t *aDataSize) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetDataSize(int64_t *aDataSize)
-{
-=======
 nsresult CacheEntry::GetDataSize(int64_t* aDataSize) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::GetDataSize [this=%p]", this));
   *aDataSize = 0;
 
@@ -2014,14 +1514,7 @@ nsresult CacheEntry::GetDataSize(int64_t* aDataSize) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetAltDataSize(int64_t *aDataSize) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetAltDataSize(int64_t *aDataSize)
-{
-=======
 nsresult CacheEntry::GetAltDataSize(int64_t* aDataSize) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::GetAltDataSize [this=%p]", this));
   if (NS_FAILED(mFileStatus)) {
     return mFileStatus;
@@ -2029,14 +1522,7 @@ nsresult CacheEntry::GetAltDataSize(int64_t* aDataSize) {
   return mFile->GetAltDataSize(aDataSize);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetAltDataType(nsACString &aType) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetAltDataType(nsACString &aType)
-{
-=======
 nsresult CacheEntry::GetAltDataType(nsACString& aType) {
->>>>>>> upstream-releases
   LOG(("CacheEntry::GetAltDataType [this=%p]", this));
   if (NS_FAILED(mFileStatus)) {
     return mFileStatus;
@@ -2054,14 +1540,7 @@ nsresult CacheEntry::MaybeMarkValid() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::HasWriteAccess(bool aWriteAllowed, bool *aWriteAccess) {
-||||||| merged common ancestors
-nsresult CacheEntry::HasWriteAccess(bool aWriteAllowed, bool *aWriteAccess)
-{
-=======
 nsresult CacheEntry::HasWriteAccess(bool aWriteAllowed, bool* aWriteAccess) {
->>>>>>> upstream-releases
   *aWriteAccess = aWriteAllowed;
   return NS_OK;
 }
@@ -2071,14 +1550,7 @@ nsresult CacheEntry::Close() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetDiskStorageSizeInKB(uint32_t *aDiskStorageSize) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetDiskStorageSizeInKB(uint32_t *aDiskStorageSize)
-{
-=======
 nsresult CacheEntry::GetDiskStorageSizeInKB(uint32_t* aDiskStorageSize) {
->>>>>>> upstream-releases
   if (NS_FAILED(mFileStatus)) {
     return NS_ERROR_NOT_AVAILABLE;
   }
@@ -2086,14 +1558,7 @@ nsresult CacheEntry::GetDiskStorageSizeInKB(uint32_t* aDiskStorageSize) {
   return mFile->GetDiskStorageSizeInKB(aDiskStorageSize);
 }
 
-<<<<<<< HEAD
-nsresult CacheEntry::GetLoadContextInfo(nsILoadContextInfo **aInfo) {
-||||||| merged common ancestors
-nsresult CacheEntry::GetLoadContextInfo(nsILoadContextInfo** aInfo)
-{
-=======
 nsresult CacheEntry::GetLoadContextInfo(nsILoadContextInfo** aInfo) {
->>>>>>> upstream-releases
   nsCOMPtr<nsILoadContextInfo> info = CacheFileUtils::ParseKey(mStorageID);
   if (!info) {
     return NS_ERROR_FAILURE;
@@ -2336,19 +1801,9 @@ void CacheEntry::BackgroundOp(uint32_t aOperations, bool aForceAsync) {
     if (aOperations & Ops::FRECENCYUPDATE) {
       ++mUseCount;
 
-<<<<<<< HEAD
-#ifndef M_LN2
-#define M_LN2 0.69314718055994530942
-#endif
-||||||| merged common ancestors
-      #ifndef M_LN2
-      #define M_LN2 0.69314718055994530942
-      #endif
-=======
 #ifndef M_LN2
 #  define M_LN2 0.69314718055994530942
 #endif
->>>>>>> upstream-releases
 
       // Half-life is dynamic, in seconds.
       static double half_life = CacheObserver::HalfLifeSeconds();
@@ -2406,19 +1861,8 @@ void CacheEntry::StoreFrecency(double aFrecency) {
 
 // CacheOutputCloseListener
 
-<<<<<<< HEAD
-CacheOutputCloseListener::CacheOutputCloseListener(CacheEntry *aEntry)
-    : Runnable("net::CacheOutputCloseListener"), mEntry(aEntry) {}
-||||||| merged common ancestors
-CacheOutputCloseListener::CacheOutputCloseListener(CacheEntry* aEntry)
-  : Runnable("net::CacheOutputCloseListener")
-  , mEntry(aEntry)
-{
-}
-=======
 CacheOutputCloseListener::CacheOutputCloseListener(CacheEntry* aEntry)
     : Runnable("net::CacheOutputCloseListener"), mEntry(aEntry) {}
->>>>>>> upstream-releases
 
 void CacheOutputCloseListener::OnOutputClosed() {
   // We need this class and to redispatch since this callback is invoked

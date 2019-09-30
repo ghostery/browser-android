@@ -30,16 +30,8 @@ class TickLabels extends PureComponent {
           {
             className: "tick-label",
             style: {
-<<<<<<< HEAD
-              marginInlineStart: `${ tick.position }%`,
-              maxWidth: `${ tick.width }px`,
-||||||| merged common ancestors
-              marginInlineStart: `${ tick.position }%`,
-              maxWidth: `${ tick.width }px`
-=======
               marginInlineStart: `${tick.position}%`,
               maxWidth: `${tick.width}px`,
->>>>>>> upstream-releases
             },
           },
           tick.label

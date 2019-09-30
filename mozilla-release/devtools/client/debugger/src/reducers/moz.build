@@ -7,17 +7,12 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/reducers/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/reducers/moz.build
     'ast.js',
     'async-requests.js',
     'breakpoints.js',
     'debuggee.js',
+    'event-listeners.js',
     'expressions.js',
     'file-search.js',
     'index.js',

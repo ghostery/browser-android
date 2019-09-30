@@ -144,42 +144,19 @@ bool AnyContentAncestorModified(nsIFrame* aFrame, nsIFrame* aStopAtFrame) {
 // TODO: We currently descend into all children even if we don't have an AGR
 // to mark, as child stacking contexts might. It would be nice if we could
 // jump into those immediately rather than walking the entire thing.
-<<<<<<< HEAD
-bool RetainedDisplayListBuilder::PreProcessDisplayList(
-    RetainedDisplayList* aList, AnimatedGeometryRoot* aAGR, uint32_t aCallerKey,
-    uint32_t aNestingDepth) {
-||||||| merged common ancestors
-bool
-RetainedDisplayListBuilder::PreProcessDisplayList(RetainedDisplayList* aList,
-                                                  AnimatedGeometryRoot* aAGR,
-                                                  uint32_t aCallerKey,
-                                                  uint32_t aNestingDepth)
-{
-=======
 bool RetainedDisplayListBuilder::PreProcessDisplayList(
     RetainedDisplayList* aList, AnimatedGeometryRoot* aAGR,
     PartialUpdateResult& aUpdated, nsIFrame* aOuterFrame, uint32_t aCallerKey,
     uint32_t aNestingDepth, bool aKeepLinked) {
->>>>>>> upstream-releases
   // The DAG merging algorithm does not have strong mechanisms in place to keep
   // the complexity of the resulting DAG under control. In some cases we can
   // build up edges very quickly. Detect those cases and force a full display
   // list build if we hit them.
   static const uint32_t kMaxEdgeRatio = 5;
-<<<<<<< HEAD
-  bool initializeDAG = !aList->mDAG.Length();
-  if (!initializeDAG && aList->mDAG.mDirectPredecessorList.Length() >
-                            (aList->mDAG.mNodesInfo.Length() * kMaxEdgeRatio)) {
-||||||| merged common ancestors
-  bool initializeDAG = !aList->mDAG.Length();
-  if (!initializeDAG && aList->mDAG.mDirectPredecessorList.Length() >
-                          (aList->mDAG.mNodesInfo.Length() * kMaxEdgeRatio)) {
-=======
   const bool initializeDAG = !aList->mDAG.Length();
   if (!aKeepLinked && !initializeDAG &&
       aList->mDAG.mDirectPredecessorList.Length() >
           (aList->mDAG.mNodesInfo.Length() * kMaxEdgeRatio)) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -280,21 +257,12 @@ bool RetainedDisplayListBuilder::PreProcessDisplayList(
       }
 
       if (!PreProcessDisplayList(item->GetChildren(),
-<<<<<<< HEAD
-                                 SelectAGRForFrame(f, aAGR),
-                                 item->GetPerFrameKey(), aNestingDepth + 1)) {
-||||||| merged common ancestors
-                                 SelectAGRForFrame(f, aAGR),
-                                 item->GetPerFrameKey(),
-                                 aNestingDepth + 1)) {
-=======
                                  SelectAGRForFrame(f, aAGR), aUpdated,
                                  item->Frame(), item->GetPerFrameKey(),
                                  aNestingDepth + 1, keepLinked)) {
         MOZ_RELEASE_ASSERT(
             !aKeepLinked,
             "Can't early return since we need to move the out list back");
->>>>>>> upstream-releases
         return false;
       }
     }
@@ -353,43 +321,6 @@ void RetainedDisplayListBuilder::IncrementSubDocPresShellPaintCount(
   mBuilder.IncrementPresShellPaintCount(presShell);
 }
 
-<<<<<<< HEAD
-static bool AnyContentAncestorModified(nsIFrame* aFrame,
-                                       nsIFrame* aStopAtFrame = nullptr) {
-  for (nsIFrame* f = aFrame; f;
-       f = nsLayoutUtils::GetParentOrPlaceholderForCrossDoc(f)) {
-    if (f->IsFrameModified()) {
-      return true;
-    }
-||||||| merged common ancestors
-static bool
-AnyContentAncestorModified(nsIFrame* aFrame, nsIFrame* aStopAtFrame = nullptr)
-{
-  for (nsIFrame* f = aFrame; f;
-       f = nsLayoutUtils::GetParentOrPlaceholderForCrossDoc(f)) {
-    if (f->IsFrameModified()) {
-      return true;
-    }
-=======
-static Maybe<const ActiveScrolledRoot*> SelectContainerASR(
-    const DisplayItemClipChain* aClipChain, const ActiveScrolledRoot* aItemASR,
-    Maybe<const ActiveScrolledRoot*>& aContainerASR) {
-  const ActiveScrolledRoot* itemClipASR =
-      aClipChain ? aClipChain->mASR : nullptr;
->>>>>>> upstream-releases
-
-  const ActiveScrolledRoot* finiteBoundsASR =
-      ActiveScrolledRoot::PickDescendant(itemClipASR, aItemASR);
-
-  if (!aContainerASR) {
-    return Some(finiteBoundsASR);
-  }
-
-  return Some(
-      ActiveScrolledRoot::PickAncestor(*aContainerASR, finiteBoundsASR));
-}
-
-<<<<<<< HEAD
 static Maybe<const ActiveScrolledRoot*> SelectContainerASR(
     const DisplayItemClipChain* aClipChain, const ActiveScrolledRoot* aItemASR,
     Maybe<const ActiveScrolledRoot*>& aContainerASR) {
@@ -420,26 +351,6 @@ static void UpdateASR(nsDisplayItem* aItem,
   }
 
   if (!asr) {
-||||||| merged common ancestors
-static void
-UpdateASR(nsDisplayItem* aItem, Maybe<const ActiveScrolledRoot*>& aContainerASR)
-{
-  if (!aContainerASR) {
-=======
-static void UpdateASR(nsDisplayItem* aItem,
-                      Maybe<const ActiveScrolledRoot*>& aContainerASR) {
-  Maybe<const ActiveScrolledRoot*> asr;
-
-  if (aItem->HasHitTestInfo()) {
-    const HitTestInfo& info =
-        static_cast<nsDisplayHitTestInfoItem*>(aItem)->GetHitTestInfo();
-    asr = SelectContainerASR(info.mClipChain, info.mASR, aContainerASR);
-  } else {
-    asr = aContainerASR;
-  }
-
-  if (!asr) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -455,15 +366,6 @@ static void UpdateASR(nsDisplayItem* aItem,
   wrapList->UpdateHitTestInfoActiveScrolledRoot(*asr);
 }
 
-<<<<<<< HEAD
-void OldItemInfo::AddedMatchToMergedList(RetainedDisplayListBuilder* aBuilder,
-                                         MergedListIndex aIndex) {
-||||||| merged common ancestors
-void
-OldItemInfo::AddedMatchToMergedList(RetainedDisplayListBuilder* aBuilder,
-                                    MergedListIndex aIndex)
-{
-=======
 static void CopyASR(nsDisplayItem* aOld, nsDisplayItem* aNew) {
   const ActiveScrolledRoot* hitTest = nullptr;
   if (aOld->HasHitTestInfo()) {
@@ -493,7 +395,6 @@ OldItemInfo::OldItemInfo(nsDisplayItem* aItem)
 
 void OldItemInfo::AddedMatchToMergedList(RetainedDisplayListBuilder* aBuilder,
                                          MergedListIndex aIndex) {
->>>>>>> upstream-releases
   AddedToMergedList(aIndex);
 }
 
@@ -510,18 +411,8 @@ void OldItemInfo::Discard(RetainedDisplayListBuilder* aBuilder,
   mItem = nullptr;
 }
 
-<<<<<<< HEAD
-bool OldItemInfo::IsChanged() {
-  return !mItem || mItem->HasDeletedFrame() || !mItem->CanBeReused();
-||||||| merged common ancestors
-bool
-OldItemInfo::IsChanged()
-{
-  return !mItem || mItem->HasDeletedFrame() || !mItem->CanBeReused();
-=======
 bool OldItemInfo::IsChanged() {
   return !mItem || !mItem->CanBeReused() || mItem->HasDeletedFrame();
->>>>>>> upstream-releases
 }
 
 /**
@@ -536,28 +427,6 @@ bool OldItemInfo::IsChanged() {
 class MergeState {
  public:
   MergeState(RetainedDisplayListBuilder* aBuilder,
-<<<<<<< HEAD
-             RetainedDisplayList& aOldList, uint32_t aOuterKey)
-      : mBuilder(aBuilder),
-        mOldList(&aOldList),
-        mOldItems(std::move(aOldList.mOldItems)),
-        mOldDAG(
-            std::move(*reinterpret_cast<DirectedAcyclicGraph<OldListUnits>*>(
-                &aOldList.mDAG))),
-        mOuterKey(aOuterKey),
-        mResultIsModified(false) {
-||||||| merged common ancestors
-             RetainedDisplayList& aOldList,
-             uint32_t aOuterKey)
-    : mBuilder(aBuilder)
-    , mOldList(&aOldList)
-    , mOldItems(std::move(aOldList.mOldItems))
-    , mOldDAG(std::move(
-        *reinterpret_cast<DirectedAcyclicGraph<OldListUnits>*>(&aOldList.mDAG)))
-    , mOuterKey(aOuterKey)
-    , mResultIsModified(false)
-  {
-=======
              RetainedDisplayList& aOldList, nsDisplayItem* aOuterItem)
       : mBuilder(aBuilder),
         mOldList(&aOldList),
@@ -567,23 +436,12 @@ class MergeState {
                 &aOldList.mDAG))),
         mOuterItem(aOuterItem),
         mResultIsModified(false) {
->>>>>>> upstream-releases
     mMergedDAG.EnsureCapacityFor(mOldDAG);
     MOZ_RELEASE_ASSERT(mOldItems.Length() == mOldDAG.Length());
   }
 
-<<<<<<< HEAD
-  MergedListIndex ProcessItemFromNewList(
-      nsDisplayItem* aNewItem, const Maybe<MergedListIndex>& aPreviousItem) {
-||||||| merged common ancestors
-  MergedListIndex ProcessItemFromNewList(
-    nsDisplayItem* aNewItem,
-    const Maybe<MergedListIndex>& aPreviousItem)
-  {
-=======
   Maybe<MergedListIndex> ProcessItemFromNewList(
       nsDisplayItem* aNewItem, const Maybe<MergedListIndex>& aPreviousItem) {
->>>>>>> upstream-releases
     OldListIndex oldIndex;
     MOZ_DIAGNOSTIC_ASSERT(aNewItem->HasModifiedFrame() ==
                           HasModifiedFrame(aNewItem));
@@ -608,31 +466,10 @@ class MergeState {
           oldItem->SetBuildingRect(aNewItem->GetBuildingRect());
         }
 
-<<<<<<< HEAD
-        if (aNewItem->GetChildren()) {
-          Maybe<const ActiveScrolledRoot*> containerASRForChildren;
-          if (mBuilder->MergeDisplayLists(
-                  aNewItem->GetChildren(), oldItem->GetChildren(),
-                  destItem->GetChildren(), containerASRForChildren,
-                  aNewItem->GetPerFrameKey())) {
-            destItem->InvalidateCachedChildInfo();
-            mResultIsModified = true;
-||||||| merged common ancestors
-        if (aNewItem->GetChildren()) {
-          Maybe<const ActiveScrolledRoot*> containerASRForChildren;
-          if (mBuilder->MergeDisplayLists(aNewItem->GetChildren(),
-                                          oldItem->GetChildren(),
-                                          destItem->GetChildren(),
-                                          containerASRForChildren,
-                                          aNewItem->GetPerFrameKey())) {
-            destItem->InvalidateCachedChildInfo();
-            mResultIsModified = true;
-=======
         if (destItem == aNewItem) {
           if (oldItem->IsGlassItem() &&
               oldItem == mBuilder->Builder()->GetGlassDisplayItem()) {
             mBuilder->Builder()->ClearGlassDisplayItem();
->>>>>>> upstream-releases
           }
         }  // aNewItem can't be the glass item on the builder yet.
 
@@ -656,13 +493,6 @@ class MergeState {
       }
     }
     mResultIsModified = true;
-<<<<<<< HEAD
-    return AddNewNode(aNewItem, Nothing(), Span<MergedListIndex>(),
-                      aPreviousItem);
-||||||| merged common ancestors
-    return AddNewNode(
-      aNewItem, Nothing(), Span<MergedListIndex>(), aPreviousItem);
-=======
     if (aNewItem->IsGlassItem()) {
       mBuilder->Builder()->SetGlassDisplayItem(aNewItem);
     }
@@ -695,7 +525,6 @@ class MergeState {
     // current ASR, which gets reset during RestoreState(), so we always need
     // to run it again.
     aOutItem->UpdateBounds(mBuilder->Builder());
->>>>>>> upstream-releases
   }
 
   bool ShouldUseNewItem(nsDisplayItem* aNewItem) {
@@ -800,19 +629,10 @@ class MergeState {
     return false;
   }
 
-<<<<<<< HEAD
-  bool HasModifiedFrame(nsDisplayItem* aItem) {
-    return AnyContentAncestorModified(aItem->FrameForInvalidation());
-||||||| merged common ancestors
-  bool HasModifiedFrame(nsDisplayItem* aItem)
-  {
-    return AnyContentAncestorModified(aItem->FrameForInvalidation());
-=======
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
   bool HasModifiedFrame(nsDisplayItem* aItem) {
     nsIFrame* stopFrame = mOuterItem ? mOuterItem->Frame() : nullptr;
     return AnyContentAncestorModified(aItem->FrameForInvalidation(), stopFrame);
->>>>>>> upstream-releases
   }
 #endif
 
@@ -830,16 +650,8 @@ class MergeState {
 
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
     nsIFrame::DisplayItemArray* items =
-<<<<<<< HEAD
-        aItem->Frame()->GetProperty(nsIFrame::DisplayItems());
-    for (nsDisplayItem* i : *items) {
-||||||| merged common ancestors
-      aItem->Frame()->GetProperty(nsIFrame::DisplayItems());
-    for (nsDisplayItem* i : *items) {
-=======
         aItem->Frame()->GetProperty(nsIFrame::DisplayItems());
     for (nsDisplayItemBase* i : *items) {
->>>>>>> upstream-releases
       if (i->Frame() == aItem->Frame() &&
           i->GetPerFrameKey() == aItem->GetPerFrameKey()) {
         MOZ_DIAGNOSTIC_ASSERT(!i->IsMergedItem());
@@ -869,38 +681,8 @@ class MergeState {
       mOldItems[aNode.val].Discard(mBuilder, std::move(aDirectPredecessors));
       mResultIsModified = true;
     } else {
-<<<<<<< HEAD
-      if (item->GetChildren()) {
-        Maybe<const ActiveScrolledRoot*> containerASRForChildren;
-        nsDisplayList empty;
-        if (mBuilder->MergeDisplayLists(
-                &empty, item->GetChildren(), item->GetChildren(),
-                containerASRForChildren, item->GetPerFrameKey())) {
-          item->InvalidateCachedChildInfo();
-          mResultIsModified = true;
-        }
-        UpdateASR(item, containerASRForChildren);
-        item->UpdateBounds(mBuilder->Builder());
-      }
-||||||| merged common ancestors
-      if (item->GetChildren()) {
-        Maybe<const ActiveScrolledRoot*> containerASRForChildren;
-        nsDisplayList empty;
-        if (mBuilder->MergeDisplayLists(&empty,
-                                        item->GetChildren(),
-                                        item->GetChildren(),
-                                        containerASRForChildren,
-                                        item->GetPerFrameKey())) {
-          item->InvalidateCachedChildInfo();
-          mResultIsModified = true;
-        }
-        UpdateASR(item, containerASRForChildren);
-        item->UpdateBounds(mBuilder->Builder());
-      }
-=======
       MergeChildLists(nullptr, item, item);
 
->>>>>>> upstream-releases
       if (item->GetType() == DisplayItemType::TYPE_SUBDOCUMENT) {
         mBuilder->IncrementSubDocPresShellPaintCount(item);
       }
@@ -1020,24 +802,6 @@ void VerifyNotModified(nsDisplayList* aList) {
  * Once we've merged a list, we then retain the DAG (as part of the
  * RetainedDisplayList object) to use for future merges.
  */
-<<<<<<< HEAD
-bool RetainedDisplayListBuilder::MergeDisplayLists(
-    nsDisplayList* aNewList, RetainedDisplayList* aOldList,
-    RetainedDisplayList* aOutList,
-    mozilla::Maybe<const mozilla::ActiveScrolledRoot*>& aOutContainerASR,
-    uint32_t aOuterKey) {
-  MergeState merge(this, *aOldList, aOuterKey);
-||||||| merged common ancestors
-bool
-RetainedDisplayListBuilder::MergeDisplayLists(
-  nsDisplayList* aNewList,
-  RetainedDisplayList* aOldList,
-  RetainedDisplayList* aOutList,
-  mozilla::Maybe<const mozilla::ActiveScrolledRoot*>& aOutContainerASR,
-  uint32_t aOuterKey)
-{
-  MergeState merge(this, *aOldList, aOuterKey);
-=======
 bool RetainedDisplayListBuilder::MergeDisplayLists(
     nsDisplayList* aNewList, RetainedDisplayList* aOldList,
     RetainedDisplayList* aOutList,
@@ -1063,20 +827,11 @@ bool RetainedDisplayListBuilder::MergeDisplayLists(
   }
 
   MergeState merge(this, *aOldList, aOuterItem);
->>>>>>> upstream-releases
 
   Maybe<MergedListIndex> previousItemIndex;
   while (nsDisplayItem* item = aNewList->RemoveBottom()) {
-<<<<<<< HEAD
-    previousItemIndex =
-        Some(merge.ProcessItemFromNewList(item, previousItemIndex));
-||||||| merged common ancestors
-    previousItemIndex =
-      Some(merge.ProcessItemFromNewList(item, previousItemIndex));
-=======
     Metrics()->mNewItems++;
     previousItemIndex = merge.ProcessItemFromNewList(item, previousItemIndex);
->>>>>>> upstream-releases
   }
 
   *aOutList = merge.Finalize();
@@ -1121,17 +876,8 @@ struct CbData {
   nsTArray<nsIFrame*>* framesWithProps;
 };
 
-<<<<<<< HEAD
-static nsIFrame* GetRootFrameForPainting(nsDisplayListBuilder* aBuilder,
-                                         nsIDocument* aDocument) {
-||||||| merged common ancestors
-static nsIFrame*
-GetRootFrameForPainting(nsDisplayListBuilder* aBuilder, nsIDocument* aDocument)
-{
-=======
 static nsIFrame* GetRootFrameForPainting(nsDisplayListBuilder* aBuilder,
                                          Document* aDocument) {
->>>>>>> upstream-releases
   // Although this is the actual subdocument, it might not be
   // what painting uses. Walk up to the nsSubDocumentFrame owning
   // us, and then ask that which subdoc it's going to paint.
@@ -1171,15 +917,7 @@ static nsIFrame* GetRootFrameForPainting(nsDisplayListBuilder* aBuilder,
   return presShell ? presShell->GetRootFrame() : nullptr;
 }
 
-<<<<<<< HEAD
-static bool SubDocEnumCb(nsIDocument* aDocument, void* aData) {
-||||||| merged common ancestors
-static bool
-SubDocEnumCb(nsIDocument* aDocument, void* aData)
-{
-=======
 static bool SubDocEnumCb(Document* aDocument, void* aData) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
   MOZ_ASSERT(aData);
 
@@ -1243,31 +981,12 @@ static bool IsInPreserve3DContext(const nsIFrame* aFrame) {
          aFrame->Combines3DTransformWithAncestors();
 }
 
-<<<<<<< HEAD
-static bool ProcessFrameInternal(nsIFrame* aFrame,
-                                 nsDisplayListBuilder& aBuilder,
-                                 AnimatedGeometryRoot** aAGR, nsRect& aOverflow,
-                                 nsIFrame* aStopAtFrame,
-                                 nsTArray<nsIFrame*>& aOutFramesWithProps,
-                                 const bool aStopAtStackingContext) {
-||||||| merged common ancestors
-static bool
-ProcessFrameInternal(nsIFrame* aFrame,
-                     nsDisplayListBuilder& aBuilder,
-                     AnimatedGeometryRoot** aAGR,
-                     nsRect& aOverflow,
-                     nsIFrame* aStopAtFrame,
-                     nsTArray<nsIFrame*>& aOutFramesWithProps,
-                     const bool aStopAtStackingContext)
-{
-=======
 static bool ProcessFrameInternal(nsIFrame* aFrame,
                                  nsDisplayListBuilder* aBuilder,
                                  AnimatedGeometryRoot** aAGR, nsRect& aOverflow,
                                  nsIFrame* aStopAtFrame,
                                  nsTArray<nsIFrame*>& aOutFramesWithProps,
                                  const bool aStopAtStackingContext) {
->>>>>>> upstream-releases
   nsIFrame* currentFrame = aFrame;
 
   while (currentFrame != aStopAtFrame) {
@@ -1284,24 +1003,12 @@ static bool ProcessFrameInternal(nsIFrame* aFrame,
                                 : nullptr;
 
     if (placeholder) {
-<<<<<<< HEAD
-      // The rect aOverflow is in the coordinate space of the containing block.
-      // Convert it to a coordinate space of the placeholder frame.
-      nsRect placeholderOverflow =
-          aOverflow + currentFrame->GetOffsetTo(placeholder);
-||||||| merged common ancestors
-      // The rect aOverflow is in the coordinate space of the containing block.
-      // Convert it to a coordinate space of the placeholder frame.
-      nsRect placeholderOverflow =
-        aOverflow + currentFrame->GetOffsetTo(placeholder);
-=======
       nsRect placeholderOverflow = aOverflow;
       auto rv = nsLayoutUtils::TransformRect(currentFrame, placeholder,
                                              placeholderOverflow);
       if (rv != nsLayoutUtils::TRANSFORM_SUCCEEDED) {
         placeholderOverflow = nsRect();
       }
->>>>>>> upstream-releases
 
       CRR_LOG("Processing placeholder %p for OOF frame %p\n", placeholder,
               currentFrame);
@@ -1457,28 +1164,10 @@ static bool ProcessFrameInternal(nsIFrame* aFrame,
   return true;
 }
 
-<<<<<<< HEAD
-bool RetainedDisplayListBuilder::ProcessFrame(
-    nsIFrame* aFrame, nsDisplayListBuilder& aBuilder, nsIFrame* aStopAtFrame,
-    nsTArray<nsIFrame*>& aOutFramesWithProps, const bool aStopAtStackingContext,
-    nsRect* aOutDirty, AnimatedGeometryRoot** aOutModifiedAGR) {
-||||||| merged common ancestors
-bool
-RetainedDisplayListBuilder::ProcessFrame(
-  nsIFrame* aFrame,
-  nsDisplayListBuilder& aBuilder,
-  nsIFrame* aStopAtFrame,
-  nsTArray<nsIFrame*>& aOutFramesWithProps,
-  const bool aStopAtStackingContext,
-  nsRect* aOutDirty,
-  AnimatedGeometryRoot** aOutModifiedAGR)
-{
-=======
 bool RetainedDisplayListBuilder::ProcessFrame(
     nsIFrame* aFrame, nsDisplayListBuilder* aBuilder, nsIFrame* aStopAtFrame,
     nsTArray<nsIFrame*>& aOutFramesWithProps, const bool aStopAtStackingContext,
     nsRect* aOutDirty, AnimatedGeometryRoot** aOutModifiedAGR) {
->>>>>>> upstream-releases
   if (aFrame->HasOverrideDirtyRegion()) {
     aOutFramesWithProps.AppendElement(aFrame);
   }
@@ -1490,13 +1179,7 @@ bool RetainedDisplayListBuilder::ProcessFrame(
   // TODO: There is almost certainly a faster way of doing this, probably can be
   // combined with the ancestor walk for TransformFrameRectToAncestor.
   AnimatedGeometryRoot* agr =
-<<<<<<< HEAD
-      aBuilder.FindAnimatedGeometryRootFor(aFrame)->GetAsyncAGR();
-||||||| merged common ancestors
-    aBuilder.FindAnimatedGeometryRootFor(aFrame)->GetAsyncAGR();
-=======
       aBuilder->FindAnimatedGeometryRootFor(aFrame)->GetAsyncAGR();
->>>>>>> upstream-releases
 
   CRR_LOG("Processing frame %p with agr %p\n", aFrame, agr->mFrame);
 
@@ -1561,27 +1244,12 @@ static void AddFramesForContainingBlock(nsIFrame* aBlock,
 // so that we can avoid an extra ancestor walk, and we can reuse the flag
 // to detect when we've already visited an ancestor (and thus all further
 // ancestors must also be visited).
-<<<<<<< HEAD
-void FindContainingBlocks(nsIFrame* aFrame, nsTArray<nsIFrame*>& aExtraFrames) {
-  for (nsIFrame* f = aFrame; f;
-       f = nsLayoutUtils::GetParentOrPlaceholderForCrossDoc(f)) {
-    if (f->ForceDescendIntoIfVisible()) return;
-||||||| merged common ancestors
-void
-FindContainingBlocks(nsIFrame* aFrame, nsTArray<nsIFrame*>& aExtraFrames)
-{
-  for (nsIFrame* f = aFrame; f;
-       f = nsLayoutUtils::GetParentOrPlaceholderForCrossDoc(f)) {
-    if (f->ForceDescendIntoIfVisible())
-      return;
-=======
 static void FindContainingBlocks(nsIFrame* aFrame,
                                  nsTArray<nsIFrame*>& aExtraFrames) {
   for (nsIFrame* f = aFrame; f; f = nsLayoutUtils::GetDisplayListParent(f)) {
     if (f->ForceDescendIntoIfVisible()) {
       return;
     }
->>>>>>> upstream-releases
     f->SetForceDescendIntoIfVisible(true);
     CRR_LOG("Considering OOFs for %p\n", f);
 
@@ -1634,21 +1302,8 @@ bool RetainedDisplayListBuilder::ComputeRebuildRegion(
     mBuilder.AddFrameMarkedForDisplayIfVisible(f);
     FindContainingBlocks(f, extraFrames);
 
-<<<<<<< HEAD
-    if (!ProcessFrame(f, mBuilder, mBuilder.RootReferenceFrame(),
-                      aOutFramesWithProps, true, aOutDirty, aOutModifiedAGR)) {
-||||||| merged common ancestors
-    if (!ProcessFrame(f,
-                      mBuilder,
-                      mBuilder.RootReferenceFrame(),
-                      aOutFramesWithProps,
-                      true,
-                      aOutDirty,
-                      aOutModifiedAGR)) {
-=======
     if (!ProcessFrame(f, &mBuilder, mBuilder.RootReferenceFrame(),
                       aOutFramesWithProps, true, aOutDirty, aOutModifiedAGR)) {
->>>>>>> upstream-releases
       return false;
     }
   }
@@ -1658,27 +1313,10 @@ bool RetainedDisplayListBuilder::ComputeRebuildRegion(
   aModifiedFrames.AppendElements(extraFrames);
 
   for (nsIFrame* f : extraFrames) {
-<<<<<<< HEAD
-    mBuilder.MarkFrameModifiedDuringBuilding(f);
-
-    if (!ProcessFrame(f, mBuilder, mBuilder.RootReferenceFrame(),
-                      aOutFramesWithProps, true, aOutDirty, aOutModifiedAGR)) {
-||||||| merged common ancestors
-    mBuilder.MarkFrameModifiedDuringBuilding(f);
-
-    if (!ProcessFrame(f,
-                      mBuilder,
-                      mBuilder.RootReferenceFrame(),
-                      aOutFramesWithProps,
-                      true,
-                      aOutDirty,
-                      aOutModifiedAGR)) {
-=======
     f->SetFrameIsModified(true);
 
     if (!ProcessFrame(f, &mBuilder, mBuilder.RootReferenceFrame(),
                       aOutFramesWithProps, true, aOutDirty, aOutModifiedAGR)) {
->>>>>>> upstream-releases
       return false;
     }
   }
@@ -1686,21 +1324,6 @@ bool RetainedDisplayListBuilder::ComputeRebuildRegion(
   return true;
 }
 
-<<<<<<< HEAD
-/*
- * A simple early exit heuristic to avoid slow partial display list rebuilds.
- */
-static bool ShouldBuildPartial(nsTArray<nsIFrame*>& aModifiedFrames) {
-  if (aModifiedFrames.Length() > gfxPrefs::LayoutRebuildFrameLimit()) {
-||||||| merged common ancestors
-/*
- * A simple early exit heuristic to avoid slow partial display list rebuilds.
- */
-static bool
-ShouldBuildPartial(nsTArray<nsIFrame*>& aModifiedFrames)
-{
-  if (aModifiedFrames.Length() > gfxPrefs::LayoutRebuildFrameLimit()) {
-=======
 bool RetainedDisplayListBuilder::ShouldBuildPartial(
     nsTArray<nsIFrame*>& aModifiedFrames) {
   if (mList.IsEmpty()) {
@@ -1722,7 +1345,6 @@ bool RetainedDisplayListBuilder::ShouldBuildPartial(
   if (mBuilder.DisablePartialUpdates()) {
     mBuilder.SetDisablePartialUpdates(false);
     Metrics()->mPartialUpdateFailReason = PartialUpdateFailReason::Disabled;
->>>>>>> upstream-releases
     return false;
   }
 
@@ -1748,13 +1370,6 @@ bool RetainedDisplayListBuilder::ShouldBuildPartial(
   return true;
 }
 
-<<<<<<< HEAD
-static void ClearFrameProps(nsTArray<nsIFrame*>& aFrames) {
-||||||| merged common ancestors
-static void
-ClearFrameProps(nsTArray<nsIFrame*>& aFrames)
-{
-=======
 void RetainedDisplayListBuilder::InvalidateCaretFramesIfNeeded() {
   if (mPreviousCaret == mBuilder.GetCaretFrame()) {
     // The current caret frame is the same as the previous one.
@@ -1773,7 +1388,6 @@ void RetainedDisplayListBuilder::InvalidateCaretFramesIfNeeded() {
 }
 
 static void ClearFrameProps(nsTArray<nsIFrame*>& aFrames) {
->>>>>>> upstream-releases
   for (nsIFrame* f : aFrames) {
     if (f->HasOverrideDirtyRegion()) {
       f->SetHasOverrideDirtyRegion(false);
@@ -1786,25 +1400,9 @@ static void ClearFrameProps(nsTArray<nsIFrame*>& aFrames) {
   }
 }
 
-<<<<<<< HEAD
 class AutoClearFramePropsArray {
  public:
   explicit AutoClearFramePropsArray(size_t aCapacity) : mFrames(aCapacity) {}
-
-||||||| merged common ancestors
-class AutoClearFramePropsArray
-{
-public:
-  explicit AutoClearFramePropsArray(size_t aCapacity)
-    : mFrames(aCapacity)
-  {
-  }
-
-=======
-class AutoClearFramePropsArray {
- public:
-  explicit AutoClearFramePropsArray(size_t aCapacity) : mFrames(aCapacity) {}
->>>>>>> upstream-releases
   AutoClearFramePropsArray() = default;
   ~AutoClearFramePropsArray() { ClearFrameProps(mFrames); }
 
@@ -1822,20 +1420,8 @@ void RetainedDisplayListBuilder::ClearFramesWithProps() {
                                 &framesWithProps.Frames());
 }
 
-<<<<<<< HEAD
-auto RetainedDisplayListBuilder::AttemptPartialUpdate(
-    nscolor aBackstop, mozilla::DisplayListChecker* aChecker)
-    -> PartialUpdateResult {
-||||||| merged common ancestors
-auto
-RetainedDisplayListBuilder::AttemptPartialUpdate(
-  nscolor aBackstop,
-  mozilla::DisplayListChecker* aChecker) -> PartialUpdateResult
-{
-=======
 PartialUpdateResult RetainedDisplayListBuilder::AttemptPartialUpdate(
     nscolor aBackstop, mozilla::DisplayListChecker* aChecker) {
->>>>>>> upstream-releases
   mBuilder.RemoveModifiedWindowRegions();
 
   if (mBuilder.ShouldSyncDecodeImages()) {
@@ -1851,26 +1437,8 @@ PartialUpdateResult RetainedDisplayListBuilder::AttemptPartialUpdate(
   // marks the frame modified, so those regions are cleared here as well.
   AutoClearFramePropsArray modifiedFrames(64);
   AutoClearFramePropsArray framesWithProps;
-<<<<<<< HEAD
   GetModifiedAndFramesWithProps(&mBuilder, &modifiedFrames.Frames(),
                                 &framesWithProps.Frames());
-
-  // Do not allow partial builds if the retained display list is empty, or if
-  // ShouldBuildPartial heuristic fails.
-  bool shouldBuildPartial =
-      !mList.IsEmpty() && ShouldBuildPartial(modifiedFrames.Frames());
-||||||| merged common ancestors
-  GetModifiedAndFramesWithProps(
-    &mBuilder, &modifiedFrames.Frames(), &framesWithProps.Frames());
-
-  // Do not allow partial builds if the retained display list is empty, or if
-  // ShouldBuildPartial heuristic fails.
-  bool shouldBuildPartial =
-    !mList.IsEmpty() && ShouldBuildPartial(modifiedFrames.Frames());
-=======
-  GetModifiedAndFramesWithProps(&mBuilder, &modifiedFrames.Frames(),
-                                &framesWithProps.Frames());
->>>>>>> upstream-releases
 
   // Do not allow partial builds if the |ShouldBuildPartial()| heuristic fails.
   bool shouldBuildPartial = ShouldBuildPartial(modifiedFrames.Frames());
@@ -1879,24 +1447,10 @@ PartialUpdateResult RetainedDisplayListBuilder::AttemptPartialUpdate(
   AnimatedGeometryRoot* modifiedAGR = nullptr;
   PartialUpdateResult result = PartialUpdateResult::NoChange;
   if (!shouldBuildPartial ||
-<<<<<<< HEAD
-      !ComputeRebuildRegion(modifiedFrames.Frames(), &modifiedDirty,
-                            &modifiedAGR, framesWithProps.Frames()) ||
-      !PreProcessDisplayList(&mList, modifiedAGR)) {
-    mBuilder.LeavePresShell(mBuilder.RootReferenceFrame(), nullptr);
-||||||| merged common ancestors
-      !ComputeRebuildRegion(modifiedFrames.Frames(),
-                            &modifiedDirty,
-                            &modifiedAGR,
-                            framesWithProps.Frames()) ||
-      !PreProcessDisplayList(&mList, modifiedAGR)) {
-    mBuilder.LeavePresShell(mBuilder.RootReferenceFrame(), List());
-=======
       !ComputeRebuildRegion(modifiedFrames.Frames(), &modifiedDirty,
                             &modifiedAGR, framesWithProps.Frames()) ||
       !PreProcessDisplayList(&mList, modifiedAGR, result)) {
     mBuilder.LeavePresShell(mBuilder.RootReferenceFrame(), nullptr);
->>>>>>> upstream-releases
     mList.DeleteAll(&mBuilder);
     return PartialUpdateResult::Failed;
   }
@@ -1915,26 +1469,8 @@ PartialUpdateResult RetainedDisplayListBuilder::AttemptPartialUpdate(
   }
 
   modifiedDirty.IntersectRect(
-<<<<<<< HEAD
       modifiedDirty,
       mBuilder.RootReferenceFrame()->GetVisualOverflowRectRelativeToSelf());
-
-  PartialUpdateResult result = PartialUpdateResult::NoChange;
-  if (!modifiedDirty.IsEmpty() || !framesWithProps.IsEmpty()) {
-    result = PartialUpdateResult::Updated;
-  }
-||||||| merged common ancestors
-    modifiedDirty,
-    mBuilder.RootReferenceFrame()->GetVisualOverflowRectRelativeToSelf());
-
-  PartialUpdateResult result = PartialUpdateResult::NoChange;
-  if (!modifiedDirty.IsEmpty() || !framesWithProps.IsEmpty()) {
-    result = PartialUpdateResult::Updated;
-  }
-=======
-      modifiedDirty,
-      mBuilder.RootReferenceFrame()->GetVisualOverflowRectRelativeToSelf());
->>>>>>> upstream-releases
 
   mBuilder.SetDirtyRect(modifiedDirty);
   mBuilder.SetPartialUpdate(true);
@@ -1944,24 +1480,10 @@ PartialUpdateResult RetainedDisplayListBuilder::AttemptPartialUpdate(
       &mBuilder, &modifiedDL);
   if (!modifiedDL.IsEmpty()) {
     nsLayoutUtils::AddExtraBackgroundItems(
-<<<<<<< HEAD
-        mBuilder, modifiedDL, mBuilder.RootReferenceFrame(),
-        nsRect(nsPoint(0, 0), mBuilder.RootReferenceFrame()->GetSize()),
-        mBuilder.RootReferenceFrame()->GetVisualOverflowRectRelativeToSelf(),
-        aBackstop);
-||||||| merged common ancestors
-      mBuilder,
-      modifiedDL,
-      mBuilder.RootReferenceFrame(),
-      nsRect(nsPoint(0, 0), mBuilder.RootReferenceFrame()->GetSize()),
-      mBuilder.RootReferenceFrame()->GetVisualOverflowRectRelativeToSelf(),
-      aBackstop);
-=======
         &mBuilder, &modifiedDL, mBuilder.RootReferenceFrame(),
         nsRect(nsPoint(0, 0), mBuilder.RootReferenceFrame()->GetSize()),
         mBuilder.RootReferenceFrame()->GetVisualOverflowRectRelativeToSelf(),
         aBackstop);
->>>>>>> upstream-releases
   }
   mBuilder.SetPartialUpdate(false);
 

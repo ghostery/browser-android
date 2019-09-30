@@ -562,14 +562,6 @@ void CacheIOThread::LoopOneLevel(uint32_t aLevel) {
     }
   }
 
-<<<<<<< HEAD
-  if (returnEvents)
-    mEventQueue[aLevel].InsertElementsAt(0, events.Elements() + index,
-                                         length - index);
-||||||| merged common ancestors
-  if (returnEvents)
-    mEventQueue[aLevel].InsertElementsAt(0, events.Elements() + index, length - index);
-=======
   if (returnEvents) {
     // This code must prevent any AddRef/Release calls on the stored COMPtrs as
     // it might be exhaustive and block the monitor's lock for an excessive
@@ -586,7 +578,6 @@ void CacheIOThread::LoopOneLevel(uint32_t aLevel) {
     // And finally move everything back to the main queue.
     events.SwapElements(mEventQueue[aLevel]);
   }
->>>>>>> upstream-releases
 }
 
 bool CacheIOThread::EventsPending(uint32_t aLastLevel) {

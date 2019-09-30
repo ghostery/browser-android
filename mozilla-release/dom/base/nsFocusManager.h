@@ -30,20 +30,10 @@ namespace mozilla {
 class PresShell;
 namespace dom {
 class Element;
-<<<<<<< HEAD
-class TabParent;
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-class TabParent;
-}
-}
-=======
 struct FocusOptions;
 class BrowserParent;
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 struct nsDelayedBlurOrFocusEvent;
 
@@ -115,20 +105,9 @@ class nsFocusManager final : public nsIFocusManager,
   /**
    * Called when mouse button event handling is started and finished.
    */
-<<<<<<< HEAD
-  already_AddRefed<nsIDocument> SetMouseButtonHandlingDocument(
-      nsIDocument* aDocument) {
-    nsCOMPtr<nsIDocument> handlingDocument = mMouseButtonEventHandlingDocument;
-||||||| merged common ancestors
-  already_AddRefed<nsIDocument>
-    SetMouseButtonHandlingDocument(nsIDocument* aDocument)
-  {
-    nsCOMPtr<nsIDocument> handlingDocument = mMouseButtonEventHandlingDocument;
-=======
   already_AddRefed<Document> SetMouseButtonHandlingDocument(
       Document* aDocument) {
     RefPtr<Document> handlingDocument = mMouseButtonEventHandlingDocument;
->>>>>>> upstream-releases
     mMouseButtonEventHandlingDocument = aDocument;
     return handlingDocument.forget();
   }
@@ -174,16 +153,6 @@ class nsFocusManager final : public nsIFocusManager,
     // Return focused content in aWindow or one of visible sub windows.
     eIncludeVisibleDescendants,
   };
-<<<<<<< HEAD
-  static mozilla::dom::Element* GetFocusedDescendant(
-      nsPIDOMWindowOuter* aWindow, SearchRange aSearchRange,
-      nsPIDOMWindowOuter** aFocusedWindow);
-||||||| merged common ancestors
-  static mozilla::dom::Element*
-  GetFocusedDescendant(nsPIDOMWindowOuter* aWindow,
-                       SearchRange aSearchRange,
-                       nsPIDOMWindowOuter** aFocusedWindow);
-=======
   static mozilla::dom::Element* GetFocusedDescendant(
       nsPIDOMWindowOuter* aWindow, SearchRange aSearchRange,
       nsPIDOMWindowOuter** aFocusedWindow);
@@ -213,7 +182,6 @@ class nsFocusManager final : public nsIFocusManager,
 
   static uint32_t FocusOptionsToFocusManagerFlags(
       const mozilla::dom::FocusOptions& aOptions);
->>>>>>> upstream-releases
 
   /**
    * Returns the content node that focus will be redirected to if aContent was
@@ -372,24 +340,10 @@ class nsFocusManager final : public nsIFocusManager,
    *
    * If aAdjustWidget is false, don't change the widget focus state.
    */
-<<<<<<< HEAD
-  void Focus(nsPIDOMWindowOuter* aWindow, mozilla::dom::Element* aContent,
-             uint32_t aFlags, bool aIsNewDocument, bool aFocusChanged,
-             bool aWindowRaised, bool aAdjustWidget,
-||||||| merged common ancestors
-  void Focus(nsPIDOMWindowOuter* aWindow,
-             mozilla::dom::Element* aContent,
-             uint32_t aFlags,
-             bool aIsNewDocument,
-             bool aFocusChanged,
-             bool aWindowRaised,
-             bool aAdjustWidget,
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   void Focus(nsPIDOMWindowOuter* aWindow, mozilla::dom::Element* aContent,
              uint32_t aFlags, bool aIsNewDocument, bool aFocusChanged,
              bool aWindowRaised, bool aAdjustWidget,
->>>>>>> upstream-releases
              nsIContent* aContentLostFocus = nullptr);
 
   /**
@@ -401,28 +355,11 @@ class nsFocusManager final : public nsIFocusManager,
    *
    * aWindowRaised should only be true if called from WindowRaised.
    */
-<<<<<<< HEAD
-  void SendFocusOrBlurEvent(
-      mozilla::EventMessage aEventMessage, nsIPresShell* aPresShell,
-      nsIDocument* aDocument, nsISupports* aTarget, uint32_t aFocusMethod,
-      bool aWindowRaised, bool aIsRefocus = false,
-      mozilla::dom::EventTarget* aRelatedTarget = nullptr);
-||||||| merged common ancestors
-  void SendFocusOrBlurEvent(mozilla::EventMessage aEventMessage,
-                            nsIPresShell* aPresShell,
-                            nsIDocument* aDocument,
-                            nsISupports* aTarget,
-                            uint32_t aFocusMethod,
-                            bool aWindowRaised,
-                            bool aIsRefocus = false,
-                            mozilla::dom::EventTarget* aRelatedTarget = nullptr);
-=======
   void SendFocusOrBlurEvent(
       mozilla::EventMessage aEventMessage, mozilla::PresShell* aPresShell,
       Document* aDocument, nsISupports* aTarget, uint32_t aFocusMethod,
       bool aWindowRaised, bool aIsRefocus = false,
       mozilla::dom::EventTarget* aRelatedTarget = nullptr);
->>>>>>> upstream-releases
 
   /**
    * Fire a focus or blur event at aTarget.
@@ -432,24 +369,10 @@ class nsFocusManager final : public nsIFocusManager,
    *
    * aWindowRaised should only be true if called from WindowRaised.
    */
-<<<<<<< HEAD
-  void FireFocusOrBlurEvent(
-      mozilla::EventMessage aEventMessage, nsIPresShell* aPresShell,
-      nsISupports* aTarget, bool aWindowRaised, bool aIsRefocus = false,
-      mozilla::dom::EventTarget* aRelatedTarget = nullptr);
-||||||| merged common ancestors
-  void FireFocusOrBlurEvent(mozilla::EventMessage aEventMessage,
-                            nsIPresShell* aPresShell,
-                            nsISupports* aTarget,
-                            bool aWindowRaised,
-                            bool aIsRefocus = false,
-                            mozilla::dom::EventTarget* aRelatedTarget = nullptr);
-=======
   void FireFocusOrBlurEvent(
       mozilla::EventMessage aEventMessage, mozilla::PresShell* aPresShell,
       nsISupports* aTarget, bool aWindowRaised, bool aIsRefocus = false,
       mozilla::dom::EventTarget* aRelatedTarget = nullptr);
->>>>>>> upstream-releases
 
   /**
    *  Fire a focusin or focusout event
@@ -468,39 +391,17 @@ class nsFocusManager final : public nsIFocusManager,
    *  aRelatedTarget is the content related to the event (the object
    *  losing focus for focusin, the object getting focus for focusout).
    */
-<<<<<<< HEAD
-  void FireFocusInOrOutEvent(
-      mozilla::EventMessage aEventMessage, nsIPresShell* aPresShell,
-      nsISupports* aTarget, nsPIDOMWindowOuter* aCurrentFocusedWindow,
-      nsIContent* aCurrentFocusedContent,
-      mozilla::dom::EventTarget* aRelatedTarget = nullptr);
-||||||| merged common ancestors
-  void FireFocusInOrOutEvent(mozilla::EventMessage aEventMessage,
-                             nsIPresShell* aPresShell,
-                             nsISupports* aTarget,
-                             nsPIDOMWindowOuter* aCurrentFocusedWindow,
-                             nsIContent* aCurrentFocusedContent,
-                             mozilla::dom::EventTarget* aRelatedTarget = nullptr);
-=======
   void FireFocusInOrOutEvent(
       mozilla::EventMessage aEventMessage, mozilla::PresShell* aPresShell,
       nsISupports* aTarget, nsPIDOMWindowOuter* aCurrentFocusedWindow,
       nsIContent* aCurrentFocusedContent,
       mozilla::dom::EventTarget* aRelatedTarget = nullptr);
->>>>>>> upstream-releases
 
   /**
    * Scrolls aContent into view unless the FLAG_NOSCROLL flag is set.
    */
-<<<<<<< HEAD
-  void ScrollIntoView(nsIPresShell* aPresShell, nsIContent* aContent,
-||||||| merged common ancestors
-  void ScrollIntoView(nsIPresShell* aPresShell,
-                      nsIContent* aContent,
-=======
   MOZ_CAN_RUN_SCRIPT
   void ScrollIntoView(mozilla::PresShell* aPresShell, nsIContent* aContent,
->>>>>>> upstream-releases
                       uint32_t aFlags);
 
   /**
@@ -527,14 +428,7 @@ class nsFocusManager final : public nsIFocusManager,
   /**
    * Makes the caret visible or not, depending on aVisible.
    */
-<<<<<<< HEAD
-  nsresult SetCaretVisible(nsIPresShell* aPresShell, bool aVisible,
-||||||| merged common ancestors
-  nsresult SetCaretVisible(nsIPresShell* aPresShell,
-                           bool aVisible,
-=======
   nsresult SetCaretVisible(mozilla::PresShell* aPresShell, bool aVisible,
->>>>>>> upstream-releases
                            nsIContent* aContent);
 
   // the remaining functions are used for tab key and document-navigation
@@ -543,97 +437,10 @@ class nsFocusManager final : public nsIFocusManager,
    * Retrieves the start and end points of the current selection for
    * aDocument and stores them in aStartContent and aEndContent.
    */
-<<<<<<< HEAD
-  nsresult GetSelectionLocation(nsIDocument* aDocument,
-                                nsIPresShell* aPresShell,
-                                nsIContent** aStartContent,
-                                nsIContent** aEndContent);
-
-  /**
-   * Helper function for MoveFocus which determines the next element
-   * to move the focus to and returns it in aNextContent.
-   *
-   * aWindow is the window to adjust the focus within, and aStart is
-   * the element to start navigation from. For tab key navigation,
-   * this should be the currently focused element.
-   *
-   * aType is the type passed to MoveFocus. If aNoParentTraversal is set,
-   * navigation is not done to parent documents and iteration returns to the
-   * beginning (or end) of the starting document.
-   */
-  nsresult DetermineElementToMoveFocus(nsPIDOMWindowOuter* aWindow,
-                                       nsIContent* aStart, int32_t aType,
-                                       bool aNoParentTraversal,
-                                       nsIContent** aNextContent);
-
-  /**
-   * Returns scope owner of aContent.
-   * A scope owner is either a document root, shadow host, or slot.
-   */
-  nsIContent* FindOwner(nsIContent* aContent);
-
-  /**
-   * Returns true if aContent is a shadow host or slot
-   */
-  bool IsHostOrSlot(nsIContent* aContent);
-
-  /**
-   * Host and Slot elements need to be handled as if they had tabindex 0 even
-   * when they don't have the attribute. This is a helper method to get the
-   * right value for focus navigation. If aIsFocusable is passed, it is set to
-   * true if the element itself is focusable.
-   */
-  int32_t HostOrSlotTabIndexValue(nsIContent* aContent,
-                                  bool* aIsFocusable = nullptr);
-||||||| merged common ancestors
-  nsresult GetSelectionLocation(nsIDocument* aDocument,
-                                nsIPresShell* aPresShell,
-                                nsIContent **aStartContent,
-                                nsIContent **aEndContent);
-
-  /**
-   * Helper function for MoveFocus which determines the next element
-   * to move the focus to and returns it in aNextContent.
-   *
-   * aWindow is the window to adjust the focus within, and aStart is
-   * the element to start navigation from. For tab key navigation,
-   * this should be the currently focused element.
-   *
-   * aType is the type passed to MoveFocus. If aNoParentTraversal is set,
-   * navigation is not done to parent documents and iteration returns to the
-   * beginning (or end) of the starting document.
-   */
-  nsresult DetermineElementToMoveFocus(nsPIDOMWindowOuter* aWindow,
-                                       nsIContent* aStart,
-                                       int32_t aType, bool aNoParentTraversal,
-                                       nsIContent** aNextContent);
-
-  /**
-   * Returns scope owner of aContent.
-   * A scope owner is either a document root, shadow host, or slot.
-   */
-  nsIContent* FindOwner(nsIContent* aContent);
-
-  /**
-   * Returns true if aContent is a shadow host or slot
-   */
-  bool IsHostOrSlot(nsIContent* aContent);
-
-  /**
-   * Host and Slot elements need to be handled as if they had tabindex 0 even
-   * when they don't have the attribute. This is a helper method to get the right
-   * value for focus navigation.
-   * If aIsFocusable is passed, it is set to true if the element itself is
-   * focusable.
-   */
-  int32_t HostOrSlotTabIndexValue(nsIContent* aContent,
-                                  bool* aIsFocusable = nullptr);
-=======
   nsresult GetSelectionLocation(Document* aDocument,
                                 mozilla::PresShell* aPresShell,
                                 nsIContent** aStartContent,
                                 nsIContent** aEndContent);
->>>>>>> upstream-releases
 
   /**
    * Retrieve the next tabbable element in scope owned by aOwner, using
@@ -703,25 +510,11 @@ class nsFocusManager final : public nsIFocusManager,
    *   flattened subtrees that contains aStartContent as non-root, except
    *   the flattened subtree rooted at shadow host in light DOM.
    */
-<<<<<<< HEAD
-  nsIContent* GetNextTabbableContentInAncestorScopes(
-      nsIContent** aStartContent, nsIContent* aOriginalStartContent,
-      bool aForward, int32_t* aCurrentTabIndex, bool aIgnoreTabIndex,
-      bool aForDocumentNavigation);
-||||||| merged common ancestors
-  nsIContent* GetNextTabbableContentInAncestorScopes(nsIContent** aStartContent,
-                                                     nsIContent* aOriginalStartContent,
-                                                     bool aForward,
-                                                     int32_t* aCurrentTabIndex,
-                                                     bool aIgnoreTabIndex,
-                                                     bool aForDocumentNavigation);
-=======
   nsIContent* GetNextTabbableContentInAncestorScopes(
       nsIContent* aStartOwner, nsIContent** aStartContent,
       nsIContent* aOriginalStartContent, bool aForward,
       int32_t* aCurrentTabIndex, bool aIgnoreTabIndex,
       bool aForDocumentNavigation);
->>>>>>> upstream-releases
 
   /**
    * Retrieve the next tabbable element within a document, using focusability
@@ -751,29 +544,11 @@ class nsFocusManager final : public nsIFocusManager,
    * from where the selection is. Similarly, if the starting element isn't
    * focusable, since it doesn't really have a defined tab index.
    */
-<<<<<<< HEAD
-  nsresult GetNextTabbableContent(
-      nsIPresShell* aPresShell, nsIContent* aRootContent,
-      nsIContent* aOriginalStartContent, nsIContent* aStartContent,
-      bool aForward, int32_t aCurrentTabIndex, bool aIgnoreTabIndex,
-      bool aForDocumentNavigation, nsIContent** aResultContent);
-||||||| merged common ancestors
-  nsresult GetNextTabbableContent(nsIPresShell* aPresShell,
-                                  nsIContent* aRootContent,
-                                  nsIContent* aOriginalStartContent,
-                                  nsIContent* aStartContent,
-                                  bool aForward,
-                                  int32_t aCurrentTabIndex,
-                                  bool aIgnoreTabIndex,
-                                  bool aForDocumentNavigation,
-                                  nsIContent** aResultContent);
-=======
   nsresult GetNextTabbableContent(
       mozilla::PresShell* aPresShell, nsIContent* aRootContent,
       nsIContent* aOriginalStartContent, nsIContent* aStartContent,
       bool aForward, int32_t aCurrentTabIndex, bool aIgnoreTabIndex,
       bool aForDocumentNavigation, nsIContent** aResultContent);
->>>>>>> upstream-releases
 
   /**
    * Get the next tabbable image map area and returns it.

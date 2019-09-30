@@ -36,18 +36,6 @@ function run_test() {
     Ci.nsIPrefService
   );
   var prefs = prefserv.getBranch("network.proxy.");
-<<<<<<< HEAD
-    prefs.setIntPref("type", 2);
-    prefs.setCharPref("no_proxies_on", "nothing");
-  prefs.setCharPref("autoconfig_url", "data:text/plain," +
-    "function FindProxyForURL(url, host) {return 'PROXY a_non_existent_domain_x7x6c572v:80; PROXY localhost:" +
-    httpServer.identity.primaryPort + "';}"
-||||||| merged common ancestors
-  prefs.setIntPref("type", 2);
-  prefs.setCharPref("autoconfig_url", "data:text/plain," +
-    "function FindProxyForURL(url, host) {return 'PROXY a_non_existent_domain_x7x6c572v:80; PROXY localhost:" +
-    httpServer.identity.primaryPort + "';}"
-=======
   prefs.setIntPref("type", 2);
   prefs.setCharPref("no_proxies_on", "nothing");
   prefs.setBoolPref("allow_hijacking_localhost", true);
@@ -57,7 +45,6 @@ function run_test() {
       "function FindProxyForURL(url, host) {return 'PROXY a_non_existent_domain_x7x6c572v:80; PROXY localhost:" +
       httpServer.identity.primaryPort +
       "';}"
->>>>>>> upstream-releases
   );
 
   var chan = make_channel(

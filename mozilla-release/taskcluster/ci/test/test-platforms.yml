@@ -43,18 +43,9 @@ linux64/opt:
         - linux-talos-flex
         - raptor-firefox
         - raptor-fetch-firefox
-<<<<<<< HEAD
-linux64-nightly/opt:
-    build-platform: linux64-nightly/opt
-||||||| merged common ancestors
-        - raptor-fetch-chrome
-linux64-nightly/opt:
-    build-platform: linux64-nightly/opt
-=======
         - marionette-media-tests
 linux64-shippable/opt:
     build-platform: linux64-shippable/opt
->>>>>>> upstream-releases
     test-sets:
         - common-tests
         - web-platform-tests
@@ -63,13 +54,6 @@ linux64-shippable/opt:
         - desktop-screenshot-capture
         - talos
         - awsy
-<<<<<<< HEAD
-        - raptor-chrome
-        - raptor-fetch-chrome
-||||||| merged common ancestors
-        - linux-talos-profiling
-        - raptor-chrome
-=======
         - mochitest-headless
         - marionette-headless
         - linux-talos-flex
@@ -79,7 +63,6 @@ linux64-shippable/opt:
         - raptor-fetch-firefox
         - raptor-profiling
         - raptor-fetch-profiling
->>>>>>> upstream-releases
 linux64-devedition/opt:
     build-platform: linux64-devedition-nightly/opt
     test-sets:
@@ -215,46 +198,18 @@ windows10-64/opt:
         - raptor-firefox
         - marionette-media-tests
 
-<<<<<<< HEAD
-windows10-64-ux/opt:
-    build-platform: win64-nightly/opt
-    test-sets:
-        - raptor-firefox
-        - talos-ux
-
-windows10-64-pgo/opt:
-    build-platform: win64-pgo/opt
-||||||| merged common ancestors
-windows10-64-pgo/opt:
-    build-platform: win64-pgo/opt
-=======
 windows10-aarch64/opt:
     build-platform: win64-aarch64/opt
->>>>>>> upstream-releases
     test-sets:
         - awsy
-<<<<<<< HEAD
-        - desktop-screenshot-capture
-        - marionette-gpu-tests
-||||||| merged common ancestors
-        - desktop-screenshot-capture
-=======
         - marionette-gpu-tests
         - raptor-firefox
         - windows-aarch64-tests
->>>>>>> upstream-releases
         - windows-talos
-<<<<<<< HEAD
-        - marionette-gpu-tests
-        - windows-tests
-||||||| merged common ancestors
-        - windows-tests
-=======
 
 windows10-64-ux/opt:
     build-platform: win64-shippable/opt
     test-sets:
->>>>>>> upstream-releases
         - raptor-firefox
         - talos-ux
 
@@ -264,26 +219,14 @@ windows10-64-shippable/opt:
         - awsy
         - desktop-screenshot-capture
         - desktop-instrumentation
-<<<<<<< HEAD
-        - marionette-gpu-tests
-||||||| merged common ancestors
-=======
         - windows-talos
         - marionette-gpu-tests
->>>>>>> upstream-releases
         - windows-tests
-<<<<<<< HEAD
-        - raptor-chrome
-||||||| merged common ancestors
-        - windows-talos-profiling
-        - raptor-chrome
-=======
         - web-platform-tests
         - web-platform-tests-wdspec-headless
         - raptor-firefox
         - raptor-chromium
         - raptor-profiling
->>>>>>> upstream-releases
 
 windows10-64-devedition/opt:
     build-platform: win64-devedition-nightly/opt
@@ -342,19 +285,8 @@ macosx1014-64-shippable/opt:
 macosx1014-64/debug:
     build-platform: macosx64-shippable/opt
     test-sets:
-<<<<<<< HEAD
-        - macosx64-tests
-        - awsy
-        - raptor-chrome
-||||||| merged common ancestors
-        - macosx64-tests
-        - macosx64-talos-profiling
-        - awsy
-        - raptor-chrome
-=======
         - macosx1014-64-tests
         # - marionette-media-tests
->>>>>>> upstream-releases
 
 macosx1014-64-devedition/opt:
     build-platform: macosx64-devedition-nightly/opt
@@ -405,18 +337,6 @@ android-em-4.3-arm7-api-16/opt:
         - android-common-tests
         - android-opt-tests
 
-<<<<<<< HEAD
-android-em-7.0-x86/opt:
-    build-platform: android-x86/opt
-||||||| merged common ancestors
-android-em-4.2-x86/opt:
-    build-platform: android-x86/opt
-    test-sets:
-        - android-x86-tests
-
-android-em-7.0-x86/opt:
-    build-platform: android-x86/opt
-=======
 android-em-4.3-arm7-api-16/pgo:
     build-platform: android-api-16-pgo/opt
     test-sets:
@@ -431,7 +351,6 @@ android-em-7.0-x86_64/opt:
 
 android-em-7.0-x86_64/debug:
     build-platform: android-x86_64/debug
->>>>>>> upstream-releases
     test-sets:
         - android-x86_64-tests
 

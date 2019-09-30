@@ -58,15 +58,8 @@ class nsMathMLmfracFrame final : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmfracFrame)
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewMathMLmfracFrame(nsIPresShell* aPresShell,
-                                          ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewMathMLmfracFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewMathMLmfracFrame(mozilla::PresShell* aPresShell,
                                           ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   virtual eMathMLFrameType GetMathMLFrameType() override;
 
@@ -89,44 +82,6 @@ class nsMathMLmfracFrame final : public nsMathMLContainerFrame {
   virtual nscoord FixInterFrameSpacing(ReflowOutput& aDesiredSize) override;
 
   // helper to translate the thickness attribute into a usable form
-<<<<<<< HEAD
-  static nscoord CalcLineThickness(nsPresContext* aPresContext,
-                                   ComputedStyle* aComputedStyle,
-                                   nsString& aThicknessAttribute,
-                                   nscoord onePixel,
-                                   nscoord aDefaultRuleThickness,
-                                   float aFontSizeInflation);
-
-  uint8_t ScriptIncrement(nsIFrame* aFrame) override;
-
- protected:
-  explicit nsMathMLmfracFrame(ComputedStyle* aStyle)
-      : nsMathMLContainerFrame(aStyle, kClassID),
-        mLineRect(),
-        mSlashChar(nullptr),
-        mLineThickness(0),
-        mIsBevelled(false) {}
-||||||| merged common ancestors
-  static nscoord
-  CalcLineThickness(nsPresContext*  aPresContext,
-                    ComputedStyle*  aComputedStyle,
-                    nsString&        aThicknessAttribute,
-                    nscoord          onePixel,
-                    nscoord          aDefaultRuleThickness,
-                    float            aFontSizeInflation);
-
-  uint8_t
-  ScriptIncrement(nsIFrame* aFrame) override;
-
-protected:
-  explicit nsMathMLmfracFrame(ComputedStyle* aStyle)
-    : nsMathMLContainerFrame(aStyle, kClassID)
-    , mLineRect()
-    , mSlashChar(nullptr)
-    , mLineThickness(0)
-    , mIsBevelled(false)
-  {}
-=======
   static nscoord CalcLineThickness(nsPresContext* aPresContext,
                                    ComputedStyle* aComputedStyle,
                                    nsString& aThicknessAttribute,
@@ -144,7 +99,6 @@ protected:
         mSlashChar(nullptr),
         mLineThickness(0),
         mIsBevelled(false) {}
->>>>>>> upstream-releases
   virtual ~nsMathMLmfracFrame();
 
   nsresult PlaceInternal(DrawTarget* aDrawTarget, bool aPlaceOrigin,

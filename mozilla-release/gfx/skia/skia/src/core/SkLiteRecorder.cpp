@@ -99,55 +99,6 @@ void SkLiteRecorder::onDrawAnnotation(const SkRect& rect, const char key[], SkDa
     fDL->drawAnnotation(rect, key, val);
 }
 
-<<<<<<< HEAD
-void SkLiteRecorder::onDrawText(const void* text, size_t bytes,
-                                SkScalar x, SkScalar y,
-                                const SkPaint& paint) {
-    fDL->drawText(text, bytes, x, y, paint);
-}
-void SkLiteRecorder::onDrawPosText(const void* text, size_t bytes,
-                                   const SkPoint pos[],
-                                   const SkPaint& paint) {
-    fDL->drawPosText(text, bytes, pos, paint);
-}
-void SkLiteRecorder::onDrawPosTextH(const void* text, size_t bytes,
-                                    const SkScalar xs[], SkScalar y,
-                                    const SkPaint& paint) {
-    fDL->drawPosTextH(text, bytes, xs, y, paint);
-}
-void SkLiteRecorder::onDrawTextRSXform(const void* text, size_t bytes,
-                                       const SkRSXform xform[], const SkRect* cull,
-                                       const SkPaint& paint) {
-    fDL->drawTextRSXform(text, bytes, xform, cull, paint);
-}
-||||||| merged common ancestors
-void SkLiteRecorder::onDrawText(const void* text, size_t bytes,
-                                SkScalar x, SkScalar y,
-                                const SkPaint& paint) {
-    fDL->drawText(text, bytes, x, y, paint);
-}
-void SkLiteRecorder::onDrawPosText(const void* text, size_t bytes,
-                                   const SkPoint pos[],
-                                   const SkPaint& paint) {
-    fDL->drawPosText(text, bytes, pos, paint);
-}
-void SkLiteRecorder::onDrawPosTextH(const void* text, size_t bytes,
-                                    const SkScalar xs[], SkScalar y,
-                                    const SkPaint& paint) {
-    fDL->drawPosTextH(text, bytes, xs, y, paint);
-}
-void SkLiteRecorder::onDrawTextOnPath(const void* text, size_t bytes,
-                                      const SkPath& path, const SkMatrix* matrix,
-                                      const SkPaint& paint) {
-    fDL->drawTextOnPath(text, bytes, path, matrix, paint);
-}
-void SkLiteRecorder::onDrawTextRSXform(const void* text, size_t bytes,
-                                       const SkRSXform xform[], const SkRect* cull,
-                                       const SkPaint& paint) {
-    fDL->drawTextRSXform(text, bytes, xform, cull, paint);
-}
-=======
->>>>>>> upstream-releases
 void SkLiteRecorder::onDrawTextBlob(const SkTextBlob* blob,
                                     SkScalar x, SkScalar y,
                                     const SkPaint& paint) {

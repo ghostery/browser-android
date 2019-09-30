@@ -20,25 +20,6 @@ class nsLookAndFeel final : public nsXPLookAndFeel {
   nsLookAndFeel();
   virtual ~nsLookAndFeel();
 
-<<<<<<< HEAD
-  void NativeInit() final;
-  virtual void RefreshImpl() override;
-  virtual nsresult NativeGetColor(ColorID aID, nscolor &aResult) override;
-  virtual nsresult GetIntImpl(IntID aID, int32_t &aResult) override;
-  virtual nsresult GetFloatImpl(FloatID aID, float &aResult) override;
-  virtual bool GetFontImpl(FontID aID, nsString &aFontName,
-                           gfxFontStyle &aFontStyle,
-                           float aDevPixPerCSSPixel) override;
-||||||| merged common ancestors
-    void NativeInit() final;
-    virtual void RefreshImpl() override;
-    virtual nsresult NativeGetColor(ColorID aID, nscolor &aResult) override;
-    virtual nsresult GetIntImpl(IntID aID, int32_t &aResult) override;
-    virtual nsresult GetFloatImpl(FloatID aID, float &aResult) override;
-    virtual bool GetFontImpl(FontID aID, nsString& aFontName,
-                             gfxFontStyle& aFontStyle,
-                             float aDevPixPerCSSPixel) override;
-=======
   void NativeInit() final;
   virtual void RefreshImpl() override;
   virtual nsresult NativeGetColor(ColorID aID, nscolor& aResult) override;
@@ -46,92 +27,15 @@ class nsLookAndFeel final : public nsXPLookAndFeel {
   virtual nsresult GetFloatImpl(FloatID aID, float& aResult) override;
   virtual bool GetFontImpl(FontID aID, nsString& aFontName,
                            gfxFontStyle& aFontStyle) override;
->>>>>>> upstream-releases
 
   virtual char16_t GetPasswordCharacterImpl() override;
   virtual bool GetEchoPasswordImpl() override;
 
   bool IsCSDAvailable() const { return mCSDAvailable; }
 
-<<<<<<< HEAD
- protected:
-  // Cached fonts
-  bool mDefaultFontCached;
-  bool mButtonFontCached;
-  bool mFieldFontCached;
-  bool mMenuFontCached;
-  nsString mDefaultFontName;
-  nsString mButtonFontName;
-  nsString mFieldFontName;
-  nsString mMenuFontName;
-  gfxFontStyle mDefaultFontStyle;
-  gfxFontStyle mButtonFontStyle;
-  gfxFontStyle mFieldFontStyle;
-  gfxFontStyle mMenuFontStyle;
-||||||| merged common ancestors
-protected:
-=======
   static const nscolor kBlack = NS_RGB(0, 0, 0);
   static const nscolor kWhite = NS_RGB(255, 255, 255);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Cached colors
-  nscolor mInfoBackground;
-  nscolor mInfoText;
-  nscolor mMenuBackground;
-  nscolor mMenuBarText;
-  nscolor mMenuBarHoverText;
-  nscolor mMenuText;
-  nscolor mMenuTextInactive;
-  nscolor mMenuHover;
-  nscolor mMenuHoverText;
-  nscolor mButtonDefault;
-  nscolor mButtonText;
-  nscolor mButtonHoverText;
-  nscolor mButtonHoverFace;
-  nscolor mFrameOuterLightBorder;
-  nscolor mFrameInnerDarkBorder;
-  nscolor mOddCellBackground;
-  nscolor mNativeHyperLinkText;
-  nscolor mComboBoxText;
-  nscolor mComboBoxBackground;
-  nscolor mMozFieldText;
-  nscolor mMozFieldBackground;
-  nscolor mMozWindowText;
-  nscolor mMozWindowBackground;
-  nscolor mMozWindowActiveBorder;
-  nscolor mMozWindowInactiveBorder;
-  nscolor mMozWindowInactiveCaption;
-  nscolor mMozCellHighlightBackground;
-  nscolor mMozCellHighlightText;
-  nscolor mTextSelectedText;
-  nscolor mTextSelectedBackground;
-  nscolor mMozScrollbar;
-  nscolor mInfoBarText;
-  char16_t mInvisibleCharacter;
-  float mCaretRatio;
-  bool mMenuSupportsDrag;
-  bool mCSDAvailable;
-  bool mCSDMaximizeButton;
-  bool mCSDMinimizeButton;
-  bool mCSDCloseButton;
-  bool mInitialized;
-||||||| merged common ancestors
-    // Cached fonts
-    bool mDefaultFontCached;
-    bool mButtonFontCached;
-    bool mFieldFontCached;
-    bool mMenuFontCached;
-    nsString mDefaultFontName;
-    nsString mButtonFontName;
-    nsString mFieldFontName;
-    nsString mMenuFontName;
-    gfxFontStyle mDefaultFontStyle;
-    gfxFontStyle mButtonFontStyle;
-    gfxFontStyle mFieldFontStyle;
-    gfxFontStyle mMenuFontStyle;
-=======
  protected:
   // Cached fonts
   bool mDefaultFontCached = false;
@@ -146,53 +50,7 @@ protected:
   gfxFontStyle mButtonFontStyle;
   gfxFontStyle mFieldFontStyle;
   gfxFontStyle mMenuFontStyle;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void EnsureInit();
-||||||| merged common ancestors
-    // Cached colors
-    nscolor mInfoBackground;
-    nscolor mInfoText;
-    nscolor mMenuBackground;
-    nscolor mMenuBarText;
-    nscolor mMenuBarHoverText;
-    nscolor mMenuText;
-    nscolor mMenuTextInactive;
-    nscolor mMenuHover;
-    nscolor mMenuHoverText;
-    nscolor mButtonDefault;
-    nscolor mButtonText;
-    nscolor mButtonHoverText;
-    nscolor mButtonHoverFace;
-    nscolor mFrameOuterLightBorder;
-    nscolor mFrameInnerDarkBorder;
-    nscolor mOddCellBackground;
-    nscolor mNativeHyperLinkText;
-    nscolor mComboBoxText;
-    nscolor mComboBoxBackground;
-    nscolor mMozFieldText;
-    nscolor mMozFieldBackground;
-    nscolor mMozWindowText;
-    nscolor mMozWindowBackground;
-    nscolor mMozWindowActiveBorder;
-    nscolor mMozWindowInactiveBorder;
-    nscolor mMozWindowInactiveCaption;
-    nscolor mMozCellHighlightBackground;
-    nscolor mMozCellHighlightText;
-    nscolor mTextSelectedText;
-    nscolor mTextSelectedBackground;
-    nscolor mMozScrollbar;
-    nscolor mInfoBarText;
-    char16_t mInvisibleCharacter;
-    float   mCaretRatio;
-    bool    mMenuSupportsDrag;
-    bool    mCSDAvailable;
-    bool    mCSDMaximizeButton;
-    bool    mCSDMinimizeButton;
-    bool    mCSDCloseButton;
-    bool    mInitialized;
-=======
   // Cached colors
   nscolor mInfoBackground = kWhite;
   nscolor mInfoText = kBlack;
@@ -239,22 +97,11 @@ protected:
   bool mCSDReversedPlacement = false;
   bool mSystemUsesDarkTheme = false;
   bool mInitialized = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  nsresult InitCellHighlightColors();
-||||||| merged common ancestors
-    void EnsureInit();
-
-private:
-    nsresult InitCellHighlightColors();
-=======
   void EnsureInit();
 
  private:
   nsresult InitCellHighlightColors();
->>>>>>> upstream-releases
 };
 
 #endif

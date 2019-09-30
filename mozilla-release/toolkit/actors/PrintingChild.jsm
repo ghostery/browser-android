@@ -498,13 +498,6 @@ PrintingListener.prototype = {
 
   onLocationChange(aWebProgress, aRequest, aLocation, aFlags) {},
   onStatusChange(aWebProgress, aRequest, aStatus, aMessage) {},
-<<<<<<< HEAD
-  onSecurityChange(aWebProgress, aRequest, aState) {},
-||||||| merged common ancestors
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON) {},
-=======
   onSecurityChange(aWebProgress, aRequest, aState) {},
   onContentBlockingEvent(aWebProgress, aRequest, aEvent) {},
->>>>>>> upstream-releases
 };

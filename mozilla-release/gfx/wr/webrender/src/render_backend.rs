@@ -10,28 +10,10 @@
 
 use api::{ApiMsg, BuiltDisplayList, ClearCache, DebugCommand, DebugFlags};
 #[cfg(feature = "debugger")]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-use api::{BuiltDisplayListIter, SpecificDisplayItem};
-use api::{DevicePixelScale, DeviceIntPoint, DeviceIntRect, DeviceIntSize};
-||||||| merged common ancestors
-use api::{BuiltDisplayListIter, SpecificDisplayItem};
-use api::{DeviceIntPoint, DevicePixelScale, DeviceUintPoint, DeviceUintRect, DeviceUintSize};
-=======
 use api::{BuiltDisplayListIter, DisplayItem};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 use api::{DocumentId, DocumentLayer, ExternalScrollId, FrameMsg, HitTestFlags, HitTestResult};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-use api::{IdNamespace, LayoutPoint, PipelineId, RenderNotifier, SceneMsg, ScrollClamping};
-use api::{MemoryReport, VoidPtrToSizeFn};
-use api::{ScrollLocation, ScrollNodeState, TransactionMsg, ResourceUpdate, BlobImageKey};
-||||||| merged common ancestors
-use api::{IdNamespace, LayoutPoint, PipelineId, RenderNotifier, SceneMsg, ScrollClamping};
-use api::{MemoryReport, VoidPtrToSizeFn};
-use api::{ScrollLocation, ScrollNodeState, TransactionMsg, ResourceUpdate, ImageKey};
-=======
 use api::{IdNamespace, MemoryReport, PipelineId, RenderNotifier, SceneMsg, ScrollClamping};
 use api::{ScrollLocation, ScrollNodeState, TransactionMsg, ResourceUpdate, BlobImageKey};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 use api::{NotificationRequest, Checkpoint};
 use api::{ClipIntern, FilterDataIntern, PrimitiveKeyKind};
 use api::units::*;
@@ -42,32 +24,6 @@ use api::CaptureBits;
 use api::CapturedDocument;
 use crate::clip_scroll_tree::{SpatialNodeIndex, ClipScrollTree};
 #[cfg(feature = "debugger")]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-use debug_server;
-use frame_builder::{FrameBuilder, FrameBuilderConfig};
-use gpu_cache::GpuCache;
-use hit_test::{HitTest, HitTester};
-use internal_types::{DebugOutput, FastHashMap, FastHashSet, RenderedDocument, ResultMsg};
-use prim_store::{PrimitiveDataStore, PrimitiveScratchBuffer, PrimitiveInstance};
-use prim_store::{PrimitiveInstanceKind, PrimTemplateCommonData};
-use prim_store::gradient::{LinearGradientDataStore, RadialGradientDataStore};
-use prim_store::text_run::TextRunDataStore;
-use profiler::{BackendProfileCounters, IpcProfileCounters, ResourceProfileCounters};
-use record::ApiRecordingReceiver;
-use renderer::{AsyncPropertySampler, PipelineInfo};
-use resource_cache::ResourceCache;
-||||||| merged common ancestors
-use debug_server;
-use frame_builder::{FrameBuilder, FrameBuilderConfig};
-use gpu_cache::GpuCache;
-use hit_test::{HitTest, HitTester};
-use internal_types::{DebugOutput, FastHashMap, FastHashSet, RenderedDocument, ResultMsg};
-use prim_store::PrimitiveDataStore;
-use profiler::{BackendProfileCounters, IpcProfileCounters, ResourceProfileCounters};
-use record::ApiRecordingReceiver;
-use renderer::{AsyncPropertySampler, PipelineInfo};
-use resource_cache::ResourceCache;
-=======
 use crate::debug_server;
 use crate::frame_builder::{FrameBuilder, FrameBuilderConfig};
 use crate::glyph_rasterizer::{FontInstance};
@@ -85,7 +41,6 @@ use crate::record::ApiRecordingReceiver;
 use crate::render_task::RenderTaskGraphCounters;
 use crate::renderer::{AsyncPropertySampler, PipelineInfo};
 use crate::resource_cache::ResourceCache;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 #[cfg(feature = "replay")]
 use crate::resource_cache::PlainCacheOwn;
 #[cfg(any(feature = "capture", feature = "replay"))]
@@ -100,13 +55,6 @@ use serde_json;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-use std::mem::replace;
-||||||| merged common ancestors
-use std::mem::replace;
-use std::os::raw::c_void;
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 use std::sync::mpsc::{channel, Sender, Receiver};
 use std::time::{UNIX_EPOCH, SystemTime};
 use std::u32;
@@ -120,15 +68,7 @@ use crate::util::{Recycler, VecHelper, drain_filter};
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 #[derive(Clone)]
 pub struct DocumentView {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-    pub window_size: DeviceIntSize,
-    pub inner_rect: DeviceIntRect,
-||||||| merged common ancestors
-    pub window_size: DeviceUintSize,
-    pub inner_rect: DeviceUintRect,
-=======
     pub device_rect: DeviceIntRect,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
     pub layer: DocumentLayer,
     pub pan: DeviceIntPoint,
     pub device_pixel_ratio: f32,
@@ -149,114 +89,6 @@ impl DocumentView {
 #[derive(Copy, Clone, Hash, MallocSizeOf, PartialEq, PartialOrd, Debug, Eq, Ord)]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-pub struct FrameId(usize);
-
-impl FrameId {
-    /// Returns a FrameId corresponding to the first frame.
-    ///
-    /// Note that we use 0 as the internal id here because the current code
-    /// increments the frame id at the beginning of the frame, rather than
-    /// at the end, and we want the first frame to be 1. It would probably
-    /// be sensible to move the advance() call to after frame-building, and
-    /// then make this method return FrameId(1).
-    pub fn first() -> Self {
-        FrameId(0)
-    }
-
-    /// Returns the backing usize for this FrameId.
-    pub fn as_usize(&self) -> usize {
-        self.0
-    }
-
-    /// Advances this FrameId to the next frame.
-    pub fn advance(&mut self) {
-        self.0 += 1;
-    }
-
-    /// An invalid sentinel FrameId, which will always compare less than
-    /// any valid FrameId.
-    pub const INVALID: FrameId = FrameId(0);
-}
-
-impl ::std::ops::Add<usize> for FrameId {
-    type Output = Self;
-    fn add(self, other: usize) -> FrameId {
-        FrameId(self.0 + other)
-    }
-}
-
-impl ::std::ops::Sub<usize> for FrameId {
-    type Output = Self;
-    fn sub(self, other: usize) -> FrameId {
-        assert!(self.0 >= other, "Underflow subtracting FrameIds");
-        FrameId(self.0 - other)
-    }
-}
-
-/// Identifier to track a sequence of frames.
-///
-/// This is effectively a `FrameId` with a ridealong timestamp corresponding
-/// to when advance() was called, which allows for more nuanced cache eviction
-/// decisions. As such, we use the `FrameId` for equality and comparison, since
-/// we should never have two `FrameStamps` with the same id but different
-/// timestamps.
-#[derive(Copy, Clone, Debug)]
-#[cfg_attr(feature = "capture", derive(Serialize))]
-#[cfg_attr(feature = "replay", derive(Deserialize))]
-pub struct FrameStamp {
-    id: FrameId,
-    time: SystemTime,
-}
-
-impl Eq for FrameStamp {}
-
-impl PartialEq for FrameStamp {
-    fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
-    }
-}
-
-impl PartialOrd for FrameStamp {
-    fn partial_cmp(&self, other: &Self) -> Option<::std::cmp::Ordering> {
-        self.id.partial_cmp(&other.id)
-    }
-}
-
-impl FrameStamp {
-    /// Gets the FrameId in this stamp.
-    pub fn frame_id(&self) -> FrameId {
-        self.id
-    }
-
-    /// Gets the time associated with this FrameStamp.
-    pub fn time(&self) -> SystemTime {
-        self.time
-    }
-
-    /// Returns a FrameStamp corresponding to the first frame.
-    pub fn first() -> Self {
-        FrameStamp {
-            id: FrameId::first(),
-            time: SystemTime::now(),
-        }
-    }
-
-    /// Advances to a new frame.
-    pub fn advance(&mut self) {
-        self.id.advance();
-        self.time = SystemTime::now();
-    }
-
-    /// An invalid sentinel FrameStamp.
-    pub const INVALID: FrameStamp = FrameStamp {
-        id: FrameId(0),
-        time: UNIX_EPOCH,
-    };
-}
-||||||| merged common ancestors
-pub struct FrameId(pub u32);
-=======
 pub struct FrameId(usize);
 
 impl FrameId {
@@ -306,7 +138,6 @@ impl ::std::ops::Sub<usize> for FrameId {
         FrameId(self.0 - other)
     }
 }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 
 /// Identifier to track a sequence of frames.
 ///
@@ -318,29 +149,6 @@ impl ::std::ops::Sub<usize> for FrameId {
 #[derive(Copy, Clone, Debug, MallocSizeOf)]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-#[derive(Default)]
-pub struct FrameResources {
-    /// The store of currently active / available clip nodes. This is kept
-    /// in sync with the clip interner in the scene builder for each document.
-    pub clip_data_store: ClipDataStore,
-
-    /// Currently active / available primitives. Kept in sync with the
-    /// primitive interner in the scene builder, per document.
-    pub prim_data_store: PrimitiveDataStore,
-    pub linear_grad_data_store: LinearGradientDataStore,
-    pub radial_grad_data_store: RadialGradientDataStore,
-    pub text_run_data_store: TextRunDataStore,
-||||||| merged common ancestors
-pub struct FrameResources {
-    /// The store of currently active / available clip nodes. This is kept
-    /// in sync with the clip interner in the scene builder for each document.
-    pub clip_data_store: ClipDataStore,
-
-    /// Currently active / available primitives. Kept in sync with the
-    /// primitive interner in the scene builder, per document.
-    pub prim_data_store: PrimitiveDataStore,
-=======
 pub struct FrameStamp {
     id: FrameId,
     time: SystemTime,
@@ -444,46 +252,8 @@ macro_rules! declare_data_stores {
             }
         }
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-impl FrameResources {
-    pub fn as_common_data(
-        &self,
-        prim_inst: &PrimitiveInstance
-    ) -> &PrimTemplateCommonData {
-        match prim_inst.kind {
-            PrimitiveInstanceKind::Picture { data_handle, .. } |
-            PrimitiveInstanceKind::LineDecoration { data_handle, .. } |
-            PrimitiveInstanceKind::NormalBorder { data_handle, .. } |
-            PrimitiveInstanceKind::ImageBorder { data_handle, .. } |
-            PrimitiveInstanceKind::Rectangle { data_handle, .. } |
-            PrimitiveInstanceKind::YuvImage { data_handle, .. } |
-            PrimitiveInstanceKind::Image { data_handle, .. } |
-            PrimitiveInstanceKind::Clear { data_handle, .. } => {
-                let prim_data = &self.prim_data_store[data_handle];
-                &prim_data.common
-            }
-            PrimitiveInstanceKind::LinearGradient { data_handle, .. } => {
-                let prim_data = &self.linear_grad_data_store[data_handle];
-                &prim_data.common
-            }
-            PrimitiveInstanceKind::RadialGradient { data_handle, .. } =>{
-                let prim_data = &self.radial_grad_data_store[data_handle];
-                &prim_data.common
-            }
-            PrimitiveInstanceKind::TextRun { data_handle, .. }  => {
-                let prim_data = &self.text_run_data_store[data_handle];
-                &prim_data.common
-            }
-||||||| merged common ancestors
-impl FrameResources {
-    fn new() -> Self {
-        FrameResources {
-            clip_data_store: ClipDataStore::new(),
-            prim_data_store: PrimitiveDataStore::new(),
-=======
 enumerate_interners!(declare_data_stores);
 
 impl DataStores {
@@ -537,7 +307,6 @@ impl DataStores {
             PrimitiveInstanceKind::PopClipChain => {
                 unreachable!();
             }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         }
     }
 }
@@ -582,21 +351,6 @@ struct Document {
     frame_is_valid: bool,
     hit_tester_is_valid: bool,
     rendered_frame_is_valid: bool,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-    // We track this information to be able to display debugging information from the
-    // renderer.
-    has_built_scene: bool,
-
-    resources: FrameResources,
-
-    /// Contains various vecs of data that is used only during frame building,
-    /// where we want to recycle the memory each new display list, to avoid constantly
-    /// re-allocating and moving memory around.
-    scratch: PrimitiveScratchBuffer,
-||||||| merged common ancestors
-
-    resources: FrameResources,
-=======
     // We track this information to be able to display debugging information from the
     // renderer.
     has_built_scene: bool,
@@ -610,19 +364,12 @@ struct Document {
     /// Keep track of the size of render task graph to pre-allocate memory up-front
     /// the next frame.
     render_task_counters: RenderTaskGraphCounters,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 }
 
 impl Document {
     pub fn new(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-        window_size: DeviceIntSize,
-||||||| merged common ancestors
-        window_size: DeviceUintSize,
-=======
         id: DocumentId,
         size: DeviceIntSize,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         layer: DocumentLayer,
         default_device_pixel_ratio: f32,
     ) -> Self {
@@ -631,15 +378,7 @@ impl Document {
             scene: Scene::new(),
             removed_pipelines: Vec::new(),
             view: DocumentView {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                window_size,
-                inner_rect: DeviceIntRect::new(DeviceIntPoint::zero(), window_size),
-||||||| merged common ancestors
-                window_size,
-                inner_rect: DeviceUintRect::new(DeviceUintPoint::zero(), window_size),
-=======
                 device_rect: size.into(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                 layer,
                 pan: DeviceIntPoint::zero(),
                 page_zoom_factor: 1.0,
@@ -647,13 +386,7 @@ impl Document {
                 device_pixel_ratio: default_device_pixel_ratio,
             },
             clip_scroll_tree: ClipScrollTree::new(),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-            stamp: FrameStamp::first(),
-||||||| merged common ancestors
-            frame_id: FrameId(0),
-=======
             stamp: FrameStamp::first(id),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
             frame_builder: None,
             output_pipelines: FastHashSet::default(),
             hit_tester: None,
@@ -661,18 +394,10 @@ impl Document {
             frame_is_valid: false,
             hit_tester_is_valid: false,
             rendered_frame_is_valid: false,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-            has_built_scene: false,
-            resources: FrameResources::default(),
-            scratch: PrimitiveScratchBuffer::new(),
-||||||| merged common ancestors
-            resources: FrameResources::new(),
-=======
             has_built_scene: false,
             data_stores: DataStores::default(),
             scratch: PrimitiveScratchBuffer::new(),
             render_task_counters: RenderTaskGraphCounters::new(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         }
     }
 
@@ -791,12 +516,7 @@ impl Document {
         resource_cache: &mut ResourceCache,
         gpu_cache: &mut GpuCache,
         resource_profile: &mut ResourceProfileCounters,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-||||||| merged common ancestors
-        is_new_scene: bool,
-=======
         debug_flags: DebugFlags,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
     ) -> RenderedDocument {
         let accumulated_scale_factor = self.view.accumulated_scale_factor();
         let pan = self.view.pan.to_f32() / accumulated_scale_factor;
@@ -822,17 +542,10 @@ impl Document {
                 &mut resource_profile.texture_cache,
                 &mut resource_profile.gpu_cache,
                 &self.dynamic_properties,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                &mut self.resources,
-                &mut self.scratch,
-||||||| merged common ancestors
-                &mut self.resources,
-=======
                 &mut self.data_stores,
                 &mut self.scratch,
                 &mut self.render_task_counters,
                 debug_flags,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
             );
             self.hit_tester = Some(frame_builder.create_hit_tester(
                 &self.clip_scroll_tree,
@@ -908,41 +621,15 @@ impl Document {
         self.clip_scroll_tree.get_scroll_node_state()
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-    pub fn new_async_scene_ready(
-        &mut self,
-        mut built_scene: BuiltScene,
-    ) {
-||||||| merged common ancestors
-    pub fn new_async_scene_ready(&mut self, built_scene: BuiltScene) {
-=======
     pub fn new_async_scene_ready(
         &mut self,
         mut built_scene: BuiltScene,
         recycler: &mut Recycler,
     ) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         self.scene = built_scene.scene;
         self.frame_is_valid = false;
         self.hit_tester_is_valid = false;
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-        // Give the old frame builder a chance to destroy any resources.
-        // Right now, all this does is build a hash map of any cached
-        // surface tiles, that can be provided to the next frame builder.
-        let mut retained_tiles = FastHashMap::default();
-        if let Some(frame_builder) = self.frame_builder.take() {
-            frame_builder.destroy(
-                &mut retained_tiles,
-            );
-        }
-
-        // Provide any cached tiles from the previous frame builder to
-        // the newly built one.
-        built_scene.frame_builder.set_retained_tiles(retained_tiles);
-
-||||||| merged common ancestors
-=======
         // Give the old frame builder a chance to destroy any resources.
         // Right now, all this does is build a hash map of any cached
         // surface tiles, that can be provided to the next frame builder.
@@ -960,17 +647,10 @@ impl Document {
             );
         }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         self.frame_builder = Some(built_scene.frame_builder);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-        self.scratch.recycle();
-
-||||||| merged common ancestors
-=======
         self.scratch.recycle(recycler);
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         let old_scrolling_states = self.clip_scroll_tree.drain();
         self.clip_scroll_tree = built_scene.clip_scroll_tree;
         self.clip_scroll_tree.finalize_and_apply_pending_scroll_offsets(old_scrolling_states);
@@ -1031,14 +711,8 @@ pub struct RenderBackend {
     size_of_ops: Option<MallocSizeOfOps>,
     debug_flags: DebugFlags,
     namespace_alloc_by_client: bool,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-||||||| merged common ancestors
-
-    last_scene_id: u64,
-=======
 
     recycler: Recycler,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 }
 
 impl RenderBackend {
@@ -1075,15 +749,8 @@ impl RenderBackend {
             notifier,
             recorder,
             sampler,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-            size_of_op,
-||||||| merged common ancestors
-            size_of_op,
-            last_scene_id: 0,
-=======
             size_of_ops,
             debug_flags,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
             namespace_alloc_by_client,
             recycler: Recycler::new(),
         }
@@ -1213,27 +880,6 @@ impl RenderBackend {
 
             while let Ok(msg) = self.scene_rx.try_recv() {
                 match msg {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                    SceneBuilderResult::Transaction(mut txn, result_tx) => {
-                        let has_built_scene = txn.built_scene.is_some();
-                        if let Some(doc) = self.documents.get_mut(&txn.document_id) {
-
-                            doc.removed_pipelines.append(&mut txn.removed_pipelines);
-
-                            if let Some(mut built_scene) = txn.built_scene.take() {
-                                doc.new_async_scene_ready(
-                                    built_scene,
-                                );
-||||||| merged common ancestors
-                    SceneBuilderResult::Transaction(mut txn, result_tx) => {
-                        let has_built_scene = txn.built_scene.is_some();
-                        if let Some(doc) = self.documents.get_mut(&txn.document_id) {
-
-                            doc.removed_pipelines.append(&mut txn.removed_pipelines);
-
-                            if let Some(mut built_scene) = txn.built_scene.take() {
-                                doc.new_async_scene_ready(built_scene);
-=======
                     SceneBuilderResult::Transactions(mut txns, result_tx) => {
                         self.prepare_for_frames();
                         self.maybe_force_nop_documents(
@@ -1271,7 +917,6 @@ impl RenderBackend {
                                     tx.send(SceneSwapResult::Aborted).unwrap();
                                 }
                                 continue;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                             }
 
                             self.resource_cache.add_rasterized_blob_images(
@@ -1281,19 +926,6 @@ impl RenderBackend {
                                 self.resource_cache.set_blob_rasterizer(rasterizer, info);
                             }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                        self.resource_cache.add_rasterized_blob_images(
-                            replace(&mut txn.rasterized_blobs, Vec::new())
-                        );
-                        if let Some((rasterizer, epoch)) = txn.blob_rasterizer.take() {
-                            self.resource_cache.set_blob_rasterizer(rasterizer, epoch);
-||||||| merged common ancestors
-                        self.resource_cache.add_rasterized_blob_images(
-                            replace(&mut txn.rasterized_blobs, Vec::new())
-                        );
-                        if let Some(rasterizer) = txn.blob_rasterizer.take() {
-                            self.resource_cache.set_blob_rasterizer(rasterizer);
-=======
                             self.update_document(
                                 txn.document_id,
                                 txn.resource_updates.take(),
@@ -1306,7 +938,6 @@ impl RenderBackend {
                                 &mut profile_counters,
                                 has_built_scene,
                             );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                         }
                         self.bookkeep_after_frames();
                     },
@@ -1543,13 +1174,6 @@ impl RenderBackend {
                         ).unwrap();
                         return true;
                     }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                    DebugCommand::SetFlags(flags) => {
-                        self.resource_cache.set_debug_flags(flags);
-                        ResultMsg::DebugCommand(option)
-                    }
-||||||| merged common ancestors
-=======
                     DebugCommand::SetFlags(flags) => {
                         self.resource_cache.set_debug_flags(flags);
                         self.gpu_cache.set_debug_flags(flags);
@@ -1571,7 +1195,6 @@ impl RenderBackend {
 
                         ResultMsg::DebugCommand(option)
                     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                     _ => ResultMsg::DebugCommand(option),
                 };
                 self.result_tx.send(msg).unwrap();
@@ -1674,30 +1297,6 @@ impl RenderBackend {
             for txn in txns.iter_mut() {
                 let doc = self.documents.get_mut(&txn.document_id).unwrap();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-        if !transaction_msg.use_scene_builder_thread &&
-            txn.can_skip_scene_builder() &&
-            txn.blob_rasterizer.is_none() {
-
-            self.update_document(
-                txn.document_id,
-                replace(&mut txn.resource_updates, Vec::new()),
-                None,
-                replace(&mut txn.frame_ops, Vec::new()),
-                replace(&mut txn.notifications, Vec::new()),
-                txn.render_frame,
-                txn.invalidate_rendered_frame,
-||||||| merged common ancestors
-        if !transaction_msg.use_scene_builder_thread && txn.can_skip_scene_builder() {
-            self.update_document(
-                txn.document_id,
-                replace(&mut txn.resource_updates, Vec::new()),
-                None,
-                replace(&mut txn.frame_ops, Vec::new()),
-                replace(&mut txn.notifications, Vec::new()),
-                txn.render_frame,
-                txn.invalidate_rendered_frame,
-=======
                 if txn.should_build_scene() {
                     txn.request_scene_build = Some(SceneRequest {
                         view: doc.view.clone(),
@@ -1709,7 +1308,6 @@ impl RenderBackend {
         } else {
             self.prepare_for_frames();
             self.maybe_force_nop_documents(
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                 frame_counter,
                 profile_counters,
                 |document_id| txns.iter().any(|txn| txn.document_id == document_id));
@@ -1733,39 +1331,7 @@ impl RenderBackend {
             return;
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-        let doc = self.documents.get_mut(&document_id).unwrap();
-
-        if txn.should_build_scene() {
-            txn.request_scene_build = Some(SceneRequest {
-                view: doc.view.clone(),
-                font_instances: self.resource_cache.get_font_instances(),
-                output_pipelines: doc.output_pipelines.clone(),
-            });
-        }
-
-        let tx = if transaction_msg.low_priority {
-            &self.low_priority_scene_tx
-        } else {
-||||||| merged common ancestors
-        let scene_id = self.make_unique_scene_id();
-        let doc = self.documents.get_mut(&document_id).unwrap();
-
-        if txn.should_build_scene() {
-            txn.request_scene_build = Some(SceneRequest {
-                view: doc.view.clone(),
-                font_instances: self.resource_cache.get_font_instances(),
-                output_pipelines: doc.output_pipelines.clone(),
-                scene_id,
-            });
-        }
-
-        let tx = if transaction_msg.low_priority {
-            &self.low_priority_scene_tx
-        } else {
-=======
         let tx = if use_high_priority {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
             &self.scene_tx
         } else {
             &self.low_priority_scene_tx
@@ -1838,36 +1404,8 @@ impl RenderBackend {
 
         // If there are any additions or removals of clip modes
         // during the scene build, apply them to the data store now.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-        if let Some(updates) = doc_resource_updates {
-            doc.resources.clip_data_store.apply_updates(
-                updates.clip_updates,
-                &mut profile_counters.intern.clips,
-            );
-            doc.resources.prim_data_store.apply_updates(
-                updates.prim_updates,
-                &mut profile_counters.intern.prims,
-            );
-            doc.resources.linear_grad_data_store.apply_updates(
-                updates.linear_grad_updates,
-                &mut profile_counters.intern.linear_gradients,
-            );
-            doc.resources.radial_grad_data_store.apply_updates(
-                updates.radial_grad_updates,
-                &mut profile_counters.intern.radial_gradients,
-            );
-            doc.resources.text_run_data_store.apply_updates(
-                updates.text_run_updates,
-                &mut profile_counters.intern.text_runs,
-            );
-||||||| merged common ancestors
-        if let Some(updates) = doc_resource_updates {
-            doc.resources.clip_data_store.apply_updates(updates.clip_updates);
-            doc.resources.prim_data_store.apply_updates(updates.prim_updates);
-=======
         if let Some(updates) = interner_updates {
             doc.data_stores.apply_updates(updates, profile_counters);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         }
 
         // TODO: this scroll variable doesn't necessarily mean we scrolled. It is only used
@@ -1933,12 +1471,7 @@ impl RenderBackend {
                     &mut self.resource_cache,
                     &mut self.gpu_cache,
                     &mut profile_counters.resources,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-||||||| merged common ancestors
-                    has_built_scene,
-=======
                     self.debug_flags,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                 );
 
                 debug!("generated frame for document {:?} with {} passes",
@@ -2089,32 +1622,14 @@ impl RenderBackend {
         serde_json::to_string(&debug_root).unwrap()
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-    fn report_memory(&self) -> MemoryReport {
-||||||| merged common ancestors
-    fn size_of<T>(&self, ptr: *const T) -> usize {
-        let op = self.size_of_op.as_ref().unwrap();
-        unsafe { op(ptr as *const c_void) }
-    }
-
-    fn report_memory(&self) -> MemoryReport {
-=======
     fn report_memory(&mut self, tx: MsgSender<MemoryReport>) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
         let mut report = MemoryReport::default();
         let ops = self.size_of_ops.as_mut().unwrap();
         let op = ops.size_of_op;
         report.gpu_cache_metadata = self.gpu_cache.size_of(ops);
         for (_id, doc) in &self.documents {
             if let Some(ref fb) = doc.frame_builder {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                report.clip_stores += fb.clip_store.malloc_size_of(op);
-||||||| merged common ancestors
-                report.primitive_stores += self.size_of(fb.prim_store.primitives.as_ptr());
-                report.clip_stores += fb.clip_store.malloc_size_of(op);
-=======
                 report.clip_stores += fb.clip_store.size_of(ops);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
             }
             report.hit_testers += doc.hit_tester.size_of(ops);
 
@@ -2147,84 +1662,6 @@ fn get_blob_image_updates(updates: &[ResourceUpdate]) -> Vec<BlobImageKey> {
     requests
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-
-#[cfg(feature = "debugger")]
-trait ToDebugString {
-    fn debug_string(&self) -> String;
-}
-
-#[cfg(feature = "debugger")]
-impl ToDebugString for SpecificDisplayItem {
-    fn debug_string(&self) -> String {
-        match *self {
-            SpecificDisplayItem::Border(..) => String::from("border"),
-            SpecificDisplayItem::BoxShadow(..) => String::from("box_shadow"),
-            SpecificDisplayItem::ClearRectangle => String::from("clear_rectangle"),
-            SpecificDisplayItem::Clip(..) => String::from("clip"),
-            SpecificDisplayItem::ClipChain(..) => String::from("clip_chain"),
-            SpecificDisplayItem::Gradient(..) => String::from("gradient"),
-            SpecificDisplayItem::Iframe(..) => String::from("iframe"),
-            SpecificDisplayItem::Image(..) => String::from("image"),
-            SpecificDisplayItem::Line(..) => String::from("line"),
-            SpecificDisplayItem::PopAllShadows => String::from("pop_all_shadows"),
-            SpecificDisplayItem::PopReferenceFrame => String::from("pop_reference_frame"),
-            SpecificDisplayItem::PopStackingContext => String::from("pop_stacking_context"),
-            SpecificDisplayItem::PushReferenceFrame(..) => String::from("push_reference_frame"),
-            SpecificDisplayItem::PushShadow(..) => String::from("push_shadow"),
-            SpecificDisplayItem::PushStackingContext(..) => String::from("push_stacking_context"),
-            SpecificDisplayItem::RadialGradient(..) => String::from("radial_gradient"),
-            SpecificDisplayItem::Rectangle(..) => String::from("rectangle"),
-            SpecificDisplayItem::ScrollFrame(..) => String::from("scroll_frame"),
-            SpecificDisplayItem::SetGradientStops => String::from("set_gradient_stops"),
-            SpecificDisplayItem::StickyFrame(..) => String::from("sticky_frame"),
-            SpecificDisplayItem::Text(..) => String::from("text"),
-            SpecificDisplayItem::YuvImage(..) => String::from("yuv_image"),
-            SpecificDisplayItem::PushCacheMarker(..) => String::from("push_cache_marker"),
-            SpecificDisplayItem::PopCacheMarker => String::from("pop_cache_marker"),
-        }
-    }
-}
-
-||||||| merged common ancestors
-
-#[cfg(feature = "debugger")]
-trait ToDebugString {
-    fn debug_string(&self) -> String;
-}
-
-#[cfg(feature = "debugger")]
-impl ToDebugString for SpecificDisplayItem {
-    fn debug_string(&self) -> String {
-        match *self {
-            SpecificDisplayItem::Border(..) => String::from("border"),
-            SpecificDisplayItem::BoxShadow(..) => String::from("box_shadow"),
-            SpecificDisplayItem::ClearRectangle => String::from("clear_rectangle"),
-            SpecificDisplayItem::Clip(..) => String::from("clip"),
-            SpecificDisplayItem::ClipChain(..) => String::from("clip_chain"),
-            SpecificDisplayItem::Gradient(..) => String::from("gradient"),
-            SpecificDisplayItem::Iframe(..) => String::from("iframe"),
-            SpecificDisplayItem::Image(..) => String::from("image"),
-            SpecificDisplayItem::Line(..) => String::from("line"),
-            SpecificDisplayItem::PopAllShadows => String::from("pop_all_shadows"),
-            SpecificDisplayItem::PopReferenceFrame => String::from("pop_reference_frame"),
-            SpecificDisplayItem::PopStackingContext => String::from("pop_stacking_context"),
-            SpecificDisplayItem::PushReferenceFrame(..) => String::from("push_reference_frame"),
-            SpecificDisplayItem::PushShadow(..) => String::from("push_shadow"),
-            SpecificDisplayItem::PushStackingContext(..) => String::from("push_stacking_context"),
-            SpecificDisplayItem::RadialGradient(..) => String::from("radial_gradient"),
-            SpecificDisplayItem::Rectangle(..) => String::from("rectangle"),
-            SpecificDisplayItem::ScrollFrame(..) => String::from("scroll_frame"),
-            SpecificDisplayItem::SetGradientStops => String::from("set_gradient_stops"),
-            SpecificDisplayItem::StickyFrame(..) => String::from("sticky_frame"),
-            SpecificDisplayItem::Text(..) => String::from("text"),
-            SpecificDisplayItem::YuvImage(..) => String::from("yuv_image"),
-        }
-    }
-}
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
 impl RenderBackend {
     #[cfg(feature = "capture")]
     // Note: the mutable `self` is only needed here for resolving blob images
@@ -2261,12 +1698,7 @@ impl RenderBackend {
                     &mut self.resource_cache,
                     &mut self.gpu_cache,
                     &mut profile_counters.resources,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-||||||| merged common ancestors
-                    true,
-=======
                     self.debug_flags,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                 );
                 // After we rendered the frames, there are pending updates to both
                 // GPU cache and resources. Instead of serializing them, we are going to make sure
@@ -2398,13 +1830,7 @@ impl RenderBackend {
                 removed_pipelines: Vec::new(),
                 view: view.clone(),
                 clip_scroll_tree: ClipScrollTree::new(),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                stamp: FrameStamp::first(),
-||||||| merged common ancestors
-                frame_id: FrameId(0),
-=======
                 stamp: FrameStamp::first(id),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
                 frame_builder: Some(FrameBuilder::empty()),
                 output_pipelines: FastHashSet::default(),
                 dynamic_properties: SceneProperties::new(),
@@ -2412,18 +1838,10 @@ impl RenderBackend {
                 frame_is_valid: false,
                 hit_tester_is_valid: false,
                 rendered_frame_is_valid: false,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/render_backend.rs
-                has_built_scene: false,
-                resources: frame_resources,
-                scratch: PrimitiveScratchBuffer::new(),
-||||||| merged common ancestors
-                resources: frame_resources,
-=======
                 has_built_scene: false,
                 data_stores,
                 scratch: PrimitiveScratchBuffer::new(),
                 render_task_counters: RenderTaskGraphCounters::new(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/render_backend.rs
             };
 
             let frame_name = format!("frame-{}-{}", id.namespace_id.0, id.id);

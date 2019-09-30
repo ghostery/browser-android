@@ -26,18 +26,9 @@ StaticAutoPtr<nsTArray<CompositorManagerParent*>>
     CompositorManagerParent::sActiveActors;
 #endif
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<CompositorManagerParent>
-CompositorManagerParent::CreateSameProcess() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<CompositorManagerParent>
-CompositorManagerParent::CreateSameProcess()
-{
-=======
 /* static */
 already_AddRefed<CompositorManagerParent>
 CompositorManagerParent::CreateSameProcess() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess() || recordreplay::IsRecordingOrReplaying());
   MOZ_ASSERT(NS_IsMainThread());
   StaticMutexAutoLock lock(sMutex);
@@ -58,18 +49,9 @@ CompositorManagerParent::CreateSameProcess() {
   return parent.forget();
 }
 
-<<<<<<< HEAD
-/* static */ void CompositorManagerParent::Create(
-    Endpoint<PCompositorManagerParent>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ void
-CompositorManagerParent::Create(Endpoint<PCompositorManagerParent>&& aEndpoint)
-{
-=======
 /* static */
 bool CompositorManagerParent::Create(
     Endpoint<PCompositorManagerParent>&& aEndpoint, bool aIsRoot) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // We are creating a manager for the another process, inside the GPU process
@@ -82,46 +64,19 @@ bool CompositorManagerParent::Create(
 
   RefPtr<CompositorManagerParent> bridge = new CompositorManagerParent();
 
-<<<<<<< HEAD
-  RefPtr<Runnable> runnable =
-      NewRunnableMethod<Endpoint<PCompositorManagerParent>&&>(
-          "CompositorManagerParent::Bind", bridge,
-          &CompositorManagerParent::Bind, std::move(aEndpoint));
-||||||| merged common ancestors
-  RefPtr<Runnable> runnable = NewRunnableMethod<Endpoint<PCompositorManagerParent>&&>(
-    "CompositorManagerParent::Bind",
-    bridge,
-    &CompositorManagerParent::Bind,
-    std::move(aEndpoint));
-=======
   RefPtr<Runnable> runnable =
       NewRunnableMethod<Endpoint<PCompositorManagerParent>&&, bool>(
           "CompositorManagerParent::Bind", bridge,
           &CompositorManagerParent::Bind, std::move(aEndpoint), aIsRoot);
->>>>>>> upstream-releases
   CompositorThreadHolder::Loop()->PostTask(runnable.forget());
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<CompositorBridgeParent>
-CompositorManagerParent::CreateSameProcessWidgetCompositorBridge(
-    CSSToLayoutDeviceScale aScale, const CompositorOptions& aOptions,
-    bool aUseExternalSurfaceSize, const gfx::IntSize& aSurfaceSize) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<CompositorBridgeParent>
-CompositorManagerParent::CreateSameProcessWidgetCompositorBridge(CSSToLayoutDeviceScale aScale,
-                                                                 const CompositorOptions& aOptions,
-                                                                 bool aUseExternalSurfaceSize,
-                                                                 const gfx::IntSize& aSurfaceSize)
-{
-=======
 /* static */
 already_AddRefed<CompositorBridgeParent>
 CompositorManagerParent::CreateSameProcessWidgetCompositorBridge(
     CSSToLayoutDeviceScale aScale, const CompositorOptions& aOptions,
     bool aUseExternalSurfaceSize, const gfx::IntSize& aSurfaceSize) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess() || recordreplay::IsRecordingOrReplaying());
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -163,17 +118,8 @@ CompositorManagerParent::CompositorManagerParent()
 
 CompositorManagerParent::~CompositorManagerParent() {}
 
-<<<<<<< HEAD
-void CompositorManagerParent::Bind(
-    Endpoint<PCompositorManagerParent>&& aEndpoint) {
-||||||| merged common ancestors
-void
-CompositorManagerParent::Bind(Endpoint<PCompositorManagerParent>&& aEndpoint)
-{
-=======
 void CompositorManagerParent::Bind(
     Endpoint<PCompositorManagerParent>&& aEndpoint, bool aIsRoot) {
->>>>>>> upstream-releases
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   if (NS_WARN_IF(!aEndpoint.Bind(this))) {
     return;
@@ -182,18 +128,10 @@ void CompositorManagerParent::Bind(
   BindComplete(aIsRoot);
 }
 
-<<<<<<< HEAD
-void CompositorManagerParent::BindComplete() {
-||||||| merged common ancestors
-void
-CompositorManagerParent::BindComplete()
-{
-=======
 void CompositorManagerParent::BindComplete(bool aIsRoot) {
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() ||
              NS_IsMainThread());
 
->>>>>>> upstream-releases
   // Add the IPDL reference to ourself, so we can't get freed until IPDL is
   // done with us.
   AddRef();
@@ -220,15 +158,7 @@ void CompositorManagerParent::ActorDestroy(ActorDestroyReason aReason) {
   }
 }
 
-<<<<<<< HEAD
-void CompositorManagerParent::DeallocPCompositorManagerParent() {
-||||||| merged common ancestors
-void
-CompositorManagerParent::DeallocPCompositorManagerParent()
-{
-=======
 void CompositorManagerParent::ActorDealloc() {
->>>>>>> upstream-releases
   MessageLoop::current()->PostTask(
       NewRunnableMethod("layers::CompositorManagerParent::DeferredDestroy",
                         this, &CompositorManagerParent::DeferredDestroy));
@@ -247,16 +177,8 @@ void CompositorManagerParent::DeferredDestroy() {
 }
 
 #ifdef COMPOSITOR_MANAGER_PARENT_EXPLICIT_SHUTDOWN
-<<<<<<< HEAD
-/* static */ void CompositorManagerParent::ShutdownInternal() {
-||||||| merged common ancestors
-/* static */ void
-CompositorManagerParent::ShutdownInternal()
-{
-=======
 /* static */
 void CompositorManagerParent::ShutdownInternal() {
->>>>>>> upstream-releases
   nsAutoPtr<nsTArray<CompositorManagerParent*>> actors;
 
   // We move here because we may attempt to acquire the same lock during the
@@ -274,16 +196,8 @@ void CompositorManagerParent::ShutdownInternal() {
 }
 #endif  // COMPOSITOR_MANAGER_PARENT_EXPLICIT_SHUTDOWN
 
-<<<<<<< HEAD
-/* static */ void CompositorManagerParent::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-CompositorManagerParent::Shutdown()
-{
-=======
 /* static */
 void CompositorManagerParent::Shutdown() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
 #ifdef COMPOSITOR_MANAGER_PARENT_EXPLICIT_SHUTDOWN
@@ -297,16 +211,8 @@ PCompositorBridgeParent* CompositorManagerParent::AllocPCompositorBridgeParent(
     const CompositorBridgeOptions& aOpt) {
   switch (aOpt.type()) {
     case CompositorBridgeOptions::TContentCompositorOptions: {
-<<<<<<< HEAD
-      CrossProcessCompositorBridgeParent* bridge =
-          new CrossProcessCompositorBridgeParent(this);
-||||||| merged common ancestors
-      CrossProcessCompositorBridgeParent* bridge =
-        new CrossProcessCompositorBridgeParent(this);
-=======
       ContentCompositorBridgeParent* bridge =
           new ContentCompositorBridgeParent(this);
->>>>>>> upstream-releases
       bridge->AddRef();
       return bridge;
     }
@@ -420,13 +326,6 @@ mozilla::ipc::IPCResult CompositorManagerParent::RecvReportMemory(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 /* static */
 void CompositorManagerParent::NotifyWebRenderError(wr::WebRenderError aError) {
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
@@ -440,4 +339,3 @@ void CompositorManagerParent::NotifyWebRenderError(wr::WebRenderError aError) {
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases

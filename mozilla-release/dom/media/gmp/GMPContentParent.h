@@ -18,20 +18,10 @@ class GMPVideoDecoderParent;
 class GMPVideoEncoderParent;
 class ChromiumCDMParent;
 
-<<<<<<< HEAD
-class GMPContentParent final : public PGMPContentParent, public GMPSharedMem {
- public:
-||||||| merged common ancestors
-class GMPContentParent final : public PGMPContentParent,
-                               public GMPSharedMem
-{
-public:
-=======
 class GMPContentParent final : public PGMPContentParent, public GMPSharedMem {
   friend class PGMPContentParent;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GMPContentParent)
 
   explicit GMPContentParent(GMPParent* aParent = nullptr);

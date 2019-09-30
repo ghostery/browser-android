@@ -19,18 +19,11 @@ async function waitForBreakpoint(dbg, location) {
 }
 
 function getBreakpoints(dbg) {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-sourcemaps-reload.js
-  return dbg.selectors.getBreakpointsList(dbg.getState());
-||||||| merged common ancestors
-  const breakpoints = dbg.selectors.getBreakpoints(dbg.getState());
-  return breakpoints.valueSeq().toJS();
-=======
   return dbg.selectors.getBreakpointsList();
 }
 
 function getBreakpointCount(dbg) {
   return dbg.selectors.getBreakpointCount();
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-sourcemaps-reload.js
 }
 
 add_task(async function() {

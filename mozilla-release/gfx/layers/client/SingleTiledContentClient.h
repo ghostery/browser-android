@@ -22,26 +22,11 @@ class ClientLayerManager;
  * Whether a single paint buffer is used is controlled by
  * StaticPrefs::PerTileDrawing().
  */
-<<<<<<< HEAD
-class ClientSingleTiledLayerBuffer : public ClientTiledLayerBuffer,
-                                     public TextureClientAllocator {
-  virtual ~ClientSingleTiledLayerBuffer() {}
-
- public:
-||||||| merged common ancestors
-class ClientSingleTiledLayerBuffer
-  : public ClientTiledLayerBuffer
-  , public TextureClientAllocator
-{
-  virtual ~ClientSingleTiledLayerBuffer() {}
-public:
-=======
 class ClientSingleTiledLayerBuffer : public ClientTiledLayerBuffer,
                                      public TextureClientAllocator {
   virtual ~ClientSingleTiledLayerBuffer() = default;
 
  public:
->>>>>>> upstream-releases
   ClientSingleTiledLayerBuffer(ClientTiledPaintedLayer& aPaintedLayer,
                                CompositableClient& aCompositableClient,
                                ClientLayerManager* aManager);
@@ -128,22 +113,10 @@ class SingleTiledContentClient : public TiledContentClient {
 
   void UpdatedBuffer(TiledBufferType aType) override;
 
-<<<<<<< HEAD
-  virtual ClientTiledLayerBuffer* GetTiledBuffer() override {
-    return mTiledBuffer;
-  }
-  virtual ClientTiledLayerBuffer* GetLowPrecisionTiledBuffer() override {
-    return nullptr;
-  }
-||||||| merged common ancestors
-  virtual ClientTiledLayerBuffer* GetTiledBuffer() override { return mTiledBuffer; }
-  virtual ClientTiledLayerBuffer* GetLowPrecisionTiledBuffer() override { return nullptr; }
-=======
   ClientTiledLayerBuffer* GetTiledBuffer() override { return mTiledBuffer; }
   ClientTiledLayerBuffer* GetLowPrecisionTiledBuffer() override {
     return nullptr;
   }
->>>>>>> upstream-releases
 
  private:
   RefPtr<ClientSingleTiledLayerBuffer> mTiledBuffer;

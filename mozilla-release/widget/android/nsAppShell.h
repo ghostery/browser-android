@@ -65,24 +65,10 @@ class nsAppShell : public nsBaseAppShell {
    protected:
     T lambda;
 
-<<<<<<< HEAD
-   public:
-    explicit LambdaEvent(T&& l) : lambda(std::move(l)) {}
-    void Run() override { return lambda(); }
-  };
-||||||| merged common ancestors
-    template<typename T> static
-    typename mozilla::EnableIf<!mozilla::IsBaseOf<Event, T>::value, void>::Type
-    SyncRunEvent(T&& lambda)
-    {
-        SyncRunEvent(LambdaEvent<T>(std::forward<T>(lambda)));
-    }
-=======
    public:
     explicit LambdaEvent(T&& l) : lambda(std::move(l)) {}
     void Run() override { lambda(); }
   };
->>>>>>> upstream-releases
 
   class ProxyEvent : public Event {
    protected:
@@ -122,35 +108,6 @@ class nsAppShell : public nsBaseAppShell {
     if (!sAppShell) {
       return;
     }
-<<<<<<< HEAD
-    sAppShell->mEventQueue.Post(std::move(event));
-  }
-
-  // Post a event that will call a lambda
-  // e.g. PostEvent([=] { /* do something */ });
-  template <typename T>
-  static void PostEvent(T&& lambda) {
-    mozilla::MutexAutoLock lock(*sAppShellLock);
-    if (!sAppShell) {
-      return;
-    }
-    sAppShell->mEventQueue.Post(
-        mozilla::MakeUnique<LambdaEvent<T>>(std::move(lambda)));
-  }
-
-  // Post a event and wait for it to finish running on the Gecko thread.
-  static void SyncRunEvent(Event&& event,
-                           mozilla::UniquePtr<Event> (*eventFactory)(
-                               mozilla::UniquePtr<Event>&&) = nullptr);
-
-  template <typename T>
-  static typename mozilla::EnableIf<!mozilla::IsBaseOf<Event, T>::value,
-                                    void>::Type
-  SyncRunEvent(T&& lambda) {
-    SyncRunEvent(LambdaEvent<T>(std::forward<T>(lambda)));
-  }
-||||||| merged common ancestors
-=======
     sAppShell->mEventQueue.Post(std::move(event));
   }
 
@@ -179,7 +136,6 @@ class nsAppShell : public nsBaseAppShell {
   SyncRunEvent(T&& lambda) {
     SyncRunEvent(LambdaEvent<T>(std::forward<T>(lambda)));
   }
->>>>>>> upstream-releases
 
   static already_AddRefed<nsIURI> ResolveURI(const nsCString& aUriStr);
 
@@ -230,7 +186,6 @@ class nsAppShell : public nsBaseAppShell {
       lock.NotifyAll();
     }
 
-<<<<<<< HEAD
     void Post(mozilla::UniquePtr<Event>&& event) {
       MOZ_ASSERT(event && !event->isInList());
 
@@ -245,77 +200,7 @@ class nsAppShell : public nsBaseAppShell {
     }
 
     mozilla::UniquePtr<Event> Pop(bool mayWait) {
-      mozilla::MonitorAutoLock lock(mMonitor);
-
-      if (mayWait && mQueue.isEmpty()) {
-||||||| merged common ancestors
-    class Queue
-    {
-    private:
-        mozilla::Monitor mMonitor;
-        mozilla::LinkedList<Event> mQueue;
-
-    public:
-        enum {
-            LATENCY_UI,
-            LATENCY_OTHER,
-            LATENCY_COUNT
-        };
-        static uint32_t sLatencyCount[LATENCY_COUNT];
-        static uint64_t sLatencyTime[LATENCY_COUNT];
-
-        Queue() : mMonitor("nsAppShell.Queue")
-        {}
-
-        void Signal()
-        {
-            mozilla::MonitorAutoLock lock(mMonitor);
-            lock.NotifyAll();
-        }
-
-        void Post(mozilla::UniquePtr<Event>&& event)
-        {
-            MOZ_ASSERT(event && !event->isInList());
-
-            mozilla::MonitorAutoLock lock(mMonitor);
-            event->PostTo(mQueue);
-            if (event->isInList()) {
-                event->mPostTime = Event::GetTime();
-                // Ownership of event object transfers to the queue.
-                mozilla::Unused << event.release();
-            }
-            lock.NotifyAll();
-        }
-
-        mozilla::UniquePtr<Event> Pop(bool mayWait)
-        {
-            mozilla::MonitorAutoLock lock(mMonitor);
-
-            if (mayWait && mQueue.isEmpty()) {
-=======
-    void Post(mozilla::UniquePtr<Event>&& event) {
-      MOZ_ASSERT(event && !event->isInList());
-
-      mozilla::MonitorAutoLock lock(mMonitor);
-      event->PostTo(mQueue);
-      if (event->isInList()) {
-        event->mPostTime = Event::GetTime();
-        // Ownership of event object transfers to the queue.
-        mozilla::Unused << event.release();
-      }
-      lock.NotifyAll();
-    }
-
-    mozilla::UniquePtr<Event> Pop(bool mayWait) {
->>>>>>> upstream-releases
 #ifdef EARLY_BETA_OR_EARLIER
-<<<<<<< HEAD
-        // Record latencies when we're about to be idle.
-        nsAppShell::RecordLatencies();
-||||||| merged common ancestors
-                // Record latencies when we're about to be idle.
-                nsAppShell::RecordLatencies();
-=======
       bool isQueueEmpty = false;
       if (mayWait) {
         mozilla::MonitorAutoLock lock(mMonitor);
@@ -328,21 +213,12 @@ class nsAppShell : public nsBaseAppShell {
         // thread which tries to acquire the lock again.
         nsAppShell::RecordLatencies();
       }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-        lock.Wait();
-      }
-||||||| merged common ancestors
-                lock.Wait();
-            }
-=======
       mozilla::MonitorAutoLock lock(mMonitor);
 
       if (mayWait && mQueue.isEmpty()) {
         lock.Wait();
       }
->>>>>>> upstream-releases
 
       // Ownership of event object transfers to the return value.
       mozilla::UniquePtr<Event> event(mQueue.popFirst());

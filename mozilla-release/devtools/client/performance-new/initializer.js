@@ -33,54 +33,12 @@ const {
  *
  * @param perfFront - The Perf actor's front. Used to start and stop recordings.
  * @param preferenceFront - Used to get the recording preferences from the device.
- * @param actorVersion {(number|undefined)} - The Perf actor's version.
  */
-async function gInit(perfFront, preferenceFront, actorVersion) {
+async function gInit(perfFront, preferenceFront) {
   const store = createStore(reducers);
-  actorVersion = actorVersion || 0;
 
   // Do some initialization, especially with privileged things that are part of the
   // the browser.
-<<<<<<< HEAD
-  store.dispatch(actions.initializeStore({
-    perfFront,
-    receiveProfile,
-    actorVersion,
-    // Pull the default recording settings from the reducer, and update them according
-    // to what's in the target's preferences. This way the preferences are stored
-    // on the target. This could be useful for something like Android where you might
-    // want to tweak the settings.
-    recordingSettingsFromPreferences: await getRecordingPreferences(
-      preferenceFront,
-      selectors.getRecordingSettings(store.getState())
-    ),
-    // Go ahead and hide the implementation details for the component on how the
-    // preference information is stored
-    setRecordingPreferences: () => setRecordingPreferences(
-      preferenceFront,
-      selectors.getRecordingSettings(store.getState())
-    ),
-  }));
-||||||| merged common ancestors
-  store.dispatch(actions.initializeStore({
-    perfFront,
-    receiveProfile,
-    // Pull the default recording settings from the reducer, and update them according
-    // to what's in the target's preferences. This way the preferences are stored
-    // on the target. This could be useful for something like Android where you might
-    // want to tweak the settings.
-    recordingSettingsFromPreferences: await getRecordingPreferences(
-      preferenceFront,
-      selectors.getRecordingSettings(store.getState())
-    ),
-    // Go ahead and hide the implementation details for the component on how the
-    // preference information is stored
-    setRecordingPreferences: () => setRecordingPreferences(
-      preferenceFront,
-      selectors.getRecordingSettings(store.getState())
-    ),
-  }));
-=======
   store.dispatch(
     actions.initializeStore({
       perfFront,
@@ -102,7 +60,6 @@ async function gInit(perfFront, preferenceFront, actorVersion) {
         ),
     })
   );
->>>>>>> upstream-releases
 
   ReactDOM.render(
     React.createElement(Provider, { store }, React.createElement(Perf)),

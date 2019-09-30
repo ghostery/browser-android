@@ -13,23 +13,11 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class FeaturePolicyUtils final {
- public:
-  enum FeaturePolicyValue {
-||||||| merged common ancestors
-class FeaturePolicyUtils final
-{
-public:
-  enum FeaturePolicyValue
-  {
-=======
 class Document;
 
 class FeaturePolicyUtils final {
  public:
   enum FeaturePolicyValue {
->>>>>>> upstream-releases
     // Feature always allowed.
     eAll,
 
@@ -42,17 +30,8 @@ class FeaturePolicyUtils final {
 
   // This method returns true if aFeatureName is allowed for aDocument.
   // Use this method everywhere you need to check feature-policy directives.
-<<<<<<< HEAD
-  static bool IsFeatureAllowed(nsIDocument* aDocument,
-                               const nsAString& aFeatureName);
-||||||| merged common ancestors
-  static bool
-  IsFeatureAllowed(nsIDocument* aDocument,
-                   const nsAString& aFeatureName);
-=======
   static bool IsFeatureAllowed(Document* aDocument,
                                const nsAString& aFeatureName);
->>>>>>> upstream-releases
 
   // Returns true if aFeatureName is a known feature policy name.
   static bool IsSupportedFeature(const nsAString& aFeatureName);
@@ -62,24 +41,12 @@ class FeaturePolicyUtils final {
   static void ForEachFeature(const std::function<void(const char*)>& aCallback);
 
   // Returns the default policy value for aFeatureName.
-<<<<<<< HEAD
-  static FeaturePolicyValue DefaultAllowListFeature(
-      const nsAString& aFeatureName);
-
- private:
-  static void ReportViolation(nsIDocument* aDocument,
-                              const nsAString& aFeatureName);
-||||||| merged common ancestors
-  static FeaturePolicyValue
-  DefaultAllowListFeature(const nsAString& aFeatureName);
-=======
   static FeaturePolicyValue DefaultAllowListFeature(
       const nsAString& aFeatureName);
 
  private:
   static void ReportViolation(Document* aDocument,
                               const nsAString& aFeatureName);
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

@@ -81,7 +81,8 @@ bool CreateFile(const nsACString& aData) {
   return true;
 }
 
-TEST(ServiceWorkerRegistrar, TestNoFile) {
+TEST(ServiceWorkerRegistrar, TestNoFile)
+{
   nsCOMPtr<nsIFile> file = GetFile();
   ASSERT_TRUE(file)
   << "GetFile must return a nsIFIle";
@@ -105,19 +106,10 @@ TEST(ServiceWorkerRegistrar, TestNoFile) {
       << "No data should be found in an empty file";
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestEmptyFile) {
-  ASSERT_TRUE(CreateFile(EmptyCString())) << "CreateFile should not fail";
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestEmptyFile)
-{
-  ASSERT_TRUE(CreateFile(EmptyCString())) << "CreateFile should not fail";
-=======
 TEST(ServiceWorkerRegistrar, TestEmptyFile)
 {
   ASSERT_TRUE(CreateFile(EmptyCString()))
   << "CreateFile should not fail";
->>>>>>> upstream-releases
 
   RefPtr<ServiceWorkerRegistrarTest> swr = new ServiceWorkerRegistrarTest;
 
@@ -129,22 +121,11 @@ TEST(ServiceWorkerRegistrar, TestEmptyFile)
       << "No data should be found in an empty file";
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestRightVersionFile) {
-  ASSERT_TRUE(
-      CreateFile(NS_LITERAL_CSTRING(SERVICEWORKERREGISTRAR_VERSION "\n")))
-      << "CreateFile should not fail";
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestRightVersionFile)
-{
-  ASSERT_TRUE(CreateFile(NS_LITERAL_CSTRING(SERVICEWORKERREGISTRAR_VERSION "\n"))) << "CreateFile should not fail";
-=======
 TEST(ServiceWorkerRegistrar, TestRightVersionFile)
 {
   ASSERT_TRUE(
       CreateFile(NS_LITERAL_CSTRING(SERVICEWORKERREGISTRAR_VERSION "\n")))
   << "CreateFile should not fail";
->>>>>>> upstream-releases
 
   RefPtr<ServiceWorkerRegistrarTest> swr = new ServiceWorkerRegistrarTest;
 
@@ -157,22 +138,11 @@ TEST(ServiceWorkerRegistrar, TestRightVersionFile)
       << "No data should be found in an empty file";
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestWrongVersionFile) {
-  ASSERT_TRUE(
-      CreateFile(NS_LITERAL_CSTRING(SERVICEWORKERREGISTRAR_VERSION "bla\n")))
-      << "CreateFile should not fail";
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestWrongVersionFile)
-{
-  ASSERT_TRUE(CreateFile(NS_LITERAL_CSTRING(SERVICEWORKERREGISTRAR_VERSION "bla\n"))) << "CreateFile should not fail";
-=======
 TEST(ServiceWorkerRegistrar, TestWrongVersionFile)
 {
   ASSERT_TRUE(
       CreateFile(NS_LITERAL_CSTRING(SERVICEWORKERREGISTRAR_VERSION "bla\n")))
   << "CreateFile should not fail";
->>>>>>> upstream-releases
 
   RefPtr<ServiceWorkerRegistrarTest> swr = new ServiceWorkerRegistrarTest;
 
@@ -185,7 +155,8 @@ TEST(ServiceWorkerRegistrar, TestWrongVersionFile)
       << "No data should be found in an empty file";
 }
 
-TEST(ServiceWorkerRegistrar, TestReadData) {
+TEST(ServiceWorkerRegistrar, TestReadData)
+{
   nsAutoCString buffer(SERVICEWORKERREGISTRAR_VERSION "\n");
 
   buffer.AppendLiteral("^inBrowser=1\n");
@@ -270,20 +241,10 @@ TEST(ServiceWorkerRegistrar, TestReadData) {
   ASSERT_EQ((int64_t)ts, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestDeleteData) {
-  ASSERT_TRUE(CreateFile(NS_LITERAL_CSTRING("Foobar")))
-      << "CreateFile should not fail";
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestDeleteData)
-{
-  ASSERT_TRUE(CreateFile(NS_LITERAL_CSTRING("Foobar"))) << "CreateFile should not fail";
-=======
 TEST(ServiceWorkerRegistrar, TestDeleteData)
 {
   ASSERT_TRUE(CreateFile(NS_LITERAL_CSTRING("Foobar")))
   << "CreateFile should not fail";
->>>>>>> upstream-releases
 
   RefPtr<ServiceWorkerRegistrarTest> swr = new ServiceWorkerRegistrarTest;
 
@@ -299,7 +260,8 @@ TEST(ServiceWorkerRegistrar, TestDeleteData)
   << "The file should not exist after a DeleteData().";
 }
 
-TEST(ServiceWorkerRegistrar, TestWriteData) {
+TEST(ServiceWorkerRegistrar, TestWriteData)
+{
   {
     RefPtr<ServiceWorkerRegistrarTest> swr = new ServiceWorkerRegistrarTest;
 
@@ -320,19 +282,10 @@ TEST(ServiceWorkerRegistrar, TestWriteData) {
 
       nsAutoCString spec;
       spec.AppendPrintf("spec write %d", i);
-<<<<<<< HEAD
-      reg.principal() = mozilla::ipc::ContentPrincipalInfo(
-          mozilla::OriginAttributes(i, i % 2), spec, spec);
-||||||| merged common ancestors
-      reg.principal() =
-        mozilla::ipc::ContentPrincipalInfo(mozilla::OriginAttributes(i, i % 2),
-                                           spec, spec);
-=======
 
       reg.principal() = mozilla::ipc::ContentPrincipalInfo(
           mozilla::OriginAttributes(i % 2), spec, spec, mozilla::Nothing(),
           spec);
->>>>>>> upstream-releases
 
       swr->TestRegisterServiceWorker(reg);
     }
@@ -389,22 +342,11 @@ TEST(ServiceWorkerRegistrar, TestWriteData) {
   }
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestVersion2Migration) {
-  nsAutoCString buffer(
-      "2"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestVersion2Migration)
-{
-  nsAutoCString buffer("2" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestVersion2Migration)
 {
   nsAutoCString buffer(
       "2"
       "\n");
->>>>>>> upstream-releases
 
   buffer.AppendLiteral("^appId=123&inBrowser=1\n");
   buffer.AppendLiteral(
@@ -472,22 +414,11 @@ TEST(ServiceWorkerRegistrar, TestVersion2Migration)
   ASSERT_EQ((int64_t)0, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestVersion3Migration) {
-  nsAutoCString buffer(
-      "3"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestVersion3Migration)
-{
-  nsAutoCString buffer("3" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestVersion3Migration)
 {
   nsAutoCString buffer(
       "3"
       "\n");
->>>>>>> upstream-releases
 
   buffer.AppendLiteral("^appId=123&inBrowser=1\n");
   buffer.AppendLiteral(
@@ -551,22 +482,11 @@ TEST(ServiceWorkerRegistrar, TestVersion3Migration)
   ASSERT_EQ((int64_t)0, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestVersion4Migration) {
-  nsAutoCString buffer(
-      "4"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestVersion4Migration)
-{
-  nsAutoCString buffer("4" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestVersion4Migration)
 {
   nsAutoCString buffer(
       "4"
       "\n");
->>>>>>> upstream-releases
 
   buffer.AppendLiteral("^appId=123&inBrowser=1\n");
   buffer.AppendLiteral(
@@ -632,22 +552,11 @@ TEST(ServiceWorkerRegistrar, TestVersion4Migration)
   ASSERT_EQ((int64_t)0, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestVersion5Migration) {
-  nsAutoCString buffer(
-      "5"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestVersion5Migration)
-{
-  nsAutoCString buffer("5" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestVersion5Migration)
 {
   nsAutoCString buffer(
       "5"
       "\n");
->>>>>>> upstream-releases
 
   buffer.AppendLiteral("^appId=123&inBrowser=1\n");
   buffer.AppendLiteral("https://scope_0.org\ncurrentWorkerURL 0\n");
@@ -713,22 +622,11 @@ TEST(ServiceWorkerRegistrar, TestVersion5Migration)
   ASSERT_EQ((int64_t)0, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestVersion6Migration) {
-  nsAutoCString buffer(
-      "6"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestVersion6Migration)
-{
-  nsAutoCString buffer("6" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestVersion6Migration)
 {
   nsAutoCString buffer(
       "6"
       "\n");
->>>>>>> upstream-releases
 
   buffer.AppendLiteral("^appId=123&inBrowser=1\n");
   buffer.AppendLiteral("https://scope_0.org\ncurrentWorkerURL 0\n");
@@ -798,22 +696,11 @@ TEST(ServiceWorkerRegistrar, TestVersion6Migration)
   ASSERT_EQ((int64_t)0, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestVersion7Migration) {
-  nsAutoCString buffer(
-      "7"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestVersion7Migration)
-{
-  nsAutoCString buffer("7" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestVersion7Migration)
 {
   nsAutoCString buffer(
       "7"
       "\n");
->>>>>>> upstream-releases
 
   buffer.AppendLiteral("^appId=123&inBrowser=1\n");
   buffer.AppendLiteral("https://scope_0.org\ncurrentWorkerURL 0\n");
@@ -896,36 +783,16 @@ TEST(ServiceWorkerRegistrar, TestVersion7Migration)
   ASSERT_EQ((int64_t)ts, data[1].lastUpdateTime());
 }
 
-<<<<<<< HEAD
-TEST(ServiceWorkerRegistrar, TestDedupeRead) {
-  nsAutoCString buffer(
-      "3"
-      "\n");
-||||||| merged common ancestors
-TEST(ServiceWorkerRegistrar, TestDedupeRead)
-{
-  nsAutoCString buffer("3" "\n");
-=======
 TEST(ServiceWorkerRegistrar, TestDedupeRead)
 {
   nsAutoCString buffer(
       "3"
       "\n");
->>>>>>> upstream-releases
 
   // unique entries
-<<<<<<< HEAD
-  buffer.AppendLiteral("^appId=123&inBrowser=1\n");
-  buffer.AppendLiteral(
-      "spec 0\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
-||||||| merged common ancestors
-  buffer.AppendLiteral("^appId=123&inBrowser=1\n");
-  buffer.AppendLiteral("spec 0\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
-=======
   buffer.AppendLiteral("^inBrowser=1\n");
   buffer.AppendLiteral(
       "spec 0\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
->>>>>>> upstream-releases
   buffer.AppendLiteral(SERVICEWORKERREGISTRAR_TERMINATOR "\n");
 
   buffer.AppendLiteral("\n");
@@ -934,32 +801,14 @@ TEST(ServiceWorkerRegistrar, TestDedupeRead)
   buffer.AppendLiteral(SERVICEWORKERREGISTRAR_TERMINATOR "\n");
 
   // dupe entries
-<<<<<<< HEAD
-  buffer.AppendLiteral("^appId=123&inBrowser=1\n");
-  buffer.AppendLiteral(
-      "spec 1\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
-||||||| merged common ancestors
-  buffer.AppendLiteral("^appId=123&inBrowser=1\n");
-  buffer.AppendLiteral("spec 1\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
-=======
   buffer.AppendLiteral("^inBrowser=1\n");
   buffer.AppendLiteral(
       "spec 1\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
->>>>>>> upstream-releases
   buffer.AppendLiteral(SERVICEWORKERREGISTRAR_TERMINATOR "\n");
 
-<<<<<<< HEAD
-  buffer.AppendLiteral("^appId=123&inBrowser=1\n");
-  buffer.AppendLiteral(
-      "spec 2\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
-||||||| merged common ancestors
-  buffer.AppendLiteral("^appId=123&inBrowser=1\n");
-  buffer.AppendLiteral("spec 2\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
-=======
   buffer.AppendLiteral("^inBrowser=1\n");
   buffer.AppendLiteral(
       "spec 2\nhttps://scope_0.org\ncurrentWorkerURL 0\ncacheName 0\n");
->>>>>>> upstream-releases
   buffer.AppendLiteral(SERVICEWORKERREGISTRAR_TERMINATOR "\n");
 
   buffer.AppendLiteral("\n");
@@ -1019,7 +868,8 @@ TEST(ServiceWorkerRegistrar, TestDedupeRead)
   ASSERT_EQ((int64_t)0, data[1].lastUpdateTime());
 }
 
-TEST(ServiceWorkerRegistrar, TestDedupeWrite) {
+TEST(ServiceWorkerRegistrar, TestDedupeWrite)
+{
   {
     RefPtr<ServiceWorkerRegistrarTest> swr = new ServiceWorkerRegistrarTest;
 
@@ -1036,19 +886,10 @@ TEST(ServiceWorkerRegistrar, TestDedupeWrite) {
 
       nsAutoCString spec;
       spec.AppendPrintf("spec write dedupe/%d", i);
-<<<<<<< HEAD
-      reg.principal() = mozilla::ipc::ContentPrincipalInfo(
-          mozilla::OriginAttributes(0, false), spec, spec);
-||||||| merged common ancestors
-      reg.principal() =
-        mozilla::ipc::ContentPrincipalInfo(mozilla::OriginAttributes(0, false),
-                                           spec, spec);
-=======
 
       reg.principal() = mozilla::ipc::ContentPrincipalInfo(
           mozilla::OriginAttributes(false), spec, spec, mozilla::Nothing(),
           spec);
->>>>>>> upstream-releases
 
       swr->TestRegisterServiceWorker(reg);
     }

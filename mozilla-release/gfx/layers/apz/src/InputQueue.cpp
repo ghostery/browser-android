@@ -25,24 +25,11 @@ InputQueue::InputQueue() = default;
 
 InputQueue::~InputQueue() { mQueuedInputs.Clear(); }
 
-<<<<<<< HEAD
-nsEventStatus InputQueue::ReceiveInputEvent(
-    const RefPtr<AsyncPanZoomController>& aTarget,
-    TargetConfirmationFlags aFlags, const InputData& aEvent,
-    uint64_t* aOutInputBlockId) {
-||||||| merged common ancestors
-nsEventStatus
-InputQueue::ReceiveInputEvent(const RefPtr<AsyncPanZoomController>& aTarget,
-                              TargetConfirmationFlags aFlags,
-                              const InputData& aEvent,
-                              uint64_t* aOutInputBlockId) {
-=======
 nsEventStatus InputQueue::ReceiveInputEvent(
     const RefPtr<AsyncPanZoomController>& aTarget,
     TargetConfirmationFlags aFlags, const InputData& aEvent,
     uint64_t* aOutInputBlockId,
     const Maybe<nsTArray<TouchBehaviorFlags>>& aTouchBehaviors) {
->>>>>>> upstream-releases
   APZThreadUtils::AssertOnControllerThread();
 
   AutoRunImmediateTimeout timeoutRunner{this};
@@ -87,24 +74,11 @@ nsEventStatus InputQueue::ReceiveInputEvent(
   }
 }
 
-<<<<<<< HEAD
-nsEventStatus InputQueue::ReceiveTouchInput(
-    const RefPtr<AsyncPanZoomController>& aTarget,
-    TargetConfirmationFlags aFlags, const MultiTouchInput& aEvent,
-    uint64_t* aOutInputBlockId) {
-||||||| merged common ancestors
-nsEventStatus
-InputQueue::ReceiveTouchInput(const RefPtr<AsyncPanZoomController>& aTarget,
-                              TargetConfirmationFlags aFlags,
-                              const MultiTouchInput& aEvent,
-                              uint64_t* aOutInputBlockId) {
-=======
 nsEventStatus InputQueue::ReceiveTouchInput(
     const RefPtr<AsyncPanZoomController>& aTarget,
     TargetConfirmationFlags aFlags, const MultiTouchInput& aEvent,
     uint64_t* aOutInputBlockId,
     const Maybe<nsTArray<TouchBehaviorFlags>>& aTouchBehaviors) {
->>>>>>> upstream-releases
   TouchBlockState* block = nullptr;
   if (aEvent.mType == MultiTouchInput::MULTITOUCH_START) {
     nsTArray<TouchBehaviorFlags> currentBehaviors;
@@ -345,18 +319,9 @@ nsEventStatus InputQueue::ReceiveKeyboardInput(
 
   // If APZ is allowing passive listeners then we must dispatch the event to
   // content, otherwise we can consume the event.
-<<<<<<< HEAD
-  return gfxPrefs::APZKeyboardPassiveListeners()
-             ? nsEventStatus_eConsumeDoDefault
-             : nsEventStatus_eConsumeNoDefault;
-||||||| merged common ancestors
-  return gfxPrefs::APZKeyboardPassiveListeners() ? nsEventStatus_eConsumeDoDefault
-                                                 : nsEventStatus_eConsumeNoDefault;
-=======
   return StaticPrefs::apz_keyboard_passive_listeners()
              ? nsEventStatus_eConsumeDoDefault
              : nsEventStatus_eConsumeNoDefault;
->>>>>>> upstream-releases
 }
 
 static bool CanScrollTargetHorizontally(const PanGestureInput& aInitialEvent,
@@ -584,23 +549,10 @@ void InputQueue::ScheduleMainThreadTimeout(
     CancelableBlockState* aBlock) {
   INPQ_LOG("scheduling main thread timeout for target %p\n", aTarget.get());
   aBlock->StartContentResponseTimer();
-<<<<<<< HEAD
-  RefPtr<Runnable> timeoutTask = NewRunnableMethod<uint64_t>(
-      "layers::InputQueue::MainThreadTimeout", this,
-      &InputQueue::MainThreadTimeout, aBlock->GetBlockId());
-  int32_t timeout = gfxPrefs::APZContentResponseTimeout();
-||||||| merged common ancestors
-  RefPtr<Runnable> timeoutTask = NewRunnableMethod<uint64_t>("layers::InputQueue::MainThreadTimeout",
-      this,
-      &InputQueue::MainThreadTimeout,
-      aBlock->GetBlockId());
-  int32_t timeout = gfxPrefs::APZContentResponseTimeout();
-=======
   RefPtr<Runnable> timeoutTask = NewRunnableMethod<uint64_t>(
       "layers::InputQueue::MainThreadTimeout", this,
       &InputQueue::MainThreadTimeout, aBlock->GetBlockId());
   int32_t timeout = StaticPrefs::apz_content_response_timeout();
->>>>>>> upstream-releases
   if (timeout == 0) {
     // If the timeout is zero, treat it as a request to ignore any main
     // thread confirmation and unconditionally use fallback behaviour for

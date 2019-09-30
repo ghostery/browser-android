@@ -12,31 +12,15 @@
  * this document.
  */
 
-<<<<<<< HEAD
-[Constructor(USVString scriptURL, optional WorkerOptions options),
- Exposed=(Window,DedicatedWorker,SharedWorker)]
-||||||| merged common ancestors
-[Constructor(USVString scriptURL, optional WorkerOptions options),
- Exposed=(Window,DedicatedWorker,SharedWorker,System)]
-=======
 [Constructor(USVString scriptURL, optional WorkerOptions options = {}),
  Exposed=(Window,DedicatedWorker,SharedWorker)]
->>>>>>> upstream-releases
 interface Worker : EventTarget {
   void terminate();
 
   [Throws]
-<<<<<<< HEAD
-  void postMessage(any message, sequence<object> transfer);
-  [Throws]
-  void postMessage(any message, optional PostMessageOptions aOptions);
-||||||| merged common ancestors
-  void postMessage(any message, optional sequence<object> transfer = []);
-=======
   void postMessage(any message, sequence<object> transfer);
   [Throws]
   void postMessage(any message, optional PostMessageOptions aOptions = {});
->>>>>>> upstream-releases
 
   attribute EventHandler onmessage;
   attribute EventHandler onmessageerror;

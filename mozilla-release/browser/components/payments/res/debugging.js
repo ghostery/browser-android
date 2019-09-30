@@ -343,28 +343,12 @@ let BASIC_CARDS_1 = {
     billingAddressGUID: "68gjdh354j",
     methodName: "basic-card",
     "cc-number": "************5461",
-<<<<<<< HEAD
-    "guid": "53f9d009aed2",
-    "version": 2,
-    "timeCreated": 1505240896213,
-    "timeLastModified": 1515609524588,
-    "timeLastUsed": 10000,
-    "timesUsed": 0,
-||||||| merged common ancestors
-    "guid": "53f9d009aed2",
-    "version": 1,
-    "timeCreated": 1505240896213,
-    "timeLastModified": 1515609524588,
-    "timeLastUsed": 10000,
-    "timesUsed": 0,
-=======
     guid: "53f9d009aed2",
     version: 2,
     timeCreated: 1505240896213,
     timeLastModified: 1515609524588,
     timeLastUsed: 10000,
     timesUsed: 0,
->>>>>>> upstream-releases
     "cc-name": "John Smith",
     "cc-exp-month": 6,
     "cc-exp-year": 2024,
@@ -377,28 +361,12 @@ let BASIC_CARDS_1 = {
   "9h5d4h6f4d1s": {
     methodName: "basic-card",
     "cc-number": "************0954",
-<<<<<<< HEAD
-    "guid": "9h5d4h6f4d1s",
-    "version": 2,
-    "timeCreated": 1517890536491,
-    "timeLastModified": 1517890564518,
-    "timeLastUsed": 50000,
-    "timesUsed": 0,
-||||||| merged common ancestors
-    "guid": "9h5d4h6f4d1s",
-    "version": 1,
-    "timeCreated": 1517890536491,
-    "timeLastModified": 1517890564518,
-    "timeLastUsed": 50000,
-    "timesUsed": 0,
-=======
     guid: "9h5d4h6f4d1s",
     version: 2,
     timeCreated: 1517890536491,
     timeLastModified: 1517890564518,
     timeLastUsed: 50000,
     timesUsed: 0,
->>>>>>> upstream-releases
     "cc-name": "Jane Doe",
     "cc-exp-month": 5,
     "cc-exp-year": 2023,
@@ -411,28 +379,12 @@ let BASIC_CARDS_1 = {
   "123456789abc": {
     methodName: "basic-card",
     "cc-number": "************1234",
-<<<<<<< HEAD
-    "guid": "123456789abc",
-    "version": 2,
-    "timeCreated": 1517890536491,
-    "timeLastModified": 1517890564518,
-    "timeLastUsed": 90000,
-    "timesUsed": 0,
-||||||| merged common ancestors
-    "guid": "123456789abc",
-    "version": 1,
-    "timeCreated": 1517890536491,
-    "timeLastModified": 1517890564518,
-    "timeLastUsed": 90000,
-    "timesUsed": 0,
-=======
     guid: "123456789abc",
     version: 2,
     timeCreated: 1517890536491,
     timeLastModified: 1517890564518,
     timeLastUsed: 90000,
     timesUsed: 0,
->>>>>>> upstream-releases
     "cc-name": "Jane Fields",
     "cc-given-name": "Jane",
     "cc-additional-name": "",
@@ -461,28 +413,12 @@ let BASIC_CARDS_1 = {
   "missing-cc-name": {
     methodName: "basic-card",
     "cc-number": "************8563",
-<<<<<<< HEAD
-    "guid": "missing-cc-name",
-    "version": 2,
-    "timeCreated": 1517890536491,
-    "timeLastModified": 1517890564518,
-    "timeLastUsed": 30000,
-    "timesUsed": 0,
-||||||| merged common ancestors
-    "guid": "missing-cc-name",
-    "version": 1,
-    "timeCreated": 1517890536491,
-    "timeLastModified": 1517890564518,
-    "timeLastUsed": 30000,
-    "timesUsed": 0,
-=======
     guid: "missing-cc-name",
     version: 2,
     timeCreated: 1517890536491,
     timeLastModified: 1517890564518,
     timeLastUsed: 30000,
     timesUsed: 0,
->>>>>>> upstream-releases
     "cc-exp-month": 8,
     "cc-exp-year": 2024,
     "cc-exp": "2024-08",
@@ -562,19 +498,11 @@ let buttonActions = {
 
   setBasicCardErrors() {
     let request = Object.assign({}, requestStore.getState().request);
-<<<<<<< HEAD
-    request.paymentDetails = Object.assign({}, requestStore.getState().request.paymentDetails);
-    request.paymentDetails.paymentMethodErrors = {
-||||||| merged common ancestors
-    request.paymentDetails = Object.assign({}, requestStore.getState().request.paymentDetails);
-    request.paymentDetails.paymentMethod = {
-=======
     request.paymentDetails = Object.assign(
       {},
       requestStore.getState().request.paymentDetails
     );
     request.paymentDetails.paymentMethodErrors = {
->>>>>>> upstream-releases
       cardNumber: "",
       cardholderName: "",
       cardSecurityCode: "",
@@ -616,19 +544,11 @@ let buttonActions = {
 
   setPayerErrors() {
     let request = Object.assign({}, requestStore.getState().request);
-<<<<<<< HEAD
-    request.paymentDetails = Object.assign({}, requestStore.getState().request.paymentDetails);
-    request.paymentDetails.payerErrors = {
-||||||| merged common ancestors
-    request.paymentDetails = Object.assign({}, requestStore.getState().request.paymentDetails);
-    request.paymentDetails.payer = {
-=======
     request.paymentDetails = Object.assign(
       {},
       requestStore.getState().request.paymentDetails
     );
     request.paymentDetails.payerErrors = {
->>>>>>> upstream-releases
       email: "Only @mozilla.com emails are supported",
       name: "Payer name must start with M",
       phone: "Payer area codes must start with 1",

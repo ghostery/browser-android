@@ -28,45 +28,18 @@ namespace gfx {
  * Callers should check the cr member after constructing the object
  * to see if it succeeded. The DrawTarget should not be used while
  * the context is borrowed. */
-<<<<<<< HEAD
-class BorrowedCairoContext {
- public:
-  BorrowedCairoContext() : mCairo(nullptr), mDT(nullptr) {}
-
-  explicit BorrowedCairoContext(DrawTarget *aDT) : mDT(aDT) {
-||||||| merged common ancestors
-class BorrowedCairoContext
-{
-public:
-  BorrowedCairoContext()
-    : mCairo(nullptr)
-    , mDT(nullptr)
-  { }
-
-  explicit BorrowedCairoContext(DrawTarget *aDT)
-    : mDT(aDT)
-  {
-=======
 class BorrowedCairoContext {
  public:
   BorrowedCairoContext() : mCairo(nullptr), mDT(nullptr) {}
 
   explicit BorrowedCairoContext(DrawTarget* aDT) : mDT(aDT) {
->>>>>>> upstream-releases
     mCairo = BorrowCairoContextFromDrawTarget(aDT);
   }
 
   // We can optionally Init after construction in
   // case we don't know what the DT will be at construction
   // time.
-<<<<<<< HEAD
-  cairo_t *Init(DrawTarget *aDT) {
-||||||| merged common ancestors
-  cairo_t *Init(DrawTarget *aDT)
-  {
-=======
   cairo_t* Init(DrawTarget* aDT) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mDT, "Can't initialize twice!");
     mDT = aDT;
     return mCairo = BorrowCairoContextFromDrawTarget(aDT);
@@ -86,27 +59,12 @@ class BorrowedCairoContext {
 
   ~BorrowedCairoContext() { MOZ_ASSERT(!mCairo); }
 
-<<<<<<< HEAD
-  cairo_t *mCairo;
-
- private:
-  static cairo_t *BorrowCairoContextFromDrawTarget(DrawTarget *aDT);
-  static void ReturnCairoContextToDrawTarget(DrawTarget *aDT, cairo_t *aCairo);
-  DrawTarget *mDT;
-||||||| merged common ancestors
-  cairo_t *mCairo;
-private:
-  static cairo_t* BorrowCairoContextFromDrawTarget(DrawTarget *aDT);
-  static void ReturnCairoContextToDrawTarget(DrawTarget *aDT, cairo_t *aCairo);
-  DrawTarget *mDT;
-=======
   cairo_t* mCairo;
 
  private:
   static cairo_t* BorrowCairoContextFromDrawTarget(DrawTarget* aDT);
   static void ReturnCairoContextToDrawTarget(DrawTarget* aDT, cairo_t* aCairo);
   DrawTarget* mDT;
->>>>>>> upstream-releases
 };
 
 #ifdef MOZ_X11
@@ -119,39 +77,6 @@ private:
 class BorrowedXlibDrawable {
  public:
   BorrowedXlibDrawable()
-<<<<<<< HEAD
-      : mDT(nullptr),
-        mDisplay(nullptr),
-        mDrawable(X11None),
-        mScreen(nullptr),
-        mVisual(nullptr),
-        mXRenderFormat(nullptr) {}
-
-  explicit BorrowedXlibDrawable(DrawTarget *aDT)
-      : mDT(nullptr),
-        mDisplay(nullptr),
-        mDrawable(X11None),
-        mScreen(nullptr),
-        mVisual(nullptr),
-        mXRenderFormat(nullptr) {
-||||||| merged common ancestors
-    : mDT(nullptr),
-      mDisplay(nullptr),
-      mDrawable(X11None),
-      mScreen(nullptr),
-      mVisual(nullptr),
-      mXRenderFormat(nullptr)
-  {}
-
-  explicit BorrowedXlibDrawable(DrawTarget *aDT)
-    : mDT(nullptr),
-      mDisplay(nullptr),
-      mDrawable(X11None),
-      mScreen(nullptr),
-      mVisual(nullptr),
-      mXRenderFormat(nullptr)
-  {
-=======
       : mDT(nullptr),
         mDisplay(nullptr),
         mDrawable(X11None),
@@ -166,7 +91,6 @@ class BorrowedXlibDrawable {
         mScreen(nullptr),
         mVisual(nullptr),
         mXRenderFormat(nullptr) {
->>>>>>> upstream-releases
     Init(aDT);
   }
 
@@ -191,21 +115,11 @@ class BorrowedXlibDrawable {
   IntSize GetSize() const { return mSize; }
   Point GetOffset() const { return mOffset; }
 
-  XRenderPictFormat *GetXRenderFormat() const { return mXRenderFormat; }
+  XRenderPictFormat* GetXRenderFormat() const { return mXRenderFormat; }
 
-<<<<<<< HEAD
- private:
-  DrawTarget *mDT;
-  Display *mDisplay;
-||||||| merged common ancestors
-private:
-  DrawTarget *mDT;
-  Display *mDisplay;
-=======
  private:
   DrawTarget* mDT;
   Display* mDisplay;
->>>>>>> upstream-releases
   Drawable mDrawable;
   Screen* mScreen;
   Visual* mVisual;
@@ -222,31 +136,11 @@ private:
  * Callers should check the cg member after constructing the object
  * to see if it succeeded. The DrawTarget should not be used while
  * the context is borrowed. */
-<<<<<<< HEAD
-class BorrowedCGContext {
- public:
-  BorrowedCGContext() : cg(nullptr), mDT(nullptr) {}
-
-  explicit BorrowedCGContext(DrawTarget *aDT) : mDT(aDT) {
-||||||| merged common ancestors
-class BorrowedCGContext
-{
-public:
-  BorrowedCGContext()
-    : cg(nullptr)
-    , mDT(nullptr)
-  { }
-
-  explicit BorrowedCGContext(DrawTarget *aDT)
-    : mDT(aDT)
-  {
-=======
 class BorrowedCGContext {
  public:
   BorrowedCGContext() : cg(nullptr), mDT(nullptr) {}
 
   explicit BorrowedCGContext(DrawTarget* aDT) : mDT(aDT) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aDT, "Caller should check for nullptr");
     cg = BorrowCGContextFromDrawTarget(aDT);
   }
@@ -254,14 +148,7 @@ class BorrowedCGContext {
   // We can optionally Init after construction in
   // case we don't know what the DT will be at construction
   // time.
-<<<<<<< HEAD
-  CGContextRef Init(DrawTarget *aDT) {
-||||||| merged common ancestors
-  CGContextRef Init(DrawTarget *aDT)
-  {
-=======
   CGContextRef Init(DrawTarget* aDT) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aDT, "Caller should check for nullptr");
     MOZ_ASSERT(!mDT, "Can't initialize twice!");
     mDT = aDT;
@@ -284,22 +171,6 @@ class BorrowedCGContext {
   ~BorrowedCGContext() { MOZ_ASSERT(!cg); }
 
   CGContextRef cg;
-<<<<<<< HEAD
-
- private:
-#ifdef USE_SKIA
-  static CGContextRef BorrowCGContextFromDrawTarget(DrawTarget *aDT);
-  static void ReturnCGContextToDrawTarget(DrawTarget *aDT, CGContextRef cg);
-#else
-  static CGContextRef BorrowCGContextFromDrawTarget(DrawTarget *aDT) {
-||||||| merged common ancestors
-private:
-#ifdef USE_SKIA
-  static CGContextRef BorrowCGContextFromDrawTarget(DrawTarget *aDT);
-  static void ReturnCGContextToDrawTarget(DrawTarget *aDT, CGContextRef cg);
-#else
-  static CGContextRef BorrowCGContextFromDrawTarget(DrawTarget *aDT) {
-=======
 
  private:
 #  ifdef USE_SKIA
@@ -307,7 +178,6 @@ private:
   static void ReturnCGContextToDrawTarget(DrawTarget* aDT, CGContextRef cg);
 #  else
   static CGContextRef BorrowCGContextFromDrawTarget(DrawTarget* aDT) {
->>>>>>> upstream-releases
     MOZ_CRASH("Not supported without Skia");
   }
 

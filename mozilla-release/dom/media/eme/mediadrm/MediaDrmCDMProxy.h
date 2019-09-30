@@ -31,15 +31,8 @@ class MediaDrmCDMProxy : public CDMProxy {
 
   MediaDrmCDMProxy(dom::MediaKeys* aKeys, const nsAString& aKeySystem,
                    bool aDistinctiveIdentifierRequired,
-<<<<<<< HEAD
-                   bool aPersistentStateRequired, nsIEventTarget* aMainThread);
-||||||| merged common ancestors
-                   bool aPersistentStateRequired,
-                   nsIEventTarget* aMainThread);
-=======
                    bool aPersistentStateRequired,
                    nsISerialEventTarget* aMainThread);
->>>>>>> upstream-releases
 
   void Init(PromiseId aPromiseId, const nsAString& aOrigin,
             const nsAString& aTopLevelOrigin,

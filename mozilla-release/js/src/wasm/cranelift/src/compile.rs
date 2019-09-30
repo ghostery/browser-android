@@ -18,45 +18,14 @@
 //! This module defines the `compile()` function which uses Cranelift to compile a single
 //! WebAssembly function.
 
-<<<<<<< HEAD
-use baldrdash as bd;
-use cpu::make_isa;
-use cranelift_codegen::binemit::{Addend, CodeOffset, NullTrapSink, Reloc, RelocSink};
-||||||| merged common ancestors
-use baldrdash as bd;
-use cpu::make_isa;
-use cranelift_codegen::binemit::{Addend, CodeOffset, NullTrapSink, Reloc, RelocSink, TrapSink};
-use cranelift_codegen::cursor::{Cursor, FuncCursor};
-=======
 use std::fmt;
 use std::mem;
 
 use cranelift_codegen::binemit::{Addend, CodeInfo, CodeOffset, NullTrapSink, Reloc, RelocSink};
->>>>>>> upstream-releases
 use cranelift_codegen::entity::EntityRef;
 use cranelift_codegen::ir;
 use cranelift_codegen::ir::stackslot::StackSize;
 use cranelift_codegen::isa::TargetIsa;
-<<<<<<< HEAD
-use cranelift_codegen::CodegenResult;
-use cranelift_codegen::Context;
-use cranelift_wasm::{FuncIndex, FuncTranslator, WasmResult};
-use std::fmt;
-use std::mem;
-use utils::DashResult;
-use wasm2clif::{init_sig, native_pointer_size, TransEnv};
-||||||| merged common ancestors
-use cranelift_codegen::settings::Flags;
-use cranelift_codegen::{self, ir};
-use cranelift_codegen::{CodegenError, CodegenResult};
-use cranelift_wasm::{
-    self, FuncIndex, GlobalIndex, MemoryIndex, SignatureIndex, TableIndex, WasmResult,
-};
-use std::fmt;
-use std::mem;
-use wasm2clif::{init_sig, native_pointer_size, TransEnv};
-use utils::DashResult;
-=======
 use cranelift_codegen::CodegenResult;
 use cranelift_codegen::Context;
 use cranelift_wasm::{FuncIndex, FuncTranslator, WasmResult};
@@ -71,7 +40,6 @@ const USER_FUNCTION_NAMESPACE: u32 = 0;
 
 // Namespace for builtins functions that are translated to symbolic accesses in Spidermonkey.
 const SYMBOLIC_FUNCTION_NAMESPACE: u32 = 1;
->>>>>>> upstream-releases
 
 /// The result of a function's compilation: code + metadata.
 pub struct CompiledFunc {
@@ -116,25 +84,11 @@ impl CompiledFunc {
 /// A batch compiler holds on to data structures that can be recycled for multiple function
 /// compilations.
 pub struct BatchCompiler<'a, 'b> {
-<<<<<<< HEAD
-    static_environ: &'a bd::StaticEnvironment,
-    environ: bd::ModuleEnvironment<'b>,
-    isa: Box<TargetIsa>,
-    context: Context,
-    trans: FuncTranslator,
-||||||| merged common ancestors
-    static_environ: &'a bd::StaticEnvironment,
-    environ: bd::ModuleEnvironment<'b>,
-    isa: Box<TargetIsa>,
-    context: cranelift_codegen::Context,
-    trans: cranelift_wasm::FuncTranslator,
-=======
     static_environ: &'a bindings::StaticEnvironment,
     environ: bindings::ModuleEnvironment<'b>,
     isa: Box<dyn TargetIsa>,
     context: Context,
     trans: FuncTranslator,
->>>>>>> upstream-releases
     pub current_func: CompiledFunc,
 }
 
@@ -155,18 +109,9 @@ impl<'a, 'b> BatchCompiler<'a, 'b> {
     }
 
     pub fn compile(&mut self) -> CodegenResult<()> {
-<<<<<<< HEAD
-        let size = self.context.compile(&*self.isa)?;
-        self.binemit(size as usize)
-||||||| merged common ancestors
-        let orig_size = self.context.compile(&*self.isa)?;
-        let size = self.remove_return_inst(orig_size) as usize;
-        self.binemit(size)
-=======
         let info = self.context.compile(&*self.isa)?;
         debug!("Optimized wasm function IR: {}", self);
         self.binemit(info)
->>>>>>> upstream-releases
     }
 
     /// Translate the WebAssembly code to Cranelift IR.
@@ -229,20 +174,10 @@ impl<'a, 'b> BatchCompiler<'a, 'b> {
         }
 
         {
-<<<<<<< HEAD
-            let eenv = &mut EmitEnv::new(&mut self.current_func.metadata);
-||||||| merged common ancestors
-            let eenv = &mut EmitEnv::new(
-                &self.context.func,
-                &self.environ,
-                &mut self.current_func.metadata,
-            );
-=======
             let emit_env = &mut EmitEnv::new(
                 &mut self.current_func.metadata,
                 &mut self.current_func.rodata_relocs,
             );
->>>>>>> upstream-releases
             let mut trap_sink = NullTrapSink {};
             unsafe {
                 let code_buffer = &mut self.current_func.code_buffer;
@@ -398,19 +333,9 @@ impl<'a, 'b> BatchCompiler<'a, 'b> {
             _ => panic!("Bad format for call"),
         };
 
-<<<<<<< HEAD
-        let func_index = match *callee {
-            ir::ExternalName::User {
-                namespace: 0,
-||||||| merged common ancestors
-        let func_index = match callee {
-            &ir::ExternalName::User {
-                namespace: 0,
-=======
         let func_index = match *callee {
             ir::ExternalName::User {
                 namespace: USER_FUNCTION_NAMESPACE,
->>>>>>> upstream-releases
                 index,
             } => FuncIndex::new(index as usize),
             _ => panic!("Direct call to {} unsupported", callee),
@@ -444,23 +369,12 @@ impl<'a, 'b> BatchCompiler<'a, 'b> {
         ));
     }
 
-<<<<<<< HEAD
-    fn trap_metadata(
-        &self,
-        metadata: &mut Vec<bd::MetadataEntry>,
-        inst: ir::Inst,
-        offset: CodeOffset,
-    ) {
-||||||| merged common ancestors
-    fn trap_metadata(&self, metadata: &mut Vec<bd::MetadataEntry>, inst: ir::Inst, offset: CodeOffset) {
-=======
     fn trap_metadata(
         &self,
         metadata: &mut Vec<bindings::MetadataEntry>,
         inst: ir::Inst,
         offset: CodeOffset,
     ) {
->>>>>>> upstream-releases
         let func = &self.context.func;
         let (code, trap_offset) = match func.dfg[inst] {
             ir::InstructionData::Trap { code, .. } => (code, 0),
@@ -489,35 +403,11 @@ impl<'a, 'b> BatchCompiler<'a, 'b> {
             ir::TrapCode::User(_) => panic!("Uncovered trap code {}", code),
         };
 
-<<<<<<< HEAD
-        let srcloc = func.srclocs[inst];
-        assert!(
-            !srcloc.is_default(),
-            "No source location on {}",
-            func.dfg.display_inst(inst, Some(self.isa.as_ref()))
-        );
-
-        metadata.push(bd::MetadataEntry::trap(
-            offset + trap_offset,
-            srcloc,
-            bd_trap,
-        ));
-||||||| merged common ancestors
-        let srcloc = func.srclocs[inst];
-        assert!(
-            !srcloc.is_default(),
-            "No source location on {}",
-            func.dfg.display_inst(inst, Some(self.isa.as_ref()))
-        );
-
-        metadata.push(bd::MetadataEntry::trap(offset + trap_offset, srcloc, bd_trap));
-=======
         metadata.push(bindings::MetadataEntry::trap(
             offset + trap_offset,
             self.srcloc(inst),
             bd_trap,
         ));
->>>>>>> upstream-releases
     }
 
     fn memory_metadata(
@@ -572,38 +462,11 @@ pub fn symbolic_function_name(sym: bindings::SymbolicAddress) -> ir::ExternalNam
 }
 
 /// References joined so we can implement `RelocSink`.
-<<<<<<< HEAD
-struct EmitEnv<'a> {
-    metadata: &'a mut Vec<bd::MetadataEntry>,
-||||||| merged common ancestors
-struct EmitEnv<'a, 'b, 'c> {
-    func: &'a ir::Function,
-    env: &'b bd::ModuleEnvironment<'b>,
-    metadata: &'c mut Vec<bd::MetadataEntry>,
-=======
 struct EmitEnv<'a> {
     metadata: &'a mut Vec<bindings::MetadataEntry>,
     rodata_relocs: &'a mut Vec<CodeOffset>,
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-impl<'a> EmitEnv<'a> {
-    pub fn new(metadata: &'a mut Vec<bd::MetadataEntry>) -> EmitEnv<'a> {
-        EmitEnv { metadata }
-||||||| merged common ancestors
-impl<'a, 'b, 'c> EmitEnv<'a, 'b, 'c> {
-    pub fn new(
-        func: &'a ir::Function,
-        env: &'b bd::ModuleEnvironment,
-        metadata: &'c mut Vec<bd::MetadataEntry>,
-    ) -> EmitEnv<'a, 'b, 'c> {
-        EmitEnv {
-            func,
-            env,
-            metadata,
-        }
-=======
 impl<'a> EmitEnv<'a> {
     pub fn new(
         metadata: &'a mut Vec<bindings::MetadataEntry>,
@@ -613,7 +476,6 @@ impl<'a> EmitEnv<'a> {
             metadata,
             rodata_relocs,
         }
->>>>>>> upstream-releases
     }
 }
 
@@ -630,37 +492,16 @@ impl<'a> RelocSink for EmitEnv<'a> {
         _addend: Addend,
     ) {
         // Decode the function name.
-<<<<<<< HEAD
-        match *name {
-            ir::ExternalName::User { namespace: 0, .. } => {
-                // This is a direct function call handled by `emit_metadata` above.
-||||||| merged common ancestors
-        match name {
-            &ir::ExternalName::User {
-                namespace: 0,
-                index,
-            } => {
-                // This is a direct function call handled by `emit_metadata` above.
-=======
         match *name {
             ir::ExternalName::User {
                 namespace: USER_FUNCTION_NAMESPACE,
                 ..
             } => {
                 // This is a direct function call handled by `call_metadata` above.
->>>>>>> upstream-releases
             }
-<<<<<<< HEAD
-            ir::ExternalName::User {
-                namespace: 1,
-||||||| merged common ancestors
-            &ir::ExternalName::User {
-                namespace: 1,
-=======
 
             ir::ExternalName::User {
                 namespace: SYMBOLIC_FUNCTION_NAMESPACE,
->>>>>>> upstream-releases
                 index,
             } => {
                 // This is a symbolic function reference encoded by `symbolic_function_name()`.
@@ -671,14 +512,8 @@ impl<'a> RelocSink for EmitEnv<'a> {
                 self.metadata
                     .push(bindings::MetadataEntry::symbolic_access(offset, sym));
             }
-<<<<<<< HEAD
-            ir::ExternalName::LibCall(call) => {
-||||||| merged common ancestors
-            &ir::ExternalName::LibCall(call) => {
-=======
 
             ir::ExternalName::LibCall(call) => {
->>>>>>> upstream-releases
                 let sym = match call {
                     ir::LibCall::CeilF32 => bindings::SymbolicAddress::CeilF32,
                     ir::LibCall::CeilF64 => bindings::SymbolicAddress::CeilF64,

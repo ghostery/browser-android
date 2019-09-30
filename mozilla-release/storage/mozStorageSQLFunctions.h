@@ -36,15 +36,7 @@ int registerFunctions(sqlite3* aDB);
  * @param aArgv
  *        An array of the arguments the functions is being called with.
  */
-<<<<<<< HEAD
-void caseFunction(sqlite3_context *aCtx, int aArgc, sqlite3_value **aArgv);
-||||||| merged common ancestors
-void caseFunction(sqlite3_context *aCtx,
-                              int aArgc,
-                              sqlite3_value **aArgv);
-=======
 void caseFunction(sqlite3_context* aCtx, int aArgc, sqlite3_value** aArgv);
->>>>>>> upstream-releases
 
 /**
  * Overridden function to perform the SQL function LIKE.  This supports unicode,
@@ -57,15 +49,7 @@ void caseFunction(sqlite3_context* aCtx, int aArgc, sqlite3_value** aArgv);
  * @param aArgv
  *        An array of the arguments the functions is being called with.
  */
-<<<<<<< HEAD
-void likeFunction(sqlite3_context *aCtx, int aArgc, sqlite3_value **aArgv);
-||||||| merged common ancestors
-void likeFunction(sqlite3_context *aCtx,
-                              int aArgc,
-                              sqlite3_value **aArgv);
-=======
 void likeFunction(sqlite3_context* aCtx, int aArgc, sqlite3_value** aArgv);
->>>>>>> upstream-releases
 
 /**
  * An implementation of the Levenshtein Edit Distance algorithm for use in
@@ -78,25 +62,9 @@ void likeFunction(sqlite3_context* aCtx, int aArgc, sqlite3_value** aArgv);
  * @param aArgv
  *        An array of the arguments the functions is being called with.
  */
-<<<<<<< HEAD
-void levenshteinDistanceFunction(sqlite3_context *aCtx, int aArgc,
-                                 sqlite3_value **aArgv);
-||||||| merged common ancestors
-void levenshteinDistanceFunction(sqlite3_context *aCtx,
-                                             int aArgc,
-                                             sqlite3_value **aArgv);
-=======
 void levenshteinDistanceFunction(sqlite3_context* aCtx, int aArgc,
                                  sqlite3_value** aArgv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-}  // namespace storage
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace storage
-} // namespace mozilla
-=======
 /**
  * An alternative string length function that uses XPCOM string classes for
  * string length calculation.
@@ -113,6 +81,5 @@ void utf16LengthFunction(sqlite3_context* aCtx, int aArgc,
 
 }  // namespace storage
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozStorageSQLFunctions_h

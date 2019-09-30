@@ -9,26 +9,11 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-void TryCircle(double centerX, double centerY, double radius) {
-  printf("TestCairo:TryArcs centerY %f, radius %f\n", centerY, radius);
-||||||| merged common ancestors
-void TryCircle(double centerX, double centerY, double radius) {
-  printf("TestCairo:TryArcs centerY %f, radius %f\n",centerY,radius);
-=======
 static void TryCircle(double centerX, double centerY, double radius) {
   printf("TestCairo:TryArcs centerY %f, radius %f\n", centerY, radius);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  cairo_surface_t *surf =
-      cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 8, 21);
-||||||| merged common ancestors
-  cairo_surface_t *surf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,8,21);
-=======
   cairo_surface_t* surf =
       cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 8, 21);
->>>>>>> upstream-releases
   ASSERT_TRUE(surf != nullptr);
 
   cairo_t* cairo = cairo_create(surf);
@@ -67,15 +52,8 @@ TEST(Cairo, Bug825721)
   TryCircle(0.0, 1.0, 5761126469220696064.0);
 }
 
-<<<<<<< HEAD
-TEST(Cairo, Bug1063486) {
-||||||| merged common ancestors
-TEST(Cairo, Bug1063486) {
-
-=======
 TEST(Cairo, Bug1063486)
 {
->>>>>>> upstream-releases
   double x1, y1, x2, y2;
   const double epsilon = .01;
 

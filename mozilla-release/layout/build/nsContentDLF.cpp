@@ -150,27 +150,6 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
   // Try html or plaintext; both use the same document CID
   if (IsTypeInList(contentType, gHTMLTypes) ||
       nsContentUtils::IsPlainTextType(contentType)) {
-<<<<<<< HEAD
-    return CreateDocument(aCommand, aChannel, aLoadGroup, aContainer,
-                          []() -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv =
-                                NS_NewHTMLDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-||||||| merged common ancestors
-    return CreateDocument(aCommand,
-                          aChannel, aLoadGroup,
-                          aContainer, [] () -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv = NS_NewHTMLDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-=======
     return CreateDocument(
         aCommand, aChannel, aLoadGroup, aContainer,
         []() -> already_AddRefed<Document> {
@@ -180,32 +159,10 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
           return doc.forget();
         },
         aDocListener, aDocViewer);
->>>>>>> upstream-releases
   }
 
   // Try XML
   if (IsTypeInList(contentType, gXMLTypes)) {
-<<<<<<< HEAD
-    return CreateDocument(aCommand, aChannel, aLoadGroup, aContainer,
-                          []() -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv =
-                                NS_NewXMLDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-||||||| merged common ancestors
-    return CreateDocument(aCommand,
-                          aChannel, aLoadGroup,
-                          aContainer, [] () -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv = NS_NewXMLDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-=======
     return CreateDocument(
         aCommand, aChannel, aLoadGroup, aContainer,
         []() -> already_AddRefed<Document> {
@@ -215,32 +172,10 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
           return doc.forget();
         },
         aDocListener, aDocViewer);
->>>>>>> upstream-releases
   }
 
   // Try SVG
   if (IsTypeInList(contentType, gSVGTypes)) {
-<<<<<<< HEAD
-    return CreateDocument(aCommand, aChannel, aLoadGroup, aContainer,
-                          []() -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv =
-                                NS_NewSVGDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-||||||| merged common ancestors
-    return CreateDocument(aCommand,
-                          aChannel, aLoadGroup,
-                          aContainer, [] () -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv = NS_NewSVGDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-=======
     return CreateDocument(
         aCommand, aChannel, aLoadGroup, aContainer,
         []() -> already_AddRefed<Document> {
@@ -250,7 +185,6 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
           return doc.forget();
         },
         aDocListener, aDocViewer);
->>>>>>> upstream-releases
   }
 
   // Try XUL
@@ -263,32 +197,6 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
                              aExtraInfo, aDocListener, aDocViewer);
   }
 
-<<<<<<< HEAD
-  if (mozilla::DecoderTraits::ShouldHandleMediaType(
-          contentType.get(),
-          /* DecoderDoctorDiagnostics* */ nullptr)) {
-    return CreateDocument(aCommand, aChannel, aLoadGroup, aContainer,
-                          []() -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv =
-                                NS_NewVideoDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-||||||| merged common ancestors
-  if (mozilla::DecoderTraits::ShouldHandleMediaType(contentType.get(),
-                    /* DecoderDoctorDiagnostics* */ nullptr)) {
-    return CreateDocument(aCommand,
-                          aChannel, aLoadGroup,
-                          aContainer, [] () -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv = NS_NewVideoDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-=======
   if (mozilla::DecoderTraits::ShouldHandleMediaType(
           contentType.get(),
           /* DecoderDoctorDiagnostics* */ nullptr)) {
@@ -301,32 +209,10 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
           return doc.forget();
         },
         aDocListener, aDocViewer);
->>>>>>> upstream-releases
   }
 
   // Try image types
   if (IsImageContentType(contentType.get())) {
-<<<<<<< HEAD
-    return CreateDocument(aCommand, aChannel, aLoadGroup, aContainer,
-                          []() -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv =
-                                NS_NewImageDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-||||||| merged common ancestors
-    return CreateDocument(aCommand,
-                          aChannel, aLoadGroup,
-                          aContainer, [] () -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv = NS_NewImageDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-=======
     return CreateDocument(
         aCommand, aChannel, aLoadGroup, aContainer,
         []() -> already_AddRefed<Document> {
@@ -336,37 +222,11 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
           return doc.forget();
         },
         aDocListener, aDocViewer);
->>>>>>> upstream-releases
   }
 
   RefPtr<nsPluginHost> pluginHost = nsPluginHost::GetInst();
   // Don't exclude disabled plugins, which will still trigger the "this plugin
   // is disabled" placeholder.
-<<<<<<< HEAD
-  if (pluginHost &&
-      pluginHost->HavePluginForType(contentType, nsPluginHost::eExcludeNone)) {
-    return CreateDocument(aCommand, aChannel, aLoadGroup, aContainer,
-                          []() -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv =
-                                NS_NewPluginDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-||||||| merged common ancestors
-  if (pluginHost && pluginHost->HavePluginForType(contentType,
-                                                  nsPluginHost::eExcludeNone)) {
-    return CreateDocument(aCommand,
-                          aChannel, aLoadGroup,
-                          aContainer, [] () -> already_AddRefed<nsIDocument> {
-                            nsCOMPtr<nsIDocument> doc;
-                            nsresult rv = NS_NewPluginDocument(getter_AddRefs(doc));
-                            NS_ENSURE_SUCCESS(rv, nullptr);
-                            return doc.forget();
-                          },
-                          aDocListener, aDocViewer);
-=======
   if (pluginHost &&
       pluginHost->HavePluginForType(contentType, nsPluginHost::eExcludeNone)) {
     return CreateDocument(
@@ -378,7 +238,6 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
           return doc.forget();
         },
         aDocListener, aDocViewer);
->>>>>>> upstream-releases
   }
 
   // If we get here, then we weren't able to create anything. Sorry!
@@ -387,20 +246,9 @@ nsContentDLF::CreateInstance(const char* aCommand, nsIChannel* aChannel,
 
 NS_IMETHODIMP
 nsContentDLF::CreateInstanceForDocument(nsISupports* aContainer,
-<<<<<<< HEAD
-                                        nsIDocument* aDocument,
-                                        const char* aCommand,
-                                        nsIContentViewer** aContentViewer) {
-||||||| merged common ancestors
-                                        nsIDocument* aDocument,
-                                        const char *aCommand,
-                                        nsIContentViewer** aContentViewer)
-{
-=======
                                         Document* aDocument,
                                         const char* aCommand,
                                         nsIContentViewer** aContentViewer) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
 
   nsCOMPtr<nsIContentViewer> contentViewer = NS_NewContentViewer();
@@ -411,22 +259,10 @@ nsContentDLF::CreateInstanceForDocument(nsISupports* aContainer,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsIDocument> nsContentDLF::CreateBlankDocument(
-    nsILoadGroup* aLoadGroup, nsIPrincipal* aPrincipal,
-    nsDocShell* aContainer) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsIDocument>
-nsContentDLF::CreateBlankDocument(nsILoadGroup* aLoadGroup,
-                                  nsIPrincipal* aPrincipal,
-                                  nsDocShell* aContainer)
-{
-=======
 /* static */
 already_AddRefed<Document> nsContentDLF::CreateBlankDocument(
     nsILoadGroup* aLoadGroup, nsIPrincipal* aPrincipal,
     nsIPrincipal* aStoragePrincipal, nsDocShell* aContainer) {
->>>>>>> upstream-releases
   // create a new blank HTML document
   RefPtr<Document> blankDoc;
   mozilla::Unused << NS_NewHTMLDocument(getter_AddRefs(blankDoc));
@@ -526,30 +362,11 @@ nsresult nsContentDLF::CreateDocument(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsContentDLF::CreateXULDocument(
-    const char* aCommand, nsIChannel* aChannel, nsILoadGroup* aLoadGroup,
-    nsIDocShell* aContainer, nsISupports* aExtraInfo,
-    nsIStreamListener** aDocListener, nsIContentViewer** aContentViewer) {
-  nsCOMPtr<nsIDocument> doc;
-||||||| merged common ancestors
-nsresult
-nsContentDLF::CreateXULDocument(const char* aCommand,
-                                nsIChannel* aChannel,
-                                nsILoadGroup* aLoadGroup,
-                                nsIDocShell* aContainer,
-                                nsISupports* aExtraInfo,
-                                nsIStreamListener** aDocListener,
-                                nsIContentViewer** aContentViewer)
-{
-  nsCOMPtr<nsIDocument> doc;
-=======
 nsresult nsContentDLF::CreateXULDocument(
     const char* aCommand, nsIChannel* aChannel, nsILoadGroup* aLoadGroup,
     nsIDocShell* aContainer, nsISupports* aExtraInfo,
     nsIStreamListener** aDocListener, nsIContentViewer** aContentViewer) {
   RefPtr<Document> doc;
->>>>>>> upstream-releases
   nsresult rv = NS_NewXULDocument(getter_AddRefs(doc));
   if (NS_FAILED(rv)) return rv;
 

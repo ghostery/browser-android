@@ -54,16 +54,8 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
   // If base telemetry data is enabled and we're trying to record base
   // telemetry, allow it.
   if (aCanRecordBase &&
-<<<<<<< HEAD
-      IsInDataset(aDataset, nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT)) {
-    return true;
-||||||| merged common ancestors
-      IsInDataset(aDataset, nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT)) {
-      return true;
-=======
       IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
     return true;
->>>>>>> upstream-releases
   }
 
   // We're not recording extended telemetry or this is not the base
@@ -71,24 +63,10 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
   return false;
 }
 
-<<<<<<< HEAD
-bool CanRecordInProcess(RecordedProcessType processes,
-                        GeckoProcessType processType) {
-  bool recordAllChildren = !!(processes & RecordedProcessType::AllChildren);
-  // We can use (1 << ProcessType) due to the way RecordedProcessType is
-  // defined.
-||||||| merged common ancestors
-bool
-CanRecordInProcess(RecordedProcessType processes, GeckoProcessType processType)
-{
-  bool recordAllChildren = !!(processes & RecordedProcessType::AllChildren);
-  // We can use (1 << ProcessType) due to the way RecordedProcessType is defined.
-=======
 bool CanRecordInProcess(RecordedProcessType processes,
                         GeckoProcessType processType) {
   // We can use (1 << ProcessType) due to the way RecordedProcessType is
   // defined.
->>>>>>> upstream-releases
   bool canRecordProcess =
       !!(processes & static_cast<RecordedProcessType>(1 << processType));
 
@@ -103,23 +81,6 @@ bool CanRecordProduct(SupportedProduct aProducts) {
   return !!(aProducts & GetCurrentProduct());
 }
 
-<<<<<<< HEAD
-nsresult MsSinceProcessStart(double* aResult) {
-  bool error;
-  *aResult = (TimeStamp::NowLoRes() - TimeStamp::ProcessCreation(&error))
-                 .ToMilliseconds();
-  if (error) {
-    return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsresult
-MsSinceProcessStart(double* aResult)
-{
-  bool error;
-  *aResult = (TimeStamp::NowLoRes() -
-              TimeStamp::ProcessCreation(&error)).ToMilliseconds();
-  if (error) {
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsresult MsSinceProcessStart(double* aResult) {
   bool isInconsistent = false;
   *aResult =
@@ -130,7 +91,6 @@ nsresult MsSinceProcessStart(double* aResult) {
     Telemetry::ScalarAdd(
         Telemetry::ScalarID::TELEMETRY_PROCESS_CREATION_TIMESTAMP_INCONSISTENT,
         1);
->>>>>>> upstream-releases
   }
   return NS_OK;
 }

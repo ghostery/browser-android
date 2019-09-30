@@ -34,14 +34,7 @@ add_task(async function() {
 
   await waitForBreakpoint(dbg, location);
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-reload.js
-  const breakpointList = dbg.selectors.getBreakpointsList(dbg.getState());
-||||||| merged common ancestors
-  const breakpoints = dbg.selectors.getBreakpoints(dbg.getState());
-  const breakpointList = breakpoints.valueSeq().toJS();
-=======
   const breakpointList = dbg.selectors.getBreakpointsList();
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-reload.js
   const breakpoint = breakpointList[0];
 
   is(breakpointList.length, 1);

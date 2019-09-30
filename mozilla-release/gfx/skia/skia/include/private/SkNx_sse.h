@@ -34,17 +34,6 @@ AI static __m128 emulate_mm_floor_ps(__m128 v) {
     return _mm_sub_ps(roundtrip, _mm_and_ps(too_big, _mm_set1_ps(1.0f)));
 }
 
-// Emulate _mm_floor_ps() with SSE2:
-//   - roundtrip through integers via truncation
-//   - subtract 1 if that's too big (possible for negative values).
-// This restricts the domain of our inputs to a maximum somehwere around 2^31.
-// Seems plenty big.
-AI static __m128 emulate_mm_floor_ps(__m128 v) {
-    __m128 roundtrip = _mm_cvtepi32_ps(_mm_cvttps_epi32(v));
-    __m128 too_big = _mm_cmpgt_ps(roundtrip, v);
-    return _mm_sub_ps(roundtrip, _mm_and_ps(too_big, _mm_set1_ps(1.0f)));
-}
-
 template <>
 class SkNx<2, float> {
 public:

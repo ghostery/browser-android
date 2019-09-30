@@ -52,26 +52,6 @@ AndroidSpecificState::AndroidSpecificState() {
   mOverScroller = scroller;
 }
 
-<<<<<<< HEAD
-AsyncPanZoomAnimation* AndroidSpecificState::CreateFlingAnimation(
-    AsyncPanZoomController& aApzc, const FlingHandoffState& aHandoffState,
-    float aPLPPI) {
-  if (gfxPrefs::APZUseChromeFlingPhysics()) {
-    return new GenericFlingAnimation<AndroidFlingPhysics>(
-        aApzc, aHandoffState.mChain, aHandoffState.mIsHandoff,
-        aHandoffState.mScrolledApzc, aPLPPI);
-||||||| merged common ancestors
-AsyncPanZoomAnimation*
-AndroidSpecificState::CreateFlingAnimation(AsyncPanZoomController& aApzc,
-                                           const FlingHandoffState& aHandoffState,
-                                           float aPLPPI) {
-  if (gfxPrefs::APZUseChromeFlingPhysics()) {
-    return new GenericFlingAnimation<AndroidFlingPhysics>(aApzc,
-            aHandoffState.mChain,
-            aHandoffState.mIsHandoff,
-            aHandoffState.mScrolledApzc,
-            aPLPPI);
-=======
 AsyncPanZoomAnimation* AndroidSpecificState::CreateFlingAnimation(
     AsyncPanZoomController& aApzc, const FlingHandoffState& aHandoffState,
     float aPLPPI) {
@@ -79,7 +59,6 @@ AsyncPanZoomAnimation* AndroidSpecificState::CreateFlingAnimation(
     return new GenericFlingAnimation<AndroidFlingPhysics>(
         aApzc, aHandoffState.mChain, aHandoffState.mIsHandoff,
         aHandoffState.mScrolledApzc, aPLPPI);
->>>>>>> upstream-releases
   } else {
     return new StackScrollerFlingAnimation(aApzc, this, aHandoffState.mChain,
                                            aHandoffState.mIsHandoff,
@@ -87,42 +66,19 @@ AsyncPanZoomAnimation* AndroidSpecificState::CreateFlingAnimation(
   }
 }
 
-<<<<<<< HEAD
-UniquePtr<VelocityTracker> AndroidSpecificState::CreateVelocityTracker(
-    Axis* aAxis) {
-  if (gfxPrefs::APZUseChromeFlingPhysics()) {
-    return MakeUnique<AndroidVelocityTracker>();
-||||||| merged common ancestors
-UniquePtr<VelocityTracker>
-AndroidSpecificState::CreateVelocityTracker(Axis* aAxis) {
-  if (gfxPrefs::APZUseChromeFlingPhysics()) {
-      return MakeUnique<AndroidVelocityTracker>();
-=======
 UniquePtr<VelocityTracker> AndroidSpecificState::CreateVelocityTracker(
     Axis* aAxis) {
   if (StaticPrefs::apz_android_chrome_fling_physics_enabled()) {
     return MakeUnique<AndroidVelocityTracker>();
->>>>>>> upstream-releases
   }
   return MakeUnique<SimpleVelocityTracker>(aAxis);
 }
 
-<<<<<<< HEAD
-/* static */ void AndroidSpecificState::InitializeGlobalState() {
-  // Not conditioned on gfxPrefs::APZUseChromeFlingPhysics() because
-  // the pref is live.
-||||||| merged common ancestors
-/* static */ void
-AndroidSpecificState::InitializeGlobalState() {
-  // Not conditioned on gfxPrefs::APZUseChromeFlingPhysics() because
-  // the pref is live.
-=======
 /* static */
 void AndroidSpecificState::InitializeGlobalState() {
   // Not conditioned on
   // StaticPrefs::apz_android_chrome_fling_physics_enabled() because the pref
   // is live.
->>>>>>> upstream-releases
   AndroidFlingPhysics::InitializeGlobalState();
 }
 
@@ -212,17 +168,9 @@ StackScrollerFlingAnimation::StackScrollerFlingAnimation(
     // flywheel to kick in, then we need to update the timestamp on the
     // StackScroller because otherwise it might use a stale velocity.
     TimeDuration flingDuration = TimeStamp::Now() - state->mLastFling;
-<<<<<<< HEAD
-    if (flingDuration.ToMilliseconds() < gfxPrefs::APZFlingAccelInterval() &&
-        velocity.Length() >= gfxPrefs::APZFlingAccelMinVelocity()) {
-||||||| merged common ancestors
-    if (flingDuration.ToMilliseconds() < gfxPrefs::APZFlingAccelInterval()
-        && velocity.Length() >= gfxPrefs::APZFlingAccelMinVelocity()) {
-=======
     if (flingDuration.ToMilliseconds() <
             StaticPrefs::apz_fling_accel_interval_ms() &&
         velocity.Length() >= StaticPrefs::apz_fling_accel_interval_ms()) {
->>>>>>> upstream-releases
       bool unused = false;
       mOverScroller->ComputeScrollOffset(flingDuration.ToMilliseconds(),
                                          &unused);

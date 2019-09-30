@@ -81,13 +81,7 @@ enum class TextureFlags : uint32_t {
   WAIT_HOST_USAGE_END = 1 << 17,
 
   // OR union of all valid bits
-<<<<<<< HEAD
-  ALL_BITS = (1 << 17) - 1,
-||||||| merged common ancestors
-  ALL_BITS           = (1 << 17) - 1,
-=======
   ALL_BITS = (1 << 18) - 1,
->>>>>>> upstream-releases
   // the default flags
   DEFAULT = NO_FLAGS
 };

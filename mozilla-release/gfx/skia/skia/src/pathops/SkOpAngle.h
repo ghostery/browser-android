@@ -98,13 +98,6 @@ public:
 private:
     bool after(SkOpAngle* test);
     void alignmentSameSide(const SkOpAngle* test, int* order) const;
-<<<<<<< HEAD
-    int allOnOneSide(const SkOpAngle* test);
-    int allOnOriginalSide(const SkOpAngle* test);
-||||||| merged common ancestors
-    int allOnOneSide(const SkOpAngle* test);
-=======
->>>>>>> upstream-releases
     bool checkCrossesZero() const;
     bool checkParallel(SkOpAngle* );
     bool computeSector();

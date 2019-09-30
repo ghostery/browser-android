@@ -83,18 +83,10 @@ class xpcAccessible : public nsIAccessible {
   NS_IMETHOD ScrollToPoint(uint32_t aCoordinateType, int32_t aX,
                            int32_t aY) final;
 
-<<<<<<< HEAD
- protected:
-  xpcAccessible() {}
-||||||| merged common ancestors
-protected:
-  xpcAccessible() { }
-=======
   NS_IMETHOD Announce(const nsAString& aAnnouncement, uint16_t aPriority) final;
 
  protected:
   xpcAccessible() {}
->>>>>>> upstream-releases
   virtual ~xpcAccessible() {}
 
  private:

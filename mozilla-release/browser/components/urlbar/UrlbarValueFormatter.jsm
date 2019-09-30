@@ -328,71 +328,10 @@ class UrlbarValueFormatter {
       return false;
     }
 
-<<<<<<< HEAD
-    let popup = this.urlbarInput.popup;
-    if (!popup) {
-      // TODO: make this work with UrlbarView
-      return false;
-    }
-
-    if (popup.oneOffSearchButtons.selectedButton) {
-      return false;
-    }
-
     let editor = this.urlbarInput.editor;
     let textNode = editor.rootElement.firstChild;
     let value = textNode.textContent;
     let trimmedValue = value.trim();
-
-    if (!trimmedValue.startsWith("@")) {
-      return false;
-    }
-
-    // To determine whether the input contains a valid alias, check the value of
-    // the selected result -- whether it's a search engine result with an alias.
-    // Actually, check the selected listbox item, not the result in the
-    // controller, because we want to continue highlighting the alias when the
-    // popup is closed and the search has stopped.  The selected index when the
-    // popup is closed is zero, however, which is why we also check the previous
-    // selected index.
-    let itemIndex =
-      popup.selectedIndex < 0 ? popup._previousSelectedIndex :
-      popup.selectedIndex;
-    if (itemIndex < 0) {
-      return false;
-    }
-    let item = popup.richlistbox.children[itemIndex] || null;
-||||||| merged common ancestors
-    let popup = this.urlbarInput.popup;
-    if (!popup) {
-      // TODO: make this work with UrlbarView
-      return false;
-    }
-
-    if (popup.oneOffSearchButtons.selectedButton) {
-      return false;
-    }
-
-    // To determine whether the input contains a search engine alias, check the
-    // value of the selected result -- whether it's a search engine result with
-    // an alias.  Actually, check the selected listbox item, not the result in
-    // the controller, because we want to continue highlighting the alias when
-    // the popup is closed and the search has stopped.  The selected index when
-    // the popup is closed is zero, however, which is why we check the previous
-    // selected index.
-    let itemIndex =
-      popup.selectedIndex < 0 ? popup._previousSelectedIndex :
-      popup.selectedIndex;
-    if (itemIndex < 0) {
-      return false;
-    }
-    let item = popup.richlistbox.children[itemIndex] || null;
-=======
-    let editor = this.urlbarInput.editor;
-    let textNode = editor.rootElement.firstChild;
-    let value = textNode.textContent;
-    let trimmedValue = value.trim();
->>>>>>> upstream-releases
 
     if (
       !trimmedValue.startsWith("@") ||
@@ -409,44 +348,12 @@ class UrlbarValueFormatter {
       return false;
     }
 
-<<<<<<< HEAD
-    // Make sure the item's input matches the current urlbar input because the
-    // urlbar input can change without the popup results changing.  Most notably
-    // that happens when the user performs a search using an alias: The popup
-    // closes (preserving its items), the search results page is loaded, and the
-    // urlbar value is set to the URL of the page.
-    //
-    // If the item is the heuristic item, then its input is the value that the
-    // user has typed in the input.  If the item is not the heuristic item, then
-    // its input is "@engine ".  So in order to make sure the item's input
-    // matches the current urlbar input, we need to check that the urlbar input
-    // starts with the item's input.
-    if (!trimmedValue.startsWith(action.params.input.trim())) {
-||||||| merged common ancestors
-    let editor = this.urlbarInput.editor;
-    let textNode = editor.rootElement.firstChild;
-    let value = textNode.textContent;
-
-    // Make sure the item's input matches the current urlbar input because the
-    // urlbar input can change without the popup results changing.  Most notably
-    // that happens when the user performs a search using an alias: The popup
-    // closes (preserving its items), the search results page is loaded, and the
-    // urlbar value is set to the URL of the page.
-    //
-    // If the item is the heuristic item, then its input is the value that the
-    // user has typed in the input.  If the item is not the heuristic item, then
-    // its input is "@engine ".  So in order to make sure the item's input
-    // matches the current urlbar input, we need to check that the urlbar input
-    // starts with the item's input.
-    if (!value.trim().startsWith(decodeURIComponent(action.params.input).trim())) {
-=======
     // Make sure the current input starts with the alias because it can change
     // without the popup results changing.  Most notably that happens when the
     // user performs a search using an alias: The popup closes (preserving its
     // results), the search results page loads, and the input value is set to
     // the URL of the page.
     if (trimmedValue != alias && !trimmedValue.startsWith(alias + " ")) {
->>>>>>> upstream-releases
       return false;
     }
 

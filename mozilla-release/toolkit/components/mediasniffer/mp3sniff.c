@@ -25,14 +25,7 @@ typedef struct {
 } mp3_header;
 
 /* Parse the 4-byte header in p and fill in the header struct. */
-<<<<<<< HEAD
-static void mp3_parse(const uint8_t *p, mp3_header *header) {
-||||||| merged common ancestors
-static void mp3_parse(const uint8_t *p, mp3_header *header)
-{
-=======
 static void mp3_parse(const uint8_t* p, mp3_header* header) {
->>>>>>> upstream-releases
   const int bitrates[2][16] = {
       /* MPEG version 1 layer 3 bitrates. */
       {0, 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000,
@@ -63,14 +56,7 @@ static void mp3_parse(const uint8_t* p, mp3_header* header) {
 }
 
 /* calculate the size of an mp3 frame from its header */
-<<<<<<< HEAD
-static int mp3_framesize(mp3_header *header) {
-||||||| merged common ancestors
-static int mp3_framesize(mp3_header *header)
-{
-=======
 static int mp3_framesize(mp3_header* header) {
->>>>>>> upstream-releases
   int size;
   int scale;
 
@@ -117,14 +103,7 @@ static int is_id3(const uint8_t* p, long length) {
 }
 
 /* Calculate the size of an id3 tag structure from its header. */
-<<<<<<< HEAD
-static int id3_framesize(const uint8_t *p, long length) {
-||||||| merged common ancestors
-static int id3_framesize(const uint8_t *p, long length)
-{
-=======
 static int id3_framesize(const uint8_t* p, long length) {
->>>>>>> upstream-releases
   int size;
 
   /* Header is 10 bytes. */
@@ -137,14 +116,7 @@ static int id3_framesize(const uint8_t* p, long length) {
   return size;
 }
 
-<<<<<<< HEAD
-int mp3_sniff(const uint8_t *buf, long length) {
-||||||| merged common ancestors
-int mp3_sniff(const uint8_t *buf, long length)
-{
-=======
 int mp3_sniff(const uint8_t* buf, long length) {
->>>>>>> upstream-releases
   mp3_header header;
   const uint8_t* p;
   long skip;

@@ -12,25 +12,10 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-TEST(ContainerParser, MIMETypes) {
-  const char* containerTypes[] = {"video/webm", "audio/webm", "video/mp4",
-                                  "audio/mp4", "audio/aac"};
-||||||| merged common ancestors
-TEST(ContainerParser, MIMETypes) {
-  const char* containerTypes[] = {
-    "video/webm",
-    "audio/webm",
-    "video/mp4",
-    "audio/mp4",
-    "audio/aac"
-  };
-=======
 TEST(ContainerParser, MIMETypes)
 {
   const char* containerTypes[] = {"video/webm", "audio/webm", "video/mp4",
                                   "audio/mp4", "audio/aac"};
->>>>>>> upstream-releases
   nsAutoPtr<ContainerParser> parser;
   for (size_t i = 0; i < ArrayLength(containerTypes); ++i) {
     Maybe<MediaContainerType> containerType =
@@ -67,94 +52,39 @@ TEST(ContainerParser, ADTSHeader)
   for (uint8_t i = 1; i < 3; ++i) {
     // Set non-zero layer.
     header->ReplaceElementAt(1, (header->ElementAt(1) & 0xf9) | (i << 1));
-<<<<<<< HEAD
-    EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-        << "Accepted non-zero layer in header.";
-||||||| merged common ancestors
-    EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-      << "Accepted non-zero layer in header.";
-=======
     EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(MediaSpan(header))))
         << "Accepted non-zero layer in header.";
->>>>>>> upstream-releases
   }
   header->ReplaceElementAt(1, save);
   save = header->ElementAt(2);
   header->ReplaceElementAt(2, (header->ElementAt(2) & 0x3b) | (15 << 2));
-<<<<<<< HEAD
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-      << "Accepted explicit frequency in header.";
-||||||| merged common ancestors
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-    << "Accepted explicit frequency in header.";
-=======
   EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(MediaSpan(header))))
       << "Accepted explicit frequency in header.";
->>>>>>> upstream-releases
   header->ReplaceElementAt(2, save);
 
   // Test a short header.
   header->SetLength(6);
-<<<<<<< HEAD
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-      << "Accepted too-short header.";
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-      << "Found media segment when there was just a partial header.";
-||||||| merged common ancestors
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-    << "Accepted too-short header.";
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-    << "Found media segment when there was just a partial header.";
-=======
   EXPECT_FALSE(NS_SUCCEEDED(parser->IsInitSegmentPresent(MediaSpan(header))))
       << "Accepted too-short header.";
   EXPECT_FALSE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(MediaSpan(header))))
       << "Found media segment when there was just a partial header.";
->>>>>>> upstream-releases
 
   // Test a header with short data.
   header = make_adts_header();
   header->AppendElements(1);
-<<<<<<< HEAD
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-      << "Rejected a valid header.";
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-      << "Rejected a one-byte media segment.";
-||||||| merged common ancestors
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-    << "Rejected a valid header.";
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-    << "Rejected a one-byte media segment.";
-=======
   EXPECT_TRUE(NS_SUCCEEDED(parser->IsInitSegmentPresent(MediaSpan(header))))
       << "Rejected a valid header.";
   EXPECT_TRUE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(MediaSpan(header))))
       << "Rejected a one-byte media segment.";
->>>>>>> upstream-releases
 
   // Test parse results.
   header = make_adts_header();
-<<<<<<< HEAD
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-      << "Found media segment when there was just a header.";
-||||||| merged common ancestors
-  EXPECT_FALSE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-    << "Found media segment when there was just a header.";
-=======
   EXPECT_FALSE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(MediaSpan(header))))
       << "Found media segment when there was just a header.";
->>>>>>> upstream-releases
   int64_t start = 0;
   int64_t end = 0;
-<<<<<<< HEAD
-  EXPECT_TRUE(
-      NS_FAILED(parser->ParseStartAndEndTimestamps(header, start, end)));
-||||||| merged common ancestors
-  EXPECT_TRUE(NS_FAILED(parser->ParseStartAndEndTimestamps(header, start, end)));
-=======
   EXPECT_TRUE(NS_FAILED(
       parser->ParseStartAndEndTimestamps(MediaSpan(header), start, end)));
->>>>>>> upstream-releases
 
   EXPECT_TRUE(parser->HasInitData());
   EXPECT_TRUE(parser->HasCompleteInitData());
@@ -188,34 +118,15 @@ TEST(ContainerParser, ADTSBlankMedia)
   size_t data_length = 24;
   size_t frame_length = header_length + data_length;
   header->AppendElements(data_length);
-<<<<<<< HEAD
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-      << "Rejected a valid header.";
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-      << "Rejected a full (but zeroed) media segment.";
-||||||| merged common ancestors
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsInitSegmentPresent(header)))
-    << "Rejected a valid header.";
-  EXPECT_TRUE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(header)))
-    << "Rejected a full (but zeroed) media segment.";
-=======
   EXPECT_TRUE(NS_SUCCEEDED(parser->IsInitSegmentPresent(MediaSpan(header))))
       << "Rejected a valid header.";
   EXPECT_TRUE(NS_SUCCEEDED(parser->IsMediaSegmentPresent(MediaSpan(header))))
       << "Rejected a full (but zeroed) media segment.";
->>>>>>> upstream-releases
   int64_t start = 0;
   int64_t end = 0;
   // We don't report timestamps from ADTS.
-<<<<<<< HEAD
-  EXPECT_TRUE(
-      NS_FAILED(parser->ParseStartAndEndTimestamps(header, start, end)));
-||||||| merged common ancestors
-  EXPECT_TRUE(NS_FAILED(parser->ParseStartAndEndTimestamps(header, start, end)));
-=======
   EXPECT_TRUE(NS_FAILED(
       parser->ParseStartAndEndTimestamps(MediaSpan(header), start, end)));
->>>>>>> upstream-releases
   EXPECT_EQ(start, 0);
   EXPECT_EQ(end, 0);
 

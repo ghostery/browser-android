@@ -17,29 +17,13 @@
 class nsIFile;
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include <windows.h>
-typedef HANDLE ProcessType;
-||||||| merged common ancestors
-#include <windows.h>
-  typedef HANDLE     ProcessType;
-=======
 #  include <windows.h>
 typedef HANDLE ProcessType;
->>>>>>> upstream-releases
 #elif defined(XP_UNIX)
 typedef pid_t ProcessType;
 #else
-<<<<<<< HEAD
-#include "prproces.h"
-typedef PRProcess *ProcessType;
-||||||| merged common ancestors
-#include "prproces.h"
-  typedef PRProcess* ProcessType;
-=======
 #  include "prproces.h"
 typedef PRProcess* ProcessType;
->>>>>>> upstream-releases
 #endif
 
 /**
@@ -81,17 +65,7 @@ class nsUpdateProcessor final : public nsIUpdateProcessor {
   ~nsUpdateProcessor();
 
   struct StagedUpdateInfo {
-<<<<<<< HEAD
-    StagedUpdateInfo() : mArgc(0), mArgv(nullptr), mIsOSUpdate(false) {}
-||||||| merged common ancestors
-    StagedUpdateInfo()
-      : mArgc(0),
-        mArgv(nullptr),
-        mIsOSUpdate(false)
-    {}
-=======
     StagedUpdateInfo() : mArgc(0), mArgv(nullptr) {}
->>>>>>> upstream-releases
     ~StagedUpdateInfo() {
       for (int i = 0; i < mArgc; ++i) {
         delete[] mArgv[i];

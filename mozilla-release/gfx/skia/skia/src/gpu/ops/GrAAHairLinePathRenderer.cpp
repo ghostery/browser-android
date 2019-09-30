@@ -313,73 +313,6 @@ static int gather_lines_and_quads(const SkPath& path,
         SkPoint pathPts[4];
         SkPath::Verb verb = iter.next(pathPts, false);
         switch (verb) {
-<<<<<<< HEAD
-            case SkPath::kConic_Verb:
-                if (convertConicsToQuads) {
-                    SkScalar weight = iter.conicWeight();
-                    SkAutoConicToQuads converter;
-                    const SkPoint* quadPts = converter.computeQuads(pathPts, weight, 0.5f);
-                    for (int i = 0; i < converter.countQuads(); ++i) {
-                        addSrcChoppedQuad(quadPts + 2 * i, !verbsInContour && 0 == i);
-                    }
-                } else {
-                    SkConic dst[4];
-                    // We chop the conics to create tighter clipping to hide error
-                    // that appears near max curvature of very thin conics. Thin
-                    // hyperbolas with high weight still show error.
-                    int conicCnt = chop_conic(pathPts, dst, iter.conicWeight());
-                    for (int i = 0; i < conicCnt; ++i) {
-                        SkPoint devPts[4];
-                        SkPoint* chopPnts = dst[i].fPts;
-                        m.mapPoints(devPts, chopPnts, 3);
-                        bounds.setBounds(devPts, 3);
-                        bounds.outset(SK_Scalar1, SK_Scalar1);
-                        bounds.roundOut(&ibounds);
-                        if (SkIRect::Intersects(devClipBounds, ibounds)) {
-                            if (is_degen_quad_or_conic(devPts)) {
-                                SkPoint* pts = lines->push_back_n(4);
-                                pts[0] = devPts[0];
-                                pts[1] = devPts[1];
-                                pts[2] = devPts[1];
-                                pts[3] = devPts[2];
-                                if (verbsInContour == 0 && i == 0 && pts[0] == pts[1] &&
-                                    pts[2] == pts[3]) {
-                                    seenZeroLengthVerb = true;
-                                    zeroVerbPt = pts[0];
-                                }
-                            } else {
-                                // when in perspective keep conics in src space
-                                SkPoint* cPts = persp ? chopPnts : devPts;
-                                SkPoint* pts = conics->push_back_n(3);
-                                pts[0] = cPts[0];
-                                pts[1] = cPts[1];
-                                pts[2] = cPts[2];
-                                conicWeights->push_back() = dst[i].fW;
-||||||| merged common ancestors
-            case SkPath::kConic_Verb: {
-                SkConic dst[4];
-                // We chop the conics to create tighter clipping to hide error
-                // that appears near max curvature of very thin conics. Thin
-                // hyperbolas with high weight still show error.
-                int conicCnt = chop_conic(pathPts, dst, iter.conicWeight());
-                for (int i = 0; i < conicCnt; ++i) {
-                    SkPoint* chopPnts = dst[i].fPts;
-                    m.mapPoints(devPts, chopPnts, 3);
-                    bounds.setBounds(devPts, 3);
-                    bounds.outset(SK_Scalar1, SK_Scalar1);
-                    bounds.roundOut(&ibounds);
-                    if (SkIRect::Intersects(devClipBounds, ibounds)) {
-                        if (is_degen_quad_or_conic(devPts)) {
-                            SkPoint* pts = lines->push_back_n(4);
-                            pts[0] = devPts[0];
-                            pts[1] = devPts[1];
-                            pts[2] = devPts[1];
-                            pts[3] = devPts[2];
-                            if (verbsInContour == 0 && i == 0 &&
-                                    pts[0] == pts[1] && pts[2] == pts[3]) {
-                                seenZeroLengthVerb = true;
-                                zeroVerbPt = pts[0];
-=======
             case SkPath::kConic_Verb:
                 if (convertConicsToQuads) {
                     SkScalar weight = iter.conicWeight();
@@ -421,7 +354,6 @@ static int gather_lines_and_quads(const SkPath& path,
                                 pts[1] = cPts[1];
                                 pts[2] = cPts[2];
                                 conicWeights->push_back() = dst[i].fW;
->>>>>>> upstream-releases
                             }
                         }
                     }
@@ -848,15 +780,8 @@ private:
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
->>>>>>> upstream-releases
                                           const SkMatrix& viewMatrix,
                                           const SkPath& path,
                                           const GrStyle& style,
@@ -913,21 +838,10 @@ public:
 
     FixedFunctionFlags fixedFunctionFlags() const override { return fHelper.fixedFunctionFlags(); }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fColor);
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped,
-                                            GrProcessorAnalysisCoverage::kSingleChannel, &fColor);
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
         return fHelper.finalizeProcessors(
                 caps, clip, fsaaType, GrProcessorAnalysisCoverage::kSingleChannel, &fColor);
->>>>>>> upstream-releases
     }
 
 private:
@@ -971,15 +885,7 @@ private:
         }
 
         fPaths.push_back_n(that->fPaths.count(), that->fPaths.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
         return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
-        return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     const SkPMColor4f& color() const { return fColor; }
@@ -1050,12 +956,6 @@ void AAHairlineOp::onPrepareDraws(Target* target) {
         return;
     }
 
-<<<<<<< HEAD
-    auto pipe = fHelper.makePipeline(target);
-||||||| merged common ancestors
-    const GrPipeline* pipeline = fHelper.makePipeline(target);
-=======
->>>>>>> upstream-releases
     // do lines first
     if (lineCount) {
         sk_sp<GrGeometryProcessor> lineGP;
@@ -1076,13 +976,7 @@ void AAHairlineOp::onPrepareDraws(Target* target) {
         sk_sp<const GrBuffer> vertexBuffer;
         int firstVertex;
 
-<<<<<<< HEAD
-        SkASSERT(sizeof(LineVertex) == lineGP->debugOnly_vertexStride());
-||||||| merged common ancestors
-        size_t vertexStride = lineGP->getVertexStride();
-=======
         SkASSERT(sizeof(LineVertex) == lineGP->vertexStride());
->>>>>>> upstream-releases
         int vertexCount = kLineSegNumVertices * lineCount;
         LineVertex* verts = reinterpret_cast<LineVertex*>(target->makeVertexSpace(
                 sizeof(LineVertex), vertexCount, &vertexBuffer, &firstVertex));
@@ -1096,25 +990,11 @@ void AAHairlineOp::onPrepareDraws(Target* target) {
             add_line(&lines[2*i], toSrc, this->coverage(), &verts);
         }
 
-<<<<<<< HEAD
-        GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
-        mesh->setIndexedPatterned(linesIndexBuffer.get(), kIdxsPerLineSeg, kLineSegNumVertices,
-                                  lineCount, kLineSegsNumInIdxBuffer);
-        mesh->setVertexData(vertexBuffer, firstVertex);
-        target->draw(std::move(lineGP), pipe.fPipeline, pipe.fFixedDynamicState, mesh);
-||||||| merged common ancestors
-        GrMesh mesh(GrPrimitiveType::kTriangles);
-        mesh.setIndexedPatterned(linesIndexBuffer.get(), kIdxsPerLineSeg, kLineSegNumVertices,
-                                 lineCount, kLineSegsNumInIdxBuffer);
-        mesh.setVertexData(vertexBuffer, firstVertex);
-        target->draw(lineGP.get(), pipeline, mesh);
-=======
         GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
         mesh->setIndexedPatterned(std::move(linesIndexBuffer), kIdxsPerLineSeg, kLineSegNumVertices,
                                   lineCount, kLineSegsNumInIdxBuffer);
         mesh->setVertexData(std::move(vertexBuffer), firstVertex);
         target->recordDraw(std::move(lineGP), mesh);
->>>>>>> upstream-releases
     }
 
     if (quadCount || conicCount) {
@@ -1139,15 +1019,8 @@ void AAHairlineOp::onPrepareDraws(Target* target) {
 
         sk_sp<const GrBuffer> quadsIndexBuffer = get_quads_index_buffer(target->resourceProvider());
 
-<<<<<<< HEAD
-        SkASSERT(sizeof(BezierVertex) == quadGP->debugOnly_vertexStride());
-        SkASSERT(sizeof(BezierVertex) == conicGP->debugOnly_vertexStride());
-||||||| merged common ancestors
-        size_t vertexStride = sizeof(BezierVertex);
-=======
         SkASSERT(sizeof(BezierVertex) == quadGP->vertexStride());
         SkASSERT(sizeof(BezierVertex) == conicGP->vertexStride());
->>>>>>> upstream-releases
         int vertexCount = kQuadNumVertices * quadAndConicCount;
         void* vertices = target->makeVertexSpace(sizeof(BezierVertex), vertexCount, &vertexBuffer,
                                                  &firstVertex);
@@ -1172,48 +1045,20 @@ void AAHairlineOp::onPrepareDraws(Target* target) {
         }
 
         if (quadCount > 0) {
-<<<<<<< HEAD
-            GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
-            mesh->setIndexedPatterned(quadsIndexBuffer.get(), kIdxsPerQuad, kQuadNumVertices,
-                                      quadCount, kQuadsNumInIdxBuffer);
-            mesh->setVertexData(vertexBuffer, firstVertex);
-            target->draw(std::move(quadGP), pipe.fPipeline, pipe.fFixedDynamicState, mesh);
-||||||| merged common ancestors
-            GrMesh mesh(GrPrimitiveType::kTriangles);
-            mesh.setIndexedPatterned(quadsIndexBuffer.get(), kIdxsPerQuad, kQuadNumVertices,
-                                     quadCount, kQuadsNumInIdxBuffer);
-            mesh.setVertexData(vertexBuffer, firstVertex);
-            target->draw(quadGP.get(), pipeline, mesh);
-=======
             GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
             mesh->setIndexedPatterned(quadsIndexBuffer, kIdxsPerQuad, kQuadNumVertices, quadCount,
                                       kQuadsNumInIdxBuffer);
             mesh->setVertexData(vertexBuffer, firstVertex);
             target->recordDraw(std::move(quadGP), mesh);
->>>>>>> upstream-releases
             firstVertex += quadCount * kQuadNumVertices;
         }
 
         if (conicCount > 0) {
-<<<<<<< HEAD
-            GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
-            mesh->setIndexedPatterned(quadsIndexBuffer.get(), kIdxsPerQuad, kQuadNumVertices,
-                                      conicCount, kQuadsNumInIdxBuffer);
-            mesh->setVertexData(vertexBuffer, firstVertex);
-            target->draw(std::move(conicGP), pipe.fPipeline, pipe.fFixedDynamicState, mesh);
-||||||| merged common ancestors
-            GrMesh mesh(GrPrimitiveType::kTriangles);
-            mesh.setIndexedPatterned(quadsIndexBuffer.get(), kIdxsPerQuad, kQuadNumVertices,
-                                     conicCount, kQuadsNumInIdxBuffer);
-            mesh.setVertexData(vertexBuffer, firstVertex);
-            target->draw(conicGP.get(), pipeline, mesh);
-=======
             GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
             mesh->setIndexedPatterned(std::move(quadsIndexBuffer), kIdxsPerQuad, kQuadNumVertices,
                                       conicCount, kQuadsNumInIdxBuffer);
             mesh->setVertexData(std::move(vertexBuffer), firstVertex);
             target->recordDraw(std::move(conicGP), mesh);
->>>>>>> upstream-releases
         }
     }
 }

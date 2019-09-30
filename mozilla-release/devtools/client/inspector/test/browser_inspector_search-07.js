@@ -9,29 +9,6 @@ const TEST_URL = URL_ROOT + "doc_inspector_search-svg.html";
 
 // An array of (key, suggestions) pairs where key is a key to press and
 // suggestions is an array of suggestions that should be shown in the popup.
-<<<<<<< HEAD
-const TEST_DATA = [{
-  key: "c",
-  suggestions: ["circle", "clipPath", ".class1", ".class2"],
-}, {
-  key: "VK_BACK_SPACE",
-  suggestions: [],
-}, {
-  key: ".",
-  suggestions: [".class1", ".class2"],
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  key: "c",
-  suggestions: ["circle", "clipPath", ".class1", ".class2"]
-}, {
-  key: "VK_BACK_SPACE",
-  suggestions: []
-}, {
-  key: ".",
-  suggestions: [".class1", ".class2"]
-}];
-=======
 const TEST_DATA = [
   {
     key: "c",
@@ -46,7 +23,6 @@ const TEST_DATA = [
     suggestions: [".class1", ".class2"],
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URL);

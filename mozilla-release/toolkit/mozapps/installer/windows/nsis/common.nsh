@@ -3492,33 +3492,8 @@
                 RmDir /r "$R2"
             ${EndIf}
           ${EndIf}
-<<<<<<< HEAD
         ${EndIf}
 
-        ; Get the taskbar ID hash for this installation path
-        ReadRegStr $R1 HKLM "SOFTWARE\$R7\TaskBarIDs" $R6
-        ${If} $R1 == ""
-          ReadRegStr $R1 HKCU "SOFTWARE\$R7\TaskBarIDs" $R6
-        ${EndIf}
-
-        ; If the taskbar ID hash exists then delete the new update directory
-        ; Backup its logs before deleting it.
-        ${If} $R1 != ""
-          StrCpy $R0 "$LOCALAPPDATA\$R8\$R1"
-||||||| merged common ancestors
-=======
-        ${EndIf}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-          ${If} ${FileExists} "$R0\updates\last-update.log"
-            Rename "$R0\updates\last-update.log" "$TEMP\moz-update-older-last-update.log"
-||||||| merged common ancestors
-          ; Get the taskbar ID hash for this installation path
-          ReadRegStr $R1 HKLM "SOFTWARE\$R7\TaskBarIDs" $R6
-          ${If} $R1 == ""
-            ReadRegStr $R1 HKCU "SOFTWARE\$R7\TaskBarIDs" $R6
-=======
         ; Get the taskbar ID hash for this installation path
         ReadRegStr $R1 HKLM "SOFTWARE\$R7\TaskBarIDs" $R6
         ${If} $R1 == ""
@@ -3532,7 +3507,6 @@
 
           ${If} ${FileExists} "$R0\updates\last-update.log"
             Rename "$R0\updates\last-update.log" "$TEMP\moz-update-older-last-update.log"
->>>>>>> upstream-releases
           ${EndIf}
 
           ${If} ${FileExists} "$R0\updates\backup-update.log"

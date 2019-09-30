@@ -16,77 +16,33 @@ public class NSSBridge {
     private static native String nativeDecrypt(String aDb, String aValue);
 
     @RobocopTarget
-<<<<<<< HEAD
-    static public String encrypt(Context context, String aValue)
-      throws Exception {
-        GeckoLoader.loadNSSLibs(context);
-||||||| merged common ancestors
-    static public String encrypt(Context context, String aValue)
-      throws Exception {
-        String resourcePath = context.getPackageResourcePath();
-        GeckoLoader.loadNSSLibs(context, resourcePath);
-=======
     static public String encrypt(final Context context, final String aValue) throws Exception {
         GeckoLoader.loadNSSLibs(context);
->>>>>>> upstream-releases
 
         String path = GeckoProfile.get(context).getDir().toString();
         return nativeEncrypt(path, aValue);
     }
 
     @RobocopTarget
-<<<<<<< HEAD
-    static public String encrypt(Context context, String profilePath, String aValue)
-      throws Exception {
-        GeckoLoader.loadNSSLibs(context);
-||||||| merged common ancestors
-    static public String encrypt(Context context, String profilePath, String aValue)
-      throws Exception {
-        String resourcePath = context.getPackageResourcePath();
-        GeckoLoader.loadNSSLibs(context, resourcePath);
-=======
     static public String encrypt(final Context context, final String profilePath,
                                  final String aValue) throws Exception {
         GeckoLoader.loadNSSLibs(context);
->>>>>>> upstream-releases
 
         return nativeEncrypt(profilePath, aValue);
     }
 
     @RobocopTarget
-<<<<<<< HEAD
-    static public String decrypt(Context context, String aValue)
-      throws Exception {
-        GeckoLoader.loadNSSLibs(context);
-||||||| merged common ancestors
-    static public String decrypt(Context context, String aValue)
-      throws Exception {
-        String resourcePath = context.getPackageResourcePath();
-        GeckoLoader.loadNSSLibs(context, resourcePath);
-=======
     static public String decrypt(final Context context, final String aValue) throws Exception {
         GeckoLoader.loadNSSLibs(context);
->>>>>>> upstream-releases
 
         String path = GeckoProfile.get(context).getDir().toString();
         return nativeDecrypt(path, aValue);
     }
 
     @RobocopTarget
-<<<<<<< HEAD
-    static public String decrypt(Context context, String profilePath, String aValue)
-      throws Exception {
-        GeckoLoader.loadNSSLibs(context);
-||||||| merged common ancestors
-    static public String decrypt(Context context, String profilePath, String aValue)
-      throws Exception {
-        String resourcePath = context.getPackageResourcePath();
-        GeckoLoader.loadNSSLibs(context, resourcePath);
-=======
     static public String decrypt(final Context context, final String profilePath,
                                  final String aValue) throws Exception {
         GeckoLoader.loadNSSLibs(context);
->>>>>>> upstream-releases
 
         return nativeDecrypt(profilePath, aValue);
     }

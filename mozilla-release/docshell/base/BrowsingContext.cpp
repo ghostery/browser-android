@@ -12,10 +12,6 @@
 #include "mozilla/dom/BrowsingContextGroup.h"
 #include "mozilla/dom/BrowsingContextBinding.h"
 #include "mozilla/dom/ContentChild.h"
-<<<<<<< HEAD
-#include "mozilla/dom/ContentParent.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/ContentParent.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/Location.h"
@@ -25,25 +21,14 @@
 #include "mozilla/dom/WindowGlobalChild.h"
 #include "mozilla/dom/WindowGlobalParent.h"
 #include "mozilla/dom/WindowProxyHolder.h"
->>>>>>> upstream-releases
 #include "mozilla/Assertions.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/HashTable.h"
 #include "mozilla/Logging.h"
 #include "mozilla/StaticPtr.h"
 
-<<<<<<< HEAD
-#include "nsDataHashtable.h"
-#include "nsDocShell.h"
-#include "nsRefPtrHashtable.h"
-||||||| merged common ancestors
-#include "nsDataHashtable.h"
-#include "nsRefPtrHashtable.h"
-#include "nsIDocShell.h"
-=======
 #include "nsDocShell.h"
 #include "nsGlobalWindowOuter.h"
->>>>>>> upstream-releases
 #include "nsContentUtils.h"
 #include "nsScriptError.h"
 #include "nsThreadUtils.h"
@@ -73,13 +58,6 @@ static StaticAutoPtr<BrowsingContextMap> sBrowsingContexts;
 static void Register(BrowsingContext* aBrowsingContext) {
   sBrowsingContexts->Put(aBrowsingContext->Id(), aBrowsingContext);
 
-<<<<<<< HEAD
-static StaticAutoPtr<nsDataHashtable<nsUint64HashKey, BrowsingContext*>>
-    sBrowsingContexts;
-||||||| merged common ancestors
-static StaticAutoPtr<nsDataHashtable<nsUint64HashKey, BrowsingContext*>>
-  sBrowsingContexts;
-=======
   aBrowsingContext->Group()->Register(aBrowsingContext);
 }
 
@@ -87,66 +65,16 @@ void BrowsingContext::Unregister() {
   MOZ_DIAGNOSTIC_ASSERT(mGroup);
   mGroup->Unregister(this);
   mIsDiscarded = true;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// TODO(farre): This duplicates some of the work performed by the
-// bfcache. This should be unified. [Bug 1471601]
-static StaticAutoPtr<nsRefPtrHashtable<nsUint64HashKey, BrowsingContext>>
-    sCachedBrowsingContexts;
-||||||| merged common ancestors
-// TODO(farre): This duplicates some of the work performed by the
-// bfcache. This should be unified. [Bug 1471601]
-static StaticAutoPtr<nsRefPtrHashtable<nsUint64HashKey, BrowsingContext>>
-  sCachedBrowsingContexts;
-=======
   // NOTE: Doesn't use SetClosed, as it will be set in all processes
   // automatically by calls to Detach()
   mClosed = true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void Register(BrowsingContext* aBrowsingContext) {
-  auto entry = sBrowsingContexts->LookupForAdd(aBrowsingContext->Id());
-  MOZ_RELEASE_ASSERT(!entry, "Duplicate BrowsingContext ID");
-  entry.OrInsert([&] { return aBrowsingContext; });
-}
-
-static void Sync(BrowsingContext* aBrowsingContext) {
-  if (!XRE_IsContentProcess()) {
-    return;
-  }
-
-  auto cc = ContentChild::GetSingleton();
-  MOZ_DIAGNOSTIC_ASSERT(cc);
-  nsAutoString name;
-  aBrowsingContext->GetName(name);
-  RefPtr<BrowsingContext> parent = aBrowsingContext->GetParent();
-  BrowsingContext* opener = aBrowsingContext->GetOpener();
-  cc->SendAttachBrowsingContext(BrowsingContextId(parent ? parent->Id() : 0),
-                                BrowsingContextId(opener ? opener->Id() : 0),
-                                BrowsingContextId(aBrowsingContext->Id()),
-                                name);
-}
-
-/* static */ void BrowsingContext::Init() {
-  if (!sRootBrowsingContexts) {
-    sRootBrowsingContexts = new BrowsingContext::Children();
-    ClearOnShutdown(&sRootBrowsingContexts);
-||||||| merged common ancestors
-/* static */ void
-BrowsingContext::Init()
-{
-  if (!sRootBrowsingContexts) {
-    sRootBrowsingContexts = new BrowsingContext::Children();
-    ClearOnShutdown(&sRootBrowsingContexts);
-=======
 BrowsingContext* BrowsingContext::Top() {
   BrowsingContext* bc = this;
   while (bc->mParent) {
     bc = bc->mParent;
->>>>>>> upstream-releases
   }
   return bc;
 }
@@ -154,91 +82,29 @@ BrowsingContext* BrowsingContext::Top() {
 /* static */
 void BrowsingContext::Init() {
   if (!sBrowsingContexts) {
-<<<<<<< HEAD
-    sBrowsingContexts =
-        new nsDataHashtable<nsUint64HashKey, BrowsingContext*>();
-||||||| merged common ancestors
-    sBrowsingContexts =
-      new nsDataHashtable<nsUint64HashKey, BrowsingContext*>();
-=======
     sBrowsingContexts = new BrowsingContextMap();
->>>>>>> upstream-releases
     ClearOnShutdown(&sBrowsingContexts);
   }
 }
 
-<<<<<<< HEAD
-  if (!sCachedBrowsingContexts) {
-    sCachedBrowsingContexts =
-        new nsRefPtrHashtable<nsUint64HashKey, BrowsingContext>();
-    ClearOnShutdown(&sCachedBrowsingContexts);
-  }
-||||||| merged common ancestors
-  if (!sCachedBrowsingContexts) {
-    sCachedBrowsingContexts =
-      new nsRefPtrHashtable<nsUint64HashKey, BrowsingContext>();
-    ClearOnShutdown(&sCachedBrowsingContexts);
-  }
-=======
 /* static */
 LogModule* BrowsingContext::GetLog() { return gBrowsingContextLog; }
 
 /* static */
 already_AddRefed<BrowsingContext> BrowsingContext::Get(uint64_t aId) {
   return do_AddRef(sBrowsingContexts->Get(aId));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ LogModule* BrowsingContext::GetLog() {
-  return gBrowsingContextLog;
-||||||| merged common ancestors
-/* static */ LogModule*
-BrowsingContext::GetLog()
-{
-  return gBrowsingContextLog;
-=======
 /* static */
 already_AddRefed<BrowsingContext> BrowsingContext::GetFromWindow(
     WindowProxyHolder& aProxy) {
   return do_AddRef(aProxy.get());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<BrowsingContext> BrowsingContext::Get(
-    uint64_t aId) {
-  RefPtr<BrowsingContext> abc = sBrowsingContexts->Get(aId);
-  return abc.forget();
-||||||| merged common ancestors
-/* static */ already_AddRefed<BrowsingContext>
-BrowsingContext::Get(uint64_t aId)
-{
-  RefPtr<BrowsingContext> abc = sBrowsingContexts->Get(aId);
-  return abc.forget();
-=======
 CanonicalBrowsingContext* BrowsingContext::Canonical() {
   return CanonicalBrowsingContext::Cast(this);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<BrowsingContext> BrowsingContext::Create(
-    BrowsingContext* aParent, BrowsingContext* aOpener, const nsAString& aName,
-    Type aType) {
-  MOZ_DIAGNOSTIC_ASSERT(!aParent || aParent->mType == aType);
-
-  uint64_t id = nsContentUtils::GenerateBrowsingContextId();
-
-  MOZ_LOG(GetLog(), LogLevel::Debug,
-          ("Creating 0x%08" PRIx64 " in %s", id,
-           XRE_IsParentProcess() ? "Parent" : "Child"));
-
-||||||| merged common ancestors
-/* static */ already_AddRefed<BrowsingContext>
-BrowsingContext::Create(nsIDocShell* aDocShell)
-{
-=======
 /* static */
 already_AddRefed<BrowsingContext> BrowsingContext::Create(
     BrowsingContext* aParent, BrowsingContext* aOpener, const nsAString& aName,
@@ -255,39 +121,14 @@ already_AddRefed<BrowsingContext> BrowsingContext::Create(
   RefPtr<BrowsingContextGroup> group =
       BrowsingContextGroup::Select(aParent, aOpener);
 
->>>>>>> upstream-releases
   RefPtr<BrowsingContext> context;
   if (XRE_IsParentProcess()) {
-<<<<<<< HEAD
-    context = new ChromeBrowsingContext(aParent, aOpener, aName, id,
-                                        /* aProcessId */ 0, aType);
-||||||| merged common ancestors
-    context = new ChromeBrowsingContext(aDocShell);
-=======
     context = new CanonicalBrowsingContext(aParent, group, id,
                                            /* aProcessId */ 0, aType);
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    context = new BrowsingContext(aParent, aOpener, aName, id, aType);
-||||||| merged common ancestors
-    // TODO(farre): will we ever create BrowsingContexts on processes
-    // other than content and parent?
-    MOZ_ASSERT(XRE_IsContentProcess());
-    context = new BrowsingContext(aDocShell);
-=======
     context = new BrowsingContext(aParent, group, id, aType);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  Register(context);
-
-  // Attach the browsing context to the tree.
-  context->Attach();
-
-||||||| merged common ancestors
-=======
   // The name and opener fields need to be explicitly initialized. Don't bother
   // using transactions to set them, as we haven't been attached yet.
   context->mName = aName;
@@ -306,102 +147,15 @@ already_AddRefed<BrowsingContext> BrowsingContext::Create(
   // Attach the browsing context to the tree.
   context->Attach();
 
->>>>>>> upstream-releases
   return context.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<BrowsingContext> BrowsingContext::CreateFromIPC(
-    BrowsingContext* aParent, BrowsingContext* aOpener, const nsAString& aName,
-    uint64_t aId, ContentParent* aOriginProcess) {
-  MOZ_DIAGNOSTIC_ASSERT(aOriginProcess || XRE_IsContentProcess(),
-                        "Parent Process IPC contexts need a Content Process.");
-  MOZ_DIAGNOSTIC_ASSERT(!aParent || aParent->IsContent());
-
-  MOZ_LOG(GetLog(), LogLevel::Debug,
-          ("Creating 0x%08" PRIx64 " from IPC (origin=0x%08" PRIx64 ")", aId,
-           aOriginProcess ? uint64_t(aOriginProcess->ChildID()) : 0));
-
-  RefPtr<BrowsingContext> context;
-  if (XRE_IsParentProcess()) {
-    context = new ChromeBrowsingContext(
-        aParent, aOpener, aName, aId, aOriginProcess->ChildID(), Type::Content);
-  } else {
-    context = new BrowsingContext(aParent, aOpener, aName, aId, Type::Content);
-  }
-
-  Register(context);
-
-  context->Attach();
-
-  return context.forget();
-}
-
-BrowsingContext::BrowsingContext(BrowsingContext* aParent,
-                                 BrowsingContext* aOpener,
-                                 const nsAString& aName,
-                                 uint64_t aBrowsingContextId, Type aType)
-    : mType(aType),
-      mBrowsingContextId(aBrowsingContextId),
-      mParent(aParent),
-      mOpener(aOpener),
-      mName(aName) {}
-
-void BrowsingContext::SetDocShell(nsIDocShell* aDocShell) {
-  // XXX(nika): We should communicate that we are now an active BrowsingContext
-  // process to the parent & do other validation here.
-  MOZ_RELEASE_ASSERT(nsDocShell::Cast(aDocShell)->GetBrowsingContext() == this);
-  mDocShell = aDocShell;
-}
-
-void BrowsingContext::Attach() {
-  if (isInList()) {
-    MOZ_LOG(GetLog(), LogLevel::Debug,
-            ("%s: Connecting already existing 0x%08" PRIx64 " to 0x%08" PRIx64,
-             XRE_IsParentProcess() ? "Parent" : "Child", Id(),
-             mParent ? mParent->Id() : 0));
-    MOZ_DIAGNOSTIC_ASSERT(sBrowsingContexts->Contains(Id()));
-    MOZ_DIAGNOSTIC_ASSERT(!IsCached());
-    return;
-  }
-||||||| merged common ancestors
-BrowsingContext::BrowsingContext(nsIDocShell* aDocShell)
-  : mBrowsingContextId(nsContentUtils::GenerateBrowsingContextId())
-  , mDocShell(aDocShell)
-{
-  sBrowsingContexts->Put(mBrowsingContextId, this);
-}
-
-BrowsingContext::BrowsingContext(uint64_t aBrowsingContextId,
-                const nsAString& aName)
-  : mBrowsingContextId(aBrowsingContextId)
-  , mName(aName)
-{
-  sBrowsingContexts->Put(mBrowsingContextId, this);
-}
-
-void
-BrowsingContext::Attach(BrowsingContext* aParent)
-{
-  if (isInList()) {
-    MOZ_LOG(GetLog(),
-            LogLevel::Debug,
-            ("%s: Connecting already existing 0x%08" PRIx64 " to 0x%08" PRIx64,
-             XRE_IsParentProcess() ? "Parent" : "Child",
-             Id(),
-             aParent ? aParent->Id() : 0));
-    MOZ_DIAGNOSTIC_ASSERT(sBrowsingContexts->Contains(Id()));
-    MOZ_DIAGNOSTIC_ASSERT(!IsCached());
-    return;
-  }
-=======
 /* static */
 already_AddRefed<BrowsingContext> BrowsingContext::CreateFromIPC(
     BrowsingContext::IPCInitializer&& aInit, BrowsingContextGroup* aGroup,
     ContentParent* aOriginProcess) {
   MOZ_DIAGNOSTIC_ASSERT(aOriginProcess || XRE_IsContentProcess());
   MOZ_DIAGNOSTIC_ASSERT(aGroup);
->>>>>>> upstream-releases
 
   uint64_t originId = 0;
   if (aOriginProcess) {
@@ -409,38 +163,10 @@ already_AddRefed<BrowsingContext> BrowsingContext::CreateFromIPC(
     aGroup->EnsureSubscribed(aOriginProcess);
   }
 
-<<<<<<< HEAD
-  MOZ_LOG(GetLog(), LogLevel::Debug,
-          ("%s: %s 0x%08" PRIx64 " to 0x%08" PRIx64,
-           XRE_IsParentProcess() ? "Parent" : "Child",
-           wasCached ? "Re-connecting" : "Connecting", Id(),
-           mParent ? mParent->Id() : 0));
-||||||| merged common ancestors
-  MOZ_LOG(GetLog(),
-          LogLevel::Debug,
-          ("%s: %s 0x%08" PRIx64 " to 0x%08" PRIx64,
-           XRE_IsParentProcess() ? "Parent" : "Child",
-           wasCached ? "Re-connecting" : "Connecting",
-           Id(),
-           aParent ? aParent->Id() : 0));
-=======
   MOZ_LOG(GetLog(), LogLevel::Debug,
           ("Creating 0x%08" PRIx64 " from IPC (origin=0x%08" PRIx64 ")",
            aInit.mId, originId));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto* children = mParent ? &mParent->mChildren : sRootBrowsingContexts.get();
-  children->insertBack(this);
-||||||| merged common ancestors
-  auto* children = aParent ? &aParent->mChildren : sRootBrowsingContexts.get();
-  children->insertBack(this);
-  mParent = aParent;
-
-  if (!XRE_IsContentProcess()) {
-    return;
-  }
-=======
   RefPtr<BrowsingContext> parent = aInit.GetParent();
 
   RefPtr<BrowsingContext> context;
@@ -450,18 +176,7 @@ already_AddRefed<BrowsingContext> BrowsingContext::CreateFromIPC(
   } else {
     context = new BrowsingContext(parent, aGroup, aInit.mId, Type::Content);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Sync(this);
-||||||| merged common ancestors
-  auto cc = ContentChild::GetSingleton();
-  MOZ_DIAGNOSTIC_ASSERT(cc);
-  cc->SendAttachBrowsingContext(
-    BrowsingContextId(mParent ? mParent->Id() : 0),
-    BrowsingContextId(Id()),
-    mName);
-=======
   Register(context);
 
   // Initialize all of our fields from IPC. We don't have to worry about
@@ -472,18 +187,8 @@ already_AddRefed<BrowsingContext> BrowsingContext::CreateFromIPC(
   // Caller handles attaching us to the tree.
 
   return context.forget();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void BrowsingContext::Detach() {
-  RefPtr<BrowsingContext> kungFuDeathGrip(this);
-||||||| merged common ancestors
-void
-BrowsingContext::Detach()
-{
-  RefPtr<BrowsingContext> kungFuDeathGrip(this);
-=======
 BrowsingContext::BrowsingContext(BrowsingContext* aParent,
                                  BrowsingContextGroup* aGroup,
                                  uint64_t aBrowsingContextId, Type aType)
@@ -505,7 +210,6 @@ void BrowsingContext::SetDocShell(nsIDocShell* aDocShell) {
   mDocShell = aDocShell;
   mIsInProcess = true;
 }
->>>>>>> upstream-releases
 
 void BrowsingContext::SetEmbedderElement(Element* aEmbedder) {
   // Notify the parent process of the embedding status. We don't need to do
@@ -553,21 +257,6 @@ void BrowsingContext::SetEmbedderElement(Element* aEmbedder) {
     }
   }
 
-<<<<<<< HEAD
-  if (!isInList()) {
-    MOZ_LOG(GetLog(), LogLevel::Debug,
-            ("%s: Detaching already detached 0x%08" PRIx64,
-             XRE_IsParentProcess() ? "Parent" : "Child", Id()));
-    return;
-||||||| merged common ancestors
-  if (!isInList()) {
-    MOZ_LOG(GetLog(),
-            LogLevel::Debug,
-            ("%s: Detaching already detached 0x%08" PRIx64,
-             XRE_IsParentProcess() ? "Parent" : "Child",
-             Id()));
-    return;
-=======
   mEmbedderElement = aEmbedder;
 }
 
@@ -597,19 +286,11 @@ void BrowsingContext::Attach(bool aFromIPC) {
         Unused << aParent->SendAttachBrowsingContext(GetIPCInitializer());
       });
     }
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-  MOZ_LOG(GetLog(), LogLevel::Debug,
-||||||| merged common ancestors
-  MOZ_LOG(GetLog(),
-          LogLevel::Debug,
-=======
 void BrowsingContext::Detach(bool aFromIPC) {
   MOZ_LOG(GetLog(), LogLevel::Debug,
->>>>>>> upstream-releases
           ("%s: Detaching 0x%08" PRIx64 " from 0x%08" PRIx64,
            XRE_IsParentProcess() ? "Parent" : "Child", Id(),
            mParent ? mParent->Id() : 0));
@@ -621,17 +302,6 @@ void BrowsingContext::Detach(bool aFromIPC) {
 
   RefPtr<BrowsingContext> kungFuDeathGrip(this);
 
-<<<<<<< HEAD
-void BrowsingContext::CacheChildren() {
-  if (mChildren.isEmpty()) {
-    return;
-||||||| merged common ancestors
-void
-BrowsingContext::CacheChildren()
-{
-  if (mChildren.isEmpty()) {
-    return;
-=======
   if (!mGroup->EvictCachedContext(this)) {
     Children* children = nullptr;
     if (mParent) {
@@ -652,7 +322,6 @@ BrowsingContext::CacheChildren()
     auto cc = ContentChild::GetSingleton();
     MOZ_DIAGNOSTIC_ASSERT(cc);
     cc->SendDetachBrowsingContext(this);
->>>>>>> upstream-releases
   }
 }
 
@@ -661,12 +330,6 @@ void BrowsingContext::PrepareForProcessChange() {
           ("%s: Preparing 0x%08" PRIx64 " for a process change",
            XRE_IsParentProcess() ? "Parent" : "Child", Id()));
 
-<<<<<<< HEAD
-  MOZ_LOG(GetLog(), LogLevel::Debug,
-||||||| merged common ancestors
-  MOZ_LOG(GetLog(),
-          LogLevel::Debug,
-=======
   MOZ_ASSERT(mIsInProcess, "Must currently be an in-process frame");
   MOZ_ASSERT(!mIsDiscarded, "We're already closed?");
 
@@ -684,19 +347,11 @@ void BrowsingContext::PrepareForProcessChange() {
 
 void BrowsingContext::CacheChildren(bool aFromIPC) {
   MOZ_LOG(GetLog(), LogLevel::Debug,
->>>>>>> upstream-releases
           ("%s: Caching children of 0x%08" PRIx64 "",
-<<<<<<< HEAD
-           XRE_IsParentProcess() ? "Parent" : "Child", Id()));
-||||||| merged common ancestors
-           XRE_IsParentProcess() ? "Parent" : "Child",
-           Id()));
-=======
            XRE_IsParentProcess() ? "Parent" : "Child", Id()));
 
   mGroup->CacheContexts(mChildren);
   mChildren.Clear();
->>>>>>> upstream-releases
 
   if (!aFromIPC && XRE_IsContentProcess()) {
     auto cc = ContentChild::GetSingleton();
@@ -730,32 +385,10 @@ bool BrowsingContext::HasOpener() const {
   return sBrowsingContexts->Contains(mOpenerId);
 }
 
-<<<<<<< HEAD
-bool BrowsingContext::IsCached() {
-  return sCachedBrowsingContexts->Contains(Id());
-||||||| merged common ancestors
-bool
-BrowsingContext::IsCached()
-{
-  return sCachedBrowsingContexts->Contains(Id());
-=======
 void BrowsingContext::GetChildren(Children& aChildren) {
   MOZ_ALWAYS_TRUE(aChildren.AppendElements(mChildren));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void BrowsingContext::GetChildren(
-    nsTArray<RefPtr<BrowsingContext>>& aChildren) {
-  for (BrowsingContext* context : mChildren) {
-    aChildren.AppendElement(context);
-||||||| merged common ancestors
-void
-BrowsingContext::GetChildren(nsTArray<RefPtr<BrowsingContext>>& aChildren)
-{
-  for (BrowsingContext* context : mChildren) {
-    aChildren.AppendElement(context);
-=======
 // FindWithName follows the rules for choosing a browsing context,
 // with the exception of sandboxing for iframes. The implementation
 // for arbitrarily choosing between two browsing contexts with the
@@ -820,7 +453,6 @@ BrowsingContext* BrowsingContext::FindWithName(const nsAString& aName) {
 
       current = parent;
     } while (current);
->>>>>>> upstream-releases
   }
 
   // Helpers should perform access control checks, which means that we
@@ -830,35 +462,6 @@ BrowsingContext* BrowsingContext::FindWithName(const nsAString& aName) {
   return found;
 }
 
-<<<<<<< HEAD
-void BrowsingContext::SetOpener(BrowsingContext* aOpener) {
-  if (mOpener == aOpener) {
-    return;
-  }
-
-  mOpener = aOpener;
-
-  if (!XRE_IsContentProcess()) {
-    return;
-  }
-
-  auto cc = ContentChild::GetSingleton();
-  MOZ_DIAGNOSTIC_ASSERT(cc);
-  cc->SendSetOpenerBrowsingContext(
-      BrowsingContextId(Id()), BrowsingContextId(aOpener ? aOpener->Id() : 0));
-}
-
-/* static */ void BrowsingContext::GetRootBrowsingContexts(
-    nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts) {
-  for (BrowsingContext* context : *sRootBrowsingContexts) {
-    aBrowsingContexts.AppendElement(context);
-||||||| merged common ancestors
-/* static */ void
-BrowsingContext::GetRootBrowsingContexts(nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts)
-{
-  for (BrowsingContext* context : *sRootBrowsingContexts) {
-    aBrowsingContexts.AppendElement(context);
-=======
 BrowsingContext* BrowsingContext::FindChildWithName(const nsAString& aName) {
   if (aName.IsEmpty()) {
     // You can't find a browsing context with the empty name.
@@ -869,20 +472,11 @@ BrowsingContext* BrowsingContext::FindChildWithName(const nsAString& aName) {
     if (child->NameEquals(aName) && CanAccess(child) && child->IsActive()) {
       return child;
     }
->>>>>>> upstream-releases
   }
 
   return nullptr;
 }
 
-<<<<<<< HEAD
-BrowsingContext::~BrowsingContext() {
-  MOZ_DIAGNOSTIC_ASSERT(!isInList());
-||||||| merged common ancestors
-BrowsingContext::~BrowsingContext()
-{
-  MOZ_DIAGNOSTIC_ASSERT(!isInList());
-=======
 BrowsingContext* BrowsingContext::FindWithSpecialName(const nsAString& aName) {
   // TODO(farre): Neither BrowsingContext nor nsDocShell checks if the
   // browsing context pointed to by a special name is active. Should
@@ -953,7 +547,6 @@ BrowsingContext::~BrowsingContext() {
   MOZ_DIAGNOSTIC_ASSERT(!mParent || !mParent->mChildren.Contains(this));
   MOZ_DIAGNOSTIC_ASSERT(!mGroup || !mGroup->Toplevels().Contains(this));
   MOZ_DIAGNOSTIC_ASSERT(!mGroup || !mGroup->IsContextCached(this));
->>>>>>> upstream-releases
 
   if (sBrowsingContexts) {
     sBrowsingContexts->Remove(Id());
@@ -969,41 +562,13 @@ JSObject* BrowsingContext::WrapObject(JSContext* aCx,
   return BrowsingContext_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-static void ImplCycleCollectionUnlink(BrowsingContext::Children& aField) {
-  aField.clear();
-||||||| merged common ancestors
-static void
-ImplCycleCollectionUnlink(BrowsingContext::Children& aField)
-{
-  aField.clear();
-=======
 bool BrowsingContext::WriteStructuredClone(JSContext* aCx,
                                            JSStructuredCloneWriter* aWriter,
                                            StructuredCloneHolder* aHolder) {
   return (JS_WriteUint32Pair(aWriter, SCTAG_DOM_BROWSING_CONTEXT, 0) &&
           JS_WriteUint32Pair(aWriter, uint32_t(Id()), uint32_t(Id() >> 32)));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void ImplCycleCollectionTraverse(
-    nsCycleCollectionTraversalCallback& aCallback,
-    BrowsingContext::Children& aField, const char* aName, uint32_t aFlags = 0) {
-  for (BrowsingContext* aContext : aField) {
-    aCallback.NoteNativeChild(aContext,
-                              NS_CYCLE_COLLECTION_PARTICIPANT(BrowsingContext));
-||||||| merged common ancestors
-static void
-ImplCycleCollectionTraverse(nsCycleCollectionTraversalCallback& aCallback,
-                            BrowsingContext::Children& aField,
-                            const char* aName,
-                            uint32_t aFlags = 0)
-{
-  for (BrowsingContext* aContext : aField) {
-    aCallback.NoteNativeChild(aContext,
-                              NS_CYCLE_COLLECTION_PARTICIPANT(BrowsingContext));
-=======
 /* static */
 JSObject* BrowsingContext::ReadStructuredClone(JSContext* aCx,
                                                JSStructuredCloneReader* aReader,
@@ -1022,7 +587,6 @@ JSObject* BrowsingContext::ReadStructuredClone(JSContext* aCx,
                           "We shouldn't be trying to decode a BrowsingContext "
                           "on a background thread.");
     return nullptr;
->>>>>>> upstream-releases
   }
 
   JS::RootedValue val(aCx, JS::NullValue());
@@ -1090,13 +654,6 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_WRAPPERCACHE(BrowsingContext)
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(BrowsingContext, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(BrowsingContext, Release)
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 class RemoteLocationProxy
     : public RemoteObjectProxy<BrowsingContext::LocationProxy,
                                Location_Binding::sCrossOriginAttributes,
@@ -1512,4 +1069,3 @@ bool IPDLParamTraits<dom::BrowsingContext::IPCInitializer>::Read(
 
 }  // namespace ipc
 }  // namespace mozilla
->>>>>>> upstream-releases

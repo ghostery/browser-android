@@ -142,17 +142,8 @@ class CallbackObject : public nsISupports {
    * used instead of CallbackOrNull() to avoid the overhead of
    * ExposeObjectToActiveJS().
    */
-<<<<<<< HEAD
-  JS::Handle<JSObject*> CallbackKnownNotGray() const {
-    MOZ_ASSERT(JS::ObjectIsNotGray(mCallback));
-||||||| merged common ancestors
-  JS::Handle<JSObject*> CallbackKnownNotGray() const
-  {
-    MOZ_ASSERT(JS::ObjectIsNotGray(mCallback));
-=======
   JS::Handle<JSObject*> CallbackKnownNotGray() const {
     JS::AssertObjectIsNotGray(mCallback);
->>>>>>> upstream-releases
     return CallbackPreserveColor();
   }
 
@@ -175,21 +166,6 @@ class CallbackObject : public nsISupports {
     return aMallocSizeOf(this);
   }
 
-<<<<<<< HEAD
- protected:
-  virtual ~CallbackObject() { mozilla::DropJSObjects(this); }
-
-  explicit CallbackObject(CallbackObject* aCallbackObject) {
-||||||| merged common ancestors
-protected:
-  virtual ~CallbackObject()
-  {
-    mozilla::DropJSObjects(this);
-  }
-
-  explicit CallbackObject(CallbackObject* aCallbackObject)
-  {
-=======
   // Used for cycle collection optimization.  Should return true only if all our
   // outgoing edges are to known-live objects.  In that case, there's no point
   // traversing our edges to them, because we know they can't be collected
@@ -212,7 +188,6 @@ protected:
   virtual ~CallbackObject() { mozilla::DropJSObjects(this); }
 
   explicit CallbackObject(CallbackObject* aCallbackObject) {
->>>>>>> upstream-releases
     Init(aCallbackObject->mCallback, aCallbackObject->mCallbackGlobal,
          aCallbackObject->mCreationStack, aCallbackObject->mIncumbentGlobal);
   }
@@ -272,20 +247,9 @@ protected:
   // Provide a way to clear this object's pointers to GC things after the
   // callback has been run. Note that CallbackOrNull() will return null after
   // this point. This should only be called if the object is known not to be
-<<<<<<< HEAD
-  // used again.
-  void Reset() { ClearJSReferences(); }
-||||||| merged common ancestors
-  // used again.
-  void Reset()
-  {
-    ClearJSReferences();
-  }
-=======
   // used again, and no handles (e.g. those returned by CallbackPreserveColor)
   // are in use.
   void Reset() { ClearJSReferences(); }
->>>>>>> upstream-releases
   friend class mozilla::PromiseJobRunnable;
 
   inline void ClearJSReferences() {
@@ -616,21 +580,6 @@ void ImplCycleCollectionUnlink(CallbackObjectHolder<T, U>& aField) {
 // subclass.  This class is used in bindings to safely handle Fast* callbacks;
 // it ensures that the callback is traced, and that if something is holding onto
 // the callback when we're done with it HoldJSObjects is called.
-<<<<<<< HEAD
-template <typename T>
-class MOZ_RAII RootedCallback : public JS::Rooted<T> {
- public:
-  explicit RootedCallback(JSContext* cx) : JS::Rooted<T>(cx), mCx(cx) {}
-||||||| merged common ancestors
-template<typename T>
-class MOZ_RAII RootedCallback : public JS::Rooted<T>
-{
-public:
-  explicit RootedCallback(JSContext* cx)
-    : JS::Rooted<T>(cx)
-    , mCx(cx)
-  {}
-=======
 //
 // Since we effectively hold a ref to a refcounted thing (like RefPtr or
 // OwningNonNull), we are also MOZ_IS_SMARTPTR_TO_REFCOUNTED for static analysis
@@ -640,7 +589,6 @@ class MOZ_RAII MOZ_IS_SMARTPTR_TO_REFCOUNTED RootedCallback
     : public JS::Rooted<T> {
  public:
   explicit RootedCallback(JSContext* cx) : JS::Rooted<T>(cx), mCx(cx) {}
->>>>>>> upstream-releases
 
   // We need a way to make assignment from pointers (how we're normally used)
   // work.

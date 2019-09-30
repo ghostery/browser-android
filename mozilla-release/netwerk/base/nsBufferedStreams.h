@@ -54,13 +54,7 @@ class nsBufferedStream : public nsISeekableStream {
   // is relative to mBufferStartOffset.
   uint32_t mFillPoint;
 
-<<<<<<< HEAD
-  nsISupports* mStream;  // cast to appropriate subclass
-||||||| merged common ancestors
-    nsISupports*                mStream;        // cast to appropriate subclass
-=======
   nsCOMPtr<nsISupports> mStream;  // cast to appropriate subclass
->>>>>>> upstream-releases
 
   bool mBufferDisabled;
   bool mEOF;  // True if mStream is at EOF
@@ -69,110 +63,6 @@ class nsBufferedStream : public nsISeekableStream {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-class nsBufferedInputStream final : public nsBufferedStream,
-                                    public nsIBufferedInputStream,
-                                    public nsIStreamBufferAccess,
-                                    public nsIIPCSerializableInputStream,
-                                    public nsIAsyncInputStream,
-                                    public nsIInputStreamCallback,
-                                    public nsICloneableInputStream,
-                                    public nsIInputStreamLength,
-                                    public nsIAsyncInputStreamLength,
-                                    public nsIInputStreamLengthCallback {
- public:
-  NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_NSIINPUTSTREAM
-  NS_DECL_NSIBUFFEREDINPUTSTREAM
-  NS_DECL_NSISTREAMBUFFERACCESS
-  NS_DECL_NSIIPCSERIALIZABLEINPUTSTREAM
-  NS_DECL_NSIASYNCINPUTSTREAM
-  NS_DECL_NSIINPUTSTREAMCALLBACK
-  NS_DECL_NSICLONEABLEINPUTSTREAM
-  NS_DECL_NSIINPUTSTREAMLENGTH
-  NS_DECL_NSIASYNCINPUTSTREAMLENGTH
-  NS_DECL_NSIINPUTSTREAMLENGTHCALLBACK
-
-  nsBufferedInputStream();
-
-  static nsresult Create(nsISupports* aOuter, REFNSIID aIID, void** aResult);
-
-  nsIInputStream* Source() { return (nsIInputStream*)mStream; }
-
- protected:
-  virtual ~nsBufferedInputStream() = default;
-
-  NS_IMETHOD Fill() override;
-  NS_IMETHOD Flush() override { return NS_OK; }  // no-op for input streams
-
-  mozilla::Mutex mMutex;
-
-  // This value is protected by mutex.
-  nsCOMPtr<nsIInputStreamCallback> mAsyncWaitCallback;
-
-  // This value is protected by mutex.
-  nsCOMPtr<nsIInputStreamLengthCallback> mAsyncInputStreamLengthCallback;
-
-  bool mIsIPCSerializable;
-  bool mIsAsyncInputStream;
-  bool mIsCloneableInputStream;
-  bool mIsInputStreamLength;
-  bool mIsAsyncInputStreamLength;
-||||||| merged common ancestors
-class nsBufferedInputStream final
-    : public nsBufferedStream,
-      public nsIBufferedInputStream,
-      public nsIStreamBufferAccess,
-      public nsIIPCSerializableInputStream,
-      public nsIAsyncInputStream,
-      public nsIInputStreamCallback,
-      public nsICloneableInputStream,
-      public nsIInputStreamLength,
-      public nsIAsyncInputStreamLength,
-      public nsIInputStreamLengthCallback
-{
-public:
-    NS_DECL_ISUPPORTS_INHERITED
-    NS_DECL_NSIINPUTSTREAM
-    NS_DECL_NSIBUFFEREDINPUTSTREAM
-    NS_DECL_NSISTREAMBUFFERACCESS
-    NS_DECL_NSIIPCSERIALIZABLEINPUTSTREAM
-    NS_DECL_NSIASYNCINPUTSTREAM
-    NS_DECL_NSIINPUTSTREAMCALLBACK
-    NS_DECL_NSICLONEABLEINPUTSTREAM
-    NS_DECL_NSIINPUTSTREAMLENGTH
-    NS_DECL_NSIASYNCINPUTSTREAMLENGTH
-    NS_DECL_NSIINPUTSTREAMLENGTHCALLBACK
-
-    nsBufferedInputStream();
-
-    static nsresult
-    Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-
-    nsIInputStream* Source() {
-        return (nsIInputStream*)mStream;
-    }
-
-protected:
-    virtual ~nsBufferedInputStream() = default;
-
-    NS_IMETHOD Fill() override;
-    NS_IMETHOD Flush() override { return NS_OK; } // no-op for input streams
-
-    mozilla::Mutex mMutex;
-
-    // This value is protected by mutex.
-    nsCOMPtr<nsIInputStreamCallback> mAsyncWaitCallback;
-
-    // This value is protected by mutex.
-    nsCOMPtr<nsIInputStreamLengthCallback> mAsyncInputStreamLengthCallback;
-
-    bool mIsIPCSerializable;
-    bool mIsAsyncInputStream;
-    bool mIsCloneableInputStream;
-    bool mIsInputStreamLength;
-    bool mIsAsyncInputStreamLength;
-=======
 class nsBufferedInputStream final : public nsBufferedStream,
                                     public nsIBufferedInputStream,
                                     public nsIStreamBufferAccess,
@@ -227,7 +117,6 @@ class nsBufferedInputStream final : public nsBufferedStream,
   bool mIsCloneableInputStream;
   bool mIsInputStreamLength;
   bool mIsAsyncInputStreamLength;
->>>>>>> upstream-releases
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,15 +136,7 @@ class nsBufferedOutputStream : public nsBufferedStream,
 
   static nsresult Create(nsISupports* aOuter, REFNSIID aIID, void** aResult);
 
-<<<<<<< HEAD
-  nsIOutputStream* Sink() { return (nsIOutputStream*)mStream; }
-||||||| merged common ancestors
-    nsIOutputStream* Sink() {
-        return (nsIOutputStream*)mStream;
-    }
-=======
   nsIOutputStream* Sink() { return (nsIOutputStream*)mStream.get(); }
->>>>>>> upstream-releases
 
  protected:
   virtual ~nsBufferedOutputStream() { nsBufferedOutputStream::Close(); }

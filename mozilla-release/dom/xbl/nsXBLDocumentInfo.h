@@ -44,18 +44,9 @@ class nsXBLDocumentInfo final : public nsSupportsWeakReference {
 
   void MarkInCCGeneration(uint32_t aGeneration);
 
-<<<<<<< HEAD
-  static nsresult ReadPrototypeBindings(nsIURI* aURI,
-                                        nsXBLDocumentInfo** aDocInfo,
-                                        nsIDocument* aBoundDocument);
-||||||| merged common ancestors
-  static nsresult ReadPrototypeBindings(nsIURI* aURI, nsXBLDocumentInfo** aDocInfo,
-                                        nsIDocument* aBoundDocument);
-=======
   static nsresult ReadPrototypeBindings(nsIURI* aURI,
                                         nsXBLDocumentInfo** aDocInfo,
                                         mozilla::dom::Document* aBoundDocument);
->>>>>>> upstream-releases
 
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 

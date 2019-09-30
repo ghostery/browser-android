@@ -12,16 +12,8 @@
 namespace mozilla {
 namespace dom {
 class ContentParent;
-<<<<<<< HEAD
-class TabParent;
-}  // namespace dom
-||||||| merged common ancestors
-class TabParent;
-} // namespace dom
-=======
 class BrowserParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * This class sets the priority of subprocesses in response to explicit

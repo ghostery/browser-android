@@ -37,16 +37,6 @@ class NativeFileWatcherService final : public nsINativeFileWatcherService {
   void operator=(const NativeFileWatcherService& other) = delete;
 };
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(NativeFileWatcherService, nsINativeFileWatcherService);
-
 }  // namespace mozilla
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(NativeFileWatcherService, nsINativeFileWatcherService);
-
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_nativefilewatcher_h__

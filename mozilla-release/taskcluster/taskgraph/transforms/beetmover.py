@@ -7,16 +7,9 @@ Transform the beetmover task into an actual task description.
 
 from __future__ import absolute_import, print_function, unicode_literals
 
-<<<<<<< HEAD
-from voluptuous import Any, Optional, Required
-
-from taskgraph.loader.single_dep import schema
-||||||| merged common ancestors
-=======
 from voluptuous import Optional, Required
 
 from taskgraph.loader.single_dep import schema
->>>>>>> upstream-releases
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.transforms.task import task_description_schema
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
@@ -27,14 +20,7 @@ from taskgraph.util.scriptworker import (generate_beetmover_artifact_map,
                                          get_worker_type_for_scope,
                                          should_use_artifact_map)
 from taskgraph.util.taskcluster import get_artifact_prefix
-<<<<<<< HEAD
-||||||| merged common ancestors
-from taskgraph.transforms.task import task_description_schema
-from voluptuous import Any, Required, Optional
-
-=======
 from taskgraph.util.treeherder import replace_group
->>>>>>> upstream-releases
 
 # Until bug 1331141 is fixed, if you are adding any new artifacts here that
 # need to be transfered to S3, please be aware you also need to follow-up
@@ -130,26 +116,7 @@ UPSTREAM_SOURCE_ARTIFACTS = [
 
 transforms = TransformSequence()
 
-<<<<<<< HEAD
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
 beetmover_description_schema = schema.extend({
-||||||| merged common ancestors
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
-beetmover_description_schema = Schema({
-    # the dependent task (object) for this beetmover job, used to inform beetmover.
-    Required('dependent-task'): object,
-
-=======
-beetmover_description_schema = schema.extend({
->>>>>>> upstream-releases
     # depname is used in taskref's to identify the taskID of the unsigned things
     Required('depname', default='build'): basestring,
 
@@ -348,17 +315,6 @@ def make_task_worker(config, jobs):
         signing_task_ref = "<" + str(signing_task) + ">"
         build_task_ref = "<" + str(build_task) + ">"
 
-<<<<<<< HEAD
-        if should_use_artifact_map(platform, config.params['project']):
-            upstream_artifacts = generate_beetmover_upstream_artifacts(
-                job, platform, locale
-            )
-        else:
-            upstream_artifacts = generate_upstream_artifacts(
-                job, signing_task_ref, build_task_ref, platform, locale
-            )
-||||||| merged common ancestors
-=======
         if should_use_artifact_map(platform):
             upstream_artifacts = generate_beetmover_upstream_artifacts(
                 config, job, platform, locale
@@ -367,25 +323,16 @@ def make_task_worker(config, jobs):
             upstream_artifacts = generate_upstream_artifacts(
                 job, signing_task_ref, build_task_ref, platform, locale
             )
->>>>>>> upstream-releases
         worker = {
             'implementation': 'beetmover',
             'release-properties': craft_release_properties(config, job),
             'upstream-artifacts': upstream_artifacts,
         }
 
-<<<<<<< HEAD
-        if should_use_artifact_map(platform, config.params['project']):
-            worker['artifact-map'] = generate_beetmover_artifact_map(
-                config, job, platform=platform, locale=locale)
-
-||||||| merged common ancestors
-=======
         if should_use_artifact_map(platform):
             worker['artifact-map'] = generate_beetmover_artifact_map(
                 config, job, platform=platform, locale=locale)
 
->>>>>>> upstream-releases
         if locale:
             worker["locale"] = locale
         job["worker"] = worker

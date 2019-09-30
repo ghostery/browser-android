@@ -30,184 +30,13 @@ public:
         kSubpixelAntiAlias,  //!< glyph positioned in pixel using transparency
     };
 
-<<<<<<< HEAD
-/*
- 1. The Hinting enum in SkPaint is gone entirely, absorbed into SkFont's flags.
-
- 2. SkPaint Flags look like this today
-
- enum Flags {
-     kAntiAlias_Flag       = 0x01,   //!< mask to enable antialiasing
-     kDither_Flag          = 0x04,   //!< mask to enable dithering
-     kFakeBoldText_Flag    = 0x20,   //!< mask to enable fake-bold text
-     kLinearText_Flag      = 0x40,   //!< mask to enable linear-text
-     kSubpixelText_Flag    = 0x80,   //!< mask to enable subpixel text positioning
-     kLCDRenderText_Flag   = 0x200,  //!< mask to enable subpixel glyph renderering
-     kEmbeddedBitmapText_Flag = 0x400, //!< mask to enable embedded bitmap strikes
-     kAutoHinting_Flag     = 0x800,  //!< mask to force Freetype's autohinter
-     kVerticalText_Flag    = 0x1000,
- };
-
- SkFont would absorb these:
-
-     kFakeBoldText_Flag    = 0x20,   //!< mask to enable fake-bold text
-     kLinearText_Flag      = 0x40,   //!< mask to enable linear-text
-     kSubpixelText_Flag    = 0x80,   //!< mask to enable subpixel text positioning
-     kLCDRenderText_Flag   = 0x200,  //!< mask to enable subpixel glyph renderering
-     kEmbeddedBitmapText_Flag = 0x400, //!< mask to enable embedded bitmap strikes
-     kAutoHinting_Flag     = 0x800,  //!< mask to force Freetype's autohinter
-     kVerticalText_Flag    = 0x1000,
-
- leaving these still in paint
-
-     kAntiAlias_Flag       = 0x01,   //!< mask to enable antialiasing
-     kDither_Flag          = 0x04,   //!< mask to enable dithering
-
- 3. Antialiasing
-
-    SkFont has a mask-type: BW, AA, LCD
-    SkPaint has antialias boolean
-
-    What to do if the font's mask-type disagrees with the paint?
-||||||| merged common ancestors
-/*
- 1. The Hinting enum in SkPaint is gone entirely, absorbed into SkFont's flags.
-
- 2. SkPaint Flags look like this today
-
- enum Flags {
-     kAntiAlias_Flag       = 0x01,   //!< mask to enable antialiasing
-     kDither_Flag          = 0x04,   //!< mask to enable dithering
-     kUnderlineText_Flag   = 0x08,   //!< mask to enable underline text
-     kStrikeThruText_Flag  = 0x10,   //!< mask to enable strike-thru text
-     kFakeBoldText_Flag    = 0x20,   //!< mask to enable fake-bold text
-     kLinearText_Flag      = 0x40,   //!< mask to enable linear-text
-     kSubpixelText_Flag    = 0x80,   //!< mask to enable subpixel text positioning
-     kDevKernText_Flag     = 0x100,  //!< mask to enable device kerning text
-     kLCDRenderText_Flag   = 0x200,  //!< mask to enable subpixel glyph renderering
-     kEmbeddedBitmapText_Flag = 0x400, //!< mask to enable embedded bitmap strikes
-     kAutoHinting_Flag     = 0x800,  //!< mask to force Freetype's autohinter
-     kVerticalText_Flag    = 0x1000,
-     kGenA8FromLCD_Flag    = 0x2000, // hack for GDI -- do not use if you can help it
- };
-
- SkFont would absorb these:
-
-     kFakeBoldText_Flag    = 0x20,   //!< mask to enable fake-bold text
-     kLinearText_Flag      = 0x40,   //!< mask to enable linear-text
-     kSubpixelText_Flag    = 0x80,   //!< mask to enable subpixel text positioning
-     kDevKernText_Flag     = 0x100,  //!< mask to enable device kerning text
-     kLCDRenderText_Flag   = 0x200,  //!< mask to enable subpixel glyph renderering
-     kEmbeddedBitmapText_Flag = 0x400, //!< mask to enable embedded bitmap strikes
-     kAutoHinting_Flag     = 0x800,  //!< mask to force Freetype's autohinter
-     kVerticalText_Flag    = 0x1000,
-     kGenA8FromLCD_Flag    = 0x2000, // hack for GDI -- do not use if you can help it
-
- leaving these still in paint
-
-     kAntiAlias_Flag       = 0x01,   //!< mask to enable antialiasing
-     kDither_Flag          = 0x04,   //!< mask to enable dithering
-     kUnderlineText_Flag   = 0x08,   //!< mask to enable underline text
-     kStrikeThruText_Flag  = 0x10,   //!< mask to enable strike-thru text
-
- 3. Antialiasing
-
-    SkFont has a mask-type: BW, AA, LCD
-    SkPaint has antialias boolean
-
-    What to do if the font's mask-type disagrees with the paint?
-=======
     /** Constructs SkFont with default values.
->>>>>>> upstream-releases
 
         @return  default initialized SkFont
     */
     SkFont();
 
-<<<<<<< HEAD
-class SkFont : public SkRefCnt {
-public:
-    enum Flags {
-        /**
-         *  Use the system's automatic hinting mechanism to hint the typeface.
-         *  This is a last resort hinting method applied only if other hinting methods do not apply.
-         *  TODO: where to put auto-normal vs auto-light?
-         */
-        kEnableAutoHints_Flag       = 1 << 0,
-
-        /**
-         *  If the typeface contains explicit bytecodes for hinting, use them.
-         *  If both bytecode and auto hints are specified, attempt to use the bytecodes first;
-         *  if that fails (e.g. there are no codes), then attempt to autohint.
-         */
-        kEnableByteCodeHints_Flag   = 1 << 1,
-
-        /**
-         *  If the typeface contains explicit bitmaps for hinting, use them.
-         *  If both bytecode and auto hints are also specified, attempt to use the bitmaps first;
-         *  if that fails (e.g. there are no bitmaps), then attempt to bytecode or autohint.
-         */
-        kEmbeddedBitmaps_Flag       = 1 << 2,
-
-        /**
-         *  Use rounded metric values (e.g. advance).
-         *  If either auto or bytecode hinting was used, apply those results to the metrics of the
-         *  glyphs as well. If no hinting was applied, the metrics will just be rounded to the
-         *  nearest integer.
-         *
-         *  This applies to calls that return metrics (e.g. measureText) and to drawing the glyphs
-         *  (see SkCanvas drawText and drawPosText).
-         */
-        kUseNonlinearMetrics_Flag   = 1 << 3,
-
-        kVertical_Flag              = 1 << 4,
-
-        kEmbolden_Flag              = 1 << 6,
-    };
-||||||| merged common ancestors
-class SkFont : public SkRefCnt {
-public:
-    enum Flags {
-        /**
-         *  Use the system's automatic hinting mechanism to hint the typeface.
-         *  This is a last resort hinting method applied only if other hinting methods do not apply.
-         *  TODO: where to put auto-normal vs auto-light?
-         */
-        kEnableAutoHints_Flag       = 1 << 0,
-
-        /**
-         *  If the typeface contains explicit bytecodes for hinting, use them.
-         *  If both bytecode and auto hints are specified, attempt to use the bytecodes first;
-         *  if that fails (e.g. there are no codes), then attempt to autohint.
-         */
-        kEnableByteCodeHints_Flag   = 1 << 1,
-
-        /**
-         *  If the typeface contains explicit bitmaps for hinting, use them.
-         *  If both bytecode and auto hints are also specified, attempt to use the bitmaps first;
-         *  if that fails (e.g. there are no bitmaps), then attempt to bytecode or autohint.
-         */
-        kEmbeddedBitmaps_Flag       = 1 << 2,
-
-        /**
-         *  Use rounded metric values (e.g. advance).
-         *  If either auto or bytecode hinting was used, apply those results to the metrics of the
-         *  glyphs as well. If no hinting was applied, the metrics will just be rounded to the
-         *  nearest integer.
-         *
-         *  This applies to calls that return metrics (e.g. measureText) and to drawing the glyphs
-         *  (see SkCanvas drawText and drawPosText).
-         */
-        kUseNonlinearMetrics_Flag   = 1 << 3,
-
-        kVertical_Flag              = 1 << 4,
-        kGenA8FromLCD_Flag          = 1 << 5,
-        kEmbolden_Flag              = 1 << 6,
-        kDevKern_Flag               = 1 << 7,   // ifdef ANDROID ?
-    };
-=======
     /** Constructs SkFont with default values with SkTypeface and size in points.
->>>>>>> upstream-releases
 
         @param typeface  font and style used to draw and measure text
         @param size      typographic height of text
@@ -389,20 +218,6 @@ public:
     */
     SkScalar    getSkewX() const { return fSkewX; }
 
-<<<<<<< HEAD
-    bool isVertical() const { return SkToBool(fFlags & kVertical_Flag); }
-    bool isEmbolden() const { return SkToBool(fFlags & kEmbolden_Flag); }
-    bool isEnableAutoHints() const { return SkToBool(fFlags & kEnableAutoHints_Flag); }
-    bool isEnableByteCodeHints() const { return SkToBool(fFlags & kEnableByteCodeHints_Flag); }
-    bool isUseNonLinearMetrics() const { return SkToBool(fFlags & kUseNonlinearMetrics_Flag); }
-||||||| merged common ancestors
-    bool isVertical() const { return SkToBool(fFlags & kVertical_Flag); }
-    bool isEmbolden() const { return SkToBool(fFlags & kEmbolden_Flag); }
-    bool isEnableAutoHints() const { return SkToBool(fFlags & kEnableAutoHints_Flag); }
-    bool isEnableByteCodeHints() const { return SkToBool(fFlags & kEnableByteCodeHints_Flag); }
-    bool isUseNonLinearMetrics() const { return SkToBool(fFlags & kUseNonlinearMetrics_Flag); }
-    bool isDevKern() const { return SkToBool(fFlags & kDevKern_Flag); }
-=======
     /** Increases SkTypeface SkRefCnt by one.
 
         @return  SkTypeface if previously set, nullptr otherwise
@@ -449,7 +264,6 @@ public:
         Returns the number of glyph indices represented by text.
         SkTextEncoding specifies how text represents characters or glyphs.
         glyphs may be nullptr, to compute the glyph count.
->>>>>>> upstream-releases
 
         Does not check text for valid character codes or valid glyph indices.
 
@@ -670,13 +484,6 @@ public:
     void dump() const;
 
 private:
-<<<<<<< HEAD
-    static constexpr int kAllFlags = 0xFF;
-||||||| merged common ancestors
-    enum {
-        kAllFlags = 0xFF,
-    };
-=======
     enum PrivFlags {
         kForceAutoHinting_PrivFlag      = 1 << 0,
         kEmbeddedBitmaps_PrivFlag       = 1 << 1,
@@ -684,7 +491,6 @@ private:
         kLinearMetrics_PrivFlag         = 1 << 3,
         kEmbolden_PrivFlag              = 1 << 4,
     };
->>>>>>> upstream-releases
 
     static constexpr unsigned kAllFlags = 0x1F;
 

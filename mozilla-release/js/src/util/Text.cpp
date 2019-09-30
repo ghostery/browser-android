@@ -57,111 +57,39 @@ int32_t js_fputs(const char16_t* s, FILE* f) {
   return 1;
 }
 
-<<<<<<< HEAD
-UniqueChars js::DuplicateString(JSContext* cx, const char* s) {
-  size_t n = strlen(s) + 1;
-  auto ret = cx->make_pod_array<char>(n);
-  if (!ret) {
-||||||| merged common ancestors
-UniqueChars
-js::DuplicateString(JSContext* cx, const char* s)
-{
-    size_t n = strlen(s) + 1;
-    auto ret = cx->make_pod_array<char>(n);
-    if (!ret) {
-        return ret;
-    }
-    PodCopy(ret.get(), s, n);
-=======
 UniqueChars js::DuplicateStringToArena(arena_id_t destArenaId, JSContext* cx,
                                        const char* s) {
   size_t n = strlen(s) + 1;
   auto ret = cx->make_pod_array<char>(n, destArenaId);
   if (!ret) {
->>>>>>> upstream-releases
     return ret;
   }
   PodCopy(ret.get(), s, n);
   return ret;
 }
 
-<<<<<<< HEAD
-UniqueTwoByteChars js::DuplicateString(JSContext* cx, const char16_t* s) {
-  size_t n = js_strlen(s) + 1;
-  auto ret = cx->make_pod_array<char16_t>(n);
-  if (!ret) {
-||||||| merged common ancestors
-UniqueTwoByteChars
-js::DuplicateString(JSContext* cx, const char16_t* s)
-{
-    size_t n = js_strlen(s) + 1;
-    auto ret = cx->make_pod_array<char16_t>(n);
-    if (!ret) {
-        return ret;
-    }
-    PodCopy(ret.get(), s, n);
-=======
 UniqueTwoByteChars js::DuplicateStringToArena(arena_id_t destArenaId,
                                               JSContext* cx,
                                               const char16_t* s) {
   size_t n = js_strlen(s) + 1;
   auto ret = cx->make_pod_array<char16_t>(n, destArenaId);
   if (!ret) {
->>>>>>> upstream-releases
     return ret;
   }
   PodCopy(ret.get(), s, n);
   return ret;
 }
 
-<<<<<<< HEAD
-UniqueChars js::DuplicateString(const char* s) {
-  size_t n = strlen(s) + 1;
-  UniqueChars ret(js_pod_malloc<char>(n));
-  if (!ret) {
-||||||| merged common ancestors
-UniqueChars
-js::DuplicateString(const char* s)
-{
-    size_t n = strlen(s) + 1;
-    UniqueChars ret(js_pod_malloc<char>(n));
-    if (!ret) {
-        return ret;
-    }
-    PodCopy(ret.get(), s, n);
-=======
 UniqueChars js::DuplicateStringToArena(arena_id_t destArenaId, const char* s) {
   size_t n = strlen(s) + 1;
   UniqueChars ret(js_pod_arena_malloc<char>(destArenaId, n));
   if (!ret) {
->>>>>>> upstream-releases
     return ret;
   }
   PodCopy(ret.get(), s, n);
   return ret;
 }
 
-<<<<<<< HEAD
-UniqueChars js::DuplicateString(const char* s, size_t n) {
-  UniqueChars ret(js_pod_malloc<char>(n + 1));
-  if (!ret) {
-    return nullptr;
-  }
-  PodCopy(ret.get(), s, n);
-  ret[n] = 0;
-  return ret;
-||||||| merged common ancestors
-UniqueChars
-js::DuplicateString(const char* s, size_t n)
-{
-    UniqueChars ret(js_pod_malloc<char>(n + 1));
-    if (!ret) {
-        return nullptr;
-    }
-    PodCopy(ret.get(), s, n);
-    ret[n] = 0;
-    return ret;
-=======
 UniqueChars js::DuplicateStringToArena(arena_id_t destArenaId, const char* s,
                                        size_t n) {
   UniqueChars ret(js_pod_arena_malloc<char>(destArenaId, n + 1));
@@ -171,45 +99,13 @@ UniqueChars js::DuplicateStringToArena(arena_id_t destArenaId, const char* s,
   PodCopy(ret.get(), s, n);
   ret[n] = 0;
   return ret;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-UniqueTwoByteChars js::DuplicateString(const char16_t* s) {
-  return DuplicateString(s, js_strlen(s));
-||||||| merged common ancestors
-UniqueTwoByteChars
-js::DuplicateString(const char16_t* s)
-{
-    return DuplicateString(s, js_strlen(s));
-=======
 UniqueTwoByteChars js::DuplicateStringToArena(arena_id_t destArenaId,
                                               const char16_t* s) {
   return DuplicateStringToArena(destArenaId, s, js_strlen(s));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-UniqueTwoByteChars js::DuplicateString(const char16_t* s, size_t n) {
-  UniqueTwoByteChars ret(js_pod_malloc<char16_t>(n + 1));
-  if (!ret) {
-    return nullptr;
-  }
-  PodCopy(ret.get(), s, n);
-  ret[n] = 0;
-  return ret;
-||||||| merged common ancestors
-UniqueTwoByteChars
-js::DuplicateString(const char16_t* s, size_t n)
-{
-    UniqueTwoByteChars ret(js_pod_malloc<char16_t>(n + 1));
-    if (!ret) {
-        return nullptr;
-    }
-    PodCopy(ret.get(), s, n);
-    ret[n] = 0;
-    return ret;
-=======
 UniqueTwoByteChars js::DuplicateStringToArena(arena_id_t destArenaId,
                                               const char16_t* s, size_t n) {
   UniqueTwoByteChars ret(js_pod_arena_malloc<char16_t>(destArenaId, n + 1));
@@ -219,30 +115,8 @@ UniqueTwoByteChars js::DuplicateStringToArena(arena_id_t destArenaId,
   PodCopy(ret.get(), s, n);
   ret[n] = 0;
   return ret;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-char16_t* js::InflateString(JSContext* cx, const char* bytes, size_t length) {
-  char16_t* chars = cx->pod_malloc<char16_t>(length + 1);
-  if (!chars) {
-    return nullptr;
-  }
-  CopyAndInflateChars(chars, bytes, length);
-  chars[length] = 0;
-  return chars;
-||||||| merged common ancestors
-char16_t*
-js::InflateString(JSContext* cx, const char* bytes, size_t length)
-{
-    char16_t* chars = cx->pod_malloc<char16_t>(length + 1);
-    if (!chars) {
-        return nullptr;
-    }
-    CopyAndInflateChars(chars, bytes, length);
-    chars[length] = 0;
-    return chars;
-=======
 UniqueChars js::DuplicateString(JSContext* cx, const char* s) {
   return DuplicateStringToArena(js::MallocArena, cx, s);
 }
@@ -275,7 +149,6 @@ char16_t* js::InflateString(JSContext* cx, const char* bytes, size_t length) {
   CopyAndInflateChars(chars, bytes, length);
   chars[length] = 0;
   return chars;
->>>>>>> upstream-releases
 }
 
 /*
@@ -297,31 +170,8 @@ uint32_t js::OneUcs4ToUtf8Char(uint8_t* utf8Buffer, uint32_t ucs4Char) {
     utf8Length++;
   }
 
-<<<<<<< HEAD
   MOZ_ASSERT(utf8Length <= 4);
 
-  uint32_t i = utf8Length;
-  while (--i) {
-    utf8Buffer[i] = uint8_t((ucs4Char & 0x3F) | 0x80);
-    ucs4Char >>= 6;
-  }
-||||||| merged common ancestors
-    uint32_t i = utf8Length;
-    while (--i) {
-        utf8Buffer[i] = uint8_t((ucs4Char & 0x3F) | 0x80);
-        ucs4Char >>= 6;
-    }
-=======
-  MOZ_ASSERT(utf8Length <= 4);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  utf8Buffer[0] = uint8_t(0x100 - (1 << (8 - utf8Length)) + ucs4Char);
-  return utf8Length;
-||||||| merged common ancestors
-    utf8Buffer[0] = uint8_t(0x100 - (1 << (8 - utf8Length)) + ucs4Char);
-    return utf8Length;
-=======
   uint32_t i = utf8Length;
   while (--i) {
     utf8Buffer[i] = uint8_t((ucs4Char & 0x3F) | 0x80);
@@ -330,7 +180,6 @@ uint32_t js::OneUcs4ToUtf8Char(uint8_t* utf8Buffer, uint32_t ucs4Char) {
 
   utf8Buffer[0] = uint8_t(0x100 - (1 << (8 - utf8Length)) + ucs4Char);
   return utf8Length;
->>>>>>> upstream-releases
 }
 
 size_t js::PutEscapedStringImpl(char* buffer, size_t bufferSize,
@@ -497,15 +346,6 @@ template size_t js::PutEscapedString(char* buffer, size_t bufferSize,
                                      const Latin1Char* chars, size_t length,
                                      uint32_t quote);
 
-<<<<<<< HEAD
-template size_t js::PutEscapedString(char* buffer, size_t bufferSize,
-                                     const char16_t* chars, size_t length,
-                                     uint32_t quote);
-||||||| merged common ancestors
-template size_t
-js::PutEscapedString(char* buffer, size_t bufferSize, const char16_t* chars, size_t length,
-                     uint32_t quote);
-=======
 template size_t js::PutEscapedString(char* buffer, size_t bufferSize,
                                      const char16_t* chars, size_t length,
                                      uint32_t quote);
@@ -557,4 +397,3 @@ size_t js::unicode::CountCodePoints(const char16_t* begin,
 
   return count;
 }
->>>>>>> upstream-releases

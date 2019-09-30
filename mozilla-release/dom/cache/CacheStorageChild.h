@@ -25,20 +25,10 @@ class CacheStorage;
 class CacheWorkerHolder;
 class PCacheChild;
 
-<<<<<<< HEAD
-class CacheStorageChild final : public PCacheStorageChild, public ActorChild {
- public:
-||||||| merged common ancestors
-class CacheStorageChild final : public PCacheStorageChild
-                              , public ActorChild
-{
-public:
-=======
 class CacheStorageChild final : public PCacheStorageChild, public ActorChild {
   friend class PCacheStorageChild;
 
  public:
->>>>>>> upstream-releases
   CacheStorageChild(CacheStorage* aListener, CacheWorkerHolder* aWorkerHolder);
   ~CacheStorageChild();
 
@@ -63,24 +53,9 @@ class CacheStorageChild final : public PCacheStorageChild, public ActorChild {
   // PCacheStorageChild methods
   virtual void ActorDestroy(ActorDestroyReason aReason) override;
 
-<<<<<<< HEAD
-  virtual PCacheOpChild* AllocPCacheOpChild(
-      const CacheOpArgs& aOpArgs) override;
-||||||| merged common ancestors
-  virtual PCacheOpChild*
-  AllocPCacheOpChild(const CacheOpArgs& aOpArgs) override;
-=======
   PCacheOpChild* AllocPCacheOpChild(const CacheOpArgs& aOpArgs);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool DeallocPCacheOpChild(PCacheOpChild* aActor) override;
-||||||| merged common ancestors
-  virtual bool
-  DeallocPCacheOpChild(PCacheOpChild* aActor) override;
-=======
   bool DeallocPCacheOpChild(PCacheOpChild* aActor);
->>>>>>> upstream-releases
 
   // utility methods
   void NoteDeletedActor();

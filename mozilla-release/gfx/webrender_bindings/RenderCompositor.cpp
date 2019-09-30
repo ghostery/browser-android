@@ -23,18 +23,9 @@
 namespace mozilla {
 namespace wr {
 
-<<<<<<< HEAD
-/* static */ UniquePtr<RenderCompositor> RenderCompositor::Create(
-    RefPtr<widget::CompositorWidget>&& aWidget) {
-||||||| merged common ancestors
-/* static */ UniquePtr<RenderCompositor>
-RenderCompositor::Create(RefPtr<widget::CompositorWidget>&& aWidget)
-{
-=======
 /* static */
 UniquePtr<RenderCompositor> RenderCompositor::Create(
     RefPtr<widget::CompositorWidget>&& aWidget) {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   if (gfx::gfxVars::UseWebRenderANGLE()) {
     return RenderCompositorANGLE::Create(std::move(aWidget));

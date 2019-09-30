@@ -44,15 +44,7 @@ const OperatingSystemVersionInfo kOsVersionStrings[] = {
 #endif
 
 // A helper for four features below
-<<<<<<< HEAD
-static nsSize GetSize(nsIDocument* aDocument) {
-||||||| merged common ancestors
-static nsSize
-GetSize(nsIDocument* aDocument)
-{
-=======
 static nsSize GetSize(const Document* aDocument) {
->>>>>>> upstream-releases
   nsPresContext* pc = aDocument->GetPresContext();
 
   // Per spec, return a 0x0 viewport if we're not being rendered. See:
@@ -74,15 +66,7 @@ static nsSize GetSize(const Document* aDocument) {
   return pc->GetVisibleArea().Size();
 }
 
-<<<<<<< HEAD
-static bool IsDeviceSizePageSize(nsIDocument* aDocument) {
-||||||| merged common ancestors
-static bool
-IsDeviceSizePageSize(nsIDocument* aDocument)
-{
-=======
 static bool IsDeviceSizePageSize(const Document* aDocument) {
->>>>>>> upstream-releases
   nsIDocShell* docShell = aDocument->GetDocShell();
   if (!docShell) {
     return false;
@@ -91,15 +75,7 @@ static bool IsDeviceSizePageSize(const Document* aDocument) {
 }
 
 // A helper for three features below.
-<<<<<<< HEAD
-static nsSize GetDeviceSize(nsIDocument* aDocument) {
-||||||| merged common ancestors
-static nsSize
-GetDeviceSize(nsIDocument* aDocument)
-{
-=======
 static nsSize GetDeviceSize(const Document* aDocument) {
->>>>>>> upstream-releases
   if (nsContentUtils::ShouldResistFingerprinting(aDocument) ||
       IsDeviceSizePageSize(aDocument)) {
     return GetSize(aDocument);
@@ -125,27 +101,11 @@ static nsSize GetDeviceSize(const Document* aDocument) {
   return size;
 }
 
-<<<<<<< HEAD
-bool Gecko_MediaFeatures_IsResourceDocument(nsIDocument* aDocument) {
-||||||| merged common ancestors
-bool
-Gecko_MediaFeatures_IsResourceDocument(nsIDocument* aDocument)
-{
-=======
 bool Gecko_MediaFeatures_IsResourceDocument(const Document* aDocument) {
->>>>>>> upstream-releases
   return aDocument->IsResourceDoc();
 }
 
-<<<<<<< HEAD
-static nsDeviceContext* GetDeviceContextFor(nsIDocument* aDocument) {
-||||||| merged common ancestors
-static nsDeviceContext*
-GetDeviceContextFor(nsIDocument* aDocument)
-{
-=======
 static nsDeviceContext* GetDeviceContextFor(const Document* aDocument) {
->>>>>>> upstream-releases
   nsPresContext* pc = aDocument->GetPresContext();
   if (!pc) {
     return nullptr;
@@ -157,33 +117,14 @@ static nsDeviceContext* GetDeviceContextFor(const Document* aDocument) {
   return pc->DeviceContext();
 }
 
-<<<<<<< HEAD
-void Gecko_MediaFeatures_GetDeviceSize(nsIDocument* aDocument, nscoord* aWidth,
-                                       nscoord* aHeight) {
-||||||| merged common ancestors
-void
-Gecko_MediaFeatures_GetDeviceSize(nsIDocument* aDocument,
-                                  nscoord* aWidth,
-                                  nscoord* aHeight)
-{
-=======
 void Gecko_MediaFeatures_GetDeviceSize(const Document* aDocument,
                                        nscoord* aWidth, nscoord* aHeight) {
->>>>>>> upstream-releases
   nsSize size = GetDeviceSize(aDocument);
   *aWidth = size.width;
   *aHeight = size.height;
 }
 
-<<<<<<< HEAD
-uint32_t Gecko_MediaFeatures_GetColorDepth(nsIDocument* aDocument) {
-||||||| merged common ancestors
-uint32_t
-Gecko_MediaFeatures_GetColorDepth(nsIDocument* aDocument)
-{
-=======
 uint32_t Gecko_MediaFeatures_GetColorDepth(const Document* aDocument) {
->>>>>>> upstream-releases
   // Use depth of 24 when resisting fingerprinting, or when we're not being
   // rendered.
   uint32_t depth = 24;
@@ -201,15 +142,7 @@ uint32_t Gecko_MediaFeatures_GetColorDepth(const Document* aDocument) {
   return depth / 3;
 }
 
-<<<<<<< HEAD
-float Gecko_MediaFeatures_GetResolution(nsIDocument* aDocument) {
-||||||| merged common ancestors
-float
-Gecko_MediaFeatures_GetResolution(nsIDocument* aDocument)
-{
-=======
 float Gecko_MediaFeatures_GetResolution(const Document* aDocument) {
->>>>>>> upstream-releases
   // We're returning resolution in terms of device pixels per css pixel, since
   // that is the preferred unit for media queries of resolution. This avoids
   // introducing precision error from conversion to and from less-used
@@ -231,38 +164,16 @@ float Gecko_MediaFeatures_GetResolution(const Document* aDocument) {
          pc->DeviceContext()->AppUnitsPerDevPixel();
 }
 
-<<<<<<< HEAD
-static nsIDocument* TopDocument(nsIDocument* aDocument) {
-  nsIDocument* current = aDocument;
-  while (nsIDocument* parent = current->GetParentDocument()) {
-||||||| merged common ancestors
-static nsIDocument*
-TopDocument(nsIDocument* aDocument)
-{
-  nsIDocument* current = aDocument;
-  while (nsIDocument* parent = current->GetParentDocument()) {
-=======
 static const Document* TopDocument(const Document* aDocument) {
   const Document* current = aDocument;
   while (const Document* parent = current->GetParentDocument()) {
->>>>>>> upstream-releases
     current = parent;
   }
   return current;
 }
 
-<<<<<<< HEAD
-StyleDisplayMode Gecko_MediaFeatures_GetDisplayMode(nsIDocument* aDocument) {
-  nsIDocument* rootDocument = TopDocument(aDocument);
-||||||| merged common ancestors
-StyleDisplayMode
-Gecko_MediaFeatures_GetDisplayMode(nsIDocument* aDocument)
-{
-  nsIDocument* rootDocument = TopDocument(aDocument);
-=======
 StyleDisplayMode Gecko_MediaFeatures_GetDisplayMode(const Document* aDocument) {
   const Document* rootDocument = TopDocument(aDocument);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsISupports> container = rootDocument->GetContainer();
   if (nsCOMPtr<nsIBaseWindow> baseWindow = do_QueryInterface(container)) {
@@ -290,21 +201,9 @@ StyleDisplayMode Gecko_MediaFeatures_GetDisplayMode(const Document* aDocument) {
   return static_cast<StyleDisplayMode>(docShell->GetDisplayMode());
 }
 
-<<<<<<< HEAD
-bool Gecko_MediaFeatures_HasSystemMetric(nsIDocument* aDocument,
-                                         nsAtom* aMetric,
-                                         bool aIsAccessibleFromContent) {
-||||||| merged common ancestors
-bool
-Gecko_MediaFeatures_HasSystemMetric(nsIDocument* aDocument,
-                                    nsAtom* aMetric,
-                                    bool aIsAccessibleFromContent)
-{
-=======
 bool Gecko_MediaFeatures_HasSystemMetric(const Document* aDocument,
                                          nsAtom* aMetric,
                                          bool aIsAccessibleFromContent) {
->>>>>>> upstream-releases
   if (aIsAccessibleFromContent &&
       nsContentUtils::ShouldResistFingerprinting(aDocument)) {
     return false;
@@ -314,16 +213,8 @@ bool Gecko_MediaFeatures_HasSystemMetric(const Document* aDocument,
   return sSystemMetrics->IndexOf(aMetric) != sSystemMetrics->NoIndex;
 }
 
-<<<<<<< HEAD
-nsAtom* Gecko_MediaFeatures_GetOperatingSystemVersion(nsIDocument* aDocument) {
-||||||| merged common ancestors
-nsAtom*
-Gecko_MediaFeatures_GetOperatingSystemVersion(nsIDocument* aDocument)
-{
-=======
 nsAtom* Gecko_MediaFeatures_GetOperatingSystemVersion(
     const Document* aDocument) {
->>>>>>> upstream-releases
   if (nsContentUtils::ShouldResistFingerprinting(aDocument)) {
     return nullptr;
   }
@@ -344,29 +235,13 @@ nsAtom* Gecko_MediaFeatures_GetOperatingSystemVersion(
   return nullptr;
 }
 
-<<<<<<< HEAD
-bool Gecko_MediaFeatures_PrefersReducedMotion(nsIDocument* aDocument) {
-||||||| merged common ancestors
-bool
-Gecko_MediaFeatures_PrefersReducedMotion(nsIDocument* aDocument)
-{
-=======
 bool Gecko_MediaFeatures_PrefersReducedMotion(const Document* aDocument) {
->>>>>>> upstream-releases
   if (nsContentUtils::ShouldResistFingerprinting(aDocument)) {
     return false;
   }
   return LookAndFeel::GetInt(LookAndFeel::eIntID_PrefersReducedMotion, 0) == 1;
 }
 
-<<<<<<< HEAD
-static PointerCapabilities GetPointerCapabilities(nsIDocument* aDocument,
-                                                  LookAndFeel::IntID aID) {
-||||||| merged common ancestors
-static PointerCapabilities
-GetPointerCapabilities(nsIDocument* aDocument, LookAndFeel::IntID aID)
-{
-=======
 StylePrefersColorScheme Gecko_MediaFeatures_PrefersColorScheme(
     const Document* aDocument) {
   if (nsContentUtils::ShouldResistFingerprinting(aDocument)) {
@@ -395,7 +270,6 @@ StylePrefersColorScheme Gecko_MediaFeatures_PrefersColorScheme(
 
 static PointerCapabilities GetPointerCapabilities(const Document* aDocument,
                                                   LookAndFeel::IntID aID) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aID == LookAndFeel::eIntID_PrimaryPointerCapabilities ||
              aID == LookAndFeel::eIntID_AllPointerCapabilities);
   MOZ_ASSERT(aDocument);
@@ -426,50 +300,21 @@ static PointerCapabilities GetPointerCapabilities(const Document* aDocument,
   return static_cast<PointerCapabilities>(intValue);
 }
 
-<<<<<<< HEAD
-PointerCapabilities Gecko_MediaFeatures_PrimaryPointerCapabilities(
-    nsIDocument* aDocument) {
-||||||| merged common ancestors
-PointerCapabilities
-Gecko_MediaFeatures_PrimaryPointerCapabilities(nsIDocument* aDocument)
-{
-=======
 PointerCapabilities Gecko_MediaFeatures_PrimaryPointerCapabilities(
     const Document* aDocument) {
->>>>>>> upstream-releases
   return GetPointerCapabilities(aDocument,
                                 LookAndFeel::eIntID_PrimaryPointerCapabilities);
 }
 
-<<<<<<< HEAD
-PointerCapabilities Gecko_MediaFeatures_AllPointerCapabilities(
-    nsIDocument* aDocument) {
-||||||| merged common ancestors
-PointerCapabilities
-Gecko_MediaFeatures_AllPointerCapabilities(nsIDocument* aDocument)
-{
-=======
 PointerCapabilities Gecko_MediaFeatures_AllPointerCapabilities(
     const Document* aDocument) {
->>>>>>> upstream-releases
   return GetPointerCapabilities(aDocument,
                                 LookAndFeel::eIntID_AllPointerCapabilities);
 }
 
-<<<<<<< HEAD
-/* static */ void nsMediaFeatures::InitSystemMetrics() {
-  if (sSystemMetrics) return;
-||||||| merged common ancestors
-/* static */ void
-nsMediaFeatures::InitSystemMetrics()
-{
-  if (sSystemMetrics)
-    return;
-=======
 /* static */
 void nsMediaFeatures::InitSystemMetrics() {
   if (sSystemMetrics) return;
->>>>>>> upstream-releases
 
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -570,12 +415,6 @@ void nsMediaFeatures::InitSystemMetrics() {
         (nsStaticAtom*)nsGkAtoms::_moz_swipe_animation_enabled);
   }
 
-<<<<<<< HEAD
-  rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDAvailable, &metricResult);
-||||||| merged common ancestors
-  rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDAvailable,
-                           &metricResult);
-=======
   rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDAvailable, &metricResult);
   if (NS_SUCCEEDED(rv) && metricResult) {
     sSystemMetrics->AppendElement(
@@ -584,16 +423,9 @@ void nsMediaFeatures::InitSystemMetrics() {
 
   rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDHideTitlebarByDefault,
                            &metricResult);
->>>>>>> upstream-releases
   if (NS_SUCCEEDED(rv) && metricResult) {
     sSystemMetrics->AppendElement(
-<<<<<<< HEAD
-        (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_available);
-||||||| merged common ancestors
-      (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_available);
-=======
         (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_hide_titlebar_by_default);
->>>>>>> upstream-releases
   }
 
   rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDTransparentBackground,
@@ -614,11 +446,6 @@ void nsMediaFeatures::InitSystemMetrics() {
                            &metricResult);
   if (NS_SUCCEEDED(rv) && metricResult) {
     sSystemMetrics->AppendElement(
-<<<<<<< HEAD
-        (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_maximize_button);
-||||||| merged common ancestors
-      (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_maximize_button);
-=======
         (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_maximize_button);
   }
 
@@ -627,70 +454,28 @@ void nsMediaFeatures::InitSystemMetrics() {
   if (NS_SUCCEEDED(rv) && metricResult) {
     sSystemMetrics->AppendElement(
         (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_close_button);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  rv =
-      LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDCloseButton, &metricResult);
-||||||| merged common ancestors
-  rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDCloseButton,
-                           &metricResult);
-=======
   rv = LookAndFeel::GetInt(LookAndFeel::eIntID_GTKCSDReversedPlacement,
                            &metricResult);
->>>>>>> upstream-releases
   if (NS_SUCCEEDED(rv) && metricResult) {
     sSystemMetrics->AppendElement(
-<<<<<<< HEAD
-        (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_close_button);
-||||||| merged common ancestors
-      (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_close_button);
-=======
         (nsStaticAtom*)nsGkAtoms::_moz_gtk_csd_reversed_placement);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  metricResult = LookAndFeel::GetInt(LookAndFeel::eIntID_SystemUsesDarkTheme);
-  if (metricResult) {
-||||||| merged common ancestors
-  metricResult =
-    LookAndFeel::GetInt(LookAndFeel::eIntID_SystemUsesDarkTheme);
-  if (metricResult) {
-=======
   rv = LookAndFeel::GetInt(LookAndFeel::eIntID_SystemUsesDarkTheme,
                            &metricResult);
   if (NS_SUCCEEDED(rv) && metricResult) {
->>>>>>> upstream-releases
     sSystemMetrics->AppendElement(
         (nsStaticAtom*)nsGkAtoms::_moz_system_dark_theme);
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsMediaFeatures::FreeSystemMetrics() {
-||||||| merged common ancestors
-/* static */ void
-nsMediaFeatures::FreeSystemMetrics()
-{
-=======
 /* static */
 void nsMediaFeatures::FreeSystemMetrics() {
->>>>>>> upstream-releases
   delete sSystemMetrics;
   sSystemMetrics = nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ void nsMediaFeatures::Shutdown() { FreeSystemMetrics(); }
-||||||| merged common ancestors
-/* static */ void
-nsMediaFeatures::Shutdown()
-{
-  FreeSystemMetrics();
-}
-=======
 /* static */
 void nsMediaFeatures::Shutdown() { FreeSystemMetrics(); }
->>>>>>> upstream-releases

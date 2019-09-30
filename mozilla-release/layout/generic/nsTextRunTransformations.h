@@ -22,45 +22,6 @@ struct nsTransformedCharStyle final {
 
   explicit nsTransformedCharStyle(mozilla::ComputedStyle* aStyle,
                                   nsPresContext* aPresContext)
-<<<<<<< HEAD
-      : mFont(aStyle->StyleFont()->mFont),
-        mLanguage(aStyle->StyleFont()->mLanguage),
-        mPresContext(aPresContext),
-        mScriptSizeMultiplier(aStyle->StyleFont()->mScriptSizeMultiplier),
-        mTextTransform(aStyle->StyleText()->mTextTransform),
-        mMathVariant(aStyle->StyleFont()->mMathVariant),
-        mExplicitLanguage(aStyle->StyleFont()->mExplicitLanguage) {}
-
-  nsFont mFont;
-  RefPtr<nsAtom> mLanguage;
-  RefPtr<nsPresContext> mPresContext;
-  float mScriptSizeMultiplier;
-  uint8_t mTextTransform;
-  uint8_t mMathVariant;
-  bool mExplicitLanguage;
-  bool mForceNonFullWidth = false;
-
- private:
-||||||| merged common ancestors
-    : mFont(aStyle->StyleFont()->mFont)
-    , mLanguage(aStyle->StyleFont()->mLanguage)
-    , mPresContext(aPresContext)
-    , mScriptSizeMultiplier(aStyle->StyleFont()->mScriptSizeMultiplier)
-    , mTextTransform(aStyle->StyleText()->mTextTransform)
-    , mMathVariant(aStyle->StyleFont()->mMathVariant)
-    , mExplicitLanguage(aStyle->StyleFont()->mExplicitLanguage) {}
-
-  nsFont                  mFont;
-  RefPtr<nsAtom>          mLanguage;
-  RefPtr<nsPresContext>   mPresContext;
-  float                   mScriptSizeMultiplier;
-  uint8_t                 mTextTransform;
-  uint8_t                 mMathVariant;
-  bool                    mExplicitLanguage;
-  bool                    mForceNonFullWidth = false;
-
-private:
-=======
       : mFont(aStyle->StyleFont()->mFont),
         mLanguage(aStyle->StyleFont()->mLanguage),
         mPresContext(aPresContext),
@@ -79,7 +40,6 @@ private:
   bool mForceNonFullWidth = false;
 
  private:
->>>>>>> upstream-releases
   ~nsTransformedCharStyle() {}
   nsTransformedCharStyle(const nsTransformedCharStyle& aOther) = delete;
   nsTransformedCharStyle& operator=(const nsTransformedCharStyle& aOther) =
@@ -143,34 +103,6 @@ class nsCaseTransformTextRunFactory : public nsTransformingTextRunFactory {
   // will be copied to the output arrays, which must also be provided by
   // the caller. For the global upper-casing usage (no input textrun),
   // these are ignored.
-<<<<<<< HEAD
-  static bool TransformString(
-      const nsAString& aString, nsString& aConvertedString, bool aAllUppercase,
-      const nsAtom* aLanguage, nsTArray<bool>& aCharsToMergeArray,
-      nsTArray<bool>& aDeletedCharsArray,
-      const nsTransformedTextRun* aTextRun = nullptr,
-      uint32_t aOffsetInTextRun = 0,
-      nsTArray<uint8_t>* aCanBreakBeforeArray = nullptr,
-      nsTArray<RefPtr<nsTransformedCharStyle>>* aStyleArray = nullptr);
-
- protected:
-  mozilla::UniquePtr<nsTransformingTextRunFactory>
-      mInnerTransformingTextRunFactory;
-||||||| merged common ancestors
-  static bool TransformString(const nsAString& aString,
-                              nsString& aConvertedString,
-                              bool aAllUppercase,
-                              const nsAtom* aLanguage,
-                              nsTArray<bool>& aCharsToMergeArray,
-                              nsTArray<bool>& aDeletedCharsArray,
-                              const nsTransformedTextRun* aTextRun = nullptr,
-                              uint32_t aOffsetInTextRun = 0,
-                              nsTArray<uint8_t>* aCanBreakBeforeArray = nullptr,
-                              nsTArray<RefPtr<nsTransformedCharStyle>>* aStyleArray = nullptr);
-
-protected:
-  mozilla::UniquePtr<nsTransformingTextRunFactory> mInnerTransformingTextRunFactory;
-=======
   // If aCaseTransformsOnly is true, then only the upper/lower/capitalize
   // transformations are performed; full-width and full-size-kana are ignored.
   static bool TransformString(
@@ -185,7 +117,6 @@ protected:
  protected:
   mozilla::UniquePtr<nsTransformingTextRunFactory>
       mInnerTransformingTextRunFactory;
->>>>>>> upstream-releases
   bool mAllUppercase;
 };
 

@@ -49,31 +49,15 @@
 
 #include "updatecommon.h"
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-#include "updaterfileutils_osx.h"
-#endif  // XP_MACOSX
-||||||| merged common ancestors
-#include "updaterfileutils_osx.h"
-#endif // XP_MACOSX
-=======
 #  include "updaterfileutils_osx.h"
 #endif  // XP_MACOSX
->>>>>>> upstream-releases
 
 #include "mozilla/Compiler.h"
 #include "mozilla/Types.h"
 #include "mozilla/UniquePtr.h"
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include "mozilla/WinHeaderOnlyUtils.h"
-#endif  // XP_WIN
-||||||| merged common ancestors
-#include "mozilla/WinHeaderOnlyUtils.h"
-#endif // XP_WIN
-=======
 #  include "mozilla/WinHeaderOnlyUtils.h"
 #endif  // XP_WIN
->>>>>>> upstream-releases
 
 // Amount of the progress bar to use in each of the 3 update stages,
 // should total 100.0.
@@ -89,26 +73,6 @@
 #if defined(XP_MACOSX)
 // These functions are defined in launchchild_osx.mm
 void CleanupElevatedMacUpdate(bool aFailureOccurred);
-<<<<<<< HEAD
-bool IsOwnedByGroupAdmin(const char *aAppBundle);
-bool IsRecursivelyWritable(const char *aPath);
-void LaunchChild(int argc, const char **argv);
-void LaunchMacPostProcess(const char *aAppBundle);
-bool ObtainUpdaterArguments(int *argc, char ***argv);
-bool ServeElevatedUpdate(int argc, const char **argv);
-void SetGroupOwnershipAndPermissions(const char *aAppBundle);
-struct UpdateServerThreadArgs {
-||||||| merged common ancestors
-bool IsOwnedByGroupAdmin(const char* aAppBundle);
-bool IsRecursivelyWritable(const char* aPath);
-void LaunchChild(int argc, const char** argv);
-void LaunchMacPostProcess(const char* aAppBundle);
-bool ObtainUpdaterArguments(int* argc, char*** argv);
-bool ServeElevatedUpdate(int argc, const char** argv);
-void SetGroupOwnershipAndPermissions(const char* aAppBundle);
-struct UpdateServerThreadArgs
-{
-=======
 bool IsOwnedByGroupAdmin(const char* aAppBundle);
 bool IsRecursivelyWritable(const char* aPath);
 void LaunchChild(int argc, const char** argv);
@@ -117,40 +81,21 @@ bool ObtainUpdaterArguments(int* argc, char*** argv);
 bool ServeElevatedUpdate(int argc, const char** argv);
 void SetGroupOwnershipAndPermissions(const char* aAppBundle);
 struct UpdateServerThreadArgs {
->>>>>>> upstream-releases
   int argc;
-  const NS_tchar **argv;
+  const NS_tchar** argv;
 };
 #endif
 
 #ifndef _O_BINARY
-<<<<<<< HEAD
-#define _O_BINARY 0
-||||||| merged common ancestors
-# define _O_BINARY 0
-=======
 #  define _O_BINARY 0
->>>>>>> upstream-releases
 #endif
 
 #ifndef NULL
-<<<<<<< HEAD
-#define NULL (0)
-||||||| merged common ancestors
-# define NULL (0)
-=======
 #  define NULL (0)
->>>>>>> upstream-releases
 #endif
 
 #ifndef SSIZE_MAX
-<<<<<<< HEAD
-#define SSIZE_MAX LONG_MAX
-||||||| merged common ancestors
-# define SSIZE_MAX LONG_MAX
-=======
 #  define SSIZE_MAX LONG_MAX
->>>>>>> upstream-releases
 #endif
 
 // We want to use execv to invoke the callback executable on platforms where
@@ -159,20 +104,9 @@ struct UpdateServerThreadArgs {
 #  define USE_EXECV
 #endif
 
-<<<<<<< HEAD
-#if defined(MOZ_VERIFY_MAR_SIGNATURE) && !defined(XP_WIN) && !defined(XP_MACOSX)
-#include "nss.h"
-#include "prerror.h"
-||||||| merged common ancestors
-#if defined(MOZ_VERIFY_MAR_SIGNATURE) && !defined(XP_WIN) && \
-    !defined(XP_MACOSX)
-#include "nss.h"
-#include "prerror.h"
-=======
 #if defined(MOZ_VERIFY_MAR_SIGNATURE) && !defined(XP_WIN) && !defined(XP_MACOSX)
 #  include "nss.h"
 #  include "prerror.h"
->>>>>>> upstream-releases
 #endif
 
 #include "crctable.h"
@@ -189,29 +123,6 @@ BOOL PathGetSiblingFilePath(LPWSTR destinationBuffer, LPCWSTR siblingFilePath,
 // Closes the handle if valid and if the updater is elevated returns with the
 // return code specified. This prevents multiple launches of the callback
 // application by preventing the elevated process from launching the callback.
-<<<<<<< HEAD
-#define EXIT_WHEN_ELEVATED(path, handle, retCode)             \
-  {                                                           \
-    if (handle != INVALID_HANDLE_VALUE) {                     \
-      CloseHandle(handle);                                    \
-    }                                                         \
-    if (_waccess(path, F_OK) == 0 && NS_tremove(path) != 0) { \
-      ImpersonatedLogFinish();                                \
-      return retCode;                                         \
-    }                                                         \
-  }
-||||||| merged common ancestors
-#define EXIT_WHEN_ELEVATED(path, handle, retCode) \
-  { \
-      if (handle != INVALID_HANDLE_VALUE) { \
-        CloseHandle(handle); \
-      } \
-      if (_waccess(path, F_OK) == 0 && NS_tremove(path) != 0) { \
-        LogFinish(); \
-        return retCode; \
-      } \
-  }
-=======
 #  define EXIT_WHEN_ELEVATED(path, handle, retCode) \
     {                                               \
       if (handle != INVALID_HANDLE_VALUE) {         \
@@ -222,7 +133,6 @@ BOOL PathGetSiblingFilePath(LPWSTR destinationBuffer, LPCWSTR siblingFilePath,
         return retCode;                             \
       }                                             \
     }
->>>>>>> upstream-releases
 #endif
 
 //-----------------------------------------------------------------------------
@@ -230,15 +140,7 @@ BOOL PathGetSiblingFilePath(LPWSTR destinationBuffer, LPCWSTR siblingFilePath,
 // This BZ2_crc32Table variable lives in libbz2. We just took the
 // data structure from bz2 and created crctables.h
 
-<<<<<<< HEAD
-static unsigned int crc32(const unsigned char *buf, unsigned int len) {
-||||||| merged common ancestors
-static unsigned int
-crc32(const unsigned char *buf, unsigned int len)
-{
-=======
 static unsigned int crc32(const unsigned char* buf, unsigned int len) {
->>>>>>> upstream-releases
   unsigned int crc = 0xffffffffL;
 
   const unsigned char* end = buf + len;
@@ -253,83 +155,30 @@ static unsigned int crc32(const unsigned char* buf, unsigned int len) {
 
 // A simple stack based container for a FILE struct that closes the
 // file descriptor from its destructor.
-<<<<<<< HEAD
-class AutoFile {
- public:
-  explicit AutoFile(FILE *file = nullptr) : mFile(file) {}
-||||||| merged common ancestors
-class AutoFile
-{
-public:
-  explicit AutoFile(FILE* file = nullptr)
-    : mFile(file) {
-  }
-=======
 class AutoFile {
  public:
   explicit AutoFile(FILE* file = nullptr) : mFile(file) {}
->>>>>>> upstream-releases
 
   ~AutoFile() {
-<<<<<<< HEAD
-    if (mFile != nullptr) fclose(mFile);
-||||||| merged common ancestors
-    if (mFile != nullptr)
-      fclose(mFile);
-=======
     if (mFile != nullptr) {
       fclose(mFile);
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  AutoFile &operator=(FILE *file) {
-    if (mFile != 0) fclose(mFile);
-||||||| merged common ancestors
-  AutoFile &operator=(FILE* file) {
-    if (mFile != 0)
-      fclose(mFile);
-=======
   AutoFile& operator=(FILE* file) {
     if (mFile != 0) {
       fclose(mFile);
     }
->>>>>>> upstream-releases
     mFile = file;
     return *this;
   }
 
-<<<<<<< HEAD
-  operator FILE *() { return mFile; }
-||||||| merged common ancestors
-  operator FILE*() {
-    return mFile;
-  }
-=======
   operator FILE*() { return mFile; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  FILE *get() { return mFile; }
-||||||| merged common ancestors
-  FILE* get() {
-    return mFile;
-  }
-=======
   FILE* get() { return mFile; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  FILE *mFile;
-||||||| merged common ancestors
-private:
-  FILE* mFile;
-=======
  private:
   FILE* mFile;
->>>>>>> upstream-releases
 };
 
 struct MARChannelStringTable {
@@ -363,32 +212,14 @@ UmaskContext::~UmaskContext() { umask(mPreviousUmask); }
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-typedef void (*ThreadFunc)(void *param);
-||||||| merged common ancestors
-typedef void (* ThreadFunc)(void *param);
-=======
 typedef void (*ThreadFunc)(void* param);
->>>>>>> upstream-releases
 
 #ifdef XP_WIN
 #  include <process.h>
 
-<<<<<<< HEAD
-class Thread {
- public:
-  int Run(ThreadFunc func, void *param) {
-||||||| merged common ancestors
-class Thread
-{
-public:
-  int Run(ThreadFunc func, void *param)
-  {
-=======
 class Thread {
  public:
   int Run(ThreadFunc func, void* param) {
->>>>>>> upstream-releases
     mThreadFunc = func;
     mThreadParam = param;
 
@@ -404,69 +235,28 @@ class Thread {
     CloseHandle(mThread);
     return 0;
   }
-<<<<<<< HEAD
-
- private:
-  static unsigned __stdcall ThreadMain(void *p) {
-    Thread *self = (Thread *)p;
-||||||| merged common ancestors
-private:
-  static unsigned __stdcall ThreadMain(void *p)
-  {
-    Thread *self = (Thread *) p;
-=======
 
  private:
   static unsigned __stdcall ThreadMain(void* p) {
     Thread* self = (Thread*)p;
->>>>>>> upstream-releases
     self->mThreadFunc(self->mThreadParam);
     return 0;
   }
   HANDLE mThread;
   ThreadFunc mThreadFunc;
-<<<<<<< HEAD
-  void *mThreadParam;
-||||||| merged common ancestors
-  void      *mThreadParam;
-=======
   void* mThreadParam;
->>>>>>> upstream-releases
 };
 
 #elif defined(XP_UNIX)
 #  include <pthread.h>
 
-<<<<<<< HEAD
-class Thread {
- public:
-  int Run(ThreadFunc func, void *param) {
-    return pthread_create(&thr, nullptr, (void *(*)(void *))func, param);
-||||||| merged common ancestors
-class Thread
-{
-public:
-  int Run(ThreadFunc func, void *param)
-  {
-    return pthread_create(&thr, nullptr, (void* (*)(void *)) func, param);
-=======
 class Thread {
  public:
   int Run(ThreadFunc func, void* param) {
     return pthread_create(&thr, nullptr, (void* (*)(void*))func, param);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  int Join() {
-    void *result;
-||||||| merged common ancestors
-  int Join()
-  {
-    void *result;
-=======
   int Join() {
     void* result;
->>>>>>> upstream-releases
     return pthread_join(thr, &result);
   }
 
@@ -491,37 +281,10 @@ static bool sUsingService = false;
 
 #ifdef XP_WIN
 // The current working directory specified in the command line.
-static NS_tchar *gDestPath;
+static NS_tchar* gDestPath;
 static NS_tchar gCallbackRelPath[MAXPATHLEN];
 static NS_tchar gCallbackBackupPath[MAXPATHLEN];
 static NS_tchar gDeleteDirPath[MAXPATHLEN];
-
-#ifdef MOZ_MAINTENANCE_SERVICE
-// Token used to impersonate the original user when running via the
-// maintenance service. If nullptr no impersonation is performed.
-static HANDLE gUserToken;
-
-static void ImpersonatedLogInit(NS_tchar *sourcePath,
-                                const NS_tchar *fileName) {
-  ImpersonationScope impersonated(gUserToken);
-  if (!gUserToken || impersonated) {
-    LogInit(sourcePath, fileName);
-  }
-}
-
-static void ImpersonatedLogFinish() {
-  ImpersonationScope impersonated(gUserToken);
-  if (!gUserToken || impersonated) {
-    LogFinish();
-  }
-}
-
-#endif  // MOZ_MAINTENANCE_SERVICE
-#endif  // XP_WIN
-
-#if !defined(XP_WIN) || !defined(MOZ_MAINTENANCE_SERVICE)
-#define ImpersonatedLogInit LogInit
-#define ImpersonatedLogFinish LogFinish
 #endif
 
 static const NS_tchar kWhitespace[] = NS_T(" \t");
@@ -530,15 +293,7 @@ static const NS_tchar kQuote[] = NS_T("\"");
 
 static inline size_t mmin(size_t a, size_t b) { return (a > b) ? b : a; }
 
-<<<<<<< HEAD
-static NS_tchar *mstrtok(const NS_tchar *delims, NS_tchar **str) {
-||||||| merged common ancestors
-static NS_tchar*
-mstrtok(const NS_tchar *delims, NS_tchar **str)
-{
-=======
 static NS_tchar* mstrtok(const NS_tchar* delims, NS_tchar** str) {
->>>>>>> upstream-releases
   if (!*str || !**str) {
     *str = nullptr;
     return nullptr;
@@ -584,18 +339,8 @@ static NS_tchar* mstrtok(const NS_tchar* delims, NS_tchar** str) {
 #endif
 
 #if defined(HAS_ENV_CHECK)
-<<<<<<< HEAD
-static bool EnvHasValue(const char *name) {
-  const char *val = getenv(name);
-||||||| merged common ancestors
-static bool
-EnvHasValue(const char *name)
-{
-  const char *val = getenv(name);
-=======
 static bool EnvHasValue(const char* name) {
   const char* val = getenv(name);
->>>>>>> upstream-releases
   return (val && *val);
 }
 #endif
@@ -607,18 +352,8 @@ static bool EnvHasValue(const char* name) {
  *         The relative path to convert to a full path.
  * @return valid filesystem full path or nullptr if memory allocation fails.
  */
-<<<<<<< HEAD
-static NS_tchar *get_full_path(const NS_tchar *relpath) {
-  NS_tchar *destpath = sStagedUpdate ? gWorkingDirPath : gInstallDirPath;
-||||||| merged common ancestors
-static NS_tchar*
-get_full_path(const NS_tchar *relpath)
-{
-  NS_tchar *destpath = sStagedUpdate ? gWorkingDirPath : gInstallDirPath;
-=======
 static NS_tchar* get_full_path(const NS_tchar* relpath) {
   NS_tchar* destpath = sStagedUpdate ? gWorkingDirPath : gInstallDirPath;
->>>>>>> upstream-releases
   size_t lendestpath = NS_tstrlen(destpath);
   size_t lenrelpath = NS_tstrlen(relpath);
   NS_tchar* s = new NS_tchar[lendestpath + lenrelpath + 2];
@@ -647,21 +382,8 @@ static NS_tchar* get_full_path(const NS_tchar* relpath) {
  * return pointer to the location within fullpath where the relative path starts
  *        or fullpath itself if it already looks relative.
  */
-<<<<<<< HEAD
-#ifndef XP_WIN
-static const NS_tchar *get_relative_path(const NS_tchar *fullpath) {
-||||||| merged common ancestors
-static const NS_tchar*
-get_relative_path(const NS_tchar *fullpath)
-{
-  // If the path isn't absolute, just return it as-is.
-#ifdef XP_WIN
-  if (fullpath[1] != ':' && fullpath[2] != '\\') {
-#else
-=======
 #ifndef XP_WIN
 static const NS_tchar* get_relative_path(const NS_tchar* fullpath) {
->>>>>>> upstream-releases
   if (fullpath[0] != '/') {
     return fullpath;
   }
@@ -687,18 +409,8 @@ static const NS_tchar* get_relative_path(const NS_tchar* fullpath) {
  *         Whether the path is a directory path. Defaults to false.
  * @return valid filesystem path or nullptr if the path checks fail.
  */
-<<<<<<< HEAD
-static NS_tchar *get_valid_path(NS_tchar **line, bool isdir = false) {
-  NS_tchar *path = mstrtok(kQuote, line);
-||||||| merged common ancestors
-static NS_tchar*
-get_valid_path(NS_tchar **line, bool isdir = false)
-{
-  NS_tchar *path = mstrtok(kQuote, line);
-=======
 static NS_tchar* get_valid_path(NS_tchar** line, bool isdir = false) {
   NS_tchar* path = mstrtok(kQuote, line);
->>>>>>> upstream-releases
   if (!path) {
     LOG(("get_valid_path: unable to determine path: " LOG_S, *line));
     return nullptr;
@@ -742,13 +454,6 @@ static NS_tchar* get_valid_path(NS_tchar** line, bool isdir = false) {
   return path;
 }
 
-<<<<<<< HEAD
-static NS_tchar *get_quoted_path(const NS_tchar *path) {
-||||||| merged common ancestors
-static NS_tchar*
-get_quoted_path(const NS_tchar *path)
-{
-=======
 /*
  * Gets a quoted path. The return value is malloc'd and it is the responsibility
  * of the caller to free it.
@@ -758,24 +463,14 @@ get_quoted_path(const NS_tchar *path)
  * @return On success the quoted path and nullptr otherwise.
  */
 static NS_tchar* get_quoted_path(const NS_tchar* path) {
->>>>>>> upstream-releases
   size_t lenQuote = NS_tstrlen(kQuote);
   size_t lenPath = NS_tstrlen(path);
   size_t len = lenQuote + lenPath + lenQuote + 1;
 
-<<<<<<< HEAD
-  NS_tchar *s = (NS_tchar *)malloc(len * sizeof(NS_tchar));
-  if (!s) return nullptr;
-||||||| merged common ancestors
-  NS_tchar *s = (NS_tchar *) malloc(len * sizeof(NS_tchar));
-  if (!s)
-    return nullptr;
-=======
   NS_tchar* s = (NS_tchar*)malloc(len * sizeof(NS_tchar));
   if (!s) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   NS_tchar* c = s;
   NS_tstrcpy(c, kQuote);
@@ -788,14 +483,7 @@ static NS_tchar* get_quoted_path(const NS_tchar* path) {
   return s;
 }
 
-<<<<<<< HEAD
-static void ensure_write_permissions(const NS_tchar *path) {
-||||||| merged common ancestors
-static void ensure_write_permissions(const NS_tchar *path)
-{
-=======
 static void ensure_write_permissions(const NS_tchar* path) {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   (void)_wchmod(path, _S_IREAD | _S_IWRITE);
 #else
@@ -806,14 +494,7 @@ static void ensure_write_permissions(const NS_tchar* path) {
 #endif
 }
 
-<<<<<<< HEAD
-static int ensure_remove(const NS_tchar *path) {
-||||||| merged common ancestors
-static int ensure_remove(const NS_tchar *path)
-{
-=======
 static int ensure_remove(const NS_tchar* path) {
->>>>>>> upstream-releases
   ensure_write_permissions(path);
   int rv = NS_tremove(path);
   if (rv) {
@@ -823,22 +504,10 @@ static int ensure_remove(const NS_tchar* path) {
   return rv;
 }
 
-<<<<<<< HEAD
-// Remove the directory pointed to by path and all of its files and
-// sub-directories.
-static int ensure_remove_recursive(const NS_tchar *path,
-                                   bool continueEnumOnFailure = false) {
-||||||| merged common ancestors
-// Remove the directory pointed to by path and all of its files and sub-directories.
-static int ensure_remove_recursive(const NS_tchar *path,
-                                   bool continueEnumOnFailure = false)
-{
-=======
 // Remove the directory pointed to by path and all of its files and
 // sub-directories.
 static int ensure_remove_recursive(const NS_tchar* path,
                                    bool continueEnumOnFailure = false) {
->>>>>>> upstream-releases
   // We use lstat rather than stat here so that we can successfully remove
   // symlinks.
   struct NS_tstat_t sInfo;
@@ -889,77 +558,34 @@ static int ensure_remove_recursive(const NS_tchar* path,
   return rv;
 }
 
-<<<<<<< HEAD
-static bool is_read_only(const NS_tchar *flags) {
-||||||| merged common ancestors
-static bool is_read_only(const NS_tchar *flags)
-{
-=======
 static bool is_read_only(const NS_tchar* flags) {
->>>>>>> upstream-releases
   size_t length = NS_tstrlen(flags);
-<<<<<<< HEAD
-  if (length == 0) return false;
-||||||| merged common ancestors
-  if (length == 0)
-    return false;
-=======
   if (length == 0) {
     return false;
   }
->>>>>>> upstream-releases
 
   // Make sure the string begins with "r"
-<<<<<<< HEAD
-  if (flags[0] != NS_T('r')) return false;
-||||||| merged common ancestors
-  if (flags[0] != NS_T('r'))
-    return false;
-=======
   if (flags[0] != NS_T('r')) {
     return false;
   }
->>>>>>> upstream-releases
 
   // Look for "r+" or "r+b"
-<<<<<<< HEAD
-  if (length > 1 && flags[1] == NS_T('+')) return false;
-||||||| merged common ancestors
-  if (length > 1 && flags[1] == NS_T('+'))
-    return false;
-=======
   if (length > 1 && flags[1] == NS_T('+')) {
     return false;
   }
->>>>>>> upstream-releases
 
   // Look for "rb+"
-<<<<<<< HEAD
-  if (NS_tstrcmp(flags, NS_T("rb+")) == 0) return false;
-||||||| merged common ancestors
-  if (NS_tstrcmp(flags, NS_T("rb+")) == 0)
-    return false;
-=======
   if (NS_tstrcmp(flags, NS_T("rb+")) == 0) {
     return false;
   }
->>>>>>> upstream-releases
 
   return true;
 }
 
-<<<<<<< HEAD
-static FILE *ensure_open(const NS_tchar *path, const NS_tchar *flags,
-                         unsigned int options) {
-||||||| merged common ancestors
-static FILE* ensure_open(const NS_tchar *path, const NS_tchar *flags, unsigned int options)
-{
-=======
 static FILE* ensure_open(const NS_tchar* path, const NS_tchar* flags,
                          unsigned int options) {
->>>>>>> upstream-releases
   ensure_write_permissions(path);
-  FILE *f = NS_tfopen(path, flags);
+  FILE* f = NS_tfopen(path, flags);
   if (is_read_only(flags)) {
     // Don't attempt to modify the file permissions if the file is being opened
     // in read-only mode.
@@ -982,23 +608,10 @@ static FILE* ensure_open(const NS_tchar* path, const NS_tchar* flags,
 }
 
 // Ensure that the directory containing this file exists.
-<<<<<<< HEAD
-static int ensure_parent_dir(const NS_tchar *path) {
-||||||| merged common ancestors
-static int ensure_parent_dir(const NS_tchar *path)
-{
-=======
 static int ensure_parent_dir(const NS_tchar* path) {
->>>>>>> upstream-releases
   int rv = OK;
 
-<<<<<<< HEAD
-  NS_tchar *slash = (NS_tchar *)NS_tstrrchr(path, NS_T('/'));
-||||||| merged common ancestors
-  NS_tchar *slash = (NS_tchar *) NS_tstrrchr(path, NS_T('/'));
-=======
   NS_tchar* slash = (NS_tchar*)NS_tstrrchr(path, NS_T('/'));
->>>>>>> upstream-releases
   if (slash) {
     *slash = NS_T('\0');
     rv = ensure_parent_dir(path);
@@ -1021,14 +634,7 @@ static int ensure_parent_dir(const NS_tchar* path) {
 }
 
 #ifdef XP_UNIX
-<<<<<<< HEAD
-static int ensure_copy_symlink(const NS_tchar *path, const NS_tchar *dest) {
-||||||| merged common ancestors
-static int ensure_copy_symlink(const NS_tchar *path, const NS_tchar *dest)
-{
-=======
 static int ensure_copy_symlink(const NS_tchar* path, const NS_tchar* dest) {
->>>>>>> upstream-releases
   // Copy symlinks by creating a new symlink to the same target
   NS_tchar target[MAXPATHLEN + 1] = {NS_T('\0')};
   int rv = readlink(path, target, MAXPATHLEN);
@@ -1049,14 +655,7 @@ static int ensure_copy_symlink(const NS_tchar* path, const NS_tchar* dest) {
 #endif
 
 // Copy the file named path onto a new file named dest.
-<<<<<<< HEAD
-static int ensure_copy(const NS_tchar *path, const NS_tchar *dest) {
-||||||| merged common ancestors
-static int ensure_copy(const NS_tchar *path, const NS_tchar *dest)
-{
-=======
 static int ensure_copy(const NS_tchar* path, const NS_tchar* dest) {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   // Fast path for Windows
   bool result = CopyFileW(path, dest, false);
@@ -1099,19 +698,10 @@ static int ensure_copy(const NS_tchar* path, const NS_tchar* dest) {
   // compromise. For example, the optimal block size on a modern OS X machine
   // is 100k */
   const int blockSize = 32 * 1024;
-<<<<<<< HEAD
-  void *buffer = malloc(blockSize);
-  if (!buffer) return UPDATER_MEM_ERROR;
-||||||| merged common ancestors
-  void* buffer = malloc(blockSize);
-  if (!buffer)
-    return UPDATER_MEM_ERROR;
-=======
   void* buffer = malloc(blockSize);
   if (!buffer) {
     return UPDATER_MEM_ERROR;
   }
->>>>>>> upstream-releases
 
   while (!feof(infile.get())) {
     size_t read = fread(buffer, 1, blockSize, infile);
@@ -1165,17 +755,8 @@ struct copy_recursive_skiplist {
 // Copy all of the files and subdirectories under path to a new directory named
 // dest. The path names in the skiplist will be skipped and will not be copied.
 template <unsigned N>
-<<<<<<< HEAD
-static int ensure_copy_recursive(const NS_tchar *path, const NS_tchar *dest,
-                                 copy_recursive_skiplist<N> &skiplist) {
-||||||| merged common ancestors
-static int ensure_copy_recursive(const NS_tchar *path, const NS_tchar *dest,
-                                 copy_recursive_skiplist<N>& skiplist)
-{
-=======
 static int ensure_copy_recursive(const NS_tchar* path, const NS_tchar* dest,
                                  copy_recursive_skiplist<N>& skiplist) {
->>>>>>> upstream-releases
   struct NS_tstat_t sInfo;
   int rv = NS_tlstat(path, &sInfo);
   if (rv) {
@@ -1239,28 +820,12 @@ static int ensure_copy_recursive(const NS_tchar* path, const NS_tchar* dest,
 
 // Renames the specified file to the new file specified. If the destination file
 // exists it is removed.
-<<<<<<< HEAD
-static int rename_file(const NS_tchar *spath, const NS_tchar *dpath,
-                       bool allowDirs = false) {
-||||||| merged common ancestors
-static int rename_file(const NS_tchar *spath, const NS_tchar *dpath,
-                       bool allowDirs = false)
-{
-=======
 static int rename_file(const NS_tchar* spath, const NS_tchar* dpath,
                        bool allowDirs = false) {
->>>>>>> upstream-releases
   int rv = ensure_parent_dir(dpath);
-<<<<<<< HEAD
-  if (rv) return rv;
-||||||| merged common ancestors
-  if (rv)
-    return rv;
-=======
   if (rv) {
     return rv;
   }
->>>>>>> upstream-releases
 
   struct NS_tstat_t spathInfo;
   rv = NS_tstat(spath, &spathInfo);
@@ -1304,16 +869,8 @@ static int rename_file(const NS_tchar* spath, const NS_tchar* dpath,
 // Remove the directory pointed to by path and all of its files and
 // sub-directories. If a file is in use move it to the tobedeleted directory
 // and attempt to schedule removal of the file on reboot
-<<<<<<< HEAD
-static int remove_recursive_on_reboot(const NS_tchar *path,
-                                      const NS_tchar *deleteDir) {
-||||||| merged common ancestors
-static int remove_recursive_on_reboot(const NS_tchar *path, const NS_tchar *deleteDir)
-{
-=======
 static int remove_recursive_on_reboot(const NS_tchar* path,
                                       const NS_tchar* deleteDir) {
->>>>>>> upstream-releases
   struct NS_tstat_t sInfo;
   int rv = NS_tlstat(path, &sInfo);
   if (rv) {
@@ -1388,14 +945,7 @@ static int remove_recursive_on_reboot(const NS_tchar* path,
 //-----------------------------------------------------------------------------
 
 // Create a backup of the specified file by renaming it.
-<<<<<<< HEAD
-static int backup_create(const NS_tchar *path) {
-||||||| merged common ancestors
-static int backup_create(const NS_tchar *path)
-{
-=======
 static int backup_create(const NS_tchar* path) {
->>>>>>> upstream-releases
   NS_tchar backup[MAXPATHLEN];
   NS_tsnprintf(backup, sizeof(backup) / sizeof(backup[0]),
                NS_T("%s") BACKUP_EXT, path);
@@ -1405,14 +955,7 @@ static int backup_create(const NS_tchar* path) {
 
 // Rename the backup of the specified file that was created by renaming it back
 // to the original file.
-<<<<<<< HEAD
-static int backup_restore(const NS_tchar *path, const NS_tchar *relPath) {
-||||||| merged common ancestors
-static int backup_restore(const NS_tchar *path, const NS_tchar *relPath)
-{
-=======
 static int backup_restore(const NS_tchar* path, const NS_tchar* relPath) {
->>>>>>> upstream-releases
   NS_tchar backup[MAXPATHLEN];
   NS_tsnprintf(backup, sizeof(backup) / sizeof(backup[0]),
                NS_T("%s") BACKUP_EXT, path);
@@ -1430,14 +973,7 @@ static int backup_restore(const NS_tchar* path, const NS_tchar* relPath) {
 }
 
 // Discard the backup of the specified file that was created by renaming it.
-<<<<<<< HEAD
-static int backup_discard(const NS_tchar *path, const NS_tchar *relPath) {
-||||||| merged common ancestors
-static int backup_discard(const NS_tchar *path, const NS_tchar *relPath)
-{
-=======
 static int backup_discard(const NS_tchar* path, const NS_tchar* relPath) {
->>>>>>> upstream-releases
   NS_tchar backup[MAXPATHLEN];
   NS_tsnprintf(backup, sizeof(backup) / sizeof(backup[0]),
                NS_T("%s") BACKUP_EXT, path);
@@ -1480,36 +1016,18 @@ static int backup_discard(const NS_tchar* path, const NS_tchar* relPath) {
     }
   }
 #else
-<<<<<<< HEAD
-  if (rv) return WRITE_ERROR_DELETE_BACKUP;
-||||||| merged common ancestors
-  if (rv)
-    return WRITE_ERROR_DELETE_BACKUP;
-=======
   if (rv) {
     return WRITE_ERROR_DELETE_BACKUP;
   }
->>>>>>> upstream-releases
 #endif
 
   return OK;
 }
 
 // Helper function for post-processing a temporary backup.
-<<<<<<< HEAD
-static void backup_finish(const NS_tchar *path, const NS_tchar *relPath,
-                          int status) {
-  if (status == OK)
-||||||| merged common ancestors
-static void backup_finish(const NS_tchar *path, const NS_tchar *relPath,
-                          int status)
-{
-  if (status == OK)
-=======
 static void backup_finish(const NS_tchar* path, const NS_tchar* relPath,
                           int status) {
   if (status == OK) {
->>>>>>> upstream-releases
     backup_discard(path, relPath);
   } else {
     backup_restore(path, relPath);
@@ -1541,18 +1059,9 @@ class Action {
   virtual void Finish(int status) = 0;
 
   int mProgressCost;
-<<<<<<< HEAD
-
- private:
-  Action *mNext;
-||||||| merged common ancestors
-private:
-  Action* mNext;
-=======
 
  private:
   Action* mNext;
->>>>>>> upstream-releases
 
   friend class ActionList;
 };
@@ -1572,24 +1081,10 @@ class RemoveFile : public Action {
   int mSkip;
 };
 
-<<<<<<< HEAD
-int RemoveFile::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-RemoveFile::Parse(NS_tchar *line)
-{
-=======
 int RemoveFile::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<deadfile>"
 
-<<<<<<< HEAD
-  NS_tchar *validPath = get_valid_path(&line);
-||||||| merged common ancestors
-  NS_tchar * validPath = get_valid_path(&line);
-=======
   NS_tchar* validPath = get_valid_path(&line);
->>>>>>> upstream-releases
   if (!validPath) {
     return PARSE_ERROR;
   }
@@ -1630,13 +1125,7 @@ int RemoveFile::Prepare() {
     return DELETE_ERROR_EXPECTED_FILE;
   }
 
-<<<<<<< HEAD
-  NS_tchar *slash = (NS_tchar *)NS_tstrrchr(mFile.get(), NS_T('/'));
-||||||| merged common ancestors
-  NS_tchar *slash = (NS_tchar *) NS_tstrrchr(mFile.get(), NS_T('/'));
-=======
   NS_tchar* slash = (NS_tchar*)NS_tstrrchr(mFile.get(), NS_T('/'));
->>>>>>> upstream-releases
   if (slash) {
     *slash = NS_T('\0');
     rv = NS_taccess(mFile.get(), W_OK);
@@ -1653,21 +1142,10 @@ int RemoveFile::Prepare() {
   return OK;
 }
 
-<<<<<<< HEAD
-int RemoveFile::Execute() {
-  if (mSkip) return OK;
-||||||| merged common ancestors
-int
-RemoveFile::Execute()
-{
-  if (mSkip)
-    return OK;
-=======
 int RemoveFile::Execute() {
   if (mSkip) {
     return OK;
   }
->>>>>>> upstream-releases
 
   LOG(("EXECUTE REMOVEFILE " LOG_S, mRelPath.get()));
 
@@ -1715,16 +1193,8 @@ class RemoveDir : public Action {
  public:
   RemoveDir() : mSkip(0) {}
 
-<<<<<<< HEAD
-  int Parse(NS_tchar *line) override;
-  int Prepare() override;  // check that the source dir exists
-||||||| merged common ancestors
-  int Parse(NS_tchar *line) override;
-  int Prepare() override; // check that the source dir exists
-=======
   int Parse(NS_tchar* line) override;
   int Prepare() override;  // check that the source dir exists
->>>>>>> upstream-releases
   int Execute() override;
   void Finish(int status) override;
 
@@ -1734,24 +1204,10 @@ class RemoveDir : public Action {
   int mSkip;
 };
 
-<<<<<<< HEAD
-int RemoveDir::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-RemoveDir::Parse(NS_tchar *line)
-{
-=======
 int RemoveDir::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<deaddir>/"
 
-<<<<<<< HEAD
-  NS_tchar *validPath = get_valid_path(&line, true);
-||||||| merged common ancestors
-  NS_tchar * validPath = get_valid_path(&line, true);
-=======
   NS_tchar* validPath = get_valid_path(&line, true);
->>>>>>> upstream-releases
   if (!validPath) {
     return PARSE_ERROR;
   }
@@ -1801,21 +1257,10 @@ int RemoveDir::Prepare() {
   return OK;
 }
 
-<<<<<<< HEAD
-int RemoveDir::Execute() {
-  if (mSkip) return OK;
-||||||| merged common ancestors
-int
-RemoveDir::Execute()
-{
-  if (mSkip)
-    return OK;
-=======
 int RemoveDir::Execute() {
   if (mSkip) {
     return OK;
   }
->>>>>>> upstream-releases
 
   LOG(("EXECUTE REMOVEDIR " LOG_S "/", mRelPath.get()));
 
@@ -1830,21 +1275,10 @@ int RemoveDir::Execute() {
   return OK;
 }
 
-<<<<<<< HEAD
-void RemoveDir::Finish(int status) {
-  if (mSkip || status != OK) return;
-||||||| merged common ancestors
-void
-RemoveDir::Finish(int status)
-{
-  if (mSkip || status != OK)
-    return;
-=======
 void RemoveDir::Finish(int status) {
   if (mSkip || status != OK) {
     return;
   }
->>>>>>> upstream-releases
 
   LOG(("FINISH REMOVEDIR " LOG_S "/", mRelPath.get()));
 
@@ -1879,24 +1313,10 @@ class AddFile : public Action {
   bool mAdded;
 };
 
-<<<<<<< HEAD
-int AddFile::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-AddFile::Parse(NS_tchar *line)
-{
-=======
 int AddFile::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<newfile>"
 
-<<<<<<< HEAD
-  NS_tchar *validPath = get_valid_path(&line);
-||||||| merged common ancestors
-  NS_tchar * validPath = get_valid_path(&line);
-=======
   NS_tchar* validPath = get_valid_path(&line);
->>>>>>> upstream-releases
   if (!validPath) {
     return PARSE_ERROR;
   }
@@ -1937,16 +1357,9 @@ int AddFile::Execute() {
     }
   } else {
     rv = ensure_parent_dir(mFile.get());
-<<<<<<< HEAD
-    if (rv) return rv;
-||||||| merged common ancestors
-    if (rv)
-      return rv;
-=======
     if (rv) {
       return rv;
     }
->>>>>>> upstream-releases
   }
 
 #ifdef XP_WIN
@@ -1990,29 +1403,13 @@ class PatchFile : public Action {
 
   ~PatchFile() override;
 
-<<<<<<< HEAD
-  int Parse(NS_tchar *line) override;
-  int Prepare() override;  // should check for patch file and for checksum here
-||||||| merged common ancestors
-  int Parse(NS_tchar *line) override;
-  int Prepare() override; // should check for patch file and for checksum here
-=======
   int Parse(NS_tchar* line) override;
   int Prepare() override;  // should check for patch file and for checksum here
->>>>>>> upstream-releases
   int Execute() override;
   void Finish(int status) override;
 
-<<<<<<< HEAD
- private:
-  int LoadSourceFile(FILE *ofile);
-||||||| merged common ancestors
-private:
-  int LoadSourceFile(FILE* ofile);
-=======
  private:
   int LoadSourceFile(FILE* ofile);
->>>>>>> upstream-releases
 
   static int sPatchIndex;
 
@@ -2046,15 +1443,7 @@ PatchFile::~PatchFile() {
   }
 }
 
-<<<<<<< HEAD
-int PatchFile::LoadSourceFile(FILE *ofile) {
-||||||| merged common ancestors
-int
-PatchFile::LoadSourceFile(FILE* ofile)
-{
-=======
 int PatchFile::LoadSourceFile(FILE* ofile) {
->>>>>>> upstream-releases
   struct stat os;
   int rv = fstat(fileno((FILE*)ofile), &os);
   if (rv) {
@@ -2072,13 +1461,7 @@ int PatchFile::LoadSourceFile(FILE* ofile) {
     return LOADSOURCE_ERROR_WRONG_SIZE;
   }
 
-<<<<<<< HEAD
-  buf = (unsigned char *)malloc(header.slen);
-||||||| merged common ancestors
-  buf = (unsigned char *) malloc(header.slen);
-=======
   buf = (unsigned char*)malloc(header.slen);
->>>>>>> upstream-releases
   if (!buf) {
     return UPDATER_MEM_ERROR;
   }
@@ -2113,15 +1496,7 @@ int PatchFile::LoadSourceFile(FILE* ofile) {
   return OK;
 }
 
-<<<<<<< HEAD
-int PatchFile::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-PatchFile::Parse(NS_tchar *line)
-{
-=======
 int PatchFile::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<patchfile>" "<filetopatch>"
 
   // Get the path to the patch file inside of the mar
@@ -2136,13 +1511,7 @@ int PatchFile::Parse(NS_tchar* line) {
     return PARSE_ERROR;
   }
 
-<<<<<<< HEAD
-  NS_tchar *validPath = get_valid_path(&line);
-||||||| merged common ancestors
-  NS_tchar * validPath = get_valid_path(&line);
-=======
   NS_tchar* validPath = get_valid_path(&line);
->>>>>>> upstream-releases
   if (!validPath) {
     return PARSE_ERROR;
   }
@@ -2343,20 +1712,9 @@ void PatchFile::Finish(int status) {
   }
 }
 
-<<<<<<< HEAD
-class AddIfFile : public AddFile {
- public:
-  int Parse(NS_tchar *line) override;
-||||||| merged common ancestors
-class AddIfFile : public AddFile
-{
-public:
-  int Parse(NS_tchar *line) override;
-=======
 class AddIfFile : public AddFile {
  public:
   int Parse(NS_tchar* line) override;
->>>>>>> upstream-releases
   int Prepare() override;
   int Execute() override;
   void Finish(int status) override;
@@ -2365,15 +1723,7 @@ class AddIfFile : public AddFile {
   mozilla::UniquePtr<NS_tchar[]> mTestFile;
 };
 
-<<<<<<< HEAD
-int AddIfFile::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-AddIfFile::Parse(NS_tchar *line)
-{
-=======
 int AddIfFile::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<testfile>" "<newfile>"
 
   mTestFile.reset(get_full_path(get_valid_path(&line)));
@@ -2400,58 +1750,25 @@ int AddIfFile::Prepare() {
   return AddFile::Prepare();
 }
 
-<<<<<<< HEAD
-int AddIfFile::Execute() {
-  if (!mTestFile) return OK;
-||||||| merged common ancestors
-int
-AddIfFile::Execute()
-{
-  if (!mTestFile)
-    return OK;
-=======
 int AddIfFile::Execute() {
   if (!mTestFile) {
     return OK;
   }
->>>>>>> upstream-releases
 
   return AddFile::Execute();
 }
 
-<<<<<<< HEAD
-void AddIfFile::Finish(int status) {
-  if (!mTestFile) return;
-||||||| merged common ancestors
-void
-AddIfFile::Finish(int status)
-{
-  if (!mTestFile)
-    return;
-=======
 void AddIfFile::Finish(int status) {
   if (!mTestFile) {
     return;
   }
->>>>>>> upstream-releases
 
   AddFile::Finish(status);
 }
 
-<<<<<<< HEAD
-class AddIfNotFile : public AddFile {
- public:
-  int Parse(NS_tchar *line) override;
-||||||| merged common ancestors
-class AddIfNotFile : public AddFile
-{
-public:
-  int Parse(NS_tchar *line) override;
-=======
 class AddIfNotFile : public AddFile {
  public:
   int Parse(NS_tchar* line) override;
->>>>>>> upstream-releases
   int Prepare() override;
   int Execute() override;
   void Finish(int status) override;
@@ -2460,15 +1777,7 @@ class AddIfNotFile : public AddFile {
   mozilla::UniquePtr<NS_tchar[]> mTestFile;
 };
 
-<<<<<<< HEAD
-int AddIfNotFile::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-AddIfNotFile::Parse(NS_tchar *line)
-{
-=======
 int AddIfNotFile::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<testfile>" "<newfile>"
 
   mTestFile.reset(get_full_path(get_valid_path(&line)));
@@ -2495,61 +1804,26 @@ int AddIfNotFile::Prepare() {
   return AddFile::Prepare();
 }
 
-<<<<<<< HEAD
-int AddIfNotFile::Execute() {
-  if (!mTestFile) return OK;
-||||||| merged common ancestors
-int
-AddIfNotFile::Execute()
-{
-  if (!mTestFile)
-    return OK;
-=======
 int AddIfNotFile::Execute() {
   if (!mTestFile) {
     return OK;
   }
->>>>>>> upstream-releases
 
   return AddFile::Execute();
 }
 
-<<<<<<< HEAD
-void AddIfNotFile::Finish(int status) {
-  if (!mTestFile) return;
-||||||| merged common ancestors
-void
-AddIfNotFile::Finish(int status)
-{
-  if (!mTestFile)
-    return;
-=======
 void AddIfNotFile::Finish(int status) {
   if (!mTestFile) {
     return;
   }
->>>>>>> upstream-releases
 
   AddFile::Finish(status);
 }
 
-<<<<<<< HEAD
-class PatchIfFile : public PatchFile {
- public:
-  int Parse(NS_tchar *line) override;
-  int Prepare() override;  // should check for patch file and for checksum here
-||||||| merged common ancestors
-class PatchIfFile : public PatchFile
-{
-public:
-  int Parse(NS_tchar *line) override;
-  int Prepare() override; // should check for patch file and for checksum here
-=======
 class PatchIfFile : public PatchFile {
  public:
   int Parse(NS_tchar* line) override;
   int Prepare() override;  // should check for patch file and for checksum here
->>>>>>> upstream-releases
   int Execute() override;
   void Finish(int status) override;
 
@@ -2557,15 +1831,7 @@ class PatchIfFile : public PatchFile {
   mozilla::UniquePtr<NS_tchar[]> mTestFile;
 };
 
-<<<<<<< HEAD
-int PatchIfFile::Parse(NS_tchar *line) {
-||||||| merged common ancestors
-int
-PatchIfFile::Parse(NS_tchar *line)
-{
-=======
 int PatchIfFile::Parse(NS_tchar* line) {
->>>>>>> upstream-releases
   // format "<testfile>" "<patchfile>" "<filetopatch>"
 
   mTestFile.reset(get_full_path(get_valid_path(&line)));
@@ -2592,40 +1858,18 @@ int PatchIfFile::Prepare() {
   return PatchFile::Prepare();
 }
 
-<<<<<<< HEAD
-int PatchIfFile::Execute() {
-  if (!mTestFile) return OK;
-||||||| merged common ancestors
-int
-PatchIfFile::Execute()
-{
-  if (!mTestFile)
-    return OK;
-=======
 int PatchIfFile::Execute() {
   if (!mTestFile) {
     return OK;
   }
->>>>>>> upstream-releases
 
   return PatchFile::Execute();
 }
 
-<<<<<<< HEAD
-void PatchIfFile::Finish(int status) {
-  if (!mTestFile) return;
-||||||| merged common ancestors
-void
-PatchIfFile::Finish(int status)
-{
-  if (!mTestFile)
-    return;
-=======
 void PatchIfFile::Finish(int status) {
   if (!mTestFile) {
     return;
   }
->>>>>>> upstream-releases
 
   PatchFile::Finish(status);
 }
@@ -2647,21 +1891,9 @@ void PatchIfFile::Finish(int status) {
  * @param  updateInfoDir   The directory where update info is stored.
  * @return true if there was no error starting the process.
  */
-<<<<<<< HEAD
-bool LaunchWinPostProcess(const WCHAR *installationDir,
-                          const WCHAR *updateInfoDir) {
-  WCHAR workingDirectory[MAX_PATH + 1] = {L'\0'};
-||||||| merged common ancestors
-bool
-LaunchWinPostProcess(const WCHAR *installationDir,
-                     const WCHAR *updateInfoDir)
-{
-  WCHAR workingDirectory[MAX_PATH + 1] = { L'\0' };
-=======
 bool LaunchWinPostProcess(const WCHAR* installationDir,
                           const WCHAR* updateInfoDir) {
   WCHAR workingDirectory[MAX_PATH + 1] = {L'\0'};
->>>>>>> upstream-releases
   wcsncpy(workingDirectory, installationDir, MAX_PATH);
 
   // Launch helper.exe to perform post processing (e.g. registry and log file
@@ -2738,13 +1970,7 @@ bool LaunchWinPostProcess(const WCHAR* installationDir,
           sizeof(dummyArg) / sizeof(dummyArg[0]) - 1);
 
   size_t len = wcslen(exearg) + wcslen(dummyArg);
-<<<<<<< HEAD
-  WCHAR *cmdline = (WCHAR *)malloc((len + 1) * sizeof(WCHAR));
-||||||| merged common ancestors
-  WCHAR *cmdline = (WCHAR *) malloc((len + 1) * sizeof(WCHAR));
-=======
   WCHAR* cmdline = (WCHAR*)malloc((len + 1) * sizeof(WCHAR));
->>>>>>> upstream-releases
   if (!cmdline) {
     return false;
   }
@@ -2786,23 +2012,9 @@ bool LaunchWinPostProcess(const WCHAR* installationDir,
 
 #endif
 
-<<<<<<< HEAD
-static void LaunchCallbackApp(const NS_tchar *workingDir, int argc,
-                              NS_tchar **argv, bool usingService) {
-  putenv(const_cast<char *>("MOZ_LAUNCHED_CHILD=1"));
-||||||| merged common ancestors
-static void
-LaunchCallbackApp(const NS_tchar *workingDir,
-                  int argc,
-                  NS_tchar **argv,
-                  bool usingService)
-{
-  putenv(const_cast<char*>("MOZ_LAUNCHED_CHILD=1"));
-=======
 static void LaunchCallbackApp(const NS_tchar* workingDir, int argc,
                               NS_tchar** argv, bool usingService) {
   putenv(const_cast<char*>("MOZ_LAUNCHED_CHILD=1"));
->>>>>>> upstream-releases
 
   // Run from the specified working directory (see bug 312360).
   if (NS_tchdir(workingDir) != 0) {
@@ -2812,7 +2024,7 @@ static void LaunchCallbackApp(const NS_tchar* workingDir, int argc,
 #if defined(USE_EXECV)
   execv(argv[0], argv);
 #elif defined(XP_MACOSX)
-  LaunchChild(argc, (const char **)argv);
+  LaunchChild(argc, (const char**)argv);
 #elif defined(XP_WIN)
   // Do not allow the callback to run when running an update through the
   // service as session 0.  The unelevated updater.exe will do the launching.
@@ -2827,34 +2039,13 @@ static void LaunchCallbackApp(const NS_tchar* workingDir, int argc,
     }
   }
 #else
-<<<<<<< HEAD
-#warning "Need implementaton of LaunchCallbackApp"
-||||||| merged common ancestors
-# warning "Need implementaton of LaunchCallbackApp"
-=======
 #  warning "Need implementaton of LaunchCallbackApp"
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-static bool WriteToFile(const NS_tchar *aFilename, const char *aStatus) {
-||||||| merged common ancestors
-static bool
-WriteStatusFile(const char* aStatus)
-{
-=======
 static bool WriteToFile(const NS_tchar* aFilename, const char* aStatus) {
->>>>>>> upstream-releases
   NS_tchar filename[MAXPATHLEN] = {NS_T('\0')};
 #if defined(XP_WIN)
-#if defined(MOZ_MAINTENANCE_SERVICE)
-  ImpersonationScope impersonated(gUserToken);
-  if (gUserToken && !impersonated) {
-    return false;
-  }
-#endif
-
   // The temp file is not removed on failure since there is client code that
   // will remove it.
   if (!GetUUIDTempFilePath(gPatchDirPath, L"sta", filename)) {
@@ -2895,26 +2086,12 @@ static bool WriteToFile(const NS_tchar* aFilename, const char* aStatus) {
   return true;
 }
 
-<<<<<<< HEAD
-static bool WriteStatusFile(const char *aStatus) {
-  return WriteToFile(NS_T("update.status"), aStatus);
-}
-
-static void WriteStatusFile(int status) {
-  const char *text;
-||||||| merged common ancestors
-static void
-WriteStatusFile(int status)
-{
-  const char *text;
-=======
 static bool WriteStatusFile(const char* aStatus) {
   return WriteToFile(NS_T("update.status"), aStatus);
 }
 
 static void WriteStatusFile(int status) {
   const char* text;
->>>>>>> upstream-releases
 
   char buf[32];
   if (status == OK) {
@@ -2940,40 +2117,16 @@ static void WriteStatusFile(int status) {
  *         is set to pending-service or not.
  * @return true if the information was retrieved and it is pending
  *         or pending-service.
-<<<<<<< HEAD
  */
 static bool IsUpdateStatusPendingService() {
-#if defined(XP_WIN) && defined(MOZ_MAINTENANCE_SERVICE)
-  ImpersonationScope impersonated(gUserToken);
-  if (gUserToken && !impersonated) {
-    return false;
-  }
-#endif
-
-||||||| merged common ancestors
-*/
-static bool
-IsUpdateStatusPendingService()
-{
-=======
- */
-static bool IsUpdateStatusPendingService() {
->>>>>>> upstream-releases
   NS_tchar filename[MAXPATHLEN];
   NS_tsnprintf(filename, sizeof(filename) / sizeof(filename[0]),
                NS_T("%s/update.status"), gPatchDirPath);
 
   AutoFile file(NS_tfopen(filename, NS_T("rb")));
-<<<<<<< HEAD
-  if (file == nullptr) return false;
-||||||| merged common ancestors
-  if (file == nullptr)
-    return false;
-=======
   if (file == nullptr) {
     return false;
   }
->>>>>>> upstream-releases
 
   char buf[32] = {0};
   fread(buf, sizeof(buf), 1, file);
@@ -2994,41 +2147,17 @@ static bool IsUpdateStatusPendingService() {
  * @param  isSucceeded Out parameter for specifying if the status
  *         is set to succeeded or not.
  * @return true if the information was retrieved and it is succeeded.
-<<<<<<< HEAD
- */
-static bool IsUpdateStatusSucceeded(bool &isSucceeded) {
-#if defined(MOZ_MAINTENANCE_SERVICE)
-  ImpersonationScope impersonated(gUserToken);
-  if (gUserToken && !impersonated) {
-    return false;
-  }
-#endif
-
-||||||| merged common ancestors
-*/
-static bool
-IsUpdateStatusSucceeded(bool &isSucceeded)
-{
-=======
  */
 static bool IsUpdateStatusSucceeded(bool& isSucceeded) {
->>>>>>> upstream-releases
   isSucceeded = false;
   NS_tchar filename[MAXPATHLEN];
   NS_tsnprintf(filename, sizeof(filename) / sizeof(filename[0]),
                NS_T("%s/update.status"), gPatchDirPath);
 
   AutoFile file(NS_tfopen(filename, NS_T("rb")));
-<<<<<<< HEAD
-  if (file == nullptr) return false;
-||||||| merged common ancestors
-  if (file == nullptr)
-    return false;
-=======
   if (file == nullptr) {
     return false;
   }
->>>>>>> upstream-releases
 
   char buf[32] = {0};
   fread(buf, sizeof(buf), 1, file);
@@ -3093,7 +2222,7 @@ static int ProcessReplaceRequest() {
     return NO_INSTALLDIR_ERROR;
   }
 #else
-  NS_tchar *destDir = gInstallDirPath;
+  NS_tchar* destDir = gInstallDirPath;
 #endif
 
   NS_tchar tmpDir[MAXPATHLEN];
@@ -3219,15 +2348,7 @@ static int ProcessReplaceRequest() {
 }
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-static void WaitForServiceFinishThread(void *param) {
-||||||| merged common ancestors
-static void
-WaitForServiceFinishThread(void *param)
-{
-=======
 static void WaitForServiceFinishThread(void* param) {
->>>>>>> upstream-releases
   // We wait at most 10 minutes, we already waited 5 seconds previously
   // before deciding to show this UI.
   WaitForServiceStop(SVC_NAME, 595);
@@ -3243,17 +2364,8 @@ static void WaitForServiceFinishThread(void* param) {
  * @param results A pointer to the location to store the read strings
  * @return OK on success
  */
-<<<<<<< HEAD
-static int ReadMARChannelIDs(const NS_tchar *path,
-                             MARChannelStringTable *results) {
-||||||| merged common ancestors
-static int
-ReadMARChannelIDs(const NS_tchar *path, MARChannelStringTable *results)
-{
-=======
 static int ReadMARChannelIDs(const NS_tchar* path,
                              MARChannelStringTable* results) {
->>>>>>> upstream-releases
   const unsigned int kNumStrings = 1;
   const char* kUpdaterKeys = "ACCEPTED_MAR_CHANNEL_IDS\0";
   char updater_strings[kNumStrings][MAX_TEXT_LEN];
@@ -3268,31 +2380,12 @@ static int ReadMARChannelIDs(const NS_tchar* path,
 }
 #endif
 
-<<<<<<< HEAD
-static int GetUpdateFileName(NS_tchar *fileName, int maxChars) {
-  NS_tsnprintf(fileName, maxChars, NS_T("%s/update.mar"), gPatchDirPath);
-||||||| merged common ancestors
-static int
-GetUpdateFileName(NS_tchar *fileName, int maxChars)
-{
-  NS_tsnprintf(fileName, maxChars,
-               NS_T("%s/update.mar"), gPatchDirPath);
-=======
 static int GetUpdateFileName(NS_tchar* fileName, int maxChars) {
   NS_tsnprintf(fileName, maxChars, NS_T("%s/update.mar"), gPatchDirPath);
->>>>>>> upstream-releases
   return OK;
 }
 
-<<<<<<< HEAD
-static void UpdateThreadFunc(void *param) {
-||||||| merged common ancestors
-static void
-UpdateThreadFunc(void *param)
-{
-=======
 static void UpdateThreadFunc(void* param) {
->>>>>>> upstream-releases
   // open ZIP archive and process...
   int rv;
   if (sReplaceRequest) {
@@ -3322,21 +2415,10 @@ static void UpdateThreadFunc(void* param) {
                      gInstallDirPath);
         MARChannelStringTable MARStrings;
         if (ReadMARChannelIDs(updateSettingsPath, &MARStrings) != OK) {
-<<<<<<< HEAD
-          // If we can't read from update-settings.ini then we shouldn't impose
-          // a MAR restriction.  Some installations won't even include this
-          // file.
-          MARStrings.MARChannelID[0] = '\0';
-||||||| merged common ancestors
-          // If we can't read from update-settings.ini then we shouldn't impose
-          // a MAR restriction.  Some installations won't even include this file.
-          MARStrings.MARChannelID[0] = '\0';
-=======
           rv = UPDATE_SETTINGS_FILE_CHANNEL;
         } else {
           rv = gArchiveReader.VerifyProductInformation(MARStrings.MARChannelID,
                                                        MOZ_APP_VERSION);
->>>>>>> upstream-releases
         }
       }
     }
@@ -3410,7 +2492,7 @@ static void UpdateThreadFunc(void* param) {
     LOG(("failed: %d", rv));
 #ifdef TEST_UPDATER
     // Some tests need to use --test-process-updates again.
-    putenv(const_cast<char *>("MOZ_TEST_PROCESS_UPDATES="));
+    putenv(const_cast<char*>("MOZ_TEST_PROCESS_UPDATES="));
 #endif
   } else {
     if (rv) {
@@ -3434,18 +2516,8 @@ static void UpdateThreadFunc(void* param) {
 }
 
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-static void ServeElevatedUpdateThreadFunc(void *param) {
-  UpdateServerThreadArgs *threadArgs = (UpdateServerThreadArgs *)param;
-||||||| merged common ancestors
-static void
-ServeElevatedUpdateThreadFunc(void* param)
-{
-  UpdateServerThreadArgs* threadArgs = (UpdateServerThreadArgs*)param;
-=======
 static void ServeElevatedUpdateThreadFunc(void* param) {
   UpdateServerThreadArgs* threadArgs = (UpdateServerThreadArgs*)param;
->>>>>>> upstream-releases
   gSucceeded = ServeElevatedUpdate(threadArgs->argc, threadArgs->argv);
   if (!gSucceeded) {
     WriteStatusFile(ELEVATION_CANCELED);
@@ -3453,14 +2525,7 @@ static void ServeElevatedUpdateThreadFunc(void* param) {
   QuitProgressUI();
 }
 
-<<<<<<< HEAD
-void freeArguments(int argc, char **argv) {
-||||||| merged common ancestors
-void freeArguments(int argc, char** argv)
-{
-=======
 void freeArguments(int argc, char** argv) {
->>>>>>> upstream-releases
   for (int i = 0; i < argc; i++) {
     free(argv[i]);
   }
@@ -3468,21 +2533,12 @@ void freeArguments(int argc, char** argv) {
 }
 #endif
 
-int LaunchCallbackAndPostProcessApps(int argc, NS_tchar **argv,
+int LaunchCallbackAndPostProcessApps(int argc, NS_tchar** argv,
                                      int callbackIndex
 #ifdef XP_WIN
-<<<<<<< HEAD
-                                     ,
-                                     const WCHAR *elevatedLockFilePath,
-                                     HANDLE updateLockFileHandle
-||||||| merged common ancestors
-                                     , const WCHAR* elevatedLockFilePath
-                                     , HANDLE updateLockFileHandle
-=======
                                      ,
                                      const WCHAR* elevatedLockFilePath,
                                      HANDLE updateLockFileHandle
->>>>>>> upstream-releases
 #elif XP_MACOSX
                                      ,
                                      bool isElevated
@@ -3523,59 +2579,12 @@ int LaunchCallbackAndPostProcessApps(int argc, NS_tchar **argv,
 return 0;
 }
 
-<<<<<<< HEAD
-int NS_main(int argc, NS_tchar **argv) {
-#ifdef MOZ_MAINTENANCE_SERVICE
-  sUsingService = EnvHasValue("MOZ_USING_SERVICE");
-  putenv(const_cast<char *>("MOZ_USING_SERVICE="));
-
-#if XP_WIN
-  // Null gUserToken is treated as "no impersonation required".
-  gUserToken = nullptr;
-
-#ifndef DISABLE_USER_IMPERSONATION
-  if (sUsingService) {
-    char *tokenStr = getenv(USER_TOKEN_VAR_NAME);
-
-    if (tokenStr) {
-      // If a token is provided ensure that we can use it.
-
-      if (sscanf_s(tokenStr, "%p", &gUserToken) != 1 || !gUserToken) {
-        fprintf(stderr,
-                "Invalid impersonation token %p (from " USER_TOKEN_VAR_NAME
-                "=%s).",
-                gUserToken, tokenStr);
-        return 1;
-      } else if (!SetThreadToken(nullptr, gUserToken)) {
-        fprintf(stderr, "Failed to test impersonation token %p. (%lu)",
-                gUserToken, GetLastError());
-        gUserToken = nullptr;
-        return 1;
-      }
-
-      RevertToSelf();
-    } else {
-      // If there is no token provided, then even if we are running via the
-      // maintenance service we will proceed without impersonation. This
-      // prevents failure if an old maintenance service somehow attempts to
-      // run a new updater.
-    }
-  }
-#endif  // DISABLE_USER_IMPERSONATION
-#endif
-#endif
-
-||||||| merged common ancestors
-int NS_main(int argc, NS_tchar **argv)
-{
-=======
 int NS_main(int argc, NS_tchar** argv) {
 #ifdef MOZ_MAINTENANCE_SERVICE
   sUsingService = EnvHasValue("MOZ_USING_SERVICE");
   putenv(const_cast<char*>("MOZ_USING_SERVICE="));
 #endif
 
->>>>>>> upstream-releases
   // The callback is the remaining arguments starting at callbackIndex.
   // The argument specified by callbackIndex is the callback executable and the
   // argument prior to callbackIndex is the working directory.
@@ -3605,22 +2614,10 @@ int NS_main(int argc, NS_tchar** argv) {
   // need to initialize NSS at all there.
   // Otherwise, minimize the amount of NSS we depend on by avoiding all the NSS
   // databases.
-<<<<<<< HEAD
-  if (NSS_NoDB_Init(NULL) != SECSuccess) {
-    PRErrorCode error = PR_GetError();
-    fprintf(stderr, "Could not initialize NSS: %s (%d)", PR_ErrorToName(error),
-            (int)error);
-||||||| merged common ancestors
-  if (NSS_NoDB_Init(NULL) != SECSuccess) {
-   PRErrorCode error = PR_GetError();
-   fprintf(stderr, "Could not initialize NSS: %s (%d)",
-           PR_ErrorToName(error), (int) error);
-=======
   if (NSS_NoDB_Init(nullptr) != SECSuccess) {
     PRErrorCode error = PR_GetError();
     fprintf(stderr, "Could not initialize NSS: %s (%d)", PR_ErrorToName(error),
             (int)error);
->>>>>>> upstream-releases
     _exit(1);
   }
 #endif
@@ -3730,7 +2727,7 @@ int NS_main(int argc, NS_tchar** argv) {
   useService = IsUpdateStatusPendingService();
 #    ifdef TEST_UPDATER
   noServiceFallback = EnvHasValue("MOZ_NO_SERVICE_FALLBACK");
-  putenv(const_cast<char *>("MOZ_NO_SERVICE_FALLBACK="));
+  putenv(const_cast<char*>("MOZ_NO_SERVICE_FALLBACK="));
   // Our tests run with a different apply directory for each test.
   // We use this registry key on our test slaves to store the
   // allowed name/issuers.
@@ -3841,7 +2838,7 @@ int NS_main(int argc, NS_tchar** argv) {
     // required.
     UpdateServerThreadArgs threadArgs;
     threadArgs.argc = argc;
-    threadArgs.argv = const_cast<const NS_tchar **>(argv);
+    threadArgs.argv = const_cast<const NS_tchar**>(argv);
 
     Thread t1;
     if (t1.Run(ServeElevatedUpdateThreadFunc, &threadArgs) == 0) {
@@ -3856,7 +2853,7 @@ int NS_main(int argc, NS_tchar** argv) {
   }
 #endif
 
-  ImpersonatedLogInit(gPatchDirPath, NS_T("update.log"));
+  LogInit(gPatchDirPath, NS_T("update.log"));
 
   if (!WriteStatusFile("applying")) {
     LOG(("failed setting status to 'applying'"));
@@ -3888,7 +2885,7 @@ int NS_main(int argc, NS_tchar** argv) {
       LOG(
           ("Installation directory and working directory must be the same "
            "for non-staged updates. Exiting."));
-      ImpersonatedLogFinish();
+      LogFinish();
       return 1;
     }
 
@@ -3899,7 +2896,7 @@ int NS_main(int argc, NS_tchar** argv) {
     if (!PathRemoveFileSpecW(workingDirParent)) {
       WriteStatusFile(REMOVE_FILE_SPEC_ERROR);
       LOG(("Error calling PathRemoveFileSpecW: %d", GetLastError()));
-      ImpersonatedLogFinish();
+      LogFinish();
       return 1;
     }
 
@@ -3908,7 +2905,7 @@ int NS_main(int argc, NS_tchar** argv) {
       LOG(
           ("The apply-to directory must be the same as or "
            "a child of the installation directory! Exiting."));
-      ImpersonatedLogFinish();
+      LogFinish();
       return 1;
     }
   }
@@ -3938,15 +2935,6 @@ int NS_main(int argc, NS_tchar** argv) {
       }
     }
   }
-<<<<<<< HEAD
-#else
-    if (pid > 0) waitpid(pid, nullptr, 0);
-||||||| merged common ancestors
-#else
-  if (pid > 0)
-    waitpid(pid, nullptr, 0);
-=======
->>>>>>> upstream-releases
 #endif
 
 #ifdef XP_WIN
@@ -3985,13 +2973,7 @@ int NS_main(int argc, NS_tchar** argv) {
       // <install_dir>\..\moz_update_in_progress.lock
       NS_tchar installDir[MAXPATHLEN];
       NS_tstrcpy(installDir, gInstallDirPath);
-<<<<<<< HEAD
-      NS_tchar *slash = (NS_tchar *)NS_tstrrchr(installDir, NS_SLASH);
-||||||| merged common ancestors
-      NS_tchar *slash = (NS_tchar *) NS_tstrrchr(installDir, NS_SLASH);
-=======
       NS_tchar* slash = (NS_tchar*)NS_tstrrchr(installDir, NS_SLASH);
->>>>>>> upstream-releases
       *slash = NS_T('\0');
       NS_tsnprintf(updateLockFilePath,
                    sizeof(updateLockFilePath) / sizeof(updateLockFilePath[0]),
@@ -4047,50 +3029,6 @@ int NS_main(int argc, NS_tchar** argv) {
 
     if (updateLockFileHandle == INVALID_HANDLE_VALUE ||
         (useService && testOnlyFallbackKeyExists && noServiceFallback)) {
-<<<<<<< HEAD
-      HANDLE elevatedFileHandle;
-
-      // A block to contain ImpersonationScope when testing access, removing,
-      // and the creating elevated lock file.
-      {
-#if defined(XP_WIN) && defined(MOZ_MAINTENANCE_SERVICE)
-        ImpersonationScope impersonated(gUserToken);
-        if (gUserToken && !impersonated) {
-          fprintf(stderr,
-                  "Unable to impersonate when creating elevated "
-                  "lock file. Exiting\n");
-          return 1;
-        }
-#endif
-
-        if (!_waccess(elevatedLockFilePath, F_OK) &&
-            NS_tremove(elevatedLockFilePath) != 0) {
-          fprintf(stderr, "Unable to create elevated lock file! Exiting\n");
-          return 1;
-        }
-
-        elevatedFileHandle = CreateFileW(
-            elevatedLockFilePath, GENERIC_READ | GENERIC_WRITE, 0, nullptr,
-            OPEN_ALWAYS, FILE_FLAG_DELETE_ON_CLOSE, nullptr);
-      }
-
-||||||| merged common ancestors
-      if (!_waccess(elevatedLockFilePath, F_OK) &&
-          NS_tremove(elevatedLockFilePath) != 0) {
-        fprintf(stderr, "Unable to create elevated lock file! Exiting\n");
-        return 1;
-      }
-
-      HANDLE elevatedFileHandle;
-      elevatedFileHandle = CreateFileW(elevatedLockFilePath,
-                                       GENERIC_READ | GENERIC_WRITE,
-                                       0,
-                                       nullptr,
-                                       OPEN_ALWAYS,
-                                       FILE_FLAG_DELETE_ON_CLOSE,
-                                       nullptr);
-
-=======
       HANDLE elevatedFileHandle;
       if (NS_tremove(elevatedLockFilePath) && errno != ENOENT) {
         fprintf(stderr, "Unable to create elevated lock file! Exiting\n");
@@ -4100,7 +3038,6 @@ int NS_main(int argc, NS_tchar** argv) {
       elevatedFileHandle =
           CreateFileW(elevatedLockFilePath, GENERIC_READ | GENERIC_WRITE, 0,
                       nullptr, OPEN_ALWAYS, FILE_FLAG_DELETE_ON_CLOSE, nullptr);
->>>>>>> upstream-releases
       if (elevatedFileHandle == INVALID_HANDLE_VALUE) {
         LOG(("Unable to create elevated lock file! Exiting"));
         return 1;
@@ -4167,18 +3104,10 @@ int NS_main(int argc, NS_tchar** argv) {
       // If we still want to use the service try to launch the service
       // comamnd for the update.
       if (useService) {
-<<<<<<< HEAD
-        // Write a catchall service failure status until the service can obtain
-        // an impersonation token for this process.
-        WriteStatusFile(SERVICE_COULD_NOT_IMPERSONATE);
-
-||||||| merged common ancestors
-=======
         // Write a catchall service failure status in case it fails without
         // changing the status.
         WriteStatusFile(SERVICE_UPDATE_STATUS_UNCHANGED);
 
->>>>>>> upstream-releases
         // If the update couldn't be started, then set useService to false so
         // we do the update the old way.
         DWORD ret = LaunchServiceSoftwareUpdateCommand(argc, (LPCWSTR*)argv);
@@ -4356,15 +3285,8 @@ int NS_main(int argc, NS_tchar** argv) {
   if (!sReplaceRequest) {
     // Allocate enough space for the length of the path an optional additional
     // trailing slash and null termination.
-<<<<<<< HEAD
-    NS_tchar *destpath = (NS_tchar *)malloc((NS_tstrlen(gWorkingDirPath) + 2) *
-                                            sizeof(NS_tchar));
-||||||| merged common ancestors
-    NS_tchar *destpath = (NS_tchar *) malloc((NS_tstrlen(gWorkingDirPath) + 2) * sizeof(NS_tchar));
-=======
     NS_tchar* destpath =
         (NS_tchar*)malloc((NS_tstrlen(gWorkingDirPath) + 2) * sizeof(NS_tchar));
->>>>>>> upstream-releases
     if (!destpath) {
       return 1;
     }
@@ -4388,7 +3310,7 @@ int NS_main(int argc, NS_tchar** argv) {
           gWorkingDirPath, applyDirLongPath,
           sizeof(applyDirLongPath) / sizeof(applyDirLongPath[0]))) {
     LOG(("NS_main: unable to find apply to dir: " LOG_S, gWorkingDirPath));
-    ImpersonatedLogFinish();
+    LogFinish();
     WriteStatusFile(WRITE_ERROR_APPLY_DIR_PATH);
     EXIT_WHEN_ELEVATED(elevatedLockFilePath, updateLockFileHandle, 1);
     if (argc > callbackIndex) {
@@ -4407,34 +3329,15 @@ int NS_main(int argc, NS_tchar** argv) {
     // to stack corruption which causes crashes and other problems.
     NS_tchar callbackLongPath[MAXPATHLEN];
     ZeroMemory(callbackLongPath, sizeof(callbackLongPath));
-<<<<<<< HEAD
-    NS_tchar *targetPath = argv[callbackIndex];
-    NS_tchar buffer[MAXPATHLEN * 2] = {NS_T('\0')};
-||||||| merged common ancestors
-    NS_tchar *targetPath = argv[callbackIndex];
-    NS_tchar buffer[MAXPATHLEN * 2] = { NS_T('\0') };
-=======
     NS_tchar* targetPath = argv[callbackIndex];
     NS_tchar buffer[MAXPATHLEN * 2] = {NS_T('\0')};
->>>>>>> upstream-releases
     size_t bufferLeft = MAXPATHLEN * 2;
     if (sReplaceRequest) {
       // In case of replace requests, we should look for the callback file in
       // the destination directory.
-<<<<<<< HEAD
-      size_t commonPrefixLength =
-          PathCommonPrefixW(argv[callbackIndex], gInstallDirPath, nullptr);
-      NS_tchar *p = buffer;
-||||||| merged common ancestors
-      size_t commonPrefixLength = PathCommonPrefixW(argv[callbackIndex],
-                                                    gInstallDirPath,
-                                                    nullptr);
-      NS_tchar *p = buffer;
-=======
       size_t commonPrefixLength =
           PathCommonPrefixW(argv[callbackIndex], gInstallDirPath, nullptr);
       NS_tchar* p = buffer;
->>>>>>> upstream-releases
       NS_tstrncpy(p, argv[callbackIndex], commonPrefixLength);
       p += commonPrefixLength;
       bufferLeft -= commonPrefixLength;
@@ -4461,7 +3364,7 @@ int NS_main(int argc, NS_tchar** argv) {
             targetPath, callbackLongPath,
             sizeof(callbackLongPath) / sizeof(callbackLongPath[0]))) {
       LOG(("NS_main: unable to find callback file: " LOG_S, targetPath));
-      ImpersonatedLogFinish();
+      LogFinish();
       WriteStatusFile(WRITE_ERROR_CALLBACK_PATH);
       EXIT_WHEN_ELEVATED(elevatedLockFilePath, updateLockFileHandle, 1);
       if (argc > callbackIndex) {
@@ -4474,33 +3377,14 @@ int NS_main(int argc, NS_tchar** argv) {
     // Doing this is only necessary when we're actually applying a patch.
     if (!sReplaceRequest) {
       int len = NS_tstrlen(applyDirLongPath);
-<<<<<<< HEAD
-      NS_tchar *s = callbackLongPath;
-      NS_tchar *d = gCallbackRelPath;
-      // advance to the apply to directory and advance past the trailing
-      // backslash if present.
-||||||| merged common ancestors
-      NS_tchar *s = callbackLongPath;
-      NS_tchar *d = gCallbackRelPath;
-      // advance to the apply to directory and advance past the trailing backslash
-      // if present.
-=======
       NS_tchar* s = callbackLongPath;
       NS_tchar* d = gCallbackRelPath;
       // advance to the apply to directory and advance past the trailing
       // backslash if present.
->>>>>>> upstream-releases
       s += len;
-<<<<<<< HEAD
-      if (*s == NS_T('\\')) ++s;
-||||||| merged common ancestors
-      if (*s == NS_T('\\'))
-        ++s;
-=======
       if (*s == NS_T('\\')) {
         ++s;
       }
->>>>>>> upstream-releases
 
       // Copy the string and replace backslashes with forward slashes along the
       // way.
@@ -4526,7 +3410,7 @@ int NS_main(int argc, NS_tchar** argv) {
           callbackBackupPathLen >=
               static_cast<int>(callbackBackupPathBufSize)) {
         LOG(("NS_main: callback backup path truncated"));
-        ImpersonatedLogFinish();
+        LogFinish();
         WriteStatusFile(USAGE_ERROR);
 
         // Don't attempt to launch the callback when the callback path is
@@ -4536,29 +3420,12 @@ int NS_main(int argc, NS_tchar** argv) {
       }
 
       // Make a copy of the callback executable so it can be read when patching.
-<<<<<<< HEAD
-      NS_tremove(gCallbackBackupPath);
-      if (!CopyFileW(argv[callbackIndex], gCallbackBackupPath, true)) {
-||||||| merged common ancestors
-      NS_tremove(gCallbackBackupPath);
-      if(!CopyFileW(argv[callbackIndex], gCallbackBackupPath, true)) {
-=======
       if (!CopyFileW(argv[callbackIndex], gCallbackBackupPath, false)) {
->>>>>>> upstream-releases
         DWORD copyFileError = GetLastError();
         LOG(("NS_main: failed to copy callback file " LOG_S
-<<<<<<< HEAD
-             " into place at " LOG_S,
-             argv[callbackIndex], gCallbackBackupPath));
-        ImpersonatedLogFinish();
-||||||| merged common ancestors
-             " into place at " LOG_S, argv[callbackIndex], gCallbackBackupPath));
-        LogFinish();
-=======
              " into place at " LOG_S,
              argv[callbackIndex], gCallbackBackupPath));
         LogFinish();
->>>>>>> upstream-releases
         if (copyFileError == ERROR_ACCESS_DENIED) {
           WriteStatusFile(WRITE_ERROR_ACCESS_DENIED);
         } else {
@@ -4586,16 +3453,9 @@ int NS_main(int argc, NS_tchar** argv) {
                                    // allow delete, rename, and write
                                    FILE_SHARE_DELETE | FILE_SHARE_WRITE,
                                    nullptr, OPEN_EXISTING, 0, nullptr);
-<<<<<<< HEAD
-        if (callbackFile != INVALID_HANDLE_VALUE) break;
-||||||| merged common ancestors
-        if (callbackFile != INVALID_HANDLE_VALUE)
-          break;
-=======
         if (callbackFile != INVALID_HANDLE_VALUE) {
           break;
         }
->>>>>>> upstream-releases
 
         lastWriteError = GetLastError();
         LOG(
@@ -4610,23 +3470,11 @@ int NS_main(int argc, NS_tchar** argv) {
       if (callbackFile == INVALID_HANDLE_VALUE) {
         // Only fail the update if the last error was not a sharing violation.
         if (lastWriteError != ERROR_SHARING_VIOLATION) {
-<<<<<<< HEAD
-          LOG(
-              ("NS_main: callback app file in use, failed to exclusively open "
-               "executable file: " LOG_S,
-               argv[callbackIndex]));
-          ImpersonatedLogFinish();
-||||||| merged common ancestors
-          LOG(("NS_main: callback app file in use, failed to exclusively open " \
-               "executable file: " LOG_S, argv[callbackIndex]));
-          LogFinish();
-=======
           LOG(
               ("NS_main: callback app file in use, failed to exclusively open "
                "executable file: " LOG_S,
                argv[callbackIndex]));
           LogFinish();
->>>>>>> upstream-releases
           if (lastWriteError == ERROR_ACCESS_DENIED) {
             WriteStatusFile(WRITE_ERROR_ACCESS_DENIED);
           } else {
@@ -4741,7 +3589,7 @@ int NS_main(int argc, NS_tchar** argv) {
   }
 #endif /* XP_MACOSX */
 
-  ImpersonatedLogFinish();
+  LogFinish();
 
   int retVal = LaunchCallbackAndPostProcessApps(argc, argv, callbackIndex
 #ifdef XP_WIN
@@ -4762,40 +3610,19 @@ class ActionList {
   ActionList() : mFirst(nullptr), mLast(nullptr), mCount(0) {}
   ~ActionList();
 
-  void Append(Action *action);
+  void Append(Action* action);
   int Prepare();
   int Execute();
   void Finish(int status);
 
-<<<<<<< HEAD
- private:
-  Action *mFirst;
-  Action *mLast;
-  int mCount;
-||||||| merged common ancestors
-private:
-  Action *mFirst;
-  Action *mLast;
-  int     mCount;
-=======
  private:
   Action* mFirst;
   Action* mLast;
   int mCount;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-ActionList::~ActionList() {
-  Action *a = mFirst;
-||||||| merged common ancestors
-ActionList::~ActionList()
-{
-  Action* a = mFirst;
-=======
 ActionList::~ActionList() {
   Action* a = mFirst;
->>>>>>> upstream-releases
   while (a) {
     Action* b = a;
     a = a->mNext;
@@ -4803,18 +3630,8 @@ ActionList::~ActionList() {
   }
 }
 
-<<<<<<< HEAD
-void ActionList::Append(Action *action) {
-  if (mLast)
-||||||| merged common ancestors
-void
-ActionList::Append(Action *action)
-{
-  if (mLast)
-=======
 void ActionList::Append(Action* action) {
   if (mLast) {
->>>>>>> upstream-releases
     mLast->mNext = action;
   } else {
     mFirst = action;
@@ -4837,16 +3654,9 @@ int ActionList::Prepare() {
   int i = 0;
   while (a) {
     int rv = a->Prepare();
-<<<<<<< HEAD
-    if (rv) return rv;
-||||||| merged common ancestors
-    if (rv)
-      return rv;
-=======
     if (rv) {
       return rv;
     }
->>>>>>> upstream-releases
 
     float percent = float(++i) / float(mCount);
     UpdateProgressUI(PROGRESS_PREPARE_SIZE * percent);
@@ -4883,18 +3693,8 @@ int ActionList::Execute() {
   return OK;
 }
 
-<<<<<<< HEAD
-void ActionList::Finish(int status) {
-  Action *a = mFirst;
-||||||| merged common ancestors
-void
-ActionList::Finish(int status)
-{
-  Action *a = mFirst;
-=======
 void ActionList::Finish(int status) {
   Action* a = mFirst;
->>>>>>> upstream-releases
   int i = 0;
   while (a) {
     a->Finish(status);
@@ -4906,27 +3706,13 @@ void ActionList::Finish(int status) {
     a = a->mNext;
   }
 
-<<<<<<< HEAD
-  if (status == OK) gSucceeded = true;
-||||||| merged common ancestors
-  if (status == OK)
-    gSucceeded = true;
-=======
   if (status == OK) {
     gSucceeded = true;
   }
->>>>>>> upstream-releases
 }
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-int add_dir_entries(const NS_tchar *dirpath, ActionList *list) {
-||||||| merged common ancestors
-int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
-{
-=======
 int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
->>>>>>> upstream-releases
   int rv = OK;
   WIN32_FIND_DATAW finddata;
   HANDLE hFindFile;
@@ -4959,19 +3745,10 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
         }
       } else {
         // Add the file to be removed to the ActionList.
-<<<<<<< HEAD
-        NS_tchar *quotedpath = get_quoted_path(foundpath);
-        if (!quotedpath) return PARSE_ERROR;
-||||||| merged common ancestors
-        NS_tchar *quotedpath = get_quoted_path(foundpath);
-        if (!quotedpath)
-          return PARSE_ERROR;
-=======
         NS_tchar* quotedpath = get_quoted_path(foundpath);
         if (!quotedpath) {
           return PARSE_ERROR;
         }
->>>>>>> upstream-releases
 
         Action* action = new RemoveFile();
         rv = action->Parse(quotedpath);
@@ -4990,19 +3767,10 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
     FindClose(hFindFile);
     {
       // Add the directory to be removed to the ActionList.
-<<<<<<< HEAD
-      NS_tchar *quotedpath = get_quoted_path(dirpath);
-      if (!quotedpath) return PARSE_ERROR;
-||||||| merged common ancestors
-      NS_tchar *quotedpath = get_quoted_path(dirpath);
-      if (!quotedpath)
-        return PARSE_ERROR;
-=======
       NS_tchar* quotedpath = get_quoted_path(dirpath);
       if (!quotedpath) {
         return PARSE_ERROR;
       }
->>>>>>> upstream-releases
 
       Action* action = new RemoveDir();
       rv = action->Parse(quotedpath);
@@ -5020,52 +3788,6 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
 }
 
 #elif defined(SOLARIS)
-<<<<<<< HEAD
-  int add_dir_entries(const NS_tchar *dirpath, ActionList *list) {
-    int rv = OK;
-    NS_tchar foundpath[MAXPATHLEN];
-    struct {
-      dirent dent_buffer;
-      char chars[MAXNAMLEN];
-    } ent_buf;
-    struct dirent *ent;
-    mozilla::UniquePtr<NS_tchar[]> searchpath(get_full_path(dirpath));
-
-    DIR *dir = opendir(searchpath.get());
-    if (!dir) {
-      LOG(("add_dir_entries error on opendir: " LOG_S ", err: %d",
-           searchpath.get(), errno));
-||||||| merged common ancestors
-int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
-{
-  int rv = OK;
-  NS_tchar foundpath[MAXPATHLEN];
-  struct {
-    dirent dent_buffer;
-    char chars[MAXNAMLEN];
-  } ent_buf;
-  struct dirent* ent;
-  mozilla::UniquePtr<NS_tchar[]> searchpath(get_full_path(dirpath));
-
-  DIR* dir = opendir(searchpath.get());
-  if (!dir) {
-    LOG(("add_dir_entries error on opendir: " LOG_S ", err: %d", searchpath.get(),
-         errno));
-    return UNEXPECTED_FILE_OPERATION_ERROR;
-  }
-
-  while (readdir_r(dir, (dirent *)&ent_buf, &ent) == 0 && ent) {
-    if ((strcmp(ent->d_name, ".") == 0) ||
-        (strcmp(ent->d_name, "..") == 0))
-      continue;
-
-    NS_tsnprintf(foundpath, sizeof(foundpath)/sizeof(foundpath[0]),
-                 NS_T("%s%s"), searchpath.get(), ent->d_name);
-    struct stat64 st_buf;
-    int test = stat64(foundpath, &st_buf);
-    if (test) {
-      closedir(dir);
-=======
   int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
     int rv = OK;
     NS_tchar foundpath[MAXPATHLEN];
@@ -5080,36 +3802,8 @@ int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
     if (!dir) {
       LOG(("add_dir_entries error on opendir: " LOG_S ", err: %d",
            searchpath.get(), errno));
->>>>>>> upstream-releases
       return UNEXPECTED_FILE_OPERATION_ERROR;
     }
-<<<<<<< HEAD
-
-    while (readdir_r(dir, (dirent *)&ent_buf, &ent) == 0 && ent) {
-      if ((strcmp(ent->d_name, ".") == 0) || (strcmp(ent->d_name, "..") == 0))
-        continue;
-
-      NS_tsnprintf(foundpath, sizeof(foundpath) / sizeof(foundpath[0]),
-                   NS_T("%s%s"), searchpath.get(), ent->d_name);
-      struct stat64 st_buf;
-      int test = stat64(foundpath, &st_buf);
-      if (test) {
-||||||| merged common ancestors
-    if (S_ISDIR(st_buf.st_mode)) {
-      NS_tsnprintf(foundpath, sizeof(foundpath)/sizeof(foundpath[0]),
-                   NS_T("%s/"), foundpath);
-      // Recurse into the directory.
-      rv = add_dir_entries(foundpath, list);
-      if (rv) {
-        LOG(("add_dir_entries error: " LOG_S ", err: %d", foundpath, rv));
-        closedir(dir);
-        return rv;
-      }
-    } else {
-      // Add the file to be removed to the ActionList.
-      NS_tchar *quotedpath = get_quoted_path(get_relative_path(foundpath));
-      if (!quotedpath) {
-=======
 
     while (readdir_r(dir, (dirent*)&ent_buf, &ent) == 0 && ent) {
       if ((strcmp(ent->d_name, ".") == 0) || (strcmp(ent->d_name, "..") == 0)) {
@@ -5121,30 +3815,9 @@ int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
       struct stat64 st_buf;
       int test = stat64(foundpath, &st_buf);
       if (test) {
->>>>>>> upstream-releases
         closedir(dir);
         return UNEXPECTED_FILE_OPERATION_ERROR;
       }
-<<<<<<< HEAD
-      if (S_ISDIR(st_buf.st_mode)) {
-        NS_tsnprintf(foundpath, sizeof(foundpath) / sizeof(foundpath[0]),
-                     NS_T("%s/"), foundpath);
-        // Recurse into the directory.
-        rv = add_dir_entries(foundpath, list);
-        if (rv) {
-          LOG(("add_dir_entries error: " LOG_S ", err: %d", foundpath, rv));
-          closedir(dir);
-          return rv;
-        }
-      } else {
-        // Add the file to be removed to the ActionList.
-        NS_tchar *quotedpath = get_quoted_path(get_relative_path(foundpath));
-        if (!quotedpath) {
-          closedir(dir);
-          return PARSE_ERROR;
-        }
-||||||| merged common ancestors
-=======
       if (S_ISDIR(st_buf.st_mode)) {
         NS_tsnprintf(foundpath, sizeof(foundpath) / sizeof(foundpath[0]),
                      NS_T("%s/"), foundpath);
@@ -5162,28 +3835,7 @@ int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
           closedir(dir);
           return PARSE_ERROR;
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        Action *action = new RemoveFile();
-        rv = action->Parse(quotedpath);
-        if (rv) {
-          LOG(("add_dir_entries Parse error on recurse: " LOG_S ", err: %d",
-               quotedpath, rv));
-          closedir(dir);
-          return rv;
-        }
-
-        list->Append(action);
-||||||| merged common ancestors
-      Action *action = new RemoveFile();
-      rv = action->Parse(quotedpath);
-      if (rv) {
-        LOG(("add_dir_entries Parse error on recurse: " LOG_S ", err: %d",
-             quotedpath, rv));
-        closedir(dir);
-        return rv;
-=======
         Action* action = new RemoveFile();
         rv = action->Parse(quotedpath);
         if (rv) {
@@ -5196,42 +3848,15 @@ int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
         free(quotedpath);
 
         list->Append(action);
->>>>>>> upstream-releases
       }
     }
     closedir(dir);
 
-<<<<<<< HEAD
-    // Add the directory to be removed to the ActionList.
-    NS_tchar *quotedpath = get_quoted_path(get_relative_path(dirpath));
-    if (!quotedpath) return PARSE_ERROR;
-
-    Action *action = new RemoveDir();
-    rv = action->Parse(quotedpath);
-    if (rv) {
-      LOG(("add_dir_entries Parse error on close: " LOG_S ", err: %d",
-           quotedpath, rv));
-    } else {
-      list->Append(action);
-||||||| merged common ancestors
-      list->Append(action);
-=======
     // Add the directory to be removed to the ActionList.
     NS_tchar* quotedpath = get_quoted_path(get_relative_path(dirpath));
     if (!quotedpath) {
       return PARSE_ERROR;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-||||||| merged common ancestors
-  }
-  closedir(dir);
-
-  // Add the directory to be removed to the ActionList.
-  NS_tchar *quotedpath = get_quoted_path(get_relative_path(dirpath));
-  if (!quotedpath)
-    return PARSE_ERROR;
-=======
 
     Action* action = new RemoveDir();
     rv = action->Parse(quotedpath);
@@ -5242,21 +3867,13 @@ int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
       list->Append(action);
     }
     free(quotedpath);
->>>>>>> upstream-releases
 
     return rv;
   }
 
 #else
 
-<<<<<<< HEAD
-int add_dir_entries(const NS_tchar *dirpath, ActionList *list) {
-||||||| merged common ancestors
-int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
-{
-=======
 int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
->>>>>>> upstream-releases
   int rv = OK;
   FTS* ftsdir;
   FTSENT* ftsdirEntry;
@@ -5265,7 +3882,7 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
   // Remove the trailing slash so the paths don't contain double slashes. The
   // existence of the slash has already been checked in DoUpdate.
   searchpath[NS_tstrlen(searchpath.get()) - 1] = NS_T('\0');
-  char *const pathargv[] = {searchpath.get(), nullptr};
+  char* const pathargv[] = {searchpath.get(), nullptr};
 
   // FTS_NOCHDIR is used so relative paths from the destination directory are
   // returned.
@@ -5304,16 +3921,9 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
         action = new RemoveFile();
         rv = action->Parse(quotedpath);
         free(quotedpath);
-<<<<<<< HEAD
-        if (!rv) list->Append(action);
-||||||| merged common ancestors
-        if (!rv)
-          list->Append(action);
-=======
         if (!rv) {
           list->Append(action);
         }
->>>>>>> upstream-releases
         break;
 
       // Directories
@@ -5331,16 +3941,9 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
         action = new RemoveDir();
         rv = action->Parse(quotedpath);
         free(quotedpath);
-<<<<<<< HEAD
-        if (!rv) list->Append(action);
-||||||| merged common ancestors
-        if (!rv)
-          list->Append(action);
-=======
         if (!rv) {
           list->Append(action);
         }
->>>>>>> upstream-releases
         break;
 
       // Errors
@@ -5373,16 +3976,9 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
         break;
     }
 
-<<<<<<< HEAD
-    if (rv != OK) break;
-||||||| merged common ancestors
-    if (rv != OK)
-      break;
-=======
     if (rv != OK) {
       break;
     }
->>>>>>> upstream-releases
   }
 
   fts_close(ftsdir);
@@ -5391,13 +3987,6 @@ int add_dir_entries(const NS_tchar* dirpath, ActionList* list) {
 }
 #endif
 
-<<<<<<< HEAD
-static NS_tchar *GetManifestContents(const NS_tchar *manifest) {
-||||||| merged common ancestors
-static NS_tchar*
-GetManifestContents(const NS_tchar *manifest)
-{
-=======
 /*
  * Gets the contents of an update manifest file. The return value is malloc'd
  * and it is the responsibility of the caller to free it.
@@ -5407,7 +3996,6 @@ GetManifestContents(const NS_tchar *manifest)
  * @return On success the contents of the manifest and nullptr otherwise.
  */
 static NS_tchar* GetManifestContents(const NS_tchar* manifest) {
->>>>>>> upstream-releases
   AutoFile mfile(NS_tfopen(manifest, NS_T("rb")));
   if (mfile == nullptr) {
     LOG(("GetManifestContents: error opening manifest file: " LOG_S, manifest));
@@ -5421,19 +4009,10 @@ static NS_tchar* GetManifestContents(const NS_tchar* manifest) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  char *mbuf = (char *)malloc(ms.st_size + 1);
-  if (!mbuf) return nullptr;
-||||||| merged common ancestors
-  char *mbuf = (char *) malloc(ms.st_size + 1);
-  if (!mbuf)
-    return nullptr;
-=======
   char* mbuf = (char*)malloc(ms.st_size + 1);
   if (!mbuf) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   size_t r = ms.st_size;
   char* rb = mbuf;
@@ -5455,40 +4034,12 @@ static NS_tchar* GetManifestContents(const NS_tchar* manifest) {
 #ifndef XP_WIN
   return mbuf;
 #else
-<<<<<<< HEAD
-    NS_tchar *wrb = (NS_tchar *)malloc((ms.st_size + 1) * sizeof(NS_tchar));
-    if (!wrb) {
-      free(mbuf);
-      return nullptr;
-    }
-||||||| merged common ancestors
-  NS_tchar *wrb = (NS_tchar *) malloc((ms.st_size + 1) * sizeof(NS_tchar));
-  if (!wrb) {
-    free(mbuf);
-    return nullptr;
-  }
-=======
     NS_tchar* wrb = (NS_tchar*)malloc((ms.st_size + 1) * sizeof(NS_tchar));
     if (!wrb) {
       free(mbuf);
       return nullptr;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, rb, -1, wrb,
-                             ms.st_size + 1)) {
-      LOG(("GetManifestContents: error converting utf8 to utf16le: %d",
-           GetLastError()));
-      free(mbuf);
-      free(wrb);
-      return nullptr;
-    }
-||||||| merged common ancestors
-  if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, rb, -1, wrb,
-                           ms.st_size + 1)) {
-    LOG(("GetManifestContents: error converting utf8 to utf16le: %d", GetLastError()));
-=======
     if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, mbuf, -1, wrb,
                              ms.st_size + 1)) {
       LOG(("GetManifestContents: error converting utf8 to utf16le: %d",
@@ -5497,21 +4048,13 @@ static NS_tchar* GetManifestContents(const NS_tchar* manifest) {
       free(wrb);
       return nullptr;
     }
->>>>>>> upstream-releases
     free(mbuf);
 
     return wrb;
 #endif
 }
 
-<<<<<<< HEAD
-int AddPreCompleteActions(ActionList *list) {
-||||||| merged common ancestors
-int AddPreCompleteActions(ActionList *list)
-{
-=======
 int AddPreCompleteActions(ActionList* list) {
->>>>>>> upstream-releases
 #ifdef XP_MACOSX
   mozilla::UniquePtr<NS_tchar[]> manifestPath(
       get_full_path(NS_T("Contents/Resources/precomplete")));
@@ -5520,21 +4063,10 @@ int AddPreCompleteActions(ActionList* list) {
         get_full_path(NS_T("precomplete")));
 #endif
 
-<<<<<<< HEAD
-  NS_tchar *rb = GetManifestContents(manifestPath.get());
-  if (rb == nullptr) {
-    LOG(
-        ("AddPreCompleteActions: error getting contents of precomplete "
-||||||| merged common ancestors
-  NS_tchar *rb = GetManifestContents(manifestPath.get());
-  if (rb == nullptr) {
-    LOG(("AddPreCompleteActions: error getting contents of precomplete " \
-=======
   NS_tchar* buf = GetManifestContents(manifestPath.get());
   if (!buf) {
     LOG(
         ("AddPreCompleteActions: error getting contents of precomplete "
->>>>>>> upstream-releases
          "manifest"));
     // Applications aren't required to have a precomplete manifest. The mar
     // generation scripts enforce the presence of a precomplete manifest.
@@ -5543,27 +4075,12 @@ int AddPreCompleteActions(ActionList* list) {
   NS_tchar* rb = buf;
 
   int rv;
-<<<<<<< HEAD
-  NS_tchar *line;
-  while ((line = mstrtok(kNL, &rb)) != 0) {
-||||||| merged common ancestors
-  NS_tchar *line;
-  while((line = mstrtok(kNL, &rb)) != 0) {
-=======
   NS_tchar* line;
   while ((line = mstrtok(kNL, &rb)) != 0) {
->>>>>>> upstream-releases
     // skip comments
-<<<<<<< HEAD
-    if (*line == NS_T('#')) continue;
-||||||| merged common ancestors
-    if (*line == NS_T('#'))
-      continue;
-=======
     if (*line == NS_T('#')) {
       continue;
     }
->>>>>>> upstream-releases
 
     NS_tchar* token = mstrtok(kWhitespace, &line);
     if (!token) {
@@ -5572,16 +4089,8 @@ int AddPreCompleteActions(ActionList* list) {
       return PARSE_ERROR;
     }
 
-<<<<<<< HEAD
-    Action *action = nullptr;
-    if (NS_tstrcmp(token, NS_T("remove")) == 0) {  // rm file
-||||||| merged common ancestors
-    Action *action = nullptr;
-    if (NS_tstrcmp(token, NS_T("remove")) == 0) { // rm file
-=======
     Action* action = nullptr;
     if (NS_tstrcmp(token, NS_T("remove")) == 0) {  // rm file
->>>>>>> upstream-releases
       action = new RemoveFile();
     } else if (NS_tstrcmp(token, NS_T("remove-cc")) ==
                0) {  // no longer supported
@@ -5594,31 +4103,17 @@ int AddPreCompleteActions(ActionList* list) {
       return PARSE_ERROR;
     }
 
-<<<<<<< HEAD
-    if (!action) return BAD_ACTION_ERROR;
-||||||| merged common ancestors
-    if (!action)
-      return BAD_ACTION_ERROR;
-=======
     if (!action) {
       free(buf);
       return BAD_ACTION_ERROR;
     }
->>>>>>> upstream-releases
 
     rv = action->Parse(line);
-<<<<<<< HEAD
-    if (rv) return rv;
-||||||| merged common ancestors
-    if (rv)
-      return rv;
-=======
     if (rv) {
       delete action;
       free(buf);
       return rv;
     }
->>>>>>> upstream-releases
 
     list->Append(action);
   }
@@ -5647,38 +4142,16 @@ int DoUpdate() {
     LOG(("DoUpdate: error opening manifest file: " LOG_S, manifest));
     return READ_ERROR;
   }
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
   NS_tchar* rb = buf;
 
->>>>>>> upstream-releases
   ActionList list;
   NS_tchar* line;
   bool isFirstAction = true;
-<<<<<<< HEAD
-
   while ((line = mstrtok(kNL, &rb)) != 0) {
-||||||| merged common ancestors
-
-  while((line = mstrtok(kNL, &rb)) != 0) {
-=======
-  while ((line = mstrtok(kNL, &rb)) != 0) {
->>>>>>> upstream-releases
     // skip comments
-<<<<<<< HEAD
-    if (*line == NS_T('#')) continue;
-||||||| merged common ancestors
-    if (*line == NS_T('#'))
-      continue;
-=======
     if (*line == NS_T('#')) {
       continue;
     }
->>>>>>> upstream-releases
 
     NS_tchar* token = mstrtok(kWhitespace, &line);
     if (!token) {
@@ -5696,53 +4169,26 @@ int DoUpdate() {
         LOG(("UPDATE TYPE " LOG_S, type));
         if (NS_tstrcmp(type, NS_T("complete")) == 0) {
           rv = AddPreCompleteActions(&list);
-<<<<<<< HEAD
-          if (rv) return rv;
-||||||| merged common ancestors
-          if (rv)
-            return rv;
-=======
           if (rv) {
             free(buf);
             return rv;
           }
->>>>>>> upstream-releases
         }
         continue;
       }
     }
 
-<<<<<<< HEAD
-    Action *action = nullptr;
-    if (NS_tstrcmp(token, NS_T("remove")) == 0) {  // rm file
-||||||| merged common ancestors
-    Action *action = nullptr;
-    if (NS_tstrcmp(token, NS_T("remove")) == 0) { // rm file
-=======
     Action* action = nullptr;
     if (NS_tstrcmp(token, NS_T("remove")) == 0) {  // rm file
->>>>>>> upstream-releases
       action = new RemoveFile();
     } else if (NS_tstrcmp(token, NS_T("rmdir")) == 0) {  // rmdir if empty
       action = new RemoveDir();
-<<<<<<< HEAD
-    } else if (NS_tstrcmp(token, NS_T("rmrfdir")) == 0) {  // rmdir recursive
-      const NS_tchar *reldirpath = mstrtok(kQuote, &line);
-      if (!reldirpath) return PARSE_ERROR;
-||||||| merged common ancestors
-    }
-    else if (NS_tstrcmp(token, NS_T("rmrfdir")) == 0) { // rmdir recursive
-      const NS_tchar *reldirpath = mstrtok(kQuote, &line);
-      if (!reldirpath)
-        return PARSE_ERROR;
-=======
     } else if (NS_tstrcmp(token, NS_T("rmrfdir")) == 0) {  // rmdir recursive
       const NS_tchar* reldirpath = mstrtok(kQuote, &line);
       if (!reldirpath) {
         free(buf);
         return PARSE_ERROR;
       }
->>>>>>> upstream-releases
 
       if (reldirpath[NS_tstrlen(reldirpath) - 1] != NS_T('/')) {
         free(buf);
@@ -5750,17 +4196,10 @@ int DoUpdate() {
       }
 
       rv = add_dir_entries(reldirpath, &list);
-<<<<<<< HEAD
-      if (rv) return rv;
-||||||| merged common ancestors
-      if (rv)
-        return rv;
-=======
       if (rv) {
         free(buf);
         return rv;
       }
->>>>>>> upstream-releases
 
       continue;
     } else if (NS_tstrcmp(token, NS_T("add")) == 0) {
@@ -5780,46 +4219,25 @@ int DoUpdate() {
       return PARSE_ERROR;
     }
 
-<<<<<<< HEAD
-    if (!action) return BAD_ACTION_ERROR;
-||||||| merged common ancestors
-    if (!action)
-      return BAD_ACTION_ERROR;
-=======
     if (!action) {
       free(buf);
       return BAD_ACTION_ERROR;
     }
->>>>>>> upstream-releases
 
     rv = action->Parse(line);
-<<<<<<< HEAD
-    if (rv) return rv;
-||||||| merged common ancestors
-    if (rv)
-      return rv;
-=======
     if (rv) {
       free(buf);
       return rv;
     }
->>>>>>> upstream-releases
 
     list.Append(action);
   }
 
   rv = list.Prepare();
-<<<<<<< HEAD
-  if (rv) return rv;
-||||||| merged common ancestors
-  if (rv)
-    return rv;
-=======
   if (rv) {
     free(buf);
     return rv;
   }
->>>>>>> upstream-releases
 
   rv = list.Execute();
 

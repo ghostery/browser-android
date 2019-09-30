@@ -43,21 +43,11 @@ class nsNSSCertTrust {
   /* set p <--> P */
   void AddPeerTrust(bool ssl, bool email);
 
-  CERTCertTrust &GetTrust() { return mTrust; }
+  CERTCertTrust& GetTrust() { return mTrust; }
 
-<<<<<<< HEAD
- private:
-  void addTrust(unsigned int *t, unsigned int v);
-  void removeTrust(unsigned int *t, unsigned int v);
-||||||| merged common ancestors
-private:
-  void addTrust(unsigned int *t, unsigned int v);
-  void removeTrust(unsigned int *t, unsigned int v);
-=======
  private:
   void addTrust(unsigned int* t, unsigned int v);
   void removeTrust(unsigned int* t, unsigned int v);
->>>>>>> upstream-releases
   bool hasTrust(unsigned int t, unsigned int v);
   CERTCertTrust mTrust;
 };

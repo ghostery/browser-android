@@ -94,42 +94,6 @@ class SnapshotListItem extends Component {
       details = dom.span({ className: "snapshot-state" }, statusText);
     }
 
-<<<<<<< HEAD
-    const saveLink = !snapshot.path ? void 0 : dom.a({
-      onClick: () => onSave(snapshot),
-      className: "save",
-    }, L10N.getStr("snapshot.io.save"));
-
-    const deleteButton = !snapshot.path ? void 0 : dom.button({
-      onClick: (event) => {
-        event.stopPropagation();
-        onDelete(snapshot);
-      },
-      className: "delete",
-      title: L10N.getStr("snapshot.io.delete"),
-    });
-
-    return (
-      dom.li({ className, onClick },
-        dom.span({
-          className: `snapshot-title ${wantThrobber ? " devtools-throbber" : ""}`,
-||||||| merged common ancestors
-    const saveLink = !snapshot.path ? void 0 : dom.a({
-      onClick: () => onSave(snapshot),
-      className: "save",
-    }, L10N.getStr("snapshot.io.save"));
-
-    const deleteButton = !snapshot.path ? void 0 : dom.button({
-      onClick: () => onDelete(snapshot),
-      className: "delete",
-      title: L10N.getStr("snapshot.io.delete"),
-    });
-
-    return (
-      dom.li({ className, onClick },
-        dom.span({
-          className: `snapshot-title ${wantThrobber ? " devtools-throbber" : ""}`,
-=======
     const saveLink = !snapshot.path
       ? void 0
       : dom.a(
@@ -158,7 +122,6 @@ class SnapshotListItem extends Component {
           className: `snapshot-title ${
             wantThrobber ? " devtools-throbber" : ""
           }`,
->>>>>>> upstream-releases
         },
         checkbox,
         title,

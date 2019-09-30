@@ -18,13 +18,7 @@
 #include FT_MULTIPLE_MASTERS_H
 
 #ifndef FT_FACE_FLAG_COLOR
-<<<<<<< HEAD
-#define FT_FACE_FLAG_COLOR (1L << 14)
-||||||| merged common ancestors
-#define FT_FACE_FLAG_COLOR ( 1L << 14 )
-=======
 #  define FT_FACE_FLAG_COLOR (1L << 14)
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla::gfx;
@@ -177,89 +171,6 @@ uint32_t gfxFT2FontBase::GetCharWidth(char aChar, gfxFloat* aWidth) {
   return gid;
 }
 
-<<<<<<< HEAD
-void gfxFT2FontBase::InitMetrics() {
-  mFUnitsConvFactor = 0.0;
-
-  if (MOZ_UNLIKELY(GetStyle()->size <= 0.0) ||
-      MOZ_UNLIKELY(GetStyle()->sizeAdjust == 0.0)) {
-    memset(&mMetrics, 0, sizeof(mMetrics));  // zero initialize
-    mSpaceGlyph = GetGlyph(' ');
-    return;
-  }
-
-  // Explicitly lock the face so we can release it early before calling
-  // back into Cairo below.
-  FT_Face face = cairo_ft_scaled_font_lock_face(GetCairoScaledFont());
-
-  if (MOZ_UNLIKELY(!face)) {
-    // No face.  This unfortunate situation might happen if the font
-    // file is (re)moved at the wrong time.
-    const gfxFloat emHeight = GetAdjustedSize();
-    mMetrics.emHeight = emHeight;
-    mMetrics.maxAscent = mMetrics.emAscent = 0.8 * emHeight;
-    mMetrics.maxDescent = mMetrics.emDescent = 0.2 * emHeight;
-    mMetrics.maxHeight = emHeight;
-    mMetrics.internalLeading = 0.0;
-    mMetrics.externalLeading = 0.2 * emHeight;
-    const gfxFloat spaceWidth = 0.5 * emHeight;
-    mMetrics.spaceWidth = spaceWidth;
-    mMetrics.maxAdvance = spaceWidth;
-    mMetrics.aveCharWidth = spaceWidth;
-    mMetrics.zeroOrAveCharWidth = spaceWidth;
-    const gfxFloat xHeight = 0.5 * emHeight;
-    mMetrics.xHeight = xHeight;
-    mMetrics.capHeight = mMetrics.maxAscent;
-    const gfxFloat underlineSize = emHeight / 14.0;
-    mMetrics.underlineSize = underlineSize;
-    mMetrics.underlineOffset = -underlineSize;
-    mMetrics.strikeoutOffset = 0.25 * emHeight;
-    mMetrics.strikeoutSize = underlineSize;
-||||||| merged common ancestors
-void
-gfxFT2FontBase::InitMetrics()
-{
-    mFUnitsConvFactor = 0.0;
-
-    if (MOZ_UNLIKELY(GetStyle()->size <= 0.0) ||
-        MOZ_UNLIKELY(GetStyle()->sizeAdjust == 0.0)) {
-        memset(&mMetrics, 0, sizeof(mMetrics)); // zero initialize
-        mSpaceGlyph = GetGlyph(' ');
-        return;
-    }
-
-    // Explicitly lock the face so we can release it early before calling
-    // back into Cairo below.
-    FT_Face face = cairo_ft_scaled_font_lock_face(GetCairoScaledFont());
-
-    if (MOZ_UNLIKELY(!face)) {
-        // No face.  This unfortunate situation might happen if the font
-        // file is (re)moved at the wrong time.
-        const gfxFloat emHeight = GetAdjustedSize();
-        mMetrics.emHeight = emHeight;
-        mMetrics.maxAscent = mMetrics.emAscent = 0.8 * emHeight;
-        mMetrics.maxDescent = mMetrics.emDescent = 0.2 * emHeight;
-        mMetrics.maxHeight = emHeight;
-        mMetrics.internalLeading = 0.0;
-        mMetrics.externalLeading = 0.2 * emHeight;
-        const gfxFloat spaceWidth = 0.5 * emHeight;
-        mMetrics.spaceWidth = spaceWidth;
-        mMetrics.maxAdvance = spaceWidth;
-        mMetrics.aveCharWidth = spaceWidth;
-        mMetrics.zeroOrAveCharWidth = spaceWidth;
-        const gfxFloat xHeight = 0.5 * emHeight;
-        mMetrics.xHeight = xHeight;
-        mMetrics.capHeight = mMetrics.maxAscent;
-        const gfxFloat underlineSize = emHeight / 14.0;
-        mMetrics.underlineSize = underlineSize;
-        mMetrics.underlineOffset = -underlineSize;
-        mMetrics.strikeoutOffset = 0.25 * emHeight;
-        mMetrics.strikeoutSize = underlineSize;
-
-        SanitizeMetrics(&mMetrics, false);
-        return;
-    }
-=======
 void gfxFT2FontBase::InitMetrics() {
   mFUnitsConvFactor = 0.0;
 
@@ -297,7 +208,6 @@ void gfxFT2FontBase::InitMetrics() {
     mMetrics.underlineOffset = -underlineSize;
     mMetrics.strikeoutOffset = 0.25 * emHeight;
     mMetrics.strikeoutSize = underlineSize;
->>>>>>> upstream-releases
 
     SanitizeMetrics(&mMetrics, false);
     return;
@@ -459,130 +369,6 @@ void gfxFT2FontBase::InitMetrics() {
     // Round to pixels as this is compared with maxAdvance to guess
     // whether this is a fixed width font.
     mMetrics.aveCharWidth =
-<<<<<<< HEAD
-        ScaleRoundDesignUnits(os2->xAvgCharWidth, ftMetrics.x_scale);
-  } else {
-    mMetrics.aveCharWidth = 0.0;  // updated below
-  }
-
-  if (os2 && os2->sCapHeight && yScale > 0.0) {
-    mMetrics.capHeight = os2->sCapHeight * yScale;
-  } else {
-    mMetrics.capHeight = mMetrics.maxAscent;
-  }
-
-  // Release the face lock to safely load glyphs with GetCharExtents if
-  // necessary without recursively locking.
-  cairo_ft_scaled_font_unlock_face(GetCairoScaledFont());
-
-  gfxFloat width;
-  mSpaceGlyph = GetCharWidth(' ', &width);
-  if (mSpaceGlyph) {
-    mMetrics.spaceWidth = width;
-  } else {
-    mMetrics.spaceWidth = mMetrics.maxAdvance;  // guess
-  }
-
-  if (GetCharWidth('0', &width)) {
-    mMetrics.zeroOrAveCharWidth = width;
-  } else {
-    mMetrics.zeroOrAveCharWidth = 0.0;
-  }
-
-  // Prefering a measured x over sxHeight because sxHeight doesn't consider
-  // hinting, but maybe the x extents are not quite right in some fancy
-  // script fonts.  CSS 2.1 suggests possibly using the height of an "o",
-  // which would have a more consistent glyph across fonts.
-  cairo_text_extents_t extents;
-  if (GetCharExtents('x', &extents) && extents.y_bearing < 0.0) {
-    mMetrics.xHeight = -extents.y_bearing;
-    mMetrics.aveCharWidth = std::max(mMetrics.aveCharWidth, extents.x_advance);
-  }
-
-  if (GetCharExtents('H', &extents) && extents.y_bearing < 0.0) {
-    mMetrics.capHeight = -extents.y_bearing;
-  }
-
-  mMetrics.aveCharWidth =
-      std::max(mMetrics.aveCharWidth, mMetrics.zeroOrAveCharWidth);
-  if (mMetrics.aveCharWidth == 0.0) {
-    mMetrics.aveCharWidth = mMetrics.spaceWidth;
-  }
-  if (mMetrics.zeroOrAveCharWidth == 0.0) {
-    mMetrics.zeroOrAveCharWidth = mMetrics.aveCharWidth;
-  }
-  // Apparently hinting can mean that max_advance is not always accurate.
-  mMetrics.maxAdvance = std::max(mMetrics.maxAdvance, mMetrics.aveCharWidth);
-
-  mMetrics.maxHeight = mMetrics.maxAscent + mMetrics.maxDescent;
-
-  // Make the line height an integer number of pixels so that lines will be
-  // equally spaced (rather than just being snapped to pixels, some up and
-  // some down).  Layout calculates line height from the emHeight +
-  // internalLeading + externalLeading, but first each of these is rounded
-  // to layout units.  To ensure that the result is an integer number of
-  // pixels, round each of the components to pixels.
-  mMetrics.emHeight = floor(emHeight + 0.5);
-
-  // maxHeight will normally be an integer, but round anyway in case
-  // FreeType is configured differently.
-  mMetrics.internalLeading =
-      floor(mMetrics.maxHeight - mMetrics.emHeight + 0.5);
-
-  // Text input boxes currently don't work well with lineHeight
-  // significantly less than maxHeight (with Verdana, for example).
-  lineHeight = floor(std::max(lineHeight, mMetrics.maxHeight) + 0.5);
-  mMetrics.externalLeading =
-      lineHeight - mMetrics.internalLeading - mMetrics.emHeight;
-
-  // Ensure emAscent + emDescent == emHeight
-  gfxFloat sum = mMetrics.emAscent + mMetrics.emDescent;
-  mMetrics.emAscent =
-      sum > 0.0 ? mMetrics.emAscent * mMetrics.emHeight / sum : 0.0;
-  mMetrics.emDescent = mMetrics.emHeight - mMetrics.emAscent;
-
-  SanitizeMetrics(&mMetrics, false);
-||||||| merged common ancestors
-        std::max(mMetrics.aveCharWidth, mMetrics.zeroOrAveCharWidth);
-    if (mMetrics.aveCharWidth == 0.0) {
-        mMetrics.aveCharWidth = mMetrics.spaceWidth;
-    }
-    if (mMetrics.zeroOrAveCharWidth == 0.0) {
-        mMetrics.zeroOrAveCharWidth = mMetrics.aveCharWidth;
-    }
-    // Apparently hinting can mean that max_advance is not always accurate.
-    mMetrics.maxAdvance =
-        std::max(mMetrics.maxAdvance, mMetrics.aveCharWidth);
-
-    mMetrics.maxHeight = mMetrics.maxAscent + mMetrics.maxDescent;
-
-    // Make the line height an integer number of pixels so that lines will be
-    // equally spaced (rather than just being snapped to pixels, some up and
-    // some down).  Layout calculates line height from the emHeight +
-    // internalLeading + externalLeading, but first each of these is rounded
-    // to layout units.  To ensure that the result is an integer number of
-    // pixels, round each of the components to pixels.
-    mMetrics.emHeight = floor(emHeight + 0.5);
-
-    // maxHeight will normally be an integer, but round anyway in case
-    // FreeType is configured differently.
-    mMetrics.internalLeading =
-        floor(mMetrics.maxHeight - mMetrics.emHeight + 0.5);
-
-    // Text input boxes currently don't work well with lineHeight
-    // significantly less than maxHeight (with Verdana, for example).
-    lineHeight = floor(std::max(lineHeight, mMetrics.maxHeight) + 0.5);
-    mMetrics.externalLeading =
-        lineHeight - mMetrics.internalLeading - mMetrics.emHeight;
-
-    // Ensure emAscent + emDescent == emHeight
-    gfxFloat sum = mMetrics.emAscent + mMetrics.emDescent;
-    mMetrics.emAscent = sum > 0.0 ?
-        mMetrics.emAscent * mMetrics.emHeight / sum : 0.0;
-    mMetrics.emDescent = mMetrics.emHeight - mMetrics.emAscent;
-
-    SanitizeMetrics(&mMetrics, false);
-=======
         ScaleRoundDesignUnits(os2->xAvgCharWidth, ftMetrics.x_scale);
   } else {
     mMetrics.aveCharWidth = 0.0;  // updated below
@@ -661,7 +447,6 @@ void gfxFT2FontBase::InitMetrics() {
   mMetrics.emDescent = mMetrics.emHeight - mMetrics.emAscent;
 
   SanitizeMetrics(&mMetrics, false);
->>>>>>> upstream-releases
 
 #if 0
     //    printf("font name: %s %f\n", NS_ConvertUTF16toUTF8(GetName()).get(), GetStyle()->size);
@@ -701,62 +486,6 @@ uint32_t gfxFT2FontBase::GetGlyph(uint32_t unicode,
   return GetGlyph(unicode);
 }
 
-<<<<<<< HEAD
-bool gfxFT2FontBase::GetFTGlyphAdvance(uint16_t aGID, int32_t* aAdvance) {
-  gfxFT2LockedFace face(this);
-  MOZ_ASSERT(face.get());
-  if (!face.get()) {
-    // Failed to get the FT_Face? Give up already.
-    NS_WARNING("failed to get FT_Face!");
-    return false;
-  }
-
-  // Due to bugs like 1435234 and 1440938, we currently prefer to fall back
-  // to reading the advance from cairo extents, unless we're dealing with
-  // a variation font (for which cairo metrics may be wrong, due to FreeType
-  // bug 52683).
-  if (!(face.get()->face_flags & FT_FACE_FLAG_SCALABLE) ||
-      !(face.get()->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS)) {
-    return false;
-  }
-
-  bool hinting = gfxPlatform::GetPlatform()->FontHintingEnabled();
-  int32_t flags =
-      hinting ? FT_LOAD_ADVANCE_ONLY
-              : FT_LOAD_ADVANCE_ONLY | FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_HINTING;
-  FT_Error ftError = Factory::LoadFTGlyph(face.get(), aGID, flags);
-  if (ftError != FT_Err_Ok) {
-    // FT_Face was somehow broken/invalid? Don't try to access glyph slot.
-    // This probably shouldn't happen, but does: see bug 1440938.
-    NS_WARNING("failed to load glyph!");
-    return false;
-  }
-
-  // Due to freetype bug 52683 we MUST use the linearHoriAdvance field when
-  // dealing with a variation font. (And other fonts would have returned
-  // earlier, so only variation fonts currently reach here.)
-  FT_Fixed advance = face.get()->glyph->linearHoriAdvance;
-
-  // If freetype emboldening is being used, and it's not a zero-width glyph,
-  // adjust the advance to account for the increased width.
-  if (mEmbolden && advance > 0) {
-    // This is the embolden "strength" used by FT_GlyphSlot_Embolden,
-    // converted from 26.6 to 16.16
-    FT_Fixed strength =
-        1024 *
-        FT_MulFix(face.get()->units_per_EM, face.get()->size->metrics.y_scale) /
-        24;
-    advance += strength;
-  }
-
-  // Round the 16.16 fixed-point value to whole pixels for better consistency
-  // with how cairo renders the glyphs.
-  *aAdvance = (advance + 0x8000) & 0xffff0000u;
-
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
 bool gfxFT2FontBase::GetFTGlyphAdvance(uint16_t aGID, int32_t* aAdvance) {
   gfxFT2LockedFace face(this);
   MOZ_ASSERT(face.get());
@@ -812,30 +541,13 @@ bool gfxFT2FontBase::GetFTGlyphAdvance(uint16_t aGID, int32_t* aAdvance) {
   *aAdvance = (advance + 0x8000) & 0xffff0000u;
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-int32_t gfxFT2FontBase::GetGlyphWidth(DrawTarget& aDrawTarget, uint16_t aGID) {
-  if (!mGlyphWidths) {
-    mGlyphWidths =
-        mozilla::MakeUnique<nsDataHashtable<nsUint32HashKey, int32_t>>(128);
-  }
-||||||| merged common ancestors
-int32_t
-gfxFT2FontBase::GetGlyphWidth(DrawTarget& aDrawTarget, uint16_t aGID)
-{
-    if (!mGlyphWidths) {
-        mGlyphWidths =
-            mozilla::MakeUnique<nsDataHashtable<nsUint32HashKey,int32_t>>(128);
-    }
-=======
 int32_t gfxFT2FontBase::GetGlyphWidth(uint16_t aGID) {
   if (!mGlyphWidths) {
     mGlyphWidths =
         mozilla::MakeUnique<nsDataHashtable<nsUint32HashKey, int32_t>>(128);
   }
->>>>>>> upstream-releases
 
   int32_t width;
   if (mGlyphWidths->Get(aGID, &width)) {

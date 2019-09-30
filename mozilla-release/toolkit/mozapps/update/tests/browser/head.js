@@ -83,8 +83,6 @@ add_task(async function setupTestCommon() {
   await setAppUpdateAutoEnabledHelper(true);
 });
 
-let gOriginalUpdateAutoValue = null;
-
 /**
  * Common tasks to perform for all tests after each one has finished.
  */
@@ -253,28 +251,6 @@ function getVersionParams(aAppVersion) {
 }
 
 /**
-<<<<<<< HEAD
- * Clean up updates list and the updates directory.
- */
-function cleanUpUpdates() {
-  reloadUpdateManagerData(true);
-  removeUpdateDirsAndFiles();
-}
-
-/**
-||||||| merged common ancestors
- * Clean up updates list and the updates directory.
- */
-function cleanUpUpdates() {
-  gUpdateManager.activeUpdate = null;
-  gUpdateManager.saveUpdates();
-
-  removeUpdateDirsAndFiles();
-}
-
-/**
-=======
->>>>>>> upstream-releases
  * Prevent nsIUpdateTimerManager from notifying nsIApplicationUpdateService
  * to check for updates by setting the app update last update time to the
  * current time minus one minute in seconds and the interval time to 12 hours
@@ -286,166 +262,9 @@ function setUpdateTimerPrefs() {
   Services.prefs.setIntPref(PREF_APP_UPDATE_INTERVAL, 43200);
 }
 
-<<<<<<< HEAD
-/*
- * In addition to changing the value of the Auto Update setting, this function
- * also takes care of cleaning up after itself.
- */
-async function setAppUpdateAutoEnabledHelper(enabled) {
-  if (gOriginalUpdateAutoValue == null) {
-    gOriginalUpdateAutoValue = await UpdateUtils.getAppUpdateAutoEnabled();
-    registerCleanupFunction(async () => {
-      await UpdateUtils.setAppUpdateAutoEnabled(gOriginalUpdateAutoValue);
-    });
-  }
-  await UpdateUtils.setAppUpdateAutoEnabled(enabled);
-}
-
-add_task(async function setDefaults() {
-  await SpecialPowers.pushPrefEnv({
-    set: [
-      [PREF_APP_UPDATE_LOG, DEBUG_AUS_TEST],
-      // See bug 1505790 - uses a very large value to prevent the sync code
-      // from running since it has nothing to do with these tests.
-      ["services.sync.autoconnectDelay", 600000],
-    ]});
-  // Most tests in this directory expect auto update to be enabled. Those that
-  // don't will explicitly change this.
-  await setAppUpdateAutoEnabledHelper(true);
-});
-
-/**
- * Runs a typical update test. Will set various common prefs for using the
- * updater doorhanger, runs the provided list of steps, and makes sure
- * everything is cleaned up afterwards.
- *
- * @param  updateParams
- *         URL-encoded params which will be sent to update.sjs.
- * @param  checkAttempts
- *         How many times to check for updates. Useful for testing the UI
- *         for check failures.
- * @param  steps
- *         A list of test steps to perform, specifying expected doorhangers
- *         and additional validation/cleanup callbacks.
- * @return A promise which will resolve once all of the steps have been run
- *         and cleanup has been performed.
- */
-function runUpdateTest(updateParams, checkAttempts, steps) {
-  return (async function() {
-    registerCleanupFunction(() => {
-      gEnv.set("MOZ_TEST_SKIP_UPDATE_STAGE", "");
-      UpdateListener.reset();
-      cleanUpUpdates();
-    });
-
-    gEnv.set("MOZ_TEST_SKIP_UPDATE_STAGE", "1");
-    setUpdateTimerPrefs();
-    removeUpdateDirsAndFiles();
-    await SpecialPowers.pushPrefEnv({
-      set: [
-        [PREF_APP_UPDATE_DOWNLOADPROMPTATTEMPTS, 0],
-        [PREF_APP_UPDATE_DISABLEDFORTESTING, false],
-        [PREF_APP_UPDATE_IDLETIME, 0],
-        [PREF_APP_UPDATE_URL_MANUAL, URL_MANUAL_UPDATE],
-      ]});
-
-    await setupTestUpdater();
-
-    let url = URL_HTTP_UPDATE_SJS +
-              "?" + updateParams +
-              getVersionParams();
-
-    setUpdateURL(url);
-
-    executeSoon(() => {
-      (async function() {
-        gAUS.checkForBackgroundUpdates();
-        for (var i = 0; i < checkAttempts - 1; i++) {
-          await waitForEvent("update-error", "check-attempt-failed");
-          gAUS.checkForBackgroundUpdates();
-        }
-      })();
-    });
-
-    for (let step of steps) {
-      await processStep(step);
-    }
-
-    await finishTestRestoreUpdaterBackup();
-  })();
-}
-
-/**
- * Runs a test which processes an update. Similar to runUpdateTest.
-||||||| merged common ancestors
-/**
- * Runs a typical update test. Will set various common prefs for using the
- * updater doorhanger, runs the provided list of steps, and makes sure
- * everything is cleaned up afterwards.
- *
- * @param  updateParams
- *         URL-encoded params which will be sent to update.sjs.
- * @param  checkAttempts
- *         How many times to check for updates. Useful for testing the UI
- *         for check failures.
- * @param  steps
- *         A list of test steps to perform, specifying expected doorhangers
- *         and additional validation/cleanup callbacks.
- * @return A promise which will resolve once all of the steps have been run
- *         and cleanup has been performed.
- */
-function runUpdateTest(updateParams, checkAttempts, steps) {
-  return (async function() {
-    registerCleanupFunction(() => {
-      gEnv.set("MOZ_TEST_SKIP_UPDATE_STAGE", "");
-      UpdateListener.reset();
-      cleanUpUpdates();
-    });
-
-    gEnv.set("MOZ_TEST_SKIP_UPDATE_STAGE", "1");
-    setUpdateTimerPrefs();
-    await SpecialPowers.pushPrefEnv({
-      set: [
-        [PREF_APP_UPDATE_DOWNLOADPROMPTATTEMPTS, 0],
-        [PREF_APP_UPDATE_DISABLEDFORTESTING, false],
-        [PREF_APP_UPDATE_IDLETIME, 0],
-        [PREF_APP_UPDATE_URL_MANUAL, URL_MANUAL_UPDATE],
-        [PREF_APP_UPDATE_LOG, DEBUG_AUS_TEST],
-      ]});
-
-    await setupTestUpdater();
-
-    let url = URL_HTTP_UPDATE_SJS +
-              "?" + updateParams +
-              getVersionParams();
-
-    setUpdateURL(url);
-
-    executeSoon(() => {
-      (async function() {
-        gAUS.checkForBackgroundUpdates();
-        for (var i = 0; i < checkAttempts - 1; i++) {
-          await waitForEvent("update-error", "check-attempt-failed");
-          gAUS.checkForBackgroundUpdates();
-        }
-      })();
-    });
-
-    for (let step of steps) {
-      await processStep(step);
-    }
-
-    await finishTestRestoreUpdaterBackup();
-  })();
-}
-
-/**
- * Runs a test which processes an update. Similar to runUpdateTest.
-=======
 /*
  * Sets the value of the App Auto Update setting and sets it back to the
  * original value at the start of the test when the test finishes.
->>>>>>> upstream-releases
  *
  * @param  enabled
  *         The value to set App Auto Update to.
@@ -456,76 +275,6 @@ async function setAppUpdateAutoEnabledHelper(enabled) {
     registerCleanupFunction(async () => {
       await UpdateUtils.setAppUpdateAutoEnabled(gOriginalUpdateAutoValue);
     });
-<<<<<<< HEAD
-
-    gEnv.set("MOZ_TEST_SKIP_UPDATE_STAGE", "1");
-    setUpdateTimerPrefs();
-    removeUpdateDirsAndFiles();
-    await SpecialPowers.pushPrefEnv({
-      set: [
-        [PREF_APP_UPDATE_DOWNLOADPROMPTATTEMPTS, 0],
-        [PREF_APP_UPDATE_DISABLEDFORTESTING, false],
-        [PREF_APP_UPDATE_IDLETIME, 0],
-        [PREF_APP_UPDATE_URL_MANUAL, URL_MANUAL_UPDATE],
-      ]});
-
-    await setupTestUpdater();
-
-    writeUpdatesToXMLFile(getLocalUpdatesXMLString(updates), true);
-
-    writeUpdatesToXMLFile(getLocalUpdatesXMLString(""), false);
-    writeStatusFile(STATE_FAILED_CRC_ERROR);
-    reloadUpdateManagerData();
-
-    testPostUpdateProcessing();
-
-    for (let step of steps) {
-      await processStep(step);
-    }
-
-    await finishTestRestoreUpdaterBackup();
-  })();
-}
-
-function processStep(step) {
-  if (typeof(step) == "function") {
-    return step();
-||||||| merged common ancestors
-
-    setUpdateTimerPrefs();
-    gEnv.set("MOZ_TEST_SKIP_UPDATE_STAGE", "1");
-    await SpecialPowers.pushPrefEnv({
-      set: [
-        [PREF_APP_UPDATE_DOWNLOADPROMPTATTEMPTS, 0],
-        [PREF_APP_UPDATE_DISABLEDFORTESTING, false],
-        [PREF_APP_UPDATE_IDLETIME, 0],
-        [PREF_APP_UPDATE_URL_MANUAL, URL_MANUAL_UPDATE],
-        [PREF_APP_UPDATE_LOG, DEBUG_AUS_TEST],
-      ]});
-
-    await setupTestUpdater();
-
-    writeUpdatesToXMLFile(getLocalUpdatesXMLString(updates), true);
-
-    writeUpdatesToXMLFile(getLocalUpdatesXMLString(""), false);
-    writeStatusFile(STATE_FAILED_CRC_ERROR);
-    reloadUpdateManagerData();
-
-    testPostUpdateProcessing();
-
-    for (let step of steps) {
-      await processStep(step);
-    }
-
-    await finishTestRestoreUpdaterBackup();
-  })();
-}
-
-function processStep(step) {
-  if (typeof(step) == "function") {
-    return step();
-=======
->>>>>>> upstream-releases
   }
   await UpdateUtils.setAppUpdateAutoEnabled(enabled);
 }

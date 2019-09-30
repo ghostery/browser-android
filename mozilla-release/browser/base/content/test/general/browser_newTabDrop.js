@@ -4,13 +4,7 @@ registerCleanupFunction(async function cleanup() {
   while (gBrowser.tabs.length > 1) {
     BrowserTestUtils.removeTab(gBrowser.tabs[gBrowser.tabs.length - 1]);
   }
-<<<<<<< HEAD
-  Services.search.defaultEngine = originalEngine;
-||||||| merged common ancestors
-  Services.search.currentEngine = originalEngine;
-=======
   await Services.search.setDefault(originalEngine);
->>>>>>> upstream-releases
   let engine = Services.search.getEngineByName("MozSearch");
   await Services.search.removeEngine(engine);
 });
@@ -26,16 +20,8 @@ add_task(async function test_setup() {
     template: "http://example.com/?q={searchTerms}",
   });
   let engine = Services.search.getEngineByName("MozSearch");
-<<<<<<< HEAD
-  originalEngine = Services.search.defaultEngine;
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  originalEngine = Services.search.currentEngine;
-  Services.search.currentEngine = engine;
-=======
   originalEngine = await Services.search.getDefault();
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 });
 
 // New Tab Button opens any link.

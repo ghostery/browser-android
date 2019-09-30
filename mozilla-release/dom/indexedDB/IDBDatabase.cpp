@@ -148,34 +148,6 @@ class IDBDatabase::Observer final : public nsIObserver {
   NS_DECL_NSIOBSERVER
 };
 
-<<<<<<< HEAD
-IDBDatabase::IDBDatabase(IDBOpenDBRequest* aRequest, IDBFactory* aFactory,
-                         BackgroundDatabaseChild* aActor, DatabaseSpec* aSpec)
-    : IDBWrapperCache(aRequest),
-      mFactory(aFactory),
-      mSpec(aSpec),
-      mBackgroundActor(aActor),
-      mFileHandleDisabled(aRequest->IsFileHandleDisabled()),
-      mClosed(false),
-      mInvalidated(false),
-      mQuotaExceeded(false),
-      mIncreasedActiveDatabaseCount(false) {
-||||||| merged common ancestors
-IDBDatabase::IDBDatabase(IDBOpenDBRequest* aRequest,
-                         IDBFactory* aFactory,
-                         BackgroundDatabaseChild* aActor,
-                         DatabaseSpec* aSpec)
-  : IDBWrapperCache(aRequest)
-  , mFactory(aFactory)
-  , mSpec(aSpec)
-  , mBackgroundActor(aActor)
-  , mFileHandleDisabled(aRequest->IsFileHandleDisabled())
-  , mClosed(false)
-  , mInvalidated(false)
-  , mQuotaExceeded(false)
-  , mIncreasedActiveDatabaseCount(false)
-{
-=======
 IDBDatabase::IDBDatabase(IDBOpenDBRequest* aRequest, IDBFactory* aFactory,
                          BackgroundDatabaseChild* aActor, DatabaseSpec* aSpec)
     : DOMEventTargetHelper(aRequest),
@@ -187,7 +159,6 @@ IDBDatabase::IDBDatabase(IDBOpenDBRequest* aRequest, IDBFactory* aFactory,
       mInvalidated(false),
       mQuotaExceeded(false),
       mIncreasedActiveDatabaseCount(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRequest);
   MOZ_ASSERT(aFactory);
   aFactory->AssertIsOnOwningThread();
@@ -211,18 +182,7 @@ already_AddRefed<IDBDatabase> IDBDatabase::Create(
   MOZ_ASSERT(aActor);
   MOZ_ASSERT(aSpec);
 
-<<<<<<< HEAD
   RefPtr<IDBDatabase> db = new IDBDatabase(aRequest, aFactory, aActor, aSpec);
-
-  db->SetScriptOwner(aRequest->GetScriptOwner());
-||||||| merged common ancestors
-  RefPtr<IDBDatabase> db =
-    new IDBDatabase(aRequest, aFactory, aActor, aSpec);
-
-  db->SetScriptOwner(aRequest->GetScriptOwner());
-=======
-  RefPtr<IDBDatabase> db = new IDBDatabase(aRequest, aFactory, aActor, aSpec);
->>>>>>> upstream-releases
 
   if (NS_IsMainThread()) {
     nsCOMPtr<nsPIDOMWindowInner> window =
@@ -358,25 +318,7 @@ void IDBDatabase::RefreshSpec(bool aMayDelete) {
   }
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowInner* IDBDatabase::GetParentObject() const {
-  return mFactory->GetParentObject();
-}
-
 const nsString& IDBDatabase::Name() const {
-||||||| merged common ancestors
-nsPIDOMWindowInner*
-IDBDatabase::GetParentObject() const
-{
-  return mFactory->GetParentObject();
-}
-
-const nsString&
-IDBDatabase::Name() const
-{
-=======
-const nsString& IDBDatabase::Name() const {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
   MOZ_ASSERT(mSpec);
 
@@ -410,15 +352,7 @@ already_AddRefed<DOMStringList> IDBDatabase::ObjectStoreNames() const {
   return list.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIDocument> IDBDatabase::GetOwnerDocument() const {
-||||||| merged common ancestors
-already_AddRefed<nsIDocument>
-IDBDatabase::GetOwnerDocument() const
-{
-=======
 already_AddRefed<Document> IDBDatabase::GetOwnerDocument() const {
->>>>>>> upstream-releases
   if (nsPIDOMWindowInner* window = GetOwner()) {
     nsCOMPtr<Document> doc = window->GetExtantDoc();
     return doc.forget();

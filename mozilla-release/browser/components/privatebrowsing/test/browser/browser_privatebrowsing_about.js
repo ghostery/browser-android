@@ -2,17 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-const TP_PB_ENABLED_PREF = "privacy.trackingprotection.pbmode.enabled";
-||||||| merged common ancestors
-const TP_PB_ENABLED_PREF = "privacy.trackingprotection.pbmode.enabled";
-const CB_ENABLED_PREF = "browser.contentblocking.enabled";
-const CB_UI_ENABLED_PREF = "browser.contentblocking.ui.enabled";
-=======
 const { UrlbarTestUtils } = ChromeUtils.import(
   "resource://testing-common/UrlbarTestUtils.jsm"
 );
->>>>>>> upstream-releases
 
 /**
  * Opens a new private window and loads "about:privatebrowsing" there.
@@ -49,53 +41,7 @@ async function testLinkOpensUrl({ win, tab, elementId, expectedUrl }) {
  */
 add_task(async function test_myths_link() {
   Services.prefs.setCharPref("app.support.baseURL", "https://example.com/");
-<<<<<<< HEAD
-  Services.prefs.setCharPref("privacy.trackingprotection.introURL",
-                             "https://example.com/tour");
-||||||| merged common ancestors
-  Services.prefs.setCharPref("privacy.trackingprotection.introURL",
-                             "https://example.com/tour");
-  Services.prefs.setBoolPref(CB_UI_ENABLED_PREF, false);
-=======
->>>>>>> upstream-releases
   registerCleanupFunction(function() {
-<<<<<<< HEAD
-    Services.prefs.clearUserPref("privacy.trackingprotection.introURL");
-    Services.prefs.clearUserPref("app.support.baseURL");
-  });
-||||||| merged common ancestors
-    Services.prefs.clearUserPref(CB_UI_ENABLED_PREF);
-    Services.prefs.clearUserPref("privacy.trackingprotection.introURL");
-    Services.prefs.clearUserPref("app.support.baseURL");
-  });
-
-  let { win, tab } = await openAboutPrivateBrowsing();
-
-  await testLinkOpensTab({ win, tab,
-    elementId: "learnMore",
-    expectedUrl: "https://example.com/private-browsing",
-  });
-
-  await testLinkOpensUrl({ win, tab,
-    elementId: "startTour",
-    expectedUrl: "https://example.com/tour?variation=0",
-  });
-
-  await BrowserTestUtils.closeWindow(win);
-});
-
-add_task(async function test_links_CB() {
-  // Use full version and change the remote URLs to prevent network access.
-  Services.prefs.setCharPref("app.support.baseURL", "https://example.com/");
-  Services.prefs.setCharPref("privacy.trackingprotection.introURL",
-                             "https://example.com/tour");
-  Services.prefs.setBoolPref(CB_UI_ENABLED_PREF, true);
-  registerCleanupFunction(function() {
-    Services.prefs.clearUserPref(CB_UI_ENABLED_PREF);
-    Services.prefs.clearUserPref("privacy.trackingprotection.introURL");
-    Services.prefs.clearUserPref("app.support.baseURL");
-  });
-=======
     Services.prefs.clearUserPref("app.support.baseURL");
   });
 
@@ -117,7 +63,6 @@ function urlBarHasHiddenFocus(win) {
     win.gURLBar.textbox.classList.contains("hidden-focus")
   );
 }
->>>>>>> upstream-releases
 
 function urlBarHasNormalFocus(win) {
   return (
@@ -167,99 +112,6 @@ add_task(async function test_search_handoff_on_keydown() {
   await BrowserTestUtils.closeWindow(win);
 });
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-function waitForPrefChanged(pref) {
-  return new Promise(resolve => {
-    let prefObserver = {
-      QueryInterface: ChromeUtils.generateQI([Ci.nsIObserver]),
-      observe() {
-        Services.prefs.removeObserver(pref, prefObserver);
-        resolve();
-      },
-    };
-    Services.prefs.addObserver(pref, prefObserver);
-  });
-}
-
-/**
- * Tests the action to disable and re-enable Tracking Protection in
- * "about:privatebrowsing".
- */
-add_task(async function test_toggleTrackingProtection() {
-  // Use tour version but disable Tracking Protection.
-  Services.prefs.setBoolPref(TP_PB_ENABLED_PREF, true);
-  // For good measure, check that content blocking being off
-  // has no impact if the contentblocking UI is not shown.
-  Services.prefs.setBoolPref(CB_ENABLED_PREF, false);
-  Services.prefs.setBoolPref(CB_UI_ENABLED_PREF, false);
-
-  registerCleanupFunction(function() {
-    Services.prefs.clearUserPref(TP_PB_ENABLED_PREF);
-    Services.prefs.clearUserPref(CB_ENABLED_PREF);
-    Services.prefs.clearUserPref(CB_UI_ENABLED_PREF);
-  });
-
-  let { win, tab } = await openAboutPrivateBrowsing();
-
-  // Set up the observer for the preference change before triggering the action.
-  let promisePrefChanged = waitForPrefChanged(TP_PB_ENABLED_PREF);
-  await ContentTask.spawn(tab, {}, async function() {
-    is(content.document.getElementById("tpToggle").checked, true, "toggle is active");
-    content.document.getElementById("tpButton").click();
-  });
-  await promisePrefChanged;
-  ok(!Services.prefs.getBoolPref(TP_PB_ENABLED_PREF), "Tracking Protection is disabled.");
-
-  promisePrefChanged = waitForPrefChanged(TP_PB_ENABLED_PREF);
-  await ContentTask.spawn(tab, {}, async function() {
-    is(content.document.getElementById("tpToggle").checked, false, "toggle is not active");
-    content.document.getElementById("tpButton").click();
-  });
-  await promisePrefChanged;
-  ok(Services.prefs.getBoolPref(TP_PB_ENABLED_PREF), "Tracking Protection is enabled.");
-
-  await BrowserTestUtils.closeWindow(win);
-});
-
-/**
- * Tests the action to disable and re-enable Tracking Protection in
- * "about:privatebrowsing" when content blocking is disabled.
- */
-add_task(async function test_toggleTrackingProtectionContentBlocking() {
-  Services.prefs.setBoolPref(TP_PB_ENABLED_PREF, true);
-  Services.prefs.setBoolPref(CB_ENABLED_PREF, false);
-  Services.prefs.setBoolPref(CB_UI_ENABLED_PREF, true);
-
-  registerCleanupFunction(function() {
-    Services.prefs.clearUserPref(TP_PB_ENABLED_PREF);
-    Services.prefs.clearUserPref(CB_ENABLED_PREF);
-    Services.prefs.clearUserPref(CB_UI_ENABLED_PREF);
-  });
-
-  let { win, tab } = await openAboutPrivateBrowsing();
-
-  let promiseCBPrefChanged = waitForPrefChanged(CB_ENABLED_PREF);
-  await ContentTask.spawn(tab, {}, async function() {
-    is(content.document.getElementById("tpToggle").checked, false, "toggle is not active");
-    content.document.getElementById("tpButton").click();
-  });
-  await promiseCBPrefChanged;
-  ok(Services.prefs.getBoolPref(TP_PB_ENABLED_PREF), "Tracking Protection is enabled.");
-  ok(Services.prefs.getBoolPref(CB_ENABLED_PREF), "Content Blocking is enabled.");
-
-  let promiseTPPrefChanged = waitForPrefChanged(TP_PB_ENABLED_PREF);
-  await ContentTask.spawn(tab, {}, async function() {
-    is(content.document.getElementById("tpToggle").checked, true, "toggle is active");
-    content.document.getElementById("tpButton").click();
-  });
-  await promiseTPPrefChanged;
-  ok(!Services.prefs.getBoolPref(TP_PB_ENABLED_PREF), "Tracking Protection is disabled.");
-  ok(Services.prefs.getBoolPref(CB_ENABLED_PREF), "Content Blocking is enabled.");
-
-  await BrowserTestUtils.closeWindow(win);
-});
-=======
 /**
  * Tests the search hand-off on composition start in "about:privatebrowsing".
  */
@@ -305,4 +157,3 @@ add_task(async function test_search_handoff_on_paste() {
 
   await BrowserTestUtils.closeWindow(win);
 });
->>>>>>> upstream-releases

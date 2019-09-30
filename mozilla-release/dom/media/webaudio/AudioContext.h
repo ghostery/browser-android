@@ -196,18 +196,10 @@ class AudioContext final : public DOMEventTargetHelper,
 
   bool IsRunning() const;
 
-<<<<<<< HEAD
-  // Called when an AudioScheduledSourceNode started, this method might resume
-  // the AudioContext if it was not allowed to start.
-  void NotifyScheduledSourceNodeStarted();
-
-||||||| merged common ancestors
-=======
   // Called when an AudioScheduledSourceNode started or the source node starts,
   // this method might resume the AudioContext if it was not allowed to start.
   void StartBlockedAudioContextIfAllowed();
 
->>>>>>> upstream-releases
   // Those three methods return a promise to content, that is resolved when an
   // (possibly long) operation is completed on the MSG (and possibly other)
   // thread(s). To avoid having to match the calls and asychronous result when
@@ -252,17 +244,6 @@ class AudioContext final : public DOMEventTargetHelper,
 
   already_AddRefed<WaveShaperNode> CreateWaveShaper(ErrorResult& aRv);
 
-<<<<<<< HEAD
-  already_AddRefed<MediaElementAudioSourceNode> CreateMediaElementSource(
-      HTMLMediaElement& aMediaElement, ErrorResult& aRv);
-  already_AddRefed<MediaStreamAudioSourceNode> CreateMediaStreamSource(
-      DOMMediaStream& aMediaStream, ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<MediaElementAudioSourceNode>
-  CreateMediaElementSource(HTMLMediaElement& aMediaElement, ErrorResult& aRv);
-  already_AddRefed<MediaStreamAudioSourceNode>
-  CreateMediaStreamSource(DOMMediaStream& aMediaStream, ErrorResult& aRv);
-=======
   already_AddRefed<MediaElementAudioSourceNode> CreateMediaElementSource(
       HTMLMediaElement& aMediaElement, ErrorResult& aRv);
   already_AddRefed<MediaStreamAudioSourceNode> CreateMediaStreamSource(
@@ -270,7 +251,6 @@ class AudioContext final : public DOMEventTargetHelper,
   already_AddRefed<MediaStreamTrackAudioSourceNode>
   CreateMediaStreamTrackSource(MediaStreamTrack& aMediaStreamTrack,
                                ErrorResult& aRv);
->>>>>>> upstream-releases
 
   already_AddRefed<DelayNode> CreateDelay(double aMaxDelayTime,
                                           ErrorResult& aRv);
@@ -380,11 +360,6 @@ class AudioContext final : public DOMEventTargetHelper,
   // audio context, it's used to update Telemetry related variables.
   void UpdateAutoplayAssumptionStatus();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // These functions are used for updating Telemetry.
   // - MaybeUpdateAutoplayTelemetry: update category 'AllowedAfterBlocked'
   // - MaybeUpdateAutoplayTelemetryWhenShutdown: update category 'NeverBlocked'
@@ -393,7 +368,6 @@ private:
   void MaybeUpdateAutoplayTelemetryWhenShutdown();
 
  private:
->>>>>>> upstream-releases
   // Each AudioContext has an id, that is passed down the MediaStreams that
   // back the AudioNodes, so we can easily compute the set of all the
   // MediaStreams for a given context, on the MediasStreamGraph side.
@@ -418,15 +392,9 @@ private:
   // is rendering and the window remains alive.
   nsTHashtable<nsRefPtrHashKey<AudioNode>> mActiveNodes;
   // Raw (non-owning) references to all AudioNodes for this AudioContext.
-<<<<<<< HEAD
-  nsTHashtable<nsPtrHashKey<AudioNode>> mAllNodes;
-||||||| merged common ancestors
-  nsTHashtable<nsPtrHashKey<AudioNode> > mAllNodes;
-=======
   nsTHashtable<nsPtrHashKey<AudioNode>> mAllNodes;
   nsDataHashtable<nsStringHashKey, AudioParamDescriptorMap>
       mWorkletParamDescriptors;
->>>>>>> upstream-releases
   // Cache to avoid recomputing basic waveforms all the time.
   RefPtr<BasicWaveFormCache> mBasicWaveFormCache;
   // Number of channels passed in the OfflineAudioContext ctor.
@@ -439,11 +407,6 @@ private:
   // Suspend has been called with no following resume.
   bool mSuspendCalled;
   bool mIsDisconnecting;
-<<<<<<< HEAD
-  // This flag stores the value of previous status of `allowed-to-start`.
-  bool mWasAllowedToStart;
-||||||| merged common ancestors
-=======
   // This flag stores the value of previous status of `allowed-to-start`.
   bool mWasAllowedToStart;
 
@@ -463,7 +426,6 @@ private:
   bool mWasEverAllowedToStart;
   bool mWasEverBlockedToStart;
   bool mWouldBeAllowedToStart;
->>>>>>> upstream-releases
 };
 
 static const dom::AudioContext::AudioContextId NO_AUDIO_CONTEXT = 0;
@@ -471,15 +433,8 @@ static const dom::AudioContext::AudioContextId NO_AUDIO_CONTEXT = 0;
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-#endif
-
-=======
 inline nsISupports* ToSupports(mozilla::dom::AudioContext* p) {
   return NS_CYCLE_COLLECTION_CLASSNAME(mozilla::dom::AudioContext)::Upcast(p);
 }
 
 #endif
->>>>>>> upstream-releases

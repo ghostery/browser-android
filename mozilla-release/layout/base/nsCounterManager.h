@@ -20,113 +20,6 @@ struct nsCounterUseNode;
 struct nsCounterChangeNode;
 
 struct nsCounterNode : public nsGenConNode {
-<<<<<<< HEAD
-  enum Type {
-    RESET,      // a "counter number" pair in 'counter-reset'
-    INCREMENT,  // a "counter number" pair in 'counter-increment'
-    USE         // counter() or counters() in 'content'
-  };
-
-  Type mType;
-
-  // Counter value after this node
-  int32_t mValueAfter;
-
-  // mScopeStart points to the node (usually a RESET, but not in the
-  // case of an implied 'counter-reset') that created the scope for
-  // this element (for a RESET, its outer scope, i.e., the one it is
-  // inside rather than the one it creates).
-
-  // May be null for all types, but only when mScopePrev is also null.
-  // Being null for a non-RESET means that it is an implied
-  // 'counter-reset'.  Being null for a RESET means it has no outer
-  // scope.
-  nsCounterNode* mScopeStart;
-
-  // mScopePrev points to the previous node that is in the same scope,
-  // or for a RESET, the previous node in the scope outside of the
-  // reset.
-
-  // May be null for all types, but only when mScopeStart is also
-  // null.  Following the mScopePrev links will eventually lead to
-  // mScopeStart.  Being null for a non-RESET means that it is an
-  // implied 'counter-reset'.  Being null for a RESET means it has no
-  // outer scope.
-  nsCounterNode* mScopePrev;
-
-  inline nsCounterUseNode* UseNode();
-  inline nsCounterChangeNode* ChangeNode();
-
-  // For RESET and INCREMENT nodes, aPseudoFrame need not be a
-  // pseudo-element, and aContentIndex represents the index within the
-  // 'counter-reset' or 'counter-increment' property instead of within
-  // the 'content' property but offset to ensure that (reset,
-  // increment, use) sort in that order.  (This slight weirdness
-  // allows sharing a lot of code with 'quotes'.)
-  nsCounterNode(int32_t aContentIndex, Type aType)
-      : nsGenConNode(aContentIndex),
-        mType(aType),
-        mValueAfter(0),
-        mScopeStart(nullptr),
-        mScopePrev(nullptr) {}
-
-  // to avoid virtual function calls in the common case
-  inline void Calc(nsCounterList* aList);
-||||||| merged common ancestors
-    enum Type {
-        RESET,     // a "counter number" pair in 'counter-reset'
-        INCREMENT, // a "counter number" pair in 'counter-increment'
-        USE        // counter() or counters() in 'content'
-    };
-
-    Type mType;
-
-    // Counter value after this node
-    int32_t mValueAfter;
-
-    // mScopeStart points to the node (usually a RESET, but not in the
-    // case of an implied 'counter-reset') that created the scope for
-    // this element (for a RESET, its outer scope, i.e., the one it is
-    // inside rather than the one it creates).
-
-    // May be null for all types, but only when mScopePrev is also null.
-    // Being null for a non-RESET means that it is an implied
-    // 'counter-reset'.  Being null for a RESET means it has no outer
-    // scope.
-    nsCounterNode *mScopeStart;
-
-    // mScopePrev points to the previous node that is in the same scope,
-    // or for a RESET, the previous node in the scope outside of the
-    // reset.
-
-    // May be null for all types, but only when mScopeStart is also
-    // null.  Following the mScopePrev links will eventually lead to
-    // mScopeStart.  Being null for a non-RESET means that it is an
-    // implied 'counter-reset'.  Being null for a RESET means it has no
-    // outer scope.
-    nsCounterNode *mScopePrev;
-
-    inline nsCounterUseNode* UseNode();
-    inline nsCounterChangeNode* ChangeNode();
-
-    // For RESET and INCREMENT nodes, aPseudoFrame need not be a
-    // pseudo-element, and aContentIndex represents the index within the
-    // 'counter-reset' or 'counter-increment' property instead of within
-    // the 'content' property but offset to ensure that (reset,
-    // increment, use) sort in that order.  (This slight weirdness
-    // allows sharing a lot of code with 'quotes'.)
-    nsCounterNode(int32_t aContentIndex, Type aType)
-        : nsGenConNode(aContentIndex)
-        , mType(aType)
-        , mValueAfter(0)
-        , mScopeStart(nullptr)
-        , mScopePrev(nullptr)
-    {
-    }
-
-    // to avoid virtual function calls in the common case
-    inline void Calc(nsCounterList* aList);
-=======
   enum Type {
     RESET,      // a "counter number" pair in 'counter-reset'
     INCREMENT,  // a "counter number" pair in 'counter-increment'
@@ -178,64 +71,9 @@ struct nsCounterNode : public nsGenConNode {
 
   // Is this a <ol reversed> RESET node?
   inline bool IsContentBasedReset();
->>>>>>> upstream-releases
 };
 
 struct nsCounterUseNode : public nsCounterNode {
-<<<<<<< HEAD
-  mozilla::CounterStylePtr mCounterStyle;
-  nsString mSeparator;
-
-  // false for counter(), true for counters()
-  bool mAllCounters;
-
-  // args go directly to member variables here and of nsGenConNode
-  nsCounterUseNode(nsStyleContentData::CounterFunction* aCounterFunction,
-                   uint32_t aContentIndex, bool aAllCounters)
-      : nsCounterNode(aContentIndex, USE),
-        mCounterStyle(aCounterFunction->mCounterStyle),
-        mSeparator(aCounterFunction->mSeparator),
-        mAllCounters(aAllCounters) {
-    NS_ASSERTION(aContentIndex <= INT32_MAX, "out of range");
-  }
-
-  virtual bool InitTextFrame(nsGenConList* aList, nsIFrame* aPseudoFrame,
-                             nsIFrame* aTextFrame) override;
-
-  // assign the correct |mValueAfter| value to a node that has been inserted
-  // Should be called immediately after calling |Insert|.
-  void Calc(nsCounterList* aList);
-
-  // The text that should be displayed for this counter.
-  void GetText(nsString& aResult);
-||||||| merged common ancestors
-    mozilla::CounterStylePtr mCounterStyle;
-    nsString mSeparator;
-
-    // false for counter(), true for counters()
-    bool mAllCounters;
-
-    // args go directly to member variables here and of nsGenConNode
-    nsCounterUseNode(nsStyleContentData::CounterFunction* aCounterFunction,
-                     uint32_t aContentIndex, bool aAllCounters)
-        : nsCounterNode(aContentIndex, USE)
-        , mCounterStyle(aCounterFunction->mCounterStyle)
-        , mSeparator(aCounterFunction->mSeparator)
-        , mAllCounters(aAllCounters)
-    {
-        NS_ASSERTION(aContentIndex <= INT32_MAX, "out of range");
-    }
-
-    virtual bool InitTextFrame(nsGenConList* aList,
-            nsIFrame* aPseudoFrame, nsIFrame* aTextFrame) override;
-
-    // assign the correct |mValueAfter| value to a node that has been inserted
-    // Should be called immediately after calling |Insert|.
-    void Calc(nsCounterList* aList);
-
-    // The text that should be displayed for this counter.
-    void GetText(nsString& aResult);
-=======
   mozilla::CounterStylePtr mCounterStyle;
   nsString mSeparator;
 
@@ -272,36 +110,9 @@ struct nsCounterUseNode : public nsCounterNode {
 
   // The text that should be displayed for this counter.
   void GetText(nsString& aResult);
->>>>>>> upstream-releases
 };
 
 struct nsCounterChangeNode : public nsCounterNode {
-<<<<<<< HEAD
-  int32_t mChangeValue;  // the numeric value of the increment or reset
-
-  // |aPseudoFrame| is not necessarily a pseudo-element's frame, but
-  // since it is for every other subclass of nsGenConNode, we follow
-  // the naming convention here.
-  // |aPropIndex| is the index of the value within the list in the
-  // 'counter-increment' or 'counter-reset' property.
-  nsCounterChangeNode(nsIFrame* aPseudoFrame, nsCounterNode::Type aChangeType,
-                      int32_t aChangeValue,
-                      int32_t aPropIndex)
-      : nsCounterNode(  // Fake a content index for resets and increments
-||||||| merged common ancestors
-    int32_t mChangeValue; // the numeric value of the increment or reset
-
-    // |aPseudoFrame| is not necessarily a pseudo-element's frame, but
-    // since it is for every other subclass of nsGenConNode, we follow
-    // the naming convention here.
-    // |aPropIndex| is the index of the value within the list in the
-    // 'counter-increment' or 'counter-reset' property.
-    nsCounterChangeNode(nsIFrame* aPseudoFrame,
-                        nsCounterNode::Type aChangeType,
-                        int32_t aChangeValue,
-                        int32_t aPropIndex)
-        : nsCounterNode(// Fake a content index for resets and increments
-=======
   int32_t mChangeValue;  // the numeric value of the increment, set or reset
 
   // |aPseudoFrame| is not necessarily a pseudo-element's frame, but
@@ -312,41 +123,7 @@ struct nsCounterChangeNode : public nsCounterNode {
   nsCounterChangeNode(nsIFrame* aPseudoFrame, nsCounterNode::Type aChangeType,
                       int32_t aChangeValue, int32_t aPropIndex)
       : nsCounterNode(  // Fake a content index for resets, increments and sets
->>>>>>> upstream-releases
                         // that comes before all the real content, with
-<<<<<<< HEAD
-                        // the resets first, in order, and then the increments.
-            aPropIndex + (aChangeType == RESET ? (INT32_MIN) : (INT32_MIN / 2)),
-            aChangeType),
-        mChangeValue(aChangeValue) {
-    NS_ASSERTION(aPropIndex >= 0, "out of range");
-    NS_ASSERTION(aChangeType == INCREMENT || aChangeType == RESET, "bad type");
-    mPseudoFrame = aPseudoFrame;
-    CheckFrameAssertions();
-  }
-
-  // assign the correct |mValueAfter| value to a node that has been inserted
-  // Should be called immediately after calling |Insert|.
-  void Calc(nsCounterList* aList);
-||||||| merged common ancestors
-                        // the resets first, in order, and then the increments.
-                        aPropIndex + (aChangeType == RESET
-                                        ? (INT32_MIN)
-                                        : (INT32_MIN / 2)),
-                        aChangeType)
-        , mChangeValue(aChangeValue)
-    {
-        NS_ASSERTION(aPropIndex >= 0, "out of range");
-        NS_ASSERTION(aChangeType == INCREMENT || aChangeType == RESET,
-                     "bad type");
-        mPseudoFrame = aPseudoFrame;
-        CheckFrameAssertions();
-    }
-
-    // assign the correct |mValueAfter| value to a node that has been inserted
-    // Should be called immediately after calling |Insert|.
-    void Calc(nsCounterList* aList);
-=======
                         // the resets first, in order, and then the increments
                         // and then the sets.
             aPropIndex + (aChangeType == RESET ? (INT32_MIN)
@@ -366,19 +143,8 @@ struct nsCounterChangeNode : public nsCounterNode {
   // assign the correct |mValueAfter| value to a node that has been inserted
   // Should be called immediately after calling |Insert|.
   void Calc(nsCounterList* aList);
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-inline nsCounterUseNode* nsCounterNode::UseNode() {
-  NS_ASSERTION(mType == USE, "wrong type");
-  return static_cast<nsCounterUseNode*>(this);
-||||||| merged common ancestors
-inline nsCounterUseNode* nsCounterNode::UseNode()
-{
-    NS_ASSERTION(mType == USE, "wrong type");
-    return static_cast<nsCounterUseNode*>(this);
-=======
 inline nsCounterUseNode* nsCounterNode::UseNode() {
   NS_ASSERTION(mType == USE, "wrong type");
   return static_cast<nsCounterUseNode*>(this);
@@ -387,45 +153,18 @@ inline nsCounterUseNode* nsCounterNode::UseNode() {
 inline nsCounterChangeNode* nsCounterNode::ChangeNode() {
   MOZ_ASSERT(mType == INCREMENT || mType == SET || mType == RESET);
   return static_cast<nsCounterChangeNode*>(this);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline nsCounterChangeNode* nsCounterNode::ChangeNode() {
-  NS_ASSERTION(mType == INCREMENT || mType == RESET, "wrong type");
-  return static_cast<nsCounterChangeNode*>(this);
-||||||| merged common ancestors
-inline nsCounterChangeNode* nsCounterNode::ChangeNode()
-{
-    NS_ASSERTION(mType == INCREMENT || mType == RESET, "wrong type");
-    return static_cast<nsCounterChangeNode*>(this);
-=======
 inline void nsCounterNode::Calc(nsCounterList* aList, bool aNotify) {
   if (mType == USE)
     UseNode()->Calc(aList, aNotify);
   else
     ChangeNode()->Calc(aList);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void nsCounterNode::Calc(nsCounterList* aList) {
-  if (mType == USE)
-    UseNode()->Calc(aList);
-  else
-    ChangeNode()->Calc(aList);
-||||||| merged common ancestors
-inline void nsCounterNode::Calc(nsCounterList* aList)
-{
-    if (mType == USE)
-        UseNode()->Calc(aList);
-    else
-        ChangeNode()->Calc(aList);
-=======
 inline bool nsCounterNode::IsContentBasedReset() {
   return mType == RESET &&
          ChangeNode()->mChangeValue == std::numeric_limits<int32_t>::min();
->>>>>>> upstream-releases
 }
 
 class nsCounterList : public nsGenConList {
@@ -475,33 +214,13 @@ class nsCounterList : public nsGenConList {
  * counter to keep track of all scopes with that name.
  */
 class nsCounterManager {
-<<<<<<< HEAD
- public:
-  // Returns true if dirty
-  bool AddCounterResetsAndIncrements(nsIFrame* aFrame);
-||||||| merged common ancestors
-public:
-    // Returns true if dirty
-    bool AddCounterResetsAndIncrements(nsIFrame *aFrame);
-=======
  public:
   // Returns true if dirty
   bool AddCounterChanges(nsIFrame* aFrame);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Gets the appropriate counter list, creating it if necessary.
-  // Guaranteed to return non-null. (Uses an infallible hashtable API.)
-  nsCounterList* CounterListFor(const nsAString& aCounterName);
-||||||| merged common ancestors
-    // Gets the appropriate counter list, creating it if necessary.
-    // Guaranteed to return non-null. (Uses an infallible hashtable API.)
-    nsCounterList* CounterListFor(const nsAString& aCounterName);
-=======
   // Gets the appropriate counter list, creating it if necessary.
   // Guaranteed to return non-null. (Uses an infallible hashtable API.)
   nsCounterList* CounterListFor(nsAtom* aCounterName);
->>>>>>> upstream-releases
 
   // Clean up data in any dirty counter lists.
   void RecalcAll();
@@ -543,25 +262,11 @@ public:
     return newValue;
   }
 
-<<<<<<< HEAD
- private:
-  // for |AddCounterResetsAndIncrements| only
-  bool AddResetOrIncrement(nsIFrame* aFrame, int32_t aIndex,
-                           const nsStyleCounterData& aCounterData,
-                           nsCounterNode::Type aType);
-||||||| merged common ancestors
-private:
-    // for |AddCounterResetsAndIncrements| only
-  bool AddResetOrIncrement(nsIFrame* aFrame, int32_t aIndex,
-                           const nsStyleCounterData& aCounterData,
-                           nsCounterNode::Type aType);
-=======
  private:
   // for |AddCounterChanges| only
   bool AddCounterChangeNode(nsIFrame* aFrame, int32_t aIndex,
                             const nsStyleCounterData& aCounterData,
                             nsCounterNode::Type aType);
->>>>>>> upstream-releases
 
   nsClassHashtable<nsRefPtrHashKey<nsAtom>, nsCounterList> mNames;
 };

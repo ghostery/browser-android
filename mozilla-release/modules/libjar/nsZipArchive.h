@@ -23,26 +23,6 @@
 #include "mozilla/UniquePtr.h"
 
 #ifdef HAVE_SEH_EXCEPTIONS
-<<<<<<< HEAD
-#define MOZ_WIN_MEM_TRY_BEGIN __try {
-#define MOZ_WIN_MEM_TRY_CATCH(cmd)                        \
-  }                                                       \
-  __except (GetExceptionCode() == EXCEPTION_IN_PAGE_ERROR \
-                ? EXCEPTION_EXECUTE_HANDLER               \
-                : EXCEPTION_CONTINUE_SEARCH) {            \
-    NS_WARNING("unexpected EXCEPTION_IN_PAGE_ERROR");     \
-    cmd;                                                  \
-  }
-||||||| merged common ancestors
-#define MOZ_WIN_MEM_TRY_BEGIN __try {
-#define MOZ_WIN_MEM_TRY_CATCH(cmd) }                                \
-  __except(GetExceptionCode()==EXCEPTION_IN_PAGE_ERROR ?            \
-           EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)   \
-  {                                                                 \
-    NS_WARNING("unexpected EXCEPTION_IN_PAGE_ERROR");               \
-    cmd;                                                            \
-  }
-=======
 #  define MOZ_WIN_MEM_TRY_BEGIN __try {
 #  define MOZ_WIN_MEM_TRY_CATCH(cmd)                        \
     }                                                       \
@@ -52,7 +32,6 @@
       NS_WARNING("unexpected EXCEPTION_IN_PAGE_ERROR");     \
       cmd;                                                  \
     }
->>>>>>> upstream-releases
 #else
 #  define MOZ_WIN_MEM_TRY_BEGIN {
 #  define MOZ_WIN_MEM_TRY_CATCH(cmd) }

@@ -23,17 +23,6 @@ function testCached(code, imports, test) {
      })
      .then(m => {
          test(new Instance(m, imports));
-<<<<<<< HEAD
-         assertEq(cache.cached, wasmCachingIsSupported());
-
-         if (wasmCachingIsSupported()) {
-             let m2 = wasmCompileInSeparateProcess(code);
-             test(new Instance(m2, imports));
-         }
-
-||||||| merged common ancestors
-         assertEq(cache.cached, wasmCachingIsSupported());
-=======
          assertEq(wasmLoadedFromCache(m), true);
          assertEq(cache.cached, true);
 
@@ -41,7 +30,6 @@ function testCached(code, imports, test) {
          test(new Instance(m2, imports));
          assertEq(wasmLoadedFromCache(m2), true);
 
->>>>>>> upstream-releases
          success = true;
      })
      .catch(err => { print(String(err) + " at:\n" + err.stack) });
@@ -50,25 +38,6 @@ function testCached(code, imports, test) {
      assertEq(success, true);
 }
 
-<<<<<<< HEAD
-testCached(`(module
-    (func $test (param i64) (result f64)
-        get_local 0
-        f64.convert_u/i64
-    )
-    (func (export "run") (result i32)
-        i64.const 1
-        call $test
-        f64.const 1
-        f64.eq
-    )
-)`,
-    undefined,
-    i => { assertEq(i.exports.run(), 1); }
-);
-
-||||||| merged common ancestors
-=======
 testCached(`(module
     (func $test (param i64) (result f64)
         local.get 0
@@ -85,7 +54,6 @@ testCached(`(module
     i => { assertEq(i.exports.run(), 1); }
 );
 
->>>>>>> upstream-releases
 testCached(
     `(module
        (func (export "run") (result i32)

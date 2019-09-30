@@ -85,44 +85,15 @@ class JsepTrack {
 
   virtual ~JsepTrack() {}
 
-<<<<<<< HEAD
-  void UpdateTrackIds(const std::vector<std::string>& streamIds,
-                      const std::string& trackId) {
-||||||| merged common ancestors
-  void UpdateTrackIds(const std::vector<std::string>& streamIds,
-                      const std::string& trackId)
-  {
-=======
   void UpdateStreamIds(const std::vector<std::string>& streamIds) {
->>>>>>> upstream-releases
     mStreamIds = streamIds;
   }
 
-<<<<<<< HEAD
-  void ClearTrackIds() {
-    mStreamIds.clear();
-    mTrackId.clear();
-  }
-||||||| merged common ancestors
-  void ClearTrackIds()
-  {
-    mStreamIds.clear();
-    mTrackId.clear();
-  }
-=======
   void SetTrackId(const std::string& aTrackId) { mTrackId = aTrackId; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void UpdateRecvTrack(const Sdp& sdp, const SdpMediaSection& msection) {
-||||||| merged common ancestors
-  void UpdateRecvTrack(const Sdp& sdp, const SdpMediaSection& msection)
-  {
-=======
   void ClearStreamIds() { mStreamIds.clear(); }
 
   void UpdateRecvTrack(const Sdp& sdp, const SdpMediaSection& msection) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mDirection == sdp::kRecv);
     MOZ_ASSERT(msection.GetMediaType() !=
                SdpMediaSection::MediaType::kApplication);
@@ -165,17 +136,9 @@ class JsepTrack {
       mActive = rhs.mActive;
       mRemoteSetSendBit = rhs.mRemoteSetSendBit;
 
-<<<<<<< HEAD
-      for (const auto& codec : rhs.mPrototypeCodecs) {
-        mPrototypeCodecs.emplace_back(codec->Clone());
-||||||| merged common ancestors
-      for (const JsepCodecDescription* codec : rhs.mPrototypeCodecs.values) {
-        mPrototypeCodecs.values.push_back(codec->Clone());
-=======
       mPrototypeCodecs.clear();
       for (const auto& codec : rhs.mPrototypeCodecs) {
         mPrototypeCodecs.emplace_back(codec->Clone());
->>>>>>> upstream-releases
       }
       if (rhs.mNegotiatedDetails) {
         mNegotiatedDetails.reset(
@@ -193,61 +156,13 @@ class JsepTrack {
     return mStreamIds;
   }
 
-<<<<<<< HEAD
-  virtual const std::string& GetTrackId() const { return mTrackId; }
-||||||| merged common ancestors
-  virtual const std::string&
-  GetTrackId() const
-  {
-    return mTrackId;
-  }
-=======
   virtual const std::string& GetCNAME() const { return mCNAME; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual const std::string& GetCNAME() const { return mCNAME; }
-||||||| merged common ancestors
-  virtual const std::string&
-  GetCNAME() const
-  {
-    return mCNAME;
-  }
-=======
   virtual void SetCNAME(const std::string& cname) { mCNAME = cname; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void SetCNAME(const std::string& cname) { mCNAME = cname; }
-||||||| merged common ancestors
-  virtual void
-  SetCNAME(const std::string& cname)
-  {
-    mCNAME = cname;
-  }
-=======
-  virtual sdp::Direction GetDirection() const { return mDirection; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   virtual sdp::Direction GetDirection() const { return mDirection; }
 
   virtual const std::vector<uint32_t>& GetSsrcs() const { return mSsrcs; }
-||||||| merged common ancestors
-  virtual sdp::Direction
-  GetDirection() const
-  {
-    return mDirection;
-  }
-
-  virtual const std::vector<uint32_t>&
-  GetSsrcs() const
-  {
-    return mSsrcs;
-  }
-=======
-  virtual const std::vector<uint32_t>& GetSsrcs() const { return mSsrcs; }
->>>>>>> upstream-releases
 
   virtual void EnsureSsrcs(SsrcGenerator& ssrcGenerator);
 
@@ -271,17 +186,9 @@ class JsepTrack {
   }
 
   // These two are non-const because this is where ssrcs are chosen.
-<<<<<<< HEAD
-  virtual void AddToOffer(SsrcGenerator& ssrcGenerator, bool encodeTrackId,
-                          SdpMediaSection* offer);
-||||||| merged common ancestors
-  virtual void AddToOffer(SsrcGenerator& ssrcGenerator,
-                          SdpMediaSection* offer);
-=======
   virtual void AddToOffer(SsrcGenerator& ssrcGenerator, SdpMediaSection* offer);
->>>>>>> upstream-releases
   virtual void AddToAnswer(const SdpMediaSection& offer,
-                           SsrcGenerator& ssrcGenerator, bool encodeTrackId,
+                           SsrcGenerator& ssrcGenerator,
                            SdpMediaSection* answer);
 
   virtual void Negotiate(const SdpMediaSection& answer,
@@ -334,50 +241,17 @@ class JsepTrack {
   static void GetPayloadTypes(
       const std::vector<UniquePtr<JsepCodecDescription>>& codecs,
       std::vector<uint16_t>* pts);
-<<<<<<< HEAD
-  static void EnsurePayloadTypeIsUnique(std::set<uint16_t>* uniquePayloadTypes,
-                                        JsepCodecDescription* codec);
-  void AddToMsection(const std::vector<UniquePtr<JsepCodecDescription>>& codecs,
-                     bool encodeTrackId, SdpMediaSection* msection);
-  void GetRids(const SdpMediaSection& msection, sdp::Direction direction,
-||||||| merged common ancestors
-  static void EnsurePayloadTypeIsUnique(std::set<uint16_t>* uniquePayloadTypes,
-                                        JsepCodecDescription* codec);
-  void AddToMsection(const std::vector<JsepCodecDescription*>& codecs,
-                     SdpMediaSection* msection);
-  void GetRids(const SdpMediaSection& msection,
-               sdp::Direction direction,
-=======
   void AddToMsection(const std::vector<UniquePtr<JsepCodecDescription>>& codecs,
                      SdpMediaSection* msection);
   void GetRids(const SdpMediaSection& msection, sdp::Direction direction,
->>>>>>> upstream-releases
                std::vector<SdpRidAttributeList::Rid>* rids) const;
   void CreateEncodings(
       const SdpMediaSection& remote,
       const std::vector<UniquePtr<JsepCodecDescription>>& negotiatedCodecs,
       JsepTrackNegotiatedDetails* details);
 
-<<<<<<< HEAD
-  // |formatChanges| is set on completion of offer/answer, and records how the
-  // formats in |codecs| were changed, which is used by |Negotiate| to update
-  // |mPrototypeCodecs|.
-  virtual void NegotiateCodecs(
-      const SdpMediaSection& remote,
-      std::vector<UniquePtr<JsepCodecDescription>>* codecs,
-      std::map<std::string, std::string>* formatChanges = nullptr) const;
-||||||| merged common ancestors
-  // |formatChanges| is set on completion of offer/answer, and records how the
-  // formats in |codecs| were changed, which is used by |Negotiate| to update
-  // |mPrototypeCodecs|.
-  virtual void NegotiateCodecs(
-      const SdpMediaSection& remote,
-      std::vector<JsepCodecDescription*>* codecs,
-      std::map<std::string, std::string>* formatChanges = nullptr) const;
-=======
   virtual std::vector<UniquePtr<JsepCodecDescription>> NegotiateCodecs(
       const SdpMediaSection& remote, bool isOffer);
->>>>>>> upstream-releases
 
   JsConstraints* FindConstraints(
       const std::string& rid,

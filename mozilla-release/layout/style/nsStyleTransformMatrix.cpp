@@ -124,80 +124,6 @@ void TransformReferenceBox::Init(const nsSize& aDimensions) {
   mIsCached = true;
 }
 
-<<<<<<< HEAD
-float ProcessTranslatePart(
-    const nsCSSValue& aValue, TransformReferenceBox* aRefBox,
-    TransformReferenceBox::DimensionGetter aDimensionGetter) {
-  nscoord offset = 0;
-  float percent = 0.0f;
-
-  if (aValue.GetUnit() == eCSSUnit_Percent) {
-    percent = aValue.GetPercentValue();
-  } else if (aValue.GetUnit() == eCSSUnit_Pixel ||
-             aValue.GetUnit() == eCSSUnit_Number) {
-    // Raw numbers are treated as being pixels.
-    return aValue.GetFloatValue();
-  } else if (aValue.IsCalcUnit()) {
-    // We can retrieve the Calc value directly because it has been computed
-    // from the Servo side and set by nsCSSValue::SetCalcValue().
-    nsStyleCoord::CalcValue calc = aValue.GetCalcValue();
-    percent = calc.mPercent;
-    offset = calc.mLength;
-  } else {
-    // Note: The unit of nsCSSValue passed from Servo side would be number,
-    //       pixel, percent, or eCSSUnit_Calc, so it is impossible to go into
-    //       this branch.
-    MOZ_CRASH("unexpected unit in ProcessTranslatePart");
-  }
-
-  float translation = NSAppUnitsToFloatPixels(offset, AppUnitsPerCSSPixel());
-  // We want to avoid calling aDimensionGetter if there's no percentage to be
-  // resolved (for performance reasons - see TransformReferenceBox).
-  if (percent != 0.0f && aRefBox && !aRefBox->IsEmpty()) {
-    translation +=
-        percent * NSAppUnitsToFloatPixels((aRefBox->*aDimensionGetter)(),
-                                          AppUnitsPerCSSPixel());
-  }
-  return translation;
-||||||| merged common ancestors
-float
-ProcessTranslatePart(const nsCSSValue& aValue,
-                     TransformReferenceBox* aRefBox,
-                     TransformReferenceBox::DimensionGetter aDimensionGetter)
-{
-  nscoord offset = 0;
-  float percent = 0.0f;
-
-  if (aValue.GetUnit() == eCSSUnit_Percent) {
-    percent = aValue.GetPercentValue();
-  } else if (aValue.GetUnit() == eCSSUnit_Pixel ||
-             aValue.GetUnit() == eCSSUnit_Number) {
-    // Raw numbers are treated as being pixels.
-    return aValue.GetFloatValue();
-  } else if (aValue.IsCalcUnit()) {
-    // We can retrieve the Calc value directly because it has been computed
-    // from the Servo side and set by nsCSSValue::SetCalcValue().
-    nsStyleCoord::CalcValue calc = aValue.GetCalcValue();
-    percent = calc.mPercent;
-    offset = calc.mLength;
-  } else {
-    // Note: The unit of nsCSSValue passed from Servo side would be number,
-    //       pixel, percent, or eCSSUnit_Calc, so it is impossible to go into
-    //       this branch.
-    MOZ_CRASH("unexpected unit in ProcessTranslatePart");
-  }
-
-  float translation =
-    NSAppUnitsToFloatPixels(offset, AppUnitsPerCSSPixel());
-  // We want to avoid calling aDimensionGetter if there's no percentage to be
-  // resolved (for performance reasons - see TransformReferenceBox).
-  if (percent != 0.0f && aRefBox && !aRefBox->IsEmpty()) {
-    translation +=
-      percent * NSAppUnitsToFloatPixels((aRefBox->*aDimensionGetter)(),
-                                        AppUnitsPerCSSPixel());
-  }
-  return translation;
-=======
 float ProcessTranslatePart(
     const LengthPercentage& aValue, TransformReferenceBox* aRefBox,
     TransformReferenceBox::DimensionGetter aDimensionGetter) {
@@ -206,7 +132,6 @@ float ProcessTranslatePart(
                ? CSSPixel::FromAppUnits((aRefBox->*aDimensionGetter)())
                : CSSCoord(0);
   });
->>>>>>> upstream-releases
 }
 
 /**
@@ -216,130 +141,25 @@ float ProcessTranslatePart(
  */
 
 /* Helper function to process a matrix entry. */
-<<<<<<< HEAD
-static void ProcessMatrix(Matrix4x4& aMatrix, const nsCSSValue::Array* aData,
-                          TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 7, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessMatrix(Matrix4x4& aMatrix,
-              const nsCSSValue::Array* aData,
-              TransformReferenceBox& aRefBox)
-{
-  MOZ_ASSERT(aData->Count() == 7, "Invalid array!");
-
-=======
 static void ProcessMatrix(Matrix4x4& aMatrix,
                           const StyleTransformOperation& aOp) {
   const auto& matrix = aOp.AsMatrix();
->>>>>>> upstream-releases
   gfxMatrix result;
 
-<<<<<<< HEAD
-  /* Take the first four elements out of the array as floats and store
-   * them.
-   */
-  result._11 = aData->Item(1).GetFloatValue();
-  result._12 = aData->Item(2).GetFloatValue();
-  result._21 = aData->Item(3).GetFloatValue();
-  result._22 = aData->Item(4).GetFloatValue();
-
-  /* The last two elements have their length parts stored in aDelta
-   * and their percent parts stored in aX[0] and aY[1].
-   */
-  result._31 = ProcessTranslatePart(aData->Item(5), &aRefBox,
-                                    &TransformReferenceBox::Width);
-  result._32 = ProcessTranslatePart(aData->Item(6), &aRefBox,
-                                    &TransformReferenceBox::Height);
-||||||| merged common ancestors
-  /* Take the first four elements out of the array as floats and store
-   * them.
-   */
-  result._11 = aData->Item(1).GetFloatValue();
-  result._12 = aData->Item(2).GetFloatValue();
-  result._21 = aData->Item(3).GetFloatValue();
-  result._22 = aData->Item(4).GetFloatValue();
-
-  /* The last two elements have their length parts stored in aDelta
-   * and their percent parts stored in aX[0] and aY[1].
-   */
-  result._31 = ProcessTranslatePart(aData->Item(5),
-                                    &aRefBox, &TransformReferenceBox::Width);
-  result._32 = ProcessTranslatePart(aData->Item(6),
-                                    &aRefBox, &TransformReferenceBox::Height);
-=======
   result._11 = matrix.a;
   result._12 = matrix.b;
   result._21 = matrix.c;
   result._22 = matrix.d;
   result._31 = matrix.e;
   result._32 = matrix.f;
->>>>>>> upstream-releases
 
   aMatrix = result * aMatrix;
 }
 
-<<<<<<< HEAD
-static void ProcessMatrix3D(Matrix4x4& aMatrix, const nsCSSValue::Array* aData,
-                            TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 17, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessMatrix3D(Matrix4x4& aMatrix,
-                const nsCSSValue::Array* aData,
-                TransformReferenceBox& aRefBox)
-{
-  MOZ_ASSERT(aData->Count() == 17, "Invalid array!");
-
-=======
 static void ProcessMatrix3D(Matrix4x4& aMatrix,
                             const StyleTransformOperation& aOp) {
->>>>>>> upstream-releases
   Matrix4x4 temp;
 
-<<<<<<< HEAD
-  temp._11 = aData->Item(1).GetFloatValue();
-  temp._12 = aData->Item(2).GetFloatValue();
-  temp._13 = aData->Item(3).GetFloatValue();
-  temp._14 = aData->Item(4).GetFloatValue();
-  temp._21 = aData->Item(5).GetFloatValue();
-  temp._22 = aData->Item(6).GetFloatValue();
-  temp._23 = aData->Item(7).GetFloatValue();
-  temp._24 = aData->Item(8).GetFloatValue();
-  temp._31 = aData->Item(9).GetFloatValue();
-  temp._32 = aData->Item(10).GetFloatValue();
-  temp._33 = aData->Item(11).GetFloatValue();
-  temp._34 = aData->Item(12).GetFloatValue();
-  temp._44 = aData->Item(16).GetFloatValue();
-
-  temp._41 = ProcessTranslatePart(aData->Item(13), &aRefBox,
-                                  &TransformReferenceBox::Width);
-  temp._42 = ProcessTranslatePart(aData->Item(14), &aRefBox,
-                                  &TransformReferenceBox::Height);
-  temp._43 = ProcessTranslatePart(aData->Item(15), nullptr);
-||||||| merged common ancestors
-  temp._11 = aData->Item(1).GetFloatValue();
-  temp._12 = aData->Item(2).GetFloatValue();
-  temp._13 = aData->Item(3).GetFloatValue();
-  temp._14 = aData->Item(4).GetFloatValue();
-  temp._21 = aData->Item(5).GetFloatValue();
-  temp._22 = aData->Item(6).GetFloatValue();
-  temp._23 = aData->Item(7).GetFloatValue();
-  temp._24 = aData->Item(8).GetFloatValue();
-  temp._31 = aData->Item(9).GetFloatValue();
-  temp._32 = aData->Item(10).GetFloatValue();
-  temp._33 = aData->Item(11).GetFloatValue();
-  temp._34 = aData->Item(12).GetFloatValue();
-  temp._44 = aData->Item(16).GetFloatValue();
-
-  temp._41 = ProcessTranslatePart(aData->Item(13),
-                                  &aRefBox, &TransformReferenceBox::Width);
-  temp._42 = ProcessTranslatePart(aData->Item(14),
-                                  &aRefBox, &TransformReferenceBox::Height);
-  temp._43 = ProcessTranslatePart(aData->Item(15), nullptr);
-=======
   const auto& matrix = aOp.AsMatrix3D();
 
   temp._11 = matrix.m11;
@@ -359,7 +179,6 @@ static void ProcessMatrix3D(Matrix4x4& aMatrix,
   temp._42 = matrix.m42;
   temp._43 = matrix.m43;
   temp._44 = matrix.m44;
->>>>>>> upstream-releases
 
   aMatrix = temp * aMatrix;
 }
@@ -457,205 +276,7 @@ class Interpolate {
   }
 };
 
-<<<<<<< HEAD
-/**
- * Calculate 2 matrices by decomposing them with Operator.
- *
- * @param aMatrix1   First matrix, using CSS pixel units.
- * @param aMatrix2   Second matrix, using CSS pixel units.
- * @param aProgress  Coefficient for the Operator.
- */
 template <typename Operator>
-static Matrix4x4 OperateTransformMatrix(const Matrix4x4& aMatrix1,
-                                        const Matrix4x4& aMatrix2,
-                                        double aProgress) {
-  // Decompose both matrices
-
-  Point3D scale1(1, 1, 1), translate1;
-  Point4D perspective1(0, 0, 0, 1);
-  gfxQuaternion rotate1;
-  nsStyleTransformMatrix::ShearArray shear1{0.0f, 0.0f, 0.0f};
-
-  Point3D scale2(1, 1, 1), translate2;
-  Point4D perspective2(0, 0, 0, 1);
-  gfxQuaternion rotate2;
-  nsStyleTransformMatrix::ShearArray shear2{0.0f, 0.0f, 0.0f};
-
-  // Check if both matrices are decomposable.
-  bool wasDecomposed;
-  Matrix matrix2d1, matrix2d2;
-  if (aMatrix1.Is2D(&matrix2d1) && aMatrix2.Is2D(&matrix2d2)) {
-    wasDecomposed =
-        Decompose2DMatrix(matrix2d1, scale1, shear1, rotate1, translate1) &&
-        Decompose2DMatrix(matrix2d2, scale2, shear2, rotate2, translate2);
-  } else {
-    wasDecomposed = Decompose3DMatrix(aMatrix1, scale1, shear1, rotate1,
-                                      translate1, perspective1) &&
-                    Decompose3DMatrix(aMatrix2, scale2, shear2, rotate2,
-                                      translate2, perspective2);
-  }
-
-  // Fallback to discrete operation if one of the matrices is not decomposable.
-  if (!wasDecomposed) {
-    return Operator::operateForFallback(aMatrix1, aMatrix2, aProgress);
-  }
-
-  Matrix4x4 result;
-
-  // Operate each of the pieces in response to |Operator|.
-  Point4D perspective =
-      Operator::operateForPerspective(perspective1, perspective2, aProgress);
-  result.SetTransposedVector(3, perspective);
-
-  Point3D translate = Operator::operate(translate1, translate2, aProgress);
-  result.PreTranslate(translate.x, translate.y, translate.z);
-
-  Matrix4x4 rotate = Operator::operateForRotate(rotate1, rotate2, aProgress);
-  if (!rotate.IsIdentity()) {
-    result = rotate * result;
-  }
-
-  // TODO: Would it be better to operate these as angles?
-  //       How do we convert back to angles?
-  float yzshear = Operator::operate(shear1[ShearType::YZSHEAR],
-                                    shear2[ShearType::YZSHEAR], aProgress);
-  if (yzshear != 0.0) {
-    result.SkewYZ(yzshear);
-  }
-
-  float xzshear = Operator::operate(shear1[ShearType::XZSHEAR],
-                                    shear2[ShearType::XZSHEAR], aProgress);
-  if (xzshear != 0.0) {
-    result.SkewXZ(xzshear);
-  }
-
-  float xyshear = Operator::operate(shear1[ShearType::XYSHEAR],
-                                    shear2[ShearType::XYSHEAR], aProgress);
-  if (xyshear != 0.0) {
-    result.SkewXY(xyshear);
-  }
-
-  Point3D scale = Operator::operateForScale(scale1, scale2, aProgress);
-  if (scale != Point3D(1.0, 1.0, 1.0)) {
-    result.PreScale(scale.x, scale.y, scale.z);
-  }
-
-  return result;
-}
-
-||||||| merged common ancestors
-/**
- * Calculate 2 matrices by decomposing them with Operator.
- *
- * @param aMatrix1   First matrix, using CSS pixel units.
- * @param aMatrix2   Second matrix, using CSS pixel units.
- * @param aProgress  Coefficient for the Operator.
- */
-template <typename Operator>
-static Matrix4x4
-OperateTransformMatrix(const Matrix4x4 &aMatrix1,
-                       const Matrix4x4 &aMatrix2,
-                       double aProgress)
-{
-  // Decompose both matrices
-
-  Point3D scale1(1, 1, 1), translate1;
-  Point4D perspective1(0, 0, 0, 1);
-  gfxQuaternion rotate1;
-  nsStyleTransformMatrix::ShearArray shear1{0.0f, 0.0f, 0.0f};
-
-  Point3D scale2(1, 1, 1), translate2;
-  Point4D perspective2(0, 0, 0, 1);
-  gfxQuaternion rotate2;
-  nsStyleTransformMatrix::ShearArray shear2{0.0f, 0.0f, 0.0f};
-
-  // Check if both matrices are decomposable.
-  bool wasDecomposed;
-  Matrix matrix2d1, matrix2d2;
-  if (aMatrix1.Is2D(&matrix2d1) && aMatrix2.Is2D(&matrix2d2)) {
-    wasDecomposed =
-      Decompose2DMatrix(matrix2d1, scale1, shear1, rotate1, translate1) &&
-      Decompose2DMatrix(matrix2d2, scale2, shear2, rotate2, translate2);
-  } else {
-    wasDecomposed =
-      Decompose3DMatrix(aMatrix1, scale1, shear1,
-                        rotate1, translate1, perspective1) &&
-      Decompose3DMatrix(aMatrix2, scale2, shear2,
-                        rotate2, translate2, perspective2);
-  }
-
-  // Fallback to discrete operation if one of the matrices is not decomposable.
-  if (!wasDecomposed) {
-    return Operator::operateForFallback(aMatrix1, aMatrix2, aProgress);
-  }
-
-  Matrix4x4 result;
-
-  // Operate each of the pieces in response to |Operator|.
-  Point4D perspective =
-    Operator::operateForPerspective(perspective1, perspective2, aProgress);
-  result.SetTransposedVector(3, perspective);
-
-  Point3D translate =
-    Operator::operate(translate1, translate2, aProgress);
-  result.PreTranslate(translate.x, translate.y, translate.z);
-
-  Matrix4x4 rotate = Operator::operateForRotate(rotate1, rotate2, aProgress);
-  if (!rotate.IsIdentity()) {
-    result = rotate * result;
-  }
-
-  // TODO: Would it be better to operate these as angles?
-  //       How do we convert back to angles?
-  float yzshear =
-    Operator::operate(shear1[ShearType::YZSHEAR],
-                      shear2[ShearType::YZSHEAR],
-                      aProgress);
-  if (yzshear != 0.0) {
-    result.SkewYZ(yzshear);
-  }
-
-  float xzshear =
-    Operator::operate(shear1[ShearType::XZSHEAR],
-                      shear2[ShearType::XZSHEAR],
-                      aProgress);
-  if (xzshear != 0.0) {
-    result.SkewXZ(xzshear);
-  }
-
-  float xyshear =
-    Operator::operate(shear1[ShearType::XYSHEAR],
-                      shear2[ShearType::XYSHEAR],
-                      aProgress);
-  if (xyshear != 0.0) {
-    result.SkewXY(xyshear);
-  }
-
-  Point3D scale =
-    Operator::operateForScale(scale1, scale2, aProgress);
-  if (scale != Point3D(1.0, 1.0, 1.0)) {
-    result.PreScale(scale.x, scale.y, scale.z);
-  }
-
-  return result;
-}
-
-=======
->>>>>>> upstream-releases
-template <typename Operator>
-<<<<<<< HEAD
-static Matrix4x4 OperateTransformMatrixByServo(const Matrix4x4& aMatrix1,
-                                               const Matrix4x4& aMatrix2,
-                                               double aProgress) {
-  return Operator::operateByServo(aMatrix1, aMatrix2, aProgress);
-||||||| merged common ancestors
-static Matrix4x4
-OperateTransformMatrixByServo(const Matrix4x4 &aMatrix1,
-                              const Matrix4x4 &aMatrix2,
-                              double aProgress)
-{
-  return Operator::operateByServo(aMatrix1, aMatrix2, aProgress);
-=======
 static void ProcessMatrixOperator(Matrix4x4& aMatrix,
                                   const StyleTransform& aFrom,
                                   const StyleTransform& aTo, float aProgress,
@@ -664,139 +285,8 @@ static void ProcessMatrixOperator(Matrix4x4& aMatrix,
   Matrix4x4 matrix1 = ReadTransforms(aFrom, aRefBox, appUnitPerCSSPixel);
   Matrix4x4 matrix2 = ReadTransforms(aTo, aRefBox, appUnitPerCSSPixel);
   aMatrix = Operator::operateByServo(matrix1, matrix2, aProgress) * aMatrix;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename Operator>
-static void ProcessMatrixOperator(Matrix4x4& aMatrix,
-                                  const nsCSSValue::Array* aData,
-                                  TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 4, "Invalid array!");
-
-  auto readTransform = [&](const nsCSSValue& aValue) -> Matrix4x4 {
-    const nsCSSValueList* list = nullptr;
-    switch (aValue.GetUnit()) {
-      case eCSSUnit_List:
-        // For Gecko style backend.
-        list = aValue.GetListValue();
-        break;
-      case eCSSUnit_SharedList:
-        // For Servo style backend. The transform lists of interpolatematrix
-        // are not created on the main thread (i.e. during parallel traversal),
-        // and nsCSSValueList_heap is not thread safe. Therefore, we use
-        // nsCSSValueSharedList as a workaround.
-        list = aValue.GetSharedListValue()->mHead;
-        break;
-      default:
-        list = nullptr;
-    }
-
-    Matrix4x4 matrix;
-    if (!list) {
-      return matrix;
-    }
-
-    float appUnitPerCSSPixel = AppUnitsPerCSSPixel();
-    matrix = nsStyleTransformMatrix::ReadTransforms(list, aRefBox,
-                                                    appUnitPerCSSPixel);
-    return matrix;
-  };
-
-  Matrix4x4 matrix1 = readTransform(aData->Item(1));
-  Matrix4x4 matrix2 = readTransform(aData->Item(2));
-  double progress = aData->Item(3).GetPercentValue();
-
-  // We cannot use GeckoComputedStyle to check if we use Servo backend because
-  // it could be null in Gecko. Instead, use the unit of the nsCSSValue because
-  // we use eCSSUnit_SharedList for Servo backend.
-  if (aData->Item(1).GetUnit() == eCSSUnit_SharedList) {
-    aMatrix =
-        OperateTransformMatrixByServo<Operator>(matrix1, matrix2, progress) *
-        aMatrix;
-    return;
-  }
-
-  aMatrix =
-      OperateTransformMatrix<Operator>(matrix1, matrix2, progress) * aMatrix;
-}
-
-/* Helper function to process two matrices that we need to interpolate between
- */
-void ProcessInterpolateMatrix(Matrix4x4& aMatrix,
-                              const nsCSSValue::Array* aData,
-                              TransformReferenceBox& aRefBox) {
-  ProcessMatrixOperator<Interpolate>(aMatrix, aData, aRefBox);
-||||||| merged common ancestors
-template <typename Operator>
-static void
-ProcessMatrixOperator(Matrix4x4& aMatrix,
-                      const nsCSSValue::Array* aData,
-                      TransformReferenceBox& aRefBox,
-                      bool* aContains3dTransform)
-{
-  MOZ_ASSERT(aData->Count() == 4, "Invalid array!");
-
-  auto readTransform = [&](const nsCSSValue& aValue) -> Matrix4x4 {
-    const nsCSSValueList* list = nullptr;
-    switch (aValue.GetUnit()) {
-      case eCSSUnit_List:
-        // For Gecko style backend.
-        list = aValue.GetListValue();
-        break;
-      case eCSSUnit_SharedList:
-        // For Servo style backend. The transform lists of interpolatematrix
-        // are not created on the main thread (i.e. during parallel traversal),
-        // and nsCSSValueList_heap is not thread safe. Therefore, we use
-        // nsCSSValueSharedList as a workaround.
-        list = aValue.GetSharedListValue()->mHead;
-        break;
-      default:
-        list = nullptr;
-    }
-
-    Matrix4x4 matrix;
-    if (!list) {
-      return matrix;
-    }
-
-    float appUnitPerCSSPixel = AppUnitsPerCSSPixel();
-    matrix = nsStyleTransformMatrix::ReadTransforms(list,
-                                                    aRefBox,
-                                                    appUnitPerCSSPixel,
-                                                    aContains3dTransform);
-    return matrix;
-  };
-
-  Matrix4x4 matrix1 = readTransform(aData->Item(1));
-  Matrix4x4 matrix2 = readTransform(aData->Item(2));
-  double progress = aData->Item(3).GetPercentValue();
-
-  // We cannot use GeckoComputedStyle to check if we use Servo backend because
-  // it could be null in Gecko. Instead, use the unit of the nsCSSValue because
-  // we use eCSSUnit_SharedList for Servo backend.
-  if (aData->Item(1).GetUnit() == eCSSUnit_SharedList) {
-    aMatrix =
-      OperateTransformMatrixByServo<Operator>(matrix1, matrix2, progress)
-        * aMatrix;
-    return;
-  }
-
-  aMatrix =
-    OperateTransformMatrix<Operator>(matrix1, matrix2, progress) * aMatrix;
-}
-
-/* Helper function to process two matrices that we need to interpolate between */
-void
-ProcessInterpolateMatrix(Matrix4x4& aMatrix,
-                         const nsCSSValue::Array* aData,
-                         TransformReferenceBox& aRefBox,
-                         bool* aContains3dTransform)
-{
-  ProcessMatrixOperator<Interpolate>(aMatrix, aData,
-                                     aRefBox,
-                                     aContains3dTransform);
-=======
 /* Helper function to process two matrices that we need to interpolate between
  */
 void ProcessInterpolateMatrix(Matrix4x4& aMatrix,
@@ -805,213 +295,60 @@ void ProcessInterpolateMatrix(Matrix4x4& aMatrix,
   const auto& args = aOp.AsInterpolateMatrix();
   ProcessMatrixOperator<Interpolate>(aMatrix, args.from_list, args.to_list,
                                      args.progress._0, aRefBox);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ProcessAccumulateMatrix(Matrix4x4& aMatrix, const nsCSSValue::Array* aData,
-                             TransformReferenceBox& aRefBox) {
-  ProcessMatrixOperator<Accumulate>(aMatrix, aData, aRefBox);
-||||||| merged common ancestors
-void
-ProcessAccumulateMatrix(Matrix4x4& aMatrix,
-                        const nsCSSValue::Array* aData,
-                        TransformReferenceBox& aRefBox,
-                        bool* aContains3dTransform)
-{
-  ProcessMatrixOperator<Accumulate>(aMatrix, aData, aRefBox,
-                                    aContains3dTransform);
-=======
 void ProcessAccumulateMatrix(Matrix4x4& aMatrix,
                              const StyleTransformOperation& aOp,
                              TransformReferenceBox& aRefBox) {
   const auto& args = aOp.AsAccumulateMatrix();
   ProcessMatrixOperator<Accumulate>(aMatrix, args.from_list, args.to_list,
                                     args.count, aRefBox);
->>>>>>> upstream-releases
 }
 
 /* Helper function to process a translatex function. */
-<<<<<<< HEAD
-static void ProcessTranslateX(Matrix4x4& aMatrix,
-                              const nsCSSValue::Array* aData,
-                              TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessTranslateX(Matrix4x4& aMatrix,
-                  const nsCSSValue::Array* aData,
-                  TransformReferenceBox& aRefBox)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-=======
 static void ProcessTranslateX(Matrix4x4& aMatrix,
                               const LengthPercentage& aLength,
                               TransformReferenceBox& aRefBox) {
->>>>>>> upstream-releases
   Point3D temp;
-<<<<<<< HEAD
-
-  temp.x = ProcessTranslatePart(aData->Item(1), &aRefBox,
-                                &TransformReferenceBox::Width);
-||||||| merged common ancestors
-
-  temp.x = ProcessTranslatePart(aData->Item(1),
-                                &aRefBox, &TransformReferenceBox::Width);
-=======
   temp.x =
       ProcessTranslatePart(aLength, &aRefBox, &TransformReferenceBox::Width);
->>>>>>> upstream-releases
   aMatrix.PreTranslate(temp);
 }
 
 /* Helper function to process a translatey function. */
-<<<<<<< HEAD
-static void ProcessTranslateY(Matrix4x4& aMatrix,
-                              const nsCSSValue::Array* aData,
-                              TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessTranslateY(Matrix4x4& aMatrix,
-                  const nsCSSValue::Array* aData,
-                  TransformReferenceBox& aRefBox)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-=======
 static void ProcessTranslateY(Matrix4x4& aMatrix,
                               const LengthPercentage& aLength,
                               TransformReferenceBox& aRefBox) {
->>>>>>> upstream-releases
   Point3D temp;
-<<<<<<< HEAD
-
-  temp.y = ProcessTranslatePart(aData->Item(1), &aRefBox,
-                                &TransformReferenceBox::Height);
-||||||| merged common ancestors
-
-  temp.y = ProcessTranslatePart(aData->Item(1),
-                                &aRefBox, &TransformReferenceBox::Height);
-=======
   temp.y =
       ProcessTranslatePart(aLength, &aRefBox, &TransformReferenceBox::Height);
->>>>>>> upstream-releases
   aMatrix.PreTranslate(temp);
 }
 
-<<<<<<< HEAD
-static void ProcessTranslateZ(Matrix4x4& aMatrix,
-                              const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessTranslateZ(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-=======
 static void ProcessTranslateZ(Matrix4x4& aMatrix, const Length& aLength) {
->>>>>>> upstream-releases
   Point3D temp;
   temp.z = aLength.ToCSSPixels();
   aMatrix.PreTranslate(temp);
 }
 
 /* Helper function to process a translate function. */
-<<<<<<< HEAD
-static void ProcessTranslate(Matrix4x4& aMatrix, const nsCSSValue::Array* aData,
-                             TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 2 || aData->Count() == 3, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessTranslate(Matrix4x4& aMatrix,
-                 const nsCSSValue::Array* aData,
-                 TransformReferenceBox& aRefBox)
-{
-  MOZ_ASSERT(aData->Count() == 2 || aData->Count() == 3, "Invalid array!");
-
-=======
 static void ProcessTranslate(Matrix4x4& aMatrix, const LengthPercentage& aX,
                              const LengthPercentage& aY,
                              TransformReferenceBox& aRefBox) {
->>>>>>> upstream-releases
   Point3D temp;
-<<<<<<< HEAD
-
-  temp.x = ProcessTranslatePart(aData->Item(1), &aRefBox,
-                                &TransformReferenceBox::Width);
-
-  /* If we read in a Y component, set it appropriately */
-  if (aData->Count() == 3) {
-    temp.y = ProcessTranslatePart(aData->Item(2), &aRefBox,
-                                  &TransformReferenceBox::Height);
-  }
-||||||| merged common ancestors
-
-  temp.x = ProcessTranslatePart(aData->Item(1),
-                                &aRefBox, &TransformReferenceBox::Width);
-
-  /* If we read in a Y component, set it appropriately */
-  if (aData->Count() == 3) {
-    temp.y = ProcessTranslatePart(aData->Item(2),
-                                  &aRefBox, &TransformReferenceBox::Height);
-  }
-=======
   temp.x = ProcessTranslatePart(aX, &aRefBox, &TransformReferenceBox::Width);
   temp.y = ProcessTranslatePart(aY, &aRefBox, &TransformReferenceBox::Height);
->>>>>>> upstream-releases
   aMatrix.PreTranslate(temp);
 }
 
-<<<<<<< HEAD
-static void ProcessTranslate3D(Matrix4x4& aMatrix,
-                               const nsCSSValue::Array* aData,
-                               TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData->Count() == 4, "Invalid array!");
-
-||||||| merged common ancestors
-static void
-ProcessTranslate3D(Matrix4x4& aMatrix,
-                   const nsCSSValue::Array* aData,
-                   TransformReferenceBox& aRefBox)
-{
-  MOZ_ASSERT(aData->Count() == 4, "Invalid array!");
-
-=======
 static void ProcessTranslate3D(Matrix4x4& aMatrix, const LengthPercentage& aX,
                                const LengthPercentage& aY, const Length& aZ,
                                TransformReferenceBox& aRefBox) {
->>>>>>> upstream-releases
   Point3D temp;
 
-<<<<<<< HEAD
-  temp.x = ProcessTranslatePart(aData->Item(1), &aRefBox,
-                                &TransformReferenceBox::Width);
-
-  temp.y = ProcessTranslatePart(aData->Item(2), &aRefBox,
-                                &TransformReferenceBox::Height);
-
-  temp.z = ProcessTranslatePart(aData->Item(3), nullptr);
-||||||| merged common ancestors
-  temp.x = ProcessTranslatePart(aData->Item(1),
-                                &aRefBox, &TransformReferenceBox::Width);
-
-  temp.y = ProcessTranslatePart(aData->Item(2),
-                                &aRefBox, &TransformReferenceBox::Height);
-
-  temp.z = ProcessTranslatePart(aData->Item(3),
-                                nullptr);
-=======
   temp.x = ProcessTranslatePart(aX, &aRefBox, &TransformReferenceBox::Width);
   temp.y = ProcessTranslatePart(aY, &aRefBox, &TransformReferenceBox::Height);
   temp.z = aZ.ToCSSPixels();
->>>>>>> upstream-releases
 
   aMatrix.PreTranslate(temp);
 }
@@ -1022,558 +359,36 @@ static void ProcessScaleHelper(Matrix4x4& aMatrix, float aXScale, float aYScale,
   aMatrix.PreScale(aXScale, aYScale, aZScale);
 }
 
-<<<<<<< HEAD
-/* Process a scalex function. */
-static void ProcessScaleX(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Bad array!");
-  ProcessScaleHelper(aMatrix, aData->Item(1).GetFloatValue(), 1.0f, 1.0f);
-}
-
-/* Process a scaley function. */
-static void ProcessScaleY(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Bad array!");
-  ProcessScaleHelper(aMatrix, 1.0f, aData->Item(1).GetFloatValue(), 1.0f);
-}
-
-static void ProcessScaleZ(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Bad array!");
-  ProcessScaleHelper(aMatrix, 1.0f, 1.0f, aData->Item(1).GetFloatValue());
-}
-
-static void ProcessScale3D(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 4, "Bad array!");
-  ProcessScaleHelper(aMatrix, aData->Item(1).GetFloatValue(),
-                     aData->Item(2).GetFloatValue(),
-                     aData->Item(3).GetFloatValue());
-}
-
-/* Process a scale function. */
-static void ProcessScale(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2 || aData->Count() == 3, "Bad array!");
-  /* We either have one element or two.  If we have one, it's for both X and Y.
-   * Otherwise it's one for each.
-   */
-  const nsCSSValue& scaleX = aData->Item(1);
-  const nsCSSValue& scaleY = (aData->Count() == 2 ? scaleX : aData->Item(2));
-
-  ProcessScaleHelper(aMatrix, scaleX.GetFloatValue(), scaleY.GetFloatValue(),
-                     1.0f);
-||||||| merged common ancestors
-/* Process a scalex function. */
-static void
-ProcessScaleX(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Bad array!");
-  ProcessScaleHelper(aMatrix, aData->Item(1).GetFloatValue(), 1.0f, 1.0f);
-}
-
-/* Process a scaley function. */
-static void
-ProcessScaleY(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Bad array!");
-  ProcessScaleHelper(aMatrix, 1.0f, aData->Item(1).GetFloatValue(), 1.0f);
-}
-
-static void
-ProcessScaleZ(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Bad array!");
-  ProcessScaleHelper(aMatrix, 1.0f, 1.0f, aData->Item(1).GetFloatValue());
-}
-
-static void
-ProcessScale3D(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 4, "Bad array!");
-  ProcessScaleHelper(aMatrix,
-                     aData->Item(1).GetFloatValue(),
-                     aData->Item(2).GetFloatValue(),
-                     aData->Item(3).GetFloatValue());
-}
-
-/* Process a scale function. */
-static void
-ProcessScale(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2 || aData->Count() == 3, "Bad array!");
-  /* We either have one element or two.  If we have one, it's for both X and Y.
-   * Otherwise it's one for each.
-   */
-  const nsCSSValue& scaleX = aData->Item(1);
-  const nsCSSValue& scaleY = (aData->Count() == 2 ? scaleX :
-                              aData->Item(2));
-
-  ProcessScaleHelper(aMatrix,
-                     scaleX.GetFloatValue(),
-                     scaleY.GetFloatValue(),
-                     1.0f);
-=======
 static void ProcessScale3D(Matrix4x4& aMatrix,
                            const StyleTransformOperation& aOp) {
   const auto& scale = aOp.AsScale3D();
   ProcessScaleHelper(aMatrix, scale._0, scale._1, scale._2);
->>>>>>> upstream-releases
 }
 
 /* Helper function that, given a set of angles, constructs the appropriate
  * skew matrix.
  */
-<<<<<<< HEAD
-static void ProcessSkewHelper(Matrix4x4& aMatrix, double aXAngle,
-                              double aYAngle) {
-  aMatrix.SkewXY(aXAngle, aYAngle);
-}
-
-/* Function that converts a skewx transform into a matrix. */
-static void ProcessSkewX(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  NS_ASSERTION(aData->Count() == 2, "Bad array!");
-  ProcessSkewHelper(aMatrix, aData->Item(1).GetAngleValueInRadians(), 0.0);
-}
-
-/* Function that converts a skewy transform into a matrix. */
-static void ProcessSkewY(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  NS_ASSERTION(aData->Count() == 2, "Bad array!");
-  ProcessSkewHelper(aMatrix, 0.0, aData->Item(1).GetAngleValueInRadians());
-}
-
-/* Function that converts a skew transform into a matrix. */
-static void ProcessSkew(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  NS_ASSERTION(aData->Count() == 2 || aData->Count() == 3, "Bad array!");
-
-  double xSkew = aData->Item(1).GetAngleValueInRadians();
-  double ySkew =
-      (aData->Count() == 2 ? 0.0 : aData->Item(2).GetAngleValueInRadians());
-
-  ProcessSkewHelper(aMatrix, xSkew, ySkew);
-}
-
-/* Function that converts a rotate transform into a matrix. */
-static void ProcessRotateZ(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-  double theta = aData->Item(1).GetAngleValueInRadians();
-  aMatrix.RotateZ(theta);
-}
-
-static void ProcessRotateX(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-  double theta = aData->Item(1).GetAngleValueInRadians();
-  aMatrix.RotateX(theta);
-||||||| merged common ancestors
-static void
-ProcessSkewHelper(Matrix4x4& aMatrix, double aXAngle, double aYAngle)
-{
-  aMatrix.SkewXY(aXAngle, aYAngle);
-}
-
-/* Function that converts a skewx transform into a matrix. */
-static void
-ProcessSkewX(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  NS_ASSERTION(aData->Count() == 2, "Bad array!");
-  ProcessSkewHelper(aMatrix, aData->Item(1).GetAngleValueInRadians(), 0.0);
-}
-
-/* Function that converts a skewy transform into a matrix. */
-static void
-ProcessSkewY(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  NS_ASSERTION(aData->Count() == 2, "Bad array!");
-  ProcessSkewHelper(aMatrix, 0.0, aData->Item(1).GetAngleValueInRadians());
-}
-
-/* Function that converts a skew transform into a matrix. */
-static void
-ProcessSkew(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  NS_ASSERTION(aData->Count() == 2 || aData->Count() == 3, "Bad array!");
-
-  double xSkew = aData->Item(1).GetAngleValueInRadians();
-  double ySkew = (aData->Count() == 2
-                  ? 0.0 : aData->Item(2).GetAngleValueInRadians());
-
-  ProcessSkewHelper(aMatrix, xSkew, ySkew);
-}
-
-/* Function that converts a rotate transform into a matrix. */
-static void
-ProcessRotateZ(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-  double theta = aData->Item(1).GetAngleValueInRadians();
-  aMatrix.RotateZ(theta);
-}
-
-static void
-ProcessRotateX(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-  double theta = aData->Item(1).GetAngleValueInRadians();
-  aMatrix.RotateX(theta);
-=======
 static void ProcessSkewHelper(Matrix4x4& aMatrix, const StyleAngle& aXAngle,
                               const StyleAngle& aYAngle) {
   aMatrix.SkewXY(aXAngle.ToRadians(), aYAngle.ToRadians());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void ProcessRotateY(Matrix4x4& aMatrix, const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-  double theta = aData->Item(1).GetAngleValueInRadians();
-  aMatrix.RotateY(theta);
-}
-
-static void ProcessRotate3D(Matrix4x4& aMatrix,
-                            const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 5, "Invalid array!");
-
-  double theta = aData->Item(4).GetAngleValueInRadians();
-  float x = aData->Item(1).GetFloatValue();
-  float y = aData->Item(2).GetFloatValue();
-  float z = aData->Item(3).GetFloatValue();
-
-||||||| merged common ancestors
-static void
-ProcessRotateY(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-  double theta = aData->Item(1).GetAngleValueInRadians();
-  aMatrix.RotateY(theta);
-}
-
-static void
-ProcessRotate3D(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 5, "Invalid array!");
-
-  double theta = aData->Item(4).GetAngleValueInRadians();
-  float x = aData->Item(1).GetFloatValue();
-  float y = aData->Item(2).GetFloatValue();
-  float z = aData->Item(3).GetFloatValue();
-
-=======
 static void ProcessRotate3D(Matrix4x4& aMatrix, float aX, float aY, float aZ,
                             const StyleAngle& aAngle) {
->>>>>>> upstream-releases
   Matrix4x4 temp;
   temp.SetRotateAxisAngle(aX, aY, aZ, aAngle.ToRadians());
   aMatrix = temp * aMatrix;
 }
 
-<<<<<<< HEAD
-static void ProcessPerspective(Matrix4x4& aMatrix,
-                               const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-  float depth = ProcessTranslatePart(aData->Item(1), nullptr);
-||||||| merged common ancestors
-static void
-ProcessPerspective(Matrix4x4& aMatrix, const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Count() == 2, "Invalid array!");
-
-  float depth = ProcessTranslatePart(aData->Item(1), nullptr);
-=======
 static void ProcessPerspective(Matrix4x4& aMatrix, const Length& aLength) {
   float depth = aLength.ToCSSPixels();
->>>>>>> upstream-releases
   ApplyPerspectiveToMatrix(aMatrix, depth);
 }
 
-<<<<<<< HEAD
-/**
- * SetToTransformFunction is essentially a giant switch statement that fans
- * out to many smaller helper functions.
- */
-static void MatrixForTransformFunction(Matrix4x4& aMatrix,
-                                       const nsCSSValue::Array* aData,
-                                       TransformReferenceBox& aRefBox) {
-  MOZ_ASSERT(aData, "Why did you want to get data from a null array?");
-
-||||||| merged common ancestors
-
-/**
- * SetToTransformFunction is essentially a giant switch statement that fans
- * out to many smaller helper functions.
- */
-static void
-MatrixForTransformFunction(Matrix4x4& aMatrix,
-                           const nsCSSValue::Array * aData,
-                           TransformReferenceBox& aRefBox,
-                           bool* aContains3dTransform)
-{
-  MOZ_ASSERT(aContains3dTransform);
-  MOZ_ASSERT(aData, "Why did you want to get data from a null array?");
-
-=======
 static void MatrixForTransformFunction(Matrix4x4& aMatrix,
                                        const StyleTransformOperation& aOp,
                                        TransformReferenceBox& aRefBox) {
->>>>>>> upstream-releases
   /* Get the keyword for the transform. */
-<<<<<<< HEAD
-  switch (TransformFunctionOf(aData)) {
-    case eCSSKeyword_translatex:
-      ProcessTranslateX(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_translatey:
-      ProcessTranslateY(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_translatez:
-      ProcessTranslateZ(aMatrix, aData);
-      break;
-    case eCSSKeyword_translate:
-      ProcessTranslate(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_translate3d:
-      ProcessTranslate3D(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_scalex:
-      ProcessScaleX(aMatrix, aData);
-      break;
-    case eCSSKeyword_scaley:
-      ProcessScaleY(aMatrix, aData);
-      break;
-    case eCSSKeyword_scalez:
-      ProcessScaleZ(aMatrix, aData);
-      break;
-    case eCSSKeyword_scale:
-      ProcessScale(aMatrix, aData);
-      break;
-    case eCSSKeyword_scale3d:
-      ProcessScale3D(aMatrix, aData);
-      break;
-    case eCSSKeyword_skewx:
-      ProcessSkewX(aMatrix, aData);
-      break;
-    case eCSSKeyword_skewy:
-      ProcessSkewY(aMatrix, aData);
-      break;
-    case eCSSKeyword_skew:
-      ProcessSkew(aMatrix, aData);
-      break;
-    case eCSSKeyword_rotatex:
-      ProcessRotateX(aMatrix, aData);
-      break;
-    case eCSSKeyword_rotatey:
-      ProcessRotateY(aMatrix, aData);
-      break;
-    case eCSSKeyword_rotatez:
-      MOZ_FALLTHROUGH;
-    case eCSSKeyword_rotate:
-      ProcessRotateZ(aMatrix, aData);
-      break;
-    case eCSSKeyword_rotate3d:
-      ProcessRotate3D(aMatrix, aData);
-      break;
-    case eCSSKeyword_matrix:
-      ProcessMatrix(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_matrix3d:
-      ProcessMatrix3D(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_interpolatematrix:
-      ProcessMatrixOperator<Interpolate>(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_accumulatematrix:
-      ProcessMatrixOperator<Accumulate>(aMatrix, aData, aRefBox);
-      break;
-    case eCSSKeyword_perspective:
-      ProcessPerspective(aMatrix, aData);
-      break;
-    default:
-      MOZ_ASSERT_UNREACHABLE("Unknown transform function!");
-  }
-}
-
-/**
- * Return the transform function, as an nsCSSKeyword, for the given
- * nsCSSValue::Array from a transform list.
- */
-nsCSSKeyword TransformFunctionOf(const nsCSSValue::Array* aData) {
-  MOZ_ASSERT(aData->Item(0).GetUnit() == eCSSUnit_Enumerated);
-  return aData->Item(0).GetKeywordValue();
-}
-
-void SetIdentityMatrix(nsCSSValue::Array* aMatrix) {
-  MOZ_ASSERT(aMatrix, "aMatrix should be non-null");
-
-  nsCSSKeyword tfunc = TransformFunctionOf(aMatrix);
-  MOZ_ASSERT(tfunc == eCSSKeyword_matrix || tfunc == eCSSKeyword_matrix3d,
-             "Only accept matrix and matrix3d");
-
-  if (tfunc == eCSSKeyword_matrix) {
-    MOZ_ASSERT(aMatrix->Count() == 7, "Invalid matrix");
-    Matrix m;
-    for (size_t i = 0; i < 6; ++i) {
-      aMatrix->Item(i + 1).SetFloatValue(m.components[i], eCSSUnit_Number);
-    }
-    return;
-  }
-
-  MOZ_ASSERT(aMatrix->Count() == 17, "Invalid matrix3d");
-  Matrix4x4 m;
-  for (size_t i = 0; i < 16; ++i) {
-    aMatrix->Item(i + 1).SetFloatValue(m.components[i], eCSSUnit_Number);
-  }
-}
-
-static void ReadTransformsImpl(Matrix4x4& aMatrix, const nsCSSValueList* aList,
-                               TransformReferenceBox& aRefBox) {
-  for (const nsCSSValueList* curr = aList; curr != nullptr;
-       curr = curr->mNext) {
-    const nsCSSValue& currElem = curr->mValue;
-    if (currElem.GetUnit() != eCSSUnit_Function) {
-      NS_ASSERTION(currElem.GetUnit() == eCSSUnit_None && !aList->mNext,
-                   "stream should either be a list of functions or a "
-                   "lone None");
-      continue;
-    }
-    NS_ASSERTION(currElem.GetArrayValue()->Count() >= 1,
-                 "Incoming function is too short!");
-||||||| merged common ancestors
-  switch (TransformFunctionOf(aData)) {
-  case eCSSKeyword_translatex:
-    ProcessTranslateX(aMatrix, aData, aRefBox);
-    break;
-  case eCSSKeyword_translatey:
-    ProcessTranslateY(aMatrix, aData, aRefBox);
-    break;
-  case eCSSKeyword_translatez:
-    *aContains3dTransform = true;
-    ProcessTranslateZ(aMatrix, aData);
-    break;
-  case eCSSKeyword_translate:
-    ProcessTranslate(aMatrix, aData, aRefBox);
-    break;
-  case eCSSKeyword_translate3d:
-    *aContains3dTransform = true;
-    ProcessTranslate3D(aMatrix, aData, aRefBox);
-    break;
-  case eCSSKeyword_scalex:
-    ProcessScaleX(aMatrix, aData);
-    break;
-  case eCSSKeyword_scaley:
-    ProcessScaleY(aMatrix, aData);
-    break;
-  case eCSSKeyword_scalez:
-    *aContains3dTransform = true;
-    ProcessScaleZ(aMatrix, aData);
-    break;
-  case eCSSKeyword_scale:
-    ProcessScale(aMatrix, aData);
-    break;
-  case eCSSKeyword_scale3d:
-    *aContains3dTransform = true;
-    ProcessScale3D(aMatrix, aData);
-    break;
-  case eCSSKeyword_skewx:
-    ProcessSkewX(aMatrix, aData);
-    break;
-  case eCSSKeyword_skewy:
-    ProcessSkewY(aMatrix, aData);
-    break;
-  case eCSSKeyword_skew:
-    ProcessSkew(aMatrix, aData);
-    break;
-  case eCSSKeyword_rotatex:
-    *aContains3dTransform = true;
-    ProcessRotateX(aMatrix, aData);
-    break;
-  case eCSSKeyword_rotatey:
-    *aContains3dTransform = true;
-    ProcessRotateY(aMatrix, aData);
-    break;
-  case eCSSKeyword_rotatez:
-    *aContains3dTransform = true;
-    MOZ_FALLTHROUGH;
-  case eCSSKeyword_rotate:
-    ProcessRotateZ(aMatrix, aData);
-    break;
-  case eCSSKeyword_rotate3d:
-    *aContains3dTransform = true;
-    ProcessRotate3D(aMatrix, aData);
-    break;
-  case eCSSKeyword_matrix:
-    ProcessMatrix(aMatrix, aData, aRefBox);
-    break;
-  case eCSSKeyword_matrix3d:
-    *aContains3dTransform = true;
-    ProcessMatrix3D(aMatrix, aData, aRefBox);
-    break;
-  case eCSSKeyword_interpolatematrix:
-    ProcessMatrixOperator<Interpolate>(aMatrix, aData, aRefBox,
-                                       aContains3dTransform);
-    break;
-  case eCSSKeyword_accumulatematrix:
-    ProcessMatrixOperator<Accumulate>(aMatrix, aData, aRefBox,
-                                      aContains3dTransform);
-    break;
-  case eCSSKeyword_perspective:
-    *aContains3dTransform = true;
-    ProcessPerspective(aMatrix, aData);
-    break;
-  default:
-    MOZ_ASSERT_UNREACHABLE("Unknown transform function!");
-  }
-}
-
-/**
- * Return the transform function, as an nsCSSKeyword, for the given
- * nsCSSValue::Array from a transform list.
- */
-nsCSSKeyword
-TransformFunctionOf(const nsCSSValue::Array* aData)
-{
-  MOZ_ASSERT(aData->Item(0).GetUnit() == eCSSUnit_Enumerated);
-  return aData->Item(0).GetKeywordValue();
-}
-
-void
-SetIdentityMatrix(nsCSSValue::Array* aMatrix)
-{
-  MOZ_ASSERT(aMatrix, "aMatrix should be non-null");
-
-  nsCSSKeyword tfunc = TransformFunctionOf(aMatrix);
-  MOZ_ASSERT(tfunc == eCSSKeyword_matrix ||
-             tfunc == eCSSKeyword_matrix3d,
-             "Only accept matrix and matrix3d");
-
-  if (tfunc == eCSSKeyword_matrix) {
-    MOZ_ASSERT(aMatrix->Count() == 7, "Invalid matrix");
-    Matrix m;
-    for (size_t i = 0; i < 6; ++i) {
-      aMatrix->Item(i + 1).SetFloatValue(m.components[i], eCSSUnit_Number);
-    }
-    return;
-  }
-
-  MOZ_ASSERT(aMatrix->Count() == 17, "Invalid matrix3d");
-  Matrix4x4 m;
-  for (size_t i = 0; i < 16; ++i) {
-    aMatrix->Item(i + 1).SetFloatValue(m.components[i], eCSSUnit_Number);
-  }
-}
-
-static void
-ReadTransformsImpl(Matrix4x4& aMatrix,
-                   const nsCSSValueList* aList,
-                   TransformReferenceBox& aRefBox,
-                   bool* aContains3dTransform)
-{
-  for (const nsCSSValueList* curr = aList; curr != nullptr; curr = curr->mNext) {
-    const nsCSSValue &currElem = curr->mValue;
-    if (currElem.GetUnit() != eCSSUnit_Function) {
-      NS_ASSERTION(currElem.GetUnit() == eCSSUnit_None &&
-                   !aList->mNext,
-                   "stream should either be a list of functions or a "
-                   "lone None");
-      continue;
-    }
-    NS_ASSERTION(currElem.GetArrayValue()->Count() >= 1,
-                 "Incoming function is too short!");
-=======
   switch (aOp.tag) {
     case StyleTransformOperation::Tag::TranslateX:
       ProcessTranslateX(aMatrix, aOp.AsTranslateX(), aRefBox);
@@ -1657,41 +472,10 @@ Matrix4x4 ReadTransforms(const StyleTransform& aTransform,
                          TransformReferenceBox& aRefBox,
                          float aAppUnitsPerMatrixUnit) {
   Matrix4x4 result;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    /* Read in a single transform matrix. */
-    MatrixForTransformFunction(aMatrix, currElem.GetArrayValue(), aRefBox);
-||||||| merged common ancestors
-    /* Read in a single transform matrix. */
-    MatrixForTransformFunction(aMatrix, currElem.GetArrayValue(), aRefBox,
-                               aContains3dTransform);
-=======
   for (const StyleTransformOperation& op : aTransform.Operations()) {
     MatrixForTransformFunction(result, op, aRefBox);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-}
-
-Matrix4x4 ReadTransforms(const nsCSSValueList* aList,
-                         TransformReferenceBox& aRefBox,
-                         float aAppUnitsPerMatrixUnit) {
-  Matrix4x4 result;
-  ReadTransformsImpl(result, aList, aRefBox);
-||||||| merged common ancestors
-}
-
-Matrix4x4
-ReadTransforms(const nsCSSValueList* aList,
-               TransformReferenceBox& aRefBox,
-               float aAppUnitsPerMatrixUnit,
-               bool* aContains3dTransform)
-{
-  Matrix4x4 result;
-  ReadTransformsImpl(result, aList, aRefBox, aContains3dTransform);
-=======
->>>>>>> upstream-releases
 
   float scale = float(AppUnitsPerCSSPixel()) / aAppUnitsPerMatrixUnit;
   result.PreScale(1 / scale, 1 / scale, 1 / scale);
@@ -1700,22 +484,6 @@ ReadTransforms(const nsCSSValueList* aList,
   return result;
 }
 
-<<<<<<< HEAD
-Matrix4x4 ReadTransforms(const nsCSSValueList* aIndividualTransforms,
-                         const Maybe<MotionPathData>& aMotion,
-                         const nsCSSValueList* aTransform,
-                         TransformReferenceBox& aRefBox,
-                         float aAppUnitsPerMatrixUnit) {
-||||||| merged common ancestors
-Matrix4x4
-ReadTransforms(const nsCSSValueList* aIndividualTransforms,
-               const Maybe<MotionPathData>& aMotion,
-               const nsCSSValueList* aTransform,
-               TransformReferenceBox& aRefBox,
-               float aAppUnitsPerMatrixUnit,
-               bool* aContains3dTransform)
-{
-=======
 static void ProcessTranslate(Matrix4x4& aMatrix,
                              const StyleTranslate& aTranslate,
                              TransformReferenceBox& aRefBox) {
@@ -1773,23 +541,11 @@ Matrix4x4 ReadTransforms(const StyleTranslate& aTranslate,
                          const StyleTransform& aTransform,
                          TransformReferenceBox& aRefBox,
                          float aAppUnitsPerMatrixUnit) {
->>>>>>> upstream-releases
   Matrix4x4 result;
 
-<<<<<<< HEAD
-  if (aIndividualTransforms) {
-    ReadTransformsImpl(result, aIndividualTransforms, aRefBox);
-  }
-||||||| merged common ancestors
-  if (aIndividualTransforms) {
-    ReadTransformsImpl(result, aIndividualTransforms, aRefBox,
-                       aContains3dTransform);
-  }
-=======
   ProcessTranslate(result, aTranslate, aRefBox);
   ProcessRotate(result, aRotate, aRefBox);
   ProcessScale(result, aScale, aRefBox);
->>>>>>> upstream-releases
 
   if (aMotion.isSome()) {
     // Create the equivalent translate and rotate function, according to the
@@ -1801,16 +557,8 @@ Matrix4x4 ReadTransforms(const StyleTranslate& aTranslate,
     }
   }
 
-<<<<<<< HEAD
-  if (aTransform) {
-    ReadTransformsImpl(result, aTransform, aRefBox);
-||||||| merged common ancestors
-  if (aTransform) {
-    ReadTransformsImpl(result, aTransform, aRefBox, aContains3dTransform);
-=======
   for (const StyleTransformOperation& op : aTransform.Operations()) {
     MatrixForTransformFunction(result, op, aRefBox);
->>>>>>> upstream-releases
   }
 
   float scale = float(AppUnitsPerCSSPixel()) / aAppUnitsPerMatrixUnit;
@@ -1820,66 +568,6 @@ Matrix4x4 ReadTransforms(const StyleTranslate& aTranslate,
   return result;
 }
 
-<<<<<<< HEAD
-Point Convert2DPosition(nsStyleCoord const (&aValue)[2],
-                        TransformReferenceBox& aRefBox,
-                        int32_t aAppUnitsPerDevPixel) {
-  float position[2];
-  nsStyleTransformMatrix::TransformReferenceBox::DimensionGetter
-      dimensionGetter[] = {
-          &nsStyleTransformMatrix::TransformReferenceBox::Width,
-          &nsStyleTransformMatrix::TransformReferenceBox::Height};
-  for (uint8_t index = 0; index < 2; ++index) {
-    const nsStyleCoord& value = aValue[index];
-    if (value.GetUnit() == eStyleUnit_Calc) {
-      const nsStyleCoord::Calc* calc = value.GetCalcValue();
-      position[index] =
-          NSAppUnitsToFloatPixels((aRefBox.*dimensionGetter[index])(),
-                                  aAppUnitsPerDevPixel) *
-              calc->mPercent +
-          NSAppUnitsToFloatPixels(calc->mLength, aAppUnitsPerDevPixel);
-    } else if (value.GetUnit() == eStyleUnit_Percent) {
-      position[index] =
-          NSAppUnitsToFloatPixels((aRefBox.*dimensionGetter[index])(),
-                                  aAppUnitsPerDevPixel) *
-          value.GetPercentValue();
-    } else {
-      MOZ_ASSERT(value.GetUnit() == eStyleUnit_Coord, "unexpected unit");
-      position[index] =
-          NSAppUnitsToFloatPixels(value.GetCoordValue(), aAppUnitsPerDevPixel);
-    }
-  }
-||||||| merged common ancestors
-Point
-Convert2DPosition(nsStyleCoord const (&aValue)[2],
-                  TransformReferenceBox& aRefBox,
-                  int32_t aAppUnitsPerDevPixel)
-{
-  float position[2];
-  nsStyleTransformMatrix::TransformReferenceBox::DimensionGetter dimensionGetter[] =
-    { &nsStyleTransformMatrix::TransformReferenceBox::Width,
-      &nsStyleTransformMatrix::TransformReferenceBox::Height };
-  for (uint8_t index = 0; index < 2; ++index) {
-    const nsStyleCoord& value  = aValue[index];
-    if (value.GetUnit() == eStyleUnit_Calc) {
-      const nsStyleCoord::Calc *calc = value.GetCalcValue();
-      position[index] =
-        NSAppUnitsToFloatPixels((aRefBox.*dimensionGetter[index])(), aAppUnitsPerDevPixel) *
-          calc->mPercent +
-        NSAppUnitsToFloatPixels(calc->mLength, aAppUnitsPerDevPixel);
-    } else if (value.GetUnit() == eStyleUnit_Percent) {
-      position[index] =
-        NSAppUnitsToFloatPixels((aRefBox.*dimensionGetter[index])(), aAppUnitsPerDevPixel) *
-        value.GetPercentValue();
-    } else {
-      MOZ_ASSERT(value.GetUnit() == eStyleUnit_Coord,
-                "unexpected unit");
-      position[index] =
-        NSAppUnitsToFloatPixels(value.GetCoordValue(),
-                                aAppUnitsPerDevPixel);
-    }
-  }
-=======
 CSSPoint Convert2DPosition(const LengthPercentage& aX,
                            const LengthPercentage& aY,
                            TransformReferenceBox& aRefBox) {
@@ -1890,7 +578,6 @@ CSSPoint Convert2DPosition(const LengthPercentage& aX,
           [&] { return CSSPixel::FromAppUnits(aRefBox.Height()); }),
   };
 }
->>>>>>> upstream-releases
 
 Point Convert2DPosition(const LengthPercentage& aX, const LengthPercentage& aY,
                         TransformReferenceBox& aRefBox,
@@ -2061,16 +748,8 @@ bool Decompose2DMatrix(const Matrix& aMatrix, Point3D& aScale,
   }
 
   float rotate = atan2f(B, A);
-<<<<<<< HEAD
-  aRotate = gfxQuaternion(0, 0, sin(rotate / 2), cos(rotate / 2));
-  aShear[ShearType::XYSHEAR] = XYshear;
-||||||| merged common ancestors
-  aRotate = gfxQuaternion(0, 0, sin(rotate/2), cos(rotate/2));
-  aShear[ShearType::XYSHEAR] = XYshear;
-=======
   aRotate = gfxQuaternion(0, 0, sin(rotate / 2), cos(rotate / 2));
   aShear[ShearType::XY] = XYshear;
->>>>>>> upstream-releases
   aScale.x = scaleX;
   aScale.y = scaleY;
   aTranslate.x = aMatrix._31;
@@ -2182,99 +861,4 @@ bool Decompose3DMatrix(const Matrix4x4& aMatrix, Point3D& aScale,
   return true;
 }
 
-<<<<<<< HEAD
-Matrix CSSValueArrayTo2DMatrix(nsCSSValue::Array* aArray) {
-  MOZ_ASSERT(aArray && TransformFunctionOf(aArray) == eCSSKeyword_matrix &&
-             aArray->Count() == 7);
-  Matrix m(aArray->Item(1).GetFloatValue(), aArray->Item(2).GetFloatValue(),
-           aArray->Item(3).GetFloatValue(), aArray->Item(4).GetFloatValue(),
-           aArray->Item(5).GetFloatValue(), aArray->Item(6).GetFloatValue());
-  return m;
-}
-
-Matrix4x4 CSSValueArrayTo3DMatrix(nsCSSValue::Array* aArray) {
-  MOZ_ASSERT(aArray && TransformFunctionOf(aArray) == eCSSKeyword_matrix3d &&
-             aArray->Count() == 17);
-  gfx::Float array[16];
-  for (size_t i = 0; i < 16; ++i) {
-    array[i] = aArray->Item(i + 1).GetFloatValue();
-  }
-  Matrix4x4 m(array);
-  return m;
-}
-
-Size GetScaleValue(const nsCSSValueSharedList* aList,
-                   const nsIFrame* aForFrame) {
-  MOZ_ASSERT(aList && aList->mHead);
-  MOZ_ASSERT(aForFrame);
-
-  TransformReferenceBox refBox(aForFrame);
-  Matrix4x4 transform = ReadTransforms(
-      aList->mHead, refBox, aForFrame->PresContext()->AppUnitsPerDevPixel());
-  Matrix transform2d;
-  bool canDraw2D = transform.CanDraw2D(&transform2d);
-  if (!canDraw2D) {
-    return Size();
-  }
-
-  return transform2d.ScaleFactors(true);
-}
-
 }  // namespace nsStyleTransformMatrix
-||||||| merged common ancestors
-Matrix
-CSSValueArrayTo2DMatrix(nsCSSValue::Array* aArray)
-{
-  MOZ_ASSERT(aArray &&
-             TransformFunctionOf(aArray) == eCSSKeyword_matrix &&
-             aArray->Count() == 7);
-  Matrix m(aArray->Item(1).GetFloatValue(),
-           aArray->Item(2).GetFloatValue(),
-           aArray->Item(3).GetFloatValue(),
-           aArray->Item(4).GetFloatValue(),
-           aArray->Item(5).GetFloatValue(),
-           aArray->Item(6).GetFloatValue());
-  return m;
-}
-
-Matrix4x4
-CSSValueArrayTo3DMatrix(nsCSSValue::Array* aArray)
-{
-  MOZ_ASSERT(aArray &&
-             TransformFunctionOf(aArray) == eCSSKeyword_matrix3d &&
-             aArray->Count() == 17);
-  gfx::Float array[16];
-  for (size_t i = 0; i < 16; ++i) {
-    array[i] = aArray->Item(i+1).GetFloatValue();
-  }
-  Matrix4x4 m(array);
-  return m;
-}
-
-Size
-GetScaleValue(const nsCSSValueSharedList* aList,
-              const nsIFrame* aForFrame)
-{
-  MOZ_ASSERT(aList && aList->mHead);
-  MOZ_ASSERT(aForFrame);
-
-  bool dontCareBool;
-  TransformReferenceBox refBox(aForFrame);
-  Matrix4x4 transform = ReadTransforms(
-                          aList->mHead,
-                          refBox,
-                          aForFrame->PresContext()->AppUnitsPerDevPixel(),
-                          &dontCareBool);
-  Matrix transform2d;
-  bool canDraw2D = transform.CanDraw2D(&transform2d);
-  if (!canDraw2D) {
-    return Size();
-  }
-
-  return transform2d.ScaleFactors(true);
-}
-
-} // namespace nsStyleTransformMatrix
-=======
-}  // namespace nsStyleTransformMatrix
->>>>>>> upstream-releases

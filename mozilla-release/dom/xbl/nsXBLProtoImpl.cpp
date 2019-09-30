@@ -192,16 +192,8 @@ nsresult nsXBLProtoImpl::InitTargetObjects(
     MOZ_ASSERT(mPrecompiledMemberHolder);
   }
 
-<<<<<<< HEAD
-  nsIDocument* ownerDoc = aBoundElement->OwnerDoc();
-  nsIGlobalObject* sgo;
-||||||| merged common ancestors
-  nsIDocument *ownerDoc = aBoundElement->OwnerDoc();
-  nsIGlobalObject *sgo;
-=======
   Document* ownerDoc = aBoundElement->OwnerDoc();
   nsIGlobalObject* sgo;
->>>>>>> upstream-releases
 
   if (!(sgo = ownerDoc->GetScopeObject())) {
     return NS_ERROR_UNEXPECTED;

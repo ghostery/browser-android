@@ -101,63 +101,6 @@ def support_vcs_checkout(config, job, taskdesc, sparse=False):
     This can only be used with ``run-task`` tasks, as the cache name is
     reserved for ``run-task`` tasks.
     """
-<<<<<<< HEAD
-    is_win = job['worker']['os'] == 'windows'
-
-    if is_win:
-        checkoutdir = './build'
-        geckodir = '{}/src'.format(checkoutdir)
-        hgstore = 'y:/hg-shared'
-    else:
-        checkoutdir = '{workdir}/checkouts'.format(**job['run'])
-        geckodir = '{}/gecko'.format(checkoutdir)
-        hgstore = '{}/hg-store'.format(checkoutdir)
-
-    level = config.params['level']
-    # native-engine and generic-worker do not support caches (yet), so we just
-    # do a full clone every time :(
-    if job['worker']['implementation'] in ('docker-worker', 'docker-engine'):
-        name = 'level-%s-checkouts' % level
-
-        # comm-central checkouts need their own cache, because clobber won't
-        # remove the comm-central checkout
-        if job['run'].get('comm-checkout', False):
-            name += '-comm'
-
-        # Sparse checkouts need their own cache because they can interfere
-        # with clients that aren't sparse aware.
-        if sparse:
-            name += '-sparse'
-
-        taskdesc['worker'].setdefault('caches', []).append({
-            'type': 'persistent',
-            'name': name,
-            'mount-point': checkoutdir,
-        })
-||||||| merged common ancestors
-    level = config.params['level']
-
-    # native-engine does not support caches (yet), so we just do a full clone
-    # every time :(
-    if job['worker']['implementation'] in ('docker-worker', 'docker-engine'):
-        name = 'level-%s-checkouts' % level
-
-        # comm-central checkouts need their own cache, because clobber won't
-        # remove the comm-central checkout
-        if job['run'].get('comm-checkout', False):
-            name += '-comm'
-
-        # Sparse checkouts need their own cache because they can interfere
-        # with clients that aren't sparse aware.
-        if sparse:
-            name += '-sparse'
-
-        taskdesc['worker'].setdefault('caches', []).append({
-            'type': 'persistent',
-            'name': name,
-            'mount-point': '{workdir}/checkouts'.format(**job['run']),
-        })
-=======
     worker = job['worker']
     is_mac = worker['os'] == 'macosx'
     is_win = worker['os'] == 'windows'
@@ -185,21 +128,12 @@ def support_vcs_checkout(config, job, taskdesc, sparse=False):
         cache_name += '-sparse'
 
     add_cache(job, taskdesc, cache_name, checkoutdir)
->>>>>>> upstream-releases
 
     taskdesc['worker'].setdefault('env', {}).update({
         'GECKO_BASE_REPOSITORY': config.params['base_repository'],
         'GECKO_HEAD_REPOSITORY': config.params['head_repository'],
         'GECKO_HEAD_REV': config.params['head_rev'],
-<<<<<<< HEAD
-        'GECKO_PATH': geckodir,
         'HG_STORE_PATH': hgstore,
-||||||| merged common ancestors
-        'GECKO_PATH': '{workdir}/checkouts/gecko'.format(**job['run']),
-        'HG_STORE_PATH': '{workdir}/checkouts/hg-store'.format(**job['run']),
-=======
-        'HG_STORE_PATH': hgstore,
->>>>>>> upstream-releases
     })
     taskdesc['worker']['env'].setdefault('GECKO_PATH', geckodir)
 

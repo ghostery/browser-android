@@ -672,16 +672,8 @@ private:
         }
     }
 
-<<<<<<< HEAD
-    SkCodec::Result decodeAllRows(void* dst, size_t rowBytes, int* rowsDecoded) override {
-        const int height = this->dimensions().height();
-||||||| merged common ancestors
-    SkCodec::Result decodeAllRows(void* dst, size_t rowBytes, int* rowsDecoded) override {
-        const int height = this->getInfo().height();
-=======
     Result decodeAllRows(void* dst, size_t rowBytes, int* rowsDecoded) override {
         const int height = this->dimensions().height();
->>>>>>> upstream-releases
         this->setUpInterlaceBuffer(height);
         png_set_progressive_read_fn(this->png_ptr(), this, nullptr, InterlacedRowCallback,
                                     nullptr);

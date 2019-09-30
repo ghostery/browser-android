@@ -20,17 +20,8 @@ namespace layers {
 // or work improperly with APZ enabled. This class helps us detect such an
 // effect so that we can warn the author and/or take other preventative
 // measures.
-<<<<<<< HEAD
-class MOZ_STACK_CLASS ScrollLinkedEffectDetector {
- private:
-||||||| merged common ancestors
-class MOZ_STACK_CLASS ScrollLinkedEffectDetector
-{
-private:
-=======
 class MOZ_STACK_CLASS ScrollLinkedEffectDetector final {
  private:
->>>>>>> upstream-releases
   static uint32_t sDepth;
   static bool sFoundScrollLinkedEffect;
 
@@ -40,16 +31,8 @@ class MOZ_STACK_CLASS ScrollLinkedEffectDetector final {
   explicit ScrollLinkedEffectDetector(dom::Document*);
   ~ScrollLinkedEffectDetector();
 
-<<<<<<< HEAD
- private:
-  RefPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-private:
-  RefPtr<nsIDocument> mDocument;
-=======
  private:
   RefPtr<dom::Document> mDocument;
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

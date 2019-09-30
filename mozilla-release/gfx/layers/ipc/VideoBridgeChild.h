@@ -34,17 +34,8 @@ class VideoBridgeChild final : public PVideoBridgeChild,
   bool DeallocPTextureChild(PTextureChild* actor);
 
   void ActorDestroy(ActorDestroyReason aWhy) override;
-<<<<<<< HEAD
-  void DeallocPVideoBridgeChild() override;
-
-||||||| merged common ancestors
-  void DeallocPVideoBridgeChild() override;
-
-
-=======
   void ActorDealloc() override;
 
->>>>>>> upstream-releases
   // ISurfaceAllocator
   bool AllocUnsafeShmem(size_t aSize,
                         mozilla::ipc::SharedMemory::SharedMemoryType aShmType,
@@ -64,36 +55,20 @@ class VideoBridgeChild final : public PVideoBridgeChild,
 
   // ClientIPCAllocator
   base::ProcessId GetParentPid() const override { return OtherPid(); }
-<<<<<<< HEAD
-  MessageLoop* GetMessageLoop() const override { return mMessageLoop; }
-  void CancelWaitForRecycle(uint64_t aTextureId) override {
-    MOZ_ASSERT(false, "NO RECYCLING HERE");
-  }
-||||||| merged common ancestors
-  MessageLoop * GetMessageLoop() const override { return mMessageLoop; }
-  void CancelWaitForRecycle(uint64_t aTextureId) override { MOZ_ASSERT(false, "NO RECYCLING HERE"); }
-=======
   MessageLoop* GetMessageLoop() const override { return mMessageLoop; }
   void CancelWaitForNotifyNotUsed(uint64_t aTextureId) override {
     MOZ_ASSERT(false, "NO RECYCLING HERE");
   }
->>>>>>> upstream-releases
 
   // ISurfaceAllocator
   bool IsSameProcess() const override;
 
   bool CanSend() { return mCanSend; }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   static void OpenToParentProcess(Endpoint<PVideoBridgeChild>&& aEndpoint);
   static void OpenToGPUProcess(Endpoint<PVideoBridgeChild>&& aEndpoint);
 
  private:
->>>>>>> upstream-releases
   VideoBridgeChild();
   virtual ~VideoBridgeChild();
 

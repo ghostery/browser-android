@@ -27,24 +27,6 @@
 //! ebb23:
 //! ```
 
-<<<<<<< HEAD
-use binemit::CodeOffset;
-use cursor::{Cursor, FuncCursor};
-use ir::{Function, InstructionData, Opcode};
-use isa::{EncInfo, TargetIsa};
-use iterators::IteratorExtras;
-use regalloc::RegDiversions;
-use timing;
-use CodegenResult;
-||||||| merged common ancestors
-use binemit::CodeOffset;
-use cursor::{Cursor, FuncCursor};
-use ir::{Function, InstructionData, Opcode};
-use isa::{EncInfo, TargetIsa};
-use iterators::IteratorExtras;
-use timing;
-use CodegenResult;
-=======
 use crate::binemit::{CodeInfo, CodeOffset};
 use crate::cursor::{Cursor, FuncCursor};
 use crate::ir::{Function, InstructionData, Opcode};
@@ -54,7 +36,6 @@ use crate::regalloc::RegDiversions;
 use crate::timing;
 use crate::CodegenResult;
 use log::debug;
->>>>>>> upstream-releases
 
 /// Relax branches and compute the final layout of EBB headers in `func`.
 ///
@@ -115,26 +96,9 @@ pub fn relax_branches(func: &mut Function, isa: &dyn TargetIsa) -> CodegenResult
                 if let Some(range) = encinfo.branch_range(enc) {
                     if let Some(dest) = cur.func.dfg[inst].branch_destination() {
                         let dest_offset = cur.func.offsets[dest];
-<<<<<<< HEAD
-                        // This could be an out-of-range branch.
-                        // Relax it unless the destination offset has not been computed yet.
-                        if !range.contains(offset, dest_offset)
-                            && (dest_offset != 0 || Some(dest) == cur.func.layout.entry_block())
-                        {
-                            offset +=
-                                relax_branch(&mut cur, &divert, offset, dest_offset, &encinfo, isa);
-||||||| merged common ancestors
-                        // This could be an out-of-range branch.
-                        // Relax it unless the destination offset has not been computed yet.
-                        if !range.contains(offset, dest_offset)
-                            && (dest_offset != 0 || Some(dest) == cur.func.layout.entry_block())
-                        {
-                            offset += relax_branch(&mut cur, offset, dest_offset, &encinfo, isa);
-=======
                         if !range.contains(offset, dest_offset) {
                             offset +=
                                 relax_branch(&mut cur, &divert, offset, dest_offset, &encinfo, isa);
->>>>>>> upstream-releases
                             continue;
                         }
                     }
@@ -145,18 +109,6 @@ pub fn relax_branches(func: &mut Function, isa: &dyn TargetIsa) -> CodegenResult
         }
     }
 
-<<<<<<< HEAD
-    for (jt, jt_data) in func.jump_tables.iter() {
-        func.jt_offsets[jt] = offset;
-        // TODO: this should be computed based on the min size needed to hold
-        //        the furthest branch.
-        offset += jt_data.len() as u32 * 4;
-    }
-
-    Ok(offset)
-||||||| merged common ancestors
-    Ok(offset)
-=======
     let code_size = offset;
     let jumptables = offset;
 
@@ -180,7 +132,6 @@ pub fn relax_branches(func: &mut Function, isa: &dyn TargetIsa) -> CodegenResult
         rodata_size,
         total_size: offset,
     })
->>>>>>> upstream-releases
 }
 
 /// Convert `jump` instructions to `fallthrough` instructions where possible and verify that any

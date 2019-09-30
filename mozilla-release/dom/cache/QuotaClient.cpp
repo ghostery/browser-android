@@ -140,26 +140,12 @@ class CacheQuotaClient final : public Client {
 
   virtual Type GetType() override { return DOMCACHE; }
 
-<<<<<<< HEAD
-  virtual nsresult InitOrigin(PersistenceType aPersistenceType,
-                              const nsACString& aGroup,
-                              const nsACString& aOrigin,
-                              const AtomicBool& aCanceled,
-                              UsageInfo* aUsageInfo) override {
-||||||| merged common ancestors
-  virtual nsresult
-  InitOrigin(PersistenceType aPersistenceType, const nsACString& aGroup,
-             const nsACString& aOrigin, const AtomicBool& aCanceled,
-             UsageInfo* aUsageInfo) override
-  {
-=======
   virtual nsresult InitOrigin(PersistenceType aPersistenceType,
                               const nsACString& aGroup,
                               const nsACString& aOrigin,
                               const AtomicBool& aCanceled,
                               UsageInfo* aUsageInfo,
                               bool aForGetUsage) override {
->>>>>>> upstream-releases
     AssertIsOnIOThread();
 
     // The QuotaManager passes a nullptr UsageInfo if there is no quota being
@@ -173,209 +159,6 @@ class CacheQuotaClient final : public Client {
                                      /* aInitializing*/ true);
   }
 
-<<<<<<< HEAD
-  virtual nsresult GetUsageForOrigin(PersistenceType aPersistenceType,
-                                     const nsACString& aGroup,
-                                     const nsACString& aOrigin,
-                                     const AtomicBool& aCanceled,
-                                     UsageInfo* aUsageInfo) override {
-    AssertIsOnIOThread();
-    MOZ_DIAGNOSTIC_ASSERT(aUsageInfo);
-
-    QuotaManager* qm = QuotaManager::Get();
-    MOZ_DIAGNOSTIC_ASSERT(qm);
-
-    nsCOMPtr<nsIFile> dir;
-    nsresult rv = qm->GetDirectoryForOrigin(aPersistenceType, aOrigin,
-                                            getter_AddRefs(dir));
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-    }
-
-    rv = dir->Append(NS_LITERAL_STRING(DOMCACHE_DIRECTORY_NAME));
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-    }
-
-    int64_t paddingSize = 0;
-    {
-      // If the tempoary file still exists after locking, it means the previous
-      // action fails, so restore the padding file.
-      MutexAutoLock lock(mDirPaddingFileMutex);
-
-      if (mozilla::dom::cache::DirectoryPaddingFileExists(
-              dir, DirPaddingFile::TMP_FILE) ||
-          NS_WARN_IF(NS_FAILED(mozilla::dom::cache::LockedDirectoryPaddingGet(
-              dir, &paddingSize)))) {
-        rv = LockedGetPaddingSizeFromDB(dir, aGroup, aOrigin, &paddingSize);
-        if (NS_WARN_IF(NS_FAILED(rv))) {
-          return rv;
-        }
-      }
-    }
-
-    aUsageInfo->AppendToFileUsage(paddingSize);
-
-    nsCOMPtr<nsIDirectoryEnumerator> entries;
-    rv = dir->GetDirectoryEntries(getter_AddRefs(entries));
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-    }
-
-    nsCOMPtr<nsIFile> file;
-    while (NS_SUCCEEDED(rv = entries->GetNextFile(getter_AddRefs(file))) &&
-           file && !aCanceled) {
-      nsAutoString leafName;
-      rv = file->GetLeafName(leafName);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
-
-      bool isDir;
-      rv = file->IsDirectory(&isDir);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
-
-      if (isDir) {
-        if (leafName.EqualsLiteral("morgue")) {
-          rv = GetBodyUsage(file, aCanceled, aUsageInfo);
-          if (NS_WARN_IF(NS_FAILED(rv))) {
-            return rv;
-          }
-        } else {
-          NS_WARNING("Unknown Cache directory found!");
-        }
-
-        continue;
-      }
-
-      // Ignore transient sqlite files and marker files
-      if (leafName.EqualsLiteral("caches.sqlite-journal") ||
-          leafName.EqualsLiteral("caches.sqlite-shm") ||
-          leafName.Find(NS_LITERAL_CSTRING("caches.sqlite-mj"), false, 0, 0) ==
-              0 ||
-          leafName.EqualsLiteral("context_open.marker")) {
-        continue;
-      }
-
-      if (leafName.EqualsLiteral("caches.sqlite") ||
-          leafName.EqualsLiteral("caches.sqlite-wal")) {
-        int64_t fileSize;
-        rv = file->GetFileSize(&fileSize);
-        if (NS_WARN_IF(NS_FAILED(rv))) {
-          return rv;
-        }
-        MOZ_DIAGNOSTIC_ASSERT(fileSize >= 0);
-
-        aUsageInfo->AppendToDatabaseUsage(fileSize);
-        continue;
-      }
-
-      // Ignore directory padding file
-      if (leafName.EqualsLiteral(PADDING_FILE_NAME) ||
-          leafName.EqualsLiteral(PADDING_TMP_FILE_NAME)) {
-        continue;
-      }
-
-      NS_WARNING("Unknown Cache file found!");
-    }
-
-    return NS_OK;
-||||||| merged common ancestors
-  virtual nsresult
-  GetUsageForOrigin(PersistenceType aPersistenceType, const nsACString& aGroup,
-                    const nsACString& aOrigin, const AtomicBool& aCanceled,
-                    UsageInfo* aUsageInfo) override
-  {
-    AssertIsOnIOThread();
-    MOZ_DIAGNOSTIC_ASSERT(aUsageInfo);
-
-    QuotaManager* qm = QuotaManager::Get();
-    MOZ_DIAGNOSTIC_ASSERT(qm);
-
-    nsCOMPtr<nsIFile> dir;
-    nsresult rv = qm->GetDirectoryForOrigin(aPersistenceType, aOrigin,
-                                            getter_AddRefs(dir));
-    if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-
-    rv = dir->Append(NS_LITERAL_STRING(DOMCACHE_DIRECTORY_NAME));
-    if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-
-    int64_t paddingSize = 0;
-    {
-      // If the tempoary file still exists after locking, it means the previous
-      // action fails, so restore the padding file.
-      MutexAutoLock lock(mDirPaddingFileMutex);
-
-      if (mozilla::dom::cache::
-          DirectoryPaddingFileExists(dir, DirPaddingFile::TMP_FILE) ||
-          NS_WARN_IF(NS_FAILED(mozilla::dom::cache::
-                               LockedDirectoryPaddingGet(dir,
-                                                         &paddingSize)))) {
-        rv = LockedGetPaddingSizeFromDB(dir, aGroup, aOrigin, &paddingSize);
-        if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-      }
-    }
-
-    aUsageInfo->AppendToFileUsage(paddingSize);
-
-    nsCOMPtr<nsIDirectoryEnumerator> entries;
-    rv = dir->GetDirectoryEntries(getter_AddRefs(entries));
-    if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-
-    nsCOMPtr<nsIFile> file;
-    while (NS_SUCCEEDED(rv = entries->GetNextFile(getter_AddRefs(file))) &&
-           file && !aCanceled) {
-      nsAutoString leafName;
-      rv = file->GetLeafName(leafName);
-      if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-
-      bool isDir;
-      rv = file->IsDirectory(&isDir);
-      if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-
-      if (isDir) {
-        if (leafName.EqualsLiteral("morgue")) {
-          rv = GetBodyUsage(file, aCanceled, aUsageInfo);
-          if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-        } else {
-          NS_WARNING("Unknown Cache directory found!");
-        }
-
-        continue;
-      }
-
-      // Ignore transient sqlite files and marker files
-      if (leafName.EqualsLiteral("caches.sqlite-journal") ||
-          leafName.EqualsLiteral("caches.sqlite-shm") ||
-          leafName.Find(NS_LITERAL_CSTRING("caches.sqlite-mj"), false, 0, 0) == 0 ||
-          leafName.EqualsLiteral("context_open.marker")) {
-        continue;
-      }
-
-      if (leafName.EqualsLiteral("caches.sqlite") ||
-          leafName.EqualsLiteral("caches.sqlite-wal")) {
-        int64_t fileSize;
-        rv = file->GetFileSize(&fileSize);
-        if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-        MOZ_DIAGNOSTIC_ASSERT(fileSize >= 0);
-
-        aUsageInfo->AppendToDatabaseUsage(fileSize);
-        continue;
-      }
-
-      // Ignore directory padding file
-      if (leafName.EqualsLiteral(PADDING_FILE_NAME) ||
-          leafName.EqualsLiteral(PADDING_TMP_FILE_NAME)) {
-        continue;
-      }
-
-      NS_WARNING("Unknown Cache file found!");
-    }
-
-    return NS_OK;
-=======
   virtual nsresult GetUsageForOrigin(PersistenceType aPersistenceType,
                                      const nsACString& aGroup,
                                      const nsACString& aOrigin,
@@ -384,7 +167,6 @@ class CacheQuotaClient final : public Client {
     return GetUsageForOriginInternal(aPersistenceType, aGroup, aOrigin,
                                      aCanceled, aUsageInfo,
                                      /* aInitializing*/ false);
->>>>>>> upstream-releases
   }
 
   virtual void OnOriginClearCompleted(PersistenceType aPersistenceType,

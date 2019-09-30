@@ -82,31 +82,12 @@ NS_HIDDEN __typeof(dlclose) __wrap_dlclose;
 
 typedef void* LibHandleType;
 
-<<<<<<< HEAD
-static LibHandleType GetLibHandle(pathstr_t aDependentLib) {
-  LibHandleType libHandle = dlopen(aDependentLib, RTLD_GLOBAL | RTLD_LAZY
-#ifdef XP_MACOSX
-                                                      | RTLD_FIRST
-#endif
-  );
-||||||| merged common ancestors
-static LibHandleType
-GetLibHandle(pathstr_t aDependentLib)
-{
-  LibHandleType libHandle = dlopen(aDependentLib,
-                                   RTLD_GLOBAL | RTLD_LAZY
-#ifdef XP_MACOSX
-                                   | RTLD_FIRST
-#endif
-                                   );
-=======
 static LibHandleType GetLibHandle(pathstr_t aDependentLib) {
   LibHandleType libHandle = dlopen(aDependentLib, RTLD_GLOBAL | RTLD_LAZY
 #  ifdef XP_MACOSX
                                                       | RTLD_FIRST
 #  endif
   );
->>>>>>> upstream-releases
   if (!libHandle) {
     fprintf(stderr, "XPCOMGlueLoad error for file %s:\n%s\n", aDependentLib,
             dlerror());
@@ -118,23 +99,9 @@ static NSFuncPtr GetSymbol(LibHandleType aLibHandle, const char* aSymbol) {
   return (NSFuncPtr)dlsym(aLibHandle, aSymbol);
 }
 
-<<<<<<< HEAD
-#ifndef MOZ_LINKER
-static void CloseLibHandle(LibHandleType aLibHandle) { dlclose(aLibHandle); }
-#endif
-||||||| merged common ancestors
-#ifndef MOZ_LINKER
-static void
-CloseLibHandle(LibHandleType aLibHandle)
-{
-  dlclose(aLibHandle);
-}
-#endif
-=======
 #  ifndef MOZ_LINKER
 static void CloseLibHandle(LibHandleType aLibHandle) { dlclose(aLibHandle); }
 #  endif
->>>>>>> upstream-releases
 #endif
 
 struct DependentLib {
@@ -156,16 +123,8 @@ static void AppendDependentLib(LibHandleType aLibHandle) {
   sTop = d;
 }
 
-<<<<<<< HEAD
-static bool ReadDependentCB(pathstr_t aDependentLib) {
-||||||| merged common ancestors
-static bool
-ReadDependentCB(pathstr_t aDependentLib)
-{
-=======
 static bool ReadDependentCB(pathstr_t aDependentLib,
                             LibLoadingStrategy aLibLoadingStrategy) {
->>>>>>> upstream-releases
 #ifndef MOZ_LINKER
   // Don't bother doing a ReadAhead if we're not in the parent process.
   // What we need from the library should already be in the system file
@@ -183,29 +142,12 @@ static bool ReadDependentCB(pathstr_t aDependentLib,
 }
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-static bool ReadDependentCB(const char* aDependentLib) {
-||||||| merged common ancestors
-static bool
-ReadDependentCB(const char* aDependentLib)
-{
-=======
 static bool ReadDependentCB(const char* aDependentLib,
                             LibLoadingStrategy aLibLoadingStrategy) {
->>>>>>> upstream-releases
   wchar_t wideDependentLib[MAX_PATH];
-<<<<<<< HEAD
-  MultiByteToWideChar(CP_UTF8, 0, aDependentLib, -1, wideDependentLib,
-                      MAX_PATH);
-  return ReadDependentCB(wideDependentLib);
-||||||| merged common ancestors
-  MultiByteToWideChar(CP_UTF8, 0, aDependentLib, -1, wideDependentLib, MAX_PATH);
-  return ReadDependentCB(wideDependentLib);
-=======
   MultiByteToWideChar(CP_UTF8, 0, aDependentLib, -1, wideDependentLib,
                       MAX_PATH);
   return ReadDependentCB(wideDependentLib, aLibLoadingStrategy);
->>>>>>> upstream-releases
 }
 
 inline FILE* TS_tfopen(const char* path, const wchar_t* mode) {
@@ -262,16 +204,8 @@ static const char* ns_strrpbrk(const char* string, const char* strCharSet) {
 }
 #endif
 
-<<<<<<< HEAD
-static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
-||||||| merged common ancestors
-static nsresult
-XPCOMGlueLoad(const char* aXPCOMFile)
-{
-=======
 static nsresult XPCOMGlueLoad(const char* aXPCOMFile,
                               LibLoadingStrategy aLibLoadingStrategy) {
->>>>>>> upstream-releases
 #ifdef MOZ_LINKER
   if (!ReadDependentCB(aXPCOMFile, aLibLoadingStrategy)) {
     return NS_ERROR_FAILURE;
@@ -295,16 +229,8 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile,
   tempBuffer[tempLen] = '\0';
   const char* slash = strrchr(tempBuffer, '/');
   tempLen = size_t(slash - tempBuffer);
-<<<<<<< HEAD
-  const char* lastSlash = aXPCOMFile + tempLen;
-#else
-||||||| merged common ancestors
-  const char *lastSlash = aXPCOMFile + tempLen;
-#else
-=======
   const char* lastSlash = aXPCOMFile + tempLen;
 #  else
->>>>>>> upstream-releases
   const char* lastSlash = strrchr(aXPCOMFile, '/');
 #  endif
   char* cursor;
@@ -312,44 +238,18 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile,
     size_t len = size_t(lastSlash - aXPCOMFile);
 
     if (len > MAXPATHLEN - sizeof(XPCOM_FILE_PATH_SEPARATOR
-<<<<<<< HEAD
-#ifdef XP_MACOSX
-                                  "Resources" XPCOM_FILE_PATH_SEPARATOR
-#endif
-                                      XPCOM_DEPENDENT_LIBS_LIST)) {
-||||||| merged common ancestors
-#ifdef XP_MACOSX
-                                  "Resources"
-                                  XPCOM_FILE_PATH_SEPARATOR
-#endif
-                                  XPCOM_DEPENDENT_LIBS_LIST)) {
-=======
 #  ifdef XP_MACOSX
                                   "Resources" XPCOM_FILE_PATH_SEPARATOR
 #  endif
                                       XPCOM_DEPENDENT_LIBS_LIST)) {
->>>>>>> upstream-releases
       return NS_ERROR_FAILURE;
     }
     memcpy(xpcomDir, aXPCOMFile, len);
     strcpy(xpcomDir + len, XPCOM_FILE_PATH_SEPARATOR
-<<<<<<< HEAD
-#ifdef XP_MACOSX
-           "Resources" XPCOM_FILE_PATH_SEPARATOR
-#endif
-               XPCOM_DEPENDENT_LIBS_LIST);
-||||||| merged common ancestors
-#ifdef XP_MACOSX
-                           "Resources"
-                           XPCOM_FILE_PATH_SEPARATOR
-#endif
-                           XPCOM_DEPENDENT_LIBS_LIST);
-=======
 #  ifdef XP_MACOSX
            "Resources" XPCOM_FILE_PATH_SEPARATOR
 #  endif
                XPCOM_DEPENDENT_LIBS_LIST);
->>>>>>> upstream-releases
     cursor = xpcomDir + len + 1;
   } else {
     strcpy(xpcomDir, XPCOM_DEPENDENT_LIBS_LIST);
@@ -412,18 +312,9 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-#if defined(MOZ_WIDGET_GTK) && \
-    (defined(MOZ_MEMORY) || defined(__FreeBSD__) || defined(__NetBSD__))
-#define MOZ_GSLICE_INIT
-||||||| merged common ancestors
-#if defined(MOZ_WIDGET_GTK) && (defined(MOZ_MEMORY) || defined(__FreeBSD__) || defined(__NetBSD__))
-#define MOZ_GSLICE_INIT
-=======
 #if defined(MOZ_WIDGET_GTK) && \
     (defined(MOZ_MEMORY) || defined(__FreeBSD__) || defined(__NetBSD__))
 #  define MOZ_GSLICE_INIT
->>>>>>> upstream-releases
 #endif
 
 #ifdef MOZ_GSLICE_INIT
@@ -458,16 +349,8 @@ class GSliceInit {
 
 namespace mozilla {
 
-<<<<<<< HEAD
-Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile) {
-||||||| merged common ancestors
-Bootstrap::UniquePtr
-GetBootstrap(const char* aXPCOMFile)
-{
-=======
 Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile,
                                   LibLoadingStrategy aLibLoadingStrategy) {
->>>>>>> upstream-releases
 #ifdef MOZ_GSLICE_INIT
   GSliceInit gSliceInit;
 #endif

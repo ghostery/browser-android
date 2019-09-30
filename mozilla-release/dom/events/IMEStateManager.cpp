@@ -14,13 +14,8 @@
 #include "mozilla/EventStates.h"
 #include "mozilla/MouseEvents.h"
 #include "mozilla/Preferences.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "mozilla/Services.h"
-=======
 #include "mozilla/PresShell.h"
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/TextComposition.h"
 #include "mozilla/TextEvents.h"
 #include "mozilla/Unused.h"
@@ -133,33 +128,6 @@ static const char* GetIMEStateSetOpenName(IMEState::Open aOpen) {
   }
 }
 
-<<<<<<< HEAD
-static bool IsSameProcess(const TabParent* aTabParent1,
-                          const TabParent* aTabParent2) {
-  if (aTabParent1 == aTabParent2) {
-    return true;
-  }
-  if (!aTabParent1 != !aTabParent2) {
-    return false;
-  }
-  return aTabParent1->Manager() == aTabParent2->Manager();
-}
-
-||||||| merged common ancestors
-static bool
-IsSameProcess(const TabParent* aTabParent1, const TabParent* aTabParent2)
-{
-  if (aTabParent1 == aTabParent2) {
-    return true;
-  }
-  if (!aTabParent1 != !aTabParent2) {
-    return false;
-  }
-  return aTabParent1->Manager() == aTabParent2->Manager();
-}
-
-=======
->>>>>>> upstream-releases
 StaticRefPtr<nsIContent> IMEStateManager::sContent;
 StaticRefPtr<nsPresContext> IMEStateManager::sPresContext;
 nsIWidget* IMEStateManager::sWidget = nullptr;
@@ -175,35 +143,11 @@ bool IMEStateManager::sIsGettingNewIMEState = false;
 bool IMEStateManager::sCheckForIMEUnawareWebApps = false;
 
 // static
-<<<<<<< HEAD
 void IMEStateManager::Init() {
   Preferences::AddBoolVarCache(
       &sCheckForIMEUnawareWebApps,
       "intl.ime.hack.on_ime_unaware_apps.fire_key_events_for_composition",
       false);
-
-  Preferences::AddBoolVarCache(&sInputModeSupported, "dom.forms.inputmode",
-                               false);
-||||||| merged common ancestors
-void
-IMEStateManager::Init()
-{
-  Preferences::AddBoolVarCache(
-    &sCheckForIMEUnawareWebApps,
-    "intl.ime.hack.on_ime_unaware_apps.fire_key_events_for_composition",
-    false);
-
-  Preferences::AddBoolVarCache(
-    &sInputModeSupported,
-    "dom.forms.inputmode",
-    false);
-=======
-void IMEStateManager::Init() {
-  Preferences::AddBoolVarCache(
-      &sCheckForIMEUnawareWebApps,
-      "intl.ime.hack.on_ime_unaware_apps.fire_key_events_for_composition",
-      false);
->>>>>>> upstream-releases
 
   sOrigin = XRE_IsParentProcess() ? InputContext::ORIGIN_MAIN
                                   : InputContext::ORIGIN_CONTENT;
@@ -226,17 +170,6 @@ void IMEStateManager::Shutdown() {
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::OnTabParentDestroying(TabParent* aTabParent) {
-  if (sFocusedIMETabParent == aTabParent) {
-    NotifyIMEOfBlurForChildProcess();
-||||||| merged common ancestors
-void
-IMEStateManager::OnTabParentDestroying(TabParent* aTabParent)
-{
-  if (sFocusedIMETabParent == aTabParent) {
-    NotifyIMEOfBlurForChildProcess();
-=======
 void IMEStateManager::OnFocusMovedBetweenBrowsers(BrowserParent* aBlur,
                                                   BrowserParent* aFocus) {
   MOZ_ASSERT(aBlur != aFocus);
@@ -260,7 +193,6 @@ void IMEStateManager::OnFocusMovedBetweenBrowsers(BrowserParent* aBlur,
       NotifyIME(REQUEST_TO_COMMIT_COMPOSITION, oldWidget,
                 composition->GetBrowserParent());
     }
->>>>>>> upstream-releases
   }
 
   if (aBlur) {
@@ -271,20 +203,9 @@ void IMEStateManager::OnFocusMovedBetweenBrowsers(BrowserParent* aBlur,
     aBlur->StopIMEStateManagement();
   }
 
-<<<<<<< HEAD
-  MOZ_LOG(sISMLog, LogLevel::Info,
-          ("OnTabParentDestroying(aTabParent=0x%p), "
-           "The active TabParent is being destroyed",
-           aTabParent));
-||||||| merged common ancestors
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("OnTabParentDestroying(aTabParent=0x%p), "
-     "The active TabParent is being destroyed", aTabParent));
-=======
   if (sActiveIMEContentObserver) {
     DestroyIMEContentObserver();
   }
->>>>>>> upstream-releases
 
   if (sFocusedIMEWidget) {
     // sFocusedIMEBrowserParent can be null, if IME focus hasn't been
@@ -330,16 +251,6 @@ void IMEStateManager::WidgetDestroyed(nsIWidget* aWidget) {
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::StopIMEStateManagement() {
-  MOZ_LOG(sISMLog, LogLevel::Info, ("StopIMEStateManagement()"));
-||||||| merged common ancestors
-void
-IMEStateManager::StopIMEStateManagement()
-{
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("StopIMEStateManagement()"));
-=======
 void IMEStateManager::WidgetOnQuit(nsIWidget* aWidget) {
   if (sFocusedIMEWidget == aWidget) {
     // Try to do it the normal way first.
@@ -354,7 +265,6 @@ void IMEStateManager::WidgetOnQuit(nsIWidget* aWidget) {
 void IMEStateManager::StopIMEStateManagement() {
   MOZ_ASSERT(XRE_IsContentProcess());
   MOZ_LOG(sISMLog, LogLevel::Info, ("StopIMEStateManagement()"));
->>>>>>> upstream-releases
 
   // NOTE: Don't set input context from here since this has already lost
   //       the rights to change input context.
@@ -369,81 +279,8 @@ void IMEStateManager::StopIMEStateManagement() {
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::NotifyIMEOfBlurForChildProcess() {
-  MOZ_LOG(sISMLog, LogLevel::Debug,
-          ("NotifyIMEOfBlurForChildProcess(), sFocusedIMETabParent=0x%p, "
-           "sFocusedIMEWidget=0x%p",
-           sFocusedIMETabParent.get(), sFocusedIMEWidget));
-
-  if (!sFocusedIMETabParent) {
-    MOZ_ASSERT(!sFocusedIMEWidget);
-    return;
-  }
-
-  MOZ_ASSERT(sFocusedIMEWidget);
-
-  if (MOZ_LOG_TEST(sISMLog, LogLevel::Debug) && sTextCompositions) {
-    RefPtr<TextComposition> composition =
-        sTextCompositions->GetCompositionFor(sFocusedIMEWidget);
-    if (composition) {
-      MOZ_LOG(
-          sISMLog, LogLevel::Debug,
-          ("  NotifyIMEOfBlurForChildProcess(), sFocusedIMEWidget still has "
-           "composition"));
-    }
-  }
-
-  NotifyIME(NOTIFY_IME_OF_BLUR, sFocusedIMEWidget, sFocusedIMETabParent);
-
-  MOZ_ASSERT(!sFocusedIMETabParent);
-  MOZ_ASSERT(!sFocusedIMEWidget);
-}
-
-// static
 void IMEStateManager::MaybeStartOffsetUpdatedInChild(nsIWidget* aWidget,
                                                      uint32_t aStartOffset) {
-||||||| merged common ancestors
-void
-IMEStateManager::NotifyIMEOfBlurForChildProcess()
-{
-  MOZ_LOG(sISMLog, LogLevel::Debug,
-    ("NotifyIMEOfBlurForChildProcess(), sFocusedIMETabParent=0x%p, "
-     "sFocusedIMEWidget=0x%p",
-     sFocusedIMETabParent.get(), sFocusedIMEWidget));
-
-  if (!sFocusedIMETabParent) {
-    MOZ_ASSERT(!sFocusedIMEWidget);
-    return;
-  }
-
-  MOZ_ASSERT(sFocusedIMEWidget);
-
-  if (MOZ_LOG_TEST(sISMLog, LogLevel::Debug) && sTextCompositions) {
-    RefPtr<TextComposition> composition =
-      sTextCompositions->GetCompositionFor(sFocusedIMEWidget);
-    if (composition) {
-      MOZ_LOG(sISMLog, LogLevel::Debug,
-        ("  NotifyIMEOfBlurForChildProcess(), sFocusedIMEWidget still has "
-         "composition"));
-    }
-  }
-
-  NotifyIME(NOTIFY_IME_OF_BLUR, sFocusedIMEWidget, sFocusedIMETabParent);
-
-  MOZ_ASSERT(!sFocusedIMETabParent);
-  MOZ_ASSERT(!sFocusedIMEWidget);
-}
-
-// static
-void
-IMEStateManager::MaybeStartOffsetUpdatedInChild(nsIWidget* aWidget,
-                                                uint32_t aStartOffset)
-{
-=======
-void IMEStateManager::MaybeStartOffsetUpdatedInChild(nsIWidget* aWidget,
-                                                     uint32_t aStartOffset) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(!sTextCompositions)) {
     MOZ_LOG(sISMLog, LogLevel::Warning,
             ("MaybeStartOffsetUpdatedInChild(aWidget=0x%p, aStartOffset=%u), "
@@ -516,13 +353,7 @@ nsresult IMEStateManager::OnDestroyPresContext(nsPresContext* aPresContext) {
     InputContextAction action(InputContextAction::CAUSE_UNKNOWN,
                               InputContextAction::LOST_FOCUS);
     InputContext::Origin origin =
-<<<<<<< HEAD
-        sActiveTabParent ? InputContext::ORIGIN_CONTENT : sOrigin;
-||||||| merged common ancestors
-      sActiveTabParent ? InputContext::ORIGIN_CONTENT : sOrigin;
-=======
         BrowserParent::GetFocused() ? InputContext::ORIGIN_CONTENT : sOrigin;
->>>>>>> upstream-releases
     SetIMEState(newState, nullptr, nullptr, sWidget, action, origin);
   }
   sWidget = nullptr;
@@ -577,13 +408,7 @@ nsresult IMEStateManager::OnRemoveContent(nsPresContext* aPresContext,
     InputContextAction action(InputContextAction::CAUSE_UNKNOWN,
                               InputContextAction::LOST_FOCUS);
     InputContext::Origin origin =
-<<<<<<< HEAD
-        sActiveTabParent ? InputContext::ORIGIN_CONTENT : sOrigin;
-||||||| merged common ancestors
-      sActiveTabParent ? InputContext::ORIGIN_CONTENT : sOrigin;
-=======
         BrowserParent::GetFocused() ? InputContext::ORIGIN_CONTENT : sOrigin;
->>>>>>> upstream-releases
     SetIMEState(newState, aPresContext, nullptr, sWidget, action, origin);
   }
 
@@ -613,55 +438,13 @@ nsresult IMEStateManager::OnChangeFocus(nsPresContext* aPresContext,
 }
 
 // static
-<<<<<<< HEAD
-nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
-                                                nsIContent* aContent,
-                                                InputContextAction aAction) {
-  RefPtr<TabParent> newTabParent = TabParent::GetFrom(aContent);
-||||||| merged common ancestors
-nsresult
-IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
-                                       nsIContent* aContent,
-                                       InputContextAction aAction)
-{
-  RefPtr<TabParent> newTabParent = TabParent::GetFrom(aContent);
-=======
 nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
                                                 nsIContent* aContent,
                                                 InputContextAction aAction) {
   bool remoteHasFocus =
       BrowserParent::GetFrom(aContent) || BrowserBridgeChild::GetFrom(aContent);
->>>>>>> upstream-releases
 
   MOZ_LOG(sISMLog, LogLevel::Info,
-<<<<<<< HEAD
-          ("OnChangeFocusInternal(aPresContext=0x%p (available: %s), "
-           "aContent=0x%p (TabParent=0x%p), aAction={ mCause=%s, "
-           "mFocusChange=%s }), "
-           "sPresContext=0x%p (available: %s), sContent=0x%p, "
-           "sWidget=0x%p (available: %s), sActiveTabParent=0x%p, "
-           "sActiveIMEContentObserver=0x%p, sInstalledMenuKeyboardListener=%s",
-           aPresContext, GetBoolName(CanHandleWith(aPresContext)), aContent,
-           newTabParent.get(), GetActionCauseName(aAction.mCause),
-           GetActionFocusChangeName(aAction.mFocusChange), sPresContext.get(),
-           GetBoolName(CanHandleWith(sPresContext)), sContent.get(), sWidget,
-           GetBoolName(sWidget && !sWidget->Destroyed()),
-           sActiveTabParent.get(), sActiveIMEContentObserver.get(),
-           GetBoolName(sInstalledMenuKeyboardListener)));
-||||||| merged common ancestors
-    ("OnChangeFocusInternal(aPresContext=0x%p (available: %s), "
-     "aContent=0x%p (TabParent=0x%p), aAction={ mCause=%s, mFocusChange=%s }), "
-     "sPresContext=0x%p (available: %s), sContent=0x%p, "
-     "sWidget=0x%p (available: %s), sActiveTabParent=0x%p, "
-     "sActiveIMEContentObserver=0x%p, sInstalledMenuKeyboardListener=%s",
-     aPresContext, GetBoolName(CanHandleWith(aPresContext)), aContent,
-     newTabParent.get(), GetActionCauseName(aAction.mCause),
-     GetActionFocusChangeName(aAction.mFocusChange),
-     sPresContext.get(), GetBoolName(CanHandleWith(sPresContext)),
-     sContent.get(), sWidget, GetBoolName(sWidget && !sWidget->Destroyed()),
-     sActiveTabParent.get(), sActiveIMEContentObserver.get(),
-     GetBoolName(sInstalledMenuKeyboardListener)));
-=======
           ("OnChangeFocusInternal(aPresContext=0x%p (available: %s), "
            "aContent=0x%p (remote: %s), aAction={ mCause=%s, "
            "mFocusChange=%s }), "
@@ -675,7 +458,6 @@ nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
            GetBoolName(sWidget && !sWidget->Destroyed()),
            BrowserParent::GetFocused(), sActiveIMEContentObserver.get(),
            GetBoolName(sInstalledMenuKeyboardListener)));
->>>>>>> upstream-releases
 
   // If new aPresShell has been destroyed, this should handle the focus change
   // as nobody is getting focus.
@@ -691,18 +473,10 @@ nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
   nsCOMPtr<nsIWidget> newWidget =
       aPresContext ? aPresContext->GetRootWidget() : nullptr;
   bool focusActuallyChanging =
-<<<<<<< HEAD
-      (sContent != aContent || sPresContext != aPresContext ||
-       oldWidget != newWidget || sActiveTabParent != newTabParent);
-||||||| merged common ancestors
-    (sContent != aContent || sPresContext != aPresContext ||
-     oldWidget != newWidget || sActiveTabParent != newTabParent);
-=======
       (sContent != aContent || sPresContext != aPresContext ||
        oldWidget != newWidget ||
        (remoteHasFocus &&
         (aAction.mFocusChange != InputContextAction::MENU_GOT_PSEUDO_FOCUS)));
->>>>>>> upstream-releases
 
   // If old widget has composition, we may need to commit composition since
   // a native IME context is shared on all editors on some widgets or all
@@ -744,55 +518,6 @@ nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
     else if (!sActiveIMEContentObserver->IsManaging(aPresContext, aContent)) {
       DestroyIMEContentObserver();
     }
-<<<<<<< HEAD
-  } else {
-    // If there is no active IMEContentObserver, it means that focused content
-    // may be in another process.
-
-    // If focus is moving from current focused remote process to different
-    // process while the process has IME focus too, we need to notify IME of
-    // blur here because it may be too late the blur notification to reach
-    // this process especially when closing active window.
-    // However, don't send blur if we're being deactivated and IME wants to
-    // keep composition during deactive because notifying blur will commit
-    // or cancel composition.
-    if (sFocusedIMETabParent && sFocusedIMEWidget &&
-        (aPresContext || !sFocusedIMEWidget->IMENotificationRequestsRef()
-                              .WantDuringDeactive()) &&
-        !IsSameProcess(sFocusedIMETabParent, newTabParent)) {
-      MOZ_LOG(
-          sISMLog, LogLevel::Info,
-          ("  OnChangeFocusInternal(), notifying IME of blur of previous "
-           "focused "
-           "remote process because it may be too late actual notification to "
-           "reach this process"));
-      NotifyIMEOfBlurForChildProcess();
-    }
-||||||| merged common ancestors
-  } else {
-    // If there is no active IMEContentObserver, it means that focused content
-    // may be in another process.
-
-    // If focus is moving from current focused remote process to different
-    // process while the process has IME focus too, we need to notify IME of
-    // blur here because it may be too late the blur notification to reach
-    // this process especially when closing active window.
-    // However, don't send blur if we're being deactivated and IME wants to
-    // keep composition during deactive because notifying blur will commit
-    // or cancel composition.
-    if (sFocusedIMETabParent && sFocusedIMEWidget &&
-        (aPresContext ||
-         !sFocusedIMEWidget->IMENotificationRequestsRef().
-           WantDuringDeactive()) &&
-        !IsSameProcess(sFocusedIMETabParent, newTabParent)) {
-      MOZ_LOG(sISMLog, LogLevel::Info,
-        ("  OnChangeFocusInternal(), notifying IME of blur of previous focused "
-         "remote process because it may be too late actual notification to "
-         "reach this process"));
-      NotifyIMEOfBlurForChildProcess();
-    }
-=======
->>>>>>> upstream-releases
   }
 
   if (!aPresContext) {
@@ -802,26 +527,6 @@ nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  if (sActiveTabParent && !IsSameProcess(sActiveTabParent, newTabParent)) {
-    MOZ_LOG(sISMLog, LogLevel::Debug,
-            ("  OnChangeFocusInternal(), notifying previous "
-             "focused child process of parent process or another child process "
-             "getting focus"));
-    Unused << sActiveTabParent->SendStopIMEStateManagement();
-  }
-
-||||||| merged common ancestors
-  if (sActiveTabParent && !IsSameProcess(sActiveTabParent, newTabParent)) {
-    MOZ_LOG(sISMLog, LogLevel::Debug,
-      ("  OnChangeFocusInternal(), notifying previous "
-       "focused child process of parent process or another child process "
-       "getting focus"));
-    Unused << sActiveTabParent->SendStopIMEStateManagement();
-  }
-
-=======
->>>>>>> upstream-releases
   if (NS_WARN_IF(!newWidget)) {
     MOZ_LOG(sISMLog, LogLevel::Error,
             ("  OnChangeFocusInternal(), FAILED due to "
@@ -836,17 +541,8 @@ nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
   // If a child process has focus, we should disable IME state until the child
   // process actually gets focus because if user types keys before that they
   // are handled by IME.
-<<<<<<< HEAD
-  IMEState newState = newTabParent ? IMEState(IMEState::DISABLED)
-                                   : GetNewIMEState(aPresContext, aContent);
-||||||| merged common ancestors
-  IMEState newState =
-    newTabParent ? IMEState(IMEState::DISABLED) :
-                   GetNewIMEState(aPresContext, aContent);
-=======
   IMEState newState = remoteHasFocus ? IMEState(IMEState::DISABLED)
                                      : GetNewIMEState(aPresContext, aContent);
->>>>>>> upstream-releases
   bool setIMEState = true;
 
   if (remoteHasFocus && XRE_IsParentProcess()) {
@@ -966,44 +662,6 @@ nsresult IMEStateManager::OnChangeFocusInternal(nsPresContext* aPresContext,
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::OnInstalledMenuKeyboardListener(bool aInstalling) {
-  MOZ_LOG(
-      sISMLog, LogLevel::Info,
-      ("OnInstalledMenuKeyboardListener(aInstalling=%s), "
-       "sInstalledMenuKeyboardListener=%s, sActiveTabParent=0x%p, "
-       "sActiveChildInputContext={ mIMEState={ mEnabled=%s, mOpen=%s }, "
-       "mHTMLInputType=\"%s\", mHTMLInputInputmode=\"%s\", mActionHint=\"%s\", "
-       "mInPrivateBrowsing=%s }",
-       GetBoolName(aInstalling), GetBoolName(sInstalledMenuKeyboardListener),
-       sActiveTabParent.get(),
-       GetIMEStateEnabledName(sActiveChildInputContext.mIMEState.mEnabled),
-       GetIMEStateSetOpenName(sActiveChildInputContext.mIMEState.mOpen),
-       NS_ConvertUTF16toUTF8(sActiveChildInputContext.mHTMLInputType).get(),
-       NS_ConvertUTF16toUTF8(sActiveChildInputContext.mHTMLInputInputmode)
-           .get(),
-       NS_ConvertUTF16toUTF8(sActiveChildInputContext.mActionHint).get(),
-       GetBoolName(sActiveChildInputContext.mInPrivateBrowsing)));
-||||||| merged common ancestors
-void
-IMEStateManager::OnInstalledMenuKeyboardListener(bool aInstalling)
-{
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("OnInstalledMenuKeyboardListener(aInstalling=%s), "
-     "sInstalledMenuKeyboardListener=%s, sActiveTabParent=0x%p, "
-     "sActiveChildInputContext={ mIMEState={ mEnabled=%s, mOpen=%s }, "
-     "mHTMLInputType=\"%s\", mHTMLInputInputmode=\"%s\", mActionHint=\"%s\", "
-     "mInPrivateBrowsing=%s }",
-     GetBoolName(aInstalling),
-     GetBoolName(sInstalledMenuKeyboardListener),
-     sActiveTabParent.get(),
-     GetIMEStateEnabledName(sActiveChildInputContext.mIMEState.mEnabled),
-     GetIMEStateSetOpenName(sActiveChildInputContext.mIMEState.mOpen),
-     NS_ConvertUTF16toUTF8(sActiveChildInputContext.mHTMLInputType).get(),
-     NS_ConvertUTF16toUTF8(sActiveChildInputContext.mHTMLInputInputmode).get(),
-     NS_ConvertUTF16toUTF8(sActiveChildInputContext.mActionHint).get(),
-     GetBoolName(sActiveChildInputContext.mInPrivateBrowsing)));
-=======
 void IMEStateManager::OnInstalledMenuKeyboardListener(bool aInstalling) {
   MOZ_LOG(
       sISMLog, LogLevel::Info,
@@ -1021,7 +679,6 @@ void IMEStateManager::OnInstalledMenuKeyboardListener(bool aInstalling) {
            .get(),
        NS_ConvertUTF16toUTF8(sActiveChildInputContext.mActionHint).get(),
        GetBoolName(sActiveChildInputContext.mInPrivateBrowsing)));
->>>>>>> upstream-releases
 
   sInstalledMenuKeyboardListener = aInstalling;
 
@@ -1075,22 +732,10 @@ bool IMEStateManager::OnMouseButtonEventInEditor(
   if (MOZ_LOG_TEST(sISMLog, LogLevel::Info)) {
     nsAutoString eventType;
     MOZ_LOG(sISMLog, LogLevel::Info,
-<<<<<<< HEAD
-            ("  OnMouseButtonEventInEditor(), "
-             "mouse event (mMessage=%s, button=%d) is %s",
-             ToChar(aMouseEvent->mMessage), aMouseEvent->button,
-             consumed ? "consumed" : "not consumed"));
-||||||| merged common ancestors
-      ("  OnMouseButtonEventInEditor(), "
-       "mouse event (mMessage=%s, button=%d) is %s",
-       ToChar(aMouseEvent->mMessage), aMouseEvent->button,
-       consumed ? "consumed" : "not consumed"));
-=======
             ("  OnMouseButtonEventInEditor(), "
              "mouse event (mMessage=%s, mButton=%d) is %s",
              ToChar(aMouseEvent->mMessage), aMouseEvent->mButton,
              consumed ? "consumed" : "not consumed"));
->>>>>>> upstream-releases
   }
 
   return consumed;
@@ -1147,18 +792,9 @@ void IMEStateManager::OnClickInEditor(nsPresContext* aPresContext,
   }
 
   InputContextAction::Cause cause =
-<<<<<<< HEAD
-      aMouseEvent->inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH
-          ? InputContextAction::CAUSE_TOUCH
-          : InputContextAction::CAUSE_MOUSE;
-||||||| merged common ancestors
-    aMouseEvent->inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH ?
-      InputContextAction::CAUSE_TOUCH : InputContextAction::CAUSE_MOUSE;
-=======
       aMouseEvent->mInputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH
           ? InputContextAction::CAUSE_TOUCH
           : InputContextAction::CAUSE_MOUSE;
->>>>>>> upstream-releases
 
   InputContextAction action(cause, InputContextAction::FOCUS_NOT_CHANGED);
   IMEState newState = GetNewIMEState(aPresContext, aContent);
@@ -1482,59 +1118,6 @@ bool IMEStateManager::HasActiveChildSetInputContext() {
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::SetInputContextForChildProcess(
-    TabParent* aTabParent, const InputContext& aInputContext,
-    const InputContextAction& aAction) {
-  MOZ_LOG(
-      sISMLog, LogLevel::Info,
-      ("SetInputContextForChildProcess(aTabParent=0x%p, "
-       "aInputContext={ mIMEState={ mEnabled=%s, mOpen=%s }, "
-       "mHTMLInputType=\"%s\", mHTMLInputInputmode=\"%s\", mActionHint=\"%s\", "
-       "mInPrivateBrowsing=%s }, aAction={ mCause=%s, mAction=%s }), "
-       "sPresContext=0x%p (available: %s), sWidget=0x%p (available: %s), "
-       "sActiveTabParent=0x%p, sInstalledMenuKeyboardListener=%s",
-       aTabParent, GetIMEStateEnabledName(aInputContext.mIMEState.mEnabled),
-       GetIMEStateSetOpenName(aInputContext.mIMEState.mOpen),
-       NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputType).get(),
-       NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputInputmode).get(),
-       NS_ConvertUTF16toUTF8(aInputContext.mActionHint).get(),
-       GetBoolName(aInputContext.mInPrivateBrowsing),
-       GetActionCauseName(aAction.mCause),
-       GetActionFocusChangeName(aAction.mFocusChange), sPresContext.get(),
-       GetBoolName(CanHandleWith(sPresContext)), sWidget,
-       GetBoolName(sWidget && !sWidget->Destroyed()), sActiveTabParent.get(),
-       GetBoolName(sInstalledMenuKeyboardListener)));
-
-  if (aTabParent != sActiveTabParent) {
-||||||| merged common ancestors
-void
-IMEStateManager::SetInputContextForChildProcess(
-                   TabParent* aTabParent,
-                   const InputContext& aInputContext,
-                   const InputContextAction& aAction)
-{
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("SetInputContextForChildProcess(aTabParent=0x%p, "
-     "aInputContext={ mIMEState={ mEnabled=%s, mOpen=%s }, "
-     "mHTMLInputType=\"%s\", mHTMLInputInputmode=\"%s\", mActionHint=\"%s\", "
-     "mInPrivateBrowsing=%s }, aAction={ mCause=%s, mAction=%s }), "
-     "sPresContext=0x%p (available: %s), sWidget=0x%p (available: %s), "
-     "sActiveTabParent=0x%p, sInstalledMenuKeyboardListener=%s",
-     aTabParent, GetIMEStateEnabledName(aInputContext.mIMEState.mEnabled),
-     GetIMEStateSetOpenName(aInputContext.mIMEState.mOpen),
-     NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputType).get(),
-     NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputInputmode).get(),
-     NS_ConvertUTF16toUTF8(aInputContext.mActionHint).get(),
-     GetBoolName(aInputContext.mInPrivateBrowsing),
-     GetActionCauseName(aAction.mCause),
-     GetActionFocusChangeName(aAction.mFocusChange),
-     sPresContext.get(), GetBoolName(CanHandleWith(sPresContext)),
-     sWidget, GetBoolName(sWidget && !sWidget->Destroyed()),
-     sActiveTabParent.get(), GetBoolName(sInstalledMenuKeyboardListener)));
-
-  if (aTabParent != sActiveTabParent) {
-=======
 void IMEStateManager::SetInputContextForChildProcess(
     BrowserParent* aBrowserParent, const InputContext& aInputContext,
     const InputContextAction& aAction) {
@@ -1560,7 +1143,6 @@ void IMEStateManager::SetInputContextForChildProcess(
        GetBoolName(sInstalledMenuKeyboardListener)));
 
   if (aBrowserParent != BrowserParent::GetFocused()) {
->>>>>>> upstream-releases
     MOZ_LOG(sISMLog, LogLevel::Error,
             ("  SetInputContextForChildProcess(), FAILED, "
              "because non-focused tab parent tries to set input context"));
@@ -1722,41 +1304,6 @@ static void GetActionHint(nsIContent& aContent, nsAString& aActionHint) {
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::SetIMEState(const IMEState& aState,
-                                  nsPresContext* aPresContext,
-                                  nsIContent* aContent, nsIWidget* aWidget,
-                                  InputContextAction aAction,
-                                  InputContext::Origin aOrigin) {
-  MOZ_LOG(sISMLog, LogLevel::Info,
-          ("SetIMEState(aState={ mEnabled=%s, mOpen=%s }, "
-           "aContent=0x%p (TabParent=0x%p), aWidget=0x%p, aAction={ mCause=%s, "
-           "mFocusChange=%s }, aOrigin=%s)",
-           GetIMEStateEnabledName(aState.mEnabled),
-           GetIMEStateSetOpenName(aState.mOpen), aContent,
-           TabParent::GetFrom(aContent), aWidget,
-           GetActionCauseName(aAction.mCause),
-           GetActionFocusChangeName(aAction.mFocusChange), ToChar(aOrigin)));
-||||||| merged common ancestors
-void
-IMEStateManager::SetIMEState(const IMEState& aState,
-                             nsPresContext* aPresContext,
-                             nsIContent* aContent,
-                             nsIWidget* aWidget,
-                             InputContextAction aAction,
-                             InputContext::Origin aOrigin)
-{
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("SetIMEState(aState={ mEnabled=%s, mOpen=%s }, "
-     "aContent=0x%p (TabParent=0x%p), aWidget=0x%p, aAction={ mCause=%s, "
-     "mFocusChange=%s }, aOrigin=%s)",
-     GetIMEStateEnabledName(aState.mEnabled),
-     GetIMEStateSetOpenName(aState.mOpen), aContent,
-     TabParent::GetFrom(aContent), aWidget,
-     GetActionCauseName(aAction.mCause),
-     GetActionFocusChangeName(aAction.mFocusChange),
-     ToChar(aOrigin)));
-=======
 void IMEStateManager::SetIMEState(const IMEState& aState,
                                   nsPresContext* aPresContext,
                                   nsIContent* aContent, nsIWidget* aWidget,
@@ -1772,7 +1319,6 @@ void IMEStateManager::SetIMEState(const IMEState& aState,
        BrowserParent::GetFrom(aContent), aWidget,
        GetActionCauseName(aAction.mCause),
        GetActionFocusChangeName(aAction.mFocusChange), ToChar(aOrigin)));
->>>>>>> upstream-releases
 
   NS_ENSURE_TRUE_VOID(aWidget);
 
@@ -1824,91 +1370,7 @@ void IMEStateManager::SetIMEState(const IMEState& aState,
       }
     }
 
-<<<<<<< HEAD
-    aContent->AsElement()->GetAttr(
-        kNameSpaceID_None, nsGkAtoms::moz_action_hint, context.mActionHint);
-
-    // Get the input content corresponding to the focused node,
-    // which may be an anonymous child of the input content.
-    nsIContent* inputContent = aContent->FindFirstNonChromeOnlyAccessContent();
-
-    // If we don't have an action hint and
-    // return won't submit the form, use "next".
-    if (context.mActionHint.IsEmpty() &&
-        inputContent->IsHTMLElement(nsGkAtoms::input)) {
-      bool willSubmit = false;
-      nsCOMPtr<nsIFormControl> control(do_QueryInterface(inputContent));
-      mozilla::dom::Element* formElement = nullptr;
-      nsCOMPtr<nsIForm> form;
-      if (control) {
-        formElement = control->GetFormElement();
-        // is this a form and does it have a default submit element?
-        if ((form = do_QueryInterface(formElement)) &&
-            form->GetDefaultSubmitElement()) {
-          willSubmit = true;
-          // is this an html form...
-        } else if (formElement && formElement->IsHTMLElement(nsGkAtoms::form)) {
-          dom::HTMLFormElement* htmlForm =
-              static_cast<dom::HTMLFormElement*>(formElement);
-          // ... and does it only have a single text input element ?
-          if (!htmlForm->ImplicitSubmissionIsDisabled() ||
-              // ... or is this the last non-disabled element?
-              htmlForm->IsLastActiveElement(control)) {
-            willSubmit = true;
-          }
-        }
-      }
-      context.mActionHint.Assign(
-          willSubmit
-              ? (control->ControlType() == NS_FORM_INPUT_SEARCH
-                     ? NS_LITERAL_STRING("search")
-                     : NS_LITERAL_STRING("go"))
-              : (formElement ? NS_LITERAL_STRING("next") : EmptyString()));
-    }
-||||||| merged common ancestors
-    aContent->AsElement()->GetAttr(kNameSpaceID_None,
-                                   nsGkAtoms::moz_action_hint,
-                                   context.mActionHint);
-
-    // Get the input content corresponding to the focused node,
-    // which may be an anonymous child of the input content.
-    nsIContent* inputContent = aContent->FindFirstNonChromeOnlyAccessContent();
-
-    // If we don't have an action hint and
-    // return won't submit the form, use "next".
-    if (context.mActionHint.IsEmpty() &&
-        inputContent->IsHTMLElement(nsGkAtoms::input)) {
-      bool willSubmit = false;
-      nsCOMPtr<nsIFormControl> control(do_QueryInterface(inputContent));
-      mozilla::dom::Element* formElement = nullptr;
-      nsCOMPtr<nsIForm> form;
-      if (control) {
-        formElement = control->GetFormElement();
-        // is this a form and does it have a default submit element?
-        if ((form = do_QueryInterface(formElement)) &&
-            form->GetDefaultSubmitElement()) {
-          willSubmit = true;
-        // is this an html form...
-        } else if (formElement && formElement->IsHTMLElement(nsGkAtoms::form)) {
-          dom::HTMLFormElement* htmlForm =
-            static_cast<dom::HTMLFormElement*>(formElement);
-          // ... and does it only have a single text input element ?
-          if (!htmlForm->ImplicitSubmissionIsDisabled() ||
-              // ... or is this the last non-disabled element?
-              htmlForm->IsLastActiveElement(control)) {
-            willSubmit = true;
-          }
-        }
-      }
-      context.mActionHint.Assign(
-        willSubmit ? (control->ControlType() == NS_FORM_INPUT_SEARCH ?
-                       NS_LITERAL_STRING("search") : NS_LITERAL_STRING("go")) :
-                     (formElement ?
-                       NS_LITERAL_STRING("next") : EmptyString()));
-    }
-=======
     GetActionHint(*aContent, context.mActionHint);
->>>>>>> upstream-releases
   }
 
   // XXX I think that we should use nsContentUtils::IsCallerChrome() instead
@@ -1931,48 +1393,6 @@ void IMEStateManager::SetIMEState(const IMEState& aState,
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::SetInputContext(nsIWidget* aWidget,
-                                      const InputContext& aInputContext,
-                                      const InputContextAction& aAction) {
-  MOZ_LOG(
-      sISMLog, LogLevel::Info,
-      ("SetInputContext(aWidget=0x%p, aInputContext={ "
-       "mIMEState={ mEnabled=%s, mOpen=%s }, mHTMLInputType=\"%s\", "
-       "mHTMLInputInputmode=\"%s\", mActionHint=\"%s\", "
-       "mInPrivateBrowsing=%s }, "
-       "aAction={ mCause=%s, mAction=%s }), sActiveTabParent=0x%p",
-       aWidget, GetIMEStateEnabledName(aInputContext.mIMEState.mEnabled),
-       GetIMEStateSetOpenName(aInputContext.mIMEState.mOpen),
-       NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputType).get(),
-       NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputInputmode).get(),
-       NS_ConvertUTF16toUTF8(aInputContext.mActionHint).get(),
-       GetBoolName(aInputContext.mInPrivateBrowsing),
-       GetActionCauseName(aAction.mCause),
-       GetActionFocusChangeName(aAction.mFocusChange), sActiveTabParent.get()));
-||||||| merged common ancestors
-void
-IMEStateManager::SetInputContext(nsIWidget* aWidget,
-                                 const InputContext& aInputContext,
-                                 const InputContextAction& aAction)
-{
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("SetInputContext(aWidget=0x%p, aInputContext={ "
-     "mIMEState={ mEnabled=%s, mOpen=%s }, mHTMLInputType=\"%s\", "
-     "mHTMLInputInputmode=\"%s\", mActionHint=\"%s\", "
-     "mInPrivateBrowsing=%s }, "
-     "aAction={ mCause=%s, mAction=%s }), sActiveTabParent=0x%p",
-     aWidget,
-     GetIMEStateEnabledName(aInputContext.mIMEState.mEnabled),
-     GetIMEStateSetOpenName(aInputContext.mIMEState.mOpen),
-     NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputType).get(),
-     NS_ConvertUTF16toUTF8(aInputContext.mHTMLInputInputmode).get(),
-     NS_ConvertUTF16toUTF8(aInputContext.mActionHint).get(),
-     GetBoolName(aInputContext.mInPrivateBrowsing),
-     GetActionCauseName(aAction.mCause),
-     GetActionFocusChangeName(aAction.mFocusChange),
-     sActiveTabParent.get()));
-=======
 void IMEStateManager::SetInputContext(nsIWidget* aWidget,
                                       const InputContext& aInputContext,
                                       const InputContextAction& aAction) {
@@ -1992,7 +1412,6 @@ void IMEStateManager::SetInputContext(nsIWidget* aWidget,
        GetActionCauseName(aAction.mCause),
        GetActionFocusChangeName(aAction.mFocusChange),
        BrowserParent::GetFocused()));
->>>>>>> upstream-releases
 
   MOZ_RELEASE_ASSERT(aWidget);
 
@@ -2010,71 +1429,6 @@ void IMEStateManager::EnsureTextCompositionArray() {
 }
 
 // static
-<<<<<<< HEAD
-void IMEStateManager::DispatchCompositionEvent(
-    nsINode* aEventTargetNode, nsPresContext* aPresContext,
-    WidgetCompositionEvent* aCompositionEvent, nsEventStatus* aStatus,
-    EventDispatchingCallback* aCallBack, bool aIsSynthesized) {
-  RefPtr<TabParent> tabParent =
-      aEventTargetNode->IsContent()
-          ? TabParent::GetFrom(aEventTargetNode->AsContent())
-          : nullptr;
-
-  MOZ_LOG(
-      sISMLog, LogLevel::Info,
-      ("DispatchCompositionEvent(aNode=0x%p, "
-       "aPresContext=0x%p, aCompositionEvent={ mMessage=%s, "
-       "mNativeIMEContext={ mRawNativeIMEContext=0x%" PRIXPTR ", "
-       "mOriginProcessID=0x%" PRIX64 " }, mWidget(0x%p)={ "
-       "GetNativeIMEContext()={ mRawNativeIMEContext=0x%" PRIXPTR ", "
-       "mOriginProcessID=0x%" PRIX64 " }, Destroyed()=%s }, "
-       "mFlags={ mIsTrusted=%s, mPropagationStopped=%s } }, "
-       "aIsSynthesized=%s), tabParent=%p",
-       aEventTargetNode, aPresContext, ToChar(aCompositionEvent->mMessage),
-       aCompositionEvent->mNativeIMEContext.mRawNativeIMEContext,
-       aCompositionEvent->mNativeIMEContext.mOriginProcessID,
-       aCompositionEvent->mWidget.get(),
-       aCompositionEvent->mWidget->GetNativeIMEContext().mRawNativeIMEContext,
-       aCompositionEvent->mWidget->GetNativeIMEContext().mOriginProcessID,
-       GetBoolName(aCompositionEvent->mWidget->Destroyed()),
-       GetBoolName(aCompositionEvent->mFlags.mIsTrusted),
-       GetBoolName(aCompositionEvent->mFlags.mPropagationStopped),
-       GetBoolName(aIsSynthesized), tabParent.get()));
-||||||| merged common ancestors
-void
-IMEStateManager::DispatchCompositionEvent(
-                   nsINode* aEventTargetNode,
-                   nsPresContext* aPresContext,
-                   WidgetCompositionEvent* aCompositionEvent,
-                   nsEventStatus* aStatus,
-                   EventDispatchingCallback* aCallBack,
-                   bool aIsSynthesized)
-{
-  RefPtr<TabParent> tabParent =
-    aEventTargetNode->IsContent() ?
-      TabParent::GetFrom(aEventTargetNode->AsContent()) : nullptr;
-
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("DispatchCompositionEvent(aNode=0x%p, "
-     "aPresContext=0x%p, aCompositionEvent={ mMessage=%s, "
-     "mNativeIMEContext={ mRawNativeIMEContext=0x%" PRIXPTR ", "
-     "mOriginProcessID=0x%" PRIX64 " }, mWidget(0x%p)={ "
-     "GetNativeIMEContext()={ mRawNativeIMEContext=0x%" PRIXPTR ", "
-     "mOriginProcessID=0x%" PRIX64 " }, Destroyed()=%s }, "
-     "mFlags={ mIsTrusted=%s, mPropagationStopped=%s } }, "
-     "aIsSynthesized=%s), tabParent=%p",
-     aEventTargetNode, aPresContext,
-     ToChar(aCompositionEvent->mMessage),
-     aCompositionEvent->mNativeIMEContext.mRawNativeIMEContext,
-     aCompositionEvent->mNativeIMEContext.mOriginProcessID,
-     aCompositionEvent->mWidget.get(),
-     aCompositionEvent->mWidget->GetNativeIMEContext().mRawNativeIMEContext,
-     aCompositionEvent->mWidget->GetNativeIMEContext().mOriginProcessID,
-     GetBoolName(aCompositionEvent->mWidget->Destroyed()),
-     GetBoolName(aCompositionEvent->mFlags.mIsTrusted),
-     GetBoolName(aCompositionEvent->mFlags.mPropagationStopped),
-     GetBoolName(aIsSynthesized), tabParent.get()));
-=======
 void IMEStateManager::DispatchCompositionEvent(
     nsINode* aEventTargetNode, nsPresContext* aPresContext,
     BrowserParent* aBrowserParent, WidgetCompositionEvent* aCompositionEvent,
@@ -2100,7 +1454,6 @@ void IMEStateManager::DispatchCompositionEvent(
        GetBoolName(aCompositionEvent->mFlags.mIsTrusted),
        GetBoolName(aCompositionEvent->mFlags.mPropagationStopped),
        GetBoolName(aIsSynthesized), aBrowserParent));
->>>>>>> upstream-releases
 
   if (!aCompositionEvent->IsTrusted() ||
       aCompositionEvent->PropagationStopped()) {
@@ -2124,17 +1477,8 @@ void IMEStateManager::DispatchCompositionEvent(
             ("  DispatchCompositionEvent(), "
              "adding new TextComposition to the array"));
     MOZ_ASSERT(aCompositionEvent->mMessage == eCompositionStart);
-<<<<<<< HEAD
-    composition = new TextComposition(aPresContext, aEventTargetNode, tabParent,
-                                      aCompositionEvent);
-||||||| merged common ancestors
-    composition =
-      new TextComposition(aPresContext, aEventTargetNode, tabParent,
-                          aCompositionEvent);
-=======
     composition = new TextComposition(aPresContext, aEventTargetNode,
                                       aBrowserParent, aCompositionEvent);
->>>>>>> upstream-releases
     sTextCompositions->AppendElement(composition);
   }
 #ifdef DEBUG
@@ -2182,18 +1526,8 @@ IMEContentObserver* IMEStateManager::GetActiveContentObserver() {
 }
 
 // static
-<<<<<<< HEAD
-nsIContent* IMEStateManager::GetRootContent(nsPresContext* aPresContext) {
-  nsIDocument* doc = aPresContext->Document();
-||||||| merged common ancestors
-nsIContent*
-IMEStateManager::GetRootContent(nsPresContext* aPresContext)
-{
-  nsIDocument* doc = aPresContext->Document();
-=======
 nsIContent* IMEStateManager::GetRootContent(nsPresContext* aPresContext) {
   Document* doc = aPresContext->Document();
->>>>>>> upstream-releases
   if (NS_WARN_IF(!doc)) {
     return nullptr;
   }
@@ -2205,32 +1539,6 @@ void IMEStateManager::HandleSelectionEvent(
     nsPresContext* aPresContext, nsIContent* aEventTargetContent,
     WidgetSelectionEvent* aSelectionEvent) {
   nsIContent* eventTargetContent =
-<<<<<<< HEAD
-      aEventTargetContent ? aEventTargetContent : GetRootContent(aPresContext);
-  RefPtr<TabParent> tabParent =
-      eventTargetContent ? TabParent::GetFrom(eventTargetContent) : nullptr;
-
-  MOZ_LOG(sISMLog, LogLevel::Info,
-          ("HandleSelectionEvent(aPresContext=0x%p, "
-           "aEventTargetContent=0x%p, aSelectionEvent={ mMessage=%s, "
-           "mFlags={ mIsTrusted=%s } }), tabParent=%p",
-           aPresContext, aEventTargetContent, ToChar(aSelectionEvent->mMessage),
-           GetBoolName(aSelectionEvent->mFlags.mIsTrusted), tabParent.get()));
-||||||| merged common ancestors
-    aEventTargetContent ? aEventTargetContent :
-                          GetRootContent(aPresContext);
-  RefPtr<TabParent> tabParent =
-    eventTargetContent ? TabParent::GetFrom(eventTargetContent) : nullptr;
-
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("HandleSelectionEvent(aPresContext=0x%p, "
-     "aEventTargetContent=0x%p, aSelectionEvent={ mMessage=%s, "
-     "mFlags={ mIsTrusted=%s } }), tabParent=%p",
-     aPresContext, aEventTargetContent,
-     ToChar(aSelectionEvent->mMessage),
-     GetBoolName(aSelectionEvent->mFlags.mIsTrusted),
-     tabParent.get()));
-=======
       aEventTargetContent ? aEventTargetContent : GetRootContent(aPresContext);
   RefPtr<BrowserParent> browserParent =
       eventTargetContent ? BrowserParent::GetFrom(eventTargetContent) : nullptr;
@@ -2242,7 +1550,6 @@ void IMEStateManager::HandleSelectionEvent(
        "mFlags={ mIsTrusted=%s } }), browserParent=%p",
        aPresContext, aEventTargetContent, ToChar(aSelectionEvent->mMessage),
        GetBoolName(aSelectionEvent->mFlags.mIsTrusted), browserParent.get()));
->>>>>>> upstream-releases
 
   if (!aSelectionEvent->IsTrusted()) {
     return;
@@ -2313,56 +1620,13 @@ void IMEStateManager::OnCompositionEventDiscarded(
 }
 
 // static
-<<<<<<< HEAD
-nsresult IMEStateManager::NotifyIME(IMEMessage aMessage, nsIWidget* aWidget,
-                                    TabParent* aTabParent) {
-||||||| merged common ancestors
-nsresult
-IMEStateManager::NotifyIME(IMEMessage aMessage,
-                           nsIWidget* aWidget,
-                           TabParent* aTabParent)
-{
-=======
 nsresult IMEStateManager::NotifyIME(IMEMessage aMessage, nsIWidget* aWidget,
                                     BrowserParent* aBrowserParent) {
->>>>>>> upstream-releases
   return IMEStateManager::NotifyIME(IMENotification(aMessage), aWidget,
                                     aBrowserParent);
 }
 
 // static
-<<<<<<< HEAD
-nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
-                                    nsIWidget* aWidget, TabParent* aTabParent) {
-  MOZ_LOG(
-      sISMLog, LogLevel::Info,
-      ("NotifyIME(aNotification={ mMessage=%s }, "
-       "aWidget=0x%p, aTabParent=0x%p), sFocusedIMEWidget=0x%p, "
-       "sActiveTabParent=0x%p, sFocusedIMETabParent=0x%p, "
-       "IsSameProcess(aTabParent, sActiveTabParent)=%s, "
-       "IsSameProcess(aTabParent, sFocusedIMETabParent)=%s",
-       ToChar(aNotification.mMessage), aWidget, aTabParent, sFocusedIMEWidget,
-       sActiveTabParent.get(), sFocusedIMETabParent.get(),
-       GetBoolName(IsSameProcess(aTabParent, sActiveTabParent)),
-       GetBoolName(IsSameProcess(aTabParent, sFocusedIMETabParent))));
-||||||| merged common ancestors
-nsresult
-IMEStateManager::NotifyIME(const IMENotification& aNotification,
-                           nsIWidget* aWidget,
-                           TabParent* aTabParent)
-{
-  MOZ_LOG(sISMLog, LogLevel::Info,
-    ("NotifyIME(aNotification={ mMessage=%s }, "
-     "aWidget=0x%p, aTabParent=0x%p), sFocusedIMEWidget=0x%p, "
-     "sActiveTabParent=0x%p, sFocusedIMETabParent=0x%p, "
-     "IsSameProcess(aTabParent, sActiveTabParent)=%s, "
-     "IsSameProcess(aTabParent, sFocusedIMETabParent)=%s",
-     ToChar(aNotification.mMessage), aWidget,
-     aTabParent, sFocusedIMEWidget, sActiveTabParent.get(),
-     sFocusedIMETabParent.get(),
-     GetBoolName(IsSameProcess(aTabParent, sActiveTabParent)),
-     GetBoolName(IsSameProcess(aTabParent, sFocusedIMETabParent))));
-=======
 nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
                                     nsIWidget* aWidget,
                                     BrowserParent* aBrowserParent) {
@@ -2377,7 +1641,6 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
            sFocusedIMEBrowserParent.get(),
            GetBoolName(aBrowserParent == BrowserParent::GetFocused()),
            GetBoolName(aBrowserParent == sFocusedIMEBrowserParent)));
->>>>>>> upstream-releases
 
   if (NS_WARN_IF(!aWidget)) {
     MOZ_LOG(sISMLog, LogLevel::Error,
@@ -2390,49 +1653,16 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
       // If focus notification comes from a remote browser which already lost
       // focus, we shouldn't accept the focus notification.  Then, following
       // notifications from the process will be ignored.
-<<<<<<< HEAD
-      if (NS_WARN_IF(!IsSameProcess(aTabParent, sActiveTabParent))) {
-        MOZ_ASSERT(
-            aTabParent,
-            "Why was the input context initialized for a remote process but "
-            "does this process get IME focus?");
-        MOZ_LOG(
-            sISMLog, LogLevel::Warning,
-            ("  NotifyIME(), WARNING, the received focus notification is "
-             "ignored "
-             "because input context was initialized for %s, perhaps, it came "
-             "from a busy remote process",
-             sActiveTabParent ? "another remote process" : "current process"));
-||||||| merged common ancestors
-      if (NS_WARN_IF(!IsSameProcess(aTabParent, sActiveTabParent))) {
-        MOZ_ASSERT(aTabParent,
-          "Why was the input context initialized for a remote process but "
-          "does this process get IME focus?");
-        MOZ_LOG(sISMLog, LogLevel::Warning,
-          ("  NotifyIME(), WARNING, the received focus notification is ignored "
-           "because input context was initialized for %s, perhaps, it came "
-           "from a busy remote process",
-           sActiveTabParent ? "another remote process" : "current process"));
-=======
       if (aBrowserParent != BrowserParent::GetFocused()) {
         MOZ_LOG(sISMLog, LogLevel::Warning,
                 ("  NotifyIME(), WARNING, the received focus notification is "
                  "ignored, because its associated BrowserParent did not match"
                  "the focused BrowserParent."));
->>>>>>> upstream-releases
         return NS_OK;
       }
       // If IME focus is already set, first blur the currently-focused
       // IME widget
       if (sFocusedIMEWidget) {
-<<<<<<< HEAD
-        MOZ_ASSERT(
-            sFocusedIMETabParent || aTabParent,
-            "This case shouldn't be caused by focus move in this process");
-||||||| merged common ancestors
-        MOZ_ASSERT(sFocusedIMETabParent || aTabParent,
-          "This case shouldn't be caused by focus move in this process");
-=======
         // XXX Why don't we first request the previously-focused IME
         // widget to commit the composition?
         MOZ_ASSERT(
@@ -2442,7 +1672,6 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
                 ("  NotifyIME(), WARNING, received focus notification with ")
                  "non-null sFocusedIMEWidget. How come "
                  "OnFocusMovedBetweenBrowsers did not blur it already?");
->>>>>>> upstream-releases
         nsCOMPtr<nsIWidget> focusedIMEWidget(sFocusedIMEWidget);
         sFocusedIMEWidget = nullptr;
         sFocusedIMEBrowserParent = nullptr;
@@ -2465,18 +1694,9 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
     case NOTIFY_IME_OF_BLUR: {
       if (aBrowserParent != sFocusedIMEBrowserParent) {
         MOZ_LOG(sISMLog, LogLevel::Warning,
-<<<<<<< HEAD
-                ("  NotifyIME(), WARNING, the received blur notification is "
-                 "ignored "
-                 "because it's not from current focused IME process"));
-||||||| merged common ancestors
-          ("  NotifyIME(), WARNING, the received blur notification is ignored "
-           "because it's not from current focused IME process"));
-=======
                 ("  NotifyIME(), WARNING, the received blur notification is "
                  "ignored "
                  "because it's not from current focused IME browser"));
->>>>>>> upstream-releases
         return NS_OK;
       }
       if (!sFocusedIMEWidget) {
@@ -2503,24 +1723,11 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
     case NOTIFY_IME_OF_POSITION_CHANGE:
     case NOTIFY_IME_OF_MOUSE_BUTTON_EVENT:
     case NOTIFY_IME_OF_COMPOSITION_EVENT_HANDLED: {
-<<<<<<< HEAD
-      if (!IsSameProcess(aTabParent, sFocusedIMETabParent)) {
-        MOZ_LOG(
-            sISMLog, LogLevel::Warning,
-            ("  NotifyIME(), WARNING, the received content change notification "
-             "is ignored because it's not from current focused IME process"));
-||||||| merged common ancestors
-      if (!IsSameProcess(aTabParent, sFocusedIMETabParent)) {
-        MOZ_LOG(sISMLog, LogLevel::Warning,
-          ("  NotifyIME(), WARNING, the received content change notification "
-           "is ignored because it's not from current focused IME process"));
-=======
       if (aBrowserParent != sFocusedIMEBrowserParent) {
         MOZ_LOG(
             sISMLog, LogLevel::Warning,
             ("  NotifyIME(), WARNING, the received content change notification "
              "is ignored because it's not from current focused IME browser"));
->>>>>>> upstream-releases
         return NS_OK;
       }
       if (!sFocusedIMEWidget) {
@@ -2562,27 +1769,12 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  if (!IsSameProcess(aTabParent, composition->GetTabParent())) {
-    MOZ_LOG(
-        sISMLog, LogLevel::Warning,
-        ("  NotifyIME(), WARNING, the request to IME is ignored because "
-         "it does not come from the remote process which has the composition "
-         "on aWidget"));
-||||||| merged common ancestors
-  if (!IsSameProcess(aTabParent, composition->GetTabParent())) {
-    MOZ_LOG(sISMLog, LogLevel::Warning,
-      ("  NotifyIME(), WARNING, the request to IME is ignored because "
-       "it does not come from the remote process which has the composition "
-       "on aWidget"));
-=======
   if (aBrowserParent != composition->GetBrowserParent()) {
     MOZ_LOG(
         sISMLog, LogLevel::Warning,
         ("  NotifyIME(), WARNING, the request to IME is ignored because "
          "it does not come from the remote browser which has the composition "
          "on aWidget"));
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -2600,32 +1792,12 @@ nsresult IMEStateManager::NotifyIME(const IMENotification& aNotification,
 }
 
 // static
-<<<<<<< HEAD
-nsresult IMEStateManager::NotifyIME(IMEMessage aMessage,
-                                    nsPresContext* aPresContext,
-                                    TabParent* aTabParent) {
-||||||| merged common ancestors
-nsresult
-IMEStateManager::NotifyIME(IMEMessage aMessage,
-                           nsPresContext* aPresContext,
-                           TabParent* aTabParent)
-{
-=======
 nsresult IMEStateManager::NotifyIME(IMEMessage aMessage,
                                     nsPresContext* aPresContext,
                                     BrowserParent* aBrowserParent) {
->>>>>>> upstream-releases
   MOZ_LOG(sISMLog, LogLevel::Info,
-<<<<<<< HEAD
-          ("NotifyIME(aMessage=%s, aPresContext=0x%p, aTabParent=0x%p)",
-           ToChar(aMessage), aPresContext, aTabParent));
-||||||| merged common ancestors
-    ("NotifyIME(aMessage=%s, aPresContext=0x%p, aTabParent=0x%p)",
-     ToChar(aMessage), aPresContext, aTabParent));
-=======
           ("NotifyIME(aMessage=%s, aPresContext=0x%p, aBrowserParent=0x%p)",
            ToChar(aMessage), aPresContext, aBrowserParent));
->>>>>>> upstream-releases
 
   if (NS_WARN_IF(!CanHandleWith(aPresContext))) {
     return NS_ERROR_INVALID_ARG;

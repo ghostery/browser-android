@@ -179,16 +179,6 @@ with modules["XPCOM"]:
     errors["NS_SUCCESS_LOSS_OF_INSIGNIFICANT_DATA"] = SUCCESS(1)
     # Used by nsCycleCollectionParticipant
     errors["NS_SUCCESS_INTERRUPTED_TRAVERSE"] = SUCCESS(2)
-<<<<<<< HEAD
-    # DEPRECATED
-    errors["NS_ERROR_SERVICE_IN_USE"] = SUCCESS(23)
-||||||| merged common ancestors
-    # DEPRECATED
-    errors["NS_ERROR_SERVICE_NOT_FOUND"] = SUCCESS(22)
-    # DEPRECATED
-    errors["NS_ERROR_SERVICE_IN_USE"] = SUCCESS(23)
-=======
->>>>>>> upstream-releases
 
 # =======================================================================
 # 2: NS_ERROR_MODULE_BASE

@@ -13,29 +13,12 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-APZCTreeManagerParent::APZCTreeManagerParent(
-    LayersId aLayersId, RefPtr<APZCTreeManager> aAPZCTreeManager,
-    RefPtr<APZUpdater> aAPZUpdater)
-    : mLayersId(aLayersId),
-      mTreeManager(std::move(aAPZCTreeManager)),
-      mUpdater(std::move(aAPZUpdater)) {
-||||||| merged common ancestors
-APZCTreeManagerParent::APZCTreeManagerParent(LayersId aLayersId,
-                                             RefPtr<APZCTreeManager> aAPZCTreeManager,
-                                             RefPtr<APZUpdater> aAPZUpdater)
-  : mLayersId(aLayersId)
-  , mTreeManager(std::move(aAPZCTreeManager))
-  , mUpdater(std::move(aAPZUpdater))
-{
-=======
 APZCTreeManagerParent::APZCTreeManagerParent(
     WRRootId aWrRootId, RefPtr<APZCTreeManager> aAPZCTreeManager,
     RefPtr<APZUpdater> aAPZUpdater)
     : mWrRootId(aWrRootId),
       mTreeManager(std::move(aAPZCTreeManager)),
       mUpdater(std::move(aAPZUpdater)) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mTreeManager != nullptr);
   MOZ_ASSERT(mUpdater != nullptr);
   MOZ_ASSERT(mUpdater->HasTreeManager(mTreeManager));
@@ -52,23 +35,6 @@ void APZCTreeManagerParent::ChildAdopted(
   mUpdater = std::move(aAPZUpdater);
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetKeyboardMap(
-    const KeyboardMap& aKeyboardMap) {
-  mUpdater->RunOnControllerThread(
-      mLayersId, NewRunnableMethod<KeyboardMap>(
-                     "layers::IAPZCTreeManager::SetKeyboardMap", mTreeManager,
-                     &IAPZCTreeManager::SetKeyboardMap, aKeyboardMap));
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvSetKeyboardMap(const KeyboardMap& aKeyboardMap)
-{
-  mUpdater->RunOnControllerThread(mLayersId, NewRunnableMethod<KeyboardMap>(
-    "layers::IAPZCTreeManager::SetKeyboardMap",
-    mTreeManager,
-    &IAPZCTreeManager::SetKeyboardMap,
-    aKeyboardMap));
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetKeyboardMap(
     const KeyboardMap& aKeyboardMap) {
   mUpdater->RunOnControllerThread(
@@ -76,79 +42,25 @@ mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetKeyboardMap(
       NewRunnableMethod<KeyboardMap>(
           "layers::IAPZCTreeManager::SetKeyboardMap", mTreeManager,
           &IAPZCTreeManager::SetKeyboardMap, aKeyboardMap));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvZoomToRect(
-    const ScrollableLayerGuid& aGuid, const CSSRect& aRect,
-    const uint32_t& aFlags) {
-  if (aGuid.mLayersId != mLayersId) {
-    // Guard against bad data from hijacked child processes
-    NS_ERROR("Unexpected layers id in RecvZoomToRect; dropping message...");
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvZoomToRect(
-    const ScrollableLayerGuid& aGuid,
-    const CSSRect& aRect,
-    const uint32_t& aFlags)
-{
-  if (aGuid.mLayersId != mLayersId) {
-    // Guard against bad data from hijacked child processes
-    NS_ERROR("Unexpected layers id in RecvZoomToRect; dropping message...");
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvZoomToRect(
     const SLGuidAndRenderRoot& aGuid, const CSSRect& aRect,
     const uint32_t& aFlags) {
   if (!IsGuidValid(aGuid)) {
->>>>>>> upstream-releases
     return IPC_FAIL_NO_REASON(this);
   }
 
   mUpdater->RunOnControllerThread(
-<<<<<<< HEAD
-      mLayersId, NewRunnableMethod<ScrollableLayerGuid, CSSRect, uint32_t>(
-                     "layers::IAPZCTreeManager::ZoomToRect", mTreeManager,
-                     &IAPZCTreeManager::ZoomToRect, aGuid, aRect, aFlags));
-||||||| merged common ancestors
-    mLayersId,
-    NewRunnableMethod<ScrollableLayerGuid, CSSRect, uint32_t>(
-      "layers::IAPZCTreeManager::ZoomToRect",
-      mTreeManager,
-      &IAPZCTreeManager::ZoomToRect,
-      aGuid, aRect, aFlags));
-=======
       UpdaterQueueSelector(aGuid.GetWRRootId()),
       NewRunnableMethod<SLGuidAndRenderRoot, CSSRect, uint32_t>(
           "layers::IAPZCTreeManager::ZoomToRect", mTreeManager,
           &IAPZCTreeManager::ZoomToRect, aGuid, aRect, aFlags));
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvContentReceivedInputBlock(
-    const uint64_t& aInputBlockId, const bool& aPreventDefault) {
-  mUpdater->RunOnControllerThread(
-      mLayersId, NewRunnableMethod<uint64_t, bool>(
-                     "layers::IAPZCTreeManager::ContentReceivedInputBlock",
-                     mTreeManager, &IAPZCTreeManager::ContentReceivedInputBlock,
-                     aInputBlockId, aPreventDefault));
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvContentReceivedInputBlock(
-    const uint64_t& aInputBlockId,
-    const bool& aPreventDefault)
-{
-  mUpdater->RunOnControllerThread(mLayersId, NewRunnableMethod<uint64_t, bool>(
-    "layers::IAPZCTreeManager::ContentReceivedInputBlock",
-    mTreeManager,
-    &IAPZCTreeManager::ContentReceivedInputBlock,
-    aInputBlockId,
-    aPreventDefault));
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvContentReceivedInputBlock(
     const uint64_t& aInputBlockId, const bool& aPreventDefault) {
   mUpdater->RunOnControllerThread(
@@ -157,93 +69,33 @@ mozilla::ipc::IPCResult APZCTreeManagerParent::RecvContentReceivedInputBlock(
           "layers::IAPZCTreeManager::ContentReceivedInputBlock", mTreeManager,
           &IAPZCTreeManager::ContentReceivedInputBlock, aInputBlockId,
           aPreventDefault));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetTargetAPZC(
-    const uint64_t& aInputBlockId, nsTArray<ScrollableLayerGuid>&& aTargets) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvSetTargetAPZC(
-    const uint64_t& aInputBlockId,
-    nsTArray<ScrollableLayerGuid>&& aTargets)
-{
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetTargetAPZC(
     const uint64_t& aInputBlockId, nsTArray<SLGuidAndRenderRoot>&& aTargets) {
   UpdaterQueueSelector selector(mWrRootId.mLayersId);
->>>>>>> upstream-releases
   for (size_t i = 0; i < aTargets.Length(); i++) {
-<<<<<<< HEAD
-    if (aTargets[i].mLayersId != mLayersId) {
-      // Guard against bad data from hijacked child processes
-      NS_ERROR(
-          "Unexpected layers id in RecvSetTargetAPZC; dropping message...");
-||||||| merged common ancestors
-    if (aTargets[i].mLayersId != mLayersId) {
-      // Guard against bad data from hijacked child processes
-      NS_ERROR("Unexpected layers id in RecvSetTargetAPZC; dropping message...");
-=======
     if (!IsGuidValid(aTargets[i])) {
->>>>>>> upstream-releases
       return IPC_FAIL_NO_REASON(this);
     }
     selector.mRenderRoots += aTargets[i].mRenderRoot;
   }
   mUpdater->RunOnControllerThread(
-<<<<<<< HEAD
-      mLayersId,
-      NewRunnableMethod<uint64_t,
-                        StoreCopyPassByRRef<nsTArray<ScrollableLayerGuid>>>(
-          "layers::IAPZCTreeManager::SetTargetAPZC", mTreeManager,
-          &IAPZCTreeManager::SetTargetAPZC, aInputBlockId, aTargets));
-||||||| merged common ancestors
-    mLayersId,
-    NewRunnableMethod<uint64_t,
-                      StoreCopyPassByRRef<nsTArray<ScrollableLayerGuid>>>(
-      "layers::IAPZCTreeManager::SetTargetAPZC",
-      mTreeManager,
-      &IAPZCTreeManager::SetTargetAPZC,
-      aInputBlockId,
-      aTargets));
-=======
       selector,
       NewRunnableMethod<uint64_t,
                         StoreCopyPassByRRef<nsTArray<SLGuidAndRenderRoot>>>(
           "layers::IAPZCTreeManager::SetTargetAPZC", mTreeManager,
           &IAPZCTreeManager::SetTargetAPZC, aInputBlockId, aTargets));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvUpdateZoomConstraints(
-    const ScrollableLayerGuid& aGuid,
-    const MaybeZoomConstraints& aConstraints) {
-  if (aGuid.mLayersId != mLayersId) {
-    // Guard against bad data from hijacked child processes
-    NS_ERROR(
-        "Unexpected layers id in RecvUpdateZoomConstraints; dropping "
-        "message...");
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvUpdateZoomConstraints(
-    const ScrollableLayerGuid& aGuid,
-    const MaybeZoomConstraints& aConstraints)
-{
-  if (aGuid.mLayersId != mLayersId) {
-    // Guard against bad data from hijacked child processes
-    NS_ERROR("Unexpected layers id in RecvUpdateZoomConstraints; dropping message...");
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvUpdateZoomConstraints(
     const SLGuidAndRenderRoot& aGuid,
     const MaybeZoomConstraints& aConstraints) {
   if (!IsGuidValid(aGuid)) {
->>>>>>> upstream-releases
     return IPC_FAIL_NO_REASON(this);
   }
 
@@ -251,125 +103,45 @@ mozilla::ipc::IPCResult APZCTreeManagerParent::RecvUpdateZoomConstraints(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetDPI(
-    const float& aDpiValue) {
-  mUpdater->RunOnControllerThread(
-      mLayersId,
-      NewRunnableMethod<float>("layers::IAPZCTreeManager::SetDPI", mTreeManager,
-                               &IAPZCTreeManager::SetDPI, aDpiValue));
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvSetDPI(const float& aDpiValue)
-{
-  mUpdater->RunOnControllerThread(mLayersId, NewRunnableMethod<float>(
-    "layers::IAPZCTreeManager::SetDPI",
-    mTreeManager,
-    &IAPZCTreeManager::SetDPI,
-    aDpiValue));
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetDPI(
     const float& aDpiValue) {
   mUpdater->RunOnControllerThread(
       UpdaterQueueSelector(mWrRootId),
       NewRunnableMethod<float>("layers::IAPZCTreeManager::SetDPI", mTreeManager,
                                &IAPZCTreeManager::SetDPI, aDpiValue));
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetAllowedTouchBehavior(
     const uint64_t& aInputBlockId, nsTArray<TouchBehaviorFlags>&& aValues) {
   mUpdater->RunOnControllerThread(
-<<<<<<< HEAD
-      mLayersId,
-      NewRunnableMethod<uint64_t,
-                        StoreCopyPassByRRef<nsTArray<TouchBehaviorFlags>>>(
-          "layers::IAPZCTreeManager::SetAllowedTouchBehavior", mTreeManager,
-          &IAPZCTreeManager::SetAllowedTouchBehavior, aInputBlockId,
-          std::move(aValues)));
-||||||| merged common ancestors
-    mLayersId,
-    NewRunnableMethod<uint64_t,
-                      StoreCopyPassByRRef<nsTArray<TouchBehaviorFlags>>>(
-      "layers::IAPZCTreeManager::SetAllowedTouchBehavior",
-      mTreeManager,
-      &IAPZCTreeManager::SetAllowedTouchBehavior,
-      aInputBlockId,
-      std::move(aValues)));
-=======
       UpdaterQueueSelector(mWrRootId),
       NewRunnableMethod<uint64_t,
                         StoreCopyPassByRRef<nsTArray<TouchBehaviorFlags>>>(
           "layers::IAPZCTreeManager::SetAllowedTouchBehavior", mTreeManager,
           &IAPZCTreeManager::SetAllowedTouchBehavior, aInputBlockId,
           std::move(aValues)));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStartScrollbarDrag(
-    const ScrollableLayerGuid& aGuid, const AsyncDragMetrics& aDragMetrics) {
-  if (aGuid.mLayersId != mLayersId) {
-    // Guard against bad data from hijacked child processes
-    NS_ERROR(
-        "Unexpected layers id in RecvStartScrollbarDrag; dropping message...");
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvStartScrollbarDrag(
-    const ScrollableLayerGuid& aGuid,
-    const AsyncDragMetrics& aDragMetrics)
-{
-  if (aGuid.mLayersId != mLayersId) {
-    // Guard against bad data from hijacked child processes
-    NS_ERROR("Unexpected layers id in RecvStartScrollbarDrag; dropping message...");
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStartScrollbarDrag(
     const SLGuidAndRenderRoot& aGuid, const AsyncDragMetrics& aDragMetrics) {
   if (!IsGuidValid(aGuid)) {
->>>>>>> upstream-releases
     return IPC_FAIL_NO_REASON(this);
   }
 
   mUpdater->RunOnControllerThread(
-<<<<<<< HEAD
-      mLayersId,
-      NewRunnableMethod<ScrollableLayerGuid, AsyncDragMetrics>(
-          "layers::IAPZCTreeManager::StartScrollbarDrag", mTreeManager,
-          &IAPZCTreeManager::StartScrollbarDrag, aGuid, aDragMetrics));
-||||||| merged common ancestors
-    mLayersId,
-    NewRunnableMethod<ScrollableLayerGuid, AsyncDragMetrics>(
-      "layers::IAPZCTreeManager::StartScrollbarDrag",
-      mTreeManager,
-      &IAPZCTreeManager::StartScrollbarDrag,
-      aGuid,
-      aDragMetrics));
-=======
       UpdaterQueueSelector(aGuid.GetWRRootId()),
       NewRunnableMethod<SLGuidAndRenderRoot, AsyncDragMetrics>(
           "layers::IAPZCTreeManager::StartScrollbarDrag", mTreeManager,
           &IAPZCTreeManager::StartScrollbarDrag, aGuid, aDragMetrics));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStartAutoscroll(
-    const ScrollableLayerGuid& aGuid, const ScreenPoint& aAnchorLocation) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvStartAutoscroll(
-    const ScrollableLayerGuid& aGuid,
-    const ScreenPoint& aAnchorLocation)
-{
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStartAutoscroll(
     const SLGuidAndRenderRoot& aGuid, const ScreenPoint& aAnchorLocation) {
->>>>>>> upstream-releases
   // Unlike RecvStartScrollbarDrag(), this message comes from the parent
   // process (via nsBaseWidget::mAPZC) rather than from the child process
   // (via BrowserChild::mApzcTreeManager), so there is no need to check the
@@ -378,59 +150,23 @@ mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStartAutoscroll(
   // sending the child process's layers id).
 
   mUpdater->RunOnControllerThread(
-<<<<<<< HEAD
-      mLayersId,
-      NewRunnableMethod<ScrollableLayerGuid, ScreenPoint>(
-          "layers::IAPZCTreeManager::StartAutoscroll", mTreeManager,
-          &IAPZCTreeManager::StartAutoscroll, aGuid, aAnchorLocation));
-||||||| merged common ancestors
-      mLayersId,
-      NewRunnableMethod<ScrollableLayerGuid, ScreenPoint>(
-        "layers::IAPZCTreeManager::StartAutoscroll",
-        mTreeManager,
-        &IAPZCTreeManager::StartAutoscroll,
-        aGuid, aAnchorLocation));
-=======
       UpdaterQueueSelector(mWrRootId.mLayersId, aGuid.mRenderRoot),
       NewRunnableMethod<SLGuidAndRenderRoot, ScreenPoint>(
           "layers::IAPZCTreeManager::StartAutoscroll", mTreeManager,
           &IAPZCTreeManager::StartAutoscroll, aGuid, aAnchorLocation));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStopAutoscroll(
-    const ScrollableLayerGuid& aGuid) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-APZCTreeManagerParent::RecvStopAutoscroll(const ScrollableLayerGuid& aGuid)
-{
-=======
 mozilla::ipc::IPCResult APZCTreeManagerParent::RecvStopAutoscroll(
     const SLGuidAndRenderRoot& aGuid) {
->>>>>>> upstream-releases
   // See RecvStartAutoscroll() for why we don't check the layers id.
 
   mUpdater->RunOnControllerThread(
-<<<<<<< HEAD
-      mLayersId, NewRunnableMethod<ScrollableLayerGuid>(
-                     "layers::IAPZCTreeManager::StopAutoscroll", mTreeManager,
-                     &IAPZCTreeManager::StopAutoscroll, aGuid));
-||||||| merged common ancestors
-      mLayersId,
-      NewRunnableMethod<ScrollableLayerGuid>(
-        "layers::IAPZCTreeManager::StopAutoscroll",
-        mTreeManager,
-        &IAPZCTreeManager::StopAutoscroll,
-        aGuid));
-=======
       UpdaterQueueSelector(mWrRootId.mLayersId, aGuid.mRenderRoot),
       NewRunnableMethod<SLGuidAndRenderRoot>(
           "layers::IAPZCTreeManager::StopAutoscroll", mTreeManager,
           &IAPZCTreeManager::StopAutoscroll, aGuid));
->>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -446,13 +182,6 @@ mozilla::ipc::IPCResult APZCTreeManagerParent::RecvSetLongTapEnabled(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 bool APZCTreeManagerParent::IsGuidValid(const SLGuidAndRenderRoot& aGuid) {
   if (aGuid.mScrollableLayerGuid.mLayersId != mWrRootId.mLayersId) {
     NS_ERROR("Unexpected layers id");
@@ -472,4 +201,3 @@ bool APZCTreeManagerParent::IsGuidValid(const SLGuidAndRenderRoot& aGuid) {
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases

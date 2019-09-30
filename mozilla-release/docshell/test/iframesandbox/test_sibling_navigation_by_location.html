@@ -24,19 +24,9 @@ html5 sandboxed iframe should not be able to perform top navigation with scripts
     };
 
     try {
-<<<<<<< HEAD
-      window["testIframe"].eval(testCase.script);
-    } catch(e) {
-      ok(true, testCase.desc + " - " + e.message);
-||||||| merged common ancestors
-      window["testIframe"].eval(testCase.script);
-    } catch(e) {
-      ok(true, testCase.desc, e.message);
-=======
       window.testIframe.eval(testCase.script);
     } catch (e) {
       ok(true, testCase.desc + " - " + e.message);
->>>>>>> upstream-releases
       runNextTest();
     }
   }

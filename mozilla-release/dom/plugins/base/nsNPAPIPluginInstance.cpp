@@ -770,19 +770,10 @@ nsresult nsNPAPIPluginInstance::PushPopupsEnabledState(bool aEnabled) {
   nsCOMPtr<nsPIDOMWindowOuter> window = GetDOMWindow();
   if (!window) return NS_ERROR_FAILURE;
 
-<<<<<<< HEAD
-  PopupControlState oldState =
-      window->PushPopupControlState(aEnabled ? openAllowed : openAbused, true);
-||||||| merged common ancestors
-  PopupControlState oldState =
-    window->PushPopupControlState(aEnabled ? openAllowed : openAbused,
-                                  true);
-=======
   PopupBlocker::PopupControlState oldState =
       PopupBlocker::PushPopupControlState(
           aEnabled ? PopupBlocker::openAllowed : PopupBlocker::openAbused,
           true);
->>>>>>> upstream-releases
 
   if (!mPopupStates.AppendElement(oldState)) {
     // Appending to our state stack failed, pop what we just pushed.
@@ -804,13 +795,7 @@ nsresult nsNPAPIPluginInstance::PopPopupsEnabledState() {
   nsCOMPtr<nsPIDOMWindowOuter> window = GetDOMWindow();
   if (!window) return NS_ERROR_FAILURE;
 
-<<<<<<< HEAD
-  PopupControlState& oldState = mPopupStates[last];
-||||||| merged common ancestors
-  PopupControlState &oldState = mPopupStates[last];
-=======
   PopupBlocker::PopupControlState& oldState = mPopupStates[last];
->>>>>>> upstream-releases
 
   PopupBlocker::PopPopupControlState(oldState);
 

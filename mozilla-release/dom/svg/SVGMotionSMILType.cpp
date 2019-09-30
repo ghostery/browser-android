@@ -21,18 +21,9 @@ using namespace mozilla::gfx;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/*static*/ SVGMotionSMILType SVGMotionSMILType::sSingleton;
-
-||||||| merged common ancestors
-/*static*/ SVGMotionSMILType SVGMotionSMILType::sSingleton;
-
-
-=======
 /*static*/
 SVGMotionSMILType SVGMotionSMILType::sSingleton;
 
->>>>>>> upstream-releases
 // Helper enum, for distinguishing between types of MotionSegment structs
 enum SegmentType { eSegmentType_Translation, eSegmentType_PathPoint };
 
@@ -156,62 +147,27 @@ struct MotionSegment {
 
 typedef FallibleTArray<MotionSegment> MotionSegmentArray;
 
-<<<<<<< HEAD
-// Helper methods to cast nsSMILValue.mU.mPtr to the right pointer-type
-static MotionSegmentArray& ExtractMotionSegmentArray(nsSMILValue& aValue) {
-||||||| merged common ancestors
-// Helper methods to cast nsSMILValue.mU.mPtr to the right pointer-type
-static MotionSegmentArray&
-ExtractMotionSegmentArray(nsSMILValue& aValue)
-{
-=======
 // Helper methods to cast SMILValue.mU.mPtr to the right pointer-type
 static MotionSegmentArray& ExtractMotionSegmentArray(SMILValue& aValue) {
->>>>>>> upstream-releases
   return *static_cast<MotionSegmentArray*>(aValue.mU.mPtr);
 }
 
-<<<<<<< HEAD
-static const MotionSegmentArray& ExtractMotionSegmentArray(
-    const nsSMILValue& aValue) {
-||||||| merged common ancestors
-static const MotionSegmentArray&
-ExtractMotionSegmentArray(const nsSMILValue& aValue)
-{
-=======
 static const MotionSegmentArray& ExtractMotionSegmentArray(
     const SMILValue& aValue) {
->>>>>>> upstream-releases
   return *static_cast<const MotionSegmentArray*>(aValue.mU.mPtr);
 }
 
 // nsISMILType Methods
 // -------------------
 
-<<<<<<< HEAD
-void SVGMotionSMILType::Init(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGMotionSMILType::Init(nsSMILValue& aValue) const
-{
-=======
 void SVGMotionSMILType::Init(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.IsNull(), "Unexpected SMIL type");
 
   aValue.mType = this;
   aValue.mU.mPtr = new MotionSegmentArray(1);
 }
 
-<<<<<<< HEAD
-void SVGMotionSMILType::Destroy(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGMotionSMILType::Destroy(nsSMILValue& aValue) const
-{
-=======
 void SVGMotionSMILType::Destroy(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == this, "Unexpected SMIL type");
 
   MotionSegmentArray* arr = static_cast<MotionSegmentArray*>(aValue.mU.mPtr);
@@ -221,17 +177,8 @@ void SVGMotionSMILType::Destroy(SMILValue& aValue) const {
   aValue.mType = SMILNullType::Singleton();
 }
 
-<<<<<<< HEAD
-nsresult SVGMotionSMILType::Assign(nsSMILValue& aDest,
-                                   const nsSMILValue& aSrc) const {
-||||||| merged common ancestors
-nsresult
-SVGMotionSMILType::Assign(nsSMILValue& aDest, const nsSMILValue& aSrc) const
-{
-=======
 nsresult SVGMotionSMILType::Assign(SMILValue& aDest,
                                    const SMILValue& aSrc) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == aSrc.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
 
@@ -244,18 +191,8 @@ nsresult SVGMotionSMILType::Assign(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool SVGMotionSMILType::IsEqual(const nsSMILValue& aLeft,
-                                const nsSMILValue& aRight) const {
-||||||| merged common ancestors
-bool
-SVGMotionSMILType::IsEqual(const nsSMILValue& aLeft,
-                           const nsSMILValue& aRight) const
-{
-=======
 bool SVGMotionSMILType::IsEqual(const SMILValue& aLeft,
                                 const SMILValue& aRight) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLeft.mType == aRight.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aLeft.mType == this, "Unexpected SMIL type");
 
@@ -300,23 +237,9 @@ inline static void GetAngleAndPointAtDistance(
   }
 }
 
-<<<<<<< HEAD
-nsresult SVGMotionSMILType::Add(nsSMILValue& aDest,
-                                const nsSMILValue& aValueToAdd,
-                                uint32_t aCount) const {
-  MOZ_ASSERT(aDest.mType == aValueToAdd.mType, "Incompatible SMIL types");
-||||||| merged common ancestors
-nsresult
-SVGMotionSMILType::Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-                       uint32_t aCount) const
-{
-  MOZ_ASSERT(aDest.mType == aValueToAdd.mType,
-             "Incompatible SMIL types");
-=======
 nsresult SVGMotionSMILType::Add(SMILValue& aDest, const SMILValue& aValueToAdd,
                                 uint32_t aCount) const {
   MOZ_ASSERT(aDest.mType == aValueToAdd.mType, "Incompatible SMIL types");
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
 
   MotionSegmentArray& dstArr = ExtractMotionSegmentArray(aDest);
@@ -365,22 +288,9 @@ nsresult SVGMotionSMILType::Add(SMILValue& aDest, const SMILValue& aValueToAdd,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGMotionSMILType::SandwichAdd(nsSMILValue& aDest,
-                                        const nsSMILValue& aValueToAdd) const {
-  MOZ_ASSERT(aDest.mType == aValueToAdd.mType, "Incompatible SMIL types");
-||||||| merged common ancestors
-nsresult
-SVGMotionSMILType::SandwichAdd(nsSMILValue& aDest,
-                               const nsSMILValue& aValueToAdd) const
-{
-  MOZ_ASSERT(aDest.mType == aValueToAdd.mType,
-             "Incompatible SMIL types");
-=======
 nsresult SVGMotionSMILType::SandwichAdd(SMILValue& aDest,
                                         const SMILValue& aValueToAdd) const {
   MOZ_ASSERT(aDest.mType == aValueToAdd.mType, "Incompatible SMIL types");
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
   MotionSegmentArray& dstArr = ExtractMotionSegmentArray(aDest);
   const MotionSegmentArray& srcArr = ExtractMotionSegmentArray(aValueToAdd);
@@ -396,21 +306,9 @@ nsresult SVGMotionSMILType::SandwichAdd(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGMotionSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                            const nsSMILValue& aTo,
-                                            double& aDistance) const {
-||||||| merged common ancestors
-nsresult
-SVGMotionSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                   const nsSMILValue& aTo,
-                                   double& aDistance) const
-{
-=======
 nsresult SVGMotionSMILType::ComputeDistance(const SMILValue& aFrom,
                                             const SMILValue& aTo,
                                             double& aDistance) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrom.mType == aTo.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aFrom.mType == this, "Unexpected SMIL type");
   const MotionSegmentArray& fromArr = ExtractMotionSegmentArray(aFrom);
@@ -450,24 +348,10 @@ static inline float InterpolateFloat(const float& aStartFlt,
   return aStartFlt + aUnitDistance * (aEndFlt - aStartFlt);
 }
 
-<<<<<<< HEAD
-nsresult SVGMotionSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                        const nsSMILValue& aEndVal,
-                                        double aUnitDistance,
-                                        nsSMILValue& aResult) const {
-||||||| merged common ancestors
-nsresult
-SVGMotionSMILType::Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal,
-                               double aUnitDistance,
-                               nsSMILValue& aResult) const
-{
-=======
 nsresult SVGMotionSMILType::Interpolate(const SMILValue& aStartVal,
                                         const SMILValue& aEndVal,
                                         double aUnitDistance,
                                         SMILValue& aResult) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartVal.mType == aEndVal.mType,
              "Trying to interpolate different types");
   MOZ_ASSERT(aStartVal.mType == this, "Unexpected types for interpolation");
@@ -533,17 +417,8 @@ nsresult SVGMotionSMILType::Interpolate(const SMILValue& aStartVal,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ gfx::Matrix SVGMotionSMILType::CreateMatrix(
-    const nsSMILValue& aSMILVal) {
-||||||| merged common ancestors
-/* static */ gfx::Matrix
-SVGMotionSMILType::CreateMatrix(const nsSMILValue& aSMILVal)
-{
-=======
 /* static */ gfx::Matrix SVGMotionSMILType::CreateMatrix(
     const SMILValue& aSMILVal) {
->>>>>>> upstream-releases
   const MotionSegmentArray& arr = ExtractMotionSegmentArray(aSMILVal);
 
   gfx::Matrix matrix;
@@ -568,25 +443,11 @@ SVGMotionSMILType::CreateMatrix(const nsSMILValue& aSMILVal)
   return matrix;
 }
 
-<<<<<<< HEAD
-/* static */ nsSMILValue SVGMotionSMILType::ConstructSMILValue(
-    Path* aPath, float aDist, RotateType aRotateType, float aRotateAngle) {
-  nsSMILValue smilVal(&SVGMotionSMILType::sSingleton);
-||||||| merged common ancestors
-/* static */ nsSMILValue
-SVGMotionSMILType::ConstructSMILValue(Path* aPath,
-                                      float aDist,
-                                      RotateType aRotateType,
-                                      float aRotateAngle)
-{
-  nsSMILValue smilVal(&SVGMotionSMILType::sSingleton);
-=======
 /* static */
 SMILValue SVGMotionSMILType::ConstructSMILValue(Path* aPath, float aDist,
                                                 RotateType aRotateType,
                                                 float aRotateAngle) {
   SMILValue smilVal(&SVGMotionSMILType::sSingleton);
->>>>>>> upstream-releases
   MotionSegmentArray& arr = ExtractMotionSegmentArray(smilVal);
 
   // AppendElement has guaranteed success here, since Init() allocates 1 slot.

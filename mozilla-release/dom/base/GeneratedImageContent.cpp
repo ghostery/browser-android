@@ -18,29 +18,11 @@ namespace dom {
 
 NS_IMPL_ELEMENT_CLONE(GeneratedImageContent);
 
-<<<<<<< HEAD
-already_AddRefed<GeneratedImageContent> GeneratedImageContent::Create(
-    nsIDocument& aDocument, uint32_t aContentIndex) {
-  RefPtr<dom::NodeInfo> nodeInfo = aDocument.NodeInfoManager()->GetNodeInfo(
-      nsGkAtoms::mozgeneratedcontentimage, nullptr, kNameSpaceID_XHTML,
-      nsINode::ELEMENT_NODE);
-||||||| merged common ancestors
-already_AddRefed<GeneratedImageContent>
-GeneratedImageContent::Create(nsIDocument& aDocument, uint32_t aContentIndex)
-{
-  RefPtr<dom::NodeInfo> nodeInfo =
-    aDocument.NodeInfoManager()->
-      GetNodeInfo(nsGkAtoms::mozgeneratedcontentimage,
-                  nullptr,
-                  kNameSpaceID_XHTML,
-                  nsINode::ELEMENT_NODE);
-=======
 already_AddRefed<GeneratedImageContent> GeneratedImageContent::Create(
     Document& aDocument, uint32_t aContentIndex) {
   RefPtr<dom::NodeInfo> nodeInfo = aDocument.NodeInfoManager()->GetNodeInfo(
       nsGkAtoms::mozgeneratedcontentimage, nullptr, kNameSpaceID_XHTML,
       nsINode::ELEMENT_NODE);
->>>>>>> upstream-releases
 
   auto image = MakeRefPtr<GeneratedImageContent>(nodeInfo.forget());
   image->mIndex = aContentIndex;

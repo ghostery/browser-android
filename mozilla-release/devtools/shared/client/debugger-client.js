@@ -31,23 +31,6 @@ loader.lazyRequireGetter(
 );
 loader.lazyRequireGetter(this, "EventEmitter", "devtools/shared/event-emitter");
 
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "WebConsoleClient", "devtools/shared/webconsole/client", true);
-loader.lazyRequireGetter(this, "RootFront", "devtools/shared/fronts/root", true);
-loader.lazyRequireGetter(this, "BrowsingContextTargetFront", "devtools/shared/fronts/targets/browsing-context", true);
-loader.lazyRequireGetter(this, "ThreadClient", "devtools/shared/client/thread-client");
-loader.lazyRequireGetter(this, "ObjectClient", "devtools/shared/client/object-client");
-loader.lazyRequireGetter(this, "Pool", "devtools/shared/protocol", true);
-||||||| merged common ancestors
-loader.lazyRequireGetter(this, "WebConsoleClient", "devtools/shared/webconsole/client", true);
-loader.lazyRequireGetter(this, "AddonClient", "devtools/shared/client/addon-client");
-loader.lazyRequireGetter(this, "RootClient", "devtools/shared/client/root-client");
-loader.lazyRequireGetter(this, "BrowsingContextFront", "devtools/shared/fronts/targets/browsing-context", true);
-loader.lazyRequireGetter(this, "WorkerTargetFront", "devtools/shared/fronts/targets/worker", true);
-loader.lazyRequireGetter(this, "ThreadClient", "devtools/shared/client/thread-client");
-loader.lazyRequireGetter(this, "ObjectClient", "devtools/shared/client/object-client");
-loader.lazyRequireGetter(this, "Pool", "devtools/shared/protocol", true);
-=======
 loader.lazyRequireGetter(
   this,
   "RootFront",
@@ -59,7 +42,6 @@ loader.lazyRequireGetter(
   "ObjectClient",
   "devtools/shared/client/object-client"
 );
->>>>>>> upstream-releases
 loader.lazyRequireGetter(this, "Front", "devtools/shared/protocol", true);
 
 /**
@@ -71,38 +53,6 @@ function DebuggerClient(transport) {
   this._transport = transport;
   this._transport.hooks = this;
 
-<<<<<<< HEAD
-  // Map actor ID to client instance for each actor type.
-  // To be removed once all clients are refactored to protocol.js
-  this._clients = new Map();
-
-  // Pool of fronts instanciated by this class.
-  // This is useful for actors that have already been transitioned to protocol.js
-  // Once RootClient becomes a protocol.js actor, these actors can be attached to it
-  // instead of this pool.
-  // This Pool will automatically be added to this._pools via addActorPool once the first
-  // Front will be added to it (in attachTarget, ...).
-  // And it does not need to destroyed explicitly as all Pools are destroyed on client
-  // closing.
-  this._frontPool = new Pool(this);
-
-||||||| merged common ancestors
-  // Map actor ID to client instance for each actor type.
-  // To be removed once all clients are refactored to protocol.js
-  this._clients = new Map();
-
-  // Pool of fronts instanciated by this class.
-  // This is useful for actors that have already been transitioned to protocol.js
-  // Once RootClient becomes a protocol.js actor, these actors can be attached to it
-  // instead of this pool.
-  // This Pool will automatically be added to this._pools via addActorPool once the first
-  // Front will be added to it (in attachTarget, attachWorker,...).
-  // And it does not need to destroyed explicitly as all Pools are destroyed on client
-  // closing.
-  this._frontPool = new Pool(this);
-
-=======
->>>>>>> upstream-releases
   this._pendingRequests = new Map();
   this._activeRequests = new Map();
   this._eventsEnabled = true;
@@ -117,14 +67,6 @@ function DebuggerClient(transport) {
    * the connection's root actor.
    */
   this.mainRoot = null;
-<<<<<<< HEAD
-  this.expectReply("root", (packet) => {
-    this.mainRoot = new RootFront(this, packet);
-    this._frontPool.manage(this.mainRoot);
-||||||| merged common ancestors
-  this.expectReply("root", (packet) => {
-    this.mainRoot = new RootClient(this, packet);
-=======
   this.expectReply("root", packet => {
     this.mainRoot = new RootFront(this, packet);
 
@@ -132,7 +74,6 @@ function DebuggerClient(transport) {
     // It will register itself to DebuggerClient as a Pool via Front._poolMap.
     this.mainRoot.manage(this.mainRoot);
 
->>>>>>> upstream-releases
     this.emit("connected", packet.applicationType, packet.traits);
   });
 }
@@ -293,256 +234,7 @@ DebuggerClient.prototype = {
       return deferred.promise;
     }
 
-<<<<<<< HEAD
-    this.addOneTimeListener("closed", deferred.resolve);
-
-    // Call each client's `detach` method by calling
-    // lastly registered ones first to give a chance
-    // to detach child clients first.
-    const clients = [...this._clients.values()];
-    this._clients.clear();
-    const detachClients = () => {
-      const client = clients.pop();
-      if (!client) {
-        // All clients detached.
-        cleanup();
-        return;
-      }
-      if (client.detach) {
-        client.detach(detachClients);
-        return;
-      }
-      detachClients();
-    };
-    detachClients();
-
-    return deferred.promise;
-  },
-
-  /*
-   * This function exists only to preserve DebuggerClient's interface;
-   * new code should say 'client.mainRoot.listTabs()'.
-   */
-  listTabs: function(options) {
-    return this.mainRoot.listTabs(options);
-  },
-
-  getTab: function(filter) {
-    return this.mainRoot.getTab(filter);
-  },
-
-  /**
-   * Attach to a target actor:
-   *
-   *  - start watching for new documents (emits `tabNativated` messages)
-   *  - start watching for inner iframe updates (emits `frameUpdate` messages)
-   *  - retrieve the thread actor:
-   *    Instantiates a new ThreadActor that can be later attached to in order to
-   *    debug JS sources in the document.
-   *
-   * @param string targetActorForm
-   *        The target actor form for the tab to attach.
-   */
-  attachTarget: async function(targetActorForm) {
-    const actorID = targetActorForm.actor;
-    let front = this._frontPool.actor(actorID);
-    if (!front) {
-      front = new BrowsingContextTargetFront(this, targetActorForm);
-      this._frontPool.manage(front);
-    }
-
-    const response = await front.attach();
-    return [response, front];
-  },
-
-  /**
-   * Attach to a Web Console actor. Depending on the listeners being passed as second
-   * arguments, starts listening for:
-   * - PageError:
-   *   Javascript error happening in the debugged context
-   * - ConsoleAPI:
-   *   Calls made to console.* API
-   * - NetworkActivity:
-   *   Http requests made in the debugged context
-   * - FileActivity:
-   *   Any requests made for a file:// or ftp:// URL. It can be the document or any of
-   *   its resources, like images.
-   * - ReflowActivity:
-   *   Any reflow made by the document being debugged.
-   * - ContentProcessMessages:
-   *   When the console actor runs in the parent process, also fetch calls made to
-   *   console.* API in all the content processes.
-   * - DocumentEvents:
-   *   Listen for DOMContentLoaded and load events.
-   *
-   * @param string consoleActor
-   *        The ID for the console actor to attach to.
-   * @param array listeners
-   *        The console listeners you want to start.
-   */
-  attachConsole: function(consoleActor, listeners) {
-    const packet = {
-      to: consoleActor,
-      type: "startListeners",
-      listeners: listeners,
-    };
-
-    return this.request(packet).then(response => {
-      let consoleClient;
-      if (this._clients.has(consoleActor)) {
-        consoleClient = this._clients.get(consoleActor);
-      } else {
-        consoleClient = new WebConsoleClient(this, response);
-        this.registerClient(consoleClient);
-      }
-      return [response, consoleClient];
-    });
-  },
-||||||| merged common ancestors
-    this.addOneTimeListener("closed", deferred.resolve);
-
-    // Call each client's `detach` method by calling
-    // lastly registered ones first to give a chance
-    // to detach child clients first.
-    const clients = [...this._clients.values()];
-    this._clients.clear();
-    const detachClients = () => {
-      const client = clients.pop();
-      if (!client) {
-        // All clients detached.
-        cleanup();
-        return;
-      }
-      if (client.detach) {
-        client.detach(detachClients);
-        return;
-      }
-      detachClients();
-    };
-    detachClients();
-
-    return deferred.promise;
-  },
-
-  /*
-   * This function exists only to preserve DebuggerClient's interface;
-   * new code should say 'client.mainRoot.listTabs()'.
-   */
-  listTabs: function(options) {
-    return this.mainRoot.listTabs(options);
-  },
-
-  /*
-   * This function exists only to preserve DebuggerClient's interface;
-   * new code should say 'client.mainRoot.listAddons()'.
-   */
-  listAddons: function() {
-    return this.mainRoot.listAddons();
-  },
-
-  getTab: function(filter) {
-    return this.mainRoot.getTab(filter);
-  },
-
-  /**
-   * Attach to a target actor:
-   *
-   *  - start watching for new documents (emits `tabNativated` messages)
-   *  - start watching for inner iframe updates (emits `frameUpdate` messages)
-   *  - retrieve the thread actor:
-   *    Instantiates a new ThreadActor that can be later attached to in order to
-   *    debug JS sources in the document.
-   *
-   * @param string targetActor
-   *        The target actor ID for the tab to attach.
-   */
-  attachTarget: async function(targetActor) {
-    let front = this._frontPool.actor(targetActor);
-    if (!front) {
-      front = new BrowsingContextFront(this, { actor: targetActor });
-      this._frontPool.manage(front);
-    }
-
-    const response = await front.attach();
-    return [response, front];
-  },
-
-  attachWorker: async function(workerTargetActor) {
-    let front = this._frontPool.actor(workerTargetActor);
-    if (!front) {
-      front = new WorkerTargetFront(this, { actor: workerTargetActor });
-      this._frontPool.manage(front);
-    }
-
-    const response = await front.attach();
-    return [response, front];
-  },
-
-  /**
-   * Attach to an addon target actor.
-   *
-   * @param string addonTargetActor
-   *        The actor ID for the addon to attach.
-   */
-  attachAddon: function(addonTargetActor) {
-    const packet = {
-      to: addonTargetActor,
-      type: "attach",
-    };
-    return this.request(packet).then(response => {
-      const addonClient = new AddonClient(this, addonTargetActor);
-      this.registerClient(addonClient);
-      this.activeAddon = addonClient;
-      return [response, addonClient];
-    });
-  },
-
-  /**
-   * Attach to a Web Console actor. Depending on the listeners being passed as second
-   * arguments, starts listening for:
-   * - PageError:
-   *   Javascript error happening in the debugged context
-   * - ConsoleAPI:
-   *   Calls made to console.* API
-   * - NetworkActivity:
-   *   Http requests made in the debugged context
-   * - FileActivity:
-   *   Any requests made for a file:// or ftp:// URL. It can be the document or any of
-   *   its resources, like images.
-   * - ReflowActivity:
-   *   Any reflow made by the document being debugged.
-   * - ContentProcessMessages:
-   *   When the console actor runs in the parent process, also fetch calls made to
-   *   console.* API in all the content processes.
-   * - DocumentEvents:
-   *   Listen for DOMContentLoaded and load events.
-   *
-   * @param string consoleActor
-   *        The ID for the console actor to attach to.
-   * @param array listeners
-   *        The console listeners you want to start.
-   */
-  attachConsole: function(consoleActor, listeners) {
-    const packet = {
-      to: consoleActor,
-      type: "startListeners",
-      listeners: listeners,
-    };
-
-    return this.request(packet).then(response => {
-      let consoleClient;
-      if (this._clients.has(consoleActor)) {
-        consoleClient = this._clients.get(consoleActor);
-      } else {
-        consoleClient = new WebConsoleClient(this, response);
-        this.registerClient(consoleClient);
-      }
-      return [response, consoleClient];
-    });
-  },
-=======
     this.once("closed", deferred.resolve);
->>>>>>> upstream-releases
 
     cleanup();
 
@@ -894,16 +586,6 @@ DebuggerClient.prototype = {
       return;
     }
 
-    // Check for "forwardingCancelled" here instead of using a front to handle it.
-    // This is necessary because we might receive this event while the client is closing,
-    // and the fronts have already been removed by that point.
-    if (this.mainRoot &&
-        packet.from == this.mainRoot.actorID &&
-        packet.type == "forwardingCancelled") {
-      this.purgeRequests(packet.prefix);
-      return;
-    }
-
     // If we have a registered Front for this actor, let it handle the packet
     // and skip all the rest of this unpleasantness.
     const front = this.getActor(packet.from);
@@ -912,23 +594,6 @@ DebuggerClient.prototype = {
       return;
     }
 
-<<<<<<< HEAD
-    if (this._clients.has(packet.from) && packet.type) {
-      const client = this._clients.get(packet.from);
-||||||| merged common ancestors
-    // Check for "forwardingCancelled" here instead of using a client to handle it.
-    // This is necessary because we might receive this event while the client is closing,
-    // and the clients have already been removed by that point.
-    if (this.mainRoot &&
-        packet.from == this.mainRoot.actor &&
-        packet.type == "forwardingCancelled") {
-      this.purgeRequests(packet.prefix);
-      return;
-    }
-
-    if (this._clients.has(packet.from) && packet.type) {
-      const client = this._clients.get(packet.from);
-=======
     let activeRequest;
     // See if we have a handler function waiting for a reply from this
     // actor. (Don't count unsolicited notifications or pauses as
@@ -972,7 +637,6 @@ DebuggerClient.prototype = {
   sendToDeprecatedThreadClient(packet) {
     const deprecatedThreadClient = this.getActor(packet.from);
     if (deprecatedThreadClient && packet.type) {
->>>>>>> upstream-releases
       const type = packet.type;
       if (deprecatedThreadClient.events.includes(type)) {
         deprecatedThreadClient.emit(type, packet);

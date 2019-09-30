@@ -11,20 +11,9 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-bool KeyAlgorithmProxy::WriteStructuredClone(
-    JSStructuredCloneWriter* aWriter) const {
-  if (!WriteString(aWriter, mName) ||
-||||||| merged common ancestors
-bool
-KeyAlgorithmProxy::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const
-{
-  if (!WriteString(aWriter, mName) ||
-=======
 bool KeyAlgorithmProxy::WriteStructuredClone(
     JSStructuredCloneWriter* aWriter) const {
   if (!StructuredCloneHolder::WriteString(aWriter, mName) ||
->>>>>>> upstream-releases
       !JS_WriteUint32Pair(aWriter, mType, KEY_ALGORITHM_SC_VERSION)) {
     return false;
   }

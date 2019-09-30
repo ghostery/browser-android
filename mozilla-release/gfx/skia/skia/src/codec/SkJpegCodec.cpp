@@ -639,28 +639,8 @@ void SkJpegCodec::allocateStorage(const SkImageInfo& dstInfo) {
     }
 }
 
-static SkEncodedInfo make_info(const SkEncodedInfo& orig, bool needsCMYKToRGB) {
-    auto color = needsCMYKToRGB ? SkEncodedInfo::kInvertedCMYK_Color
-                                : orig.color();
-    // The swizzler does not need the width or height
-    return SkEncodedInfo::Make(0, 0, color, orig.alpha(), orig.bitsPerComponent());
-}
-
 void SkJpegCodec::initializeSwizzler(const SkImageInfo& dstInfo, const Options& options,
         bool needsCMYKToRGB) {
-<<<<<<< HEAD
-    SkEncodedInfo swizzlerInfo = make_info(this->getEncodedInfo(), needsCMYKToRGB);
-
-||||||| merged common ancestors
-    SkEncodedInfo swizzlerInfo = this->getEncodedInfo();
-    if (needsCMYKToRGB) {
-        swizzlerInfo = SkEncodedInfo::Make(SkEncodedInfo::kInvertedCMYK_Color,
-                                           swizzlerInfo.alpha(),
-                                           swizzlerInfo.bitsPerComponent());
-    }
-
-=======
->>>>>>> upstream-releases
     Options swizzlerOptions = options;
     if (options.fSubset) {
         // Use fSwizzlerSubset if this is a subset decode.  This is necessary in the case

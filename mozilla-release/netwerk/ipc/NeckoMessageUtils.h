@@ -16,15 +16,8 @@
 #include "prio.h"
 #include "mozilla/net/DNS.h"
 #include "TimingStruct.h"
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
 #include "nsILoadInfo.h"
 
->>>>>>> upstream-releases
 namespace IPC {
 
 // nsIPermissionManager utilities
@@ -34,35 +27,6 @@ struct Permission {
   uint32_t capability, expireType;
   int64_t expireTime;
 
-<<<<<<< HEAD
-  Permission() : capability(0), expireType(0), expireTime(0) {}
-
-  Permission(const nsCString& aOrigin, const nsCString& aType,
-             const uint32_t aCapability, const uint32_t aExpireType,
-             const int64_t aExpireTime)
-      : origin(aOrigin),
-        type(aType),
-        capability(aCapability),
-        expireType(aExpireType),
-        expireTime(aExpireTime) {}
-||||||| merged common ancestors
-  Permission()
-    : capability(0)
-    , expireType(0)
-    , expireTime(0)
-  {}
-
-  Permission(const nsCString& aOrigin,
-             const nsCString& aType,
-             const uint32_t aCapability,
-             const uint32_t aExpireType,
-             const int64_t aExpireTime) : origin(aOrigin),
-                                          type(aType),
-                                          capability(aCapability),
-                                          expireType(aExpireType),
-                                          expireTime(aExpireTime)
-  {}
-=======
   Permission() : capability(0), expireType(0), expireTime(0) {}
 
   Permission(const nsCString& aOrigin, const nsACString& aType,
@@ -73,7 +37,6 @@ struct Permission {
         capability(aCapability),
         expireType(aExpireType),
         expireTime(aExpireTime) {}
->>>>>>> upstream-releases
 };
 
 template <>
@@ -218,11 +181,6 @@ struct ParamTraits<mozilla::net::ResourceTimingStruct> {
   }
 };
 
-<<<<<<< HEAD
-}  // namespace IPC
-||||||| merged common ancestors
-} // namespace IPC
-=======
 template <>
 struct ParamTraits<nsIHttpChannel::FlashPluginState>
     : public ContiguousEnumSerializerInclusive<
@@ -230,6 +188,5 @@ struct ParamTraits<nsIHttpChannel::FlashPluginState>
           nsIHttpChannel::FlashPluginLastValue> {};
 
 }  // namespace IPC
->>>>>>> upstream-releases
 
 #endif  // mozilla_net_NeckoMessageUtils_h

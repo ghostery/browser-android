@@ -47,18 +47,6 @@ add_task(async function() {
   );
 
   info("Highlight the node by moving the cursor on it");
-<<<<<<< HEAD
-
-  // the inspector should be initialized first and then the node should
-  // highlight after the hover effect.
-  const onNodeHighlight = toolbox.target.once("inspector")
-    .then(inspector => inspector.highlighter.once("node-highlight"));
-
-  EventUtils.synthesizeMouseAtCenter(node, {type: "mousemove"}, view);
-||||||| merged common ancestors
-  const onNodeHighlight = toolbox.once("node-highlight");
-  EventUtils.synthesizeMouseAtCenter(node, {type: "mousemove"}, view);
-=======
 
   // the inspector should be initialized first and then the node should
   // highlight after the hover effect.
@@ -67,7 +55,6 @@ add_task(async function() {
     .then(inspector => inspector.highlighter.once("node-highlight"));
 
   EventUtils.synthesizeMouseAtCenter(node, { type: "mousemove" }, view);
->>>>>>> upstream-releases
 
   const nodeFront = await onNodeHighlight;
   is(nodeFront.displayName, "h1", "The correct node was highlighted");
@@ -75,22 +62,12 @@ add_task(async function() {
   ok(isVisible, "Highlighter is displayed");
 
   info("Unhighlight the node by moving away from the node");
-<<<<<<< HEAD
-  const onNodeUnhighlight = toolbox.highlighter.once("node-unhighlight");
-  const btn = toolbox.doc.getElementById("toolbox-meatball-menu-button");
-  EventUtils.synthesizeMouseAtCenter(btn, {type: "mousemove"}, view);
-||||||| merged common ancestors
-  const onNodeUnhighlight = toolbox.once("node-unhighlight");
-  const btn = toolbox.doc.getElementById("toolbox-meatball-menu-button");
-  EventUtils.synthesizeMouseAtCenter(btn, {type: "mousemove"}, view);
-=======
   let onNodeUnhighlight = toolbox.highlighter.once("node-unhighlight");
   EventUtils.synthesizeMouseAtCenter(
     nonHighlightEl,
     { type: "mousemove" },
     view
   );
->>>>>>> upstream-releases
 
   await onNodeUnhighlight;
   ok(true, "node-unhighlight event was fired when moving away from the node");

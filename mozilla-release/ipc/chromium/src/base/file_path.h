@@ -243,13 +243,7 @@ class FilePath {
 #if defined(OS_POSIX)
 #  define FILE_PATH_LITERAL(x) x
 #elif defined(OS_WIN)
-<<<<<<< HEAD
-#define FILE_PATH_LITERAL(x) L##x
-||||||| merged common ancestors
-#define FILE_PATH_LITERAL(x) L ## x
-=======
 #  define FILE_PATH_LITERAL(x) L##x
->>>>>>> upstream-releases
 #endif  // OS_WIN
 
 // Implement hash function so that we can use FilePaths in hashsets and maps.

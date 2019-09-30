@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-const BASE_URL = "http://mochi.test:8888/browser/browser/components/originattributes/test/browser/";
-const EXAMPLE_BASE_URL = BASE_URL.replace("mochi.test:8888", "example.com");
-||||||| merged common ancestors
-const BASE_URL = "http://mochi.test:8888/browser/browser/components/originattributes/test/browser/";
-=======
 const BASE_URL =
   "http://mochi.test:8888/browser/browser/components/originattributes/test/browser/";
 const EXAMPLE_BASE_URL = BASE_URL.replace("mochi.test:8888", "example.com");
->>>>>>> upstream-releases
 const BASE_DOMAIN = "mochi.test";
 
 add_task(async function setup() {
@@ -285,33 +278,12 @@ add_task(async function window_open_redirect_test() {
     Services.prefs.clearUserPref("browser.link.open_newwindow");
   });
 
-<<<<<<< HEAD
-  let tab = BrowserTestUtils.addTab(gBrowser, BASE_URL + "window_redirect.html");
-  let win = await BrowserTestUtils.waitForNewWindow({url: BASE_URL + "dummy.html"});
-
-  await ContentTask.spawn(win.gBrowser.selectedBrowser, { firstPartyDomain: "mochi.test" }, async function(attrs) {
-    Assert.equal(docShell.getOriginAttributes().firstPartyDomain, attrs.firstPartyDomain,
-                 "window.open() should have firstPartyDomain attribute");
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 attrs.firstPartyDomain, "The document should have firstPartyDomain");
-||||||| merged common ancestors
-  let tab = BrowserTestUtils.addTab(gBrowser, BASE_URL + "window_redirect.html");
-  let win = await BrowserTestUtils.waitForNewWindow();
-  await BrowserTestUtils.browserLoaded(win.gBrowser.selectedBrowser);
-
-  await ContentTask.spawn(win.gBrowser.selectedBrowser, { firstPartyDomain: "mochi.test" }, async function(attrs) {
-    Assert.equal(docShell.getOriginAttributes().firstPartyDomain, attrs.firstPartyDomain,
-                 "window.open() should have firstPartyDomain attribute");
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 attrs.firstPartyDomain, "The document should have firstPartyDomain");
-=======
   let tab = BrowserTestUtils.addTab(
     gBrowser,
     BASE_URL + "window_redirect.html"
   );
   let win = await BrowserTestUtils.waitForNewWindow({
     url: BASE_URL + "dummy.html",
->>>>>>> upstream-releases
   });
 
   await ContentTask.spawn(
@@ -348,46 +320,6 @@ add_task(async function window_open_iframe_test() {
   });
 
   let tab = BrowserTestUtils.addTab(gBrowser, BASE_URL + "window2.html");
-<<<<<<< HEAD
-  let url = EXAMPLE_BASE_URL + "test_firstParty.html";
-  info("Waiting for window with url " + url);
-  let win = await BrowserTestUtils.waitForNewWindow({url});
-
-  await ContentTask.spawn(win.gBrowser.selectedBrowser, { firstPartyDomain: "mochi.test" }, async function(attrs) {
-    Assert.equal(docShell.getOriginAttributes().firstPartyDomain, attrs.firstPartyDomain,
-                 "window.open() should have firstPartyDomain attribute");
-
-    // The document is http://example.com/browser/browser/components/originattributes/test/browser/test_firstParty.html
-    // so the firstPartyDomain will be overriden to 'example.com'.
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 "example.com", "The document should have firstPartyDomain");
-
-    let iframe = content.document.getElementById("iframe1");
-    Assert.equal(iframe.frameLoader.docShell.getOriginAttributes().firstPartyDomain,
-                 "example.com", "iframe's docshell should have firstPartyDomain");
-    Assert.equal(iframe.contentDocument.nodePrincipal.originAttributes.firstPartyDomain,
-                 "example.com", "iframe should have firstPartyDomain");
-  });
-||||||| merged common ancestors
-  let win = await BrowserTestUtils.waitForNewWindow();
-  await BrowserTestUtils.browserLoaded(win.gBrowser.selectedBrowser, true);
-
-  await ContentTask.spawn(win.gBrowser.selectedBrowser, { firstPartyDomain: "mochi.test" }, async function(attrs) {
-    Assert.equal(docShell.getOriginAttributes().firstPartyDomain, attrs.firstPartyDomain,
-                 "window.open() should have firstPartyDomain attribute");
-
-    // The document is http://example.com/browser/browser/components/originattributes/test/browser/test_firstParty.html
-    // so the firstPartyDomain will be overriden to 'example.com'.
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 "example.com", "The document should have firstPartyDomain");
-
-    let iframe = content.document.getElementById("iframe1");
-    Assert.equal(iframe.frameLoader.docShell.getOriginAttributes().firstPartyDomain,
-                 "example.com", "iframe's docshell should have firstPartyDomain");
-    Assert.equal(iframe.contentDocument.nodePrincipal.originAttributes.firstPartyDomain,
-                 "example.com", "iframe should have firstPartyDomain");
-  });
-=======
   let url = EXAMPLE_BASE_URL + "test_firstParty.html";
   info("Waiting for window with url " + url);
   let win = await BrowserTestUtils.waitForNewWindow({ url });
@@ -423,7 +355,6 @@ add_task(async function window_open_iframe_test() {
       );
     }
   );
->>>>>>> upstream-releases
 
   gBrowser.removeTab(tab);
   await BrowserTestUtils.closeWindow(win);
@@ -464,34 +395,6 @@ add_task(async function window_open_form_test() {
   });
 
   let tab = BrowserTestUtils.addTab(gBrowser, BASE_URL + "window3.html");
-<<<<<<< HEAD
-  let url = EXAMPLE_BASE_URL + "test_form.html";
-  info("Waiting for window with url " + url);
-  let win = await BrowserTestUtils.waitForNewWindow({url});
-
-  await ContentTask.spawn(win.gBrowser.selectedBrowser, { firstPartyDomain: "mochi.test" }, async function(attrs) {
-    Assert.equal(docShell.getOriginAttributes().firstPartyDomain, attrs.firstPartyDomain,
-                 "window.open() should have firstPartyDomain attribute");
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 "example.com", "The document should have firstPartyDomain");
-
-    let submit = content.document.getElementById("submit");
-    submit.click();
-  });
-||||||| merged common ancestors
-  let win = await BrowserTestUtils.waitForNewWindow();
-  await BrowserTestUtils.browserLoaded(win.gBrowser.selectedBrowser, true);
-
-  await ContentTask.spawn(win.gBrowser.selectedBrowser, { firstPartyDomain: "mochi.test" }, async function(attrs) {
-    Assert.equal(docShell.getOriginAttributes().firstPartyDomain, attrs.firstPartyDomain,
-                 "window.open() should have firstPartyDomain attribute");
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 "example.com", "The document should have firstPartyDomain");
-
-    let submit = content.document.getElementById("submit");
-    submit.click();
-  });
-=======
   let url = EXAMPLE_BASE_URL + "test_form.html";
   info("Waiting for window with url " + url);
   let win = await BrowserTestUtils.waitForNewWindow({ url });
@@ -515,7 +418,6 @@ add_task(async function window_open_form_test() {
       submit.click();
     }
   );
->>>>>>> upstream-releases
 
   gBrowser.removeTab(tab);
   await BrowserTestUtils.closeWindow(win);
@@ -528,20 +430,11 @@ add_task(async function ip_address_test() {
   const ipAddr = "127.0.0.1";
   const ipHost = `http://${ipAddr}/browser/browser/components/originattributes/test/browser/`;
 
-<<<<<<< HEAD
-  Services.prefs.setCharPref("network.proxy.no_proxies_on", "");
-  registerCleanupFunction(function() {
-    Services.prefs.clearUserPref("network.proxy.no_proxies_on");
-  });
-
-||||||| merged common ancestors
-=======
   Services.prefs.setBoolPref("network.proxy.allow_hijacking_localhost", true);
   registerCleanupFunction(function() {
     Services.prefs.clearUserPref("network.proxy.allow_hijacking_localhost");
   });
 
->>>>>>> upstream-releases
   let tab = BrowserTestUtils.addTab(gBrowser, ipHost + "test_firstParty.html");
   await BrowserTestUtils.browserLoaded(tab.linkedBrowser, true);
 

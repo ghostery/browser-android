@@ -65,38 +65,13 @@ class SVGTextPathElement final : public SVGTextPathElementBase {
   virtual StringAttributesInfo GetStringInfo() override;
 
   enum { /* TEXTLENGTH, */ STARTOFFSET = 1 };
-<<<<<<< HEAD
-  nsSVGLength2 mLengthAttributes[2];
-  virtual nsSVGLength2* LengthAttributes() override {
-    return mLengthAttributes;
-  }
-||||||| merged common ancestors
-  nsSVGLength2 mLengthAttributes[2];
-  virtual nsSVGLength2* LengthAttributes() override
-    { return mLengthAttributes; }
-=======
   SVGAnimatedLength mLengthAttributes[2];
   virtual SVGAnimatedLength* LengthAttributes() override {
     return mLengthAttributes;
   }
->>>>>>> upstream-releases
   static LengthInfo sLengthInfo[2];
 
   enum { /* LENGTHADJUST, */ METHOD = 1, SPACING, SIDE };
-<<<<<<< HEAD
-  nsSVGEnum mEnumAttributes[4];
-  virtual nsSVGEnum* EnumAttributes() override { return mEnumAttributes; }
-  static nsSVGEnumMapping sMethodMap[];
-  static nsSVGEnumMapping sSpacingMap[];
-  static nsSVGEnumMapping sSideMap[];
-||||||| merged common ancestors
-  nsSVGEnum mEnumAttributes[4];
-  virtual nsSVGEnum* EnumAttributes() override
-    { return mEnumAttributes; }
-  static nsSVGEnumMapping sMethodMap[];
-  static nsSVGEnumMapping sSpacingMap[];
-  static nsSVGEnumMapping sSideMap[];
-=======
   SVGAnimatedEnumeration mEnumAttributes[4];
   virtual SVGAnimatedEnumeration* EnumAttributes() override {
     return mEnumAttributes;
@@ -104,7 +79,6 @@ class SVGTextPathElement final : public SVGTextPathElementBase {
   static SVGEnumMapping sMethodMap[];
   static SVGEnumMapping sSpacingMap[];
   static SVGEnumMapping sSideMap[];
->>>>>>> upstream-releases
   static EnumInfo sEnumInfo[4];
 
   enum { HREF, XLINK_HREF };

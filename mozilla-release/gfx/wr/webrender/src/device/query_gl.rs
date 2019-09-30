@@ -6,13 +6,7 @@ use gleam::gl;
 use std::mem;
 use std::rc::Rc;
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/query_gl.rs
-use device::GpuFrameId;
-||||||| merged common ancestors
-use device::FrameId;
-=======
 use crate::device::GpuFrameId;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/query_gl.rs
 
 #[derive(Copy, Clone, Debug)]
 pub enum GpuDebugMethod {
@@ -171,15 +165,7 @@ impl<T: NamedTag> GpuFrameProfile<T> {
         GpuSampleQuery
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/query_gl.rs
-    #[cfg(feature = "debug_renderer")]
     fn build_samples(&mut self) -> (GpuFrameId, Vec<GpuTimer<T>>, Vec<GpuSampler<T>>) {
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-    fn build_samples(&mut self) -> (FrameId, Vec<GpuTimer<T>>, Vec<GpuSampler<T>>) {
-=======
-    fn build_samples(&mut self) -> (GpuFrameId, Vec<GpuTimer<T>>, Vec<GpuSampler<T>>) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/query_gl.rs
         debug_assert!(!self.inside_frame);
         let gl = &self.gl;
 
@@ -257,15 +243,7 @@ impl<T> GpuProfiler<T> {
 }
 
 impl<T: NamedTag> GpuProfiler<T> {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/query_gl.rs
-    #[cfg(feature = "debug_renderer")]
     pub fn build_samples(&mut self) -> (GpuFrameId, Vec<GpuTimer<T>>, Vec<GpuSampler<T>>) {
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-    pub fn build_samples(&mut self) -> (FrameId, Vec<GpuTimer<T>>, Vec<GpuSampler<T>>) {
-=======
-    pub fn build_samples(&mut self) -> (GpuFrameId, Vec<GpuTimer<T>>, Vec<GpuSampler<T>>) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/query_gl.rs
         self.frames[self.next_frame].build_samples()
     }
 

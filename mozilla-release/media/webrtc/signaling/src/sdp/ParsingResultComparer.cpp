@@ -41,21 +41,9 @@ std::string ToString(const T& serializable) {
   return os.str();
 }
 
-<<<<<<< HEAD
-bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
-                                    const std::string& originalSdp) {
-  bool result = true;
-||||||| merged common ancestors
-bool
-ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
-                               const std::string& originalSdp)
-{
-  bool result = true;
-=======
 bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
                                     const std::string& originalSdp,
                                     const SdpComparisonResult expect) {
->>>>>>> upstream-releases
   mOriginalSdp = originalSdp;
   const std::string sipccSdpStr = sipccSdp.ToString();
   const std::string rsdparsaSdpStr = rsdparsaSdp.ToString();
@@ -73,22 +61,6 @@ bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
 
   Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF,
                        NS_LITERAL_STRING("serialization_is_not_equal"), 1);
-<<<<<<< HEAD
-  LOGD(
-      ("Serialization is not equal\n"
-       " --- Sipcc SDP ---\n"
-       "%s\n"
-       "--- Rsdparsa SDP ---\n"
-       "%s\n",
-       sipccSdpStr.c_str(), rsdparsaSdpStr.c_str()));
-||||||| merged common ancestors
-  LOGD(("Serialization is not equal\n"
-        " --- Sipcc SDP ---\n"
-        "%s\n"
-        "--- Rsdparsa SDP ---\n"
-        "%s\n",
-        sipccSdpStr.c_str(), rsdparsaSdpStr.c_str()));
-=======
   LOG_EXPECT(result, expect,
              ("Serialization is not equal\n"
               " --- Sipcc SDP ---\n"
@@ -96,7 +68,6 @@ bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
               "--- Rsdparsa SDP ---\n"
               "%s\n",
               sipccSdpStr.c_str(), rsdparsaSdpStr.c_str()));
->>>>>>> upstream-releases
 
   const std::string rsdparsaOriginStr = ToString(rsdparsaSdp.GetOrigin());
   const std::string sipccOriginStr = ToString(sipccSdp.GetOrigin());
@@ -105,15 +76,6 @@ bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
   if (rsdparsaOriginStr != sipccOriginStr) {
     Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF,
                          NS_LITERAL_STRING("o="), 1);
-<<<<<<< HEAD
-    LOGD(("origin is not equal\nrust origin: %s\nsipcc origin: %s",
-          rsdparsaOriginStr.c_str(), sipccOriginStr.c_str()));
-||||||| merged common ancestors
-    LOGD(("origin is not equal\nrust origin: %s\nsipcc origin: %s",
-          rsdparsaOriginStr.c_str(),
-          sipccOriginStr.c_str()));
-=======
->>>>>>> upstream-releases
     result = false;
     LOG_EXPECT(result, expect,
                ("origin is not equal\nrust origin: %s\nsipcc origin: %s",
@@ -125,20 +87,10 @@ bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
     const auto sipcc_sess_attr_count = sipccSdp.GetAttributeList().Count();
 
     if (rust_sess_attr_count != sipcc_sess_attr_count) {
-<<<<<<< HEAD
-      LOGD(
-          ("Session level attribute count is NOT equal, rsdparsa: %u, "
-           "sipcc: %u\n",
-           rust_sess_attr_count, sipcc_sess_attr_count));
-||||||| merged common ancestors
-      LOGD(("Session level attribute count is NOT equal, rsdparsa: %u, "
-            "sipcc: %u\n", rust_sess_attr_count, sipcc_sess_attr_count));
-=======
       LOG_EXPECT(false, expect,
                  ("Session level attribute count is NOT equal, rsdparsa: %u, "
                   "sipcc: %u\n",
                   rust_sess_attr_count, sipcc_sess_attr_count));
->>>>>>> upstream-releases
     }
   }
 
@@ -168,59 +120,17 @@ bool ParsingResultComparer::Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
   return result;
 }
 
-<<<<<<< HEAD
-bool ParsingResultComparer::CompareMediaSections(
-    const SdpMediaSection& rustMediaSection,
-    const SdpMediaSection& sipccMediaSection) const {
-||||||| merged common ancestors
-bool
-ParsingResultComparer::CompareMediaSections(const SdpMediaSection&
-                                              rustMediaSection,
-                                            const SdpMediaSection&
-                                              sipccMediaSection) const
-{
-=======
 bool ParsingResultComparer::CompareMediaSections(
     const SdpMediaSection& rustMediaSection,
     const SdpMediaSection& sipccMediaSection,
     const SdpComparisonResult expect) const {
->>>>>>> upstream-releases
   bool result = true;
-<<<<<<< HEAD
-  auto trackMediaLineMismatch = [&result](auto rustValue, auto sipccValue,
-                                          const nsString& valueDescription) {
-||||||| merged common ancestors
-  auto trackMediaLineMismatch = [&result] (auto rustValue, auto sipccValue,
-                                         const nsString& valueDescription) {
-=======
   auto trackMediaLineMismatch = [&result, &expect](
                                     auto rustValue, auto sipccValue,
                                     const nsString& valueDescription) {
     result = false;
->>>>>>> upstream-releases
     nsString typeStr = NS_LITERAL_STRING("m=");
     typeStr += valueDescription;
-<<<<<<< HEAD
-    Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF, typeStr,
-                         1);
-    LOGD(
-        ("The media line values %s are not equal\n"
-         "rsdparsa value: %s\n"
-         "sipcc value: %s\n",
-         NS_LossyConvertUTF16toASCII(valueDescription).get(),
-         ToString(rustValue).c_str(), ToString(sipccValue).c_str()));
-    result = false;
-||||||| merged common ancestors
-    Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF,
-                         typeStr, 1);
-    LOGD(("The media line values %s are not equal\n"
-          "rsdparsa value: %s\n"
-          "sipcc value: %s\n",
-          NS_LossyConvertUTF16toASCII(valueDescription).get(),
-          ToString(rustValue).c_str(),
-          ToString(sipccValue).c_str()));
-    result = false;
-=======
     Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF, typeStr,
                          1);
     LOG_EXPECT(result, expect,
@@ -229,7 +139,6 @@ bool ParsingResultComparer::CompareMediaSections(
                 "sipcc value: %s\n",
                 NS_LossyConvertUTF16toASCII(valueDescription).get(),
                 ToString(rustValue).c_str(), ToString(sipccValue).c_str()));
->>>>>>> upstream-releases
   };
 
   auto compareMediaLineValue = [trackMediaLineMismatch](
@@ -275,21 +184,9 @@ bool ParsingResultComparer::CompareMediaSections(
   return result;
 }
 
-<<<<<<< HEAD
-bool ParsingResultComparer::CompareAttrLists(
-    const SdpAttributeList& rustAttrlist, const SdpAttributeList& sipccAttrlist,
-    int level) const {
-||||||| merged common ancestors
-bool
-ParsingResultComparer::CompareAttrLists(const SdpAttributeList& rustAttrlist,
-                                        const SdpAttributeList& sipccAttrlist,
-                                        int level) const
-{
-=======
 bool ParsingResultComparer::CompareAttrLists(
     const SdpAttributeList& rustAttrlist, const SdpAttributeList& sipccAttrlist,
     int level, const SdpComparisonResult expect) const {
->>>>>>> upstream-releases
   bool result = true;
 
   for (size_t i = AttributeType::kFirstAttribute;
@@ -312,18 +209,10 @@ bool ParsingResultComparer::CompareAttrLists(
         typeStr += NS_LITERAL_STRING("_missing");
         Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF,
                              typeStr, 1);
-<<<<<<< HEAD
-        LOGD(("Rust is missing the attribute: %s\n", attrStr.c_str()));
-        LOGD(("Rust is missing: %s\n", sipccAttrStr.c_str()));
-||||||| merged common ancestors
-        LOGD(("Rust is missing the attribute: %s\n", attrStr.c_str()));
-        LOGD(("Rust is missing: %s\n",sipccAttrStr.c_str()));
-=======
         LOG_EXPECT(result, expect,
                    ("Rust is missing the attribute: %s\n", attrStr.c_str()));
         LOG_EXPECT(result, expect,
                    ("Rust is missing: %s\n", sipccAttrStr.c_str()));
->>>>>>> upstream-releases
 
         continue;
       }
@@ -345,30 +234,6 @@ bool ParsingResultComparer::CompareAttrLists(
           typeStr += NS_LITERAL_STRING("_inequal");
           Telemetry::ScalarAdd(Telemetry::ScalarID::WEBRTC_SDP_PARSER_DIFF,
                                typeStr, 1);
-<<<<<<< HEAD
-          LOGD(
-              ("%s is neither equal to sipcc nor to the orginal sdp\n"
-               "--------------rsdparsa attribute---------------\n"
-               "%s"
-               "--------------sipcc attribute---------------\n"
-               "%s"
-               "--------------original attribute---------------\n"
-               "%s\n",
-               attrStr.c_str(), rustAttrStr.c_str(), sipccAttrStr.c_str(),
-               originalAttrStr.c_str()));
-          result = false;
-||||||| merged common ancestors
-          LOGD(("%s is neither equal to sipcc nor to the orginal sdp\n"
-                "--------------rsdparsa attribute---------------\n"
-                "%s"
-                "--------------sipcc attribute---------------\n"
-                "%s"
-                "--------------original attribute---------------\n"
-                "%s\n",
-                attrStr.c_str(), rustAttrStr.c_str(), sipccAttrStr.c_str(),
-                originalAttrStr.c_str()));
-          result = false;
-=======
           LOG_EXPECT(result, expect,
                      ("%s is neither equal to sipcc nor to the orginal sdp\n"
                       "--------------rsdparsa attribute---------------\n"
@@ -379,7 +244,6 @@ bool ParsingResultComparer::CompareAttrLists(
                       "%s\n",
                       attrStr.c_str(), rustAttrStr.c_str(),
                       sipccAttrStr.c_str(), originalAttrStr.c_str()));
->>>>>>> upstream-releases
         } else {
           LOG_EXPECT(
               result, expect,
@@ -434,20 +298,9 @@ std::string ParsingResultComparer::GetAttributeLines(
   // Filters rtcp-fb lines that contain "x-..." types
   // This is because every SDP from Edge contains these rtcp-fb x- types
   // for example: a=rtcp-fb:121 x-foo
-<<<<<<< HEAD
-  std::regex customRtcpFbLines("a\\=rtcp\\-fb\\:(\\d+|\\*).* x\\-.*");
-
-  for (auto line : lines) {
-||||||| merged common ancestors
-  std::regex customRtcpFbLines("a\\=rtcp\\-fb\\:(\\d+|\\*).* x\\-.*");
-
-  for (auto line : lines) {
-
-=======
   std::regex customRtcpFbLines(R"(a\=rtcp\-fb\:(\d+|\*).* x\-.*)");
 
   for (auto& line : lines) {
->>>>>>> upstream-releases
     if (line.find("m=") == 0) {
       if (level > currentLevel) {
         attrLines.clear();

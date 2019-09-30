@@ -25,22 +25,10 @@
 #include "secoidt.h"
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include <windows.h>
-#include <softpub.h>
-#include <wintrust.h>
-#endif  // XP_WIN
-||||||| merged common ancestors
-#include <windows.h>
-#include <softpub.h>
-#include <wintrust.h>
-#endif // XP_WIN
-=======
 #  include <windows.h>
 #  include <softpub.h>
 #  include <wintrust.h>
 #endif  // XP_WIN
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace net {
@@ -75,31 +63,12 @@ static LazyLogModule prlog("BackgroundFileSaver");
  * Runnable object used to notify the control thread that file contents will now
  * be saved to the specified file.
  */
-<<<<<<< HEAD
-class NotifyTargetChangeRunnable final : public Runnable {
- public:
-  NotifyTargetChangeRunnable(BackgroundFileSaver *aSaver, nsIFile *aTarget)
-      : Runnable("net::NotifyTargetChangeRunnable"),
-        mSaver(aSaver),
-        mTarget(aTarget) {}
-||||||| merged common ancestors
-class NotifyTargetChangeRunnable final : public Runnable
-{
-public:
-  NotifyTargetChangeRunnable(BackgroundFileSaver* aSaver, nsIFile* aTarget)
-    : Runnable("net::NotifyTargetChangeRunnable")
-    , mSaver(aSaver)
-    , mTarget(aTarget)
-  {
-  }
-=======
 class NotifyTargetChangeRunnable final : public Runnable {
  public:
   NotifyTargetChangeRunnable(BackgroundFileSaver* aSaver, nsIFile* aTarget)
       : Runnable("net::NotifyTargetChangeRunnable"),
         mSaver(aSaver),
         mTarget(aTarget) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override { return mSaver->NotifyTargetChange(mTarget); }
 
@@ -170,14 +139,7 @@ nsresult BackgroundFileSaver::Init() {
 
 // Called on the control thread.
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaver::GetObserver(nsIBackgroundFileSaverObserver **aObserver) {
-||||||| merged common ancestors
-BackgroundFileSaver::GetObserver(nsIBackgroundFileSaverObserver **aObserver)
-{
-=======
 BackgroundFileSaver::GetObserver(nsIBackgroundFileSaverObserver** aObserver) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aObserver);
   *aObserver = mObserver;
   NS_IF_ADDREF(*aObserver);
@@ -186,14 +148,7 @@ BackgroundFileSaver::GetObserver(nsIBackgroundFileSaverObserver** aObserver) {
 
 // Called on the control thread.
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaver::SetObserver(nsIBackgroundFileSaverObserver *aObserver) {
-||||||| merged common ancestors
-BackgroundFileSaver::SetObserver(nsIBackgroundFileSaverObserver *aObserver)
-{
-=======
 BackgroundFileSaver::SetObserver(nsIBackgroundFileSaverObserver* aObserver) {
->>>>>>> upstream-releases
   mObserver = aObserver;
   return NS_OK;
 }
@@ -211,14 +166,7 @@ BackgroundFileSaver::EnableAppend() {
 
 // Called on the control thread.
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaver::SetTarget(nsIFile *aTarget, bool aKeepPartial) {
-||||||| merged common ancestors
-BackgroundFileSaver::SetTarget(nsIFile *aTarget, bool aKeepPartial)
-{
-=======
 BackgroundFileSaver::SetTarget(nsIFile* aTarget, bool aKeepPartial) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aTarget);
   {
     MutexAutoLock lock(mLock);
@@ -278,14 +226,7 @@ BackgroundFileSaver::EnableSha256() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaver::GetSha256Hash(nsACString &aHash) {
-||||||| merged common ancestors
-BackgroundFileSaver::GetSha256Hash(nsACString& aHash)
-{
-=======
 BackgroundFileSaver::GetSha256Hash(nsACString& aHash) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Can't inspect sha256 off the main thread");
   // We acquire a lock because mSha256 is written on the worker thread.
   MutexAutoLock lock(mLock);
@@ -309,14 +250,7 @@ BackgroundFileSaver::EnableSignatureInfo() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaver::GetSignatureInfo(nsIArray **aSignatureInfo) {
-||||||| merged common ancestors
-BackgroundFileSaver::GetSignatureInfo(nsIArray** aSignatureInfo)
-{
-=======
 BackgroundFileSaver::GetSignatureInfo(nsIArray** aSignatureInfo) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Can't inspect signature off the main thread");
   // We acquire a lock because mSignatureInfo is written on the worker thread.
   MutexAutoLock lock(mLock);
@@ -374,22 +308,12 @@ nsresult BackgroundFileSaver::GetWorkerThreadAttention(
 
 // Called on the worker thread.
 // static
-<<<<<<< HEAD
-void BackgroundFileSaver::AsyncCopyCallback(void *aClosure, nsresult aStatus) {
-  BackgroundFileSaver *self = (BackgroundFileSaver *)aClosure;
-||||||| merged common ancestors
-void
-BackgroundFileSaver::AsyncCopyCallback(void *aClosure, nsresult aStatus)
-{
-  BackgroundFileSaver *self = (BackgroundFileSaver *)aClosure;
-=======
 void BackgroundFileSaver::AsyncCopyCallback(void* aClosure, nsresult aStatus) {
   // We called NS_ADDREF_THIS when NS_AsyncCopy started, to keep the object
   // alive even if other references disappeared.  At the end of this method,
   // we've finished using the object and can safely release our reference.
   RefPtr<BackgroundFileSaver> self =
       dont_AddRef((BackgroundFileSaver*)aClosure);
->>>>>>> upstream-releases
   {
     MutexAutoLock lock(self->mLock);
 
@@ -615,17 +539,8 @@ nsresult BackgroundFileSaver::ProcessStateChange() {
         }
 
         nsresult rv = MapSECStatus(
-<<<<<<< HEAD
-            PK11_DigestOp(mDigestContext.get(),
-                          BitwiseCast<unsigned char *, char *>(buffer), count));
-||||||| merged common ancestors
-          PK11_DigestOp(mDigestContext.get(),
-                        BitwiseCast<unsigned char*, char*>(buffer),
-                        count));
-=======
             PK11_DigestOp(mDigestContext.get(),
                           BitwiseCast<unsigned char*, char*>(buffer), count));
->>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, rv);
       }
 
@@ -758,17 +673,8 @@ bool BackgroundFileSaver::CheckCompletion() {
     rv = d.End(SEC_OID_SHA256, mDigestContext);
     if (NS_SUCCEEDED(rv)) {
       MutexAutoLock lock(mLock);
-<<<<<<< HEAD
-      mSha256 = nsDependentCSubstring(
-          BitwiseCast<char *, unsigned char *>(d.get().data), d.get().len);
-||||||| merged common ancestors
-      mSha256 =
-        nsDependentCSubstring(BitwiseCast<char*, unsigned char*>(d.get().data),
-                              d.get().len);
-=======
       mSha256 = nsDependentCSubstring(
           BitwiseCast<char*, unsigned char*>(d.get().data), d.get().len);
->>>>>>> upstream-releases
     }
   }
 
@@ -797,15 +703,7 @@ bool BackgroundFileSaver::CheckCompletion() {
 }
 
 // Called on the control thread.
-<<<<<<< HEAD
-nsresult BackgroundFileSaver::NotifyTargetChange(nsIFile *aTarget) {
-||||||| merged common ancestors
-nsresult
-BackgroundFileSaver::NotifyTargetChange(nsIFile *aTarget)
-{
-=======
 nsresult BackgroundFileSaver::NotifyTargetChange(nsIFile* aTarget) {
->>>>>>> upstream-releases
   if (mObserver) {
     (void)mObserver->OnTargetChange(this, aTarget);
   }
@@ -855,15 +753,7 @@ nsresult BackgroundFileSaver::NotifySaveComplete() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult BackgroundFileSaver::ExtractSignatureInfo(const nsAString &filePath) {
-||||||| merged common ancestors
-nsresult
-BackgroundFileSaver::ExtractSignatureInfo(const nsAString& filePath)
-{
-=======
 nsresult BackgroundFileSaver::ExtractSignatureInfo(const nsAString& filePath) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread(), "Cannot extract signature on main thread");
   {
     MutexAutoLock lock(mLock);
@@ -906,7 +796,7 @@ nsresult BackgroundFileSaver::ExtractSignatureInfo(const nsAString& filePath) {
   // Check if the file is signed by something that is trusted. If the file is
   // not signed, this is a no-op.
   LONG ret = WinVerifyTrust(nullptr, &policyGUID, &trustData);
-  CRYPT_PROVIDER_DATA *cryptoProviderData = nullptr;
+  CRYPT_PROVIDER_DATA* cryptoProviderData = nullptr;
   // According to the Windows documentation, we should check against 0 instead
   // of ERROR_SUCCESS, which is an HRESULT.
   if (ret == 0) {
@@ -919,30 +809,14 @@ nsresult BackgroundFileSaver::ExtractSignatureInfo(const nsAString& filePath) {
     // A binary may have multiple signers. Each signer may have multiple certs
     // in the chain.
     for (DWORD i = 0; i < cryptoProviderData->csSigners; ++i) {
-<<<<<<< HEAD
-      const CERT_CHAIN_CONTEXT *certChainContext =
-          cryptoProviderData->pasSigners[i].pChainContext;
-||||||| merged common ancestors
-      const CERT_CHAIN_CONTEXT* certChainContext =
-        cryptoProviderData->pasSigners[i].pChainContext;
-=======
       const CERT_CHAIN_CONTEXT* certChainContext =
           cryptoProviderData->pasSigners[i].pChainContext;
->>>>>>> upstream-releases
       if (!certChainContext) {
         break;
       }
       for (DWORD j = 0; j < certChainContext->cChain; ++j) {
-<<<<<<< HEAD
-        const CERT_SIMPLE_CHAIN *certSimpleChain =
-            certChainContext->rgpChain[j];
-||||||| merged common ancestors
-        const CERT_SIMPLE_CHAIN* certSimpleChain =
-          certChainContext->rgpChain[j];
-=======
         const CERT_SIMPLE_CHAIN* certSimpleChain =
             certChainContext->rgpChain[j];
->>>>>>> upstream-releases
         if (!certSimpleChain) {
           break;
         }
@@ -953,26 +827,16 @@ nsresult BackgroundFileSaver::ExtractSignatureInfo(const nsAString& filePath) {
         }
         bool extractionSuccess = true;
         for (DWORD k = 0; k < certSimpleChain->cElement; ++k) {
-          CERT_CHAIN_ELEMENT *certChainElement = certSimpleChain->rgpElement[k];
+          CERT_CHAIN_ELEMENT* certChainElement = certSimpleChain->rgpElement[k];
           if (certChainElement->pCertContext->dwCertEncodingType !=
               X509_ASN_ENCODING) {
             continue;
           }
           nsCOMPtr<nsIX509Cert> nssCert = nullptr;
           nsDependentCSubstring certDER(
-<<<<<<< HEAD
-              reinterpret_cast<char *>(
-                  certChainElement->pCertContext->pbCertEncoded),
-              certChainElement->pCertContext->cbCertEncoded);
-||||||| merged common ancestors
-            reinterpret_cast<char *>(
-              certChainElement->pCertContext->pbCertEncoded),
-            certChainElement->pCertContext->cbCertEncoded);
-=======
               reinterpret_cast<char*>(
                   certChainElement->pCertContext->pbCertEncoded),
               certChainElement->pCertContext->cbCertEncoded);
->>>>>>> upstream-releases
           rv = certDB->ConstructX509(certDER, getter_AddRefs(nssCert));
           if (!nssCert) {
             extractionSuccess = false;
@@ -1028,60 +892,26 @@ NS_IMETHODIMP
 BackgroundFileSaverOutputStream::Flush() { return mPipeOutputStream->Flush(); }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaverOutputStream::Write(const char *aBuf, uint32_t aCount,
-                                       uint32_t *_retval) {
-||||||| merged common ancestors
-BackgroundFileSaverOutputStream::Write(const char *aBuf, uint32_t aCount,
-                                       uint32_t *_retval)
-{
-=======
 BackgroundFileSaverOutputStream::Write(const char* aBuf, uint32_t aCount,
                                        uint32_t* _retval) {
->>>>>>> upstream-releases
   return mPipeOutputStream->Write(aBuf, aCount, _retval);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaverOutputStream::WriteFrom(nsIInputStream *aFromStream,
-                                           uint32_t aCount, uint32_t *_retval) {
-||||||| merged common ancestors
-BackgroundFileSaverOutputStream::WriteFrom(nsIInputStream *aFromStream,
-                                           uint32_t aCount, uint32_t *_retval)
-{
-=======
 BackgroundFileSaverOutputStream::WriteFrom(nsIInputStream* aFromStream,
                                            uint32_t aCount, uint32_t* _retval) {
->>>>>>> upstream-releases
   return mPipeOutputStream->WriteFrom(aFromStream, aCount, _retval);
 }
 
 NS_IMETHODIMP
 BackgroundFileSaverOutputStream::WriteSegments(nsReadSegmentFun aReader,
-<<<<<<< HEAD
-                                               void *aClosure, uint32_t aCount,
-                                               uint32_t *_retval) {
-||||||| merged common ancestors
-                                               void *aClosure, uint32_t aCount,
-                                               uint32_t *_retval)
-{
-=======
                                                void* aClosure, uint32_t aCount,
                                                uint32_t* _retval) {
->>>>>>> upstream-releases
   return mPipeOutputStream->WriteSegments(aReader, aClosure, aCount, _retval);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaverOutputStream::IsNonBlocking(bool *_retval) {
-||||||| merged common ancestors
-BackgroundFileSaverOutputStream::IsNonBlocking(bool *_retval)
-{
-=======
 BackgroundFileSaverOutputStream::IsNonBlocking(bool* _retval) {
->>>>>>> upstream-releases
   return mPipeOutputStream->IsNonBlocking(_retval);
 }
 
@@ -1094,14 +924,7 @@ NS_IMETHODIMP
 BackgroundFileSaverOutputStream::AsyncWait(nsIOutputStreamCallback* aCallback,
                                            uint32_t aFlags,
                                            uint32_t aRequestedCount,
-<<<<<<< HEAD
-                                           nsIEventTarget *aEventTarget) {
-||||||| merged common ancestors
-                                           nsIEventTarget *aEventTarget)
-{
-=======
                                            nsIEventTarget* aEventTarget) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(!mAsyncWaitCallback);
 
   mAsyncWaitCallback = aCallback;
@@ -1112,14 +935,7 @@ BackgroundFileSaverOutputStream::AsyncWait(nsIOutputStreamCallback* aCallback,
 
 NS_IMETHODIMP
 BackgroundFileSaverOutputStream::OnOutputStreamReady(
-<<<<<<< HEAD
-    nsIAsyncOutputStream *aStream) {
-||||||| merged common ancestors
-                                 nsIAsyncOutputStream *aStream)
-{
-=======
     nsIAsyncOutputStream* aStream) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mAsyncWaitCallback);
 
   nsCOMPtr<nsIOutputStreamCallback> asyncWaitCallback = nullptr;
@@ -1149,35 +965,15 @@ BackgroundFileSaverStreamListener::GetProgressCallback() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaverStreamListener::OnStartRequest(nsIRequest *aRequest,
-                                                  nsISupports *aContext) {
-||||||| merged common ancestors
-BackgroundFileSaverStreamListener::OnStartRequest(nsIRequest *aRequest,
-                                                  nsISupports *aContext)
-{
-=======
 BackgroundFileSaverStreamListener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aRequest);
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackgroundFileSaverStreamListener::OnStopRequest(nsIRequest *aRequest,
-                                                 nsISupports *aContext,
-                                                 nsresult aStatusCode) {
-||||||| merged common ancestors
-BackgroundFileSaverStreamListener::OnStopRequest(nsIRequest *aRequest,
-                                                 nsISupports *aContext,
-                                                 nsresult aStatusCode)
-{
-=======
 BackgroundFileSaverStreamListener::OnStopRequest(nsIRequest* aRequest,
                                                  nsresult aStatusCode) {
->>>>>>> upstream-releases
   // If an error occurred, cancel the operation immediately.  On success, wait
   // until the caller has determined whether the file should be renamed.
   if (NS_FAILED(aStatusCode)) {
@@ -1234,24 +1030,10 @@ BackgroundFileSaverStreamListener::OnDataAvailable(nsIRequest* aRequest,
 
 // Called on the worker thread.
 // static
-<<<<<<< HEAD
-void BackgroundFileSaverStreamListener::AsyncCopyProgressCallback(
-    void *aClosure, uint32_t aCount) {
-  BackgroundFileSaverStreamListener *self =
-      (BackgroundFileSaverStreamListener *)aClosure;
-||||||| merged common ancestors
-void
-BackgroundFileSaverStreamListener::AsyncCopyProgressCallback(void *aClosure,
-                                                             uint32_t aCount)
-{
-  BackgroundFileSaverStreamListener *self =
-    (BackgroundFileSaverStreamListener *)aClosure;
-=======
 void BackgroundFileSaverStreamListener::AsyncCopyProgressCallback(
     void* aClosure, uint32_t aCount) {
   BackgroundFileSaverStreamListener* self =
       (BackgroundFileSaverStreamListener*)aClosure;
->>>>>>> upstream-releases
 
   // Wait if the control thread is in the process of suspending or resuming.
   MutexAutoLock lock(self->mSuspensionLock);
@@ -1308,28 +1090,11 @@ nsresult BackgroundFileSaverStreamListener::NotifySuspendOrResume() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //// DigestOutputStream
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(DigestOutputStream, nsIOutputStream)
-
-DigestOutputStream::DigestOutputStream(nsIOutputStream *aStream,
-                                       PK11Context *aContext)
-    : mOutputStream(aStream), mDigestContext(aContext) {
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(DigestOutputStream,
-                  nsIOutputStream)
-
-DigestOutputStream::DigestOutputStream(nsIOutputStream* aStream,
-                                       PK11Context* aContext) :
-  mOutputStream(aStream)
-  , mDigestContext(aContext)
-{
-=======
 NS_IMPL_ISUPPORTS(DigestOutputStream, nsIOutputStream)
 
 DigestOutputStream::DigestOutputStream(nsIOutputStream* aStream,
                                        PK11Context* aContext)
     : mOutputStream(aStream), mDigestContext(aContext) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mDigestContext, "Can't have null digest context");
   MOZ_ASSERT(mOutputStream, "Can't have null output stream");
 }
@@ -1341,41 +1106,18 @@ NS_IMETHODIMP
 DigestOutputStream::Flush() { return mOutputStream->Flush(); }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DigestOutputStream::Write(const char *aBuf, uint32_t aCount, uint32_t *retval) {
-  nsresult rv = MapSECStatus(PK11_DigestOp(
-      mDigestContext, BitwiseCast<const unsigned char *, const char *>(aBuf),
-      aCount));
-||||||| merged common ancestors
-DigestOutputStream::Write(const char* aBuf, uint32_t aCount, uint32_t* retval)
-{
-  nsresult rv = MapSECStatus(
-    PK11_DigestOp(mDigestContext,
-                  BitwiseCast<const unsigned char*, const char*>(aBuf),
-                  aCount));
-=======
 DigestOutputStream::Write(const char* aBuf, uint32_t aCount, uint32_t* retval) {
   nsresult rv = MapSECStatus(PK11_DigestOp(
       mDigestContext, BitwiseCast<const unsigned char*, const char*>(aBuf),
       aCount));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   return mOutputStream->Write(aBuf, aCount, retval);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DigestOutputStream::WriteFrom(nsIInputStream *aFromStream, uint32_t aCount,
-                              uint32_t *retval) {
-||||||| merged common ancestors
-DigestOutputStream::WriteFrom(nsIInputStream* aFromStream,
-                              uint32_t aCount, uint32_t* retval)
-{
-=======
 DigestOutputStream::WriteFrom(nsIInputStream* aFromStream, uint32_t aCount,
                               uint32_t* retval) {
->>>>>>> upstream-releases
   // Not supported. We could read the stream to a buf, call DigestOp on the
   // result, seek back and pass the stream on, but it's not worth it since our
   // application (NS_AsyncCopy) doesn't invoke this on the sink.
@@ -1383,30 +1125,13 @@ DigestOutputStream::WriteFrom(nsIInputStream* aFromStream, uint32_t aCount,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DigestOutputStream::WriteSegments(nsReadSegmentFun aReader, void *aClosure,
-                                  uint32_t aCount, uint32_t *retval) {
-||||||| merged common ancestors
-DigestOutputStream::WriteSegments(nsReadSegmentFun aReader,
-                                  void *aClosure, uint32_t aCount,
-                                  uint32_t *retval)
-{
-=======
 DigestOutputStream::WriteSegments(nsReadSegmentFun aReader, void* aClosure,
                                   uint32_t aCount, uint32_t* retval) {
->>>>>>> upstream-releases
   MOZ_CRASH("DigestOutputStream::WriteSegments not implemented");
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DigestOutputStream::IsNonBlocking(bool *retval) {
-||||||| merged common ancestors
-DigestOutputStream::IsNonBlocking(bool *retval)
-{
-=======
 DigestOutputStream::IsNonBlocking(bool* retval) {
->>>>>>> upstream-releases
   return mOutputStream->IsNonBlocking(retval);
 }
 

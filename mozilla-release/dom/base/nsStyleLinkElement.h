@@ -90,17 +90,8 @@ class nsStyleLinkElement : public nsIStyleSheetLinkingElement {
    * TODO(emilio): Should probably pass a single DocumentOrShadowRoot.
    */
   mozilla::Result<Update, nsresult> UpdateStyleSheetInternal(
-<<<<<<< HEAD
-      nsIDocument* aOldDocument, mozilla::dom::ShadowRoot* aOldShadowRoot,
-      ForceUpdate = ForceUpdate::No);
-||||||| merged common ancestors
-      nsIDocument* aOldDocument,
-      mozilla::dom::ShadowRoot* aOldShadowRoot,
-      ForceUpdate = ForceUpdate::No);
-=======
       mozilla::dom::Document* aOldDocument,
       mozilla::dom::ShadowRoot* aOldShadowRoot, ForceUpdate = ForceUpdate::No);
->>>>>>> upstream-releases
 
   // Gets a suitable title and media for SheetInfo out of an element, which
   // needs to be `this`.
@@ -132,22 +123,10 @@ class nsStyleLinkElement : public nsIStyleSheetLinkingElement {
    *                     about the content that affects the resulting sheet
    *                     changed but the URI may not have changed.
    */
-<<<<<<< HEAD
-  mozilla::Result<Update, nsresult> DoUpdateStyleSheet(
-      nsIDocument* aOldDocument, mozilla::dom::ShadowRoot* aOldShadowRoot,
-      nsICSSLoaderObserver* aObserver, ForceUpdate);
-||||||| merged common ancestors
-  mozilla::Result<Update, nsresult>
-    DoUpdateStyleSheet(nsIDocument* aOldDocument,
-                       mozilla::dom::ShadowRoot* aOldShadowRoot,
-                       nsICSSLoaderObserver* aObserver,
-                       ForceUpdate);
-=======
   mozilla::Result<Update, nsresult> DoUpdateStyleSheet(
       mozilla::dom::Document* aOldDocument,
       mozilla::dom::ShadowRoot* aOldShadowRoot, nsICSSLoaderObserver* aObserver,
       ForceUpdate);
->>>>>>> upstream-releases
 
   RefPtr<mozilla::StyleSheet> mStyleSheet;
 

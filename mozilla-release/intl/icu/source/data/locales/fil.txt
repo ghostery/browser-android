@@ -19,9 +19,7 @@ fil{
         default{"latn"}
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -207,13 +205,7 @@ fil{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -2656,41 +2648,6 @@ fil{
         US{"US"}
         metric{"Metriko"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -2719,5 +2676,4 @@ fil{
             }
         }
     }
->>>>>>> upstream-releases
 }

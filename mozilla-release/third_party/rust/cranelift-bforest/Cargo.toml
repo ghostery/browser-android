@@ -1,12 +1,4 @@
 [package]
-<<<<<<< HEAD
-name = "cranelift-bforest"
-version = "0.25.0"
-||||||| merged common ancestors
-name = "cranelift-bforest"
-version = "0.20.0"
-=======
->>>>>>> upstream-releases
 authors = ["The Cranelift Project Developers"]
 name = "cranelift-bforest"
 version = "0.32.0"
@@ -17,26 +9,10 @@ repository = "https://github.com/CraneStation/cranelift"
 categories = ["no-std"]
 readme = "README.md"
 keywords = ["btree", "forest", "set", "map"]
-<<<<<<< HEAD
-categories = ["no-std"]
-license = "Apache-2.0 WITH LLVM-exception"
-repository = "https://github.com/CraneStation/cranelift"
-[dependencies.cranelift-entity]
-version = "0.25.0"
-default-features = false
-||||||| merged common ancestors
-categories = ["no-std"]
-license = "Apache-2.0 WITH LLVM-exception"
-repository = "https://github.com/CraneStation/cranelift"
-[dependencies.cranelift-entity]
-version = "0.20.0"
-default-features = false
-=======
 edition = "2018"
 
 [dependencies]
 cranelift-entity = { path = "../cranelift-entity", version = "0.32.0", default-features = false }
->>>>>>> upstream-releases
 
 [features]
 default = ["std"]

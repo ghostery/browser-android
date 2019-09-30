@@ -167,29 +167,6 @@ class GridOutline extends PureComponent {
    * Displays a message text "Cannot show outline for this grid".
    */
   renderCannotShowOutlineText() {
-<<<<<<< HEAD
-    return (
-      dom.div({ className: "grid-outline-text" },
-        dom.span(
-          {
-            className: "grid-outline-text-icon",
-            title: getStr("layout.cannotShowGridOutline.title"),
-          }
-        ),
-        getStr("layout.cannotShowGridOutline")
-      )
-||||||| merged common ancestors
-    return (
-      dom.div({ className: "grid-outline-text" },
-        dom.span(
-          {
-            className: "grid-outline-text-icon",
-            title: getStr("layout.cannotShowGridOutline.title")
-          }
-        ),
-        getStr("layout.cannotShowGridOutline")
-      )
-=======
     return dom.div(
       { className: "grid-outline-text" },
       dom.span({
@@ -197,7 +174,6 @@ class GridOutline extends PureComponent {
         title: getStr("layout.cannotShowGridOutline.title"),
       }),
       getStr("layout.cannotShowGridOutline")
->>>>>>> upstream-releases
     );
   }
 
@@ -339,27 +315,6 @@ class GridOutline extends PureComponent {
   renderGridOutline(grid) {
     const { color } = grid;
 
-<<<<<<< HEAD
-    return (
-      dom.g(
-        {
-          id: "grid-outline-group",
-          className: "grid-outline-group",
-          style: { color },
-        },
-        this.renderGrid(grid)
-      )
-||||||| merged common ancestors
-    return (
-      dom.g(
-        {
-          id: "grid-outline-group",
-          className: "grid-outline-group",
-          style: { color }
-        },
-        this.renderGrid(grid)
-      )
-=======
     return dom.g(
       {
         id: "grid-outline-group",
@@ -367,34 +322,10 @@ class GridOutline extends PureComponent {
         style: { color },
       },
       this.renderGrid(grid)
->>>>>>> upstream-releases
     );
   }
 
   renderGridOutlineBorder(borderWidth, borderHeight, color) {
-<<<<<<< HEAD
-    return (
-      dom.rect({
-        key: "border",
-        className: "grid-outline-border",
-        x: 0,
-        y: 0,
-        width: borderWidth,
-        height: borderHeight,
-      })
-    );
-||||||| merged common ancestors
-    return (
-      dom.rect({
-        key: "border",
-        className: "grid-outline-border",
-        x: 0,
-        y: 0,
-        width: borderWidth,
-        height: borderHeight
-      })
-    );
-=======
     return dom.rect({
       key: "border",
       className: "grid-outline-border",
@@ -403,7 +334,6 @@ class GridOutline extends PureComponent {
       width: borderWidth,
       height: borderHeight,
     });
->>>>>>> upstream-releases
   }
 
   renderOutline() {

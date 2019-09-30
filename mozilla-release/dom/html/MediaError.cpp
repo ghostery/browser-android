@@ -45,22 +45,6 @@ void MediaError::GetMessage(nsAString& aResult) const {
     // Print a warning message to JavaScript console to alert developers of
     // a non-whitelisted error message.
     nsAutoCString message =
-<<<<<<< HEAD
-        NS_LITERAL_CSTRING(
-            "This error message will be blank when "
-            "privacy.resistFingerprinting = true."
-            "  If it is really necessary, please add it to the whitelist in"
-            " MediaError::GetMessage: ") +
-        mMessage;
-    nsIDocument* ownerDoc = mParent->OwnerDoc();
-||||||| merged common ancestors
-      NS_LITERAL_CSTRING(
-        "This error message will be blank when privacy.resistFingerprinting = true."
-        "  If it is really necessary, please add it to the whitelist in"
-        " MediaError::GetMessage: ") +
-      mMessage;
-    nsIDocument* ownerDoc = mParent->OwnerDoc();
-=======
         NS_LITERAL_CSTRING(
             "This error message will be blank when "
             "privacy.resistFingerprinting = true."
@@ -68,7 +52,6 @@ void MediaError::GetMessage(nsAString& aResult) const {
             " MediaError::GetMessage: ") +
         mMessage;
     Document* ownerDoc = mParent->OwnerDoc();
->>>>>>> upstream-releases
     AutoJSAPI api;
     if (api.Init(ownerDoc->GetScopeObject())) {
       // We prefer this API because it can also print to our debug log and
@@ -85,15 +68,8 @@ void MediaError::GetMessage(nsAString& aResult) const {
   }
 
   if (!nsContentUtils::IsCallerChrome() &&
-<<<<<<< HEAD
-      nsContentUtils::ShouldResistFingerprinting() && shouldBlank) {
-||||||| merged common ancestors
-      nsContentUtils::ShouldResistFingerprinting() &&
-      shouldBlank) {
-=======
       nsContentUtils::ShouldResistFingerprinting(mParent->OwnerDoc()) &&
       shouldBlank) {
->>>>>>> upstream-releases
     aResult.Truncate();
     return;
   }

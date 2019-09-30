@@ -15,24 +15,10 @@
 #include "js/SourceText.h"  // JS::Source{Ownership,Text}
 #include "jsapi-tests/tests.h"
 
-<<<<<<< HEAD
-class TestTracer : public JS::CallbackTracer {
-  void onChild(const JS::GCCellPtr& thing) override {
-    if (thing.asCell() == expectedCell && thing.kind() == expectedKind) {
-      found = true;
-||||||| merged common ancestors
-class TestTracer : public JS::CallbackTracer
-{
-    void onChild(const JS::GCCellPtr& thing) override {
-        if (thing.asCell() == expectedCell && thing.kind() == expectedKind) {
-            found = true;
-        }
-=======
 class TestTracer final : public JS::CallbackTracer {
   void onChild(const JS::GCCellPtr& thing) override {
     if (thing.asCell() == expectedCell && thing.kind() == expectedKind) {
       found = true;
->>>>>>> upstream-releases
     }
   }
 
@@ -48,71 +34,25 @@ class TestTracer final : public JS::CallbackTracer {
         found(false) {}
 };
 
-<<<<<<< HEAD
-static const JSClass TestClass = {"TestClass", JSCLASS_HAS_RESERVED_SLOTS(1)};
-||||||| merged common ancestors
-static const JSClass TestClass = {
-    "TestClass",
-    JSCLASS_HAS_RESERVED_SLOTS(1)
-};
-=======
 static const JSClass TestClass = {"TestClass", JSCLASS_HAS_RESERVED_SLOTS(1)};
 
 BEGIN_TEST(testPrivateGCThingValue) {
   JS::RootedObject obj(cx, JS_NewObject(cx, &TestClass));
   CHECK(obj);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BEGIN_TEST(testPrivateGCThingValue) {
-  JS::RootedObject obj(cx, JS_NewObject(cx, &TestClass));
-  CHECK(obj);
-||||||| merged common ancestors
-BEGIN_TEST(testPrivateGCThingValue)
-{
-    JS::RootedObject obj(cx, JS_NewObject(cx, &TestClass));
-    CHECK(obj);
-=======
   // Make a JSScript to stick into a PrivateGCThingValue.
   static const char code[] = "'objet petit a'";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Make a JSScript to stick into a PrivateGCThingValue.
-  const char code[] = "'objet petit a'";
-||||||| merged common ancestors
-    // Make a JSScript to stick into a PrivateGCThingValue.
-    const char code[] = "'objet petit a'";
-=======
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, __LINE__);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::CompileOptions options(cx);
-  options.setFileAndLine(__FILE__, __LINE__);
-||||||| merged common ancestors
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(__FILE__, __LINE__);
-=======
   JS::SourceText<mozilla::Utf8Unit> srcBuf;
   CHECK(srcBuf.init(cx, code, mozilla::ArrayLength(code) - 1,
                     JS::SourceOwnership::Borrowed));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::RootedScript script(cx);
-  CHECK(JS::CompileUtf8(cx, options, code, sizeof(code) - 1, &script));
-  JS_SetReservedSlot(obj, 0, PrivateGCThingValue(script));
-||||||| merged common ancestors
-    JS::RootedScript script(cx);
-    CHECK(JS::CompileUtf8(cx, options, code, sizeof(code) - 1, &script));
-    JS_SetReservedSlot(obj, 0, PrivateGCThingValue(script));
-=======
   JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
   CHECK(script);
   JS_SetReservedSlot(obj, 0, PrivateGCThingValue(script));
->>>>>>> upstream-releases
 
   TestTracer trc(cx);
   trc.expectedCell = script;

@@ -141,17 +141,9 @@ GMPErr GMPVideoEncoderParent::Encode(
   GMPVideoi420FrameData frameData;
   inputFrameImpl->InitFrameData(frameData);
 
-<<<<<<< HEAD
-  if (!SendEncode(frameData, aCodecSpecificInfo, aFrameTypes)) {
-||||||| merged common ancestors
-  if (!SendEncode(frameData,
-                  aCodecSpecificInfo,
-                  aFrameTypes)) {
-=======
   if (!SendEncode(frameData, aCodecSpecificInfo, aFrameTypes)) {
     LOG(LogLevel::Error,
         ("%s::%s: failed to send encode", __CLASS__, __FUNCTION__));
->>>>>>> upstream-releases
     return GMPGenericErr;
   }
 

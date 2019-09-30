@@ -89,13 +89,7 @@ var ExtensionTestCommon;
  * @param {string} installType
  */
 class MockExtension {
-<<<<<<< HEAD
-  constructor(file, rootURI, installType) {
-||||||| merged common ancestors
-  constructor(file, rootURI, installType, embedded) {
-=======
   constructor(file, rootURI, addonData) {
->>>>>>> upstream-releases
     this.id = null;
     this.file = file;
     this.rootURI = rootURI;
@@ -224,20 +218,7 @@ function provide(obj, keys, value, override = false) {
   }
 }
 
-<<<<<<< HEAD
-var ExtensionTestCommon = class ExtensionTestCommon {
-||||||| merged common ancestors
-var ExtensionTestCommon = class ExtensionTestCommon {
-  static generateManifest(manifest) {
-    provide(manifest, ["name"], "Generated extension");
-    provide(manifest, ["manifest_version"], 2);
-    provide(manifest, ["version"], "1.0");
-    return manifest;
-  }
-
-=======
 ExtensionTestCommon = class ExtensionTestCommon {
->>>>>>> upstream-releases
   /**
    * This code is designed to make it easy to test a WebExtension
    * without creating a bunch of files. Everything is contained in a
@@ -286,17 +267,6 @@ ExtensionTestCommon = class ExtensionTestCommon {
 
     provide(files, ["manifest.json"], JSON.stringify(manifest));
 
-<<<<<<< HEAD
-    for (let filename in files) {
-      let contents = files[filename];
-      if (typeof contents == "function") {
-        files[filename] = this.serializeScript(contents);
-      } else if (typeof contents != "string" && !instanceOf(contents, "ArrayBuffer")) {
-        files[filename] = JSON.stringify(contents);
-||||||| merged common ancestors
-      for (let [path, data] of Object.entries(files)) {
-        xpiFiles[`webextension/${path}`] = data;
-=======
     for (let filename in files) {
       let contents = files[filename];
       if (typeof contents == "function") {
@@ -306,7 +276,6 @@ ExtensionTestCommon = class ExtensionTestCommon {
         !instanceOf(contents, "ArrayBuffer")
       ) {
         files[filename] = JSON.stringify(contents);
->>>>>>> upstream-releases
       }
     }
 
@@ -460,13 +429,7 @@ ExtensionTestCommon = class ExtensionTestCommon {
 
     // This may be "temporary" or "permanent".
     if (data.useAddonManager) {
-<<<<<<< HEAD
-      return new MockExtension(file, jarURI, data.useAddonManager);
-||||||| merged common ancestors
-      return new MockExtension(file, jarURI, data.useAddonManager, data.embedded);
-=======
       return new MockExtension(file, jarURI, data);
->>>>>>> upstream-releases
     }
 
     let id;

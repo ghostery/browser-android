@@ -142,24 +142,6 @@ class Event : public nsISupports, public nsWrapperCache {
   // Returns true if the event should be trusted.
   bool Init(EventTarget* aGlobal);
 
-<<<<<<< HEAD
-  static PopupControlState GetEventPopupControlState(
-      WidgetEvent* aEvent, Event* aDOMEvent = nullptr);
-
-  static void PopupAllowedEventsChanged();
-
-  static void Shutdown();
-
-||||||| merged common ancestors
-  static PopupControlState GetEventPopupControlState(WidgetEvent* aEvent,
-                                                     Event* aDOMEvent = nullptr);
-
-  static void PopupAllowedEventsChanged();
-
-  static void Shutdown();
-
-=======
->>>>>>> upstream-releases
   static const char* GetEventName(EventMessage aEventType);
   static CSSIntPoint GetClientCoords(nsPresContext* aPresContext,
                                      WidgetEvent* aEvent,

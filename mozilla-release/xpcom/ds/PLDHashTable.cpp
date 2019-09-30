@@ -61,61 +61,27 @@ class AutoDestructorOp {
 
 #endif
 
-<<<<<<< HEAD
-/* static */ PLDHashNumber PLDHashTable::HashStringKey(const void* aKey) {
-||||||| merged common ancestors
-/* static */ PLDHashNumber
-PLDHashTable::HashStringKey(const void* aKey)
-{
-=======
 /* static */
 PLDHashNumber PLDHashTable::HashStringKey(const void* aKey) {
->>>>>>> upstream-releases
   return HashString(static_cast<const char*>(aKey));
 }
 
-<<<<<<< HEAD
-/* static */ PLDHashNumber PLDHashTable::HashVoidPtrKeyStub(const void* aKey) {
-||||||| merged common ancestors
-/* static */ PLDHashNumber
-PLDHashTable::HashVoidPtrKeyStub(const void* aKey)
-{
-=======
 /* static */
 PLDHashNumber PLDHashTable::HashVoidPtrKeyStub(const void* aKey) {
->>>>>>> upstream-releases
   return nsPtrHashKey<void>::HashKey(aKey);
 }
 
-<<<<<<< HEAD
-/* static */ bool PLDHashTable::MatchEntryStub(const PLDHashEntryHdr* aEntry,
-                                               const void* aKey) {
-||||||| merged common ancestors
-/* static */ bool
-PLDHashTable::MatchEntryStub(const PLDHashEntryHdr* aEntry, const void* aKey)
-{
-=======
 /* static */
 bool PLDHashTable::MatchEntryStub(const PLDHashEntryHdr* aEntry,
                                   const void* aKey) {
->>>>>>> upstream-releases
   const PLDHashEntryStub* stub = (const PLDHashEntryStub*)aEntry;
 
   return stub->key == aKey;
 }
 
-<<<<<<< HEAD
-/* static */ bool PLDHashTable::MatchStringKey(const PLDHashEntryHdr* aEntry,
-                                               const void* aKey) {
-||||||| merged common ancestors
-/* static */ bool
-PLDHashTable::MatchStringKey(const PLDHashEntryHdr* aEntry, const void* aKey)
-{
-=======
 /* static */
 bool PLDHashTable::MatchStringKey(const PLDHashEntryHdr* aEntry,
                                   const void* aKey) {
->>>>>>> upstream-releases
   const PLDHashEntryStub* stub = (const PLDHashEntryStub*)aEntry;
 
   // XXX tolerate null keys on account of sloppy Mozilla callers.
@@ -124,37 +90,16 @@ bool PLDHashTable::MatchStringKey(const PLDHashEntryHdr* aEntry,
           strcmp((const char*)stub->key, (const char*)aKey) == 0);
 }
 
-<<<<<<< HEAD
-/* static */ void PLDHashTable::MoveEntryStub(PLDHashTable* aTable,
-                                              const PLDHashEntryHdr* aFrom,
-                                              PLDHashEntryHdr* aTo) {
-||||||| merged common ancestors
-/* static */ void
-PLDHashTable::MoveEntryStub(PLDHashTable* aTable,
-                            const PLDHashEntryHdr* aFrom,
-                            PLDHashEntryHdr* aTo)
-{
-=======
 /* static */
 void PLDHashTable::MoveEntryStub(PLDHashTable* aTable,
                                  const PLDHashEntryHdr* aFrom,
                                  PLDHashEntryHdr* aTo) {
->>>>>>> upstream-releases
   memcpy(aTo, aFrom, aTable->mEntrySize);
 }
 
-<<<<<<< HEAD
-/* static */ void PLDHashTable::ClearEntryStub(PLDHashTable* aTable,
-                                               PLDHashEntryHdr* aEntry) {
-||||||| merged common ancestors
-/* static */ void
-PLDHashTable::ClearEntryStub(PLDHashTable* aTable, PLDHashEntryHdr* aEntry)
-{
-=======
 /* static */
 void PLDHashTable::ClearEntryStub(PLDHashTable* aTable,
                                   PLDHashEntryHdr* aEntry) {
->>>>>>> upstream-releases
   memset(aEntry, 0, aTable->mEntrySize);
 }
 
@@ -194,21 +139,11 @@ static inline uint32_t MinLoad(uint32_t aCapacity) {
 // - table must be at most 75% full;
 // - capacity must be a power of two;
 // - capacity cannot be too small.
-<<<<<<< HEAD
-static inline void BestCapacity(uint32_t aLength, uint32_t* aCapacityOut,
-                                uint32_t* aLog2CapacityOut) {
-||||||| merged common ancestors
-static inline void
-BestCapacity(uint32_t aLength, uint32_t* aCapacityOut,
-             uint32_t* aLog2CapacityOut)
-{
-=======
 static inline void BestCapacity(uint32_t aLength, uint32_t* aCapacityOut,
                                 uint32_t* aLog2CapacityOut) {
   // Callers should ensure this is true.
   MOZ_ASSERT(aLength <= PLDHashTable::kMaxInitialLength);
 
->>>>>>> upstream-releases
   // Compute the smallest capacity allowing |aLength| elements to be inserted
   // without rehashing.
   uint32_t capacity = (aLength * 4 + (3 - 1)) / 3;  // == ceil(aLength * 4 / 3)
@@ -343,21 +278,9 @@ void PLDHashTable::Hash2(PLDHashNumber aHash0, uint32_t& aHash2Out,
 // should not hurt the hash function's effectiveness much.
 
 // Match an entry's mKeyHash against an unstored one computed from a key.
-<<<<<<< HEAD
-/* static */ bool PLDHashTable::MatchSlotKeyhash(Slot& aSlot,
-                                                 const PLDHashNumber aKeyHash) {
-  return (aSlot.KeyHash() & ~kCollisionFlag) == aKeyHash;
-||||||| merged common ancestors
-/* static */ bool
-PLDHashTable::MatchEntryKeyhash(const PLDHashEntryHdr* aEntry,
-                                const PLDHashNumber aKeyHash)
-{
-  return (aEntry->mKeyHash & ~kCollisionFlag) == aKeyHash;
-=======
 /* static */
 bool PLDHashTable::MatchSlotKeyhash(Slot& aSlot, const PLDHashNumber aKeyHash) {
   return (aSlot.KeyHash() & ~kCollisionFlag) == aKeyHash;
->>>>>>> upstream-releases
 }
 
 // Compute the address of the indexed entry in table.
@@ -632,22 +555,6 @@ PLDHashEntryHdr* PLDHashTable::Add(const void* aKey,
   // Look for entry after possibly growing, so we don't have to add it,
   // then skip it while growing the table and re-add it after.
   PLDHashNumber keyHash = ComputeKeyHash(aKey);
-<<<<<<< HEAD
-  Slot slot = SearchTable<ForAdd>(aKey, keyHash,
-                                  [&](Slot& found) -> Slot { return found; },
-                                  [&]() -> Slot {
-                                    MOZ_CRASH("Nope");
-                                    return Slot(nullptr, nullptr);
-                                  });
-  if (!slot.IsLive()) {
-    // Initialize the slot, indicating that it's no longer free.
-    if (slot.IsRemoved()) {
-||||||| merged common ancestors
-  PLDHashEntryHdr* entry = SearchTable<ForAdd>(aKey, keyHash);
-  if (!EntryIsLive(entry)) {
-    // Initialize the entry, indicating that it's no longer free.
-    if (EntryIsRemoved(entry)) {
-=======
   Slot slot = SearchTable<ForAdd>(
       aKey, keyHash, [&](Slot& found) -> Slot { return found; },
       [&]() -> Slot {
@@ -657,7 +564,6 @@ PLDHashEntryHdr* PLDHashTable::Add(const void* aKey,
   if (!slot.IsLive()) {
     // Initialize the slot, indicating that it's no longer free.
     if (slot.IsRemoved()) {
->>>>>>> upstream-releases
       mRemovedCount--;
       keyHash |= kCollisionFlag;
     }
@@ -698,30 +604,7 @@ void PLDHashTable::Remove(const void* aKey) {
   if (!mEntryStore.Get()) {
     return;
   }
-<<<<<<< HEAD
 
-  PLDHashNumber keyHash = ComputeKeyHash(aKey);
-  SearchTable<ForSearchOrRemove>(aKey, keyHash,
-                                 [&](Slot& slot) {
-                                   RawRemove(slot);
-                                   ShrinkIfAppropriate();
-                                 },
-                                 [&]() {
-                                   // Do nothing.
-                                 });
-}
-||||||| merged common ancestors
-}
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void PLDHashTable::RemoveEntry(PLDHashEntryHdr* aEntry) {
-||||||| merged common ancestors
-void
-PLDHashTable::RemoveEntry(PLDHashEntryHdr* aEntry)
-{
-=======
   PLDHashNumber keyHash = ComputeKeyHash(aKey);
   SearchTable<ForSearchOrRemove>(
       aKey, keyHash,
@@ -735,7 +618,6 @@ PLDHashTable::RemoveEntry(PLDHashEntryHdr* aEntry)
 }
 
 void PLDHashTable::RemoveEntry(PLDHashEntryHdr* aEntry) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   AutoWriteOp op(mChecker);
 #endif

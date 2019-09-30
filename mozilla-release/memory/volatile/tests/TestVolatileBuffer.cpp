@@ -18,7 +18,8 @@
 
 using namespace mozilla;
 
-TEST(VolatileBufferTest, HeapVolatileBuffersWork) {
+TEST(VolatileBufferTest, HeapVolatileBuffersWork)
+{
   RefPtr<VolatileBuffer> heapbuf = new VolatileBuffer();
 
   ASSERT_TRUE(heapbuf)
@@ -33,7 +34,8 @@ TEST(VolatileBufferTest, HeapVolatileBuffersWork) {
   EXPECT_TRUE(ptr) << "Couldn't get pointer from VolatileBufferPtr";
 }
 
-TEST(VolatileBufferTest, RealVolatileBuffersWork) {
+TEST(VolatileBufferTest, RealVolatileBuffersWork)
+{
   RefPtr<VolatileBuffer> buf = new VolatileBuffer();
 
   ASSERT_TRUE(buf)
@@ -54,17 +56,9 @@ TEST(VolatileBufferTest, RealVolatileBuffersWork) {
       VolatileBufferPtr<char> ptr2(buf);
 
       EXPECT_FALSE(ptr.WasBufferPurged())
-<<<<<<< HEAD
-          << "Failed to lock buffer again while currently locked";
-      ASSERT_TRUE(ptr2) << "Didn't get a pointer on the second lock";
-||||||| merged common ancestors
-        << "Failed to lock buffer again while currently locked";
-      ASSERT_TRUE(ptr2) << "Didn't get a pointer on the second lock";
-=======
           << "Failed to lock buffer again while currently locked";
       ASSERT_TRUE(ptr2)
       << "Didn't get a pointer on the second lock";
->>>>>>> upstream-releases
 
       strcpy(ptr2, teststr);
     }

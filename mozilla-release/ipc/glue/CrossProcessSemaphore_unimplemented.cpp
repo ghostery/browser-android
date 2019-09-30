@@ -10,33 +10,15 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ CrossProcessSemaphore* CrossProcessSemaphore::Create(const char*,
-                                                                  uint32_t) {
-||||||| merged common ancestors
-/* static */ CrossProcessSemaphore*
-CrossProcessSemaphore::Create(const char*, uint32_t)
-{
-=======
 /* static */
 CrossProcessSemaphore* CrossProcessSemaphore::Create(const char*, uint32_t) {
->>>>>>> upstream-releases
   MOZ_CRASH("Cross-process semaphores not allowed on this platform.");
   return nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ CrossProcessSemaphore* CrossProcessSemaphore::Create(
-    CrossProcessSemaphoreHandle) {
-||||||| merged common ancestors
-/* static */ CrossProcessSemaphore*
-CrossProcessSemaphore::Create(CrossProcessSemaphoreHandle)
-{
-=======
 /* static */
 CrossProcessSemaphore* CrossProcessSemaphore::Create(
     CrossProcessSemaphoreHandle) {
->>>>>>> upstream-releases
   MOZ_CRASH("Cross-process semaphores not allowed on this platform.");
   return nullptr;
 }

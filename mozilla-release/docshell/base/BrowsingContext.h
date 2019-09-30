@@ -73,8 +73,6 @@ class BrowsingContextBase {
 #include "mozilla/dom/BrowsingContextFieldList.h"
 };
 
-class ContentParent;
-
 // BrowsingContext, in this context, is the cross process replicated
 // environment in which information about documents is stored. In
 // particular the tree structure of nested browsing contexts is
@@ -87,25 +85,6 @@ class ContentParent;
 // to the parent process, making it possible to traverse the
 // BrowsingContext tree for a tab, in both the parent and the child
 // process.
-<<<<<<< HEAD
-//
-// Trees of BrowsingContexts should only ever contain nodes of the
-// same BrowsingContext::Type. This is enforced by asserts in the
-// BrowsingContext::Create* methods.
-class BrowsingContext : public nsWrapperCache,
-                        public SupportsWeakPtr<BrowsingContext>,
-                        public LinkedListElement<RefPtr<BrowsingContext>> {
- public:
-  enum class Type { Chrome, Content };
-
-||||||| merged common ancestors
-class BrowsingContext
-  : public nsWrapperCache
-  , public SupportsWeakPtr<BrowsingContext>
-  , public LinkedListElement<RefPtr<BrowsingContext>>
-{
-public:
-=======
 //
 // Trees of BrowsingContexts should only ever contain nodes of the
 // same BrowsingContext::Type. This is enforced by asserts in the
@@ -116,50 +95,16 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
 
   using Children = nsTArray<RefPtr<BrowsingContext>>;
 
->>>>>>> upstream-releases
   static void Init();
   static LogModule* GetLog();
   static void CleanupContexts(uint64_t aProcessId);
 
   // Look up a BrowsingContext in the current process by ID.
   static already_AddRefed<BrowsingContext> Get(uint64_t aId);
-<<<<<<< HEAD
-||||||| merged common ancestors
-  static already_AddRefed<BrowsingContext> Create(nsIDocShell* aDocShell);
-=======
   static already_AddRefed<BrowsingContext> Get(GlobalObject&, uint64_t aId) {
     return Get(aId);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Create a brand-new BrowsingContext object.
-  static already_AddRefed<BrowsingContext> Create(BrowsingContext* aParent,
-                                                  BrowsingContext* aOpener,
-                                                  const nsAString& aName,
-                                                  Type aType);
-
-  // Create a BrowsingContext object from over IPC.
-  static already_AddRefed<BrowsingContext> CreateFromIPC(
-      BrowsingContext* aParent, BrowsingContext* aOpener,
-      const nsAString& aName, uint64_t aId, ContentParent* aOriginProcess);
-
-  // Get the DocShell for this BrowsingContext if it is in-process, or
-  // null if it's not.
-  nsIDocShell* GetDocShell() { return mDocShell; }
-  void SetDocShell(nsIDocShell* aDocShell);
-
-  // Attach the current BrowsingContext to its parent, in both the child and the
-  // parent process. BrowsingContext objects are created attached by default, so
-  // this method need only be called when restoring cached BrowsingContext
-  // objects.
-  void Attach();
-||||||| merged common ancestors
-  // Attach the current BrowsingContext to its parent, in both the
-  // child and the parent process. If 'aParent' is null, 'this' is
-  // taken to be a root BrowsingContext.
-  void Attach(BrowsingContext* aParent);
-=======
   static already_AddRefed<BrowsingContext> GetFromWindow(
       WindowProxyHolder& aProxy);
   static already_AddRefed<BrowsingContext> GetFromWindow(
@@ -208,7 +153,6 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
   // this method need only be called when restoring cached BrowsingContext
   // objects.
   void Attach(bool aFromIPC = false);
->>>>>>> upstream-releases
 
   // Detach the current BrowsingContext from its parent, in both the
   // child and the parent process.
@@ -228,39 +172,17 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
   // CacheChildren.
   bool IsCached();
 
-<<<<<<< HEAD
-  // TODO(farre): We should sync changes from SetName to the parent
-  // process. [Bug 1490303]
-  void SetName(const nsAString& aName) { mName = aName; }
-||||||| merged common ancestors
-  void SetName(const nsAString& aName) { mName = aName; }
-=======
   const nsString& Name() const { return mName; }
->>>>>>> upstream-releases
   void GetName(nsAString& aName) { aName = mName; }
   bool NameEquals(const nsAString& aName) { return mName.Equals(aName); }
 
-<<<<<<< HEAD
-  bool IsContent() const { return mType == Type::Content; }
-
-||||||| merged common ancestors
-=======
   bool IsContent() const { return mType == Type::Content; }
   bool IsChrome() const { return !IsContent(); }
 
   bool IsTopContent() const { return IsContent() && !GetParent(); }
 
->>>>>>> upstream-releases
   uint64_t Id() const { return mBrowsingContextId; }
 
-<<<<<<< HEAD
-  BrowsingContext* GetParent() { return mParent; }
-||||||| merged common ancestors
-  already_AddRefed<BrowsingContext> GetParent()
-  {
-    return do_AddRef(mParent.get());
-  }
-=======
   BrowsingContext* GetParent() const { return mParent; }
 
   BrowsingContext* Top();
@@ -269,7 +191,6 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
   void SetOpener(BrowsingContext* aOpener) {
     SetOpenerId(aOpener ? aOpener->Id() : 0);
   }
->>>>>>> upstream-releases
 
   bool HasOpener() const;
 
@@ -277,17 +198,6 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
 
   BrowsingContextGroup* Group() { return mGroup; }
 
-<<<<<<< HEAD
-  BrowsingContext* GetOpener() { return mOpener; }
-
-  void SetOpener(BrowsingContext* aOpener);
-
-  static void GetRootBrowsingContexts(
-      nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts);
-||||||| merged common ancestors
-  static void GetRootBrowsingContexts(
-    nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts);
-=======
   // Using the rules for choosing a browsing context we try to find
   // the browsing context with the given name in the set of
   // transitively reachable browsing contexts. Performs access control
@@ -305,16 +215,8 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
   // '_top', or '_blank'. Performs access control with regard to
   // 'this'.
   BrowsingContext* FindChildWithName(const nsAString& aName);
->>>>>>> upstream-releases
 
   nsISupports* GetParentObject() const;
-<<<<<<< HEAD
-  JSObject* WrapObject(JSContext* aCx,
-                       JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-=======
   JSObject* WrapObject(JSContext* aCx,
                        JS::Handle<JSObject*> aGivenProto) override;
 
@@ -336,7 +238,6 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
   void SetWindowProxy(JS::Handle<JSObject*> aWindowProxy) {
     mWindowProxy = aWindowProxy;
   }
->>>>>>> upstream-releases
 
   MOZ_DECLARE_WEAKREFERENCE_TYPENAME(BrowsingContext)
   NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(BrowsingContext)
@@ -454,11 +355,6 @@ class BrowsingContext : public nsWrapperCache, public BrowsingContextBase {
   struct IPCInitializer {
     uint64_t mId;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
     // IDs are used for Parent and Opener to allow for this object to be
     // deserialized before other BrowsingContext in the BrowsingContextGroup
     // have been initialized.
@@ -482,28 +378,7 @@ protected:
       ContentParent* aOriginProcess);
 
  protected:
->>>>>>> upstream-releases
   virtual ~BrowsingContext();
-<<<<<<< HEAD
-  BrowsingContext(BrowsingContext* aParent, BrowsingContext* aOpener,
-                  const nsAString& aName, uint64_t aBrowsingContextId,
-                  Type aType);
-
- private:
-  // Type of BrowsingContent
-  const Type mType;
-
-  // Unique id identifying BrowsingContext
-||||||| merged common ancestors
-  // Create a new BrowsingContext for 'aDocShell'. The id will be
-  // generated so that it is unique across all content child processes
-  // and the content parent process.
-  explicit BrowsingContext(nsIDocShell* aDocShell);
-  BrowsingContext(uint64_t aBrowsingContextId,
-                  const nsAString& aName);
-
-private:
-=======
   BrowsingContext(BrowsingContext* aParent, BrowsingContextGroup* aGroup,
                   uint64_t aBrowsingContextId, Type aType);
 
@@ -586,13 +461,11 @@ private:
   const Type mType;
 
   // Unique id identifying BrowsingContext
->>>>>>> upstream-releases
   const uint64_t mBrowsingContextId;
 
   RefPtr<BrowsingContextGroup> mGroup;
   RefPtr<BrowsingContext> mParent;
   Children mChildren;
-  WeakPtr<BrowsingContext> mOpener;
   nsCOMPtr<nsIDocShell> mDocShell;
 
   RefPtr<Element> mEmbedderElement;
@@ -655,16 +528,6 @@ struct IPDLParamTraits<dom::BrowsingContext::Transaction> {
                    dom::BrowsingContext::Transaction* aTransaction);
 };
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-
-#endif  // !defined(mozilla_dom_BrowsingContext_h)
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-#endif
-=======
 template <>
 struct IPDLParamTraits<dom::BrowsingContext::FieldEpochs> {
   static void Write(IPC::Message* aMessage, IProtocol* aActor,
@@ -689,4 +552,3 @@ struct IPDLParamTraits<dom::BrowsingContext::IPCInitializer> {
 }  // namespace mozilla
 
 #endif  // !defined(mozilla_dom_BrowsingContext_h)
->>>>>>> upstream-releases

@@ -23,11 +23,6 @@ class VsyncIOThreadHolder final {
 
   RefPtr<nsIThread> GetThread() const;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   bool IsOnCurrentThread() const { return mThread->IsOnCurrentThread(); }
 
   void Dispatch(already_AddRefed<nsIRunnable> task) {
@@ -35,7 +30,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   ~VsyncIOThreadHolder();
 
  private:

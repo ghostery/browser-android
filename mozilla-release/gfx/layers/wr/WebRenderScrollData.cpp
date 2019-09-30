@@ -18,27 +18,11 @@ namespace mozilla {
 namespace layers {
 
 WebRenderLayerScrollData::WebRenderLayerScrollData()
-<<<<<<< HEAD
-    : mDescendantCount(-1),
-      mTransformIsPerspective(false),
-      mEventRegionsOverride(EventRegionsOverride::NoOverride),
-      mScrollbarAnimationId(0),
-      mFixedPosScrollContainerId(ScrollableLayerGuid::NULL_SCROLL_ID) {}
-||||||| merged common ancestors
-  : mDescendantCount(-1)
-  , mTransformIsPerspective(false)
-  , mEventRegionsOverride(EventRegionsOverride::NoOverride)
-  , mScrollbarAnimationId(0)
-  , mFixedPosScrollContainerId(FrameMetrics::NULL_SCROLL_ID)
-{
-}
-=======
     : mDescendantCount(-1),
       mTransformIsPerspective(false),
       mEventRegionsOverride(EventRegionsOverride::NoOverride),
       mFixedPosScrollContainerId(ScrollableLayerGuid::NULL_SCROLL_ID),
       mRenderRoot(wr::RenderRoot::Default) {}
->>>>>>> upstream-releases
 
 WebRenderLayerScrollData::~WebRenderLayerScrollData() {}
 
@@ -46,25 +30,6 @@ void WebRenderLayerScrollData::InitializeRoot(int32_t aDescendantCount) {
   mDescendantCount = aDescendantCount;
 }
 
-<<<<<<< HEAD
-void WebRenderLayerScrollData::Initialize(
-    WebRenderScrollData& aOwner, nsDisplayItem* aItem, int32_t aDescendantCount,
-    const ActiveScrolledRoot* aStopAtAsr,
-    const Maybe<gfx::Matrix4x4>& aAncestorTransform) {
-  MOZ_ASSERT(aDescendantCount >= 0);  // Ensure value is valid
-  MOZ_ASSERT(mDescendantCount ==
-             -1);  // Don't allow re-setting an already set value
-||||||| merged common ancestors
-void
-WebRenderLayerScrollData::Initialize(WebRenderScrollData& aOwner,
-                                     nsDisplayItem* aItem,
-                                     int32_t aDescendantCount,
-                                     const ActiveScrolledRoot* aStopAtAsr,
-                                     const Maybe<gfx::Matrix4x4>& aAncestorTransform)
-{
-  MOZ_ASSERT(aDescendantCount >= 0); // Ensure value is valid
-  MOZ_ASSERT(mDescendantCount == -1); // Don't allow re-setting an already set value
-=======
 void WebRenderLayerScrollData::Initialize(
     WebRenderScrollData& aOwner, nsDisplayItem* aItem, int32_t aDescendantCount,
     const ActiveScrolledRoot* aStopAtAsr,
@@ -73,7 +38,6 @@ void WebRenderLayerScrollData::Initialize(
   MOZ_ASSERT(aDescendantCount >= 0);  // Ensure value is valid
   MOZ_ASSERT(mDescendantCount ==
              -1);  // Don't allow re-setting an already set value
->>>>>>> upstream-releases
   mDescendantCount = aDescendantCount;
   mRenderRoot = aRenderRoot;
 
@@ -176,14 +140,8 @@ void WebRenderLayerScrollData::Dump(const WebRenderScrollData& aOwner) const {
                   mReferentRenderRoot->ToString().c_str());
   }
   printf_stderr("  scrollbar type: %d animation: %" PRIx64 "\n",
-<<<<<<< HEAD
-                (int)mScrollbarData.mScrollbarLayerType, mScrollbarAnimationId);
-||||||| merged common ancestors
-    (int)mScrollbarData.mScrollbarLayerType, mScrollbarAnimationId);
-=======
                 (int)mScrollbarData.mScrollbarLayerType,
                 mScrollbarAnimationId.valueOr(0));
->>>>>>> upstream-releases
   printf_stderr("  fixed pos container: %" PRIu64 "\n",
                 mFixedPosScrollContainerId);
 }
@@ -194,21 +152,7 @@ WebRenderScrollData::WebRenderScrollData()
 WebRenderScrollData::WebRenderScrollData(WebRenderLayerManager* aManager)
     : mManager(aManager), mIsFirstPaint(false), mPaintSequenceNumber(0) {}
 
-<<<<<<< HEAD
-WebRenderScrollData::~WebRenderScrollData() {}
-
 WebRenderLayerManager* WebRenderScrollData::GetManager() const {
-||||||| merged common ancestors
-WebRenderScrollData::~WebRenderScrollData()
-{
-}
-
-WebRenderLayerManager*
-WebRenderScrollData::GetManager() const
-{
-=======
-WebRenderLayerManager* WebRenderScrollData::GetManager() const {
->>>>>>> upstream-releases
   return mManager;
 }
 
@@ -253,27 +197,7 @@ Maybe<size_t> WebRenderScrollData::HasMetadataFor(
   return (it == mScrollIdMap.end() ? Nothing() : Some(it->second));
 }
 
-<<<<<<< HEAD
-void WebRenderScrollData::SetFocusTarget(const FocusTarget& aFocusTarget) {
-  mFocusTarget = aFocusTarget;
-}
-
 void WebRenderScrollData::SetIsFirstPaint() { mIsFirstPaint = true; }
-||||||| merged common ancestors
-void
-WebRenderScrollData::SetFocusTarget(const FocusTarget& aFocusTarget)
-{
-  mFocusTarget = aFocusTarget;
-}
-
-void
-WebRenderScrollData::SetIsFirstPaint()
-{
-  mIsFirstPaint = true;
-}
-=======
-void WebRenderScrollData::SetIsFirstPaint() { mIsFirstPaint = true; }
->>>>>>> upstream-releases
 
 bool WebRenderScrollData::IsFirstPaint() const { return mIsFirstPaint; }
 

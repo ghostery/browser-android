@@ -17,42 +17,6 @@ namespace layers {
 
 class TextureClient;
 
-<<<<<<< HEAD
-class D3D9RecycleAllocator : public TextureClientRecycleAllocator {
- public:
-  explicit D3D9RecycleAllocator(KnowsCompositor* aAllocator,
-                                IDirect3DDevice9* aDevice)
-      : TextureClientRecycleAllocator(aAllocator), mDevice(aDevice) {}
-
-  already_AddRefed<TextureClient> CreateOrRecycleClient(
-      gfx::SurfaceFormat aFormat, const gfx::IntSize& aSize);
-
- protected:
-  virtual already_AddRefed<TextureClient> Allocate(
-      gfx::SurfaceFormat aFormat, gfx::IntSize aSize, BackendSelector aSelector,
-      TextureFlags aTextureFlags, TextureAllocationFlags aAllocFlags) override;
-||||||| merged common ancestors
-class D3D9RecycleAllocator : public TextureClientRecycleAllocator
-{
-public:
-  explicit D3D9RecycleAllocator(KnowsCompositor* aAllocator,
-                                IDirect3DDevice9* aDevice)
-    : TextureClientRecycleAllocator(aAllocator)
-    , mDevice(aDevice)
-  {}
-
-  already_AddRefed<TextureClient>
-  CreateOrRecycleClient(gfx::SurfaceFormat aFormat,
-                        const gfx::IntSize& aSize);
-
-protected:
-  virtual already_AddRefed<TextureClient>
-  Allocate(gfx::SurfaceFormat aFormat,
-           gfx::IntSize aSize,
-           BackendSelector aSelector,
-           TextureFlags aTextureFlags,
-           TextureAllocationFlags aAllocFlags) override;
-=======
 class D3D9RecycleAllocator : public TextureClientRecycleAllocator {
  public:
   D3D9RecycleAllocator(KnowsCompositor* aAllocator, IDirect3DDevice9* aDevice)
@@ -65,7 +29,6 @@ class D3D9RecycleAllocator : public TextureClientRecycleAllocator {
   already_AddRefed<TextureClient> Allocate(
       gfx::SurfaceFormat aFormat, gfx::IntSize aSize, BackendSelector aSelector,
       TextureFlags aTextureFlags, TextureAllocationFlags aAllocFlags) override;
->>>>>>> upstream-releases
 
   RefPtr<IDirect3DDevice9> mDevice;
 };

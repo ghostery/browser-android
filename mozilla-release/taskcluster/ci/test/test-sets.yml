@@ -72,18 +72,7 @@ talos:
     - talos-tp5o
     - talos-perf-reftest
     - talos-perf-reftest-singletons
-<<<<<<< HEAD
-    - talos-tp6-stylo-threads
-    - talos-tps
-||||||| merged common ancestors
-    - talos-tp6
-    - talos-tp6-stylo-threads
-    - talos-tps
-    - talos-speedometer
-    - talos-motionmark
-=======
     - talos-tabswitch
->>>>>>> upstream-releases
     # - talos-h1 Bug 1487031 - Disabled for not finding actionable regressions
     # - talos-h2 Bug 1487031 - Disabled for not finding actionable regressions
 
@@ -91,16 +80,6 @@ talos-ux:
     - talos-g4
 
 raptor-firefox:
-<<<<<<< HEAD
-    - raptor-tp6-1-firefox
-    - raptor-tp6-2-firefox
-    - raptor-tp6-3-firefox
-    - raptor-tp6-4-firefox
-    - raptor-tp6-5-firefox
-    - raptor-tp6-6-firefox
-||||||| merged common ancestors
-    - raptor-tp6-firefox
-=======
     - raptor-tp6-1-firefox
     - raptor-tp6-2-firefox
     - raptor-tp6-3-firefox
@@ -112,42 +91,12 @@ raptor-firefox:
     - raptor-tp6-9-firefox
     - raptor-tp6-10-firefox
     - raptor-tp6-binast-1-firefox
->>>>>>> upstream-releases
     - raptor-speedometer-firefox
     - raptor-stylebench-firefox
     - raptor-motionmark-htmlsuite-firefox
     - raptor-motionmark-animometer-firefox
     - raptor-webaudio-firefox
     - raptor-sunspider-firefox
-<<<<<<< HEAD
-    - raptor-wasm-godot-firefox
-
-raptor-chrome:
-    - raptor-tp6-1-chrome
-    - raptor-tp6-2-chrome
-    - raptor-tp6-3-chrome
-    - raptor-tp6-4-chrome
-    - raptor-tp6-5-chrome
-    - raptor-tp6-6-chrome
-    - raptor-speedometer-chrome
-    - raptor-stylebench-chrome
-    - raptor-motionmark-htmlsuite-chrome
-    - raptor-motionmark-animometer-chrome
-    - raptor-webaudio-chrome
-    - raptor-sunspider-chrome
-    - raptor-wasm-godot-chrome
-||||||| merged common ancestors
-
-raptor-chrome:
-    - raptor-tp6-chrome
-    - raptor-speedometer-chrome
-    - raptor-stylebench-chrome
-    - raptor-motionmark-htmlsuite-chrome
-    - raptor-motionmark-animometer-chrome
-    - raptor-webaudio-chrome
-    - raptor-gdocs-chrome
-    - raptor-sunspider-chrome
-=======
     - raptor-wasm-godot-firefox
     - raptor-youtube-playback-firefox
     - raptor-tp6-1-firefox-cold
@@ -196,7 +145,6 @@ raptor-chromium:
     - raptor-tp6-2-chromium-cold
     - raptor-tp6-3-chromium-cold
     - raptor-tp6-4-chromium-cold
->>>>>>> upstream-releases
 
 # Fetch tasks are only supported on Linux for now,
 # so these need to be separate sets.
@@ -205,16 +153,10 @@ raptor-fetch-firefox:
     - raptor-wasm-misc-firefox
     - raptor-wasm-misc-baseline-firefox
     - raptor-wasm-misc-ion-firefox
-<<<<<<< HEAD
-    - raptor-wasm-godot-baseline-firefox
-    - raptor-wasm-godot-ion-firefox
-||||||| merged common ancestors
-=======
     - raptor-wasm-misc-cranelift-firefox
     - raptor-wasm-godot-baseline-firefox
     - raptor-wasm-godot-ion-firefox
     - raptor-wasm-godot-cranelift-firefox
->>>>>>> upstream-releases
     - raptor-assorted-dom-firefox
 
 raptor-fetch-profiling:
@@ -265,33 +207,10 @@ linux-qr-tests:
     - reftest
     - xpcshell
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-linux-talos-profiling:
-    - talos-bcv-profiling
-    - talos-chrome-profiling
-    - talos-damp-profiling
-    - talos-dromaeojs-profiling
-    - talos-g1-profiling
-    - talos-g3-profiling
-    - talos-g4-profiling
-    - talos-g5-profiling
-    - talos-other-profiling
-    - talos-perf-reftest-profiling
-    - talos-perf-reftest-singletons-profiling
-    - talos-speedometer-profiling
-    - talos-motionmark-profiling
-    - talos-svgr-profiling
-    - talos-tp5o-profiling
-    - talos-tp6-profiling
-    # - talos-tps-profiling # Bug 1453007 - times out
-
-=======
 linux-qr-smoketests:
     - crashtest
     - reftest
 
->>>>>>> upstream-releases
 linux-talos-flex:
     - talos-flex
 
@@ -380,45 +299,9 @@ windows-talos:
     - talos-svgr
     - talos-tp5o
     - talos-xperf
-<<<<<<< HEAD
-    - talos-tps
-||||||| merged common ancestors
-    - talos-speedometer
-    - talos-tp6
-    - talos-tps
-    - talos-motionmark
-=======
     - talos-tabswitch
->>>>>>> upstream-releases
     # - talos-h1 Bug 1487031 - Disabled for not finding actionable regressions
 
-<<<<<<< HEAD
-marionette-gpu-tests:
-    - marionette-gpu
-
-macosx64-tests:
-||||||| merged common ancestors
-windows-talos-profiling:
-    - talos-bcv-profiling
-    - talos-chrome-profiling
-    - talos-damp-profiling
-    - talos-dromaeojs-profiling
-    - talos-g1-profiling
-    - talos-g3-profiling
-    - talos-g4-profiling
-    - talos-g5-profiling
-    - talos-motionmark-profiling
-    - talos-other-profiling
-    - talos-perf-reftest-profiling
-    - talos-perf-reftest-singletons-profiling
-    - talos-speedometer-profiling
-    - talos-svgr-profiling
-    - talos-tp5o-profiling
-    - talos-tp6-profiling
-    - talos-tps-profiling
-
-macosx64-tests:
-=======
 marionette-gpu-tests:
     - marionette-gpu
 
@@ -426,7 +309,6 @@ marionette-media-tests:
     - marionette-media
 
 macosx1014-64-tests:
->>>>>>> upstream-releases
     - cppunit
     - crashtest
     - firefox-ui-functional-local
@@ -476,51 +358,9 @@ macosx64-talos:
     - talos-tp5o
     - talos-perf-reftest
     - talos-perf-reftest-singletons
-<<<<<<< HEAD
-    - talos-tp6-stylo-threads
-    # - talos-tps # Bug 1453007 times out
-||||||| merged common ancestors
-    - talos-tp6
-    - talos-tp6-stylo-threads
-    # - talos-tps # Bug 1453007 times out
-    - talos-speedometer
-    - talos-motionmark
-=======
     # - talos-tabswitch # Bug 1453007 times out
->>>>>>> upstream-releases
     # - talos-h1 # too long to unpack profile- Bug 1442893
 
-<<<<<<< HEAD
-macosx64-qr-tests:
-    - crashtest
-    - reftest
-
-||||||| merged common ancestors
-macosx64-talos-profiling:
-    - talos-bcv-profiling
-    - talos-chrome-profiling
-    - talos-damp-profiling
-    - talos-dromaeojs-profiling
-    - talos-g1-profiling
-    - talos-g3-profiling
-    - talos-g4-profiling
-    - talos-g5-profiling
-    - talos-other-profiling
-    - talos-perf-reftest-profiling
-    - talos-perf-reftest-singletons-profiling
-    - talos-speedometer-profiling
-    - talos-motionmark-profiling
-    - talos-svgr-profiling
-    - talos-tp5o-profiling
-    - talos-tp6-profiling
-    # - talos-tps-profiling # Bug 1453007 times out
-
-macosx64-qr-tests:
-    - crashtest
-    - reftest
-
-=======
->>>>>>> upstream-releases
 linux32-tests:
     - web-platform-tests
 
@@ -545,18 +385,8 @@ android-opt-tests:
     # Robocop tests often fail on Debug builds
     - robocop
 
-<<<<<<< HEAD
-android-x86-kvm-tests:
-||||||| merged common ancestors
-android-x86-tests:
-    - mochitest-chrome
-    - xpcshell
-
-android-x86-kvm-tests:
-=======
 android-x86_64-opt-tests:
     # crashtests failing on debug; bug 1524493
->>>>>>> upstream-releases
     - crashtest
     # geckoview-junit perma-fail on opt and debug; bug 1521195
     # - geckoview-junit
@@ -567,29 +397,11 @@ android-x86_64-tests:
     - marionette
     - mochitest
     - mochitest-gpu
-<<<<<<< HEAD
-    # - mochitest-media
-    # - mochitest-webgl1-core
-    # - reftest
-    # - test-verify
-    - web-platform-tests
-    - web-platform-tests-reftests
-    # - web-platform-tests-wdspec
-||||||| merged common ancestors
-    # - mochitest-media
-    # - mochitest-webgl1-core
-    # - reftest
-    # - test-verify
-    # - web-platform-tests
-    # - web-platform-tests-reftests
-    # - web-platform-tests-wdspec
-=======
     - reftest
     - test-verify
     - web-platform-tests
     - web-platform-tests-reftests
     - xpcshell
->>>>>>> upstream-releases
 
 android-ccov-tests:
     - geckoview-junit
@@ -608,7 +420,6 @@ remote-tests:
     - mochitest-remote
 
 android-hw-arm7-opt-unittests:
-    - jittest
     - mochitest-media
 
 android-hw-arm7-pgo-unittests:

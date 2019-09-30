@@ -21,18 +21,8 @@ class DataTransferItemList final : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(DataTransferItemList);
 
-<<<<<<< HEAD
-  DataTransferItemList(DataTransfer* aDataTransfer, bool aIsExternal)
-      : mDataTransfer(aDataTransfer), mIsExternal(aIsExternal) {
-||||||| merged common ancestors
-  DataTransferItemList(DataTransfer* aDataTransfer, bool aIsExternal)
-    : mDataTransfer(aDataTransfer)
-    , mIsExternal(aIsExternal)
-  {
-=======
   explicit DataTransferItemList(DataTransfer* aDataTransfer)
       : mDataTransfer(aDataTransfer) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aDataTransfer);
     // We always allocate an index 0 in our DataTransferItemList. This is done
     // in order to maintain the invariants according to the spec. Mainly, within

@@ -9,55 +9,22 @@
 #include "timecard.h"
 #include "mozilla/mozalloc.h"
 
-<<<<<<< HEAD
-Timecard *create_timecard() {
-  Timecard *tc = moz_xcalloc(1, sizeof(Timecard));
-||||||| merged common ancestors
-Timecard *
-create_timecard()
-{
-  Timecard *tc = moz_xcalloc(1,sizeof(Timecard));
-=======
 Timecard* create_timecard() {
   Timecard* tc = moz_xcalloc(1, sizeof(Timecard));
->>>>>>> upstream-releases
   tc->entries_allocated = TIMECARD_INITIAL_TABLE_SIZE;
   tc->entries = moz_xcalloc(tc->entries_allocated, sizeof(TimecardEntry));
   tc->start_time = PR_Now();
   return tc;
 }
 
-<<<<<<< HEAD
-void destroy_timecard(Timecard *tc) {
-||||||| merged common ancestors
-void
-destroy_timecard(Timecard *tc)
-{
-=======
 void destroy_timecard(Timecard* tc) {
->>>>>>> upstream-releases
   free(tc->entries);
   free(tc);
 }
 
-<<<<<<< HEAD
-void stamp_timecard(Timecard *tc, const char *event, const char *file,
-                    unsigned int line, const char *function) {
-  TimecardEntry *entry = NULL;
-||||||| merged common ancestors
-void
-stamp_timecard(Timecard *tc,
-               const char *event,
-               const char *file,
-               unsigned int line,
-               const char *function)
-{
-  TimecardEntry *entry = NULL;
-=======
 void stamp_timecard(Timecard* tc, const char* event, const char* file,
                     unsigned int line, const char* function) {
   TimecardEntry* entry = NULL;
->>>>>>> upstream-releases
 
   /* Trim the path component from the filename */
   const char* last_slash = file;
@@ -89,15 +56,7 @@ void stamp_timecard(Timecard* tc, const char* event, const char* file,
   tc->curr_entry++;
 }
 
-<<<<<<< HEAD
-void print_timecard(Timecard *tc) {
-||||||| merged common ancestors
-void
-print_timecard(Timecard *tc)
-{
-=======
 void print_timecard(Timecard* tc) {
->>>>>>> upstream-releases
   size_t i;
   TimecardEntry* entry;
   size_t event_width = 5;

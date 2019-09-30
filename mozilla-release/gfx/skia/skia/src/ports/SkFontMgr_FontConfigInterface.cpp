@@ -190,35 +190,6 @@ protected:
         return new SkFontStyleSet_FCI();
     }
 
-<<<<<<< HEAD
-    SkTypeface* onMatchFamilyStyle(const char requestedFamilyName[],
-                                   const SkFontStyle& requestedStyle) const override
-    {
-        SkAutoMutexAcquire ama(fMutex);
-
-        SkFontConfigInterface::FontIdentity identity;
-        SkString outFamilyName;
-        SkFontStyle outStyle;
-        if (!fFCI->matchFamilyName(requestedFamilyName, requestedStyle,
-                                   &identity, &outFamilyName, &outStyle))
-        {
-            return nullptr;
-        }
-
-        // Check if a typeface with this FontIdentity is already in the FontIdentity cache.
-        SkTypeface* face = fTFCache.findByProcAndRef(find_by_FontIdentity, &identity);
-        if (!face) {
-            face = SkTypeface_FCI::Create(fFCI, identity, std::move(outFamilyName), outStyle);
-            // Add this FontIdentity to the FontIdentity cache.
-            fTFCache.add(face);
-        }
-        return face;
-    }
-
-||||||| merged common ancestors
-    SkTypeface* onMatchFamilyStyle(const char familyName[],
-                                   const SkFontStyle&) const override { return nullptr; }
-=======
     SkTypeface* onMatchFamilyStyle(const char requestedFamilyName[],
                                    const SkFontStyle& requestedStyle) const override
     {
@@ -243,25 +214,13 @@ protected:
         return face.release();
     }
 
->>>>>>> upstream-releases
     SkTypeface* onMatchFamilyStyleCharacter(const char familyName[], const SkFontStyle&,
                                             const char* bcp47[], int bcp47Count,
                                             SkUnichar character) const override {
-<<<<<<< HEAD
-        SK_ABORT("Not implemented.");
-||||||| merged common ancestors
-=======
         SK_ABORT("Not implemented.");
         return nullptr;
     }
 
-    SkTypeface* onMatchFaceStyle(const SkTypeface*, const SkFontStyle&) const override {
-        SK_ABORT("Not implemented.");
->>>>>>> upstream-releases
-        return nullptr;
-    }
-
-<<<<<<< HEAD
     SkTypeface* onMatchFaceStyle(const SkTypeface*, const SkFontStyle&) const override {
         SK_ABORT("Not implemented.");
         return nullptr;
@@ -270,13 +229,6 @@ protected:
     sk_sp<SkTypeface> onMakeFromData(sk_sp<SkData> data, int ttcIndex) const override {
         return this->onMakeFromStreamIndex(SkMemoryStream::Make(std::move(data)), ttcIndex);
     }
-||||||| merged common ancestors
-    sk_sp<SkTypeface> onMakeFromData(sk_sp<SkData>, int ttcIndex) const override { return nullptr; }
-=======
-    sk_sp<SkTypeface> onMakeFromData(sk_sp<SkData> data, int ttcIndex) const override {
-        return this->onMakeFromStreamIndex(SkMemoryStream::Make(std::move(data)), ttcIndex);
-    }
->>>>>>> upstream-releases
 
     sk_sp<SkTypeface> onMakeFromStreamIndex(std::unique_ptr<SkStreamAsset> stream,
                                             int ttcIndex) const override {

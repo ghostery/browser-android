@@ -17,50 +17,10 @@ inline bool JS::Zone::requireGCTracer() const {
 }
 #endif
 
-<<<<<<< HEAD
-inline void JS::Zone::updateAllGCMallocCountersOnGCStart() {
-  gcMallocCounter.updateOnGCStart();
-  jitCodeCounter.updateOnGCStart();
-||||||| merged common ancestors
-inline void
-JS::Zone::updateAllGCMallocCountersOnGCStart()
-{
-    gcMallocCounter.updateOnGCStart();
-    jitCodeCounter.updateOnGCStart();
-=======
 /* static */ inline js::HashNumber JS::Zone::UniqueIdToHash(uint64_t uid) {
   return mozilla::HashGeneric(uid);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JS::Zone::updateAllGCMallocCountersOnGCEnd(
-    const js::AutoLockGC& lock) {
-  auto& gc = runtimeFromAnyThread()->gc;
-  gcMallocCounter.updateOnGCEnd(gc.tunables, lock);
-  jitCodeCounter.updateOnGCEnd(gc.tunables, lock);
-}
-
-inline js::gc::TriggerKind JS::Zone::shouldTriggerGCForTooMuchMalloc() {
-  auto& gc = runtimeFromAnyThread()->gc;
-  return std::max(gcMallocCounter.shouldTriggerGC(gc.tunables),
-                  jitCodeCounter.shouldTriggerGC(gc.tunables));
-||||||| merged common ancestors
-inline void
-JS::Zone::updateAllGCMallocCountersOnGCEnd(const js::AutoLockGC& lock)
-{
-    auto& gc = runtimeFromAnyThread()->gc;
-    gcMallocCounter.updateOnGCEnd(gc.tunables, lock);
-    jitCodeCounter.updateOnGCEnd(gc.tunables, lock);
-}
-
-inline js::gc::TriggerKind
-JS::Zone::shouldTriggerGCForTooMuchMalloc()
-{
-    auto& gc = runtimeFromAnyThread()->gc;
-    return std::max(gcMallocCounter.shouldTriggerGC(gc.tunables),
-                    jitCodeCounter.shouldTriggerGC(gc.tunables));
-=======
 inline bool JS::Zone::getHashCode(js::gc::Cell* cell, js::HashNumber* hashp) {
   uint64_t uid;
   if (!getOrCreateUniqueId(cell, &uid)) {
@@ -68,56 +28,8 @@ inline bool JS::Zone::getHashCode(js::gc::Cell* cell, js::HashNumber* hashp) {
   }
   *hashp = UniqueIdToHash(uid);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ inline js::HashNumber JS::Zone::UniqueIdToHash(uint64_t uid) {
-  return mozilla::HashGeneric(uid);
-}
-||||||| merged common ancestors
-
-/* static */ inline js::HashNumber
-JS::Zone::UniqueIdToHash(uint64_t uid)
-{
-    return mozilla::HashGeneric(uid);
-}
-=======
-inline bool JS::Zone::maybeGetUniqueId(js::gc::Cell* cell, uint64_t* uidp) {
-  MOZ_ASSERT(uidp);
-  MOZ_ASSERT(js::CurrentThreadCanAccessZone(this));
-
-  // Get an existing uid, if one has been set.
-  auto p = uniqueIds().lookup(cell);
-  if (p) {
-    *uidp = p->value();
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-inline bool JS::Zone::getHashCode(js::gc::Cell* cell, js::HashNumber* hashp) {
-  uint64_t uid;
-  if (!getOrCreateUniqueId(cell, &uid)) {
-    return false;
-  }
-  *hashp = UniqueIdToHash(uid);
-  return true;
-||||||| merged common ancestors
-inline bool
-JS::Zone::getHashCode(js::gc::Cell* cell, js::HashNumber* hashp)
-{
-    uint64_t uid;
-    if (!getOrCreateUniqueId(cell, &uid)) {
-        return false;
-    }
-    *hashp = UniqueIdToHash(uid);
-    return true;
-=======
-  return p.found();
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 inline bool JS::Zone::maybeGetUniqueId(js::gc::Cell* cell, uint64_t* uidp) {
   MOZ_ASSERT(uidp);
   MOZ_ASSERT(js::CurrentThreadCanAccessZone(this));
@@ -130,112 +42,27 @@ inline bool JS::Zone::maybeGetUniqueId(js::gc::Cell* cell, uint64_t* uidp) {
 
   return p.found();
 }
-||||||| merged common ancestors
-inline bool
-JS::Zone::maybeGetUniqueId(js::gc::Cell* cell, uint64_t* uidp)
-{
-    MOZ_ASSERT(uidp);
-    MOZ_ASSERT(js::CurrentThreadCanAccessZone(this));
 
-    // Get an existing uid, if one has been set.
-    auto p = uniqueIds().lookup(cell);
-    if (p) {
-        *uidp = p->value();
-    }
-
-    return p.found();
-}
-=======
 inline bool JS::Zone::getOrCreateUniqueId(js::gc::Cell* cell, uint64_t* uidp) {
   MOZ_ASSERT(uidp);
   MOZ_ASSERT(js::CurrentThreadCanAccessZone(this) ||
              js::CurrentThreadIsPerformingGC());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline bool JS::Zone::getOrCreateUniqueId(js::gc::Cell* cell, uint64_t* uidp) {
-  MOZ_ASSERT(uidp);
-  MOZ_ASSERT(js::CurrentThreadCanAccessZone(this) ||
-             js::CurrentThreadIsPerformingGC());
-||||||| merged common ancestors
-inline bool
-JS::Zone::getOrCreateUniqueId(js::gc::Cell* cell, uint64_t* uidp)
-{
-    MOZ_ASSERT(uidp);
-    MOZ_ASSERT(js::CurrentThreadCanAccessZone(this) || js::CurrentThreadIsPerformingGC());
-
-    // Get an existing uid, if one has been set.
-    auto p = uniqueIds().lookupForAdd(cell);
-    if (p) {
-        *uidp = p->value();
-        return true;
-    }
-=======
   // Get an existing uid, if one has been set.
   auto p = uniqueIds().lookupForAdd(cell);
   if (p) {
     *uidp = p->value();
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Get an existing uid, if one has been set.
-  auto p = uniqueIds().lookupForAdd(cell);
-  if (p) {
-    *uidp = p->value();
-    return true;
-  }
-||||||| merged common ancestors
-    MOZ_ASSERT(js::CurrentThreadCanAccessZone(this));
-=======
   MOZ_ASSERT(js::CurrentThreadCanAccessZone(this));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(js::CurrentThreadCanAccessZone(this));
-||||||| merged common ancestors
-    // Set a new uid on the cell.
-    *uidp = js::gc::NextCellUniqueId(runtimeFromAnyThread());
-    if (!uniqueIds().add(p, cell, *uidp)) {
-        return false;
-    }
-=======
   // Set a new uid on the cell.
   *uidp = js::gc::NextCellUniqueId(runtimeFromAnyThread());
   if (!uniqueIds().add(p, cell, *uidp)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Set a new uid on the cell.
-  *uidp = js::gc::NextCellUniqueId(runtimeFromAnyThread());
-  if (!uniqueIds().add(p, cell, *uidp)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // If the cell was in the nursery, hopefully unlikely, then we need to
-    // tell the nursery about it so that it can sweep the uid if the thing
-    // does not get tenured.
-    if (IsInsideNursery(cell) &&
-        !runtimeFromMainThread()->gc.nursery().addedUniqueIdToCell(cell))
-    {
-        uniqueIds().remove(cell);
-        return false;
-    }
-=======
-  // If the cell was in the nursery, hopefully unlikely, then we need to
-  // tell the nursery about it so that it can sweep the uid if the thing
-  // does not get tenured.
-  if (IsInsideNursery(cell) &&
-      !runtimeFromMainThread()->gc.nursery().addedUniqueIdToCell(cell)) {
-    uniqueIds().remove(cell);
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // If the cell was in the nursery, hopefully unlikely, then we need to
   // tell the nursery about it so that it can sweep the uid if the thing
   // does not get tenured.
@@ -246,11 +73,6 @@ JS::Zone::getOrCreateUniqueId(js::gc::Cell* cell, uint64_t* uidp)
   }
 
   return true;
-||||||| merged common ancestors
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
 inline js::HashNumber JS::Zone::getHashCodeInfallible(js::gc::Cell* cell) {

@@ -132,55 +132,6 @@ const char16_t JS::ubi::Concrete<JSString>::concreteTypeName[] = u"JSString";
 #if defined(DEBUG) || defined(JS_JITSPEW)
 
 template <typename CharT>
-<<<<<<< HEAD
-/*static */ void JSString::dumpChars(const CharT* s, size_t n,
-                                     js::GenericPrinter& out) {
-  if (n == SIZE_MAX) {
-    n = 0;
-    while (s[n]) {
-      n++;
-    }
-  }
-
-  out.put("\"");
-  for (size_t i = 0; i < n; i++) {
-    char16_t c = s[i];
-    if (c == '\n') {
-      out.put("\\n");
-    } else if (c == '\t') {
-      out.put("\\t");
-    } else if (c >= 32 && c < 127) {
-      out.putChar((char)s[i]);
-    } else if (c <= 255) {
-      out.printf("\\x%02x", unsigned(c));
-    } else {
-      out.printf("\\u%04x", unsigned(c));
-||||||| merged common ancestors
-/*static */ void
-JSString::dumpChars(const CharT* s, size_t n, js::GenericPrinter& out)
-{
-    if (n == SIZE_MAX) {
-        n = 0;
-        while (s[n]) {
-            n++;
-        }
-    }
-
-    out.put("\"");
-    for (size_t i = 0; i < n; i++) {
-        char16_t c = s[i];
-        if (c == '\n') {
-            out.put("\\n");
-        } else if (c == '\t') {
-            out.put("\\t");
-        } else if (c >= 32 && c < 127) {
-            out.putChar((char)s[i]);
-        } else if (c <= 255) {
-            out.printf("\\x%02x", unsigned(c));
-        } else {
-            out.printf("\\u%04x", unsigned(c));
-        }
-=======
 /*static */
 void JSString::dumpChars(const CharT* s, size_t n, js::GenericPrinter& out) {
   if (n == SIZE_MAX) {
@@ -203,7 +154,6 @@ void JSString::dumpChars(const CharT* s, size_t n, js::GenericPrinter& out) {
       out.printf("\\x%02x", unsigned(c));
     } else {
       out.printf("\\u%04x", unsigned(c));
->>>>>>> upstream-releases
     }
   }
   out.putChar('"');
@@ -342,151 +292,32 @@ static MOZ_ALWAYS_INLINE bool AllocChars(JSString* str, size_t length,
   /* Like length, capacity does not include the null char, so take it out. */
   *capacity = numChars - 1;
 
-<<<<<<< HEAD
-  JS_STATIC_ASSERT(JSString::MAX_LENGTH * sizeof(CharT) < UINT32_MAX);
-  *chars = str->zone()->pod_malloc<CharT>(numChars);
-  return *chars != nullptr;
-||||||| merged common ancestors
-    JS_STATIC_ASSERT(JSString::MAX_LENGTH * sizeof(CharT) < UINT32_MAX);
-    *chars = str->zone()->pod_malloc<CharT>(numChars);
-    return *chars != nullptr;
-=======
   JS_STATIC_ASSERT(JSString::MAX_LENGTH * sizeof(CharT) < UINT32_MAX);
   *chars = str->zone()->pod_malloc<CharT>(numChars, js::StringBufferArena);
   return *chars != nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-UniqueLatin1Chars JSRope::copyLatin1CharsZ(JSContext* maybecx) const {
-  return copyCharsInternal<Latin1Char>(maybecx, true);
-||||||| merged common ancestors
-UniqueLatin1Chars
-JSRope::copyLatin1CharsZ(JSContext* maybecx) const
-{
-    return copyCharsInternal<Latin1Char>(maybecx, true);
-=======
 UniqueLatin1Chars JSRope::copyLatin1CharsZ(JSContext* maybecx,
                                            arena_id_t destArenaId) const {
   return copyCharsInternal<Latin1Char>(maybecx, true, destArenaId);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-UniqueTwoByteChars JSRope::copyTwoByteCharsZ(JSContext* maybecx) const {
-  return copyCharsInternal<char16_t>(maybecx, true);
-||||||| merged common ancestors
-UniqueTwoByteChars
-JSRope::copyTwoByteCharsZ(JSContext* maybecx) const
-{
-    return copyCharsInternal<char16_t>(maybecx, true);
-=======
 UniqueTwoByteChars JSRope::copyTwoByteCharsZ(JSContext* maybecx,
                                              arena_id_t destArenaId) const {
   return copyCharsInternal<char16_t>(maybecx, true, destArenaId);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-UniqueLatin1Chars JSRope::copyLatin1Chars(JSContext* maybecx) const {
-  return copyCharsInternal<Latin1Char>(maybecx, false);
-||||||| merged common ancestors
-UniqueLatin1Chars
-JSRope::copyLatin1Chars(JSContext* maybecx) const
-{
-    return copyCharsInternal<Latin1Char>(maybecx, false);
-=======
 UniqueLatin1Chars JSRope::copyLatin1Chars(JSContext* maybecx,
                                           arena_id_t destArenaId) const {
   return copyCharsInternal<Latin1Char>(maybecx, false, destArenaId);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-UniqueTwoByteChars JSRope::copyTwoByteChars(JSContext* maybecx) const {
-  return copyCharsInternal<char16_t>(maybecx, false);
-||||||| merged common ancestors
-UniqueTwoByteChars
-JSRope::copyTwoByteChars(JSContext* maybecx) const
-{
-    return copyCharsInternal<char16_t>(maybecx, false);
-=======
 UniqueTwoByteChars JSRope::copyTwoByteChars(JSContext* maybecx,
                                             arena_id_t destArenaId) const {
   return copyCharsInternal<char16_t>(maybecx, false, destArenaId);
->>>>>>> upstream-releases
 }
 
 template <typename CharT>
-<<<<<<< HEAD
-UniquePtr<CharT[], JS::FreePolicy> JSRope::copyCharsInternal(
-    JSContext* maybecx, bool nullTerminate) const {
-  // Left-leaning ropes are far more common than right-leaning ropes, so
-  // perform a non-destructive traversal of the rope, right node first,
-  // splatting each node's characters into a contiguous buffer.
-
-  size_t n = length();
-
-  UniquePtr<CharT[], JS::FreePolicy> out;
-  if (maybecx) {
-    out.reset(maybecx->pod_malloc<CharT>(n + 1));
-  } else {
-    out.reset(js_pod_malloc<CharT>(n + 1));
-  }
-
-  if (!out) {
-    return nullptr;
-  }
-
-  Vector<const JSString*, 8, SystemAllocPolicy> nodeStack;
-  const JSString* str = this;
-  CharT* end = out.get() + str->length();
-  while (true) {
-    if (str->isRope()) {
-      if (!nodeStack.append(str->asRope().leftChild())) {
-        if (maybecx) {
-          ReportOutOfMemory(maybecx);
-||||||| merged common ancestors
-UniquePtr<CharT[], JS::FreePolicy>
-JSRope::copyCharsInternal(JSContext* maybecx, bool nullTerminate) const
-{
-    // Left-leaning ropes are far more common than right-leaning ropes, so
-    // perform a non-destructive traversal of the rope, right node first,
-    // splatting each node's characters into a contiguous buffer.
-
-    size_t n = length();
-
-    UniquePtr<CharT[], JS::FreePolicy> out;
-    if (maybecx) {
-        out.reset(maybecx->pod_malloc<CharT>(n + 1));
-    } else {
-        out.reset(js_pod_malloc<CharT>(n + 1));
-    }
-
-    if (!out) {
-        return nullptr;
-    }
-
-    Vector<const JSString*, 8, SystemAllocPolicy> nodeStack;
-    const JSString* str = this;
-    CharT* end = out.get() + str->length();
-    while (true) {
-        if (str->isRope()) {
-            if (!nodeStack.append(str->asRope().leftChild())) {
-                if (maybecx) {
-                    ReportOutOfMemory(maybecx);
-                }
-                return nullptr;
-            }
-            str = str->asRope().rightChild();
-        } else {
-            end -= str->length();
-            CopyChars(end, str->asLinear());
-            if (nodeStack.empty()) {
-                break;
-            }
-            str = nodeStack.popCopy();
-=======
 UniquePtr<CharT[], JS::FreePolicy> JSRope::copyCharsInternal(
     JSContext* maybecx, bool nullTerminate, arena_id_t destArenaId) const {
   // Left-leaning ropes are far more common than right-leaning ropes, so
@@ -514,7 +345,6 @@ UniquePtr<CharT[], JS::FreePolicy> JSRope::copyCharsInternal(
       if (!nodeStack.append(str->asRope().leftChild())) {
         if (maybecx) {
           ReportOutOfMemory(maybecx);
->>>>>>> upstream-releases
         }
         return nullptr;
       }
@@ -726,71 +556,6 @@ JSFlatString* JSRope::flattenInternal(JSContext* maybecx) {
       MOZ_ASSERT(str->isRope());
       while (str != leftMostRope) {
         if (b == WithIncrementalBarrier) {
-<<<<<<< HEAD
-          JSString::writeBarrierPre(str->d.s.u2.left);
-          JSString::writeBarrierPre(str->d.s.u3.right);
-        }
-        JSString* child = str->d.s.u2.left;
-        // 'child' will be post-barriered during the later traversal.
-        MOZ_ASSERT(child->isRope());
-        str->setNonInlineChars(wholeChars);
-        child->setFlattenData(uintptr_t(str) | Tag_VisitRightChild);
-        str = child;
-      }
-      if (b == WithIncrementalBarrier) {
-        JSString::writeBarrierPre(str->d.s.u2.left);
-        JSString::writeBarrierPre(str->d.s.u3.right);
-      }
-      str->setNonInlineChars(wholeChars);
-      uint32_t left_len = left.length();
-      pos = wholeChars + left_len;
-      if (IsSame<CharT, char16_t>::value) {
-        left.setLengthAndFlags(left_len, DEPENDENT_FLAGS);
-      } else {
-        left.setLengthAndFlags(left_len, DEPENDENT_FLAGS | LATIN1_CHARS_BIT);
-      }
-      left.d.s.u3.base = (JSLinearString*)this; /* will be true on exit */
-      Nursery& nursery = runtimeFromMainThread()->gc.nursery();
-      bool inTenured = !bufferIfNursery;
-      if (!inTenured && left.isTenured()) {
-        // tenured leftmost child is giving its chars buffer to the
-        // nursery-allocated root node.
-        nursery.registerMallocedBuffer(wholeChars);
-        // leftmost child -> root is a tenured -> nursery edge.
-        bufferIfNursery->putWholeCell(&left);
-      } else if (inTenured && !left.isTenured()) {
-        // leftmost child is giving its nursery-held chars buffer to a
-        // tenured string.
-        nursery.removeMallocedBuffer(wholeChars);
-      }
-      goto visit_right_child;
-||||||| merged common ancestors
-            JSString::writeBarrierPre(str->d.s.u2.left);
-            JSString::writeBarrierPre(str->d.s.u3.right);
-        }
-
-        JSString& left = *str->d.s.u2.left;
-        str->setNonInlineChars(pos);
-        if (left.isRope()) {
-            /* Return to this node when 'left' done, then goto visit_right_child. */
-            left.setFlattenData(uintptr_t(str) | Tag_VisitRightChild);
-            str = &left;
-            goto first_visit_node;
-        }
-        CopyChars(pos, left.asLinear());
-        pos += left.length();
-    }
-    visit_right_child: {
-        JSString& right = *str->d.s.u3.right;
-        if (right.isRope()) {
-            /* Return to this node when 'right' done, then goto finish_node. */
-            right.setFlattenData(uintptr_t(str) | Tag_FinishNode);
-            str = &right;
-            goto first_visit_node;
-        }
-        CopyChars(pos, right.asLinear());
-        pos += right.length();
-=======
           JSString::writeBarrierPre(str->d.s.u2.left);
           JSString::writeBarrierPre(str->d.s.u3.right);
         }
@@ -835,7 +600,6 @@ JSFlatString* JSRope::flattenInternal(JSContext* maybecx) {
         nursery.removeMallocedBuffer(wholeChars);
       }
       goto visit_right_child;
->>>>>>> upstream-releases
     }
   }
 
@@ -896,95 +660,9 @@ finish_node : {
     } else {
       str->setLengthAndFlags(wholeLength, EXTENSIBLE_FLAGS | LATIN1_CHARS_BIT);
     }
-<<<<<<< HEAD
     str->setNonInlineChars(wholeChars);
     str->d.s.u3.capacity = wholeCapacity;
-    return &this->asFlat();
-  }
-  uintptr_t flattenData;
-  uint32_t len = pos - str->nonInlineCharsRaw<CharT>();
-  if (IsSame<CharT, char16_t>::value) {
-    flattenData = str->unsetFlattenData(len, DEPENDENT_FLAGS);
-  } else {
-    flattenData =
-        str->unsetFlattenData(len, DEPENDENT_FLAGS | LATIN1_CHARS_BIT);
-  }
-  str->d.s.u3.base = (JSLinearString*)this; /* will be true on exit */
 
-  // Every interior (rope) node in the rope's tree will be visited during
-  // the traversal and post-barriered here, so earlier additions of
-  // dependent.base -> root pointers are handled by this barrier as well.
-  //
-  // The only time post-barriers need do anything is when the root is in
-  // the nursery. Note that the root was a rope but will be an extensible
-  // string when we return, so it will not point to any strings and need
-  // not be barriered.
-  gc::StoreBuffer* bufferIfNursery = storeBuffer();
-  if (bufferIfNursery && str->isTenured()) {
-    bufferIfNursery->putWholeCell(str);
-  }
-
-  str = (JSString*)(flattenData & ~Tag_Mask);
-  if ((flattenData & Tag_Mask) == Tag_VisitRightChild) {
-    goto visit_right_child;
-  }
-  MOZ_ASSERT((flattenData & Tag_Mask) == Tag_FinishNode);
-  goto finish_node;
-}
-}
-
-template <JSRope::UsingBarrier b>
-JSFlatString* JSRope::flattenInternal(JSContext* maybecx) {
-  if (hasTwoByteChars()) {
-    return flattenInternal<b, char16_t>(maybecx);
-  }
-  return flattenInternal<b, Latin1Char>(maybecx);
-}
-
-JSFlatString* JSRope::flatten(JSContext* maybecx) {
-  mozilla::Maybe<AutoGeckoProfilerEntry> entry;
-  if (maybecx && !maybecx->helperThread()) {
-    entry.emplace(maybecx, "JSRope::flatten");
-  }
-
-  if (zone()->needsIncrementalBarrier()) {
-    return flattenInternal<WithIncrementalBarrier>(maybecx);
-  }
-  return flattenInternal<NoBarrier>(maybecx);
-}
-||||||| merged common ancestors
-    return flattenInternal<b, Latin1Char>(maybecx);
-}
-=======
-    str->setNonInlineChars(wholeChars);
-    str->d.s.u3.capacity = wholeCapacity;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-template <AllowGC allowGC>
-static JSLinearString* EnsureLinear(
-    JSContext* cx,
-    typename MaybeRooted<JSString*, allowGC>::HandleType string) {
-  JSLinearString* linear = string->ensureLinear(cx);
-  // Don't report an exception if GC is not allowed, just return nullptr.
-  if (!linear && !allowGC) {
-    cx->recoverFromOutOfMemory();
-  }
-  return linear;
-||||||| merged common ancestors
-JSFlatString*
-JSRope::flatten(JSContext* maybecx)
-{
-    mozilla::Maybe<AutoGeckoProfilerEntry> entry;
-    if (maybecx && !maybecx->helperThread()) {
-        entry.emplace(maybecx, "JSRope::flatten");
-    }
-
-    if (zone()->needsIncrementalBarrier()) {
-        return flattenInternal<WithIncrementalBarrier>(maybecx);
-    }
-    return flattenInternal<NoBarrier>(maybecx);
-=======
     if (str->isTenured()) {
       AddCellMemory(str, str->asFlat().allocSize(), MemoryUse::StringContents);
     }
@@ -1041,73 +719,9 @@ JSFlatString* JSRope::flatten(JSContext* maybecx) {
     return flattenInternal<WithIncrementalBarrier>(maybecx);
   }
   return flattenInternal<NoBarrier>(maybecx);
->>>>>>> upstream-releases
 }
 
 template <AllowGC allowGC>
-<<<<<<< HEAD
-JSString* js::ConcatStrings(
-    JSContext* cx, typename MaybeRooted<JSString*, allowGC>::HandleType left,
-    typename MaybeRooted<JSString*, allowGC>::HandleType right) {
-  MOZ_ASSERT_IF(!left->isAtom(), cx->isInsideCurrentZone(left));
-  MOZ_ASSERT_IF(!right->isAtom(), cx->isInsideCurrentZone(right));
-
-  size_t leftLen = left->length();
-  if (leftLen == 0) {
-    return right;
-  }
-
-  size_t rightLen = right->length();
-  if (rightLen == 0) {
-    return left;
-  }
-
-  size_t wholeLength = leftLen + rightLen;
-  if (MOZ_UNLIKELY(wholeLength > JSString::MAX_LENGTH)) {
-    // Don't report an exception if GC is not allowed, just return nullptr.
-    if (allowGC) {
-      js::ReportAllocationOverflow(cx);
-    }
-    return nullptr;
-  }
-
-  bool isLatin1 = left->hasLatin1Chars() && right->hasLatin1Chars();
-  bool canUseInline = isLatin1
-                          ? JSInlineString::lengthFits<Latin1Char>(wholeLength)
-                          : JSInlineString::lengthFits<char16_t>(wholeLength);
-  if (canUseInline) {
-    Latin1Char* latin1Buf = nullptr;  // initialize to silence GCC warning
-    char16_t* twoByteBuf = nullptr;   // initialize to silence GCC warning
-    JSInlineString* str =
-        isLatin1 ? AllocateInlineString<allowGC>(cx, wholeLength, &latin1Buf)
-                 : AllocateInlineString<allowGC>(cx, wholeLength, &twoByteBuf);
-    if (!str) {
-      return nullptr;
-||||||| merged common ancestors
-static JSLinearString*
-EnsureLinear(JSContext* cx, typename MaybeRooted<JSString*, allowGC>::HandleType string)
-{
-    JSLinearString* linear = string->ensureLinear(cx);
-    // Don't report an exception if GC is not allowed, just return nullptr.
-    if (!linear && !allowGC) {
-        cx->recoverFromOutOfMemory();
-    }
-    return linear;
-}
-
-template <AllowGC allowGC>
-JSString*
-js::ConcatStrings(JSContext* cx,
-                  typename MaybeRooted<JSString*, allowGC>::HandleType left,
-                  typename MaybeRooted<JSString*, allowGC>::HandleType right)
-{
-    MOZ_ASSERT_IF(!left->isAtom(), cx->isInsideCurrentZone(left));
-    MOZ_ASSERT_IF(!right->isAtom(), cx->isInsideCurrentZone(right));
-
-    size_t leftLen = left->length();
-    if (leftLen == 0) {
-        return right;
-=======
 static JSLinearString* EnsureLinear(
     JSContext* cx,
     typename MaybeRooted<JSString*, allowGC>::HandleType string) {
@@ -1157,19 +771,8 @@ JSString* js::ConcatStrings(
                  : AllocateInlineString<allowGC>(cx, wholeLength, &twoByteBuf);
     if (!str) {
       return nullptr;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    AutoCheckCannotGC nogc;
-    JSLinearString* leftLinear = EnsureLinear<allowGC>(cx, left);
-    if (!leftLinear) {
-      return nullptr;
-||||||| merged common ancestors
-    size_t rightLen = right->length();
-    if (rightLen == 0) {
-        return left;
-=======
     AutoCheckCannotGC nogc;
     JSLinearString* leftLinear = EnsureLinear<allowGC>(cx, left);
     if (!leftLinear) {
@@ -1178,22 +781,7 @@ JSString* js::ConcatStrings(
     JSLinearString* rightLinear = EnsureLinear<allowGC>(cx, right);
     if (!rightLinear) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    JSLinearString* rightLinear = EnsureLinear<allowGC>(cx, right);
-    if (!rightLinear) {
-      return nullptr;
-||||||| merged common ancestors
-
-    size_t wholeLength = leftLen + rightLen;
-    if (MOZ_UNLIKELY(wholeLength > JSString::MAX_LENGTH)) {
-        // Don't report an exception if GC is not allowed, just return nullptr.
-        if (allowGC) {
-            js::ReportAllocationOverflow(cx);
-        }
-        return nullptr;
-=======
 
     if (isLatin1) {
       PodCopy(latin1Buf, leftLinear->latin1Chars(nogc), leftLen);
@@ -1213,75 +801,8 @@ JSString* js::ConcatStrings(
                             rightLinear->latin1Chars(nogc), rightLen);
       }
       twoByteBuf[wholeLength] = 0;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (isLatin1) {
-      PodCopy(latin1Buf, leftLinear->latin1Chars(nogc), leftLen);
-      PodCopy(latin1Buf + leftLen, rightLinear->latin1Chars(nogc), rightLen);
-      latin1Buf[wholeLength] = 0;
-    } else {
-      if (leftLinear->hasTwoByteChars()) {
-        PodCopy(twoByteBuf, leftLinear->twoByteChars(nogc), leftLen);
-      } else {
-        CopyAndInflateChars(twoByteBuf, leftLinear->latin1Chars(nogc), leftLen);
-      }
-      if (rightLinear->hasTwoByteChars()) {
-        PodCopy(twoByteBuf + leftLen, rightLinear->twoByteChars(nogc),
-                rightLen);
-      } else {
-        CopyAndInflateChars(twoByteBuf + leftLen,
-                            rightLinear->latin1Chars(nogc), rightLen);
-      }
-      twoByteBuf[wholeLength] = 0;
-    }
-||||||| merged common ancestors
-    bool isLatin1 = left->hasLatin1Chars() && right->hasLatin1Chars();
-    bool canUseInline = isLatin1
-                        ? JSInlineString::lengthFits<Latin1Char>(wholeLength)
-                        : JSInlineString::lengthFits<char16_t>(wholeLength);
-    if (canUseInline) {
-        Latin1Char* latin1Buf = nullptr;  // initialize to silence GCC warning
-        char16_t* twoByteBuf = nullptr;  // initialize to silence GCC warning
-        JSInlineString* str = isLatin1
-            ? AllocateInlineString<allowGC>(cx, wholeLength, &latin1Buf)
-            : AllocateInlineString<allowGC>(cx, wholeLength, &twoByteBuf);
-        if (!str) {
-            return nullptr;
-        }
-
-        AutoCheckCannotGC nogc;
-        JSLinearString* leftLinear = EnsureLinear<allowGC>(cx, left);
-        if (!leftLinear) {
-            return nullptr;
-        }
-        JSLinearString* rightLinear = EnsureLinear<allowGC>(cx, right);
-        if (!rightLinear) {
-            return nullptr;
-        }
-
-        if (isLatin1) {
-            PodCopy(latin1Buf, leftLinear->latin1Chars(nogc), leftLen);
-            PodCopy(latin1Buf + leftLen, rightLinear->latin1Chars(nogc), rightLen);
-            latin1Buf[wholeLength] = 0;
-        } else {
-            if (leftLinear->hasTwoByteChars()) {
-                PodCopy(twoByteBuf, leftLinear->twoByteChars(nogc), leftLen);
-            } else {
-                CopyAndInflateChars(twoByteBuf, leftLinear->latin1Chars(nogc), leftLen);
-            }
-            if (rightLinear->hasTwoByteChars()) {
-                PodCopy(twoByteBuf + leftLen, rightLinear->twoByteChars(nogc), rightLen);
-            } else {
-                CopyAndInflateChars(twoByteBuf + leftLen, rightLinear->latin1Chars(nogc), rightLen);
-            }
-            twoByteBuf[wholeLength] = 0;
-        }
-
-        return str;
-    }
-=======
     return str;
   }
 
@@ -1310,27 +831,10 @@ static void FillAndTerminate(Dest* dest, Source src, size_t length) {
                   "source/destination characters are unsigned for simplicity");
     *dest++ = srcChar;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    return str;
-  }
-
-  return JSRope::new_<allowGC>(cx, left, right, wholeLength);
-||||||| merged common ancestors
-    return JSRope::new_<allowGC>(cx, left, right, wholeLength);
-=======
   *dest = '\0';
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template JSString* js::ConcatStrings<CanGC>(JSContext* cx, HandleString left,
-                                            HandleString right);
-||||||| merged common ancestors
-template JSString*
-js::ConcatStrings<CanGC>(JSContext* cx, HandleString left, HandleString right);
-=======
 template <typename Dest, typename Src,
           typename = typename std::enable_if<!std::is_const<Src>::value>::type>
 static void FillAndTerminate(Dest* dest, Src* src, size_t length) {
@@ -1355,15 +859,7 @@ static void FillFromCompatibleAndTerminate(Dest* dest, Source src,
                   "source/destination characters are unsigned for simplicity");
     *dest++ = AssertedCast<Dest>(src[i]);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSString* js::ConcatStrings<NoGC>(JSContext* cx, JSString* const& left,
-                                           JSString* const& right);
-||||||| merged common ancestors
-template JSString*
-js::ConcatStrings<NoGC>(JSContext* cx, JSString* const& left, JSString* const& right);
-=======
   *dest = '\0';
 }
 
@@ -1373,63 +869,27 @@ static void FillFromCompatibleAndTerminate(Dest* dest, Src* src,
                                            size_t length) {
   FillFromCompatibleAndTerminate(dest, const_cast<const Src*>(src), length);
 }
->>>>>>> upstream-releases
 
 template <typename CharT>
-<<<<<<< HEAD
-JSFlatString* JSDependentString::undependInternal(JSContext* cx) {
-  size_t n = length();
-  auto s = cx->make_pod_array<CharT>(n + 1);
-  if (!s) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-JSFlatString*
-JSDependentString::undependInternal(JSContext* cx)
-{
-    size_t n = length();
-    auto s = cx->make_pod_array<CharT>(n + 1);
-    if (!s) {
-        return nullptr;
-    }
-=======
 JSFlatString* JSDependentString::undependInternal(JSContext* cx) {
   size_t n = length();
   auto s = cx->make_pod_array<CharT>(n + 1, js::StringBufferArena);
   if (!s) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   if (!isTenured()) {
     if (!cx->runtime()->gc.nursery().registerMallocedBuffer(s.get())) {
       ReportOutOfMemory(cx);
       return nullptr;
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   } else {
     AddCellMemory(this, (n + 1) * sizeof(CharT), MemoryUse::StringContents);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AutoCheckCannotGC nogc;
-  PodCopy(s.get(), nonInlineChars<CharT>(nogc), n);
-  s[n] = '\0';
-  setNonInlineChars<CharT>(s.release());
-||||||| merged common ancestors
-    AutoCheckCannotGC nogc;
-    PodCopy(s.get(), nonInlineChars<CharT>(nogc), n);
-    s[n] = '\0';
-    setNonInlineChars<CharT>(s.release());
-=======
   AutoCheckCannotGC nogc;
   FillAndTerminate(s.get(), nonInlineChars<CharT>(nogc), n);
   setNonInlineChars<CharT>(s.release());
->>>>>>> upstream-releases
 
   /*
    * Transform *this into an undepended string so 'base' will remain rooted
@@ -1468,7 +928,6 @@ void JSDependentString::dumpRepresentation(js::GenericPrinter& out,
 bool js::EqualChars(JSLinearString* str1, JSLinearString* str2) {
   MOZ_ASSERT(str1->length() == str2->length());
 
-<<<<<<< HEAD
   size_t len = str1->length();
 
   AutoCheckCannotGC nogc;
@@ -1476,25 +935,6 @@ bool js::EqualChars(JSLinearString* str1, JSLinearString* str2) {
     if (str2->hasTwoByteChars()) {
       return ArrayEqual(str1->twoByteChars(nogc), str2->twoByteChars(nogc),
                         len);
-||||||| merged common ancestors
-    size_t len = str1->length();
-
-    AutoCheckCannotGC nogc;
-    if (str1->hasTwoByteChars()) {
-        if (str2->hasTwoByteChars()) {
-            return ArrayEqual(str1->twoByteChars(nogc), str2->twoByteChars(nogc), len);
-        }
-
-        return EqualChars(str2->latin1Chars(nogc), str1->twoByteChars(nogc), len);
-=======
-  size_t len = str1->length();
-
-  AutoCheckCannotGC nogc;
-  if (str1->hasTwoByteChars()) {
-    if (str2->hasTwoByteChars()) {
-      return ArrayEqual(str1->twoByteChars(nogc), str2->twoByteChars(nogc),
-                        len);
->>>>>>> upstream-releases
     }
 
     return EqualChars(str2->latin1Chars(nogc), str1->twoByteChars(nogc), len);
@@ -1653,62 +1093,6 @@ bool js::StringEqualsAscii(JSLinearString* str, const char* asciiBytes) {
 }
 
 template <typename CharT>
-<<<<<<< HEAD
-/* static */ bool JSFlatString::isIndexSlow(const CharT* s, size_t length,
-                                            uint32_t* indexp) {
-  CharT ch = *s;
-
-  if (!IsAsciiDigit(ch)) {
-    return false;
-  }
-||||||| merged common ancestors
-/* static */ bool
-JSFlatString::isIndexSlow(const CharT* s, size_t length, uint32_t* indexp)
-{
-    CharT ch = *s;
-
-    if (!IsAsciiDigit(ch)) {
-        return false;
-    }
-
-    if (length > UINT32_CHAR_BUFFER_LENGTH) {
-        return false;
-    }
-
-    /*
-     * Make sure to account for the '\0' at the end of characters, dereferenced
-     * in the loop below.
-     */
-    RangedPtr<const CharT> cp(s, length + 1);
-    const RangedPtr<const CharT> end(s + length, s, length + 1);
-
-    uint32_t index = JS7_UNDEC(*cp++);
-    uint32_t oldIndex = 0;
-    uint32_t c = 0;
-
-    if (index != 0) {
-        while (IsAsciiDigit(*cp)) {
-            oldIndex = index;
-            c = JS7_UNDEC(*cp);
-            index = 10 * index + c;
-            cp++;
-        }
-    }
-
-    /* It's not an element if there are characters after the number. */
-    if (cp != end) {
-        return false;
-    }
-
-    /*
-     * Look out for "4294967296" and larger-number strings that fit in
-     * UINT32_CHAR_BUFFER_LENGTH: only unsigned 32-bit integers shall pass.
-     */
-    if (oldIndex < UINT32_MAX / 10 || (oldIndex == UINT32_MAX / 10 && c <= (UINT32_MAX % 10))) {
-        *indexp = index;
-        return true;
-    }
-=======
 /* static */
 bool JSFlatString::isIndexSlow(const CharT* s, size_t length,
                                uint32_t* indexp) {
@@ -1717,51 +1101,9 @@ bool JSFlatString::isIndexSlow(const CharT* s, size_t length,
   if (!IsAsciiDigit(ch)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (length > UINT32_CHAR_BUFFER_LENGTH) {
     return false;
-<<<<<<< HEAD
-  }
-
-  /*
-   * Make sure to account for the '\0' at the end of characters, dereferenced
-   * in the loop below.
-   */
-  RangedPtr<const CharT> cp(s, length + 1);
-  const RangedPtr<const CharT> end(s + length, s, length + 1);
-
-  uint32_t index = JS7_UNDEC(*cp++);
-  uint32_t oldIndex = 0;
-  uint32_t c = 0;
-
-  if (index != 0) {
-    while (IsAsciiDigit(*cp)) {
-      oldIndex = index;
-      c = JS7_UNDEC(*cp);
-      index = 10 * index + c;
-      cp++;
-    }
-  }
-
-  /* It's not an element if there are characters after the number. */
-  if (cp != end) {
-    return false;
-  }
-
-  /*
-   * Look out for "4294967296" and larger-number strings that fit in
-   * UINT32_CHAR_BUFFER_LENGTH: only unsigned 32-bit integers shall pass.
-   */
-  if (oldIndex < UINT32_MAX / 10 ||
-      (oldIndex == UINT32_MAX / 10 && c <= (UINT32_MAX % 10))) {
-    *indexp = index;
-    return true;
-  }
-
-  return false;
-||||||| merged common ancestors
-=======
   }
 
   /*
@@ -1800,7 +1142,6 @@ bool JSFlatString::isIndexSlow(const CharT* s, size_t length,
   }
 
   return false;
->>>>>>> upstream-releases
 }
 
 template bool JSFlatString::isIndexSlow(const Latin1Char* s, size_t length,
@@ -1931,31 +1272,6 @@ void StaticStrings::trace(JSTracer* trc) {
 }
 
 template <typename CharT>
-<<<<<<< HEAD
-/* static */ bool StaticStrings::isStatic(const CharT* chars, size_t length) {
-  switch (length) {
-    case 1: {
-      char16_t c = chars[0];
-      return c < UNIT_STATIC_LIMIT;
-    }
-    case 2:
-      return fitsInSmallChar(chars[0]) && fitsInSmallChar(chars[1]);
-    case 3:
-      if ('1' <= chars[0] && chars[0] <= '9' && '0' <= chars[1] &&
-          chars[1] <= '9' && '0' <= chars[2] && chars[2] <= '9') {
-        int i =
-            (chars[0] - '0') * 100 + (chars[1] - '0') * 10 + (chars[2] - '0');
-
-        return unsigned(i) < INT_STATIC_LIMIT;
-||||||| merged common ancestors
-/* static */ bool
-StaticStrings::isStatic(const CharT* chars, size_t length)
-{
-    switch (length) {
-      case 1: {
-        char16_t c = chars[0];
-        return c < UNIT_STATIC_LIMIT;
-=======
 /* static */
 bool StaticStrings::isStatic(const CharT* chars, size_t length) {
   switch (length) {
@@ -1972,7 +1288,6 @@ bool StaticStrings::isStatic(const CharT* chars, size_t length) {
             (chars[0] - '0') * 100 + (chars[1] - '0') * 10 + (chars[2] - '0');
 
         return unsigned(i) < INT_STATIC_LIMIT;
->>>>>>> upstream-releases
       }
       return false;
     default:
@@ -1980,28 +1295,12 @@ bool StaticStrings::isStatic(const CharT* chars, size_t length) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool StaticStrings::isStatic(JSAtom* atom) {
-  AutoCheckCannotGC nogc;
-  return atom->hasLatin1Chars()
-             ? isStatic(atom->latin1Chars(nogc), atom->length())
-             : isStatic(atom->twoByteChars(nogc), atom->length());
-||||||| merged common ancestors
-/* static */ bool
-StaticStrings::isStatic(JSAtom* atom)
-{
-    AutoCheckCannotGC nogc;
-    return atom->hasLatin1Chars()
-           ? isStatic(atom->latin1Chars(nogc), atom->length())
-           : isStatic(atom->twoByteChars(nogc), atom->length());
-=======
 /* static */
 bool StaticStrings::isStatic(JSAtom* atom) {
   AutoCheckCannotGC nogc;
   return atom->hasLatin1Chars()
              ? isStatic(atom->latin1Chars(nogc), atom->length())
              : isStatic(atom->twoByteChars(nogc), atom->length());
->>>>>>> upstream-releases
 }
 
 bool AutoStableStringChars::init(JSContext* cx, JSString* s) {
@@ -2102,18 +1401,8 @@ bool AutoStableStringChars::copyAndInflateLatin1Chars(
     return false;
   }
 
-<<<<<<< HEAD
-  CopyAndInflateChars(chars, linearString->rawLatin1Chars(),
-                      linearString->length());
-  chars[linearString->length()] = 0;
-||||||| merged common ancestors
-    CopyAndInflateChars(chars, linearString->rawLatin1Chars(),
-                        linearString->length());
-    chars[linearString->length()] = 0;
-=======
   FillAndTerminate(chars, linearString->rawLatin1Chars(),
                    linearString->length());
->>>>>>> upstream-releases
 
   state_ = TwoByte;
   twoByteChars_ = chars;
@@ -2129,15 +1418,7 @@ bool AutoStableStringChars::copyLatin1Chars(JSContext* cx,
     return false;
   }
 
-<<<<<<< HEAD
-  PodCopy(chars, linearString->rawLatin1Chars(), length);
-  chars[length] = 0;
-||||||| merged common ancestors
-    PodCopy(chars, linearString->rawLatin1Chars(), length);
-    chars[length] = 0;
-=======
   FillAndTerminate(chars, linearString->rawLatin1Chars(), length);
->>>>>>> upstream-releases
 
   state_ = Latin1;
   latin1Chars_ = chars;
@@ -2153,15 +1434,7 @@ bool AutoStableStringChars::copyTwoByteChars(JSContext* cx,
     return false;
   }
 
-<<<<<<< HEAD
-  PodCopy(chars, linearString->rawTwoByteChars(), length);
-  chars[length] = 0;
-||||||| merged common ancestors
-    PodCopy(chars, linearString->rawTwoByteChars(), length);
-    chars[length] = 0;
-=======
   FillAndTerminate(chars, linearString->rawTwoByteChars(), length);
->>>>>>> upstream-releases
 
   state_ = TwoByte;
   twoByteChars_ = chars;
@@ -2185,77 +1458,23 @@ JSFlatString* JSString::ensureFlat(JSContext* cx) {
 JSFlatString* JSExternalString::ensureFlat(JSContext* cx) {
   MOZ_ASSERT(hasTwoByteChars());
 
-<<<<<<< HEAD
-  size_t n = length();
-  auto s = cx->make_pod_array<char16_t>(n + 1);
-  if (!s) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    size_t n = length();
-    auto s = cx->make_pod_array<char16_t>(n + 1);
-    if (!s) {
-        return nullptr;
-    }
-=======
   size_t n = length();
   auto s = cx->make_pod_array<char16_t>(n + 1, js::StringBufferArena);
   if (!s) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!isTenured()) {
-    if (!cx->runtime()->gc.nursery().registerMallocedBuffer(s.get())) {
-      ReportOutOfMemory(cx);
-      return nullptr;
-    }
-  }
-||||||| merged common ancestors
-    if (!isTenured()) {
-        if (!cx->runtime()->gc.nursery().registerMallocedBuffer(s.get())) {
-            ReportOutOfMemory(cx);
-            return nullptr;
-        }
-    }
-=======
   // Copy the chars before finalizing the string.
   {
     AutoCheckCannotGC nogc;
     FillAndTerminate(s.get(), nonInlineChars<char16_t>(nogc), n);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Copy the chars before finalizing the string.
-  {
-    AutoCheckCannotGC nogc;
-    PodCopy(s.get(), nonInlineChars<char16_t>(nogc), n);
-    s[n] = '\0';
-  }
-||||||| merged common ancestors
-    // Copy the chars before finalizing the string.
-    {
-        AutoCheckCannotGC nogc;
-        PodCopy(s.get(), nonInlineChars<char16_t>(nogc), n);
-        s[n] = '\0';
-    }
-=======
   // Release the external chars.
   finalize(cx->runtime()->defaultFreeOp());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Release the external chars.
-  finalize(cx->runtime()->defaultFreeOp());
-||||||| merged common ancestors
-    // Release the external chars.
-    finalize(cx->runtime()->defaultFreeOp());
-=======
   MOZ_ASSERT(isTenured());
   AddCellMemory(this, (n + 1) * sizeof(char16_t), MemoryUse::StringContents);
->>>>>>> upstream-releases
 
   // Transform the string into a non-external, flat string. Note that the
   // resulting string will still be in an AllocKind::EXTERNAL_STRING arena,
@@ -2303,7 +1522,6 @@ JSLinearString* js::NewDependentString(JSContext* cx, JSString* baseArg,
     return base;
   }
 
-<<<<<<< HEAD
   if (base->hasTwoByteChars()) {
     AutoCheckCannotGC nogc;
     const char16_t* chars = base->twoByteChars(nogc) + start;
@@ -2315,39 +1533,8 @@ JSLinearString* js::NewDependentString(JSContext* cx, JSString* baseArg,
     const Latin1Char* chars = base->latin1Chars(nogc) + start;
     if (JSLinearString* staticStr = cx->staticStrings().lookup(chars, length)) {
       return staticStr;
-||||||| merged common ancestors
-    if (base->hasTwoByteChars()) {
-        AutoCheckCannotGC nogc;
-        const char16_t* chars = base->twoByteChars(nogc) + start;
-        if (JSLinearString* staticStr = cx->staticStrings().lookup(chars, length)) {
-            return staticStr;
-        }
-    } else {
-        AutoCheckCannotGC nogc;
-        const Latin1Char* chars = base->latin1Chars(nogc) + start;
-        if (JSLinearString* staticStr = cx->staticStrings().lookup(chars, length)) {
-            return staticStr;
-        }
-=======
-  if (base->hasTwoByteChars()) {
-    AutoCheckCannotGC nogc;
-    const char16_t* chars = base->twoByteChars(nogc) + start;
-    if (JSLinearString* staticStr = cx->staticStrings().lookup(chars, length)) {
-      return staticStr;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
-  } else {
-    AutoCheckCannotGC nogc;
-    const Latin1Char* chars = base->latin1Chars(nogc) + start;
-    if (JSLinearString* staticStr = cx->staticStrings().lookup(chars, length)) {
-      return staticStr;
     }
   }
->>>>>>> upstream-releases
 
   return JSDependentString::new_(cx, base, start, length);
 }
@@ -2366,70 +1553,17 @@ static bool CanStoreCharsAsLatin1(const Latin1Char* s, size_t length) {
   MOZ_CRASH("Shouldn't be called for Latin1 chars");
 }
 
-<<<<<<< HEAD
-template <AllowGC allowGC>
-static MOZ_ALWAYS_INLINE JSInlineString* NewInlineStringDeflated(
-    JSContext* cx, mozilla::Range<const char16_t> chars) {
-  size_t len = chars.length();
-  Latin1Char* storage;
-  JSInlineString* str = AllocateInlineString<allowGC>(cx, len, &storage);
-  if (!str) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-template <AllowGC allowGC>
-static MOZ_ALWAYS_INLINE JSInlineString*
-NewInlineStringDeflated(JSContext* cx, mozilla::Range<const char16_t> chars)
-{
-    size_t len = chars.length();
-    Latin1Char* storage;
-    JSInlineString* str = AllocateInlineString<allowGC>(cx, len, &storage);
-    if (!str) {
-        return nullptr;
-    }
-=======
 static bool CanStoreCharsAsLatin1(LittleEndianChars chars, size_t length) {
   for (size_t i = 0; i < length; i++) {
     if (chars[i] > JSString::MAX_LATIN1_CHAR) {
       return false;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (size_t i = 0; i < len; i++) {
-    MOZ_ASSERT(chars[i] <= JSString::MAX_LATIN1_CHAR);
-    storage[i] = Latin1Char(chars[i]);
-  }
-  storage[len] = '\0';
-  return str;
-||||||| merged common ancestors
-    for (size_t i = 0; i < len; i++) {
-        MOZ_ASSERT(chars[i] <= JSString::MAX_LATIN1_CHAR);
-        storage[i] = Latin1Char(chars[i]);
-    }
-    storage[len] = '\0';
-    return str;
-=======
   return true;
->>>>>>> upstream-releases
 }
 
 template <AllowGC allowGC>
-<<<<<<< HEAD
-static JSFlatString* NewStringDeflated(JSContext* cx, const char16_t* s,
-                                       size_t n) {
-  if (JSFlatString* str = TryEmptyOrStaticString(cx, s, n)) {
-    return str;
-  }
-||||||| merged common ancestors
-static JSFlatString*
-NewStringDeflated(JSContext* cx, const char16_t* s, size_t n)
-{
-    if (JSFlatString* str = TryEmptyOrStaticString(cx, s, n)) {
-        return str;
-    }
-=======
 static MOZ_ALWAYS_INLINE JSInlineString* NewInlineStringDeflated(
     JSContext* cx, mozilla::Range<const char16_t> chars) {
   size_t len = chars.length();
@@ -2438,73 +1572,24 @@ static MOZ_ALWAYS_INLINE JSInlineString* NewInlineStringDeflated(
   if (!str) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (JSInlineString::lengthFits<Latin1Char>(n)) {
-    return NewInlineStringDeflated<allowGC>(
-        cx, mozilla::Range<const char16_t>(s, n));
-  }
-||||||| merged common ancestors
-    if (JSInlineString::lengthFits<Latin1Char>(n)) {
-        return NewInlineStringDeflated<allowGC>(cx, mozilla::Range<const char16_t>(s, n));
-    }
-=======
   MOZ_ASSERT(CanStoreCharsAsLatin1(chars.begin().get(), len));
   FillFromCompatibleAndTerminate(storage, chars, len);
   return str;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto news = cx->make_pod_array<Latin1Char>(n + 1);
-  if (!news) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    auto news = cx->make_pod_array<Latin1Char>(n + 1);
-    if (!news) {
-        return nullptr;
-    }
-=======
 template <AllowGC allowGC>
 static JSFlatString* NewStringDeflated(JSContext* cx, const char16_t* s,
                                        size_t n) {
   if (JSFlatString* str = TryEmptyOrStaticString(cx, s, n)) {
     return str;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (size_t i = 0; i < n; i++) {
-    MOZ_ASSERT(s[i] <= JSString::MAX_LATIN1_CHAR);
-    news[i] = Latin1Char(s[i]);
-  }
-  news[n] = '\0';
-||||||| merged common ancestors
-    for (size_t i = 0; i < n; i++) {
-        MOZ_ASSERT(s[i] <= JSString::MAX_LATIN1_CHAR);
-        news[i] = Latin1Char(s[i]);
-    }
-    news[n] = '\0';
-=======
   if (JSInlineString::lengthFits<Latin1Char>(n)) {
     return NewInlineStringDeflated<allowGC>(
         cx, mozilla::Range<const char16_t>(s, n));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFlatString* str = JSFlatString::new_<allowGC>(cx, news.get(), n);
-  if (!str) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    JSFlatString* str = JSFlatString::new_<allowGC>(cx, news.get(), n);
-    if (!str) {
-        return nullptr;
-    }
-=======
   auto news = cx->make_pod_array<Latin1Char>(n + 1, js::StringBufferArena);
   if (!news) {
     if (!allowGC) {
@@ -2512,20 +1597,11 @@ static JSFlatString* NewStringDeflated(JSContext* cx, const char16_t* s,
     }
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::Unused << news.release();
-  return str;
-||||||| merged common ancestors
-    mozilla::Unused << news.release();
-    return str;
-=======
   MOZ_ASSERT(CanStoreCharsAsLatin1(s, n));
   FillFromCompatibleAndTerminate(news.get(), s, n);
 
   return JSFlatString::new_<allowGC>(cx, std::move(news), n);
->>>>>>> upstream-releases
 }
 
 template <AllowGC allowGC>
@@ -2534,44 +1610,6 @@ static JSFlatString* NewStringDeflated(JSContext* cx, const Latin1Char* s,
   MOZ_CRASH("Shouldn't be called for Latin1 chars");
 }
 
-<<<<<<< HEAD
-template <typename CharT>
-JSFlatString* js::NewStringDontDeflate(JSContext* cx, CharT* chars,
-                                       size_t length) {
-  if (JSFlatString* str = TryEmptyOrStaticString(cx, chars, length)) {
-    // Free |chars| because we're taking possession of it, but it's no
-    // longer needed because we use the static string instead.
-    js_free(chars);
-    return str;
-  }
-
-  if (JSInlineString::lengthFits<CharT>(length)) {
-    JSInlineString* str =
-        NewInlineString<CanGC>(cx, mozilla::Range<const CharT>(chars, length));
-    if (!str) {
-      return nullptr;
-||||||| merged common ancestors
-template <typename CharT>
-JSFlatString*
-js::NewStringDontDeflate(JSContext* cx, CharT* chars, size_t length)
-{
-    if (JSFlatString* str = TryEmptyOrStaticString(cx, chars, length)) {
-        // Free |chars| because we're taking possession of it, but it's no
-        // longer needed because we use the static string instead.
-        js_free(chars);
-        return str;
-    }
-
-    if (JSInlineString::lengthFits<CharT>(length)) {
-        JSInlineString* str =
-            NewInlineString<CanGC>(cx, mozilla::Range<const CharT>(chars, length));
-        if (!str) {
-            return nullptr;
-        }
-
-        js_free(chars);
-        return str;
-=======
 static JSFlatString* NewStringDeflatedFromLittleEndianNoGC(
     JSContext* cx, LittleEndianChars chars, size_t length) {
   MOZ_ASSERT(CanStoreCharsAsLatin1(chars, length));
@@ -2581,20 +1619,8 @@ static JSFlatString* NewStringDeflatedFromLittleEndianNoGC(
     JSInlineString* str = AllocateInlineString<NoGC>(cx, length, &storage);
     if (!str) {
       return nullptr;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    js_free(chars);
-    return str;
-  }
-
-  return JSFlatString::new_<CanGC>(cx, chars, length);
-}
-||||||| merged common ancestors
-    return JSFlatString::new_<CanGC>(cx, chars, length);
-}
-=======
     FillFromCompatibleAndTerminate(storage, chars, length);
     return str;
   }
@@ -2604,53 +1630,13 @@ static JSFlatString* NewStringDeflatedFromLittleEndianNoGC(
     cx->recoverFromOutOfMemory();
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSFlatString* js::NewStringDontDeflate(JSContext* cx, char16_t* chars,
-                                                size_t length);
-||||||| merged common ancestors
-template JSFlatString*
-js::NewStringDontDeflate(JSContext* cx, char16_t* chars, size_t length);
-=======
   FillFromCompatibleAndTerminate(news.get(), chars, length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSFlatString* js::NewStringDontDeflate(JSContext* cx,
-                                                Latin1Char* chars,
-                                                size_t length);
-||||||| merged common ancestors
-template JSFlatString*
-js::NewStringDontDeflate(JSContext* cx, Latin1Char* chars, size_t length);
-=======
   return JSFlatString::new_<NoGC>(cx, std::move(news), length);
 }
->>>>>>> upstream-releases
 
 template <typename CharT>
-<<<<<<< HEAD
-JSFlatString* js::NewString(JSContext* cx, CharT* chars, size_t length) {
-  if (IsSame<CharT, char16_t>::value && CanStoreCharsAsLatin1(chars, length)) {
-    JSFlatString* s = NewStringDeflated<CanGC>(cx, chars, length);
-    if (!s) {
-      return nullptr;
-    }
-||||||| merged common ancestors
-JSFlatString*
-js::NewString(JSContext* cx, CharT* chars, size_t length)
-{
-    if (IsSame<CharT, char16_t>::value && CanStoreCharsAsLatin1(chars, length)) {
-        JSFlatString* s = NewStringDeflated<CanGC>(cx, chars, length);
-        if (!s) {
-            return nullptr;
-        }
-
-        // Free |chars| because we're taking possession of it but not using it.
-        js_free(chars);
-        return s;
-    }
-=======
 JSFlatString* js::NewStringDontDeflate(JSContext* cx,
                                        UniquePtr<CharT[], JS::FreePolicy> chars,
                                        size_t length) {
@@ -2664,63 +1650,18 @@ JSFlatString* js::NewStringDontDeflate(JSContext* cx,
     return NewInlineString<CanGC>(
         cx, mozilla::Range<const CharT>(chars.get(), length));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Free |chars| because we're taking possession of it but not using it.
-    js_free(chars);
-    return s;
-  }
-
-  return NewStringDontDeflate(cx, chars, length);
-||||||| merged common ancestors
-    return NewStringDontDeflate(cx, chars, length);
-=======
   return JSFlatString::new_<CanGC>(cx, std::move(chars), length);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template JSFlatString* js::NewString(JSContext* cx, char16_t* chars,
-                                     size_t length);
-||||||| merged common ancestors
-template JSFlatString*
-js::NewString(JSContext* cx, char16_t* chars, size_t length);
-=======
 template JSFlatString* js::NewStringDontDeflate(JSContext* cx,
                                                 UniqueTwoByteChars chars,
                                                 size_t length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSFlatString* js::NewString(JSContext* cx, Latin1Char* chars,
-                                     size_t length);
-||||||| merged common ancestors
-template JSFlatString*
-js::NewString(JSContext* cx, Latin1Char* chars, size_t length);
-=======
 template JSFlatString* js::NewStringDontDeflate(JSContext* cx,
                                                 UniqueLatin1Chars chars,
                                                 size_t length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <AllowGC allowGC, typename CharT>
-JSFlatString* js::NewStringDontDeflate(JSContext* cx,
-                                       UniquePtr<CharT[], JS::FreePolicy> chars,
-                                       size_t length) {
-  if (JSFlatString* str = TryEmptyOrStaticString(cx, chars.get(), length)) {
-    return str;
-  }
-||||||| merged common ancestors
-template <AllowGC allowGC, typename CharT>
-JSFlatString*
-js::NewStringDontDeflate(JSContext* cx, UniquePtr<CharT[], JS::FreePolicy> chars, size_t length)
-{
-    if (JSFlatString* str = TryEmptyOrStaticString(cx, chars.get(), length)) {
-        return str;
-    }
-=======
 template <typename CharT>
 JSFlatString* js::NewString(JSContext* cx,
                             UniquePtr<CharT[], JS::FreePolicy> chars,
@@ -2730,47 +1671,16 @@ JSFlatString* js::NewString(JSContext* cx,
     // Deflating copies from |chars.get()| and lets |chars| be freed on return.
     return NewStringDeflated<CanGC>(cx, chars.get(), length);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (JSInlineString::lengthFits<CharT>(length)) {
-    return NewInlineString<allowGC>(
-        cx, mozilla::Range<const CharT>(chars.get(), length));
-  }
-||||||| merged common ancestors
-    if (JSInlineString::lengthFits<CharT>(length)) {
-        return NewInlineString<allowGC>(cx, mozilla::Range<const CharT>(chars.get(), length));
-    }
-=======
   return NewStringDontDeflate(cx, std::move(chars), length);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFlatString* str = JSFlatString::new_<allowGC>(cx, chars.get(), length);
-  if (!str) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    JSFlatString* str = JSFlatString::new_<allowGC>(cx, chars.get(), length);
-    if (!str) {
-        return nullptr;
-    }
-=======
 template JSFlatString* js::NewString(JSContext* cx, UniqueTwoByteChars chars,
                                      size_t length);
 
 template JSFlatString* js::NewString(JSContext* cx, UniqueLatin1Chars chars,
                                      size_t length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::Unused << chars.release();
-  return str;
-||||||| merged common ancestors
-    mozilla::Unused << chars.release();
-    return str;
-=======
 template <AllowGC allowGC, typename CharT>
 JSFlatString* js::NewStringDontDeflate(JSContext* cx,
                                        UniquePtr<CharT[], JS::FreePolicy> chars,
@@ -2785,7 +1695,6 @@ JSFlatString* js::NewStringDontDeflate(JSContext* cx,
   }
 
   return JSFlatString::new_<allowGC>(cx, std::move(chars), length);
->>>>>>> upstream-releases
 }
 
 template JSFlatString* js::NewStringDontDeflate<CanGC>(JSContext* cx,
@@ -2845,30 +1754,11 @@ JSFlatString* NewStringCopyNDontDeflate(JSContext* cx, const CharT* s,
     return NewInlineString<allowGC>(cx, mozilla::Range<const CharT>(s, n));
   }
 
-<<<<<<< HEAD
-  auto news = cx->make_pod_array<CharT>(n + 1);
-  if (!news) {
-    if (!allowGC) {
-      cx->recoverFromOutOfMemory();
-||||||| merged common ancestors
-    auto news = cx->make_pod_array<CharT>(n + 1);
-    if (!news) {
-        if (!allowGC) {
-            cx->recoverFromOutOfMemory();
-        }
-        return nullptr;
-=======
   auto news = cx->make_pod_array<CharT>(n + 1, js::StringBufferArena);
   if (!news) {
     if (!allowGC) {
       cx->recoverFromOutOfMemory();
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return nullptr;
-  }
-||||||| merged common ancestors
-=======
     return nullptr;
   }
 
@@ -2876,31 +1766,11 @@ JSFlatString* NewStringCopyNDontDeflate(JSContext* cx, const CharT* s,
 
   return JSFlatString::new_<allowGC>(cx, std::move(news), n);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PodCopy(news.get(), s, n);
-  news[n] = 0;
-||||||| merged common ancestors
-    PodCopy(news.get(), s, n);
-    news[n] = 0;
-=======
 template JSFlatString* NewStringCopyNDontDeflate<CanGC>(JSContext* cx,
                                                         const char16_t* s,
                                                         size_t n);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSFlatString* str = JSFlatString::new_<allowGC>(cx, news.get(), n);
-  if (!str) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    JSFlatString* str = JSFlatString::new_<allowGC>(cx, news.get(), n);
-    if (!str) {
-        return nullptr;
-    }
-=======
 template JSFlatString* NewStringCopyNDontDeflate<NoGC>(JSContext* cx,
                                                        const char16_t* s,
                                                        size_t n);
@@ -2921,66 +1791,21 @@ static JSFlatString* NewUndeflatedStringFromLittleEndianNoGC(
     if (!str) {
       return nullptr;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::Unused << news.release();
-  return str;
-}
-||||||| merged common ancestors
-    mozilla::Unused << news.release();
-    return str;
-}
-=======
     FillAndTerminate(storage, chars, length);
     return str;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSFlatString* NewStringCopyNDontDeflate<CanGC>(JSContext* cx,
-                                                        const char16_t* s,
-                                                        size_t n);
-
-template JSFlatString* NewStringCopyNDontDeflate<NoGC>(JSContext* cx,
-                                                       const char16_t* s,
-                                                       size_t n);
-||||||| merged common ancestors
-template JSFlatString*
-NewStringCopyNDontDeflate<CanGC>(JSContext* cx, const char16_t* s, size_t n);
-
-template JSFlatString*
-NewStringCopyNDontDeflate<NoGC>(JSContext* cx, const char16_t* s, size_t n);
-=======
   auto news = cx->make_pod_array<char16_t>(length + 1, js::StringBufferArena);
   if (!news) {
     cx->recoverFromOutOfMemory();
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSFlatString* NewStringCopyNDontDeflate<CanGC>(JSContext* cx,
-                                                        const Latin1Char* s,
-                                                        size_t n);
-||||||| merged common ancestors
-template JSFlatString*
-NewStringCopyNDontDeflate<CanGC>(JSContext* cx, const Latin1Char* s, size_t n);
-=======
   FillAndTerminate(news.get(), chars, length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template JSFlatString* NewStringCopyNDontDeflate<NoGC>(JSContext* cx,
-                                                       const Latin1Char* s,
-                                                       size_t n);
-||||||| merged common ancestors
-template JSFlatString*
-NewStringCopyNDontDeflate<NoGC>(JSContext* cx, const Latin1Char* s, size_t n);
-=======
   return JSFlatString::new_<NoGC>(cx, std::move(news), length);
 }
->>>>>>> upstream-releases
 
 JSFlatString* NewLatin1StringZ(JSContext* cx, UniqueChars chars) {
   size_t length = strlen(chars.get());
@@ -3009,71 +1834,20 @@ template JSFlatString* NewStringCopyN<CanGC>(JSContext* cx, const Latin1Char* s,
 template JSFlatString* NewStringCopyN<NoGC>(JSContext* cx, const Latin1Char* s,
                                             size_t n);
 
-<<<<<<< HEAD
-template <js::AllowGC allowGC>
-JSFlatString* NewStringCopyUTF8N(JSContext* cx, const JS::UTF8Chars utf8) {
-  JS::SmallestEncoding encoding = JS::FindSmallestEncoding(utf8);
-  if (encoding == JS::SmallestEncoding::ASCII) {
-    return NewStringCopyN<allowGC>(cx, utf8.begin().get(), utf8.length());
-  }
-||||||| merged common ancestors
-template <js::AllowGC allowGC>
-JSFlatString*
-NewStringCopyUTF8N(JSContext* cx, const JS::UTF8Chars utf8)
-{
-    JS::SmallestEncoding encoding = JS::FindSmallestEncoding(utf8);
-    if (encoding == JS::SmallestEncoding::ASCII) {
-        return NewStringCopyN<allowGC>(cx, utf8.begin().get(), utf8.length());
-    }
-=======
 JSFlatString* NewStringFromLittleEndianNoGC(JSContext* cx,
                                             LittleEndianChars chars,
                                             size_t length) {
   if (JSFlatString* str = TryEmptyOrStaticString(cx, chars, length)) {
     return str;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  size_t length;
-  if (encoding == JS::SmallestEncoding::Latin1) {
-    UniqueLatin1Chars latin1(
-        UTF8CharsToNewLatin1CharsZ(cx, utf8, &length).get());
-    if (!latin1) {
-      return nullptr;
-    }
-
-    return NewString<allowGC>(cx, std::move(latin1), length);
-  }
-||||||| merged common ancestors
-    size_t length;
-    if (encoding == JS::SmallestEncoding::Latin1) {
-        UniqueLatin1Chars latin1(UTF8CharsToNewLatin1CharsZ(cx, utf8, &length).get());
-        if (!latin1) {
-            return nullptr;
-        }
-
-        return NewString<allowGC>(cx, std::move(latin1), length);
-    }
-
-    MOZ_ASSERT(encoding == JS::SmallestEncoding::UTF16);
-=======
   if (CanStoreCharsAsLatin1(chars, length)) {
     return NewStringDeflatedFromLittleEndianNoGC(cx, chars, length);
   }
 
   return NewUndeflatedStringFromLittleEndianNoGC(cx, chars, length);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(encoding == JS::SmallestEncoding::UTF16);
-||||||| merged common ancestors
-    UniqueTwoByteChars utf16(UTF8CharsToNewTwoByteCharsZ(cx, utf8, &length).get());
-    if (!utf16) {
-        return nullptr;
-    }
-=======
 template <js::AllowGC allowGC>
 JSFlatString* NewStringCopyUTF8N(JSContext* cx, const JS::UTF8Chars utf8) {
   JS::SmallestEncoding encoding = JS::FindSmallestEncoding(utf8);
@@ -3101,21 +1875,8 @@ JSFlatString* NewStringCopyUTF8N(JSContext* cx, const JS::UTF8Chars utf8) {
   if (!utf16) {
     return nullptr;
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  UniqueTwoByteChars utf16(
-      UTF8CharsToNewTwoByteCharsZ(cx, utf8, &length).get());
-  if (!utf16) {
-    return nullptr;
-  }
 
   return NewString<allowGC>(cx, std::move(utf16), length);
-||||||| merged common ancestors
-    return NewString<allowGC>(cx, std::move(utf16), length);
-=======
-  return NewString<allowGC>(cx, std::move(utf16), length);
->>>>>>> upstream-releases
 }
 
 template JSFlatString* NewStringCopyUTF8N<CanGC>(JSContext* cx,
@@ -3316,90 +2077,6 @@ static bool FillWithRepresentatives(JSContext* cx, HandleArrayObject array,
   }
   MOZ_ASSERT(undep->isUndepended());
 
-<<<<<<< HEAD
-  // Extensible.
-  RootedString temp1(cx, NewStringCopyN<CanGC>(cx, chars, len));
-  if (!temp1) {
-    return false;
-  }
-  RootedString extensible(cx, ConcatStrings<CanGC>(cx, temp1, atom3));
-  if (!extensible || !extensible->ensureLinear(cx)) {
-    return false;
-  }
-  if (!AppendString(cx, array, index, extensible)) {
-    return false;
-  }
-  MOZ_ASSERT(extensible->isExtensible());
-
-  // External. Note that we currently only support TwoByte external strings.
-  RootedString external1(cx), external2(cx);
-  if (IsSame<CharT, char16_t>::value) {
-    external1 = JS_NewExternalString(cx, (const char16_t*)chars, len,
-                                     &RepresentativeExternalStringFinalizer);
-    if (!external1 || !AppendString(cx, array, index, external1)) {
-      return false;
-    }
-    MOZ_ASSERT(external1->isExternal());
-
-    external2 = JS_NewExternalString(cx, (const char16_t*)chars, 2,
-                                     &RepresentativeExternalStringFinalizer);
-    if (!external2 || !AppendString(cx, array, index, external2)) {
-      return false;
-    }
-    MOZ_ASSERT(external2->isExternal());
-  }
-
-  // Assert the strings still have the types we expect after creating the
-  // other strings.
-
-  MOZ_ASSERT(atom1->isAtom());
-  MOZ_ASSERT(atom2->isAtom());
-  MOZ_ASSERT(atom3->isAtom());
-  MOZ_ASSERT(atom2->isInline());
-  MOZ_ASSERT(atom3->isFatInline());
-
-  MOZ_ASSERT(flat1->isFlat());
-  MOZ_ASSERT(flat2->isFlat());
-  MOZ_ASSERT(flat3->isFlat());
-  MOZ_ASSERT(flat2->isInline());
-  MOZ_ASSERT(flat3->isFatInline());
-
-  MOZ_ASSERT(rope->isRope());
-  MOZ_ASSERT(dep->isDependent());
-  MOZ_ASSERT(undep->isUndepended());
-  MOZ_ASSERT(extensible->isExtensible());
-  MOZ_ASSERT_IF(external1, external1->isExternal());
-  MOZ_ASSERT_IF(external2, external2->isExternal());
-  return true;
-}
-
-/* static */ bool JSString::fillWithRepresentatives(JSContext* cx,
-                                                    HandleArrayObject array) {
-  uint32_t index = 0;
-
-  auto CheckTwoByte = [](JSString* str) { return str->hasTwoByteChars(); };
-  auto CheckLatin1 = [](JSString* str) { return str->hasLatin1Chars(); };
-
-  // Append TwoByte strings.
-  static const char16_t twoByteChars[] =
-      u"\u1234abc\0def\u5678ghijklmasdfa\0xyz0123456789";
-  if (!FillWithRepresentatives(cx, array, &index, twoByteChars,
-                               mozilla::ArrayLength(twoByteChars) - 1,
-                               JSFatInlineString::MAX_LENGTH_TWO_BYTE,
-                               CheckTwoByte)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Append Latin1 strings.
-    static const Latin1Char latin1Chars[] = "abc\0defghijklmasdfa\0xyz0123456789";
-    if (!FillWithRepresentatives(cx, array, &index,
-                                 latin1Chars, mozilla::ArrayLength(latin1Chars) - 1,
-                                 JSFatInlineString::MAX_LENGTH_LATIN1,
-                                 CheckLatin1))
-    {
-        return false;
-    }
-=======
   // Extensible.
   RootedString temp1(cx, NewStringCopyN<CanGC>(cx, chars, len));
   if (!temp1) {
@@ -3472,7 +2149,6 @@ bool JSString::fillWithRepresentatives(JSContext* cx, HandleArrayObject array) {
                                CheckTwoByte)) {
     return false;
   }
->>>>>>> upstream-releases
 
   // Append Latin1 strings.
   static const Latin1Char latin1Chars[] = "abc\0defghijklmasdfa\0xyz0123456789";
@@ -3530,17 +2206,8 @@ UniqueChars js::EncodeLatin1(JSContext* cx, JSString* str) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  mozilla::PodCopy(buf, linear->latin1Chars(nogc), len);
-  buf[len] = '\0';
-  return UniqueChars(reinterpret_cast<char*>(buf));
-||||||| merged common ancestors
-    MOZ_ASSERT(StringIsAscii(linear));
-    return EncodeLatin1(cx, linear);
-=======
   FillAndTerminate(buf, linear->latin1Chars(nogc), len);
   return UniqueChars(reinterpret_cast<char*>(buf));
->>>>>>> upstream-releases
 }
 
 UniqueChars js::EncodeAscii(JSContext* cx, JSString* str) {
@@ -3575,94 +2242,6 @@ UniqueChars js::IdToPrintableUTF8(JSContext* cx, HandleId id,
 }
 
 template <AllowGC allowGC>
-<<<<<<< HEAD
-JSString* js::ToStringSlow(
-    JSContext* cx, typename MaybeRooted<Value, allowGC>::HandleType arg) {
-  /* As with ToObjectSlow, callers must verify that |arg| isn't a string. */
-  MOZ_ASSERT(!arg.isString());
-
-  Value v = arg;
-  if (!v.isPrimitive()) {
-    MOZ_ASSERT(!cx->helperThread());
-    if (!allowGC) {
-      return nullptr;
-    }
-    RootedValue v2(cx, v);
-    if (!ToPrimitive(cx, JSTYPE_STRING, &v2)) {
-      return nullptr;
-    }
-    v = v2;
-  }
-
-  JSString* str;
-  if (v.isString()) {
-    str = v.toString();
-  } else if (v.isInt32()) {
-    str = Int32ToString<allowGC>(cx, v.toInt32());
-  } else if (v.isDouble()) {
-    str = NumberToString<allowGC>(cx, v.toDouble());
-  } else if (v.isBoolean()) {
-    str = BooleanToString(cx, v.toBoolean());
-  } else if (v.isNull()) {
-    str = cx->names().null;
-  } else if (v.isSymbol()) {
-    MOZ_ASSERT(!cx->helperThread());
-    if (allowGC) {
-      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                JSMSG_SYMBOL_TO_STRING);
-    }
-    return nullptr;
-  }
-#ifdef ENABLE_BIGINT
-  else if (v.isBigInt()) {
-    if (!allowGC) {
-      return nullptr;
-||||||| merged common ancestors
-JSString*
-js::ToStringSlow(JSContext* cx, typename MaybeRooted<Value, allowGC>::HandleType arg)
-{
-    /* As with ToObjectSlow, callers must verify that |arg| isn't a string. */
-    MOZ_ASSERT(!arg.isString());
-
-    Value v = arg;
-    if (!v.isPrimitive()) {
-        MOZ_ASSERT(!cx->helperThread());
-        if (!allowGC) {
-            return nullptr;
-        }
-        RootedValue v2(cx, v);
-        if (!ToPrimitive(cx, JSTYPE_STRING, &v2)) {
-            return nullptr;
-        }
-        v = v2;
-    }
-
-    JSString* str;
-    if (v.isString()) {
-        str = v.toString();
-    } else if (v.isInt32()) {
-        str = Int32ToString<allowGC>(cx, v.toInt32());
-    } else if (v.isDouble()) {
-        str = NumberToString<allowGC>(cx, v.toDouble());
-    } else if (v.isBoolean()) {
-        str = BooleanToString(cx, v.toBoolean());
-    } else if (v.isNull()) {
-        str = cx->names().null;
-    } else if (v.isSymbol()) {
-        MOZ_ASSERT(!cx->helperThread());
-        if (allowGC) {
-            JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                      JSMSG_SYMBOL_TO_STRING);
-        }
-        return nullptr;
-    }
-#ifdef ENABLE_BIGINT
-    else if (v.isBigInt()) {
-        if (!allowGC) {
-            return nullptr;
-        }
-        str = BigInt::toString(cx, v.toBigInt(), 10);
-=======
 JSString* js::ToStringSlow(
     JSContext* cx, typename MaybeRooted<Value, allowGC>::HandleType arg) {
   /* As with ToObjectSlow, callers must verify that |arg| isn't a string. */
@@ -3697,25 +2276,7 @@ JSString* js::ToStringSlow(
     if (allowGC) {
       JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                                 JSMSG_SYMBOL_TO_STRING);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    str = BigInt::toString(cx, v.toBigInt(), 10);
-  }
-#endif
-  else {
-    MOZ_ASSERT(v.isUndefined());
-    str = cx->names().undefined;
-  }
-  return str;
-||||||| merged common ancestors
-#endif
-    else {
-        MOZ_ASSERT(v.isUndefined());
-        str = cx->names().undefined;
-    }
-    return str;
-=======
     return nullptr;
   } else if (v.isBigInt()) {
     if (!allowGC) {
@@ -3728,7 +2289,6 @@ JSString* js::ToStringSlow(
     str = cx->names().undefined;
   }
   return str;
->>>>>>> upstream-releases
 }
 
 template JSString* js::ToStringSlow<CanGC>(JSContext* cx, HandleValue arg);
@@ -3739,72 +2299,6 @@ JS_PUBLIC_API JSString* js::ToStringSlow(JSContext* cx, HandleValue v) {
   return ToStringSlow<CanGC>(cx, v);
 }
 
-<<<<<<< HEAD
-/*
- * Convert a JSString to its source expression; returns null after reporting an
- * error, otherwise returns a new string reference. No Handle needed since the
- * input is dead after the GC.
- */
-static JSString* StringToSource(JSContext* cx, JSString* str) {
-  UniqueChars chars = QuoteString(cx, str, '"');
-  if (!chars) {
-    return nullptr;
-  }
-  return NewStringCopyZ<CanGC>(cx, chars.get());
-}
-
-static JSString* SymbolToSource(JSContext* cx, Symbol* symbol) {
-  RootedString desc(cx, symbol->description());
-  SymbolCode code = symbol->code();
-  if (code != SymbolCode::InSymbolRegistry &&
-      code != SymbolCode::UniqueSymbol) {
-    // Well-known symbol.
-    MOZ_ASSERT(uint32_t(code) < JS::WellKnownSymbolLimit);
-    return desc;
-  }
-
-  StringBuffer buf(cx);
-  if (code == SymbolCode::InSymbolRegistry ? !buf.append("Symbol.for(")
-                                           : !buf.append("Symbol(")) {
-    return nullptr;
-  }
-  if (desc) {
-    UniqueChars quoted = QuoteString(cx, desc, '"');
-    if (!quoted || !buf.append(quoted.get(), strlen(quoted.get()))) {
-      return nullptr;
-    }
-  }
-  if (!buf.append(')')) {
-    return nullptr;
-  }
-  return buf.finishString();
-||||||| merged common ancestors
-static JSString*
-SymbolToSource(JSContext* cx, Symbol* symbol)
-{
-    RootedString desc(cx, symbol->description());
-    SymbolCode code = symbol->code();
-    if (code != SymbolCode::InSymbolRegistry && code != SymbolCode::UniqueSymbol) {
-        // Well-known symbol.
-        MOZ_ASSERT(uint32_t(code) < JS::WellKnownSymbolLimit);
-        return desc;
-    }
-
-    StringBuffer buf(cx);
-    if (code == SymbolCode::InSymbolRegistry ? !buf.append("Symbol.for(") : !buf.append("Symbol(")) {
-        return nullptr;
-    }
-    if (desc) {
-        UniqueChars quoted = QuoteString(cx, desc, '"');
-        if (!quoted || !buf.append(quoted.get(), strlen(quoted.get()))) {
-            return nullptr;
-        }
-    }
-    if (!buf.append(')')) {
-        return nullptr;
-    }
-    return buf.finishString();
-=======
 /*
  * Convert a JSString to its source expression; returns null after reporting an
  * error, otherwise returns a new string reference. No Handle needed since the
@@ -3843,7 +2337,6 @@ static JSString* SymbolToSource(JSContext* cx, Symbol* symbol) {
     return nullptr;
   }
   return buf.finishString();
->>>>>>> upstream-releases
 }
 
 JSString* js::ValueToSource(JSContext* cx, HandleValue v) {

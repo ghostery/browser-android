@@ -42,44 +42,18 @@ class Interval {
 
   template <typename StartArg, typename EndArg>
   Interval(StartArg&& aStart, EndArg&& aEnd)
-<<<<<<< HEAD
-      : mStart(std::forward<StartArg>(aStart)),
-        mEnd(std::forward<EndArg>(aEnd)),
-        mFuzz() {
-    MOZ_ASSERT(aStart <= aEnd);
-||||||| merged common ancestors
-    : mStart(std::forward<StartArg>(aStart))
-    , mEnd(std::forward<EndArg>(aEnd))
-    , mFuzz()
-  {
-    MOZ_ASSERT(aStart <= aEnd);
-=======
       : mStart(std::forward<StartArg>(aStart)),
         mEnd(std::forward<EndArg>(aEnd)),
         mFuzz() {
     MOZ_DIAGNOSTIC_ASSERT(mStart <= mEnd, "Invalid Interval");
->>>>>>> upstream-releases
   }
 
   template <typename StartArg, typename EndArg, typename FuzzArg>
   Interval(StartArg&& aStart, EndArg&& aEnd, FuzzArg&& aFuzz)
-<<<<<<< HEAD
-      : mStart(std::forward<StartArg>(aStart)),
-        mEnd(std::forward<EndArg>(aEnd)),
-        mFuzz(std::forward<FuzzArg>(aFuzz)) {
-    MOZ_ASSERT(aStart <= aEnd);
-||||||| merged common ancestors
-    : mStart(std::forward<StartArg>(aStart))
-    , mEnd(std::forward<EndArg>(aEnd))
-    , mFuzz(std::forward<FuzzArg>(aFuzz))
-  {
-    MOZ_ASSERT(aStart <= aEnd);
-=======
       : mStart(std::forward<StartArg>(aStart)),
         mEnd(std::forward<EndArg>(aEnd)),
         mFuzz(std::forward<FuzzArg>(aFuzz)) {
     MOZ_DIAGNOSTIC_ASSERT(mStart <= mEnd, "Invalid Interval");
->>>>>>> upstream-releases
   }
 
   Interval(const SelfType& aOther)
@@ -114,20 +88,8 @@ class Interval {
     return SelfType(mStart + aVal, mEnd + aVal, mFuzz);
   }
 
-<<<<<<< HEAD
-  // Basic interval arithmetic operator definition.
   SelfType operator-(const SelfType& aOther) const {
     return SelfType(mStart - aOther.mEnd, mEnd - aOther.mStart,
-||||||| merged common ancestors
-  // Basic interval arithmetic operator definition.
-  SelfType operator- (const SelfType& aOther) const
-  {
-    return SelfType(mStart - aOther.mEnd,
-                    mEnd - aOther.mStart,
-=======
-  SelfType operator-(const SelfType& aOther) const {
-    return SelfType(mStart - aOther.mEnd, mEnd - aOther.mStart,
->>>>>>> upstream-releases
                     mFuzz + aOther.mFuzz);
   }
 
@@ -135,45 +97,19 @@ class Interval {
     return SelfType(mStart - aVal, mEnd - aVal, mFuzz);
   }
 
-<<<<<<< HEAD
-  bool operator==(const SelfType& aOther) const {
-    return mStart == aOther.mStart && mEnd == aOther.mEnd;
-||||||| merged common ancestors
-  bool operator== (const SelfType& aOther) const
-  {
-    return mStart == aOther.mStart && mEnd == aOther.mEnd;
-=======
   SelfType& operator+=(const SelfType& aOther) {
     mStart += aOther.mStart;
     mEnd += aOther.mEnd;
     mFuzz += aOther.mFuzz;
     return *this;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  bool operator!=(const SelfType& aOther) const { return !(*this == aOther); }
-||||||| merged common ancestors
-  bool operator!= (const SelfType& aOther) const
-  {
-    return !(*this == aOther);
-  }
-=======
   SelfType& operator+=(const T& aVal) {
     mStart += aVal;
     mEnd += aVal;
     return *this;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool Contains(const T& aX) const {
-    return mStart - mFuzz <= aX && aX < mEnd + mFuzz;
-||||||| merged common ancestors
-  bool Contains(const T& aX) const
-  {
-    return mStart - mFuzz <= aX && aX < mEnd + mFuzz;
-=======
   SelfType& operator-=(const SelfType& aOther) {
     mStart -= aOther.mStart;
     mEnd -= aOther.mEnd;
@@ -185,17 +121,8 @@ class Interval {
     mStart -= aVal;
     mEnd -= aVal;
     return *this;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  bool ContainsStrict(const T& aX) const { return mStart <= aX && aX < mEnd; }
-||||||| merged common ancestors
-  bool ContainsStrict(const T& aX) const
-  {
-    return mStart <= aX && aX < mEnd;
-  }
-=======
   bool operator==(const SelfType& aOther) const {
     return mStart == aOther.mStart && mEnd == aOther.mEnd;
   }
@@ -205,18 +132,10 @@ class Interval {
   bool Contains(const T& aX) const {
     return mStart - mFuzz <= aX && aX < mEnd + mFuzz;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool ContainsWithStrictEnd(const T& aX) const {
-||||||| merged common ancestors
-  bool ContainsWithStrictEnd(const T& aX) const
-  {
-=======
   bool ContainsStrict(const T& aX) const { return mStart <= aX && aX < mEnd; }
 
   bool ContainsWithStrictEnd(const T& aX) const {
->>>>>>> upstream-releases
     return mStart - mFuzz <= aX && aX < mEnd;
   }
 
@@ -386,16 +305,6 @@ class IntervalSet {
     return *this;
   }
 
-<<<<<<< HEAD
-  SelfType& Add(const SelfType& aIntervals) {
-    mIntervals.AppendElements(aIntervals.mIntervals);
-    Normalize();
-||||||| merged common ancestors
-  SelfType& Add(const SelfType& aIntervals)
-  {
-    mIntervals.AppendElements(aIntervals.mIntervals);
-    Normalize();
-=======
   SelfType& Add(const SelfType& aIntervals) {
     if (aIntervals.mIntervals.Length() == 1) {
       Add(aIntervals.mIntervals[0]);
@@ -403,7 +312,6 @@ class IntervalSet {
       mIntervals.AppendElements(aIntervals.mIntervals);
       Normalize();
     }
->>>>>>> upstream-releases
     return *this;
   }
 
@@ -481,18 +389,7 @@ class IntervalSet {
   }
 
   // Excludes an interval from an IntervalSet.
-<<<<<<< HEAD
-  // This is done by inverting aInterval within the bounds of mIntervals
-  // and then doing the intersection.
   SelfType& operator-=(const ElemType& aInterval) {
-||||||| merged common ancestors
-  // This is done by inverting aInterval within the bounds of mIntervals
-  // and then doing the intersection.
-  SelfType& operator-= (const ElemType& aInterval)
-  {
-=======
-  SelfType& operator-=(const ElemType& aInterval) {
->>>>>>> upstream-releases
     if (aInterval.IsEmpty() || mIntervals.IsEmpty()) {
       return *this;
     }
@@ -778,48 +675,6 @@ class IntervalSet {
  protected:
   ContainerType mIntervals;
 
-<<<<<<< HEAD
- private:
-  void Normalize() {
-    if (mIntervals.Length() >= 2) {
-      ContainerType normalized;
-
-      mIntervals.Sort(CompareIntervals());
-
-      // This merges the intervals.
-      ElemType current(mIntervals[0]);
-      for (IndexType i = 1; i < mIntervals.Length(); i++) {
-        ElemType& interval = mIntervals[i];
-        if (current.Touches(interval)) {
-          current = current.Span(interval);
-        } else {
-          normalized.AppendElement(std::move(current));
-          current = std::move(interval);
-        }
-      }
-      normalized.AppendElement(std::move(current));
-||||||| merged common ancestors
-private:
-  void Normalize()
-  {
-    if (mIntervals.Length() >= 2) {
-      ContainerType normalized;
-
-      mIntervals.Sort(CompareIntervals());
-
-      // This merges the intervals.
-      ElemType current(mIntervals[0]);
-      for (IndexType i = 1; i < mIntervals.Length(); i++) {
-        ElemType& interval = mIntervals[i];
-        if (current.Touches(interval)) {
-          current = current.Span(interval);
-        } else {
-          normalized.AppendElement(std::move(current));
-          current = std::move(interval);
-        }
-      }
-      normalized.AppendElement(std::move(current));
-=======
  private:
   void Normalize() {
     if (mIntervals.Length() < 2) {
@@ -833,7 +688,6 @@ private:
     if (mIntervals.Length() < 2) {
       return;
     }
->>>>>>> upstream-releases
 
     // This merges the intervals in place.
     IndexType read = 0;

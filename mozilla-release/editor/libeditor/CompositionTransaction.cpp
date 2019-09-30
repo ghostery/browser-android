@@ -5,31 +5,6 @@
 
 #include "CompositionTransaction.h"
 
-<<<<<<< HEAD
-#include "mozilla/EditorBase.h"       // mEditorBase
-#include "mozilla/SelectionState.h"   // RangeUpdater
-#include "mozilla/TextComposition.h"  // TextComposition
-#include "mozilla/dom/Selection.h"    // local var
-#include "mozilla/dom/Text.h"         // mTextNode
-#include "nsAString.h"                // params
-#include "nsDebug.h"                  // for NS_ASSERTION, etc
-#include "nsError.h"                  // for NS_SUCCEEDED, NS_FAILED, etc
-#include "nsIPresShell.h"             // nsISelectionController constants
-#include "nsRange.h"                  // local var
-#include "nsQueryObject.h"            // for do_QueryObject
-||||||| merged common ancestors
-#include "mozilla/EditorBase.h"         // mEditorBase
-#include "mozilla/SelectionState.h"     // RangeUpdater
-#include "mozilla/TextComposition.h"    // TextComposition
-#include "mozilla/dom/Selection.h"      // local var
-#include "mozilla/dom/Text.h"           // mTextNode
-#include "nsAString.h"                  // params
-#include "nsDebug.h"                    // for NS_ASSERTION, etc
-#include "nsError.h"                    // for NS_SUCCEEDED, NS_FAILED, etc
-#include "nsIPresShell.h"               // nsISelectionController constants
-#include "nsRange.h"                    // local var
-#include "nsQueryObject.h"              // for do_QueryObject
-=======
 #include "mozilla/EditorBase.h"       // mEditorBase
 #include "mozilla/SelectionState.h"   // RangeUpdater
 #include "mozilla/TextComposition.h"  // TextComposition
@@ -41,7 +16,6 @@
 #include "nsRange.h"                  // local var
 #include "nsISelectionController.h"   // for nsISelectionController constants
 #include "nsQueryObject.h"            // for do_QueryObject
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -307,20 +281,9 @@ nsresult CompositionTransaction::SetIMESelection(
         std::min(textRange.mEndOffset, aLengthOfCompositionString));
     MOZ_ASSERT(endOffset >= startOffset &&
                static_cast<uint32_t>(endOffset) <= maxOffset);
-<<<<<<< HEAD
-    rv = nsRange::CreateRange(aTextNode, startOffset, aTextNode, endOffset,
-                              getter_AddRefs(clauseRange));
-    if (NS_FAILED(rv)) {
-||||||| merged common ancestors
-    rv = nsRange::CreateRange(aTextNode, startOffset,
-                              aTextNode, endOffset,
-                              getter_AddRefs(clauseRange));
-    if (NS_FAILED(rv)) {
-=======
     clauseRange = nsRange::Create(aTextNode, startOffset, aTextNode, endOffset,
                                   IgnoreErrors());
     if (!clauseRange) {
->>>>>>> upstream-releases
       NS_WARNING("Failed to create a DOM range for a clause of composition");
       break;
     }

@@ -4,22 +4,10 @@
 
 %include ../../../shared/in-content/common.inc.css
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-:root {
-  --in-content-box-background-odd: transparent;
-}
-
-xul|caption {
-  background-color: transparent;
-}
-
-=======
 :root {
   --panel-border-radius: 0;
 }
 
->>>>>>> upstream-releases
 xul|*.menulist-dropmarker {
   margin-top: 1px;
   margin-bottom: 1px;
@@ -47,19 +35,10 @@ xul|menulist:-moz-focusring > xul|*.menulist-label-box {
   outline: none !important;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-*|button.primary:focus {
-  outline: 1px dotted;
-  outline-offset: -3px;
-}
-
-=======
 html|input[type="checkbox"]:-moz-focusring + html|label:before {
   outline: 1px dotted;
 }
 
->>>>>>> upstream-releases
 /* Use a 2px border so that selected row highlight is still visible behind
     an existing high-contrast border that uses the background color */
 @media (-moz-windows-default-theme: 0) {

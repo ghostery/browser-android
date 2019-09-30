@@ -10,50 +10,18 @@ requirements:
  - tools/requirements_flake8.txt:
       update: all
       pin: True
-<<<<<<< HEAD
- - tools/wpt/requirements.txt:
-||||||| merged common ancestors
- - tools/wptrunner/requirements_edge.txt:
-=======
  - tools/requirements_mypy.txt:
->>>>>>> upstream-releases
       update: all
       pin: True
-<<<<<<< HEAD
- - tools/wptrunner/requirements.txt:
-||||||| merged common ancestors
- - tools/wptrunner/requirements_opera.txt:
-=======
  - tools/wpt/requirements.txt:
->>>>>>> upstream-releases
       update: all
       pin: True
-<<<<<<< HEAD
- - tools/wptrunner/requirements_chrome.txt:
-||||||| merged common ancestors
- - tools/wptrunner/requirements_servo.txt:
-=======
  - tools/wptrunner/requirements.txt:
->>>>>>> upstream-releases
       update: all
       pin: True
-<<<<<<< HEAD
- - tools/wptrunner/requirements_chrome_android.txt:
-||||||| merged common ancestors
- - tools/wptrunner/requirements_safari.txt:
-=======
  - tools/wptrunner/requirements_chrome.txt:
->>>>>>> upstream-releases
       update: all
       pin: True
-<<<<<<< HEAD
- - tools/wptrunner/requirements_edge.txt:
-      update: all
-      pin: True
- - tools/wptrunner/requirements_firefox.txt:
-||||||| merged common ancestors
- - tools/wptrunner/requirements_sauce.txt:
-=======
  - tools/wptrunner/requirements_chrome_android.txt:
       update: all
       pin: True
@@ -61,7 +29,6 @@ requirements:
       update: all
       pin: True
  - tools/wptrunner/requirements_firefox.txt:
->>>>>>> upstream-releases
       update: all
       pin: True
  - tools/wptrunner/requirements_ie.txt:

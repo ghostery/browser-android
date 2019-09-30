@@ -28,27 +28,10 @@ using namespace mozilla;
 using namespace mozilla::dom;
 using namespace mozilla::dom::ipc;
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-bool InProcessTabChildMessageManager::DoSendBlockingMessage(
-    JSContext* aCx, const nsAString& aMessage, StructuredCloneData& aData,
-    JS::Handle<JSObject*> aCpows, nsIPrincipal* aPrincipal,
-    nsTArray<StructuredCloneData>* aRetVal, bool aIsSync) {
-||||||| merged common ancestors
-bool
-InProcessTabChildMessageManager::DoSendBlockingMessage(JSContext* aCx,
-                                                       const nsAString& aMessage,
-                                                       StructuredCloneData& aData,
-                                                       JS::Handle<JSObject *> aCpows,
-                                                       nsIPrincipal* aPrincipal,
-                                                       nsTArray<StructuredCloneData>* aRetVal,
-                                                       bool aIsSync)
-{
-=======
 bool InProcessBrowserChildMessageManager::DoSendBlockingMessage(
     JSContext* aCx, const nsAString& aMessage, StructuredCloneData& aData,
     JS::Handle<JSObject*> aCpows, nsIPrincipal* aPrincipal,
     nsTArray<StructuredCloneData>* aRetVal, bool aIsSync) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   SameProcessMessageQueue* queue = SameProcessMessageQueue::Get();
   queue->Flush();
 
@@ -67,25 +50,6 @@ class nsAsyncMessageToParent : public nsSameProcessAsyncMessageBase,
  public:
   nsAsyncMessageToParent(JS::RootingContext* aRootingCx,
                          JS::Handle<JSObject*> aCpows,
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-                         InProcessTabChildMessageManager* aTabChild)
-      : nsSameProcessAsyncMessageBase(aRootingCx, aCpows),
-        mTabChild(aTabChild) {}
-
-  virtual nsresult HandleMessage() override {
-    RefPtr<nsFrameLoader> fl = mTabChild->GetFrameLoader();
-    ReceiveMessage(mTabChild->mOwner, fl, mTabChild->mChromeMessageManager);
-||||||| merged common ancestors
-                         InProcessTabChildMessageManager* aTabChild)
-    : nsSameProcessAsyncMessageBase(aRootingCx, aCpows)
-    , mTabChild(aTabChild)
-  { }
-
-  virtual nsresult HandleMessage() override
-  {
-    RefPtr<nsFrameLoader> fl = mTabChild->GetFrameLoader();
-    ReceiveMessage(mTabChild->mOwner, fl, mTabChild->mChromeMessageManager);
-=======
                          InProcessBrowserChildMessageManager* aBrowserChild)
       : nsSameProcessAsyncMessageBase(aRootingCx, aCpows),
         mBrowserChild(aBrowserChild) {}
@@ -94,29 +58,14 @@ class nsAsyncMessageToParent : public nsSameProcessAsyncMessageBase,
     RefPtr<nsFrameLoader> fl = mBrowserChild->GetFrameLoader();
     ReceiveMessage(mBrowserChild->mOwner, fl,
                    mBrowserChild->mChromeMessageManager);
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
     return NS_OK;
   }
   RefPtr<InProcessBrowserChildMessageManager> mBrowserChild;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-nsresult InProcessTabChildMessageManager::DoSendAsyncMessage(
-    JSContext* aCx, const nsAString& aMessage, StructuredCloneData& aData,
-    JS::Handle<JSObject*> aCpows, nsIPrincipal* aPrincipal) {
-||||||| merged common ancestors
-nsresult
-InProcessTabChildMessageManager::DoSendAsyncMessage(JSContext* aCx,
-                                                    const nsAString& aMessage,
-                                                    StructuredCloneData& aData,
-                                                    JS::Handle<JSObject *> aCpows,
-                                                    nsIPrincipal* aPrincipal)
-{
-=======
 nsresult InProcessBrowserChildMessageManager::DoSendAsyncMessage(
     JSContext* aCx, const nsAString& aMessage, StructuredCloneData& aData,
     JS::Handle<JSObject*> aCpows, nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   SameProcessMessageQueue* queue = SameProcessMessageQueue::Get();
   JS::RootingContext* rcx = JS::RootingContext::get(aCx);
   RefPtr<nsAsyncMessageToParent> ev =
@@ -131,25 +80,6 @@ nsresult InProcessBrowserChildMessageManager::DoSendAsyncMessage(
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-InProcessTabChildMessageManager::InProcessTabChildMessageManager(
-    nsIDocShell* aShell, nsIContent* aOwner, nsFrameMessageManager* aChrome)
-    : ContentFrameMessageManager(new nsFrameMessageManager(this)),
-      mDocShell(aShell),
-      mLoadingScript(false),
-      mPreventEventsEscaping(false),
-      mOwner(aOwner),
-      mChromeMessageManager(aChrome) {
-||||||| merged common ancestors
-InProcessTabChildMessageManager::InProcessTabChildMessageManager(nsIDocShell* aShell,
-                                                                 nsIContent* aOwner,
-                                                                 nsFrameMessageManager* aChrome)
-: ContentFrameMessageManager(new nsFrameMessageManager(this)),
-  mDocShell(aShell), mLoadingScript(false),
-  mPreventEventsEscaping(false),
-  mOwner(aOwner), mChromeMessageManager(aChrome)
-{
-=======
 InProcessBrowserChildMessageManager::InProcessBrowserChildMessageManager(
     nsDocShell* aShell, nsIContent* aOwner, nsFrameMessageManager* aChrome)
     : ContentFrameMessageManager(new nsFrameMessageManager(this)),
@@ -158,7 +88,6 @@ InProcessBrowserChildMessageManager::InProcessBrowserChildMessageManager(
       mPreventEventsEscaping(false),
       mOwner(aOwner),
       mChromeMessageManager(aChrome) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   mozilla::HoldJSObjects(this);
 
   // If owner corresponds to an <iframe mozbrowser>, we'll have to tweak our
@@ -171,52 +100,24 @@ InProcessBrowserChildMessageManager::InProcessBrowserChildMessageManager(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-InProcessTabChildMessageManager::~InProcessTabChildMessageManager() {
-||||||| merged common ancestors
-InProcessTabChildMessageManager::~InProcessTabChildMessageManager()
-{
-=======
 InProcessBrowserChildMessageManager::~InProcessBrowserChildMessageManager() {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   mAnonymousGlobalScopes.Clear();
   mozilla::DropJSObjects(this);
 }
 
 // This method isn't automatically forwarded safely because it's notxpcom, so
 // the IDL binding doesn't know what value to return.
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::MarkForCC() {
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::MarkForCC()
-{
-=======
 void InProcessBrowserChildMessageManager::MarkForCC() {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   MarkScopesForCC();
   MessageManagerGlobal::MarkForCC();
 }
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(InProcessBrowserChildMessageManager)
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(
-    InProcessTabChildMessageManager, DOMEventTargetHelper)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mMessageManager)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocShell)
-||||||| merged common ancestors
-
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(InProcessTabChildMessageManager,
-                                                  DOMEventTargetHelper)
-   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mMessageManager)
-   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocShell)
-=======
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(
     InProcessBrowserChildMessageManager, DOMEventTargetHelper)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mMessageManager)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocShell)
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
 NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN_INHERITED(
@@ -243,80 +144,31 @@ NS_IMPL_ADDREF_INHERITED(InProcessBrowserChildMessageManager,
 NS_IMPL_RELEASE_INHERITED(InProcessBrowserChildMessageManager,
                           DOMEventTargetHelper)
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-JSObject* InProcessTabChildMessageManager::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-JSObject*
-InProcessTabChildMessageManager::WrapObject(JSContext* aCx,
-                                            JS::Handle<JSObject*> aGivenProto)
-{
-=======
 JSObject* InProcessBrowserChildMessageManager::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   return ContentFrameMessageManager_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::CacheFrameLoader(
-    nsFrameLoader* aFrameLoader) {
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::CacheFrameLoader(nsFrameLoader* aFrameLoader)
-{
-=======
 void InProcessBrowserChildMessageManager::CacheFrameLoader(
     nsFrameLoader* aFrameLoader) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   mFrameLoader = aFrameLoader;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-already_AddRefed<nsPIDOMWindowOuter>
-InProcessTabChildMessageManager::GetContent(ErrorResult& aError) {
-  nsCOMPtr<nsPIDOMWindowOuter> content;
-  if (mDocShell) {
-    content = mDocShell->GetWindow();
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-InProcessTabChildMessageManager::GetContent(ErrorResult& aError)
-{
-  nsCOMPtr<nsPIDOMWindowOuter> content;
-  if (mDocShell) {
-    content = mDocShell->GetWindow();
-=======
 Nullable<WindowProxyHolder> InProcessBrowserChildMessageManager::GetContent(
     ErrorResult& aError) {
   if (!mDocShell) {
     return nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   }
   return WindowProxyHolder(mDocShell->GetBrowsingContext());
 }
 
 already_AddRefed<nsIEventTarget>
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-InProcessTabChildMessageManager::GetTabEventTarget() {
-||||||| merged common ancestors
-InProcessTabChildMessageManager::GetTabEventTarget()
-{
-=======
 InProcessBrowserChildMessageManager::GetTabEventTarget() {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   nsCOMPtr<nsIEventTarget> target = GetMainThreadEventTarget();
   return target.forget();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-uint64_t InProcessTabChildMessageManager::ChromeOuterWindowID() {
-||||||| merged common ancestors
-uint64_t
-InProcessTabChildMessageManager::ChromeOuterWindowID()
-{
-=======
 uint64_t InProcessBrowserChildMessageManager::ChromeOuterWindowID() {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   if (!mDocShell) {
     return 0;
   }
@@ -335,18 +187,8 @@ uint64_t InProcessBrowserChildMessageManager::ChromeOuterWindowID() {
   return topWin->WindowID();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::FireUnloadEvent() {
-  // We're called from nsDocument::MaybeInitializeFinalizeFrameLoaders, so it
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::FireUnloadEvent()
-{
-  // We're called from nsDocument::MaybeInitializeFinalizeFrameLoaders, so it
-=======
 void InProcessBrowserChildMessageManager::FireUnloadEvent() {
   // We're called from Document::MaybeInitializeFinalizeFrameLoaders, so it
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   // should be safe to run script.
   MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
 
@@ -359,15 +201,7 @@ void InProcessBrowserChildMessageManager::FireUnloadEvent() {
   mPreventEventsEscaping = false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::DisconnectEventListeners() {
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::DisconnectEventListeners()
-{
-=======
 void InProcessBrowserChildMessageManager::DisconnectEventListeners() {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   if (mDocShell) {
     if (nsCOMPtr<nsPIDOMWindowOuter> win = mDocShell->GetWindow()) {
       win->SetChromeEventHandler(win->GetChromeEventHandler());
@@ -380,15 +214,7 @@ void InProcessBrowserChildMessageManager::DisconnectEventListeners() {
   mDocShell = nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::Disconnect() {
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::Disconnect()
-{
-=======
 void InProcessBrowserChildMessageManager::Disconnect() {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   mChromeMessageManager = nullptr;
   mOwner = nullptr;
   if (mMessageManager) {
@@ -397,31 +223,11 @@ void InProcessBrowserChildMessageManager::Disconnect() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-NS_IMETHODIMP_(nsIContent*)
-InProcessTabChildMessageManager::GetOwnerContent() { return mOwner; }
-||||||| merged common ancestors
-NS_IMETHODIMP_(nsIContent *)
-InProcessTabChildMessageManager::GetOwnerContent()
-{
-  return mOwner;
-}
-=======
 NS_IMETHODIMP_(nsIContent*)
 InProcessBrowserChildMessageManager::GetOwnerContent() { return mOwner; }
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::GetEventTargetParent(
-    EventChainPreVisitor& aVisitor) {
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::GetEventTargetParent(EventChainPreVisitor& aVisitor)
-{
-=======
 void InProcessBrowserChildMessageManager::GetEventTargetParent(
     EventChainPreVisitor& aVisitor) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   aVisitor.mForceContentDispatch = true;
   aVisitor.mCanHandle = true;
 
@@ -458,36 +264,6 @@ void InProcessBrowserChildMessageManager::GetEventTargetParent(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-class nsAsyncScriptLoad : public Runnable {
- public:
-  nsAsyncScriptLoad(InProcessTabChildMessageManager* aTabChild,
-                    const nsAString& aURL, bool aRunInGlobalScope)
-      : mozilla::Runnable("nsAsyncScriptLoad"),
-        mTabChild(aTabChild),
-        mURL(aURL),
-        mRunInGlobalScope(aRunInGlobalScope) {}
-
-  NS_IMETHOD Run() override {
-    mTabChild->LoadFrameScript(mURL, mRunInGlobalScope);
-||||||| merged common ancestors
-class nsAsyncScriptLoad : public Runnable
-{
-public:
-  nsAsyncScriptLoad(InProcessTabChildMessageManager* aTabChild,
-                    const nsAString& aURL,
-                    bool aRunInGlobalScope)
-    : mozilla::Runnable("nsAsyncScriptLoad")
-    , mTabChild(aTabChild)
-    , mURL(aURL)
-    , mRunInGlobalScope(aRunInGlobalScope)
-  {
-  }
-
-  NS_IMETHOD Run() override
-  {
-    mTabChild->LoadFrameScript(mURL, mRunInGlobalScope);
-=======
 class nsAsyncScriptLoad : public Runnable {
  public:
   nsAsyncScriptLoad(InProcessBrowserChildMessageManager* aBrowserChild,
@@ -499,7 +275,6 @@ class nsAsyncScriptLoad : public Runnable {
 
   NS_IMETHOD Run() override {
     mBrowserChild->LoadFrameScript(mURL, mRunInGlobalScope);
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
     return NS_OK;
   }
   RefPtr<InProcessBrowserChildMessageManager> mBrowserChild;
@@ -507,17 +282,8 @@ class nsAsyncScriptLoad : public Runnable {
   bool mRunInGlobalScope;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-void InProcessTabChildMessageManager::LoadFrameScript(const nsAString& aURL,
-                                                      bool aRunInGlobalScope) {
-||||||| merged common ancestors
-void
-InProcessTabChildMessageManager::LoadFrameScript(const nsAString& aURL, bool aRunInGlobalScope)
-{
-=======
 void InProcessBrowserChildMessageManager::LoadFrameScript(
     const nsAString& aURL, bool aRunInGlobalScope) {
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   if (!nsContentUtils::IsSafeToRunScript()) {
     nsContentUtils::AddScriptRunner(
         new nsAsyncScriptLoad(this, aURL, aRunInGlobalScope));
@@ -531,17 +297,8 @@ void InProcessBrowserChildMessageManager::LoadFrameScript(
 }
 
 already_AddRefed<nsFrameLoader>
-<<<<<<< HEAD:mozilla-release/dom/base/InProcessTabChildMessageManager.cpp
-InProcessTabChildMessageManager::GetFrameLoader() {
-  nsCOMPtr<nsIFrameLoaderOwner> owner = do_QueryInterface(mOwner);
-||||||| merged common ancestors
-InProcessTabChildMessageManager::GetFrameLoader()
-{
-  nsCOMPtr<nsIFrameLoaderOwner> owner = do_QueryInterface(mOwner);
-=======
 InProcessBrowserChildMessageManager::GetFrameLoader() {
   RefPtr<nsFrameLoaderOwner> owner = do_QueryObject(mOwner);
->>>>>>> upstream-releases:mozilla-release/dom/base/InProcessBrowserChildMessageManager.cpp
   RefPtr<nsFrameLoader> fl = owner ? owner->GetFrameLoader() : nullptr;
   if (!fl) {
     fl = mFrameLoader;

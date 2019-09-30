@@ -5,39 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "ContainerLayerComposite.h"
-<<<<<<< HEAD
-#include <algorithm>                         // for min
-#include "FrameMetrics.h"                    // for FrameMetrics
-#include "Units.h"                           // for LayerRect, LayerPixel, etc
-#include "CompositableHost.h"                // for CompositableHost
-#include "gfxEnv.h"                          // for gfxEnv
-#include "gfxPrefs.h"                        // for gfxPrefs
-#include "mozilla/Assertions.h"              // for MOZ_ASSERT, etc
-#include "mozilla/RefPtr.h"                  // for RefPtr
-#include "mozilla/UniquePtr.h"               // for UniquePtr
-#include "mozilla/gfx/BaseRect.h"            // for BaseRect
-#include "mozilla/gfx/Matrix.h"              // for Matrix4x4
-#include "mozilla/gfx/Point.h"               // for Point, IntPoint
-#include "mozilla/gfx/Rect.h"                // for IntRect, Rect
-#include "mozilla/layers/APZSampler.h"       // for APZSampler
-#include "mozilla/layers/Compositor.h"       // for Compositor, etc
-||||||| merged common ancestors
-#include <algorithm>                    // for min
-#include "FrameMetrics.h"               // for FrameMetrics
-#include "Units.h"                      // for LayerRect, LayerPixel, etc
-#include "CompositableHost.h"           // for CompositableHost
-#include "gfxEnv.h"                     // for gfxEnv
-#include "gfxPrefs.h"                   // for gfxPrefs
-#include "mozilla/Assertions.h"         // for MOZ_ASSERT, etc
-#include "mozilla/RefPtr.h"             // for RefPtr
-#include "mozilla/UniquePtr.h"          // for UniquePtr
-#include "mozilla/gfx/BaseRect.h"       // for BaseRect
-#include "mozilla/gfx/Matrix.h"         // for Matrix4x4
-#include "mozilla/gfx/Point.h"          // for Point, IntPoint
-#include "mozilla/gfx/Rect.h"           // for IntRect, Rect
-#include "mozilla/layers/APZSampler.h"  // for APZSampler
-#include "mozilla/layers/Compositor.h"  // for Compositor, etc
-=======
 #include <algorithm>                         // for min
 #include "FrameMetrics.h"                    // for FrameMetrics
 #include "Units.h"                           // for LayerRect, LayerPixel, etc
@@ -53,33 +20,7 @@
 #include "mozilla/gfx/Rect.h"                // for IntRect, Rect
 #include "mozilla/layers/APZSampler.h"       // for APZSampler
 #include "mozilla/layers/Compositor.h"       // for Compositor, etc
->>>>>>> upstream-releases
 #include "mozilla/layers/CompositorTypes.h"  // for DiagnosticFlags::CONTAINER
-<<<<<<< HEAD
-#include "mozilla/layers/Effects.h"          // for Effect, EffectChain, etc
-#include "mozilla/layers/TextureHost.h"      // for CompositingRenderTarget
-#include "mozilla/layers/AsyncCompositionManager.h"  // for ViewTransform
-#include "mozilla/layers/LayerMetricsWrapper.h"      // for LayerMetricsWrapper
-#include "mozilla/mozalloc.h"                        // for operator delete, etc
-#include "mozilla/RefPtr.h"                          // for nsRefPtr
-#include "nsDebug.h"                                 // for NS_ASSERTION
-#include "nsISupportsImpl.h"                         // for MOZ_COUNT_CTOR, etc
-#include "nsISupportsUtils.h"  // for NS_ADDREF, NS_RELEASE
-#include "nsRegion.h"          // for nsIntRegion
-#include "nsTArray.h"          // for AutoTArray
-||||||| merged common ancestors
-#include "mozilla/layers/Effects.h"     // for Effect, EffectChain, etc
-#include "mozilla/layers/TextureHost.h"  // for CompositingRenderTarget
-#include "mozilla/layers/AsyncCompositionManager.h" // for ViewTransform
-#include "mozilla/layers/LayerMetricsWrapper.h" // for LayerMetricsWrapper
-#include "mozilla/mozalloc.h"           // for operator delete, etc
-#include "mozilla/RefPtr.h"                   // for nsRefPtr
-#include "nsDebug.h"                    // for NS_ASSERTION
-#include "nsISupportsImpl.h"            // for MOZ_COUNT_CTOR, etc
-#include "nsISupportsUtils.h"           // for NS_ADDREF, NS_RELEASE
-#include "nsRegion.h"                   // for nsIntRegion
-#include "nsTArray.h"                   // for AutoTArray
-=======
 #include "mozilla/layers/Effects.h"          // for Effect, EffectChain, etc
 #include "mozilla/layers/TextureHost.h"      // for CompositingRenderTarget
 #include "mozilla/layers/AsyncCompositionManager.h"  // for ViewTransform
@@ -92,20 +33,13 @@
 #include "nsISupportsUtils.h"  // for NS_ADDREF, NS_RELEASE
 #include "nsRegion.h"          // for nsIntRegion
 #include "nsTArray.h"          // for AutoTArray
->>>>>>> upstream-releases
 #include <stack>
 #include "TextRenderer.h"  // for TextRenderer
 #include <vector>
 #include "GeckoProfiler.h"  // for GeckoProfiler
 
 #ifdef MOZ_GECKO_PROFILER
-<<<<<<< HEAD
-#include "ProfilerMarkerPayload.h"  // for LayerTranslationMarkerPayload
-||||||| merged common ancestors
-#include "ProfilerMarkerPayload.h"      // for LayerTranslationMarkerPayload
-=======
 #  include "ProfilerMarkerPayload.h"  // for LayerTranslationMarkerPayload
->>>>>>> upstream-releases
 #endif
 
 #define CULLING_LOG(...)
@@ -167,20 +101,9 @@ static void PrintUniformityInfo(Layer* aLayer) {
   }
 
   Point translation = transform.As2D().GetTranslation();
-<<<<<<< HEAD
-  profiler_add_marker("LayerTranslation",
-                      MakeUnique<LayerTranslationMarkerPayload>(
-                          aLayer, translation, TimeStamp::Now()));
-||||||| merged common ancestors
-  profiler_add_marker(
-    "LayerTranslation",
-    MakeUnique<LayerTranslationMarkerPayload>(aLayer, translation,
-                                              TimeStamp::Now()));
-=======
   profiler_add_marker("LayerTranslation", JS::ProfilingCategoryPair::GRAPHICS,
                       MakeUnique<LayerTranslationMarkerPayload>(
                           aLayer, translation, TimeStamp::Now()));
->>>>>>> upstream-releases
 #endif
 }
 
@@ -720,35 +643,6 @@ void ContainerRender(ContainerT* aContainer, LayerManagerComposite* aManager,
 
   } else {
     RenderLayers(aContainer, aManager,
-<<<<<<< HEAD
-                 RenderTargetIntRect::FromUnknownRect(aClipRect), aGeometry);
-  }
-
-  // If it is a scrollable container layer with no child layers, and one of the
-  // APZCs attached to it has a nonempty async transform, then that transform is
-  // not applied to any visible content. Display a warning box (conditioned on
-  // the FPS display being enabled).
-  if (gfxPrefs::LayersDrawFPS() && aContainer->IsScrollableWithoutContent()) {
-    RefPtr<APZSampler> sampler =
-        aManager->GetCompositor()->GetCompositorBridgeParent()->GetAPZSampler();
-    // Since aContainer doesn't have any children we can just iterate from the
-    // top metrics on it down to the bottom using GetFirstChild and not worry
-    // about walking onto another underlying layer.
-||||||| merged common ancestors
-                 RenderTargetIntRect::FromUnknownRect(aClipRect),
-                 aGeometry);
-  }
-
-  // If it is a scrollable container layer with no child layers, and one of the APZCs
-  // attached to it has a nonempty async transform, then that transform is not applied
-  // to any visible content. Display a warning box (conditioned on the FPS display being
-  // enabled).
-  if (gfxPrefs::LayersDrawFPS() && aContainer->IsScrollableWithoutContent()) {
-    RefPtr<APZSampler> sampler = aManager->GetCompositor()->GetCompositorBridgeParent()->GetAPZSampler();
-    // Since aContainer doesn't have any children we can just iterate from the top metrics
-    // on it down to the bottom using GetFirstChild and not worry about walking onto another
-    // underlying layer.
-=======
                  RenderTargetIntRect::FromUnknownRect(aClipRect), aGeometry);
   }
 
@@ -763,7 +657,6 @@ void ContainerRender(ContainerT* aContainer, LayerManagerComposite* aManager,
     // Since aContainer doesn't have any children we can just iterate from the
     // top metrics on it down to the bottom using GetFirstChild and not worry
     // about walking onto another underlying layer.
->>>>>>> upstream-releases
     for (LayerMetricsWrapper i(aContainer); i; i = i.GetFirstChild()) {
       if (sampler->HasUnusedAsyncTransform(i)) {
         aManager->UnusedApzTransformWarning();

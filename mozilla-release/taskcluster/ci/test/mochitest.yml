@@ -9,21 +9,11 @@ job-defaults:
         by-test-platform:
             android-em-7.*: geckoview-androidTest.apk
             default: null
-<<<<<<< HEAD
-    serviceworker-e10s:
-||||||| merged common ancestors
-    tier:
-        by-test-platform:
-            android-em-7.0-x86/opt: 3
-            default: default
-    serviceworker-e10s:
-=======
     variants:
         by-test-platform:
             linux64/debug: ['fission', 'serviceworker']
             default: ['fission']
     run-on-projects:
->>>>>>> upstream-releases
         by-test-platform:
             android-em-4.*/.*: ['try', 'mozilla-central']  # bug 1548659
             windows10-aarch64/opt: ['try', 'mozilla-central']
@@ -36,16 +26,7 @@ job-defaults:
                 default: desktop_unittest.py
         config:
             by-test-platform:
-<<<<<<< HEAD
-                android-em-7.0-x86/opt:
-||||||| merged common ancestors
-                android-em-4.2-x86/opt:
-                    - android/android_common.py
-                    - android/androidx86.py
-                android-em-7.0-x86/opt:
-=======
                 android-em-7.*:
->>>>>>> upstream-releases
                     - android/android_common.py
                     - android/androidx86_7_0.py
                 android-em-4.*:
@@ -68,25 +49,11 @@ mochitest:
         name: mochitest-plain-chunked
     treeherder-symbol: M()
     loopback-video: true
-<<<<<<< HEAD
-    run-on-projects: built-projects
-    tier: default
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            windows10-64-qr/debug: []  # bug 1424755
-            default: built-projects
-    tier:
-        by-test-platform:
-            windows10-64-qr/debug: 3  # this should be disabled but might run via try syntax anyway, so explicitly downgrade to tier-3
-            default: default
-=======
     tier:
         by-test-platform:
             android-em-7.*/debug: 2
             windows10-aarch64.*: 2
             default: default
->>>>>>> upstream-releases
     instance-size:
         by-test-platform:
             android-em.*: xlarge
@@ -248,64 +215,6 @@ mochitest-chrome:
                 android-em.*: false
                 default: true
 
-<<<<<<< HEAD
-mochitest-clipboard:
-    description: "Mochitest clipboard run"
-    suite: mochitest/clipboard
-    treeherder-symbol: M(cl)
-    loopback-video: true
-    instance-size: xlarge
-    max-run-time:
-        by-test-platform:
-            windows10-64-ccov/debug: 7200
-            macosx64-ccov/debug: 7200
-            default: 3600
-    e10s:
-        by-test-platform:
-            linux32/debug: both
-            default: true
-    mozharness:
-        mochitest-flavor: plain
-        extra-options:
-            by-test-platform:
-                android-em.*:
-                    # note that Android runs fewer suites than other platforms
-                    - --test-suite=mochitest-plain-clipboard
-                default:
-                    - --mochitest-suite=plain-clipboard,chrome-clipboard,browser-chrome-clipboard
-
-||||||| merged common ancestors
-mochitest-clipboard:
-    description: "Mochitest clipboard run"
-    suite: mochitest/clipboard
-    treeherder-symbol: M(cl)
-    loopback-video: true
-    instance-size: xlarge
-    max-run-time:
-        by-test-platform:
-            windows10-64-ccov/debug: 7200
-            macosx64-ccov/debug: 7200
-            default: 3600
-    e10s:
-        by-test-platform:
-            linux32/debug: both
-            default: true
-    run-on-projects:
-        by-test-platform:
-            android-em-7.0-x86/opt: ['mozilla-central']
-            default: built-projects
-    mozharness:
-        mochitest-flavor: plain
-        extra-options:
-            by-test-platform:
-                android-em.*:
-                    # note that Android runs fewer suites than other platforms
-                    - --test-suite=mochitest-plain-clipboard
-                default:
-                    - --mochitest-suite=plain-clipboard,chrome-clipboard,browser-chrome-clipboard
-
-=======
->>>>>>> upstream-releases
 mochitest-devtools-chrome:
     description: "Mochitest devtools-chrome run"
     suite:
@@ -324,24 +233,11 @@ mochitest-devtools-chrome:
             default: 5400
     chunks:
         by-test-platform:
-<<<<<<< HEAD
-            linux64/debug: 12
-            linux64-ccov/debug: 12
-            windows10-64-ccov/debug: 10
-            macosx64-ccov/debug: 15
-            default: 8
-||||||| merged common ancestors
-            linux64-ccov/debug: 12
-            windows10-64-ccov/debug: 10
-            macosx64-ccov/debug: 15
-            default: 8
-=======
             .*-ccov/debug: 16
             linux64/debug: 12
             macosx.*64/debug: 8
             .*-asan/opt: 8
             default: 5
->>>>>>> upstream-releases
     mozharness:
         mochitest-flavor: chrome
         chunked: true
@@ -374,15 +270,6 @@ mochitest-gpu:
     suite:
         name: mochitest-plain-gpu
     treeherder-symbol: M(gpu)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            android-em-7.0-x86/opt: ['mozilla-central']
-            default: built-projects
-=======
->>>>>>> upstream-releases
     loopback-video: true
     tier:
         by-test-platform:
@@ -457,15 +344,9 @@ mochitest-media:
                 default: true
     tier:
         by-test-platform:
-<<<<<<< HEAD
-            android-hw.*: 2
-||||||| merged common ancestors
-            android-hw.*: 3
-=======
             android-em.*: 2
             windows10-aarch64.*: 2
             android-hw.*: 1
->>>>>>> upstream-releases
             default: default
 
 mochitest-plain-headless:
@@ -511,19 +392,10 @@ mochitest-valgrind:
 mochitest-webgl1-core:
     description: "Mochitest webgl1-core run"
     treeherder-symbol: M(gl1c)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ccov/.*: []  # Do not run on Windows ccov, see bug 1419475.
-            default: built-projects
-=======
     run-on-projects:
         by-test-platform:
             windows10-aarch64/opt: ['try', 'mozilla-central']
             default: built-projects
->>>>>>> upstream-releases
     virtualization: virtual-with-gpu
     e10s: true
     loopback-video: true
@@ -544,19 +416,10 @@ mochitest-webgl1-core:
 mochitest-webgl1-ext:
     description: "Mochitest webgl1-ext run"
     treeherder-symbol: M(gl1e)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ccov/.*: []  # Do not run on Windows ccov, see bug 1419475.
-            default: built-projects
-=======
     run-on-projects:
         by-test-platform:
             windows10-aarch64/opt: ['try', 'mozilla-central']
             default: built-projects
->>>>>>> upstream-releases
     virtualization: virtual-with-gpu
     e10s: true
     loopback-video: true
@@ -576,19 +439,10 @@ mochitest-webgl1-ext:
 mochitest-webgl2-core:
     description: "Mochitest webgl2-core run"
     treeherder-symbol: M(gl2c)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ccov/.*: []  # Do not run on Windows ccov, see bug 1419475.
-            default: built-projects
-=======
     run-on-projects:
         by-test-platform:
             windows10-aarch64/opt: ['try', 'mozilla-central']
             default: built-projects
->>>>>>> upstream-releases
     virtualization: virtual-with-gpu
     e10s: true
     loopback-video: true
@@ -608,19 +462,10 @@ mochitest-webgl2-core:
 mochitest-webgl2-ext:
     description: "Mochitest webgl2-ext run"
     treeherder-symbol: M(gl2e)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ccov/.*: []  # Do not run on Windows ccov, see bug 1419475.
-            default: built-projects
-=======
     run-on-projects:
         by-test-platform:
             windows10-aarch64/opt: ['try', 'mozilla-central']
             default: built-projects
->>>>>>> upstream-releases
     virtualization: virtual-with-gpu
     chunks: 4
     e10s: true

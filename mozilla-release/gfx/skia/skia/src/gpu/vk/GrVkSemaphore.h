@@ -75,16 +75,6 @@ public:
             return &kMutex;
         }
 
-<<<<<<< HEAD
-        static SkMutex* GetMutex() {
-            static SkMutex kMutex;
-            return &kMutex;
-        }
-
-||||||| merged common ancestors
-        static SkMutex gMutex;
-=======
->>>>>>> upstream-releases
         VkSemaphore fSemaphore;
         bool        fHasBeenSubmittedToQueueForSignal;
         bool        fHasBeenSubmittedToQueueForWait;

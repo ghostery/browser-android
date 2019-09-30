@@ -23,22 +23,6 @@ class MIDIPortParent final : public PMIDIPortParent, public MIDIPortInterface {
  public:
   NS_INLINE_DECL_REFCOUNTING(MIDIPortParent);
   void ActorDestroy(ActorDestroyReason) override;
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvSend(nsTArray<MIDIMessage>&& aMsg) override;
-  mozilla::ipc::IPCResult RecvOpen() override;
-  mozilla::ipc::IPCResult RecvClose() override;
-  mozilla::ipc::IPCResult RecvClear() override;
-  mozilla::ipc::IPCResult RecvShutdown() override;
-  MOZ_IMPLICIT MIDIPortParent(const MIDIPortInfo& aPortInfo,
-                              const bool aSysexEnabled);
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvSend(nsTArray<MIDIMessage>&& aMsg) override;
-  mozilla::ipc::IPCResult RecvOpen() override;
-  mozilla::ipc::IPCResult RecvClose() override;
-  mozilla::ipc::IPCResult RecvClear() override;
-  mozilla::ipc::IPCResult RecvShutdown() override;
-  MOZ_IMPLICIT MIDIPortParent(const MIDIPortInfo& aPortInfo, const bool aSysexEnabled);
-=======
   mozilla::ipc::IPCResult RecvSend(nsTArray<MIDIMessage>&& aMsg);
   mozilla::ipc::IPCResult RecvOpen();
   mozilla::ipc::IPCResult RecvClose();
@@ -46,7 +30,6 @@ class MIDIPortParent final : public PMIDIPortParent, public MIDIPortInterface {
   mozilla::ipc::IPCResult RecvShutdown();
   MOZ_IMPLICIT MIDIPortParent(const MIDIPortInfo& aPortInfo,
                               const bool aSysexEnabled);
->>>>>>> upstream-releases
   // Sends the current port status to the child actor. May also send message
   // buffer if required.
   bool SendUpdateStatus(const MIDIPortDeviceState& aState,

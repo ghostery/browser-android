@@ -96,62 +96,13 @@ add_task(async function test_duping_local_newer() {
     remoteTimeSeconds: localModified / 1000,
   });
   deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
-<<<<<<< HEAD
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { remoteRevives: 0, localDeletes: 0, localRevives: 0,
-             remoteDeletes: 0 },
-  }], "Should record telemetry with dupe counts");
-||||||| merged common ancestors
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { new: 2, remoteRevives: 0, localDeletes: 0, localRevives: 0,
-             remoteDeletes: 0 },
-  }], "Should record telemetry with dupe counts");
-=======
   deepEqual(
     mergeTelemetryCounts,
     [{ name: "items", count: 8 }, { name: "dupes", count: 2 }],
     "Should record telemetry with dupe counts"
   );
->>>>>>> upstream-releases
 
   let menuInfo = await PlacesUtils.bookmarks.fetch(
-<<<<<<< HEAD
-    PlacesUtils.bookmarks.menuGuid);
-  deepEqual(changesToUpload, {
-    menu: {
-      tombstone: false,
-      counter: 1,
-      synced: false,
-      cleartext: {
-        id: "menu",
-        type: "folder",
-        parentid: "places",
-        hasDupe: true,
-        parentName: "",
-        dateAdded: menuInfo.dateAdded.getTime(),
-        title: menuInfo.title,
-        children: ["bookmarkAAAA", "bookmarkAAA4", "bookmarkAAA3",
-                   "bookmarkAAA5"],
-||||||| merged common ancestors
-    PlacesUtils.bookmarks.menuGuid);
-  deepEqual(changesToUpload, {
-    menu: {
-      tombstone: false,
-      counter: 2,
-      synced: false,
-      cleartext: {
-        id: "menu",
-        type: "folder",
-        parentid: "places",
-        hasDupe: true,
-        parentName: "",
-        dateAdded: menuInfo.dateAdded.getTime(),
-        title: menuInfo.title,
-        children: ["bookmarkAAAA", "bookmarkAAA4", "bookmarkAAA3",
-                   "bookmarkAAA5"],
-=======
     PlacesUtils.bookmarks.menuGuid
   );
   deepEqual(
@@ -176,7 +127,6 @@ add_task(async function test_duping_local_newer() {
             "bookmarkAAA5",
           ],
         },
->>>>>>> upstream-releases
       },
       // Note that we always reupload the deduped local item, because content
       // matching doesn't account for attributes like keywords, synced annos, or

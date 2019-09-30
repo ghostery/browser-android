@@ -155,19 +155,9 @@ struct BasicLogger {
       if (MOZ_LOG_TEST(GetGFX2DLog(), PRLogLevelForLevel(aLevel))) {
         return true;
       } else
-<<<<<<< HEAD
-#endif
-          if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
-              (aLevel < LOG_DEBUG)) {
-||||||| merged common ancestors
-#endif
-      if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
-                 (aLevel < LOG_DEBUG)) {
-=======
 #  endif
           if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
               (aLevel < LOG_DEBUG)) {
->>>>>>> upstream-releases
         return true;
       }
 #endif
@@ -198,19 +188,9 @@ struct BasicLogger {
         MOZ_LOG(GetGFX2DLog(), PRLogLevelForLevel(aLevel),
                 ("%s%s", aString.c_str(), aNoNewline ? "" : "\n"));
       } else
-<<<<<<< HEAD
-#endif
-          if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
-              (aLevel < LOG_DEBUG)) {
-||||||| merged common ancestors
-#endif
-      if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
-                 (aLevel < LOG_DEBUG)) {
-=======
 #  endif
           if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
               (aLevel < LOG_DEBUG)) {
->>>>>>> upstream-releases
         printf("%s%s", aString.c_str(), aNoNewline ? "" : "\n");
       }
 #endif
@@ -234,19 +214,9 @@ typedef mozilla::Tuple<int32_t, std::string, double> LoggingRecordEntry;
 // forward critical logs.
 typedef std::vector<LoggingRecordEntry> LoggingRecord;
 class LogForwarder {
-<<<<<<< HEAD
- public:
-  virtual ~LogForwarder() {}
-  virtual void Log(const std::string& aString) = 0;
-||||||| merged common ancestors
-public:
-  virtual ~LogForwarder() {}
-  virtual void Log(const std::string &aString) = 0;
-=======
  public:
   virtual ~LogForwarder() = default;
   virtual void Log(const std::string& aString) = 0;
->>>>>>> upstream-releases
   virtual void CrashAction(LogReason aReason) = 0;
   virtual bool UpdateStringsVector(const std::string& aString) = 0;
 
@@ -280,15 +250,6 @@ struct Hexa {
   explicit Hexa(T aVal) : mVal(aVal) {}
   T mVal;
 };
-<<<<<<< HEAD
-template <typename T>
-Hexa<T> hexa(T val) {
-  return Hexa<T>(val);
-}
-||||||| merged common ancestors
-template<typename T>
-Hexa<T> hexa(T val) { return Hexa<T>(val); }
-=======
 template <typename T>
 Hexa<T> hexa(T val) {
   return Hexa<T>(val);
@@ -297,22 +258,10 @@ Hexa<T> hexa(T val) {
 #ifdef WIN32
 void LogWStr(const wchar_t* aStr, std::stringstream& aOut);
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <int L, typename Logger = BasicLogger>
-class Log {
- public:
-||||||| merged common ancestors
-template<int L, typename Logger = BasicLogger>
-class Log
-{
-public:
-=======
 template <int L, typename Logger = BasicLogger>
 class Log final {
  public:
->>>>>>> upstream-releases
   // The default is to have the prefix, have the new line, and for critical
   // logs assert on each call.
   static int DefaultOptions(bool aWithAssert = true) {
@@ -360,11 +309,6 @@ class Log final {
     }
     return *this;
   }
-<<<<<<< HEAD
-  Log& operator<<(bool aBool) {
-||||||| merged common ancestors
-  Log &operator <<(bool aBool) {
-=======
 #ifdef WIN32
   Log& operator<<(const wchar_t aWStr[]) {
     if (MOZ_UNLIKELY(LogIt())) {
@@ -374,7 +318,6 @@ class Log final {
   }
 #endif
   Log& operator<<(bool aBool) {
->>>>>>> upstream-releases
     if (MOZ_UNLIKELY(LogIt())) {
       mMessage << (aBool ? "true" : "false");
     }
@@ -858,34 +801,10 @@ typedef Log<LOG_CRITICAL, CriticalLogger> CriticalLog;
 //   gfxCriticalError() << "This message only shows up once;
 // }
 #if defined(DEBUG)
-<<<<<<< HEAD
-#define gfxDebug mozilla::gfx::DebugLog
-#define gfxDebugOnce \
-  static gfxDebug GFX_LOGGING_GLUE(sOnceAtLine, __LINE__) = gfxDebug
-||||||| merged common ancestors
-#define gfxDebug mozilla::gfx::DebugLog
-#define gfxDebugOnce static gfxDebug GFX_LOGGING_GLUE(sOnceAtLine,__LINE__) = gfxDebug
-=======
 #  define gfxDebug mozilla::gfx::DebugLog
 #  define gfxDebugOnce \
     static gfxDebug GFX_LOGGING_GLUE(sOnceAtLine, __LINE__) = gfxDebug
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define gfxDebug \
-  if (1)         \
-    ;            \
-  else           \
-    mozilla::gfx::NoLog
-#define gfxDebugOnce \
-  if (1)             \
-    ;                \
-  else               \
-    mozilla::gfx::NoLog
-||||||| merged common ancestors
-#define gfxDebug if (1) ; else mozilla::gfx::NoLog
-#define gfxDebugOnce if (1) ; else mozilla::gfx::NoLog
-=======
 #  define gfxDebug \
     if (1)         \
       ;            \
@@ -896,7 +815,6 @@ typedef Log<LOG_CRITICAL, CriticalLogger> CriticalLog;
       ;                \
     else               \
       mozilla::gfx::NoLog
->>>>>>> upstream-releases
 #endif
 
 // Have gfxWarning available (behind a runtime preference)
@@ -947,18 +865,9 @@ inline bool MOZ2D_warn_if_impl(bool aCondition, const char* aExpr,
 
 const int INDENT_PER_LEVEL = 2;
 
-<<<<<<< HEAD
-class TreeLog {
- public:
-||||||| merged common ancestors
-class TreeLog
-{
-public:
-=======
 template <int Level = LOG_DEBUG>
 class TreeLog {
  public:
->>>>>>> upstream-releases
   explicit TreeLog(const std::string& aPrefix = "")
       : mLog(int(LogOptions::NoNewline)),
         mPrefix(aPrefix),
@@ -999,18 +908,9 @@ class TreeLog {
     mConditionedOnPref = true;
     mPrefFunction = aPrefFunction;
   }
-<<<<<<< HEAD
-
- private:
-  Log<LOG_DEBUG> mLog;
-||||||| merged common ancestors
-private:
-  Log<LOG_DEBUG> mLog;
-=======
 
  private:
   Log<Level> mLog;
->>>>>>> upstream-releases
   std::string mPrefix;
   uint32_t mDepth;
   bool mStartOfLine;
@@ -1033,21 +933,10 @@ private:
   }
 };
 
-<<<<<<< HEAD
-class TreeAutoIndent {
- public:
-  explicit TreeAutoIndent(TreeLog& aTreeLog) : mTreeLog(aTreeLog) {
-||||||| merged common ancestors
-class TreeAutoIndent
-{
-public:
-  explicit TreeAutoIndent(TreeLog& aTreeLog) : mTreeLog(aTreeLog) {
-=======
 template <int Level = LOG_DEBUG>
 class TreeAutoIndent final {
  public:
   explicit TreeAutoIndent(TreeLog<Level>& aTreeLog) : mTreeLog(aTreeLog) {
->>>>>>> upstream-releases
     mTreeLog.IncreaseIndent();
   }
 
@@ -1058,23 +947,10 @@ class TreeAutoIndent final {
 
   TreeAutoIndent& operator=(const TreeAutoIndent& aTreeAutoIndent) = delete;
 
-<<<<<<< HEAD
-  ~TreeAutoIndent() { mTreeLog.DecreaseIndent(); }
-
- private:
-  TreeLog& mTreeLog;
-||||||| merged common ancestors
-  ~TreeAutoIndent() {
-    mTreeLog.DecreaseIndent();
-  }
-private:
-  TreeLog& mTreeLog;
-=======
   ~TreeAutoIndent() { mTreeLog.DecreaseIndent(); }
 
  private:
   TreeLog<Level>& mTreeLog;
->>>>>>> upstream-releases
 };
 
 }  // namespace gfx

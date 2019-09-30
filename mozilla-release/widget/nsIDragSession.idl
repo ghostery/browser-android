@@ -36,22 +36,8 @@ interface nsIDragSession : nsISupports
     * Sets the action (copy, move, link, et.c) for the current drag
     */
   attribute unsigned long dragAction;
-<<<<<<< HEAD
-  
-  /**
-||||||| merged common ancestors
-  
-  /**
-    * Sets the current width and height of the drag target area. 
-    * It will contain the current size of the Frame that the drag is currently in
-    */  
-  [noscript] attribute nsSize targetSize;
- 
-  /**
-=======
 
   /**
->>>>>>> upstream-releases
     * Get the number of items that were dropped
     */
   readonly attribute unsigned long numDropItems;

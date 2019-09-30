@@ -2,20 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/Messaging.jsm");
-Cu.import("resource://gre/modules/Services.jsm");
-=======
 const { EventDispatcher } = ChromeUtils.import(
   "resource://gre/modules/Messaging.jsm"
 );
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 let java = new JavaBridge(this);
 do_register_cleanup(() => {

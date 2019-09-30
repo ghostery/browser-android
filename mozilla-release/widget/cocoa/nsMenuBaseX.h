@@ -23,29 +23,12 @@ enum nsMenuObjectTypeX {
 // All other objects are memory-managed based on the DOM.
 // Content removal deletes them immediately and nothing else should.
 // Do not attempt to hold strong references to them or delete them.
-<<<<<<< HEAD
-class nsMenuObjectX {
- public:
-  virtual ~nsMenuObjectX() {}
-  virtual nsMenuObjectTypeX MenuObjectType() = 0;
-  virtual void *NativeData() = 0;
-  nsIContent *Content() { return mContent; }
-||||||| merged common ancestors
-class nsMenuObjectX
-{
-public:
-  virtual ~nsMenuObjectX() { }
-  virtual nsMenuObjectTypeX MenuObjectType()=0;
-  virtual void*             NativeData()=0;
-  nsIContent*               Content() { return mContent; }
-=======
 class nsMenuObjectX {
  public:
   virtual ~nsMenuObjectX() {}
   virtual nsMenuObjectTypeX MenuObjectType() = 0;
   virtual void* NativeData() = 0;
   nsIContent* Content() { return mContent; }
->>>>>>> upstream-releases
 
   /**
    * Called when an icon of a menu item somewhere in this menu has updated.
@@ -64,32 +47,13 @@ class nsMenuObjectX {
 
 class nsMenuGroupOwnerX;
 
-<<<<<<< HEAD
-@interface MenuItemInfo : NSObject {
-  nsMenuGroupOwnerX *mMenuGroupOwner;
-||||||| merged common ancestors
-@interface MenuItemInfo : NSObject
-{
-  nsMenuGroupOwnerX * mMenuGroupOwner;
-=======
 @interface MenuItemInfo : NSObject {
   nsMenuGroupOwnerX* mMenuGroupOwner;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-- (id)initWithMenuGroupOwner:(nsMenuGroupOwnerX *)aMenuGroupOwner;
-- (nsMenuGroupOwnerX *)menuGroupOwner;
-- (void)setMenuGroupOwner:(nsMenuGroupOwnerX *)aMenuGroupOwner;
-||||||| merged common ancestors
-- (id) initWithMenuGroupOwner:(nsMenuGroupOwnerX *)aMenuGroupOwner;
-- (nsMenuGroupOwnerX *) menuGroupOwner;
-- (void) setMenuGroupOwner:(nsMenuGroupOwnerX *)aMenuGroupOwner;
-=======
 - (id)initWithMenuGroupOwner:(nsMenuGroupOwnerX*)aMenuGroupOwner;
 - (nsMenuGroupOwnerX*)menuGroupOwner;
 - (void)setMenuGroupOwner:(nsMenuGroupOwnerX*)aMenuGroupOwner;
->>>>>>> upstream-releases
 
 @end
 
@@ -103,20 +67,10 @@ enum {
   eCommand_ID_Quit = 3,
   eCommand_ID_HideApp = 4,
   eCommand_ID_HideOthers = 5,
-<<<<<<< HEAD
-  eCommand_ID_ShowAll = 6,
-  eCommand_ID_Update = 7,
-  eCommand_ID_Last = 8
-||||||| merged common ancestors
-  eCommand_ID_ShowAll    = 6,
-  eCommand_ID_Update     = 7,
-  eCommand_ID_Last       = 8
-=======
   eCommand_ID_ShowAll = 6,
   eCommand_ID_Update = 7,
   eCommand_ID_TouchBar = 8,
   eCommand_ID_Last = 9
->>>>>>> upstream-releases
 };
 
 #endif  // nsMenuBaseX_h_

@@ -320,19 +320,11 @@ void FrameBuilder::RetainTemporaryLayer(LayerMLGPU* aLayer) {
   mTemporaryLayers.push_back(aLayer->GetLayer());
 }
 
-<<<<<<< HEAD
-LayerConstants* FrameBuilder::AllocateLayerInfo(ItemInfo& aItem) {
-||||||| merged common ancestors
-LayerConstants*
-FrameBuilder::AllocateLayerInfo(ItemInfo& aItem)
-{
-=======
 MLGRenderTarget* FrameBuilder::GetWidgetRT() {
   return mWidgetRenderView->GetRenderTarget();
 }
 
 LayerConstants* FrameBuilder::AllocateLayerInfo(ItemInfo& aItem) {
->>>>>>> upstream-releases
   if (((mCurrentLayerBuffer.Length() + 1) * sizeof(LayerConstants)) >
       mDevice->GetMaxConstantBufferBindSize()) {
     FinishCurrentLayerBuffer();

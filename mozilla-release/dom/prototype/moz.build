@@ -12,12 +12,6 @@ EXPORTS.mozilla.dom += [
 ]
 
 SOURCES += [
-<<<<<<< HEAD:mozilla-release/widget/xremoteclient/moz.build
-    'RemoteUtils.cpp',
-    'XRemoteClient.cpp',
-||||||| merged common ancestors
-    'RemoteUtils.cpp',
-=======
     'PrototypeDocumentContentSink.cpp',
 ]
 
@@ -25,29 +19,8 @@ LOCAL_INCLUDES += [
     '/dom/base',
     '/dom/xbl',
     '/dom/xul',
->>>>>>> upstream-releases:mozilla-release/dom/prototype/moz.build
 ]
 
-<<<<<<< HEAD:mozilla-release/widget/xremoteclient/moz.build
-if CONFIG['MOZ_ENABLE_DBUS']:
-    SOURCES += [
-        'DBusRemoteClient.cpp',
-    ]
-    CXXFLAGS += CONFIG['TK_CFLAGS']
-    CXXFLAGS += CONFIG['MOZ_DBUS_GLIB_CFLAGS']
-||||||| merged common ancestors
-if CONFIG['MOZ_ENABLE_DBUS'] and CONFIG['MOZ_WAYLAND']:
-    SOURCES += [
-        'DBusRemoteClient.cpp',
-    ]
-    CXXFLAGS += CONFIG['TK_CFLAGS']
-    CXXFLAGS += CONFIG['MOZ_DBUS_GLIB_CFLAGS']
-else:
-    SOURCES += [
-        'XRemoteClient.cpp',
-    ]
-=======
 MOCHITEST_CHROME_MANIFESTS += ['tests/chrome/chrome.ini']
 
 FINAL_LIBRARY = 'xul'
->>>>>>> upstream-releases:mozilla-release/dom/prototype/moz.build

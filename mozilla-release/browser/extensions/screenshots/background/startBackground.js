@@ -40,16 +40,8 @@ this.startBackground = (function() {
   browser.contextMenus.create({
     id: "create-screenshot",
     title: browser.i18n.getMessage("contextMenuLabel"),
-<<<<<<< HEAD
-    contexts: ["page"],
-    documentUrlPatterns: ["<all_urls>", "about:reader*"],
-||||||| merged common ancestors
-    contexts: ["page"],
-    documentUrlPatterns: ["<all_urls>"],
-=======
     contexts: ["page", "selection"],
     documentUrlPatterns: ["<all_urls>", "about:reader*"],
->>>>>>> upstream-releases
   });
 
   browser.contextMenus.onClicked.addListener((info, tab) => {

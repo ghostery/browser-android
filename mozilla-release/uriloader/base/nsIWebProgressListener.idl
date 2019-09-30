@@ -301,33 +301,13 @@ interface nsIWebProgressListener : nsISupports
    *
    * STATE_COOKIES_BLOCKED_FOREIGN
    *   Rejected because cookie policy blocks 3rd party cookies.
-<<<<<<< HEAD
-||||||| merged common ancestors
-   *
-   * STATE_BLOCKED_SLOW_TRACKING_CONTENT
-   *   Rejected because of the FastBlock feature.
-=======
    *
    * STATE_BLOCKED_SOCIALTRACKING_CONTENT
    *   SocialTracking content has been blocked from loading.
    *
    * STATE_LOADED_SOCIALTRACKING_CONTENT
    *   SocialTracking content has been loaded.
->>>>>>> upstream-releases
    */
-<<<<<<< HEAD
-  const unsigned long STATE_COOKIES_LOADED                = 0x00008000;
-  const unsigned long STATE_COOKIES_BLOCKED_BY_PERMISSION = 0x10000000;
-  const unsigned long STATE_COOKIES_BLOCKED_TRACKER       = 0x20000000;
-  const unsigned long STATE_COOKIES_BLOCKED_ALL           = 0x40000000;
-  const unsigned long STATE_COOKIES_BLOCKED_FOREIGN       = 0x00000080;
-||||||| merged common ancestors
-  const unsigned long STATE_COOKIES_BLOCKED_BY_PERMISSION = 0x10000000;
-  const unsigned long STATE_COOKIES_BLOCKED_TRACKER       = 0x20000000;
-  const unsigned long STATE_COOKIES_BLOCKED_ALL           = 0x40000000;
-  const unsigned long STATE_COOKIES_BLOCKED_FOREIGN       = 0x00000080;
-  const unsigned long STATE_BLOCKED_SLOW_TRACKING_CONTENT = 0x00000040;
-=======
   const unsigned long STATE_BLOCKED_TRACKING_CONTENT       = 0x00001000;
   const unsigned long STATE_LOADED_TRACKING_CONTENT        = 0x00002000;
   const unsigned long STATE_BLOCKED_FINGERPRINTING_CONTENT = 0x00000040;
@@ -343,7 +323,6 @@ interface nsIWebProgressListener : nsISupports
   const unsigned long STATE_COOKIES_BLOCKED_FOREIGN        = 0x00000080;
   const unsigned long STATE_BLOCKED_SOCIALTRACKING_CONTENT = 0x00010000;
   const unsigned long STATE_LOADED_SOCIALTRACKING_CONTENT  = 0x00020000;
->>>>>>> upstream-releases
 
   /**
    * Notification indicating the state has changed for one of the requests
@@ -501,13 +480,6 @@ interface nsIWebProgressListener : nsISupports
    */
   void onSecurityChange(in nsIWebProgress aWebProgress,
                         in nsIRequest aRequest,
-<<<<<<< HEAD
-                        in unsigned long aState);
-||||||| merged common ancestors
-                        in unsigned long aOldState,
-                        in unsigned long aState,
-                        in AString aContentBlockingLogJSON);
-=======
                         in unsigned long aState);
 
   /**
@@ -526,5 +498,4 @@ interface nsIWebProgressListener : nsISupports
   void onContentBlockingEvent(in nsIWebProgress aWebProgress,
                               in nsIRequest aRequest,
                               in unsigned long aEvent);
->>>>>>> upstream-releases
 };

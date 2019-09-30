@@ -25,16 +25,8 @@ using namespace mozilla;
 using namespace mozilla::gfx;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-nsSVGElement::NumberInfo SVGGeometryElement::sNumberInfo = {
-    nsGkAtoms::pathLength, 0, false};
-||||||| merged common ancestors
-nsSVGElement::NumberInfo SVGGeometryElement::sNumberInfo =
-{ nsGkAtoms::pathLength, 0, false };
-=======
 SVGElement::NumberInfo SVGGeometryElement::sNumberInfo = {nsGkAtoms::pathLength,
                                                           0, false};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
@@ -43,15 +35,7 @@ SVGGeometryElement::SVGGeometryElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGGeometryElementBase(std::move(aNodeInfo)) {}
 
-<<<<<<< HEAD
-nsSVGElement::NumberAttributesInfo SVGGeometryElement::GetNumberInfo() {
-||||||| merged common ancestors
-nsSVGElement::NumberAttributesInfo
-SVGGeometryElement::GetNumberInfo()
-{
-=======
 SVGElement::NumberAttributesInfo SVGGeometryElement::GetNumberInfo() {
->>>>>>> upstream-releases
   return NumberAttributesInfo(&mPathLength, &sNumberInfo, 1);
 }
 
@@ -88,23 +72,10 @@ bool SVGGeometryElement::AttributeDefinesGeometry(const nsAtom* aName) {
   return false;
 }
 
-<<<<<<< HEAD
-bool SVGGeometryElement::GeometryDependsOnCoordCtx() {
-  // Check the nsSVGLength2 attribute
-  LengthAttributesInfo info =
-      const_cast<SVGGeometryElement*>(this)->GetLengthInfo();
-||||||| merged common ancestors
-bool
-SVGGeometryElement::GeometryDependsOnCoordCtx()
-{
-  // Check the nsSVGLength2 attribute
-  LengthAttributesInfo info = const_cast<SVGGeometryElement*>(this)->GetLengthInfo();
-=======
 bool SVGGeometryElement::GeometryDependsOnCoordCtx() {
   // Check the SVGAnimatedLength attribute
   LengthAttributesInfo info =
       const_cast<SVGGeometryElement*>(this)->GetLengthInfo();
->>>>>>> upstream-releases
   for (uint32_t i = 0; i < info.mLengthCount; i++) {
     if (info.mLengths[i].GetSpecifiedUnitType() ==
         SVGLength_Binding::SVG_LENGTHTYPE_PERCENTAGE) {
@@ -116,16 +87,7 @@ bool SVGGeometryElement::GeometryDependsOnCoordCtx() {
 
 bool SVGGeometryElement::IsMarkable() { return false; }
 
-<<<<<<< HEAD
-void SVGGeometryElement::GetMarkPoints(nsTArray<nsSVGMark>* aMarks) {}
-||||||| merged common ancestors
-void
-SVGGeometryElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks)
-{
-}
-=======
 void SVGGeometryElement::GetMarkPoints(nsTArray<SVGMark>* aMarks) {}
->>>>>>> upstream-releases
 
 already_AddRefed<Path> SVGGeometryElement::GetOrBuildPath(
     const DrawTarget* aDrawTarget, FillRule aFillRule) {
@@ -146,13 +108,6 @@ already_AddRefed<Path> SVGGeometryElement::GetOrBuildPath(
   return path.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<Path> SVGGeometryElement::GetOrBuildPathForMeasuring() {
-||||||| merged common ancestors
-already_AddRefed<Path>
-SVGGeometryElement::GetOrBuildPathForMeasuring()
-{
-=======
 already_AddRefed<Path> SVGGeometryElement::GetOrBuildPathForMeasuring() {
   RefPtr<DrawTarget> drawTarget =
       gfxPlatform::GetPlatform()->ScreenReferenceDrawTarget();
@@ -166,41 +121,21 @@ already_AddRefed<Path> SVGGeometryElement::GetOrBuildPathForMeasuring() {
 // may override GetOrBuildPathForMeasuring() to ignore fillRule. And
 // GetOrBuildPathForMeasuring() itself may be modified in the future.
 already_AddRefed<Path> SVGGeometryElement::GetOrBuildPathForHitTest() {
->>>>>>> upstream-releases
   RefPtr<DrawTarget> drawTarget =
       gfxPlatform::GetPlatform()->ScreenReferenceDrawTarget();
   FillRule fillRule = mCachedPath ? mCachedPath->GetFillRule() : GetFillRule();
   return GetOrBuildPath(drawTarget, fillRule);
 }
 
-<<<<<<< HEAD
-FillRule SVGGeometryElement::GetFillRule() {
-  FillRule fillRule =
-      FillRule::FILL_WINDING;  // Equivalent to StyleFillRule::Nonzero
-||||||| merged common ancestors
-FillRule
-SVGGeometryElement::GetFillRule()
-{
-  FillRule fillRule = FillRule::FILL_WINDING; // Equivalent to StyleFillRule::Nonzero
-=======
 bool SVGGeometryElement::IsGeometryChangedViaCSS(
     ComputedStyle const& aNewStyle, ComputedStyle const& aOldStyle) const {
   if (IsSVGElement(nsGkAtoms::rect)) {
     return SVGRectElement::IsLengthChangedViaCSS(aNewStyle, aOldStyle);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<ComputedStyle> computedStyle =
-      nsComputedDOMStyle::GetComputedStyleNoFlush(this, nullptr);
-||||||| merged common ancestors
-  RefPtr<ComputedStyle> computedStyle =
-    nsComputedDOMStyle::GetComputedStyleNoFlush(this, nullptr);
-=======
   if (IsSVGElement(nsGkAtoms::circle)) {
     return SVGCircleElement::IsLengthChangedViaCSS(aNewStyle, aOldStyle);
   }
->>>>>>> upstream-releases
 
   if (IsSVGElement(nsGkAtoms::ellipse)) {
     return SVGEllipseElement::IsLengthChangedViaCSS(aNewStyle, aOldStyle);
@@ -231,13 +166,6 @@ FillRule SVGGeometryElement::GetFillRule() {
   return fillRule;
 }
 
-<<<<<<< HEAD
-float SVGGeometryElement::GetTotalLength() {
-||||||| merged common ancestors
-float
-SVGGeometryElement::GetTotalLength()
-{
-=======
 static Point GetPointFrom(const DOMPointInit& aPoint) {
   return Point(aPoint.mX, aPoint.mY);
 }
@@ -287,7 +215,6 @@ bool SVGGeometryElement::IsPointInStroke(const DOMPointInit& aPoint) {
 }
 
 float SVGGeometryElement::GetTotalLength() {
->>>>>>> upstream-releases
   RefPtr<Path> flat = GetOrBuildPathForMeasuring();
   return flat ? flat->ComputeLength() : 0.f;
 }
@@ -333,14 +260,6 @@ float SVGGeometryElement::GetPathLengthScale(PathLengthScaleForType aFor) {
   return 1.0;
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedNumber> SVGGeometryElement::PathLength() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedNumber>
-SVGGeometryElement::PathLength()
-{
-=======
 already_AddRefed<DOMSVGAnimatedNumber> SVGGeometryElement::PathLength() {
->>>>>>> upstream-releases
   return mPathLength.ToDOMAnimatedNumber(this);
 }

@@ -93,19 +93,9 @@ gfxAndroidPlatform::gfxAndroidPlatform() {
   mOffscreenFormat = GetScreenDepth() == 16 ? SurfaceFormat::R5G6B5_UINT16
                                             : SurfaceFormat::X8R8G8B8_UINT32;
 
-<<<<<<< HEAD
-  if (gfxPrefs::AndroidRGB16Force()) {
-    mOffscreenFormat = SurfaceFormat::R5G6B5_UINT16;
-  }
-||||||| merged common ancestors
-    if (gfxPrefs::AndroidRGB16Force()) {
-        mOffscreenFormat = SurfaceFormat::R5G6B5_UINT16;
-    }
-=======
   if (StaticPrefs::gfx_android_rgb16_force()) {
     mOffscreenFormat = SurfaceFormat::R5G6B5_UINT16;
   }
->>>>>>> upstream-releases
 }
 
 gfxAndroidPlatform::~gfxAndroidPlatform() {
@@ -167,94 +157,6 @@ void gfxAndroidPlatform::GetCommonFallbackFonts(
       // if char is followed by VS16, try for a color emoji glyph
       aFontList.AppendElement(kNotoColorEmoji);
     }
-<<<<<<< HEAD
-  }
-
-  if (IS_IN_BMP(aCh)) {
-    // try language-specific "Droid Sans *" and "Noto Sans *" fonts for
-    // certain blocks, as most devices probably have these
-    uint8_t block = (aCh >> 8) & 0xff;
-    switch (block) {
-      case 0x05:
-        aFontList.AppendElement("Droid Sans Hebrew");
-        aFontList.AppendElement("Droid Sans Armenian");
-        break;
-      case 0x06:
-        aFontList.AppendElement("Droid Sans Arabic");
-        break;
-      case 0x09:
-        aFontList.AppendElement("Noto Sans Devanagari");
-        aFontList.AppendElement("Droid Sans Devanagari");
-        break;
-      case 0x0b:
-        aFontList.AppendElement("Noto Sans Tamil");
-        aFontList.AppendElement("Droid Sans Tamil");
-        break;
-      case 0x0e:
-        aFontList.AppendElement("Noto Sans Thai");
-        aFontList.AppendElement("Droid Sans Thai");
-        break;
-      case 0x10:
-      case 0x2d:
-        aFontList.AppendElement("Droid Sans Georgian");
-        break;
-      case 0x12:
-      case 0x13:
-        aFontList.AppendElement("Droid Sans Ethiopic");
-        break;
-      case 0xf9:
-      case 0xfa:
-        if (IsJapaneseLocale()) {
-          aFontList.AppendElement(kMotoyaLMaru);
-          aFontList.AppendElement(kNotoSansCJKJP);
-          aFontList.AppendElement(kDroidSansJapanese);
-||||||| merged common ancestors
-
-    if (IS_IN_BMP(aCh)) {
-        // try language-specific "Droid Sans *" and "Noto Sans *" fonts for
-        // certain blocks, as most devices probably have these
-        uint8_t block = (aCh >> 8) & 0xff;
-        switch (block) {
-        case 0x05:
-            aFontList.AppendElement("Droid Sans Hebrew");
-            aFontList.AppendElement("Droid Sans Armenian");
-            break;
-        case 0x06:
-            aFontList.AppendElement("Droid Sans Arabic");
-            break;
-        case 0x09:
-            aFontList.AppendElement("Noto Sans Devanagari");
-            aFontList.AppendElement("Droid Sans Devanagari");
-            break;
-        case 0x0b:
-            aFontList.AppendElement("Noto Sans Tamil");
-            aFontList.AppendElement("Droid Sans Tamil");
-            break;
-        case 0x0e:
-            aFontList.AppendElement("Noto Sans Thai");
-            aFontList.AppendElement("Droid Sans Thai");
-            break;
-        case 0x10: case 0x2d:
-            aFontList.AppendElement("Droid Sans Georgian");
-            break;
-        case 0x12: case 0x13:
-            aFontList.AppendElement("Droid Sans Ethiopic");
-            break;
-        case 0xf9: case 0xfa:
-            if (IsJapaneseLocale()) {
-                aFontList.AppendElement(kMotoyaLMaru);
-                aFontList.AppendElement(kNotoSansCJKJP);
-                aFontList.AppendElement(kDroidSansJapanese);
-            }
-            break;
-        default:
-            if (block >= 0x2e && block <= 0x9f && IsJapaneseLocale()) {
-                aFontList.AppendElement(kMotoyaLMaru);
-                aFontList.AppendElement(kNotoSansCJKJP);
-                aFontList.AppendElement(kDroidSansJapanese);
-            }
-            break;
-=======
   }
 
   if (IS_IN_BMP(aCh)) {
@@ -308,7 +210,6 @@ void gfxAndroidPlatform::GetCommonFallbackFonts(
           aFontList.AppendElement(kMotoyaLMaru);
           aFontList.AppendElement(kNotoSansCJKJP);
           aFontList.AppendElement(kDroidSansJapanese);
->>>>>>> upstream-releases
         }
         break;
       default:
@@ -454,16 +355,8 @@ class AndroidVsyncSource final : public VsyncSource {
 
   Display& GetGlobalDisplay() final { return GetDisplayInstance(); }
 
-<<<<<<< HEAD
- private:
-  virtual ~AndroidVsyncSource() {}
-||||||| merged common ancestors
-private:
-   virtual ~AndroidVsyncSource() {}
-=======
  private:
   virtual ~AndroidVsyncSource() = default;
->>>>>>> upstream-releases
 
   static Display& GetDisplayInstance() {
     static Display globalDisplay;

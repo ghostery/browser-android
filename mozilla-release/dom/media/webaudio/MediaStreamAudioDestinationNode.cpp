@@ -65,29 +65,6 @@ NS_INTERFACE_MAP_END_INHERITING(AudioNode)
 NS_IMPL_ADDREF_INHERITED(MediaStreamAudioDestinationNode, AudioNode)
 NS_IMPL_RELEASE_INHERITED(MediaStreamAudioDestinationNode, AudioNode)
 
-<<<<<<< HEAD
-MediaStreamAudioDestinationNode::MediaStreamAudioDestinationNode(
-    AudioContext* aContext)
-    : AudioNode(aContext, 2, ChannelCountMode::Explicit,
-                ChannelInterpretation::Speakers),
-      mDOMStream(DOMAudioNodeMediaStream::CreateTrackUnionStreamAsInput(
-          GetOwner(), this, aContext->Graph())) {
-  // Ensure an audio track with the correct ID is exposed to JS
-  nsIDocument* doc = aContext->GetParentObject()->GetExtantDoc();
-||||||| merged common ancestors
-MediaStreamAudioDestinationNode::MediaStreamAudioDestinationNode(AudioContext* aContext)
-  : AudioNode(aContext,
-              2,
-              ChannelCountMode::Explicit,
-              ChannelInterpretation::Speakers)
-  , mDOMStream(
-      DOMAudioNodeMediaStream::CreateTrackUnionStreamAsInput(GetOwner(),
-                                                             this,
-                                                             aContext->Graph()))
-{
-  // Ensure an audio track with the correct ID is exposed to JS
-  nsIDocument* doc = aContext->GetParentObject()->GetExtantDoc();
-=======
 MediaStreamAudioDestinationNode::MediaStreamAudioDestinationNode(
     AudioContext* aContext)
     : AudioNode(aContext, 2, ChannelCountMode::Explicit,
@@ -104,25 +81,11 @@ MediaStreamAudioDestinationNode::MediaStreamAudioDestinationNode(
     Document* doc = aContext->GetParentObject()->GetExtantDoc();
     principal = doc->NodePrincipal();
   }
->>>>>>> upstream-releases
   RefPtr<MediaStreamTrackSource> source =
-<<<<<<< HEAD
-      new AudioDestinationTrackSource(this, doc->NodePrincipal());
-  RefPtr<MediaStreamTrack> track = mDOMStream->CreateDOMTrack(
-      AudioNodeStream::AUDIO_TRACK, MediaSegment::AUDIO, source,
-      MediaTrackConstraints());
-||||||| merged common ancestors
-    new AudioDestinationTrackSource(this, doc->NodePrincipal());
-  RefPtr<MediaStreamTrack> track =
-    mDOMStream->CreateDOMTrack(AudioNodeStream::AUDIO_TRACK,
-                               MediaSegment::AUDIO, source,
-                               MediaTrackConstraints());
-=======
       new AudioDestinationTrackSource(this, principal);
   RefPtr<MediaStreamTrack> track = mDOMStream->CreateDOMTrack(
       AudioNodeStream::AUDIO_TRACK, MediaSegment::AUDIO, source,
       MediaTrackConstraints());
->>>>>>> upstream-releases
   mDOMStream->AddTrackInternal(track);
 
   ProcessedMediaStream* outputStream =

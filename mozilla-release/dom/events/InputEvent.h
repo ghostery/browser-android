@@ -14,23 +14,11 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class InputEvent : public UIEvent {
- public:
-  InputEvent(EventTarget* aOwner, nsPresContext* aPresContext,
-||||||| merged common ancestors
-class InputEvent : public UIEvent
-{
-public:
-  InputEvent(EventTarget* aOwner,
-             nsPresContext* aPresContext,
-=======
 class DataTransfer;
 
 class InputEvent : public UIEvent {
  public:
   InputEvent(EventTarget* aOwner, nsPresContext* aPresContext,
->>>>>>> upstream-releases
              InternalEditorInputEvent* aEvent);
 
   NS_INLINE_DECL_REFCOUNTING_INHERITED(InputEvent, UIEvent)

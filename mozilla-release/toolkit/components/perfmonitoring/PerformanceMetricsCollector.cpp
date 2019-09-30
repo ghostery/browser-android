@@ -259,22 +259,6 @@ PerformanceMetricsCollector::RequestMetricsInternal() {
   }
 
   // collecting the current process PerformanceInfo
-<<<<<<< HEAD
-  PerformanceInfoPromise::All(NS_GetCurrentThread(), localPromises)
-      ->Then(NS_GetCurrentThread(), __func__,
-             [uuid](const nsTArray<mozilla::dom::PerformanceInfo> aResult) {
-               LOG(("[%s] Local CollectPerformanceInfo promise resolved",
-                    nsIDToCString(uuid).get()));
-               DataReceived(uuid, aResult);
-             },
-             [](const nsresult aResult) {});
-
-  return promise;
-||||||| merged common ancestors
-  nsTArray<PerformanceInfo> info;
-  CollectPerformanceInfo(info);
-  DataReceived(uuid, info);
-=======
   PerformanceInfoPromise::All(NS_GetCurrentThread(), localPromises)
       ->Then(
           NS_GetCurrentThread(), __func__,
@@ -286,7 +270,6 @@ PerformanceMetricsCollector::RequestMetricsInternal() {
           [](const nsresult aResult) {});
 
   return promise;
->>>>>>> upstream-releases
 }
 
 // static

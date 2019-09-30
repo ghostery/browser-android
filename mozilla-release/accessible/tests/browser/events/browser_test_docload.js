@@ -43,15 +43,9 @@ async function runTests(browser, accDoc) {
     ],
   });
 
-<<<<<<< HEAD
-  BrowserTestUtils.loadURI(browser, `data:text/html;charset=utf-8,
-||||||| merged common ancestors
-  browser.loadURI(`data:text/html;charset=utf-8,
-=======
   BrowserTestUtils.loadURI(
     browser,
     `data:text/html;charset=utf-8,
->>>>>>> upstream-releases
     <html><body id="body2">
       <iframe id="iframe1" src="http://example.com"></iframe>
     </body></html>`

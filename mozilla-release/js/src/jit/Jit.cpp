@@ -17,21 +17,6 @@
 using namespace js;
 using namespace js::jit;
 
-<<<<<<< HEAD
-static EnterJitStatus JS_HAZ_JSNATIVE_CALLER EnterJit(JSContext* cx,
-                                                      RunState& state,
-                                                      uint8_t* code) {
-  MOZ_ASSERT(state.script()->hasBaselineScript());
-  MOZ_ASSERT(code);
-  MOZ_ASSERT(IsBaselineEnabled(cx));
-||||||| merged common ancestors
-static EnterJitStatus
-EnterJit(JSContext* cx, RunState& state, uint8_t* code)
-{
-    MOZ_ASSERT(state.script()->hasBaselineScript());
-    MOZ_ASSERT(code);
-    MOZ_ASSERT(IsBaselineEnabled(cx));
-=======
 static EnterJitStatus JS_HAZ_JSNATIVE_CALLER EnterJit(JSContext* cx,
                                                       RunState& state,
                                                       uint8_t* code) {
@@ -39,23 +24,12 @@ static EnterJitStatus JS_HAZ_JSNATIVE_CALLER EnterJit(JSContext* cx,
   // C++ -> interpreterStub -> C++ is slower than staying in C++).
   MOZ_ASSERT(code);
   MOZ_ASSERT(code != cx->runtime()->jitRuntime()->interpreterStub().value);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!CheckRecursionLimit(cx)) {
-    return EnterJitStatus::Error;
-  }
-||||||| merged common ancestors
-    if (!CheckRecursionLimit(cx)) {
-        return EnterJitStatus::Error;
-    }
-=======
   MOZ_ASSERT(IsBaselineEnabled(cx));
 
   if (!CheckRecursionLimit(cx)) {
     return EnterJitStatus::Error;
   }
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // Assert we don't GC before entering JIT code. A GC could discard JIT code
@@ -66,81 +40,6 @@ static EnterJitStatus JS_HAZ_JSNATIVE_CALLER EnterJit(JSContext* cx,
   nogc.emplace(cx);
 #endif
 
-<<<<<<< HEAD
-  JSScript* script = state.script();
-  size_t numActualArgs;
-  bool constructing;
-  size_t maxArgc;
-  Value* maxArgv;
-  JSObject* envChain;
-  CalleeToken calleeToken;
-
-  if (state.isInvoke()) {
-    const CallArgs& args = state.asInvoke()->args();
-    numActualArgs = args.length();
-
-    if (TooManyActualArguments(numActualArgs)) {
-      // Too many arguments for Ion. Baseline supports more actual
-      // arguments, so in that case force Baseline code.
-      if (numActualArgs > BASELINE_MAX_ARGS_LENGTH) {
-        return EnterJitStatus::NotEntered;
-      }
-      code = script->baselineScript()->method()->raw();
-    }
-
-    constructing = state.asInvoke()->constructing();
-    maxArgc = args.length() + 1;
-    maxArgv = args.array() - 1;  // -1 to include |this|
-    envChain = nullptr;
-    calleeToken = CalleeToToken(&args.callee().as<JSFunction>(), constructing);
-
-    unsigned numFormals = script->functionNonDelazifying()->nargs();
-    if (numFormals > numActualArgs) {
-      code = cx->runtime()->jitRuntime()->getArgumentsRectifier().value;
-    }
-  } else {
-    numActualArgs = 0;
-    constructing = false;
-    if (script->isDirectEvalInFunction()) {
-      if (state.asExecute()->newTarget().isNull()) {
-        ScriptFrameIter iter(cx);
-        state.asExecute()->setNewTarget(iter.newTarget());
-      }
-      maxArgc = 1;
-      maxArgv = state.asExecute()->addressOfNewTarget();
-||||||| merged common ancestors
-    JSScript* script = state.script();
-    size_t numActualArgs;
-    bool constructing;
-    size_t maxArgc;
-    Value* maxArgv;
-    JSObject* envChain;
-    CalleeToken calleeToken;
-
-    if (state.isInvoke()) {
-        const CallArgs& args = state.asInvoke()->args();
-        numActualArgs = args.length();
-
-        if (TooManyActualArguments(numActualArgs)) {
-            // Too many arguments for Ion. Baseline supports more actual
-            // arguments, so in that case force Baseline code.
-            if (numActualArgs > BASELINE_MAX_ARGS_LENGTH) {
-                return EnterJitStatus::NotEntered;
-            }
-            code = script->baselineScript()->method()->raw();
-        }
-
-        constructing = state.asInvoke()->constructing();
-        maxArgc = args.length() + 1;
-        maxArgv = args.array() - 1; // -1 to include |this|
-        envChain = nullptr;
-        calleeToken = CalleeToToken(&args.callee().as<JSFunction>(), constructing);
-
-        unsigned numFormals = script->functionNonDelazifying()->nargs();
-        if (numFormals > numActualArgs) {
-            code = cx->runtime()->jitRuntime()->getArgumentsRectifier().value;
-        }
-=======
   JSScript* script = state.script();
   size_t numActualArgs;
   bool constructing;
@@ -186,7 +85,6 @@ static EnterJitStatus JS_HAZ_JSNATIVE_CALLER EnterJit(JSContext* cx,
       }
       maxArgc = 1;
       maxArgv = state.asExecute()->addressOfNewTarget();
->>>>>>> upstream-releases
     } else {
       maxArgc = 0;
       maxArgv = nullptr;
@@ -235,12 +133,6 @@ static EnterJitStatus JS_HAZ_JSNATIVE_CALLER EnterJit(JSContext* cx,
   return EnterJitStatus::Ok;
 }
 
-<<<<<<< HEAD
-EnterJitStatus js::jit::MaybeEnterJit(JSContext* cx, RunState& state) {
-  JSScript* script = state.script();
-||||||| merged common ancestors
-    MOZ_ASSERT(!cx->hasIonReturnOverride());
-=======
 EnterJitStatus js::jit::MaybeEnterJit(JSContext* cx, RunState& state) {
   JSScript* script = state.script();
 
@@ -257,23 +149,8 @@ EnterJitStatus js::jit::MaybeEnterJit(JSContext* cx, RunState& state) {
         break;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t* code = script->jitCodeRaw();
-  do {
-    // Make sure we have a BaselineScript: we don't want to call the
-    // interpreter stub here. Note that Baseline code contains warm-up
-    // checks in the prologue to Ion-compile if needed.
-    if (script->hasBaselineScript()) {
-      break;
-    }
-||||||| merged common ancestors
-    // Release temporary buffer used for OSR into Ion.
-    cx->freeOsrTempData();
-=======
     script->incWarmUpCounter();
->>>>>>> upstream-releases
 
     // Try to Ion-compile.
     if (jit::IsIonEnabled(cx)) {
@@ -287,74 +164,6 @@ EnterJitStatus js::jit::MaybeEnterJit(JSContext* cx, RunState& state) {
       }
     }
 
-<<<<<<< HEAD
-    // Try to Baseline-compile.
-    if (jit::IsBaselineEnabled(cx)) {
-      jit::MethodStatus status = jit::CanEnterBaselineMethod(cx, state);
-      if (status == jit::Method_Error) {
-        return EnterJitStatus::Error;
-      }
-      if (status == jit::Method_Compiled) {
-        code = script->jitCodeRaw();
-        break;
-      }
-    }
-
-    return EnterJitStatus::NotEntered;
-  } while (false);
-||||||| merged common ancestors
-    // Jit callers wrap primitive constructor return, except for derived
-    // class constructors, which are forced to do it themselves.
-    if (constructing && result.isPrimitive()) {
-        MOZ_ASSERT(maxArgv[0].isObject());
-        result = maxArgv[0];
-    }
-
-    state.setReturnValue(result);
-    return EnterJitStatus::Ok;
-}
-
-EnterJitStatus
-js::jit::MaybeEnterJit(JSContext* cx, RunState& state)
-{
-    JSScript* script = state.script();
-
-    uint8_t* code = script->jitCodeRaw();
-    do {
-        // Make sure we have a BaselineScript: we don't want to call the
-        // interpreter stub here. Note that Baseline code contains warm-up
-        // checks in the prologue to Ion-compile if needed.
-        if (script->hasBaselineScript()) {
-            break;
-        }
-
-        // Try to Ion-compile.
-        if (jit::IsIonEnabled(cx)) {
-            jit::MethodStatus status = jit::CanEnterIon(cx, state);
-            if (status == jit::Method_Error) {
-                return EnterJitStatus::Error;
-            }
-            if (status == jit::Method_Compiled) {
-                code = script->jitCodeRaw();
-                break;
-            }
-        }
-
-        // Try to Baseline-compile.
-        if (jit::IsBaselineEnabled(cx)) {
-            jit::MethodStatus status = jit::CanEnterBaselineMethod(cx, state);
-            if (status == jit::Method_Error) {
-                return EnterJitStatus::Error;
-            }
-            if (status == jit::Method_Compiled) {
-                code = script->jitCodeRaw();
-                break;
-            }
-        }
-
-        return EnterJitStatus::NotEntered;
-    } while (false);
-=======
     // Try to Baseline-compile.
     if (jit::IsBaselineEnabled(cx)) {
       jit::MethodStatus status =
@@ -382,7 +191,6 @@ js::jit::MaybeEnterJit(JSContext* cx, RunState& state)
 
     return EnterJitStatus::NotEntered;
   } while (false);
->>>>>>> upstream-releases
 
   return EnterJit(cx, state, code);
 }

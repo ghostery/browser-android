@@ -166,40 +166,6 @@ def single_locale_grouping(config, tasks):
 def assert_unique_members(kinds, error_msg=None):
     if len(kinds) != len(set(kinds)):
         raise Exception(error_msg)
-<<<<<<< HEAD
-
-
-def get_primary_dep(config, dep_tasks):
-    """Find the dependent task to inherit attributes from.
-
-    If ``primary-dependency`` is defined in ``kind.yml`` and is a string,
-    then find the first dep with that task kind and return it. If it is
-    defined and is a list, the first kind in that list with a matching dep
-    is the primary dependency. If it's undefined, return the first dep.
-
-    """
-    primary_dependencies = config.get('primary-dependency')
-    if isinstance(primary_dependencies, str):
-        primary_dependencies = [primary_dependencies]
-    if not primary_dependencies:
-        assert len(dep_tasks) == 1, "Must define a primary-dependency!"
-        return dep_tasks.values()[0]
-    primary_dep = None
-    for primary_kind in primary_dependencies:
-        for dep_kind in dep_tasks:
-            if dep_kind == primary_kind:
-                assert primary_dep is None, \
-                    "Too many primary dependent tasks in dep_tasks: {}!".format(
-                        [t.label for t in dep_tasks]
-                    )
-                primary_dep = dep_tasks[dep_kind]
-    if primary_dep is None:
-        raise Exception("Can't find dependency of {}: {}".format(
-            config['primary-dependency'], config
-        ))
-    return primary_dep
-||||||| merged common ancestors
-=======
 
 
 def get_primary_dep(config, dep_tasks):
@@ -231,4 +197,3 @@ def get_primary_dep(config, dep_tasks):
             config['primary-dependency'], config
         ))
     return primary_dep
->>>>>>> upstream-releases

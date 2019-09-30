@@ -26,38 +26,6 @@ static mozilla::LazyLogModule gPrintingLog("printing");
 //-- nsPrintData Class Impl
 //---------------------------------------------------
 nsPrintData::nsPrintData(ePrintDataType aType)
-<<<<<<< HEAD
-    : mType(aType),
-      mPrintDocList(0),
-      mIsIFrameSelected(false),
-      mIsParentAFrameSet(false),
-      mOnStartSent(false),
-      mIsAborted(false),
-      mPreparingForPrint(false),
-      mDocWasToBeDestroyed(false),
-      mShrinkToFit(false),
-      mPrintFrameType(nsIPrintSettings::kFramesAsIs),
-      mNumPrintablePages(0),
-      mNumPagesPrinted(0),
-      mShrinkRatio(1.0),
-      mPPEventListeners(nullptr) {
-||||||| merged common ancestors
-  : mType(aType)
-  , mPrintDocList(0)
-  , mIsIFrameSelected(false)
-  , mIsParentAFrameSet(false)
-  , mOnStartSent(false)
-  , mIsAborted(false)
-  , mPreparingForPrint(false)
-  , mDocWasToBeDestroyed(false)
-  , mShrinkToFit(false)
-  , mPrintFrameType(nsIPrintSettings::kFramesAsIs)
-  , mNumPrintablePages(0)
-  , mNumPagesPrinted(0)
-  , mShrinkRatio(1.0)
-  , mPPEventListeners(nullptr)
-{
-=======
     : mType(aType),
       mPrintDocList(0),
       mIsIFrameSelected(false),
@@ -69,7 +37,6 @@ nsPrintData::nsPrintData(ePrintDataType aType)
       mNumPrintablePages(0),
       mNumPagesPrinted(0),
       mShrinkRatio(1.0) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIStringBundle> brandBundle;
   nsCOMPtr<nsIStringBundleService> svc =
       mozilla::services::GetStringBundleService();
@@ -86,25 +53,10 @@ nsPrintData::nsPrintData(ePrintDataType aType)
   }
 }
 
-<<<<<<< HEAD
-nsPrintData::~nsPrintData() {
-  // remove the event listeners
-  if (mPPEventListeners) {
-    mPPEventListeners->RemoveListeners();
-    NS_RELEASE(mPPEventListeners);
-||||||| merged common ancestors
-nsPrintData::~nsPrintData()
-{
-  // remove the event listeners
-  if (mPPEventListeners) {
-    mPPEventListeners->RemoveListeners();
-    NS_RELEASE(mPPEventListeners);
-=======
 nsPrintData::~nsPrintData() {
   if (mPPEventSuppressor) {
     mPPEventSuppressor->StopSuppressing();
     mPPEventSuppressor = nullptr;
->>>>>>> upstream-releases
   }
 
   // Only Send an OnEndPrinting if we have started printing

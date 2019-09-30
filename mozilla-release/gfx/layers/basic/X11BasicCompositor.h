@@ -22,15 +22,7 @@ class X11DataTextureSourceBasic : public DataTextureSource,
  public:
   X11DataTextureSourceBasic(){};
 
-<<<<<<< HEAD
-  virtual const char* Name() const override {
-    return "X11DataTextureSourceBasic";
-  }
-||||||| merged common ancestors
-  virtual const char* Name() const override { return "X11DataTextureSourceBasic"; }
-=======
   const char* Name() const override { return "X11DataTextureSourceBasic"; }
->>>>>>> upstream-releases
 
   bool Update(gfx::DataSourceSurface* aSurface,
               nsIntRegion* aDestRegion = nullptr,
@@ -57,31 +49,13 @@ class X11BasicCompositor : public BasicCompositor {
                               widget::CompositorWidget* aWidget)
       : BasicCompositor(aParent, aWidget) {}
 
-<<<<<<< HEAD
-  virtual already_AddRefed<DataTextureSource> CreateDataTextureSource(
-      TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<DataTextureSource>
-  CreateDataTextureSource(TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
-=======
   already_AddRefed<DataTextureSource> CreateDataTextureSource(
       TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<DataTextureSource> CreateDataTextureSourceAround(
-      gfx::DataSourceSurface* aSurface) override {
-    return nullptr;
-  }
-||||||| merged common ancestors
-  virtual already_AddRefed<DataTextureSource>
-  CreateDataTextureSourceAround(gfx::DataSourceSurface* aSurface) override { return nullptr; }
-=======
   already_AddRefed<DataTextureSource> CreateDataTextureSourceAround(
       gfx::DataSourceSurface* aSurface) override {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   void EndFrame() override;
 };

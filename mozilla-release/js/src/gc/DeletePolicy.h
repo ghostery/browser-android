@@ -12,17 +12,8 @@
 namespace js {
 namespace gc {
 
-<<<<<<< HEAD
-struct ClearEdgesTracer : public JS::CallbackTracer {
-  ClearEdgesTracer();
-||||||| merged common ancestors
-struct ClearEdgesTracer : public JS::CallbackTracer
-{
-    ClearEdgesTracer();
-=======
 struct ClearEdgesTracer final : public JS::CallbackTracer {
   ClearEdgesTracer();
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   TracerKind getTracerKind() const override { return TracerKind::ClearEdges; }
@@ -31,39 +22,6 @@ struct ClearEdgesTracer final : public JS::CallbackTracer {
   template <typename T>
   inline void clearEdge(T** thingp);
 
-<<<<<<< HEAD
-  void onObjectEdge(JSObject** objp) override;
-  void onStringEdge(JSString** strp) override;
-  void onSymbolEdge(JS::Symbol** symp) override;
-#ifdef ENABLE_BIGINT
-  void onBigIntEdge(JS::BigInt** bip) override;
-#endif
-  void onScriptEdge(JSScript** scriptp) override;
-  void onShapeEdge(js::Shape** shapep) override;
-  void onObjectGroupEdge(js::ObjectGroup** groupp) override;
-  void onBaseShapeEdge(js::BaseShape** basep) override;
-  void onJitCodeEdge(js::jit::JitCode** codep) override;
-  void onLazyScriptEdge(js::LazyScript** lazyp) override;
-  void onScopeEdge(js::Scope** scopep) override;
-  void onRegExpSharedEdge(js::RegExpShared** sharedp) override;
-  void onChild(const JS::GCCellPtr& thing) override;
-||||||| merged common ancestors
-    void onObjectEdge(JSObject** objp) override;
-    void onStringEdge(JSString** strp) override;
-    void onSymbolEdge(JS::Symbol** symp) override;
-#ifdef ENABLE_BIGINT
-    void onBigIntEdge(JS::BigInt** bip) override;
-#endif
-    void onScriptEdge(JSScript** scriptp) override;
-    void onShapeEdge(js::Shape** shapep) override;
-    void onObjectGroupEdge(js::ObjectGroup** groupp) override;
-    void onBaseShapeEdge(js::BaseShape** basep) override;
-    void onJitCodeEdge(js::jit::JitCode** codep) override;
-    void onLazyScriptEdge(js::LazyScript** lazyp) override;
-    void onScopeEdge(js::Scope** scopep) override;
-    void onRegExpSharedEdge(js::RegExpShared** sharedp) override;
-    void onChild(const JS::GCCellPtr& thing) override;
-=======
   void onObjectEdge(JSObject** objp) override;
   void onStringEdge(JSString** strp) override;
   void onSymbolEdge(JS::Symbol** symp) override;
@@ -77,33 +35,9 @@ struct ClearEdgesTracer final : public JS::CallbackTracer {
   void onScopeEdge(js::Scope** scopep) override;
   void onRegExpSharedEdge(js::RegExpShared** sharedp) override;
   void onChild(const JS::GCCellPtr& thing) override;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-#ifdef DEBUG
-inline bool IsClearEdgesTracer(JSTracer* trc) {
-  return trc->isCallbackTracer() &&
-         trc->asCallbackTracer()->getTracerKind() ==
-             JS::CallbackTracer::TracerKind::ClearEdges;
-}
-#endif
-
 }  // namespace gc
-||||||| merged common ancestors
-#ifdef DEBUG
-inline bool
-IsClearEdgesTracer(JSTracer *trc)
-{
-    return trc->isCallbackTracer() &&
-           trc->asCallbackTracer()->getTracerKind() == JS::CallbackTracer::TracerKind::ClearEdges;
-}
-#endif
-
-} // namespace gc
-=======
-}  // namespace gc
->>>>>>> upstream-releases
 
 /*
  * Provides a delete policy that can be used for objects which have their

@@ -175,26 +175,12 @@ class TicklerTimer final : public nsITimerCallback, public nsINamed {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSITIMERCALLBACK
 
-<<<<<<< HEAD
-  explicit TicklerTimer(Tickler *aTickler) {
-||||||| merged common ancestors
-  explicit TicklerTimer(Tickler *aTickler)
-  {
-=======
   explicit TicklerTimer(Tickler* aTickler) {
->>>>>>> upstream-releases
     mTickler = do_GetWeakReference(aTickler);
   }
 
   // nsINamed
-<<<<<<< HEAD
-  NS_IMETHOD GetName(nsACString &aName) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetName(nsACString& aName) override
-  {
-=======
   NS_IMETHOD GetName(nsACString& aName) override {
->>>>>>> upstream-releases
     aName.AssignLiteral("TicklerTimer");
     return NS_OK;
   }
@@ -225,14 +211,7 @@ void Tickler::SetIPV4Port(uint16_t port) { mAddr.inet.port = port; }
 
 NS_IMPL_ISUPPORTS(TicklerTimer, nsITimerCallback, nsINamed)
 
-<<<<<<< HEAD
-NS_IMETHODIMP TicklerTimer::Notify(nsITimer *timer) {
-||||||| merged common ancestors
-NS_IMETHODIMP TicklerTimer::Notify(nsITimer *timer)
-{
-=======
 NS_IMETHODIMP TicklerTimer::Notify(nsITimer* timer) {
->>>>>>> upstream-releases
   RefPtr<Tickler> tickler = do_QueryReferent(mTickler);
   if (!tickler) return NS_ERROR_FAILURE;
   MutexAutoLock lock(tickler->mLock);

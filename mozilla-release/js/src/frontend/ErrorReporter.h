@@ -7,21 +7,11 @@
 #ifndef frontend_ErrorReporter_h
 #define frontend_ErrorReporter_h
 
-<<<<<<< HEAD
-#include <stdarg.h>  // for va_list
-#include <stddef.h>  // for size_t
-#include <stdint.h>  // for uint32_t
-||||||| merged common ancestors
-#include <stdarg.h> // for va_list
-#include <stddef.h> // for size_t
-#include <stdint.h> // for uint32_t
-=======
 #include "mozilla/Variant.h"
 
 #include <stdarg.h>  // for va_list
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uint32_t
->>>>>>> upstream-releases
 
 #include "js/CompileOptions.h"
 #include "js/UniquePtr.h"
@@ -32,66 +22,6 @@ class JSErrorNotes;
 namespace js {
 namespace frontend {
 
-<<<<<<< HEAD
-class ErrorReporter {
- public:
-  virtual const JS::ReadOnlyCompileOptions& options() const = 0;
-
-  virtual void lineAndColumnAt(size_t offset, uint32_t* line,
-                               uint32_t* column) const = 0;
-  virtual void currentLineAndColumn(uint32_t* line, uint32_t* column) const = 0;
-  virtual bool isOnThisLine(size_t offset, uint32_t lineNum,
-                            bool* onThisLine) const = 0;
-  virtual uint32_t lineAt(size_t offset) const = 0;
-  virtual uint32_t columnAt(size_t offset) const = 0;
-
-  virtual bool hasTokenizationStarted() const = 0;
-  virtual void reportErrorNoOffsetVA(unsigned errorNumber, va_list args) = 0;
-  virtual const char* getFilename() const = 0;
-
-  void reportErrorNoOffset(unsigned errorNumber, ...) {
-    va_list args;
-    va_start(args, errorNumber);
-
-    reportErrorNoOffsetVA(errorNumber, args);
-
-    va_end(args);
-  }
-
-  virtual void errorAtVA(uint32_t offset, unsigned errorNumber,
-                         va_list* args) = 0;
-  virtual bool reportExtraWarningErrorNumberVA(UniquePtr<JSErrorNotes> notes,
-                                               uint32_t offset,
-                                               unsigned errorNumber,
-                                               va_list* args) = 0;
-||||||| merged common ancestors
-class ErrorReporter
-{
-  public:
-    virtual const JS::ReadOnlyCompileOptions& options() const = 0;
-
-    virtual void lineAndColumnAt(size_t offset, uint32_t* line, uint32_t* column) const = 0;
-    virtual void currentLineAndColumn(uint32_t* line, uint32_t* column) const = 0;
-    virtual bool isOnThisLine(size_t offset, uint32_t lineNum, bool *onThisLine) const = 0;
-    virtual uint32_t lineAt(size_t offset) const = 0;
-    virtual uint32_t columnAt(size_t offset) const = 0;
-
-    virtual bool hasTokenizationStarted() const = 0;
-    virtual void reportErrorNoOffsetVA(unsigned errorNumber, va_list args) = 0;
-    virtual const char* getFilename() const = 0;
-
-    void reportErrorNoOffset(unsigned errorNumber, ...) {
-        va_list args;
-        va_start(args, errorNumber);
-
-        reportErrorNoOffsetVA(errorNumber, args);
-
-        va_end(args);
-    }
-
-    virtual void errorAtVA(uint32_t offset, unsigned errorNumber, va_list* args) = 0;
-    virtual bool reportExtraWarningErrorNumberVA(UniquePtr<JSErrorNotes> notes, uint32_t offset, unsigned errorNumber, va_list* args) = 0;
-=======
 // An interface class to provide strictMode getter method, which is used by
 // ErrorReportMixin::strictModeError* methods.
 //
@@ -565,7 +495,6 @@ class ErrorReporter : public ErrorReportMixin {
 
   // Returns the filename which is currently being compiled.
   virtual const char* getFilename() const = 0;
->>>>>>> upstream-releases
 };
 
 }  // namespace frontend

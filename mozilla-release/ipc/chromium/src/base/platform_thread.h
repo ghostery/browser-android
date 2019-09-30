@@ -24,18 +24,9 @@ typedef void* PlatformThreadHandle;  // HANDLE
 #elif defined(OS_POSIX)
 #  include <pthread.h>
 typedef pthread_t PlatformThreadHandle;
-<<<<<<< HEAD
-#if defined(OS_LINUX) || defined(OS_OPENBSD) || defined(OS_SOLARIS) || \
-    defined(__GLIBC__)
-#include <unistd.h>
-||||||| merged common ancestors
-#if defined(OS_LINUX) || defined(OS_OPENBSD) || defined(OS_SOLARIS) || defined(__GLIBC__)
-#include <unistd.h>
-=======
 #  if defined(OS_LINUX) || defined(OS_OPENBSD) || defined(OS_SOLARIS) || \
       defined(__GLIBC__)
 #    include <unistd.h>
->>>>>>> upstream-releases
 typedef pid_t PlatformThreadId;
 #  elif defined(OS_BSD)
 #    include <sys/types.h>

@@ -4,14 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "adb", "devtools/shared/adb/adb", true);
-||||||| merged common ancestors
-loader.lazyGetter(this, "adbScanner", () => {
-  const { AddonAwareADBScanner } = require("devtools/shared/adb/addon-aware-adb-scanner");
-  return new AddonAwareADBScanner();
-});
-=======
 loader.lazyRequireGetter(this, "adb", "devtools/shared/adb/adb", true);
 
 /**
@@ -72,7 +64,6 @@ class UnpluggedUsbRuntime {
  * usb runtimes.
  */
 const devices = new Map();
->>>>>>> upstream-releases
 
 /**
  * This module provides a collection of helper methods to detect USB runtimes whom Firefox
@@ -83,23 +74,6 @@ function addUSBRuntimesObserver(listener) {
 }
 exports.addUSBRuntimesObserver = addUSBRuntimesObserver;
 
-<<<<<<< HEAD
-function getUSBRuntimes() {
-  return adb.getRuntimes();
-||||||| merged common ancestors
-function disableUSBRuntimes() {
-  adbScanner.disable();
-}
-exports.disableUSBRuntimes = disableUSBRuntimes;
-
-async function enableUSBRuntimes() {
-  adbScanner.enable();
-}
-exports.enableUSBRuntimes = enableUSBRuntimes;
-
-function getUSBRuntimes() {
-  return adbScanner.listRuntimes();
-=======
 async function getUSBRuntimes() {
   // Get the available runtimes
   const runtimes = adb.getRuntimes().map(r => new UsbRuntime(r));
@@ -129,7 +103,6 @@ async function getUSBRuntimes() {
   });
 
   return allRuntimes.concat(unpluggedRuntimes);
->>>>>>> upstream-releases
 }
 exports.getUSBRuntimes = getUSBRuntimes;
 
@@ -137,19 +110,8 @@ function removeUSBRuntimesObserver(listener) {
   adb.unregisterListener(listener);
 }
 exports.removeUSBRuntimesObserver = removeUSBRuntimesObserver;
-<<<<<<< HEAD
 
 function refreshUSBRuntimes() {
   return adb.updateRuntimes();
 }
 exports.refreshUSBRuntimes = refreshUSBRuntimes;
-
-require("./test-helper").enableMocks(module, "modules/usb-runtimes");
-||||||| merged common ancestors
-=======
-
-function refreshUSBRuntimes() {
-  return adb.updateRuntimes();
-}
-exports.refreshUSBRuntimes = refreshUSBRuntimes;
->>>>>>> upstream-releases

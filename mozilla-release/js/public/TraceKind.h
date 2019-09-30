@@ -35,69 +35,6 @@ namespace JS {
 // the matching C++ types are exposed, and those that are, are opaque.
 //
 // See Value::gcKind() and JSTraceCallback in Tracer.h for more details.
-<<<<<<< HEAD
-enum class TraceKind {
-  // These trace kinds have a publicly exposed, although opaque, C++ type.
-  // Note: The order here is determined by our Value packing. Other users
-  //       should sort alphabetically, for consistency.
-  Object = 0x00,
-  String = 0x02,
-  Symbol = 0x03,
-
-  // 0x1 is not used for any GCThing Value tag, so we use it for Script.
-  Script = 0x01,
-
-  // Shape details are exposed through JS_TraceShapeCycleCollectorChildren.
-  Shape = 0x04,
-
-  // ObjectGroup details are exposed through
-  // JS_TraceObjectGroupCycleCollectorChildren.
-  ObjectGroup = 0x05,
-
-  // The kind associated with a nullptr.
-  Null = 0x06,
-
-  // The following kinds do not have an exposed C++ idiom.
-  BaseShape = 0x0F,
-  JitCode = 0x1F,
-  LazyScript = 0x2F,
-  Scope = 0x3F,
-  RegExpShared = 0x4F,
-#ifdef ENABLE_BIGINT
-  BigInt = 0x5F
-#endif
-||||||| merged common ancestors
-enum class TraceKind
-{
-    // These trace kinds have a publicly exposed, although opaque, C++ type.
-    // Note: The order here is determined by our Value packing. Other users
-    //       should sort alphabetically, for consistency.
-    Object = 0x00,
-    String = 0x02,
-    Symbol = 0x03,
-
-    // 0x1 is not used for any GCThing Value tag, so we use it for Script.
-    Script = 0x01,
-
-    // Shape details are exposed through JS_TraceShapeCycleCollectorChildren.
-    Shape = 0x04,
-
-    // ObjectGroup details are exposed through JS_TraceObjectGroupCycleCollectorChildren.
-    ObjectGroup = 0x05,
-
-    // The kind associated with a nullptr.
-    Null = 0x06,
-
-    // The following kinds do not have an exposed C++ idiom.
-    BaseShape = 0x0F,
-    JitCode = 0x1F,
-    LazyScript = 0x2F,
-    Scope = 0x3F,
-    RegExpShared = 0x4F,
-#ifdef ENABLE_BIGINT
-    BigInt = 0x5F
-#endif
-=======
 enum class TraceKind {
   // These trace kinds have a publicly exposed, although opaque, C++ type.
   // Note: The order here is determined by our Value packing. Other users
@@ -126,37 +63,13 @@ enum class TraceKind {
   Scope = 0x3F,
   RegExpShared = 0x4F,
   BigInt = 0x5F
->>>>>>> upstream-releases
 };
 const static uintptr_t OutOfLineTraceKindMask = 0x07;
 
-<<<<<<< HEAD
-// Returns true if the JS::TraceKind is one the cycle collector cares about.
-// Everything used as WeakMap key should be listed here, to represent the key
-// in cycle collector's graph, otherwise the key is considered to be pointed
-// from somewhere unknown, and results in leaking the subgraph which contains
-// the key.
-// See the comments in NoteWeakMapsTracer::trace for more details.
-inline constexpr bool IsCCTraceKind(JS::TraceKind aKind) {
-  return aKind == JS::TraceKind::Object || aKind == JS::TraceKind::Script ||
-         aKind == JS::TraceKind::LazyScript || aKind == JS::TraceKind::Scope ||
-         aKind == JS::TraceKind::RegExpShared;
-}
-
 #define ASSERT_TRACE_KIND(tk)                                             \
   static_assert(                                                          \
       (uintptr_t(tk) & OutOfLineTraceKindMask) == OutOfLineTraceKindMask, \
       "mask bits are set")
-||||||| merged common ancestors
-#define ASSERT_TRACE_KIND(tk) \
-    static_assert((uintptr_t(tk) & OutOfLineTraceKindMask) == OutOfLineTraceKindMask, \
-        "mask bits are set")
-=======
-#define ASSERT_TRACE_KIND(tk)                                             \
-  static_assert(                                                          \
-      (uintptr_t(tk) & OutOfLineTraceKindMask) == OutOfLineTraceKindMask, \
-      "mask bits are set")
->>>>>>> upstream-releases
 ASSERT_TRACE_KIND(JS::TraceKind::BaseShape);
 ASSERT_TRACE_KIND(JS::TraceKind::JitCode);
 ASSERT_TRACE_KIND(JS::TraceKind::LazyScript);
@@ -174,37 +87,6 @@ struct MapTypeToTraceKind {
 
 // When this header is used outside SpiderMonkey, the class definitions are not
 // available, so the following table containing all public GC types is used.
-<<<<<<< HEAD
-#define JS_FOR_EACH_TRACEKIND(D)                          \
-  /* PrettyName       TypeName           IsCCTraceKind */ \
-  D(BaseShape, js::BaseShape, true)                       \
-  D(JitCode, js::jit::JitCode, true)                      \
-  D(LazyScript, js::LazyScript, true)                     \
-  D(Scope, js::Scope, true)                               \
-  D(Object, JSObject, true)                               \
-  D(ObjectGroup, js::ObjectGroup, true)                   \
-  D(Script, JSScript, true)                               \
-  D(Shape, js::Shape, true)                               \
-  D(String, JSString, false)                              \
-  D(Symbol, JS::Symbol, false)                            \
-  IF_BIGINT(D(BigInt, JS::BigInt, false), )               \
-  D(RegExpShared, js::RegExpShared, true)
-||||||| merged common ancestors
-#define JS_FOR_EACH_TRACEKIND(D) \
- /* PrettyName       TypeName           AddToCCKind */ \
-    D(BaseShape,     js::BaseShape,     true) \
-    D(JitCode,       js::jit::JitCode,  true) \
-    D(LazyScript,    js::LazyScript,    true) \
-    D(Scope,         js::Scope,         true) \
-    D(Object,        JSObject,          true) \
-    D(ObjectGroup,   js::ObjectGroup,   true) \
-    D(Script,        JSScript,          true) \
-    D(Shape,         js::Shape,         true) \
-    D(String,        JSString,          false) \
-    D(Symbol,        JS::Symbol,        false) \
-    IF_BIGINT(D(BigInt, JS::BigInt, false),) \
-    D(RegExpShared,  js::RegExpShared,  true)
-=======
 //
 // canBeGray: GC can mark things of this kind gray. The cycle collector
 //            traverses gray GC things when looking for cycles.
@@ -241,51 +123,23 @@ inline constexpr bool IsCCTraceKind(JS::TraceKind aKind) {
       return false;
   }
 }
->>>>>>> upstream-releases
 
 // Map from all public types to their trace kind.
-<<<<<<< HEAD
-#define JS_EXPAND_DEF(name, type, _)                       \
-  template <>                                              \
-  struct MapTypeToTraceKind<type> {                        \
-    static const JS::TraceKind kind = JS::TraceKind::name; \
-  };
-||||||| merged common ancestors
-#define JS_EXPAND_DEF(name, type, _) \
-    template <> struct MapTypeToTraceKind<type> { \
-        static const JS::TraceKind kind = JS::TraceKind::name; \
-    };
-=======
 #define JS_EXPAND_DEF(name, type, _, _1)                   \
   template <>                                              \
   struct MapTypeToTraceKind<type> {                        \
     static const JS::TraceKind kind = JS::TraceKind::name; \
   };
->>>>>>> upstream-releases
 JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
 #undef JS_EXPAND_DEF
 
 // RootKind is closely related to TraceKind. Whereas TraceKind's indices are
 // laid out for convenient embedding as a pointer tag, the indicies of RootKind
 // are designed for use as array keys via EnumeratedArray.
-<<<<<<< HEAD
-enum class RootKind : int8_t {
-// These map 1:1 with trace kinds.
-#define EXPAND_ROOT_KIND(name, _0, _1) name,
-  JS_FOR_EACH_TRACEKIND(EXPAND_ROOT_KIND)
-||||||| merged common ancestors
-enum class RootKind : int8_t
-{
-    // These map 1:1 with trace kinds.
-#define EXPAND_ROOT_KIND(name, _0, _1) \
-    name,
-JS_FOR_EACH_TRACEKIND(EXPAND_ROOT_KIND)
-=======
 enum class RootKind : int8_t {
 // These map 1:1 with trace kinds.
 #define EXPAND_ROOT_KIND(name, _0, _1, _2) name,
   JS_FOR_EACH_TRACEKIND(EXPAND_ROOT_KIND)
->>>>>>> upstream-releases
 #undef EXPAND_ROOT_KIND
 
   // These tagged pointers are special-cased for performance.
@@ -299,21 +153,6 @@ enum class RootKind : int8_t {
 };
 
 // Most RootKind correspond directly to a trace kind.
-<<<<<<< HEAD
-template <TraceKind traceKind>
-struct MapTraceKindToRootKind {};
-#define JS_EXPAND_DEF(name, _0, _1)                      \
-  template <>                                            \
-  struct MapTraceKindToRootKind<JS::TraceKind::name> {   \
-    static const JS::RootKind kind = JS::RootKind::name; \
-  };
-||||||| merged common ancestors
-template <TraceKind traceKind> struct MapTraceKindToRootKind {};
-#define JS_EXPAND_DEF(name, _0, _1) \
-    template <> struct MapTraceKindToRootKind<JS::TraceKind::name> { \
-        static const JS::RootKind kind = JS::RootKind::name; \
-    };
-=======
 template <TraceKind traceKind>
 struct MapTraceKindToRootKind {};
 #define JS_EXPAND_DEF(name, _0, _1, _2)                  \
@@ -321,7 +160,6 @@ struct MapTraceKindToRootKind {};
   struct MapTraceKindToRootKind<JS::TraceKind::name> {   \
     static const JS::RootKind kind = JS::RootKind::name; \
   };
->>>>>>> upstream-releases
 JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF)
 #undef JS_EXPAND_DEF
 
@@ -377,44 +215,11 @@ struct MapTypeToRootKind<JSFunction*> : public MapTypeToRootKind<JSObject*> {};
 // The clang-cl front end defines _MSC_VER, but still requires the explicit
 // template declaration, so we must test for __clang__ here as well.
 #if (defined(_MSC_VER) && _MSC_VER < 1910) && !defined(__clang__)
-<<<<<<< HEAD
-#define JS_DEPENDENT_TEMPLATE_HINT
-||||||| merged common ancestors
-# define JS_DEPENDENT_TEMPLATE_HINT
-=======
 #  define JS_DEPENDENT_TEMPLATE_HINT
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define JS_DEPENDENT_TEMPLATE_HINT template
-||||||| merged common ancestors
-# define JS_DEPENDENT_TEMPLATE_HINT template
-=======
 #  define JS_DEPENDENT_TEMPLATE_HINT template
->>>>>>> upstream-releases
 #endif
 template <typename F, typename... Args>
-<<<<<<< HEAD
-auto DispatchTraceKindTyped(F f, JS::TraceKind traceKind, Args&&... args)
-    -> decltype(f.JS_DEPENDENT_TEMPLATE_HINT operator()<JSObject>(
-        std::forward<Args>(args)...)) {
-  switch (traceKind) {
-#define JS_EXPAND_DEF(name, type, _)                      \
-  case JS::TraceKind::name:                               \
-    return f.JS_DEPENDENT_TEMPLATE_HINT operator()<type>( \
-        std::forward<Args>(args)...);
-    JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-||||||| merged common ancestors
-auto
-DispatchTraceKindTyped(F f, JS::TraceKind traceKind, Args&&... args)
-  -> decltype(f. JS_DEPENDENT_TEMPLATE_HINT operator()<JSObject>(std::forward<Args>(args)...))
-{
-    switch (traceKind) {
-#define JS_EXPAND_DEF(name, type, _) \
-      case JS::TraceKind::name: \
-        return f. JS_DEPENDENT_TEMPLATE_HINT operator()<type>(std::forward<Args>(args)...);
-      JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-=======
 auto DispatchTraceKindTyped(F f, JS::TraceKind traceKind, Args&&... args) {
   switch (traceKind) {
 #define JS_EXPAND_DEF(name, type, _, _1)                  \
@@ -422,7 +227,6 @@ auto DispatchTraceKindTyped(F f, JS::TraceKind traceKind, Args&&... args) {
     return f.JS_DEPENDENT_TEMPLATE_HINT operator()<type>( \
         std::forward<Args>(args)...);
     JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
->>>>>>> upstream-releases
 #undef JS_EXPAND_DEF
     default:
       MOZ_CRASH("Invalid trace kind in DispatchTraceKindTyped.");
@@ -430,29 +234,6 @@ auto DispatchTraceKindTyped(F f, JS::TraceKind traceKind, Args&&... args) {
 }
 #undef JS_DEPENDENT_TEMPLATE_HINT
 
-<<<<<<< HEAD
-template <typename F, typename... Args>
-auto DispatchTraceKindTyped(F f, void* thing, JS::TraceKind traceKind,
-                            Args&&... args)
-    -> decltype(f(static_cast<JSObject*>(nullptr),
-                  std::forward<Args>(args)...)) {
-  switch (traceKind) {
-#define JS_EXPAND_DEF(name, type, _) \
-  case JS::TraceKind::name:          \
-    return f(static_cast<type*>(thing), std::forward<Args>(args)...);
-    JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-||||||| merged common ancestors
-template <typename F, typename... Args>
-auto
-DispatchTraceKindTyped(F f, void* thing, JS::TraceKind traceKind, Args&&... args)
-  -> decltype(f(static_cast<JSObject*>(nullptr), std::forward<Args>(args)...))
-{
-    switch (traceKind) {
-#define JS_EXPAND_DEF(name, type, _) \
-      case JS::TraceKind::name: \
-          return f(static_cast<type*>(thing), std::forward<Args>(args)...);
-      JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-=======
 // Given a GC thing specified by pointer and trace kind, calls the functor |f|
 // with a template argument of the actual type of the pointer and returns the
 // result.
@@ -463,17 +244,7 @@ auto MapGCThingTyped(void* thing, JS::TraceKind traceKind, F&& f) {
   case JS::TraceKind::name:              \
     return f(static_cast<type*>(thing));
     JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
->>>>>>> upstream-releases
 #undef JS_EXPAND_DEF
-<<<<<<< HEAD
-    default:
-      MOZ_CRASH("Invalid trace kind in DispatchTraceKindTyped.");
-  }
-||||||| merged common ancestors
-      default:
-          MOZ_CRASH("Invalid trace kind in DispatchTraceKindTyped.");
-    }
-=======
     default:
       MOZ_CRASH("Invalid trace kind in MapGCThingTyped.");
   }
@@ -488,7 +259,6 @@ void ApplyGCThingTyped(void* thing, JS::TraceKind traceKind, F&& f) {
   // MapGCThingTyped/ApplyGCThingTyped implementations that have to wrap the
   // functor to return a dummy value that is ignored.
   MapGCThingTyped(thing, traceKind, std::move(f));
->>>>>>> upstream-releases
 }
 
 }  // namespace JS

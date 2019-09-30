@@ -3,19 +3,10 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const TRACKING_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
-const BENIGN_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/benignPage.html";
-||||||| merged common ancestors
-const TRACKING_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
-const BENIGN_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/benignPage.html";
-const CB_PREF = "browser.contentblocking.enabled";
-=======
 const TRACKING_PAGE =
   "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
 const BENIGN_PAGE =
   "http://tracking.example.org/browser/browser/base/content/test/trackingUI/benignPage.html";
->>>>>>> upstream-releases
 const TP_PREF = "privacy.trackingprotection.enabled";
 const COOKIE_PREF = "network.cookie.cookieBehavior";
 const ANIMATIONS_PREF = "toolkit.cosmeticAnimations.enabled";
@@ -24,19 +15,6 @@ const DTSCBN_PREF = "dom.testing.sync-content-blocking-notifications";
 // Check that the shield icon is always hidden when all content blocking
 // categories are turned off, even when content blocking is on.
 add_task(async function testContentBlockingAllDisabled() {
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({set: [
-    [TP_PREF, false],
-    [COOKIE_PREF, Ci.nsICookieService.BEHAVIOR_ACCEPT],
-  ]});
-||||||| merged common ancestors
-  await SpecialPowers.pushPrefEnv({set: [
-    [CB_PREF, true],
-    [TP_PREF, false],
-    [FB_PREF, false],
-    [COOKIE_PREF, Ci.nsICookieService.BEHAVIOR_ACCEPT],
-  ]});
-=======
   await SpecialPowers.pushPrefEnv({
     set: [
       [TP_PREF, false],
@@ -44,7 +22,6 @@ add_task(async function testContentBlockingAllDisabled() {
       [DTSCBN_PREF, true],
     ],
   });
->>>>>>> upstream-releases
   await UrlClassifierTestUtils.addTestTrackers();
 
   let tab = (gBrowser.selectedTab = BrowserTestUtils.addTab(gBrowser));

@@ -139,40 +139,14 @@ class IntegerRange {
   IntTypeT mEnd;
 };
 
-<<<<<<< HEAD
-template <typename T, bool = IsUnsigned<T>::value>
-struct GeqZero {
-  static bool check(T t) { return t >= 0; }
-||||||| merged common ancestors
-template<typename T, bool = IsUnsigned<T>::value>
-struct GeqZero
-{
-  static bool check(T t) {
-    return t >= 0;
-  }
-=======
 template <typename T, bool = IsUnsigned<T>::value>
 struct GeqZero {
   static bool isNonNegative(T t) { return t >= 0; }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-template <typename T>
-struct GeqZero<T, true> {
-  static bool check(T t) { return true; }
-||||||| merged common ancestors
-template<typename T>
-struct GeqZero<T, true>
-{
-  static bool check(T t) {
-    return true;
-  }
-=======
 template <typename T>
 struct GeqZero<T, true> {
   static bool isNonNegative(T t) { return true; }
->>>>>>> upstream-releases
 };
 
 }  // namespace detail

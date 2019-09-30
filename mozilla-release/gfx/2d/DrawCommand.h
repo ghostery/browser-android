@@ -50,20 +50,9 @@ enum class CommandType : int8_t {
   PADEDGES,
 };
 
-<<<<<<< HEAD
-class DrawingCommand {
- public:
-  virtual ~DrawingCommand() {}
-||||||| merged common ancestors
-class DrawingCommand
-{
-public:
-  virtual ~DrawingCommand() {}
-=======
 class DrawingCommand {
  public:
   virtual ~DrawingCommand() = default;
->>>>>>> upstream-releases
 
   virtual CommandType GetType() const = 0;
   virtual void ExecuteOnDT(DrawTarget* aDT,

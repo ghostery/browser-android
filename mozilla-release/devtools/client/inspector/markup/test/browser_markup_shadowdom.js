@@ -53,19 +53,9 @@ const TEST_DATA = [
           inner
         class="no-slot-class"
           no-slot-text
-<<<<<<< HEAD
-          inner`,
-
-  }, {
-||||||| merged common ancestors
-          inner`
-
-  }, {
-=======
           inner`,
   },
   {
->>>>>>> upstream-releases
     // Test that components without any direct children still display a shadow root node,
     // if a shadow root is attached to the host.
     title: "shadow root without direct children",
@@ -85,19 +75,9 @@ const TEST_DATA = [
       test-component
         #shadow-root
           slot
-<<<<<<< HEAD
-            fallback-content`,
-
-  }, {
-||||||| merged common ancestors
-            fallback-content`
-
-  }, {
-=======
             fallback-content`,
   },
   {
->>>>>>> upstream-releases
     // Test that markup view is correctly displayed for non-trivial shadow DOM nesting.
     title: "nested components",
     url: `data:text/html;charset=utf-8,
@@ -148,19 +128,9 @@ const TEST_DATA = [
         div
         third-component
           #shadow-root
-<<<<<<< HEAD
-            div`,
-
-  }, {
-||||||| merged common ancestors
-            div`
-
-  }, {
-=======
             div`,
   },
   {
->>>>>>> upstream-releases
     // Test that ::before and ::after pseudo elements are correctly displayed in host
     // components and in slot elements.
     title: "pseudo elements",
@@ -202,19 +172,9 @@ const TEST_DATA = [
             ::after
         ::before
         class="light-dom"
-<<<<<<< HEAD
-        ::after`,
-
-  }, {
-||||||| merged common ancestors
-        ::after`
-
-  }, {
-=======
         ::after`,
   },
   {
->>>>>>> upstream-releases
     // Test empty web components are still displayed correctly.
     title: "empty components",
     url: `data:text/html;charset=utf-8,
@@ -232,50 +192,6 @@ const TEST_DATA = [
       </script>`,
     tree: `
       test-component
-<<<<<<< HEAD
-        #shadow-root`,
-  }, {
-    // Test shadow hosts show their shadow root even if they contain just a short text.
-    title: "shadow host with inline-text-child",
-    url: `data:text/html;charset=utf-8,
-      <test-component>
-        <inner-component>short-text-outside</inner-component>
-      </test-component>
-
-      <script>
-        "use strict";
-
-        customElements.define("test-component", class extends HTMLElement {
-          constructor() {
-            super();
-            let shadowRoot = this.attachShadow({mode: "#MODE#"});
-            shadowRoot.innerHTML = "<div><slot></slot></div>";
-          }
-        });
-
-        customElements.define("inner-component", class extends HTMLElement {
-          constructor() {
-            super();
-            let shadowRoot = this.attachShadow({mode: "#MODE#"});
-            shadowRoot.innerHTML = "short-text-inside";
-          }
-        });
-      </script>`,
-    tree: `
-      test-component
-        #shadow-root
-          div
-            slot
-              inner-component!slotted
-        inner-component
-          #shadow-root
-            short-text-inside
-          short-text-outside`,
-  },
-||||||| merged common ancestors
-        #shadow-root`
-  }
-=======
         #shadow-root`,
   },
   {
@@ -351,38 +267,23 @@ const TEST_DATA = [
           #shadow-root
             inner-component-content`,
   },
->>>>>>> upstream-releases
 ];
 
 for (const { url, tree, title } of TEST_DATA) {
   // Test each configuration in both open and closed modes
   add_task(async function() {
     info(`Testing: [${title}] in OPEN mode`);
-<<<<<<< HEAD
-    const {inspector, tab} = await openInspectorForURL(url.replace(/#MODE#/g, "open"));
-||||||| merged common ancestors
-    await enableWebComponents();
-    const {inspector} = await openInspectorForURL(url.replace("#MODE#", "open"));
-=======
     const { inspector, tab } = await openInspectorForURL(
       url.replace(/#MODE#/g, "open")
     );
->>>>>>> upstream-releases
     await assertMarkupViewAsTree(tree, "test-component", inspector);
     await removeTab(tab);
   });
   add_task(async function() {
     info(`Testing: [${title}] in CLOSED mode`);
-<<<<<<< HEAD
-    const {inspector, tab} = await openInspectorForURL(url.replace(/#MODE#/g, "closed"));
-||||||| merged common ancestors
-    await enableWebComponents();
-    const {inspector} = await openInspectorForURL(url.replace("#MODE#", "closed"));
-=======
     const { inspector, tab } = await openInspectorForURL(
       url.replace(/#MODE#/g, "closed")
     );
->>>>>>> upstream-releases
     await assertMarkupViewAsTree(tree, "test-component", inspector);
     await removeTab(tab);
   });

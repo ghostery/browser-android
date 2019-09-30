@@ -69,23 +69,6 @@ class BlobURL final : public mozilla::net::nsSimpleURI {
 
   nsresult SetScheme(const nsACString& aProtocol) override;
   bool Deserialize(const mozilla::ipc::URIParams&);
-<<<<<<< HEAD
-  nsresult ReadPrivate(nsIObjectInputStream* stream);
-
- public:
-  class Mutator final : public nsIURIMutator,
-                        public BaseURIMutator<BlobURL>,
-                        public nsISerializable {
-||||||| merged common ancestors
-  nsresult ReadPrivate(nsIObjectInputStream *stream);
-
-public:
-  class Mutator final
-    : public nsIURIMutator
-    , public BaseURIMutator<BlobURL>
-    , public nsISerializable
-  {
-=======
   nsresult ReadPrivate(nsIObjectInputStream* stream);
 
   bool mRevoked;
@@ -95,7 +78,6 @@ public:
                         public BaseURIMutator<BlobURL>,
                         public nsIBlobURLMutator,
                         public nsISerializable {
->>>>>>> upstream-releases
     NS_DECL_ISUPPORTS
     NS_FORWARD_SAFE_NSIURISETTERS_RET(mURI)
     NS_DEFINE_NSIMUTATOR_COMMON

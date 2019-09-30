@@ -7,41 +7,10 @@
 #![allow(unsafe_code)]
 #![deny(missing_docs)]
 
-<<<<<<< HEAD
-use atomic_refcell::{AtomicRef, AtomicRefCell, AtomicRefMut};
 use crate::applicable_declarations::ApplicableDeclarationBlock;
-||||||| merged common ancestors
-use {Atom, LocalName, Namespace, WeakAtom};
-use applicable_declarations::ApplicableDeclarationBlock;
-use atomic_refcell::{AtomicRef, AtomicRefCell, AtomicRefMut};
-=======
-use crate::applicable_declarations::ApplicableDeclarationBlock;
->>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
 use crate::context::PostAnimationTasks;
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::context::UpdateAnimationsTasks;
-use crate::data::ElementData;
-use crate::element_state::ElementState;
-use crate::font_metrics::FontMetricsProvider;
-use crate::media_queries::Device;
-use crate::properties::{AnimationRules, ComputedValues, PropertyDeclarationBlock};
-use crate::selector_parser::{AttrValue, Lang, PseudoElement, SelectorImpl};
-use crate::shared_lock::Locked;
-use crate::stylist::CascadeData;
-use crate::traversal_flags::TraversalFlags;
-use crate::{Atom, LocalName, Namespace, WeakAtom};
-||||||| merged common ancestors
-use context::UpdateAnimationsTasks;
-use data::ElementData;
-use element_state::ElementState;
-use font_metrics::FontMetricsProvider;
-use media_queries::Device;
-use properties::{AnimationRules, ComputedValues, PropertyDeclarationBlock};
-use selector_parser::{AttrValue, Lang, PseudoElement, SelectorImpl};
-use selectors::Element as SelectorsElement;
-=======
 use crate::context::UpdateAnimationsTasks;
 use crate::data::ElementData;
 use crate::element_state::ElementState;
@@ -54,7 +23,6 @@ use crate::stylist::CascadeData;
 use crate::traversal_flags::TraversalFlags;
 use crate::{Atom, LocalName, Namespace, WeakAtom};
 use atomic_refcell::{AtomicRef, AtomicRefCell, AtomicRefMut};
->>>>>>> upstream-releases
 use selectors::matching::{ElementSelectorFlags, QuirksMode, VisitedHandlingMode};
 use selectors::sink::Push;
 use selectors::Element as SelectorsElement;

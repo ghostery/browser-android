@@ -42,14 +42,7 @@ class MediaQueue : private nsDeque {
 
   inline void Push(T* aItem) {
     RecursiveMutexAutoLock lock(mRecursiveMutex);
-<<<<<<< HEAD
-    MOZ_ASSERT(aItem);
-||||||| merged common ancestors
-    MOZ_ASSERT(!mEndOfStream);
-    MOZ_ASSERT(aItem);
-=======
     MOZ_DIAGNOSTIC_ASSERT(aItem);
->>>>>>> upstream-releases
     NS_ADDREF(aItem);
     MOZ_ASSERT(aItem->GetEndTime() >= aItem->mTime);
     nsDeque::Push(aItem);

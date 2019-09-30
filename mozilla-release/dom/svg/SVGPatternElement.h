@@ -51,16 +51,8 @@ class SVGPatternElement final : public SVGPatternElementBase {
   // nsSVGSVGElement methods:
   virtual bool HasValidDimensions() const override;
 
-<<<<<<< HEAD
-  virtual mozilla::nsSVGAnimatedTransformList* GetAnimatedTransformList(
-      uint32_t aFlags = 0) override;
-||||||| merged common ancestors
-  virtual mozilla::nsSVGAnimatedTransformList*
-    GetAnimatedTransformList(uint32_t aFlags = 0) override;
-=======
   virtual mozilla::SVGAnimatedTransformList* GetAnimatedTransformList(
       uint32_t aFlags = 0) override;
->>>>>>> upstream-releases
   virtual nsStaticAtom* GetTransformListAttrName() const override {
     return nsGkAtoms::patternTransform;
   }
@@ -68,30 +60,6 @@ class SVGPatternElement final : public SVGPatternElementBase {
   // WebIDL
   already_AddRefed<SVGAnimatedRect> ViewBox();
   already_AddRefed<DOMSVGAnimatedPreserveAspectRatio> PreserveAspectRatio();
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedEnumeration> PatternUnits();
-  already_AddRefed<SVGAnimatedEnumeration> PatternContentUnits();
-  already_AddRefed<SVGAnimatedTransformList> PatternTransform();
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
-  already_AddRefed<SVGAnimatedString> Href();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedEnumeration> PatternUnits();
-  already_AddRefed<SVGAnimatedEnumeration> PatternContentUnits();
-  already_AddRefed<SVGAnimatedTransformList> PatternTransform();
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
-  already_AddRefed<SVGAnimatedString> Href();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedEnumeration> PatternUnits();
   already_AddRefed<DOMSVGAnimatedEnumeration> PatternContentUnits();
   already_AddRefed<DOMSVGAnimatedTransformList> PatternTransform();
@@ -102,17 +70,8 @@ protected:
   already_AddRefed<DOMSVGAnimatedString> Href();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
   virtual EnumAttributesInfo GetEnumInfo() override;
-<<<<<<< HEAD
-  virtual nsSVGViewBox* GetViewBox() override;
-  virtual SVGAnimatedPreserveAspectRatio* GetPreserveAspectRatio() override;
-||||||| merged common ancestors
-  virtual nsSVGViewBox *GetViewBox() override;
-  virtual SVGAnimatedPreserveAspectRatio *GetPreserveAspectRatio() override;
-=======
->>>>>>> upstream-releases
   virtual StringAttributesInfo GetStringInfo() override;
   virtual SVGAnimatedPreserveAspectRatio* GetAnimatedPreserveAspectRatio()
       override;

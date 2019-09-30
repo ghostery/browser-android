@@ -30,20 +30,8 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-nsresult NS_NewXBLContentSink(nsIXMLContentSink** aResult, nsIDocument* aDoc,
-                              nsIURI* aURI, nsISupports* aContainer) {
-||||||| merged common ancestors
-nsresult
-NS_NewXBLContentSink(nsIXMLContentSink** aResult,
-                     nsIDocument* aDoc,
-                     nsIURI* aURI,
-                     nsISupports* aContainer)
-{
-=======
 nsresult NS_NewXBLContentSink(nsIXMLContentSink** aResult, Document* aDoc,
                               nsIURI* aURI, nsISupports* aContainer) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aResult);
 
   RefPtr<nsXBLContentSink> it = new nsXBLContentSink();
@@ -73,19 +61,8 @@ nsXBLContentSink::nsXBLContentSink()
 
 nsXBLContentSink::~nsXBLContentSink() {}
 
-<<<<<<< HEAD
-nsresult nsXBLContentSink::Init(nsIDocument* aDoc, nsIURI* aURI,
-                                nsISupports* aContainer) {
-||||||| merged common ancestors
-nsresult
-nsXBLContentSink::Init(nsIDocument* aDoc,
-                       nsIURI* aURI,
-                       nsISupports* aContainer)
-{
-=======
 nsresult nsXBLContentSink::Init(Document* aDoc, nsIURI* aURI,
                                 nsISupports* aContainer) {
->>>>>>> upstream-releases
   nsresult rv;
   rv = nsXMLContentSink::Init(aDoc, aURI, aContainer, nullptr);
   return rv;
@@ -194,33 +171,6 @@ nsresult nsXBLContentSink::ReportUnexpectedElement(nsAtom* aElementName,
   // instead of just letting the XML sink build the content model like
   // we do...
   mState = eXBL_Error;
-<<<<<<< HEAD
-  nsAutoString elementName;
-  aElementName->ToString(elementName);
-
-  const char16_t* params[] = {elementName.get()};
-
-  return nsContentUtils::ReportToConsole(
-      nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XBL Content Sink"),
-      mDocument, nsContentUtils::eXBL_PROPERTIES, "UnexpectedElement", params,
-      ArrayLength(params), nullptr, EmptyString() /* source line */,
-      aLineNumber);
-||||||| merged common ancestors
-  nsAutoString elementName;
-  aElementName->ToString(elementName);
-
-  const char16_t* params[] = { elementName.get() };
-
-  return nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
-                                         NS_LITERAL_CSTRING("XBL Content Sink"),
-                                         mDocument,
-                                         nsContentUtils::eXBL_PROPERTIES,
-                                         "UnexpectedElement",
-                                         params, ArrayLength(params),
-                                         nullptr,
-                                         EmptyString() /* source line */,
-                                         aLineNumber);
-=======
   AutoTArray<nsString, 1> params;
   aElementName->ToString(*params.AppendElement());
 
@@ -228,7 +178,6 @@ nsresult nsXBLContentSink::ReportUnexpectedElement(nsAtom* aElementName,
       nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XBL Content Sink"),
       mDocument, nsContentUtils::eXBL_PROPERTIES, "UnexpectedElement", params,
       nullptr, EmptyString() /* source line */, aLineNumber);
->>>>>>> upstream-releases
 }
 
 void nsXBLContentSink::AddMember(nsXBLProtoImplMember* aMember) {
@@ -303,22 +252,7 @@ nsXBLContentSink::HandleEndElement(const char16_t* aName) {
         } else if (localName == nsGkAtoms::handler)
           mSecondaryState = eXBL_None;
         return NS_OK;
-<<<<<<< HEAD
-      } else if (mState == eXBL_InResources) {
-        if (localName == nsGkAtoms::resources) mState = eXBL_InBinding;
-        return NS_OK;
       } else if (mState == eXBL_InImplementation) {
-||||||| merged common ancestors
-      }
-      else if (mState == eXBL_InResources) {
-        if (localName == nsGkAtoms::resources)
-          mState = eXBL_InBinding;
-        return NS_OK;
-      }
-      else if (mState == eXBL_InImplementation) {
-=======
-      } else if (mState == eXBL_InImplementation) {
->>>>>>> upstream-releases
         if (localName == nsGkAtoms::implementation)
           mState = eXBL_InBinding;
         else if (localName == nsGkAtoms::property) {
@@ -431,35 +365,7 @@ bool nsXBLContentSink::OnOpenContainer(const char16_t** aAtts,
     mSecondaryState = eXBL_InHandler;
     ConstructHandler(aAtts, aLineNumber);
     ret = false;
-<<<<<<< HEAD
-  } else if (aTagName == nsGkAtoms::resources) {
-    ENSURE_XBL_STATE(mState == eXBL_InBinding && mBinding);
-    mState = eXBL_InResources;
-    // Note that this mState will cause us to return false, so no need
-    // to set ret to false.
-  } else if (aTagName == nsGkAtoms::stylesheet ||
-             aTagName == nsGkAtoms::image) {
-    ENSURE_XBL_STATE(mState == eXBL_InResources);
-    NS_ASSERTION(mBinding, "Must have binding here");
-    ConstructResource(aAtts, aTagName);
   } else if (aTagName == nsGkAtoms::implementation) {
-||||||| merged common ancestors
-  }
-  else if (aTagName == nsGkAtoms::resources) {
-    ENSURE_XBL_STATE(mState == eXBL_InBinding && mBinding);
-    mState = eXBL_InResources;
-    // Note that this mState will cause us to return false, so no need
-    // to set ret to false.
-  }
-  else if (aTagName == nsGkAtoms::stylesheet || aTagName == nsGkAtoms::image) {
-    ENSURE_XBL_STATE(mState == eXBL_InResources);
-    NS_ASSERTION(mBinding, "Must have binding here");
-    ConstructResource(aAtts, aTagName);
-  }
-  else if (aTagName == nsGkAtoms::implementation) {
-=======
-  } else if (aTagName == nsGkAtoms::implementation) {
->>>>>>> upstream-releases
     ENSURE_XBL_STATE(mState == eXBL_InBinding && mBinding);
     mState = eXBL_InImplementation;
     ConstructImplementation(aAtts);
@@ -571,25 +477,10 @@ nsresult nsXBLContentSink::ConstructBinding(uint32_t aLineNumber) {
       mBinding = nullptr;
     }
   } else {
-<<<<<<< HEAD
-    nsContentUtils::ReportToConsole(
-        nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XBL Content Sink"),
-        nullptr, nsContentUtils::eXBL_PROPERTIES, "MissingIdAttr", nullptr, 0,
-        mDocumentURI, EmptyString(), aLineNumber);
-||||||| merged common ancestors
-    nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
-                                    NS_LITERAL_CSTRING("XBL Content Sink"), nullptr,
-                                    nsContentUtils::eXBL_PROPERTIES,
-                                    "MissingIdAttr", nullptr, 0,
-                                    mDocumentURI,
-                                    EmptyString(),
-                                    aLineNumber);
-=======
     nsContentUtils::ReportToConsole(
         nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XBL Content Sink"),
         nullptr, nsContentUtils::eXBL_PROPERTIES, "MissingIdAttr",
         nsTArray<nsString>(), mDocumentURI, EmptyString(), aLineNumber);
->>>>>>> upstream-releases
   }
 
   return rv;
@@ -670,30 +561,12 @@ void nsXBLContentSink::ConstructHandler(const char16_t** aAtts,
     // Make sure the XBL doc is chrome or resource if we have a command
     // shorthand syntax.
     mState = eXBL_Error;
-<<<<<<< HEAD
-    nsContentUtils::ReportToConsole(
-        nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XBL Content Sink"),
-        mDocument, nsContentUtils::eXBL_PROPERTIES, "CommandNotInChrome",
-        nullptr, 0, nullptr, EmptyString() /* source line */, aLineNumber);
-    return;  // Don't even make this handler.
-||||||| merged common ancestors
-    nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
-                                    NS_LITERAL_CSTRING("XBL Content Sink"),
-                                    mDocument,
-                                    nsContentUtils::eXBL_PROPERTIES,
-                                    "CommandNotInChrome", nullptr, 0,
-                                    nullptr,
-                                    EmptyString() /* source line */,
-                                    aLineNumber);
-    return; // Don't even make this handler.
-=======
     nsContentUtils::ReportToConsole(
         nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XBL Content Sink"),
         mDocument, nsContentUtils::eXBL_PROPERTIES, "CommandNotInChrome",
         nsTArray<nsString>(), nullptr, EmptyString() /* source line */,
         aLineNumber);
     return;  // Don't even make this handler.
->>>>>>> upstream-releases
   }
 
   // All of our pointers are now filled in. Construct our handler with all of
@@ -716,38 +589,7 @@ void nsXBLContentSink::ConstructHandler(const char16_t** aAtts,
   mHandler = newHandler;
 }
 
-<<<<<<< HEAD
-void nsXBLContentSink::ConstructResource(const char16_t** aAtts,
-                                         nsAtom* aResourceType) {
-  if (!mBinding) return;
-
-  const char16_t* src = nullptr;
-  if (FindValue(aAtts, nsGkAtoms::src, &src)) {
-    mBinding->AddResource(aResourceType, nsDependentString(src));
-  }
-}
-
 void nsXBLContentSink::ConstructImplementation(const char16_t** aAtts) {
-||||||| merged common ancestors
-void
-nsXBLContentSink::ConstructResource(const char16_t **aAtts,
-                                    nsAtom* aResourceType)
-{
-  if (!mBinding)
-    return;
-
-  const char16_t* src = nullptr;
-  if (FindValue(aAtts, nsGkAtoms::src, &src)) {
-    mBinding->AddResource(aResourceType, nsDependentString(src));
-  }
-}
-
-void
-nsXBLContentSink::ConstructImplementation(const char16_t **aAtts)
-{
-=======
-void nsXBLContentSink::ConstructImplementation(const char16_t** aAtts) {
->>>>>>> upstream-releases
   mImplementation = nullptr;
   mImplMember = nullptr;
   mImplField = nullptr;

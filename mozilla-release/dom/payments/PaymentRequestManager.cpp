@@ -6,12 +6,7 @@
 
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/dom/PaymentRequestChild.h"
-<<<<<<< HEAD
-#include "mozilla/dom/TabChild.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/BrowserChild.h"
->>>>>>> upstream-releases
 #include "nsContentUtils.h"
 #include "nsString.h"
 #include "nsIPrincipal.h"
@@ -228,7 +223,6 @@ void ConvertOptions(const PaymentOptions& aOptions,
   nsString shippingType(NS_LITERAL_STRING("shipping"));
   if (shippingTypeIndex < ArrayLength(PaymentShippingTypeValues::strings)) {
     shippingType.AssignASCII(
-<<<<<<< HEAD
         PaymentShippingTypeValues::strings[shippingTypeIndex].value);
   }
   aIPCOption =
@@ -236,103 +230,6 @@ void ConvertOptions(const PaymentOptions& aOptions,
                         aOptions.mRequestPayerPhone, aOptions.mRequestShipping,
                         aOptions.mRequestBillingAddress, shippingType);
 }
-
-void ConvertResponseData(const IPCPaymentResponseData& aIPCData,
-                         ResponseData& aData) {
-  switch (aIPCData.type()) {
-    case IPCPaymentResponseData::TIPCGeneralResponse: {
-      const IPCGeneralResponse& data = aIPCData;
-      GeneralData gData;
-      gData.data = data.data();
-      aData = gData;
-      break;
-    }
-    case IPCPaymentResponseData::TIPCBasicCardResponse: {
-      const IPCBasicCardResponse& data = aIPCData;
-      BasicCardData bData;
-      bData.cardholderName = data.cardholderName();
-      bData.cardNumber = data.cardNumber();
-      bData.expiryMonth = data.expiryMonth();
-      bData.expiryYear = data.expiryYear();
-      bData.cardSecurityCode = data.cardSecurityCode();
-      bData.billingAddress.country = data.billingAddress().country();
-      bData.billingAddress.addressLine = data.billingAddress().addressLine();
-      bData.billingAddress.region = data.billingAddress().region();
-      bData.billingAddress.regionCode = data.billingAddress().regionCode();
-      bData.billingAddress.city = data.billingAddress().city();
-      bData.billingAddress.dependentLocality =
-          data.billingAddress().dependentLocality();
-      bData.billingAddress.postalCode = data.billingAddress().postalCode();
-      bData.billingAddress.sortingCode = data.billingAddress().sortingCode();
-      bData.billingAddress.organization = data.billingAddress().organization();
-      bData.billingAddress.recipient = data.billingAddress().recipient();
-      bData.billingAddress.phone = data.billingAddress().phone();
-      aData = bData;
-      break;
-    }
-    default: { break; }
-  }
-}
-
-void ConvertMethodChangeDetails(const IPCMethodChangeDetails& aIPCDetails,
-                                ChangeDetails& aDetails) {
-  switch (aIPCDetails.type()) {
-    case IPCMethodChangeDetails::TIPCGeneralChangeDetails: {
-      const IPCGeneralChangeDetails& details = aIPCDetails;
-      GeneralDetails gDetails;
-      gDetails.details = details.details();
-      aDetails = gDetails;
-      break;
-    }
-    case IPCMethodChangeDetails::TIPCBasicCardChangeDetails: {
-      const IPCBasicCardChangeDetails& details = aIPCDetails;
-      BasicCardDetails bDetails;
-      bDetails.billingAddress.country = details.billingAddress().country();
-      bDetails.billingAddress.addressLine =
-          details.billingAddress().addressLine();
-      bDetails.billingAddress.region = details.billingAddress().region();
-      bDetails.billingAddress.regionCode =
-          details.billingAddress().regionCode();
-      bDetails.billingAddress.city = details.billingAddress().city();
-      bDetails.billingAddress.dependentLocality =
-          details.billingAddress().dependentLocality();
-      bDetails.billingAddress.postalCode =
-          details.billingAddress().postalCode();
-      bDetails.billingAddress.sortingCode =
-          details.billingAddress().sortingCode();
-      bDetails.billingAddress.organization =
-          details.billingAddress().organization();
-      bDetails.billingAddress.recipient = details.billingAddress().recipient();
-      bDetails.billingAddress.phone = details.billingAddress().phone();
-      aDetails = bDetails;
-      break;
-    }
-    default: { break; }
-||||||| merged common ancestors
-      PaymentShippingTypeValues::strings[shippingTypeIndex].value);
-=======
-        PaymentShippingTypeValues::strings[shippingTypeIndex].value);
->>>>>>> upstream-releases
-  }
-<<<<<<< HEAD
-||||||| merged common ancestors
-  aIPCOption = IPCPaymentOptions(aOptions.mRequestPayerName,
-                                 aOptions.mRequestPayerEmail,
-                                 aOptions.mRequestPayerPhone,
-                                 aOptions.mRequestShipping,
-                                 shippingType);
-=======
-  aIPCOption =
-      IPCPaymentOptions(aOptions.mRequestPayerName, aOptions.mRequestPayerEmail,
-                        aOptions.mRequestPayerPhone, aOptions.mRequestShipping,
-                        aOptions.mRequestBillingAddress, shippingType);
->>>>>>> upstream-releases
-}
-<<<<<<< HEAD
-}  // end of namespace
-||||||| merged common ancestors
-} // end of namespace
-=======
 
 void ConvertResponseData(const IPCPaymentResponseData& aIPCData,
                          ResponseData& aData) {
@@ -412,12 +309,10 @@ void ConvertMethodChangeDetails(const IPCMethodChangeDetails& aIPCDetails,
   }
 }
 }  // end of namespace
->>>>>>> upstream-releases
 
 /* PaymentRequestManager */
 
 StaticRefPtr<PaymentRequestManager> gPaymentManager;
-<<<<<<< HEAD
 const char kSupportedRegionsPref[] = "dom.payments.request.supportedRegions";
 
 void SupportedRegionsPrefChangedCallback(const char* aPrefName,
@@ -425,49 +320,6 @@ void SupportedRegionsPrefChangedCallback(const char* aPrefName,
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!strcmp(aPrefName, kSupportedRegionsPref));
 
-  nsAutoString supportedRegions;
-  Preferences::GetString(aPrefName, supportedRegions);
-  aRetval->Clear();
-  for (const nsAString& each : supportedRegions.Split(',')) {
-    aRetval->AppendElement(each);
-  }
-}
-||||||| merged common ancestors
-=======
-const char kSupportedRegionsPref[] = "dom.payments.request.supportedRegions";
-
-void SupportedRegionsPrefChangedCallback(const char* aPrefName,
-                                         nsTArray<nsString>* aRetval) {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(!strcmp(aPrefName, kSupportedRegionsPref));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-PaymentRequestManager::PaymentRequestManager() {
-  Preferences::RegisterCallbackAndCall(SupportedRegionsPrefChangedCallback,
-                                       kSupportedRegionsPref,
-                                       &this->mSupportedRegions);
-}
-
-PaymentRequestManager::~PaymentRequestManager() {
-  MOZ_ASSERT(mActivePayments.Count() == 0);
-  Preferences::UnregisterCallback(SupportedRegionsPrefChangedCallback,
-                                  kSupportedRegionsPref,
-                                  &this->mSupportedRegions);
-  mSupportedRegions.Clear();
-}
-
-bool PaymentRequestManager::IsRegionSupported(const nsAString& region) const {
-  return mSupportedRegions.Contains(region);
-}
-
-PaymentRequestChild* PaymentRequestManager::GetPaymentChild(
-    PaymentRequest* aRequest) {
-||||||| merged common ancestors
-PaymentRequestChild*
-PaymentRequestManager::GetPaymentChild(PaymentRequest* aRequest)
-{
-=======
   nsAutoString supportedRegions;
   Preferences::GetString(aPrefName, supportedRegions);
   aRetval->Clear();
@@ -496,7 +348,6 @@ bool PaymentRequestManager::IsRegionSupported(const nsAString& region) const {
 
 PaymentRequestChild* PaymentRequestManager::GetPaymentChild(
     PaymentRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRequest);
 
   if (PaymentRequestChild* child = aRequest->GetIPC()) {
@@ -834,7 +685,9 @@ nsresult PaymentRequestManager::RespondPayment(
       NotifyRequestDone(aRequest);
       break;
     }
-    default: { return NS_ERROR_FAILURE; }
+    default: {
+      return NS_ERROR_FAILURE;
+    }
   }
   return NS_OK;
 }

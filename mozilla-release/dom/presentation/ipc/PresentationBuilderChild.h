@@ -30,14 +30,7 @@ class PresentationBuilderChild final
 
   mozilla::ipc::IPCResult RecvOnAnswer(const nsString& aSDP);
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvOnIceCandidate(
-      const nsString& aCandidate) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvOnIceCandidate(const nsString& aCandidate) override;
-=======
   mozilla::ipc::IPCResult RecvOnIceCandidate(const nsString& aCandidate);
->>>>>>> upstream-releases
 
  private:
   virtual ~PresentationBuilderChild() = default;

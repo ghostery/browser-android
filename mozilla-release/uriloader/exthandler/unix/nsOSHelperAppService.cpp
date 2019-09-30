@@ -38,7 +38,6 @@ using namespace mozilla;
 #define LOG(args) MOZ_LOG(mLog, mozilla::LogLevel::Debug, args)
 #define LOG_ENABLED() MOZ_LOG_TEST(mLog, mozilla::LogLevel::Debug)
 
-<<<<<<< HEAD
 static nsresult FindSemicolon(nsAString::const_iterator& aSemicolon_iter,
                               const nsAString::const_iterator& aEnd_iter);
 static nsresult ParseMIMEType(const nsAString::const_iterator& aStart_iter,
@@ -49,45 +48,6 @@ static nsresult ParseMIMEType(const nsAString::const_iterator& aStart_iter,
                               const nsAString::const_iterator& aEnd_iter);
 
 inline bool IsNetscapeFormat(const nsACString& aBuffer);
-
-nsOSHelperAppService::nsOSHelperAppService() : nsExternalHelperAppService() {
-  mode_t mask = umask(0777);
-  umask(mask);
-  mPermissions = 0666 & ~mask;
-}
-||||||| merged common ancestors
-static nsresult
-FindSemicolon(nsAString::const_iterator& aSemicolon_iter,
-              const nsAString::const_iterator& aEnd_iter);
-static nsresult
-ParseMIMEType(const nsAString::const_iterator& aStart_iter,
-              nsAString::const_iterator& aMajorTypeStart,
-              nsAString::const_iterator& aMajorTypeEnd,
-              nsAString::const_iterator& aMinorTypeStart,
-              nsAString::const_iterator& aMinorTypeEnd,
-              const nsAString::const_iterator& aEnd_iter);
-
-inline bool
-IsNetscapeFormat(const nsACString& aBuffer);
-
-nsOSHelperAppService::nsOSHelperAppService() : nsExternalHelperAppService()
-{
-  mode_t mask = umask(0777);
-  umask(mask);
-  mPermissions = 0666 & ~mask;
-}
-=======
-static nsresult FindSemicolon(nsAString::const_iterator& aSemicolon_iter,
-                              const nsAString::const_iterator& aEnd_iter);
-static nsresult ParseMIMEType(const nsAString::const_iterator& aStart_iter,
-                              nsAString::const_iterator& aMajorTypeStart,
-                              nsAString::const_iterator& aMajorTypeEnd,
-                              nsAString::const_iterator& aMinorTypeStart,
-                              nsAString::const_iterator& aMinorTypeEnd,
-                              const nsAString::const_iterator& aEnd_iter);
-
-inline bool IsNetscapeFormat(const nsACString& aBuffer);
->>>>>>> upstream-releases
 
 nsOSHelperAppService::~nsOSHelperAppService() {}
 
@@ -1079,15 +1039,8 @@ nsresult nsOSHelperAppService::OSProtocolHandlerExists(
     nsCOMPtr<nsIHandlerService> handlerSvc =
         do_GetService(NS_HANDLERSERVICE_CONTRACTID, &rv);
     if (NS_SUCCEEDED(rv) && handlerSvc) {
-<<<<<<< HEAD
-      rv = handlerSvc->ExistsForProtocol(nsCString(aProtocolScheme),
-                                         aHandlerExists);
-||||||| merged common ancestors
-      rv = handlerSvc->ExistsForProtocol(nsCString(aProtocolScheme), aHandlerExists);
-=======
       rv = handlerSvc->ExistsForProtocolOS(nsCString(aProtocolScheme),
                                            aHandlerExists);
->>>>>>> upstream-releases
     }
   }
 
@@ -1371,21 +1324,10 @@ already_AddRefed<nsMIMEInfoBase> nsOSHelperAppService::GetFromType(
   return mimeInfo.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIMIMEInfo> nsOSHelperAppService::GetMIMEInfoFromOS(
-    const nsACString& aType, const nsACString& aFileExt, bool* aFound) {
-||||||| merged common ancestors
-
-already_AddRefed<nsIMIMEInfo>
-nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aType,
-                                        const nsACString& aFileExt,
-                                        bool       *aFound) {
-=======
 nsresult nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aType,
                                                  const nsACString& aFileExt,
                                                  bool* aFound,
                                                  nsIMIMEInfo** aMIMEInfo) {
->>>>>>> upstream-releases
   *aFound = true;
   RefPtr<nsMIMEInfoBase> retval;
   // Fallback to lookup by extension when generic 'application/octet-stream'
@@ -1399,17 +1341,10 @@ nsresult nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aType,
     RefPtr<nsMIMEInfoBase> miByExt =
         GetFromExtension(PromiseFlatCString(aFileExt));
     // If we had no extension match, but a type match, use that
-<<<<<<< HEAD
-    if (!miByExt && retval) return retval.forget();
-||||||| merged common ancestors
-    if (!miByExt && retval)
-      return retval.forget();
-=======
     if (!miByExt && retval) {
       retval.forget(aMIMEInfo);
       return NS_OK;
     }
->>>>>>> upstream-releases
     // If we had an extension match but no type match, set the mimetype and use
     // it
     if (!retval && miByExt) {

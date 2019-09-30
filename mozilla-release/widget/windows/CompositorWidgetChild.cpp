@@ -13,18 +13,6 @@
 namespace mozilla {
 namespace widget {
 
-<<<<<<< HEAD
-CompositorWidgetChild::CompositorWidgetChild(
-    RefPtr<CompositorVsyncDispatcher> aVsyncDispatcher,
-    RefPtr<CompositorWidgetVsyncObserver> aVsyncObserver)
-    : mVsyncDispatcher(aVsyncDispatcher), mVsyncObserver(aVsyncObserver) {
-||||||| merged common ancestors
-CompositorWidgetChild::CompositorWidgetChild(RefPtr<CompositorVsyncDispatcher> aVsyncDispatcher,
-                                             RefPtr<CompositorWidgetVsyncObserver> aVsyncObserver)
- : mVsyncDispatcher(aVsyncDispatcher),
-   mVsyncObserver(aVsyncObserver)
-{
-=======
 CompositorWidgetChild::CompositorWidgetChild(
     RefPtr<CompositorVsyncDispatcher> aVsyncDispatcher,
     RefPtr<CompositorWidgetVsyncObserver> aVsyncObserver)
@@ -32,7 +20,6 @@ CompositorWidgetChild::CompositorWidgetChild(
       mVsyncObserver(aVsyncObserver),
       mCompositorWnd(nullptr),
       mParentWnd(nullptr) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(!gfxPlatform::IsHeadless());
 }
@@ -62,19 +49,11 @@ HDC CompositorWidgetChild::GetTransparentDC() const {
   return nullptr;
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult CompositorWidgetChild::RecvObserveVsync() {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-CompositorWidgetChild::RecvObserveVsync()
-{
-=======
 void CompositorWidgetChild::SetParentWnd(const HWND aParentWnd) {
   mParentWnd = reinterpret_cast<HWND>(aParentWnd);
 }
 
 mozilla::ipc::IPCResult CompositorWidgetChild::RecvObserveVsync() {
->>>>>>> upstream-releases
   mVsyncDispatcher->SetCompositorVsyncObserver(mVsyncObserver);
   return IPC_OK();
 }
@@ -84,13 +63,6 @@ mozilla::ipc::IPCResult CompositorWidgetChild::RecvUnobserveVsync() {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-}  // namespace widget
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace widget
-} // namespace mozilla
-=======
 mozilla::ipc::IPCResult CompositorWidgetChild::RecvUpdateCompositorWnd(
     const WindowsHandle& aCompositorWnd, const WindowsHandle& aParentWnd) {
   MOZ_ASSERT(mParentWnd);
@@ -109,4 +81,3 @@ mozilla::ipc::IPCResult CompositorWidgetChild::RecvUpdateCompositorWnd(
 
 }  // namespace widget
 }  // namespace mozilla
->>>>>>> upstream-releases

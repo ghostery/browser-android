@@ -8,16 +8,8 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_error_trap.h
-#ifndef MODULES_DESKTOP_CAPTURE_X11_X_ERROR_TRAP_H_
-#define MODULES_DESKTOP_CAPTURE_X11_X_ERROR_TRAP_H_
-||||||| merged common ancestors
-#ifndef WEBRTC_MODULES_DESKTOP_CAPTURE_X11_X_ERROR_TRAP_H_
-#define WEBRTC_MODULES_DESKTOP_CAPTURE_X11_X_ERROR_TRAP_H_
-=======
 #ifndef MODULES_DESKTOP_CAPTURE_LINUX_X_ERROR_TRAP_H_
 #define MODULES_DESKTOP_CAPTURE_LINUX_X_ERROR_TRAP_H_
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_error_trap.h
 
 #include <X11/Xlibint.h>
 #undef max // Xlibint.h defines this and it breaks std::max
@@ -57,10 +49,4 @@ class XErrorTrap {
 
 }  // namespace webrtc
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_error_trap.h
-#endif  // MODULES_DESKTOP_CAPTURE_X11_X_ERROR_TRAP_H_
-||||||| merged common ancestors
-#endif  // WEBRTC_MODULES_DESKTOP_CAPTURE_X11_X_ERROR_TRAP_H_
-=======
 #endif  // MODULES_DESKTOP_CAPTURE_LINUX_X_ERROR_TRAP_H_
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_error_trap.h

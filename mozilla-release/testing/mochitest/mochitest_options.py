@@ -828,15 +828,8 @@ class MochitestArguments(ArgumentContainer):
             "default": options.defaultLeakThreshold,
             "tab": options.defaultLeakThreshold,
             # GMP rarely gets a log, but when it does, it leaks a little.
-<<<<<<< HEAD
-            "geckomediaplugin": 20000,
-            "rdd": 400,
-||||||| merged common ancestors
-            "geckomediaplugin": 20000,
-=======
             "gmplugin": 20000,
             "rdd": 400,
->>>>>>> upstream-releases
         }
 
         # See the dependencies of bug 1401764.

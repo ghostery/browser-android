@@ -46,55 +46,16 @@ class nsPrintObject {
   // Data Members
   nsCOMPtr<nsIDocShell> mDocShell;
   nsCOMPtr<nsIDocShellTreeOwner> mTreeOwner;
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument>    mDocument;
-=======
   RefPtr<mozilla::dom::Document> mDocument;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<nsPresContext> mPresContext;
-  nsCOMPtr<nsIPresShell> mPresShell;
-||||||| merged common ancestors
-  RefPtr<nsPresContext>  mPresContext;
-  nsCOMPtr<nsIPresShell>   mPresShell;
-=======
   RefPtr<nsPresContext> mPresContext;
   RefPtr<mozilla::PresShell> mPresShell;
->>>>>>> upstream-releases
   RefPtr<nsViewManager> mViewManager;
 
   nsCOMPtr<nsIContent> mContent;
   PrintObjectType mFrameType;
 
   nsTArray<mozilla::UniquePtr<nsPrintObject>> mKids;
-<<<<<<< HEAD
-  nsPrintObject* mParent;  // This is a non-owning pointer.
-  bool mHasBeenPrinted;
-  bool mDontPrint;
-  bool mPrintAsIs;
-  bool mInvisible;  // Indicates PO is set to not visible by CSS
-  bool mPrintPreview;
-  bool mDidCreateDocShell;
-  float mShrinkRatio;
-  float mZoomRatio;
-
- private:
-||||||| merged common ancestors
-  nsPrintObject*   mParent; // This is a non-owning pointer.
-  bool             mHasBeenPrinted;
-  bool             mDontPrint;
-  bool             mPrintAsIs;
-  bool             mInvisible;        // Indicates PO is set to not visible by CSS
-  bool             mPrintPreview;
-  bool             mDidCreateDocShell;
-  float            mShrinkRatio;
-  float            mZoomRatio;
-
-private:
-=======
   nsPrintObject* mParent;  // This is a non-owning pointer.
   bool mHasBeenPrinted;
   bool mDontPrint;
@@ -105,7 +66,6 @@ private:
   float mZoomRatio;
 
  private:
->>>>>>> upstream-releases
   nsPrintObject& operator=(const nsPrintObject& aOther) = delete;
 };
 

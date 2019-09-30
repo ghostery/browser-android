@@ -535,20 +535,9 @@ class nsRegion {
 
  private:
 #ifdef DEBUG_REGIONS
-<<<<<<< HEAD
-  class OperationStringGenerator {
-   public:
-    virtual ~OperationStringGenerator() {}
-||||||| merged common ancestors
-  class OperationStringGenerator
-  {
-  public:
-    virtual ~OperationStringGenerator() {}
-=======
   class OperationStringGenerator {
    public:
     virtual ~OperationStringGenerator() = default;
->>>>>>> upstream-releases
 
     virtual void OutputOp() = 0;
   };

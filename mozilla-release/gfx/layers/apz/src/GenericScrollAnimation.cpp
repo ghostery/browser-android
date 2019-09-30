@@ -7,14 +7,7 @@
 #include "GenericScrollAnimation.h"
 
 #include "AsyncPanZoomController.h"
-<<<<<<< HEAD
 #include "FrameMetrics.h"
-#include "gfxPrefs.h"
-||||||| merged common ancestors
-#include "gfxPrefs.h"
-=======
-#include "FrameMetrics.h"
->>>>>>> upstream-releases
 #include "nsPoint.h"
 #include "ScrollAnimationPhysics.h"
 #include "ScrollAnimationBezierPhysics.h"
@@ -23,27 +16,11 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-GenericScrollAnimation::GenericScrollAnimation(
-    AsyncPanZoomController& aApzc, const nsPoint& aInitialPosition,
-    const ScrollAnimationBezierPhysicsSettings& aSettings)
-    : mApzc(aApzc), mFinalDestination(aInitialPosition) {
-  if (gfxPrefs::SmoothScrollMSDPhysicsEnabled()) {
-||||||| merged common ancestors
-GenericScrollAnimation::GenericScrollAnimation(AsyncPanZoomController& aApzc,
-                                               const nsPoint& aInitialPosition,
-                                               const ScrollAnimationBezierPhysicsSettings& aSettings)
-  : mApzc(aApzc)
-  , mFinalDestination(aInitialPosition)
-{
-  if (gfxPrefs::SmoothScrollMSDPhysicsEnabled()) {
-=======
 GenericScrollAnimation::GenericScrollAnimation(
     AsyncPanZoomController& aApzc, const nsPoint& aInitialPosition,
     const ScrollAnimationBezierPhysicsSettings& aSettings)
     : mApzc(aApzc), mFinalDestination(aInitialPosition) {
   if (StaticPrefs::general_smoothScroll_msdPhysics_enabled()) {
->>>>>>> upstream-releases
     mAnimationPhysics = MakeUnique<ScrollAnimationMSDPhysics>(aInitialPosition);
   } else {
     mAnimationPhysics =

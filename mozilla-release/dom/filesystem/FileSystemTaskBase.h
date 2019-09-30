@@ -98,19 +98,10 @@ class FileSystemParams;
  *   parsing function [SetSuccessRequestResult] to get the success result.
  *   (8) Call [HandlerCallback] to send the task result to the content page.
  */
-<<<<<<< HEAD
-class FileSystemTaskChildBase : public PFileSystemRequestChild {
- public:
-||||||| merged common ancestors
-class FileSystemTaskChildBase : public PFileSystemRequestChild
-{
-public:
-=======
 class FileSystemTaskChildBase : public PFileSystemRequestChild {
   friend class PFileSystemRequestChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(FileSystemTaskChildBase)
 
   /*
@@ -164,16 +155,8 @@ class FileSystemTaskChildBase : public PFileSystemRequestChild {
                                        ErrorResult& aRv) = 0;
 
   // Overrides PFileSystemRequestChild
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult Recv__delete__(
-      const FileSystemResponseValue& value) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  Recv__delete__(const FileSystemResponseValue& value) override;
-=======
   virtual mozilla::ipc::IPCResult Recv__delete__(
       const FileSystemResponseValue& value) final;
->>>>>>> upstream-releases
 
   nsresult mErrorValue;
   RefPtr<FileSystemBase> mFileSystem;

@@ -57,24 +57,10 @@ already_AddRefed<DocumentType> DOMImplementation::CreateDocumentType(
   return docType.forget();
 }
 
-<<<<<<< HEAD
-nsresult DOMImplementation::CreateDocument(const nsAString& aNamespaceURI,
-                                           const nsAString& aQualifiedName,
-                                           DocumentType* aDoctype,
-                                           nsIDocument** aDocument) {
-||||||| merged common ancestors
-nsresult
-DOMImplementation::CreateDocument(const nsAString& aNamespaceURI,
-                                  const nsAString& aQualifiedName,
-                                  DocumentType* aDoctype,
-                                  nsIDocument** aDocument)
-{
-=======
 nsresult DOMImplementation::CreateDocument(const nsAString& aNamespaceURI,
                                            const nsAString& aQualifiedName,
                                            DocumentType* aDoctype,
                                            Document** aDocument) {
->>>>>>> upstream-releases
   *aDocument = nullptr;
 
   nsresult rv;
@@ -123,42 +109,17 @@ nsresult DOMImplementation::CreateDocument(const nsAString& aNamespaceURI,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIDocument> DOMImplementation::CreateDocument(
-    const nsAString& aNamespaceURI, const nsAString& aQualifiedName,
-    DocumentType* aDoctype, ErrorResult& aRv) {
-  nsCOMPtr<nsIDocument> document;
-||||||| merged common ancestors
-already_AddRefed<nsIDocument>
-DOMImplementation::CreateDocument(const nsAString& aNamespaceURI,
-                                  const nsAString& aQualifiedName,
-                                  DocumentType* aDoctype,
-                                  ErrorResult& aRv)
-{
-  nsCOMPtr<nsIDocument> document;
-=======
 already_AddRefed<Document> DOMImplementation::CreateDocument(
     const nsAString& aNamespaceURI, const nsAString& aQualifiedName,
     DocumentType* aDoctype, ErrorResult& aRv) {
   nsCOMPtr<Document> document;
->>>>>>> upstream-releases
   aRv = CreateDocument(aNamespaceURI, aQualifiedName, aDoctype,
                        getter_AddRefs(document));
   return document.forget();
 }
 
-<<<<<<< HEAD
-nsresult DOMImplementation::CreateHTMLDocument(const nsAString& aTitle,
-                                               nsIDocument** aDocument) {
-||||||| merged common ancestors
-nsresult
-DOMImplementation::CreateHTMLDocument(const nsAString& aTitle,
-                                      nsIDocument** aDocument)
-{
-=======
 nsresult DOMImplementation::CreateHTMLDocument(const nsAString& aTitle,
                                                Document** aDocument) {
->>>>>>> upstream-releases
   *aDocument = nullptr;
 
   NS_ENSURE_STATE(mOwner);
@@ -176,27 +137,11 @@ nsresult DOMImplementation::CreateHTMLDocument(const nsAString& aTitle,
 
   NS_ENSURE_STATE(!mScriptObject || scriptHandlingObject);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> doc;
-  nsresult rv = NS_NewDOMDocument(
-      getter_AddRefs(doc), EmptyString(), EmptyString(), doctype, mDocumentURI,
-      mBaseURI, mOwner->NodePrincipal(), true, scriptHandlingObject,
-      DocumentFlavorLegacyGuess);
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument> doc;
-  nsresult rv = NS_NewDOMDocument(getter_AddRefs(doc),
-                                  EmptyString(), EmptyString(),
-                                  doctype, mDocumentURI, mBaseURI,
-                                  mOwner->NodePrincipal(),
-                                  true, scriptHandlingObject,
-                                  DocumentFlavorLegacyGuess);
-=======
   nsCOMPtr<Document> doc;
   nsresult rv = NS_NewDOMDocument(
       getter_AddRefs(doc), EmptyString(), EmptyString(), doctype, mDocumentURI,
       mBaseURI, mOwner->NodePrincipal(), true, scriptHandlingObject,
       DocumentFlavorLegacyGuess);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsCOMPtr<Element> root =
@@ -233,21 +178,9 @@ nsresult DOMImplementation::CreateHTMLDocument(const nsAString& aTitle,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIDocument> DOMImplementation::CreateHTMLDocument(
-    const Optional<nsAString>& aTitle, ErrorResult& aRv) {
-  nsCOMPtr<nsIDocument> document;
-||||||| merged common ancestors
-already_AddRefed<nsIDocument>
-DOMImplementation::CreateHTMLDocument(const Optional<nsAString>& aTitle,
-                                      ErrorResult& aRv)
-{
-  nsCOMPtr<nsIDocument> document;
-=======
 already_AddRefed<Document> DOMImplementation::CreateHTMLDocument(
     const Optional<nsAString>& aTitle, ErrorResult& aRv) {
   nsCOMPtr<Document> document;
->>>>>>> upstream-releases
   aRv = CreateHTMLDocument(aTitle.WasPassed() ? aTitle.Value() : VoidString(),
                            getter_AddRefs(document));
   return document.forget();

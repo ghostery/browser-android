@@ -12,12 +12,7 @@
 #include "GrAppliedClip.h"
 #include "GrBufferAllocPool.h"
 #include "GrDeferredUpload.h"
-<<<<<<< HEAD
-#include "GrUninstantiateProxyTracker.h"
-||||||| merged common ancestors
-=======
 #include "GrRenderTargetProxy.h"
->>>>>>> upstream-releases
 #include "SkArenaAlloc.h"
 #include "SkArenaAllocList.h"
 #include "ops/GrMeshDrawOp.h"
@@ -60,14 +55,8 @@ public:
 
     /** Additional data required on a per-op basis when executing GrOps. */
     struct OpArgs {
-<<<<<<< HEAD
-        GrRenderTarget* renderTarget() const { return fProxy->peekRenderTarget(); }
-||||||| merged common ancestors
-        GrRenderTarget* renderTarget() const { return fProxy->priv().peekRenderTarget(); }
-=======
         GrSurfaceOrigin origin() const { return fProxy->origin(); }
         GrRenderTarget* renderTarget() const { return fProxy->peekRenderTarget(); }
->>>>>>> upstream-releases
 
         GrOp* fOp;
         // TODO: do we still need the dst proxy here?
@@ -91,24 +80,10 @@ public:
     GrDeferredUploadToken addASAPUpload(GrDeferredTextureUploadFn&&) final;
 
     /** Overrides of GrMeshDrawOp::Target. */
-<<<<<<< HEAD
-    void draw(sk_sp<const GrGeometryProcessor>,
-              const GrPipeline*,
-              const GrPipeline::FixedDynamicState*,
-              const GrPipeline::DynamicStateArrays*,
-              const GrMesh[],
-              int meshCnt) final;
-    void* makeVertexSpace(size_t vertexSize, int vertexCount, const GrBuffer**,
-||||||| merged common ancestors
-
-    void draw(const GrGeometryProcessor*, const GrPipeline*, const GrMesh&) final;
-    void* makeVertexSpace(size_t vertexSize, int vertexCount, const GrBuffer**,
-=======
     void recordDraw(
             sk_sp<const GrGeometryProcessor>, const GrMesh[], int meshCnt,
             const GrPipeline::FixedDynamicState*, const GrPipeline::DynamicStateArrays*) final;
     void* makeVertexSpace(size_t vertexSize, int vertexCount, sk_sp<const GrBuffer>*,
->>>>>>> upstream-releases
                           int* startVertex) final;
     uint16_t* makeIndexSpace(int indexCount, sk_sp<const GrBuffer>*, int* startIndex) final;
     void* makeVertexSpaceAtLeast(size_t vertexSize, int minVertexCount, int fallbackVertexCount,
@@ -127,26 +102,12 @@ public:
     const GrCaps& caps() const final;
     GrResourceProvider* resourceProvider() const final { return fResourceProvider; }
 
-<<<<<<< HEAD
-    GrGlyphCache* glyphCache() const final;
-
-    // At this point we know we're flushing so full access to the GrAtlasManager is required (and
-    // permissible).
-    GrAtlasManager* atlasManager() const final;
-
-    GrUninstantiateProxyTracker* uninstantiateProxyTracker() {
-        return &fUninstantiateProxyTracker;
-    }
-
-||||||| merged common ancestors
-=======
     GrStrikeCache* glyphCache() const final;
 
     // At this point we know we're flushing so full access to the GrAtlasManager is required (and
     // permissible).
     GrAtlasManager* atlasManager() const final;
 
->>>>>>> upstream-releases
 private:
     /** GrMeshDrawOp::Target override. */
     SkArenaAlloc* allocator() override { return &fArena; }
@@ -163,31 +124,13 @@ private:
     // that share a geometry processor into a Draw is that it allows the Gpu object to setup
     // the shared state once and then issue draws for each mesh.
     struct Draw {
-<<<<<<< HEAD
-        ~Draw();
-        sk_sp<const GrGeometryProcessor> fGeometryProcessor;
-        const GrPipeline* fPipeline = nullptr;
-        const GrPipeline::FixedDynamicState* fFixedDynamicState;
-        const GrPipeline::DynamicStateArrays* fDynamicStateArrays;
-        const GrMesh* fMeshes = nullptr;
-||||||| merged common ancestors
-=======
         ~Draw();
         sk_sp<const GrGeometryProcessor> fGeometryProcessor;
         const GrPipeline::FixedDynamicState* fFixedDynamicState;
         const GrPipeline::DynamicStateArrays* fDynamicStateArrays;
         const GrMesh* fMeshes = nullptr;
         const GrOp* fOp = nullptr;
->>>>>>> upstream-releases
         int fMeshCnt = 0;
-<<<<<<< HEAD
-        uint32_t fOpID = SK_InvalidUniqueID;
-||||||| merged common ancestors
-        GrPendingProgramElement<const GrGeometryProcessor> fGeometryProcessor;
-        const GrPipeline* fPipeline;
-        uint32_t fOpID;
-=======
->>>>>>> upstream-releases
     };
 
     // Storage for ops' pipelines, draws, and inline uploads.
@@ -218,9 +161,6 @@ private:
     // Variables that are used to track where we are in lists as ops are executed
     SkArenaAllocList<Draw>::Iter fCurrDraw;
     SkArenaAllocList<InlineUpload>::Iter fCurrUpload;
-
-    // Used to track the proxies that need to be uninstantiated after we finish a flush
-    GrUninstantiateProxyTracker fUninstantiateProxyTracker;
 };
 
 #endif

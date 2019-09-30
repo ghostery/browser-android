@@ -14,15 +14,8 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   AppConstants: "resource://gre/modules/AppConstants.jsm",
   PlacesUtils: "resource://gre/modules/PlacesUtils.jsm",
   FormHistory: "resource://gre/modules/FormHistory.jsm",
-<<<<<<< HEAD
-  ContextualIdentityService: "resource://gre/modules/ContextualIdentityService.jsm",
-||||||| merged common ancestors
-  TelemetryStopwatch: "resource://gre/modules/TelemetryStopwatch.jsm",
-  ContextualIdentityService: "resource://gre/modules/ContextualIdentityService.jsm",
-=======
   ContextualIdentityService:
     "resource://gre/modules/ContextualIdentityService.jsm",
->>>>>>> upstream-releases
 });
 
 XPCOMUtils.defineLazyServiceGetter(
@@ -895,16 +888,6 @@ async function sanitizeOnShutdown(progress) {
   // the permission explicitly set to ACCEPT_SESSION need to be wiped.  There
   // are also other ways to think about and accomplish this, but this is what
   // the logic below currently does!
-<<<<<<< HEAD
-  if (Services.prefs.getIntPref(PREF_COOKIE_LIFETIME,
-                                Ci.nsICookieService.ACCEPT_NORMALLY) == Ci.nsICookieService.ACCEPT_SESSION) {
-    let principals = await getAllPrincipals();
-    await maybeSanitizeSessionPrincipals(principals);
-  }
-
-||||||| merged common ancestors
-  await sanitizeSessionPrincipals();
-=======
   if (
     Services.prefs.getIntPref(
       PREF_COOKIE_LIFETIME,
@@ -922,44 +905,15 @@ async function sanitizeOnShutdown(progress) {
   }
 
   progress.advancement = "session-permission";
->>>>>>> upstream-releases
 
   // Let's see if we have to forget some particular site.
   for (let permission of Services.perms.enumerator) {
-<<<<<<< HEAD
-    if (permission.type != "cookie" ||
-        permission.capability != Ci.nsICookiePermission.ACCESS_SESSION) {
-      continue;
-    }
-
-    // We consider just permissions set for http, https and file URLs.
-    if (!isSupportedURI(permission.principal.URI)) {
-      continue;
-||||||| merged common ancestors
-    if (permission.type == "cookie" && permission.capability == Ci.nsICookiePermission.ACCESS_SESSION) {
-      await sanitizeSessionPrincipal(permission.principal);
-=======
     if (
       permission.type != "cookie" ||
       permission.capability != Ci.nsICookiePermission.ACCESS_SESSION
     ) {
       continue;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    // We use just the URI here, because permissions ignore OriginAttributes.
-    let principals = await getAllPrincipals(permission.principal.URI);
-    let promises = [];
-    principals.forEach(principal => {
-      promises.push(sanitizeSessionPrincipal(principal));
-    });
-    await Promise.all(promises);
-  }
-||||||| merged common ancestors
-  }
-=======
->>>>>>> upstream-releases
 
     // We consider just permissions set for http, https and file URLs.
     if (!isSupportedURI(permission.principal.URI)) {
@@ -983,35 +937,6 @@ async function sanitizeOnShutdown(progress) {
   progress.advancement = "done";
 }
 
-<<<<<<< HEAD
-// Retrieve the list of nsIPrincipals with site data. If matchUri is not null,
-// it returns only the principals matching that URI, ignoring the
-// OriginAttributes.
-async function getAllPrincipals(matchUri = null) {
-  let principals = await new Promise(resolve => {
-    quotaManagerService.getUsage(request => {
-      if (request.resultCode != Cr.NS_OK) {
-        // We are probably shutting down. We don't want to propagate the
-        // error, rejecting the promise.
-        resolve([]);
-        return;
-      }
-||||||| merged common ancestors
-async function sanitizeSessionPrincipals() {
-  if (Services.prefs.getIntPref(PREF_COOKIE_LIFETIME,
-                                Ci.nsICookieService.ACCEPT_NORMALLY) != Ci.nsICookieService.ACCEPT_SESSION) {
-    return;
-  }
-
-  let principals = await new Promise(resolve => {
-    quotaManagerService.getUsage(request => {
-      if (request.resultCode != Cr.NS_OK) {
-        // We are probably shutting down. We don't want to propagate the
-        // error, rejecting the promise.
-        resolve([]);
-        return;
-      }
-=======
 // Extracts the principals matching matchUri as root domain.
 function extractMatchingPrincipals(principals, matchUri) {
   return principals.filter(principal => {
@@ -1023,84 +948,14 @@ function extractMatchingPrincipals(principals, matchUri) {
 // some of their sub-domain need to be sanitize.
 async function maybeSanitizeSessionPrincipals(progress, principals) {
   log("Sanitizing " + principals.length + " principals");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      let list = [];
-      for (let item of request.result) {
-        let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(item.origin);
-        let uri = principal.URI;
-        if (!isSupportedURI(uri)) {
-          continue;
-        }
-
-        if (!matchUri || Services.eTLD.hasRootDomain(matchUri.host, uri.host)) {
-          list.push(principal);
-        }
-      }
-      resolve(list);
-    });
-  }).catch(() => []);
-||||||| merged common ancestors
-      let list = [];
-      for (let item of request.result) {
-        let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(item.origin);
-        let uri = principal.URI;
-        if (uri.scheme == "http" || uri.scheme == "https" || uri.scheme == "file") {
-          list.push(principal);
-        }
-      }
-      resolve(list);
-    });
-  }).catch(() => []);
-=======
   let promises = [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let serviceWorkers = serviceWorkerManager.getAllRegistrations();
-  for (let i = 0; i < serviceWorkers.length; i++) {
-    let sw = serviceWorkers.queryElementAt(i, Ci.nsIServiceWorkerRegistrationInfo);
-    let uri = sw.principal.URI;
-    // We don't need to check the scheme. SW are just exposed to http/https URLs.
-    if (!matchUri || Services.eTLD.hasRootDomain(matchUri.host, uri.host)) {
-      principals.push(sw.principal);
-    }
-  }
-||||||| merged common ancestors
-  let serviceWorkers = serviceWorkerManager.getAllRegistrations();
-  for (let i = 0; i < serviceWorkers.length; i++) {
-    let sw = serviceWorkers.queryElementAt(i, Ci.nsIServiceWorkerRegistrationInfo);
-    principals.push(sw.principal);
-  }
-=======
   principals.forEach(principal => {
     progress.step = "checking-principal";
     let cookieAllowed = cookiesAllowedForDomainOrSubDomain(principal);
     progress.step = "principal-checked:" + cookieAllowed;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Let's take the list of unique hosts+OA from cookies.
-  let enumerator = Services.cookies.enumerator;
-  let hosts = new Set();
-  for (let cookie of enumerator) {
-    if (!matchUri || Services.eTLD.hasRootDomain(matchUri.host, cookie.rawHost)) {
-      hosts.add(cookie.rawHost + ChromeUtils.originAttributesToSuffix(cookie.originAttributes));
-    }
-  }
-
-  hosts.forEach(host => {
-    // Cookies and permissions are handled by origin/host. Doesn't matter if we
-    // use http: or https: schema here.
-    principals.push(
-      Services.scriptSecurityManager.createCodebasePrincipalFromOrigin("https://" + host));
-  });
-
-  return principals;
-||||||| merged common ancestors
-  await maybeSanitizeSessionPrincipals(principals);
-=======
     if (!cookieAllowed) {
       promises.push(sanitizeSessionPrincipal(progress, principal));
     }
@@ -1109,20 +964,8 @@ async function maybeSanitizeSessionPrincipals(progress, principals) {
   progress.step = "promises:" + promises.length;
   await Promise.all(promises);
   progress.step = "promises resolved";
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// This method receives a list of principals and it checks if some of them or
-// some of their sub-domain need to be sanitize.
-async function maybeSanitizeSessionPrincipals(principals) {
-  let promises = [];
-||||||| merged common ancestors
-// This method receives a list of principals and it checks if some of them need
-// to be sanitize.
-async function maybeSanitizeSessionPrincipals(principals) {
-  let promises = [];
-=======
 function cookiesAllowedForDomainOrSubDomain(principal) {
   log("Checking principal: " + principal.URI.spec);
 
@@ -1157,89 +1000,24 @@ function cookiesAllowedForDomainOrSubDomain(principal) {
     if (!isSupportedURI(perm.principal.URI)) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  principals.forEach(principal => {
-    if (!cookiesAllowedForDomainOrSubDomain(principal)) {
-      promises.push(sanitizeSessionPrincipal(principal));
-||||||| merged common ancestors
-  for (let i = 0; i < principals.length; ++i) {
-    let p = Services.perms.testPermissionFromPrincipal(principals[i], "cookie");
-    if (p != Ci.nsICookiePermission.ACCESS_ALLOW &&
-        p != Ci.nsICookiePermission.ACCESS_ALLOW_FIRST_PARTY_ONLY &&
-        p != Ci.nsICookiePermission.ACCESS_LIMIT_THIRD_PARTY) {
-      promises.push(sanitizeSessionPrincipal(principals[i]));
-=======
     // We don't care about scheme, port, and anything else.
     if (
       Services.eTLD.hasRootDomain(perm.principal.URI.host, principal.URI.host)
     ) {
       log("Recursive cookie check on principal: " + perm.principal.URI.spec);
       return cookiesAllowedForDomainOrSubDomain(perm.principal);
->>>>>>> upstream-releases
     }
-  });
+  }
 
   log("Cookie not allowed.");
   return false;
 }
 
-<<<<<<< HEAD
-function cookiesAllowedForDomainOrSubDomain(principal) {
-  // If we have the 'cookie' permission for this principal, let's return
-  // immediately.
-  let p = Services.perms.testPermissionFromPrincipal(principal, "cookie");
-  if (p == Ci.nsICookiePermission.ACCESS_ALLOW ||
-      p == Ci.nsICookiePermission.ACCESS_ALLOW_FIRST_PARTY_ONLY ||
-      p == Ci.nsICookiePermission.ACCESS_LIMIT_THIRD_PARTY) {
-    return true;
-  }
-
-  if (p == Ci.nsICookiePermission.ACCESS_DENY ||
-      p == Ci.nsICookiePermission.ACCESS_SESSION) {
-    return false;
-  }
-
-  for (let perm of Services.perms.enumerator) {
-    if (perm.type != "cookie") {
-      continue;
-    }
-
-    // We consider just permissions set for http, https and file URLs.
-    if (!isSupportedURI(perm.principal.URI)) {
-      continue;
-    }
-
-    // We don't care about scheme, port, and anything else.
-    if (Services.eTLD.hasRootDomain(perm.principal.URI.host,
-                                    principal.URI.host)) {
-      return cookiesAllowedForDomainOrSubDomain(perm.principal);
-    }
-  }
-
-  return false;
-}
-
-async function sanitizeSessionPrincipal(principal) {
-||||||| merged common ancestors
-async function sanitizeSessionPrincipal(principal) {
-=======
 async function sanitizeSessionPrincipal(progress, principal) {
   log("Sanitizing principal: " + principal.URI.spec);
 
->>>>>>> upstream-releases
   await new Promise(resolve => {
-<<<<<<< HEAD
-    Services.clearData.deleteDataFromPrincipal(principal, true /* user request */,
-                                               Ci.nsIClearDataService.CLEAR_DOM_STORAGES |
-                                               Ci.nsIClearDataService.CLEAR_COOKIES,
-                                               resolve);
-||||||| merged common ancestors
-    Services.clearData.deleteDataFromPrincipal(principal, true /* user request */,
-                                               Ci.nsIClearDataService.CLEAR_DOM_STORAGES,
-                                               resolve);
-=======
     progress.sanitizePrincipal = "started";
     Services.clearData.deleteDataFromPrincipal(
       principal,
@@ -1252,7 +1030,6 @@ async function sanitizeSessionPrincipal(progress, principal) {
         Ci.nsIClearDataService.CLEAR_PLUGIN_DATA,
       resolve
     );
->>>>>>> upstream-releases
   });
   progress.sanitizePrincipal = "completed";
 }
@@ -1262,16 +1039,9 @@ function sanitizeNewTabSegregation() {
     "userContextIdInternal.thumbnail"
   );
   if (identity) {
-<<<<<<< HEAD
-    Services.clearData.deleteDataFromOriginAttributesPattern({ userContextId: identity.userContextId });
-||||||| merged common ancestors
-    Services.obs.notifyObservers(null, "clear-origin-attributes-data",
-                                 JSON.stringify({ userContextId: identity.userContextId }));
-=======
     Services.clearData.deleteDataFromOriginAttributesPattern({
       userContextId: identity.userContextId,
     });
->>>>>>> upstream-releases
   }
 }
 
@@ -1354,17 +1124,7 @@ async function clearData(range, flags) {
     });
   }
 }
-<<<<<<< HEAD
-
-function isSupportedURI(uri) {
-  return uri.scheme == "http" ||
-         uri.scheme == "https" ||
-         uri.scheme == "file";
-}
-||||||| merged common ancestors
-=======
 
 function isSupportedURI(uri) {
   return uri.scheme == "http" || uri.scheme == "https" || uri.scheme == "file";
 }
->>>>>>> upstream-releases

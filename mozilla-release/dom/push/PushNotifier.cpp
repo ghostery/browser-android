@@ -41,17 +41,8 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(PushNotifier)
 NS_IMETHODIMP
 PushNotifier::NotifyPushWithData(const nsACString& aScope,
                                  nsIPrincipal* aPrincipal,
-<<<<<<< HEAD
-                                 const nsAString& aMessageId, uint32_t aDataLen,
-                                 uint8_t* aData) {
-||||||| merged common ancestors
-                                 const nsAString& aMessageId,
-                                 uint32_t aDataLen, uint8_t* aData)
-{
-=======
                                  const nsAString& aMessageId,
                                  const nsTArray<uint8_t>& aData) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aPrincipal);
   // We still need to do this copying business, if we want the copy to be
   // fallible.  Just passing Some(aData) would do an infallible copy at the
@@ -204,41 +195,8 @@ PushData::Json(JSContext* aCx, JS::MutableHandle<JS::Value> aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PushData::Binary(uint32_t* aDataLen, uint8_t** aData) {
-  NS_ENSURE_ARG_POINTER(aDataLen);
-  NS_ENSURE_ARG_POINTER(aData);
-
-  *aData = nullptr;
-  if (mData.IsEmpty()) {
-    *aDataLen = 0;
-    return NS_OK;
-  }
-  uint32_t length = mData.Length();
-  uint8_t* data = static_cast<uint8_t*>(moz_xmalloc(length * sizeof(uint8_t)));
-  memcpy(data, mData.Elements(), length * sizeof(uint8_t));
-  *aDataLen = length;
-  *aData = data;
-||||||| merged common ancestors
-PushData::Binary(uint32_t* aDataLen, uint8_t** aData)
-{
-  NS_ENSURE_ARG_POINTER(aDataLen);
-  NS_ENSURE_ARG_POINTER(aData);
-
-  *aData = nullptr;
-  if (mData.IsEmpty()) {
-    *aDataLen = 0;
-    return NS_OK;
-  }
-  uint32_t length = mData.Length();
-  uint8_t* data = static_cast<uint8_t*>(moz_xmalloc(length * sizeof(uint8_t)));
-  memcpy(data, mData.Elements(), length * sizeof(uint8_t));
-  *aDataLen = length;
-  *aData = data;
-=======
 PushData::Binary(nsTArray<uint8_t>& aData) {
   aData = mData;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -467,19 +425,9 @@ PushErrorDispatcher::~PushErrorDispatcher() {}
 
 nsresult PushErrorDispatcher::NotifyObservers() { return NS_OK; }
 
-<<<<<<< HEAD
-nsresult PushErrorDispatcher::NotifyWorkers() {
-  if (!ShouldNotifyWorkers()) {
-||||||| merged common ancestors
-nsresult
-PushErrorDispatcher::NotifyWorkers()
-{
-  if (!ShouldNotifyWorkers()) {
-=======
 nsresult PushErrorDispatcher::NotifyWorkers() {
   if (!ShouldNotifyWorkers() &&
       (!mPrincipal || nsContentUtils::IsSystemPrincipal(mPrincipal))) {
->>>>>>> upstream-releases
     // For system subscriptions, log the error directly to the browser console.
     return nsContentUtils::ReportToConsoleNonLocalized(
         mMessage, mFlags, NS_LITERAL_CSTRING("Push"), nullptr, /* aDocument */
@@ -503,20 +451,10 @@ nsresult PushErrorDispatcher::NotifyWorkers() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool PushErrorDispatcher::SendToParent(ContentChild*) { return true; }
-||||||| merged common ancestors
-bool
-PushErrorDispatcher::SendToParent(ContentChild*)
-{
-  return true;
-}
-=======
 bool PushErrorDispatcher::SendToParent(ContentChild* aContentActor) {
   return aContentActor->SendPushError(mScope, IPC::Principal(mPrincipal),
                                       mMessage, mFlags);
 }
->>>>>>> upstream-releases
 
 bool PushErrorDispatcher::SendToChild(ContentParent* aContentActor) {
   return aContentActor->SendPushError(mScope, IPC::Principal(mPrincipal),

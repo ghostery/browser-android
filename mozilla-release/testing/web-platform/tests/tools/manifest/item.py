@@ -6,18 +6,6 @@ from abc import ABCMeta, abstractproperty
 
 from .utils import to_os_path
 
-<<<<<<< HEAD
-class SourceFileCache(object):
-    def __init__(self):
-        self.source_files = {}
-
-    def make_new(self, tests_root, path, url_base):
-        from .sourcefile import SourceFile
-||||||| merged common ancestors
-def get_source_file(source_files, tests_root, manifest, path):
-    def make_new():
-        from .sourcefile import SourceFile
-=======
 MYPY = False
 if MYPY:
     # MYPY is set to True when run under Mypy.
@@ -33,36 +21,8 @@ if MYPY:
     from typing import Hashable
     from .manifest import Manifest
     Fuzzy = Dict[Optional[Tuple[Text, Text, Text]], List[int]]
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        return SourceFile(tests_root, path, url_base)
-
-    def get(self, tests_root, manifest, path):
-
-        if path not in self.source_files:
-            self.source_files[path] = self.make_new(tests_root, path, manifest.url_base)
-
-        return self.source_files[path]
-
-
-item_types = {}
-||||||| merged common ancestors
-        return SourceFile(tests_root, path, manifest.url_base)
-
-    if source_files is None:
-        return make_new()
-
-    if path not in source_files:
-        source_files[path] = make_new()
-
-    return source_files[path]
-
-
-item_types = {}
-=======
 item_types = {}  # type: Dict[str, Type[ManifestItem]]
->>>>>>> upstream-releases
 
 
 class ManifestItemMeta(ABCMeta):
@@ -70,16 +30,6 @@ class ManifestItemMeta(ABCMeta):
     item_types dictionary according to the value of their item_type
     attribute, and otherwise behaves like an ABCMeta."""
 
-<<<<<<< HEAD
-    def __new__(cls, name, bases, attrs, **kwargs):
-        rv = ABCMeta.__new__(cls, name, bases, attrs, **kwargs)
-        if rv.item_type:
-            item_types[rv.item_type] = rv
-||||||| merged common ancestors
-    def __new__(cls, name, bases, attrs, **kwargs):
-        rv = ABCMeta.__new__(cls, name, bases, attrs, **kwargs)
-        item_types[rv.item_type] = rv
-=======
     def __new__(cls, name, bases, attrs):
         # type: (Type[ManifestItemMeta], str, Tuple[ManifestItemMeta, ...], Dict[str, Any]) -> type
         rv = ABCMeta.__new__(cls, name, bases, attrs)
@@ -87,7 +37,6 @@ class ManifestItemMeta(ABCMeta):
             assert issubclass(rv, ManifestItem)
             assert isinstance(rv.item_type, str)
             item_types[rv.item_type] = rv
->>>>>>> upstream-releases
 
         return rv
 
@@ -95,21 +44,10 @@ class ManifestItemMeta(ABCMeta):
 class ManifestItem(with_metaclass(ManifestItemMeta)):
     __slots__ = ("_tests_root", "path")
 
-<<<<<<< HEAD
-    source_file_cache = SourceFileCache()
-
-    def __init__(self, source_file, manifest=None):
-        self.source_file = source_file
-||||||| merged common ancestors
-    def __init__(self, source_file, manifest=None):
-        self.manifest = manifest
-        self.source_file = source_file
-=======
     def __init__(self, tests_root, path):
         # type: (Text, Text) -> None
         self._tests_root = tests_root
         self.path = path
->>>>>>> upstream-releases
 
     @abstractproperty
     def id(self):
@@ -147,17 +85,6 @@ class ManifestItem(with_metaclass(ManifestItemMeta)):
         return ()
 
     @classmethod
-<<<<<<< HEAD
-    def from_json(cls, manifest, tests_root, path, obj):
-        source_file = cls.source_file_cache.get(tests_root, manifest, path)
-        return cls(source_file,
-                   manifest=manifest)
-||||||| merged common ancestors
-    def from_json(cls, manifest, tests_root, path, obj, source_files=None):
-        source_file = get_source_file(source_files, tests_root, manifest, path)
-        return cls(source_file,
-                   manifest=manifest)
-=======
     def from_json(cls,
                   manifest,  # type: Manifest
                   path,  # type: Text
@@ -168,7 +95,6 @@ class ManifestItem(with_metaclass(ManifestItemMeta)):
         tests_root = manifest.tests_root
         assert tests_root is not None
         return cls(tests_root, path)
->>>>>>> upstream-releases
 
 
 class URLManifestItem(ManifestItem):
@@ -214,13 +140,6 @@ class URLManifestItem(ManifestItem):
         return rv
 
     @classmethod
-<<<<<<< HEAD
-    def from_json(cls, manifest, tests_root, path, obj):
-        source_file = cls.source_file_cache.get(tests_root, manifest, path)
-||||||| merged common ancestors
-    def from_json(cls, manifest, tests_root, path, obj, source_files=None):
-        source_file = get_source_file(source_files, tests_root, manifest, path)
-=======
     def from_json(cls,
                   manifest,  # type: Manifest
                   path,  # type: Text
@@ -228,7 +147,6 @@ class URLManifestItem(ManifestItem):
                   ):
         # type: (...) -> URLManifestItem
         path = to_os_path(path)
->>>>>>> upstream-releases
         url, extras = obj
         tests_root = manifest.tests_root
         assert tests_root is not None
@@ -277,16 +195,6 @@ class TestharnessTest(URLManifestItem):
             rv[-1]["script_metadata"] = self.script_metadata
         return rv
 
-<<<<<<< HEAD
-    @classmethod
-    def from_json(cls, manifest, tests_root, path, obj):
-        source_file = cls.source_file_cache.get(tests_root, manifest, path)
-||||||| merged common ancestors
-    @classmethod
-    def from_json(cls, manifest, tests_root, path, obj, source_files=None):
-        source_file = get_source_file(source_files, tests_root, manifest, path)
-=======
->>>>>>> upstream-releases
 
 class RefTestBase(URLManifestItem):
     __slots__ = ("references",)
@@ -353,13 +261,6 @@ class RefTestBase(URLManifestItem):
         return rv
 
     @classmethod
-<<<<<<< HEAD
-    def from_json(cls, manifest, tests_root, path, obj):
-        source_file = cls.source_file_cache.get(tests_root, manifest, path)
-||||||| merged common ancestors
-    def from_json(cls, manifest, tests_root, path, obj, source_files=None):
-        source_file = get_source_file(source_files, tests_root, manifest, path)
-=======
     def from_json(cls,  # type: ignore
                   manifest,  # type: Manifest
                   path,  # type: Text
@@ -369,7 +270,6 @@ class RefTestBase(URLManifestItem):
         tests_root = manifest.tests_root
         assert tests_root is not None
         path = to_os_path(path)
->>>>>>> upstream-releases
         url, references, extras = obj
         return cls(tests_root,
                    path,
@@ -452,32 +352,6 @@ class WebDriverSpecTest(URLManifestItem):
             rv[-1]["timeout"] = self.timeout
         return rv
 
-<<<<<<< HEAD
-    @classmethod
-    def from_json(cls, manifest, tests_root, path, obj):
-        source_file = cls.source_file_cache.get(tests_root, manifest, path)
-
-        url, extras = obj
-        return cls(source_file,
-                   url,
-                   url_base=manifest.url_base,
-                   timeout=extras.get("timeout"),
-                   manifest=manifest)
-
-||||||| merged common ancestors
-    @classmethod
-    def from_json(cls, manifest, tests_root, path, obj, source_files=None):
-        source_file = get_source_file(source_files, tests_root, manifest, path)
-
-        url, extras = obj
-        return cls(source_file,
-                   url,
-                   url_base=manifest.url_base,
-                   timeout=extras.get("timeout"),
-                   manifest=manifest)
-
-=======
->>>>>>> upstream-releases
 
 class SupportFile(ManifestItem):
     __slots__ = ()

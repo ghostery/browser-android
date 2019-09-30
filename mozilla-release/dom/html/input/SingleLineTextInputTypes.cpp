@@ -163,17 +163,8 @@ nsresult EmailInputType::GetBadInputMessage(nsAString& aMessage) {
       nsContentUtils::eDOM_PROPERTIES, "FormValidationInvalidEmail", aMessage);
 }
 
-<<<<<<< HEAD
-/* static */ bool EmailInputType::IsValidEmailAddressList(
-    const nsAString& aValue) {
-||||||| merged common ancestors
-/* static */ bool
-EmailInputType::IsValidEmailAddressList(const nsAString& aValue)
-{
-=======
 /* static */
 bool EmailInputType::IsValidEmailAddressList(const nsAString& aValue) {
->>>>>>> upstream-releases
   HTMLSplitOnSpacesTokenizer tokenizer(aValue, ',');
 
   while (tokenizer.hasMoreTokens()) {
@@ -185,16 +176,8 @@ bool EmailInputType::IsValidEmailAddressList(const nsAString& aValue) {
   return !tokenizer.separatorAfterCurrentToken();
 }
 
-<<<<<<< HEAD
-/* static */ bool EmailInputType::IsValidEmailAddress(const nsAString& aValue) {
-||||||| merged common ancestors
-/* static */ bool
-EmailInputType::IsValidEmailAddress(const nsAString& aValue)
-{
-=======
 /* static */
 bool EmailInputType::IsValidEmailAddress(const nsAString& aValue) {
->>>>>>> upstream-releases
   // Email addresses can't be empty and can't end with a '.' or '-'.
   if (aValue.IsEmpty() || aValue.Last() == '.' || aValue.Last() == '-') {
     return false;
@@ -258,22 +241,10 @@ bool EmailInputType::IsValidEmailAddress(const nsAString& aValue) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool EmailInputType::PunycodeEncodeEmailAddress(
-    const nsAString& aEmail, nsAutoCString& aEncodedEmail,
-    uint32_t* aIndexOfAt) {
-||||||| merged common ancestors
-/* static */ bool
-EmailInputType::PunycodeEncodeEmailAddress(const nsAString& aEmail,
-                                           nsAutoCString& aEncodedEmail,
-                                           uint32_t* aIndexOfAt)
-{
-=======
 /* static */
 bool EmailInputType::PunycodeEncodeEmailAddress(const nsAString& aEmail,
                                                 nsAutoCString& aEncodedEmail,
                                                 uint32_t* aIndexOfAt) {
->>>>>>> upstream-releases
   nsAutoCString value = NS_ConvertUTF16toUTF8(aEmail);
   *aIndexOfAt = (uint32_t)value.FindChar('@');
 

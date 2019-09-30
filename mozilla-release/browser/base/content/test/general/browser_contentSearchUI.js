@@ -806,47 +806,25 @@ function promiseMsg(name, type, msgMan) {
 function setUpEngines() {
   return (async function() {
     info("Removing default search engines");
-<<<<<<< HEAD
-    let currentEngineName = Services.search.defaultEngine.name;
-    let currentEngines = Services.search.getVisibleEngines();
-||||||| merged common ancestors
-    let currentEngineName = Services.search.currentEngine.name;
-    let currentEngines = Services.search.getVisibleEngines();
-=======
     let currentEngineName = (await Services.search.getDefault()).name;
     let currentEngines = await Services.search.getVisibleEngines();
->>>>>>> upstream-releases
     info("Adding test search engines");
     let rootDir = getRootDirectory(gTestPath);
     let engine1 = await SearchTestUtils.promiseNewSearchEngine(
       rootDir + TEST_ENGINE_BASENAME
     );
     await SearchTestUtils.promiseNewSearchEngine(
-<<<<<<< HEAD
-      rootDir + TEST_ENGINE_2_BASENAME);
-    Services.search.defaultEngine = engine1;
-||||||| merged common ancestors
-      rootDir + TEST_ENGINE_2_BASENAME);
-    Services.search.currentEngine = engine1;
-=======
       rootDir + TEST_ENGINE_2_BASENAME
     );
     await Services.search.setDefault(engine1);
->>>>>>> upstream-releases
     for (let engine of currentEngines) {
       await Services.search.removeEngine(engine);
     }
     registerCleanupFunction(async () => {
       Services.search.restoreDefaultEngines();
-<<<<<<< HEAD
-      Services.search.defaultEngine = Services.search.getEngineByName(currentEngineName);
-||||||| merged common ancestors
-      Services.search.currentEngine = Services.search.getEngineByName(currentEngineName);
-=======
       await Services.search.setDefault(
         Services.search.getEngineByName(currentEngineName)
       );
->>>>>>> upstream-releases
     });
   })();
 }

@@ -72,18 +72,9 @@ class SVGMatrix final : public nsWrapperCache {
   }
 
   // WebIDL
-<<<<<<< HEAD
-  SVGTransform* GetParentObject() const;
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  SVGTransform* GetParentObject() const;
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   DOMSVGTransform* GetParentObject() const;
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
->>>>>>> upstream-releases
 
   float A() const { return static_cast<float>(GetMatrix()._11); }
   void SetA(float aA, ErrorResult& rv);
@@ -111,16 +102,8 @@ class SVGMatrix final : public nsWrapperCache {
   already_AddRefed<SVGMatrix> SkewX(float angle, ErrorResult& rv);
   already_AddRefed<SVGMatrix> SkewY(float angle, ErrorResult& rv);
 
-<<<<<<< HEAD
- private:
-  ~SVGMatrix() {}
-||||||| merged common ancestors
-private:
-  ~SVGMatrix() {}
-=======
  private:
   ~SVGMatrix() = default;
->>>>>>> upstream-releases
 
   void SetMatrix(const gfxMatrix& aMatrix) {
     if (mTransform) {

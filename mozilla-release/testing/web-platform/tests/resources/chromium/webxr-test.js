@@ -327,15 +327,6 @@ class MockRuntime {
     });
   }
 
-<<<<<<< HEAD
-  getEnvironmentIntegrationProvider(environmentProviderRequest) {
-    let environmentProviderBinding = new mojo.AssociatedBinding(
-        device.mojom.XREnvironmentIntegrationProvider, this,
-        environmentProviderRequest);
-  }
-
-||||||| merged common ancestors
-=======
   getEnvironmentIntegrationProvider(environmentProviderRequest) {
     this.environmentProviderBinding_ = new mojo.AssociatedBinding(
         device.mojom.XREnvironmentIntegrationProvider, this,
@@ -353,7 +344,6 @@ class MockRuntime {
     this.dataProviderBinding_.close();
   }
 
->>>>>>> upstream-releases
   updateSessionGeometry(frame_size, display_rotation) {
     // This function must exist to ensure that calls to it do not crash, but we
     // do not have any use for this data at present.

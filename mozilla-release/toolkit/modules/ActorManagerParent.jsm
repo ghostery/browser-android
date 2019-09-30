@@ -124,29 +124,10 @@ let ACTORS = {
     },
 
     child: {
-<<<<<<< HEAD
-      module: "resource://gre/actors/AudioPlaybackChild.jsm",
-      messages: [
-        "AudioPlayback",
-        "TemporaryPermissionChanged",
-      ],
-      observers: [
-        "audio-playback",
-      ],
-||||||| merged common ancestors
-      module: "resource://gre/actors/AudioPlaybackChild.jsm",
-      messages: [
-        "AudioPlayback",
-      ],
-      observers: [
-        "audio-playback",
-      ],
-=======
       moduleURI: "resource://gre/actors/BrowserElementChild.jsm",
       events: {
         DOMWindowClose: {},
       },
->>>>>>> upstream-releases
     },
 
     allFrames: true,
@@ -373,17 +354,8 @@ let LEGACY_ACTORS = {
     child: {
       module: "resource://gre/actors/UAWidgetsChild.jsm",
       events: {
-<<<<<<< HEAD
-        "UAWidgetSetupOrChange": {},
-        "UAWidgetTeardown": {},
-||||||| merged common ancestors
-        "UAWidgetBindToTree": {},
-        "UAWidgetAttributeChanged": {},
-        "UAWidgetUnbindFromTree": {},
-=======
         UAWidgetSetupOrChange: {},
         UAWidgetTeardown: {},
->>>>>>> upstream-releases
       },
     },
   },

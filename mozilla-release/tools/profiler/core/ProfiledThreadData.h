@@ -51,18 +51,9 @@ class ProfiledThreadData final {
     mResponsiveness.reset();
     mLastSample = mozilla::Nothing();
     MOZ_ASSERT(!mBufferPositionWhenReceivedJSContext,
-<<<<<<< HEAD
-               "JSContext should have been cleared before the thread was "
-               "unregistered");
-    mUnregisterTime = TimeStamp::Now();
-||||||| merged common ancestors
-               "JSContext should have been cleared before the thread was unregistered");
-    mUnregisterTime = TimeStamp::Now();
-=======
                "JSContext should have been cleared before the thread was "
                "unregistered");
     mUnregisterTime = mozilla::TimeStamp::NowUnfuzzed();
->>>>>>> upstream-releases
     mBufferPositionWhenUnregistered = mozilla::Some(aBufferPosition);
   }
   mozilla::Maybe<uint64_t> BufferPositionWhenUnregistered() {
@@ -74,19 +65,10 @@ class ProfiledThreadData final {
   void StreamJSON(const ProfileBuffer& aBuffer, JSContext* aCx,
                   SpliceableJSONWriter& aWriter, const nsACString& aProcessName,
                   const mozilla::TimeStamp& aProcessStartTime,
-<<<<<<< HEAD
-                  double aSinceTime, bool aJSTracerEnabled);
-
-  void StreamTraceLoggerJSON(JSContext* aCx, SpliceableJSONWriter& aWriter,
-                             const TimeStamp& aProcessStartTime);
-||||||| merged common ancestors
-                  double aSinceTime);
-=======
                   double aSinceTime, bool aJSTracerEnabled);
 
   void StreamTraceLoggerJSON(JSContext* aCx, SpliceableJSONWriter& aWriter,
                              const mozilla::TimeStamp& aProcessStartTime);
->>>>>>> upstream-releases
 
   // Returns nullptr if this is not the main thread, the responsiveness
   // feature is not turned on, or if this thread is not being profiled.
@@ -145,25 +127,6 @@ class ProfiledThreadData final {
   mozilla::TimeStamp mUnregisterTime;
 };
 
-<<<<<<< HEAD
-void StreamSamplesAndMarkers(const char* aName, int aThreadId,
-                             const ProfileBuffer& aBuffer,
-                             SpliceableJSONWriter& aWriter,
-                             const mozilla::TimeStamp& aProcessStartTime,
-                             const TimeStamp& aRegisterTime,
-                             const TimeStamp& aUnregisterTime,
-                             double aSinceTime, UniqueStacks& aUniqueStacks);
-||||||| merged common ancestors
-void
-StreamSamplesAndMarkers(const char* aName, int aThreadId,
-                        const ProfileBuffer& aBuffer,
-                        SpliceableJSONWriter& aWriter,
-                        const mozilla::TimeStamp& aProcessStartTime,
-                        const TimeStamp& aRegisterTime,
-                        const TimeStamp& aUnregisterTime,
-                        double aSinceTime,
-                        UniqueStacks& aUniqueStacks);
-=======
 void StreamSamplesAndMarkers(const char* aName, int aThreadId,
                              const ProfileBuffer& aBuffer,
                              SpliceableJSONWriter& aWriter,
@@ -172,6 +135,5 @@ void StreamSamplesAndMarkers(const char* aName, int aThreadId,
                              const mozilla::TimeStamp& aRegisterTime,
                              const mozilla::TimeStamp& aUnregisterTime,
                              double aSinceTime, UniqueStacks& aUniqueStacks);
->>>>>>> upstream-releases
 
 #endif  // ProfiledThreadData_h

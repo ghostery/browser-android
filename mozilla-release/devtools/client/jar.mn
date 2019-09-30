@@ -15,69 +15,6 @@ devtools.jar:
     content/styleeditor/index.xul (styleeditor/index.xul)
     content/storage/index.xul (storage/index.xul)
     content/inspector/markup/markup.xhtml (inspector/markup/markup.xhtml)
-<<<<<<< HEAD
-    content/sourceeditor/codemirror/addon/dialog/dialog.css (sourceeditor/codemirror/addon/dialog/dialog.css)
-    content/sourceeditor/codemirror/addon/hint/show-hint.js (sourceeditor/codemirror/addon/hint/show-hint.js)
-    content/sourceeditor/codemirror/addon/tern/tern.js (sourceeditor/codemirror/addon/tern/tern.js)
-    content/sourceeditor/codemirror/codemirror.bundle.js (sourceeditor/codemirror/codemirror.bundle.js)
-    content/sourceeditor/codemirror/lib/codemirror.css (sourceeditor/codemirror/lib/codemirror.css)
-    content/sourceeditor/codemirror/mozilla.css (sourceeditor/codemirror/mozilla.css)
-    content/sourceeditor/codemirror/cmiframe.html (sourceeditor/codemirror/cmiframe.html)
-    content/debugger/new/index.html (debugger/new/index.html)
-    content/shadereditor/index.xul (shadereditor/index.xul)
-    content/canvasdebugger/index.xul (canvasdebugger/index.xul)
-    content/canvasdebugger/canvasdebugger.js (canvasdebugger/canvasdebugger.js)
-    content/canvasdebugger/snapshotslist.js (canvasdebugger/snapshotslist.js)
-    content/canvasdebugger/callslist.js (canvasdebugger/callslist.js)
-    content/webaudioeditor/index.xul (webaudioeditor/index.xul)
-    content/webaudioeditor/includes.js (webaudioeditor/includes.js)
-    content/webaudioeditor/models.js (webaudioeditor/models.js)
-    content/webaudioeditor/controller.js (webaudioeditor/controller.js)
-    content/webaudioeditor/views/utils.js (webaudioeditor/views/utils.js)
-    content/webaudioeditor/views/context.js (webaudioeditor/views/context.js)
-    content/webaudioeditor/views/inspector.js (webaudioeditor/views/inspector.js)
-    content/webaudioeditor/views/properties.js (webaudioeditor/views/properties.js)
-    content/webaudioeditor/views/automation.js (webaudioeditor/views/automation.js)
-||||||| merged common ancestors
-    content/sourceeditor/codemirror/addon/dialog/dialog.css (sourceeditor/codemirror/addon/dialog/dialog.css)
-    content/sourceeditor/codemirror/addon/hint/show-hint.js (sourceeditor/codemirror/addon/hint/show-hint.js)
-    content/sourceeditor/codemirror/addon/tern/tern.js (sourceeditor/codemirror/addon/tern/tern.js)
-    content/sourceeditor/codemirror/codemirror.bundle.js (sourceeditor/codemirror/codemirror.bundle.js)
-    content/sourceeditor/codemirror/lib/codemirror.css (sourceeditor/codemirror/lib/codemirror.css)
-    content/sourceeditor/codemirror/mozilla.css (sourceeditor/codemirror/mozilla.css)
-    content/sourceeditor/codemirror/cmiframe.html (sourceeditor/codemirror/cmiframe.html)
-    content/sourceeditor/codemirror/old-debugger.css (sourceeditor/codemirror/old-debugger.css)
-    content/debugger/new/index.html (debugger/new/index.html)
-*   content/debugger/index.xul (debugger/index.xul)
-    content/debugger/content/tooltip/tooltips-old.css (debugger/content/tooltip/tooltips-old.css)
-    content/debugger/debugger.css (debugger/debugger.css)
-    content/debugger/debugger-controller.js (debugger/debugger-controller.js)
-    content/debugger/debugger-view.js (debugger/debugger-view.js)
-    content/debugger/views/workers-view.js (debugger/views/workers-view.js)
-    content/debugger/views/variable-bubble-view.js (debugger/views/variable-bubble-view.js)
-    content/debugger/views/watch-expressions-view.js (debugger/views/watch-expressions-view.js)
-    content/debugger/views/global-search-view.js (debugger/views/global-search-view.js)
-    content/debugger/views/toolbar-view.js (debugger/views/toolbar-view.js)
-    content/debugger/views/options-view.js (debugger/views/options-view.js)
-    content/debugger/views/stack-frames-view.js (debugger/views/stack-frames-view.js)
-    content/debugger/views/stack-frames-classic-view.js (debugger/views/stack-frames-classic-view.js)
-    content/debugger/views/filter-view.js (debugger/views/filter-view.js)
-    content/debugger/utils.js (debugger/utils.js)
-    content/shadereditor/index.xul (shadereditor/index.xul)
-    content/canvasdebugger/index.xul (canvasdebugger/index.xul)
-    content/canvasdebugger/canvasdebugger.js (canvasdebugger/canvasdebugger.js)
-    content/canvasdebugger/snapshotslist.js (canvasdebugger/snapshotslist.js)
-    content/canvasdebugger/callslist.js (canvasdebugger/callslist.js)
-    content/webaudioeditor/index.xul (webaudioeditor/index.xul)
-    content/webaudioeditor/includes.js (webaudioeditor/includes.js)
-    content/webaudioeditor/models.js (webaudioeditor/models.js)
-    content/webaudioeditor/controller.js (webaudioeditor/controller.js)
-    content/webaudioeditor/views/utils.js (webaudioeditor/views/utils.js)
-    content/webaudioeditor/views/context.js (webaudioeditor/views/context.js)
-    content/webaudioeditor/views/inspector.js (webaudioeditor/views/inspector.js)
-    content/webaudioeditor/views/properties.js (webaudioeditor/views/properties.js)
-    content/webaudioeditor/views/automation.js (webaudioeditor/views/automation.js)
-=======
     content/shared/sourceeditor/codemirror/addon/dialog/dialog.css (shared/sourceeditor/codemirror/addon/dialog/dialog.css)
     content/shared/sourceeditor/codemirror/addon/hint/show-hint.js (shared/sourceeditor/codemirror/addon/hint/show-hint.js)
     content/shared/sourceeditor/codemirror/addon/tern/tern.js (shared/sourceeditor/codemirror/addon/tern/tern.js)
@@ -89,7 +26,6 @@ devtools.jar:
     content/shared/sourceeditor/codemirror/mozilla.css (shared/sourceeditor/codemirror/mozilla.css)
     content/shared/sourceeditor/codemirror/cmiframe.html (shared/sourceeditor/codemirror/cmiframe.html)
     content/debugger/index.html (debugger/index.html)
->>>>>>> upstream-releases
     content/performance/index.xul (performance/index.xul)
     content/performance-new/index.xhtml (performance-new/index.xhtml)
     content/performance-new/frame-script.js (performance-new/frame-script.js)
@@ -132,12 +68,6 @@ devtools.jar:
     skin/tooltips.css (themes/tooltips.css)
     skin/images/accessibility.svg (themes/images/accessibility.svg)
     skin/images/add.svg (themes/images/add.svg)
-<<<<<<< HEAD
-    skin/images/alert.svg (themes/images/alert.svg)
-    skin/images/arrow.svg (themes/images/arrow.svg)
-    skin/images/arrow-big.svg (themes/images/arrow-big.svg)
-||||||| merged common ancestors
-=======
     skin/images/alert.svg (themes/images/alert.svg)
     skin/images/alert-small.svg (themes/images/alert-small.svg)
     skin/images/alert-tiny.svg (themes/images/alert-tiny.svg)
@@ -147,20 +77,12 @@ devtools.jar:
     skin/images/info-small.svg (themes/images/info-small.svg)
     skin/images/arrow.svg (themes/images/arrow.svg)
     skin/images/arrow-big.svg (themes/images/arrow-big.svg)
->>>>>>> upstream-releases
     skin/images/arrowhead-left.svg (themes/images/arrowhead-left.svg)
     skin/images/arrowhead-right.svg (themes/images/arrowhead-right.svg)
     skin/images/arrowhead-down.svg (themes/images/arrowhead-down.svg)
     skin/images/arrowhead-up.svg (themes/images/arrowhead-up.svg)
     skin/images/breadcrumbs-divider.svg (themes/images/breadcrumbs-divider.svg)
-<<<<<<< HEAD
     skin/images/checkbox.svg (themes/images/checkbox.svg)
-    skin/images/filters.svg (themes/images/filters.svg)
-||||||| merged common ancestors
-    skin/images/filters.svg (themes/images/filters.svg)
-=======
-    skin/images/checkbox.svg (themes/images/checkbox.svg)
->>>>>>> upstream-releases
     skin/images/filter-swatch.svg (themes/images/filter-swatch.svg)
     skin/images/aboutdebugging-connect-icon.svg (themes/images/aboutdebugging-connect-icon.svg)
     skin/images/aboutdebugging-error.svg (themes/images/aboutdebugging-error.svg)
@@ -188,17 +110,6 @@ devtools.jar:
     skin/breadcrumbs.css (themes/breadcrumbs.css)
     skin/chart.css (themes/chart.css)
     skin/widgets.css (themes/widgets.css)
-<<<<<<< HEAD
-    skin/images/power.svg (themes/images/power.svg)
-||||||| merged common ancestors
-    skin/images/power.svg (themes/images/power.svg)
-    skin/images/filetypes/dir-close.svg (themes/images/filetypes/dir-close.svg)
-    skin/images/filetypes/dir-open.svg (themes/images/filetypes/dir-open.svg)
-    skin/images/filetypes/globe.svg (themes/images/filetypes/globe.svg)
-    skin/images/alerticon-warning.png (themes/images/alerticon-warning.png)
-    skin/images/alerticon-warning@2x.png (themes/images/alerticon-warning@2x.png)
-=======
->>>>>>> upstream-releases
     skin/rules.css (themes/rules.css)
     skin/images/command-paintflashing.svg (themes/images/command-paintflashing.svg)
     skin/images/command-screenshot.svg (themes/images/command-screenshot.svg)
@@ -216,26 +127,11 @@ devtools.jar:
     skin/images/rules-view-print-simulation.svg (themes/images/rules-view-print-simulation.svg)
     skin/markup.css (themes/markup.css)
     skin/webconsole.css (themes/webconsole.css)
-<<<<<<< HEAD
-    skin/images/webconsole/error.svg (themes/images/webconsole/error.svg)
-    skin/images/webconsole/info.svg (themes/images/webconsole/info.svg)
-||||||| merged common ancestors
-    skin/images/webconsole/alert.svg (themes/images/webconsole/alert.svg)
-    skin/images/webconsole/info.svg (themes/images/webconsole/info.svg)
-=======
->>>>>>> upstream-releases
     skin/images/webconsole/input.svg (themes/images/webconsole/input.svg)
     skin/images/webconsole/navigation.svg (themes/images/webconsole/navigation.svg)
     skin/images/webconsole/return.svg (themes/images/webconsole/return.svg)
     skin/images/breadcrumbs-scrollbutton.svg (themes/images/breadcrumbs-scrollbutton.svg)
     skin/animation.css (themes/animation.css)
-<<<<<<< HEAD
-    skin/canvasdebugger.css (themes/canvasdebugger.css)
-||||||| merged common ancestors
-    skin/canvasdebugger.css (themes/canvasdebugger.css)
-    skin/debugger.css (themes/debugger.css)
-=======
->>>>>>> upstream-releases
     skin/perf.css (themes/perf.css)
     skin/performance.css (themes/performance.css)
     skin/memory.css (themes/memory.css)
@@ -263,17 +159,6 @@ devtools.jar:
     skin/images/pencil-icon.svg (themes/images/pencil-icon.svg)
     skin/images/play.svg (themes/images/play.svg)
     skin/images/rewind.svg (themes/images/rewind.svg)
-<<<<<<< HEAD
-    skin/images/canvasdebugger-step-in.svg (themes/images/canvasdebugger-step-in.svg)
-    skin/images/canvasdebugger-step-out.svg (themes/images/canvasdebugger-step-out.svg)
-    skin/images/canvasdebugger-step-over.svg (themes/images/canvasdebugger-step-over.svg)
-||||||| merged common ancestors
-    skin/images/debugger-step-in.svg (themes/images/debugger-step-in.svg)
-    skin/images/debugger-step-out.svg (themes/images/debugger-step-out.svg)
-    skin/images/debugger-step-over.svg (themes/images/debugger-step-over.svg)
-    skin/images/debugger-toggleBreakpoints.svg (themes/images/debugger-toggleBreakpoints.svg)
-=======
->>>>>>> upstream-releases
     skin/images/dock-bottom.svg (themes/images/dock-bottom.svg)
     skin/images/dock-side-left.svg (themes/images/dock-side-left.svg)
     skin/images/dock-side-right.svg (themes/images/dock-side-right.svg)
@@ -287,14 +172,9 @@ devtools.jar:
     skin/images/debugging-workers.svg (themes/images/debugging-workers.svg)
     skin/images/datastore.svg (themes/images/datastore.svg)
     skin/images/globe.svg (themes/images/globe.svg)
-<<<<<<< HEAD
-    skin/images/folder.svg (themes/images/folder.svg)
-||||||| merged common ancestors
-=======
     skin/images/next.svg (themes/images/next.svg)
     skin/images/next-circle.svg (themes/images/next-circle.svg)
     skin/images/folder.svg (themes/images/folder.svg)
->>>>>>> upstream-releases
     skin/images/sad-face.svg (themes/images/sad-face.svg)
     skin/images/shape-swatch.svg (themes/images/shape-swatch.svg)
     skin/images/tool-webconsole.svg (themes/images/tool-webconsole.svg)
@@ -324,29 +204,8 @@ devtools.jar:
     skin/changes.css (themes/changes.css)
     skin/computed.css (themes/computed.css)
     skin/layout.css (themes/layout.css)
-<<<<<<< HEAD
-    skin/images/arrow-e.svg (themes/images/arrow-e.svg)
-    skin/images/search-clear-failed.svg (themes/images/search-clear-failed.svg)
-    skin/images/search-clear-light.svg (themes/images/search-clear-light.svg)
-    skin/images/search-clear-dark.svg (themes/images/search-clear-dark.svg)
-||||||| merged common ancestors
-    skin/images/arrow-e.png (themes/images/arrow-e.png)
-    skin/images/arrow-e@2x.png (themes/images/arrow-e@2x.png)
-    skin/images/search-clear-failed.svg (themes/images/search-clear-failed.svg)
-    skin/images/search-clear-light.svg (themes/images/search-clear-light.svg)
-    skin/images/search-clear-dark.svg (themes/images/search-clear-dark.svg)
-    skin/tooltip/arrow-horizontal-dark.png (themes/tooltip/arrow-horizontal-dark.png)
-    skin/tooltip/arrow-horizontal-dark@2x.png (themes/tooltip/arrow-horizontal-dark@2x.png)
-    skin/tooltip/arrow-vertical-dark.png (themes/tooltip/arrow-vertical-dark.png)
-    skin/tooltip/arrow-vertical-dark@2x.png (themes/tooltip/arrow-vertical-dark@2x.png)
-    skin/tooltip/arrow-horizontal-light.png (themes/tooltip/arrow-horizontal-light.png)
-    skin/tooltip/arrow-horizontal-light@2x.png (themes/tooltip/arrow-horizontal-light@2x.png)
-    skin/tooltip/arrow-vertical-light.png (themes/tooltip/arrow-vertical-light.png)
-    skin/tooltip/arrow-vertical-light@2x.png (themes/tooltip/arrow-vertical-light@2x.png)
-=======
     skin/images/arrow-e.svg (themes/images/arrow-e.svg)
     skin/images/search-clear.svg (themes/images/search-clear.svg)
->>>>>>> upstream-releases
     skin/images/reload.svg (themes/images/reload.svg)
     skin/images/security-state-broken.svg (themes/images/security-state-broken.svg)
     skin/images/security-state-insecure.svg (themes/images/security-state-insecure.svg)
@@ -380,15 +239,3 @@ devtools.jar:
 
     # Application panel
     content/application/index.html (application/index.html)
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-    # Devtools-components
-    skin/images/devtools-components/arrow.svg (themes/images/devtools-components/arrow.svg)
-
-    # Devtools-reps
-    skin/images/devtools-reps/jump-definition.svg (themes/images/devtools-reps/jump-definition.svg)
-    skin/images/devtools-reps/open-inspector.svg (themes/images/devtools-reps/open-inspector.svg)
-=======
->>>>>>> upstream-releases

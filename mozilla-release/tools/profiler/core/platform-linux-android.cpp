@@ -53,19 +53,9 @@
 #include <unistd.h>     // sysconf
 #include <semaphore.h>
 #ifdef __GLIBC__
-<<<<<<< HEAD
-#include <execinfo.h>  // backtrace, backtrace_symbols
-#endif                 // def __GLIBC__
-#include <strings.h>   // index
-||||||| merged common ancestors
-#include <execinfo.h>   // backtrace, backtrace_symbols
-#endif  // def __GLIBC__
-#include <strings.h>    // index
-=======
 #  include <execinfo.h>  // backtrace, backtrace_symbols
 #endif                   // def __GLIBC__
 #include <strings.h>     // index
->>>>>>> upstream-releases
 #include <errno.h>
 #include <stdarg.h>
 
@@ -79,27 +69,8 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-/* static */ int Thread::GetCurrentId() { return gettid(); }
-||||||| merged common ancestors
-/* static */ int
-Thread::GetCurrentId()
-{
-  return gettid();
-}
-=======
 int profiler_current_process_id() { return getpid(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* GetStackTop(void* aGuess) { return aGuess; }
-||||||| merged common ancestors
-void*
-GetStackTop(void* aGuess)
-{
-  return aGuess;
-}
-=======
 int profiler_current_thread_id() {
   // glibc doesn't provide a wrapper for gettid().
 #if defined(__linux__) || !defined(__BIONIC__)
@@ -108,19 +79,10 @@ int profiler_current_thread_id() {
   return static_cast<int>(gettid());
 #endif
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void PopulateRegsFromContext(Registers& aRegs, ucontext_t* aContext) {
-||||||| merged common ancestors
-static void
-PopulateRegsFromContext(Registers& aRegs, ucontext_t* aContext)
-{
-=======
 void* GetStackTop(void* aGuess) { return aGuess; }
 
 static void PopulateRegsFromContext(Registers& aRegs, ucontext_t* aContext) {
->>>>>>> upstream-releases
   aRegs.mContext = aContext;
   mcontext_t& mcontext = aContext->uc_mcontext;
 
@@ -151,24 +113,12 @@ static void PopulateRegsFromContext(Registers& aRegs, ucontext_t* aContext) {
   aRegs.mFP = reinterpret_cast<Address>(mcontext.gregs[30]);
 
 #else
-<<<<<<< HEAD
-#error "bad platform"
-||||||| merged common ancestors
-# error "bad platform"
-=======
 #  error "bad platform"
->>>>>>> upstream-releases
 #endif
 }
 
 #if defined(GP_OS_android)
-<<<<<<< HEAD
-#define SYS_tgkill __NR_tgkill
-||||||| merged common ancestors
-# define SYS_tgkill __NR_tgkill
-=======
 #  define SYS_tgkill __NR_tgkill
->>>>>>> upstream-releases
 #endif
 
 int tgkill(pid_t tgid, pid_t tid, int signalno) {
@@ -295,28 +245,12 @@ static void SigprofHandler(int aSignal, siginfo_t* aInfo, void* aContext) {
 }
 
 Sampler::Sampler(PSLockRef aLock)
-<<<<<<< HEAD
-    : mMyPid(getpid())
-      // We don't know what the sampler thread's ID will be until it runs, so
-      // set mSamplerTid to a dummy value and fill it in for real in
-      // SuspendAndSampleAndResumeThread().
-      ,
-      mSamplerTid(-1) {
-||||||| merged common ancestors
-  : mMyPid(getpid())
-  // We don't know what the sampler thread's ID will be until it runs, so set
-  // mSamplerTid to a dummy value and fill it in for real in
-  // SuspendAndSampleAndResumeThread().
-  , mSamplerTid(-1)
-{
-=======
     : mMyPid(profiler_current_process_id())
       // We don't know what the sampler thread's ID will be until it runs, so
       // set mSamplerTid to a dummy value and fill it in for real in
       // SuspendAndSampleAndResumeThread().
       ,
       mSamplerTid(-1) {
->>>>>>> upstream-releases
 #if defined(USE_EHABI_STACKWALK)
   mozilla::EHABIStackWalkInit();
 #endif

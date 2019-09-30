@@ -21,27 +21,8 @@ typedef uint8_t XBLBindingSerializeDetails;
 // Set for the first binding in a document
 #define XBLBinding_Serialize_IsFirstBinding (1 << 0)
 
-<<<<<<< HEAD
-// Set to indicate that nsXBLPrototypeBinding::mInheritStyle should be true
-#define XBLBinding_Serialize_InheritStyle (1 << 1)
-
-// Set to indicate that nsXBLPrototypeBinding::mChromeOnlyContent should be true
-#define XBLBinding_Serialize_ChromeOnlyContent (1 << 2)
-
 // Set to indicate that nsXBLPrototypeBinding::mBindToUntrustedContent should be
 // true
-||||||| merged common ancestors
-// Set to indicate that nsXBLPrototypeBinding::mInheritStyle should be true
-#define XBLBinding_Serialize_InheritStyle (1 << 1)
-
-// Set to indicate that nsXBLPrototypeBinding::mChromeOnlyContent should be true
-#define XBLBinding_Serialize_ChromeOnlyContent (1 << 2)
-
-// Set to indicate that nsXBLPrototypeBinding::mBindToUntrustedContent should be true
-=======
-// Set to indicate that nsXBLPrototypeBinding::mBindToUntrustedContent should be
-// true
->>>>>>> upstream-releases
 #define XBLBinding_Serialize_BindToUntrustedContent (1 << 3)
 
 // Set to indicate that nsXBLPrototypeBinding::mSimpleScopeChain should be true

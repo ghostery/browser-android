@@ -97,38 +97,6 @@ static uint32_t MutationBitForEventType(EventMessage aEventType) {
 
 uint32_t EventListenerManager::sMainThreadCreatedCount = 0;
 
-<<<<<<< HEAD
-static bool IsWebkitPrefixSupportEnabled() {
-  static bool sIsWebkitPrefixSupportEnabled;
-  static bool sIsPrefCached = false;
-
-  if (!sIsPrefCached) {
-    sIsPrefCached = true;
-    Preferences::AddBoolVarCache(&sIsWebkitPrefixSupportEnabled,
-                                 "layout.css.prefixes.webkit");
-  }
-
-  return sIsWebkitPrefixSupportEnabled;
-}
-
-||||||| merged common ancestors
-static bool
-IsWebkitPrefixSupportEnabled()
-{
-  static bool sIsWebkitPrefixSupportEnabled;
-  static bool sIsPrefCached = false;
-
-  if (!sIsPrefCached) {
-    sIsPrefCached = true;
-    Preferences::AddBoolVarCache(&sIsWebkitPrefixSupportEnabled,
-                                 "layout.css.prefixes.webkit");
-  }
-
-  return sIsWebkitPrefixSupportEnabled;
-}
-
-=======
->>>>>>> upstream-releases
 EventListenerManagerBase::EventListenerManagerBase()
     : mNoListenerForEvent(eVoidEvent),
       mMayHavePaintEventListener(false),
@@ -170,15 +138,7 @@ EventListenerManager::~EventListenerManager() {
   RemoveAllListenersSilently();
 }
 
-<<<<<<< HEAD
-void EventListenerManager::RemoveAllListeners() {
-||||||| merged common ancestors
-void
-EventListenerManager::RemoveAllListeners()
-{
-=======
 void EventListenerManager::RemoveAllListenersSilently() {
->>>>>>> upstream-releases
   if (mClearingListeners) {
     return;
   }
@@ -187,18 +147,6 @@ void EventListenerManager::RemoveAllListenersSilently() {
   mClearingListeners = false;
 }
 
-<<<<<<< HEAD
-void EventListenerManager::Shutdown() { Event::Shutdown(); }
-
-||||||| merged common ancestors
-void
-EventListenerManager::Shutdown()
-{
-  Event::Shutdown();
-}
-
-=======
->>>>>>> upstream-releases
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(EventListenerManager, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(EventListenerManager, Release)
 
@@ -672,21 +620,10 @@ bool EventListenerManager::ListenerCanHandle(const Listener* aListener,
   if (aEvent->mMessage == eUnidentifiedEvent) {
     return aListener->mTypeAtom == aEvent->mSpecifiedEventType;
   }
-<<<<<<< HEAD
-  if (MOZ_UNLIKELY(!nsContentUtils::IsUnprefixedFullscreenApiEnabled() &&
-                   aEvent->IsTrusted() &&
-                   (aEventMessage == eFullscreenChange ||
-                    aEventMessage == eFullscreenError))) {
-||||||| merged common ancestors
-  if (MOZ_UNLIKELY(!nsContentUtils::IsUnprefixedFullscreenApiEnabled() &&
-                    aEvent->IsTrusted() && (aEventMessage == eFullscreenChange ||
-                                            aEventMessage == eFullscreenError))) {
-=======
   if (MOZ_UNLIKELY(!StaticPrefs::full_screen_api_unprefix_enabled() &&
                    aEvent->IsTrusted() &&
                    (aEventMessage == eFullscreenChange ||
                     aEventMessage == eFullscreenError))) {
->>>>>>> upstream-releases
     // If unprefixed Fullscreen API is not enabled, don't dispatch it
     // to the content.
     if (!aEvent->mFlags.mInSystemGroup && !aListener->mIsChrome) {
@@ -810,30 +747,12 @@ EventListenerManager::Listener* EventListenerManager::SetEventHandlerInternal(
   return listener;
 }
 
-<<<<<<< HEAD
-nsresult EventListenerManager::SetEventHandler(nsAtom* aName,
-                                               const nsAString& aBody,
-                                               bool aDeferCompilation,
-                                               bool aPermitUntrustedEvents,
-                                               Element* aElement) {
-  nsCOMPtr<nsIDocument> doc;
-||||||| merged common ancestors
-nsresult
-EventListenerManager::SetEventHandler(nsAtom* aName,
-                                      const nsAString& aBody,
-                                      bool aDeferCompilation,
-                                      bool aPermitUntrustedEvents,
-                                      Element* aElement)
-{
-  nsCOMPtr<nsIDocument> doc;
-=======
 nsresult EventListenerManager::SetEventHandler(nsAtom* aName,
                                                const nsAString& aBody,
                                                bool aDeferCompilation,
                                                bool aPermitUntrustedEvents,
                                                Element* aElement) {
   nsCOMPtr<Document> doc;
->>>>>>> upstream-releases
   nsCOMPtr<nsIScriptGlobalObject> global =
       GetScriptGlobalAndDocument(getter_AddRefs(doc));
 
@@ -1106,65 +1025,15 @@ nsresult EventListenerManager::HandleEventSubType(Listener* aListener,
                                                       *aDOMEvent, rv);
       result = rv.StealNSResult();
     } else {
-<<<<<<< HEAD
-      result = listenerHolder.GetXPCOMCallback()->HandleEvent(aDOMEvent);
-||||||| merged common ancestors
-      result = listenerHolder.GetXPCOMCallback()-> HandleEvent(aDOMEvent);
-=======
       // listenerHolder is holding a stack ref here.
       result = MOZ_KnownLive(listenerHolder.GetXPCOMCallback())
                    ->HandleEvent(aDOMEvent);
->>>>>>> upstream-releases
     }
   }
 
   return result;
 }
 
-<<<<<<< HEAD
-EventMessage EventListenerManager::GetLegacyEventMessage(
-    EventMessage aEventMessage) const {
-  // (If we're off-main-thread, we can't check the pref; so we just behave as
-  // if it's disabled.)
-  if (mIsMainThreadELM) {
-    if (IsWebkitPrefixSupportEnabled()) {
-      // webkit-prefixed legacy events:
-      if (aEventMessage == eTransitionEnd) {
-        return eWebkitTransitionEnd;
-      }
-      if (aEventMessage == eAnimationStart) {
-        return eWebkitAnimationStart;
-      }
-      if (aEventMessage == eAnimationEnd) {
-        return eWebkitAnimationEnd;
-      }
-      if (aEventMessage == eAnimationIteration) {
-        return eWebkitAnimationIteration;
-      }
-    }
-||||||| merged common ancestors
-EventMessage
-EventListenerManager::GetLegacyEventMessage(EventMessage aEventMessage) const
-{
-  // (If we're off-main-thread, we can't check the pref; so we just behave as
-  // if it's disabled.)
-  if (mIsMainThreadELM) {
-    if (IsWebkitPrefixSupportEnabled()) {
-      // webkit-prefixed legacy events:
-      if (aEventMessage == eTransitionEnd) {
-        return eWebkitTransitionEnd;
-      }
-      if (aEventMessage == eAnimationStart) {
-        return eWebkitAnimationStart;
-      }
-      if (aEventMessage == eAnimationEnd) {
-        return eWebkitAnimationEnd;
-      }
-      if (aEventMessage == eAnimationIteration) {
-        return eWebkitAnimationIteration;
-      }
-    }
-=======
 EventMessage EventListenerManager::GetLegacyEventMessage(
     EventMessage aEventMessage) const {
   // webkit-prefixed legacy events:
@@ -1179,7 +1048,6 @@ EventMessage EventListenerManager::GetLegacyEventMessage(
   }
   if (aEventMessage == eAnimationIteration) {
     return eWebkitAnimationIteration;
->>>>>>> upstream-releases
   }
 
   switch (aEventMessage) {
@@ -1259,17 +1127,10 @@ void EventListenerManager::HandleEventInternal(nsPresContext* aPresContext,
   Maybe<AutoHandlingUserInputStatePusher> userInputStatePusher;
   Maybe<AutoPopupStatePusher> popupStatePusher;
   if (mIsMainThreadELM) {
-<<<<<<< HEAD
-    popupStatePusher.emplace(
-        Event::GetEventPopupControlState(aEvent, *aDOMEvent));
-||||||| merged common ancestors
-    popupStatePusher.emplace(Event::GetEventPopupControlState(aEvent, *aDOMEvent));
-=======
     userInputStatePusher.emplace(
         EventStateManager::IsUserInteractionEvent(aEvent), aEvent);
     popupStatePusher.emplace(
         PopupBlocker::GetEventPopupControlState(aEvent, *aDOMEvent));
->>>>>>> upstream-releases
   }
 
   bool hasListener = false;
@@ -1580,17 +1441,8 @@ bool EventListenerManager::HasListeners() const {
   return !mListeners.IsEmpty();
 }
 
-<<<<<<< HEAD
-nsresult EventListenerManager::GetListenerInfo(
-    nsCOMArray<nsIEventListenerInfo>* aList) {
-||||||| merged common ancestors
-nsresult
-EventListenerManager::GetListenerInfo(nsCOMArray<nsIEventListenerInfo>* aList)
-{
-=======
 nsresult EventListenerManager::GetListenerInfo(
     nsTArray<RefPtr<nsIEventListenerInfo>>& aList) {
->>>>>>> upstream-releases
   nsCOMPtr<EventTarget> target = mTarget;
   NS_ENSURE_STATE(target);
   aList.Clear();
@@ -1637,24 +1489,10 @@ nsresult EventListenerManager::GetListenerInfo(
       }
     }
 
-<<<<<<< HEAD
-    RefPtr<EventListenerInfo> info = new EventListenerInfo(
-        eventType, callback, callbackGlobal, listener.mFlags.mCapture,
-        listener.mFlags.mAllowUntrustedEvents, listener.mFlags.mInSystemGroup);
-    aList->AppendElement(info.forget());
-||||||| merged common ancestors
-    RefPtr<EventListenerInfo> info =
-      new EventListenerInfo(eventType, callback, callbackGlobal,
-                            listener.mFlags.mCapture,
-                            listener.mFlags.mAllowUntrustedEvents,
-                            listener.mFlags.mInSystemGroup);
-    aList->AppendElement(info.forget());
-=======
     RefPtr<EventListenerInfo> info = new EventListenerInfo(
         eventType, callback, callbackGlobal, listener.mFlags.mCapture,
         listener.mFlags.mAllowUntrustedEvents, listener.mFlags.mInSystemGroup);
     aList.AppendElement(info.forget());
->>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -1867,14 +1705,7 @@ void EventListenerManager::RemoveAllListeners() {
 }
 
 already_AddRefed<nsIScriptGlobalObject>
-<<<<<<< HEAD
-EventListenerManager::GetScriptGlobalAndDocument(nsIDocument** aDoc) {
-||||||| merged common ancestors
-EventListenerManager::GetScriptGlobalAndDocument(nsIDocument** aDoc)
-{
-=======
 EventListenerManager::GetScriptGlobalAndDocument(Document** aDoc) {
->>>>>>> upstream-releases
   nsCOMPtr<nsINode> node(do_QueryInterface(mTarget));
   nsCOMPtr<Document> doc;
   nsCOMPtr<nsIScriptGlobalObject> global;

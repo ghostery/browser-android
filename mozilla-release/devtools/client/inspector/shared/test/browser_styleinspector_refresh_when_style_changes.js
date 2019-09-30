@@ -12,59 +12,6 @@
 
 const TEST_URI = TEST_URL_ROOT + "doc_content_style_changes.html";
 
-<<<<<<< HEAD
-const TEST_DATA = [{
-  target: "#test",
-  className: "green-class",
-  force: true,
-}, {
-  target: "#test",
-  className: "green-class",
-  force: false,
-}, {
-  target: "#parent",
-  className: "purple-class",
-  force: true,
-}, {
-  target: "#parent",
-  className: "purple-class",
-  force: false,
-}, {
-  target: "#sibling",
-  className: "blue-class",
-  force: true,
-}, {
-  target: "#sibling",
-  className: "blue-class",
-  force: false,
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  target: "#test",
-  className: "green-class",
-  force: true
-}, {
-  target: "#test",
-  className: "green-class",
-  force: false
-}, {
-  target: "#parent",
-  className: "purple-class",
-  force: true
-}, {
-  target: "#parent",
-  className: "purple-class",
-  force: false
-}, {
-  target: "#sibling",
-  className: "blue-class",
-  force: true
-}, {
-  target: "#sibling",
-  className: "blue-class",
-  force: false
-}];
-=======
 const TEST_DATA = [
   {
     target: "#test",
@@ -97,7 +44,6 @@ const TEST_DATA = [
     force: false,
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const tab = await addTab(TEST_URI);

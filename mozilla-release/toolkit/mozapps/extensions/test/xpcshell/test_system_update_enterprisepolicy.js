@@ -5,16 +5,9 @@
 // This test verifies that system addon updates are correctly blocked by the
 // DisableSystemAddonUpdate enterprise policy.
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://testing-common/EnterprisePolicyTesting.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://testing-common/httpd.js");
-ChromeUtils.import("resource://testing-common/EnterprisePolicyTesting.jsm");
-=======
 const { EnterprisePolicyTesting } = ChromeUtils.import(
   "resource://testing-common/EnterprisePolicyTesting.jsm"
 );
->>>>>>> upstream-releases
 
 // Setting PREF_DISABLE_SECURITY tells the policy engine that we are in testing
 // mode and enables restarting the policy engine without restarting the browser.
@@ -63,19 +56,6 @@ add_task(async function test_update_disabled_by_policy() {
     },
   });
 
-<<<<<<< HEAD
-  await updateAllSystemAddons(buildSystemAddonUpdates([
-    { id: "system2@tests.mozilla.org", version: "2.0", path: "system2_2.xpi",
-      xpi: await getSystemAddonXPI(2, "2.0") },
-    { id: "system3@tests.mozilla.org", version: "2.0", path: "system3_2.xpi",
-      xpi: await getSystemAddonXPI(3, "2.0") },
-  ]));
-||||||| merged common ancestors
-  await updateAllSystemAddons(await buildSystemAddonUpdates([
-    { id: "system2@tests.mozilla.org", version: "2.0", path: "system2_2.xpi" },
-    { id: "system3@tests.mozilla.org", version: "2.0", path: "system3_2.xpi" },
-  ], root), testserver);
-=======
   await updateAllSystemAddons(
     buildSystemAddonUpdates([
       {
@@ -92,7 +72,6 @@ add_task(async function test_update_disabled_by_policy() {
       },
     ])
   );
->>>>>>> upstream-releases
 
   await verifySystemAddonState(
     TEST_CONDITIONS.initialState,

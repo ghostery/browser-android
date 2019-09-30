@@ -31,101 +31,45 @@ class BasicPaintedLayer : public PaintedLayer, public BasicImplData {
   typedef ContentClient::PaintState PaintState;
   typedef ContentClient::ContentType ContentType;
 
-<<<<<<< HEAD
-  explicit BasicPaintedLayer(BasicLayerManager* aLayerManager,
-                             gfx::BackendType aBackend)
-      : PaintedLayer(aLayerManager, static_cast<BasicImplData*>(this)),
-        mContentClient(nullptr),
-        mBackend(aBackend) {
-||||||| merged common ancestors
-  explicit BasicPaintedLayer(BasicLayerManager* aLayerManager, gfx::BackendType aBackend) :
-    PaintedLayer(aLayerManager, static_cast<BasicImplData*>(this)),
-    mContentClient(nullptr)
-    , mBackend(aBackend)
-  {
-=======
   BasicPaintedLayer(BasicLayerManager* aLayerManager, gfx::BackendType aBackend)
       : PaintedLayer(aLayerManager, static_cast<BasicImplData*>(this)),
         mContentClient(nullptr),
         mBackend(aBackend) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(BasicPaintedLayer);
   }
 
  protected:
   virtual ~BasicPaintedLayer() { MOZ_COUNT_DTOR(BasicPaintedLayer); }
 
-<<<<<<< HEAD
- public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
-||||||| merged common ancestors
-public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
-  {
-=======
  public:
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     PaintedLayer::SetVisibleRegion(aRegion);
   }
-<<<<<<< HEAD
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override {
-||||||| merged common ancestors
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override
-  {
-=======
   void InvalidateRegion(const nsIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     mInvalidRegion.Add(aRegion);
     UpdateValidRegionAfterInvalidRegionChanged();
   }
 
-<<<<<<< HEAD
-  virtual void PaintThebes(gfxContext* aContext, Layer* aMaskLayer,
-                           LayerManager::DrawPaintedLayerCallback aCallback,
-                           void* aCallbackData) override;
-||||||| merged common ancestors
-  virtual void PaintThebes(gfxContext* aContext,
-                           Layer* aMaskLayer,
-                           LayerManager::DrawPaintedLayerCallback aCallback,
-                           void* aCallbackData) override;
-=======
   void PaintThebes(gfxContext* aContext, Layer* aMaskLayer,
                    LayerManager::DrawPaintedLayerCallback aCallback,
                    void* aCallbackData) override;
->>>>>>> upstream-releases
 
   void Validate(LayerManager::DrawPaintedLayerCallback aCallback,
                 void* aCallbackData, ReadbackProcessor* aReadback) override;
 
-<<<<<<< HEAD
-  virtual void ClearCachedResources() override {
-||||||| merged common ancestors
-  virtual void ClearCachedResources() override
-  {
-=======
   void ClearCachedResources() override {
->>>>>>> upstream-releases
     if (mContentClient) {
       mContentClient->Clear();
     }
     ClearValidRegion();
   }
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const gfx::Matrix4x4& aTransformToSurface) override {
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
-  {
-=======
   void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
->>>>>>> upstream-releases
     if (!BasicManager()->IsRetained()) {
       // Don't do any snapping of our transform, since we're just going to
       // draw straight through without intermediate buffers.

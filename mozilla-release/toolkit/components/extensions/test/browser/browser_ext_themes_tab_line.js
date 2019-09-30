@@ -7,25 +7,11 @@ add_task(async function test_support_tab_line() {
   const TAB_LINE_COLOR = "#9400ff";
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "tab_line": TAB_LINE_COLOR,
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "tab_line": TAB_LINE_COLOR,
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
           tab_line: TAB_LINE_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

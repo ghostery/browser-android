@@ -59,40 +59,6 @@ class nsPrintJob final : public nsIObserver,
 
   NS_DECL_NSIWEBPROGRESSLISTENER
 
-<<<<<<< HEAD
-  // Old nsIWebBrowserPrint methods; not cleaned up yet
-  NS_IMETHOD Print(nsIPrintSettings* aPrintSettings,
-                   nsIWebProgressListener* aWebProgressListener);
-  NS_IMETHOD PrintPreview(nsIPrintSettings* aPrintSettings,
-                          mozIDOMWindowProxy* aChildDOMWin,
-                          nsIWebProgressListener* aWebProgressListener);
-  NS_IMETHOD GetIsFramesetDocument(bool* aIsFramesetDocument);
-  NS_IMETHOD GetIsIFrameSelected(bool* aIsIFrameSelected);
-  NS_IMETHOD GetIsRangeSelection(bool* aIsRangeSelection);
-  NS_IMETHOD GetIsFramesetFrameSelected(bool* aIsFramesetFrameSelected);
-  NS_IMETHOD GetPrintPreviewNumPages(int32_t* aPrintPreviewNumPages);
-  NS_IMETHOD EnumerateDocumentNames(uint32_t* aCount, char16_t*** aResult);
-  NS_IMETHOD GetDoingPrint(bool* aDoingPrint);
-  NS_IMETHOD GetDoingPrintPreview(bool* aDoingPrintPreview);
-  NS_IMETHOD GetCurrentPrintSettings(nsIPrintSettings** aCurrentPrintSettings);
-||||||| merged common ancestors
-  // Old nsIWebBrowserPrint methods; not cleaned up yet
-  NS_IMETHOD Print(nsIPrintSettings*       aPrintSettings,
-                   nsIWebProgressListener* aWebProgressListener);
-  NS_IMETHOD PrintPreview(nsIPrintSettings* aPrintSettings,
-                          mozIDOMWindowProxy* aChildDOMWin,
-                          nsIWebProgressListener* aWebProgressListener);
-  NS_IMETHOD GetIsFramesetDocument(bool *aIsFramesetDocument);
-  NS_IMETHOD GetIsIFrameSelected(bool *aIsIFrameSelected);
-  NS_IMETHOD GetIsRangeSelection(bool *aIsRangeSelection);
-  NS_IMETHOD GetIsFramesetFrameSelected(bool *aIsFramesetFrameSelected);
-  NS_IMETHOD GetPrintPreviewNumPages(int32_t *aPrintPreviewNumPages);
-  NS_IMETHOD EnumerateDocumentNames(uint32_t* aCount, char16_t*** aResult);
-  NS_IMETHOD GetDoingPrint(bool *aDoingPrint);
-  NS_IMETHOD GetDoingPrintPreview(bool *aDoingPrintPreview);
-  NS_IMETHOD GetCurrentPrintSettings(nsIPrintSettings **aCurrentPrintSettings);
-
-=======
   /**
    * Initialize for printing, or for creating a print preview document.
    *
@@ -160,18 +126,9 @@ class nsPrintJob final : public nsIObserver,
   void SetIsPrintPreview(bool aIsPrintPreview);
   bool GetIsPrintPreview() { return mIsDoingPrintPreview; }
   bool GetIsCreatingPrintPreview() { return mIsCreatingPrintPreview; }
->>>>>>> upstream-releases
 
   // This enum tells indicates what the default should be for the title
   // if the title from the document is null
-<<<<<<< HEAD
-  enum eDocTitleDefault { eDocTitleDefBlank, eDocTitleDefURLDoc };
-||||||| merged common ancestors
-  enum eDocTitleDefault {
-    eDocTitleDefBlank,
-    eDocTitleDefURLDoc
-  };
-=======
   enum eDocTitleDefault { eDocTitleDefBlank, eDocTitleDefURLDoc };
 
   nsresult GetSeqFrameAndCountPages(nsIFrame*& aSeqFrame, int32_t& aCount);
@@ -202,39 +159,17 @@ class nsPrintJob final : public nsIObserver,
   float GetPrintPreviewScale() {
     return mPrtPreview->mPrintObject->mPresContext->GetPrintPreviewScale();
   }
->>>>>>> upstream-releases
 
   nsresult Cancel();
   void Destroy();
   void DestroyPrintingData();
 
-<<<<<<< HEAD
-  nsresult Initialize(nsIDocumentViewerPrint* aDocViewerPrint,
-                      nsIDocShell* aContainer, nsIDocument* aDocument,
-                      float aScreenDPI);
-||||||| merged common ancestors
-  nsresult Initialize(nsIDocumentViewerPrint* aDocViewerPrint,
-                      nsIDocShell*            aContainer,
-                      nsIDocument*            aDocument,
-                      float                   aScreenDPI);
-=======
  private:
   nsPrintJob& operator=(const nsPrintJob& aOther) = delete;
->>>>>>> upstream-releases
 
   ~nsPrintJob();
 
   nsresult DocumentReadyForPrinting();
-<<<<<<< HEAD
-  nsresult GetSelectionDocument(nsIDeviceContextSpec* aDevSpec,
-                                nsIDocument** aNewDoc);
-
-||||||| merged common ancestors
-  nsresult GetSelectionDocument(nsIDeviceContextSpec * aDevSpec,
-                                nsIDocument ** aNewDoc);
-
-=======
->>>>>>> upstream-releases
   nsresult SetupToPrintContent();
   nsresult EnablePOsForPrinting();
   nsPrintObject* FindSmallestSTF();
@@ -245,37 +180,6 @@ class nsPrintJob final : public nsIObserver,
 
   void SetPrintPO(nsPrintObject* aPO, bool aPrint);
 
-<<<<<<< HEAD
-  void TurnScriptingOn(bool aDoTurnOn);
-  bool CheckDocumentForPPCaching();
-  void InstallPrintPreviewListener();
-
-  // nsIDocumentViewerPrint Printing Methods
-  bool HasPrintCallbackCanvas();
-  bool PrePrintPage();
-  bool PrintPage(nsPrintObject* aPOect, bool& aInRange);
-  bool DonePrintingPages(nsPrintObject* aPO, nsresult aResult);
-
-  //---------------------------------------------------------------------
-  void BuildDocTree(nsIDocShell* aParentNode,
-                    nsTArray<nsPrintObject*>* aDocList,
-                    const mozilla::UniquePtr<nsPrintObject>& aPO);
-||||||| merged common ancestors
-  void TurnScriptingOn(bool aDoTurnOn);
-  bool CheckDocumentForPPCaching();
-  void InstallPrintPreviewListener();
-
-  // nsIDocumentViewerPrint Printing Methods
-  bool     HasPrintCallbackCanvas();
-  bool     PrePrintPage();
-  bool     PrintPage(nsPrintObject* aPOect, bool& aInRange);
-  bool     DonePrintingPages(nsPrintObject* aPO, nsresult aResult);
-
-  //---------------------------------------------------------------------
-  void BuildDocTree(nsIDocShell *      aParentNode,
-                    nsTArray<nsPrintObject*> * aDocList,
-                    const mozilla::UniquePtr<nsPrintObject>& aPO);
-=======
   /**
    * Filters out certain user events while Print Preview is open to prevent
    * the user from interacting with the Print Preview document and breaking
@@ -283,7 +187,6 @@ class nsPrintJob final : public nsIObserver,
    */
   void SuppressPrintPreviewUserEvents();
 
->>>>>>> upstream-releases
   nsresult ReflowDocList(const mozilla::UniquePtr<nsPrintObject>& aPO,
                          bool aSetPixelScale);
 
@@ -299,19 +202,6 @@ class nsPrintJob final : public nsIObserver,
 
   bool IsThereARangeSelection(nsPIDOMWindowOuter* aDOMWin);
 
-<<<<<<< HEAD
-  void FirePrintingErrorEvent(nsresult aPrintError);
-  //---------------------------------------------------------------------
-
-  // Timer Methods
-||||||| merged common ancestors
-  void FirePrintingErrorEvent(nsresult aPrintError);
-  //---------------------------------------------------------------------
-
-
-  // Timer Methods
-=======
->>>>>>> upstream-releases
   nsresult StartPagePrintTimer(const mozilla::UniquePtr<nsPrintObject>& aPO);
 
   bool IsWindowsInOurSubTree(nsPIDOMWindowOuter* aDOMWindow) const;
@@ -326,71 +216,6 @@ class nsPrintJob final : public nsIObserver,
                              nsAString& aTitle, nsAString& aURLStr,
                              eDocTitleDefault aDefType);
 
-<<<<<<< HEAD
-  bool CheckBeforeDestroy();
-  nsresult Cancelled();
-
-  nsIPresShell* GetPrintPreviewPresShell() {
-    return mPrtPreview->mPrintObject->mPresShell;
-  }
-
-  float GetPrintPreviewScale() {
-    return mPrtPreview->mPrintObject->mPresContext->GetPrintPreviewScale();
-  }
-
-  // These calls also update the DocViewer
-  void SetIsPrinting(bool aIsPrinting);
-  bool GetIsPrinting() { return mIsDoingPrinting; }
-  void SetIsPrintPreview(bool aIsPrintPreview);
-  bool GetIsPrintPreview() { return mIsDoingPrintPreview; }
-  bool GetIsCreatingPrintPreview() { return mIsCreatingPrintPreview; }
-
-  void SetDisallowSelectionPrint(bool aDisallowSelectionPrint) {
-    mDisallowSelectionPrint = aDisallowSelectionPrint;
-  }
-
- private:
-  nsPrintJob& operator=(const nsPrintJob& aOther) = delete;
-
-  ~nsPrintJob();
-
-||||||| merged common ancestors
-  bool     CheckBeforeDestroy();
-  nsresult Cancelled();
-
-  nsIPresShell* GetPrintPreviewPresShell() {return mPrtPreview->mPrintObject->mPresShell;}
-
-  float GetPrintPreviewScale() { return mPrtPreview->mPrintObject->
-                                        mPresContext->GetPrintPreviewScale(); }
-
-  // These calls also update the DocViewer
-  void SetIsPrinting(bool aIsPrinting);
-  bool GetIsPrinting()
-  {
-    return mIsDoingPrinting;
-  }
-  void SetIsPrintPreview(bool aIsPrintPreview);
-  bool GetIsPrintPreview()
-  {
-    return mIsDoingPrintPreview;
-  }
-  bool GetIsCreatingPrintPreview()
-  {
-    return mIsCreatingPrintPreview;
-  }
-
-  void SetDisallowSelectionPrint(bool aDisallowSelectionPrint)
-  {
-    mDisallowSelectionPrint = aDisallowSelectionPrint;
-  }
-
-private:
-  nsPrintJob& operator=(const nsPrintJob& aOther) = delete;
-
-  ~nsPrintJob();
-
-=======
->>>>>>> upstream-releases
   nsresult CommonPrint(bool aIsPrintPreview, nsIPrintSettings* aPrintSettings,
                        nsIWebProgressListener* aWebProgressListener,
                        mozilla::dom::Document* aSourceDoc);
@@ -403,19 +228,6 @@ private:
 
   void DisconnectPagePrintTimer();
 
-<<<<<<< HEAD
-  nsresult AfterNetworkPrint(bool aHandleError);
-
-  nsresult SetRootView(nsPrintObject* aPO, bool& aDoReturn,
-                       bool& aDocumentIsTopLevel, nsSize& aAdjSize);
-||||||| merged common ancestors
-  nsresult AfterNetworkPrint(bool aHandleError);
-
-  nsresult SetRootView(nsPrintObject* aPO,
-                       bool& aDoReturn,
-                       bool& aDocumentIsTopLevel,
-                       nsSize& aAdjSize);
-=======
   /**
    * This method is called to resume printing after all outstanding resources
    * referenced by the static clone have finished loading.  (It is possibly
@@ -429,7 +241,6 @@ private:
 
   nsresult SetRootView(nsPrintObject* aPO, bool& aDoReturn,
                        bool& aDocumentIsTopLevel, nsSize& aAdjSize);
->>>>>>> upstream-releases
   nsView* GetParentViewForRoot();
   bool DoSetPixelScale();
   void UpdateZoomRatio(nsPrintObject* aPO, bool aSetPixelScale);
@@ -442,12 +253,6 @@ private:
 
   void PageDone(nsresult aResult);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-
-  nsCOMPtr<nsIDocument> mDocument;
-=======
   // The document that we were originally created for in order to print it or
   // create a print preview of it.  This may belong to mDocViewerPrint or may
   // belong to a different docViewer in a different docShell.  In reality, this
@@ -456,7 +261,6 @@ private:
   RefPtr<mozilla::dom::Document> mOriginalDoc;
 
   // The docViewer that owns us, and its docShell.
->>>>>>> upstream-releases
   nsCOMPtr<nsIDocumentViewerPrint> mDocViewerPrint;
   nsWeakPtr mDocShell;
 

@@ -32,22 +32,6 @@ class SVGFEFloodElement : public SVGFEFloodElementBase {
  public:
   virtual bool SubregionIsUnionOfRegions() override { return false; }
 
-<<<<<<< HEAD
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-  }
-||||||| merged common ancestors
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-=======
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
       const nsTArray<bool>& aInputsAreTainted,
@@ -55,7 +39,6 @@ class SVGFEFloodElement : public SVGFEFloodElementBase {
   virtual SVGAnimatedString& GetResultImageName() override {
     return mStringAttributes[RESULT];
   }
->>>>>>> upstream-releases
 
   // nsIContent interface
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;

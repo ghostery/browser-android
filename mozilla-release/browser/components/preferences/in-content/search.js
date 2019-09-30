@@ -167,13 +167,7 @@ var gSearchPane = {
     // This is called each time something affects the list of engines.
     let list = document.getElementById("defaultEngine");
     // Set selection to the current default engine.
-<<<<<<< HEAD
-    let currentEngine = Services.search.defaultEngine.name;
-||||||| merged common ancestors
-    let currentEngine = Services.search.currentEngine.name;
-=======
     let currentEngine = (await Services.search.getDefault()).name;
->>>>>>> upstream-releases
 
     // If the current engine isn't in the list any more, select the first item.
     let engines = gEngineView._engineStore._engines;
@@ -453,20 +447,10 @@ var gSearchPane = {
     );
   },
 
-<<<<<<< HEAD
-  setDefaultEngine() {
-    Services.search.defaultEngine =
-      document.getElementById("defaultEngine").selectedItem.engine;
-||||||| merged common ancestors
-  setDefaultEngine() {
-    Services.search.currentEngine =
-      document.getElementById("defaultEngine").selectedItem.engine;
-=======
   async setDefaultEngine() {
     await Services.search.setDefault(
       document.getElementById("defaultEngine").selectedItem.engine
     );
->>>>>>> upstream-releases
     ExtensionSettingsStore.setByUser(SEARCH_TYPE, SEARCH_KEY);
   },
 };
@@ -783,20 +767,6 @@ EngineView.prototype = {
     }
     return undefined;
   },
-<<<<<<< HEAD
-  toggleOpenState(index) { },
-  cycleHeader(column) { },
-  selectionChanged() { },
-  cycleCell(row, column) { },
-  isEditable(index, column) { return column.id != "engineName"; },
-||||||| merged common ancestors
-  toggleOpenState(index) { },
-  cycleHeader(column) { },
-  selectionChanged() { },
-  cycleCell(row, column) { },
-  isEditable(index, column) { return column.id != "engineName"; },
-  isSelectable(index, column) { return false; },
-=======
   toggleOpenState(index) {},
   cycleHeader(column) {},
   selectionChanged() {},
@@ -804,7 +774,6 @@ EngineView.prototype = {
   isEditable(index, column) {
     return column.id != "engineName";
   },
->>>>>>> upstream-releases
   setCellValue(index, column, value) {
     if (column.id == "engineShown") {
       this._engineStore.engines[index].shown = value == "true";

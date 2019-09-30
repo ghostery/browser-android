@@ -17,40 +17,18 @@ namespace media {
 /**
  * Handle MediaSystemResourceManager's IPC
  */
-<<<<<<< HEAD
-class MediaSystemResourceManagerParent final
-    : public PMediaSystemResourceManagerParent {
- public:
-||||||| merged common ancestors
-class MediaSystemResourceManagerParent final : public PMediaSystemResourceManagerParent
-{
-public:
-=======
 class MediaSystemResourceManagerParent final
     : public PMediaSystemResourceManagerParent {
   friend class PMediaSystemResourceManagerParent;
 
  public:
->>>>>>> upstream-releases
   MediaSystemResourceManagerParent();
   virtual ~MediaSystemResourceManagerParent();
 
-<<<<<<< HEAD
- protected:
-  mozilla::ipc::IPCResult RecvAcquire(
-      const uint32_t& aId, const MediaSystemResourceType& aResourceType,
-      const bool& aWillWait) override;
-||||||| merged common ancestors
-protected:
-  mozilla::ipc::IPCResult RecvAcquire(const uint32_t& aId,
-                                      const MediaSystemResourceType& aResourceType,
-                                      const bool& aWillWait) override;
-=======
  protected:
   mozilla::ipc::IPCResult RecvAcquire(
       const uint32_t& aId, const MediaSystemResourceType& aResourceType,
       const bool& aWillWait);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvRelease(const uint32_t& aId);
 

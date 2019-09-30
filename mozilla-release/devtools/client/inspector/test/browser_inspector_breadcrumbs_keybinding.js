@@ -6,59 +6,6 @@
 // Test that the breadcrumbs keybindings work.
 
 const TEST_URI = URL_ROOT + "doc_inspector_breadcrumbs.html";
-<<<<<<< HEAD
-const TEST_DATA = [{
-  desc: "Pressing left should select the parent <body>",
-  key: "KEY_ArrowLeft",
-  newSelection: "body",
-}, {
-  desc: "Pressing left again should select the parent <html>",
-  key: "KEY_ArrowLeft",
-  newSelection: "html",
-}, {
-  desc: "Pressing left again should stay on <html>, it's the first element",
-  key: "KEY_ArrowLeft",
-  newSelection: "html",
-}, {
-  desc: "Pressing right should go to <body>",
-  key: "KEY_ArrowRight",
-  newSelection: "body",
-}, {
-  desc: "Pressing right again should go to #i2",
-  key: "KEY_ArrowRight",
-  newSelection: "#i2",
-}, {
-  desc: "Pressing right again should stay on #i2, it's the last element",
-  key: "KEY_ArrowRight",
-  newSelection: "#i2",
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  desc: "Pressing left should select the parent <body>",
-  key: "KEY_ArrowLeft",
-  newSelection: "body"
-}, {
-  desc: "Pressing left again should select the parent <html>",
-  key: "KEY_ArrowLeft",
-  newSelection: "html"
-}, {
-  desc: "Pressing left again should stay on <html>, it's the first element",
-  key: "KEY_ArrowLeft",
-  newSelection: "html"
-}, {
-  desc: "Pressing right should go to <body>",
-  key: "KEY_ArrowRight",
-  newSelection: "body"
-}, {
-  desc: "Pressing right again should go to #i2",
-  key: "KEY_ArrowRight",
-  newSelection: "#i2"
-}, {
-  desc: "Pressing right again should stay on #i2, it's the last element",
-  key: "KEY_ArrowRight",
-  newSelection: "#i2"
-}];
-=======
 const TEST_DATA = [
   {
     desc: "Pressing left should select the parent <body>",
@@ -91,7 +38,6 @@ const TEST_DATA = [
     newSelection: "#i2",
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URI);

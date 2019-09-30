@@ -1,12 +1,4 @@
 [package]
-<<<<<<< HEAD
-name = "cranelift-frontend"
-version = "0.25.0"
-||||||| merged common ancestors
-name = "cranelift-frontend"
-version = "0.20.0"
-=======
->>>>>>> upstream-releases
 authors = ["The Cranelift Project Developers"]
 name = "cranelift-frontend"
 version = "0.32.0"
@@ -15,27 +7,6 @@ license = "Apache-2.0 WITH LLVM-exception"
 documentation = "https://cranelift.readthedocs.io/"
 categories = ["no-std"]
 repository = "https://github.com/CraneStation/cranelift"
-<<<<<<< HEAD
-[dependencies.cranelift-codegen]
-version = "0.25.0"
-default-features = false
-
-[dependencies.hashmap_core]
-version = "0.1.9"
-optional = true
-
-[dependencies.log]
-version = "0.4.4"
-default-features = false
-
-[dependencies.target-lexicon]
-version = "0.2.0"
-default-features = false
-||||||| merged common ancestors
-[dependencies.cranelift-codegen]
-version = "0.20.0"
-default-features = false
-=======
 readme = "README.md"
 edition = "2018"
 
@@ -44,15 +15,8 @@ cranelift-codegen = { path = "../cranelift-codegen", version = "0.32.0", default
 target-lexicon = { version = "0.4.0", default-features = false }
 log = { version = "0.4.6", default-features = false }
 hashmap_core = { version = "0.1.9", optional = true }
->>>>>>> upstream-releases
 
 [features]
-<<<<<<< HEAD
-core = ["hashmap_core", "cranelift-codegen/core"]
-||||||| merged common ancestors
-core = ["cranelift-codegen/core"]
-=======
->>>>>>> upstream-releases
 default = ["std"]
 std = ["cranelift-codegen/std"]
 core = ["hashmap_core", "cranelift-codegen/core"]

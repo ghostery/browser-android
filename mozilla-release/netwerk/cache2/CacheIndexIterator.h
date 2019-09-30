@@ -41,27 +41,6 @@ class CacheIndexIterator {
   nsresult CloseInternal(nsresult aStatus);
 
   bool ShouldBeNewAdded() { return mAddNew; }
-<<<<<<< HEAD
-  virtual void AddRecord(CacheIndexRecord *aRecord);
-  bool RemoveRecord(CacheIndexRecord *aRecord);
-  bool ReplaceRecord(CacheIndexRecord *aOldRecord,
-                     CacheIndexRecord *aNewRecord);
-
-  nsresult mStatus;
-  RefPtr<CacheIndex> mIndex;
-  nsTArray<CacheIndexRecord *> mRecords;
-  bool mAddNew;
-||||||| merged common ancestors
-  virtual void AddRecord(CacheIndexRecord *aRecord);
-  bool RemoveRecord(CacheIndexRecord *aRecord);
-  bool ReplaceRecord(CacheIndexRecord *aOldRecord,
-                     CacheIndexRecord *aNewRecord);
-
-  nsresult                     mStatus;
-  RefPtr<CacheIndex>           mIndex;
-  nsTArray<CacheIndexRecord *> mRecords;
-  bool                         mAddNew;
-=======
   virtual void AddRecord(CacheIndexRecord* aRecord);
   bool RemoveRecord(CacheIndexRecord* aRecord);
   bool ReplaceRecord(CacheIndexRecord* aOldRecord,
@@ -71,7 +50,6 @@ class CacheIndexIterator {
   RefPtr<CacheIndex> mIndex;
   nsTArray<CacheIndexRecord*> mRecords;
   bool mAddNew;
->>>>>>> upstream-releases
 };
 
 }  // namespace net

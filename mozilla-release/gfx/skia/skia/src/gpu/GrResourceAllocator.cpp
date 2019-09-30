@@ -16,18 +16,6 @@
 #include "GrSurfaceProxy.h"
 #include "GrSurfaceProxyPriv.h"
 #include "GrTextureProxy.h"
-#include "GrUninstantiateProxyTracker.h"
-
-#if GR_TRACK_INTERVAL_CREATION
-uint32_t GrResourceAllocator::Interval::CreateUniqueID() {
-    static int32_t gUniqueID = SK_InvalidUniqueID;
-    uint32_t id;
-    do {
-        id = static_cast<uint32_t>(sk_atomic_inc(&gUniqueID) + 1);
-    } while (id == SK_InvalidUniqueID);
-    return id;
-}
-#endif
 
 #if GR_TRACK_INTERVAL_CREATION
     #include <atomic>
@@ -109,27 +97,8 @@ void GrResourceAllocator::addInterval(GrSurfaceProxy* proxy, unsigned int start,
             newIntvl = fIntervalAllocator.make<Interval>(proxy, start, end);
         }
 
-<<<<<<< HEAD
-    Interval* newIntvl;
-    if (fFreeIntervalList) {
-        newIntvl = fFreeIntervalList;
-        fFreeIntervalList = newIntvl->next();
-        newIntvl->setNext(nullptr);
-        newIntvl->resetTo(proxy, start, end);
-    } else {
-        newIntvl = fIntervalAllocator.make<Interval>(proxy, start, end);
-||||||| merged common ancestors
-    Interval* newIntvl;
-    if (fFreeIntervalList) {
-        newIntvl = fFreeIntervalList;
-        fFreeIntervalList = newIntvl->next();
-        newIntvl->resetTo(proxy, start, end);
-    } else {
-        newIntvl = fIntervalAllocator.make<Interval>(proxy, start, end);
-=======
         fIntvlList.insertByIncreasingStart(newIntvl);
         fIntvlHash.add(newIntvl);
->>>>>>> upstream-releases
     }
 
     // Because readOnly proxies do not get a usage interval we must instantiate them here (since it
@@ -334,9 +303,7 @@ void GrResourceAllocator::expire(unsigned int curIndex) {
     }
 }
 
-bool GrResourceAllocator::assign(int* startIndex, int* stopIndex,
-                                 GrUninstantiateProxyTracker* uninstantiateTracker,
-                                 AssignError* outError) {
+bool GrResourceAllocator::assign(int* startIndex, int* stopIndex, AssignError* outError) {
     SkASSERT(outError);
     *outError = AssignError::kNoError;
 
@@ -402,11 +369,6 @@ bool GrResourceAllocator::assign(int* startIndex, int* stopIndex,
         if (GrSurfaceProxy::LazyState::kNot != cur->proxy()->lazyInstantiationState()) {
             if (!cur->proxy()->priv().doLazyInstantiation(fResourceProvider)) {
                 *outError = AssignError::kFailedProxyInstantiation;
-            } else {
-                if (GrSurfaceProxy::LazyInstantiationType::kUninstantiate ==
-                    cur->proxy()->priv().lazyInstantiationType()) {
-                    uninstantiateTracker->addProxy(cur->proxy());
-                }
             }
         } else if (sk_sp<GrSurface> surface = this->findSurfaceFor(cur->proxy(), needsStencil)) {
             // TODO: make getUniqueKey virtual on GrSurfaceProxy

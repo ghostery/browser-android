@@ -44,90 +44,19 @@ class UrlbarView {
     this._rows.addEventListener("mousedown", this);
     this._rows.addEventListener("mouseup", this);
 
-    this._rows.addEventListener("click", this);
-
     // For the horizontal fade-out effect, set the overflow attribute on result
     // rows when they overflow.
-<<<<<<< HEAD
-    this._rows.addEventListener("overflow", this);
-    this._rows.addEventListener("underflow", this);
-||||||| merged common ancestors
-    this._rows.addEventListener("overflow", event => {
-      if (event.target.classList.contains("urlbarView-row-inner")) {
-        event.target.toggleAttribute("overflow", true);
-      }
-    });
-    this._rows.addEventListener("underflow", event => {
-      if (event.target.classList.contains("urlbarView-row-inner")) {
-        event.target.toggleAttribute("overflow", false);
-      }
-    });
-=======
     this._rows.addEventListener("overflow", this);
     this._rows.addEventListener("underflow", this);
 
     this.panel.addEventListener("popupshowing", this);
     this.panel.addEventListener("popupshown", this);
     this.panel.addEventListener("popuphiding", this);
->>>>>>> upstream-releases
 
     this.controller.setView(this);
     this.controller.addQueryListener(this);
   }
 
-<<<<<<< HEAD
-  get oneOffSearchButtons() {
-    return this._oneOffSearchButtons ||
-      (this._oneOffSearchButtons =
-         new this.window.SearchOneOffs(this.panel.querySelector(".search-one-offs")));
-  }
-
-  /**
-   * @returns {boolean}
-   *   Whether the panel is open.
-   */
-  get isOpen() {
-    return this.panel.state == "open" || this.panel.state == "showing";
-  }
-
-  /**
-   * Selects the next or previous view item. An item could be an autocomplete
-   * result or a one-off search button.
-   *
-   * @param {boolean} options.reverse
-   *   Set to true to select the previous item. By default the next item
-   *   will be selected.
-   */
-  selectNextItem({reverse = false} = {}) {
-    if (!this.isOpen) {
-      this.open();
-      return;
-    }
-
-    // TODO: handle one-off search buttons
-
-    let row;
-    if (reverse) {
-      row = this._selected.previousElementSibling ||
-            this._rows.lastElementChild;
-    } else {
-      row = this._selected.nextElementSibling ||
-            this._rows.firstElementChild;
-    }
-
-    this._selected.toggleAttribute("selected", false);
-    this._selected = row;
-    row.toggleAttribute("selected", true);
-
-    let resultIndex = row.getAttribute("resultIndex");
-    let result = this._queryContext.results[resultIndex];
-    if (result) {
-      this.input.setValueFromResult(result);
-    }
-  }
-
-||||||| merged common ancestors
-=======
   get oneOffSearchButtons() {
     if (!this._oneOffSearchButtons) {
       this._oneOffSearchButtons = new this.window.SearchOneOffs(
@@ -141,7 +70,6 @@ class UrlbarView {
     return this._oneOffSearchButtons;
   }
 
->>>>>>> upstream-releases
   /**
    * @returns {boolean}
    *   Whether the panel is open.
@@ -150,15 +78,6 @@ class UrlbarView {
     return this.panel.state == "open" || this.panel.state == "showing";
   }
 
-<<<<<<< HEAD
-    this._alignPanel();
-||||||| merged common ancestors
-    let panelDirection = this.panel.style.direction;
-    if (!panelDirection) {
-      panelDirection = this.panel.style.direction =
-        this.window.getComputedStyle(this.urlbar.textbox).direction;
-    }
-=======
   get allowEmptySelection() {
     return !(
       this._queryContext &&
@@ -173,19 +92,7 @@ class UrlbarView {
     }
     return this._selected.result.uiIndex;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // TODO: Search one off buttons are a stub right now.
-    //       We'll need to set them up properly.
-    this.oneOffSearchButtons;
-||||||| merged common ancestors
-    // Make the panel span the width of the window.
-    let documentRect =
-      this._getBoundsWithoutFlushing(this.document.documentElement);
-    let width = documentRect.right - documentRect.left;
-    this.panel.setAttribute("width", width);
-=======
   set selectedIndex(val) {
     if (!this.isOpen) {
       throw new Error(
@@ -248,26 +155,10 @@ class UrlbarView {
         "UrlbarView: Cannot select an item if the view isn't open."
       );
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    this.panel.openPopup(this.input.textbox.closest("toolbar"), "after_end", 0, -1);
-||||||| merged common ancestors
-    // Subtract two pixels for left and right borders on the panel.
-    this._mainContainer.style.maxWidth = (width - 2) + "px";
-=======
     // Freeze results as the user is interacting with them.
     this.controller.cancelQuery();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    this._selected = this._rows.firstElementChild;
-    this._selected.toggleAttribute("selected", true);
-||||||| merged common ancestors
-    this.panel.openPopup(this.urlbar.textbox.closest("toolbar"), "after_end", 0, -1);
-
-    this._rows.firstElementChild.toggleAttribute("selected", true);
-=======
     let row = this._selected;
 
     // Results over maxResults may be hidden and should not be selectable.
@@ -311,7 +202,6 @@ class UrlbarView {
 
   removeAccessibleFocus() {
     this._setAccessibleFocus(null);
->>>>>>> upstream-releases
   }
 
   /**
@@ -339,14 +229,6 @@ class UrlbarView {
     if (!this._queryWasCancelled) {
       this._removeStaleRows();
     }
-  }
-
-  onQueryCancelled(queryContext) {
-    // Nothing.
-  }
-
-  onQueryFinished(queryContext) {
-    // Nothing.
   }
 
   onQueryResults(queryContext) {
@@ -454,56 +336,6 @@ class UrlbarView {
     return this.document.createElementNS("http://www.w3.org/1999/xhtml", name);
   }
 
-<<<<<<< HEAD
-  _alignPanel() {
-    // Make the panel span the width of the window.
-    let documentRect =
-      this._getBoundsWithoutFlushing(this.document.documentElement);
-    let width = documentRect.right - documentRect.left;
-    this.panel.setAttribute("width", width);
-
-    // Subtract two pixels for left and right borders on the panel.
-    this._mainContainer.style.maxWidth = (width - 2) + "px";
-
-    // Keep the popup items' site icons aligned with the input's identity
-    // icon if it's not too far from the edge of the window.  We define
-    // "too far" as "more than 30% of the window's width AND more than
-    // 250px".
-    let boundToCheck = this.window.RTL_UI ? "right" : "left";
-    let inputRect = this._getBoundsWithoutFlushing(this.input.textbox);
-    let startOffset = Math.abs(inputRect[boundToCheck] - documentRect[boundToCheck]);
-    let alignSiteIcons = startOffset / width <= 0.3 || startOffset <= 250;
-    if (alignSiteIcons) {
-      // Calculate the end margin if we have a start margin.
-      let boundToCheckEnd = this.window.RTL_UI ? "left" : "right";
-      let endOffset = Math.abs(inputRect[boundToCheckEnd] -
-                               documentRect[boundToCheckEnd]);
-      if (endOffset > startOffset * 2) {
-        // Provide more space when aligning would result in an unbalanced
-        // margin. This allows the location bar to be moved to the start
-        // of the navigation toolbar to reclaim space for results.
-        endOffset = startOffset;
-      }
-      let identityIcon = this.document.getElementById("identity-icon");
-      let identityRect = this._getBoundsWithoutFlushing(identityIcon);
-      let start = this.window.RTL_UI ?
-                    documentRect.right - identityRect.right :
-                    identityRect.left;
-
-      this.panel.style.setProperty("--item-padding-start", Math.round(start) + "px");
-      this.panel.style.setProperty("--item-padding-end", Math.round(endOffset) + "px");
-    } else {
-      this.panel.style.removeProperty("--item-padding-start");
-      this.panel.style.removeProperty("--item-padding-end");
-    }
-  }
-
-  _addRow(resultIndex) {
-    let result = this._queryContext.results[resultIndex];
-||||||| merged common ancestors
-  _addRow(resultIndex) {
-    let result = this._queryContext.results[resultIndex];
-=======
   _openPanel() {
     if (this.isOpen) {
       return;
@@ -691,27 +523,10 @@ class UrlbarView {
   }
 
   _createRow() {
->>>>>>> upstream-releases
     let item = this._createElement("div");
     item.className = "urlbarView-row";
-<<<<<<< HEAD
-    item.setAttribute("resultIndex", resultIndex);
-
-    if (result.type == UrlbarUtils.MATCH_TYPE.TAB_SWITCH) {
-      item.setAttribute("type", "switchtab");
-    } else if (result.source == UrlbarUtils.MATCH_SOURCE.BOOKMARKS) {
-      item.setAttribute("type", "bookmark");
-    }
-||||||| merged common ancestors
-    item.addEventListener("click", this);
-    item.setAttribute("resultIndex", resultIndex);
-    if (result.type == UrlbarUtils.MATCH_TYPE.TAB_SWITCH) {
-      item.setAttribute("action", "switch-to-tab");
-    }
-=======
     item.setAttribute("role", "option");
     item._elements = new Map();
->>>>>>> upstream-releases
 
     let content = this._createElement("span");
     content.className = "urlbarView-row-inner";
@@ -723,18 +538,11 @@ class UrlbarView {
 
     let favicon = this._createElement("img");
     favicon.className = "urlbarView-favicon";
-    favicon.src = result.payload.icon || "chrome://mozapps/skin/places/defaultFavicon.svg";
     content.appendChild(favicon);
     item._elements.set("favicon", favicon);
 
     let title = this._createElement("span");
     title.className = "urlbarView-title";
-<<<<<<< HEAD
-    title.textContent = result.title || result.payload.url;
-||||||| merged common ancestors
-    title.textContent = result.title || result.url;
-=======
->>>>>>> upstream-releases
     content.appendChild(title);
     item._elements.set("title", title);
 
@@ -870,13 +678,6 @@ class UrlbarView {
       action = bundle.GetStringFromName("visit");
       title.setAttribute("isurl", "true");
     } else {
-<<<<<<< HEAD
-      secondary.classList.add("urlbarView-url");
-      secondary.textContent = result.payload.url;
-||||||| merged common ancestors
-      secondary.classList.add("urlbarView-url");
-      secondary.textContent = result.url;
-=======
       title.removeAttribute("isurl");
     }
     item._elements.get("action").textContent = action;
@@ -939,7 +740,6 @@ class UrlbarView {
     if (this._selected) {
       this._selected.toggleAttribute("selected", false);
       this._selected.removeAttribute("aria-selected");
->>>>>>> upstream-releases
     }
     if (item) {
       item.toggleAttribute("selected", true);
@@ -1020,11 +820,6 @@ class UrlbarView {
     if (overflowing) {
       element.setAttribute("title", element._tooltip);
     } else {
-<<<<<<< HEAD
-      throw new Error("Unrecognized UrlbarView event: " + event.type);
-||||||| merged common ancestors
-      throw "Unrecognized urlbar event: " + event.type;
-=======
       element.removeAttribute("title");
     }
   }
@@ -1075,7 +870,6 @@ class UrlbarView {
       } else if (!engine) {
         favicon.src = result.payload.icon || UrlbarUtils.ICON.SEARCH_GLASS;
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -1089,17 +883,6 @@ class UrlbarView {
     while (!row.classList.contains("urlbarView-row")) {
       row = row.parentNode;
     }
-<<<<<<< HEAD
-    let resultIndex = row.getAttribute("resultIndex");
-    let result = this._queryContext.results[resultIndex];
-    if (result) {
-      this.input.pickResult(event, result);
-||||||| merged common ancestors
-    let resultIndex = row.getAttribute("resultIndex");
-    let result = this._queryContext.results[resultIndex];
-    if (result) {
-      this.urlbar.resultSelected(event, result);
-=======
     this._selectItem(row, { updateInput: false });
     this.controller.speculativeConnect(
       this.selectedResult,
@@ -1128,7 +911,6 @@ class UrlbarView {
         event.target.classList.contains("urlbarView-title"))
     ) {
       this._setElementOverflowing(event.target, true);
->>>>>>> upstream-releases
     }
   }
 
@@ -1171,17 +953,5 @@ class UrlbarView {
     // Close the popup as it would be wrongly sized. This can
     // happen when using special OS resize functions like Win+Arrow.
     this.close();
-  }
-
-  _on_overflow(event) {
-    if (event.target.classList.contains("urlbarView-row-inner")) {
-      event.target.toggleAttribute("overflow", true);
-    }
-  }
-
-  _on_underflow(event) {
-    if (event.target.classList.contains("urlbarView-row-inner")) {
-      event.target.toggleAttribute("overflow", false);
-    }
   }
 }

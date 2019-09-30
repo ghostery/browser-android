@@ -35,26 +35,6 @@ static const uint64_t kWebSocketIDWebSocketBits =
     kWebSocketIDTotalBits - kWebSocketIDProcessBits;
 
 BaseWebSocketChannel::BaseWebSocketChannel()
-<<<<<<< HEAD
-    : mWasOpened(0),
-      mClientSetPingInterval(0),
-      mClientSetPingTimeout(0),
-      mEncrypted(false),
-      mPingForced(false),
-      mIsServerSide(false),
-      mPingInterval(0),
-      mPingResponseTimeout(10000) {
-||||||| merged common ancestors
-  : mWasOpened(0)
-  , mClientSetPingInterval(0)
-  , mClientSetPingTimeout(0)
-  , mEncrypted(false)
-  , mPingForced(false)
-  , mIsServerSide(false)
-  , mPingInterval(0)
-  , mPingResponseTimeout(10000)
-{
-=======
     : mWasOpened(0),
       mClientSetPingInterval(0),
       mClientSetPingTimeout(0),
@@ -64,11 +44,10 @@ BaseWebSocketChannel::BaseWebSocketChannel()
       mPingInterval(0),
       mPingResponseTimeout(10000),
       mHttpChannelId(0) {
->>>>>>> upstream-releases
   // Generation of a unique serial ID.
   uint64_t processID = 0;
   if (XRE_IsContentProcess()) {
-    ContentChild *cc = ContentChild::GetSingleton();
+    ContentChild* cc = ContentChild::GetSingleton();
     processID = cc->GetID();
   }
 
@@ -91,14 +70,7 @@ BaseWebSocketChannel::BaseWebSocketChannel()
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetOriginalURI(nsIURI **aOriginalURI) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetOriginalURI(nsIURI **aOriginalURI)
-{
-=======
 BaseWebSocketChannel::GetOriginalURI(nsIURI** aOriginalURI) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetOriginalURI() %p\n", this));
 
   if (!mOriginalURI) return NS_ERROR_NOT_INITIALIZED;
@@ -107,14 +79,7 @@ BaseWebSocketChannel::GetOriginalURI(nsIURI** aOriginalURI) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetURI(nsIURI **aURI) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetURI(nsIURI **aURI)
-{
-=======
 BaseWebSocketChannel::GetURI(nsIURI** aURI) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetURI() %p\n", this));
 
   if (!mOriginalURI) return NS_ERROR_NOT_INITIALIZED;
@@ -126,145 +91,71 @@ BaseWebSocketChannel::GetURI(nsIURI** aURI) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetNotificationCallbacks(
-    nsIInterfaceRequestor **aNotificationCallbacks) {
-||||||| merged common ancestors
-BaseWebSocketChannel::
-GetNotificationCallbacks(nsIInterfaceRequestor **aNotificationCallbacks)
-{
-=======
 BaseWebSocketChannel::GetNotificationCallbacks(
     nsIInterfaceRequestor** aNotificationCallbacks) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetNotificationCallbacks() %p\n", this));
   NS_IF_ADDREF(*aNotificationCallbacks = mCallbacks);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::SetNotificationCallbacks(
-    nsIInterfaceRequestor *aNotificationCallbacks) {
-||||||| merged common ancestors
-BaseWebSocketChannel::
-SetNotificationCallbacks(nsIInterfaceRequestor *aNotificationCallbacks)
-{
-=======
 BaseWebSocketChannel::SetNotificationCallbacks(
     nsIInterfaceRequestor* aNotificationCallbacks) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::SetNotificationCallbacks() %p\n", this));
   mCallbacks = aNotificationCallbacks;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetLoadGroup(nsILoadGroup **aLoadGroup) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetLoadGroup(nsILoadGroup **aLoadGroup)
-{
-=======
 BaseWebSocketChannel::GetLoadGroup(nsILoadGroup** aLoadGroup) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetLoadGroup() %p\n", this));
   NS_IF_ADDREF(*aLoadGroup = mLoadGroup);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::SetLoadGroup(nsILoadGroup *aLoadGroup) {
-||||||| merged common ancestors
-BaseWebSocketChannel::SetLoadGroup(nsILoadGroup *aLoadGroup)
-{
-=======
 BaseWebSocketChannel::SetLoadGroup(nsILoadGroup* aLoadGroup) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::SetLoadGroup() %p\n", this));
   mLoadGroup = aLoadGroup;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::SetLoadInfo(nsILoadInfo *aLoadInfo) {
-||||||| merged common ancestors
-BaseWebSocketChannel::SetLoadInfo(nsILoadInfo* aLoadInfo)
-{
-=======
 BaseWebSocketChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
   MOZ_RELEASE_ASSERT(aLoadInfo, "loadinfo can't be null");
->>>>>>> upstream-releases
   mLoadInfo = aLoadInfo;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetLoadInfo(nsILoadInfo **aLoadInfo) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetLoadInfo(nsILoadInfo** aLoadInfo)
-{
-=======
 BaseWebSocketChannel::GetLoadInfo(nsILoadInfo** aLoadInfo) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aLoadInfo = mLoadInfo);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetExtensions(nsACString &aExtensions) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetExtensions(nsACString &aExtensions)
-{
-=======
 BaseWebSocketChannel::GetExtensions(nsACString& aExtensions) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetExtensions() %p\n", this));
   aExtensions = mNegotiatedExtensions;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetProtocol(nsACString &aProtocol) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetProtocol(nsACString &aProtocol)
-{
-=======
 BaseWebSocketChannel::GetProtocol(nsACString& aProtocol) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetProtocol() %p\n", this));
   aProtocol = mProtocol;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::SetProtocol(const nsACString &aProtocol) {
-||||||| merged common ancestors
-BaseWebSocketChannel::SetProtocol(const nsACString &aProtocol)
-{
-=======
 BaseWebSocketChannel::SetProtocol(const nsACString& aProtocol) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::SetProtocol() %p\n", this));
   mProtocol = aProtocol; /* the sub protocol */
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetPingInterval(uint32_t *aSeconds) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetPingInterval(uint32_t *aSeconds)
-{
-=======
 BaseWebSocketChannel::GetPingInterval(uint32_t* aSeconds) {
->>>>>>> upstream-releases
   // stored in ms but should only have second resolution
   MOZ_ASSERT(!(mPingInterval % 1000));
 
@@ -287,14 +178,7 @@ BaseWebSocketChannel::SetPingInterval(uint32_t aSeconds) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetPingTimeout(uint32_t *aSeconds) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetPingTimeout(uint32_t *aSeconds)
-{
-=======
 BaseWebSocketChannel::GetPingTimeout(uint32_t* aSeconds) {
->>>>>>> upstream-releases
   // stored in ms but should only have second resolution
   MOZ_ASSERT(!(mPingResponseTimeout % 1000));
 
@@ -317,15 +201,6 @@ BaseWebSocketChannel::SetPingTimeout(uint32_t aSeconds) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::InitLoadInfo(nsINode *aLoadingNode,
-                                   nsIPrincipal *aLoadingPrincipal,
-                                   nsIPrincipal *aTriggeringPrincipal,
-||||||| merged common ancestors
-BaseWebSocketChannel::InitLoadInfo(nsINode* aLoadingNode,
-                                   nsIPrincipal* aLoadingPrincipal,
-                                   nsIPrincipal* aTriggeringPrincipal,
-=======
 BaseWebSocketChannel::InitLoadInfoNative(nsINode* aLoadingNode,
                                          nsIPrincipal* aLoadingPrincipal,
                                          nsIPrincipal* aTriggeringPrincipal,
@@ -344,36 +219,15 @@ NS_IMETHODIMP
 BaseWebSocketChannel::InitLoadInfo(nsINode* aLoadingNode,
                                    nsIPrincipal* aLoadingPrincipal,
                                    nsIPrincipal* aTriggeringPrincipal,
->>>>>>> upstream-releases
                                    uint32_t aSecurityFlags,
-<<<<<<< HEAD
-                                   uint32_t aContentPolicyType) {
-  mLoadInfo = new LoadInfo(aLoadingPrincipal, aTriggeringPrincipal,
-                           aLoadingNode, aSecurityFlags, aContentPolicyType);
-  return NS_OK;
-||||||| merged common ancestors
-                                   uint32_t aContentPolicyType)
-{
-  mLoadInfo = new LoadInfo(aLoadingPrincipal, aTriggeringPrincipal,
-                           aLoadingNode, aSecurityFlags, aContentPolicyType);
-  return NS_OK;
-=======
                                    uint32_t aContentPolicyType) {
   return InitLoadInfoNative(aLoadingNode, aLoadingPrincipal,
                             aTriggeringPrincipal, nullptr, aSecurityFlags,
                             aContentPolicyType);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetSerial(uint32_t *aSerial) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetSerial(uint32_t* aSerial)
-{
-=======
 BaseWebSocketChannel::GetSerial(uint32_t* aSerial) {
->>>>>>> upstream-releases
   if (!aSerial) {
     return NS_ERROR_FAILURE;
   }
@@ -389,17 +243,8 @@ BaseWebSocketChannel::SetSerial(uint32_t aSerial) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::SetServerParameters(
-    nsITransportProvider *aProvider, const nsACString &aNegotiatedExtensions) {
-||||||| merged common ancestors
-BaseWebSocketChannel::SetServerParameters(nsITransportProvider* aProvider,
-                                          const nsACString& aNegotiatedExtensions)
-{
-=======
 BaseWebSocketChannel::SetServerParameters(
     nsITransportProvider* aProvider, const nsACString& aNegotiatedExtensions) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aProvider);
   mServerTransportProvider = aProvider;
   mNegotiatedExtensions = aNegotiatedExtensions;
@@ -418,14 +263,7 @@ BaseWebSocketChannel::GetHttpChannelId(uint64_t* aHttpChannelId) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetScheme(nsACString &aScheme) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetScheme(nsACString &aScheme)
-{
-=======
 BaseWebSocketChannel::GetScheme(nsACString& aScheme) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetScheme() %p\n", this));
 
   if (mEncrypted)
@@ -436,14 +274,7 @@ BaseWebSocketChannel::GetScheme(nsACString& aScheme) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetDefaultPort(int32_t *aDefaultPort) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetDefaultPort(int32_t *aDefaultPort)
-{
-=======
 BaseWebSocketChannel::GetDefaultPort(int32_t* aDefaultPort) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetDefaultPort() %p\n", this));
 
   if (mEncrypted)
@@ -454,14 +285,7 @@ BaseWebSocketChannel::GetDefaultPort(int32_t* aDefaultPort) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetProtocolFlags(uint32_t *aProtocolFlags) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetProtocolFlags(uint32_t *aProtocolFlags)
-{
-=======
 BaseWebSocketChannel::GetProtocolFlags(uint32_t* aProtocolFlags) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::GetProtocolFlags() %p\n", this));
 
   *aProtocolFlags = URI_NORELATIVE | URI_NON_PERSISTABLE | ALLOWS_PROXY |
@@ -474,85 +298,15 @@ BaseWebSocketChannel::GetProtocolFlags(uint32_t* aProtocolFlags) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::NewURI(const nsACString &aSpec,
-                             const char *aOriginCharset, nsIURI *aBaseURI,
-                             nsIURI **_retval) {
-  LOG(("BaseWebSocketChannel::NewURI() %p\n", this));
-
-  int32_t port;
-  nsresult rv = GetDefaultPort(&port);
-  if (NS_FAILED(rv)) return rv;
-
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  return NS_MutateURI(new nsStandardURL::Mutator())
-      .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                              nsIStandardURL::URLTYPE_AUTHORITY, port,
-                              nsCString(aSpec), aOriginCharset, base, nullptr))
-      .Finalize(_retval);
-}
-
-NS_IMETHODIMP
-BaseWebSocketChannel::NewChannel2(nsIURI *aURI, nsILoadInfo *aLoadInfo,
-                                  nsIChannel **outChannel) {
-  LOG(("BaseWebSocketChannel::NewChannel2() %p\n", this));
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-NS_IMETHODIMP
-BaseWebSocketChannel::NewChannel(nsIURI *aURI, nsIChannel **_retval) {
-||||||| merged common ancestors
-BaseWebSocketChannel::NewURI(const nsACString & aSpec, const char *aOriginCharset,
-                             nsIURI *aBaseURI, nsIURI **_retval)
-{
-  LOG(("BaseWebSocketChannel::NewURI() %p\n", this));
-
-  int32_t port;
-  nsresult rv = GetDefaultPort(&port);
-  if (NS_FAILED(rv))
-    return rv;
-
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  return NS_MutateURI(new nsStandardURL::Mutator())
-    .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                            nsIStandardURL::URLTYPE_AUTHORITY,
-                            port, nsCString(aSpec), aOriginCharset,
-                            base, nullptr))
-    .Finalize(_retval);
-}
-
-NS_IMETHODIMP
-BaseWebSocketChannel::NewChannel2(nsIURI* aURI,
-                                  nsILoadInfo* aLoadInfo,
-                                  nsIChannel** outChannel)
-{
-  LOG(("BaseWebSocketChannel::NewChannel2() %p\n", this));
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-NS_IMETHODIMP
-BaseWebSocketChannel::NewChannel(nsIURI *aURI, nsIChannel **_retval)
-{
-=======
 BaseWebSocketChannel::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
                                  nsIChannel** outChannel) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::NewChannel() %p\n", this));
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::AllowPort(int32_t port, const char *scheme,
-                                bool *_retval) {
-||||||| merged common ancestors
-BaseWebSocketChannel::AllowPort(int32_t port, const char *scheme,
-                                bool *_retval)
-{
-=======
 BaseWebSocketChannel::AllowPort(int32_t port, const char* scheme,
                                 bool* _retval) {
->>>>>>> upstream-releases
   LOG(("BaseWebSocketChannel::AllowPort() %p\n", this));
 
   // do not override any blacklisted ports
@@ -565,14 +319,7 @@ BaseWebSocketChannel::AllowPort(int32_t port, const char* scheme,
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::RetargetDeliveryTo(nsIEventTarget *aTargetThread) {
-||||||| merged common ancestors
-BaseWebSocketChannel::RetargetDeliveryTo(nsIEventTarget* aTargetThread)
-{
-=======
 BaseWebSocketChannel::RetargetDeliveryTo(nsIEventTarget* aTargetThread) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aTargetThread);
   MOZ_ASSERT(!mTargetThread,
@@ -585,14 +332,7 @@ BaseWebSocketChannel::RetargetDeliveryTo(nsIEventTarget* aTargetThread) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BaseWebSocketChannel::GetDeliveryTarget(nsIEventTarget **aTargetThread) {
-||||||| merged common ancestors
-BaseWebSocketChannel::GetDeliveryTarget(nsIEventTarget** aTargetThread)
-{
-=======
 BaseWebSocketChannel::GetDeliveryTarget(nsIEventTarget** aTargetThread) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIEventTarget> target = mTargetThread;
@@ -604,19 +344,8 @@ BaseWebSocketChannel::GetDeliveryTarget(nsIEventTarget** aTargetThread) {
 }
 
 BaseWebSocketChannel::ListenerAndContextContainer::ListenerAndContextContainer(
-<<<<<<< HEAD
-    nsIWebSocketListener *aListener, nsISupports *aContext)
-    : mListener(aListener), mContext(aContext) {
-||||||| merged common ancestors
-                                               nsIWebSocketListener* aListener,
-                                               nsISupports* aContext)
-  : mListener(aListener)
-  , mContext(aContext)
-{
-=======
     nsIWebSocketListener* aListener, nsISupports* aContext)
     : mListener(aListener), mContext(aContext) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mListener);
 }

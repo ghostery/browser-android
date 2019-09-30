@@ -11,17 +11,9 @@ DIRS += [
     'utils',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/moz.build
-DebuggerModules(
-    'ast.js',
-||||||| merged common ancestors
-DevToolsModules(
-    'ast.js',
-    'coverage.js',
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/moz.build
     'debuggee.js',
+    'event-listeners.js',
     'expressions.js',
     'file-search.js',
     'index.js',

@@ -348,13 +348,7 @@ ${helpers.predefined_type(
     "generics::transform::Translate::None",
     animation_value_type="ComputedValue",
     boxed=True,
-<<<<<<< HEAD
-    flags="CREATES_STACKING_CONTEXT FIXPOS_CB",
-||||||| merged common ancestors
-    flags="CREATES_STACKING_CONTEXT FIXPOS_CB GETCS_NEEDS_LAYOUT_FLUSH",
-=======
     flags="CREATES_STACKING_CONTEXT FIXPOS_CB CAN_ANIMATE_ON_COMPOSITOR",
->>>>>>> upstream-releases
     gecko_pref="layout.css.individual-transform.enabled",
     spec="https://drafts.csswg.org/css-transforms-2/#individual-transforms",
     servo_restyle_damage="reflow_out_of_flow",
@@ -635,14 +629,7 @@ ${helpers.predefined_type(
     "NonNegativeLengthPercentage",
     "computed::NonNegativeLengthPercentage::zero()",
     products="gecko",
-<<<<<<< HEAD
-    animation_value_type="NonNegativeLengthOrPercentage",
-||||||| merged common ancestors
-    gecko_pref="layout.css.shape-outside.enabled",
-    animation_value_type="NonNegativeLengthOrPercentage",
-=======
     animation_value_type="NonNegativeLengthPercentage",
->>>>>>> upstream-releases
     flags="APPLIES_TO_FIRST_LETTER",
     spec="https://drafts.csswg.org/css-shapes/#shape-margin-property",
 )}
@@ -652,16 +639,7 @@ ${helpers.predefined_type(
     "basic_shape::FloatAreaShape",
     "generics::basic_shape::ShapeSource::None",
     products="gecko",
-<<<<<<< HEAD
-    boxed=True,
-    animation_value_type="ComputedValue",
-||||||| merged common ancestors
-    boxed=True,
-    gecko_pref="layout.css.shape-outside.enabled",
-    animation_value_type="ComputedValue",
-=======
     animation_value_type="basic_shape::FloatAreaShape",
->>>>>>> upstream-releases
     flags="APPLIES_TO_FIRST_LETTER",
     spec="https://drafts.csswg.org/css-shapes/#shape-outside-property",
 )}

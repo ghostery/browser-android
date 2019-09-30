@@ -8,63 +8,6 @@ var EXPORTED_SYMBOLS = ["ContentRestore"];
 
 ChromeUtils.import("resource://gre/modules/Services.jsm", this);
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "FormData",
-  "resource://gre/modules/FormData.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionHistory",
-  "resource://gre/modules/sessionstore/SessionHistory.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionStorage",
-  "resource:///modules/sessionstore/SessionStorage.jsm");
-ChromeUtils.defineModuleGetter(this, "Utils",
-  "resource://gre/modules/sessionstore/Utils.jsm");
-
-const ssu = Cc["@mozilla.org/browser/sessionstore/utils;1"]
-              .getService(Ci.nsISessionStoreUtils);
-
-/**
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "DocShellCapabilities",
-  "resource:///modules/sessionstore/DocShellCapabilities.jsm");
-ChromeUtils.defineModuleGetter(this, "FormData",
-  "resource://gre/modules/FormData.jsm");
-ChromeUtils.defineModuleGetter(this, "ScrollPosition",
-  "resource://gre/modules/ScrollPosition.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionHistory",
-  "resource://gre/modules/sessionstore/SessionHistory.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionStorage",
-  "resource:///modules/sessionstore/SessionStorage.jsm");
-ChromeUtils.defineModuleGetter(this, "Utils",
-  "resource://gre/modules/sessionstore/Utils.jsm");
-
-const ssu = Cc["@mozilla.org/browser/sessionstore/utils;1"]
-              .getService(Ci.nsISessionStoreUtils);
-
-/**
- * Restores frame tree |data|, starting at the given root |frame|. As the
- * function recurses into descendant frames it will call cb(frame, data) for
- * each frame it encounters, starting with the given root.
- */
-function restoreFrameTreeData(frame, data, cb) {
-  // Restore data for the root frame.
-  // The callback can abort by returning false.
-  if (cb(frame, data) === false) {
-    return;
-  }
-
-  if (!data.hasOwnProperty("children")) {
-    return;
-  }
-
-  // Recurse into child frames.
-  ssu.forEachNonDynamicChildFrame(frame, (subframe, index) => {
-    if (data.children[index]) {
-      restoreFrameTreeData(subframe, data.children[index], cb);
-    }
-  });
-}
-
-/**
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "SessionHistory",
@@ -81,7 +24,6 @@ ChromeUtils.defineModuleGetter(
   "resource://gre/modules/E10SUtils.jsm"
 );
 /**
->>>>>>> upstream-releases
  * This module implements the content side of session restoration. The chrome
  * side is handled by SessionStore.jsm. The functions in this module are called
  * by content-sessionStore.js based on messages received from SessionStore.jsm
@@ -201,17 +143,10 @@ ContentRestoreInternal.prototype = {
 
     // Make sure to reset the capabilities and attributes in case this tab gets
     // reused.
-<<<<<<< HEAD
-    ssu.restoreDocShellCapabilities(this.docShell, tabData.disallow);
-||||||| merged common ancestors
-    let disallow = new Set(tabData.disallow && tabData.disallow.split(","));
-    DocShellCapabilities.restore(this.docShell, disallow);
-=======
     SessionStoreUtils.restoreDocShellCapabilities(
       this.docShell,
       tabData.disallow
     );
->>>>>>> upstream-releases
 
     if (tabData.storage && this.docShell instanceof Ci.nsIDocShell) {
       SessionStoreUtils.restoreSessionStorage(this.docShell, tabData.storage);
@@ -271,29 +206,6 @@ ContentRestoreInternal.prototype = {
 
         // A load has been redirected to a new process so get history into the
         // same state it was before the load started then trigger the load.
-<<<<<<< HEAD
-        let referrer = loadArguments.referrer ?
-                       Services.io.newURI(loadArguments.referrer) : null;
-        let referrerPolicy = ("referrerPolicy" in loadArguments
-            ? loadArguments.referrerPolicy
-            : Ci.nsIHttpChannel.REFERRER_POLICY_UNSET);
-        let postData = loadArguments.postData ?
-                       Utils.makeInputStream(loadArguments.postData) : null;
-        let triggeringPrincipal = loadArguments.triggeringPrincipal
-                                  ? Utils.deserializePrincipal(loadArguments.triggeringPrincipal)
-                                  : Services.scriptSecurityManager.createNullPrincipal({});
-||||||| merged common ancestors
-        let referrer = loadArguments.referrer ?
-                       Services.io.newURI(loadArguments.referrer) : null;
-        let referrerPolicy = ("referrerPolicy" in loadArguments
-            ? loadArguments.referrerPolicy
-            : Ci.nsIHttpChannel.REFERRER_POLICY_UNSET);
-        let postData = loadArguments.postData ?
-                       Utils.makeInputStream(loadArguments.postData) : null;
-        let triggeringPrincipal = loadArguments.triggeringPrincipal
-                                  ? Utils.deserializePrincipal(loadArguments.triggeringPrincipal)
-                                  : null;
-=======
         // Referrer information is now stored as a referrerInfo property. We
         // should also cope with the old format of passing `referrer` and
         // `referrerPolicy` separately.
@@ -325,7 +237,6 @@ ContentRestoreInternal.prototype = {
         let csp = loadArguments.csp
           ? E10SUtils.deserializeCSP(loadArguments.csp)
           : null;
->>>>>>> upstream-releases
 
         if (loadArguments.userContextId) {
           webNavigation.setOriginAttributesBeforeLoading({
@@ -434,13 +345,7 @@ ContentRestoreInternal.prototype = {
     // Restore scroll data.
     Utils.restoreFrameTreeData(window, scrollPositions, (frame, data) => {
       if (data.scroll) {
-<<<<<<< HEAD
-        ssu.restoreScrollPosition(frame, data.scroll);
-||||||| merged common ancestors
-        ScrollPosition.restore(frame, data.scroll);
-=======
         SessionStoreUtils.restoreScrollPosition(frame, data);
->>>>>>> upstream-releases
       }
     });
   },

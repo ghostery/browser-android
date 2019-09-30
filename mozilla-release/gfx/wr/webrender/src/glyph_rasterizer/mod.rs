@@ -863,31 +863,11 @@ mod test_glyph_rasterizer {
             .build();
         let workers = Arc::new(worker.unwrap());
         let mut glyph_rasterizer = GlyphRasterizer::new(workers).unwrap();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/mod.rs
-        let mut glyph_cache = GlyphCache::new();
-        let mut gpu_cache = GpuCache::new();
-        let mut texture_cache = TextureCache::new_for_testing(2048, 1024);
-||||||| merged common ancestors
-        let mut glyph_cache = GlyphCache::new();
-        let mut gpu_cache = GpuCache::new();
-        let mut texture_cache = TextureCache::new(2048);
-=======
         let mut glyph_cache = GlyphCache::new(GlyphCache::DEFAULT_MAX_BYTES_USED);
         let mut gpu_cache = GpuCache::new_for_testing();
         let mut texture_cache = TextureCache::new_for_testing(2048, 1024);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/mod.rs
         let mut render_task_cache = RenderTaskCache::new();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/mod.rs
-        let mut render_task_tree = RenderTaskTree::new(FrameId::INVALID);
-        let mut special_render_passes = SpecialRenderPasses::new(&DeviceIntSize::new(1366, 768));
-
-||||||| merged common ancestors
-        let mut render_task_tree = RenderTaskTree::new(FrameId(0));
-        let mut special_render_passes = SpecialRenderPasses::new(&DeviceIntSize::new(1366, 768));
-
-=======
         let mut render_task_tree = RenderTaskGraph::new(FrameId::INVALID, &RenderTaskGraphCounters::new());
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/mod.rs
         let mut font_file =
             File::open("../wrench/reftests/text/VeraBd.ttf").expect("Couldn't open font file");
         let mut font_data = vec![];

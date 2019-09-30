@@ -42,23 +42,11 @@ function getParentProcessActors(callback) {
   DebuggerServer.allowChromeProcess = true;
 
   const client = new DebuggerClient(DebuggerServer.connectPipe());
-<<<<<<< HEAD
-  client.connect()
-    .then(() => client.mainRoot.getMainProcess())
-    .then(front => {
-      callback(client, front);
-||||||| merged common ancestors
-  client.connect()
-    .then(() => client.mainRoot.getProcess(0))
-    .then(response => {
-      callback(client, response.form);
-=======
   client
     .connect()
     .then(() => client.mainRoot.getMainProcess())
     .then(front => {
       callback(client, front);
->>>>>>> upstream-releases
     });
 
   SimpleTest.registerCleanupFunction(() => {

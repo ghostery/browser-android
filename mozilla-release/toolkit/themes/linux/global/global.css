@@ -13,29 +13,13 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 @namespace html url("http://www.w3.org/1999/xhtml");
 
-<<<<<<< HEAD
 %include ../../shared/global.inc.css
-
-/* ::::: XBL bindings ::::: */
-||||||| merged common ancestors
-/* ::::: XBL bindings ::::: */
-=======
-%include ../../shared/global.inc.css
->>>>>>> upstream-releases
 
 /* ::::: XBL bindings ::::: */
 
 @media (-moz-menubar-drag) {
-<<<<<<< HEAD
-  toolbar[type="menubar"] {
-    -moz-binding: url("chrome://global/content/bindings/toolbar.xml#toolbar-drag");
-||||||| merged common ancestors
-  toolbar[type="menubar"]:not([autohide="true"]) {
-    -moz-binding: url("chrome://global/content/bindings/toolbar.xml#toolbar-drag");
-=======
   toolbar[type="menubar"] {
     -moz-window-dragging: drag;
->>>>>>> upstream-releases
   }
 }
 
@@ -248,52 +232,3 @@ popupnotificationcontent {
 }
 
 %include ../../shared/notification-popup.inc.css
-<<<<<<< HEAD
-
-/* :::::: autoscroll popup ::::: */
-
-.autoscroller {
-  border: none;
-  padding: 0;
-  background-image: url("chrome://global/skin/icons/autoscroll.svg");
-  background-size: contain;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  -moz-appearance: none;
-}
-
-.autoscroller[scrolldir="NS"] {
-  background-image: url("chrome://global/skin/icons/autoscroll-vertical.svg");
-}
-
-.autoscroller[scrolldir="EW"] {
-  background-image: url("chrome://global/skin/icons/autoscroll-horizontal.svg");
-}
-
-||||||| merged common ancestors
-
-/* :::::: autoscroll popup ::::: */
-
-.autoscroller {
-  border: none;
-  padding: 0;
-  background-image: url("chrome://global/skin/icons/autoscroll.svg");
-  background-size: contain;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  -moz-appearance: none;
-}
-
-.autoscroller[scrolldir="NS"] {
-  background-image: url("chrome://global/skin/icons/autoscroll-vertical.svg");
-}
-
-.autoscroller[scrolldir="EW"] {
-  background-image: url("chrome://global/skin/icons/autoscroll-horizontal.svg");
-}
-
-/* :::::: Close button icons ::::: */
-
-%include ../../shared/close-icon.inc.css
-=======
->>>>>>> upstream-releases

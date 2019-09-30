@@ -182,15 +182,8 @@ protected:
     };
 
     virtual TexGenType onCanGenerateTexture() const { return TexGenType::kNone; }
-<<<<<<< HEAD
-    virtual sk_sp<GrTextureProxy> onGenerateTexture(GrContext*, const SkImageInfo&, const SkIPoint&,
-||||||| merged common ancestors
-    virtual sk_sp<GrTextureProxy> onGenerateTexture(GrContext*, const SkImageInfo&, const SkIPoint&,
-                                                    SkTransferFunctionBehavior,
-=======
     virtual sk_sp<GrTextureProxy> onGenerateTexture(GrRecordingContext*, const SkImageInfo&,
                                                     const SkIPoint&,
->>>>>>> upstream-releases
                                                     bool willNeedMipMaps);  // returns nullptr
 #endif
 

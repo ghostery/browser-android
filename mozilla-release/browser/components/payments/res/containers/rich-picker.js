@@ -36,15 +36,6 @@ export default class RichPicker extends PaymentStateSubscriberMixin(
   }
 
   connectedCallback() {
-<<<<<<< HEAD
-    if (!this.dropdown.popupBox.id) {
-      this.dropdown.popupBox.id = "select-" + Math.floor(Math.random() * 1000000);
-    }
-    this.labelElement.setAttribute("for", this.dropdown.popupBox.id);
-    this.invalidLabel.setAttribute("for", this.dropdown.popupBox.id);
-
-||||||| merged common ancestors
-=======
     if (!this.dropdown.popupBox.id) {
       this.dropdown.popupBox.id =
         "select-" + Math.floor(Math.random() * 1000000);
@@ -52,7 +43,6 @@ export default class RichPicker extends PaymentStateSubscriberMixin(
     this.labelElement.setAttribute("for", this.dropdown.popupBox.id);
     this.invalidLabel.setAttribute("for", this.dropdown.popupBox.id);
 
->>>>>>> upstream-releases
     // The document order, by default, controls tab order so keep that in mind if changing this.
     this.appendChild(this.labelElement);
     this.appendChild(this.dropdown);

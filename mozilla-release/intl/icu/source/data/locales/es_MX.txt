@@ -92,13 +92,7 @@ es_MX{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.5"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.96"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

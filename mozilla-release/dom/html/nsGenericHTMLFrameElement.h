@@ -24,24 +24,6 @@ template <typename>
 struct Nullable;
 class WindowProxyHolder;
 class XULFrameElement;
-<<<<<<< HEAD
-}
-}  // namespace mozilla
-
-#define NS_GENERICHTMLFRAMEELEMENT_IID               \
-  {                                                  \
-    0x8190db72, 0xdab0, 0x4d72, {                    \
-      0x94, 0x26, 0x87, 0x5f, 0x5a, 0x8a, 0x2a, 0xe5 \
-    }                                                \
-  }
-||||||| merged common ancestors
-}
-}
-
-#define NS_GENERICHTMLFRAMEELEMENT_IID \
-{ 0x8190db72, 0xdab0, 0x4d72, \
-  { 0x94, 0x26, 0x87, 0x5f, 0x5a, 0x8a, 0x2a, 0xe5 } }
-=======
 }  // namespace dom
 }  // namespace mozilla
 
@@ -51,7 +33,6 @@ class XULFrameElement;
       0x94, 0x26, 0x87, 0x5f, 0x5a, 0x8a, 0x2a, 0xe5 \
     }                                                \
   }
->>>>>>> upstream-releases
 
 /**
  * A helper class for frame elements
@@ -80,25 +61,10 @@ class nsGenericHTMLFrameElement : public nsGenericHTMLElement,
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_GENERICHTMLFRAMEELEMENT_IID)
 
   // nsIContent
-<<<<<<< HEAD
-  virtual bool IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
-                               int32_t* aTabIndex) override;
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-||||||| merged common ancestors
-  virtual bool IsHTMLFocusable(bool aWithMouse, bool *aIsFocusable, int32_t *aTabIndex) override;
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-=======
   virtual bool IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
                                int32_t* aTabIndex) override;
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent = true) override;
->>>>>>> upstream-releases
   virtual void DestroyContent() override;
 
   nsresult CopyInnerTo(mozilla::dom::Element* aDest);
@@ -162,18 +128,12 @@ class nsGenericHTMLFrameElement : public nsGenericHTMLElement,
     return mSrcTriggeringPrincipal;
   }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // Needed for nsBrowserElement
   already_AddRefed<nsFrameLoader> GetFrameLoader() override {
     return nsFrameLoaderOwner::GetFrameLoader();
   }
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsGenericHTMLFrameElement();
 
   // This doesn't really ensure a frame loader in all cases, only when

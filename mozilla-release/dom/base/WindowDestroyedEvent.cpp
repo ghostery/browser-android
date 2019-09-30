@@ -65,15 +65,7 @@ WindowDestroyedEvent::Run() {
     case Phase::Destroying: {
       bool skipNukeCrossCompartment = false;
 #ifndef DEBUG
-<<<<<<< HEAD
-      nsCOMPtr<nsIAppStartup> appStartup =
-          do_GetService(NS_APPSTARTUP_CONTRACTID);
-||||||| merged common ancestors
-      nsCOMPtr<nsIAppStartup> appStartup =
-        do_GetService(NS_APPSTARTUP_CONTRACTID);
-=======
       nsCOMPtr<nsIAppStartup> appStartup = components::AppStartup::Service();
->>>>>>> upstream-releases
 
       if (appStartup) {
         appStartup->GetShuttingDown(&skipNukeCrossCompartment);
@@ -124,44 +116,18 @@ WindowDestroyedEvent::Run() {
               nsJSPrincipals::get(JS::GetRealmPrincipals(realm));
 
           if (BasePrincipal::Cast(pc)->AddonPolicy()) {
-<<<<<<< HEAD
-            // We want to nuke all references to the add-on compartment.
-            xpc::NukeAllWrappersForCompartment(
-                cx, cpt,
-                mIsInnerWindow ? js::DontNukeWindowReferences
-                               : js::NukeWindowReferences);
-||||||| merged common ancestors
-            // We want to nuke all references to the add-on compartment.
-            xpc::NukeAllWrappersForCompartment(cx, cpt,
-                                               mIsInnerWindow ? js::DontNukeWindowReferences
-                                                              : js::NukeWindowReferences);
-=======
             // We want to nuke all references to the add-on realm.
             xpc::NukeAllWrappersForRealm(cx, realm,
                                          mIsInnerWindow
                                              ? js::DontNukeWindowReferences
                                              : js::NukeWindowReferences);
->>>>>>> upstream-releases
           } else {
             // We only want to nuke wrappers for the chrome->content case
-<<<<<<< HEAD
-            js::NukeCrossCompartmentWrappers(
-                cx, BrowserCompartmentMatcher(), cpt,
-                mIsInnerWindow ? js::DontNukeWindowReferences
-                               : js::NukeWindowReferences,
-                js::NukeIncomingReferences);
-||||||| merged common ancestors
-            js::NukeCrossCompartmentWrappers(cx, BrowserCompartmentMatcher(), cpt,
-                                             mIsInnerWindow ? js::DontNukeWindowReferences
-                                                            : js::NukeWindowReferences,
-                                             js::NukeIncomingReferences);
-=======
             js::NukeCrossCompartmentWrappers(
                 cx, BrowserCompartmentMatcher(), realm,
                 mIsInnerWindow ? js::DontNukeWindowReferences
                                : js::NukeWindowReferences,
                 js::NukeIncomingReferences);
->>>>>>> upstream-releases
           }
         }
       }

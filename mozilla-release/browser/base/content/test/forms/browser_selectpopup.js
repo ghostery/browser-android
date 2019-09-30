@@ -720,27 +720,6 @@ async function performLargePopupTests(win) {
   ok(true, "scroll position at drag down from option");
 
   // Dragging above the popup scrolls it up.
-<<<<<<< HEAD
-  EventUtils.synthesizeMouseAtPoint(popupRect.left + 20, popupRect.top - 20, { type: "mousemove" }, win);
-  is(selectPopup.scrollBox.scrollTop, scrollPos, "scroll position at drag up from option");
-
-  scrollPos = selectPopup.scrollBox.scrollTop;
-  EventUtils.synthesizeMouseAtPoint(popupRect.left + 20, popupRect.bottom + 25, { type: "mouseup" }, win);
-  is(selectPopup.scrollBox.scrollTop, scrollPos, "scroll position at mouseup from option should not change");
-
-  EventUtils.synthesizeMouseAtPoint(popupRect.left + 20, popupRect.bottom + 20, { type: "mousemove" }, win);
-  is(selectPopup.scrollBox.scrollTop, scrollPos, "scroll position at mousemove after mouseup should not change");
-||||||| merged common ancestors
-  EventUtils.synthesizeMouseAtPoint(popupRect.left + 20, popupRect.top - 20, { type: "mousemove" }, win);
-  ok(selectPopup.scrollBox.scrollTop, scrollPos, "scroll position at drag up from option");
-
-  scrollPos = selectPopup.scrollBox.scrollTop;
-  EventUtils.synthesizeMouseAtPoint(popupRect.left + 20, popupRect.bottom + 25, { type: "mouseup" }, win);
-  is(selectPopup.scrollBox.scrollTop, scrollPos, "scroll position at mouseup from option should not change");
-
-  EventUtils.synthesizeMouseAtPoint(popupRect.left + 20, popupRect.bottom + 20, { type: "mousemove" }, win);
-  is(selectPopup.scrollBox.scrollTop, scrollPos, "scroll position at mousemove after mouseup should not change");
-=======
   scrolledPromise = BrowserTestUtils.waitForEvent(
     selectPopup,
     "scroll",
@@ -780,7 +759,6 @@ async function performLargePopupTests(win) {
     scrollPos,
     "scroll position at mousemove after mouseup should not change"
   );
->>>>>>> upstream-releases
 
   await hideSelectPopup(selectPopup, "escape", win);
 

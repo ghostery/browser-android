@@ -21,33 +21,6 @@ namespace widget {
 using namespace mozilla::gfx;
 using namespace mozilla;
 
-<<<<<<< HEAD
-WinCompositorWidget::WinCompositorWidget(
-    const WinCompositorWidgetInitData& aInitData,
-    const layers::CompositorOptions& aOptions)
-    : CompositorWidget(aOptions),
-      mWidgetKey(aInitData.widgetKey()),
-      mWnd(reinterpret_cast<HWND>(aInitData.hWnd())),
-      mCompositorWnd(nullptr),
-      mTransparentSurfaceLock("mTransparentSurfaceLock"),
-      mTransparencyMode(aInitData.transparencyMode()),
-      mMemoryDC(nullptr),
-      mCompositeDC(nullptr),
-      mLockedBackBufferData(nullptr) {
-||||||| merged common ancestors
-WinCompositorWidget::WinCompositorWidget(const WinCompositorWidgetInitData& aInitData,
-                                         const layers::CompositorOptions& aOptions)
- : CompositorWidget(aOptions)
- , mWidgetKey(aInitData.widgetKey()),
-   mWnd(reinterpret_cast<HWND>(aInitData.hWnd())),
-   mCompositorWnd(nullptr),
-   mTransparentSurfaceLock("mTransparentSurfaceLock"),
-   mTransparencyMode(aInitData.transparencyMode()),
-   mMemoryDC(nullptr),
-   mCompositeDC(nullptr),
-   mLockedBackBufferData(nullptr)
-{
-=======
 WinCompositorWidget::WinCompositorWidget(
     const WinCompositorWidgetInitData& aInitData,
     const layers::CompositorOptions& aOptions)
@@ -60,7 +33,6 @@ WinCompositorWidget::WinCompositorWidget(
       mMemoryDC(nullptr),
       mCompositeDC(nullptr),
       mLockedBackBufferData(nullptr) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mWnd && ::IsWindow(mWnd));
 
   // mNotDeferEndRemoteDrawing is set on the main thread during init,
@@ -324,18 +296,8 @@ void WinCompositorWidget::FreeWindowSurface(HDC dc) {
 
 bool WinCompositorWidget::IsHidden() const { return ::IsIconic(mWnd); }
 
-<<<<<<< HEAD
-void WinCompositorWidget::EnsureCompositorWindow() {
-  if (mCompositorWnd) {
-||||||| merged common ancestors
-void
-WinCompositorWidget::EnsureCompositorWindow()
-{
-  if (mCompositorWnd) {
-=======
 void WinCompositorWidget::EnsureCompositorWindow() {
   if (mCompositorWnds.mCompositorWnd || mCompositorWnds.mInitialParentWnd) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -346,36 +308,16 @@ void WinCompositorWidget::EnsureCompositorWindow() {
   MOZ_ASSERT(mCompositorWnds.mInitialParentWnd);
 }
 
-<<<<<<< HEAD
-void WinCompositorWidget::DestroyCompositorWindow() {
-  if (!mCompositorWnd) {
-||||||| merged common ancestors
-void
-WinCompositorWidget::DestroyCompositorWindow()
-{
-  if (!mCompositorWnd) {
-=======
 void WinCompositorWidget::DestroyCompositorWindow() {
   if (!mCompositorWnds.mCompositorWnd && !mCompositorWnds.mInitialParentWnd) {
->>>>>>> upstream-releases
     return;
   }
   WinCompositorWindowThread::DestroyCompositorWindow(mCompositorWnds);
   mCompositorWnds = WinCompositorWnds(nullptr, nullptr);
 }
 
-<<<<<<< HEAD
-void WinCompositorWidget::UpdateCompositorWndSizeIfNecessary() {
-  if (!mCompositorWnd) {
-||||||| merged common ancestors
-void
-WinCompositorWidget::UpdateCompositorWndSizeIfNecessary()
-{
-  if (!mCompositorWnd) {
-=======
 void WinCompositorWidget::UpdateCompositorWndSizeIfNecessary() {
   if (!mCompositorWnds.mCompositorWnd) {
->>>>>>> upstream-releases
     return;
   }
 

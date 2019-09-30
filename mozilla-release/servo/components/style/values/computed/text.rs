@@ -5,20 +5,6 @@
 //! Computed types for text properties.
 
 #[cfg(feature = "servo")]
-<<<<<<< HEAD
-use crate::properties::StyleBuilder;
-use crate::values::computed::length::{Length, LengthOrPercentage};
-use crate::values::computed::{NonNegativeLength, NonNegativeNumber};
-use crate::values::generics::text::InitialLetter as GenericInitialLetter;
-use crate::values::generics::text::LineHeight as GenericLineHeight;
-use crate::values::generics::text::MozTabSize as GenericMozTabSize;
-use crate::values::generics::text::Spacing;
-use crate::values::specified::text::TextOverflowSide;
-use crate::values::specified::text::{TextEmphasisFillMode, TextEmphasisShapeKeyword};
-use crate::values::{CSSFloat, CSSInteger};
-||||||| merged common ancestors
-use properties::StyleBuilder;
-=======
 use crate::properties::StyleBuilder;
 use crate::values::computed::length::{Length, LengthPercentage};
 use crate::values::computed::{Context, NonNegativeLength, NonNegativeNumber, ToComputedValue};
@@ -29,33 +15,13 @@ use crate::values::specified::text::{self as specified, TextOverflowSide};
 use crate::values::specified::text::{TextEmphasisFillMode, TextEmphasisShapeKeyword};
 use crate::values::{CSSFloat, CSSInteger};
 use crate::Zero;
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
-<<<<<<< HEAD
-
-pub use crate::values::specified::OverflowWrap;
-pub use crate::values::specified::TextAlignKeyword as TextAlign;
-pub use crate::values::specified::TextEmphasisPosition;
-||||||| merged common ancestors
-use values::{CSSFloat, CSSInteger};
-use values::computed::{NonNegativeLength, NonNegativeNumber};
-use values::computed::length::{Length, LengthOrPercentage};
-use values::generics::text::InitialLetter as GenericInitialLetter;
-use values::generics::text::LineHeight as GenericLineHeight;
-use values::generics::text::MozTabSize as GenericMozTabSize;
-use values::generics::text::Spacing;
-use values::specified::text::{TextEmphasisFillMode, TextEmphasisShapeKeyword, TextOverflowSide};
-
-pub use values::specified::TextAlignKeyword as TextAlign;
-pub use values::specified::TextEmphasisPosition;
-=======
 
 pub use crate::values::specified::TextAlignKeyword as TextAlign;
 pub use crate::values::specified::{LineBreak, OverflowWrap, WordBreak};
 pub use crate::values::specified::{TextDecorationLine, TextEmphasisPosition};
 pub use crate::values::specified::{TextDecorationSkipInk, TextTransform};
->>>>>>> upstream-releases
 
 /// A computed value for the `initial-letter` property.
 pub type InitialLetter = GenericInitialLetter<CSSFloat, CSSInteger>;

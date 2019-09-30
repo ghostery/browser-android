@@ -498,13 +498,6 @@ impl<'i: 't, 't> Parser<'i, 't> {
     /// tokenizer since either `look_for_var_or_env_functions` was called, and
     /// stop looking.
     #[inline]
-<<<<<<< HEAD
-    pub fn seen_var_or_env_functions(&mut self) -> bool {
-        self.input.tokenizer.seen_var_or_env_functions()
-||||||| merged common ancestors
-    pub fn seen_var_functions(&mut self) -> bool {
-        self.input.tokenizer.seen_var_functions()
-=======
     pub fn seen_var_or_env_functions(&mut self) -> bool {
         self.input.tokenizer.seen_var_or_env_functions()
     }
@@ -516,7 +509,6 @@ impl<'i: 't, 't> Parser<'i, 't> {
         F: FnOnce(&mut Parser<'i, 't>) -> Result<T, E>,
     {
         self.try_parse(thing)
->>>>>>> upstream-releases
     }
 
     /// Execute the given closure, passing it the parser.

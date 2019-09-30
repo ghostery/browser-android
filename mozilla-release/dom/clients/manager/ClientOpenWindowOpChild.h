@@ -15,16 +15,8 @@ namespace dom {
 class ClientOpenWindowOpChild final : public PClientOpenWindowOpChild {
   MozPromiseRequestHolder<ClientOpPromise> mPromiseRequestHolder;
 
-<<<<<<< HEAD
-  already_AddRefed<ClientOpPromise> DoOpenWindow(
-      const ClientOpenWindowArgs& aArgs);
-||||||| merged common ancestors
-  already_AddRefed<ClientOpPromise>
-  DoOpenWindow(const ClientOpenWindowArgs& aArgs);
-=======
   MOZ_MUST_USE RefPtr<ClientOpPromise> DoOpenWindow(
       const ClientOpenWindowArgs& aArgs);
->>>>>>> upstream-releases
 
   // PClientOpenWindowOpChild interface
   void ActorDestroy(ActorDestroyReason aReason) override;

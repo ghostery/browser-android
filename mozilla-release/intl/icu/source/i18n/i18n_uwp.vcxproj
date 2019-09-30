@@ -1,15 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<<<<<<< HEAD
-  <!-- The following import will include the 'default' configuration options for VS UWP projects. -->
-  <Import Project="..\allinone\Build.Windows.UWP.ProjectConfiguration.props" />
-  <!-- The following import will include the library configuration options for VS projects. -->
-  <Import Project="..\allinone\Build.Windows.Library.ProjectConfiguration.props" />
-||||||| merged common ancestors
-  <!-- The following import will include the 'default' configuration options for VS UWP projects. -->
-  <Import Project="..\allinone\Build.Windows.UWP.ProjectConfiguration.props" />
-=======
->>>>>>> upstream-releases
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -187,13 +177,7 @@
       <ProgramDataBaseFileName>.\x86\ReleaseUWP/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin32uwp\icuin63.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin32uwp\icuin62.dll</OutputFile>
-=======
       <OutputFile>..\..\bin32uwp\icuin64.dll</OutputFile>
->>>>>>> upstream-releases
       <ProgramDatabaseFile>.\..\..\lib32uwp\icuin.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib32uwp\icuin.lib</ImportLibrary>
       <AdditionalDependencies>..\..\lib32uwp\icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -210,13 +194,7 @@
       <ProgramDataBaseFileName>.\x86\DebugUWP/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin32uwp\icuin63d.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin32uwp\icuin62d.dll</OutputFile>
-=======
       <OutputFile>..\..\bin32uwp\icuin64d.dll</OutputFile>
->>>>>>> upstream-releases
       <ProgramDatabaseFile>.\..\..\lib32uwp\icuind.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib32uwp\icuind.lib</ImportLibrary>
       <AdditionalDependencies>..\..\lib32uwp\icuucd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -233,13 +211,7 @@
       <ProgramDataBaseFileName>.\x64\ReleaseUWP/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin64uwp\icuin63.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin64uwp\icuin62.dll</OutputFile>
-=======
       <OutputFile>..\..\bin64uwp\icuin64.dll</OutputFile>
->>>>>>> upstream-releases
       <ProgramDatabaseFile>.\..\..\lib64uwp\icuin.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib64uwp\icuin.lib</ImportLibrary>
       <AdditionalDependencies>..\..\lib64uwp\icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -256,13 +228,7 @@
       <ProgramDataBaseFileName>.\x64\DebugUWP/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin64uwp\icuin63d.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin64uwp\icuin62d.dll</OutputFile>
-=======
       <OutputFile>..\..\bin64uwp\icuin64d.dll</OutputFile>
->>>>>>> upstream-releases
       <ProgramDatabaseFile>.\..\..\lib64uwp\icuind.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib64uwp\icuind.lib</ImportLibrary>
       <AdditionalDependencies>..\..\lib64uwp\icuucd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -279,13 +245,7 @@
       <ProgramDataBaseFileName>.\ARM\ReleaseUWP/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\binARMuwp\icuin63.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\binARMuwp\icuin62.dll</OutputFile>
-=======
       <OutputFile>..\..\binARMuwp\icuin64.dll</OutputFile>
->>>>>>> upstream-releases
       <ProgramDatabaseFile>.\..\..\libARMuwp\icuin.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\libARMuwp\icuin.lib</ImportLibrary>
       <AdditionalDependencies>..\..\libARMuwp\icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -302,13 +262,7 @@
       <ProgramDataBaseFileName>.\ARM\DebugUWP/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\binARMuwp\icuin63d.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\binARMuwp\icuin62d.dll</OutputFile>
-=======
       <OutputFile>..\..\binARMuwp\icuin64d.dll</OutputFile>
->>>>>>> upstream-releases
       <ProgramDatabaseFile>.\..\..\libARMuwp\icuind.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\libARMuwp\icuind.lib</ImportLibrary>
       <AdditionalDependencies>..\..\libARMuwp\icuucd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -711,13 +665,8 @@
     <ClInclude Include="numparse_validators.h" />
     <ClInclude Include="numparse_types.h" />
     <ClInclude Include="numparse_utils.h" />
-<<<<<<< HEAD
-    <ClInclude Include="numrange_impl.h" />
-||||||| merged common ancestors
-=======
     <ClInclude Include="numrange_impl.h" />
     <ClInclude Include="formattedval_impl.h" />
->>>>>>> upstream-releases
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="i18n.rc" />

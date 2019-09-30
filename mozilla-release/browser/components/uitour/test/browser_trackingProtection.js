@@ -1,14 +1,7 @@
 "use strict";
 
-<<<<<<< HEAD
-const PREF_INTRO_COUNT = "browser.contentblocking.introCount";
-||||||| merged common ancestors
-const PREF_INTRO_COUNT = "privacy.trackingprotection.introCount";
-const PREF_CB_UI_ENABLED = "browser.contentblocking.ui.enabled";
-=======
 const PREF_INTRO_DELAY = "browser.contentblocking.introDelaySeconds";
 const PREF_INTRO_COUNT = "browser.contentblocking.introCount";
->>>>>>> upstream-releases
 const PREF_TP_ENABLED = "privacy.trackingprotection.enabled";
 const BENIGN_PAGE =
   "http://tracking.example.org/browser/browser/base/content/test/trackingUI/benignPage.html";
@@ -26,12 +19,7 @@ var { UrlClassifierTestUtils } = ChromeUtils.import(
 registerCleanupFunction(function() {
   UrlClassifierTestUtils.cleanupTestTrackers();
   Services.prefs.clearUserPref(PREF_TP_ENABLED);
-<<<<<<< HEAD
-||||||| merged common ancestors
-  Services.prefs.clearUserPref(PREF_INTRO_COUNT);
-=======
   Services.prefs.clearUserPref(PREF_INTRO_DELAY);
->>>>>>> upstream-releases
 });
 
 function allowOneIntro() {
@@ -80,21 +68,11 @@ add_task(async function test_trackingPages() {
         );
       });
 
-<<<<<<< HEAD
-    let step2URL = Services.urlFormatter.formatURLPref("privacy.trackingprotection.introURL") +
-                   "?step=2&newtab=true&variation=2";
-    let buttons = document.getElementById("UITourTooltipButtons");
-||||||| merged common ancestors
-    let step2URL = Services.urlFormatter.formatURLPref("privacy.trackingprotection.introURL") +
-                   "?step=2&newtab=true&variation=0";
-    let buttons = document.getElementById("UITourTooltipButtons");
-=======
       is(
         Services.prefs.getIntPref(PREF_INTRO_COUNT),
         window.ContentBlocking.MAX_INTROS,
         "Check intro count increased"
       );
->>>>>>> upstream-releases
 
       let step2URL =
         Services.urlFormatter.formatURLPref(

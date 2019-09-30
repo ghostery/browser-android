@@ -30,45 +30,8 @@
 #include "GrTextureProxy.h"
 #include "SkGr.h"
 #endif
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-#ifndef SK_IGNORE_TO_STRING
-void SkImageFilter::CropRect::toString(SkString* str) const {
-    if (!fFlags) {
-        return;
-    }
-
-    str->appendf("cropRect (");
-    if (fFlags & CropRect::kHasLeft_CropEdge) {
-        str->appendf("%.2f, ", fRect.fLeft);
-    } else {
-        str->appendf("X, ");
-    }
-    if (fFlags & CropRect::kHasTop_CropEdge) {
-        str->appendf("%.2f, ", fRect.fTop);
-    } else {
-        str->appendf("X, ");
-    }
-    if (fFlags & CropRect::kHasWidth_CropEdge) {
-        str->appendf("%.2f, ", fRect.width());
-    } else {
-        str->appendf("X, ");
-    }
-    if (fFlags & CropRect::kHasHeight_CropEdge) {
-        str->appendf("%.2f", fRect.height());
-    } else {
-        str->appendf("X");
-    }
-    str->appendf(") ");
-}
-#endif
-
-=======
 #include <atomic>
 
->>>>>>> upstream-releases
 void SkImageFilter::CropRect::applyTo(const SkIRect& imageBounds,
                                       const SkMatrix& ctm,
                                       bool embiggen,
@@ -287,17 +250,6 @@ sk_sp<SkSpecialImage> SkImageFilter::DrawWithFP(GrRecordingContext* context,
     paint.setPorterDuffXPFactory(SkBlendMode::kSrc);
 
     sk_sp<SkColorSpace> colorSpace = sk_ref_sp(outputProperties.colorSpace());
-<<<<<<< HEAD
-    GrPixelConfig config = SkColorType2GrPixelConfig(outputProperties.colorType());
-    sk_sp<GrRenderTargetContext> renderTargetContext(
-        context->contextPriv().makeDeferredRenderTargetContext(
-                                SkBackingFit::kApprox, bounds.width(), bounds.height(),
-                                config, std::move(colorSpace)));
-||||||| merged common ancestors
-    GrPixelConfig config = GrRenderableConfigForColorSpace(colorSpace.get());
-    sk_sp<GrRenderTargetContext> renderTargetContext(context->makeDeferredRenderTargetContext(
-        SkBackingFit::kApprox, bounds.width(), bounds.height(), config, std::move(colorSpace)));
-=======
     GrPixelConfig config = SkColorType2GrPixelConfig(outputProperties.colorType());
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(
@@ -306,7 +258,6 @@ sk_sp<SkSpecialImage> SkImageFilter::DrawWithFP(GrRecordingContext* context,
         context->priv().makeDeferredRenderTargetContext(
                                 format, SkBackingFit::kApprox, bounds.width(), bounds.height(),
                                 config, std::move(colorSpace)));
->>>>>>> upstream-releases
     if (!renderTargetContext) {
         return nullptr;
     }

@@ -57,14 +57,6 @@ class IMEHandler final {
    * When the message is not needed to handle anymore by the caller, this
    * returns true.  Otherwise, false.
    */
-<<<<<<< HEAD
-  static bool ProcessMessage(nsWindow* aWindow, UINT aMessage, WPARAM& aWParam,
-                             LPARAM& aLParam, MSGResult& aResult);
-||||||| merged common ancestors
-  static bool ProcessMessage(nsWindow* aWindow, UINT aMessage,
-                             WPARAM& aWParam, LPARAM& aLParam,
-                             MSGResult& aResult);
-=======
   static bool ProcessMessage(nsWindow* aWindow, UINT aMessage, WPARAM& aWParam,
                              LPARAM& aLParam, MSGResult& aResult);
 
@@ -104,7 +96,6 @@ class IMEHandler final {
    * by IMEHandler.
    */
   static bool HasNativeCaret() { return sNativeCaretIsCreated; }
->>>>>>> upstream-releases
 
   /**
    * When there is a composition, returns true.  Otherwise, false.

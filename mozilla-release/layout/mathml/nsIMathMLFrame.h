@@ -129,22 +129,6 @@ class nsIMathMLFrame {
    *      your InheritAutomaticData() -- this way, they can safely query them
    *      and the process will feed upon itself.
    *
-<<<<<<< HEAD
-   * 2. Use TransmitAutomaticData() to set properties related to your
-   * descendants:
-   *    - set properties that depend on the state that you expect your
-   *      descendants to have reached upon processing their own
-   *      TransmitAutomaticData().
-   *    - transmit properties that your descendants expect that you will
-   *      transmit to them in your TransmitAutomaticData() -- this way, they
-   *      remain up-to-date.
-||||||| merged common ancestors
-   * 2. Use TransmitAutomaticData() to set properties related to your descendants:
-   *    - set properties that depend on the state that you expect your descendants
-   *      to have reached upon processing their own TransmitAutomaticData().
-   *    - transmit properties that your descendants expect that you will transmit to
-   *      them in your TransmitAutomaticData() -- this way, they remain up-to-date.
-=======
    * 2. Use TransmitAutomaticData() to set properties related to your
    *    descendants:
    *    - set properties that depend on the state that you expect your
@@ -153,7 +137,6 @@ class nsIMathMLFrame {
    *    - transmit properties that your descendants expect that you will
    *      transmit to them in your TransmitAutomaticData() -- this way, they
    *      remain up-to-date.
->>>>>>> upstream-releases
    *    - set properties that your ancestors expect that you would set in your
    *      TransmitAutomaticData() -- this way, they can safely query them and
    *      the process will feed upon itself.

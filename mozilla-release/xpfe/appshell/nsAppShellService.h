@@ -39,41 +39,6 @@ class nsAppShellService final : public nsIAppShellService, public nsIObserver {
   void EnsureHiddenWindow();
   void EnsurePrivateHiddenWindow();
 
-<<<<<<< HEAD
-  nsresult JustCreateTopWindow(nsIXULWindow *aParent, nsIURI *aUrl,
-                               uint32_t aChromeMask, int32_t aInitialWidth,
-                               int32_t aInitialHeight, bool aIsHiddenWindow,
-                               nsITabParent *aOpeningTab,
-                               mozIDOMWindowProxy *aOpenerWindow,
-                               nsWebShellWindow **aResult);
-  uint32_t CalculateWindowZLevel(nsIXULWindow *aParent, uint32_t aChromeMask);
-
-  RefPtr<nsWebShellWindow> mHiddenWindow;
-  RefPtr<nsWebShellWindow> mHiddenPrivateWindow;
-  bool mXPCOMWillShutDown;
-  bool mXPCOMShuttingDown;
-  uint16_t mModalWindowCount;
-  bool mApplicationProvidedHiddenWindow;
-  uint32_t mScreenId;
-||||||| merged common ancestors
-  nsresult JustCreateTopWindow(nsIXULWindow *aParent,
-                               nsIURI *aUrl,
-                               uint32_t aChromeMask,
-                               int32_t aInitialWidth, int32_t aInitialHeight,
-                               bool aIsHiddenWindow,
-                               nsITabParent *aOpeningTab,
-                               mozIDOMWindowProxy *aOpenerWindow,
-                               nsWebShellWindow **aResult);
-  uint32_t CalculateWindowZLevel(nsIXULWindow *aParent, uint32_t aChromeMask);
-
-  RefPtr<nsWebShellWindow>  mHiddenWindow;
-  RefPtr<nsWebShellWindow>  mHiddenPrivateWindow;
-  bool                        mXPCOMWillShutDown;
-  bool                        mXPCOMShuttingDown;
-  uint16_t                    mModalWindowCount;
-  bool                        mApplicationProvidedHiddenWindow;
-  uint32_t                    mScreenId;
-=======
   nsresult JustCreateTopWindow(nsIXULWindow* aParent, nsIURI* aUrl,
                                uint32_t aChromeMask, int32_t aInitialWidth,
                                int32_t aInitialHeight, bool aIsHiddenWindow,
@@ -89,7 +54,6 @@ class nsAppShellService final : public nsIAppShellService, public nsIObserver {
   uint16_t mModalWindowCount;
   bool mApplicationProvidedHiddenWindow;
   uint32_t mScreenId;
->>>>>>> upstream-releases
 };
 
 #endif

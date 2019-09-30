@@ -29,19 +29,9 @@ PrintTargetSkPDF::~PrintTargetSkPDF() {
   mRefPDFDoc = nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PrintTargetSkPDF> PrintTargetSkPDF::CreateOrNull(
-    UniquePtr<SkWStream> aStream, const IntSize& aSizeInPoints) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PrintTargetSkPDF>
-PrintTargetSkPDF::CreateOrNull(UniquePtr<SkWStream> aStream,
-                               const IntSize& aSizeInPoints)
-{
-=======
 /* static */
 already_AddRefed<PrintTargetSkPDF> PrintTargetSkPDF::CreateOrNull(
     UniquePtr<SkWStream> aStream, const IntSize& aSizeInPoints) {
->>>>>>> upstream-releases
   return do_AddRef(new PrintTargetSkPDF(aSizeInPoints, std::move(aStream)));
 }
 

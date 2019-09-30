@@ -3,16 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-interface nsITreeBoxObject;
-
-||||||| merged common ancestors
-interface nsITreeBoxObject;
-
-webidl TreeColumn;
-
-=======
->>>>>>> upstream-releases
 #include "nsISupports.idl"
 
 webidl XULTreeElement;

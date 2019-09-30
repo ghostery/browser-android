@@ -20,15 +20,6 @@
  *    for certain types of links (_blank links for example) to open new tabs.
  */
 
-<<<<<<< HEAD:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
-ChromeUtils.defineModuleGetter(this, "Services",
-                               "resource://gre/modules/Services.jsm");
-ChromeUtils.defineModuleGetter(this, "TalosParentProfiler",
-                               "resource://talos-powers/TalosParentProfiler.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Task.jsm");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "Services",
@@ -39,59 +30,15 @@ ChromeUtils.defineModuleGetter(
   "TalosParentProfiler",
   "resource://talos-powers/TalosParentProfiler.jsm"
 );
->>>>>>> upstream-releases:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
 
 const ANIMATION_PREF = "toolkit.cosmeticAnimations.enabled";
 const MULTI_OPT_OUT_PREF = "dom.ipc.multiOptOut";
 
-<<<<<<< HEAD:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
-const MESSAGES = [
-  "TabPaint:Go",
-  "TabPaint:Painted",
-];
-
-/* globals ExtensionAPI */
-this.tabpaint = class extends ExtensionAPI {
-  onStartup() {
-||||||| merged common ancestors
-const TARGET_URI = "chrome://tabpaint/content/target.html";
-
-var TabPaint = {
-  MESSAGES: [
-    "TabPaint:Go",
-    "TabPaint:Painted",
-  ],
-
-  /**
-   * We'll hold the original tab animation preference here so
-   * we can restore it once the test is done.
-   */
-  originalTabsAnimate: null,
-
-  /**
-   * We'll store a callback here to be fired once the TARGET_URI
-   * reports that it has painted.
-   */
-  paintCallback: null,
-
-  /**
-   * Shortcut to getting at the TalosParentProfiler.
-   */
-  get Profiler() {
-    delete this.Profiler;
-    let context = {};
-    Services.scriptloader.loadSubScript("resource://talos-powers/TalosParentProfiler.js", context);
-    return this.Profiler = context.TalosParentProfiler;
-  },
-
-  init() {
-=======
 const MESSAGES = ["TabPaint:Go", "TabPaint:Painted"];
 
 /* globals ExtensionAPI */
 this.tabpaint = class extends ExtensionAPI {
   onStartup() {
->>>>>>> upstream-releases:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
     // We don't have a window in this scope, and in fact, there might
     // not be any browser windows around. Since pageloader is loading
     // this add-on, along with the tabpaint.html content, what we'll do
@@ -106,27 +53,6 @@ this.tabpaint = class extends ExtensionAPI {
 
     this.originalAnimate = Services.prefs.getBoolPref(ANIMATION_PREF);
     Services.prefs.setBoolPref(ANIMATION_PREF, false);
-<<<<<<< HEAD:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
-    Services.prefs.setIntPref(MULTI_OPT_OUT_PREF,
-                              Services.appinfo.E10S_MULTI_EXPERIMENT);
-
-    /**
-     * We'll store a callback here to be fired once the target page
-     * reports that it has painted.
-     */
-    this.paintCallback = null;
-  }
-
-  onShutdown() {
-    for (let msgName of MESSAGES) {
-||||||| merged common ancestors
-    Services.prefs.setIntPref(MULTI_OPT_OUT_PREF,
-                              Services.appinfo.E10S_MULTI_EXPERIMENT);
-  },
-
-  uninit() {
-    for (let msgName of this.MESSAGES) {
-=======
     Services.prefs.setIntPref(
       MULTI_OPT_OUT_PREF,
       Services.appinfo.E10S_MULTI_EXPERIMENT
@@ -141,7 +67,6 @@ this.tabpaint = class extends ExtensionAPI {
 
   onShutdown() {
     for (let msgName of MESSAGES) {
->>>>>>> upstream-releases:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
       Services.mm.removeMessageListener(msgName, this);
     }
 
@@ -210,23 +135,12 @@ this.tabpaint = class extends ExtensionAPI {
     gBrowser.selectedTab = gBrowser.addTab(`${target}?${Date.now()}`, {
       triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
     });
-<<<<<<< HEAD:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
-
-    let {tab, delta} = await this.whenTabShown();
-    TalosParentProfiler.pause("tabpaint parent end");
-    await this.removeTab(tab);
-    return delta;
-  }
-||||||| merged common ancestors
-  },
-=======
 
     let { tab, delta } = await this.whenTabShown();
     TalosParentProfiler.pause("tabpaint parent end");
     await this.removeTab(tab);
     return delta;
   }
->>>>>>> upstream-releases:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
 
   /**
    * Opens a tab from content, waits until it is displayed, then
@@ -244,28 +158,11 @@ this.tabpaint = class extends ExtensionAPI {
 
     Services.mm.broadcastAsyncMessage("TabPaint:OpenFromContent");
 
-<<<<<<< HEAD:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
-    let {tab, delta} = await this.whenTabShown();
-    TalosParentProfiler.pause("tabpaint content end");
-    await this.removeTab(tab);
-    return delta;
-  }
-||||||| merged common ancestors
-      this.whenTabShown().then(({tab, delta}) => {
-        this.Profiler.pause("tabpaint content end");
-        this.removeTab(tab).then(() => {
-          resolve(delta);
-        });
-      });
-    });
-  },
-=======
     let { tab, delta } = await this.whenTabShown();
     TalosParentProfiler.pause("tabpaint content end");
     await this.removeTab(tab);
     return delta;
   }
->>>>>>> upstream-releases:mozilla-release/testing/talos/talos/tests/tabpaint/api.js
 
   /**
    * Returns a Promise that will resolve once the next tab reports

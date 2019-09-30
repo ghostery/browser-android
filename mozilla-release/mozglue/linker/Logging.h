@@ -9,20 +9,6 @@
 #include "mozilla/MacroArgs.h"
 
 #ifdef ANDROID
-<<<<<<< HEAD
-#include <android/log.h>
-#define LOG(...) \
-  __android_log_print(ANDROID_LOG_INFO, "GeckoLinker", __VA_ARGS__)
-#define WARN(...) \
-  __android_log_print(ANDROID_LOG_WARN, "GeckoLinker", __VA_ARGS__)
-#define ERROR(...) \
-  __android_log_print(ANDROID_LOG_ERROR, "GeckoLinker", __VA_ARGS__)
-||||||| merged common ancestors
-#include <android/log.h>
-#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "GeckoLinker", __VA_ARGS__)
-#define WARN(...) __android_log_print(ANDROID_LOG_WARN, "GeckoLinker", __VA_ARGS__)
-#define ERROR(...) __android_log_print(ANDROID_LOG_ERROR, "GeckoLinker", __VA_ARGS__)
-=======
 #  include <android/log.h>
 #  define LOG(...) \
     __android_log_print(ANDROID_LOG_INFO, "GeckoLinker", __VA_ARGS__)
@@ -30,49 +16,25 @@
     __android_log_print(ANDROID_LOG_WARN, "GeckoLinker", __VA_ARGS__)
 #  define ERROR(...) \
     __android_log_print(ANDROID_LOG_ERROR, "GeckoLinker", __VA_ARGS__)
->>>>>>> upstream-releases
 #else
 #  include <cstdio>
 
 /* Expand to 1 or m depending on whether there is one argument or more
  * given. */
-<<<<<<< HEAD
-#define MOZ_ONE_OR_MORE_ARGS_IMPL2(_1, _2, _3, _4, _5, _6, _7, _8, _9, N, ...) N
-#define MOZ_ONE_OR_MORE_ARGS_IMPL(args) MOZ_ONE_OR_MORE_ARGS_IMPL2 args
-#define MOZ_ONE_OR_MORE_ARGS(...) \
-  MOZ_ONE_OR_MORE_ARGS_IMPL((__VA_ARGS__, m, m, m, m, m, m, m, m, 1, 0))
-||||||| merged common ancestors
-#define MOZ_ONE_OR_MORE_ARGS_IMPL2(_1, _2, _3, _4, _5, _6, _7, _8, _9, N, ...) \
-  N
-#define MOZ_ONE_OR_MORE_ARGS_IMPL(args) MOZ_ONE_OR_MORE_ARGS_IMPL2 args
-#define MOZ_ONE_OR_MORE_ARGS(...) \
-  MOZ_ONE_OR_MORE_ARGS_IMPL((__VA_ARGS__, m, m, m, m, m, m, m, m, 1, 0))
-=======
 #  define MOZ_ONE_OR_MORE_ARGS_IMPL2(_1, _2, _3, _4, _5, _6, _7, _8, _9, N, \
                                      ...)                                   \
     N
 #  define MOZ_ONE_OR_MORE_ARGS_IMPL(args) MOZ_ONE_OR_MORE_ARGS_IMPL2 args
 #  define MOZ_ONE_OR_MORE_ARGS(...) \
     MOZ_ONE_OR_MORE_ARGS_IMPL((__VA_ARGS__, m, m, m, m, m, m, m, m, 1, 0))
->>>>>>> upstream-releases
 
 #  define MOZ_MACRO_GLUE(a, b) a b
 
 /* Some magic to choose between LOG1 and LOGm depending on the number of
  * arguments */
-<<<<<<< HEAD
-#define MOZ_CHOOSE_LOG(...)                                          \
-  MOZ_MACRO_GLUE(MOZ_CONCAT(LOG, MOZ_ONE_OR_MORE_ARGS(__VA_ARGS__)), \
-                 (__VA_ARGS__))
-||||||| merged common ancestors
-#define MOZ_CHOOSE_LOG(...) \
-  MOZ_MACRO_GLUE(MOZ_CONCAT(LOG, MOZ_ONE_OR_MORE_ARGS(__VA_ARGS__)), \
-                 (__VA_ARGS__))
-=======
 #  define MOZ_CHOOSE_LOG(...)                                          \
     MOZ_MACRO_GLUE(MOZ_CONCAT(LOG, MOZ_ONE_OR_MORE_ARGS(__VA_ARGS__)), \
                    (__VA_ARGS__))
->>>>>>> upstream-releases
 
 #  define LOG1(format) fprintf(stderr, format "\n")
 #  define LOGm(format, ...) fprintf(stderr, format "\n", __VA_ARGS__)
@@ -89,24 +51,10 @@ class Logging {
  private:
   bool verbose;
 
-<<<<<<< HEAD
- public:
-  static void Init() {
-    const char *env = getenv("MOZ_DEBUG_LINKER");
-    if (env && *env == '1') Singleton.verbose = true;
-||||||| merged common ancestors
-public:
-  static void Init()
-  {
-    const char *env = getenv("MOZ_DEBUG_LINKER");
-    if (env && *env == '1')
-      Singleton.verbose = true;
-=======
  public:
   static void Init() {
     const char* env = getenv("MOZ_DEBUG_LINKER");
     if (env && *env == '1') Singleton.verbose = true;
->>>>>>> upstream-releases
   }
 
  private:

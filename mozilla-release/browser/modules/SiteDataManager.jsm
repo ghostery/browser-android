@@ -305,23 +305,6 @@ var SiteDataManager = {
         continue;
       }
       removals.add(originNoSuffix);
-<<<<<<< HEAD
-      promises.push(new Promise(resolve => {
-        // We are clearing *All* across OAs so need to ensure a principal without suffix here,
-        // or the call of `clearStoragesForPrincipal` would fail.
-        principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(originNoSuffix);
-        let request = this._qms.clearStoragesForPrincipal(principal, null, null, true);
-        request.callback = resolve;
-      }));
-||||||| merged common ancestors
-      promises.push(new Promise(resolve => {
-        // We are clearing *All* across OAs so need to ensure a principal without suffix here,
-        // or the call of `clearStoragesForPrincipal` would fail.
-        principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(originNoSuffix);
-        let request = this._qms.clearStoragesForPrincipal(principal, null, true);
-        request.callback = resolve;
-      }));
-=======
       promises.push(
         new Promise(resolve => {
           // We are clearing *All* across OAs so need to ensure a principal without suffix here,
@@ -338,7 +321,6 @@ var SiteDataManager = {
           request.callback = resolve;
         })
       );
->>>>>>> upstream-releases
     }
     return Promise.all(promises);
   },

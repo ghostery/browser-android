@@ -31,22 +31,6 @@ public final class GeckoEditableChild extends JNIObject implements IGeckoEditabl
 
     private final class RemoteChild extends IGeckoEditableChild.Stub {
         @Override // IGeckoEditableChild
-<<<<<<< HEAD
-        public void transferParent(final IGeckoEditableParent editableParent) {
-            GeckoEditableChild.this.transferParent(editableParent);
-        }
-
-        @Override // IGeckoEditableChild
-        public void onKeyEvent(int action, int keyCode, int scanCode, int metaState,
-                               int keyPressMetaState, long time, int domPrintableKeyValue,
-                               int repeatCount, int flags, boolean isSynthesizedImeKey,
-                               KeyEvent event) {
-||||||| merged common ancestors
-        public void onKeyEvent(int action, int keyCode, int scanCode, int metaState,
-                               int keyPressMetaState, long time, int domPrintableKeyValue,
-                               int repeatCount, int flags, boolean isSynthesizedImeKey,
-                               KeyEvent event) {
-=======
         public void transferParent(final IGeckoEditableParent editableParent) {
             GeckoEditableChild.this.transferParent(editableParent);
         }
@@ -57,7 +41,6 @@ public final class GeckoEditableChild extends JNIObject implements IGeckoEditabl
                                final int domPrintableKeyValue, final int repeatCount,
                                final int flags, final boolean isSynthesizedImeKey,
                                final KeyEvent event) {
->>>>>>> upstream-releases
             GeckoEditableChild.this.onKeyEvent(
                     action, keyCode, scanCode, metaState, keyPressMetaState, time,
                     domPrintableKeyValue, repeatCount, flags, isSynthesizedImeKey, event);

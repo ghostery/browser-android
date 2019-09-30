@@ -15,19 +15,7 @@ namespace dom {
 class XMLHttpRequestUpload final : public XMLHttpRequestEventTarget {
  public:
   explicit XMLHttpRequestUpload(DOMEventTargetHelper* aOwner)
-<<<<<<< HEAD
       : XMLHttpRequestEventTarget(aOwner) {}
-
-  explicit XMLHttpRequestUpload() {}
-||||||| merged common ancestors
-    : XMLHttpRequestEventTarget(aOwner)
-  {}
-
-  explicit XMLHttpRequestUpload()
-  {}
-=======
-      : XMLHttpRequestEventTarget(aOwner) {}
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS_INHERITED
 

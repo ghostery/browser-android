@@ -16,21 +16,8 @@ namespace mozilla {
 namespace dom {
 
 class XULBroadcastManager final {
-<<<<<<< HEAD
- public:
-  typedef mozilla::dom::Element Element;
-
-  explicit XULBroadcastManager(nsIDocument* aDocument);
-||||||| merged common ancestors
-
-public:
-  typedef mozilla::dom::Element Element;
-
-  explicit XULBroadcastManager(nsIDocument* aDocument);
-=======
  public:
   explicit XULBroadcastManager(Document* aDocument);
->>>>>>> upstream-releases
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(XULBroadcastManager)
 

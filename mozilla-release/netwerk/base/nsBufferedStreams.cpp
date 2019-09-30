@@ -13,29 +13,13 @@
 #include <algorithm>
 
 #ifdef DEBUG_brendan
-<<<<<<< HEAD
-#define METERING
-||||||| merged common ancestors
-# define METERING
-=======
 #  define METERING
->>>>>>> upstream-releases
 #endif
 
 #ifdef METERING
-<<<<<<< HEAD
-#include <stdio.h>
-#define METER(x) x
-#define MAX_BIG_SEEKS 20
-||||||| merged common ancestors
-# include <stdio.h>
-# define METER(x)       x
-# define MAX_BIG_SEEKS  20
-=======
 #  include <stdio.h>
 #  define METER(x) x
 #  define MAX_BIG_SEEKS 20
->>>>>>> upstream-releases
 
 static struct {
   uint32_t mSeeksWithinBuffer;
@@ -50,13 +34,7 @@ static struct {
   } mBigSeek[MAX_BIG_SEEKS];
 } bufstats;
 #else
-<<<<<<< HEAD
-#define METER(x) /* nothing */
-||||||| merged common ancestors
-# define METER(x)       /* nothing */
-=======
 #  define METER(x) /* nothing */
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla::ipc;
@@ -83,37 +61,6 @@ nsBufferedStream::~nsBufferedStream() { Close(); }
 
 NS_IMPL_ISUPPORTS(nsBufferedStream, nsITellableStream, nsISeekableStream)
 
-<<<<<<< HEAD
-nsresult nsBufferedStream::Init(nsISupports* stream, uint32_t bufferSize) {
-  NS_ASSERTION(stream, "need to supply a stream");
-  NS_ASSERTION(mStream == nullptr, "already inited");
-  mStream = stream;
-  NS_IF_ADDREF(mStream);
-  mBufferSize = bufferSize;
-  mBufferStartOffset = 0;
-  mCursor = 0;
-  mBuffer = new (mozilla::fallible) char[bufferSize];
-  if (mBuffer == nullptr) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsBufferedStream::Init(nsISupports* stream, uint32_t bufferSize)
-{
-    NS_ASSERTION(stream, "need to supply a stream");
-    NS_ASSERTION(mStream == nullptr, "already inited");
-    mStream = stream;
-    NS_IF_ADDREF(mStream);
-    mBufferSize = bufferSize;
-    mBufferStartOffset = 0;
-    mCursor = 0;
-    mBuffer = new (mozilla::fallible) char[bufferSize];
-    if (mBuffer == nullptr) {
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-    return NS_OK;
-=======
 nsresult nsBufferedStream::Init(nsISupports* aStream, uint32_t bufferSize) {
   NS_ASSERTION(aStream, "need to supply a stream");
   NS_ASSERTION(mStream == nullptr, "already inited");
@@ -126,34 +73,8 @@ nsresult nsBufferedStream::Init(nsISupports* aStream, uint32_t bufferSize) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsBufferedStream::Close() {
-  NS_IF_RELEASE(mStream);
-  if (mBuffer) {
-    delete[] mBuffer;
-    mBuffer = nullptr;
-    mBufferSize = 0;
-    mBufferStartOffset = 0;
-    mCursor = 0;
-    mFillPoint = 0;
-  }
-||||||| merged common ancestors
-nsresult
-nsBufferedStream::Close()
-{
-    NS_IF_RELEASE(mStream);
-    if (mBuffer) {
-        delete[] mBuffer;
-        mBuffer = nullptr;
-        mBufferSize = 0;
-        mBufferStartOffset = 0;
-        mCursor = 0;
-        mFillPoint = 0;
-    }
-=======
 nsresult nsBufferedStream::Close() {
   // Drop the reference from nsBufferedStream::Init()
   mStream = nullptr;
@@ -165,7 +86,6 @@ nsresult nsBufferedStream::Close() {
     mCursor = 0;
     mFillPoint = 0;
   }
->>>>>>> upstream-releases
 #ifdef METERING
   {
     static FILE* tfp;
@@ -340,24 +260,10 @@ nsBufferedStream::SetEOF() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsBufferedStream::GetData(nsISupports** aResult) {
-  nsCOMPtr<nsISupports> rv(mStream);
-  *aResult = rv.forget().take();
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsBufferedStream::GetData(nsISupports **aResult)
-{
-    nsCOMPtr<nsISupports> rv(mStream);
-    *aResult = rv.forget().take();
-    return NS_OK;
-=======
 nsresult nsBufferedStream::GetData(nsISupports** aResult) {
   nsCOMPtr<nsISupports> stream(mStream);
   stream.forget(aResult);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -393,51 +299,6 @@ NS_IMPL_CI_INTERFACE_GETTER(nsBufferedInputStream, nsIInputStream,
                             nsITellableStream, nsIStreamBufferAccess)
 
 nsBufferedInputStream::nsBufferedInputStream()
-<<<<<<< HEAD
-    : nsBufferedStream(),
-      mMutex("nsBufferedInputStream::mMutex"),
-      mIsIPCSerializable(true),
-      mIsAsyncInputStream(false),
-      mIsCloneableInputStream(false),
-      mIsInputStreamLength(false),
-      mIsAsyncInputStreamLength(false) {}
-
-nsresult nsBufferedInputStream::Create(nsISupports* aOuter, REFNSIID aIID,
-                                       void** aResult) {
-  NS_ENSURE_NO_AGGREGATION(aOuter);
-
-  nsBufferedInputStream* stream = new nsBufferedInputStream();
-  if (stream == nullptr) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-  NS_ADDREF(stream);
-  nsresult rv = stream->QueryInterface(aIID, aResult);
-  NS_RELEASE(stream);
-  return rv;
-||||||| merged common ancestors
-   : nsBufferedStream()
-   , mMutex("nsBufferedInputStream::mMutex")
-   , mIsIPCSerializable(true)
-   , mIsAsyncInputStream(false)
-   , mIsCloneableInputStream(false)
-   , mIsInputStreamLength(false)
-   , mIsAsyncInputStreamLength(false)
-{}
-
-nsresult
-nsBufferedInputStream::Create(nsISupports *aOuter, REFNSIID aIID, void **aResult)
-{
-    NS_ENSURE_NO_AGGREGATION(aOuter);
-
-    nsBufferedInputStream* stream = new nsBufferedInputStream();
-    if (stream == nullptr) {
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-    NS_ADDREF(stream);
-    nsresult rv = stream->QueryInterface(aIID, aResult);
-    NS_RELEASE(stream);
-    return rv;
-=======
     : nsBufferedStream(),
       mMutex("nsBufferedInputStream::mMutex"),
       mIsIPCSerializable(true),
@@ -452,7 +313,6 @@ nsresult nsBufferedInputStream::Create(nsISupports* aOuter, REFNSIID aIID,
 
   RefPtr<nsBufferedInputStream> stream = new nsBufferedInputStream();
   return stream->QueryInterface(aIID, aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -500,15 +360,7 @@ nsBufferedInputStream::Close() {
           "bsBuffedInputStream::Close().");
     };
 #endif
-<<<<<<< HEAD
-    NS_RELEASE(mStream);
   }
-||||||| merged common ancestors
-        NS_RELEASE(mStream);
-    }
-=======
-  }
->>>>>>> upstream-releases
 
   rv2 = nsBufferedStream::Close();
 
@@ -726,32 +578,11 @@ nsBufferedInputStream::GetUnbufferedStream(nsISupports** aStream) {
   mBufferStartOffset += mCursor;
   mFillPoint = mCursor = 0;
 
-<<<<<<< HEAD
-  *aStream = mStream;
-  NS_IF_ADDREF(*aStream);
-  return NS_OK;
-||||||| merged common ancestors
-    *aStream = mStream;
-    NS_IF_ADDREF(*aStream);
-    return NS_OK;
-=======
   nsCOMPtr<nsISupports> stream = mStream;
   stream.forget(aStream);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
-                                      FileDescriptorArray& aFileDescriptors) {
-  BufferedInputStreamParams params;
-||||||| merged common ancestors
-void
-nsBufferedInputStream::Serialize(InputStreamParams& aParams,
-                                 FileDescriptorArray& aFileDescriptors)
-{
-    BufferedInputStreamParams params;
-=======
 void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
                                       FileDescriptorArray& aFileDescriptors,
                                       bool aDelayedStart, uint32_t aMaxSize,
@@ -760,17 +591,7 @@ void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
   SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
                     aSizeUsed, aManager);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mStream) {
-    nsCOMPtr<nsIInputStream> stream = do_QueryInterface(mStream);
-    MOZ_ASSERT(stream);
-||||||| merged common ancestors
-    if (mStream) {
-        nsCOMPtr<nsIInputStream> stream = do_QueryInterface(mStream);
-        MOZ_ASSERT(stream);
-=======
 void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
                                       FileDescriptorArray& aFileDescriptors,
                                       bool aDelayedStart, uint32_t aMaxSize,
@@ -779,17 +600,7 @@ void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
   SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
                     aSizeUsed, aManager);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    InputStreamParams wrappedParams;
-    InputStreamHelper::SerializeInputStream(stream, wrappedParams,
-                                            aFileDescriptors);
-||||||| merged common ancestors
-        InputStreamParams wrappedParams;
-        InputStreamHelper::SerializeInputStream(stream, wrappedParams,
-                                                aFileDescriptors);
-=======
 void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
                                       FileDescriptorArray& aFileDescriptors,
                                       bool aDelayedStart, uint32_t aMaxSize,
@@ -798,20 +609,7 @@ void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
   SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
                     aSizeUsed, aManager);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    params.optionalStream() = wrappedParams;
-  } else {
-    params.optionalStream() = mozilla::void_t();
-  }
-||||||| merged common ancestors
-        params.optionalStream() = wrappedParams;
-    }
-    else {
-        params.optionalStream() = mozilla::void_t();
-    }
-=======
 void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
                                       FileDescriptorArray& aFileDescriptors,
                                       bool aDelayedStart, uint32_t aMaxSize,
@@ -820,91 +618,20 @@ void nsBufferedInputStream::Serialize(InputStreamParams& aParams,
   SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
                     aSizeUsed, aManager);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  params.bufferSize() = mBufferSize;
-||||||| merged common ancestors
-    params.bufferSize() = mBufferSize;
-=======
 template <typename M>
 void nsBufferedInputStream::SerializeInternal(
     InputStreamParams& aParams, FileDescriptorArray& aFileDescriptors,
     bool aDelayedStart, uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager) {
   MOZ_ASSERT(aSizeUsed);
   *aSizeUsed = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  aParams = params;
-}
-||||||| merged common ancestors
-    aParams = params;
-}
-=======
   BufferedInputStreamParams params;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool nsBufferedInputStream::Deserialize(
-    const InputStreamParams& aParams,
-    const FileDescriptorArray& aFileDescriptors) {
-  if (aParams.type() != InputStreamParams::TBufferedInputStreamParams) {
-    NS_ERROR("Received unknown parameters from the other process!");
-    return false;
-  }
-||||||| merged common ancestors
-bool
-nsBufferedInputStream::Deserialize(const InputStreamParams& aParams,
-                                   const FileDescriptorArray& aFileDescriptors)
-{
-    if (aParams.type() != InputStreamParams::TBufferedInputStreamParams) {
-        NS_ERROR("Received unknown parameters from the other process!");
-        return false;
-    }
-=======
   if (mStream) {
     nsCOMPtr<nsIInputStream> stream = do_QueryInterface(mStream);
     MOZ_ASSERT(stream);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const BufferedInputStreamParams& params =
-      aParams.get_BufferedInputStreamParams();
-  const OptionalInputStreamParams& wrappedParams = params.optionalStream();
-
-  nsCOMPtr<nsIInputStream> stream;
-  if (wrappedParams.type() == OptionalInputStreamParams::TInputStreamParams) {
-    stream = InputStreamHelper::DeserializeInputStream(
-        wrappedParams.get_InputStreamParams(), aFileDescriptors);
-    if (!stream) {
-      NS_WARNING("Failed to deserialize wrapped stream!");
-      return false;
-    }
-  } else {
-    NS_ASSERTION(wrappedParams.type() == OptionalInputStreamParams::Tvoid_t,
-                 "Unknown type for OptionalInputStreamParams!");
-  }
-||||||| merged common ancestors
-    const BufferedInputStreamParams& params =
-        aParams.get_BufferedInputStreamParams();
-    const OptionalInputStreamParams& wrappedParams = params.optionalStream();
-
-    nsCOMPtr<nsIInputStream> stream;
-    if (wrappedParams.type() == OptionalInputStreamParams::TInputStreamParams) {
-        stream =
-          InputStreamHelper::DeserializeInputStream(wrappedParams.get_InputStreamParams(),
-                                                    aFileDescriptors);
-        if (!stream) {
-            NS_WARNING("Failed to deserialize wrapped stream!");
-            return false;
-        }
-    }
-    else {
-        NS_ASSERTION(wrappedParams.type() == OptionalInputStreamParams::Tvoid_t,
-                     "Unknown type for OptionalInputStreamParams!");
-    }
-=======
     InputStreamParams wrappedParams;
     InputStreamHelper::SerializeInputStream(stream, wrappedParams,
                                             aFileDescriptors, aDelayedStart,
@@ -912,44 +639,12 @@ nsBufferedInputStream::Deserialize(const InputStreamParams& aParams,
 
     params.optionalStream().emplace(wrappedParams);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv = Init(stream, params.bufferSize());
-  NS_ENSURE_SUCCESS(rv, false);
-||||||| merged common ancestors
-    nsresult rv = Init(stream, params.bufferSize());
-    NS_ENSURE_SUCCESS(rv, false);
-=======
   params.bufferSize() = mBufferSize;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   aParams = params;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-Maybe<uint64_t> nsBufferedInputStream::ExpectedSerializedLength() {
-  nsCOMPtr<nsIIPCSerializableInputStream> stream = do_QueryInterface(mStream);
-  if (stream) {
-    return stream->ExpectedSerializedLength();
-  }
-  return Nothing();
-||||||| merged common ancestors
-Maybe<uint64_t>
-nsBufferedInputStream::ExpectedSerializedLength()
-{
-    nsCOMPtr<nsIIPCSerializableInputStream> stream = do_QueryInterface(mStream);
-    if (stream) {
-        return stream->ExpectedSerializedLength();
-    }
-    return Nothing();
-=======
 bool nsBufferedInputStream::Deserialize(
     const InputStreamParams& aParams,
     const FileDescriptorArray& aFileDescriptors) {
@@ -976,7 +671,6 @@ bool nsBufferedInputStream::Deserialize(
   NS_ENSURE_SUCCESS(rv, false);
 
   return true;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1024,29 +718,12 @@ nsBufferedInputStream::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBufferedInputStream::GetData(nsIInputStream** aResult) {
-  nsCOMPtr<nsISupports> stream;
-  nsBufferedStream::GetData(getter_AddRefs(stream));
-  nsCOMPtr<nsIInputStream> inputStream = do_QueryInterface(stream);
-  *aResult = inputStream.forget().take();
-  return NS_OK;
-||||||| merged common ancestors
-nsBufferedInputStream::GetData(nsIInputStream **aResult)
-{
-    nsCOMPtr<nsISupports> stream;
-    nsBufferedStream::GetData(getter_AddRefs(stream));
-    nsCOMPtr<nsIInputStream> inputStream = do_QueryInterface(stream);
-    *aResult = inputStream.forget().take();
-    return NS_OK;
-=======
 nsBufferedInputStream::GetData(nsIInputStream** aResult) {
   nsCOMPtr<nsISupports> stream;
   nsBufferedStream::GetData(getter_AddRefs(stream));
   nsCOMPtr<nsIInputStream> inputStream = do_QueryInterface(stream);
   inputStream.forget(aResult);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 // nsICloneableInputStream interface
@@ -1159,28 +836,8 @@ nsresult nsBufferedOutputStream::Create(nsISupports* aOuter, REFNSIID aIID,
                                         void** aResult) {
   NS_ENSURE_NO_AGGREGATION(aOuter);
 
-<<<<<<< HEAD
-  nsBufferedOutputStream* stream = new nsBufferedOutputStream();
-  if (stream == nullptr) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-  NS_ADDREF(stream);
-  nsresult rv = stream->QueryInterface(aIID, aResult);
-  NS_RELEASE(stream);
-  return rv;
-||||||| merged common ancestors
-    nsBufferedOutputStream* stream = new nsBufferedOutputStream();
-    if (stream == nullptr) {
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-    NS_ADDREF(stream);
-    nsresult rv = stream->QueryInterface(aIID, aResult);
-    NS_RELEASE(stream);
-    return rv;
-=======
   RefPtr<nsBufferedOutputStream> stream = new nsBufferedOutputStream();
   return stream->QueryInterface(aIID, aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1216,18 +873,9 @@ nsBufferedOutputStream::Close() {
           "(debug) Sink->Close() inside nsBufferedOutputStream::Close() "
           "returned error (rv2).");
     }
-<<<<<<< HEAD
-#endif
-    NS_RELEASE(mStream);
-  }
-  rv3 = nsBufferedStream::Close();
-||||||| merged common ancestors
-    rv3 = nsBufferedStream::Close();
-=======
 #endif
   }
   rv3 = nsBufferedStream::Close();
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   if (NS_FAILED(rv3)) {
@@ -1509,45 +1157,18 @@ nsBufferedOutputStream::GetUnbufferedStream(nsISupports** aStream) {
     }
   }
 
-<<<<<<< HEAD
-  *aStream = mStream;
-  NS_IF_ADDREF(*aStream);
-  return NS_OK;
-||||||| merged common ancestors
-    *aStream = mStream;
-    NS_IF_ADDREF(*aStream);
-    return NS_OK;
-=======
   nsCOMPtr<nsISupports> stream = mStream;
   stream.forget(aStream);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBufferedOutputStream::GetData(nsIOutputStream** aResult) {
-  nsCOMPtr<nsISupports> stream;
-  nsBufferedStream::GetData(getter_AddRefs(stream));
-  nsCOMPtr<nsIOutputStream> outputStream = do_QueryInterface(stream);
-  *aResult = outputStream.forget().take();
-  return NS_OK;
-||||||| merged common ancestors
-nsBufferedOutputStream::GetData(nsIOutputStream **aResult)
-{
-    nsCOMPtr<nsISupports> stream;
-    nsBufferedStream::GetData(getter_AddRefs(stream));
-    nsCOMPtr<nsIOutputStream> outputStream = do_QueryInterface(stream);
-    *aResult = outputStream.forget().take();
-    return NS_OK;
-=======
 nsBufferedOutputStream::GetData(nsIOutputStream** aResult) {
   nsCOMPtr<nsISupports> stream;
   nsBufferedStream::GetData(getter_AddRefs(stream));
   nsCOMPtr<nsIOutputStream> outputStream = do_QueryInterface(stream);
   outputStream.forget(aResult);
   return NS_OK;
->>>>>>> upstream-releases
 }
 #undef METER
 

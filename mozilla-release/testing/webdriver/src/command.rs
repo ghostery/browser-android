@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-use crate::actions::ActionSequence;
-use crate::capabilities::{
-    BrowserCapabilities, Capabilities, CapabilitiesMatching, LegacyNewSessionParameters,
-    SpecNewSessionParameters,
-};
-use crate::common::{Date, FrameId, LocatorStrategy, WebElement, MAX_SAFE_INTEGER};
-use crate::error::{ErrorStatus, WebDriverError, WebDriverResult};
-use crate::httpapi::{Route, VoidWebDriverExtensionRoute, WebDriverExtensionRoute};
-use regex::Captures;
-||||||| merged common ancestors
-use actions::ActionSequence;
-use capabilities::{BrowserCapabilities, Capabilities, CapabilitiesMatching,
-                   LegacyNewSessionParameters, SpecNewSessionParameters};
-use common::{Date, FrameId, LocatorStrategy, WebElement, MAX_SAFE_INTEGER};
-use error::{ErrorStatus, WebDriverError, WebDriverResult};
-use httpapi::{Route, VoidWebDriverExtensionRoute, WebDriverExtensionRoute};
-use regex::Captures;
-=======
 use crate::Parameters;
 use crate::actions::ActionSequence;
 use crate::capabilities::{
@@ -26,7 +7,6 @@ use crate::capabilities::{
 use crate::common::{Date, FrameId, LocatorStrategy, WebElement, MAX_SAFE_INTEGER};
 use crate::error::{ErrorStatus, WebDriverError, WebDriverResult};
 use crate::httpapi::{Route, VoidWebDriverExtensionRoute, WebDriverExtensionRoute};
->>>>>>> upstream-releases
 use serde::de::{self, Deserialize, Deserializer};
 use serde_json::{self, Value};
 

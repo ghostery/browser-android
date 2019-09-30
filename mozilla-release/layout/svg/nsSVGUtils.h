@@ -174,16 +174,8 @@ class nsSVGUtils {
    * frame's pre-filter visual overflow rect. If the frame is not currently
    * being filtered, this function simply returns aUnfilteredRect.
    */
-<<<<<<< HEAD
-  static nsRect GetPostFilterVisualOverflowRect(nsIFrame* aFrame,
-                                                const nsRect& aUnfilteredRect);
-||||||| merged common ancestors
-  static nsRect GetPostFilterVisualOverflowRect(nsIFrame *aFrame,
-                                                const nsRect &aUnfilteredRect);
-=======
   static nsRect GetPostFilterVisualOverflowRect(nsIFrame* aFrame,
                                                 const nsRect& aPreFilterRect);
->>>>>>> upstream-releases
 
   /**
    * Schedules an update of the frame's bounds (which will in turn invalidate
@@ -233,41 +225,19 @@ class nsSVGUtils {
      Input: rect - bounding box
             length - length to be converted
   */
-<<<<<<< HEAD
-  static float ObjectSpace(const gfxRect& aRect, const nsSVGLength2* aLength);
-||||||| merged common ancestors
-  static float ObjectSpace(const gfxRect &aRect, const nsSVGLength2 *aLength);
-=======
   static float ObjectSpace(const gfxRect& aRect,
                            const SVGAnimatedLength* aLength);
->>>>>>> upstream-releases
 
   /* Computes the input length in terms of user space coordinates.
      Input: content - object to be used for determining user space
      Input: length - length to be converted
   */
-<<<<<<< HEAD
-  static float UserSpace(nsSVGElement* aSVGElement,
-                         const nsSVGLength2* aLength);
-  static float UserSpace(nsIFrame* aFrame, const nsSVGLength2* aLength);
-||||||| merged common ancestors
-  static float UserSpace(nsSVGElement *aSVGElement,
-                         const nsSVGLength2 *aLength);
-  static float UserSpace(nsIFrame *aFrame, const nsSVGLength2 *aLength);
-=======
   static float UserSpace(SVGElement* aSVGElement,
                          const SVGAnimatedLength* aLength);
   static float UserSpace(nsIFrame* aNonSVGContext,
                          const SVGAnimatedLength* aLength);
->>>>>>> upstream-releases
   static float UserSpace(const mozilla::dom::UserSpaceMetrics& aMetrics,
-<<<<<<< HEAD
-                         const nsSVGLength2* aLength);
-||||||| merged common ancestors
-                         const nsSVGLength2 *aLength);
-=======
                          const SVGAnimatedLength* aLength);
->>>>>>> upstream-releases
 
   /* Find the outermost SVG frame of the passed frame */
   static nsSVGOuterSVGFrame* GetOuterSVGFrame(nsIFrame* aFrame);
@@ -365,20 +335,9 @@ class nsSVGUtils {
    *
    * @param aFlags One or more of the BBoxFlags values defined below.
    */
-<<<<<<< HEAD
-  static gfxMatrix AdjustMatrixForUnits(const gfxMatrix& aMatrix,
-                                        nsSVGEnum* aUnits, nsIFrame* aFrame,
-                                        uint32_t aFlags);
-||||||| merged common ancestors
-  static gfxMatrix AdjustMatrixForUnits(const gfxMatrix &aMatrix,
-                                        nsSVGEnum *aUnits,
-                                        nsIFrame *aFrame,
-                                        uint32_t aFlags);
-=======
   static gfxMatrix AdjustMatrixForUnits(const gfxMatrix& aMatrix,
                                         mozilla::SVGAnimatedEnumeration* aUnits,
                                         nsIFrame* aFrame, uint32_t aFlags);
->>>>>>> upstream-releases
 
   enum BBoxFlags {
     eBBoxIncludeFill = 1 << 0,
@@ -455,31 +414,13 @@ class nsSVGUtils {
    * @param aFrame the object in which to interpret user-space units;
    * may be null if aUnits is SVG_UNIT_TYPE_OBJECTBOUNDINGBOX
    */
-<<<<<<< HEAD
-  static gfxRect GetRelativeRect(uint16_t aUnits, const nsSVGLength2* aXYWH,
-                                 const gfxRect& aBBox, nsIFrame* aFrame);
-||||||| merged common ancestors
-  static gfxRect GetRelativeRect(uint16_t aUnits, const nsSVGLength2 *aXYWH,
-                                 const gfxRect& aBBox, nsIFrame *aFrame);
-=======
   static gfxRect GetRelativeRect(uint16_t aUnits,
                                  const SVGAnimatedLength* aXYWH,
                                  const gfxRect& aBBox, nsIFrame* aFrame);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static gfxRect GetRelativeRect(
-      uint16_t aUnits, const nsSVGLength2* aXYWH, const gfxRect& aBBox,
-      const mozilla::dom::UserSpaceMetrics& aMetrics);
-||||||| merged common ancestors
-  static gfxRect GetRelativeRect(uint16_t aUnits, const nsSVGLength2 *aXYWH,
-                                 const gfxRect& aBBox,
-                                 const mozilla::dom::UserSpaceMetrics& aMetrics);
-=======
   static gfxRect GetRelativeRect(
       uint16_t aUnits, const SVGAnimatedLength* aXYWH, const gfxRect& aBBox,
       const mozilla::dom::UserSpaceMetrics& aMetrics);
->>>>>>> upstream-releases
 
   /**
    * Find the first frame, starting with aStartFrame and going up its
@@ -532,18 +473,9 @@ class nsSVGUtils {
         std::max(double(INT32_MIN), std::min(double(INT32_MAX), aVal)));
   }
 
-<<<<<<< HEAD
-  static nscolor GetFallbackOrPaintColor(
-      mozilla::ComputedStyle* aComputedStyle,
-      nsStyleSVGPaint nsStyleSVG::*aFillOrStroke);
-||||||| merged common ancestors
-  static nscolor GetFallbackOrPaintColor(mozilla::ComputedStyle *aComputedStyle,
-                                         nsStyleSVGPaint nsStyleSVG::*aFillOrStroke);
-=======
   static nscolor GetFallbackOrPaintColor(
       const mozilla::ComputedStyle&,
       mozilla::StyleSVGPaint nsStyleSVG::*aFillOrStroke);
->>>>>>> upstream-releases
 
   static void MakeFillPatternFor(nsIFrame* aFrame, gfxContext* aContext,
                                  GeneralPattern* aOutPattern,

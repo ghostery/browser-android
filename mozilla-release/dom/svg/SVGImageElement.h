@@ -98,28 +98,16 @@ class SVGImageElement : public SVGImageElementBase,
   }
   void GetDecoding(nsAString& aValue);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   already_AddRefed<Promise> Decode(ErrorResult& aRv);
 
   static nsCSSPropertyID GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum);
 
  protected:
->>>>>>> upstream-releases
   nsresult LoadSVGImage(bool aForce, bool aNotify);
 
   virtual LengthAttributesInfo GetLengthInfo() override;
-<<<<<<< HEAD
-  virtual SVGAnimatedPreserveAspectRatio* GetPreserveAspectRatio() override;
-||||||| merged common ancestors
-  virtual SVGAnimatedPreserveAspectRatio *GetPreserveAspectRatio() override;
-=======
   virtual SVGAnimatedPreserveAspectRatio* GetAnimatedPreserveAspectRatio()
       override;
->>>>>>> upstream-releases
   virtual StringAttributesInfo GetStringInfo() override;
 
   // Override for nsImageLoadingContent.

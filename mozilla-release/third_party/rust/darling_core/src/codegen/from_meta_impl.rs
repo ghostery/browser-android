@@ -25,36 +25,17 @@ impl<'a> ToTokens for FromMetaImpl<'a> {
             }
 
             // Newtype structs proxy to the sole value they contain.
-<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/codegen/from_meta_impl.rs
-            Data::Struct(Fields {
-                ref fields,
-                style: Style::Tuple,
-                ..
-            }) if fields.len() == 1 =>
-            {
-||||||| merged common ancestors
-            Data::Struct(Fields { ref fields, style: Style::Tuple, .. }) if fields.len() == 1 => {
-=======
             Data::Struct(Fields {
                 ref fields,
                 style: Style::Tuple,
                 ..
             }) if fields.len() == 1 => {
->>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/codegen/from_meta_impl.rs
                 let ty_ident = base.ident;
                 quote!(
-<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/codegen/from_meta_impl.rs
-                    fn from_meta(__item: &::syn::Meta) -> ::darling::Result<Self> {
-                        Ok(#ty_ident(::darling::FromMeta::from_meta(__item)?))
-||||||| merged common ancestors
-                    fn from_meta_item(__item: &::syn::Meta) -> ::darling::Result<Self> {
-                        Ok(#ty_ident(::darling::FromMetaItem::from_meta_item(__item)?))
-=======
                     fn from_meta(__item: &::syn::Meta) -> ::darling::Result<Self> {
                         ::darling::FromMeta::from_meta(__item)
                             .map_err(|e| e.with_span(&__item))
                             .map(#ty_ident)
->>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/codegen/from_meta_impl.rs
                     }
                 )
             }

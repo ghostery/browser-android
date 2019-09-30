@@ -80,13 +80,6 @@ SplitNodeTransaction::DoTransaction() {
   }
 
   // Insert the new node
-<<<<<<< HEAD
-  mEditorBase->DoSplitNode(EditorDOMPoint(mStartOfRightNode), *mNewLeftNode,
-                           error);
-||||||| merged common ancestors
-  mEditorBase->DoSplitNode(EditorDOMPoint(mStartOfRightNode),
-                           *mNewLeftNode, error);
-=======
   RefPtr<EditorBase> editorBase = mEditorBase;
   nsCOMPtr<nsIContent> newLeftNode = mNewLeftNode;
   editorBase->DoSplitNode(EditorDOMPoint(mStartOfRightNode), *newLeftNode,
@@ -94,36 +87,16 @@ SplitNodeTransaction::DoTransaction() {
   if (NS_WARN_IF(error.Failed())) {
     return error.StealNSResult();
   }
->>>>>>> upstream-releases
 
   if (!editorBase->AllowsTransactionsToChangeSelection()) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  // XXX Really odd.  The result of DoSplitNode() is respected only when
-  //     we shouldn't set selection.  Otherwise, it's overridden by the
-  //     result of Selection.Collapse().
-  NS_WARNING_ASSERTION(
-      !mEditorBase->Destroyed(),
-      "The editor has gone but SplitNodeTransaction keeps trying to modify "
-      "Selection");
-  RefPtr<Selection> selection = mEditorBase->GetSelection();
-||||||| merged common ancestors
-  // XXX Really odd.  The result of DoSplitNode() is respected only when
-  //     we shouldn't set selection.  Otherwise, it's overridden by the
-  //     result of Selection.Collapse().
-  NS_WARNING_ASSERTION(!mEditorBase->Destroyed(),
-    "The editor has gone but SplitNodeTransaction keeps trying to modify "
-    "Selection");
-  RefPtr<Selection> selection = mEditorBase->GetSelection();
-=======
   NS_WARNING_ASSERTION(
       !editorBase->Destroyed(),
       "The editor has gone but SplitNodeTransaction keeps trying to modify "
       "Selection");
   RefPtr<Selection> selection = editorBase->GetSelection();
->>>>>>> upstream-releases
   if (NS_WARN_IF(!selection)) {
     return NS_ERROR_FAILURE;
   }

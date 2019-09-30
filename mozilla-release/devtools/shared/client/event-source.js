@@ -86,17 +86,9 @@ function eventSource(proto) {
     if (!listener) {
       this._listeners[name] = [];
     } else {
-<<<<<<< HEAD
-      this._listeners[name] =
-        this._listeners[name].filter(l => l.key != listener);
-||||||| merged common ancestors
-      this._listeners[name] =
-        this._listeners[name].filter(l => l != listener);
-=======
       this._listeners[name] = this._listeners[name].filter(
         l => l.key != listener
       );
->>>>>>> upstream-releases
     }
   };
 

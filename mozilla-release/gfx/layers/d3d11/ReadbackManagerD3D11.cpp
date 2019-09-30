@@ -35,16 +35,8 @@ struct ReadbackTask {
 class ReadbackResultWriterD3D11 final : public nsIRunnable {
   ~ReadbackResultWriterD3D11() {}
   NS_DECL_THREADSAFE_ISUPPORTS
-<<<<<<< HEAD
- public:
-  explicit ReadbackResultWriterD3D11(ReadbackTask *aTask) : mTask(aTask) {}
-||||||| merged common ancestors
-public:
-  explicit ReadbackResultWriterD3D11(ReadbackTask *aTask) : mTask(aTask) {}
-=======
  public:
   explicit ReadbackResultWriterD3D11(ReadbackTask* aTask) : mTask(aTask) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     D3D10_TEXTURE2D_DESC desc;
@@ -61,20 +53,9 @@ public:
     }
 
     {
-<<<<<<< HEAD
-      RefPtr<DataSourceSurface> surf = Factory::CreateWrappingDataSourceSurface(
-          (uint8_t *)mappedTex.pData, mappedTex.RowPitch,
-          IntSize(desc.Width, desc.Height), SurfaceFormat::B8G8R8A8);
-||||||| merged common ancestors
-      RefPtr<DataSourceSurface> surf =
-        Factory::CreateWrappingDataSourceSurface((uint8_t*)mappedTex.pData, mappedTex.RowPitch,
-                                                 IntSize(desc.Width, desc.Height),
-                                                 SurfaceFormat::B8G8R8A8);
-=======
       RefPtr<DataSourceSurface> surf = Factory::CreateWrappingDataSourceSurface(
           (uint8_t*)mappedTex.pData, mappedTex.RowPitch,
           IntSize(desc.Width, desc.Height), SurfaceFormat::B8G8R8A8);
->>>>>>> upstream-releases
 
       mTask->mSink->ProcessReadback(surf);
 
@@ -92,17 +73,8 @@ public:
 
 NS_IMPL_ISUPPORTS(ReadbackResultWriterD3D11, nsIRunnable)
 
-<<<<<<< HEAD
-DWORD WINAPI ReadbackManagerD3D11::StartTaskThread(void *aManager) {
-  static_cast<ReadbackManagerD3D11 *>(aManager)->ProcessTasks();
-||||||| merged common ancestors
-DWORD WINAPI ReadbackManagerD3D11::StartTaskThread(void *aManager)
-{
-  static_cast<ReadbackManagerD3D11*>(aManager)->ProcessTasks();
-=======
 DWORD WINAPI ReadbackManagerD3D11::StartTaskThread(void* aManager) {
   static_cast<ReadbackManagerD3D11*>(aManager)->ProcessTasks();
->>>>>>> upstream-releases
 
   return 0;
 }
@@ -130,20 +102,9 @@ ReadbackManagerD3D11::~ReadbackManagerD3D11() {
   }
 }
 
-<<<<<<< HEAD
-void ReadbackManagerD3D11::PostTask(ID3D10Texture2D *aTexture,
-                                    TextureReadbackSink *aSink) {
-  ReadbackTask *task = new ReadbackTask;
-||||||| merged common ancestors
-void
-ReadbackManagerD3D11::PostTask(ID3D10Texture2D *aTexture, TextureReadbackSink* aSink)
-{
-  ReadbackTask *task = new ReadbackTask;
-=======
 void ReadbackManagerD3D11::PostTask(ID3D10Texture2D* aTexture,
                                     TextureReadbackSink* aSink) {
   ReadbackTask* task = new ReadbackTask;
->>>>>>> upstream-releases
   task->mReadbackTexture = aTexture;
   task->mSink = aSink;
 

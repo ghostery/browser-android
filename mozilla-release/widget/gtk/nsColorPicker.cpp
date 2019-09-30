@@ -140,23 +140,10 @@ NS_IMETHODIMP nsColorPicker::Open(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-#if defined(ACTIVATE_GTK3_COLOR_PICKER) && GTK_CHECK_VERSION(3, 4, 0)
-/* static */ void nsColorPicker::OnColorChanged(GtkColorChooser* color_chooser,
-                                                GdkRGBA* color,
-                                                gpointer user_data) {
-||||||| merged common ancestors
-#if defined(ACTIVATE_GTK3_COLOR_PICKER) && GTK_CHECK_VERSION(3,4,0)
-/* static */ void
-nsColorPicker::OnColorChanged(GtkColorChooser* color_chooser, GdkRGBA* color,
-                              gpointer user_data)
-{
-=======
 #if defined(ACTIVATE_GTK3_COLOR_PICKER) && GTK_CHECK_VERSION(3, 4, 0)
 /* static */
 void nsColorPicker::OnColorChanged(GtkColorChooser* color_chooser,
                                    GdkRGBA* color, gpointer user_data) {
->>>>>>> upstream-releases
   static_cast<nsColorPicker*>(user_data)->Update(color);
 }
 
@@ -174,19 +161,9 @@ void nsColorPicker::SetColor(const GdkRGBA* color) {
   mColor += ToHexString(convertGdkRgbaComponent(color->blue));
 }
 #else
-<<<<<<< HEAD
-/* static */ void nsColorPicker::OnColorChanged(
-    GtkColorSelection* colorselection, gpointer user_data) {
-||||||| merged common ancestors
-/* static */ void
-nsColorPicker::OnColorChanged(GtkColorSelection* colorselection,
-                              gpointer user_data)
-{
-=======
 /* static */
 void nsColorPicker::OnColorChanged(GtkColorSelection* colorselection,
                                    gpointer user_data) {
->>>>>>> upstream-releases
   static_cast<nsColorPicker*>(user_data)->Update(colorselection);
 }
 
@@ -209,43 +186,16 @@ void nsColorPicker::ReadValueFromColorSelection(
 }
 #endif
 
-<<<<<<< HEAD
-/* static */ void nsColorPicker::OnResponse(GtkWidget* color_chooser,
-                                            gint response_id,
-                                            gpointer user_data) {
-  static_cast<nsColorPicker*>(user_data)->Done(color_chooser, response_id);
-||||||| merged common ancestors
-/* static */ void
-nsColorPicker::OnResponse(GtkWidget* color_chooser, gint response_id,
-                          gpointer user_data)
-{
-  static_cast<nsColorPicker*>(user_data)->
-    Done(color_chooser, response_id);
-=======
 /* static */
 void nsColorPicker::OnResponse(GtkWidget* color_chooser, gint response_id,
                                gpointer user_data) {
   static_cast<nsColorPicker*>(user_data)->Done(color_chooser, response_id);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void nsColorPicker::OnDestroy(GtkWidget* color_chooser,
-                                           gpointer user_data) {
-  static_cast<nsColorPicker*>(user_data)->Done(color_chooser,
-                                               GTK_RESPONSE_CANCEL);
-||||||| merged common ancestors
-/* static */ void
-nsColorPicker::OnDestroy(GtkWidget* color_chooser, gpointer user_data)
-{
-  static_cast<nsColorPicker*>(user_data)->
-    Done(color_chooser, GTK_RESPONSE_CANCEL);
-=======
 /* static */
 void nsColorPicker::OnDestroy(GtkWidget* color_chooser, gpointer user_data) {
   static_cast<nsColorPicker*>(user_data)->Done(color_chooser,
                                                GTK_RESPONSE_CANCEL);
->>>>>>> upstream-releases
 }
 
 void nsColorPicker::Done(GtkWidget* color_chooser, gint response) {

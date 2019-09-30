@@ -17,7 +17,7 @@
 
 /* Definitions of functions and operators that allocate memory. */
 #if !defined(NS_NO_XPCOM) && !defined(MOZ_NO_MOZALLOC)
-#include "mozilla/mozalloc.h"
+#  include "mozilla/mozalloc.h"
 #endif
 
 /**
@@ -34,25 +34,13 @@
 /* Import/export defines */
 
 #ifdef HAVE_VISIBILITY_HIDDEN_ATTRIBUTE
-<<<<<<< HEAD
-#define NS_VISIBILITY_HIDDEN __attribute__((visibility("hidden")))
-||||||| merged common ancestors
-#define NS_VISIBILITY_HIDDEN   __attribute__ ((visibility ("hidden")))
-=======
 #  define NS_VISIBILITY_HIDDEN __attribute__((visibility("hidden")))
->>>>>>> upstream-releases
 #else
 #  define NS_VISIBILITY_HIDDEN
 #endif
 
 #if defined(HAVE_VISIBILITY_ATTRIBUTE)
-<<<<<<< HEAD
-#define NS_VISIBILITY_DEFAULT __attribute__((visibility("default")))
-||||||| merged common ancestors
-#define NS_VISIBILITY_DEFAULT __attribute__ ((visibility ("default")))
-=======
 #  define NS_VISIBILITY_DEFAULT __attribute__((visibility("default")))
->>>>>>> upstream-releases
 #elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 #  define NS_VISIBILITY_DEFAULT __global
 #else
@@ -89,16 +77,8 @@
  */
 
 #if defined(__i386__) && defined(__GNUC__)
-<<<<<<< HEAD
-#define NS_FASTCALL __attribute__((regparm(3), stdcall))
-#define NS_CONSTRUCTOR_FASTCALL __attribute__((regparm(3), stdcall))
-||||||| merged common ancestors
-#define NS_FASTCALL __attribute__ ((regparm (3), stdcall))
-#define NS_CONSTRUCTOR_FASTCALL __attribute__ ((regparm (3), stdcall))
-=======
 #  define NS_FASTCALL __attribute__((regparm(3), stdcall))
 #  define NS_CONSTRUCTOR_FASTCALL __attribute__((regparm(3), stdcall))
->>>>>>> upstream-releases
 #elif defined(XP_WIN) && !defined(_WIN64)
 #  define NS_FASTCALL __fastcall
 #  define NS_CONSTRUCTOR_FASTCALL
@@ -118,42 +98,6 @@
 
 #ifdef XP_WIN
 
-<<<<<<< HEAD
-#define NS_IMPORT __declspec(dllimport)
-#define NS_IMPORT_(type) __declspec(dllimport) type __stdcall
-#define NS_EXPORT __declspec(dllexport)
-#define NS_EXPORT_(type) __declspec(dllexport) type __stdcall
-#define NS_IMETHOD_(type) virtual type __stdcall
-#define NS_IMETHODIMP_(type) type __stdcall
-#define NS_METHOD_(type) type __stdcall
-#define NS_CALLBACK_(_type, _name) _type(__stdcall* _name)
-#ifndef _WIN64
-// Win64 has only one calling convention.  __stdcall will be ignored by the
-// compiler.
-#define NS_STDCALL __stdcall
-#define NS_HAVE_STDCALL
-#else
-#define NS_STDCALL
-#endif
-#define NS_FROZENCALL __cdecl
-||||||| merged common ancestors
-#define NS_IMPORT __declspec(dllimport)
-#define NS_IMPORT_(type) __declspec(dllimport) type __stdcall
-#define NS_EXPORT __declspec(dllexport)
-#define NS_EXPORT_(type) __declspec(dllexport) type __stdcall
-#define NS_IMETHOD_(type) virtual type __stdcall
-#define NS_IMETHODIMP_(type) type __stdcall
-#define NS_METHOD_(type) type __stdcall
-#define NS_CALLBACK_(_type, _name) _type (__stdcall * _name)
-#ifndef _WIN64
-// Win64 has only one calling convention.  __stdcall will be ignored by the compiler.
-#define NS_STDCALL __stdcall
-#define NS_HAVE_STDCALL
-#else
-#define NS_STDCALL
-#endif
-#define NS_FROZENCALL __cdecl
-=======
 #  define NS_IMPORT __declspec(dllimport)
 #  define NS_IMPORT_(type) __declspec(dllimport) type __stdcall
 #  define NS_EXPORT __declspec(dllexport)
@@ -171,33 +115,9 @@
 #    define NS_STDCALL
 #  endif
 #  define NS_FROZENCALL __cdecl
->>>>>>> upstream-releases
 
 #else
 
-<<<<<<< HEAD
-#define NS_IMPORT NS_EXTERNAL_VIS
-#define NS_IMPORT_(type) NS_EXTERNAL_VIS_(type)
-#define NS_EXPORT NS_EXTERNAL_VIS
-#define NS_EXPORT_(type) NS_EXTERNAL_VIS_(type)
-#define NS_IMETHOD_(type) virtual type
-#define NS_IMETHODIMP_(type) type
-#define NS_METHOD_(type) type
-#define NS_CALLBACK_(_type, _name) _type(*_name)
-#define NS_STDCALL
-#define NS_FROZENCALL
-||||||| merged common ancestors
-#define NS_IMPORT NS_EXTERNAL_VIS
-#define NS_IMPORT_(type) NS_EXTERNAL_VIS_(type)
-#define NS_EXPORT NS_EXTERNAL_VIS
-#define NS_EXPORT_(type) NS_EXTERNAL_VIS_(type)
-#define NS_IMETHOD_(type) virtual type
-#define NS_IMETHODIMP_(type) type
-#define NS_METHOD_(type) type
-#define NS_CALLBACK_(_type, _name) _type (* _name)
-#define NS_STDCALL
-#define NS_FROZENCALL
-=======
 #  define NS_IMPORT NS_EXTERNAL_VIS
 #  define NS_IMPORT_(type) NS_EXTERNAL_VIS_(type)
 #  define NS_EXPORT NS_EXTERNAL_VIS
@@ -208,7 +128,6 @@
 #  define NS_CALLBACK_(_type, _name) _type(*_name)
 #  define NS_STDCALL
 #  define NS_FROZENCALL
->>>>>>> upstream-releases
 
 #endif
 
@@ -253,21 +172,12 @@
  * if we're using _exit. Bug 1555974 covers improving this.
  *
  */
-<<<<<<< HEAD
-#if defined(NS_BUILD_REFCNT_LOGGING) || defined(MOZ_VALGRIND) || \
-    defined(MOZ_ASAN) || defined(MOZ_CODE_COVERAGE)
-#define NS_FREE_PERMANENT_DATA
-||||||| merged common ancestors
-#if defined(NS_BUILD_REFCNT_LOGGING) || defined(MOZ_VALGRIND) || defined(MOZ_ASAN) || defined(MOZ_CODE_COVERAGE)
-#define NS_FREE_PERMANENT_DATA
-=======
 #ifndef NS_FREE_PERMANENT_DATA
 #if defined(NS_BUILD_REFCNT_LOGGING) || defined(MOZ_VALGRIND) || \
     defined(MOZ_ASAN) || defined(MOZ_CODE_COVERAGE) ||           \
     defined(MOZ_PROFILE_GENERATE)
 #  define NS_FREE_PERMANENT_DATA
 #endif
->>>>>>> upstream-releases
 #endif
 
 /**
@@ -352,27 +262,11 @@ inline Result<Ok, nsresult> ToResult(nsresult aValue);
  * SEH exception macros.
  */
 #ifdef HAVE_SEH_EXCEPTIONS
-<<<<<<< HEAD
-#define MOZ_SEH_TRY __try
-#define MOZ_SEH_EXCEPT(expr) __except (expr)
-||||||| merged common ancestors
-#define MOZ_SEH_TRY           __try
-#define MOZ_SEH_EXCEPT(expr)  __except(expr)
-=======
 #  define MOZ_SEH_TRY __try
 #  define MOZ_SEH_EXCEPT(expr) __except (expr)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_SEH_TRY if (true)
-#define MOZ_SEH_EXCEPT(expr) else
-||||||| merged common ancestors
-#define MOZ_SEH_TRY           if(true)
-#define MOZ_SEH_EXCEPT(expr)  else
-=======
 #  define MOZ_SEH_TRY if (true)
 #  define MOZ_SEH_EXCEPT(expr) else
->>>>>>> upstream-releases
 #endif
 
 #endif /* nscore_h___ */

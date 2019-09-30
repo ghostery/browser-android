@@ -110,48 +110,6 @@ class TypeUtils {
   //     pointers.
   //
   // Any errors are thrown on ErrorResult.
-<<<<<<< HEAD
-  static void ProcessURL(nsACString& aUrl, bool* aSchemeValidOut,
-                         nsACString* aUrlWithoutQueryOut,
-                         nsACString* aUrlQueryOut, ErrorResult& aRv);
-
- private:
-  void CheckAndSetBodyUsed(JSContext* aCx, Request* aRequest,
-                           BodyAction aBodyAction, ErrorResult& aRv);
-
-  already_AddRefed<InternalRequest> ToInternalRequest(const nsAString& aIn,
-                                                      ErrorResult& aRv);
-
-  void SerializeCacheStream(
-      nsIInputStream* aStream, CacheReadStreamOrVoid* aStreamOut,
-      nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
-      ErrorResult& aRv);
-
-  void SerializeSendStream(nsIInputStream* aStream,
-                           CacheReadStream& aReadStreamOut, ErrorResult& aRv);
-||||||| merged common ancestors
-  static void
-  ProcessURL(nsACString& aUrl, bool* aSchemeValidOut,
-             nsACString* aUrlWithoutQueryOut, nsACString* aUrlQueryOut,
-             ErrorResult& aRv);
-
-private:
-  void
-  CheckAndSetBodyUsed(JSContext* aCx, Request* aRequest, BodyAction aBodyAction,
-                      ErrorResult& aRv);
-
-  already_AddRefed<InternalRequest>
-  ToInternalRequest(const nsAString& aIn, ErrorResult& aRv);
-
-  void
-  SerializeCacheStream(nsIInputStream* aStream, CacheReadStreamOrVoid* aStreamOut,
-                       nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
-                       ErrorResult& aRv);
-
-  void
-  SerializeSendStream(nsIInputStream* aStream, CacheReadStream& aReadStreamOut,
-                      ErrorResult& aRv);
-=======
   static void ProcessURL(nsACString& aUrl, bool* aSchemeValidOut,
                          nsACString* aUrlWithoutQueryOut,
                          nsACString* aUrlQueryOut, ErrorResult& aRv);
@@ -170,7 +128,6 @@ private:
 
   void SerializeSendStream(nsIInputStream* aStream,
                            CacheReadStream& aReadStreamOut, ErrorResult& aRv);
->>>>>>> upstream-releases
 };
 
 }  // namespace cache

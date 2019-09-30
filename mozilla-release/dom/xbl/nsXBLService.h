@@ -45,16 +45,8 @@ class nsXBLService final : public nsSupportsWeakReference {
   // This function loads a particular XBL file and installs all of the bindings
   // onto the element.  aOriginPrincipal must not be null here.
   nsresult LoadBindings(mozilla::dom::Element* aElement, nsIURI* aURL,
-<<<<<<< HEAD
-                        nsIPrincipal* aOriginPrincipal, nsXBLBinding** aBinding,
-                        bool* aResolveStyle);
-||||||| merged common ancestors
-                        nsIPrincipal* aOriginPrincipal,
-                        nsXBLBinding** aBinding, bool* aResolveStyle);
-=======
                         nsIPrincipal* aOriginPrincipal,
                         nsXBLBinding** aBinding);
->>>>>>> upstream-releases
 
   // Indicates whether or not a binding is fully loaded.
   nsresult BindingReady(nsIContent* aBoundElement, nsIURI* aURI,
@@ -83,27 +75,12 @@ class nsXBLService final : public nsSupportsWeakReference {
   void FlushStyleBindings(mozilla::dom::Element*);
 
   // This method synchronously loads and parses an XBL file.
-<<<<<<< HEAD
-  nsresult FetchBindingDocument(nsIContent* aBoundElement,
-                                nsIDocument* aBoundDocument,
-||||||| merged common ancestors
-  nsresult FetchBindingDocument(nsIContent* aBoundElement, nsIDocument* aBoundDocument,
-=======
   nsresult FetchBindingDocument(nsIContent* aBoundElement,
                                 mozilla::dom::Document* aBoundDocument,
->>>>>>> upstream-releases
                                 nsIURI* aDocumentURI, nsIURI* aBindingURI,
-<<<<<<< HEAD
-                                nsIPrincipal* aOriginPrincipal,
-                                bool aForceSyncLoad, nsIDocument** aResult);
-||||||| merged common ancestors
-                                nsIPrincipal* aOriginPrincipal, bool aForceSyncLoad,
-                                nsIDocument** aResult);
-=======
                                 nsIPrincipal* aOriginPrincipal,
                                 bool aForceSyncLoad,
                                 mozilla::dom::Document** aResult);
->>>>>>> upstream-releases
 
   /**
    * This method calls the one below with an empty |aDontExtendURIs| array.

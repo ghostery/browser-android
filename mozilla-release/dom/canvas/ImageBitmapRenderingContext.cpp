@@ -139,17 +139,8 @@ mozilla::UniquePtr<uint8_t[]> ImageBitmapRenderingContext::GetImageBuffer(
 
 NS_IMETHODIMP
 ImageBitmapRenderingContext::GetInputStream(const char* aMimeType,
-<<<<<<< HEAD
-                                            const char16_t* aEncoderOptions,
-                                            nsIInputStream** aStream) {
-||||||| merged common ancestors
-                                            const char16_t* aEncoderOptions,
-                                            nsIInputStream** aStream)
-{
-=======
                                             const nsAString& aEncoderOptions,
                                             nsIInputStream** aStream) {
->>>>>>> upstream-releases
   nsCString enccid("@mozilla.org/image/encoder;2?type=");
   enccid += aMimeType;
   nsCOMPtr<imgIEncoder> encoder = do_CreateInstance(enccid.get());

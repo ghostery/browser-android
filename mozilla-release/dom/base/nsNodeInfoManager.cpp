@@ -84,59 +84,27 @@ NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(nsNodeInfoManager, Release)
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_BEGIN(nsNodeInfoManager)
   if (tmp->mDocument) {
-<<<<<<< HEAD
-    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)
-        ->CanSkip(tmp->mDocument, aRemovingAllowed);
-||||||| merged common ancestors
-    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)->CanSkip(tmp->mDocument, aRemovingAllowed);
-=======
     return NS_CYCLE_COLLECTION_PARTICIPANT(mozilla::dom::Document)
         ->CanSkip(tmp->mDocument, aRemovingAllowed);
->>>>>>> upstream-releases
   }
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_END
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_IN_CC_BEGIN(nsNodeInfoManager)
   if (tmp->mDocument) {
-<<<<<<< HEAD
-    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)
-        ->CanSkipInCC(tmp->mDocument);
-||||||| merged common ancestors
-    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)->CanSkipInCC(tmp->mDocument);
-=======
     return NS_CYCLE_COLLECTION_PARTICIPANT(mozilla::dom::Document)
         ->CanSkipInCC(tmp->mDocument);
->>>>>>> upstream-releases
   }
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_IN_CC_END
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_BEGIN(nsNodeInfoManager)
   if (tmp->mDocument) {
-<<<<<<< HEAD
-    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)
-        ->CanSkipThis(tmp->mDocument);
-||||||| merged common ancestors
-    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)->CanSkipThis(tmp->mDocument);
-=======
     return NS_CYCLE_COLLECTION_PARTICIPANT(mozilla::dom::Document)
         ->CanSkipThis(tmp->mDocument);
->>>>>>> upstream-releases
   }
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_END
 
-<<<<<<< HEAD
-nsresult nsNodeInfoManager::Init(nsIDocument* aDocument) {
-  MOZ_ASSERT(!mPrincipal, "Being inited when we already have a principal?");
-||||||| merged common ancestors
-nsresult
-nsNodeInfoManager::Init(nsIDocument *aDocument)
-{
-  MOZ_ASSERT(!mPrincipal,
-                  "Being inited when we already have a principal?");
-=======
 nsresult nsNodeInfoManager::Init(mozilla::dom::Document* aDocument) {
   MOZ_ASSERT(!mPrincipal, "Being inited when we already have a principal?");
->>>>>>> upstream-releases
 
   mPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
 

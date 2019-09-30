@@ -13,16 +13,9 @@
 #include "SkYUVAIndex.h"
 #include "SkYUVASizeInfo.h"
 
-<<<<<<< HEAD
-class GrContext;
-struct GrSurfaceDesc;
-||||||| merged common ancestors
-class GrContext;
-=======
 class GrBackendFormat;
 class GrRecordingContext;
 struct GrSurfaceDesc;
->>>>>>> upstream-releases
 class GrTexture;
 class GrTextureProxy;
 class SkCachedData;
@@ -48,36 +41,17 @@ public:
      *
      *  On failure (e.g. the provider had no data), this returns NULL.
      */
-<<<<<<< HEAD
-    sk_sp<GrTextureProxy> refAsTextureProxy(GrContext*, const GrSurfaceDesc&,
-                                            SkColorSpace* srcColorSpace,
-                                            SkColorSpace* dstColorSpace);
-||||||| merged common ancestors
-    sk_sp<GrTextureProxy> refAsTextureProxy(GrContext*, const GrSurfaceDesc&,
-                                            const SkColorSpace* srcColorSpace,
-                                            const SkColorSpace* dstColorSpace);
-=======
     sk_sp<GrTextureProxy> refAsTextureProxy(GrRecordingContext*,
                                             const GrBackendFormat&,
                                             const GrSurfaceDesc&,
                                             SkColorSpace* srcColorSpace,
                                             SkColorSpace* dstColorSpace);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    sk_sp<SkCachedData> getPlanes(SkYUVSizeInfo*, SkYUVColorSpace*, const void* planes[3]);
-
-private:
-    virtual uint32_t onGetID() const = 0;
-||||||| merged common ancestors
-    virtual uint32_t onGetID() = 0;
-=======
     sk_sp<SkCachedData> getPlanes(SkYUVASizeInfo*, SkYUVAIndex[SkYUVAIndex::kIndexCount],
                                   SkYUVColorSpace*, const void* planes[SkYUVASizeInfo::kMaxCount]);
 
 private:
     virtual uint32_t onGetID() const = 0;
->>>>>>> upstream-releases
 
     // These are not meant to be called by a client, only by the implementation
 

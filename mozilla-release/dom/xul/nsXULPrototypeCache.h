@@ -114,77 +114,23 @@ class nsXULPrototypeCache : public nsIObserver {
 
   static nsXULPrototypeCache* sInstance;
 
-<<<<<<< HEAD
-  void FlushSkinFiles();
-||||||| merged common ancestors
-    nsXULPrototypeCache();
-    virtual ~nsXULPrototypeCache();
-=======
   using StyleSheetTable = nsRefPtrHashtable<nsURIHashKey, mozilla::StyleSheet>;
   using XBLDocTable = nsRefPtrHashtable<nsURIHashKey, nsXBLDocumentInfo>;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  using StyleSheetTable = nsRefPtrHashtable<nsURIHashKey, mozilla::StyleSheet>;
-  using XBLDocTable = nsRefPtrHashtable<nsURIHashKey, nsXBLDocumentInfo>;
-||||||| merged common ancestors
-    static nsXULPrototypeCache* sInstance;
-=======
   nsRefPtrHashtable<nsURIHashKey, nsXULPrototypeDocument>
       mPrototypeTable;  // owns the prototypes
   StyleSheetTable mStyleSheetTable;
   nsJSThingHashtable<nsURIHashKey, JSScript*> mScriptTable;
   XBLDocTable mXBLDocTable;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsRefPtrHashtable<nsURIHashKey, nsXULPrototypeDocument>
-      mPrototypeTable;  // owns the prototypes
-  StyleSheetTable mStyleSheetTable;
-  nsJSThingHashtable<nsURIHashKey, JSScript*> mScriptTable;
-  XBLDocTable mXBLDocTable;
-||||||| merged common ancestors
-    void FlushSkinFiles();
-=======
   // URIs already written to the startup cache, to prevent double-caching.
   nsTHashtable<nsURIHashKey> mStartupCacheURITable;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // URIs already written to the startup cache, to prevent double-caching.
-  nsTHashtable<nsURIHashKey> mStartupCacheURITable;
-||||||| merged common ancestors
-    using StyleSheetTable = nsRefPtrHashtable<nsURIHashKey, mozilla::StyleSheet>;
-    using XBLDocTable = nsRefPtrHashtable<nsURIHashKey, nsXBLDocumentInfo>;
-=======
-  nsInterfaceHashtable<nsURIHashKey, nsIStorageStream> mOutputStreamTable;
-  nsInterfaceHashtable<nsURIHashKey, nsIObjectInputStream> mInputStreamTable;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   nsInterfaceHashtable<nsURIHashKey, nsIStorageStream> mOutputStreamTable;
   nsInterfaceHashtable<nsURIHashKey, nsIObjectInputStream> mInputStreamTable;
 
   // Bootstrap caching service
   nsresult BeginCaching(nsIURI* aDocumentURI);
-||||||| merged common ancestors
-    nsRefPtrHashtable<nsURIHashKey,nsXULPrototypeDocument>   mPrototypeTable; // owns the prototypes
-    StyleSheetTable                                          mStyleSheetTable;
-    nsJSThingHashtable<nsURIHashKey, JSScript*>              mScriptTable;
-    XBLDocTable                                              mXBLDocTable;
-
-    // URIs already written to the startup cache, to prevent double-caching.
-    nsTHashtable<nsURIHashKey>                               mStartupCacheURITable;
-
-    nsInterfaceHashtable<nsURIHashKey, nsIStorageStream>     mOutputStreamTable;
-    nsInterfaceHashtable<nsURIHashKey, nsIObjectInputStream> mInputStreamTable;
-
-    // Bootstrap caching service
-    nsresult BeginCaching(nsIURI* aDocumentURI);
-=======
-  // Bootstrap caching service
-  nsresult BeginCaching(nsIURI* aDocumentURI);
->>>>>>> upstream-releases
 };
 
 #endif  // nsXULPrototypeCache_h__

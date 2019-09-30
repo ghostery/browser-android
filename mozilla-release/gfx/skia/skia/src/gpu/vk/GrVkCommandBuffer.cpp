@@ -53,17 +53,6 @@ void GrVkCommandBuffer::freeGPUData(GrVkGpu* gpu) const {
         fTrackedRecycledResources[i]->recycle(const_cast<GrVkGpu*>(gpu));
     }
 
-<<<<<<< HEAD
-    for (int i = 0; i < fTrackedRecordingResources.count(); ++i) {
-        fTrackedRecordingResources[i]->unref(gpu);
-    }
-
-    GR_VK_CALL(gpu->vkInterface(), FreeCommandBuffers(gpu->device(), gpu->cmdPool(),
-                                                      1, &fCmdBuffer));
-||||||| merged common ancestors
-    GR_VK_CALL(gpu->vkInterface(), FreeCommandBuffers(gpu->device(), gpu->cmdPool(),
-                                                      1, &fCmdBuffer));
-=======
     for (int i = 0; i < fTrackedRecordingResources.count(); ++i) {
         fTrackedRecordingResources[i]->notifyRemovedFromCommandBuffer();
         fTrackedRecordingResources[i]->unref(gpu);
@@ -73,7 +62,6 @@ void GrVkCommandBuffer::freeGPUData(GrVkGpu* gpu) const {
         GR_VK_CALL(gpu->vkInterface(), FreeCommandBuffers(gpu->device(), fCmdPool->vkCommandPool(),
                                                           1, &fCmdBuffer));
     }
->>>>>>> upstream-releases
 
     this->onFreeGPUData(gpu);
 }
@@ -90,13 +78,6 @@ void GrVkCommandBuffer::abandonGPUData() const {
         // We don't recycle resources when abandoning them.
         fTrackedRecycledResources[i]->unrefAndAbandon();
     }
-<<<<<<< HEAD
-
-    for (int i = 0; i < fTrackedRecordingResources.count(); ++i) {
-        fTrackedRecordingResources[i]->unrefAndAbandon();
-    }
-||||||| merged common ancestors
-=======
 
     for (int i = 0; i < fTrackedRecordingResources.count(); ++i) {
         fTrackedRecordingResources[i]->notifyRemovedFromCommandBuffer();
@@ -104,7 +85,6 @@ void GrVkCommandBuffer::abandonGPUData() const {
     }
 
     this->onAbandonGPUData();
->>>>>>> upstream-releases
 }
 
 void GrVkCommandBuffer::releaseResources(GrVkGpu* gpu) {
@@ -119,19 +99,11 @@ void GrVkCommandBuffer::releaseResources(GrVkGpu* gpu) {
         fTrackedRecycledResources[i]->recycle(const_cast<GrVkGpu*>(gpu));
     }
 
-<<<<<<< HEAD
-    for (int i = 0; i < fTrackedRecordingResources.count(); ++i) {
-        fTrackedRecordingResources[i]->unref(gpu);
-    }
-
-||||||| merged common ancestors
-=======
     for (int i = 0; i < fTrackedRecordingResources.count(); ++i) {
         fTrackedRecordingResources[i]->notifyRemovedFromCommandBuffer();
         fTrackedRecordingResources[i]->unref(gpu);
     }
 
->>>>>>> upstream-releases
     if (++fNumResets > kNumRewindResetsBeforeFullReset) {
         fTrackedResources.reset();
         fTrackedRecycledResources.reset();

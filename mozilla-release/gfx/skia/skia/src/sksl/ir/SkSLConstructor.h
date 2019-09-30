@@ -108,13 +108,7 @@ struct Constructor : public Expression {
         if (fType.componentType().isFloat()) {
             zero = &fzero;
         } else {
-<<<<<<< HEAD
-            SkASSERT(fType.componentType() == *context.fInt_Type);
-||||||| merged common ancestors
-            ASSERT(fType.componentType() == *context.fInt_Type);
-=======
             SkASSERT(fType.componentType().isInteger());
->>>>>>> upstream-releases
             zero = &izero;
         }
         for (int col = 0; col < fType.columns(); col++) {

@@ -13,22 +13,10 @@ function setupTest(uri, cookies, loads) {
   SimpleTest.waitForExplicitFinish();
 
   var prefSet = new Promise(resolve => {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/test/file_testcommon.js
-    SpecialPowers.pushPrefEnv({ set: [
-      ["network.cookie.cookieBehavior", 1],
-    ]}, resolve);
-||||||| merged common ancestors
-    SpecialPowers.pushPrefEnv({ set: [
-      ["browser.contentblocking.enabled", true],
-      ["browser.contentblocking.ui.enabled", true],
-      ["network.cookie.cookieBehavior", 1],
-    ]}, resolve);
-=======
     SpecialPowers.pushPrefEnv(
       { set: [["network.cookie.cookieBehavior", 1]] },
       resolve
     );
->>>>>>> upstream-releases:mozilla-release/netwerk/test/mochitests/file_testcommon.js
   });
 
   gScript = SpecialPowers.loadChromeScript(SCRIPT_URL);

@@ -109,11 +109,6 @@ void StructuredCloneCallbacksError(JSContext* aCx, uint32_t aErrorId) {
   NS_WARNING("Failed to clone data.");
 }
 
-<<<<<<< HEAD
-}  // anonymous namespace
-||||||| merged common ancestors
-} // anonymous namespace
-=======
 void AssertTagValues() {
   static_assert(SCTAG_DOM_IMAGEDATA == 0xffff8007 &&
                     SCTAG_DOM_DOMPOINT == 0xffff8008 &&
@@ -135,7 +130,6 @@ void AssertTagValues() {
 }
 
 }  // anonymous namespace
->>>>>>> upstream-releases
 
 const JSStructuredCloneCallbacks StructuredCloneHolder::sCallbacks = {
     StructuredCloneCallbacksRead,          StructuredCloneCallbacksWrite,
@@ -331,81 +325,20 @@ void StructuredCloneHolder::ReadFromBuffer(nsISupports* aParent, JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-/* static */ JSObject* StructuredCloneHolder::ReadFullySerializableObjects(
-    JSContext* aCx, JSStructuredCloneReader* aReader, uint32_t aTag) {
-  if (aTag == SCTAG_DOM_IMAGEDATA) {
-    return ReadStructuredCloneImageData(aCx, aReader);
-  }
-||||||| merged common ancestors
-/* static */ JSObject*
-StructuredCloneHolder::ReadFullySerializableObjects(JSContext* aCx,
-                                                    JSStructuredCloneReader* aReader,
-                                                    uint32_t aTag)
-{
-  if (aTag == SCTAG_DOM_IMAGEDATA) {
-    return ReadStructuredCloneImageData(aCx, aReader);
-  }
-=======
 /* static */
 JSObject* StructuredCloneHolder::ReadFullySerializableObjects(
     JSContext* aCx, JSStructuredCloneReader* aReader, uint32_t aTag) {
   AssertTagValues();
->>>>>>> upstream-releases
 
   nsIGlobalObject* global = xpc::CurrentNativeGlobal(aCx);
   if (!global) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-    // Prevent the return value from being trashed by a GC during ~nsRefPtr.
-    JS::Rooted<JSObject*> result(aCx);
-    {
-      if (aTag == SCTAG_DOM_WEBCRYPTO_KEY) {
-        RefPtr<CryptoKey> key = new CryptoKey(global);
-        if (!key->ReadStructuredClone(aReader)) {
-          result = nullptr;
-        } else {
-          result = key->WrapObject(aCx, nullptr);
-        }
-      } else if (aTag == SCTAG_DOM_URLSEARCHPARAMS) {
-        RefPtr<URLSearchParams> usp = new URLSearchParams(global);
-        if (!usp->ReadStructuredClone(aReader)) {
-          result = nullptr;
-        } else {
-          result = usp->WrapObject(aCx, nullptr);
-        }
-      }
-    }
-    return result;
-||||||| merged common ancestors
-    // Prevent the return value from being trashed by a GC during ~nsRefPtr.
-    JS::Rooted<JSObject*> result(aCx);
-    {
-      if (aTag == SCTAG_DOM_WEBCRYPTO_KEY) {
-        RefPtr<CryptoKey> key = new CryptoKey(global);
-        if (!key->ReadStructuredClone(aReader)) {
-         result = nullptr;
-        } else {
-          result = key->WrapObject(aCx, nullptr);
-        }
-      } else if (aTag == SCTAG_DOM_URLSEARCHPARAMS) {
-        RefPtr<URLSearchParams> usp = new URLSearchParams(global);
-       if (!usp->ReadStructuredClone(aReader)) {
-          result = nullptr;
-        } else {
-          result = usp->WrapObject(aCx, nullptr);
-        }
-      }
-    }
-    return result;
-=======
   WebIDLDeserializer deserializer =
       LookupDeserializer(StructuredCloneTags(aTag));
   if (deserializer) {
     return deserializer(aCx, global, aReader);
->>>>>>> upstream-releases
   }
 
   if (aTag == SCTAG_DOM_NULL_PRINCIPAL || aTag == SCTAG_DOM_SYSTEM_PRINCIPAL ||
@@ -437,69 +370,6 @@ JSObject* StructuredCloneHolder::ReadFullySerializableObjects(
   return nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ bool StructuredCloneHolder::WriteFullySerializableObjects(
-    JSContext* aCx, JSStructuredCloneWriter* aWriter,
-    JS::Handle<JSObject*> aObj) {
-  JS::Rooted<JSObject*> obj(aCx, aObj);
-
-  // See if this is a ImageData object.
-  {
-    ImageData* imageData = nullptr;
-    if (NS_SUCCEEDED(UNWRAP_OBJECT(ImageData, &obj, imageData))) {
-      return WriteStructuredCloneImageData(aCx, aWriter, imageData);
-    }
-  }
-
-  // Handle URLSearchParams cloning
-  {
-    URLSearchParams* usp = nullptr;
-    if (NS_SUCCEEDED(UNWRAP_OBJECT(URLSearchParams, &obj, usp))) {
-      return JS_WriteUint32Pair(aWriter, SCTAG_DOM_URLSEARCHPARAMS, 0) &&
-             usp->WriteStructuredClone(aWriter);
-    }
-  }
-
-  // Handle Key cloning
-  {
-    CryptoKey* key = nullptr;
-    if (NS_SUCCEEDED(UNWRAP_OBJECT(CryptoKey, &obj, key))) {
-      return JS_WriteUint32Pair(aWriter, SCTAG_DOM_WEBCRYPTO_KEY, 0) &&
-             key->WriteStructuredClone(aWriter);
-    }
-||||||| merged common ancestors
-/* static */ bool
-StructuredCloneHolder::WriteFullySerializableObjects(JSContext* aCx,
-                                                     JSStructuredCloneWriter* aWriter,
-                                                     JS::Handle<JSObject*> aObj)
-{
-  JS::Rooted<JSObject*> obj(aCx, aObj);
-
-  // See if this is a ImageData object.
-  {
-    ImageData* imageData = nullptr;
-    if (NS_SUCCEEDED(UNWRAP_OBJECT(ImageData, &obj, imageData))) {
-      return WriteStructuredCloneImageData(aCx, aWriter, imageData);
-    }
-  }
-
-  // Handle URLSearchParams cloning
-  {
-    URLSearchParams* usp = nullptr;
-    if (NS_SUCCEEDED(UNWRAP_OBJECT(URLSearchParams, &obj, usp))) {
-      return JS_WriteUint32Pair(aWriter, SCTAG_DOM_URLSEARCHPARAMS, 0) &&
-             usp->WriteStructuredClone(aWriter);
-    }
-  }
-
-  // Handle Key cloning
-  {
-    CryptoKey* key = nullptr;
-    if (NS_SUCCEEDED(UNWRAP_OBJECT(CryptoKey, &obj, key))) {
-      return JS_WriteUint32Pair(aWriter, SCTAG_DOM_WEBCRYPTO_KEY, 0) &&
-             key->WriteStructuredClone(aWriter);
-    }
-=======
 /* static */
 bool StructuredCloneHolder::WriteFullySerializableObjects(
     JSContext* aCx, JSStructuredCloneWriter* aWriter,
@@ -511,7 +381,6 @@ bool StructuredCloneHolder::WriteFullySerializableObjects(
   JS::Rooted<JSObject*> obj(aCx, js::CheckedUnwrapStatic(aObj));
   if (!obj) {
     return xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
->>>>>>> upstream-releases
   }
 
   const DOMJSClass* domClass = GetDOMClass(obj);
@@ -870,7 +739,6 @@ bool WriteFormData(JSStructuredCloneWriter* aWriter, FormData* aFormData,
     JSStructuredCloneWriter* mWriter;
     StructuredCloneHolder* mHolder;
 
-<<<<<<< HEAD
    public:
     Closure(JSStructuredCloneWriter* aWriter, StructuredCloneHolder* aHolder)
         : mWriter(aWriter), mHolder(aHolder) {}
@@ -878,27 +746,6 @@ bool WriteFormData(JSStructuredCloneWriter* aWriter, FormData* aFormData,
     static bool Write(const nsString& aName,
                       const OwningBlobOrDirectoryOrUSVString& aValue,
                       void* aClosure) {
-||||||| merged common ancestors
-  public:
-    Closure(JSStructuredCloneWriter* aWriter,
-            StructuredCloneHolder* aHolder)
-      : mWriter(aWriter),
-        mHolder(aHolder)
-    { }
-
-    static bool
-    Write(const nsString& aName, const OwningBlobOrDirectoryOrUSVString& aValue,
-          void* aClosure)
-    {
-=======
-   public:
-    Closure(JSStructuredCloneWriter* aWriter, StructuredCloneHolder* aHolder)
-        : mWriter(aWriter), mHolder(aHolder) {}
-
-    static bool Write(const nsString& aName,
-                      const OwningBlobOrDirectoryOrUSVString& aValue,
-                      void* aClosure) {
->>>>>>> upstream-releases
       Closure* closure = static_cast<Closure*>(aClosure);
       if (!StructuredCloneHolder::WriteString(closure->mWriter, aName)) {
         return false;

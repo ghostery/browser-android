@@ -24,15 +24,7 @@ NS_INTERFACE_MAP_END
 
 SpeechGrammarList::SpeechGrammarList(nsISupports* aParent) : mParent(aParent) {}
 
-<<<<<<< HEAD
-SpeechGrammarList::~SpeechGrammarList() {}
-||||||| merged common ancestors
-SpeechGrammarList::~SpeechGrammarList()
-{
-}
-=======
 SpeechGrammarList::~SpeechGrammarList() = default;
->>>>>>> upstream-releases
 
 already_AddRefed<SpeechGrammarList> SpeechGrammarList::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {

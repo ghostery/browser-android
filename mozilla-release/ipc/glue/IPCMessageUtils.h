@@ -42,13 +42,7 @@
 #include "nsCSSPropertyID.h"
 
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(disable : 4800)
-||||||| merged common ancestors
-#pragma warning( disable : 4800 )
-=======
 #  pragma warning(disable : 4800)
->>>>>>> upstream-releases
 #endif
 
 #if !defined(OS_POSIX)
@@ -977,33 +971,7 @@ struct ParamTraits<mozilla::Variant<Ts...>> {
   typedef mozilla::Variant<Ts...> paramType;
   using Tag = typename mozilla::detail::VariantTag<Ts...>::Type;
 
-<<<<<<< HEAD
-  struct VariantWriter {
-    Message* msg;
-
-    template <class T>
-    void match(const T& t) {
-      WriteParam(msg, t);
-    }
-  };
-
   static void Write(Message* msg, const paramType& param) {
-||||||| merged common ancestors
-  struct VariantWriter
-  {
-    Message* msg;
-
-    template<class T>
-    void match(const T& t) {
-      WriteParam(msg, t);
-    }
-  };
-
-  static void Write(Message* msg, const paramType& param)
-  {
-=======
-  static void Write(Message* msg, const paramType& param) {
->>>>>>> upstream-releases
     WriteParam(msg, param.tag);
     param.match([msg](const auto& t) { WriteParam(msg, t); });
   }

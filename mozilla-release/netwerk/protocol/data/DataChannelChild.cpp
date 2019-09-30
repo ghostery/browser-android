@@ -36,35 +36,6 @@ DataChannelChild::ConnectParent(uint32_t aId) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DataChannelChild::CompleteRedirectSetup(nsIStreamListener* aListener,
-                                        nsISupports* aContext) {
-  nsresult rv;
-  if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-    MOZ_ASSERT(!aContext, "aContext should be null!");
-    rv = AsyncOpen2(aListener);
-  } else {
-    rv = AsyncOpen(aListener, aContext);
-  }
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-||||||| merged common ancestors
-DataChannelChild::CompleteRedirectSetup(nsIStreamListener *aListener,
-                                        nsISupports *aContext)
-{
-    nsresult rv;
-    if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-        MOZ_ASSERT(!aContext, "aContext should be null!");
-        rv = AsyncOpen2(aListener);
-    }
-    else {
-        rv = AsyncOpen(aListener, aContext);
-    }
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-    }
-=======
 DataChannelChild::CompleteRedirectSetup(nsIStreamListener* aListener,
                                         nsISupports* aContext) {
   nsresult rv;
@@ -73,7 +44,6 @@ DataChannelChild::CompleteRedirectSetup(nsIStreamListener* aListener,
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
 
   if (mIPCOpen) {
     Unused << Send__delete__(this);
@@ -81,40 +51,14 @@ DataChannelChild::CompleteRedirectSetup(nsIStreamListener* aListener,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void DataChannelChild::AddIPDLReference() {
-  AddRef();
-  mIPCOpen = true;
-||||||| merged common ancestors
-void
-DataChannelChild::AddIPDLReference()
-{
-    AddRef();
-    mIPCOpen = true;
-=======
 void DataChannelChild::AddIPDLReference() {
   AddRef();  // Released in NeckoChild::DeallocPDataChannelChild.
   mIPCOpen = true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 void DataChannelChild::ActorDestroy(ActorDestroyReason why) {
   MOZ_ASSERT(mIPCOpen);
   mIPCOpen = false;
-  Release();
-||||||| merged common ancestors
-void
-DataChannelChild::ActorDestroy(ActorDestroyReason why)
-{
-    MOZ_ASSERT(mIPCOpen);
-    mIPCOpen = false;
-    Release();
-=======
-void DataChannelChild::ActorDestroy(ActorDestroyReason why) {
-  MOZ_ASSERT(mIPCOpen);
-  mIPCOpen = false;
->>>>>>> upstream-releases
 }
 
 }  // namespace net

@@ -24,20 +24,10 @@ class nsFrameLoader;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class XULFrameElement final : public nsXULElement, public nsIFrameLoaderOwner {
- public:
-||||||| merged common ancestors
-class XULFrameElement final : public nsXULElement,
-                              public nsIFrameLoaderOwner
-{
-public:
-=======
 class BrowsingContext;
 
 class XULFrameElement final : public nsXULElement, public nsFrameLoaderOwner {
  public:
->>>>>>> upstream-releases
   explicit XULFrameElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
       : nsXULElement(std::move(aNodeInfo)) {}
 
@@ -47,50 +37,12 @@ class XULFrameElement final : public nsXULElement, public nsFrameLoaderOwner {
   // XULFrameElement.webidl
   nsDocShell* GetDocShell();
   already_AddRefed<nsIWebNavigation> GetWebNavigation();
-<<<<<<< HEAD
-  already_AddRefed<nsPIDOMWindowOuter> GetContentWindow();
-  nsIDocument* GetContentDocument();
-
-  // nsIFrameLoaderOwner / MozFrameLoaderOwner
-  NS_IMETHOD_(already_AddRefed<nsFrameLoader>) GetFrameLoader() override {
-    return do_AddRef(mFrameLoader);
-  }
-||||||| merged common ancestors
-  already_AddRefed<nsPIDOMWindowOuter> GetContentWindow();
-  nsIDocument* GetContentDocument();
-
-  // nsIFrameLoaderOwner / MozFrameLoaderOwner
-  NS_IMETHOD_(already_AddRefed<nsFrameLoader>) GetFrameLoader() override
-  {
-    return do_AddRef(mFrameLoader);
-  }
-=======
   Nullable<WindowProxyHolder> GetContentWindow();
   Document* GetContentDocument();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_IMETHOD_(void)
-  InternalSetFrameLoader(nsFrameLoader* aFrameLoader) override {
-    mFrameLoader = aFrameLoader;
-  }
-
-  void PresetOpenerWindow(mozIDOMWindowProxy* aWindow, ErrorResult& aRv) {
-    mOpener = do_QueryInterface(aWindow);
-||||||| merged common ancestors
-  NS_IMETHOD_(void) InternalSetFrameLoader(nsFrameLoader* aFrameLoader) override
-  {
-    mFrameLoader = aFrameLoader;
-  }
-
-  void PresetOpenerWindow(mozIDOMWindowProxy* aWindow, ErrorResult& aRv)
-  {
-    mOpener = do_QueryInterface(aWindow);
-=======
   void PresetOpenerWindow(const Nullable<WindowProxyHolder>& aWindow,
                           ErrorResult& aRv) {
     mOpener = aWindow.IsNull() ? nullptr : aWindow.Value().get();
->>>>>>> upstream-releases
   }
 
   void SwapFrameLoaders(mozilla::dom::HTMLIFrameElement& aOtherLoaderOwner,

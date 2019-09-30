@@ -70,34 +70,14 @@ class BlobImplSnapshot final : public BlobImpl, public PIBlobImplSnapshot {
     mBlobImpl->SetLastModified(aLastModified);
   }
 
-<<<<<<< HEAD
-  virtual void GetMozFullPath(nsAString& aName,
-                              SystemCallerGuarantee aGuarantee,
-                              ErrorResult& aRv) const override {
-||||||| merged common ancestors
-  virtual void
-  GetMozFullPath(nsAString& aName, SystemCallerGuarantee aGuarantee,
-                 ErrorResult& aRv) const override
-  {
-=======
   virtual void GetMozFullPath(nsAString& aName,
                               SystemCallerGuarantee aGuarantee,
                               ErrorResult& aRv) override {
->>>>>>> upstream-releases
     mBlobImpl->GetMozFullPath(aName, aGuarantee, aRv);
   }
 
-<<<<<<< HEAD
-  virtual void GetMozFullPathInternal(nsAString& aFileName,
-                                      ErrorResult& aRv) const override {
-||||||| merged common ancestors
-  virtual void
-  GetMozFullPathInternal(nsAString& aFileName, ErrorResult& aRv) const override
-  {
-=======
   virtual void GetMozFullPathInternal(nsAString& aFileName,
                                       ErrorResult& aRv) override {
->>>>>>> upstream-releases
     mBlobImpl->GetMozFullPathInternal(aFileName, aRv);
   }
 
@@ -105,19 +85,9 @@ class BlobImplSnapshot final : public BlobImpl, public PIBlobImplSnapshot {
     return mBlobImpl->GetSize(aRv);
   }
 
-<<<<<<< HEAD
-  virtual void GetType(nsAString& aType) override { mBlobImpl->GetType(aType); }
-||||||| merged common ancestors
-  virtual void
-  GetType(nsAString& aType) override
-  {
-    mBlobImpl->GetType(aType);
-  }
-=======
   virtual void GetType(nsAString& aType) override { mBlobImpl->GetType(aType); }
 
   virtual void GetBlobImplType(nsAString& aBlobImplType) const override;
->>>>>>> upstream-releases
 
   size_t GetAllocationSize() const override {
     return mBlobImpl->GetAllocationSize();

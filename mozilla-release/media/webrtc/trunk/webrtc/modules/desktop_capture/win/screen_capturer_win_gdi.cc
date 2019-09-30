@@ -62,10 +62,6 @@ ScreenCapturerWinGdi::~ScreenCapturerWinGdi() {
   if (composition_func_)
     (*composition_func_)(DWM_EC_ENABLECOMPOSITION);
 
-  // Restore Aero.
-  if (composition_func_)
-    (*composition_func_)(DWM_EC_ENABLECOMPOSITION);
-
   if (dwmapi_library_)
     FreeLibrary(dwmapi_library_);
 }
@@ -121,61 +117,11 @@ void ScreenCapturerWinGdi::Start(Callback* callback) {
 
   callback_ = callback;
 
-<<<<<<< HEAD
   // Vote to disable Aero composited desktop effects while capturing. Windows
   // will restore Aero automatically if the process exits. This has no effect
   // under Windows 8 or higher.  See crbug.com/124018.
   if (composition_func_)
     (*composition_func_)(DWM_EC_DISABLECOMPOSITION);
-}
-
-void ScreenCapturerWinGdi::Stop() {
-  if (desktop_dc_) {
-    ReleaseDC(NULL, desktop_dc_);
-    desktop_dc_ = NULL;
-  }
-  if (memory_dc_) {
-    DeleteDC(memory_dc_);
-    memory_dc_ = NULL;
-  }
-
-  // Restore Aero.
-  if (composition_func_)
-    (*composition_func_)(DWM_EC_ENABLECOMPOSITION);
-  callback_ = NULL;
-||||||| merged common ancestors
-  if (disable_composition_) {
-    // Vote to disable Aero composited desktop effects while capturing. Windows
-    // will restore Aero automatically if the process exits. This has no effect
-    // under Windows 8 or higher.  See crbug.com/124018.
-    if (composition_func_)
-      (*composition_func_)(DWM_EC_DISABLECOMPOSITION);
-  }
-}
-
-void ScreenCapturerWinGdi::Stop() {
-  if (desktop_dc_) {
-    ReleaseDC(NULL, desktop_dc_);
-    desktop_dc_ = NULL;
-  }
-  if (memory_dc_) {
-    DeleteDC(memory_dc_);
-    memory_dc_ = NULL;
-  }
-
-  if (disable_composition_) {
-    // Restore Aero.
-    if (composition_func_)
-      (*composition_func_)(DWM_EC_ENABLECOMPOSITION);
-  }
-  callback_ = NULL;
-=======
-  // Vote to disable Aero composited desktop effects while capturing. Windows
-  // will restore Aero automatically if the process exits. This has no effect
-  // under Windows 8 or higher.  See crbug.com/124018.
-  if (composition_func_)
-    (*composition_func_)(DWM_EC_DISABLECOMPOSITION);
->>>>>>> upstream-releases
 }
 
 void ScreenCapturerWinGdi::PrepareCaptureResources() {

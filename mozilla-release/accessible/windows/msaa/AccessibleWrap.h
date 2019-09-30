@@ -35,290 +35,94 @@ class AccessibleWrap : public Accessible,
                        public ia2Accessible,
                        public ia2AccessibleComponent,
                        public ia2AccessibleHyperlink,
-<<<<<<< HEAD
-                       public ia2AccessibleValue {
- public:  // construction, destruction
-  AccessibleWrap(nsIContent *aContent, DocAccessible *aDoc);
-||||||| merged common ancestors
-                       public ia2AccessibleValue
-{
-public: // construction, destruction
-  AccessibleWrap(nsIContent* aContent, DocAccessible* aDoc);
-=======
                        public ia2AccessibleValue {
  public:  // construction, destruction
   AccessibleWrap(nsIContent* aContent, DocAccessible* aDoc);
->>>>>>> upstream-releases
 
   // nsISupports
   NS_DECL_ISUPPORTS_INHERITED
 
-<<<<<<< HEAD
- public:  // IUnknown methods - see iunknown.h for documentation
-  STDMETHODIMP QueryInterface(REFIID, void **) override;
-||||||| merged common ancestors
-  public: // IUnknown methods - see iunknown.h for documentation
-    STDMETHODIMP QueryInterface(REFIID, void**) override;
-=======
  public:  // IUnknown methods - see iunknown.h for documentation
   STDMETHODIMP QueryInterface(REFIID, void**) override;
->>>>>>> upstream-releases
 
   // Return the registered OLE class ID of this object's CfDataObj.
   CLSID GetClassID() const;
 
-<<<<<<< HEAD
- public:  // COM interface IAccessible
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accParent(
-      /* [retval][out] */ IDispatch __RPC_FAR *__RPC_FAR *ppdispParent)
-      override;
-||||||| merged common ancestors
-  public: // COM interface IAccessible
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accParent(
-        /* [retval][out] */ IDispatch __RPC_FAR *__RPC_FAR *ppdispParent) override;
-=======
  public:  // COM interface IAccessible
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accParent(
       /* [retval][out] */ IDispatch __RPC_FAR* __RPC_FAR* ppdispParent)
       override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accChildCount(
-      /* [retval][out] */ long __RPC_FAR *pcountChildren) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accChildCount(
-        /* [retval][out] */ long __RPC_FAR *pcountChildren) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accChildCount(
       /* [retval][out] */ long __RPC_FAR* pcountChildren) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accChild(
-      /* [in] */ VARIANT varChild,
-      /* [retval][out] */ IDispatch __RPC_FAR *__RPC_FAR *ppdispChild) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accChild(
-        /* [in] */ VARIANT varChild,
-        /* [retval][out] */ IDispatch __RPC_FAR *__RPC_FAR *ppdispChild) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accChild(
       /* [in] */ VARIANT varChild,
       /* [retval][out] */ IDispatch __RPC_FAR* __RPC_FAR* ppdispChild) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accName(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ BSTR __RPC_FAR *pszName) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accName(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ BSTR __RPC_FAR *pszName) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accName(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ BSTR __RPC_FAR* pszName) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accValue(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ BSTR __RPC_FAR *pszValue) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accValue(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ BSTR __RPC_FAR *pszValue) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accValue(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ BSTR __RPC_FAR* pszValue) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accDescription(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ BSTR __RPC_FAR *pszDescription) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accDescription(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ BSTR __RPC_FAR *pszDescription) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accDescription(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ BSTR __RPC_FAR* pszDescription) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accRole(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ VARIANT __RPC_FAR *pvarRole) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accRole(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ VARIANT __RPC_FAR *pvarRole) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accRole(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ VARIANT __RPC_FAR* pvarRole) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accState(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ VARIANT __RPC_FAR *pvarState) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accState(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ VARIANT __RPC_FAR *pvarState) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accState(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ VARIANT __RPC_FAR* pvarState) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accHelp(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ BSTR __RPC_FAR *pszHelp) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accHelp(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ BSTR __RPC_FAR *pszHelp) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accHelp(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ BSTR __RPC_FAR* pszHelp) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accHelpTopic(
-      /* [out] */ BSTR __RPC_FAR *pszHelpFile,
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ long __RPC_FAR *pidTopic) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accHelpTopic(
-        /* [out] */ BSTR __RPC_FAR *pszHelpFile,
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ long __RPC_FAR *pidTopic) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accHelpTopic(
       /* [out] */ BSTR __RPC_FAR* pszHelpFile,
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ long __RPC_FAR* pidTopic) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accKeyboardShortcut(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ BSTR __RPC_FAR *pszKeyboardShortcut) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accKeyboardShortcut(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ BSTR __RPC_FAR *pszKeyboardShortcut) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accKeyboardShortcut(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ BSTR __RPC_FAR* pszKeyboardShortcut) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accFocus(
-      /* [retval][out] */ VARIANT __RPC_FAR *pvarChild) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accFocus(
-        /* [retval][out] */ VARIANT __RPC_FAR *pvarChild) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accFocus(
       /* [retval][out] */ VARIANT __RPC_FAR* pvarChild) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accSelection(
-      /* [retval][out] */ VARIANT __RPC_FAR *pvarChildren) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accSelection(
-        /* [retval][out] */ VARIANT __RPC_FAR *pvarChildren) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accSelection(
       /* [retval][out] */ VARIANT __RPC_FAR* pvarChildren) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accDefaultAction(
-      /* [optional][in] */ VARIANT varChild,
-      /* [retval][out] */ BSTR __RPC_FAR *pszDefaultAction) override;
-||||||| merged common ancestors
-    virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accDefaultAction(
-        /* [optional][in] */ VARIANT varChild,
-        /* [retval][out] */ BSTR __RPC_FAR *pszDefaultAction) override;
-=======
   virtual /* [id][propget] */ HRESULT STDMETHODCALLTYPE get_accDefaultAction(
       /* [optional][in] */ VARIANT varChild,
       /* [retval][out] */ BSTR __RPC_FAR* pszDefaultAction) override;
->>>>>>> upstream-releases
 
   virtual /* [id] */ HRESULT STDMETHODCALLTYPE accSelect(
       /* [in] */ long flagsSelect,
       /* [optional][in] */ VARIANT varChild) override;
 
-<<<<<<< HEAD
-  virtual /* [id] */ HRESULT STDMETHODCALLTYPE accLocation(
-      /* [out] */ long __RPC_FAR *pxLeft,
-      /* [out] */ long __RPC_FAR *pyTop,
-      /* [out] */ long __RPC_FAR *pcxWidth,
-      /* [out] */ long __RPC_FAR *pcyHeight,
-      /* [optional][in] */ VARIANT varChild) override;
-||||||| merged common ancestors
-    virtual /* [id] */ HRESULT STDMETHODCALLTYPE accLocation(
-        /* [out] */ long __RPC_FAR *pxLeft,
-        /* [out] */ long __RPC_FAR *pyTop,
-        /* [out] */ long __RPC_FAR *pcxWidth,
-        /* [out] */ long __RPC_FAR *pcyHeight,
-        /* [optional][in] */ VARIANT varChild) override;
-=======
   virtual /* [id] */ HRESULT STDMETHODCALLTYPE accLocation(
       /* [out] */ long __RPC_FAR* pxLeft,
       /* [out] */ long __RPC_FAR* pyTop,
       /* [out] */ long __RPC_FAR* pcxWidth,
       /* [out] */ long __RPC_FAR* pcyHeight,
       /* [optional][in] */ VARIANT varChild) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id] */ HRESULT STDMETHODCALLTYPE accNavigate(
-      /* [in] */ long navDir,
-      /* [optional][in] */ VARIANT varStart,
-      /* [retval][out] */ VARIANT __RPC_FAR *pvarEndUpAt) override;
-||||||| merged common ancestors
-    virtual /* [id] */ HRESULT STDMETHODCALLTYPE accNavigate(
-        /* [in] */ long navDir,
-        /* [optional][in] */ VARIANT varStart,
-        /* [retval][out] */ VARIANT __RPC_FAR *pvarEndUpAt) override;
-=======
   virtual /* [id] */ HRESULT STDMETHODCALLTYPE accNavigate(
       /* [in] */ long navDir,
       /* [optional][in] */ VARIANT varStart,
       /* [retval][out] */ VARIANT __RPC_FAR* pvarEndUpAt) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual /* [id] */ HRESULT STDMETHODCALLTYPE accHitTest(
-      /* [in] */ long xLeft,
-      /* [in] */ long yTop,
-      /* [retval][out] */ VARIANT __RPC_FAR *pvarChild) override;
-||||||| merged common ancestors
-    virtual /* [id] */ HRESULT STDMETHODCALLTYPE accHitTest(
-        /* [in] */ long xLeft,
-        /* [in] */ long yTop,
-        /* [retval][out] */ VARIANT __RPC_FAR *pvarChild) override;
-=======
   virtual /* [id] */ HRESULT STDMETHODCALLTYPE accHitTest(
       /* [in] */ long xLeft,
       /* [in] */ long yTop,
       /* [retval][out] */ VARIANT __RPC_FAR* pvarChild) override;
->>>>>>> upstream-releases
 
   virtual /* [id] */ HRESULT STDMETHODCALLTYPE accDoDefaultAction(
       /* [optional][in] */ VARIANT varChild) override;
@@ -338,20 +142,9 @@ public: // construction, destruction
                                                 ITypeInfo** ppTInfo) override;
 
   virtual HRESULT STDMETHODCALLTYPE GetIDsOfNames(REFIID riid,
-<<<<<<< HEAD
-                                                  LPOLESTR *rgszNames,
-                                                  UINT cNames, LCID lcid,
-                                                  DISPID *rgDispId) override;
-||||||| merged common ancestors
-                                                  LPOLESTR *rgszNames,
-                                                  UINT cNames,
-                                                  LCID lcid,
-                                                  DISPID *rgDispId) override;
-=======
                                                   LPOLESTR* rgszNames,
                                                   UINT cNames, LCID lcid,
                                                   DISPID* rgDispId) override;
->>>>>>> upstream-releases
 
   virtual HRESULT STDMETHODCALLTYPE Invoke(DISPID dispIdMember, REFIID riid,
                                            LCID lcid, WORD wFlags,
@@ -361,14 +154,14 @@ public: // construction, destruction
                                            UINT* puArgErr) override;
 
   // Accessible
-  virtual nsresult HandleAccEvent(AccEvent *aEvent) override;
+  virtual nsresult HandleAccEvent(AccEvent* aEvent) override;
   virtual void Shutdown() override;
 
   // Helper methods
-  static int32_t GetChildIDFor(Accessible *aAccessible);
-  static HWND GetHWNDFor(Accessible *aAccessible);
+  static int32_t GetChildIDFor(Accessible* aAccessible);
+  static HWND GetHWNDFor(Accessible* aAccessible);
 
-  static void FireWinEvent(Accessible *aTarget, uint32_t aEventType);
+  static void FireWinEvent(Accessible* aTarget, uint32_t aEventType);
 
   /**
    * System caret support: update the Windows caret position.
@@ -377,13 +170,13 @@ public: // construction, destruction
    * We will use an invisible system caret.
    * Gecko is still responsible for drawing its own caret
    */
-  void UpdateSystemCaretFor(Accessible *aAccessible);
-  static void UpdateSystemCaretFor(ProxyAccessible *aProxy,
-                                   const LayoutDeviceIntRect &aCaretRect);
+  void UpdateSystemCaretFor(Accessible* aAccessible);
+  static void UpdateSystemCaretFor(ProxyAccessible* aProxy,
+                                   const LayoutDeviceIntRect& aCaretRect);
 
  private:
   static void UpdateSystemCaretFor(HWND aCaretWnd,
-                                   const LayoutDeviceIntRect &aCaretRect);
+                                   const LayoutDeviceIntRect& aCaretRect);
 
  public:
   /**
@@ -394,20 +187,12 @@ public: // construction, destruction
   /**
    * Find an accessible by the given child ID in cached documents.
    */
-<<<<<<< HEAD
-  MOZ_MUST_USE already_AddRefed<IAccessible> GetIAccessibleFor(
-      const VARIANT &aVarChild, bool *aIsDefunct);
-||||||| merged common ancestors
-  MOZ_MUST_USE already_AddRefed<IAccessible>
-  GetIAccessibleFor(const VARIANT& aVarChild, bool* aIsDefunct);
-=======
   MOZ_MUST_USE already_AddRefed<IAccessible> GetIAccessibleFor(
       const VARIANT& aVarChild, bool* aIsDefunct);
->>>>>>> upstream-releases
 
   virtual void GetNativeInterface(void** aOutAccessible) override;
 
-  static IDispatch *NativeAccessible(Accessible *aAccessible);
+  static IDispatch* NativeAccessible(Accessible* aAccessible);
 
   uint32_t GetExistingID() const { return mID; }
   static const uint32_t kNoID = 0;
@@ -420,11 +205,11 @@ public: // construction, destruction
 
   static void InvalidateHandlers();
 
-  bool DispatchTextChangeToHandler(bool aIsInsert, const nsString &aText,
+  bool DispatchTextChangeToHandler(bool aIsInsert, const nsString& aText,
                                    int32_t aStart, uint32_t aLen);
 
-  static void AssignChildIDTo(NotNull<sdnAccessible *> aSdnAcc);
-  static void ReleaseChildID(NotNull<sdnAccessible *> aSdnAcc);
+  static void AssignChildIDTo(NotNull<sdnAccessible*> aSdnAcc);
+  static void ReleaseChildID(NotNull<sdnAccessible*> aSdnAcc);
 
  protected:
   virtual ~AccessibleWrap();
@@ -432,33 +217,25 @@ public: // construction, destruction
   uint32_t mID;
 
   HRESULT
-  ResolveChild(const VARIANT &aVarChild, IAccessible **aOutInterface);
+  ResolveChild(const VARIANT& aVarChild, IAccessible** aOutInterface);
 
   /**
    * Find a remote accessible by the given child ID.
    */
-<<<<<<< HEAD
-  MOZ_MUST_USE already_AddRefed<IAccessible> GetRemoteIAccessibleFor(
-      const VARIANT &aVarChild);
-||||||| merged common ancestors
-  MOZ_MUST_USE already_AddRefed<IAccessible>
-  GetRemoteIAccessibleFor(const VARIANT& aVarChild);
-=======
   MOZ_MUST_USE already_AddRefed<IAccessible> GetRemoteIAccessibleFor(
       const VARIANT& aVarChild);
->>>>>>> upstream-releases
 
   /**
    * Return the wrapper for the document's proxy.
    */
-  DocProxyAccessibleWrap *DocProxyWrapper() const;
+  DocProxyAccessibleWrap* DocProxyWrapper() const;
 
   /**
    * Creates ITypeInfo for LIBID_Accessibility if it's needed and returns it.
    */
-  static ITypeInfo *GetTI(LCID lcid);
+  static ITypeInfo* GetTI(LCID lcid);
 
-  static ITypeInfo *gTypeInfo;
+  static ITypeInfo* gTypeInfo;
 
   static MsaaIdGenerator sIDGen;
 
@@ -490,65 +267,22 @@ public: // construction, destruction
     NAVRELATION_ERROR_FOR = 0x1018
   };
 
-<<<<<<< HEAD
-  struct HandlerControllerData final {
-    HandlerControllerData(DWORD aPid, RefPtr<IHandlerControl> &&aCtrl)
-        : mPid(aPid), mCtrl(std::move(aCtrl)) {
-||||||| merged common ancestors
-  struct HandlerControllerData final
-  {
-    HandlerControllerData(DWORD aPid, RefPtr<IHandlerControl>&& aCtrl)
-      : mPid(aPid)
-      , mCtrl(std::move(aCtrl))
-    {
-=======
   struct HandlerControllerData final {
     HandlerControllerData(DWORD aPid, RefPtr<IHandlerControl>&& aCtrl)
         : mPid(aPid), mCtrl(std::move(aCtrl)) {
->>>>>>> upstream-releases
       mIsProxy = mozilla::mscom::IsProxy(mCtrl);
     }
 
-<<<<<<< HEAD
-    HandlerControllerData(HandlerControllerData &&aOther)
-        : mPid(aOther.mPid),
-          mIsProxy(aOther.mIsProxy),
-          mCtrl(std::move(aOther.mCtrl)) {}
-||||||| merged common ancestors
-    HandlerControllerData(HandlerControllerData&& aOther)
-      : mPid(aOther.mPid)
-      , mIsProxy(aOther.mIsProxy)
-      , mCtrl(std::move(aOther.mCtrl))
-    {
-    }
-=======
     HandlerControllerData(HandlerControllerData&& aOther)
         : mPid(aOther.mPid),
           mIsProxy(aOther.mIsProxy),
           mCtrl(std::move(aOther.mCtrl)) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    bool operator==(const HandlerControllerData &aOther) const {
-||||||| merged common ancestors
-    bool operator==(const HandlerControllerData& aOther) const
-    {
-=======
     bool operator==(const HandlerControllerData& aOther) const {
->>>>>>> upstream-releases
       return mPid == aOther.mPid;
     }
 
-<<<<<<< HEAD
-    bool operator==(const DWORD &aPid) const { return mPid == aPid; }
-||||||| merged common ancestors
-    bool operator==(const DWORD& aPid) const
-    {
-      return mPid == aPid;
-    }
-=======
     bool operator==(const DWORD& aPid) const { return mPid == aPid; }
->>>>>>> upstream-releases
 
     DWORD mPid;
     bool mIsProxy;
@@ -558,18 +292,8 @@ public: // construction, destruction
   static StaticAutoPtr<nsTArray<HandlerControllerData>> sHandlerControllers;
 };
 
-<<<<<<< HEAD
-static inline AccessibleWrap *WrapperFor(const ProxyAccessible *aProxy) {
-  return reinterpret_cast<AccessibleWrap *>(aProxy->GetWrapper());
-||||||| merged common ancestors
-static inline AccessibleWrap*
-WrapperFor(const ProxyAccessible* aProxy)
-{
-  return reinterpret_cast<AccessibleWrap*>(aProxy->GetWrapper());
-=======
 static inline AccessibleWrap* WrapperFor(const ProxyAccessible* aProxy) {
   return reinterpret_cast<AccessibleWrap*>(aProxy->GetWrapper());
->>>>>>> upstream-releases
 }
 
 }  // namespace a11y

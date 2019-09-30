@@ -32,21 +32,10 @@
 #endif /* ENABLE_INTL_API && !MOZ_SYSTEM_ICU */
 
 #if ENABLE_INTL_API && (!MOZ_SYSTEM_ICU || defined(ICU_TZ_HAS_RECREATE_DEFAULT))
-<<<<<<< HEAD
-#include "unicode/timezone.h"
-#include "unicode/unistr.h"
-#endif /* ENABLE_INTL_API && (!MOZ_SYSTEM_ICU || \
-          defined(ICU_TZ_HAS_RECREATE_DEFAULT)) */
-||||||| merged common ancestors
-#include "unicode/timezone.h"
-#include "unicode/unistr.h"
-#endif /* ENABLE_INTL_API && (!MOZ_SYSTEM_ICU || defined(ICU_TZ_HAS_RECREATE_DEFAULT)) */
-=======
 #  include "unicode/timezone.h"
 #  include "unicode/unistr.h"
 #endif /* ENABLE_INTL_API && (!MOZ_SYSTEM_ICU || \
           defined(ICU_TZ_HAS_RECREATE_DEFAULT)) */
->>>>>>> upstream-releases
 
 #include "util/Text.h"
 #include "vm/MutexIDs.h"
@@ -303,7 +292,6 @@ int32_t js::DateTimeInfo::getOrComputeValue(RangeCache& range, int64_t seconds,
       if (endOffsetMilliseconds == range.offsetMilliseconds) {
         range.endSeconds = newEndSeconds;
         return range.offsetMilliseconds;
-<<<<<<< HEAD
       }
 
       range.offsetMilliseconds = (this->*compute)(seconds);
@@ -320,66 +308,6 @@ int32_t js::DateTimeInfo::getOrComputeValue(RangeCache& range, int64_t seconds,
     range.startSeconds = range.endSeconds = seconds;
     return range.offsetMilliseconds;
   }
-||||||| merged common ancestors
-    }
-
-    if (range.oldStartSeconds <= seconds && seconds <= range.oldEndSeconds) {
-        return range.oldOffsetMilliseconds;
-    }
-
-    range.oldOffsetMilliseconds = range.offsetMilliseconds;
-    range.oldStartSeconds = range.startSeconds;
-    range.oldEndSeconds = range.endSeconds;
-
-    if (range.startSeconds <= seconds) {
-        int64_t newEndSeconds = Min(range.endSeconds + RangeExpansionAmount, MaxTimeT);
-        if (newEndSeconds >= seconds) {
-            int32_t endOffsetMilliseconds = (this->*compute)(newEndSeconds);
-            if (endOffsetMilliseconds == range.offsetMilliseconds) {
-                range.endSeconds = newEndSeconds;
-                return range.offsetMilliseconds;
-            }
-
-            range.offsetMilliseconds = (this->*compute)(seconds);
-            if (range.offsetMilliseconds == endOffsetMilliseconds) {
-                range.startSeconds = seconds;
-                range.endSeconds = newEndSeconds;
-            } else {
-                range.endSeconds = seconds;
-            }
-            return range.offsetMilliseconds;
-        }
-
-        range.offsetMilliseconds = (this->*compute)(seconds);
-        range.startSeconds = range.endSeconds = seconds;
-        return range.offsetMilliseconds;
-    }
-
-    int64_t newStartSeconds = Max<int64_t>(range.startSeconds - RangeExpansionAmount, MinTimeT);
-    if (newStartSeconds <= seconds) {
-        int32_t startOffsetMilliseconds = (this->*compute)(newStartSeconds);
-        if (startOffsetMilliseconds == range.offsetMilliseconds) {
-            range.startSeconds = newStartSeconds;
-            return range.offsetMilliseconds;
-        }
-=======
-      }
-
-      range.offsetMilliseconds = (this->*compute)(seconds);
-      if (range.offsetMilliseconds == endOffsetMilliseconds) {
-        range.startSeconds = seconds;
-        range.endSeconds = newEndSeconds;
-      } else {
-        range.endSeconds = seconds;
-      }
-      return range.offsetMilliseconds;
-    }
-
-    range.offsetMilliseconds = (this->*compute)(seconds);
-    range.startSeconds = range.endSeconds = seconds;
-    return range.offsetMilliseconds;
-  }
->>>>>>> upstream-releases
 
   int64_t newStartSeconds =
       Max<int64_t>(range.startSeconds - RangeExpansionAmount, MinTimeT);
@@ -509,22 +437,6 @@ bool js::DateTimeInfo::internalTimeZoneDisplayName(char16_t* buf, size_t buflen,
     daylightSavingsName_.reset();
   }
 
-<<<<<<< HEAD
-  bool daylightSavings = internalGetDSTOffsetMilliseconds(utcMilliseconds) != 0;
-||||||| merged common ancestors
-        size_t capacity = displayName.length() + 1; // Null-terminate.
-        JS::UniqueTwoByteChars displayNameChars(js_pod_malloc<char16_t>(capacity));
-        if (!displayNameChars) {
-            return false;
-        }
-
-        // Copy the display name. This operation always succeeds because the
-        // destination buffer is large enough to hold the complete string.
-        UErrorCode status = U_ZERO_ERROR;
-        displayName.extract(displayNameChars.get(), capacity, status);
-        MOZ_ASSERT(U_SUCCESS(status));
-        MOZ_ASSERT(displayNameChars[capacity - 1] == '\0');
-=======
   bool daylightSavings = internalGetDSTOffsetMilliseconds(utcMilliseconds) != 0;
 
   JS::UniqueTwoByteChars& cachedName =
@@ -534,28 +446,7 @@ bool js::DateTimeInfo::internalTimeZoneDisplayName(char16_t* buf, size_t buflen,
     icu::UnicodeString displayName;
     timeZone()->getDisplayName(daylightSavings, icu::TimeZone::LONG,
                                icu::Locale(locale), displayName);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::UniqueTwoByteChars& cachedName =
-      daylightSavings ? daylightSavingsName_ : standardName_;
-  if (!cachedName) {
-    // Retrieve the display name for the given locale.
-    icu::UnicodeString displayName;
-    timeZone()->getDisplayName(daylightSavings, icu::TimeZone::LONG,
-                               icu::Locale(locale), displayName);
-||||||| merged common ancestors
-        cachedName = std::move(displayNameChars);
-    }
-=======
-    size_t capacity = displayName.length() + 1;  // Null-terminate.
-    JS::UniqueTwoByteChars displayNameChars(js_pod_malloc<char16_t>(capacity));
-    if (!displayNameChars) {
-      return false;
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     size_t capacity = displayName.length() + 1;  // Null-terminate.
     JS::UniqueTwoByteChars displayNameChars(js_pod_malloc<char16_t>(capacity));
     if (!displayNameChars) {
@@ -582,62 +473,8 @@ bool js::DateTimeInfo::internalTimeZoneDisplayName(char16_t* buf, size_t buflen,
 
   buf[length] = '\0';
   return true;
-||||||| merged common ancestors
-    // Return an empty string if the display name doesn't fit into the buffer.
-    size_t length = js_strlen(cachedName.get());
-    if (length < buflen) {
-        std::copy(cachedName.get(), cachedName.get() + length, buf);
-    } else {
-        length = 0;
-    }
-
-    buf[length] = '\0';
-    return true;
-=======
-    // Copy the display name. This operation always succeeds because the
-    // destination buffer is large enough to hold the complete string.
-    UErrorCode status = U_ZERO_ERROR;
-    displayName.extract(displayNameChars.get(), capacity, status);
-    MOZ_ASSERT(U_SUCCESS(status));
-    MOZ_ASSERT(displayNameChars[capacity - 1] == '\0');
-
-    cachedName = std::move(displayNameChars);
-  }
-
-  // Return an empty string if the display name doesn't fit into the buffer.
-  size_t length = js_strlen(cachedName.get());
-  if (length < buflen) {
-    std::copy(cachedName.get(), cachedName.get() + length, buf);
-  } else {
-    length = 0;
-  }
-
-  buf[length] = '\0';
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-icu::TimeZone* js::DateTimeInfo::timeZone() {
-  if (!timeZone_) {
-    // The current default might be stale, because JS::ResetTimeZone()
-    // doesn't immediately update ICU's default time zone. So perform an
-    // update if needed.
-    js::ResyncICUDefaultTimeZone();
-||||||| merged common ancestors
-icu::TimeZone*
-js::DateTimeInfo::timeZone()
-{
-    if (!timeZone_) {
-        // The current default might be stale, because JS::ResetTimeZone()
-        // doesn't immediately update ICU's default time zone. So perform an
-        // update if needed.
-        js::ResyncICUDefaultTimeZone();
-
-        timeZone_.reset(icu::TimeZone::createDefault());
-        MOZ_ASSERT(timeZone_);
-    }
-=======
 icu::TimeZone* js::DateTimeInfo::timeZone() {
   if (!timeZone_) {
     // The current default might be stale, because JS::ResetTimeZone()
@@ -648,19 +485,8 @@ icu::TimeZone* js::DateTimeInfo::timeZone() {
     timeZone_.reset(icu::TimeZone::createDefault());
     MOZ_ASSERT(timeZone_);
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    timeZone_.reset(icu::TimeZone::createDefault());
-    MOZ_ASSERT(timeZone_);
-  }
 
   return timeZone_.get();
-||||||| merged common ancestors
-    return timeZone_.get();
-=======
-  return timeZone_.get();
->>>>>>> upstream-releases
 }
 #endif /* ENABLE_INTL_API && !MOZ_SYSTEM_ICU */
 
@@ -694,22 +520,10 @@ bool js::InitDateTimeState() {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void js::FinishDateTimeState() {
-  js_delete(IcuTimeZoneState);
-  IcuTimeZoneState = nullptr;
-||||||| merged common ancestors
-/* static */ void
-js::FinishDateTimeState()
-{
-    js_delete(IcuTimeZoneState);
-    IcuTimeZoneState = nullptr;
-=======
 /* static */
 void js::FinishDateTimeState() {
   js_delete(IcuTimeZoneState);
   IcuTimeZoneState = nullptr;
->>>>>>> upstream-releases
 
   js_delete(DateTimeInfo::instance);
   DateTimeInfo::instance = nullptr;
@@ -805,7 +619,6 @@ static inline const char* TZContainsAbsolutePath(const char* tzVar) {
  * If a non-empty string is returned, it's only guaranteed to have certain
  * syntactic validity. It might not actually *be* a time zone name.
  */
-<<<<<<< HEAD
 static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
   // The resolved link name can have different paths depending on the OS.
   // Follow ICU and only search for "/zoneinfo/"; see $ICU/common/putil.cpp.
@@ -821,161 +634,30 @@ static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
   // Four hops should be a reasonable limit for most use cases.
   constexpr uint32_t FollowDepthLimit = 4;
 
-#ifdef PATH_MAX
-  constexpr size_t PathMax = PATH_MAX;
-#else
-  constexpr size_t PathMax = 4096;
-#endif
-  static_assert(PathMax > 0, "PathMax should be larger than zero");
-||||||| merged common ancestors
-static icu::UnicodeString
-ReadTimeZoneLink(const char* tz)
-{
-    // The resolved link name can have different paths depending on the OS.
-    // Follow ICU and only search for "/zoneinfo/"; see $ICU/common/putil.cpp.
-    static constexpr char ZoneInfoPath[] = "/zoneinfo/";
-    constexpr size_t ZoneInfoPathLength = mozilla::ArrayLength(ZoneInfoPath) - 1; // exclude NUL
-
-    // Stop following symlinks after a fixed depth, because some common time
-    // zones are stored in files whose name doesn't match an Olson time zone
-    // name. For example on Ubuntu, "/usr/share/zoneinfo/America/New_York" is a
-    // symlink to "/usr/share/zoneinfo/posixrules" and "posixrules" is not an
-    // Olson time zone name.
-    // Four hops should be a reasonable limit for most use cases.
-    constexpr uint32_t FollowDepthLimit = 4;
-
-#ifdef PATH_MAX
-    constexpr size_t PathMax = PATH_MAX;
-#else
-    constexpr size_t PathMax = 4096;
-#endif
-    static_assert(PathMax > 0, "PathMax should be larger than zero");
-=======
-static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
-  // The resolved link name can have different paths depending on the OS.
-  // Follow ICU and only search for "/zoneinfo/"; see $ICU/common/putil.cpp.
-  static constexpr char ZoneInfoPath[] = "/zoneinfo/";
-  constexpr size_t ZoneInfoPathLength =
-      mozilla::ArrayLength(ZoneInfoPath) - 1;  // exclude NUL
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  char linkName[PathMax];
-  constexpr size_t linkNameLen =
-      mozilla::ArrayLength(linkName) - 1;  // -1 to null-terminate.
-||||||| merged common ancestors
-    char linkName[PathMax];
-    constexpr size_t linkNameLen = mozilla::ArrayLength(linkName) - 1; // -1 to null-terminate.
-=======
-  // Stop following symlinks after a fixed depth, because some common time
-  // zones are stored in files whose name doesn't match an Olson time zone
-  // name. For example on Ubuntu, "/usr/share/zoneinfo/America/New_York" is a
-  // symlink to "/usr/share/zoneinfo/posixrules" and "posixrules" is not an
-  // Olson time zone name.
-  // Four hops should be a reasonable limit for most use cases.
-  constexpr uint32_t FollowDepthLimit = 4;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Return if the TZ value is too large.
-  if (std::strlen(tz) > linkNameLen) {
-    return icu::UnicodeString();
-  }
-||||||| merged common ancestors
-    // Return if the TZ value is too large.
-    if (std::strlen(tz) > linkNameLen) {
-        return icu::UnicodeString();
-    }
-=======
 #  ifdef PATH_MAX
   constexpr size_t PathMax = PATH_MAX;
 #  else
   constexpr size_t PathMax = 4096;
 #  endif
   static_assert(PathMax > 0, "PathMax should be larger than zero");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  std::strcpy(linkName, tz);
-||||||| merged common ancestors
-    std::strcpy(linkName, tz);
-=======
   char linkName[PathMax];
   constexpr size_t linkNameLen =
       mozilla::ArrayLength(linkName) - 1;  // -1 to null-terminate.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  char linkTarget[PathMax];
-  constexpr size_t linkTargetLen =
-      mozilla::ArrayLength(linkTarget) - 1;  // -1 to null-terminate.
-||||||| merged common ancestors
-    char linkTarget[PathMax];
-    constexpr size_t linkTargetLen = mozilla::ArrayLength(linkTarget) - 1; // -1 to null-terminate.
-=======
   // Return if the TZ value is too large.
   if (std::strlen(tz) > linkNameLen) {
     return icu::UnicodeString();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t depth = 0;
-||||||| merged common ancestors
-    uint32_t depth = 0;
-=======
   std::strcpy(linkName, tz);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Search until we find "/zoneinfo/" in the link name.
-  const char* timeZoneWithZoneInfo;
-  while (!(timeZoneWithZoneInfo = std::strstr(linkName, ZoneInfoPath))) {
-    // Return if the symlink nesting is too deep.
-    if (++depth > FollowDepthLimit) {
-      return icu::UnicodeString();
-    }
-||||||| merged common ancestors
-    // Search until we find "/zoneinfo/" in the link name.
-    const char* timeZoneWithZoneInfo;
-    while (!(timeZoneWithZoneInfo = std::strstr(linkName, ZoneInfoPath))) {
-        // Return if the symlink nesting is too deep.
-        if (++depth > FollowDepthLimit) {
-            return icu::UnicodeString();
-        }
-=======
   char linkTarget[PathMax];
   constexpr size_t linkTargetLen =
       mozilla::ArrayLength(linkTarget) - 1;  // -1 to null-terminate.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Return on error or if the result was truncated.
-    ssize_t slen = readlink(linkName, linkTarget, linkTargetLen);
-    if (slen < 0 || size_t(slen) >= linkTargetLen) {
-      return icu::UnicodeString();
-    }
-||||||| merged common ancestors
-        // Return on error or if the result was truncated.
-        ssize_t slen = readlink(linkName, linkTarget, linkTargetLen);
-        if (slen < 0 || size_t(slen) >= linkTargetLen) {
-            return icu::UnicodeString();
-        }
-=======
   uint32_t depth = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Ensure linkTarget is null-terminated. (readlink may not necessarily
-    // null-terminate the string.)
-    size_t len = size_t(slen);
-    linkTarget[len] = '\0';
-||||||| merged common ancestors
-        // Ensure linkTarget is null-terminated. (readlink may not necessarily
-        // null-terminate the string.)
-        size_t len = size_t(slen);
-        linkTarget[len] = '\0';
-=======
   // Search until we find "/zoneinfo/" in the link name.
   const char* timeZoneWithZoneInfo;
   while (!(timeZoneWithZoneInfo = std::strstr(linkName, ZoneInfoPath))) {
@@ -983,25 +665,7 @@ static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
     if (++depth > FollowDepthLimit) {
       return icu::UnicodeString();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // If the target is absolute, continue with that.
-    if (linkTarget[0] == '/') {
-      std::strcpy(linkName, linkTarget);
-      continue;
-    }
-||||||| merged common ancestors
-        // If the target is absolute, continue with that.
-        if (linkTarget[0] == '/') {
-            std::strcpy(linkName, linkTarget);
-            continue;
-        }
-
-        // If the target is relative, it must be resolved against either the
-        // directory the link was in, or against the current working directory.
-        char* separator = std::strrchr(linkName, '/');
-=======
     // Return on error or if the result was truncated.
     ssize_t slen = readlink(linkName, linkTarget, linkTargetLen);
     if (slen < 0 || size_t(slen) >= linkTargetLen) {
@@ -1012,52 +676,17 @@ static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
     // null-terminate the string.)
     size_t len = size_t(slen);
     linkTarget[len] = '\0';
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // If the target is relative, it must be resolved against either the
-    // directory the link was in, or against the current working directory.
-    char* separator = std::strrchr(linkName, '/');
-||||||| merged common ancestors
-        // If the link name is just something like "foo", resolve linkTarget
-        // against the current working directory.
-        if (!separator) {
-            std::strcpy(linkName, linkTarget);
-            continue;
-        }
-=======
     // If the target is absolute, continue with that.
     if (linkTarget[0] == '/') {
       std::strcpy(linkName, linkTarget);
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // If the link name is just something like "foo", resolve linkTarget
-    // against the current working directory.
-    if (!separator) {
-      std::strcpy(linkName, linkTarget);
-      continue;
-    }
-||||||| merged common ancestors
-        // Remove everything after the final path separator in linkName.
-        separator[1] = '\0';
-=======
     // If the target is relative, it must be resolved against either the
     // directory the link was in, or against the current working directory.
     char* separator = std::strrchr(linkName, '/');
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Remove everything after the final path separator in linkName.
-    separator[1] = '\0';
-||||||| merged common ancestors
-        // Return if the concatenated path name is too large.
-        if (std::strlen(linkName) + len > linkNameLen) {
-            return icu::UnicodeString();
-        }
-=======
     // If the link name is just something like "foo", resolve linkTarget
     // against the current working directory.
     if (!separator) {
@@ -1067,7 +696,6 @@ static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
 
     // Remove everything after the final path separator in linkName.
     separator[1] = '\0';
->>>>>>> upstream-releases
 
     // Return if the concatenated path name is too large.
     if (std::strlen(linkName) + len > linkNameLen) {
@@ -1108,86 +736,6 @@ static icu::UnicodeString ReadTimeZoneLink(const char* tz) {
 
 void js::ResyncICUDefaultTimeZone() {
 #if ENABLE_INTL_API && defined(ICU_TZ_HAS_RECREATE_DEFAULT)
-<<<<<<< HEAD
-  auto guard = IcuTimeZoneState->lock();
-  if (guard.get() == IcuTimeZoneStatus::NeedsUpdate) {
-    bool recreate = true;
-
-    if (const char* tz = std::getenv("TZ")) {
-      icu::UnicodeString tzid;
-
-#if defined(XP_WIN)
-      // If TZ is set and its value is valid under Windows' and IANA's
-      // time zone identifier rules, update the ICU default time zone to
-      // use this value.
-      if (IsOlsonCompatibleWindowsTimeZoneId(tz)) {
-        tzid.setTo(icu::UnicodeString(tz, -1, US_INV));
-      } else {
-        // If |tz| isn't a supported time zone identifier, use the
-        // default Windows time zone for ICU.
-        // TODO: Handle invalid time zone identifiers (bug 342068).
-      }
-#else
-      // The TZ environment variable allows both absolute and
-      // relative paths, optionally beginning with a colon (':').
-      // (Relative paths, without the colon, are just Olson time
-      // zone names.)  We need to handle absolute paths ourselves,
-      // including handling that they might be symlinks.
-      // <https://unicode-org.atlassian.net/browse/ICU-13694>
-      if (const char* tzlink = TZContainsAbsolutePath(tz)) {
-        tzid.setTo(ReadTimeZoneLink(tzlink));
-      }
-#endif /* defined(XP_WIN) */
-
-      if (!tzid.isEmpty()) {
-        mozilla::UniquePtr<icu::TimeZone> newTimeZone(
-            icu::TimeZone::createTimeZone(tzid));
-        MOZ_ASSERT(newTimeZone);
-        if (*newTimeZone != icu::TimeZone::getUnknown()) {
-          // adoptDefault() takes ownership of the time zone.
-          icu::TimeZone::adoptDefault(newTimeZone.release());
-          recreate = false;
-||||||| merged common ancestors
-    auto guard = IcuTimeZoneState->lock();
-    if (guard.get() == IcuTimeZoneStatus::NeedsUpdate) {
-        bool recreate = true;
-
-        if (const char* tz = std::getenv("TZ")) {
-            icu::UnicodeString tzid;
-
-#if defined(XP_WIN)
-            // If TZ is set and its value is valid under Windows' and IANA's
-            // time zone identifier rules, update the ICU default time zone to
-            // use this value.
-            if (IsOlsonCompatibleWindowsTimeZoneId(tz)) {
-                tzid.setTo(icu::UnicodeString(tz, -1, US_INV));
-            } else {
-                // If |tz| isn't a supported time zone identifier, use the
-                // default Windows time zone for ICU.
-                // TODO: Handle invalid time zone identifiers (bug 342068).
-            }
-#else
-            // The TZ environment variable allows both absolute and
-            // relative paths, optionally beginning with a colon (':').
-            // (Relative paths, without the colon, are just Olson time
-            // zone names.)  We need to handle absolute paths ourselves,
-            // including handling that they might be symlinks.
-            // <https://unicode-org.atlassian.net/browse/ICU-13694>
-            if (const char* tzlink = TZContainsAbsolutePath(tz)) {
-                tzid.setTo(ReadTimeZoneLink(tzlink));
-            }
-#endif /* defined(XP_WIN) */
-
-            if (!tzid.isEmpty()) {
-                mozilla::UniquePtr<icu::TimeZone> newTimeZone(icu::TimeZone::createTimeZone(tzid));
-                MOZ_ASSERT(newTimeZone);
-                if (*newTimeZone != icu::TimeZone::getUnknown()) {
-                    // adoptDefault() takes ownership of the time zone.
-                    icu::TimeZone::adoptDefault(newTimeZone.release());
-                    recreate = false;
-                }
-            }
-=======
   auto guard = IcuTimeZoneState->lock();
   if (guard.get() == IcuTimeZoneStatus::NeedsUpdate) {
     bool recreate = true;
@@ -1226,7 +774,6 @@ void js::ResyncICUDefaultTimeZone() {
           // adoptDefault() takes ownership of the time zone.
           icu::TimeZone::adoptDefault(newTimeZone.release());
           recreate = false;
->>>>>>> upstream-releases
         }
       }
     }

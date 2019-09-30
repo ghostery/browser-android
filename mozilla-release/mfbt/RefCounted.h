@@ -218,19 +218,9 @@ class RefCounted {
 #ifdef MOZ_REFCOUNTED_LEAK_CHECKING
 // Passing override for the optional argument marks the typeName and
 // typeSize functions defined by this macro as overrides.
-<<<<<<< HEAD
-#define MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(T, ...)           \
-  virtual const char* typeName() const __VA_ARGS__ { return #T; } \
-  virtual size_t typeSize() const __VA_ARGS__ { return sizeof(*this); }
-||||||| merged common ancestors
-#define MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(T, ...) \
-  virtual const char* typeName() const __VA_ARGS__ { return #T; } \
-  virtual size_t typeSize() const __VA_ARGS__ { return sizeof(*this); }
-=======
 #  define MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(T, ...)           \
     virtual const char* typeName() const __VA_ARGS__ { return #T; } \
     virtual size_t typeSize() const __VA_ARGS__ { return sizeof(*this); }
->>>>>>> upstream-releases
 #else
 #  define MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(T, ...)
 #endif

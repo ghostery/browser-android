@@ -265,14 +265,6 @@ mozilla::ipc::IPCResult DocAccessibleChild::RecvScrollToPoint(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult DocAccessibleChild::RecvCaretLineNumber(
-    const uint64_t& aID, int32_t* aLineNumber) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-DocAccessibleChild::RecvCaretLineNumber(const uint64_t& aID, int32_t* aLineNumber)
-{
-=======
 mozilla::ipc::IPCResult DocAccessibleChild::RecvAnnounce(
     const uint64_t& aID, const nsString& aAnnouncement,
     const uint16_t& aPriority) {
@@ -286,7 +278,6 @@ mozilla::ipc::IPCResult DocAccessibleChild::RecvAnnounce(
 
 mozilla::ipc::IPCResult DocAccessibleChild::RecvCaretLineNumber(
     const uint64_t& aID, int32_t* aLineNumber) {
->>>>>>> upstream-releases
   HyperTextAccessible* acc = IdToHyperTextAccessible(aID);
   *aLineNumber = acc && acc->IsTextRole() ? acc->CaretLineNumber() : 0;
   return IPC_OK();
@@ -591,21 +582,9 @@ mozilla::ipc::IPCResult DocAccessibleChild::RecvDeleteText(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult DocAccessibleChild::RecvPasteText(
-    const uint64_t& aID, const int32_t& aPosition, bool* aValid) {
-  HyperTextAccessible* acc = IdToHyperTextAccessible(aID);
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-DocAccessibleChild::RecvPasteText(const uint64_t& aID,
-                                  const int32_t& aPosition, bool* aValid)
-{
-  HyperTextAccessible* acc = IdToHyperTextAccessible(aID);
-=======
 mozilla::ipc::IPCResult DocAccessibleChild::RecvPasteText(
     const uint64_t& aID, const int32_t& aPosition, bool* aValid) {
   RefPtr<HyperTextAccessible> acc = IdToHyperTextAccessible(aID);
->>>>>>> upstream-releases
   if (acc && acc->IsTextRole()) {
     *aValid = acc->IsValidOffset(aPosition);
     acc->PasteText(aPosition);

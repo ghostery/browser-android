@@ -11,19 +11,7 @@
 #ifndef MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_SINK_FILTER_DS_H_
 #define MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_SINK_FILTER_DS_H_
 
-<<<<<<< HEAD
-#include "modules/video_capture/video_capture_defines.h"
-#include "BaseInputPin.h"
-#include "BaseFilter.h"
-#include "MediaType.h"
-||||||| merged common ancestors
-#include "webrtc/modules/video_capture/video_capture_defines.h"
-#include "BaseInputPin.h"
-#include "BaseFilter.h"
-#include "MediaType.h"
-=======
 #include <dshow.h>
->>>>>>> upstream-releases
 
 #include <atomic>
 #include <memory>
@@ -119,108 +107,6 @@ class CaptureInputPin : public IMemInputPin, public IPin {
   AM_MEDIA_TYPE media_type_ RTC_GUARDED_BY(main_checker_) = {};
 };
 
-<<<<<<< HEAD
-class CaptureSinkFilter: public mozilla::media::BaseFilter
-{
-
-public:
-    CaptureSinkFilter(IN TCHAR * tszName,
-                      IN LPUNKNOWN punk,
-                      OUT HRESULT * phr,
-                      VideoCaptureExternal& captureObserver,
-                      int32_t moduleId);
-    virtual ~CaptureSinkFilter();
-
-    //  --------------------------------------------------------------------
-    //  class methods
-
-    void ProcessCapturedFrame(unsigned char* pBuffer, int32_t length,
-                              const VideoCaptureCapability& frameInfo);
-    //  explicit receiver lock aquisition and release
-    void LockReceive()  { m_crtRecv.Enter();}
-    void UnlockReceive() {m_crtRecv.Leave();}
-    //  explicit filter lock aquisition and release
-    void LockFilter() {m_crtFilter.Enter();}
-    void UnlockFilter() { m_crtFilter.Leave(); }
-    void SetFilterGraph(IGraphBuilder* graph); // Used if EVR
-
-    //  --------------------------------------------------------------------
-    //  COM interfaces
-    STDMETHODIMP QueryInterface(REFIID aIId, void **aInterface)
-    {
-      return mozilla::media::BaseFilter::QueryInterface(aIId, aInterface);
-    }
-
-    STDMETHODIMP SetMatchingMediaType(const VideoCaptureCapability& capability);
-
-    //  --------------------------------------------------------------------
-    //  CBaseFilter methods
-    int GetPinCount ();
-    mozilla::media::BasePin * GetPin ( IN int Index);
-    STDMETHODIMP Pause ();
-    STDMETHODIMP Stop ();
-    STDMETHODIMP GetClassID ( OUT CLSID * pCLSID);
-    //  --------------------------------------------------------------------
-    //  class factory calls this
-    static IUnknown * CreateInstance (IN LPUNKNOWN punk, OUT HRESULT * phr);
-private:
-    mozilla::CriticalSection m_crtFilter; //  filter lock
-    mozilla::CriticalSection m_crtRecv;  //  receiver lock; always acquire before filter lock
-    CaptureInputPin * m_pInput;
-    VideoCaptureExternal& _captureObserver;
-    int32_t _moduleId;
-||||||| merged common ancestors
-class CaptureSinkFilter: public mozilla::media::BaseFilter
-{
-
-public:
-    CaptureSinkFilter(IN TCHAR * tszName,
-                      IN LPUNKNOWN punk,
-                      OUT HRESULT * phr,
-                      VideoCaptureExternal& captureObserver,
-                      int32_t moduleId);
-    virtual ~CaptureSinkFilter();
-
-    //  --------------------------------------------------------------------
-    //  class methods
-
-    void ProcessCapturedFrame(unsigned char* pBuffer, int32_t length,
-                              const VideoCaptureCapability& frameInfo);
-    //  explicit receiver lock aquisition and release
-    void LockReceive()  { m_crtRecv.Enter();}
-    void UnlockReceive() {m_crtRecv.Leave();}
-
-    //  explicit filter lock aquisition and release
-    void LockFilter() {m_crtFilter.Enter();}
-    void UnlockFilter() { m_crtFilter.Leave(); }
-    void SetFilterGraph(IGraphBuilder* graph); // Used if EVR
-
-    //  --------------------------------------------------------------------
-    //  COM interfaces
-    STDMETHODIMP QueryInterface(REFIID aIId, void **aInterface)
-    {
-      return mozilla::media::BaseFilter::QueryInterface(aIId, aInterface);
-    }
-
-    STDMETHODIMP SetMatchingMediaType(const VideoCaptureCapability& capability);
-
-    //  --------------------------------------------------------------------
-    //  CBaseFilter methods
-    int GetPinCount ();
-    mozilla::media::BasePin * GetPin ( IN int Index);
-    STDMETHODIMP Pause ();
-    STDMETHODIMP Stop ();
-    STDMETHODIMP GetClassID ( OUT CLSID * pCLSID);
-    //  --------------------------------------------------------------------
-    //  class factory calls this
-    static IUnknown * CreateInstance (IN LPUNKNOWN punk, OUT HRESULT * phr);
-private:
-    mozilla::CriticalSection m_crtFilter; //  filter lock
-    mozilla::CriticalSection m_crtRecv;  //  receiver lock; always acquire before filter lock
-    CaptureInputPin * m_pInput;
-    VideoCaptureExternal& _captureObserver;
-    int32_t _moduleId;
-=======
 // Implement IBaseFilter (including IPersist and IMediaFilter).
 class CaptureSinkFilter : public IBaseFilter {
  public:
@@ -270,14 +156,7 @@ class CaptureSinkFilter : public IBaseFilter {
   // the sink will be used from the capture thread.
   IMediaEventSink* sink_ = nullptr;
   FILTER_STATE state_ RTC_GUARDED_BY(main_checker_) = State_Stopped;
->>>>>>> upstream-releases
 };
 }  // namespace videocapturemodule
 }  // namespace webrtc
-<<<<<<< HEAD
-#endif // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_SINK_FILTER_DS_H_
-||||||| merged common ancestors
-#endif // WEBRTC_MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_SINK_FILTER_DS_H_
-=======
 #endif  // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_SINK_FILTER_DS_H_
->>>>>>> upstream-releases

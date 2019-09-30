@@ -26,26 +26,9 @@ NS_IMPL_ISUPPORTS_INHERITED(SVGSymbolElement, SVGSymbolElementBase,
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
 SVGSymbolElement::SVGSymbolElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGSymbolElementBase(std::move(aNodeInfo)) {}
-
-SVGSymbolElement::~SVGSymbolElement() {}
-||||||| merged common ancestors
-SVGSymbolElement::SVGSymbolElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-  : SVGSymbolElementBase(std::move(aNodeInfo))
-{
-}
-
-SVGSymbolElement::~SVGSymbolElement()
-{
-}
-=======
-SVGSymbolElement::SVGSymbolElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGSymbolElementBase(std::move(aNodeInfo)) {}
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods

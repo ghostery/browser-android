@@ -17,26 +17,6 @@ class GrGLGpu;
 
 class GrGLTexture : public GrTexture {
 public:
-<<<<<<< HEAD
-    struct TexParams {
-        GrGLenum fMinFilter;
-        GrGLenum fMagFilter;
-        GrGLenum fWrapS;
-        GrGLenum fWrapT;
-        GrGLenum fMaxMipMapLevel;
-        GrGLenum fSwizzleRGBA[4];
-        void invalidate() { memset(this, 0xff, sizeof(TexParams)); }
-||||||| merged common ancestors
-    struct TexParams {
-        GrGLenum fMinFilter;
-        GrGLenum fMagFilter;
-        GrGLenum fWrapS;
-        GrGLenum fWrapT;
-        GrGLenum fMaxMipMapLevel;
-        GrGLenum fSwizzleRGBA[4];
-        GrGLenum fSRGBDecode;
-        void invalidate() { memset(this, 0xff, sizeof(TexParams)); }
-=======
     // Texture state that overlaps with sampler object state. We don't need to track this if we
     // are using sampler objects.
     struct SamplerParams {
@@ -73,7 +53,6 @@ public:
             fBaseMipMapLevel = ~0;
             fMaxMipMapLevel = ~0;
         }
->>>>>>> upstream-releases
     };
 
     struct IDDesc {
@@ -123,8 +102,6 @@ public:
 
     void dumpMemoryStatistics(SkTraceMemoryDump* traceMemoryDump) const override;
 
-    void dumpMemoryStatistics(SkTraceMemoryDump* traceMemoryDump) const override;
-
 protected:
     // Constructor for subclasses.
     GrGLTexture(GrGLGpu*, const GrSurfaceDesc&, const IDDesc&, GrMipMapsStatus);
@@ -141,42 +118,6 @@ protected:
     bool onStealBackendTexture(GrBackendTexture*, SkImage::BackendTextureReleaseProc*) override;
 
 private:
-<<<<<<< HEAD
-    void invokeReleaseProc() {
-        if (fReleaseHelper) {
-            // Depending on the ref count of fReleaseHelper this may or may not actually trigger the
-            // ReleaseProc to be called.
-            fReleaseHelper.reset();
-        }
-    }
-
-    TexParams                       fTexParams;
-    GrGpu::ResetTimestamp           fTexParamsTimestamp;
-    GrGLuint                        fID;
-    GrGLenum                        fFormat;
-    GrBackendObjectOwnership        fTextureIDOwnership;
-    bool                            fBaseLevelHasBeenBoundToFBO = false;
-
-    sk_sp<GrReleaseProcHelper>      fReleaseHelper;
-||||||| merged common ancestors
-    void invokeReleaseProc() {
-        if (fReleaseHelper) {
-            // Depending on the ref count of fReleaseHelper this may or may not actually trigger the
-            // ReleaseProc to be called.
-            fReleaseHelper.reset();
-        }
-    }
-
-    TexParams                       fTexParams;
-    GrGpu::ResetTimestamp           fTexParamsTimestamp;
-    // Holds the texture target and ID. A pointer to this may be shared to external clients for
-    // direct interaction with the GL object.
-    GrGLTextureInfo                 fInfo;
-    GrBackendObjectOwnership        fTextureIDOwnership;
-    bool                            fBaseLevelHasBeenBoundToFBO = false;
-
-    sk_sp<GrReleaseProcHelper>      fReleaseHelper;
-=======
     SamplerParams fSamplerParams;
     NonSamplerParams fNonSamplerParams;
     GrGpu::ResetTimestamp fParamsTimestamp;
@@ -184,7 +125,6 @@ private:
     GrGLenum fFormat;
     GrBackendObjectOwnership fTextureIDOwnership;
     bool fBaseLevelHasBeenBoundToFBO = false;
->>>>>>> upstream-releases
 
     typedef GrTexture INHERITED;
 };

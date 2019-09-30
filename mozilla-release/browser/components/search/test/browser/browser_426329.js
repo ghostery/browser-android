@@ -6,44 +6,13 @@ ChromeUtils.defineModuleGetter(
 );
 
 function expectedURL(aSearchTerms) {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_426329.js
-  const ENGINE_HTML_BASE = "http://mochi.test:8888/browser/browser/components/search/test/browser/test.html";
-  let searchArg = Services.textToSubURI.ConvertAndEscape("utf-8", aSearchTerms);
-||||||| merged common ancestors
-  const ENGINE_HTML_BASE = "http://mochi.test:8888/browser/browser/components/search/test/test.html";
-  var searchArg = Services.textToSubURI.ConvertAndEscape("utf-8", aSearchTerms);
-=======
   const ENGINE_HTML_BASE =
     "http://mochi.test:8888/browser/browser/components/search/test/browser/test.html";
   let searchArg = Services.textToSubURI.ConvertAndEscape("utf-8", aSearchTerms);
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_426329.js
   return ENGINE_HTML_BASE + "?test=" + searchArg;
 }
 
 function simulateClick(aEvent, aTarget) {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_426329.js
-  let event = document.createEvent("MouseEvent");
-  let ctrlKeyArg  = aEvent.ctrlKey || false;
-  let altKeyArg   = aEvent.altKey || false;
-  let shiftKeyArg = aEvent.shiftKey || false;
-  let metaKeyArg  = aEvent.metaKey || false;
-  let buttonArg   = aEvent.button || 0;
-  event.initMouseEvent("click", true, true, window,
-                        0, 0, 0, 0, 0,
-                        ctrlKeyArg, altKeyArg, shiftKeyArg, metaKeyArg,
-                        buttonArg, null);
-||||||| merged common ancestors
-  var event = document.createEvent("MouseEvent");
-  var ctrlKeyArg  = aEvent.ctrlKey || false;
-  var altKeyArg   = aEvent.altKey || false;
-  var shiftKeyArg = aEvent.shiftKey || false;
-  var metaKeyArg  = aEvent.metaKey || false;
-  var buttonArg   = aEvent.button || 0;
-  event.initMouseEvent("click", true, true, window,
-                        0, 0, 0, 0, 0,
-                        ctrlKeyArg, altKeyArg, shiftKeyArg, metaKeyArg,
-                        buttonArg, null);
-=======
   let event = document.createEvent("MouseEvent");
   let ctrlKeyArg = aEvent.ctrlKey || false;
   let altKeyArg = aEvent.altKey || false;
@@ -67,21 +36,11 @@ function simulateClick(aEvent, aTarget) {
     buttonArg,
     null
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_426329.js
   aTarget.dispatchEvent(event);
 }
 
 // modified from toolkit/components/satchel/test/test_form_autocomplete.html
 function checkMenuEntries(expectedValues) {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_426329.js
-  let actualValues = getMenuEntries();
-  is(actualValues.length, expectedValues.length, "Checking length of expected menu");
-  for (let i = 0; i < expectedValues.length; i++)
-||||||| merged common ancestors
-  var actualValues = getMenuEntries();
-  is(actualValues.length, expectedValues.length, "Checking length of expected menu");
-  for (var i = 0; i < expectedValues.length; i++)
-=======
   let actualValues = getMenuEntries();
   is(
     actualValues.length,
@@ -89,7 +48,6 @@ function checkMenuEntries(expectedValues) {
     "Checking length of expected menu"
   );
   for (let i = 0; i < expectedValues.length; i++) {
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_426329.js
     is(actualValues[i], expectedValues[i], "Checking menu entry #" + i);
   }
 }
@@ -136,16 +94,8 @@ function promiseSetEngine() {
           ok(engine, "Engine was added.");
           ss.defaultEngine = engine;
           break;
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_426329.js
-        case "engine-current":
-          ok(ss.defaultEngine.name == "Bug 426329", "currentEngine set");
-||||||| merged common ancestors
-        case "engine-current":
-          ok(ss.currentEngine.name == "Bug 426329", "currentEngine set");
-=======
         case "engine-default":
           ok(ss.defaultEngine.name == "Bug 426329", "defaultEngine set");
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_426329.js
           searchBar = BrowserSearch.searchBar;
           searchButton = searchBar.querySelector(".search-go-button");
           ok(searchButton, "got search-go-button");
@@ -161,19 +111,11 @@ function promiseSetEngine() {
     }
 
     Services.obs.addObserver(observer, "browser-search-engine-modified");
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_426329.js
-    ss.addEngine("http://mochi.test:8888/browser/browser/components/search/test/browser/426329.xml",
-                 "data:image/x-icon,%00", false);
-||||||| merged common ancestors
-    ss.addEngine("http://mochi.test:8888/browser/browser/components/search/test/426329.xml",
-                 "data:image/x-icon,%00", false);
-=======
     ss.addEngine(
       "http://mochi.test:8888/browser/browser/components/search/test/browser/426329.xml",
       "data:image/x-icon,%00",
       false
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_426329.js
   });
 }
 
@@ -330,22 +272,12 @@ add_task(async function testRightClick() {
 });
 
 add_task(async function testSearchHistory() {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_426329.js
-  let textbox = searchBar._textbox;
-  for (let i = 0; i < searchEntries.length; i++) {
-    let count = await countEntries(textbox.getAttribute("autocompletesearchparam"), searchEntries[i]);
-||||||| merged common ancestors
-  var textbox = searchBar._textbox;
-  for (var i = 0; i < searchEntries.length; i++) {
-    let count = await countEntries(textbox.getAttribute("autocompletesearchparam"), searchEntries[i]);
-=======
   let textbox = searchBar._textbox;
   for (let i = 0; i < searchEntries.length; i++) {
     let count = await countEntries(
       textbox.getAttribute("autocompletesearchparam"),
       searchEntries[i]
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_426329.js
     ok(count > 0, "form history entry '" + searchEntries[i] + "' should exist");
   }
 });

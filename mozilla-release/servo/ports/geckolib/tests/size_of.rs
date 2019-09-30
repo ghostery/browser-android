@@ -47,17 +47,6 @@ size_of_test!(
     32
 );
 
-<<<<<<< HEAD
-size_of_test!(
-    test_size_of_application_declaration_block,
-    ApplicableDeclarationBlock,
-    16
-);
-size_of_test!(test_size_of_rule_node, RuleNode, 72);
-||||||| merged common ancestors
-size_of_test!(test_size_of_application_declaration_block, ApplicableDeclarationBlock, 16);
-size_of_test!(test_size_of_rule_node, RuleNode, 72);
-=======
 size_of_test!(
     test_size_of_application_declaration_block,
     ApplicableDeclarationBlock,
@@ -65,7 +54,6 @@ size_of_test!(
 );
 
 size_of_test!(test_size_of_rule_node, RuleNode, 80);
->>>>>>> upstream-releases
 
 // This is huge, but we allocate it on the stack and then never move it,
 // we only pass `&mut SourcePropertyDeclaration` references around.
@@ -80,21 +68,6 @@ size_of_test!(test_size_of_specified_image, specified::image::Image, 16);
 
 // FIXME(bz): These can shrink if we move the None_ value inside the
 // enum instead of paying an extra word for the Either discriminant.
-<<<<<<< HEAD
-size_of_test!(
-    test_size_of_computed_image_layer,
-    computed::image::ImageLayer,
-    24
-);
-size_of_test!(
-    test_size_of_specified_image_layer,
-    specified::image::ImageLayer,
-    24
-);
-||||||| merged common ancestors
-size_of_test!(test_size_of_computed_image_layer, computed::image::ImageLayer, 24);
-size_of_test!(test_size_of_specified_image_layer, specified::image::ImageLayer, 24);
-=======
 size_of_test!(
     test_size_of_computed_image_layer,
     computed::image::ImageLayer,
@@ -105,4 +78,3 @@ size_of_test!(
     specified::image::ImageLayer,
     16
 );
->>>>>>> upstream-releases

@@ -131,33 +131,14 @@ async function test_telemetry_background() {
   keyedSnapshots = getKeyedSnapshots(process);
 
   for (let id of expectedNonEmptyHistograms) {
-<<<<<<< HEAD
-    equal(valueSum(snapshots[id].values), 1,
-          `Data recorded for histogram: ${id}.`);
-||||||| merged common ancestors
-    equal(arraySum(snapshots[id].counts), 1,
-          `Data recorded for histogram: ${id}.`);
-=======
     equal(
       valueSum(snapshots[id].values),
       1,
       `Data recorded for histogram: ${id}.`
     );
->>>>>>> upstream-releases
   }
 
   for (let id of expectedNonEmptyKeyedHistograms) {
-<<<<<<< HEAD
-    Assert.deepEqual(Object.keys(keyedSnapshots[id]), [EXTENSION_ID1],
-                     `Data recorded for histogram: ${id}.`);
-    equal(valueSum(keyedSnapshots[id][EXTENSION_ID1].values), 1,
-          `Data recorded for histogram: ${id}.`);
-||||||| merged common ancestors
-    Assert.deepEqual(Object.keys(keyedSnapshots[id]), [EXTENSION_ID1],
-                     `Data recorded for histogram: ${id}.`);
-    equal(arraySum(keyedSnapshots[id][EXTENSION_ID1].counts), 1,
-          `Data recorded for histogram: ${id}.`);
-=======
     Assert.deepEqual(
       Object.keys(keyedSnapshots[id]),
       [EXTENSION_ID1],
@@ -168,7 +149,6 @@ async function test_telemetry_background() {
       1,
       `Data recorded for histogram: ${id}.`
     );
->>>>>>> upstream-releases
   }
 
   await extension2.startup();
@@ -186,33 +166,14 @@ async function test_telemetry_background() {
   keyedSnapshots = getKeyedSnapshots(process);
 
   for (let id of expectedNonEmptyHistograms) {
-<<<<<<< HEAD
-    equal(valueSum(snapshots[id].values), 2,
-          `Additional data recorded for histogram: ${id}.`);
-||||||| merged common ancestors
-    equal(arraySum(snapshots[id].counts), 2,
-          `Additional data recorded for histogram: ${id}.`);
-=======
     equal(
       valueSum(snapshots[id].values),
       2,
       `Additional data recorded for histogram: ${id}.`
     );
->>>>>>> upstream-releases
   }
 
   for (let id of expectedNonEmptyKeyedHistograms) {
-<<<<<<< HEAD
-    Assert.deepEqual(Object.keys(keyedSnapshots[id]).sort(), [EXTENSION_ID1, EXTENSION_ID2],
-                     `Additional data recorded for histogram: ${id}.`);
-    equal(valueSum(keyedSnapshots[id][EXTENSION_ID2].values), 1,
-          `Additional data recorded for histogram: ${id}.`);
-||||||| merged common ancestors
-    Assert.deepEqual(Object.keys(keyedSnapshots[id]).sort(), [EXTENSION_ID1, EXTENSION_ID2],
-                     `Additional data recorded for histogram: ${id}.`);
-    equal(arraySum(keyedSnapshots[id][EXTENSION_ID2].counts), 1,
-          `Additional data recorded for histogram: ${id}.`);
-=======
     Assert.deepEqual(
       Object.keys(keyedSnapshots[id]).sort(),
       [EXTENSION_ID1, EXTENSION_ID2],
@@ -223,7 +184,6 @@ async function test_telemetry_background() {
       1,
       `Additional data recorded for histogram: ${id}.`
     );
->>>>>>> upstream-releases
   }
 
   await extension2.unload();
@@ -255,35 +215,14 @@ async function test_telemetry_background() {
   keyedSnapshots = getKeyedSnapshots(process);
 
   for (let id of expectedNonEmptyHistograms) {
-<<<<<<< HEAD
-    equal(valueSum(snapshots[id].values), expectedCount,
-          `Data recorded in content script for histogram: ${id}.`);
-||||||| merged common ancestors
-    equal(arraySum(snapshots[id].counts), expectedCount,
-          `Data recorded in content script for histogram: ${id}.`);
-=======
     equal(
       valueSum(snapshots[id].values),
       expectedCount,
       `Data recorded in content script for histogram: ${id}.`
     );
->>>>>>> upstream-releases
   }
 
   for (let id of expectedNonEmptyKeyedHistograms) {
-<<<<<<< HEAD
-    Assert.deepEqual(Object.keys(keyedSnapshots[id]).sort(),
-                     IS_OOP ? [EXTENSION_ID1] : [EXTENSION_ID1, EXTENSION_ID2],
-                     `Additional data recorded for histogram: ${id}.`);
-    equal(valueSum(keyedSnapshots[id][EXTENSION_ID1].values), expectedKeyedCount,
-          `Additional data recorded for histogram: ${id}.`);
-||||||| merged common ancestors
-    Assert.deepEqual(Object.keys(keyedSnapshots[id]).sort(),
-                     IS_OOP ? [EXTENSION_ID1] : [EXTENSION_ID1, EXTENSION_ID2],
-                     `Additional data recorded for histogram: ${id}.`);
-    equal(arraySum(keyedSnapshots[id][EXTENSION_ID1].counts), expectedKeyedCount,
-          `Additional data recorded for histogram: ${id}.`);
-=======
     Assert.deepEqual(
       Object.keys(keyedSnapshots[id]).sort(),
       IS_OOP ? [EXTENSION_ID1] : [EXTENSION_ID1, EXTENSION_ID2],
@@ -294,7 +233,6 @@ async function test_telemetry_background() {
       expectedKeyedCount,
       `Additional data recorded for histogram: ${id}.`
     );
->>>>>>> upstream-releases
   }
 
   await extension1.unload();

@@ -6,30 +6,6 @@
 #ifndef mozilla_EditorBase_h
 #define mozilla_EditorBase_h
 
-<<<<<<< HEAD
-#include "mozilla/Assertions.h"          // for MOZ_ASSERT, etc.
-#include "mozilla/EditAction.h"          // for EditAction and EditSubAction
-#include "mozilla/EditorDOMPoint.h"      // for EditorDOMPoint
-#include "mozilla/Maybe.h"               // for Maybe
-#include "mozilla/OwningNonNull.h"       // for OwningNonNull
-#include "mozilla/PresShell.h"           // for PresShell
-#include "mozilla/RangeBoundary.h"       // for RawRangeBoundary, RangeBoundary
-#include "mozilla/SelectionState.h"      // for RangeUpdater, etc.
-#include "mozilla/StyleSheet.h"          // for StyleSheet
-#include "mozilla/TransactionManager.h"  // for TransactionManager
-#include "mozilla/WeakPtr.h"             // for WeakPtr
-||||||| merged common ancestors
-#include "mozilla/Assertions.h"         // for MOZ_ASSERT, etc.
-#include "mozilla/EditorDOMPoint.h"     // for EditorDOMPoint
-#include "mozilla/Maybe.h"              // for Maybe
-#include "mozilla/OwningNonNull.h"      // for OwningNonNull
-#include "mozilla/PresShell.h"          // for PresShell
-#include "mozilla/RangeBoundary.h"      // for RawRangeBoundary, RangeBoundary
-#include "mozilla/SelectionState.h"     // for RangeUpdater, etc.
-#include "mozilla/StyleSheet.h"         // for StyleSheet
-#include "mozilla/TransactionManager.h" // for TransactionManager
-#include "mozilla/WeakPtr.h"            // for WeakPtr
-=======
 #include "mozilla/Assertions.h"          // for MOZ_ASSERT, etc.
 #include "mozilla/EditAction.h"          // for EditAction and EditSubAction
 #include "mozilla/EditorDOMPoint.h"      // for EditorDOMPoint
@@ -42,43 +18,11 @@
 #include "mozilla/TransactionManager.h"  // for TransactionManager
 #include "mozilla/WeakPtr.h"             // for WeakPtr
 #include "mozilla/dom/DataTransfer.h"    // for dom::DataTransfer
->>>>>>> upstream-releases
 #include "mozilla/dom/Selection.h"
 #include "mozilla/dom/Text.h"
 #include "nsCOMPtr.h"  // for already_AddRefed, nsCOMPtr
 #include "nsCycleCollectionParticipant.h"
 #include "nsGkAtoms.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"             // for nsIDocument
-#include "nsIContentInlines.h"       // for nsINode::IsEditable()
-#include "nsIEditor.h"               // for nsIEditor, etc.
-#include "nsIObserver.h"             // for NS_DECL_NSIOBSERVER, etc.
-#include "nsIPlaintextEditor.h"      // for nsIPlaintextEditor, etc.
-#include "nsISelectionController.h"  // for nsISelectionController constants
-#include "nsISelectionListener.h"    // for nsISelectionListener
-#include "nsISupportsImpl.h"         // for EditorBase::Release, etc.
-#include "nsIWeakReferenceUtils.h"   // for nsWeakPtr
-#include "nsLiteralString.h"         // for NS_LITERAL_STRING
-#include "nsString.h"                // for nsCString
-#include "nsTArray.h"                // for nsTArray and nsAutoTArray
-#include "nsWeakReference.h"         // for nsSupportsWeakReference
-#include "nscore.h"                  // for nsresult, nsAString, etc.
-||||||| merged common ancestors
-#include "nsIDocument.h"                // for nsIDocument
-#include "nsIContentInlines.h"          // for nsINode::IsEditable()
-#include "nsIEditor.h"                  // for nsIEditor, etc.
-#include "nsIObserver.h"                // for NS_DECL_NSIOBSERVER, etc.
-#include "nsIPlaintextEditor.h"         // for nsIPlaintextEditor, etc.
-#include "nsISelectionController.h"     // for nsISelectionController constants
-#include "nsISelectionListener.h"       // for nsISelectionListener
-#include "nsISupportsImpl.h"            // for EditorBase::Release, etc.
-#include "nsIWeakReferenceUtils.h"      // for nsWeakPtr
-#include "nsLiteralString.h"            // for NS_LITERAL_STRING
-#include "nsString.h"                   // for nsCString
-#include "nsTArray.h"                   // for nsTArray and nsAutoTArray
-#include "nsWeakReference.h"            // for nsSupportsWeakReference
-#include "nscore.h"                     // for nsresult, nsAString, etc.
-=======
 #include "mozilla/dom/Document.h"
 #include "nsIContentInlines.h"       // for nsINode::IsEditable()
 #include "nsIEditor.h"               // for nsIEditor, etc.
@@ -94,7 +38,6 @@
 #include "nsTArray.h"                // for nsTArray and nsAutoTArray
 #include "nsWeakReference.h"         // for nsSupportsWeakReference
 #include "nscore.h"                  // for nsresult, nsAString, etc.
->>>>>>> upstream-releases
 
 class mozInlineSpellChecker;
 class nsAtom;
@@ -157,140 +100,7 @@ class Text;
 
 namespace widget {
 struct IMEState;
-<<<<<<< HEAD
 }  // namespace widget
-
-/**
- * CachedWeakPtr stores a pointer to a class which inherits nsIWeakReference.
- * If the instance of the class has already been destroyed, this returns
- * nullptr.  Otherwise, returns cached pointer.
- * If class T inherits nsISupports a lot, specify Base explicitly for avoiding
- * ambiguous conversion to nsISupports.
- */
-template <class T, class Base = nsISupports>
-class CachedWeakPtr final {
- public:
-  CachedWeakPtr<T, Base>() : mCache(nullptr) {}
-  explicit CachedWeakPtr<T, Base>(T* aObject) {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aObject));
-    mCache = aObject;
-  }
-  explicit CachedWeakPtr<T, Base>(const nsCOMPtr<T>& aOther) {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aOther.get()));
-    mCache = aOther;
-  }
-  explicit CachedWeakPtr<T, Base>(already_AddRefed<T>& aOther) {
-    RefPtr<T> other = aOther;
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(other.get()));
-    mCache = other;
-  }
-
-  CachedWeakPtr<T, Base>& operator=(T* aObject) {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aObject));
-    mCache = aObject;
-    return *this;
-  }
-  CachedWeakPtr<T, Base>& operator=(const nsCOMPtr<T>& aOther) {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aOther.get()));
-    mCache = aOther;
-    return *this;
-  }
-  CachedWeakPtr<T, Base>& operator=(already_AddRefed<T>& aOther) {
-    RefPtr<T> other = aOther;
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(other.get()));
-    mCache = other;
-    return *this;
-  }
-
-  bool IsAlive() const { return mWeakPtr && mWeakPtr->IsAlive(); }
-
-  explicit operator bool() const { return mWeakPtr; }
-  operator T*() const { return get(); }
-  T* get() const {
-    if (mCache && !mWeakPtr->IsAlive()) {
-      const_cast<CachedWeakPtr<T, Base>*>(this)->mCache = nullptr;
-    }
-    return mCache;
-  }
-
- private:
-  nsWeakPtr mWeakPtr;
-  T* MOZ_NON_OWNING_REF mCache;
-};
-||||||| merged common ancestors
-} // namespace widget
-
-/**
- * CachedWeakPtr stores a pointer to a class which inherits nsIWeakReference.
- * If the instance of the class has already been destroyed, this returns
- * nullptr.  Otherwise, returns cached pointer.
- * If class T inherits nsISupports a lot, specify Base explicitly for avoiding
- * ambiguous conversion to nsISupports.
- */
-template<class T, class Base = nsISupports>
-class CachedWeakPtr final
-{
-public:
-  CachedWeakPtr<T, Base>()
-    : mCache(nullptr)
-  {
-  }
-  explicit CachedWeakPtr<T, Base>(T* aObject)
-  {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aObject));
-    mCache = aObject;
-  }
-  explicit CachedWeakPtr<T, Base>(const nsCOMPtr<T>& aOther)
-  {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aOther.get()));
-    mCache = aOther;
-  }
-  explicit CachedWeakPtr<T, Base>(already_AddRefed<T>& aOther)
-  {
-    RefPtr<T> other = aOther;
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(other.get()));
-    mCache = other;
-  }
-
-  CachedWeakPtr<T, Base>& operator=(T* aObject)
-  {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aObject));
-    mCache = aObject;
-    return *this;
-  }
-  CachedWeakPtr<T, Base>& operator=(const nsCOMPtr<T>& aOther)
-  {
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(aOther.get()));
-    mCache = aOther;
-    return *this;
-  }
-  CachedWeakPtr<T, Base>& operator=(already_AddRefed<T>& aOther)
-  {
-    RefPtr<T> other = aOther;
-    mWeakPtr = do_GetWeakReference(static_cast<Base*>(other.get()));
-    mCache = other;
-    return *this;
-  }
-
-  bool IsAlive() const { return mWeakPtr && mWeakPtr->IsAlive(); }
-
-  explicit operator bool() const { return mWeakPtr; }
-  operator T*() const { return get(); }
-  T* get() const
-  {
-    if (mCache && !mWeakPtr->IsAlive()) {
-      const_cast<CachedWeakPtr<T, Base>*>(this)->mCache = nullptr;
-    }
-    return mCache;
-  }
-
-private:
-  nsWeakPtr mWeakPtr;
-  T* MOZ_NON_OWNING_REF mCache;
-};
-=======
-}  // namespace widget
->>>>>>> upstream-releases
 
 #define kMOZEditorBogusNodeAttrAtom nsGkAtoms::mozeditorbogusnode
 #define kMOZEditorBogusNodeValue NS_LITERAL_STRING("TRUE")
@@ -363,19 +173,9 @@ class EditorBase : public nsIEditor,
    * @param aFlags        A bitmask of flags for specifying the behavior
    *                      of the editor.
    */
-<<<<<<< HEAD
-  virtual nsresult Init(nsIDocument& doc, Element* aRoot,
-                        nsISelectionController* aSelCon, uint32_t aFlags,
-||||||| merged common ancestors
-  virtual nsresult Init(nsIDocument& doc,
-                        Element* aRoot,
-                        nsISelectionController* aSelCon,
-                        uint32_t aFlags,
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult Init(Document& doc, Element* aRoot,
                         nsISelectionController* aSelCon, uint32_t aFlags,
->>>>>>> upstream-releases
                         const nsAString& aInitialValue);
 
   /**
@@ -414,29 +214,11 @@ class EditorBase : public nsIEditor,
     return window ? window->HasMutationListeners(aMutationEventType) : false;
   }
 
-<<<<<<< HEAD
-  nsIPresShell* GetPresShell() const {
-    return mDocument ? mDocument->GetShell() : nullptr;
-||||||| merged common ancestors
-  nsIPresShell* GetPresShell() const
-  {
-    return mDocument ? mDocument->GetShell() : nullptr;
-=======
   PresShell* GetPresShell() const {
     return mDocument ? mDocument->GetPresShell() : nullptr;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  nsPresContext* GetPresContext() const {
-    nsIPresShell* presShell = GetPresShell();
-||||||| merged common ancestors
-  nsPresContext* GetPresContext() const
-  {
-    nsIPresShell* presShell = GetPresShell();
-=======
   nsPresContext* GetPresContext() const {
     PresShell* presShell = GetPresShell();
->>>>>>> upstream-releases
     return presShell ? presShell->GetPresContext() : nullptr;
   }
   already_AddRefed<nsCaret> GetCaret() const {
@@ -524,15 +306,8 @@ class EditorBase : public nsIEditor,
    *                            JS.  If set to nullptr, will be treated as
    *                            called by system.
    */
-<<<<<<< HEAD
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  nsresult ToggleTextDirection();
-||||||| merged common ancestors
-  nsresult ToggleTextDirection();
-=======
   MOZ_CAN_RUN_SCRIPT nsresult
   ToggleTextDirectionAsAction(nsIPrincipal* aPrincipal = nullptr);
->>>>>>> upstream-releases
 
   /**
    * SwitchTextDirectionTo() sets the text-direction of the root element to
@@ -823,100 +598,6 @@ class EditorBase : public nsIEditor,
    * selection state even if this has no focus.  So if destroying editor,
    * we have to call this method for focused editor to set selection state.
    */
-<<<<<<< HEAD
-  void ReinitializeSelection(Element& aElement);
-
- protected:  // AutoEditActionDataSetter, this shouldn't be accessed by friends.
-  /**
-   * AutoEditActionDataSetter grabs some necessary objects for handling any
-   * edit actions and store the edit action what we're handling.  When this is
-   * created, its pointer is set to the mEditActionData, and this guarantees
-   * the lifetime of grabbing objects until it's destroyed.
-   */
-  class MOZ_STACK_CLASS AutoEditActionDataSetter final {
-   public:
-    AutoEditActionDataSetter(const EditorBase& aEditorBase,
-                             EditAction aEditAction);
-    ~AutoEditActionDataSetter();
-
-    void UpdateEditAction(EditAction aEditAction) { mEditAction = aEditAction; }
-
-    bool CanHandle() const { return mSelection && mEditorBase.IsInitialized(); }
-
-    const RefPtr<Selection>& SelectionRefPtr() const { return mSelection; }
-    EditAction GetEditAction() const { return mEditAction; }
-
-    void SetTopLevelEditSubAction(EditSubAction aEditSubAction,
-                                  EDirection aDirection = eNone) {
-      mTopLevelEditSubAction = aEditSubAction;
-      switch (mTopLevelEditSubAction) {
-        case EditSubAction::eInsertNode:
-        case EditSubAction::eCreateNode:
-        case EditSubAction::eSplitNode:
-        case EditSubAction::eInsertText:
-        case EditSubAction::eInsertTextComingFromIME:
-        case EditSubAction::eSetTextProperty:
-        case EditSubAction::eRemoveTextProperty:
-        case EditSubAction::eRemoveAllTextProperties:
-        case EditSubAction::eSetText:
-        case EditSubAction::eInsertLineBreak:
-        case EditSubAction::eInsertParagraphSeparator:
-        case EditSubAction::eCreateOrChangeList:
-        case EditSubAction::eIndent:
-        case EditSubAction::eOutdent:
-        case EditSubAction::eSetOrClearAlignment:
-        case EditSubAction::eCreateOrRemoveBlock:
-        case EditSubAction::eRemoveList:
-        case EditSubAction::eCreateOrChangeDefinitionList:
-        case EditSubAction::eInsertElement:
-        case EditSubAction::eInsertQuotation:
-        case EditSubAction::ePasteHTMLContent:
-        case EditSubAction::eInsertHTMLSource:
-        case EditSubAction::eSetPositionToAbsolute:
-        case EditSubAction::eSetPositionToStatic:
-        case EditSubAction::eDecreaseZIndex:
-        case EditSubAction::eIncreaseZIndex:
-          MOZ_ASSERT(aDirection == eNext);
-          mDirectionOfTopLevelEditSubAction = eNext;
-          break;
-        case EditSubAction::eJoinNodes:
-        case EditSubAction::eDeleteText:
-          MOZ_ASSERT(aDirection == ePrevious);
-          mDirectionOfTopLevelEditSubAction = ePrevious;
-          break;
-        case EditSubAction::eUndo:
-        case EditSubAction::eRedo:
-        case EditSubAction::eComputeTextToOutput:
-        case EditSubAction::eCreateBogusNode:
-        case EditSubAction::eNone:
-          MOZ_ASSERT(aDirection == eNone);
-          mDirectionOfTopLevelEditSubAction = eNone;
-          break;
-        case EditSubAction::eReplaceHeadWithHTMLSource:
-          // NOTE: Not used with AutoTopLevelEditSubActionNotifier.
-          mDirectionOfTopLevelEditSubAction = eNone;
-          break;
-        case EditSubAction::eDeleteNode:
-        case EditSubAction::eDeleteSelectedContent:
-          // Unfortunately, eDeleteNode and eDeleteSelectedContent is used with
-          // any direction.  We might have specific sub-action for each
-          // direction, but there are some points referencing
-          // eDeleteSelectedContent so that we should keep storing direction
-          // as-is for now.
-          mDirectionOfTopLevelEditSubAction = aDirection;
-          break;
-      }
-    }
-    EditSubAction GetTopLevelEditSubAction() const {
-      MOZ_ASSERT(CanHandle());
-      return mTopLevelEditSubAction;
-    }
-    EDirection GetDirectionOfTopLevelEditSubAction() const {
-      return mDirectionOfTopLevelEditSubAction;
-    }
-||||||| merged common ancestors
- void ReinitializeSelection(Element& aElement);
-=======
   void ReinitializeSelection(Element& aElement);
 
  protected:  // AutoEditActionDataSetter, this shouldn't be accessed by friends.
@@ -1061,59 +742,7 @@ class EditorBase : public nsIEditor,
     const SelectionState& SavedSelectionRef() const {
       return mParentData ? mParentData->SavedSelectionRef() : mSavedSelection;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    SelectionState& SavedSelectionRef() {
-      return mParentData ? mParentData->SavedSelectionRef() : mSavedSelection;
-    }
-    const SelectionState& SavedSelectionRef() const {
-      return mParentData ? mParentData->SavedSelectionRef() : mSavedSelection;
-    }
-
-    RangeUpdater& RangeUpdaterRef() {
-      return mParentData ? mParentData->RangeUpdaterRef() : mRangeUpdater;
-    }
-    const RangeUpdater& RangeUpdaterRef() const {
-      return mParentData ? mParentData->RangeUpdaterRef() : mRangeUpdater;
-    }
-
-    void UpdateSelectionCache(Selection& aSelection) {
-      AutoEditActionDataSetter* actionData = this;
-      while (actionData) {
-        if (actionData->mSelection) {
-          actionData->mSelection = &aSelection;
-        }
-        actionData = actionData->mParentData;
-      }
-    }
-
-   private:
-    EditorBase& mEditorBase;
-    RefPtr<Selection> mSelection;
-    // EditAction may be nested, for example, a command may be executed
-    // from mutation event listener which is run while editor changes
-    // the DOM tree.  In such case, we need to handle edit action separately.
-    AutoEditActionDataSetter* mParentData;
-
-    // Cached selection for AutoSelectionRestorer.
-    SelectionState mSavedSelection;
-
-    // Utility class object for maintaining preserved ranges.
-    RangeUpdater mRangeUpdater;
-
-    EditAction mEditAction;
-    EditSubAction mTopLevelEditSubAction;
-    EDirection mDirectionOfTopLevelEditSubAction;
-
-    AutoEditActionDataSetter() = delete;
-    AutoEditActionDataSetter(const AutoEditActionDataSetter& aOther) = delete;
-  };
-
- protected:  // May be called by friends.
-||||||| merged common ancestors
-protected: // May be called by friends.
-=======
     RangeUpdater& RangeUpdaterRef() {
       return mParentData ? mParentData->RangeUpdaterRef() : mRangeUpdater;
     }
@@ -1164,7 +793,6 @@ protected: // May be called by friends.
   }
 
  protected:  // May be called by friends.
->>>>>>> upstream-releases
   /****************************************************************************
    * Some classes like TextEditRules, HTMLEditRules, WSRunObject which are
    * part of handling edit actions are allowed to call the following protected
@@ -1174,83 +802,6 @@ protected: // May be called by friends.
    * and call it.
    ****************************************************************************/
 
-<<<<<<< HEAD
-  bool IsEditActionDataAvailable() const {
-    return mEditActionData && mEditActionData->CanHandle();
-  }
-
-  /**
-   * SelectionRefPtr() returns cached Selection.  This is pretty faster than
-   * EditorBase::GetSelection() if available.
-   * Note that this never returns nullptr unless public methods ignore
-   * result of AutoEditActionDataSetter::CanHandle() and keep handling edit
-   * action but any methods should stop handling edit action if it returns
-   * false.
-   */
-  const RefPtr<Selection>& SelectionRefPtr() const {
-    MOZ_ASSERT(mEditActionData);
-    return mEditActionData->SelectionRefPtr();
-  }
-
-  /**
-   * GetEditAction() returns EditAction which is being handled.  If some
-   * edit actions are nested, this returns the innermost edit action.
-   */
-  EditAction GetEditAction() const {
-    return mEditActionData ? mEditActionData->GetEditAction()
-                           : EditAction::eNone;
-  }
-
-  /**
-   * GetTopLevelEditSubAction() returns the top level edit sub-action.
-   * For example, if selected content is being replaced with inserted text,
-   * while removing selected content, the top level edit sub-action may be
-   * EditSubAction::eDeleteSelectedContent.  However, while inserting new
-   * text, the top level edit sub-action may be EditSubAction::eInsertText.
-   * So, this result means what we are doing right now unless you're looking
-   * for a case which the method is called via mutation event listener or
-   * selectionchange event listener which are fired while handling the edit
-   * sub-action.
-   */
-  EditSubAction GetTopLevelEditSubAction() const {
-    return mEditActionData ? mEditActionData->GetTopLevelEditSubAction()
-                           : EditSubAction::eNone;
-  }
-
-  /**
-   * GetDirectionOfTopLevelEditSubAction() returns direction which user
-   * intended for doing the edit sub-action.
-   */
-  EDirection GetDirectionOfTopLevelEditSubAction() const {
-    return mEditActionData
-               ? mEditActionData->GetDirectionOfTopLevelEditSubAction()
-               : eNone;
-  }
-
-  /**
-   * SavedSelection() returns reference to saved selection which are
-   * stored by AutoSelectionRestorer.
-   */
-  SelectionState& SavedSelectionRef() {
-    MOZ_ASSERT(IsEditActionDataAvailable());
-    return mEditActionData->SavedSelectionRef();
-  }
-  const SelectionState& SavedSelectionRef() const {
-    MOZ_ASSERT(IsEditActionDataAvailable());
-    return mEditActionData->SavedSelectionRef();
-  }
-
-  RangeUpdater& RangeUpdaterRef() {
-    MOZ_ASSERT(IsEditActionDataAvailable());
-    return mEditActionData->RangeUpdaterRef();
-  }
-  const RangeUpdater& RangeUpdaterRef() const {
-    MOZ_ASSERT(IsEditActionDataAvailable());
-    return mEditActionData->RangeUpdaterRef();
-  }
-
-||||||| merged common ancestors
-=======
   bool IsEditActionDataAvailable() const {
     return mEditActionData && mEditActionData->CanHandle();
   }
@@ -1350,7 +901,6 @@ protected: // May be called by friends.
   EditorRawDOMPoint GetCompositionStartPoint() const;
   EditorRawDOMPoint GetCompositionEndPoint() const;
 
->>>>>>> upstream-releases
   /**
    * InsertTextWithTransaction() inserts aStringToInsert to aPointToInsert or
    * better insertion point around it.  If aPointToInsert isn't in a text node,
@@ -1371,25 +921,11 @@ protected: // May be called by friends.
    *                        does nothing during composition, returns NS_OK.
    *                        Otherwise, an error code.
    */
-<<<<<<< HEAD
-  virtual nsresult InsertTextWithTransaction(
-      nsIDocument& aDocument, const nsAString& aStringToInsert,
-      const EditorRawDOMPoint& aPointToInsert,
-      EditorRawDOMPoint* aPointAfterInsertedString = nullptr);
-||||||| merged common ancestors
-  virtual nsresult
-  InsertTextWithTransaction(nsIDocument& aDocument,
-                            const nsAString& aStringToInsert,
-                            const EditorRawDOMPoint& aPointToInsert,
-                            EditorRawDOMPoint* aPointAfterInsertedString =
-                              nullptr);
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult InsertTextWithTransaction(
       Document& aDocument, const nsAString& aStringToInsert,
       const EditorRawDOMPoint& aPointToInsert,
       EditorRawDOMPoint* aPointAfterInsertedString = nullptr);
->>>>>>> upstream-releases
 
   /**
    * InsertTextIntoTextNodeWithTransaction() inserts aStringToInsert into
@@ -1402,21 +938,10 @@ protected: // May be called by friends.
    *                            E.g., adjusting whitespaces during composition.
    *                            false, otherwise.
    */
-<<<<<<< HEAD
-  nsresult InsertTextIntoTextNodeWithTransaction(
-      const nsAString& aStringToInsert, Text& aTextNode, int32_t aOffset,
-      bool aSuppressIME = false);
-||||||| merged common ancestors
-  nsresult
-  InsertTextIntoTextNodeWithTransaction(const nsAString& aStringToInsert,
-                                        Text& aTextNode, int32_t aOffset,
-                                        bool aSuppressIME = false);
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult InsertTextIntoTextNodeWithTransaction(
       const nsAString& aStringToInsert, Text& aTextNode, int32_t aOffset,
       bool aSuppressIME = false);
->>>>>>> upstream-releases
 
   nsresult SetTextImpl(const nsAString& aString, Text& aTextNode);
 
@@ -1438,20 +963,8 @@ protected: // May be called by friends.
    *                            container.  Otherwise, will insert the node
    *                            before child node referred by this.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  nsresult InsertNodeWithTransaction(
-      nsIContent& aContentToInsert,
-      const EditorDOMPointBase<PT, CT>& aPointToInsert);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  nsresult
-  InsertNodeWithTransaction(nsIContent& aContentToInsert,
-                            const EditorDOMPointBase<PT, CT>& aPointToInsert);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult InsertNodeWithTransaction(
       nsIContent& aContentToInsert, const EditorDOMPoint& aPointToInsert);
->>>>>>> upstream-releases
 
   /**
    * ReplaceContainerWithTransaction() creates new element whose name is
@@ -1462,26 +975,11 @@ protected: // May be called by friends.
    *                            with new element.
    * @param aTagName            The name of new element node.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> ReplaceContainerWithTransaction(
-      Element& aOldContainer, nsAtom& aTagName) {
-    return ReplaceContainerWithTransactionInternal(
-        aOldContainer, aTagName, *nsGkAtoms::_empty, EmptyString(), false);
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  ReplaceContainerWithTransaction(Element& aOldContainer,
-                                  nsAtom& aTagName)
-  {
-    return ReplaceContainerWithTransactionInternal(aOldContainer, aTagName,
-                                                   *nsGkAtoms::_empty,
-                                                   EmptyString(), false);
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> ReplaceContainerWithTransaction(
       Element& aOldContainer, nsAtom& aTagName) {
     return ReplaceContainerWithTransactionInternal(
         aOldContainer, aTagName, *nsGkAtoms::_empty, EmptyString(), false);
->>>>>>> upstream-releases
   }
 
   /**
@@ -1494,26 +992,11 @@ protected: // May be called by friends.
    *                            with new element.
    * @param aTagName            The name of new element node.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> ReplaceContainerAndCloneAttributesWithTransaction(
-      Element& aOldContainer, nsAtom& aTagName) {
-    return ReplaceContainerWithTransactionInternal(
-        aOldContainer, aTagName, *nsGkAtoms::_empty, EmptyString(), true);
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  ReplaceContainerAndCloneAttributesWithTransaction(Element& aOldContainer,
-                                                    nsAtom& aTagName)
-  {
-    return ReplaceContainerWithTransactionInternal(aOldContainer, aTagName,
-                                                   *nsGkAtoms::_empty,
-                                                   EmptyString(), true);
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> ReplaceContainerAndCloneAttributesWithTransaction(
       Element& aOldContainer, nsAtom& aTagName) {
     return ReplaceContainerWithTransactionInternal(
         aOldContainer, aTagName, *nsGkAtoms::_empty, EmptyString(), true);
->>>>>>> upstream-releases
   }
 
   /**
@@ -1528,30 +1011,12 @@ protected: // May be called by friends.
    * @param aAttribute          Attribute name to be set to the new element.
    * @param aAttributeValue     Attribute value to be set to aAttribute.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> ReplaceContainerWithTransaction(
-      Element& aOldContainer, nsAtom& aTagName, nsAtom& aAttribute,
-      const nsAString& aAttributeValue) {
-    return ReplaceContainerWithTransactionInternal(
-        aOldContainer, aTagName, aAttribute, aAttributeValue, false);
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  ReplaceContainerWithTransaction(Element& aOldContainer,
-                                  nsAtom& aTagName,
-                                  nsAtom& aAttribute,
-                                  const nsAString& aAttributeValue)
-  {
-    return ReplaceContainerWithTransactionInternal(aOldContainer, aTagName,
-                                                   aAttribute,
-                                                   aAttributeValue, false);
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> ReplaceContainerWithTransaction(
       Element& aOldContainer, nsAtom& aTagName, nsAtom& aAttribute,
       const nsAString& aAttributeValue) {
     return ReplaceContainerWithTransactionInternal(
         aOldContainer, aTagName, aAttribute, aAttributeValue, false);
->>>>>>> upstream-releases
   }
 
   /**
@@ -1586,25 +1051,11 @@ protected: // May be called by friends.
    *                            was.
    * @return                    The new element.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> InsertContainerWithTransaction(nsIContent& aContent,
-                                                           nsAtom& aTagName) {
-    return InsertContainerWithTransactionInternal(
-        aContent, aTagName, *nsGkAtoms::_empty, EmptyString());
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  InsertContainerWithTransaction(nsIContent& aContent, nsAtom& aTagName)
-  {
-    return InsertContainerWithTransactionInternal(aContent, aTagName,
-                                                  *nsGkAtoms::_empty,
-                                                  EmptyString());
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> InsertContainerWithTransaction(nsIContent& aContent,
                                                            nsAtom& aTagName) {
     return InsertContainerWithTransactionInternal(
         aContent, aTagName, *nsGkAtoms::_empty, EmptyString());
->>>>>>> upstream-releases
   }
 
   /**
@@ -1624,22 +1075,10 @@ protected: // May be called by friends.
    * @param aAttributeValue     Value to be set to aAttribute.
    * @return                    The new element.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> InsertContainerWithTransaction(
-      nsIContent& aContent, nsAtom& aTagName, nsAtom& aAttribute,
-      const nsAString& aAttributeValue) {
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  InsertContainerWithTransaction(nsIContent& aContent, nsAtom& aTagName,
-                                 nsAtom& aAttribute,
-                                 const nsAString& aAttributeValue)
-  {
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> InsertContainerWithTransaction(
       nsIContent& aContent, nsAtom& aTagName, nsAtom& aAttribute,
       const nsAString& aAttributeValue) {
->>>>>>> upstream-releases
     return InsertContainerWithTransactionInternal(aContent, aTagName,
                                                   aAttribute, aAttributeValue);
   }
@@ -1657,20 +1096,8 @@ protected: // May be called by friends.
    * @param aError              If succeed, returns no error.  Otherwise, an
    *                            error.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  already_AddRefed<nsIContent> SplitNodeWithTransaction(
-      const EditorDOMPointBase<PT, CT>& aStartOfRightNode,
-      ErrorResult& aResult);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  already_AddRefed<nsIContent>
-  SplitNodeWithTransaction(const EditorDOMPointBase<PT, CT>& aStartOfRightNode,
-                           ErrorResult& aResult);
-=======
   MOZ_CAN_RUN_SCRIPT already_AddRefed<nsIContent> SplitNodeWithTransaction(
       const EditorDOMPoint& aStartOfRightNode, ErrorResult& aResult);
->>>>>>> upstream-releases
 
   /**
    * JoinNodesWithTransaction() joins aLeftNode and aRightNode.  Content of
@@ -1689,19 +1116,8 @@ protected: // May be called by friends.
    *
    * @param aContent        The node to be moved.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  nsresult MoveNodeWithTransaction(
-      nsIContent& aContent, const EditorDOMPointBase<PT, CT>& aPointToInsert);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  nsresult
-  MoveNodeWithTransaction(nsIContent& aContent,
-                          const EditorDOMPointBase<PT, CT>& aPointToInsert);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult MoveNodeWithTransaction(
       nsIContent& aContent, const EditorDOMPoint& aPointToInsert);
->>>>>>> upstream-releases
 
   /**
    * MoveNodeToEndWithTransaction() moves aContent to end of aNewContainer.
@@ -1710,22 +1126,10 @@ protected: // May be called by friends.
    * @param aNewContainer   The new container which will contain aContent as
    *                        its last child.
    */
-<<<<<<< HEAD
-  nsresult MoveNodeToEndWithTransaction(nsIContent& aContent,
-                                        nsINode& aNewContainer) {
-    EditorRawDOMPoint pointToInsert;
-||||||| merged common ancestors
-  nsresult
-  MoveNodeToEndWithTransaction(nsIContent& aContent,
-                               nsINode& aNewContainer)
-  {
-    EditorRawDOMPoint pointToInsert;
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult MoveNodeToEndWithTransaction(nsIContent& aContent,
                                         nsINode& aNewContainer) {
     EditorDOMPoint pointToInsert;
->>>>>>> upstream-releases
     pointToInsert.SetToEndOf(&aNewContainer);
     return MoveNodeWithTransaction(aContent, pointToInsert);
   }
@@ -1823,15 +1227,8 @@ protected: // May be called by friends.
    * @param aAttribute      Attribute name to be set.
    * @param aValue          Attribute value be set to aAttribute.
    */
-<<<<<<< HEAD
-  nsresult SetAttributeWithTransaction(Element& aElement, nsAtom& aAttribute,
-||||||| merged common ancestors
-  nsresult SetAttributeWithTransaction(Element& aElement,
-                                       nsAtom& aAttribute,
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult SetAttributeWithTransaction(Element& aElement, nsAtom& aAttribute,
->>>>>>> upstream-releases
                                        const nsAString& aValue);
 
   MOZ_CAN_RUN_SCRIPT
@@ -1868,19 +1265,8 @@ protected: // May be called by friends.
    *                        child node referred by this.
    * @return                The created new element node.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  already_AddRefed<Element> CreateNodeWithTransaction(
-      nsAtom& aTag, const EditorDOMPointBase<PT, CT>& aPointToInsert);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  already_AddRefed<Element>
-  CreateNodeWithTransaction(nsAtom& aTag,
-                            const EditorDOMPointBase<PT, CT>& aPointToInsert);
-=======
   MOZ_CAN_RUN_SCRIPT already_AddRefed<Element> CreateNodeWithTransaction(
       nsAtom& aTag, const EditorDOMPoint& aPointToInsert);
->>>>>>> upstream-releases
 
   /**
    * Create an aggregate transaction for delete selection.  The result may
@@ -1942,23 +1328,10 @@ protected: // May be called by friends.
    * @param aCloneAllAttributes If true, all attributes of aOldContainer will
    *                            be copied to the new element.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> ReplaceContainerWithTransactionInternal(
-      Element& aElement, nsAtom& aTagName, nsAtom& aAttribute,
-      const nsAString& aAttributeValue, bool aCloneAllAttributes);
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  ReplaceContainerWithTransactionInternal(Element& aElement,
-                                          nsAtom& aTagName,
-                                          nsAtom& aAttribute,
-                                          const nsAString& aAttributeValue,
-                                          bool aCloneAllAttributes);
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> ReplaceContainerWithTransactionInternal(
       Element& aElement, nsAtom& aTagName, nsAtom& aAttribute,
       const nsAString& aAttributeValue, bool aCloneAllAttributes);
->>>>>>> upstream-releases
 
   /**
    * InsertContainerWithTransactionInternal() creates new element whose name is
@@ -1978,22 +1351,10 @@ protected: // May be called by friends.
    * @param aAttributeValue     Value to be set to aAttribute.
    * @return                    The new element.
    */
-<<<<<<< HEAD
-  already_AddRefed<Element> InsertContainerWithTransactionInternal(
-      nsIContent& aContent, nsAtom& aTagName, nsAtom& aAttribute,
-      const nsAString& aAttributeValue);
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  InsertContainerWithTransactionInternal(nsIContent& aContent,
-                                         nsAtom& aTagName,
-                                         nsAtom& aAttribute,
-                                         const nsAString& aAttributeValue);
-=======
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<Element> InsertContainerWithTransactionInternal(
       nsIContent& aContent, nsAtom& aTagName, nsAtom& aAttribute,
       const nsAString& aAttributeValue);
->>>>>>> upstream-releases
 
   /**
    * DoSplitNode() creates a new node (left node) identical to an existing
@@ -2050,25 +1411,10 @@ protected: // May be called by friends.
    *                                    be good to insert something if the
    *                                    caller want to do it.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  SplitNodeResult SplitNodeDeepWithTransaction(
-      nsIContent& aMostAncestorToSplit,
-      const EditorDOMPointBase<PT, CT>& aDeepestStartOfRightNode,
-      SplitAtEdges aSplitAtEdges);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  SplitNodeResult
-  SplitNodeDeepWithTransaction(
-    nsIContent& aMostAncestorToSplit,
-    const EditorDOMPointBase<PT, CT>& aDeepestStartOfRightNode,
-    SplitAtEdges aSplitAtEdges);
-=======
   MOZ_CAN_RUN_SCRIPT SplitNodeResult
   SplitNodeDeepWithTransaction(nsIContent& aMostAncestorToSplit,
                                const EditorDOMPoint& aDeepestStartOfRightNode,
                                SplitAtEdges aSplitAtEdges);
->>>>>>> upstream-releases
 
   /**
    * JoinNodesDeepWithTransaction() joins aLeftNode and aRightNode "deeply".
@@ -2086,17 +1432,7 @@ protected: // May be called by friends.
   EditorDOMPoint JoinNodesDeepWithTransaction(nsIContent& aLeftNode,
                                               nsIContent& aRightNode);
 
-<<<<<<< HEAD
-  nsresult DoTransactionInternal(nsITransaction* aTxn);
-||||||| merged common ancestors
-  /**
-   * Note that aSelection is optional and can be nullptr.
-   */
-  nsresult DoTransaction(Selection* aSelection,
-                         nsITransaction* aTxn);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult DoTransactionInternal(nsITransaction* aTxn);
->>>>>>> upstream-releases
 
   virtual bool IsBlockNode(nsINode* aNode);
 
@@ -2537,18 +1873,12 @@ protected: // May be called by friends.
   virtual nsresult SelectAllInternal();
 
   nsresult DetermineCurrentDirection();
-<<<<<<< HEAD
-
-  MOZ_CAN_RUN_SCRIPT
-||||||| merged common ancestors
-=======
 
   /**
    * FireInputEvent() dispatches an "input" event synchronously or
    * asynchronously if it's not safe to dispatch.
    */
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   void FireInputEvent();
   MOZ_CAN_RUN_SCRIPT
   void FireInputEvent(EditAction aEditAction, const nsAString& aData,
@@ -2557,13 +1887,7 @@ protected: // May be called by friends.
   /**
    * Called after a transaction is done successfully.
    */
-<<<<<<< HEAD
-  void DoAfterDoTransaction(nsITransaction* aTxn);
-||||||| merged common ancestors
-  void DoAfterDoTransaction(nsITransaction *aTxn);
-=======
   MOZ_CAN_RUN_SCRIPT void DoAfterDoTransaction(nsITransaction* aTxn);
->>>>>>> upstream-releases
 
   /**
    * Called after a transaction is undone successfully.
@@ -2584,28 +1908,14 @@ protected: // May be called by friends.
     eDocumentToBeDestroyed,
     eDocumentStateChanged
   };
-<<<<<<< HEAD
-  nsresult NotifyDocumentListeners(
-      TDocumentListenerNotification aNotificationType);
-||||||| merged common ancestors
-  nsresult NotifyDocumentListeners(
-             TDocumentListenerNotification aNotificationType);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult
   NotifyDocumentListeners(TDocumentListenerNotification aNotificationType);
->>>>>>> upstream-releases
 
   /**
    * Make the given selection span the entire document.
    */
-<<<<<<< HEAD
-  virtual nsresult SelectEntireDocument();
-||||||| merged common ancestors
-  virtual nsresult SelectEntireDocument(Selection* aSelection);
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult SelectEntireDocument() = 0;
->>>>>>> upstream-releases
 
   /**
    * Helper method for scrolling the selection into view after
@@ -2758,151 +2068,6 @@ protected: // May be called by friends.
    * This is a helper class of them.
    */
   nsresult SetTextDirectionTo(TextDirection aTextDirection);
-<<<<<<< HEAD
-
- protected:  // helper classes which may be used by friends
-  /**
-   * Stack based helper class for calling EditorBase::EndTransactionInternal().
-   */
-  class MOZ_RAII AutoTransactionBatch final {
-   public:
-    explicit AutoTransactionBatch(
-        EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-        : mEditorBase(aEditorBase) {
-      MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-      mEditorBase->BeginTransactionInternal();
-    }
-
-    ~AutoTransactionBatch() { mEditorBase->EndTransactionInternal(); }
-
-   protected:
-    OwningNonNull<EditorBase> mEditorBase;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  };
-
-  /**
-   * Stack based helper class for batching a collection of transactions inside
-   * a placeholder transaction.
-   */
-  class MOZ_RAII AutoPlaceholderBatch final {
-   public:
-    explicit AutoPlaceholderBatch(
-        EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-        : mEditorBase(aEditorBase) {
-      MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-      mEditorBase->BeginPlaceholderTransaction(nullptr);
-    }
-
-    AutoPlaceholderBatch(EditorBase& aEditorBase,
-                         nsAtom& aTransactionName
-                             MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-        : mEditorBase(aEditorBase) {
-      MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-      mEditorBase->BeginPlaceholderTransaction(&aTransactionName);
-    }
-
-    ~AutoPlaceholderBatch() { mEditorBase->EndPlaceholderTransaction(); }
-
-   protected:
-    OwningNonNull<EditorBase> mEditorBase;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  };
-
-  /**
-   * Stack based helper class for saving/restoring selection.  Note that this
-   * assumes that the nodes involved are still around afterwords!
-   */
-  class MOZ_RAII AutoSelectionRestorer final {
-   public:
-    /**
-     * Constructor responsible for remembering all state needed to restore
-     * aSelection.
-     */
-    explicit AutoSelectionRestorer(
-        EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
-
-    /**
-     * Destructor restores mSelection to its former state
-     */
-    ~AutoSelectionRestorer();
-
-    /**
-     * Abort() cancels to restore the selection.
-     */
-    void Abort();
-
-   protected:
-    EditorBase* mEditorBase;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  };
-
-  /**
-   * AutoTopLevelEditSubActionNotifier notifies editor of start to handle
-   * top level edit sub-action and end handling top level edit sub-action.
-   */
-  class MOZ_RAII AutoTopLevelEditSubActionNotifier final {
-   public:
-    AutoTopLevelEditSubActionNotifier(
-        EditorBase& aEditorBase, EditSubAction aEditSubAction,
-        nsIEditor::EDirection aDirection MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-        : mEditorBase(aEditorBase), mDoNothing(false) {
-      MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-      // The top level edit sub action has already be set if this is nested call
-      // XXX Looks like that this is not aware of unexpected nested edit action
-      //     handling via selectionchange event listener or mutation event
-      //     listener.
-      if (!mEditorBase.GetTopLevelEditSubAction()) {
-        mEditorBase.OnStartToHandleTopLevelEditSubAction(aEditSubAction,
-                                                         aDirection);
-      } else {
-        mDoNothing = true;  // nested calls will end up here
-      }
-    }
-
-    ~AutoTopLevelEditSubActionNotifier() {
-      if (!mDoNothing) {
-        mEditorBase.OnEndHandlingTopLevelEditSubAction();
-      }
-    }
-
-   protected:
-    EditorBase& mEditorBase;
-    bool mDoNothing;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  };
-
-  /**
-   * Stack based helper class for turning off active selection adjustment
-   * by low level transactions
-   */
-  class MOZ_RAII AutoTransactionsConserveSelection final {
-   public:
-    explicit AutoTransactionsConserveSelection(
-        EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-        : mEditorBase(aEditorBase),
-          mAllowedTransactionsToChangeSelection(
-              aEditorBase.AllowsTransactionsToChangeSelection()) {
-      MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-      mEditorBase.MakeThisAllowTransactionsToChangeSelection(false);
-    }
-
-    ~AutoTransactionsConserveSelection() {
-      mEditorBase.MakeThisAllowTransactionsToChangeSelection(
-          mAllowedTransactionsToChangeSelection);
-    }
-
-   protected:
-    EditorBase& mEditorBase;
-    bool mAllowedTransactionsToChangeSelection;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-||||||| merged common ancestors
-protected:
-  enum Tristate
-  {
-    eTriUnset,
-    eTriFalse,
-    eTriTrue
-=======
 
  protected:  // helper classes which may be used by friends
   /**
@@ -2924,34 +2089,8 @@ protected:
    protected:
     EditorBase& mEditorBase;
     MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
->>>>>>> upstream-releases
   };
 
-<<<<<<< HEAD
-  /***************************************************************************
-   * stack based helper class for batching reflow and paint requests.
-   */
-  class MOZ_RAII AutoUpdateViewBatch final {
-   public:
-    explicit AutoUpdateViewBatch(
-        EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-        : mEditorBase(aEditorBase) {
-      MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-      mEditorBase.BeginUpdateViewBatch();
-    }
-
-    ~AutoUpdateViewBatch() { mEditorBase.EndUpdateViewBatch(); }
-
-   protected:
-    EditorBase& mEditorBase;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  };
-
- protected:
-  enum Tristate { eTriUnset, eTriFalse, eTriTrue };
-
-||||||| merged common ancestors
-=======
   /**
    * Stack based helper class for batching a collection of transactions inside
    * a placeholder transaction.
@@ -3094,7 +2233,6 @@ protected:
  protected:
   enum Tristate { eTriUnset, eTriFalse, eTriTrue };
 
->>>>>>> upstream-releases
   // MIME type of the doc we are editing.
   nsCString mContentMIMEType;
 

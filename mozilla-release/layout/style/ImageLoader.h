@@ -51,18 +51,8 @@ class ImageLoader final : public imgINotificationObserver {
     REQUEST_HAS_BLOCKED_ONLOAD = 1u << 1,
   };
 
-<<<<<<< HEAD
-  explicit ImageLoader(nsIDocument* aDocument)
-      : mDocument(aDocument), mInClone(false) {
-||||||| merged common ancestors
-  explicit ImageLoader(nsIDocument* aDocument)
-  : mDocument(aDocument),
-    mInClone(false)
-  {
-=======
   explicit ImageLoader(dom::Document* aDocument)
       : mDocument(aDocument), mInClone(false) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mDocument);
   }
 
@@ -190,22 +180,9 @@ class ImageLoader final : public imgINotificationObserver {
   // Are we cloning?  If so, ignore any notifications we get.
   bool mInClone;
 
-<<<<<<< HEAD
-  // Data associated with every css::URLValue object that has had a load
-  // started.
-  struct ImageTableEntry {
-    // Set of all ImageLoaders that have registered this css::URLValue.
-||||||| merged common ancestors
-  // Data associated with every css::URLValue object that has had a load
-  // started.
-  struct ImageTableEntry
-  {
-    // Set of all ImageLoaders that have registered this css::URLValue.
-=======
   // Data associated with every started load.
   struct ImageTableEntry {
     // Set of all ImageLoaders that have registered this URL.
->>>>>>> upstream-releases
     nsTHashtable<nsPtrHashKey<ImageLoader>> mImageLoaders;
 
     // The "canonical" image request for this URL.

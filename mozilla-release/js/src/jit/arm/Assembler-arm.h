@@ -81,62 +81,6 @@ static constexpr Register CallTempNonArgRegs[] = {r5, r6, r7, r8};
 static const uint32_t NumCallTempNonArgRegs =
     mozilla::ArrayLength(CallTempNonArgRegs);
 
-<<<<<<< HEAD
-class ABIArgGenerator {
-  unsigned intRegIndex_;
-  unsigned floatRegIndex_;
-  uint32_t stackOffset_;
-  ABIArg current_;
-
-  // ARM can either use HardFp (use float registers for float arguments), or
-  // SoftFp (use general registers for float arguments) ABI.  We keep this
-  // switch as a runtime switch because wasm always use the HardFp back-end
-  // while the calls to native functions have to use the one provided by the
-  // system.
-  bool useHardFp_;
-
-  ABIArg softNext(MIRType argType);
-  ABIArg hardNext(MIRType argType);
-
- public:
-  ABIArgGenerator();
-
-  void setUseHardFp(bool useHardFp) {
-    MOZ_ASSERT(intRegIndex_ == 0 && floatRegIndex_ == 0);
-    useHardFp_ = useHardFp;
-  }
-  ABIArg next(MIRType argType);
-  ABIArg& current() { return current_; }
-  uint32_t stackBytesConsumedSoFar() const { return stackOffset_; }
-||||||| merged common ancestors
-class ABIArgGenerator
-{
-    unsigned intRegIndex_;
-    unsigned floatRegIndex_;
-    uint32_t stackOffset_;
-    ABIArg current_;
-
-    // ARM can either use HardFp (use float registers for float arguments), or
-    // SoftFp (use general registers for float arguments) ABI.  We keep this
-    // switch as a runtime switch because wasm always use the HardFp back-end
-    // while the calls to native functions have to use the one provided by the
-    // system.
-    bool useHardFp_;
-
-    ABIArg softNext(MIRType argType);
-    ABIArg hardNext(MIRType argType);
-
-  public:
-    ABIArgGenerator();
-
-    void setUseHardFp(bool useHardFp) {
-        MOZ_ASSERT(intRegIndex_ == 0 && floatRegIndex_ == 0);
-        useHardFp_ = useHardFp;
-    }
-    ABIArg next(MIRType argType);
-    ABIArg& current() { return current_; }
-    uint32_t stackBytesConsumedSoFar() const { return stackOffset_; }
-=======
 // These register assignments for the 64-bit atomic ops are frequently too
 // constraining, but we have no way of expressing looser constraints to the
 // register allocator.
@@ -201,7 +145,6 @@ class ABIArgGenerator {
   ABIArg next(MIRType argType);
   ABIArg& current() { return current_; }
   uint32_t stackBytesConsumedSoFar() const { return stackOffset_; }
->>>>>>> upstream-releases
 };
 
 bool IsUnaligned(const wasm::MemoryAccessDesc& access);
@@ -242,15 +185,9 @@ static constexpr Register WasmTableCallIndexReg = ABINonArgReg3;
 
 static constexpr Register PreBarrierReg = r1;
 
-<<<<<<< HEAD
-static constexpr Register InvalidReg{Registers::invalid_reg};
-||||||| merged common ancestors
-static constexpr Register InvalidReg { Registers::invalid_reg };
-=======
 static constexpr Register InterpreterPCReg = r9;
 
 static constexpr Register InvalidReg{Registers::invalid_reg};
->>>>>>> upstream-releases
 static constexpr FloatRegister InvalidFloatReg;
 
 static constexpr Register JSReturnReg_Type = r3;
@@ -568,39 +505,6 @@ class Reg {
 // Op2 has a mode labelled "<imm8m>", which is arm's magical immediate encoding.
 // Some instructions actually get 8 bits of data, which is called Imm8Data
 // below. These should have edit distance > 1, but this is how it is for now.
-<<<<<<< HEAD
-class Imm8mData {
-  uint32_t data_ : 8;
-  uint32_t rot_ : 4;
-||||||| merged common ancestors
-class Imm8mData
-{
-    uint32_t data_ : 8;
-    uint32_t rot_ : 4;
-
-  protected:
-    // Mark as a protected field to avoid unused private field warnings.
-    uint32_t buff_ : 19;
-
-  private:
-    // Throw in an extra bit that will be 1 if we can't encode this properly.
-    // if we can encode it properly, a simple "|" will still suffice to meld it
-    // into the instruction.
-    uint32_t invalid_ : 1;
-
-  public:
-    // Default constructor makes an invalid immediate.
-    Imm8mData()
-      : data_(0xff), rot_(0xf), buff_(0), invalid_(true)
-    { }
-
-    Imm8mData(uint32_t data, uint32_t rot)
-      : data_(data), rot_(rot), buff_(0), invalid_(false)
-    {
-        MOZ_ASSERT(data == data_);
-        MOZ_ASSERT(rot == rot_);
-    }
-=======
 class Imm8mData {
   uint32_t data_ : 8;
   uint32_t rot_ : 4;
@@ -609,26 +513,6 @@ class Imm8mData {
   // Mark as a protected field to avoid unused private field warnings.
   uint32_t buff_ : 19;
 
- private:
-  // Throw in an extra bit that will be 1 if we can't encode this properly.
-  // if we can encode it properly, a simple "|" will still suffice to meld it
-  // into the instruction.
-  uint32_t invalid_ : 1;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- protected:
-  // Mark as a protected field to avoid unused private field warnings.
-  uint32_t buff_ : 19;
-||||||| merged common ancestors
-    bool invalid() const { return invalid_; }
-=======
- public:
-  // Default constructor makes an invalid immediate.
-  Imm8mData() : data_(0xff), rot_(0xf), buff_(0), invalid_(true) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
  private:
   // Throw in an extra bit that will be 1 if we can't encode this properly.
   // if we can encode it properly, a simple "|" will still suffice to meld it
@@ -651,25 +535,6 @@ class Imm8mData {
     MOZ_ASSERT(!invalid_);
     return data_ | (rot_ << 8);
   };
-||||||| merged common ancestors
-    uint32_t encode() const {
-        MOZ_ASSERT(!invalid_);
-        return data_ | (rot_ << 8);
-    };
-=======
-  Imm8mData(uint32_t data, uint32_t rot)
-      : data_(data), rot_(rot), buff_(0), invalid_(false) {
-    MOZ_ASSERT(data == data_);
-    MOZ_ASSERT(rot == rot_);
-  }
-
-  bool invalid() const { return invalid_; }
-
-  uint32_t encode() const {
-    MOZ_ASSERT(!invalid_);
-    return data_ | (rot_ << 8);
-  };
->>>>>>> upstream-releases
 };
 
 class Imm8Data {
@@ -728,37 +593,12 @@ struct Imm8VFPImmData {
 class Imm12Data {
   uint32_t data_ : 12;
 
-<<<<<<< HEAD
- public:
-  explicit Imm12Data(uint32_t imm) : data_(imm) { MOZ_ASSERT(data_ == imm); }
-||||||| merged common ancestors
-  public:
-    explicit RIS(uint32_t imm)
-      : shiftAmount_(imm)
-    {
-        MOZ_ASSERT(shiftAmount_ == imm);
-    }
-=======
  public:
   explicit Imm12Data(uint32_t imm) : data_(imm) { MOZ_ASSERT(data_ == imm); }
 
   uint32_t encode() const { return data_; }
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t encode() const { return data_; }
-};
-||||||| merged common ancestors
-    explicit RIS(Reg r)
-      : shiftAmount_(r.shiftAmount())
-    { }
-=======
-class RIS {
-  uint32_t shiftAmount_ : 5;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 class RIS {
   uint32_t shiftAmount_ : 5;
 
@@ -770,20 +610,6 @@ class RIS {
   explicit RIS(Reg r) : shiftAmount_(r.shiftAmount()) {}
 
   uint32_t encode() const { return shiftAmount_; }
-||||||| merged common ancestors
-    uint32_t encode() const {
-        return shiftAmount_;
-    }
-=======
- public:
-  explicit RIS(uint32_t imm) : shiftAmount_(imm) {
-    MOZ_ASSERT(shiftAmount_ == imm);
-  }
-
-  explicit RIS(Reg r) : shiftAmount_(r.shiftAmount()) {}
-
-  uint32_t encode() const { return shiftAmount_; }
->>>>>>> upstream-releases
 };
 
 class RRS {
@@ -1142,7 +968,6 @@ class Imm16 {
 // I would preffer that these do not exist, since there are essentially no
 // instructions that would ever take more than one of these, however, the MIR
 // wants to only have one type of arguments to functions, so bugger.
-<<<<<<< HEAD
 class Operand {
   // The encoding of registers is the same for OP2, DTR and EDTR yet the type
   // system doesn't let us express this, so choices must be made.
@@ -1153,77 +978,6 @@ class Operand {
   uint32_t tag_ : 8;
   uint32_t reg_ : 5;
   int32_t offset_;
-||||||| merged common ancestors
-class Operand
-{
-    // The encoding of registers is the same for OP2, DTR and EDTR yet the type
-    // system doesn't let us express this, so choices must be made.
-  public:
-    enum class Tag : uint8_t {
-        OP2,
-        MEM,
-        FOP
-    };
-
-  private:
-    uint32_t tag_ : 8;
-    uint32_t reg_ : 5;
-    int32_t offset_;
-
-  protected:
-    Operand(Tag tag, uint32_t regCode, int32_t offset)
-      : tag_(static_cast<uint32_t>(tag)),
-        reg_(regCode),
-        offset_(offset)
-    { }
-
-  public:
-    explicit Operand(Register reg)
-      : Operand(Tag::OP2, reg.code(), 0)
-    { }
-
-    explicit Operand(FloatRegister freg)
-      : Operand(Tag::FOP, freg.code(), 0)
-    { }
-
-    explicit Operand(Register base, Imm32 off)
-      : Operand(Tag::MEM, base.code(), off.value)
-    { }
-
-    explicit Operand(Register base, int32_t off)
-      : Operand(Tag::MEM, base.code(), off)
-    { }
-
-    explicit Operand(const Address& addr)
-      : Operand(Tag::MEM, addr.base.code(), addr.offset)
-    { }
-
-  public:
-    Tag tag() const {
-        return static_cast<Tag>(tag_);
-    }
-
-    Operand2 toOp2() const {
-        MOZ_ASSERT(tag() == Tag::OP2);
-        return O2Reg(Register::FromCode(reg_));
-    }
-
-    Register toReg() const {
-        MOZ_ASSERT(tag() == Tag::OP2);
-        return Register::FromCode(reg_);
-    }
-=======
-class Operand {
-  // The encoding of registers is the same for OP2, DTR and EDTR yet the type
-  // system doesn't let us express this, so choices must be made.
- public:
-  enum class Tag : uint8_t { OP2, MEM, FOP };
-
- private:
-  uint32_t tag_ : 8;
-  uint32_t reg_ : 5;
-  int32_t offset_;
->>>>>>> upstream-releases
 
  protected:
   Operand(Tag tag, uint32_t regCode, int32_t offset)
@@ -1301,144 +1055,11 @@ class InstructionIterator {
   // Advances to the next intentionally-inserted instruction.
   Instruction* next();
 
-<<<<<<< HEAD
-  // Advances past any automatically-inserted instructions.
-  Instruction* maybeSkipAutomaticInstructions();
-||||||| merged common ancestors
-#ifdef JS_DISASM_ARM
-    typedef disasm::EmbeddedVector<char, disasm::ReasonableBufferSize> DisasmBuffer;
-=======
   // Advances past any automatically-inserted instructions.
   Instruction* maybeSkipAutomaticInstructions();
 
   Instruction* cur() const { return inst_; }
 
- protected:
-  // Advances past the given number of instruction-length bytes.
-  inline void advanceRaw(ptrdiff_t instructions = 1);
-};
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  Instruction* cur() const { return inst_; }
-||||||| merged common ancestors
-    static void disassembleInstruction(const Instruction* i, DisasmBuffer& buffer);
-=======
-class Assembler;
-typedef js::jit::AssemblerBufferWithConstantPools<1024, 4, Instruction,
-                                                  Assembler>
-    ARMBuffer;
-
-class Assembler : public AssemblerShared {
- public:
-  // ARM conditional constants:
-  enum ARMCondition : uint32_t {
-    EQ = 0x00000000,  // Zero
-    NE = 0x10000000,  // Non-zero
-    CS = 0x20000000,
-    CC = 0x30000000,
-    MI = 0x40000000,
-    PL = 0x50000000,
-    VS = 0x60000000,
-    VC = 0x70000000,
-    HI = 0x80000000,
-    LS = 0x90000000,
-    GE = 0xa0000000,
-    LT = 0xb0000000,
-    GT = 0xc0000000,
-    LE = 0xd0000000,
-    AL = 0xe0000000
-  };
-
-  enum Condition : uint32_t {
-    Equal = EQ,
-    NotEqual = NE,
-    Above = HI,
-    AboveOrEqual = CS,
-    Below = CC,
-    BelowOrEqual = LS,
-    GreaterThan = GT,
-    GreaterThanOrEqual = GE,
-    LessThan = LT,
-    LessThanOrEqual = LE,
-    Overflow = VS,
-    CarrySet = CS,
-    CarryClear = CC,
-    Signed = MI,
-    NotSigned = PL,
-    Zero = EQ,
-    NonZero = NE,
-    Always = AL,
-
-    VFP_NotEqualOrUnordered = NE,
-    VFP_Equal = EQ,
-    VFP_Unordered = VS,
-    VFP_NotUnordered = VC,
-    VFP_GreaterThanOrEqualOrUnordered = CS,
-    VFP_GreaterThanOrEqual = GE,
-    VFP_GreaterThanOrUnordered = HI,
-    VFP_GreaterThan = GT,
-    VFP_LessThanOrEqualOrUnordered = LE,
-    VFP_LessThanOrEqual = LS,
-    VFP_LessThanOrUnordered = LT,
-    VFP_LessThan = CC  // MI is valid too.
-  };
-
-  // Bit set when a DoubleCondition does not map to a single ARM condition.
-  // The macro assembler has to special-case these conditions, or else
-  // ConditionFromDoubleCondition will complain.
-  static const int DoubleConditionBitSpecial = 0x1;
-
-  enum DoubleCondition : uint32_t {
-    // These conditions will only evaluate to true if the comparison is
-    // ordered - i.e. neither operand is NaN.
-    DoubleOrdered = VFP_NotUnordered,
-    DoubleEqual = VFP_Equal,
-    DoubleNotEqual = VFP_NotEqualOrUnordered | DoubleConditionBitSpecial,
-    DoubleGreaterThan = VFP_GreaterThan,
-    DoubleGreaterThanOrEqual = VFP_GreaterThanOrEqual,
-    DoubleLessThan = VFP_LessThan,
-    DoubleLessThanOrEqual = VFP_LessThanOrEqual,
-    // If either operand is NaN, these conditions always evaluate to true.
-    DoubleUnordered = VFP_Unordered,
-    DoubleEqualOrUnordered = VFP_Equal | DoubleConditionBitSpecial,
-    DoubleNotEqualOrUnordered = VFP_NotEqualOrUnordered,
-    DoubleGreaterThanOrUnordered = VFP_GreaterThanOrUnordered,
-    DoubleGreaterThanOrEqualOrUnordered = VFP_GreaterThanOrEqualOrUnordered,
-    DoubleLessThanOrUnordered = VFP_LessThanOrUnordered,
-    DoubleLessThanOrEqualOrUnordered = VFP_LessThanOrEqualOrUnordered
-  };
-
-  Condition getCondition(uint32_t inst) {
-    return (Condition)(0xf0000000 & inst);
-  }
-  static inline Condition ConditionFromDoubleCondition(DoubleCondition cond) {
-    MOZ_ASSERT(!(cond & DoubleConditionBitSpecial));
-    return static_cast<Condition>(cond);
-  }
-
-  enum BarrierOption {
-    BarrierSY = 15,  // Full system barrier
-    BarrierST = 14   // StoreStore barrier
-  };
-
-  // This should be protected, but since CodeGenerator wants to use it, it
-  // needs to go out here :(
-
-  BufferOffset nextOffset() { return m_buffer.nextOffset(); }
-
- protected:
-  // Shim around AssemblerBufferWithConstantPools::allocEntry.
-  BufferOffset allocLiteralLoadEntry(size_t numInst, unsigned numPoolEntries,
-                                     PoolHintPun& php, uint8_t* data,
-                                     const LiteralDoc& doc = LiteralDoc(),
-                                     ARMBuffer::PoolEntry* pe = nullptr,
-                                     bool loadToPC = false);
-
-  Instruction* editSrc(BufferOffset bo) { return m_buffer.getInst(bo); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
  protected:
   // Advances past the given number of instruction-length bytes.
   inline void advanceRaw(ptrdiff_t instructions = 1);
@@ -1570,28 +1191,6 @@ class Assembler : public AssemblerShared {
   void spewBranch(Instruction* i, const LabelDoc& target);
   void spewLiteralLoad(PoolHintPun& php, bool loadToPC, const Instruction* offs,
                        const LiteralDoc& doc);
-||||||| merged common ancestors
-    void initDisassembler();
-    void finishDisassembler();
-    void spew(Instruction* i);
-    void spewBranch(Instruction* i, const LabelDoc& target);
-    void spewLiteralLoad(PoolHintPun& php, bool loadToPC, const Instruction* offs,
-                         const LiteralDoc& doc);
-=======
-#ifdef JS_DISASM_ARM
-  typedef disasm::EmbeddedVector<char, disasm::ReasonableBufferSize>
-      DisasmBuffer;
-
-  static void disassembleInstruction(const Instruction* i,
-                                     DisasmBuffer& buffer);
-
-  void initDisassembler();
-  void finishDisassembler();
-  void spew(Instruction* i);
-  void spewBranch(Instruction* i, const LabelDoc& target);
-  void spewLiteralLoad(PoolHintPun& php, bool loadToPC, const Instruction* offs,
-                       const LiteralDoc& doc);
->>>>>>> upstream-releases
 #endif
 
  public:
@@ -1654,60 +1253,18 @@ class Assembler : public AssemblerShared {
   // MacroAssembler, before allocating any space.
   void initWithAllocator() { m_buffer.initWithAllocator(); }
 
-<<<<<<< HEAD
-  static Condition InvertCondition(Condition cond);
-  static Condition UnsignedCondition(Condition cond);
-  static Condition ConditionWithoutEqual(Condition cond);
-||||||| merged common ancestors
-    static Condition InvertCondition(Condition cond);
-    static Condition UnsignedCondition(Condition cond);
-    static Condition ConditionWithoutEqual(Condition cond);
-=======
   void setUnlimitedBuffer() { m_buffer.setUnlimited(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static DoubleCondition InvertCondition(DoubleCondition cond);
-||||||| merged common ancestors
-    static DoubleCondition InvertCondition(DoubleCondition cond);
-=======
   static Condition InvertCondition(Condition cond);
   static Condition UnsignedCondition(Condition cond);
   static Condition ConditionWithoutEqual(Condition cond);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void writeRelocation(BufferOffset src) {
-    jumpRelocations_.writeUnsigned(src.getOffset());
-  }
-||||||| merged common ancestors
-    void writeRelocation(BufferOffset src) {
-        jumpRelocations_.writeUnsigned(src.getOffset());
-    }
-=======
   static DoubleCondition InvertCondition(DoubleCondition cond);
 
   void writeRelocation(BufferOffset src) {
     jumpRelocations_.writeUnsigned(src.getOffset());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void writeDataRelocation(BufferOffset offset, ImmGCPtr ptr) {
-    if (ptr.value) {
-      if (gc::IsInsideNursery(ptr.value)) {
-        embedsNurseryPointers_ = true;
-      }
-      dataRelocations_.writeUnsigned(offset.getOffset());
-||||||| merged common ancestors
-    void writeDataRelocation(BufferOffset offset, ImmGCPtr ptr) {
-        if (ptr.value) {
-            if (gc::IsInsideNursery(ptr.value)) {
-                embedsNurseryPointers_ = true;
-            }
-            dataRelocations_.writeUnsigned(offset.getOffset());
-        }
-=======
   void writeDataRelocation(BufferOffset offset, ImmGCPtr ptr) {
     // Raw GC pointer relocations and Value relocations both end up in
     // Assembler::TraceDataRelocations.
@@ -1716,7 +1273,6 @@ class Assembler : public AssemblerShared {
         embedsNurseryPointers_ = true;
       }
       dataRelocations_.writeUnsigned(offset.getOffset());
->>>>>>> upstream-releases
     }
   }
 
@@ -2147,387 +1703,6 @@ class Assembler : public AssemblerShared {
 #ifdef JS_DISASM_ARM
     spew_.spew("; %s", msg);
 #endif
-<<<<<<< HEAD
-  }
-
-  // Copy the assembly code to the given buffer, and perform any pending
-  // relocations relying on the target address.
-  void executableCopy(uint8_t* buffer, bool flushICache = true);
-
-  // Actual assembly emitting functions.
-
-  // Since I can't think of a reasonable default for the mode, I'm going to
-  // leave it as a required argument.
-  void startDataTransferM(LoadStore ls, Register rm, DTMMode mode,
-                          DTMWriteBack update = NoWriteBack,
-                          Condition c = Always) {
-    MOZ_ASSERT(!dtmActive);
-    dtmUpdate = update;
-    dtmBase = rm;
-    dtmLoadStore = ls;
-    dtmLastReg = -1;
-    dtmRegBitField = 0;
-    dtmActive = 1;
-    dtmCond = c;
-    dtmMode = mode;
-  }
-
-  void transferReg(Register rn) {
-    MOZ_ASSERT(dtmActive);
-    MOZ_ASSERT(rn.code() > dtmLastReg);
-    dtmRegBitField |= 1 << rn.code();
-    if (dtmLoadStore == IsLoad && rn.code() == 13 && dtmBase.code() == 13) {
-      MOZ_CRASH("ARM Spec says this is invalid");
-    }
-  }
-  void finishDataTransfer() {
-    dtmActive = false;
-    as_dtm(dtmLoadStore, dtmBase, dtmRegBitField, dtmMode, dtmUpdate, dtmCond);
-  }
-
-  void startFloatTransferM(LoadStore ls, Register rm, DTMMode mode,
-                           DTMWriteBack update = NoWriteBack,
-                           Condition c = Always) {
-    MOZ_ASSERT(!dtmActive);
-    dtmActive = true;
-    dtmUpdate = update;
-    dtmLoadStore = ls;
-    dtmBase = rm;
-    dtmCond = c;
-    dtmLastReg = -1;
-    dtmMode = mode;
-    dtmDelta = 0;
-  }
-  void transferFloatReg(VFPRegister rn) {
-    if (dtmLastReg == -1) {
-      vdtmFirstReg = rn.code();
-    } else {
-      if (dtmDelta == 0) {
-        dtmDelta = rn.code() - dtmLastReg;
-        MOZ_ASSERT(dtmDelta == 1 || dtmDelta == -1);
-      }
-      MOZ_ASSERT(dtmLastReg >= 0);
-      MOZ_ASSERT(rn.code() == unsigned(dtmLastReg) + dtmDelta);
-    }
-
-    dtmLastReg = rn.code();
-  }
-  void finishFloatTransfer() {
-    MOZ_ASSERT(dtmActive);
-    dtmActive = false;
-    MOZ_ASSERT(dtmLastReg != -1);
-    dtmDelta = dtmDelta ? dtmDelta : 1;
-    // The operand for the vstr/vldr instruction is the lowest register in the
-    // range.
-    int low = Min(dtmLastReg, vdtmFirstReg);
-    int high = Max(dtmLastReg, vdtmFirstReg);
-    // Fencepost problem.
-    int len = high - low + 1;
-    // vdtm can only transfer 16 registers at once.  If we need to transfer
-    // more, then either hoops are necessary, or we need to be updating the
-    // register.
-    MOZ_ASSERT_IF(len > 16, dtmUpdate == WriteBack);
-
-    int adjustLow = dtmLoadStore == IsStore ? 0 : 1;
-    int adjustHigh = dtmLoadStore == IsStore ? -1 : 0;
-    while (len > 0) {
-      // Limit the instruction to 16 registers.
-      int curLen = Min(len, 16);
-      // If it is a store, we want to start at the high end and move down
-      // (e.g. vpush d16-d31; vpush d0-d15).
-      int curStart = (dtmLoadStore == IsStore) ? high - curLen + 1 : low;
-      as_vdtm(dtmLoadStore, dtmBase,
-              VFPRegister(FloatRegister::FromCode(curStart)), curLen, dtmCond);
-      // Update the bounds.
-      low += adjustLow * curLen;
-      high += adjustHigh * curLen;
-      // Update the length parameter.
-      len -= curLen;
-    }
-  }
-
- private:
-  int dtmRegBitField;
-  int vdtmFirstReg;
-  int dtmLastReg;
-  int dtmDelta;
-  Register dtmBase;
-  DTMWriteBack dtmUpdate;
-  DTMMode dtmMode;
-  LoadStore dtmLoadStore;
-  bool dtmActive;
-  Condition dtmCond;
-
- public:
-  enum {
-    PadForAlign8 = (int)0x00,
-    PadForAlign16 = (int)0x0000,
-    PadForAlign32 = (int)0xe12fff7f  // 'bkpt 0xffff'
-  };
-
-  // API for speaking with the IonAssemblerBufferWithConstantPools generate an
-  // initial placeholder instruction that we want to later fix up.
-  static void InsertIndexIntoTag(uint8_t* load, uint32_t index);
-
-  // Take the stub value that was written in before, and write in an actual
-  // load using the index we'd computed previously as well as the address of
-  // the pool start.
-  static void PatchConstantPoolLoad(void* loadAddr, void* constPoolAddr);
-
-  // We're not tracking short-range branches for ARM for now.
-  static void PatchShortRangeBranchToVeneer(ARMBuffer*, unsigned rangeIdx,
-                                            BufferOffset deadline,
-                                            BufferOffset veneer) {
-    MOZ_CRASH();
-  }
-  // END API
-
-  // Move our entire pool into the instruction stream. This is to force an
-  // opportunistic dump of the pool, prefferably when it is more convenient to
-  // do a dump.
-  void flushBuffer();
-  void enterNoPool(size_t maxInst);
-  void leaveNoPool();
-  void enterNoNops();
-  void leaveNoNops();
-  // This should return a BOffImm, but we didn't want to require everyplace
-  // that used the AssemblerBuffer to make that class.
-  static ptrdiff_t GetBranchOffset(const Instruction* i);
-  static void RetargetNearBranch(Instruction* i, int offset, Condition cond,
-                                 bool final = true);
-  static void RetargetNearBranch(Instruction* i, int offset, bool final = true);
-  static void RetargetFarBranch(Instruction* i, uint8_t** slot, uint8_t* dest,
-                                Condition cond);
-
-  static void WritePoolHeader(uint8_t* start, Pool* p, bool isNatural);
-  static void WritePoolGuard(BufferOffset branch, Instruction* inst,
-                             BufferOffset dest);
-
-  static uint32_t PatchWrite_NearCallSize();
-  static uint32_t NopSize() { return 4; }
-  static void PatchWrite_NearCall(CodeLocationLabel start,
-                                  CodeLocationLabel toCall);
-  static void PatchDataWithValueCheck(CodeLocationLabel label,
-                                      PatchedImmPtr newValue,
-                                      PatchedImmPtr expectedValue);
-  static void PatchDataWithValueCheck(CodeLocationLabel label, ImmPtr newValue,
-                                      ImmPtr expectedValue);
-  static void PatchWrite_Imm32(CodeLocationLabel label, Imm32 imm);
-
-  static uint32_t AlignDoubleArg(uint32_t offset) { return (offset + 1) & ~1; }
-  static uint8_t* NextInstruction(uint8_t* instruction,
-                                  uint32_t* count = nullptr);
-
-  // Toggle a jmp or cmp emitted by toggledJump().
-  static void ToggleToJmp(CodeLocationLabel inst_);
-  static void ToggleToCmp(CodeLocationLabel inst_);
-
-  static uint8_t* BailoutTableStart(uint8_t* code);
-
-  static size_t ToggledCallSize(uint8_t* code);
-  static void ToggleCall(CodeLocationLabel inst_, bool enabled);
-
-  void processCodeLabels(uint8_t* rawCode);
-
-  bool bailed() { return m_buffer.bail(); }
-
-  void verifyHeapAccessDisassembly(uint32_t begin, uint32_t end,
-                                   const Disassembler::HeapAccess& heapAccess) {
-    // Implement this if we implement a disassembler.
-  }
-};  // Assembler
-||||||| merged common ancestors
-    }
-
-    // Copy the assembly code to the given buffer, and perform any pending
-    // relocations relying on the target address.
-    void executableCopy(uint8_t* buffer, bool flushICache = true);
-
-    // Actual assembly emitting functions.
-
-    // Since I can't think of a reasonable default for the mode, I'm going to
-    // leave it as a required argument.
-    void startDataTransferM(LoadStore ls, Register rm,
-                            DTMMode mode, DTMWriteBack update = NoWriteBack,
-                            Condition c = Always)
-    {
-        MOZ_ASSERT(!dtmActive);
-        dtmUpdate = update;
-        dtmBase = rm;
-        dtmLoadStore = ls;
-        dtmLastReg = -1;
-        dtmRegBitField = 0;
-        dtmActive = 1;
-        dtmCond = c;
-        dtmMode = mode;
-    }
-
-    void transferReg(Register rn) {
-        MOZ_ASSERT(dtmActive);
-        MOZ_ASSERT(rn.code() > dtmLastReg);
-        dtmRegBitField |= 1 << rn.code();
-        if (dtmLoadStore == IsLoad && rn.code() == 13 && dtmBase.code() == 13) {
-            MOZ_CRASH("ARM Spec says this is invalid");
-        }
-    }
-    void finishDataTransfer() {
-        dtmActive = false;
-        as_dtm(dtmLoadStore, dtmBase, dtmRegBitField, dtmMode, dtmUpdate, dtmCond);
-    }
-
-    void startFloatTransferM(LoadStore ls, Register rm,
-                             DTMMode mode, DTMWriteBack update = NoWriteBack,
-                             Condition c = Always)
-    {
-        MOZ_ASSERT(!dtmActive);
-        dtmActive = true;
-        dtmUpdate = update;
-        dtmLoadStore = ls;
-        dtmBase = rm;
-        dtmCond = c;
-        dtmLastReg = -1;
-        dtmMode = mode;
-        dtmDelta = 0;
-    }
-    void transferFloatReg(VFPRegister rn)
-    {
-        if (dtmLastReg == -1) {
-            vdtmFirstReg = rn.code();
-        } else {
-            if (dtmDelta == 0) {
-                dtmDelta = rn.code() - dtmLastReg;
-                MOZ_ASSERT(dtmDelta == 1 || dtmDelta == -1);
-            }
-            MOZ_ASSERT(dtmLastReg >= 0);
-            MOZ_ASSERT(rn.code() == unsigned(dtmLastReg) + dtmDelta);
-        }
-
-        dtmLastReg = rn.code();
-    }
-    void finishFloatTransfer() {
-        MOZ_ASSERT(dtmActive);
-        dtmActive = false;
-        MOZ_ASSERT(dtmLastReg != -1);
-        dtmDelta = dtmDelta ? dtmDelta : 1;
-        // The operand for the vstr/vldr instruction is the lowest register in the range.
-        int low = Min(dtmLastReg, vdtmFirstReg);
-        int high = Max(dtmLastReg, vdtmFirstReg);
-        // Fencepost problem.
-        int len = high - low + 1;
-        // vdtm can only transfer 16 registers at once.  If we need to transfer more,
-        // then either hoops are necessary, or we need to be updating the register.
-        MOZ_ASSERT_IF(len > 16, dtmUpdate == WriteBack);
-
-        int adjustLow = dtmLoadStore == IsStore ? 0 : 1;
-        int adjustHigh = dtmLoadStore == IsStore ? -1 : 0;
-        while (len > 0) {
-            // Limit the instruction to 16 registers.
-            int curLen = Min(len, 16);
-            // If it is a store, we want to start at the high end and move down
-            // (e.g. vpush d16-d31; vpush d0-d15).
-            int curStart = (dtmLoadStore == IsStore) ? high - curLen + 1 : low;
-            as_vdtm(dtmLoadStore, dtmBase,
-                    VFPRegister(FloatRegister::FromCode(curStart)),
-                    curLen, dtmCond);
-            // Update the bounds.
-            low += adjustLow * curLen;
-            high += adjustHigh * curLen;
-            // Update the length parameter.
-            len -= curLen;
-        }
-    }
-
-  private:
-    int dtmRegBitField;
-    int vdtmFirstReg;
-    int dtmLastReg;
-    int dtmDelta;
-    Register dtmBase;
-    DTMWriteBack dtmUpdate;
-    DTMMode dtmMode;
-    LoadStore dtmLoadStore;
-    bool dtmActive;
-    Condition dtmCond;
-
-  public:
-    enum {
-        PadForAlign8  = (int)0x00,
-        PadForAlign16 = (int)0x0000,
-        PadForAlign32 = (int)0xe12fff7f  // 'bkpt 0xffff'
-    };
-
-    // API for speaking with the IonAssemblerBufferWithConstantPools generate an
-    // initial placeholder instruction that we want to later fix up.
-    static void InsertIndexIntoTag(uint8_t* load, uint32_t index);
-
-    // Take the stub value that was written in before, and write in an actual
-    // load using the index we'd computed previously as well as the address of
-    // the pool start.
-    static void PatchConstantPoolLoad(void* loadAddr, void* constPoolAddr);
-
-    // We're not tracking short-range branches for ARM for now.
-    static void PatchShortRangeBranchToVeneer(ARMBuffer*, unsigned rangeIdx, BufferOffset deadline,
-                                              BufferOffset veneer)
-    {
-        MOZ_CRASH();
-    }
-    // END API
-
-    // Move our entire pool into the instruction stream. This is to force an
-    // opportunistic dump of the pool, prefferably when it is more convenient to
-    // do a dump.
-    void flushBuffer();
-    void enterNoPool(size_t maxInst);
-    void leaveNoPool();
-    void enterNoNops();
-    void leaveNoNops();
-    // This should return a BOffImm, but we didn't want to require everyplace
-    // that used the AssemblerBuffer to make that class.
-    static ptrdiff_t GetBranchOffset(const Instruction* i);
-    static void RetargetNearBranch(Instruction* i, int offset, Condition cond, bool final = true);
-    static void RetargetNearBranch(Instruction* i, int offset, bool final = true);
-    static void RetargetFarBranch(Instruction* i, uint8_t** slot, uint8_t* dest, Condition cond);
-
-    static void WritePoolHeader(uint8_t* start, Pool* p, bool isNatural);
-    static void WritePoolGuard(BufferOffset branch, Instruction* inst, BufferOffset dest);
-
-
-    static uint32_t PatchWrite_NearCallSize();
-    static uint32_t NopSize() { return 4; }
-    static void PatchWrite_NearCall(CodeLocationLabel start, CodeLocationLabel toCall);
-    static void PatchDataWithValueCheck(CodeLocationLabel label, PatchedImmPtr newValue,
-                                        PatchedImmPtr expectedValue);
-    static void PatchDataWithValueCheck(CodeLocationLabel label, ImmPtr newValue,
-                                        ImmPtr expectedValue);
-    static void PatchWrite_Imm32(CodeLocationLabel label, Imm32 imm);
-
-    static uint32_t AlignDoubleArg(uint32_t offset) {
-        return (offset + 1) & ~1;
-    }
-    static uint8_t* NextInstruction(uint8_t* instruction, uint32_t* count = nullptr);
-
-    // Toggle a jmp or cmp emitted by toggledJump().
-    static void ToggleToJmp(CodeLocationLabel inst_);
-    static void ToggleToCmp(CodeLocationLabel inst_);
-
-    static uint8_t* BailoutTableStart(uint8_t* code);
-
-    static size_t ToggledCallSize(uint8_t* code);
-    static void ToggleCall(CodeLocationLabel inst_, bool enabled);
-
-    void processCodeLabels(uint8_t* rawCode);
-
-    bool bailed() {
-        return m_buffer.bail();
-    }
-
-    void verifyHeapAccessDisassembly(uint32_t begin, uint32_t end,
-                                     const Disassembler::HeapAccess& heapAccess)
-    {
-        // Implement this if we implement a disassembler.
-    }
-}; // Assembler
-=======
   }
 
   // Copy the assembly code to the given buffer, and perform any pending
@@ -2714,7 +1889,6 @@ class Assembler : public AssemblerShared {
     // Implement this if we implement a disassembler.
   }
 };  // Assembler
->>>>>>> upstream-releases
 
 // An Instruction is a structure for both encoding and decoding any and all ARM
 // instructions. Many classes have not been implemented thus far.
@@ -2777,7 +1951,6 @@ inline void InstructionIterator::advanceRaw(ptrdiff_t instructions) {
 }
 
 // Data Transfer Instructions.
-<<<<<<< HEAD
 class InstDTR : public Instruction {
  public:
   enum IsByte_ { IsByte = 0x00400000, IsWord = 0x00000000 };
@@ -2788,36 +1961,6 @@ class InstDTR : public Instruction {
   InstDTR(LoadStore ls, IsByte_ ib, Index mode, Register rt, DTRAddr addr,
           Assembler::Condition c)
       : Instruction(ls | ib | mode | RT(rt) | addr.encode() | IsDTR, c) {}
-||||||| merged common ancestors
-class InstDTR : public Instruction
-{
-  public:
-    enum IsByte_ {
-        IsByte = 0x00400000,
-        IsWord = 0x00000000
-    };
-    static const int IsDTR     = 0x04000000;
-    static const int IsDTRMask = 0x0c000000;
-
-    // TODO: Replace the initialization with something that is safer.
-    InstDTR(LoadStore ls, IsByte_ ib, Index mode, Register rt, DTRAddr addr, Assembler::Condition c)
-      : Instruction(ls | ib | mode | RT(rt) | addr.encode() | IsDTR, c)
-    { }
-
-    static bool IsTHIS(const Instruction& i);
-    static InstDTR* AsTHIS(const Instruction& i);
-=======
-class InstDTR : public Instruction {
- public:
-  enum IsByte_ { IsByte = 0x00400000, IsWord = 0x00000000 };
-  static const int IsDTR = 0x04000000;
-  static const int IsDTRMask = 0x0c000000;
-
-  // TODO: Replace the initialization with something that is safer.
-  InstDTR(LoadStore ls, IsByte_ ib, Index mode, Register rt, DTRAddr addr,
-          Assembler::Condition c)
-      : Instruction(ls | ib | mode | RT(rt) | addr.encode() | IsDTR, c) {}
->>>>>>> upstream-releases
 
   static bool IsTHIS(const Instruction& i);
   static InstDTR* AsTHIS(const Instruction& i);
@@ -2938,50 +2081,11 @@ class InstBLImm : public InstBranchImm {
 
 // Both movw and movt. The layout of both the immediate and the destination
 // register is the same so the code is being shared.
-<<<<<<< HEAD
 class InstMovWT : public Instruction {
  protected:
   enum WT { IsW = 0x03000000, IsT = 0x03400000 };
   static const uint32_t IsWTMask = 0x0ff00000;
 
-  InstMovWT(Register rd, Imm16 imm, WT wt, Assembler::Condition c)
-      : Instruction(RD(rd) | imm.encode() | wt, c) {}
-||||||| merged common ancestors
-class InstMovWT : public Instruction
-{
-  protected:
-    enum WT {
-        IsW = 0x03000000,
-        IsT = 0x03400000
-    };
-    static const uint32_t IsWTMask = 0x0ff00000;
-
-    InstMovWT(Register rd, Imm16 imm, WT wt, Assembler::Condition c)
-      : Instruction (RD(rd) | imm.encode() | wt, c)
-    { }
-=======
-class InstMovWT : public Instruction {
- protected:
-  enum WT { IsW = 0x03000000, IsT = 0x03400000 };
-  static const uint32_t IsWTMask = 0x0ff00000;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- public:
-  void extractImm(Imm16* dest);
-  void extractDest(Register* dest);
-  bool checkImm(Imm16 dest);
-  bool checkDest(Register dest);
-||||||| merged common ancestors
-  public:
-    void extractImm(Imm16* dest);
-    void extractDest(Register* dest);
-    bool checkImm(Imm16 dest);
-    bool checkDest(Register dest);
-
-    static bool IsTHIS (Instruction& i);
-    static InstMovWT* AsTHIS (Instruction& i);
-=======
   InstMovWT(Register rd, Imm16 imm, WT wt, Assembler::Condition c)
       : Instruction(RD(rd) | imm.encode() | wt, c) {}
 
@@ -2990,7 +2094,6 @@ class InstMovWT : public Instruction {
   void extractDest(Register* dest);
   bool checkImm(Imm16 dest);
   bool checkDest(Register dest);
->>>>>>> upstream-releases
 
   static bool IsTHIS(Instruction& i);
   static InstMovWT* AsTHIS(Instruction& i);
@@ -3049,7 +2152,6 @@ class InstMOV : public InstALU {
 
 // Compile-time iterator over instructions, with a safe interface that
 // references not-necessarily-linear Instructions by linear BufferOffset.
-<<<<<<< HEAD
 class BufferInstructionIterator
     : public ARMBuffer::AssemblerBufferInstIterator {
  public:
@@ -3062,45 +2164,9 @@ class BufferInstructionIterator
     maybeSkipAutomaticInstructions();
     return cur();
   }
-||||||| merged common ancestors
-class BufferInstructionIterator : public ARMBuffer::AssemblerBufferInstIterator
-{
-  public:
-    BufferInstructionIterator(BufferOffset bo, ARMBuffer* buffer)
-      : ARMBuffer::AssemblerBufferInstIterator(bo, buffer)
-    {}
-
-    // Advances the buffer to the next intentionally-inserted instruction.
-    Instruction* next() {
-        advance(cur()->size());
-        maybeSkipAutomaticInstructions();
-        return cur();
-    }
-=======
-class BufferInstructionIterator
-    : public ARMBuffer::AssemblerBufferInstIterator {
- public:
-  BufferInstructionIterator(BufferOffset bo, ARMBuffer* buffer)
-      : ARMBuffer::AssemblerBufferInstIterator(bo, buffer) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Advances the BufferOffset past any automatically-inserted instructions.
-  Instruction* maybeSkipAutomaticInstructions();
-||||||| merged common ancestors
-    // Advances the BufferOffset past any automatically-inserted instructions.
-    Instruction* maybeSkipAutomaticInstructions();
-=======
-  // Advances the buffer to the next intentionally-inserted instruction.
-  Instruction* next() {
-    advance(cur()->size());
-    maybeSkipAutomaticInstructions();
-    return cur();
-  }
 
   // Advances the BufferOffset past any automatically-inserted instructions.
   Instruction* maybeSkipAutomaticInstructions();
->>>>>>> upstream-releases
 };
 
 static const uint32_t NumIntArgRegs = 4;
@@ -3218,7 +2284,6 @@ static inline uint32_t GetDoubleArgStackDisp(uint32_t usedIntArgs,
 
 #endif
 
-<<<<<<< HEAD
 class DoubleEncoder {
   struct DoubleEntry {
     uint32_t dblTop;
@@ -3237,124 +2302,9 @@ class DoubleEncoder {
     }
     return false;
   }
-};
-||||||| merged common ancestors
-class DoubleEncoder
-{
-    struct DoubleEntry
-    {
-        uint32_t dblTop;
-        datastore::Imm8VFPImmData data;
-    };
-
-    static const DoubleEntry table[256];
-
-  public:
-    bool lookup(uint32_t top, datastore::Imm8VFPImmData* ret) const {
-        for (int i = 0; i < 256; i++) {
-            if (table[i].dblTop == top) {
-                *ret = table[i].data;
-                return true;
-            }
-        }
-        return false;
-    }
-};
-=======
-class DoubleEncoder {
-  struct DoubleEntry {
-    uint32_t dblTop;
-    datastore::Imm8VFPImmData data;
-  };
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-class AutoForbidPools {
-  Assembler* masm_;
-||||||| merged common ancestors
-class AutoForbidPools
-{
-    Assembler* masm_;
-
-  public:
-    // The maxInst argument is the maximum number of word sized instructions
-    // that will be allocated within this context. It is used to determine if
-    // the pool needs to be dumped before entering this content. The debug code
-    // checks that no more than maxInst instructions are actually allocated.
-    //
-    // Allocation of pool entries is not supported within this content so the
-    // code can not use large integers or float constants etc.
-    AutoForbidPools(Assembler* masm, size_t maxInst)
-      : masm_(masm)
-    {
-        masm_->enterNoPool(maxInst);
-    }
-=======
-  static const DoubleEntry table[256];
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- public:
-  // The maxInst argument is the maximum number of word sized instructions
-  // that will be allocated within this context. It is used to determine if
-  // the pool needs to be dumped before entering this content. The debug code
-  // checks that no more than maxInst instructions are actually allocated.
-  //
-  // Allocation of pool entries is not supported within this content so the
-  // code can not use large integers or float constants etc.
-  AutoForbidPools(Assembler* masm, size_t maxInst) : masm_(masm) {
-    masm_->enterNoPool(maxInst);
-  }
-
-  ~AutoForbidPools() { masm_->leaveNoPool(); }
-||||||| merged common ancestors
-    ~AutoForbidPools() {
-        masm_->leaveNoPool();
-    }
-=======
- public:
-  bool lookup(uint32_t top, datastore::Imm8VFPImmData* ret) const {
-    for (int i = 0; i < 256; i++) {
-      if (table[i].dblTop == top) {
-        *ret = table[i].data;
-        return true;
-      }
-    }
-    return false;
-  }
->>>>>>> upstream-releases
 };
 
 // Forbids nop filling for testing purposes. Not nestable.
-<<<<<<< HEAD
-class AutoForbidNops {
-  Assembler* masm_;
-
- public:
-  explicit AutoForbidNops(Assembler* masm) : masm_(masm) {
-    masm_->enterNoNops();
-  }
-  ~AutoForbidNops() { masm_->leaveNoNops(); }
-};
-
-}  // namespace jit
-}  // namespace js
-||||||| merged common ancestors
-class AutoForbidNops
-{
-    Assembler* masm_;
-  public:
-    explicit AutoForbidNops(Assembler* masm) : masm_(masm) {
-        masm_->enterNoNops();
-    }
-    ~AutoForbidNops() {
-        masm_->leaveNoNops();
-    }
-};
-
-} // namespace jit
-} // namespace js
-=======
 class AutoForbidNops {
  protected:
   Assembler* masm_;
@@ -3385,6 +2335,5 @@ class AutoForbidPoolsAndNops : public AutoForbidNops {
 
 }  // namespace jit
 }  // namespace js
->>>>>>> upstream-releases
 
 #endif /* jit_arm_Assembler_arm_h */

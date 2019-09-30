@@ -58,41 +58,17 @@
 // is identical to the one in mfbt/Attributes.h, which we don't use here because
 // this file avoids depending on Mozilla headers.
 #if defined(__clang__) && __cplusplus >= 201103L
-<<<<<<< HEAD
-/* clang's fallthrough annotations are only available starting in C++11. */
-#define MOZ_FALLTHROUGH [[clang::fallthrough]]
-||||||| merged common ancestors
-   /* clang's fallthrough annotations are only available starting in C++11. */
-#  define MOZ_FALLTHROUGH [[clang::fallthrough]]
-=======
 /* clang's fallthrough annotations are only available starting in C++11. */
 #  define MOZ_FALLTHROUGH [[clang::fallthrough]]
->>>>>>> upstream-releases
 #elif defined(_MSC_VER)
-<<<<<<< HEAD
-/*
- * MSVC's __fallthrough annotations are checked by /analyze (Code Analysis):
- * https://msdn.microsoft.com/en-us/library/ms235402%28VS.80%29.aspx
- */
-#include <sal.h>
-#define MOZ_FALLTHROUGH __fallthrough
-||||||| merged common ancestors
-   /*
-    * MSVC's __fallthrough annotations are checked by /analyze (Code Analysis):
-    * https://msdn.microsoft.com/en-us/library/ms235402%28VS.80%29.aspx
-    */
-#  include <sal.h>
-#  define MOZ_FALLTHROUGH __fallthrough
-=======
 /*
  * MSVC's __fallthrough annotations are checked by /analyze (Code Analysis):
  * https://msdn.microsoft.com/en-us/library/ms235402%28VS.80%29.aspx
  */
 #  include <sal.h>
 #  define MOZ_FALLTHROUGH __fallthrough
->>>>>>> upstream-releases
 #else
-#define MOZ_FALLTHROUGH /* FALLTHROUGH */
+#  define MOZ_FALLTHROUGH /* FALLTHROUGH */
 #endif
 
 // The value of argv[0] passed to main(). Used in error messages.
@@ -187,37 +163,6 @@ static void PrintAndFlush(const char* aFormat, ...) {
 //   pkg_energy_statistics_t::pkes_version did not change, though.
 
 typedef struct {
-<<<<<<< HEAD
-  uint64_t caperf;
-  uint64_t cmperf;
-  uint64_t ccres[6];
-  uint64_t crtimes[CPU_RTIME_BINS];
-  uint64_t citimes[CPU_ITIME_BINS];
-  uint64_t crtime_total;
-  uint64_t citime_total;
-  uint64_t cpu_idle_exits;
-  uint64_t cpu_insns;
-  uint64_t cpu_ucc;
-  uint64_t cpu_urc;
-#if DIAG_ALL_PMCS           // Added in 10.10.2 (xnu-2782.10.72).
-  uint64_t gpmcs[4];        // Added in 10.10.2 (xnu-2782.10.72).
-#endif /* DIAG_ALL_PMCS */  // Added in 10.10.2 (xnu-2782.10.72).
-||||||| merged common ancestors
-        uint64_t caperf;
-        uint64_t cmperf;
-        uint64_t ccres[6];
-        uint64_t crtimes[CPU_RTIME_BINS];
-        uint64_t citimes[CPU_ITIME_BINS];
-        uint64_t crtime_total;
-        uint64_t citime_total;
-        uint64_t cpu_idle_exits;
-        uint64_t cpu_insns;
-        uint64_t cpu_ucc;
-        uint64_t cpu_urc;
-#if     DIAG_ALL_PMCS           // Added in 10.10.2 (xnu-2782.10.72).
-        uint64_t gpmcs[4];      // Added in 10.10.2 (xnu-2782.10.72).
-#endif /* DIAG_ALL_PMCS */      // Added in 10.10.2 (xnu-2782.10.72).
-=======
   uint64_t caperf;
   uint64_t cmperf;
   uint64_t ccres[6];
@@ -232,7 +177,6 @@ typedef struct {
 #  if DIAG_ALL_PMCS           // Added in 10.10.2 (xnu-2782.10.72).
   uint64_t gpmcs[4];          // Added in 10.10.2 (xnu-2782.10.72).
 #  endif /* DIAG_ALL_PMCS */  // Added in 10.10.2 (xnu-2782.10.72).
->>>>>>> upstream-releases
 } core_energy_stat_t;
 
 typedef struct {

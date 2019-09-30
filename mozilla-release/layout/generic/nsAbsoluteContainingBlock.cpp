@@ -69,17 +69,8 @@ void nsAbsoluteContainingBlock::AppendFrames(nsIFrame* aDelegatingFrame,
 
   // no damage to intrinsic widths, since absolutely positioned frames can't
   // change them
-<<<<<<< HEAD
-  aDelegatingFrame->PresShell()->FrameNeedsReflow(
-      aDelegatingFrame, nsIPresShell::eResize, NS_FRAME_HAS_DIRTY_CHILDREN);
-||||||| merged common ancestors
-  aDelegatingFrame->PresShell()->
-    FrameNeedsReflow(aDelegatingFrame, nsIPresShell::eResize,
-                     NS_FRAME_HAS_DIRTY_CHILDREN);
-=======
   aDelegatingFrame->PresShell()->FrameNeedsReflow(
       aDelegatingFrame, IntrinsicDirty::Resize, NS_FRAME_HAS_DIRTY_CHILDREN);
->>>>>>> upstream-releases
 }
 
 void nsAbsoluteContainingBlock::InsertFrames(nsIFrame* aDelegatingFrame,
@@ -97,17 +88,8 @@ void nsAbsoluteContainingBlock::InsertFrames(nsIFrame* aDelegatingFrame,
 
   // no damage to intrinsic widths, since absolutely positioned frames can't
   // change them
-<<<<<<< HEAD
-  aDelegatingFrame->PresShell()->FrameNeedsReflow(
-      aDelegatingFrame, nsIPresShell::eResize, NS_FRAME_HAS_DIRTY_CHILDREN);
-||||||| merged common ancestors
-  aDelegatingFrame->PresShell()->
-    FrameNeedsReflow(aDelegatingFrame, nsIPresShell::eResize,
-                     NS_FRAME_HAS_DIRTY_CHILDREN);
-=======
   aDelegatingFrame->PresShell()->FrameNeedsReflow(
       aDelegatingFrame, IntrinsicDirty::Resize, NS_FRAME_HAS_DIRTY_CHILDREN);
->>>>>>> upstream-releases
 }
 
 void nsAbsoluteContainingBlock::RemoveFrame(nsIFrame* aDelegatingFrame,
@@ -135,21 +117,6 @@ void nsAbsoluteContainingBlock::Reflow(nsContainerFrame* aDelegatingFrame,
   const bool isGrid = !!(aFlags & AbsPosReflowFlags::IsGridContainerCB);
   nsIFrame* kidFrame;
   nsOverflowContinuationTracker tracker(aDelegatingFrame, true);
-<<<<<<< HEAD
-  for (kidFrame = mAbsoluteFrames.FirstChild(); kidFrame;
-       kidFrame = kidFrame->GetNextSibling()) {
-    bool kidNeedsReflow =
-        reflowAll || NS_SUBTREE_DIRTY(kidFrame) ||
-        FrameDependsOnContainer(
-            kidFrame, !!(aFlags & AbsPosReflowFlags::eCBWidthChanged),
-            !!(aFlags & AbsPosReflowFlags::eCBHeightChanged));
-||||||| merged common ancestors
-  for (kidFrame = mAbsoluteFrames.FirstChild(); kidFrame; kidFrame = kidFrame->GetNextSibling()) {
-    bool kidNeedsReflow = reflowAll || NS_SUBTREE_DIRTY(kidFrame) ||
-      FrameDependsOnContainer(kidFrame,
-                              !!(aFlags & AbsPosReflowFlags::eCBWidthChanged),
-                              !!(aFlags & AbsPosReflowFlags::eCBHeightChanged));
-=======
   for (kidFrame = mAbsoluteFrames.FirstChild(); kidFrame;
        kidFrame = kidFrame->GetNextSibling()) {
     bool kidNeedsReflow =
@@ -157,7 +124,6 @@ void nsAbsoluteContainingBlock::Reflow(nsContainerFrame* aDelegatingFrame,
         FrameDependsOnContainer(
             kidFrame, !!(aFlags & AbsPosReflowFlags::CBWidthChanged),
             !!(aFlags & AbsPosReflowFlags::CBHeightChanged));
->>>>>>> upstream-releases
     nscoord availBSize = aReflowInput.AvailableBSize();
     const nsRect& cb =
         isGrid ? nsGridContainerFrame::GridItemCB(kidFrame) : aContainingBlock;
@@ -255,34 +221,6 @@ void nsAbsoluteContainingBlock::Reflow(nsContainerFrame* aDelegatingFrame,
   aReflowStatus.MergeCompletionStatusFrom(reflowStatus);
 }
 
-<<<<<<< HEAD
-static inline bool IsFixedPaddingSize(const nsStyleCoord& aCoord) {
-  return aCoord.ConvertsToLength();
-}
-static inline bool IsFixedMarginSize(const nsStyleCoord& aCoord) {
-  return aCoord.ConvertsToLength();
-}
-static inline bool IsFixedOffset(const nsStyleCoord& aCoord) {
-  return aCoord.ConvertsToLength();
-}
-
-bool nsAbsoluteContainingBlock::FrameDependsOnContainer(nsIFrame* f,
-                                                        bool aCBWidthChanged,
-                                                        bool aCBHeightChanged) {
-||||||| merged common ancestors
-static inline bool IsFixedPaddingSize(const nsStyleCoord& aCoord)
-  { return aCoord.ConvertsToLength(); }
-static inline bool IsFixedMarginSize(const nsStyleCoord& aCoord)
-  { return aCoord.ConvertsToLength(); }
-static inline bool IsFixedOffset(const nsStyleCoord& aCoord)
-  { return aCoord.ConvertsToLength(); }
-
-bool
-nsAbsoluteContainingBlock::FrameDependsOnContainer(nsIFrame* f,
-                                                   bool aCBWidthChanged,
-                                                   bool aCBHeightChanged)
-{
-=======
 static inline bool IsFixedPaddingSize(const LengthPercentage& aCoord) {
   return aCoord.ConvertsToLength();
 }
@@ -296,7 +234,6 @@ static inline bool IsFixedOffset(const LengthPercentageOrAuto& aCoord) {
 bool nsAbsoluteContainingBlock::FrameDependsOnContainer(nsIFrame* f,
                                                         bool aCBWidthChanged,
                                                         bool aCBHeightChanged) {
->>>>>>> upstream-releases
   const nsStylePosition* pos = f->StylePosition();
   // See if f's position might have changed because it depends on a
   // placeholder's position.
@@ -533,19 +470,9 @@ static nscoord OffsetToAlignedStaticPos(const ReflowInput& aKidReflowInput,
                                     ? alignAreaSize.ISize(pcWM)
                                     : alignAreaSize.BSize(pcWM);
 
-<<<<<<< HEAD
-  AlignJustifyFlags flags = AlignJustifyFlags::eIgnoreAutoMargins;
-  uint16_t alignConst = aPlaceholderContainer->CSSAlignmentForAbsPosChild(
-      aKidReflowInput, pcAxis);
-||||||| merged common ancestors
-  AlignJustifyFlags flags = AlignJustifyFlags::eIgnoreAutoMargins;
-  uint16_t alignConst =
-    aPlaceholderContainer->CSSAlignmentForAbsPosChild(aKidReflowInput, pcAxis);
-=======
   AlignJustifyFlags flags = AlignJustifyFlags::IgnoreAutoMargins;
   uint16_t alignConst = aPlaceholderContainer->CSSAlignmentForAbsPosChild(
       aKidReflowInput, pcAxis);
->>>>>>> upstream-releases
   // If the safe bit in alignConst is set, set the safe flag in |flags|.
   // Note: If no <overflow-position> is specified, we behave as 'unsafe'.
   // This doesn't quite match the css-align spec, which has an [at-risk]
@@ -727,17 +654,8 @@ void nsAbsoluteContainingBlock::ReflowAbsoluteFrame(
     }
   }
   ReflowInput kidReflowInput(aPresContext, aReflowInput, aKidFrame,
-<<<<<<< HEAD
-                             LogicalSize(wm, availISize, NS_UNCONSTRAINEDSIZE),
-                             &logicalCBSize, rsFlags);
-||||||| merged common ancestors
-                                   LogicalSize(wm, availISize,
-                                               NS_UNCONSTRAINEDSIZE),
-                                   &logicalCBSize, rsFlags);
-=======
                              LogicalSize(wm, availISize, NS_UNCONSTRAINEDSIZE),
                              Some(logicalCBSize), rsFlags);
->>>>>>> upstream-releases
 
   // Get the border values
   WritingMode outerWM = aReflowInput.GetWritingMode();
@@ -756,31 +674,6 @@ void nsAbsoluteContainingBlock::ReflowAbsoluteFrame(
     margin.BStart(outerWM) = margin.BEnd(outerWM) = 0;
   }
 
-<<<<<<< HEAD
-  bool constrainBSize =
-      (aReflowInput.AvailableBSize() != NS_UNCONSTRAINEDSIZE) &&
-      (aFlags & AbsPosReflowFlags::eConstrainHeight) &&
-      // Don't split if told not to (e.g. for fixed frames)
-      !aDelegatingFrame->IsInlineFrame() &&
-      // XXX we don't handle splitting frames for inline absolute containing
-      // blocks yet
-      (aKidFrame->GetLogicalRect(aContainingBlock.Size()).BStart(wm) <=
-       aReflowInput.AvailableBSize());
-  // Don't split things below the fold. (Ideally we shouldn't *have*
-  // anything totally below the fold, but we can't position frames
-  // across next-in-flow breaks yet.
-||||||| merged common ancestors
-  bool constrainBSize = (aReflowInput.AvailableBSize() != NS_UNCONSTRAINEDSIZE)
-    && (aFlags & AbsPosReflowFlags::eConstrainHeight)
-       // Don't split if told not to (e.g. for fixed frames)
-    && !aDelegatingFrame->IsInlineFrame()
-       //XXX we don't handle splitting frames for inline absolute containing blocks yet
-    && (aKidFrame->GetLogicalRect(aContainingBlock.Size()).BStart(wm) <=
-        aReflowInput.AvailableBSize());
-       // Don't split things below the fold. (Ideally we shouldn't *have*
-       // anything totally below the fold, but we can't position frames
-       // across next-in-flow breaks yet.
-=======
   bool constrainBSize =
       (aReflowInput.AvailableBSize() != NS_UNCONSTRAINEDSIZE) &&
       (aFlags & AbsPosReflowFlags::ConstrainHeight) &&
@@ -793,7 +686,6 @@ void nsAbsoluteContainingBlock::ReflowAbsoluteFrame(
   // Don't split things below the fold. (Ideally we shouldn't *have*
   // anything totally below the fold, but we can't position frames
   // across next-in-flow breaks yet.
->>>>>>> upstream-releases
   if (constrainBSize) {
     kidReflowInput.AvailableBSize() =
         aReflowInput.AvailableBSize() -

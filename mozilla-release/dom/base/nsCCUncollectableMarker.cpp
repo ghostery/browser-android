@@ -175,13 +175,7 @@ void MarkContentViewer(nsIContentViewer* aViewer, bool aCleanupJS) {
     return;
   }
 
-<<<<<<< HEAD
-  nsIDocument* doc = aViewer->GetDocument();
-||||||| merged common ancestors
-  nsIDocument *doc = aViewer->GetDocument();
-=======
   Document* doc = aViewer->GetDocument();
->>>>>>> upstream-releases
   if (doc &&
       doc->GetMarkedCCGeneration() != nsCCUncollectableMarker::sGeneration) {
     doc->MarkUncollectableForCCGeneration(nsCCUncollectableMarker::sGeneration);
@@ -197,17 +191,7 @@ void MarkContentViewer(nsIContentViewer* aViewer, bool aCleanupJS) {
         if (elm) {
           elm->MarkForCC();
         }
-<<<<<<< HEAD
-        static_cast<nsGlobalWindowInner*>(win.get())
-            ->AsInner()
-            ->TimeoutManager()
-            .UnmarkGrayTimers();
-||||||| merged common ancestors
-        static_cast<nsGlobalWindowInner*>(win.get())->AsInner()->
-          TimeoutManager().UnmarkGrayTimers();
-=======
         win->TimeoutManager().UnmarkGrayTimers();
->>>>>>> upstream-releases
       }
     }
   }
@@ -442,7 +426,9 @@ nsresult nsCCUncollectableMarker::Observe(nsISupports* aSubject,
       xpc_UnmarkSkippableJSHolders();
       break;
     }
-    default: { break; }
+    default: {
+      break;
+    }
   }
 
   return NS_OK;
@@ -497,20 +483,10 @@ void mozilla::dom::TraceBlackJS(JSTracer* aTrc, bool aIsShutdownGC) {
         }
 
         if (window->IsRootOuterWindow()) {
-<<<<<<< HEAD
-          // In child process trace all the TabChildMessageManagers.
-          // Since there is one root outer window per TabChildMessageManager, we
-          // need to look for only those windows, not all.
-||||||| merged common ancestors
-          // In child process trace all the TabChildMessageManagers.
-          // Since there is one root outer window per TabChildMessageManager, we need
-          // to look for only those windows, not all.
-=======
           // In child process trace all the BrowserChildMessageManagers.
           // Since there is one root outer window per
           // BrowserChildMessageManager, we need to look for only those windows,
           // not all.
->>>>>>> upstream-releases
           nsIDocShell* ds = window->GetDocShell();
           if (ds) {
             nsCOMPtr<nsIBrowserChild> browserChild = ds->GetBrowserChild();
@@ -518,19 +494,9 @@ void mozilla::dom::TraceBlackJS(JSTracer* aTrc, bool aIsShutdownGC) {
               RefPtr<ContentFrameMessageManager> mm;
               browserChild->GetMessageManager(getter_AddRefs(mm));
               if (mm) {
-<<<<<<< HEAD
-                nsCOMPtr<nsISupports> tabChildAsSupports =
-                    do_QueryInterface(tabChild);
-                mozilla::TraceScriptHolder(tabChildAsSupports, aTrc);
-||||||| merged common ancestors
-                nsCOMPtr<nsISupports> tabChildAsSupports =
-                  do_QueryInterface(tabChild);
-                mozilla::TraceScriptHolder(tabChildAsSupports, aTrc);
-=======
                 nsCOMPtr<nsISupports> browserChildAsSupports =
                     do_QueryInterface(browserChild);
                 mozilla::TraceScriptHolder(browserChildAsSupports, aTrc);
->>>>>>> upstream-releases
                 EventListenerManager* elm = mm->GetExistingListenerManager();
                 if (elm) {
                   elm->TraceListeners(aTrc);

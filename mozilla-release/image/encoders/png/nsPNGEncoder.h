@@ -75,10 +75,4 @@ class nsPNGEncoder final : public imgIEncoder {
   // AsyncWait.
   ReentrantMonitor mReentrantMonitor;
 };
-<<<<<<< HEAD
-#endif  // nsPNGEncoder_h
-||||||| merged common ancestors
-#endif // nsPNGEncoder_h
-=======
 #endif  // mozilla_image_encoders_png_nsPNGEncoder_h
->>>>>>> upstream-releases

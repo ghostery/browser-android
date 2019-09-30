@@ -12,17 +12,8 @@
 #include "nsServiceManagerUtils.h"
 #include "prtime.h"
 
-<<<<<<< HEAD
-inline MOZ_MUST_USE nsresult NS_GetAboutModuleName(nsIURI *aAboutURI,
-                                                   nsCString &aModule) {
-||||||| merged common ancestors
-inline MOZ_MUST_USE nsresult
-NS_GetAboutModuleName(nsIURI *aAboutURI, nsCString& aModule)
-{
-=======
 inline MOZ_MUST_USE nsresult NS_GetAboutModuleName(nsIURI* aAboutURI,
                                                    nsCString& aModule) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   {
     bool isAbout;
@@ -45,15 +36,7 @@ inline MOZ_MUST_USE nsresult NS_GetAboutModuleName(nsIURI* aAboutURI,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-inline nsresult NS_GetAboutModule(nsIURI *aAboutURI, nsIAboutModule **aModule) {
-||||||| merged common ancestors
-inline nsresult
-NS_GetAboutModule(nsIURI *aAboutURI, nsIAboutModule** aModule)
-{
-=======
 inline nsresult NS_GetAboutModule(nsIURI* aAboutURI, nsIAboutModule** aModule) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aAboutURI, "Must have URI");
 
   nsAutoCString contractID;
@@ -72,26 +55,11 @@ inline PRTime SecondsToPRTime(uint32_t t_sec) {
   usec_per_sec = PR_USEC_PER_SEC;
   return t_usec *= usec_per_sec;
 }
-<<<<<<< HEAD
-inline void PrintTimeString(char *buf, uint32_t bufsize, uint32_t t_sec) {
-  PRExplodedTime et;
-  PRTime t_usec = SecondsToPRTime(t_sec);
-  PR_ExplodeTime(t_usec, PR_LocalTimeParameters, &et);
-  PR_FormatTime(buf, bufsize, "%Y-%m-%d %H:%M:%S", &et);
-||||||| merged common ancestors
-inline void PrintTimeString(char *buf, uint32_t bufsize, uint32_t t_sec)
-{
-    PRExplodedTime et;
-    PRTime t_usec = SecondsToPRTime(t_sec);
-    PR_ExplodeTime(t_usec, PR_LocalTimeParameters, &et);
-    PR_FormatTime(buf, bufsize, "%Y-%m-%d %H:%M:%S", &et);
-=======
 inline void PrintTimeString(char* buf, uint32_t bufsize, uint32_t t_sec) {
   PRExplodedTime et;
   PRTime t_usec = SecondsToPRTime(t_sec);
   PR_ExplodeTime(t_usec, PR_LocalTimeParameters, &et);
   PR_FormatTime(buf, bufsize, "%Y-%m-%d %H:%M:%S", &et);
->>>>>>> upstream-releases
 }
 
 #endif

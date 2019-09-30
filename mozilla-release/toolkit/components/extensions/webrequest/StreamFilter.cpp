@@ -50,20 +50,10 @@ void StreamFilter::ForgetActor() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<StreamFilter> StreamFilter::Create(
-    GlobalObject& aGlobal, uint64_t aRequestId, const nsAString& aAddonId) {
-||||||| merged common ancestors
-
-/* static */ already_AddRefed<StreamFilter>
-StreamFilter::Create(GlobalObject& aGlobal, uint64_t aRequestId, const nsAString& aAddonId)
-{
-=======
 /* static */
 already_AddRefed<StreamFilter> StreamFilter::Create(GlobalObject& aGlobal,
                                                     uint64_t aRequestId,
                                                     const nsAString& aAddonId) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   MOZ_ASSERT(global);
 
@@ -88,26 +78,6 @@ void StreamFilter::Connect() {
   if (cc) {
     RefPtr<StreamFilter> self(this);
 
-<<<<<<< HEAD
-    cc->SendInitStreamFilter(mChannelId, addonId)
-        ->Then(GetCurrentThreadSerialEventTarget(), __func__,
-               [=](mozilla::ipc::Endpoint<PStreamFilterChild>&& aEndpoint) {
-                 self->FinishConnect(std::move(aEndpoint));
-               },
-               [=](mozilla::ipc::ResponseRejectReason aReason) {
-                 self->mActor->RecvInitialized(false);
-               });
-||||||| merged common ancestors
-    cc->SendInitStreamFilter(mChannelId, addonId)->Then(
-      GetCurrentThreadSerialEventTarget(),
-      __func__,
-      [=] (mozilla::ipc::Endpoint<PStreamFilterChild>&& aEndpoint) {
-        self->FinishConnect(std::move(aEndpoint));
-      },
-      [=] (mozilla::ipc::ResponseRejectReason aReason) {
-        self->mActor->RecvInitialized(false);
-      });
-=======
     cc->SendInitStreamFilter(mChannelId, addonId)
         ->Then(
             GetCurrentThreadSerialEventTarget(), __func__,
@@ -117,7 +87,6 @@ void StreamFilter::Connect() {
             [=](mozilla::ipc::ResponseRejectReason&& aReason) {
               self->mActor->RecvInitialized(false);
             });
->>>>>>> upstream-releases
   } else {
     mozilla::ipc::Endpoint<PStreamFilterChild> endpoint;
     Unused << StreamFilterParent::Create(nullptr, mChannelId, addonId,
@@ -285,22 +254,10 @@ void StreamFilter::FireErrorEvent(const nsAString& aError) {
  * Glue
  *****************************************************************************/
 
-<<<<<<< HEAD
-/* static */ bool StreamFilter::IsAllowedInContext(JSContext* aCx,
-                                                   JSObject* /* unused */) {
-  return nsContentUtils::CallerHasPermission(aCx,
-                                             nsGkAtoms::webRequestBlocking);
-||||||| merged common ancestors
-/* static */ bool
-StreamFilter::IsAllowedInContext(JSContext* aCx, JSObject* /* unused */)
-{
-  return nsContentUtils::CallerHasPermission(aCx, nsGkAtoms::webRequestBlocking);
-=======
 /* static */
 bool StreamFilter::IsAllowedInContext(JSContext* aCx, JSObject* /* unused */) {
   return nsContentUtils::CallerHasPermission(aCx,
                                              nsGkAtoms::webRequestBlocking);
->>>>>>> upstream-releases
 }
 
 JSObject* StreamFilter::WrapObject(JSContext* aCx, HandleObject aGivenProto) {

@@ -64,18 +64,10 @@ function runTests() {
     // Self xss prevention tests (bug 994134)
     info("Self xss paste tests");
     is(WebConsoleUtils.usageCount, 0, "Test for usage count getter");
-<<<<<<< HEAD
-    const notificationbox = sp.notificationBox;
-    const notification = notificationbox.getNotificationWithValue("selfxss-notification");
-||||||| merged common ancestors
-    const notificationbox = doc.getElementById("scratchpad-notificationbox");
-    const notification = notificationbox.getNotificationWithValue("selfxss-notification");
-=======
     const notificationbox = sp.notificationBox;
     const notification = notificationbox.getNotificationWithValue(
       "selfxss-notification"
     );
->>>>>>> upstream-releases
     ok(notification, "Self-xss notification shown");
     is(oldVal, sp.editor.getText(), "Paste blocked by self-xss prevention");
     Services.prefs.setIntPref("devtools.selfxss.count", 10);

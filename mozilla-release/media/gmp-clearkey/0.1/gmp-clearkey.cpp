@@ -35,16 +35,8 @@
 #endif
 
 #ifdef ENABLE_WMF
-<<<<<<< HEAD
-#include "WMFUtils.h"
-#endif  // ENABLE_WMF
-||||||| merged common ancestors
-#include "WMFUtils.h"
-#endif // ENABLE_WMF
-=======
 #  include "WMFUtils.h"
 #endif  // ENABLE_WMF
->>>>>>> upstream-releases
 
 extern "C" {
 
@@ -59,23 +51,11 @@ void* CreateCdmInstance(int cdm_interface_version, const char* key_system,
                         GetCdmHostFunc get_cdm_host_func, void* user_data) {
   CK_LOGE("ClearKey CreateCDMInstance");
 
-<<<<<<< HEAD
-  if (cdm_interface_version != cdm::ContentDecryptionModule_9::kVersion) {
-    CK_LOGE(
-        "ClearKey CreateCDMInstance failed due to requesting unsupported "
-        "version %d.",
-        cdm_interface_version);
-||||||| merged common ancestors
-  if (cdm_interface_version != cdm::ContentDecryptionModule_9::kVersion) {
-    CK_LOGE("ClearKey CreateCDMInstance failed due to requesting unsupported version %d.",
-            cdm_interface_version);
-=======
   if (cdm_interface_version != cdm::ContentDecryptionModule_10::kVersion) {
     CK_LOGE(
         "ClearKey CreateCDMInstance failed due to requesting unsupported "
         "version %d.",
         cdm_interface_version);
->>>>>>> upstream-releases
     return nullptr;
   }
 #ifdef ENABLE_WMF
@@ -92,16 +72,8 @@ void* CreateCdmInstance(int cdm_interface_version, const char* key_system,
   }
 #endif
 
-<<<<<<< HEAD
-  cdm::Host_9* host = static_cast<cdm::Host_9*>(
-      get_cdm_host_func(cdm_interface_version, user_data));
-||||||| merged common ancestors
-  cdm::Host_9* host = static_cast<cdm::Host_9*>(
-    get_cdm_host_func(cdm_interface_version, user_data));
-=======
   cdm::Host_10* host = static_cast<cdm::Host_10*>(
       get_cdm_host_func(cdm_interface_version, user_data));
->>>>>>> upstream-releases
   ClearKeyCDM* clearKey = new ClearKeyCDM(host);
 
   CK_LOGE("Created ClearKeyCDM instance!");
@@ -131,19 +103,9 @@ void ClosePlatformFile(cdm::PlatformFile aFile) {
 #endif
 }
 
-<<<<<<< HEAD
-CDM_API
-bool VerifyCdmHost_0(const cdm::HostFile* aHostFiles, uint32_t aNumFiles) {
-||||||| merged common ancestors
-CDM_API
-bool
-VerifyCdmHost_0(const cdm::HostFile* aHostFiles, uint32_t aNumFiles)
-{
-=======
 static uint32_t NumExpectedHostFiles(const cdm::HostFile* aHostFiles,
                                      uint32_t aNumFiles) {
 #if !defined(XP_WIN)
->>>>>>> upstream-releases
   // We expect 4 binaries: clearkey, libxul, plugin-container, and Firefox.
   return 4;
 #else

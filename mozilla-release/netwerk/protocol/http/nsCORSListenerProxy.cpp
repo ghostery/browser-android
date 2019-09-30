@@ -55,22 +55,9 @@ using namespace mozilla::net;
 static bool gDisableCORS = false;
 static bool gDisableCORSPrivateData = false;
 
-<<<<<<< HEAD
-static void LogBlockedRequest(nsIRequest* aRequest, const char* aProperty,
-                              const char16_t* aParam,
-                              nsIHttpChannel* aCreatingChannel) {
-||||||| merged common ancestors
-static void
-LogBlockedRequest(nsIRequest* aRequest,
-                  const char* aProperty,
-                  const char16_t* aParam,
-                  nsIHttpChannel* aCreatingChannel)
-{
-=======
 static void LogBlockedRequest(nsIRequest* aRequest, const char* aProperty,
                               const char16_t* aParam, uint32_t aBlockingReason,
                               nsIHttpChannel* aCreatingChannel) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
@@ -92,20 +79,8 @@ static void LogBlockedRequest(nsIRequest* aRequest, const char* aProperty,
     params.AppendElement(aParam);
   }
   NS_ConvertUTF8toUTF16 specUTF16(spec);
-<<<<<<< HEAD
-  const char16_t* params[] = {specUTF16.get(), aParam};
   rv = nsContentUtils::FormatLocalizedString(
       nsContentUtils::eSECURITY_PROPERTIES, aProperty, params, blockedMessage);
-||||||| merged common ancestors
-  const char16_t* params[] = { specUTF16.get(), aParam };
-  rv = nsContentUtils::FormatLocalizedString(nsContentUtils::eSECURITY_PROPERTIES,
-                                             aProperty,
-                                             params,
-                                             blockedMessage);
-=======
-  rv = nsContentUtils::FormatLocalizedString(
-      nsContentUtils::eSECURITY_PROPERTIES, aProperty, params, blockedMessage);
->>>>>>> upstream-releases
 
   if (NS_FAILED(rv)) {
     NS_WARNING("Failed to log blocked cross-site request (no formalizedStr");
@@ -362,23 +337,9 @@ void nsPreflightCache::Clear() {
   mTable.Clear();
 }
 
-<<<<<<< HEAD
-/* static */ bool nsPreflightCache::GetCacheKey(nsIURI* aURI,
-                                                nsIPrincipal* aPrincipal,
-                                                bool aWithCredentials,
-                                                nsACString& _retval) {
-||||||| merged common ancestors
-/* static */ bool
-nsPreflightCache::GetCacheKey(nsIURI* aURI,
-                              nsIPrincipal* aPrincipal,
-                              bool aWithCredentials,
-                              nsACString& _retval)
-{
-=======
 /* static */
 bool nsPreflightCache::GetCacheKey(nsIURI* aURI, nsIPrincipal* aPrincipal,
                                    bool aWithCredentials, nsACString& _retval) {
->>>>>>> upstream-releases
   NS_ASSERTION(aURI, "Null uri!");
   NS_ASSERTION(aPrincipal, "Null principal!");
 
@@ -469,16 +430,7 @@ nsresult nsCORSListenerProxy::Init(nsIChannel* aChannel,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCORSListenerProxy::OnStartRequest(nsIRequest* aRequest,
-                                    nsISupports* aContext) {
-||||||| merged common ancestors
-nsCORSListenerProxy::OnStartRequest(nsIRequest* aRequest,
-                                    nsISupports* aContext)
-{
-=======
 nsCORSListenerProxy::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mInited, "nsCORSListenerProxy has not been initialized properly");
   nsresult rv = CheckRequestApproved(aRequest);
   mRequestApproved = NS_SUCCEEDED(rv);
@@ -621,17 +573,10 @@ nsresult nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest) {
   // check for duplicate headers
   rv = http->VisitOriginalResponseHeaders(visitor);
   if (NS_FAILED(rv)) {
-<<<<<<< HEAD
-    LogBlockedRequest(aRequest, "CORSMultipleAllowOriginNotAllowed", nullptr,
-                      topChannel);
-||||||| merged common ancestors
-    LogBlockedRequest(aRequest, "CORSMultipleAllowOriginNotAllowed", nullptr, topChannel);
-=======
     LogBlockedRequest(
         aRequest, "CORSMultipleAllowOriginNotAllowed", nullptr,
         nsILoadInfo::BLOCKING_REASON_CORSMULTIPLEALLOWORIGINNOTALLOWED,
         topChannel);
->>>>>>> upstream-releases
     return rv;
   }
 
@@ -653,16 +598,9 @@ nsresult nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest) {
   // below since "if (A && B)" is included in "if (A || !B)".
   //
   if (mWithCredentials && allowedOriginHeader.EqualsLiteral("*")) {
-<<<<<<< HEAD
-    LogBlockedRequest(aRequest, "CORSNotSupportingCredentials", nullptr,
-                      topChannel);
-||||||| merged common ancestors
-    LogBlockedRequest(aRequest, "CORSNotSupportingCredentials", nullptr, topChannel);
-=======
     LogBlockedRequest(aRequest, "CORSNotSupportingCredentials", nullptr,
                       nsILoadInfo::BLOCKING_REASON_CORSNOTSUPPORTINGCREDENTIALS,
                       topChannel);
->>>>>>> upstream-releases
     return NS_ERROR_DOM_BAD_URI;
   }
 
@@ -672,20 +610,11 @@ nsresult nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest) {
     nsContentUtils::GetASCIIOrigin(mOriginHeaderPrincipal, origin);
 
     if (!allowedOriginHeader.Equals(origin)) {
-<<<<<<< HEAD
-      LogBlockedRequest(aRequest, "CORSAllowOriginNotMatchingOrigin",
-                        NS_ConvertUTF8toUTF16(allowedOriginHeader).get(),
-                        topChannel);
-||||||| merged common ancestors
-      LogBlockedRequest(aRequest, "CORSAllowOriginNotMatchingOrigin",
-                        NS_ConvertUTF8toUTF16(allowedOriginHeader).get(), topChannel);
-=======
       LogBlockedRequest(
           aRequest, "CORSAllowOriginNotMatchingOrigin",
           NS_ConvertUTF8toUTF16(allowedOriginHeader).get(),
           nsILoadInfo::BLOCKING_REASON_CORSALLOWORIGINNOTMATCHINGORIGIN,
           topChannel);
->>>>>>> upstream-releases
       return NS_ERROR_DOM_BAD_URI;
     }
   }
@@ -698,16 +627,9 @@ nsresult nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest) {
         allowCredentialsHeader);
 
     if (!allowCredentialsHeader.EqualsLiteral("true")) {
-<<<<<<< HEAD
-      LogBlockedRequest(aRequest, "CORSMissingAllowCredentials", nullptr,
-                        topChannel);
-||||||| merged common ancestors
-      LogBlockedRequest(aRequest, "CORSMissingAllowCredentials", nullptr, topChannel);
-=======
       LogBlockedRequest(
           aRequest, "CORSMissingAllowCredentials", nullptr,
           nsILoadInfo::BLOCKING_REASON_CORSMISSINGALLOWCREDENTIALS, topChannel);
->>>>>>> upstream-releases
       return NS_ERROR_DOM_BAD_URI;
     }
   }
@@ -716,17 +638,7 @@ nsresult nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCORSListenerProxy::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                                   nsresult aStatusCode) {
-||||||| merged common ancestors
-nsCORSListenerProxy::OnStopRequest(nsIRequest* aRequest,
-                                   nsISupports* aContext,
-                                   nsresult aStatusCode)
-{
-=======
 nsCORSListenerProxy::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mInited, "nsCORSListenerProxy has not been initialized properly");
   nsCOMPtr<nsIStreamListener> listener;
   {
@@ -757,15 +669,7 @@ nsCORSListenerProxy::OnDataAvailable(nsIRequest* aRequest,
     MutexAutoLock lock(mMutex);
     listener = mOuterListener;
   }
-<<<<<<< HEAD
-  return listener->OnDataAvailable(aRequest, aContext, aInputStream, aOffset,
-                                   aCount);
-||||||| merged common ancestors
-  return listener->OnDataAvailable(aRequest, aContext, aInputStream,
-                                   aOffset, aCount);
-=======
   return listener->OnDataAvailable(aRequest, aInputStream, aOffset, aCount);
->>>>>>> upstream-releases
 }
 
 void nsCORSListenerProxy::SetInterceptController(
@@ -995,14 +899,7 @@ nsresult nsCORSListenerProxy::UpdateChannel(nsIChannel* aChannel,
     if (dataScheme) {
       return NS_OK;
     }
-<<<<<<< HEAD
-    if (loadInfo && loadInfo->GetAboutBlankInherits() && NS_IsAboutBlank(uri)) {
-||||||| merged common ancestors
-    if (loadInfo && loadInfo->GetAboutBlankInherits() &&
-        NS_IsAboutBlank(uri)) {
-=======
     if (loadInfo->GetAboutBlankInherits() && NS_IsAboutBlank(uri)) {
->>>>>>> upstream-releases
       return NS_OK;
     }
   }
@@ -1082,33 +979,6 @@ nsresult nsCORSListenerProxy::UpdateChannel(nsIChannel* aChannel,
   nsCOMPtr<nsIHttpChannel> http = do_QueryInterface(aChannel);
   NS_ENSURE_TRUE(http, NS_ERROR_FAILURE);
 
-<<<<<<< HEAD
-  // hide the Origin header when requesting from .onion and requesting CORS
-  if (gHttpHandler->HideOnionReferrerSource()) {
-    nsCOMPtr<nsIURI> potentialOnionUri;  // the candidate uri in header Origin:
-    rv = mOriginHeaderPrincipal->GetURI(getter_AddRefs(potentialOnionUri));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsAutoCString potentialOnionHost;
-    rv = potentialOnionUri ? potentialOnionUri->GetAsciiHost(potentialOnionHost)
-                           : NS_ERROR_FAILURE;
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsAutoCString currentOrgin;
-    rv = nsContentUtils::GetASCIIOrigin(originalURI, currentOrgin);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    if (!currentOrgin.EqualsIgnoreCase(origin.get()) &&
-        StringEndsWith(potentialOnionHost, NS_LITERAL_CSTRING(".onion"))) {
-      origin.Truncate();
-    }
-  }
-
-  rv = http->SetRequestHeader(nsDependentCString(net::nsHttp::Origin), origin,
-                              false);
-||||||| merged common ancestors
-  rv = http->SetRequestHeader(NS_LITERAL_CSTRING("Origin"), origin, false);
-=======
   // hide the Origin header when requesting from .onion and requesting CORS
   if (dom::ReferrerInfo::HideOnionReferrerSource()) {
     nsCOMPtr<nsIURI> potentialOnionUri;  // the candidate uri in header Origin:
@@ -1132,20 +1002,12 @@ nsresult nsCORSListenerProxy::UpdateChannel(nsIChannel* aChannel,
 
   rv = http->SetRequestHeader(nsDependentCString(net::nsHttp::Origin), origin,
                               false);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Make cookie-less if needed. We don't need to do anything here if the
   // channel was opened with AsyncOpen, since then AsyncOpen will take
   // care of the cookie policy for us.
-<<<<<<< HEAD
-  if (!mWithCredentials && (!loadInfo || !loadInfo->GetEnforceSecurity())) {
-||||||| merged common ancestors
-  if (!mWithCredentials &&
-      (!loadInfo || !loadInfo->GetEnforceSecurity())) {
-=======
   if (!mWithCredentials) {
->>>>>>> upstream-releases
     nsLoadFlags flags;
     rv = http->GetLoadFlags(&flags);
     NS_ENSURE_SUCCESS(rv, rv);
@@ -1160,36 +1022,13 @@ nsresult nsCORSListenerProxy::UpdateChannel(nsIChannel* aChannel,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCORSListenerProxy::CheckPreflightNeeded(nsIChannel* aChannel,
-                                                   UpdateType aUpdateType) {
-  // If this caller isn't using AsyncOpen2, or if this *is* a preflight channel,
-||||||| merged common ancestors
-nsresult
-nsCORSListenerProxy::CheckPreflightNeeded(nsIChannel* aChannel, UpdateType aUpdateType)
-{
-  // If this caller isn't using AsyncOpen2, or if this *is* a preflight channel,
-=======
 nsresult nsCORSListenerProxy::CheckPreflightNeeded(nsIChannel* aChannel,
                                                    UpdateType aUpdateType) {
   // If this caller isn't using AsyncOpen, or if this *is* a preflight channel,
->>>>>>> upstream-releases
   // then we shouldn't initiate preflight for this channel.
-<<<<<<< HEAD
-  nsCOMPtr<nsILoadInfo> loadInfo = aChannel->GetLoadInfo();
-  if (!loadInfo ||
-      loadInfo->GetSecurityMode() !=
-          nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS ||
-||||||| merged common ancestors
-  nsCOMPtr<nsILoadInfo> loadInfo = aChannel->GetLoadInfo();
-  if (!loadInfo ||
-      loadInfo->GetSecurityMode() !=
-        nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS ||
-=======
   nsCOMPtr<nsILoadInfo> loadInfo = aChannel->LoadInfo();
   if (loadInfo->GetSecurityMode() !=
           nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS ||
->>>>>>> upstream-releases
       loadInfo->GetIsPreflight()) {
     return NS_OK;
   }
@@ -1407,16 +1246,7 @@ void nsCORSPreflightListener::AddResultToCache(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCORSPreflightListener::OnStartRequest(nsIRequest* aRequest,
-                                        nsISupports* aContext) {
-||||||| merged common ancestors
-nsCORSPreflightListener::OnStartRequest(nsIRequest *aRequest,
-                                        nsISupports *aContext)
-{
-=======
 nsCORSPreflightListener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   {
     nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
@@ -1440,18 +1270,7 @@ nsCORSPreflightListener::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCORSPreflightListener::OnStopRequest(nsIRequest* aRequest,
-                                       nsISupports* aContext,
-                                       nsresult aStatus) {
-||||||| merged common ancestors
-nsCORSPreflightListener::OnStopRequest(nsIRequest *aRequest,
-                                       nsISupports *aContext,
-                                       nsresult aStatus)
-{
-=======
 nsCORSPreflightListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   mCallback = nullptr;
   return NS_OK;
 }
@@ -1459,18 +1278,8 @@ nsCORSPreflightListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
 /** nsIStreamListener methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCORSPreflightListener::OnDataAvailable(nsIRequest* aRequest,
-                                         nsISupports* ctxt,
-                                         nsIInputStream* inStr,
-||||||| merged common ancestors
-nsCORSPreflightListener::OnDataAvailable(nsIRequest *aRequest,
-                                         nsISupports *ctxt,
-                                         nsIInputStream *inStr,
-=======
 nsCORSPreflightListener::OnDataAvailable(nsIRequest* aRequest,
                                          nsIInputStream* inStr,
->>>>>>> upstream-releases
                                          uint64_t sourceOffset,
                                          uint32_t count) {
   uint32_t totalRead;
@@ -1512,16 +1321,9 @@ nsresult nsCORSPreflightListener::CheckPreflightRequestApproved(
   bool succeedded;
   rv = http->GetRequestSucceeded(&succeedded);
   if (NS_FAILED(rv) || !succeedded) {
-<<<<<<< HEAD
-    LogBlockedRequest(aRequest, "CORSPreflightDidNotSucceed", nullptr,
-                      parentHttpChannel);
-||||||| merged common ancestors
-    LogBlockedRequest(aRequest, "CORSPreflightDidNotSucceed", nullptr, parentHttpChannel);
-=======
     LogBlockedRequest(aRequest, "CORSPreflightDidNotSucceed", nullptr,
                       nsILoadInfo::BLOCKING_REASON_CORSPREFLIGHTDIDNOTSUCCEED,
                       parentHttpChannel);
->>>>>>> upstream-releases
     return NS_ERROR_DOM_BAD_URI;
   }
 
@@ -1554,16 +1356,9 @@ nsresult nsCORSPreflightListener::CheckPreflightRequestApproved(
     }
   }
   if (!foundMethod) {
-<<<<<<< HEAD
-    LogBlockedRequest(aRequest, "CORSMethodNotFound", nullptr,
-                      parentHttpChannel);
-||||||| merged common ancestors
-    LogBlockedRequest(aRequest, "CORSMethodNotFound", nullptr, parentHttpChannel);
-=======
     LogBlockedRequest(aRequest, "CORSMethodNotFound", nullptr,
                       nsILoadInfo::BLOCKING_REASON_CORSMETHODNOTFOUND,
                       parentHttpChannel);
->>>>>>> upstream-releases
     return NS_ERROR_DOM_BAD_URI;
   }
 
@@ -1573,14 +1368,8 @@ nsresult nsCORSPreflightListener::CheckPreflightRequestApproved(
       NS_LITERAL_CSTRING("Access-Control-Allow-Headers"), headerVal);
   nsTArray<nsCString> headers;
   nsCCharSeparatedTokenizer headerTokens(headerVal, ',');
-<<<<<<< HEAD
-  while (headerTokens.hasMoreTokens()) {
-||||||| merged common ancestors
-  while(headerTokens.hasMoreTokens()) {
-=======
   bool allowAllHeaders = false;
   while (headerTokens.hasMoreTokens()) {
->>>>>>> upstream-releases
     const nsDependentCSubstring& header = headerTokens.nextToken();
     if (header.IsEmpty()) {
       continue;
@@ -1598,22 +1387,6 @@ nsresult nsCORSPreflightListener::CheckPreflightRequestApproved(
       headers.AppendElement(header);
     }
   }
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < mPreflightHeaders.Length(); ++i) {
-    const auto& comparator = nsCaseInsensitiveCStringArrayComparator();
-    if (!headers.Contains(mPreflightHeaders[i], comparator)) {
-      LogBlockedRequest(aRequest, "CORSMissingAllowHeaderFromPreflight",
-                        NS_ConvertUTF8toUTF16(mPreflightHeaders[i]).get(),
-                        parentHttpChannel);
-      return NS_ERROR_DOM_BAD_URI;
-||||||| merged common ancestors
-  for (uint32_t i = 0; i < mPreflightHeaders.Length(); ++i) {
-    const auto& comparator = nsCaseInsensitiveCStringArrayComparator();
-    if (!headers.Contains(mPreflightHeaders[i], comparator)) {
-      LogBlockedRequest(aRequest, "CORSMissingAllowHeaderFromPreflight",
-                        NS_ConvertUTF8toUTF16(mPreflightHeaders[i]).get(), parentHttpChannel);
-      return NS_ERROR_DOM_BAD_URI;
-=======
 
   if (!allowAllHeaders) {
     for (uint32_t i = 0; i < mPreflightHeaders.Length(); ++i) {
@@ -1626,7 +1399,6 @@ nsresult nsCORSPreflightListener::CheckPreflightRequestApproved(
             parentHttpChannel);
         return NS_ERROR_DOM_BAD_URI;
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -1674,24 +1446,7 @@ nsresult nsCORSListenerProxy::StartCORSPreflight(
   nsresult rv = NS_GetFinalChannelURI(aRequestChannel, getter_AddRefs(uri));
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsILoadInfo> originalLoadInfo = aRequestChannel->GetLoadInfo();
-  MOZ_ASSERT(originalLoadInfo,
-             "can not perform CORS preflight without a loadInfo");
-  if (!originalLoadInfo) {
-    return NS_ERROR_FAILURE;
-  }
-
-||||||| merged common ancestors
-  nsCOMPtr<nsILoadInfo> originalLoadInfo = aRequestChannel->GetLoadInfo();
-  MOZ_ASSERT(originalLoadInfo, "can not perform CORS preflight without a loadInfo");
-  if (!originalLoadInfo) {
-    return NS_ERROR_FAILURE;
-  }
-
-=======
   nsCOMPtr<nsILoadInfo> originalLoadInfo = aRequestChannel->LoadInfo();
->>>>>>> upstream-releases
   MOZ_ASSERT(originalLoadInfo->GetSecurityMode() ==
                  nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS,
              "how did we end up here?");
@@ -1829,25 +1584,11 @@ nsresult nsCORSListenerProxy::StartCORSPreflight(
 }
 
 // static
-<<<<<<< HEAD
-void nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
-                                                bool aPrivateBrowsing,
-                                                const nsAString& aMessage,
-                                                const nsACString& aCategory) {
-||||||| merged common ancestors
-void
-nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
-                                           bool aPrivateBrowsing,
-                                           const nsAString& aMessage,
-                                           const nsACString& aCategory)
-{
-=======
 void nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
                                                 bool aPrivateBrowsing,
                                                 bool aFromChromeContext,
                                                 const nsAString& aMessage,
                                                 const nsACString& aCategory) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   // Build the error object and log it to the console
@@ -1878,22 +1619,6 @@ void nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
   } else {
     nsCString category = PromiseFlatCString(aCategory);
     rv = scriptError->Init(aMessage,
-<<<<<<< HEAD
-                           EmptyString(),  // sourceName
-                           EmptyString(),  // sourceLine
-                           0,              // lineNumber
-                           0,              // columnNumber
-                           nsIScriptError::warningFlag, category.get(),
-                           aPrivateBrowsing);
-||||||| merged common ancestors
-                           EmptyString(), // sourceName
-                           EmptyString(), // sourceLine
-                           0,             // lineNumber
-                           0,             // columnNumber
-                           nsIScriptError::warningFlag,
-                           category.get(),
-                           aPrivateBrowsing);
-=======
                            EmptyString(),  // sourceName
                            EmptyString(),  // sourceLine
                            0,              // lineNumber
@@ -1901,7 +1626,6 @@ void nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
                            nsIScriptError::warningFlag, category.get(),
                            aPrivateBrowsing,
                            aFromChromeContext);  // From chrome context
->>>>>>> upstream-releases
   }
   if (NS_FAILED(rv)) {
     NS_WARNING(

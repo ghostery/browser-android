@@ -216,50 +216,6 @@ class NotificationBox extends Component {
         key: notification.value,
         className: "notification",
         "data-key": notification.value,
-<<<<<<< HEAD
-        "data-type": notification.type},
-        div(
-          {className: "notificationInner"},
-          div({
-            className: "messageImage",
-            "data-type": notification.type,
-          }),
-          span({
-            className: "messageText",
-            title: notification.label,
-          },
-            notification.label
-          ),
-          notification.buttons.map(props =>
-            this.renderButton(props, notification)
-          ),
-          div({
-            className: "messageCloseButton",
-            title: this.props.closeButtonTooltip,
-            onClick: this.close.bind(this, notification)}
-          )
-        )
-||||||| merged common ancestors
-        "data-type": notification.type},
-        div({className: "notificationInner"},
-          div({className: "details"},
-            div({
-              className: "messageImage",
-              "data-type": notification.type}),
-            span({className: "messageText"},
-              notification.label
-            ),
-            notification.buttons.map(props =>
-              this.renderButton(props, notification)
-            )
-          ),
-          div({
-            className: "messageCloseButton",
-            title: this.props.closeButtonTooltip,
-            onClick: this.close.bind(this, notification)}
-          )
-        )
-=======
         "data-type": notification.type,
       },
       div(
@@ -283,7 +239,6 @@ class NotificationBox extends Component {
           title: this.props.closeButtonTooltip,
           onClick: this.close.bind(this, notification),
         })
->>>>>>> upstream-releases
       )
     );
   }

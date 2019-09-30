@@ -16,7 +16,7 @@ namespace a11y {
 class ia2AccessibleValue : public IAccessibleValue {
  public:
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleValue
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_currentValue(
@@ -29,14 +29,7 @@ class ia2AccessibleValue : public IAccessibleValue {
       /* [retval][out] */ VARIANT* maximumValue);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_minimumValue(
-<<<<<<< HEAD
-      /* [retval][out] */ VARIANT *minimumValue);
-||||||| merged common ancestors
-      /* [retval][out] */ VARIANT *minimumValue);
-
-=======
       /* [retval][out] */ VARIANT* minimumValue);
->>>>>>> upstream-releases
 };
 
 }  // namespace a11y

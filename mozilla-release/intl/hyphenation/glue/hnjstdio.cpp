@@ -34,76 +34,6 @@ struct hnjFile_ {
 
 // replacement for fopen()
 // (not a full substitute: only supports read access)
-<<<<<<< HEAD
-hnjFile* hnjFopen(const char* aURISpec, const char* aMode) {
-  // this override only needs to support "r"
-  NS_ASSERTION(!strcmp(aMode, "r"), "unsupported fopen() mode in hnjFopen");
-
-  nsCOMPtr<nsIURI> uri;
-  nsresult rv = NS_NewURI(getter_AddRefs(uri), aURISpec);
-  if (NS_FAILED(rv)) {
-    return nullptr;
-  }
-
-  nsCOMPtr<nsIChannel> channel;
-  rv = NS_NewChannel(getter_AddRefs(channel), uri,
-                     nsContentUtils::GetSystemPrincipal(),
-                     nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                     nsIContentPolicy::TYPE_OTHER);
-  if (NS_FAILED(rv)) {
-    return nullptr;
-  }
-
-  nsCOMPtr<nsIInputStream> instream;
-  rv = channel->Open2(getter_AddRefs(instream));
-  if (NS_FAILED(rv)) {
-    return nullptr;
-  }
-
-  hnjFile* f = new hnjFile;
-  f->mStream = instream;
-  f->mCurPos = 0;
-  f->mLimit = 0;
-  f->mEOF = false;
-
-  return f;
-||||||| merged common ancestors
-hnjFile*
-hnjFopen(const char* aURISpec, const char* aMode)
-{
-    // this override only needs to support "r"
-    NS_ASSERTION(!strcmp(aMode, "r"), "unsupported fopen() mode in hnjFopen");
-
-    nsCOMPtr<nsIURI> uri;
-    nsresult rv = NS_NewURI(getter_AddRefs(uri), aURISpec);
-    if (NS_FAILED(rv)) {
-        return nullptr;
-    }
-
-    nsCOMPtr<nsIChannel> channel;
-    rv = NS_NewChannel(getter_AddRefs(channel),
-                       uri,
-                       nsContentUtils::GetSystemPrincipal(),
-                       nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                       nsIContentPolicy::TYPE_OTHER);
-    if (NS_FAILED(rv)) {
-        return nullptr;
-    }
-
-    nsCOMPtr<nsIInputStream> instream;
-    rv = channel->Open2(getter_AddRefs(instream));
-    if (NS_FAILED(rv)) {
-        return nullptr;
-    }
-
-    hnjFile *f = new hnjFile;
-    f->mStream = instream;
-    f->mCurPos = 0;
-    f->mLimit = 0;
-    f->mEOF = false;
-
-    return f;
-=======
 hnjFile* hnjFopen(const char* aURISpec, const char* aMode) {
   // this override only needs to support "r"
   NS_ASSERTION(!strcmp(aMode, "r"), "unsupported fopen() mode in hnjFopen");
@@ -136,7 +66,6 @@ hnjFile* hnjFopen(const char* aURISpec, const char* aMode) {
   f->mEOF = false;
 
   return f;
->>>>>>> upstream-releases
 }
 
 // replacement for fclose()

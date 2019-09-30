@@ -51,58 +51,6 @@ add_task(async function async_init() {
   await commitPromise;
 });
 
-<<<<<<< HEAD
-add_task(async function sync_init() {
-  let unInitPromise = waitForSearchNotification("uninit-complete");
-  let reInitPromise = asyncReInit();
-  await unInitPromise;
-  Assert.ok(!Services.search.isInitialized);
-
-  // Synchronously check the current default engine, to force a sync init.
-  Assert.equal(Services.search.defaultEngine.name, "hidden");
-  Assert.ok(Services.search.isInitialized);
-
-  let engines = Services.search.getEngines();
-  Assert.equal(engines.length, 1);
-
-  // The default test jar engine has been hidden.
-  let engine = Services.search.getEngineByName("bug645970");
-  Assert.equal(engine, null);
-
-  // The hidden engine is visible.
-  engine = Services.search.getEngineByName("hidden");
-  Assert.notEqual(engine, null);
-
-  await reInitPromise;
-});
-
-||||||| merged common ancestors
-add_task(async function sync_init() {
-  let unInitPromise = waitForSearchNotification("uninit-complete");
-  let reInitPromise = asyncReInit();
-  await unInitPromise;
-  Assert.ok(!Services.search.isInitialized);
-
-  // Synchronously check the current default engine, to force a sync init.
-  Assert.equal(Services.search.currentEngine.name, "hidden");
-  Assert.ok(Services.search.isInitialized);
-
-  let engines = Services.search.getEngines();
-  Assert.equal(engines.length, 1);
-
-  // The default test jar engine has been hidden.
-  let engine = Services.search.getEngineByName("bug645970");
-  Assert.equal(engine, null);
-
-  // The hidden engine is visible.
-  engine = Services.search.getEngineByName("hidden");
-  Assert.notEqual(engine, null);
-
-  await reInitPromise;
-});
-
-=======
->>>>>>> upstream-releases
 add_task(async function invalid_engine() {
   // Trigger a new request.
   await forceExpiration();

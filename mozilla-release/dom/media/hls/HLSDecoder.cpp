@@ -51,16 +51,8 @@ HLSResourceCallbacksSupport::HLSResourceCallbacksSupport(HLSDecoder* aDecoder)
   MOZ_ASSERT(mDecoder);
 }
 
-<<<<<<< HEAD
-void HLSResourceCallbacksSupport::Detach() {
-||||||| merged common ancestors
-void
-HLSResourceCallbacksSupport::Detach()
-{
-=======
 void HLSResourceCallbacksSupport::Detach() {
   MOZ_ASSERT(NS_IsMainThread());
->>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
   mDecoder = nullptr;
 }
@@ -72,20 +64,8 @@ void HLSResourceCallbacksSupport::OnDataArrived() {
     return;
   }
   RefPtr<HLSResourceCallbacksSupport> self = this;
-<<<<<<< HEAD
   NS_DispatchToMainThread(NS_NewRunnableFunction(
       "HLSResourceCallbacksSupport::OnDataArrived", [self]() -> void {
-        MutexAutoLock lock(self->mMutex);
-||||||| merged common ancestors
-  NS_DispatchToMainThread(
-    NS_NewRunnableFunction(
-      "HLSResourceCallbacksSupport::OnDataArrived",
-      [self]() -> void {
-        MutexAutoLock lock(self->mMutex);
-=======
-  NS_DispatchToMainThread(NS_NewRunnableFunction(
-      "HLSResourceCallbacksSupport::OnDataArrived", [self]() -> void {
->>>>>>> upstream-releases
         if (self->mDecoder) {
           self->mDecoder->NotifyDataArrived();
         }
@@ -99,20 +79,8 @@ void HLSResourceCallbacksSupport::OnError(int aErrorCode) {
     return;
   }
   RefPtr<HLSResourceCallbacksSupport> self = this;
-<<<<<<< HEAD
-  NS_DispatchToMainThread(NS_NewRunnableFunction(
-      "HLSResourceCallbacksSupport::OnDataArrived", [self]() -> void {
-        MutexAutoLock lock(self->mMutex);
-||||||| merged common ancestors
-  NS_DispatchToMainThread(
-    NS_NewRunnableFunction(
-      "HLSResourceCallbacksSupport::OnDataArrived",
-      [self]() -> void {
-        MutexAutoLock lock(self->mMutex);
-=======
   NS_DispatchToMainThread(NS_NewRunnableFunction(
       "HLSResourceCallbacksSupport::OnError", [self]() -> void {
->>>>>>> upstream-releases
         if (self->mDecoder) {
           // Since HLS source should be from the Internet, we treat all resource
           // errors from GeckoHlsPlayer as network errors.
@@ -122,14 +90,6 @@ void HLSResourceCallbacksSupport::OnError(int aErrorCode) {
       }));
 }
 
-<<<<<<< HEAD
-HLSDecoder::HLSDecoder(MediaDecoderInit& aInit) : MediaDecoder(aInit) {}
-||||||| merged common ancestors
-HLSDecoder::HLSDecoder(MediaDecoderInit& aInit)
-  : MediaDecoder(aInit)
-{
-}
-=======
 size_t HLSDecoder::sAllocatedInstances = 0;
 
 // static
@@ -140,15 +100,7 @@ RefPtr<HLSDecoder> HLSDecoder::Create(MediaDecoderInit& aInit) {
              ? new HLSDecoder(aInit)
              : nullptr;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MediaDecoderStateMachine* HLSDecoder::CreateStateMachine() {
-||||||| merged common ancestors
-MediaDecoderStateMachine*
-HLSDecoder::CreateStateMachine()
-{
-=======
 HLSDecoder::HLSDecoder(MediaDecoderInit& aInit) : MediaDecoder(aInit) {
   MOZ_ASSERT(NS_IsMainThread());
   sAllocatedInstances++;
@@ -163,7 +115,6 @@ HLSDecoder::~HLSDecoder() {
 }
 
 MediaDecoderStateMachine* HLSDecoder::CreateStateMachine() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   MediaFormatReaderInit init;
@@ -178,18 +129,8 @@ MediaDecoderStateMachine* HLSDecoder::CreateStateMachine() {
   return new MediaDecoderStateMachine(this, mReader);
 }
 
-<<<<<<< HEAD
-bool HLSDecoder::IsEnabled() {
-  return StaticPrefs::MediaHlsEnabled() && (jni::GetAPIVersion() >= 16);
-||||||| merged common ancestors
-bool
-HLSDecoder::IsEnabled()
-{
-  return StaticPrefs::MediaHlsEnabled() && (jni::GetAPIVersion() >= 16);
-=======
 bool HLSDecoder::IsEnabled() {
   return StaticPrefs::media_hls_enabled() && (jni::GetAPIVersion() >= 16);
->>>>>>> upstream-releases
 }
 
 bool HLSDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
@@ -241,13 +182,6 @@ already_AddRefed<nsIPrincipal> HLSDecoder::GetCurrentPrincipal() {
   return nullptr;
 }
 
-<<<<<<< HEAD
-void HLSDecoder::Play() {
-||||||| merged common ancestors
-void
-HLSDecoder::Play()
-{
-=======
 bool HLSDecoder::HadCrossOriginRedirects() {
   MOZ_ASSERT(NS_IsMainThread());
   // Bug 1478843
@@ -255,7 +189,6 @@ bool HLSDecoder::HadCrossOriginRedirects() {
 }
 
 void HLSDecoder::Play() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   HLS_DEBUG("HLSDecoder", "MediaElement called Play");
   mHLSResourceWrapper->Play();

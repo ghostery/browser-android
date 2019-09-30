@@ -84,46 +84,20 @@ class MOZ_RAII AutoTraceSession : public AutoLockAllAtoms,
       : AutoLockAllAtoms(rt), AutoHeapSession(rt, JS::HeapState::Tracing) {}
 };
 
-<<<<<<< HEAD
-struct MOZ_RAII AutoFinishGC {
-  explicit AutoFinishGC(JSContext* cx) { FinishGC(cx); }
-||||||| merged common ancestors
-struct MOZ_RAII AutoFinishGC
-{
-    explicit AutoFinishGC(JSContext* cx) {
-        FinishGC(cx);
-    }
-=======
 struct MOZ_RAII AutoFinishGC {
   explicit AutoFinishGC(JSContext* cx, JS::GCReason reason) {
     FinishGC(cx, reason);
   }
->>>>>>> upstream-releases
 };
 
 // This class should be used by any code that needs exclusive access to the heap
 // in order to trace through it.
 class MOZ_RAII AutoPrepareForTracing : private AutoFinishGC,
-<<<<<<< HEAD
-                                       public AutoTraceSession {
- public:
-  explicit AutoPrepareForTracing(JSContext* cx)
-      : AutoFinishGC(cx), AutoTraceSession(cx->runtime()) {}
-||||||| merged common ancestors
-                                       public AutoTraceSession
-{
-  public:
-    explicit AutoPrepareForTracing(JSContext* cx)
-      : AutoFinishGC(cx),
-        AutoTraceSession(cx->runtime())
-    {}
-=======
                                        public AutoTraceSession {
  public:
   explicit AutoPrepareForTracing(JSContext* cx)
       : AutoFinishGC(cx, JS::GCReason::PREPARE_FOR_TRACING),
         AutoTraceSession(cx->runtime()) {}
->>>>>>> upstream-releases
 };
 
 AbortReason IsIncrementalGCUnsafe(JSRuntime* rt);
@@ -175,39 +149,6 @@ void CheckHashTablesAfterMovingGC(JSRuntime* rt);
 void CheckHeapAfterGC(JSRuntime* rt);
 #endif
 
-<<<<<<< HEAD
-struct MovingTracer : JS::CallbackTracer {
-  explicit MovingTracer(JSRuntime* rt)
-      : CallbackTracer(rt, TraceWeakMapKeysValues) {}
-
-  void onObjectEdge(JSObject** objp) override;
-  void onShapeEdge(Shape** shapep) override;
-  void onStringEdge(JSString** stringp) override;
-  void onScriptEdge(JSScript** scriptp) override;
-  void onLazyScriptEdge(LazyScript** lazyp) override;
-  void onBaseShapeEdge(BaseShape** basep) override;
-  void onScopeEdge(Scope** basep) override;
-  void onRegExpSharedEdge(RegExpShared** sharedp) override;
-  void onChild(const JS::GCCellPtr& thing) override {
-    MOZ_ASSERT(!thing.asCell()->isForwarded());
-  }
-||||||| merged common ancestors
-struct MovingTracer : JS::CallbackTracer
-{
-    explicit MovingTracer(JSRuntime* rt) : CallbackTracer(rt, TraceWeakMapKeysValues) {}
-
-    void onObjectEdge(JSObject** objp) override;
-    void onShapeEdge(Shape** shapep) override;
-    void onStringEdge(JSString** stringp) override;
-    void onScriptEdge(JSScript** scriptp) override;
-    void onLazyScriptEdge(LazyScript** lazyp) override;
-    void onBaseShapeEdge(BaseShape** basep) override;
-    void onScopeEdge(Scope** basep) override;
-    void onRegExpSharedEdge(RegExpShared** sharedp) override;
-    void onChild(const JS::GCCellPtr& thing) override {
-        MOZ_ASSERT(!thing.asCell()->isForwarded());
-    }
-=======
 struct MovingTracer final : public JS::CallbackTracer {
   explicit MovingTracer(JSRuntime* rt)
       : CallbackTracer(rt, TraceWeakMapKeysValues) {}
@@ -224,7 +165,6 @@ struct MovingTracer final : public JS::CallbackTracer {
   void onChild(const JS::GCCellPtr& thing) override {
     MOZ_ASSERT(!thing.asCell()->isForwarded());
   }
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   TracerKind getTracerKind() const override { return TracerKind::Moving; }
@@ -237,24 +177,6 @@ struct MovingTracer final : public JS::CallbackTracer {
 
 // Structure for counting how many times objects in a particular group have
 // been tenured during a minor collection.
-<<<<<<< HEAD
-struct TenureCount {
-  ObjectGroup* group;
-  int count;
-
-  // ObjectGroups are never nursery-allocated, and TenureCounts are only used
-  // in minor GC (not compacting GC), so prevent the analysis from
-  // complaining about TenureCounts being held live across a minor GC.
-||||||| merged common ancestors
-struct TenureCount
-{
-    ObjectGroup* group;
-    int count;
-
-    // ObjectGroups are never nursery-allocated, and TenureCounts are only used
-    // in minor GC (not compacting GC), so prevent the analysis from
-    // complaining about TenureCounts being held live across a minor GC.
-=======
 struct TenureCount {
   ObjectGroup* group;
   unsigned count;
@@ -262,7 +184,6 @@ struct TenureCount {
   // ObjectGroups are never nursery-allocated, and TenureCounts are only used
   // in minor GC (not compacting GC), so prevent the analysis from
   // complaining about TenureCounts being held live across a minor GC.
->>>>>>> upstream-releases
 } JS_HAZ_NON_GC_POINTER;
 
 // Keep rough track of how many times we tenure objects in particular groups
@@ -365,21 +286,9 @@ class MOZ_RAII AutoEmptyNursery : public AutoAssertEmptyNursery {
 
 extern void DelayCrossCompartmentGrayMarking(JSObject* src);
 
-<<<<<<< HEAD
-inline bool IsOOMReason(JS::gcreason::Reason reason) {
-  return reason == JS::gcreason::LAST_DITCH ||
-         reason == JS::gcreason::MEM_PRESSURE;
-||||||| merged common ancestors
-inline bool
-IsOOMReason(JS::gcreason::Reason reason)
-{
-    return reason == JS::gcreason::LAST_DITCH ||
-           reason == JS::gcreason::MEM_PRESSURE;
-=======
 inline bool IsOOMReason(JS::GCReason reason) {
   return reason == JS::GCReason::LAST_DITCH ||
          reason == JS::GCReason::MEM_PRESSURE;
->>>>>>> upstream-releases
 }
 
 TenuredCell* AllocateCellInGC(JS::Zone* zone, AllocKind thingKind);

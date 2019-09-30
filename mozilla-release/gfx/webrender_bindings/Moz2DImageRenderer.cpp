@@ -306,24 +306,6 @@ static RefPtr<ScaledFont> GetScaledFont(Translator* aTranslator,
 }
 
 static bool Moz2DRenderCallback(const Range<const uint8_t> aBlob,
-<<<<<<< HEAD
-                                gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
-                                const uint16_t* aTileSize,
-                                const mozilla::wr::TileOffset* aTileOffset,
-                                const mozilla::wr::LayoutIntRect* aDirtyRect,
-                                Range<uint8_t> aOutput) {
-  AUTO_PROFILER_TRACING("WebRender", "RasterizeSingleBlob");
-  MOZ_ASSERT(aSize.width > 0 && aSize.height > 0);
-||||||| merged common ancestors
-                                gfx::IntSize aSize,
-                                gfx::SurfaceFormat aFormat,
-                                const uint16_t *aTileSize,
-                                const mozilla::wr::TileOffset *aTileOffset,
-                                const mozilla::wr::DeviceUintRect *aDirtyRect,
-                                Range<uint8_t> aOutput)
-{
-  MOZ_ASSERT(aSize.width > 0 && aSize.height > 0);
-=======
                                 gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
                                 const uint16_t* aTileSize,
                                 const mozilla::wr::TileOffset* aTileOffset,
@@ -331,7 +313,6 @@ static bool Moz2DRenderCallback(const Range<const uint8_t> aBlob,
                                 Range<uint8_t> aOutput) {
   AUTO_PROFILER_TRACING("WebRender", "RasterizeSingleBlob", GRAPHICS);
   MOZ_RELEASE_ASSERT(aSize.width > 0 && aSize.height > 0);
->>>>>>> upstream-releases
   if (aSize.width <= 0 || aSize.height <= 0) {
     return false;
   }

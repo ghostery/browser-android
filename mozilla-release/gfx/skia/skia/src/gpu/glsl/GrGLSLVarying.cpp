@@ -67,29 +67,11 @@ void GrGLSLVaryingHandler::addVarying(const char* name, GrGLSLVarying* varying,
 }
 
 void GrGLSLVaryingHandler::emitAttributes(const GrGeometryProcessor& gp) {
-<<<<<<< HEAD
-    int vaCount = gp.numVertexAttributes();
-    for (int i = 0; i < vaCount; i++) {
-        this->addAttribute(gp.vertexAttribute(i).asShaderVar());
-    }
-    int iaCount = gp.numInstanceAttributes();
-    for (int i = 0; i < iaCount; i++) {
-        this->addAttribute(gp.instanceAttribute(i).asShaderVar());
-||||||| merged common ancestors
-    int vaCount = gp.numAttribs();
-    for (int i = 0; i < vaCount; i++) {
-        const GrGeometryProcessor::Attribute& attr = gp.getAttrib(i);
-        this->addAttribute(GrShaderVar(attr.fName,
-                                       GrVertexAttribTypeToSLType(attr.fType),
-                                       GrShaderVar::kIn_TypeModifier,
-                                       GrShaderVar::kNonArray));
-=======
     for (const auto& attr : gp.vertexAttributes()) {
         this->addAttribute(attr.asShaderVar());
     }
     for (const auto& attr : gp.instanceAttributes()) {
         this->addAttribute(attr.asShaderVar());
->>>>>>> upstream-releases
     }
 }
 

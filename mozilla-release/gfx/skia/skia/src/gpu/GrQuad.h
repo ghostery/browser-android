@@ -9,13 +9,6 @@
 #define GrQuad_DEFINED
 
 #include "SkMatrix.h"
-<<<<<<< HEAD
-#include "SkNx.h"
-#include "SkPoint.h"
-#include "SkPoint3.h"
-||||||| merged common ancestors
-#include "SkMatrixPriv.h"
-=======
 #include "SkNx.h"
 #include "SkPoint.h"
 #include "SkPoint3.h"
@@ -53,7 +46,6 @@ template <typename Q>
 void GrResolveAATypeForQuad(GrAAType requestedAAType, GrQuadAAFlags requestedEdgeFlags,
                             const Q& quad, GrQuadType knownQuadType,
                             GrAAType* outAAtype, GrQuadAAFlags* outEdgeFlags);
->>>>>>> upstream-releases
 
 /**
  * GrQuad is a collection of 4 points which can be used to represent an arbitrary quadrilateral. The
@@ -61,11 +53,6 @@ void GrResolveAATypeForQuad(GrAAType requestedAAType, GrQuadAAFlags requestedEdg
  */
 class GrQuad {
 public:
-<<<<<<< HEAD
-    GrQuad() = default;
-||||||| merged common ancestors
-    GrQuad() {}
-=======
     GrQuad() = default;
 
     GrQuad(const GrQuad& that) = default;
@@ -73,30 +60,12 @@ public:
     explicit GrQuad(const SkRect& rect)
             : fX{rect.fLeft, rect.fLeft, rect.fRight, rect.fRight}
             , fY{rect.fTop, rect.fBottom, rect.fTop, rect.fBottom} {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    GrQuad(const GrQuad& that) = default;
-||||||| merged common ancestors
-    GrQuad(const GrQuad& that) {
-        *this = that;
-    }
-=======
     GrQuad(const Sk4f& xs, const Sk4f& ys) {
         xs.store(fX);
         ys.store(fY);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    explicit GrQuad(const SkRect& rect)
-            : fX{rect.fLeft, rect.fLeft, rect.fRight, rect.fRight}
-            , fY{rect.fTop, rect.fBottom, rect.fTop, rect.fBottom} {}
-||||||| merged common ancestors
-    explicit GrQuad(const SkRect& rect) {
-        this->set(rect);
-    }
-=======
     explicit GrQuad(const SkPoint pts[4])
             : fX{pts[0].fX, pts[1].fX, pts[2].fX, pts[3].fX}
             , fY{pts[0].fY, pts[1].fY, pts[2].fY, pts[3].fY} {}
@@ -154,33 +123,13 @@ public:
         ys.store(fY);
         fW[0] = fW[1] = fW[2] = fW[3] = 1.f;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    /** Sets the quad to the rect as transformed by the matrix. */
-    GrQuad(const SkRect&, const SkMatrix&);
-||||||| merged common ancestors
-    void set(const SkRect& rect) {
-        SkPointPriv::SetRectTriStrip(fPoints, rect.fLeft, rect.fTop, rect.fRight, rect.fBottom,
-                sizeof(SkPoint));
-    }
-=======
     GrPerspQuad(const Sk4f& xs, const Sk4f& ys, const Sk4f& ws) {
         xs.store(fX);
         ys.store(fY);
         ws.store(fW);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    explicit GrQuad(const SkPoint pts[4])
-            : fX{pts[0].fX, pts[1].fX, pts[2].fX, pts[3].fX}
-            , fY{pts[0].fY, pts[1].fY, pts[2].fY, pts[3].fY} {}
-||||||| merged common ancestors
-    void map(const SkMatrix& matrix) {
-        matrix.mapPoints(fPoints, kNumPoints);
-    }
-=======
     static GrPerspQuad MakeFromRect(const SkRect&, const SkMatrix&);
 
     // Creates a GrPerspQuad from the quadrilateral 'pts', transformed by the matrix. The input
@@ -205,15 +154,7 @@ public:
 
         return {x.min(), y.min(), x.max(), y.max()};
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    GrQuad& operator=(const GrQuad& that) = default;
-||||||| merged common ancestors
-    void setFromMappedRect(const SkRect& rect, const SkMatrix& matrix) {
-        SkMatrixPriv::SetMappedRectTriStrip(matrix, rect, fPoints);
-    }
-=======
     float x(int i) const { return fX[i]; }
     float y(int i) const { return fY[i]; }
     float w(int i) const { return fW[i]; }
@@ -402,106 +343,29 @@ public:
     void concat(const GrTQuadList<T>& that) {
         this->concatImpl(that);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    SkPoint point(int i) const { return {fX[i], fY[i]}; }
-||||||| merged common ancestors
-    const GrQuad& operator=(const GrQuad& that) {
-        memcpy(fPoints, that.fPoints, sizeof(SkPoint) * kNumPoints);
-        return *this;
-    }
-=======
     // Adding to the list requires metadata
     void push_back(const GrQuad& quad, GrQuadType type, T&& metadata) {
         QuadData<T>& item = this->pushBackImpl(quad, type);
         item.fMetadata = std::move(metadata);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    SkRect bounds() const {
-        auto x = this->x4f(), y = this->y4f();
-        return {x.min(), y.min(), x.max(), y.max()};
-||||||| merged common ancestors
-    SkPoint* points() {
-        return fPoints;
-=======
     void push_back(const GrPerspQuad& quad, GrQuadType type, T&& metadata) {
         QuadData<T>& item = this->pushBackImpl(quad, type);
         item.fMetadata = std::move(metadata);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    float x(int i) const { return fX[i]; }
-    float y(int i) const { return fY[i]; }
-
-    Sk4f x4f() const { return Sk4f::Load(fX); }
-    Sk4f y4f() const { return Sk4f::Load(fY); }
-||||||| merged common ancestors
-    const SkPoint* points() const {
-        return fPoints;
-    }
-=======
     // And provide access to the metadata per quad
     const T& metadata(int i) const {
         return this->item(i).fMetadata;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-private:
-    float fX[4];
-    float fY[4];
-};
-
-class GrPerspQuad {
-public:
-    GrPerspQuad() = default;
-
-    GrPerspQuad(const SkRect&, const SkMatrix&);
-
-    GrPerspQuad& operator=(const GrPerspQuad&) = default;
-
-    SkPoint3 point(int i) const { return {fX[i], fY[i], fW[i]}; }
-
-    SkRect bounds() const {
-        auto x = this->x4f() * this->iw4f();
-        auto y = this->y4f() * this->iw4f();
-        return {x.min(), y.min(), x.max(), y.max()};
-||||||| merged common ancestors
-    const SkPoint& point(int i) const {
-        SkASSERT(i < kNumPoints);
-        return fPoints[i];
-=======
     T& metadata(int i) {
         return this->item(i).fMetadata;
->>>>>>> upstream-releases
     }
 
-    float x(int i) const { return fX[i]; }
-    float y(int i) const { return fY[i]; }
-    float w(int i) const { return fW[i]; }
-    float iw(int i) const { return fIW[i]; }
-
-    Sk4f x4f() const { return Sk4f::Load(fX); }
-    Sk4f y4f() const { return Sk4f::Load(fY); }
-    Sk4f w4f() const { return Sk4f::Load(fW); }
-    Sk4f iw4f() const { return Sk4f::Load(fIW); }
-
 private:
-<<<<<<< HEAD
-    float fX[4];
-    float fY[4];
-    float fW[4];
-    float fIW[4];  // 1/w
-||||||| merged common ancestors
-    static const int kNumPoints = 4;
-    SkPoint fPoints[kNumPoints];
-=======
     typedef GrQuadListBase<T> INHERITED;
->>>>>>> upstream-releases
 };
 
 #endif

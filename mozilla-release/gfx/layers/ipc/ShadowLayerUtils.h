@@ -17,13 +17,7 @@
 #endif
 
 #if defined(MOZ_X11)
-<<<<<<< HEAD
-#include "mozilla/layers/ShadowLayerUtilsX11.h"
-||||||| merged common ancestors
-# include "mozilla/layers/ShadowLayerUtilsX11.h"
-=======
 #  include "mozilla/layers/ShadowLayerUtilsX11.h"
->>>>>>> upstream-releases
 #else
 namespace mozilla {
 namespace layers {

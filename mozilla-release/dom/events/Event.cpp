@@ -41,28 +41,8 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-static char* sPopupAllowedEvents;
-
-static bool sReturnHighResTimeStamp = false;
-static bool sReturnHighResTimeStampIsSet = false;
-
 Event::Event(EventTarget* aOwner, nsPresContext* aPresContext,
              WidgetEvent* aEvent) {
-||||||| merged common ancestors
-static char *sPopupAllowedEvents;
-
-static bool sReturnHighResTimeStamp = false;
-static bool sReturnHighResTimeStampIsSet = false;
-
-Event::Event(EventTarget* aOwner,
-             nsPresContext* aPresContext,
-             WidgetEvent* aEvent)
-{
-=======
-Event::Event(EventTarget* aOwner, nsPresContext* aPresContext,
-             WidgetEvent* aEvent) {
->>>>>>> upstream-releases
   ConstructorInit(aOwner, aPresContext, aEvent);
 }
 
@@ -240,15 +220,7 @@ void Event::GetType(nsAString& aType) const {
 
 EventTarget* Event::GetTarget() const { return mEvent->GetDOMEventTarget(); }
 
-<<<<<<< HEAD
-already_AddRefed<nsIDocument> Event::GetDocument() const {
-||||||| merged common ancestors
-already_AddRefed<nsIDocument>
-Event::GetDocument() const
-{
-=======
 already_AddRefed<Document> Event::GetDocument() const {
->>>>>>> upstream-releases
   nsCOMPtr<EventTarget> eventTarget = GetTarget();
 
   if (!eventTarget) {
@@ -410,27 +382,11 @@ void Event::PreventDefaultInternal(bool aCalledByDefaultHandler,
   if (mEvent->mFlags.mInPassiveListener) {
     nsCOMPtr<nsPIDOMWindowInner> win(do_QueryInterface(mOwner));
     if (win) {
-<<<<<<< HEAD
-      if (nsIDocument* doc = win->GetExtantDoc()) {
-        nsString type;
-        GetType(type);
-        const char16_t* params[] = {type.get()};
-        doc->WarnOnceAbout(nsIDocument::ePreventDefaultFromPassiveListener,
-                           false, params, ArrayLength(params));
-||||||| merged common ancestors
-      if (nsIDocument* doc = win->GetExtantDoc()) {
-        nsString type;
-        GetType(type);
-        const char16_t* params[] = { type.get() };
-        doc->WarnOnceAbout(nsIDocument::ePreventDefaultFromPassiveListener,
-          false, params, ArrayLength(params));
-=======
       if (Document* doc = win->GetExtantDoc()) {
         AutoTArray<nsString, 1> params;
         GetType(*params.AppendElement());
         doc->WarnOnceAbout(Document::ePreventDefaultFromPassiveListener, false,
                            params);
->>>>>>> upstream-releases
       }
     }
     return;
@@ -541,562 +497,11 @@ void Event::DuplicatePrivateData() {
   mPrivateDataDuplicated = true;
 }
 
-<<<<<<< HEAD
 void Event::SetTarget(EventTarget* aTarget) { mEvent->mTarget = aTarget; }
 
 bool Event::IsDispatchStopped() { return mEvent->PropagationStopped(); }
 
 WidgetEvent* Event::WidgetEventPtr() { return mEvent; }
-
-// return true if eventName is contained within events, delimited by
-// spaces
-static bool PopupAllowedForEvent(const char* eventName) {
-  if (!sPopupAllowedEvents) {
-    Event::PopupAllowedEventsChanged();
-
-    if (!sPopupAllowedEvents) {
-      return false;
-    }
-  }
-
-  nsDependentCString events(sPopupAllowedEvents);
-
-  nsCString::const_iterator start, end;
-  nsCString::const_iterator startiter(events.BeginReading(start));
-  events.EndReading(end);
-
-  while (startiter != end) {
-    nsCString::const_iterator enditer(end);
-
-    if (!FindInReadable(nsDependentCString(eventName), startiter, enditer))
-      return false;
-
-    // the match is surrounded by spaces, or at a string boundary
-    if ((startiter == start || *--startiter == ' ') &&
-        (enditer == end || *enditer == ' ')) {
-      return true;
-    }
-
-    // Move on and see if there are other matches. (The delimitation
-    // requirement makes it pointless to begin the next search before
-    // the end of the invalid match just found.)
-    startiter = enditer;
-  }
-
-  return false;
-}
-
-// static
-PopupControlState Event::GetEventPopupControlState(WidgetEvent* aEvent,
-                                                   Event* aDOMEvent) {
-  // generally if an event handler is running, new windows are disallowed.
-  // check for exceptions:
-  PopupControlState abuse = openAbused;
-
-  if (aDOMEvent && aDOMEvent->GetWantsPopupControlCheck()) {
-    nsAutoString type;
-    aDOMEvent->GetType(type);
-    if (PopupAllowedForEvent(NS_ConvertUTF16toUTF8(type).get())) {
-      return openAllowed;
-    }
-  }
-
-  switch (aEvent->mClass) {
-    case eBasicEventClass:
-      // For these following events only allow popups if they're
-      // triggered while handling user input. See
-      // nsPresShell::HandleEventInternal() for details.
-      if (EventStateManager::IsHandlingUserInput()) {
-        abuse = openBlocked;
-        switch (aEvent->mMessage) {
-          case eFormSelect:
-            if (PopupAllowedForEvent("select")) {
-              abuse = openControlled;
-            }
-            break;
-          case eFormChange:
-            if (PopupAllowedForEvent("change")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case eEditorInputEventClass:
-      // For this following event only allow popups if it's triggered
-      // while handling user input. See
-      // nsPresShell::HandleEventInternal() for details.
-      if (EventStateManager::IsHandlingUserInput()) {
-        abuse = openBlocked;
-        switch (aEvent->mMessage) {
-          case eEditorInput:
-            if (PopupAllowedForEvent("input")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case eInputEventClass:
-      // For this following event only allow popups if it's triggered
-      // while handling user input. See
-      // nsPresShell::HandleEventInternal() for details.
-      if (EventStateManager::IsHandlingUserInput()) {
-        abuse = openBlocked;
-        switch (aEvent->mMessage) {
-          case eFormChange:
-            if (PopupAllowedForEvent("change")) {
-              abuse = openControlled;
-            }
-            break;
-          case eXULCommand:
-            abuse = openControlled;
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case eKeyboardEventClass:
-      if (aEvent->IsTrusted()) {
-        abuse = openBlocked;
-        uint32_t key = aEvent->AsKeyboardEvent()->mKeyCode;
-        switch (aEvent->mMessage) {
-          case eKeyPress:
-            // return key on focused button. see note at eMouseClick.
-            if (key == NS_VK_RETURN) {
-              abuse = openAllowed;
-            } else if (PopupAllowedForEvent("keypress")) {
-              abuse = openControlled;
-            }
-            break;
-          case eKeyUp:
-            // space key on focused button. see note at eMouseClick.
-            if (key == NS_VK_SPACE) {
-              abuse = openAllowed;
-            } else if (PopupAllowedForEvent("keyup")) {
-              abuse = openControlled;
-            }
-            break;
-          case eKeyDown:
-            if (PopupAllowedForEvent("keydown")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case eTouchEventClass:
-      if (aEvent->IsTrusted()) {
-        abuse = openBlocked;
-        switch (aEvent->mMessage) {
-          case eTouchStart:
-            if (PopupAllowedForEvent("touchstart")) {
-              abuse = openControlled;
-            }
-            break;
-          case eTouchEnd:
-            if (PopupAllowedForEvent("touchend")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case eMouseEventClass:
-      if (aEvent->IsTrusted() &&
-          aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
-        abuse = openBlocked;
-        switch (aEvent->mMessage) {
-          case eMouseUp:
-            if (PopupAllowedForEvent("mouseup")) {
-              abuse = openControlled;
-            }
-            break;
-          case eMouseDown:
-            if (PopupAllowedForEvent("mousedown")) {
-              abuse = openControlled;
-            }
-            break;
-          case eMouseClick:
-            /* Click events get special treatment because of their
-               historical status as a more legitimate event handler. If
-               click popups are enabled in the prefs, clear the popup
-               status completely. */
-            if (PopupAllowedForEvent("click")) {
-              abuse = openAllowed;
-            }
-            break;
-          case eMouseDoubleClick:
-            if (PopupAllowedForEvent("dblclick")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case ePointerEventClass:
-      if (aEvent->IsTrusted() &&
-          aEvent->AsPointerEvent()->button == WidgetMouseEvent::eLeftButton) {
-        switch (aEvent->mMessage) {
-          case ePointerUp:
-            if (PopupAllowedForEvent("pointerup")) {
-              abuse = openControlled;
-            }
-            break;
-          case ePointerDown:
-            if (PopupAllowedForEvent("pointerdown")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    case eFormEventClass:
-      // For these following events only allow popups if they're
-      // triggered while handling user input. See
-      // nsPresShell::HandleEventInternal() for details.
-      if (EventStateManager::IsHandlingUserInput()) {
-        abuse = openBlocked;
-        switch (aEvent->mMessage) {
-          case eFormSubmit:
-            if (PopupAllowedForEvent("submit")) {
-              abuse = openControlled;
-            }
-            break;
-          case eFormReset:
-            if (PopupAllowedForEvent("reset")) {
-              abuse = openControlled;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      break;
-    default:
-      break;
-  }
-
-  return abuse;
-}
-
-// static
-void Event::PopupAllowedEventsChanged() {
-  if (sPopupAllowedEvents) {
-    free(sPopupAllowedEvents);
-  }
-||||||| merged common ancestors
-void
-Event::SetTarget(EventTarget* aTarget)
-{
-  mEvent->mTarget = aTarget;
-}
-
-bool
-Event::IsDispatchStopped()
-{
-  return mEvent->PropagationStopped();
-}
-
-WidgetEvent*
-Event::WidgetEventPtr()
-{
-  return mEvent;
-}
-
-// return true if eventName is contained within events, delimited by
-// spaces
-static bool
-PopupAllowedForEvent(const char *eventName)
-{
-  if (!sPopupAllowedEvents) {
-    Event::PopupAllowedEventsChanged();
-
-    if (!sPopupAllowedEvents) {
-      return false;
-    }
-  }
-
-  nsDependentCString events(sPopupAllowedEvents);
-
-  nsCString::const_iterator start, end;
-  nsCString::const_iterator startiter(events.BeginReading(start));
-  events.EndReading(end);
-
-  while (startiter != end) {
-    nsCString::const_iterator enditer(end);
-
-    if (!FindInReadable(nsDependentCString(eventName), startiter, enditer))
-      return false;
-
-    // the match is surrounded by spaces, or at a string boundary
-    if ((startiter == start || *--startiter == ' ') &&
-        (enditer == end || *enditer == ' ')) {
-      return true;
-    }
-
-    // Move on and see if there are other matches. (The delimitation
-    // requirement makes it pointless to begin the next search before
-    // the end of the invalid match just found.)
-    startiter = enditer;
-  }
-
-  return false;
-}
-
-// static
-PopupControlState
-Event::GetEventPopupControlState(WidgetEvent* aEvent, Event* aDOMEvent)
-{
-  // generally if an event handler is running, new windows are disallowed.
-  // check for exceptions:
-  PopupControlState abuse = openAbused;
-
-  if (aDOMEvent && aDOMEvent->GetWantsPopupControlCheck()) {
-    nsAutoString type;
-    aDOMEvent->GetType(type);
-    if (PopupAllowedForEvent(NS_ConvertUTF16toUTF8(type).get())) {
-      return openAllowed;
-    }
-  }
-
-  switch(aEvent->mClass) {
-  case eBasicEventClass:
-    // For these following events only allow popups if they're
-    // triggered while handling user input. See
-    // nsPresShell::HandleEventInternal() for details.
-    if (EventStateManager::IsHandlingUserInput()) {
-      abuse = openBlocked;
-      switch(aEvent->mMessage) {
-      case eFormSelect:
-        if (PopupAllowedForEvent("select")) {
-          abuse = openControlled;
-        }
-        break;
-      case eFormChange:
-        if (PopupAllowedForEvent("change")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case eEditorInputEventClass:
-    // For this following event only allow popups if it's triggered
-    // while handling user input. See
-    // nsPresShell::HandleEventInternal() for details.
-    if (EventStateManager::IsHandlingUserInput()) {
-      abuse = openBlocked;
-      switch(aEvent->mMessage) {
-      case eEditorInput:
-        if (PopupAllowedForEvent("input")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case eInputEventClass:
-    // For this following event only allow popups if it's triggered
-    // while handling user input. See
-    // nsPresShell::HandleEventInternal() for details.
-    if (EventStateManager::IsHandlingUserInput()) {
-      abuse = openBlocked;
-      switch(aEvent->mMessage) {
-      case eFormChange:
-        if (PopupAllowedForEvent("change")) {
-          abuse = openControlled;
-        }
-        break;
-      case eXULCommand:
-        abuse = openControlled;
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case eKeyboardEventClass:
-    if (aEvent->IsTrusted()) {
-      abuse = openBlocked;
-      uint32_t key = aEvent->AsKeyboardEvent()->mKeyCode;
-      switch(aEvent->mMessage) {
-      case eKeyPress:
-        // return key on focused button. see note at eMouseClick.
-        if (key == NS_VK_RETURN) {
-          abuse = openAllowed;
-        } else if (PopupAllowedForEvent("keypress")) {
-          abuse = openControlled;
-        }
-        break;
-      case eKeyUp:
-        // space key on focused button. see note at eMouseClick.
-        if (key == NS_VK_SPACE) {
-          abuse = openAllowed;
-        } else if (PopupAllowedForEvent("keyup")) {
-          abuse = openControlled;
-        }
-        break;
-      case eKeyDown:
-        if (PopupAllowedForEvent("keydown")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case eTouchEventClass:
-    if (aEvent->IsTrusted()) {
-      abuse = openBlocked;
-      switch (aEvent->mMessage) {
-      case eTouchStart:
-        if (PopupAllowedForEvent("touchstart")) {
-          abuse = openControlled;
-        }
-        break;
-      case eTouchEnd:
-        if (PopupAllowedForEvent("touchend")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case eMouseEventClass:
-    if (aEvent->IsTrusted() &&
-        aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
-      abuse = openBlocked;
-      switch(aEvent->mMessage) {
-      case eMouseUp:
-        if (PopupAllowedForEvent("mouseup")) {
-          abuse = openControlled;
-        }
-        break;
-      case eMouseDown:
-        if (PopupAllowedForEvent("mousedown")) {
-          abuse = openControlled;
-        }
-        break;
-      case eMouseClick:
-        /* Click events get special treatment because of their
-           historical status as a more legitimate event handler. If
-           click popups are enabled in the prefs, clear the popup
-           status completely. */
-        if (PopupAllowedForEvent("click")) {
-          abuse = openAllowed;
-        }
-        break;
-      case eMouseDoubleClick:
-        if (PopupAllowedForEvent("dblclick")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case ePointerEventClass:
-    if (aEvent->IsTrusted() &&
-        aEvent->AsPointerEvent()->button == WidgetMouseEvent::eLeftButton) {
-      switch(aEvent->mMessage) {
-      case ePointerUp:
-        if (PopupAllowedForEvent("pointerup")) {
-          abuse = openControlled;
-        }
-        break;
-      case ePointerDown:
-        if (PopupAllowedForEvent("pointerdown")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  case eFormEventClass:
-    // For these following events only allow popups if they're
-    // triggered while handling user input. See
-    // nsPresShell::HandleEventInternal() for details.
-    if (EventStateManager::IsHandlingUserInput()) {
-      abuse = openBlocked;
-      switch(aEvent->mMessage) {
-      case eFormSubmit:
-        if (PopupAllowedForEvent("submit")) {
-          abuse = openControlled;
-        }
-        break;
-      case eFormReset:
-        if (PopupAllowedForEvent("reset")) {
-          abuse = openControlled;
-        }
-        break;
-      default:
-        break;
-      }
-    }
-    break;
-  default:
-    break;
-  }
-
-  return abuse;
-}
-
-// static
-void
-Event::PopupAllowedEventsChanged()
-{
-  if (sPopupAllowedEvents) {
-    free(sPopupAllowedEvents);
-  }
-=======
-void Event::SetTarget(EventTarget* aTarget) { mEvent->mTarget = aTarget; }
->>>>>>> upstream-releases
-
-bool Event::IsDispatchStopped() { return mEvent->PropagationStopped(); }
-
-<<<<<<< HEAD
-// static
-void Event::Shutdown() {
-  if (sPopupAllowedEvents) {
-    free(sPopupAllowedEvents);
-  }
-}
-||||||| merged common ancestors
-// static
-void
-Event::Shutdown()
-{
-  if (sPopupAllowedEvents) {
-    free(sPopupAllowedEvents);
-  }
-}
-=======
-WidgetEvent* Event::WidgetEventPtr() { return mEvent; }
->>>>>>> upstream-releases
 
 // static
 CSSIntPoint Event::GetScreenCoords(nsPresContext* aPresContext,
@@ -1123,14 +528,6 @@ CSSIntPoint Event::GetScreenCoords(nsPresContext* aPresContext,
     return CSSIntPoint(aPoint.x, aPoint.y);
   }
 
-<<<<<<< HEAD
-  nsPoint pt = LayoutDevicePixel::ToAppUnits(
-      aPoint,
-      aPresContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
-||||||| merged common ancestors
-  nsPoint pt =
-    LayoutDevicePixel::ToAppUnits(aPoint, aPresContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
-=======
   // (Potentially) transform the point from the coordinate space of an
   // out-of-process iframe to the coordinate space of the native
   // window. The transform can only be applied to a point whose components
@@ -1145,25 +542,15 @@ CSSIntPoint Event::GetScreenCoords(nsPresContext* aPresContext,
   nsPoint pt = LayoutDevicePixel::ToAppUnits(
       rounded,
       aPresContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
->>>>>>> upstream-releases
 
   if (PresShell* presShell = aPresContext->GetPresShell()) {
     pt = pt.RemoveResolution(
         nsLayoutUtils::GetCurrentAPZResolutionScale(presShell));
   }
 
-<<<<<<< HEAD
-  pt += LayoutDevicePixel::ToAppUnits(
-      guiEvent->mWidget->WidgetToScreenOffset(),
-      aPresContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
-||||||| merged common ancestors
-  pt += LayoutDevicePixel::ToAppUnits(guiEvent->mWidget->WidgetToScreenOffset(),
-                                      aPresContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
-=======
   pt += LayoutDevicePixel::ToAppUnits(
       guiEvent->mWidget->TopLevelWidgetToScreenOffset(),
       aPresContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
->>>>>>> upstream-releases
 
   return CSSPixel::FromAppUnitsRounded(pt);
 }
@@ -1307,33 +694,7 @@ void Event::SetReturnValue(bool aReturnValue, CallerType aCallerType) {
   }
 }
 
-<<<<<<< HEAD
 double Event::TimeStamp() {
-  if (!sReturnHighResTimeStamp) {
-    // In the situation where you have set a very old, not-very-supported
-    // non-default preference, we will always reduce the precision,
-    // regardless of system principal or not.
-    // The timestamp is absolute, so we supply a zero context mix-in.
-    double ret = static_cast<double>(mEvent->mTime);
-    return nsRFPService::ReduceTimePrecisionAsMSecs(ret, 0);
-  }
-
-||||||| merged common ancestors
-double
-Event::TimeStamp()
-{
-  if (!sReturnHighResTimeStamp) {
-    // In the situation where you have set a very old, not-very-supported
-    // non-default preference, we will always reduce the precision,
-    // regardless of system principal or not.
-    // The timestamp is absolute, so we supply a zero context mix-in.
-    double ret = static_cast<double>(mEvent->mTime);
-    return nsRFPService::ReduceTimePrecisionAsMSecs(ret, 0);
-  }
-
-=======
-double Event::TimeStamp() {
->>>>>>> upstream-releases
   if (mEvent->mTimeStamp.IsNull()) {
     return 0.0;
   }

@@ -41,51 +41,12 @@ nsresult nsJARProtocolHandler::Init() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsIMIMEService *nsJARProtocolHandler::MimeService() {
-  if (!mMimeService) mMimeService = do_GetService("@mozilla.org/mime;1");
-||||||| merged common ancestors
-nsIMIMEService *
-nsJARProtocolHandler::MimeService()
-{
-    if (!mMimeService)
-        mMimeService = do_GetService("@mozilla.org/mime;1");
-=======
 nsIMIMEService* nsJARProtocolHandler::MimeService() {
   if (!mMimeService) mMimeService = do_GetService("@mozilla.org/mime;1");
->>>>>>> upstream-releases
 
   return mMimeService.get();
 }
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsJARProtocolHandler, nsIJARProtocolHandler,
-                  nsIProtocolHandler, nsISupportsWeakReference)
-
-already_AddRefed<nsJARProtocolHandler> nsJARProtocolHandler::GetSingleton() {
-  if (!gJarHandler) {
-    gJarHandler = new nsJARProtocolHandler();
-    if (NS_SUCCEEDED(gJarHandler->Init())) {
-      ClearOnShutdown(&gJarHandler);
-    } else {
-      gJarHandler = nullptr;
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(nsJARProtocolHandler,
-                  nsIJARProtocolHandler,
-                  nsIProtocolHandler,
-                  nsISupportsWeakReference)
-
-already_AddRefed<nsJARProtocolHandler>
-nsJARProtocolHandler::GetSingleton()
-{
-    if (!gJarHandler) {
-        gJarHandler = new nsJARProtocolHandler();
-        if (NS_SUCCEEDED(gJarHandler->Init())) {
-            ClearOnShutdown(&gJarHandler);
-        } else {
-            gJarHandler = nullptr;
-        }
-=======
 NS_IMPL_ISUPPORTS(nsJARProtocolHandler, nsIProtocolHandler,
                   nsISupportsWeakReference)
 
@@ -96,115 +57,27 @@ already_AddRefed<nsJARProtocolHandler> nsJARProtocolHandler::GetSingleton() {
       ClearOnShutdown(&gJarHandler);
     } else {
       gJarHandler = nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
   }
   return do_AddRef(gJarHandler);
-}
-
-NS_IMETHODIMP
-nsJARProtocolHandler::GetJARCache(nsIZipReaderCache **result) {
-  *result = mJARCache;
-  NS_ADDREF(*result);
-  return NS_OK;
-||||||| merged common ancestors
-    return do_AddRef(gJarHandler);
-}
-
-NS_IMETHODIMP
-nsJARProtocolHandler::GetJARCache(nsIZipReaderCache* *result)
-{
-    *result = mJARCache;
-    NS_ADDREF(*result);
-    return NS_OK;
-=======
-  }
-  return do_AddRef(gJarHandler);
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // nsIProtocolHandler methods:
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARProtocolHandler::GetScheme(nsACString &result) {
-  result.AssignLiteral("jar");
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsJARProtocolHandler::GetDefaultPort(int32_t *result) {
-  *result = -1;  // no port for JAR: URLs
-  return NS_OK;
-||||||| merged common ancestors
-nsJARProtocolHandler::GetScheme(nsACString &result)
-{
-    result.AssignLiteral("jar");
-    return NS_OK;
-}
-
-NS_IMETHODIMP
-nsJARProtocolHandler::GetDefaultPort(int32_t *result)
-{
-    *result = -1;        // no port for JAR: URLs
-    return NS_OK;
-=======
 nsJARProtocolHandler::GetScheme(nsACString& result) {
   result.AssignLiteral("jar");
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARProtocolHandler::GetProtocolFlags(uint32_t *result) {
-  // URI_LOADABLE_BY_ANYONE, since it's our inner URI that will matter
-  // anyway.
-  *result = URI_NORELATIVE | URI_NOAUTH | URI_LOADABLE_BY_ANYONE;
-  /* Although jar uris have their own concept of relative urls
-     it is very different from the standard behaviour, so we
-     have to say norelative here! */
-  return NS_OK;
-||||||| merged common ancestors
-nsJARProtocolHandler::GetProtocolFlags(uint32_t *result)
-{
-    // URI_LOADABLE_BY_ANYONE, since it's our inner URI that will matter
-    // anyway.
-    *result = URI_NORELATIVE | URI_NOAUTH | URI_LOADABLE_BY_ANYONE;
-    /* Although jar uris have their own concept of relative urls
-       it is very different from the standard behaviour, so we
-       have to say norelative here! */
-    return NS_OK;
-=======
 nsJARProtocolHandler::GetDefaultPort(int32_t* result) {
   *result = -1;  // no port for JAR: URLs
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARProtocolHandler::NewURI(const nsACString &aSpec, const char *aCharset,
-                             nsIURI *aBaseURI, nsIURI **result) {
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  return NS_MutateURI(new nsJARURI::Mutator())
-      .Apply(NS_MutatorMethod(&nsIJARURIMutator::SetSpecBaseCharset,
-                              nsCString(aSpec), base, aCharset))
-      .Finalize(result);
-||||||| merged common ancestors
-nsJARProtocolHandler::NewURI(const nsACString &aSpec,
-                             const char *aCharset,
-                             nsIURI *aBaseURI,
-                             nsIURI **result)
-{
-    nsCOMPtr<nsIURI> base(aBaseURI);
-    return NS_MutateURI(new nsJARURI::Mutator())
-             .Apply(NS_MutatorMethod(&nsIJARURIMutator::SetSpecBaseCharset,
-                                     nsCString(aSpec), base, aCharset))
-             .Finalize(result);
-=======
 nsJARProtocolHandler::GetProtocolFlags(uint32_t* result) {
   // URI_LOADABLE_BY_ANYONE, since it's our inner URI that will matter
   // anyway.
@@ -213,52 +86,9 @@ nsJARProtocolHandler::GetProtocolFlags(uint32_t* result) {
      it is very different from the standard behaviour, so we
      have to say norelative here! */
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARProtocolHandler::NewChannel2(nsIURI *uri, nsILoadInfo *aLoadInfo,
-                                  nsIChannel **result) {
-  nsJARChannel *chan = new nsJARChannel();
-  if (!chan) return NS_ERROR_OUT_OF_MEMORY;
-  NS_ADDREF(chan);
-
-  nsresult rv = chan->Init(uri);
-  if (NS_FAILED(rv)) {
-    NS_RELEASE(chan);
-    return rv;
-  }
-
-  // set the loadInfo on the new channel
-  rv = chan->SetLoadInfo(aLoadInfo);
-  if (NS_FAILED(rv)) {
-    NS_RELEASE(chan);
-    return rv;
-  }
-||||||| merged common ancestors
-nsJARProtocolHandler::NewChannel2(nsIURI* uri,
-                                  nsILoadInfo* aLoadInfo,
-                                  nsIChannel** result)
-{
-    nsJARChannel *chan = new nsJARChannel();
-    if (!chan)
-        return NS_ERROR_OUT_OF_MEMORY;
-    NS_ADDREF(chan);
-
-    nsresult rv = chan->Init(uri);
-    if (NS_FAILED(rv)) {
-        NS_RELEASE(chan);
-        return rv;
-    }
-
-    // set the loadInfo on the new channel
-    rv = chan->SetLoadInfo(aLoadInfo);
-    if (NS_FAILED(rv)) {
-        NS_RELEASE(chan);
-        return rv;
-    }
-=======
 nsJARProtocolHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
                                  nsIChannel** result) {
   nsJARChannel* chan = new nsJARChannel();
@@ -270,60 +100,24 @@ nsJARProtocolHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
     NS_RELEASE(chan);
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *result = chan;
-  return NS_OK;
-}
-||||||| merged common ancestors
-    *result = chan;
-    return NS_OK;
-}
-=======
   // set the loadInfo on the new channel
   rv = chan->SetLoadInfo(aLoadInfo);
   if (NS_FAILED(rv)) {
     NS_RELEASE(chan);
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJARProtocolHandler::NewChannel(nsIURI *uri, nsIChannel **result) {
-  return NewChannel2(uri, nullptr, result);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJARProtocolHandler::NewChannel(nsIURI *uri, nsIChannel **result)
-{
-    return NewChannel2(uri, nullptr, result);
-=======
   *result = chan;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARProtocolHandler::AllowPort(int32_t port, const char *scheme,
-                                bool *_retval) {
-  // don't override anything.
-  *_retval = false;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARProtocolHandler::AllowPort(int32_t port, const char *scheme, bool *_retval)
-{
-    // don't override anything.
-    *_retval = false;
-    return NS_OK;
-=======
 nsJARProtocolHandler::AllowPort(int32_t port, const char* scheme,
                                 bool* _retval) {
   // don't override anything.
   *_retval = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////

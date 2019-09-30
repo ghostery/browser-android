@@ -15,21 +15,9 @@ class GamepadEventChannelChild final : public PGamepadEventChannelChild {
  public:
   GamepadEventChannelChild() {}
   ~GamepadEventChannelChild() {}
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvGamepadUpdate(
-      const GamepadChangeEvent& aGamepadEvent) override;
-  virtual mozilla::ipc::IPCResult RecvReplyGamepadVibrateHaptic(
-      const uint32_t& aPromiseID) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvGamepadUpdate(const GamepadChangeEvent& aGamepadEvent) override;
-  virtual mozilla::ipc::IPCResult
-  RecvReplyGamepadVibrateHaptic(const uint32_t& aPromiseID) override;
-=======
   mozilla::ipc::IPCResult RecvGamepadUpdate(
       const GamepadChangeEvent& aGamepadEvent);
   mozilla::ipc::IPCResult RecvReplyGamepadPromise(const uint32_t& aPromiseID);
->>>>>>> upstream-releases
   void AddPromise(const uint32_t& aID, dom::Promise* aPromise);
 
  private:

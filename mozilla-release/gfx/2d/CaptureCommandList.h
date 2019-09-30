@@ -108,14 +108,7 @@ class CaptureCommandList {
     uint8_t* mEnd;
   };
 
-<<<<<<< HEAD
-  void Log(TreeLog& aStream) {
-||||||| merged common ancestors
-  void Log(TreeLog& aStream)
-  {
-=======
   void Log(TreeLog<>& aStream) {
->>>>>>> upstream-releases
     for (iterator iter(*this); !iter.Done(); iter.Next()) {
       DrawingCommand* cmd = iter.Get();
       cmd->Log(aStream);

@@ -13,18 +13,7 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
-extern crate cranelift_codegen;
-extern crate cranelift_wasm;
-||||||| merged common ancestors
-#![allow(unused)]
-#![warn(unused_must_use)]
-
-extern crate cranelift_codegen;
-extern crate cranelift_wasm;
-=======
 #[cfg(feature = "cranelift_x86")]
->>>>>>> upstream-releases
 #[macro_use]
 extern crate target_lexicon;
 
@@ -37,14 +26,6 @@ mod isa; // `TargetISA` configuration.
 mod utils; // Helpers for other source files.
 mod wasm2clif; // WebAssembly to Cranelift translation callbacks.
 
-<<<<<<< HEAD
-use baldrdash::{CompiledFunc, FuncCompileInput, ModuleEnvironment, StaticEnvironment};
-use compile::BatchCompiler;
-||||||| merged common ancestors
-use baldrdash::{ CompiledFunc, FuncCompileInput, ModuleEnvironment, StaticEnvironment };
-use compile::BatchCompiler;
-=======
->>>>>>> upstream-releases
 use std::ptr;
 
 use crate::bindings::{CompiledFunc, FuncCompileInput, ModuleEnvironment, StaticEnvironment};

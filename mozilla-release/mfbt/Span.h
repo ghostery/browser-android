@@ -39,13 +39,7 @@
 #    pragma warning(push)
 
 // turn off some warnings that are noisy about our MOZ_RELEASE_ASSERT statements
-<<<<<<< HEAD
-#pragma warning(disable : 4127)  // conditional expression is constant
-||||||| merged common ancestors
-#pragma warning(disable : 4127) // conditional expression is constant
-=======
 #    pragma warning(disable : 4127)  // conditional expression is constant
->>>>>>> upstream-releases
 
 // blanket turn off warnings from CppCoreCheck for now
 // so people aren't annoyed by them when running the tool.
@@ -57,16 +51,8 @@
 #      pragma push_macro("constexpr")
 #      define constexpr /*constexpr*/
 
-<<<<<<< HEAD
-#endif  // _MSC_VER < 1910
-#endif  // _MSC_VER
-||||||| merged common ancestors
-#endif            // _MSC_VER < 1910
-#endif            // _MSC_VER
-=======
 #    endif  // _MSC_VER < 1910
 #  endif    // _MSC_VER
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -948,23 +934,9 @@ inline Span<const char16_t> MakeStringSpan(const char16_t* aZeroTerminated) {
 #      undef constexpr
 #      pragma pop_macro("constexpr")
 
-<<<<<<< HEAD
-#endif  // _MSC_VER < 1910
-||||||| merged common ancestors
-#endif // _MSC_VER < 1910
-=======
 #    endif  // _MSC_VER < 1910
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#pragma warning(pop)
-#endif  // _MSC_VER
-||||||| merged common ancestors
-#pragma warning(pop)
-#endif // _MSC_VER
-=======
 #    pragma warning(pop)
 #  endif  // _MSC_VER
->>>>>>> upstream-releases
 
 #endif  // mozilla_Span_h

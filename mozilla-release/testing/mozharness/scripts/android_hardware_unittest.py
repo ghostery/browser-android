@@ -23,17 +23,10 @@ from mozharness.mozilla.testing.android import AndroidMixin
 from mozharness.mozilla.testing.testbase import TestingMixin, testing_config_options
 from mozharness.mozilla.testing.codecoverage import CodeCoverageMixin
 
-<<<<<<< HEAD
-SUITE_DEFAULT_E10S = ['geckoview-junit', 'mochitest', 'reftest']
-SUITE_NO_E10S = ['cppunittest', 'xpcshell']
-
-||||||| merged common ancestors
-=======
 SUITE_DEFAULT_E10S = ['geckoview-junit', 'mochitest', 'reftest']
 SUITE_NO_E10S = ['cppunittest', 'xpcshell']
 SUITE_REPEATABLE = ['mochitest', 'reftest']
 
->>>>>>> upstream-releases
 
 class AndroidHardwareTest(TestingMixin, BaseScript, MozbaseMixin,
                           CodeCoverageMixin, AndroidMixin):
@@ -78,16 +71,6 @@ class AndroidHardwareTest(TestingMixin, BaseScript, MozbaseMixin,
          "default": "info",
          "help": "Set log level (debug|info|warning|error|critical|fatal)",
          }
-<<<<<<< HEAD
-    ], [
-        ['--e10s', ],
-        {"action": "store_true",
-         "dest": "e10s",
-         "default": False,
-         "help": "Run tests with multiple processes.",
-         }
-||||||| merged common ancestors
-=======
     ], [
         ['--disable-e10s', ],
         {"action": "store_false",
@@ -111,7 +94,6 @@ class AndroidHardwareTest(TestingMixin, BaseScript, MozbaseMixin,
          "help": "Repeat the tests the given number of times. Supported "
                  "by mochitest, reftest, crashtest, ignored otherwise."
          }
->>>>>>> upstream-releases
     ]] + copy.deepcopy(testing_config_options)
 
     def __init__(self, require_config_file=False):
@@ -152,13 +134,8 @@ class AndroidHardwareTest(TestingMixin, BaseScript, MozbaseMixin,
         self.xre_path = None
         self.log_raw_level = c.get('log_raw_level')
         self.log_tbpl_level = c.get('log_tbpl_level')
-<<<<<<< HEAD
-        self.e10s = c.get('e10s')
-||||||| merged common ancestors
-=======
         self.e10s = c.get('e10s')
         self.enable_webrender = c.get('enable_webrender')
->>>>>>> upstream-releases
 
     def query_abs_dirs(self):
         if self.abs_dirs:
@@ -276,21 +253,6 @@ class AndroidHardwareTest(TestingMixin, BaseScript, MozbaseMixin,
             if self.total_chunks is not None:
                 cmd.extend(['--total-chunks', self.total_chunks])
 
-<<<<<<< HEAD
-        if 'mochitest' in self.test_suite:
-            category = 'mochitest'
-        elif 'reftest' in self.test_suite or 'crashtest' in self.test_suite:
-            category = 'reftest'
-        else:
-            category = self.test_suite
-        if category not in SUITE_NO_E10S:
-            if category in SUITE_DEFAULT_E10S and not self.e10s:
-                cmd.extend(['--disable-e10s'])
-            elif category not in SUITE_DEFAULT_E10S and self.e10s:
-                cmd.extend(['--e10s'])
-
-||||||| merged common ancestors
-=======
         if 'mochitest' in self.test_suite:
             category = 'mochitest'
         elif 'reftest' in self.test_suite or 'crashtest' in self.test_suite:
@@ -316,7 +278,6 @@ class AndroidHardwareTest(TestingMixin, BaseScript, MozbaseMixin,
         if self.enable_webrender:
             cmd.extend(['--enable-webrender'])
 
->>>>>>> upstream-releases
         try_options, try_tests = self.try_args(self.test_suite)
         cmd.extend(try_options)
         if not self.verify_enabled and not self.per_test_coverage:

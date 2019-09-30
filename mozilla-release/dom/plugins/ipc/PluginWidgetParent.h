@@ -17,16 +17,8 @@
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class TabParent;
-}  // namespace dom
-||||||| merged common ancestors
-class TabParent;
-} // namespace dom
-=======
 class BrowserParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 namespace plugins {
 

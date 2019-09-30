@@ -3,15 +3,6 @@ from __future__ import unicode_literals
 import re
 import sys
 import json
-<<<<<<< HEAD
-
-
-def to_json(value, fn=None):
-||||||| merged common ancestors
-
-
-def to_json(value):
-=======
 import six
 
 
@@ -77,7 +68,6 @@ class Transformer(Visitor):
 
 
 def to_json(value, fn=None):
->>>>>>> upstream-releases
     if isinstance(value, BaseNode):
         return value.to_json(fn)
     if isinstance(value, list):
@@ -286,21 +276,10 @@ class Expression(SyntaxNode):
     """An abstract base class for expressions."""
 
 
-<<<<<<< HEAD
-class StringLiteral(Expression):
-    def __init__(self, raw, value, **kwargs):
-        super(StringLiteral, self).__init__(**kwargs)
-        self.raw = raw
-||||||| merged common ancestors
-class StringLiteral(Expression):
-    def __init__(self, value, **kwargs):
-        super(StringLiteral, self).__init__(**kwargs)
-=======
 class Literal(Expression):
     """An abstract base class for literals."""
     def __init__(self, value, **kwargs):
         super(Literal, self).__init__(**kwargs)
->>>>>>> upstream-releases
         self.value = value
 
     def parse(self):
@@ -363,15 +342,6 @@ class VariableReference(Expression):
         self.id = id
 
 
-<<<<<<< HEAD
-class FunctionReference(Expression):
-    def __init__(self, id, **kwargs):
-        super(FunctionReference, self).__init__(**kwargs)
-        self.id = id
-
-
-||||||| merged common ancestors
-=======
 class FunctionReference(Expression):
     def __init__(self, id, arguments, **kwargs):
         super(FunctionReference, self).__init__(**kwargs)
@@ -379,7 +349,6 @@ class FunctionReference(Expression):
         self.arguments = arguments
 
 
->>>>>>> upstream-releases
 class SelectExpression(Expression):
     def __init__(self, selector, variants, **kwargs):
         super(SelectExpression, self).__init__(**kwargs)

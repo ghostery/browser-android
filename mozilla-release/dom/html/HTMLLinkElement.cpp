@@ -86,34 +86,18 @@ NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLLinkElement,
 
 NS_IMPL_ELEMENT_CLONE(HTMLLinkElement)
 
-<<<<<<< HEAD
-bool HTMLLinkElement::Disabled() {
-||||||| merged common ancestors
-bool
-HTMLLinkElement::Disabled()
-{
-=======
 bool HTMLLinkElement::Disabled() const {
   if (StaticPrefs::dom_link_disabled_attribute_enabled()) {
     return GetBoolAttr(nsGkAtoms::disabled);
   }
->>>>>>> upstream-releases
   StyleSheet* ss = GetSheet();
   return ss && ss->Disabled();
 }
 
-<<<<<<< HEAD
-void HTMLLinkElement::SetDisabled(bool aDisabled) {
-||||||| merged common ancestors
-void
-HTMLLinkElement::SetDisabled(bool aDisabled)
-{
-=======
 void HTMLLinkElement::SetDisabled(bool aDisabled, ErrorResult& aRv) {
   if (StaticPrefs::dom_link_disabled_attribute_enabled()) {
     return SetHTMLBoolAttr(nsGkAtoms::disabled, aDisabled, aRv);
   }
->>>>>>> upstream-releases
   if (StyleSheet* ss = GetSheet()) {
     ss->SetDisabled(aDisabled);
   }
@@ -133,30 +117,10 @@ bool HTMLLinkElement::HasDeferredDNSPrefetchRequest() {
   return HasFlag(HTML_LINK_DNS_PREFETCH_DEFERRED);
 }
 
-<<<<<<< HEAD
-nsresult HTMLLinkElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-||||||| merged common ancestors
-nsresult
-HTMLLinkElement::BindToTree(nsIDocument* aDocument,
-                            nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-=======
 nsresult HTMLLinkElement::BindToTree(BindContext& aContext, nsINode& aParent) {
->>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
-<<<<<<< HEAD
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (IsInComposedDoc()) {
@@ -169,18 +133,6 @@ nsresult HTMLLinkElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   void (HTMLLinkElement::*update)() =
       &HTMLLinkElement::UpdateStyleSheetInternal;
   nsContentUtils::AddScriptRunner(
-<<<<<<< HEAD
-      NewRunnableMethod("dom::HTMLLinkElement::BindToTree", this, update));
-
-  if (aDocument && this->AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel,
-                                     nsGkAtoms::localization, eIgnoreCase)) {
-    aDocument->LocalizationLinkAdded(this);
-||||||| merged common ancestors
-    NewRunnableMethod("dom::HTMLLinkElement::BindToTree", this, update));
-
-  if (aDocument && this->AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel, nsGkAtoms::localization, eIgnoreCase)) {
-    aDocument->LocalizationLinkAdded(this);
-=======
       NewRunnableMethod("dom::HTMLLinkElement::BindToTree", this, update));
 
   // FIXME(emilio, bug 1555947): Why does this use the uncomposed doc but the
@@ -189,7 +141,6 @@ nsresult HTMLLinkElement::BindToTree(BindContext& aContext, nsINode& aParent) {
       AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel, nsGkAtoms::localization,
                   eIgnoreCase)) {
     aContext.OwnerDoc().LocalizationLinkAdded(this);
->>>>>>> upstream-releases
   }
 
   LinkAdded();
@@ -205,15 +156,7 @@ void HTMLLinkElement::LinkRemoved() {
   CreateAndDispatchEvent(OwnerDoc(), NS_LITERAL_STRING("DOMLinkRemoved"));
 }
 
-<<<<<<< HEAD
-void HTMLLinkElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLLinkElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void HTMLLinkElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   // Cancel any DNS prefetches
   // Note: Must come before ResetLinkState.  If called after, it will recreate
   // mCachedURI based on data that is invalid - due to a call to GetHostname.
@@ -230,12 +173,6 @@ void HTMLLinkElement::UnbindFromTree(bool aNullParent) {
   Document* oldDoc = GetUncomposedDoc();
   ShadowRoot* oldShadowRoot = GetContainingShadow();
 
-<<<<<<< HEAD
-  if (oldDoc && this->AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel,
-                                  nsGkAtoms::localization, eIgnoreCase)) {
-||||||| merged common ancestors
-  if (oldDoc && this->AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel, nsGkAtoms::localization, eIgnoreCase)) {
-=======
   // We want to update the localization but only if the
   // link is removed from a DOM change, and not
   // because the document is going away.
@@ -243,7 +180,6 @@ void HTMLLinkElement::UnbindFromTree(bool aNullParent) {
   if (oldDoc && oldDoc->GetScriptHandlingObject(ignore) &&
       this->AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel,
                         nsGkAtoms::localization, eIgnoreCase)) {
->>>>>>> upstream-releases
     oldDoc->LocalizationLinkRemoved(this);
   }
 
@@ -283,22 +219,9 @@ bool HTMLLinkElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                               aMaybeScriptedPrincipal, aResult);
 }
 
-<<<<<<< HEAD
-void HTMLLinkElement::CreateAndDispatchEvent(nsIDocument* aDoc,
-                                             const nsAString& aEventName) {
-  if (!aDoc) return;
-||||||| merged common ancestors
-void
-HTMLLinkElement::CreateAndDispatchEvent(nsIDocument* aDoc,
-                                        const nsAString& aEventName)
-{
-  if (!aDoc)
-    return;
-=======
 void HTMLLinkElement::CreateAndDispatchEvent(Document* aDoc,
                                              const nsAString& aEventName) {
   if (!aDoc) return;
->>>>>>> upstream-releases
 
   // In the unlikely case that both rev is specified *and* rel=stylesheet,
   // this code will cause the event to fire, on the principle that maybe the
@@ -380,21 +303,10 @@ nsresult HTMLLinkElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
 
   // If the link has `rel=localization` and its `href` attribute is changed,
   // update the list of localization links.
-<<<<<<< HEAD
-  if (aNameSpaceID == kNameSpaceID_None && aName == nsGkAtoms::href &&
-      AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel, nsGkAtoms::localization,
-                  eIgnoreCase)) {
-    nsIDocument* doc = GetComposedDoc();
-||||||| merged common ancestors
-  if (aNameSpaceID == kNameSpaceID_None && aName == nsGkAtoms::href && 
-      AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel, nsGkAtoms::localization, eIgnoreCase)) {
-    nsIDocument* doc = GetComposedDoc();
-=======
   if (aNameSpaceID == kNameSpaceID_None && aName == nsGkAtoms::href &&
       AttrValueIs(kNameSpaceID_None, nsGkAtoms::rel, nsGkAtoms::localization,
                   eIgnoreCase)) {
     Document* doc = GetComposedDoc();
->>>>>>> upstream-releases
     if (doc) {
       if (aOldValue) {
         doc->LocalizationLinkRemoved(this);
@@ -407,27 +319,12 @@ nsresult HTMLLinkElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
 
   if (aValue) {
     if (aNameSpaceID == kNameSpaceID_None &&
-<<<<<<< HEAD
-        (aName == nsGkAtoms::href || aName == nsGkAtoms::rel ||
-         aName == nsGkAtoms::title || aName == nsGkAtoms::media ||
-         aName == nsGkAtoms::type || aName == nsGkAtoms::as ||
-         aName == nsGkAtoms::crossorigin)) {
-||||||| merged common ancestors
-        (aName == nsGkAtoms::href ||
-         aName == nsGkAtoms::rel ||
-         aName == nsGkAtoms::title ||
-         aName == nsGkAtoms::media ||
-         aName == nsGkAtoms::type ||
-         aName == nsGkAtoms::as ||
-         aName == nsGkAtoms::crossorigin)) {
-=======
         (aName == nsGkAtoms::href || aName == nsGkAtoms::rel ||
          aName == nsGkAtoms::title || aName == nsGkAtoms::media ||
          aName == nsGkAtoms::type || aName == nsGkAtoms::as ||
          aName == nsGkAtoms::crossorigin ||
          (aName == nsGkAtoms::disabled &&
           StaticPrefs::dom_link_disabled_attribute_enabled()))) {
->>>>>>> upstream-releases
       bool dropSheet = false;
       if (aName == nsGkAtoms::rel) {
         nsAutoString value;
@@ -449,37 +346,15 @@ nsresult HTMLLinkElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
         UpdatePreload(aName, aValue, aOldValue);
       }
 
-<<<<<<< HEAD
-      const bool forceUpdate = dropSheet || aName == nsGkAtoms::title ||
-                               aName == nsGkAtoms::media ||
-                               aName == nsGkAtoms::type;
-||||||| merged common ancestors
-      const bool forceUpdate = dropSheet ||
-        aName == nsGkAtoms::title ||
-        aName == nsGkAtoms::media ||
-        aName == nsGkAtoms::type;
-=======
       const bool forceUpdate =
           dropSheet || aName == nsGkAtoms::title || aName == nsGkAtoms::media ||
           aName == nsGkAtoms::type || aName == nsGkAtoms::disabled;
->>>>>>> upstream-releases
 
       Unused << UpdateStyleSheetInternal(
           nullptr, nullptr, forceUpdate ? ForceUpdate::Yes : ForceUpdate::No);
     }
   } else {
     if (aNameSpaceID == kNameSpaceID_None) {
-<<<<<<< HEAD
-      if (aName == nsGkAtoms::href || aName == nsGkAtoms::rel ||
-          aName == nsGkAtoms::title || aName == nsGkAtoms::media ||
-          aName == nsGkAtoms::type) {
-||||||| merged common ancestors
-      if (aName == nsGkAtoms::href ||
-          aName == nsGkAtoms::rel ||
-          aName == nsGkAtoms::title ||
-          aName == nsGkAtoms::media ||
-          aName == nsGkAtoms::type) {
-=======
       if (aName == nsGkAtoms::disabled &&
           StaticPrefs::dom_link_disabled_attribute_enabled()) {
         mExplicitlyEnabled = true;
@@ -491,7 +366,6 @@ nsresult HTMLLinkElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
           aName == nsGkAtoms::type ||
           (aName == nsGkAtoms::disabled &&
            StaticPrefs::dom_link_disabled_attribute_enabled())) {
->>>>>>> upstream-releases
         Unused << UpdateStyleSheetInternal(nullptr, nullptr, ForceUpdate::Yes);
       }
       if ((aName == nsGkAtoms::as || aName == nsGkAtoms::type ||
@@ -579,31 +453,6 @@ Maybe<nsStyleLinkElement::SheetInfo> HTMLLinkElement::GetStyleSheetInfo() {
 
   nsCOMPtr<nsIURI> uri = Link::GetURI();
   nsCOMPtr<nsIPrincipal> prin = mTriggeringPrincipal;
-<<<<<<< HEAD
-  return Some(SheetInfo{
-      *OwnerDoc(),
-      this,
-      uri.forget(),
-      prin.forget(),
-      GetReferrerPolicyAsEnum(),
-      GetCORSMode(),
-      title,
-      media,
-      alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
-      IsInline::No,
-||||||| merged common ancestors
-  return Some(SheetInfo {
-    *OwnerDoc(),
-    this,
-    uri.forget(),
-    prin.forget(),
-    GetReferrerPolicyAsEnum(),
-    GetCORSMode(),
-    title,
-    media,
-    alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
-    IsInline::No,
-=======
   return Some(SheetInfo{
       *OwnerDoc(),
       this,
@@ -616,7 +465,6 @@ Maybe<nsStyleLinkElement::SheetInfo> HTMLLinkElement::GetStyleSheetInfo() {
       alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
       IsInline::No,
       mExplicitlyEnabled ? IsExplicitlyEnabled::Yes : IsExplicitlyEnabled::No,
->>>>>>> upstream-releases
   });
 }
 
@@ -659,24 +507,10 @@ bool IsFontMimeType(const nsAString& aType) {
   return false;
 }
 
-<<<<<<< HEAD
-bool HTMLLinkElement::CheckPreloadAttrs(const nsAttrValue& aAs,
-                                        const nsAString& aType,
-                                        const nsAString& aMedia,
-                                        nsIDocument* aDocument) {
-||||||| merged common ancestors
-bool
-HTMLLinkElement::CheckPreloadAttrs(const nsAttrValue& aAs,
-                                   const nsAString& aType,
-                                   const nsAString& aMedia,
-                                   nsIDocument* aDocument)
-{
-=======
 bool HTMLLinkElement::CheckPreloadAttrs(const nsAttrValue& aAs,
                                         const nsAString& aType,
                                         const nsAString& aMedia,
                                         Document* aDocument) {
->>>>>>> upstream-releases
   nsContentPolicyType policyType = Link::AsValueToContentPolicy(aAs);
   if (policyType == nsIContentPolicy::TYPE_INVALID) {
     return false;

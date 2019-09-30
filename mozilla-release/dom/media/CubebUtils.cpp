@@ -6,16 +6,9 @@
 
 #include "CubebUtils.h"
 
-<<<<<<< HEAD
-#ifdef MOZ_WEBRTC
-#include "CubebDeviceEnumerator.h"
-#endif
-||||||| merged common ancestors
-=======
 #ifdef MOZ_WEBRTC
 #  include "CubebDeviceEnumerator.h"
 #endif
->>>>>>> upstream-releases
 #include "MediaInfo.h"
 #include "mozilla/AbstractThread.h"
 #include "mozilla/dom/ContentChild.h"
@@ -86,18 +79,11 @@ extern mozilla::ipc::FileDescriptor::PlatformHandleType
 audioipc_server_new_client(void*);
 extern void audioipc_server_stop(void*);
 // These functions are provided by audioipc-client crate
-<<<<<<< HEAD
-extern int audioipc_client_init(cubeb**, const char*,
-                                const AudioIpcInitParams*);
-||||||| merged common ancestors
-extern int audioipc_client_init(cubeb**, const char*, const AudioIpcInitParams*);
-=======
 extern int audioipc_client_init(cubeb**, const char*,
                                 const AudioIpcInitParams*);
 #ifdef XP_LINUX
 extern void audioipc_init_threads(const AudioIpcInitParams*);
 #endif
->>>>>>> upstream-releases
 }
 
 namespace mozilla {
@@ -337,12 +323,6 @@ void ForceSetCubebContext(cubeb* aCubebContext) {
   sCubebState = CubebState::Initialized;
 }
 
-<<<<<<< HEAD
-bool InitPreferredSampleRate() {
-||||||| merged common ancestors
-bool InitPreferredSampleRate()
-{
-=======
 void SetInCommunication(bool aInCommunication) {
 #ifdef MOZ_WIDGET_ANDROID
   StaticMutexAutoLock lock(sMutex);
@@ -362,7 +342,6 @@ void SetInCommunication(bool aInCommunication) {
 }
 
 bool InitPreferredSampleRate() {
->>>>>>> upstream-releases
   StaticMutexAutoLock lock(sMutex);
   if (sPreferredSampleRate != 0) {
     return true;
@@ -423,31 +402,6 @@ void InitAudioIPCConnection() {
   MOZ_ASSERT(NS_IsMainThread());
   auto contentChild = dom::ContentChild::GetSingleton();
   auto promise = contentChild->SendCreateAudioIPCConnection();
-<<<<<<< HEAD
-  promise->Then(
-      AbstractThread::MainThread(), __func__,
-      [](ipc::FileDescriptor aFD) {
-        StaticMutexAutoLock lock(sMutex);
-        MOZ_ASSERT(!sIPCConnection);
-        sIPCConnection = new ipc::FileDescriptor(aFD);
-      },
-      [](mozilla::ipc::ResponseRejectReason aReason) {
-        MOZ_LOG(gCubebLog, LogLevel::Error,
-                ("SendCreateAudioIPCConnection failed: %d", int(aReason)));
-      });
-||||||| merged common ancestors
-  promise->Then(AbstractThread::MainThread(),
-                __func__,
-                [](ipc::FileDescriptor aFD) {
-                  StaticMutexAutoLock lock(sMutex);
-                  MOZ_ASSERT(!sIPCConnection);
-                  sIPCConnection = new ipc::FileDescriptor(aFD);
-                },
-                [](mozilla::ipc::ResponseRejectReason aReason) {
-                  MOZ_LOG(gCubebLog, LogLevel::Error, ("SendCreateAudioIPCConnection failed: %d",
-                                                       int(aReason)));
-                });
-=======
   promise->Then(
       AbstractThread::MainThread(), __func__,
       [](dom::FileDescOrError&& aFD) {
@@ -464,7 +418,6 @@ void InitAudioIPCConnection() {
         MOZ_LOG(gCubebLog, LogLevel::Error,
                 ("SendCreateAudioIPCConnection rejected: %d", int(aReason)));
       });
->>>>>>> upstream-releases
 }
 #endif
 
@@ -474,18 +427,6 @@ ipc::FileDescriptor CreateAudioIPCConnection() {
   ipc::FileDescriptor::PlatformHandleType rawFD =
       audioipc_server_new_client(sServerHandle);
   ipc::FileDescriptor fd(rawFD);
-<<<<<<< HEAD
-  if (!fd.IsValid()) {
-    MOZ_LOG(gCubebLog, LogLevel::Error, ("audioipc_server_new_client failed"));
-    return ipc::FileDescriptor();
-  }
-  // Close rawFD since FileDescriptor's ctor cloned it.
-  // TODO: Find cleaner cross-platform way to close rawFD.
-#ifdef XP_WIN
-  CloseHandle(rawFD);
-#else
-||||||| merged common ancestors
-=======
   if (!fd.IsValid()) {
     MOZ_LOG(gCubebLog, LogLevel::Error, ("audioipc_server_new_client failed"));
     return ipc::FileDescriptor();
@@ -495,26 +436,14 @@ ipc::FileDescriptor CreateAudioIPCConnection() {
 #  ifdef XP_WIN
   CloseHandle(rawFD);
 #  else
->>>>>>> upstream-releases
   close(rawFD);
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-=======
 #  endif
->>>>>>> upstream-releases
   return fd;
 #else
   return ipc::FileDescriptor();
 #endif
 }
 
-<<<<<<< HEAD
-cubeb* GetCubebContextUnlocked() {
-||||||| merged common ancestors
-cubeb* GetCubebContextUnlocked()
-{
-=======
 #if defined(XP_LINUX) && !defined(MOZ_WIDGET_ANDROID)
 void InitAudioThreads() {
   AudioIpcInitParams initParams;
@@ -528,7 +457,6 @@ void InitAudioThreads() {
 #endif
 
 cubeb* GetCubebContextUnlocked() {
->>>>>>> upstream-releases
   sMutex.AssertCurrentThreadOwns();
   if (sCubebForceNullContext) {
     // Pref set such that we should return a null context
@@ -601,17 +529,7 @@ cubeb* GetCubebContextUnlocked() {
 #ifdef MOZ_CUBEB_REMOTING
   }
   sIPCConnection = nullptr;
-<<<<<<< HEAD
-#else   // !MOZ_CUBEB_REMOTING
-  int rv = cubeb_init(&sCubebContext, sBrandName, sCubebBackendName.get());
 #endif  // MOZ_CUBEB_REMOTING
-||||||| merged common ancestors
-#else // !MOZ_CUBEB_REMOTING
-  int rv = cubeb_init(&sCubebContext, sBrandName, sCubebBackendName.get());
-#endif // MOZ_CUBEB_REMOTING
-=======
-#endif  // MOZ_CUBEB_REMOTING
->>>>>>> upstream-releases
   NS_WARNING_ASSERTION(rv == CUBEB_OK, "Could not get a cubeb context.");
   sCubebState =
       (rv == CUBEB_OK) ? CubebState::Initialized : CubebState::Uninitialized;
@@ -780,191 +698,7 @@ char* GetForcedOutputDevice() {
   return sCubebOutputDeviceName;
 }
 
-<<<<<<< HEAD
-uint16_t ConvertCubebType(cubeb_device_type aType) {
-  uint16_t map[] = {
-      nsIAudioDeviceInfo::TYPE_UNKNOWN,  // CUBEB_DEVICE_TYPE_UNKNOWN
-      nsIAudioDeviceInfo::TYPE_INPUT,    // CUBEB_DEVICE_TYPE_INPUT,
-      nsIAudioDeviceInfo::TYPE_OUTPUT    // CUBEB_DEVICE_TYPE_OUTPUT
-  };
-  return map[aType];
-}
-
-uint16_t ConvertCubebState(cubeb_device_state aState) {
-  uint16_t map[] = {
-      nsIAudioDeviceInfo::STATE_DISABLED,   // CUBEB_DEVICE_STATE_DISABLED
-      nsIAudioDeviceInfo::STATE_UNPLUGGED,  // CUBEB_DEVICE_STATE_UNPLUGGED
-      nsIAudioDeviceInfo::STATE_ENABLED     // CUBEB_DEVICE_STATE_ENABLED
-  };
-  return map[aState];
-}
-
-uint16_t ConvertCubebPreferred(cubeb_device_pref aPreferred) {
-  if (aPreferred == CUBEB_DEVICE_PREF_NONE) {
-    return nsIAudioDeviceInfo::PREF_NONE;
-  } else if (aPreferred == CUBEB_DEVICE_PREF_ALL) {
-    return nsIAudioDeviceInfo::PREF_ALL;
-  }
-
-  uint16_t preferred = 0;
-  if (aPreferred & CUBEB_DEVICE_PREF_MULTIMEDIA) {
-    preferred |= nsIAudioDeviceInfo::PREF_MULTIMEDIA;
-  }
-  if (aPreferred & CUBEB_DEVICE_PREF_VOICE) {
-    preferred |= nsIAudioDeviceInfo::PREF_VOICE;
-  }
-  if (aPreferred & CUBEB_DEVICE_PREF_NOTIFICATION) {
-    preferred |= nsIAudioDeviceInfo::PREF_NOTIFICATION;
-  }
-  return preferred;
-}
-
-uint16_t ConvertCubebFormat(cubeb_device_fmt aFormat) {
-  uint16_t format = 0;
-  if (aFormat & CUBEB_DEVICE_FMT_S16LE) {
-    format |= nsIAudioDeviceInfo::FMT_S16LE;
-  }
-  if (aFormat & CUBEB_DEVICE_FMT_S16BE) {
-    format |= nsIAudioDeviceInfo::FMT_S16BE;
-  }
-  if (aFormat & CUBEB_DEVICE_FMT_F32LE) {
-    format |= nsIAudioDeviceInfo::FMT_F32LE;
-  }
-  if (aFormat & CUBEB_DEVICE_FMT_F32BE) {
-    format |= nsIAudioDeviceInfo::FMT_F32BE;
-  }
-  return format;
-}
-
-void GetDeviceCollection(nsTArray<RefPtr<AudioDeviceInfo>>& aDeviceInfos,
-                         Side aSide) {
-  cubeb* context = GetCubebContext();
-  if (context) {
-    cubeb_device_collection collection = {nullptr, 0};
-    if (cubeb_enumerate_devices(
-            context,
-            aSide == Input ? CUBEB_DEVICE_TYPE_INPUT : CUBEB_DEVICE_TYPE_OUTPUT,
-            &collection) == CUBEB_OK) {
-      for (unsigned int i = 0; i < collection.count; ++i) {
-        auto device = collection.device[i];
-        RefPtr<AudioDeviceInfo> info = new AudioDeviceInfo(
-            device.devid, NS_ConvertUTF8toUTF16(device.friendly_name),
-            NS_ConvertUTF8toUTF16(device.group_id),
-            NS_ConvertUTF8toUTF16(device.vendor_name),
-            ConvertCubebType(device.type), ConvertCubebState(device.state),
-            ConvertCubebPreferred(device.preferred),
-            ConvertCubebFormat(device.format),
-            ConvertCubebFormat(device.default_format), device.max_channels,
-            device.default_rate, device.max_rate, device.min_rate,
-            device.latency_hi, device.latency_lo);
-        aDeviceInfos.AppendElement(info);
-      }
-    }
-    cubeb_device_collection_destroy(context, &collection);
-  }
-}
-
 cubeb_stream_prefs GetDefaultStreamPrefs() {
-||||||| merged common ancestors
-uint16_t ConvertCubebType(cubeb_device_type aType)
-{
-  uint16_t map[] = {
-    nsIAudioDeviceInfo::TYPE_UNKNOWN, // CUBEB_DEVICE_TYPE_UNKNOWN
-    nsIAudioDeviceInfo::TYPE_INPUT,   // CUBEB_DEVICE_TYPE_INPUT,
-    nsIAudioDeviceInfo::TYPE_OUTPUT   // CUBEB_DEVICE_TYPE_OUTPUT
-  };
-  return map[aType];
-}
-
-uint16_t ConvertCubebState(cubeb_device_state aState)
-{
-  uint16_t map[] = {
-    nsIAudioDeviceInfo::STATE_DISABLED,   // CUBEB_DEVICE_STATE_DISABLED
-    nsIAudioDeviceInfo::STATE_UNPLUGGED,  // CUBEB_DEVICE_STATE_UNPLUGGED
-    nsIAudioDeviceInfo::STATE_ENABLED     // CUBEB_DEVICE_STATE_ENABLED
-  };
-  return map[aState];
-}
-
-uint16_t ConvertCubebPreferred(cubeb_device_pref aPreferred)
-{
-  if (aPreferred == CUBEB_DEVICE_PREF_NONE) {
-    return nsIAudioDeviceInfo::PREF_NONE;
-  } else if (aPreferred == CUBEB_DEVICE_PREF_ALL) {
-    return nsIAudioDeviceInfo::PREF_ALL;
-  }
-
-  uint16_t preferred = 0;
-  if (aPreferred & CUBEB_DEVICE_PREF_MULTIMEDIA) {
-    preferred |= nsIAudioDeviceInfo::PREF_MULTIMEDIA;
-  }
-  if (aPreferred & CUBEB_DEVICE_PREF_VOICE) {
-    preferred |= nsIAudioDeviceInfo::PREF_VOICE;
-  }
-  if (aPreferred & CUBEB_DEVICE_PREF_NOTIFICATION) {
-    preferred |= nsIAudioDeviceInfo::PREF_NOTIFICATION;
-  }
-  return preferred;
-}
-
-uint16_t ConvertCubebFormat(cubeb_device_fmt aFormat)
-{
-  uint16_t format = 0;
-  if (aFormat & CUBEB_DEVICE_FMT_S16LE) {
-    format |= nsIAudioDeviceInfo::FMT_S16LE;
-  }
-  if (aFormat & CUBEB_DEVICE_FMT_S16BE) {
-    format |= nsIAudioDeviceInfo::FMT_S16BE;
-  }
-  if (aFormat & CUBEB_DEVICE_FMT_F32LE) {
-    format |= nsIAudioDeviceInfo::FMT_F32LE;
-  }
-  if (aFormat & CUBEB_DEVICE_FMT_F32BE) {
-    format |= nsIAudioDeviceInfo::FMT_F32BE;
-  }
-  return format;
-}
-
-void GetDeviceCollection(nsTArray<RefPtr<AudioDeviceInfo>>& aDeviceInfos,
-                         Side aSide)
-{
-  cubeb* context = GetCubebContext();
-  if (context) {
-    cubeb_device_collection collection = { nullptr, 0 };
-    if (cubeb_enumerate_devices(context,
-                                aSide == Input ? CUBEB_DEVICE_TYPE_INPUT :
-                                                 CUBEB_DEVICE_TYPE_OUTPUT,
-                                &collection) == CUBEB_OK) {
-      for (unsigned int i = 0; i < collection.count; ++i) {
-        auto device = collection.device[i];
-        RefPtr<AudioDeviceInfo> info =
-          new AudioDeviceInfo(device.devid,
-                              NS_ConvertUTF8toUTF16(device.friendly_name),
-                              NS_ConvertUTF8toUTF16(device.group_id),
-                              NS_ConvertUTF8toUTF16(device.vendor_name),
-                              ConvertCubebType(device.type),
-                              ConvertCubebState(device.state),
-                              ConvertCubebPreferred(device.preferred),
-                              ConvertCubebFormat(device.format),
-                              ConvertCubebFormat(device.default_format),
-                              device.max_channels,
-                              device.default_rate,
-                              device.max_rate,
-                              device.min_rate,
-                              device.latency_hi,
-                              device.latency_lo);
-        aDeviceInfos.AppendElement(info);
-      }
-    }
-    cubeb_device_collection_destroy(context, &collection);
-  }
-}
-
-cubeb_stream_prefs GetDefaultStreamPrefs()
-{
-=======
-cubeb_stream_prefs GetDefaultStreamPrefs() {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   // Investigation for bug 1427011 - if we're in E10S mode, rely on the
   // AudioNotification IPC to detect device changes.

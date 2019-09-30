@@ -47,17 +47,8 @@ class AsyncStatement final : public mozIStorageAsyncStatement,
    * @param aSQLStatement
    *        The SQL statement to prepare that this object will represent.
    */
-<<<<<<< HEAD
-  nsresult initialize(Connection *aDBConnection, sqlite3 *aNativeConnection,
-                      const nsACString &aSQLStatement);
-||||||| merged common ancestors
-  nsresult initialize(Connection *aDBConnection,
-                      sqlite3 *aNativeConnection,
-                      const nsACString &aSQLStatement);
-=======
   nsresult initialize(Connection* aDBConnection, sqlite3* aNativeConnection,
                       const nsACString& aSQLStatement);
->>>>>>> upstream-releases
 
   /**
    * Obtains and transfers ownership of the array of parameters that are bound

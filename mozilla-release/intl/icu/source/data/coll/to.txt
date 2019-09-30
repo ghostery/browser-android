@@ -13,13 +13,7 @@ to{
                 "&o<<ó<<<Ó<<ō<<<Ō"
                 "&u<<ú<<<Ú<<ū<<<Ū"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

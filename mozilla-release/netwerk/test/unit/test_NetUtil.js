@@ -254,21 +254,7 @@ function test_newURI_takes_nsIFile() {
   run_next_test();
 }
 
-<<<<<<< HEAD
-function test_asyncFetch_no_channel()
-{
-||||||| merged common ancestors
-function test_ioService()
-{
-  Assert.ok(NetUtil.ioService instanceof Ci.nsIIOService);
-  run_next_test();
-}
-
-function test_asyncFetch_no_channel()
-{
-=======
 function test_asyncFetch_no_channel() {
->>>>>>> upstream-releases
   try {
     NetUtil.asyncFetch(null, function() {});
     do_throw("should throw!");
@@ -539,27 +525,6 @@ function test_newChannel_with_string() {
 
   // Check that we get the same URI back from channel the IO service creates and
   // the channel the utility method creates.
-<<<<<<< HEAD
-  let ios = Services.io
-  let iosChannel = ios.newChannel2(TEST_SPEC,
-                                   null,
-                                   null,
-                                   null,      // aLoadingNode
-                                   Services.scriptSecurityManager.getSystemPrincipal(),
-                                   null,      // aTriggeringPrincipal
-                                   Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                   Ci.nsIContentPolicy.TYPE_OTHER);
-||||||| merged common ancestors
-  let ios = NetUtil.ioService;
-  let iosChannel = ios.newChannel2(TEST_SPEC,
-                                   null,
-                                   null,
-                                   null,      // aLoadingNode
-                                   Services.scriptSecurityManager.getSystemPrincipal(),
-                                   null,      // aTriggeringPrincipal
-                                   Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                   Ci.nsIContentPolicy.TYPE_OTHER);
-=======
   let ios = Services.io;
   let iosChannel = ios.newChannel(
     TEST_SPEC,
@@ -571,7 +536,6 @@ function test_newChannel_with_string() {
     Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
     Ci.nsIContentPolicy.TYPE_OTHER
   );
->>>>>>> upstream-releases
   let NetUtilChannel = NetUtil.newChannel({
     uri: TEST_SPEC,
     loadUsingSystemPrincipal: true,
@@ -587,21 +551,6 @@ function test_newChannel_with_nsIURI() {
   // Check that we get the same URI back from channel the IO service creates and
   // the channel the utility method creates.
   let uri = NetUtil.newURI(TEST_SPEC);
-<<<<<<< HEAD
-  let iosChannel = Services.io.newChannelFromURI2(uri,
-                                                  null,      // aLoadingNode
-                                                  Services.scriptSecurityManager.getSystemPrincipal(),
-                                                  null,      // aTriggeringPrincipal
-                                                  Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                                  Ci.nsIContentPolicy.TYPE_OTHER);
-||||||| merged common ancestors
-  let iosChannel = NetUtil.ioService.newChannelFromURI2(uri,
-                                                        null,      // aLoadingNode
-                                                        Services.scriptSecurityManager.getSystemPrincipal(),
-                                                        null,      // aTriggeringPrincipal
-                                                        Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                                        Ci.nsIContentPolicy.TYPE_OTHER);
-=======
   let iosChannel = Services.io.newChannelFromURI(
     uri,
     null, // aLoadingNode
@@ -610,7 +559,6 @@ function test_newChannel_with_nsIURI() {
     Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
     Ci.nsIContentPolicy.TYPE_OTHER
   );
->>>>>>> upstream-releases
   let NetUtilChannel = NetUtil.newChannel({
     uri,
     loadUsingSystemPrincipal: true,
@@ -623,21 +571,6 @@ function test_newChannel_with_nsIURI() {
 function test_newChannel_with_options() {
   let uri = "data:text/plain,";
 
-<<<<<<< HEAD
-  let iosChannel = Services.io.newChannelFromURI2(NetUtil.newURI(uri),
-                                                  null,      // aLoadingNode
-                                                  Services.scriptSecurityManager.getSystemPrincipal(),
-                                                  null,      // aTriggeringPrincipal
-                                                  Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                                  Ci.nsIContentPolicy.TYPE_OTHER);
-||||||| merged common ancestors
-  let iosChannel = NetUtil.ioService.newChannelFromURI2(NetUtil.newURI(uri),
-                                                        null,      // aLoadingNode
-                                                        Services.scriptSecurityManager.getSystemPrincipal(),
-                                                        null,      // aTriggeringPrincipal
-                                                        Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                                        Ci.nsIContentPolicy.TYPE_OTHER);
-=======
   let iosChannel = Services.io.newChannelFromURI(
     NetUtil.newURI(uri),
     null, // aLoadingNode
@@ -646,7 +579,6 @@ function test_newChannel_with_options() {
     Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
     Ci.nsIContentPolicy.TYPE_OTHER
   );
->>>>>>> upstream-releases
 
   function checkEqualToIOSChannel(channel) {
     Assert.ok(iosChannel.URI.equals(channel.URI));

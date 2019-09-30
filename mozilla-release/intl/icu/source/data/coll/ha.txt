@@ -12,13 +12,7 @@ ha{
                 "&T<ts<<<Ts<<<TS"
                 "&Y<ƴ<<<ʼy<<<''y<<<Ƴ<<<ʼY<<<''Y"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

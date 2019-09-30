@@ -165,35 +165,7 @@ public:
      * @return *this
      */
     LocalMemory<T> &operator=(LocalMemory<T> &&src) U_NOEXCEPT {
-<<<<<<< HEAD
-        return moveFrom(src);
-    }
-    /**
-     * Move assignment, leaves src with isNull().
-     * The behavior is undefined if *this and src are the same object.
-     *
-     * Can be called explicitly, does not need C++11 support.
-     * @param src source smart pointer
-     * @return *this
-     */
-    LocalMemory<T> &moveFrom(LocalMemory<T> &src) U_NOEXCEPT {
         uprv_free(LocalPointerBase<T>::ptr);
-||||||| merged common ancestors
-        return moveFrom(src);
-    }
-    /**
-     * Move assignment, leaves src with isNull().
-     * The behavior is undefined if *this and src are the same object.
-     *
-     * Can be called explicitly, does not need C++11 support.
-     * @param src source smart pointer
-     * @return *this
-     */
-    LocalMemory<T> &moveFrom(LocalMemory<T> &src) U_NOEXCEPT {
-        delete[] LocalPointerBase<T>::ptr;
-=======
-        uprv_free(LocalPointerBase<T>::ptr);
->>>>>>> upstream-releases
         LocalPointerBase<T>::ptr=src.ptr;
         src.ptr=NULL;
         return *this;
@@ -300,18 +272,10 @@ inline T *LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity, int32_t le
  *
  * Unlike LocalMemory and LocalArray, this class never adopts
  * (takes ownership of) another array.
-<<<<<<< HEAD
- *
- * WARNING: MaybeStackArray only works with primitive (plain-old data) types.
- * It does NOT know how to call a destructor! If you work with classes with
- * destructors, consider LocalArray in localpointer.h.
-||||||| merged common ancestors
-=======
  *
  * WARNING: MaybeStackArray only works with primitive (plain-old data) types.
  * It does NOT know how to call a destructor! If you work with classes with
  * destructors, consider LocalArray in localpointer.h or MemoryPool.
->>>>>>> upstream-releases
  */
 template<typename T, int32_t stackCapacity>
 class MaybeStackArray {

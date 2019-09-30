@@ -203,42 +203,16 @@ def build_interface(iface):
     def build_attr(a):
         assert a.realtype.name != 'void'
         # Write the getter
-<<<<<<< HEAD
-        getter_params = []
-        if not a.notxpcom:
-            getter_params.append(mk_param(get_type(a.realtype, 'out'), out=1))
-        methods.append(mk_method(a.name, getter_params, getter=1,
-                                 notxpcom=a.notxpcom, hidden=a.noscript,
-                                 context=a.implicit_jscontext, hasretval=1,
-                                 symbol=a.symbol))
-||||||| merged common ancestors
-        param = mk_param(get_type(a.realtype, 'out'), out=1)
-        methods.append(mk_method(a.name, [param], getter=1, hidden=a.noscript,
-                                 context=a.implicit_jscontext, hasretval=1,
-                                 symbol=a.symbol))
-=======
         getter_params = []
         if not a.notxpcom:
             getter_params.append(mk_param(get_type(a.realtype, 'out'), out=1))
 
         methods.append(mk_method(a, getter_params, getter=1, hasretval=1))
->>>>>>> upstream-releases
 
         # And maybe the setter
         if not a.readonly:
             param = mk_param(get_type(a.realtype, 'in'), in_=1)
-<<<<<<< HEAD
-            methods.append(mk_method(a.name, [param], setter=1,
-                                     notxpcom=a.notxpcom, hidden=a.noscript,
-                                     context=a.implicit_jscontext,
-                                     symbol=a.symbol))
-||||||| merged common ancestors
-            methods.append(mk_method(a.name, [param], setter=1, hidden=a.noscript,
-                                     context=a.implicit_jscontext,
-                                     symbol=a.symbol))
-=======
             methods.append(mk_method(a, [param], setter=1))
->>>>>>> upstream-releases
 
     for member in iface.members:
         if isinstance(member, xpidl.ConstMember):

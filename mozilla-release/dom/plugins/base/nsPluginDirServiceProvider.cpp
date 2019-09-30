@@ -35,17 +35,8 @@ NS_IMPL_ISUPPORTS(nsPluginDirServiceProvider, nsIDirectoryServiceProvider)
 //*****************************************************************************
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPluginDirServiceProvider::GetFile(const char *charProp, bool *persistant,
-                                    nsIFile **_retval) {
-||||||| merged common ancestors
-nsPluginDirServiceProvider::GetFile(const char *charProp, bool *persistant,
-                                    nsIFile **_retval)
-{
-=======
 nsPluginDirServiceProvider::GetFile(const char* charProp, bool* persistant,
                                     nsIFile** _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(charProp);
 
   *_retval = nullptr;
@@ -54,17 +45,8 @@ nsPluginDirServiceProvider::GetFile(const char* charProp, bool* persistant,
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-nsresult nsPluginDirServiceProvider::GetPLIDDirectories(
-    nsISimpleEnumerator **aEnumerator) {
-||||||| merged common ancestors
-nsresult
-nsPluginDirServiceProvider::GetPLIDDirectories(nsISimpleEnumerator **aEnumerator)
-{
-=======
 nsresult nsPluginDirServiceProvider::GetPLIDDirectories(
     nsISimpleEnumerator** aEnumerator) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aEnumerator);
   *aEnumerator = nullptr;
 
@@ -76,17 +58,8 @@ nsresult nsPluginDirServiceProvider::GetPLIDDirectories(
   return NS_NewArrayEnumerator(aEnumerator, dirs, NS_GET_IID(nsIFile));
 }
 
-<<<<<<< HEAD
-nsresult nsPluginDirServiceProvider::GetPLIDDirectoriesWithRootKey(
-    uint32_t aKey, nsCOMArray<nsIFile> &aDirs) {
-||||||| merged common ancestors
-nsresult
-nsPluginDirServiceProvider::GetPLIDDirectoriesWithRootKey(uint32_t aKey, nsCOMArray<nsIFile> &aDirs)
-{
-=======
 nsresult nsPluginDirServiceProvider::GetPLIDDirectoriesWithRootKey(
     uint32_t aKey, nsCOMArray<nsIFile>& aDirs) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIWindowsRegKey> regKey =
       do_CreateInstance("@mozilla.org/windows-registry-key;1");
   NS_ENSURE_TRUE(regKey, NS_ERROR_FAILURE);
@@ -132,17 +105,8 @@ nsresult nsPluginDirServiceProvider::GetPLIDDirectoriesWithRootKey(
             if (NS_SUCCEEDED(localFile->Exists(&isFileThere)) && isFileThere) {
               int32_t c = aDirs.Count();
               for (int32_t i = 0; i < c; i++) {
-<<<<<<< HEAD
-                nsIFile *dup = static_cast<nsIFile *>(aDirs[i]);
-                if (dup && NS_SUCCEEDED(dup->Equals(localFile, &isDupEntry)) &&
-||||||| merged common ancestors
-                nsIFile *dup = static_cast<nsIFile*>(aDirs[i]);
-                if (dup &&
-                    NS_SUCCEEDED(dup->Equals(localFile, &isDupEntry)) &&
-=======
                 nsIFile* dup = static_cast<nsIFile*>(aDirs[i]);
                 if (dup && NS_SUCCEEDED(dup->Equals(localFile, &isDupEntry)) &&
->>>>>>> upstream-releases
                     isDupEntry) {
                   break;
                 }

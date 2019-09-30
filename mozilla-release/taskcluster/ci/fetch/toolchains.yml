@@ -145,45 +145,6 @@ mpfr-3.1.4:
             key-path: build/unix/build-gcc/07F3DBBECC1A39605078094D980C197698C3739D.key
 
 mpfr-3.1.5:
-<<<<<<< HEAD
-  description: mpfr 3.1.5 source code
-  fetch:
-    type: static-url
-    url: http://www.mpfr.org/mpfr-3.1.5/mpfr-3.1.5.tar.bz2
-    sha256: ca498c1c7a74dd37a576f353312d1e68d490978de4395fa28f1cbd46a364e658
-    size: 1279489
-    gpg-signature:
-      sig-url: "{url}.asc"
-      key-path: build/unix/build-gcc/07F3DBBECC1A39605078094D980C197698C3739D.key
-
-wix-3.1.1:
-  description: wix 3.1.1 binary release
-  # WIX doesn't use a wrapping toplevel DIR, so we should really repackage it when
-  # Bug 1479533 and related code is ready.
-  fetch:
-    type: static-url
-    url: https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311-binaries.zip
-    sha256: 37f0a533b0978a454efb5dc3bd3598becf9660aaf4287e55bf68ca6b527d051d
-    size: 34358269
-
-grcov-osx-x86_64:
-  description: grcov binary release
-  fetch:
-    type: static-url
-    url: https://github.com/mozilla/grcov/releases/download/v0.3.2/grcov-osx-x86_64.tar.bz2
-    sha256: 6a810f782efb207234ef418ab136edd1c0ffa61aa84d8c4545042a6fa3b9dd13
-    size: 915948
-||||||| merged common ancestors
-  description: mpfr 3.1.5 source code
-  fetch:
-    type: static-url
-    url: http://www.mpfr.org/mpfr-3.1.5/mpfr-3.1.5.tar.bz2
-    sha256: ca498c1c7a74dd37a576f353312d1e68d490978de4395fa28f1cbd46a364e658
-    size: 1279489
-    gpg-signature:
-      sig-url: "{url}.asc"
-      key-path: build/unix/build-gcc/07F3DBBECC1A39605078094D980C197698C3739D.key
-=======
     description: mpfr 3.1.5 source code
     fetch:
         type: static-url
@@ -257,4 +218,3 @@ wine-3.0.3:
         gpg-signature:
             sig-url: "{url}.sign"
             key-path: build/unix/build-gcc/DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D.key
->>>>>>> upstream-releases

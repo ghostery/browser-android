@@ -9,93 +9,35 @@
 // running in the same process.
 
 #ifdef WIN32
-<<<<<<< HEAD
-#include "util/Windows.h"
-||||||| merged common ancestors
-# include "util/Windows.h"
-=======
 #  include "util/Windows.h"
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define __cdecl
-#include <stdarg.h>
-#include <string.h>
-||||||| merged common ancestors
-# define __cdecl
-# include <stdarg.h>
-# include <string.h>
-=======
 #  define __cdecl
 #  include <stdarg.h>
 #  include <string.h>
->>>>>>> upstream-releases
 #endif
 
 #include "vprof.h"
 
 #ifndef MIN
-<<<<<<< HEAD
-#define MIN(x, y) ((x) <= (y) ? x : y)
-||||||| merged common ancestors
-#define MIN(x,y) ((x) <= (y) ? x : y)
-=======
 #  define MIN(x, y) ((x) <= (y) ? x : y)
->>>>>>> upstream-releases
 #endif
 #ifndef MAX
-<<<<<<< HEAD
-#define MAX(x, y) ((x) >= (y) ? x : y)
-||||||| merged common ancestors
-#define MAX(x,y) ((x) >= (y) ? x : y)
-=======
 #  define MAX(x, y) ((x) >= (y) ? x : y)
->>>>>>> upstream-releases
 #endif
 
 #ifndef MAXINT
-<<<<<<< HEAD
-#define MAXINT int(unsigned(-1) >> 1)
-||||||| merged common ancestors
-#define MAXINT int(unsigned(-1)>>1)
-=======
 #  define MAXINT int(unsigned(-1) >> 1)
->>>>>>> upstream-releases
 #endif
 
 #ifndef MAXINT64
-<<<<<<< HEAD
-#define MAXINT64 int64_t(uint64_t(-1) >> 1)
-||||||| merged common ancestors
-#define MAXINT64 int64_t(uint64_t(-1)>>1)
-=======
 #  define MAXINT64 int64_t(uint64_t(-1) >> 1)
->>>>>>> upstream-releases
 #endif
 
 #ifndef __STDC_WANT_SECURE_LIB__
-<<<<<<< HEAD
-#define sprintf_s(b, size, fmt, ...) sprintf((b), (fmt), __VA_ARGS__)
-||||||| merged common ancestors
-#define sprintf_s(b,size,fmt,...) sprintf((b),(fmt),__VA_ARGS__)
-=======
 #  define sprintf_s(b, size, fmt, ...) sprintf((b), (fmt), __VA_ARGS__)
->>>>>>> upstream-releases
 #endif
 
 #if THREADED
-<<<<<<< HEAD
-#define DO_LOCK(lock) \
-  Lock(lock);         \
-  {
-#define DO_UNLOCK(lock) \
-  }                     \
-  ;                     \
-  Unlock(lock)
-||||||| merged common ancestors
-#define DO_LOCK(lock) Lock(lock); {
-#define DO_UNLOCK(lock) }; Unlock(lock)
-=======
 #  define DO_LOCK(lock) \
     Lock(lock);         \
     {
@@ -103,42 +45,21 @@
     }                     \
     ;                     \
     Unlock(lock)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define DO_LOCK(lock) \
-  {                   \
-    (void)(lock);
-#define DO_UNLOCK(lock) }
-||||||| merged common ancestors
-#define DO_LOCK(lock) { (void)(lock);
-#define DO_UNLOCK(lock) }
-=======
 #  define DO_LOCK(lock) \
     {                   \
       (void)(lock);
 #  define DO_UNLOCK(lock) }
->>>>>>> upstream-releases
 #endif
 
 #if THREAD_SAFE
 #  define LOCK(lock) DO_LOCK(lock)
 #  define UNLOCK(lock) DO_UNLOCK(lock)
 #else
-<<<<<<< HEAD
-#define LOCK(lock) \
-  {                \
-    (void)(lock);
-#define UNLOCK(lock) }
-||||||| merged common ancestors
-#define LOCK(lock) { (void)(lock);
-#define UNLOCK(lock) }
-=======
 #  define LOCK(lock) \
     {                \
       (void)(lock);
 #  define UNLOCK(lock) }
->>>>>>> upstream-releases
 #endif
 
 static entry* entries = nullptr;
@@ -166,13 +87,7 @@ static void vprof_printf(const char* format, ...) {
   ::OutputDebugStringA(buf);
 }
 #else
-<<<<<<< HEAD
-#define vprof_printf printf
-||||||| merged common ancestors
-	#define vprof_printf printf
-=======
 #  define vprof_printf printf
->>>>>>> upstream-releases
 #endif
 
 static inline entry* reverse(entry* s) {

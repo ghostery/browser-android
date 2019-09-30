@@ -849,19 +849,9 @@ fn render<'a>(
 
     match *events_loop {
         None => {
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/main.rs
-            while body(wrench, winit::Event::Awakened) == winit::ControlFlow::Continue {}
-            let rect = DeviceIntRect::new(DeviceIntPoint::zero(), size);
-            let pixels = wrench.renderer.read_pixels_rgba8(rect);
-||||||| merged common ancestors
-            while body(wrench, winit::Event::Awakened) == winit::ControlFlow::Continue {}
-            let rect = DeviceUintRect::new(DeviceUintPoint::zero(), size);
-            let pixels = wrench.renderer.read_pixels_rgba8(rect);
-=======
             while body(wrench, vec![winit::Event::Awakened]) == winit::ControlFlow::Continue {}
             let fb_rect = FramebufferIntSize::new(size.width, size.height).into();
             let pixels = wrench.renderer.read_pixels_rgba8(fb_rect);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/main.rs
             save_flipped("screenshot.png", pixels, size);
         }
         Some(ref mut events_loop) => {

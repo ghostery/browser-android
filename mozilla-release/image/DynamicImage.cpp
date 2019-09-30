@@ -104,24 +104,9 @@ DynamicImage::GetIntrinsicSize(nsSize* aSize) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-DynamicImage::GetIntrinsicRatio(nsSize* aSize) {
-  IntSize intSize(mDrawable->Size());
-  *aSize = nsSize(intSize.width, intSize.height);
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP
-DynamicImage::GetIntrinsicRatio(nsSize* aSize)
-{
-  IntSize intSize(mDrawable->Size());
-  *aSize = nsSize(intSize.width, intSize.height);
-  return NS_OK;
-=======
 Maybe<AspectRatio> DynamicImage::GetIntrinsicRatio() {
   auto size = mDrawable->Size();
   return Some(AspectRatio::FromSize(size.width, size.height));
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP_(Orientation)
@@ -134,12 +119,6 @@ DynamicImage::GetType(uint16_t* aType) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DynamicImage::GetAnimated(bool* aAnimated) {
-||||||| merged common ancestors
-DynamicImage::GetAnimated(bool* aAnimated)
-{
-=======
 DynamicImage::GetProducerId(uint32_t* aId) {
   *aId = 0;
   return NS_OK;
@@ -147,7 +126,6 @@ DynamicImage::GetProducerId(uint32_t* aId) {
 
 NS_IMETHODIMP
 DynamicImage::GetAnimated(bool* aAnimated) {
->>>>>>> upstream-releases
   *aAnimated = false;
   return NS_OK;
 }
@@ -241,91 +219,34 @@ DynamicImage::Draw(gfxContext* aContext, const nsIntSize& aSize,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DynamicImage::StartDecoding(uint32_t aFlags) { return NS_OK; }
-||||||| merged common ancestors
-DynamicImage::StartDecoding(uint32_t aFlags)
-{
-  return NS_OK;
-}
-=======
 DynamicImage::StartDecoding(uint32_t aFlags, uint32_t aWhichFrame) {
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool DynamicImage::StartDecodingWithResult(uint32_t aFlags) { return true; }
-||||||| merged common ancestors
-bool
-DynamicImage::StartDecodingWithResult(uint32_t aFlags)
-{
-  return true;
-}
-=======
 bool DynamicImage::StartDecodingWithResult(uint32_t aFlags,
                                            uint32_t aWhichFrame) {
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-DynamicImage::RequestDecodeForSize(const nsIntSize& aSize, uint32_t aFlags) {
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP
-DynamicImage::RequestDecodeForSize(const nsIntSize& aSize, uint32_t aFlags)
-{
-  return NS_OK;
-=======
 bool DynamicImage::RequestDecodeWithResult(uint32_t aFlags,
                                            uint32_t aWhichFrame) {
   return true;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DynamicImage::LockImage() { return NS_OK; }
-||||||| merged common ancestors
-DynamicImage::LockImage()
-{
-  return NS_OK;
-}
-=======
 DynamicImage::RequestDecodeForSize(const nsIntSize& aSize, uint32_t aFlags,
                                    uint32_t aWhichFrame) {
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DynamicImage::UnlockImage() { return NS_OK; }
-||||||| merged common ancestors
-DynamicImage::UnlockImage()
-{
-  return NS_OK;
-}
-=======
 DynamicImage::LockImage() { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DynamicImage::RequestDiscard() { return NS_OK; }
-||||||| merged common ancestors
-DynamicImage::RequestDiscard()
-{
-  return NS_OK;
-}
-=======
 DynamicImage::UnlockImage() { return NS_OK; }
 
 NS_IMETHODIMP
 DynamicImage::RequestDiscard() { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP_(void)
 DynamicImage::RequestRefresh(const mozilla::TimeStamp& aTime) {}
@@ -369,15 +290,7 @@ already_AddRefed<imgIContainer> DynamicImage::Unwrap() {
   return self.forget();
 }
 
-<<<<<<< HEAD
-void DynamicImage::PropagateUseCounters(nsIDocument*) {
-||||||| merged common ancestors
-void
-DynamicImage::PropagateUseCounters(nsIDocument*)
-{
-=======
 void DynamicImage::PropagateUseCounters(dom::Document*) {
->>>>>>> upstream-releases
   // No use counters.
 }
 

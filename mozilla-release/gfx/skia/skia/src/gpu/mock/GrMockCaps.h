@@ -67,56 +67,16 @@ public:
         return 0;
     }
 
-<<<<<<< HEAD
-    bool surfaceSupportsWritePixels(const GrSurface*) const override { return true; }
     bool surfaceSupportsReadPixels(const GrSurface*) const override { return true; }
-||||||| merged common ancestors
-    bool surfaceSupportsWritePixels(const GrSurface* surface) const override { return true; }
-=======
-    bool surfaceSupportsReadPixels(const GrSurface*) const override { return true; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    bool canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
-                        const SkIRect& srcRect, const SkIPoint& dstPoint) const override {
-        return true;
-    }
 
     bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
-||||||| merged common ancestors
-    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc,
-=======
-    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
->>>>>>> upstream-releases
                             bool* rectsMustMatch, bool* disallowSubrect) const override {
         return false;
     }
 
-<<<<<<< HEAD
-    bool validateBackendTexture(const GrBackendTexture& tex, SkColorType,
-                                GrPixelConfig* config) const override {
-        GrMockTextureInfo texInfo;
-        if (!tex.getMockTextureInfo(&texInfo)) {
-            return false;
-        }
-
-        *config = texInfo.fConfig;
-        return true;
-||||||| merged common ancestors
-    bool validateBackendTexture(const GrBackendTexture& tex, SkColorType,
-                                GrPixelConfig* config) const override {
-        const GrMockTextureInfo* texInfo = tex.getMockTextureInfo();
-        if (!texInfo) {
-            return false;
-        }
-
-        *config = texInfo->fConfig;
-        return true;
-=======
     GrPixelConfig validateBackendRenderTarget(const GrBackendRenderTarget&,
                                               SkColorType) const override {
         return kUnknown_GrPixelConfig;
->>>>>>> upstream-releases
     }
 
     GrPixelConfig getConfigFromBackendFormat(const GrBackendFormat& format,
@@ -146,25 +106,12 @@ public:
     }
 
 private:
-<<<<<<< HEAD
-#ifdef GR_TEST_UTILS
-    GrBackendFormat onCreateFormatFromBackendTexture(
-            const GrBackendTexture& backendTex) const override {
-        GrMockTextureInfo mockInfo;
-        SkAssertResult(backendTex.getMockTextureInfo(&mockInfo));
-        return GrBackendFormat::MakeMock(mockInfo.fConfig);
-    }
-#endif
-
-||||||| merged common ancestors
-=======
     bool onSurfaceSupportsWritePixels(const GrSurface*) const override { return true; }
     bool onCanCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
                           const SkIRect& srcRect, const SkIPoint& dstPoint) const override {
         return true;
     }
 
->>>>>>> upstream-releases
     static const int kMaxSampleCnt = 16;
 
     GrMockOptions fOptions;

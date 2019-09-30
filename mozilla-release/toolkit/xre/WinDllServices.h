@@ -9,48 +9,14 @@
 
 #include "mozilla/CombinedStacks.h"
 #include "mozilla/glue/WindowsDllServices.h"
-<<<<<<< HEAD
-#include "mozilla/ModuleEvaluator_windows.h"
-#include "mozilla/mozalloc.h"
-#include "mozilla/UniquePtr.h"
-#include "mozilla/Vector.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/Maybe.h"
 #include "mozilla/ModuleEvaluator_windows.h"
 #include "mozilla/mozalloc.h"
 #include "mozilla/UniquePtr.h"
 #include "mozilla/Vector.h"
->>>>>>> upstream-releases
 
 namespace mozilla {
 
-<<<<<<< HEAD
-// Holds the data that telemetry requests, and will be later converted to the
-// telemetry payload.
-class UntrustedModuleLoadTelemetryData {
- public:
-  UntrustedModuleLoadTelemetryData() = default;
-  // Moves allowed, no copies.
-  UntrustedModuleLoadTelemetryData(UntrustedModuleLoadTelemetryData&&) =
-      default;
-  UntrustedModuleLoadTelemetryData(
-      const UntrustedModuleLoadTelemetryData& aOther) = delete;
-
-  Vector<ModuleLoadEvent, 0, InfallibleAllocPolicy> mEvents;
-  Telemetry::CombinedStacks mStacks;
-  int mErrorModules = 0;
-};
-
-class UntrustedModulesManager;
-
-class DllServices : public mozilla::glue::DllServices {
- public:
-||||||| merged common ancestors
-class DllServices : public mozilla::glue::DllServices
-{
-public:
-=======
 // Holds the data that telemetry requests, and will be later converted to the
 // telemetry payload.
 class UntrustedModuleLoadTelemetryData {
@@ -72,7 +38,6 @@ class UntrustedModulesManager;
 
 class DllServices : public mozilla::glue::DllServices {
  public:
->>>>>>> upstream-releases
   static DllServices* Get();
 
   static const char* kTopicDllLoadedMainThread;

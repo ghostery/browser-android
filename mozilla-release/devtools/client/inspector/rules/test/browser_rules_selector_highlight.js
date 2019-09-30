@@ -26,16 +26,8 @@ const TEST_URI = [
   '<div hidden="true"></div>',
   '<div title="test" checked="true"></div>',
   "<p></p>",
-<<<<<<< HEAD
-  "<p lang=\"en\">Paragraph<p>",
-  "<div class=\"testclass\">Styled Node</div>",
-||||||| merged common ancestors
-  "<p lang=\"en\">Paragraph<p>",
-  "<div class=\"testclass\">Styled Node</div>"
-=======
   '<p lang="en">Paragraph<p>',
   '<div class="testclass">Styled Node</div>',
->>>>>>> upstream-releases
 ].join("\n");
 
 const SELECTOR_ATTRIBUTE = "ruleview-selector-attribute";
@@ -46,78 +38,30 @@ const SELECTOR_PSEUDO_CLASS_LOCK = "ruleview-selector-pseudo-class-lock";
 const TEST_DATA = [
   {
     node: "h1",
-<<<<<<< HEAD
-    expected: [
-      { value: "h1", class: SELECTOR_ELEMENT },
-    ],
-||||||| merged common ancestors
-    expected: [
-      { value: "h1", class: SELECTOR_ELEMENT }
-    ]
-=======
     expected: [{ value: "h1", class: SELECTOR_ELEMENT }],
->>>>>>> upstream-releases
   },
   {
     node: "h1 + p",
-<<<<<<< HEAD
-    expected: [
-      { value: "h1 + p", class: SELECTOR_ELEMENT },
-    ],
-||||||| merged common ancestors
-    expected: [
-      { value: "h1 + p", class: SELECTOR_ELEMENT }
-    ]
-=======
     expected: [{ value: "h1 + p", class: SELECTOR_ELEMENT }],
->>>>>>> upstream-releases
   },
   {
     node: "h1#testid",
-<<<<<<< HEAD
-    expected: [
-      { value: "h1#testid", class: SELECTOR_ELEMENT },
-    ],
-||||||| merged common ancestors
-    expected: [
-      { value: "h1#testid", class: SELECTOR_ELEMENT }
-    ]
-=======
     expected: [{ value: "h1#testid", class: SELECTOR_ELEMENT }],
->>>>>>> upstream-releases
   },
   {
     node: "div[hidden='true']",
     expected: [
       { value: "div", class: SELECTOR_ELEMENT },
-<<<<<<< HEAD
-      { value: "[hidden=\"true\"]", class: SELECTOR_ATTRIBUTE },
-    ],
-||||||| merged common ancestors
-      { value: "[hidden=\"true\"]", class: SELECTOR_ATTRIBUTE }
-    ]
-=======
       { value: '[hidden="true"]', class: SELECTOR_ATTRIBUTE },
     ],
->>>>>>> upstream-releases
   },
   {
     node: 'div[title="test"][checked="true"]',
     expected: [
       { value: "div", class: SELECTOR_ELEMENT },
-<<<<<<< HEAD
-      { value: "[title=\"test\"]", class: SELECTOR_ATTRIBUTE },
-      { value: "[checked=\"true\"]", class: SELECTOR_ATTRIBUTE },
-    ],
-||||||| merged common ancestors
-      { value: "[title=\"test\"]", class: SELECTOR_ATTRIBUTE },
-      { value: "[checked=\"true\"]", class: SELECTOR_ATTRIBUTE }
-    ]
-=======
       { value: '[title="test"]', class: SELECTOR_ATTRIBUTE },
       { value: '[checked="true"]', class: SELECTOR_ATTRIBUTE },
     ],
->>>>>>> upstream-releases
   },
   {
     node: "p:empty",

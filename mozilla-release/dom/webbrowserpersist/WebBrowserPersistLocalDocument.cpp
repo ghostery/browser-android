@@ -59,24 +59,10 @@ NS_INTERFACE_MAP_END
 
 NS_IMPL_CYCLE_COLLECTION(WebBrowserPersistLocalDocument, mDocument)
 
-<<<<<<< HEAD
-WebBrowserPersistLocalDocument::WebBrowserPersistLocalDocument(
-    nsIDocument* aDocument)
-    : mDocument(aDocument), mPersistFlags(0) {
-  MOZ_ASSERT(mDocument);
-||||||| merged common ancestors
-
-WebBrowserPersistLocalDocument::WebBrowserPersistLocalDocument(nsIDocument* aDocument)
-: mDocument(aDocument)
-, mPersistFlags(0)
-{
-    MOZ_ASSERT(mDocument);
-=======
 WebBrowserPersistLocalDocument::WebBrowserPersistLocalDocument(
     dom::Document* aDocument)
     : mDocument(aDocument), mPersistFlags(0) {
   MOZ_ASSERT(mDocument);
->>>>>>> upstream-releases
 }
 
 WebBrowserPersistLocalDocument::~WebBrowserPersistLocalDocument() = default;
@@ -147,32 +133,10 @@ WebBrowserPersistLocalDocument::GetReferrer(nsAString& aReferrer) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebBrowserPersistLocalDocument::GetContentDisposition(nsAString& aCD) {
-  nsCOMPtr<nsPIDOMWindowOuter> window = mDocument->GetDefaultView();
-  if (NS_WARN_IF(!window)) {
-    aCD.SetIsVoid(true);
-||||||| merged common ancestors
-WebBrowserPersistLocalDocument::GetContentDisposition(nsAString& aCD)
-{
-    nsCOMPtr<nsPIDOMWindowOuter> window = mDocument->GetDefaultView();
-    if (NS_WARN_IF(!window)) {
-        aCD.SetIsVoid(true);
-        return NS_OK;
-    }
-    nsCOMPtr<nsIDOMWindowUtils> utils =
-        nsGlobalWindowOuter::Cast(window)->WindowUtils();
-    nsresult rv = utils->GetDocumentMetadata(
-        NS_LITERAL_STRING("content-disposition"), aCD);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-        aCD.SetIsVoid(true);
-    }
-=======
 WebBrowserPersistLocalDocument::GetContentDisposition(nsAString& aCD) {
   nsCOMPtr<nsPIDOMWindowOuter> window = mDocument->GetWindow();
   if (NS_WARN_IF(!window)) {
     aCD.SetIsVoid(true);
->>>>>>> upstream-releases
     return NS_OK;
   }
   nsCOMPtr<nsIDOMWindowUtils> utils =
@@ -212,53 +176,6 @@ WebBrowserPersistLocalDocument::GetPrincipal(nsIPrincipal** aPrincipal) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsISHEntry> WebBrowserPersistLocalDocument::GetHistory() {
-  nsCOMPtr<nsPIDOMWindowOuter> window = mDocument->GetDefaultView();
-  if (NS_WARN_IF(!window)) {
-    return nullptr;
-  }
-  nsCOMPtr<nsIWebNavigation> webNav = do_GetInterface(window);
-  if (NS_WARN_IF(!webNav)) {
-    return nullptr;
-  }
-  nsCOMPtr<nsIWebPageDescriptor> desc = do_QueryInterface(webNav);
-  if (NS_WARN_IF(!desc)) {
-    return nullptr;
-  }
-  nsCOMPtr<nsISupports> curDesc;
-  nsresult rv = desc->GetCurrentDescriptor(getter_AddRefs(curDesc));
-  // This can fail if, e.g., the document is a Print Preview.
-  if (NS_FAILED(rv) || NS_WARN_IF(!curDesc)) {
-    return nullptr;
-  }
-  nsCOMPtr<nsISHEntry> history = do_QueryInterface(curDesc);
-  return history.forget();
-||||||| merged common ancestors
-already_AddRefed<nsISHEntry>
-WebBrowserPersistLocalDocument::GetHistory()
-{
-    nsCOMPtr<nsPIDOMWindowOuter> window = mDocument->GetDefaultView();
-    if (NS_WARN_IF(!window)) {
-        return nullptr;
-    }
-    nsCOMPtr<nsIWebNavigation> webNav = do_GetInterface(window);
-    if (NS_WARN_IF(!webNav)) {
-        return nullptr;
-    }
-    nsCOMPtr<nsIWebPageDescriptor> desc = do_QueryInterface(webNav);
-    if (NS_WARN_IF(!desc)) {
-        return nullptr;
-    }
-    nsCOMPtr<nsISupports> curDesc;
-    nsresult rv = desc->GetCurrentDescriptor(getter_AddRefs(curDesc));
-    // This can fail if, e.g., the document is a Print Preview.
-    if (NS_FAILED(rv) || NS_WARN_IF(!curDesc)) {
-        return nullptr;
-    }
-    nsCOMPtr<nsISHEntry> history = do_QueryInterface(curDesc);
-    return history.forget();
-=======
 already_AddRefed<nsISHEntry> WebBrowserPersistLocalDocument::GetHistory() {
   nsCOMPtr<nsPIDOMWindowOuter> window = mDocument->GetWindow();
   if (NS_WARN_IF(!window)) {
@@ -280,7 +197,6 @@ already_AddRefed<nsISHEntry> WebBrowserPersistLocalDocument::GetHistory() {
   }
   nsCOMPtr<nsISHEntry> history = do_QueryInterface(curDesc);
   return history.forget();
->>>>>>> upstream-releases
 }
 
 NotNull<const Encoding*> WebBrowserPersistLocalDocument::GetCharacterSet()
@@ -367,57 +283,6 @@ void ResourceReader::DocumentDone(nsresult aStatus) {
   }
 }
 
-<<<<<<< HEAD
-nsresult ResourceReader::OnWalkSubframe(nsINode* aNode) {
-  nsCOMPtr<nsIFrameLoaderOwner> loaderOwner = do_QueryInterface(aNode);
-  NS_ENSURE_STATE(loaderOwner);
-  RefPtr<nsFrameLoader> loader = loaderOwner->GetFrameLoader();
-  NS_ENSURE_STATE(loader);
-
-  ++mOutstandingDocuments;
-  // Pass in 0 as the outer window ID so that we start
-  // persisting the root of this subframe, and not some other
-  // subframe child of this subframe.
-  ErrorResult err;
-  loader->StartPersistence(0, this, err);
-  nsresult rv = err.StealNSResult();
-  if (NS_FAILED(rv)) {
-    if (rv == NS_ERROR_NO_CONTENT) {
-      // Just ignore frames with no content document.
-      rv = NS_OK;
-    }
-    // StartPersistence won't eventually call this if it failed,
-    // so this does so (to keep mOutstandingDocuments correct).
-    DocumentDone(rv);
-  }
-  return rv;
-||||||| merged common ancestors
-nsresult
-ResourceReader::OnWalkSubframe(nsINode* aNode)
-{
-    nsCOMPtr<nsIFrameLoaderOwner> loaderOwner = do_QueryInterface(aNode);
-    NS_ENSURE_STATE(loaderOwner);
-    RefPtr<nsFrameLoader> loader = loaderOwner->GetFrameLoader();
-    NS_ENSURE_STATE(loader);
-
-    ++mOutstandingDocuments;
-    // Pass in 0 as the outer window ID so that we start
-    // persisting the root of this subframe, and not some other
-    // subframe child of this subframe.
-    ErrorResult err;
-    loader->StartPersistence(0, this, err);
-    nsresult rv = err.StealNSResult();
-    if (NS_FAILED(rv)) {
-        if (rv == NS_ERROR_NO_CONTENT) {
-            // Just ignore frames with no content document.
-            rv = NS_OK;
-        }
-        // StartPersistence won't eventually call this if it failed,
-        // so this does so (to keep mOutstandingDocuments correct).
-        DocumentDone(rv);
-    }
-    return rv;
-=======
 nsresult ResourceReader::OnWalkSubframe(nsINode* aNode) {
   RefPtr<nsFrameLoaderOwner> loaderOwner = do_QueryObject(aNode);
   NS_ENSURE_STATE(loaderOwner);
@@ -441,7 +306,6 @@ nsresult ResourceReader::OnWalkSubframe(nsINode* aNode) {
     DocumentDone(rv);
   }
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -479,34 +343,6 @@ nsresult ResourceReader::OnWalkURI(const nsACString& aURISpec,
   nsresult rv;
   nsCOMPtr<nsIURI> uri;
 
-<<<<<<< HEAD
-  rv = NS_NewURI(getter_AddRefs(uri), aURISpec, mParent->GetCharacterSet(),
-                 mCurrentBaseURI);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return OnWalkURI(uri, aContentPolicyType);
-||||||| merged common ancestors
-static void
-ExtractAttribute(Element* aElement,
-                 const char* aAttribute,
-                 const char* aNamespaceURI,
-                 nsCString&  aValue)
-{
-    // Find the named URI attribute on the (element) node and store
-    // a reference to the URI that maps onto a local file name
-
-    RefPtr<nsDOMAttributeMap> attrMap = aElement->Attributes();
-
-    NS_ConvertASCIItoUTF16 namespaceURI(aNamespaceURI);
-    NS_ConvertASCIItoUTF16 attribute(aAttribute);
-    RefPtr<dom::Attr> attr = attrMap->GetNamedItemNS(namespaceURI, attribute);
-    if (attr) {
-        nsAutoString value;
-        attr->GetValue(value);
-        CopyUTF16toUTF8(value, aValue);
-    } else {
-        aValue.Truncate();
-    }
-=======
   rv = NS_NewURI(getter_AddRefs(uri), aURISpec, mParent->GetCharacterSet(),
                  mCurrentBaseURI);
   if (NS_FAILED(rv)) {
@@ -514,7 +350,6 @@ ExtractAttribute(Element* aElement,
     return NS_OK;
   }
   return OnWalkURI(uri, aContentPolicyType);
->>>>>>> upstream-releases
 }
 
 static void ExtractAttribute(Element* aElement, const char* aAttribute,
@@ -548,7 +383,6 @@ nsresult ResourceReader::OnWalkAttribute(Element* aElement,
   return OnWalkURI(uriSpec, aContentPolicyType);
 }
 
-<<<<<<< HEAD
 static nsresult GetXMLStyleSheetLink(dom::ProcessingInstruction* aPI,
                                      nsAString& aHref) {
   nsAutoString data;
@@ -557,80 +391,6 @@ static nsresult GetXMLStyleSheetLink(dom::ProcessingInstruction* aPI,
   nsContentUtils::GetPseudoAttributeValue(data, nsGkAtoms::href, aHref);
   return NS_OK;
 }
-||||||| merged common ancestors
-nsresult
-ResourceReader::OnWalkDOMNode(nsINode* aNode)
-{
-    // Fixup xml-stylesheet processing instructions
-    if (auto nodeAsPI = dom::ProcessingInstruction::FromNode(aNode)) {
-        nsAutoString target;
-        nodeAsPI->GetTarget(target);
-        if (target.EqualsLiteral("xml-stylesheet")) {
-            nsAutoString href;
-            GetXMLStyleSheetLink(nodeAsPI, href);
-            if (!href.IsEmpty()) {
-                return OnWalkURI(NS_ConvertUTF16toUTF8(href));
-            }
-        }
-        return NS_OK;
-    }
-
-    // Test the node to see if it's an image, frame, iframe, css, js
-    if (aNode->IsHTMLElement(nsGkAtoms::img)) {
-        return OnWalkAttribute(aNode->AsElement(), "src");
-    }
-
-    if (aNode->IsSVGElement(nsGkAtoms::img)) {
-        return OnWalkAttribute(aNode->AsElement(), "href",
-                               "http://www.w3.org/1999/xlink");
-    }
-
-    if (aNode->IsAnyOfHTMLElements(nsGkAtoms::audio, nsGkAtoms::video)) {
-        return OnWalkAttribute(aNode->AsElement(), "src");
-    }
-
-    if (aNode->IsHTMLElement(nsGkAtoms::source)) {
-        return OnWalkAttribute(aNode->AsElement(), "src");
-    }
-
-    if (aNode->IsHTMLElement(nsGkAtoms::body)) {
-        return OnWalkAttribute(aNode->AsElement(), "background");
-    }
-
-    if (aNode->IsHTMLElement(nsGkAtoms::table)) {
-        return OnWalkAttribute(aNode->AsElement(), "background");
-    }
-
-    if (aNode->IsHTMLElement(nsGkAtoms::tr)) {
-        return OnWalkAttribute(aNode->AsElement(), "background");
-    }
-
-    if (aNode->IsAnyOfHTMLElements(nsGkAtoms::td, nsGkAtoms::th)) {
-        return OnWalkAttribute(aNode->AsElement(), "background");
-    }
-
-    if (aNode->IsHTMLElement(nsGkAtoms::script)) {
-        return OnWalkAttribute(aNode->AsElement(), "src");
-    }
-
-    if (aNode->IsSVGElement(nsGkAtoms::script)) {
-        return OnWalkAttribute(aNode->AsElement(), "href",
-                               "http://www.w3.org/1999/xlink");
-    }
-
-    if (aNode->IsHTMLElement(nsGkAtoms::embed)) {
-        return OnWalkAttribute(aNode->AsElement(), "src");
-    }
-=======
-static nsresult GetXMLStyleSheetLink(dom::ProcessingInstruction* aPI,
-                                     nsAString& aHref) {
-  nsAutoString data;
-  aPI->GetData(data);
-
-  nsContentUtils::GetPseudoAttributeValue(data, nsGkAtoms::href, aHref);
-  return NS_OK;
-}
->>>>>>> upstream-releases
 
 nsresult ResourceReader::OnWalkDOMNode(nsINode* aNode) {
   // Fixup xml-stylesheet processing instructions
@@ -728,56 +488,6 @@ nsresult ResourceReader::OnWalkDOMNode(nsINode* aNode) {
           continue;
         }
 
-<<<<<<< HEAD
-        // Grab the next space delimited word
-        nsReadingIterator<char16_t> startWord = current;
-        do {
-          ++current;
-        } while (current != end && !nsCRT::IsAsciiSpace(*current));
-
-        // Store the link for fix up if it says "stylesheet"
-        if (Substring(startWord, current)
-                .LowerCaseEqualsLiteral("stylesheet")) {
-          OnWalkAttribute(aNode->AsElement(), nsIContentPolicy::TYPE_STYLESHEET,
-                          "href");
-          return NS_OK;
-||||||| merged common ancestors
-    if (auto nodeAsLink = dom::HTMLLinkElement::FromNode(aNode)) {
-        // Test if the link has a rel value indicating it to be a stylesheet
-        nsAutoString linkRel;
-        nodeAsLink->GetRel(linkRel);
-        if (!linkRel.IsEmpty()) {
-            nsReadingIterator<char16_t> start;
-            nsReadingIterator<char16_t> end;
-            nsReadingIterator<char16_t> current;
-
-            linkRel.BeginReading(start);
-            linkRel.EndReading(end);
-
-            // Walk through space delimited string looking for "stylesheet"
-            for (current = start; current != end; ++current) {
-                // Ignore whitespace
-                if (nsCRT::IsAsciiSpace(*current)) {
-                    continue;
-                }
-
-                // Grab the next space delimited word
-                nsReadingIterator<char16_t> startWord = current;
-                do {
-                    ++current;
-                } while (current != end && !nsCRT::IsAsciiSpace(*current));
-
-                // Store the link for fix up if it says "stylesheet"
-                if (Substring(startWord, current)
-                        .LowerCaseEqualsLiteral("stylesheet")) {
-                    OnWalkAttribute(aNode->AsElement(), "href");
-                    return NS_OK;
-                }
-                if (current == end) {
-                    break;
-                }
-            }
-=======
         // Grab the next space delimited word
         nsReadingIterator<char16_t> startWord = current;
         do {
@@ -793,18 +503,8 @@ nsresult ResourceReader::OnWalkDOMNode(nsINode* aNode) {
         }
         if (current == end) {
           break;
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        if (current == end) {
-          break;
         }
       }
-||||||| merged common ancestors
-        return NS_OK;
-=======
-      }
->>>>>>> upstream-releases
     }
     return NS_OK;
   }
@@ -1113,25 +813,6 @@ PersistNodeFixup::FixupNode(nsINode* aNodeIn, bool* aSerializeCloneKids,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  // BASE elements are replaced by a comment so relative links are not hosed.
-  if (!IsFlagSet(IWBP::PERSIST_FLAGS_NO_BASE_TAG_MODIFICATIONS) &&
-      content->IsHTMLElement(nsGkAtoms::base)) {
-    // Base uses HTMLSharedElement, which would be awkward to implement
-    // FromContent on, since it represents multiple elements. Since we've
-    // already checked IsHTMLElement here, just cast as we were doing.
-    auto* base = static_cast<dom::HTMLSharedElement*>(content.get());
-    nsIDocument* ownerDoc = base->OwnerDoc();
-||||||| merged common ancestors
-    // BASE elements are replaced by a comment so relative links are not hosed.
-    if (!IsFlagSet(IWBP::PERSIST_FLAGS_NO_BASE_TAG_MODIFICATIONS) &&
-        content->IsHTMLElement(nsGkAtoms::base)) {
-        // Base uses HTMLSharedElement, which would be awkward to implement
-        // FromContent on, since it represents multiple elements. Since we've
-        // already checked IsHTMLElement here, just cast as we were doing.
-        auto* base = static_cast<dom::HTMLSharedElement*>(content.get());
-        nsIDocument* ownerDoc = base->OwnerDoc();
-=======
   // BASE elements are replaced by a comment so relative links are not hosed.
   if (!IsFlagSet(IWBP::PERSIST_FLAGS_NO_BASE_TAG_MODIFICATIONS) &&
       content->IsHTMLElement(nsGkAtoms::base)) {
@@ -1140,7 +821,6 @@ PersistNodeFixup::FixupNode(nsINode* aNodeIn, bool* aSerializeCloneKids,
     // already checked IsHTMLElement here, just cast as we were doing.
     auto* base = static_cast<dom::HTMLSharedElement*>(content.get());
     dom::Document* ownerDoc = base->OwnerDoc();
->>>>>>> upstream-releases
 
     nsAutoString href;
     base->GetHref(href);  // Doesn't matter if this fails

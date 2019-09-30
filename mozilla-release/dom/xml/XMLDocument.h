@@ -18,33 +18,16 @@ class nsIChannel;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class XMLDocument : public nsDocument {
- public:
-||||||| merged common ancestors
-class XMLDocument : public nsDocument
-{
-public:
-=======
 class XMLDocument : public Document {
  public:
->>>>>>> upstream-releases
   explicit XMLDocument(const char* aContentType = "application/xml");
 
   NS_INLINE_DECL_REFCOUNTING_INHERITED(XMLDocument, Document)
 
   virtual void Reset(nsIChannel* aChannel, nsILoadGroup* aLoadGroup) override;
-<<<<<<< HEAD
-  virtual void ResetToURI(nsIURI* aURI, nsILoadGroup* aLoadGroup,
-                          nsIPrincipal* aPrincipal) override;
-||||||| merged common ancestors
-  virtual void ResetToURI(nsIURI *aURI, nsILoadGroup *aLoadGroup,
-                          nsIPrincipal* aPrincipal) override;
-=======
   virtual void ResetToURI(nsIURI* aURI, nsILoadGroup* aLoadGroup,
                           nsIPrincipal* aPrincipal,
                           nsIPrincipal* aStoragePrincipal) override;
->>>>>>> upstream-releases
 
   virtual void SetSuppressParserErrorElement(bool aSuppress) override;
   virtual bool SuppressParserErrorElement() override;
@@ -65,65 +48,15 @@ class XMLDocument : public Document {
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
-<<<<<<< HEAD
-  virtual void DocAddSizeOfExcludingThis(
-      nsWindowSizes& aWindowSizes) const override;
-  // DocAddSizeOfIncludingThis is inherited from nsIDocument.
-
-||||||| merged common ancestors
-  virtual void DocAddSizeOfExcludingThis(nsWindowSizes& aWindowSizes) const override;
-  // DocAddSizeOfIncludingThis is inherited from nsIDocument.
-
-
-=======
   virtual void DocAddSizeOfExcludingThis(
       nsWindowSizes& aWindowSizes) const override;
   // DocAddSizeOfIncludingThis is inherited from Document.
 
->>>>>>> upstream-releases
   // WebIDL API
   bool Load(const nsAString& aUrl, CallerType aCallerType, ErrorResult& aRv);
-<<<<<<< HEAD
   bool Async() const { return mAsync; }
   void SetAsync(bool aAsync) { mAsync = aAsync; }
 
-  // .location is [Unforgeable], so we have to make it clear that the
-  // nsIDocument version applies to us (it's shadowed by the XPCOM thing on
-  // nsDocument).
-  using nsIDocument::GetLocation;
-
- protected:
-  virtual ~XMLDocument();
-||||||| merged common ancestors
-  bool Async() const
-  {
-    return mAsync;
-  }
-  void SetAsync(bool aAsync)
-  {
-    mAsync = aAsync;
-  }
-
-  // .location is [Unforgeable], so we have to make it clear that the
-  // nsIDocument version applies to us (it's shadowed by the XPCOM thing on
-  // nsDocument).
-  using nsIDocument::GetLocation;
-
-protected:
-  virtual ~XMLDocument();
-=======
-  bool Async() const { return mAsync; }
-  void SetAsync(bool aAsync) { mAsync = aAsync; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-  friend nsresult (::NS_NewXMLDocument)(nsIDocument**, bool, bool);
-=======
   // .location is [Unforgeable], so we have to make it clear that the Document
   // version applies to us (it's shadowed by the XPCOM thing on Document).
   using Document::GetLocation;
@@ -133,14 +66,8 @@ protected:
 
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  friend nsresult(::NS_NewXMLDocument)(nsIDocument**, bool, bool);
-||||||| merged common ancestors
-=======
   friend nsresult(::NS_NewXMLDocument)(Document**, bool, bool);
->>>>>>> upstream-releases
 
   // mChannelIsPending indicates whether we're currently asynchronously loading
   // data from mChannel (via document.load() or normal load).  It's set to true

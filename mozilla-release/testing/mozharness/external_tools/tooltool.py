@@ -747,13 +747,7 @@ def fetch_file(base_urls, file_record, grabchunk=1024 * 4, auth_file=None, regio
                          (file_record.filename, base_url, temp_path))
                 fetched_path = temp_path
                 break
-<<<<<<< HEAD
-        except (urllib2.URLError, urllib2.HTTPError, ValueError):
-||||||| merged common ancestors
-        except (urllib2.URLError, urllib2.HTTPError, ValueError) as e:
-=======
         except (URLError, HTTPError, ValueError):
->>>>>>> upstream-releases
             log.info("...failed to fetch '%s' from %s" %
                      (file_record.filename, base_url), exc_info=True)
         except IOError:  # pragma: no cover

@@ -71,23 +71,9 @@ using namespace mozilla::dom;
 //    increase as we support more and more HTML elements. How can code
 //    from the code be factored?
 
-<<<<<<< HEAD
-nsresult NS_NewXMLContentSink(nsIXMLContentSink** aResult, nsIDocument* aDoc,
-                              nsIURI* aURI, nsISupports* aContainer,
-                              nsIChannel* aChannel) {
-||||||| merged common ancestors
-nsresult
-NS_NewXMLContentSink(nsIXMLContentSink** aResult,
-                     nsIDocument* aDoc,
-                     nsIURI* aURI,
-                     nsISupports* aContainer,
-                     nsIChannel* aChannel)
-{
-=======
 nsresult NS_NewXMLContentSink(nsIXMLContentSink** aResult, Document* aDoc,
                               nsIURI* aURI, nsISupports* aContainer,
                               nsIChannel* aChannel) {
->>>>>>> upstream-releases
   MOZ_ASSERT(nullptr != aResult, "null ptr");
   if (nullptr == aResult) {
     return NS_ERROR_NULL_POINTER;
@@ -115,20 +101,8 @@ nsXMLContentSink::nsXMLContentSink()
 
 nsXMLContentSink::~nsXMLContentSink() {}
 
-<<<<<<< HEAD
-nsresult nsXMLContentSink::Init(nsIDocument* aDoc, nsIURI* aURI,
-                                nsISupports* aContainer, nsIChannel* aChannel) {
-||||||| merged common ancestors
-nsresult
-nsXMLContentSink::Init(nsIDocument* aDoc,
-                       nsIURI* aURI,
-                       nsISupports* aContainer,
-                       nsIChannel* aChannel)
-{
-=======
 nsresult nsXMLContentSink::Init(Document* aDoc, nsIURI* aURI,
                                 nsISupports* aContainer, nsIChannel* aChannel) {
->>>>>>> upstream-releases
   nsresult rv = nsContentSink::Init(aDoc, aURI, aContainer, aChannel);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -344,14 +318,7 @@ nsXMLContentSink::DidBuildModel(bool aTerminated) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXMLContentSink::OnDocumentCreated(nsIDocument* aResultDocument) {
-||||||| merged common ancestors
-nsXMLContentSink::OnDocumentCreated(nsIDocument* aResultDocument)
-{
-=======
 nsXMLContentSink::OnDocumentCreated(Document* aResultDocument) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aResultDocument);
 
   aResultDocument->SetDocWriteDisabled(true);
@@ -365,21 +332,9 @@ nsXMLContentSink::OnDocumentCreated(Document* aResultDocument) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXMLContentSink::OnTransformDone(nsresult aResult,
-                                  nsIDocument* aResultDocument) {
-  MOZ_ASSERT(aResultDocument,
-             "Don't notify about transform end without a document.");
-||||||| merged common ancestors
-nsXMLContentSink::OnTransformDone(nsresult aResult,
-                                  nsIDocument* aResultDocument)
-{
-  MOZ_ASSERT(aResultDocument, "Don't notify about transform end without a document.");
-=======
 nsXMLContentSink::OnTransformDone(nsresult aResult, Document* aResultDocument) {
   MOZ_ASSERT(aResultDocument,
              "Don't notify about transform end without a document.");
->>>>>>> upstream-releases
 
   mDocumentChildren.Clear();
 
@@ -774,17 +729,7 @@ void nsXMLContentSink::SetDocumentCharset(NotNull<const Encoding*> aEncoding) {
   }
 }
 
-<<<<<<< HEAD
-nsISupports* nsXMLContentSink::GetTarget() { return mDocument; }
-||||||| merged common ancestors
-nsISupports *
-nsXMLContentSink::GetTarget()
-{
-  return mDocument;
-}
-=======
 nsISupports* nsXMLContentSink::GetTarget() { return ToSupports(mDocument); }
->>>>>>> upstream-releases
 
 bool nsXMLContentSink::IsScriptExecuting() { return IsScriptExecutingImpl(); }
 
@@ -1457,19 +1402,11 @@ nsresult nsXMLContentSink::AddText(const char16_t* aText, int32_t aLength) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsXMLContentSink::FlushPendingNotifications(FlushType aType) {
-||||||| merged common ancestors
-void
-nsXMLContentSink::FlushPendingNotifications(FlushType aType)
-{
-=======
 void nsXMLContentSink::InitialDocumentTranslationCompleted() {
   StartLayout(false);
 }
 
 void nsXMLContentSink::FlushPendingNotifications(FlushType aType) {
->>>>>>> upstream-releases
   // Only flush tags if we're not doing the notification ourselves
   // (since we aren't reentrant)
   if (!mInNotification) {

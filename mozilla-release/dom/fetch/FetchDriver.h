@@ -101,88 +101,28 @@ class FetchDriver final : public nsIStreamListener,
   NS_DECL_NSIINTERFACEREQUESTOR
   NS_DECL_NSITHREADRETARGETABLESTREAMLISTENER
 
-<<<<<<< HEAD
-  FetchDriver(InternalRequest* aRequest, nsIPrincipal* aPrincipal,
-              nsILoadGroup* aLoadGroup, nsIEventTarget* aMainThreadEventTarget,
-              PerformanceStorage* aPerformanceStorage, bool aIsTrackingFetch);
-||||||| merged common ancestors
-  FetchDriver(InternalRequest* aRequest,
-              nsIPrincipal* aPrincipal,
-              nsILoadGroup* aLoadGroup,
-              nsIEventTarget* aMainThreadEventTarget,
-              PerformanceStorage* aPerformanceStorage,
-              bool aIsTrackingFetch);
-=======
   FetchDriver(InternalRequest* aRequest, nsIPrincipal* aPrincipal,
               nsILoadGroup* aLoadGroup, nsIEventTarget* aMainThreadEventTarget,
               nsICookieSettings* aCookieSettings,
               PerformanceStorage* aPerformanceStorage, bool aIsTrackingFetch);
 
   nsresult Fetch(AbortSignalImpl* aSignalImpl, FetchDriverObserver* aObserver);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult Fetch(AbortSignalImpl* aSignalImpl, FetchDriverObserver* aObserver);
-||||||| merged common ancestors
-  nsresult Fetch(AbortSignalImpl* aSignalImpl,
-                 FetchDriverObserver* aObserver);
-=======
   void SetDocument(Document* aDocument);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetDocument(nsIDocument* aDocument);
-||||||| merged common ancestors
-  void
-  SetDocument(nsIDocument* aDocument);
-=======
   void SetCSPEventListener(nsICSPEventListener* aCSPEventListener);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetCSPEventListener(nsICSPEventListener* aCSPEventListener);
-||||||| merged common ancestors
-  void
-  SetCSPEventListener(nsICSPEventListener* aCSPEventListener);
-=======
   void SetClientInfo(const ClientInfo& aClientInfo);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetClientInfo(const ClientInfo& aClientInfo);
-||||||| merged common ancestors
-  void
-  SetClientInfo(const ClientInfo& aClientInfo);
-=======
   void SetController(const Maybe<ServiceWorkerDescriptor>& aController);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetController(const Maybe<ServiceWorkerDescriptor>& aController);
-||||||| merged common ancestors
-  void
-  SetController(const Maybe<ServiceWorkerDescriptor>& aController);
-=======
   void SetWorkerScript(const nsACString& aWorkerScript) {
     MOZ_ASSERT(!aWorkerScript.IsEmpty());
     mWorkerScript = aWorkerScript;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetWorkerScript(const nsACString& aWorkerScirpt) {
-    MOZ_ASSERT(!aWorkerScirpt.IsEmpty());
-    mWorkerScript = aWorkerScirpt;
-||||||| merged common ancestors
-  void
-  SetWorkerScript(const nsACString& aWorkerScirpt)
-  {
-    MOZ_ASSERT(!aWorkerScirpt.IsEmpty());
-    mWorkerScript = aWorkerScirpt;
-=======
   void SetOriginStack(UniquePtr<SerializedStackHolder>&& aOriginStack) {
     mOriginStack = std::move(aOriginStack);
->>>>>>> upstream-releases
   }
 
   // AbortFollower

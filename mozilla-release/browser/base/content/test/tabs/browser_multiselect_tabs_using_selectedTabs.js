@@ -38,14 +38,6 @@ add_task(async function() {
         "Selected tab shouldn't be marked as aria-selected when only one tab is selected"
       );
     } else {
-<<<<<<< HEAD
-      const uniqueTabs = [...new Set(tabs)];
-      is(selectedTabs.length, uniqueTabs.length, "Check number of selected tabs");
-      for (let tab of uniqueTabs) {
-||||||| merged common ancestors
-      ok(selectedTabs.length, tabs.length, "Check number of selected tabs");
-      for (let tab of tabs) {
-=======
       const uniqueTabs = [...new Set(tabs)];
       is(
         selectedTabs.length,
@@ -53,7 +45,6 @@ add_task(async function() {
         "Check number of selected tabs"
       );
       for (let tab of uniqueTabs) {
->>>>>>> upstream-releases
         ok(tab.multiselected, "Tab should be multi-selected");
         ok(
           _multiSelectedTabsSet.has(tab),

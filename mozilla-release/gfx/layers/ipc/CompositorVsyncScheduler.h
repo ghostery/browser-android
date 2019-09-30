@@ -39,20 +39,9 @@ class CompositorVsyncSchedulerOwner;
 class CompositorVsyncScheduler {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(CompositorVsyncScheduler)
 
-<<<<<<< HEAD
- public:
-  explicit CompositorVsyncScheduler(
-      CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
-      widget::CompositorWidget* aWidget);
-||||||| merged common ancestors
-public:
-  explicit CompositorVsyncScheduler(CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
-                                    widget::CompositorWidget* aWidget);
-=======
  public:
   CompositorVsyncScheduler(CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
                            widget::CompositorWidget* aWidget);
->>>>>>> upstream-releases
 
   /**
    * Notify this class of a vsync. This will trigger a composite if one is
@@ -148,13 +137,7 @@ public:
   class Observer final : public VsyncObserver {
    public:
     explicit Observer(CompositorVsyncScheduler* aOwner);
-<<<<<<< HEAD
-    virtual bool NotifyVsync(const VsyncEvent& aVsync) override;
-||||||| merged common ancestors
-    virtual bool NotifyVsync(TimeStamp aVsyncTimestamp) override;
-=======
     bool NotifyVsync(const VsyncEvent& aVsync) override;
->>>>>>> upstream-releases
     void Destroy();
 
    private:

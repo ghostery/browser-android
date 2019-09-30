@@ -39,17 +39,6 @@ inline bool IsIgnorableCharacter(char16_t ch) {
 //    Some characters (like apostrophes) require characters on each side to be
 //    part of a word, and are otherwise punctuation.
 
-<<<<<<< HEAD
-inline bool IsConditionalPunctuation(char16_t ch) {
-  return (ch == '\'' || ch == 0x2019 ||  // RIGHT SINGLE QUOTATION MARK
-          ch == 0x00B7);                 // MIDDLE DOT
-||||||| merged common ancestors
-inline bool IsConditionalPunctuation(char16_t ch)
-{
-  return (ch == '\'' ||
-          ch == 0x2019 || // RIGHT SINGLE QUOTATION MARK
-          ch == 0x00B7); // MIDDLE DOT
-=======
 inline bool IsConditionalPunctuation(char16_t ch) {
   return (ch == '\'' || ch == 0x2019 ||  // RIGHT SINGLE QUOTATION MARK
           ch == 0x00B7);                 // MIDDLE DOT
@@ -59,7 +48,6 @@ static bool IsAmbiguousDOMWordSeprator(char16_t ch) {
   // This class may be CHAR_CLASS_SEPARATOR, but it depends on context.
   return (ch == '@' || ch == ':' || ch == '.' || ch == '/' || ch == '-' ||
           IsConditionalPunctuation(ch));
->>>>>>> upstream-releases
 }
 
 // mozInlineSpellWordUtil::Init

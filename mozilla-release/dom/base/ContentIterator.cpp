@@ -69,306 +69,14 @@ static bool NodeIsInTraversalRange(nsINode* aNode, bool aIsPreMode,
          nsContentUtils::ComparePoints(aEnd, beforeNode) > 0;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-/*
- *  A simple iterator class for traversing the content in "close tag" order
- */
-class nsContentIterator : public nsIContentIterator {
- public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_CLASS(nsContentIterator)
-
-  explicit nsContentIterator(bool aPre);
-
-  // nsIContentIterator interface methods ------------------------------
-
-  virtual nsresult Init(nsINode* aRoot) override;
-
-  virtual nsresult Init(nsRange* aRange) override;
-
-  virtual nsresult Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                        nsINode* aEndContainer, uint32_t aEndOffset) override;
-
-  virtual nsresult Init(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd) override;
-
-  virtual void First() override;
-
-  virtual void Last() override;
-
-  virtual void Next() override;
-
-  virtual void Prev() override;
-
-  virtual nsINode* GetCurrentNode() override;
-
-  virtual bool IsDone() override;
-
-  virtual nsresult PositionAt(nsINode* aCurNode) override;
-
- protected:
-  virtual ~nsContentIterator();
-
-  /**
-   * Callers must guarantee that:
-   * - Neither aStartContainer nor aEndContainer is nullptr.
-   * - aStartOffset and aEndOffset are valid for its container.
-   * - The start point and the end point are in document order.
-   */
-  nsresult InitInternal(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd);
-
-  // Recursively get the deepest first/last child of aRoot.  This will return
-  // aRoot itself if it has no children.
-  nsINode* GetDeepFirstChild(nsINode* aRoot);
-  nsIContent* GetDeepFirstChild(nsIContent* aRoot);
-  nsINode* GetDeepLastChild(nsINode* aRoot);
-  nsIContent* GetDeepLastChild(nsIContent* aRoot);
-
-  // Get the next/previous sibling of aNode, or its parent's, or grandparent's,
-  // etc.  Returns null if aNode and all its ancestors have no next/previous
-  // sibling.
-  nsIContent* GetNextSibling(nsINode* aNode);
-  nsIContent* GetPrevSibling(nsINode* aNode);
-
-  nsINode* NextNode(nsINode* aNode);
-  nsINode* PrevNode(nsINode* aNode);
-
-  void MakeEmpty();
-
-  virtual void LastRelease();
-
-  nsCOMPtr<nsINode> mCurNode;
-  nsCOMPtr<nsINode> mFirst;
-  nsCOMPtr<nsINode> mLast;
-  nsCOMPtr<nsINode> mCommonParent;
-
-  bool mIsDone;
-  bool mPre;
-
- private:
-  // no copies or assigns  FIX ME
-  nsContentIterator(const nsContentIterator&);
-  nsContentIterator& operator=(const nsContentIterator&);
-};
-
-/******************************************************
- * repository cruft
- ******************************************************/
-
-already_AddRefed<nsIContentIterator> NS_NewContentIterator() {
-  nsCOMPtr<nsIContentIterator> iter = new nsContentIterator(false);
-  return iter.forget();
-}
-
-already_AddRefed<nsIContentIterator> NS_NewPreContentIterator() {
-  nsCOMPtr<nsIContentIterator> iter = new nsContentIterator(true);
-  return iter.forget();
-}
-
-/******************************************************
- * XPCOM cruft
- ******************************************************/
-
-NS_IMPL_CYCLE_COLLECTING_ADDREF(nsContentIterator)
-NS_IMPL_CYCLE_COLLECTING_RELEASE_WITH_LAST_RELEASE(nsContentIterator,
-                                                   LastRelease())
-
-NS_INTERFACE_MAP_BEGIN(nsContentIterator)
-  NS_INTERFACE_MAP_ENTRY(nsIContentIterator)
-  NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIContentIterator)
-  NS_INTERFACE_MAP_ENTRIES_CYCLE_COLLECTION(nsContentIterator)
-NS_INTERFACE_MAP_END
-
-NS_IMPL_CYCLE_COLLECTION(nsContentIterator, mCurNode, mFirst, mLast,
-                         mCommonParent)
-
-void nsContentIterator::LastRelease() {
-  mCurNode = nullptr;
-  mFirst = nullptr;
-  mLast = nullptr;
-  mCommonParent = nullptr;
-}
-
-/******************************************************
- * constructor/destructor
- ******************************************************/
-
-nsContentIterator::nsContentIterator(bool aPre) : mIsDone(false), mPre(aPre) {}
-
-nsContentIterator::~nsContentIterator() {}
-||||||| merged common ancestors
-
-
-/*
- *  A simple iterator class for traversing the content in "close tag" order
- */
-class nsContentIterator : public nsIContentIterator
-{
-public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_CLASS(nsContentIterator)
-
-  explicit nsContentIterator(bool aPre);
-
-  // nsIContentIterator interface methods ------------------------------
-
-  virtual nsresult Init(nsINode* aRoot) override;
-
-  virtual nsresult Init(nsRange* aRange) override;
-
-  virtual nsresult Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                        nsINode* aEndContainer, uint32_t aEndOffset) override;
-
-  virtual nsresult Init(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd) override;
-
-  virtual void First() override;
-
-  virtual void Last() override;
-
-  virtual void Next() override;
-
-  virtual void Prev() override;
-
-  virtual nsINode* GetCurrentNode() override;
-
-  virtual bool IsDone() override;
-
-  virtual nsresult PositionAt(nsINode* aCurNode) override;
-
-protected:
-  virtual ~nsContentIterator();
-
-  /**
-   * Callers must guarantee that:
-   * - Neither aStartContainer nor aEndContainer is nullptr.
-   * - aStartOffset and aEndOffset are valid for its container.
-   * - The start point and the end point are in document order.
-   */
-  nsresult InitInternal(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd);
-
-  // Recursively get the deepest first/last child of aRoot.  This will return
-  // aRoot itself if it has no children.
-  nsINode* GetDeepFirstChild(nsINode* aRoot);
-  nsIContent* GetDeepFirstChild(nsIContent* aRoot);
-  nsINode* GetDeepLastChild(nsINode* aRoot);
-  nsIContent* GetDeepLastChild(nsIContent* aRoot);
-
-  // Get the next/previous sibling of aNode, or its parent's, or grandparent's,
-  // etc.  Returns null if aNode and all its ancestors have no next/previous
-  // sibling.
-  nsIContent* GetNextSibling(nsINode* aNode);
-  nsIContent* GetPrevSibling(nsINode* aNode);
-
-  nsINode* NextNode(nsINode* aNode);
-  nsINode* PrevNode(nsINode* aNode);
-
-  void MakeEmpty();
-
-  virtual void LastRelease();
-
-  nsCOMPtr<nsINode> mCurNode;
-  nsCOMPtr<nsINode> mFirst;
-  nsCOMPtr<nsINode> mLast;
-  nsCOMPtr<nsINode> mCommonParent;
-
-  bool mIsDone;
-  bool mPre;
-
-private:
-
-  // no copies or assigns  FIX ME
-  nsContentIterator(const nsContentIterator&);
-  nsContentIterator& operator=(const nsContentIterator&);
-
-};
-
-
-/******************************************************
- * repository cruft
- ******************************************************/
-
-already_AddRefed<nsIContentIterator>
-NS_NewContentIterator()
-{
-  nsCOMPtr<nsIContentIterator> iter = new nsContentIterator(false);
-  return iter.forget();
-}
-
-
-already_AddRefed<nsIContentIterator>
-NS_NewPreContentIterator()
-{
-  nsCOMPtr<nsIContentIterator> iter = new nsContentIterator(true);
-  return iter.forget();
-}
-
-
-/******************************************************
- * XPCOM cruft
- ******************************************************/
-
-NS_IMPL_CYCLE_COLLECTING_ADDREF(nsContentIterator)
-NS_IMPL_CYCLE_COLLECTING_RELEASE_WITH_LAST_RELEASE(nsContentIterator,
-                                                   LastRelease())
-
-NS_INTERFACE_MAP_BEGIN(nsContentIterator)
-  NS_INTERFACE_MAP_ENTRY(nsIContentIterator)
-  NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIContentIterator)
-  NS_INTERFACE_MAP_ENTRIES_CYCLE_COLLECTION(nsContentIterator)
-NS_INTERFACE_MAP_END
-
-NS_IMPL_CYCLE_COLLECTION(nsContentIterator,
-                         mCurNode,
-                         mFirst,
-                         mLast,
-                         mCommonParent)
-
-void
-nsContentIterator::LastRelease()
-{
-  mCurNode = nullptr;
-  mFirst = nullptr;
-  mLast = nullptr;
-  mCommonParent = nullptr;
-}
-
-/******************************************************
- * constructor/destructor
- ******************************************************/
-
-nsContentIterator::nsContentIterator(bool aPre)
-  : mIsDone(false)
-  , mPre(aPre)
-{
-}
-
-
-nsContentIterator::~nsContentIterator()
-{
-}
-
-=======
 ContentIteratorBase::ContentIteratorBase(bool aPre)
     : mIsDone(false), mPre(aPre) {}
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
 
 /******************************************************
  * Init routines
  ******************************************************/
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentIterator::Init(nsINode* aRoot) {
-||||||| merged common ancestors
-
-nsresult
-nsContentIterator::Init(nsINode* aRoot)
-{
-=======
 nsresult ContentIteratorBase::Init(nsINode* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aRoot)) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -390,15 +98,7 @@ nsresult ContentIteratorBase::Init(nsINode* aRoot) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentIterator::Init(nsRange* aRange) {
-||||||| merged common ancestors
-nsresult
-nsContentIterator::Init(nsRange* aRange)
-{
-=======
 nsresult ContentIteratorBase::Init(nsRange* aRange) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mIsDone = false;
 
   if (NS_WARN_IF(!aRange)) {
@@ -412,21 +112,10 @@ nsresult ContentIteratorBase::Init(nsRange* aRange) {
   return InitInternal(aRange->StartRef().AsRaw(), aRange->EndRef().AsRaw());
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentIterator::Init(nsINode* aStartContainer,
-                                 uint32_t aStartOffset, nsINode* aEndContainer,
-                                 uint32_t aEndOffset) {
-||||||| merged common ancestors
-nsresult
-nsContentIterator::Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                        nsINode* aEndContainer, uint32_t aEndOffset)
-{
-=======
 nsresult ContentIteratorBase::Init(nsINode* aStartContainer,
                                    uint32_t aStartOffset,
                                    nsINode* aEndContainer,
                                    uint32_t aEndOffset) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mIsDone = false;
 
   if (NS_WARN_IF(!RangeUtils::IsValidPoints(aStartContainer, aStartOffset,
@@ -438,48 +127,19 @@ nsresult ContentIteratorBase::Init(nsINode* aStartContainer,
                       RawRangeBoundary(aEndContainer, aEndOffset));
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentIterator::Init(const RawRangeBoundary& aStart,
-                                 const RawRangeBoundary& aEnd) {
-||||||| merged common ancestors
-nsresult
-nsContentIterator::Init(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd)
-{
-=======
 nsresult ContentIteratorBase::Init(const RawRangeBoundary& aStart,
                                    const RawRangeBoundary& aEnd) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mIsDone = false;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-  if (NS_WARN_IF(!nsRange::IsValidPoints(aStart.Container(), aStart.Offset(),
-                                         aEnd.Container(), aEnd.Offset()))) {
-||||||| merged common ancestors
-
-  if (NS_WARN_IF(!nsRange::IsValidPoints(aStart.Container(), aStart.Offset(),
-                                         aEnd.Container(), aEnd.Offset()))) {
-=======
   if (NS_WARN_IF(!RangeUtils::IsValidPoints(aStart, aEnd))) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
     return NS_ERROR_INVALID_ARG;
   }
 
   return InitInternal(aStart, aEnd);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentIterator::InitInternal(const RawRangeBoundary& aStart,
-                                         const RawRangeBoundary& aEnd) {
-||||||| merged common ancestors
-nsresult
-nsContentIterator::InitInternal(const RawRangeBoundary& aStart,
-                                const RawRangeBoundary& aEnd)
-{
-=======
 nsresult ContentIteratorBase::InitInternal(const RawRangeBoundary& aStart,
                                            const RawRangeBoundary& aEnd) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   // get common content parent
   mCommonParent =
       nsContentUtils::GetCommonAncestor(aStart.Container(), aEnd.Container());
@@ -661,37 +321,15 @@ nsresult ContentIteratorBase::InitInternal(const RawRangeBoundary& aStart,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentIterator::MakeEmpty() {
-  mCurNode = nullptr;
-  mFirst = nullptr;
-  mLast = nullptr;
-||||||| merged common ancestors
-void
-nsContentIterator::MakeEmpty()
-{
-  mCurNode      = nullptr;
-  mFirst        = nullptr;
-  mLast         = nullptr;
-=======
 void ContentIteratorBase::MakeEmpty() {
   mCurNode = nullptr;
   mFirst = nullptr;
   mLast = nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mCommonParent = nullptr;
   mIsDone = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsINode* nsContentIterator::GetDeepFirstChild(nsINode* aRoot) {
-||||||| merged common ancestors
-nsINode*
-nsContentIterator::GetDeepFirstChild(nsINode* aRoot)
-{
-=======
 nsINode* ContentIteratorBase::GetDeepFirstChild(nsINode* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aRoot) || !aRoot->HasChildren()) {
     return aRoot;
   }
@@ -699,15 +337,7 @@ nsINode* ContentIteratorBase::GetDeepFirstChild(nsINode* aRoot) {
   return GetDeepFirstChild(aRoot->GetFirstChild());
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsIContent* nsContentIterator::GetDeepFirstChild(nsIContent* aRoot) {
-||||||| merged common ancestors
-nsIContent*
-nsContentIterator::GetDeepFirstChild(nsIContent* aRoot)
-{
-=======
 nsIContent* ContentIteratorBase::GetDeepFirstChild(nsIContent* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aRoot)) {
     return nullptr;
   }
@@ -723,15 +353,7 @@ nsIContent* ContentIteratorBase::GetDeepFirstChild(nsIContent* aRoot) {
   return node;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsINode* nsContentIterator::GetDeepLastChild(nsINode* aRoot) {
-||||||| merged common ancestors
-nsINode*
-nsContentIterator::GetDeepLastChild(nsINode* aRoot)
-{
-=======
 nsINode* ContentIteratorBase::GetDeepLastChild(nsINode* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aRoot) || !aRoot->HasChildren()) {
     return aRoot;
   }
@@ -739,15 +361,7 @@ nsINode* ContentIteratorBase::GetDeepLastChild(nsINode* aRoot) {
   return GetDeepLastChild(aRoot->GetLastChild());
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsIContent* nsContentIterator::GetDeepLastChild(nsIContent* aRoot) {
-||||||| merged common ancestors
-nsIContent*
-nsContentIterator::GetDeepLastChild(nsIContent* aRoot)
-{
-=======
 nsIContent* ContentIteratorBase::GetDeepLastChild(nsIContent* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aRoot)) {
     return nullptr;
   }
@@ -761,15 +375,7 @@ nsIContent* ContentIteratorBase::GetDeepLastChild(nsIContent* aRoot) {
 }
 
 // Get the next sibling, or parent's next sibling, or grandpa's next sibling...
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsIContent* nsContentIterator::GetNextSibling(nsINode* aNode) {
-||||||| merged common ancestors
-nsIContent*
-nsContentIterator::GetNextSibling(nsINode* aNode)
-{
-=======
 nsIContent* ContentIteratorBase::GetNextSibling(nsINode* aNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aNode)) {
     return nullptr;
   }
@@ -794,15 +400,7 @@ nsIContent* ContentIteratorBase::GetNextSibling(nsINode* aNode) {
 }
 
 // Get the prev sibling, or parent's prev sibling, or grandpa's prev sibling...
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsIContent* nsContentIterator::GetPrevSibling(nsINode* aNode) {
-||||||| merged common ancestors
-nsIContent*
-nsContentIterator::GetPrevSibling(nsINode* aNode)
-{
-=======
 nsIContent* ContentIteratorBase::GetPrevSibling(nsINode* aNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aNode)) {
     return nullptr;
   }
@@ -826,15 +424,7 @@ nsIContent* ContentIteratorBase::GetPrevSibling(nsINode* aNode) {
   return GetPrevSibling(parent);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsINode* nsContentIterator::NextNode(nsINode* aNode) {
-||||||| merged common ancestors
-nsINode*
-nsContentIterator::NextNode(nsINode* aNode)
-{
-=======
 nsINode* ContentIteratorBase::NextNode(nsINode* aNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   nsINode* node = aNode;
 
   // if we are a Pre-order iterator, use pre-order
@@ -868,15 +458,7 @@ nsINode* ContentIteratorBase::NextNode(nsINode* aNode) {
   return parent;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsINode* nsContentIterator::PrevNode(nsINode* aNode) {
-||||||| merged common ancestors
-nsINode*
-nsContentIterator::PrevNode(nsINode* aNode)
-{
-=======
 nsINode* ContentIteratorBase::PrevNode(nsINode* aNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   nsINode* node = aNode;
 
   // if we are a Pre-order iterator, use pre-order
@@ -909,15 +491,7 @@ nsINode* ContentIteratorBase::PrevNode(nsINode* aNode) {
  * ContentIteratorBase routines
  ******************************************************/
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentIterator::First() {
-||||||| merged common ancestors
-void
-nsContentIterator::First()
-{
-=======
 void ContentIteratorBase::First() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (mFirst) {
     mozilla::DebugOnly<nsresult> rv = PositionAt(mFirst);
     NS_ASSERTION(NS_SUCCEEDED(rv), "Failed to position iterator!");
@@ -926,16 +500,7 @@ void ContentIteratorBase::First() {
   mIsDone = mFirst == nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentIterator::Last() {
-||||||| merged common ancestors
-
-void
-nsContentIterator::Last()
-{
-=======
 void ContentIteratorBase::Last() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   // Note that mLast can be nullptr if MakeEmpty() is called in Init() since
   // at that time, Init() returns NS_OK.
   if (!mLast) {
@@ -949,16 +514,7 @@ void ContentIteratorBase::Last() {
   mIsDone = mLast == nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentIterator::Next() {
-||||||| merged common ancestors
-
-void
-nsContentIterator::Next()
-{
-=======
 void ContentIteratorBase::Next() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (mIsDone || NS_WARN_IF(!mCurNode)) {
     return;
   }
@@ -971,16 +527,7 @@ void ContentIteratorBase::Next() {
   mCurNode = NextNode(mCurNode);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentIterator::Prev() {
-||||||| merged common ancestors
-
-void
-nsContentIterator::Prev()
-{
-=======
 void ContentIteratorBase::Prev() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(mIsDone) || NS_WARN_IF(!mCurNode)) {
     return;
   }
@@ -993,30 +540,11 @@ void ContentIteratorBase::Prev() {
   mCurNode = PrevNode(mCurNode);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-bool nsContentIterator::IsDone() { return mIsDone; }
-||||||| merged common ancestors
-
-bool
-nsContentIterator::IsDone()
-{
-  return mIsDone;
-}
-=======
 bool ContentIteratorBase::IsDone() { return mIsDone; }
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
 
 // Keeping arrays of indexes for the stack of nodes makes PositionAt
 // interesting...
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentIterator::PositionAt(nsINode* aCurNode) {
-||||||| merged common ancestors
-nsresult
-nsContentIterator::PositionAt(nsINode* aCurNode)
-{
-=======
 nsresult ContentIteratorBase::PositionAt(nsINode* aCurNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (NS_WARN_IF(!aCurNode)) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -1075,15 +603,7 @@ nsresult ContentIteratorBase::PositionAt(nsINode* aCurNode) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsINode* nsContentIterator::GetCurrentNode() {
-||||||| merged common ancestors
-nsINode*
-nsContentIterator::GetCurrentNode()
-{
-=======
 nsINode* ContentIteratorBase::GetCurrentNode() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (mIsDone) {
     return nullptr;
   }
@@ -1093,235 +613,15 @@ nsINode* ContentIteratorBase::GetCurrentNode() {
   return mCurNode;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-/*====================================================================================*/
-/*====================================================================================*/
-
-||||||| merged common ancestors
-
-
-
-
-/*====================================================================================*/
-/*====================================================================================*/
-
-
-
-
-
-
-=======
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
 /******************************************************
  * ContentSubtreeIterator init routines
  ******************************************************/
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-/*
- *  A simple iterator class for traversing the content in "top subtree" order
- */
-class nsContentSubtreeIterator : public nsContentIterator {
- public:
-  nsContentSubtreeIterator() : nsContentIterator(false) {}
-
-  NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(nsContentSubtreeIterator,
-                                           nsContentIterator)
-
-  // nsContentIterator overrides ------------------------------
-
-  virtual nsresult Init(nsINode* aRoot) override;
-
-  virtual nsresult Init(nsRange* aRange) override;
-
-  virtual nsresult Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                        nsINode* aEndContainer, uint32_t aEndOffset) override;
-
-  virtual nsresult Init(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd) override;
-
-  virtual void Next() override;
-
-  virtual void Prev() override;
-
-  virtual nsresult PositionAt(nsINode* aCurNode) override;
-
-  // Must override these because we don't do PositionAt
-  virtual void First() override;
-
-  // Must override these because we don't do PositionAt
-  virtual void Last() override;
-
- protected:
-  virtual ~nsContentSubtreeIterator() {}
-
-  /**
-   * Callers must guarantee that mRange isn't nullptr and is positioned.
-   */
-  nsresult InitWithRange();
-
-  // Returns the highest inclusive ancestor of aNode that's in the range
-  // (possibly aNode itself).  Returns null if aNode is null, or is not itself
-  // in the range.  A node is in the range if (node, 0) comes strictly after
-  // the range endpoint, and (node, node.length) comes strictly before it, so
-  // the range's start and end nodes will never be considered "in" it.
-  nsIContent* GetTopAncestorInRange(nsINode* aNode);
-
-  // no copy's or assigns  FIX ME
-  nsContentSubtreeIterator(const nsContentSubtreeIterator&);
-  nsContentSubtreeIterator& operator=(const nsContentSubtreeIterator&);
-
-  virtual void LastRelease() override;
-
-  RefPtr<nsRange> mRange;
-
-  AutoTArray<nsIContent*, 8> mEndNodes;
-};
-
-NS_IMPL_ADDREF_INHERITED(nsContentSubtreeIterator, nsContentIterator)
-NS_IMPL_RELEASE_INHERITED(nsContentSubtreeIterator, nsContentIterator)
-
-NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsContentSubtreeIterator)
-NS_INTERFACE_MAP_END_INHERITING(nsContentIterator)
-
-NS_IMPL_CYCLE_COLLECTION_INHERITED(nsContentSubtreeIterator, nsContentIterator,
-                                   mRange)
-
-void nsContentSubtreeIterator::LastRelease() {
-  mRange = nullptr;
-  nsContentIterator::LastRelease();
-}
-
-/******************************************************
- * repository cruft
- ******************************************************/
-
-already_AddRefed<nsIContentIterator> NS_NewContentSubtreeIterator() {
-  nsCOMPtr<nsIContentIterator> iter = new nsContentSubtreeIterator();
-  return iter.forget();
-}
-
-/******************************************************
- * Init routines
- ******************************************************/
-
-nsresult nsContentSubtreeIterator::Init(nsINode* aRoot) {
-||||||| merged common ancestors
-
-/*
- *  A simple iterator class for traversing the content in "top subtree" order
- */
-class nsContentSubtreeIterator : public nsContentIterator
-{
-public:
-  nsContentSubtreeIterator() : nsContentIterator(false) {}
-
-  NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(nsContentSubtreeIterator, nsContentIterator)
-
-  // nsContentIterator overrides ------------------------------
-
-  virtual nsresult Init(nsINode* aRoot) override;
-
-  virtual nsresult Init(nsRange* aRange) override;
-
-  virtual nsresult Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                        nsINode* aEndContainer, uint32_t aEndOffset) override;
-
-  virtual nsresult Init(const RawRangeBoundary& aStart,
-                        const RawRangeBoundary& aEnd) override;
-
-  virtual void Next() override;
-
-  virtual void Prev() override;
-
-  virtual nsresult PositionAt(nsINode* aCurNode) override;
-
-  // Must override these because we don't do PositionAt
-  virtual void First() override;
-
-  // Must override these because we don't do PositionAt
-  virtual void Last() override;
-
-protected:
-  virtual ~nsContentSubtreeIterator() {}
-
-  /**
-   * Callers must guarantee that mRange isn't nullptr and is positioned.
-   */
-  nsresult InitWithRange();
-
-  // Returns the highest inclusive ancestor of aNode that's in the range
-  // (possibly aNode itself).  Returns null if aNode is null, or is not itself
-  // in the range.  A node is in the range if (node, 0) comes strictly after
-  // the range endpoint, and (node, node.length) comes strictly before it, so
-  // the range's start and end nodes will never be considered "in" it.
-  nsIContent* GetTopAncestorInRange(nsINode* aNode);
-
-  // no copy's or assigns  FIX ME
-  nsContentSubtreeIterator(const nsContentSubtreeIterator&);
-  nsContentSubtreeIterator& operator=(const nsContentSubtreeIterator&);
-
-  virtual void LastRelease() override;
-
-  RefPtr<nsRange> mRange;
-
-  AutoTArray<nsIContent*, 8> mEndNodes;
-};
-
-NS_IMPL_ADDREF_INHERITED(nsContentSubtreeIterator, nsContentIterator)
-NS_IMPL_RELEASE_INHERITED(nsContentSubtreeIterator, nsContentIterator)
-
-NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsContentSubtreeIterator)
-NS_INTERFACE_MAP_END_INHERITING(nsContentIterator)
-
-NS_IMPL_CYCLE_COLLECTION_INHERITED(nsContentSubtreeIterator, nsContentIterator,
-                                   mRange)
-
-void
-nsContentSubtreeIterator::LastRelease()
-{
-  mRange = nullptr;
-  nsContentIterator::LastRelease();
-}
-
-/******************************************************
- * repository cruft
- ******************************************************/
-
-already_AddRefed<nsIContentIterator>
-NS_NewContentSubtreeIterator()
-{
-  nsCOMPtr<nsIContentIterator> iter = new nsContentSubtreeIterator();
-  return iter.forget();
-}
-
-
-
-/******************************************************
- * Init routines
- ******************************************************/
-
-
-nsresult
-nsContentSubtreeIterator::Init(nsINode* aRoot)
-{
-=======
 nsresult ContentSubtreeIterator::Init(nsINode* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentSubtreeIterator::Init(nsRange* aRange) {
-||||||| merged common ancestors
-
-nsresult
-nsContentSubtreeIterator::Init(nsRange* aRange)
-{
-=======
 nsresult ContentSubtreeIterator::Init(nsRange* aRange) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   MOZ_ASSERT(aRange);
 
   mIsDone = false;
@@ -1335,38 +635,16 @@ nsresult ContentSubtreeIterator::Init(nsRange* aRange) {
   return InitWithRange();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentSubtreeIterator::Init(nsINode* aStartContainer,
-                                        uint32_t aStartOffset,
-                                        nsINode* aEndContainer,
-                                        uint32_t aEndOffset) {
-||||||| merged common ancestors
-nsresult
-nsContentSubtreeIterator::Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                               nsINode* aEndContainer, uint32_t aEndOffset)
-{
-=======
 nsresult ContentSubtreeIterator::Init(nsINode* aStartContainer,
                                       uint32_t aStartOffset,
                                       nsINode* aEndContainer,
                                       uint32_t aEndOffset) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   return Init(RawRangeBoundary(aStartContainer, aStartOffset),
               RawRangeBoundary(aEndContainer, aEndOffset));
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentSubtreeIterator::Init(const RawRangeBoundary& aStart,
-                                        const RawRangeBoundary& aEnd) {
-||||||| merged common ancestors
-nsresult
-nsContentSubtreeIterator::Init(const RawRangeBoundary& aStart,
-                               const RawRangeBoundary& aEnd)
-{
-=======
 nsresult ContentSubtreeIterator::Init(const RawRangeBoundary& aStartBoundary,
                                       const RawRangeBoundary& aEndBoundary) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mIsDone = false;
 
   RefPtr<nsRange> range =
@@ -1385,15 +663,7 @@ nsresult ContentSubtreeIterator::Init(const RawRangeBoundary& aStartBoundary,
   return InitWithRange();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentSubtreeIterator::InitWithRange() {
-||||||| merged common ancestors
-nsresult
-nsContentSubtreeIterator::InitWithRange()
-{
-=======
 nsresult ContentSubtreeIterator::InitWithRange() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   MOZ_ASSERT(mRange);
   MOZ_ASSERT(mRange->IsPositioned());
 
@@ -1465,16 +735,8 @@ nsresult ContentSubtreeIterator::InitWithRange() {
   // we have a range that does not fully contain any node.
 
   bool nodeBefore, nodeAfter;
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-  MOZ_ALWAYS_SUCCEEDS(nsRange::CompareNodeToRange(firstCandidate, mRange,
-                                                  &nodeBefore, &nodeAfter));
-||||||| merged common ancestors
-  MOZ_ALWAYS_SUCCEEDS(
-    nsRange::CompareNodeToRange(firstCandidate, mRange, &nodeBefore, &nodeAfter));
-=======
   MOZ_ALWAYS_SUCCEEDS(RangeUtils::CompareNodeToRange(firstCandidate, mRange,
                                                      &nodeBefore, &nodeAfter));
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
 
   if (nodeBefore || nodeAfter) {
     MakeEmpty();
@@ -1518,16 +780,8 @@ nsresult ContentSubtreeIterator::InitWithRange() {
   // confirm that this last possible contained node is indeed contained.  Else
   // we have a range that does not fully contain any node.
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-  MOZ_ALWAYS_SUCCEEDS(nsRange::CompareNodeToRange(lastCandidate, mRange,
-                                                  &nodeBefore, &nodeAfter));
-||||||| merged common ancestors
-  MOZ_ALWAYS_SUCCEEDS(
-    nsRange::CompareNodeToRange(lastCandidate, mRange, &nodeBefore, &nodeAfter));
-=======
   MOZ_ALWAYS_SUCCEEDS(RangeUtils::CompareNodeToRange(lastCandidate, mRange,
                                                      &nodeBefore, &nodeAfter));
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
 
   if (nodeBefore || nodeAfter) {
     MakeEmpty();
@@ -1549,45 +803,20 @@ nsresult ContentSubtreeIterator::InitWithRange() {
  ****************************************************************/
 
 // we can't call PositionAt in a subtree iterator...
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentSubtreeIterator::First() {
-||||||| merged common ancestors
-void
-nsContentSubtreeIterator::First()
-{
-=======
 void ContentSubtreeIterator::First() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mIsDone = mFirst == nullptr;
 
   mCurNode = mFirst;
 }
 
 // we can't call PositionAt in a subtree iterator...
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentSubtreeIterator::Last() {
-||||||| merged common ancestors
-void
-nsContentSubtreeIterator::Last()
-{
-=======
 void ContentSubtreeIterator::Last() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   mIsDone = mLast == nullptr;
 
   mCurNode = mLast;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentSubtreeIterator::Next() {
-||||||| merged common ancestors
-
-void
-nsContentSubtreeIterator::Next()
-{
-=======
 void ContentSubtreeIterator::Next() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (mIsDone || !mCurNode) {
     return;
   }
@@ -1622,16 +851,7 @@ void ContentSubtreeIterator::Next() {
   mIsDone = mCurNode == nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-void nsContentSubtreeIterator::Prev() {
-||||||| merged common ancestors
-
-void
-nsContentSubtreeIterator::Prev()
-{
-=======
 void ContentSubtreeIterator::Prev() {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   // Prev should be optimized to use the mStartNodes, just as Next
   // uses mEndNodes.
   if (mIsDone || !mCurNode) {
@@ -1659,16 +879,7 @@ void ContentSubtreeIterator::Prev() {
   mIsDone = mCurNode == nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsresult nsContentSubtreeIterator::PositionAt(nsINode* aCurNode) {
-||||||| merged common ancestors
-
-nsresult
-nsContentSubtreeIterator::PositionAt(nsINode* aCurNode)
-{
-=======
 nsresult ContentSubtreeIterator::PositionAt(nsINode* aCurNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   NS_ERROR("Not implemented!");
 
   return NS_ERROR_NOT_IMPLEMENTED;
@@ -1678,15 +889,7 @@ nsresult ContentSubtreeIterator::PositionAt(nsINode* aCurNode) {
  * ContentSubtreeIterator helper routines
  ****************************************************************/
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-nsIContent* nsContentSubtreeIterator::GetTopAncestorInRange(nsINode* aNode) {
-||||||| merged common ancestors
-nsIContent*
-nsContentSubtreeIterator::GetTopAncestorInRange(nsINode* aNode)
-{
-=======
 nsIContent* ContentSubtreeIterator::GetTopAncestorInRange(nsINode* aNode) {
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   if (!aNode || !aNode->GetParentNode()) {
     return nullptr;
   }
@@ -1696,16 +899,8 @@ nsIContent* ContentSubtreeIterator::GetTopAncestorInRange(nsINode* aNode) {
 
   // sanity check: aNode is itself in the range
   bool nodeBefore, nodeAfter;
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-  nsresult res =
-      nsRange::CompareNodeToRange(aNode, mRange, &nodeBefore, &nodeAfter);
-||||||| merged common ancestors
-  nsresult res = nsRange::CompareNodeToRange(aNode, mRange,
-                                             &nodeBefore, &nodeAfter);
-=======
   nsresult res =
       RangeUtils::CompareNodeToRange(aNode, mRange, &nodeBefore, &nodeAfter);
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
   NS_ASSERTION(NS_SUCCEEDED(res) && !nodeBefore && !nodeAfter,
                "aNode isn't in mRange, or something else weird happened");
   if (NS_FAILED(res) || nodeBefore || nodeAfter) {
@@ -1723,16 +918,8 @@ nsIContent* ContentSubtreeIterator::GetTopAncestorInRange(nsINode* aNode) {
     if (!parent || !parent->GetParentNode()) {
       return content;
     }
-<<<<<<< HEAD:mozilla-release/dom/base/nsContentIterator.cpp
-    MOZ_ALWAYS_SUCCEEDS(
-        nsRange::CompareNodeToRange(parent, mRange, &nodeBefore, &nodeAfter));
-||||||| merged common ancestors
-    MOZ_ALWAYS_SUCCEEDS(
-      nsRange::CompareNodeToRange(parent, mRange, &nodeBefore, &nodeAfter));
-=======
     MOZ_ALWAYS_SUCCEEDS(RangeUtils::CompareNodeToRange(
         parent, mRange, &nodeBefore, &nodeAfter));
->>>>>>> upstream-releases:mozilla-release/dom/base/ContentIterator.cpp
 
     if (nodeBefore || nodeAfter) {
       return content;

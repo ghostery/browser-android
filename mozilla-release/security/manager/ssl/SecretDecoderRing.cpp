@@ -62,14 +62,6 @@ void BackgroundSdrEncryptStrings(const nsTArray<nsCString>& plaintexts,
   NS_DispatchToMainThread(runnable.forget());
 }
 
-<<<<<<< HEAD
-nsresult SecretDecoderRing::Encrypt(const nsACString& data,
-                                    /*out*/ nsACString& result) {
-||||||| merged common ancestors
-nsresult
-SecretDecoderRing::Encrypt(const nsACString& data, /*out*/ nsACString& result)
-{
-=======
 void BackgroundSdrDecryptStrings(const nsTArray<nsCString>& encryptedStrings,
                                  RefPtr<Promise>& aPromise) {
   nsCOMPtr<nsISecretDecoderRing> sdrService =
@@ -103,7 +95,6 @@ void BackgroundSdrDecryptStrings(const nsTArray<nsCString>& encryptedStrings,
 
 nsresult SecretDecoderRing::Encrypt(const nsACString& data,
                                     /*out*/ nsACString& result) {
->>>>>>> upstream-releases
   UniquePK11SlotInfo slot(PK11_GetInternalKeySlot());
   if (!slot) {
     return NS_ERROR_NOT_AVAILABLE;
@@ -181,19 +172,8 @@ SecretDecoderRing::EncryptString(const nsACString& text,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SecretDecoderRing::AsyncEncryptStrings(uint32_t plaintextsCount,
-                                       const char16_t** plaintexts,
-                                       JSContext* aCx, Promise** aPromise) {
-||||||| merged common ancestors
-SecretDecoderRing::AsyncEncryptStrings(uint32_t plaintextsCount,
-                                       const char16_t** plaintexts,
-                                       JSContext* aCx,
-                                       Promise** aPromise) {
-=======
 SecretDecoderRing::AsyncEncryptStrings(const nsTArray<nsCString>& plaintexts,
                                        JSContext* aCx, Promise** aPromise) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
   NS_ENSURE_ARG(!plaintexts.IsEmpty());
   NS_ENSURE_ARG_POINTER(aCx);
@@ -210,49 +190,18 @@ SecretDecoderRing::AsyncEncryptStrings(const nsTArray<nsCString>& plaintexts,
     return result.StealNSResult();
   }
 
-<<<<<<< HEAD
-  InfallibleTArray<nsCString> plaintextsUtf8(plaintextsCount);
-  for (uint32_t i = 0; i < plaintextsCount; ++i) {
-    plaintextsUtf8.AppendElement(NS_ConvertUTF16toUTF8(plaintexts[i]));
-  }
-  nsCOMPtr<nsIRunnable> runnable(NS_NewRunnableFunction(
-      "BackgroundSdrEncryptStrings",
-      [promise, plaintextsUtf8 = std::move(plaintextsUtf8)]() mutable {
-        BackgroundSdrEncryptStrings(plaintextsUtf8, promise);
-||||||| merged common ancestors
-  InfallibleTArray<nsCString> plaintextsUtf8(plaintextsCount);
-  for (uint32_t i = 0; i < plaintextsCount; ++i) {
-    plaintextsUtf8.AppendElement(NS_ConvertUTF16toUTF8(plaintexts[i]));
-  }
-  nsCOMPtr<nsIRunnable> runnable(
-    NS_NewRunnableFunction("BackgroundSdrEncryptStrings",
-      [promise, plaintextsUtf8 = std::move(plaintextsUtf8)]() mutable {
-        BackgroundSdrEncryptStrings(plaintextsUtf8, promise);
-=======
   // plaintexts are already expected to be UTF-8.
   nsCOMPtr<nsIRunnable> runnable(NS_NewRunnableFunction(
       "BackgroundSdrEncryptStrings", [promise, plaintexts]() mutable {
         BackgroundSdrEncryptStrings(plaintexts, promise);
->>>>>>> upstream-releases
       }));
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIThread> encryptionThread;
-  nsresult rv = NS_NewNamedThread("AsyncSDRThread",
-                                  getter_AddRefs(encryptionThread), runnable);
-||||||| merged common ancestors
-  nsCOMPtr<nsIThread> encryptionThread;
-  nsresult rv = NS_NewNamedThread("AsyncSDRThread",
-                                  getter_AddRefs(encryptionThread),
-                                  runnable);
-=======
   nsCOMPtr<nsIEventTarget> target(
       do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID));
   if (!target) {
     return NS_ERROR_FAILURE;
   }
   nsresult rv = target->Dispatch(runnable, NS_DISPATCH_NORMAL);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -279,12 +228,6 @@ SecretDecoderRing::DecryptString(const nsACString& encryptedBase64Text,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SecretDecoderRing::ChangePassword() {
-||||||| merged common ancestors
-SecretDecoderRing::ChangePassword()
-{
-=======
 SecretDecoderRing::AsyncDecryptStrings(
     const nsTArray<nsCString>& encryptedStrings, JSContext* aCx,
     Promise** aPromise) {
@@ -326,7 +269,6 @@ SecretDecoderRing::AsyncDecryptStrings(
 
 NS_IMETHODIMP
 SecretDecoderRing::ChangePassword() {
->>>>>>> upstream-releases
   UniquePK11SlotInfo slot(PK11_GetInternalKeySlot());
   if (!slot) {
     return NS_ERROR_NOT_AVAILABLE;

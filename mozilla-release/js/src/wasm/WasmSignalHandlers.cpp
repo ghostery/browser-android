@@ -22,29 +22,11 @@
 #include "mozilla/ScopeExit.h"
 #include "mozilla/ThreadLocal.h"
 
-<<<<<<< HEAD
-#include "threading/Thread.h"
-||||||| merged common ancestors
-=======
 #include "threading/Thread.h"
 #include "vm/Realm.h"
->>>>>>> upstream-releases
 #include "vm/Runtime.h"
 #include "wasm/WasmInstance.h"
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-#include <winternl.h>  // must include before util/Windows.h's `#undef`s
-#include "util/Windows.h"
-#elif defined(XP_DARWIN)
-#include <mach/exc.h>
-#include <mach/mach.h>
-#else
-#include <signal.h>
-#endif
-
-||||||| merged common ancestors
-=======
 #if defined(XP_WIN)
 #  include <winternl.h>  // must include before util/Windows.h's `#undef`s
 #  include "util/Windows.h"
@@ -55,7 +37,6 @@
 #  include <signal.h>
 #endif
 
->>>>>>> upstream-releases
 using namespace js;
 using namespace js::wasm;
 
@@ -68,68 +49,19 @@ using mozilla::DebugOnly;
 // =============================================================================
 
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
-<<<<<<< HEAD
-#include <sys/ucontext.h>  // for ucontext_t, mcontext_t
-||||||| merged common ancestors
-# include <sys/ucontext.h> // for ucontext_t, mcontext_t
-=======
 #  include <sys/ucontext.h>  // for ucontext_t, mcontext_t
->>>>>>> upstream-releases
 #endif
 
 #if defined(__x86_64__)
-<<<<<<< HEAD
-#if defined(__DragonFly__)
-#include <machine/npx.h>  // for union savefpu
-#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
-    defined(__NetBSD__) || defined(__OpenBSD__)
-#include <machine/fpu.h>  // for struct savefpu/fxsave64
-#endif
-||||||| merged common ancestors
-# if defined(__DragonFly__)
-#  include <machine/npx.h> // for union savefpu
-# elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
-       defined(__NetBSD__) || defined(__OpenBSD__)
-#  include <machine/fpu.h> // for struct savefpu/fxsave64
-# endif
-=======
 #  if defined(__DragonFly__)
 #    include <machine/npx.h>  // for union savefpu
 #  elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
       defined(__NetBSD__) || defined(__OpenBSD__)
 #    include <machine/fpu.h>  // for struct savefpu/fxsave64
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#define EIP_sig(p) ((p)->Eip)
-#define EBP_sig(p) ((p)->Ebp)
-#define ESP_sig(p) ((p)->Esp)
-#define RIP_sig(p) ((p)->Rip)
-#define RSP_sig(p) ((p)->Rsp)
-#define RBP_sig(p) ((p)->Rbp)
-#define R11_sig(p) ((p)->R11)
-#define R13_sig(p) ((p)->R13)
-#define R14_sig(p) ((p)->R14)
-#define R15_sig(p) ((p)->R15)
-#define EPC_sig(p) ((p)->Pc)
-#define RFP_sig(p) ((p)->Fp)
-#define R31_sig(p) ((p)->Sp)
-#define RLR_sig(p) ((p)->Lr)
-||||||| merged common ancestors
-# define EIP_sig(p) ((p)->Eip)
-# define EBP_sig(p) ((p)->Ebp)
-# define ESP_sig(p) ((p)->Esp)
-# define RIP_sig(p) ((p)->Rip)
-# define RSP_sig(p) ((p)->Rsp)
-# define RBP_sig(p) ((p)->Rbp)
-# define R11_sig(p) ((p)->R11)
-# define R13_sig(p) ((p)->R13)
-# define R14_sig(p) ((p)->R14)
-# define R15_sig(p) ((p)->R15)
-=======
 #  define EIP_sig(p) ((p)->Eip)
 #  define EBP_sig(p) ((p)->Ebp)
 #  define ESP_sig(p) ((p)->Esp)
@@ -144,63 +76,7 @@ using mozilla::DebugOnly;
 #  define RFP_sig(p) ((p)->Fp)
 #  define R31_sig(p) ((p)->Sp)
 #  define RLR_sig(p) ((p)->Lr)
->>>>>>> upstream-releases
 #elif defined(__OpenBSD__)
-<<<<<<< HEAD
-#define EIP_sig(p) ((p)->sc_eip)
-#define EBP_sig(p) ((p)->sc_ebp)
-#define ESP_sig(p) ((p)->sc_esp)
-#define RIP_sig(p) ((p)->sc_rip)
-#define RSP_sig(p) ((p)->sc_rsp)
-#define RBP_sig(p) ((p)->sc_rbp)
-#define R11_sig(p) ((p)->sc_r11)
-#if defined(__arm__)
-#define R13_sig(p) ((p)->sc_usr_sp)
-#define R14_sig(p) ((p)->sc_usr_lr)
-#define R15_sig(p) ((p)->sc_pc)
-#else
-#define R13_sig(p) ((p)->sc_r13)
-#define R14_sig(p) ((p)->sc_r14)
-#define R15_sig(p) ((p)->sc_r15)
-#endif
-#if defined(__aarch64__)
-#define EPC_sig(p) ((p)->sc_elr)
-#define RFP_sig(p) ((p)->sc_x[29])
-#define RLR_sig(p) ((p)->sc_lr)
-#define R31_sig(p) ((p)->sc_sp)
-#endif
-#if defined(__mips__)
-#define EPC_sig(p) ((p)->sc_pc)
-#define RFP_sig(p) ((p)->sc_regs[30])
-#endif
-||||||| merged common ancestors
-# define EIP_sig(p) ((p)->sc_eip)
-# define EBP_sig(p) ((p)->sc_ebp)
-# define ESP_sig(p) ((p)->sc_esp)
-# define RIP_sig(p) ((p)->sc_rip)
-# define RSP_sig(p) ((p)->sc_rsp)
-# define RBP_sig(p) ((p)->sc_rbp)
-# define R11_sig(p) ((p)->sc_r11)
-# if defined(__arm__)
-#  define R13_sig(p) ((p)->sc_usr_sp)
-#  define R14_sig(p) ((p)->sc_usr_lr)
-#  define R15_sig(p) ((p)->sc_pc)
-# else
-#  define R13_sig(p) ((p)->sc_r13)
-#  define R14_sig(p) ((p)->sc_r14)
-#  define R15_sig(p) ((p)->sc_r15)
-# endif
-# if defined(__aarch64__)
-#  define EPC_sig(p) ((p)->sc_elr)
-#  define RFP_sig(p) ((p)->sc_x[29])
-#  define RLR_sig(p) ((p)->sc_lr)
-#  define R31_sig(p) ((p)->sc_sp)
-# endif
-# if defined(__mips__)
-#  define EPC_sig(p) ((p)->sc_pc)
-#  define RFP_sig(p) ((p)->sc_regs[30])
-# endif
-=======
 #  define EIP_sig(p) ((p)->sc_eip)
 #  define EBP_sig(p) ((p)->sc_ebp)
 #  define ESP_sig(p) ((p)->sc_esp)
@@ -232,101 +108,7 @@ using mozilla::DebugOnly;
 #    define R01_sig(p) ((p)->sc_frame.fixreg[1])
 #    define R32_sig(p) ((p)->sc_frame.srr0)
 #  endif
->>>>>>> upstream-releases
 #elif defined(__linux__) || defined(__sun)
-<<<<<<< HEAD
-#if defined(__linux__)
-#define EIP_sig(p) ((p)->uc_mcontext.gregs[REG_EIP])
-#define EBP_sig(p) ((p)->uc_mcontext.gregs[REG_EBP])
-#define ESP_sig(p) ((p)->uc_mcontext.gregs[REG_ESP])
-#else
-#define EIP_sig(p) ((p)->uc_mcontext.gregs[REG_PC])
-#define EBP_sig(p) ((p)->uc_mcontext.gregs[REG_EBP])
-#define ESP_sig(p) ((p)->uc_mcontext.gregs[REG_ESP])
-#endif
-#define RIP_sig(p) ((p)->uc_mcontext.gregs[REG_RIP])
-#define RSP_sig(p) ((p)->uc_mcontext.gregs[REG_RSP])
-#define RBP_sig(p) ((p)->uc_mcontext.gregs[REG_RBP])
-#if defined(__linux__) && defined(__arm__)
-#define R11_sig(p) ((p)->uc_mcontext.arm_fp)
-#define R13_sig(p) ((p)->uc_mcontext.arm_sp)
-#define R14_sig(p) ((p)->uc_mcontext.arm_lr)
-#define R15_sig(p) ((p)->uc_mcontext.arm_pc)
-#else
-#define R11_sig(p) ((p)->uc_mcontext.gregs[REG_R11])
-#define R13_sig(p) ((p)->uc_mcontext.gregs[REG_R13])
-#define R14_sig(p) ((p)->uc_mcontext.gregs[REG_R14])
-#define R15_sig(p) ((p)->uc_mcontext.gregs[REG_R15])
-#endif
-#if defined(__linux__) && defined(__aarch64__)
-#define EPC_sig(p) ((p)->uc_mcontext.pc)
-#define RFP_sig(p) ((p)->uc_mcontext.regs[29])
-#define RLR_sig(p) ((p)->uc_mcontext.regs[30])
-#define R31_sig(p) ((p)->uc_mcontext.regs[31])
-#endif
-#if defined(__linux__) && defined(__mips__)
-#define EPC_sig(p) ((p)->uc_mcontext.pc)
-#define RFP_sig(p) ((p)->uc_mcontext.gregs[30])
-#define RSP_sig(p) ((p)->uc_mcontext.gregs[29])
-#define R31_sig(p) ((p)->uc_mcontext.gregs[31])
-#endif
-#if defined(__linux__) && (defined(__sparc__) && defined(__arch64__))
-#define PC_sig(p) ((p)->uc_mcontext.mc_gregs[MC_PC])
-#define FP_sig(p) ((p)->uc_mcontext.mc_fp)
-#define SP_sig(p) ((p)->uc_mcontext.mc_i7)
-#endif
-#if defined(__linux__) && (defined(__ppc64__) || defined(__PPC64__) || \
-                           defined(__ppc64le__) || defined(__PPC64LE__))
-#define R01_sig(p) ((p)->uc_mcontext.gp_regs[1])
-#define R32_sig(p) ((p)->uc_mcontext.gp_regs[32])
-#endif
-||||||| merged common ancestors
-# if defined(__linux__)
-#  define EIP_sig(p) ((p)->uc_mcontext.gregs[REG_EIP])
-#  define EBP_sig(p) ((p)->uc_mcontext.gregs[REG_EBP])
-#  define ESP_sig(p) ((p)->uc_mcontext.gregs[REG_ESP])
-# else
-#  define EIP_sig(p) ((p)->uc_mcontext.gregs[REG_PC])
-#  define EBP_sig(p) ((p)->uc_mcontext.gregs[REG_EBP])
-#  define ESP_sig(p) ((p)->uc_mcontext.gregs[REG_ESP])
-# endif
-# define RIP_sig(p) ((p)->uc_mcontext.gregs[REG_RIP])
-# define RSP_sig(p) ((p)->uc_mcontext.gregs[REG_RSP])
-# define RBP_sig(p) ((p)->uc_mcontext.gregs[REG_RBP])
-# if defined(__linux__) && defined(__arm__)
-#  define R11_sig(p) ((p)->uc_mcontext.arm_fp)
-#  define R13_sig(p) ((p)->uc_mcontext.arm_sp)
-#  define R14_sig(p) ((p)->uc_mcontext.arm_lr)
-#  define R15_sig(p) ((p)->uc_mcontext.arm_pc)
-# else
-#  define R11_sig(p) ((p)->uc_mcontext.gregs[REG_R11])
-#  define R13_sig(p) ((p)->uc_mcontext.gregs[REG_R13])
-#  define R14_sig(p) ((p)->uc_mcontext.gregs[REG_R14])
-#  define R15_sig(p) ((p)->uc_mcontext.gregs[REG_R15])
-# endif
-# if defined(__linux__) && defined(__aarch64__)
-#  define EPC_sig(p) ((p)->uc_mcontext.pc)
-#  define RFP_sig(p) ((p)->uc_mcontext.regs[29])
-#  define RLR_sig(p) ((p)->uc_mcontext.regs[30])
-#  define R31_sig(p) ((p)->uc_mcontext.regs[31])
-# endif
-# if defined(__linux__) && defined(__mips__)
-#  define EPC_sig(p) ((p)->uc_mcontext.pc)
-#  define RFP_sig(p) ((p)->uc_mcontext.gregs[30])
-#  define RSP_sig(p) ((p)->uc_mcontext.gregs[29])
-#  define R31_sig(p) ((p)->uc_mcontext.gregs[31])
-# endif
-# if defined(__linux__) && (defined(__sparc__) && defined(__arch64__))
-#  define PC_sig(p) ((p)->uc_mcontext.mc_gregs[MC_PC])
-#  define FP_sig(p) ((p)->uc_mcontext.mc_fp)
-#  define SP_sig(p) ((p)->uc_mcontext.mc_i7)
-# endif
-# if defined(__linux__) && \
-     (defined(__ppc64__) ||  defined (__PPC64__) || defined(__ppc64le__) || defined (__PPC64LE__))
-#  define R01_sig(p) ((p)->uc_mcontext.gp_regs[1])
-#  define R32_sig(p) ((p)->uc_mcontext.gp_regs[32])
-# endif
-=======
 #  if defined(__linux__)
 #    define EIP_sig(p) ((p)->uc_mcontext.gregs[REG_EIP])
 #    define EBP_sig(p) ((p)->uc_mcontext.gregs[REG_EBP])
@@ -372,108 +154,7 @@ using mozilla::DebugOnly;
 #    define R01_sig(p) ((p)->uc_mcontext.gp_regs[1])
 #    define R32_sig(p) ((p)->uc_mcontext.gp_regs[32])
 #  endif
->>>>>>> upstream-releases
 #elif defined(__NetBSD__)
-<<<<<<< HEAD
-#define EIP_sig(p) ((p)->uc_mcontext.__gregs[_REG_EIP])
-#define EBP_sig(p) ((p)->uc_mcontext.__gregs[_REG_EBP])
-#define ESP_sig(p) ((p)->uc_mcontext.__gregs[_REG_ESP])
-#define RIP_sig(p) ((p)->uc_mcontext.__gregs[_REG_RIP])
-#define RSP_sig(p) ((p)->uc_mcontext.__gregs[_REG_RSP])
-#define RBP_sig(p) ((p)->uc_mcontext.__gregs[_REG_RBP])
-#define R11_sig(p) ((p)->uc_mcontext.__gregs[_REG_R11])
-#define R13_sig(p) ((p)->uc_mcontext.__gregs[_REG_R13])
-#define R14_sig(p) ((p)->uc_mcontext.__gregs[_REG_R14])
-#define R15_sig(p) ((p)->uc_mcontext.__gregs[_REG_R15])
-#if defined(__aarch64__)
-#define EPC_sig(p) ((p)->uc_mcontext.__gregs[_REG_PC])
-#define RFP_sig(p) ((p)->uc_mcontext.__gregs[_REG_X29])
-#define RLR_sig(p) ((p)->uc_mcontext.__gregs[_REG_X30])
-#define R31_sig(p) ((p)->uc_mcontext.__gregs[_REG_SP])
-#endif
-#if defined(__mips__)
-#define EPC_sig(p) ((p)->uc_mcontext.__gregs[_REG_EPC])
-#define RFP_sig(p) ((p)->uc_mcontext.__gregs[_REG_S8])
-#endif
-#elif defined(__DragonFly__) || defined(__FreeBSD__) || \
-    defined(__FreeBSD_kernel__)
-#define EIP_sig(p) ((p)->uc_mcontext.mc_eip)
-#define EBP_sig(p) ((p)->uc_mcontext.mc_ebp)
-#define ESP_sig(p) ((p)->uc_mcontext.mc_esp)
-#define RIP_sig(p) ((p)->uc_mcontext.mc_rip)
-#define RSP_sig(p) ((p)->uc_mcontext.mc_rsp)
-#define RBP_sig(p) ((p)->uc_mcontext.mc_rbp)
-#if defined(__FreeBSD__) && defined(__arm__)
-#define R11_sig(p) ((p)->uc_mcontext.__gregs[_REG_R11])
-#define R13_sig(p) ((p)->uc_mcontext.__gregs[_REG_R13])
-#define R14_sig(p) ((p)->uc_mcontext.__gregs[_REG_R14])
-#define R15_sig(p) ((p)->uc_mcontext.__gregs[_REG_R15])
-#else
-#define R11_sig(p) ((p)->uc_mcontext.mc_r11)
-#define R13_sig(p) ((p)->uc_mcontext.mc_r13)
-#define R14_sig(p) ((p)->uc_mcontext.mc_r14)
-#define R15_sig(p) ((p)->uc_mcontext.mc_r15)
-#endif
-#if defined(__FreeBSD__) && defined(__aarch64__)
-#define EPC_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_elr)
-#define RFP_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_x[29])
-#define RLR_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_lr)
-#define R31_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_sp)
-#endif
-#if defined(__FreeBSD__) && defined(__mips__)
-#define EPC_sig(p) ((p)->uc_mcontext.mc_pc)
-#define RFP_sig(p) ((p)->uc_mcontext.mc_regs[30])
-#endif
-||||||| merged common ancestors
-# define EIP_sig(p) ((p)->uc_mcontext.__gregs[_REG_EIP])
-# define EBP_sig(p) ((p)->uc_mcontext.__gregs[_REG_EBP])
-# define ESP_sig(p) ((p)->uc_mcontext.__gregs[_REG_ESP])
-# define RIP_sig(p) ((p)->uc_mcontext.__gregs[_REG_RIP])
-# define RSP_sig(p) ((p)->uc_mcontext.__gregs[_REG_RSP])
-# define RBP_sig(p) ((p)->uc_mcontext.__gregs[_REG_RBP])
-# define R11_sig(p) ((p)->uc_mcontext.__gregs[_REG_R11])
-# define R13_sig(p) ((p)->uc_mcontext.__gregs[_REG_R13])
-# define R14_sig(p) ((p)->uc_mcontext.__gregs[_REG_R14])
-# define R15_sig(p) ((p)->uc_mcontext.__gregs[_REG_R15])
-# if defined(__aarch64__)
-#  define EPC_sig(p) ((p)->uc_mcontext.__gregs[_REG_PC])
-#  define RFP_sig(p) ((p)->uc_mcontext.__gregs[_REG_X29])
-#  define RLR_sig(p) ((p)->uc_mcontext.__gregs[_REG_X30])
-#  define R31_sig(p) ((p)->uc_mcontext.__gregs[_REG_SP])
-# endif
-# if defined(__mips__)
-#  define EPC_sig(p) ((p)->uc_mcontext.__gregs[_REG_EPC])
-#  define RFP_sig(p) ((p)->uc_mcontext.__gregs[_REG_S8])
-# endif
-#elif defined(__DragonFly__) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
-# define EIP_sig(p) ((p)->uc_mcontext.mc_eip)
-# define EBP_sig(p) ((p)->uc_mcontext.mc_ebp)
-# define ESP_sig(p) ((p)->uc_mcontext.mc_esp)
-# define RIP_sig(p) ((p)->uc_mcontext.mc_rip)
-# define RSP_sig(p) ((p)->uc_mcontext.mc_rsp)
-# define RBP_sig(p) ((p)->uc_mcontext.mc_rbp)
-# if defined(__FreeBSD__) && defined(__arm__)
-#  define R11_sig(p) ((p)->uc_mcontext.__gregs[_REG_R11])
-#  define R13_sig(p) ((p)->uc_mcontext.__gregs[_REG_R13])
-#  define R14_sig(p) ((p)->uc_mcontext.__gregs[_REG_R14])
-#  define R15_sig(p) ((p)->uc_mcontext.__gregs[_REG_R15])
-# else
-#  define R11_sig(p) ((p)->uc_mcontext.mc_r11)
-#  define R13_sig(p) ((p)->uc_mcontext.mc_r13)
-#  define R14_sig(p) ((p)->uc_mcontext.mc_r14)
-#  define R15_sig(p) ((p)->uc_mcontext.mc_r15)
-# endif
-# if defined(__FreeBSD__) && defined(__aarch64__)
-#  define EPC_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_elr)
-#  define RFP_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_x[29])
-#  define RLR_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_lr)
-#  define R31_sig(p) ((p)->uc_mcontext.mc_gpregs.gp_sp)
-# endif
-# if defined(__FreeBSD__) && defined(__mips__)
-#  define EPC_sig(p) ((p)->uc_mcontext.mc_pc)
-#  define RFP_sig(p) ((p)->uc_mcontext.mc_regs[30])
-# endif
-=======
 #  define EIP_sig(p) ((p)->uc_mcontext.__gregs[_REG_EIP])
 #  define EBP_sig(p) ((p)->uc_mcontext.__gregs[_REG_EBP])
 #  define ESP_sig(p) ((p)->uc_mcontext.__gregs[_REG_ESP])
@@ -533,31 +214,7 @@ using mozilla::DebugOnly;
 #    define R01_sig(p) ((p)->uc_mcontext.mc_gpr[1])
 #    define R32_sig(p) ((p)->uc_mcontext.mc_srr0)
 #  endif
->>>>>>> upstream-releases
 #elif defined(XP_DARWIN)
-<<<<<<< HEAD
-#define EIP_sig(p) ((p)->thread.uts.ts32.__eip)
-#define EBP_sig(p) ((p)->thread.uts.ts32.__ebp)
-#define ESP_sig(p) ((p)->thread.uts.ts32.__esp)
-#define RIP_sig(p) ((p)->thread.__rip)
-#define RBP_sig(p) ((p)->thread.__rbp)
-#define RSP_sig(p) ((p)->thread.__rsp)
-#define R11_sig(p) ((p)->thread.__r[11])
-#define R13_sig(p) ((p)->thread.__sp)
-#define R14_sig(p) ((p)->thread.__lr)
-#define R15_sig(p) ((p)->thread.__pc)
-||||||| merged common ancestors
-# define EIP_sig(p) ((p)->thread.uts.ts32.__eip)
-# define EBP_sig(p) ((p)->thread.uts.ts32.__ebp)
-# define ESP_sig(p) ((p)->thread.uts.ts32.__esp)
-# define RIP_sig(p) ((p)->thread.__rip)
-# define RBP_sig(p) ((p)->thread.__rbp)
-# define RSP_sig(p) ((p)->thread.__rsp)
-# define R11_sig(p) ((p)->thread.__r[11])
-# define R13_sig(p) ((p)->thread.__sp)
-# define R14_sig(p) ((p)->thread.__lr)
-# define R15_sig(p) ((p)->thread.__pc)
-=======
 #  define EIP_sig(p) ((p)->thread.uts.ts32.__eip)
 #  define EBP_sig(p) ((p)->thread.uts.ts32.__ebp)
 #  define ESP_sig(p) ((p)->thread.uts.ts32.__esp)
@@ -568,13 +225,7 @@ using mozilla::DebugOnly;
 #  define R13_sig(p) ((p)->thread.__sp)
 #  define R14_sig(p) ((p)->thread.__lr)
 #  define R15_sig(p) ((p)->thread.__pc)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#error "Don't know how to read/write to the thread state via the mcontext_t."
-||||||| merged common ancestors
-# error "Don't know how to read/write to the thread state via the mcontext_t."
-=======
 #  error "Don't know how to read/write to the thread state via the mcontext_t."
 #endif
 
@@ -598,7 +249,6 @@ using mozilla::DebugOnly;
 
 #ifdef WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS
 #  include <sys/user.h>
->>>>>>> upstream-releases
 #endif
 
 #if defined(ANDROID)
@@ -609,32 +259,14 @@ using mozilla::DebugOnly;
 //
 // See: https://chromiumcodereview.appspot.com/10829122/
 // See: http://code.google.com/p/android/issues/detail?id=34784
-<<<<<<< HEAD
-#if !defined(__BIONIC_HAVE_UCONTEXT_T)
-#if defined(__arm__)
-||||||| merged common ancestors
-# if !defined(__BIONIC_HAVE_UCONTEXT_T)
-#  if defined(__arm__)
-=======
 #  if !defined(__BIONIC_HAVE_UCONTEXT_T)
 #    if defined(__arm__)
->>>>>>> upstream-releases
 
 // GLibc on ARM defines mcontext_t has a typedef for 'struct sigcontext'.
 // Old versions of the C library <signal.h> didn't define the type.
-<<<<<<< HEAD
-#if !defined(__BIONIC_HAVE_STRUCT_SIGCONTEXT)
-#include <asm/sigcontext.h>
-#endif
-||||||| merged common ancestors
-#   if !defined(__BIONIC_HAVE_STRUCT_SIGCONTEXT)
-#    include <asm/sigcontext.h>
-#   endif
-=======
 #      if !defined(__BIONIC_HAVE_STRUCT_SIGCONTEXT)
 #        include <asm/sigcontext.h>
 #      endif
->>>>>>> upstream-releases
 
 typedef struct sigcontext mcontext_t;
 
@@ -646,13 +278,7 @@ typedef struct ucontext {
   // Other fields are not used so don't define them here.
 } ucontext_t;
 
-<<<<<<< HEAD
-#elif defined(__mips__)
-||||||| merged common ancestors
-#  elif defined(__mips__)
-=======
 #    elif defined(__mips__)
->>>>>>> upstream-releases
 
 typedef struct {
   uint32_t regmask;
@@ -683,13 +309,7 @@ typedef struct ucontext {
   // Other fields are not used so don't define them here.
 } ucontext_t;
 
-<<<<<<< HEAD
-#elif defined(__i386__)
-||||||| merged common ancestors
-#  elif defined(__i386__)
-=======
 #    elif defined(__i386__)
->>>>>>> upstream-releases
 // x86 version for Android.
 typedef struct {
   uint32_t gregs[19];
@@ -707,136 +327,45 @@ typedef struct ucontext {
   // Other fields are not used by V8, don't define them here.
 } ucontext_t;
 enum { REG_EIP = 14 };
-<<<<<<< HEAD
-#endif  // defined(__i386__)
-#endif  // !defined(__BIONIC_HAVE_UCONTEXT_T)
-#endif  // defined(ANDROID)
-||||||| merged common ancestors
-#  endif  // defined(__i386__)
-# endif  // !defined(__BIONIC_HAVE_UCONTEXT_T)
-#endif // defined(ANDROID)
-=======
 #    endif  // defined(__i386__)
 #  endif    // !defined(__BIONIC_HAVE_UCONTEXT_T)
 #endif      // defined(ANDROID)
->>>>>>> upstream-releases
 
 #if defined(XP_DARWIN)
-<<<<<<< HEAD
-#if defined(__x86_64__)
-||||||| merged common ancestors
-# if defined(__x86_64__)
-=======
 #  if defined(__x86_64__)
->>>>>>> upstream-releases
 struct macos_x64_context {
   x86_thread_state64_t thread;
   x86_float_state64_t float_;
 };
-<<<<<<< HEAD
-#define CONTEXT macos_x64_context
-#elif defined(__i386__)
-||||||| merged common ancestors
-#  define CONTEXT macos_x64_context
-# elif defined(__i386__)
-=======
 #    define CONTEXT macos_x64_context
 #  elif defined(__i386__)
->>>>>>> upstream-releases
 struct macos_x86_context {
   x86_thread_state_t thread;
   x86_float_state_t float_;
 };
-<<<<<<< HEAD
-#define CONTEXT macos_x86_context
-#elif defined(__arm__)
-||||||| merged common ancestors
-#  define CONTEXT macos_x86_context
-# elif defined(__arm__)
-=======
 #    define CONTEXT macos_x86_context
 #  elif defined(__arm__)
->>>>>>> upstream-releases
 struct macos_arm_context {
   arm_thread_state_t thread;
   arm_neon_state_t float_;
 };
-<<<<<<< HEAD
-#define CONTEXT macos_arm_context
-#else
-#error Unsupported architecture
-#endif
-||||||| merged common ancestors
-#  define CONTEXT macos_arm_context
-# else
-#  error Unsupported architecture
-# endif
-=======
 #    define CONTEXT macos_arm_context
 #  else
 #    error Unsupported architecture
 #  endif
->>>>>>> upstream-releases
 #elif !defined(XP_WIN)
-<<<<<<< HEAD
-#define CONTEXT ucontext_t
-||||||| merged common ancestors
-# define CONTEXT ucontext_t
-=======
 #  define CONTEXT ucontext_t
->>>>>>> upstream-releases
 #endif
 
 #if defined(_M_X64) || defined(__x86_64__)
-<<<<<<< HEAD
-#define PC_sig(p) RIP_sig(p)
-#define FP_sig(p) RBP_sig(p)
-#define SP_sig(p) RSP_sig(p)
-||||||| merged common ancestors
-# define PC_sig(p) RIP_sig(p)
-# define FP_sig(p) RBP_sig(p)
-# define SP_sig(p) RSP_sig(p)
-=======
 #  define PC_sig(p) RIP_sig(p)
 #  define FP_sig(p) RBP_sig(p)
 #  define SP_sig(p) RSP_sig(p)
->>>>>>> upstream-releases
 #elif defined(_M_IX86) || defined(__i386__)
-<<<<<<< HEAD
-#define PC_sig(p) EIP_sig(p)
-#define FP_sig(p) EBP_sig(p)
-#define SP_sig(p) ESP_sig(p)
-||||||| merged common ancestors
-# define PC_sig(p) EIP_sig(p)
-# define FP_sig(p) EBP_sig(p)
-# define SP_sig(p) ESP_sig(p)
-=======
 #  define PC_sig(p) EIP_sig(p)
 #  define FP_sig(p) EBP_sig(p)
 #  define SP_sig(p) ESP_sig(p)
->>>>>>> upstream-releases
 #elif defined(__arm__)
-<<<<<<< HEAD
-#define FP_sig(p) R11_sig(p)
-#define SP_sig(p) R13_sig(p)
-#define LR_sig(p) R14_sig(p)
-#define PC_sig(p) R15_sig(p)
-#elif defined(_M_ARM64) || defined(__aarch64__)
-#define PC_sig(p) EPC_sig(p)
-#define FP_sig(p) RFP_sig(p)
-#define SP_sig(p) R31_sig(p)
-#define LR_sig(p) RLR_sig(p)
-||||||| merged common ancestors
-# define FP_sig(p) R11_sig(p)
-# define SP_sig(p) R13_sig(p)
-# define LR_sig(p) R14_sig(p)
-# define PC_sig(p) R15_sig(p)
-#elif defined(__aarch64__)
-# define PC_sig(p) EPC_sig(p)
-# define FP_sig(p) RFP_sig(p)
-# define SP_sig(p) R31_sig(p)
-# define LR_sig(p) RLR_sig(p)
-=======
 #  define FP_sig(p) R11_sig(p)
 #  define SP_sig(p) R13_sig(p)
 #  define LR_sig(p) R14_sig(p)
@@ -846,36 +375,7 @@ struct macos_arm_context {
 #  define FP_sig(p) RFP_sig(p)
 #  define SP_sig(p) R31_sig(p)
 #  define LR_sig(p) RLR_sig(p)
->>>>>>> upstream-releases
 #elif defined(__mips__)
-<<<<<<< HEAD
-#define PC_sig(p) EPC_sig(p)
-#define FP_sig(p) RFP_sig(p)
-#define SP_sig(p) RSP_sig(p)
-#define LR_sig(p) R31_sig(p)
-#elif defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64le__) || \
-    defined(__PPC64LE__)
-#define PC_sig(p) R32_sig(p)
-#define SP_sig(p) R01_sig(p)
-#define FP_sig(p) R01_sig(p)
-#endif
-
-static void SetContextPC(CONTEXT* context, uint8_t* pc) {
-||||||| merged common ancestors
-# define PC_sig(p) EPC_sig(p)
-# define FP_sig(p) RFP_sig(p)
-# define SP_sig(p) RSP_sig(p)
-# define LR_sig(p) R31_sig(p)
-#elif defined(__ppc64__) ||  defined (__PPC64__) || defined(__ppc64le__) || defined (__PPC64LE__)
-# define PC_sig(p) R32_sig(p)
-# define SP_sig(p) R01_sig(p)
-# define FP_sig(p) R01_sig(p)
-#endif
-
-static uint8_t**
-ContextToPC(CONTEXT* context)
-{
-=======
 #  define PC_sig(p) EPC_sig(p)
 #  define FP_sig(p) RFP_sig(p)
 #  define SP_sig(p) RSP_sig(p)
@@ -896,22 +396,6 @@ static void SetContextPC(CONTEXT* context, uint8_t* pc) {
 }
 
 static uint8_t* ContextToPC(CONTEXT* context) {
->>>>>>> upstream-releases
-#ifdef PC_sig
-<<<<<<< HEAD
-  *reinterpret_cast<uint8_t**>(&PC_sig(context)) = pc;
-||||||| merged common ancestors
-    return reinterpret_cast<uint8_t**>(&PC_sig(context));
-=======
-  return reinterpret_cast<uint8_t*>(PC_sig(context));
->>>>>>> upstream-releases
-#else
-  MOZ_CRASH();
-#endif
-}
-
-<<<<<<< HEAD
-static uint8_t* ContextToPC(CONTEXT* context) {
 #ifdef PC_sig
   return reinterpret_cast<uint8_t*>(PC_sig(context));
 #else
@@ -920,13 +404,6 @@ static uint8_t* ContextToPC(CONTEXT* context) {
 }
 
 static uint8_t* ContextToFP(CONTEXT* context) {
-||||||| merged common ancestors
-static uint8_t*
-ContextToFP(CONTEXT* context)
-{
-=======
-static uint8_t* ContextToFP(CONTEXT* context) {
->>>>>>> upstream-releases
 #ifdef FP_sig
   return reinterpret_cast<uint8_t*>(FP_sig(context));
 #else
@@ -943,30 +420,12 @@ static uint8_t* ContextToSP(CONTEXT* context) {
 }
 
 #if defined(__arm__) || defined(__aarch64__) || defined(__mips__)
-<<<<<<< HEAD
-static uint8_t* ContextToLR(CONTEXT* context) {
-#ifdef LR_sig
-  return reinterpret_cast<uint8_t*>(LR_sig(context));
-#else
-  MOZ_CRASH();
-#endif
-||||||| merged common ancestors
-static uint8_t*
-ContextToLR(CONTEXT* context)
-{
-# ifdef LR_sig
-    return reinterpret_cast<uint8_t*>(LR_sig(context));
-# else
-    MOZ_CRASH();
-# endif
-=======
 static uint8_t* ContextToLR(CONTEXT* context) {
 #  ifdef LR_sig
   return reinterpret_cast<uint8_t*>(LR_sig(context));
 #  else
   MOZ_CRASH();
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -1004,26 +463,6 @@ static JS::ProfilingFrameIterator::RegisterState ToRegisterState(
 
 static MOZ_THREAD_LOCAL(bool) sAlreadyHandlingTrap;
 
-<<<<<<< HEAD
-struct AutoHandlingTrap {
-  AutoHandlingTrap() {
-    MOZ_ASSERT(!sAlreadyHandlingTrap.get());
-    sAlreadyHandlingTrap.set(true);
-  }
-||||||| merged common ancestors
-struct AutoHandlingTrap
-{
-    AutoHandlingTrap() {
-        MOZ_ASSERT(!sAlreadyHandlingTrap.get());
-        sAlreadyHandlingTrap.set(true);
-    }
-
-    ~AutoHandlingTrap() {
-        MOZ_ASSERT(sAlreadyHandlingTrap.get());
-        sAlreadyHandlingTrap.set(false);
-    }
-};
-=======
 struct AutoHandlingTrap {
   AutoHandlingTrap() {
     MOZ_ASSERT(!sAlreadyHandlingTrap.get());
@@ -1035,20 +474,7 @@ struct AutoHandlingTrap {
     sAlreadyHandlingTrap.set(false);
   }
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ~AutoHandlingTrap() {
-    MOZ_ASSERT(sAlreadyHandlingTrap.get());
-    sAlreadyHandlingTrap.set(false);
-  }
-};
-||||||| merged common ancestors
-static MOZ_MUST_USE bool
-HandleTrap(CONTEXT* context, JSContext* cx)
-{
-    MOZ_ASSERT(sAlreadyHandlingTrap.get());
-=======
 #ifdef WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS
 
 // Code to handle SIGBUS for unaligned floating point accesses on 32-bit ARM.
@@ -1091,19 +517,7 @@ static uintptr_t ReadGPR(CONTEXT* context, uint32_t rn) {
       MOZ_CRASH();
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static MOZ_MUST_USE bool HandleTrap(CONTEXT* context,
-                                    JSContext* assertCx = nullptr) {
-  MOZ_ASSERT(sAlreadyHandlingTrap.get());
-||||||| merged common ancestors
-    uint8_t* pc = *ContextToPC(context);
-    const CodeSegment* codeSegment = LookupCodeSegment(pc);
-    if (!codeSegment || !codeSegment->isModule()) {
-        return false;
-    }
-=======
 // Linux kernel data structures.
 //
 // The vfp_sigframe is a kernel type overlaid on the uc_regspace field of the
@@ -1125,72 +539,16 @@ struct vfp_sigframe {
   struct user_vfp ufp;
   struct user_vfp_exc ufp_exc;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t* pc = ContextToPC(context);
-  const CodeSegment* codeSegment = LookupCodeSegment(pc);
-  if (!codeSegment || !codeSegment->isModule()) {
-    return false;
-  }
-||||||| merged common ancestors
-    const ModuleSegment& segment = *codeSegment->asModule();
-=======
 #  define VFP_MAGIC 0x56465001
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const ModuleSegment& segment = *codeSegment->asModule();
-||||||| merged common ancestors
-    Trap trap;
-    BytecodeOffset bytecode;
-    if (!segment.code().lookupTrap(pc, &trap, &bytecode)) {
-        return false;
-    }
-=======
 static vfp_sigframe* GetVFPFrame(CONTEXT* context) {
   if (context->uc_regspace[0] != VFP_MAGIC) {
     return nullptr;
   }
   return (vfp_sigframe*)&context->uc_regspace;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Trap trap;
-  BytecodeOffset bytecode;
-  if (!segment.code().lookupTrap(pc, &trap, &bytecode)) {
-    return false;
-  }
-
-  // We have a safe, expected wasm trap, so fp is well-defined to be a Frame*.
-  // For the first sanity check, the Trap::IndirectCallBadSig special case is
-  // due to this trap occurring in the indirect call prologue, while fp points
-  // to the caller's Frame which can be in a different Module. In any case,
-  // though, the containing JSContext is the same.
-  Instance* instance = ((Frame*)ContextToFP(context))->tls->instance;
-  MOZ_RELEASE_ASSERT(&instance->code() == &segment.code() ||
-                     trap == Trap::IndirectCallBadSig);
-  JSContext* cx =
-      instance->realm()->runtimeFromAnyThread()->mainContextFromAnyThread();
-  MOZ_RELEASE_ASSERT(!assertCx || cx == assertCx);
-
-  // JitActivation::startWasmTrap() stores enough register state from the
-  // point of the trap to allow stack unwinding or resumption, both of which
-  // will call finishWasmTrap().
-  jit::JitActivation* activation = cx->activation()->asJit();
-  activation->startWasmTrap(trap, bytecode.offset(), ToRegisterState(context));
-  SetContextPC(context, segment.trapCode());
-  return true;
-||||||| merged common ancestors
-    // We have a safe, expected wasm trap. Call startWasmTrap() to store enough
-    // register state at the point of the trap to allow stack unwinding or
-    // resumption, both of which will call finishWasmTrap().
-    jit::JitActivation* activation = cx->activation()->asJit();
-    activation->startWasmTrap(trap, bytecode.offset(), ToRegisterState(context));
-    *ContextToPC(context) = segment.trapCode();
-    return true;
-=======
 static bool ReadFPR64(CONTEXT* context, uint32_t vd, double* val) {
   MOZ_ASSERT(vd < 32);
   vfp_sigframe* frame = GetVFPFrame(context);
@@ -1199,21 +557,8 @@ static bool ReadFPR64(CONTEXT* context, uint32_t vd, double* val) {
     return true;
   }
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// =============================================================================
-// The following platform-specific handlers funnel all signals/exceptions into
-// the shared HandleTrap() above.
-// =============================================================================
-||||||| merged common ancestors
-// =============================================================================
-// The following platform specific signal/exception handlers are installed by
-// wasm::EnsureSignalHandlers() and funnel all potential wasm traps into
-// HandleTrap() above.
-// =============================================================================
-=======
 static bool WriteFPR64(CONTEXT* context, uint32_t vd, double val) {
   MOZ_ASSERT(vd < 32);
   vfp_sigframe* frame = GetVFPFrame(context);
@@ -1223,60 +568,7 @@ static bool WriteFPR64(CONTEXT* context, uint32_t vd, double val) {
   }
   return false;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-// Obtained empirically from thread_local codegen on x86/x64/arm64.
-// Compiled in all user binaries, so should be stable over time.
-static const unsigned sThreadLocalArrayPointerIndex = 11;
-
-static LONG WINAPI WasmTrapHandler(LPEXCEPTION_POINTERS exception) {
-  // Make sure TLS is initialized before reading sAlreadyHandlingTrap.
-  if (!NtCurrentTeb()->Reserved1[sThreadLocalArrayPointerIndex]) {
-    return EXCEPTION_CONTINUE_SEARCH;
-  }
-
-  if (sAlreadyHandlingTrap.get()) {
-    return EXCEPTION_CONTINUE_SEARCH;
-  }
-  AutoHandlingTrap aht;
-
-  EXCEPTION_RECORD* record = exception->ExceptionRecord;
-  if (record->ExceptionCode != EXCEPTION_ACCESS_VIOLATION &&
-      record->ExceptionCode != EXCEPTION_ILLEGAL_INSTRUCTION) {
-    return EXCEPTION_CONTINUE_SEARCH;
-  }
-
-  if (!HandleTrap(exception->ContextRecord, TlsContext.get())) {
-    return EXCEPTION_CONTINUE_SEARCH;
-  }
-
-  return EXCEPTION_CONTINUE_EXECUTION;
-||||||| merged common ancestors
-#if defined(XP_WIN)
-
-static LONG WINAPI
-WasmTrapHandler(LPEXCEPTION_POINTERS exception)
-{
-    if (sAlreadyHandlingTrap.get()) {
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-    AutoHandlingTrap aht;
-
-    EXCEPTION_RECORD* record = exception->ExceptionRecord;
-    if (record->ExceptionCode != EXCEPTION_ACCESS_VIOLATION &&
-        record->ExceptionCode != EXCEPTION_ILLEGAL_INSTRUCTION)
-    {
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-
-    if (!HandleTrap(exception->ContextRecord, TlsContext.get())) {
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-
-    return EXCEPTION_CONTINUE_EXECUTION;
-=======
 static bool ReadFPR32(CONTEXT* context, uint32_t vd, float* val) {
   MOZ_ASSERT(vd < 32);
   vfp_sigframe* frame = GetVFPFrame(context);
@@ -1472,7 +764,6 @@ static LONG WINAPI WasmTrapHandler(LPEXCEPTION_POINTERS exception) {
   }
 
   return EXCEPTION_CONTINUE_EXECUTION;
->>>>>>> upstream-releases
 }
 
 #elif defined(XP_DARWIN)
@@ -1503,87 +794,6 @@ struct ExceptionRequest {
   mach_msg_trailer_t trailer;
 };
 
-<<<<<<< HEAD
-static bool HandleMachException(const ExceptionRequest& request) {
-  // Get the port of the JSContext's thread from the message.
-  mach_port_t cxThread = request.body.thread.name;
-
-  // Read out the JSRuntime thread's register state.
-  CONTEXT context;
-#if defined(__x86_64__)
-  unsigned int thread_state_count = x86_THREAD_STATE64_COUNT;
-  unsigned int float_state_count = x86_FLOAT_STATE64_COUNT;
-  int thread_state = x86_THREAD_STATE64;
-  int float_state = x86_FLOAT_STATE64;
-#elif defined(__i386__)
-  unsigned int thread_state_count = x86_THREAD_STATE_COUNT;
-  unsigned int float_state_count = x86_FLOAT_STATE_COUNT;
-  int thread_state = x86_THREAD_STATE;
-  int float_state = x86_FLOAT_STATE;
-#elif defined(__arm__)
-  unsigned int thread_state_count = ARM_THREAD_STATE_COUNT;
-  unsigned int float_state_count = ARM_NEON_STATE_COUNT;
-  int thread_state = ARM_THREAD_STATE;
-  int float_state = ARM_NEON_STATE;
-#else
-#error Unsupported architecture
-#endif
-  kern_return_t kret;
-  kret = thread_get_state(cxThread, thread_state,
-                          (thread_state_t)&context.thread, &thread_state_count);
-  if (kret != KERN_SUCCESS) {
-    return false;
-  }
-  kret = thread_get_state(cxThread, float_state,
-                          (thread_state_t)&context.float_, &float_state_count);
-  if (kret != KERN_SUCCESS) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-HandleMachException(JSContext* cx, const ExceptionRequest& request)
-{
-    // Get the port of the JSContext's thread from the message.
-    mach_port_t cxThread = request.body.thread.name;
-
-    // Read out the JSRuntime thread's register state.
-    CONTEXT context;
-# if defined(__x86_64__)
-    unsigned int thread_state_count = x86_THREAD_STATE64_COUNT;
-    unsigned int float_state_count = x86_FLOAT_STATE64_COUNT;
-    int thread_state = x86_THREAD_STATE64;
-    int float_state = x86_FLOAT_STATE64;
-# elif defined(__i386__)
-    unsigned int thread_state_count = x86_THREAD_STATE_COUNT;
-    unsigned int float_state_count = x86_FLOAT_STATE_COUNT;
-    int thread_state = x86_THREAD_STATE;
-    int float_state = x86_FLOAT_STATE;
-# elif defined(__arm__)
-    unsigned int thread_state_count = ARM_THREAD_STATE_COUNT;
-    unsigned int float_state_count = ARM_NEON_STATE_COUNT;
-    int thread_state = ARM_THREAD_STATE;
-    int float_state = ARM_NEON_STATE;
-# else
-#  error Unsupported architecture
-# endif
-    kern_return_t kret;
-    kret = thread_get_state(cxThread, thread_state,
-                            (thread_state_t)&context.thread, &thread_state_count);
-    if (kret != KERN_SUCCESS) {
-        return false;
-    }
-    kret = thread_get_state(cxThread, float_state,
-                            (thread_state_t)&context.float_, &float_state_count);
-    if (kret != KERN_SUCCESS) {
-        return false;
-    }
-
-    if (request.body.exception != EXC_BAD_ACCESS &&
-        request.body.exception != EXC_BAD_INSTRUCTION)
-    {
-        return false;
-    }
-=======
 static bool HandleMachException(const ExceptionRequest& request) {
   // Get the port of the JSContext's thread from the message.
   mach_port_t cxThread = request.body.thread.name;
@@ -1619,7 +829,6 @@ static bool HandleMachException(const ExceptionRequest& request) {
   if (kret != KERN_SUCCESS) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (request.body.exception != EXC_BAD_ACCESS &&
       request.body.exception != EXC_BAD_INSTRUCTION) {
@@ -1634,81 +843,6 @@ static bool HandleMachException(const ExceptionRequest& request) {
     }
   }
 
-<<<<<<< HEAD
-  // Update the thread state with the new pc and register values.
-  kret = thread_set_state(cxThread, float_state,
-                          (thread_state_t)&context.float_, float_state_count);
-  if (kret != KERN_SUCCESS) {
-    return false;
-  }
-  kret = thread_set_state(cxThread, thread_state,
-                          (thread_state_t)&context.thread, thread_state_count);
-  if (kret != KERN_SUCCESS) {
-    return false;
-  }
-||||||| merged common ancestors
-    return true;
-}
-
-// Taken from mach_exc in /usr/include/mach/mach_exc.defs.
-static const mach_msg_id_t sExceptionId = 2405;
-
-// The choice of id here is arbitrary, the only constraint is that sQuitId != sExceptionId.
-static const mach_msg_id_t sQuitId = 42;
-
-static void
-MachExceptionHandlerThread(JSContext* cx)
-{
-    mach_port_t port = cx->wasmMachExceptionHandler.port();
-    kern_return_t kret;
-
-    while(true) {
-        ExceptionRequest request;
-        kret = mach_msg(&request.body.Head, MACH_RCV_MSG, 0, sizeof(request),
-                        port, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-
-        // If we fail even receiving the message, we can't even send a reply!
-        // Rather than hanging the faulting thread (hanging the browser), crash.
-        if (kret != KERN_SUCCESS) {
-            fprintf(stderr, "MachExceptionHandlerThread: mach_msg failed with %d\n", (int)kret);
-            MOZ_CRASH();
-        }
-
-        // There are only two messages we should be receiving: an exception
-        // message that occurs when the runtime's thread faults and the quit
-        // message sent when the runtime is shutting down.
-        if (request.body.Head.msgh_id == sQuitId) {
-            break;
-        }
-        if (request.body.Head.msgh_id != sExceptionId) {
-            fprintf(stderr, "Unexpected msg header id %d\n", (int)request.body.Head.msgh_bits);
-            MOZ_CRASH();
-        }
-
-        // Some thread just commited an EXC_BAD_ACCESS and has been suspended by
-        // the kernel. The kernel is waiting for us to reply with instructions.
-        // Our default is the "not handled" reply (by setting the RetCode field
-        // of the reply to KERN_FAILURE) which tells the kernel to continue
-        // searching at the process and system level. If this is an asm.js
-        // expected exception, we handle it and return KERN_SUCCESS.
-        bool handled = HandleMachException(cx, request);
-        kern_return_t replyCode = handled ? KERN_SUCCESS : KERN_FAILURE;
-
-        // This magic incantation to send a reply back to the kernel was derived
-        // from the exc_server generated by 'mig -v /usr/include/mach/mach_exc.defs'.
-        __Reply__exception_raise_t reply;
-        reply.Head.msgh_bits = MACH_MSGH_BITS(MACH_MSGH_BITS_REMOTE(request.body.Head.msgh_bits), 0);
-        reply.Head.msgh_size = sizeof(reply);
-        reply.Head.msgh_remote_port = request.body.Head.msgh_remote_port;
-        reply.Head.msgh_local_port = MACH_PORT_NULL;
-        reply.Head.msgh_id = request.body.Head.msgh_id + 100;
-        reply.NDR = NDR_record;
-        reply.RetCode = replyCode;
-        mach_msg(&reply.Head, MACH_SEND_MSG, sizeof(reply), 0, MACH_PORT_NULL,
-                 MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-    }
-}
-=======
   // Update the thread state with the new pc and register values.
   kret = thread_set_state(cxThread, float_state,
                           (thread_state_t)&context.float_, float_state_count);
@@ -1723,113 +857,13 @@ MachExceptionHandlerThread(JSContext* cx)
 
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-}
-||||||| merged common ancestors
-MachExceptionHandler::MachExceptionHandler()
-  : installed_(false),
-    thread_(),
-    port_(MACH_PORT_NULL)
-{}
-
-void
-MachExceptionHandler::uninstall()
-{
-    if (installed_) {
-        thread_port_t thread = mach_thread_self();
-        kern_return_t kret = thread_set_exception_ports(thread,
-                                                        EXC_MASK_BAD_ACCESS | EXC_MASK_BAD_INSTRUCTION,
-                                                        MACH_PORT_NULL,
-                                                        EXCEPTION_DEFAULT | MACH_EXCEPTION_CODES,
-                                                        THREAD_STATE_NONE);
-        mach_port_deallocate(mach_task_self(), thread);
-        if (kret != KERN_SUCCESS) {
-            MOZ_CRASH();
-        }
-        installed_ = false;
-    }
-    if (thread_.joinable()) {
-        // Break the handler thread out of the mach_msg loop.
-        mach_msg_header_t msg;
-        msg.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, 0);
-        msg.msgh_size = sizeof(msg);
-        msg.msgh_remote_port = port_;
-        msg.msgh_local_port = MACH_PORT_NULL;
-        msg.msgh_reserved = 0;
-        msg.msgh_id = sQuitId;
-        kern_return_t kret = mach_msg(&msg, MACH_SEND_MSG, sizeof(msg), 0, MACH_PORT_NULL,
-                                      MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-        if (kret != KERN_SUCCESS) {
-            fprintf(stderr, "MachExceptionHandler: failed to send quit message: %d\n", (int)kret);
-            MOZ_CRASH();
-        }
-
-        // Wait for the handler thread to complete before deallocating the port.
-        thread_.join();
-    }
-    if (port_ != MACH_PORT_NULL) {
-        DebugOnly<kern_return_t> kret = mach_port_destroy(mach_task_self(), port_);
-        MOZ_ASSERT(kret == KERN_SUCCESS);
-        port_ = MACH_PORT_NULL;
-    }
-}
-=======
 static mach_port_t sMachDebugPort = MACH_PORT_NULL;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static mach_port_t sMachDebugPort = MACH_PORT_NULL;
-||||||| merged common ancestors
-bool
-MachExceptionHandler::install(JSContext* cx)
-{
-    MOZ_ASSERT(!installed());
-    kern_return_t kret;
-    mach_port_t thread;
-
-    auto onFailure = mozilla::MakeScopeExit([&] {
-        uninstall();
-    });
-=======
 static void MachExceptionHandlerThread() {
   // Taken from mach_exc in /usr/include/mach/mach_exc.defs.
   static const unsigned EXCEPTION_MSG_ID = 2405;
 
-  while (true) {
-    ExceptionRequest request;
-    kern_return_t kret =
-        mach_msg(&request.body.Head, MACH_RCV_MSG, 0, sizeof(request),
-                 sMachDebugPort, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-static void MachExceptionHandlerThread() {
-  // Taken from mach_exc in /usr/include/mach/mach_exc.defs.
-  static const unsigned EXCEPTION_MSG_ID = 2405;
-||||||| merged common ancestors
-    // Get a port which can send and receive data.
-    kret = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &port_);
-    if (kret != KERN_SUCCESS) {
-        return false;
-    }
-    kret = mach_port_insert_right(mach_task_self(), port_, port_, MACH_MSG_TYPE_MAKE_SEND);
-    if (kret != KERN_SUCCESS) {
-        return false;
-    }
-=======
-    // If we fail even receiving the message, we can't even send a reply!
-    // Rather than hanging the faulting thread (hanging the browser), crash.
-    if (kret != KERN_SUCCESS) {
-      fprintf(stderr, "MachExceptionHandlerThread: mach_msg failed with %d\n",
-              (int)kret);
-      MOZ_CRASH();
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   while (true) {
     ExceptionRequest request;
     kern_return_t kret =
@@ -1874,63 +908,6 @@ static void MachExceptionHandlerThread() {
     mach_msg(&reply.Head, MACH_SEND_MSG, sizeof(reply), 0, MACH_PORT_NULL,
              MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
   }
-||||||| merged common ancestors
-    // Create a thread to block on reading port_.
-    if (!thread_.init(MachExceptionHandlerThread, cx)) {
-        return false;
-    }
-
-    // Direct exceptions on this thread to port_ (and thus our handler thread).
-    // Note: we are totally clobbering any existing *thread* exception ports and
-    // not even attempting to forward. Breakpad and gdb both use the *process*
-    // exception ports which are only called if the thread doesn't handle the
-    // exception, so we should be fine.
-    thread = mach_thread_self();
-    kret = thread_set_exception_ports(thread,
-                                      EXC_MASK_BAD_ACCESS | EXC_MASK_BAD_INSTRUCTION,
-                                      port_,
-                                      EXCEPTION_DEFAULT | MACH_EXCEPTION_CODES,
-                                      THREAD_STATE_NONE);
-    mach_port_deallocate(mach_task_self(), thread);
-    if (kret != KERN_SUCCESS) {
-        return false;
-    }
-
-    installed_ = true;
-    onFailure.release();
-    return true;
-=======
-    if (request.body.Head.msgh_id != EXCEPTION_MSG_ID) {
-      fprintf(stderr, "Unexpected msg header id %d\n",
-              (int)request.body.Head.msgh_bits);
-      MOZ_CRASH();
-    }
-
-    // Some thread just commited an EXC_BAD_ACCESS and has been suspended by
-    // the kernel. The kernel is waiting for us to reply with instructions.
-    // Our default is the "not handled" reply (by setting the RetCode field
-    // of the reply to KERN_FAILURE) which tells the kernel to continue
-    // searching at the process and system level. If this is an asm.js
-    // expected exception, we handle it and return KERN_SUCCESS.
-    bool handled = HandleMachException(request);
-    kern_return_t replyCode = handled ? KERN_SUCCESS : KERN_FAILURE;
-
-    // This magic incantation to send a reply back to the kernel was
-    // derived from the exc_server generated by
-    // 'mig -v /usr/include/mach/mach_exc.defs'.
-    __Reply__exception_raise_t reply;
-    reply.Head.msgh_bits =
-        MACH_MSGH_BITS(MACH_MSGH_BITS_REMOTE(request.body.Head.msgh_bits), 0);
-    reply.Head.msgh_size = sizeof(reply);
-    reply.Head.msgh_remote_port = request.body.Head.msgh_remote_port;
-    reply.Head.msgh_local_port = MACH_PORT_NULL;
-    reply.Head.msgh_id = request.body.Head.msgh_id + 100;
-    reply.NDR = NDR_record;
-    reply.RetCode = replyCode;
-    mach_msg(&reply.Head, MACH_SEND_MSG, sizeof(reply), 0, MACH_PORT_NULL,
-             MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-  }
->>>>>>> upstream-releases
 }
 
 #else  // If not Windows or Mac, assume Unix
@@ -1945,91 +922,6 @@ static struct sigaction sPrevSEGVHandler;
 static struct sigaction sPrevSIGBUSHandler;
 static struct sigaction sPrevWasmTrapHandler;
 
-<<<<<<< HEAD
-static void WasmTrapHandler(int signum, siginfo_t* info, void* context) {
-  if (!sAlreadyHandlingTrap.get()) {
-    AutoHandlingTrap aht;
-    MOZ_RELEASE_ASSERT(signum == SIGSEGV || signum == SIGBUS ||
-                       signum == kWasmTrapSignal);
-    if (HandleTrap((CONTEXT*)context, TlsContext.get())) {
-      return;
-    }
-  }
-
-  struct sigaction* previousSignal = nullptr;
-  switch (signum) {
-    case SIGSEGV:
-      previousSignal = &sPrevSEGVHandler;
-      break;
-    case SIGBUS:
-      previousSignal = &sPrevSIGBUSHandler;
-      break;
-    case kWasmTrapSignal:
-      previousSignal = &sPrevWasmTrapHandler;
-      break;
-  }
-  MOZ_ASSERT(previousSignal);
-
-  // This signal is not for any asm.js code we expect, so we need to forward
-  // the signal to the next handler. If there is no next handler (SIG_IGN or
-  // SIG_DFL), then it's time to crash. To do this, we set the signal back to
-  // its original disposition and return. This will cause the faulting op to
-  // be re-executed which will crash in the normal way. The advantage of
-  // doing this to calling _exit() is that we remove ourselves from the crash
-  // stack which improves crash reports. If there is a next handler, call it.
-  // It will either crash synchronously, fix up the instruction so that
-  // execution can continue and return, or trigger a crash by returning the
-  // signal to it's original disposition and returning.
-  //
-  // Note: the order of these tests matter.
-  if (previousSignal->sa_flags & SA_SIGINFO) {
-    previousSignal->sa_sigaction(signum, info, context);
-  } else if (previousSignal->sa_handler == SIG_DFL ||
-             previousSignal->sa_handler == SIG_IGN) {
-    sigaction(signum, previousSignal, nullptr);
-  } else {
-    previousSignal->sa_handler(signum);
-  }
-||||||| merged common ancestors
-static void
-WasmTrapHandler(int signum, siginfo_t* info, void* context)
-{
-    if (!sAlreadyHandlingTrap.get()) {
-        AutoHandlingTrap aht;
-        MOZ_RELEASE_ASSERT(signum == SIGSEGV || signum == SIGBUS || signum == kWasmTrapSignal);
-        if (HandleTrap((CONTEXT*)context, TlsContext.get())) {
-            return;
-        }
-    }
-
-    struct sigaction* previousSignal = nullptr;
-    switch (signum) {
-      case SIGSEGV: previousSignal = &sPrevSEGVHandler; break;
-      case SIGBUS: previousSignal = &sPrevSIGBUSHandler; break;
-      case kWasmTrapSignal: previousSignal = &sPrevWasmTrapHandler; break;
-    }
-    MOZ_ASSERT(previousSignal);
-
-    // This signal is not for any asm.js code we expect, so we need to forward
-    // the signal to the next handler. If there is no next handler (SIG_IGN or
-    // SIG_DFL), then it's time to crash. To do this, we set the signal back to
-    // its original disposition and return. This will cause the faulting op to
-    // be re-executed which will crash in the normal way. The advantage of
-    // doing this to calling _exit() is that we remove ourselves from the crash
-    // stack which improves crash reports. If there is a next handler, call it.
-    // It will either crash synchronously, fix up the instruction so that
-    // execution can continue and return, or trigger a crash by returning the
-    // signal to it's original disposition and returning.
-    //
-    // Note: the order of these tests matter.
-    if (previousSignal->sa_flags & SA_SIGINFO) {
-        previousSignal->sa_sigaction(signum, info, context);
-    } else if (previousSignal->sa_handler == SIG_DFL || previousSignal->sa_handler == SIG_IGN) {
-        sigaction(signum, previousSignal, nullptr);
-    } else {
-        previousSignal->sa_handler(signum);
-    }
-=======
 static void WasmTrapHandler(int signum, siginfo_t* info, void* context) {
   if (!sAlreadyHandlingTrap.get()) {
     AutoHandlingTrap aht;
@@ -2074,7 +966,6 @@ static void WasmTrapHandler(int signum, siginfo_t* info, void* context) {
   } else {
     previousSignal->sa_handler(signum);
   }
->>>>>>> upstream-releases
 }
 #endif  // XP_WIN || XP_DARWIN || assume unix
 
@@ -2122,45 +1013,6 @@ void wasm::EnsureEagerProcessSignalHandlers() {
   // Install whatever exception/signal handler is appropriate for the OS.
 #if defined(XP_WIN)
 
-<<<<<<< HEAD
-#if defined(MOZ_ASAN)
-  // Under ASan we need to let the ASan runtime's ShadowExceptionHandler stay
-  // in the first handler position. This requires some coordination with
-  // MemoryProtectionExceptionHandler::isDisabled().
-  const bool firstHandler = false;
-#else
-  // Otherwise, WasmTrapHandler needs to go first, so that we can recover
-  // from wasm faults and continue execution without triggering handlers
-  // such as MemoryProtectionExceptionHandler that assume we are crashing.
-  const bool firstHandler = true;
-#endif
-  if (!AddVectoredExceptionHandler(firstHandler, WasmTrapHandler)) {
-    // Windows has all sorts of random security knobs for disabling things
-    // so make this a dynamic failure that disables wasm, not a MOZ_CRASH().
-    return;
-  }
-
-||||||| merged common ancestors
-# if defined(_M_ARM64)
-    // The AArch64 Windows build is not ready for this yet.
-    return false;
-# endif
-
-# if defined(MOZ_ASAN)
-    // Under ASan we need to let the ASan runtime's ShadowExceptionHandler stay
-    // in the first handler position. This requires some coordination with
-    // MemoryProtectionExceptionHandler::isDisabled().
-    const bool firstHandler = false;
-# else
-    // Otherwise, WasmTrapHandler needs to go first, so that we can recover
-    // from wasm faults and continue execution without triggering handlers
-    // such as MemoryProtectionExceptionHandler that assume we are crashing.
-    const bool firstHandler = true;
-# endif
-    if (!AddVectoredExceptionHandler(firstHandler, WasmTrapHandler)) {
-        return false;
-    }
-=======
 #  if defined(MOZ_ASAN)
   // Under ASan we need to let the ASan runtime's ShadowExceptionHandler stay
   // in the first handler position. This requires some coordination with
@@ -2178,79 +1030,9 @@ void wasm::EnsureEagerProcessSignalHandlers() {
     return;
   }
 
->>>>>>> upstream-releases
 #elif defined(XP_DARWIN)
   // All the Mach setup in EnsureLazyProcessSignalHandlers.
 #else
-<<<<<<< HEAD
-  // SA_NODEFER allows us to reenter the signal handler if we crash while
-  // handling the signal, and fall through to the Breakpad handler by testing
-  // handlingSegFault.
-
-  // Allow handling OOB with signals on all architectures
-  struct sigaction faultHandler;
-  faultHandler.sa_flags = SA_SIGINFO | SA_NODEFER | SA_ONSTACK;
-  faultHandler.sa_sigaction = WasmTrapHandler;
-  sigemptyset(&faultHandler.sa_mask);
-  if (sigaction(SIGSEGV, &faultHandler, &sPrevSEGVHandler)) {
-    MOZ_CRASH("unable to install segv handler");
-  }
-
-#if defined(JS_CODEGEN_ARM)
-  // On Arm Handle Unaligned Accesses
-  struct sigaction busHandler;
-  busHandler.sa_flags = SA_SIGINFO | SA_NODEFER | SA_ONSTACK;
-  busHandler.sa_sigaction = WasmTrapHandler;
-  sigemptyset(&busHandler.sa_mask);
-  if (sigaction(SIGBUS, &busHandler, &sPrevSIGBUSHandler)) {
-    MOZ_CRASH("unable to install sigbus handler");
-  }
-#endif
-
-  // Install a handler to handle the instructions that are emitted to implement
-  // wasm traps.
-  struct sigaction wasmTrapHandler;
-  wasmTrapHandler.sa_flags = SA_SIGINFO | SA_NODEFER | SA_ONSTACK;
-  wasmTrapHandler.sa_sigaction = WasmTrapHandler;
-  sigemptyset(&wasmTrapHandler.sa_mask);
-  if (sigaction(kWasmTrapSignal, &wasmTrapHandler, &sPrevWasmTrapHandler)) {
-    MOZ_CRASH("unable to install wasm trap handler");
-  }
-||||||| merged common ancestors
-    // SA_NODEFER allows us to reenter the signal handler if we crash while
-    // handling the signal, and fall through to the Breakpad handler by testing
-    // handlingSegFault.
-
-    // Allow handling OOB with signals on all architectures
-    struct sigaction faultHandler;
-    faultHandler.sa_flags = SA_SIGINFO | SA_NODEFER | SA_ONSTACK;
-    faultHandler.sa_sigaction = WasmTrapHandler;
-    sigemptyset(&faultHandler.sa_mask);
-    if (sigaction(SIGSEGV, &faultHandler, &sPrevSEGVHandler)) {
-        MOZ_CRASH("unable to install segv handler");
-    }
-
-# if defined(JS_CODEGEN_ARM)
-    // On Arm Handle Unaligned Accesses
-    struct sigaction busHandler;
-    busHandler.sa_flags = SA_SIGINFO | SA_NODEFER | SA_ONSTACK;
-    busHandler.sa_sigaction = WasmTrapHandler;
-    sigemptyset(&busHandler.sa_mask);
-    if (sigaction(SIGBUS, &busHandler, &sPrevSIGBUSHandler)) {
-        MOZ_CRASH("unable to install sigbus handler");
-    }
-# endif
-
-    // Install a handler to handle the instructions that are emitted to implement
-    // wasm traps.
-    struct sigaction wasmTrapHandler;
-    wasmTrapHandler.sa_flags = SA_SIGINFO | SA_NODEFER | SA_ONSTACK;
-    wasmTrapHandler.sa_sigaction = WasmTrapHandler;
-    sigemptyset(&wasmTrapHandler.sa_mask);
-    if (sigaction(kWasmTrapSignal, &wasmTrapHandler, &sPrevWasmTrapHandler)) {
-        MOZ_CRASH("unable to install wasm trap handler");
-    }
-=======
   // SA_NODEFER allows us to reenter the signal handler if we crash while
   // handling the signal, and fall through to the Breakpad handler by testing
   // handlingSegFault.
@@ -2284,7 +1066,6 @@ void wasm::EnsureEagerProcessSignalHandlers() {
   if (sigaction(kWasmTrapSignal, &wasmTrapHandler, &sPrevWasmTrapHandler)) {
     MOZ_CRASH("unable to install wasm trap handler");
   }
->>>>>>> upstream-releases
 #endif
 
   eagerInstallState->success = true;

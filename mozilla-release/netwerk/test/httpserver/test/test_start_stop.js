@@ -18,26 +18,12 @@ XPCOMUtils.defineLazyGetter(this, "PREPATH", function() {
 
 var srv, srv2;
 
-<<<<<<< HEAD
-function run_test() {
-  if (mozinfo.os == "win") {
-    dumpn("*** not running test_start_stop.js on Windows for now, because " +
-          "Windows is dumb");
-||||||| merged common ancestors
-function run_test()
-{
-  if (mozinfo.os == "win")
-  {
-    dumpn("*** not running test_start_stop.js on Windows for now, because " +
-          "Windows is dumb");
-=======
 function run_test() {
   if (mozinfo.os == "win") {
     dumpn(
       "*** not running test_start_stop.js on Windows for now, because " +
         "Windows is dumb"
     );
->>>>>>> upstream-releases
     return;
   }
 
@@ -80,38 +66,6 @@ function run_test_2() {
   }
 
   do_test_pending();
-<<<<<<< HEAD
-  try {
-    srv.stop({onStopped() {
-                try {
-                  do_test_pending();
-                  run_test_3();
-                } finally {
-                  do_test_finished();
-                }
-              },
-             });
-  } catch (e) {
-||||||| merged common ancestors
-  try
-  {
-    srv.stop({onStopped: function()
-              {
-                try
-                {
-                  do_test_pending();
-                  run_test_3();
-                }
-                finally
-                {
-                  do_test_finished();
-                }
-              }
-             });
-  }
-  catch (e)
-  {
-=======
   try {
     srv.stop({
       onStopped() {
@@ -124,7 +78,6 @@ function run_test_2() {
       },
     });
   } catch (e) {
->>>>>>> upstream-releases
     do_throw("error stopping with an object: " + e);
   }
 }

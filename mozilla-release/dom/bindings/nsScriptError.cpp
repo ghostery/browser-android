@@ -30,39 +30,6 @@ static_assert(nsIScriptError::errorFlag == JSREPORT_ERROR &&
               "flags should be consistent");
 
 nsScriptErrorBase::nsScriptErrorBase()
-<<<<<<< HEAD
-    : mMessage(),
-      mMessageName(),
-      mSourceName(),
-      mLineNumber(0),
-      mSourceLine(),
-      mColumnNumber(0),
-      mFlags(0),
-      mCategory(),
-      mOuterWindowID(0),
-      mInnerWindowID(0),
-      mTimeStamp(0),
-      mTimeWarpTarget(0),
-      mInitializedOnMainThread(false),
-      mIsFromPrivateWindow(false) {}
-||||||| merged common ancestors
-    :  mMessage(),
-       mMessageName(),
-       mSourceName(),
-       mLineNumber(0),
-       mSourceLine(),
-       mColumnNumber(0),
-       mFlags(0),
-       mCategory(),
-       mOuterWindowID(0),
-       mInnerWindowID(0),
-       mTimeStamp(0),
-       mTimeWarpTarget(0),
-       mInitializedOnMainThread(false),
-       mIsFromPrivateWindow(false)
-{
-}
-=======
     : mMessage(),
       mMessageName(),
       mSourceName(),
@@ -80,69 +47,9 @@ nsScriptErrorBase::nsScriptErrorBase()
       mInitializedOnMainThread(false),
       mIsFromPrivateWindow(false),
       mIsFromChromeContext(false) {}
->>>>>>> upstream-releases
 
 nsScriptErrorBase::~nsScriptErrorBase() {}
 
-<<<<<<< HEAD
-void nsScriptErrorBase::AddNote(nsIScriptErrorNote* note) {
-  mNotes.AppendObject(note);
-}
-
-void nsScriptErrorBase::InitializeOnMainThread() {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(!mInitializedOnMainThread);
-
-  if (mInnerWindowID) {
-    nsGlobalWindowInner* window =
-        nsGlobalWindowInner::GetInnerWindowWithId(mInnerWindowID);
-    if (window) {
-      nsPIDOMWindowOuter* outer = window->GetOuterWindow();
-      if (outer) mOuterWindowID = outer->WindowID();
-
-      nsIDocShell* docShell = window->GetDocShell();
-      nsCOMPtr<nsILoadContext> loadContext = do_QueryInterface(docShell);
-
-      if (loadContext) {
-        // Never mark exceptions from chrome windows as having come from
-        // private windows, since we always want them to be reported.
-        nsIPrincipal* winPrincipal = window->GetPrincipal();
-        mIsFromPrivateWindow = loadContext->UsePrivateBrowsing() &&
-                               !nsContentUtils::IsSystemPrincipal(winPrincipal);
-      }
-||||||| merged common ancestors
-void
-nsScriptErrorBase::AddNote(nsIScriptErrorNote* note)
-{
-    mNotes.AppendObject(note);
-}
-
-void
-nsScriptErrorBase::InitializeOnMainThread()
-{
-    MOZ_ASSERT(NS_IsMainThread());
-    MOZ_ASSERT(!mInitializedOnMainThread);
-
-    if (mInnerWindowID) {
-        nsGlobalWindowInner* window =
-          nsGlobalWindowInner::GetInnerWindowWithId(mInnerWindowID);
-        if (window) {
-            nsPIDOMWindowOuter* outer = window->GetOuterWindow();
-            if (outer)
-                mOuterWindowID = outer->WindowID();
-
-            nsIDocShell* docShell = window->GetDocShell();
-            nsCOMPtr<nsILoadContext> loadContext = do_QueryInterface(docShell);
-
-            if (loadContext) {
-                // Never mark exceptions from chrome windows as having come from
-                // private windows, since we always want them to be reported.
-                nsIPrincipal* winPrincipal = window->GetPrincipal();
-                mIsFromPrivateWindow = loadContext->UsePrivateBrowsing() &&
-                                       !nsContentUtils::IsSystemPrincipal(winPrincipal);
-            }
-        }
-=======
 void nsScriptErrorBase::AddNote(nsIScriptErrorNote* note) {
   mNotes.AppendObject(note);
 }
@@ -159,15 +66,9 @@ void nsScriptErrorBase::InitializeOnMainThread() {
       if (outer) mOuterWindowID = outer->WindowID();
       mIsFromChromeContext = ComputeIsFromChromeContext(window);
       mIsFromPrivateWindow = ComputeIsFromPrivateWindow(window);
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  mInitializedOnMainThread = true;
-||||||| merged common ancestors
-    mInitializedOnMainThread = true;
-=======
   mInitializedOnMainThread = true;
 }
 
@@ -175,7 +76,6 @@ NS_IMETHODIMP
 nsScriptErrorBase::InitSourceId(uint32_t value) {
   mSourceId = value;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 // nsIConsoleMessage methods
@@ -212,13 +112,6 @@ nsScriptErrorBase::GetErrorMessage(nsAString& aResult) {
 
 NS_IMETHODIMP
 nsScriptErrorBase::GetSourceName(nsAString& aResult) {
-<<<<<<< HEAD
-  aResult.Assign(mSourceName);
-  return NS_OK;
-||||||| merged common ancestors
-    aResult.Assign(mSourceName);
-    return NS_OK;
-=======
   aResult.Assign(mSourceName);
   return NS_OK;
 }
@@ -239,7 +132,6 @@ NS_IMETHODIMP
 nsScriptErrorBase::GetSourceId(uint32_t* result) {
   *result = mSourceId;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -323,70 +215,6 @@ static void AssignSourceNameHelper(nsIURI* aSourceURI,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsScriptErrorBase::Init(const nsAString& message, const nsAString& sourceName,
-                        const nsAString& sourceLine, uint32_t lineNumber,
-                        uint32_t columnNumber, uint32_t flags,
-                        const char* category, bool fromPrivateWindow) {
-  InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                       category ? nsDependentCString(category) : EmptyCString(),
-                       0 /* inner Window ID */);
-  AssignSourceNameHelper(mSourceName, sourceName);
-
-  mIsFromPrivateWindow = fromPrivateWindow;
-  return NS_OK;
-}
-
-void nsScriptErrorBase::InitializationHelper(
-    const nsAString& message, const nsAString& sourceLine, uint32_t lineNumber,
-    uint32_t columnNumber, uint32_t flags, const nsACString& category,
-    uint64_t aInnerWindowID) {
-  mMessage.Assign(message);
-  mLineNumber = lineNumber;
-  mSourceLine.Assign(sourceLine);
-  mColumnNumber = columnNumber;
-  mFlags = flags;
-  mCategory = category;
-  mTimeStamp = JS_Now() / 1000;
-  mInnerWindowID = aInnerWindowID;
-||||||| merged common ancestors
-nsScriptErrorBase::Init(const nsAString& message,
-                        const nsAString& sourceName,
-                        const nsAString& sourceLine,
-                        uint32_t lineNumber,
-                        uint32_t columnNumber,
-                        uint32_t flags,
-                        const char* category,
-                        bool fromPrivateWindow)
-{
-    InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                         category ? nsDependentCString(category)
-                                  : EmptyCString(),
-                         0 /* inner Window ID */);
-    AssignSourceNameHelper(mSourceName, sourceName);
-
-    mIsFromPrivateWindow = fromPrivateWindow;
-    return NS_OK;
-}
-
-void
-nsScriptErrorBase::InitializationHelper(const nsAString& message,
-                                        const nsAString& sourceLine,
-                                        uint32_t lineNumber,
-                                        uint32_t columnNumber,
-                                        uint32_t flags,
-                                        const nsACString& category,
-                                        uint64_t aInnerWindowID)
-{
-    mMessage.Assign(message);
-    mLineNumber = lineNumber;
-    mSourceLine.Assign(sourceLine);
-    mColumnNumber = columnNumber;
-    mFlags = flags;
-    mCategory = category;
-    mTimeStamp = JS_Now() / 1000;
-    mInnerWindowID = aInnerWindowID;
-=======
 nsScriptErrorBase::Init(const nsAString& message, const nsAString& sourceName,
                         const nsAString& sourceLine, uint32_t lineNumber,
                         uint32_t columnNumber, uint32_t flags,
@@ -415,31 +243,12 @@ void nsScriptErrorBase::InitializationHelper(
   mTimeStamp = JS_Now() / 1000;
   mInnerWindowID = aInnerWindowID;
   mIsFromChromeContext = aFromChromeContext;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
 nsScriptErrorBase::InitWithWindowID(const nsAString& message,
                                     const nsAString& sourceName,
                                     const nsAString& sourceLine,
-<<<<<<< HEAD
-                                    uint32_t lineNumber, uint32_t columnNumber,
-                                    uint32_t flags, const nsACString& category,
-                                    uint64_t aInnerWindowID) {
-  InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                       category, aInnerWindowID);
-  AssignSourceNameHelper(mSourceName, sourceName);
-||||||| merged common ancestors
-                                    uint32_t lineNumber,
-                                    uint32_t columnNumber,
-                                    uint32_t flags,
-                                    const nsACString& category,
-                                    uint64_t aInnerWindowID)
-{
-    InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                         category, aInnerWindowID);
-    AssignSourceNameHelper(mSourceName, sourceName);
-=======
                                     uint32_t lineNumber, uint32_t columnNumber,
                                     uint32_t flags, const nsACString& category,
                                     uint64_t aInnerWindowID,
@@ -447,7 +256,6 @@ nsScriptErrorBase::InitWithWindowID(const nsAString& message,
   InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
                        category, aInnerWindowID, aFromChromeContext);
   AssignSourceNameHelper(mSourceName, sourceName);
->>>>>>> upstream-releases
 
   if (aInnerWindowID && NS_IsMainThread()) InitializeOnMainThread();
 
@@ -455,28 +263,6 @@ nsScriptErrorBase::InitWithWindowID(const nsAString& message,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsScriptErrorBase::InitWithSanitizedSource(
-    const nsAString& message, const nsAString& sourceName,
-    const nsAString& sourceLine, uint32_t lineNumber, uint32_t columnNumber,
-    uint32_t flags, const nsACString& category, uint64_t aInnerWindowID) {
-  InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                       category, aInnerWindowID);
-  mSourceName = sourceName;
-||||||| merged common ancestors
-nsScriptErrorBase::InitWithSanitizedSource(const nsAString& message,
-                                           const nsAString& sourceName,
-                                           const nsAString& sourceLine,
-                                           uint32_t lineNumber,
-                                           uint32_t columnNumber,
-                                           uint32_t flags,
-                                           const nsACString& category,
-                                           uint64_t aInnerWindowID)
-{
-    InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                         category, aInnerWindowID);
-    mSourceName = sourceName;
-=======
 nsScriptErrorBase::InitWithSanitizedSource(
     const nsAString& message, const nsAString& sourceName,
     const nsAString& sourceLine, uint32_t lineNumber, uint32_t columnNumber,
@@ -485,7 +271,6 @@ nsScriptErrorBase::InitWithSanitizedSource(
   InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
                        category, aInnerWindowID, aFromChromeContext);
   mSourceName = sourceName;
->>>>>>> upstream-releases
 
   if (aInnerWindowID && NS_IsMainThread()) InitializeOnMainThread();
 
@@ -496,79 +281,6 @@ NS_IMETHODIMP
 nsScriptErrorBase::InitWithSourceURI(const nsAString& message,
                                      nsIURI* sourceURI,
                                      const nsAString& sourceLine,
-<<<<<<< HEAD
-                                     uint32_t lineNumber, uint32_t columnNumber,
-                                     uint32_t flags, const nsACString& category,
-                                     uint64_t aInnerWindowID) {
-  InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                       category, aInnerWindowID);
-  AssignSourceNameHelper(sourceURI, mSourceName);
-
-  if (aInnerWindowID && NS_IsMainThread()) InitializeOnMainThread();
-||||||| merged common ancestors
-                                     uint32_t lineNumber,
-                                     uint32_t columnNumber,
-                                     uint32_t flags,
-                                     const nsACString& category,
-                                     uint64_t aInnerWindowID)
-{
-    InitializationHelper(message, sourceLine, lineNumber, columnNumber, flags,
-                         category, aInnerWindowID);
-    AssignSourceNameHelper(sourceURI, mSourceName);
-
-    if (aInnerWindowID && NS_IsMainThread())
-        InitializeOnMainThread();
-
-    return NS_OK;
-}
-
-static nsresult
-ToStringHelper(const char* aSeverity, const nsString& aMessage,
-               const nsString& aSourceName, const nsString* aSourceLine,
-               uint32_t aLineNumber, uint32_t aColumnNumber,
-               nsACString& /*UTF8*/ aResult)
-{
-    static const char format0[] =
-        "[%s: \"%s\" {file: \"%s\" line: %d column: %d source: \"%s\"}]";
-    static const char format1[] =
-        "[%s: \"%s\" {file: \"%s\" line: %d}]";
-    static const char format2[] =
-        "[%s: \"%s\"]";
-
-    JS::UniqueChars temp;
-    char* tempMessage = nullptr;
-    char* tempSourceName = nullptr;
-    char* tempSourceLine = nullptr;
-
-    if (!aMessage.IsEmpty())
-        tempMessage = ToNewUTF8String(aMessage);
-    if (!aSourceName.IsEmpty())
-        // Use at most 512 characters from mSourceName.
-        tempSourceName = ToNewUTF8String(StringHead(aSourceName, 512));
-    if (aSourceLine && !aSourceLine->IsEmpty())
-        // Use at most 512 characters from mSourceLine.
-        tempSourceLine = ToNewUTF8String(StringHead(*aSourceLine, 512));
-
-    if (nullptr != tempSourceName && nullptr != tempSourceLine) {
-        temp = JS_smprintf(format0,
-                           aSeverity,
-                           tempMessage,
-                           tempSourceName,
-                           aLineNumber,
-                           aColumnNumber,
-                           tempSourceLine);
-    } else if (!aSourceName.IsEmpty()) {
-        temp = JS_smprintf(format1,
-                           aSeverity,
-                           tempMessage,
-                           tempSourceName,
-                           aLineNumber);
-    } else {
-        temp = JS_smprintf(format2,
-                           aSeverity,
-                           tempMessage);
-    }
-=======
                                      uint32_t lineNumber, uint32_t columnNumber,
                                      uint32_t flags, const nsACString& category,
                                      uint64_t aInnerWindowID,
@@ -614,65 +326,7 @@ static nsresult ToStringHelper(const char* aSeverity, const nsString& aMessage,
   } else {
     temp = JS_smprintf(format2, aSeverity, tempMessage);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-}
-||||||| merged common ancestors
-    if (nullptr != tempMessage)
-        free(tempMessage);
-    if (nullptr != tempSourceName)
-        free(tempSourceName);
-    if (nullptr != tempSourceLine)
-        free(tempSourceLine);
-=======
-  if (nullptr != tempMessage) free(tempMessage);
-  if (nullptr != tempSourceName) free(tempSourceName);
-  if (nullptr != tempSourceLine) free(tempSourceLine);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-static nsresult ToStringHelper(const char* aSeverity, const nsString& aMessage,
-                               const nsString& aSourceName,
-                               const nsString* aSourceLine,
-                               uint32_t aLineNumber, uint32_t aColumnNumber,
-                               nsACString& /*UTF8*/ aResult) {
-  static const char format0[] =
-      "[%s: \"%s\" {file: \"%s\" line: %d column: %d source: \"%s\"}]";
-  static const char format1[] = "[%s: \"%s\" {file: \"%s\" line: %d}]";
-  static const char format2[] = "[%s: \"%s\"]";
-
-  JS::UniqueChars temp;
-  char* tempMessage = nullptr;
-  char* tempSourceName = nullptr;
-  char* tempSourceLine = nullptr;
-
-  if (!aMessage.IsEmpty()) tempMessage = ToNewUTF8String(aMessage);
-  if (!aSourceName.IsEmpty())
-    // Use at most 512 characters from mSourceName.
-    tempSourceName = ToNewUTF8String(StringHead(aSourceName, 512));
-  if (aSourceLine && !aSourceLine->IsEmpty())
-    // Use at most 512 characters from mSourceLine.
-    tempSourceLine = ToNewUTF8String(StringHead(*aSourceLine, 512));
-
-  if (nullptr != tempSourceName && nullptr != tempSourceLine) {
-    temp = JS_smprintf(format0, aSeverity, tempMessage, tempSourceName,
-                       aLineNumber, aColumnNumber, tempSourceLine);
-  } else if (!aSourceName.IsEmpty()) {
-    temp = JS_smprintf(format1, aSeverity, tempMessage, tempSourceName,
-                       aLineNumber);
-  } else {
-    temp = JS_smprintf(format2, aSeverity, tempMessage);
-  }
-||||||| merged common ancestors
-    if (!temp)
-        return NS_ERROR_OUT_OF_MEMORY;
-=======
-  if (!temp) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (nullptr != tempMessage) free(tempMessage);
   if (nullptr != tempSourceName) free(tempSourceName);
   if (nullptr != tempSourceLine) free(tempSourceLine);
@@ -681,13 +335,6 @@ static nsresult ToStringHelper(const char* aSeverity, const nsString& aMessage,
 
   aResult.Assign(temp.get());
   return NS_OK;
-||||||| merged common ancestors
-    aResult.Assign(temp.get());
-    return NS_OK;
-=======
-  aResult.Assign(temp.get());
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -702,22 +349,6 @@ nsScriptErrorBase::ToString(nsACString& /*UTF8*/ aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsScriptErrorBase::GetOuterWindowID(uint64_t* aOuterWindowID) {
-  NS_WARNING_ASSERTION(NS_IsMainThread() || mInitializedOnMainThread,
-                       "This can't be safely determined off the main thread, "
-                       "returning an inaccurate value!");
-||||||| merged common ancestors
-nsScriptErrorBase::GetOuterWindowID(uint64_t* aOuterWindowID)
-{
-    NS_WARNING_ASSERTION(NS_IsMainThread() || mInitializedOnMainThread,
-                         "This can't be safely determined off the main thread, "
-                         "returning an inaccurate value!");
-
-    if (!mInitializedOnMainThread && NS_IsMainThread()) {
-        InitializeOnMainThread();
-    }
-=======
 nsScriptErrorBase::GetOuterWindowID(uint64_t* aOuterWindowID) {
   NS_WARNING_ASSERTION(NS_IsMainThread() || mInitializedOnMainThread,
                        "This can't be safely determined off the main thread, "
@@ -726,22 +357,9 @@ nsScriptErrorBase::GetOuterWindowID(uint64_t* aOuterWindowID) {
   if (!mInitializedOnMainThread && NS_IsMainThread()) {
     InitializeOnMainThread();
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!mInitializedOnMainThread && NS_IsMainThread()) {
-    InitializeOnMainThread();
-  }
 
   *aOuterWindowID = mOuterWindowID;
   return NS_OK;
-||||||| merged common ancestors
-    *aOuterWindowID = mOuterWindowID;
-    return NS_OK;
-=======
-  *aOuterWindowID = mOuterWindowID;
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -757,22 +375,6 @@ nsScriptErrorBase::GetTimeStamp(int64_t* aTimeStamp) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsScriptErrorBase::GetIsFromPrivateWindow(bool* aIsFromPrivateWindow) {
-  NS_WARNING_ASSERTION(NS_IsMainThread() || mInitializedOnMainThread,
-                       "This can't be safely determined off the main thread, "
-                       "returning an inaccurate value!");
-||||||| merged common ancestors
-nsScriptErrorBase::GetIsFromPrivateWindow(bool* aIsFromPrivateWindow)
-{
-    NS_WARNING_ASSERTION(NS_IsMainThread() || mInitializedOnMainThread,
-                         "This can't be safely determined off the main thread, "
-                         "returning an inaccurate value!");
-
-    if (!mInitializedOnMainThread && NS_IsMainThread()) {
-        InitializeOnMainThread();
-    }
-=======
 nsScriptErrorBase::GetIsFromPrivateWindow(bool* aIsFromPrivateWindow) {
   NS_WARNING_ASSERTION(NS_IsMainThread() || mInitializedOnMainThread,
                        "This can't be safely determined off the main thread, "
@@ -781,22 +383,9 @@ nsScriptErrorBase::GetIsFromPrivateWindow(bool* aIsFromPrivateWindow) {
   if (!mInitializedOnMainThread && NS_IsMainThread()) {
     InitializeOnMainThread();
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!mInitializedOnMainThread && NS_IsMainThread()) {
-    InitializeOnMainThread();
-  }
 
   *aIsFromPrivateWindow = mIsFromPrivateWindow;
   return NS_OK;
-||||||| merged common ancestors
-    *aIsFromPrivateWindow = mIsFromPrivateWindow;
-    return NS_OK;
-=======
-  *aIsFromPrivateWindow = mIsFromPrivateWindow;
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -806,16 +395,6 @@ nsScriptErrorBase::SetTimeWarpTarget(uint64_t aTarget) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsScriptErrorBase::GetTimeWarpTarget(uint64_t* aTarget) {
-  *aTarget = mTimeWarpTarget;
-  return NS_OK;
-||||||| merged common ancestors
-nsScriptErrorBase::GetTimeWarpTarget(uint64_t* aTarget)
-{
-    *aTarget = mTimeWarpTarget;
-    return NS_OK;
-=======
 nsScriptErrorBase::GetTimeWarpTarget(uint64_t* aTarget) {
   *aTarget = mTimeWarpTarget;
   return NS_OK;
@@ -831,23 +410,9 @@ nsScriptErrorBase::GetIsFromChromeContext(bool* aIsFromChromeContext) {
   }
   *aIsFromChromeContext = mIsFromChromeContext;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsScriptErrorBase::GetNotes(nsIArray** aNotes) {
-  nsresult rv = NS_OK;
-  nsCOMPtr<nsIMutableArray> array = do_CreateInstance(NS_ARRAY_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsScriptErrorBase::GetNotes(nsIArray** aNotes)
-{
-    nsresult rv = NS_OK;
-    nsCOMPtr<nsIMutableArray> array =
-        do_CreateInstance(NS_ARRAY_CONTRACTID, &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsScriptErrorBase::GetNotes(nsIArray** aNotes) {
   nsresult rv = NS_OK;
   nsCOMPtr<nsIMutableArray> array = do_CreateInstance(NS_ARRAY_CONTRACTID, &rv);
@@ -859,18 +424,7 @@ nsScriptErrorBase::GetNotes(nsIArray** aNotes) {
 
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t len = mNotes.Length();
-  for (uint32_t i = 0; i < len; i++) array->AppendElement(mNotes[i]);
-  array.forget(aNotes);
-||||||| merged common ancestors
-    uint32_t len = mNotes.Length();
-    for (uint32_t i = 0; i < len; i++)
-        array->AppendElement(mNotes[i]);
-    array.forget(aNotes);
-=======
 /* static */
 bool nsScriptErrorBase::ComputeIsFromPrivateWindow(
     nsGlobalWindowInner* aWindow) {
@@ -880,63 +434,25 @@ bool nsScriptErrorBase::ComputeIsFromPrivateWindow(
   return aWindow->IsPrivateBrowsing() &&
          !nsContentUtils::IsSystemPrincipal(winPrincipal);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
 /* static */
 bool nsScriptErrorBase::ComputeIsFromChromeContext(
     nsGlobalWindowInner* aWindow) {
   nsIPrincipal* winPrincipal = aWindow->GetPrincipal();
   return nsContentUtils::IsSystemPrincipal(winPrincipal);
->>>>>>> upstream-releases
 }
 
 NS_IMPL_ISUPPORTS(nsScriptError, nsIConsoleMessage, nsIScriptError)
 
 nsScriptErrorNote::nsScriptErrorNote()
-<<<<<<< HEAD
-    : mMessage(), mSourceName(), mLineNumber(0), mColumnNumber(0) {}
-||||||| merged common ancestors
-    :  mMessage(),
-       mSourceName(),
-       mLineNumber(0),
-       mColumnNumber(0)
-{
-}
-=======
     : mMessage(),
       mSourceName(),
       mSourceId(0),
       mLineNumber(0),
       mColumnNumber(0) {}
->>>>>>> upstream-releases
 
 nsScriptErrorNote::~nsScriptErrorNote() {}
 
-<<<<<<< HEAD
-void nsScriptErrorNote::Init(const nsAString& message,
-                             const nsAString& sourceName, uint32_t lineNumber,
-                             uint32_t columnNumber) {
-  mMessage.Assign(message);
-  AssignSourceNameHelper(mSourceName, sourceName);
-  mLineNumber = lineNumber;
-  mColumnNumber = columnNumber;
-||||||| merged common ancestors
-void
-nsScriptErrorNote::Init(const nsAString& message,
-                        const nsAString& sourceName,
-                        uint32_t lineNumber,
-                        uint32_t columnNumber)
-{
-    mMessage.Assign(message);
-    AssignSourceNameHelper(mSourceName, sourceName);
-    mLineNumber = lineNumber;
-    mColumnNumber = columnNumber;
-=======
 void nsScriptErrorNote::Init(const nsAString& message,
                              const nsAString& sourceName, uint32_t sourceId,
                              uint32_t lineNumber, uint32_t columnNumber) {
@@ -945,7 +461,6 @@ void nsScriptErrorNote::Init(const nsAString& message,
   mSourceId = sourceId;
   mLineNumber = lineNumber;
   mColumnNumber = columnNumber;
->>>>>>> upstream-releases
 }
 
 // nsIScriptErrorNote methods
@@ -957,13 +472,6 @@ nsScriptErrorNote::GetErrorMessage(nsAString& aResult) {
 
 NS_IMETHODIMP
 nsScriptErrorNote::GetSourceName(nsAString& aResult) {
-<<<<<<< HEAD
-  aResult.Assign(mSourceName);
-  return NS_OK;
-||||||| merged common ancestors
-    aResult.Assign(mSourceName);
-    return NS_OK;
-=======
   aResult.Assign(mSourceName);
   return NS_OK;
 }
@@ -972,7 +480,6 @@ NS_IMETHODIMP
 nsScriptErrorNote::GetSourceId(uint32_t* result) {
   *result = mSourceId;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

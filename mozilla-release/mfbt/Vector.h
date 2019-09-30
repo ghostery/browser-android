@@ -26,16 +26,8 @@
 
 /* Silence dire "bugs in previous versions of MSVC have been fixed" warnings */
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(push)
-#pragma warning(disable : 4345)
-||||||| merged common ancestors
-#pragma warning(push)
-#pragma warning(disable:4345)
-=======
 #  pragma warning(push)
 #  pragma warning(disable : 4345)
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -386,19 +378,9 @@ class MOZ_NON_PARAM Vector final : private AllocPolicy {
 // Silence warnings about this struct possibly being padded dued to the
 // alignas() in it -- there's nothing we can do to avoid it.
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(push)
-#pragma warning(disable : 4324)
-#endif  // _MSC_VER
-||||||| merged common ancestors
-#  pragma warning(push)
-#  pragma warning(disable:4324)
-#endif // _MSC_VER
-=======
 #  pragma warning(push)
 #  pragma warning(disable : 4324)
 #endif  // _MSC_VER
->>>>>>> upstream-releases
 
   template <size_t Capacity, size_t Dummy>
   struct CRAndStorage : CapacityAndReserved {
@@ -434,16 +416,8 @@ class MOZ_NON_PARAM Vector final : private AllocPolicy {
   CRAndStorage<kInlineCapacity, 0> mTail;
 
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(pop)
-#endif  // _MSC_VER
-||||||| merged common ancestors
-#  pragma warning(pop)
-#endif // _MSC_VER
-=======
 #  pragma warning(pop)
 #endif  // _MSC_VER
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   friend class ReentrancyGuard;
@@ -868,26 +842,11 @@ class MOZ_NON_PARAM Vector final : private AllocPolicy {
 
 /* Vector Implementation */
 
-<<<<<<< HEAD
-template <typename T, size_t N, class AP>
-MOZ_ALWAYS_INLINE Vector<T, N, AP>::Vector(AP aAP)
-    : AP(aAP),
-      mLength(0),
-      mTail(kInlineCapacity, 0)
-||||||| merged common ancestors
-template<typename T, size_t N, class AP>
-MOZ_ALWAYS_INLINE
-Vector<T, N, AP>::Vector(AP aAP)
-  : AP(aAP)
-  , mLength(0)
-  , mTail(kInlineCapacity, 0)
-=======
 template <typename T, size_t N, class AP>
 MOZ_ALWAYS_INLINE Vector<T, N, AP>::Vector(AP aAP)
     : AP(std::move(aAP)),
       mLength(0),
       mTail(kInlineCapacity, 0)
->>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mEntered(false)
@@ -1340,18 +1299,6 @@ inline void Vector<T, N, AP>::erase(T* aBegin, T* aEnd) {
   shrinkBy(aEnd - aBegin);
 }
 
-<<<<<<< HEAD
-template <typename T, size_t N, class AP>
-template <typename U>
-MOZ_ALWAYS_INLINE bool Vector<T, N, AP>::append(const U* aInsBegin,
-                                                const U* aInsEnd) {
-||||||| merged common ancestors
-template<typename T, size_t N, class AP>
-template<typename U>
-MOZ_ALWAYS_INLINE bool
-Vector<T, N, AP>::append(const U* aInsBegin, const U* aInsEnd)
-{
-=======
 template <typename T, size_t N, class AP>
 template <typename Pred>
 void Vector<T, N, AP>::eraseIf(Pred aPred) {
@@ -1376,7 +1323,6 @@ template <typename T, size_t N, class AP>
 template <typename U>
 MOZ_ALWAYS_INLINE bool Vector<T, N, AP>::append(const U* aInsBegin,
                                                 const U* aInsEnd) {
->>>>>>> upstream-releases
   MOZ_REENTRANCY_GUARD_ET_AL;
   size_t aNeeded = PointerRangeSize(aInsBegin, aInsEnd);
   if (mLength + aNeeded > mTail.mCapacity) {

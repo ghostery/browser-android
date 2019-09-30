@@ -71,15 +71,6 @@ class SharedPreferenceDeserializer final {
   base::SharedMemory mShmem;
 };
 
-<<<<<<< HEAD
-}  // namespace ipc
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace ipc
-} // namespace mozilla
-
-#endif // ifndef mozilla_ipc_ProcessUtils_h
-=======
 #ifdef ANDROID
 // Android doesn't use -prefsHandle or -prefMapHandle. It gets those FDs
 // another way.
@@ -89,6 +80,5 @@ void SetPrefMapFd(int aFd);
 
 }  // namespace ipc
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // ifndef mozilla_ipc_ProcessUtils_h

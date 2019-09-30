@@ -62,15 +62,6 @@ add_task(async function() {
   BrowserTestUtils.removeTab(tab);
 
   // Shift-click the testprotocol link and check the new window.
-<<<<<<< HEAD
-  let newWindowPromise = BrowserTestUtils.waitForNewWindow({url: expectedURL});
-  await BrowserTestUtils.synthesizeMouseAtCenter(link, {shiftKey: true},
-                                                 browser);
-||||||| merged common ancestors
-  let newWindowPromise = BrowserTestUtils.waitForNewWindow();
-  await BrowserTestUtils.synthesizeMouseAtCenter(link, {shiftKey: true},
-                                                 browser);
-=======
   let newWindowPromise = BrowserTestUtils.waitForNewWindow({
     url: expectedURL,
   });
@@ -79,18 +70,7 @@ add_task(async function() {
     { shiftKey: true },
     browser
   );
->>>>>>> upstream-releases
   let win = await newWindowPromise;
-<<<<<<< HEAD
-  await BrowserTestUtils.waitForCondition(() => win.gBrowser.currentURI.spec == expectedURL);
-  is(win.gURLBar.value, expectedURL,
-     "the expected URL is displayed in the location bar");
-||||||| merged common ancestors
-  await BrowserTestUtils.browserLoaded(win.gBrowser.selectedBrowser);
-  await BrowserTestUtils.waitForCondition(() => win.gBrowser.currentURI.spec == expectedURL);
-  is(win.gURLBar.value, expectedURL,
-     "the expected URL is displayed in the location bar");
-=======
   await BrowserTestUtils.waitForCondition(
     () => win.gBrowser.currentURI.spec == expectedURL
   );
@@ -99,7 +79,6 @@ add_task(async function() {
     expectedURL,
     "the expected URL is displayed in the location bar"
   );
->>>>>>> upstream-releases
   await BrowserTestUtils.closeWindow(win);
 
   // Click the testprotocol link and check the url in the current tab.

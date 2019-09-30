@@ -48,42 +48,11 @@ using namespace mozilla::dom;
 
 static const nscoord kMediumBorderWidth = nsPresContext::CSSPixelsToAppUnits(3);
 
-static const nscoord kMediumBorderWidth = nsPresContext::CSSPixelsToAppUnits(3);
-
 // We set the size limit of style structs to 504 bytes so that when they
 // are allocated by Servo side with Arc, the total size doesn't exceed
 // 512 bytes, which minimizes allocator slop.
 static constexpr size_t kStyleStructSizeLimit = 504;
-<<<<<<< HEAD
-#define STYLE_STRUCT(name_)                                      \
-  static_assert(sizeof(nsStyle##name_) <= kStyleStructSizeLimit, \
-                "nsStyle" #name_ " became larger than the size limit");
-#include "nsStyleStructList.h"
-#undef STYLE_STRUCT
-||||||| merged common ancestors
-#define STYLE_STRUCT(name_) \
-  static_assert(sizeof(nsStyle##name_) <= kStyleStructSizeLimit, \
-                "nsStyle" #name_ " became larger than the size limit");
-#include "nsStyleStructList.h"
-#undef STYLE_STRUCT
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool DefinitelyEqualURIs(const css::URLValue* aURI1,
-                                const css::URLValue* aURI2) {
-  return aURI1 == aURI2 ||
-         (aURI1 && aURI2 && aURI1->DefinitelyEqualURIs(*aURI2));
-}
-||||||| merged common ancestors
-static bool
-DefinitelyEqualURIs(css::URLValue* aURI1,
-                    css::URLValue* aURI2)
-{
-  return aURI1 == aURI2 ||
-         (aURI1 && aURI2 && aURI1->DefinitelyEqualURIs(*aURI2));
-}
-=======
 template <typename Struct, size_t Actual, size_t Limit>
 struct AssertSizeIsLessThan {
   static_assert(Actual == sizeof(Struct), "Bogus invocation");
@@ -91,30 +60,13 @@ struct AssertSizeIsLessThan {
                 "Style struct became larger than the size limit");
   static constexpr bool instantiate = true;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool DefinitelyEqualURIsAndPrincipal(const css::URLValue* aURI1,
-                                            const css::URLValue* aURI2) {
-  return aURI1 == aURI2 ||
-         (aURI1 && aURI2 && aURI1->DefinitelyEqualURIsAndPrincipal(*aURI2));
-}
-||||||| merged common ancestors
-static bool
-DefinitelyEqualURIsAndPrincipal(css::URLValue* aURI1,
-                                css::URLValue* aURI2)
-{
-  return aURI1 == aURI2 ||
-         (aURI1 && aURI2 && aURI1->DefinitelyEqualURIsAndPrincipal(*aURI2));
-}
-=======
 #define STYLE_STRUCT(name_)                                                  \
   static_assert(AssertSizeIsLessThan<nsStyle##name_, sizeof(nsStyle##name_), \
                                      kStyleStructSizeLimit>::instantiate,    \
                 "");
 #include "nsStyleStructList.h"
 #undef STYLE_STRUCT
->>>>>>> upstream-releases
 
 static bool DefinitelyEqualImages(const nsStyleImageRequest* aRequest1,
                                   const nsStyleImageRequest* aRequest2) {
@@ -219,48 +171,6 @@ nsStyleFont::nsStyleFont(const nsStyleFont& aSrc)
   MOZ_COUNT_CTOR(nsStyleFont);
 }
 
-<<<<<<< HEAD
-nsStyleFont::nsStyleFont(const nsPresContext* aContext)
-    : mFont(*aContext->GetDefaultFont(kPresContext_DefaultVariableFont_ID,
-                                      nullptr)),
-      mSize(ZoomText(aContext, mFont.size)),
-      mFontSizeFactor(1.0),
-      mFontSizeOffset(0),
-      mFontSizeKeyword(NS_STYLE_FONT_SIZE_MEDIUM),
-      mGenericID(kGenericFont_NONE),
-      mScriptLevel(0),
-      mMathVariant(NS_MATHML_MATHVARIANT_NONE),
-      mMathDisplay(NS_MATHML_DISPLAYSTYLE_INLINE),
-      mMinFontSizeRatio(100),  // 100%
-      mExplicitLanguage(false),
-      mAllowZoom(true),
-      mScriptUnconstrainedSize(mSize),
-      mScriptMinSize(nsPresContext::CSSTwipsToAppUnits(
-          NS_POINTS_TO_TWIPS(NS_MATHML_DEFAULT_SCRIPT_MIN_SIZE_PT))),
-      mScriptSizeMultiplier(NS_MATHML_DEFAULT_SCRIPT_SIZE_MULTIPLIER),
-      mLanguage(GetLanguage(aContext)) {
-||||||| merged common ancestors
-nsStyleFont::nsStyleFont(const nsPresContext* aContext)
-  : mFont(*aContext->GetDefaultFont(kPresContext_DefaultVariableFont_ID,
-                                    nullptr))
-  , mSize(ZoomText(aContext, mFont.size))
-  , mFontSizeFactor(1.0)
-  , mFontSizeOffset(0)
-  , mFontSizeKeyword(NS_STYLE_FONT_SIZE_MEDIUM)
-  , mGenericID(kGenericFont_NONE)
-  , mScriptLevel(0)
-  , mMathVariant(NS_MATHML_MATHVARIANT_NONE)
-  , mMathDisplay(NS_MATHML_DISPLAYSTYLE_INLINE)
-  , mMinFontSizeRatio(100) // 100%
-  , mExplicitLanguage(false)
-  , mAllowZoom(true)
-  , mScriptUnconstrainedSize(mSize)
-  , mScriptMinSize(nsPresContext::CSSTwipsToAppUnits(
-      NS_POINTS_TO_TWIPS(NS_MATHML_DEFAULT_SCRIPT_MIN_SIZE_PT)))
-  , mScriptSizeMultiplier(NS_MATHML_DEFAULT_SCRIPT_SIZE_MULTIPLIER)
-  , mLanguage(GetLanguage(aContext))
-{
-=======
 nsStyleFont::nsStyleFont(const Document& aDocument)
     : mFont(*aDocument.GetFontPrefsForLang(nullptr)->GetDefaultFont(
           StyleGenericFontFamily::None)),
@@ -280,7 +190,6 @@ nsStyleFont::nsStyleFont(const Document& aDocument)
           NS_POINTS_TO_TWIPS(NS_MATHML_DEFAULT_SCRIPT_MIN_SIZE_PT))),
       mScriptSizeMultiplier(NS_MATHML_DEFAULT_SCRIPT_SIZE_MULTIPLIER),
       mLanguage(aDocument.GetLanguageForStyle()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleFont);
   MOZ_ASSERT(NS_IsMainThread());
   mFont.size = mSize;
@@ -325,130 +234,38 @@ nsChangeHint nsStyleFont::CalcDifference(const nsStyleFont& aNewData) const {
   return nsChangeHint(0);
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsStyleFont::ZoomText(const nsPresContext* aPresContext,
-                                           nscoord aSize) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsStyleFont::ZoomText(const nsPresContext* aPresContext, nscoord aSize)
-{
-=======
 nscoord nsStyleFont::ZoomText(const Document& aDocument, nscoord aSize) {
   float textZoom = 1.0;
   if (auto* pc = aDocument.GetPresContext()) {
     textZoom = pc->EffectiveTextZoom();
   }
->>>>>>> upstream-releases
   // aSize can be negative (e.g.: calc(-1px)) so we can't assert that here.
   // The caller is expected deal with that.
-<<<<<<< HEAD
-  return NSToCoordTruncClamped(float(aSize) *
-                               aPresContext->EffectiveTextZoom());
-||||||| merged common ancestors
-  return NSToCoordTruncClamped(float(aSize) * aPresContext->EffectiveTextZoom());
-=======
   return NSToCoordTruncClamped(float(aSize) * textZoom);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsAtom> nsStyleFont::GetLanguage(
-    const nsPresContext* aPresContext) {
-  RefPtr<nsAtom> language = aPresContext->GetContentLanguage();
-  if (!language) {
-    // we didn't find a (usable) Content-Language, so we fall back
-    // to whatever the presContext guessed from the charset
-    // NOTE this should not be used elsewhere, because we want websites
-    // to use UTF-8 with proper language tag, instead of relying on
-    // deriving language from charset. See bug 1040668 comment 67.
-    language = aPresContext->GetLanguageFromCharset();
-  }
-  return language.forget();
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsAtom>
-nsStyleFont::GetLanguage(const nsPresContext* aPresContext)
-{
-  RefPtr<nsAtom> language = aPresContext->GetContentLanguage();
-  if (!language) {
-    // we didn't find a (usable) Content-Language, so we fall back
-    // to whatever the presContext guessed from the charset
-    // NOTE this should not be used elsewhere, because we want websites
-    // to use UTF-8 with proper language tag, instead of relying on
-    // deriving language from charset. See bug 1040668 comment 67.
-    language = aPresContext->GetLanguageFromCharset();
-  }
-  return language.forget();
-=======
 template <typename T>
 static StyleRect<T> StyleRectWithAllSides(const T& aSide) {
   return {aSide, aSide, aSide, aSide};
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsStyleMargin::nsStyleMargin(const nsPresContext* aContext) {
-||||||| merged common ancestors
-nsStyleMargin::nsStyleMargin(const nsPresContext* aContext)
-{
-=======
 nsStyleMargin::nsStyleMargin(const Document& aDocument)
     : mMargin(StyleRectWithAllSides(
           LengthPercentageOrAuto::LengthPercentage(LengthPercentage::Zero()))),
       mScrollMargin(StyleRectWithAllSides(StyleLength{0.})) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleMargin);
-<<<<<<< HEAD
-  nsStyleCoord zero(0, nsStyleCoord::CoordConstructor);
-  NS_FOR_CSS_SIDES(side) { mMargin.Set(side, zero); }
-||||||| merged common ancestors
-  nsStyleCoord zero(0, nsStyleCoord::CoordConstructor);
-  NS_FOR_CSS_SIDES(side) {
-    mMargin.Set(side, zero);
-  }
-=======
->>>>>>> upstream-releases
 }
 
 nsStyleMargin::nsStyleMargin(const nsStyleMargin& aSrc)
-<<<<<<< HEAD
-    : mMargin(aSrc.mMargin) {
-||||||| merged common ancestors
-  : mMargin(aSrc.mMargin)
-{
-=======
     : mMargin(aSrc.mMargin), mScrollMargin(aSrc.mScrollMargin) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleMargin);
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStyleMargin::CalcDifference(
-    const nsStyleMargin& aNewData) const {
-  if (mMargin == aNewData.mMargin) {
-||||||| merged common ancestors
-nsChangeHint
-nsStyleMargin::CalcDifference(const nsStyleMargin& aNewData) const
-{
-  if (mMargin == aNewData.mMargin) {
-=======
 nsChangeHint nsStyleMargin::CalcDifference(
     const nsStyleMargin& aNewData) const {
   if (mMargin == aNewData.mMargin && mScrollMargin == aNewData.mScrollMargin) {
->>>>>>> upstream-releases
     return nsChangeHint(0);
   }
-<<<<<<< HEAD
-  // Margin differences can't affect descendant intrinsic sizes and
-  // don't need to force children to reflow.
-  return nsChangeHint_NeedReflow | nsChangeHint_ReflowChangesSizeOrPosition |
-         nsChangeHint_ClearAncestorIntrinsics;
-||||||| merged common ancestors
-  // Margin differences can't affect descendant intrinsic sizes and
-  // don't need to force children to reflow.
-  return nsChangeHint_NeedReflow |
-         nsChangeHint_ReflowChangesSizeOrPosition |
-         nsChangeHint_ClearAncestorIntrinsics;
-=======
 
   nsChangeHint hint = nsChangeHint(0);
 
@@ -465,139 +282,28 @@ nsChangeHint nsStyleMargin::CalcDifference(
   }
 
   return hint;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsStylePadding::nsStylePadding(const nsPresContext* aContext) {
-||||||| merged common ancestors
-nsStylePadding::nsStylePadding(const nsPresContext* aContext)
-{
-=======
 nsStylePadding::nsStylePadding(const Document& aDocument)
     : mPadding(StyleRectWithAllSides(LengthPercentage::Zero())),
       mScrollPadding(StyleRectWithAllSides(LengthPercentageOrAuto::Auto())) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStylePadding);
-<<<<<<< HEAD
-  nsStyleCoord zero(0, nsStyleCoord::CoordConstructor);
-  NS_FOR_CSS_SIDES(side) { mPadding.Set(side, zero); }
-||||||| merged common ancestors
-  nsStyleCoord zero(0, nsStyleCoord::CoordConstructor);
-  NS_FOR_CSS_SIDES(side) {
-    mPadding.Set(side, zero);
-  }
-=======
->>>>>>> upstream-releases
 }
 
 nsStylePadding::nsStylePadding(const nsStylePadding& aSrc)
-<<<<<<< HEAD
-    : mPadding(aSrc.mPadding) {
-||||||| merged common ancestors
-  : mPadding(aSrc.mPadding)
-{
-=======
     : mPadding(aSrc.mPadding), mScrollPadding(aSrc.mScrollPadding) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStylePadding);
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStylePadding::CalcDifference(
-    const nsStylePadding& aNewData) const {
-  if (mPadding == aNewData.mPadding) {
-||||||| merged common ancestors
-nsChangeHint
-nsStylePadding::CalcDifference(const nsStylePadding& aNewData) const
-{
-  if (mPadding == aNewData.mPadding) {
-=======
 nsChangeHint nsStylePadding::CalcDifference(
     const nsStylePadding& aNewData) const {
   if (mPadding == aNewData.mPadding &&
       mScrollPadding == aNewData.mScrollPadding) {
->>>>>>> upstream-releases
     return nsChangeHint(0);
   }
-<<<<<<< HEAD
-  // Padding differences can't affect descendant intrinsic sizes, but do need
-  // to force children to reflow so that we can reposition them, since their
-  // offsets are from our frame bounds but our content rect's position within
-  // those bounds is moving.
-  // FIXME: It would be good to return a weaker hint here that doesn't
-  // force reflow of all descendants, but the hint would need to force
-  // reflow of the frame's children (see how
-  // ReflowInput::InitResizeFlags initializes the inline-resize flag).
-  return NS_STYLE_HINT_REFLOW & ~nsChangeHint_ClearDescendantIntrinsics;
-}
 
-nsStyleBorder::nsStyleBorder(const nsPresContext* aContext)
-    : mBorderImageFill(NS_STYLE_BORDER_IMAGE_SLICE_NOFILL),
-      mBorderImageRepeatH(StyleBorderImageRepeat::Stretch),
-      mBorderImageRepeatV(StyleBorderImageRepeat::Stretch),
-      mFloatEdge(StyleFloatEdge::ContentBox),
-      mBoxDecorationBreak(StyleBoxDecorationBreak::Slice),
-      mBorderTopColor(StyleComplexColor::CurrentColor()),
-      mBorderRightColor(StyleComplexColor::CurrentColor()),
-      mBorderBottomColor(StyleComplexColor::CurrentColor()),
-      mBorderLeftColor(StyleComplexColor::CurrentColor()),
-      mComputedBorder(0, 0, 0, 0) {
-  MOZ_COUNT_CTOR(nsStyleBorder);
-||||||| merged common ancestors
-  // Padding differences can't affect descendant intrinsic sizes, but do need
-  // to force children to reflow so that we can reposition them, since their
-  // offsets are from our frame bounds but our content rect's position within
-  // those bounds is moving.
-  // FIXME: It would be good to return a weaker hint here that doesn't
-  // force reflow of all descendants, but the hint would need to force
-  // reflow of the frame's children (see how
-  // ReflowInput::InitResizeFlags initializes the inline-resize flag).
-  return NS_STYLE_HINT_REFLOW & ~nsChangeHint_ClearDescendantIntrinsics;
-}
-
-nsStyleBorder::nsStyleBorder(const nsPresContext* aContext)
-  : mBorderImageFill(NS_STYLE_BORDER_IMAGE_SLICE_NOFILL)
-  , mBorderImageRepeatH(StyleBorderImageRepeat::Stretch)
-  , mBorderImageRepeatV(StyleBorderImageRepeat::Stretch)
-  , mFloatEdge(StyleFloatEdge::ContentBox)
-  , mBoxDecorationBreak(StyleBoxDecorationBreak::Slice)
-  , mBorderTopColor(StyleComplexColor::CurrentColor())
-  , mBorderRightColor(StyleComplexColor::CurrentColor())
-  , mBorderBottomColor(StyleComplexColor::CurrentColor())
-  , mBorderLeftColor(StyleComplexColor::CurrentColor())
-  , mComputedBorder(0, 0, 0, 0)
-{
-  MOZ_COUNT_CTOR(nsStyleBorder);
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  NS_FOR_CSS_HALF_CORNERS(corner) {
-    mBorderRadius.Set(corner, nsStyleCoord(0, nsStyleCoord::CoordConstructor));
-  }
-||||||| merged common ancestors
-  NS_FOR_CSS_HALF_CORNERS (corner) {
-    mBorderRadius.Set(corner, nsStyleCoord(0, nsStyleCoord::CoordConstructor));
-  }
-=======
   nsChangeHint hint = nsChangeHint(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nscoord medium = kMediumBorderWidth;
-  NS_FOR_CSS_SIDES(side) {
-    mBorderImageSlice.Set(side, nsStyleCoord(1.0f, eStyleUnit_Percent));
-    mBorderImageWidth.Set(side, nsStyleCoord(1.0f, eStyleUnit_Factor));
-    mBorderImageOutset.Set(side, nsStyleCoord(0.0f, eStyleUnit_Factor));
-||||||| merged common ancestors
-  nscoord medium =
-    (StaticPresData::Get()->GetBorderWidthTable())[NS_STYLE_BORDER_WIDTH_MEDIUM];
-  NS_FOR_CSS_SIDES(side) {
-    mBorderImageSlice.Set(side, nsStyleCoord(1.0f, eStyleUnit_Percent));
-    mBorderImageWidth.Set(side, nsStyleCoord(1.0f, eStyleUnit_Factor));
-    mBorderImageOutset.Set(side, nsStyleCoord(0.0f, eStyleUnit_Factor));
-=======
   if (mPadding != aNewData.mPadding) {
     // Padding differences can't affect descendant intrinsic sizes, but do need
     // to force children to reflow so that we can reposition them, since their
@@ -609,64 +315,15 @@ nsStyleBorder::nsStyleBorder(const nsPresContext* aContext)
     // ReflowInput::InitResizeFlags initializes the inline-resize flag).
     hint |= NS_STYLE_HINT_REFLOW & ~nsChangeHint_ClearDescendantIntrinsics;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    mBorder.Side(side) = medium;
-    mBorderStyle[side] = StyleBorderStyle::None;
-||||||| merged common ancestors
-    mBorder.Side(side) = medium;
-    mBorderStyle[side] = NS_STYLE_BORDER_STYLE_NONE;
-=======
   if (mScrollPadding != aNewData.mScrollPadding) {
     // FIXME: Bug 1530253 Support re-snapping when scroll-padding changes.
     hint |= nsChangeHint_NeutralChange;
->>>>>>> upstream-releases
   }
 
   return hint;
 }
 
-<<<<<<< HEAD
-nsStyleBorder::nsStyleBorder(const nsStyleBorder& aSrc)
-    : mBorderRadius(aSrc.mBorderRadius),
-      mBorderImageSource(aSrc.mBorderImageSource),
-      mBorderImageSlice(aSrc.mBorderImageSlice),
-      mBorderImageWidth(aSrc.mBorderImageWidth),
-      mBorderImageOutset(aSrc.mBorderImageOutset),
-      mBorderImageFill(aSrc.mBorderImageFill),
-      mBorderImageRepeatH(aSrc.mBorderImageRepeatH),
-      mBorderImageRepeatV(aSrc.mBorderImageRepeatV),
-      mFloatEdge(aSrc.mFloatEdge),
-      mBoxDecorationBreak(aSrc.mBoxDecorationBreak),
-      mBorderTopColor(aSrc.mBorderTopColor),
-      mBorderRightColor(aSrc.mBorderRightColor),
-      mBorderBottomColor(aSrc.mBorderBottomColor),
-      mBorderLeftColor(aSrc.mBorderLeftColor),
-      mComputedBorder(aSrc.mComputedBorder),
-      mBorder(aSrc.mBorder),
-      mTwipsPerPixel(aSrc.mTwipsPerPixel) {
-||||||| merged common ancestors
-nsStyleBorder::nsStyleBorder(const nsStyleBorder& aSrc)
-  : mBorderRadius(aSrc.mBorderRadius)
-  , mBorderImageSource(aSrc.mBorderImageSource)
-  , mBorderImageSlice(aSrc.mBorderImageSlice)
-  , mBorderImageWidth(aSrc.mBorderImageWidth)
-  , mBorderImageOutset(aSrc.mBorderImageOutset)
-  , mBorderImageFill(aSrc.mBorderImageFill)
-  , mBorderImageRepeatH(aSrc.mBorderImageRepeatH)
-  , mBorderImageRepeatV(aSrc.mBorderImageRepeatV)
-  , mFloatEdge(aSrc.mFloatEdge)
-  , mBoxDecorationBreak(aSrc.mBoxDecorationBreak)
-  , mBorderTopColor(aSrc.mBorderTopColor)
-  , mBorderRightColor(aSrc.mBorderRightColor)
-  , mBorderBottomColor(aSrc.mBorderBottomColor)
-  , mBorderLeftColor(aSrc.mBorderLeftColor)
-  , mComputedBorder(aSrc.mComputedBorder)
-  , mBorder(aSrc.mBorder)
-  , mTwipsPerPixel(aSrc.mTwipsPerPixel)
-{
-=======
 static nscoord TwipsPerPixel(const Document& aDocument) {
   auto* pc = aDocument.GetPresContext();
   return pc ? pc->AppUnitsPerDevPixel() : mozilla::AppUnitsPerCSSPixel();
@@ -696,32 +353,15 @@ nsStyleBorder::nsStyleBorder(const Document& aDocument)
       mBorderLeftColor(StyleColor::CurrentColor()),
       mComputedBorder(0, 0, 0, 0),
       mTwipsPerPixel(TwipsPerPixel(aDocument)) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleBorder);
-<<<<<<< HEAD
-  NS_FOR_CSS_SIDES(side) { mBorderStyle[side] = aSrc.mBorderStyle[side]; }
-||||||| merged common ancestors
-  NS_FOR_CSS_SIDES(side) {
-    mBorderStyle[side] = aSrc.mBorderStyle[side];
-  }
-=======
 
   nscoord medium = kMediumBorderWidth;
   NS_FOR_CSS_SIDES(side) {
     mBorder.Side(side) = medium;
     mBorderStyle[side] = StyleBorderStyle::None;
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsStyleBorder::~nsStyleBorder() { MOZ_COUNT_DTOR(nsStyleBorder); }
-||||||| merged common ancestors
-nsStyleBorder::~nsStyleBorder()
-{
-  MOZ_COUNT_DTOR(nsStyleBorder);
-}
-=======
 nsStyleBorder::nsStyleBorder(const nsStyleBorder& aSrc)
     : mBorderRadius(aSrc.mBorderRadius),
       mBorderImageSource(aSrc.mBorderImageSource),
@@ -742,31 +382,15 @@ nsStyleBorder::nsStyleBorder(const nsStyleBorder& aSrc)
   MOZ_COUNT_CTOR(nsStyleBorder);
   NS_FOR_CSS_SIDES(side) { mBorderStyle[side] = aSrc.mBorderStyle[side]; }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void nsStyleBorder::FinishStyle(nsPresContext* aPresContext,
-                                const nsStyleBorder* aOldStyle) {
-||||||| merged common ancestors
-void
-nsStyleBorder::FinishStyle(nsPresContext* aPresContext, const nsStyleBorder* aOldStyle)
-{
-=======
 nsStyleBorder::~nsStyleBorder() { MOZ_COUNT_DTOR(nsStyleBorder); }
 
 void nsStyleBorder::TriggerImageLoads(Document& aDocument,
                                       const nsStyleBorder* aOldStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   mBorderImageSource.ResolveImage(
-<<<<<<< HEAD
-      aPresContext, aOldStyle ? &aOldStyle->mBorderImageSource : nullptr);
-||||||| merged common ancestors
-    aPresContext, aOldStyle ? &aOldStyle->mBorderImageSource : nullptr);
-=======
       aDocument, aOldStyle ? &aOldStyle->mBorderImageSource : nullptr);
->>>>>>> upstream-releases
 }
 
 nsMargin nsStyleBorder::GetImageOutset() const {
@@ -840,18 +464,8 @@ nsChangeHint nsStyleBorder::CalcDifference(
     if (mBorderImageSource != aNewData.mBorderImageSource ||
         mBorderImageRepeatH != aNewData.mBorderImageRepeatH ||
         mBorderImageRepeatV != aNewData.mBorderImageRepeatV ||
-<<<<<<< HEAD
-        mBorderImageSlice != aNewData.mBorderImageSlice ||
-        mBorderImageFill != aNewData.mBorderImageFill ||
-        mBorderImageWidth != aNewData.mBorderImageWidth) {
-||||||| merged common ancestors
-        mBorderImageSlice   != aNewData.mBorderImageSlice   ||
-        mBorderImageFill    != aNewData.mBorderImageFill    ||
-        mBorderImageWidth   != aNewData.mBorderImageWidth) {
-=======
         mBorderImageSlice != aNewData.mBorderImageSlice ||
         mBorderImageWidth != aNewData.mBorderImageWidth) {
->>>>>>> upstream-releases
       return nsChangeHint_RepaintFrame;
     }
   }
@@ -867,43 +481,14 @@ nsChangeHint nsStyleBorder::CalcDifference(
   if (mBorderImageSource != aNewData.mBorderImageSource ||
       mBorderImageRepeatH != aNewData.mBorderImageRepeatH ||
       mBorderImageRepeatV != aNewData.mBorderImageRepeatV ||
-<<<<<<< HEAD
-      mBorderImageSlice != aNewData.mBorderImageSlice ||
-      mBorderImageFill != aNewData.mBorderImageFill ||
-      mBorderImageWidth != aNewData.mBorderImageWidth) {
-||||||| merged common ancestors
-      mBorderImageSlice   != aNewData.mBorderImageSlice   ||
-      mBorderImageFill    != aNewData.mBorderImageFill    ||
-      mBorderImageWidth   != aNewData.mBorderImageWidth) {
-=======
       mBorderImageSlice != aNewData.mBorderImageSlice ||
       mBorderImageWidth != aNewData.mBorderImageWidth) {
->>>>>>> upstream-releases
     return nsChangeHint_NeutralChange;
   }
 
   return nsChangeHint(0);
 }
 
-<<<<<<< HEAD
-nsStyleOutline::nsStyleOutline(const nsPresContext* aContext)
-    : mOutlineWidth(kMediumBorderWidth),
-      mOutlineOffset(0),
-      mOutlineColor(StyleComplexColor::CurrentColor()),
-      mOutlineStyle(StyleOutlineStyle::BorderStyle(StyleBorderStyle::None)),
-      mActualOutlineWidth(0),
-      mTwipsPerPixel(aContext->DevPixelsToAppUnits(1)) {
-||||||| merged common ancestors
-nsStyleOutline::nsStyleOutline(const nsPresContext* aContext)
-  : mOutlineWidth((StaticPresData::Get()
-                     ->GetBorderWidthTable())[NS_STYLE_BORDER_WIDTH_MEDIUM])
-  , mOutlineOffset(0)
-  , mOutlineColor(StyleComplexColor::CurrentColor())
-  , mOutlineStyle(NS_STYLE_BORDER_STYLE_NONE)
-  , mActualOutlineWidth(0)
-  , mTwipsPerPixel(aContext->DevPixelsToAppUnits(1))
-{
-=======
 nsStyleOutline::nsStyleOutline(const Document& aDocument)
     : mOutlineRadius(ZeroBorderRadius()),
       mOutlineWidth(kMediumBorderWidth),
@@ -912,20 +497,7 @@ nsStyleOutline::nsStyleOutline(const Document& aDocument)
       mOutlineStyle(StyleOutlineStyle::BorderStyle(StyleBorderStyle::None)),
       mActualOutlineWidth(0),
       mTwipsPerPixel(TwipsPerPixel(aDocument)) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleOutline);
-<<<<<<< HEAD
-  // spacing values not inherited
-  nsStyleCoord zero(0, nsStyleCoord::CoordConstructor);
-  NS_FOR_CSS_HALF_CORNERS(corner) { mOutlineRadius.Set(corner, zero); }
-||||||| merged common ancestors
-  // spacing values not inherited
-  nsStyleCoord zero(0, nsStyleCoord::CoordConstructor);
-  NS_FOR_CSS_HALF_CORNERS(corner) {
-    mOutlineRadius.Set(corner, zero);
-  }
-=======
->>>>>>> upstream-releases
 }
 
 nsStyleOutline::nsStyleOutline(const nsStyleOutline& aSrc)
@@ -968,127 +540,43 @@ nsChangeHint nsStyleOutline::CalcDifference(
 // --------------------
 // nsStyleList
 //
-<<<<<<< HEAD
-nsStyleList::nsStyleList(const nsPresContext* aContext)
-    : mListStylePosition(NS_STYLE_LIST_STYLE_POSITION_OUTSIDE) {
-||||||| merged common ancestors
-nsStyleList::nsStyleList(const nsPresContext* aContext)
-  : mListStylePosition(NS_STYLE_LIST_STYLE_POSITION_OUTSIDE)
-{
-=======
 nsStyleList::nsStyleList(const Document& aDocument)
     : mListStylePosition(NS_STYLE_LIST_STYLE_POSITION_OUTSIDE),
       mQuotes{StyleArcSlice<StyleQuotePair>(Servo_Quotes_GetInitialValue())},
       mMozListReversed(StyleMozListReversed::False) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleList);
   MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-  mCounterStyle = CounterStyleManager::GetDiscStyle();
-  mQuotes = Servo_Quotes_GetInitialValue().Consume();
-||||||| merged common ancestors
-  mCounterStyle = CounterStyleManager::GetDiscStyle();
-
-  if (!sInitialQuotes) {
-    // The initial value for quotes is the en-US typographic convention:
-    // outermost are LEFT and RIGHT DOUBLE QUOTATION MARK, alternating
-    // with LEFT and RIGHT SINGLE QUOTATION MARK.
-    static const char16_t initialQuotes[8] = {
-      0x201C, 0, 0x201D, 0, 0x2018, 0, 0x2019, 0
-    };
-
-    sInitialQuotes = new nsStyleQuoteValues;
-    sInitialQuotes->mQuotePairs.AppendElement(
-        std::make_pair(nsDependentString(&initialQuotes[0], 1),
-                       nsDependentString(&initialQuotes[2], 1)));
-    sInitialQuotes->mQuotePairs.AppendElement(
-        std::make_pair(nsDependentString(&initialQuotes[4], 1),
-                       nsDependentString(&initialQuotes[6], 1)));
-  }
-
-  mQuotes = sInitialQuotes;
-=======
   mCounterStyle = nsGkAtoms::disc;
->>>>>>> upstream-releases
 }
 
 nsStyleList::~nsStyleList() { MOZ_COUNT_DTOR(nsStyleList); }
 
 nsStyleList::nsStyleList(const nsStyleList& aSource)
-<<<<<<< HEAD
-    : mListStylePosition(aSource.mListStylePosition),
-      mListStyleImage(aSource.mListStyleImage),
-      mCounterStyle(aSource.mCounterStyle),
-      mQuotes(aSource.mQuotes),
-      mImageRegion(aSource.mImageRegion) {
-||||||| merged common ancestors
-  : mListStylePosition(aSource.mListStylePosition)
-  , mListStyleImage(aSource.mListStyleImage)
-  , mCounterStyle(aSource.mCounterStyle)
-  , mQuotes(aSource.mQuotes)
-  , mImageRegion(aSource.mImageRegion)
-{
-=======
     : mListStylePosition(aSource.mListStylePosition),
       mListStyleImage(aSource.mListStyleImage),
       mCounterStyle(aSource.mCounterStyle),
       mQuotes(aSource.mQuotes),
       mImageRegion(aSource.mImageRegion),
       mMozListReversed(aSource.mMozListReversed) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleList);
 }
 
-<<<<<<< HEAD
-void nsStyleList::FinishStyle(nsPresContext* aPresContext,
-                              const nsStyleList* aOldStyle) {
-||||||| merged common ancestors
-void
-nsStyleList::FinishStyle(nsPresContext* aPresContext, const nsStyleList* aOldStyle)
-{
-=======
 void nsStyleList::TriggerImageLoads(Document& aDocument,
                                     const nsStyleList* aOldStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (mListStyleImage && !mListStyleImage->IsResolved()) {
     mListStyleImage->Resolve(
-<<<<<<< HEAD
-        aPresContext, aOldStyle ? aOldStyle->mListStyleImage.get() : nullptr);
-||||||| merged common ancestors
-      aPresContext, aOldStyle ? aOldStyle->mListStyleImage.get() : nullptr);
-=======
         aDocument, aOldStyle ? aOldStyle->mListStyleImage.get() : nullptr);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStyleList::CalcDifference(
-    const nsStyleList& aNewData, const nsStyleDisplay* aOldDisplay) const {
-||||||| merged common ancestors
-nsChangeHint
-nsStyleList::CalcDifference(const nsStyleList& aNewData,
-                            const nsStyleDisplay* aOldDisplay) const
-{
-=======
 nsChangeHint nsStyleList::CalcDifference(
     const nsStyleList& aNewData, const nsStyleDisplay& aOldDisplay) const {
->>>>>>> upstream-releases
   // If the quotes implementation is ever going to change we might not need
   // a framechange here and a reflow should be sufficient.  See bug 35768.
-<<<<<<< HEAD
-  if (mQuotes != aNewData.mQuotes &&
-      !Servo_Quotes_Equal(mQuotes.get(), aNewData.mQuotes.get())) {
-||||||| merged common ancestors
-  if (mQuotes != aNewData.mQuotes &&
-      (mQuotes || aNewData.mQuotes) &&
-      GetQuotePairs() != aNewData.GetQuotePairs()) {
-=======
   if (mQuotes != aNewData.mQuotes) {
->>>>>>> upstream-releases
     return nsChangeHint_ReconstructFrame;
   }
   nsChangeHint hint = nsChangeHint(0);
@@ -1141,26 +629,6 @@ already_AddRefed<nsIURI> nsStyleList::GetListStyleImageURI() const {
 // --------------------
 // nsStyleXUL
 //
-<<<<<<< HEAD
-nsStyleXUL::nsStyleXUL(const nsPresContext* aContext)
-    : mBoxFlex(0.0f),
-      mBoxOrdinal(1),
-      mBoxAlign(StyleBoxAlign::Stretch),
-      mBoxDirection(StyleBoxDirection::Normal),
-      mBoxOrient(StyleBoxOrient::Horizontal),
-      mBoxPack(StyleBoxPack::Start),
-      mStackSizing(StyleStackSizing::StretchToFit) {
-||||||| merged common ancestors
-nsStyleXUL::nsStyleXUL(const nsPresContext* aContext)
-  : mBoxFlex(0.0f)
-  , mBoxOrdinal(1)
-  , mBoxAlign(StyleBoxAlign::Stretch)
-  , mBoxDirection(StyleBoxDirection::Normal)
-  , mBoxOrient(StyleBoxOrient::Horizontal)
-  , mBoxPack(StyleBoxPack::Start)
-  , mStackSizing(StyleStackSizing::StretchToFit)
-{
-=======
 nsStyleXUL::nsStyleXUL(const Document& aDocument)
     : mBoxFlex(0.0f),
       mBoxOrdinal(1),
@@ -1169,7 +637,6 @@ nsStyleXUL::nsStyleXUL(const Document& aDocument)
       mBoxOrient(StyleBoxOrient::Horizontal),
       mBoxPack(StyleBoxPack::Start),
       mStackSizing(StyleStackSizing::StretchToFit) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleXUL);
 }
 
@@ -1206,30 +673,12 @@ nsChangeHint nsStyleXUL::CalcDifference(const nsStyleXUL& aNewData) const {
 /* static */ const uint32_t nsStyleColumn::kMaxColumnCount;
 /* static */ const uint32_t nsStyleColumn::kColumnCountAuto;
 
-<<<<<<< HEAD
-nsStyleColumn::nsStyleColumn(const nsPresContext* aContext)
-    : mColumnWidth(eStyleUnit_Auto),
-      mColumnRuleColor(StyleComplexColor::CurrentColor()),
-      mColumnRuleStyle(StyleBorderStyle::None),
-      mColumnRuleWidth(kMediumBorderWidth),
-      mTwipsPerPixel(aContext->AppUnitsPerDevPixel()) {
-||||||| merged common ancestors
-nsStyleColumn::nsStyleColumn(const nsPresContext* aContext)
-  : mColumnWidth(eStyleUnit_Auto)
-  , mColumnRuleColor(StyleComplexColor::CurrentColor())
-  , mColumnRuleStyle(NS_STYLE_BORDER_STYLE_NONE)
-  , mColumnRuleWidth((StaticPresData::Get()
-                        ->GetBorderWidthTable())[NS_STYLE_BORDER_WIDTH_MEDIUM])
-  , mTwipsPerPixel(aContext->AppUnitsPerDevPixel())
-{
-=======
 nsStyleColumn::nsStyleColumn(const Document& aDocument)
     : mColumnWidth(LengthOrAuto::Auto()),
       mColumnRuleColor(StyleColor::CurrentColor()),
       mColumnRuleStyle(StyleBorderStyle::None),
       mColumnRuleWidth(kMediumBorderWidth),
       mTwipsPerPixel(TwipsPerPixel(aDocument)) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleColumn);
 }
 
@@ -1247,22 +696,9 @@ nsStyleColumn::nsStyleColumn(const nsStyleColumn& aSource)
   MOZ_COUNT_CTOR(nsStyleColumn);
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStyleColumn::CalcDifference(
-    const nsStyleColumn& aNewData) const {
-  if ((mColumnWidth.GetUnit() == eStyleUnit_Auto) !=
-          (aNewData.mColumnWidth.GetUnit() == eStyleUnit_Auto) ||
-||||||| merged common ancestors
-nsChangeHint
-nsStyleColumn::CalcDifference(const nsStyleColumn& aNewData) const
-{
-  if ((mColumnWidth.GetUnit() == eStyleUnit_Auto)
-      != (aNewData.mColumnWidth.GetUnit() == eStyleUnit_Auto) ||
-=======
 nsChangeHint nsStyleColumn::CalcDifference(
     const nsStyleColumn& aNewData) const {
   if (mColumnWidth.IsAuto() != aNewData.mColumnWidth.IsAuto() ||
->>>>>>> upstream-releases
       mColumnCount != aNewData.mColumnCount ||
       mColumnSpan != aNewData.mColumnSpan) {
     // We force column count changes to do a reframe, because it's tricky to
@@ -1298,52 +734,6 @@ using SVGPaintFallback = StyleGenericSVGPaintFallback<StyleColor>;
 // --------------------
 // nsStyleSVG
 //
-<<<<<<< HEAD
-nsStyleSVG::nsStyleSVG(const nsPresContext* aContext)
-    : mFill(eStyleSVGPaintType_Color),  // Will be initialized to NS_RGB(0,0,0)
-      mStroke(eStyleSVGPaintType_None),
-      mStrokeDashoffset(0, nsStyleCoord::CoordConstructor),
-      mStrokeWidth(nsPresContext::CSSPixelsToAppUnits(1),
-                   nsStyleCoord::CoordConstructor),
-      mFillOpacity(1.0f),
-      mStrokeMiterlimit(4.0f),
-      mStrokeOpacity(1.0f),
-      mClipRule(StyleFillRule::Nonzero),
-      mColorInterpolation(NS_STYLE_COLOR_INTERPOLATION_SRGB),
-      mColorInterpolationFilters(NS_STYLE_COLOR_INTERPOLATION_LINEARRGB),
-      mFillRule(StyleFillRule::Nonzero),
-      mPaintOrder(NS_STYLE_PAINT_ORDER_NORMAL),
-      mShapeRendering(NS_STYLE_SHAPE_RENDERING_AUTO),
-      mStrokeLinecap(NS_STYLE_STROKE_LINECAP_BUTT),
-      mStrokeLinejoin(NS_STYLE_STROKE_LINEJOIN_MITER),
-      mTextAnchor(NS_STYLE_TEXT_ANCHOR_START),
-      mContextPropsBits(0),
-      mContextFlags(
-          (eStyleSVGOpacitySource_Normal << FILL_OPACITY_SOURCE_SHIFT) |
-          (eStyleSVGOpacitySource_Normal << STROKE_OPACITY_SOURCE_SHIFT)) {
-||||||| merged common ancestors
-nsStyleSVG::nsStyleSVG(const nsPresContext* aContext)
-  : mFill(eStyleSVGPaintType_Color) // Will be initialized to NS_RGB(0, 0, 0)
-  , mStroke(eStyleSVGPaintType_None)
-  , mStrokeDashoffset(0, nsStyleCoord::CoordConstructor)
-  , mStrokeWidth(nsPresContext::CSSPixelsToAppUnits(1), nsStyleCoord::CoordConstructor)
-  , mFillOpacity(1.0f)
-  , mStrokeMiterlimit(4.0f)
-  , mStrokeOpacity(1.0f)
-  , mClipRule(StyleFillRule::Nonzero)
-  , mColorInterpolation(NS_STYLE_COLOR_INTERPOLATION_SRGB)
-  , mColorInterpolationFilters(NS_STYLE_COLOR_INTERPOLATION_LINEARRGB)
-  , mFillRule(StyleFillRule::Nonzero)
-  , mPaintOrder(NS_STYLE_PAINT_ORDER_NORMAL)
-  , mShapeRendering(NS_STYLE_SHAPE_RENDERING_AUTO)
-  , mStrokeLinecap(NS_STYLE_STROKE_LINECAP_BUTT)
-  , mStrokeLinejoin(NS_STYLE_STROKE_LINEJOIN_MITER)
-  , mTextAnchor(NS_STYLE_TEXT_ANCHOR_START)
-  , mContextPropsBits(0)
-  , mContextFlags((eStyleSVGOpacitySource_Normal << FILL_OPACITY_SOURCE_SHIFT) |
-                  (eStyleSVGOpacitySource_Normal << STROKE_OPACITY_SOURCE_SHIFT))
-{
-=======
 nsStyleSVG::nsStyleSVG(const Document& aDocument)
     : mFill{StyleSVGPaintKind::Color(StyleColor::Black()),
             SVGPaintFallback::Unset()},
@@ -1369,63 +759,12 @@ nsStyleSVG::nsStyleSVG(const Document& aDocument)
       mContextFlags(
           (eStyleSVGOpacitySource_Normal << FILL_OPACITY_SOURCE_SHIFT) |
           (eStyleSVGOpacitySource_Normal << STROKE_OPACITY_SOURCE_SHIFT)) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleSVG);
 }
 
 nsStyleSVG::~nsStyleSVG() { MOZ_COUNT_DTOR(nsStyleSVG); }
 
 nsStyleSVG::nsStyleSVG(const nsStyleSVG& aSource)
-<<<<<<< HEAD
-    : mFill(aSource.mFill),
-      mStroke(aSource.mStroke),
-      mMarkerEnd(aSource.mMarkerEnd),
-      mMarkerMid(aSource.mMarkerMid),
-      mMarkerStart(aSource.mMarkerStart),
-      mStrokeDasharray(aSource.mStrokeDasharray),
-      mContextProps(aSource.mContextProps),
-      mStrokeDashoffset(aSource.mStrokeDashoffset),
-      mStrokeWidth(aSource.mStrokeWidth),
-      mFillOpacity(aSource.mFillOpacity),
-      mStrokeMiterlimit(aSource.mStrokeMiterlimit),
-      mStrokeOpacity(aSource.mStrokeOpacity),
-      mClipRule(aSource.mClipRule),
-      mColorInterpolation(aSource.mColorInterpolation),
-      mColorInterpolationFilters(aSource.mColorInterpolationFilters),
-      mFillRule(aSource.mFillRule),
-      mPaintOrder(aSource.mPaintOrder),
-      mShapeRendering(aSource.mShapeRendering),
-      mStrokeLinecap(aSource.mStrokeLinecap),
-      mStrokeLinejoin(aSource.mStrokeLinejoin),
-      mTextAnchor(aSource.mTextAnchor),
-      mContextPropsBits(aSource.mContextPropsBits),
-      mContextFlags(aSource.mContextFlags) {
-||||||| merged common ancestors
-  : mFill(aSource.mFill)
-  , mStroke(aSource.mStroke)
-  , mMarkerEnd(aSource.mMarkerEnd)
-  , mMarkerMid(aSource.mMarkerMid)
-  , mMarkerStart(aSource.mMarkerStart)
-  , mStrokeDasharray(aSource.mStrokeDasharray)
-  , mContextProps(aSource.mContextProps)
-  , mStrokeDashoffset(aSource.mStrokeDashoffset)
-  , mStrokeWidth(aSource.mStrokeWidth)
-  , mFillOpacity(aSource.mFillOpacity)
-  , mStrokeMiterlimit(aSource.mStrokeMiterlimit)
-  , mStrokeOpacity(aSource.mStrokeOpacity)
-  , mClipRule(aSource.mClipRule)
-  , mColorInterpolation(aSource.mColorInterpolation)
-  , mColorInterpolationFilters(aSource.mColorInterpolationFilters)
-  , mFillRule(aSource.mFillRule)
-  , mPaintOrder(aSource.mPaintOrder)
-  , mShapeRendering(aSource.mShapeRendering)
-  , mStrokeLinecap(aSource.mStrokeLinecap)
-  , mStrokeLinejoin(aSource.mStrokeLinejoin)
-  , mTextAnchor(aSource.mTextAnchor)
-  , mContextPropsBits(aSource.mContextPropsBits)
-  , mContextFlags(aSource.mContextFlags)
-{
-=======
     : mFill(aSource.mFill),
       mStroke(aSource.mStroke),
       mMarkerEnd(aSource.mMarkerEnd),
@@ -1448,29 +787,13 @@ nsStyleSVG::nsStyleSVG(const nsStyleSVG& aSource)
       mStrokeLinejoin(aSource.mStrokeLinejoin),
       mTextAnchor(aSource.mTextAnchor),
       mContextFlags(aSource.mContextFlags) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleSVG);
 }
 
-<<<<<<< HEAD
-static bool PaintURIChanged(const nsStyleSVGPaint& aPaint1,
-                            const nsStyleSVGPaint& aPaint2) {
-  if (aPaint1.Type() != aPaint2.Type()) {
-    return aPaint1.Type() == eStyleSVGPaintType_Server ||
-           aPaint2.Type() == eStyleSVGPaintType_Server;
-||||||| merged common ancestors
-static bool
-PaintURIChanged(const nsStyleSVGPaint& aPaint1, const nsStyleSVGPaint& aPaint2)
-{
-  if (aPaint1.Type() != aPaint2.Type()) {
-    return aPaint1.Type() == eStyleSVGPaintType_Server ||
-           aPaint2.Type() == eStyleSVGPaintType_Server;
-=======
 static bool PaintURIChanged(const StyleSVGPaint& aPaint1,
                             const StyleSVGPaint& aPaint2) {
   if (aPaint1.kind.IsPaintServer() != aPaint2.kind.IsPaintServer()) {
     return true;
->>>>>>> upstream-releases
   }
   return aPaint1.kind.IsPaintServer() &&
          aPaint1.kind.AsPaintServer() != aPaint2.kind.AsPaintServer();
@@ -1526,34 +849,6 @@ nsChangeHint nsStyleSVG::CalcDifference(const nsStyleSVG& aNewData) const {
   }
 
   if (hint & nsChangeHint_RepaintFrame) {
-<<<<<<< HEAD
-    return hint;  // we don't add anything else below
-  }
-
-  if (mStrokeDashoffset != aNewData.mStrokeDashoffset ||
-      mClipRule != aNewData.mClipRule ||
-      mColorInterpolation != aNewData.mColorInterpolation ||
-      mColorInterpolationFilters != aNewData.mColorInterpolationFilters ||
-      mFillRule != aNewData.mFillRule || mPaintOrder != aNewData.mPaintOrder ||
-      mShapeRendering != aNewData.mShapeRendering ||
-      mStrokeDasharray != aNewData.mStrokeDasharray ||
-      mContextFlags != aNewData.mContextFlags ||
-      mContextPropsBits != aNewData.mContextPropsBits) {
-||||||| merged common ancestors
-    return hint; // we don't add anything else below
-  }
-
-  if ( mStrokeDashoffset      != aNewData.mStrokeDashoffset      ||
-       mClipRule              != aNewData.mClipRule              ||
-       mColorInterpolation    != aNewData.mColorInterpolation    ||
-       mColorInterpolationFilters != aNewData.mColorInterpolationFilters ||
-       mFillRule              != aNewData.mFillRule              ||
-       mPaintOrder            != aNewData.mPaintOrder            ||
-       mShapeRendering        != aNewData.mShapeRendering        ||
-       mStrokeDasharray       != aNewData.mStrokeDasharray       ||
-       mContextFlags          != aNewData.mContextFlags          ||
-       mContextPropsBits      != aNewData.mContextPropsBits) {
-=======
     return hint;  // we don't add anything else below
   }
 
@@ -1566,7 +861,6 @@ nsChangeHint nsStyleSVG::CalcDifference(const nsStyleSVG& aNewData) const {
       mStrokeDasharray != aNewData.mStrokeDasharray ||
       mContextFlags != aNewData.mContextFlags ||
       mMozContextProperties.bits != aNewData.mMozContextProperties.bits) {
->>>>>>> upstream-releases
     return hint | nsChangeHint_RepaintFrame;
   }
 
@@ -1580,48 +874,6 @@ nsChangeHint nsStyleSVG::CalcDifference(const nsStyleSVG& aNewData) const {
 }
 
 // --------------------
-<<<<<<< HEAD
-// StyleBasicShape
-
-nsCSSKeyword StyleBasicShape::GetShapeTypeName() const {
-  switch (mType) {
-    case StyleBasicShapeType::Polygon:
-      return eCSSKeyword_polygon;
-    case StyleBasicShapeType::Circle:
-      return eCSSKeyword_circle;
-    case StyleBasicShapeType::Ellipse:
-      return eCSSKeyword_ellipse;
-    case StyleBasicShapeType::Inset:
-      return eCSSKeyword_inset;
-  }
-  MOZ_ASSERT_UNREACHABLE("unexpected type");
-  return eCSSKeyword_UNKNOWN;
-}
-
-// --------------------
-||||||| merged common ancestors
-// StyleBasicShape
-
-nsCSSKeyword
-StyleBasicShape::GetShapeTypeName() const
-{
-  switch (mType) {
-    case StyleBasicShapeType::Polygon:
-      return eCSSKeyword_polygon;
-    case StyleBasicShapeType::Circle:
-      return eCSSKeyword_circle;
-    case StyleBasicShapeType::Ellipse:
-      return eCSSKeyword_ellipse;
-    case StyleBasicShapeType::Inset:
-      return eCSSKeyword_inset;
-  }
-  MOZ_ASSERT_UNREACHABLE("unexpected type");
-  return eCSSKeyword_UNKNOWN;
-}
-
-// --------------------
-=======
->>>>>>> upstream-releases
 // StyleShapeSource
 StyleShapeSource::StyleShapeSource() : mBasicShape() {}
 
@@ -1666,38 +918,7 @@ bool StyleShapeSource::operator==(const StyleShapeSource& aOther) const {
   return true;
 }
 
-<<<<<<< HEAD
-void StyleShapeSource::SetURL(const css::URLValue& aValue) {
-  if (mType != StyleShapeSourceType::Image &&
-      mType != StyleShapeSourceType::URL) {
-    DoDestroy();
-    new (&mShapeImage) UniquePtr<nsStyleImage>(new nsStyleImage());
-  }
-  mShapeImage->SetURLValue(do_AddRef(&aValue));
-  mType = StyleShapeSourceType::URL;
-}
-
 void StyleShapeSource::SetShapeImage(UniquePtr<nsStyleImage> aShapeImage) {
-||||||| merged common ancestors
-void
-StyleShapeSource::SetURL(css::URLValue* aValue)
-{
-  MOZ_ASSERT(aValue);
-  if (mType != StyleShapeSourceType::Image &&
-      mType != StyleShapeSourceType::URL) {
-    DoDestroy();
-    new (&mShapeImage) UniquePtr<nsStyleImage>(new nsStyleImage());
-  }
-  mShapeImage->SetURLValue(do_AddRef(aValue));
-  mType = StyleShapeSourceType::URL;
-}
-
-void
-StyleShapeSource::SetShapeImage(UniquePtr<nsStyleImage> aShapeImage)
-{
-=======
-void StyleShapeSource::SetShapeImage(UniquePtr<nsStyleImage> aShapeImage) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aShapeImage);
   DoDestroy();
   new (&mShapeImage) UniquePtr<nsStyleImage>(std::move(aShapeImage));
@@ -1730,26 +951,6 @@ void StyleShapeSource::SetPath(UniquePtr<StyleSVGPath> aPath) {
   mType = StyleShapeSourceType::Path;
 }
 
-<<<<<<< HEAD
-void StyleShapeSource::FinishStyle(nsPresContext* aPresContext,
-                                   const StyleShapeSource* aOldShapeSource) {
-  if (GetType() != StyleShapeSourceType::Image) {
-    return;
-  }
-
-  auto* oldShapeImage = (aOldShapeSource && aOldShapeSource->GetType() ==
-                                                StyleShapeSourceType::Image)
-                            ? &aOldShapeSource->ShapeImage()
-                            : nullptr;
-  mShapeImage->ResolveImage(aPresContext, oldShapeImage);
-}
-
-void StyleShapeSource::SetReferenceBox(StyleGeometryBox aReferenceBox) {
-||||||| merged common ancestors
-void
-StyleShapeSource::SetReferenceBox(StyleGeometryBox aReferenceBox)
-{
-=======
 void StyleShapeSource::TriggerImageLoads(
     Document& aDocument, const StyleShapeSource* aOldShapeSource) {
   if (GetType() != StyleShapeSourceType::Image) {
@@ -1764,7 +965,6 @@ void StyleShapeSource::TriggerImageLoads(
 }
 
 void StyleShapeSource::SetReferenceBox(StyleGeometryBox aReferenceBox) {
->>>>>>> upstream-releases
   DoDestroy();
   mReferenceBox = aReferenceBox;
   mType = StyleShapeSourceType::Box;
@@ -1777,38 +977,16 @@ void StyleShapeSource::DoCopy(const StyleShapeSource& aOther) {
       mType = StyleShapeSourceType::None;
       break;
 
-<<<<<<< HEAD
-    case StyleShapeSourceType::URL:
-      SetURL(aOther.URL());
-      break;
-
-||||||| merged common ancestors
-    case StyleShapeSourceType::URL:
-      SetURL(aOther.GetURL());
-      break;
-
-=======
->>>>>>> upstream-releases
     case StyleShapeSourceType::Image:
       SetShapeImage(MakeUnique<nsStyleImage>(aOther.ShapeImage()));
       break;
 
-<<<<<<< HEAD
-    case StyleShapeSourceType::Shape:
-      SetBasicShape(MakeUnique<StyleBasicShape>(aOther.BasicShape()),
-                    aOther.GetReferenceBox());
-||||||| merged common ancestors
-    case StyleShapeSourceType::Shape:
-      SetBasicShape(MakeUnique<StyleBasicShape>(*aOther.GetBasicShape()),
-                    aOther.GetReferenceBox());
-=======
     case StyleShapeSourceType::Shape: {
       UniquePtr<StyleBasicShape> shape(
           Servo_CloneBasicShape(&aOther.BasicShape()));
       // TODO(emilio): This could be a copy-ctor call like above if we teach
       // cbindgen to generate copy-constructors for tagged unions.
       SetBasicShape(std::move(shape), aOther.GetReferenceBox());
->>>>>>> upstream-releases
       break;
     }
 
@@ -1842,241 +1020,8 @@ void StyleShapeSource::DoDestroy() {
 }
 
 // --------------------
-<<<<<<< HEAD
-// nsStyleFilter
-//
-nsStyleFilter::nsStyleFilter()
-    : mType(NS_STYLE_FILTER_NONE), mDropShadow(nullptr) {
-  MOZ_COUNT_CTOR(nsStyleFilter);
-}
-
-nsStyleFilter::nsStyleFilter(const nsStyleFilter& aSource)
-    : mType(NS_STYLE_FILTER_NONE), mDropShadow(nullptr) {
-  MOZ_COUNT_CTOR(nsStyleFilter);
-  if (aSource.mType == NS_STYLE_FILTER_URL) {
-    SetURL(aSource.mURL);
-  } else if (aSource.mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    SetDropShadow(aSource.mDropShadow);
-  } else if (aSource.mType != NS_STYLE_FILTER_NONE) {
-    SetFilterParameter(aSource.mFilterParameter, aSource.mType);
-  }
-}
-
-nsStyleFilter::~nsStyleFilter() {
-  ReleaseRef();
-  MOZ_COUNT_DTOR(nsStyleFilter);
-}
-
-nsStyleFilter& nsStyleFilter::operator=(const nsStyleFilter& aOther) {
-  if (this == &aOther) {
-    return *this;
-  }
-
-  if (aOther.mType == NS_STYLE_FILTER_URL) {
-    SetURL(aOther.mURL);
-  } else if (aOther.mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    SetDropShadow(aOther.mDropShadow);
-  } else if (aOther.mType != NS_STYLE_FILTER_NONE) {
-    SetFilterParameter(aOther.mFilterParameter, aOther.mType);
-  } else {
-    ReleaseRef();
-    mType = NS_STYLE_FILTER_NONE;
-  }
-
-  return *this;
-}
-
-bool nsStyleFilter::operator==(const nsStyleFilter& aOther) const {
-  if (mType != aOther.mType) {
-    return false;
-  }
-
-  if (mType == NS_STYLE_FILTER_URL) {
-    return DefinitelyEqualURIs(mURL, aOther.mURL);
-  } else if (mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    return *mDropShadow == *aOther.mDropShadow;
-  } else if (mType != NS_STYLE_FILTER_NONE) {
-    return mFilterParameter == aOther.mFilterParameter;
-  }
-
-  return true;
-}
-
-void nsStyleFilter::ReleaseRef() {
-  if (mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    NS_ASSERTION(mDropShadow, "expected pointer");
-    mDropShadow->Release();
-  } else if (mType == NS_STYLE_FILTER_URL) {
-    NS_ASSERTION(mURL, "expected pointer");
-    mURL->Release();
-  }
-  mURL = nullptr;
-}
-
-void nsStyleFilter::SetFilterParameter(const nsStyleCoord& aFilterParameter,
-                                       int32_t aType) {
-  ReleaseRef();
-  mFilterParameter = aFilterParameter;
-  mType = aType;
-}
-
-bool nsStyleFilter::SetURL(css::URLValue* aURL) {
-  ReleaseRef();
-  mURL = aURL;
-  mURL->AddRef();
-  mType = NS_STYLE_FILTER_URL;
-  return true;
-}
-
-void nsStyleFilter::SetDropShadow(nsCSSShadowArray* aDropShadow) {
-  NS_ASSERTION(aDropShadow, "expected pointer");
-  ReleaseRef();
-  mDropShadow = aDropShadow;
-  mDropShadow->AddRef();
-  mType = NS_STYLE_FILTER_DROP_SHADOW;
-}
-
-// --------------------
-||||||| merged common ancestors
-// nsStyleFilter
-//
-nsStyleFilter::nsStyleFilter()
-  : mType(NS_STYLE_FILTER_NONE)
-  , mDropShadow(nullptr)
-{
-  MOZ_COUNT_CTOR(nsStyleFilter);
-}
-
-nsStyleFilter::nsStyleFilter(const nsStyleFilter& aSource)
-  : mType(NS_STYLE_FILTER_NONE)
-  , mDropShadow(nullptr)
-{
-  MOZ_COUNT_CTOR(nsStyleFilter);
-  if (aSource.mType == NS_STYLE_FILTER_URL) {
-    SetURL(aSource.mURL);
-  } else if (aSource.mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    SetDropShadow(aSource.mDropShadow);
-  } else if (aSource.mType != NS_STYLE_FILTER_NONE) {
-    SetFilterParameter(aSource.mFilterParameter, aSource.mType);
-  }
-}
-
-nsStyleFilter::~nsStyleFilter()
-{
-  ReleaseRef();
-  MOZ_COUNT_DTOR(nsStyleFilter);
-}
-
-nsStyleFilter&
-nsStyleFilter::operator=(const nsStyleFilter& aOther)
-{
-  if (this == &aOther) {
-    return *this;
-  }
-
-  if (aOther.mType == NS_STYLE_FILTER_URL) {
-    SetURL(aOther.mURL);
-  } else if (aOther.mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    SetDropShadow(aOther.mDropShadow);
-  } else if (aOther.mType != NS_STYLE_FILTER_NONE) {
-    SetFilterParameter(aOther.mFilterParameter, aOther.mType);
-  } else {
-    ReleaseRef();
-    mType = NS_STYLE_FILTER_NONE;
-  }
-
-  return *this;
-}
-
-bool
-nsStyleFilter::operator==(const nsStyleFilter& aOther) const
-{
-  if (mType != aOther.mType) {
-      return false;
-  }
-
-  if (mType == NS_STYLE_FILTER_URL) {
-    return DefinitelyEqualURIs(mURL, aOther.mURL);
-  } else if (mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    return *mDropShadow == *aOther.mDropShadow;
-  } else if (mType != NS_STYLE_FILTER_NONE) {
-    return mFilterParameter == aOther.mFilterParameter;
-  }
-
-  return true;
-}
-
-void
-nsStyleFilter::ReleaseRef()
-{
-  if (mType == NS_STYLE_FILTER_DROP_SHADOW) {
-    NS_ASSERTION(mDropShadow, "expected pointer");
-    mDropShadow->Release();
-  } else if (mType == NS_STYLE_FILTER_URL) {
-    NS_ASSERTION(mURL, "expected pointer");
-    mURL->Release();
-  }
-  mURL = nullptr;
-}
-
-void
-nsStyleFilter::SetFilterParameter(const nsStyleCoord& aFilterParameter,
-                                  int32_t aType)
-{
-  ReleaseRef();
-  mFilterParameter = aFilterParameter;
-  mType = aType;
-}
-
-bool
-nsStyleFilter::SetURL(css::URLValue* aURL)
-{
-  ReleaseRef();
-  mURL = aURL;
-  mURL->AddRef();
-  mType = NS_STYLE_FILTER_URL;
-  return true;
-}
-
-void
-nsStyleFilter::SetDropShadow(nsCSSShadowArray* aDropShadow)
-{
-  NS_ASSERTION(aDropShadow, "expected pointer");
-  ReleaseRef();
-  mDropShadow = aDropShadow;
-  mDropShadow->AddRef();
-  mType = NS_STYLE_FILTER_DROP_SHADOW;
-}
-
-// --------------------
-=======
->>>>>>> upstream-releases
 // nsStyleSVGReset
 //
-<<<<<<< HEAD
-nsStyleSVGReset::nsStyleSVGReset(const nsPresContext* aContext)
-    : mMask(nsStyleImageLayers::LayerType::Mask),
-      mStopColor(StyleComplexColor::Black()),
-      mFloodColor(StyleComplexColor::Black()),
-      mLightingColor(StyleComplexColor::White()),
-      mStopOpacity(1.0f),
-      mFloodOpacity(1.0f),
-      mDominantBaseline(NS_STYLE_DOMINANT_BASELINE_AUTO),
-      mVectorEffect(NS_STYLE_VECTOR_EFFECT_NONE),
-      mMaskType(NS_STYLE_MASK_TYPE_LUMINANCE) {
-||||||| merged common ancestors
-nsStyleSVGReset::nsStyleSVGReset(const nsPresContext* aContext)
-  : mMask(nsStyleImageLayers::LayerType::Mask)
-  , mStopColor(StyleComplexColor::Black())
-  , mFloodColor(StyleComplexColor::Black())
-  , mLightingColor(StyleComplexColor::White())
-  , mStopOpacity(1.0f)
-  , mFloodOpacity(1.0f)
-  , mDominantBaseline(NS_STYLE_DOMINANT_BASELINE_AUTO)
-  , mVectorEffect(NS_STYLE_VECTOR_EFFECT_NONE)
-  , mMaskType(NS_STYLE_MASK_TYPE_LUMINANCE)
-{
-=======
 nsStyleSVGReset::nsStyleSVGReset(const Document& aDocument)
     : mX(LengthPercentage::Zero()),
       mY(LengthPercentage::Zero()),
@@ -2094,37 +1039,12 @@ nsStyleSVGReset::nsStyleSVGReset(const Document& aDocument)
       mDominantBaseline(NS_STYLE_DOMINANT_BASELINE_AUTO),
       mVectorEffect(NS_STYLE_VECTOR_EFFECT_NONE),
       mMaskType(NS_STYLE_MASK_TYPE_LUMINANCE) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleSVGReset);
 }
 
 nsStyleSVGReset::~nsStyleSVGReset() { MOZ_COUNT_DTOR(nsStyleSVGReset); }
 
 nsStyleSVGReset::nsStyleSVGReset(const nsStyleSVGReset& aSource)
-<<<<<<< HEAD
-    : mMask(aSource.mMask),
-      mClipPath(aSource.mClipPath),
-      mStopColor(aSource.mStopColor),
-      mFloodColor(aSource.mFloodColor),
-      mLightingColor(aSource.mLightingColor),
-      mStopOpacity(aSource.mStopOpacity),
-      mFloodOpacity(aSource.mFloodOpacity),
-      mDominantBaseline(aSource.mDominantBaseline),
-      mVectorEffect(aSource.mVectorEffect),
-      mMaskType(aSource.mMaskType) {
-||||||| merged common ancestors
-  : mMask(aSource.mMask)
-  , mClipPath(aSource.mClipPath)
-  , mStopColor(aSource.mStopColor)
-  , mFloodColor(aSource.mFloodColor)
-  , mLightingColor(aSource.mLightingColor)
-  , mStopOpacity(aSource.mStopOpacity)
-  , mFloodOpacity(aSource.mFloodOpacity)
-  , mDominantBaseline(aSource.mDominantBaseline)
-  , mVectorEffect(aSource.mVectorEffect)
-  , mMaskType(aSource.mMaskType)
-{
-=======
     : mX(aSource.mX),
       mY(aSource.mY),
       mCx(aSource.mCx),
@@ -2142,21 +1062,11 @@ nsStyleSVGReset::nsStyleSVGReset(const nsStyleSVGReset& aSource)
       mDominantBaseline(aSource.mDominantBaseline),
       mVectorEffect(aSource.mVectorEffect),
       mMaskType(aSource.mMaskType) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleSVGReset);
 }
 
-<<<<<<< HEAD
-void nsStyleSVGReset::FinishStyle(nsPresContext* aPresContext,
-                                  const nsStyleSVGReset* aOldStyle) {
-||||||| merged common ancestors
-void
-nsStyleSVGReset::FinishStyle(nsPresContext* aPresContext, const nsStyleSVGReset* aOldStyle)
-{
-=======
 void nsStyleSVGReset::TriggerImageLoads(Document& aDocument,
                                         const nsStyleSVGReset* aOldStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // NOTE(emilio): we intentionally don't call TriggerImageLoads for clip-path.
 
@@ -2242,348 +1152,9 @@ bool nsStyleSVGReset::HasMask() const {
   return false;
 }
 
-<<<<<<< HEAD
-// nsStyleSVGPaint implementation
-nsStyleSVGPaint::nsStyleSVGPaint(nsStyleSVGPaintType aType)
-    : mPaint(StyleComplexColor::Black()),
-      mType(aType),
-      mFallbackType(eStyleSVGFallbackType_NotSet),
-      mFallbackColor(StyleComplexColor::Black()) {
-  MOZ_ASSERT(aType == nsStyleSVGPaintType(0) ||
-             aType == eStyleSVGPaintType_None ||
-             aType == eStyleSVGPaintType_Color);
-}
-
-nsStyleSVGPaint::nsStyleSVGPaint(const nsStyleSVGPaint& aSource)
-    : nsStyleSVGPaint(nsStyleSVGPaintType(0)) {
-  Assign(aSource);
-}
-
-nsStyleSVGPaint::~nsStyleSVGPaint() { Reset(); }
-
-void nsStyleSVGPaint::Reset() {
-  switch (mType) {
-    case eStyleSVGPaintType_None:
-      break;
-    case eStyleSVGPaintType_Color:
-      mPaint.mColor = StyleComplexColor::Black();
-      break;
-    case eStyleSVGPaintType_Server:
-      mPaint.mPaintServer->Release();
-      mPaint.mPaintServer = nullptr;
-      MOZ_FALLTHROUGH;
-    case eStyleSVGPaintType_ContextFill:
-    case eStyleSVGPaintType_ContextStroke:
-      mFallbackType = eStyleSVGFallbackType_NotSet;
-      mFallbackColor = StyleComplexColor::Black();
-      break;
-  }
-  mType = nsStyleSVGPaintType(0);
-}
-
-nsStyleSVGPaint& nsStyleSVGPaint::operator=(const nsStyleSVGPaint& aOther) {
-  if (this != &aOther) {
-    Assign(aOther);
-  }
-  return *this;
-}
-
-void nsStyleSVGPaint::Assign(const nsStyleSVGPaint& aOther) {
-  MOZ_ASSERT(aOther.mType != nsStyleSVGPaintType(0),
-             "shouldn't copy uninitialized nsStyleSVGPaint");
-
-  switch (aOther.mType) {
-    case eStyleSVGPaintType_None:
-      SetNone();
-      break;
-    case eStyleSVGPaintType_Color:
-      SetColor(aOther.mPaint.mColor);
-      break;
-    case eStyleSVGPaintType_Server:
-      SetPaintServer(aOther.mPaint.mPaintServer, aOther.mFallbackType,
-                     aOther.mFallbackColor);
-      break;
-    case eStyleSVGPaintType_ContextFill:
-    case eStyleSVGPaintType_ContextStroke:
-      SetContextValue(aOther.mType, aOther.mFallbackType,
-                      aOther.mFallbackColor);
-      break;
-  }
-}
-
-void nsStyleSVGPaint::SetNone() {
-  Reset();
-  mType = eStyleSVGPaintType_None;
-}
-
-void nsStyleSVGPaint::SetContextValue(nsStyleSVGPaintType aType,
-                                      nsStyleSVGFallbackType aFallbackType,
-                                      StyleComplexColor aFallbackColor) {
-  MOZ_ASSERT(aType == eStyleSVGPaintType_ContextFill ||
-             aType == eStyleSVGPaintType_ContextStroke);
-  Reset();
-  mType = aType;
-  mFallbackType = aFallbackType;
-  mFallbackColor = aFallbackColor;
-}
-
-void nsStyleSVGPaint::SetColor(StyleComplexColor aColor) {
-  Reset();
-  mType = eStyleSVGPaintType_Color;
-  mPaint.mColor = aColor;
-}
-
-void nsStyleSVGPaint::SetPaintServer(css::URLValue* aPaintServer,
-                                     nsStyleSVGFallbackType aFallbackType,
-                                     StyleComplexColor aFallbackColor) {
-  MOZ_ASSERT(aPaintServer);
-  Reset();
-  mType = eStyleSVGPaintType_Server;
-  mPaint.mPaintServer = aPaintServer;
-  mPaint.mPaintServer->AddRef();
-  mFallbackType = aFallbackType;
-  mFallbackColor = aFallbackColor;
-}
-
-bool nsStyleSVGPaint::operator==(const nsStyleSVGPaint& aOther) const {
-  if (mType != aOther.mType) {
-    return false;
-  }
-  switch (mType) {
-    case eStyleSVGPaintType_Color:
-      return mPaint.mColor == aOther.mPaint.mColor;
-    case eStyleSVGPaintType_Server:
-      return DefinitelyEqualURIs(mPaint.mPaintServer,
-                                 aOther.mPaint.mPaintServer) &&
-             mFallbackType == aOther.mFallbackType &&
-             mFallbackColor == aOther.mFallbackColor;
-    case eStyleSVGPaintType_ContextFill:
-    case eStyleSVGPaintType_ContextStroke:
-      return mFallbackType == aOther.mFallbackType &&
-             mFallbackColor == aOther.mFallbackColor;
-    default:
-      MOZ_ASSERT(mType == eStyleSVGPaintType_None, "Unexpected SVG paint type");
-      return true;
-  }
-}
-
-||||||| merged common ancestors
-// nsStyleSVGPaint implementation
-nsStyleSVGPaint::nsStyleSVGPaint(nsStyleSVGPaintType aType)
-  : mPaint(StyleComplexColor::Black())
-  , mType(aType)
-  , mFallbackType(eStyleSVGFallbackType_NotSet)
-  , mFallbackColor(StyleComplexColor::Black())
-{
-  MOZ_ASSERT(aType == nsStyleSVGPaintType(0) ||
-             aType == eStyleSVGPaintType_None ||
-             aType == eStyleSVGPaintType_Color);
-}
-
-nsStyleSVGPaint::nsStyleSVGPaint(const nsStyleSVGPaint& aSource)
-  : nsStyleSVGPaint(nsStyleSVGPaintType(0))
-{
-  Assign(aSource);
-}
-
-nsStyleSVGPaint::~nsStyleSVGPaint()
-{
-  Reset();
-}
-
-void
-nsStyleSVGPaint::Reset()
-{
-  switch (mType) {
-    case eStyleSVGPaintType_None:
-      break;
-    case eStyleSVGPaintType_Color:
-      mPaint.mColor = StyleComplexColor::Black();
-      break;
-    case eStyleSVGPaintType_Server:
-      mPaint.mPaintServer->Release();
-      mPaint.mPaintServer = nullptr;
-      MOZ_FALLTHROUGH;
-    case eStyleSVGPaintType_ContextFill:
-    case eStyleSVGPaintType_ContextStroke:
-      mFallbackType = eStyleSVGFallbackType_NotSet;
-      mFallbackColor = StyleComplexColor::Black();
-      break;
-  }
-  mType = nsStyleSVGPaintType(0);
-}
-
-nsStyleSVGPaint&
-nsStyleSVGPaint::operator=(const nsStyleSVGPaint& aOther)
-{
-  if (this != &aOther) {
-    Assign(aOther);
-  }
-  return *this;
-}
-
-void
-nsStyleSVGPaint::Assign(const nsStyleSVGPaint& aOther)
-{
-  MOZ_ASSERT(aOther.mType != nsStyleSVGPaintType(0),
-             "shouldn't copy uninitialized nsStyleSVGPaint");
-
-  switch (aOther.mType) {
-    case eStyleSVGPaintType_None:
-      SetNone();
-      break;
-    case eStyleSVGPaintType_Color:
-      SetColor(aOther.mPaint.mColor);
-      break;
-    case eStyleSVGPaintType_Server:
-      SetPaintServer(aOther.mPaint.mPaintServer,
-                     aOther.mFallbackType,
-                     aOther.mFallbackColor);
-      break;
-    case eStyleSVGPaintType_ContextFill:
-    case eStyleSVGPaintType_ContextStroke:
-      SetContextValue(aOther.mType,
-                      aOther.mFallbackType,
-                      aOther.mFallbackColor);
-      break;
-  }
-}
-
-void
-nsStyleSVGPaint::SetNone()
-{
-  Reset();
-  mType = eStyleSVGPaintType_None;
-}
-
-void
-nsStyleSVGPaint::SetContextValue(nsStyleSVGPaintType aType,
-                                 nsStyleSVGFallbackType aFallbackType,
-                                 StyleComplexColor aFallbackColor)
-{
-  MOZ_ASSERT(aType == eStyleSVGPaintType_ContextFill ||
-             aType == eStyleSVGPaintType_ContextStroke);
-  Reset();
-  mType = aType;
-  mFallbackType = aFallbackType;
-  mFallbackColor = aFallbackColor;
-}
-
-void
-nsStyleSVGPaint::SetColor(StyleComplexColor aColor)
-{
-  Reset();
-  mType = eStyleSVGPaintType_Color;
-  mPaint.mColor = aColor;
-}
-
-void
-nsStyleSVGPaint::SetPaintServer(css::URLValue* aPaintServer,
-                                nsStyleSVGFallbackType aFallbackType,
-                                StyleComplexColor aFallbackColor)
-{
-  MOZ_ASSERT(aPaintServer);
-  Reset();
-  mType = eStyleSVGPaintType_Server;
-  mPaint.mPaintServer = aPaintServer;
-  mPaint.mPaintServer->AddRef();
-  mFallbackType = aFallbackType;
-  mFallbackColor = aFallbackColor;
-}
-
-bool nsStyleSVGPaint::operator==(const nsStyleSVGPaint& aOther) const
-{
-  if (mType != aOther.mType) {
-    return false;
-  }
-  switch (mType) {
-    case eStyleSVGPaintType_Color:
-      return mPaint.mColor == aOther.mPaint.mColor;
-    case eStyleSVGPaintType_Server:
-      return DefinitelyEqualURIs(mPaint.mPaintServer,
-                                 aOther.mPaint.mPaintServer) &&
-             mFallbackType == aOther.mFallbackType &&
-             mFallbackColor == aOther.mFallbackColor;
-    case eStyleSVGPaintType_ContextFill:
-    case eStyleSVGPaintType_ContextStroke:
-      return mFallbackType == aOther.mFallbackType &&
-             mFallbackColor == aOther.mFallbackColor;
-    default:
-      MOZ_ASSERT(mType == eStyleSVGPaintType_None,
-                 "Unexpected SVG paint type");
-      return true;
-  }
-}
-
-=======
->>>>>>> upstream-releases
 // --------------------
 // nsStylePosition
 //
-<<<<<<< HEAD
-nsStylePosition::nsStylePosition(const nsPresContext* aContext)
-    : mWidth(eStyleUnit_Auto),
-      mMinWidth(eStyleUnit_Auto),
-      mMaxWidth(eStyleUnit_None),
-      mHeight(eStyleUnit_Auto),
-      mMinHeight(eStyleUnit_Auto),
-      mMaxHeight(eStyleUnit_None),
-      mFlexBasis(eStyleUnit_Auto),
-      mGridAutoColumnsMin(eStyleUnit_Auto),
-      mGridAutoColumnsMax(eStyleUnit_Auto),
-      mGridAutoRowsMin(eStyleUnit_Auto),
-      mGridAutoRowsMax(eStyleUnit_Auto),
-      mGridAutoFlow(NS_STYLE_GRID_AUTO_FLOW_ROW),
-      mBoxSizing(StyleBoxSizing::Content),
-      mAlignContent(NS_STYLE_ALIGN_NORMAL),
-      mAlignItems(NS_STYLE_ALIGN_NORMAL),
-      mAlignSelf(NS_STYLE_ALIGN_AUTO),
-      mJustifyContent(NS_STYLE_JUSTIFY_NORMAL),
-      mSpecifiedJustifyItems(NS_STYLE_JUSTIFY_LEGACY),
-      mJustifyItems(NS_STYLE_JUSTIFY_NORMAL),
-      mJustifySelf(NS_STYLE_JUSTIFY_AUTO),
-      mFlexDirection(NS_STYLE_FLEX_DIRECTION_ROW),
-      mFlexWrap(NS_STYLE_FLEX_WRAP_NOWRAP),
-      mObjectFit(NS_STYLE_OBJECT_FIT_FILL),
-      mOrder(NS_STYLE_ORDER_INITIAL),
-      mFlexGrow(0.0f),
-      mFlexShrink(1.0f),
-      mZIndex(eStyleUnit_Auto),
-      mColumnGap(eStyleUnit_Normal),
-      mRowGap(eStyleUnit_Normal) {
-||||||| merged common ancestors
-nsStylePosition::nsStylePosition(const nsPresContext* aContext)
-  : mWidth(eStyleUnit_Auto)
-  , mMinWidth(eStyleUnit_Auto)
-  , mMaxWidth(eStyleUnit_None)
-  , mHeight(eStyleUnit_Auto)
-  , mMinHeight(eStyleUnit_Auto)
-  , mMaxHeight(eStyleUnit_None)
-  , mFlexBasis(eStyleUnit_Auto)
-  , mGridAutoColumnsMin(eStyleUnit_Auto)
-  , mGridAutoColumnsMax(eStyleUnit_Auto)
-  , mGridAutoRowsMin(eStyleUnit_Auto)
-  , mGridAutoRowsMax(eStyleUnit_Auto)
-  , mGridAutoFlow(NS_STYLE_GRID_AUTO_FLOW_ROW)
-  , mBoxSizing(StyleBoxSizing::Content)
-  , mAlignContent(NS_STYLE_ALIGN_NORMAL)
-  , mAlignItems(NS_STYLE_ALIGN_NORMAL)
-  , mAlignSelf(NS_STYLE_ALIGN_AUTO)
-  , mJustifyContent(NS_STYLE_JUSTIFY_NORMAL)
-  , mSpecifiedJustifyItems(NS_STYLE_JUSTIFY_LEGACY)
-  , mJustifyItems(NS_STYLE_JUSTIFY_NORMAL)
-  , mJustifySelf(NS_STYLE_JUSTIFY_AUTO)
-  , mFlexDirection(NS_STYLE_FLEX_DIRECTION_ROW)
-  , mFlexWrap(NS_STYLE_FLEX_WRAP_NOWRAP)
-  , mObjectFit(NS_STYLE_OBJECT_FIT_FILL)
-  , mOrder(NS_STYLE_ORDER_INITIAL)
-  , mFlexGrow(0.0f)
-  , mFlexShrink(1.0f)
-  , mZIndex(eStyleUnit_Auto)
-  , mColumnGap(eStyleUnit_Normal)
-  , mRowGap(eStyleUnit_Normal)
-{
-=======
 nsStylePosition::nsStylePosition(const Document& aDocument)
     : mObjectPosition(Position::FromPercentage(0.5f)),
       mOffset(StyleRectWithAllSides(LengthPercentageOrAuto::Auto())),
@@ -2616,29 +1187,8 @@ nsStylePosition::nsStylePosition(const Document& aDocument)
       mGridTemplateAreas(StyleGridTemplateAreas::None()),
       mColumnGap(NonNegativeLengthPercentageOrNormal::Normal()),
       mRowGap(NonNegativeLengthPercentageOrNormal::Normal()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStylePosition);
 
-<<<<<<< HEAD
-  // positioning values not inherited
-
-  mObjectPosition.SetInitialPercentValues(0.5f);
-
-  nsStyleCoord autoCoord(eStyleUnit_Auto);
-  NS_FOR_CSS_SIDES(side) { mOffset.Set(side, autoCoord); }
-
-||||||| merged common ancestors
-  // positioning values not inherited
-
-  mObjectPosition.SetInitialPercentValues(0.5f);
-
-  nsStyleCoord  autoCoord(eStyleUnit_Auto);
-  NS_FOR_CSS_SIDES(side) {
-    mOffset.Set(side, autoCoord);
-  }
-
-=======
->>>>>>> upstream-releases
   // The initial value of grid-auto-columns and grid-auto-rows is 'auto',
   // which computes to 'minmax(auto, auto)'.
 
@@ -2651,82 +1201,6 @@ nsStylePosition::nsStylePosition(const Document& aDocument)
 nsStylePosition::~nsStylePosition() { MOZ_COUNT_DTOR(nsStylePosition); }
 
 nsStylePosition::nsStylePosition(const nsStylePosition& aSource)
-<<<<<<< HEAD
-    : mObjectPosition(aSource.mObjectPosition),
-      mOffset(aSource.mOffset),
-      mWidth(aSource.mWidth),
-      mMinWidth(aSource.mMinWidth),
-      mMaxWidth(aSource.mMaxWidth),
-      mHeight(aSource.mHeight),
-      mMinHeight(aSource.mMinHeight),
-      mMaxHeight(aSource.mMaxHeight),
-      mFlexBasis(aSource.mFlexBasis),
-      mGridAutoColumnsMin(aSource.mGridAutoColumnsMin),
-      mGridAutoColumnsMax(aSource.mGridAutoColumnsMax),
-      mGridAutoRowsMin(aSource.mGridAutoRowsMin),
-      mGridAutoRowsMax(aSource.mGridAutoRowsMax),
-      mGridAutoFlow(aSource.mGridAutoFlow),
-      mBoxSizing(aSource.mBoxSizing),
-      mAlignContent(aSource.mAlignContent),
-      mAlignItems(aSource.mAlignItems),
-      mAlignSelf(aSource.mAlignSelf),
-      mJustifyContent(aSource.mJustifyContent),
-      mSpecifiedJustifyItems(aSource.mSpecifiedJustifyItems),
-      mJustifyItems(aSource.mJustifyItems),
-      mJustifySelf(aSource.mJustifySelf),
-      mFlexDirection(aSource.mFlexDirection),
-      mFlexWrap(aSource.mFlexWrap),
-      mObjectFit(aSource.mObjectFit),
-      mOrder(aSource.mOrder),
-      mFlexGrow(aSource.mFlexGrow),
-      mFlexShrink(aSource.mFlexShrink),
-      mZIndex(aSource.mZIndex),
-      mGridTemplateAreas(aSource.mGridTemplateAreas),
-      mGridColumnStart(aSource.mGridColumnStart),
-      mGridColumnEnd(aSource.mGridColumnEnd),
-      mGridRowStart(aSource.mGridRowStart),
-      mGridRowEnd(aSource.mGridRowEnd),
-      mColumnGap(aSource.mColumnGap),
-      mRowGap(aSource.mRowGap) {
-||||||| merged common ancestors
-  : mObjectPosition(aSource.mObjectPosition)
-  , mOffset(aSource.mOffset)
-  , mWidth(aSource.mWidth)
-  , mMinWidth(aSource.mMinWidth)
-  , mMaxWidth(aSource.mMaxWidth)
-  , mHeight(aSource.mHeight)
-  , mMinHeight(aSource.mMinHeight)
-  , mMaxHeight(aSource.mMaxHeight)
-  , mFlexBasis(aSource.mFlexBasis)
-  , mGridAutoColumnsMin(aSource.mGridAutoColumnsMin)
-  , mGridAutoColumnsMax(aSource.mGridAutoColumnsMax)
-  , mGridAutoRowsMin(aSource.mGridAutoRowsMin)
-  , mGridAutoRowsMax(aSource.mGridAutoRowsMax)
-  , mGridAutoFlow(aSource.mGridAutoFlow)
-  , mBoxSizing(aSource.mBoxSizing)
-  , mAlignContent(aSource.mAlignContent)
-  , mAlignItems(aSource.mAlignItems)
-  , mAlignSelf(aSource.mAlignSelf)
-  , mJustifyContent(aSource.mJustifyContent)
-  , mSpecifiedJustifyItems(aSource.mSpecifiedJustifyItems)
-  , mJustifyItems(aSource.mJustifyItems)
-  , mJustifySelf(aSource.mJustifySelf)
-  , mFlexDirection(aSource.mFlexDirection)
-  , mFlexWrap(aSource.mFlexWrap)
-  , mObjectFit(aSource.mObjectFit)
-  , mOrder(aSource.mOrder)
-  , mFlexGrow(aSource.mFlexGrow)
-  , mFlexShrink(aSource.mFlexShrink)
-  , mZIndex(aSource.mZIndex)
-  , mGridTemplateAreas(aSource.mGridTemplateAreas)
-  , mGridColumnStart(aSource.mGridColumnStart)
-  , mGridColumnEnd(aSource.mGridColumnEnd)
-  , mGridRowStart(aSource.mGridRowStart)
-  , mGridRowEnd(aSource.mGridRowEnd)
-  , mColumnGap(aSource.mColumnGap)
-  , mRowGap(aSource.mRowGap)
-{
-=======
     : mObjectPosition(aSource.mObjectPosition),
       mOffset(aSource.mOffset),
       mWidth(aSource.mWidth),
@@ -2762,7 +1236,6 @@ nsStylePosition::nsStylePosition(const nsStylePosition& aSource)
       mGridRowEnd(aSource.mGridRowEnd),
       mColumnGap(aSource.mColumnGap),
       mRowGap(aSource.mRowGap) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStylePosition);
 
   if (aSource.mGridTemplateColumns) {
@@ -2775,17 +1248,8 @@ nsStylePosition::nsStylePosition(const nsStylePosition& aSource)
   }
 }
 
-<<<<<<< HEAD
-static bool IsAutonessEqual(const nsStyleSides& aSides1,
-                            const nsStyleSides& aSides2) {
-||||||| merged common ancestors
-static bool
-IsAutonessEqual(const nsStyleSides& aSides1, const nsStyleSides& aSides2)
-{
-=======
 static bool IsAutonessEqual(const StyleRect<LengthPercentageOrAuto>& aSides1,
                             const StyleRect<LengthPercentageOrAuto>& aSides2) {
->>>>>>> upstream-releases
   NS_FOR_CSS_SIDES(side) {
     if (aSides1.Get(side).IsAuto() != aSides2.Get(side).IsAuto()) {
       return false;
@@ -2806,20 +1270,9 @@ static bool IsGridTemplateEqual(
   return *aOldData == *aNewData;
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStylePosition::CalcDifference(
-    const nsStylePosition& aNewData,
-    const nsStyleVisibility* aOldStyleVisibility) const {
-||||||| merged common ancestors
-nsChangeHint
-nsStylePosition::CalcDifference(const nsStylePosition& aNewData,
-                                const nsStyleVisibility* aOldStyleVisibility) const
-{
-=======
 nsChangeHint nsStylePosition::CalcDifference(
     const nsStylePosition& aNewData,
     const nsStyleVisibility& aOldStyleVisibility) const {
->>>>>>> upstream-releases
   nsChangeHint hint = nsChangeHint(0);
 
   // Changes to "z-index" require a repaint.
@@ -3002,18 +1455,8 @@ const nsStyleGridTemplate& nsStylePosition::GridTemplateRows() const {
 // nsStyleTable
 //
 
-<<<<<<< HEAD
-nsStyleTable::nsStyleTable(const nsPresContext* aContext)
-    : mLayoutStrategy(NS_STYLE_TABLE_LAYOUT_AUTO), mSpan(1) {
-||||||| merged common ancestors
-nsStyleTable::nsStyleTable(const nsPresContext* aContext)
-  : mLayoutStrategy(NS_STYLE_TABLE_LAYOUT_AUTO)
-  , mSpan(1)
-{
-=======
 nsStyleTable::nsStyleTable(const Document& aDocument)
     : mLayoutStrategy(NS_STYLE_TABLE_LAYOUT_AUTO), mSpan(1) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleTable);
 }
 
@@ -3034,29 +1477,12 @@ nsChangeHint nsStyleTable::CalcDifference(const nsStyleTable& aNewData) const {
 // -----------------------
 // nsStyleTableBorder
 
-<<<<<<< HEAD
-nsStyleTableBorder::nsStyleTableBorder(const nsPresContext* aContext)
-    : mBorderSpacingCol(0),
-      mBorderSpacingRow(0),
-      mBorderCollapse(NS_STYLE_BORDER_SEPARATE),
-      mCaptionSide(NS_STYLE_CAPTION_SIDE_TOP),
-      mEmptyCells(NS_STYLE_TABLE_EMPTY_CELLS_SHOW) {
-||||||| merged common ancestors
-nsStyleTableBorder::nsStyleTableBorder(const nsPresContext* aContext)
-  : mBorderSpacingCol(0)
-  , mBorderSpacingRow(0)
-  , mBorderCollapse(NS_STYLE_BORDER_SEPARATE)
-  , mCaptionSide(NS_STYLE_CAPTION_SIDE_TOP)
-  , mEmptyCells(NS_STYLE_TABLE_EMPTY_CELLS_SHOW)
-{
-=======
 nsStyleTableBorder::nsStyleTableBorder(const Document& aDocument)
     : mBorderSpacingCol(0),
       mBorderSpacingRow(0),
       mBorderCollapse(StyleBorderCollapse::Separate),
       mCaptionSide(NS_STYLE_CAPTION_SIDE_TOP),
       mEmptyCells(NS_STYLE_TABLE_EMPTY_CELLS_SHOW) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleTableBorder);
 }
 
@@ -3095,204 +1521,23 @@ nsChangeHint nsStyleTableBorder::CalcDifference(
   }
 }
 
-<<<<<<< HEAD
-// --------------------
-// nsStyleColor
-//
-
-nsStyleColor::nsStyleColor(const nsPresContext* aContext)
-    : mColor(aContext->DefaultColor()) {
-  MOZ_COUNT_CTOR(nsStyleColor);
-}
-
-nsStyleColor::nsStyleColor(const nsStyleColor& aSource)
-    : mColor(aSource.mColor) {
-  MOZ_COUNT_CTOR(nsStyleColor);
-}
-
-nsChangeHint nsStyleColor::CalcDifference(const nsStyleColor& aNewData) const {
-  if (mColor == aNewData.mColor) {
-    return nsChangeHint(0);
-  }
-  return nsChangeHint_RepaintFrame;
-}
-
-// --------------------
-// nsStyleGradient
-//
-bool nsStyleGradient::operator==(const nsStyleGradient& aOther) const {
-  MOZ_ASSERT(mSize == NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER ||
-                 mShape != NS_STYLE_GRADIENT_SHAPE_LINEAR,
-             "incorrect combination of shape and size");
-  MOZ_ASSERT(aOther.mSize == NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER ||
-                 aOther.mShape != NS_STYLE_GRADIENT_SHAPE_LINEAR,
-             "incorrect combination of shape and size");
-
-  if (mShape != aOther.mShape || mSize != aOther.mSize ||
-      mRepeating != aOther.mRepeating ||
-      mLegacySyntax != aOther.mLegacySyntax ||
-      mMozLegacySyntax != aOther.mMozLegacySyntax ||
-      mBgPosX != aOther.mBgPosX || mBgPosY != aOther.mBgPosY ||
-      mAngle != aOther.mAngle || mRadiusX != aOther.mRadiusX ||
-      mRadiusY != aOther.mRadiusY) {
-    return false;
-  }
-
-  if (mStops.Length() != aOther.mStops.Length()) {
-    return false;
-  }
-
-  for (uint32_t i = 0; i < mStops.Length(); i++) {
-    const auto& stop1 = mStops[i];
-    const auto& stop2 = aOther.mStops[i];
-    if (stop1.mLocation != stop2.mLocation ||
-        stop1.mIsInterpolationHint != stop2.mIsInterpolationHint ||
-        (!stop1.mIsInterpolationHint && stop1.mColor != stop2.mColor)) {
-      return false;
-||||||| merged common ancestors
-// --------------------
-// nsStyleColor
-//
-
-nsStyleColor::nsStyleColor(const nsPresContext* aContext)
-  : mColor(aContext->DefaultColor())
-{
-  MOZ_COUNT_CTOR(nsStyleColor);
-}
-
-nsStyleColor::nsStyleColor(const nsStyleColor& aSource)
-  : mColor(aSource.mColor)
-{
-  MOZ_COUNT_CTOR(nsStyleColor);
-}
-
-nsChangeHint
-nsStyleColor::CalcDifference(const nsStyleColor& aNewData) const
-{
-  if (mColor == aNewData.mColor) {
-    return nsChangeHint(0);
-  }
-  return nsChangeHint_RepaintFrame;
-}
-
-// --------------------
-// nsStyleGradient
-//
-bool
-nsStyleGradient::operator==(const nsStyleGradient& aOther) const
-{
-  MOZ_ASSERT(mSize == NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER ||
-             mShape != NS_STYLE_GRADIENT_SHAPE_LINEAR,
-             "incorrect combination of shape and size");
-  MOZ_ASSERT(aOther.mSize == NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER ||
-             aOther.mShape != NS_STYLE_GRADIENT_SHAPE_LINEAR,
-             "incorrect combination of shape and size");
-
-  if (mShape != aOther.mShape ||
-      mSize != aOther.mSize ||
-      mRepeating != aOther.mRepeating ||
-      mLegacySyntax != aOther.mLegacySyntax ||
-      mMozLegacySyntax != aOther.mMozLegacySyntax ||
-      mBgPosX != aOther.mBgPosX ||
-      mBgPosY != aOther.mBgPosY ||
-      mAngle != aOther.mAngle ||
-      mRadiusX != aOther.mRadiusX ||
-      mRadiusY != aOther.mRadiusY) {
-    return false;
-  }
-
-  if (mStops.Length() != aOther.mStops.Length()) {
-    return false;
-  }
-
-  for (uint32_t i = 0; i < mStops.Length(); i++) {
-    const auto& stop1 = mStops[i];
-    const auto& stop2 = aOther.mStops[i];
-    if (stop1.mLocation != stop2.mLocation ||
-        stop1.mIsInterpolationHint != stop2.mIsInterpolationHint ||
-        (!stop1.mIsInterpolationHint && stop1.mColor != stop2.mColor)) {
-      return false;
-=======
 template <>
 bool StyleGradient::IsOpaque() const {
   for (auto& stop : items.AsSpan()) {
     if (stop.IsInterpolationHint()) {
       continue;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
 
-  return true;
-}
-
-nsStyleGradient::nsStyleGradient()
-    : mShape(NS_STYLE_GRADIENT_SHAPE_LINEAR),
-      mSize(NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER),
-      mRepeating(false),
-      mLegacySyntax(false),
-      mMozLegacySyntax(false) {}
-||||||| merged common ancestors
-  }
-
-  return true;
-}
-
-nsStyleGradient::nsStyleGradient()
-  : mShape(NS_STYLE_GRADIENT_SHAPE_LINEAR)
-  , mSize(NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER)
-  , mRepeating(false)
-  , mLegacySyntax(false)
-  , mMozLegacySyntax(false)
-{
-}
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool nsStyleGradient::IsOpaque() {
-  for (uint32_t i = 0; i < mStops.Length(); i++) {
-    if (mStops[i].mColor.MaybeTransparent()) {
-||||||| merged common ancestors
-bool
-nsStyleGradient::IsOpaque()
-{
-  for (uint32_t i = 0; i < mStops.Length(); i++) {
-    if (mStops[i].mColor.MaybeTransparent()) {
-=======
     auto& color = stop.IsSimpleColorStop() ? stop.AsSimpleColorStop()
                                            : stop.AsComplexColorStop().color;
     if (color.MaybeTransparent()) {
->>>>>>> upstream-releases
       // We don't know the foreground color here, so if it's being used
       // we must assume it might be transparent.
       return false;
     }
   }
 
-<<<<<<< HEAD
-bool nsStyleGradient::HasCalc() {
-  for (uint32_t i = 0; i < mStops.Length(); i++) {
-    if (mStops[i].mLocation.IsCalcUnit()) {
-      return true;
-    }
-  }
-  return mBgPosX.IsCalcUnit() || mBgPosY.IsCalcUnit() || mAngle.IsCalcUnit() ||
-         mRadiusX.IsCalcUnit() || mRadiusY.IsCalcUnit();
-||||||| merged common ancestors
-bool
-nsStyleGradient::HasCalc()
-{
-  for (uint32_t i = 0; i < mStops.Length(); i++) {
-    if (mStops[i].mLocation.IsCalcUnit()) {
-      return true;
-    }
-  }
-  return mBgPosX.IsCalcUnit() || mBgPosY.IsCalcUnit() || mAngle.IsCalcUnit() ||
-         mRadiusX.IsCalcUnit() || mRadiusY.IsCalcUnit();
-=======
   return true;
->>>>>>> upstream-releases
 }
 
 // --------------------
@@ -3353,20 +1598,8 @@ class StyleImageRequestCleanupTask : public mozilla::Runnable {
 };
 
 nsStyleImageRequest::nsStyleImageRequest(Mode aModeFlags,
-<<<<<<< HEAD
-                                         css::URLValue* aImageValue)
-    : mImageValue(aImageValue), mModeFlags(aModeFlags), mResolved(false) {}
-||||||| merged common ancestors
-                                         css::URLValue* aImageValue)
-  : mImageValue(aImageValue)
-  , mModeFlags(aModeFlags)
-  , mResolved(false)
-{
-}
-=======
                                          const StyleComputedImageUrl& aImageURL)
     : mImageURL(aImageURL), mModeFlags(aModeFlags), mResolved(false) {}
->>>>>>> upstream-releases
 
 nsStyleImageRequest::~nsStyleImageRequest() {
   // We may or may not be being destroyed on the main thread.  To clean
@@ -3392,19 +1625,8 @@ nsStyleImageRequest::~nsStyleImageRequest() {
   MOZ_ASSERT(!mImageTracker);
 }
 
-<<<<<<< HEAD
-bool nsStyleImageRequest::Resolve(nsPresContext* aPresContext,
-                                  const nsStyleImageRequest* aOldImageRequest) {
-||||||| merged common ancestors
-bool
-nsStyleImageRequest::Resolve(
-  nsPresContext* aPresContext,
-  const nsStyleImageRequest* aOldImageRequest)
-{
-=======
 bool nsStyleImageRequest::Resolve(Document& aDocument,
                                   const nsStyleImageRequest* aOldImageRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!IsResolved(), "already resolved");
 
@@ -3483,20 +1705,9 @@ void nsStyleImageRequest::MaybeTrackAndLock() {
   }
 }
 
-<<<<<<< HEAD
-bool nsStyleImageRequest::DefinitelyEquals(
-    const nsStyleImageRequest& aOther) const {
-  return DefinitelyEqualURIs(mImageValue, aOther.mImageValue);
-||||||| merged common ancestors
-bool
-nsStyleImageRequest::DefinitelyEquals(const nsStyleImageRequest& aOther) const
-{
-  return DefinitelyEqualURIs(mImageValue, aOther.mImageValue);
-=======
 bool nsStyleImageRequest::DefinitelyEquals(
     const nsStyleImageRequest& aOther) const {
   return mImageURL == aOther.mImageURL;
->>>>>>> upstream-releases
 }
 
 // --------------------
@@ -3603,16 +1814,6 @@ void nsStyleImage::SetNull() {
     NS_RELEASE(mImage);
   } else if (mType == eStyleImageType_Element) {
     NS_RELEASE(mElementId);
-<<<<<<< HEAD
-  } else if (mType == eStyleImageType_URL) {
-    // FIXME: NS_RELEASE doesn't handle const gracefully (unlike RefPtr).
-    const_cast<css::URLValue*>(mURLValue)->Release();
-    mURLValue = nullptr;
-||||||| merged common ancestors
-  } else if (mType == eStyleImageType_URL) {
-    NS_RELEASE(mURLValue);
-=======
->>>>>>> upstream-releases
   }
 
   mType = eStyleImageType_Null;
@@ -3636,22 +1837,8 @@ void nsStyleImage::SetImageRequest(
   }
 }
 
-<<<<<<< HEAD
-void nsStyleImage::SetGradientData(nsStyleGradient* aGradient) {
-  if (aGradient) {
-    aGradient->AddRef();
-  }
-||||||| merged common ancestors
-void
-nsStyleImage::SetGradientData(nsStyleGradient* aGradient)
-{
-  if (aGradient) {
-    aGradient->AddRef();
-  }
-=======
 void nsStyleImage::SetGradientData(UniquePtr<StyleGradient> aGradient) {
   MOZ_ASSERT(aGradient);
->>>>>>> upstream-releases
 
   if (mType != eStyleImageType_Null) {
     SetNull();
@@ -3672,59 +1859,12 @@ void nsStyleImage::SetElementId(already_AddRefed<nsAtom> aElementId) {
   }
 }
 
-<<<<<<< HEAD
-void nsStyleImage::SetCropRect(UniquePtr<nsStyleSides> aCropRect) {
-  mCropRect = std::move(aCropRect);
-||||||| merged common ancestors
-void
-nsStyleImage::SetCropRect(UniquePtr<nsStyleSides> aCropRect)
-{
-    mCropRect = std::move(aCropRect);
-=======
 void nsStyleImage::SetCropRect(UniquePtr<CropRect> aCropRect) {
   mCropRect = std::move(aCropRect);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsStyleImage::SetURLValue(already_AddRefed<const URLValue> aValue) {
-  RefPtr<const URLValue> value = aValue;
-
-  if (mType != eStyleImageType_Null) {
-    SetNull();
-  }
-
-  if (value) {
-    mURLValue = value.forget().take();
-    mType = eStyleImageType_URL;
-  }
-}
-
-static int32_t ConvertToPixelCoord(const nsStyleCoord& aCoord,
-                                   int32_t aPercentScale) {
-||||||| merged common ancestors
-void
-nsStyleImage::SetURLValue(already_AddRefed<URLValue> aValue)
-{
-  RefPtr<URLValue> value = aValue;
-
-  if (mType != eStyleImageType_Null) {
-    SetNull();
-  }
-
-  if (value) {
-    mURLValue = value.forget().take();
-    mType = eStyleImageType_URL;
-  }
-}
-
-static int32_t
-ConvertToPixelCoord(const nsStyleCoord& aCoord, int32_t aPercentScale)
-{
-=======
 static int32_t ConvertToPixelCoord(const StyleNumberOrPercentage& aCoord,
                                    int32_t aPercentScale) {
->>>>>>> upstream-releases
   double pixelValue;
   if (aCoord.IsNumber()) {
     pixelValue = aCoord.AsNumber();
@@ -3777,18 +1917,6 @@ bool nsStyleImage::ComputeActualCropRect(nsIntRect& aActualCropRect,
     return false;
   }
 
-<<<<<<< HEAD
-  int32_t left = ConvertToPixelCoord(mCropRect->GetLeft(), imageSize.width);
-  int32_t top = ConvertToPixelCoord(mCropRect->GetTop(), imageSize.height);
-  int32_t right = ConvertToPixelCoord(mCropRect->GetRight(), imageSize.width);
-  int32_t bottom =
-      ConvertToPixelCoord(mCropRect->GetBottom(), imageSize.height);
-||||||| merged common ancestors
-  int32_t left   = ConvertToPixelCoord(mCropRect->GetLeft(),   imageSize.width);
-  int32_t top    = ConvertToPixelCoord(mCropRect->GetTop(),    imageSize.height);
-  int32_t right  = ConvertToPixelCoord(mCropRect->GetRight(),  imageSize.width);
-  int32_t bottom = ConvertToPixelCoord(mCropRect->GetBottom(), imageSize.height);
-=======
   int32_t left =
       ConvertToPixelCoord(mCropRect->Get(eSideLeft), imageSize.width);
   int32_t top = ConvertToPixelCoord(mCropRect->Get(eSideTop), imageSize.height);
@@ -3796,7 +1924,6 @@ bool nsStyleImage::ComputeActualCropRect(nsIntRect& aActualCropRect,
       ConvertToPixelCoord(mCropRect->Get(eSideRight), imageSize.width);
   int32_t bottom =
       ConvertToPixelCoord(mCropRect->Get(eSideBottom), imageSize.height);
->>>>>>> upstream-releases
 
   // IntersectRect() returns an empty rect if we get negative width or height
   nsIntRect cropRect(left, top, right - left, bottom - top);
@@ -3906,17 +2033,8 @@ bool nsStyleImage::IsLoaded() const {
   }
 }
 
-<<<<<<< HEAD
-static inline bool EqualRects(const UniquePtr<nsStyleSides>& aRect1,
-                              const UniquePtr<nsStyleSides>& aRect2) {
-||||||| merged common ancestors
-static inline bool
-EqualRects(const UniquePtr<nsStyleSides>& aRect1, const UniquePtr<nsStyleSides>& aRect2)
-{
-=======
 static inline bool EqualRects(const nsStyleImage::CropRect* aRect1,
                               const nsStyleImage::CropRect* aRect2) {
->>>>>>> upstream-releases
   return aRect1 == aRect2 || /* handles null== null, and optimize */
          (aRect1 && aRect2 && *aRect1 == *aRect2);
 }
@@ -3969,33 +2087,8 @@ already_AddRefed<nsIURI> nsStyleImage::GetImageURI() const {
   }
 
   nsCOMPtr<nsIURI> uri = mImage->GetImageURI();
-<<<<<<< HEAD
   return uri.forget();
 }
-
-const css::URLValue* nsStyleImage::GetURLValue() const {
-  if (mType == eStyleImageType_Image) {
-    return mImage->GetImageValue();
-  }
-  if (mType == eStyleImageType_URL) {
-    return mURLValue;
-  }
-||||||| merged common ancestors
-  return uri.forget();
-}
-
-css::URLValue*
-nsStyleImage::GetURLValue() const
-{
-  if (mType == eStyleImageType_Image) {
-    return mImage->GetImageValue();
-  } else if (mType == eStyleImageType_URL) {
-    return mURLValue;
-  }
-=======
-  return uri.forget();
-}
->>>>>>> upstream-releases
 
 const StyleComputedImageUrl* nsStyleImage::GetURLValue() const {
   return mType == eStyleImageType_Image ? &mImage->GetImageValue() : nullptr;
@@ -4087,16 +2180,6 @@ nsStyleImageLayers::nsStyleImageLayers(const nsStyleImageLayers& aSource)
   }
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStyleImageLayers::CalcDifference(
-    const nsStyleImageLayers& aNewLayers,
-    nsStyleImageLayers::LayerType aType) const {
-||||||| merged common ancestors
-nsChangeHint
-nsStyleImageLayers::CalcDifference(const nsStyleImageLayers& aNewLayers,
-                                   nsStyleImageLayers::LayerType aType) const
-{
-=======
 static bool IsElementImage(const nsStyleImageLayers::Layer& aLayer) {
   return aLayer.mImage.GetType() == eStyleImageType_Element;
 }
@@ -4112,7 +2195,6 @@ static bool AnyLayerIsElementImage(const nsStyleImageLayers& aLayers) {
 
 nsChangeHint nsStyleImageLayers::CalcDifference(
     const nsStyleImageLayers& aNewLayers, LayerType aType) const {
->>>>>>> upstream-releases
   nsChangeHint hint = nsChangeHint(0);
 
   // If the number of visible images changes, then it's easy-peasy.
@@ -4126,23 +2208,9 @@ nsChangeHint nsStyleImageLayers::CalcDifference(
   }
 
   const nsStyleImageLayers& moreLayers =
-<<<<<<< HEAD
-      mImageCount > aNewLayers.mImageCount ? *this : aNewLayers;
-||||||| merged common ancestors
-    mImageCount > aNewLayers.mImageCount ?
-      *this : aNewLayers;
-=======
       mLayers.Length() > aNewLayers.mLayers.Length() ? *this : aNewLayers;
->>>>>>> upstream-releases
   const nsStyleImageLayers& lessLayers =
-<<<<<<< HEAD
-      mImageCount > aNewLayers.mImageCount ? aNewLayers : *this;
-||||||| merged common ancestors
-    mImageCount > aNewLayers.mImageCount ?
-      aNewLayers : *this;
-=======
       mLayers.Length() > aNewLayers.mLayers.Length() ? aNewLayers : *this;
->>>>>>> upstream-releases
 
   for (size_t i = 0; i < moreLayers.mLayers.Length(); ++i) {
     const Layer& moreLayersLayer = moreLayers.mLayers[i];
@@ -4150,38 +2218,11 @@ nsChangeHint nsStyleImageLayers::CalcDifference(
       // This is a visible image we're diffing, we may need to repaint.
       const Layer& lessLayersLayer = lessLayers.mLayers[i];
       nsChangeHint layerDifference =
-<<<<<<< HEAD
-          moreLayers.mLayers[i].CalcDifference(lessLayers.mLayers[i]);
-      hint |= layerDifference;
-      if (layerDifference && ((moreLayers.mLayers[i].mImage.GetType() ==
-                               eStyleImageType_Element) ||
-                              (lessLayers.mLayers[i].mImage.GetType() ==
-                               eStyleImageType_Element))) {
-        hint |= nsChangeHint_UpdateEffects | nsChangeHint_RepaintFrame;
-      }
-    } else {
-      hint |= nsChangeHint_RepaintFrame;
-      if (moreLayers.mLayers[i].mImage.GetType() == eStyleImageType_Element) {
-        hint |= nsChangeHint_UpdateEffects | nsChangeHint_RepaintFrame;
-||||||| merged common ancestors
-        moreLayers.mLayers[i].CalcDifference(lessLayers.mLayers[i]);
-      hint |= layerDifference;
-      if (layerDifference &&
-          ((moreLayers.mLayers[i].mImage.GetType() == eStyleImageType_Element) ||
-           (lessLayers.mLayers[i].mImage.GetType() == eStyleImageType_Element))) {
-        hint |= nsChangeHint_UpdateEffects | nsChangeHint_RepaintFrame;
-      }
-    } else {
-      hint |= nsChangeHint_RepaintFrame;
-      if (moreLayers.mLayers[i].mImage.GetType() == eStyleImageType_Element) {
-        hint |= nsChangeHint_UpdateEffects | nsChangeHint_RepaintFrame;
-=======
           moreLayersLayer.CalcDifference(lessLayersLayer);
       if (layerDifference && (IsElementImage(moreLayersLayer) ||
                               IsElementImage(lessLayersLayer))) {
         layerDifference |=
             nsChangeHint_UpdateEffects | nsChangeHint_RepaintFrame;
->>>>>>> upstream-releases
       }
       hint |= layerDifference;
       continue;
@@ -4329,89 +2370,13 @@ bool nsStyleImageLayers::operator==(const nsStyleImageLayers& aOther) const {
   return true;
 }
 
-<<<<<<< HEAD
-bool nsStyleImageLayers::IsInitialPositionForLayerType(Position aPosition,
-                                                       LayerType aType) {
-  if (aPosition.mXPosition.mPercent == 0.0f &&
-      aPosition.mXPosition.mLength == 0 && aPosition.mXPosition.mHasPercent &&
-      aPosition.mYPosition.mPercent == 0.0f &&
-      aPosition.mYPosition.mLength == 0 && aPosition.mYPosition.mHasPercent) {
-    return true;
-  }
-
-  return false;
-}
-
-void Position::SetInitialPercentValues(float aPercentVal) {
-  mXPosition.mPercent = aPercentVal;
-  mXPosition.mLength = 0;
-  mXPosition.mHasPercent = true;
-  mYPosition.mPercent = aPercentVal;
-  mYPosition.mLength = 0;
-  mYPosition.mHasPercent = true;
-}
-
-void Position::SetInitialZeroValues() {
-  mXPosition.mPercent = 0;
-  mXPosition.mLength = 0;
-  mXPosition.mHasPercent = false;
-  mYPosition.mPercent = 0;
-  mYPosition.mLength = 0;
-  mYPosition.mHasPercent = false;
-||||||| merged common ancestors
-bool
-nsStyleImageLayers::IsInitialPositionForLayerType(Position aPosition, LayerType aType)
-{
-  if (aPosition.mXPosition.mPercent == 0.0f &&
-      aPosition.mXPosition.mLength == 0 &&
-      aPosition.mXPosition.mHasPercent &&
-      aPosition.mYPosition.mPercent == 0.0f &&
-      aPosition.mYPosition.mLength == 0 &&
-      aPosition.mYPosition.mHasPercent) {
-    return true;
-  }
-
-  return false;
-}
-
-void
-Position::SetInitialPercentValues(float aPercentVal)
-{
-  mXPosition.mPercent = aPercentVal;
-  mXPosition.mLength = 0;
-  mXPosition.mHasPercent = true;
-  mYPosition.mPercent = aPercentVal;
-  mYPosition.mLength = 0;
-  mYPosition.mHasPercent = true;
-}
-
-void
-Position::SetInitialZeroValues()
-{
-  mXPosition.mPercent = 0;
-  mXPosition.mLength = 0;
-  mXPosition.mHasPercent = false;
-  mYPosition.mPercent = 0;
-  mYPosition.mLength = 0;
-  mYPosition.mHasPercent = false;
-=======
 bool nsStyleImageLayers::IsInitialPositionForLayerType(Position aPosition,
                                                        LayerType aType) {
   return aPosition == Position::FromPercentage(0.);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool nsStyleImageLayers::Size::DependsOnPositioningAreaSize(
-    const nsStyleImage& aImage) const {
-||||||| merged common ancestors
-bool
-nsStyleImageLayers::Size::DependsOnPositioningAreaSize(const nsStyleImage& aImage) const
-{
-=======
 static bool SizeDependsOnPositioningAreaSize(const StyleBackgroundSize& aSize,
                                              const nsStyleImage& aImage) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aImage.GetType() != eStyleImageType_Null,
              "caller should have handled this");
 
@@ -4434,20 +2399,6 @@ static bool SizeDependsOnPositioningAreaSize(const StyleBackgroundSize& aSize,
     return false;
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT((mWidthType == eLengthPercentage && mHeightType == eAuto) ||
-                 (mWidthType == eAuto && mHeightType == eLengthPercentage) ||
-                 (mWidthType == eAuto && mHeightType == eAuto),
-             "logic error");
-
-||||||| merged common ancestors
-  MOZ_ASSERT((mWidthType == eLengthPercentage && mHeightType == eAuto) ||
-             (mWidthType == eAuto && mHeightType == eLengthPercentage) ||
-             (mWidthType == eAuto && mHeightType == eAuto),
-             "logic error");
-
-=======
->>>>>>> upstream-releases
   nsStyleImageType type = aImage.GetType();
 
   // Gradient rendering depends on frame size when auto is involved because
@@ -4501,66 +2452,7 @@ static bool SizeDependsOnPositioningAreaSize(const StyleBackgroundSize& aSize,
   return false;
 }
 
-<<<<<<< HEAD
-void nsStyleImageLayers::Size::SetInitialValues() {
-  mWidthType = mHeightType = eAuto;
-}
-
-bool nsStyleImageLayers::Size::operator==(const Size& aOther) const {
-  MOZ_ASSERT(mWidthType < eDimensionType_COUNT, "bad mWidthType for this");
-  MOZ_ASSERT(mHeightType < eDimensionType_COUNT, "bad mHeightType for this");
-  MOZ_ASSERT(aOther.mWidthType < eDimensionType_COUNT,
-             "bad mWidthType for aOther");
-  MOZ_ASSERT(aOther.mHeightType < eDimensionType_COUNT,
-             "bad mHeightType for aOther");
-
-  return mWidthType == aOther.mWidthType && mHeightType == aOther.mHeightType &&
-         (mWidthType != eLengthPercentage || mWidth == aOther.mWidth) &&
-         (mHeightType != eLengthPercentage || mHeight == aOther.mHeight);
-}
-
-||||||| merged common ancestors
-void
-nsStyleImageLayers::Size::SetInitialValues()
-{
-  mWidthType = mHeightType = eAuto;
-}
-
-bool
-nsStyleImageLayers::Size::operator==(const Size& aOther) const
-{
-  MOZ_ASSERT(mWidthType < eDimensionType_COUNT,
-             "bad mWidthType for this");
-  MOZ_ASSERT(mHeightType < eDimensionType_COUNT,
-             "bad mHeightType for this");
-  MOZ_ASSERT(aOther.mWidthType < eDimensionType_COUNT,
-             "bad mWidthType for aOther");
-  MOZ_ASSERT(aOther.mHeightType < eDimensionType_COUNT,
-             "bad mHeightType for aOther");
-
-  return mWidthType == aOther.mWidthType &&
-         mHeightType == aOther.mHeightType &&
-         (mWidthType != eLengthPercentage || mWidth == aOther.mWidth) &&
-         (mHeightType != eLengthPercentage || mHeight == aOther.mHeight);
-}
-
-=======
->>>>>>> upstream-releases
 nsStyleImageLayers::Layer::Layer()
-<<<<<<< HEAD
-    : mClip(StyleGeometryBox::BorderBox),
-      mAttachment(StyleImageLayerAttachment::Scroll),
-      mBlendMode(NS_STYLE_BLEND_NORMAL),
-      mComposite(NS_STYLE_MASK_COMPOSITE_ADD),
-      mMaskMode(NS_STYLE_MASK_MODE_MATCH_SOURCE) {
-||||||| merged common ancestors
-  : mClip(StyleGeometryBox::BorderBox)
-  , mAttachment(StyleImageLayerAttachment::Scroll)
-  , mBlendMode(NS_STYLE_BLEND_NORMAL)
-  , mComposite(NS_STYLE_MASK_COMPOSITE_ADD)
-  , mMaskMode(NS_STYLE_MASK_MODE_MATCH_SOURCE)
-{
-=======
     : mSize(StyleBackgroundSize::ExplicitSize(LengthPercentageOrAuto::Auto(),
                                               LengthPercentageOrAuto::Auto())),
       mClip(StyleGeometryBox::BorderBox),
@@ -4568,7 +2460,6 @@ nsStyleImageLayers::Layer::Layer()
       mBlendMode(NS_STYLE_BLEND_NORMAL),
       mComposite(NS_STYLE_MASK_COMPOSITE_ADD),
       mMaskMode(StyleMaskMode::MatchSource) {
->>>>>>> upstream-releases
   mImage.SetNull();
 }
 
@@ -4596,16 +2487,8 @@ bool nsStyleImageLayers::Layer::
   }
 
   return mPosition.DependsOnPositioningAreaSize() ||
-<<<<<<< HEAD
-         mSize.DependsOnPositioningAreaSize(mImage) ||
-         mRepeat.DependsOnPositioningAreaSize();
-||||||| merged common ancestors
-      mSize.DependsOnPositioningAreaSize(mImage) ||
-      mRepeat.DependsOnPositioningAreaSize();
-=======
          SizeDependsOnPositioningAreaSize(mSize, mImage) ||
          mRepeat.DependsOnPositioningAreaSize();
->>>>>>> upstream-releases
 }
 
 bool nsStyleImageLayers::Layer::operator==(const Layer& aOther) const {
@@ -4632,18 +2515,8 @@ static void FillImageLayerList(
 // layer.mPosition.*aResultLocation instead of layer.*aResultLocation.
 static void FillImageLayerPositionCoordList(
     nsStyleAutoArray<nsStyleImageLayers::Layer>& aLayers,
-<<<<<<< HEAD
-    Position::Coord Position::*aResultLocation, uint32_t aItemCount,
-    uint32_t aFillCount) {
-||||||| merged common ancestors
-    Position::Coord
-        Position::* aResultLocation,
-    uint32_t aItemCount, uint32_t aFillCount)
-{
-=======
     LengthPercentage Position::*aResultLocation, uint32_t aItemCount,
     uint32_t aFillCount) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFillCount <= aLayers.Length(), "unexpected array length");
   for (uint32_t sourceLayer = 0, destLayer = aItemCount; destLayer < aFillCount;
        ++sourceLayer, ++destLayer) {
@@ -4658,36 +2531,6 @@ void nsStyleImageLayers::FillAllLayers(uint32_t aMaxItemCount) {
   mLayers.TruncateLengthNonZero(aMaxItemCount);
 
   uint32_t fillCount = mImageCount;
-<<<<<<< HEAD
-  FillImageLayerList(mLayers, &Layer::mImage, mImageCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mRepeat, mRepeatCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mAttachment, mAttachmentCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mClip, mClipCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mBlendMode, mBlendModeCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mOrigin, mOriginCount, fillCount);
-  FillImageLayerPositionCoordList(mLayers, &Position::mXPosition,
-||||||| merged common ancestors
-  FillImageLayerList(mLayers,
-                     &Layer::mImage,
-                     mImageCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mRepeat,
-                     mRepeatCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mAttachment,
-                     mAttachmentCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mClip,
-                     mClipCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mBlendMode,
-                     mBlendModeCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mOrigin,
-                     mOriginCount, fillCount);
-  FillImageLayerPositionCoordList(mLayers,
-                                  &Position::mXPosition,
-=======
   FillImageLayerList(mLayers, &Layer::mImage, mImageCount, fillCount);
   FillImageLayerList(mLayers, &Layer::mRepeat, mRepeatCount, fillCount);
   FillImageLayerList(mLayers, &Layer::mAttachment, mAttachmentCount, fillCount);
@@ -4695,37 +2538,7 @@ void nsStyleImageLayers::FillAllLayers(uint32_t aMaxItemCount) {
   FillImageLayerList(mLayers, &Layer::mBlendMode, mBlendModeCount, fillCount);
   FillImageLayerList(mLayers, &Layer::mOrigin, mOriginCount, fillCount);
   FillImageLayerPositionCoordList(mLayers, &Position::horizontal,
->>>>>>> upstream-releases
                                   mPositionXCount, fillCount);
-<<<<<<< HEAD
-  FillImageLayerPositionCoordList(mLayers, &Position::mYPosition,
-                                  mPositionYCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mSize, mSizeCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mMaskMode, mMaskModeCount, fillCount);
-  FillImageLayerList(mLayers, &Layer::mComposite, mCompositeCount, fillCount);
-}
-
-nsChangeHint nsStyleImageLayers::Layer::CalcDifference(
-    const nsStyleImageLayers::Layer& aNewLayer) const {
-||||||| merged common ancestors
-  FillImageLayerPositionCoordList(mLayers,
-                                  &Position::mYPosition,
-                                  mPositionYCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mSize,
-                     mSizeCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mMaskMode,
-                     mMaskModeCount, fillCount);
-  FillImageLayerList(mLayers,
-                     &Layer::mComposite,
-                     mCompositeCount, fillCount);
-}
-
-nsChangeHint
-nsStyleImageLayers::Layer::CalcDifference(const nsStyleImageLayers::Layer& aNewLayer) const
-{
-=======
   FillImageLayerPositionCoordList(mLayers, &Position::vertical, mPositionYCount,
                                   fillCount);
   FillImageLayerList(mLayers, &Layer::mSize, mSizeCount, fillCount);
@@ -4742,7 +2555,6 @@ static bool UrlValuesEqual(const nsStyleImage& aImage,
 
 nsChangeHint nsStyleImageLayers::Layer::CalcDifference(
     const nsStyleImageLayers::Layer& aNewLayer) const {
->>>>>>> upstream-releases
   nsChangeHint hint = nsChangeHint(0);
   if (!UrlValuesEqual(mImage, aNewLayer.mImage)) {
     hint |= nsChangeHint_RepaintFrame | nsChangeHint_UpdateEffects;
@@ -4765,20 +2577,9 @@ nsChangeHint nsStyleImageLayers::Layer::CalcDifference(
 // nsStyleBackground
 //
 
-<<<<<<< HEAD
-nsStyleBackground::nsStyleBackground(const nsPresContext* aContext)
-    : mImage(nsStyleImageLayers::LayerType::Background),
-      mBackgroundColor(StyleComplexColor::Transparent()) {
-||||||| merged common ancestors
-nsStyleBackground::nsStyleBackground(const nsPresContext* aContext)
-  : mImage(nsStyleImageLayers::LayerType::Background)
-  , mBackgroundColor(StyleComplexColor::Transparent())
-{
-=======
 nsStyleBackground::nsStyleBackground(const Document& aDocument)
     : mImage(nsStyleImageLayers::LayerType::Background),
       mBackgroundColor(StyleColor::Transparent()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleBackground);
 }
 
@@ -4789,18 +2590,8 @@ nsStyleBackground::nsStyleBackground(const nsStyleBackground& aSource)
 
 nsStyleBackground::~nsStyleBackground() { MOZ_COUNT_DTOR(nsStyleBackground); }
 
-<<<<<<< HEAD
-void nsStyleBackground::FinishStyle(nsPresContext* aPresContext,
-                                    const nsStyleBackground* aOldStyle) {
-||||||| merged common ancestors
-void
-nsStyleBackground::FinishStyle(
-  nsPresContext* aPresContext, const nsStyleBackground* aOldStyle)
-{
-=======
 void nsStyleBackground::TriggerImageLoads(Document& aDocument,
                                           const nsStyleBackground* aOldStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   mImage.ResolveImages(aDocument, aOldStyle ? &aOldStyle->mImage : nullptr);
 }
@@ -4833,19 +2624,8 @@ nscolor nsStyleBackground::BackgroundColor(const nsIFrame* aFrame) const {
   return mBackgroundColor.CalcColor(aFrame);
 }
 
-<<<<<<< HEAD
-nscolor nsStyleBackground::BackgroundColor(
-    mozilla::ComputedStyle* aStyle) const {
-  return mBackgroundColor.CalcColor(aStyle);
-||||||| merged common ancestors
-nscolor
-nsStyleBackground::BackgroundColor(mozilla::ComputedStyle* aStyle) const
-{
-  return mBackgroundColor.CalcColor(aStyle);
-=======
 nscolor nsStyleBackground::BackgroundColor(ComputedStyle* aStyle) const {
   return mBackgroundColor.CalcColor(*aStyle);
->>>>>>> upstream-releases
 }
 
 bool nsStyleBackground::IsTransparent(const nsIFrame* aFrame) const {
@@ -4911,121 +2691,6 @@ bool StyleAnimation::operator==(const StyleAnimation& aOther) const {
 // --------------------
 // nsStyleDisplay
 //
-<<<<<<< HEAD
-nsStyleDisplay::nsStyleDisplay(const nsPresContext* aContext)
-    : mDisplay(StyleDisplay::Inline),
-      mOriginalDisplay(StyleDisplay::Inline),
-      mContain(NS_STYLE_CONTAIN_NONE),
-      mAppearance(StyleAppearance::None),
-      mPosition(NS_STYLE_POSITION_STATIC),
-      mFloat(StyleFloat::None),
-      mOriginalFloat(StyleFloat::None),
-      mBreakType(StyleClear::None),
-      mBreakInside(StyleBreakWithin::Auto),
-      mBreakBefore(StyleBreakBetween::Auto),
-      mBreakAfter(StyleBreakBetween::Auto),
-      mOverflowX(NS_STYLE_OVERFLOW_VISIBLE),
-      mOverflowY(NS_STYLE_OVERFLOW_VISIBLE),
-      mOverflowClipBoxBlock(StyleOverflowClipBox::PaddingBox),
-      mOverflowClipBoxInline(StyleOverflowClipBox::PaddingBox),
-      mResize(StyleResize::None),
-      mOrient(StyleOrient::Inline),
-      mIsolation(NS_STYLE_ISOLATION_AUTO),
-      mTopLayer(NS_STYLE_TOP_LAYER_NONE),
-      mWillChangeBitField(0),
-      mTouchAction(NS_STYLE_TOUCH_ACTION_AUTO),
-      mScrollBehavior(NS_STYLE_SCROLL_BEHAVIOR_AUTO),
-      mOverscrollBehaviorX(StyleOverscrollBehavior::Auto),
-      mOverscrollBehaviorY(StyleOverscrollBehavior::Auto),
-      mScrollSnapTypeX(StyleScrollSnapType::None),
-      mScrollSnapTypeY(StyleScrollSnapType::None),
-      mScrollSnapPointsX(eStyleUnit_None),
-      mScrollSnapPointsY(eStyleUnit_None),
-      mBackfaceVisibility(NS_STYLE_BACKFACE_VISIBILITY_VISIBLE),
-      mTransformStyle(NS_STYLE_TRANSFORM_STYLE_FLAT),
-      mTransformBox(StyleGeometryBox::BorderBox),
-      mTransformOrigin{
-          {0.5f, eStyleUnit_Percent},  // Transform is centered on origin
-          {0.5f, eStyleUnit_Percent},
-          {0, nsStyleCoord::CoordConstructor}},
-      mChildPerspective(eStyleUnit_None),
-      mPerspectiveOrigin{{0.5f, eStyleUnit_Percent},
-                         {0.5f, eStyleUnit_Percent}},
-      mVerticalAlign(NS_STYLE_VERTICAL_ALIGN_BASELINE, eStyleUnit_Enumerated),
-      mTransitions(
-          nsStyleAutoArray<StyleTransition>::WITH_SINGLE_INITIAL_ELEMENT),
-      mTransitionTimingFunctionCount(1),
-      mTransitionDurationCount(1),
-      mTransitionDelayCount(1),
-      mTransitionPropertyCount(1),
-      mAnimations(
-          nsStyleAutoArray<StyleAnimation>::WITH_SINGLE_INITIAL_ELEMENT),
-      mAnimationTimingFunctionCount(1),
-      mAnimationDurationCount(1),
-      mAnimationDelayCount(1),
-      mAnimationNameCount(1),
-      mAnimationDirectionCount(1),
-      mAnimationFillModeCount(1),
-      mAnimationPlayStateCount(1),
-      mAnimationIterationCountCount(1),
-      mShapeMargin(0, nsStyleCoord::CoordConstructor) {
-||||||| merged common ancestors
-nsStyleDisplay::nsStyleDisplay(const nsPresContext* aContext)
-  : mDisplay(StyleDisplay::Inline)
-  , mOriginalDisplay(StyleDisplay::Inline)
-  , mContain(NS_STYLE_CONTAIN_NONE)
-  , mAppearance(StyleAppearance::None)
-  , mPosition(NS_STYLE_POSITION_STATIC)
-  , mFloat(StyleFloat::None)
-  , mOriginalFloat(StyleFloat::None)
-  , mBreakType(StyleClear::None)
-  , mBreakInside(NS_STYLE_PAGE_BREAK_AUTO)
-  , mBreakBefore(false)
-  , mBreakAfter(false)
-  , mOverflowX(NS_STYLE_OVERFLOW_VISIBLE)
-  , mOverflowY(NS_STYLE_OVERFLOW_VISIBLE)
-  , mOverflowClipBoxBlock(NS_STYLE_OVERFLOW_CLIP_BOX_PADDING_BOX)
-  , mOverflowClipBoxInline(NS_STYLE_OVERFLOW_CLIP_BOX_PADDING_BOX)
-  , mResize(NS_STYLE_RESIZE_NONE)
-  , mOrient(StyleOrient::Inline)
-  , mIsolation(NS_STYLE_ISOLATION_AUTO)
-  , mTopLayer(NS_STYLE_TOP_LAYER_NONE)
-  , mWillChangeBitField(0)
-  , mTouchAction(NS_STYLE_TOUCH_ACTION_AUTO)
-  , mScrollBehavior(NS_STYLE_SCROLL_BEHAVIOR_AUTO)
-  , mOverscrollBehaviorX(StyleOverscrollBehavior::Auto)
-  , mOverscrollBehaviorY(StyleOverscrollBehavior::Auto)
-  , mScrollSnapTypeX(NS_STYLE_SCROLL_SNAP_TYPE_NONE)
-  , mScrollSnapTypeY(NS_STYLE_SCROLL_SNAP_TYPE_NONE)
-  , mScrollSnapPointsX(eStyleUnit_None)
-  , mScrollSnapPointsY(eStyleUnit_None)
-  , mBackfaceVisibility(NS_STYLE_BACKFACE_VISIBILITY_VISIBLE)
-  , mTransformStyle(NS_STYLE_TRANSFORM_STYLE_FLAT)
-  , mTransformBox(StyleGeometryBox::BorderBox)
-  , mTransformOrigin{ {0.5f, eStyleUnit_Percent}, // Transform is centered on origin
-                      {0.5f, eStyleUnit_Percent},
-                      {0, nsStyleCoord::CoordConstructor} }
-  , mChildPerspective(eStyleUnit_None)
-  , mPerspectiveOrigin{ {0.5f, eStyleUnit_Percent},
-                        {0.5f, eStyleUnit_Percent} }
-  , mVerticalAlign(NS_STYLE_VERTICAL_ALIGN_BASELINE, eStyleUnit_Enumerated)
-  , mTransitions(nsStyleAutoArray<StyleTransition>::WITH_SINGLE_INITIAL_ELEMENT)
-  , mTransitionTimingFunctionCount(1)
-  , mTransitionDurationCount(1)
-  , mTransitionDelayCount(1)
-  , mTransitionPropertyCount(1)
-  , mAnimations(nsStyleAutoArray<StyleAnimation>::WITH_SINGLE_INITIAL_ELEMENT)
-  , mAnimationTimingFunctionCount(1)
-  , mAnimationDurationCount(1)
-  , mAnimationDelayCount(1)
-  , mAnimationNameCount(1)
-  , mAnimationDirectionCount(1)
-  , mAnimationFillModeCount(1)
-  , mAnimationPlayStateCount(1)
-  , mAnimationIterationCountCount(1)
-  , mShapeMargin(0, nsStyleCoord::CoordConstructor)
-{
-=======
 nsStyleDisplay::nsStyleDisplay(const Document& aDocument)
     : mBinding(StyleUrlOrNone::None()),
       mTransitions(
@@ -5085,7 +2750,6 @@ nsStyleDisplay::nsStyleDisplay(const Document& aDocument)
       mVerticalAlign(
           StyleVerticalAlign::Keyword(StyleVerticalAlignKeyword::Baseline)),
       mShapeMargin(LengthPercentage::Zero()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleDisplay);
 
   mTransitions[0].SetInitialValues();
@@ -5093,142 +2757,6 @@ nsStyleDisplay::nsStyleDisplay(const Document& aDocument)
 }
 
 nsStyleDisplay::nsStyleDisplay(const nsStyleDisplay& aSource)
-<<<<<<< HEAD
-    : mBinding(aSource.mBinding),
-      mDisplay(aSource.mDisplay),
-      mOriginalDisplay(aSource.mOriginalDisplay),
-      mContain(aSource.mContain),
-      mAppearance(aSource.mAppearance),
-      mPosition(aSource.mPosition),
-      mFloat(aSource.mFloat),
-      mOriginalFloat(aSource.mOriginalFloat),
-      mBreakType(aSource.mBreakType),
-      mBreakInside(aSource.mBreakInside),
-      mBreakBefore(aSource.mBreakBefore),
-      mBreakAfter(aSource.mBreakAfter),
-      mOverflowX(aSource.mOverflowX),
-      mOverflowY(aSource.mOverflowY),
-      mOverflowClipBoxBlock(aSource.mOverflowClipBoxBlock),
-      mOverflowClipBoxInline(aSource.mOverflowClipBoxInline),
-      mResize(aSource.mResize),
-      mOrient(aSource.mOrient),
-      mIsolation(aSource.mIsolation),
-      mTopLayer(aSource.mTopLayer),
-      mWillChangeBitField(aSource.mWillChangeBitField),
-      mWillChange(aSource.mWillChange),
-      mTouchAction(aSource.mTouchAction),
-      mScrollBehavior(aSource.mScrollBehavior),
-      mOverscrollBehaviorX(aSource.mOverscrollBehaviorX),
-      mOverscrollBehaviorY(aSource.mOverscrollBehaviorY),
-      mScrollSnapTypeX(aSource.mScrollSnapTypeX),
-      mScrollSnapTypeY(aSource.mScrollSnapTypeY),
-      mScrollSnapPointsX(aSource.mScrollSnapPointsX),
-      mScrollSnapPointsY(aSource.mScrollSnapPointsY),
-      mScrollSnapDestination(aSource.mScrollSnapDestination),
-      mScrollSnapCoordinate(aSource.mScrollSnapCoordinate),
-      mBackfaceVisibility(aSource.mBackfaceVisibility),
-      mTransformStyle(aSource.mTransformStyle),
-      mTransformBox(aSource.mTransformBox),
-      mSpecifiedTransform(aSource.mSpecifiedTransform),
-      mSpecifiedRotate(aSource.mSpecifiedRotate),
-      mSpecifiedTranslate(aSource.mSpecifiedTranslate),
-      mSpecifiedScale(aSource.mSpecifiedScale),
-      mIndividualTransform(aSource.mIndividualTransform),
-      mMotion(aSource.mMotion ? MakeUnique<StyleMotion>(*aSource.mMotion)
-                              : nullptr),
-      mTransformOrigin{aSource.mTransformOrigin[0], aSource.mTransformOrigin[1],
-                       aSource.mTransformOrigin[2]},
-      mChildPerspective(aSource.mChildPerspective),
-      mPerspectiveOrigin{aSource.mPerspectiveOrigin[0],
-                         aSource.mPerspectiveOrigin[1]},
-      mVerticalAlign(aSource.mVerticalAlign),
-      mTransitions(aSource.mTransitions),
-      mTransitionTimingFunctionCount(aSource.mTransitionTimingFunctionCount),
-      mTransitionDurationCount(aSource.mTransitionDurationCount),
-      mTransitionDelayCount(aSource.mTransitionDelayCount),
-      mTransitionPropertyCount(aSource.mTransitionPropertyCount),
-      mAnimations(aSource.mAnimations),
-      mAnimationTimingFunctionCount(aSource.mAnimationTimingFunctionCount),
-      mAnimationDurationCount(aSource.mAnimationDurationCount),
-      mAnimationDelayCount(aSource.mAnimationDelayCount),
-      mAnimationNameCount(aSource.mAnimationNameCount),
-      mAnimationDirectionCount(aSource.mAnimationDirectionCount),
-      mAnimationFillModeCount(aSource.mAnimationFillModeCount),
-      mAnimationPlayStateCount(aSource.mAnimationPlayStateCount),
-      mAnimationIterationCountCount(aSource.mAnimationIterationCountCount),
-      mShapeImageThreshold(aSource.mShapeImageThreshold),
-      mShapeMargin(aSource.mShapeMargin),
-      mShapeOutside(aSource.mShapeOutside) {
-||||||| merged common ancestors
-  : mBinding(aSource.mBinding)
-  , mDisplay(aSource.mDisplay)
-  , mOriginalDisplay(aSource.mOriginalDisplay)
-  , mContain(aSource.mContain)
-  , mAppearance(aSource.mAppearance)
-  , mPosition(aSource.mPosition)
-  , mFloat(aSource.mFloat)
-  , mOriginalFloat(aSource.mOriginalFloat)
-  , mBreakType(aSource.mBreakType)
-  , mBreakInside(aSource.mBreakInside)
-  , mBreakBefore(aSource.mBreakBefore)
-  , mBreakAfter(aSource.mBreakAfter)
-  , mOverflowX(aSource.mOverflowX)
-  , mOverflowY(aSource.mOverflowY)
-  , mOverflowClipBoxBlock(aSource.mOverflowClipBoxBlock)
-  , mOverflowClipBoxInline(aSource.mOverflowClipBoxInline)
-  , mResize(aSource.mResize)
-  , mOrient(aSource.mOrient)
-  , mIsolation(aSource.mIsolation)
-  , mTopLayer(aSource.mTopLayer)
-  , mWillChangeBitField(aSource.mWillChangeBitField)
-  , mWillChange(aSource.mWillChange)
-  , mTouchAction(aSource.mTouchAction)
-  , mScrollBehavior(aSource.mScrollBehavior)
-  , mOverscrollBehaviorX(aSource.mOverscrollBehaviorX)
-  , mOverscrollBehaviorY(aSource.mOverscrollBehaviorY)
-  , mScrollSnapTypeX(aSource.mScrollSnapTypeX)
-  , mScrollSnapTypeY(aSource.mScrollSnapTypeY)
-  , mScrollSnapPointsX(aSource.mScrollSnapPointsX)
-  , mScrollSnapPointsY(aSource.mScrollSnapPointsY)
-  , mScrollSnapDestination(aSource.mScrollSnapDestination)
-  , mScrollSnapCoordinate(aSource.mScrollSnapCoordinate)
-  , mBackfaceVisibility(aSource.mBackfaceVisibility)
-  , mTransformStyle(aSource.mTransformStyle)
-  , mTransformBox(aSource.mTransformBox)
-  , mSpecifiedTransform(aSource.mSpecifiedTransform)
-  , mSpecifiedRotate(aSource.mSpecifiedRotate)
-  , mSpecifiedTranslate(aSource.mSpecifiedTranslate)
-  , mSpecifiedScale(aSource.mSpecifiedScale)
-  , mIndividualTransform(aSource.mIndividualTransform)
-  , mMotion(aSource.mMotion
-            ? MakeUnique<StyleMotion>(*aSource.mMotion)
-            : nullptr)
-  , mTransformOrigin{ aSource.mTransformOrigin[0],
-                      aSource.mTransformOrigin[1],
-                      aSource.mTransformOrigin[2] }
-  , mChildPerspective(aSource.mChildPerspective)
-  , mPerspectiveOrigin{ aSource.mPerspectiveOrigin[0],
-                        aSource.mPerspectiveOrigin[1] }
-  , mVerticalAlign(aSource.mVerticalAlign)
-  , mTransitions(aSource.mTransitions)
-  , mTransitionTimingFunctionCount(aSource.mTransitionTimingFunctionCount)
-  , mTransitionDurationCount(aSource.mTransitionDurationCount)
-  , mTransitionDelayCount(aSource.mTransitionDelayCount)
-  , mTransitionPropertyCount(aSource.mTransitionPropertyCount)
-  , mAnimations(aSource.mAnimations)
-  , mAnimationTimingFunctionCount(aSource.mAnimationTimingFunctionCount)
-  , mAnimationDurationCount(aSource.mAnimationDurationCount)
-  , mAnimationDelayCount(aSource.mAnimationDelayCount)
-  , mAnimationNameCount(aSource.mAnimationNameCount)
-  , mAnimationDirectionCount(aSource.mAnimationDirectionCount)
-  , mAnimationFillModeCount(aSource.mAnimationFillModeCount)
-  , mAnimationPlayStateCount(aSource.mAnimationPlayStateCount)
-  , mAnimationIterationCountCount(aSource.mAnimationIterationCountCount)
-  , mShapeImageThreshold(aSource.mShapeImageThreshold)
-  , mShapeMargin(aSource.mShapeMargin)
-  , mShapeOutside(aSource.mShapeOutside)
-{
-=======
     : mBinding(aSource.mBinding),
       mTransitions(aSource.mTransitions),
       mTransitionTimingFunctionCount(aSource.mTransitionTimingFunctionCount),
@@ -5286,141 +2814,22 @@ nsStyleDisplay::nsStyleDisplay(const nsStyleDisplay& aSource)
       mShapeImageThreshold(aSource.mShapeImageThreshold),
       mShapeMargin(aSource.mShapeMargin),
       mShapeOutside(aSource.mShapeOutside) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleDisplay);
 }
 
-<<<<<<< HEAD
-static void ReleaseSharedListOnMainThread(const char* aName,
-                                          RefPtr<nsCSSValueSharedList>& aList) {
-  // We don't allow releasing nsCSSValues with refcounted data in the Servo
-  // traversal, since the refcounts aren't threadsafe. Since Servo may trigger
-  // the deallocation of style structs during styling, we need to handle it
-  // here.
-  if (aList && ServoStyleSet::IsInServoTraversal()) {
-    // The default behavior of NS_ReleaseOnMainThreadSystemGroup is to only
-    // proxy the release if we're not already on the main thread. This is a nice
-    // optimization for the cases we happen to be doing a sequential traversal
-    // (i.e. a single-core machine), but it trips our assertions which check
-    // whether we're in a Servo traversal, parallel or not. So we
-    // unconditionally proxy in debug builds.
-    bool alwaysProxy =
-#ifdef DEBUG
-        true;
-#else
-        false;
-#endif
-    NS_ReleaseOnMainThreadSystemGroup(aName, aList.forget(), alwaysProxy);
-  }
-}
-
-nsStyleDisplay::~nsStyleDisplay() {
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedTransform",
-                                mSpecifiedTransform);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedRotate",
-                                mSpecifiedRotate);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedTranslate",
-                                mSpecifiedTranslate);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedScale",
-                                mSpecifiedScale);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mIndividualTransform",
-                                mIndividualTransform);
-  MOZ_COUNT_DTOR(nsStyleDisplay);
-}
-
-void nsStyleDisplay::FinishStyle(nsPresContext* aPresContext,
-                                 const nsStyleDisplay* aOldStyle) {
-||||||| merged common ancestors
-
-static
-void ReleaseSharedListOnMainThread(const char* aName,
-                                   RefPtr<nsCSSValueSharedList>& aList)
-{
-  // We don't allow releasing nsCSSValues with refcounted data in the Servo
-  // traversal, since the refcounts aren't threadsafe. Since Servo may trigger
-  // the deallocation of style structs during styling, we need to handle it
-  // here.
-  if (aList && ServoStyleSet::IsInServoTraversal()) {
-    // The default behavior of NS_ReleaseOnMainThreadSystemGroup is to only
-    // proxy the release if we're not already on the main thread. This is a nice
-    // optimization for the cases we happen to be doing a sequential traversal
-    // (i.e. a single-core machine), but it trips our assertions which check
-    // whether we're in a Servo traversal, parallel or not. So we
-    // unconditionally proxy in debug builds.
-    bool alwaysProxy =
-#ifdef DEBUG
-      true;
-#else
-      false;
-#endif
-    NS_ReleaseOnMainThreadSystemGroup(aName, aList.forget(), alwaysProxy);
-  }
-}
-
-nsStyleDisplay::~nsStyleDisplay()
-{
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedTransform",
-                                mSpecifiedTransform);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedRotate",
-                                mSpecifiedRotate);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedTranslate",
-                                mSpecifiedTranslate);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mSpecifiedScale",
-                                mSpecifiedScale);
-  ReleaseSharedListOnMainThread("nsStyleDisplay::mIndividualTransform",
-                                mIndividualTransform);
-  MOZ_COUNT_DTOR(nsStyleDisplay);
-}
-
-void
-nsStyleDisplay::FinishStyle(
-    nsPresContext* aPresContext, const nsStyleDisplay* aOldStyle)
-{
-=======
 nsStyleDisplay::~nsStyleDisplay() { MOZ_COUNT_DTOR(nsStyleDisplay); }
 
 void nsStyleDisplay::TriggerImageLoads(Document& aDocument,
                                        const nsStyleDisplay* aOldStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-  mShapeOutside.FinishStyle(aPresContext,
-                            aOldStyle ? &aOldStyle->mShapeOutside : nullptr);
-  GenerateCombinedIndividualTransform();
-||||||| merged common ancestors
-  if (mShapeOutside.GetType() == StyleShapeSourceType::Image) {
-    const UniquePtr<nsStyleImage>& shapeImage = mShapeOutside.GetShapeImage();
-    if (shapeImage) {
-      const nsStyleImage* oldShapeImage =
-        (aOldStyle &&
-         aOldStyle->mShapeOutside.GetType() == StyleShapeSourceType::Image)
-          ?  &*aOldStyle->mShapeOutside.GetShapeImage() : nullptr;
-      shapeImage->ResolveImage(aPresContext, oldShapeImage);
-    }
-  }
-
-  GenerateCombinedIndividualTransform();
-=======
   mShapeOutside.TriggerImageLoads(
       aDocument, aOldStyle ? &aOldStyle->mShapeOutside : nullptr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline nsChangeHint CompareTransformValues(
-    const RefPtr<nsCSSValueSharedList>& aList,
-    const RefPtr<nsCSSValueSharedList>& aNewList) {
-||||||| merged common ancestors
-static inline nsChangeHint
-CompareTransformValues(const RefPtr<nsCSSValueSharedList>& aList,
-                       const RefPtr<nsCSSValueSharedList>& aNewList)
-{
-=======
 template <typename TransformLike>
 static inline nsChangeHint CompareTransformValues(
     const TransformLike& aOldTransform, const TransformLike& aNewTransform) {
->>>>>>> upstream-releases
   nsChangeHint result = nsChangeHint(0);
 
   // Note: If we add a new change hint for transform changes here, we have to
@@ -5437,17 +2846,6 @@ static inline nsChangeHint CompareTransformValues(
   return result;
 }
 
-<<<<<<< HEAD
-static inline nsChangeHint CompareMotionValues(const StyleMotion* aMotion,
-                                               const StyleMotion* aNewMotion) {
-  nsChangeHint result = nsChangeHint(0);
-||||||| merged common ancestors
-static inline nsChangeHint
-CompareMotionValues(const StyleMotion* aMotion,
-                    const StyleMotion* aNewMotion)
-{
-  nsChangeHint result = nsChangeHint(0);
-=======
 static inline nsChangeHint CompareMotionValues(
     const nsStyleDisplay& aDisplay, const nsStyleDisplay& aNewDisplay) {
   if (aDisplay.mOffsetPath == aNewDisplay.mOffsetPath) {
@@ -5460,34 +2858,9 @@ static inline nsChangeHint CompareMotionValues(
       return nsChangeHint_NeutralChange;
     }
   }
->>>>>>> upstream-releases
 
   // TODO: Bug 1482737: This probably doesn't need to UpdateOverflow
   // (or UpdateTransformLayer) if there's already a transform.
-<<<<<<< HEAD
-  if (!aMotion != !aNewMotion || (aMotion && *aMotion != *aNewMotion)) {
-    // Set the same hints as what we use for transform because motion path is
-    // a kind of transform and will be combined with other transforms.
-    result |= nsChangeHint_UpdateTransformLayer;
-    if ((aMotion && aMotion->HasPath()) &&
-        (aNewMotion && aNewMotion->HasPath())) {
-      result |= nsChangeHint_UpdatePostTransformOverflow;
-    } else {
-      result |= nsChangeHint_UpdateOverflow;
-    }
-||||||| merged common ancestors
-  if (!aMotion != !aNewMotion ||
-      (aMotion && *aMotion != *aNewMotion)) {
-    // Set the same hints as what we use for transform because motion path is
-    // a kind of transform and will be combined with other transforms.
-    result |= nsChangeHint_UpdateTransformLayer;
-    if ((aMotion && aMotion->HasPath()) &&
-        (aNewMotion && aNewMotion->HasPath())) {
-      result |= nsChangeHint_UpdatePostTransformOverflow;
-    } else {
-      result |= nsChangeHint_UpdateOverflow;
-    }
-=======
   // Set the same hints as what we use for transform because motion path is
   // a kind of transform and will be combined with other transforms.
   nsChangeHint result = nsChangeHint_UpdateTransformLayer;
@@ -5495,58 +2868,20 @@ static inline nsChangeHint CompareMotionValues(
     result |= nsChangeHint_UpdatePostTransformOverflow;
   } else {
     result |= nsChangeHint_UpdateOverflow;
->>>>>>> upstream-releases
   }
   return result;
 }
 
-<<<<<<< HEAD
-nsChangeHint nsStyleDisplay::CalcDifference(
-    const nsStyleDisplay& aNewData) const {
-||||||| merged common ancestors
-nsChangeHint
-nsStyleDisplay::CalcDifference(const nsStyleDisplay& aNewData) const
-{
-=======
 nsChangeHint nsStyleDisplay::CalcDifference(
     const nsStyleDisplay& aNewData, const nsStylePosition& aOldPosition) const {
->>>>>>> upstream-releases
   nsChangeHint hint = nsChangeHint(0);
 
-<<<<<<< HEAD
-  if (!DefinitelyEqualURIsAndPrincipal(mBinding, aNewData.mBinding) ||
-      mPosition != aNewData.mPosition || mDisplay != aNewData.mDisplay ||
-      mContain != aNewData.mContain ||
-      (mFloat == StyleFloat::None) != (aNewData.mFloat == StyleFloat::None) ||
-      mScrollBehavior != aNewData.mScrollBehavior ||
-      mScrollSnapTypeX != aNewData.mScrollSnapTypeX ||
-      mScrollSnapTypeY != aNewData.mScrollSnapTypeY ||
-      mScrollSnapPointsX != aNewData.mScrollSnapPointsX ||
-      mScrollSnapPointsY != aNewData.mScrollSnapPointsY ||
-      mScrollSnapDestination != aNewData.mScrollSnapDestination ||
-      mTopLayer != aNewData.mTopLayer || mResize != aNewData.mResize) {
-||||||| merged common ancestors
-  if (!DefinitelyEqualURIsAndPrincipal(mBinding, aNewData.mBinding)
-      || mPosition != aNewData.mPosition
-      || mDisplay != aNewData.mDisplay
-      || mContain != aNewData.mContain
-      || (mFloat == StyleFloat::None) != (aNewData.mFloat == StyleFloat::None)
-      || mScrollBehavior != aNewData.mScrollBehavior
-      || mScrollSnapTypeX != aNewData.mScrollSnapTypeX
-      || mScrollSnapTypeY != aNewData.mScrollSnapTypeY
-      || mScrollSnapPointsX != aNewData.mScrollSnapPointsX
-      || mScrollSnapPointsY != aNewData.mScrollSnapPointsY
-      || mScrollSnapDestination != aNewData.mScrollSnapDestination
-      || mTopLayer != aNewData.mTopLayer
-      || mResize != aNewData.mResize) {
-=======
   if (mBinding != aNewData.mBinding || mPosition != aNewData.mPosition ||
       mDisplay != aNewData.mDisplay || mContain != aNewData.mContain ||
       (mFloat == StyleFloat::None) != (aNewData.mFloat == StyleFloat::None) ||
       mScrollBehavior != aNewData.mScrollBehavior ||
       mScrollSnapType != aNewData.mScrollSnapType ||
       mTopLayer != aNewData.mTopLayer || mResize != aNewData.mResize) {
->>>>>>> upstream-releases
     return nsChangeHint_ReconstructFrame;
   }
 
@@ -5563,19 +2898,12 @@ nsChangeHint nsStyleDisplay::CalcDifference(
     return nsChangeHint_ReconstructFrame;
   }
 
-<<<<<<< HEAD
-  if (mOverflowX != aNewData.mOverflowX || mOverflowY != aNewData.mOverflowY) {
-||||||| merged common ancestors
-  if (mOverflowX != aNewData.mOverflowX
-      || mOverflowY != aNewData.mOverflowY) {
-=======
   if (mScrollSnapAlign != aNewData.mScrollSnapAlign) {
     // FIXME: Bug 1530253 Support re-snapping when scroll-snap-align changes.
     hint |= nsChangeHint_NeutralChange;
   }
 
   if (mOverflowX != aNewData.mOverflowX || mOverflowY != aNewData.mOverflowY) {
->>>>>>> upstream-releases
     hint |= nsChangeHint_ScrollbarChange;
   }
 
@@ -5660,53 +2988,11 @@ nsChangeHint nsStyleDisplay::CalcDifference(
      */
     nsChangeHint transformHint = nsChangeHint(0);
 
-<<<<<<< HEAD
-    transformHint |= CompareTransformValues(mSpecifiedTransform,
-                                            aNewData.mSpecifiedTransform);
-    transformHint |=
-        CompareTransformValues(mSpecifiedRotate, aNewData.mSpecifiedRotate);
-    transformHint |= CompareTransformValues(mSpecifiedTranslate,
-                                            aNewData.mSpecifiedTranslate);
-    transformHint |=
-        CompareTransformValues(mSpecifiedScale, aNewData.mSpecifiedScale);
-    transformHint |= CompareMotionValues(mMotion.get(), aNewData.mMotion.get());
-
-    const nsChangeHint kUpdateOverflowAndRepaintHint =
-        nsChangeHint_UpdateOverflow | nsChangeHint_RepaintFrame;
-    for (uint8_t index = 0; index < 3; ++index) {
-      if (mTransformOrigin[index] != aNewData.mTransformOrigin[index]) {
-        transformHint |= nsChangeHint_UpdateTransformLayer |
-                         nsChangeHint_UpdatePostTransformOverflow;
-        break;
-      }
-    }
-||||||| merged common ancestors
-    transformHint |= CompareTransformValues(mSpecifiedTransform,
-                                            aNewData.mSpecifiedTransform);
-    transformHint |= CompareTransformValues(mSpecifiedRotate, aNewData.
-                                            mSpecifiedRotate);
-    transformHint |= CompareTransformValues(mSpecifiedTranslate,
-                                            aNewData.mSpecifiedTranslate);
-    transformHint |= CompareTransformValues(mSpecifiedScale,
-                                            aNewData.mSpecifiedScale);
-    transformHint |= CompareMotionValues(mMotion.get(), aNewData.mMotion.get());
-
-    const nsChangeHint kUpdateOverflowAndRepaintHint =
-      nsChangeHint_UpdateOverflow | nsChangeHint_RepaintFrame;
-    for (uint8_t index = 0; index < 3; ++index) {
-      if (mTransformOrigin[index] != aNewData.mTransformOrigin[index]) {
-        transformHint |= nsChangeHint_UpdateTransformLayer |
-                         nsChangeHint_UpdatePostTransformOverflow;
-        break;
-      }
-    }
-=======
     transformHint |= CompareTransformValues(mTransform, aNewData.mTransform);
     transformHint |= CompareTransformValues(mRotate, aNewData.mRotate);
     transformHint |= CompareTransformValues(mTranslate, aNewData.mTranslate);
     transformHint |= CompareTransformValues(mScale, aNewData.mScale);
     transformHint |= CompareMotionValues(*this, aNewData);
->>>>>>> upstream-releases
 
     if (mTransformOrigin != aNewData.mTransformOrigin) {
       transformHint |= nsChangeHint_UpdateTransformLayer |
@@ -5741,27 +3027,6 @@ nsChangeHint nsStyleDisplay::CalcDifference(
   }
 
   // Note that the HasTransformStyle() != aNewData.HasTransformStyle()
-<<<<<<< HEAD
-  // test above handles relevant changes in the
-  // NS_STYLE_WILL_CHANGE_TRANSFORM bit, which in turn handles frame
-  // reconstruction for changes in the containing block of
-  // fixed-positioned elements.
-  uint8_t willChangeBitsChanged =
-      mWillChangeBitField ^ aNewData.mWillChangeBitField;
-  if (willChangeBitsChanged &
-      (NS_STYLE_WILL_CHANGE_STACKING_CONTEXT | NS_STYLE_WILL_CHANGE_SCROLL |
-       NS_STYLE_WILL_CHANGE_OPACITY)) {
-||||||| merged common ancestors
-  // test above handles relevant changes in the
-  // NS_STYLE_WILL_CHANGE_TRANSFORM bit, which in turn handles frame
-  // reconstruction for changes in the containing block of
-  // fixed-positioned elements.
-  uint8_t willChangeBitsChanged =
-    mWillChangeBitField ^ aNewData.mWillChangeBitField;
-  if (willChangeBitsChanged & (NS_STYLE_WILL_CHANGE_STACKING_CONTEXT |
-                               NS_STYLE_WILL_CHANGE_SCROLL |
-                               NS_STYLE_WILL_CHANGE_OPACITY)) {
-=======
   // test above handles relevant changes in the StyleWillChangeBit_TRANSFORM
   // bit, which in turn handles frame reconstruction for changes in the
   // containing block of fixed-positioned elements.
@@ -5774,20 +3039,11 @@ nsChangeHint nsStyleDisplay::CalcDifference(
   if (willChangeBitsChanged &
       (StyleWillChangeBits_STACKING_CONTEXT | StyleWillChangeBits_SCROLL |
        StyleWillChangeBits_OPACITY)) {
->>>>>>> upstream-releases
     hint |= nsChangeHint_RepaintFrame;
   }
 
-<<<<<<< HEAD
-  if (willChangeBitsChanged &
-      (NS_STYLE_WILL_CHANGE_FIXPOS_CB | NS_STYLE_WILL_CHANGE_ABSPOS_CB)) {
-||||||| merged common ancestors
-  if (willChangeBitsChanged & (NS_STYLE_WILL_CHANGE_FIXPOS_CB |
-                               NS_STYLE_WILL_CHANGE_ABSPOS_CB)) {
-=======
   if (willChangeBitsChanged &
       (StyleWillChangeBits_FIXPOS_CB | StyleWillChangeBits_ABSPOS_CB)) {
->>>>>>> upstream-releases
     hint |= nsChangeHint_UpdateContainingBlock;
   }
 
@@ -5836,50 +3092,6 @@ nsChangeHint nsStyleDisplay::CalcDifference(
   // But we still need to return nsChangeHint_NeutralChange for these
   // properties, since some data did change in the style struct.
 
-<<<<<<< HEAD
-  if (!hint && (mOriginalDisplay != aNewData.mOriginalDisplay ||
-                mOriginalFloat != aNewData.mOriginalFloat ||
-                mTransitions != aNewData.mTransitions ||
-                mTransitionTimingFunctionCount !=
-                    aNewData.mTransitionTimingFunctionCount ||
-                mTransitionDurationCount != aNewData.mTransitionDurationCount ||
-                mTransitionDelayCount != aNewData.mTransitionDelayCount ||
-                mTransitionPropertyCount != aNewData.mTransitionPropertyCount ||
-                mAnimations != aNewData.mAnimations ||
-                mAnimationTimingFunctionCount !=
-                    aNewData.mAnimationTimingFunctionCount ||
-                mAnimationDurationCount != aNewData.mAnimationDurationCount ||
-                mAnimationDelayCount != aNewData.mAnimationDelayCount ||
-                mAnimationNameCount != aNewData.mAnimationNameCount ||
-                mAnimationDirectionCount != aNewData.mAnimationDirectionCount ||
-                mAnimationFillModeCount != aNewData.mAnimationFillModeCount ||
-                mAnimationPlayStateCount != aNewData.mAnimationPlayStateCount ||
-                mAnimationIterationCountCount !=
-                    aNewData.mAnimationIterationCountCount ||
-                mScrollSnapCoordinate != aNewData.mScrollSnapCoordinate ||
-                mWillChange != aNewData.mWillChange)) {
-||||||| merged common ancestors
-  if (!hint &&
-      (mOriginalDisplay != aNewData.mOriginalDisplay ||
-       mOriginalFloat != aNewData.mOriginalFloat ||
-       mTransitions != aNewData.mTransitions ||
-       mTransitionTimingFunctionCount !=
-         aNewData.mTransitionTimingFunctionCount ||
-       mTransitionDurationCount != aNewData.mTransitionDurationCount ||
-       mTransitionDelayCount != aNewData.mTransitionDelayCount ||
-       mTransitionPropertyCount != aNewData.mTransitionPropertyCount ||
-       mAnimations != aNewData.mAnimations ||
-       mAnimationTimingFunctionCount != aNewData.mAnimationTimingFunctionCount ||
-       mAnimationDurationCount != aNewData.mAnimationDurationCount ||
-       mAnimationDelayCount != aNewData.mAnimationDelayCount ||
-       mAnimationNameCount != aNewData.mAnimationNameCount ||
-       mAnimationDirectionCount != aNewData.mAnimationDirectionCount ||
-       mAnimationFillModeCount != aNewData.mAnimationFillModeCount ||
-       mAnimationPlayStateCount != aNewData.mAnimationPlayStateCount ||
-       mAnimationIterationCountCount != aNewData.mAnimationIterationCountCount ||
-       mScrollSnapCoordinate != aNewData.mScrollSnapCoordinate ||
-       mWillChange != aNewData.mWillChange)) {
-=======
   if (!hint && (mTransitions != aNewData.mTransitions ||
                 mTransitionTimingFunctionCount !=
                     aNewData.mTransitionTimingFunctionCount ||
@@ -5899,145 +3111,16 @@ nsChangeHint nsStyleDisplay::CalcDifference(
                     aNewData.mAnimationIterationCountCount ||
                 mWillChange != aNewData.mWillChange ||
                 mOverflowAnchor != aNewData.mOverflowAnchor)) {
->>>>>>> upstream-releases
     hint |= nsChangeHint_NeutralChange;
   }
 
   return hint;
 }
 
-<<<<<<< HEAD
-void nsStyleDisplay::GenerateCombinedIndividualTransform() {
-  // FIXME(emilio): This should probably be called from somewhere like what we
-  // do for image layers, instead of FinishStyle.
-  //
-  // This does and undoes the work a ton of times in Stylo.
-  mIndividualTransform = nullptr;
-
-  // Follow the order defined in the spec to append transform functions.
-  // https://drafts.csswg.org/css-transforms-2/#ctm
-  AutoTArray<nsCSSValueSharedList*, 3> shareLists;
-  if (mSpecifiedTranslate) {
-    shareLists.AppendElement(mSpecifiedTranslate.get());
-  }
-  if (mSpecifiedRotate) {
-    shareLists.AppendElement(mSpecifiedRotate.get());
-  }
-  if (mSpecifiedScale) {
-    shareLists.AppendElement(mSpecifiedScale.get());
-  }
-
-  if (shareLists.Length() == 0) {
-    return;
-  }
-  if (shareLists.Length() == 1) {
-    mIndividualTransform = shareLists[0];
-    return;
-  }
-
-  // In common, we may have 3 transform functions:
-  // 1. one rotate function in mSpecifiedRotate,
-  // 2. one translate function in mSpecifiedTranslate,
-  // 3. one scale function in mSpecifiedScale.
-  AutoTArray<nsCSSValueList*, 3> valueLists;
-  for (auto list : shareLists) {
-    if (list) {
-      valueLists.AppendElement(list->mHead->Clone());
-    }
-  }
-
-  // Check we have at least one list or else valueLists.Length() - 1 below will
-  // underflow.
-  MOZ_ASSERT(valueLists.Length());
-
-  for (uint32_t i = 0; i < valueLists.Length() - 1; i++) {
-    valueLists[i]->mNext = valueLists[i + 1];
-  }
-
-  mIndividualTransform = new nsCSSValueSharedList(valueLists[0]);
-}
-
-||||||| merged common ancestors
-void
-nsStyleDisplay::GenerateCombinedIndividualTransform()
-{
-  // FIXME(emilio): This should probably be called from somewhere like what we
-  // do for image layers, instead of FinishStyle.
-  //
-  // This does and undoes the work a ton of times in Stylo.
-  mIndividualTransform = nullptr;
-
-  // Follow the order defined in the spec to append transform functions.
-  // https://drafts.csswg.org/css-transforms-2/#ctm
-  AutoTArray<nsCSSValueSharedList*, 3> shareLists;
-  if (mSpecifiedTranslate) {
-    shareLists.AppendElement(mSpecifiedTranslate.get());
-  }
-  if (mSpecifiedRotate) {
-    shareLists.AppendElement(mSpecifiedRotate.get());
-  }
-  if (mSpecifiedScale) {
-    shareLists.AppendElement(mSpecifiedScale.get());
-  }
-
-  if (shareLists.Length() == 0) {
-    return;
-  }
-  if (shareLists.Length() == 1) {
-    mIndividualTransform = shareLists[0];
-    return;
-  }
-
-  // In common, we may have 3 transform functions:
-  // 1. one rotate function in mSpecifiedRotate,
-  // 2. one translate function in mSpecifiedTranslate,
-  // 3. one scale function in mSpecifiedScale.
-  AutoTArray<nsCSSValueList*, 3> valueLists;
-  for (auto list: shareLists) {
-    if (list) {
-      valueLists.AppendElement(list->mHead->Clone());
-    }
-  }
-
-  // Check we have at least one list or else valueLists.Length() - 1 below will
-  // underflow.
-  MOZ_ASSERT(valueLists.Length());
-
-  for (uint32_t i = 0; i < valueLists.Length() - 1; i++) {
-    valueLists[i]->mNext = valueLists[i + 1];
-  }
-
-  mIndividualTransform = new nsCSSValueSharedList(valueLists[0]);
-}
-
-=======
->>>>>>> upstream-releases
 // --------------------
 // nsStyleVisibility
 //
 
-<<<<<<< HEAD
-nsStyleVisibility::nsStyleVisibility(const nsPresContext* aContext)
-    : mDirection(aContext->GetBidi() == IBMBIDI_TEXTDIRECTION_RTL
-                     ? NS_STYLE_DIRECTION_RTL
-                     : NS_STYLE_DIRECTION_LTR),
-      mVisible(NS_STYLE_VISIBILITY_VISIBLE),
-      mImageRendering(NS_STYLE_IMAGE_RENDERING_AUTO),
-      mWritingMode(NS_STYLE_WRITING_MODE_HORIZONTAL_TB),
-      mTextOrientation(NS_STYLE_TEXT_ORIENTATION_MIXED),
-      mColorAdjust(NS_STYLE_COLOR_ADJUST_ECONOMY) {
-||||||| merged common ancestors
-nsStyleVisibility::nsStyleVisibility(const nsPresContext* aContext)
-  : mDirection(aContext->GetBidi() == IBMBIDI_TEXTDIRECTION_RTL
-                 ? NS_STYLE_DIRECTION_RTL
-                 : NS_STYLE_DIRECTION_LTR)
-  , mVisible(NS_STYLE_VISIBILITY_VISIBLE)
-  , mImageRendering(NS_STYLE_IMAGE_RENDERING_AUTO)
-  , mWritingMode(NS_STYLE_WRITING_MODE_HORIZONTAL_TB)
-  , mTextOrientation(NS_STYLE_TEXT_ORIENTATION_MIXED)
-  , mColorAdjust(NS_STYLE_COLOR_ADJUST_ECONOMY)
-{
-=======
 nsStyleVisibility::nsStyleVisibility(const Document& aDocument)
     : mDirection(aDocument.GetBidiOptions() == IBMBIDI_TEXTDIRECTION_RTL
                      ? NS_STYLE_DIRECTION_RTL
@@ -6047,7 +3130,6 @@ nsStyleVisibility::nsStyleVisibility(const Document& aDocument)
       mWritingMode(NS_STYLE_WRITING_MODE_HORIZONTAL_TB),
       mTextOrientation(NS_STYLE_TEXT_ORIENTATION_MIXED),
       mColorAdjust(StyleColorAdjust::Economy) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleVisibility);
 }
 
@@ -6187,50 +3269,6 @@ bool nsStyleContentData::operator==(const nsStyleContentData& aOther) const {
   return true;
 }
 
-<<<<<<< HEAD
-void nsStyleContentData::Resolve(nsPresContext* aPresContext,
-                                 const nsStyleContentData* aOldStyle) {
-  switch (mType) {
-    case StyleContentType::Image:
-      if (!mContent.mImage->IsResolved()) {
-        const nsStyleImageRequest* oldRequest =
-            (aOldStyle && aOldStyle->mType == StyleContentType::Image)
-                ? aOldStyle->mContent.mImage
-                : nullptr;
-        mContent.mImage->Resolve(aPresContext, oldRequest);
-      }
-      break;
-    case StyleContentType::Counter:
-    case StyleContentType::Counters: {
-      mContent.mCounters->mCounterStyle.Resolve(
-          aPresContext->CounterStyleManager());
-      break;
-    }
-    default:
-      break;
-||||||| merged common ancestors
-void
-nsStyleContentData::Resolve(
-  nsPresContext* aPresContext, const nsStyleContentData* aOldStyle)
-{
-  switch (mType) {
-    case StyleContentType::Image:
-      if (!mContent.mImage->IsResolved()) {
-        const nsStyleImageRequest* oldRequest =
-          (aOldStyle && aOldStyle->mType == StyleContentType::Image)
-          ? aOldStyle->mContent.mImage : nullptr;
-        mContent.mImage->Resolve(aPresContext, oldRequest);
-      }
-      break;
-    case StyleContentType::Counter:
-    case StyleContentType::Counters: {
-      mContent.mCounters->
-        mCounterStyle.Resolve(aPresContext->CounterStyleManager());
-      break;
-    }
-    default:
-      break;
-=======
 void nsStyleContentData::Resolve(Document& aDocument,
                                  const nsStyleContentData* aOldStyle) {
   if (mType != StyleContentType::Image) {
@@ -6242,7 +3280,6 @@ void nsStyleContentData::Resolve(Document& aDocument,
             ? aOldStyle->mContent.mImage
             : nullptr;
     mContent.mImage->Resolve(aDocument, oldRequest);
->>>>>>> upstream-releases
   }
 }
 
@@ -6250,127 +3287,38 @@ void nsStyleContentData::Resolve(Document& aDocument,
 // nsStyleContent
 //
 
-<<<<<<< HEAD
-nsStyleContent::nsStyleContent(const nsPresContext* aContext) {
-||||||| merged common ancestors
-nsStyleContent::nsStyleContent(const nsPresContext* aContext)
-{
-=======
 nsStyleContent::nsStyleContent(const Document& aDocument) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleContent);
 }
 
 nsStyleContent::~nsStyleContent() { MOZ_COUNT_DTOR(nsStyleContent); }
 
-<<<<<<< HEAD
-void nsStyleContent::FinishStyle(nsPresContext* aPresContext,
-                                 const nsStyleContent* aOldStyle) {
-||||||| merged common ancestors
-void
-nsStyleContent::FinishStyle(nsPresContext* aPresContext, const nsStyleContent* aOldStyle)
-{
-=======
 void nsStyleContent::TriggerImageLoads(Document& aDocument,
                                        const nsStyleContent* aOldStyle) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < mContents.Length(); ++i) {
     const nsStyleContentData* oldData =
-<<<<<<< HEAD
-        (aOldStyle && aOldStyle->mContents.Length() > i)
-            ? &aOldStyle->mContents[i]
-            : nullptr;
-    mContents[i].Resolve(aPresContext, oldData);
-||||||| merged common ancestors
-      (aOldStyle && aOldStyle->mContents.Length() > i)
-      ? &aOldStyle->mContents[i]
-      : nullptr;
-    mContents[i].Resolve(aPresContext, oldData);
-=======
         (aOldStyle && aOldStyle->mContents.Length() > i)
             ? &aOldStyle->mContents[i]
             : nullptr;
     mContents[i].Resolve(aDocument, oldData);
->>>>>>> upstream-releases
   }
 }
 
 nsStyleContent::nsStyleContent(const nsStyleContent& aSource)
-<<<<<<< HEAD
-    : mContents(aSource.mContents),
-      mIncrements(aSource.mIncrements),
-      mResets(aSource.mResets) {
-||||||| merged common ancestors
-  : mContents(aSource.mContents)
-  , mIncrements(aSource.mIncrements)
-  , mResets(aSource.mResets)
-{
-=======
     : mContents(aSource.mContents),
       mIncrements(aSource.mIncrements),
       mResets(aSource.mResets),
       mSets(aSource.mSets) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleContent);
 }
 
-<<<<<<< HEAD
 nsChangeHint nsStyleContent::CalcDifference(
     const nsStyleContent& aNewData) const {
-  // In ElementRestyler::Restyle we assume that if there's no existing
-  // ::before or ::after and we don't have to restyle children of the
-  // node then we can't end up with a ::before or ::after due to the
-  // restyle of the node itself.  That's not quite true, but the only
-  // exception to the above is when the 'content' property of the node
-  // changes and the pseudo-element inherits the changed value.  Since
-  // the code here triggers a frame change on the node in that case,
-  // the optimization in ElementRestyler::Restyle is ok.  But if we ever
-  // change this code to not reconstruct frames on changes to the
-  // 'content' property, then we will need to revisit the optimization
-  // in ElementRestyler::Restyle.
-
-||||||| merged common ancestors
-nsChangeHint
-nsStyleContent::CalcDifference(const nsStyleContent& aNewData) const
-{
-  // In ElementRestyler::Restyle we assume that if there's no existing
-  // ::before or ::after and we don't have to restyle children of the
-  // node then we can't end up with a ::before or ::after due to the
-  // restyle of the node itself.  That's not quite true, but the only
-  // exception to the above is when the 'content' property of the node
-  // changes and the pseudo-element inherits the changed value.  Since
-  // the code here triggers a frame change on the node in that case,
-  // the optimization in ElementRestyler::Restyle is ok.  But if we ever
-  // change this code to not reconstruct frames on changes to the
-  // 'content' property, then we will need to revisit the optimization
-  // in ElementRestyler::Restyle.
-
-=======
-nsChangeHint nsStyleContent::CalcDifference(
-    const nsStyleContent& aNewData) const {
->>>>>>> upstream-releases
   // Unfortunately we need to reframe even if the content lengths are the same;
   // a simple reflow will not pick up different text or different image URLs,
   // since we set all that up in the CSSFrameConstructor
-<<<<<<< HEAD
-  //
-  // Also note that we also rely on this to return ReconstructFrame when
-  // content changes to ensure that nsCounterUseNode wouldn't reference
-  // to stale counter stylex.
-  if (mContents != aNewData.mContents || mIncrements != aNewData.mIncrements ||
-      mResets != aNewData.mResets) {
-||||||| merged common ancestors
-  //
-  // Also note that we also rely on this to return ReconstructFrame when
-  // content changes to ensure that nsCounterUseNode wouldn't reference
-  // to stale counter stylex.
-  if (mContents != aNewData.mContents ||
-      mIncrements != aNewData.mIncrements ||
-      mResets != aNewData.mResets) {
-=======
   if (mContents != aNewData.mContents || mIncrements != aNewData.mIncrements ||
       mResets != aNewData.mResets || mSets != aNewData.mSets) {
->>>>>>> upstream-releases
     return nsChangeHint_ReconstructFrame;
   }
 
@@ -6381,26 +3329,6 @@ nsChangeHint nsStyleContent::CalcDifference(
 // nsStyleTextReset
 //
 
-<<<<<<< HEAD
-nsStyleTextReset::nsStyleTextReset(const nsPresContext* aContext)
-    : mTextOverflow(),
-      mTextDecorationLine(NS_STYLE_TEXT_DECORATION_LINE_NONE),
-      mTextDecorationStyle(NS_STYLE_TEXT_DECORATION_STYLE_SOLID),
-      mUnicodeBidi(NS_STYLE_UNICODE_BIDI_NORMAL),
-      mInitialLetterSink(0),
-      mInitialLetterSize(0.0f),
-      mTextDecorationColor(StyleComplexColor::CurrentColor()) {
-||||||| merged common ancestors
-nsStyleTextReset::nsStyleTextReset(const nsPresContext* aContext)
-  : mTextOverflow()
-  , mTextDecorationLine(NS_STYLE_TEXT_DECORATION_LINE_NONE)
-  , mTextDecorationStyle(NS_STYLE_TEXT_DECORATION_STYLE_SOLID)
-  , mUnicodeBidi(NS_STYLE_UNICODE_BIDI_NORMAL)
-  , mInitialLetterSink(0)
-  , mInitialLetterSize(0.0f)
-  , mTextDecorationColor(StyleComplexColor::CurrentColor())
-{
-=======
 nsStyleTextReset::nsStyleTextReset(const Document& aDocument)
     : mTextOverflow(),
       mTextDecorationLine(StyleTextDecorationLine_NONE),
@@ -6410,29 +3338,10 @@ nsStyleTextReset::nsStyleTextReset(const Document& aDocument)
       mInitialLetterSize(0.0f),
       mTextDecorationColor(StyleColor::CurrentColor()),
       mTextDecorationWidth(LengthOrAuto::Auto()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleTextReset);
 }
 
 nsStyleTextReset::nsStyleTextReset(const nsStyleTextReset& aSource)
-<<<<<<< HEAD
-    : mTextOverflow(aSource.mTextOverflow),
-      mTextDecorationLine(aSource.mTextDecorationLine),
-      mTextDecorationStyle(aSource.mTextDecorationStyle),
-      mUnicodeBidi(aSource.mUnicodeBidi),
-      mInitialLetterSink(aSource.mInitialLetterSink),
-      mInitialLetterSize(aSource.mInitialLetterSize),
-      mTextDecorationColor(aSource.mTextDecorationColor) {
-||||||| merged common ancestors
-  : mTextOverflow(aSource.mTextOverflow)
-  , mTextDecorationLine(aSource.mTextDecorationLine)
-  , mTextDecorationStyle(aSource.mTextDecorationStyle)
-  , mUnicodeBidi(aSource.mUnicodeBidi)
-  , mInitialLetterSink(aSource.mInitialLetterSink)
-  , mInitialLetterSize(aSource.mInitialLetterSize)
-  , mTextDecorationColor(aSource.mTextDecorationColor)
-{
-=======
     : mTextOverflow(aSource.mTextOverflow),
       mTextDecorationLine(aSource.mTextDecorationLine),
       mTextDecorationStyle(aSource.mTextDecorationStyle),
@@ -6441,7 +3350,6 @@ nsStyleTextReset::nsStyleTextReset(const nsStyleTextReset& aSource)
       mInitialLetterSize(aSource.mInitialLetterSize),
       mTextDecorationColor(aSource.mTextDecorationColor),
       mTextDecorationWidth(aSource.mTextDecorationWidth) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleTextReset);
 }
 
@@ -6477,112 +3385,10 @@ nsChangeHint nsStyleTextReset::CalcDifference(
   return nsChangeHint(0);
 }
 
-<<<<<<< HEAD
-// Returns true if the given shadow-arrays are equal.
-static bool AreShadowArraysEqual(nsCSSShadowArray* lhs, nsCSSShadowArray* rhs) {
-  if (lhs == rhs) {
-    return true;
-  }
-
-  if (!lhs || !rhs || lhs->Length() != rhs->Length()) {
-    return false;
-  }
-
-  for (uint32_t i = 0; i < lhs->Length(); ++i) {
-    if (*lhs->ShadowAt(i) != *rhs->ShadowAt(i)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-||||||| merged common ancestors
-// Returns true if the given shadow-arrays are equal.
-static bool
-AreShadowArraysEqual(nsCSSShadowArray* lhs,
-                     nsCSSShadowArray* rhs)
-{
-  if (lhs == rhs) {
-    return true;
-  }
-
-  if (!lhs || !rhs || lhs->Length() != rhs->Length()) {
-    return false;
-  }
-
-  for (uint32_t i = 0; i < lhs->Length(); ++i) {
-    if (*lhs->ShadowAt(i) != *rhs->ShadowAt(i)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-=======
->>>>>>> upstream-releases
 // --------------------
 // nsStyleText
 //
 
-<<<<<<< HEAD
-nsStyleText::nsStyleText(const nsPresContext* aContext)
-    : mTextAlign(NS_STYLE_TEXT_ALIGN_START),
-      mTextAlignLast(NS_STYLE_TEXT_ALIGN_AUTO),
-      mTextJustify(StyleTextJustify::Auto),
-      mTextTransform(NS_STYLE_TEXT_TRANSFORM_NONE),
-      mWhiteSpace(StyleWhiteSpace::Normal),
-      mWordBreak(NS_STYLE_WORDBREAK_NORMAL),
-      mOverflowWrap(StyleOverflowWrap::Normal),
-      mHyphens(StyleHyphens::Manual),
-      mRubyAlign(NS_STYLE_RUBY_ALIGN_SPACE_AROUND),
-      mRubyPosition(NS_STYLE_RUBY_POSITION_OVER),
-      mTextSizeAdjust(NS_STYLE_TEXT_SIZE_ADJUST_AUTO),
-      mTextCombineUpright(NS_STYLE_TEXT_COMBINE_UPRIGHT_NONE),
-      mControlCharacterVisibility(
-          nsLayoutUtils::ControlCharVisibilityDefault()),
-      mTextEmphasisStyle(NS_STYLE_TEXT_EMPHASIS_STYLE_NONE),
-      mTextRendering(StyleTextRendering::Auto),
-      mTextEmphasisColor(StyleComplexColor::CurrentColor()),
-      mWebkitTextFillColor(StyleComplexColor::CurrentColor()),
-      mWebkitTextStrokeColor(StyleComplexColor::CurrentColor()),
-      mTabSize(float(NS_STYLE_TABSIZE_INITIAL), eStyleUnit_Factor),
-      mWordSpacing(0, nsStyleCoord::CoordConstructor),
-      mLetterSpacing(eStyleUnit_Normal),
-      mLineHeight(eStyleUnit_Normal),
-      mTextIndent(0, nsStyleCoord::CoordConstructor),
-      mWebkitTextStrokeWidth(0),
-      mTextShadow(nullptr) {
-||||||| merged common ancestors
-nsStyleText::nsStyleText(const nsPresContext* aContext)
-  : mTextAlign(NS_STYLE_TEXT_ALIGN_START)
-  , mTextAlignLast(NS_STYLE_TEXT_ALIGN_AUTO)
-  , mTextAlignTrue(false)
-  , mTextAlignLastTrue(false)
-  , mTextJustify(StyleTextJustify::Auto)
-  , mTextTransform(NS_STYLE_TEXT_TRANSFORM_NONE)
-  , mWhiteSpace(StyleWhiteSpace::Normal)
-  , mWordBreak(NS_STYLE_WORDBREAK_NORMAL)
-  , mOverflowWrap(NS_STYLE_OVERFLOWWRAP_NORMAL)
-  , mHyphens(StyleHyphens::Manual)
-  , mRubyAlign(NS_STYLE_RUBY_ALIGN_SPACE_AROUND)
-  , mRubyPosition(NS_STYLE_RUBY_POSITION_OVER)
-  , mTextSizeAdjust(NS_STYLE_TEXT_SIZE_ADJUST_AUTO)
-  , mTextCombineUpright(NS_STYLE_TEXT_COMBINE_UPRIGHT_NONE)
-  , mControlCharacterVisibility(nsLayoutUtils::ControlCharVisibilityDefault())
-  , mTextEmphasisStyle(NS_STYLE_TEXT_EMPHASIS_STYLE_NONE)
-  , mTextRendering(NS_STYLE_TEXT_RENDERING_AUTO)
-  , mTextEmphasisColor(StyleComplexColor::CurrentColor())
-  , mWebkitTextFillColor(StyleComplexColor::CurrentColor())
-  , mWebkitTextStrokeColor(StyleComplexColor::CurrentColor())
-  , mTabSize(float(NS_STYLE_TABSIZE_INITIAL), eStyleUnit_Factor)
-  , mWordSpacing(0, nsStyleCoord::CoordConstructor)
-  , mLetterSpacing(eStyleUnit_Normal)
-  , mLineHeight(eStyleUnit_Normal)
-  , mTextIndent(0, nsStyleCoord::CoordConstructor)
-  , mWebkitTextStrokeWidth(0)
-  , mTextShadow(nullptr)
-{
-=======
 static StyleRGBA DefaultColor(const Document& aDocument) {
   return StyleRGBA::FromColor(
       PreferenceSheet::PrefsFor(aDocument).mDefaultColor);
@@ -6616,90 +3422,15 @@ nsStyleText::nsStyleText(const Document& aDocument)
       mTextUnderlineOffset(LengthOrAuto::Auto()),
       mTextDecorationSkipInk(StyleTextDecorationSkipInk::Auto),
       mWebkitTextStrokeWidth(0) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleText);
-<<<<<<< HEAD
-  RefPtr<nsAtom> language = aContext->GetContentLanguage();
-  mTextEmphasisPosition =
-      language && nsStyleUtil::MatchesLanguagePrefix(language, u"zh")
-          ? NS_STYLE_TEXT_EMPHASIS_POSITION_DEFAULT_ZH
-          : NS_STYLE_TEXT_EMPHASIS_POSITION_DEFAULT;
-||||||| merged common ancestors
-  RefPtr<nsAtom> language = aContext->GetContentLanguage();
-  mTextEmphasisPosition = language &&
-    nsStyleUtil::MatchesLanguagePrefix(language, u"zh") ?
-    NS_STYLE_TEXT_EMPHASIS_POSITION_DEFAULT_ZH :
-    NS_STYLE_TEXT_EMPHASIS_POSITION_DEFAULT;
-=======
   RefPtr<nsAtom> language = aDocument.GetContentLanguageAsAtomForStyle();
   mTextEmphasisPosition =
       language && nsStyleUtil::MatchesLanguagePrefix(language, u"zh")
           ? NS_STYLE_TEXT_EMPHASIS_POSITION_DEFAULT_ZH
           : NS_STYLE_TEXT_EMPHASIS_POSITION_DEFAULT;
->>>>>>> upstream-releases
 }
 
 nsStyleText::nsStyleText(const nsStyleText& aSource)
-<<<<<<< HEAD
-    : mTextAlign(aSource.mTextAlign),
-      mTextAlignLast(aSource.mTextAlignLast),
-      mTextJustify(aSource.mTextJustify),
-      mTextTransform(aSource.mTextTransform),
-      mWhiteSpace(aSource.mWhiteSpace),
-      mWordBreak(aSource.mWordBreak),
-      mOverflowWrap(aSource.mOverflowWrap),
-      mHyphens(aSource.mHyphens),
-      mRubyAlign(aSource.mRubyAlign),
-      mRubyPosition(aSource.mRubyPosition),
-      mTextSizeAdjust(aSource.mTextSizeAdjust),
-      mTextCombineUpright(aSource.mTextCombineUpright),
-      mControlCharacterVisibility(aSource.mControlCharacterVisibility),
-      mTextEmphasisPosition(aSource.mTextEmphasisPosition),
-      mTextEmphasisStyle(aSource.mTextEmphasisStyle),
-      mTextRendering(aSource.mTextRendering),
-      mTextEmphasisColor(aSource.mTextEmphasisColor),
-      mWebkitTextFillColor(aSource.mWebkitTextFillColor),
-      mWebkitTextStrokeColor(aSource.mWebkitTextStrokeColor),
-      mTabSize(aSource.mTabSize),
-      mWordSpacing(aSource.mWordSpacing),
-      mLetterSpacing(aSource.mLetterSpacing),
-      mLineHeight(aSource.mLineHeight),
-      mTextIndent(aSource.mTextIndent),
-      mWebkitTextStrokeWidth(aSource.mWebkitTextStrokeWidth),
-      mTextShadow(aSource.mTextShadow),
-      mTextEmphasisStyleString(aSource.mTextEmphasisStyleString) {
-||||||| merged common ancestors
-  : mTextAlign(aSource.mTextAlign)
-  , mTextAlignLast(aSource.mTextAlignLast)
-  , mTextAlignTrue(false)
-  , mTextAlignLastTrue(false)
-  , mTextJustify(aSource.mTextJustify)
-  , mTextTransform(aSource.mTextTransform)
-  , mWhiteSpace(aSource.mWhiteSpace)
-  , mWordBreak(aSource.mWordBreak)
-  , mOverflowWrap(aSource.mOverflowWrap)
-  , mHyphens(aSource.mHyphens)
-  , mRubyAlign(aSource.mRubyAlign)
-  , mRubyPosition(aSource.mRubyPosition)
-  , mTextSizeAdjust(aSource.mTextSizeAdjust)
-  , mTextCombineUpright(aSource.mTextCombineUpright)
-  , mControlCharacterVisibility(aSource.mControlCharacterVisibility)
-  , mTextEmphasisPosition(aSource.mTextEmphasisPosition)
-  , mTextEmphasisStyle(aSource.mTextEmphasisStyle)
-  , mTextRendering(aSource.mTextRendering)
-  , mTextEmphasisColor(aSource.mTextEmphasisColor)
-  , mWebkitTextFillColor(aSource.mWebkitTextFillColor)
-  , mWebkitTextStrokeColor(aSource.mWebkitTextStrokeColor)
-  , mTabSize(aSource.mTabSize)
-  , mWordSpacing(aSource.mWordSpacing)
-  , mLetterSpacing(aSource.mLetterSpacing)
-  , mLineHeight(aSource.mLineHeight)
-  , mTextIndent(aSource.mTextIndent)
-  , mWebkitTextStrokeWidth(aSource.mWebkitTextStrokeWidth)
-  , mTextShadow(aSource.mTextShadow)
-  , mTextEmphasisStyleString(aSource.mTextEmphasisStyleString)
-{
-=======
     : mColor(aSource.mColor),
       mTextTransform(aSource.mTextTransform),
       mTextAlign(aSource.mTextAlign),
@@ -6731,7 +3462,6 @@ nsStyleText::nsStyleText(const nsStyleText& aSource)
       mWebkitTextStrokeWidth(aSource.mWebkitTextStrokeWidth),
       mTextShadow(aSource.mTextShadow),
       mTextEmphasisStyleString(aSource.mTextEmphasisStyleString) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleText);
 }
 
@@ -6873,28 +3603,6 @@ bool nsCursorImage::operator==(const nsCursorImage& aOther) const {
          DefinitelyEqualImages(mImage, aOther.mImage);
 }
 
-<<<<<<< HEAD
-nsStyleUI::nsStyleUI(const nsPresContext* aContext)
-    : mUserInput(StyleUserInput::Auto),
-      mUserModify(StyleUserModify::ReadOnly),
-      mUserFocus(StyleUserFocus::None),
-      mPointerEvents(NS_STYLE_POINTER_EVENTS_AUTO),
-      mCursor(NS_STYLE_CURSOR_AUTO),
-      mCaretColor(StyleComplexColor::Auto()),
-      mScrollbarFaceColor(StyleComplexColor::Auto()),
-      mScrollbarTrackColor(StyleComplexColor::Auto()) {
-||||||| merged common ancestors
-nsStyleUI::nsStyleUI(const nsPresContext* aContext)
-  : mUserInput(StyleUserInput::Auto)
-  , mUserModify(StyleUserModify::ReadOnly)
-  , mUserFocus(StyleUserFocus::None)
-  , mPointerEvents(NS_STYLE_POINTER_EVENTS_AUTO)
-  , mCursor(NS_STYLE_CURSOR_AUTO)
-  , mCaretColor(StyleComplexColor::Auto())
-  , mScrollbarFaceColor(StyleComplexColor::Auto())
-  , mScrollbarTrackColor(StyleComplexColor::Auto())
-{
-=======
 nsStyleUI::nsStyleUI(const Document& aDocument)
     : mUserInput(StyleUserInput::Auto),
       mUserModify(StyleUserModify::ReadOnly),
@@ -6903,33 +3611,10 @@ nsStyleUI::nsStyleUI(const Document& aDocument)
       mCursor(StyleCursorKind::Auto),
       mCaretColor(StyleColorOrAuto::Auto()),
       mScrollbarColor(StyleScrollbarColor::Auto()) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleUI);
 }
 
 nsStyleUI::nsStyleUI(const nsStyleUI& aSource)
-<<<<<<< HEAD
-    : mUserInput(aSource.mUserInput),
-      mUserModify(aSource.mUserModify),
-      mUserFocus(aSource.mUserFocus),
-      mPointerEvents(aSource.mPointerEvents),
-      mCursor(aSource.mCursor),
-      mCursorImages(aSource.mCursorImages),
-      mCaretColor(aSource.mCaretColor),
-      mScrollbarFaceColor(aSource.mScrollbarFaceColor),
-      mScrollbarTrackColor(aSource.mScrollbarTrackColor) {
-||||||| merged common ancestors
-  : mUserInput(aSource.mUserInput)
-  , mUserModify(aSource.mUserModify)
-  , mUserFocus(aSource.mUserFocus)
-  , mPointerEvents(aSource.mPointerEvents)
-  , mCursor(aSource.mCursor)
-  , mCursorImages(aSource.mCursorImages)
-  , mCaretColor(aSource.mCaretColor)
-  , mScrollbarFaceColor(aSource.mScrollbarFaceColor)
-  , mScrollbarTrackColor(aSource.mScrollbarTrackColor)
-{
-=======
     : mUserInput(aSource.mUserInput),
       mUserModify(aSource.mUserModify),
       mUserFocus(aSource.mUserFocus),
@@ -6938,24 +3623,13 @@ nsStyleUI::nsStyleUI(const nsStyleUI& aSource)
       mCursorImages(aSource.mCursorImages),
       mCaretColor(aSource.mCaretColor),
       mScrollbarColor(aSource.mScrollbarColor) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleUI);
 }
 
 nsStyleUI::~nsStyleUI() { MOZ_COUNT_DTOR(nsStyleUI); }
 
-<<<<<<< HEAD
-void nsStyleUI::FinishStyle(nsPresContext* aPresContext,
-                            const nsStyleUI* aOldStyle) {
-||||||| merged common ancestors
-void
-nsStyleUI::FinishStyle(nsPresContext* aPresContext,
-                       const nsStyleUI* aOldStyle)
-{
-=======
 void nsStyleUI::TriggerImageLoads(Document& aDocument,
                                   const nsStyleUI* aOldStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   for (size_t i = 0; i < mCursorImages.Length(); ++i) {
@@ -6963,25 +3637,11 @@ void nsStyleUI::TriggerImageLoads(Document& aDocument,
 
     if (cursor.mImage && !cursor.mImage->IsResolved()) {
       const nsCursorImage* oldCursor =
-<<<<<<< HEAD
-          (aOldStyle && aOldStyle->mCursorImages.Length() > i)
-              ? &aOldStyle->mCursorImages[i]
-              : nullptr;
-      cursor.mImage->Resolve(aPresContext,
-                             oldCursor ? oldCursor->mImage.get() : nullptr);
-||||||| merged common ancestors
-        (aOldStyle && aOldStyle->mCursorImages.Length() > i)
-        ? &aOldStyle->mCursorImages[i]
-        : nullptr;
-      cursor.mImage->Resolve(
-        aPresContext, oldCursor ? oldCursor->mImage.get() : nullptr);
-=======
           (aOldStyle && aOldStyle->mCursorImages.Length() > i)
               ? &aOldStyle->mCursorImages[i]
               : nullptr;
       cursor.mImage->Resolve(aDocument,
                              oldCursor ? oldCursor->mImage.get() : nullptr);
->>>>>>> upstream-releases
     }
   }
 }
@@ -7035,33 +3695,6 @@ nsChangeHint nsStyleUI::CalcDifference(const nsStyleUI& aNewData) const {
 // nsStyleUIReset
 //
 
-<<<<<<< HEAD
-nsStyleUIReset::nsStyleUIReset(const nsPresContext* aContext)
-    : mUserSelect(StyleUserSelect::Auto),
-      mScrollbarWidth(StyleScrollbarWidth::Auto),
-      mForceBrokenImageIcon(0),
-      mIMEMode(NS_STYLE_IME_MODE_AUTO),
-      mWindowDragging(StyleWindowDragging::Default),
-      mWindowShadow(NS_STYLE_WINDOW_SHADOW_DEFAULT),
-      mWindowOpacity(1.0),
-      mSpecifiedWindowTransform(nullptr),
-      mWindowTransformOrigin{
-          {0.5f, eStyleUnit_Percent},  // Transform is centered on origin
-          {0.5f, eStyleUnit_Percent}} {
-||||||| merged common ancestors
-nsStyleUIReset::nsStyleUIReset(const nsPresContext* aContext)
-  : mUserSelect(StyleUserSelect::Auto)
-  , mScrollbarWidth(StyleScrollbarWidth::Auto)
-  , mForceBrokenImageIcon(0)
-  , mIMEMode(NS_STYLE_IME_MODE_AUTO)
-  , mWindowDragging(StyleWindowDragging::Default)
-  , mWindowShadow(NS_STYLE_WINDOW_SHADOW_DEFAULT)
-  , mWindowOpacity(1.0)
-  , mSpecifiedWindowTransform(nullptr)
-  , mWindowTransformOrigin{ {0.5f, eStyleUnit_Percent}, // Transform is centered on origin
-                            {0.5f, eStyleUnit_Percent} }
-{
-=======
 nsStyleUIReset::nsStyleUIReset(const Document& aDocument)
     : mUserSelect(StyleUserSelect::Auto),
       mScrollbarWidth(StyleScrollbarWidth::Auto),
@@ -7073,35 +3706,10 @@ nsStyleUIReset::nsStyleUIReset(const Document& aDocument)
       mWindowTransformOrigin{LengthPercentage::FromPercentage(0.5),
                              LengthPercentage::FromPercentage(0.5),
                              {0.}} {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleUIReset);
 }
 
 nsStyleUIReset::nsStyleUIReset(const nsStyleUIReset& aSource)
-<<<<<<< HEAD
-    : mUserSelect(aSource.mUserSelect),
-      mScrollbarWidth(aSource.mScrollbarWidth),
-      mForceBrokenImageIcon(aSource.mForceBrokenImageIcon),
-      mIMEMode(aSource.mIMEMode),
-      mWindowDragging(aSource.mWindowDragging),
-      mWindowShadow(aSource.mWindowShadow),
-      mWindowOpacity(aSource.mWindowOpacity),
-      mSpecifiedWindowTransform(aSource.mSpecifiedWindowTransform),
-      mWindowTransformOrigin{aSource.mWindowTransformOrigin[0],
-                             aSource.mWindowTransformOrigin[1]} {
-||||||| merged common ancestors
-  : mUserSelect(aSource.mUserSelect)
-  , mScrollbarWidth(aSource.mScrollbarWidth)
-  , mForceBrokenImageIcon(aSource.mForceBrokenImageIcon)
-  , mIMEMode(aSource.mIMEMode)
-  , mWindowDragging(aSource.mWindowDragging)
-  , mWindowShadow(aSource.mWindowShadow)
-  , mWindowOpacity(aSource.mWindowOpacity)
-  , mSpecifiedWindowTransform(aSource.mSpecifiedWindowTransform)
-  , mWindowTransformOrigin{ aSource.mWindowTransformOrigin[0],
-                            aSource.mWindowTransformOrigin[1] }
-{
-=======
     : mUserSelect(aSource.mUserSelect),
       mScrollbarWidth(aSource.mScrollbarWidth),
       mForceBrokenImageIcon(aSource.mForceBrokenImageIcon),
@@ -7111,28 +3719,10 @@ nsStyleUIReset::nsStyleUIReset(const nsStyleUIReset& aSource)
       mWindowOpacity(aSource.mWindowOpacity),
       mMozWindowTransform(aSource.mMozWindowTransform),
       mWindowTransformOrigin(aSource.mWindowTransformOrigin) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleUIReset);
 }
 
-<<<<<<< HEAD
-nsStyleUIReset::~nsStyleUIReset() {
-  MOZ_COUNT_DTOR(nsStyleUIReset);
-
-  ReleaseSharedListOnMainThread("nsStyleUIReset::mSpecifiedWindowTransform",
-                                mSpecifiedWindowTransform);
-}
-||||||| merged common ancestors
-nsStyleUIReset::~nsStyleUIReset()
-{
-  MOZ_COUNT_DTOR(nsStyleUIReset);
-
-  ReleaseSharedListOnMainThread("nsStyleUIReset::mSpecifiedWindowTransform",
-                                mSpecifiedWindowTransform);
-}
-=======
 nsStyleUIReset::~nsStyleUIReset() { MOZ_COUNT_DTOR(nsStyleUIReset); }
->>>>>>> upstream-releases
 
 nsChangeHint nsStyleUIReset::CalcDifference(
     const nsStyleUIReset& aNewData) const {
@@ -7164,26 +3754,6 @@ nsChangeHint nsStyleUIReset::CalcDifference(
   if (mWindowOpacity != aNewData.mWindowOpacity ||
       mMozWindowTransform != aNewData.mMozWindowTransform) {
     hint |= nsChangeHint_UpdateWidgetProperties;
-<<<<<<< HEAD
-  } else {
-    for (uint8_t index = 0; index < 2; ++index) {
-      if (mWindowTransformOrigin[index] !=
-          aNewData.mWindowTransformOrigin[index]) {
-        hint |= nsChangeHint_UpdateWidgetProperties;
-        break;
-      }
-    }
-||||||| merged common ancestors
-  } else {
-    for (uint8_t index = 0; index < 2; ++index) {
-      if (mWindowTransformOrigin[index] !=
-            aNewData.mWindowTransformOrigin[index]) {
-        hint |= nsChangeHint_UpdateWidgetProperties;
-        break;
-      }
-    }
-=======
->>>>>>> upstream-releases
   }
 
   if (!hint && mIMEMode != aNewData.mIMEMode) {
@@ -7197,48 +3767,15 @@ nsChangeHint nsStyleUIReset::CalcDifference(
 // nsStyleEffects
 //
 
-<<<<<<< HEAD
-nsStyleEffects::nsStyleEffects(const nsPresContext* aContext)
-    : mBoxShadow(nullptr),
-      mClip(0, 0, 0, 0),
-      mOpacity(1.0f),
-      mClipFlags(NS_STYLE_CLIP_AUTO),
-      mMixBlendMode(NS_STYLE_BLEND_NORMAL) {
-||||||| merged common ancestors
-nsStyleEffects::nsStyleEffects(const nsPresContext* aContext)
-  : mBoxShadow(nullptr)
-  , mClip(0, 0, 0, 0)
-  , mOpacity(1.0f)
-  , mClipFlags(NS_STYLE_CLIP_AUTO)
-  , mMixBlendMode(NS_STYLE_BLEND_NORMAL)
-{
-=======
 nsStyleEffects::nsStyleEffects(const Document&)
     : mClip(0, 0, 0, 0),
       mOpacity(1.0f),
       mClipFlags(NS_STYLE_CLIP_AUTO),
       mMixBlendMode(NS_STYLE_BLEND_NORMAL) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleEffects);
 }
 
 nsStyleEffects::nsStyleEffects(const nsStyleEffects& aSource)
-<<<<<<< HEAD
-    : mFilters(aSource.mFilters),
-      mBoxShadow(aSource.mBoxShadow),
-      mClip(aSource.mClip),
-      mOpacity(aSource.mOpacity),
-      mClipFlags(aSource.mClipFlags),
-      mMixBlendMode(aSource.mMixBlendMode) {
-||||||| merged common ancestors
-  : mFilters(aSource.mFilters)
-  , mBoxShadow(aSource.mBoxShadow)
-  , mClip(aSource.mClip)
-  , mOpacity(aSource.mOpacity)
-  , mClipFlags(aSource.mClipFlags)
-  , mMixBlendMode(aSource.mMixBlendMode)
-{
-=======
     : mFilters(aSource.mFilters),
       mBoxShadow(aSource.mBoxShadow),
       mBackdropFilters(aSource.mBackdropFilters),
@@ -7246,7 +3783,6 @@ nsStyleEffects::nsStyleEffects(const nsStyleEffects& aSource)
       mOpacity(aSource.mOpacity),
       mClipFlags(aSource.mClipFlags),
       mMixBlendMode(aSource.mMixBlendMode) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsStyleEffects);
 }
 
@@ -7305,18 +3841,11 @@ nsChangeHint nsStyleEffects::CalcDifference(
     hint |= nsChangeHint_RepaintFrame;
   }
 
-<<<<<<< HEAD
-  if (!hint && !mClip.IsEqualEdges(aNewData.mClip)) {
-||||||| merged common ancestors
-  if (!hint &&
-      !mClip.IsEqualEdges(aNewData.mClip)) {
-=======
   if (mBackdropFilters != aNewData.mBackdropFilters) {
     hint |= nsChangeHint_UpdateEffects | nsChangeHint_RepaintFrame;
   }
 
   if (!hint && !mClip.IsEqualEdges(aNewData.mClip)) {
->>>>>>> upstream-releases
     hint |= nsChangeHint_NeutralChange;
   }
 

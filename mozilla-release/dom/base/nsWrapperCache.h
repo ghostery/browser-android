@@ -17,22 +17,10 @@
 namespace mozilla {
 namespace dom {
 class ContentProcessMessageManager;
-<<<<<<< HEAD
-class InProcessTabChildMessageManager;
-class TabChildMessageManager;
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-class InProcessTabChildMessageManager;
-class TabChildMessageManager;
-} // namespace dom
-} // namespace mozilla
-=======
 class InProcessBrowserChildMessageManager;
 class BrowserChildMessageManager;
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 class SandboxPrivate;
 class nsWindowRoot;
 

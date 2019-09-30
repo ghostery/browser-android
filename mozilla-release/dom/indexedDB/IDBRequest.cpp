@@ -50,71 +50,30 @@ NS_DEFINE_IID(kIDBRequestIID, PRIVATE_IDBREQUEST_IID);
 }  // namespace
 
 IDBRequest::IDBRequest(IDBDatabase* aDatabase)
-<<<<<<< HEAD
-    : IDBWrapperCache(aDatabase),
-      mLoggingSerialNumber(0),
-      mLineNo(0),
-      mColumn(0),
-      mHaveResultOrErrorCode(false) {
-||||||| merged common ancestors
-  : IDBWrapperCache(aDatabase)
-  , mLoggingSerialNumber(0)
-  , mLineNo(0)
-  , mColumn(0)
-  , mHaveResultOrErrorCode(false)
-{
-=======
     : DOMEventTargetHelper(aDatabase),
       mLoggingSerialNumber(0),
       mLineNo(0),
       mColumn(0),
       mHaveResultOrErrorCode(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDatabase);
   aDatabase->AssertIsOnOwningThread();
 
   InitMembers();
 }
 
-<<<<<<< HEAD
-IDBRequest::IDBRequest(nsPIDOMWindowInner* aOwner)
-    : IDBWrapperCache(aOwner),
-      mLoggingSerialNumber(0),
-      mLineNo(0),
-      mColumn(0),
-      mHaveResultOrErrorCode(false) {
-||||||| merged common ancestors
-IDBRequest::IDBRequest(nsPIDOMWindowInner* aOwner)
-  : IDBWrapperCache(aOwner)
-  , mLoggingSerialNumber(0)
-  , mLineNo(0)
-  , mColumn(0)
-  , mHaveResultOrErrorCode(false)
-{
-=======
 IDBRequest::IDBRequest(nsIGlobalObject* aGlobal)
     : DOMEventTargetHelper(aGlobal),
       mLoggingSerialNumber(0),
       mLineNo(0),
       mColumn(0),
       mHaveResultOrErrorCode(false) {
->>>>>>> upstream-releases
   InitMembers();
 }
 
-<<<<<<< HEAD
-IDBRequest::~IDBRequest() { AssertIsOnOwningThread(); }
-||||||| merged common ancestors
-IDBRequest::~IDBRequest()
-{
-  AssertIsOnOwningThread();
-}
-=======
 IDBRequest::~IDBRequest() {
   AssertIsOnOwningThread();
   mozilla::DropJSObjects(this);
 }
->>>>>>> upstream-releases
 
 void IDBRequest::InitMembers() {
   AssertIsOnOwningThread();
@@ -413,23 +372,10 @@ void IDBRequest::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
 IDBOpenDBRequest::IDBOpenDBRequest(IDBFactory* aFactory,
                                    nsIGlobalObject* aGlobal,
                                    bool aFileHandleDisabled)
-<<<<<<< HEAD
-    : IDBRequest(aOwner),
-      mFactory(aFactory),
-      mFileHandleDisabled(aFileHandleDisabled),
-      mIncreasedActiveDatabaseCount(false) {
-||||||| merged common ancestors
-  : IDBRequest(aOwner)
-  , mFactory(aFactory)
-  , mFileHandleDisabled(aFileHandleDisabled)
-  , mIncreasedActiveDatabaseCount(false)
-{
-=======
     : IDBRequest(aGlobal),
       mFactory(aFactory),
       mFileHandleDisabled(aFileHandleDisabled),
       mIncreasedActiveDatabaseCount(false) {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
   MOZ_ASSERT(aFactory);
   MOZ_ASSERT(aGlobal);
@@ -441,21 +387,8 @@ IDBOpenDBRequest::~IDBOpenDBRequest() {
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<IDBOpenDBRequest> IDBOpenDBRequest::CreateForWindow(
-    JSContext* aCx, IDBFactory* aFactory, nsPIDOMWindowInner* aOwner,
-    JS::Handle<JSObject*> aScriptOwner) {
-||||||| merged common ancestors
-already_AddRefed<IDBOpenDBRequest>
-IDBOpenDBRequest::CreateForWindow(JSContext* aCx,
-                                  IDBFactory* aFactory,
-                                  nsPIDOMWindowInner* aOwner,
-                                  JS::Handle<JSObject*> aScriptOwner)
-{
-=======
 already_AddRefed<IDBOpenDBRequest> IDBOpenDBRequest::Create(
     JSContext* aCx, IDBFactory* aFactory, nsIGlobalObject* aGlobal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFactory);
   aFactory->AssertIsOnOwningThread();
   MOZ_ASSERT(aGlobal);
@@ -463,66 +396,9 @@ already_AddRefed<IDBOpenDBRequest> IDBOpenDBRequest::Create(
   bool fileHandleDisabled = !IndexedDatabaseManager::IsFileHandleEnabled();
 
   RefPtr<IDBOpenDBRequest> request =
-<<<<<<< HEAD
-      new IDBOpenDBRequest(aFactory, aOwner, fileHandleDisabled);
-||||||| merged common ancestors
-    new IDBOpenDBRequest(aFactory, aOwner, fileHandleDisabled);
-=======
       new IDBOpenDBRequest(aFactory, aGlobal, fileHandleDisabled);
->>>>>>> upstream-releases
   CaptureCaller(aCx, request->mFilename, &request->mLineNo, &request->mColumn);
 
-<<<<<<< HEAD
-  request->SetScriptOwner(aScriptOwner);
-
-  request->IncreaseActiveDatabaseCount();
-
-  return request.forget();
-}
-
-// static
-already_AddRefed<IDBOpenDBRequest> IDBOpenDBRequest::CreateForJS(
-    JSContext* aCx, IDBFactory* aFactory, JS::Handle<JSObject*> aScriptOwner) {
-  MOZ_ASSERT(aFactory);
-  aFactory->AssertIsOnOwningThread();
-  MOZ_ASSERT(aScriptOwner);
-
-  bool fileHandleDisabled = !IndexedDatabaseManager::IsFileHandleEnabled();
-
-  RefPtr<IDBOpenDBRequest> request =
-      new IDBOpenDBRequest(aFactory, nullptr, fileHandleDisabled);
-  CaptureCaller(aCx, request->mFilename, &request->mLineNo, &request->mColumn);
-
-  request->SetScriptOwner(aScriptOwner);
-
-||||||| merged common ancestors
-  request->SetScriptOwner(aScriptOwner);
-
-  request->IncreaseActiveDatabaseCount();
-
-  return request.forget();
-}
-
-// static
-already_AddRefed<IDBOpenDBRequest>
-IDBOpenDBRequest::CreateForJS(JSContext* aCx,
-                              IDBFactory* aFactory,
-                              JS::Handle<JSObject*> aScriptOwner)
-{
-  MOZ_ASSERT(aFactory);
-  aFactory->AssertIsOnOwningThread();
-  MOZ_ASSERT(aScriptOwner);
-
-  bool fileHandleDisabled = !IndexedDatabaseManager::IsFileHandleEnabled();
-
-  RefPtr<IDBOpenDBRequest> request =
-    new IDBOpenDBRequest(aFactory, nullptr, fileHandleDisabled);
-  CaptureCaller(aCx, request->mFilename, &request->mLineNo, &request->mColumn);
-
-  request->SetScriptOwner(aScriptOwner);
-
-=======
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
     MOZ_ASSERT(workerPrivate);

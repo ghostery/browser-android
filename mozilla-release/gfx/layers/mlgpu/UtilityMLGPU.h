@@ -30,18 +30,6 @@ struct AlignUp<0> {
 }  // namespace mozilla
 
 #ifdef ENABLE_AL_LOGGING
-<<<<<<< HEAD
-#define AL_LOG(...) printf_stderr("AL: " __VA_ARGS__)
-#define AL_LOG_IF(cond, ...)             \
-  do {                                   \
-    if (cond) {                          \
-      printf_stderr("AL: " __VA_ARGS__); \
-    }                                    \
-  } while (0)
-||||||| merged common ancestors
-#  define AL_LOG(...) printf_stderr("AL: " __VA_ARGS__)
-#  define AL_LOG_IF(cond, ...) do { if (cond) { printf_stderr("AL: " __VA_ARGS__); } } while(0)
-=======
 #  define AL_LOG(...) printf_stderr("AL: " __VA_ARGS__)
 #  define AL_LOG_IF(cond, ...)             \
     do {                                   \
@@ -49,10 +37,9 @@ struct AlignUp<0> {
         printf_stderr("AL: " __VA_ARGS__); \
       }                                    \
     } while (0)
->>>>>>> upstream-releases
 #else
-#define AL_LOG(...)
-#define AL_LOG_IF(...)
+#  define AL_LOG(...)
+#  define AL_LOG_IF(...)
 #endif
 
 #endif  // mozilla_gfx_layers_mlgpu_UtilityMLGPU_h

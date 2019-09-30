@@ -64,16 +64,9 @@ nsFontFaceLoader::nsFontFaceLoader(gfxUserFontEntry* aUserFontEntry,
   mFontFaceSet->Document()->BlockOnload();
 }
 
-<<<<<<< HEAD
-nsFontFaceLoader::~nsFontFaceLoader() {
-||||||| merged common ancestors
-nsFontFaceLoader::~nsFontFaceLoader()
-{
-=======
 nsFontFaceLoader::~nsFontFaceLoader() {
   MOZ_DIAGNOSTIC_ASSERT(!mInLoadTimerCallback);
   MOZ_DIAGNOSTIC_ASSERT(!mInStreamComplete);
->>>>>>> upstream-releases
   if (mUserFontEntry) {
     mUserFontEntry->mLoader = nullptr;
   }
@@ -108,17 +101,8 @@ void nsFontFaceLoader::StartedLoading(nsIStreamLoader* aStreamLoader) {
   mStreamLoader = aStreamLoader;
 }
 
-<<<<<<< HEAD
-/* static */ void nsFontFaceLoader::LoadTimerCallback(nsITimer* aTimer,
-                                                      void* aClosure) {
-||||||| merged common ancestors
-/* static */ void
-nsFontFaceLoader::LoadTimerCallback(nsITimer* aTimer, void* aClosure)
-{
-=======
 /* static */
 void nsFontFaceLoader::LoadTimerCallback(nsITimer* aTimer, void* aClosure) {
->>>>>>> upstream-releases
   nsFontFaceLoader* loader = static_cast<nsFontFaceLoader*>(aClosure);
 
   MOZ_DIAGNOSTIC_ASSERT(!loader->mInLoadTimerCallback);
@@ -292,14 +276,6 @@ nsFontFaceLoader::OnStreamComplete(nsIStreamLoader* aLoader,
   // This is called even in the case of a failed download (HTTP 404, etc),
   // as there may still be data to be freed (e.g. an error page),
   // and we need to load the next source.
-<<<<<<< HEAD
-  bool fontUpdate =
-      mUserFontEntry->FontDataDownloadComplete(aString, aStringLen, aStatus);
-||||||| merged common ancestors
-  bool fontUpdate =
-    mUserFontEntry->FontDataDownloadComplete(aString, aStringLen, aStatus);
-=======
->>>>>>> upstream-releases
 
   // FontDataDownloadComplete will load the platform font on a worker thread,
   // and will call FontLoadComplete when it has finished its work.
@@ -338,15 +314,7 @@ nsresult nsFontFaceLoader::FontLoadComplete() {
 
 // nsIRequestObserver
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFontFaceLoader::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-||||||| merged common ancestors
-nsFontFaceLoader::OnStartRequest(nsIRequest* aRequest,
-                                 nsISupports* aContext)
-{
-=======
 nsFontFaceLoader::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIThreadRetargetableRequest> req = do_QueryInterface(aRequest);
@@ -359,35 +327,17 @@ nsFontFaceLoader::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFontFaceLoader::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                                nsresult aStatusCode) {
-||||||| merged common ancestors
-nsFontFaceLoader::OnStopRequest(nsIRequest* aRequest,
-                                nsISupports* aContext,
-                                nsresult aStatusCode)
-{
-=======
 nsFontFaceLoader::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   DropChannel();
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsFontFaceLoader::Cancel() {
-||||||| merged common ancestors
-void
-nsFontFaceLoader::Cancel()
-{
-=======
 void nsFontFaceLoader::Cancel() {
   MOZ_DIAGNOSTIC_ASSERT(!mInLoadTimerCallback);
   MOZ_DIAGNOSTIC_ASSERT(!mInStreamComplete);
   MOZ_DIAGNOSTIC_ASSERT(mFontFaceSet);
 
->>>>>>> upstream-releases
   mUserFontEntry->LoadCanceled();
   mUserFontEntry = nullptr;
   mFontFaceSet->Document()->UnblockOnload(false);

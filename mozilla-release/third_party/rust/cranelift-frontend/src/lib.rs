@@ -164,19 +164,6 @@
 #![cfg_attr(
     feature = "cargo-clippy",
     warn(
-<<<<<<< HEAD
-        float_arithmetic,
-        mut_mut,
-        nonminimal_bool,
-        option_map_unwrap_or,
-        option_map_unwrap_or_else,
-        print_stdout,
-        unicode_not_nfc,
-        use_self
-||||||| merged common ancestors
-        float_arithmetic, mut_mut, nonminimal_bool, option_map_unwrap_or, option_map_unwrap_or_else,
-        print_stdout, unicode_not_nfc, use_self
-=======
         clippy::float_arithmetic,
         clippy::mut_mut,
         clippy::nonminimal_bool,
@@ -185,24 +172,11 @@
         clippy::print_stdout,
         clippy::unicode_not_nfc,
         clippy::use_self
->>>>>>> upstream-releases
     )
 )]
 #![no_std]
 #![cfg_attr(not(feature = "std"), feature(alloc))]
 
-<<<<<<< HEAD
-#[cfg(not(feature = "std"))]
-#[macro_use]
-extern crate alloc;
-extern crate cranelift_codegen;
-#[cfg(test)]
-extern crate target_lexicon;
-#[macro_use]
-extern crate log;
-||||||| merged common ancestors
-extern crate cranelift_codegen;
-=======
 #[cfg(not(feature = "std"))]
 #[macro_use]
 extern crate alloc as std;
@@ -214,49 +188,15 @@ extern crate std;
 use hashmap_core::HashMap;
 #[cfg(feature = "std")]
 use std::collections::HashMap;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-pub use frontend::{FunctionBuilder, FunctionBuilderContext};
-pub use switch::Switch;
-pub use variable::Variable;
-||||||| merged common ancestors
-pub use frontend::{FunctionBuilder, FunctionBuilderContext};
-pub use variable::Variable;
-=======
 pub use crate::frontend::{FunctionBuilder, FunctionBuilderContext};
 pub use crate::switch::Switch;
 pub use crate::variable::Variable;
->>>>>>> upstream-releases
 
 mod frontend;
 mod ssa;
 mod switch;
 mod variable;
 
-<<<<<<< HEAD
-/// This replaces `std` in builds with `core`.
-#[cfg(not(feature = "std"))]
-mod std {
-    pub use alloc::{string, vec};
-    pub use core::*;
-    pub mod collections {
-        #[allow(unused_extern_crates)]
-        extern crate hashmap_core;
-
-        pub use self::hashmap_core::map as hash_map;
-        pub use self::hashmap_core::{HashMap, HashSet};
-    }
-}
-||||||| merged common ancestors
-#[cfg(not(feature = "std"))]
-mod std {
-    extern crate alloc;
-
-    pub use self::alloc::vec;
-    pub use core::*;
-}
-=======
 /// Version number of this crate.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
->>>>>>> upstream-releases

@@ -86,15 +86,6 @@ enum CacheDisposition : uint8_t {
   kCacheUnknown = 5
 };
 
-enum CacheDisposition : uint8_t {
-  kCacheUnresolved = 0,
-  kCacheHit = 1,
-  kCacheHitViaReval = 2,
-  kCacheMissedViaReval = 3,
-  kCacheMissed = 4,
-  kCacheUnknown = 5
-};
-
 /*
  * This class is a partial implementation of nsIHttpChannel.  It contains code
  * shared by nsHttpChannel and HttpChannelChild.
@@ -138,78 +129,20 @@ class HttpBaseChannel : public nsHashPropertyBag,
   virtual MOZ_MUST_USE nsresult Init(nsIURI* aURI, uint32_t aCaps,
                                      nsProxyInfo* aProxyInfo,
                                      uint32_t aProxyResolveFlags,
-<<<<<<< HEAD
-                                     nsIURI *aProxyURI, uint64_t aChannelId);
-||||||| merged common ancestors
-                                     nsIURI *aProxyURI,
-                                     uint64_t aChannelId);
-=======
                                      nsIURI* aProxyURI, uint64_t aChannelId,
                                      nsContentPolicyType aContentPolicyType);
->>>>>>> upstream-releases
 
   // nsIRequest
-<<<<<<< HEAD
-  NS_IMETHOD GetName(nsACString &aName) override;
-  NS_IMETHOD IsPending(bool *aIsPending) override;
-  NS_IMETHOD GetStatus(nsresult *aStatus) override;
-  NS_IMETHOD GetLoadGroup(nsILoadGroup **aLoadGroup) override;
-  NS_IMETHOD SetLoadGroup(nsILoadGroup *aLoadGroup) override;
-  NS_IMETHOD GetLoadFlags(nsLoadFlags *aLoadFlags) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetName(nsACString& aName) override;
-  NS_IMETHOD IsPending(bool *aIsPending) override;
-  NS_IMETHOD GetStatus(nsresult *aStatus) override;
-  NS_IMETHOD GetLoadGroup(nsILoadGroup **aLoadGroup) override;
-  NS_IMETHOD SetLoadGroup(nsILoadGroup *aLoadGroup) override;
-  NS_IMETHOD GetLoadFlags(nsLoadFlags *aLoadFlags) override;
-=======
   NS_IMETHOD GetName(nsACString& aName) override;
   NS_IMETHOD IsPending(bool* aIsPending) override;
   NS_IMETHOD GetStatus(nsresult* aStatus) override;
   NS_IMETHOD GetLoadGroup(nsILoadGroup** aLoadGroup) override;
   NS_IMETHOD SetLoadGroup(nsILoadGroup* aLoadGroup) override;
   NS_IMETHOD GetLoadFlags(nsLoadFlags* aLoadFlags) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetLoadFlags(nsLoadFlags aLoadFlags) override;
   NS_IMETHOD SetDocshellUserAgentOverride();
 
   // nsIChannel
-<<<<<<< HEAD
-  NS_IMETHOD GetOriginalURI(nsIURI **aOriginalURI) override;
-  NS_IMETHOD SetOriginalURI(nsIURI *aOriginalURI) override;
-  NS_IMETHOD GetURI(nsIURI **aURI) override;
-  NS_IMETHOD GetOwner(nsISupports **aOwner) override;
-  NS_IMETHOD SetOwner(nsISupports *aOwner) override;
-  NS_IMETHOD GetLoadInfo(nsILoadInfo **aLoadInfo) override;
-  NS_IMETHOD SetLoadInfo(nsILoadInfo *aLoadInfo) override;
-  NS_IMETHOD GetIsDocument(bool *aIsDocument) override;
-  NS_IMETHOD GetNotificationCallbacks(
-      nsIInterfaceRequestor **aCallbacks) override;
-  NS_IMETHOD SetNotificationCallbacks(
-      nsIInterfaceRequestor *aCallbacks) override;
-  NS_IMETHOD GetContentType(nsACString &aContentType) override;
-  NS_IMETHOD SetContentType(const nsACString &aContentType) override;
-  NS_IMETHOD GetContentCharset(nsACString &aContentCharset) override;
-  NS_IMETHOD SetContentCharset(const nsACString &aContentCharset) override;
-  NS_IMETHOD GetContentDisposition(uint32_t *aContentDisposition) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetOriginalURI(nsIURI **aOriginalURI) override;
-  NS_IMETHOD SetOriginalURI(nsIURI *aOriginalURI) override;
-  NS_IMETHOD GetURI(nsIURI **aURI) override;
-  NS_IMETHOD GetOwner(nsISupports **aOwner) override;
-  NS_IMETHOD SetOwner(nsISupports *aOwner) override;
-  NS_IMETHOD GetLoadInfo(nsILoadInfo **aLoadInfo) override;
-  NS_IMETHOD SetLoadInfo(nsILoadInfo *aLoadInfo) override;
-  NS_IMETHOD GetIsDocument(bool *aIsDocument) override;
-  NS_IMETHOD GetNotificationCallbacks(nsIInterfaceRequestor **aCallbacks) override;
-  NS_IMETHOD SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks) override;
-  NS_IMETHOD GetContentType(nsACString& aContentType) override;
-  NS_IMETHOD SetContentType(const nsACString& aContentType) override;
-  NS_IMETHOD GetContentCharset(nsACString& aContentCharset) override;
-  NS_IMETHOD SetContentCharset(const nsACString& aContentCharset) override;
-  NS_IMETHOD GetContentDisposition(uint32_t *aContentDisposition) override;
-=======
   NS_IMETHOD GetOriginalURI(nsIURI** aOriginalURI) override;
   NS_IMETHOD SetOriginalURI(nsIURI* aOriginalURI) override;
   NS_IMETHOD GetURI(nsIURI** aURI) override;
@@ -227,22 +160,7 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD GetContentCharset(nsACString& aContentCharset) override;
   NS_IMETHOD SetContentCharset(const nsACString& aContentCharset) override;
   NS_IMETHOD GetContentDisposition(uint32_t* aContentDisposition) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetContentDisposition(uint32_t aContentDisposition) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetContentDispositionFilename(
-      nsAString &aContentDispositionFilename) override;
-  NS_IMETHOD SetContentDispositionFilename(
-      const nsAString &aContentDispositionFilename) override;
-  NS_IMETHOD GetContentDispositionHeader(
-      nsACString &aContentDispositionHeader) override;
-  NS_IMETHOD GetContentLength(int64_t *aContentLength) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetContentDispositionFilename(nsAString& aContentDispositionFilename) override;
-  NS_IMETHOD SetContentDispositionFilename(const nsAString& aContentDispositionFilename) override;
-  NS_IMETHOD GetContentDispositionHeader(nsACString& aContentDispositionHeader) override;
-  NS_IMETHOD GetContentLength(int64_t *aContentLength) override;
-=======
   NS_IMETHOD GetContentDispositionFilename(
       nsAString& aContentDispositionFilename) override;
   NS_IMETHOD SetContentDispositionFilename(
@@ -250,95 +168,20 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD GetContentDispositionHeader(
       nsACString& aContentDispositionHeader) override;
   NS_IMETHOD GetContentLength(int64_t* aContentLength) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetContentLength(int64_t aContentLength) override;
-<<<<<<< HEAD
-  NS_IMETHOD Open(nsIInputStream **aResult) override;
-  NS_IMETHOD Open2(nsIInputStream **aResult) override;
-  NS_IMETHOD GetBlockAuthPrompt(bool *aValue) override;
-||||||| merged common ancestors
-  NS_IMETHOD Open(nsIInputStream **aResult) override;
-  NS_IMETHOD Open2(nsIInputStream **aResult) override;
-  NS_IMETHOD GetBlockAuthPrompt(bool* aValue) override;
-=======
   NS_IMETHOD Open(nsIInputStream** aResult) override;
   NS_IMETHOD GetBlockAuthPrompt(bool* aValue) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetBlockAuthPrompt(bool aValue) override;
 
   // nsIEncodedChannel
   NS_IMETHOD GetApplyConversion(bool* value) override;
   NS_IMETHOD SetApplyConversion(bool value) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetContentEncodings(nsIUTF8StringEnumerator **aEncodings) override;
-  NS_IMETHOD DoApplyContentConversions(nsIStreamListener *aNextListener,
-                                       nsIStreamListener **aNewNextListener,
-                                       nsISupports *aCtxt) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetContentEncodings(nsIUTF8StringEnumerator** aEncodings) override;
-  NS_IMETHOD DoApplyContentConversions(nsIStreamListener *aNextListener,
-                                       nsIStreamListener **aNewNextListener,
-                                       nsISupports *aCtxt) override;
-=======
   NS_IMETHOD GetContentEncodings(nsIUTF8StringEnumerator** aEncodings) override;
   NS_IMETHOD DoApplyContentConversions(nsIStreamListener* aNextListener,
                                        nsIStreamListener** aNewNextListener,
                                        nsISupports* aCtxt) override;
->>>>>>> upstream-releases
 
   // HttpBaseChannel::nsIHttpChannel
-<<<<<<< HEAD
-  NS_IMETHOD GetRequestMethod(nsACString &aMethod) override;
-  NS_IMETHOD SetRequestMethod(const nsACString &aMethod) override;
-  NS_IMETHOD GetReferrer(nsIURI **referrer) override;
-  NS_IMETHOD SetReferrer(nsIURI *referrer) override;
-  NS_IMETHOD GetReferrerPolicy(uint32_t *referrerPolicy) override;
-  NS_IMETHOD SetReferrerWithPolicy(nsIURI *referrer,
-                                   uint32_t referrerPolicy) override;
-  NS_IMETHOD GetRequestHeader(const nsACString &aHeader,
-                              nsACString &aValue) override;
-  NS_IMETHOD SetRequestHeader(const nsACString &aHeader,
-                              const nsACString &aValue, bool aMerge) override;
-  NS_IMETHOD SetEmptyRequestHeader(const nsACString &aHeader) override;
-  NS_IMETHOD VisitRequestHeaders(nsIHttpHeaderVisitor *visitor) override;
-  NS_IMETHOD VisitNonDefaultRequestHeaders(
-      nsIHttpHeaderVisitor *visitor) override;
-  NS_IMETHOD GetResponseHeader(const nsACString &header,
-                               nsACString &value) override;
-  NS_IMETHOD SetResponseHeader(const nsACString &header,
-                               const nsACString &value, bool merge) override;
-  NS_IMETHOD VisitResponseHeaders(nsIHttpHeaderVisitor *visitor) override;
-  NS_IMETHOD GetOriginalResponseHeader(const nsACString &aHeader,
-                                       nsIHttpHeaderVisitor *aVisitor) override;
-  NS_IMETHOD VisitOriginalResponseHeaders(
-      nsIHttpHeaderVisitor *aVisitor) override;
-  NS_IMETHOD GetAllowPipelining(bool *value) override;  // deprecated
-  NS_IMETHOD SetAllowPipelining(bool value) override;   // deprecated
-  NS_IMETHOD GetAllowSTS(bool *value) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetRequestMethod(nsACString& aMethod) override;
-  NS_IMETHOD SetRequestMethod(const nsACString& aMethod) override;
-  NS_IMETHOD GetReferrer(nsIURI **referrer) override;
-  NS_IMETHOD SetReferrer(nsIURI *referrer) override;
-  NS_IMETHOD GetReferrerPolicy(uint32_t *referrerPolicy) override;
-  NS_IMETHOD SetReferrerWithPolicy(nsIURI *referrer, uint32_t referrerPolicy) override;
-  NS_IMETHOD GetRequestHeader(const nsACString& aHeader, nsACString& aValue) override;
-  NS_IMETHOD SetRequestHeader(const nsACString& aHeader,
-                              const nsACString& aValue, bool aMerge) override;
-  NS_IMETHOD SetEmptyRequestHeader(const nsACString& aHeader) override;
-  NS_IMETHOD VisitRequestHeaders(nsIHttpHeaderVisitor *visitor) override;
-  NS_IMETHOD VisitNonDefaultRequestHeaders(nsIHttpHeaderVisitor *visitor) override;
-  NS_IMETHOD GetResponseHeader(const nsACString &header, nsACString &value) override;
-  NS_IMETHOD SetResponseHeader(const nsACString& header,
-                               const nsACString& value, bool merge) override;
-  NS_IMETHOD VisitResponseHeaders(nsIHttpHeaderVisitor *visitor) override;
-  NS_IMETHOD GetOriginalResponseHeader(const nsACString &aHeader,
-                                       nsIHttpHeaderVisitor *aVisitor) override;
-  NS_IMETHOD VisitOriginalResponseHeaders(nsIHttpHeaderVisitor *aVisitor) override;
-  NS_IMETHOD GetAllowPipelining(bool *value) override; // deprecated
-  NS_IMETHOD SetAllowPipelining(bool value) override;  // deprecated
-  NS_IMETHOD GetAllowSTS(bool *value) override;
-=======
   NS_IMETHOD GetRequestMethod(nsACString& aMethod) override;
   NS_IMETHOD SetRequestMethod(const nsACString& aMethod) override;
   NS_IMETHOD GetReferrerInfo(nsIReferrerInfo** aReferrerInfo) override;
@@ -365,27 +208,9 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD GetAllowPipelining(bool* value) override;  // deprecated
   NS_IMETHOD SetAllowPipelining(bool value) override;   // deprecated
   NS_IMETHOD GetAllowSTS(bool* value) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetAllowSTS(bool value) override;
   NS_IMETHOD GetRedirectionLimit(uint32_t* value) override;
   NS_IMETHOD SetRedirectionLimit(uint32_t value) override;
-<<<<<<< HEAD
-  NS_IMETHOD IsNoStoreResponse(bool *value) override;
-  NS_IMETHOD IsNoCacheResponse(bool *value) override;
-  NS_IMETHOD IsPrivateResponse(bool *value) override;
-  NS_IMETHOD GetResponseStatus(uint32_t *aValue) override;
-  NS_IMETHOD GetResponseStatusText(nsACString &aValue) override;
-  NS_IMETHOD GetRequestSucceeded(bool *aValue) override;
-  NS_IMETHOD RedirectTo(nsIURI *newURI) override;
-||||||| merged common ancestors
-  NS_IMETHOD IsNoStoreResponse(bool *value) override;
-  NS_IMETHOD IsNoCacheResponse(bool *value) override;
-  NS_IMETHOD IsPrivateResponse(bool *value) override;
-  NS_IMETHOD GetResponseStatus(uint32_t *aValue) override;
-  NS_IMETHOD GetResponseStatusText(nsACString& aValue) override;
-  NS_IMETHOD GetRequestSucceeded(bool *aValue) override;
-  NS_IMETHOD RedirectTo(nsIURI *newURI) override;
-=======
   NS_IMETHOD IsNoStoreResponse(bool* value) override;
   NS_IMETHOD IsNoCacheResponse(bool* value) override;
   NS_IMETHOD IsPrivateResponse(bool* value) override;
@@ -396,41 +221,21 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD SwitchProcessTo(mozilla::dom::Promise* aBrowserParent,
                              uint64_t aIdentifier) override;
   NS_IMETHOD HasCrossOriginOpenerPolicyMismatch(bool* aMismatch) override;
->>>>>>> upstream-releases
   NS_IMETHOD UpgradeToSecure() override;
   NS_IMETHOD GetRequestContextID(uint64_t* aRCID) override;
   NS_IMETHOD GetTransferSize(uint64_t* aTransferSize) override;
   NS_IMETHOD GetDecodedBodySize(uint64_t* aDecodedBodySize) override;
   NS_IMETHOD GetEncodedBodySize(uint64_t* aEncodedBodySize) override;
   NS_IMETHOD SetRequestContextID(uint64_t aRCID) override;
-  NS_IMETHOD GetIsMainDocumentChannel(bool *aValue) override;
+  NS_IMETHOD GetIsMainDocumentChannel(bool* aValue) override;
   NS_IMETHOD SetIsMainDocumentChannel(bool aValue) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetProtocolVersion(nsACString &aProtocolVersion) override;
-  NS_IMETHOD GetChannelId(uint64_t *aChannelId) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetProtocolVersion(nsACString & aProtocolVersion) override;
-  NS_IMETHOD GetChannelId(uint64_t *aChannelId) override;
-=======
   NS_IMETHOD GetProtocolVersion(nsACString& aProtocolVersion) override;
   NS_IMETHOD GetChannelId(uint64_t* aChannelId) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetChannelId(uint64_t aChannelId) override;
   NS_IMETHOD GetTopLevelContentWindowId(uint64_t* aContentWindowId) override;
   NS_IMETHOD SetTopLevelContentWindowId(uint64_t aContentWindowId) override;
   NS_IMETHOD GetTopLevelOuterContentWindowId(uint64_t* aWindowId) override;
   NS_IMETHOD SetTopLevelOuterContentWindowId(uint64_t aWindowId) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetIsTrackingResource(bool *aIsTrackingResource) override;
-  NS_IMETHOD GetIsThirdPartyTrackingResource(
-      bool *aIsTrackingResource) override;
-  NS_IMETHOD OverrideTrackingFlagsForDocumentCookieAccessor(
-      nsIHttpChannel *aDocumentChannel) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetIsTrackingResource(bool* aIsTrackingResource) override;
-  NS_IMETHOD GetIsThirdPartyTrackingResource(bool* aIsTrackingResource) override;
-  NS_IMETHOD OverrideTrackingFlagsForDocumentCookieAccessor(nsIHttpChannel* aDocumentChannel) override;
-=======
   NS_IMETHOD IsTrackingResource(bool* aIsTrackingResource) override;
   NS_IMETHOD IsThirdPartyTrackingResource(bool* aIsTrackingResource) override;
   NS_IMETHOD GetClassificationFlags(uint32_t* aIsClassificationFlags) override;
@@ -442,7 +247,6 @@ class HttpBaseChannel : public nsHashPropertyBag,
       nsIHttpChannel::FlashPluginState* aState) override;
 
   using nsIHttpChannel::IsThirdPartyTrackingResource;
->>>>>>> upstream-releases
 
   // nsIHttpChannelInternal
   NS_IMETHOD GetDocumentURI(nsIURI** aDocumentURI) override;
@@ -457,23 +261,6 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD GetCanceled(bool* aCanceled) override;
   NS_IMETHOD GetChannelIsForDownload(bool* aChannelIsForDownload) override;
   NS_IMETHOD SetChannelIsForDownload(bool aChannelIsForDownload) override;
-<<<<<<< HEAD
-  NS_IMETHOD SetCacheKeysRedirectChain(nsTArray<nsCString> *cacheKeys) override;
-  NS_IMETHOD GetLocalAddress(nsACString &addr) override;
-  NS_IMETHOD GetLocalPort(int32_t *port) override;
-  NS_IMETHOD GetRemoteAddress(nsACString &addr) override;
-  NS_IMETHOD GetRemotePort(int32_t *port) override;
-  NS_IMETHOD GetOnlyConnect(bool *aOnlyConnect) override;
-  NS_IMETHOD SetConnectOnly() override;
-  NS_IMETHOD GetAllowSpdy(bool *aAllowSpdy) override;
-||||||| merged common ancestors
-  NS_IMETHOD SetCacheKeysRedirectChain(nsTArray<nsCString> *cacheKeys) override;
-  NS_IMETHOD GetLocalAddress(nsACString& addr) override;
-  NS_IMETHOD GetLocalPort(int32_t* port) override;
-  NS_IMETHOD GetRemoteAddress(nsACString& addr) override;
-  NS_IMETHOD GetRemotePort(int32_t* port) override;
-  NS_IMETHOD GetAllowSpdy(bool *aAllowSpdy) override;
-=======
   NS_IMETHOD SetCacheKeysRedirectChain(nsTArray<nsCString>* cacheKeys) override;
   NS_IMETHOD GetLocalAddress(nsACString& addr) override;
   NS_IMETHOD GetLocalPort(int32_t* port) override;
@@ -482,7 +269,6 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD GetOnlyConnect(bool* aOnlyConnect) override;
   NS_IMETHOD SetConnectOnly() override;
   NS_IMETHOD GetAllowSpdy(bool* aAllowSpdy) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetAllowSpdy(bool aAllowSpdy) override;
   NS_IMETHOD GetAllowAltSvc(bool* aAllowAltSvc) override;
   NS_IMETHOD SetAllowAltSvc(bool aAllowAltSvc) override;
@@ -493,86 +279,39 @@ class HttpBaseChannel : public nsHashPropertyBag,
   NS_IMETHOD GetIsResolvedByTRR(bool* aResolvedByTRR) override;
   NS_IMETHOD GetTlsFlags(uint32_t* aTlsFlags) override;
   NS_IMETHOD SetTlsFlags(uint32_t aTlsFlags) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetApiRedirectToURI(nsIURI **aApiRedirectToURI) override;
-  virtual MOZ_MUST_USE nsresult AddSecurityMessage(
-      const nsAString &aMessageTag, const nsAString &aMessageCategory);
-  NS_IMETHOD TakeAllSecurityMessages(
-      nsCOMArray<nsISecurityConsoleMessage> &aMessages) override;
-  NS_IMETHOD GetResponseTimeoutEnabled(bool *aEnable) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetApiRedirectToURI(nsIURI * *aApiRedirectToURI) override;
-  virtual MOZ_MUST_USE nsresult AddSecurityMessage(const nsAString &aMessageTag, const nsAString &aMessageCategory);
-  NS_IMETHOD TakeAllSecurityMessages(nsCOMArray<nsISecurityConsoleMessage> &aMessages) override;
-  NS_IMETHOD GetResponseTimeoutEnabled(bool *aEnable) override;
-=======
   NS_IMETHOD GetApiRedirectToURI(nsIURI** aApiRedirectToURI) override;
   virtual MOZ_MUST_USE nsresult AddSecurityMessage(
       const nsAString& aMessageTag, const nsAString& aMessageCategory);
   NS_IMETHOD TakeAllSecurityMessages(
       nsCOMArray<nsISecurityConsoleMessage>& aMessages) override;
   NS_IMETHOD GetResponseTimeoutEnabled(bool* aEnable) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetResponseTimeoutEnabled(bool aEnable) override;
-  NS_IMETHOD GetInitialRwin(uint32_t *aRwin) override;
+  NS_IMETHOD GetInitialRwin(uint32_t* aRwin) override;
   NS_IMETHOD SetInitialRwin(uint32_t aRwin) override;
   NS_IMETHOD ForcePending(bool aForcePending) override;
-  NS_IMETHOD GetLastModifiedTime(PRTime *lastModifiedTime) override;
-  NS_IMETHOD GetCorsIncludeCredentials(bool *aInclude) override;
+  NS_IMETHOD GetLastModifiedTime(PRTime* lastModifiedTime) override;
+  NS_IMETHOD GetCorsIncludeCredentials(bool* aInclude) override;
   NS_IMETHOD SetCorsIncludeCredentials(bool aInclude) override;
-  NS_IMETHOD GetCorsMode(uint32_t *aCorsMode) override;
+  NS_IMETHOD GetCorsMode(uint32_t* aCorsMode) override;
   NS_IMETHOD SetCorsMode(uint32_t aCorsMode) override;
-  NS_IMETHOD GetRedirectMode(uint32_t *aRedirectMode) override;
+  NS_IMETHOD GetRedirectMode(uint32_t* aRedirectMode) override;
   NS_IMETHOD SetRedirectMode(uint32_t aRedirectMode) override;
-  NS_IMETHOD GetFetchCacheMode(uint32_t *aFetchCacheMode) override;
+  NS_IMETHOD GetFetchCacheMode(uint32_t* aFetchCacheMode) override;
   NS_IMETHOD SetFetchCacheMode(uint32_t aFetchCacheMode) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetTopWindowURI(nsIURI **aTopWindowURI) override;
-  NS_IMETHOD SetTopWindowURIIfUnknown(nsIURI *aTopWindowURI) override;
-  NS_IMETHOD GetProxyURI(nsIURI **proxyURI) override;
-  virtual void SetCorsPreflightParameters(
-      const nsTArray<nsCString> &unsafeHeaders) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetTopWindowURI(nsIURI **aTopWindowURI) override;
-  NS_IMETHOD SetTopWindowURIIfUnknown(nsIURI *aTopWindowURI) override;
-  NS_IMETHOD GetProxyURI(nsIURI **proxyURI) override;
-  virtual void SetCorsPreflightParameters(const nsTArray<nsCString>& unsafeHeaders) override;
-=======
   NS_IMETHOD GetTopWindowURI(nsIURI** aTopWindowURI) override;
   NS_IMETHOD SetTopWindowURIIfUnknown(nsIURI* aTopWindowURI) override;
   NS_IMETHOD GetProxyURI(nsIURI** proxyURI) override;
   virtual void SetCorsPreflightParameters(
       const nsTArray<nsCString>& unsafeHeaders) override;
->>>>>>> upstream-releases
   virtual void SetAltDataForChild(bool aIsForChild) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetConnectionInfoHashKey(
-      nsACString &aConnectionInfoHashKey) override;
-  NS_IMETHOD GetIntegrityMetadata(nsAString &aIntegrityMetadata) override;
-  NS_IMETHOD SetIntegrityMetadata(const nsAString &aIntegrityMetadata) override;
-  NS_IMETHOD GetLastRedirectFlags(uint32_t *aValue) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetConnectionInfoHashKey(nsACString& aConnectionInfoHashKey) override;
-  NS_IMETHOD GetIntegrityMetadata(nsAString& aIntegrityMetadata) override;
-  NS_IMETHOD SetIntegrityMetadata(const nsAString& aIntegrityMetadata) override;
-  NS_IMETHOD GetLastRedirectFlags(uint32_t *aValue) override;
-=======
   NS_IMETHOD GetConnectionInfoHashKey(
       nsACString& aConnectionInfoHashKey) override;
   NS_IMETHOD GetIntegrityMetadata(nsAString& aIntegrityMetadata) override;
   NS_IMETHOD SetIntegrityMetadata(const nsAString& aIntegrityMetadata) override;
   NS_IMETHOD GetLastRedirectFlags(uint32_t* aValue) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetLastRedirectFlags(uint32_t aValue) override;
-  NS_IMETHOD GetNavigationStartTimeStamp(TimeStamp *aTimeStamp) override;
+  NS_IMETHOD GetNavigationStartTimeStamp(TimeStamp* aTimeStamp) override;
   NS_IMETHOD SetNavigationStartTimeStamp(TimeStamp aTimeStamp) override;
-<<<<<<< HEAD
-  NS_IMETHOD CancelForTrackingProtection() override;
-  virtual void SetIPv4Disabled(void) override;
-  virtual void SetIPv6Disabled(void) override;
-||||||| merged common ancestors
-  NS_IMETHOD CancelForTrackingProtection() override;
-=======
   NS_IMETHOD CancelByURLClassifier(nsresult aErrorCode) override;
   virtual void SetIPv4Disabled(void) override;
   virtual void SetIPv6Disabled(void) override;
@@ -585,130 +324,50 @@ class HttpBaseChannel : public nsHashPropertyBag,
       bool aHasSandboxedAuxiliaryNavigations) override {
     mHasSandboxedNavigations = aHasSandboxedAuxiliaryNavigations;
   }
->>>>>>> upstream-releases
 
   inline void CleanRedirectCacheChainIfNecessary() {
     mRedirectedCachekeys = nullptr;
   }
-<<<<<<< HEAD
-  NS_IMETHOD HTTPUpgrade(const nsACString &aProtocolName,
-                         nsIHttpUpgradeListener *aListener) override;
-||||||| merged common ancestors
-  NS_IMETHOD HTTPUpgrade(const nsACString & aProtocolName,
-                         nsIHttpUpgradeListener *aListener) override;
-=======
   NS_IMETHOD HTTPUpgrade(const nsACString& aProtocolName,
                          nsIHttpUpgradeListener* aListener) override;
->>>>>>> upstream-releases
 
   // nsISupportsPriority
   NS_IMETHOD GetPriority(int32_t* value) override;
   NS_IMETHOD AdjustPriority(int32_t delta) override;
 
   // nsIClassOfService
-<<<<<<< HEAD
-  NS_IMETHOD GetClassFlags(uint32_t *outFlags) override {
-    *outFlags = mClassOfService;
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  NS_IMETHOD GetClassFlags(uint32_t *outFlags) override { *outFlags = mClassOfService; return NS_OK; }
-=======
   NS_IMETHOD GetClassFlags(uint32_t* outFlags) override {
     *outFlags = mClassOfService;
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   // nsIResumableChannel
-<<<<<<< HEAD
-  NS_IMETHOD GetEntityID(nsACString &aEntityID) override;
-
-||||||| merged common ancestors
   NS_IMETHOD GetEntityID(nsACString& aEntityID) override;
 
-
-=======
-  NS_IMETHOD GetEntityID(nsACString& aEntityID) override;
-
->>>>>>> upstream-releases
   // nsIConsoleReportCollector
-<<<<<<< HEAD
-  void AddConsoleReport(uint32_t aErrorFlags, const nsACString &aCategory,
-                        nsContentUtils::PropertiesFile aPropertiesFile,
-                        const nsACString &aSourceFileURI, uint32_t aLineNumber,
-                        uint32_t aColumnNumber, const nsACString &aMessageName,
-                        const nsTArray<nsString> &aStringParams) override;
-||||||| merged common ancestors
-  void
-  AddConsoleReport(uint32_t aErrorFlags, const nsACString& aCategory,
-                   nsContentUtils::PropertiesFile aPropertiesFile,
-                   const nsACString& aSourceFileURI,
-                   uint32_t aLineNumber, uint32_t aColumnNumber,
-                   const nsACString& aMessageName,
-                   const nsTArray<nsString>& aStringParams) override;
-=======
   void AddConsoleReport(uint32_t aErrorFlags, const nsACString& aCategory,
                         nsContentUtils::PropertiesFile aPropertiesFile,
                         const nsACString& aSourceFileURI, uint32_t aLineNumber,
                         uint32_t aColumnNumber, const nsACString& aMessageName,
                         const nsTArray<nsString>& aStringParams) override;
->>>>>>> upstream-releases
 
   void FlushReportsToConsole(
       uint64_t aInnerWindowID,
       ReportAction aAction = ReportAction::Forget) override;
 
-<<<<<<< HEAD
-  void FlushReportsToConsoleForServiceWorkerScope(
-      const nsACString &aScope,
-      ReportAction aAction = ReportAction::Forget) override;
-||||||| merged common ancestors
-  void
-  FlushReportsToConsoleForServiceWorkerScope(const nsACString& aScope,
-                                             ReportAction aAction = ReportAction::Forget) override;
-=======
   void FlushReportsToConsoleForServiceWorkerScope(
       const nsACString& aScope,
       ReportAction aAction = ReportAction::Forget) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void FlushConsoleReports(
-      nsIDocument *aDocument,
-      ReportAction aAction = ReportAction::Forget) override;
-||||||| merged common ancestors
-  void
-  FlushConsoleReports(nsIDocument* aDocument,
-                      ReportAction aAction = ReportAction::Forget) override;
-=======
   void FlushConsoleReports(
       dom::Document* aDocument,
       ReportAction aAction = ReportAction::Forget) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void FlushConsoleReports(
-      nsILoadGroup *aLoadGroup,
-      ReportAction aAction = ReportAction::Forget) override;
-||||||| merged common ancestors
-  void
-  FlushConsoleReports(nsILoadGroup* aLoadGroup,
-                      ReportAction aAction = ReportAction::Forget) override;
-=======
   void FlushConsoleReports(
       nsILoadGroup* aLoadGroup,
       ReportAction aAction = ReportAction::Forget) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void FlushConsoleReports(nsIConsoleReportCollector *aCollector) override;
-||||||| merged common ancestors
-  void
-  FlushConsoleReports(nsIConsoleReportCollector* aCollector) override;
-=======
   void FlushConsoleReports(nsIConsoleReportCollector* aCollector) override;
->>>>>>> upstream-releases
 
   void ClearConsoleReports() override;
 
@@ -719,35 +378,17 @@ class HttpBaseChannel : public nsHashPropertyBag,
 
     using nsStringEnumeratorBase::GetNext;
 
-<<<<<<< HEAD
-    nsContentEncodings(nsIHttpChannel *aChannel, const char *aEncodingHeader);
-||||||| merged common ancestors
-        nsContentEncodings(nsIHttpChannel* aChannel, const char* aEncodingHeader);
-=======
     nsContentEncodings(nsIHttpChannel* aChannel, const char* aEncodingHeader);
->>>>>>> upstream-releases
 
    private:
     virtual ~nsContentEncodings() = default;
 
     MOZ_MUST_USE nsresult PrepareForNext(void);
 
-<<<<<<< HEAD
-    // We do not own the buffer.  The channel owns it.
-    const char *mEncodingHeader;
-    const char *mCurStart;  // points to start of current header
-    const char *mCurEnd;    // points to end of current header
-||||||| merged common ancestors
-        // We do not own the buffer.  The channel owns it.
-        const char* mEncodingHeader;
-        const char* mCurStart;  // points to start of current header
-        const char* mCurEnd;  // points to end of current header
-=======
     // We do not own the buffer.  The channel owns it.
     const char* mEncodingHeader;
     const char* mCurStart;  // points to start of current header
     const char* mCurEnd;    // points to end of current header
->>>>>>> upstream-releases
 
     // Hold a ref to our channel so that it can't go away and take the
     // header with it.
@@ -756,149 +397,6 @@ class HttpBaseChannel : public nsHashPropertyBag,
     bool mReady;
   };
 
-<<<<<<< HEAD
-  nsHttpResponseHead *GetResponseHead() const { return mResponseHead; }
-  nsHttpRequestHead *GetRequestHead() { return &mRequestHead; }
-  nsHttpHeaderArray *GetResponseTrailers() const { return mResponseTrailers; }
-
-  const NetAddr &GetSelfAddr() { return mSelfAddr; }
-  const NetAddr &GetPeerAddr() { return mPeerAddr; }
-
-  MOZ_MUST_USE nsresult OverrideSecurityInfo(nsISupports *aSecurityInfo);
-
- public: /* Necko internal use only... */
-  int64_t GetAltDataLength() { return mAltDataLength; }
-  bool IsNavigation();
-
-  static bool IsReferrerSchemeAllowed(nsIURI *aReferrer);
-
-  static void PropagateReferenceIfNeeded(nsIURI *aURI,
-                                         nsCOMPtr<nsIURI> &aRedirectURI);
-
-  // Return whether upon a redirect code of httpStatus for method, the
-  // request method should be rewritten to GET.
-  static bool ShouldRewriteRedirectToGET(
-      uint32_t httpStatus, nsHttpRequestHead::ParsedMethodType method);
-
-  // Like nsIEncodedChannel::DoApplyConversions except context is set to
-  // mListenerContext.
-  MOZ_MUST_USE nsresult DoApplyContentConversions(
-      nsIStreamListener *aNextListener, nsIStreamListener **aNewNextListener);
-
-  // Callback on STS thread called by CopyComplete when NS_AsyncCopy()
-  // is finished. This function works as a proxy function to dispatch
-  // |EnsureUploadStreamIsCloneableComplete| to main thread.
-  virtual void OnCopyComplete(nsresult aStatus);
-
-  void SetIsTrackingResource(bool aIsThirdParty);
-
-  const uint64_t &ChannelId() const { return mChannelId; }
-
-  void InternalSetUploadStream(nsIInputStream *uploadStream) {
-    mUploadStream = uploadStream;
-  }
-
-  void InternalSetUploadStreamLength(uint64_t aLength) {
-    mReqContentLength = aLength;
-  }
-
-  void SetUploadStreamHasHeaders(bool hasHeaders) {
-    mUploadStreamHasHeaders = hasHeaders;
-  }
-
-  MOZ_MUST_USE nsresult SetReferrerWithPolicyInternal(nsIURI *referrer,
-                                                      uint32_t referrerPolicy) {
-    nsAutoCString spec;
-    nsresult rv = referrer->GetAsciiSpec(spec);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-    mReferrer = referrer;
-    mReferrerPolicy = referrerPolicy;
-    rv = mRequestHead.SetHeader(nsHttp::Referer, spec);
-    return rv;
-  }
-
-  MOZ_MUST_USE nsresult SetTopWindowURI(nsIURI *aTopWindowURI) {
-    mTopWindowURI = aTopWindowURI;
-    return NS_OK;
-  }
-||||||| merged common ancestors
-    nsHttpResponseHead * GetResponseHead() const { return mResponseHead; }
-    nsHttpRequestHead * GetRequestHead() { return &mRequestHead; }
-    nsHttpHeaderArray * GetResponseTrailers() const { return mResponseTrailers; }
-
-    const NetAddr& GetSelfAddr() { return mSelfAddr; }
-    const NetAddr& GetPeerAddr() { return mPeerAddr; }
-
-    MOZ_MUST_USE nsresult OverrideSecurityInfo(nsISupports* aSecurityInfo);
-
-public: /* Necko internal use only... */
-    int64_t GetAltDataLength() { return mAltDataLength; }
-    bool IsNavigation();
-
-    static bool IsReferrerSchemeAllowed(nsIURI *aReferrer);
-
-    static void PropagateReferenceIfNeeded(nsIURI *aURI, nsCOMPtr<nsIURI>& aRedirectURI);
-
-    // Return whether upon a redirect code of httpStatus for method, the
-    // request method should be rewritten to GET.
-    static bool ShouldRewriteRedirectToGET(uint32_t httpStatus,
-                                           nsHttpRequestHead::ParsedMethodType method);
-
-    // Like nsIEncodedChannel::DoApplyConversions except context is set to
-    // mListenerContext.
-    MOZ_MUST_USE nsresult
-    DoApplyContentConversions(nsIStreamListener *aNextListener,
-                              nsIStreamListener **aNewNextListener);
-
-    // Callback on STS thread called by CopyComplete when NS_AsyncCopy()
-    // is finished. This function works as a proxy function to dispatch
-    // |EnsureUploadStreamIsCloneableComplete| to main thread.
-    virtual void OnCopyComplete(nsresult aStatus);
-
-    void SetIsTrackingResource(bool aIsThirdParty);
-
-    const uint64_t& ChannelId() const
-    {
-      return mChannelId;
-    }
-
-    void InternalSetUploadStream(nsIInputStream *uploadStream)
-    {
-      mUploadStream = uploadStream;
-    }
-
-    void InternalSetUploadStreamLength(uint64_t aLength)
-    {
-      mReqContentLength = aLength;
-    }
-
-    void SetUploadStreamHasHeaders(bool hasHeaders)
-    {
-      mUploadStreamHasHeaders = hasHeaders;
-    }
-
-    MOZ_MUST_USE nsresult
-    SetReferrerWithPolicyInternal(nsIURI *referrer, uint32_t referrerPolicy)
-    {
-      nsAutoCString spec;
-      nsresult rv = referrer->GetAsciiSpec(spec);
-      if (NS_FAILED(rv)) {
-        return rv;
-      }
-      mReferrer = referrer;
-      mReferrerPolicy = referrerPolicy;
-      rv = mRequestHead.SetHeader(nsHttp::Referer, spec);
-      return rv;
-    }
-
-    MOZ_MUST_USE nsresult SetTopWindowURI(nsIURI* aTopWindowURI)
-    {
-      mTopWindowURI = aTopWindowURI;
-      return NS_OK;
-    }
-=======
   nsHttpResponseHead* GetResponseHead() const { return mResponseHead; }
   nsHttpRequestHead* GetRequestHead() { return &mRequestHead; }
   nsHttpHeaderArray* GetResponseTrailers() const { return mResponseTrailers; }
@@ -971,14 +469,7 @@ public: /* Necko internal use only... */
 
  protected:
   nsresult GetTopWindowURI(nsIURI* aURIBeingLoaded, nsIURI** aTopWindowURI);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
->>>>>>> upstream-releases
   // Handle notifying listener, removing from loadgroup if request failed.
   void DoNotifyListener();
   virtual void DoNotifyListenerCleanup() = 0;
@@ -995,25 +486,15 @@ protected:
   // was fired.
   void NotifySetCookie(const nsACString& aCookie);
 
-  mozilla::dom::PerformanceStorage *GetPerformanceStorage();
+  mozilla::dom::PerformanceStorage* GetPerformanceStorage();
   void MaybeReportTimingData();
-  nsIURI *GetReferringPage();
-  nsPIDOMWindowInner *GetInnerDOMWindow();
+  nsIURI* GetReferringPage();
+  nsPIDOMWindowInner* GetInnerDOMWindow();
 
   void AddCookiesToRequest();
-<<<<<<< HEAD
-  virtual MOZ_MUST_USE nsresult SetupReplacementChannel(nsIURI *, nsIChannel *,
-                                                        bool preserveMethod,
-                                                        uint32_t redirectFlags);
-||||||| merged common ancestors
-  virtual MOZ_MUST_USE nsresult
-  SetupReplacementChannel(nsIURI *, nsIChannel *, bool preserveMethod,
-                          uint32_t redirectFlags);
-=======
   virtual MOZ_MUST_USE nsresult SetupReplacementChannel(nsIURI*, nsIChannel*,
                                                         bool preserveMethod,
                                                         uint32_t redirectFlags);
->>>>>>> upstream-releases
 
   // bundle calling OMR observers and marking flag into one function
   inline void CallOnModifyRequestObservers() {
@@ -1024,14 +505,7 @@ protected:
 
   // Helper function to simplify getting notification callbacks.
   template <class T>
-<<<<<<< HEAD
-  void GetCallback(nsCOMPtr<T> &aResult) {
-||||||| merged common ancestors
-  void GetCallback(nsCOMPtr<T> &aResult)
-  {
-=======
   void GetCallback(nsCOMPtr<T>& aResult) {
->>>>>>> upstream-releases
     NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
                                   NS_GET_TEMPLATE_IID(T),
                                   getter_AddRefs(aResult));
@@ -1046,19 +520,9 @@ protected:
 
   MOZ_MUST_USE bool BypassServiceWorker() const;
 
-<<<<<<< HEAD
-  // Returns true if this channel should intercept the network request and
-  // prepare for a possible synthesized response instead.
-  bool ShouldIntercept(nsIURI *aURI = nullptr);
-||||||| merged common ancestors
-  // Returns true if this channel should intercept the network request and prepare
-  // for a possible synthesized response instead.
-  bool ShouldIntercept(nsIURI* aURI = nullptr);
-=======
   // Returns true if this channel should intercept the network request and
   // prepare for a possible synthesized response instead.
   bool ShouldIntercept(nsIURI* aURI = nullptr);
->>>>>>> upstream-releases
 
   // Callback on main thread when NS_AsyncCopy() is finished populating
   // the new mUploadStream.
@@ -1070,32 +534,16 @@ protected:
 #endif
 
   // Called before we create the redirect target channel.
-<<<<<<< HEAD
-  already_AddRefed<nsILoadInfo> CloneLoadInfoForRedirect(
-      nsIURI *newURI, uint32_t redirectFlags);
-||||||| merged common ancestors
-  already_AddRefed<nsILoadInfo> CloneLoadInfoForRedirect(nsIURI *newURI, uint32_t redirectFlags);
-=======
   already_AddRefed<nsILoadInfo> CloneLoadInfoForRedirect(
       nsIURI* newURI, uint32_t redirectFlags);
->>>>>>> upstream-releases
 
   static void CallTypeSniffers(void* aClosure, const uint8_t* aData,
                                uint32_t aCount);
 
   nsresult CheckRedirectLimit(uint32_t aRedirectFlags) const;
 
-<<<<<<< HEAD
-  bool MaybeWaitForUploadStreamLength(nsIStreamListener *aListener,
-                                      nsISupports *aContext);
-||||||| merged common ancestors
-  bool
-  MaybeWaitForUploadStreamLength(nsIStreamListener *aListener,
-                                 nsISupports *aContext);
-=======
   bool MaybeWaitForUploadStreamLength(nsIStreamListener* aListener,
                                       nsISupports* aContext);
->>>>>>> upstream-releases
 
   friend class PrivateBrowsingChannel<HttpBaseChannel>;
   friend class InterceptFailedOnStop;
@@ -1124,21 +572,8 @@ protected:
   // Proxy release all members above on main thread.
   void ReleaseMainThreadOnlyReferences();
 
-<<<<<<< HEAD
-  bool IsCrossOriginWithReferrer();
-
   nsresult ExplicitSetUploadStreamLength(uint64_t aContentLength,
                                          bool aStreamHasHeaders);
-||||||| merged common ancestors
-  bool IsCrossOriginWithReferrer();
-
-  nsresult
-  ExplicitSetUploadStreamLength(uint64_t aContentLength,
-                                bool aStreamHasHeaders);
-=======
-  nsresult ExplicitSetUploadStreamLength(uint64_t aContentLength,
-                                         bool aStreamHasHeaders);
->>>>>>> upstream-releases
 
   void MaybeResumeAsyncOpen();
 
@@ -1165,25 +600,12 @@ protected:
   nsCString mMatchedProvider;
   nsCString mMatchedFullHash;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsISupports> mOwner;
-||||||| merged common ancestors
-=======
   nsTArray<nsCString> mMatchedTrackingLists;
   nsTArray<nsCString> mMatchedTrackingFullHashes;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsHttpRequestHead mRequestHead;
-||||||| merged common ancestors
-  nsCOMPtr<nsISupports>             mOwner;
-
-  nsHttpRequestHead                 mRequestHead;
-=======
   nsCOMPtr<nsISupports> mOwner;
 
   nsHttpRequestHead mRequestHead;
->>>>>>> upstream-releases
   // Upload throttling.
   nsCOMPtr<nsIInputChannelThrottleQueue> mThrottleQueue;
   nsCOMPtr<nsIInputStream> mUploadStream;
@@ -1247,31 +669,6 @@ protected:
   // Use Release-Acquire ordering to ensure the OMT ODA is ignored while channel
   // is canceled on main thread.
   Atomic<bool, ReleaseAcquire> mCanceled;
-<<<<<<< HEAD
-  Atomic<bool, ReleaseAcquire> mIsFirstPartyTrackingResource;
-  Atomic<bool, ReleaseAcquire> mIsThirdPartyTrackingResource;
-
-  uint32_t mLoadFlags;
-  uint32_t mCaps;
-  uint32_t mClassOfService;
-
-  uint32_t mUpgradeToSecure : 1;
-  uint32_t mApplyConversion : 1;
-  uint32_t mIsPending : 1;
-  uint32_t mWasOpened : 1;
-||||||| merged common ancestors
-  Atomic<bool, ReleaseAcquire> mIsFirstPartyTrackingResource;
-  Atomic<bool, ReleaseAcquire> mIsThirdPartyTrackingResource;
-
-  uint32_t                          mLoadFlags;
-  uint32_t                          mCaps;
-  uint32_t                          mClassOfService;
-
-  uint32_t                          mUpgradeToSecure            : 1;
-  uint32_t                          mApplyConversion            : 1;
-  uint32_t                          mIsPending                  : 1;
-  uint32_t                          mWasOpened                  : 1;
-=======
   Atomic<uint32_t, ReleaseAcquire> mFirstPartyClassificationFlags;
   Atomic<uint32_t, ReleaseAcquire> mThirdPartyClassificationFlags;
   Atomic<uint32_t, ReleaseAcquire> mFlashPluginState;
@@ -1284,7 +681,6 @@ protected:
   uint32_t mApplyConversion : 1;
   uint32_t mIsPending : 1;
   uint32_t mWasOpened : 1;
->>>>>>> upstream-releases
   // if 1 all "http-on-{opening|modify|etc}-request" observers have been called
   uint32_t mRequestObserversCalled : 1;
   uint32_t mResponseHeadersModified : 1;
@@ -1297,23 +693,6 @@ protected:
   uint32_t mChannelIsForDownload : 1;
   uint32_t mTracingEnabled : 1;
   // True if timing collection is enabled
-<<<<<<< HEAD
-  uint32_t mTimingEnabled : 1;
-  uint32_t mReportTiming : 1;
-  uint32_t mAllowSpdy : 1;
-  uint32_t mAllowAltSvc : 1;
-  uint32_t mBeConservative : 1;
-  uint32_t mTRR : 1;
-  uint32_t mResponseTimeoutEnabled : 1;
-||||||| merged common ancestors
-  uint32_t                          mTimingEnabled              : 1;
-  uint32_t                          mReportTiming               : 1;
-  uint32_t                          mAllowSpdy                  : 1;
-  uint32_t                          mAllowAltSvc                : 1;
-  uint32_t                          mBeConservative             : 1;
-  uint32_t                          mTRR                        : 1;
-  uint32_t                          mResponseTimeoutEnabled     : 1;
-=======
   uint32_t mTimingEnabled : 1;
   uint32_t mReportTiming : 1;
   uint32_t mAllowSpdy : 1;
@@ -1329,7 +708,6 @@ protected:
   // (for example when it's loaded from the cache).
   uint32_t mResolvedByTRR : 1;
   uint32_t mResponseTimeoutEnabled : 1;
->>>>>>> upstream-releases
   // A flag that should be false only if a cross-domain redirect occurred
   uint32_t mAllRedirectsSameOrigin : 1;
 
@@ -1358,17 +736,10 @@ protected:
 
   // Defaults to true.  This is set to false when it is no longer possible
   // to upgrade the request to a secure channel.
-<<<<<<< HEAD
-  uint32_t mUpgradableToSecure : 1;
-||||||| merged common ancestors
-  uint32_t                          mUpgradableToSecure : 1;
-
-=======
   uint32_t mUpgradableToSecure : 1;
 
   // Is true if the docshell has the SANDBOXED_AUXILIARY_NAVIGATION flag set.
   uint32_t mHasSandboxedNavigations : 1;
->>>>>>> upstream-releases
 
   // An opaque flags for non-standard behavior of the TLS system.
   // It is unlikely this will need to be set outside of telemetry studies
@@ -1383,15 +754,7 @@ protected:
 
   uint32_t mProxyResolveFlags;
 
-<<<<<<< HEAD
   uint32_t mContentDispositionHint;
-  uint32_t mReferrerPolicy;
-||||||| merged common ancestors
-  uint32_t                          mContentDispositionHint;
-  uint32_t                          mReferrerPolicy;
-=======
-  uint32_t mContentDispositionHint;
->>>>>>> upstream-releases
 
   uint32_t mCorsMode;
   uint32_t mRedirectMode;
@@ -1408,27 +771,13 @@ protected:
   // Number of redirects that has occurred.
   int8_t mRedirectCount;
   // Number of internal redirects that has occurred.
-<<<<<<< HEAD
-  int8_t mInternalRedirectCount;
-||||||| merged common ancestors
-  int8_t                            mInternalRedirectCount;
-=======
   int8_t mInternalRedirectCount;
 
   bool mAsyncOpenTimeOverriden;
   bool mForcePending;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool mAsyncOpenTimeOverriden;
-  bool mForcePending;
-||||||| merged common ancestors
-  bool                              mAsyncOpenTimeOverriden;
-  bool                              mForcePending;
-=======
   // true if the channel is deliving alt-data.
   bool mDeliveringAltData;
->>>>>>> upstream-releases
 
   bool mCorsIncludeCredentials;
 
@@ -1474,21 +823,10 @@ NS_DEFINE_STATIC_IID_ACCESSOR(HttpBaseChannel, HTTP_BASE_CHANNEL_IID)
 //   then we'd have to cast member function ptr between base/derived class
 //   types.  Sigh...
 template <class T>
-<<<<<<< HEAD
-class HttpAsyncAborter {
- public:
-  explicit HttpAsyncAborter(T *derived) : mThis(derived), mCallOnResume(0) {}
-||||||| merged common ancestors
-class HttpAsyncAborter
-{
-public:
-  explicit HttpAsyncAborter(T *derived) : mThis(derived), mCallOnResume(0) {}
-=======
 class HttpAsyncAborter {
  public:
   explicit HttpAsyncAborter(T* derived)
       : mThis(derived), mCallOnResume(nullptr) {}
->>>>>>> upstream-releases
 
   // Aborts channel: calls OnStart/Stop with provided status, removes channel
   // from loadGroup.
@@ -1500,34 +838,15 @@ class HttpAsyncAborter {
   // AsyncCall calls a member function asynchronously (via an event).
   // retval isn't refcounted and is set only when event was successfully
   // posted, the event is returned for the purpose of cancelling when needed
-<<<<<<< HEAD
-  MOZ_MUST_USE virtual nsresult AsyncCall(
-      void (T::*funcPtr)(), nsRunnableMethod<T> **retval = nullptr);
-
- private:
-  T *mThis;
-||||||| merged common ancestors
-  MOZ_MUST_USE virtual nsresult AsyncCall(void (T::*funcPtr)(),
-                                          nsRunnableMethod<T> **retval = nullptr);
-private:
-  T *mThis;
-=======
   MOZ_MUST_USE virtual nsresult AsyncCall(
       void (T::*funcPtr)(), nsRunnableMethod<T>** retval = nullptr);
 
  private:
   T* mThis;
->>>>>>> upstream-releases
 
  protected:
   // Function to be called at resume time
-<<<<<<< HEAD
-  void (T::*mCallOnResume)(void);
-||||||| merged common ancestors
-  void (T::* mCallOnResume)(void);
-=======
   std::function<nsresult(T*)> mCallOnResume;
->>>>>>> upstream-releases
 };
 
 template <class T>
@@ -1549,16 +868,6 @@ inline void HttpAsyncAborter<T>::HandleAsyncAbort() {
   MOZ_ASSERT(!mCallOnResume, "How did that happen?");
 
   if (mThis->mSuspendCount) {
-<<<<<<< HEAD
-    MOZ_LOG(
-        gHttpLog, LogLevel::Debug,
-        ("Waiting until resume to do async notification [this=%p]\n", mThis));
-    mCallOnResume = &T::HandleAsyncAbort;
-||||||| merged common ancestors
-    MOZ_LOG(gHttpLog, LogLevel::Debug,
-           ("Waiting until resume to do async notification [this=%p]\n", mThis));
-    mCallOnResume = &T::HandleAsyncAbort;
-=======
     MOZ_LOG(
         gHttpLog, LogLevel::Debug,
         ("Waiting until resume to do async notification [this=%p]\n", mThis));
@@ -1566,7 +875,6 @@ inline void HttpAsyncAborter<T>::HandleAsyncAbort() {
       self->HandleAsyncAbort();
       return NS_OK;
     };
->>>>>>> upstream-releases
     return;
   }
 
@@ -1579,14 +887,7 @@ inline void HttpAsyncAborter<T>::HandleAsyncAbort() {
 
 template <class T>
 nsresult HttpAsyncAborter<T>::AsyncCall(void (T::*funcPtr)(),
-<<<<<<< HEAD
-                                        nsRunnableMethod<T> **retval) {
-||||||| merged common ancestors
-                                        nsRunnableMethod<T> **retval)
-{
-=======
                                         nsRunnableMethod<T>** retval) {
->>>>>>> upstream-releases
   nsresult rv;
 
   RefPtr<nsRunnableMethod<T>> event =
@@ -1599,25 +900,10 @@ nsresult HttpAsyncAborter<T>::AsyncCall(void (T::*funcPtr)(),
   return rv;
 }
 
-<<<<<<< HEAD
-class ProxyReleaseRunnable final : public mozilla::Runnable {
- public:
-  explicit ProxyReleaseRunnable(nsTArray<nsCOMPtr<nsISupports>> &&aDoomed)
-      : Runnable("ProxyReleaseRunnable"), mDoomed(std::move(aDoomed)) {}
-||||||| merged common ancestors
-class ProxyReleaseRunnable final : public mozilla::Runnable
-{
-public:
-  explicit ProxyReleaseRunnable(nsTArray<nsCOMPtr<nsISupports>>&& aDoomed)
-    : Runnable("ProxyReleaseRunnable")
-    , mDoomed(std::move(aDoomed))
-  {}
-=======
 class ProxyReleaseRunnable final : public mozilla::Runnable {
  public:
   explicit ProxyReleaseRunnable(nsTArray<nsCOMPtr<nsISupports>>&& aDoomed)
       : Runnable("ProxyReleaseRunnable"), mDoomed(std::move(aDoomed)) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD
   Run() override {

@@ -9,22 +9,11 @@ const NUM_SLICES = root.NUM_SLICES = 10;
 let fired = false;
 let slicesFound = 0;
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-||||||| merged common ancestors
-=======
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
->>>>>>> upstream-releases
 dbg.memory.onGarbageCollection = data => {
   fired = true;
 

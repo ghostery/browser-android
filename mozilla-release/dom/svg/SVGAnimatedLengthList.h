@@ -19,14 +19,8 @@ class SMILValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD
-}  // namespace dom
-||||||| merged common ancestors
-} // namespace dom
-=======
 class SVGElement;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * Class SVGAnimatedLengthList
@@ -47,16 +41,8 @@ class SVGAnimatedLengthList {
   friend class dom::DOMSVGLength;
   friend class dom::DOMSVGLengthList;
 
-<<<<<<< HEAD
- public:
-  SVGAnimatedLengthList() {}
-||||||| merged common ancestors
-public:
-  SVGAnimatedLengthList() {}
-=======
  public:
   SVGAnimatedLengthList() = default;
->>>>>>> upstream-releases
 
   /**
    * Because it's so important that mBaseVal and its DOMSVGLengthList wrapper
@@ -75,57 +61,18 @@ public:
     return mAnimVal ? *mAnimVal : mBaseVal;
   }
 
-<<<<<<< HEAD
-  nsresult SetAnimValue(const SVGLengthList& aValue, nsSVGElement* aElement,
-                        uint32_t aAttrEnum);
-||||||| merged common ancestors
-  nsresult SetAnimValue(const SVGLengthList& aValue,
-                        nsSVGElement *aElement,
-                        uint32_t aAttrEnum);
-=======
   nsresult SetAnimValue(const SVGLengthList& aNewAnimValue,
                         dom::SVGElement* aElement, uint32_t aAttrEnum);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ClearAnimValue(nsSVGElement* aElement, uint32_t aAttrEnum);
-||||||| merged common ancestors
-  void ClearAnimValue(nsSVGElement *aElement,
-                      uint32_t aAttrEnum);
-=======
   void ClearAnimValue(dom::SVGElement* aElement, uint32_t aAttrEnum);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   bool IsAnimating() const { return !!mAnimVal; }
 
-  UniquePtr<nsISMILAttr> ToSMILAttr(nsSVGElement* aSVGElement,
-                                    uint8_t aAttrEnum, uint8_t aAxis,
-                                    bool aCanZeroPadList);
-||||||| merged common ancestors
-  bool IsAnimating() const {
-    return !!mAnimVal;
-  }
-
-  UniquePtr<nsISMILAttr> ToSMILAttr(nsSVGElement* aSVGElement,
-                                    uint8_t aAttrEnum, uint8_t aAxis,
-                                    bool aCanZeroPadList);
-=======
-  bool IsAnimating() const { return !!mAnimVal; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-
-=======
   UniquePtr<SMILAttr> ToSMILAttr(dom::SVGElement* aSVGElement,
                                  uint8_t aAttrEnum, uint8_t aAxis,
                                  bool aCanZeroPadList);
 
  private:
->>>>>>> upstream-releases
   // mAnimVal is a pointer to allow us to determine if we're being animated or
   // not. Making it a non-pointer member and using mAnimVal.IsEmpty() to check
   // if we're animating is not an option, since that would break animation *to*
@@ -134,42 +81,9 @@ private:
   SVGLengthList mBaseVal;
   nsAutoPtr<SVGLengthList> mAnimVal;
 
-<<<<<<< HEAD
-  struct SMILAnimatedLengthList : public nsISMILAttr {
-   public:
-||||||| merged common ancestors
-  struct SMILAnimatedLengthList : public nsISMILAttr
-  {
-  public:
-=======
   struct SMILAnimatedLengthList : public SMILAttr {
    public:
->>>>>>> upstream-releases
     SMILAnimatedLengthList(SVGAnimatedLengthList* aVal,
-<<<<<<< HEAD
-                           nsSVGElement* aSVGElement, uint8_t aAttrEnum,
-                           uint8_t aAxis, bool aCanZeroPadList)
-        : mVal(aVal),
-          mElement(aSVGElement),
-          mAttrEnum(aAttrEnum),
-          mAxis(aAxis),
-          mCanZeroPadList(aCanZeroPadList) {}
-
-    // These will stay alive because a nsISMILAttr only lives as long
-||||||| merged common ancestors
-                           nsSVGElement* aSVGElement,
-                           uint8_t aAttrEnum,
-                           uint8_t aAxis,
-                           bool aCanZeroPadList)
-      : mVal(aVal)
-      , mElement(aSVGElement)
-      , mAttrEnum(aAttrEnum)
-      , mAxis(aAxis)
-      , mCanZeroPadList(aCanZeroPadList)
-    {}
-
-    // These will stay alive because a nsISMILAttr only lives as long
-=======
                            dom::SVGElement* aSVGElement, uint8_t aAttrEnum,
                            uint8_t aAxis, bool aCanZeroPadList)
         : mVal(aVal),
@@ -179,31 +93,12 @@ private:
           mCanZeroPadList(aCanZeroPadList) {}
 
     // These will stay alive because a SMILAttr only lives as long
->>>>>>> upstream-releases
     // as the Compositing step, and DOM elements don't get a chance to
     // die during that.
     SVGAnimatedLengthList* mVal;
     dom::SVGElement* mElement;
     uint8_t mAttrEnum;
     uint8_t mAxis;
-<<<<<<< HEAD
-    bool mCanZeroPadList;  // See SVGLengthListAndInfo::CanZeroPadList
-
-    // nsISMILAttr methods
-    virtual nsresult ValueFromString(
-        const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
-        nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
-    virtual nsSMILValue GetBaseValue() const override;
-||||||| merged common ancestors
-    bool mCanZeroPadList; // See SVGLengthListAndInfo::CanZeroPadList
-
-    // nsISMILAttr methods
-    virtual nsresult ValueFromString(const nsAString& aStr,
-                                     const dom::SVGAnimationElement* aSrcElement,
-                                     nsSMILValue& aValue,
-                                     bool& aPreventCachingOfSandwich) const override;
-    virtual nsSMILValue GetBaseValue() const override;
-=======
     bool mCanZeroPadList;  // See SVGLengthListAndInfo::CanZeroPadList
 
     // SMILAttr methods
@@ -211,7 +106,6 @@ private:
         const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
         SMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
     virtual SMILValue GetBaseValue() const override;
->>>>>>> upstream-releases
     virtual void ClearAnimValue() override;
     virtual nsresult SetAnimValue(const SMILValue& aValue) override;
   };

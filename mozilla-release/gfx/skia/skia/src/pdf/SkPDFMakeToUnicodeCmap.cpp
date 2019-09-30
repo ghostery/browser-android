@@ -149,16 +149,8 @@ static void append_bfrange_section(const std::vector<BFRange>& bfrange,
 // For the worst case (having 65536 continuous unicode and we use every other
 // one of them), the possible savings by aggressive optimization is 416KB
 // pre-compressed and does not provide enough motivation for implementation.
-<<<<<<< HEAD
-void SkPDFAppendCmapSections(const SkUnichar* glyphToUnicode,
-                             const SkBitSet* subset,
-||||||| merged common ancestors
-void SkPDFAppendCmapSections(const SkTDArray<SkUnichar>& glyphToUnicode,
-                             const SkBitSet* subset,
-=======
 void SkPDFAppendCmapSections(const SkUnichar* glyphToUnicode,
                              const SkPDFGlyphUse* subset,
->>>>>>> upstream-releases
                              SkDynamicMemoryWStream* cmap,
                              bool multiByteGlyphs,
                              SkGlyphID firstGlyphID,
@@ -213,19 +205,9 @@ void SkPDFAppendCmapSections(const SkUnichar* glyphToUnicode,
     append_bfrange_section(bfrangeEntries, multiByteGlyphs, cmap);
 }
 
-<<<<<<< HEAD
-sk_sp<SkPDFStream> SkPDFMakeToUnicodeCmap(
-        const SkUnichar* glyphToUnicode,
-        const SkBitSet* subset,
-||||||| merged common ancestors
-sk_sp<SkPDFStream> SkPDFMakeToUnicodeCmap(
-        const SkTDArray<SkUnichar>& glyphToUnicode,
-        const SkBitSet* subset,
-=======
 std::unique_ptr<SkStreamAsset> SkPDFMakeToUnicodeCmap(
         const SkUnichar* glyphToUnicode,
         const SkPDFGlyphUse* subset,
->>>>>>> upstream-releases
         bool multiByteGlyphs,
         SkGlyphID firstGlyphID,
         SkGlyphID lastGlyphID) {

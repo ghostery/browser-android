@@ -50,24 +50,12 @@ class EventTarget;
  * is called right after calling event listener for the current event target.
  */
 
-<<<<<<< HEAD
-class EventChainVisitor {
- public:
-  EventChainVisitor(nsPresContext* aPresContext, WidgetEvent* aEvent,
-||||||| merged common ancestors
-class EventChainVisitor
-{
-public:
-  EventChainVisitor(nsPresContext* aPresContext,
-                    WidgetEvent* aEvent,
-=======
 class MOZ_STACK_CLASS EventChainVisitor {
  public:
   // For making creators of this class instances guarantee the lifetime of
   // aPresContext, this needs to be marked as MOZ_CAN_RUN_SCRIPT.
   MOZ_CAN_RUN_SCRIPT
   EventChainVisitor(nsPresContext* aPresContext, WidgetEvent* aEvent,
->>>>>>> upstream-releases
                     dom::Event* aDOMEvent,
                     nsEventStatus aEventStatus = nsEventStatus_eIgnore)
       : mPresContext(aPresContext),
@@ -124,26 +112,11 @@ class MOZ_STACK_CLASS EventChainVisitor {
   nsCOMPtr<nsISupports> mItemData;
 };
 
-<<<<<<< HEAD
-class EventChainPreVisitor : public EventChainVisitor {
- public:
-  EventChainPreVisitor(nsPresContext* aPresContext, WidgetEvent* aEvent,
-                       dom::Event* aDOMEvent, nsEventStatus aEventStatus,
-||||||| merged common ancestors
-class EventChainPreVisitor : public EventChainVisitor
-{
-public:
-  EventChainPreVisitor(nsPresContext* aPresContext,
-                       WidgetEvent* aEvent,
-                       dom::Event* aDOMEvent,
-                       nsEventStatus aEventStatus,
-=======
 class MOZ_STACK_CLASS EventChainPreVisitor final : public EventChainVisitor {
  public:
   MOZ_CAN_RUN_SCRIPT
   EventChainPreVisitor(nsPresContext* aPresContext, WidgetEvent* aEvent,
                        dom::Event* aDOMEvent, nsEventStatus aEventStatus,
->>>>>>> upstream-releases
                        bool aIsInAnon,
                        dom::EventTarget* aTargetInKnownToBeHandledScope)
       : EventChainVisitor(aPresContext, aEvent, aDOMEvent, aEventStatus),
@@ -326,14 +299,6 @@ class MOZ_STACK_CLASS EventChainPreVisitor final : public EventChainVisitor {
   dom::EventTarget* mTargetInKnownToBeHandledScope;
 };
 
-<<<<<<< HEAD
-class EventChainPostVisitor : public mozilla::EventChainVisitor {
- public:
-||||||| merged common ancestors
-class EventChainPostVisitor : public mozilla::EventChainVisitor
-{
-public:
-=======
 class MOZ_STACK_CLASS EventChainPostVisitor final
     : public mozilla::EventChainVisitor {
  public:
@@ -341,21 +306,10 @@ class MOZ_STACK_CLASS EventChainPostVisitor final
   // creators should guarantee that aOther won't be deleted while the instance
   // of this class is alive.
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   explicit EventChainPostVisitor(EventChainVisitor& aOther)
-<<<<<<< HEAD
-      : EventChainVisitor(aOther.mPresContext, aOther.mEvent, aOther.mDOMEvent,
-                          aOther.mEventStatus) {}
-||||||| merged common ancestors
-    : EventChainVisitor(aOther.mPresContext, aOther.mEvent,
-                        aOther.mDOMEvent, aOther.mEventStatus)
-  {
-  }
-=======
       : EventChainVisitor(MOZ_KnownLive(aOther.mPresContext), aOther.mEvent,
                           MOZ_KnownLive(aOther.mDOMEvent),
                           aOther.mEventStatus) {}
->>>>>>> upstream-releases
 };
 
 /**
@@ -364,18 +318,9 @@ class MOZ_STACK_CLASS EventChainPostVisitor final
  * before handling the system event group.
  * This is used in PresShell.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS EventDispatchingCallback {
- public:
-||||||| merged common ancestors
-class MOZ_STACK_CLASS EventDispatchingCallback
-{
-public:
-=======
 class MOZ_STACK_CLASS EventDispatchingCallback {
  public:
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   virtual void HandleEvent(EventChainPostVisitor& aVisitor) = 0;
 };
 
@@ -401,21 +346,11 @@ class EventDispatcher {
    * eVoidEvent.
    * @note Use this method when dispatching a WidgetEvent.
    */
-<<<<<<< HEAD
-  static nsresult Dispatch(nsISupports* aTarget, nsPresContext* aPresContext,
-                           WidgetEvent* aEvent, dom::Event* aDOMEvent = nullptr,
-||||||| merged common ancestors
-  static nsresult Dispatch(nsISupports* aTarget,
-                           nsPresContext* aPresContext,
-                           WidgetEvent* aEvent,
-                           dom::Event* aDOMEvent = nullptr,
-=======
   // This should obviously be MOZ_CAN_RUN_SCRIPT, but that's a bit of
   // a project.  See bug 1539884.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   static nsresult Dispatch(nsISupports* aTarget, nsPresContext* aPresContext,
                            WidgetEvent* aEvent, dom::Event* aDOMEvent = nullptr,
->>>>>>> upstream-releases
                            nsEventStatus* aEventStatus = nullptr,
                            EventDispatchingCallback* aCallback = nullptr,
                            nsTArray<dom::EventTarget*>* aTargets = nullptr);
@@ -452,11 +387,5 @@ class EventDispatcher {
 
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_EventDispatcher_h_
-||||||| merged common ancestors
-#endif // mozilla_EventDispatcher_h_
-=======
 #  endif  // mozilla_EventDispatcher_h_
->>>>>>> upstream-releases
 #endif

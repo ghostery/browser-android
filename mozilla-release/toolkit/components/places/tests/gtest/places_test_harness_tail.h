@@ -52,43 +52,16 @@ void do_test_finished() {
   gPendingTests--;
 }
 
-<<<<<<< HEAD
-void disable_idle_service() {
-  (void)fprintf(stderr, TEST_INFO_STR "Disabling Idle Service.\n");
-  static NS_DEFINE_IID(kIdleCID, NS_IDLE_SERVICE_CID);
-  nsresult rv;
-  nsCOMPtr<nsIFactory> idleFactory = do_GetClassObject(kIdleCID, &rv);
-  do_check_success(rv);
-  nsCOMPtr<nsIComponentRegistrar> registrar;
-  rv = NS_GetComponentRegistrar(getter_AddRefs(registrar));
-  do_check_success(rv);
-  rv = registrar->UnregisterFactory(kIdleCID, idleFactory);
-  do_check_success(rv);
-||||||| merged common ancestors
-void
-disable_idle_service()
-{
-  (void)fprintf(stderr, TEST_INFO_STR  "Disabling Idle Service.\n");
-  static NS_DEFINE_IID(kIdleCID, NS_IDLE_SERVICE_CID);
-  nsresult rv;
-  nsCOMPtr<nsIFactory> idleFactory = do_GetClassObject(kIdleCID, &rv);
-  do_check_success(rv);
-  nsCOMPtr<nsIComponentRegistrar> registrar;
-  rv = NS_GetComponentRegistrar(getter_AddRefs(registrar));
-  do_check_success(rv);
-  rv = registrar->UnregisterFactory(kIdleCID, idleFactory);
-  do_check_success(rv);
-=======
 void disable_idle_service() {
   (void)fprintf(stderr, TEST_INFO_STR "Disabling Idle Service.\n");
 
   nsCOMPtr<nsIIdleService> idle =
       do_GetService("@mozilla.org/widget/idleservice;1");
   idle->SetDisabled(true);
->>>>>>> upstream-releases
 }
 
-TEST(IHistory, Test) {
+TEST(IHistory, Test)
+{
   RefPtr<WaitForConnectionClosed> spinClose = new WaitForConnectionClosed();
 
   // Tinderboxes are constantly on idle.  Since idle tasks can interact with

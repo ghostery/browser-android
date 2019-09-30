@@ -25,14 +25,7 @@ DevToolsModules(
     'animation.js',
     'array-buffer.js',
     'breakpoint.js',
-<<<<<<< HEAD
-    'canvas.js',
     'changes.js',
-||||||| merged common ancestors
-    'canvas.js',
-=======
-    'changes.js',
->>>>>>> upstream-releases
     'common.js',
     'css-properties.js',
     'device.js',
@@ -65,13 +58,6 @@ DevToolsModules(
     'styles.js',
     'stylesheets.js',
     'thread.js',
-<<<<<<< HEAD
-    'webaudio.js',
-||||||| merged common ancestors
-    'timeline.js',
-    'webaudio.js',
-=======
->>>>>>> upstream-releases
     'webbrowser.js',
     'webconsole.js',
 )

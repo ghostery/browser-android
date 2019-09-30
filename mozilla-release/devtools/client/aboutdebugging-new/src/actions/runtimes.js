@@ -4,40 +4,18 @@
 
 "use strict";
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-const { ADB } = require("devtools/shared/adb/adb");
-const { DebuggerClient } = require("devtools/shared/client/debugger-client");
-const { DebuggerServer } = require("devtools/server/main");
-
-=======
 const Services = require("Services");
 
->>>>>>> upstream-releases
 const Actions = require("./index");
 
 const {
-<<<<<<< HEAD
-  getCurrentRuntime,
-||||||| merged common ancestors
-=======
   getAllRuntimes,
   getCurrentRuntime,
->>>>>>> upstream-releases
   findRuntimeById,
 } = require("../modules/runtimes-state-helper");
 
-<<<<<<< HEAD
-const { createClientForRuntime } = require("../modules/runtime-client-factory");
-
-const { remoteClientManager } =
-  require("devtools/client/shared/remote-debugging/remote-client-manager");
-
-||||||| merged common ancestors
-=======
 const { l10n } = require("../modules/l10n");
 const { createClientForRuntime } = require("../modules/runtime-client-factory");
->>>>>>> upstream-releases
 const {
   isSupportedDebugTargetPane,
 } = require("../modules/debug-target-support");
@@ -56,111 +34,25 @@ const {
   DISCONNECT_RUNTIME_FAILURE,
   DISCONNECT_RUNTIME_START,
   DISCONNECT_RUNTIME_SUCCESS,
-<<<<<<< HEAD
-  RUNTIME_PREFERENCE,
-||||||| merged common ancestors
-=======
   PAGE_TYPES,
   REMOTE_RUNTIMES_UPDATED,
   RUNTIME_PREFERENCE,
->>>>>>> upstream-releases
   RUNTIMES,
   THIS_FIREFOX_RUNTIME_CREATED,
   UNWATCH_RUNTIME_FAILURE,
   UNWATCH_RUNTIME_START,
   UNWATCH_RUNTIME_SUCCESS,
-<<<<<<< HEAD
-  UPDATE_CONNECTION_PROMPT_SETTING_FAILURE,
-  UPDATE_CONNECTION_PROMPT_SETTING_START,
-  UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS,
-  USB_RUNTIMES_UPDATED,
-||||||| merged common ancestors
-  USB_RUNTIMES_UPDATED,
-=======
   UPDATE_CONNECTION_PROMPT_SETTING_FAILURE,
   UPDATE_CONNECTION_PROMPT_SETTING_START,
   UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS,
   UPDATE_RUNTIME_MULTIE10S_FAILURE,
   UPDATE_RUNTIME_MULTIE10S_START,
   UPDATE_RUNTIME_MULTIE10S_SUCCESS,
->>>>>>> upstream-releases
   WATCH_RUNTIME_FAILURE,
   WATCH_RUNTIME_START,
   WATCH_RUNTIME_SUCCESS,
 } = require("../constants");
 
-<<<<<<< HEAD
-async function getRuntimeInfo(runtime, clientWrapper) {
-  const { type } = runtime;
-  const { name, channel, deviceName, version } =
-    await clientWrapper.getDeviceDescription();
-  const icon =
-    (channel === "release" || channel === "beta" || channel === "aurora")
-      ? `chrome://devtools/skin/images/aboutdebugging-firefox-${ channel }.svg`
-      : "chrome://devtools/skin/images/aboutdebugging-firefox-nightly.svg";
-
-  return {
-    icon,
-    deviceName,
-    name,
-    type,
-    version,
-  };
-||||||| merged common ancestors
-async function createLocalClient() {
-  DebuggerServer.init();
-  DebuggerServer.registerAllActors();
-  const client = new DebuggerClient(DebuggerServer.connectPipe());
-  await client.connect();
-  return { client };
-}
-
-async function createNetworkClient(host, port) {
-  const transportDetails = { host, port };
-  const transport = await DebuggerClient.socketConnect(transportDetails);
-  const client = new DebuggerClient(transport);
-  await client.connect();
-  return { client, transportDetails };
-}
-
-async function createUSBClient(socketPath) {
-  const port = await ADB.prepareTCPConnection(socketPath);
-  return createNetworkClient("localhost", port);
-}
-
-async function createClientForRuntime(runtime) {
-  const { extra, type } = runtime;
-
-  if (type === RUNTIMES.THIS_FIREFOX) {
-    return createLocalClient();
-  } else if (type === RUNTIMES.NETWORK) {
-    const { host, port } = extra.connectionParameters;
-    return createNetworkClient(host, port);
-  } else if (type === RUNTIMES.USB) {
-    const { socketPath } = extra.connectionParameters;
-    return createUSBClient(socketPath);
-  }
-
-  return null;
-}
-
-async function getRuntimeInfo(runtime, client) {
-  const { extra, type } = runtime;
-  const deviceFront = await client.mainRoot.getFront("device");
-  const { brandName: name, channel, version } = await deviceFront.getDescription();
-  const icon =
-    (channel === "release" || channel === "beta" || channel === "aurora")
-      ? `chrome://devtools/skin/images/aboutdebugging-firefox-${ channel }.svg`
-      : "chrome://devtools/skin/images/aboutdebugging-firefox-nightly.svg";
-
-  return {
-    icon,
-    deviceName: extra ? extra.deviceName : undefined,
-    name,
-    type,
-    version,
-  };
-=======
 const CONNECTION_TIMING_OUT_DELAY = 3000;
 const CONNECTION_CANCEL_DELAY = 13000;
 
@@ -188,14 +80,6 @@ function onRemoteDebuggerClientClosed() {
 
 function onMultiE10sUpdated() {
   window.AboutDebugging.store.dispatch(updateMultiE10s());
->>>>>>> upstream-releases
-}
-
-function onUSBDebuggerClientClosed() {
-  // After scanUSBRuntimes action, updateUSBRuntimes action is called.
-  // The closed runtime will be unwatched and disconnected explicitly in the action
-  // if needed.
-  window.AboutDebugging.store.dispatch(Actions.scanUSBRuntimes());
 }
 
 function connectRuntime(id) {
@@ -233,28 +117,6 @@ function connectRuntime(id) {
 
     try {
       const runtime = findRuntimeById(id, getState().runtimes);
-<<<<<<< HEAD
-      const clientWrapper = await createClientForRuntime(runtime);
-      const info = await getRuntimeInfo(runtime, clientWrapper);
-
-      const promptPrefName = RUNTIME_PREFERENCE.CONNECTION_PROMPT;
-      const connectionPromptEnabled = await clientWrapper.getPreference(promptPrefName);
-      const runtimeDetails = {
-        clientWrapper,
-        connectionPromptEnabled,
-        info,
-      };
-
-      if (runtime.type === RUNTIMES.USB) {
-        // `closed` event will be emitted when disabling remote debugging
-        // on the connected USB runtime.
-        clientWrapper.addOneTimeListener("closed", onUSBDebuggerClientClosed);
-      }
-||||||| merged common ancestors
-      const { client, transportDetails } = await createClientForRuntime(runtime);
-      const info = await getRuntimeInfo(runtime, client);
-      const connection = { client, info, transportDetails };
-=======
       const clientWrapper = await createClientForRuntime(runtime);
 
       const deviceDescription = await clientWrapper.getDeviceDescription();
@@ -322,7 +184,6 @@ function connectRuntime(id) {
         // on the connected remote runtime.
         clientWrapper.once("closed", onRemoteDebuggerClientClosed);
       }
->>>>>>> upstream-releases
 
       dispatch({
         type: CONNECT_RUNTIME_SUCCESS,
@@ -334,16 +195,10 @@ function connectRuntime(id) {
         },
       });
     } catch (e) {
-<<<<<<< HEAD
-      dispatch({ type: CONNECT_RUNTIME_FAILURE, error: e });
-||||||| merged common ancestors
-      dispatch({ type: CONNECT_RUNTIME_FAILURE, error: e.message });
-=======
       dispatch({ type: CONNECT_RUNTIME_FAILURE, connectionId, id, error: e });
     } finally {
       clearTimeout(connectionNotRespondingTimer);
       clearTimeout(connectionCancelTimer);
->>>>>>> upstream-releases
     }
   };
 }
@@ -373,29 +228,13 @@ function disconnectRuntime(id, shouldRedirect = false) {
     dispatch({ type: DISCONNECT_RUNTIME_START });
     try {
       const runtime = findRuntimeById(id, getState().runtimes);
-<<<<<<< HEAD
-      const { clientWrapper } = runtime.runtimeDetails;
-||||||| merged common ancestors
-      const client = runtime.connection.client;
-=======
       const { clientWrapper } = runtime.runtimeDetails;
 
       const deviceFront = await clientWrapper.getFront("device");
       if (deviceFront) {
         deviceFront.off("multi-e10s-updated", onMultiE10sUpdated);
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (runtime.type === RUNTIMES.USB) {
-        clientWrapper.removeListener("closed", onUSBDebuggerClientClosed);
-      }
-
-      await clientWrapper.close();
-||||||| merged common ancestors
-      await client.close();
-      DebuggerServer.destroy();
-=======
       if (runtime.type !== RUNTIMES.THIS_FIREFOX) {
         clientWrapper.off("closed", onRemoteDebuggerClientClosed);
       }
@@ -405,7 +244,6 @@ function disconnectRuntime(id, shouldRedirect = false) {
           Actions.selectPage(PAGE_TYPES.RUNTIME, RUNTIMES.THIS_FIREFOX)
         );
       }
->>>>>>> upstream-releases
 
       dispatch({
         type: DISCONNECT_RUNTIME_SUCCESS,
@@ -415,30 +253,6 @@ function disconnectRuntime(id, shouldRedirect = false) {
         },
       });
     } catch (e) {
-<<<<<<< HEAD
-      dispatch({ type: DISCONNECT_RUNTIME_FAILURE, error: e });
-    }
-  };
-}
-
-function updateConnectionPromptSetting(connectionPromptEnabled) {
-  return async (dispatch, getState) => {
-    dispatch({ type: UPDATE_CONNECTION_PROMPT_SETTING_START });
-    try {
-      const runtime = getCurrentRuntime(getState().runtimes);
-      const { clientWrapper } = runtime.runtimeDetails;
-      const promptPrefName = RUNTIME_PREFERENCE.CONNECTION_PROMPT;
-      await clientWrapper.setPreference(promptPrefName, connectionPromptEnabled);
-      // Re-get actual value from the runtime.
-      connectionPromptEnabled = await clientWrapper.getPreference(promptPrefName);
-
-      dispatch({ type: UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS,
-                 runtime, connectionPromptEnabled });
-    } catch (e) {
-      dispatch({ type: UPDATE_CONNECTION_PROMPT_SETTING_FAILURE, error: e });
-||||||| merged common ancestors
-      dispatch({ type: DISCONNECT_RUNTIME_FAILURE, error: e.message });
-=======
       dispatch({ type: DISCONNECT_RUNTIME_FAILURE, error: e });
     }
   };
@@ -488,7 +302,6 @@ function updateMultiE10s() {
       });
     } catch (e) {
       dispatch({ type: UPDATE_RUNTIME_MULTIE10S_FAILURE, error: e });
->>>>>>> upstream-releases
     }
   };
 }
@@ -544,67 +357,6 @@ function unwatchRuntime(id) {
   };
 }
 
-<<<<<<< HEAD
-function updateUSBRuntimes(runtimes) {
-  return async (dispatch, getState) => {
-    const currentRuntime = getCurrentRuntime(getState().runtimes);
-
-    if (currentRuntime &&
-        currentRuntime.type === RUNTIMES.USB &&
-        !runtimes.find(runtime => currentRuntime.id === runtime.id)) {
-      // Since current USB runtime was invalid, move to this firefox page.
-      // This case is considered as followings and so on:
-      // * Remove ADB addon
-      // * (Physically) Disconnect USB runtime
-      //
-      // The reason why we call selectPage before USB_RUNTIMES_UPDATED was fired is below.
-      // Current runtime can not be retrieved after USB_RUNTIMES_UPDATED action, since
-      // that updates runtime state. So, before that we fire selectPage action so that to
-      // transact unwatchRuntime correctly.
-
-      await dispatch(Actions.selectPage(RUNTIMES.THIS_FIREFOX, RUNTIMES.THIS_FIREFOX));
-    }
-
-    // Disconnect runtimes that were no longer valid
-    const validIds = runtimes.map(r => r.id);
-    const existingRuntimes = getState().runtimes.usbRuntimes;
-    const invalidRuntimes = existingRuntimes.filter(r => !validIds.includes(r.id));
-
-    for (const invalidRuntime of invalidRuntimes) {
-      await dispatch(disconnectRuntime(invalidRuntime.id));
-    }
-
-    dispatch({ type: USB_RUNTIMES_UPDATED, runtimes });
-
-    for (const runtime of getState().runtimes.usbRuntimes) {
-      const isConnected = !!runtime.runtimeDetails;
-      const hasConnectedClient = remoteClientManager.hasClient(runtime.id, runtime.type);
-      if (!isConnected && hasConnectedClient) {
-        await dispatch(connectRuntime(runtime.id));
-      }
-    }
-  };
-}
-
-/**
- * Remove all the listeners added on client objects. Since those objects are persisted
- * regardless of the about:debugging lifecycle, all the added events should be removed
- * before leaving about:debugging.
- */
-function removeRuntimeListeners() {
-  return (dispatch, getState) => {
-    const { usbRuntimes } = getState().runtimes;
-    for (const runtime of usbRuntimes) {
-      if (runtime.runtimeDetails) {
-        const { clientWrapper } = runtime.runtimeDetails;
-        clientWrapper.removeListener("closed", onUSBDebuggerClientClosed);
-      }
-    }
-  };
-||||||| merged common ancestors
-function updateUSBRuntimes(runtimes) {
-  return { type: USB_RUNTIMES_UPDATED, runtimes };
-=======
 function updateNetworkRuntimes(locations) {
   const runtimes = locations.map(location => {
     const [host, port] = location.split(":");
@@ -774,7 +526,6 @@ function removeRuntimeListeners() {
       }
     }
   };
->>>>>>> upstream-releases
 }
 
 module.exports = {
@@ -783,13 +534,8 @@ module.exports = {
   disconnectRuntime,
   removeRuntimeListeners,
   unwatchRuntime,
-<<<<<<< HEAD
-  updateConnectionPromptSetting,
-||||||| merged common ancestors
-=======
   updateConnectionPromptSetting,
   updateNetworkRuntimes,
->>>>>>> upstream-releases
   updateUSBRuntimes,
   watchRuntime,
 };

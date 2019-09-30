@@ -50,22 +50,6 @@ public:
     void onDrawPicture(const SkPicture*, const SkMatrix*, const SkPaint*) override;
     void onDrawAnnotation(const SkRect&, const char[], SkData*) override;
 
-<<<<<<< HEAD
-    void onDrawText      (const void*, size_t, SkScalar x, SkScalar y, const SkPaint&) override;
-    void onDrawPosText   (const void*, size_t, const SkPoint[], const SkPaint&) override;
-    void onDrawPosTextH  (const void*, size_t, const SkScalar[], SkScalar, const SkPaint&) override;
-    void onDrawTextRSXform(const void*, size_t,
-                           const SkRSXform[], const SkRect*, const SkPaint&) override;
-||||||| merged common ancestors
-    void onDrawText      (const void*, size_t, SkScalar x, SkScalar y, const SkPaint&) override;
-    void onDrawPosText   (const void*, size_t, const SkPoint[], const SkPaint&) override;
-    void onDrawPosTextH  (const void*, size_t, const SkScalar[], SkScalar, const SkPaint&) override;
-    void onDrawTextOnPath(const void*, size_t,
-                          const SkPath&, const SkMatrix*, const SkPaint&) override;
-    void onDrawTextRSXform(const void*, size_t,
-                           const SkRSXform[], const SkRect*, const SkPaint&) override;
-=======
->>>>>>> upstream-releases
     void onDrawTextBlob(const SkTextBlob*, SkScalar, SkScalar, const SkPaint&) override;
 
     void onDrawBitmap(const SkBitmap&, SkScalar, SkScalar, const SkPaint*) override;

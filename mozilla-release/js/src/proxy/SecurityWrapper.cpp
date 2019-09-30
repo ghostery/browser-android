@@ -97,43 +97,6 @@ bool SecurityWrapper<Base>::boxedValue_unbox(JSContext* cx, HandleObject obj,
 }
 
 template <class Base>
-<<<<<<< HEAD
-bool SecurityWrapper<Base>::defineProperty(JSContext* cx, HandleObject wrapper,
-                                           HandleId id,
-                                           Handle<PropertyDescriptor> desc,
-                                           ObjectOpResult& result) const {
-  if (desc.getter() || desc.setter()) {
-    UniqueChars prop =
-        IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsPropertyKey);
-    if (!prop) {
-      return false;
-    }
-
-    JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr,
-                             JSMSG_ACCESSOR_DEF_DENIED, prop.get());
-    return false;
-  }
-
-  return Base::defineProperty(cx, wrapper, id, desc, result);
-||||||| merged common ancestors
-bool
-SecurityWrapper<Base>::defineProperty(JSContext* cx, HandleObject wrapper, HandleId id,
-                                      Handle<PropertyDescriptor> desc,
-                                      ObjectOpResult& result) const
-{
-    if (desc.getter() || desc.setter()) {
-        UniqueChars prop = IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsPropertyKey);
-        if (!prop) {
-            return false;
-        }
-
-        JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr, JSMSG_ACCESSOR_DEF_DENIED,
-                                 prop.get());
-        return false;
-    }
-
-    return Base::defineProperty(cx, wrapper, id, desc, result);
-=======
 bool SecurityWrapper<Base>::defineProperty(JSContext* cx, HandleObject wrapper,
                                            HandleId id,
                                            Handle<PropertyDescriptor> desc,
@@ -143,7 +106,6 @@ bool SecurityWrapper<Base>::defineProperty(JSContext* cx, HandleObject wrapper,
   }
 
   return Base::defineProperty(cx, wrapper, id, desc, result);
->>>>>>> upstream-releases
 }
 
 template class js::SecurityWrapper<Wrapper>;

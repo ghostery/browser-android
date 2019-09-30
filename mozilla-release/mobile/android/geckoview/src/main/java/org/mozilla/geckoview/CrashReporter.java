@@ -71,16 +71,10 @@ public class CrashReporter {
      * @see GeckoRuntimeSettings.Builder#crashHandler(Class)
      * @see GeckoRuntime#ACTION_CRASHED
      */
-<<<<<<< HEAD
-    public static GeckoResult<String> sendCrashReport(Context context, Intent intent, String appName)
-||||||| merged common ancestors
-    public static void sendCrashReport(Context context, Intent intent, String appName)
-=======
     @AnyThread
     public static @NonNull GeckoResult<String> sendCrashReport(@NonNull final Context context,
                                                                @NonNull final Intent intent,
                                                                @NonNull final String appName)
->>>>>>> upstream-releases
             throws IOException, URISyntaxException {
         return sendCrashReport(context, intent.getExtras(), appName);
     }
@@ -102,16 +96,10 @@ public class CrashReporter {
      * @see GeckoRuntimeSettings.Builder#crashHandler(Class)
      * @see GeckoRuntime#ACTION_CRASHED
      */
-<<<<<<< HEAD
-    public static GeckoResult<String> sendCrashReport(Context context, Bundle intentExtras, String appName)
-||||||| merged common ancestors
-    public static void sendCrashReport(Context context, Bundle intentExtras, String appName)
-=======
     @AnyThread
     public static @NonNull GeckoResult<String> sendCrashReport(@NonNull final Context context,
                                                                @NonNull final Bundle intentExtras,
                                                                @NonNull final String appName)
->>>>>>> upstream-releases
             throws IOException, URISyntaxException {
         final File dumpFile = new File(intentExtras.getString(GeckoRuntime.EXTRA_MINIDUMP_PATH));
         final File extrasFile = new File(intentExtras.getString(GeckoRuntime.EXTRA_EXTRAS_PATH));
@@ -139,13 +127,6 @@ public class CrashReporter {
      * @see GeckoRuntimeSettings.Builder#crashHandler(Class)
      * @see GeckoRuntime#ACTION_CRASHED
      */
-<<<<<<< HEAD
-    public static GeckoResult<String> sendCrashReport(Context context, File minidumpFile, File extrasFile,
-                                       boolean success, String appName) throws IOException, URISyntaxException {
-||||||| merged common ancestors
-    public static void sendCrashReport(Context context, File minidumpFile, File extrasFile,
-                                       boolean success, String appName) throws IOException, URISyntaxException {
-=======
     @AnyThread
     public static @NonNull GeckoResult<String> sendCrashReport(@NonNull final Context context,
                                                                @NonNull final File minidumpFile,
@@ -153,7 +134,6 @@ public class CrashReporter {
                                                                final boolean success,
                                                                @NonNull final String appName)
             throws IOException, URISyntaxException {
->>>>>>> upstream-releases
         // Compute the minidump hash and generate the stack traces
         computeMinidumpHash(extrasFile, minidumpFile);
 
@@ -178,21 +158,11 @@ public class CrashReporter {
      * @see GeckoRuntimeSettings.Builder#crashHandler(Class)
      * @see GeckoRuntime#ACTION_CRASHED
      */
-<<<<<<< HEAD
-    public static GeckoResult<String> sendCrashReport(Context context, File minidumpFile,
-                                       Map<String, String> extras, boolean success,
-                                       String appName) throws IOException, URISyntaxException {
-||||||| merged common ancestors
-    public static void sendCrashReport(Context context, File minidumpFile,
-                                       Map<String, String> extras, boolean success,
-                                       String appName) throws IOException, URISyntaxException {
-=======
     @AnyThread
     public static @NonNull GeckoResult<String> sendCrashReport(
         @NonNull final Context context, @NonNull final File minidumpFile,
         @NonNull final Map<String, String> extras, final boolean success,
         @NonNull final String appName) throws IOException, URISyntaxException {
->>>>>>> upstream-releases
         Log.d(LOGTAG, "Sending crash report: " + minidumpFile.getPath());
 
         String spec = extras.get(SERVER_URL_KEY);

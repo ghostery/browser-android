@@ -254,66 +254,6 @@ decorate_task(
 );
 
 // Test that a rollback doesn't affect user prefs
-<<<<<<< HEAD
-decorate_task(
-  PreferenceRollouts.withTestMock,
-  async function simple_rollback(setExperimentInactiveStub, sendEventStub) {
-    Services.prefs.getDefaultBranch("").setCharPref("test.pref", "rollout value");
-    Services.prefs.setCharPref("test.pref", "user value");
-
-    PreferenceRollouts.add({
-      slug: "test-rollout",
-      state: PreferenceRollouts.STATE_ACTIVE,
-      preferences: [
-        {preferenceName: "test.pref", value: "rollout value", previousValue: "builtin value"},
-      ],
-    });
-
-    const recipe = {id: 1, arguments: {rolloutSlug: "test-rollout"}};
-
-    const action = new PreferenceRollbackAction();
-    await action.runRecipe(recipe);
-    await action.finalize();
-    is(action.lastError, null, "lastError should be null");
-
-    is(Services.prefs.getDefaultBranch("").getCharPref("test.pref"), "builtin value", "default branch should be reset");
-    is(Services.prefs.getCharPref("test.pref"), "user value", "user branch should remain the same");
-
-    // Cleanup
-    Services.prefs.deleteBranch("test.pref");
-    Services.prefs.getDefaultBranch("").deleteBranch("test.pref");
-  },
-);
-||||||| merged common ancestors
-decorate_task(
-  PreferenceRollouts.withTestMock,
-  async function simple_rollback(setExperimentInactiveStub, sendEventStub) {
-    Services.prefs.getDefaultBranch("").setCharPref("test.pref", "rollout value");
-    Services.prefs.setCharPref("test.pref", "user value");
-
-    PreferenceRollouts.add({
-      slug: "test-rollout",
-      state: PreferenceRollouts.STATE_ACTIVE,
-      preferences: [
-        {preferenceName: "test.pref", value: "rollout value", previousValue: "builtin value"},
-      ],
-    });
-
-    const recipe = {id: 1, arguments: {rolloutSlug: "test-rollout"}};
-
-    const action = new PreferenceRollbackAction();
-    await action.runRecipe(recipe);
-    await action.finalize();
-
-    is(Services.prefs.getDefaultBranch("").getCharPref("test.pref"), "builtin value", "default branch should be reset");
-    is(Services.prefs.getCharPref("test.pref"), "user value", "user branch should remain the same");
-
-    // Cleanup
-    Services.prefs.deleteBranch("test.pref");
-    Services.prefs.getDefaultBranch("").deleteBranch("test.pref");
-  },
-);
-=======
 decorate_task(PreferenceRollouts.withTestMock, async function simple_rollback(
   setExperimentInactiveStub,
   sendEventStub
@@ -355,4 +295,3 @@ decorate_task(PreferenceRollouts.withTestMock, async function simple_rollback(
   Services.prefs.deleteBranch("test.pref");
   Services.prefs.getDefaultBranch("").deleteBranch("test.pref");
 });
->>>>>>> upstream-releases

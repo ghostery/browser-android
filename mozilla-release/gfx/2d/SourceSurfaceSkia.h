@@ -54,13 +54,7 @@ class SourceSurfaceSkia : public DataSourceSurface {
   /**
    * The caller is responsible for ensuring aMappedSurface is not null.
    */
-<<<<<<< HEAD
-  virtual bool Map(MapType, MappedSurface* aMappedSurface) override;
-||||||| merged common ancestors
-  virtual bool Map(MapType, MappedSurface *aMappedSurface) override;
-=======
   bool Map(MapType, MappedSurface* aMappedSurface) override;
->>>>>>> upstream-releases
 
   void Unmap() override;
 

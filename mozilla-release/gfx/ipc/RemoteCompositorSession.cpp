@@ -11,16 +11,8 @@
 #include "mozilla/Unused.h"
 #include "nsBaseWidget.h"
 #if defined(MOZ_WIDGET_ANDROID)
-<<<<<<< HEAD
-#include "mozilla/layers/UiCompositorControllerChild.h"
-#endif  // defined(MOZ_WIDGET_ANDROID)
-||||||| merged common ancestors
-#include "mozilla/layers/UiCompositorControllerChild.h"
-#endif // defined(MOZ_WIDGET_ANDROID)
-=======
 #  include "mozilla/layers/UiCompositorControllerChild.h"
 #endif  // defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -28,32 +20,12 @@ namespace layers {
 using namespace gfx;
 using namespace widget;
 
-<<<<<<< HEAD
-RemoteCompositorSession::RemoteCompositorSession(
-    nsBaseWidget* aWidget, CompositorBridgeChild* aChild,
-    CompositorWidgetDelegate* aWidgetDelegate, APZCTreeManagerChild* aAPZ,
-    const LayersId& aRootLayerTreeId)
-    : CompositorSession(aWidgetDelegate, aChild, aRootLayerTreeId),
-      mWidget(aWidget),
-      mAPZ(aAPZ) {
-||||||| merged common ancestors
-RemoteCompositorSession::RemoteCompositorSession(nsBaseWidget* aWidget,
-                                                 CompositorBridgeChild* aChild,
-                                                 CompositorWidgetDelegate* aWidgetDelegate,
-                                                 APZCTreeManagerChild* aAPZ,
-                                                 const LayersId& aRootLayerTreeId)
- : CompositorSession(aWidgetDelegate, aChild, aRootLayerTreeId),
-   mWidget(aWidget),
-   mAPZ(aAPZ)
-{
-=======
 RemoteCompositorSession::RemoteCompositorSession(
     nsBaseWidget* aWidget, CompositorBridgeChild* aChild,
     CompositorWidgetDelegate* aWidgetDelegate, APZCTreeManagerChild* aAPZ,
     const LayersId& aRootLayerTreeId)
     : CompositorSession(aWidget, aWidgetDelegate, aChild, aRootLayerTreeId),
       mAPZ(aAPZ) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!gfxPlatform::IsHeadless());
   GPUProcessManager::Get()->RegisterRemoteProcessSession(this);
   if (mAPZ) {

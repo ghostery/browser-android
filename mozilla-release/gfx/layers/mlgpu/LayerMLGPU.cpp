@@ -23,18 +23,8 @@ LayerMLGPU::LayerMLGPU(LayerManagerMLGPU* aManager)
       mComputedOpacity(0.0),
       mPrepared(false) {}
 
-<<<<<<< HEAD
-/* static */ void LayerMLGPU::BeginFrame() { sFrameKey++; }
-||||||| merged common ancestors
-/* static */ void
-LayerMLGPU::BeginFrame()
-{
-  sFrameKey++;
-}
-=======
 /* static */
 void LayerMLGPU::BeginFrame() { sFrameKey++; }
->>>>>>> upstream-releases
 
 LayerManagerMLGPU* LayerMLGPU::GetManager() {
   return static_cast<LayerManagerMLGPU*>(mCompositorManager);

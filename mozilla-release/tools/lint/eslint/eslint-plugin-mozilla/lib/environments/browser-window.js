@@ -23,16 +23,8 @@ const rootDir = helpers.rootDir;
 // When updating EXTRA_SCRIPTS or MAPPINGS, be sure to also update the
 // 'support-files' config in `tools/lint/eslint.yml`.
 
-<<<<<<< HEAD
-// These are scripts not loaded from browser.xul or global-scripts.inc
-// but via other includes.
-||||||| merged common ancestors
-// These are scripts not included in global-scripts.inc, but which are loaded
-// via overlays.
-=======
 // These are scripts not loaded from browser.xhtml or global-scripts.inc
 // but via other includes.
->>>>>>> upstream-releases
 const EXTRA_SCRIPTS = [
   "browser/base/content/nsContextMenu.js",
   "browser/components/places/content/editBookmark.js",
@@ -59,26 +51,12 @@ const MAPPINGS = {
   "places-tree.js": "browser/components/places/content/places-tree.js",
 };
 
-<<<<<<< HEAD
-const globalScriptsRegExp =
-  /^\s*Services.scriptloader.loadSubScript\(\"(.*?)\", this\);$/;
-||||||| merged common ancestors
-const globalScriptsRegExp =
-  /<script type=\"application\/javascript\" src=\"(.*)\"\/>|^\s*"(.*?\.js)",$/;
-=======
 const globalScriptsRegExp = /^\s*Services.scriptloader.loadSubScript\(\"(.*?)\", this\);$/;
->>>>>>> upstream-releases
 
 function getGlobalScriptIncludes(scriptPath) {
   let fileData;
   try {
-<<<<<<< HEAD
-    fileData = fs.readFileSync(scriptPath, {encoding: "utf8"});
-||||||| merged common ancestors
-    fileData = fs.readFileSync(helpers.globalScriptsPath, {encoding: "utf8"});
-=======
     fileData = fs.readFileSync(scriptPath, { encoding: "utf8" });
->>>>>>> upstream-releases
   } catch (ex) {
     // The file isn't present, so this isn't an m-c repository.
     return null;
@@ -91,17 +69,6 @@ function getGlobalScriptIncludes(scriptPath) {
   for (let line of fileData) {
     let match = line.match(globalScriptsRegExp);
     if (match) {
-<<<<<<< HEAD
-      let sourceFile = match[1]
-                .replace("chrome://browser/content/search/", "browser/components/search/content/")
-                .replace("chrome://browser/content/", "browser/base/content/")
-                .replace("chrome://global/content/", "toolkit/content/");
-||||||| merged common ancestors
-      let sourceFile = (match[1] || match[2])
-                .replace("chrome://browser/content/search/", "browser/components/search/content/")
-                .replace("chrome://browser/content/", "browser/base/content/")
-                .replace("chrome://global/content/", "toolkit/content/");
-=======
       let sourceFile = match[1]
         .replace(
           "chrome://browser/content/search/",
@@ -109,7 +76,6 @@ function getGlobalScriptIncludes(scriptPath) {
         )
         .replace("chrome://browser/content/", "browser/base/content/")
         .replace("chrome://global/content/", "toolkit/content/");
->>>>>>> upstream-releases
 
       for (let mapping of Object.getOwnPropertyNames(MAPPINGS)) {
         if (sourceFile.includes(mapping)) {

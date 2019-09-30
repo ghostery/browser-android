@@ -49,7 +49,6 @@ class PICStub {
  * The basic PIC just has a pointer to the list of stubs.
  */
 template <typename Category>
-<<<<<<< HEAD
 class PICChain {
  private:
   typedef typename Category::Stub CatStub;
@@ -58,107 +57,6 @@ class PICChain {
  protected:
   CatStub* stubs_;
 
-  PICChain() : stubs_(nullptr) {}
-  // PICs should never be copy constructed.
-  PICChain(const PICChain<Category>& other) = delete;
-
- public:
-  CatStub* stubs() const { return stubs_; }
-
-  void addStub(CatStub* stub) {
-    MOZ_ASSERT(stub);
-    MOZ_ASSERT(!stub->next());
-    if (!stubs_) {
-      stubs_ = stub;
-      return;
-    }
-||||||| merged common ancestors
-class PICChain
-{
-  private:
-    typedef typename Category::Stub CatStub;
-    typedef typename Category::Chain CatChain;
-
-  protected:
-    CatStub* stubs_;
-
-    PICChain() : stubs_(nullptr) {}
-    // PICs should never be copy constructed.
-    PICChain(const PICChain<Category>& other) = delete;
-
-  public:
-    CatStub* stubs() const {
-        return stubs_;
-    }
-=======
-class PICChain {
- private:
-  typedef typename Category::Stub CatStub;
-  typedef typename Category::Chain CatChain;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    CatStub* cur = stubs_;
-    while (cur->next()) {
-      cur = cur->next();
-    }
-    cur->append(stub);
-  }
-||||||| merged common ancestors
-    void addStub(CatStub* stub) {
-        MOZ_ASSERT(stub);
-        MOZ_ASSERT(!stub->next());
-        if (!stubs_) {
-            stubs_ = stub;
-            return;
-        }
-
-        CatStub* cur = stubs_;
-        while (cur->next()) {
-            cur = cur->next();
-        }
-        cur->append(stub);
-    }
-=======
- protected:
-  CatStub* stubs_;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  unsigned numStubs() const {
-    unsigned count = 0;
-    for (CatStub* stub = stubs_; stub; stub = stub->next()) {
-      count++;
-    }
-    return count;
-  }
-
-  void removeStub(CatStub* stub, CatStub* previous) {
-    if (previous) {
-      MOZ_ASSERT(previous->next() == stub);
-      previous->next_ = stub->next();
-    } else {
-      MOZ_ASSERT(stub == stubs_);
-      stubs_ = stub->next();
-||||||| merged common ancestors
-    unsigned numStubs() const {
-        unsigned count = 0;
-        for (CatStub* stub = stubs_; stub; stub = stub->next()) {
-            count++;
-        }
-        return count;
-    }
-
-    void removeStub(CatStub* stub, CatStub* previous) {
-        if (previous) {
-            MOZ_ASSERT(previous->next() == stub);
-            previous->next_ = stub->next();
-        } else {
-            MOZ_ASSERT(stub == stubs_);
-            stubs_ = stub->next();
-        }
-        js_delete(stub);
-=======
   PICChain() : stubs_(nullptr) {}
   // PICs should never be copy constructed.
   PICChain(const PICChain<Category>& other) = delete;
@@ -172,16 +70,9 @@ class PICChain {
     unsigned count = 0;
     for (CatStub* stub = stubs_; stub; stub = stub->next()) {
       count++;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    js_delete(stub);
-  }
-||||||| merged common ancestors
-=======
     return count;
   }
->>>>>>> upstream-releases
 };
 
 /*
@@ -211,102 +102,6 @@ struct ForOfPIC {
     explicit Stub(Shape* shape) : BaseStub(), shape_(shape) {
       MOZ_ASSERT(shape_);
     }
-<<<<<<< HEAD
-
-    Shape* shape() { return shape_; }
-  };
-
-  /*
-   * A ForOfPIC chain holds the following:
-   *
-   *  Array.prototype (arrayProto_)
-   *      To ensure that the incoming array has the standard proto.
-   *
-   *  Array.prototype's shape (arrayProtoShape_)
-   *      To ensure that Array.prototype has not been modified.
-   *
-   *  ArrayIterator.prototype
-   *  ArrayIterator.prototype's shape
-   *      (arrayIteratorProto_, arrayIteratorProtoShape_)
-   *      To ensure that an ArrayIterator.prototype has not been modified.
-   *
-   *  Array.prototype's slot number for @@iterator
-   *  Array.prototype's canonical value for @@iterator
-   *      (arrayProtoIteratorSlot_, canonicalIteratorFunc_)
-   *      To quickly retrieve and ensure that the iterator constructor
-   *      stored in the slot has not changed.
-   *
-   *  ArrayIterator.prototype's slot number for 'next'
-   *  ArrayIterator.prototype's canonical value for 'next'
-   *      (arrayIteratorProtoNextSlot_, canonicalNextFunc_)
-   *      To quickly retrieve and ensure that the 'next' method for
-   *      ArrayIterator objects has not changed.
-   */
-  class Chain : public BaseChain {
-   private:
-    // Pointer to canonical Array.prototype and ArrayIterator.prototype
-    GCPtrNativeObject arrayProto_;
-    GCPtrNativeObject arrayIteratorProto_;
-
-    // Shape of matching Array.prototype object, and slot containing
-    // the @@iterator for it, and the canonical value.
-    GCPtrShape arrayProtoShape_;
-    uint32_t arrayProtoIteratorSlot_;
-    GCPtrValue canonicalIteratorFunc_;
-
-    // Shape of matching ArrayIteratorProto, and slot containing
-    // the 'next' property, and the canonical value.
-    GCPtrShape arrayIteratorProtoShape_;
-    uint32_t arrayIteratorProtoNextSlot_;
-    GCPtrValue canonicalNextFunc_;
-
-    // Initialization flag marking lazy initialization of above fields.
-    bool initialized_;
-
-    // Disabled flag is set when we don't want to try optimizing anymore
-    // because core objects were changed.
-    bool disabled_;
-
-    static const unsigned MAX_STUBS = 10;
-
-   public:
-    Chain()
-        : BaseChain(),
-          arrayProto_(nullptr),
-          arrayIteratorProto_(nullptr),
-          arrayProtoShape_(nullptr),
-          arrayProtoIteratorSlot_(-1),
-          canonicalIteratorFunc_(UndefinedValue()),
-          arrayIteratorProtoShape_(nullptr),
-          arrayIteratorProtoNextSlot_(-1),
-          initialized_(false),
-          disabled_(false) {}
-
-    // Initialize the canonical iterator function.
-    bool initialize(JSContext* cx);
-
-    // Try to optimize this chain for an object.
-    bool tryOptimizeArray(JSContext* cx, HandleArrayObject array,
-                          bool* optimized);
-
-    // Check if the global array-related objects have not been messed with
-    // in a way that would disable this PIC.
-    bool isArrayStateStillSane();
-
-    // Check if ArrayIterator.next is still optimizable.
-    inline bool isArrayNextStillSane() {
-      return (arrayIteratorProto_->lastProperty() ==
-              arrayIteratorProtoShape_) &&
-             (arrayIteratorProto_->getSlot(arrayIteratorProtoNextSlot_) ==
-              canonicalNextFunc_);
-||||||| merged common ancestors
-    static inline Chain* getOrCreate(JSContext* cx) {
-        NativeObject* obj = cx->global()->getForOfPICObject();
-        if (obj) {
-            return fromJSObject(obj);
-        }
-        return create(cx);
-=======
 
     Shape* shape() { return shape_; }
   };
@@ -405,45 +200,8 @@ struct ForOfPIC {
               arrayIteratorProtoShape_) &&
              (arrayIteratorProto_->getSlot(arrayIteratorProtoNextSlot_) ==
               canonicalNextFunc_);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    void trace(JSTracer* trc);
-    void sweep(FreeOp* fop);
-
-   private:
-    // Check if a matching optimized stub for the given object exists.
-    bool hasMatchingStub(ArrayObject* obj);
-
-    // Reset the PIC and all info associated with it.
-    void reset();
-
-    // Erase the stub chain.
-    void eraseChain();
-  };
-
-  // Class for object that holds ForOfPIC chain.
-  static const Class class_;
-
-  static NativeObject* createForOfPICObject(JSContext* cx,
-                                            Handle<GlobalObject*> global);
-
-  static inline Chain* fromJSObject(NativeObject* obj) {
-    MOZ_ASSERT(obj->getClass() == &ForOfPIC::class_);
-    return (ForOfPIC::Chain*)obj->getPrivate();
-  }
-  static inline Chain* getOrCreate(JSContext* cx) {
-    NativeObject* obj = cx->global()->getForOfPICObject();
-    if (obj) {
-      return fromJSObject(obj);
-    }
-    return create(cx);
-  }
-  static Chain* create(JSContext* cx);
-};
-||||||| merged common ancestors
-=======
     // Check if a matching optimized stub for the given object exists.
     bool hasMatchingStub(ArrayObject* obj);
 
@@ -475,7 +233,6 @@ struct ForOfPIC {
   }
   static Chain* create(JSContext* cx);
 };
->>>>>>> upstream-releases
 
 }  // namespace js
 

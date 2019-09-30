@@ -84,20 +84,6 @@ public:
     SkInternalAtlasTextTarget(sk_sp<SkAtlasTextContext> context,
                               int width, int height,
                               void* handle)
-<<<<<<< HEAD
-            : GrTextTarget(width, height, kColorSpaceInfo)
-            , SkAtlasTextTarget(std::move(context), width, height, handle)
-            , fGlyphPainter(kProps, kColorSpaceInfo) {
-        fOpMemoryPool = fContext->internal().grContext()->contextPriv().refOpMemoryPool();
-    }
-
-    ~SkInternalAtlasTextTarget() override {
-        this->deleteOps();
-    }
-||||||| merged common ancestors
-            : GrTextUtils::Target(width, height, kColorSpaceInfo)
-            , SkAtlasTextTarget(std::move(context), width, height, handle) {}
-=======
             : GrTextTarget(width, height, kColorSpaceInfo)
             , SkAtlasTextTarget(std::move(context), width, height, handle)
             , fGlyphPainter(kProps, kColorSpaceInfo) {
@@ -107,7 +93,6 @@ public:
     ~SkInternalAtlasTextTarget() override {
         this->deleteOps();
     }
->>>>>>> upstream-releases
 
     /** GrTextTarget overrides */
 
@@ -120,19 +105,6 @@ public:
 
     void makeGrPaint(GrMaskFormat, const SkPaint& skPaint, const SkMatrix&,
                      GrPaint* grPaint) override {
-<<<<<<< HEAD
-        grPaint->setColor4f(GrColor4f::FromRGBA4f(skPaint.getColor4f().premul()));
-    }
-
-    GrContext* getContext() override {
-        return this->context()->internal().grContext();
-    }
-
-    SkGlyphRunListPainter* glyphPainter() override {
-        return &fGlyphPainter;
-||||||| merged common ancestors
-        grPaint->setColor4f(SkColorToPremulGrColor4fLegacy(skPaint.getColor()));
-=======
         grPaint->setColor4f(skPaint.getColor4f().premul());
     }
 
@@ -142,7 +114,6 @@ public:
 
     SkGlyphRunListPainter* glyphPainter() override {
         return &fGlyphPainter;
->>>>>>> upstream-releases
     }
 
     /** SkAtlasTextTarget overrides */
@@ -183,25 +154,6 @@ void SkInternalAtlasTextTarget::drawText(const SkGlyphID glyphs[], const SkPoint
     fColor = color;
 
     SkSurfaceProps props(SkSurfaceProps::kUseDistanceFieldFonts_Flag, kUnknown_SkPixelGeometry);
-<<<<<<< HEAD
-    auto* grContext = this->context()->internal().grContext();
-    auto atlasTextContext = grContext->contextPriv().drawingManager()->getTextContext();
-    SkGlyphRunBuilder builder;
-    builder.drawGlyphPos(paint, SkSpan<const SkGlyphID>{glyphs, SkTo<size_t>(glyphCnt)}, positions);
-    auto glyphRunList = builder.useGlyphRunList();
-    if (!glyphRunList.empty()) {
-        atlasTextContext->drawGlyphRunList(grContext, this, GrNoClip(), this->ctm(), props,
-                                           glyphRunList);
-    }
-||||||| merged common ancestors
-    auto* grContext = this->context()->internal().grContext();
-    auto bounds = SkIRect::MakeWH(fWidth, fHeight);
-    auto atlasTextContext = grContext->contextPriv().drawingManager()->getAtlasTextContext();
-    size_t byteLength = sizeof(SkGlyphID) * glyphCnt;
-    const SkScalar* pos = &positions->fX;
-    atlasTextContext->drawPosText(grContext, this, GrNoClip(), paint, this->ctm(), props,
-                                  (const char*)glyphs, byteLength, pos, 2, {0, 0}, bounds);
-=======
     auto grContext = this->context()->internal().grContext();
     auto atlasTextContext = grContext->priv().drawingManager()->getTextContext();
     SkGlyphRunBuilder builder;
@@ -213,7 +165,6 @@ void SkInternalAtlasTextTarget::drawText(const SkGlyphID glyphs[], const SkPoint
         atlasTextContext->drawGlyphRunList(grContext, this, GrNoClip(), this->ctm(), props,
                                            glyphRunList);
     }
->>>>>>> upstream-releases
 }
 
 void SkInternalAtlasTextTarget::addDrawOp(const GrClip& clip, std::unique_ptr<GrAtlasTextOp> op) {
@@ -222,13 +173,7 @@ void SkInternalAtlasTextTarget::addDrawOp(const GrClip& clip, std::unique_ptr<Gr
     if (op->maskType() != GrAtlasTextOp::kGrayscaleDistanceField_MaskType) {
         return;
     }
-<<<<<<< HEAD
-    const GrCaps& caps = *this->context()->internal().grContext()->contextPriv().caps();
-||||||| merged common ancestors
-    const GrCaps& caps = *this->context()->internal().grContext()->caps();
-=======
     const GrCaps& caps = *this->context()->internal().grContext()->priv().caps();
->>>>>>> upstream-releases
     op->finalizeForTextTarget(fColor, caps);
     int n = SkTMin(kMaxBatchLookBack, fOps.count());
     for (int i = 0; i < n; ++i) {
@@ -267,33 +212,14 @@ void GrAtlasTextOp::finalizeForTextTarget(uint32_t color, const GrCaps& caps) {
     for (int i = 0; i < fGeoCount; ++i) {
         fGeoData[i].fColor = color4f;
     }
-<<<<<<< HEAD
-    this->finalize(caps, nullptr /* applied clip */);
-||||||| merged common ancestors
-    this->finalize(caps, nullptr /* applied clip */, GrPixelConfigIsClamped::kNo);
-=======
     // Atlas text doesn't use MSAA, so no need to handle a GrFSAAType.
     this->finalize(caps, nullptr /* applied clip */, GrFSAAType::kNone);
->>>>>>> upstream-releases
 }
 
 void GrAtlasTextOp::executeForTextTarget(SkAtlasTextTarget* target) {
     FlushInfo flushInfo;
     SkExclusiveStrikePtr autoGlyphCache;
     auto& context = target->context()->internal();
-<<<<<<< HEAD
-    auto glyphCache = context.grContext()->contextPriv().getGlyphCache();
-    auto atlasManager = context.grContext()->contextPriv().getAtlasManager();
-    auto resourceProvider = context.grContext()->contextPriv().resourceProvider();
-
-    unsigned int numProxies;
-    if (!atlasManager->getProxies(kA8_GrMaskFormat, &numProxies)) {
-        return;
-    }
-
-||||||| merged common ancestors
-    auto* atlasGlyphCache = context.grContext()->contextPriv().getAtlasGlyphCache();
-=======
     auto glyphCache = context.grContext()->priv().getGrStrikeCache();
     auto atlasManager = context.grContext()->priv().getAtlasManager();
     auto resourceProvider = context.grContext()->priv().resourceProvider();
@@ -303,30 +229,7 @@ void GrAtlasTextOp::executeForTextTarget(SkAtlasTextTarget* target) {
         return;
     }
 
->>>>>>> upstream-releases
     for (int i = 0; i < fGeoCount; ++i) {
-<<<<<<< HEAD
-        GrTextBlob::VertexRegenerator regenerator(
-                resourceProvider, fGeoData[i].fBlob, fGeoData[i].fRun, fGeoData[i].fSubRun,
-                fGeoData[i].fViewMatrix, fGeoData[i].fX, fGeoData[i].fY, fGeoData[i].fColor,
-                &context, glyphCache, atlasManager, &autoGlyphCache);
-        bool done = false;
-        while (!done) {
-            GrTextBlob::VertexRegenerator::Result result;
-            if (!regenerator.regenerate(&result)) {
-                break;
-            }
-            done = result.fFinished;
-
-||||||| merged common ancestors
-        GrAtlasTextBlob::VertexRegenerator regenerator(
-                fGeoData[i].fBlob, fGeoData[i].fRun, fGeoData[i].fSubRun, fGeoData[i].fViewMatrix,
-                fGeoData[i].fX, fGeoData[i].fY, fGeoData[i].fColor, &context, atlasGlyphCache,
-                &glyphCache);
-        GrAtlasTextBlob::VertexRegenerator::Result result;
-        do {
-            result = regenerator.regenerate();
-=======
         // TODO4F: Preserve float colors
         GrTextBlob::VertexRegenerator regenerator(
                 resourceProvider, fGeoData[i].fBlob, fGeoData[i].fRun, fGeoData[i].fSubRun,
@@ -341,7 +244,6 @@ void GrAtlasTextOp::executeForTextTarget(SkAtlasTextTarget* target) {
             }
             done = result.fFinished;
 
->>>>>>> upstream-releases
             context.recordDraw(result.fFirstVertex, result.fGlyphsRegenerated,
                                fGeoData[i].fViewMatrix, target->handle());
             if (!result.fFinished) {

@@ -34,27 +34,10 @@ bool HTMLLegendElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                        nsAttrValue& aResult) {
   // this contains center, because IE4 does
   static const nsAttrValue::EnumTable kAlignTable[] = {
-<<<<<<< HEAD
-      {"left", NS_STYLE_TEXT_ALIGN_LEFT},
-      {"right", NS_STYLE_TEXT_ALIGN_RIGHT},
-      {"center", NS_STYLE_TEXT_ALIGN_CENTER},
-      {"bottom", NS_STYLE_VERTICAL_ALIGN_BOTTOM},
-      {"top", NS_STYLE_VERTICAL_ALIGN_TOP},
-      {nullptr, 0}};
-||||||| merged common ancestors
-    { "left", NS_STYLE_TEXT_ALIGN_LEFT },
-    { "right", NS_STYLE_TEXT_ALIGN_RIGHT },
-    { "center", NS_STYLE_TEXT_ALIGN_CENTER },
-    { "bottom", NS_STYLE_VERTICAL_ALIGN_BOTTOM },
-    { "top", NS_STYLE_VERTICAL_ALIGN_TOP },
-    { nullptr, 0 }
-  };
-=======
       {"left", NS_STYLE_TEXT_ALIGN_LEFT},
       {"right", NS_STYLE_TEXT_ALIGN_RIGHT},
       {"center", NS_STYLE_TEXT_ALIGN_CENTER},
       {nullptr, 0}};
->>>>>>> upstream-releases
 
   if (aAttribute == nsGkAtoms::align && aNamespaceID == kNameSpaceID_None) {
     return aResult.ParseEnumValue(aValue, kAlignTable, false);
@@ -74,49 +57,17 @@ nsChangeHint HTMLLegendElement::GetAttributeChangeHint(const nsAtom* aAttribute,
   return retval;
 }
 
-<<<<<<< HEAD
-nsresult HTMLLegendElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  return nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLLegendElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  return nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                          aBindingParent);
-=======
 nsresult HTMLLegendElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   return nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void HTMLLegendElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-HTMLLegendElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
-=======
 void HTMLLegendElement::UnbindFromTree(bool aNullParent) {
   nsGenericHTMLElement::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void HTMLLegendElement::Focus(ErrorResult& aError) {
-||||||| merged common ancestors
-void
-HTMLLegendElement::Focus(ErrorResult& aError)
-{
-=======
 void HTMLLegendElement::Focus(const FocusOptions& aOptions,
                               ErrorResult& aError) {
->>>>>>> upstream-releases
   nsIFrame* frame = GetPrimaryFrame();
   if (!frame) {
     return;
@@ -144,21 +95,9 @@ void HTMLLegendElement::Focus(const FocusOptions& aOptions,
       getter_AddRefs(result));
 }
 
-<<<<<<< HEAD
-bool HTMLLegendElement::PerformAccesskey(bool aKeyCausesActivation,
-                                         bool aIsTrustedEvent) {
-  // just use the same behaviour as the focus method
-||||||| merged common ancestors
-bool
-HTMLLegendElement::PerformAccesskey(bool aKeyCausesActivation,
-                                    bool aIsTrustedEvent)
-{
-  // just use the same behaviour as the focus method
-=======
 bool HTMLLegendElement::PerformAccesskey(bool aKeyCausesActivation,
                                          bool aIsTrustedEvent) {
   FocusOptions options;
->>>>>>> upstream-releases
   ErrorResult rv;
 
   Focus(options, rv);

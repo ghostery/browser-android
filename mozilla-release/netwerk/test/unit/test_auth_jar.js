@@ -52,20 +52,9 @@ function run_test() {
     inIsolatedMozBrowser: true,
   });
 
-<<<<<<< HEAD
-  Services.clearData.deleteDataFromOriginAttributesPattern({ appId:1, inIsolatedMozBrowser:true });
-  
-  var domain = {value: ""}, user = {value: ""}, pass = {value: ""};
-||||||| merged common ancestors
-  let attrs_inBrowser = JSON.stringify({ appId:1, inIsolatedMozBrowser:true });
-  Services.obs.notifyObservers(null, "clear-origin-attributes-data", attrs_inBrowser);
-  
-  var domain = {value: ""}, user = {value: ""}, pass = {value: ""};
-=======
   var domain = { value: "" },
     user = { value: "" },
     pass = { value: "" };
->>>>>>> upstream-releases
   try {
     am.getAuthIdentity(
       "http",

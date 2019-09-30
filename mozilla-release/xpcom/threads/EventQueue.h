@@ -22,26 +22,11 @@ class EventQueue final : public AbstractEventQueue {
   EventQueue() {}
   explicit EventQueue(EventQueuePriority aPriority);
 
-<<<<<<< HEAD
-  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent, EventPriority aPriority,
-||||||| merged common ancestors
-  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
-                EventPriority aPriority,
-=======
   void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
                 EventQueuePriority aPriority,
->>>>>>> upstream-releases
                 const MutexAutoLock& aProofOfLock) final;
-<<<<<<< HEAD
-  already_AddRefed<nsIRunnable> GetEvent(
-      EventPriority* aPriority, const MutexAutoLock& aProofOfLock) final;
-||||||| merged common ancestors
-  already_AddRefed<nsIRunnable> GetEvent(EventPriority* aPriority,
-                                         const MutexAutoLock& aProofOfLock) final;
-=======
   already_AddRefed<nsIRunnable> GetEvent(
       EventQueuePriority* aPriority, const MutexAutoLock& aProofOfLock) final;
->>>>>>> upstream-releases
 
   bool IsEmpty(const MutexAutoLock& aProofOfLock) final;
   bool HasReadyEvent(const MutexAutoLock& aProofOfLock) final;

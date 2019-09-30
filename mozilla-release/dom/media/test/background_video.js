@@ -48,31 +48,6 @@ function appendVideoToDoc(url, token, width, height) {
   return v;
 }
 
-<<<<<<< HEAD
-
-/**
- * @param {HTMLMediaElement} video Video element with under test.
- * @returns {Promise} Promise that is resolved when video 'visibilitychanged' event fires.
- */
-function waitUntilVisible(video) {
-  let videoChrome = SpecialPowers.wrap(video);
-  if (videoChrome.isVisible) {
-    return Promise.resolve();
-  }
-
-  return new Promise(resolve => {
-    videoChrome.addEventListener("visibilitychanged", () => {
-      if (videoChrome.isVisible) {
-        ok(true, `${video.token} is visible.`);
-        videoChrome.removeEventListener("visibilitychanged", this);
-        resolve();
-      }
-    });
-  });
-}
-
-||||||| merged common ancestors
-=======
 function appendVideoToDocWithoutLoad(token, width, height) {
   // Default size of (160, 120) is used by other media tests.
   if (width === undefined) { width = 160; }
@@ -115,7 +90,6 @@ function waitUntilVisible(video) {
   });
 }
 
->>>>>>> upstream-releases
 /**
  * @param {HTMLMediaElement} video Video element under test.
  * @returns {Promise} Promise that is resolved when video 'playing' event fires.

@@ -15,16 +15,8 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ bool OmxDecoderModule::Init() {
-||||||| merged common ancestors
-/* static */ bool
-OmxDecoderModule::Init()
-{
-=======
 /* static */
 bool OmxDecoderModule::Init() {
->>>>>>> upstream-releases
 #ifdef MOZ_OMX
   return PureOmxPlatformLayer::Init();
 #endif

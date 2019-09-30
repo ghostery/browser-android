@@ -19,16 +19,9 @@ impl FromVariantOptions {
             base: OuterFrom::start(di),
             fields: Default::default(),
             supports: Default::default(),
-<<<<<<< HEAD
-        }).parse_attributes(&di.attrs)?
-            .parse_body(&di.data)
-||||||| merged common ancestors
-        }).parse_attributes(&di.attrs)?.parse_body(&di.data)
-=======
         })
         .parse_attributes(&di.attrs)?
         .parse_body(&di.data)
->>>>>>> upstream-releases
     }
 }
 

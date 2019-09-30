@@ -31,7 +31,7 @@ class AxisPhysicsModel {
    * Advance the physics simulation.
    * |aDelta| is the time since the last sample.
    */
-  void Simulate(const TimeDuration &aDeltaTime);
+  void Simulate(const TimeDuration& aDeltaTime);
 
   /**
    * Gets the raw velocity of this axis at this moment.
@@ -72,20 +72,9 @@ class AxisPhysicsModel {
    * axis-position-units / second that should be added or removed from the
    * velocity.
    */
-<<<<<<< HEAD
-  virtual double Acceleration(const State &aState) = 0;
-
- private:
-||||||| merged common ancestors
-  virtual double Acceleration(const State &aState) = 0;
-
-private:
-
-=======
   virtual double Acceleration(const State& aState) = 0;
 
  private:
->>>>>>> upstream-releases
   /**
    * Duration of fixed delta time step (seconds)
    */

@@ -108,14 +108,9 @@
 #include "DecoderDoctorLogger.h"
 #include "MediaDecoder.h"
 #include "mozilla/ClearSiteData.h"
-<<<<<<< HEAD
-#include "mozilla/Fuzzyfox.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/EditorController.h"
 #include "mozilla/Fuzzyfox.h"
 #include "mozilla/HTMLEditorController.h"
->>>>>>> upstream-releases
 #include "mozilla/ServoBindings.h"
 #include "mozilla/StaticPresData.h"
 #include "mozilla/dom/Document.h"
@@ -128,16 +123,11 @@
 #include "mozilla/dom/PointerEventHandler.h"
 #include "mozilla/dom/RemoteWorkerService.h"
 #include "mozilla/dom/BlobURLProtocolHandler.h"
-<<<<<<< HEAD
-#include "mozilla/dom/ReportingHeader.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/ReportingHeader.h"
 #include "mozilla/dom/BrowserParent.h"
 #include "mozilla/dom/quota/ActorsParent.h"
 #include "mozilla/dom/localstorage/ActorsParent.h"
 #include "mozilla/net/UrlClassifierFeatureFactory.h"
->>>>>>> upstream-releases
 #include "nsThreadManager.h"
 #include "mozilla/css/ImageLoader.h"
 #include "gfxUserFontSet.h"
@@ -310,22 +300,11 @@ nsresult nsLayoutStatics::Initialize() {
 #endif
 
   if (XRE_IsParentProcess()) {
-<<<<<<< HEAD
-    // On content process we initialize these components when PContentChild is
-    // fully initialized.
-    mozilla::dom::DOMPrefs::Initialize();
-    mozilla::dom::RemoteWorkerService::Initialize();
-||||||| merged common ancestors
-    // On content process we initialize DOMPrefs when PContentChild is fully
-    // initialized.
-    mozilla::dom::DOMPrefs::Initialize();
-=======
     // On content process we initialize these components when PContentChild is
     // fully initialized.
     mozilla::dom::RemoteWorkerService::Initialize();
     // This one should be initialized on the parent only
     mozilla::dom::BrowserParent::InitializeStatics();
->>>>>>> upstream-releases
   }
 
   nsThreadManager::InitializeShutdownObserver();
@@ -334,12 +313,6 @@ nsresult nsLayoutStatics::Initialize() {
 
   ClearSiteData::Initialize();
 
-<<<<<<< HEAD
-  // Reporting API.
-  ReportingHeader::Initialize();
-
-||||||| merged common ancestors
-=======
   // Reporting API.
   ReportingHeader::Initialize();
 
@@ -350,7 +323,6 @@ nsresult nsLayoutStatics::Initialize() {
 
   ThirdPartyUtil::Startup();
 
->>>>>>> upstream-releases
   return NS_OK;
 }
 

@@ -22,43 +22,6 @@ const { XPCOMUtils } = ChromeUtils.import(
 
 XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "BookmarkHTMLUtils",
-                               "resource://gre/modules/BookmarkHTMLUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "LoginHelper",
-                               "resource://gre/modules/LoginHelper.jsm");
-ChromeUtils.defineModuleGetter(this, "PlacesUtils",
-                               "resource://gre/modules/PlacesUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "PromiseUtils",
-                               "resource://gre/modules/PromiseUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "ResponsivenessMonitor",
-                               "resource://gre/modules/ResponsivenessMonitor.jsm");
-ChromeUtils.defineModuleGetter(this, "Sqlite",
-                               "resource://gre/modules/Sqlite.jsm");
-ChromeUtils.defineModuleGetter(this, "WindowsRegistry",
-                               "resource://gre/modules/WindowsRegistry.jsm");
-ChromeUtils.defineModuleGetter(this, "setTimeout",
-                               "resource://gre/modules/Timer.jsm");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "BookmarkHTMLUtils",
-                               "resource://gre/modules/BookmarkHTMLUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "LoginHelper",
-                               "resource://gre/modules/LoginHelper.jsm");
-ChromeUtils.defineModuleGetter(this, "PlacesUtils",
-                               "resource://gre/modules/PlacesUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "PromiseUtils",
-                               "resource://gre/modules/PromiseUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "ResponsivenessMonitor",
-                               "resource://gre/modules/ResponsivenessMonitor.jsm");
-ChromeUtils.defineModuleGetter(this, "Sqlite",
-                               "resource://gre/modules/Sqlite.jsm");
-ChromeUtils.defineModuleGetter(this, "TelemetryStopwatch",
-                               "resource://gre/modules/TelemetryStopwatch.jsm");
-ChromeUtils.defineModuleGetter(this, "WindowsRegistry",
-                               "resource://gre/modules/WindowsRegistry.jsm");
-ChromeUtils.defineModuleGetter(this, "setTimeout",
-                               "resource://gre/modules/Timer.jsm");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "BookmarkHTMLUtils",
@@ -99,7 +62,6 @@ ChromeUtils.defineModuleGetter(
   "setTimeout",
   "resource://gre/modules/Timer.jsm"
 );
->>>>>>> upstream-releases
 
 var gMigrators = null;
 var gProfileStartup = null;

@@ -2,14 +2,7 @@ use std::borrow::Cow;
 
 use syn;
 
-<<<<<<< HEAD
-use ast::{Fields, Style};
-||||||| merged common ancestors
-use {FromMetaItem, Error, Result};
-use ast::{Style, Fields};
-=======
 use ast::Fields;
->>>>>>> upstream-releases
 use codegen;
 use options::{Core, InputField, ParseAttribute};
 use {Error, FromMeta, Result};
@@ -29,18 +22,10 @@ impl InputVariant {
         codegen::Variant {
             ty_ident,
             variant_ident: &self.ident,
-<<<<<<< HEAD
-            name_in_attr: self.attr_name
-                .clone()
-                .unwrap_or(self.ident.to_string()),
-||||||| merged common ancestors
-            name_in_attr: self.attr_name.as_ref().map(|s| s.as_str()).unwrap_or(self.ident.as_ref()),
-=======
             name_in_attr: self
                 .attr_name
                 .as_ref()
                 .map_or_else(|| Cow::Owned(self.ident.to_string()), Cow::Borrowed),
->>>>>>> upstream-releases
             data: self.data.as_ref().map(InputField::as_codegen_field),
             skip: self.skip,
             allow_unknown_fields: self.allow_unknown_fields.unwrap_or_default(),
@@ -65,22 +50,8 @@ impl InputVariant {
                     items.push(InputField::from_field(item, parent)?);
                 }
 
-<<<<<<< HEAD
-                Fields {
-                    style: v.fields.clone().into(),
-                    fields: items,
-                }
-            }
-||||||| merged common ancestors
-                Fields {
-                    style: v.fields.clone().into(),
-                    fields: items,
-                }
-            },
-=======
                 items
             }
->>>>>>> upstream-releases
             syn::Fields::Named(ref fields) => {
                 let mut items = Vec::with_capacity(fields.named.len());
                 for item in &fields.named {
@@ -100,17 +71,11 @@ impl InputVariant {
 
     fn with_inherited(mut self, parent: &Core) -> Self {
         if self.attr_name.is_none() {
-<<<<<<< HEAD
-            self.attr_name = Some(parent.rename_rule.apply_to_variant(self.ident.to_string()));
-||||||| merged common ancestors
-            self.attr_name = Some(parent.rename_rule.apply_to_variant(&self.ident));
-=======
             self.attr_name = Some(parent.rename_rule.apply_to_variant(self.ident.to_string()));
         }
 
         if self.allow_unknown_fields.is_none() {
             self.allow_unknown_fields = Some(parent.allow_unknown_fields.is_some());
->>>>>>> upstream-releases
         }
 
         self

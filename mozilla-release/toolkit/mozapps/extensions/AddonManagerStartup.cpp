@@ -31,14 +31,8 @@
 #include "nsAppRunner.h"
 #include "nsContentUtils.h"
 #include "nsChromeRegistry.h"
-<<<<<<< HEAD
-#include "nsIDOMWindowUtils.h"  // for nsIJSRAIIHelper
-||||||| merged common ancestors
-#include "nsIDOMWindowUtils.h" // for nsIJSRAIIHelper
-=======
 #include "nsIAppStartup.h"
 #include "nsIDOMWindowUtils.h"  // for nsIJSRAIIHelper
->>>>>>> upstream-releases
 #include "nsIFileURL.h"
 #include "nsIIOService.h"
 #include "nsIJARURI.h"
@@ -56,27 +50,7 @@ namespace mozilla {
 using Compression::LZ4;
 using dom::ipc::StructuredCloneData;
 
-<<<<<<< HEAD
-#ifdef XP_WIN
-#define READ_BINARYMODE "rb"
-#else
-#define READ_BINARYMODE "r"
-#endif
-
 AddonManagerStartup& AddonManagerStartup::GetSingleton() {
-||||||| merged common ancestors
-#ifdef XP_WIN
-#  define READ_BINARYMODE "rb"
-#else
-#  define READ_BINARYMODE "r"
-#endif
-
-AddonManagerStartup&
-AddonManagerStartup::GetSingleton()
-{
-=======
-AddonManagerStartup& AddonManagerStartup::GetSingleton() {
->>>>>>> upstream-releases
   static RefPtr<AddonManagerStartup> singleton;
   if (!singleton) {
     singleton = new AddonManagerStartup();
@@ -85,23 +59,9 @@ AddonManagerStartup& AddonManagerStartup::GetSingleton() {
   return *singleton;
 }
 
-<<<<<<< HEAD
 AddonManagerStartup::AddonManagerStartup() {}
 
 nsIFile* AddonManagerStartup::ProfileDir() {
-||||||| merged common ancestors
-AddonManagerStartup::AddonManagerStartup()
-{}
-
-
-nsIFile*
-AddonManagerStartup::ProfileDir()
-{
-=======
-AddonManagerStartup::AddonManagerStartup() {}
-
-nsIFile* AddonManagerStartup::ProfileDir() {
->>>>>>> upstream-releases
   if (!mProfileDir) {
     nsresult rv;
 
@@ -115,10 +75,6 @@ nsIFile* AddonManagerStartup::ProfileDir() {
 
 NS_IMPL_ISUPPORTS(AddonManagerStartup, amIAddonManagerStartup, nsIObserver)
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 /*****************************************************************************
  * URI utils
  *****************************************************************************/
@@ -157,7 +113,6 @@ static Result<nsCOMPtr<nsIFile>, nsresult> GetFile(nsIURI* uri) {
   return std::move(file);
 }
 
->>>>>>> upstream-releases
 /*****************************************************************************
  * File utils
  *****************************************************************************/
@@ -516,14 +471,7 @@ Result<bool, nsresult> Addon::UpdateLastModifiedTime() {
     JS_ClearPendingException(mCx);
   }
 
-<<<<<<< HEAD
   return lastModified != LastModifiedTime();
-  ;
-||||||| merged common ancestors
-  return lastModified != LastModifiedTime();;
-=======
-  return lastModified != LastModifiedTime();
->>>>>>> upstream-releases
 }
 
 InstallLocation::InstallLocation(JSContext* cx, const JS::Value& value)
@@ -615,16 +563,8 @@ nsresult AddonManagerStartup::EncodeBlob(JS::HandleValue value, JSContext* cx,
 nsresult AddonManagerStartup::DecodeBlob(JS::HandleValue value, JSContext* cx,
                                          JS::MutableHandleValue result) {
   NS_ENSURE_TRUE(value.isObject() &&
-<<<<<<< HEAD
-                     JS_IsArrayBufferObject(&value.toObject()) &&
-                     JS_ArrayBufferHasData(&value.toObject()),
-||||||| merged common ancestors
-                 JS_IsArrayBufferObject(&value.toObject()) &&
-                 JS_ArrayBufferHasData(&value.toObject()),
-=======
                      JS::IsArrayBufferObject(&value.toObject()) &&
                      JS::ArrayBufferHasData(&value.toObject()),
->>>>>>> upstream-releases
                  NS_ERROR_INVALID_ARG);
 
   StructuredCloneData holder;
@@ -637,16 +577,8 @@ nsresult AddonManagerStartup::DecodeBlob(JS::HandleValue value, JSContext* cx,
     bool isShared;
 
     nsDependentCSubstring lz4(
-<<<<<<< HEAD
-        reinterpret_cast<char*>(JS_GetArrayBufferData(obj, &isShared, nogc)),
-        JS_GetArrayBufferByteLength(obj));
-||||||| merged common ancestors
-      reinterpret_cast<char*>(JS_GetArrayBufferData(obj, &isShared, nogc)),
-      JS_GetArrayBufferByteLength(obj));
-=======
         reinterpret_cast<char*>(JS::GetArrayBufferData(obj, &isShared, nogc)),
         JS::GetArrayBufferByteLength(obj));
->>>>>>> upstream-releases
 
     MOZ_TRY_VAR(data, DecodeLZ4(lz4, STRUCTURED_CLONE_MAGIC));
   }
@@ -660,40 +592,8 @@ nsresult AddonManagerStartup::DecodeBlob(JS::HandleValue value, JSContext* cx,
   ;
 }
 
-<<<<<<< HEAD
-nsresult AddonManagerStartup::EnumerateZipFile(nsIFile* file,
-                                               const nsACString& pattern,
-                                               uint32_t* countOut,
-                                               char16_t*** entriesOut) {
-  NS_ENSURE_ARG_POINTER(file);
-  NS_ENSURE_ARG_POINTER(countOut);
-  NS_ENSURE_ARG_POINTER(entriesOut);
-
-  nsCOMPtr<nsIZipReaderCache> zipCache;
-  MOZ_TRY_VAR(zipCache, GetJarCache());
-
-  nsCOMPtr<nsIZipReader> zip;
-  MOZ_TRY(zipCache->GetZip(file, getter_AddRefs(zip)));
-
-||||||| merged common ancestors
-nsresult
-AddonManagerStartup::EnumerateZipFile(nsIFile* file, const nsACString& pattern,
-                                      uint32_t* countOut, char16_t*** entriesOut)
-{
-  NS_ENSURE_ARG_POINTER(file);
-  NS_ENSURE_ARG_POINTER(countOut);
-  NS_ENSURE_ARG_POINTER(entriesOut);
-
-  nsCOMPtr<nsIZipReaderCache> zipCache;
-  MOZ_TRY_VAR(zipCache, GetJarCache());
-
-  nsCOMPtr<nsIZipReader> zip;
-  MOZ_TRY(zipCache->GetZip(file, getter_AddRefs(zip)));
-
-=======
 static nsresult EnumerateZip(nsIZipReader* zip, const nsACString& pattern,
                              nsTArray<nsString>& results) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIUTF8StringEnumerator> entries;
   MOZ_TRY(zip->FindEntries(pattern, getter_AddRefs(entries)));
 

@@ -54,33 +54,15 @@ async function addSearchEngine(basename) {
 }
 
 async function prepareSearchEngine() {
-<<<<<<< HEAD
-  let oldCurrentEngine = Services.search.defaultEngine;
-||||||| merged common ancestors
-  let oldCurrentEngine = Services.search.currentEngine;
-=======
   let oldDefaultEngine = await Services.search.getDefault();
->>>>>>> upstream-releases
   let suggestionsEnabled = Services.prefs.getBoolPref(SUGGEST_URLBAR_PREF);
   Services.prefs.setBoolPref(SUGGEST_URLBAR_PREF, true);
   let engine = await addSearchEngine(TEST_ENGINE_BASENAME);
-<<<<<<< HEAD
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-=======
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 
   registerCleanupFunction(async function() {
     Services.prefs.setBoolPref(SUGGEST_URLBAR_PREF, suggestionsEnabled);
-<<<<<<< HEAD
-    Services.search.defaultEngine = oldCurrentEngine;
-||||||| merged common ancestors
-    Services.search.currentEngine = oldCurrentEngine;
-=======
     await Services.search.setDefault(oldDefaultEngine);
->>>>>>> upstream-releases
 
     // Make sure the popup is closed for the next test.
     await UrlbarTestUtils.promisePopupClose(window);
@@ -129,21 +111,10 @@ add_task(async function test_webnavigation_urlbar_typed_transitions() {
   await extension.awaitMessage("ready");
 
   gURLBar.focus();
-<<<<<<< HEAD
-  const inputValue = "http://example.com/?q=typed";
-  gURLBar.inputField.value = inputValue.slice(0, -1);
-  EventUtils.sendString(inputValue.slice(-1));
-  EventUtils.synthesizeKey("VK_RETURN", {altKey: true});
-||||||| merged common ancestors
-  gURLBar.textValue = "http://example.com/?q=typed";
-
-  EventUtils.synthesizeKey("VK_RETURN", {altKey: true});
-=======
   const inputValue = "http://example.com/?q=typed";
   gURLBar.inputField.value = inputValue.slice(0, -1);
   EventUtils.sendString(inputValue.slice(-1));
   EventUtils.synthesizeKey("VK_RETURN", { altKey: true });
->>>>>>> upstream-releases
 
   await extension.awaitFinish("webNavigation.from_address_bar.typed");
 

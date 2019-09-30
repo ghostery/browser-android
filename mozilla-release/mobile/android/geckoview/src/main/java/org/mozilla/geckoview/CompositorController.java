@@ -18,21 +18,7 @@ import java.util.List;
 
 @UiThread
 public final class CompositorController {
-<<<<<<< HEAD:mozilla-release/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CompositorController.java
     private final GeckoSession.Compositor mCompositor;
-
-    public interface GetPixelsCallback {
-        void onPixelsResult(int width, int height, IntBuffer pixels);
-    }
-||||||| merged common ancestors
-    private final LayerSession.Compositor mCompositor;
-
-    public interface GetPixelsCallback {
-        void onPixelsResult(int width, int height, IntBuffer pixels);
-    }
-=======
-    private final GeckoSession.Compositor mCompositor;
->>>>>>> upstream-releases:mozilla-release/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CompositorController.java
 
     private List<Runnable> mDrawCallbacks;
     private int mDefaultClearColor = Color.WHITE;

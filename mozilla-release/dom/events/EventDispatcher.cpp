@@ -98,14 +98,7 @@ class ELMCreationDetector {
 };
 
 static bool IsEventTargetChrome(EventTarget* aEventTarget,
-<<<<<<< HEAD
-                                nsIDocument** aDocument = nullptr) {
-||||||| merged common ancestors
-                                nsIDocument** aDocument = nullptr)
-{
-=======
                                 Document** aDocument = nullptr) {
->>>>>>> upstream-releases
   if (aDocument) {
     *aDocument = nullptr;
   }
@@ -134,28 +127,10 @@ static bool IsEventTargetChrome(EventTarget* aEventTarget,
 }
 
 // EventTargetChainItem represents a single item in the event target chain.
-<<<<<<< HEAD
-class EventTargetChainItem {
- private:
-  explicit EventTargetChainItem(EventTarget* aTarget);
-
- public:
-  EventTargetChainItem() : mItemFlags(0) {
-||||||| merged common ancestors
-class EventTargetChainItem
-{
-private:
-  explicit EventTargetChainItem(EventTarget* aTarget);
-public:
-  EventTargetChainItem()
-    : mItemFlags(0)
-  {
-=======
 class EventTargetChainItem {
  public:
   explicit EventTargetChainItem(EventTarget* aTarget)
       : mTarget(aTarget), mItemFlags(0) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(EventTargetChainItem);
   }
 
@@ -384,16 +359,8 @@ class EventTargetChainItem {
    */
   MOZ_CAN_RUN_SCRIPT void PostHandleEvent(EventChainPostVisitor& aVisitor);
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<EventTarget> mTarget;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<EventTarget> mTarget;
-=======
  private:
   const nsCOMPtr<EventTarget> mTarget;
->>>>>>> upstream-releases
   nsCOMPtr<EventTarget> mRetargetedRelatedTarget;
   Maybe<nsTArray<RefPtr<EventTarget>>> mRetargetedTouchTargets;
   Maybe<nsTArray<RefPtr<dom::Touch>>> mInitialTargetTouches;
@@ -673,16 +640,8 @@ void EventTargetChainItem::HandleEventTargetChain(
 
 static nsTArray<EventTargetChainItem>* sCachedMainThreadChain = nullptr;
 
-<<<<<<< HEAD
-/* static */ void EventDispatcher::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-EventDispatcher::Shutdown()
-{
-=======
 /* static */
 void EventDispatcher::Shutdown() {
->>>>>>> upstream-releases
   delete sCachedMainThreadChain;
   sCachedMainThreadChain = nullptr;
 }
@@ -748,22 +707,6 @@ static bool ShouldClearTargets(WidgetEvent* aEvent) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult EventDispatcher::Dispatch(
-    nsISupports* aTarget, nsPresContext* aPresContext, WidgetEvent* aEvent,
-    Event* aDOMEvent, nsEventStatus* aEventStatus,
-    EventDispatchingCallback* aCallback, nsTArray<EventTarget*>* aTargets) {
-||||||| merged common ancestors
-/* static */ nsresult
-EventDispatcher::Dispatch(nsISupports* aTarget,
-                          nsPresContext* aPresContext,
-                          WidgetEvent* aEvent,
-                          Event* aDOMEvent,
-                          nsEventStatus* aEventStatus,
-                          EventDispatchingCallback* aCallback,
-                          nsTArray<EventTarget*>* aTargets)
-{
-=======
 /* static */
 nsresult EventDispatcher::Dispatch(nsISupports* aTarget,
                                    nsPresContext* aPresContext,
@@ -771,7 +714,6 @@ nsresult EventDispatcher::Dispatch(nsISupports* aTarget,
                                    nsEventStatus* aEventStatus,
                                    EventDispatchingCallback* aCallback,
                                    nsTArray<EventTarget*>* aTargets) {
->>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("EventDispatcher::Dispatch", OTHER);
 
   NS_ASSERTION(aEvent, "Trying to dispatch without WidgetEvent!");
@@ -844,15 +786,8 @@ nsresult EventDispatcher::Dispatch(nsISupports* aTarget,
 
       // Set the target to be the original dispatch target,
       aEvent->mTarget = target;
-<<<<<<< HEAD
-      // but use chrome event handler or TabChildMessageManager for event target
-      // chain.
-||||||| merged common ancestors
-      // but use chrome event handler or TabChildMessageManager for event target chain.
-=======
       // but use chrome event handler or BrowserChildMessageManager for event
       // target chain.
->>>>>>> upstream-releases
       target = piTarget;
     } else if (NS_WARN_IF(!doc)) {
       return NS_ERROR_UNEXPECTED;
@@ -1093,46 +1028,19 @@ nsresult EventDispatcher::Dispatch(nsISupports* aTarget,
           docShell = nsContentUtils::GetDocShellForEventTarget(aEvent->mTarget);
           DECLARE_DOCSHELL_AND_HISTORY_ID(docShell);
           profiler_add_marker(
-<<<<<<< HEAD
-              "DOMEvent",
-              MakeUnique<DOMEventMarkerPayload>(
-                  typeStr, aEvent->mTimeStamp, "DOMEvent",
-                  TRACING_INTERVAL_START, docShellId, docShellHistoryId));
-||||||| merged common ancestors
-            "DOMEvent",
-            MakeUnique<DOMEventMarkerPayload>(typeStr,
-                                              aEvent->mTimeStamp,
-                                              "DOMEvent",
-                                              TRACING_INTERVAL_START));
-=======
               "DOMEvent", JS::ProfilingCategoryPair::DOM,
               MakeUnique<DOMEventMarkerPayload>(
                   typeStr, aEvent->mTimeStamp, "DOMEvent",
                   TRACING_INTERVAL_START, docShellId, docShellHistoryId));
->>>>>>> upstream-releases
 
           EventTargetChainItem::HandleEventTargetChain(chain, postVisitor,
                                                        aCallback, cd);
 
-<<<<<<< HEAD
-          profiler_add_marker("DOMEvent", MakeUnique<DOMEventMarkerPayload>(
-                                              typeStr, aEvent->mTimeStamp,
-                                              "DOMEvent", TRACING_INTERVAL_END,
-                                              docShellId, docShellHistoryId));
-||||||| merged common ancestors
-          profiler_add_marker(
-            "DOMEvent",
-            MakeUnique<DOMEventMarkerPayload>(typeStr,
-                                              aEvent->mTimeStamp,
-                                              "DOMEvent",
-                                              TRACING_INTERVAL_END));
-=======
           profiler_add_marker(
               "DOMEvent", JS::ProfilingCategoryPair::DOM,
               MakeUnique<DOMEventMarkerPayload>(
                   typeStr, aEvent->mTimeStamp, "DOMEvent", TRACING_INTERVAL_END,
                   docShellId, docShellHistoryId));
->>>>>>> upstream-releases
         } else
 #endif
         {
@@ -1207,26 +1115,12 @@ nsresult EventDispatcher::Dispatch(nsISupports* aTarget,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult EventDispatcher::DispatchDOMEvent(
-    nsISupports* aTarget, WidgetEvent* aEvent, Event* aDOMEvent,
-    nsPresContext* aPresContext, nsEventStatus* aEventStatus) {
-||||||| merged common ancestors
-/* static */ nsresult
-EventDispatcher::DispatchDOMEvent(nsISupports* aTarget,
-                                  WidgetEvent* aEvent,
-                                  Event* aDOMEvent,
-                                  nsPresContext* aPresContext,
-                                  nsEventStatus* aEventStatus)
-{
-=======
 /* static */
 nsresult EventDispatcher::DispatchDOMEvent(nsISupports* aTarget,
                                            WidgetEvent* aEvent,
                                            Event* aDOMEvent,
                                            nsPresContext* aPresContext,
                                            nsEventStatus* aEventStatus) {
->>>>>>> upstream-releases
   if (aDOMEvent) {
     WidgetEvent* innerEvent = aDOMEvent->WidgetEventPtr();
     NS_ENSURE_TRUE(innerEvent, NS_ERROR_ILLEGAL_VALUE);
@@ -1382,16 +1276,9 @@ nsresult EventDispatcher::DispatchDOMEvent(nsISupports* aTarget,
     return NS_NewDOMScrollAreaEvent(aOwner, aPresContext, nullptr);
   }
   if (aEventType.LowerCaseEqualsLiteral("touchevent") &&
-<<<<<<< HEAD
-      TouchEvent::PrefEnabled(
-          nsContentUtils::GetDocShellForEventTarget(aOwner))) {
-||||||| merged common ancestors
-      TouchEvent::PrefEnabled(nsContentUtils::GetDocShellForEventTarget(aOwner))) {
-=======
       TouchEvent::LegacyAPIEnabled(
           nsContentUtils::GetDocShellForEventTarget(aOwner),
           aCallerType == CallerType::System)) {
->>>>>>> upstream-releases
     return NS_NewDOMTouchEvent(aOwner, aPresContext, nullptr);
   }
   if (aEventType.LowerCaseEqualsLiteral("hashchangeevent")) {

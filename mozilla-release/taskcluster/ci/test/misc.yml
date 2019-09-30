@@ -17,19 +17,9 @@ geckoview-junit:
             default: default
     chunks:
         by-test-platform:
-<<<<<<< HEAD
-            android-em-4.3-arm7-api-16-ccov/debug: 6
-            android-em-4.3-arm7-api-16/debug: 6
-            android-em-4.3-arm7-api-16/opt: 2
-||||||| merged common ancestors
-            android-em-4.3-arm7-api-16-ccov/debug: 4
-            android-em-4.3-arm7-api-16/debug: 4
-            android-em-4.3-arm7-api-16/opt: 2
-=======
             android-em-4.3-arm7-api-16-ccov/debug: 8
             android-em-4.3-arm7-api-16.*\/debug: 8
             android-em-4.*\/(?:opt|pgo)?: 3
->>>>>>> upstream-releases
             default: 1
     run-on-projects:
         by-test-platform:
@@ -39,16 +29,7 @@ geckoview-junit:
         script: android_emulator_unittest.py
         config:
             by-test-platform:
-<<<<<<< HEAD
-                android-em-7.0-x86/opt:
-||||||| merged common ancestors
-                android-em-4.2-x86/opt:
-                    - android/android_common.py
-                    - android/androidx86.py
-                android-em-7.0-x86/opt:
-=======
                 android-em-7.*:
->>>>>>> upstream-releases
                     - android/android_common.py
                     - android/androidx86_7_0.py
                 android-em-4.*:
@@ -86,17 +67,8 @@ telemetry-tests-client:
     description: "Telemetry tests client run"
     suite: telemetry-tests-client
     treeherder-symbol: tt(c)
-<<<<<<< HEAD
-    max-run-time: 5400
-    tier: 2
-||||||| merged common ancestors
-    max-run-time: 5400
-    checkout: true
-    tier: 2
-=======
     max-run-time: 1200
     tier: default
->>>>>>> upstream-releases
     mozharness:
         script: telemetry/telemetry_client.py
         config:

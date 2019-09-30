@@ -92,28 +92,11 @@ static nsINode* ParentOffset(nsINode* aNode, int32_t* aChildOffset);
 static nsINode* GetCellParent(nsINode* aDomNode);
 
 #ifdef PRINT_RANGE
-<<<<<<< HEAD
-static void printRange(nsRange* aDomRange);
-#define DEBUG_OUT_RANGE(x) printRange(x)
-||||||| merged common ancestors
-static void printRange(nsRange *aDomRange);
-#define DEBUG_OUT_RANGE(x)  printRange(x)
-=======
 static void printRange(nsRange* aDomRange);
 #  define DEBUG_OUT_RANGE(x) printRange(x)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define DEBUG_OUT_RANGE(x)
-#endif  // PRINT_RANGE
-||||||| merged common ancestors
-#define DEBUG_OUT_RANGE(x)
-#endif // PRINT_RANGE
-
-=======
 #  define DEBUG_OUT_RANGE(x)
 #endif  // PRINT_RANGE
->>>>>>> upstream-releases
 
 /******************************************************************************
  * nsPeekOffsetStruct
@@ -124,56 +107,6 @@ static void printRange(nsRange* aDomRange);
 
 //#define DEBUG_TABLE_SELECTION 1
 
-<<<<<<< HEAD
-nsPeekOffsetStruct::nsPeekOffsetStruct(
-    nsSelectionAmount aAmount, nsDirection aDirection, int32_t aStartOffset,
-    nsPoint aDesiredPos, bool aJumpLines, bool aScrollViewStop,
-    bool aIsKeyboardSelect, bool aVisual, bool aExtend,
-    ForceEditableRegion aForceEditableRegion,
-    EWordMovementType aWordMovementType)
-    : mAmount(aAmount),
-      mDirection(aDirection),
-      mStartOffset(aStartOffset),
-      mDesiredPos(aDesiredPos),
-      mWordMovementType(aWordMovementType),
-      mJumpLines(aJumpLines),
-      mScrollViewStop(aScrollViewStop),
-      mIsKeyboardSelect(aIsKeyboardSelect),
-      mVisual(aVisual),
-      mExtend(aExtend),
-      mForceEditableRegion(aForceEditableRegion == ForceEditableRegion::Yes),
-      mResultContent(),
-      mResultFrame(nullptr),
-      mContentOffset(0),
-      mAttach(CARET_ASSOCIATE_BEFORE) {}
-||||||| merged common ancestors
-nsPeekOffsetStruct::nsPeekOffsetStruct(nsSelectionAmount aAmount,
-                                       nsDirection aDirection,
-                                       int32_t aStartOffset,
-                                       nsPoint aDesiredPos,
-                                       bool aJumpLines,
-                                       bool aScrollViewStop,
-                                       bool aIsKeyboardSelect,
-                                       bool aVisual,
-                                       bool aExtend,
-                                       EWordMovementType aWordMovementType)
-  : mAmount(aAmount)
-  , mDirection(aDirection)
-  , mStartOffset(aStartOffset)
-  , mDesiredPos(aDesiredPos)
-  , mWordMovementType(aWordMovementType)
-  , mJumpLines(aJumpLines)
-  , mScrollViewStop(aScrollViewStop)
-  , mIsKeyboardSelect(aIsKeyboardSelect)
-  , mVisual(aVisual)
-  , mExtend(aExtend)
-  , mResultContent()
-  , mResultFrame(nullptr)
-  , mContentOffset(0)
-  , mAttach(CARET_ASSOCIATE_BEFORE)
-{
-}
-=======
 nsPeekOffsetStruct::nsPeekOffsetStruct(
     nsSelectionAmount aAmount, nsDirection aDirection, int32_t aStartOffset,
     nsPoint aDesiredPos, bool aJumpLines, bool aScrollViewStop,
@@ -196,7 +129,6 @@ nsPeekOffsetStruct::nsPeekOffsetStruct(
       mResultFrame(nullptr),
       mContentOffset(0),
       mAttach(CARET_ASSOCIATE_BEFORE) {}
->>>>>>> upstream-releases
 
 // Array which contains index of each SelecionType in Selection::mDOMSelections.
 // For avoiding using if nor switch to retrieve the index, this needs to have
@@ -394,20 +326,9 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(nsFrameSelection)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mAncestorLimiter)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(nsFrameSelection)
-<<<<<<< HEAD
-  if (tmp->mShell && tmp->mShell->GetDocument() &&
-      nsCCUncollectableMarker::InGeneration(
-          cb, tmp->mShell->GetDocument()->GetMarkedCCGeneration())) {
-||||||| merged common ancestors
-  if (tmp->mShell && tmp->mShell->GetDocument() &&
-      nsCCUncollectableMarker::InGeneration(cb,
-                                            tmp->mShell->GetDocument()->
-                                              GetMarkedCCGeneration())) {
-=======
   if (tmp->mPresShell && tmp->mPresShell->GetDocument() &&
       nsCCUncollectableMarker::InGeneration(
           cb, tmp->mPresShell->GetDocument()->GetMarkedCCGeneration())) {
->>>>>>> upstream-releases
     return NS_SUCCESS_INTERRUPTED_TRAVERSE;
   }
   for (size_t i = 0; i < ArrayLength(tmp->mDomSelections); ++i) {
@@ -429,18 +350,8 @@ NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(nsFrameSelection, Release)
 
 // Get the x (or y, in vertical writing mode) position requested
 // by the Key Handling for line-up/down
-<<<<<<< HEAD
-nsresult nsFrameSelection::FetchDesiredPos(nsPoint& aDesiredPos) {
-  if (!mShell) {
-||||||| merged common ancestors
-nsresult
-nsFrameSelection::FetchDesiredPos(nsPoint &aDesiredPos)
-{
-  if (!mShell) {
-=======
 nsresult nsFrameSelection::FetchDesiredPos(nsPoint& aDesiredPos) {
   if (!mPresShell) {
->>>>>>> upstream-releases
     NS_ERROR("fetch desired position failed");
     return NS_ERROR_FAILURE;
   }
@@ -529,33 +440,15 @@ nsresult nsFrameSelection::ConstrainFrameAndPointToAnchorSubtree(
 
   nsIContent* content = aFrame->GetContent();
 
-<<<<<<< HEAD
-  if (content) {
-    nsIContent* contentRoot = content->GetSelectionRootContent(mShell);
-||||||| merged common ancestors
-  if (content)
-  {
-    nsIContent* contentRoot = content->GetSelectionRootContent(mShell);
-=======
   if (content) {
     nsIContent* contentRoot = content->GetSelectionRootContent(mPresShell);
->>>>>>> upstream-releases
     NS_ENSURE_TRUE(contentRoot, NS_ERROR_UNEXPECTED);
 
     if (anchorRoot == contentRoot) {
       // If the aFrame's content isn't the capturing content, it should be
       // a descendant.  At this time, we can return simply.
-<<<<<<< HEAD
-      nsIContent* capturedContent = nsIPresShell::GetCapturingContent();
-      if (capturedContent != content) {
-||||||| merged common ancestors
-      nsIContent* capturedContent = nsIPresShell::GetCapturingContent();
-      if (capturedContent != content)
-      {
-=======
       nsIContent* capturedContent = PresShell::GetCapturingContent();
       if (capturedContent != content) {
->>>>>>> upstream-releases
         return NS_OK;
       }
 
@@ -569,24 +462,11 @@ nsresult nsFrameSelection::ConstrainFrameAndPointToAnchorSubtree(
 
       // If the mouse cursor in on a frame which is descendant of same
       // selection root, we can expand the selection to the frame.
-<<<<<<< HEAD
-      if (cursorFrame && cursorFrame->PresShell() == mShell) {
-||||||| merged common ancestors
-      if (cursorFrame && cursorFrame->PresShell() == mShell)
-      {
-=======
       if (cursorFrame && cursorFrame->PresShell() == mPresShell) {
->>>>>>> upstream-releases
         nsIContent* cursorContent = cursorFrame->GetContent();
         NS_ENSURE_TRUE(cursorContent, NS_ERROR_FAILURE);
         nsIContent* cursorContentRoot =
-<<<<<<< HEAD
-            cursorContent->GetSelectionRootContent(mShell);
-||||||| merged common ancestors
-          cursorContent->GetSelectionRootContent(mShell);
-=======
             cursorContent->GetSelectionRootContent(mPresShell);
->>>>>>> upstream-releases
         NS_ENSURE_TRUE(cursorContentRoot, NS_ERROR_UNEXPECTED);
         if (cursorContentRoot == anchorRoot) {
           *aRetFrame = cursorFrame;
@@ -691,22 +571,10 @@ static nsINode* GetCellParent(nsINode* aDomNode) {
   return nullptr;
 }
 
-<<<<<<< HEAD
-void nsFrameSelection::Init(nsIPresShell* aShell, nsIContent* aLimiter,
-                            bool aAccessibleCaretEnabled) {
-  mShell = aShell;
-||||||| merged common ancestors
-void
-nsFrameSelection::Init(nsIPresShell *aShell, nsIContent *aLimiter,
-                       bool aAccessibleCaretEnabled)
-{
-  mShell = aShell;
-=======
 void nsFrameSelection::Init(mozilla::PresShell* aPresShell,
                             nsIContent* aLimiter,
                             bool aAccessibleCaretEnabled) {
   mPresShell = aPresShell;
->>>>>>> upstream-releases
   mDragState = false;
   mDesiredPosSet = false;
   mLimiter = aLimiter;
@@ -730,19 +598,9 @@ void nsFrameSelection::Init(mozilla::PresShell* aPresShell,
   }
 
   bool plaintextControl = (aLimiter != nullptr);
-<<<<<<< HEAD
-  bool initSelectEvents = plaintextControl
-                              ? sSelectionEventsOnTextControlsEnabled
-                              : sSelectionEventsEnabled;
-||||||| merged common ancestors
-  bool initSelectEvents = plaintextControl ?
-                            sSelectionEventsOnTextControlsEnabled :
-                            sSelectionEventsEnabled;
-=======
   bool initSelectEvents = plaintextControl
                               ? sSelectionEventsOnTextControlsEnabled
                               : StaticPrefs::dom_select_events_enabled();
->>>>>>> upstream-releases
 
   Document* doc = aPresShell->GetDocument();
   if (initSelectEvents ||
@@ -775,17 +633,8 @@ nsresult nsFrameSelection::MoveCaret(nsDirection aDirection,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsPresContext* context = mShell->GetPresContext();
-  if (!context) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  nsPresContext *context = mShell->GetPresContext();
-  if (!context)
-    return NS_ERROR_FAILURE;
-=======
   nsPresContext* context = mPresShell->GetPresContext();
   if (!context) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
   // we must keep this around and revalidate it when its just UP/DOWN
   nsPoint desiredPos(0, 0);
@@ -851,15 +700,7 @@ nsresult nsFrameSelection::MoveCaret(nsDirection aDirection,
       sel->Collapse(node, offset);
     }
     sel->ScrollIntoView(nsISelectionController::SELECTION_FOCUS_REGION,
-<<<<<<< HEAD
-                        nsIPresShell::ScrollAxis(), nsIPresShell::ScrollAxis(),
-                        scrollFlags);
-||||||| merged common ancestors
-                        nsIPresShell::ScrollAxis(),
-                        nsIPresShell::ScrollAxis(), scrollFlags);
-=======
                         ScrollAxis(), ScrollAxis(), scrollFlags);
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -962,35 +803,16 @@ nsresult nsFrameSelection::MoveCaret(nsDirection aDirection,
                pos.mContentOffset != frameEnd) ||
               eSelectLine == aAmount) {
             SetCaretBidiLevel(theFrame->GetEmbeddingLevel());
-<<<<<<< HEAD
-          } else {
-            BidiLevelFromMove(mShell, pos.mResultContent, pos.mContentOffset,
-                              aAmount, tHint);
-||||||| merged common ancestors
-          }
-          else {
-            BidiLevelFromMove(mShell, pos.mResultContent, pos.mContentOffset,
-                              aAmount, tHint);
-=======
           } else {
             BidiLevelFromMove(mPresShell, pos.mResultContent,
                               pos.mContentOffset, aAmount, tHint);
->>>>>>> upstream-releases
           }
       }
     }
-<<<<<<< HEAD
-    result = TakeFocus(pos.mResultContent, pos.mContentOffset,
-                       pos.mContentOffset, tHint, aContinueSelection, false);
-||||||| merged common ancestors
-    result = TakeFocus(pos.mResultContent, pos.mContentOffset, pos.mContentOffset,
-                       tHint, aContinueSelection, false);
-=======
     // "pos" is on the stack, so pos.mResultContent has stack lifetime, so using
     // MOZ_KnownLive is ok.
     result = TakeFocus(MOZ_KnownLive(pos.mResultContent), pos.mContentOffset,
                        pos.mContentOffset, tHint, aContinueSelection, false);
->>>>>>> upstream-releases
   } else if (aAmount <= eSelectWordNoSpace && aDirection == eDirNext &&
              !aContinueSelection) {
     // Collapse selection if PeekOffset failed, we either
@@ -1005,24 +827,10 @@ nsresult nsFrameSelection::MoveCaret(nsDirection aDirection,
     }
     result = NS_OK;
   }
-<<<<<<< HEAD
-  if (NS_SUCCEEDED(result)) {
-    result = mDomSelections[index]->ScrollIntoView(
-        nsISelectionController::SELECTION_FOCUS_REGION,
-        nsIPresShell::ScrollAxis(), nsIPresShell::ScrollAxis(), scrollFlags);
-||||||| merged common ancestors
-  if (NS_SUCCEEDED(result))
-  {
-    result = mDomSelections[index]->
-      ScrollIntoView(nsISelectionController::SELECTION_FOCUS_REGION,
-                     nsIPresShell::ScrollAxis(), nsIPresShell::ScrollAxis(),
-                     scrollFlags);
-=======
   if (NS_SUCCEEDED(result)) {
     result = mDomSelections[index]->ScrollIntoView(
         nsISelectionController::SELECTION_FOCUS_REGION, ScrollAxis(),
         ScrollAxis(), scrollFlags);
->>>>>>> upstream-releases
   }
 
   return result;
@@ -1100,27 +908,11 @@ nsPrevNextBidiLevels nsFrameSelection::GetPrevNextBidiLevels(
   return levels;
 }
 
-<<<<<<< HEAD
-nsresult nsFrameSelection::GetFrameFromLevel(nsIFrame* aFrameIn,
-                                             nsDirection aDirection,
-                                             nsBidiLevel aBidiLevel,
-                                             nsIFrame** aFrameOut) const {
-  NS_ENSURE_STATE(mShell);
-||||||| merged common ancestors
-nsresult
-nsFrameSelection::GetFrameFromLevel(nsIFrame    *aFrameIn,
-                                    nsDirection  aDirection,
-                                    nsBidiLevel  aBidiLevel,
-                                    nsIFrame   **aFrameOut) const
-{
-  NS_ENSURE_STATE(mShell);
-=======
 nsresult nsFrameSelection::GetFrameFromLevel(nsIFrame* aFrameIn,
                                              nsDirection aDirection,
                                              nsBidiLevel aBidiLevel,
                                              nsIFrame** aFrameOut) const {
   NS_ENSURE_STATE(mPresShell);
->>>>>>> upstream-releases
   nsBidiLevel foundLevel = 0;
   nsIFrame* foundFrame = aFrameIn;
 
@@ -1130,27 +922,6 @@ nsresult nsFrameSelection::GetFrameFromLevel(nsIFrame* aFrameIn,
       do_CreateInstance(kFrameTraversalCID, &result));
   if (NS_FAILED(result)) return result;
 
-<<<<<<< HEAD
-  result = trav->NewFrameTraversal(getter_AddRefs(frameTraversal),
-                                   mShell->GetPresContext(), aFrameIn, eLeaf,
-                                   false,  // aVisual
-                                   false,  // aLockInScrollView
-                                   false,  // aFollowOOFs
-                                   false   // aSkipPopupChecks
-  );
-  if (NS_FAILED(result)) return result;
-||||||| merged common ancestors
-  result = trav->NewFrameTraversal(getter_AddRefs(frameTraversal),
-                                   mShell->GetPresContext(), aFrameIn,
-                                   eLeaf,
-                                   false, // aVisual
-                                   false, // aLockInScrollView
-                                   false, // aFollowOOFs
-                                   false  // aSkipPopupChecks
-                                   );
-  if (NS_FAILED(result))
-    return result;
-=======
   result =
       trav->NewFrameTraversal(getter_AddRefs(frameTraversal),
                               mPresShell->GetPresContext(), aFrameIn, eLeaf,
@@ -1160,7 +931,6 @@ nsresult nsFrameSelection::GetFrameFromLevel(nsIFrame* aFrameIn,
                               false   // aSkipPopupChecks
       );
   if (NS_FAILED(result)) return result;
->>>>>>> upstream-releases
 
   do {
     *aFrameOut = foundFrame;
@@ -1215,26 +985,11 @@ nsresult nsFrameSelection::MaintainSelection(nsSelectionAmount aAmount) {
  * @param aAmount is the amount of the move that gave the caret its new position
  * @param aHint is the hint indicating in what logical direction the caret moved
  */
-<<<<<<< HEAD
-void nsFrameSelection::BidiLevelFromMove(nsIPresShell* aPresShell,
-                                         nsIContent* aNode,
-                                         uint32_t aContentOffset,
-                                         nsSelectionAmount aAmount,
-                                         CaretAssociateHint aHint) {
-||||||| merged common ancestors
-void nsFrameSelection::BidiLevelFromMove(nsIPresShell*      aPresShell,
-                                         nsIContent*        aNode,
-                                         uint32_t           aContentOffset,
-                                         nsSelectionAmount  aAmount,
-                                         CaretAssociateHint aHint)
-{
-=======
 void nsFrameSelection::BidiLevelFromMove(PresShell* aPresShell,
                                          nsIContent* aNode,
                                          uint32_t aContentOffset,
                                          nsSelectionAmount aAmount,
                                          CaretAssociateHint aHint) {
->>>>>>> upstream-releases
   switch (aAmount) {
     // Movement within the line: the new cursor Bidi level is the level of the
     // last character moved over
@@ -1361,21 +1116,10 @@ nsresult nsFrameSelection::HandleClick(nsIContent* aNewFocus,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsFrameSelection::HandleDrag(nsIFrame* aFrame, const nsPoint& aPoint) {
-  if (!aFrame || !mShell) return;
-||||||| merged common ancestors
-void
-nsFrameSelection::HandleDrag(nsIFrame* aFrame, const nsPoint& aPoint)
-{
-  if (!aFrame || !mShell)
-    return;
-=======
 void nsFrameSelection::HandleDrag(nsIFrame* aFrame, const nsPoint& aPoint) {
   if (!aFrame || !mPresShell) {
     return;
   }
->>>>>>> upstream-releases
 
   nsresult result;
   nsIFrame* newFrame = 0;
@@ -1595,29 +1339,12 @@ nsresult nsFrameSelection::TakeFocus(nsIContent* aNewFocus,
   return NotifySelectionListeners(SelectionType::eNormal);
 }
 
-<<<<<<< HEAD
-UniquePtr<SelectionDetails> nsFrameSelection::LookUpSelection(
-    nsIContent* aContent, int32_t aContentOffset, int32_t aContentLength,
-    bool aSlowCheck) const {
-  if (!aContent || !mShell) return nullptr;
-||||||| merged common ancestors
-
-UniquePtr<SelectionDetails>
-nsFrameSelection::LookUpSelection(nsIContent *aContent,
-                                  int32_t aContentOffset,
-                                  int32_t aContentLength,
-                                  bool aSlowCheck) const
-{
-  if (!aContent || !mShell)
-    return nullptr;
-=======
 UniquePtr<SelectionDetails> nsFrameSelection::LookUpSelection(
     nsIContent* aContent, int32_t aContentOffset, int32_t aContentLength,
     bool aSlowCheck) const {
   if (!aContent || !mPresShell) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   UniquePtr<SelectionDetails> details;
 
@@ -1672,16 +1399,8 @@ nsresult nsFrameSelection::ScrollSelectionIntoView(SelectionType aSelectionType,
     flags |= Selection::SCROLL_OVERFLOW_HIDDEN;
   }
   if (aFlags & nsISelectionController::SCROLL_CENTER_VERTICALLY) {
-<<<<<<< HEAD
-    verticalScroll = nsIPresShell::ScrollAxis(
-        nsIPresShell::SCROLL_CENTER, nsIPresShell::SCROLL_IF_NOT_FULLY_VISIBLE);
-||||||| merged common ancestors
-    verticalScroll = nsIPresShell::ScrollAxis(
-      nsIPresShell::SCROLL_CENTER, nsIPresShell::SCROLL_IF_NOT_FULLY_VISIBLE);
-=======
     verticalScroll =
         ScrollAxis(kScrollToCenter, WhenToScroll::IfNotFullyVisible);
->>>>>>> upstream-releases
   }
   if (aFlags & nsISelectionController::SCROLL_FOR_CARET_MOVE) {
     flags |= Selection::SCROLL_FOR_CARET_MOVE;
@@ -1695,21 +1414,9 @@ nsresult nsFrameSelection::ScrollSelectionIntoView(SelectionType aSelectionType,
 
 nsresult nsFrameSelection::RepaintSelection(SelectionType aSelectionType) {
   int8_t index = GetIndexFromSelectionType(aSelectionType);
-<<<<<<< HEAD
-  if (index < 0) return NS_ERROR_INVALID_ARG;
-  if (!mDomSelections[index]) return NS_ERROR_NULL_POINTER;
-  NS_ENSURE_STATE(mShell);
-||||||| merged common ancestors
-  if (index < 0)
-    return NS_ERROR_INVALID_ARG;
-  if (!mDomSelections[index])
-    return NS_ERROR_NULL_POINTER;
-  NS_ENSURE_STATE(mShell);
-=======
   if (index < 0) return NS_ERROR_INVALID_ARG;
   if (!mDomSelections[index]) return NS_ERROR_NULL_POINTER;
   NS_ENSURE_STATE(mPresShell);
->>>>>>> upstream-releases
 
 // On macOS, update the selection cache to the new active selection
 // aka the current selection.
@@ -1728,26 +1435,10 @@ static bool IsDisplayContents(const nsIContent* aContent) {
   return aContent->IsElement() && aContent->AsElement()->IsDisplayContents();
 }
 
-<<<<<<< HEAD
-nsIFrame* nsFrameSelection::GetFrameForNodeOffset(
-    nsIContent* aNode, int32_t aOffset, CaretAssociateHint aHint,
-    int32_t* aReturnOffset) const {
-  if (!aNode || !aReturnOffset || !mShell) return nullptr;
-||||||| merged common ancestors
-nsIFrame*
-nsFrameSelection::GetFrameForNodeOffset(nsIContent*        aNode,
-                                        int32_t            aOffset,
-                                        CaretAssociateHint aHint,
-                                        int32_t*           aReturnOffset) const
-{
-  if (!aNode || !aReturnOffset || !mShell)
-    return nullptr;
-=======
 nsIFrame* nsFrameSelection::GetFrameForNodeOffset(
     nsIContent* aNode, int32_t aOffset, CaretAssociateHint aHint,
     int32_t* aReturnOffset) const {
   if (!aNode || !aReturnOffset || !mPresShell) return nullptr;
->>>>>>> upstream-releases
 
   if (aOffset < 0) return nullptr;
 
@@ -1895,18 +1586,8 @@ nsIFrame* nsFrameSelection::GetFrameForNodeOffset(
   return returnFrame;
 }
 
-<<<<<<< HEAD
-nsIFrame* nsFrameSelection::GetFrameToPageSelect() const {
-  if (NS_WARN_IF(!mShell)) {
-||||||| merged common ancestors
-nsIFrame*
-nsFrameSelection::GetFrameToPageSelect() const
-{
-  if (NS_WARN_IF(!mShell)) {
-=======
 nsIFrame* nsFrameSelection::GetFrameToPageSelect() const {
   if (NS_WARN_IF(!mPresShell)) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -2030,15 +1711,7 @@ void nsFrameSelection::CommonPageMove(bool aForward, bool aExtend,
   // Scroll one page if necessary.
   if (scrollableFrame) {
     scrollableFrame->ScrollBy(nsIntPoint(0, aForward ? 1 : -1),
-<<<<<<< HEAD
-                              nsIScrollableFrame::PAGES,
-                              nsIScrollableFrame::SMOOTH);
-||||||| merged common ancestors
-                               nsIScrollableFrame::PAGES,
-                               nsIScrollableFrame::SMOOTH);
-=======
                               nsIScrollableFrame::PAGES, ScrollMode::Smooth);
->>>>>>> upstream-releases
   }
 
   // place the caret
@@ -2046,21 +1719,9 @@ void nsFrameSelection::CommonPageMove(bool aForward, bool aExtend,
               CARET_ASSOCIATE_AFTER);
 }
 
-<<<<<<< HEAD
-nsresult nsFrameSelection::PhysicalMove(int16_t aDirection, int16_t aAmount,
-                                        bool aExtend) {
-  NS_ENSURE_STATE(mShell);
-||||||| merged common ancestors
-nsresult
-nsFrameSelection::PhysicalMove(int16_t aDirection, int16_t aAmount,
-                               bool aExtend)
-{
-  NS_ENSURE_STATE(mShell);
-=======
 nsresult nsFrameSelection::PhysicalMove(int16_t aDirection, int16_t aAmount,
                                         bool aExtend) {
   NS_ENSURE_STATE(mPresShell);
->>>>>>> upstream-releases
   // Flush out layout, since we need it to be up to date to do caret
   // positioning.
   OwningNonNull<PresShell> presShell(*mPresShell);
@@ -2075,13 +1736,7 @@ nsresult nsFrameSelection::PhysicalMove(int16_t aDirection, int16_t aAmount,
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  nsPresContext* context = mShell->GetPresContext();
-||||||| merged common ancestors
-  nsPresContext *context = mShell->GetPresContext();
-=======
   nsPresContext* context = mPresShell->GetPresContext();
->>>>>>> upstream-releases
   if (!context) {
     return NS_ERROR_FAILURE;
   }
@@ -2210,25 +1865,10 @@ nsresult nsFrameSelection::SelectAll() {
     rootContent = mLimiter;  // addrefit
   } else if (mAncestorLimiter) {
     rootContent = mAncestorLimiter;
-<<<<<<< HEAD
-  } else {
-    NS_ENSURE_STATE(mShell);
-    nsIDocument* doc = mShell->GetDocument();
-    if (!doc) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  }
-  else
-  {
-    NS_ENSURE_STATE(mShell);
-    nsIDocument *doc = mShell->GetDocument();
-    if (!doc)
-      return NS_ERROR_FAILURE;
-=======
   } else {
     NS_ENSURE_STATE(mPresShell);
     Document* doc = mPresShell->GetDocument();
     if (!doc) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
     rootContent = doc->GetRootElement();
     if (!rootContent) return NS_ERROR_FAILURE;
   }
@@ -2273,26 +1913,11 @@ static bool IsCell(nsIContent* aContent) {
   return aContent->IsAnyOfHTMLElements(nsGkAtoms::td, nsGkAtoms::th);
 }
 
-<<<<<<< HEAD
-nsITableCellLayout* nsFrameSelection::GetCellLayout(
-    nsIContent* aCellContent) const {
-  NS_ENSURE_TRUE(mShell, nullptr);
-  nsITableCellLayout* cellLayoutObject =
-      do_QueryFrame(aCellContent->GetPrimaryFrame());
-||||||| merged common ancestors
-nsITableCellLayout*
-nsFrameSelection::GetCellLayout(nsIContent *aCellContent) const
-{
-  NS_ENSURE_TRUE(mShell, nullptr);
-  nsITableCellLayout *cellLayoutObject =
-    do_QueryFrame(aCellContent->GetPrimaryFrame());
-=======
 nsITableCellLayout* nsFrameSelection::GetCellLayout(
     nsIContent* aCellContent) const {
   NS_ENSURE_TRUE(mPresShell, nullptr);
   nsITableCellLayout* cellLayoutObject =
       do_QueryFrame(aCellContent->GetPrimaryFrame());
->>>>>>> upstream-releases
   return cellLayoutObject;
 }
 
@@ -2700,15 +2325,8 @@ nsresult nsFrameSelection::UnselectCells(nsIContent* aTableContent,
       if (aRemoveOutsideOfCellRange) {
         if (curRowIndex < minRowIndex || curRowIndex > maxRowIndex ||
             curColIndex < minColIndex || curColIndex > maxColIndex) {
-<<<<<<< HEAD
-          mDomSelections[index]->RemoveRange(*range, IgnoreErrors());
-||||||| merged common ancestors
-
-          mDomSelections[index]->RemoveRange(*range, IgnoreErrors());
-=======
           mDomSelections[index]->RemoveRangeAndUnselectFramesAndNotifyListeners(
               *range, IgnoreErrors());
->>>>>>> upstream-releases
           // Since we've removed the range, decrement pointer to next range
           mSelectedCellIndex--;
         }
@@ -2724,26 +2342,6 @@ nsresult nsFrameSelection::UnselectCells(nsIContent* aTableContent,
         uint32_t actualRowSpan =
             tableFrame->GetEffectiveRowSpanAt(origRowIndex, origColIndex);
         uint32_t actualColSpan =
-<<<<<<< HEAD
-            tableFrame->GetEffectiveColSpanAt(curRowIndex, curColIndex);
-        if (origRowIndex <= static_cast<uint32_t>(maxRowIndex) &&
-            maxRowIndex >= 0 &&
-            origRowIndex + actualRowSpan - 1 >=
-                static_cast<uint32_t>(minRowIndex) &&
-            origColIndex <= static_cast<uint32_t>(maxColIndex) &&
-            maxColIndex >= 0 &&
-            origColIndex + actualColSpan - 1 >=
-                static_cast<uint32_t>(minColIndex)) {
-          mDomSelections[index]->RemoveRange(*range, IgnoreErrors());
-||||||| merged common ancestors
-          tableFrame->GetEffectiveColSpanAt(curRowIndex, curColIndex);
-        if (origRowIndex <= static_cast<uint32_t>(maxRowIndex) && maxRowIndex >= 0 &&
-            origRowIndex + actualRowSpan - 1 >= static_cast<uint32_t>(minRowIndex) &&
-            origColIndex <= static_cast<uint32_t>(maxColIndex) && maxColIndex >= 0 &&
-            origColIndex + actualColSpan - 1 >= static_cast<uint32_t>(minColIndex)) {
-
-          mDomSelections[index]->RemoveRange(*range, IgnoreErrors());
-=======
             tableFrame->GetEffectiveColSpanAt(curRowIndex, curColIndex);
         if (origRowIndex <= static_cast<uint32_t>(maxRowIndex) &&
             maxRowIndex >= 0 &&
@@ -2755,7 +2353,6 @@ nsresult nsFrameSelection::UnselectCells(nsIContent* aTableContent,
                 static_cast<uint32_t>(minColIndex)) {
           mDomSelections[index]->RemoveRangeAndUnselectFramesAndNotifyListeners(
               *range, IgnoreErrors());
->>>>>>> upstream-releases
           // Since we've removed the range, decrement pointer to next range
           mSelectedCellIndex--;
         }
@@ -3143,38 +2740,17 @@ void nsFrameSelection::DisconnectFromPresShell() {
  * If the current selection is empty. The current selection cache
  * would be cleared by AutoCopyListener::OnSelectionChange().
  */
-<<<<<<< HEAD
-nsresult nsFrameSelection::UpdateSelectionCacheOnRepaintSelection(
-    Selection* aSel) {
-  nsIPresShell* ps = aSel->GetPresShell();
-  if (!ps) {
-||||||| merged common ancestors
-nsresult
-nsFrameSelection::UpdateSelectionCacheOnRepaintSelection(Selection* aSel)
-{
-  nsIPresShell* ps = aSel->GetPresShell();
-  if (!ps) {
-=======
 nsresult nsFrameSelection::UpdateSelectionCacheOnRepaintSelection(
     Selection* aSel) {
   PresShell* presShell = aSel->GetPresShell();
   if (!presShell) {
->>>>>>> upstream-releases
     return NS_OK;
   }
   nsCOMPtr<Document> aDoc = presShell->GetDocument();
 
   if (aDoc && aSel && !aSel->IsCollapsed()) {
-<<<<<<< HEAD
-    return nsCopySupport::HTMLCopy(aSel, aDoc, nsIClipboard::kSelectionCache,
-                                   false);
-||||||| merged common ancestors
-    return nsCopySupport::HTMLCopy(aSel, aDoc,
-                                   nsIClipboard::kSelectionCache, false);
-=======
     return nsCopySupport::EncodeDocumentWithContextAndPutToClipboard(
         aSel, aDoc, nsIClipboard::kSelectionCache, false);
->>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -3218,21 +2794,9 @@ int16_t AutoCopyListener::sClipboardID = -1;
  */
 
 // static
-<<<<<<< HEAD
-void AutoCopyListener::OnSelectionChange(nsIDocument* aDocument,
-                                         Selection& aSelection,
-                                         int16_t aReason) {
-||||||| merged common ancestors
-void
-AutoCopyListener::OnSelectionChange(nsIDocument* aDocument,
-                                    Selection& aSelection,
-                                    int16_t aReason)
-{
-=======
 void AutoCopyListener::OnSelectionChange(Document* aDocument,
                                          Selection& aSelection,
                                          int16_t aReason) {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsValidClipboardID(sClipboardID));
 
   if (sClipboardID == nsIClipboard::kSelectionCache) {
@@ -3270,18 +2834,9 @@ void AutoCopyListener::OnSelectionChange(Document* aDocument,
   }
 
   DebugOnly<nsresult> rv =
-<<<<<<< HEAD
-      nsCopySupport::HTMLCopy(&aSelection, aDocument, sClipboardID, false);
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "nsCopySupport::HTMLCopy() failed");
-||||||| merged common ancestors
-    nsCopySupport::HTMLCopy(&aSelection, aDocument, sClipboardID, false);
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
-    "nsCopySupport::HTMLCopy() failed");
-=======
       nsCopySupport::EncodeDocumentWithContextAndPutToClipboard(
           &aSelection, aDocument, sClipboardID, false);
   NS_WARNING_ASSERTION(
       NS_SUCCEEDED(rv),
       "nsCopySupport::EncodeDocumentWithContextAndPutToClipboard() failed");
->>>>>>> upstream-releases
 }

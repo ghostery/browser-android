@@ -49,121 +49,6 @@ struct nsXPTCVariant {
     //
     // nsXPTCVariant contains enough space to store ExtendedVal inline, which
     // can be used to store these types when IsIndirect() is true.
-<<<<<<< HEAD
-    nsXPTCMiniVariant mini;
-
-    nsCString nscstr;
-    nsString nsstr;
-    JS::Value jsval;
-    xpt::detail::UntypedTArray array;
-
-    // This type contains non-standard-layout types, so needs an explicit
-    // Ctor/Dtor - we'll just delete them.
-    ExtendedVal() = delete;
-    ~ExtendedVal() = delete;
-  };
-
-  union {
-    // The `val` field from nsXPTCMiniVariant.
-    nsXPTCMiniVariant::Union val;
-
-    // Storage for any extended variants.
-    ExtendedVal ext;
-  };
-
-  nsXPTType type;
-  uint8_t flags;
-
-  // Clear to a valid, null state.
-  nsXPTCVariant() {
-    memset(this, 0, sizeof(nsXPTCVariant));
-    type = nsXPTType::T_VOID;
-  }
-
-  enum {
-    //
-    // Bitflag definitions
-    //
-
-    // Indicates that we &val.p should be passed n the stack, i.e. that
-    // val should be passed by reference.
-    IS_INDIRECT = 0x1,
-  };
-
-  void ClearFlags() { flags = 0; }
-  void SetIndirect() { flags |= IS_INDIRECT; }
-
-  bool IsIndirect() const { return 0 != (flags & IS_INDIRECT); }
-
-  // Implicitly convert to nsXPTCMiniVariant.
-  operator nsXPTCMiniVariant&() { return *(nsXPTCMiniVariant*)&val; }
-  operator const nsXPTCMiniVariant&() const {
-    return *(const nsXPTCMiniVariant*)&val;
-  }
-
-  // As this type contains an anonymous union, we need to provide an explicit
-  // destructor.
-  ~nsXPTCVariant() {}
-||||||| merged common ancestors
-        nsXPTCMiniVariant mini;
-
-        nsCString  nscstr;
-        nsString   nsstr;
-        JS::Value  jsval;
-        xpt::detail::UntypedTArray array;
-
-        // This type contains non-standard-layout types, so needs an explicit
-        // Ctor/Dtor - we'll just delete them.
-        ExtendedVal() = delete;
-        ~ExtendedVal() = delete;
-    };
-
-    union
-    {
-        // The `val` field from nsXPTCMiniVariant.
-        nsXPTCMiniVariant::Union val;
-
-        // Storage for any extended variants.
-        ExtendedVal ext;
-    };
-
-    nsXPTType type;
-    uint8_t   flags;
-
-    // Clear to a valid, null state.
-    nsXPTCVariant() {
-        memset(this, 0, sizeof(nsXPTCVariant));
-        type = nsXPTType::T_VOID;
-    }
-
-    enum
-    {
-        //
-        // Bitflag definitions
-        //
-
-        // Indicates that we &val.p should be passed n the stack, i.e. that
-        // val should be passed by reference.
-        IS_INDIRECT    = 0x1,
-    };
-
-    void ClearFlags()         {flags = 0;}
-    void SetIndirect()        {flags |= IS_INDIRECT;}
-
-    bool IsIndirect()         const  {return 0 != (flags & IS_INDIRECT);}
-
-    // Implicitly convert to nsXPTCMiniVariant.
-    operator nsXPTCMiniVariant&() {
-        return *(nsXPTCMiniVariant*) &val;
-    }
-    operator const nsXPTCMiniVariant&() const {
-        return *(const nsXPTCMiniVariant*) &val;
-    }
-
-    // As this type contains an anonymous union, we need to provide an explicit
-    // destructor.
-    ~nsXPTCVariant() { }
-=======
     nsXPTCMiniVariant mini;
 
     nsID nsid;
@@ -219,7 +104,6 @@ struct nsXPTCVariant {
   // As this type contains an anonymous union, we need to provide an explicit
   // destructor.
   ~nsXPTCVariant() {}
->>>>>>> upstream-releases
 };
 
 static_assert(offsetof(nsXPTCVariant, val) == offsetof(nsXPTCVariant, ext),

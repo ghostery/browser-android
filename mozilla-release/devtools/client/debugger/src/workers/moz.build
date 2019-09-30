@@ -9,12 +9,6 @@ DIRS += [
     'search',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/workers/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/workers/moz.build
 
 )

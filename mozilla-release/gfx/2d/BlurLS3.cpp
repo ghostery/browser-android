@@ -21,42 +21,9 @@ typedef struct {
 } __m128i;
 
 MOZ_ALWAYS_INLINE
-<<<<<<< HEAD
-__m128i loadUnaligned128(__m128i *p) {
-||||||| merged common ancestors
-__m128i loadUnaligned128(__m128i *p)
-{
-=======
 __m128i loadUnaligned128(__m128i* p) {
->>>>>>> upstream-releases
   __m128i v;
 
-<<<<<<< HEAD
-  asm volatile(
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t"
-      "gsldlc1 %[vh], 0xf(%[p]) \n\t"
-      "gsldrc1 %[vh], 0x8(%[p]) \n\t"
-      "gsldlc1 %[vl], 0x7(%[p]) \n\t"
-      "gsldrc1 %[vl], 0x0(%[p]) \n\t"
-      ".set pop \n\t"
-      : [vh] "=f"(v.h), [vl] "=f"(v.l)
-      : [p] "r"(p)
-      : "memory");
-||||||| merged common ancestors
-  asm volatile (
-    ".set push \n\t"
-    ".set arch=loongson3a \n\t"
-    "gsldlc1 %[vh], 0xf(%[p]) \n\t"
-    "gsldrc1 %[vh], 0x8(%[p]) \n\t"
-    "gsldlc1 %[vl], 0x7(%[p]) \n\t"
-    "gsldrc1 %[vl], 0x0(%[p]) \n\t"
-    ".set pop \n\t"
-    :[vh]"=f"(v.h), [vl]"=f"(v.l)
-    :[p]"r"(p)
-    :"memory"
-  );
-=======
   asm volatile(
       ".set push \n\t"
       ".set arch=loongson3a \n\t"
@@ -68,7 +35,6 @@ __m128i loadUnaligned128(__m128i* p) {
       : [ vh ] "=f"(v.h), [ vl ] "=f"(v.l)
       : [ p ] "r"(p)
       : "memory");
->>>>>>> upstream-releases
 
   return v;
 }
@@ -79,37 +45,6 @@ __m128i Divide(__m128i aValues, __m128i aDivisor) {
   double srl32;
   __m128i mask, ra, p4321, t1, t2;
 
-<<<<<<< HEAD
-  asm volatile(
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t"
-      "li %[tmp], 0x80000000 \n\t"
-      "mtc1 %[tmp], %[ral] \n\t"
-      "xor %[maskl], %[maskl], %[maskl] \n\t"
-      "mov.d %[rah], %[ral] \n\t"
-      "li %[tmp], 0xffffffff \n\t"
-      "mthc1 %[tmp], %[maskl] \n\t"
-      "mov.d %[maskh], %[maskl] \n\t"
-      ".set pop \n\t"
-      : [rah] "=f"(ra.h), [ral] "=f"(ra.l), [maskh] "=f"(mask.h),
-        [maskl] "=f"(mask.l), [tmp] "=&r"(tmp));
-||||||| merged common ancestors
-  asm volatile (
-    ".set push \n\t"
-    ".set arch=loongson3a \n\t"
-    "li %[tmp], 0x80000000 \n\t"
-    "mtc1 %[tmp], %[ral] \n\t"
-    "xor %[maskl], %[maskl], %[maskl] \n\t"
-    "mov.d %[rah], %[ral] \n\t"
-    "li %[tmp], 0xffffffff \n\t"
-    "mthc1 %[tmp], %[maskl] \n\t"
-    "mov.d %[maskh], %[maskl] \n\t"
-    ".set pop \n\t"
-    :[rah]"=f"(ra.h), [ral]"=f"(ra.l),
-     [maskh]"=f"(mask.h), [maskl]"=f"(mask.l),
-     [tmp]"=&r"(tmp)
-  );
-=======
   asm volatile(
       ".set push \n\t"
       ".set arch=loongson3a \n\t"
@@ -123,52 +58,7 @@ __m128i Divide(__m128i aValues, __m128i aDivisor) {
       ".set pop \n\t"
       : [ rah ] "=f"(ra.h), [ ral ] "=f"(ra.l), [ maskh ] "=f"(mask.h),
         [ maskl ] "=f"(mask.l), [ tmp ] "=&r"(tmp));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  asm volatile(
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t"
-      "ori %[tmp], $0, 32 \n\t"
-      "mtc1 %[tmp], %[srl32] \n\t" _mm_pmuluw(t1, av, ad)
-          _mm_psrld(t2, av, srl32) _mm_pmuluw(t2, t2, ad)
-      // Add 1 << 31 before shifting or masking the lower 32 bits away, so that
-      // the result is rounded.
-      _mm_paddd(t1, t1, ra) _mm_psrld(t1, t1, srl32) _mm_paddd(t2, t2, ra)
-          _mm_and(t2, t2, mask) _mm_or(p4321, t1, t2) ".set pop \n\t"
-      : [p4321h] "=&f"(p4321.h), [p4321l] "=&f"(p4321.l), [t1h] "=&f"(t1.h),
-        [t1l] "=&f"(t1.l), [t2h] "=&f"(t2.h), [t2l] "=&f"(t2.l),
-        [srl32] "=&f"(srl32), [tmp] "=&r"(tmp)
-      : [rah] "f"(ra.h), [ral] "f"(ra.l), [maskh] "f"(mask.h),
-        [maskl] "f"(mask.l), [avh] "f"(aValues.h), [avl] "f"(aValues.l),
-        [adh] "f"(aDivisor.h), [adl] "f"(aDivisor.l));
-||||||| merged common ancestors
-  asm volatile (
-    ".set push \n\t"
-    ".set arch=loongson3a \n\t"
-    "ori %[tmp], $0, 32 \n\t"
-    "mtc1 %[tmp], %[srl32] \n\t"
-    _mm_pmuluw(t1, av, ad)
-    _mm_psrld(t2, av, srl32)
-    _mm_pmuluw(t2, t2, ad)
-    // Add 1 << 31 before shifting or masking the lower 32 bits away, so that the
-    // result is rounded.
-    _mm_paddd(t1, t1, ra)
-    _mm_psrld(t1, t1, srl32)
-    _mm_paddd(t2, t2, ra)
-    _mm_and(t2, t2, mask)
-    _mm_or(p4321, t1, t2)
-    ".set pop \n\t"
-    :[p4321h]"=&f"(p4321.h), [p4321l]"=&f"(p4321.l),
-     [t1h]"=&f"(t1.h), [t1l]"=&f"(t1.l),
-     [t2h]"=&f"(t2.h), [t2l]"=&f"(t2.l),
-     [srl32]"=&f"(srl32), [tmp]"=&r"(tmp)
-    :[rah]"f"(ra.h), [ral]"f"(ra.l),
-     [maskh]"f"(mask.h), [maskl]"f"(mask.l),
-     [avh]"f"(aValues.h), [avl]"f"(aValues.l),
-     [adh]"f"(aDivisor.h), [adl]"f"(aDivisor.l)
-  );
-=======
   asm volatile(
       ".set push \n\t"
       ".set arch=loongson3a \n\t"
@@ -185,53 +75,16 @@ __m128i Divide(__m128i aValues, __m128i aDivisor) {
       : [ rah ] "f"(ra.h), [ ral ] "f"(ra.l), [ maskh ] "f"(mask.h),
         [ maskl ] "f"(mask.l), [ avh ] "f"(aValues.h), [ avl ] "f"(aValues.l),
         [ adh ] "f"(aDivisor.h), [ adl ] "f"(aDivisor.l));
->>>>>>> upstream-releases
 
   return p4321;
 }
 
 MOZ_ALWAYS_INLINE
-<<<<<<< HEAD
-__m128i BlurFourPixels(const __m128i &aTopLeft, const __m128i &aTopRight,
-                       const __m128i &aBottomRight, const __m128i &aBottomLeft,
-                       const __m128i &aDivisor) {
-||||||| merged common ancestors
-__m128i BlurFourPixels(const __m128i& aTopLeft, const __m128i& aTopRight,
-                       const __m128i& aBottomRight, const __m128i& aBottomLeft,
-                       const __m128i& aDivisor)
-{
-=======
 __m128i BlurFourPixels(const __m128i& aTopLeft, const __m128i& aTopRight,
                        const __m128i& aBottomRight, const __m128i& aBottomLeft,
                        const __m128i& aDivisor) {
->>>>>>> upstream-releases
   __m128i values;
 
-<<<<<<< HEAD
-  asm volatile(
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t" _mm_psubw(val, abr, atr)
-          _mm_psubw(val, val, abl) _mm_paddw(val, val, atl) ".set pop \n\t"
-      : [valh] "=&f"(values.h), [vall] "=&f"(values.l)
-      : [abrh] "f"(aBottomRight.h), [abrl] "f"(aBottomRight.l),
-        [atrh] "f"(aTopRight.h), [atrl] "f"(aTopRight.l),
-        [ablh] "f"(aBottomLeft.h), [abll] "f"(aBottomLeft.l),
-        [atlh] "f"(aTopLeft.h), [atll] "f"(aTopLeft.l));
-||||||| merged common ancestors
-  asm volatile (
-    ".set push \n\t"
-    ".set arch=loongson3a \n\t"
-    _mm_psubw(val, abr, atr)
-    _mm_psubw(val, val, abl)
-    _mm_paddw(val, val, atl)
-    ".set pop \n\t"
-    :[valh]"=&f"(values.h), [vall]"=&f"(values.l)
-    :[abrh]"f"(aBottomRight.h), [abrl]"f"(aBottomRight.l),
-     [atrh]"f"(aTopRight.h), [atrl]"f"(aTopRight.l),
-     [ablh]"f"(aBottomLeft.h), [abll]"f"(aBottomLeft.l),
-     [atlh]"f"(aTopLeft.h), [atll]"f"(aTopLeft.l)
-  );
-=======
   asm volatile(
       ".set push \n\t"
       ".set arch=loongson3a \n\t" _mm_psubw(val, abr, atr)
@@ -241,7 +94,6 @@ __m128i BlurFourPixels(const __m128i& aTopLeft, const __m128i& aTopRight,
         [ atrh ] "f"(aTopRight.h), [ atrl ] "f"(aTopRight.l),
         [ ablh ] "f"(aBottomLeft.h), [ abll ] "f"(aBottomLeft.l),
         [ atlh ] "f"(aTopLeft.h), [ atll ] "f"(aTopLeft.l));
->>>>>>> upstream-releases
 
   return Divide(values, aDivisor);
 }
@@ -302,22 +154,10 @@ __m128i AccumulatePixelSums(__m128i aPixels) {
 
 MOZ_ALWAYS_INLINE
 void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
-<<<<<<< HEAD
-                               int32_t aTopInflation, int32_t aBottomInflation,
-                               uint32_t *aIntegralImage,
-                               size_t aIntegralImageStride, uint8_t *aSource,
-                               int32_t aSourceStride, const IntSize &aSize) {
-||||||| merged common ancestors
-                           int32_t aTopInflation, int32_t aBottomInflation,
-                           uint32_t *aIntegralImage, size_t aIntegralImageStride,
-                           uint8_t *aSource, int32_t aSourceStride, const IntSize &aSize)
-{
-=======
                                int32_t aTopInflation, int32_t aBottomInflation,
                                uint32_t* aIntegralImage,
                                size_t aIntegralImageStride, uint8_t* aSource,
                                int32_t aSourceStride, const IntSize& aSize) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!(aLeftInflation & 3));
 
   uint32_t stride32bit = aIntegralImageStride / 4;
@@ -356,30 +196,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
   uint64_t tmp;
   double s44, see;
   __m128i zero;
-<<<<<<< HEAD
-  asm volatile(
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t"
-      "li %[tmp], 0xee \n\t"
-      "mtc1 %[tmp], %[see] \n\t"
-      "li %[tmp], 0x44 \n\t"
-      "mtc1 %[tmp], %[s44] \n\t" _mm_xor(zero, zero, zero) ".set pop \n\t"
-      : [tmp] "=&r"(tmp), [s44] "=f"(s44), [see] "=f"(see),
-        [zeroh] "=f"(zero.h), [zerol] "=f"(zero.l));
-||||||| merged common ancestors
-  asm volatile (
-    ".set push \n\t"
-    ".set arch=loongson3a \n\t"
-    "li %[tmp], 0xee \n\t"
-    "mtc1 %[tmp], %[see] \n\t"
-    "li %[tmp], 0x44 \n\t"
-    "mtc1 %[tmp], %[s44] \n\t"
-    _mm_xor(zero, zero, zero)
-    ".set pop \n\t"
-    :[tmp]"=&r"(tmp), [s44]"=f"(s44), [see]"=f"(see),
-     [zeroh]"=f"(zero.h), [zerol]"=f"(zero.l)
-  );
-=======
   asm volatile(
       ".set push \n\t"
       ".set arch=loongson3a \n\t"
@@ -389,7 +205,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
       "mtc1 %[tmp], %[s44] \n\t" _mm_xor(zero, zero, zero) ".set pop \n\t"
       : [ tmp ] "=&r"(tmp), [ s44 ] "=f"(s44), [ see ] "=f"(see),
         [ zeroh ] "=f"(zero.h), [ zerol ] "=f"(zero.l));
->>>>>>> upstream-releases
   for (int y = aTopInflation + 1; y < (aSize.height + aTopInflation); y++) {
     __m128i currentRowSum;
     uint32_t* intRow = aIntegralImage + (y * stride32bit);
@@ -397,53 +212,12 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
     uint8_t* sourceRow = aSource + aSourceStride * (y - aTopInflation);
     uint32_t pixel = sourceRow[0];
 
-<<<<<<< HEAD
-    asm volatile(
-        ".set push \n\t"
-        ".set arch=loongson3a \n\t" _mm_xor(cr, cr, cr) ".set pop \n\t"
-        : [crh] "=f"(currentRowSum.h), [crl] "=f"(currentRowSum.l));
-||||||| merged common ancestors
-    asm volatile (
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t"
-      _mm_xor(cr, cr, cr)
-      ".set pop \n\t"
-      :[crh]"=f"(currentRowSum.h), [crl]"=f"(currentRowSum.l)
-    );
-=======
     asm volatile(
         ".set push \n\t"
         ".set arch=loongson3a \n\t" _mm_xor(cr, cr, cr) ".set pop \n\t"
         : [ crh ] "=f"(currentRowSum.h), [ crl ] "=f"(currentRowSum.l));
->>>>>>> upstream-releases
     for (int x = 0; x < aLeftInflation; x += 4) {
       __m128i sumPixels, t;
-<<<<<<< HEAD
-      asm volatile(
-          ".set push \n\t"
-          ".set arch=loongson3a \n\t"
-          "mtc1 %[pix], %[spl] \n\t"
-          "punpcklwd %[spl], %[spl], %[spl] \n\t"
-          "mov.d %[sph], %[spl] \n\t"
-          "pshufh %[sph], %[spl], %[s44] \n\t"
-          "pshufh %[spl], %[spl], %[s44] \n\t"
-          ".set pop \n\t"
-          : [sph] "=&f"(sumPixels.h), [spl] "=&f"(sumPixels.l)
-          : [pix] "r"(pixel), [s44] "f"(s44));
-||||||| merged common ancestors
-      asm volatile (
-        ".set push \n\t"
-        ".set arch=loongson3a \n\t"
-        "mtc1 %[pix], %[spl] \n\t"
-        "punpcklwd %[spl], %[spl], %[spl] \n\t"
-        "mov.d %[sph], %[spl] \n\t"
-        "pshufh %[sph], %[spl], %[s44] \n\t"
-        "pshufh %[spl], %[spl], %[s44] \n\t"
-        ".set pop \n\t"
-        :[sph]"=&f"(sumPixels.h), [spl]"=&f"(sumPixels.l)
-        :[pix]"r"(pixel), [s44]"f"(s44)
-      );
-=======
       asm volatile(
           ".set push \n\t"
           ".set arch=loongson3a \n\t"
@@ -455,7 +229,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
           ".set pop \n\t"
           : [ sph ] "=&f"(sumPixels.h), [ spl ] "=&f"(sumPixels.l)
           : [ pix ] "r"(pixel), [ s44 ] "f"(s44));
->>>>>>> upstream-releases
       sumPixels = AccumulatePixelSums(sumPixels);
       asm volatile (
         ".set push \n\t"
@@ -475,45 +248,13 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
       );
     }
     for (int x = aLeftInflation; x < (aSize.width + aLeftInflation); x += 4) {
-      uint32_t pixels = *(uint32_t *)(sourceRow + (x - aLeftInflation));
+      uint32_t pixels = *(uint32_t*)(sourceRow + (x - aLeftInflation));
       __m128i sumPixels, t;
 
       // It's important to shuffle here. When we exit this loop currentRowSum
       // has to be set to sumPixels, so that the following loop can get the
       // correct pixel for the currentRowSum. The highest order pixel in
       // currentRowSum could've originated from accumulation in the stride.
-<<<<<<< HEAD
-      asm volatile(
-          ".set push \n\t"
-          ".set arch=loongson3a \n\t"
-          "pshufh %[crl], %[crh], %[see] \n\t"
-          "pshufh %[crh], %[crh], %[see] \n\t"
-          "mtc1 %[pix], %[spl] \n\t"
-          "punpcklwd %[spl], %[spl], %[spl] \n\t"
-          "mov.d %[sph], %[spl] \n\t" _mm_punpcklbh(sp, sp, zero)
-              _mm_punpcklhw(sp, sp, zero) ".set pop \n\t"
-          : [sph] "=&f"(sumPixels.h), [spl] "=&f"(sumPixels.l),
-            [crh] "+f"(currentRowSum.h), [crl] "+f"(currentRowSum.l)
-          : [pix] "r"(pixels), [see] "f"(see), [zeroh] "f"(zero.h),
-            [zerol] "f"(zero.l));
-||||||| merged common ancestors
-      asm volatile (
-        ".set push \n\t"
-        ".set arch=loongson3a \n\t"
-        "pshufh %[crl], %[crh], %[see] \n\t"
-        "pshufh %[crh], %[crh], %[see] \n\t"
-        "mtc1 %[pix], %[spl] \n\t"
-        "punpcklwd %[spl], %[spl], %[spl] \n\t"
-        "mov.d %[sph], %[spl] \n\t"
-        _mm_punpcklbh(sp, sp, zero)
-        _mm_punpcklhw(sp, sp, zero)
-        ".set pop \n\t"
-        :[sph]"=&f"(sumPixels.h), [spl]"=&f"(sumPixels.l),
-         [crh]"+f"(currentRowSum.h), [crl]"+f"(currentRowSum.l)
-        :[pix]"r"(pixels), [see]"f"(see),
-         [zeroh]"f"(zero.h), [zerol]"f"(zero.l)
-      );
-=======
       asm volatile(
           ".set push \n\t"
           ".set arch=loongson3a \n\t"
@@ -527,7 +268,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
             [ crh ] "+f"(currentRowSum.h), [ crl ] "+f"(currentRowSum.l)
           : [ pix ] "r"(pixels), [ see ] "f"(see), [ zeroh ] "f"(zero.h),
             [ zerol ] "f"(zero.l));
->>>>>>> upstream-releases
       sumPixels = AccumulatePixelSums(sumPixels);
       asm volatile (
         ".set push \n\t"
@@ -552,41 +292,12 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
     if ((aSize.width & 3)) {
       // Deal with unaligned portion. Get the correct pixel from currentRowSum,
       // see explanation above.
-<<<<<<< HEAD
-      uint32_t intCurrentRowSum =
-          ((uint32_t *)&currentRowSum)[(aSize.width % 4) - 1];
-||||||| merged common ancestors
-      uint32_t intCurrentRowSum = ((uint32_t*)&currentRowSum)[(aSize.width % 4) - 1];
-=======
       uint32_t intCurrentRowSum =
           ((uint32_t*)&currentRowSum)[(aSize.width % 4) - 1];
->>>>>>> upstream-releases
       for (; x < integralImageSize.width; x++) {
         // We could be unaligned here!
         if (!(x & 3)) {
           // aligned!
-<<<<<<< HEAD
-          asm volatile(
-              ".set push \n\t"
-              ".set arch=loongson3a \n\t"
-              "mtc1 %[cr], %[crl] \n\t"
-              "punpcklwd %[crl], %[crl], %[crl] \n\t"
-              "mov.d %[crh], %[crl] \n\t"
-              ".set pop \n\t"
-              : [crh] "=f"(currentRowSum.h), [crl] "=f"(currentRowSum.l)
-              : [cr] "r"(intCurrentRowSum));
-||||||| merged common ancestors
-          asm volatile (
-            ".set push \n\t"
-            ".set arch=loongson3a \n\t"
-            "mtc1 %[cr], %[crl] \n\t"
-            "punpcklwd %[crl], %[crl], %[crl] \n\t"
-            "mov.d %[crh], %[crl] \n\t"
-            ".set pop \n\t"
-            :[crh]"=f"(currentRowSum.h), [crl]"=f"(currentRowSum.l)
-            :[cr]"r"(intCurrentRowSum)
-          );
-=======
           asm volatile(
               ".set push \n\t"
               ".set arch=loongson3a \n\t"
@@ -596,33 +307,12 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
               ".set pop \n\t"
               : [ crh ] "=f"(currentRowSum.h), [ crl ] "=f"(currentRowSum.l)
               : [ cr ] "r"(intCurrentRowSum));
->>>>>>> upstream-releases
           break;
         }
         intCurrentRowSum += pixel;
         intRow[x] = intPrevRow[x] + intCurrentRowSum;
       }
     } else {
-<<<<<<< HEAD
-      asm volatile(
-          ".set push \n\t"
-          ".set arch=loongson3a \n\t"
-          "pshufh %[crl], %[crh], %[see] \n\t"
-          "pshufh %[crh], %[crh], %[see] \n\t"
-          ".set pop \n\t"
-          : [crh] "+f"(currentRowSum.h), [crl] "+f"(currentRowSum.l)
-          : [see] "f"(see));
-||||||| merged common ancestors
-      asm volatile (
-        ".set push \n\t"
-        ".set arch=loongson3a \n\t"
-        "pshufh %[crl], %[crh], %[see] \n\t"
-        "pshufh %[crh], %[crh], %[see] \n\t"
-        ".set pop \n\t"
-        :[crh]"+f"(currentRowSum.h), [crl]"+f"(currentRowSum.l)
-        :[see]"f"(see)
-      );
-=======
       asm volatile(
           ".set push \n\t"
           ".set arch=loongson3a \n\t"
@@ -631,32 +321,9 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
           ".set pop \n\t"
           : [ crh ] "+f"(currentRowSum.h), [ crl ] "+f"(currentRowSum.l)
           : [ see ] "f"(see));
->>>>>>> upstream-releases
     }
     for (; x < integralImageSize.width; x += 4) {
       __m128i sumPixels, t;
-<<<<<<< HEAD
-      asm volatile(
-          ".set push \n\t"
-          ".set arch=loongson3a \n\t"
-          "mtc1 %[pix], %[spl] \n\t"
-          "punpcklwd %[spl], %[spl], %[spl] \n\t"
-          "mov.d %[sph], %[spl] \n\t"
-          ".set pop \n\t"
-          : [sph] "=f"(sumPixels.h), [spl] "=f"(sumPixels.l)
-          : [pix] "r"(pixel));
-||||||| merged common ancestors
-      asm volatile (
-        ".set push \n\t"
-        ".set arch=loongson3a \n\t"
-        "mtc1 %[pix], %[spl] \n\t"
-        "punpcklwd %[spl], %[spl], %[spl] \n\t"
-        "mov.d %[sph], %[spl] \n\t"
-        ".set pop \n\t"
-        :[sph]"=f"(sumPixels.h), [spl]"=f"(sumPixels.l)
-        :[pix]"r"(pixel)
-      );
-=======
       asm volatile(
           ".set push \n\t"
           ".set arch=loongson3a \n\t"
@@ -666,7 +333,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
           ".set pop \n\t"
           : [ sph ] "=f"(sumPixels.h), [ spl ] "=f"(sumPixels.l)
           : [ pix ] "r"(pixel));
->>>>>>> upstream-releases
       sumPixels = AccumulatePixelSums(sumPixels);
       asm volatile (
         ".set push \n\t"
@@ -691,29 +357,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
     // Store the last valid row of our source image in the last row of
     // our integral image. This will be overwritten with the correct values
     // in the upcoming loop.
-<<<<<<< HEAD
-    LoadIntegralRowFromRow(
-        aIntegralImage + (integralImageSize.height - 1) * stride32bit,
-        aSource + (aSize.height - 1) * aSourceStride, aSize.width,
-        aLeftInflation, aRightInflation);
-
-    for (int y = aSize.height + aTopInflation; y < integralImageSize.height;
-         y++) {
-      __m128i *intRow = (__m128i *)(aIntegralImage + (y * stride32bit));
-      __m128i *intPrevRow = (__m128i *)(aIntegralImage + (y - 1) * stride32bit);
-      __m128i *intLastRow =
-          (__m128i *)(aIntegralImage +
-                      (integralImageSize.height - 1) * stride32bit);
-||||||| merged common ancestors
-    LoadIntegralRowFromRow(aIntegralImage + (integralImageSize.height - 1) * stride32bit,
-                           aSource + (aSize.height - 1) * aSourceStride, aSize.width, aLeftInflation, aRightInflation);
-
-
-    for (int y = aSize.height + aTopInflation; y < integralImageSize.height; y++) {
-      __m128i *intRow = (__m128i*)(aIntegralImage + (y * stride32bit));
-      __m128i *intPrevRow = (__m128i*)(aIntegralImage + (y - 1) * stride32bit);
-      __m128i *intLastRow = (__m128i*)(aIntegralImage + (integralImageSize.height - 1) * stride32bit);
-=======
     LoadIntegralRowFromRow(
         aIntegralImage + (integralImageSize.height - 1) * stride32bit,
         aSource + (aSize.height - 1) * aSourceStride, aSize.width,
@@ -726,7 +369,6 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
       __m128i* intLastRow =
           (__m128i*)(aIntegralImage +
                      (integralImageSize.height - 1) * stride32bit);
->>>>>>> upstream-releases
 
       for (int x = 0; x < integralImageSize.width; x += 4) {
         __m128i t1, t2;
@@ -753,27 +395,10 @@ void GenerateIntegralImage_LS3(int32_t aLeftInflation, int32_t aRightInflation,
 /**
  * Attempt to do an in-place box blur using an integral image.
  */
-<<<<<<< HEAD
-void AlphaBoxBlur::BoxBlur_LS3(uint8_t *aData, int32_t aLeftLobe,
-                               int32_t aRightLobe, int32_t aTopLobe,
-                               int32_t aBottomLobe, uint32_t *aIntegralImage,
-                               size_t aIntegralImageStride) const {
-||||||| merged common ancestors
-void
-AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData,
-                           int32_t aLeftLobe,
-                           int32_t aRightLobe,
-                           int32_t aTopLobe,
-                           int32_t aBottomLobe,
-                           uint32_t *aIntegralImage,
-                           size_t aIntegralImageStride) const
-{
-=======
 void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
                                int32_t aRightLobe, int32_t aTopLobe,
                                int32_t aBottomLobe, uint32_t* aIntegralImage,
                                size_t aIntegralImageStride) const {
->>>>>>> upstream-releases
   IntSize size = GetSize();
 
   MOZ_ASSERT(size.height > 0);
@@ -801,39 +426,6 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
                             mStride, size);
 
   __m128i divisor, zero;
-<<<<<<< HEAD
-  asm volatile(
-      ".set push \n\t"
-      ".set arch=loongson3a \n\t"
-      "mtc1 %[rec], %[divl] \n\t"
-      "punpcklwd %[divl], %[divl], %[divl] \n\t"
-      "mov.d %[divh], %[divl] \n\t" _mm_xor(zero, zero, zero) ".set pop \n\t"
-      : [divh] "=f"(divisor.h), [divl] "=f"(divisor.l), [zeroh] "=f"(zero.h),
-        [zerol] "=f"(zero.l)
-      : [rec] "r"(reciprocal));
-
-  // This points to the start of the rectangle within the IntegralImage that
-  // overlaps the surface being blurred.
-  uint32_t *innerIntegral =
-      aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
-||||||| merged common ancestors
-  asm volatile (
-    ".set push \n\t"
-    ".set arch=loongson3a \n\t"
-    "mtc1 %[rec], %[divl] \n\t"
-    "punpcklwd %[divl], %[divl], %[divl] \n\t"
-    "mov.d %[divh], %[divl] \n\t"
-    _mm_xor(zero, zero, zero)
-    ".set pop \n\t"
-    :[divh]"=f"(divisor.h), [divl]"=f"(divisor.l),
-     [zeroh]"=f"(zero.h), [zerol]"=f"(zero.l)
-    :[rec]"r"(reciprocal)
-  );
-
-  // This points to the start of the rectangle within the IntegralImage that overlaps
-  // the surface being blurred.
-  uint32_t *innerIntegral = aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
-=======
   asm volatile(
       ".set push \n\t"
       ".set arch=loongson3a \n\t"
@@ -848,7 +440,6 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
   // overlaps the surface being blurred.
   uint32_t* innerIntegral =
       aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
->>>>>>> upstream-releases
 
   IntRect skipRect = mSkipRect;
   int32_t stride = mStride;
@@ -856,23 +447,6 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
   for (int32_t y = 0; y < size.height; y++) {
     bool inSkipRectY = y > skipRect.y && y < skipRect.YMost();
 
-<<<<<<< HEAD
-    uint32_t *topLeftBase =
-        innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-    uint32_t *topRightBase =
-        innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomRightBase =
-        innerIntegral +
-        ((y + aBottomLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomLeftBase =
-        innerIntegral +
-        ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-||||||| merged common ancestors
-    uint32_t *topLeftBase = innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-    uint32_t *topRightBase = innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomRightBase = innerIntegral + ((y + aBottomLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomLeftBase = innerIntegral + ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-=======
     uint32_t* topLeftBase =
         innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
     uint32_t* topRightBase =
@@ -883,7 +457,6 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
     uint32_t* bottomLeftBase =
         innerIntegral +
         ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
->>>>>>> upstream-releases
 
     int32_t x = 0;
     // Process 16 pixels at a time for as long as possible.
@@ -901,59 +474,6 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
       __m128i bottomRight;
       __m128i bottomLeft;
 
-<<<<<<< HEAD
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x));
-      __m128i result1 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x + 4));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x + 4));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x + 4));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x + 4));
-      __m128i result2 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x + 8));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x + 8));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x + 8));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x + 8));
-      __m128i result3 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x + 12));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x + 12));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x + 12));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x + 12));
-      __m128i result4 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-||||||| merged common ancestors
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x));
-      __m128i result1 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x + 4));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x + 4));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x + 4));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 4));
-      __m128i result2 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x + 8));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x + 8));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x + 8));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 8));
-      __m128i result3 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x + 12));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x + 12));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x + 12));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 12));
-      __m128i result4 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-=======
       topLeft = loadUnaligned128((__m128i*)(topLeftBase + x));
       topRight = loadUnaligned128((__m128i*)(topRightBase + x));
       bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x));
@@ -981,7 +501,6 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
       bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 12));
       __m128i result4 =
           BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
->>>>>>> upstream-releases
 
       double t;
       __m128i final;
@@ -1016,10 +535,10 @@ void AlphaBoxBlur::BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe,
         inSkipRectY = false;
         continue;
       }
-      __m128i topLeft = loadUnaligned128((__m128i *)(topLeftBase + x));
-      __m128i topRight = loadUnaligned128((__m128i *)(topRightBase + x));
-      __m128i bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x));
-      __m128i bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x));
+      __m128i topLeft = loadUnaligned128((__m128i*)(topLeftBase + x));
+      __m128i topRight = loadUnaligned128((__m128i*)(topRightBase + x));
+      __m128i bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x));
+      __m128i bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x));
 
       __m128i result =
           BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);

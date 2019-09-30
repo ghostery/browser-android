@@ -197,15 +197,9 @@ class imgRequest final : public nsIStreamListener,
 
   bool HasConsumers() const;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   bool ImageAvailable() const;
 
  private:
->>>>>>> upstream-releases
   friend class FinishPreparingForNewPartRunnable;
 
   virtual ~imgRequest();

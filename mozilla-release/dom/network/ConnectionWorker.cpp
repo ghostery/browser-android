@@ -139,18 +139,9 @@ class NotifyRunnable : public WorkerRunnable {
 
 }  // anonymous namespace
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ConnectionWorker> ConnectionWorker::Create(
-    WorkerPrivate* aWorkerPrivate, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ConnectionWorker>
-ConnectionWorker::Create(WorkerPrivate* aWorkerPrivate, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ConnectionWorker> ConnectionWorker::Create(
     WorkerPrivate* aWorkerPrivate, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<ConnectionWorker> c = new ConnectionWorker();
   c->mProxy = ConnectionProxy::Create(aWorkerPrivate, c);
   if (!c->mProxy) {

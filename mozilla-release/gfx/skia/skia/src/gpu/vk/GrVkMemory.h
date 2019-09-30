@@ -10,13 +10,6 @@
 
 #include "GrVkBuffer.h"
 #include "SkTArray.h"
-<<<<<<< HEAD
-#include "vk/GrVkDefines.h"
-||||||| merged common ancestors
-#include "SkTLList.h"
-#include "vk/GrVkDefines.h"
-=======
->>>>>>> upstream-releases
 #include "vk/GrVkTypes.h"
 
 class GrVkGpu;

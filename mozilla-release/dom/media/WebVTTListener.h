@@ -42,11 +42,6 @@ class WebVTTListener final : public nsIWebVTTListener,
    */
   nsresult LoadResource();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   /**
    * When this listener is not going to be used anymore, its owner should take
    * a responsibility to call `Cancel()` to prevent this listener making any
@@ -56,7 +51,6 @@ private:
   void Cancel();
 
  private:
->>>>>>> upstream-releases
   ~WebVTTListener();
 
   // List of error codes returned from the WebVTT parser that we care about.

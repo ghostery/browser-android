@@ -233,14 +233,6 @@ def bootstrap(topsrcdir, mozilla_dir=None):
 
         For now,  we will use this to handle build system telemetry.
         """
-<<<<<<< HEAD
-        # Don't write telemetry data if this mach command was invoked as part of another
-        # mach command.
-        if depth != 1 or os.environ.get('MACH_MAIN_PID') != str(os.getpid()):
-||||||| merged common ancestors
-        # Don't do anything when...
-        if should_skip_dispatch(context, handler):
-=======
         # Don't write telemetry data if this mach command was invoked as part of another
         # mach command.
         if depth != 1 or os.environ.get('MACH_MAIN_PID') != str(os.getpid()):
@@ -248,58 +240,12 @@ def bootstrap(topsrcdir, mozilla_dir=None):
 
         # Don't write telemetry data for 'mach' when 'DISABLE_TELEMETRY' is set.
         if os.environ.get('DISABLE_TELEMETRY') == '1':
->>>>>>> upstream-releases
             return
 
         # We have not opted-in to telemetry
         if not context.settings.build.telemetry:
             return
 
-<<<<<<< HEAD
-        from mozbuild.telemetry import gather_telemetry
-        from mozbuild.base import MozbuildObject
-        import mozpack.path as mozpath
-
-        if not isinstance(instance, MozbuildObject):
-            instance = MozbuildObject.from_environment()
-
-        try:
-            substs = instance.substs
-        except Exception:
-            substs = {}
-
-        # We gather telemetry for every operation.
-        paths = {
-            instance.topsrcdir: '$topsrcdir/',
-            instance.topobjdir: '$topobjdir/',
-            mozpath.normpath(os.path.expanduser('~')): '$HOME/',
-        }
-        # This might override one of the existing entries, that's OK.
-        # We don't use a sigil here because we treat all arguments as potentially relative
-        # paths, so we'd like to get them back as they were specified.
-        paths[mozpath.normpath(os.getcwd())] = ''
-        data = gather_telemetry(command=handler.name, success=(result == 0),
-                                start_time=start_time, end_time=end_time,
-                                mach_context=context, substs=substs,
-                                paths=paths)
-        if data:
-            telemetry_dir = os.path.join(get_state_dir()[0], 'telemetry')
-            try:
-                os.mkdir(telemetry_dir)
-            except OSError as e:
-                if e.errno != errno.EEXIST:
-                    raise
-            outgoing_dir = os.path.join(telemetry_dir, 'outgoing')
-            try:
-                os.mkdir(outgoing_dir)
-            except OSError as e:
-                if e.errno != errno.EEXIST:
-                    raise
-||||||| merged common ancestors
-        # Every n-th operation
-        if random.randint(1, TELEMETRY_SUBMISSION_FREQUENCY) != 1:
-            return
-=======
         from mozbuild.telemetry import gather_telemetry
         from mozbuild.base import MozbuildObject
         import mozpack.path as mozpath
@@ -345,28 +291,13 @@ def bootstrap(topsrcdir, mozilla_dir=None):
             with open(os.path.join(outgoing_dir, str(uuid.uuid4()) + '.json'),
                       'w') as f:
                 json.dump(data, f, sort_keys=True)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-            with open(os.path.join(outgoing_dir, str(uuid.uuid4()) + '.json'),
-                      'w') as f:
-                json.dump(data, f, sort_keys=True)
-
-        if should_skip_telemetry_submission(handler):
-            return True
-
-        state_dir, _ = get_state_dir()
-
-        machpath = os.path.join(instance.topsrcdir, 'mach')
-||||||| merged common ancestors
-=======
         if should_skip_telemetry_submission(handler):
             return True
 
         state_dir = get_state_dir()
 
         machpath = os.path.join(instance.topsrcdir, 'mach')
->>>>>>> upstream-releases
         with open(os.devnull, 'wb') as devnull:
             subprocess.Popen([sys.executable, machpath, 'python',
                               '--no-virtualenv',

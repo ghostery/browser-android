@@ -304,44 +304,9 @@ impl_threadsafe_refcount!(
     bindings::Gecko_ReleaseURLExtraDataArbitraryThread
 );
 impl_threadsafe_refcount!(
-<<<<<<< HEAD
-    structs::nsCSSValueSharedList,
-    bindings::Gecko_AddRefCSSValueSharedListArbitraryThread,
-    bindings::Gecko_ReleaseCSSValueSharedListArbitraryThread
-);
-impl_threadsafe_refcount!(
-    structs::mozilla::css::URLValue,
-    bindings::Gecko_AddRefCSSURLValueArbitraryThread,
-    bindings::Gecko_ReleaseCSSURLValueArbitraryThread
-);
-impl_threadsafe_refcount!(
-    structs::mozilla::css::GridTemplateAreasValue,
-    bindings::Gecko_AddRefGridTemplateAreasValueArbitraryThread,
-    bindings::Gecko_ReleaseGridTemplateAreasValueArbitraryThread
-||||||| merged common ancestors
-    structs::nsStyleQuoteValues,
-    bindings::Gecko_AddRefQuoteValuesArbitraryThread,
-    bindings::Gecko_ReleaseQuoteValuesArbitraryThread
-);
-impl_threadsafe_refcount!(
-    structs::nsCSSValueSharedList,
-    bindings::Gecko_AddRefCSSValueSharedListArbitraryThread,
-    bindings::Gecko_ReleaseCSSValueSharedListArbitraryThread
-);
-impl_threadsafe_refcount!(
-    structs::mozilla::css::URLValue,
-    bindings::Gecko_AddRefCSSURLValueArbitraryThread,
-    bindings::Gecko_ReleaseCSSURLValueArbitraryThread
-);
-impl_threadsafe_refcount!(
-    structs::mozilla::css::GridTemplateAreasValue,
-    bindings::Gecko_AddRefGridTemplateAreasValueArbitraryThread,
-    bindings::Gecko_ReleaseGridTemplateAreasValueArbitraryThread
-=======
     structs::nsIURI,
     bindings::Gecko_AddRefnsIURIArbitraryThread,
     bindings::Gecko_ReleasensIURIArbitraryThread
->>>>>>> upstream-releases
 );
 impl_threadsafe_refcount!(
     structs::SharedFontList,

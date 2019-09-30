@@ -15,33 +15,6 @@ namespace mozilla {
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-nsSMILInstanceTime::nsSMILInstanceTime(const nsSMILTimeValue& aTime,
-                                       nsSMILInstanceTimeSource aSource,
-                                       nsSMILTimeValueSpec* aCreator,
-                                       nsSMILInterval* aBaseInterval)
-    : mTime(aTime),
-      mFlags(0),
-      mVisited(false),
-      mFixedEndpointRefCnt(0),
-      mSerial(0),
-      mCreator(aCreator),
-      mBaseInterval(nullptr)  // This will get set to aBaseInterval in a call to
-                              // SetBaseInterval() at end of constructor
-||||||| merged common ancestors
-nsSMILInstanceTime::nsSMILInstanceTime(const nsSMILTimeValue& aTime,
-                                       nsSMILInstanceTimeSource aSource,
-                                       nsSMILTimeValueSpec* aCreator,
-                                       nsSMILInterval* aBaseInterval)
-  : mTime(aTime),
-    mFlags(0),
-    mVisited(false),
-    mFixedEndpointRefCnt(0),
-    mSerial(0),
-    mCreator(aCreator),
-    mBaseInterval(nullptr) // This will get set to aBaseInterval in a call to
-                          // SetBaseInterval() at end of constructor
-=======
 SMILInstanceTime::SMILInstanceTime(const SMILTimeValue& aTime,
                                    SMILInstanceTimeSource aSource,
                                    SMILTimeValueSpec* aCreator,
@@ -54,7 +27,6 @@ SMILInstanceTime::SMILInstanceTime(const SMILTimeValue& aTime,
       mCreator(aCreator),
       mBaseInterval(nullptr)  // This will get set to aBaseInterval in a call to
                               // SetBaseInterval() at end of constructor
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
 {
   switch (aSource) {
     case SOURCE_NONE:
@@ -77,14 +49,7 @@ SMILInstanceTime::SMILInstanceTime(const SMILTimeValue& aTime,
   SetBaseInterval(aBaseInterval);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-nsSMILInstanceTime::~nsSMILInstanceTime() {
-||||||| merged common ancestors
-nsSMILInstanceTime::~nsSMILInstanceTime()
-{
-=======
 SMILInstanceTime::~SMILInstanceTime() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   MOZ_ASSERT(!mBaseInterval,
              "Destroying instance time without first calling Unlink()");
   MOZ_ASSERT(mFixedEndpointRefCnt == 0,
@@ -92,18 +57,8 @@ SMILInstanceTime::~SMILInstanceTime() {
              "endpoint of an interval");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::Unlink() {
-  RefPtr<nsSMILInstanceTime> deathGrip(this);
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::Unlink()
-{
-  RefPtr<nsSMILInstanceTime> deathGrip(this);
-=======
 void SMILInstanceTime::Unlink() {
   RefPtr<SMILInstanceTime> deathGrip(this);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   if (mBaseInterval) {
     mBaseInterval->RemoveDependentTime(*this);
     mBaseInterval = nullptr;
@@ -111,22 +66,9 @@ void SMILInstanceTime::Unlink() {
   mCreator = nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::HandleChangedInterval(
-    const nsSMILTimeContainer* aSrcContainer, bool aBeginObjectChanged,
-    bool aEndObjectChanged) {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::HandleChangedInterval(
-    const nsSMILTimeContainer* aSrcContainer,
-    bool aBeginObjectChanged,
-    bool aEndObjectChanged)
-{
-=======
 void SMILInstanceTime::HandleChangedInterval(
     const SMILTimeContainer* aSrcContainer, bool aBeginObjectChanged,
     bool aEndObjectChanged) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   // It's possible a sequence of notifications might cause our base interval to
   // be updated and then deleted. Furthermore, the delete might happen whilst
   // we're still in the queue to be notified of the change. In any case, if we
@@ -152,15 +94,7 @@ void SMILInstanceTime::HandleChangedInterval(
                                       objectChanged);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::HandleDeletedInterval() {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::HandleDeletedInterval()
-{
-=======
 void SMILInstanceTime::HandleDeletedInterval() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   MOZ_ASSERT(mBaseInterval,
              "Got call to HandleDeletedInterval on an independent instance "
              "time");
@@ -174,15 +108,7 @@ void SMILInstanceTime::HandleDeletedInterval() {
   mCreator = nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::HandleFilteredInterval() {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::HandleFilteredInterval()
-{
-=======
 void SMILInstanceTime::HandleFilteredInterval() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   MOZ_ASSERT(mBaseInterval,
              "Got call to HandleFilteredInterval on an independent instance "
              "time");
@@ -192,54 +118,22 @@ void SMILInstanceTime::HandleFilteredInterval() {
   mCreator = nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-bool nsSMILInstanceTime::ShouldPreserve() const {
-||||||| merged common ancestors
-bool
-nsSMILInstanceTime::ShouldPreserve() const
-{
-=======
 bool SMILInstanceTime::ShouldPreserve() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   return mFixedEndpointRefCnt > 0 || (mFlags & kWasDynamicEndpoint);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::UnmarkShouldPreserve() {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::UnmarkShouldPreserve()
-{
-=======
 void SMILInstanceTime::UnmarkShouldPreserve() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   mFlags &= ~kWasDynamicEndpoint;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::AddRefFixedEndpoint() {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::AddRefFixedEndpoint()
-{
-=======
 void SMILInstanceTime::AddRefFixedEndpoint() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   MOZ_ASSERT(mFixedEndpointRefCnt < UINT16_MAX,
              "Fixed endpoint reference count upper limit reached");
   ++mFixedEndpointRefCnt;
   mFlags &= ~kMayUpdate;  // Once fixed, always fixed
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::ReleaseFixedEndpoint() {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::ReleaseFixedEndpoint()
-{
-=======
 void SMILInstanceTime::ReleaseFixedEndpoint() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   MOZ_ASSERT(mFixedEndpointRefCnt > 0, "Duplicate release");
   --mFixedEndpointRefCnt;
   if (mFixedEndpointRefCnt == 0 && IsDynamic()) {
@@ -247,31 +141,11 @@ void SMILInstanceTime::ReleaseFixedEndpoint() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-bool nsSMILInstanceTime::IsDependentOn(const nsSMILInstanceTime& aOther) const {
-  if (mVisited) return false;
-||||||| merged common ancestors
-bool
-nsSMILInstanceTime::IsDependentOn(const nsSMILInstanceTime& aOther) const
-{
-  if (mVisited)
-    return false;
-=======
 bool SMILInstanceTime::IsDependentOn(const SMILInstanceTime& aOther) const {
   if (mVisited) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-  const nsSMILInstanceTime* myBaseTime = GetBaseTime();
-  if (!myBaseTime) return false;
-||||||| merged common ancestors
-  const nsSMILInstanceTime* myBaseTime = GetBaseTime();
-  if (!myBaseTime)
-    return false;
-=======
   const SMILInstanceTime* myBaseTime = GetBaseTime();
   if (!myBaseTime) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
 
   if (myBaseTime == &aOther) return true;
 
@@ -280,15 +154,7 @@ bool SMILInstanceTime::IsDependentOn(const SMILInstanceTime& aOther) const {
   return myBaseTime->IsDependentOn(aOther);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-const nsSMILInstanceTime* nsSMILInstanceTime::GetBaseTime() const {
-||||||| merged common ancestors
-const nsSMILInstanceTime*
-nsSMILInstanceTime::GetBaseTime() const
-{
-=======
 const SMILInstanceTime* SMILInstanceTime::GetBaseTime() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   if (!mBaseInterval) {
     return nullptr;
   }
@@ -302,15 +168,7 @@ const SMILInstanceTime* SMILInstanceTime::GetBaseTime() const {
                                     : mBaseInterval->End();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-void nsSMILInstanceTime::SetBaseInterval(nsSMILInterval* aBaseInterval) {
-||||||| merged common ancestors
-void
-nsSMILInstanceTime::SetBaseInterval(nsSMILInterval* aBaseInterval)
-{
-=======
 void SMILInstanceTime::SetBaseInterval(SMILInterval* aBaseInterval) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
   MOZ_ASSERT(!mBaseInterval,
              "Attempting to reassociate an instance time with a different "
              "interval.");
@@ -318,17 +176,8 @@ void SMILInstanceTime::SetBaseInterval(SMILInterval* aBaseInterval) {
   if (aBaseInterval) {
     MOZ_ASSERT(mCreator,
                "Attempting to create a dependent instance time without "
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILInstanceTime.cpp
-               "reference to the creating nsSMILTimeValueSpec object.");
-    if (!mCreator) return;
-||||||| merged common ancestors
-               "reference to the creating nsSMILTimeValueSpec object.");
-    if (!mCreator)
-      return;
-=======
                "reference to the creating SMILTimeValueSpec object.");
     if (!mCreator) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILInstanceTime.cpp
 
     aBaseInterval->AddDependentTime(*this);
   }

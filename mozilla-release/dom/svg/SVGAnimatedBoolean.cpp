@@ -148,16 +148,6 @@ void SVGAnimatedBoolean::SMILBool::ClearAnimValue() {
   }
 }
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedBoolean::WrapObject(JSContext* aCx,
-                                         JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedBoolean_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedBoolean::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedBoolean_Binding::Wrap(aCx, this, aGivenProto);
-=======
 nsresult SVGAnimatedBoolean::SMILBool::SetAnimValue(const SMILValue& aValue) {
   NS_ASSERTION(aValue.mType == SMILBoolType::Singleton(),
                "Unexpected type to assign animated value");
@@ -165,12 +155,6 @@ nsresult SVGAnimatedBoolean::SMILBool::SetAnimValue(const SMILValue& aValue) {
     mVal->SetAnimValue(uint16_t(aValue.mU.mBool), mSVGElement);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 
 }  // namespace mozilla
->>>>>>> upstream-releases

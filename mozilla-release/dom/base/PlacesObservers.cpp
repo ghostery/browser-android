@@ -90,22 +90,6 @@ uint32_t GetFlagsForEvents(
 }
 
 template <class TWrapped, class TUnwrapped>
-<<<<<<< HEAD
-void CallListeners(
-    uint32_t aEventFlags, FlaggedArray<TWrapped>& aListeners,
-    const Sequence<OwningNonNull<PlacesEvent>>& aEvents,
-    const std::function<TUnwrapped(TWrapped&)>& aUnwrapListener,
-    const std::function<void(TUnwrapped&,
-                             const Sequence<OwningNonNull<PlacesEvent>>&)>&
-        aCallListener) {
-||||||| merged common ancestors
-void CallListeners(uint32_t aEventFlags,
-                   FlaggedArray<TWrapped>& aListeners,
-                   const Sequence<OwningNonNull<PlacesEvent>>& aEvents,
-                   const std::function<TUnwrapped(TWrapped&)>& aUnwrapListener,
-                   const std::function<void(TUnwrapped&, const Sequence<OwningNonNull<PlacesEvent>>&)>& aCallListener)
-{
-=======
 MOZ_CAN_RUN_SCRIPT void CallListeners(
     uint32_t aEventFlags, FlaggedArray<TWrapped>& aListeners,
     const Sequence<OwningNonNull<PlacesEvent>>& aEvents,
@@ -113,7 +97,6 @@ MOZ_CAN_RUN_SCRIPT void CallListeners(
     const std::function<void(TUnwrapped&,
                              const Sequence<OwningNonNull<PlacesEvent>>&)>&
         aCallListener) {
->>>>>>> upstream-releases
   for (uint32_t i = 0; i < aListeners.Length(); i++) {
     Flagged<TWrapped>& l = aListeners[i];
     TUnwrapped unwrapped = aUnwrapListener(l.value);
@@ -299,16 +282,6 @@ void PlacesObservers::NotifyListeners(
   uint32_t flags = GetFlagsForEvents(aEvents);
 
   CallListeners<RefPtr<PlacesEventCallback>, RefPtr<PlacesEventCallback>>(
-<<<<<<< HEAD
-      flags, *JSListeners::GetListeners(), aEvents, [](auto& cb) { return cb; },
-      [&](auto& cb, const auto& events) { cb->Call(aEvents); });
-||||||| merged common ancestors
-    flags, *JSListeners::GetListeners(), aEvents,
-    [](auto& cb) { return cb; },
-    [&](auto& cb, const auto& events) {
-      cb->Call(aEvents);
-    });
-=======
       flags, *JSListeners::GetListeners(), aEvents, [](auto& cb) { return cb; },
       // MOZ_CAN_RUN_SCRIPT_BOUNDARY because on Windows this gets called from
       // some internals of the std::function implementation that we can't
@@ -316,7 +289,6 @@ void PlacesObservers::NotifyListeners(
       // it holds a strong ref to the callback.
       [&](auto& cb, const auto& events)
           MOZ_CAN_RUN_SCRIPT_BOUNDARY { cb->Call(aEvents); });
->>>>>>> upstream-releases
 
   CallListeners<WeakPtr<places::INativePlacesEventCallback>,
                 RefPtr<places::INativePlacesEventCallback>>(
@@ -328,17 +300,6 @@ void PlacesObservers::NotifyListeners(
 
   CallListeners<WeakPtr<PlacesWeakCallbackWrapper>,
                 RefPtr<PlacesWeakCallbackWrapper>>(
-<<<<<<< HEAD
-      flags, *WeakJSListeners::GetListeners(), aEvents,
-      [](auto& cb) { return cb.get(); },
-      [&](auto& cb, const auto& events) { cb->mCallback->Call(aEvents); });
-||||||| merged common ancestors
-    flags, *WeakJSListeners::GetListeners(), aEvents,
-    [](auto& cb) { return cb.get(); },
-    [&](auto& cb, const auto& events) {
-      cb->mCallback->Call(aEvents);
-    });
-=======
       flags, *WeakJSListeners::GetListeners(), aEvents,
       [](auto& cb) { return cb.get(); },
       // MOZ_CAN_RUN_SCRIPT_BOUNDARY because on Windows this gets called from
@@ -349,7 +310,6 @@ void PlacesObservers::NotifyListeners(
         RefPtr<PlacesEventCallback> callback(cb->mCallback);
         callback->Call(aEvents);
       });
->>>>>>> upstream-releases
 
   auto& listenersToRemove = *JSListeners::GetListenersToRemove();
   if (listenersToRemove.Length() > 0) {

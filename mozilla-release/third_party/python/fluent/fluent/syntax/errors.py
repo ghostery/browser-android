@@ -60,19 +60,9 @@ def get_error_message(code, args):
     if code == 'E0025':
         return 'Unknown escape sequence: \\{}.'.format(args[0])
     if code == 'E0026':
-<<<<<<< HEAD
-        return 'Invalid Unicode escape sequence: {}'.format(args[0])
-    if code == 'E0027':
-        return 'Unbalanced closing brace in TextElement.'
-    if code == 'E0028':
-        return 'Expected an inline expression'
-||||||| merged common ancestors
-        return 'Invalid Unicode escape sequence: {}'.format(args[0])
-=======
         return 'Invalid Unicode escape sequence: {}.'.format(args[0])
     if code == 'E0027':
         return 'Unbalanced closing brace in TextElement.'
     if code == 'E0028':
         return 'Expected an inline expression'
->>>>>>> upstream-releases
     return code

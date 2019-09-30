@@ -7,19 +7,12 @@
 
 var EXPORTED_SYMBOLS = ["PopupBlockingChild"];
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/ActorChild.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/ActorChild.jsm");
-=======
 const { ActorChild } = ChromeUtils.import(
   "resource://gre/modules/ActorChild.jsm"
 );
 const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
->>>>>>> upstream-releases
 
 class PopupBlockingChild extends ActorChild {
   constructor(dispatcher) {
@@ -164,16 +157,9 @@ class PopupBlockingChild extends ActorChild {
     });
   }
 }
-<<<<<<< HEAD
-
-XPCOMUtils.defineLazyPreferenceGetter(PopupBlockingChild, "maxReportedPopups",
-  "privacy.popups.maxReported");
-||||||| merged common ancestors
-=======
 
 XPCOMUtils.defineLazyPreferenceGetter(
   PopupBlockingChild,
   "maxReportedPopups",
   "privacy.popups.maxReported"
 );
->>>>>>> upstream-releases

@@ -15,41 +15,6 @@
 namespace mozilla {
 namespace ipc {
 
-<<<<<<< HEAD
-void SerializeURI(nsIURI* aURI, URIParams& aParams);
-
-void SerializeURI(nsIURI* aURI, OptionalURIParams& aParams);
-
-already_AddRefed<nsIURI> DeserializeURI(const URIParams& aParams);
-
-already_AddRefed<nsIURI> DeserializeURI(const OptionalURIParams& aParams);
-
-template <>
-struct IPDLParamTraits<nsIURI> {
-  static void Write(IPC::Message* aMsg, IProtocol* aActor, nsIURI* aParam) {
-    OptionalURIParams params;
-||||||| merged common ancestors
-void
-SerializeURI(nsIURI* aURI,
-             URIParams& aParams);
-
-void
-SerializeURI(nsIURI* aURI,
-             OptionalURIParams& aParams);
-
-already_AddRefed<nsIURI>
-DeserializeURI(const URIParams& aParams);
-
-already_AddRefed<nsIURI>
-DeserializeURI(const OptionalURIParams& aParams);
-
-template<>
-struct IPDLParamTraits<nsIURI>
-{
-  static void Write(IPC::Message* aMsg, IProtocol* aActor, nsIURI* aParam)
-  {
-    OptionalURIParams params;
-=======
 void SerializeURI(nsIURI* aURI, URIParams& aParams);
 
 void SerializeURI(nsIURI* aURI, Maybe<URIParams>& aParams);
@@ -62,23 +27,13 @@ template <>
 struct IPDLParamTraits<nsIURI*> {
   static void Write(IPC::Message* aMsg, IProtocol* aActor, nsIURI* aParam) {
     Maybe<URIParams> params;
->>>>>>> upstream-releases
     SerializeURI(aParam, params);
     WriteIPDLParam(aMsg, aActor, params);
   }
 
   static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
-<<<<<<< HEAD
-                   IProtocol* aActor, RefPtr<nsIURI>* aResult) {
-    OptionalURIParams params;
-||||||| merged common ancestors
-                   IProtocol* aActor, RefPtr<nsIURI>* aResult)
-  {
-    OptionalURIParams params;
-=======
                    IProtocol* aActor, RefPtr<nsIURI>* aResult) {
     Maybe<URIParams> params;
->>>>>>> upstream-releases
     if (!ReadIPDLParam(aMsg, aIter, aActor, &params)) {
       return false;
     }

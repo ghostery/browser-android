@@ -83,29 +83,11 @@ class DOMQuad;
 class DOMRectReadOnly;
 class Element;
 class EventHandlerNonNull;
-<<<<<<< HEAD
-class L10nCallback;
 template <typename T>
 class Optional;
-||||||| merged common ancestors
-class L10nCallback;
-template<typename T> class Optional;
-=======
-template <typename T>
-class Optional;
->>>>>>> upstream-releases
 class OwningNodeOrString;
-<<<<<<< HEAD
-class Promise;
 template <typename>
 class Sequence;
-||||||| merged common ancestors
-class Promise;
-template<typename> class Sequence;
-=======
-template <typename>
-class Sequence;
->>>>>>> upstream-releases
 class SVGUseElement;
 class Text;
 class TextOrElementOrDocument;
@@ -196,43 +178,14 @@ enum {
   NODE_HAS_DIRECTION_RTL = NODE_FLAG_BIT(16),
 
   // Set if the node has left-to-right directionality
-<<<<<<< HEAD
   NODE_HAS_DIRECTION_LTR = NODE_FLAG_BIT(17),
 
   NODE_ALL_DIRECTION_FLAGS = NODE_HAS_DIRECTION_LTR | NODE_HAS_DIRECTION_RTL,
-||||||| merged common ancestors
-  NODE_HAS_DIRECTION_LTR =                NODE_FLAG_BIT(17),
 
-  NODE_ALL_DIRECTION_FLAGS =              NODE_HAS_DIRECTION_LTR |
-                                          NODE_HAS_DIRECTION_RTL,
-=======
-  NODE_HAS_DIRECTION_LTR = NODE_FLAG_BIT(17),
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  NODE_CHROME_ONLY_ACCESS = NODE_FLAG_BIT(18),
-||||||| merged common ancestors
-  NODE_CHROME_ONLY_ACCESS =               NODE_FLAG_BIT(18),
-=======
-  NODE_ALL_DIRECTION_FLAGS = NODE_HAS_DIRECTION_LTR | NODE_HAS_DIRECTION_RTL,
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  NODE_IS_ROOT_OF_CHROME_ONLY_ACCESS = NODE_FLAG_BIT(19),
-||||||| merged common ancestors
-  NODE_IS_ROOT_OF_CHROME_ONLY_ACCESS =    NODE_FLAG_BIT(19),
-=======
   NODE_HAS_BEEN_IN_UA_WIDGET = NODE_FLAG_BIT(18),
->>>>>>> upstream-releases
 
   // Remaining bits are node type specific.
-<<<<<<< HEAD
-  NODE_TYPE_SPECIFIC_BITS_OFFSET = 20
-||||||| merged common ancestors
-  NODE_TYPE_SPECIFIC_BITS_OFFSET =        20
-=======
   NODE_TYPE_SPECIFIC_BITS_OFFSET = 19
->>>>>>> upstream-releases
 };
 
 // Make sure we have space for our bits
@@ -500,18 +453,9 @@ class nsINode : public mozilla::dom::EventTarget {
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) = 0;
 
-<<<<<<< HEAD
- public:
-  mozilla::dom::ParentObject GetParentObject()
-      const;  // Implemented in nsIDocument.h
-||||||| merged common ancestors
-public:
-  mozilla::dom::ParentObject GetParentObject() const; // Implemented in nsIDocument.h
-=======
  public:
   mozilla::dom::ParentObject GetParentObject()
       const;  // Implemented in Document.h
->>>>>>> upstream-releases
 
   /**
    * Return the scope chain parent for this node, for use in things
@@ -636,16 +580,7 @@ public:
    *
    * For all other cases OwnerDoc and GetOwnerDocument behave identically.
    */
-<<<<<<< HEAD
-  nsIDocument* OwnerDoc() const { return mNodeInfo->GetDocument(); }
-||||||| merged common ancestors
-  nsIDocument* OwnerDoc() const
-  {
-    return mNodeInfo->GetDocument();
-  }
-=======
   Document* OwnerDoc() const { return mNodeInfo->GetDocument(); }
->>>>>>> upstream-releases
 
   /**
    * Return the "owner document" of this node as an nsINode*.  Implemented
@@ -667,14 +602,7 @@ public:
    * @return the current document
    */
 
-<<<<<<< HEAD
-  nsIDocument* GetUncomposedDoc() const {
-||||||| merged common ancestors
-  nsIDocument* GetUncomposedDoc() const
-  {
-=======
   Document* GetUncomposedDoc() const {
->>>>>>> upstream-releases
     return IsInUncomposedDoc() ? OwnerDoc() : nullptr;
   }
 
@@ -691,14 +619,7 @@ public:
    * Shadow DOM, if there is a possibly shadow boundary crossing path from
    * the node to its owner document.
    */
-<<<<<<< HEAD
-  nsIDocument* GetComposedDoc() const {
-||||||| merged common ancestors
-  nsIDocument* GetComposedDoc() const
-  {
-=======
   Document* GetComposedDoc() const {
->>>>>>> upstream-releases
     return IsInComposedDoc() ? OwnerDoc() : nullptr;
   }
 
@@ -1015,16 +936,6 @@ public:
    */
   nsINode* GetRootNode(const mozilla::dom::GetRootNodeOptions& aOptions);
 
-<<<<<<< HEAD
-  virtual mozilla::EventListenerManager* GetExistingListenerManager()
-      const override;
-  virtual mozilla::EventListenerManager* GetOrCreateListenerManager() override;
-||||||| merged common ancestors
-  virtual mozilla::EventListenerManager*
-    GetExistingListenerManager() const override;
-  virtual mozilla::EventListenerManager*
-    GetOrCreateListenerManager() override;
-=======
   virtual mozilla::EventListenerManager* GetExistingListenerManager()
       const override;
   virtual mozilla::EventListenerManager* GetOrCreateListenerManager() override;
@@ -1034,7 +945,6 @@ public:
     return mozilla::Some(
         mozilla::dom::EventCallbackDebuggerNotificationType::Node);
   }
->>>>>>> upstream-releases
 
   bool ComputeDefaultWantsUntrusted(mozilla::ErrorResult& aRv) final;
 
@@ -1167,27 +1077,6 @@ public:
   nsSlots* DebugGetSlots() { return Slots(); }
 #endif
 
-<<<<<<< HEAD
-  void SetFlags(FlagsType aFlagsToSet) {
-    NS_ASSERTION(
-        !(aFlagsToSet &
-          (NODE_IS_ANONYMOUS_ROOT | NODE_IS_NATIVE_ANONYMOUS_ROOT |
-           NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE | NODE_DESCENDANTS_NEED_FRAMES |
-           NODE_NEEDS_FRAME | NODE_CHROME_ONLY_ACCESS)) ||
-            IsContent(),
-        "Flag only permitted on nsIContent nodes");
-||||||| merged common ancestors
-  void SetFlags(FlagsType aFlagsToSet)
-  {
-    NS_ASSERTION(!(aFlagsToSet & (NODE_IS_ANONYMOUS_ROOT |
-                                  NODE_IS_NATIVE_ANONYMOUS_ROOT |
-                                  NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE |
-                                  NODE_DESCENDANTS_NEED_FRAMES |
-                                  NODE_NEEDS_FRAME |
-                                  NODE_CHROME_ONLY_ACCESS)) ||
-                 IsContent(),
-                 "Flag only permitted on nsIContent nodes");
-=======
   void SetFlags(FlagsType aFlagsToSet) {
     NS_ASSERTION(
         !(aFlagsToSet &
@@ -1196,31 +1085,14 @@ public:
            NODE_NEEDS_FRAME | NODE_HAS_BEEN_IN_UA_WIDGET)) ||
             IsContent(),
         "Flag only permitted on nsIContent nodes");
->>>>>>> upstream-releases
     nsWrapperCache::SetFlags(aFlagsToSet);
   }
 
-<<<<<<< HEAD
-  void UnsetFlags(FlagsType aFlagsToUnset) {
-    NS_ASSERTION(!(aFlagsToUnset & (NODE_IS_ANONYMOUS_ROOT |
-                                    NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE |
-                                    NODE_IS_NATIVE_ANONYMOUS_ROOT)),
-                 "Trying to unset write-only flags");
-||||||| merged common ancestors
-  void UnsetFlags(FlagsType aFlagsToUnset)
-  {
-    NS_ASSERTION(!(aFlagsToUnset &
-                   (NODE_IS_ANONYMOUS_ROOT |
-                    NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE |
-                    NODE_IS_NATIVE_ANONYMOUS_ROOT)),
-                 "Trying to unset write-only flags");
-=======
   void UnsetFlags(FlagsType aFlagsToUnset) {
     NS_ASSERTION(
         !(aFlagsToUnset & (NODE_IS_ANONYMOUS_ROOT | NODE_HAS_BEEN_IN_UA_WIDGET |
                            NODE_IS_NATIVE_ANONYMOUS_ROOT)),
         "Trying to unset write-only flags");
->>>>>>> upstream-releases
     nsWrapperCache::UnsetFlags(aFlagsToUnset);
   }
 
@@ -1265,50 +1137,12 @@ public:
   // Whether this node has ever been part of a UA widget shadow tree.
   bool HasBeenInUAWidget() const { return HasFlag(NODE_HAS_BEEN_IN_UA_WIDGET); }
 
-<<<<<<< HEAD
-  // True for native anonymous content and for XBL content if the binding
-  // has chromeOnlyContent="true".
-  bool ChromeOnlyAccess() const {
-    return HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE |
-                   NODE_CHROME_ONLY_ACCESS);
-  }
-
-  bool IsInShadowTree() const { return HasFlag(NODE_IS_IN_SHADOW_TREE); }
-
-  /**
-   * Get whether this node is C++-generated anonymous content
-   * @see nsIAnonymousContentCreator
-   * @return whether this content is anonymous
-   */
-  bool IsRootOfNativeAnonymousSubtree() const {
-    NS_ASSERTION(!HasFlag(NODE_IS_NATIVE_ANONYMOUS_ROOT) ||
-                     (HasFlag(NODE_IS_ANONYMOUS_ROOT) &&
-                      HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE)),
-                 "Some flags seem to be missing!");
-    return HasFlag(NODE_IS_NATIVE_ANONYMOUS_ROOT);
-||||||| merged common ancestors
-  // True for native anonymous content and for XBL content if the binding
-  // has chromeOnlyContent="true".
-  bool ChromeOnlyAccess() const
-  {
-    return HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE | NODE_CHROME_ONLY_ACCESS);
-=======
   // True for native anonymous content and for content in UA widgets.
   bool ChromeOnlyAccess() const {
     return HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE |
                    NODE_HAS_BEEN_IN_UA_WIDGET);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  bool IsRootOfChromeAccessOnlySubtree() const {
-    return HasFlag(NODE_IS_NATIVE_ANONYMOUS_ROOT |
-                   NODE_IS_ROOT_OF_CHROME_ONLY_ACCESS);
-||||||| merged common ancestors
-  bool IsInShadowTree() const
-  {
-    return HasFlag(NODE_IS_IN_SHADOW_TREE);
-=======
   bool IsInShadowTree() const { return HasFlag(NODE_IS_IN_SHADOW_TREE); }
 
   /**
@@ -1322,7 +1156,6 @@ public:
                       HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE)),
                  "Some flags seem to be missing!");
     return HasFlag(NODE_IS_NATIVE_ANONYMOUS_ROOT);
->>>>>>> upstream-releases
   }
 
   // Whether this node is a UA Widget ShadowRoot.
@@ -1427,19 +1260,9 @@ public:
   already_AddRefed<nsINodeList> QuerySelectorAll(const nsAString& aSelector,
                                                  mozilla::ErrorResult& aResult);
 
-<<<<<<< HEAD
- protected:
-  // nsIDocument overrides this with its own (faster) version.  This
-  // should really only be called for elements and document fragments.
-||||||| merged common ancestors
-protected:
-  // nsIDocument overrides this with its own (faster) version.  This
-  // should really only be called for elements and document fragments.
-=======
  protected:
   // Document and ShadowRoot override this with its own (faster) version.
   // This should really only be called for elements and document fragments.
->>>>>>> upstream-releases
   mozilla::dom::Element* GetElementById(const nsAString& aId);
 
   void AppendChildToChildList(nsIContent* aKid);
@@ -1683,49 +1506,6 @@ protected:
   void SetMayHaveClass() { SetBoolFlag(ElementMayHaveClass); }
   bool MayHaveStyle() const { return GetBoolFlag(ElementMayHaveStyle); }
   bool HasName() const { return GetBoolFlag(ElementHasName); }
-<<<<<<< HEAD
-  bool MayHaveContentEditableAttr() const {
-    return GetBoolFlag(ElementMayHaveContentEditableAttr);
-  }
-  bool IsCommonAncestorForRangeInSelection() const {
-    return GetBoolFlag(NodeIsCommonAncestorForRangeInSelection);
-  }
-  void SetCommonAncestorForRangeInSelection() {
-    SetBoolFlag(NodeIsCommonAncestorForRangeInSelection);
-  }
-  void ClearCommonAncestorForRangeInSelection() {
-    ClearBoolFlag(NodeIsCommonAncestorForRangeInSelection);
-  }
-  bool IsDescendantOfCommonAncestorForRangeInSelection() const {
-    return GetBoolFlag(NodeIsDescendantOfCommonAncestorForRangeInSelection);
-  }
-  void SetDescendantOfCommonAncestorForRangeInSelection() {
-    SetBoolFlag(NodeIsDescendantOfCommonAncestorForRangeInSelection);
-  }
-  void ClearDescendantOfCommonAncestorForRangeInSelection() {
-    ClearBoolFlag(NodeIsDescendantOfCommonAncestorForRangeInSelection);
-  }
-
-  void SetCCMarkedRoot(bool aValue) { SetBoolFlag(NodeIsCCMarkedRoot, aValue); }
-||||||| merged common ancestors
-  bool MayHaveContentEditableAttr() const
-    { return GetBoolFlag(ElementMayHaveContentEditableAttr); }
-  bool IsCommonAncestorForRangeInSelection() const
-    { return GetBoolFlag(NodeIsCommonAncestorForRangeInSelection); }
-  void SetCommonAncestorForRangeInSelection()
-    { SetBoolFlag(NodeIsCommonAncestorForRangeInSelection); }
-  void ClearCommonAncestorForRangeInSelection()
-    { ClearBoolFlag(NodeIsCommonAncestorForRangeInSelection); }
-  bool IsDescendantOfCommonAncestorForRangeInSelection() const
-    { return GetBoolFlag(NodeIsDescendantOfCommonAncestorForRangeInSelection); }
-  void SetDescendantOfCommonAncestorForRangeInSelection()
-    { SetBoolFlag(NodeIsDescendantOfCommonAncestorForRangeInSelection); }
-  void ClearDescendantOfCommonAncestorForRangeInSelection()
-    { ClearBoolFlag(NodeIsDescendantOfCommonAncestorForRangeInSelection); }
-
-  void SetCCMarkedRoot(bool aValue)
-    { SetBoolFlag(NodeIsCCMarkedRoot, aValue); }
-=======
   bool HasPartAttribute() const { return GetBoolFlag(ElementHasPart); }
   bool MayHaveContentEditableAttr() const {
     return GetBoolFlag(ElementMayHaveContentEditableAttr);
@@ -1750,7 +1530,6 @@ protected:
   }
 
   void SetCCMarkedRoot(bool aValue) { SetBoolFlag(NodeIsCCMarkedRoot, aValue); }
->>>>>>> upstream-releases
   bool CCMarkedRoot() const { return GetBoolFlag(NodeIsCCMarkedRoot); }
   void SetInCCBlackTree(bool aValue) { SetBoolFlag(NodeIsCCBlackTree, aValue); }
   bool InCCBlackTree() const { return GetBoolFlag(NodeIsCCBlackTree); }
@@ -1835,19 +1614,10 @@ protected:
   void SetMayHaveStyle() { SetBoolFlag(ElementMayHaveStyle); }
   void SetHasName() { SetBoolFlag(ElementHasName); }
   void ClearHasName() { ClearBoolFlag(ElementHasName); }
-<<<<<<< HEAD
-  void SetMayHaveContentEditableAttr() {
-    SetBoolFlag(ElementMayHaveContentEditableAttr);
-  }
-||||||| merged common ancestors
-  void SetMayHaveContentEditableAttr()
-    { SetBoolFlag(ElementMayHaveContentEditableAttr); }
-=======
   void SetHasPartAttribute(bool aPart) { SetBoolFlag(ElementHasPart, aPart); }
   void SetMayHaveContentEditableAttr() {
     SetBoolFlag(ElementMayHaveContentEditableAttr);
   }
->>>>>>> upstream-releases
   void SetHasLockedStyleStates() { SetBoolFlag(ElementHasLockedStyleStates); }
   void ClearHasLockedStyleStates() {
     ClearBoolFlag(ElementHasLockedStyleStates);
@@ -1883,17 +1653,6 @@ protected:
 
   void GenerateXPath(nsAString& aResult);
 
-<<<<<<< HEAD
-  already_AddRefed<mozilla::dom::Promise> Localize(
-      JSContext* aCx, mozilla::dom::L10nCallback& aCallback,
-      mozilla::ErrorResult& aRv);
-
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::Promise>
-  Localize(JSContext* aCx, mozilla::dom::L10nCallback& aCallback, mozilla::ErrorResult& aRv);
-
-=======
->>>>>>> upstream-releases
   already_AddRefed<mozilla::dom::AccessibleNode> GetAccessibleNode();
 
   /**

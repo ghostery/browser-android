@@ -34,28 +34,11 @@ gfx::SurfaceFormat MacIOSurfaceTextureSourceBasic::GetFormat() const {
 }
 
 MacIOSurfaceTextureHostBasic::MacIOSurfaceTextureHostBasic(
-<<<<<<< HEAD
-    TextureFlags aFlags, const SurfaceDescriptorMacIOSurface& aDescriptor)
-    : TextureHost(aFlags) {
-  mSurface = MacIOSurface::LookupSurface(aDescriptor.surfaceId(),
-                                         aDescriptor.scaleFactor(),
-                                         !aDescriptor.isOpaque());
-||||||| merged common ancestors
-    TextureFlags aFlags,
-    const SurfaceDescriptorMacIOSurface& aDescriptor
-)
-  : TextureHost(aFlags)
-{
-  mSurface = MacIOSurface::LookupSurface(aDescriptor.surfaceId(),
-                                         aDescriptor.scaleFactor(),
-                                         !aDescriptor.isOpaque());
-=======
     TextureFlags aFlags, const SurfaceDescriptorMacIOSurface& aDescriptor)
     : TextureHost(aFlags) {
   mSurface = MacIOSurface::LookupSurface(
       aDescriptor.surfaceId(), aDescriptor.scaleFactor(),
       !aDescriptor.isOpaque(), aDescriptor.yUVColorSpace());
->>>>>>> upstream-releases
 }
 
 gfx::SourceSurface* MacIOSurfaceTextureSourceBasic::GetSurface(

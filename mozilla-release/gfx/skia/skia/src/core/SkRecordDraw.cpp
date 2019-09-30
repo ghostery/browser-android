@@ -127,13 +127,6 @@ DRAW(DrawRect, drawRect(r.rect, r.paint));
 DRAW(DrawEdgeAARect, experimental_DrawEdgeAARectV1(r.rect, r.aa, r.color, r.mode));
 DRAW(DrawRegion, drawRegion(r.region, r.paint));
 DRAW(DrawTextBlob, drawTextBlob(r.blob.get(), r.x, r.y, r.paint));
-<<<<<<< HEAD
-DRAW(DrawTextRSXform, drawTextRSXform(r.text, r.byteLength, r.xforms, r.cull, r.paint));
-||||||| merged common ancestors
-DRAW(DrawTextOnPath, drawTextOnPath(r.text, r.byteLength, r.path, &r.matrix, r.paint));
-DRAW(DrawTextRSXform, drawTextRSXform(r.text, r.byteLength, r.xforms, r.cull, r.paint));
-=======
->>>>>>> upstream-releases
 DRAW(DrawAtlas, drawAtlas(r.atlas.get(),
                           r.xforms, r.texs, r.colors, r.count, r.mode, r.cull, r.paint));
 DRAW(DrawVertices, drawVertices(r.vertices, r.bones, r.boneCount, r.bmode, r.paint));
@@ -360,19 +353,7 @@ private:
 
     Bounds bounds(const Flush&) const { return fCullRect; }
 
-<<<<<<< HEAD
-    // FIXME: this method could use better bounds
-    Bounds bounds(const DrawText&) const { return fCullRect; }
-
     Bounds bounds(const DrawPaint&) const { return fCullRect; }
-||||||| merged common ancestors
-    // FIXME: this method could use better bounds
-    Bounds bounds(const DrawText&) const { return fCurrentClipBounds; }
-
-    Bounds bounds(const DrawPaint&) const { return fCurrentClipBounds; }
-=======
-    Bounds bounds(const DrawPaint&) const { return fCullRect; }
->>>>>>> upstream-releases
     Bounds bounds(const NoOp&)  const { return Bounds::MakeEmpty(); }    // NoOps don't draw.
 
     Bounds bounds(const DrawRect& op) const { return this->adjustAndMap(op.rect, &op.paint); }
@@ -458,95 +439,6 @@ private:
         return this->adjustAndMap(dst, op.paint);
     }
 
-<<<<<<< HEAD
-    Bounds bounds(const DrawPosText& op) const {
-        const int N = op.paint.countText(op.text, op.byteLength);
-        if (N == 0) {
-            return Bounds::MakeEmpty();
-        }
-
-        SkRect dst;
-        dst.set(op.pos, N);
-        AdjustTextForFontMetrics(&dst, op.paint);
-        return this->adjustAndMap(dst, &op.paint);
-    }
-    Bounds bounds(const DrawPosTextH& op) const {
-        const int N = op.paint.countText(op.text, op.byteLength);
-        if (N == 0) {
-            return Bounds::MakeEmpty();
-        }
-
-        SkScalar left = op.xpos[0], right = op.xpos[0];
-        for (int i = 1; i < N; i++) {
-            left  = SkMinScalar(left,  op.xpos[i]);
-            right = SkMaxScalar(right, op.xpos[i]);
-        }
-        SkRect dst = { left, op.y, right, op.y };
-        AdjustTextForFontMetrics(&dst, op.paint);
-        return this->adjustAndMap(dst, &op.paint);
-    }
-
-    Bounds bounds(const DrawTextRSXform& op) const {
-        if (op.cull) {
-            return this->adjustAndMap(*op.cull, nullptr);
-        } else {
-            return fCullRect;
-        }
-    }
-
-||||||| merged common ancestors
-    Bounds bounds(const DrawPosText& op) const {
-        const int N = op.paint.countText(op.text, op.byteLength);
-        if (N == 0) {
-            return Bounds::MakeEmpty();
-        }
-
-        SkRect dst;
-        dst.set(op.pos, N);
-        AdjustTextForFontMetrics(&dst, op.paint);
-        return this->adjustAndMap(dst, &op.paint);
-    }
-    Bounds bounds(const DrawPosTextH& op) const {
-        const int N = op.paint.countText(op.text, op.byteLength);
-        if (N == 0) {
-            return Bounds::MakeEmpty();
-        }
-
-        SkScalar left = op.xpos[0], right = op.xpos[0];
-        for (int i = 1; i < N; i++) {
-            left  = SkMinScalar(left,  op.xpos[i]);
-            right = SkMaxScalar(right, op.xpos[i]);
-        }
-        SkRect dst = { left, op.y, right, op.y };
-        AdjustTextForFontMetrics(&dst, op.paint);
-        return this->adjustAndMap(dst, &op.paint);
-    }
-    Bounds bounds(const DrawTextOnPath& op) const {
-        SkRect dst = op.path.getBounds();
-
-        // Pad all sides by the maximum padding in any direction we'd normally apply.
-        SkRect pad = { 0, 0, 0, 0};
-        AdjustTextForFontMetrics(&pad, op.paint);
-
-        // That maximum padding happens to always be the right pad today.
-        SkASSERT(pad.fLeft == -pad.fRight);
-        SkASSERT(pad.fTop  == -pad.fBottom);
-        SkASSERT(pad.fRight > pad.fBottom);
-        dst.outset(pad.fRight, pad.fRight);
-
-        return this->adjustAndMap(dst, &op.paint);
-    }
-
-    Bounds bounds(const DrawTextRSXform& op) const {
-        if (op.cull) {
-            return this->adjustAndMap(*op.cull, nullptr);
-        } else {
-            return fCurrentClipBounds;
-        }
-    }
-
-=======
->>>>>>> upstream-releases
     Bounds bounds(const DrawTextBlob& op) const {
         SkRect dst = op.blob->bounds();
         dst.offset(op.x, op.y);

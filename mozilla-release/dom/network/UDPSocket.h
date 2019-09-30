@@ -128,38 +128,13 @@ class UDPSocket final : public DOMEventTargetHelper,
   nsresult InitRemote(const nsAString& aLocalAddress,
                       const uint16_t& aLocalPort);
 
-<<<<<<< HEAD
-  void HandleReceivedData(const nsACString& aRemoteAddress,
-                          const uint16_t& aRemotePort, const uint8_t* aData,
-                          const uint32_t& aDataLength);
-||||||| merged common ancestors
-  void
-  HandleReceivedData(const nsACString& aRemoteAddress,
-                     const uint16_t& aRemotePort,
-                     const uint8_t* aData,
-                     const uint32_t& aDataLength);
-=======
   void HandleReceivedData(const nsACString& aRemoteAddress,
                           const uint16_t& aRemotePort,
                           const nsTArray<uint8_t>& aData);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult DispatchReceivedData(const nsACString& aRemoteAddress,
-                                const uint16_t& aRemotePort,
-                                const uint8_t* aData,
-                                const uint32_t& aDataLength);
-||||||| merged common ancestors
-  nsresult
-  DispatchReceivedData(const nsACString& aRemoteAddress,
-                       const uint16_t& aRemotePort,
-                       const uint8_t* aData,
-                       const uint32_t& aDataLength);
-=======
   nsresult DispatchReceivedData(const nsACString& aRemoteAddress,
                                 const uint16_t& aRemotePort,
                                 const nsTArray<uint8_t>& aData);
->>>>>>> upstream-releases
 
   void CloseWithReason(nsresult aReason);
 

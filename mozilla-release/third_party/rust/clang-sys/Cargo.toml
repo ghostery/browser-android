@@ -12,13 +12,7 @@
 
 [package]
 name = "clang-sys"
-<<<<<<< HEAD
-version = "0.26.1"
-||||||| merged common ancestors
-version = "0.23.0"
-=======
 version = "0.28.0"
->>>>>>> upstream-releases
 authors = ["Kyle Mayes <kyle@mayeses.com>"]
 build = "build.rs"
 links = "clang"
@@ -49,13 +43,8 @@ clang_3_9 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9"]
 clang_4_0 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9", "gte_clang_4_0"]
 clang_5_0 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9", "gte_clang_4_0", "gte_clang_5_0"]
 clang_6_0 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9", "gte_clang_4_0", "gte_clang_5_0", "gte_clang_6_0"]
-<<<<<<< HEAD
-clang_7_0 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9", "gte_clang_4_0", "gte_clang_5_0", "gte_clang_6_0", "gte_clang_7_0"]
-||||||| merged common ancestors
-=======
 clang_7_0 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9", "gte_clang_4_0", "gte_clang_5_0", "gte_clang_6_0", "gte_clang_7_0"]
 clang_8_0 = ["gte_clang_3_6", "gte_clang_3_7", "gte_clang_3_8", "gte_clang_3_9", "gte_clang_4_0", "gte_clang_5_0", "gte_clang_6_0", "gte_clang_7_0", "gte_clang_8_0"]
->>>>>>> upstream-releases
 gte_clang_3_6 = []
 gte_clang_3_7 = []
 gte_clang_3_8 = []
@@ -63,12 +52,7 @@ gte_clang_3_9 = []
 gte_clang_4_0 = []
 gte_clang_5_0 = []
 gte_clang_6_0 = []
-<<<<<<< HEAD
-gte_clang_7_0 = []
-||||||| merged common ancestors
-=======
 gte_clang_7_0 = []
 gte_clang_8_0 = []
->>>>>>> upstream-releases
 runtime = ["libloading"]
 static = []

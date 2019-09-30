@@ -9,13 +9,8 @@
 
 #include <prthread.h>
 #include "mozilla/gfx/Types.h"
-<<<<<<< HEAD
-#include "nsWaylandDisplay.h"
-||||||| merged common ancestors
-=======
 #include "nsWaylandDisplay.h"
 #include "WaylandDMABufSurface.h"
->>>>>>> upstream-releases
 
 #define BACK_BUFFER_NUM 2
 
@@ -45,15 +40,6 @@ class WaylandShmPool {
 
 // Holds actual graphics data for wl_surface
 class WindowBackBuffer {
-<<<<<<< HEAD
- public:
-  WindowBackBuffer(nsWaylandDisplay* aDisplay, int aWidth, int aHeight);
-  ~WindowBackBuffer();
-||||||| merged common ancestors
-public:
-  WindowBackBuffer(nsWaylandDisplay* aDisplay, int aWidth, int aHeight);
-  ~WindowBackBuffer();
-=======
  public:
   virtual already_AddRefed<gfx::DrawTarget> Lock() = 0;
   virtual void Unlock() = 0;
@@ -99,7 +85,6 @@ class WindowBackBufferShm : public WindowBackBuffer {
   WindowBackBufferShm(nsWaylandDisplay* aWaylandDisplay, int aWidth,
                       int aHeight);
   ~WindowBackBufferShm();
->>>>>>> upstream-releases
 
   already_AddRefed<gfx::DrawTarget> Lock();
   bool IsLocked() { return mIsLocked; };
@@ -113,38 +98,12 @@ class WindowBackBufferShm : public WindowBackBuffer {
   bool Resize(int aWidth, int aHeight);
   bool SetImageDataFromBuffer(class WindowBackBuffer* aSourceBuffer);
 
-<<<<<<< HEAD
-  bool IsMatchingSize(int aWidth, int aHeight) {
-    return aWidth == mWidth && aHeight == mHeight;
-  }
-  bool IsMatchingSize(class WindowBackBuffer* aBuffer) {
-    return aBuffer->mWidth == mWidth && aBuffer->mHeight == mHeight;
-  }
-||||||| merged common ancestors
-  bool IsMatchingSize(int aWidth, int aHeight)
-  {
-    return aWidth == mWidth && aHeight == mHeight;
-  }
-  bool IsMatchingSize(class WindowBackBuffer *aBuffer)
-  {
-    return aBuffer->mWidth == mWidth && aBuffer->mHeight == mHeight;
-  }
-=======
   int GetWidth() { return mWidth; };
   int GetHeight() { return mHeight; };
 
   wl_buffer* GetWlBuffer() { return mWaylandBuffer; };
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  static gfx::SurfaceFormat GetSurfaceFormat() { return mFormat; }
 
  private:
-||||||| merged common ancestors
-private:
-=======
- private:
->>>>>>> upstream-releases
   void Create(int aWidth, int aHeight);
   void Release();
 
@@ -153,20 +112,6 @@ private:
 
   // wl_buffer is a wayland object that encapsulates the shared memory
   // and passes it to wayland compositor by wl_surface object.
-<<<<<<< HEAD
-  wl_buffer* mWaylandBuffer;
-  int mWidth;
-  int mHeight;
-  bool mAttached;
-  nsWaylandDisplay* mWaylandDisplay;
-  static gfx::SurfaceFormat mFormat;
-||||||| merged common ancestors
-  wl_buffer*          mWaylandBuffer;
-  int                 mWidth;
-  int                 mHeight;
-  bool                mAttached;
-  nsWaylandDisplay*   mWaylandDisplay;
-=======
   wl_buffer* mWaylandBuffer;
   int mWidth;
   int mHeight;
@@ -215,7 +160,6 @@ class WindowImageSurface {
  private:
   RefPtr<gfx::SourceSurface> mSurface;
   const LayoutDeviceIntRegion mUpdateRegion;
->>>>>>> upstream-releases
 };
 
 // WindowSurfaceWayland is an abstraction for wl_surface
@@ -225,36 +169,6 @@ class WindowSurfaceWayland : public WindowSurface {
   explicit WindowSurfaceWayland(nsWindow* aWindow);
   ~WindowSurfaceWayland();
 
-<<<<<<< HEAD
-  already_AddRefed<gfx::DrawTarget> Lock(
-      const LayoutDeviceIntRegion& aRegion) override;
-  void Commit(const LayoutDeviceIntRegion& aInvalidRegion) final;
-  void FrameCallbackHandler();
-  void DelayedCommitHandler();
-
- private:
-  WindowBackBuffer* GetWaylandBufferToDraw(int aWidth, int aHeight);
-
-  already_AddRefed<gfx::DrawTarget> LockWaylandBuffer(int aWidth, int aHeight,
-                                                      bool aClearBuffer);
-  already_AddRefed<gfx::DrawTarget> LockImageSurface(
-      const gfx::IntSize& aLockSize);
-  bool CommitImageSurfaceToWaylandBuffer(const LayoutDeviceIntRegion& aRegion);
-  void CommitWaylandBuffer();
-||||||| merged common ancestors
-  already_AddRefed<gfx::DrawTarget> Lock(const LayoutDeviceIntRegion& aRegion) override;
-  void                      Commit(const LayoutDeviceIntRegion& aInvalidRegion) final;
-  void                      FrameCallbackHandler();
-  void                      DelayedCommitHandler();
-
-private:
-  WindowBackBuffer*         GetWaylandBufferToDraw(int aWidth, int aHeight);
-
-  already_AddRefed<gfx::DrawTarget> LockWaylandBuffer(int aWidth, int aHeight);
-  already_AddRefed<gfx::DrawTarget> LockImageSurface(const gfx::IntSize& aLockSize);
-  bool                      CommitImageSurfaceToWaylandBuffer(const LayoutDeviceIntRegion& aRegion);
-  void                      CommitWaylandBuffer();
-=======
   already_AddRefed<gfx::DrawTarget> Lock(
       const LayoutDeviceIntRegion& aRegion) override;
   void Commit(const LayoutDeviceIntRegion& aInvalidRegion) final;
@@ -281,42 +195,8 @@ private:
 
   void DrawDelayedImageCommits(gfx::DrawTarget* aDrawTarget,
                                LayoutDeviceIntRegion& aWaylandBufferDamage);
->>>>>>> upstream-releases
 
   // TODO: Do we need to hold a reference to nsWindow object?
-<<<<<<< HEAD
-  nsWindow* mWindow;
-  nsWaylandDisplay* mWaylandDisplay;
-  WindowBackBuffer* mWaylandBuffer;
-  LayoutDeviceIntRegion mWaylandBufferDamage;
-  WindowBackBuffer* mBackupBuffer[BACK_BUFFER_NUM];
-  RefPtr<gfxImageSurface> mImageSurface;
-  wl_callback* mFrameCallback;
-  wl_surface* mLastCommittedSurface;
-  MessageLoop* mDisplayThreadMessageLoop;
-  WindowSurfaceWayland** mDelayedCommitHandle;
-  bool mDrawToWaylandBufferDirectly;
-  bool mPendingCommit;
-  bool mWaylandBufferFullScreenDamage;
-  bool mIsMainThread;
-  bool mNeedScaleFactorUpdate;
-||||||| merged common ancestors
-  nsWindow*                 mWindow;
-  nsWaylandDisplay*         mWaylandDisplay;
-  WindowBackBuffer*         mWaylandBuffer;
-  LayoutDeviceIntRegion     mWaylandBufferDamage;
-  WindowBackBuffer*         mBackupBuffer[BACK_BUFFER_NUM];
-  RefPtr<gfxImageSurface>   mImageSurface;
-  wl_callback*              mFrameCallback;
-  wl_surface*               mLastCommittedSurface;
-  MessageLoop*              mDisplayThreadMessageLoop;
-  WindowSurfaceWayland**    mDelayedCommitHandle;
-  bool                      mDrawToWaylandBufferDirectly;
-  bool                      mPendingCommit;
-  bool                      mWaylandBufferFullScreenDamage;
-  bool                      mIsMainThread;
-  bool                      mNeedScaleFactorUpdate;
-=======
   nsWindow* mWindow;
   LayoutDeviceIntRect mLastScreenRect;
   nsWaylandDisplay* mWaylandDisplay;
@@ -338,7 +218,6 @@ private:
   static bool UseDMABufBackend();
   static bool mUseDMABufInitialized;
   static bool mUseDMABuf;
->>>>>>> upstream-releases
 };
 
 }  // namespace widget

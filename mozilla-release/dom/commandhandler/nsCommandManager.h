@@ -15,31 +15,12 @@
 #include "nsCycleCollectionParticipant.h"
 
 class nsIController;
-<<<<<<< HEAD
-template <class E>
-class nsCOMArray;
-
-class nsCommandManager : public nsICommandManager,
-                         public nsPICommandUpdater,
-                         public nsSupportsWeakReference {
- public:
-||||||| merged common ancestors
-template<class E> class nsCOMArray;
-
-class nsCommandManager
-  : public nsICommandManager
-  , public nsPICommandUpdater
-  , public nsSupportsWeakReference
-{
-public:
-=======
 template <class E>
 class nsCOMArray;
 
 class nsCommandManager final : public nsICommandManager,
                                public nsSupportsWeakReference {
  public:
->>>>>>> upstream-releases
   typedef nsTArray<nsCOMPtr<nsIObserver> > ObserverList;
 
   nsCommandManager() = delete;
@@ -54,11 +35,6 @@ class nsCommandManager final : public nsICommandManager,
 
   NS_DECL_NSICOMMANDMANAGER
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Notify the command manager that the status of a command changed. It may
    * have changed from enabled to disabled, or vice versa, or become toggled
@@ -70,7 +46,6 @@ protected:
                         mozIDOMWindowProxy* aTargetWindow);
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsCommandManager();
 
   nsresult GetControllerForCommand(const char* aCommand,
@@ -83,11 +58,6 @@ protected:
   mozIDOMWindowProxy* mWindow;  // weak ptr. The window should always outlive us
 };
 
-<<<<<<< HEAD
-#endif  // nsCommandManager_h__
-||||||| merged common ancestors
-#endif // nsCommandManager_h__
-=======
 nsCommandManager* nsICommandManager::AsCommandManager() {
   return static_cast<nsCommandManager*>(this);
 }
@@ -97,4 +67,3 @@ const nsCommandManager* nsICommandManager::AsCommandManager() const {
 }
 
 #endif  // nsCommandManager_h__
->>>>>>> upstream-releases

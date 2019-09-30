@@ -8,14 +8,8 @@ package org.mozilla.geckoview;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-<<<<<<< HEAD
-import java.util.Collections;
-import java.util.Map;
-||||||| merged common ancestors
-=======
 import java.util.ArrayList;
 import java.util.Locale;
->>>>>>> upstream-releases
 
 import android.app.Service;
 import android.graphics.Rect;
@@ -28,12 +22,7 @@ import android.support.annotation.AnyThread;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-<<<<<<< HEAD
-import android.support.v4.util.ArrayMap;
-||||||| merged common ancestors
-=======
 import android.text.TextUtils;
->>>>>>> upstream-releases
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -137,13 +126,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
          * @return This Builder instance.
          */
         public @NonNull Builder webFontsEnabled(final boolean flag) {
-<<<<<<< HEAD
-            mSettings.mWebFonts.set(flag ? 1 : 0);
-||||||| merged common ancestors
-            mSettings.mWebFonts.set(flag);
-=======
             getSettings().mWebFonts.set(flag ? 1 : 0);
->>>>>>> upstream-releases
             return this;
         }
 
@@ -159,26 +142,6 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
             getSettings().mDebugPause = enabled;
             return this;
         }
-<<<<<<< HEAD
-        /**
-         * Set whether the to report the full bit depth of the device.
-         *
-         * By default, 24 bits are reported for high memory devices and 16 bits
-         * for low memory devices. If set to true, the device's maximum bit depth is
-         * reported. On most modern devices this will be 32 bit screen depth.
-         *
-         * @param enable A flag determining whether maximum screen depth should be used.
-         * @return This Builder.
-         */
-        public @NonNull Builder useMaxScreenDepth(boolean enable) {
-            mSettings.mUseMaxScreenDepth = enable;
-            return this;
-        }
-
-||||||| merged common ancestors
-
-=======
->>>>>>> upstream-releases
         /**
          * Set whether the to report the full bit depth of the device.
          *
@@ -228,19 +191,9 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
          *
          * <p>The default factor is 1.0.
          *
-<<<<<<< HEAD
-         * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-         * with error category {@link WebRequestError#ERROR_CATEGORY_SAFEBROWSING}
-         * is called.
-||||||| merged common ancestors
-         * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-         * with error category {@link GeckoSession.NavigationDelegate#ERROR_CATEGORY_SAFEBROWSING}
-         * is called.
-=======
          * <p>This setting cannot be modified if
          * {@link Builder#automaticFontSizeAdjustment automatic font size adjustment}
          * has already been enabled.
->>>>>>> upstream-releases
          *
          * @param fontSizeFactor The factor to be used for scaling all text. Setting a value of 0
          *                       disables both this feature and
@@ -262,18 +215,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
          * inflation logic will attempt to increase font sizes for the main text content of the page
          * only.
          *
-<<<<<<< HEAD
-         * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-         * with error category {@link WebRequestError#ERROR_CATEGORY_SAFEBROWSING}
-         * is called.
-||||||| merged common ancestors
-         * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-         * with error category {@link GeckoSession.NavigationDelegate#ERROR_CATEGORY_SAFEBROWSING}
-         * is called.
-=======
          * <p>The magnitude of font inflation applied depends on the
          * {@link Builder#fontSizeFactor font size factor} currently in use.
->>>>>>> upstream-releases
          *
          * <p>This setting cannot be modified if
          * {@link Builder#automaticFontSizeAdjustment automatic font size adjustment}
@@ -366,16 +309,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
          * @param requestedLocales List of locale codes in Gecko format ("en" or "en-US").
          * @return The builder instance.
          */
-<<<<<<< HEAD
-        public @NonNull Builder locales(String[] requestedLocales) {
-            mSettings.mRequestedLocales = requestedLocales;
-||||||| merged common ancestors
-        public @NonNull Builder locale(String languageTag) {
-            mSettings.mLocale = languageTag;
-=======
         public @NonNull Builder locales(final @Nullable String[] requestedLocales) {
             getSettings().mRequestedLocales = requestedLocales;
->>>>>>> upstream-releases
             return this;
         }
 
@@ -408,19 +343,6 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
             return this;
         }
 
-<<<<<<< HEAD
-        public void set(T newValue) {
-            mValue = newValue;
-            mIsSet = true;
-
-            // There is a flush() in GeckoRuntimeSettings, so be explicit.
-            this.flush();
-||||||| merged common ancestors
-        public void set(T newValue) {
-            mValue = newValue;
-            mIsSet = true;
-            flush();
-=======
         /**
          * Set whether auto-zoom to editable fields should be enabled.
          *
@@ -430,7 +352,6 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
         public @NonNull Builder inputAutoZoomEnabled(final boolean flag) {
             getSettings().mInputAutoZoom.set(flag);
             return this;
->>>>>>> upstream-releases
         }
 
         /**
@@ -444,33 +365,6 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
             return this;
         }
 
-<<<<<<< HEAD
-        private void flush() {
-            final GeckoRuntime runtime = GeckoRuntimeSettings.this.runtime;
-            if (runtime != null) {
-                final GeckoBundle prefs = new GeckoBundle(1);
-                intoBundle(prefs);
-                runtime.setDefaultPrefs(prefs);
-            }
-        }
-
-        public void intoBundle(final GeckoBundle bundle) {
-            final T value = mIsSet ? mValue : defaultValue;
-            if (value instanceof String) {
-                bundle.putString(name, (String)value);
-            } else if (value instanceof Integer) {
-                bundle.putInt(name, (Integer)value);
-            } else if (value instanceof Boolean) {
-                bundle.putBoolean(name, (Boolean)value);
-            } else {
-                throw new UnsupportedOperationException("Unhandled pref type for " + name);
-            }
-||||||| merged common ancestors
-        public void flush() {
-            if (GeckoRuntimeSettings.this.runtime != null) {
-                GeckoRuntimeSettings.this.runtime.setPref(name, mValue, mIsSet);
-            }
-=======
         /**
          * Sets the WebGL MSAA level.
          *
@@ -480,7 +374,6 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
         public @NonNull Builder glMsaaLevel(final int level) {
             getSettings().mGlMsaaLevel.set(level);
             return this;
->>>>>>> upstream-releases
         }
     }
 
@@ -500,41 +393,9 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
         "javascript.enabled", true);
     /* package */ final Pref<Boolean> mRemoteDebugging = new Pref<Boolean>(
         "devtools.debugger.remote-enabled", false);
-<<<<<<< HEAD
-    /* package */ Pref<Integer> mWebFonts = new Pref<Integer>(
-        "browser.display.use_document_fonts", 1);
-    /* package */ Pref<Integer> mCookieBehavior = new Pref<Integer>(
-        "network.cookie.cookieBehavior", COOKIE_ACCEPT_ALL);
-    /* package */ Pref<Integer> mCookieLifetime = new Pref<Integer>(
-        "network.cookie.lifetimePolicy", COOKIE_LIFETIME_NORMAL);
-    /* package */ Pref<String> mTrackingProtection = new Pref<String>(
-        "urlclassifier.trackingTable",
-        TrackingProtection.buildPrefValue(
-            TrackingProtectionDelegate.CATEGORY_TEST |
-            TrackingProtectionDelegate.CATEGORY_ANALYTIC |
-            TrackingProtectionDelegate.CATEGORY_SOCIAL |
-            TrackingProtectionDelegate.CATEGORY_AD));
-    /* package */ Pref<Boolean> mConsoleOutput = new Pref<Boolean>(
-||||||| merged common ancestors
-    /* package */ Pref<Boolean> mWebFonts = new Pref<Boolean>(
-        "browser.display.use_document_fonts", true);
-    /* package */ Pref<Integer> mCookieBehavior = new Pref<Integer>(
-        "network.cookie.cookieBehavior", COOKIE_ACCEPT_ALL);
-    /* package */ Pref<Integer> mCookieLifetime = new Pref<Integer>(
-        "network.cookie.lifetimePolicy", COOKIE_LIFETIME_NORMAL);
-    /* package */ Pref<String> mTrackingProtection = new Pref<String>(
-        "urlclassifier.trackingTable",
-        TrackingProtection.buildPrefValue(
-            TrackingProtectionDelegate.CATEGORY_TEST |
-            TrackingProtectionDelegate.CATEGORY_ANALYTIC |
-            TrackingProtectionDelegate.CATEGORY_SOCIAL |
-            TrackingProtectionDelegate.CATEGORY_AD));
-    /* package */ Pref<Boolean> mConsoleOutput = new Pref<Boolean>(
-=======
     /* package */ final Pref<Integer> mWebFonts = new Pref<Integer>(
         "browser.display.use_document_fonts", 1);
     /* package */ final Pref<Boolean> mConsoleOutput = new Pref<Boolean>(
->>>>>>> upstream-releases
         "geckoview.console.enabled", false);
     /* package */ final Pref<Integer> mAutoplayDefault = new Pref<Integer>(
         "media.autoplay.default", AUTOPLAY_DEFAULT_BLOCKED);
@@ -608,54 +469,13 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
         mScreenWidthOverride = settings.mScreenWidthOverride;
         mScreenHeightOverride = settings.mScreenHeightOverride;
         mCrashHandler = settings.mCrashHandler;
-<<<<<<< HEAD
-        mRequestedLocales = settings.mRequestedLocales;
-    }
-
-    /* package */ Map<String, Object> getPrefsMap() {
-        final ArrayMap<String, Object> prefs = new ArrayMap<>(mPrefs.length);
-        for (final Pref<?> pref : mPrefs) {
-            prefs.put(pref.name, pref.get());
-        }
-
-        return Collections.unmodifiableMap(prefs);
-||||||| merged common ancestors
-        mLocale = settings.mLocale;
-=======
         mRequestedLocales = settings.mRequestedLocales;
         mConfigFilePath = settings.mConfigFilePath;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    /* package */ void flush() {
-        flushLocales();
-
-        // Prefs are flushed individually when they are set, and
-        // initial values are handled by GeckoRuntime itself.
-        // We may have user prefs due to previous versions of
-        // this class operating differently, though, so we'll
-        // send a message to clear any user prefs that may have
-        // been set on the prefs we manage.
-        final String[] names = new String[mPrefs.length];
-        for (int i = 0; i < mPrefs.length; i++) {
-            names[i] = mPrefs[i].name;
-        }
-
-        final GeckoBundle data = new GeckoBundle(1);
-        data.putStringArray("names", names);
-        EventDispatcher.getInstance().dispatch("GeckoView:ResetUserPrefs", data);
-||||||| merged common ancestors
-    /* package */ void flush() {
-        flushLocale();
-        for (final Pref<?> pref: mPrefs) {
-            pref.flush();
-        }
-=======
     /* package */ void commit() {
         commitLocales();
         commitResetPrefs();
->>>>>>> upstream-releases
     }
 
     /**
@@ -753,13 +573,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      * @return This GeckoRuntimeSettings instance.
      */
     public @NonNull GeckoRuntimeSettings setWebFontsEnabled(final boolean flag) {
-<<<<<<< HEAD
-        mWebFonts.set(flag ? 1 : 0);
-||||||| merged common ancestors
-        mWebFonts.set(flag);
-=======
         mWebFonts.commit(flag ? 1 : 0);
->>>>>>> upstream-releases
         return this;
     }
 
@@ -780,13 +594,6 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
     public boolean getUseMaxScreenDepth() {
         return mUseMaxScreenDepth;
     }
-
-    /**
-     * Gets whether the compositor should use the maximum screen depth when rendering.
-     *
-     * @return True if the maximum screen depth should be used.
-     */
-    public boolean getUseMaxScreenDepth() { return mUseMaxScreenDepth; }
 
     /**
      * Gets the display density override value.
@@ -834,16 +641,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      *
      * @return A list of locale codes in Gecko format ("en" or "en-US").
      */
-<<<<<<< HEAD
-    public String[] getLocales() {
-        return mRequestedLocales;
-||||||| merged common ancestors
-    public String getLocale() {
-        return mLocale;
-=======
     public @Nullable String[] getLocales() {
         return mRequestedLocales;
->>>>>>> upstream-releases
     }
 
     /**
@@ -851,40 +650,15 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      *
      * @param requestedLocales An ordered list of locales in Gecko format ("en-US").
      */
-<<<<<<< HEAD
-    public void setLocales(String[] requestedLocales) {
-        mRequestedLocales = requestedLocales;
-        flushLocales();
-||||||| merged common ancestors
-    public void setLocale(String languageTag) {
-        mLocale = languageTag;
-        flushLocale();
-=======
     public void setLocales(final @Nullable String[] requestedLocales) {
         mRequestedLocales = requestedLocales;
         commitLocales();
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    private void flushLocales() {
-        if (mRequestedLocales == null) {
-            return;
-        }
-||||||| merged common ancestors
-    private void flushLocale() {
-=======
     private void commitLocales() {
->>>>>>> upstream-releases
         final GeckoBundle data = new GeckoBundle(1);
-<<<<<<< HEAD
-        data.putStringArray("requestedLocales", mRequestedLocales);
-||||||| merged common ancestors
-        data.putString("languageTag", mLocale);
-=======
         data.putStringArray("requestedLocales", mRequestedLocales);
         data.putString("acceptLanguages", computeAcceptLanguages());
->>>>>>> upstream-releases
         EventDispatcher.getInstance().dispatch("GeckoView:SetLocale", data);
     }
 
@@ -1157,24 +931,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
     /**
      * Set whether auto-zoom to editable fields should be enabled.
      *
-<<<<<<< HEAD
-     * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-     * with error category {@link WebRequestError#ERROR_CATEGORY_SAFEBROWSING}
-     * is called.
-     *
-     * @param enabled A flag determining whether or not to block malware sites.
-     * @return The GeckoRuntimeSettings instance.
-||||||| merged common ancestors
-     * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-     * with error category {@link GeckoSession.NavigationDelegate#ERROR_CATEGORY_SAFEBROWSING}
-     * is called.
-     *
-     * @param enabled A flag determining whether or not to block malware sites.
-     * @return The GeckoRuntimeSettings instance.
-=======
      * @param flag True if auto-zoom should be enabled, false otherwise.
      * @return This GeckoRuntimeSettings instance.
->>>>>>> upstream-releases
      */
     public @NonNull GeckoRuntimeSettings setInputAutoZoomEnabled(final boolean flag) {
         mInputAutoZoom.commit(flag);
@@ -1191,21 +949,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
     }
 
     /**
-<<<<<<< HEAD
-     * Set whether or not known phishing sites should be blocked.
-     *
-     * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-     * with error category {@link WebRequestError#ERROR_CATEGORY_SAFEBROWSING}
-     * is called.
-||||||| merged common ancestors
-     * Set whether or not known phishing sites should be blocked.
-     *
-     * Note: For each blocked site, {@link GeckoSession.NavigationDelegate#onLoadError}
-     * with error category {@link GeckoSession.NavigationDelegate#ERROR_CATEGORY_SAFEBROWSING}
-     * is called.
-=======
      * Sets whether double tap zooming is enabled.
->>>>>>> upstream-releases
      *
      * @param flag true if double tap zooming should be enabled, false otherwise.
      * @return This GeckoRuntimeSettings instance.
@@ -1249,14 +993,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
         out.writeInt(mScreenWidthOverride);
         out.writeInt(mScreenHeightOverride);
         out.writeString(mCrashHandler != null ? mCrashHandler.getName() : null);
-<<<<<<< HEAD
-        out.writeStringArray(mRequestedLocales);
-||||||| merged common ancestors
-        out.writeString(mLocale);
-=======
         out.writeStringArray(mRequestedLocales);
         out.writeString(mConfigFilePath);
->>>>>>> upstream-releases
     }
 
     // AIDL code may call readFromParcel even though it's not part of Parcelable.
@@ -1285,14 +1023,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
             }
         }
 
-<<<<<<< HEAD
-        mRequestedLocales = source.createStringArray();
-||||||| merged common ancestors
-        mLocale = source.readString();
-=======
         mRequestedLocales = source.createStringArray();
         mConfigFilePath = source.readString();
->>>>>>> upstream-releases
     }
 
     public static final Parcelable.Creator<GeckoRuntimeSettings> CREATOR

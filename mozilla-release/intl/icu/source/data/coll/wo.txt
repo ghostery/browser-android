@@ -11,13 +11,7 @@ wo{
                 "&N<ñ<<<Ñ<ŋ<<<Ŋ"
                 "&O<ó<<<Ó"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

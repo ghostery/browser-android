@@ -4,44 +4,6 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 /* jshint esnext: true, moz: true */
 
-<<<<<<< HEAD
-"use strict";
-
-var EXPORTED_SYMBOLS = ["MulticastDNS"];
-
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
-
-ChromeUtils.import("resource://gre/modules/DNSPacket.jsm");
-ChromeUtils.import("resource://gre/modules/DNSRecord.jsm");
-ChromeUtils.import("resource://gre/modules/DNSResourceRecord.jsm");
-ChromeUtils.import("resource://gre/modules/DNSTypes.jsm");
-
-const NS_NETWORK_LINK_TOPIC = "network:link-status-changed";
-
-let networkInfoService  = Cc["@mozilla.org/network-info-service;1"]
-                            .createInstance(Ci.nsINetworkInfoService);
-||||||| merged common ancestors
-'use strict';
-
-var EXPORTED_SYMBOLS = ['MulticastDNS'];
-
-ChromeUtils.import('resource://gre/modules/Services.jsm');
-ChromeUtils.import('resource://gre/modules/Timer.jsm');
-ChromeUtils.import('resource://gre/modules/XPCOMUtils.jsm');
-
-ChromeUtils.import('resource://gre/modules/DNSPacket.jsm');
-ChromeUtils.import('resource://gre/modules/DNSRecord.jsm');
-ChromeUtils.import('resource://gre/modules/DNSResourceRecord.jsm');
-ChromeUtils.import('resource://gre/modules/DNSTypes.jsm');
-
-const NS_NETWORK_LINK_TOPIC = 'network:link-status-changed';
-
-let observerService     = Cc["@mozilla.org/observer-service;1"]
-                            .getService(Ci.nsIObserverService);
-let networkInfoService  = Cc['@mozilla.org/network-info-service;1']
-                            .createInstance(Ci.nsINetworkInfoService);
-=======
 "use strict";
 
 var EXPORTED_SYMBOLS = ["MulticastDNS"];
@@ -72,23 +34,12 @@ const NS_NETWORK_LINK_TOPIC = "network:link-status-changed";
 let networkInfoService = Cc[
   "@mozilla.org/network-info-service;1"
 ].createInstance(Ci.nsINetworkInfoService);
->>>>>>> upstream-releases
 
 const DEBUG = true;
 
-<<<<<<< HEAD
-const MDNS_MULTICAST_GROUP = "224.0.0.251";
-const MDNS_PORT            = 5353;
-const DEFAULT_TTL          = 120;
-||||||| merged common ancestors
-const MDNS_MULTICAST_GROUP = '224.0.0.251';
-const MDNS_PORT            = 5353;
-const DEFAULT_TTL          = 120;
-=======
 const MDNS_MULTICAST_GROUP = "224.0.0.251";
 const MDNS_PORT = 5353;
 const DEFAULT_TTL = 120;
->>>>>>> upstream-releases
 
 function debug(msg) {
   dump("MulticastDNS: " + msg + "\n");
@@ -185,11 +136,6 @@ class MulticastDNS {
 
     this._networkLinkObserver = {
       observe: (subject, topic, data) => {
-<<<<<<< HEAD
-        DEBUG && debug(NS_NETWORK_LINK_TOPIC + "(" + data + "); Clearing list of previously discovered services");
-||||||| merged common ancestors
-        DEBUG && debug(NS_NETWORK_LINK_TOPIC + '(' + data + '); Clearing list of previously discovered services');
-=======
         DEBUG &&
           debug(
             NS_NETWORK_LINK_TOPIC +
@@ -197,7 +143,6 @@ class MulticastDNS {
               data +
               "); Clearing list of previously discovered services"
           );
->>>>>>> upstream-releases
         this._discovered.clear();
       },
     };
@@ -209,19 +154,11 @@ class MulticastDNS {
     }
 
     if (!this._isNetworkLinkObserverAttached) {
-<<<<<<< HEAD
-      DEBUG && debug("Attaching observer " + NS_NETWORK_LINK_TOPIC);
-      Services.obs.addObserver(this._networkLinkObserver, NS_NETWORK_LINK_TOPIC);
-||||||| merged common ancestors
-      DEBUG && debug('Attaching observer ' + NS_NETWORK_LINK_TOPIC);
-      observerService.addObserver(this._networkLinkObserver, NS_NETWORK_LINK_TOPIC);
-=======
       DEBUG && debug("Attaching observer " + NS_NETWORK_LINK_TOPIC);
       Services.obs.addObserver(
         this._networkLinkObserver,
         NS_NETWORK_LINK_TOPIC
       );
->>>>>>> upstream-releases
       this._isNetworkLinkObserverAttached = true;
     }
   }
@@ -233,19 +170,11 @@ class MulticastDNS {
       }
 
       this._networkLinkObserverTimeout = setTimeout(() => {
-<<<<<<< HEAD
-        DEBUG && debug("Detaching observer " + NS_NETWORK_LINK_TOPIC);
-        Services.obs.removeObserver(this._networkLinkObserver, NS_NETWORK_LINK_TOPIC);
-||||||| merged common ancestors
-        DEBUG && debug('Detaching observer ' + NS_NETWORK_LINK_TOPIC);
-        observerService.removeObserver(this._networkLinkObserver, NS_NETWORK_LINK_TOPIC);
-=======
         DEBUG && debug("Detaching observer " + NS_NETWORK_LINK_TOPIC);
         Services.obs.removeObserver(
           this._networkLinkObserver,
           NS_NETWORK_LINK_TOPIC
         );
->>>>>>> upstream-releases
         this._isNetworkLinkObserverAttached = false;
         this._networkLinkObserverTimeout = null;
       }, 5000);
@@ -325,15 +254,6 @@ class MulticastDNS {
 
     // Make sure that the service addr is '0.0.0.0', or there is at least one
     // socket open on the address the service is open on.
-<<<<<<< HEAD
-    this._getSockets().then((sockets) => {
-      if (publishedService.address != "0.0.0.0" && !sockets.get(publishedService.address)) {
-        setTimeout(() => aListener.onRegistrationFailed(aServiceInfo, Cr.NS_ERROR_FAILURE));
-||||||| merged common ancestors
-    this._getSockets().then((sockets) => {
-      if (publishedService.address != '0.0.0.0' && !sockets.get(publishedService.address)) {
-        setTimeout(() => aListener.onRegistrationFailed(aServiceInfo, Cr.NS_ERROR_FAILURE));
-=======
     this._getSockets().then(sockets => {
       if (
         publishedService.address != "0.0.0.0" &&
@@ -342,7 +262,6 @@ class MulticastDNS {
         setTimeout(() =>
           aListener.onRegistrationFailed(aServiceInfo, Cr.NS_ERROR_FAILURE)
         );
->>>>>>> upstream-releases
         return;
       }
 
@@ -402,13 +321,6 @@ class MulticastDNS {
   _respondToQuery(serviceKey, message) {
     let address = message.fromAddr.address;
     let port = message.fromAddr.port;
-<<<<<<< HEAD
-    DEBUG && debug("_respondToQuery(): key=" + serviceKey + ", fromAddr="
-                        + address + ":" + port);
-||||||| merged common ancestors
-    DEBUG && debug('_respondToQuery(): key=' + serviceKey + ', fromAddr='
-                        + address + ":" + port);
-=======
     DEBUG &&
       debug(
         "_respondToQuery(): key=" +
@@ -418,7 +330,6 @@ class MulticastDNS {
           ":" +
           port
       );
->>>>>>> upstream-releases
 
     let publishedService = this._services.get(serviceKey);
     if (!publishedService) {
@@ -426,17 +337,9 @@ class MulticastDNS {
       return;
     }
 
-<<<<<<< HEAD
-    DEBUG && debug("_respondToQuery(): key=" + serviceKey + ": SENDING RESPONSE");
-    this._advertiseServiceHelper(publishedService, {address, port});
-||||||| merged common ancestors
-    DEBUG && debug('_respondToQuery(): key=' + serviceKey + ': SENDING RESPONSE');
-    this._advertiseServiceHelper(publishedService, {address,port});
-=======
     DEBUG &&
       debug("_respondToQuery(): key=" + serviceKey + ": SENDING RESPONSE");
     this._advertiseServiceHelper(publishedService, { address, port });
->>>>>>> upstream-releases
   }
 
   _advertiseService(serviceKey, firstAdv) {
@@ -469,13 +372,7 @@ class MulticastDNS {
 
   _advertiseServiceHelper(svc, target) {
     if (!target) {
-<<<<<<< HEAD
-      target = {address: MDNS_MULTICAST_GROUP, port: MDNS_PORT};
-||||||| merged common ancestors
-      target = {address:MDNS_MULTICAST_GROUP, port:MDNS_PORT};
-=======
       target = { address: MDNS_MULTICAST_GROUP, port: MDNS_PORT };
->>>>>>> upstream-releases
     }
 
     return this._getSockets().then(sockets => {
@@ -564,21 +461,6 @@ class MulticastDNS {
     packet.setFlag("QR", DNS_QUERY_RESPONSE_CODES.QUERY);
 
     // PTR Record
-<<<<<<< HEAD
-    packet.addRecord("QD", new DNSRecord({
-      name,
-      recordType: DNS_RECORD_TYPES.PTR,
-      classCode: DNS_CLASS_CODES.IN,
-      cacheFlush: true,
-    }));
-||||||| merged common ancestors
-    packet.addRecord('QD', new DNSRecord({
-      name: name,
-      recordType: DNS_RECORD_TYPES.PTR,
-      classCode: DNS_CLASS_CODES.IN,
-      cacheFlush: true
-    }));
-=======
     packet.addRecord(
       "QD",
       new DNSRecord({
@@ -588,7 +470,6 @@ class MulticastDNS {
         cacheFlush: true,
       })
     );
->>>>>>> upstream-releases
 
     let data = packet.serialize();
 
@@ -628,24 +509,12 @@ class MulticastDNS {
     this._discovered.forEach((discovery, key) => {
       if (discovery.expireTime < Date.now()) {
         this._discovered.delete(key);
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-        return;
-=======
->>>>>>> upstream-releases
       }
     });
   }
 
   _handleQueryPacket(packet, message) {
-<<<<<<< HEAD
-    packet.getRecords(["QD"]).forEach((record) => {
-||||||| merged common ancestors
-    packet.getRecords(['QD']).forEach((record) => {
-=======
     packet.getRecords(["QD"]).forEach(record => {
->>>>>>> upstream-releases
       // Don't respond if the query's class code is not IN or ANY.
       if (
         record.classCode !== DNS_CLASS_CODES.IN &&
@@ -679,29 +548,10 @@ class MulticastDNS {
     let host = service.host || _hostname;
 
     // e.g.: foo-bar-service._http._tcp.local
-<<<<<<< HEAD
-    let serviceDomainName = service.serviceName + "." + service.serviceType + ".local";
-||||||| merged common ancestors
-    let serviceDomainName = service.serviceName + '.' + service.serviceType + '.local';
-=======
     let serviceDomainName =
       service.serviceName + "." + service.serviceType + ".local";
->>>>>>> upstream-releases
 
     // PTR Record
-<<<<<<< HEAD
-    packet.addRecord("AN", new DNSResourceRecord({
-      name: service.serviceType + ".local", // e.g.: _http._tcp.local
-      recordType: DNS_RECORD_TYPES.PTR,
-      data: serviceDomainName,
-    }));
-||||||| merged common ancestors
-    packet.addRecord('AN', new DNSResourceRecord({
-      name: service.serviceType + '.local', // e.g.: _http._tcp.local
-      recordType: DNS_RECORD_TYPES.PTR,
-      data: serviceDomainName
-    }));
-=======
     packet.addRecord(
       "AN",
       new DNSResourceRecord({
@@ -710,36 +560,8 @@ class MulticastDNS {
         data: serviceDomainName,
       })
     );
->>>>>>> upstream-releases
 
     // SRV Record
-<<<<<<< HEAD
-    packet.addRecord("AR", new DNSResourceRecord({
-      name: serviceDomainName,
-      recordType: DNS_RECORD_TYPES.SRV,
-      classCode: DNS_CLASS_CODES.IN,
-      cacheFlush: true,
-      data: {
-        priority: 0,
-        weight: 0,
-        port: service.port,
-        target: host, // e.g.: My-Android-Phone.local
-      },
-    }));
-||||||| merged common ancestors
-    packet.addRecord('AR', new DNSResourceRecord({
-      name: serviceDomainName,
-      recordType: DNS_RECORD_TYPES.SRV,
-      classCode: DNS_CLASS_CODES.IN,
-      cacheFlush: true,
-      data: {
-        priority: 0,
-        weight: 0,
-        port: service.port,
-        target: host // e.g.: My-Android-Phone.local
-      }
-    }));
-=======
     packet.addRecord(
       "AR",
       new DNSResourceRecord({
@@ -755,52 +577,20 @@ class MulticastDNS {
         },
       })
     );
->>>>>>> upstream-releases
 
     // A Records
     for (let address of addresses) {
-<<<<<<< HEAD
-        packet.addRecord("AR", new DNSResourceRecord({
-||||||| merged common ancestors
-        packet.addRecord('AR', new DNSResourceRecord({
-=======
       packet.addRecord(
         "AR",
         new DNSResourceRecord({
->>>>>>> upstream-releases
           name: host,
           recordType: DNS_RECORD_TYPES.A,
-<<<<<<< HEAD
-          data: address,
-        }));
-||||||| merged common ancestors
-          data: address
-        }));
-=======
           data: address,
         })
       );
->>>>>>> upstream-releases
     }
 
     // TXT Record
-<<<<<<< HEAD
-    packet.addRecord("AR", new DNSResourceRecord({
-      name: serviceDomainName,
-      recordType: DNS_RECORD_TYPES.TXT,
-      classCode: DNS_CLASS_CODES.IN,
-      cacheFlush: true,
-      data: service.serviceAttrs || {},
-    }));
-||||||| merged common ancestors
-    packet.addRecord('AR', new DNSResourceRecord({
-      name: serviceDomainName,
-      recordType: DNS_RECORD_TYPES.TXT,
-      classCode: DNS_CLASS_CODES.IN,
-      cacheFlush: true,
-      data: service.serviceAttrs || {}
-    }));
-=======
     packet.addRecord(
       "AR",
       new DNSResourceRecord({
@@ -811,7 +601,6 @@ class MulticastDNS {
         data: service.serviceAttrs || {},
       })
     );
->>>>>>> upstream-releases
 
     return packet;
   }
@@ -888,21 +677,6 @@ class MulticastDNS {
   }
 
   _onServiceFound(serviceInfo, ttl = 0) {
-<<<<<<< HEAD
-    let expireTime = Date.now() + (ttl * 1000);
-    let key = serviceInfo.serviceName + "." +
-              serviceInfo.serviceType + "." +
-              serviceInfo.domainName + " @" +
-              serviceInfo.address + ":" +
-              serviceInfo.port;
-||||||| merged common ancestors
-    let expireTime = Date.now() + (ttl * 1000);
-    let key = serviceInfo.serviceName + '.' +
-              serviceInfo.serviceType + '.' +
-              serviceInfo.domainName + ' @' +
-              serviceInfo.address + ':' +
-              serviceInfo.port;
-=======
     let expireTime = Date.now() + ttl * 1000;
     let key =
       serviceInfo.serviceName +
@@ -914,7 +688,6 @@ class MulticastDNS {
       serviceInfo.address +
       ":" +
       serviceInfo.port;
->>>>>>> upstream-releases
 
     // If this service was already discovered, just update
     // its expiration time and don't re-emit it.
@@ -966,17 +739,6 @@ class MulticastDNS {
   _getBroadcastReceiverSocket() {
     return new Promise((resolve, reject) => {
       if (!this._broadcastReceiverSocket) {
-<<<<<<< HEAD
-        this._broadcastReceiverSocket = _openSocket("0.0.0.0", MDNS_PORT, {
-          onPacketReceived: this._onPacketReceived.bind(this),
-          onStopListening: this._onStopListening.bind(this),
-        }, /* multicastInterface = */ "0.0.0.0");
-||||||| merged common ancestors
-        this._broadcastReceiverSocket = _openSocket('0.0.0.0', MDNS_PORT, {
-          onPacketReceived: this._onPacketReceived.bind(this),
-          onStopListening: this._onStopListening.bind(this)
-        }, /* multicastInterface = */ '0.0.0.0');
-=======
         this._broadcastReceiverSocket = _openSocket(
           "0.0.0.0",
           MDNS_PORT,
@@ -986,7 +748,6 @@ class MulticastDNS {
           },
           /* multicastInterface = */ "0.0.0.0"
         );
->>>>>>> upstream-releases
       }
       resolve(this._broadcastReceiverSocket);
     });
@@ -1107,24 +868,12 @@ function getAddresses() {
 
     networkInfoService.listNetworkAddresses({
       onListedNetworkAddresses(aAddressArray) {
-<<<<<<< HEAD
-        _addresses = aAddressArray.filter((address) => {
-          return !address.includes("%p2p") && // No WiFi Direct interfaces
-                 !address.includes(":") && // XXX: No IPv6 for now
-                 address != "127.0.0.1"; // No ipv4 loopback addresses.
-||||||| merged common ancestors
-        _addresses = aAddressArray.filter((address) => {
-          return !address.includes('%p2p') &&  // No WiFi Direct interfaces
-                 !address.includes(':') &&  // XXX: No IPv6 for now
-                 address != "127.0.0.1"             // No ipv4 loopback addresses.
-=======
         _addresses = aAddressArray.filter(address => {
           return (
             !address.includes("%p2p") && // No WiFi Direct interfaces
             !address.includes(":") && // XXX: No IPv6 for now
             address != "127.0.0.1"
           ); // No ipv4 loopback addresses.
->>>>>>> upstream-releases
         });
 
         DEBUG && debug("getAddresses(): " + _addresses);
@@ -1212,13 +961,6 @@ function _propertyBagToObject(propBag) {
  * @private
  */
 function _openSocket(addr, port, handler, multicastInterface) {
-<<<<<<< HEAD
-  let socket = Cc["@mozilla.org/network/udp-socket;1"].createInstance(Ci.nsIUDPSocket);
-  socket.init2(addr, port, Services.scriptSecurityManager.getSystemPrincipal(), true);
-||||||| merged common ancestors
-  let socket = Cc['@mozilla.org/network/udp-socket;1'].createInstance(Ci.nsIUDPSocket);
-  socket.init2(addr, port, Services.scriptSecurityManager.getSystemPrincipal(), true);
-=======
   let socket = Cc["@mozilla.org/network/udp-socket;1"].createInstance(
     Ci.nsIUDPSocket
   );
@@ -1228,7 +970,6 @@ function _openSocket(addr, port, handler, multicastInterface) {
     Services.scriptSecurityManager.getSystemPrincipal(),
     true
   );
->>>>>>> upstream-releases
 
   if (handler) {
     socket.asyncListen({

@@ -74,16 +74,8 @@ public:
      */
     GrVkResource() : fRefCnt(1) {
 #ifdef SK_TRACE_VK_RESOURCES
-<<<<<<< HEAD
-        fKey = sk_atomic_fetch_add(&fKeyCounter, 1u, sk_memory_order_relaxed);
-        GetTrace()->add(this);
-||||||| merged common ancestors
-        fKey = sk_atomic_fetch_add(&fKeyCounter, 1u, sk_memory_order_relaxed);
-        fTrace.add(this);
-=======
         fKey = fKeyCounter.fetch_add(+1, std::memory_order_relaxed);
         GetTrace()->add(this);
->>>>>>> upstream-releases
 #endif
     }
 
@@ -196,18 +188,12 @@ private:
     void internal_dispose(GrVkGpu* gpu) const {
         this->freeGPUData(gpu);
 #ifdef SK_TRACE_VK_RESOURCES
-<<<<<<< HEAD
-        GetTrace()->remove(this);
-||||||| merged common ancestors
-        fTrace.remove(this);
-=======
         GetTrace()->remove(this);
 #endif
 
 #ifdef SK_DEBUG
         SkASSERT(0 == this->getRefCnt());
         fRefCnt.store(1);
->>>>>>> upstream-releases
 #endif
         delete this;
     }
@@ -218,18 +204,12 @@ private:
     void internal_dispose() const {
         this->abandonGPUData();
 #ifdef SK_TRACE_VK_RESOURCES
-<<<<<<< HEAD
-        GetTrace()->remove(this);
-||||||| merged common ancestors
-        fTrace.remove(this);
-=======
         GetTrace()->remove(this);
 #endif
 
 #ifdef SK_DEBUG
         SkASSERT(0 == this->getRefCnt());
         fRefCnt.store(1);
->>>>>>> upstream-releases
 #endif
         delete this;
     }

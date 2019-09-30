@@ -33,19 +33,9 @@ PresentationConnectionList::PresentationConnectionList(
   MOZ_ASSERT(aPromise);
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* PresentationConnectionList::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-PresentationConnectionList::WrapObject(JSContext* aCx,
-                                       JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* PresentationConnectionList::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return PresentationConnectionList_Binding::Wrap(aCx, this, aGivenProto);
 }
 

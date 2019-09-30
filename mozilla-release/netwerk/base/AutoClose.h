@@ -32,30 +32,12 @@ class AutoClose {
     return mPtr.forget();
   }
 
-<<<<<<< HEAD
-  void takeOver(nsCOMPtr<T> &rhs) { TakeOverInternal(rhs.forget()); }
-||||||| merged common ancestors
-  void takeOver(nsCOMPtr<T> & rhs)
-  {
-    TakeOverInternal(rhs.forget());
-  }
-=======
   void takeOver(nsCOMPtr<T>& rhs) { TakeOverInternal(rhs.forget()); }
->>>>>>> upstream-releases
 
   void CloseAndRelease() { TakeOverInternal(nullptr); }
 
-<<<<<<< HEAD
- private:
-  void TakeOverInternal(already_AddRefed<T> &&aOther) {
-||||||| merged common ancestors
-private:
-  void TakeOverInternal(already_AddRefed<T>&& aOther)
-  {
-=======
  private:
   void TakeOverInternal(already_AddRefed<T>&& aOther) {
->>>>>>> upstream-releases
     nsCOMPtr<T> ptr(std::move(aOther));
     {
       MutexAutoLock lock(mMutex);

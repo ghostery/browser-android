@@ -21,32 +21,15 @@ class SMILValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.h
 }  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.h
 
 /**
  * Common parsing utilities for the SMIL module. There is little re-use here; it
  * simply serves to simplify other classes by moving parsing outside and to aid
  * unit testing.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.h
-class nsSMILParserUtils {
- public:
-||||||| merged common ancestors
-class nsSMILParserUtils
-{
-public:
-=======
 class SMILParserUtils {
  public:
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.h
   // Abstract helper-class for assisting in parsing |values| attribute
   class MOZ_STACK_CLASS GenericValueParser {
    public:
@@ -89,14 +72,7 @@ class SMILParserUtils {
    * @param aResult  The parsed result. [OUT]
    * @return true if parsing succeeded, otherwise false.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.h
-  static bool ParseClockValue(const nsAString& aSpec, nsSMILTimeValue* aResult);
-||||||| merged common ancestors
-  static bool ParseClockValue(const nsAString& aSpec,
-                              nsSMILTimeValue* aResult);
-=======
   static bool ParseClockValue(const nsAString& aSpec, SMILTimeValue* aResult);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.h
 
   /*
    * This method checks whether the given string looks like a negative number.
@@ -108,12 +84,6 @@ class SMILParserUtils {
   static int32_t CheckForNegativeNumber(const nsAString& aStr);
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.h
-#endif  // NS_SMILPARSERUTILS_H_
-||||||| merged common ancestors
-#endif // NS_SMILPARSERUTILS_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILParserUtils_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.h

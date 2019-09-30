@@ -321,16 +321,6 @@ var check_use_counter_img = async function(file, use_counter_middlefix) {
     }
   );
 
-<<<<<<< HEAD
-    return deferred.promise;
-  });
-
-||||||| merged common ancestors
-    return deferred.promise;
-  });
-  
-=======
->>>>>>> upstream-releases
   // Tear down the page.
   gBrowser.removeTab(newTab);
 

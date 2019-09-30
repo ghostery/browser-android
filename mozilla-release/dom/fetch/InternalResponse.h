@@ -38,30 +38,7 @@ class InternalResponse final {
       uint16_t aStatus, const nsACString& aStatusText,
       RequestCredentials aCredentialsMode = RequestCredentials::Omit);
 
-<<<<<<< HEAD
-  static already_AddRefed<InternalResponse> FromIPC(
-      const IPCInternalResponse& aIPCResponse);
-
-  template <typename M>
-  void ToIPC(IPCInternalResponse* aIPCResponse, M* aManager,
-             UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
-
   enum CloneType {
-||||||| merged common ancestors
-  static already_AddRefed<InternalResponse>
-  FromIPC(const IPCInternalResponse& aIPCResponse);
-
-  template<typename M>
-  void
-  ToIPC(IPCInternalResponse* aIPCResponse,
-        M* aManager,
-        UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
-
-  enum CloneType
-  {
-=======
-  enum CloneType {
->>>>>>> upstream-releases
     eCloneInputStream,
     eDontCloneInputStream,
   };
@@ -278,13 +255,6 @@ class InternalResponse final {
     return rtn;
   }
 
-<<<<<<< HEAD
-  void InitChannelInfo(nsIChannel* aChannel) {
-||||||| merged common ancestors
-  void
-  InitChannelInfo(nsIChannel* aChannel)
-  {
-=======
   bool HasCacheInfoChannel() const {
     if (mWrappedResponse) {
       return !!mWrappedResponse->HasCacheInfoChannel();
@@ -293,7 +263,6 @@ class InternalResponse final {
   }
 
   void InitChannelInfo(nsIChannel* aChannel) {
->>>>>>> upstream-releases
     mChannelInfo.InitFromChannel(aChannel);
   }
 

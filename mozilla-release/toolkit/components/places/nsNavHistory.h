@@ -51,15 +51,8 @@
 
 #ifdef MOZ_XUL
 // Fired after autocomplete feedback has been updated.
-<<<<<<< HEAD
-#define TOPIC_AUTOCOMPLETE_FEEDBACK_UPDATED \
-  "places-autocomplete-feedback-updated"
-||||||| merged common ancestors
-#define TOPIC_AUTOCOMPLETE_FEEDBACK_UPDATED "places-autocomplete-feedback-updated"
-=======
 #  define TOPIC_AUTOCOMPLETE_FEEDBACK_UPDATED \
     "places-autocomplete-feedback-updated"
->>>>>>> upstream-releases
 #endif
 
 // The preference we watch to know when the mobile bookmarks folder is filled by

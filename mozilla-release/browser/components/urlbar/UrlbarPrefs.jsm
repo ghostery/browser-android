@@ -46,13 +46,6 @@ const PREF_URLBAR_DEFAULTS = new Map([
   // on systems that support it.
   ["clickSelectsAll", false],
 
-<<<<<<< HEAD
-  // Whether copying the entire URL from the location bar will put a human
-  // readable (percent-decoded) URL on the clipboard.
-  ["decodeURLsOnCopy", false],
-
-||||||| merged common ancestors
-=======
   // Whether using `ctrl` when hitting return/enter in the URL bar
   // (or clicking 'go') should prefix 'www.' and suffix
   // browser.fixup.alternate.suffix to the URL bar value prior to
@@ -63,7 +56,6 @@ const PREF_URLBAR_DEFAULTS = new Map([
   // readable (percent-decoded) URL on the clipboard.
   ["decodeURLsOnCopy", false],
 
->>>>>>> upstream-releases
   // The amount of time (ms) to wait after the user has stopped typing before
   // fetching results.  However, we ignore this for the very first result (the
   // "heuristic" result).  We fetch it as fast as possible.
@@ -213,18 +205,9 @@ class Preferences {
       Ci.nsISupportsWeakReference,
     ]);
     Services.prefs.addObserver(PREF_URLBAR_BRANCH, this, true);
-<<<<<<< HEAD
-    Services.prefs.addObserver("keyword.enabled", this, true);
-||||||| merged common ancestors
-    Services.prefs.addObserver("keyword.enabled", this, true);
-
-    // On startup we must check that some prefs are linked.
-    this._updateLinkedPrefs();
-=======
     for (let pref of PREF_OTHER_DEFAULTS.keys()) {
       Services.prefs.addObserver(pref, this, true);
     }
->>>>>>> upstream-releases
   }
 
   /**
@@ -343,23 +326,12 @@ class Preferences {
       }
       case "defaultBehavior": {
         let val = 0;
-<<<<<<< HEAD
-        for (let type of Object.keys(SUGGEST_PREF_TO_BEHAVIOR)) {
-          let behavior = `BEHAVIOR_${SUGGEST_PREF_TO_BEHAVIOR[type].toUpperCase()}`;
-          val |= this.get("suggest." + type) && Ci.mozIPlacesAutoComplete[behavior];
-||||||| merged common ancestors
-        for (let type of [...TYPES, "history.onlyTyped"]) {
-          let behavior = type == "history.onlyTyped" ? "TYPED" : type.toUpperCase();
-          val |= this.get("suggest." + type) &&
-                 Ci.mozIPlacesAutoComplete["BEHAVIOR_" + behavior];
-=======
         for (let type of Object.keys(SUGGEST_PREF_TO_BEHAVIOR)) {
           let behavior = `BEHAVIOR_${SUGGEST_PREF_TO_BEHAVIOR[
             type
           ].toUpperCase()}`;
           val |=
             this.get("suggest." + type) && Ci.mozIPlacesAutoComplete[behavior];
->>>>>>> upstream-releases
         }
         return val;
       }
@@ -381,90 +353,6 @@ class Preferences {
     }
     return this._readPref(pref);
   }
-<<<<<<< HEAD
-
-  /**
-   * QueryInterface
-   *
-   * @param {IID} qiIID
-   * @returns {Preferences} this
-   */
-  QueryInterface(qiIID) {
-    let supportedIIDs = [
-      Ci.nsISupports,
-      Ci.nsIObserver,
-      Ci.nsISupportsWeakReference,
-    ];
-    for (let iid of supportedIIDs) {
-      if (Ci[iid].equals(qiIID)) {
-        return this;
-      }
-    }
-    throw Cr.NS_ERROR_NO_INTERFACE;
-  }
-||||||| merged common ancestors
-
-  /**
-   * Used to keep some pref values linked.
-   * TODO: remove autocomplete.enabled and rely only on suggest.* prefs once we
-   * can drop legacy add-ons compatibility.
-   *
-   * @param {string} changedPref
-   *        The name of the preference that changed.
-   */
-  _updateLinkedPrefs(changedPref = "") {
-    // Avoid re-entrance.
-    if (this._linkingPrefs) {
-      return;
-    }
-    this._linkingPrefs = true;
-    try {
-      let branch = Services.prefs.getBranch(PREF_URLBAR_BRANCH);
-      if (changedPref.startsWith("suggest.")) {
-        // A suggest pref changed, fix autocomplete.enabled.
-        branch.setBoolPref("autocomplete.enabled",
-                          TYPES.some(type => this.get("suggest." + type)));
-      } else if (this.get("autocomplete.enabled")) {
-        // If autocomplete is enabled and all of the suggest.* prefs are
-        // disabled, reset the suggest.* prefs to their default value.
-        if (TYPES.every(type => !this.get("suggest." + type))) {
-          for (let type of TYPES) {
-            let def = PREF_URLBAR_DEFAULTS.get("suggest." + type);
-            branch.setBoolPref("suggest." + type, def);
-          }
-        }
-      } else {
-        // If autocomplete is disabled, deactivate all suggest preferences.
-        for (let type of TYPES) {
-          branch.setBoolPref("suggest." + type, false);
-        }
-      }
-    } finally {
-      delete this._linkingPrefs;
-    }
-  }
-
-  /**
-   * QueryInterface
-   *
-   * @param {IID} qiIID
-   * @returns {Preferences} this
-   */
-  QueryInterface(qiIID) {
-    let supportedIIDs = [
-      Ci.nsISupports,
-      Ci.nsIObserver,
-      Ci.nsISupportsWeakReference,
-    ];
-    for (let iid of supportedIIDs) {
-      if (Ci[iid].equals(qiIID)) {
-        return this;
-      }
-    }
-    throw Cr.NS_ERROR_NO_INTERFACE;
-  }
-=======
->>>>>>> upstream-releases
 }
 
 var UrlbarPrefs = new Preferences();

@@ -7,42 +7,12 @@
 #ifndef GFX_VR_EXTERNAL_API_H
 #define GFX_VR_EXTERNAL_API_H
 
-<<<<<<< HEAD
 #define GFX_VR_EIGHTCC(c1, c2, c3, c4, c5, c6, c7, c8)                  \
   ((uint64_t)(c1) << 56 | (uint64_t)(c2) << 48 | (uint64_t)(c3) << 40 | \
    (uint64_t)(c4) << 32 | (uint64_t)(c5) << 24 | (uint64_t)(c6) << 16 | \
    (uint64_t)(c7) << 8 | (uint64_t)(c8))
-
-#include <stddef.h>
-#include <stdint.h>
-#include <type_traits>
-||||||| merged common ancestors
-#define GFX_VR_EIGHTCC(c1, c2, c3, c4, c5, c6, c7, c8) \
-  ((uint64_t)(c1) << 56 | (uint64_t)(c2) << 48 | \
-  (uint64_t)(c3) << 40 | (uint64_t)(c4) << 32 | \
-  (uint64_t)(c5) << 24 | (uint64_t)(c6) << 16 | \
-  (uint64_t)(c7) << 8 | (uint64_t)(c8))
-
-#include <stddef.h>
-#include <stdint.h>
-#include <type_traits>
-=======
-#define GFX_VR_EIGHTCC(c1, c2, c3, c4, c5, c6, c7, c8)                  \
-  ((uint64_t)(c1) << 56 | (uint64_t)(c2) << 48 | (uint64_t)(c3) << 40 | \
-   (uint64_t)(c4) << 32 | (uint64_t)(c5) << 24 | (uint64_t)(c6) << 16 | \
-   (uint64_t)(c7) << 8 | (uint64_t)(c8))
->>>>>>> upstream-releases
 
 #ifdef MOZILLA_INTERNAL_API
-<<<<<<< HEAD
-#include "mozilla/TypedEnumBits.h"
-#include "mozilla/gfx/2D.h"
-#endif  // MOZILLA_INTERNAL_API
-||||||| merged common ancestors
-#include "mozilla/TypedEnumBits.h"
-#include "mozilla/gfx/2D.h"
-#endif // MOZILLA_INTERNAL_API
-=======
 #  define __STDC_WANT_LIB_EXT1__ 1
 // __STDC_WANT_LIB_EXT1__ required for memcpy_s
 #  include <stdlib.h>
@@ -53,22 +23,13 @@
 #  include <stdint.h>
 #  include <type_traits>
 #endif  // MOZILLA_INTERNAL_API
->>>>>>> upstream-releases
 
 #if defined(__ANDROID__)
-<<<<<<< HEAD
-#include <pthread.h>
-#endif  // defined(__ANDROID__)
-||||||| merged common ancestors
-#include <pthread.h>
-#endif // defined(__ANDROID__)
-=======
 #  include <pthread.h>
 #endif  // defined(__ANDROID__)
 
 #include <cstdint>
 #include <type_traits>
->>>>>>> upstream-releases
 
 namespace mozilla {
 #ifdef MOZILLA_INTERNAL_API
@@ -309,31 +270,6 @@ struct VRDisplayState {
   uint32_t minRestartInterval;
   char displayName[kVRDisplayNameMaxLen];
   // eight byte character code identifier
-<<<<<<< HEAD
-  // LSB first, so "ABCDEFGH" -> ('H'<<56) + ('G'<<48) + ('F'<<40) +
-  //                             ('E'<<32) + ('D'<<24) + ('C'<<16) +
-  //                             ('B'<<8) + 'A').
-  uint64_t mEightCC;
-  VRDisplayCapabilityFlags mCapabilityFlags;
-  VRFieldOfView mEyeFOV[VRDisplayState::NumEyes];
-  Point3D_POD mEyeTranslation[VRDisplayState::NumEyes];
-  IntSize_POD mEyeResolution;
-  bool mSuppressFrames;
-  bool mIsConnected;
-  bool mIsMounted;
-  FloatSize_POD mStageSize;
-||||||| merged common ancestors
-  // LSB first, so "ABCDEFGH" -> ('H'<<56) + ('G'<<48) + ('F'<<40) + ('E'<<32) + ('D'<<24) + ('C'<<16) + ('B'<<8) + 'A').
-  uint64_t mEightCC;
-  VRDisplayCapabilityFlags mCapabilityFlags;
-  VRFieldOfView mEyeFOV[VRDisplayState::NumEyes];
-  Point3D_POD mEyeTranslation[VRDisplayState::NumEyes];
-  IntSize_POD mEyeResolution;
-  bool mSuppressFrames;
-  bool mIsConnected;
-  bool mIsMounted;
-  FloatSize_POD mStageSize;
-=======
   // LSB first, so "ABCDEFGH" -> ('H'<<56) + ('G'<<48) + ('F'<<40) +
   //                             ('E'<<32) + ('D'<<24) + ('C'<<16) +
   //                             ('B'<<8) + 'A').
@@ -346,7 +282,6 @@ struct VRDisplayState {
   bool isConnected;
   bool isMounted;
   FloatSize_POD stageSize;
->>>>>>> upstream-releases
   // We can't use a Matrix4x4 here unless we ensure it's a POD type
   float sittingToStandingTransform[16];
   uint64_t lastSubmittedFrameId;
@@ -411,43 +346,12 @@ enum class VRLayerTextureType : uint16_t {
   LayerTextureType_GeckoSurfaceTexture = 3
 };
 
-<<<<<<< HEAD
-struct VRLayer_2D_Content {
-  VRLayerTextureHandle mTextureHandle;
-  VRLayerTextureType mTextureType;
-  uint64_t mFrameId;
-||||||| merged common ancestors
-struct VRLayer_2D_Content
-{
-  VRLayerTextureHandle mTextureHandle;
-  VRLayerTextureType mTextureType;
-  uint64_t mFrameId;
-=======
 struct VRLayer_2D_Content {
   VRLayerTextureHandle textureHandle;
   VRLayerTextureType textureType;
   uint64_t frameId;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-struct VRLayer_Stereo_Immersive {
-  VRLayerTextureHandle mTextureHandle;
-  VRLayerTextureType mTextureType;
-  uint64_t mFrameId;
-  uint64_t mInputFrameId;
-  VRLayerEyeRect mLeftEyeRect;
-  VRLayerEyeRect mRightEyeRect;
-||||||| merged common ancestors
-struct VRLayer_Stereo_Immersive
-{
-  VRLayerTextureHandle mTextureHandle;
-  VRLayerTextureType mTextureType;
-  uint64_t mFrameId;
-  uint64_t mInputFrameId;
-  VRLayerEyeRect mLeftEyeRect;
-  VRLayerEyeRect mRightEyeRect;
-=======
 struct VRLayer_Stereo_Immersive {
   VRLayerTextureHandle textureHandle;
   VRLayerTextureType textureType;
@@ -456,7 +360,6 @@ struct VRLayer_Stereo_Immersive {
   VRLayerEyeRect leftEyeRect;
   VRLayerEyeRect rightEyeRect;
   IntSize_POD textureSize;
->>>>>>> upstream-releases
 };
 
 struct VRLayerState {
@@ -522,29 +425,12 @@ struct VRExternalShmem {
   VRSystemState state;
 #if !defined(__ANDROID__)
   int64_t generationB;
-<<<<<<< HEAD
-  int64_t browserGenerationA;
-#endif  // !defined(__ANDROID__)
-  VRBrowserState browserState;
-||||||| merged common ancestors
-  int64_t browserGenerationA;
-#endif // !defined(__ANDROID__)
-  VRBrowserState browserState;
-=======
   int64_t geckoGenerationA;
   int64_t servoGenerationA;
 #endif  // !defined(__ANDROID__)
   VRBrowserState geckoState;
   VRBrowserState servoState;
->>>>>>> upstream-releases
 #if !defined(__ANDROID__)
-<<<<<<< HEAD
-  int64_t browserGenerationB;
-#endif  // !defined(__ANDROID__)
-||||||| merged common ancestors
-  int64_t browserGenerationB;
-#endif // !defined(__ANDROID__)
-=======
   int64_t geckoGenerationB;
   int64_t servoGenerationB;
 #endif  // !defined(__ANDROID__)
@@ -570,7 +456,6 @@ struct VRExternalShmem {
 #  endif
   }
 #endif
->>>>>>> upstream-releases
 };
 
 // As we are memcpy'ing VRExternalShmem and its members around, it must be a POD

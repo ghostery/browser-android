@@ -10,7 +10,7 @@
 #define mozilla_ThreadLocal_h
 
 #if !defined(XP_WIN)
-#include <pthread.h>
+#  include <pthread.h>
 #endif
 
 #include "mozilla/Assertions.h"
@@ -22,11 +22,11 @@ namespace mozilla {
 namespace detail {
 
 #ifdef XP_MACOSX
-#if defined(__has_feature)
-#if __has_feature(cxx_thread_local)
-#define MACOSX_HAS_THREAD_LOCAL
-#endif
-#endif
+#  if defined(__has_feature)
+#    if __has_feature(cxx_thread_local)
+#      define MACOSX_HAS_THREAD_LOCAL
+#    endif
+#  endif
 #endif
 
 /*
@@ -212,45 +212,19 @@ inline void ThreadLocal<T, Storage>::set(const T aValue) {
   }
 }
 
-<<<<<<< HEAD
-#if (defined(XP_WIN) || defined(MACOSX_HAS_THREAD_LOCAL)) && \
-    !defined(__MINGW32__)
-#define MOZ_THREAD_LOCAL(TYPE)               \
-  thread_local mozilla::detail::ThreadLocal< \
-      TYPE, mozilla::detail::ThreadLocalNativeStorage>
-||||||| merged common ancestors
-#if (defined(XP_WIN) || defined(MACOSX_HAS_THREAD_LOCAL)) && !defined(__MINGW32__)
-#define MOZ_THREAD_LOCAL(TYPE) thread_local mozilla::detail::ThreadLocal<TYPE, mozilla::detail::ThreadLocalNativeStorage>
-=======
 #if (defined(XP_WIN) || defined(MACOSX_HAS_THREAD_LOCAL)) && \
     !defined(__MINGW32__)
 #  define MOZ_THREAD_LOCAL(TYPE)                 \
     thread_local ::mozilla::detail::ThreadLocal< \
         TYPE, ::mozilla::detail::ThreadLocalNativeStorage>
->>>>>>> upstream-releases
 #elif defined(HAVE_THREAD_TLS_KEYWORD)
-<<<<<<< HEAD
-#define MOZ_THREAD_LOCAL(TYPE)           \
-  __thread mozilla::detail::ThreadLocal< \
-      TYPE, mozilla::detail::ThreadLocalNativeStorage>
-||||||| merged common ancestors
-#define MOZ_THREAD_LOCAL(TYPE) __thread mozilla::detail::ThreadLocal<TYPE, mozilla::detail::ThreadLocalNativeStorage>
-=======
 #  define MOZ_THREAD_LOCAL(TYPE)             \
     __thread ::mozilla::detail::ThreadLocal< \
         TYPE, ::mozilla::detail::ThreadLocalNativeStorage>
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_THREAD_LOCAL(TYPE) \
-  mozilla::detail::ThreadLocal<TYPE, mozilla::detail::ThreadLocalKeyStorage>
-||||||| merged common ancestors
-#define MOZ_THREAD_LOCAL(TYPE) mozilla::detail::ThreadLocal<TYPE, mozilla::detail::ThreadLocalKeyStorage>
-=======
 #  define MOZ_THREAD_LOCAL(TYPE)         \
     ::mozilla::detail::ThreadLocal<TYPE, \
                                    ::mozilla::detail::ThreadLocalKeyStorage>
->>>>>>> upstream-releases
 #endif
 
 }  // namespace detail

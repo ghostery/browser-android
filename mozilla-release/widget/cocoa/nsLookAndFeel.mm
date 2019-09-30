@@ -121,49 +121,6 @@ void nsLookAndFeel::RefreshImpl() {
   mInitialized = false;
 }
 
-<<<<<<< HEAD
-// Turns an opaque selection color into a partially transparent selection color,
-// which usually leads to better contrast with the text color and which should
-// look more visually appealing in most contexts.
-// The idea is that the text and its regular, non-selected background are
-// usually chosen in such a way that they contrast well. Making the selection
-// color partially transparent causes the selection color to mix with the text's
-// regular background, so the end result will often have better contrast with
-// the text than an arbitrary opaque selection color.
-// The motivating example for this is the URL bar text field in the dark theme:
-// White text on a light blue selection color has very bad contrast, whereas
-// white text on dark blue (which what you get if you mix partially-transparent
-// light blue with the black textbox background) has much better contrast.
-nscolor
-nsLookAndFeel::ProcessSelectionBackground(nscolor aColor)
-{
-  uint16_t hue, sat, value;
-  uint8_t alpha;
-  nscolor resultColor = aColor;
-  NS_RGB2HSV(resultColor, hue, sat, value, alpha);
-  int factor = 2;
-  alpha = alpha / factor;
-  if (sat > 0) {
-    // The color is not a shade of grey, restore the saturation taken away by
-    // the transparency.
-    sat = mozilla::clamped(sat * factor, 0, 255);
-  } else {
-    // The color is a shade of grey, find the value that looks equivalent
-    // on a white background with the given opacity.
-    value = mozilla::clamped(255 - (255 - value) * factor, 0, 255);
-  }
-  NS_HSV2RGB(resultColor, hue, sat, value, alpha);
-  return resultColor;
-}
-
-nsresult
-nsLookAndFeel::NativeGetColor(ColorID aID, nscolor &aColor)
-{
-||||||| merged common ancestors
-nsresult
-nsLookAndFeel::NativeGetColor(ColorID aID, nscolor &aColor)
-{
-=======
 // Turns an opaque selection color into a partially transparent selection color,
 // which usually leads to better contrast with the text color and which should
 // look more visually appealing in most contexts.
@@ -197,7 +154,6 @@ nscolor nsLookAndFeel::ProcessSelectionBackground(nscolor aColor) {
 }
 
 nsresult nsLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
->>>>>>> upstream-releases
   EnsureInit();
 
   nsresult res = NS_OK;
@@ -233,29 +189,13 @@ nsresult nsLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
     case ColorID::TextForeground:
       aColor = NS_RGB(0x00, 0x00, 0x00);
       break;
-<<<<<<< HEAD
-    case eColorID_TextSelectBackground:
-      aColor = ProcessSelectionBackground(mColorTextSelectBackground);
-||||||| merged common ancestors
-    case eColorID_TextSelectBackground:
-      aColor = mColorTextSelectBackground;
-=======
     case ColorID::TextSelectBackground:
       aColor = ProcessSelectionBackground(mColorTextSelectBackground);
->>>>>>> upstream-releases
       break;
     // This is used to gray out the selection when it's not focused. Used with
     // nsISelectionController::SELECTION_DISABLED.
-<<<<<<< HEAD
-    case eColorID_TextSelectBackgroundDisabled:
-      aColor = ProcessSelectionBackground(mColorTextSelectBackgroundDisabled);
-||||||| merged common ancestors
-    case eColorID_TextSelectBackgroundDisabled:
-      aColor = mColorTextSelectBackgroundDisabled;
-=======
     case ColorID::TextSelectBackgroundDisabled:
       aColor = ProcessSelectionBackground(mColorTextSelectBackgroundDisabled);
->>>>>>> upstream-releases
       break;
     case ColorID::Highlight:  // CSS2 color
       aColor = mColorHighlight;
@@ -803,16 +743,8 @@ void nsLookAndFeel::EnsureInit() {
   mColorWindowText = GetColorFromNSColor([NSColor windowFrameTextColor]);
   mColorActiveCaption = GetColorFromNSColor([NSColor gridColor]);
   mColorActiveBorder = GetColorFromNSColor([NSColor keyboardFocusIndicatorColor]);
-<<<<<<< HEAD
-  NSColor* disabledColor = [NSColor disabledControlTextColor];
-  mColorGrayText = GetColorFromNSColorWithAlpha(disabledColor,
-                                                [disabledColor alphaComponent]);
-||||||| merged common ancestors
-  mColorGrayText = GetColorFromNSColor([NSColor disabledControlTextColor]);
-=======
   NSColor* disabledColor = [NSColor disabledControlTextColor];
   mColorGrayText = GetColorFromNSColorWithAlpha(disabledColor, [disabledColor alphaComponent]);
->>>>>>> upstream-releases
   mColorInactiveBorder = GetColorFromNSColor([NSColor controlBackgroundColor]);
   mColorInactiveCaption = GetColorFromNSColor([NSColor controlBackgroundColor]);
   mColorScrollbar = GetColorFromNSColor([NSColor scrollBarColor]);

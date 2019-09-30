@@ -629,13 +629,6 @@ bool LinuxDumper::EnumerateMappings() {
             name = kLinuxGateLibraryName;
             offset = 0;
           }
-<<<<<<< HEAD
-          // Merge adjacent mappings into one module, assuming they're a single
-          // library mapped by the dynamic linker.
-||||||| merged common ancestors
-          // Merge adjacent mappings with the same name into one module,
-          // assuming they're a single library mapped by the dynamic linker
-=======
           // Skip shared memory segments used for IPC
           if (name && IsIPCSharedMemorySegment(name)) {
             line_reader->PopLine(line_len);
@@ -643,7 +636,6 @@ bool LinuxDumper::EnumerateMappings() {
           }
           // Merge adjacent mappings into one module, assuming they're a single
           // library mapped by the dynamic linker.
->>>>>>> upstream-releases
           if (name && !mappings_.empty()) {
             MappingInfo* module = mappings_.back();
             if ((start_addr == module->start_addr + module->size) &&

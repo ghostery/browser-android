@@ -10,19 +10,12 @@ add_task(async function logging_works() {
   try {
     const recipe = { id: 1, arguments: { message: "Hello, world!" } };
     await action.runRecipe(recipe);
-<<<<<<< HEAD
-    is(action.lastError, null, "lastError should be null");
-    Assert.deepEqual(infoStub.args, ["Hello, world!"], "the message should be logged");
-||||||| merged common ancestors
-    Assert.deepEqual(infoStub.args, ["Hello, world!"], "the message should be logged");
-=======
     is(action.lastError, null, "lastError should be null");
     Assert.deepEqual(
       infoStub.args,
       ["Hello, world!"],
       "the message should be logged"
     );
->>>>>>> upstream-releases
   } finally {
     infoStub.restore();
   }

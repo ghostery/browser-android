@@ -70,13 +70,8 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   TelemetryReportingPolicy:
     "resource://gre/modules/TelemetryReportingPolicy.jsm",
   TelemetryModules: "resource://gre/modules/ModulesPing.jsm",
-<<<<<<< HEAD
-  TelemetryUntrustedModulesPing: "resource://gre/modules/UntrustedModulesPing.jsm",
-||||||| merged common ancestors
-=======
   TelemetryUntrustedModulesPing:
     "resource://gre/modules/UntrustedModulesPing.jsm",
->>>>>>> upstream-releases
   UpdatePing: "resource://gre/modules/UpdatePing.jsm",
   TelemetryHealthPing: "resource://gre/modules/HealthPing.jsm",
   TelemetryEventPing: "resource://gre/modules/EventPing.jsm",
@@ -845,25 +840,11 @@ var Impl = {
           EcosystemTelemetry.startup();
           TelemetryPrioPing.startup();
 
-<<<<<<< HEAD
-          // Send coverage ping.
-          await CoveragePing.startup();
-
-          // Start the untrusted modules ping, which reports events where
-          // untrusted modules were loaded into the Firefox process.
-          if (AppConstants.NIGHTLY_BUILD && AppConstants.platform == "win") {
-            TelemetryUntrustedModulesPing.start();
-          }
-||||||| merged common ancestors
-          // Send coverage ping.
-          await CoveragePing.startup();
-=======
           this._delayedInitTaskDeferred.resolve();
         } catch (e) {
           this._delayedInitTaskDeferred.reject(e);
         } finally {
           this._delayedInitTask = null;
->>>>>>> upstream-releases
         }
       },
       this._testMode ? TELEMETRY_TEST_DELAY : TELEMETRY_DELAY,

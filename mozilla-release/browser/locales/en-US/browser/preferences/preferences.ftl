@@ -360,15 +360,6 @@ update-enable-search-update =
     .label = Automatically update search engines
     .accesskey = e
 
-<<<<<<< HEAD
-update-pref-write-failure-title = Write Failure
-
-# Variables:
-#   $path (String) - Path to the configuration file
-update-pref-write-failure-message = Unable to save preference. Could not write to file: { $path }
-
-||||||| merged common ancestors
-=======
 update-setting-write-failure-title = Error saving Update preferences
 
 # Variables:
@@ -389,7 +380,6 @@ update-in-progress-ok-button = &Discard
 # method of closing the UI will not discard the update.
 update-in-progress-cancel-button = &Continue
 
->>>>>>> upstream-releases
 ## General Section - Performance
 
 performance-title = Performance
@@ -832,25 +822,11 @@ sitedata-total-size = Your stored cookies, site data, and cache are currently us
 
 sitedata-learn-more = Learn more
 
-<<<<<<< HEAD
-sitedata-delete-on-close =
-    .label = Delete cookies and site data when { -brand-short-name } is closed
-    .accesskey = c
-||||||| merged common ancestors
-sitedata-keep-until = Keep until
-    .accesskey = u
-
-sitedata-keep-until-expire =
-    .label = They expire
-sitedata-keep-until-closed =
-    .label = { -brand-short-name } is closed
-=======
 sitedata-delete-on-close =
     .label = Delete cookies and site data when { -brand-short-name } is closed
     .accesskey = c
 
 sitedata-delete-on-close-private-browsing = In permanent private browsing mode, cookies and site data will always be cleared when { -brand-short-name } is closed.
->>>>>>> upstream-releases
 
 sitedata-allow-cookies-option =
     .label = Accept cookies and site data
@@ -908,70 +884,9 @@ addressbar-suggestions-settings = Change preferences for search engine suggestio
 
 content-blocking-header = Content Blocking
 
-<<<<<<< HEAD
-content-blocking-description = Block third-party content that tracks you around the web. Control how much of your online activity gets stored and shared between websites.
-||||||| merged common ancestors
-content-blocking-desc = Block third-party content, like ads or code, that can slow your browsing and track you around the web. Customize your settings for the best balance of protection and performance.
-=======
 content-blocking-section-description = Protect your privacy while you browse. Block invisible content that tracks the sites you visit and profiles you. Blocking some of this content may make pages load faster.
->>>>>>> upstream-releases
 
 content-blocking-learn-more = Learn more
-<<<<<<< HEAD
-
-# The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
-# "Standard" in this case is an adjective, meaning "default" or "normal".
-content-blocking-setting-standard =
-  .label = Standard
-  .accesskey = d
-content-blocking-setting-strict =
-  .label = Strict
-  .accesskey = r
-content-blocking-setting-custom =
-  .label = Custom
-  .accesskey = C
-
-content-blocking-standard-description = Only blocks known trackers in Private Windows.
-content-blocking-standard-desc = Balanced for protection and performance. Allows some trackers so websites function properly.
-content-blocking-strict-desc = Blocks all trackers { -brand-short-name } detects. May cause some sites to break.
-content-blocking-custom-desc = Choose what to block.
-
-content-blocking-private-trackers = Known trackers only in Private Windows
-content-blocking-third-party-cookies = Third-party tracking cookies
-content-blocking-all-windows-trackers = Known trackers in all windows
-content-blocking-all-third-party-cookies = All third-party cookies
-
-content-blocking-warning-title = Heads up!
-content-blocking-warning-desc = Blocking cookies and trackers can cause some websites to break. It’s easy to disable blocking for sites you trust.
-content-blocking-learn-how = Learn how
-
-content-blocking-trackers-label =
-||||||| merged common ancestors
-content-blocking-restore-defaults =
-  .label = Restore Defaults
-  .accesskey = R
-
-content-blocking-toggle-on =
-  .tooltiptext = Turn Off Content Blocking
-content-blocking-toggle-off =
-  .tooltiptext = Turn On Content Blocking
-
-content-blocking-toggle-label-on = ON
-  .accesskey = O
-content-blocking-toggle-label-off = OFF
-  .accesskey = O
-
-content-blocking-category-label = Choose what to block
-
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-  .label = Slow-Loading Trackers
-  .accesskey = S
-content-blocking-fastblock-new-description = Block just the trackers that keep pages from loading quickly.
-content-blocking-tracking-protection-trackers-label =
-=======
 
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
@@ -1008,7 +923,6 @@ content-blocking-reload-tabs-button =
   .accesskey = R
 
 content-blocking-trackers-label =
->>>>>>> upstream-releases
   .label = Trackers
   .accesskey = T
 content-blocking-tracking-protection-option-all-windows =
@@ -1022,56 +936,7 @@ content-blocking-tracking-protection-change-block-list = Change block list
 content-blocking-cookies-label =
   .label = Cookies
   .accesskey = C
-<<<<<<< HEAD
 
-## Privacy Section - Tracking
-||||||| merged common ancestors
-content-blocking-reject-trackers-description = Block all third-party cookies or just those set by trackers.
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = Your settings in Cookies and Site Data are preventing changes to Third-Party Cookies settings.
-content-blocking-change-cookie-settings =
-  .label = Change Cookie Settings
-  .accesskey = S
-content-blocking-reject-trackers-block-trackers-option-recommended =
-  .label = Trackers (recommended)
-  .accesskey = k
-content-blocking-reject-trackers-block-trackers-option =
-  .label = Trackers
-  .accesskey = k
-content-blocking-reject-trackers-all-third-parties-option =
-  .label = All third-party cookies (may cause websites to break)
-  .accesskey = A
-
-## Privacy Section - Tracking
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-tracking-manage-exceptions =
-    .label = Manage Exceptions…
-||||||| merged common ancestors
-tracking-header = Tracking Protection
-
-tracking-desc = Tracking Protection blocks online trackers that collect your browsing data across multiple websites. <a data-l10n-name="learn-more">Learn more about Tracking Protection and your privacy</a>
-
-tracking-mode-label = Use Tracking Protection to block known trackers
-
-tracking-mode-always =
-    .label = Always
-    .accesskey = y
-tracking-mode-private =
-    .label = Only in private windows
-    .accesskey = l
-tracking-mode-never =
-    .label = Never
-    .accesskey = N
-
-tracking-exceptions =
-    .label = Exceptions…
-=======
 content-blocking-expand-section =
   .tooltiptext = More information
 
@@ -1090,7 +955,6 @@ content-blocking-fingerprinters-label =
 
 tracking-manage-exceptions =
     .label = Manage Exceptions…
->>>>>>> upstream-releases
     .accesskey = x
 
 ## Privacy Section - Permissions

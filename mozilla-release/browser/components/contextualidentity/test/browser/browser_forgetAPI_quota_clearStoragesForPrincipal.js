@@ -136,20 +136,6 @@ add_task(async function test_quota_clearStoragesForPrincipal() {
     caUtils
   );
   let httpURI = caUtils.makeURI("http://" + TEST_HOST);
-<<<<<<< HEAD
-  let httpPrincipal = Services.scriptSecurityManager
-                              .createCodebasePrincipal(httpURI, {});
-  let clearRequest = Services.qms.clearStoragesForPrincipal(httpPrincipal, null, null, true);
-  await new Promise(resolve => {
-    clearRequest.callback = () => {
-      resolve();
-    };
-  });
-||||||| merged common ancestors
-  let httpPrincipal = Services.scriptSecurityManager
-                              .createCodebasePrincipal(httpURI, {});
-  Services.qms.clearStoragesForPrincipal(httpPrincipal, null, true);
-=======
   let httpPrincipal = Services.scriptSecurityManager.createCodebasePrincipal(
     httpURI,
     {}
@@ -165,7 +151,6 @@ add_task(async function test_quota_clearStoragesForPrincipal() {
       resolve();
     };
   });
->>>>>>> upstream-releases
 
   for (let userContextId of Object.keys(USER_CONTEXTS)) {
     // Open our tab in the given user context.

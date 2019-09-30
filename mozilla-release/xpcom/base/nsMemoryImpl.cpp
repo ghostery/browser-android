@@ -64,18 +64,9 @@ nsMemoryImpl::IsLowMemoryPlatform(bool* aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/*static*/ nsresult nsMemoryImpl::Create(nsISupports* aOuter, const nsIID& aIID,
-                                         void** aResult) {
-||||||| merged common ancestors
-/*static*/ nsresult
-nsMemoryImpl::Create(nsISupports* aOuter, const nsIID& aIID, void** aResult)
-{
-=======
 /*static*/
 nsresult nsMemoryImpl::Create(nsISupports* aOuter, const nsIID& aIID,
                               void** aResult) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(aOuter)) {
     return NS_ERROR_NO_AGGREGATION;
   }

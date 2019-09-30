@@ -287,15 +287,6 @@ function loadDialog() {
   gDialog.scalingLabel.disabled = gDialog.scalingInput.disabled =
     gDialog.shrinkToFit.checked;
 
-<<<<<<< HEAD
-  var marginGroupLabel = gDialog.marginGroup.getAttribute("value");
-  if (gPrintSettings.paperSizeUnit == gPrintSettingsInterface.kPaperSizeInches) {
-    marginGroupLabel = marginGroupLabel.replace(/#1/, gDialog.strings["marginUnits.inches"]);
-||||||| merged common ancestors
-  var marginGroupLabel = gDialog.marginGroup.label;
-  if (gPrintSettings.paperSizeUnit == gPrintSettingsInterface.kPaperSizeInches) {
-    marginGroupLabel = marginGroupLabel.replace(/#1/, gDialog.strings["marginUnits.inches"]);
-=======
   if (
     gPrintSettings.paperSizeUnit == gPrintSettingsInterface.kPaperSizeInches
   ) {
@@ -303,7 +294,6 @@ function loadDialog() {
       gDialog.marginGroup,
       "margin-group-label-inches"
     );
->>>>>>> upstream-releases
     gDoingMetric = false;
   } else {
     document.l10n.setAttributes(
@@ -315,12 +305,6 @@ function loadDialog() {
     gPageHeight = 2970;
     gDoingMetric = true;
   }
-<<<<<<< HEAD
-  gDialog.marginGroup.setAttribute("value", marginGroupLabel);
-||||||| merged common ancestors
-  gDialog.marginGroup.label = marginGroupLabel;
-=======
->>>>>>> upstream-releases
 
   print_orientation = gPrintSettings.orientation;
   print_margin_top = convertMarginInchesToUnits(

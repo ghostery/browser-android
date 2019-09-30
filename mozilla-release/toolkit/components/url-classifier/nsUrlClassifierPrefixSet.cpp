@@ -27,7 +27,6 @@ using namespace mozilla;
 
 // MOZ_LOG=UrlClassifierPrefixSet:5
 static LazyLogModule gUrlClassifierPrefixSetLog("UrlClassifierPrefixSet");
-<<<<<<< HEAD
 #define LOG(args) \
   MOZ_LOG(gUrlClassifierPrefixSetLog, mozilla::LogLevel::Debug, args)
 #define LOG_ENABLED() \
@@ -35,70 +34,9 @@ static LazyLogModule gUrlClassifierPrefixSetLog("UrlClassifierPrefixSet");
 
 NS_IMPL_ISUPPORTS(nsUrlClassifierPrefixSet, nsIUrlClassifierPrefixSet,
                   nsIMemoryReporter)
-
-// Definition required due to std::max<>()
-const uint32_t nsUrlClassifierPrefixSet::MAX_BUFFER_SIZE;
-
-template <typename T>
-static void CalculateTArrayChecksum(const nsTArray<T>& aArray,
-                                    uint32_t* outChecksum) {
-  *outChecksum = ~0;
-
-  for (size_t i = 0; i < aArray.Length(); i++) {
-    const T& element = aArray[i];
-    const void* pointer = &element;
-    *outChecksum = ComputeCrc32c(
-        *outChecksum, reinterpret_cast<const uint8_t*>(pointer), sizeof(void*));
-  }
-}
-||||||| merged common ancestors
-#define LOG(args) MOZ_LOG(gUrlClassifierPrefixSetLog, mozilla::LogLevel::Debug, args)
-#define LOG_ENABLED() MOZ_LOG_TEST(gUrlClassifierPrefixSetLog, mozilla::LogLevel::Debug)
-
-NS_IMPL_ISUPPORTS(
-  nsUrlClassifierPrefixSet, nsIUrlClassifierPrefixSet, nsIMemoryReporter)
-
-// Definition required due to std::max<>()
-const uint32_t nsUrlClassifierPrefixSet::MAX_BUFFER_SIZE;
-
-template<typename T>
-static void
-CalculateTArrayChecksum(const nsTArray<T>& aArray, uint32_t* outChecksum)
-{
-  *outChecksum = ~0;
-
-  for (size_t i = 0; i < aArray.Length(); i++) {
-    const T& element = aArray[i];
-    const void* pointer = &element;
-    *outChecksum = ComputeCrc32c(*outChecksum,
-                                 reinterpret_cast<const uint8_t*>(pointer),
-                                 sizeof(void*));
-  }
-}
-=======
-#define LOG(args) \
-  MOZ_LOG(gUrlClassifierPrefixSetLog, mozilla::LogLevel::Debug, args)
-#define LOG_ENABLED() \
-  MOZ_LOG_TEST(gUrlClassifierPrefixSetLog, mozilla::LogLevel::Debug)
-
-NS_IMPL_ISUPPORTS(nsUrlClassifierPrefixSet, nsIUrlClassifierPrefixSet,
-                  nsIMemoryReporter)
->>>>>>> upstream-releases
 
 nsUrlClassifierPrefixSet::nsUrlClassifierPrefixSet()
-<<<<<<< HEAD
-    : mLock("nsUrlClassifierPrefixSet.mLock"),
-      mIndexDeltasChecksum(~0),
-      mTotalPrefixes(0) {}
-||||||| merged common ancestors
-  : mLock("nsUrlClassifierPrefixSet.mLock")
-  , mIndexDeltasChecksum(~0)
-  , mTotalPrefixes(0)
-{
-}
-=======
     : mLock("nsUrlClassifierPrefixSet.mLock"), mTotalPrefixes(0) {}
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 nsUrlClassifierPrefixSet::Init(const nsACString& aName) {
@@ -159,29 +97,6 @@ nsresult nsUrlClassifierPrefixSet::MakePrefixSet(const uint32_t* aPrefixes,
 #endif
 
   uint32_t totalDeltas = 0;
-<<<<<<< HEAD
-  uint32_t previousItem = aPrefixes[0];
-  for (uint32_t i = 1; i < aLength; i++) {
-    if ((numOfDeltas >= DELTAS_LIMIT) ||
-        (aPrefixes[i] - previousItem >= MAX_INDEX_DIFF)) {
-      // Compact the previous element.
-      // Note there is always at least one element when we get here,
-      // because we created the first element before the loop.
-      if (!mIndexDeltas.AppendElement(fallible)) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
-||||||| merged common ancestors
-  uint32_t previousItem = aPrefixes[0];
-  for (uint32_t i = 1; i < aLength; i++) {
-    if ((numOfDeltas >= DELTAS_LIMIT) ||
-          (aPrefixes[i] - previousItem >= MAX_INDEX_DIFF)) {
-      // Compact the previous element.
-      // Note there is always at least one element when we get here,
-      // because we created the first element before the loop.
-      if (!mIndexDeltas.AppendElement(fallible)) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
-=======
 
   // Request one memory space to store all the prefixes may lead to
   // memory allocation failure on certain platforms(See Bug 1046038).
@@ -229,7 +144,6 @@ nsresult nsUrlClassifierPrefixSet::MakePrefixSet(const uint32_t* aPrefixes,
           return NS_ERROR_OUT_OF_MEMORY;
         }
         mIndexDeltas.LastElement().SetCapacity(DELTAS_LIMIT);
->>>>>>> upstream-releases
 
         if (!mIndexPrefixes.AppendElement(aPrefixes[i], fallible)) {
           return NS_ERROR_OUT_OF_MEMORY;
@@ -386,14 +300,6 @@ nsUrlClassifierPrefixSet::Contains(uint32_t aPrefix, bool* aFound) {
 
   // Now search through the deltas for the target.
   uint32_t diff = target - mIndexPrefixes[i];
-<<<<<<< HEAD
-  uint32_t deltaSize = mIndexDeltas[i].Length();
-  uint32_t deltaIndex = 0;
-||||||| merged common ancestors
-  uint32_t deltaSize  = mIndexDeltas[i].Length();
-  uint32_t deltaIndex = 0;
-=======
->>>>>>> upstream-releases
 
   if (!mIndexDeltas.IsEmpty()) {
     uint32_t deltaSize = mIndexDeltas[i].Length();
@@ -464,166 +370,9 @@ nsUrlClassifierPrefixSet::IsEmpty(bool* aEmpty) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsUrlClassifierPrefixSet::LoadFromFile(nsIFile* aFile) {
-  MutexAutoLock lock(mLock);
-
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_PS_FILELOAD_TIME> timer;
-
-  nsCOMPtr<nsIInputStream> localInFile;
-  nsresult rv = NS_NewLocalFileInputStream(getter_AddRefs(localInFile), aFile,
-                                           PR_RDONLY | nsIFile::OS_READAHEAD);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Calculate how big the file is, make sure our read buffer isn't bigger
-  // than the file itself which is just wasting memory.
-  int64_t fileSize;
-  rv = aFile->GetFileSize(&fileSize);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (fileSize < 0 || fileSize > UINT32_MAX) {
-    return NS_ERROR_FAILURE;
-  }
-
-  uint32_t bufferSize =
-      std::min<uint32_t>(static_cast<uint32_t>(fileSize), MAX_BUFFER_SIZE);
-
-  // Convert to buffered stream
-  nsCOMPtr<nsIInputStream> in;
-  rv = NS_NewBufferedInputStream(getter_AddRefs(in), localInFile.forget(),
-                                 bufferSize);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = LoadPrefixes(in);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsUrlClassifierPrefixSet::StoreToFile(nsIFile* aFile) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsUrlClassifierPrefixSet::LoadFromFile(nsIFile* aFile)
-{
-  MutexAutoLock lock(mLock);
-
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_PS_FILELOAD_TIME> timer;
-
-  nsCOMPtr<nsIInputStream> localInFile;
-  nsresult rv = NS_NewLocalFileInputStream(getter_AddRefs(localInFile), aFile,
-                                           PR_RDONLY | nsIFile::OS_READAHEAD);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Calculate how big the file is, make sure our read buffer isn't bigger
-  // than the file itself which is just wasting memory.
-  int64_t fileSize;
-  rv = aFile->GetFileSize(&fileSize);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (fileSize < 0 || fileSize > UINT32_MAX) {
-    return NS_ERROR_FAILURE;
-  }
-
-  uint32_t bufferSize = std::min<uint32_t>(static_cast<uint32_t>(fileSize),
-                                           MAX_BUFFER_SIZE);
-
-  // Convert to buffered stream
-  nsCOMPtr<nsIInputStream> in;
-  rv = NS_NewBufferedInputStream(getter_AddRefs(in), localInFile.forget(),
-                                 bufferSize);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = LoadPrefixes(in);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsUrlClassifierPrefixSet::StoreToFile(nsIFile* aFile)
-{
-=======
 nsresult nsUrlClassifierPrefixSet::LoadPrefixes(nsCOMPtr<nsIInputStream>& in) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIOutputStream> localOutFile;
-  nsresult rv =
-      NS_NewLocalFileOutputStream(getter_AddRefs(localOutFile), aFile,
-                                  PR_WRONLY | PR_TRUNCATE | PR_CREATE_FILE);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  uint32_t fileSize;
-
-  // Preallocate the file storage
-  {
-    nsCOMPtr<nsIFileOutputStream> fos(do_QueryInterface(localOutFile));
-    Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_PS_FALLOCATE_TIME> timer;
-
-    fileSize = CalculatePreallocateSize();
-
-    // Ignore failure, the preallocation is a hint and we write out the entire
-    // file later on
-    Unused << fos->Preallocate(fileSize);
-  }
-
-  // Convert to buffered stream
-  nsCOMPtr<nsIOutputStream> out;
-  rv = NS_NewBufferedOutputStream(getter_AddRefs(out), localOutFile.forget(),
-                                  std::min(fileSize, MAX_BUFFER_SIZE));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = WritePrefixes(out);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  LOG(("[%s] Storing PrefixSet successful", mName.get()));
-
-  return NS_OK;
-}
-
-nsresult nsUrlClassifierPrefixSet::LoadPrefixes(nsCOMPtr<nsIInputStream>& in) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIOutputStream> localOutFile;
-  nsresult rv = NS_NewLocalFileOutputStream(getter_AddRefs(localOutFile), aFile,
-                                            PR_WRONLY | PR_TRUNCATE | PR_CREATE_FILE);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  uint32_t fileSize;
-
-  // Preallocate the file storage
-  {
-    nsCOMPtr<nsIFileOutputStream> fos(do_QueryInterface(localOutFile));
-    Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_PS_FALLOCATE_TIME> timer;
-
-    fileSize = CalculatePreallocateSize();
-
-    // Ignore failure, the preallocation is a hint and we write out the entire
-    // file later on
-    Unused << fos->Preallocate(fileSize);
-  }
-
-  // Convert to buffered stream
-  nsCOMPtr<nsIOutputStream> out;
-  rv = NS_NewBufferedOutputStream(getter_AddRefs(out), localOutFile.forget(),
-                                  std::min(fileSize, MAX_BUFFER_SIZE));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = WritePrefixes(out);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  LOG(("[%s] Storing PrefixSet successful", mName.get()));
-
-  return NS_OK;
-}
-
-nsresult
-nsUrlClassifierPrefixSet::LoadPrefixes(nsCOMPtr<nsIInputStream>& in)
-{
-=======
->>>>>>> upstream-releases
   mCanary.Check();
   Clear();
 
@@ -662,54 +411,16 @@ nsUrlClassifierPrefixSet::LoadPrefixes(nsCOMPtr<nsIInputStream>& in)
       return NS_ERROR_FILE_CORRUPTED;
     }
 
-<<<<<<< HEAD
-    uint32_t toRead = indexSize * sizeof(uint32_t);
-    rv = in->Read(reinterpret_cast<char*>(mIndexPrefixes.Elements()), toRead,
-                  &read);
-||||||| merged common ancestors
-    uint32_t toRead = indexSize*sizeof(uint32_t);
-    rv = in->Read(reinterpret_cast<char*>(mIndexPrefixes.Elements()), toRead, &read);
-=======
     // Read index prefixes
     uint32_t toRead = indexSize * sizeof(uint32_t);
     rv = in->Read(reinterpret_cast<char*>(mIndexPrefixes.Elements()), toRead,
                   &read);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
     NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
 
-<<<<<<< HEAD
-    rv = in->Read(reinterpret_cast<char*>(indexStarts.Elements()), toRead,
-                  &read);
-    NS_ENSURE_SUCCESS(rv, rv);
-    NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-    rv = in->Read(reinterpret_cast<char*>(indexStarts.Elements()), toRead, &read);
-    NS_ENSURE_SUCCESS(rv, rv);
-    NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
-=======
     if (deltaSize) {
       nsTArray<uint32_t> indexStarts;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (indexSize != 0 && indexStarts[0] != 0) {
-      return NS_ERROR_FILE_CORRUPTED;
-    }
-    for (uint32_t i = 0; i < indexSize; i++) {
-      uint32_t numInDelta = i == indexSize - 1
-                                ? deltaSize - indexStarts[i]
-                                : indexStarts[i + 1] - indexStarts[i];
-      if (numInDelta > DELTAS_LIMIT) {
-||||||| merged common ancestors
-    if (indexSize != 0 && indexStarts[0] != 0) {
-      return NS_ERROR_FILE_CORRUPTED;
-    }
-    for (uint32_t i = 0; i < indexSize; i++) {
-      uint32_t numInDelta = i == indexSize - 1 ? deltaSize - indexStarts[i]
-                               : indexStarts[i + 1] - indexStarts[i];
-      if (numInDelta > DELTAS_LIMIT) {
-=======
       if (!indexStarts.SetLength(indexSize, fallible) ||
           !mIndexDeltas.SetLength(indexSize, fallible)) {
         return NS_ERROR_OUT_OF_MEMORY;
@@ -722,7 +433,6 @@ nsUrlClassifierPrefixSet::LoadPrefixes(nsCOMPtr<nsIInputStream>& in)
       NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
 
       if (indexStarts[0] != 0) {
->>>>>>> upstream-releases
         return NS_ERROR_FILE_CORRUPTED;
       }
 
@@ -744,21 +454,6 @@ nsUrlClassifierPrefixSet::LoadPrefixes(nsCOMPtr<nsIInputStream>& in)
           NS_ENSURE_SUCCESS(rv, rv);
           NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
         }
-<<<<<<< HEAD
-        mTotalPrefixes += numInDelta;
-        toRead = numInDelta * sizeof(uint16_t);
-        rv = in->Read(reinterpret_cast<char*>(mIndexDeltas[i].Elements()),
-                      toRead, &read);
-        NS_ENSURE_SUCCESS(rv, rv);
-        NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-        mTotalPrefixes += numInDelta;
-        toRead = numInDelta * sizeof(uint16_t);
-        rv = in->Read(reinterpret_cast<char*>(mIndexDeltas[i].Elements()), toRead, &read);
-        NS_ENSURE_SUCCESS(rv, rv);
-        NS_ENSURE_TRUE(read == toRead, NS_ERROR_FAILURE);
-=======
->>>>>>> upstream-releases
       }
     } else {
       mIndexDeltas.Clear();
@@ -793,54 +488,16 @@ uint32_t nsUrlClassifierPrefixSet::CalculatePreallocateSize() const {
   return fileSize;
 }
 
-<<<<<<< HEAD
-nsresult nsUrlClassifierPrefixSet::WritePrefixes(
-    nsCOMPtr<nsIOutputStream>& out) const {
-  mCanary.Check();
-||||||| merged common ancestors
-nsresult
-nsUrlClassifierPrefixSet::WritePrefixes(nsCOMPtr<nsIOutputStream>& out) const
-{
-  mCanary.Check();
-=======
 nsresult nsUrlClassifierPrefixSet::WritePrefixes(
     nsCOMPtr<nsIOutputStream>& out) const {
   MutexAutoLock lock(mLock);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // In Bug 1362761, crashes happened while reading mIndexDeltas[i].
-  // We suspect that this is due to memory corruption so to test this
-  // hypothesis, we will crash the browser. Once we have established
-  // memory corruption as the root cause, we can attempt to gracefully
-  // handle this.
-  uint32_t checksum;
-  CalculateTArrayChecksum(mIndexDeltas, &checksum);
-  if (checksum != mIndexDeltasChecksum) {
-    LOG(("[%s] The contents of mIndexDeltas doesn't match the checksum!",
-         mName.get()));
-    MOZ_CRASH("Memory corruption detected in mIndexDeltas.");
-  }
-||||||| merged common ancestors
-  // In Bug 1362761, crashes happened while reading mIndexDeltas[i].
-  // We suspect that this is due to memory corruption so to test this
-  // hypothesis, we will crash the browser. Once we have established
-  // memory corruption as the root cause, we can attempt to gracefully
-  // handle this.
-  uint32_t checksum;
-  CalculateTArrayChecksum(mIndexDeltas, &checksum);
-  if (checksum != mIndexDeltasChecksum) {
-    LOG(("[%s] The contents of mIndexDeltas doesn't match the checksum!", mName.get()));
-    MOZ_CRASH("Memory corruption detected in mIndexDeltas.");
-  }
-=======
   MOZ_ASSERT_IF(mIndexDeltas.IsEmpty(),
                 mIndexPrefixes.Length() == mTotalPrefixes);
   MOZ_ASSERT_IF(!mIndexDeltas.IsEmpty(),
                 mIndexPrefixes.Length() == mIndexDeltas.Length());
 
   mCanary.Check();
->>>>>>> upstream-releases
 
   uint32_t written;
   uint32_t writelen = sizeof(uint32_t);
@@ -886,14 +543,6 @@ nsresult nsUrlClassifierPrefixSet::WritePrefixes(
     indexStarts.RemoveElementAt(indexSize);  // we don't use the last element
     MOZ_ASSERT(indexStarts.Length() == indexSize);
   }
-<<<<<<< HEAD
-  indexStarts.RemoveElementAt(indexSize);  // we don't use the last element
-  MOZ_ASSERT(indexStarts.Length() == indexSize);
-||||||| merged common ancestors
-  indexStarts.RemoveElementAt(indexSize); // we don't use the last element
-  MOZ_ASSERT(indexStarts.Length() == indexSize);
-=======
->>>>>>> upstream-releases
 
   rv =
       out->Write(reinterpret_cast<const char*>(&indexSize), writelen, &written);
@@ -911,23 +560,12 @@ nsresult nsUrlClassifierPrefixSet::WritePrefixes(
   NS_ENSURE_SUCCESS(rv, rv);
   NS_ENSURE_TRUE(written == writelen, NS_ERROR_FAILURE);
 
-<<<<<<< HEAD
-  rv = out->Write(reinterpret_cast<const char*>(indexStarts.Elements()),
-                  writelen, &written);
-  NS_ENSURE_SUCCESS(rv, rv);
-  NS_ENSURE_TRUE(written == writelen, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-  rv = out->Write(reinterpret_cast<const char*>(indexStarts.Elements()), writelen, &written);
-  NS_ENSURE_SUCCESS(rv, rv);
-  NS_ENSURE_TRUE(written == writelen, NS_ERROR_FAILURE);
-=======
   if (!mIndexDeltas.IsEmpty()) {
     MOZ_ASSERT(!indexStarts.IsEmpty() && totalDeltas > 0);
     rv = out->Write(reinterpret_cast<const char*>(indexStarts.Elements()),
                     writelen, &written);
     NS_ENSURE_SUCCESS(rv, rv);
     NS_ENSURE_TRUE(written == writelen, NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
     for (uint32_t i = 0; i < indexSize; i++) {
       writelen = mIndexDeltas[i].Length() * sizeof(uint16_t);

@@ -13,16 +13,8 @@
 #include "WinTextEventDispatcherListener.h"
 
 #ifdef NS_ENABLE_TSF
-<<<<<<< HEAD
-#include "TSFTextStore.h"
-#endif  // #ifdef NS_ENABLE_TSF
-||||||| merged common ancestors
-#include "TSFTextStore.h"
-#endif // #ifdef NS_ENABLE_TSF
-=======
 #  include "TSFTextStore.h"
 #endif  // #ifdef NS_ENABLE_TSF
->>>>>>> upstream-releases
 
 #include "nsLookAndFeel.h"
 #include "nsWindow.h"
@@ -55,14 +47,8 @@ namespace widget {
 
 nsWindow* IMEHandler::sFocusedWindow = nullptr;
 InputContextAction::Cause IMEHandler::sLastContextActionCause =
-<<<<<<< HEAD
-    InputContextAction::CAUSE_UNKNOWN;
-||||||| merged common ancestors
-  InputContextAction::CAUSE_UNKNOWN;
-=======
     InputContextAction::CAUSE_UNKNOWN;
 bool IMEHandler::sMaybeEditable = false;
->>>>>>> upstream-releases
 bool IMEHandler::sForceDisableCurrentIMM_IME = false;
 bool IMEHandler::sPluginHasFocus = false;
 bool IMEHandler::sNativeCaretIsCreated = false;
@@ -243,15 +229,6 @@ bool IMEHandler::ProcessMessage(nsWindow* aWindow, UINT aMessage,
 }
 
 // static
-<<<<<<< HEAD
-bool IMEHandler::IsIMMActive() { return TSFTextStore::IsIMM_IMEActive(); }
-||||||| merged common ancestors
-bool
-IMEHandler::IsIMMActive()
-{
-  return TSFTextStore::IsIMM_IMEActive();
-}
-=======
 bool IMEHandler::IsA11yHandlingNativeCaret() {
 #ifndef ACCESSIBILITY
   return false;
@@ -260,19 +237,12 @@ bool IMEHandler::IsA11yHandlingNativeCaret() {
   return GetAccService() != nullptr;
 #endif  // #ifndef ACCESSIBILITY #else
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // #ifdef NS_ENABLE_TSF
-||||||| merged common ancestors
-#endif // #ifdef NS_ENABLE_TSF
-=======
 #ifdef NS_ENABLE_TSF
 // static
 bool IMEHandler::IsIMMActive() { return TSFTextStore::IsIMM_IMEActive(); }
 
 #endif  // #ifdef NS_ENABLE_TSF
->>>>>>> upstream-releases
 
 // static
 bool IMEHandler::IsComposing() {
@@ -330,18 +300,9 @@ nsresult IMEHandler::NotifyIME(nsWindow* aWindow,
       case NOTIFY_IME_OF_FOCUS: {
         sFocusedWindow = aWindow;
         IMMHandler::OnFocusChange(true, aWindow);
-<<<<<<< HEAD
-        nsresult rv = TSFTextStore::OnFocusChange(true, aWindow,
-                                                  aWindow->GetInputContext());
-||||||| merged common ancestors
-        nsresult rv =
-          TSFTextStore::OnFocusChange(true, aWindow,
-                                      aWindow->GetInputContext());
-=======
         nsresult rv = TSFTextStore::OnFocusChange(true, aWindow,
                                                   aWindow->GetInputContext());
         MaybeCreateNativeCaret(aWindow);
->>>>>>> upstream-releases
         IMEHandler::MaybeShowOnScreenKeyboard();
         return rv;
       }
@@ -615,28 +576,12 @@ void IMEHandler::InitInputContext(nsWindow* aWindow,
 
 #ifdef DEBUG
 // static
-<<<<<<< HEAD
-bool IMEHandler::CurrentKeyboardLayoutHasIME() {
-#ifdef NS_ENABLE_TSF
-||||||| merged common ancestors
-bool
-IMEHandler::CurrentKeyboardLayoutHasIME()
-{
-#ifdef NS_ENABLE_TSF
-=======
 bool IMEHandler::CurrentKeyboardLayoutHasIME() {
 #  ifdef NS_ENABLE_TSF
->>>>>>> upstream-releases
   if (sIsInTSFMode) {
     return TSFTextStore::CurrentKeyboardLayoutHasIME();
   }
-<<<<<<< HEAD
-#endif  // #ifdef NS_ENABLE_TSF
-||||||| merged common ancestors
-#endif // #ifdef NS_ENABLE_TSF
-=======
 #  endif  // #ifdef NS_ENABLE_TSF
->>>>>>> upstream-releases
 
   return IMMHandler::IsIMEAvailable();
 }
@@ -1130,13 +1075,6 @@ void IMEHandler::DefaultProcOfPluginEvent(nsWindow* aWindow,
   IMMHandler::DefaultProcOfPluginEvent(aWindow, aPluginEvent);
 }
 
-<<<<<<< HEAD
-}  // namespace widget
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace widget
-} // namespace mozilla
-=======
 bool IMEHandler::MaybeCreateNativeCaret(nsWindow* aWindow) {
   MOZ_ASSERT(aWindow);
 
@@ -1219,4 +1157,3 @@ void IMEHandler::MaybeDestroyNativeCaret() {
 
 }  // namespace widget
 }  // namespace mozilla
->>>>>>> upstream-releases

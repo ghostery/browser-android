@@ -288,26 +288,6 @@ AccessibilityPanel.prototype = {
     this.target.off("navigate", this.onTabNavigated);
     this._toolbox.off("select", this.onPanelVisibilityChange);
 
-<<<<<<< HEAD
-    this.panelWin.off(EVENTS.NEW_ACCESSIBLE_FRONT_SELECTED,
-      this.onNewAccessibleFrontSelected);
-    this.panelWin.off(EVENTS.ACCESSIBILITY_INSPECTOR_UPDATED,
-      this.onAccessibilityInspectorUpdated);
-
-    // Older versions of debugger server do not support picker functionality.
-    if (this.picker) {
-      this.picker.release();
-      this.picker = null;
-    }
-||||||| merged common ancestors
-    this.panelWin.off(EVENTS.NEW_ACCESSIBLE_FRONT_SELECTED,
-      this.onNewAccessibleFrontSelected);
-    this.panelWin.off(EVENTS.ACCESSIBILITY_INSPECTOR_UPDATED,
-      this.onAccessibilityInspectorUpdated);
-
-    this.picker.release();
-    this.picker = null;
-=======
     this.panelWin.off(
       EVENTS.NEW_ACCESSIBLE_FRONT_SELECTED,
       this.onNewAccessibleFrontSelected
@@ -322,7 +302,6 @@ AccessibilityPanel.prototype = {
       this.picker.release();
       this.picker = null;
     }
->>>>>>> upstream-releases
 
     if (this.front) {
       this.front.off("init", this.updateA11YServiceDurationTimer);

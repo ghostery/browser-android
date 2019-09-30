@@ -32,13 +32,6 @@ DEPRECATED_OPERATION(AppCacheInsecure)
 DEPRECATED_OPERATION(PrefixedImageSmoothingEnabled)
 DEPRECATED_OPERATION(LenientSetter)
 DEPRECATED_OPERATION(ImageBitmapRenderingContext_TransferImageBitmap)
-<<<<<<< HEAD
-DEPRECATED_OPERATION(XMLBaseAttribute)
-||||||| merged common ancestors
-DEPRECATED_OPERATION(URLCreateObjectURL_MediaStream)
-DEPRECATED_OPERATION(XMLBaseAttribute)
-=======
->>>>>>> upstream-releases
 DEPRECATED_OPERATION(WindowContentUntrusted)
 DEPRECATED_OPERATION(MixedDisplayObjectSubrequest)
 DEPRECATED_OPERATION(MotionEvent)
@@ -48,16 +41,6 @@ DEPRECATED_OPERATION(AmbientLightEvent)
 DEPRECATED_OPERATION(IDBOpenDBOptions_StorageType)
 DEPRECATED_OPERATION(MozBoxOrInlineBoxDisplay)
 DEPRECATED_OPERATION(DOMQuadBoundsAttr)
-<<<<<<< HEAD
-DEPRECATED_OPERATION(DeprecatedTestingInterface)
-DEPRECATED_OPERATION(DeprecatedTestingMethod)
-DEPRECATED_OPERATION(DeprecatedTestingAttribute)
-DEPRECATED_OPERATION(CreateImageBitmapCanvasRenderingContext2D)
-DEPRECATED_OPERATION(MozRequestFullScreenDeprecatedPrefix)
-DEPRECATED_OPERATION(MozfullscreenchangeDeprecatedPrefix)
-DEPRECATED_OPERATION(MozfullscreenerrorDeprecatedPrefix)
-||||||| merged common ancestors
-=======
 DEPRECATED_OPERATION(DeprecatedTestingInterface)
 DEPRECATED_OPERATION(DeprecatedTestingMethod)
 DEPRECATED_OPERATION(DeprecatedTestingAttribute)
@@ -67,4 +50,3 @@ DEPRECATED_OPERATION(MozfullscreenchangeDeprecatedPrefix)
 DEPRECATED_OPERATION(MozfullscreenerrorDeprecatedPrefix)
 DEPRECATED_OPERATION(External_AddSearchProvider)
 DEPRECATED_OPERATION(MouseEvent_MozPressure)
->>>>>>> upstream-releases

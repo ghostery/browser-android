@@ -73,50 +73,21 @@ struct CycleCollectorResults {
   uint32_t mNumSlices;
 };
 
-<<<<<<< HEAD
-class MicroTaskRunnable {
- public:
-  MicroTaskRunnable() {}
-||||||| merged common ancestors
-class MicroTaskRunnable
-{
-public:
-  MicroTaskRunnable() {}
-=======
 class MicroTaskRunnable {
  public:
   MicroTaskRunnable() = default;
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(MicroTaskRunnable)
   MOZ_CAN_RUN_SCRIPT virtual void Run(AutoSlowOperation& aAso) = 0;
   virtual bool Suppressed() { return false; }
-<<<<<<< HEAD
-
- protected:
-  virtual ~MicroTaskRunnable() {}
-||||||| merged common ancestors
-protected:
-  virtual ~MicroTaskRunnable() {}
-=======
 
  protected:
   virtual ~MicroTaskRunnable() = default;
->>>>>>> upstream-releases
 };
 
 class CycleCollectedJSContext
-<<<<<<< HEAD
-    : dom::PerThreadAtomCache,
-      public LinkedListElement<CycleCollectedJSContext> {
-||||||| merged common ancestors
-  : dom::PerThreadAtomCache
-  , public LinkedListElement<CycleCollectedJSContext>
-{
-=======
     : dom::PerThreadAtomCache,
       public LinkedListElement<CycleCollectedJSContext>,
       private JS::JobQueue {
->>>>>>> upstream-releases
   friend class CycleCollectedJSRuntime;
 
  protected:
@@ -146,20 +117,9 @@ class CycleCollectedJSContext
                                         JS::HandleObject aAllocationSite,
                                         JS::HandleObject aIncumbentGlobal,
                                         void* aData);
-<<<<<<< HEAD
-  static void PromiseRejectionTrackerCallback(
-      JSContext* aCx, JS::HandleObject aPromise,
-      JS::PromiseRejectionHandlingState state, void* aData);
-||||||| merged common ancestors
-  static void PromiseRejectionTrackerCallback(JSContext* aCx,
-                                              JS::HandleObject aPromise,
-                                              JS::PromiseRejectionHandlingState state,
-                                              void* aData);
-=======
   static void PromiseRejectionTrackerCallback(
       JSContext* aCx, bool aMutedErrors, JS::HandleObject aPromise,
       JS::PromiseRejectionHandlingState state, void* aData);
->>>>>>> upstream-releases
 
   void AfterProcessMicrotasks();
 
@@ -247,41 +207,16 @@ class CycleCollectedJSContext
   // Usually the best way to do this is to use nsAutoMicroTask.
   void EnterMicroTask() { ++mMicroTaskLevel; }
 
-<<<<<<< HEAD
-  void LeaveMicroTask() {
-||||||| merged common ancestors
-  void LeaveMicroTask()
-  {
-=======
   MOZ_CAN_RUN_SCRIPT
   void LeaveMicroTask() {
->>>>>>> upstream-releases
     if (--mMicroTaskLevel == 0) {
       PerformMicroTaskCheckPoint();
     }
   }
 
-<<<<<<< HEAD
-  bool IsInMicroTask() { return mMicroTaskLevel != 0; }
-||||||| merged common ancestors
-  bool IsInMicroTask()
-  {
-    return mMicroTaskLevel != 0;
-  }
-=======
   bool IsInMicroTask() const { return mMicroTaskLevel != 0; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t MicroTaskLevel() { return mMicroTaskLevel; }
-||||||| merged common ancestors
-  uint32_t MicroTaskLevel()
-  {
-    return mMicroTaskLevel;
-  }
-=======
   uint32_t MicroTaskLevel() const { return mMicroTaskLevel; }
->>>>>>> upstream-releases
 
   void SetMicroTaskLevel(uint32_t aLevel) { mMicroTaskLevel = aLevel; }
 
@@ -291,16 +226,7 @@ class CycleCollectedJSContext
   MOZ_CAN_RUN_SCRIPT
   void PerformDebuggerMicroTaskCheckpoint();
 
-<<<<<<< HEAD
-  bool IsInStableOrMetaStableState() { return mDoingStableStates; }
-||||||| merged common ancestors
-  bool IsInStableOrMetaStableState()
-  {
-    return mDoingStableStates;
-  }
-=======
   bool IsInStableOrMetaStableState() const { return mDoingStableStates; }
->>>>>>> upstream-releases
 
   // Storage for watching rejected promises waiting for some client to
   // consume their rejection.
@@ -321,11 +247,6 @@ class CycleCollectedJSContext
 
   virtual bool IsSystemCaller() const = 0;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   // JS::JobQueue implementation: see js/public/Promise.h.
   // SpiderMonkey uses some of these methods to enqueue promise resolution jobs.
@@ -346,7 +267,6 @@ private:
   js::UniquePtr<SavedJobQueue> saveJobQueue(JSContext*) override;
 
  private:
->>>>>>> upstream-releases
   // A primary context owns the mRuntime. Non-main-thread contexts should always
   // be primary. On the main thread, the primary context should be the first one
   // created and the last one destroyed. Non-primary contexts are used for
@@ -435,14 +355,7 @@ class MOZ_STACK_CLASS nsAutoMicroTask {
       ccjs->EnterMicroTask();
     }
   }
-<<<<<<< HEAD
-  ~nsAutoMicroTask() {
-||||||| merged common ancestors
-  ~nsAutoMicroTask()
-  {
-=======
   MOZ_CAN_RUN_SCRIPT ~nsAutoMicroTask() {
->>>>>>> upstream-releases
     CycleCollectedJSContext* ccjs = CycleCollectedJSContext::Get();
     if (ccjs) {
       ccjs->LeaveMicroTask();

@@ -15,22 +15,9 @@
 typedef nsInterfaceHashtable<nsCharPtrHashKey, nsISupports>
     nsProperties_HashBase;
 
-<<<<<<< HEAD
-class nsProperties final : public nsIProperties, public nsProperties_HashBase {
- public:
-  NS_DECL_AGGREGATED
-||||||| merged common ancestors
-class nsProperties final
-  : public nsIProperties
-  , public nsProperties_HashBase
-{
-public:
-  NS_DECL_AGGREGATED
-=======
 class nsProperties final : public nsIProperties, public nsProperties_HashBase {
  public:
   NS_DECL_ISUPPORTS
->>>>>>> upstream-releases
   NS_DECL_NSIPROPERTIES
 
   nsProperties() = default;

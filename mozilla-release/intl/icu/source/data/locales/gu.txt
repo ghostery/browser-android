@@ -44,9 +44,7 @@ gu{
         }
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -236,13 +234,7 @@ gu{
         minimumGroupingDigits{"1"}
         native{"gujr"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.2"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.42"}
->>>>>>> upstream-releases
     calendar{
         coptic{
             eras{

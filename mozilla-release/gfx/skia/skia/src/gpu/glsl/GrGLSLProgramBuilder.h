@@ -93,13 +93,7 @@ public:
 
     GrProgramDesc*               fDesc;
 
-<<<<<<< HEAD
-    GrGLSLBuiltinUniformHandles fUniformHandles;
-||||||| merged common ancestors
-    BuiltinUniformHandles fUniformHandles;
-=======
     GrGLSLBuiltinUniformHandles  fUniformHandles;
->>>>>>> upstream-releases
 
     std::unique_ptr<GrGLSLPrimitiveProcessor> fGeometryProcessor;
     std::unique_ptr<GrGLSLXferProcessor> fXferProcessor;
@@ -107,19 +101,11 @@ public:
     int fFragmentProcessorCnt;
 
 protected:
-<<<<<<< HEAD
-    explicit GrGLSLProgramBuilder(const GrPrimitiveProcessor&, const GrPipeline&, GrProgramDesc*);
-||||||| merged common ancestors
-    explicit GrGLSLProgramBuilder(const GrPipeline&,
-                                  const GrPrimitiveProcessor&,
-                                  GrProgramDesc*);
-=======
     explicit GrGLSLProgramBuilder(GrRenderTarget* renderTarget, GrSurfaceOrigin origin,
                                   const GrPrimitiveProcessor&,
                                   const GrTextureProxy* const primProcProxies[],
                                   const GrPipeline&,
                                   GrProgramDesc*);
->>>>>>> upstream-releases
 
     void addFeature(GrShaderFlags shaders, uint32_t featureBit, const char* extensionName);
 
@@ -164,18 +150,7 @@ private:
                                     SkString output,
                                     SkTArray<std::unique_ptr<GrGLSLFragmentProcessor>>*);
     void emitAndInstallXferProc(const SkString& colorIn, const SkString& coverageIn);
-<<<<<<< HEAD
-    SamplerHandle emitSampler(GrTextureType, GrPixelConfig, const char* name);
-||||||| merged common ancestors
-    void emitSamplers(const GrResourceIOProcessor& processor,
-                      SkTArray<SamplerHandle>* outTexSamplerHandles,
-                      SkTArray<TexelBufferHandle>* outTexelBufferHandles);
-    SamplerHandle emitSampler(GrSLType samplerType, GrPixelConfig, const char* name,
-                              GrShaderFlags visibility);
-    TexelBufferHandle emitTexelBuffer(GrPixelConfig, const char* name, GrShaderFlags visibility);
-=======
     SamplerHandle emitSampler(const GrTexture*, const GrSamplerState&, const char* name);
->>>>>>> upstream-releases
     void emitFSOutputSwizzle(bool hasSecondaryOutput);
     bool checkSamplerCounts();
 

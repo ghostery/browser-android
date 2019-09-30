@@ -11,29 +11,11 @@
 
 // A simple implementation of PrintfTarget, just for testing
 // PrintfTarget::print.
-<<<<<<< HEAD
-class TestPrintfTarget : public mozilla::PrintfTarget {
- public:
-  static const char *test_string;
-
-  TestPrintfTarget() : mOut(0) { memset(mBuffer, '\0', sizeof(mBuffer)); }
-||||||| merged common ancestors
-class TestPrintfTarget : public mozilla::PrintfTarget
-{
-public:
-
-  static const char *test_string;
-
-  TestPrintfTarget() : mOut(0) {
-    memset(mBuffer, '\0', sizeof(mBuffer));
-  }
-=======
 class TestPrintfTarget : public mozilla::PrintfTarget {
  public:
   static const char* test_string;
 
   TestPrintfTarget() : mOut(0) { memset(mBuffer, '\0', sizeof(mBuffer)); }
->>>>>>> upstream-releases
 
   ~TestPrintfTarget() {
     MOZ_RELEASE_ASSERT(mOut == strlen(test_string));
@@ -61,14 +43,7 @@ static void TestPrintfTargetPrint() {
 }
 
 static bool MOZ_FORMAT_PRINTF(2, 3)
-<<<<<<< HEAD
-    print_one(const char *expect, const char *fmt, ...) {
-||||||| merged common ancestors
-print_one (const char *expect, const char *fmt, ...)
-{
-=======
     print_one(const char* expect, const char* fmt, ...) {
->>>>>>> upstream-releases
   va_list ap;
 
   va_start(ap, fmt);
@@ -78,17 +53,7 @@ print_one (const char *expect, const char *fmt, ...)
   return output && !strcmp(output.get(), expect);
 }
 
-<<<<<<< HEAD
-static const char *zero() { return nullptr; }
-||||||| merged common ancestors
-static const char *
-zero()
-{
-  return nullptr;
-}
-=======
 static const char* zero() { return nullptr; }
->>>>>>> upstream-releases
 
 static void TestPrintfFormats() {
   MOZ_RELEASE_ASSERT(print_one("0", "%d", 0));
@@ -138,13 +103,7 @@ static void TestPrintfFormats() {
   MOZ_RELEASE_ASSERT(print_one("hello", "%.*s", 5, "hello there"));
   MOZ_RELEASE_ASSERT(print_one("", "%.*s", 0, "hello there"));
   MOZ_RELEASE_ASSERT(print_one("%%", "%%%%"));
-<<<<<<< HEAD
-  MOZ_RELEASE_ASSERT(print_one("0", "%p", (char *)0));
-||||||| merged common ancestors
-  MOZ_RELEASE_ASSERT(print_one("0", "%p", (char *) 0));
-=======
   MOZ_RELEASE_ASSERT(print_one("0", "%p", (char*)0));
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(print_one("h", "%c", 'h'));
   MOZ_RELEASE_ASSERT(print_one("1.500000", "%f", 1.5f));
   MOZ_RELEASE_ASSERT(print_one("1.5", "%g", 1.5));

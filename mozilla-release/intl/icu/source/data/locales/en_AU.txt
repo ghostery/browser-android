@@ -10,51 +10,8 @@ en_AU{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.18"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.48.43"}
->>>>>>> upstream-releases
     calendar{
-<<<<<<< HEAD
-        chinese{
-            monthNames{
-                stand-alone{
-                    abbreviated{
-                        "Mo1",
-                        "Mo2",
-                        "Mo3",
-                        "Mo4",
-                        "Mo5",
-                        "Mo6",
-                        "Mo7",
-                        "Mo8",
-                        "Mo9",
-                        "Mo10",
-                        "Mo11",
-                        "Mo12",
-                    }
-                    wide{
-                        "First Month",
-                        "Second Month",
-                        "Third Month",
-                        "Fourth Month",
-                        "Fifth Month",
-                        "Sixth Month",
-                        "Seventh Month",
-                        "Eighth Month",
-                        "Ninth Month",
-                        "Tenth Month",
-                        "Eleventh Month",
-                        "Twelfth Month",
-                    }
-                }
-            }
-        }
-||||||| merged common ancestors
-=======
         chinese{
             monthNames{
                 format{
@@ -105,7 +62,6 @@ en_AU{
                 }
             }
         }
->>>>>>> upstream-releases
         generic{
             availableFormats{
                 yMEd{"E, dd/MM/y"}
@@ -227,44 +183,6 @@ en_AU{
                     }
                     wide{
                         noon{"midday"}
-<<<<<<< HEAD
-||||||| merged common ancestors
-                        pm{"pm"}
-                    }
-                }
-            }
-            monthNames{
-                format{
-                    abbreviated{
-                        "Jan.",
-                        "Feb.",
-                        "Mar.",
-                        "Apr.",
-                        "May",
-                        "Jun.",
-                        "Jul.",
-                        "Aug.",
-                        "Sep.",
-                        "Oct.",
-                        "Nov.",
-                        "Dec.",
-                    }
-                }
-                stand-alone{
-                    abbreviated{
-                        "Jan.",
-                        "Feb.",
-                        "Mar.",
-                        "Apr.",
-                        "May",
-                        "Jun.",
-                        "Jul.",
-                        "Aug.",
-                        "Sep.",
-                        "Oct.",
-                        "Nov.",
-                        "Dec.",
-=======
                     }
                 }
             }
@@ -283,7 +201,6 @@ en_AU{
                         "Oct",
                         "Nov",
                         "Dec",
->>>>>>> upstream-releases
                     }
                 }
             }
@@ -307,56 +224,6 @@ en_AU{
         upwards_arrows{"upward arrows"}
     }
     fields{
-<<<<<<< HEAD
-        day{
-            relative{
-                "-1"{"yesterday"}
-                "0"{"today"}
-                "1"{"tomorrow"}
-||||||| merged common ancestors
-        day-narrow{
-            relativeTime{
-                future{
-                    other{"in {0} days"}
-                }
-                past{
-                    other{"{0} days ago"}
-                }
-            }
-        }
-        day-short{
-            relativeTime{
-                future{
-                    other{"in {0} days"}
-                }
-                past{
-                    other{"{0} days ago"}
-                }
-            }
-        }
-        dayOfYear-narrow{
-            dn{"day of yr"}
-        }
-        dayOfYear-short{
-            dn{"day of yr"}
-        }
-        dayperiod-narrow{
-            dn{"am/pm"}
-        }
-        dayperiod-short{
-            dn{"am/pm"}
-        }
-        fri-narrow{
-            relativeTime{
-                future{
-                    one{"in {0} F"}
-                    other{"in {0} F"}
-                }
-                past{
-                    one{"{0} F ago"}
-                    other{"{0} F ago"}
-                }
-=======
         day{
             relative{
                 "-1"{"yesterday"}
@@ -369,7 +236,6 @@ en_AU{
                 future{
                     other{"in {0} days"}
                 }
->>>>>>> upstream-releases
             }
         }
         fri-short{
@@ -566,21 +432,6 @@ en_AU{
                 }
             }
         }
-<<<<<<< HEAD
-||||||| merged common ancestors
-        wed-narrow{
-            relativeTime{
-                future{
-                    one{"in {0} W"}
-                    other{"in {0} W"}
-                }
-                past{
-                    one{"{0} W ago"}
-                    other{"{0} W ago"}
-                }
-            }
-        }
-=======
         wed-narrow{
             relativeTime{
                 past{
@@ -588,7 +439,6 @@ en_AU{
                 }
             }
         }
->>>>>>> upstream-releases
         wed-short{
             relativeTime{
                 future{

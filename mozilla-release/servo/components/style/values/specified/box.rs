@@ -4,21 +4,6 @@
 
 //! Specified types for box properties.
 
-<<<<<<< HEAD
-use crate::custom_properties::Name as CustomPropertyName;
-use crate::parser::{Parse, ParserContext};
-use crate::properties::{LonghandId, PropertyDeclarationId, PropertyFlags};
-use crate::properties::{PropertyId, ShorthandId};
-use crate::values::generics::box_::AnimationIterationCount as GenericAnimationIterationCount;
-use crate::values::generics::box_::Perspective as GenericPerspective;
-use crate::values::generics::box_::VerticalAlign as GenericVerticalAlign;
-use crate::values::specified::length::{LengthOrPercentage, NonNegativeLength};
-use crate::values::specified::{AllowQuirks, Number};
-use crate::values::{CustomIdent, KeyframesName};
-use crate::Atom;
-||||||| merged common ancestors
-use Atom;
-=======
 use crate::custom_properties::Name as CustomPropertyName;
 use crate::parser::{Parse, ParserContext};
 use crate::properties::{LonghandId, PropertyDeclarationId, PropertyFlags};
@@ -30,65 +15,23 @@ use crate::values::specified::length::{LengthPercentage, NonNegativeLength};
 use crate::values::specified::{AllowQuirks, Number};
 use crate::values::{CustomIdent, KeyframesName};
 use crate::Atom;
->>>>>>> upstream-releases
 use cssparser::Parser;
 use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
 use style_traits::{CssWriter, KeywordsCollectFn, ParseError};
 use style_traits::{SpecifiedValueInfo, StyleParseErrorKind, ToCss};
-
-fn in_ua_or_chrome_sheet(context: &ParserContext) -> bool {
-    use crate::stylesheets::Origin;
-    context.stylesheet_origin == Origin::UserAgent || context.chrome_rules_enabled()
-}
-||||||| merged common ancestors
-use style_traits::{CssWriter, KeywordsCollectFn, ParseError, StyleParseErrorKind, SpecifiedValueInfo, ToCss};
-use values::{CustomIdent, KeyframesName};
-use values::generics::box_::AnimationIterationCount as GenericAnimationIterationCount;
-use values::generics::box_::Perspective as GenericPerspective;
-use values::generics::box_::VerticalAlign as GenericVerticalAlign;
-use values::specified::{AllowQuirks, Number};
-use values::specified::length::{LengthOrPercentage, NonNegativeLength};
-
-fn in_ua_or_chrome_sheet(context: &ParserContext) -> bool {
-    use stylesheets::Origin;
-    context.stylesheet_origin == Origin::UserAgent || context.chrome_rules_enabled()
-}
-=======
-use style_traits::{CssWriter, KeywordsCollectFn, ParseError};
-use style_traits::{SpecifiedValueInfo, StyleParseErrorKind, ToCss};
->>>>>>> upstream-releases
 
 #[cfg(feature = "gecko")]
 fn moz_display_values_enabled(context: &ParserContext) -> bool {
-<<<<<<< HEAD
-    use crate::gecko_bindings::structs;
-    in_ua_or_chrome_sheet(context) ||
-        unsafe { structs::StaticPrefs_sVarCache_layout_css_xul_display_values_content_enabled }
-||||||| merged common ancestors
-    use gecko_bindings::structs;
-    in_ua_or_chrome_sheet(context) ||
-        unsafe { structs::StaticPrefs_sVarCache_layout_css_xul_display_values_content_enabled }
-=======
     use crate::gecko_bindings::structs;
     context.in_ua_or_chrome_sheet() ||
         unsafe { structs::StaticPrefs::sVarCache_layout_css_xul_display_values_content_enabled }
->>>>>>> upstream-releases
 }
 
 #[cfg(feature = "gecko")]
 fn moz_box_display_values_enabled(context: &ParserContext) -> bool {
-<<<<<<< HEAD
-    use crate::gecko_bindings::structs;
-    in_ua_or_chrome_sheet(context) ||
-||||||| merged common ancestors
-    use gecko_bindings::structs;
-    in_ua_or_chrome_sheet(context) ||
-=======
     use crate::gecko_bindings::structs;
     context.in_ua_or_chrome_sheet() ||
->>>>>>> upstream-releases
         unsafe {
             structs::StaticPrefs::sVarCache_layout_css_xul_box_display_values_content_enabled
         }
@@ -442,14 +385,6 @@ impl Parse for AnimationName {
     ToResolvedValue,
     ToShmem,
 )]
-<<<<<<< HEAD
-#[repr(u8)]
-pub enum ScrollSnapType {
-    None,
-||||||| merged common ancestors
-pub enum ScrollSnapType {
-    None,
-=======
 #[repr(u8)]
 pub enum ScrollSnapAxis {
     X,
@@ -480,7 +415,6 @@ pub enum ScrollSnapAxis {
 pub enum ScrollSnapStrictness {
     #[css(skip)]
     None, // Used to represent scroll-snap-type: none.  It's not parsed.
->>>>>>> upstream-releases
     Mandatory,
     Proximity,
 }
@@ -595,10 +529,6 @@ pub enum ScrollSnapAlignKeyword {
     ToResolvedValue,
     ToShmem,
 )]
-<<<<<<< HEAD
-#[repr(u8)]
-||||||| merged common ancestors
-=======
 #[repr(C)]
 pub struct ScrollSnapAlign {
     block: ScrollSnapAlignKeyword,
@@ -659,7 +589,6 @@ impl ToCss for ScrollSnapAlign {
     ToShmem,
 )]
 #[repr(u8)]
->>>>>>> upstream-releases
 pub enum OverscrollBehavior {
     Auto,
     Contain,
@@ -920,62 +849,6 @@ impl Parse for TouchAction {
     }
 }
 
-<<<<<<< HEAD
-#[cfg(feature = "gecko")]
-impl_bitflags_conversions!(TouchAction);
-
-/// Asserts that all touch-action matches its NS_STYLE_TOUCH_ACTION_* value.
-#[cfg(feature = "gecko")]
-#[inline]
-pub fn assert_touch_action_matches() {
-    use crate::gecko_bindings::structs;
-
-    macro_rules! check_touch_action {
-        ( $( $a:ident => $b:path),*, ) => {
-            $(
-                debug_assert_eq!(structs::$a as u8, $b.bits());
-            )*
-        }
-    }
-
-    check_touch_action! {
-        NS_STYLE_TOUCH_ACTION_NONE => TouchAction::TOUCH_ACTION_NONE,
-        NS_STYLE_TOUCH_ACTION_AUTO => TouchAction::TOUCH_ACTION_AUTO,
-        NS_STYLE_TOUCH_ACTION_PAN_X => TouchAction::TOUCH_ACTION_PAN_X,
-        NS_STYLE_TOUCH_ACTION_PAN_Y => TouchAction::TOUCH_ACTION_PAN_Y,
-        NS_STYLE_TOUCH_ACTION_MANIPULATION => TouchAction::TOUCH_ACTION_MANIPULATION,
-    }
-}
-
-||||||| merged common ancestors
-#[cfg(feature = "gecko")]
-impl_bitflags_conversions!(TouchAction);
-
-/// Asserts that all touch-action matches its NS_STYLE_TOUCH_ACTION_* value.
-#[cfg(feature = "gecko")]
-#[inline]
-pub fn assert_touch_action_matches() {
-    use gecko_bindings::structs;
-
-    macro_rules! check_touch_action {
-        ( $( $a:ident => $b:path),*, ) => {
-            $(
-                debug_assert_eq!(structs::$a as u8, $b.bits());
-            )*
-        }
-    }
-
-    check_touch_action! {
-        NS_STYLE_TOUCH_ACTION_NONE => TouchAction::TOUCH_ACTION_NONE,
-        NS_STYLE_TOUCH_ACTION_AUTO => TouchAction::TOUCH_ACTION_AUTO,
-        NS_STYLE_TOUCH_ACTION_PAN_X => TouchAction::TOUCH_ACTION_PAN_X,
-        NS_STYLE_TOUCH_ACTION_PAN_Y => TouchAction::TOUCH_ACTION_PAN_Y,
-        NS_STYLE_TOUCH_ACTION_MANIPULATION => TouchAction::TOUCH_ACTION_MANIPULATION,
-    }
-}
-
-=======
->>>>>>> upstream-releases
 bitflags! {
     #[derive(MallocSizeOf, SpecifiedValueInfo, ToComputedValue, ToResolvedValue, ToShmem)]
     #[value_info(other_values = "none,strict,content,size,layout,paint")]
@@ -1319,12 +1192,7 @@ pub enum Appearance {
     #[parse(aliases = "meterbar")]
     Meter,
     /// The meter bar's meter indicator.
-<<<<<<< HEAD
-    #[parse(condition = "in_ua_or_chrome_sheet")]
-||||||| merged common ancestors
-=======
     #[parse(condition = "ParserContext::in_ua_or_chrome_sheet")]
->>>>>>> upstream-releases
     Meterchunk,
     /// The "arrowed" part of the dropdown button that open up a dropdown list.
     #[parse(condition = "ParserContext::in_ua_or_chrome_sheet")]
@@ -1335,12 +1203,7 @@ pub enum Appearance {
     #[parse(aliases = "progressbar")]
     ProgressBar,
     /// The progress bar's progress indicator
-<<<<<<< HEAD
-    #[parse(condition = "in_ua_or_chrome_sheet")]
-||||||| merged common ancestors
-=======
     #[parse(condition = "ParserContext::in_ua_or_chrome_sheet")]
->>>>>>> upstream-releases
     Progresschunk,
     /// A vertical progress bar.
     ProgressbarVertical,
@@ -1587,103 +1450,6 @@ pub enum Appearance {
     #[css(skip)]
     Count,
 }
-<<<<<<< HEAD
-
-/// A kind of break between two boxes.
-///
-/// https://drafts.csswg.org/css-break/#break-between
-#[allow(missing_docs)]
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    Hash,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToCss,
-    ToComputedValue,
-)]
-#[repr(u8)]
-pub enum BreakBetween {
-    Always,
-    Auto,
-    Page,
-    Avoid,
-    Left,
-    Right,
-}
-
-impl BreakBetween {
-    /// Parse a legacy break-between value for `page-break-*`.
-    ///
-    /// See https://drafts.csswg.org/css-break/#page-break-properties.
-    #[inline]
-    pub fn parse_legacy<'i>(input: &mut Parser<'i, '_>) -> Result<Self, ParseError<'i>> {
-        let location = input.current_source_location();
-        let ident = input.expect_ident()?;
-        let break_value = match BreakBetween::from_ident(ident) {
-            Ok(v) => v,
-            Err(()) => {
-                return Err(location
-                    .new_custom_error(SelectorParseErrorKind::UnexpectedIdent(ident.clone())))
-            },
-        };
-        match break_value {
-            BreakBetween::Always => Ok(BreakBetween::Page),
-            BreakBetween::Auto | BreakBetween::Avoid | BreakBetween::Left | BreakBetween::Right => {
-                Ok(break_value)
-            },
-            BreakBetween::Page => {
-                Err(location
-                    .new_custom_error(SelectorParseErrorKind::UnexpectedIdent(ident.clone())))
-            },
-        }
-    }
-
-    /// Serialize a legacy break-between value for `page-break-*`.
-    ///
-    /// See https://drafts.csswg.org/css-break/#page-break-properties.
-    pub fn to_css_legacy<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: Write,
-    {
-        match *self {
-            BreakBetween::Auto | BreakBetween::Avoid | BreakBetween::Left | BreakBetween::Right => {
-                self.to_css(dest)
-            },
-            BreakBetween::Page => dest.write_str("always"),
-            BreakBetween::Always => Ok(()),
-        }
-    }
-}
-
-/// A kind of break within a box.
-///
-/// https://drafts.csswg.org/css-break/#break-within
-#[allow(missing_docs)]
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    Hash,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToCss,
-    ToComputedValue,
-)]
-#[repr(u8)]
-pub enum BreakWithin {
-    Auto,
-    Avoid,
-}
-||||||| merged common ancestors
-=======
 
 /// A kind of break between two boxes.
 ///
@@ -1809,4 +1575,3 @@ pub enum Overflow {
     #[cfg(feature = "gecko")]
     MozHiddenUnscrollable,
 }
->>>>>>> upstream-releases

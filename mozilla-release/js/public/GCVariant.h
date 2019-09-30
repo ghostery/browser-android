@@ -43,54 +43,6 @@ struct GCVariantImplementation;
 
 // The base case.
 template <typename T>
-<<<<<<< HEAD
-struct GCVariantImplementation<T> {
-  template <typename ConcreteVariant>
-  static void trace(JSTracer* trc, ConcreteVariant* v, const char* name) {
-    T& thing = v->template as<T>();
-    if (!mozilla::IsPointer<T>::value || thing) {
-      GCPolicy<T>::trace(trc, &thing, name);
-    }
-  }
-
-  template <typename Matcher, typename ConcreteVariant>
-  static typename Matcher::ReturnType match(Matcher& matcher,
-                                            Handle<ConcreteVariant> v) {
-    const T& thing = v.get().template as<T>();
-    return matcher.match(Handle<T>::fromMarkedLocation(&thing));
-  }
-
-  template <typename Matcher, typename ConcreteVariant>
-  static typename Matcher::ReturnType match(Matcher& matcher,
-                                            MutableHandle<ConcreteVariant> v) {
-    T& thing = v.get().template as<T>();
-    return matcher.match(MutableHandle<T>::fromMarkedLocation(&thing));
-  }
-||||||| merged common ancestors
-struct GCVariantImplementation<T>
-{
-    template <typename ConcreteVariant>
-    static void trace(JSTracer* trc, ConcreteVariant* v, const char* name) {
-        T& thing = v->template as<T>();
-        if (!mozilla::IsPointer<T>::value || thing) {
-            GCPolicy<T>::trace(trc, &thing, name);
-        }
-    }
-
-    template <typename Matcher, typename ConcreteVariant>
-    static typename Matcher::ReturnType
-    match(Matcher& matcher, Handle<ConcreteVariant> v) {
-        const T& thing = v.get().template as<T>();
-        return matcher.match(Handle<T>::fromMarkedLocation(&thing));
-    }
-
-    template <typename Matcher, typename ConcreteVariant>
-    static typename Matcher::ReturnType
-    match(Matcher& matcher, MutableHandle<ConcreteVariant> v) {
-        T& thing = v.get().template as<T>();
-        return matcher.match(MutableHandle<T>::fromMarkedLocation(&thing));
-    }
-=======
 struct GCVariantImplementation<T> {
   template <typename ConcreteVariant>
   static void trace(JSTracer* trc, ConcreteVariant* v, const char* name) {
@@ -111,40 +63,10 @@ struct GCVariantImplementation<T> {
     T& thing = v.get().template as<T>();
     return matcher.match(MutableHandle<T>::fromMarkedLocation(&thing));
   }
->>>>>>> upstream-releases
 };
 
 // The inductive case.
 template <typename T, typename... Ts>
-<<<<<<< HEAD
-struct GCVariantImplementation<T, Ts...> {
-  using Next = GCVariantImplementation<Ts...>;
-
-  template <typename ConcreteVariant>
-  static void trace(JSTracer* trc, ConcreteVariant* v, const char* name) {
-    if (v->template is<T>()) {
-      T& thing = v->template as<T>();
-      if (!mozilla::IsPointer<T>::value || thing) {
-        GCPolicy<T>::trace(trc, &thing, name);
-      }
-    } else {
-      Next::trace(trc, v, name);
-||||||| merged common ancestors
-struct GCVariantImplementation<T, Ts...>
-{
-    using Next = GCVariantImplementation<Ts...>;
-
-    template <typename ConcreteVariant>
-    static void trace(JSTracer* trc, ConcreteVariant* v, const char* name) {
-        if (v->template is<T>()) {
-            T& thing = v->template as<T>();
-            if (!mozilla::IsPointer<T>::value || thing) {
-                GCPolicy<T>::trace(trc, &thing, name);
-            }
-        } else {
-            Next::trace(trc, v, name);
-        }
-=======
 struct GCVariantImplementation<T, Ts...> {
   using Next = GCVariantImplementation<Ts...>;
 
@@ -155,7 +77,6 @@ struct GCVariantImplementation<T, Ts...> {
       GCPolicy<T>::trace(trc, &thing, name);
     } else {
       Next::trace(trc, v, name);
->>>>>>> upstream-releases
     }
   }
 
@@ -183,48 +104,6 @@ struct GCVariantImplementation<T, Ts...> {
 }  // namespace detail
 
 template <typename... Ts>
-<<<<<<< HEAD
-struct GCPolicy<mozilla::Variant<Ts...>> {
-  using Impl = detail::GCVariantImplementation<Ts...>;
-
-  static void trace(JSTracer* trc, mozilla::Variant<Ts...>* v,
-                    const char* name) {
-    Impl::trace(trc, v, name);
-  }
-
-  static bool isValid(const mozilla::Variant<Ts...>& v) {
-    return v.match(IsValidMatcher());
-  }
-
- private:
-  struct IsValidMatcher {
-    template <typename T>
-    bool match(T& v) {
-      return GCPolicy<T>::isValid(v);
-    };
-  };
-||||||| merged common ancestors
-struct GCPolicy<mozilla::Variant<Ts...>>
-{
-    using Impl = detail::GCVariantImplementation<Ts...>;
-
-    static void trace(JSTracer* trc, mozilla::Variant<Ts...>* v, const char* name) {
-        Impl::trace(trc, v, name);
-    }
-
-    static bool isValid(const mozilla::Variant<Ts...>& v) {
-        return v.match(IsValidMatcher());
-    }
-
-  private:
-    struct IsValidMatcher
-    {
-        template<typename T>
-        bool match(T& v) {
-            return GCPolicy<T>::isValid(v);
-        };
-    };
-=======
 struct GCPolicy<mozilla::Variant<Ts...>> {
   using Impl = detail::GCVariantImplementation<Ts...>;
 
@@ -239,7 +118,6 @@ struct GCPolicy<mozilla::Variant<Ts...>> {
           typename mozilla::RemoveReference<decltype(v)>::Type>::isValid(v);
     });
   }
->>>>>>> upstream-releases
 };
 
 }  // namespace JS

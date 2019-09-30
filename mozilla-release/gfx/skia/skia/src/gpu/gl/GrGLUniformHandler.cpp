@@ -62,23 +62,10 @@ GrGLSLUniformHandler::UniformHandle GrGLUniformHandler::internalAddUniformArray(
     return GrGLSLUniformHandler::UniformHandle(fUniforms.count() - 1);
 }
 
-<<<<<<< HEAD
-GrGLSLUniformHandler::SamplerHandle GrGLUniformHandler::addSampler(GrSwizzle swizzle,
-                                                                   GrTextureType type,
-                                                                   GrSLPrecision precision,
-                                                                   const char* name) {
-||||||| merged common ancestors
-GrGLSLUniformHandler::SamplerHandle GrGLUniformHandler::addSampler(uint32_t visibility,
-                                                                   GrSwizzle swizzle,
-                                                                   GrSLType type,
-                                                                   GrSLPrecision precision,
-                                                                   const char* name) {
-=======
 GrGLSLUniformHandler::SamplerHandle GrGLUniformHandler::addSampler(const GrTexture* texture,
                                                                    const GrSamplerState&,
                                                                    const char* name,
                                                                    const GrShaderCaps* shaderCaps) {
->>>>>>> upstream-releases
     SkASSERT(name && strlen(name));
 
     SkString mangleName;

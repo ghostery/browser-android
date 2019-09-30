@@ -1,25 +1,13 @@
 # wasmparser version
 
-<<<<<<< HEAD
-Current vesion is: 0.6.2
-||||||| merged common ancestors
-Current vesion is: 0.6.1
-=======
 Current vesion is: 0.7.0
->>>>>>> upstream-releases
 
 # Upgrade process
 
 1. Pull latest release from npm and extract WasmDis.js and WasmParser.js, e.g.
 
 ```
-<<<<<<< HEAD
-curl https://registry.npmjs.org/wasmparser/-/wasmparser-0.6.2.tgz | tar -x --strip-components 2 package/dist/{WasmDis,WasmParser}.js
-||||||| merged common ancestors
-curl https://registry.npmjs.org/wasmparser/-/wasmparser-0.6.1.tgz | tar -x --strip-components 2 package/dist/{WasmDis,WasmParser}.js
-=======
 curl https://registry.npmjs.org/wasmparser/-/wasmparser-0.7.0.tgz | tar -x --strip-components 2 package/dist/{WasmDis,WasmParser}.js
->>>>>>> upstream-releases
 ```
 
 2. Remove reference to source maps (last line)

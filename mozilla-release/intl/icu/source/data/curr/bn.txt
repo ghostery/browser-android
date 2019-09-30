@@ -1852,11 +1852,5 @@ bn{
             other{"জাম্বিয়ান কওয়াচা"}
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.36"}
->>>>>>> upstream-releases
 }

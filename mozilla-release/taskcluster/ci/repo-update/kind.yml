@@ -39,81 +39,6 @@ job-defaults:
 
 
 jobs:
-<<<<<<< HEAD
-   hsts-hpkp-blocklist:
-      name: periodic_file_update
-      description: HSTS, HPKP, Blocklist and remote settings update
-      run-on-projects: []  # Only run via cron
-      treeherder:
-         kind: build
-         platform: linux64/opt
-         symbol: pfu
-         tier: 1
-      worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-      worker:
-         implementation: docker-worker
-         os: linux
-         docker-image: {in-tree: periodic-updates}
-         max-run-time: 10800  # Takes 2-3 hours
-         env:
-            PRODUCT: firefox
-            REVIEWERS: "ryanvm"
-         command:
-            - /runme.sh
-         taskcluster-proxy: true
-         artifacts:
-            - name: 'public/build/nsSTSPreloadList.diff'
-              path: '/home/worker/artifacts/nsSTSPreloadList.diff'
-              type: file
-            - name: 'public/build/StaticHPKPins.h.diff'
-              path: '/home/worker/artifacts/StaticHPKPins.h.diff'
-              type: file
-            - name: 'public/build/blocklist.diff'
-              path: '/home/worker/artifacts/blocklist.diff'
-              type: file
-            - name: 'public/build/remote-settings.diff'
-              path: '/home/worker/artifacts/remote-settings.diff'
-              type: file
-      scopes:
-         - secrets:get:project/releng/gecko/build/level-{level}/arc-phabricator-token
-||||||| merged common ancestors
-   hsts-hpkp-blocklist:
-      name: periodic_file_update
-      description: HSTS, HPKP, Blocklist and remote settings update
-      run-on-projects: []  # Only run via cron
-      treeherder:
-         kind: build
-         platform: linux64/opt
-         symbol: pfu
-         tier: 1
-      worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-      worker:
-         implementation: docker-worker
-         os: linux
-         docker-image: {in-tree: periodic-updates}
-         max-run-time: 10800  # Takes 2-3 hours
-         env:
-            PRODUCT: firefox
-            REVIEWERS: "mtabara, jlund"
-         command:
-            - /runme.sh
-         taskcluster-proxy: true
-         artifacts:
-            - name: 'public/build/nsSTSPreloadList.diff'
-              path: '/home/worker/artifacts/nsSTSPreloadList.diff'
-              type: file
-            - name: 'public/build/StaticHPKPins.h.diff'
-              path: '/home/worker/artifacts/StaticHPKPins.h.diff'
-              type: file
-            - name: 'public/build/blocklist.diff'
-              path: '/home/worker/artifacts/blocklist.diff'
-              type: file
-            - name: 'public/build/remote-settings.diff'
-              path: '/home/worker/artifacts/remote-settings.diff'
-              type: file
-      scopes:
-         - secrets:get:project/releng/gecko/build/level-{level}/arc-phabricator-token
-=======
     hsts-hpkp-blocklist:
         name: periodic_file_update
         description: HSTS, HPKP, Blocklist and remote settings update
@@ -150,4 +75,3 @@ jobs:
                   type: file
         scopes:
             - secrets:get:project/releng/gecko/build/level-{level}/arc-phabricator-token
->>>>>>> upstream-releases

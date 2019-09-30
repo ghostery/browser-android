@@ -10,15 +10,7 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-int TestBase::RunTests(int *aFailures) {
-||||||| merged common ancestors
-int
-TestBase::RunTests(int *aFailures)
-{
-=======
 int TestBase::RunTests(int* aFailures) {
->>>>>>> upstream-releases
   int testsRun = 0;
   *aFailures = 0;
 
@@ -34,15 +26,8 @@ int TestBase::RunTests(int* aFailures) {
     // of child clases, so we reinterpret cast those child class pointers to
     // TestBase and then call the functions. Because the compiler believes
     // these function calls are members of TestBase.
-<<<<<<< HEAD
-    ((*reinterpret_cast<TestBase *>((mTests[i].implPointer))).*
-     (mTests[i].funcCall))();
-||||||| merged common ancestors
-    ((*reinterpret_cast<TestBase*>((mTests[i].implPointer))).*(mTests[i].funcCall))();
-=======
     ((*reinterpret_cast<TestBase*>((mTests[i].implPointer))).*
      (mTests[i].funcCall))();
->>>>>>> upstream-releases
 
     if (!mTestFailed) {
       LogMessage("PASSED\n");

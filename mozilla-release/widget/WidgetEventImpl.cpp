@@ -76,47 +76,21 @@ const nsCString ToString(CodeNameIndex aCodeNameIndex) {
   return NS_ConvertUTF16toUTF8(codeName);
 }
 
-<<<<<<< HEAD
-const char* ToChar(Command aCommand) {
-  if (aCommand == CommandDoNothing) {
-||||||| merged common ancestors
-const char*
-ToChar(Command aCommand)
-{
-  if (aCommand == CommandDoNothing) {
-=======
 const char* ToChar(Command aCommand) {
   if (aCommand == Command::DoNothing) {
->>>>>>> upstream-releases
     return "CommandDoNothing";
   }
 
   switch (aCommand) {
 #define NS_DEFINE_COMMAND(aName, aCommandStr) \
-<<<<<<< HEAD
-  case Command##aName:                        \
-    return "Command" #aName;
-||||||| merged common ancestors
-    case Command##aName: \
-      return "Command" #aName;
-=======
   case Command::aName:                        \
     return "Command::" #aName;
 #define NS_DEFINE_COMMAND_WITH_PARAM(aName, aCommandStr, aParam) \
   case Command::aName:                                           \
     return "Command::" #aName;
->>>>>>> upstream-releases
 #define NS_DEFINE_COMMAND_NO_EXEC_COMMAND(aName) \
-<<<<<<< HEAD
-  case Command##aName:                           \
-    return "Command" #aName;
-||||||| merged common ancestors
-    case Command##aName: \
-      return "Command" #aName;
-=======
   case Command::aName:                           \
     return "Command::" #aName;
->>>>>>> upstream-releases
 
 #include "mozilla/CommandList.h"
 
@@ -676,16 +650,8 @@ Modifier WidgetInputEvent::AccelModifier() {
  * mozilla::WidgetMouseEvent (MouseEvents.h)
  ******************************************************************************/
 
-<<<<<<< HEAD
-/* static */ bool WidgetMouseEvent::IsMiddleClickPasteEnabled() {
-||||||| merged common ancestors
-/* static */ bool
-WidgetMouseEvent::IsMiddleClickPasteEnabled()
-{
-=======
 /* static */
 bool WidgetMouseEvent::IsMiddleClickPasteEnabled() {
->>>>>>> upstream-releases
   return Preferences::GetBool("middlemouse.paste", false);
 }
 
@@ -693,40 +659,19 @@ bool WidgetMouseEvent::IsMiddleClickPasteEnabled() {
  * mozilla::WidgetWheelEvent (MouseEvents.h)
  ******************************************************************************/
 
-<<<<<<< HEAD
-/* static */ double WidgetWheelEvent::ComputeOverriddenDelta(
-    double aDelta, bool aIsForVertical) {
-  if (!gfxPrefs::MouseWheelHasRootScrollDeltaOverride()) {
-||||||| merged common ancestors
-/* static */ double
-WidgetWheelEvent::ComputeOverriddenDelta(double aDelta, bool aIsForVertical)
-{
-  if (!gfxPrefs::MouseWheelHasRootScrollDeltaOverride()) {
-=======
 /* static */
 double WidgetWheelEvent::ComputeOverriddenDelta(double aDelta,
                                                 bool aIsForVertical) {
   if (!StaticPrefs::
           mousewheel_system_scroll_override_on_root_content_enabled()) {
->>>>>>> upstream-releases
     return aDelta;
   }
-<<<<<<< HEAD
-  int32_t intFactor = aIsForVertical
-                          ? gfxPrefs::MouseWheelRootScrollVerticalFactor()
-                          : gfxPrefs::MouseWheelRootScrollHorizontalFactor();
-||||||| merged common ancestors
-  int32_t intFactor = aIsForVertical
-                      ? gfxPrefs::MouseWheelRootScrollVerticalFactor()
-                      : gfxPrefs::MouseWheelRootScrollHorizontalFactor();
-=======
   int32_t intFactor =
       aIsForVertical
           ? StaticPrefs::
                 mousewheel_system_scroll_override_on_root_content_vertical_factor()
           : StaticPrefs::
                 mousewheel_system_scroll_override_on_root_content_horizontal_factor();
->>>>>>> upstream-releases
   // Making the scroll speed slower doesn't make sense. So, ignore odd factor
   // which is less than 1.0.
   if (intFactor <= 100) {
@@ -1130,16 +1075,8 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   return sValue;
 }
 
-<<<<<<< HEAD
-/* static */ void WidgetKeyboardEvent::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-WidgetKeyboardEvent::Shutdown()
-{
-=======
 /* static */
 void WidgetKeyboardEvent::Shutdown() {
->>>>>>> upstream-releases
   delete sKeyNameIndexHashtable;
   sKeyNameIndexHashtable = nullptr;
   delete sCodeNameIndexHashtable;
@@ -1150,19 +1087,9 @@ void WidgetKeyboardEvent::Shutdown() {
   sCommandHashtable = nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ void WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
-                                                     nsAString& aKeyName) {
-||||||| merged common ancestors
-/* static */ void
-WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
-                                   nsAString& aKeyName)
-{
-=======
 /* static */
 void WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
                                         nsAString& aKeyName) {
->>>>>>> upstream-releases
   if (aKeyNameIndex >= KEY_NAME_INDEX_USE_STRING) {
     aKeyName.Truncate();
     return;
@@ -1174,19 +1101,9 @@ void WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
   aKeyName = kKeyNames[aKeyNameIndex];
 }
 
-<<<<<<< HEAD
-/* static */ void WidgetKeyboardEvent::GetDOMCodeName(
-    CodeNameIndex aCodeNameIndex, nsAString& aCodeName) {
-||||||| merged common ancestors
-/* static */ void
-WidgetKeyboardEvent::GetDOMCodeName(CodeNameIndex aCodeNameIndex,
-                                    nsAString& aCodeName)
-{
-=======
 /* static */
 void WidgetKeyboardEvent::GetDOMCodeName(CodeNameIndex aCodeNameIndex,
                                          nsAString& aCodeName) {
->>>>>>> upstream-releases
   if (aCodeNameIndex >= CODE_NAME_INDEX_USE_STRING) {
     aCodeName.Truncate();
     return;
@@ -1198,17 +1115,8 @@ void WidgetKeyboardEvent::GetDOMCodeName(CodeNameIndex aCodeNameIndex,
   aCodeName = kCodeNames[aCodeNameIndex];
 }
 
-<<<<<<< HEAD
-/* static */ KeyNameIndex WidgetKeyboardEvent::GetKeyNameIndex(
-    const nsAString& aKeyValue) {
-||||||| merged common ancestors
-/* static */ KeyNameIndex
-WidgetKeyboardEvent::GetKeyNameIndex(const nsAString& aKeyValue)
-{
-=======
 /* static */
 KeyNameIndex WidgetKeyboardEvent::GetKeyNameIndex(const nsAString& aKeyValue) {
->>>>>>> upstream-releases
   if (!sKeyNameIndexHashtable) {
     sKeyNameIndexHashtable = new KeyNameIndexHashtable(ArrayLength(kKeyNames));
     for (size_t i = 0; i < ArrayLength(kKeyNames); i++) {
@@ -1221,18 +1129,9 @@ KeyNameIndex WidgetKeyboardEvent::GetKeyNameIndex(const nsAString& aKeyValue) {
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ CodeNameIndex WidgetKeyboardEvent::GetCodeNameIndex(
-    const nsAString& aCodeValue) {
-||||||| merged common ancestors
-/* static */ CodeNameIndex
-WidgetKeyboardEvent::GetCodeNameIndex(const nsAString& aCodeValue)
-{
-=======
 /* static */
 CodeNameIndex WidgetKeyboardEvent::GetCodeNameIndex(
     const nsAString& aCodeValue) {
->>>>>>> upstream-releases
   if (!sCodeNameIndexHashtable) {
     sCodeNameIndexHashtable =
         new CodeNameIndexHashtable(ArrayLength(kCodeNames));
@@ -1246,19 +1145,9 @@ CodeNameIndex WidgetKeyboardEvent::GetCodeNameIndex(
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
-    CodeNameIndex aCodeNameIndex) {
-||||||| merged common ancestors
-/* static */ uint32_t
-WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
-                       CodeNameIndex aCodeNameIndex)
-{
-=======
 /* static */
 uint32_t WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
     CodeNameIndex aCodeNameIndex) {
->>>>>>> upstream-releases
   switch (aCodeNameIndex) {
     case CODE_NAME_INDEX_Semicolon:  // VK_OEM_1 on Windows
       return dom::KeyboardEvent_Binding::DOM_VK_SEMICOLON;
@@ -1296,13 +1185,7 @@ uint32_t WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
 #define NS_DEFINE_COMMAND_WITH_PARAM(aName, aCommandStr, aParam) , #aCommandStr
 #define NS_DEFINE_COMMAND_NO_EXEC_COMMAND(aName)
   static const char* const kCommands[] = {
-<<<<<<< HEAD
-      ""  // CommandDoNothing
-||||||| merged common ancestors
-    "" // CommandDoNothing
-=======
       ""  // DoNothing
->>>>>>> upstream-releases
 #include "mozilla/CommandList.h"
   };
 #undef NS_DEFINE_COMMAND
@@ -1314,18 +1197,9 @@ uint32_t WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
   return kCommands[static_cast<CommandInt>(aCommand)];
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t WidgetKeyboardEvent::ComputeLocationFromCodeValue(
-    CodeNameIndex aCodeNameIndex) {
-||||||| merged common ancestors
-/* static */ uint32_t
-WidgetKeyboardEvent::ComputeLocationFromCodeValue(CodeNameIndex aCodeNameIndex)
-{
-=======
 /* static */
 uint32_t WidgetKeyboardEvent::ComputeLocationFromCodeValue(
     CodeNameIndex aCodeNameIndex) {
->>>>>>> upstream-releases
   // Following commented out cases are not defined in PhysicalKeyCodeNameList.h
   // but are defined by D3E spec.  So, they should be uncommented when the
   // code values are defined in the header.
@@ -1374,18 +1248,9 @@ uint32_t WidgetKeyboardEvent::ComputeLocationFromCodeValue(
   }
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(
-    KeyNameIndex aKeyNameIndex) {
-||||||| merged common ancestors
-/* static */ uint32_t
-WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(KeyNameIndex aKeyNameIndex)
-{
-=======
 /* static */
 uint32_t WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(
     KeyNameIndex aKeyNameIndex) {
->>>>>>> upstream-releases
   switch (aKeyNameIndex) {
     case KEY_NAME_INDEX_Cancel:
       return dom::KeyboardEvent_Binding::DOM_VK_CANCEL;
@@ -1555,21 +1420,9 @@ uint32_t WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(
   }
 }
 
-<<<<<<< HEAD
-/* static */ CodeNameIndex
-WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
-    KeyNameIndex aKeyNameIndex, const Maybe<uint32_t>& aLocation) {
-||||||| merged common ancestors
-/* static */ CodeNameIndex
-WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
-                       KeyNameIndex aKeyNameIndex,
-                       const Maybe<uint32_t>& aLocation)
-{
-=======
 /* static */
 CodeNameIndex WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
     KeyNameIndex aKeyNameIndex, const Maybe<uint32_t>& aLocation) {
->>>>>>> upstream-releases
   if (aLocation.isSome() &&
       aLocation.value() ==
           dom::KeyboardEvent_Binding::DOM_KEY_LOCATION_NUMPAD) {
@@ -1801,20 +1654,9 @@ CodeNameIndex WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
       return CODE_NAME_INDEX_MediaTrackPrevious;
     case KEY_NAME_INDEX_LaunchApplication1:
       return CODE_NAME_INDEX_LaunchApp1;
-<<<<<<< HEAD
 #endif  // #ifndef XP_MACOSX
 
       // Only Windows and GTK supports the following multimedia keys.
-||||||| merged common ancestors
-#endif // #ifndef XP_MACOSX
-
-
-    // Only Windows and GTK supports the following multimedia keys.
-=======
-#endif  // #ifndef XP_MACOSX
-
-      // Only Windows and GTK supports the following multimedia keys.
->>>>>>> upstream-releases
 #if defined(XP_WIN) || defined(MOZ_WIDGET_GTK)
     case KEY_NAME_INDEX_BrowserHome:
       return CODE_NAME_INDEX_BrowserHome;
@@ -1899,18 +1741,9 @@ CodeNameIndex WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
   }
 }
 
-<<<<<<< HEAD
-/* static */ Modifier WidgetKeyboardEvent::GetModifierForKeyName(
-    KeyNameIndex aKeyNameIndex) {
-||||||| merged common ancestors
-/* static */ Modifier
-WidgetKeyboardEvent::GetModifierForKeyName(KeyNameIndex aKeyNameIndex)
-{
-=======
 /* static */
 Modifier WidgetKeyboardEvent::GetModifierForKeyName(
     KeyNameIndex aKeyNameIndex) {
->>>>>>> upstream-releases
   switch (aKeyNameIndex) {
     case KEY_NAME_INDEX_Alt:
       return MODIFIER_ALT;
@@ -1945,17 +1778,8 @@ Modifier WidgetKeyboardEvent::GetModifierForKeyName(
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool WidgetKeyboardEvent::IsLockableModifier(
-    KeyNameIndex aKeyNameIndex) {
-||||||| merged common ancestors
-/* static */ bool
-WidgetKeyboardEvent::IsLockableModifier(KeyNameIndex aKeyNameIndex)
-{
-=======
 /* static */
 bool WidgetKeyboardEvent::IsLockableModifier(KeyNameIndex aKeyNameIndex) {
->>>>>>> upstream-releases
   switch (aKeyNameIndex) {
     case KEY_NAME_INDEX_CapsLock:
     case KEY_NAME_INDEX_FnLock:
@@ -1968,11 +1792,6 @@ bool WidgetKeyboardEvent::IsLockableModifier(KeyNameIndex aKeyNameIndex) {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 /******************************************************************************
  * mozilla::InternalEditorInputEvent (TextEvents.h)
  ******************************************************************************/
@@ -2027,4 +1846,3 @@ EditorInputType InternalEditorInputEvent::GetEditorInputType(
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

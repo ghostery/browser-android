@@ -54,15 +54,7 @@ static void MergeAndSortArray(const _PrefixArray& array1,
   output.Sort();
 }
 
-<<<<<<< HEAD
-static void CalculateCheckSum(_PrefixArray& prefixArray, nsCString& checksum) {
-||||||| merged common ancestors
-static void
-CalculateCheckSum(_PrefixArray& prefixArray, nsCString& checksum)
-{
-=======
 static void CalculateSHA256(_PrefixArray& prefixArray, nsCString& sha256) {
->>>>>>> upstream-releases
   prefixArray.Sort();
 
   nsresult rv;
@@ -121,23 +113,9 @@ static void CreateRandomRemovalIndices(uint32_t N, uint32_t MAX,
 }
 
 // Function to generate TableUpdateV4.
-<<<<<<< HEAD
-static void GenerateUpdateData(bool fullUpdate, PrefixStringMap& add,
-                               nsTArray<uint32_t>* removal, nsCString* checksum,
-                               TableUpdateArray& tableUpdates) {
-||||||| merged common ancestors
-static void
-GenerateUpdateData(bool fullUpdate,
-                   PrefixStringMap& add,
-                   nsTArray<uint32_t>* removal,
-                   nsCString* checksum,
-                   TableUpdateArray& tableUpdates)
-{
-=======
 static void GenerateUpdateData(bool fullUpdate, PrefixStringMap& add,
                                nsTArray<uint32_t>* removal, nsCString* sha256,
                                TableUpdateArray& tableUpdates) {
->>>>>>> upstream-releases
   RefPtr<TableUpdateV4> tableUpdate = new TableUpdateV4(GTEST_TABLE);
   tableUpdate->SetFullUpdate(fullUpdate);
 
@@ -150,21 +128,10 @@ static void GenerateUpdateData(bool fullUpdate, PrefixStringMap& add,
     tableUpdate->NewRemovalIndices(removal->Elements(), removal->Length());
   }
 
-<<<<<<< HEAD
-  if (checksum) {
-    std::string stdChecksum;
-    stdChecksum.assign(const_cast<char*>(checksum->BeginReading()),
-                       checksum->Length());
-||||||| merged common ancestors
-  if (checksum) {
-    std::string stdChecksum;
-    stdChecksum.assign(const_cast<char*>(checksum->BeginReading()), checksum->Length());
-=======
   if (sha256) {
     std::string stdSHA256;
     stdSHA256.assign(const_cast<char*>(sha256->BeginReading()),
                      sha256->Length());
->>>>>>> upstream-releases
 
     tableUpdate->SetSHA256(stdSHA256);
   }
@@ -221,32 +188,10 @@ static void testUpdate(TableUpdateArray& tableUpdates,
   nsCOMPtr<nsIFile> file;
   NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR, getter_AddRefs(file));
 
-<<<<<<< HEAD
-  {
-    // Force nsIUrlClassifierUtils loading on main thread
-    // because nsIUrlClassifierDBService will not run in advance
-    // in gtest.
-    nsresult rv;
-    nsCOMPtr<nsIUrlClassifierUtils> dummy =
-        do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID, &rv);
-    ASSERT_TRUE(NS_SUCCEEDED(rv));
-  }
-||||||| merged common ancestors
-  {
-    // Force nsIUrlClassifierUtils loading on main thread
-    // because nsIUrlClassifierDBService will not run in advance
-    // in gtest.
-    nsresult rv;
-    nsCOMPtr<nsIUrlClassifierUtils> dummy =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID, &rv);
-      ASSERT_TRUE(NS_SUCCEEDED(rv));
-  }
-=======
   // Force nsUrlClassifierUtils loading on main thread
   // because nsIUrlClassifierDBService will not run in advance
   // in gtest.
   nsUrlClassifierUtils::GetInstance();
->>>>>>> upstream-releases
 
   RefPtr<Classifier> classifier = new Classifier();
   classifier->Open(*file);
@@ -256,15 +201,7 @@ static void testUpdate(TableUpdateArray& tableUpdates,
   VerifyPrefixSet(expected);
 }
 
-<<<<<<< HEAD
-static void testFullUpdate(PrefixStringMap& add, nsCString* checksum) {
-||||||| merged common ancestors
-static void
-testFullUpdate(PrefixStringMap& add, nsCString* checksum)
-{
-=======
 static void testFullUpdate(PrefixStringMap& add, nsCString* sha256) {
->>>>>>> upstream-releases
   TableUpdateArray tableUpdates;
 
   GenerateUpdateData(true, add, nullptr, sha256, tableUpdates);
@@ -272,20 +209,8 @@ static void testFullUpdate(PrefixStringMap& add, nsCString* sha256) {
   testUpdate(tableUpdates, add);
 }
 
-<<<<<<< HEAD
-static void testPartialUpdate(PrefixStringMap& add, nsTArray<uint32_t>* removal,
-                              nsCString* checksum, PrefixStringMap& expected) {
-||||||| merged common ancestors
-static void
-testPartialUpdate(PrefixStringMap& add,
-                  nsTArray<uint32_t>* removal,
-                  nsCString* checksum,
-                  PrefixStringMap& expected)
-{
-=======
 static void testPartialUpdate(PrefixStringMap& add, nsTArray<uint32_t>* removal,
                               nsCString* sha256, PrefixStringMap& expected) {
->>>>>>> upstream-releases
   TableUpdateArray tableUpdates;
   GenerateUpdateData(false, add, removal, sha256, tableUpdates);
 
@@ -309,15 +234,8 @@ static void testOpenLookupCache() {
 }
 
 // Tests start from here.
-<<<<<<< HEAD
-TEST(UrlClassifierTableUpdateV4, FixLenghtPSetFullUpdate) {
-||||||| merged common ancestors
-TEST(UrlClassifierTableUpdateV4, FixLenghtPSetFullUpdate)
-{
-=======
 TEST(UrlClassifierTableUpdateV4, FixLengthPSetFullUpdate)
 {
->>>>>>> upstream-releases
   srand(time(NULL));
 
   _PrefixArray array;
@@ -333,18 +251,9 @@ TEST(UrlClassifierTableUpdateV4, FixLengthPSetFullUpdate)
   Clear();
 }
 
-<<<<<<< HEAD
-TEST(UrlClassifierTableUpdateV4, VariableLenghtPSetFullUpdate) {
-  _PrefixArray array;
-||||||| merged common ancestors
-TEST(UrlClassifierTableUpdateV4, VariableLenghtPSetFullUpdate)
-{
-   _PrefixArray array;
-=======
 TEST(UrlClassifierTableUpdateV4, VariableLengthPSetFullUpdate)
 {
   _PrefixArray array;
->>>>>>> upstream-releases
   PrefixStringMap map;
   nsCString sha256;
 
@@ -358,7 +267,8 @@ TEST(UrlClassifierTableUpdateV4, VariableLengthPSetFullUpdate)
 }
 
 // This test contain both variable length prefix set and fixed-length prefix set
-TEST(UrlClassifierTableUpdateV4, MixedPSetFullUpdate) {
+TEST(UrlClassifierTableUpdateV4, MixedPSetFullUpdate)
+{
   _PrefixArray array;
   PrefixStringMap map;
   nsCString sha256;
@@ -373,7 +283,8 @@ TEST(UrlClassifierTableUpdateV4, MixedPSetFullUpdate) {
   Clear();
 }
 
-TEST(UrlClassifierTableUpdateV4, PartialUpdateWithRemoval) {
+TEST(UrlClassifierTableUpdateV4, PartialUpdateWithRemoval)
+{
   _PrefixArray fArray;
 
   // Apply a full update first.
@@ -416,7 +327,8 @@ TEST(UrlClassifierTableUpdateV4, PartialUpdateWithRemoval) {
   Clear();
 }
 
-TEST(UrlClassifierTableUpdateV4, PartialUpdateWithoutRemoval) {
+TEST(UrlClassifierTableUpdateV4, PartialUpdateWithoutRemoval)
+{
   _PrefixArray fArray;
 
   // Apply a full update first.
@@ -456,7 +368,8 @@ TEST(UrlClassifierTableUpdateV4, PartialUpdateWithoutRemoval) {
 
 // Expect failure because partial update contains prefix already
 // in old prefix set.
-TEST(UrlClassifierTableUpdateV4, PartialUpdatePrefixAlreadyExist) {
+TEST(UrlClassifierTableUpdateV4, PartialUpdatePrefixAlreadyExist)
+{
   _PrefixArray fArray;
 
   // Apply a full update fist.
@@ -492,7 +405,8 @@ TEST(UrlClassifierTableUpdateV4, PartialUpdatePrefixAlreadyExist) {
 }
 
 // Test apply partial update directly without applying an full update first.
-TEST(UrlClassifierTableUpdateV4, OnlyPartialUpdate) {
+TEST(UrlClassifierTableUpdateV4, OnlyPartialUpdate)
+{
   _PrefixArray pArray;
   PrefixStringMap pMap;
   nsCString sha256;
@@ -508,7 +422,8 @@ TEST(UrlClassifierTableUpdateV4, OnlyPartialUpdate) {
 }
 
 // Test partial update without any ADD prefixes, only removalIndices.
-TEST(UrlClassifierTableUpdateV4, PartialUpdateOnlyRemoval) {
+TEST(UrlClassifierTableUpdateV4, PartialUpdateOnlyRemoval)
+{
   _PrefixArray fArray;
 
   // Apply a full update first.
@@ -545,7 +460,8 @@ TEST(UrlClassifierTableUpdateV4, PartialUpdateOnlyRemoval) {
 }
 
 // Test one tableupdate array contains full update and multiple partial updates.
-TEST(UrlClassifierTableUpdateV4, MultipleTableUpdates) {
+TEST(UrlClassifierTableUpdateV4, MultipleTableUpdates)
+{
   _PrefixArray fArray, pArray, mergedArray;
   PrefixStringMap fMap, pMap, mergedMap;
   nsCString sha256;
@@ -598,7 +514,8 @@ TEST(UrlClassifierTableUpdateV4, MultipleTableUpdates) {
 
 // Test apply full update first, and then apply multiple partial updates
 // in one tableupdate array.
-TEST(UrlClassifierTableUpdateV4, MultiplePartialUpdateTableUpdates) {
+TEST(UrlClassifierTableUpdateV4, MultiplePartialUpdateTableUpdates)
+{
   _PrefixArray fArray;
 
   // Apply a full update first
@@ -666,7 +583,8 @@ TEST(UrlClassifierTableUpdateV4, MultiplePartialUpdateTableUpdates) {
 }
 
 // Test removal indices are larger than the original prefix set.
-TEST(UrlClassifierTableUpdateV4, RemovalIndexTooLarge) {
+TEST(UrlClassifierTableUpdateV4, RemovalIndexTooLarge)
+{
   _PrefixArray fArray;
 
   // Apply a full update first
@@ -704,7 +622,8 @@ TEST(UrlClassifierTableUpdateV4, RemovalIndexTooLarge) {
   Clear();
 }
 
-TEST(UrlClassifierTableUpdateV4, ChecksumMismatch) {
+TEST(UrlClassifierTableUpdateV4, ChecksumMismatch)
+{
   // Apply a full update first
   {
     _PrefixArray fArray;
@@ -728,22 +647,10 @@ TEST(UrlClassifierTableUpdateV4, ChecksumMismatch) {
     CreateRandomSortedPrefixArray(200, 4, 32, pArray);
     PrefixArrayToPrefixStringMap(pArray, pMap);
 
-<<<<<<< HEAD
-    // Checksum should be calculated with both old prefix set and add prefix
-    // set, here we only calculate checksum with add prefix set to check if
-    // applyUpdate will return failure.
-    CalculateCheckSum(pArray, checksum);
-||||||| merged common ancestors
-    // Checksum should be calculated with both old prefix set and add prefix set,
-    // here we only calculate checksum with add prefix set to check if applyUpdate
-    // will return failure.
-    CalculateCheckSum(pArray, checksum);
-=======
     // sha256 should be calculated with both old prefix set and add prefix
     // set, here we only calculate sha256 with add prefix set to check if
     // applyUpdate will return failure.
     CalculateSHA256(pArray, sha256);
->>>>>>> upstream-releases
 
     GenerateUpdateData(false, pMap, nullptr, &sha256, tableUpdates);
     testUpdateFail(tableUpdates);
@@ -752,18 +659,9 @@ TEST(UrlClassifierTableUpdateV4, ChecksumMismatch) {
   Clear();
 }
 
-<<<<<<< HEAD
-TEST(UrlClassifierTableUpdateV4, ApplyUpdateThenLoad) {
-  // Apply update with checksum
-||||||| merged common ancestors
-TEST(UrlClassifierTableUpdateV4, ApplyUpdateThenLoad)
-{
-  // Apply update with checksum
-=======
 TEST(UrlClassifierTableUpdateV4, ApplyUpdateThenLoad)
 {
   // Apply update with sha256
->>>>>>> upstream-releases
   {
     _PrefixArray fArray;
     PrefixStringMap fMap;
@@ -798,39 +696,6 @@ TEST(UrlClassifierTableUpdateV4, ApplyUpdateThenLoad)
 }
 
 // This test is used to avoid an eror from nsICryptoHash
-<<<<<<< HEAD
-TEST(UrlClassifierTableUpdateV4, ApplyUpdateWithFixedChecksum) {
-  _PrefixArray fArray = {_Prefix("enus"),
-                         _Prefix("apollo"),
-                         _Prefix("mars"),
-                         _Prefix("Hecatonchires cyclopes"),
-                         _Prefix("vesta"),
-                         _Prefix("neptunus"),
-                         _Prefix("jupiter"),
-                         _Prefix("diana"),
-                         _Prefix("minerva"),
-                         _Prefix("ceres"),
-                         _Prefix("Aidos,Adephagia,Adikia,Aletheia"),
-                         _Prefix("hecatonchires"),
-                         _Prefix("alcyoneus"),
-                         _Prefix("hades"),
-                         _Prefix("vulcanus"),
-                         _Prefix("juno"),
-                         _Prefix("mercury"),
-                         _Prefix("Stheno, Euryale and Medusa")};
-||||||| merged common ancestors
-TEST(UrlClassifierTableUpdateV4, ApplyUpdateWithFixedChecksum)
-{
-  _PrefixArray fArray = { _Prefix("enus"), _Prefix("apollo"), _Prefix("mars"),
-                          _Prefix("Hecatonchires cyclopes"),
-                          _Prefix("vesta"), _Prefix("neptunus"), _Prefix("jupiter"),
-                          _Prefix("diana"), _Prefix("minerva"), _Prefix("ceres"),
-                          _Prefix("Aidos,Adephagia,Adikia,Aletheia"),
-                          _Prefix("hecatonchires"), _Prefix("alcyoneus"), _Prefix("hades"),
-                          _Prefix("vulcanus"), _Prefix("juno"), _Prefix("mercury"),
-                          _Prefix("Stheno, Euryale and Medusa")
-                        };
-=======
 TEST(UrlClassifierTableUpdateV4, ApplyUpdateWithFixedChecksum)
 {
   _PrefixArray fArray = {_Prefix("enus"),
@@ -851,30 +716,16 @@ TEST(UrlClassifierTableUpdateV4, ApplyUpdateWithFixedChecksum)
                          _Prefix("juno"),
                          _Prefix("mercury"),
                          _Prefix("Stheno, Euryale and Medusa")};
->>>>>>> upstream-releases
   fArray.Sort();
 
   PrefixStringMap fMap;
   PrefixArrayToPrefixStringMap(fArray, fMap);
 
-<<<<<<< HEAD
-  nsCString checksum(
-      "\xae\x18\x94\xd7\xd0\x83\x5f\xc1"
-      "\x58\x59\x5c\x2c\x72\xb9\x6e\x5e"
-      "\xf4\xe8\x0a\x6b\xff\x5e\x6b\x81"
-      "\x65\x34\x06\x16\x06\x59\xa0\x67");
-||||||| merged common ancestors
-  nsCString checksum("\xae\x18\x94\xd7\xd0\x83\x5f\xc1"
-                     "\x58\x59\x5c\x2c\x72\xb9\x6e\x5e"
-                     "\xf4\xe8\x0a\x6b\xff\x5e\x6b\x81"
-                     "\x65\x34\x06\x16\x06\x59\xa0\x67");
-=======
   nsCString sha256(
       "\xae\x18\x94\xd7\xd0\x83\x5f\xc1"
       "\x58\x59\x5c\x2c\x72\xb9\x6e\x5e"
       "\xf4\xe8\x0a\x6b\xff\x5e\x6b\x81"
       "\x65\x34\x06\x16\x06\x59\xa0\x67");
->>>>>>> upstream-releases
 
   testFullUpdate(fMap, &sha256);
 
@@ -886,7 +737,8 @@ TEST(UrlClassifierTableUpdateV4, ApplyUpdateWithFixedChecksum)
 
 // This test ensure that an empty update works correctly. Empty update
 // should be skipped by CheckValidUpdate in Classifier::UpdateTableV4.
-TEST(UrlClassifierTableUpdateV4, EmptyUpdate) {
+TEST(UrlClassifierTableUpdateV4, EmptyUpdate)
+{
   PrefixStringMap emptyAddition;
   nsTArray<uint32_t> emptyRemoval;
 
@@ -919,35 +771,20 @@ TEST(UrlClassifierTableUpdateV4, EmptyUpdate) {
 
 // This test ensure applying an empty update directly through update algorithm
 // should be correct.
-TEST(UrlClassifierTableUpdateV4, EmptyUpdate2) {
+TEST(UrlClassifierTableUpdateV4, EmptyUpdate2)
+{
   // Setup LookupCache with initial data
   _PrefixArray array;
   CreateRandomSortedPrefixArray(100, 4, 4, array);
   CreateRandomSortedPrefixArray(10, 5, 32, array);
   RefPtr<LookupCacheV4> cache = SetupLookupCache<LookupCacheV4>(array);
 
-<<<<<<< HEAD
-  // Setup TableUpdate object with only checksum from previous update(initial
-  // data).
-  nsCString checksum;
-  CalculateCheckSum(array, checksum);
-  std::string stdChecksum;
-  stdChecksum.assign(const_cast<char*>(checksum.BeginReading()),
-                     checksum.Length());
-||||||| merged common ancestors
-  // Setup TableUpdate object with only checksum from previous update(initial data).
-  nsCString checksum;
-  CalculateCheckSum(array, checksum);
-  std::string stdChecksum;
-  stdChecksum.assign(const_cast<char*>(checksum.BeginReading()), checksum.Length());
-=======
   // Setup TableUpdate object with only sha256 from previous update(initial
   // data).
   nsCString sha256;
   CalculateSHA256(array, sha256);
   std::string stdSHA256;
   stdSHA256.assign(const_cast<char*>(sha256.BeginReading()), sha256.Length());
->>>>>>> upstream-releases
 
   RefPtr<TableUpdateV4> tableUpdate = new TableUpdateV4(GTEST_TABLE);
   tableUpdate->SetSHA256(stdSHA256);

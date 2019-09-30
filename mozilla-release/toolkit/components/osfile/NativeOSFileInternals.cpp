@@ -38,52 +38,23 @@
 #include "jsfriendapi.h"
 #include "js/ArrayBuffer.h"  // JS::GetArrayBufferByteLength,IsArrayBufferObject,NewArrayBufferWithContents,StealArrayBufferContents
 #include "js/Conversions.h"
-<<<<<<< HEAD
-#include "js/MemoryFunctions.h"
-||||||| merged common ancestors
-=======
 #include "js/MemoryFunctions.h"
 #include "js/UniquePtr.h"
->>>>>>> upstream-releases
 #include "js/Utility.h"
 #include "xpcpublic.h"
 
 #include <algorithm>
 #if defined(XP_UNIX)
-<<<<<<< HEAD
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/uio.h>
-#endif  // defined (XP_UNIX)
-||||||| merged common ancestors
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/uio.h>
-#endif // defined (XP_UNIX)
-=======
 #  include <unistd.h>
 #  include <errno.h>
 #  include <fcntl.h>
 #  include <sys/stat.h>
 #  include <sys/uio.h>
 #endif  // defined (XP_UNIX)
->>>>>>> upstream-releases
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include <windows.h>
-#endif  // defined (XP_WIN)
-||||||| merged common ancestors
-#include <windows.h>
-#endif // defined (XP_WIN)
-=======
 #  include <windows.h>
 #endif  // defined (XP_WIN)
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -386,17 +357,9 @@ nsresult TypedArrayResult::GetCacheableResult(
   const ArrayBufferContents& contents = mContents.get();
   MOZ_ASSERT(contents.data);
 
-<<<<<<< HEAD
-  JS::Rooted<JSObject*> arrayBuffer(
-      cx, JS_NewArrayBufferWithContents(cx, contents.nbytes, contents.data));
-||||||| merged common ancestors
-  JS::Rooted<JSObject*>
-    arrayBuffer(cx, JS_NewArrayBufferWithContents(cx, contents.nbytes, contents.data));
-=======
   // This takes ownership of the buffer and notes the memory allocation.
   JS::Rooted<JSObject*> arrayBuffer(
       cx, JS::NewArrayBufferWithContents(cx, contents.nbytes, contents.data));
->>>>>>> upstream-releases
   if (!arrayBuffer) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
@@ -924,43 +887,6 @@ class DoWriteAtomicEvent : public AbstractDoEvent {
   /**
    * @param aPath The path of the file.
    */
-<<<<<<< HEAD
-  DoWriteAtomicEvent(
-      const nsAString& aPath, UniquePtr<char> aBuffer, const uint64_t aBytes,
-      const nsAString& aTmpPath, const nsAString& aBackupTo, const bool aFlush,
-      const bool aNoOverwrite,
-      nsMainThreadPtrHandle<nsINativeOSFileSuccessCallback>& aOnSuccess,
-      nsMainThreadPtrHandle<nsINativeOSFileErrorCallback>& aOnError)
-      : AbstractDoEvent(aOnSuccess, aOnError),
-        mPath(aPath),
-        mBuffer(std::move(aBuffer)),
-        mBytes(aBytes),
-        mTmpPath(aTmpPath),
-        mBackupTo(aBackupTo),
-        mFlush(aFlush),
-        mNoOverwrite(aNoOverwrite),
-        mResult(new Int32Result(TimeStamp::Now())) {
-||||||| merged common ancestors
-  DoWriteAtomicEvent(const nsAString& aPath,
-                     UniquePtr<char> aBuffer,
-                     const uint64_t aBytes,
-                     const nsAString& aTmpPath,
-                     const nsAString& aBackupTo,
-                     const bool aFlush,
-                     const bool aNoOverwrite,
-                     nsMainThreadPtrHandle<nsINativeOSFileSuccessCallback>& aOnSuccess,
-                     nsMainThreadPtrHandle<nsINativeOSFileErrorCallback>& aOnError)
-    : AbstractDoEvent(aOnSuccess, aOnError)
-    , mPath(aPath)
-    , mBuffer(std::move(aBuffer))
-    , mBytes(aBytes)
-    , mTmpPath(aTmpPath)
-    , mBackupTo(aBackupTo)
-    , mFlush(aFlush)
-    , mNoOverwrite(aNoOverwrite)
-    , mResult(new Int32Result(TimeStamp::Now()))
-  {
-=======
   DoWriteAtomicEvent(
       const nsAString& aPath, UniquePtr<char[], JS::FreePolicy> aBuffer,
       const uint64_t aBytes, const nsAString& aTmpPath,
@@ -976,7 +902,6 @@ class DoWriteAtomicEvent : public AbstractDoEvent {
         mFlush(aFlush),
         mNoOverwrite(aNoOverwrite),
         mResult(new Int32Result(TimeStamp::Now())) {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
   }
 
@@ -1291,19 +1216,9 @@ NativeOSFileInternalsService::WriteAtomic(
     return NS_ERROR_INVALID_ARG;
   }
 
-<<<<<<< HEAD
-  bytes = JS_GetArrayBufferByteLength(bufferObject.get());
-  buffer.reset(
-      static_cast<char*>(JS_StealArrayBufferContents(cx, bufferObject)));
-||||||| merged common ancestors
-  bytes = JS_GetArrayBufferByteLength(bufferObject.get());
-  buffer.reset(static_cast<char*>(
-                 JS_StealArrayBufferContents(cx, bufferObject)));
-=======
   bytes = JS::GetArrayBufferByteLength(bufferObject.get());
   buffer.reset(
       static_cast<char*>(JS::StealArrayBufferContents(cx, bufferObject)));
->>>>>>> upstream-releases
 
   if (!buffer) {
     return NS_ERROR_FAILURE;

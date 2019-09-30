@@ -22,29 +22,6 @@ use std::mem::{self, ManuallyDrop};
 use cssparser::{Parser, RGBA, TokenSerializationType};
 use cssparser::ParserInput;
 #[cfg(feature = "servo")] use euclid::SideOffsets2D;
-<<<<<<< HEAD
-use crate::context::QuirksMode;
-#[cfg(feature = "gecko")] use crate::gecko_bindings::structs::{self, nsCSSPropertyID};
-#[cfg(feature = "servo")] use crate::logical_geometry::LogicalMargin;
-#[cfg(feature = "servo")] use crate::computed_values;
-use crate::logical_geometry::WritingMode;
-#[cfg(feature = "gecko")] use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
-use crate::media_queries::Device;
-use crate::parser::ParserContext;
-use crate::properties::longhands::system_font::SystemFont;
-use crate::selector_parser::PseudoElement;
-||||||| merged common ancestors
-use context::QuirksMode;
-#[cfg(feature = "gecko")] use gecko_bindings::structs::{self, nsCSSPropertyID};
-#[cfg(feature = "servo")] use logical_geometry::LogicalMargin;
-#[cfg(feature = "servo")] use computed_values;
-use logical_geometry::WritingMode;
-#[cfg(feature = "gecko")] use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
-use media_queries::Device;
-use parser::ParserContext;
-use properties::longhands::system_font::SystemFont;
-use selector_parser::PseudoElement;
-=======
 use crate::context::QuirksMode;
 #[cfg(feature = "gecko")] use crate::gecko_bindings::structs::{self, nsCSSPropertyID};
 #[cfg(feature = "servo")] use crate::logical_geometry::LogicalMargin;
@@ -55,26 +32,10 @@ use crate::media_queries::Device;
 use crate::parser::ParserContext;
 use crate::properties::longhands::system_font::SystemFont;
 use crate::selector_parser::PseudoElement;
->>>>>>> upstream-releases
 use selectors::parser::SelectorParseErrorKind;
 #[cfg(feature = "servo")] use servo_config::prefs;
 use style_traits::{CssWriter, KeywordsCollectFn, ParseError, ParsingMode};
 use style_traits::{SpecifiedValueInfo, StyleParseErrorKind, ToCss};
-<<<<<<< HEAD
-use crate::stylesheets::{CssRuleType, Origin, UrlExtraData};
-use crate::values::generics::text::LineHeight;
-use crate::values::computed;
-use crate::values::computed::NonNegativeLength;
-use crate::values::serialize_atom_name;
-use crate::rule_tree::StrongRuleNode;
-||||||| merged common ancestors
-use stylesheets::{CssRuleType, Origin, UrlExtraData};
-use values::generics::text::LineHeight;
-use values::computed;
-use values::computed::NonNegativeLength;
-use values::serialize_atom_name;
-use rule_tree::StrongRuleNode;
-=======
 use to_shmem::impl_trivial_to_shmem;
 use crate::stylesheets::{CssRuleType, Origin, UrlExtraData};
 use crate::values::generics::text::LineHeight;
@@ -83,16 +44,9 @@ use crate::values::computed::NonNegativeLength;
 use crate::values::serialize_atom_name;
 use crate::rule_tree::StrongRuleNode;
 use crate::Zero;
->>>>>>> upstream-releases
 use self::computed_value_flags::*;
-<<<<<<< HEAD
-use crate::str::{CssString, CssStringBorrow, CssStringWriter};
-||||||| merged common ancestors
-use str::{CssString, CssStringBorrow, CssStringWriter};
-=======
 use crate::str::{CssString, CssStringBorrow, CssStringWriter};
 use std::cell::Cell;
->>>>>>> upstream-releases
 
 pub use self::declaration_block::*;
 pub use self::cascade::*;
@@ -1006,21 +960,11 @@ bitflags! {
         const APPLIES_TO_MARKER = 1 << 7;
         /// This property's getComputedStyle implementation requires layout
         /// to be flushed.
-<<<<<<< HEAD
-        const GETCS_NEEDS_LAYOUT_FLUSH = 1 << 6;
-        /// This property is a legacy shorthand.
-        ///
-        /// https://drafts.csswg.org/css-cascade/#legacy-shorthand
-        const IS_LEGACY_SHORTHAND = 1 << 7;
-||||||| merged common ancestors
-        const GETCS_NEEDS_LAYOUT_FLUSH = 1 << 6;
-=======
         const GETCS_NEEDS_LAYOUT_FLUSH = 1 << 8;
         /// This property is a legacy shorthand.
         ///
         /// https://drafts.csswg.org/css-cascade/#legacy-shorthand
         const IS_LEGACY_SHORTHAND = 1 << 9;
->>>>>>> upstream-releases
 
         /* The following flags are currently not used in Rust code, they
          * only need to be listed in corresponding properties so that
@@ -1503,21 +1447,10 @@ impl ShorthandId {
         None
     }
 
-<<<<<<< HEAD
-    /// Returns PropertyFlags for the given shorthand property.
-    #[inline]
-    pub fn flags(self) -> PropertyFlags {
-        const FLAGS: [u8; ${len(data.shorthands)}] = [
-||||||| merged common ancestors
-    /// Returns PropertyFlags for given shorthand property.
-    pub fn flags(&self) -> PropertyFlags {
-        match *self {
-=======
     /// Returns PropertyFlags for the given shorthand property.
     #[inline]
     pub fn flags(self) -> PropertyFlags {
         const FLAGS: [u16; ${len(data.shorthands)}] = [
->>>>>>> upstream-releases
             % for property in data.shorthands:
                 % for flag in property.flags:
                     PropertyFlags::${flag}.bits |
@@ -1605,124 +1538,7 @@ impl UnparsedValue {
         quirks_mode: QuirksMode,
         environment: &::custom_properties::CssEnvironment,
     ) -> PropertyDeclaration {
-<<<<<<< HEAD
-        crate::custom_properties::substitute(
-            &self.css,
-            self.first_token_type,
-            custom_properties,
-            environment,
-        ).ok().and_then(|css| {
-            // As of this writing, only the base URL is used for property
-            // values.
-            //
-            // NOTE(emilio): we intentionally pase `None` as the rule type here.
-            // If something starts depending on it, it's probably a bug, since
-            // it'd change how values are parsed depending on whether we're in a
-            // @keyframes rule or not, for example... So think twice about
-            // whether you want to do this!
-            //
-            // FIXME(emilio): ParsingMode is slightly fishy...
-            let context = ParserContext::new(
-                Origin::Author,
-                &self.url_data,
-                None,
-                ParsingMode::DEFAULT,
-                quirks_mode,
-                None,
-                None,
-            );
-
-            let mut input = ParserInput::new(&css);
-            Parser::new(&mut input).parse_entirely(|input| {
-                match self.from_shorthand {
-                    None => longhand_id.parse_value(&context, input),
-                    Some(ShorthandId::All) => {
-                        // No need to parse the 'all' shorthand as anything other than a CSS-wide
-                        // keyword, after variable substitution.
-                        Err(input.new_custom_error(SelectorParseErrorKind::UnexpectedIdent("all".into())))
-                    }
-                    % for shorthand in data.shorthands_except_all():
-                        Some(ShorthandId::${shorthand.camel_case}) => {
-                            shorthands::${shorthand.ident}::parse_value(&context, input)
-                            .map(|longhands| {
-                                match longhand_id {
-                                    % for property in shorthand.sub_properties:
-                                        LonghandId::${property.camel_case} => {
-                                            PropertyDeclaration::${property.camel_case}(
-                                                longhands.${property.ident}
-                                            )
-                                        }
-                                    % endfor
-                                    _ => unreachable!()
-                                }
-                            })
-                        }
-                    % endfor
-                }
-            })
-            .ok()
-        })
-        .unwrap_or_else(|| {
-            // Invalid at computed-value time.
-||||||| merged common ancestors
-        ::custom_properties::substitute(&self.css, self.first_token_type, custom_properties)
-        .ok()
-        .and_then(|css| {
-            // As of this writing, only the base URL is used for property
-            // values.
-            //
-            // NOTE(emilio): we intentionally pase `None` as the rule type here.
-            // If something starts depending on it, it's probably a bug, since
-            // it'd change how values are parsed depending on whether we're in a
-            // @keyframes rule or not, for example... So think twice about
-            // whether you want to do this!
-            //
-            // FIXME(emilio): ParsingMode is slightly fishy...
-            let context = ParserContext::new(
-                Origin::Author,
-                &self.url_data,
-                None,
-                ParsingMode::DEFAULT,
-                quirks_mode,
-                None,
-                None,
-            );
-
-            let mut input = ParserInput::new(&css);
-            Parser::new(&mut input).parse_entirely(|input| {
-                match self.from_shorthand {
-                    None => longhand_id.parse_value(&context, input),
-                    Some(ShorthandId::All) => {
-                        // No need to parse the 'all' shorthand as anything other than a CSS-wide
-                        // keyword, after variable substitution.
-                        Err(input.new_custom_error(SelectorParseErrorKind::UnexpectedIdent("all".into())))
-                    }
-                    % for shorthand in data.shorthands_except_all():
-                        Some(ShorthandId::${shorthand.camel_case}) => {
-                            shorthands::${shorthand.ident}::parse_value(&context, input)
-                            .map(|longhands| {
-                                match longhand_id {
-                                    % for property in shorthand.sub_properties:
-                                        LonghandId::${property.camel_case} => {
-                                            PropertyDeclaration::${property.camel_case}(
-                                                longhands.${property.ident}
-                                            )
-                                        }
-                                    % endfor
-                                    _ => unreachable!()
-                                }
-                            })
-                        }
-                    % endfor
-                }
-            })
-            .ok()
-        })
-        .unwrap_or_else(|| {
-            // Invalid at computed-value time.
-=======
         let invalid_at_computed_value_time = || {
->>>>>>> upstream-releases
             let keyword = if longhand_id.inherited() {
                 CSSWideKeyword::Inherit
             } else {
@@ -2397,27 +2213,9 @@ impl PropertyDeclaration {
                 // This probably affects some test results.
                 let value = match input.try(CSSWideKeyword::parse) {
                     Ok(keyword) => CustomDeclarationValue::CSSWideKeyword(keyword),
-<<<<<<< HEAD
-                    Err(()) => match crate::custom_properties::SpecifiedValue::parse(input) {
-                        Ok(value) => CustomDeclarationValue::Value(value),
-                        Err(e) => return Err(StyleParseErrorKind::new_invalid(
-                            format!("--{}", property_name),
-                            e,
-                        )),
-                    }
-||||||| merged common ancestors
-                    Err(()) => match ::custom_properties::SpecifiedValue::parse(input) {
-                        Ok(value) => CustomDeclarationValue::Value(value),
-                        Err(e) => return Err(StyleParseErrorKind::new_invalid(
-                            format!("--{}", property_name),
-                            e,
-                        )),
-                    }
-=======
                     Err(()) => CustomDeclarationValue::Value(
                         crate::custom_properties::SpecifiedValue::parse(input)?
                     ),
->>>>>>> upstream-releases
                 };
                 declarations.push(PropertyDeclaration::Custom(CustomDeclaration {
                     name: property_name,
@@ -2437,38 +2235,6 @@ impl PropertyDeclaration {
                     input.parse_entirely(|input| id.parse_value(context, input))
                     .or_else(|err| {
                         while let Ok(_) = input.next() {}  // Look for var() after the error.
-<<<<<<< HEAD
-                        if !input.seen_var_or_env_functions() {
-                            return Err(StyleParseErrorKind::new_invalid(
-                                non_custom_id.unwrap().name(),
-                                err,
-                            ));
-                        }
-                        input.reset(&start);
-                        let (first_token_type, css) =
-                            crate::custom_properties::parse_non_custom_with_var(input).map_err(|e| {
-                                StyleParseErrorKind::new_invalid(
-                                    non_custom_id.unwrap().name(),
-                                    e,
-                                )
-                            })?;
-                        Ok(PropertyDeclaration::WithVariables(VariableDeclaration {
-                            id,
-                            value: Arc::new(UnparsedValue {
-||||||| merged common ancestors
-                        if input.seen_var_functions() {
-                            input.reset(&start);
-                            let (first_token_type, css) =
-                                ::custom_properties::parse_non_custom_with_var(input).map_err(|e| {
-                                    StyleParseErrorKind::new_invalid(
-                                        non_custom_id.unwrap().name(),
-                                        e,
-                                    )
-                                })?;
-                            Ok(PropertyDeclaration::WithVariables(VariableDeclaration {
-                                id,
-                                value: Arc::new(UnparsedValue {
-=======
                         if !input.seen_var_or_env_functions() {
                             return Err(err);
                         }
@@ -2478,7 +2244,6 @@ impl PropertyDeclaration {
                         Ok(PropertyDeclaration::WithVariables(VariableDeclaration {
                             id,
                             value: Arc::new(UnparsedValue {
->>>>>>> upstream-releases
                                 css: css.into_owned(),
                                 first_token_type: first_token_type,
                                 url_data: context.url_data.clone(),
@@ -2513,43 +2278,13 @@ impl PropertyDeclaration {
                     // *before* pushing to `declarations`.
                     id.parse_into(declarations, context, input).or_else(|err| {
                         while let Ok(_) = input.next() {}  // Look for var() after the error.
-<<<<<<< HEAD
-                        if !input.seen_var_or_env_functions() {
-                            return Err(StyleParseErrorKind::new_invalid(
-                                non_custom_id.unwrap().name(),
-                                err,
-                            ));
-||||||| merged common ancestors
-                        if !input.seen_var_functions() {
-                            return Err(StyleParseErrorKind::new_invalid(
-                                non_custom_id.unwrap().name(),
-                                err,
-                            ));
-=======
                         if !input.seen_var_or_env_functions() {
                             return Err(err);
->>>>>>> upstream-releases
                         }
 
                         input.reset(&start);
                         let (first_token_type, css) =
-<<<<<<< HEAD
-                            crate::custom_properties::parse_non_custom_with_var(input).map_err(|e| {
-                                StyleParseErrorKind::new_invalid(
-                                    non_custom_id.unwrap().name(),
-                                    e,
-                                )
-                            })?;
-||||||| merged common ancestors
-                            ::custom_properties::parse_non_custom_with_var(input).map_err(|e| {
-                                StyleParseErrorKind::new_invalid(
-                                    non_custom_id.unwrap().name(),
-                                    e,
-                                )
-                            })?;
-=======
                             crate::custom_properties::parse_non_custom_with_var(input)?;
->>>>>>> upstream-releases
                         let unparsed = Arc::new(UnparsedValue {
                             css: css.into_owned(),
                             first_token_type: first_token_type,
@@ -2941,21 +2676,7 @@ pub mod style_structs {
             /// Whether this is a multicol style.
             #[cfg(feature = "servo")]
             pub fn is_multicol(&self) -> bool {
-<<<<<<< HEAD
-                use crate::values::Either;
-                match self.column_width {
-                    Either::First(_width) => true,
-                    Either::Second(_auto) => !self.column_count.is_auto(),
-                }
-||||||| merged common ancestors
-                use values::Either;
-                match self.column_width {
-                    Either::First(_width) => true,
-                    Either::Second(_auto) => !self.column_count.is_auto(),
-                }
-=======
                 !self.column_width.is_auto() || !self.column_count.is_auto()
->>>>>>> upstream-releases
             }
         % endif
     }

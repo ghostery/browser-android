@@ -12,19 +12,10 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-TEST(TestProtocolProxyService, LoadHostFilters) {
-  nsCOMPtr<nsIProtocolProxyService2> ps =
-      do_GetService(NS_PROTOCOLPROXYSERVICE_CID);
-||||||| merged common ancestors
-TEST(TestProtocolProxyService, LoadHostFilters) {
-  nsCOMPtr<nsIProtocolProxyService2> ps = do_GetService(NS_PROTOCOLPROXYSERVICE_CID);
-=======
 TEST(TestProtocolProxyService, LoadHostFilters)
 {
   nsCOMPtr<nsIProtocolProxyService2> ps =
       do_GetService(NS_PROTOCOLPROXYSERVICE_CID);
->>>>>>> upstream-releases
   ASSERT_TRUE(ps);
   mozilla::net::nsProtocolProxyService* pps =
       static_cast<mozilla::net::nsProtocolProxyService*>(ps.get());
@@ -99,13 +90,7 @@ TEST(TestProtocolProxyService, LoadHostFilters)
   printf("Testing empty filter: %s\n", filter.get());
   pps->LoadHostFilters(filter);
 
-<<<<<<< HEAD
-  CheckLoopbackURLs(true);  // only time when loopbacks can be proxied. bug?
-||||||| merged common ancestors
-  CheckLoopbackURLs(true); // only time when loopbacks can be proxied. bug?
-=======
   CheckLoopbackURLs(false);
->>>>>>> upstream-releases
   CheckLocalDomain(true);
   CheckURLs(true);
   CheckPortDomain(true);

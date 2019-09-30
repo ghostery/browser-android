@@ -62,36 +62,14 @@ class nsDeleteDir {
   friend class nsDestroyThreadEvent;
 
   nsresult InitThread();
-<<<<<<< HEAD
-  void DestroyThread();
-  nsresult PostTimer(void *arg, uint32_t delay);
-  nsresult RemoveDir(nsIFile *file, bool *stopDeleting);
-||||||| merged common ancestors
-  void     DestroyThread();
-  nsresult PostTimer(void *arg, uint32_t delay);
-  nsresult RemoveDir(nsIFile *file, bool *stopDeleting);
-=======
   void DestroyThread();
   nsresult PostTimer(void* arg, uint32_t delay);
   nsresult RemoveDir(nsIFile* file, bool* stopDeleting);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static nsDeleteDir *gInstance;
-  mozilla::Mutex mLock;
-  mozilla::CondVar mCondVar;
-  bool mNotified;
-||||||| merged common ancestors
-  static nsDeleteDir * gInstance;
-  mozilla::Mutex       mLock;
-  mozilla::CondVar     mCondVar;
-  bool                 mNotified;
-=======
   static nsDeleteDir* gInstance;
   mozilla::Mutex mLock;
   mozilla::CondVar mCondVar;
   bool mNotified;
->>>>>>> upstream-releases
   nsCOMArray<nsITimer> mTimers;
   nsCOMPtr<nsIThread> mThread;
   bool mShutdownPending;

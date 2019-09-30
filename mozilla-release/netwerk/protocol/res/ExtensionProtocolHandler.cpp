@@ -350,26 +350,12 @@ ExtensionProtocolHandler::GetSingleton() {
 ExtensionProtocolHandler::ExtensionProtocolHandler()
     : SubstitutingProtocolHandler(EXTENSION_SCHEME)
 #if !defined(XP_WIN)
-<<<<<<< HEAD
-#if defined(XP_MACOSX)
-      ,
-      mAlreadyCheckedDevRepo(false)
-#endif /* XP_MACOSX */
-      ,
-      mAlreadyCheckedAppDir(false)
-||||||| merged common ancestors
-#if defined(XP_MACOSX)
-  , mAlreadyCheckedDevRepo(false)
-#endif /* XP_MACOSX */
-  , mAlreadyCheckedAppDir(false)
-=======
 #  if defined(XP_MACOSX)
       ,
       mAlreadyCheckedDevRepo(false)
 #  endif /* XP_MACOSX */
       ,
       mAlreadyCheckedAppDir(false)
->>>>>>> upstream-releases
 #endif /* ! XP_WIN */
 {
   // Note, extensions.webextensions.protocol.remote=false is for
@@ -386,26 +372,10 @@ static inline ExtensionPolicyService& EPS() {
   return ExtensionPolicyService::GetSingleton();
 }
 
-<<<<<<< HEAD
-nsresult ExtensionProtocolHandler::GetFlagsForURI(nsIURI* aURI,
-                                                  uint32_t* aFlags) {
-  // In general a moz-extension URI is only loadable by chrome, but a
-  // whitelisted subset are web-accessible (and cross-origin fetchable). Check
-  // that whitelist.
-  bool loadableByAnyone = false;
-||||||| merged common ancestors
-nsresult
-ExtensionProtocolHandler::GetFlagsForURI(nsIURI* aURI, uint32_t* aFlags)
-{
-  // In general a moz-extension URI is only loadable by chrome, but a whitelisted
-  // subset are web-accessible (and cross-origin fetchable). Check that whitelist.
-  bool loadableByAnyone = false;
-=======
 nsresult ExtensionProtocolHandler::GetFlagsForURI(nsIURI* aURI,
                                                   uint32_t* aFlags) {
   uint32_t flags =
       URI_STD | URI_IS_LOCAL_RESOURCE | URI_IS_POTENTIALLY_TRUSTWORTHY;
->>>>>>> upstream-releases
 
   URLInfo url(aURI);
   if (auto* policy = EPS().GetByURL(url)) {
@@ -424,36 +394,10 @@ nsresult ExtensionProtocolHandler::GetFlagsForURI(nsIURI* aURI,
     }
   }
 
-<<<<<<< HEAD
-  *aFlags =
-      URI_STD | URI_IS_LOCAL_RESOURCE | URI_IS_POTENTIALLY_TRUSTWORTHY |
-      (loadableByAnyone ? (URI_LOADABLE_BY_ANYONE | URI_FETCHABLE_BY_ANYONE)
-                        : URI_DANGEROUS_TO_LOAD);
-||||||| merged common ancestors
-  *aFlags = URI_STD | URI_IS_LOCAL_RESOURCE | URI_IS_POTENTIALLY_TRUSTWORTHY |
-    (loadableByAnyone ? (URI_LOADABLE_BY_ANYONE |
-                         URI_FETCHABLE_BY_ANYONE) : URI_DANGEROUS_TO_LOAD);
-=======
   *aFlags = flags;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool ExtensionProtocolHandler::ResolveSpecialCases(const nsACString& aHost,
-                                                   const nsACString& aPath,
-                                                   const nsACString& aPathname,
-                                                   nsACString& aResult) {
-  // Create special moz-extension:-pages such as moz-extension://foo/_blank.html
-||||||| merged common ancestors
-bool
-ExtensionProtocolHandler::ResolveSpecialCases(const nsACString& aHost,
-                                              const nsACString& aPath,
-                                              const nsACString& aPathname,
-                                              nsACString& aResult)
-{
-  // Create special moz-extension:-pages such as moz-extension://foo/_blank.html
-=======
 bool ExtensionProtocolHandler::ResolveSpecialCases(const nsACString& aHost,
                                                    const nsACString& aPath,
                                                    const nsACString& aPathname,
@@ -461,7 +405,6 @@ bool ExtensionProtocolHandler::ResolveSpecialCases(const nsACString& aHost,
   MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread(),
                         "The ExtensionPolicyService is not thread safe");
   // Create special moz-extension://foo/_generated_background_page.html page
->>>>>>> upstream-releases
   // for all registered extensions. We can't just do this as a substitution
   // because substitutions can only match on host.
   if (!SubstitutingProtocolHandler::HasSubstitution(aHost)) {
@@ -512,23 +455,6 @@ Result<Ok, nsresult> ExtensionProtocolHandler::SubstituteRemoteChannel(
   return Ok();
 }
 
-<<<<<<< HEAD
-nsresult ExtensionProtocolHandler::SubstituteChannel(nsIURI* aURI,
-                                                     nsILoadInfo* aLoadInfo,
-                                                     nsIChannel** result) {
-  nsresult rv;
-  nsCOMPtr<nsIURL> url = do_QueryInterface(aURI, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsresult
-ExtensionProtocolHandler::SubstituteChannel(nsIURI* aURI,
-                                            nsILoadInfo* aLoadInfo,
-                                            nsIChannel** result)
-{
-  nsresult rv;
-  nsCOMPtr<nsIURL> url = do_QueryInterface(aURI, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
 void OpenWhenReady(
     Promise* aPromise, nsIStreamListener* aListener, nsIChannel* aChannel,
     const std::function<nsresult(nsIStreamListener*, nsIChannel*)>& aCallback) {
@@ -547,7 +473,6 @@ void OpenWhenReady(
       },
       listener);
 }
->>>>>>> upstream-releases
 
 nsresult ExtensionProtocolHandler::SubstituteChannel(nsIURI* aURI,
                                                      nsILoadInfo* aLoadInfo,
@@ -565,64 +490,6 @@ nsresult ExtensionProtocolHandler::SubstituteChannel(nsIURI* aURI,
   nsCOMPtr<nsIURL> url = do_QueryInterface(aURI, &rv);
   MOZ_TRY(rv);
 
-<<<<<<< HEAD
-  bool haveLoadInfo = aLoadInfo;
-  nsCOMPtr<nsIChannel> channel = NS_NewSimpleChannel(
-      aURI, aLoadInfo, *result,
-      [haveLoadInfo](nsIStreamListener* listener, nsIChannel* channel,
-                     nsIChannel* origChannel) -> RequestOrReason {
-        nsresult rv;
-        nsCOMPtr<nsIStreamConverterService> convService =
-            do_GetService(NS_STREAMCONVERTERSERVICE_CONTRACTID, &rv);
-        MOZ_TRY(rv);
-
-        nsCOMPtr<nsIURI> uri;
-        MOZ_TRY(channel->GetURI(getter_AddRefs(uri)));
-
-        const char* kFromType = "application/vnd.mozilla.webext.unlocalized";
-        const char* kToType = "text/css";
-
-        nsCOMPtr<nsIStreamListener> converter;
-        MOZ_TRY(convService->AsyncConvertData(kFromType, kToType, listener, uri,
-                                              getter_AddRefs(converter)));
-        if (haveLoadInfo) {
-          MOZ_TRY(origChannel->AsyncOpen2(converter));
-        } else {
-          MOZ_TRY(origChannel->AsyncOpen(converter, nullptr));
-        }
-
-        return RequestOrReason(origChannel);
-      });
-  NS_ENSURE_TRUE(channel, NS_ERROR_OUT_OF_MEMORY);
-||||||| merged common ancestors
-  bool haveLoadInfo = aLoadInfo;
-  nsCOMPtr<nsIChannel> channel = NS_NewSimpleChannel(
-    aURI, aLoadInfo, *result,
-    [haveLoadInfo] (nsIStreamListener* listener, nsIChannel* channel, nsIChannel* origChannel) -> RequestOrReason {
-      nsresult rv;
-      nsCOMPtr<nsIStreamConverterService> convService =
-        do_GetService(NS_STREAMCONVERTERSERVICE_CONTRACTID, &rv);
-      MOZ_TRY(rv);
-
-      nsCOMPtr<nsIURI> uri;
-      MOZ_TRY(channel->GetURI(getter_AddRefs(uri)));
-
-      const char* kFromType = "application/vnd.mozilla.webext.unlocalized";
-      const char* kToType = "text/css";
-
-      nsCOMPtr<nsIStreamListener> converter;
-      MOZ_TRY(convService->AsyncConvertData(kFromType, kToType, listener,
-                                        uri, getter_AddRefs(converter)));
-      if (haveLoadInfo) {
-        MOZ_TRY(origChannel->AsyncOpen2(converter));
-      } else {
-        MOZ_TRY(origChannel->AsyncOpen(converter, nullptr));
-      }
-
-      return RequestOrReason(origChannel);
-    });
-  NS_ENSURE_TRUE(channel, NS_ERROR_OUT_OF_MEMORY);
-=======
   nsAutoCString ext;
   MOZ_TRY(url->GetFileExtension(ext));
   ToLowerCase(ext);
@@ -692,7 +559,6 @@ nsresult ExtensionProtocolHandler::SubstituteChannel(nsIURI* aURI,
   } else {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   NS_ENSURE_TRUE(channel, NS_ERROR_OUT_OF_MEMORY);
   if (aLoadInfo) {
@@ -705,19 +571,8 @@ nsresult ExtensionProtocolHandler::SubstituteChannel(nsIURI* aURI,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-Result<Ok, nsresult> ExtensionProtocolHandler::AllowExternalResource(
-    nsIFile* aExtensionDir, nsIFile* aRequestedFile, bool* aResult) {
-||||||| merged common ancestors
-Result<Ok, nsresult>
-ExtensionProtocolHandler::AllowExternalResource(nsIFile* aExtensionDir,
-                                                nsIFile* aRequestedFile,
-                                                bool* aResult)
-{
-=======
 Result<bool, nsresult> ExtensionProtocolHandler::AllowExternalResource(
     nsIFile* aExtensionDir, nsIFile* aRequestedFile) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!IsNeckoChild());
 
 #if defined(XP_WIN)
@@ -753,18 +608,8 @@ Result<bool, nsresult> ExtensionProtocolHandler::AllowExternalResource(
 
 #if defined(XP_MACOSX)
 // The |aRequestedFile| argument must already be Normalize()'d
-<<<<<<< HEAD
-Result<Ok, nsresult> ExtensionProtocolHandler::DevRepoContains(
-    nsIFile* aRequestedFile, bool* aResult) {
-||||||| merged common ancestors
-Result<Ok, nsresult>
-ExtensionProtocolHandler::DevRepoContains(nsIFile* aRequestedFile,
-                                          bool* aResult)
-{
-=======
 Result<bool, nsresult> ExtensionProtocolHandler::DevRepoContains(
     nsIFile* aRequestedFile) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mozilla::IsDevelopmentBuild());
   MOZ_ASSERT(!IsNeckoChild());
 
@@ -788,18 +633,8 @@ Result<bool, nsresult> ExtensionProtocolHandler::DevRepoContains(
 #endif /* XP_MACOSX */
 
 #if !defined(XP_WIN)
-<<<<<<< HEAD
-Result<Ok, nsresult> ExtensionProtocolHandler::AppDirContains(
-    nsIFile* aExtensionDir, bool* aResult) {
-||||||| merged common ancestors
-Result<Ok, nsresult>
-ExtensionProtocolHandler::AppDirContains(nsIFile* aExtensionDir,
-                                         bool* aResult)
-{
-=======
 Result<bool, nsresult> ExtensionProtocolHandler::AppDirContains(
     nsIFile* aExtensionDir) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mozilla::IsDevelopmentBuild());
   MOZ_ASSERT(!IsNeckoChild());
 
@@ -1041,38 +876,6 @@ static void NewSimpleChannel(nsIURI* aURI, nsILoadInfo* aLoadinfo,
 }
 
 // Gets a SimpleChannel that wraps the provided channel
-<<<<<<< HEAD
-static void NewSimpleChannel(nsIURI* aURI, nsILoadInfo* aLoadinfo,
-                             nsIChannel* aChannel, nsIChannel** aRetVal) {
-  nsCOMPtr<nsIChannel> channel = NS_NewSimpleChannel(
-      aURI, aLoadinfo, aChannel,
-      [](nsIStreamListener* listener, nsIChannel* simpleChannel,
-         nsIChannel* origChannel) -> RequestOrReason {
-        nsresult rv = origChannel->AsyncOpen2(listener);
-        if (NS_FAILED(rv)) {
-          simpleChannel->Cancel(NS_BINDING_ABORTED);
-          return RequestOrReason(rv);
-        }
-        return RequestOrReason(origChannel);
-      });
-||||||| merged common ancestors
-static void
-NewSimpleChannel(nsIURI* aURI,
-                 nsILoadInfo* aLoadinfo,
-                 nsIChannel* aChannel,
-                 nsIChannel** aRetVal)
-{
-  nsCOMPtr<nsIChannel> channel = NS_NewSimpleChannel(aURI, aLoadinfo, aChannel,
-    [] (nsIStreamListener* listener, nsIChannel* simpleChannel,
-        nsIChannel* origChannel) -> RequestOrReason {
-      nsresult rv = origChannel->AsyncOpen2(listener);
-      if (NS_FAILED(rv)) {
-        simpleChannel->Cancel(NS_BINDING_ABORTED);
-        return RequestOrReason(rv);
-      }
-      return RequestOrReason(origChannel);
-    });
-=======
 static void NewSimpleChannel(nsIURI* aURI, nsILoadInfo* aLoadinfo,
                              nsIChannel* aChannel, nsIChannel** aRetVal) {
   nsCOMPtr<nsIChannel> channel = NS_NewSimpleChannel(
@@ -1086,7 +889,6 @@ static void NewSimpleChannel(nsIURI* aURI, nsILoadInfo* aLoadinfo,
         }
         return RequestOrReason(origChannel);
       });
->>>>>>> upstream-releases
 
   SetContentType(aURI, channel);
   channel.swap(*aRetVal);

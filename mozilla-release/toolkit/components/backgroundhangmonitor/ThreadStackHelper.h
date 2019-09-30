@@ -26,44 +26,17 @@
 #  endif
 
 // Support profiling stack and native stack on these platforms.
-<<<<<<< HEAD
-#if defined(XP_LINUX) || defined(XP_WIN) || defined(XP_MACOSX)
-#define MOZ_THREADSTACKHELPER_PROFILING_STACK
-#define MOZ_THREADSTACKHELPER_NATIVE_STACK
-#endif
-
-||||||| merged common ancestors
-#if defined(XP_LINUX) || defined(XP_WIN) || defined(XP_MACOSX)
-#  define MOZ_THREADSTACKHELPER_PROFILING_STACK
-#  define MOZ_THREADSTACKHELPER_NATIVE_STACK
-#endif
-
-
-=======
 #  if defined(XP_LINUX) || defined(XP_WIN) || defined(XP_MACOSX)
 #    define MOZ_THREADSTACKHELPER_PROFILING_STACK
 #    define MOZ_THREADSTACKHELPER_NATIVE_STACK
 #  endif
 
->>>>>>> upstream-releases
 // Android x86 builds consistently crash in the Background Hang Reporter. bug
 // 1368520.
-<<<<<<< HEAD
-#if defined(__ANDROID__)
-#undef MOZ_THREADSTACKHELPER_PROFILING_STACK
-#undef MOZ_THREADSTACKHELPER_NATIVE_STACK
-#endif
-||||||| merged common ancestors
-#if defined(__ANDROID__)
-#  undef MOZ_THREADSTACKHELPER_PROFILING_STACK
-#  undef MOZ_THREADSTACKHELPER_NATIVE_STACK
-#endif
-=======
 #  if defined(__ANDROID__)
 #    undef MOZ_THREADSTACKHELPER_PROFILING_STACK
 #    undef MOZ_THREADSTACKHELPER_NATIVE_STACK
 #  endif
->>>>>>> upstream-releases
 
 namespace mozilla {
 

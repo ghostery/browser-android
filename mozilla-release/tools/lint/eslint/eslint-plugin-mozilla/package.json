@@ -1,12 +1,6 @@
 {
   "name": "eslint-plugin-mozilla",
-<<<<<<< HEAD
-  "version": "1.0.1",
-||||||| merged common ancestors
-  "version": "0.16.1",
-=======
   "version": "2.0.1",
->>>>>>> upstream-releases
   "description": "A collection of rules that help enforce JavaScript coding standard in the Mozilla project.",
   "keywords": [
     "eslint",

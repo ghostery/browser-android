@@ -47,17 +47,6 @@ NS_DEFINE_CID(kMultiplexInputStreamCID, NS_MULTIPLEXINPUTSTREAM_CID);
 namespace mozilla {
 namespace ipc {
 
-<<<<<<< HEAD
-void InputStreamHelper::SerializeInputStream(
-    nsIInputStream* aInputStream, InputStreamParams& aParams,
-    nsTArray<FileDescriptor>& aFileDescriptors) {
-||||||| merged common ancestors
-void
-InputStreamHelper::SerializeInputStream(nsIInputStream* aInputStream,
-                                        InputStreamParams& aParams,
-                                        nsTArray<FileDescriptor>& aFileDescriptors)
-{
-=======
 namespace {
 
 template <typename M>
@@ -66,7 +55,6 @@ void SerializeInputStreamInternal(nsIInputStream* aInputStream,
                                   nsTArray<FileDescriptor>& aFileDescriptors,
                                   bool aDelayedStart, uint32_t aMaxSize,
                                   uint32_t* aSizeUsed, M* aManager) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aInputStream);
   MOZ_ASSERT(aManager);
 
@@ -84,20 +72,6 @@ void SerializeInputStreamInternal(nsIInputStream* aInputStream,
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIInputStream> InputStreamHelper::DeserializeInputStream(
-    const InputStreamParams& aParams,
-    const nsTArray<FileDescriptor>& aFileDescriptors) {
-  nsCOMPtr<nsIInputStream> stream;
-  nsCOMPtr<nsIIPCSerializableInputStream> serializable;
-||||||| merged common ancestors
-already_AddRefed<nsIInputStream>
-InputStreamHelper::DeserializeInputStream(const InputStreamParams& aParams,
-                                          const nsTArray<FileDescriptor>& aFileDescriptors)
-{
-  nsCOMPtr<nsIInputStream> stream;
-  nsCOMPtr<nsIIPCSerializableInputStream> serializable;
-=======
 template <typename M>
 void SerializeInputStreamAsPipeInternal(nsIInputStream* aInputStream,
                                         InputStreamParams& aParams,
@@ -290,7 +264,6 @@ void InputStreamHelper::PostSerializationActivation(InputStreamParams& aParams,
 
     case InputStreamParams::TFileInputStreamParams:
       break;
->>>>>>> upstream-releases
 
     case InputStreamParams::TIPCBlobInputStreamParams:
       break;
@@ -317,18 +290,6 @@ already_AddRefed<nsIInputStream> InputStreamHelper::DeserializeInputStream(
   // IPCBlobInputStreams are not deserializable on the parent side.
   if (aParams.type() == InputStreamParams::TIPCBlobInputStreamParams) {
     MOZ_ASSERT(XRE_IsParentProcess());
-<<<<<<< HEAD
-    IPCBlobInputStreamStorage::Get()->GetStream(
-        aParams.get_IPCBlobInputStreamParams().id(),
-        aParams.get_IPCBlobInputStreamParams().start(),
-        aParams.get_IPCBlobInputStreamParams().length(),
-        getter_AddRefs(stream));
-||||||| merged common ancestors
-    IPCBlobInputStreamStorage::Get()->GetStream(aParams.get_IPCBlobInputStreamParams().id(),
-                                                aParams.get_IPCBlobInputStreamParams().start(),
-                                                aParams.get_IPCBlobInputStreamParams().length(),
-                                                getter_AddRefs(stream));
-=======
 
     nsCOMPtr<nsIInputStream> stream;
     IPCBlobInputStreamStorage::Get()->GetStream(
@@ -336,7 +297,6 @@ already_AddRefed<nsIInputStream> InputStreamHelper::DeserializeInputStream(
         aParams.get_IPCBlobInputStreamParams().start(),
         aParams.get_IPCBlobInputStreamParams().length(),
         getter_AddRefs(stream));
->>>>>>> upstream-releases
     return stream.forget();
   }
 

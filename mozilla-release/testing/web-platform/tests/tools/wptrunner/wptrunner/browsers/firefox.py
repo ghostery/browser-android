@@ -191,13 +191,7 @@ class FirefoxBrowser(Browser):
                  symbols_path=None, stackwalk_binary=None, certutil_binary=None,
                  ca_certificate_path=None, e10s=False, enable_webrender=False, lsan_dir=None, stackfix_dir=None,
                  binary_args=None, timeout_multiplier=None, leak_check=False, asan=False,
-<<<<<<< HEAD
-                 stylo_threads=1, chaos_mode_flags=None, config=None, headless=None, **kwargs):
-||||||| merged common ancestors
-                 stylo_threads=1, chaos_mode_flags=None, config=None, headless=None):
-=======
                  stylo_threads=1, chaos_mode_flags=None, config=None, browser_channel="nightly", headless=None, **kwargs):
->>>>>>> upstream-releases
         Browser.__init__(self, logger)
         self.binary = binary
         self.prefs_root = prefs_root
@@ -396,21 +390,8 @@ class FirefoxBrowser(Browser):
             # Ideally we would record which content process crashed and just skip those.
             mozleak.process_leak_log(
                 self.leak_report_file,
-<<<<<<< HEAD
-                leak_thresholds=self.mozleak_thresholds,
-                ignore_missing_leaks=["geckomediaplugin"],
-||||||| merged common ancestors
-                leak_thresholds={
-                    "default": 0,
-                    "tab": 10000,  # See dependencies of bug 1051230.
-                    # GMP rarely gets a log, but when it does, it leaks a little.
-                    "geckomediaplugin": 20000,
-                },
-                ignore_missing_leaks=["geckomediaplugin"],
-=======
                 leak_thresholds=self.mozleak_thresholds,
                 ignore_missing_leaks=["tab", "gmplugin"],
->>>>>>> upstream-releases
                 log=self.logger,
                 stack_fixer=self.stack_fixer,
                 scope=self.group_metadata.get("scope"),

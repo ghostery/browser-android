@@ -3,33 +3,19 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const TEST_URL = "http://example.com/";
-||||||| merged common ancestors
-const TEST_URL = "http://example.com";
-=======
 const TEST_URL1 = "http://example.com/1";
 const TEST_URL2 = "http://example.com/2";
->>>>>>> upstream-releases
 
 add_task(async function setup() {
   let oldHomepagePref = Services.prefs.getCharPref("browser.startup.homepage");
 
   await openPreferencesViaOpenPreferencesAPI("paneHome", { leaveOpen: true });
 
-<<<<<<< HEAD
-  Assert.equal(gBrowser.currentURI.spec, "about:preferences#home",
-               "#home should be in the URI for about:preferences");
-||||||| merged common ancestors
-  Assert.ok(gBrowser.currentURI.spec, "about:preferences#home",
-            "#home should be in the URI for about:preferences");
-=======
   Assert.equal(
     gBrowser.currentURI.spec,
     "about:preferences#home",
     "#home should be in the URI for about:preferences"
   );
->>>>>>> upstream-releases
 
   registerCleanupFunction(async () => {
     Services.prefs.setCharPref("browser.startup.homepage", oldHomepagePref);
@@ -88,17 +74,9 @@ add_task(async function testSetHomepageFromTopLevelFolder() {
     .selectItems([PlacesUtils.bookmarks.menuGuid]);
   dialog.document.documentElement.getButton("accept").click();
 
-<<<<<<< HEAD
-  Assert.equal(Services.prefs.getCharPref("browser.startup.homepage"), TEST_URL,
-               "Should have set the homepage to the same as the bookmark.");
-||||||| merged common ancestors
-  Assert.ok(Services.prefs.getCharPref("browser.startup.homepage"), TEST_URL,
-            "Should have set the homepage to the same as the bookmark.");
-=======
   Assert.equal(
     Services.prefs.getCharPref("browser.startup.homepage"),
     `${TEST_URL1}|${TEST_URL2}`,
     "Should have set the homepage to the same as the bookmark."
   );
->>>>>>> upstream-releases
 });

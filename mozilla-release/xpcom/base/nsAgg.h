@@ -275,45 +275,6 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsAggregatedCycleCollectionParticipant,
     if (!tmp->IsPartOfAggregated())                                \
     NS_IMPL_CYCLE_COLLECTION_DESCRIBE(_class, tmp->mRefCnt.get())
 
-<<<<<<< HEAD
-#define NS_GENERIC_AGGREGATED_CONSTRUCTOR(_InstanceClass)                      \
-  static nsresult _InstanceClass##Constructor(nsISupports* aOuter,             \
-                                              REFNSIID aIID, void** aResult) { \
-    *aResult = nullptr;                                                        \
-    if (NS_WARN_IF(aOuter && !aIID.Equals(NS_GET_IID(nsISupports))))           \
-      return NS_ERROR_INVALID_ARG;                                             \
-                                                                               \
-    RefPtr<_InstanceClass> inst = new _InstanceClass(aOuter);                  \
-    if (!inst) {                                                               \
-      return NS_ERROR_OUT_OF_MEMORY;                                           \
-    }                                                                          \
-                                                                               \
-    nsISupports* inner = inst->InnerObject();                                  \
-    nsresult rv = inner->QueryInterface(aIID, aResult);                        \
-                                                                               \
-    return rv;                                                                 \
-  }
-||||||| merged common ancestors
-#define NS_GENERIC_AGGREGATED_CONSTRUCTOR(_InstanceClass)                   \
-static nsresult                                                             \
-_InstanceClass##Constructor(nsISupports *aOuter, REFNSIID aIID,             \
-                            void **aResult)                                 \
-{                                                                           \
-    *aResult = nullptr;                                                     \
-    if (NS_WARN_IF(aOuter && !aIID.Equals(NS_GET_IID(nsISupports))))        \
-        return NS_ERROR_INVALID_ARG;                                        \
-                                                                            \
-    RefPtr<_InstanceClass> inst = new _InstanceClass(aOuter);               \
-    if (!inst) {                                                            \
-        return NS_ERROR_OUT_OF_MEMORY;                                      \
-    }                                                                       \
-                                                                            \
-    nsISupports* inner = inst->InnerObject();                               \
-    nsresult rv = inner->QueryInterface(aIID, aResult);                     \
-                                                                            \
-    return rv;                                                              \
-}                                                                           \
-=======
 #define NS_GENERIC_AGGREGATED_CONSTRUCTOR(_InstanceClass)                      \
   static nsresult _InstanceClass##Constructor(nsISupports* aOuter,             \
                                               REFNSIID aIID, void** aResult) { \
@@ -327,57 +288,7 @@ _InstanceClass##Constructor(nsISupports *aOuter, REFNSIID aIID,             \
                                                                                \
     return rv;                                                                 \
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_GENERIC_AGGREGATED_CONSTRUCTOR_INIT(_InstanceClass, _InitMethod)    \
-  static nsresult _InstanceClass##Constructor(nsISupports* aOuter,             \
-                                              REFNSIID aIID, void** aResult) { \
-    *aResult = nullptr;                                                        \
-    if (NS_WARN_IF(aOuter && !aIID.Equals(NS_GET_IID(nsISupports))))           \
-      return NS_ERROR_INVALID_ARG;                                             \
-                                                                               \
-    RefPtr<_InstanceClass> inst = new _InstanceClass(aOuter);                  \
-    if (!inst) {                                                               \
-      return NS_ERROR_OUT_OF_MEMORY;                                           \
-    }                                                                          \
-                                                                               \
-    nsISupports* inner = inst->InnerObject();                                  \
-    NS_ADDREF(inner);                                                          \
-    nsresult rv = inst->_InitMethod();                                         \
-    if (NS_SUCCEEDED(rv)) {                                                    \
-      rv = inner->QueryInterface(aIID, aResult);                               \
-    }                                                                          \
-    NS_RELEASE(inner);                                                         \
-                                                                               \
-    return rv;                                                                 \
-  }
-||||||| merged common ancestors
-#define NS_GENERIC_AGGREGATED_CONSTRUCTOR_INIT(_InstanceClass, _InitMethod) \
-static nsresult                                                             \
-_InstanceClass##Constructor(nsISupports *aOuter, REFNSIID aIID,             \
-                            void **aResult)                                 \
-{                                                                           \
-    *aResult = nullptr;                                                     \
-    if (NS_WARN_IF(aOuter && !aIID.Equals(NS_GET_IID(nsISupports))))        \
-        return NS_ERROR_INVALID_ARG;                                        \
-                                                                            \
-    RefPtr<_InstanceClass> inst = new _InstanceClass(aOuter);               \
-    if (!inst) {                                                            \
-        return NS_ERROR_OUT_OF_MEMORY;                                      \
-    }                                                                       \
-                                                                            \
-    nsISupports* inner = inst->InnerObject();                               \
-    NS_ADDREF(inner);                                                       \
-    nsresult rv = inst->_InitMethod();                                      \
-    if (NS_SUCCEEDED(rv)) {                                                 \
-        rv = inner->QueryInterface(aIID, aResult);                          \
-    }                                                                       \
-    NS_RELEASE(inner);                                                      \
-                                                                            \
-    return rv;                                                              \
-}                                                                           \
-=======
 #define NS_GENERIC_AGGREGATED_CONSTRUCTOR_INIT(_InstanceClass, _InitMethod)    \
   static nsresult _InstanceClass##Constructor(nsISupports* aOuter,             \
                                               REFNSIID aIID, void** aResult) { \
@@ -396,6 +307,5 @@ _InstanceClass##Constructor(nsISupports *aOuter, REFNSIID aIID,             \
                                                                                \
     return rv;                                                                 \
   }
->>>>>>> upstream-releases
 
 #endif /* nsAgg_h___ */

@@ -173,15 +173,6 @@ Preferences
   Override the ``channel`` value that is reported via Telemetry.
   This is useful for distinguishing different types of builds that otherwise still report as the same update channel.
 
-<<<<<<< HEAD
-``toolkit.telemetry.ipcBatchTimeout``
-
-  How long, in milliseconds, we batch accumulations from child processes before
-  sending them to the parent process.
-  Default is 2000 (milliseconds).
-
-||||||| merged common ancestors
-=======
 ``toolkit.telemetry.ipcBatchTimeout``
 
   How long, in milliseconds, we batch accumulations from child processes before
@@ -198,7 +189,6 @@ Preferences
   The number of encoded prio payloads which triggers an immediate :doc:`../data/prio-ping` with reason "max".
   Default is 10 payloads.
 
->>>>>>> upstream-releases
 Data-choices notification
 -------------------------
 

@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-use proc_macro2::TokenStream;
-use quote::{TokenStreamExt, ToTokens};
-||||||| merged common ancestors
-use quote::{Tokens, ToTokens};
-=======
 use std::borrow::Cow;
 
 use proc_macro2::TokenStream;
 use quote::{ToTokens, TokenStreamExt};
->>>>>>> upstream-releases
 use syn::{Ident, Path, Type};
 
 use codegen::DefaultExpression;
@@ -20,13 +13,7 @@ use usage::{self, IdentRefSet, IdentSet, UsesTypeParams};
 pub struct Field<'a> {
     /// The name presented to the user of the library. This will appear
     /// in error messages and will be looked when parsing names.
-<<<<<<< HEAD
-    pub name_in_attr: String,
-||||||| merged common ancestors
-    pub name_in_attr: &'a str,
-=======
     pub name_in_attr: Cow<'a, String>,
->>>>>>> upstream-releases
 
     /// The name presented to the author of the library. This will appear
     /// in the setters or temporary variables which contain the values.

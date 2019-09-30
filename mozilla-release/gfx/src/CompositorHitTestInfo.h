@@ -22,15 +22,6 @@ namespace gfx {
 // EnumSet (2 ^ <value of enumerator>), in hexadecimal.
 enum class CompositorHitTestFlags : uint8_t {
   // The frame participates in hit-testing
-<<<<<<< HEAD
-  eVisibleToHitTest = 0,  // 0x001
-  // The frame requires main-thread handling for events
-  eDispatchToContent,  // 0x002
-||||||| merged common ancestors
-  eVisibleToHitTest = 0,              // 0x001
-  // The frame requires main-thread handling for events
-  eDispatchToContent,                 // 0x002
-=======
   eVisibleToHitTest = 0,  // 0x0001
 
   // The frame may have odd shapes that requires the main thread to do accurate
@@ -44,7 +35,6 @@ enum class CompositorHitTestFlags : uint8_t {
   // it cannot be used by APZ for async scrolling, so APZ will defer to the main
   // thread.
   eInactiveScrollframe,  // 0x0008
->>>>>>> upstream-releases
 
   // The touch action flags are set up so that the default of
   // touch-action:auto on an element leaves all the flags as 0.
@@ -55,44 +45,20 @@ enum class CompositorHitTestFlags : uint8_t {
 
   // The frame is a scrollbar or a subframe inside a scrollbar (including
   // scroll thumbs)
-<<<<<<< HEAD
-  eScrollbar,  // 0x040
-||||||| merged common ancestors
-  eScrollbar,                         // 0x040
-=======
   eScrollbar,  // 0x0100
->>>>>>> upstream-releases
   // The frame is a scrollthumb. If this is set then eScrollbar will also be
   // set, unless gecko somehow generates a scroll thumb without a containing
   // scrollbar.
-<<<<<<< HEAD
-  eScrollbarThumb,  // 0x080
-||||||| merged common ancestors
-  eScrollbarThumb,                    // 0x080
-=======
   eScrollbarThumb,  // 0x0200
->>>>>>> upstream-releases
   // If eScrollbar is set, this flag indicates if the scrollbar is a vertical
   // one (if set) or a horizontal one (if not set)
-<<<<<<< HEAD
-  eScrollbarVertical,  // 0x100
-||||||| merged common ancestors
-  eScrollbarVertical,                 // 0x100
-=======
   eScrollbarVertical,  // 0x0400
->>>>>>> upstream-releases
 
   // Events targeting this frame should only be processed if a target
   // confirmation is received from the main thread. If no such confirmation
   // is received within a timeout period, the event may be dropped.
   // Only meaningful in combination with eDispatchToContent.
-<<<<<<< HEAD
-  eRequiresTargetConfirmation,  // 0x200
-||||||| merged common ancestors
-  eRequiresTargetConfirmation,        // 0x200
-=======
   eRequiresTargetConfirmation,  // 0x0800
->>>>>>> upstream-releases
 };
 
 using CompositorHitTestInfo = EnumSet<CompositorHitTestFlags, uint32_t>;
@@ -102,27 +68,6 @@ constexpr CompositorHitTestInfo CompositorHitTestInvisibleToHit;
 
 // Mask to check for all the touch-action flags at once
 constexpr CompositorHitTestInfo CompositorHitTestTouchActionMask(
-<<<<<<< HEAD
-    CompositorHitTestFlags::eTouchActionPanXDisabled,
-    CompositorHitTestFlags::eTouchActionPanYDisabled,
-    CompositorHitTestFlags::eTouchActionPinchZoomDisabled,
-    CompositorHitTestFlags::eTouchActionDoubleTapZoomDisabled);
-
-}  // namespace gfx
-
-// Used for IPDL serialization. The 'value' have to be the biggest enum from
-// CompositorHitTestFlags.
-||||||| merged common ancestors
-  CompositorHitTestFlags::eTouchActionPanXDisabled,
-  CompositorHitTestFlags::eTouchActionPanYDisabled,
-  CompositorHitTestFlags::eTouchActionPinchZoomDisabled,
-  CompositorHitTestFlags::eTouchActionDoubleTapZoomDisabled);
-
-} // namespace gfx
-
-
-// Used for IPDL serialization. The 'value' have to be the biggest enum from CompositorHitTestFlags.
-=======
     CompositorHitTestFlags::eTouchActionPanXDisabled,
     CompositorHitTestFlags::eTouchActionPanYDisabled,
     CompositorHitTestFlags::eTouchActionPinchZoomDisabled,
@@ -139,7 +84,6 @@ constexpr CompositorHitTestInfo CompositorHitTestDispatchToContent(
 
 // Used for IPDL serialization. The 'value' have to be the biggest enum from
 // CompositorHitTestFlags.
->>>>>>> upstream-releases
 template <>
 struct MaxEnumValue<::mozilla::gfx::CompositorHitTestFlags> {
   static constexpr unsigned int value = static_cast<unsigned int>(

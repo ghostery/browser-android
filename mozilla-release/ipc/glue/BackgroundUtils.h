@@ -73,14 +73,6 @@ already_AddRefed<nsIPrincipal> PrincipalInfoToPrincipal(
  *
  * MUST be called on the main thread only.
  */
-<<<<<<< HEAD
-nsresult PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
-                                  PrincipalInfo* aPrincipalInfo);
-||||||| merged common ancestors
-nsresult
-PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
-                         PrincipalInfo* aPrincipalInfo);
-=======
 nsresult PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
                                   PrincipalInfo* aPrincipalInfo,
                                   bool aSkipBaseDomain = false);
@@ -105,7 +97,6 @@ already_AddRefed<nsIContentSecurityPolicy> CSPInfoToCSP(
  * MUST be called on the main thread only.
  */
 nsresult CSPToCSPInfo(nsIContentSecurityPolicy* aCSP, CSPInfo* aCSPInfo);
->>>>>>> upstream-releases
 
 /**
  * Return true if this PrincipalInfo is a content principal and it has
@@ -131,36 +122,16 @@ nsresult RHEntryToRHEntryInfo(
 /**
  * Convert a LoadInfo to LoadInfoArgs struct.
  */
-<<<<<<< HEAD
-nsresult LoadInfoToLoadInfoArgs(
-    nsILoadInfo* aLoadInfo,
-    mozilla::net::OptionalLoadInfoArgs* outOptionalLoadInfoArgs);
-||||||| merged common ancestors
-nsresult
-LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
-                       mozilla::net::OptionalLoadInfoArgs* outOptionalLoadInfoArgs);
-=======
 nsresult LoadInfoToLoadInfoArgs(
     nsILoadInfo* aLoadInfo,
     Maybe<mozilla::net::LoadInfoArgs>* outOptionalLoadInfoArgs);
->>>>>>> upstream-releases
 
 /**
  * Convert LoadInfoArgs to a LoadInfo.
  */
-<<<<<<< HEAD
-nsresult LoadInfoArgsToLoadInfo(
-    const mozilla::net::OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
-    nsILoadInfo** outLoadInfo);
-||||||| merged common ancestors
-nsresult
-LoadInfoArgsToLoadInfo(const mozilla::net::OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
-                       nsILoadInfo** outLoadInfo);
-=======
 nsresult LoadInfoArgsToLoadInfo(
     const Maybe<mozilla::net::LoadInfoArgs>& aOptionalLoadInfoArgs,
     nsILoadInfo** outLoadInfo);
->>>>>>> upstream-releases
 
 /**
  * Fills ParentLoadInfoForwarderArgs with properties we want to carry to child

@@ -123,16 +123,8 @@ def test_metadata_inherit():
             data_cls_getter=lambda x,y: manifestexpected.DirectoryManifest)
         for item in [dir_ini_0, dir_ini_1]]
 
-<<<<<<< HEAD
-    test = tests[0][2].pop()
-    test_obj = wpttest.from_manifest(tests, test, inherit_metadata, test_metadata.get_test(test.id))
-||||||| merged common ancestors
-    test = tests[0][2].pop()
-    test_obj = wpttest.from_manifest(test, inherit_metadata, test_metadata.get_test(test.id))
-=======
     test_obj = make_test_object(test_0, "a/0.html", 0, items, inherit_metadata, True)
 
->>>>>>> upstream-releases
     assert test_obj.max_assertion_count == 3
     assert test_obj.min_assertion_count == 1
     assert test_obj.prefs == {"b": "c", "c": "d"}
@@ -146,53 +138,20 @@ def test_conditional():
 
     test_obj = make_test_object(test_1, "a/1.html", 1, items, None, True, {"os": "win"})
 
-<<<<<<< HEAD
-    test = tests[1][2].pop()
-    test_obj = wpttest.from_manifest(tests, test, [], test_metadata.get_test(test.id))
-||||||| merged common ancestors
-    test = tests[1][2].pop()
-    test_obj = wpttest.from_manifest(test, [], test_metadata.get_test(test.id))
-=======
->>>>>>> upstream-releases
     assert test_obj.prefs == {"a": "b", "c": "d"}
     assert test_obj.expected() == "FAIL"
 
-<<<<<<< HEAD
-
-def test_metadata_lsan_stack_depth():
-    tests = make_mock_manifest(("test", "a", 10), ("test", "a/b", 10))
-||||||| merged common ancestors
-def test_metadata_lsan_stack_depth():
-    tests = make_mock_manifest(("test", "a", 10), ("test", "a/b", 10))
-=======
->>>>>>> upstream-releases
 
 @pytest.mark.xfail(sys.version[0] == "3",
                    reason="bytes/text confusion in py3")
 def test_metadata_lsan_stack_depth():
     items = [("test", "a", 10), ("test", "a/b", 10)]
 
-<<<<<<< HEAD
-    test = tests[2][2].pop()
-    test_obj = wpttest.from_manifest(tests, test, [], test_metadata.get_test(test.id))
-||||||| merged common ancestors
-    test = tests[2][2].pop()
-    test_obj = wpttest.from_manifest(test, [], test_metadata.get_test(test.id))
-=======
     test_obj = make_test_object(test_2, "a/2.html", 2, items, None, True)
->>>>>>> upstream-releases
 
     assert test_obj.lsan_max_stack_depth == 42
 
-<<<<<<< HEAD
-    test = tests[1][2].pop()
-    test_obj = wpttest.from_manifest(tests, test, [], test_metadata.get_test(test.id))
-||||||| merged common ancestors
-    test = tests[1][2].pop()
-    test_obj = wpttest.from_manifest(test, [], test_metadata.get_test(test.id))
-=======
     test_obj = make_test_object(test_2, "a/2.html", 1, items, None, True)
->>>>>>> upstream-releases
 
     assert test_obj.lsan_max_stack_depth is None
 
@@ -203,15 +162,7 @@ def test_metadata_lsan_stack_depth():
             data_cls_getter=lambda x,y: manifestexpected.DirectoryManifest)
     ]
 
-<<<<<<< HEAD
-    test = tests[0][2].pop()
-    test_obj = wpttest.from_manifest(tests, test, inherit_metadata, test_metadata.get_test(test.id))
-||||||| merged common ancestors
-    test = tests[0][2].pop()
-    test_obj = wpttest.from_manifest(test, inherit_metadata, test_metadata.get_test(test.id))
-=======
     test_obj = make_test_object(test_0, "a/0/html", 0, items, inherit_metadata, False)
->>>>>>> upstream-releases
 
     assert test_obj.lsan_max_stack_depth == 42
 

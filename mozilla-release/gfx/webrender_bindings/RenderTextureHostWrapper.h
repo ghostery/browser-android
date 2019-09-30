@@ -29,16 +29,8 @@ class RenderTextureHostWrapper final : public RenderTextureHost {
   void UpdateRenderTextureHost(RenderTextureHost* aTextureHost);
   bool IsInited() { return mInited; }
 
-<<<<<<< HEAD
- private:
-  ~RenderTextureHostWrapper() override;
-||||||| merged common ancestors
-private:
-  ~RenderTextureHostWrapper() override;
-=======
  private:
   virtual ~RenderTextureHostWrapper();
->>>>>>> upstream-releases
 
   bool mInited;
   bool mLocked;

@@ -89,20 +89,6 @@ static void FreeCallback(void* aPtr) {
 // malloc/free interception
 //---------------------------------------------------------------------------
 
-<<<<<<< HEAD
-static bool Init(malloc_table_t const* aMallocTable);
-
-}  // namespace profiler
-}  // namespace mozilla
-
-||||||| merged common ancestors
-static bool Init(malloc_table_t const* aMallocTable);
-
-} // namespace profiler
-} // namespace mozilla
-
-=======
->>>>>>> upstream-releases
 using namespace mozilla::profiler;
 
 static void* replace_malloc(size_t aSize) {
@@ -195,18 +181,8 @@ static void replace_moz_dispose_arena(arena_id_t aArenaId) {
 }
 
 // Must come after all the replace_* funcs
-<<<<<<< HEAD
-void replace_init(malloc_table_t* aMallocTable, ReplaceMallocBridge** aBridge) {
-  if (mozilla::profiler::Init(aMallocTable)) {
-||||||| merged common ancestors
-void
-replace_init(malloc_table_t * aMallocTable, ReplaceMallocBridge** aBridge)
-{
-  if (mozilla::profiler::Init(aMallocTable)) {
-=======
 void replace_init(malloc_table_t* aMallocTable, ReplaceMallocBridge** aBridge) {
   gMallocTable = *aMallocTable;
->>>>>>> upstream-releases
 #define MALLOC_FUNCS (MALLOC_FUNCS_MALLOC_BASE | MALLOC_FUNCS_ARENA)
 #define MALLOC_DECL(name, ...) aMallocTable->name = replace_##name;
 #include "malloc_decls.h"
@@ -220,44 +196,11 @@ namespace profiler {
 // Initialization
 //---------------------------------------------------------------------------
 
-<<<<<<< HEAD
-static bool Init(malloc_table_t const* aMallocTable) {
-  gMallocTable = *aMallocTable;
-
-  return true;
-}
-
-void install_memory_counter(bool aInstall) {
-  if (!sCounter) {
-    if (aInstall) {
-      sCounter = MakeUnique<ProfilerCounterTotal>("malloc", "Memory",
-                                                  "Amount of allocated memory");
-    } else {
-      return;
-||||||| merged common ancestors
-static bool
-Init(malloc_table_t const* aMallocTable)
-{
-  gMallocTable = *aMallocTable;
-
-  return true;
-}
-
-void
-install_memory_counter(bool aInstall)
-{
-  if (!sCounter) {
-    if (aInstall) {
-      sCounter = MakeUnique<ProfilerCounterTotal>("malloc", "Memory", "Amount of allocated memory");
-    } else {
-      return;
-=======
 void install_memory_counter(bool aInstall) {
   if (aInstall) {
     if (!sCounter) {
       sCounter = MakeUnique<ProfilerCounterTotal>("malloc", "Memory",
                                                   "Amount of allocated memory");
->>>>>>> upstream-releases
     }
     jemalloc_replace_dynamic(replace_init);
   } else {

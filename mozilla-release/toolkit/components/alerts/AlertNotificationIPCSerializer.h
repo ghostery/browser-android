@@ -19,19 +19,9 @@ namespace mozilla {
 namespace ipc {
 
 template <>
-<<<<<<< HEAD
-struct ParamTraits<nsIAlertNotification> {
-  static void Write(Message* aMsg, nsIAlertNotification* aParam) {
-||||||| merged common ancestors
-struct ParamTraits<nsIAlertNotification>
-{
-  static void Write(Message* aMsg, nsIAlertNotification* aParam)
-  {
-=======
 struct IPDLParamTraits<nsIAlertNotification*> {
   static void Write(IPC::Message* aMsg, IProtocol* aActor,
                     nsIAlertNotification* aParam) {
->>>>>>> upstream-releases
     bool isNull = !aParam;
     if (isNull) {
       WriteIPDLParam(aMsg, aActor, isNull);
@@ -78,16 +68,8 @@ struct IPDLParamTraits<nsIAlertNotification*> {
     WriteIPDLParam(aMsg, aActor, requireInteraction);
   }
 
-<<<<<<< HEAD
-  static bool Read(const Message* aMsg, PickleIterator* aIter,
-                   RefPtr<nsIAlertNotification>* aResult) {
-||||||| merged common ancestors
-  static bool Read(const Message* aMsg, PickleIterator* aIter, RefPtr<nsIAlertNotification>* aResult)
-  {
-=======
   static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
                    IProtocol* aActor, RefPtr<nsIAlertNotification>* aResult) {
->>>>>>> upstream-releases
     bool isNull;
     NS_ENSURE_TRUE(ReadIPDLParam(aMsg, aIter, aActor, &isNull), false);
     if (isNull) {
@@ -99,30 +81,6 @@ struct IPDLParamTraits<nsIAlertNotification*> {
     bool textClickable, inPrivateBrowsing, requireInteraction;
     IPC::Principal principal;
 
-<<<<<<< HEAD
-    if (!ReadParam(aMsg, aIter, &name) || !ReadParam(aMsg, aIter, &imageURL) ||
-        !ReadParam(aMsg, aIter, &title) || !ReadParam(aMsg, aIter, &text) ||
-        !ReadParam(aMsg, aIter, &textClickable) ||
-        !ReadParam(aMsg, aIter, &cookie) || !ReadParam(aMsg, aIter, &dir) ||
-        !ReadParam(aMsg, aIter, &lang) || !ReadParam(aMsg, aIter, &data) ||
-        !ReadParam(aMsg, aIter, &principal) ||
-        !ReadParam(aMsg, aIter, &inPrivateBrowsing) ||
-        !ReadParam(aMsg, aIter, &requireInteraction)) {
-||||||| merged common ancestors
-    if (!ReadParam(aMsg, aIter, &name) ||
-        !ReadParam(aMsg, aIter, &imageURL) ||
-        !ReadParam(aMsg, aIter, &title) ||
-        !ReadParam(aMsg, aIter, &text) ||
-        !ReadParam(aMsg, aIter, &textClickable) ||
-        !ReadParam(aMsg, aIter, &cookie) ||
-        !ReadParam(aMsg, aIter, &dir) ||
-        !ReadParam(aMsg, aIter, &lang) ||
-        !ReadParam(aMsg, aIter, &data) ||
-        !ReadParam(aMsg, aIter, &principal) ||
-        !ReadParam(aMsg, aIter, &inPrivateBrowsing) ||
-        !ReadParam(aMsg, aIter, &requireInteraction)) {
-
-=======
     if (!ReadIPDLParam(aMsg, aIter, aActor, &name) ||
         !ReadIPDLParam(aMsg, aIter, aActor, &imageURL) ||
         !ReadIPDLParam(aMsg, aIter, aActor, &title) ||
@@ -135,7 +93,6 @@ struct IPDLParamTraits<nsIAlertNotification*> {
         !ReadIPDLParam(aMsg, aIter, aActor, &principal) ||
         !ReadIPDLParam(aMsg, aIter, aActor, &inPrivateBrowsing) ||
         !ReadIPDLParam(aMsg, aIter, aActor, &requireInteraction)) {
->>>>>>> upstream-releases
       return false;
     }
 
@@ -157,13 +114,7 @@ struct IPDLParamTraits<nsIAlertNotification*> {
   }
 };
 
-<<<<<<< HEAD
-}  // namespace IPC
-||||||| merged common ancestors
-} // namespace IPC
-=======
 }  // namespace ipc
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* mozilla_AlertNotificationIPCSerializer_h__ */

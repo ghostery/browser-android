@@ -13,31 +13,13 @@
 //!
 //! [https://serde.rs/derive.html]: https://serde.rs/derive.html
 
-<<<<<<< HEAD
-#![doc(html_root_url = "https://docs.rs/serde_derive/1.0.80")]
-#![cfg_attr(feature = "cargo-clippy", allow(renamed_and_removed_lints))]
-||||||| merged common ancestors
-#![doc(html_root_url = "https://docs.rs/serde_derive/1.0.66")]
-=======
 #![doc(html_root_url = "https://docs.rs/serde_derive/1.0.88")]
 #![cfg_attr(feature = "cargo-clippy", allow(renamed_and_removed_lints))]
->>>>>>> upstream-releases
 #![cfg_attr(feature = "cargo-clippy", deny(clippy, clippy_pedantic))]
 // Ignored clippy lints
 #![cfg_attr(
     feature = "cargo-clippy",
     allow(
-<<<<<<< HEAD
-        cyclomatic_complexity,
-        enum_variant_names,
-        needless_pass_by_value,
-        redundant_field_names,
-        too_many_arguments,
-        used_underscore_binding,
-||||||| merged common ancestors
-        enum_variant_names, redundant_field_names, too_many_arguments, used_underscore_binding,
-        cyclomatic_complexity, needless_pass_by_value
-=======
         cyclomatic_complexity,
         enum_variant_names,
         needless_pass_by_value,
@@ -45,30 +27,12 @@
         too_many_arguments,
         trivially_copy_pass_by_ref,
         used_underscore_binding,
->>>>>>> upstream-releases
     )
 )]
 // Ignored clippy_pedantic lints
 #![cfg_attr(
     feature = "cargo-clippy",
     allow(
-<<<<<<< HEAD
-        cast_possible_truncation,
-        doc_markdown,
-        enum_glob_use,
-        filter_map,
-        indexing_slicing,
-        items_after_statements,
-        match_same_arms,
-        similar_names,
-        single_match_else,
-        stutter,
-        unseparated_literal_suffix,
-        use_self,
-||||||| merged common ancestors
-        items_after_statements, doc_markdown, stutter, similar_names, use_self, single_match_else,
-        enum_glob_use, match_same_arms, filter_map, cast_possible_truncation
-=======
         cast_possible_truncation,
         doc_markdown,
         enum_glob_use,
@@ -81,7 +45,6 @@
         single_match_else,
         unseparated_literal_suffix,
         use_self,
->>>>>>> upstream-releases
     )
 )]
 // The `quote!` macro requires deep recursion.

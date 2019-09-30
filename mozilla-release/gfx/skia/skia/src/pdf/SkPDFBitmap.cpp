@@ -18,46 +18,7 @@
 #include "SkPDFTypes.h"
 #include "SkPDFUtils.h"
 #include "SkStream.h"
-<<<<<<< HEAD
 #include "SkTo.h"
-#include "SkUnPreMultiply.h"
-
-bool image_compute_is_opaque(const SkImage* image) {
-    if (image->isOpaque()) {
-        return true;
-    }
-    // keep output PDF small at cost of possible resource use.
-    SkBitmap bm;
-    // if image can not be read, treat as transparent.
-    return SkPDFUtils::ToBitmap(image, &bm) && SkBitmap::ComputeIsOpaque(bm);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-static const char kStreamBegin[] = " stream\n";
-
-static const char kStreamEnd[] = "\nendstream";
-||||||| merged common ancestors
-#include "SkUnPreMultiply.h"
-
-bool image_compute_is_opaque(const SkImage* image) {
-    if (image->isOpaque()) {
-        return true;
-    }
-    // keep output PDF small at cost of possible resource use.
-    SkBitmap bm;
-    // if image can not be read, treat as transparent.
-    return SkPDFUtils::ToBitmap(image, &bm) && SkBitmap::ComputeIsOpaque(bm);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-static const char kStreamBegin[] = " stream\n";
-
-static const char kStreamEnd[] = "\nendstream";
-=======
-#include "SkTo.h"
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -281,148 +242,9 @@ static SkBitmap to_pixels(const SkImage* image) {
     if (!image->readPixels(bm.pixmap(), 0, 0)) {
         bm.eraseColor(SkColorSetARGB(0xFF, 0, 0, 0));
     }
-<<<<<<< HEAD
-    void drop() override { fImage = nullptr; fSMask = nullptr; }
-    PDFDefaultBitmap(sk_sp<SkImage> image, sk_sp<SkPDFObject> smask)
-        : fImage(std::move(image)), fSMask(std::move(smask)) { SkASSERT(fImage); }
-
-private:
-    sk_sp<SkImage> fImage;
-    sk_sp<SkPDFObject> fSMask;
-};
-}  // namespace
-
-////////////////////////////////////////////////////////////////////////////////
-
-namespace {
-/**
- *  This PDFObject assumes that its constructor was handed YUV or
- *  Grayscale JFIF Jpeg-encoded data that can be directly embedded
- *  into a PDF.
- */
-class PDFJpegBitmap final : public SkPDFObject {
-public:
-    SkISize fSize;
-    sk_sp<SkData> fData;
-    bool fIsYUV;
-    PDFJpegBitmap(SkISize size, sk_sp<SkData> data, bool isYUV)
-        : fSize(size), fData(std::move(data)), fIsYUV(isYUV) { SkASSERT(fData); }
-    void emitObject(SkWStream*, const SkPDFObjNumMap&) const override;
-    void drop() override { fData = nullptr; }
-};
-
-void PDFJpegBitmap::emitObject(SkWStream* stream,
-                               const SkPDFObjNumMap& objNumMap) const {
-    SkASSERT(fData);
-    SkPDFDict pdfDict("XObject");
-    pdfDict.insertName("Subtype", "Image");
-    pdfDict.insertInt("Width", fSize.width());
-    pdfDict.insertInt("Height", fSize.height());
-    if (fIsYUV) {
-        pdfDict.insertName("ColorSpace", "DeviceRGB");
-    } else {
-        pdfDict.insertName("ColorSpace", "DeviceGray");
-    }
-    pdfDict.insertInt("BitsPerComponent", 8);
-    pdfDict.insertName("Filter", "DCTDecode");
-    pdfDict.insertInt("ColorTransform", 0);
-    pdfDict.insertInt("Length", SkToInt(fData->size()));
-    pdfDict.emitObject(stream, objNumMap);
-    stream->writeText(kStreamBegin);
-    stream->write(fData->data(), fData->size());
-    stream->writeText(kStreamEnd);
-||||||| merged common ancestors
-    void drop() override { fImage = nullptr; fSMask = nullptr; }
-    PDFDefaultBitmap(sk_sp<SkImage> image, sk_sp<SkPDFObject> smask)
-        : fImage(std::move(image)), fSMask(std::move(smask)) { SkASSERT(fImage); }
-
-private:
-    sk_sp<SkImage> fImage;
-    sk_sp<SkPDFObject> fSMask;
-};
-}  // namespace
-
-////////////////////////////////////////////////////////////////////////////////
-
-namespace {
-/**
- *  This PDFObject assumes that its constructor was handed YUV or
- *  Grayscale JFIF Jpeg-encoded data that can be directly embedded
- *  into a PDF.
- */
-class PDFJpegBitmap final : public SkPDFObject {
-public:
-    SkISize fSize;
-    sk_sp<SkData> fData;
-    bool fIsYUV;
-    PDFJpegBitmap(SkISize size, SkData* data, bool isYUV)
-        : fSize(size), fData(SkRef(data)), fIsYUV(isYUV) { SkASSERT(data); }
-    void emitObject(SkWStream*, const SkPDFObjNumMap&) const override;
-    void drop() override { fData = nullptr; }
-};
-
-void PDFJpegBitmap::emitObject(SkWStream* stream,
-                               const SkPDFObjNumMap& objNumMap) const {
-    SkASSERT(fData);
-    SkPDFDict pdfDict("XObject");
-    pdfDict.insertName("Subtype", "Image");
-    pdfDict.insertInt("Width", fSize.width());
-    pdfDict.insertInt("Height", fSize.height());
-    if (fIsYUV) {
-        pdfDict.insertName("ColorSpace", "DeviceRGB");
-    } else {
-        pdfDict.insertName("ColorSpace", "DeviceGray");
-    }
-    pdfDict.insertInt("BitsPerComponent", 8);
-    pdfDict.insertName("Filter", "DCTDecode");
-    pdfDict.insertInt("ColorTransform", 0);
-    pdfDict.insertInt("Length", SkToInt(fData->size()));
-    pdfDict.emitObject(stream, objNumMap);
-    stream->writeText(kStreamBegin);
-    stream->write(fData->data(), fData->size());
-    stream->writeText(kStreamEnd);
-=======
     return bm;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-////////////////////////////////////////////////////////////////////////////////
-sk_sp<PDFJpegBitmap> make_jpeg_bitmap(sk_sp<SkData> data, SkISize size) {
-    SkISize jpegSize;
-    SkEncodedInfo::Color jpegColorType;
-    SkEncodedOrigin exifOrientation;
-    if (data && SkGetJpegInfo(data->data(), data->size(), &jpegSize,
-                              &jpegColorType, &exifOrientation)) {
-        bool yuv = jpegColorType == SkEncodedInfo::kYUV_Color;
-        bool goodColorType = yuv || jpegColorType == SkEncodedInfo::kGray_Color;
-        if (jpegSize == size  // Sanity check.
-                && goodColorType
-                && kTopLeft_SkEncodedOrigin == exifOrientation) {
-            // hold on to data, not image.
-            #ifdef SK_PDF_IMAGE_STATS
-            gJpegImageObjects.fetch_add(1);
-            #endif
-            return sk_make_sp<PDFJpegBitmap>(jpegSize, std::move(data), yuv);
-        }
-||||||| merged common ancestors
-////////////////////////////////////////////////////////////////////////////////
-
-sk_sp<SkPDFObject> SkPDFCreateBitmapObject(sk_sp<SkImage> image, int encodingQuality) {
-    SkASSERT(image);
-    SkASSERT(encodingQuality >= 0);
-    sk_sp<SkData> data = image->refEncodedData();
-    SkJFIFInfo info;
-    if (data && SkIsJFIF(data.get(), &info)) {
-        bool yuv = info.fType == SkJFIFInfo::kYCbCr;
-        if (info.fSize == image->dimensions()) {  // Sanity check.
-            // hold on to data, not image.
-            #ifdef SK_PDF_IMAGE_STATS
-            gJpegImageObjects.fetch_add(1);
-            #endif
-            return sk_make_sp<PDFJpegBitmap>(info.fSize, data.get(), yuv);
-        }
-=======
 void serialize_image(const SkImage* img,
                      int encodingQuality,
                      SkPDFDocument* doc,
@@ -434,49 +256,14 @@ void serialize_image(const SkImage* img,
     sk_sp<SkData> data = img->refEncodedData();
     if (data && do_jpeg(std::move(data), doc, dimensions, ref)) {
         return;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return nullptr;
-}
-
-sk_sp<SkPDFObject> SkPDFCreateBitmapObject(sk_sp<SkImage> image, int encodingQuality) {
-    SkASSERT(image);
-    SkASSERT(encodingQuality >= 0);
-    SkISize dimensions = image->dimensions();
-    sk_sp<SkData> data = image->refEncodedData();
-    if (auto jpeg = make_jpeg_bitmap(std::move(data), dimensions)) {
-        return std::move(jpeg);
-    }
-
-    const bool isOpaque = image_compute_is_opaque(image.get());
-
-||||||| merged common ancestors
-
-    const bool isOpaque = image_compute_is_opaque(image.get());
-
-=======
     SkBitmap bm = to_pixels(img);
     SkPixmap pm = bm.pixmap();
     bool isOpaque = pm.isOpaque() || pm.computeIsOpaque();
->>>>>>> upstream-releases
     if (encodingQuality <= 100 && isOpaque) {
-<<<<<<< HEAD
-        data = image->encodeToData(SkEncodedImageFormat::kJPEG, encodingQuality);
-        if (auto jpeg = make_jpeg_bitmap(std::move(data), dimensions)) {
-            return std::move(jpeg);
-||||||| merged common ancestors
-        data = image->encodeToData(SkEncodedImageFormat::kJPEG, encodingQuality);
-        if (data && SkIsJFIF(data.get(), &info)) {
-            bool yuv = info.fType == SkJFIFInfo::kYCbCr;
-            if (info.fSize == image->dimensions()) {  // Sanity check.
-                return sk_make_sp<PDFJpegBitmap>(info.fSize, data.get(), yuv);
-            }
-=======
         sk_sp<SkData> data = img->encodeToData(SkEncodedImageFormat::kJPEG, encodingQuality);
         if (data && do_jpeg(std::move(data), doc, dimensions, ref)) {
             return;
->>>>>>> upstream-releases
         }
     }
     do_deflated_image(pm, doc, isOpaque, ref);

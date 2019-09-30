@@ -18,15 +18,7 @@ using namespace mozilla::dom;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-nsresult SVGAnimatedPointList::SetBaseValueString(const nsAString &aValue) {
-||||||| merged common ancestors
-nsresult
-SVGAnimatedPointList::SetBaseValueString(const nsAString& aValue)
-{
-=======
 nsresult SVGAnimatedPointList::SetBaseValueString(const nsAString& aValue) {
->>>>>>> upstream-releases
   SVGPointList newBaseValue;
 
   // The spec says that the point data is parsed and accepted up to the first
@@ -41,21 +33,13 @@ nsresult SVGAnimatedPointList::SetBaseValueString(const nsAString& aValue) {
   // change them. See the comments in
   // DOMSVGPointList::InternalListWillChangeTo().
 
-<<<<<<< HEAD
-  DOMSVGPointList *baseValWrapper =
-      DOMSVGPointList::GetDOMWrapperIfExists(GetBaseValKey());
-||||||| merged common ancestors
-  DOMSVGPointList *baseValWrapper =
-    DOMSVGPointList::GetDOMWrapperIfExists(GetBaseValKey());
-=======
   DOMSVGPointList* baseValWrapper =
       DOMSVGPointList::GetDOMWrapperIfExists(GetBaseValKey());
->>>>>>> upstream-releases
   if (baseValWrapper) {
     baseValWrapper->InternalListWillChangeTo(newBaseValue);
   }
 
-  DOMSVGPointList *animValWrapper = nullptr;
+  DOMSVGPointList* animValWrapper = nullptr;
   if (!IsAnimating()) {  // DOM anim val wraps our base val too!
     animValWrapper = DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
     if (animValWrapper) {
@@ -87,33 +71,15 @@ nsresult SVGAnimatedPointList::SetBaseValueString(const nsAString& aValue) {
 void SVGAnimatedPointList::ClearBaseValue() {
   // We must send these notifications *before* changing mBaseVal! (See above.)
 
-<<<<<<< HEAD
-  DOMSVGPointList *baseValWrapper =
-      DOMSVGPointList::GetDOMWrapperIfExists(GetBaseValKey());
-||||||| merged common ancestors
-  DOMSVGPointList *baseValWrapper =
-    DOMSVGPointList::GetDOMWrapperIfExists(GetBaseValKey());
-=======
   DOMSVGPointList* baseValWrapper =
       DOMSVGPointList::GetDOMWrapperIfExists(GetBaseValKey());
->>>>>>> upstream-releases
   if (baseValWrapper) {
     baseValWrapper->InternalListWillChangeTo(SVGPointList());
   }
 
-<<<<<<< HEAD
-  if (!IsAnimating()) {  // DOM anim val wraps our base val too!
-    DOMSVGPointList *animValWrapper =
-        DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
-||||||| merged common ancestors
-  if (!IsAnimating()) { // DOM anim val wraps our base val too!
-    DOMSVGPointList *animValWrapper =
-      DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
-=======
   if (!IsAnimating()) {  // DOM anim val wraps our base val too!
     DOMSVGPointList* animValWrapper =
         DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
->>>>>>> upstream-releases
     if (animValWrapper) {
       animValWrapper->InternalListWillChangeTo(SVGPointList());
     }
@@ -123,18 +89,8 @@ void SVGAnimatedPointList::ClearBaseValue() {
   // Caller notifies
 }
 
-<<<<<<< HEAD
-nsresult SVGAnimatedPointList::SetAnimValue(const SVGPointList &aNewAnimValue,
-                                            nsSVGElement *aElement) {
-||||||| merged common ancestors
-nsresult
-SVGAnimatedPointList::SetAnimValue(const SVGPointList& aNewAnimValue,
-                                   nsSVGElement *aElement)
-{
-=======
 nsresult SVGAnimatedPointList::SetAnimValue(const SVGPointList& aNewAnimValue,
                                             SVGElement* aElement) {
->>>>>>> upstream-releases
   // Note that a new animation may totally change the number of items in the
   // animVal list, either replacing what was essentially a mirror of the
   // baseVal list, or else replacing and overriding an existing animation.
@@ -150,16 +106,8 @@ nsresult SVGAnimatedPointList::SetAnimValue(const SVGPointList& aNewAnimValue,
 
   // We must send this notification *before* changing mAnimVal! (See above.)
 
-<<<<<<< HEAD
-  DOMSVGPointList *domWrapper =
-      DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
-||||||| merged common ancestors
-  DOMSVGPointList *domWrapper =
-    DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
-=======
   DOMSVGPointList* domWrapper =
       DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
->>>>>>> upstream-releases
   if (domWrapper) {
     domWrapper->InternalListWillChangeTo(aNewAnimValue);
   }
@@ -177,27 +125,11 @@ nsresult SVGAnimatedPointList::SetAnimValue(const SVGPointList& aNewAnimValue,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void SVGAnimatedPointList::ClearAnimValue(nsSVGElement *aElement) {
-||||||| merged common ancestors
-void
-SVGAnimatedPointList::ClearAnimValue(nsSVGElement *aElement)
-{
-=======
 void SVGAnimatedPointList::ClearAnimValue(SVGElement* aElement) {
->>>>>>> upstream-releases
   // We must send these notifications *before* changing mAnimVal! (See above.)
 
-<<<<<<< HEAD
-  DOMSVGPointList *domWrapper =
-      DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
-||||||| merged common ancestors
-  DOMSVGPointList *domWrapper =
-    DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
-=======
   DOMSVGPointList* domWrapper =
       DOMSVGPointList::GetDOMWrapperIfExists(GetAnimValKey());
->>>>>>> upstream-releases
   if (domWrapper) {
     // When all animation ends, animVal simply mirrors baseVal, which may have
     // a different number of items to the last active animated value.
@@ -208,42 +140,15 @@ void SVGAnimatedPointList::ClearAnimValue(SVGElement* aElement) {
   aElement->DidAnimatePointList();
 }
 
-<<<<<<< HEAD
-UniquePtr<nsISMILAttr> SVGAnimatedPointList::ToSMILAttr(
-    nsSVGElement *aElement) {
-||||||| merged common ancestors
-UniquePtr<nsISMILAttr>
-SVGAnimatedPointList::ToSMILAttr(nsSVGElement *aElement)
-{
-=======
 UniquePtr<SMILAttr> SVGAnimatedPointList::ToSMILAttr(SVGElement* aElement) {
->>>>>>> upstream-releases
   return MakeUnique<SMILAnimatedPointList>(this, aElement);
 }
 
-<<<<<<< HEAD
-nsresult SVGAnimatedPointList::SMILAnimatedPointList::ValueFromString(
-    const nsAString &aStr, const dom::SVGAnimationElement * /*aSrcElement*/,
-    nsSMILValue &aValue, bool &aPreventCachingOfSandwich) const {
-  nsSMILValue val(&SVGPointListSMILType::sSingleton);
-  SVGPointListAndInfo *list = static_cast<SVGPointListAndInfo *>(val.mU.mPtr);
-||||||| merged common ancestors
-nsresult
-SVGAnimatedPointList::
-  SMILAnimatedPointList::ValueFromString(const nsAString& aStr,
-                               const dom::SVGAnimationElement* /*aSrcElement*/,
-                               nsSMILValue& aValue,
-                               bool& aPreventCachingOfSandwich) const
-{
-  nsSMILValue val(&SVGPointListSMILType::sSingleton);
-  SVGPointListAndInfo *list = static_cast<SVGPointListAndInfo*>(val.mU.mPtr);
-=======
 nsresult SVGAnimatedPointList::SMILAnimatedPointList::ValueFromString(
     const nsAString& aStr, const dom::SVGAnimationElement* /*aSrcElement*/,
     SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
   SMILValue val(&SVGPointListSMILType::sSingleton);
   SVGPointListAndInfo* list = static_cast<SVGPointListAndInfo*>(val.mU.mPtr);
->>>>>>> upstream-releases
   nsresult rv = list->SetValueFromString(aStr);
   if (NS_SUCCEEDED(rv)) {
     list->SetInfo(mElement);
@@ -253,30 +158,14 @@ nsresult SVGAnimatedPointList::SMILAnimatedPointList::ValueFromString(
   return rv;
 }
 
-<<<<<<< HEAD
-nsSMILValue SVGAnimatedPointList::SMILAnimatedPointList::GetBaseValue() const {
-||||||| merged common ancestors
-nsSMILValue
-SVGAnimatedPointList::SMILAnimatedPointList::GetBaseValue() const
-{
-=======
 SMILValue SVGAnimatedPointList::SMILAnimatedPointList::GetBaseValue() const {
->>>>>>> upstream-releases
   // To benefit from Return Value Optimization and avoid copy constructor calls
   // due to our use of return-by-value, we must return the exact same object
   // from ALL return points. This function must only return THIS variable:
   SMILValue val;
 
-<<<<<<< HEAD
-  nsSMILValue tmp(&SVGPointListSMILType::sSingleton);
-  SVGPointListAndInfo *list = static_cast<SVGPointListAndInfo *>(tmp.mU.mPtr);
-||||||| merged common ancestors
-  nsSMILValue tmp(&SVGPointListSMILType::sSingleton);
-  SVGPointListAndInfo *list = static_cast<SVGPointListAndInfo*>(tmp.mU.mPtr);
-=======
   SMILValue tmp(&SVGPointListSMILType::sSingleton);
   SVGPointListAndInfo* list = static_cast<SVGPointListAndInfo*>(tmp.mU.mPtr);
->>>>>>> upstream-releases
   nsresult rv = list->CopyFrom(mVal->mBaseVal);
   if (NS_SUCCEEDED(rv)) {
     list->SetInfo(mElement);
@@ -285,21 +174,12 @@ SMILValue SVGAnimatedPointList::SMILAnimatedPointList::GetBaseValue() const {
   return val;
 }
 
-<<<<<<< HEAD
-nsresult SVGAnimatedPointList::SMILAnimatedPointList::SetAnimValue(
-    const nsSMILValue &aValue) {
-||||||| merged common ancestors
-nsresult
-SVGAnimatedPointList::SMILAnimatedPointList::SetAnimValue(const nsSMILValue& aValue)
-{
-=======
 nsresult SVGAnimatedPointList::SMILAnimatedPointList::SetAnimValue(
     const SMILValue& aValue) {
->>>>>>> upstream-releases
   NS_ASSERTION(aValue.mType == &SVGPointListSMILType::sSingleton,
                "Unexpected type to assign animated value");
   if (aValue.mType == &SVGPointListSMILType::sSingleton) {
-    mVal->SetAnimValue(*static_cast<SVGPointListAndInfo *>(aValue.mU.mPtr),
+    mVal->SetAnimValue(*static_cast<SVGPointListAndInfo*>(aValue.mU.mPtr),
                        mElement);
   }
   return NS_OK;

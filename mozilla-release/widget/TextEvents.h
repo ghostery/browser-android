@@ -11,14 +11,8 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/BasicEvents.h"
 #include "mozilla/CheckedInt.h"
-<<<<<<< HEAD
-#include "mozilla/EventForwards.h"  // for KeyNameIndex, temporarily
-||||||| merged common ancestors
-#include "mozilla/EventForwards.h" // for KeyNameIndex, temporarily
-=======
 #include "mozilla/dom/DataTransfer.h"
 #include "mozilla/EventForwards.h"  // for KeyNameIndex, temporarily
->>>>>>> upstream-releases
 #include "mozilla/FontRange.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/TextRange.h"
@@ -1007,26 +1001,7 @@ class WidgetQueryContentEvent : public WidgetGUIEvent {
     Init(aOptions);
   }
 
-<<<<<<< HEAD
-  bool NeedsToFlushLayout() const {
-#ifdef XP_MACOSX
-    return true;
-#else
-    return mNeedsToFlushLayout;
-#endif
-  }
-||||||| merged common ancestors
-  bool NeedsToFlushLayout() const
-  {
-#ifdef XP_MACOSX
-    return true;
-#else
-    return mNeedsToFlushLayout;
-#endif
-  }
-=======
   bool NeedsToFlushLayout() const { return mNeedsToFlushLayout; }
->>>>>>> upstream-releases
 
   void RequestFontRanges() {
     NS_ASSERTION(mMessage == eQueryTextContent, "not querying text content");
@@ -1220,26 +1195,12 @@ class WidgetSelectionEvent : public WidgetGUIEvent {
  * mozilla::InternalEditorInputEvent
  ******************************************************************************/
 
-<<<<<<< HEAD
-class InternalEditorInputEvent : public InternalUIEvent {
- private:
-  InternalEditorInputEvent() : mIsComposing(false) {}
-||||||| merged common ancestors
-class InternalEditorInputEvent : public InternalUIEvent
-{
-private:
-  InternalEditorInputEvent()
-    : mIsComposing(false)
-  {
-  }
-=======
 class InternalEditorInputEvent : public InternalUIEvent {
  private:
   InternalEditorInputEvent()
       : mData(VoidString()),
         mInputType(EditorInputType::eUnknown),
         mIsComposing(false) {}
->>>>>>> upstream-releases
 
  public:
   virtual InternalEditorInputEvent* AsEditorInputEvent() override {
@@ -1248,19 +1209,9 @@ class InternalEditorInputEvent : public InternalUIEvent {
 
   InternalEditorInputEvent(bool aIsTrusted, EventMessage aMessage,
                            nsIWidget* aWidget = nullptr)
-<<<<<<< HEAD
-      : InternalUIEvent(aIsTrusted, aMessage, aWidget, eEditorInputEventClass),
-        mIsComposing(false) {}
-||||||| merged common ancestors
-    : InternalUIEvent(aIsTrusted, aMessage, aWidget, eEditorInputEventClass)
-    , mIsComposing(false)
-  {
-  }
-=======
       : InternalUIEvent(aIsTrusted, aMessage, aWidget, eEditorInputEventClass),
         mData(VoidString()),
         mInputType(EditorInputType::eUnknown) {}
->>>>>>> upstream-releases
 
   virtual WidgetEvent* Duplicate() const override {
     MOZ_ASSERT(mClass == eEditorInputEventClass,

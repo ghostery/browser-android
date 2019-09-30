@@ -155,13 +155,6 @@ class AsyncNotifyRunnable : public Runnable {
   nsTArray<RefPtr<IProgressObserver>> mObservers;
 };
 
-<<<<<<< HEAD
-void ProgressTracker::Notify(IProgressObserver* aObserver) {
-||||||| merged common ancestors
-void
-ProgressTracker::Notify(IProgressObserver* aObserver)
-{
-=======
 ProgressTracker::MediumHighRunnable::MediumHighRunnable(
     already_AddRefed<AsyncNotifyRunnable>&& aEvent)
     : PrioritizableRunnable(std::move(aEvent),
@@ -188,7 +181,6 @@ ProgressTracker::MediumHighRunnable::Create(
 }
 
 void ProgressTracker::Notify(IProgressObserver* aObserver) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aObserver->NotificationsDeferred()) {
@@ -206,22 +198,8 @@ void ProgressTracker::Notify(IProgressObserver* aObserver) {
   // If we have an existing runnable that we can use, we just append this
   // observer to its list of observers to be notified. This ensures we don't
   // unnecessarily delay onload.
-<<<<<<< HEAD
-  AsyncNotifyRunnable* runnable =
-      static_cast<AsyncNotifyRunnable*>(mRunnable.get());
-
-  if (runnable) {
-    runnable->AddObserver(aObserver);
-||||||| merged common ancestors
-  AsyncNotifyRunnable* runnable =
-    static_cast<AsyncNotifyRunnable*>(mRunnable.get());
-
-  if (runnable) {
-    runnable->AddObserver(aObserver);
-=======
   if (mRunnable) {
     mRunnable->AddObserver(aObserver);
->>>>>>> upstream-releases
   } else {
     RefPtr<AsyncNotifyRunnable> ev = new AsyncNotifyRunnable(this, aObserver);
     mRunnable = ProgressTracker::MediumHighRunnable::Create(ev.forget());
@@ -508,22 +486,8 @@ bool ProgressTracker::RemoveObserver(IProgressObserver* aObserver) {
 
   // Make sure we don't give callbacks to an observer that isn't interested in
   // them any more.
-<<<<<<< HEAD
-  AsyncNotifyRunnable* runnable =
-      static_cast<AsyncNotifyRunnable*>(mRunnable.get());
-
-  if (aObserver->NotificationsDeferred() && runnable) {
-    runnable->RemoveObserver(aObserver);
-||||||| merged common ancestors
-  AsyncNotifyRunnable* runnable =
-    static_cast<AsyncNotifyRunnable*>(mRunnable.get());
-
-  if (aObserver->NotificationsDeferred() && runnable) {
-    runnable->RemoveObserver(aObserver);
-=======
   if (aObserver->NotificationsDeferred() && mRunnable) {
     mRunnable->RemoveObserver(aObserver);
->>>>>>> upstream-releases
     aObserver->ClearPendingNotify();
   }
 

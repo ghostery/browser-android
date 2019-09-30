@@ -392,18 +392,9 @@ class ColorModel {
   }
 
   // Used to index FilterCachedColorModels::mFilterForColorModel.
-<<<<<<< HEAD
-  uint8_t ToIndex() const {
-    return (uint8_t(mColorSpace) << 1) + uint8_t(mAlphaModel);
-||||||| merged common ancestors
-  uint8_t ToIndex() const
-  {
-    return (uint8_t(mColorSpace) << 1) + uint8_t(mAlphaModel);
-=======
   uint8_t ToIndex() const {
     return static_cast<uint8_t>(static_cast<uint8_t>(mColorSpace) << 1) |
            static_cast<uint8_t>(mAlphaModel);
->>>>>>> upstream-releases
   }
 
   ColorSpace mColorSpace;

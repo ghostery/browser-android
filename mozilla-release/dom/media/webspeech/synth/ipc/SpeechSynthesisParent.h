@@ -29,40 +29,6 @@ class SpeechSynthesisParent : public PSpeechSynthesisParent {
  protected:
   SpeechSynthesisParent();
   virtual ~SpeechSynthesisParent();
-<<<<<<< HEAD
-  PSpeechSynthesisRequestParent* AllocPSpeechSynthesisRequestParent(
-      const nsString& aText, const nsString& aLang, const nsString& aUri,
-      const float& aVolume, const float& aRate, const float& aPitch,
-      const bool& aIsChrome) override;
-
-  bool DeallocPSpeechSynthesisRequestParent(
-      PSpeechSynthesisRequestParent* aActor) override;
-
-  mozilla::ipc::IPCResult RecvPSpeechSynthesisRequestConstructor(
-      PSpeechSynthesisRequestParent* aActor, const nsString& aText,
-      const nsString& aLang, const nsString& aUri, const float& aVolume,
-      const float& aRate, const float& aPitch, const bool& aIsChrome) override;
-||||||| merged common ancestors
-  PSpeechSynthesisRequestParent* AllocPSpeechSynthesisRequestParent(const nsString& aText,
-                                                                    const nsString& aLang,
-                                                                    const nsString& aUri,
-                                                                    const float& aVolume,
-                                                                    const float& aRate,
-                                                                    const float& aPitch,
-                                                                    const bool& aIsChrome)
-                                                                    override;
-
-  bool DeallocPSpeechSynthesisRequestParent(PSpeechSynthesisRequestParent* aActor) override;
-
-  mozilla::ipc::IPCResult RecvPSpeechSynthesisRequestConstructor(PSpeechSynthesisRequestParent* aActor,
-                                                                 const nsString& aText,
-                                                                 const nsString& aLang,
-                                                                 const nsString& aUri,
-                                                                 const float& aVolume,
-                                                                 const float& aRate,
-                                                                 const float& aPitch,
-                                                                 const bool& aIsChrome) override;
-=======
   PSpeechSynthesisRequestParent* AllocPSpeechSynthesisRequestParent(
       const nsString& aText, const nsString& aLang, const nsString& aUri,
       const float& aVolume, const float& aRate, const float& aPitch,
@@ -75,7 +41,6 @@ class SpeechSynthesisParent : public PSpeechSynthesisParent {
       PSpeechSynthesisRequestParent* aActor, const nsString& aText,
       const nsString& aLang, const nsString& aUri, const float& aVolume,
       const float& aRate, const float& aPitch, const bool& aIsChrome) override;
->>>>>>> upstream-releases
 };
 
 class SpeechSynthesisRequestParent : public PSpeechSynthesisRequestParent {

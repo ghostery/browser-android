@@ -97,118 +97,6 @@ const SUPPORTED_HEADERS = [
   "X-XSS-Protection",
 ];
 
-<<<<<<< HEAD
-/**
- * A mapping of HTTP status codes to external documentation. Any code included
- * here will show a MDN link alongside it.
- */
-const SUPPORTED_HTTP_CODES = [
-    "100",
-    "101",
-    "200",
-    "201",
-    "202",
-    "203",
-    "204",
-    "205",
-    "206",
-    "300",
-    "301",
-    "302",
-    "303",
-    "304",
-    "307",
-    "308",
-    "400",
-    "401",
-    "403",
-    "404",
-    "405",
-    "406",
-    "407",
-    "408",
-    "409",
-    "410",
-    "411",
-    "412",
-    "413",
-    "414",
-    "415",
-    "416",
-    "417",
-    "418",
-    "422",
-    "425",
-    "426",
-    "428",
-    "429",
-    "431",
-    "451",
-    "500",
-    "501",
-    "502",
-    "503",
-    "504",
-    "505",
-    "511",
-];
-
-||||||| merged common ancestors
-/**
- * A mapping of HTTP status codes to external documentation. Any code included
- * here will show a MDN link alongside it.
- */
-const SUPPORTED_HTTP_CODES = [
-    "100",
-    "101",
-    "200",
-    "201",
-    "202",
-    "203",
-    "204",
-    "205",
-    "206",
-    "300",
-    "301",
-    "302",
-    "303",
-    "304",
-    "307",
-    "308",
-    "400",
-    "401",
-    "403",
-    "404",
-    "405",
-    "406",
-    "407",
-    "408",
-    "409",
-    "410",
-    "411",
-    "412",
-    "413",
-    "414",
-    "415",
-    "416",
-    "417",
-    "418",
-    "426",
-    "428",
-    "429",
-    "431",
-    "451",
-    "500",
-    "501",
-    "502",
-    "503",
-    "504",
-    "505",
-    "511",
-];
-
-=======
->>>>>>> upstream-releases
 const MDN_URL = "https://developer.mozilla.org/docs/";
 const MDN_STATUS_CODES_LIST_URL = `${MDN_URL}Web/HTTP/Status`;
 const getGAParams = (panelId = "netmonitor") => {
@@ -271,12 +159,6 @@ function getPerformanceAnalysisURL() {
  * @return {string} The MDN URL for the documentation of Filter box.
  */
 function getFilterBoxURL() {
-<<<<<<< HEAD
-  return `${MDN_URL}Tools/Network_Monitor/request_list${getGAParams()}` +
-    `#Filtering_by_properties`;
-||||||| merged common ancestors
-  return `${MDN_URL}Tools/Network_Monitor${getGAParams()}#Filtering_by_properties`;
-=======
   return (
     `${MDN_URL}Tools/Network_Monitor/request_list${getGAParams()}` +
     `#Filtering_by_properties`
@@ -290,7 +172,6 @@ function getFilterBoxURL() {
  */
 function getTrackingProtectionURL() {
   return `${MDN_URL}Mozilla/Firefox/Privacy/Tracking_Protection${getGAParams()}`;
->>>>>>> upstream-releases
 }
 
 module.exports = {

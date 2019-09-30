@@ -48,27 +48,11 @@ set_define('JS_NUNBOX32', depends(target)(lambda t: t.bitness == 32 or None))
 
 # SpiderMonkey as a shared library, and how its symbols are exported
 # ==================================================================
-<<<<<<< HEAD
-js_option('--disable-shared-js', default=building_js,
-          help='{Create|Do not create} a shared library')
-||||||| merged common ancestors
-js_option('--disable-shared-js', default=building_js,
-          help='Do not create a shared library')
-=======
 js_option('--disable-shared-js', when=js_standalone,
           help='{Create|Do not create} a shared library')
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-js_option('--disable-export-js', default=building_js,
-          help='{Mark|Do not mark} JS symbols as DLL exported/visible')
-||||||| merged common ancestors
-js_option('--disable-export-js', default=building_js,
-          help='Do not mark JS symbols as DLL exported/visible')
-=======
 js_option('--disable-export-js', when=js_standalone,
           help='{Mark|Do not mark} JS symbols as DLL exported/visible')
->>>>>>> upstream-releases
 
 @depends('--disable-shared-js', '--disable-export-js', when=js_standalone)
 def shared_js(shared_js, export_js):
@@ -291,16 +275,8 @@ def default_trace_logging(milestone):
 
 
 js_option('--enable-trace-logging',
-<<<<<<< HEAD
-          default=depends(when=moz_debug)(lambda: True),
-          help='{Enable|Disable} trace logging')
-||||||| merged common ancestors
-          default=depends(when=moz_debug)(lambda: True),
-          help='Enable trace logging')
-=======
           default=default_trace_logging,
           help='{Enable|Disable} trace logging')
->>>>>>> upstream-releases
 
 set_config('ENABLE_TRACE_LOGGING',
            depends_if('--enable-trace-logging')(lambda x: True))
@@ -338,26 +314,6 @@ set_define('JS_JITSPEW',
 set_config('JS_JITSPEW',
            depends_if('--enable-jitspew')(lambda _: True))
 
-<<<<<<< HEAD
-# Also enable the structured spewer
-set_define('JS_STRUCTURED_SPEW',
-           depends_if('--enable-jitspew')(lambda _: True))
-set_config('JS_STRUCTURED_SPEW',
-           depends_if('--enable-jitspew')(lambda _: True))
-# When enabled, masm will generate assumeUnreachable calls that act as
-# assertions in the generated code. This option is worth disabling when you
-# have to track mutated values through the generated code, to avoid constantly
-# dumping registers on and off the stack.
-js_option('--enable-masm-verbose',
-          default=depends(when=moz_debug)(lambda: True),
-          help='{Enable|Disable} MacroAssembler verbosity of generated code.')
-set_define('JS_MASM_VERBOSE',
-           depends_if('--enable-masm-verbose')(lambda _: True))
-set_config('JS_MASM_VERBOSE',
-           depends_if('--enable-masm-verbose')(lambda _: True))
-
-||||||| merged common ancestors
-=======
 # Also enable the structured spewer
 set_define('JS_STRUCTURED_SPEW',
            depends_if('--enable-jitspew')(lambda _: True))
@@ -406,7 +362,6 @@ set_define('JS_MASM_VERBOSE',
 set_config('JS_MASM_VERBOSE',
            depends_if('--enable-masm-verbose')(lambda _: True))
 
->>>>>>> upstream-releases
 
 js_option('--enable-more-deterministic', env='JS_MORE_DETERMINISTIC',
           help='Enable changes that make the shell more deterministic')

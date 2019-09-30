@@ -1579,19 +1579,6 @@ fn read_ds_descriptor(data: &[u8], esds: &mut ES_Descriptor) -> Result<()> {
         };
     };
 
-<<<<<<< HEAD
-    match audio_object_type {
-        1 ... 4 | 6 | 7 | 17 | 19 ... 23 => {
-            if sample_frequency.is_none() {
-                return Err(Error::Unsupported("unknown frequency"));
-            }
-||||||| merged common ancestors
-        channel_counts += read_surround_channel_count(bit_reader, num_front_channel)?;
-        channel_counts += read_surround_channel_count(bit_reader, num_side_channel)?;
-        channel_counts += read_surround_channel_count(bit_reader, num_back_channel)?;
-        channel_counts += read_surround_channel_count(bit_reader, num_lfe_channel)?;
-    }
-=======
     match audio_object_type {
         1 ... 4 | 6 | 7 | 17 | 19 ... 23 => {
             if sample_frequency.is_none() {
@@ -1623,69 +1610,7 @@ fn read_ds_descriptor(data: &[u8], esds: &mut ES_Descriptor) -> Result<()> {
                 75132 ... 92016 => 88200,
                 _ => 96000
             };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-            // parsing GASpecificConfig
-
-            // If the sampling rate is not one of the rates listed in the right
-            // column in Table 4.82, the sampling frequency dependent tables
-            // (code tables, scale factor band tables etc.) must be deduced in
-            // order for the bitstream payload to be parsed. Since a given
-            // sampling frequency is associated with only one sampling frequency
-            // table, and since maximum flexibility is desired in the range of
-            // possible sampling frequencies, the following table shall be used
-            // to associate an implied sampling frequency with the desired
-            // sampling frequency dependent tables.
-            let sample_frequency_value = match sample_frequency.unwrap() {
-                0 ... 9390 => 8000,
-                9391 ... 11501 => 11025,
-                11502 ... 13855 => 12000,
-                13856 ... 18782 => 16000,
-                18783 ... 23003 => 22050,
-                23004 ... 27712 => 24000,
-                27713 ... 37565 => 32000,
-                37566 ... 46008 => 44100,
-                46009 ... 55425 => 48000,
-                55426 ... 75131 => 64000,
-                75132 ... 92016 => 88200,
-                _ => 96000
-            };
-||||||| merged common ancestors
-    esds.audio_object_type = Some(audio_object_type);
-    esds.audio_sample_rate = sample_frequency;
-    esds.audio_channel_count = Some(channel_counts);
-    assert!(esds.decoder_specific_data.is_empty());
-    esds.decoder_specific_data.extend_from_slice(data);
-=======
-            bit_reader.skip(1)?;        // frameLengthFlag
-            let depend_on_core_order: u8 = ReadInto::read(bit_reader, 1)?;
-            if depend_on_core_order > 0 {
-                bit_reader.skip(14)?;   // codeCoderDelay
-            }
-            bit_reader.skip(1)?;        // extensionFlag
-
-            let channel_counts = match channel_configuration {
-                0 => {
-                    debug!("Parsing program_config_element for channel counts");
-
-                    bit_reader.skip(4)?;    // element_instance_tag
-                    bit_reader.skip(2)?;    // object_type
-                    bit_reader.skip(4)?;    // sampling_frequency_index
-                    let num_front_channel: u8 = ReadInto::read(bit_reader, 4)?;
-                    let num_side_channel: u8 = ReadInto::read(bit_reader, 4)?;
-                    let num_back_channel:u8 = ReadInto::read(bit_reader, 4)?;
-                    let num_lfe_channel: u8 = ReadInto::read(bit_reader, 2)?;
-                    bit_reader.skip(3)?;    // num_assoc_data
-                    bit_reader.skip(4)?;    // num_valid_cc
-
-                    let mono_mixdown_present: bool = ReadInto::read(bit_reader, 1)?;
-                    if mono_mixdown_present {
-                        bit_reader.skip(4)?;    // mono_mixdown_element_number
-                    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
             bit_reader.skip(1)?;        // frameLengthFlag
             let depend_on_core_order: u8 = ReadInto::read(bit_reader, 1)?;
             if depend_on_core_order > 0 {
@@ -1749,47 +1674,6 @@ fn read_ds_descriptor(data: &[u8], esds: &mut ES_Descriptor) -> Result<()> {
         },
         _ => Err(Error::Unsupported("unknown aac audio object type"))
     }
-||||||| merged common ancestors
-    Ok(())
-=======
-                    let stereo_mixdown_present: bool = ReadInto::read(bit_reader, 1)?;
-                    if stereo_mixdown_present {
-                        bit_reader.skip(4)?;    // stereo_mixdown_element_number
-                    }
-
-                    let matrix_mixdown_idx_present: bool = ReadInto::read(bit_reader, 1)?;
-                    if matrix_mixdown_idx_present {
-                        bit_reader.skip(2)?;    // matrix_mixdown_idx
-                        bit_reader.skip(1)?;    // pseudo_surround_enable
-                    }
-                    let mut _channel_counts = 0;
-                    _channel_counts += read_surround_channel_count(bit_reader, num_front_channel)?;
-                    _channel_counts += read_surround_channel_count(bit_reader, num_side_channel)?;
-                    _channel_counts += read_surround_channel_count(bit_reader, num_back_channel)?;
-                    _channel_counts += read_surround_channel_count(bit_reader, num_lfe_channel)?;
-                    _channel_counts
-                },
-                1 ... 7 => channel_configuration,
-                // Amendment 4 of the AAC standard in 2013 below
-                11 => 7, // 6.1 Amendment 4 of the AAC standard in 2013
-                12 | 14 => 8, // 7.1 (a/d) of ITU BS.2159
-                _ => {
-                    return Err(Error::Unsupported("invalid channel configuration"));
-                }
-            };
-
-            esds.audio_object_type = Some(audio_object_type);
-            esds.extended_audio_object_type = extended_audio_object_type;
-            esds.audio_sample_rate = Some(sample_frequency_value);
-            esds.audio_channel_count = Some(channel_counts);
-            assert!(esds.decoder_specific_data.is_empty());
-            esds.decoder_specific_data.extend_from_slice(data);
-
-            Ok(())
-        },
-        _ => Err(Error::Unsupported("unknown aac audio object type"))
-    }
->>>>>>> upstream-releases
 }
 
 fn read_surround_channel_count(bit_reader: &mut BitReader, channels: u8) -> Result<u16> {

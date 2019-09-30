@@ -240,73 +240,6 @@
     // We only do basic tone verification and not check timing here
     let expectedTones = ['A', 'B', 'C', 'D', ''];
 
-<<<<<<< HEAD
-    const onToneChange = t.step_func(ev => {
-      assert_false(remoteDescriptionIsSet,
-        'Expect no tonechange event to be fired after currentDirection is changed to recvonly');
-
-      const { tone } = ev;
-      const expectedTone = expectedTones.shift();
-      assert_equals(tone, expectedTone,
-        `Expect fired event.tone to be ${expectedTone}`);
-
-      // Only change transceiver.currentDirection after the first
-      // tonechange event, to make sure that tonechange is triggered
-      // then stopped
-      if(tone === 'A') {
-        transceiver.direction = 'recvonly';
-
-        pc.createOffer()
-        .then(offer =>
-          pc.setLocalDescription(offer)
-          .then(() => generateAnswer(offer)))
-        .then(answer => pc.setRemoteDescription(answer))
-        .then(() => {
-          assert_equals(transceiver.currentDirection, 'recvonly');
-          remoteDescriptionIsSet = true;
-
-          // Pass the test if no further tonechange event is
-          // fired in the next 300ms
-          t.step_timeout(t.step_func_done(), 300);
-        })
-        .catch(t.step_func(err => {
-          assert_unreached(`Unexpected promise rejection: ${err}`);
-        }));
-      }
-||||||| merged common ancestors
-    const onToneChange = t.step_func(ev => {
-      assert_false(remoteDescriptionIsSet,
-        'Expect no tonechange event to be fired after currentDirection is changed to recvonly');
-
-      const { tone } = ev;
-      const expectedTone = expectedTones.shift();
-      assert_equals(tone, expectedTone,
-        `Expect fired event.tone to be ${expectedTone}`);
-
-      // Only change transceiver.currentDirection after the first
-      // tonechange event, to make sure that tonechange is triggered
-      // then stopped
-      if(tone === 'A') {
-        transceiver.setDirection('recvonly');
-
-        pc.createOffer()
-        .then(offer =>
-          pc.setLocalDescription(offer)
-          .then(() => generateAnswer(offer)))
-        .then(answer => pc.setRemoteDescription(answer))
-        .then(() => {
-          assert_equals(transceiver.currentDirection, 'recvonly');
-          remoteDescriptionIsSet = true;
-
-          // Pass the test if no further tonechange event is
-          // fired in the next 300ms
-          t.step_timeout(t.step_func_done(), 300);
-        })
-        .catch(t.step_func(err => {
-          assert_unreached(`Unexpected promise rejection: ${err}`);
-        }));
-      }
-=======
     const firstTone = new Promise(resolve => {
       const onToneChange = t.step_func(ev => {
         assert_false(remoteDescriptionIsSet,
@@ -322,7 +255,6 @@
         }
       });
       dtmfSender.addEventListener('tonechange', onToneChange);
->>>>>>> upstream-releases
     });
 
     dtmfSender.insertDTMF('ABCD', 100, 70);

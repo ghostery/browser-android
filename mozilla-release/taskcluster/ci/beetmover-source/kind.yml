@@ -14,14 +14,6 @@ kind-dependencies:
     - release-source-signing
 
 job-template:
-<<<<<<< HEAD
-   shipping-phase: promote
-   attributes:
-      artifact_map: taskcluster/taskgraph/manifests/source_files.yml
-||||||| merged common ancestors
-   shipping-phase: promote
-=======
     shipping-phase: promote
     attributes:
         artifact_map: taskcluster/taskgraph/manifests/source_files.yml
->>>>>>> upstream-releases

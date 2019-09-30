@@ -4,38 +4,11 @@ const { WebExtensionPolicy } = Cu.getGlobalForObject(
   ChromeUtils.import("resource://gre/modules/Services.jsm", {})
 );
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/UpdateUtils.jsm");
-
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/UpdateUtils.jsm");
-
-function getNotificationBox(aWindow) {
-  return aWindow.document.getElementById("high-priority-global-notificationbox");
-}
-
-=======
 const { UpdateUtils } = ChromeUtils.import(
   "resource://gre/modules/UpdateUtils.jsm"
 );
 
->>>>>>> upstream-releases
 function promiseNotificationShown(aWindow, aName) {
-<<<<<<< HEAD
-  return new Promise((resolve) => {
-    let notificationBox = aWindow.gHighPriorityNotificationBox;
-    notificationBox.stack.addEventListener("AlertActive", function() {
-      is(notificationBox.allNotifications.length, 1, "Notification Displayed.");
-      resolve(notificationBox);
-    }, {once: true});
-||||||| merged common ancestors
-  return new Promise((resolve) => {
-    let notification = getNotificationBox(aWindow);
-    notification.addEventListener("AlertActive", function() {
-      is(notification.allNotifications.length, 1, "Notification Displayed.");
-      resolve(notification);
-    }, {once: true});
-=======
   return new Promise(resolve => {
     let notificationBox = aWindow.gHighPriorityNotificationBox;
     notificationBox.stack.addEventListener(
@@ -50,7 +23,6 @@ function promiseNotificationShown(aWindow, aName) {
       },
       { once: true }
     );
->>>>>>> upstream-releases
   });
 }
 

@@ -16,23 +16,6 @@ const TEST_URL = "data:text/html;charset=utf-8," + encodeURIComponent(HTML);
 //   specify an attribute that would make it impossible to find the node using
 //   selector.
 // Note that after each test case, undo is called.
-<<<<<<< HEAD
-const TEST_DATA = [{
-  selector: "#id",
-  attribute: "class",
-}, {
-  selector: "#id",
-  attribute: "data-id",
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  selector: "#id",
-  attribute: "class"
-}, {
-  selector: "#id",
-  attribute: "data-id"
-}];
-=======
 const TEST_DATA = [
   {
     selector: "#id",
@@ -43,7 +26,6 @@ const TEST_DATA = [
     attribute: "data-id",
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URL);

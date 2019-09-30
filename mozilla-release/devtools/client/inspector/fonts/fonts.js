@@ -363,56 +363,6 @@ class FontInspector {
     return properties;
   }
 
-<<<<<<< HEAD
-  /**
-   * Get an array of keyword values supported by the following CSS properties:
-   * - font-size
-   * - font-weight
-   * - font-stretch
-   * - line-height
-   *
-   * This list is used to filter out values when reading CSS font properties from rules.
-   * Computed styles will be used instead of any of these values.
-   *
-   * @return {Array}
-   */
-  getFontPropertyValueKeywords() {
-    return [
-      "font-size",
-      "font-weight",
-      "font-stretch",
-      "line-height",
-    ].reduce((acc, property) => {
-      return acc.concat(this.cssProperties.getValues(property));
-    }, []);
-  }
-
-||||||| merged common ancestors
-  /**
-   * Get an array of keyword values supported by the following CSS properties:
-   * - font-size
-   * - font-weight
-   * - font-stretch
-   * - line-height
-   *
-   * This list is used to filter out values when reading CSS font properties from rules.
-   * Computed styles will be used instead of any of these values.
-   *
-   * @return {Array}
-   */
-  getFontPropertyValueKeywords() {
-    return [
-      "font-size",
-      "font-weight",
-      "font-stretch",
-      "line-height"
-    ].reduce((acc, property) => {
-      return acc.concat(this.cssProperties.getValues(property));
-    }, []);
-  }
-
-=======
->>>>>>> upstream-releases
   async getFontsForNode(node, options) {
     // In case we've been destroyed in the meantime
     if (!this.document) {
@@ -701,22 +651,6 @@ class FontInspector {
     const { fontEditor } = this.store.getState();
     const { telemetry } = this.inspector;
 
-<<<<<<< HEAD
-    // Log the number of font faces used to render content of the element.
-    const nbOfFontsRendered = fontEditor.fonts.length;
-    if (nbOfFontsRendered) {
-      telemetry.getHistogramById(HISTOGRAM_N_FONTS_RENDERED).add(nbOfFontsRendered);
-    }
-
-||||||| merged common ancestors
-    // Log the number of font faces used to render content of the element.
-    const nbOfFontsRendered = fontData.fonts.length;
-    if (nbOfFontsRendered) {
-      telemetry.getHistogramById(HISTOGRAM_N_FONTS_RENDERED).add(nbOfFontsRendered);
-    }
-
-=======
->>>>>>> upstream-releases
     // Log data about the currently edited font (if any).
     // Note that the edited font is always the first one from the fontEditor.fonts array.
     const editedFont = fontEditor.fonts[0];
@@ -970,46 +904,7 @@ class FontInspector {
    * and the ones already in the store to decide if to update the font editor state.
    */
   async refreshFontEditor() {
-<<<<<<< HEAD
-    if (!this.store || !this.isSelectedNodeValid()) {
-      if (this.inspector.selection.isPseudoElementNode()) {
-        const noPseudoWarning = getStr("fontinspector.noPseduoWarning");
-        this.store.dispatch(resetFontEditor());
-        this.store.dispatch(updateWarningMessage(noPseudoWarning));
-        return;
-      }
-
-      // If the selection is a TextNode, switch selection to be its parent node.
-      if (this.inspector.selection.isTextNode()) {
-        const selection = this.inspector.selection;
-        selection.setNodeFront(selection.nodeFront.parentNode());
-        return;
-      }
-
-||||||| merged common ancestors
-    // Early return if pref for font editor is not enabled.
-    if (!Services.prefs.getBoolPref(PREF_FONT_EDITOR)) {
-      return;
-    }
-
-    if (!this.store || !this.isSelectedNodeValid()) {
-      if (this.inspector.selection.isPseudoElementNode()) {
-        const noPseudoWarning = getStr("fontinspector.noPseduoWarning");
-        this.store.dispatch(resetFontEditor());
-        this.store.dispatch(updateWarningMessage(noPseudoWarning));
-        return;
-      }
-
-      // If the selection is a TextNode, switch selection to be its parent node.
-      if (this.inspector.selection.isTextNode()) {
-        const selection = this.inspector.selection;
-        selection.setNodeFront(selection.nodeFront.parentNode());
-        return;
-      }
-
-=======
     if (!this.node) {
->>>>>>> upstream-releases
       this.store.dispatch(resetFontEditor());
       return;
     }
@@ -1023,16 +918,8 @@ class FontInspector {
 
     try {
       // Get computed styles for the selected node, but filter by CSS font properties.
-<<<<<<< HEAD
-      this.nodeComputedStyle = await this.pageStyle.getComputed(node, {
-        filterProperties: FONT_PROPERTIES,
-||||||| merged common ancestors
-      this.nodeComputedStyle = await this.pageStyle.getComputed(node, {
-        filterProperties: FONT_PROPERTIES
-=======
       this.nodeComputedStyle = await this.pageStyle.getComputed(this.node, {
         filterProperties: FONT_PROPERTIES,
->>>>>>> upstream-releases
       });
     } catch (e) {
       // Because getComputed is async, there is a chance the font editor was
@@ -1090,16 +977,8 @@ class FontInspector {
 
     let allFonts = [];
 
-<<<<<<< HEAD
-    if (!this.isSelectedNodeValid()) {
-      this.store.dispatch(updateFonts(allFonts));
-||||||| merged common ancestors
-    if (!this.isSelectedNodeValid()) {
-      this.store.dispatch(updateFonts(fonts, otherFonts, allFonts));
-=======
     if (!this.node) {
       this.store.dispatch(updateFonts(allFonts));
->>>>>>> upstream-releases
       return;
     }
 

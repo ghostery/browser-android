@@ -103,15 +103,6 @@ already_AddRefed<nsISpeechRecognitionService> GetSpeechRecognitionService(
   return recognitionService.forget();
 }
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION_INHERITED(SpeechRecognition, DOMEventTargetHelper,
-                                   mTrack, mSpeechGrammarList)
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION_INHERITED(SpeechRecognition,
-                                   DOMEventTargetHelper,
-                                   mDOMStream,
-                                   mSpeechGrammarList)
-=======
 class SpeechRecognitionShutdownBlocker : public media::ShutdownBlocker {
  public:
   explicit SpeechRecognitionShutdownBlocker(SpeechRecognition* aRecognition)
@@ -133,7 +124,6 @@ class SpeechRecognitionShutdownBlocker : public media::ShutdownBlocker {
 NS_IMPL_CYCLE_COLLECTION_INHERITED(SpeechRecognition, DOMEventTargetHelper,
                                    mStream, mTrack, mRecognitionService,
                                    mSpeechGrammarList)
->>>>>>> upstream-releases
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(SpeechRecognition)
   NS_INTERFACE_MAP_ENTRY(nsIObserver)
@@ -194,16 +184,8 @@ bool SpeechRecognition::IsAuthorized(JSContext* aCx, JSObject* aGlobal) {
   }
 
   uint32_t speechRecognition = nsIPermissionManager::UNKNOWN_ACTION;
-<<<<<<< HEAD
-  rv = mgr->TestExactPermissionFromPrincipal(principal, "speech-recognition",
-                                             &speechRecognition);
-||||||| merged common ancestors
-  rv = mgr->TestExactPermissionFromPrincipal(
-    principal, "speech-recognition", &speechRecognition);
-=======
   rv = mgr->TestExactPermissionFromPrincipal(
       principal, NS_LITERAL_CSTRING("speech-recognition"), &speechRecognition);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return false;
   }
@@ -569,13 +551,6 @@ SpeechRecognition::StartRecording(RefPtr<AudioStreamTrack>& aTrack) {
   if (NS_WARN_IF(mTrack->Ended())) {
     return NS_ERROR_UNEXPECTED;
   }
-<<<<<<< HEAD
-  mSpeechListener = new SpeechTrackListener(this);
-  mTrack->AddListener(mSpeechListener);
-||||||| merged common ancestors
-  mSpeechListener = new SpeechStreamListener(this);
-  mDOMStream->GetPlaybackStream()->AddListener(mSpeechListener);
-=======
   mSpeechListener = new SpeechTrackListener(this);
   mTrack->AddListener(mSpeechListener);
 
@@ -583,7 +558,6 @@ SpeechRecognition::StartRecording(RefPtr<AudioStreamTrack>& aTrack) {
   RefPtr<nsIAsyncShutdownClient> shutdown = media::GetShutdownBarrier();
   shutdown->AddBlocker(mShutdownBlocker, NS_LITERAL_STRING(__FILE__), __LINE__,
                        NS_LITERAL_STRING("SpeechRecognition shutdown"));
->>>>>>> upstream-releases
 
   mEndpointer.StartSession();
 
@@ -592,22 +566,6 @@ SpeechRecognition::StartRecording(RefPtr<AudioStreamTrack>& aTrack) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SpeechRecognition::StopRecording() {
-  // we only really need to remove the listener explicitly when testing,
-  // as our JS code still holds a reference to mTrack and only assigning
-  // it to nullptr isn't guaranteed to free the stream and the listener.
-  mStream->UnregisterTrackListener(this);
-  mTrack->RemoveListener(mSpeechListener);
-  mStream = nullptr;
-||||||| merged common ancestors
-SpeechRecognition::StopRecording()
-{
-  // we only really need to remove the listener explicitly when testing,
-  // as our JS code still holds a reference to mDOMStream and only assigning
-  // it to nullptr isn't guaranteed to free the stream and the listener.
-  mDOMStream->GetPlaybackStream()->RemoveListener(mSpeechListener);
-=======
 SpeechRecognition::StopRecording() {
   if (mShutdownBlocker) {
     // Block shutdown until the speech track listener has been removed from the
@@ -627,7 +585,6 @@ SpeechRecognition::StopRecording() {
   mStream->UnregisterTrackListener(this);
   mTrack->RemoveListener(mSpeechListener);
   mStream = nullptr;
->>>>>>> upstream-releases
   mSpeechListener = nullptr;
   mTrack = nullptr;
 
@@ -755,45 +712,6 @@ void SpeechRecognition::Start(const Optional<NonNull<DOMMediaStream>>& aStream,
     }
   } else {
     AutoNoJSAPI nojsapi;
-<<<<<<< HEAD
-    RefPtr<SpeechRecognition> self(this);
-    MediaManager::Get()
-        ->GetUserMedia(GetOwner(), constraints, aCallerType)
-        ->Then(GetCurrentThreadSerialEventTarget(), __func__,
-               [this, self](RefPtr<DOMMediaStream>&& aStream) {
-                 mStream = std::move(aStream);
-                 mStream->RegisterTrackListener(this);
-                 nsTArray<RefPtr<AudioStreamTrack>> tracks;
-                 mStream->GetAudioTracks(tracks);
-                 for (const RefPtr<AudioStreamTrack>& track : tracks) {
-                   if (!track->Ended()) {
-                     NotifyTrackAdded(track);
-                   }
-                 }
-               },
-               [this, self](RefPtr<MediaMgrError>&& error) {
-                 SpeechRecognitionErrorCode errorCode;
-
-                 if (error->mName == MediaMgrError::Name::NotAllowedError) {
-                   errorCode = SpeechRecognitionErrorCode::Not_allowed;
-                 } else {
-                   errorCode = SpeechRecognitionErrorCode::Audio_capture;
-                 }
-                 DispatchError(SpeechRecognition::EVENT_AUDIO_ERROR, errorCode,
-                               error->mMessage);
-               });
-||||||| merged common ancestors
-    MediaManager* manager = MediaManager::Get();
-    MediaManager::GetUserMediaSuccessCallback onsuccess(
-      new GetUserMediaSuccessCallback(this));
-    MediaManager::GetUserMediaErrorCallback onerror(
-      new GetUserMediaErrorCallback(this));
-    manager->GetUserMedia(GetOwner(),
-                          constraints,
-                          std::move(onsuccess),
-                          std::move(onerror),
-                          aCallerType);
-=======
     RefPtr<SpeechRecognition> self(this);
     MediaManager::Get()
         ->GetUserMedia(GetOwner(), constraints, aCallerType)
@@ -821,7 +739,6 @@ void SpeechRecognition::Start(const Optional<NonNull<DOMMediaStream>>& aStream,
               DispatchError(SpeechRecognition::EVENT_AUDIO_ERROR, errorCode,
                             error->mMessage);
             });
->>>>>>> upstream-releases
   }
 
   RefPtr<SpeechEvent> event = new SpeechEvent(this, EVENT_START);
@@ -847,16 +764,8 @@ bool SpeechRecognition::SetRecognitionService(ErrorResult& aRv) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return false;
   }
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> document = window->GetExtantDoc();
-  if (!document) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument> document = window->GetExtantDoc();
-  if(!document) {
-=======
   nsCOMPtr<Document> document = window->GetExtantDoc();
   if (!document) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return false;
   }
@@ -1100,7 +1009,6 @@ const char* SpeechRecognition::GetName(SpeechEvent* aEvent) {
   return names[aEvent->mType];
 }
 
-<<<<<<< HEAD
 SpeechEvent::SpeechEvent(SpeechRecognition* aRecognition,
                          SpeechRecognition::EventType aType)
     : Runnable("dom::SpeechEvent"),
@@ -1112,80 +1020,10 @@ SpeechEvent::SpeechEvent(SpeechRecognition* aRecognition,
       mTrackRate(0) {}
 
 SpeechEvent::~SpeechEvent() { delete mAudioSegment; }
-||||||| merged common ancestors
-SpeechEvent::~SpeechEvent()
-{
-  delete mAudioSegment;
-}
-
-NS_IMETHODIMP
-SpeechEvent::Run()
-{
-  mRecognition->ProcessEvent(this);
-  return NS_OK;
-}
-
-NS_IMPL_ISUPPORTS(SpeechRecognition::GetUserMediaSuccessCallback,
-                  nsIDOMGetUserMediaSuccessCallback)
-=======
-SpeechEvent::SpeechEvent(SpeechRecognition* aRecognition,
-                         SpeechRecognition::EventType aType)
-    : Runnable("dom::SpeechEvent"),
-      mAudioSegment(nullptr),
-      mRecognitionResultList(nullptr),
-      mError(nullptr),
-      mRecognition(aRecognition),
-      mType(aType),
-      mTrackRate(0) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-NS_IMETHODIMP
-SpeechEvent::Run() {
-  mRecognition->ProcessEvent(this);
-||||||| merged common ancestors
-NS_IMETHODIMP
-SpeechRecognition::GetUserMediaSuccessCallback::OnSuccess(nsISupports* aStream)
-{
-  RefPtr<DOMMediaStream> stream = do_QueryObject(aStream);
-  if (!stream) {
-    return NS_ERROR_NO_INTERFACE;
-  }
-  mRecognition->StartRecording(stream);
-  return NS_OK;
-}
-
-NS_IMPL_ISUPPORTS(SpeechRecognition::GetUserMediaErrorCallback,
-                  nsIDOMGetUserMediaErrorCallback)
-
-NS_IMETHODIMP
-SpeechRecognition::GetUserMediaErrorCallback::OnError(nsISupports* aError)
-{
-  RefPtr<MediaStreamError> error = do_QueryObject(aError);
-  if (!error) {
-    return NS_OK;
-  }
-  SpeechRecognitionErrorCode errorCode;
-
-  nsAutoString name;
-  error->GetName(name);
-  if (name.EqualsLiteral("PERMISSION_DENIED")) {
-    errorCode = SpeechRecognitionErrorCode::Not_allowed;
-  } else {
-    errorCode = SpeechRecognitionErrorCode::Audio_capture;
-  }
-
-  nsAutoString message;
-  error->GetMessage(message);
-  mRecognition->DispatchError(SpeechRecognition::EVENT_AUDIO_ERROR, errorCode,
-                              message);
-=======
-SpeechEvent::~SpeechEvent() { delete mAudioSegment; }
 
 NS_IMETHODIMP
 SpeechEvent::Run() {
   mRecognition->ProcessEvent(this);
->>>>>>> upstream-releases
   return NS_OK;
 }
 

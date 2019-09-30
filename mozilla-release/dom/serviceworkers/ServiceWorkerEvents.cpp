@@ -136,23 +136,10 @@ void FetchEvent::PostInit(
   mScriptSpec.Assign(aScriptSpec);
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<FetchEvent> FetchEvent::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aType,
-    const FetchEventInit& aOptions, ErrorResult& aRv) {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<FetchEvent>
-FetchEvent::Constructor(const GlobalObject& aGlobal,
-                        const nsAString& aType,
-                        const FetchEventInit& aOptions,
-                        ErrorResult& aRv)
-{
-=======
 /*static*/
 already_AddRefed<FetchEvent> FetchEvent::Constructor(
     const GlobalObject& aGlobal, const nsAString& aType,
     const FetchEventInit& aOptions, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<EventTarget> owner = do_QueryObject(aGlobal.GetAsSupports());
   MOZ_ASSERT(owner);
   RefPtr<FetchEvent> e = new FetchEvent(owner);
@@ -333,15 +320,8 @@ class StartResponse final : public Runnable {
     if (outerChannel &&
         !outerChannel->PreferredAlternativeDataTypes().IsEmpty()) {
       // TODO: handle multiple types properly.
-<<<<<<< HEAD
-      preferredAltDataType.Assign(
-          mozilla::Get<0>(outerChannel->PreferredAlternativeDataTypes()[0]));
-||||||| merged common ancestors
-      preferredAltDataType.Assign(mozilla::Get<0>(outerChannel->PreferredAlternativeDataTypes()[0]));
-=======
       preferredAltDataType.Assign(
           outerChannel->PreferredAlternativeDataTypes()[0].type());
->>>>>>> upstream-releases
     }
 
     // Get the alternative data type saved in the InternalResponse
@@ -1193,53 +1173,20 @@ void ExtendableMessageEvent::GetSource(
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ExtendableMessageEvent>
-ExtendableMessageEvent::Constructor(const GlobalObject& aGlobal,
-                                    const nsAString& aType,
-                                    const ExtendableMessageEventInit& aOptions,
-                                    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ExtendableMessageEvent>
-ExtendableMessageEvent::Constructor(const GlobalObject& aGlobal,
-                                    const nsAString& aType,
-                                    const ExtendableMessageEventInit& aOptions,
-                                    ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ExtendableMessageEvent> ExtendableMessageEvent::Constructor(
     const GlobalObject& aGlobal, const nsAString& aType,
     const ExtendableMessageEventInit& aOptions, ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<EventTarget> t = do_QueryInterface(aGlobal.GetAsSupports());
   return Constructor(t, aType, aOptions, aRv);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ExtendableMessageEvent>
-ExtendableMessageEvent::Constructor(mozilla::dom::EventTarget* aEventTarget,
-                                    const nsAString& aType,
-                                    const ExtendableMessageEventInit& aOptions,
-                                    ErrorResult& aRv) {
-  RefPtr<ExtendableMessageEvent> event =
-      new ExtendableMessageEvent(aEventTarget);
-||||||| merged common ancestors
-/* static */ already_AddRefed<ExtendableMessageEvent>
-ExtendableMessageEvent::Constructor(mozilla::dom::EventTarget* aEventTarget,
-                                    const nsAString& aType,
-                                    const ExtendableMessageEventInit& aOptions,
-                                    ErrorResult& aRv)
-{
-  RefPtr<ExtendableMessageEvent> event = new ExtendableMessageEvent(aEventTarget);
-=======
 /* static */
 already_AddRefed<ExtendableMessageEvent> ExtendableMessageEvent::Constructor(
     mozilla::dom::EventTarget* aEventTarget, const nsAString& aType,
     const ExtendableMessageEventInit& aOptions, ErrorResult& aRv) {
   RefPtr<ExtendableMessageEvent> event =
       new ExtendableMessageEvent(aEventTarget);
->>>>>>> upstream-releases
 
   event->InitEvent(aType, aOptions.mBubbles, aOptions.mCancelable);
   bool trusted = event->Init(aEventTarget);

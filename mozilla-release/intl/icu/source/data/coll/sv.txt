@@ -12,26 +12,14 @@ sv{
                 "&Y<<ü<<<Ü<<ű<<<Ű"
                 "&[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<<ę<<<Ę<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<œ<<<Œ<<ô<<<Ô"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         search{
             Sequence{
                 "[import und-u-co-search]"
                 "[import sv-u-co-standard]"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -42,13 +30,7 @@ sv{
                 "&Y<<ü<<<Ü<<ű<<<Ű"
                 "&[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<<ę<<<Ę<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<œ<<<Œ<<ô<<<Ô"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

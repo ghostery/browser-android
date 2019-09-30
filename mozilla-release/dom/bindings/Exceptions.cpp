@@ -200,17 +200,8 @@ already_AddRefed<nsIStackFrame> GetCurrentJSStack(int32_t aMaxDepth) {
 
 namespace exceptions {
 
-<<<<<<< HEAD
-class JSStackFrame : public nsIStackFrame {
- public:
-||||||| merged common ancestors
-class JSStackFrame : public nsIStackFrame
-{
-public:
-=======
 class JSStackFrame final : public nsIStackFrame, public xpc::JSStackFrameBase {
  public:
->>>>>>> upstream-releases
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(JSStackFrame)
   NS_DECL_NSISTACKFRAME
@@ -251,32 +242,6 @@ class JSStackFrame final : public nsIStackFrame, public xpc::JSStackFrameBase {
 };
 
 JSStackFrame::JSStackFrame(JS::Handle<JSObject*> aStack)
-<<<<<<< HEAD
-    : mStack(aStack),
-      mLineno(0),
-      mColNo(0),
-      mFilenameInitialized(false),
-      mFunnameInitialized(false),
-      mLinenoInitialized(false),
-      mColNoInitialized(false),
-      mAsyncCauseInitialized(false),
-      mAsyncCallerInitialized(false),
-      mCallerInitialized(false),
-      mFormattedStackInitialized(false) {
-||||||| merged common ancestors
-  : mStack(aStack)
-  , mLineno(0)
-  , mColNo(0)
-  , mFilenameInitialized(false)
-  , mFunnameInitialized(false)
-  , mLinenoInitialized(false)
-  , mColNoInitialized(false)
-  , mAsyncCauseInitialized(false)
-  , mAsyncCallerInitialized(false)
-  , mCallerInitialized(false)
-  , mFormattedStackInitialized(false)
-{
-=======
     : mStack(aStack),
       mSourceId(0),
       mLineno(0),
@@ -290,7 +255,6 @@ JSStackFrame::JSStackFrame(JS::Handle<JSObject*> aStack)
       mAsyncCallerInitialized(false),
       mCallerInitialized(false),
       mFormattedStackInitialized(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mStack);
   MOZ_ASSERT(JS::IsUnwrappedSavedFrame(mStack));
 
@@ -299,19 +263,10 @@ JSStackFrame::JSStackFrame(JS::Handle<JSObject*> aStack)
   xpc::RegisterJSStackFrame(js::GetNonCCWObjectRealm(aStack), this);
 }
 
-<<<<<<< HEAD
-JSStackFrame::~JSStackFrame() { mozilla::DropJSObjects(this); }
-||||||| merged common ancestors
-JSStackFrame::~JSStackFrame()
-{
-  mozilla::DropJSObjects(this);
-}
-=======
 JSStackFrame::~JSStackFrame() {
   UnregisterAndClear();
   mozilla::DropJSObjects(this);
 }
->>>>>>> upstream-releases
 
 void JSStackFrame::UnregisterAndClear() {
   if (!mStack) {
@@ -500,13 +455,6 @@ void JSStackFrame::GetName(JSContext* aCx, nsAString& aFunction) {
   }
 }
 
-<<<<<<< HEAD
-int32_t JSStackFrame::GetLineNumber(JSContext* aCx) {
-||||||| merged common ancestors
-int32_t
-JSStackFrame::GetLineNumber(JSContext* aCx)
-{
-=======
 int32_t JSStackFrame::GetSourceId(JSContext* aCx) {
   if (!mStack) {
     return 0;
@@ -536,7 +484,6 @@ JSStackFrame::GetSourceIdXPCOM(JSContext* aCx, int32_t* aSourceId) {
 }
 
 int32_t JSStackFrame::GetLineNumber(JSContext* aCx) {
->>>>>>> upstream-releases
   if (!mStack) {
     return 0;
   }

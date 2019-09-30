@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 fr_BE{
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.39"}
-=======
     Version{"2.1.47.70"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

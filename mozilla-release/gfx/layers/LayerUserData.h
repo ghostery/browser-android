@@ -18,16 +18,8 @@ namespace layers {
  * Everything else in Layers.h should be forward-declarable.
  */
 class LayerUserData {
-<<<<<<< HEAD
- public:
-  virtual ~LayerUserData() {}
-||||||| merged common ancestors
-public:
-  virtual ~LayerUserData() {}
-=======
  public:
   virtual ~LayerUserData() = default;
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

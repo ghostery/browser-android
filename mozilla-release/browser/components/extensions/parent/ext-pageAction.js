@@ -61,18 +61,9 @@ this.pageAction = class extends ExtensionAPI {
       show = false;
     } else {
       // Might show or hide depending on the URL. Enable pattern matching.
-<<<<<<< HEAD
-      const {restrictSchemes} = extension;
-      showMatches = new MatchPatternSet(show_matches, {restrictSchemes});
-      hideMatches = new MatchPatternSet(hide_matches, {restrictSchemes});
-||||||| merged common ancestors
-      showMatches = new MatchPatternSet(show_matches);
-      hideMatches = new MatchPatternSet(hide_matches);
-=======
       const { restrictSchemes } = extension;
       showMatches = new MatchPatternSet(show_matches, { restrictSchemes });
       hideMatches = new MatchPatternSet(hide_matches, { restrictSchemes });
->>>>>>> upstream-releases
     }
 
     this.defaults = {

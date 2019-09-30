@@ -134,31 +134,12 @@ inline int16_t nsAttrValue::GetEnumValue() const {
                               NS_ATTRVALUE_ENUMTABLEINDEX_BITS);
 }
 
-<<<<<<< HEAD
-inline float nsAttrValue::GetPercentValue() const {
-||||||| merged common ancestors
-inline float
-nsAttrValue::GetPercentValue() const
-{
-=======
 inline double nsAttrValue::GetPercentValue() const {
->>>>>>> upstream-releases
   MOZ_ASSERT(Type() == ePercent, "wrong type");
-<<<<<<< HEAD
-  return ((BaseType() == eIntegerBase) ? GetIntInternal()
-                                       : GetMiscContainer()->mValue.mPercent) /
-         100.0f;
-||||||| merged common ancestors
-  return ((BaseType() == eIntegerBase)
-          ? GetIntInternal()
-          : GetMiscContainer()->mValue.mPercent)
-            / 100.0f;
-=======
   if (BaseType() == eIntegerBase) {
     return GetIntInternal() / 100.0f;
   }
   return GetMiscContainer()->mDoubleValue / 100.0f;
->>>>>>> upstream-releases
 }
 
 inline mozilla::AtomArray* nsAttrValue::GetAtomArrayValue() const {
@@ -262,18 +243,9 @@ inline void nsAttrValue::ToString(mozilla::dom::DOMString& aResult) const {
       aResult.SetKnownLiveAtom(atom, mozilla::dom::DOMString::eNullNotExpected);
       break;
     }
-<<<<<<< HEAD
-    default: { ToString(aResult.AsAString()); }
-||||||| merged common ancestors
-    default:
-    {
-      ToString(aResult.AsAString());
-    }
-=======
     default: {
       ToString(aResult.AsAString());
     }
->>>>>>> upstream-releases
   }
 }
 

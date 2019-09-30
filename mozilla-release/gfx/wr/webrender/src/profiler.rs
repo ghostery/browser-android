@@ -481,18 +481,6 @@ pub struct IpcProfileCounters {
     pub display_lists: ResourceProfileCounter,
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/profiler.rs
-#[derive(Clone)]
-pub struct InternProfileCounters {
-    pub prims: ResourceProfileCounter,
-    pub linear_gradients: ResourceProfileCounter,
-    pub radial_gradients: ResourceProfileCounter,
-    pub text_runs: ResourceProfileCounter,
-    pub clips: ResourceProfileCounter,
-}
-
-||||||| merged common ancestors
-=======
 macro_rules! declare_intern_profile_counters {
     ( $( $name:ident : $ty:ty, )+ ) => {
         #[derive(Clone)]
@@ -525,7 +513,6 @@ macro_rules! declare_intern_profile_counters {
 
 enumerate_interners!(declare_intern_profile_counters);
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/profiler.rs
 impl IpcProfileCounters {
     pub fn set(
         &mut self,
@@ -564,16 +551,6 @@ impl BackendProfileCounters {
                 total_time: TimeProfileCounter::new("Total Display List Time", false),
                 display_lists: ResourceProfileCounter::new("Display Lists Sent"),
             },
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/profiler.rs
-            intern: InternProfileCounters {
-                prims: ResourceProfileCounter::new("Interned primitives"),
-                linear_gradients: ResourceProfileCounter::new("Interned linear gradients"),
-                radial_gradients: ResourceProfileCounter::new("Interned radial gradients"),
-                text_runs: ResourceProfileCounter::new("Interned text runs"),
-                clips: ResourceProfileCounter::new("Interned clips"),
-            },
-||||||| merged common ancestors
-=======
             //TODO: generate this by a macro
             intern: InternProfileCounters {
                 prim: ResourceProfileCounter::new("Interned primitives"),
@@ -589,7 +566,6 @@ impl BackendProfileCounters {
                 clip: ResourceProfileCounter::new("Interned clips"),
                 filter_data: ResourceProfileCounter::new("Interned filter data"),
             },
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/profiler.rs
         }
     }
 
@@ -1233,19 +1209,6 @@ impl Profiler {
         );
 
         backend_profile.intern.draw(debug_renderer, &mut self.draw_state);
-
-        Profiler::draw_counters(
-            &[
-                &backend_profile.intern.clips,
-                &backend_profile.intern.prims,
-                &backend_profile.intern.linear_gradients,
-                &backend_profile.intern.radial_gradients,
-                &backend_profile.intern.text_runs,
-            ],
-            debug_renderer,
-            true,
-            &mut self.draw_state
-        );
 
         Profiler::draw_counters(
             &[

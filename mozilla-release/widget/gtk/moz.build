@@ -98,13 +98,8 @@ if CONFIG['MOZ_X11']:
 if CONFIG['MOZ_WAYLAND']:
     UNIFIED_SOURCES += [
         'nsClipboardWayland.cpp',
-<<<<<<< HEAD
-        'nsWaylandDisplay.cpp',
-||||||| merged common ancestors
-=======
         'nsWaylandDisplay.cpp',
         'WaylandDMABufSurface.cpp',
->>>>>>> upstream-releases
         'WindowSurfaceWayland.cpp',
     ]
     EXPORTS.mozilla.widget += [
@@ -117,24 +112,6 @@ if CONFIG['ACCESSIBILITY']:
         'maiRedundantObjectFactory.c',
     ]
 
-<<<<<<< HEAD
-UNIFIED_SOURCES += [
-    'gtk3drawing.cpp',
-    'nsApplicationChooser.cpp',
-    'WidgetStyleCache.cpp',
-]
-||||||| merged common ancestors
-if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk2':
-    UNIFIED_SOURCES += [
-        'gtk2drawing.c',
-    ]
-else:
-    UNIFIED_SOURCES += [
-        'gtk3drawing.cpp',
-        'nsApplicationChooser.cpp',
-        'WidgetStyleCache.cpp',
-    ]
-=======
 UNIFIED_SOURCES += [
     'gtk3drawing.cpp',
     'nsApplicationChooser.cpp',
@@ -144,7 +121,6 @@ UNIFIED_SOURCES += [
 XPCOM_MANIFESTS += [
     'components.conf',
 ]
->>>>>>> upstream-releases
 
 include('/ipc/chromium/chromium-config.mozbuild')
 

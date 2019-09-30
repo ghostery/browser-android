@@ -48,44 +48,10 @@ pref("devtools.inspector.imagePreviewTooltipSize", 300);
 pref("devtools.inspector.showUserAgentStyles", false);
 // Show all native anonymous content
 pref("devtools.inspector.showAllAnonymousContent", false);
-<<<<<<< HEAD
-// Show user agent shadow roots
-pref("devtools.inspector.showUserAgentShadowRoots", false);
-// Enable the CSS shapes highlighter
-pref("devtools.inspector.shapesHighlighter.enabled", true);
-// Enable the font highlight-on-hover feature
-pref("devtools.inspector.fonthighlighter.enabled", true);
-// Enable tracking of style changes and the Changes panel in the Inspector
-pref("devtools.inspector.changes.enabled", true);
-
-// Flexbox preferences
-pref("devtools.inspector.flexboxHighlighter.enabled", true);
-pref("devtools.flexboxinspector.enabled", true);
-||||||| merged common ancestors
-// Enable the CSS shapes highlighter
-pref("devtools.inspector.shapesHighlighter.enabled", true);
-// Enable the Font Editor
-pref("devtools.inspector.fonteditor.enabled", true);
-// Enable the font highlight-on-hover feature
-pref("devtools.inspector.fonthighlighter.enabled", true);
-// Enable tracking of style changes and the Changes panel in the Inspector
-pref("devtools.inspector.changes.enabled", false);
-
-// Flexbox preferences
-// Enable the Flexbox highlighter and inspector panel in Nightly and DevEdition
-#if defined(NIGHTLY_BUILD) || defined(MOZ_DEV_EDITION)
-pref("devtools.inspector.flexboxHighlighter.enabled", true);
-pref("devtools.flexboxinspector.enabled", true);
-#else
-pref("devtools.inspector.flexboxHighlighter.enabled", false);
-pref("devtools.flexboxinspector.enabled", false);
-#endif
-=======
 // Show user agent shadow roots
 pref("devtools.inspector.showUserAgentShadowRoots", false);
 // Enable the new Rules View
 pref("devtools.inspector.new-rulesview.enabled", false);
->>>>>>> upstream-releases
 
 // Grid highlighter preferences
 pref("devtools.gridinspector.gridOutlineMaxColumns", 50);
@@ -316,24 +282,12 @@ pref("devtools.webconsole.sidebarToggle", false);
 // Enable CodeMirror in the JsTerm
 pref("devtools.webconsole.jsterm.codeMirror", true);
 
-<<<<<<< HEAD
-// Enable console input reverse-search everywhere
-pref("devtools.webconsole.jsterm.reverse-search", true);
-||||||| merged common ancestors
-// Enable console input reverse-search in Nightly builds
-#if defined(NIGHTLY_BUILD)
-pref("devtools.webconsole.jsterm.reverse-search", true);
-#else
-pref("devtools.webconsole.jsterm.reverse-search", false);
-#endif
-=======
 // Enable editor mode in the console in Nightly builds.
 #if defined(NIGHTLY_BUILD)
 pref("devtools.webconsole.features.editor", true);
 #else
 pref("devtools.webconsole.features.editor", false);
 #endif
->>>>>>> upstream-releases
 
 // Saved editor mode state in the console.
 pref("devtools.webconsole.input.editor", false);
@@ -406,16 +360,6 @@ pref("devtools.responsive.showUserAgentInput", false);
 #endif
 
 // Enable new about:debugging.
-<<<<<<< HEAD
-pref("devtools.aboutdebugging.new-enabled", false);
-// Enable the network location feature.
-pref("devtools.aboutdebugging.network", false);
-// Enable the wifi feature.
-pref("devtools.aboutdebugging.wifi", false);
-// Stringified array of network locations that users can connect to.
-||||||| merged common ancestors
-pref("devtools.aboutdebugging.new-enabled", false);
-=======
 pref("devtools.aboutdebugging.new-enabled", true);
 
 // Show tab debug targets for This Firefox (on by default for local builds).
@@ -428,7 +372,6 @@ pref("devtools.aboutdebugging.new-enabled", true);
 // Show process debug targets.
 pref("devtools.aboutdebugging.process-debugging", true);
 // Stringified array of network locations that users can connect to.
->>>>>>> upstream-releases
 pref("devtools.aboutdebugging.network-locations", "[]");
 // Debug target pane collapse/expand settings.
 pref("devtools.aboutdebugging.collapsibilities.installedExtension", false);

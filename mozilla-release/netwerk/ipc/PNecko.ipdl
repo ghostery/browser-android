@@ -25,16 +25,9 @@ include protocol PChildToParentStream; //FIXME: bug #792908
 include protocol PParentToChildStream; //FIXME: bug #792908
 include protocol PStunAddrsRequest;
 include protocol PFileChannel;
-<<<<<<< HEAD
-include protocol PTrackingDummyChannel;
-include protocol PWebrtcProxyChannel;
-||||||| merged common ancestors
-include protocol PTrackingDummyChannel;
-=======
 include protocol PClassifierDummyChannel;
 include protocol PWebrtcProxyChannel;
 include protocol PSocketProcessBridge;
->>>>>>> upstream-releases
 
 include IPCStream;
 include URIParams;
@@ -72,15 +65,8 @@ nested(upto inside_cpow) sync protocol PNecko
   manages PTransportProvider;
   manages PAltDataOutputStream;
   manages PStunAddrsRequest;
-<<<<<<< HEAD
-  manages PTrackingDummyChannel;
-  manages PWebrtcProxyChannel;
-||||||| merged common ancestors
-  manages PTrackingDummyChannel;
-=======
   manages PClassifierDummyChannel;
   manages PWebrtcProxyChannel;
->>>>>>> upstream-releases
 
 parent:
   async __delete__();
@@ -148,14 +134,8 @@ parent:
 
   async PStunAddrsRequest();
 
-<<<<<<< HEAD
-  async PWebrtcProxyChannel(PBrowserOrId browser);
-
-||||||| merged common ancestors
-=======
   async PWebrtcProxyChannel(TabId tabId);
 
->>>>>>> upstream-releases
   /**
    * WebExtension-specific remote resource loading
    */

@@ -4,16 +4,10 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const { createFactory, PureComponent } = require("devtools/client/shared/vendor/react");
-||||||| merged common ancestors
-const { PureComponent } = require("devtools/client/shared/vendor/react");
-=======
 const {
   createFactory,
   PureComponent,
 } = require("devtools/client/shared/vendor/react");
->>>>>>> upstream-releases
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const { connect } = require("devtools/client/shared/vendor/react-redux");
@@ -26,12 +20,6 @@ const { getStr } = require("../utils/l10n");
 class ChangesApp extends PureComponent {
   static get propTypes() {
     return {
-<<<<<<< HEAD
-      // Nested CSS rule tree structure of CSS changes grouped by source (stylesheet)
-      changesTree: PropTypes.object.isRequired,
-||||||| merged common ancestors
-      changes: PropTypes.object.isRequired
-=======
       // Nested CSS rule tree structure of CSS changes grouped by source (stylesheet)
       changesTree: PropTypes.object.isRequired,
       // Event handler for "contextmenu" event
@@ -42,7 +30,6 @@ class ChangesApp extends PureComponent {
       onCopyAllChanges: PropTypes.func.isRequired,
       // Event handler for click on "Copy Rule" button
       onCopyRule: PropTypes.func.isRequired,
->>>>>>> upstream-releases
     };
   }
 
@@ -50,39 +37,6 @@ class ChangesApp extends PureComponent {
     super(props);
   }
 
-<<<<<<< HEAD
-  renderDeclarations(remove = [], add = []) {
-    const removals = remove
-      // Sorting changed declarations in the order they appear in the Rules view.
-      .sort((a, b) => a.index > b.index)
-      .map(({property, value, index}) => {
-        return CSSDeclaration({
-          key: "remove-" + property + index,
-          className: "level diff-remove",
-          property,
-          value,
-        });
-      });
-
-    const additions = add
-      // Sorting changed declarations in the order they appear in the Rules view.
-      .sort((a, b) => a.index > b.index)
-      .map(({property, value, index}) => {
-        return CSSDeclaration({
-          key: "add-" + property + index,
-          className: "level diff-add",
-          property,
-          value,
-        });
-      });
-||||||| merged common ancestors
-    const additions = Object.entries(add).map(([prop, value]) => {
-      return dom.div(
-        { className: "line diff-add"},
-        `${prop}: ${value};`
-      );
-    });
-=======
   renderCopyAllChangesButton() {
     const button = dom.button(
       {
@@ -139,60 +93,10 @@ class ChangesApp extends PureComponent {
           value,
         });
       });
->>>>>>> upstream-releases
 
     return [removals, additions];
   }
 
-<<<<<<< HEAD
-  renderRule(ruleId, rule, level = 0) {
-    const selector = rule.selector;
-
-    let diffClass = "";
-    if (rule.changeType === "rule-add") {
-      diffClass = "diff-add";
-    } else if (rule.changeType === "rule-remove") {
-      diffClass = "diff-remove";
-    }
-
-    return dom.div(
-      {
-        key: ruleId,
-        className: "rule devtools-monospace",
-        style: {
-          "--diff-level": level,
-        },
-      },
-      dom.div(
-        {
-          className: `level selector ${diffClass}`,
-          title: selector,
-        },
-        selector,
-        dom.span({ className: "bracket-open" }, "{")
-      ),
-      // Render any nested child rules if they exist.
-      rule.children.map(childRule => {
-        return this.renderRule(childRule.ruleId, childRule, level + 1);
-      }),
-      // Render any changed CSS declarations.
-      this.renderDeclarations(rule.remove, rule.add),
-      dom.div({ className: `level bracket-close ${diffClass}` }, "}")
-    );
-||||||| merged common ancestors
-  renderSelectors(selectors = {}) {
-    return Object.keys(selectors).map(sel => {
-      return dom.details(
-        { className: "selector", open: true },
-        dom.summary(
-          {
-            title: sel,
-          },
-          sel),
-        this.renderMutations(selectors[sel].remove, selectors[sel].add)
-      );
-    });
-=======
   renderRule(ruleId, rule, level = 0) {
     const diffClass = rule.isNew ? "diff-add" : "";
     return dom.div(
@@ -262,30 +166,8 @@ class ChangesApp extends PureComponent {
     }
 
     return elements;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  renderDiff(changes = {}) {
-    // Render groups of style sources: stylesheets and element style attributes.
-    return Object.entries(changes).map(([sourceId, source]) => {
-      const path = getSourceForDisplay(source);
-      const { href, rules, isFramed } = source;
-
-      return dom.div(
-        {
-          key: sourceId,
-          className: "source",
-        },
-        dom.div(
-||||||| merged common ancestors
-  renderDiff(diff = {}) {
-    // Render groups of style sources: stylesheets, embedded styles and inline styles
-    return Object.keys(diff).map(href => {
-      return dom.details(
-        { className: "source", open: true },
-        dom.summary(
-=======
   renderDiff(changes = {}) {
     // Render groups of style sources: stylesheets and element style attributes.
     return Object.entries(changes).map(([sourceId, source]) => {
@@ -299,7 +181,6 @@ class ChangesApp extends PureComponent {
           className: "source",
         },
         dom.div(
->>>>>>> upstream-releases
           {
             className: "href",
             title: href,
@@ -315,26 +196,6 @@ class ChangesApp extends PureComponent {
     });
   }
 
-<<<<<<< HEAD
-  renderFrameBadge(href = "") {
-    return dom.span(
-      {
-        className: "inspector-badge",
-        title: href,
-      },
-      getStr("changes.iframeLabel")
-    );
-  }
-
-  renderEmptyState() {
-    return dom.div({ className: "devtools-sidepanel-no-result" },
-      dom.p({}, getStr("changes.noChanges")),
-      dom.p({}, getStr("changes.noChangesDescription"))
-    );
-  }
-
-||||||| merged common ancestors
-=======
   renderFrameBadge(href = "") {
     return dom.span(
       {
@@ -353,47 +214,22 @@ class ChangesApp extends PureComponent {
     );
   }
 
->>>>>>> upstream-releases
   render() {
     const hasChanges = Object.keys(this.props.changesTree).length > 0;
     return dom.div(
       {
         className: "theme-sidebar inspector-tabpanel",
-<<<<<<< HEAD
-        id: "sidebar-panel-changes",
-||||||| merged common ancestors
-        id: "sidebar-panel-changes"
-=======
         id: "sidebar-panel-changes",
         onContextMenu: this.props.onContextMenu,
         onCopy: this.props.onCopy,
->>>>>>> upstream-releases
       },
-<<<<<<< HEAD
-      !hasChanges && this.renderEmptyState(),
-      hasChanges && this.renderDiff(this.props.changesTree)
-||||||| merged common ancestors
-      this.renderDiff(this.props.changes.diff)
-=======
       !hasChanges && this.renderEmptyState(),
       hasChanges && this.renderCopyAllChangesButton(),
       hasChanges && this.renderDiff(this.props.changesTree)
->>>>>>> upstream-releases
     );
   }
 }
 
-<<<<<<< HEAD
-const mapStateToProps = state => {
-  return {
-    changesTree: getChangesTree(state.changes),
-  };
-};
-
-module.exports = connect(mapStateToProps)(ChangesApp);
-||||||| merged common ancestors
-module.exports = connect(state => state)(ChangesApp);
-=======
 /**
  * Get a React element with text content of either a plus or minus sign according to
  * the given CSS class name used to mark added or removed lines in the changes diff view.
@@ -425,4 +261,3 @@ const mapStateToProps = state => {
 };
 
 module.exports = connect(mapStateToProps)(ChangesApp);
->>>>>>> upstream-releases

@@ -21,28 +21,6 @@ const {
   showFilePicker,
   optionsPopupMenu,
 } = require("resource://devtools/client/styleeditor/StyleEditorUtil.jsm");
-<<<<<<< HEAD
-const {SplitView} = require("resource://devtools/client/shared/SplitView.jsm");
-const {StyleSheetEditor} = require("resource://devtools/client/styleeditor/StyleSheetEditor.jsm");
-const {PluralForm} = require("devtools/shared/plural-form");
-const {PrefObserver} = require("devtools/client/shared/prefs");
-const {KeyCodes} = require("devtools/client/shared/keycodes");
-const {OriginalSource} = require("devtools/client/styleeditor/original-source");
-
-loader.lazyRequireGetter(this, "ResponsiveUIManager", "devtools/client/responsive.html/manager", true);
-loader.lazyRequireGetter(this, "openContentLink", "devtools/client/shared/link", true);
-loader.lazyRequireGetter(this, "copyString", "devtools/shared/platform/clipboard", true);
-||||||| merged common ancestors
-const {SplitView} = require("resource://devtools/client/shared/SplitView.jsm");
-const {StyleSheetEditor} = require("resource://devtools/client/styleeditor/StyleSheetEditor.jsm");
-const {PluralForm} = require("devtools/shared/plural-form");
-const {PrefObserver} = require("devtools/client/shared/prefs");
-const {KeyCodes} = require("devtools/client/shared/keycodes");
-const {OriginalSource} = require("devtools/client/styleeditor/original-source");
-
-loader.lazyRequireGetter(this, "ResponsiveUIManager", "devtools/client/responsive.html/manager", true);
-loader.lazyRequireGetter(this, "openContentLink", "devtools/client/shared/link", true);
-=======
 const {
   SplitView,
 } = require("resource://devtools/client/shared/SplitView.jsm");
@@ -74,7 +52,6 @@ loader.lazyRequireGetter(
   "devtools/shared/platform/clipboard",
   true
 );
->>>>>>> upstream-releases
 
 const LOAD_ERROR = "error-load";
 const STYLE_EDITOR_TEMPLATE = "stylesheet";
@@ -215,15 +192,6 @@ StyleEditorUI.prototype = {
       this._onOptionsButtonClick(event);
     });
 
-<<<<<<< HEAD
-    this._contextMenu = this._panelDoc.getElementById("sidebar-context");
-    this._contextMenu.addEventListener("popupshowing",
-                                       this._updateContextMenuItems);
-||||||| merged common ancestors
-    this._contextMenu = this._panelDoc.getElementById("sidebar-context");
-    this._contextMenu.addEventListener("popupshowing",
-                                       this._updateOpenLinkItem);
-=======
     this._panelDoc.addEventListener(
       "contextmenu",
       () => {
@@ -231,7 +199,6 @@ StyleEditorUI.prototype = {
       },
       true
     );
->>>>>>> upstream-releases
 
     this._optionsButton = this._panelDoc.getElementById("style-editor-options");
 
@@ -245,9 +212,6 @@ StyleEditorUI.prototype = {
       "context-openlinknewtab"
     );
     this._openLinkNewTabItem.addEventListener("command", this._openLinkNewTab);
-
-    this._copyUrlItem = this._panelDoc.getElementById("context-copyurl");
-    this._copyUrlItem.addEventListener("command", this._copyUrl);
 
     this._copyUrlItem = this._panelDoc.getElementById("context-copyurl");
     this._copyUrlItem.addEventListener("command", this._copyUrl);
@@ -380,23 +344,12 @@ StyleEditorUI.prototype = {
       const promise = (async () => {
         let editor = await this._addStyleSheetEditor(styleSheet, isNew);
 
-<<<<<<< HEAD
-        const toolbox = gDevTools.getToolbox(this._target);
-        const sourceMapService = toolbox.sourceMapService;
-
-        if (!sourceMapService || !Services.prefs.getBoolPref(PREF_ORIG_SOURCES)) {
-||||||| merged common ancestors
-        const toolbox = gDevTools.getToolbox(this._target);
-        const sourceMapService = toolbox.sourceMapService;
-        if (!sourceMapService) {
-=======
         const sourceMapService = this._toolbox.sourceMapService;
 
         if (
           !sourceMapService ||
           !Services.prefs.getBoolPref(PREF_ORIG_SOURCES)
         ) {
->>>>>>> upstream-releases
           return editor;
         }
 
@@ -578,17 +531,6 @@ StyleEditorUI.prototype = {
    * 3) There was no stylesheet clicked on (the right click happened
    * below the list): hide the context menu
    */
-<<<<<<< HEAD
-  _updateContextMenuItems: function() {
-    this._openLinkNewTabItem.setAttribute("hidden",
-                                          !this._contextMenuStyleSheet);
-    this._copyUrlItem.setAttribute("hidden", !this._contextMenuStyleSheet);
-
-||||||| merged common ancestors
-  _updateOpenLinkItem: function() {
-    this._openLinkNewTabItem.setAttribute("hidden",
-                                          !this._contextMenuStyleSheet);
-=======
   _updateContextMenuItems: function() {
     this._openLinkNewTabItem.setAttribute(
       "hidden",
@@ -596,16 +538,7 @@ StyleEditorUI.prototype = {
     );
     this._copyUrlItem.setAttribute("hidden", !this._contextMenuStyleSheet);
 
->>>>>>> upstream-releases
     if (this._contextMenuStyleSheet) {
-<<<<<<< HEAD
-      this._openLinkNewTabItem.setAttribute("disabled",
-                                            !this._contextMenuStyleSheet.href);
-      this._copyUrlItem.setAttribute("disabled", !this._contextMenuStyleSheet.href);
-||||||| merged common ancestors
-      this._openLinkNewTabItem.setAttribute("disabled",
-                                            !this._contextMenuStyleSheet.href);
-=======
       this._openLinkNewTabItem.setAttribute(
         "disabled",
         !this._contextMenuStyleSheet.href
@@ -614,7 +547,6 @@ StyleEditorUI.prototype = {
         "disabled",
         !this._contextMenuStyleSheet.href
       );
->>>>>>> upstream-releases
     }
   },
 
@@ -785,63 +717,9 @@ StyleEditorUI.prototype = {
           showEditor.onShow();
 
           this.emit("editor-selected", showEditor);
-<<<<<<< HEAD
-
-          // Is there any CSS coverage markup to include?
-          const usage = await this._target.getFront("cssUsage");
-          if (usage == null) {
-            return;
-          }
-
-          const sheet = showEditor.styleSheet;
-          const {reports} = await usage.createEditorReportForSheet(sheet);
-
-          showEditor.removeAllUnusedRegions();
-
-          if (reports.length > 0) {
-            // Only apply if this file isn't compressed. We detect a
-            // compressed file if there are more rules than lines.
-            const editorText = showEditor.sourceEditor.getText();
-            const lineCount = editorText.split("\n").length;
-            const ruleCount = showEditor.styleSheet.ruleCount;
-            if (lineCount >= ruleCount) {
-              showEditor.addUnusedRegions(reports);
-            } else {
-              this.emit("error", { key: "error-compressed", level: "info" });
-            }
-          }
-        }.bind(this))().catch(console.error);
-||||||| merged common ancestors
-
-          // Is there any CSS coverage markup to include?
-          const usage = this._target.getFront("cssUsage");
-          if (usage == null) {
-            return;
-          }
-
-          const sheet = showEditor.styleSheet;
-          const {reports} = await usage.createEditorReportForSheet(sheet);
-
-          showEditor.removeAllUnusedRegions();
-
-          if (reports.length > 0) {
-            // Only apply if this file isn't compressed. We detect a
-            // compressed file if there are more rules than lines.
-            const editorText = showEditor.sourceEditor.getText();
-            const lineCount = editorText.split("\n").length;
-            const ruleCount = showEditor.styleSheet.ruleCount;
-            if (lineCount >= ruleCount) {
-              showEditor.addUnusedRegions(reports);
-            } else {
-              this.emit("error", { key: "error-compressed", level: "info" });
-            }
-          }
-        }.bind(this))().catch(console.error);
-=======
         }
           .bind(this)()
           .catch(console.error));
->>>>>>> upstream-releases
       },
     });
   },

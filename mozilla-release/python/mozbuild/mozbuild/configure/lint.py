@@ -31,17 +31,10 @@ class LintSandbox(ConfigureSandbox):
         environ = environ or {}
         argv = argv or []
         self._wrapped = {}
-<<<<<<< HEAD
-        self._bool_options = []
-        self._bool_func_options = []
-        self.LOG = ""
-||||||| merged common ancestors
-=======
         self._has_imports = set()
         self._bool_options = []
         self._bool_func_options = []
         self.LOG = ""
->>>>>>> upstream-releases
         super(LintSandbox, self).__init__({}, environ=environ, argv=argv,
                                           stdout=stdout, stderr=stderr)
 
@@ -200,85 +193,12 @@ class LintSandbox(ConfigureSandbox):
         result = super(LintSandbox, self).option_impl(*args, **kwargs)
         when = self._conditions.get(result)
         if when:
-<<<<<<< HEAD
-            self._value_for(when, need_help_dependency=True)
-
-        self._check_option(result, *args, **kwargs)
-
-||||||| merged common ancestors
-            self._value_for(when, need_help_dependency=True)
-=======
             self._value_for(when)
 
         self._check_option(result, *args, **kwargs)
 
->>>>>>> upstream-releases
         return result
 
-<<<<<<< HEAD
-    def _check_option(self, option, *args, **kwargs):
-        if 'default' not in kwargs:
-            return
-        if len(args) == 0:
-            return
-
-        self._check_prefix_for_bool_option(*args, **kwargs)
-        self._check_help_for_option_with_func_default(option, *args, **kwargs)
-
-    def _check_prefix_for_bool_option(self, *args, **kwargs):
-        name = args[0]
-        default = kwargs['default']
-
-        if type(default) != bool:
-            return
-
-        table = {
-            True: {
-                'enable': 'disable',
-                'with': 'without',
-            },
-            False: {
-                'disable': 'enable',
-                'without': 'with',
-            }
-        }
-        for prefix, replacement in table[default].iteritems():
-            if name.startswith('--{}-'.format(prefix)):
-                raise ConfigureError(('{} should be used instead of '
-                                      '{} with default={}').format(
-                                          name.replace('--{}-'.format(prefix),
-                                                       '--{}-'.format(replacement)),
-                                          name, default))
-
-    def _check_help_for_option_with_func_default(self, option, *args, **kwargs):
-        name = args[0]
-        default = kwargs['default']
-
-        if not isinstance(default, SandboxDependsFunction):
-            return
-
-        if not option.prefix:
-            return
-
-        default = self._resolve(default)
-        if type(default) in (str, unicode):
-            return
-
-        help = kwargs['help']
-        match = re.search(HelpFormatter.RE_FORMAT, help)
-        if match:
-            return
-
-        if option.prefix in ('enable', 'disable'):
-            rule = '{Enable|Disable}'
-        else:
-            rule = '{With|Without}'
-
-        raise ConfigureError(('{} has a non-constant default. '
-                              'Its help should contain "{}"').format(name, rule))
-
-||||||| merged common ancestors
-=======
     def _check_option(self, option, *args, **kwargs):
         if 'default' not in kwargs:
             return
@@ -348,7 +268,6 @@ class LintSandbox(ConfigureSandbox):
             .format(rule))
         self._raise_from(e, frame.f_back if frame else None)
 
->>>>>>> upstream-releases
     def unwrap(self, func):
         glob = func.__globals__
         while func in self._wrapped:

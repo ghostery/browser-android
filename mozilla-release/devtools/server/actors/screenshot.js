@@ -15,17 +15,6 @@ exports.ScreenshotActor = protocol.ActorClassWithSpec(screenshotSpec, {
   },
 
   capture: function(args) {
-<<<<<<< HEAD
-    if (args.nodeActorID) {
-      const nodeActor = this.conn.getActor(args.nodeActorID);
-      if (!nodeActor) {
-        throw new Error(
-          `Screenshot actor failed to find Node actor for '${args.nodeActorID}'`);
-      }
-      args.rawNode = nodeActor.rawNode;
-    }
-||||||| merged common ancestors
-=======
     if (args.nodeActorID) {
       const nodeActor = this.conn.getActor(args.nodeActorID);
       if (!nodeActor) {
@@ -35,7 +24,6 @@ exports.ScreenshotActor = protocol.ActorClassWithSpec(screenshotSpec, {
       }
       args.rawNode = nodeActor.rawNode;
     }
->>>>>>> upstream-releases
     return captureScreenshot(args, this.document);
   },
 });

@@ -84,20 +84,8 @@ ScreenHelperAndroid::ScreenHelperAndroid() {
 
 ScreenHelperAndroid::~ScreenHelperAndroid() { gHelper = nullptr; }
 
-<<<<<<< HEAD
-/* static */ ScreenHelperAndroid* ScreenHelperAndroid::GetSingleton() {
-  return gHelper;
-}
-||||||| merged common ancestors
-/* static */ ScreenHelperAndroid*
-ScreenHelperAndroid::GetSingleton()
-{
-    return gHelper;
-}
-=======
 /* static */
 ScreenHelperAndroid* ScreenHelperAndroid::GetSingleton() { return gHelper; }
->>>>>>> upstream-releases
 
 void ScreenHelperAndroid::Refresh() {
   mScreens.Remove(0);

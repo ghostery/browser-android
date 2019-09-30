@@ -657,13 +657,7 @@ test(t => {
   // Test inheriting a background-size value
 
   expected[0].backgroundSize = div.style.backgroundSize =
-<<<<<<< HEAD
-    "30px auto, 40% auto, auto";
-||||||| merged common ancestors
-    "30px auto, 40% auto, auto auto";
-=======
     "30px, 40%, auto";
->>>>>>> upstream-releases
   frames = getKeyframes(div);
 
   for (let i = 0; i < frames.length; i++) {

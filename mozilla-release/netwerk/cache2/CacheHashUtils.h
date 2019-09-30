@@ -10,28 +10,12 @@
 #include "prnetdb.h"
 #include "nsPrintfCString.h"
 
-<<<<<<< HEAD
-#define LOGSHA1(x)                                          \
-  PR_htonl((reinterpret_cast<const uint32_t *>(x))[0]),     \
-      PR_htonl((reinterpret_cast<const uint32_t *>(x))[1]), \
-      PR_htonl((reinterpret_cast<const uint32_t *>(x))[2]), \
-      PR_htonl((reinterpret_cast<const uint32_t *>(x))[3]), \
-      PR_htonl((reinterpret_cast<const uint32_t *>(x))[4])
-||||||| merged common ancestors
-#define LOGSHA1(x) \
-    PR_htonl((reinterpret_cast<const uint32_t *>(x))[0]), \
-    PR_htonl((reinterpret_cast<const uint32_t *>(x))[1]), \
-    PR_htonl((reinterpret_cast<const uint32_t *>(x))[2]), \
-    PR_htonl((reinterpret_cast<const uint32_t *>(x))[3]), \
-    PR_htonl((reinterpret_cast<const uint32_t *>(x))[4])
-=======
 #define LOGSHA1(x)                                         \
   PR_htonl((reinterpret_cast<const uint32_t*>(x))[0]),     \
       PR_htonl((reinterpret_cast<const uint32_t*>(x))[1]), \
       PR_htonl((reinterpret_cast<const uint32_t*>(x))[2]), \
       PR_htonl((reinterpret_cast<const uint32_t*>(x))[3]), \
       PR_htonl((reinterpret_cast<const uint32_t*>(x))[4])
->>>>>>> upstream-releases
 
 #define SHA1STRING(x) \
   (nsPrintfCString("%08x%08x%08x%08x%08x", LOGSHA1(x)).get())
@@ -49,31 +33,14 @@ class CacheHash : public nsISupports {
   typedef uint16_t Hash16_t;
   typedef uint32_t Hash32_t;
 
-<<<<<<< HEAD
-  static Hash32_t Hash(const char *aData, uint32_t aSize,
-                       uint32_t aInitval = 0);
-  static Hash16_t Hash16(const char *aData, uint32_t aSize,
-                         uint32_t aInitval = 0);
-||||||| merged common ancestors
-  static Hash32_t Hash(const char* aData, uint32_t aSize, uint32_t aInitval=0);
-  static Hash16_t Hash16(const char* aData, uint32_t aSize,
-                         uint32_t aInitval=0);
-=======
   static Hash32_t Hash(const char* aData, uint32_t aSize,
                        uint32_t aInitval = 0);
   static Hash16_t Hash16(const char* aData, uint32_t aSize,
                          uint32_t aInitval = 0);
->>>>>>> upstream-releases
 
   explicit CacheHash(uint32_t aInitval = 0);
 
-<<<<<<< HEAD
-  void Update(const char *aData, uint32_t aLen);
-||||||| merged common ancestors
-  void     Update(const char *aData, uint32_t aLen);
-=======
   void Update(const char* aData, uint32_t aLen);
->>>>>>> upstream-releases
   Hash32_t GetHash();
   Hash16_t GetHash16();
 

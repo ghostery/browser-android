@@ -107,15 +107,8 @@ class MediaSink {
 
   // Begin a playback session with the provided start time and media info.
   // Must be called when playback is stopped.
-<<<<<<< HEAD
-  virtual nsresult Start(const TimeUnit& aStartTime,
-                         const MediaInfo& aInfo) = 0;
-||||||| merged common ancestors
-  virtual nsresult Start(const TimeUnit& aStartTime, const MediaInfo& aInfo) = 0;
-=======
   virtual nsresult Start(const media::TimeUnit& aStartTime,
                          const MediaInfo& aInfo) = 0;
->>>>>>> upstream-releases
 
   // Finish a playback session.
   // Must be called after playback starts.
@@ -139,26 +132,10 @@ class MediaSink {
 
   virtual void GetDebugInfo(dom::MediaSinkDebugInfo& aInfo) {}
 
-<<<<<<< HEAD
- protected:
-  virtual ~MediaSink() {}
-||||||| merged common ancestors
-protected:
-  virtual ~MediaSink() {}
-=======
  protected:
   virtual ~MediaSink() = default;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-}  // namespace media
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace media
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // MediaSink_h_

@@ -8,20 +8,6 @@
 
 use crate::applicable_declarations::ApplicableDeclarationList;
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::gecko::selector_parser::PseudoElement;
-use crate::properties::{Importance, LonghandIdSet, PropertyDeclarationBlock};
-use crate::shared_lock::{Locked, SharedRwLockReadGuard, StylesheetGuards};
-use crate::stylesheets::StyleRule;
-use crate::thread_state;
-#[cfg(feature = "gecko")]
-use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
-||||||| merged common ancestors
-use gecko::selector_parser::PseudoElement;
-#[cfg(feature = "gecko")]
-use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
-use properties::{Importance, LonghandIdSet, PropertyDeclarationBlock};
-=======
 use crate::gecko::selector_parser::PseudoElement;
 use crate::hash::{self, FxHashMap};
 use crate::properties::{Importance, LonghandIdSet, PropertyDeclarationBlock};
@@ -30,7 +16,6 @@ use crate::stylesheets::{Origin, StyleRule};
 use crate::thread_state;
 use malloc_size_of::{MallocShallowSizeOf, MallocSizeOf, MallocSizeOfOps};
 use parking_lot::RwLock;
->>>>>>> upstream-releases
 use servo_arc::{Arc, ArcBorrow, ArcUnion, ArcUnionBorrow};
 use smallvec::SmallVec;
 use std::io::{self, Write};
@@ -1344,27 +1329,12 @@ impl StrongRuleNode {
     where
         E: crate::dom::TElement,
     {
-<<<<<<< HEAD
-        use crate::gecko_bindings::structs::NS_AUTHOR_SPECIFIED_BACKGROUND;
-        use crate::gecko_bindings::structs::NS_AUTHOR_SPECIFIED_BORDER;
-        use crate::gecko_bindings::structs::NS_AUTHOR_SPECIFIED_PADDING;
-        use crate::properties::{CSSWideKeyword, LonghandId, LonghandIdSet};
-        use crate::properties::{PropertyDeclaration, PropertyDeclarationId};
-        use crate::values::specified::Color;
-||||||| merged common ancestors
-        use gecko_bindings::structs::NS_AUTHOR_SPECIFIED_BACKGROUND;
-        use gecko_bindings::structs::NS_AUTHOR_SPECIFIED_BORDER;
-        use gecko_bindings::structs::NS_AUTHOR_SPECIFIED_PADDING;
-        use properties::{CSSWideKeyword, LonghandId, LonghandIdSet};
-        use properties::{PropertyDeclaration, PropertyDeclarationId};
-=======
         use crate::gecko_bindings::structs::NS_AUTHOR_SPECIFIED_BACKGROUND;
         use crate::gecko_bindings::structs::NS_AUTHOR_SPECIFIED_BORDER;
         use crate::gecko_bindings::structs::NS_AUTHOR_SPECIFIED_PADDING;
         use crate::properties::{CSSWideKeyword, LonghandId};
         use crate::properties::{PropertyDeclaration, PropertyDeclarationId};
         use crate::values::specified::Color;
->>>>>>> upstream-releases
         use std::borrow::Cow;
 
         // Reset properties:

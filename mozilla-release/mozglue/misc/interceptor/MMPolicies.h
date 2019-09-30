@@ -8,29 +8,16 @@
 #define mozilla_interceptor_MMPolicies_h
 
 #include "mozilla/Assertions.h"
-<<<<<<< HEAD
-#include "mozilla/TypedEnumBits.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/DynamicallyLinkedFunctionPtr.h"
 #include "mozilla/MathAlgorithms.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/Span.h"
 #include "mozilla/TypedEnumBits.h"
->>>>>>> upstream-releases
 #include "mozilla/Types.h"
 #include "mozilla/WindowsMapRemoteView.h"
 
 #include <windows.h>
 
-<<<<<<< HEAD
-// _CRT_RAND_S is not defined everywhere, but we need it.
-#if !defined(_CRT_RAND_S)
-extern "C" errno_t rand_s(unsigned int* randomValue);
-#endif  // !defined(_CRT_RAND_S)
-
-||||||| merged common ancestors
-=======
 // MinGW does not have these definitions yet
 #if defined(__MINGW32__)
 typedef struct _MEM_ADDRESS_REQUIREMENTS {
@@ -86,28 +73,9 @@ PVOID WINAPI MapViewOfFile3(HANDLE FileMapping, HANDLE Process,
 extern "C" errno_t rand_s(unsigned int* randomValue);
 #endif  // !defined(_CRT_RAND_S)
 
->>>>>>> upstream-releases
 namespace mozilla {
 namespace interceptor {
 
-<<<<<<< HEAD
-enum class ReservationFlags : uint32_t {
-  eDefault = 0,
-  eForceFirst2GB = 1,
-};
-
-MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(ReservationFlags)
-
-class MMPolicyBase {
- public:
-  static DWORD ComputeAllocationSize(const uint32_t aRequestedSize) {
-||||||| merged common ancestors
-class MMPolicyBase
-{
-public:
-  static DWORD ComputeAllocationSize(const uint32_t aRequestedSize)
-  {
-=======
 class MOZ_TRIVIAL_CTOR_DTOR MMPolicyBase {
  protected:
   static uintptr_t AlignDown(const uintptr_t aUnaligned,
@@ -126,7 +94,6 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyBase {
 
  public:
   static DWORD ComputeAllocationSize(const uint32_t aRequestedSize) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aRequestedSize);
     DWORD result = aRequestedSize;
 
@@ -159,101 +126,6 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyBase {
 
     return kPageSize;
   }
-<<<<<<< HEAD
-
-#if defined(_M_X64)
-
-  /**
-   * This function locates a virtual memory region of |aDesiredBytesLen| that
-   * resides in the lowest 2GB of address space. We do this by scanning the
-   * virtual memory space for a block of unallocated memory that is sufficiently
-   * large. We must stay below the 2GB mark because a 10-byte patch uses movsxd
-   * (ie, sign extension) to expand the pointer to 64-bits, so bit 31 of the
-   * found region must be 0.
-   */
-  static PVOID FindLowRegion(HANDLE aProcess, const size_t aDesiredBytesLen) {
-    const DWORD granularity = GetAllocGranularity();
-
-    MOZ_ASSERT(aDesiredBytesLen / granularity > 0);
-    if (!aDesiredBytesLen) {
-      return nullptr;
-    }
-
-    // Generate a randomized base address that falls within the interval
-    // [1MiB, 2GiB - aDesiredBytesLen]
-    unsigned int rnd = 0;
-    rand_s(&rnd);
-
-    // Reduce rnd to a value that falls within the acceptable range
-    const uint64_t kMinAddress = 0x0000000000100000ULL;
-    const uint64_t kMaxAddress = 0x0000000080000000ULL;
-    uint64_t maxOffset =
-        (kMaxAddress - kMinAddress - aDesiredBytesLen) / granularity;
-    uint64_t offset = (uint64_t(rnd) % maxOffset) * granularity;
-
-    // Start searching at this address
-    char* address = reinterpret_cast<char*>(kMinAddress) + offset;
-    // The max address needs to incorporate the desired length
-    char* const kMaxPtr =
-        reinterpret_cast<char*>(kMaxAddress) - aDesiredBytesLen;
-
-    MOZ_DIAGNOSTIC_ASSERT(address <= kMaxPtr);
-
-    MEMORY_BASIC_INFORMATION mbi = {};
-    SIZE_T len = sizeof(mbi);
-
-    // Scan the range for a free chunk that is at least as large as
-    // aDesiredBytesLen
-    while (address <= kMaxPtr &&
-           ::VirtualQueryEx(aProcess, address, &mbi, len)) {
-      if (mbi.State == MEM_FREE && mbi.RegionSize >= aDesiredBytesLen) {
-        return mbi.BaseAddress;
-      }
-
-      address = reinterpret_cast<char*>(mbi.BaseAddress) + mbi.RegionSize;
-    }
-
-    return nullptr;
-  }
-
-#endif  // defined(_M_X64)
-
-  template <typename ReserveFnT>
-  static PVOID Reserve(HANDLE aProcess, const uint32_t aSize,
-                       const ReserveFnT& aReserveFn,
-                       const ReservationFlags aFlags) {
-#if defined(_M_X64)
-    if (aFlags & ReservationFlags::eForceFirst2GB) {
-      size_t curAttempt = 0;
-      const size_t kMaxAttempts = 8;
-
-      // We loop here because |FindLowRegion| may return a base address that
-      // is reserved elsewhere before we have had a chance to reserve it
-      // ourselves.
-      while (curAttempt < kMaxAttempts) {
-        PVOID base = FindLowRegion(aProcess, aSize);
-        if (!base) {
-          return nullptr;
-        }
-
-        PVOID result = aReserveFn(aProcess, base, aSize);
-        if (result) {
-          return result;
-        }
-
-        ++curAttempt;
-      }
-
-      // If we run out of attempts, we fall through to the default case where
-      // the system chooses any base address it wants. In that case, the hook
-      // will be set on a best-effort basis.
-    }
-#endif  // defined(_M_X64)
-
-    return aReserveFn(aProcess, nullptr, aSize);
-  }
-||||||| merged common ancestors
-=======
 
   static uintptr_t GetMaxUserModeAddress() {
     static const uintptr_t kMaxUserModeAddr = []() -> uintptr_t {
@@ -478,36 +350,14 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyBase {
 
     return aReserveFn(aProcess, nullptr, aSize);
   }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-class MMPolicyInProcess : public MMPolicyBase {
- public:
-||||||| merged common ancestors
-class MMPolicyInProcess : public MMPolicyBase
-{
-public:
-=======
 class MOZ_TRIVIAL_CTOR_DTOR MMPolicyInProcess : public MMPolicyBase {
  public:
->>>>>>> upstream-releases
   typedef MMPolicyInProcess MMPolicyT;
 
-<<<<<<< HEAD
-  explicit MMPolicyInProcess()
-      : mBase(nullptr), mReservationSize(0), mCommitOffset(0) {}
-||||||| merged common ancestors
-  explicit MMPolicyInProcess()
-    : mBase(nullptr)
-    , mReservationSize(0)
-    , mCommitOffset(0)
-  {
-  }
-=======
   constexpr MMPolicyInProcess()
       : mBase(nullptr), mReservationSize(0), mCommitOffset(0) {}
->>>>>>> upstream-releases
 
   MMPolicyInProcess(const MMPolicyInProcess&) = delete;
   MMPolicyInProcess& operator=(const MMPolicyInProcess&) = delete;
@@ -530,22 +380,7 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyInProcess : public MMPolicyBase {
     return *this;
   }
 
-<<<<<<< HEAD
-  // We always leak mBase
-  ~MMPolicyInProcess() = default;
-
   explicit operator bool() const { return !!mBase; }
-||||||| merged common ancestors
-  // We always leak mBase
-  ~MMPolicyInProcess() = default;
-
-  explicit operator bool() const
-  {
-    return !!mBase;
-  }
-=======
-  explicit operator bool() const { return !!mBase; }
->>>>>>> upstream-releases
 
   /**
    * Should we unhook everything upon destruction?
@@ -605,27 +440,12 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyInProcess : public MMPolicyBase {
     return (mBase + mReservationSize) <=
            reinterpret_cast<uint8_t*>(0x0000000080000000ULL);
   }
-<<<<<<< HEAD
-#endif  // defined(_M_X64)
-||||||| merged common ancestors
-=======
 #endif  // defined(_M_X64)
 
  protected:
   uint8_t* GetLocalView() const { return mBase; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- protected:
-  uint8_t* GetLocalView() const { return mBase; }
 
   uintptr_t GetRemoteView() const {
-||||||| merged common ancestors
-  uintptr_t GetRemoteView() const
-  {
-=======
-  uintptr_t GetRemoteView() const {
->>>>>>> upstream-releases
     // Same as local view for in-process
     return reinterpret_cast<uintptr_t>(mBase);
   }
@@ -633,15 +453,8 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyInProcess : public MMPolicyBase {
   /**
    * @return the effective number of bytes reserved, or 0 on failure
    */
-<<<<<<< HEAD
-  uint32_t Reserve(const uint32_t aSize, const ReservationFlags aFlags) {
-||||||| merged common ancestors
-  uint32_t Reserve(const uint32_t aSize)
-  {
-=======
   uint32_t Reserve(const uint32_t aSize,
                    const Maybe<Span<const uint8_t>>& aBounds) {
->>>>>>> upstream-releases
     if (!aSize) {
       return 0;
     }
@@ -652,19 +465,6 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyInProcess : public MMPolicyBase {
     }
 
     mReservationSize = ComputeAllocationSize(aSize);
-<<<<<<< HEAD
-
-    auto reserveFn = [](HANDLE aProcess, PVOID aBase, uint32_t aSize) -> PVOID {
-      return ::VirtualAlloc(aBase, aSize, MEM_RESERVE, PAGE_NOACCESS);
-    };
-
-    mBase = static_cast<uint8_t*>(MMPolicyBase::Reserve(
-        ::GetCurrentProcess(), mReservationSize, reserveFn, aFlags));
-
-||||||| merged common ancestors
-    mBase = static_cast<uint8_t*>(::VirtualAlloc(nullptr, mReservationSize,
-                                                 MEM_RESERVE, PAGE_NOACCESS));
-=======
 
     auto reserveFn = [](HANDLE aProcess, PVOID aBase, uint32_t aSize) -> PVOID {
       return ::VirtualAlloc(aBase, aSize, MEM_RESERVE, PAGE_NOACCESS);
@@ -696,7 +496,6 @@ class MOZ_TRIVIAL_CTOR_DTOR MMPolicyInProcess : public MMPolicyBase {
         MMPolicyBase::Reserve(::GetCurrentProcess(), mReservationSize,
                               reserveFn, reserveWithinRangeFn, aBounds));
 
->>>>>>> upstream-releases
     if (!mBase) {
       return 0;
     }
@@ -875,42 +674,20 @@ class MMPolicyOutOfProcess : public MMPolicyBase {
   bool IsTrampolineSpaceInLowest2GB() const {
     return (GetRemoteView() + mReservationSize) <= 0x0000000080000000ULL;
   }
-<<<<<<< HEAD
 #endif  // defined(_M_X64)
 
  protected:
   uint8_t* GetLocalView() const { return mLocalView; }
-||||||| merged common ancestors
-=======
-#endif  // defined(_M_X64)
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  uintptr_t GetRemoteView() const {
-||||||| merged common ancestors
-  uintptr_t GetRemoteView() const
-  {
-=======
- protected:
-  uint8_t* GetLocalView() const { return mLocalView; }
 
   uintptr_t GetRemoteView() const {
->>>>>>> upstream-releases
     return reinterpret_cast<uintptr_t>(mRemoteView);
   }
 
   /**
    * @return the effective number of bytes reserved, or 0 on failure
    */
-<<<<<<< HEAD
-  uint32_t Reserve(const uint32_t aSize, const ReservationFlags aFlags) {
-||||||| merged common ancestors
-  uint32_t Reserve(const uint32_t aSize)
-  {
-=======
   uint32_t Reserve(const uint32_t aSize,
                    const Maybe<Span<const uint8_t>>& aBounds) {
->>>>>>> upstream-releases
     if (!aSize || !mProcess) {
       return 0;
     }
@@ -935,19 +712,6 @@ class MMPolicyOutOfProcess : public MMPolicyBase {
       return 0;
     }
 
-<<<<<<< HEAD
-    auto reserveFn = [mapping = mMapping](HANDLE aProcess, PVOID aBase,
-                                          uint32_t aSize) -> PVOID {
-      return mozilla::MapRemoteViewOfFile(mapping, aProcess, 0ULL, aBase, 0, 0,
-                                          PAGE_EXECUTE_READ);
-    };
-
-    mRemoteView =
-        MMPolicyBase::Reserve(mProcess, mReservationSize, reserveFn, aFlags);
-||||||| merged common ancestors
-    mRemoteView = MapRemoteViewOfFile(mMapping, mProcess, 0ULL,
-                                      nullptr, 0, 0, PAGE_EXECUTE_READ);
-=======
     auto reserveFn = [mapping = mMapping](HANDLE aProcess, PVOID aBase,
                                           uint32_t aSize) -> PVOID {
       return mozilla::MapRemoteViewOfFile(mapping, aProcess, 0ULL, aBase, 0, 0,
@@ -979,7 +743,6 @@ class MMPolicyOutOfProcess : public MMPolicyBase {
 
     mRemoteView = MMPolicyBase::Reserve(mProcess, mReservationSize, reserveFn,
                                         reserveWithinRangeFn, aBounds);
->>>>>>> upstream-releases
     if (!mRemoteView) {
       return 0;
     }

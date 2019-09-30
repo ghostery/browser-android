@@ -74,42 +74,14 @@ notification.heartbeat {
 }
 
 /* Learn More link styles */
-<<<<<<< HEAD
 .heartbeat > hbox > .text-link {
-  color: #0095DD !important;
-||||||| merged common ancestors
-.heartbeat > .text-link {
-  color: #0095DD !important;
-=======
-.heartbeat > hbox > .text-link {
->>>>>>> upstream-releases
   margin-inline-start: 0 !important;
 }
 
-<<<<<<< HEAD
 .heartbeat > hbox > .text-link:hover {
-  color: #008ACB !important;
-||||||| merged common ancestors
-.heartbeat > .text-link:hover {
-  color: #008ACB !important;
-=======
-.heartbeat > hbox > .text-link:hover {
->>>>>>> upstream-releases
   text-decoration: none !important;
 }
 
-<<<<<<< HEAD
-.heartbeat > hbox > .text-link:hover:active {
-  color: #006B9D !important;
-}
-
-||||||| merged common ancestors
-.heartbeat > .text-link:hover:active {
-  color: #006B9D !important;
-}
-
-=======
->>>>>>> upstream-releases
 /* Heartbeat UI Rating Star Classes */
 #star-rating-container {
   display: -moz-box;

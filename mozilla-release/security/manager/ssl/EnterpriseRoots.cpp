@@ -12,21 +12,11 @@
 #include "mozpkix/Result.h"
 
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-#include <Security/Security.h>
-#include "KeychainSecret.h"  // for ScopedCFType
-#endif                       // XP_MACOSX
-||||||| merged common ancestors
-#include <Security/Security.h>
-#include "KeychainSecret.h" // for ScopedCFType
-#endif // XP_MACOSX
-=======
 #  include <Security/Security.h>
 #  include "KeychainSecret.h"  // for ScopedCFType
 
 #  include "nsCocoaFeatures.h"
 #endif  // XP_MACOSX
->>>>>>> upstream-releases
 
 extern LazyLogModule gPIPNSSLog;
 
@@ -70,18 +60,10 @@ const wchar_t* kWindowsDefaultRootStoreNames[] = {L"ROOT", L"CA"};
 // in some way unsuitable to issue certificates, mozilla::pkix will never build
 // a valid chain that includes the certificate, so importing it even if it
 // isn't a valid CA poses no risk.
-<<<<<<< HEAD
-static bool CertIsTrustAnchorForTLSServerAuth(PCCERT_CONTEXT certificate) {
-||||||| merged common ancestors
-static bool
-CertIsTrustAnchorForTLSServerAuth(PCCERT_CONTEXT certificate)
-{
-=======
 static void CertIsTrustAnchorForTLSServerAuth(PCCERT_CONTEXT certificate,
                                               bool& isTrusted, bool& isRoot) {
   isTrusted = false;
   isRoot = false;
->>>>>>> upstream-releases
   MOZ_ASSERT(certificate);
   if (!certificate) {
     return;
@@ -110,25 +92,6 @@ static void CertIsTrustAnchorForTLSServerAuth(PCCERT_CONTEXT certificate,
     MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("CertGetCertificateChain failed"));
     return;
   }
-<<<<<<< HEAD
-  bool trusted =
-      pChainContext->TrustStatus.dwErrorStatus == CERT_TRUST_NO_ERROR;
-  bool isRoot = pChainContext->cChain == 1;
-  CertFreeCertificateChain(pChainContext);
-  if (trusted && isRoot) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("certificate is trust anchor for TLS server auth"));
-    return true;
-||||||| merged common ancestors
-  bool trusted = pChainContext->TrustStatus.dwErrorStatus ==
-                 CERT_TRUST_NO_ERROR;
-  bool isRoot = pChainContext->cChain == 1;
-  CertFreeCertificateChain(pChainContext);
-  if (trusted && isRoot) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("certificate is trust anchor for TLS server auth"));
-    return true;
-=======
   isTrusted = pChainContext->TrustStatus.dwErrorStatus == CERT_TRUST_NO_ERROR;
   if (isTrusted && pChainContext->cChain > 0) {
     // The so-called "final chain" is what we're after:
@@ -138,7 +101,6 @@ static void CertIsTrustAnchorForTLSServerAuth(PCCERT_CONTEXT certificate,
     // This is a root if the final chain consists of only one certificate (i.e.
     // this one).
     isRoot = finalChain->cElement == 1;
->>>>>>> upstream-releases
   }
   CertFreeCertificateChain(pChainContext);
 }
@@ -151,51 +113,8 @@ class ScopedCertStore final {
  public:
   explicit ScopedCertStore(HCERTSTORE certstore) : certstore(certstore) {}
 
-<<<<<<< HEAD
-// Helper function to convert a PCCERT_CONTEXT (i.e. a certificate obtained via
-// a Windows API) to a temporary CERTCertificate (i.e. a certificate for use
-// with NSS APIs).
-UniqueCERTCertificate PCCERT_CONTEXTToCERTCertificate(PCCERT_CONTEXT pccert) {
-  MOZ_ASSERT(pccert);
-  if (!pccert) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-// Helper function to convert a PCCERT_CONTEXT (i.e. a certificate obtained via
-// a Windows API) to a temporary CERTCertificate (i.e. a certificate for use
-// with NSS APIs).
-UniqueCERTCertificate
-PCCERT_CONTEXTToCERTCertificate(PCCERT_CONTEXT pccert)
-{
-  MOZ_ASSERT(pccert);
-  if (!pccert) {
-    return nullptr;
-  }
-=======
   ~ScopedCertStore() { CertCloseStore(certstore, 0); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  SECItem derCert = {siBuffer, pccert->pbCertEncoded, pccert->cbCertEncoded};
-  return UniqueCERTCertificate(
-      CERT_NewTempCertificate(CERT_GetDefaultCertDB(), &derCert,
-                              nullptr,  // nickname unnecessary
-                              false,    // not permanent
-                              true));   // copy DER
-}
-||||||| merged common ancestors
-  SECItem derCert = {
-    siBuffer,
-    pccert->pbCertEncoded,
-    pccert->cbCertEncoded
-  };
-  return UniqueCERTCertificate(
-    CERT_NewTempCertificate(CERT_GetDefaultCertDB(), &derCert,
-                            nullptr, // nickname unnecessary
-                            false, // not permanent
-                            true)); // copy DER
-}
-=======
   HCERTSTORE get() { return certstore; }
 
  private:
@@ -203,7 +122,6 @@ PCCERT_CONTEXTToCERTCertificate(PCCERT_CONTEXT pccert)
   ScopedCertStore& operator=(const ScopedCertStore&) = delete;
   HCERTSTORE certstore;
 };
->>>>>>> upstream-releases
 
 // Loads the enterprise roots at the registry location corresponding to the
 // given location flag.
@@ -215,17 +133,8 @@ PCCERT_CONTEXTToCERTCertificate(PCCERT_CONTEXT pccert)
 //     HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Root\Certificates)
 //   CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE
 //     (for HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates)
-<<<<<<< HEAD
-static void GatherEnterpriseRootsForLocation(DWORD locationFlag,
-                                             UniqueCERTCertList& roots) {
-||||||| merged common ancestors
-static void
-GatherEnterpriseRootsForLocation(DWORD locationFlag, UniqueCERTCertList& roots)
-{
-=======
 static void GatherEnterpriseCertsForLocation(DWORD locationFlag,
                                              Vector<EnterpriseCert>& certs) {
->>>>>>> upstream-releases
   MOZ_ASSERT(locationFlag == CERT_SYSTEM_STORE_LOCAL_MACHINE ||
                  locationFlag == CERT_SYSTEM_STORE_LOCAL_MACHINE_GROUP_POLICY ||
                  locationFlag == CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE,
@@ -243,76 +152,14 @@ static void GatherEnterpriseCertsForLocation(DWORD locationFlag,
   // of Microsoft's root store program.
   // The 3rd parameter to CertOpenStore should be NULL according to
   // https://msdn.microsoft.com/en-us/library/windows/desktop/aa376559%28v=vs.85%29.aspx
-<<<<<<< HEAD
-  ScopedCertStore enterpriseRootStore(
-      CertOpenStore(CERT_STORE_PROV_SYSTEM_REGISTRY_W, 0, NULL, flags,
-                    kWindowsDefaultRootStoreName));
-  if (!enterpriseRootStore.get()) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("failed to open enterprise root store"));
-    return;
-  }
-  PCCERT_CONTEXT certificate = nullptr;
-  uint32_t numImported = 0;
-  while ((certificate = CertFindCertificateInStore(
-              enterpriseRootStore.get(), X509_ASN_ENCODING, 0, CERT_FIND_ANY,
-              nullptr, certificate))) {
-    if (!CertIsTrustAnchorForTLSServerAuth(certificate)) {
-||||||| merged common ancestors
-  ScopedCertStore enterpriseRootStore(CertOpenStore(
-    CERT_STORE_PROV_SYSTEM_REGISTRY_W, 0, NULL, flags,
-    kWindowsDefaultRootStoreName));
-  if (!enterpriseRootStore.get()) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("failed to open enterprise root store"));
-    return;
-  }
-  PCCERT_CONTEXT certificate = nullptr;
-  uint32_t numImported = 0;
-  while ((certificate = CertFindCertificateInStore(enterpriseRootStore.get(),
-                                                   X509_ASN_ENCODING, 0,
-                                                   CERT_FIND_ANY, nullptr,
-                                                   certificate))) {
-    if (!CertIsTrustAnchorForTLSServerAuth(certificate)) {
-=======
   for (auto name : kWindowsDefaultRootStoreNames) {
     ScopedCertStore enterpriseRootStore(
         CertOpenStore(CERT_STORE_PROV_SYSTEM_REGISTRY_W, 0, NULL, flags, name));
     if (!enterpriseRootStore.get()) {
->>>>>>> upstream-releases
       MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
               ("failed to open enterprise root store"));
       continue;
     }
-<<<<<<< HEAD
-    UniqueCERTCertificate nssCertificate(
-        PCCERT_CONTEXTToCERTCertificate(certificate));
-    if (!nssCertificate) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't decode certificate"));
-      continue;
-    }
-    // Don't import the Microsoft Family Safety root (this prevents the
-    // Enterprise Roots feature from interacting poorly with the Family
-    // Safety support).
-    UniquePORTString subjectName(CERT_GetCommonName(&nssCertificate->subject));
-    if (kMicrosoftFamilySafetyCN.Equals(subjectName.get())) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("skipping Family Safety Root"));
-      continue;
-||||||| merged common ancestors
-    UniqueCERTCertificate nssCertificate(
-      PCCERT_CONTEXTToCERTCertificate(certificate));
-    if (!nssCertificate) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't decode certificate"));
-      continue;
-    }
-    // Don't import the Microsoft Family Safety root (this prevents the
-    // Enterprise Roots feature from interacting poorly with the Family
-    // Safety support).
-    UniquePORTString subjectName(
-      CERT_GetCommonName(&nssCertificate->subject));
-    if (kMicrosoftFamilySafetyCN.Equals(subjectName.get())) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("skipping Family Safety Root"));
-      continue;
-=======
     PCCERT_CONTEXT certificate = nullptr;
     uint32_t numImported = 0;
     while ((certificate = CertFindCertificateInStore(
@@ -337,80 +184,23 @@ static void GatherEnterpriseCertsForLocation(DWORD locationFlag,
         continue;
       }
       numImported++;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (CERT_AddCertToListTail(roots.get(), nssCertificate.get()) !=
-        SECSuccess) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't add cert to list"));
-      continue;
-    }
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("Imported '%s'", subjectName.get()));
-    numImported++;
-    // now owned by roots
-    Unused << nssCertificate.release();
-||||||| merged common ancestors
-    if (CERT_AddCertToListTail(roots.get(), nssCertificate.get())
-          != SECSuccess) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't add cert to list"));
-      continue;
-    }
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("Imported '%s'", subjectName.get()));
-    numImported++;
-    // now owned by roots
-    Unused << nssCertificate.release();
-=======
     MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
             ("imported %u certs from %S", numImported, name));
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-static void GatherEnterpriseRootsWindows(UniqueCERTCertList& roots) {
-  GatherEnterpriseRootsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE, roots);
-  GatherEnterpriseRootsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE_GROUP_POLICY,
-                                   roots);
-  GatherEnterpriseRootsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE,
-                                   roots);
-||||||| merged common ancestors
-static void
-GatherEnterpriseRootsWindows(UniqueCERTCertList& roots)
-{
-  GatherEnterpriseRootsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE, roots);
-  GatherEnterpriseRootsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE_GROUP_POLICY,
-                                   roots);
-  GatherEnterpriseRootsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE,
-                                   roots);
-=======
 static void GatherEnterpriseCertsWindows(Vector<EnterpriseCert>& certs) {
   GatherEnterpriseCertsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE, certs);
   GatherEnterpriseCertsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE_GROUP_POLICY,
                                    certs);
   GatherEnterpriseCertsForLocation(CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE,
                                    certs);
->>>>>>> upstream-releases
 }
 #endif  // XP_WIN
 
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-OSStatus GatherEnterpriseRootsOSX(UniqueCERTCertList& roots) {
-  MOZ_ASSERT(roots, "roots unexpectedly NULL?");
-  if (!roots) {
-    return errSecBadReq;
-  }
-||||||| merged common ancestors
-OSStatus
-GatherEnterpriseRootsOSX(UniqueCERTCertList& roots)
-{
-  MOZ_ASSERT(roots, "roots unexpectedly NULL?");
-  if (!roots) {
-    return errSecBadReq;
-  }
-=======
 OSStatus GatherEnterpriseCertsMacOS(Vector<EnterpriseCert>& certs) {
->>>>>>> upstream-releases
   // The following builds a search dictionary corresponding to:
   // { class: "certificate",
   //   match limit: "match all",
@@ -492,43 +282,10 @@ OSStatus GatherEnterpriseCertsMacOS(Vector<EnterpriseCert>& certs) {
     // a SecCertificateRef.
     const SecCertificateRef s = (const SecCertificateRef)c;
     ScopedCFType<CFDataRef> der(SecCertificateCopyData(s));
-<<<<<<< HEAD
-    const unsigned char* ptr = CFDataGetBytePtr(der.get());
-    unsigned int len = CFDataGetLength(der.get());
-    SECItem derItem = {
-        siBuffer,
-        const_cast<unsigned char*>(ptr),
-        len,
-    };
-    UniqueCERTCertificate cert(
-        CERT_NewTempCertificate(CERT_GetDefaultCertDB(), &derItem,
-                                nullptr,  // nickname unnecessary
-                                false,    // not permanent
-                                true));   // copy DER
-    if (!cert) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("couldn't decode 3rd party root certificate"));
-||||||| merged common ancestors
-    const unsigned char* ptr = CFDataGetBytePtr(der.get());
-    unsigned int len = CFDataGetLength(der.get());
-    SECItem derItem = {
-      siBuffer,
-      const_cast<unsigned char*>(ptr),
-      len,
-    };
-    UniqueCERTCertificate cert(
-      CERT_NewTempCertificate(CERT_GetDefaultCertDB(), &derItem,
-                              nullptr, // nickname unnecessary
-                              false, // not permanent
-                              true)); // copy DER
-    if (!cert) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't decode 3rd party root certificate"));
-=======
     EnterpriseCert enterpriseCert;
     if (NS_FAILED(enterpriseCert.Init(CFDataGetBytePtr(der.get()),
                                       CFDataGetLength(der.get()), isRoot))) {
       // Best-effort. We probably ran out of memory.
->>>>>>> upstream-releases
       continue;
     }
     if (!certs.append(std::move(enterpriseCert))) {
@@ -536,65 +293,27 @@ OSStatus GatherEnterpriseCertsMacOS(Vector<EnterpriseCert>& certs) {
       continue;
     }
     numImported++;
-<<<<<<< HEAD
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("Imported '%s'", subjectName.get()));
-    mozilla::Unused << cert.release();  // owned by roots
-||||||| merged common ancestors
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("Imported '%s'", subjectName.get()));
-    mozilla::Unused << cert.release(); // owned by roots
-=======
->>>>>>> upstream-releases
   }
   MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("imported %u certs", numImported));
   return errSecSuccess;
 }
 #endif  // XP_MACOSX
 
-<<<<<<< HEAD
-nsresult GatherEnterpriseRoots(UniqueCERTCertList& result) {
-  UniqueCERTCertList roots(CERT_NewCertList());
-  if (!roots) {
-    return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-nsresult
-GatherEnterpriseRoots(UniqueCERTCertList& result)
-{
-  UniqueCERTCertList roots(CERT_NewCertList());
-  if (!roots) {
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
 nsresult GatherEnterpriseCerts(Vector<EnterpriseCert>& certs) {
   MOZ_ASSERT(!NS_IsMainThread());
   if (NS_IsMainThread()) {
     return NS_ERROR_NOT_SAME_THREAD;
->>>>>>> upstream-releases
   }
 
   certs.clear();
 #ifdef XP_WIN
-<<<<<<< HEAD
-  GatherEnterpriseRootsWindows(roots);
-#endif  // XP_WIN
-||||||| merged common ancestors
-  GatherEnterpriseRootsWindows(roots);
-#endif // XP_WIN
-=======
   GatherEnterpriseCertsWindows(certs);
 #endif  // XP_WIN
->>>>>>> upstream-releases
 #ifdef XP_MACOSX
   OSStatus rv = GatherEnterpriseCertsMacOS(certs);
   if (rv != errSecSuccess) {
     return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
 #endif  // XP_MACOSX
-  result = std::move(roots);
-||||||| merged common ancestors
-#endif // XP_MACOSX
-  result = std::move(roots);
-=======
-#endif  // XP_MACOSX
->>>>>>> upstream-releases
   return NS_OK;
 }

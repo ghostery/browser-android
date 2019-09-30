@@ -28,19 +28,9 @@ static int CompareIIDs(const nsIID& aA, const nsIID& aB) {
 }
 
 /* static */
-<<<<<<< HEAD
-MozQueryInterface* ChromeUtils::GenerateQI(
-    const GlobalObject& aGlobal, const Sequence<OwningStringOrIID>& aInterfaces,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-MozQueryInterface*
-ChromeUtils::GenerateQI(const GlobalObject& aGlobal, const Sequence<OwningStringOrIID>& aInterfaces, ErrorResult& aRv)
-{
-=======
 MozQueryInterface* ChromeUtils::GenerateQI(
     const GlobalObject& aGlobal, const Sequence<JS::Value>& aInterfaces,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   nsTArray<nsIID> ifaces;
@@ -66,27 +56,8 @@ MozQueryInterface* ChromeUtils::GenerateQI(
       }
     }
 
-<<<<<<< HEAD
-    nsCOMPtr<nsISupports> base =
-        xpc::UnwrapReflectorToISupports(&val.toObject());
-    nsCOMPtr<nsIJSID> iid = do_QueryInterface(base);
-    if (!iid) {
-      aRv.Throw(NS_ERROR_INVALID_ARG);
-      return nullptr;
-    }
-    ifaces.AppendElement(*iid->GetID());
-||||||| merged common ancestors
-    nsCOMPtr<nsISupports> base = xpc::UnwrapReflectorToISupports(&val.toObject());
-    nsCOMPtr<nsIJSID> iid = do_QueryInterface(base);
-    if (!iid) {
-      aRv.Throw(NS_ERROR_INVALID_ARG);
-      return nullptr;
-    }
-    ifaces.AppendElement(*iid->GetID());
-=======
     // NOTE: We ignore unknown interfaces here because in some cases we try to
     // pass them in to support multiple platforms.
->>>>>>> upstream-releases
   }
 
   MOZ_ASSERT(!ifaces.Contains(NS_GET_IID(nsISupports), CompareIIDs));
@@ -101,32 +72,12 @@ bool MozQueryInterface::QueriesTo(const nsIID& aIID) const {
   return mInterfaces.ContainsSorted(aIID, CompareIIDs);
 }
 
-<<<<<<< HEAD
-void MozQueryInterface::LegacyCall(JSContext* cx, JS::Handle<JS::Value> thisv,
-                                   nsIJSID* aIID,
-                                   JS::MutableHandle<JS::Value> aResult,
-                                   ErrorResult& aRv) const {
-  if (!QueriesTo(*aIID->GetID())) {
-    aRv.Throw(NS_ERROR_NO_INTERFACE);
-  } else {
-||||||| merged common ancestors
-void
-MozQueryInterface::LegacyCall(JSContext* cx, JS::Handle<JS::Value> thisv,
-                              nsIJSID* aIID,
-                              JS::MutableHandle<JS::Value> aResult,
-                              ErrorResult& aRv) const
-{
-  if (!QueriesTo(*aIID->GetID())) {
-    aRv.Throw(NS_ERROR_NO_INTERFACE);
-  } else {
-=======
 void MozQueryInterface::LegacyCall(JSContext* cx, JS::Handle<JS::Value> thisv,
                                    JS::Handle<JS::Value> aIID,
                                    JS::MutableHandle<JS::Value> aResult,
                                    ErrorResult& aRv) const {
   Maybe<nsID> id = xpc::JSValue2ID(cx, aIID);
   if (id && QueriesTo(*id)) {
->>>>>>> upstream-releases
     aResult.set(thisv);
   } else {
     aRv.Throw(NS_ERROR_NO_INTERFACE);

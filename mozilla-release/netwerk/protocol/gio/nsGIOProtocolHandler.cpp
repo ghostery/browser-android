@@ -6,18 +6,10 @@
 /*
  * This code is based on original Mozilla gnome-vfs extension. It implements
  * input stream provided by GVFS/GIO.
-<<<<<<< HEAD
- */
-#include "mozilla/ModuleUtils.h"
-||||||| merged common ancestors
-*/
-#include "mozilla/ModuleUtils.h"
-=======
  */
 #include "nsGIOProtocolHandler.h"
 #include "mozilla/Components.h"
 #include "mozilla/ClearOnShutdown.h"
->>>>>>> upstream-releases
 #include "mozilla/NullPrincipal.h"
 #include "nsIPrefService.h"
 #include "nsIPrefBranch.h"
@@ -42,15 +34,9 @@
 #include <gio/gio.h>
 #include <algorithm>
 
-<<<<<<< HEAD
-#define MOZ_GIO_SCHEME "moz-gio"
-||||||| merged common ancestors
-#define MOZ_GIO_SCHEME              "moz-gio"
-=======
 using namespace mozilla;
 
 #define MOZ_GIO_SCHEME "moz-gio"
->>>>>>> upstream-releases
 #define MOZ_GIO_SUPPORTED_PROTOCOLS "network.gio.supported-protocols"
 
 //-----------------------------------------------------------------------------
@@ -122,19 +108,8 @@ static nsresult MapGIOResult(gint code) {
   }
 }
 
-<<<<<<< HEAD
-static nsresult MapGIOResult(GError *result) {
-  if (!result) return NS_OK;
-||||||| merged common ancestors
-static nsresult
-MapGIOResult(GError *result)
-{
-  if (!result)
-    return NS_OK;
-=======
 static nsresult MapGIOResult(GError* result) {
   if (!result) return NS_OK;
->>>>>>> upstream-releases
   return MapGIOResult(result->code);
 }
 /** Return values for mount operation.
@@ -154,27 +129,11 @@ typedef enum {
  * @return -1 when first object should be before the second, 0 when equal,
  * +1 when second object should be before the first
  */
-<<<<<<< HEAD
-static gint FileInfoComparator(gconstpointer a, gconstpointer b) {
-  GFileInfo *ia = (GFileInfo *)a;
-  GFileInfo *ib = (GFileInfo *)b;
-  if (g_file_info_get_file_type(ia) == G_FILE_TYPE_DIRECTORY &&
-      g_file_info_get_file_type(ib) != G_FILE_TYPE_DIRECTORY)
-||||||| merged common ancestors
-static gint
-FileInfoComparator(gconstpointer a, gconstpointer b)
-{
-  GFileInfo *ia = ( GFileInfo *) a;
-  GFileInfo *ib = ( GFileInfo *) b;
-  if (g_file_info_get_file_type(ia) == G_FILE_TYPE_DIRECTORY
-      && g_file_info_get_file_type(ib) != G_FILE_TYPE_DIRECTORY)
-=======
 static gint FileInfoComparator(gconstpointer a, gconstpointer b) {
   GFileInfo* ia = (GFileInfo*)a;
   GFileInfo* ib = (GFileInfo*)b;
   if (g_file_info_get_file_type(ia) == G_FILE_TYPE_DIRECTORY &&
       g_file_info_get_file_type(ib) != G_FILE_TYPE_DIRECTORY)
->>>>>>> upstream-releases
     return -1;
   if (g_file_info_get_file_type(ib) == G_FILE_TYPE_DIRECTORY &&
       g_file_info_get_file_type(ia) != G_FILE_TYPE_DIRECTORY)
@@ -184,155 +143,14 @@ static gint FileInfoComparator(gconstpointer a, gconstpointer b) {
 }
 
 /* Declaration of mount callback functions */
-<<<<<<< HEAD
-static void mount_enclosing_volume_finished(GObject *source_object,
-                                            GAsyncResult *res,
-                                            gpointer user_data);
-static void mount_operation_ask_password(
-    GMountOperation *mount_op, const char *message, const char *default_user,
-    const char *default_domain, GAskPasswordFlags flags, gpointer user_data);
-||||||| merged common ancestors
-static void mount_enclosing_volume_finished (GObject *source_object,
-                                             GAsyncResult *res,
-                                             gpointer user_data);
-static void mount_operation_ask_password (GMountOperation   *mount_op,
-                                          const char        *message,
-                                          const char        *default_user,
-                                          const char        *default_domain,
-                                          GAskPasswordFlags flags,
-                                          gpointer          user_data);
-=======
 static void mount_enclosing_volume_finished(GObject* source_object,
                                             GAsyncResult* res,
                                             gpointer user_data);
 static void mount_operation_ask_password(
     GMountOperation* mount_op, const char* message, const char* default_user,
     const char* default_domain, GAskPasswordFlags flags, gpointer user_data);
->>>>>>> upstream-releases
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-class nsGIOInputStream final : public nsIInputStream {
-  ~nsGIOInputStream() { Close(); }
-
- public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-  NS_DECL_NSIINPUTSTREAM
-
-  explicit nsGIOInputStream(const nsCString &uriSpec)
-      : mSpec(uriSpec),
-        mChannel(nullptr),
-        mHandle(nullptr),
-        mStream(nullptr),
-        mBytesRemaining(UINT64_MAX),
-        mStatus(NS_OK),
-        mDirList(nullptr),
-        mDirListPtr(nullptr),
-        mDirBufCursor(0),
-        mDirOpen(false),
-        mMonitorMountInProgress("GIOInputStream::MountFinished") {}
-
-  void SetChannel(nsIChannel *channel) {
-    // We need to hold an owning reference to our channel.  This is done
-    // so we can access the channel's notification callbacks to acquire
-    // a reference to a nsIAuthPrompt if we need to handle an interactive
-    // mount operation.
-    //
-    // However, the channel can only be accessed on the main thread, so
-    // we have to be very careful with ownership.  Moreover, it doesn't
-    // support threadsafe addref/release, so proxying is the answer.
-    //
-    // Also, it's important to note that this likely creates a reference
-    // cycle since the channel likely owns this stream.  This reference
-    // cycle is broken in our Close method.
-
-    NS_ADDREF(mChannel = channel);
-  }
-  void SetMountResult(MountOperationResult result, gint error_code);
-
- private:
-  nsresult DoOpen();
-  nsresult DoRead(char *aBuf, uint32_t aCount, uint32_t *aCountRead);
-  nsresult SetContentTypeOfChannel(const char *contentType);
-  nsresult MountVolume();
-  nsresult DoOpenDirectory();
-  nsresult DoOpenFile(GFileInfo *info);
-  nsCString mSpec;
-  nsIChannel *mChannel;  // manually refcounted
-  GFile *mHandle;
-  GFileInputStream *mStream;
-  uint64_t mBytesRemaining;
-  nsresult mStatus;
-  GList *mDirList;
-  GList *mDirListPtr;
-  nsCString mDirBuf;
-  uint32_t mDirBufCursor;
-  bool mDirOpen;
-  MountOperationResult mMountRes;
-  mozilla::Monitor mMonitorMountInProgress;
-  gint mMountErrorCode;
-||||||| merged common ancestors
-class nsGIOInputStream final : public nsIInputStream
-{
-   ~nsGIOInputStream() { Close(); }
-
-  public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-    NS_DECL_NSIINPUTSTREAM
-
-    explicit nsGIOInputStream(const nsCString &uriSpec)
-      : mSpec(uriSpec)
-      , mChannel(nullptr)
-      , mHandle(nullptr)
-      , mStream(nullptr)
-      , mBytesRemaining(UINT64_MAX)
-      , mStatus(NS_OK)
-      , mDirList(nullptr)
-      , mDirListPtr(nullptr)
-      , mDirBufCursor(0)
-      , mDirOpen(false)
-      , mMonitorMountInProgress("GIOInputStream::MountFinished") { }
-
-    void SetChannel(nsIChannel *channel)
-    {
-      // We need to hold an owning reference to our channel.  This is done
-      // so we can access the channel's notification callbacks to acquire
-      // a reference to a nsIAuthPrompt if we need to handle an interactive
-      // mount operation.
-      //
-      // However, the channel can only be accessed on the main thread, so
-      // we have to be very careful with ownership.  Moreover, it doesn't
-      // support threadsafe addref/release, so proxying is the answer.
-      //
-      // Also, it's important to note that this likely creates a reference
-      // cycle since the channel likely owns this stream.  This reference
-      // cycle is broken in our Close method.
-
-      NS_ADDREF(mChannel = channel);
-    }
-    void           SetMountResult(MountOperationResult result, gint error_code);
-  private:
-    nsresult       DoOpen();
-    nsresult       DoRead(char *aBuf, uint32_t aCount, uint32_t *aCountRead);
-    nsresult       SetContentTypeOfChannel(const char *contentType);
-    nsresult       MountVolume();
-    nsresult       DoOpenDirectory();
-    nsresult       DoOpenFile(GFileInfo *info);
-    nsCString             mSpec;
-    nsIChannel           *mChannel; // manually refcounted
-    GFile                *mHandle;
-    GFileInputStream     *mStream;
-    uint64_t              mBytesRemaining;
-    nsresult              mStatus;
-    GList                *mDirList;
-    GList                *mDirListPtr;
-    nsCString             mDirBuf;
-    uint32_t              mDirBufCursor;
-    bool                  mDirOpen;
-    MountOperationResult  mMountRes;
-    mozilla::Monitor      mMonitorMountInProgress;
-    gint                  mMountErrorCode;
-=======
 class nsGIOInputStream final : public nsIInputStream {
   ~nsGIOInputStream() { Close(); }
 
@@ -392,7 +210,6 @@ class nsGIOInputStream final : public nsIInputStream {
   MountOperationResult mMountRes;
   mozilla::Monitor mMonitorMountInProgress;
   gint mMountErrorCode;
->>>>>>> upstream-releases
 };
 /**
  * Set result of mount operation and notify monitor waiting for results.
@@ -412,23 +229,10 @@ void nsGIOInputStream::SetMountResult(MountOperationResult result,
  * Start mount operation and wait in loop until it is finished. This method is
  * called from thread which is trying to read from location.
  */
-<<<<<<< HEAD
-nsresult nsGIOInputStream::MountVolume() {
-  GMountOperation *mount_op = g_mount_operation_new();
-  g_signal_connect(mount_op, "ask-password",
-                   G_CALLBACK(mount_operation_ask_password), mChannel);
-||||||| merged common ancestors
-nsresult
-nsGIOInputStream::MountVolume() {
-  GMountOperation* mount_op = g_mount_operation_new();
-  g_signal_connect (mount_op, "ask-password",
-                    G_CALLBACK (mount_operation_ask_password), mChannel);
-=======
 nsresult nsGIOInputStream::MountVolume() {
   GMountOperation* mount_op = g_mount_operation_new();
   g_signal_connect(mount_op, "ask-password",
                    G_CALLBACK(mount_operation_ask_password), mChannel);
->>>>>>> upstream-releases
   mMountRes = MOUNT_OPERATION_IN_PROGRESS;
   /* g_file_mount_enclosing_volume uses a dbus request to mount the volume.
      Callback mount_enclosing_volume_finished is called in main thread
@@ -452,30 +256,11 @@ nsresult nsGIOInputStream::MountVolume() {
  * Return: NS_OK when list obtained, otherwise error code according
  * to failed operation.
  */
-<<<<<<< HEAD
-nsresult nsGIOInputStream::DoOpenDirectory() {
-  GError *error = nullptr;
-
-  GFileEnumerator *f_enum = g_file_enumerate_children(
-      mHandle, "standard::*,time::*", G_FILE_QUERY_INFO_NONE, nullptr, &error);
-||||||| merged common ancestors
-nsresult
-nsGIOInputStream::DoOpenDirectory()
-{
-  GError *error = nullptr;
-
-  GFileEnumerator *f_enum = g_file_enumerate_children(mHandle,
-                                                      "standard::*,time::*",
-                                                      G_FILE_QUERY_INFO_NONE,
-                                                      nullptr,
-                                                      &error);
-=======
 nsresult nsGIOInputStream::DoOpenDirectory() {
   GError* error = nullptr;
 
   GFileEnumerator* f_enum = g_file_enumerate_children(
       mHandle, "standard::*,time::*", G_FILE_QUERY_INFO_NONE, nullptr, &error);
->>>>>>> upstream-releases
   if (!f_enum) {
     nsresult rv = MapGIOResult(error);
     g_warning("Cannot read from directory: %s", error->message);
@@ -523,18 +308,8 @@ nsresult nsGIOInputStream::DoOpenDirectory() {
  * @param info file info used to determine mime type
  * @return NS_OK when file stream created successfuly, error code otherwise
  */
-<<<<<<< HEAD
-nsresult nsGIOInputStream::DoOpenFile(GFileInfo *info) {
-  GError *error = nullptr;
-||||||| merged common ancestors
-nsresult
-nsGIOInputStream::DoOpenFile(GFileInfo *info)
-{
-  GError *error = nullptr;
-=======
 nsresult nsGIOInputStream::DoOpenFile(GFileInfo* info) {
   GError* error = nullptr;
->>>>>>> upstream-releases
 
   mStream = g_file_read(mHandle, nullptr, &error);
   if (!mStream) {
@@ -544,13 +319,7 @@ nsresult nsGIOInputStream::DoOpenFile(GFileInfo* info) {
     return rv;
   }
 
-<<<<<<< HEAD
-  const char *content_type = g_file_info_get_content_type(info);
-||||||| merged common ancestors
-  const char * content_type = g_file_info_get_content_type(info);
-=======
   const char* content_type = g_file_info_get_content_type(info);
->>>>>>> upstream-releases
   if (content_type) {
     char* mime_type = g_content_type_get_mime_type(content_type);
     if (mime_type) {
@@ -585,19 +354,8 @@ nsresult nsGIOInputStream::DoOpen() {
 
   mHandle = g_file_new_for_uri(mSpec.get());
 
-<<<<<<< HEAD
-  GFileInfo *info = g_file_query_info(mHandle, "standard::*",
-                                      G_FILE_QUERY_INFO_NONE, nullptr, &error);
-||||||| merged common ancestors
-  GFileInfo *info = g_file_query_info(mHandle,
-                                      "standard::*",
-                                      G_FILE_QUERY_INFO_NONE,
-                                      nullptr,
-                                      &error);
-=======
   GFileInfo* info = g_file_query_info(mHandle, "standard::*",
                                       G_FILE_QUERY_INFO_NONE, nullptr, &error);
->>>>>>> upstream-releases
 
   if (error) {
     if (error->domain == G_IO_ERROR && error->code == G_IO_ERROR_NOT_MOUNTED) {
@@ -650,36 +408,14 @@ nsresult nsGIOInputStream::DoOpen() {
  * @return NS_OK when read successfully, NS_BASE_STREAM_CLOSED when end of file,
  *         error code otherwise
  */
-<<<<<<< HEAD
-nsresult nsGIOInputStream::DoRead(char *aBuf, uint32_t aCount,
-                                  uint32_t *aCountRead) {
-||||||| merged common ancestors
-nsresult
-nsGIOInputStream::DoRead(char *aBuf, uint32_t aCount, uint32_t *aCountRead)
-{
-=======
 nsresult nsGIOInputStream::DoRead(char* aBuf, uint32_t aCount,
                                   uint32_t* aCountRead) {
->>>>>>> upstream-releases
   nsresult rv = NS_ERROR_NOT_AVAILABLE;
   if (mStream) {
     // file read
-<<<<<<< HEAD
-    GError *error = nullptr;
-    uint32_t bytes_read = g_input_stream_read(G_INPUT_STREAM(mStream), aBuf,
-                                              aCount, nullptr, &error);
-||||||| merged common ancestors
-    GError *error = nullptr;
-    uint32_t bytes_read = g_input_stream_read(G_INPUT_STREAM(mStream),
-                                              aBuf,
-                                              aCount,
-                                              nullptr,
-                                              &error);
-=======
     GError* error = nullptr;
     uint32_t bytes_read = g_input_stream_read(G_INPUT_STREAM(mStream), aBuf,
                                               aCount, nullptr, &error);
->>>>>>> upstream-releases
     if (error) {
       rv = MapGIOResult(error);
       *aCountRead = 0;
@@ -710,22 +446,10 @@ nsresult nsGIOInputStream::DoRead(char* aBuf, uint32_t aCount,
         rv = NS_BASE_STREAM_CLOSED;
       } else if (aCount)  // Do we need more data?
       {
-<<<<<<< HEAD
-        GFileInfo *info = (GFileInfo *)mDirListPtr->data;
-||||||| merged common ancestors
-        GFileInfo *info = (GFileInfo *) mDirListPtr->data;
-=======
         GFileInfo* info = (GFileInfo*)mDirListPtr->data;
->>>>>>> upstream-releases
 
         // Prune '.' and '..' from directory listing.
-<<<<<<< HEAD
-        const char *fname = g_file_info_get_name(info);
-||||||| merged common ancestors
-        const char * fname = g_file_info_get_name(info);
-=======
         const char* fname = g_file_info_get_name(info);
->>>>>>> upstream-releases
         if (fname && fname[0] == '.' &&
             (fname[1] == '\0' || (fname[1] == '.' && fname[2] == '\0'))) {
           mDirListPtr = mDirListPtr->next;
@@ -795,40 +519,6 @@ nsresult nsGIOInputStream::DoRead(char* aBuf, uint32_t aCount,
 /**
  * This class is used to implement SetContentTypeOfChannel.
  */
-<<<<<<< HEAD
-class nsGIOSetContentTypeEvent : public mozilla::Runnable {
- public:
-  nsGIOSetContentTypeEvent(nsIChannel *channel, const char *contentType)
-      : mozilla::Runnable("nsGIOSetContentTypeEvent"),
-        mChannel(channel),
-        mContentType(contentType) {
-    // stash channel reference in mChannel.  no AddRef here!  see note
-    // in SetContentTypeOfchannel.
-  }
-
-  NS_IMETHOD Run() override {
-    mChannel->SetContentType(mContentType);
-    return NS_OK;
-  }
-||||||| merged common ancestors
-class nsGIOSetContentTypeEvent : public mozilla::Runnable
-{
-  public:
-    nsGIOSetContentTypeEvent(nsIChannel* channel, const char* contentType)
-      : mozilla::Runnable("nsGIOSetContentTypeEvent")
-      , mChannel(channel)
-      , mContentType(contentType)
-    {
-      // stash channel reference in mChannel.  no AddRef here!  see note
-      // in SetContentTypeOfchannel.
-    }
-
-    NS_IMETHOD Run() override
-    {
-      mChannel->SetContentType(mContentType);
-      return NS_OK;
-    }
-=======
 class nsGIOSetContentTypeEvent : public mozilla::Runnable {
  public:
   nsGIOSetContentTypeEvent(nsIChannel* channel, const char* contentType)
@@ -843,32 +533,13 @@ class nsGIOSetContentTypeEvent : public mozilla::Runnable {
     mChannel->SetContentType(mContentType);
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  nsIChannel *mChannel;
-  nsCString mContentType;
-||||||| merged common ancestors
-  private:
-    nsIChannel *mChannel;
-    nsCString   mContentType;
-=======
  private:
   nsIChannel* mChannel;
   nsCString mContentType;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-nsresult nsGIOInputStream::SetContentTypeOfChannel(const char *contentType) {
-||||||| merged common ancestors
-nsresult
-nsGIOInputStream::SetContentTypeOfChannel(const char *contentType)
-{
-=======
 nsresult nsGIOInputStream::SetContentTypeOfChannel(const char* contentType) {
->>>>>>> upstream-releases
   // We need to proxy this call over to the main thread.  We post an
   // asynchronous event in this case so that we don't delay reading data, and
   // we know that this is safe to do since the channel's reference will be
@@ -931,18 +602,8 @@ nsGIOInputStream::Close() {
  * @param aResult remaining bytes
  */
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOInputStream::Available(uint64_t *aResult) {
-  if (NS_FAILED(mStatus)) return mStatus;
-||||||| merged common ancestors
-nsGIOInputStream::Available(uint64_t *aResult)
-{
-  if (NS_FAILED(mStatus))
-    return mStatus;
-=======
 nsGIOInputStream::Available(uint64_t* aResult) {
   if (NS_FAILED(mStatus)) return mStatus;
->>>>>>> upstream-releases
 
   *aResult = mBytesRemaining;
 
@@ -957,16 +618,7 @@ nsGIOInputStream::Available(uint64_t* aResult) {
  * @param aCountRead number of bytes actually read
  */
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOInputStream::Read(char *aBuf, uint32_t aCount, uint32_t *aCountRead) {
-||||||| merged common ancestors
-nsGIOInputStream::Read(char     *aBuf,
-                       uint32_t  aCount,
-                       uint32_t *aCountRead)
-{
-=======
 nsGIOInputStream::Read(char* aBuf, uint32_t aCount, uint32_t* aCountRead) {
->>>>>>> upstream-releases
   *aCountRead = 0;
   // Check if file is already opened, otherwise open it
   if (!mStream && !mDirOpen && mStatus == NS_OK) {
@@ -985,19 +637,8 @@ nsGIOInputStream::Read(char* aBuf, uint32_t aCount, uint32_t* aCountRead) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOInputStream::ReadSegments(nsWriteSegmentFun aWriter, void *aClosure,
-                               uint32_t aCount, uint32_t *aResult) {
-||||||| merged common ancestors
-nsGIOInputStream::ReadSegments(nsWriteSegmentFun aWriter,
-                               void             *aClosure,
-                               uint32_t          aCount,
-                               uint32_t         *aResult)
-{
-=======
 nsGIOInputStream::ReadSegments(nsWriteSegmentFun aWriter, void* aClosure,
                                uint32_t aCount, uint32_t* aResult) {
->>>>>>> upstream-releases
   // There is no way to implement this using GnomeVFS, but fortunately
   // that doesn't matter.  Because we are a blocking input stream, Necko
   // isn't going to call our ReadSegments method.
@@ -1006,14 +647,7 @@ nsGIOInputStream::ReadSegments(nsWriteSegmentFun aWriter, void* aClosure,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOInputStream::IsNonBlocking(bool *aResult) {
-||||||| merged common ancestors
-nsGIOInputStream::IsNonBlocking(bool *aResult)
-{
-=======
 nsGIOInputStream::IsNonBlocking(bool* aResult) {
->>>>>>> upstream-releases
   *aResult = false;
   return NS_OK;
 }
@@ -1028,26 +662,12 @@ nsGIOInputStream::IsNonBlocking(bool* aResult) {
  * @param res result object
  * @param user_data pointer to nsGIOInputStream
  */
-<<<<<<< HEAD
-static void mount_enclosing_volume_finished(GObject *source_object,
-                                            GAsyncResult *res,
-                                            gpointer user_data) {
-  GError *error = nullptr;
-||||||| merged common ancestors
-static void
-mount_enclosing_volume_finished (GObject *source_object,
-                                 GAsyncResult *res,
-                                 gpointer user_data)
-{
-  GError *error = nullptr;
-=======
 static void mount_enclosing_volume_finished(GObject* source_object,
                                             GAsyncResult* res,
                                             gpointer user_data) {
   GError* error = nullptr;
->>>>>>> upstream-releases
 
-  nsGIOInputStream *istream = static_cast<nsGIOInputStream *>(user_data);
+  nsGIOInputStream* istream = static_cast<nsGIOInputStream*>(user_data);
 
   g_file_mount_enclosing_volume_finish(G_FILE(source_object), res, &error);
 
@@ -1070,27 +690,10 @@ static void mount_enclosing_volume_finished(GObject* source_object,
  * @param flags what type of information is required
  * @param user_data nsIChannel
  */
-<<<<<<< HEAD
-static void mount_operation_ask_password(
-    GMountOperation *mount_op, const char *message, const char *default_user,
-    const char *default_domain, GAskPasswordFlags flags, gpointer user_data) {
-  nsIChannel *channel = (nsIChannel *)user_data;
-||||||| merged common ancestors
-static void
-mount_operation_ask_password (GMountOperation   *mount_op,
-                              const char        *message,
-                              const char        *default_user,
-                              const char        *default_domain,
-                              GAskPasswordFlags flags,
-                              gpointer          user_data)
-{
-  nsIChannel *channel = (nsIChannel *) user_data;
-=======
 static void mount_operation_ask_password(
     GMountOperation* mount_op, const char* message, const char* default_user,
     const char* default_domain, GAskPasswordFlags flags, gpointer user_data) {
   nsIChannel* channel = (nsIChannel*)user_data;
->>>>>>> upstream-releases
   if (!channel) {
     g_mount_operation_reply(mount_op, G_MOUNT_OPERATION_ABORTED);
     return;
@@ -1172,46 +775,17 @@ static void mount_operation_ask_password(
   if (flags & G_ASK_PASSWORD_NEED_PASSWORD) {
     if (flags & G_ASK_PASSWORD_NEED_USERNAME) {
       if (!realm.IsEmpty()) {
-<<<<<<< HEAD
-        const char16_t *strings[] = {realm.get(), dispHost.get()};
-        bundle->FormatStringFromName("EnterLoginForRealm3", strings, 2,
-                                     nsmessage);
-||||||| merged common ancestors
-        const char16_t *strings[] = { realm.get(), dispHost.get() };
-        bundle->FormatStringFromName("EnterLoginForRealm3",
-                                     strings, 2, nsmessage);
-=======
         AutoTArray<nsString, 2> strings = {realm, dispHost};
         bundle->FormatStringFromName("EnterLoginForRealm3", strings, nsmessage);
->>>>>>> upstream-releases
       } else {
-<<<<<<< HEAD
-        const char16_t *strings[] = {dispHost.get()};
-        bundle->FormatStringFromName("EnterUserPasswordFor2", strings, 1,
-                                     nsmessage);
-||||||| merged common ancestors
-        const char16_t *strings[] = { dispHost.get() };
-        bundle->FormatStringFromName("EnterUserPasswordFor2",
-                                     strings, 1, nsmessage);
-=======
         AutoTArray<nsString, 1> strings = {dispHost};
         bundle->FormatStringFromName("EnterUserPasswordFor2", strings,
                                      nsmessage);
->>>>>>> upstream-releases
       }
     } else {
       NS_ConvertUTF8toUTF16 userName(default_user);
-<<<<<<< HEAD
-      const char16_t *strings[] = {userName.get(), dispHost.get()};
-      bundle->FormatStringFromName("EnterPasswordFor", strings, 2, nsmessage);
-||||||| merged common ancestors
-      const char16_t *strings[] = { userName.get(), dispHost.get() };
-      bundle->FormatStringFromName("EnterPasswordFor",
-                                   strings, 2, nsmessage);
-=======
       AutoTArray<nsString, 2> strings = {userName, dispHost};
       bundle->FormatStringFromName("EnterPasswordFor", strings, nsmessage);
->>>>>>> upstream-releases
     }
   } else {
     g_warning("Unknown mount operation request (flags: %x)", flags);
@@ -1254,48 +828,8 @@ static void mount_operation_ask_password(
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-class nsGIOProtocolHandler final : public nsIProtocolHandler,
-                                   public nsIObserver {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIPROTOCOLHANDLER
-  NS_DECL_NSIOBSERVER
-
-  nsresult Init();
-
- private:
-  ~nsGIOProtocolHandler() {}
-||||||| merged common ancestors
-class nsGIOProtocolHandler final : public nsIProtocolHandler
-                                 , public nsIObserver
-{
-  public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSIPROTOCOLHANDLER
-    NS_DECL_NSIOBSERVER
-
-    nsresult Init();
-
-  private:
-    ~nsGIOProtocolHandler() {}
-=======
 mozilla::StaticRefPtr<nsGIOProtocolHandler> nsGIOProtocolHandler::sSingleton;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void InitSupportedProtocolsPref(nsIPrefBranch *prefs);
-  bool IsSupportedProtocol(const nsCString &spec);
-
-  nsCString mSupportedProtocols;
-};
-||||||| merged common ancestors
-    void InitSupportedProtocolsPref(nsIPrefBranch *prefs);
-    bool IsSupportedProtocol(const nsCString &spec);
-
-    nsCString mSupportedProtocols;
-};
-=======
 already_AddRefed<nsGIOProtocolHandler> nsGIOProtocolHandler::GetSingleton() {
   if (!sSingleton) {
     sSingleton = new nsGIOProtocolHandler();
@@ -1304,7 +838,6 @@ already_AddRefed<nsGIOProtocolHandler> nsGIOProtocolHandler::GetSingleton() {
   }
   return do_AddRef(sSingleton);
 }
->>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(nsGIOProtocolHandler, nsIProtocolHandler, nsIObserver)
 
@@ -1318,15 +851,7 @@ nsresult nsGIOProtocolHandler::Init() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsGIOProtocolHandler::InitSupportedProtocolsPref(nsIPrefBranch *prefs) {
-||||||| merged common ancestors
-void
-nsGIOProtocolHandler::InitSupportedProtocolsPref(nsIPrefBranch *prefs)
-{
-=======
 void nsGIOProtocolHandler::InitSupportedProtocolsPref(nsIPrefBranch* prefs) {
->>>>>>> upstream-releases
   // Get user preferences to determine which protocol is supported.
   // Gvfs/GIO has a set of supported protocols like obex, network, archive,
   // computer, dav, cdda, gphoto2, trash, etc. Some of these seems to be
@@ -1349,42 +874,18 @@ void nsGIOProtocolHandler::InitSupportedProtocolsPref(nsIPrefBranch* prefs) {
   LOG(("gio: supported protocols \"%s\"\n", mSupportedProtocols.get()));
 }
 
-<<<<<<< HEAD
-bool nsGIOProtocolHandler::IsSupportedProtocol(const nsCString &aSpec) {
-  const char *specString = aSpec.get();
-  const char *colon = strchr(specString, ':');
-  if (!colon) return false;
-||||||| merged common ancestors
-bool
-nsGIOProtocolHandler::IsSupportedProtocol(const nsCString &aSpec)
-{
-  const char *specString = aSpec.get();
-  const char *colon = strchr(specString, ':');
-  if (!colon)
-    return false;
-=======
 bool nsGIOProtocolHandler::IsSupportedProtocol(const nsCString& aSpec) {
   const char* specString = aSpec.get();
   const char* colon = strchr(specString, ':');
   if (!colon) return false;
->>>>>>> upstream-releases
 
   uint32_t length = colon - specString + 1;
 
   // <scheme> + ':'
   nsCString scheme(specString, length);
 
-<<<<<<< HEAD
-  char *found = PL_strcasestr(mSupportedProtocols.get(), scheme.get());
-  if (!found) return false;
-||||||| merged common ancestors
-  char *found = PL_strcasestr(mSupportedProtocols.get(), scheme.get());
-  if (!found)
-    return false;
-=======
   char* found = PL_strcasestr(mSupportedProtocols.get(), scheme.get());
   if (!found) return false;
->>>>>>> upstream-releases
 
   if (found[length] != ',' && found[length] != '\0') return false;
 
@@ -1392,114 +893,32 @@ bool nsGIOProtocolHandler::IsSupportedProtocol(const nsCString& aSpec) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOProtocolHandler::GetScheme(nsACString &aScheme) {
-||||||| merged common ancestors
-nsGIOProtocolHandler::GetScheme(nsACString &aScheme)
-{
-=======
 nsGIOProtocolHandler::GetScheme(nsACString& aScheme) {
->>>>>>> upstream-releases
   aScheme.AssignLiteral(MOZ_GIO_SCHEME);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOProtocolHandler::GetDefaultPort(int32_t *aDefaultPort) {
-||||||| merged common ancestors
-nsGIOProtocolHandler::GetDefaultPort(int32_t *aDefaultPort)
-{
-=======
 nsGIOProtocolHandler::GetDefaultPort(int32_t* aDefaultPort) {
->>>>>>> upstream-releases
   *aDefaultPort = -1;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOProtocolHandler::GetProtocolFlags(uint32_t *aProtocolFlags) {
-||||||| merged common ancestors
-nsGIOProtocolHandler::GetProtocolFlags(uint32_t *aProtocolFlags)
-{
-=======
 nsGIOProtocolHandler::GetProtocolFlags(uint32_t* aProtocolFlags) {
->>>>>>> upstream-releases
   // Is URI_STD true of all GnomeVFS URI types?
   *aProtocolFlags = URI_STD | URI_DANGEROUS_TO_LOAD;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsGIOProtocolHandler::NewURI(const nsACString &aSpec,
-                             const char *aOriginCharset, nsIURI *aBaseURI,
-                             nsIURI **aResult) {
-  const nsCString flatSpec(aSpec);
-  LOG(("gio: NewURI [spec=%s]\n", flatSpec.get()));
-
-  if (!aBaseURI) {
-    // XXX Is it good to support all GIO protocols?
-    if (!IsSupportedProtocol(flatSpec)) return NS_ERROR_UNKNOWN_PROTOCOL;
-
-    int32_t colon_location = flatSpec.FindChar(':');
-    if (colon_location <= 0) return NS_ERROR_UNKNOWN_PROTOCOL;
-
-    // Verify that GIO supports this URI scheme.
-    bool uri_scheme_supported = false;
-
-    GVfs *gvfs = g_vfs_get_default();
-
-    if (!gvfs) {
-      g_warning("Cannot get GVfs object.");
-      return NS_ERROR_UNKNOWN_PROTOCOL;
-    }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsGIOProtocolHandler::NewURI(const nsACString &aSpec,
-                             const char *aOriginCharset,
-                             nsIURI *aBaseURI,
-                             nsIURI **aResult)
-{
-  const nsCString flatSpec(aSpec);
-  LOG(("gio: NewURI [spec=%s]\n", flatSpec.get()));
-
-  if (!aBaseURI)
-  {
-    // XXX Is it good to support all GIO protocols?
-    if (!IsSupportedProtocol(flatSpec))
-      return NS_ERROR_UNKNOWN_PROTOCOL;
-
-    int32_t colon_location = flatSpec.FindChar(':');
-    if (colon_location <= 0)
-      return NS_ERROR_UNKNOWN_PROTOCOL;
-
-    // Verify that GIO supports this URI scheme.
-    bool uri_scheme_supported = false;
-
-    GVfs *gvfs = g_vfs_get_default();
-
-    if (!gvfs) {
-      g_warning("Cannot get GVfs object.");
-      return NS_ERROR_UNKNOWN_PROTOCOL;
-    }
-=======
 static bool IsValidGIOScheme(const nsACString& aScheme) {
   // Verify that GIO supports this URI scheme.
   GVfs* gvfs = g_vfs_get_default();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    const gchar *const *uri_schemes = g_vfs_get_supported_uri_schemes(gvfs);
-||||||| merged common ancestors
-    const gchar* const * uri_schemes = g_vfs_get_supported_uri_schemes(gvfs);
-=======
   if (!gvfs) {
     g_warning("Cannot get GVfs object.");
     return false;
   }
->>>>>>> upstream-releases
 
   const gchar* const* uri_schemes = g_vfs_get_supported_uri_schemes(gvfs);
 
@@ -1512,49 +931,17 @@ static bool IsValidGIOScheme(const nsACString& aScheme) {
     uri_schemes++;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  return NS_MutateURI(NS_STANDARDURLMUTATOR_CONTRACTID)
-      .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                              nsIStandardURL::URLTYPE_STANDARD, -1, flatSpec,
-                              aOriginCharset, base, nullptr))
-      .Finalize(aResult);
-||||||| merged common ancestors
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  return NS_MutateURI(NS_STANDARDURLMUTATOR_CONTRACTID)
-    .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                            nsIStandardURL::URLTYPE_STANDARD,
-                            -1, flatSpec, aOriginCharset, base, nullptr))
-    .Finalize(aResult);
-=======
   return false;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOProtocolHandler::NewChannel2(nsIURI *aURI, nsILoadInfo *aLoadInfo,
-                                  nsIChannel **aResult) {
-||||||| merged common ancestors
-nsGIOProtocolHandler::NewChannel2(nsIURI* aURI,
-                                  nsILoadInfo* aLoadInfo,
-                                  nsIChannel** aResult)
-{
-=======
 nsGIOProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
                                  nsIChannel** aResult) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aURI);
   nsresult rv;
 
   nsAutoCString spec;
   rv = aURI->GetSpec(spec);
-<<<<<<< HEAD
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-  if (NS_FAILED(rv))
-    return rv;
-=======
   if (NS_FAILED(rv)) return rv;
 
   if (!IsSupportedProtocol(spec)) {
@@ -1570,7 +957,6 @@ nsGIOProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
   if (!IsValidGIOScheme(scheme)) {
     return NS_ERROR_UNKNOWN_PROTOCOL;
   }
->>>>>>> upstream-releases
 
   RefPtr<nsGIOInputStream> stream = new nsGIOInputStream(spec);
   if (!stream) {
@@ -1590,112 +976,19 @@ nsGIOProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOProtocolHandler::NewChannel(nsIURI *aURI, nsIChannel **aResult) {
-  return NewChannel2(aURI, nullptr, aResult);
-}
-
-NS_IMETHODIMP
-nsGIOProtocolHandler::AllowPort(int32_t aPort, const char *aScheme,
-                                bool *aResult) {
-||||||| merged common ancestors
-nsGIOProtocolHandler::NewChannel(nsIURI *aURI, nsIChannel **aResult)
-{
-    return NewChannel2(aURI, nullptr, aResult);
-}
-
-NS_IMETHODIMP
-nsGIOProtocolHandler::AllowPort(int32_t aPort,
-                                const char *aScheme,
-                                bool *aResult)
-{
-=======
 nsGIOProtocolHandler::AllowPort(int32_t aPort, const char* aScheme,
                                 bool* aResult) {
->>>>>>> upstream-releases
   // Don't override anything.
   *aResult = false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsGIOProtocolHandler::Observe(nsISupports *aSubject, const char *aTopic,
-                              const char16_t *aData) {
-||||||| merged common ancestors
-nsGIOProtocolHandler::Observe(nsISupports *aSubject,
-                              const char *aTopic,
-                              const char16_t *aData)
-{
-=======
 nsGIOProtocolHandler::Observe(nsISupports* aSubject, const char* aTopic,
                               const char16_t* aData) {
->>>>>>> upstream-releases
   if (strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID) == 0) {
     nsCOMPtr<nsIPrefBranch> prefs = do_QueryInterface(aSubject);
     InitSupportedProtocolsPref(prefs);
   }
   return NS_OK;
 }
-<<<<<<< HEAD
-
-//-----------------------------------------------------------------------------
-
-#define NS_GIOPROTOCOLHANDLER_CID                    \
-  { /* ee706783-3af8-4d19-9e84-e2ebfe213480 */       \
-    0xee706783, 0x3af8, 0x4d19, {                    \
-      0x9e, 0x84, 0xe2, 0xeb, 0xfe, 0x21, 0x34, 0x80 \
-    }                                                \
-  }
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsGIOProtocolHandler, Init)
-NS_DEFINE_NAMED_CID(NS_GIOPROTOCOLHANDLER_CID);
-
-static const mozilla::Module::CIDEntry kVFSCIDs[] = {
-    {&kNS_GIOPROTOCOLHANDLER_CID, false, nullptr,
-     nsGIOProtocolHandlerConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kVFSContracts[] = {
-    {NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX MOZ_GIO_SCHEME,
-     &kNS_GIOPROTOCOLHANDLER_CID},
-    {nullptr}};
-
-static const mozilla::Module kVFSModule = {mozilla::Module::kVersion, kVFSCIDs,
-                                           kVFSContracts};
-
-NSMODULE_DEFN(nsGIOModule) = &kVFSModule;
-||||||| merged common ancestors
-
-//-----------------------------------------------------------------------------
-
-#define NS_GIOPROTOCOLHANDLER_CID                    \
-{ /* ee706783-3af8-4d19-9e84-e2ebfe213480 */         \
-    0xee706783,                                      \
-    0x3af8,                                          \
-    0x4d19,                                          \
-    {0x9e, 0x84, 0xe2, 0xeb, 0xfe, 0x21, 0x34, 0x80} \
-}
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsGIOProtocolHandler, Init)
-NS_DEFINE_NAMED_CID(NS_GIOPROTOCOLHANDLER_CID);
-
-static const mozilla::Module::CIDEntry kVFSCIDs[] = {
-  { &kNS_GIOPROTOCOLHANDLER_CID, false, nullptr, nsGIOProtocolHandlerConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kVFSContracts[] = {
-  { NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX MOZ_GIO_SCHEME, &kNS_GIOPROTOCOLHANDLER_CID },
-  { nullptr }
-};
-
-static const mozilla::Module kVFSModule = {
-  mozilla::Module::kVersion,
-  kVFSCIDs,
-  kVFSContracts
-};
-
-NSMODULE_DEFN(nsGIOModule) = &kVFSModule;
-=======
->>>>>>> upstream-releases

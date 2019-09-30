@@ -21,19 +21,11 @@ namespace ImageDataSerializer {
 
 using namespace gfx;
 
-<<<<<<< HEAD
-int32_t ComputeRGBStride(SurfaceFormat aFormat, int32_t aWidth) {
-||||||| merged common ancestors
-int32_t
-ComputeRGBStride(SurfaceFormat aFormat, int32_t aWidth)
-{
-=======
 int32_t ComputeRGBStride(SurfaceFormat aFormat, int32_t aWidth) {
 #ifdef XP_MACOSX
   // Some drivers require an alignment of 32 bytes for efficient texture upload.
   return GetAlignedStride<32>(aWidth, BytesPerPixel(aFormat));
 #else
->>>>>>> upstream-releases
   return GetAlignedStride<4>(aWidth, BytesPerPixel(aFormat));
 #endif
 }
@@ -166,16 +158,8 @@ Maybe<gfx::IntSize> CbCrSizeFromBufferDescriptor(
   }
 }
 
-<<<<<<< HEAD
-Maybe<YUVColorSpace> YUVColorSpaceFromBufferDescriptor(
-    const BufferDescriptor& aDescriptor) {
-||||||| merged common ancestors
-Maybe<YUVColorSpace> YUVColorSpaceFromBufferDescriptor(const BufferDescriptor& aDescriptor)
-{
-=======
 Maybe<gfx::YUVColorSpace> YUVColorSpaceFromBufferDescriptor(
     const BufferDescriptor& aDescriptor) {
->>>>>>> upstream-releases
   switch (aDescriptor.type()) {
     case BufferDescriptor::TRGBDescriptor:
       return Nothing();

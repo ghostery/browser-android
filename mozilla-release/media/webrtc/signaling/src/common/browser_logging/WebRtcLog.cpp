@@ -23,19 +23,9 @@
 using mozilla::LogLevel;
 
 #if defined(ANDROID)
-<<<<<<< HEAD
-static const char *default_tmp_dir = "/dev/null";
-static const char *default_log_name = "nspr";
-#else  // Assume a POSIX environment
-||||||| merged common ancestors
-static const char *default_tmp_dir = "/dev/null";
-static const char *default_log_name = "nspr";
-#else // Assume a POSIX environment
-=======
 static const char* default_tmp_dir = "/dev/null";
 static const char* default_log_name = "nspr";
 #else  // Assume a POSIX environment
->>>>>>> upstream-releases
 NS_NAMED_LITERAL_CSTRING(default_log_name, "WebRTC.log");
 #endif
 
@@ -46,16 +36,8 @@ class LogSinkImpl : public rtc::LogSink {
  public:
   LogSinkImpl() {}
 
-<<<<<<< HEAD
- private:
-  void OnLogMessage(const std::string &message) override {
-||||||| merged common ancestors
-private:
-  void OnLogMessage(const std::string& message) override {
-=======
  private:
   void OnLogMessage(const std::string& message) override {
->>>>>>> upstream-releases
     MOZ_LOG(sWebRtcLog, LogLevel::Debug, ("%s", message.data()));
   }
 };
@@ -68,18 +50,8 @@ void GetWebRtcLogPrefs() {
       mozilla::Preferences::GetUint("media.webrtc.debug.aec_dump_max_size"));
 }
 
-<<<<<<< HEAD
-mozilla::LogLevel CheckOverrides() {
-  mozilla::LogModule *log_info = sWebRtcLog;
-||||||| merged common ancestors
-mozilla::LogLevel
-CheckOverrides(uint32_t *aTraceMask, nsACString *aLogFile, bool *aMultiLog)
-{
-  mozilla::LogModule *log_info = sWebRtcLog;
-=======
 mozilla::LogLevel CheckOverrides() {
   mozilla::LogModule* log_info = sWebRtcLog;
->>>>>>> upstream-releases
   mozilla::LogLevel log_level = log_info->Level();
 
   log_info = sLogAEC;

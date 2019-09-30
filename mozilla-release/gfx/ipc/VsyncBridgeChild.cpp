@@ -10,41 +10,16 @@
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-VsyncBridgeChild::VsyncBridgeChild(RefPtr<VsyncIOThreadHolder> aThread,
-                                   const uint64_t& aProcessToken)
-    : mThread(aThread), mLoop(nullptr), mProcessToken(aProcessToken) {}
-||||||| merged common ancestors
-VsyncBridgeChild::VsyncBridgeChild(RefPtr<VsyncIOThreadHolder> aThread, const uint64_t& aProcessToken)
- : mThread(aThread),
-   mLoop(nullptr),
-   mProcessToken(aProcessToken)
-{
-}
-=======
 VsyncBridgeChild::VsyncBridgeChild(RefPtr<VsyncIOThreadHolder> aThread,
                                    const uint64_t& aProcessToken)
     : mThread(aThread), mProcessToken(aProcessToken) {}
->>>>>>> upstream-releases
 
 VsyncBridgeChild::~VsyncBridgeChild() {}
 
-<<<<<<< HEAD
-/* static */ RefPtr<VsyncBridgeChild> VsyncBridgeChild::Create(
-    RefPtr<VsyncIOThreadHolder> aThread, const uint64_t& aProcessToken,
-    Endpoint<PVsyncBridgeChild>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ RefPtr<VsyncBridgeChild>
-VsyncBridgeChild::Create(RefPtr<VsyncIOThreadHolder> aThread,
-                         const uint64_t& aProcessToken,
-                         Endpoint<PVsyncBridgeChild>&& aEndpoint)
-{
-=======
 /* static */
 RefPtr<VsyncBridgeChild> VsyncBridgeChild::Create(
     RefPtr<VsyncIOThreadHolder> aThread, const uint64_t& aProcessToken,
     Endpoint<PVsyncBridgeChild>&& aEndpoint) {
->>>>>>> upstream-releases
   RefPtr<VsyncBridgeChild> child = new VsyncBridgeChild(aThread, aProcessToken);
 
   RefPtr<nsIRunnable> task = NewRunnableMethod<Endpoint<PVsyncBridgeChild>&&>(
@@ -88,18 +63,8 @@ class NotifyVsyncTask : public Runnable {
   layers::LayersId mLayersId;
 };
 
-<<<<<<< HEAD
-bool VsyncBridgeChild::IsOnVsyncIOThread() const {
-  return MessageLoop::current() == mLoop;
-||||||| merged common ancestors
-bool
-VsyncBridgeChild::IsOnVsyncIOThread() const
-{
-  return MessageLoop::current() == mLoop;
-=======
 bool VsyncBridgeChild::IsOnVsyncIOThread() const {
   return mThread->IsOnCurrentThread();
->>>>>>> upstream-releases
 }
 
 void VsyncBridgeChild::NotifyVsync(const VsyncEvent& aVsync,
@@ -107,16 +72,8 @@ void VsyncBridgeChild::NotifyVsync(const VsyncEvent& aVsync,
   // This should be on the Vsync thread (not the Vsync I/O thread).
   MOZ_ASSERT(!IsOnVsyncIOThread());
 
-<<<<<<< HEAD
-  RefPtr<NotifyVsyncTask> task = new NotifyVsyncTask(this, aVsync, aLayersId);
-  mLoop->PostTask(task.forget());
-||||||| merged common ancestors
-  RefPtr<NotifyVsyncTask> task = new NotifyVsyncTask(this, aTimeStamp, aLayersId);
-  mLoop->PostTask(task.forget());
-=======
   RefPtr<NotifyVsyncTask> task = new NotifyVsyncTask(this, aVsync, aLayersId);
   mThread->Dispatch(task.forget());
->>>>>>> upstream-releases
 }
 
 void VsyncBridgeChild::NotifyVsyncImpl(const VsyncEvent& aVsync,
@@ -132,16 +89,8 @@ void VsyncBridgeChild::NotifyVsyncImpl(const VsyncEvent& aVsync,
 
 void VsyncBridgeChild::Close() {
   if (!IsOnVsyncIOThread()) {
-<<<<<<< HEAD
-    mLoop->PostTask(NewRunnableMethod("gfx::VsyncBridgeChild::Close", this,
-                                      &VsyncBridgeChild::Close));
-||||||| merged common ancestors
-    mLoop->PostTask(NewRunnableMethod(
-      "gfx::VsyncBridgeChild::Close", this, &VsyncBridgeChild::Close));
-=======
     mThread->Dispatch(NewRunnableMethod("gfx::VsyncBridgeChild::Close", this,
                                         &VsyncBridgeChild::Close));
->>>>>>> upstream-releases
     return;
   }
 
@@ -166,17 +115,7 @@ void VsyncBridgeChild::ActorDestroy(ActorDestroyReason aWhy) {
   }
 }
 
-<<<<<<< HEAD
-void VsyncBridgeChild::DeallocPVsyncBridgeChild() { Release(); }
-||||||| merged common ancestors
-void
-VsyncBridgeChild::DeallocPVsyncBridgeChild()
-{
-  Release();
-}
-=======
 void VsyncBridgeChild::ActorDealloc() { Release(); }
->>>>>>> upstream-releases
 
 void VsyncBridgeChild::ProcessingError(Result aCode, const char* aReason) {
   MOZ_RELEASE_ASSERT(aCode == MsgDropped,

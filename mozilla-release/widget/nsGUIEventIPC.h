@@ -1205,25 +1205,6 @@ struct ParamTraits<mozilla::MouseInput> {
 
 template <>
 struct ParamTraits<mozilla::PanGestureInput::PanGestureType>
-<<<<<<< HEAD
-    : public ContiguousEnumSerializerInclusive<
-          mozilla::PanGestureInput::PanGestureType,
-          mozilla::PanGestureInput::PanGestureType::PANGESTURE_MAYSTART,
-          mozilla::PanGestureInput::sHighestPanGestureType> {};
-
-template <>
-struct ParamTraits<mozilla::PanGestureInput> {
-||||||| merged common ancestors
-  : public ContiguousEnumSerializerInclusive<
-             mozilla::PanGestureInput::PanGestureType,
-             mozilla::PanGestureInput::PanGestureType::PANGESTURE_MAYSTART,
-             mozilla::PanGestureInput::sHighestPanGestureType>
-{};
-
-template<>
-struct ParamTraits<mozilla::PanGestureInput>
-{
-=======
     : public ContiguousEnumSerializerInclusive<
           mozilla::PanGestureInput::PanGestureType,
           mozilla::PanGestureInput::PanGestureType::PANGESTURE_MAYSTART,
@@ -1239,7 +1220,6 @@ struct ParamTraits<mozilla::PanGestureInput::PanDeltaType>
 template <>
 struct ParamTraits<mozilla::PanGestureInput>
     : BitfieldHelper<mozilla::PanGestureInput> {
->>>>>>> upstream-releases
   typedef mozilla::PanGestureInput paramType;
 
   static void Write(Message* aMsg, const paramType& aParam) {
@@ -1276,20 +1256,6 @@ struct ParamTraits<mozilla::PanGestureInput>
            ReadParam(aMsg, aIter, &aResult->mLineOrPageDeltaY) &&
            ReadParam(aMsg, aIter, &aResult->mUserDeltaMultiplierX) &&
            ReadParam(aMsg, aIter, &aResult->mUserDeltaMultiplierY) &&
-<<<<<<< HEAD
-           ReadParam(aMsg, aIter, &aResult->mHandledByAPZ) &&
-           ReadParam(aMsg, aIter, &aResult->mFollowedByMomentum) &&
-           ReadParam(
-               aMsg, aIter,
-               &aResult
-                    ->mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection) &&
-           ReadParam(aMsg, aIter, &aResult->mOverscrollBehaviorAllowsSwipe);
-||||||| merged common ancestors
-           ReadParam(aMsg, aIter, &aResult->mHandledByAPZ) &&
-           ReadParam(aMsg, aIter, &aResult->mFollowedByMomentum) &&
-           ReadParam(aMsg, aIter, &aResult->mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection) &&
-           ReadParam(aMsg, aIter, &aResult->mOverscrollBehaviorAllowsSwipe);
-=======
            ReadParam(aMsg, aIter, &aResult->mDeltaType) &&
            ReadBoolForBitfield(aMsg, aIter, aResult,
                                &paramType::SetHandledByAPZ) &&
@@ -1303,7 +1269,6 @@ struct ParamTraits<mozilla::PanGestureInput>
                                &paramType::SetOverscrollBehaviorAllowsSwipe) &&
            ReadBoolForBitfield(aMsg, aIter, aResult,
                                &paramType::SetSimulateMomentum);
->>>>>>> upstream-releases
   }
 };
 

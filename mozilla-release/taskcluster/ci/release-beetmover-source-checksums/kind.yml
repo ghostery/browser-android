@@ -13,15 +13,7 @@ kind-dependencies:
     - release-source-checksums-signing
 
 job-template:
-<<<<<<< HEAD
-   shipping-phase: promote
-   attributes:
-      artifact_map: taskcluster/taskgraph/manifests/source_checksums.yml
-||||||| merged common ancestors
-   shipping-phase: promote
-=======
     shipping-phase: promote
     attributes:
         artifact_prefix: public
         artifact_map: taskcluster/taskgraph/manifests/source_checksums.yml
->>>>>>> upstream-releases

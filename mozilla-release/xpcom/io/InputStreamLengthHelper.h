@@ -49,12 +49,6 @@ class InputStreamLengthHelper final : public Runnable,
   std::function<void(int64_t aLength)> mCallback;
 };
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // mozilla namespace
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_InputStreamLengthHelper_h
->>>>>>> upstream-releases

@@ -13,18 +13,6 @@ wpt_root = os.path.abspath(os.path.join(here, os.pardir, os.pardir))
 
 logger = get_logger()
 
-<<<<<<< HEAD
-
-def update(tests_root,
-           manifest,
-           manifest_path=None,
-           working_copy=False,
-           cache_root=None,
-           rebuild=False):
-    logger.warning("Deprecated; use manifest.load_and_update instead")
-||||||| merged common ancestors
-def update(tests_root, manifest, working_copy=False):
-=======
 MYPY = False
 if MYPY:
     # MYPY is set to True when run under Mypy.
@@ -42,7 +30,6 @@ def update(tests_root,  # type: str
            ):
     # type: (...) -> bool
     logger.warning("Deprecated; use manifest.load_and_update instead")
->>>>>>> upstream-releases
     logger.info("Updating manifest")
 
     tree = vcs.get_tree(tests_root, manifest, manifest_path, cache_root,
@@ -56,49 +43,15 @@ def update_from_cli(**kwargs):
     path = kwargs["path"]
     assert tests_root is not None
 
-<<<<<<< HEAD
-    if kwargs["download"]:
-||||||| merged common ancestors
-    m = None
-
-    if kwargs["download"]:
-=======
     if not kwargs["rebuild"] and kwargs["download"]:
->>>>>>> upstream-releases
         download_from_github(path, tests_root)
 
-<<<<<<< HEAD
-    manifest.load_and_update(tests_root,
-                             path,
-                             kwargs["url_base"],
-                             update=True,
-                             rebuild=kwargs["rebuild"],
-                             cache_root=kwargs["cache_root"],
-                             working_copy=kwargs["work"])
-||||||| merged common ancestors
-    if not kwargs.get("rebuild", False):
-        try:
-            m = manifest.load(tests_root, path)
-        except manifest.ManifestVersionMismatch:
-            logger.info("Manifest version changed, rebuilding")
-            m = None
-
-    if m is None:
-        m = manifest.Manifest(kwargs["url_base"])
-
-    changed = update(tests_root,
-                     m,
-                     working_copy=kwargs["work"])
-    if changed:
-        manifest.write(m, path)
-=======
     manifest.load_and_update(tests_root,
                              path,
                              kwargs["url_base"],
                              update=True,
                              rebuild=kwargs["rebuild"],
                              cache_root=kwargs["cache_root"])
->>>>>>> upstream-releases
 
 
 def abs_path(path):
@@ -128,36 +81,8 @@ def create_parser():
     return parser
 
 
-<<<<<<< HEAD
-def find_top_repo():
-    path = here
-    rv = None
-    while path != "/":
-        if vcs.is_git_repo(path):
-            rv = path
-        path = os.path.abspath(os.path.join(path, os.pardir))
-
-    return rv
-
-
-def run(*args, **kwargs):
-||||||| merged common ancestors
-def find_top_repo():
-    path = here
-    rv = None
-    while path != "/":
-        if vcs.is_git_repo(path):
-            rv = path
-        path = os.path.abspath(os.path.join(path, os.pardir))
-
-    return rv
-
-
-def run(**kwargs):
-=======
 def run(*args, **kwargs):
     # type: (*Any, **Any) -> None
->>>>>>> upstream-releases
     if kwargs["path"] is None:
         kwargs["path"] = os.path.join(kwargs["tests_root"], "MANIFEST.json")
     update_from_cli(**kwargs)

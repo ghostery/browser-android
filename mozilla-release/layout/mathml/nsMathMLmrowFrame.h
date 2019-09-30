@@ -24,15 +24,8 @@ class nsMathMLmrowFrame final : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmrowFrame)
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewMathMLmrowFrame(nsIPresShell* aPresShell,
-                                         ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewMathMLmrowFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewMathMLmrowFrame(mozilla::PresShell* aPresShell,
                                          ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
                                     int32_t aModType) override;
@@ -54,19 +47,9 @@ class nsMathMLmrowFrame final : public nsMathMLContainerFrame {
     return mFrames.FirstChild() != mFrames.LastChild() || !mFrames.FirstChild();
   }
 
-<<<<<<< HEAD
- protected:
-  explicit nsMathMLmrowFrame(ComputedStyle* aStyle)
-      : nsMathMLContainerFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-protected:
-  explicit nsMathMLmrowFrame(ComputedStyle* aStyle)
-    : nsMathMLContainerFrame(aStyle, kClassID) {}
-=======
  protected:
   explicit nsMathMLmrowFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsMathMLContainerFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
   virtual ~nsMathMLmrowFrame();
 };
 

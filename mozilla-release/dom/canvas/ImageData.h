@@ -49,33 +49,17 @@ class ImageData final : public nsISupports {
   void GetData(JSContext* cx, JS::MutableHandle<JSObject*> aData) const {
     aData.set(GetDataObject());
   }
-<<<<<<< HEAD
-  JSObject* GetDataObject() const { return mData; }
-||||||| merged common ancestors
-  JSObject* GetDataObject() const
-  {
-    return mData;
-  }
-=======
   JSObject* GetDataObject() const { return mData; }
 
   bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
                   JS::MutableHandle<JSObject*> aReflector);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
-                  JS::MutableHandle<JSObject*> aReflector);
-||||||| merged common ancestors
-  bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto, JS::MutableHandle<JSObject*> aReflector);
-=======
   //[Serializable] implementation
   static already_AddRefed<ImageData> ReadStructuredClone(
       JSContext* aCx, nsIGlobalObject* aGlobal,
       JSStructuredCloneReader* aReader);
   bool WriteStructuredClone(JSContext* aCx,
                             JSStructuredCloneWriter* aWriter) const;
->>>>>>> upstream-releases
 
  private:
   void HoldData();

@@ -433,21 +433,7 @@ select {
   display: none;
 }
 
-<<<<<<< HEAD
-.pdfPresentationMode:-moz-full-screen .textLayer > span {
-  cursor: none;
-}
-
 .pdfPresentationMode:fullscreen .textLayer > span {
-||||||| merged common ancestors
-.pdfPresentationMode:-moz-full-screen .textLayer > div {
-  cursor: none;
-}
-
-.pdfPresentationMode:fullscreen .textLayer > div {
-=======
-.pdfPresentationMode:fullscreen .textLayer > span {
->>>>>>> upstream-releases
   cursor: none;
 }
 

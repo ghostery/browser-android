@@ -43,67 +43,21 @@ class WebBrowserPersistDocumentParent final
 
   using Attrs = WebBrowserPersistDocumentAttrs;
 
-<<<<<<< HEAD
-  // IPDL methods:
-  virtual mozilla::ipc::IPCResult RecvAttributes(
-      const Attrs& aAttrs, const OptionalIPCStream& aPostStream) override;
-  virtual mozilla::ipc::IPCResult RecvInitFailure(
-      const nsresult& aFailure) override;
-||||||| merged common ancestors
-    // IPDL methods:
-    virtual mozilla::ipc::IPCResult
-    RecvAttributes(const Attrs& aAttrs,
-                   const OptionalIPCStream& aPostStream) override;
-    virtual mozilla::ipc::IPCResult
-    RecvInitFailure(const nsresult& aFailure) override;
-=======
   // IPDL methods:
   mozilla::ipc::IPCResult RecvAttributes(const Attrs& aAttrs,
                                          const Maybe<IPCStream>& aPostStream);
   mozilla::ipc::IPCResult RecvInitFailure(const nsresult& aFailure);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual PWebBrowserPersistResourcesParent*
-  AllocPWebBrowserPersistResourcesParent() override;
-  virtual bool DeallocPWebBrowserPersistResourcesParent(
-      PWebBrowserPersistResourcesParent* aActor) override;
-||||||| merged common ancestors
-    virtual PWebBrowserPersistResourcesParent*
-    AllocPWebBrowserPersistResourcesParent() override;
-    virtual bool
-    DeallocPWebBrowserPersistResourcesParent(PWebBrowserPersistResourcesParent* aActor) override;
-=======
   PWebBrowserPersistResourcesParent* AllocPWebBrowserPersistResourcesParent();
   bool DeallocPWebBrowserPersistResourcesParent(
       PWebBrowserPersistResourcesParent* aActor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual PWebBrowserPersistSerializeParent*
-  AllocPWebBrowserPersistSerializeParent(const WebBrowserPersistURIMap& aMap,
-                                         const nsCString& aRequestedContentType,
-                                         const uint32_t& aEncoderFlags,
-                                         const uint32_t& aWrapColumn) override;
-  virtual bool DeallocPWebBrowserPersistSerializeParent(
-      PWebBrowserPersistSerializeParent* aActor) override;
-||||||| merged common ancestors
-    virtual PWebBrowserPersistSerializeParent*
-    AllocPWebBrowserPersistSerializeParent(
-            const WebBrowserPersistURIMap& aMap,
-            const nsCString& aRequestedContentType,
-            const uint32_t& aEncoderFlags,
-            const uint32_t& aWrapColumn) override;
-    virtual bool
-    DeallocPWebBrowserPersistSerializeParent(PWebBrowserPersistSerializeParent* aActor) override;
-=======
   PWebBrowserPersistSerializeParent* AllocPWebBrowserPersistSerializeParent(
       const WebBrowserPersistURIMap& aMap,
       const nsCString& aRequestedContentType, const uint32_t& aEncoderFlags,
       const uint32_t& aWrapColumn);
   bool DeallocPWebBrowserPersistSerializeParent(
       PWebBrowserPersistSerializeParent* aActor);
->>>>>>> upstream-releases
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 

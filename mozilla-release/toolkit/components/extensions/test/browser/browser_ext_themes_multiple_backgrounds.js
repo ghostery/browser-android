@@ -3,36 +3,14 @@
 add_task(async function test_support_backgrounds_position() {
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "face1.png",
-          "additional_backgrounds": ["face2.png", "face2.png", "face2.png"],
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "face1.png",
-          "additional_backgrounds": ["face2.png", "face2.png", "face2.png"],
-=======
       theme: {
         images: {
           theme_frame: "face1.png",
           additional_backgrounds: ["face2.png", "face2.png", "face2.png"],
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": `rgb(${FRAME_COLOR.join(",")})`,
-          "tab_background_text": `rgb(${TAB_BACKGROUND_TEXT_COLOR.join(",")})`,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": `rgb(${FRAME_COLOR.join(",")})`,
-          "textcolor": `rgb(${TAB_BACKGROUND_TEXT_COLOR.join(",")})`,
-=======
         colors: {
           frame: `rgb(${FRAME_COLOR.join(",")})`,
           tab_background_text: `rgb(${TAB_BACKGROUND_TEXT_COLOR.join(",")})`,
->>>>>>> upstream-releases
         },
         properties: {
           additional_backgrounds_alignment: [

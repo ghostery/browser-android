@@ -30,28 +30,6 @@ XPCOMUtils.defineLazyScriptGetter(
 );
 /* End Shared Places Import */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.defineModuleGetter(this, "MigrationUtils",
-                               "resource:///modules/MigrationUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "BookmarkJSONUtils",
-                               "resource://gre/modules/BookmarkJSONUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "PlacesBackups",
-                               "resource://gre/modules/PlacesBackups.jsm");
-ChromeUtils.defineModuleGetter(this, "DownloadUtils",
-                               "resource://gre/modules/DownloadUtils.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/TelemetryStopwatch.jsm");
-ChromeUtils.defineModuleGetter(this, "MigrationUtils",
-                               "resource:///modules/MigrationUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "BookmarkJSONUtils",
-                               "resource://gre/modules/BookmarkJSONUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "PlacesBackups",
-                               "resource://gre/modules/PlacesBackups.jsm");
-ChromeUtils.defineModuleGetter(this, "DownloadUtils",
-                               "resource://gre/modules/DownloadUtils.jsm");
-=======
 var { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -75,7 +53,6 @@ ChromeUtils.defineModuleGetter(
   "DownloadUtils",
   "resource://gre/modules/DownloadUtils.jsm"
 );
->>>>>>> upstream-releases
 
 const RESTORE_FILEPICKER_FILTER_EXT = "*.json;*.jsonlz4";
 const HISTORY_LIBRARY_SEARCH_TELEMETRY =

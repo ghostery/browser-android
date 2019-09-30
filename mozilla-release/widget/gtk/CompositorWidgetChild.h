@@ -24,18 +24,10 @@ class CompositorWidgetChild final : public PCompositorWidgetChild,
   mozilla::ipc::IPCResult RecvUnobserveVsync() override;
 
   void NotifyClientSizeChanged(const LayoutDeviceIntSize& aClientSize) override;
-<<<<<<< HEAD
-
- private:
-||||||| merged common ancestors
-
-private:
-=======
 #ifdef MOZ_WAYLAND
   void RequestsUpdatingEGLSurface() override;
 #endif
  private:
->>>>>>> upstream-releases
   RefPtr<CompositorVsyncDispatcher> mVsyncDispatcher;
   RefPtr<CompositorWidgetVsyncObserver> mVsyncObserver;
 };

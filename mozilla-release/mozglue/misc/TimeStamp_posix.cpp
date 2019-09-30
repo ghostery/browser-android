@@ -18,22 +18,10 @@
 #include <unistd.h>
 #include <string.h>
 
-<<<<<<< HEAD
-#if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
-    defined(__OpenBSD__)
-#include <sys/param.h>
-#include <sys/sysctl.h>
-||||||| merged common ancestors
-#if defined(__DragonFly__) || defined(__FreeBSD__) \
-    || defined(__NetBSD__) || defined(__OpenBSD__)
-#include <sys/param.h>
-#include <sys/sysctl.h>
-=======
 #if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
     defined(__OpenBSD__)
 #  include <sys/param.h>
 #  include <sys/sysctl.h>
->>>>>>> upstream-releases
 #endif
 
 #if defined(__DragonFly__) || defined(__FreeBSD__)

@@ -8,14 +8,8 @@
 #include "PDMFactory.h"
 #include "VideoUtils.h"
 #include "mozilla/layers/ImageBridgeChild.h"
-<<<<<<< HEAD
-#include "webrtc/rtc_base/keep_ref_until_done.h"
-||||||| merged common ancestors
-#include "webrtc/base/keep_ref_until_done.h"
-=======
 #include "mozilla/media/MediaUtils.h"
 #include "webrtc/rtc_base/keep_ref_until_done.h"
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -53,58 +47,28 @@ int32_t WebrtcMediaDataDecoder::InitDecode(
   mInfo.mMimeType = codec;
 
   RefPtr<layers::KnowsCompositor> knowsCompositor =
-<<<<<<< HEAD
-      layers::ImageBridgeChild::GetSingleton();
-||||||| merged common ancestors
-    layers::ImageBridgeChild::GetSingleton();
-=======
       layers::ImageBridgeChild::GetSingleton();
 
   if (mDecoder) {
     Release();
   }
->>>>>>> upstream-releases
 
   mDecoder = mFactory->CreateDecoder(
-<<<<<<< HEAD
-      {mInfo, mTaskQueue,
-       CreateDecoderParams::OptionSet(CreateDecoderParams::Option::LowLatency),
-       mTrackType, mImageContainer, knowsCompositor});
-||||||| merged common ancestors
-    { mInfo,
-      mTaskQueue,
-      CreateDecoderParams::OptionSet(CreateDecoderParams::Option::LowLatency),
-      mTrackType,
-      mImageContainer,
-      knowsCompositor });
-=======
       {mInfo, mTaskQueue,
        CreateDecoderParams::OptionSet(
            CreateDecoderParams::Option::LowLatency,
            CreateDecoderParams::Option::FullH264Parsing,
            CreateDecoderParams::Option::ErrorIfNoInitializationData),
        mTrackType, mImageContainer, knowsCompositor});
->>>>>>> upstream-releases
 
   if (!mDecoder) {
     return WEBRTC_VIDEO_CODEC_ERROR;
   }
 
-<<<<<<< HEAD
-  media::Await(do_AddRef(mThreadPool), mDecoder->Init(),
-               [](TrackInfo::TrackType) {},
-               [&](const MediaResult& aError) { mError = aError; });
-||||||| merged common ancestors
-  media::Await(do_AddRef(mThreadPool),
-               mDecoder->Init(),
-               [](TrackInfo::TrackType) {},
-               [&](const MediaResult& aError) { mError = aError; });
-=======
   media::Await(
       do_AddRef(mThreadPool), mDecoder->Init(),
       [&](TrackInfo::TrackType) { mError = NS_OK; },
       [&](const MediaResult& aError) { mError = aError; });
->>>>>>> upstream-releases
 
   return NS_SUCCEEDED(mError) ? WEBRTC_VIDEO_CODEC_OK
                               : WEBRTC_VIDEO_CODEC_ERROR;
@@ -148,20 +112,6 @@ int32_t WebrtcMediaDataDecoder::Decode(
   compressedFrame->mKeyframe =
       aInputImage._frameType == webrtc::FrameType::kVideoFrameKey;
   {
-<<<<<<< HEAD
-    media::Await(do_AddRef(mThreadPool), mDecoder->Decode(compressedFrame),
-                 [&](const MediaDataDecoder::DecodedData& aResults) {
-                   mResults = aResults;
-                 },
-                 [&](const MediaResult& aError) { mError = aError; });
-||||||| merged common ancestors
-    media::Await(do_AddRef(mThreadPool),
-                 mDecoder->Decode(compressedFrame),
-                 [&](const MediaDataDecoder::DecodedData& aResults) {
-                   mResults = aResults;
-                 },
-                 [&](const MediaResult& aError) { mError = aError; });
-=======
     media::Await(
         do_AddRef(mThreadPool), mDecoder->Decode(compressedFrame),
         [&](const MediaDataDecoder::DecodedData& aResults) {
@@ -169,7 +119,6 @@ int32_t WebrtcMediaDataDecoder::Decode(
           mError = NS_OK;
         },
         [&](const MediaResult& aError) { mError = aError; });
->>>>>>> upstream-releases
 
     for (auto& frame : mResults) {
       MOZ_ASSERT(frame->mType == MediaData::Type::VIDEO_DATA);

@@ -16,17 +16,6 @@ add_task(async function() {
   );
   await startCustomizing();
   let button = document.getElementById("history-panelmenu");
-<<<<<<< HEAD
-  is(button.getAttribute(kAnchorAttribute), "nav-bar-overflow-button",
-     "Button (" + button.id + ") starts out with correct anchor");
-
-  let navbar = CustomizableUI.getCustomizationTarget(document.getElementById("nav-bar"));
-||||||| merged common ancestors
-  is(button.getAttribute(kAnchorAttribute), "nav-bar-overflow-button",
-     "Button (" + button.id + ") starts out with correct anchor");
-
-  let navbar = document.getElementById("nav-bar").customizationTarget;
-=======
   is(
     button.getAttribute(kAnchorAttribute),
     "nav-bar-overflow-button",
@@ -36,7 +25,6 @@ add_task(async function() {
   let navbar = CustomizableUI.getCustomizationTarget(
     document.getElementById("nav-bar")
   );
->>>>>>> upstream-releases
   let onMouseUp = BrowserTestUtils.waitForEvent(navbar, "mouseup");
   simulateItemDrag(button, navbar);
   await onMouseUp;

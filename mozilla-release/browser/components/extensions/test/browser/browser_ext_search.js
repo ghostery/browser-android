@@ -75,17 +75,11 @@ add_task(async function test_search() {
   is(addonEngines.length, engines.length, "Engine lengths are the same.");
   let defaultEngine = addonEngines.filter(engine => engine.isDefault === true);
   is(defaultEngine.length, 1, "One default engine");
-<<<<<<< HEAD
-  is(defaultEngine[0].name, Services.search.defaultEngine.name, "Default engine is correct");
-||||||| merged common ancestors
-  is(defaultEngine[0].name, Services.search.currentEngine.name, "Default engine is correct");
-=======
   is(
     defaultEngine[0].name,
     (await Services.search.getDefault()).name,
     "Default engine is correct"
   );
->>>>>>> upstream-releases
 
   let url = await extension.awaitMessage("searchLoaded");
   is(

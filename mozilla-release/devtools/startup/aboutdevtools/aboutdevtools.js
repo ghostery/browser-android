@@ -31,17 +31,8 @@ const GA_PARAMETERS = [
   ["utm_medium", "onboarding"],
 ];
 
-<<<<<<< HEAD
-const KEY_SHORTCUTS_STRINGS = "chrome://devtools-startup/locale/key-shortcuts.properties";
-||||||| merged common ancestors
-const ABOUTDEVTOOLS_STRINGS = "chrome://devtools-startup/locale/aboutdevtools.properties";
-const aboutDevtoolsBundle = Services.strings.createBundle(ABOUTDEVTOOLS_STRINGS);
-
-const KEY_SHORTCUTS_STRINGS = "chrome://devtools-startup/locale/key-shortcuts.properties";
-=======
 const KEY_SHORTCUTS_STRINGS =
   "chrome://devtools-startup/locale/key-shortcuts.properties";
->>>>>>> upstream-releases
 const keyShortcutsBundle = Services.strings.createBundle(KEY_SHORTCUTS_STRINGS);
 
 // URL constructor doesn't support about: scheme,
@@ -98,172 +89,66 @@ function updatePage() {
  */
 const features = [
   {
-<<<<<<< HEAD
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-inspector.svg",
-    title: "features-inspector-title",
-    desc: "features-inspector-desc",
-||||||| merged common ancestors
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-inspector.svg",
-    title: "features.inspector.title",
-    desc: "features.inspector.desc",
-=======
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-inspector.svg",
     title: "features-inspector-title",
     desc: "features-inspector-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Page_Inspector",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-console.svg",
-    title: "features-console-title",
-    desc: "features-console-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-console.svg",
-    title: "features.console.title",
-    desc: "features.console.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-console.svg",
     title: "features-console-title",
     desc: "features-console-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Web_Console",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-debugger.svg",
-    title: "features-debugger-title",
-    desc: "features-debugger-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-debugger.svg",
-    title: "features.debugger.title",
-    desc: "features.debugger.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-debugger.svg",
     title: "features-debugger-title",
     desc: "features-debugger-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Debugger",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-network.svg",
-    title: "features-network-title",
-    desc: "features-network-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-network.svg",
-    title: "features.network.title",
-    desc: "features.network.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-network.svg",
     title: "features-network-title",
     desc: "features-network-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Network_Monitor",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-storage.svg",
-    title: "features-storage-title",
-    desc: "features-storage-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-storage.svg",
-    title: "features.storage.title",
-    desc: "features.storage.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-storage.svg",
     title: "features-storage-title",
     desc: "features-storage-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Storage_Inspector",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-responsive.svg",
-    title: "features-responsive-title",
-    desc: "features-responsive-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-responsive.svg",
-    title: "features.responsive.title",
-    desc: "features.responsive.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-responsive.svg",
     title: "features-responsive-title",
     desc: "features-responsive-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Responsive_Design_Mode",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-visualediting.svg",
-    title: "features-visual-editing-title",
-    desc: "features-visual-editing-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-visualediting.svg",
-    title: "features.visualediting.title",
-    desc: "features.visualediting.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-visualediting.svg",
     title: "features-visual-editing-title",
     desc: "features-visual-editing-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Style_Editor",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-performance.svg",
-    title: "features-performance-title",
-    desc: "features-performance-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-performance.svg",
-    title: "features.performance.title",
-    desc: "features.performance.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-performance.svg",
     title: "features-performance-title",
     desc: "features-performance-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Performance",
-<<<<<<< HEAD
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-memory.svg",
-    title: "features-memory-title",
-    desc: "features-memory-desc",
-||||||| merged common ancestors
-  }, {
-    icon: "chrome://devtools-startup/content/aboutdevtools/images/feature-memory.svg",
-    title: "features.memory.title",
-    desc: "features.memory.desc",
-=======
   },
   {
     icon:
       "chrome://devtools-startup/content/aboutdevtools/images/feature-memory.svg",
     title: "features-memory-title",
     desc: "features-memory-desc",
->>>>>>> upstream-releases
     link: "https://developer.mozilla.org/docs/Tools/Memory",
   },
 ];
@@ -275,15 +160,7 @@ function createFeatureEl(feature) {
   const li = document.createElement("li");
   li.classList.add("feature");
 
-<<<<<<< HEAD
-  const {icon, link, title, desc} = feature;
-||||||| merged common ancestors
-  let {icon, link, title, desc} = feature;
-  title = aboutDevtoolsBundle.GetStringFromName(title);
-  desc = aboutDevtoolsBundle.GetStringFromName(desc);
-=======
   const { icon, link, title, desc } = feature;
->>>>>>> upstream-releases
   // eslint-disable-next-line no-unsanitized/property
   li.innerHTML = `<a class="feature-link" href="${link}" target="_blank">
        <img class="feature-icon" src="${icon}"/>
@@ -297,89 +174,6 @@ function createFeatureEl(feature) {
   return li;
 }
 
-<<<<<<< HEAD
-window.addEventListener("load", function() {
-  const inspectorShortcut = getToolboxShortcut();
-  const welcomeMessage = document.getElementById("welcome-message");
-
-  // Set the welcome message content with the correct keyboard shortcut for the current
-  // platform.
-  document.l10n.setAttributes(welcomeMessage, "welcome-message",
-                             { shortcut: inspectorShortcut });
-
-  // Set the appropriate title message.
-  if (reason == "ContextMenu") {
-    document.getElementById("inspect-title").removeAttribute("hidden");
-  } else {
-    document.getElementById("common-title").removeAttribute("hidden");
-  }
-
-  // Display the message specific to the reason
-  const id = MESSAGES[reason];
-  if (id) {
-    const message = document.getElementById(id);
-    message.removeAttribute("hidden");
-  }
-
-  // Attach event listeners
-  document.getElementById("install").addEventListener("click", onInstallButtonClick);
-  document.getElementById("close").addEventListener("click", onCloseButtonClick);
-  Services.prefs.addObserver(DEVTOOLS_ENABLED_PREF, updatePage);
-
-  const featuresContainer = document.querySelector(".features-list");
-  for (const feature of features) {
-    featuresContainer.appendChild(createFeatureEl(feature));
-  }
-
-  // Add Google Analytics parameters to all the external links.
-  const externalLinks = [...document.querySelectorAll("a.external")];
-  for (const link of externalLinks) {
-    const linkUrl = new URL(link.getAttribute("href"));
-    GA_PARAMETERS.forEach(([key, value]) => linkUrl.searchParams.set(key, value));
-    link.setAttribute("href", linkUrl.href);
-  }
-||||||| merged common ancestors
-window.addEventListener("load", function() {
-  const inspectorShortcut = getToolboxShortcut();
-  const welcomeMessage = document.getElementById("welcome-message");
-
-  // Set the welcome message content with the correct keyboard sortcut for the current
-  // platform.
-  welcomeMessage.textContent = aboutDevtoolsBundle.formatStringFromName("welcome.message",
-    [inspectorShortcut], 1);
-
-  // Set the appropriate title message.
-  if (reason == "ContextMenu") {
-    document.getElementById("inspect-title").removeAttribute("hidden");
-  } else {
-    document.getElementById("common-title").removeAttribute("hidden");
-  }
-
-  // Display the message specific to the reason
-  const id = MESSAGES[reason];
-  if (id) {
-    const message = document.getElementById(id);
-    message.removeAttribute("hidden");
-  }
-
-  // Attach event listeners
-  document.getElementById("install").addEventListener("click", onInstallButtonClick);
-  document.getElementById("close").addEventListener("click", onCloseButtonClick);
-  Services.prefs.addObserver(DEVTOOLS_ENABLED_PREF, updatePage);
-
-  const featuresContainer = document.querySelector(".features-list");
-  for (const feature of features) {
-    featuresContainer.appendChild(createFeatureEl(feature));
-  }
-
-  // Add Google Analytics parameters to all the external links.
-  const externalLinks = [...document.querySelectorAll("a.external")];
-  for (const link of externalLinks) {
-    const linkUrl = new URL(link.getAttribute("href"));
-    GA_PARAMETERS.forEach(([key, value]) => linkUrl.searchParams.set(key, value));
-    link.setAttribute("href", linkUrl.href);
-  }
-=======
 window.addEventListener(
   "load",
   function() {
@@ -398,7 +192,6 @@ window.addEventListener(
     } else {
       document.getElementById("common-title").removeAttribute("hidden");
     }
->>>>>>> upstream-releases
 
     // Display the message specific to the reason
     const id = MESSAGES[reason];

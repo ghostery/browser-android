@@ -14,41 +14,6 @@ function debug(msg) {
   Services.console.logStringMessage("SessionStoreContent: " + msg);
 }
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "FormData",
-  "resource://gre/modules/FormData.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ContentRestore",
-  "resource:///modules/sessionstore/ContentRestore.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionHistory",
-  "resource://gre/modules/sessionstore/SessionHistory.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionStorage",
-  "resource:///modules/sessionstore/SessionStorage.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Utils",
-  "resource://gre/modules/sessionstore/Utils.jsm");
-const ssu = Cc["@mozilla.org/browser/sessionstore/utils;1"]
-              .getService(Ci.nsISessionStoreUtils);
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "FormData",
-  "resource://gre/modules/FormData.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ContentRestore",
-  "resource:///modules/sessionstore/ContentRestore.jsm");
-ChromeUtils.defineModuleGetter(this, "DocShellCapabilities",
-  "resource:///modules/sessionstore/DocShellCapabilities.jsm");
-ChromeUtils.defineModuleGetter(this, "ScrollPosition",
-  "resource://gre/modules/ScrollPosition.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionHistory",
-  "resource://gre/modules/sessionstore/SessionHistory.jsm");
-ChromeUtils.defineModuleGetter(this, "SessionStorage",
-  "resource:///modules/sessionstore/SessionStorage.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Utils",
-  "resource://gre/modules/sessionstore/Utils.jsm");
-const ssu = Cc["@mozilla.org/browser/sessionstore/utils;1"]
-              .getService(Ci.nsISessionStoreUtils);
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "ContentRestore",
@@ -59,7 +24,6 @@ ChromeUtils.defineModuleGetter(
   "SessionHistory",
   "resource://gre/modules/sessionstore/SessionHistory.jsm"
 );
->>>>>>> upstream-releases
 
 // A bound to the size of data to store for DOM Storage.
 const DOM_STORAGE_LIMIT_PREF = "browser.sessionstore.dom_storage_limit";
@@ -344,94 +308,10 @@ class SessionHistoryListener extends Handler {
     this.collect();
   }
 }
-<<<<<<< HEAD
-SessionHistoryListener.prototype.QueryInterface =
-  ChromeUtils.generateQI([Ci.nsISHistoryListener,
-                          Ci.nsISupportsWeakReference]);
-
-/**
- * Listens for scroll position changes. Whenever the user scrolls the top-most
- * frame we update the scroll position and will restore it when requested.
- *
- * Causes a SessionStore:update message to be sent that contains the current
- * scroll positions as a tree of strings. If no frame of the whole frame tree
- * is scrolled this will return null so that we don't tack a property onto
- * the tabData object in the parent process.
- *
- * Example:
- *   {scroll: "100,100", children: [null, null, {scroll: "200,200"}]}
- */
-class ScrollPositionListener extends Handler {
-  constructor(store) {
-    super(store);
-
-    ssu.addDynamicFrameFilteredListener(this.mm, "scroll", this, false);
-    this.stateChangeNotifier.addObserver(this);
-  }
-
-  handleEvent() {
-    this.messageQueue.push("scroll", () => this.collect());
-  }
-
-  onPageLoadCompleted() {
-    this.messageQueue.push("scroll", () => this.collect());
-  }
-
-  onPageLoadStarted() {
-    this.messageQueue.push("scroll", () => null);
-  }
-
-  collect() {
-    return mapFrameTree(this.mm, ssu.collectScrollPosition.bind(ssu));
-  }
-}
-||||||| merged common ancestors
-SessionHistoryListener.prototype.QueryInterface =
-  ChromeUtils.generateQI([Ci.nsISHistoryListener,
-                          Ci.nsISupportsWeakReference]);
-
-/**
- * Listens for scroll position changes. Whenever the user scrolls the top-most
- * frame we update the scroll position and will restore it when requested.
- *
- * Causes a SessionStore:update message to be sent that contains the current
- * scroll positions as a tree of strings. If no frame of the whole frame tree
- * is scrolled this will return null so that we don't tack a property onto
- * the tabData object in the parent process.
- *
- * Example:
- *   {scroll: "100,100", children: [null, null, {scroll: "200,200"}]}
- */
-class ScrollPositionListener extends Handler {
-  constructor(store) {
-    super(store);
-
-    ssu.addDynamicFrameFilteredListener(this.mm, "scroll", this, false);
-    this.stateChangeNotifier.addObserver(this);
-  }
-
-  handleEvent() {
-    this.messageQueue.push("scroll", () => this.collect());
-  }
-
-  onPageLoadCompleted() {
-    this.messageQueue.push("scroll", () => this.collect());
-  }
-
-  onPageLoadStarted() {
-    this.messageQueue.push("scroll", () => null);
-  }
-
-  collect() {
-    return mapFrameTree(this.mm, ScrollPosition.collect);
-  }
-}
-=======
 SessionHistoryListener.prototype.QueryInterface = ChromeUtils.generateQI([
   Ci.nsISHistoryListener,
   Ci.nsISupportsWeakReference,
 ]);
->>>>>>> upstream-releases
 
 /**
  * Listens for changes to input elements. Whenever the value of an input
@@ -472,81 +352,7 @@ class FormDataListener extends Handler {
   }
 
   collect() {
-<<<<<<< HEAD
-    return mapFrameTree(this.mm, FormData.collect);
-  }
-}
-
-/**
- * Listens for changes to docShell capabilities. Whenever a new load is started
- * we need to re-check the list of capabilities and send message when it has
- * changed.
- *
- * Causes a SessionStore:update message to be sent that contains the currently
- * disabled docShell capabilities (all nsIDocShell.allow* properties set to
- * false) as a string - i.e. capability names separate by commas.
- */
-class DocShellCapabilitiesListener extends Handler {
-  constructor(store) {
-    super(store);
-
-    /**
-     * This field is used to compare the last docShell capabilities to the ones
-     * that have just been collected. If nothing changed we won't send a message.
-     */
-    this._latestCapabilities = "";
-
-    this.stateChangeNotifier.addObserver(this);
-  }
-
-  onPageLoadStarted() {
-    let caps = ssu.collectDocShellCapabilities(this.mm.docShell);
-
-    // Send new data only when the capability list changes.
-    if (caps != this._latestCapabilities) {
-      this._latestCapabilities = caps;
-      this.messageQueue.push("disallow", () => caps || null);
-    }
-||||||| merged common ancestors
-    return mapFrameTree(this.mm, FormData.collect);
-  }
-}
-
-/**
- * Listens for changes to docShell capabilities. Whenever a new load is started
- * we need to re-check the list of capabilities and send message when it has
- * changed.
- *
- * Causes a SessionStore:update message to be sent that contains the currently
- * disabled docShell capabilities (all nsIDocShell.allow* properties set to
- * false) as a string - i.e. capability names separate by commas.
- */
-class DocShellCapabilitiesListener extends Handler {
-  constructor(store) {
-    super(store);
-
-    /**
-     * This field is used to compare the last docShell capabilities to the ones
-     * that have just been collected. If nothing changed we won't send a message.
-     */
-    this._latestCapabilities = "";
-
-    this.stateChangeNotifier.addObserver(this);
-  }
-
-  onPageLoadStarted() {
-    // The order of docShell capabilities cannot change while we're running
-    // so calling join() without sorting before is totally sufficient.
-    let caps = DocShellCapabilities.collect(this.mm.docShell).join(",");
-
-    // Send new data only when the capability list changes.
-    if (caps != this._latestCapabilities) {
-      this._latestCapabilities = caps;
-      this.messageQueue.push("disallow", () => caps || null);
-    }
-=======
     return SessionStoreUtils.collectFormData(this.mm.content);
->>>>>>> upstream-releases
   }
 }
 

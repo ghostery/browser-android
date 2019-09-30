@@ -178,23 +178,10 @@ nsresult nsXBLProtoImplMethod::CompileMember(
   options.setFileAndLine(functionUri.get(),
                          uncompiledMethod->mBodyText.GetLineNumber());
   JS::Rooted<JSObject*> methodObject(cx);
-<<<<<<< HEAD
-  JS::AutoObjectVector emptyVector(cx);
-  nsresult rv = nsJSUtils::CompileFunction(
-      jsapi, emptyVector, options, cname, paramCount,
-      const_cast<const char**>(args), body, methodObject.address());
-||||||| merged common ancestors
-  JS::AutoObjectVector emptyVector(cx);
-  nsresult rv = nsJSUtils::CompileFunction(jsapi, emptyVector, options, cname,
-                                           paramCount,
-                                           const_cast<const char**>(args),
-                                           body, methodObject.address());
-=======
   JS::RootedVector<JSObject*> emptyVector(cx);
   nsresult rv = nsJSUtils::CompileFunction(
       jsapi, emptyVector, options, cname, paramCount,
       const_cast<const char**>(args), body, methodObject.address());
->>>>>>> upstream-releases
 
   // Destroy our uncompiled method and delete our arg list.
   delete uncompiledMethod;
@@ -292,14 +279,7 @@ nsresult nsXBLProtoImplAnonymousMethod::Execute(
   JSContext* cx = aes.cx();
   JS::RootedVector<JSObject*> scopeChain(cx);
   if (!nsJSUtils::GetScopeChainForXBL(cx, aBoundElement->AsElement(),
-<<<<<<< HEAD
-                                      aProtoBinding, scopeChain)) {
-||||||| merged common ancestors
-                                      aProtoBinding,
-                                      scopeChain)) {
-=======
                                       aProtoBinding, &scopeChain)) {
->>>>>>> upstream-releases
     return NS_ERROR_OUT_OF_MEMORY;
   }
   MOZ_ASSERT(scopeChain.length() != 0);

@@ -1,37 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/workers/parser/getScopes/index.js
-
-// @flow
-
-import {
-  buildScopeList,
-  parseSourceScopes,
-  type SourceScope,
-  type ParsedScope,
-  type BindingData,
-  type BindingDeclarationLocation,
-  type BindingLocation,
-  type BindingLocationType,
-  type BindingMetaValue,
-  type BindingType
-} from "./visitor";
-
-export type {
-  SourceScope,
-  BindingData,
-  BindingDeclarationLocation,
-  BindingLocation,
-  BindingLocationType,
-  BindingMetaValue,
-  BindingType
-};
-
-import type { SourceLocation } from "../../../types";
-
-||||||| merged common ancestors
-=======
 
 // @flow
 
@@ -60,7 +29,6 @@ export type {
 
 import type { SourceLocation } from "../../../types";
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/workers/parser/getScopes/index.js
 let parsedScopesCache = new Map();
 
 export default function getScopes(location: SourceLocation): SourceScope[] {

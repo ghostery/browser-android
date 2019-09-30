@@ -25,14 +25,9 @@ const {
   PROCESS_TYPE_PLUGIN,
   PROCESS_TYPE_GMPLUGIN,
   PROCESS_TYPE_GPU,
-<<<<<<< HEAD
-  PROCESS_TYPE_RDD,
-||||||| merged common ancestors
-=======
   PROCESS_TYPE_VR,
   PROCESS_TYPE_RDD,
   PROCESS_TYPE_SOCKET,
->>>>>>> upstream-releases
   CRASH_TYPE_CRASH,
   CRASH_TYPE_HANG,
   SUBMISSION_RESULT_OK,
@@ -414,56 +409,11 @@ add_task(async function test_add_socket_crash() {
   Assert.equal(crashes.length, 2);
 });
 
-add_task(async function test_add_rdd_crash() {
-  let s = await getStore();
-
-  Assert.ok(
-    s.addCrash(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH, "id1", new Date())
-  );
-  Assert.equal(s.crashesCount, 1);
-
-  let c = s.crashes[0];
-  Assert.ok(c.crashDate);
-  Assert.equal(c.type, PROCESS_TYPE_RDD + "-" + CRASH_TYPE_CRASH);
-  Assert.ok(c.isOfType(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH));
-
-  Assert.ok(
-    s.addCrash(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH, "id2", new Date())
-  );
-  Assert.equal(s.crashesCount, 2);
-
-  Assert.ok(
-    s.addCrash(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH, "id1", new Date())
-  );
-  Assert.equal(s.crashesCount, 2);
-
-  let crashes = s.getCrashesOfType(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH);
-  Assert.equal(crashes.length, 2);
-});
-
 add_task(async function test_add_mixed_types() {
   let s = await getStore();
 
   Assert.ok(
     s.addCrash(PROCESS_TYPE_MAIN, CRASH_TYPE_CRASH, "mcrash", new Date()) &&
-<<<<<<< HEAD
-    s.addCrash(PROCESS_TYPE_MAIN, CRASH_TYPE_HANG, "mhang", new Date()) &&
-    s.addCrash(PROCESS_TYPE_CONTENT, CRASH_TYPE_CRASH, "ccrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_CONTENT, CRASH_TYPE_HANG, "chang", new Date()) &&
-    s.addCrash(PROCESS_TYPE_PLUGIN, CRASH_TYPE_CRASH, "pcrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_PLUGIN, CRASH_TYPE_HANG, "phang", new Date()) &&
-    s.addCrash(PROCESS_TYPE_GMPLUGIN, CRASH_TYPE_CRASH, "gmpcrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_GPU, CRASH_TYPE_CRASH, "gpucrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH, "rddcrash", new Date())
-||||||| merged common ancestors
-    s.addCrash(PROCESS_TYPE_MAIN, CRASH_TYPE_HANG, "mhang", new Date()) &&
-    s.addCrash(PROCESS_TYPE_CONTENT, CRASH_TYPE_CRASH, "ccrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_CONTENT, CRASH_TYPE_HANG, "chang", new Date()) &&
-    s.addCrash(PROCESS_TYPE_PLUGIN, CRASH_TYPE_CRASH, "pcrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_PLUGIN, CRASH_TYPE_HANG, "phang", new Date()) &&
-    s.addCrash(PROCESS_TYPE_GMPLUGIN, CRASH_TYPE_CRASH, "gmpcrash", new Date()) &&
-    s.addCrash(PROCESS_TYPE_GPU, CRASH_TYPE_CRASH, "gpucrash", new Date())
-=======
       s.addCrash(PROCESS_TYPE_MAIN, CRASH_TYPE_HANG, "mhang", new Date()) &&
       s.addCrash(
         PROCESS_TYPE_CONTENT,
@@ -489,16 +439,9 @@ add_task(async function test_add_mixed_types() {
         "socketcrash",
         new Date()
       )
->>>>>>> upstream-releases
   );
 
-<<<<<<< HEAD
-  Assert.equal(s.crashesCount, 9);
-||||||| merged common ancestors
-  Assert.equal(s.crashesCount, 8);
-=======
   Assert.equal(s.crashesCount, 11);
->>>>>>> upstream-releases
 
   await s.save();
 
@@ -507,13 +450,7 @@ add_task(async function test_add_mixed_types() {
 
   await s.load();
 
-<<<<<<< HEAD
-  Assert.equal(s.crashesCount, 9);
-||||||| merged common ancestors
-  Assert.equal(s.crashesCount, 8);
-=======
   Assert.equal(s.crashesCount, 11);
->>>>>>> upstream-releases
 
   let crashes = s.getCrashesOfType(PROCESS_TYPE_MAIN, CRASH_TYPE_CRASH);
   Assert.equal(crashes.length, 1);
@@ -531,18 +468,12 @@ add_task(async function test_add_mixed_types() {
   Assert.equal(crashes.length, 1);
   crashes = s.getCrashesOfType(PROCESS_TYPE_GPU, CRASH_TYPE_CRASH);
   Assert.equal(crashes.length, 1);
-<<<<<<< HEAD
-  crashes = s.getCrashesOfType(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH);
-  Assert.equal(crashes.length, 1);
-||||||| merged common ancestors
-=======
   crashes = s.getCrashesOfType(PROCESS_TYPE_VR, CRASH_TYPE_CRASH);
   Assert.equal(crashes.length, 1);
   crashes = s.getCrashesOfType(PROCESS_TYPE_RDD, CRASH_TYPE_CRASH);
   Assert.equal(crashes.length, 1);
   crashes = s.getCrashesOfType(PROCESS_TYPE_SOCKET, CRASH_TYPE_CRASH);
   Assert.equal(crashes.length, 1);
->>>>>>> upstream-releases
 });
 
 // Crashes added beyond the high water mark behave properly.

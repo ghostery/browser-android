@@ -84,19 +84,9 @@ extern void CallWarningReporter(JSContext* cx, JSErrorReport* report);
  * Report a compile error during script processing prior to execution of the
  * script.
  */
-<<<<<<< HEAD
-extern void ReportCompileError(JSContext* cx, ErrorMetadata&& metadata,
-                               UniquePtr<JSErrorNotes> notes, unsigned flags,
-                               unsigned errorNumber, va_list args);
-||||||| merged common ancestors
-extern void
-ReportCompileError(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
-                   unsigned flags, unsigned errorNumber, va_list args);
-=======
 extern void ReportCompileError(JSContext* cx, ErrorMetadata&& metadata,
                                UniquePtr<JSErrorNotes> notes, unsigned flags,
                                unsigned errorNumber, va_list* args);
->>>>>>> upstream-releases
 
 /**
  * Report a compile warning during script processing prior to execution of the
@@ -106,19 +96,9 @@ extern void ReportCompileError(JSContext* cx, ErrorMetadata&& metadata,
  * This function DOES NOT respect an existing werror option.  If the caller
  * wishes such option to be respected, it must do so itself.
  */
-<<<<<<< HEAD
-extern MOZ_MUST_USE bool ReportCompileWarning(
-    JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
-    unsigned flags, unsigned errorNumber, va_list args);
-||||||| merged common ancestors
-extern MOZ_MUST_USE bool
-ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
-                     unsigned flags, unsigned errorNumber, va_list args);
-=======
 extern MOZ_MUST_USE bool ReportCompileWarning(
     JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
     unsigned flags, unsigned errorNumber, va_list* args);
->>>>>>> upstream-releases
 
 class GlobalObject;
 

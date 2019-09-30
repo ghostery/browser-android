@@ -24,29 +24,6 @@ const TEST_URI = "data:application/xhtml+xml;charset=utf-8," + encodeURI(XHTML);
 
 // An array of (key, suggestions) pairs where key is a key to press and
 // suggestions is an array of suggestions that should be shown in the popup.
-<<<<<<< HEAD
-const TEST_DATA = [{
-  key: "c",
-  suggestions: ["circle", "clipPath"],
-}, {
-  key: "VK_BACK_SPACE",
-  suggestions: [],
-}, {
-  key: "s",
-  suggestions: ["svg"],
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  key: "c",
-  suggestions: ["circle", "clipPath"]
-}, {
-  key: "VK_BACK_SPACE",
-  suggestions: []
-}, {
-  key: "s",
-  suggestions: ["svg"]
-}];
-=======
 const TEST_DATA = [
   {
     key: "c",
@@ -61,7 +38,6 @@ const TEST_DATA = [
     suggestions: ["svg"],
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URI);

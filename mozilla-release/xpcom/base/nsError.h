@@ -79,24 +79,12 @@ inline bool NS_ERROR_GET_SEVERITY(nsresult aErr) {
 }
 
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(disable : 4251) /* 'nsCOMPtr<class nsIInputStream>' needs to   \
-                                   have dll-interface to be used by clients of \
-                                   class 'nsInputStream' */
-#pragma warning(                                                              \
-    disable : 4275) /* non dll-interface class 'nsISupports' used as base for \
-                       dll-interface class 'nsIRDFNode' */
-||||||| merged common ancestors
-#pragma warning(disable: 4251) /* 'nsCOMPtr<class nsIInputStream>' needs to have dll-interface to be used by clients of class 'nsInputStream' */
-#pragma warning(disable: 4275) /* non dll-interface class 'nsISupports' used as base for dll-interface class 'nsIRDFNode' */
-=======
 #  pragma warning(disable : 4251) /* 'nsCOMPtr<class nsIInputStream>' needs to \
                                      have dll-interface to be used by clients  \
                                      of class 'nsInputStream' */
 #  pragma warning(                                                          \
       disable : 4275) /* non dll-interface class 'nsISupports' used as base \
                          for dll-interface class 'nsIRDFNode' */
->>>>>>> upstream-releases
 #endif
 
 #endif

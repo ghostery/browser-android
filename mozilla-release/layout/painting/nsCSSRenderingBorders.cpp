@@ -102,17 +102,8 @@ static bool IsZeroSize(const Size& sz) {
   return sz.width == 0.0 || sz.height == 0.0;
 }
 
-<<<<<<< HEAD
-/* static */ bool nsCSSBorderRenderer::AllCornersZeroSize(
-    const RectCornerRadii& corners) {
-||||||| merged common ancestors
-/* static */ bool
-nsCSSBorderRenderer::AllCornersZeroSize(const RectCornerRadii& corners)
-{
-=======
 /* static */
 bool nsCSSBorderRenderer::AllCornersZeroSize(const RectCornerRadii& corners) {
->>>>>>> upstream-releases
   return IsZeroSize(corners[eCornerTopLeft]) &&
          IsZeroSize(corners[eCornerTopRight]) &&
          IsZeroSize(corners[eCornerBottomRight]) &&
@@ -157,43 +148,6 @@ typedef enum {
   CORNER_DOT
 } CornerStyle;
 
-<<<<<<< HEAD
-nsCSSBorderRenderer::nsCSSBorderRenderer(
-    nsPresContext* aPresContext, const nsIDocument* aDocument,
-    DrawTarget* aDrawTarget, const Rect& aDirtyRect, Rect& aOuterRect,
-    const StyleBorderStyle* aBorderStyles, const Float* aBorderWidths,
-    RectCornerRadii& aBorderRadii, const nscolor* aBorderColors,
-    bool aBackfaceIsVisible, const Maybe<Rect>& aClipRect)
-    : mPresContext(aPresContext),
-      mDocument(aDocument),
-      mDrawTarget(aDrawTarget),
-      mDirtyRect(aDirtyRect),
-      mOuterRect(aOuterRect),
-      mBorderRadii(aBorderRadii),
-      mBackfaceIsVisible(aBackfaceIsVisible),
-      mLocalClip(aClipRect) {
-||||||| merged common ancestors
-nsCSSBorderRenderer::nsCSSBorderRenderer(nsPresContext* aPresContext,
-                                         const nsIDocument* aDocument,
-                                         DrawTarget* aDrawTarget,
-                                         const Rect& aDirtyRect,
-                                         Rect& aOuterRect,
-                                         const uint8_t* aBorderStyles,
-                                         const Float* aBorderWidths,
-                                         RectCornerRadii& aBorderRadii,
-                                         const nscolor* aBorderColors,
-                                         bool aBackfaceIsVisible,
-                                         const Maybe<Rect>& aClipRect)
-  : mPresContext(aPresContext)
-  , mDocument(aDocument)
-  , mDrawTarget(aDrawTarget)
-  , mDirtyRect(aDirtyRect)
-  , mOuterRect(aOuterRect)
-  , mBorderRadii(aBorderRadii)
-  , mBackfaceIsVisible(aBackfaceIsVisible)
-  , mLocalClip(aClipRect)
-{
-=======
 nsCSSBorderRenderer::nsCSSBorderRenderer(
     nsPresContext* aPresContext, const Document* aDocument,
     DrawTarget* aDrawTarget, const Rect& aDirtyRect, Rect& aOuterRect,
@@ -208,7 +162,6 @@ nsCSSBorderRenderer::nsCSSBorderRenderer(
       mBorderRadii(aBorderRadii),
       mBackfaceIsVisible(aBackfaceIsVisible),
       mLocalClip(aClipRect) {
->>>>>>> upstream-releases
   PodCopy(mBorderStyles, aBorderStyles, 4);
   PodCopy(mBorderWidths, aBorderWidths, 4);
   PodCopy(mBorderColors, aBorderColors, 4);
@@ -229,22 +182,10 @@ nsCSSBorderRenderer::nsCSSBorderRenderer(
   mAvoidStroke = false;
 }
 
-<<<<<<< HEAD
-/* static */ void nsCSSBorderRenderer::ComputeInnerRadii(
-    const RectCornerRadii& aRadii, const Float* aBorderSizes,
-    RectCornerRadii* aInnerRadiiRet) {
-||||||| merged common ancestors
-/* static */ void
-nsCSSBorderRenderer::ComputeInnerRadii(const RectCornerRadii& aRadii,
-                                       const Float* aBorderSizes,
-                                       RectCornerRadii* aInnerRadiiRet)
-{
-=======
 /* static */
 void nsCSSBorderRenderer::ComputeInnerRadii(const RectCornerRadii& aRadii,
                                             const Float* aBorderSizes,
                                             RectCornerRadii* aInnerRadiiRet) {
->>>>>>> upstream-releases
   RectCornerRadii& iRadii = *aInnerRadiiRet;
 
   iRadii[C_TL].width =
@@ -268,22 +209,10 @@ void nsCSSBorderRenderer::ComputeInnerRadii(const RectCornerRadii& aRadii,
       std::max(0.f, aRadii[C_BL].height - aBorderSizes[eSideBottom]);
 }
 
-<<<<<<< HEAD
-/* static */ void nsCSSBorderRenderer::ComputeOuterRadii(
-    const RectCornerRadii& aRadii, const Float* aBorderSizes,
-    RectCornerRadii* aOuterRadiiRet) {
-||||||| merged common ancestors
-/* static */ void
-nsCSSBorderRenderer::ComputeOuterRadii(const RectCornerRadii& aRadii,
-                                       const Float* aBorderSizes,
-                                       RectCornerRadii* aOuterRadiiRet)
-{
-=======
 /* static */
 void nsCSSBorderRenderer::ComputeOuterRadii(const RectCornerRadii& aRadii,
                                             const Float* aBorderSizes,
                                             RectCornerRadii* aOuterRadiiRet) {
->>>>>>> upstream-releases
   RectCornerRadii& oRadii = *aOuterRadiiRet;
 
   // default all corners to sharp corners
@@ -357,16 +286,9 @@ bool nsCSSBorderRenderer::AreBorderSideFinalStylesSame(uint8_t aSides) {
   int firstStyle = 0;
   NS_FOR_CSS_SIDES(i) {
     if (firstStyle == i) {
-<<<<<<< HEAD
-      if (((1 << i) & aSides) == 0) firstStyle++;
-||||||| merged common ancestors
-      if (((1 << i) & aSides) == 0)
-        firstStyle++;
-=======
       if (((1 << i) & aSides) == 0) {
         firstStyle++;
       }
->>>>>>> upstream-releases
       continue;
     }
 
@@ -474,38 +396,18 @@ BorderColorStyle nsCSSBorderRenderer::BorderColorStyleForSolidCorner(
     case StyleBorderStyle::Double:
       return BorderColorStyleSolid;
 
-<<<<<<< HEAD
-    case StyleBorderStyle::Inset:
-    case StyleBorderStyle::Groove:
-      if (aCorner == eCornerTopLeft)
-||||||| merged common ancestors
-    case NS_STYLE_BORDER_STYLE_INSET:
-    case NS_STYLE_BORDER_STYLE_GROOVE:
-      if (aCorner == eCornerTopLeft)
-=======
     case StyleBorderStyle::Inset:
     case StyleBorderStyle::Groove:
       if (aCorner == eCornerTopLeft) {
->>>>>>> upstream-releases
         return BorderColorStyleDark;
       } else if (aCorner == eCornerBottomRight) {
         return BorderColorStyleLight;
       }
       break;
 
-<<<<<<< HEAD
-    case StyleBorderStyle::Outset:
-    case StyleBorderStyle::Ridge:
-      if (aCorner == eCornerTopLeft)
-||||||| merged common ancestors
-    case NS_STYLE_BORDER_STYLE_OUTSET:
-    case NS_STYLE_BORDER_STYLE_RIDGE:
-      if (aCorner == eCornerTopLeft)
-=======
     case StyleBorderStyle::Outset:
     case StyleBorderStyle::Ridge:
       if (aCorner == eCornerTopLeft) {
->>>>>>> upstream-releases
         return BorderColorStyleLight;
       } else if (aCorner == eCornerBottomRight) {
         return BorderColorStyleDark;
@@ -1337,35 +1239,17 @@ void nsCSSBorderRenderer::DrawBorderSides(int aSides) {
   BorderColorStyle borderColorStyleTopLeft[3], borderColorStyleBottomRight[3];
   BorderColorStyle* borderColorStyle = nullptr;
 
-<<<<<<< HEAD
-  NS_FOR_CSS_SIDES(i) {
-    if ((aSides & (1 << i)) == 0) continue;
-||||||| merged common ancestors
-  NS_FOR_CSS_SIDES(i)
-  {
-    if ((aSides & (1 << i)) == 0)
-      continue;
-=======
   NS_FOR_CSS_SIDES(i) {
     if ((aSides & (1 << i)) == 0) {
       continue;
     }
->>>>>>> upstream-releases
     borderRenderStyle = mBorderStyles[i];
     borderRenderColor = mBorderColors[i];
     break;
   }
 
-<<<<<<< HEAD
-  if (borderRenderStyle == StyleBorderStyle::None ||
-      borderRenderStyle == StyleBorderStyle::Hidden)
-||||||| merged common ancestors
-  if (borderRenderStyle == NS_STYLE_BORDER_STYLE_NONE ||
-      borderRenderStyle == NS_STYLE_BORDER_STYLE_HIDDEN)
-=======
   if (borderRenderStyle == StyleBorderStyle::None ||
       borderRenderStyle == StyleBorderStyle::Hidden) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -1403,23 +1287,11 @@ void nsCSSBorderRenderer::DrawBorderSides(int aSides) {
   // If the border width is 1, we need to change the borderRenderStyle
   // a bit to make sure that we get the right colors -- e.g. 'ridge'
   // with a 1px border needs to look like solid, not like 'outset'.
-<<<<<<< HEAD
-  if (mOneUnitBorder && (borderRenderStyle == StyleBorderStyle::Ridge ||
-                         borderRenderStyle == StyleBorderStyle::Groove ||
-                         borderRenderStyle == StyleBorderStyle::Double))
-    borderRenderStyle = StyleBorderStyle::Solid;
-||||||| merged common ancestors
-  if (mOneUnitBorder && (borderRenderStyle == NS_STYLE_BORDER_STYLE_RIDGE ||
-                         borderRenderStyle == NS_STYLE_BORDER_STYLE_GROOVE ||
-                         borderRenderStyle == NS_STYLE_BORDER_STYLE_DOUBLE))
-    borderRenderStyle = NS_STYLE_BORDER_STYLE_SOLID;
-=======
   if (mOneUnitBorder && (borderRenderStyle == StyleBorderStyle::Ridge ||
                          borderRenderStyle == StyleBorderStyle::Groove ||
                          borderRenderStyle == StyleBorderStyle::Double)) {
     borderRenderStyle = StyleBorderStyle::Solid;
   }
->>>>>>> upstream-releases
 
   switch (borderRenderStyle) {
     case StyleBorderStyle::Solid:
@@ -1728,16 +1600,9 @@ void nsCSSBorderRenderer::SetupDashedOptions(StrokeOptions* aStrokeOptions,
       // +---+---+---+---+---+---+---+---+---+---+
 
       // If border is too short, draw solid line.
-<<<<<<< HEAD
-      if (aBorderLength < 6.0f * minHalfDash) return;
-||||||| merged common ancestors
-      if (aBorderLength < 6.0f * minHalfDash)
-        return;
-=======
       if (aBorderLength < 6.0f * minHalfDash) {
         return;
       }
->>>>>>> upstream-releases
 
       if (count % 4 == 0) {
         count += 2;
@@ -1768,16 +1633,9 @@ void nsCSSBorderRenderer::SetupDashedOptions(StrokeOptions* aStrokeOptions,
       // +---+---+---+---+---+---+---+---+---+
 
       // If border is too short, draw solid line.
-<<<<<<< HEAD
-      if (aBorderLength < 5.0f * minHalfDash) return;
-||||||| merged common ancestors
-      if (aBorderLength < 5.0f * minHalfDash)
-        return;
-=======
       if (aBorderLength < 5.0f * minHalfDash) {
         return;
       }
->>>>>>> upstream-releases
 
       if (count % 4 == 0) {
         count += 1;
@@ -1799,16 +1657,9 @@ void nsCSSBorderRenderer::SetupDashedOptions(StrokeOptions* aStrokeOptions,
       // +---+---+---+---+---+---+---+---+
 
       // If border is too short, draw solid line.
-<<<<<<< HEAD
-      if (aBorderLength < 4.0f * minHalfDash) return;
-||||||| merged common ancestors
-      if (aBorderLength < 4.0f * minHalfDash)
-        return;
-=======
       if (aBorderLength < 4.0f * minHalfDash) {
         return;
       }
->>>>>>> upstream-releases
 
       if (count % 4 == 1) {
         count += 3;
@@ -3229,16 +3080,9 @@ void nsCSSBorderRenderer::DrawBorders() {
   {
     gfxRect outerRect = ThebesRect(mOuterRect);
     gfxUtils::ConditionRect(outerRect);
-<<<<<<< HEAD
-    if (outerRect.IsEmpty()) return;
-||||||| merged common ancestors
-    if (outerRect.IsEmpty())
-      return;
-=======
     if (outerRect.IsEmpty()) {
       return;
     }
->>>>>>> upstream-releases
     mOuterRect = ToRect(outerRect);
 
     gfxRect innerRect = ThebesRect(mInnerRect);
@@ -3331,16 +3175,9 @@ void nsCSSBorderRenderer::DrawBorders() {
     NS_FOR_CSS_FULL_CORNERS(corner) {
       const mozilla::Side sides[2] = {mozilla::Side(corner), PREV_SIDE(corner)};
 
-<<<<<<< HEAD
-      if (!IsZeroSize(mBorderRadii[corner])) continue;
-||||||| merged common ancestors
-      if (!IsZeroSize(mBorderRadii[corner]))
-        continue;
-=======
       if (!IsZeroSize(mBorderRadii[corner])) {
         continue;
       }
->>>>>>> upstream-releases
 
       if (mBorderWidths[sides[0]] == 1.0 && mBorderWidths[sides[1]] == 1.0) {
         if (mOuterRect.Width() > mOuterRect.Height()) {
@@ -3354,16 +3191,9 @@ void nsCSSBorderRenderer::DrawBorders() {
     // First, the corners
     NS_FOR_CSS_FULL_CORNERS(corner) {
       // if there's no corner, don't do all this work for it
-<<<<<<< HEAD
-      if (IsZeroSize(mBorderCornerDimensions[corner])) continue;
-||||||| merged common ancestors
-      if (IsZeroSize(mBorderCornerDimensions[corner]))
-        continue;
-=======
       if (IsZeroSize(mBorderCornerDimensions[corner])) {
         continue;
       }
->>>>>>> upstream-releases
 
       const int sides[2] = {corner, PREV_SIDE(corner)};
       int sideBits = (1 << sides[0]) | (1 << sides[1]);
@@ -3454,29 +3284,14 @@ void nsCSSBorderRenderer::DrawBorders() {
     // We're done with the corners, now draw the sides.
     NS_FOR_CSS_SIDES(side) {
       // if we drew it above, skip it
-<<<<<<< HEAD
-      if (alreadyDrawnSides & (1 << side)) continue;
-||||||| merged common ancestors
-      if (alreadyDrawnSides & (1 << side))
-        continue;
-=======
       if (alreadyDrawnSides & (1 << side)) {
         continue;
       }
->>>>>>> upstream-releases
 
       // If there's no border on this side, skip it
       if (mBorderWidths[side] == 0.0 ||
-<<<<<<< HEAD
-          mBorderStyles[side] == StyleBorderStyle::Hidden ||
-          mBorderStyles[side] == StyleBorderStyle::None)
-||||||| merged common ancestors
-          mBorderStyles[side] == NS_STYLE_BORDER_STYLE_HIDDEN ||
-          mBorderStyles[side] == NS_STYLE_BORDER_STYLE_NONE)
-=======
           mBorderStyles[side] == StyleBorderStyle::Hidden ||
           mBorderStyles[side] == StyleBorderStyle::None) {
->>>>>>> upstream-releases
         continue;
       }
 
@@ -3528,54 +3343,16 @@ void nsCSSBorderRenderer::CreateWebRenderCommands(
                          LayoutDeviceSize::FromUnknownSize(mBorderRadii[2]));
 
   if (mLocalClip) {
-<<<<<<< HEAD
-    LayoutDeviceRect clip =
-        LayoutDeviceRect::FromUnknownRect(mLocalClip.value());
-    wr::LayoutRect clipRect = wr::ToRoundedLayoutRect(clip);
-    wr::WrClipId clipId = aBuilder.DefineClip(Nothing(), clipRect);
-    aBuilder.PushClip(clipId);
-||||||| merged common ancestors
-    LayoutDeviceRect clip =
-      LayoutDeviceRect::FromUnknownRect(mLocalClip.value());
-    wr::LayoutRect clipRect = wr::ToRoundedLayoutRect(clip);
-    wr::WrClipId clipId = aBuilder.DefineClip(Nothing(), clipRect);
-    aBuilder.PushClip(clipId);
-=======
     LayoutDeviceRect localClip =
         LayoutDeviceRect::FromUnknownRect(mLocalClip.value());
     clipRect = wr::ToRoundedLayoutRect(localClip.Intersect(outerRect));
->>>>>>> upstream-releases
   }
 
   Range<const wr::BorderSide> wrsides(side, 4);
-<<<<<<< HEAD
-  aBuilder.PushBorder(roundedRect, roundedRect, mBackfaceIsVisible,
-                      wr::ToBorderWidths(mBorderWidths[0], mBorderWidths[1],
-                                         mBorderWidths[2], mBorderWidths[3]),
-                      wrsides, borderRadius);
-
-  if (mLocalClip) {
-    aBuilder.PopClip();
-  }
-||||||| merged common ancestors
-  aBuilder.PushBorder(
-    roundedRect,
-    roundedRect,
-    mBackfaceIsVisible,
-    wr::ToBorderWidths(
-      mBorderWidths[0], mBorderWidths[1], mBorderWidths[2], mBorderWidths[3]),
-    wrsides,
-    borderRadius);
-
-  if (mLocalClip) {
-    aBuilder.PopClip();
-  }
-=======
   aBuilder.PushBorder(roundedRect, clipRect, mBackfaceIsVisible,
                       wr::ToBorderWidths(mBorderWidths[0], mBorderWidths[1],
                                          mBorderWidths[2], mBorderWidths[3]),
                       wrsides, borderRadius);
->>>>>>> upstream-releases
 }
 
 /* static */
@@ -3781,26 +3558,6 @@ ImgDrawResult nsCSSBorderImageRenderer::DrawBorderImage(
   return result;
 }
 
-<<<<<<< HEAD
-ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
-    nsDisplayItem* aItem, nsIFrame* aForFrame,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder) {
-||||||| merged common ancestors
-ImgDrawResult
-nsCSSBorderImageRenderer::CreateWebRenderCommands(
-  nsDisplayItem* aItem,
-  nsIFrame* aForFrame,
-  mozilla::wr::DisplayListBuilder& aBuilder,
-  mozilla::wr::IpcResourceUpdateQueue& aResources,
-  const mozilla::layers::StackingContextHelper& aSc,
-  mozilla::layers::WebRenderLayerManager* aManager,
-  nsDisplayListBuilder* aDisplayListBuilder)
-{
-=======
 ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
     nsDisplayItem* aItem, nsIFrame* aForFrame,
     mozilla::wr::DisplayListBuilder& aBuilder,
@@ -3808,7 +3565,6 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
     const mozilla::layers::StackingContextHelper& aSc,
     mozilla::layers::RenderRootStateManager* aManager,
     nsDisplayListBuilder* aDisplayListBuilder) {
->>>>>>> upstream-releases
   if (!mImageRenderer.IsReady()) {
     return ImgDrawResult::NOT_READY;
   }
@@ -3829,17 +3585,9 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
   }
 
   LayoutDeviceRect destRect =
-<<<<<<< HEAD
-      LayoutDeviceRect::FromAppUnits(mArea, appUnitsPerDevPixel);
-  wr::LayoutRect dest = wr::ToRoundedLayoutRect(destRect);
-||||||| merged common ancestors
-    LayoutDeviceRect::FromAppUnits(mArea, appUnitsPerDevPixel);
-  wr::LayoutRect dest = wr::ToRoundedLayoutRect(destRect);
-=======
       LayoutDeviceRect::FromAppUnits(mArea, appUnitsPerDevPixel);
   destRect.Round();
   wr::LayoutRect dest = wr::ToLayoutRect(destRect);
->>>>>>> upstream-releases
 
   wr::LayoutRect clip = dest;
   if (!mClip.IsEmpty()) {
@@ -3877,29 +3625,13 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
 
       Maybe<SVGImageContext> svgContext;
       gfx::IntSize decodeSize =
-<<<<<<< HEAD
-          nsLayoutUtils::ComputeImageContainerDrawingParameters(
-              img, aForFrame, destRect, aSc, flags, svgContext);
-||||||| merged common ancestors
-        nsLayoutUtils::ComputeImageContainerDrawingParameters(
-          img, aForFrame, destRect, aSc, flags, svgContext);
-=======
           nsLayoutUtils::ComputeImageContainerDrawingParameters(
               img, aForFrame, imageRect, aSc, flags, svgContext);
->>>>>>> upstream-releases
 
       RefPtr<layers::ImageContainer> container;
-<<<<<<< HEAD
-      drawResult = img->GetImageContainerAtSize(
-          aManager, decodeSize, svgContext, flags, getter_AddRefs(container));
-||||||| merged common ancestors
-      drawResult = img->GetImageContainerAtSize(aManager, decodeSize, svgContext,
-                                                flags, getter_AddRefs(container));
-=======
       drawResult = img->GetImageContainerAtSize(aManager->LayerManager(),
                                                 decodeSize, svgContext, flags,
                                                 getter_AddRefs(container));
->>>>>>> upstream-releases
       if (!container) {
         break;
       }
@@ -3914,30 +3646,6 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
         break;
       }
 
-<<<<<<< HEAD
-      aBuilder.PushBorderImage(
-          dest, clip, !aItem->BackfaceIsHidden(),
-          wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
-          key.value(), (float)(mImageSize.width) / appUnitsPerDevPixel,
-          (float)(mImageSize.height) / appUnitsPerDevPixel,
-          wr::ToSideOffsets2D_i32(slice[0], slice[1], slice[2], slice[3]),
-          wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2], outset[3]),
-          wr::ToRepeatMode(mRepeatModeHorizontal),
-          wr::ToRepeatMode(mRepeatModeVertical));
-||||||| merged common ancestors
-      aBuilder.PushBorderImage(
-        dest,
-        clip,
-        !aItem->BackfaceIsHidden(),
-        wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
-        key.value(),
-        (float)(mImageSize.width) / appUnitsPerDevPixel,
-        (float)(mImageSize.height) / appUnitsPerDevPixel,
-        wr::ToSideOffsets2D_u32(slice[0], slice[1], slice[2], slice[3]),
-        wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2], outset[3]),
-        wr::ToRepeatMode(mRepeatModeHorizontal),
-        wr::ToRepeatMode(mRepeatModeVertical));
-=======
       wr::WrBorderImage params{
           wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
           key.value(),
@@ -3950,20 +3658,12 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
           wr::ToRepeatMode(mRepeatModeVertical)};
 
       aBuilder.PushBorderImage(dest, clip, !aItem->BackfaceIsHidden(), params);
->>>>>>> upstream-releases
       break;
     }
     case eStyleImageType_Gradient: {
       const StyleGradient& gradient = *mImageRenderer.GetGradientData();
       nsCSSGradientRenderer renderer = nsCSSGradientRenderer::Create(
-<<<<<<< HEAD
-          aForFrame->PresContext(), aForFrame->Style(), gradientData,
-          mImageSize);
-||||||| merged common ancestors
-        aForFrame->PresContext(), aForFrame->Style(), gradientData, mImageSize);
-=======
           aForFrame->PresContext(), aForFrame->Style(), gradient, mImageSize);
->>>>>>> upstream-releases
 
       wr::ExtendMode extendMode;
       nsTArray<wr::GradientStop> stops;
@@ -3980,30 +3680,6 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
             LayoutDevicePoint(dest.origin.x, dest.origin.y) + lineEnd;
 
         aBuilder.PushBorderGradient(
-<<<<<<< HEAD
-            dest, clip, !aItem->BackfaceIsHidden(),
-            wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
-            (float)(mImageSize.width) / appUnitsPerDevPixel,
-            (float)(mImageSize.height) / appUnitsPerDevPixel,
-            wr::ToSideOffsets2D_i32(slice[0], slice[1], slice[2], slice[3]),
-            wr::ToLayoutPoint(startPoint), wr::ToLayoutPoint(endPoint), stops,
-            extendMode,
-            wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2],
-                                    outset[3]));
-||||||| merged common ancestors
-          dest,
-          clip,
-          !aItem->BackfaceIsHidden(),
-          wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
-          (float)(mImageSize.width) / appUnitsPerDevPixel,
-          (float)(mImageSize.height) / appUnitsPerDevPixel,
-          wr::ToSideOffsets2D_u32(slice[0], slice[1], slice[2], slice[3]),
-          wr::ToLayoutPoint(startPoint),
-          wr::ToLayoutPoint(endPoint),
-          stops,
-          extendMode,
-          wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2], outset[3]));
-=======
             dest, clip, !aItem->BackfaceIsHidden(),
             wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
             (float)(mImageSize.width) / appUnitsPerDevPixel,
@@ -4013,34 +3689,14 @@ ImgDrawResult nsCSSBorderImageRenderer::CreateWebRenderCommands(
             extendMode,
             wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2],
                                     outset[3]));
->>>>>>> upstream-releases
       } else {
         aBuilder.PushBorderRadialGradient(
-<<<<<<< HEAD
-            dest, clip, !aItem->BackfaceIsHidden(),
-            wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
-            wr::ToLayoutPoint(lineStart), wr::ToLayoutSize(gradientRadius),
-            stops, extendMode,
-            wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2],
-                                    outset[3]));
-||||||| merged common ancestors
-          dest,
-          clip,
-          !aItem->BackfaceIsHidden(),
-          wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
-          wr::ToLayoutPoint(lineStart),
-          wr::ToLayoutSize(gradientRadius),
-          stops,
-          extendMode,
-          wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2], outset[3]));
-=======
             dest, clip, !aItem->BackfaceIsHidden(),
             wr::ToBorderWidths(widths[0], widths[1], widths[2], widths[3]),
             mFill, wr::ToLayoutPoint(lineStart),
             wr::ToLayoutSize(gradientRadius), stops, extendMode,
             wr::ToSideOffsets2D_f32(outset[0], outset[1], outset[2],
                                     outset[3]));
->>>>>>> upstream-releases
       }
       break;
     }
@@ -4127,120 +3783,40 @@ nsCSSBorderImageRenderer::nsCSSBorderImageRenderer(
   // we do them together because the latter can depend on the former.
   nsMargin slice;
   nsMargin border;
-<<<<<<< HEAD
-  NS_FOR_CSS_SIDES(s) {
-    nsStyleCoord coord = aStyleBorder.mBorderImageSlice.Get(s);
-||||||| merged common ancestors
-  NS_FOR_CSS_SIDES(s)
-  {
-    nsStyleCoord coord = aStyleBorder.mBorderImageSlice.Get(s);
-=======
   NS_FOR_CSS_SIDES(s) {
     const auto& slice = aStyleBorder.mBorderImageSlice.offsets.Get(s);
->>>>>>> upstream-releases
     int32_t imgDimension =
         SideIsVertical(s) ? mImageSize.width : mImageSize.height;
     nscoord borderDimension = SideIsVertical(s) ? mArea.width : mArea.height;
     double value;
-<<<<<<< HEAD
-    switch (coord.GetUnit()) {
-      case eStyleUnit_Percent:
-        value = coord.GetPercentValue() * imgDimension;
-        break;
-      case eStyleUnit_Factor:
-        value = nsPresContext::CSSPixelsToAppUnits(
-            NS_lround(coord.GetFactorValue()));
-        break;
-      default:
-        MOZ_ASSERT_UNREACHABLE("unexpected CSS unit for image slice");
-        value = 0;
-        break;
-||||||| merged common ancestors
-    switch (coord.GetUnit()) {
-      case eStyleUnit_Percent:
-        value = coord.GetPercentValue() * imgDimension;
-        break;
-      case eStyleUnit_Factor:
-        value =
-          nsPresContext::CSSPixelsToAppUnits(NS_lround(coord.GetFactorValue()));
-        break;
-      default:
-        MOZ_ASSERT_UNREACHABLE("unexpected CSS unit for image slice");
-        value = 0;
-        break;
-=======
     if (slice.IsNumber()) {
       value = nsPresContext::CSSPixelsToAppUnits(NS_lround(slice.AsNumber()));
     } else {
       MOZ_ASSERT(slice.IsPercentage());
       value = slice.AsPercentage()._0 * imgDimension;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (value < 0) value = 0;
-    if (value > imgDimension) value = imgDimension;
-||||||| merged common ancestors
-    if (value < 0)
-      value = 0;
-    if (value > imgDimension)
-      value = imgDimension;
-=======
     if (value < 0) {
       value = 0;
     }
     if (value > imgDimension) {
       value = imgDimension;
     }
->>>>>>> upstream-releases
     mSlice.Side(s) = value;
 
-<<<<<<< HEAD
-    coord = aStyleBorder.mBorderImageWidth.Get(s);
-    switch (coord.GetUnit()) {
-      case eStyleUnit_Coord:  // absolute dimension
-        value = coord.GetCoordValue();
-        break;
-      case eStyleUnit_Percent:
-        value = coord.GetPercentValue() * borderDimension;
-||||||| merged common ancestors
-    coord = aStyleBorder.mBorderImageWidth.Get(s);
-    switch (coord.GetUnit()) {
-      case eStyleUnit_Coord: // absolute dimension
-        value = coord.GetCoordValue();
-        break;
-      case eStyleUnit_Percent:
-        value = coord.GetPercentValue() * borderDimension;
-=======
     const auto& width = aStyleBorder.mBorderImageWidth.Get(s);
     switch (width.tag) {
       case StyleBorderImageSideWidth::Tag::LengthPercentage:
         value =
             std::max(0, width.AsLengthPercentage().Resolve(borderDimension));
->>>>>>> upstream-releases
         break;
       case StyleBorderImageSideWidth::Tag::Number:
         value = width.AsNumber() * borderWidths.Side(s);
         break;
-<<<<<<< HEAD
-      case eStyleUnit_Auto:  // same as the slice value, in CSS pixels
-||||||| merged common ancestors
-      case eStyleUnit_Auto: // same as the slice value, in CSS pixels
-=======
       case StyleBorderImageSideWidth::Tag::Auto:
->>>>>>> upstream-releases
         value = mSlice.Side(s);
         break;
       default:
-<<<<<<< HEAD
-        MOZ_ASSERT_UNREACHABLE(
-            "unexpected CSS unit for border image area "
-            "division");
-||||||| merged common ancestors
-        MOZ_ASSERT_UNREACHABLE("unexpected CSS unit for border image area "
-                               "division");
-=======
         MOZ_ASSERT_UNREACHABLE("unexpected CSS unit for border image area");
->>>>>>> upstream-releases
         value = 0;
         break;
     }

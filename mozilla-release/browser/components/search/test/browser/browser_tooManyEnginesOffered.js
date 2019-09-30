@@ -91,22 +91,12 @@ add_task(async function test() {
 function getOpenSearchItems() {
   let os = [];
 
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_tooManyEnginesOffered.js
-  let addEngineList = oneOffsContainer.querySelector(".search-add-engines");
-  for (let item = addEngineList.firstElementChild; item; item = item.nextElementSibling)
-||||||| merged common ancestors
-  let addEngineList =
-    document.getAnonymousElementByAttribute(oneOffsContainer, "anonid",
-                                            "add-engines");
-  for (let item = addEngineList.firstElementChild; item; item = item.nextElementSibling)
-=======
   let addEngineList = oneOffsContainer.querySelector(".search-add-engines");
   for (
     let item = addEngineList.firstElementChild;
     item;
     item = item.nextElementSibling
   ) {
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_tooManyEnginesOffered.js
     os.push(item);
   }
 

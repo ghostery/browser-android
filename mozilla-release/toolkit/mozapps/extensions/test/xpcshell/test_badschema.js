@@ -179,20 +179,8 @@ add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "2", "2");
 
   for (let addon of Object.values(ADDONS)) {
-<<<<<<< HEAD
-    let webext = createTempWebExtensionFile({manifest: addon.manifest});
-    await AddonTestUtils.manuallyInstall(webext);
-||||||| merged common ancestors
-    if (addon["install.rdf"]) {
-      await promiseWriteInstallRDFForExtension(addon["install.rdf"], profileDir);
-    } else {
-      let webext = createTempWebExtensionFile({manifest: addon.manifest});
-      await AddonTestUtils.manuallyInstall(webext);
-    }
-=======
     let webext = createTempWebExtensionFile({ manifest: addon.manifest });
     await AddonTestUtils.manuallyInstall(webext);
->>>>>>> upstream-releases
   }
 
   await promiseStartupManager();

@@ -86,15 +86,7 @@ class LayerMLGPU : public HostLayer {
   virtual bool OnPrepareToRender(FrameBuilder* aBuilder) { return true; }
 
   virtual void ClearCachedResources() {}
-<<<<<<< HEAD
-  virtual CompositableHost* GetCompositableHost() override { return nullptr; }
-||||||| merged common ancestors
-  virtual CompositableHost* GetCompositableHost() override {
-    return nullptr;
-  }
-=======
   CompositableHost* GetCompositableHost() override { return nullptr; }
->>>>>>> upstream-releases
 
  protected:
   LayerMLGPU(LayerManagerMLGPU* aManager);

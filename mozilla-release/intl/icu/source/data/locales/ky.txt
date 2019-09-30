@@ -214,13 +214,7 @@ ky{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -282,23 +276,6 @@ ky{
                 yyyyQQQQ{"G y-'ж'. QQQQ"}
             }
             intervalFormats{
-<<<<<<< HEAD
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-||||||| merged common ancestors
-=======
                 Bh{
                     B{"h B – h B"}
                     h{"h–h B"}
@@ -322,7 +299,6 @@ ky{
                 Hv{
                     H{"HH–HH v"}
                 }
->>>>>>> upstream-releases
                 M{
                     M{"M–M"}
                 }

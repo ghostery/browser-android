@@ -26,18 +26,9 @@ struct TestExpectations {
 
 // ============================= TestDirectives ========================
 
-<<<<<<< HEAD
-TEST(SecureContext, IsOriginPotentiallyTrustworthyWithCodeBasePrincipal) {
-  // boolean isOriginPotentiallyTrustworthy(in nsIPrincipal aPrincipal);
-||||||| merged common ancestors
-TEST(SecureContext, IsOriginPotentiallyTrustworthyWithCodeBasePrincipal)
-{
-  //boolean isOriginPotentiallyTrustworthy(in nsIPrincipal aPrincipal);
-=======
 TEST(SecureContext, IsOriginPotentiallyTrustworthyWithCodeBasePrincipal)
 {
   // boolean isOriginPotentiallyTrustworthy(in nsIPrincipal aPrincipal);
->>>>>>> upstream-releases
 
   static const TestExpectations uris[] = {
       {"http://example.com/", false},
@@ -78,20 +69,10 @@ TEST(SecureContext, IsOriginPotentiallyTrustworthyWithCodeBasePrincipal)
   }
 }
 
-<<<<<<< HEAD
-TEST(SecureContext, IsOriginPotentiallyTrustworthyWithSystemPrincipal) {
-  RefPtr<nsScriptSecurityManager> ssManager =
-      nsScriptSecurityManager::GetScriptSecurityManager();
-||||||| merged common ancestors
-TEST(SecureContext, IsOriginPotentiallyTrustworthyWithSystemPrincipal)
-{
-  RefPtr<nsScriptSecurityManager> ssManager = nsScriptSecurityManager::GetScriptSecurityManager();
-=======
 TEST(SecureContext, IsOriginPotentiallyTrustworthyWithSystemPrincipal)
 {
   RefPtr<nsScriptSecurityManager> ssManager =
       nsScriptSecurityManager::GetScriptSecurityManager();
->>>>>>> upstream-releases
   ASSERT_TRUE(!!ssManager);
   nsCOMPtr<nsIContentSecurityManager> csManager =
       do_GetService(NS_CONTENTSECURITYMANAGER_CONTRACTID);
@@ -105,20 +86,10 @@ TEST(SecureContext, IsOriginPotentiallyTrustworthyWithSystemPrincipal)
   ASSERT_TRUE(isPotentiallyTrustworthy);
 }
 
-<<<<<<< HEAD
-TEST(SecureContext, IsOriginPotentiallyTrustworthyWithNullPrincipal) {
-  RefPtr<nsScriptSecurityManager> ssManager =
-      nsScriptSecurityManager::GetScriptSecurityManager();
-||||||| merged common ancestors
-TEST(SecureContext, IsOriginPotentiallyTrustworthyWithNullPrincipal)
-{
-  RefPtr<nsScriptSecurityManager> ssManager = nsScriptSecurityManager::GetScriptSecurityManager();
-=======
 TEST(SecureContext, IsOriginPotentiallyTrustworthyWithNullPrincipal)
 {
   RefPtr<nsScriptSecurityManager> ssManager =
       nsScriptSecurityManager::GetScriptSecurityManager();
->>>>>>> upstream-releases
   ASSERT_TRUE(!!ssManager);
   nsCOMPtr<nsIContentSecurityManager> csManager =
       do_GetService(NS_CONTENTSECURITYMANAGER_CONTRACTID);

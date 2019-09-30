@@ -35,69 +35,21 @@ class LazyInstantiator final : public IAccessible, public IServiceProvider {
   static void EnableBlindAggregation(HWND aHwnd);
 
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID aIid, void **aOutInterface) override;
+  STDMETHODIMP QueryInterface(REFIID aIid, void** aOutInterface) override;
   STDMETHODIMP_(ULONG) AddRef() override;
   STDMETHODIMP_(ULONG) Release() override;
 
   // IDispatch
-<<<<<<< HEAD
-  STDMETHODIMP GetTypeInfoCount(UINT *pctinfo) override;
-  STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid,
-                           ITypeInfo **ppTInfo) override;
-  STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames,
-                             LCID lcid, DISPID *rgDispId) override;
-||||||| merged common ancestors
-  STDMETHODIMP GetTypeInfoCount(UINT* pctinfo) override;
-  STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo) override;
-  STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames,
-                             LCID lcid, DISPID* rgDispId) override;
-=======
   STDMETHODIMP GetTypeInfoCount(UINT* pctinfo) override;
   STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid,
                            ITypeInfo** ppTInfo) override;
   STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames, UINT cNames,
                              LCID lcid, DISPID* rgDispId) override;
->>>>>>> upstream-releases
   STDMETHODIMP Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags,
-                      DISPPARAMS *pDispParams, VARIANT *pVarResult,
-                      EXCEPINFO *pExcepInfo, UINT *puArgErr) override;
+                      DISPPARAMS* pDispParams, VARIANT* pVarResult,
+                      EXCEPINFO* pExcepInfo, UINT* puArgErr) override;
 
   // IAccessible
-<<<<<<< HEAD
-  STDMETHODIMP get_accParent(IDispatch **ppdispParent) override;
-  STDMETHODIMP get_accChildCount(long *pcountChildren) override;
-  STDMETHODIMP get_accChild(VARIANT varChild, IDispatch **ppdispChild) override;
-  STDMETHODIMP get_accName(VARIANT varChild, BSTR *pszName) override;
-  STDMETHODIMP get_accValue(VARIANT varChild, BSTR *pszValue) override;
-  STDMETHODIMP get_accDescription(VARIANT varChild,
-                                  BSTR *pszDescription) override;
-  STDMETHODIMP get_accRole(VARIANT varChild, VARIANT *pvarRole) override;
-  STDMETHODIMP get_accState(VARIANT varChild, VARIANT *pvarState) override;
-  STDMETHODIMP get_accHelp(VARIANT varChild, BSTR *pszHelp) override;
-  STDMETHODIMP get_accHelpTopic(BSTR *pszHelpFile, VARIANT varChild,
-                                long *pidTopic) override;
-  STDMETHODIMP get_accKeyboardShortcut(VARIANT varChild,
-                                       BSTR *pszKeyboardShortcut) override;
-  STDMETHODIMP get_accFocus(VARIANT *pvarChild) override;
-  STDMETHODIMP get_accSelection(VARIANT *pvarChildren) override;
-  STDMETHODIMP get_accDefaultAction(VARIANT varChild,
-                                    BSTR *pszDefaultAction) override;
-||||||| merged common ancestors
-  STDMETHODIMP get_accParent(IDispatch **ppdispParent) override;
-  STDMETHODIMP get_accChildCount(long *pcountChildren) override;
-  STDMETHODIMP get_accChild(VARIANT varChild, IDispatch **ppdispChild) override;
-  STDMETHODIMP get_accName(VARIANT varChild, BSTR *pszName) override;
-  STDMETHODIMP get_accValue(VARIANT varChild, BSTR *pszValue) override;
-  STDMETHODIMP get_accDescription(VARIANT varChild, BSTR *pszDescription) override;
-  STDMETHODIMP get_accRole(VARIANT varChild, VARIANT *pvarRole) override;
-  STDMETHODIMP get_accState(VARIANT varChild, VARIANT *pvarState) override;
-  STDMETHODIMP get_accHelp(VARIANT varChild, BSTR *pszHelp) override;
-  STDMETHODIMP get_accHelpTopic(BSTR *pszHelpFile, VARIANT varChild, long *pidTopic) override;
-  STDMETHODIMP get_accKeyboardShortcut(VARIANT varChild, BSTR *pszKeyboardShortcut) override;
-  STDMETHODIMP get_accFocus(VARIANT *pvarChild) override;
-  STDMETHODIMP get_accSelection(VARIANT *pvarChildren) override;
-  STDMETHODIMP get_accDefaultAction(VARIANT varChild, BSTR *pszDefaultAction) override;
-=======
   STDMETHODIMP get_accParent(IDispatch** ppdispParent) override;
   STDMETHODIMP get_accChildCount(long* pcountChildren) override;
   STDMETHODIMP get_accChild(VARIANT varChild, IDispatch** ppdispChild) override;
@@ -116,39 +68,19 @@ class LazyInstantiator final : public IAccessible, public IServiceProvider {
   STDMETHODIMP get_accSelection(VARIANT* pvarChildren) override;
   STDMETHODIMP get_accDefaultAction(VARIANT varChild,
                                     BSTR* pszDefaultAction) override;
->>>>>>> upstream-releases
   STDMETHODIMP accSelect(long flagsSelect, VARIANT varChild) override;
-<<<<<<< HEAD
-  STDMETHODIMP accLocation(long *pxLeft, long *pyTop, long *pcxWidth,
-                           long *pcyHeight, VARIANT varChild) override;
-  STDMETHODIMP accNavigate(long navDir, VARIANT varStart,
-                           VARIANT *pvarEndUpAt) override;
-  STDMETHODIMP accHitTest(long xLeft, long yTop, VARIANT *pvarChild) override;
-||||||| merged common ancestors
-  STDMETHODIMP accLocation(long *pxLeft, long *pyTop, long *pcxWidth, long *pcyHeight, VARIANT varChild) override;
-  STDMETHODIMP accNavigate(long navDir, VARIANT varStart, VARIANT *pvarEndUpAt) override;
-  STDMETHODIMP accHitTest(long xLeft, long yTop, VARIANT *pvarChild) override;
-=======
   STDMETHODIMP accLocation(long* pxLeft, long* pyTop, long* pcxWidth,
                            long* pcyHeight, VARIANT varChild) override;
   STDMETHODIMP accNavigate(long navDir, VARIANT varStart,
                            VARIANT* pvarEndUpAt) override;
   STDMETHODIMP accHitTest(long xLeft, long yTop, VARIANT* pvarChild) override;
->>>>>>> upstream-releases
   STDMETHODIMP accDoDefaultAction(VARIANT varChild) override;
   STDMETHODIMP put_accName(VARIANT varChild, BSTR szName) override;
   STDMETHODIMP put_accValue(VARIANT varChild, BSTR szValue) override;
 
   // IServiceProvider
-<<<<<<< HEAD
-  STDMETHODIMP QueryService(REFGUID aServiceId, REFIID aServiceIid,
-                            void **aOutInterface) override;
-||||||| merged common ancestors
-  STDMETHODIMP QueryService(REFGUID aServiceId, REFIID aServiceIid, void** aOutInterface) override;
-=======
   STDMETHODIMP QueryService(REFGUID aServiceId, REFIID aServiceIid,
                             void** aOutInterface) override;
->>>>>>> upstream-releases
 
  private:
   explicit LazyInstantiator(HWND aHwnd);
@@ -169,7 +101,7 @@ class LazyInstantiator final : public IAccessible, public IServiceProvider {
    */
   HRESULT ResolveDispatch();
 
-  RootAccessibleWrap *ResolveRootAccWrap();
+  RootAccessibleWrap* ResolveRootAccWrap();
   void TransplantRefCnt();
   void ClearProp();
 
@@ -186,19 +118,9 @@ class LazyInstantiator final : public IAccessible, public IServiceProvider {
    * references to them, we would be holding strong references to ourselves,
    * creating a cycle.
    */
-<<<<<<< HEAD
-  RootAccessibleWrap *mWeakRootAccWrap;
-  IAccessible *mWeakAccessible;
-  IDispatch *mWeakDispatch;
-||||||| merged common ancestors
-  RootAccessibleWrap* mWeakRootAccWrap;
-  IAccessible*        mWeakAccessible;
-  IDispatch*          mWeakDispatch;
-=======
   RootAccessibleWrap* mWeakRootAccWrap;
   IAccessible* mWeakAccessible;
   IDispatch* mWeakDispatch;
->>>>>>> upstream-releases
 };
 
 }  // namespace a11y

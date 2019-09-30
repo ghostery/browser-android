@@ -19,16 +19,8 @@ namespace mscom {
 static const TimeDuration kMaxSpinTime = TimeDuration::FromMilliseconds(30);
 bool SpinEvent::sIsMulticore = false;
 
-<<<<<<< HEAD
-/* static */ bool SpinEvent::InitStatics() {
-||||||| merged common ancestors
-/* static */ bool
-SpinEvent::InitStatics()
-{
-=======
 /* static */
 bool SpinEvent::InitStatics() {
->>>>>>> upstream-releases
   SYSTEM_INFO sysInfo;
   ::GetSystemInfo(&sysInfo);
   sIsMulticore = sysInfo.dwNumberOfProcessors > 1;

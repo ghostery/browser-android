@@ -28,23 +28,6 @@
 #  endif
 
 // Suppress -Wshadow warnings from stlport headers.
-<<<<<<< HEAD
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
-#if MOZ_GCC_VERSION_AT_LEAST(4, 9, 0)
-#pragma GCC diagnostic ignored "-Wshadow-local"
-#endif
-#endif
-||||||| merged common ancestors
-#ifdef __GNUC__
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wshadow"
-#  if MOZ_GCC_VERSION_AT_LEAST(4, 9, 0)
-#    pragma GCC diagnostic ignored "-Wshadow-local"
-#  endif
-#endif
-=======
 #  ifdef __GNUC__
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wshadow"
@@ -52,33 +35,16 @@
 #      pragma GCC diagnostic ignored "-Wshadow-local"
 #    endif
 #  endif
->>>>>>> upstream-releases
 
 #  include <hash_map>
 #  include <hash_set>
 
-<<<<<<< HEAD
-#ifdef __GNUC__
-#if MOZ_GCC_VERSION_AT_LEAST(4, 9, 0)
-#pragma GCC diagnostic pop  // -Wshadow-local
-#endif
-#pragma GCC diagnostic pop  // -Wshadow
-#endif
-||||||| merged common ancestors
-#ifdef __GNUC__
-#  if MOZ_GCC_VERSION_AT_LEAST(4, 9, 0)
-#    pragma GCC diagnostic pop // -Wshadow-local
-#  endif
-#  pragma GCC diagnostic pop // -Wshadow
-#endif
-=======
 #  ifdef __GNUC__
 #    if MOZ_GCC_VERSION_AT_LEAST(4, 9, 0)
 #      pragma GCC diagnostic pop  // -Wshadow-local
 #    endif
 #    pragma GCC diagnostic pop  // -Wshadow
 #  endif
->>>>>>> upstream-releases
 
 #  ifdef COMPILER_MSVC
 #    pragma pop_macro("_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS")
@@ -90,16 +56,8 @@ using _STLP_STD_NAME::hash_set;
 #  else
 using stdext::hash_map;
 using stdext::hash_set;
-<<<<<<< HEAD
-#endif
-}  // namespace base
-||||||| merged common ancestors
-#endif
-}
-=======
 #  endif
 }  // namespace base
->>>>>>> upstream-releases
 #elif defined(COMPILER_GCC)
 // This is a hack to disable the gcc 4.4 warning about hash_map and hash_set
 // being deprecated.  We can get rid of this when we upgrade to VS2008 and we
@@ -130,23 +88,6 @@ namespace __gnu_cxx {
 // narrower than |long long|.  This is probably good enough for what we will
 // use it for.
 
-<<<<<<< HEAD
-#define DEFINE_TRIVIAL_HASH(integral_type)              \
-  template <>                                           \
-  struct hash<integral_type> {                          \
-    std::size_t operator()(integral_type value) const { \
-      return static_cast<std::size_t>(value);           \
-    }                                                   \
-  }
-||||||| merged common ancestors
-#define DEFINE_TRIVIAL_HASH(integral_type) \
-    template<> \
-    struct hash<integral_type> { \
-      std::size_t operator()(integral_type value) const { \
-        return static_cast<std::size_t>(value); \
-      } \
-    }
-=======
 #  define DEFINE_TRIVIAL_HASH(integral_type)              \
     template <>                                           \
     struct hash<integral_type> {                          \
@@ -154,7 +95,6 @@ namespace __gnu_cxx {
         return static_cast<std::size_t>(value);           \
       }                                                   \
     }
->>>>>>> upstream-releases
 
 DEFINE_TRIVIAL_HASH(long long);
 DEFINE_TRIVIAL_HASH(unsigned long long);
@@ -167,29 +107,6 @@ DEFINE_TRIVIAL_HASH(unsigned long long);
 // versions prior to 4.3.2 are unable to compile <tr1/functional> when RTTI
 // is disabled, as it is in our build.
 
-<<<<<<< HEAD
-#define DEFINE_STRING_HASH(string_type)                                  \
-  template <>                                                            \
-  struct hash<string_type> {                                             \
-    std::size_t operator()(const string_type& s) const {                 \
-      std::size_t result = 0;                                            \
-      for (string_type::const_iterator i = s.begin(); i != s.end(); ++i) \
-        result = (result * 131) + *i;                                    \
-      return result;                                                     \
-    }                                                                    \
-  }
-||||||| merged common ancestors
-#define DEFINE_STRING_HASH(string_type) \
-    template<> \
-    struct hash<string_type> { \
-      std::size_t operator()(const string_type& s) const { \
-        std::size_t result = 0; \
-        for (string_type::const_iterator i = s.begin(); i != s.end(); ++i) \
-          result = (result * 131) + *i; \
-        return result; \
-      } \
-    }
-=======
 #  define DEFINE_STRING_HASH(string_type)                                  \
     template <>                                                            \
     struct hash<string_type> {                                             \
@@ -200,7 +117,6 @@ DEFINE_TRIVIAL_HASH(unsigned long long);
         return result;                                                     \
       }                                                                    \
     }
->>>>>>> upstream-releases
 
 DEFINE_STRING_HASH(std::string);
 DEFINE_STRING_HASH(std::wstring);

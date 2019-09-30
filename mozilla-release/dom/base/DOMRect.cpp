@@ -27,16 +27,6 @@ JSObject* DOMRectReadOnly::WrapObject(JSContext* aCx,
   return DOMRectReadOnly_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMRectReadOnly> DOMRectReadOnly::Constructor(
-    const GlobalObject& aGlobal, double aX, double aY, double aWidth,
-    double aHeight, ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<DOMRectReadOnly>
-DOMRectReadOnly::Constructor(const GlobalObject& aGlobal, double aX, double aY,
-                             double aWidth, double aHeight, ErrorResult& aRv)
-{
-=======
 already_AddRefed<DOMRectReadOnly> DOMRectReadOnly::FromRect(
     const GlobalObject& aGlobal, const DOMRectInit& aInit) {
   RefPtr<DOMRectReadOnly> obj = new DOMRectReadOnly(
@@ -47,7 +37,6 @@ already_AddRefed<DOMRectReadOnly> DOMRectReadOnly::FromRect(
 already_AddRefed<DOMRectReadOnly> DOMRectReadOnly::Constructor(
     const GlobalObject& aGlobal, double aX, double aY, double aWidth,
     double aHeight, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<DOMRectReadOnly> obj =
       new DOMRectReadOnly(aGlobal.GetAsSupports(), aX, aY, aWidth, aHeight);
   return obj.forget();
@@ -105,17 +94,6 @@ JSObject* DOMRect::WrapObject(JSContext* aCx,
   return DOMRect_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMRect> DOMRect::Constructor(const GlobalObject& aGlobal,
-                                               double aX, double aY,
-                                               double aWidth, double aHeight,
-                                               ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<DOMRect>
-DOMRect::Constructor(const GlobalObject& aGlobal, double aX, double aY,
-                     double aWidth, double aHeight, ErrorResult& aRv)
-{
-=======
 already_AddRefed<DOMRect> DOMRect::FromRect(const GlobalObject& aGlobal,
                                             const DOMRectInit& aInit) {
   RefPtr<DOMRect> obj = new DOMRect(aGlobal.GetAsSupports(), aInit.mX, aInit.mY,
@@ -127,7 +105,6 @@ already_AddRefed<DOMRect> DOMRect::Constructor(const GlobalObject& aGlobal,
                                                double aX, double aY,
                                                double aWidth, double aHeight,
                                                ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<DOMRect> obj =
       new DOMRect(aGlobal.GetAsSupports(), aX, aY, aWidth, aHeight);
   return obj.forget();

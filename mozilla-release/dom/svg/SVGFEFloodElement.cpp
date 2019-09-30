@@ -23,18 +23,8 @@ JSObject* SVGFEFloodElement::WrapNode(JSContext* aCx,
   return SVGFEFloodElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringInfo SVGFEFloodElement::sStringInfo[1] = {
-    {nsGkAtoms::result, kNameSpaceID_None, true}};
-||||||| merged common ancestors
-nsSVGElement::StringInfo SVGFEFloodElement::sStringInfo[1] =
-{
-  { nsGkAtoms::result, kNameSpaceID_None, true }
-};
-=======
 SVGElement::StringInfo SVGFEFloodElement::sStringInfo[1] = {
     {nsGkAtoms::result, kNameSpaceID_None, true}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -72,15 +62,7 @@ SVGFEFloodElement::IsAttributeMapped(const nsAtom* name) const {
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGFEFloodElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGFEFloodElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGFEFloodElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

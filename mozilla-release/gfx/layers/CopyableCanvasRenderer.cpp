@@ -34,26 +34,6 @@ using namespace mozilla::gfx;
 using namespace mozilla::gl;
 
 CopyableCanvasRenderer::CopyableCanvasRenderer()
-<<<<<<< HEAD
-    : mGLContext(nullptr),
-      mBufferProvider(nullptr),
-      mGLFrontbuffer(nullptr),
-      mAsyncRenderer(nullptr),
-      mIsAlphaPremultiplied(true),
-      mOriginPos(gl::OriginPos::TopLeft),
-      mOpaque(true),
-      mCachedTempSurface(nullptr) {
-||||||| merged common ancestors
-  : mGLContext(nullptr)
-  , mBufferProvider(nullptr)
-  , mGLFrontbuffer(nullptr)
-  , mAsyncRenderer(nullptr)
-  , mIsAlphaPremultiplied(true)
-  , mOriginPos(gl::OriginPos::TopLeft)
-  , mOpaque(true)
-  , mCachedTempSurface(nullptr)
-{
-=======
     : mGLContext(nullptr),
       mBufferProvider(nullptr),
       mAsyncRenderer(nullptr),
@@ -61,7 +41,6 @@ CopyableCanvasRenderer::CopyableCanvasRenderer()
       mOriginPos(gl::OriginPos::TopLeft),
       mOpaque(true),
       mCachedTempSurface(nullptr) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(CopyableCanvasRenderer);
 }
 
@@ -83,37 +62,11 @@ void CopyableCanvasRenderer::Initialize(const CanvasInitializeData& aData) {
 
     MOZ_ASSERT(mGLContext->IsOffscreen(), "canvas gl context isn't offscreen");
 
-<<<<<<< HEAD
-    if (aData.mFrontbufferGLTex) {
-      gfx::IntSize size(aData.mSize.width, aData.mSize.height);
-      mGLFrontbuffer = SharedSurface_Basic::Wrap(
-          aData.mGLContext, size, aData.mHasAlpha, aData.mFrontbufferGLTex);
-      mBufferProvider = aData.mBufferProvider;
-    }
-||||||| merged common ancestors
-    if (aData.mFrontbufferGLTex) {
-      gfx::IntSize size(aData.mSize.width, aData.mSize.height);
-      mGLFrontbuffer = SharedSurface_Basic::Wrap(aData.mGLContext, size, aData.mHasAlpha,
-                                                 aData.mFrontbufferGLTex);
-      mBufferProvider = aData.mBufferProvider;
-    }
-=======
->>>>>>> upstream-releases
   } else if (aData.mBufferProvider) {
     mBufferProvider = aData.mBufferProvider;
   } else if (aData.mRenderer) {
     mAsyncRenderer = aData.mRenderer;
     mOriginPos = gl::OriginPos::BottomLeft;
-<<<<<<< HEAD
-  } else {
-    MOZ_CRASH(
-        "GFX: CanvasRenderer created without BufferProvider, DrawTarget or "
-        "GLContext?");
-||||||| merged common ancestors
-  } else {
-    MOZ_CRASH("GFX: CanvasRenderer created without BufferProvider, DrawTarget or GLContext?");
-=======
->>>>>>> upstream-releases
   }
 
   mOpaque = !aData.mHasAlpha;

@@ -66,14 +66,9 @@ const NetworkEventActor = protocol.ActorClassWithSpec(networkEventSpec, {
       fromServiceWorker: this._fromServiceWorker,
       private: this._private,
       isThirdPartyTrackingResource: this._isThirdPartyTrackingResource,
-<<<<<<< HEAD
-      referrerPolicy: this._referrerPolicy,
-||||||| merged common ancestors
-=======
       referrerPolicy: this._referrerPolicy,
       blockedReason: this._blockedReason,
       channelId: this._channelId,
->>>>>>> upstream-releases
     };
   },
 
@@ -112,16 +107,9 @@ const NetworkEventActor = protocol.ActorClassWithSpec(networkEventSpec, {
     this._cause = networkEvent.cause;
     this._fromCache = networkEvent.fromCache;
     this._fromServiceWorker = networkEvent.fromServiceWorker;
-<<<<<<< HEAD
-    this._isThirdPartyTrackingResource = networkEvent.isThirdPartyTrackingResource;
-    this._referrerPolicy = networkEvent.referrerPolicy;
-||||||| merged common ancestors
-    this._isThirdPartyTrackingResource = networkEvent.isThirdPartyTrackingResource;
-=======
     this._isThirdPartyTrackingResource =
       networkEvent.isThirdPartyTrackingResource;
     this._referrerPolicy = networkEvent.referrerPolicy;
->>>>>>> upstream-releases
     this._channelId = networkEvent.channelId;
 
     // Stack trace info isn't sent automatically. The client

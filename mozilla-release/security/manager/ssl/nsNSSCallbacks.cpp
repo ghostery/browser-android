@@ -64,31 +64,12 @@ const uint32_t KEA_NOT_SUPPORTED = 1;
 
 }  // namespace
 
-<<<<<<< HEAD
-class OCSPRequest final : public nsIStreamLoaderObserver, public nsIRunnable {
- public:
-  OCSPRequest(const nsCString& aiaLocation,
-||||||| merged common ancestors
-class OCSPRequest final : public nsIStreamLoaderObserver
-                        , public nsIRunnable
-{
-public:
-  OCSPRequest(const nsCString& aiaLocation,
-=======
 class OCSPRequest final : public nsIStreamLoaderObserver, public nsIRunnable {
  public:
   OCSPRequest(const nsACString& aiaLocation,
->>>>>>> upstream-releases
               const OriginAttributes& originAttributes,
-<<<<<<< HEAD
-              Vector<uint8_t>&& ocspRequest, TimeDuration timeout);
-||||||| merged common ancestors
-              Vector<uint8_t>&& ocspRequest,
-              TimeDuration timeout);
-=======
               const uint8_t (&ocspRequest)[OCSP_REQUEST_MAX_LENGTH],
               size_t ocspRequestLength, TimeDuration timeout);
->>>>>>> upstream-releases
 
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSISTREAMLOADEROBSERVER
@@ -137,42 +118,6 @@ NS_IMPL_ISUPPORTS(OCSPRequest, nsIStreamLoaderObserver, nsIRunnable)
 
 OCSPRequest::OCSPRequest(const nsACString& aiaLocation,
                          const OriginAttributes& originAttributes,
-<<<<<<< HEAD
-                         Vector<uint8_t>&& ocspRequest, TimeDuration timeout)
-    : mMonitor("OCSPRequest.mMonitor"),
-      mNotifiedDone(false),
-      mLoader(nullptr),
-      mAIALocation(aiaLocation),
-      mOriginAttributes(originAttributes),
-      mPOSTData(std::move(ocspRequest)),
-      mTimeout(timeout),
-      mTimeoutTimer(nullptr),
-      mStartTime(),
-      mResponseResult(NS_ERROR_FAILURE),
-      mResponseBytes() {}
-
-nsresult OCSPRequest::DispatchToMainThreadAndWait() {
-||||||| merged common ancestors
-                         Vector<uint8_t>&& ocspRequest,
-                         TimeDuration timeout)
-  : mMonitor("OCSPRequest.mMonitor")
-  , mNotifiedDone(false)
-  , mLoader(nullptr)
-  , mAIALocation(aiaLocation)
-  , mOriginAttributes(originAttributes)
-  , mPOSTData(std::move(ocspRequest))
-  , mTimeout(timeout)
-  , mTimeoutTimer(nullptr)
-  , mStartTime()
-  , mResponseResult(NS_ERROR_FAILURE)
-  , mResponseBytes()
-{
-}
-
-nsresult
-OCSPRequest::DispatchToMainThreadAndWait()
-{
-=======
                          const uint8_t (&ocspRequest)[OCSP_REQUEST_MAX_LENGTH],
                          size_t ocspRequestLength, TimeDuration timeout)
     : mMonitor("OCSPRequest.mMonitor"),
@@ -190,7 +135,6 @@ OCSPRequest::DispatchToMainThreadAndWait()
 }
 
 nsresult OCSPRequest::DispatchToMainThreadAndWait() {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
   if (NS_IsMainThread()) {
     return NS_ERROR_FAILURE;
@@ -300,31 +244,12 @@ OCSPRequest::Run() {
   }
 
   nsCOMPtr<nsIChannel> channel;
-<<<<<<< HEAD
-  rv = ios->NewChannel2(mAIALocation, nullptr, nullptr,
-                        nullptr,  // aLoadingNode
-                        nsContentUtils::GetSystemPrincipal(),
-                        nullptr,  // aTriggeringPrincipal
-                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                        nsIContentPolicy::TYPE_OTHER, getter_AddRefs(channel));
-||||||| merged common ancestors
-  rv = ios->NewChannel2(mAIALocation,
-                        nullptr,
-                        nullptr,
-                        nullptr, // aLoadingNode
-                        nsContentUtils::GetSystemPrincipal(),
-                        nullptr, // aTriggeringPrincipal
-                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                        nsIContentPolicy::TYPE_OTHER,
-                        getter_AddRefs(channel));
-=======
   rv = ios->NewChannel(mAIALocation, nullptr, nullptr,
                        nullptr,  // aLoadingNode
                        nsContentUtils::GetSystemPrincipal(),
                        nullptr,  // aTriggeringPrincipal
                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
                        nsIContentPolicy::TYPE_OTHER, getter_AddRefs(channel));
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return NotifyDone(rv, lock);
   }
@@ -504,26 +429,10 @@ void OCSPRequest::OnTimeout(nsITimer* timer, void* closure) {
   self->NotifyDone(NS_ERROR_NET_TIMEOUT, lock);
 }
 
-<<<<<<< HEAD
-mozilla::pkix::Result DoOCSPRequest(const nsCString& aiaLocation,
-                                    const OriginAttributes& originAttributes,
-                                    Vector<uint8_t>&& ocspRequest,
-                                    TimeDuration timeout,
-                                    /*out*/ Vector<uint8_t>& result) {
-||||||| merged common ancestors
-mozilla::pkix::Result
-DoOCSPRequest(const nsCString& aiaLocation,
-              const OriginAttributes& originAttributes,
-              Vector<uint8_t>&& ocspRequest,
-              TimeDuration timeout,
-              /*out*/ Vector<uint8_t>& result)
-{
-=======
 mozilla::pkix::Result DoOCSPRequest(
     const nsCString& aiaLocation, const OriginAttributes& originAttributes,
     uint8_t (&ocspRequest)[OCSP_REQUEST_MAX_LENGTH], size_t ocspRequestLength,
     TimeDuration timeout, /*out*/ Vector<uint8_t>& result) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
   if (NS_IsMainThread()) {
     return mozilla::pkix::Result::ERROR_OCSP_UNKNOWN_CERT;
@@ -654,28 +563,10 @@ void PK11PasswordPromptRunnable::RunOnTargetThread() {
   if (PK11_IsInternal(mSlot)) {
     rv = GetPIPNSSBundleString("CertPassPromptDefault", promptString);
   } else {
-<<<<<<< HEAD
-    NS_ConvertUTF8toUTF16 tokenName(PK11_GetTokenName(mSlot));
-    const char16_t* formatStrings[] = {
-        tokenName.get(),
-    };
-    rv =
-        PIPBundleFormatStringFromName("CertPassPrompt", formatStrings,
-                                      ArrayLength(formatStrings), promptString);
-||||||| merged common ancestors
-    NS_ConvertUTF8toUTF16 tokenName(PK11_GetTokenName(mSlot));
-    const char16_t* formatStrings[] = {
-      tokenName.get(),
-    };
-    rv = PIPBundleFormatStringFromName("CertPassPrompt", formatStrings,
-                                       ArrayLength(formatStrings),
-                                       promptString);
-=======
     AutoTArray<nsString, 1> formatStrings = {
         NS_ConvertUTF8toUTF16(PK11_GetTokenName(mSlot))};
     rv = PIPBundleFormatStringFromName("CertPassPrompt", formatStrings,
                                        promptString);
->>>>>>> upstream-releases
   }
   if (NS_FAILED(rv)) {
     return;
@@ -1377,13 +1268,8 @@ void HandshakeCallback(PRFileDesc* fd, void* client_data) {
   bool renegotiationUnsafe = !siteSupportsSafeRenego &&
                              ioLayerHelpers.treatUnsafeNegotiationAsBroken();
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
   bool deprecatedTlsVer =
       (channelInfo.protocolVersion < SSL_LIBRARY_VERSION_TLS_1_2);
->>>>>>> upstream-releases
   RememberCertErrorsTable::GetInstance().LookupCertErrorBits(infoObject);
 
   uint32_t state;
@@ -1444,17 +1330,9 @@ void HandshakeCallback(PRFileDesc* fd, void* client_data) {
     NS_ConvertASCIItoUTF16 msg(infoObject->GetHostName());
     msg.AppendLiteral(" : server does not support RFC 5746, see CVE-2009-3555");
 
-<<<<<<< HEAD
-    nsContentUtils::LogSimpleConsoleError(
-        msg, "SSL", !!infoObject->GetOriginAttributes().mPrivateBrowsingId);
-||||||| merged common ancestors
-    nsContentUtils::LogSimpleConsoleError(msg, "SSL",
-                                          !!infoObject->GetOriginAttributes().mPrivateBrowsingId);
-=======
     nsContentUtils::LogSimpleConsoleError(
         msg, "SSL", !!infoObject->GetOriginAttributes().mPrivateBrowsingId,
         true /* from chrome context */);
->>>>>>> upstream-releases
   }
 
   infoObject->NoteTimeUntilReady();

@@ -407,35 +407,8 @@ endif
 ifdef ENABLE_MOZSEARCH_PLUGIN
   UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PKG_PATH)$(MOZSEARCH_ARCHIVE_BASENAME).zip)
   UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PKG_PATH)$(MOZSEARCH_RUST_ANALYSIS_BASENAME).zip)
-<<<<<<< HEAD
-  UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PKG_PATH)$(MOZSEARCH_INCLUDEMAP_BASENAME).map)
-endif
-
-SIGN_CHECKSUM_CMD=
-ifdef MOZ_SIGN_CMD
-  # If we're signing with gpg, we'll have a bunch of extra detached signatures to
-  # upload. We also want to sign our checksums file
-  SIGN_CHECKSUM_CMD=$(MOZ_SIGN_CMD) -f gpg $(CHECKSUM_FILE)
-
-  CHECKSUM_FILES += $(CHECKSUM_FILE).asc
-  UPLOAD_FILES += $(call QUOTED_WILDCARD,$(INSTALLER_PACKAGE).asc)
-  UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PACKAGE).asc)
-||||||| merged common ancestors
-endif
-
-SIGN_CHECKSUM_CMD=
-ifdef MOZ_SIGN_CMD
-  # If we're signing with gpg, we'll have a bunch of extra detached signatures to
-  # upload. We also want to sign our checksums file
-  SIGN_CHECKSUM_CMD=$(MOZ_SIGN_CMD) -f gpg $(CHECKSUM_FILE)
-
-  CHECKSUM_FILES += $(CHECKSUM_FILE).asc
-  UPLOAD_FILES += $(call QUOTED_WILDCARD,$(INSTALLER_PACKAGE).asc)
-  UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PACKAGE).asc)
-=======
   UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PKG_PATH)$(MOZSEARCH_RUST_STDLIB_BASENAME).zip)
   UPLOAD_FILES += $(call QUOTED_WILDCARD,$(DIST)/$(PKG_PATH)$(MOZSEARCH_INCLUDEMAP_BASENAME).map)
->>>>>>> upstream-releases
 endif
 
 ifdef MOZ_STUB_INSTALLER

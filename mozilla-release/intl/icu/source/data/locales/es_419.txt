@@ -110,13 +110,7 @@ es_419{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.39"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
     calendar{
         coptic{
             monthNames{
@@ -716,15 +710,9 @@ es_419{
         dingbats{"Símbolos y viñetas"}
         downwards_upwards_arrows{"Flechas hacia arriba y hacia abajo"}
         european_scripts{"Símbolos de escritura de Europa"}
-<<<<<<< HEAD
-        flags{"banderas"}
-||||||| merged common ancestors
-        flags{"Indicadores"}
-=======
         female{"femenino"}
         flag{"bandera"}
         flags{"banderas"}
->>>>>>> upstream-releases
         format{"Formato"}
         format_whitespace{"formato y espacio duro"}
         full_width_form_variant{"Variantes de formato de ancho completo"}

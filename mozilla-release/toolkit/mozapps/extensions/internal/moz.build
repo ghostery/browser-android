@@ -10,13 +10,6 @@ EXTRA_JS_MODULES.addons += [
     'AddonUpdateChecker.jsm',
     'Content.js',
     'GMPProvider.jsm',
-<<<<<<< HEAD
-    'LightweightThemeImageOptimizer.jsm',
-    'LightweightThemePersister.jsm',
-||||||| merged common ancestors
-    'LightweightThemeImageOptimizer.jsm',
-=======
->>>>>>> upstream-releases
     'ProductAddonChecker.jsm',
     'XPIDatabase.jsm',
     'XPIInstall.jsm',

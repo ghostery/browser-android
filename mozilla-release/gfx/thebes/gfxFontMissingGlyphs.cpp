@@ -217,64 +217,6 @@ static already_AddRefed<SourceSurface> MakeWRGlyphAtlas(const Matrix* aMat) {
 /**
  * Clear any cached WebRender glyph atlas resources.
  */
-<<<<<<< HEAD
-static void PurgeWRGlyphAtlas() {
-  // For each WR layer manager, we need go through each atlas orientation
-  // and see if it has a stashed image key. If it does, remove the image
-  // from the layer manager.
-  for (WRUserData* user : gWRUsers) {
-    auto* manager = user->mManager;
-    for (size_t i = 0; i < 8; i++) {
-      if (gWRGlyphAtlas[i]) {
-        uint32_t handle = (uint32_t)(uintptr_t)gWRGlyphAtlas[i]->GetUserData(
-            reinterpret_cast<UserDataKey*>(manager));
-        if (handle) {
-          manager->AddImageKeyForDiscard(
-              wr::ImageKey{manager->WrBridge()->GetNamespace(), handle});
-        }
-      }
-    }
-  }
-  // Remove the layer managers' destroy notifications only after processing
-  // so as not to mess up gWRUsers iteration.
-  while (!gWRUsers.isEmpty()) {
-    gWRUsers.popFirst()->Remove();
-  }
-  // Finally, clear out the atlases.
-  for (size_t i = 0; i < 8; i++) {
-    gWRGlyphAtlas[i] = nullptr;
-  }
-||||||| merged common ancestors
-static void
-PurgeWRGlyphAtlas()
-{
-    // For each WR layer manager, we need go through each atlas orientation
-    // and see if it has a stashed image key. If it does, remove the image
-    // from the layer manager.
-    for (WRUserData* user : gWRUsers) {
-        auto* manager = user->mManager;
-        for (size_t i = 0; i < 8; i++) {
-            if (gWRGlyphAtlas[i]) {
-                uint32_t handle =
-                    (uint32_t)(uintptr_t)gWRGlyphAtlas[i]->GetUserData(
-                        reinterpret_cast<UserDataKey*>(manager));
-                if (handle) {
-                    manager->AddImageKeyForDiscard(
-                        wr::ImageKey{manager->WrBridge()->GetNamespace(), handle});
-                }
-            }
-        }
-    }
-    // Remove the layer managers' destroy notifications only after processing
-    // so as not to mess up gWRUsers iteration.
-    while (!gWRUsers.isEmpty()) {
-        gWRUsers.popFirst()->Remove();
-    }
-    // Finally, clear out the atlases.
-    for (size_t i = 0; i < 8; i++) {
-        gWRGlyphAtlas[i] = nullptr;
-    }
-=======
 static void PurgeWRGlyphAtlas() {
   // For each WR layer manager, we need go through each atlas orientation
   // and see if it has a stashed image key. If it does, remove the image
@@ -305,7 +247,6 @@ static void PurgeWRGlyphAtlas() {
   for (size_t i = 0; i < 16; i++) {
     gWRGlyphAtlas[i] = nullptr;
   }
->>>>>>> upstream-releases
 }
 
 WRUserData::WRUserData(layers::WebRenderLayerManager* aManager)
@@ -313,28 +254,6 @@ WRUserData::WRUserData(layers::WebRenderLayerManager* aManager)
   gWRUsers.insertFront(this);
 }
 
-<<<<<<< HEAD
-WRUserData::~WRUserData() {
-  // When the layer manager is destroyed, we need go through each
-  // atlas and remove any assigned image keys.
-  if (isInList()) {
-    for (size_t i = 0; i < 8; i++) {
-      if (gWRGlyphAtlas[i]) {
-        gWRGlyphAtlas[i]->RemoveUserData(
-            reinterpret_cast<UserDataKey*>(mManager));
-      }
-||||||| merged common ancestors
-WRUserData::~WRUserData()
-{
-    // When the layer manager is destroyed, we need go through each
-    // atlas and remove any assigned image keys.
-    if (isInList()) {
-        for (size_t i = 0; i < 8; i++) {
-            if (gWRGlyphAtlas[i]) {
-                gWRGlyphAtlas[i]->RemoveUserData(reinterpret_cast<UserDataKey*>(mManager));
-            }
-        }
-=======
 WRUserData::~WRUserData() {
   // When the layer manager is destroyed, we need go through each
   // atlas and remove any assigned image keys.
@@ -344,7 +263,6 @@ WRUserData::~WRUserData() {
         gWRGlyphAtlas[i]->RemoveUserData(
             reinterpret_cast<UserDataKey*>(mManager));
       }
->>>>>>> upstream-releases
     }
   }
 }
@@ -359,30 +277,6 @@ static already_AddRefed<SourceSurface> GetWRGlyphAtlas(DrawTarget& aDrawTarget,
     } else {
       key |= (aMat->_11 < 0 ? 1 : 0) | (aMat->_22 < 0 ? 2 : 0);
     }
-<<<<<<< HEAD
-  }
-  // Check if an atlas was already created, or create one if necessary.
-  RefPtr<SourceSurface> atlas = gWRGlyphAtlas[key];
-  if (!atlas) {
-    atlas = MakeWRGlyphAtlas(aMat);
-    gWRGlyphAtlas[key] = atlas;
-  }
-  // The atlas may exist, but an image key may not be assigned for it to
-  // the given layer manager.
-  auto* tdt = static_cast<layout::TextDrawTarget*>(&aDrawTarget);
-  auto* manager = tdt->WrLayerManager();
-  if (!atlas->GetUserData(reinterpret_cast<UserDataKey*>(manager))) {
-    // No image key, so we need to map the atlas' data for transfer to WR.
-    RefPtr<DataSourceSurface> dataSurface = atlas->GetDataSurface();
-    if (!dataSurface) {
-      return nullptr;
-||||||| merged common ancestors
-    // Check if an atlas was already created, or create one if necessary.
-    RefPtr<SourceSurface> atlas = gWRGlyphAtlas[key];
-    if (!atlas) {
-        atlas = MakeWRGlyphAtlas(aMat);
-        gWRGlyphAtlas[key] = atlas;
-=======
   }
   // The atlas may exist, but an image key may not be assigned for it to
   // the given layer manager.
@@ -404,56 +298,11 @@ static already_AddRefed<SourceSurface> GetWRGlyphAtlas(DrawTarget& aDrawTarget,
     RefPtr<DataSourceSurface> dataSurface = atlas->GetDataSurface();
     if (!dataSurface) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    DataSourceSurface::ScopedMap map(dataSurface, DataSourceSurface::READ);
-    if (!map.IsMapped()) {
-      return nullptr;
-||||||| merged common ancestors
-    // The atlas may exist, but an image key may not be assigned for it to
-    // the given layer manager.
-    auto* tdt = static_cast<layout::TextDrawTarget*>(&aDrawTarget);
-    auto* manager = tdt->WrLayerManager();
-    if (!atlas->GetUserData(reinterpret_cast<UserDataKey*>(manager))) {
-        // No image key, so we need to map the atlas' data for transfer to WR.
-        RefPtr<DataSourceSurface> dataSurface = atlas->GetDataSurface();
-        if (!dataSurface) {
-            return nullptr;
-        }
-        DataSourceSurface::ScopedMap map(dataSurface, DataSourceSurface::READ);
-        if (!map.IsMapped()) {
-            return nullptr;
-        }
-        // Transfer the data and get an image key for it.
-        Maybe<wr::ImageKey> result =
-            tdt->DefineImage(atlas->GetSize(),
-                             map.GetStride(),
-                             atlas->GetFormat(),
-                             map.GetData());
-        if (!result.isSome()) {
-            return nullptr;
-        }
-        // Assign the image key to the atlas.
-        atlas->AddUserData(reinterpret_cast<UserDataKey*>(manager),
-                           (void*)(uintptr_t)result.value().mHandle,
-                           nullptr);
-        // Create a user data notification for when the layer manager is
-        // destroyed so we can clean up any assigned image keys.
-        WRUserData::Assign(manager);
-=======
     DataSourceSurface::ScopedMap map(dataSurface, DataSourceSurface::READ);
     if (!map.IsMapped()) {
       return nullptr;
     }
-    // Transfer the data and get an image key for it.
-    Maybe<wr::ImageKey> result = tdt->DefineImage(
-        atlas->GetSize(), map.GetStride(), atlas->GetFormat(), map.GetData());
-    if (!result.isSome()) {
-      return nullptr;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
     // Transfer the data and get an image key for it.
     Maybe<wr::ImageKey> result = tdt->DefineImage(
         atlas->GetSize(), map.GetStride(), atlas->GetFormat(), map.GetData());
@@ -468,18 +317,6 @@ static already_AddRefed<SourceSurface> GetWRGlyphAtlas(DrawTarget& aDrawTarget,
     WRUserData::Assign(manager);
   }
   return atlas.forget();
-||||||| merged common ancestors
-    return atlas.forget();
-=======
-    // Assign the image key to the atlas.
-    atlas->AddUserData(reinterpret_cast<UserDataKey*>(manager),
-                       (void*)(uintptr_t)result.value().mHandle, nullptr);
-    // Create a user data notification for when the layer manager is
-    // destroyed so we can clean up any assigned image keys.
-    WRUserData::Assign(manager);
-  }
-  return atlas.forget();
->>>>>>> upstream-releases
 }
 
 static void DrawHexChar(uint32_t aDigit, Float aLeft, Float aTop,
@@ -513,22 +350,6 @@ static void DrawHexChar(uint32_t aDigit, Float aLeft, Float aTop,
       dest.width = fabs(dest.width);
       dest.height = fabs(dest.height);
     }
-<<<<<<< HEAD
-    // Finally, push the colored image with point filtering.
-    tdt->PushImage(key, wr::ToLayoutRect(bounds), wr::ToLayoutRect(dest),
-                   wr::ImageRendering::Pixelated, wr::ToColorF(aColor));
-  } else {
-    // For the normal case, just draw the given digit from the atlas. Point
-    // filtering is used to ensure the mini-font rectangles stay sharp with any
-    // scaling. Handle any transparency here as well.
-    aDrawTarget.DrawSurface(
-        aAtlas, dest,
-        Rect(aDigit * MINIFONT_WIDTH, 0, MINIFONT_WIDTH, MINIFONT_HEIGHT),
-        DrawSurfaceOptions(SamplingFilter::POINT),
-        DrawOptions(aColor.a, CompositionOp::OP_OVER, AntialiasMode::NONE));
-  }
-||||||| merged common ancestors
-=======
     // Finally, push the colored image with point filtering.
     tdt->PushImage(key, bounds, dest, wr::ImageRendering::Pixelated,
                    wr::ToColorF(aColor));
@@ -542,7 +363,6 @@ static void DrawHexChar(uint32_t aDigit, Float aLeft, Float aTop,
         DrawSurfaceOptions(SamplingFilter::POINT),
         DrawOptions(aColor.a, CompositionOp::OP_OVER, AntialiasMode::NONE));
   }
->>>>>>> upstream-releases
 }
 
 void gfxFontMissingGlyphs::Purge() {

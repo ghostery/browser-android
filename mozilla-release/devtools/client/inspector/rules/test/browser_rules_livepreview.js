@@ -28,13 +28,7 @@ const TEST_DATA = [
   { value: "red", expected: "block" },
   { value: "something", expected: "block" },
 
-<<<<<<< HEAD
-  {escape: true, value: "inline", expected: "block"},
-||||||| merged common ancestors
-  {escape: true, value: "inline", expected: "block"}
-=======
   { escape: true, value: "inline", expected: "block" },
->>>>>>> upstream-releases
 ];
 
 add_task(async function() {

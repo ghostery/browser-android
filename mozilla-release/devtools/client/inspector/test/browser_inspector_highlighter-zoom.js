@@ -20,16 +20,8 @@ const expectedStyle = (w, h, z) =>
   "overflow:hidden";
 
 add_task(async function() {
-<<<<<<< HEAD
-  const {inspector, testActor} = await openInspectorForURL(TEST_URL);
-  const highlighter = inspector.highlighter;
-||||||| merged common ancestors
-  const {inspector, testActor} = await openInspectorForURL(TEST_URL);
-  const highlighterUtils = inspector.toolbox.highlighterUtils;
-=======
   const { inspector, testActor } = await openInspectorForURL(TEST_URL);
   const highlighter = inspector.highlighter;
->>>>>>> upstream-releases
 
   const div = await getNodeFront("div", inspector);
 

@@ -559,46 +559,6 @@ nsresult WebMDemuxer::GetNextPacket(TrackInfo::TrackType aType,
   }
 
   int64_t next_tstamp = INT64_MIN;
-<<<<<<< HEAD
-  auto calculateNextTimestamp = [&](auto&& pushPacket, auto&& lastFrameTime,
-                                    auto&& trackEndTime) {
-    if (next_holder) {
-      next_tstamp = next_holder->Timestamp();
-      (this->*pushPacket)(next_holder);
-    } else if (duration >= 0) {
-      next_tstamp = tstamp + duration;
-    } else if (lastFrameTime.isSome()) {
-      next_tstamp = tstamp + (tstamp - lastFrameTime.ref());
-    } else if (mIsMediaSource) {
-      (this->*pushPacket)(holder);
-    } else {
-      // If we can't get frame's duration, it means either we need to wait for
-      // more data for MSE case or this is the last frame for file resource
-      // case.
-      MOZ_ASSERT(trackEndTime >= tstamp);
-      next_tstamp = trackEndTime;
-    }
-    lastFrameTime = Some(tstamp);
-||||||| merged common ancestors
-  auto calculateNextTimestamp =
-    [&] (auto&& pushPacket, auto&& lastFrameTime, auto&& trackEndTime) {
-      if (next_holder) {
-        next_tstamp = next_holder->Timestamp();
-        (this->*pushPacket)(next_holder);
-      } else if (duration >= 0) {
-        next_tstamp = tstamp + duration;
-      } else if (lastFrameTime.isSome()) {
-        next_tstamp = tstamp + (tstamp - lastFrameTime.ref());
-      } else if (mIsMediaSource) {
-        (this->*pushPacket)(holder);
-      } else {
-        // If we can't get frame's duration, it means either we need to wait for
-        // more data for MSE case or this is the last frame for file resource case.
-        MOZ_ASSERT(trackEndTime >= tstamp);
-        next_tstamp = trackEndTime;
-      }
-      lastFrameTime = Some(tstamp);
-=======
   auto calculateNextTimestamp = [&](auto&& pushPacket, auto&& lastFrameTime,
                                     int64_t trackEndTime) {
     if (next_holder) {
@@ -625,7 +585,6 @@ nsresult WebMDemuxer::GetNextPacket(TrackInfo::TrackType aType,
       next_tstamp = std::max<int64_t>(tstamp, trackEndTime);
     }
     lastFrameTime = Some(tstamp);
->>>>>>> upstream-releases
   };
 
   if (aType == TrackInfo::kAudioTrack) {
@@ -845,25 +804,12 @@ nsresult WebMDemuxer::GetNextPacket(TrackInfo::TrackType aType,
 
           // Assert that the lengths of the encrypted and plain samples add to
           // the length of the data.
-<<<<<<< HEAD
-          assert(
-              ((size_t)(std::accumulate(writer->mCrypto.mPlainSizes.begin(),
-                                        writer->mCrypto.mPlainSizes.end(), 0) +
-                        std::accumulate(writer->mCrypto.mEncryptedSizes.begin(),
-                                        writer->mCrypto.mEncryptedSizes.end(),
-                                        0)) == length));
-||||||| merged common ancestors
-          assert(((size_t)(std::accumulate(writer->mCrypto.mPlainSizes.begin(), writer->mCrypto.mPlainSizes.end(), 0) \
-                 + std::accumulate(writer->mCrypto.mEncryptedSizes.begin(), writer->mCrypto.mEncryptedSizes.end(), 0)) \
-                 == length));
-=======
           MOZ_ASSERT(
               ((size_t)(std::accumulate(writer->mCrypto.mPlainSizes.begin(),
                                         writer->mCrypto.mPlainSizes.end(), 0) +
                         std::accumulate(writer->mCrypto.mEncryptedSizes.begin(),
                                         writer->mCrypto.mEncryptedSizes.end(),
                                         0)) == length));
->>>>>>> upstream-releases
         }
       }
     }

@@ -123,14 +123,7 @@ inline void AcuteArcToBezier(T* aSink, const Point& aOrigin,
 template <typename T>
 void ArcToBezier(T* aSink, const Point& aOrigin, const Size& aRadius,
                  float aStartAngle, float aEndAngle, bool aAntiClockwise,
-<<<<<<< HEAD
-                 float aRotation = 0.0f) {
-||||||| merged common ancestors
-                 float aRotation = 0.0f)
-{
-=======
                  float aRotation = 0.0f, const Matrix& aTransform = Matrix()) {
->>>>>>> upstream-releases
   Float sweepDirection = aAntiClockwise ? -1.0f : 1.0f;
 
   // Calculate the total arc we're going to sweep.

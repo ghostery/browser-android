@@ -36,19 +36,8 @@ namespace mozilla {
 //   normal and high queues.
 // - We do not select events from the idle queue if the current idle period
 //   is almost over.
-<<<<<<< HEAD
-template <class InnerQueueT>
 class PrioritizedEventQueue final : public AbstractEventQueue {
  public:
-||||||| merged common ancestors
-template<class InnerQueueT>
-class PrioritizedEventQueue final : public AbstractEventQueue
-{
-public:
-=======
-class PrioritizedEventQueue final : public AbstractEventQueue {
- public:
->>>>>>> upstream-releases
   static const bool SupportsPrioritization = true;
 
   explicit PrioritizedEventQueue(already_AddRefed<nsIIdlePeriod> aIdlePeriod)
@@ -62,26 +51,11 @@ class PrioritizedEventQueue final : public AbstractEventQueue {
         mIdleQueue(MakeUnique<EventQueue>(EventQueuePriority::Idle)),
         mIdlePeriod(aIdlePeriod) {}
 
-<<<<<<< HEAD
-  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent, EventPriority aPriority,
-||||||| merged common ancestors
-  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
-                EventPriority aPriority,
-=======
   void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
                 EventQueuePriority aPriority,
->>>>>>> upstream-releases
                 const MutexAutoLock& aProofOfLock) final;
-<<<<<<< HEAD
-  already_AddRefed<nsIRunnable> GetEvent(
-      EventPriority* aPriority, const MutexAutoLock& aProofOfLock) final;
-||||||| merged common ancestors
-  already_AddRefed<nsIRunnable> GetEvent(EventPriority* aPriority,
-                                         const MutexAutoLock& aProofOfLock) final;
-=======
   already_AddRefed<nsIRunnable> GetEvent(
       EventQueuePriority* aPriority, const MutexAutoLock& aProofOfLock) final;
->>>>>>> upstream-releases
 
   bool IsEmpty(const MutexAutoLock& aProofOfLock) final;
   size_t Count(const MutexAutoLock& aProofOfLock) const final;
@@ -126,18 +100,9 @@ class PrioritizedEventQueue final : public AbstractEventQueue {
     return n;
   }
 
-<<<<<<< HEAD
- private:
-  EventPriority SelectQueue(bool aUpdateState,
-                            const MutexAutoLock& aProofOfLock);
-||||||| merged common ancestors
-private:
-  EventPriority SelectQueue(bool aUpdateState, const MutexAutoLock& aProofOfLock);
-=======
  private:
   EventQueuePriority SelectQueue(bool aUpdateState,
                                  const MutexAutoLock& aProofOfLock);
->>>>>>> upstream-releases
 
   // Returns a null TimeStamp if we're not in the idle period.
   mozilla::TimeStamp GetIdleDeadline();
@@ -187,20 +152,6 @@ private:
   InputEventQueueState mInputQueueState = STATE_DISABLED;
 };
 
-<<<<<<< HEAD
-class EventQueue;
-extern template class PrioritizedEventQueue<EventQueue>;
-extern template class PrioritizedEventQueue<LabeledEventQueue>;
-
 }  // namespace mozilla
-||||||| merged common ancestors
-class EventQueue;
-extern template class PrioritizedEventQueue<EventQueue>;
-extern template class PrioritizedEventQueue<LabeledEventQueue>;
-
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_PrioritizedEventQueue_h

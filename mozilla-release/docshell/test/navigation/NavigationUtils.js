@@ -49,13 +49,7 @@ function navigateByHyperlink(name) {
   link.target = name;
   link.id = "navigation_hyperlink_" + hyperlink_count++;
   document.body.appendChild(link);
-<<<<<<< HEAD
-  sendMouseEvent({type: "click"}, link.id);
-||||||| merged common ancestors
-  sendMouseEvent({type:"click"}, link.id);
-=======
   sendMouseEvent({ type: "click" }, link.id);
->>>>>>> upstream-releases
 }
 
 // /////////////////////////////////////////////////////////////////////////
@@ -65,18 +59,10 @@ function navigateByHyperlink(name) {
 async function isNavigated(wnd, message) {
   var result = null;
   try {
-<<<<<<< HEAD
-    result = SpecialPowers.wrap(wnd).document.body.innerHTML.trim();
-  } catch (ex) {
-||||||| merged common ancestors
-    result = SpecialPowers.wrap(wnd).document.body.innerHTML.trim();
-  } catch(ex) {
-=======
     result = await SpecialPowers.spawn(wnd, [], () =>
       this.content.document.body.innerHTML.trim()
     );
   } catch (ex) {
->>>>>>> upstream-releases
     result = ex;
   }
   is(result, body, message);
@@ -205,25 +191,6 @@ function xpcWaitForFinishedFrames(callback, numFrames) {
   }
 
   function searchForFinishedFrames(win) {
-<<<<<<< HEAD
-    if ((win.location.href.endsWith(target_url) ||
-         win.location.href.endsWith(target_popup_url)) &&
-        win.document &&
-        win.document.body &&
-        (win.document.body.textContent.trim() == body ||
-         win.document.body.textContent.trim() == popup_body) &&
-        win.document.readyState == "complete") {
-
-||||||| merged common ancestors
-    if ((win.location.href.endsWith(target_url) ||
-         win.location.href.endsWith(target_popup_url)) &&
-        win.document && 
-        win.document.body && 
-        (win.document.body.textContent.trim() == body ||
-         win.document.body.textContent.trim() == popup_body) && 
-        win.document.readyState == "complete") {
-
-=======
     if (
       (win.location.href.endsWith(target_url) ||
         win.location.href.endsWith(target_popup_url)) &&
@@ -233,7 +200,6 @@ function xpcWaitForFinishedFrames(callback, numFrames) {
         win.document.body.textContent.trim() == popup_body) &&
       win.document.readyState == "complete"
     ) {
->>>>>>> upstream-releases
       var windowId = win.windowUtils.outerWindowID;
       if (!contains(windowId, finishedWindows)) {
         finishedWindows.push(windowId);

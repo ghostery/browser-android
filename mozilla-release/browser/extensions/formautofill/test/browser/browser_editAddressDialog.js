@@ -25,13 +25,7 @@ add_task(async function test_cancelEditAddressDialogWithESC() {
 });
 
 add_task(async function test_defaultCountry() {
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "CA"]]});
-||||||| merged common ancestors
-  SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "CA"]]});
-=======
   await SpecialPowers.pushPrefEnv({ set: [[DEFAULT_REGION_PREF, "CA"]] });
->>>>>>> upstream-releases
   await testDialog(EDIT_ADDRESS_DIALOG_URL, win => {
     let doc = win.document;
     is(
@@ -41,13 +35,7 @@ add_task(async function test_defaultCountry() {
     );
     doc.querySelector("#cancel").click();
   });
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "DE"]]});
-||||||| merged common ancestors
-  SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "DE"]]});
-=======
   await SpecialPowers.pushPrefEnv({ set: [[DEFAULT_REGION_PREF, "DE"]] });
->>>>>>> upstream-releases
   await testDialog(EDIT_ADDRESS_DIALOG_URL, win => {
     let doc = win.document;
     is(
@@ -58,25 +46,13 @@ add_task(async function test_defaultCountry() {
     doc.querySelector("#cancel").click();
   });
   // Test unsupported country
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "XX"]]});
-||||||| merged common ancestors
-  SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "XX"]]});
-=======
   await SpecialPowers.pushPrefEnv({ set: [[DEFAULT_REGION_PREF, "XX"]] });
->>>>>>> upstream-releases
   await testDialog(EDIT_ADDRESS_DIALOG_URL, win => {
     let doc = win.document;
     is(doc.querySelector("#country").value, "", "Default country set to empty");
     doc.querySelector("#cancel").click();
   });
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "US"]]});
-||||||| merged common ancestors
-  SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "US"]]});
-=======
   await SpecialPowers.pushPrefEnv({ set: [[DEFAULT_REGION_PREF, "US"]] });
->>>>>>> upstream-releases
 });
 
 add_task(async function test_saveAddress() {
@@ -882,45 +858,6 @@ add_task(async function test_hiddenFieldRemovedWhenCountryChanged() {
   is(addresses[0].country, "DE", "country changed");
   await removeAllRecords();
 });
-<<<<<<< HEAD
-
-add_task(async function test_countrySpecificFieldsGetRequiredness() {
-  await SpecialPowers.pushPrefEnv({set: [[DEFAULT_REGION_PREF, "RO"]]});
-  await testDialog(EDIT_ADDRESS_DIALOG_URL, async win => {
-    let doc = win.document;
-    is(doc.querySelector("#country").value, "RO",
-                         "Default country set to Romania");
-    let provinceField = doc.getElementById("address-level1");
-    ok(!provinceField.required, "address-level1 should not be marked as required");
-    ok(provinceField.disabled, "address-level1 should be marked as disabled");
-    is(provinceField.parentNode.style.display, "none",
-       "address-level1 is hidden for Romania");
-
-    doc.querySelector("#country").focus();
-    EventUtils.synthesizeKey("United States", {}, win);
-
-    await TestUtils.waitForCondition(() => {
-      return provinceField.parentNode.style.display != "none";
-    }, "Wait for address-level1 to become visible", 10);
-
-    ok(provinceField.required, "address-level1 should be marked as required");
-    ok(!provinceField.disabled, "address-level1 should not be marked as disabled");
-
-    doc.querySelector("#country").focus();
-    EventUtils.synthesizeKey("Romania", {}, win);
-
-    await TestUtils.waitForCondition(() => {
-      return provinceField.parentNode.style.display == "none";
-    }, "Wait for address-level1 to become hidden", 10);
-
-    ok(provinceField.required, "address-level1 will still be marked as required");
-    ok(provinceField.disabled, "address-level1 should be marked as disabled");
-
-    doc.querySelector("#cancel").click();
-  });
-});
-||||||| merged common ancestors
-=======
 
 add_task(async function test_countrySpecificFieldsGetRequiredness() {
   await SpecialPowers.pushPrefEnv({ set: [[DEFAULT_REGION_PREF, "RO"]] });
@@ -982,4 +919,3 @@ add_task(async function test_countrySpecificFieldsGetRequiredness() {
     doc.querySelector("#cancel").click();
   });
 });
->>>>>>> upstream-releases

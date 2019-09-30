@@ -2561,46 +2561,6 @@ cert_test_orphan_key_reuse()
   fi
 }
 
-<<<<<<< HEAD
-cert_test_rsapss_policy()
-{
-  CERTSERIAL=`expr $CERTSERIAL + 1`
-
-  CERTNAME="TestUser-rsa-pss-policy"
-
-  # Subject certificate: RSA-PSS
-  # Issuer certificate: RSA
-  # Signature: RSA-PSS (explicit, with --pss-sign and -Z SHA1)
-  CU_ACTION="Generate Cert Request for $CERTNAME"
-  CU_SUBJECT="CN=$CERTNAME, E=${CERTNAME}@bogus.com, O=BOGUS NSS, L=Mountain View, ST=California, C=US"
-  certu -R -d "${PROFILEDIR}" -f "${R_PWFILE}" -z "${R_NOISE_FILE}" --pss -o req  2>&1
-
-  CU_ACTION="Sign ${CERTNAME}'s Request"
-  certu -C -c "TestCA" --pss-sign -Z SHA1 -m "${CERTSERIAL}" -v 60 -d "${P_R_CADIR}" \
-        -i req -o "${CERTNAME}.cert" -f "${R_PWFILE}" "$1" 2>&1
-
-  CU_ACTION="Import $CERTNAME's Cert"
-  certu -A -n "$CERTNAME" -t ",," -d "${PROFILEDIR}" -f "${R_PWFILE}" \
-        -i "${CERTNAME}.cert" 2>&1
-
-  CU_ACTION="Verify $CERTNAME's Cert"
-  certu -V -n "TestUser-rsa-pss-policy" -u V -V -e -d "${PROFILEDIR}" -f "${R_PWFILE}"
-
-  CU_ACTION="Verify $CERTNAME's Cert with Policy"
-  cp ${PROFILEDIR}/pkcs11.txt pkcs11.txt.orig
-  cat >> ${PROFILEDIR}/pkcs11.txt << ++EOF++
-library=
-name=Policy
-config="disallow=SHA1"
-++EOF++
-  RETEXPECTED=255
-  certu -V -n "TestUser-rsa-pss-policy" -u V -V -e -d "${PROFILEDIR}" -f "${R_PWFILE}"
-  RETEXPECTED=0
-  cp pkcs11.txt.orig ${PROFILEDIR}/pkcs11.txt
-}
-
-||||||| merged common ancestors
-=======
 cert_test_rsapss_policy()
 {
   CERTSERIAL=`expr $CERTSERIAL + 1`
@@ -2638,7 +2598,6 @@ config="disallow=SHA1"
   cp pkcs11.txt.orig ${PROFILEDIR}/pkcs11.txt
 }
 
->>>>>>> upstream-releases
 ############################## cert_cleanup ############################
 # local shell function to finish this script (no exit since it might be
 # sourced)

@@ -41,17 +41,8 @@ class SharedMemoryBasic final
     return ok;
   }
 
-<<<<<<< HEAD
-  virtual bool Map(size_t nBytes) override {
-    bool ok = mSharedMemory.Map(nBytes);
-||||||| merged common ancestors
-  virtual bool Map(size_t nBytes) override
-  {
-    bool ok = mSharedMemory.Map(nBytes);
-=======
   virtual bool Map(size_t nBytes, void* fixed_address = nullptr) override {
     bool ok = mSharedMemory.Map(nBytes, fixed_address);
->>>>>>> upstream-releases
     if (ok) {
       Mapped(nBytes);
     }
@@ -85,19 +76,9 @@ class SharedMemoryBasic final
     return ret;
   }
 
-<<<<<<< HEAD
- private:
-  ~SharedMemoryBasic() {}
-||||||| merged common ancestors
-private:
-  ~SharedMemoryBasic()
-  {
-  }
-=======
   static void* FindFreeAddressSpace(size_t size) {
     return base::SharedMemory::FindFreeAddressSpace(size);
   }
->>>>>>> upstream-releases
 
  private:
   ~SharedMemoryBasic() {}

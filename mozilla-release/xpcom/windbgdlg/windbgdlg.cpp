@@ -76,22 +76,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   DWORD regValue = -1;
   DWORD regLength = sizeof regValue;
   HKEY hkeyCU, hkeyLM;
-<<<<<<< HEAD
   RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\mozilla.org\\windbgdlg", 0,
                 KEY_READ, &hkeyCU);
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"Software\\mozilla.org\\windbgdlg", 0,
                 KEY_READ, &hkeyLM);
-  int argc = 0;
-||||||| merged common ancestors
-  RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\mozilla.org\\windbgdlg", 0, KEY_READ, &hkeyCU);
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"Software\\mozilla.org\\windbgdlg", 0, KEY_READ, &hkeyLM);
-  int argc =0;
-=======
-  RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\mozilla.org\\windbgdlg", 0,
-                KEY_READ, &hkeyCU);
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"Software\\mozilla.org\\windbgdlg", 0,
-                KEY_READ, &hkeyLM);
->>>>>>> upstream-releases
   for (int i = __argc - 1; regValue == (DWORD)-1 && i; --i) {
     bool ok = false;
     if (hkeyCU)

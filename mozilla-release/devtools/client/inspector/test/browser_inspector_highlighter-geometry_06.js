@@ -19,127 +19,45 @@ const SIDES = ["top", "right", "bottom", "left"];
 // the amount of pixels) and the expectation.
 const TESTS = {
   "Drag top's handler along x and y, south-east direction": {
-<<<<<<< HEAD
-    "expects": "Only y axis is used to updated the top's element value",
-    "drag": "top",
-    "by": {x: 10, y: 10},
-||||||| merged common ancestors
-    "expects": "Only y axis is used to updated the top's element value",
-    "drag": "top",
-    "by": {x: 10, y: 10}
-=======
     expects: "Only y axis is used to updated the top's element value",
     drag: "top",
     by: { x: 10, y: 10 },
->>>>>>> upstream-releases
   },
   "Drag right's handler along x and y, south-east direction": {
-<<<<<<< HEAD
-    "expects": "Only x axis is used to updated the right's element value",
-    "drag": "right",
-    "by": {x: 10, y: 10},
-||||||| merged common ancestors
-    "expects": "Only x axis is used to updated the right's element value",
-    "drag": "right",
-    "by": {x: 10, y: 10}
-=======
     expects: "Only x axis is used to updated the right's element value",
     drag: "right",
     by: { x: 10, y: 10 },
->>>>>>> upstream-releases
   },
   "Drag bottom's handler along x and y, south-east direction": {
-<<<<<<< HEAD
-    "expects": "Only y axis is used to updated the bottom's element value",
-    "drag": "bottom",
-    "by": {x: 10, y: 10},
-||||||| merged common ancestors
-    "expects": "Only y axis is used to updated the bottom's element value",
-    "drag": "bottom",
-    "by": {x: 10, y: 10}
-=======
     expects: "Only y axis is used to updated the bottom's element value",
     drag: "bottom",
     by: { x: 10, y: 10 },
->>>>>>> upstream-releases
   },
   "Drag left's handler along x and y, south-east direction": {
-<<<<<<< HEAD
-    "expects": "Only y axis is used to updated the left's element value",
-    "drag": "left",
-    "by": {x: 10, y: 10},
-||||||| merged common ancestors
-    "expects": "Only y axis is used to updated the left's element value",
-    "drag": "left",
-    "by": {x: 10, y: 10}
-=======
     expects: "Only y axis is used to updated the left's element value",
     drag: "left",
     by: { x: 10, y: 10 },
->>>>>>> upstream-releases
   },
   "Drag top's handler along x and y, north-west direction": {
-<<<<<<< HEAD
-    "expects": "Only y axis is used to updated the top's element value",
-    "drag": "top",
-    "by": {x: -20, y: -20},
-||||||| merged common ancestors
-    "expects": "Only y axis is used to updated the top's element value",
-    "drag": "top",
-    "by": {x: -20, y: -20}
-=======
     expects: "Only y axis is used to updated the top's element value",
     drag: "top",
     by: { x: -20, y: -20 },
->>>>>>> upstream-releases
   },
   "Drag right's handler along x and y, north-west direction": {
-<<<<<<< HEAD
-    "expects": "Only x axis is used to updated the right's element value",
-    "drag": "right",
-    "by": {x: -20, y: -20},
-||||||| merged common ancestors
-    "expects": "Only x axis is used to updated the right's element value",
-    "drag": "right",
-    "by": {x: -20, y: -20}
-=======
     expects: "Only x axis is used to updated the right's element value",
     drag: "right",
     by: { x: -20, y: -20 },
->>>>>>> upstream-releases
   },
   "Drag bottom's handler along x and y, north-west direction": {
-<<<<<<< HEAD
-    "expects": "Only y axis is used to updated the bottom's element value",
-    "drag": "bottom",
-    "by": {x: -20, y: -20},
-||||||| merged common ancestors
-    "expects": "Only y axis is used to updated the bottom's element value",
-    "drag": "bottom",
-    "by": {x: -20, y: -20}
-=======
     expects: "Only y axis is used to updated the bottom's element value",
     drag: "bottom",
     by: { x: -20, y: -20 },
->>>>>>> upstream-releases
   },
   "Drag left's handler along x and y, north-west direction": {
-<<<<<<< HEAD
-    "expects": "Only y axis is used to updated the left's element value",
-    "drag": "left",
-    "by": {x: -20, y: -20},
-  },
-||||||| merged common ancestors
-    "expects": "Only y axis is used to updated the left's element value",
-    "drag": "left",
-    "by": {x: -20, y: -20}
-  }
-=======
     expects: "Only y axis is used to updated the left's element value",
     drag: "left",
     by: { x: -20, y: -20 },
   },
->>>>>>> upstream-releases
 };
 
 add_task(async function() {

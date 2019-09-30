@@ -218,152 +218,6 @@ class JS_PUBLIC_API AtomOrTwoByteChars
 // The base class implemented by each ConcreteStackFrame<T> type. Subclasses
 // must not add data members to this class.
 class BaseStackFrame {
-<<<<<<< HEAD
-  friend class StackFrame;
-
-  BaseStackFrame(const StackFrame&) = delete;
-  BaseStackFrame& operator=(const StackFrame&) = delete;
-
- protected:
-  void* ptr;
-  explicit BaseStackFrame(void* ptr) : ptr(ptr) {}
-
- public:
-  // This is a value type that should not have a virtual destructor. Don't add
-  // destructors in subclasses!
-
-  // Get a unique identifier for this StackFrame. The identifier is not valid
-  // across garbage collections.
-  virtual uint64_t identifier() const { return uint64_t(uintptr_t(ptr)); }
-
-  // Get this frame's parent frame.
-  virtual StackFrame parent() const = 0;
-
-  // Get this frame's line number.
-  virtual uint32_t line() const = 0;
-
-  // Get this frame's column number.
-  virtual uint32_t column() const = 0;
-
-  // Get this frame's source name. Never null.
-  virtual AtomOrTwoByteChars source() const = 0;
-
-  // Return this frame's function name if named, otherwise the inferred
-  // display name. Can be null.
-  virtual AtomOrTwoByteChars functionDisplayName() const = 0;
-
-  // Returns true if this frame's function is system JavaScript running with
-  // trusted principals, false otherwise.
-  virtual bool isSystem() const = 0;
-
-  // Return true if this frame's function is a self-hosted JavaScript builtin,
-  // false otherwise.
-  virtual bool isSelfHosted(JSContext* cx) const = 0;
-
-  // Construct a SavedFrame stack for the stack starting with this frame and
-  // containing all of its parents. The SavedFrame objects will be placed into
-  // cx's current compartment.
-  //
-  // Note that the process of
-  //
-  //     SavedFrame
-  //         |
-  //         V
-  //     JS::ubi::StackFrame
-  //         |
-  //         V
-  //     offline heap snapshot
-  //         |
-  //         V
-  //     JS::ubi::StackFrame
-  //         |
-  //         V
-  //     SavedFrame
-  //
-  // is lossy because we cannot serialize and deserialize the SavedFrame's
-  // principals in the offline heap snapshot, so JS::ubi::StackFrame
-  // simplifies the principals check into the boolean isSystem() state. This
-  // is fine because we only expose JS::ubi::Stack to devtools and chrome
-  // code, and not to the web platform.
-  virtual MOZ_MUST_USE bool constructSavedFrameStack(
-      JSContext* cx, MutableHandleObject outSavedFrameStack) const = 0;
-
-  // Trace the concrete implementation of JS::ubi::StackFrame.
-  virtual void trace(JSTracer* trc) = 0;
-||||||| merged common ancestors
-    friend class StackFrame;
-
-    BaseStackFrame(const StackFrame&) = delete;
-    BaseStackFrame& operator=(const StackFrame&) = delete;
-
-  protected:
-    void* ptr;
-    explicit BaseStackFrame(void* ptr) : ptr(ptr) { }
-
-  public:
-    // This is a value type that should not have a virtual destructor. Don't add
-    // destructors in subclasses!
-
-    // Get a unique identifier for this StackFrame. The identifier is not valid
-    // across garbage collections.
-    virtual uint64_t identifier() const { return uint64_t(uintptr_t(ptr)); }
-
-    // Get this frame's parent frame.
-    virtual StackFrame parent() const = 0;
-
-    // Get this frame's line number.
-    virtual uint32_t line() const = 0;
-
-    // Get this frame's column number.
-    virtual uint32_t column() const = 0;
-
-    // Get this frame's source name. Never null.
-    virtual AtomOrTwoByteChars source() const = 0;
-
-    // Return this frame's function name if named, otherwise the inferred
-    // display name. Can be null.
-    virtual AtomOrTwoByteChars functionDisplayName() const = 0;
-
-    // Returns true if this frame's function is system JavaScript running with
-    // trusted principals, false otherwise.
-    virtual bool isSystem() const = 0;
-
-    // Return true if this frame's function is a self-hosted JavaScript builtin,
-    // false otherwise.
-    virtual bool isSelfHosted(JSContext* cx) const = 0;
-
-    // Construct a SavedFrame stack for the stack starting with this frame and
-    // containing all of its parents. The SavedFrame objects will be placed into
-    // cx's current compartment.
-    //
-    // Note that the process of
-    //
-    //     SavedFrame
-    //         |
-    //         V
-    //     JS::ubi::StackFrame
-    //         |
-    //         V
-    //     offline heap snapshot
-    //         |
-    //         V
-    //     JS::ubi::StackFrame
-    //         |
-    //         V
-    //     SavedFrame
-    //
-    // is lossy because we cannot serialize and deserialize the SavedFrame's
-    // principals in the offline heap snapshot, so JS::ubi::StackFrame
-    // simplifies the principals check into the boolean isSystem() state. This
-    // is fine because we only expose JS::ubi::Stack to devtools and chrome
-    // code, and not to the web platform.
-    virtual MOZ_MUST_USE bool constructSavedFrameStack(JSContext* cx,
-                                                       MutableHandleObject outSavedFrameStack)
-        const = 0;
-
-    // Trace the concrete implementation of JS::ubi::StackFrame.
-    virtual void trace(JSTracer* trc) = 0;
-=======
   friend class StackFrame;
 
   BaseStackFrame(const StackFrame&) = delete;
@@ -438,7 +292,6 @@ class BaseStackFrame {
 
   // Trace the concrete implementation of JS::ubi::StackFrame.
   virtual void trace(JSTracer* trc) = 0;
->>>>>>> upstream-releases
 };
 
 // A traits template with a specialization for each backing type that implements
@@ -461,164 +314,6 @@ class ConcreteStackFrame;
 // is an offline heap snapshot, the JS::ubi::StackFrame is valid as long as the
 // offline heap snapshot is alive.
 class StackFrame {
-<<<<<<< HEAD
-  // Storage in which we allocate BaseStackFrame subclasses.
-  mozilla::AlignedStorage2<BaseStackFrame> storage;
-
-  BaseStackFrame* base() { return storage.addr(); }
-  const BaseStackFrame* base() const { return storage.addr(); }
-
-  template <typename T>
-  void construct(T* ptr) {
-    static_assert(
-        mozilla::IsBaseOf<BaseStackFrame, ConcreteStackFrame<T>>::value,
-        "ConcreteStackFrame<T> must inherit from BaseStackFrame");
-    static_assert(
-        sizeof(ConcreteStackFrame<T>) == sizeof(*base()),
-        "ubi::ConcreteStackFrame<T> specializations must be the same size as "
-        "ubi::BaseStackFrame");
-    ConcreteStackFrame<T>::construct(base(), ptr);
-  }
-  struct ConstructFunctor;
-
- public:
-  StackFrame() { construct<void>(nullptr); }
-
-  template <typename T>
-  MOZ_IMPLICIT StackFrame(T* ptr) {
-    construct(ptr);
-  }
-
-  template <typename T>
-  StackFrame& operator=(T* ptr) {
-    construct(ptr);
-    return *this;
-  }
-
-  // Constructors accepting SpiderMonkey's generic-pointer-ish types.
-
-  template <typename T>
-  explicit StackFrame(const JS::Handle<T*>& handle) {
-    construct(handle.get());
-  }
-
-  template <typename T>
-  StackFrame& operator=(const JS::Handle<T*>& handle) {
-    construct(handle.get());
-    return *this;
-  }
-
-  template <typename T>
-  explicit StackFrame(const JS::Rooted<T*>& root) {
-    construct(root.get());
-  }
-
-  template <typename T>
-  StackFrame& operator=(const JS::Rooted<T*>& root) {
-    construct(root.get());
-    return *this;
-  }
-
-  // Because StackFrame is just a vtable pointer and an instance pointer, we
-  // can memcpy everything around instead of making concrete classes define
-  // virtual constructors. See the comment above Node's copy constructor for
-  // more details; that comment applies here as well.
-  StackFrame(const StackFrame& rhs) {
-    memcpy(storage.u.mBytes, rhs.storage.u.mBytes, sizeof(storage.u));
-  }
-
-  StackFrame& operator=(const StackFrame& rhs) {
-    memcpy(storage.u.mBytes, rhs.storage.u.mBytes, sizeof(storage.u));
-    return *this;
-  }
-
-  bool operator==(const StackFrame& rhs) const {
-    return base()->ptr == rhs.base()->ptr;
-  }
-  bool operator!=(const StackFrame& rhs) const { return !(*this == rhs); }
-
-  explicit operator bool() const { return base()->ptr != nullptr; }
-
-  // Copy this StackFrame's source name into the given |destination|
-  // buffer. Copy no more than |length| characters. The result is *not* null
-  // terminated. Returns how many characters were written into the buffer.
-  size_t source(RangedPtr<char16_t> destination, size_t length) const;
-
-  // Copy this StackFrame's function display name into the given |destination|
-  // buffer. Copy no more than |length| characters. The result is *not* null
-  // terminated. Returns how many characters were written into the buffer.
-  size_t functionDisplayName(RangedPtr<char16_t> destination,
-                             size_t length) const;
-
-  // Get the size of the respective strings. 0 is returned for null strings.
-  size_t sourceLength();
-  size_t functionDisplayNameLength();
-
-  // Methods that forward to virtual calls through BaseStackFrame.
-
-  void trace(JSTracer* trc) { base()->trace(trc); }
-  uint64_t identifier() const {
-    auto id = base()->identifier();
-    MOZ_ASSERT(JS::Value::isNumberRepresentable(id));
-    return id;
-  }
-  uint32_t line() const { return base()->line(); }
-  uint32_t column() const { return base()->column(); }
-  AtomOrTwoByteChars source() const { return base()->source(); }
-  AtomOrTwoByteChars functionDisplayName() const {
-    return base()->functionDisplayName();
-  }
-  StackFrame parent() const { return base()->parent(); }
-  bool isSystem() const { return base()->isSystem(); }
-  bool isSelfHosted(JSContext* cx) const { return base()->isSelfHosted(cx); }
-  MOZ_MUST_USE bool constructSavedFrameStack(
-      JSContext* cx, MutableHandleObject outSavedFrameStack) const {
-    return base()->constructSavedFrameStack(cx, outSavedFrameStack);
-  }
-
-  struct HashPolicy {
-    using Lookup = JS::ubi::StackFrame;
-
-    static js::HashNumber hash(const Lookup& lookup) {
-      return mozilla::HashGeneric(lookup.identifier());
-||||||| merged common ancestors
-    // Storage in which we allocate BaseStackFrame subclasses.
-    mozilla::AlignedStorage2<BaseStackFrame> storage;
-
-    BaseStackFrame* base() { return storage.addr(); }
-    const BaseStackFrame* base() const { return storage.addr(); }
-
-    template<typename T>
-    void construct(T* ptr) {
-        static_assert(mozilla::IsBaseOf<BaseStackFrame, ConcreteStackFrame<T>>::value,
-                      "ConcreteStackFrame<T> must inherit from BaseStackFrame");
-        static_assert(sizeof(ConcreteStackFrame<T>) == sizeof(*base()),
-                      "ubi::ConcreteStackFrame<T> specializations must be the same size as "
-                      "ubi::BaseStackFrame");
-        ConcreteStackFrame<T>::construct(base(), ptr);
-    }
-    struct ConstructFunctor;
-
-  public:
-    StackFrame() { construct<void>(nullptr); }
-
-    template<typename T>
-    MOZ_IMPLICIT StackFrame(T* ptr) {
-        construct(ptr);
-    }
-
-    template<typename T>
-    StackFrame& operator=(T* ptr) {
-        construct(ptr);
-        return *this;
-    }
-
-    // Constructors accepting SpiderMonkey's generic-pointer-ish types.
-
-    template<typename T>
-    explicit StackFrame(const JS::Handle<T*>& handle) {
-        construct(handle.get());
-=======
   // Storage in which we allocate BaseStackFrame subclasses.
   mozilla::AlignedStorage2<BaseStackFrame> storage;
 
@@ -739,7 +434,6 @@ class StackFrame {
 
     static js::HashNumber hash(const Lookup& lookup) {
       return mozilla::HashGeneric(lookup.identifier());
->>>>>>> upstream-releases
     }
 
     static bool match(const StackFrame& key, const Lookup& lookup) {
@@ -754,58 +448,6 @@ class StackFrame {
 // ubi::StackFrame crashes.
 template <>
 class ConcreteStackFrame<void> : public BaseStackFrame {
-<<<<<<< HEAD
-  explicit ConcreteStackFrame(void* ptr) : BaseStackFrame(ptr) {}
-
- public:
-  static void construct(void* storage, void*) {
-    new (storage) ConcreteStackFrame(nullptr);
-  }
-
-  uint64_t identifier() const override { return 0; }
-  void trace(JSTracer* trc) override {}
-  MOZ_MUST_USE bool constructSavedFrameStack(
-      JSContext* cx, MutableHandleObject out) const override {
-    out.set(nullptr);
-    return true;
-  }
-
-  uint32_t line() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-  uint32_t column() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-  AtomOrTwoByteChars source() const override {
-    MOZ_CRASH("null JS::ubi::StackFrame");
-  }
-  AtomOrTwoByteChars functionDisplayName() const override {
-    MOZ_CRASH("null JS::ubi::StackFrame");
-  }
-  StackFrame parent() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-  bool isSystem() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-  bool isSelfHosted(JSContext* cx) const override {
-    MOZ_CRASH("null JS::ubi::StackFrame");
-  }
-||||||| merged common ancestors
-    explicit ConcreteStackFrame(void* ptr) : BaseStackFrame(ptr) { }
-
-  public:
-    static void construct(void* storage, void*) { new (storage) ConcreteStackFrame(nullptr); }
-
-    uint64_t identifier() const override { return 0; }
-    void trace(JSTracer* trc) override { }
-    MOZ_MUST_USE bool constructSavedFrameStack(JSContext* cx, MutableHandleObject out)
-        const override
-    {
-        out.set(nullptr);
-        return true;
-    }
-
-    uint32_t line() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-    uint32_t column() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-    AtomOrTwoByteChars source() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-    AtomOrTwoByteChars functionDisplayName() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-    StackFrame parent() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-    bool isSystem() const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-    bool isSelfHosted(JSContext* cx) const override { MOZ_CRASH("null JS::ubi::StackFrame"); }
-=======
   explicit ConcreteStackFrame(void* ptr) : BaseStackFrame(ptr) {}
 
  public:
@@ -835,7 +477,6 @@ class ConcreteStackFrame<void> : public BaseStackFrame {
   bool isSelfHosted(JSContext* cx) const override {
     MOZ_CRASH("null JS::ubi::StackFrame");
   }
->>>>>>> upstream-releases
 };
 
 MOZ_MUST_USE JS_PUBLIC_API bool ConstructSavedFrameStackSlow(
@@ -868,15 +509,6 @@ enum class CoarseType : uint32_t {
   LAST = DOMNode
 };
 
-<<<<<<< HEAD
-inline uint32_t CoarseTypeToUint32(CoarseType type) {
-  return static_cast<uint32_t>(type);
-||||||| merged common ancestors
-inline uint32_t
-CoarseTypeToUint32(CoarseType type)
-{
-    return static_cast<uint32_t>(type);
-=======
 /**
  * Convert a CoarseType enum into a string. The string is statically allocated.
  */
@@ -884,7 +516,6 @@ JS_PUBLIC_API const char* CoarseTypeToString(CoarseType type);
 
 inline uint32_t CoarseTypeToUint32(CoarseType type) {
   return static_cast<uint32_t>(type);
->>>>>>> upstream-releases
 }
 
 inline bool Uint32IsValidCoarseType(uint32_t n) {
@@ -1070,7 +701,6 @@ class Concrete;
 // A container for a Base instance; all members simply forward to the contained
 // instance.  This container allows us to pass ubi::Node instances by value.
 class Node {
-<<<<<<< HEAD
   // Storage in which we allocate Base subclasses.
   mozilla::AlignedStorage2<Base> storage;
   Base* base() { return storage.addr(); }
@@ -1227,316 +857,6 @@ class Node {
     static bool match(const Node& k, const Lookup& l) { return k == l; }
     static void rekey(Node& k, const Node& newKey) { k = newKey; }
   };
-||||||| merged common ancestors
-    // Storage in which we allocate Base subclasses.
-    mozilla::AlignedStorage2<Base> storage;
-    Base* base() { return storage.addr(); }
-    const Base* base() const { return storage.addr(); }
-
-    template<typename T>
-    void construct(T* ptr) {
-        static_assert(sizeof(Concrete<T>) == sizeof(*base()),
-                      "ubi::Base specializations must be the same size as ubi::Base");
-        static_assert(mozilla::IsBaseOf<Base, Concrete<T>>::value,
-                      "ubi::Concrete<T> must inherit from ubi::Base");
-        Concrete<T>::construct(base(), ptr);
-    }
-    struct ConstructFunctor;
-
-  public:
-    Node() { construct<void>(nullptr); }
-
-    template<typename T>
-    MOZ_IMPLICIT Node(T* ptr) {
-        construct(ptr);
-    }
-    template<typename T>
-    Node& operator=(T* ptr) {
-        construct(ptr);
-        return *this;
-    }
-
-    // We can construct and assign from rooted forms of pointers.
-    template<typename T>
-    MOZ_IMPLICIT Node(const Rooted<T*>& root) {
-        construct(root.get());
-    }
-    template<typename T>
-    Node& operator=(const Rooted<T*>& root) {
-        construct(root.get());
-        return *this;
-    }
-
-    // Constructors accepting SpiderMonkey's other generic-pointer-ish types.
-    // Note that we *do* want an implicit constructor here: JS::Value and
-    // JS::ubi::Node are both essentially tagged references to other sorts of
-    // objects, so letting conversions happen automatically is appropriate.
-    MOZ_IMPLICIT Node(JS::HandleValue value);
-    explicit Node(const JS::GCCellPtr& thing);
-
-    // copy construction and copy assignment just use memcpy, since we know
-    // instances contain nothing but a vtable pointer and a data pointer.
-    //
-    // To be completely correct, concrete classes could provide a virtual
-    // 'construct' member function, which we could invoke on rhs to construct an
-    // instance in our storage. But this is good enough; there's no need to jump
-    // through vtables for copying and assignment that are just going to move
-    // two words around. The compiler knows how to optimize memcpy.
-    Node(const Node& rhs) {
-        memcpy(storage.u.mBytes, rhs.storage.u.mBytes, sizeof(storage.u));
-    }
-
-    Node& operator=(const Node& rhs) {
-        memcpy(storage.u.mBytes, rhs.storage.u.mBytes, sizeof(storage.u));
-        return *this;
-    }
-
-    bool operator==(const Node& rhs) const { return *base() == *rhs.base(); }
-    bool operator!=(const Node& rhs) const { return *base() != *rhs.base(); }
-
-    explicit operator bool() const {
-        return base()->ptr != nullptr;
-    }
-
-    bool isLive() const { return base()->isLive(); }
-
-    // Get the canonical type name for the given type T.
-    template<typename T>
-    static const char16_t* canonicalTypeName() { return Concrete<T>::concreteTypeName; }
-
-    template<typename T>
-    bool is() const {
-        return base()->typeName() == canonicalTypeName<T>();
-    }
-
-    template<typename T>
-    T* as() const {
-        MOZ_ASSERT(isLive());
-        MOZ_ASSERT(this->is<T>());
-        return static_cast<T*>(base()->ptr);
-    }
-
-    template<typename T>
-    T* asOrNull() const {
-        MOZ_ASSERT(isLive());
-        return this->is<T>() ? static_cast<T*>(base()->ptr) : nullptr;
-    }
-
-    // If this node refers to something that can be represented as a JavaScript
-    // value that is safe to expose to JavaScript code, return that value.
-    // Otherwise return UndefinedValue(). JSStrings, JS::Symbols, and some (but
-    // not all!) JSObjects can be exposed.
-    JS::Value exposeToJS() const;
-
-    CoarseType coarseType()               const { return base()->coarseType(); }
-    const char16_t* typeName()            const { return base()->typeName(); }
-    JS::Zone* zone()                      const { return base()->zone(); }
-    JS::Compartment* compartment()        const { return base()->compartment(); }
-    JS::Realm* realm()                    const { return base()->realm(); }
-    const char* jsObjectClassName()       const { return base()->jsObjectClassName(); }
-    const char16_t* descriptiveTypeName() const { return base()->descriptiveTypeName(); }
-    MOZ_MUST_USE bool jsObjectConstructorName(JSContext* cx, UniqueTwoByteChars& outName) const {
-        return base()->jsObjectConstructorName(cx, outName);
-    }
-
-    const char* scriptFilename() const { return base()->scriptFilename(); }
-
-    using Size = Base::Size;
-    Size size(mozilla::MallocSizeOf mallocSizeof) const {
-        auto size =  base()->size(mallocSizeof);
-        MOZ_ASSERT(size > 0,
-                   "C++ does not have zero-sized types! Choose 1 if you just need a "
-                   "conservative default.");
-        return size;
-    }
-
-    js::UniquePtr<EdgeRange> edges(JSContext* cx, bool wantNames = true) const {
-        return base()->edges(cx, wantNames);
-    }
-
-    bool hasAllocationStack() const { return base()->hasAllocationStack(); }
-    StackFrame allocationStack() const {
-        return base()->allocationStack();
-    }
-
-    using Id = Base::Id;
-    Id identifier() const {
-        auto id = base()->identifier();
-        MOZ_ASSERT(JS::Value::isNumberRepresentable(id));
-        return id;
-    }
-
-    // A hash policy for ubi::Nodes.
-    // This simply uses the stock PointerHasher on the ubi::Node's pointer.
-    // We specialize DefaultHasher below to make this the default.
-    class HashPolicy {
-        typedef js::PointerHasher<void*> PtrHash;
-
-      public:
-        typedef Node Lookup;
-
-        static js::HashNumber hash(const Lookup& l) { return PtrHash::hash(l.base()->ptr); }
-        static bool match(const Node& k, const Lookup& l) { return k == l; }
-        static void rekey(Node& k, const Node& newKey) { k = newKey; }
-    };
-=======
-  // Storage in which we allocate Base subclasses.
-  mozilla::AlignedStorage2<Base> storage;
-  Base* base() { return storage.addr(); }
-  const Base* base() const { return storage.addr(); }
-
-  template <typename T>
-  void construct(T* ptr) {
-    static_assert(
-        sizeof(Concrete<T>) == sizeof(*base()),
-        "ubi::Base specializations must be the same size as ubi::Base");
-    static_assert(mozilla::IsBaseOf<Base, Concrete<T>>::value,
-                  "ubi::Concrete<T> must inherit from ubi::Base");
-    Concrete<T>::construct(base(), ptr);
-  }
-  struct ConstructFunctor;
-
- public:
-  Node() { construct<void>(nullptr); }
-
-  template <typename T>
-  MOZ_IMPLICIT Node(T* ptr) {
-    construct(ptr);
-  }
-  template <typename T>
-  Node& operator=(T* ptr) {
-    construct(ptr);
-    return *this;
-  }
-
-  // We can construct and assign from rooted forms of pointers.
-  template <typename T>
-  MOZ_IMPLICIT Node(const Rooted<T*>& root) {
-    construct(root.get());
-  }
-  template <typename T>
-  Node& operator=(const Rooted<T*>& root) {
-    construct(root.get());
-    return *this;
-  }
-
-  // Constructors accepting SpiderMonkey's other generic-pointer-ish types.
-  // Note that we *do* want an implicit constructor here: JS::Value and
-  // JS::ubi::Node are both essentially tagged references to other sorts of
-  // objects, so letting conversions happen automatically is appropriate.
-  MOZ_IMPLICIT Node(JS::HandleValue value);
-  explicit Node(const JS::GCCellPtr& thing);
-
-  // copy construction and copy assignment just use memcpy, since we know
-  // instances contain nothing but a vtable pointer and a data pointer.
-  //
-  // To be completely correct, concrete classes could provide a virtual
-  // 'construct' member function, which we could invoke on rhs to construct an
-  // instance in our storage. But this is good enough; there's no need to jump
-  // through vtables for copying and assignment that are just going to move
-  // two words around. The compiler knows how to optimize memcpy.
-  Node(const Node& rhs) {
-    memcpy(storage.u.mBytes, rhs.storage.u.mBytes, sizeof(storage.u));
-  }
-
-  Node& operator=(const Node& rhs) {
-    memcpy(storage.u.mBytes, rhs.storage.u.mBytes, sizeof(storage.u));
-    return *this;
-  }
-
-  bool operator==(const Node& rhs) const { return *base() == *rhs.base(); }
-  bool operator!=(const Node& rhs) const { return *base() != *rhs.base(); }
-
-  explicit operator bool() const { return base()->ptr != nullptr; }
-
-  bool isLive() const { return base()->isLive(); }
-
-  // Get the canonical type name for the given type T.
-  template <typename T>
-  static const char16_t* canonicalTypeName() {
-    return Concrete<T>::concreteTypeName;
-  }
-
-  template <typename T>
-  bool is() const {
-    return base()->typeName() == canonicalTypeName<T>();
-  }
-
-  template <typename T>
-  T* as() const {
-    MOZ_ASSERT(isLive());
-    MOZ_ASSERT(this->is<T>());
-    return static_cast<T*>(base()->ptr);
-  }
-
-  template <typename T>
-  T* asOrNull() const {
-    MOZ_ASSERT(isLive());
-    return this->is<T>() ? static_cast<T*>(base()->ptr) : nullptr;
-  }
-
-  // If this node refers to something that can be represented as a JavaScript
-  // value that is safe to expose to JavaScript code, return that value.
-  // Otherwise return UndefinedValue(). JSStrings, JS::Symbols, and some (but
-  // not all!) JSObjects can be exposed.
-  JS::Value exposeToJS() const;
-
-  CoarseType coarseType() const { return base()->coarseType(); }
-  const char16_t* typeName() const { return base()->typeName(); }
-  JS::Zone* zone() const { return base()->zone(); }
-  JS::Compartment* compartment() const { return base()->compartment(); }
-  JS::Realm* realm() const { return base()->realm(); }
-  const char* jsObjectClassName() const { return base()->jsObjectClassName(); }
-  const char16_t* descriptiveTypeName() const {
-    return base()->descriptiveTypeName();
-  }
-  MOZ_MUST_USE bool jsObjectConstructorName(JSContext* cx,
-                                            UniqueTwoByteChars& outName) const {
-    return base()->jsObjectConstructorName(cx, outName);
-  }
-
-  const char* scriptFilename() const { return base()->scriptFilename(); }
-
-  using Size = Base::Size;
-  Size size(mozilla::MallocSizeOf mallocSizeof) const {
-    auto size = base()->size(mallocSizeof);
-    MOZ_ASSERT(
-        size > 0,
-        "C++ does not have zero-sized types! Choose 1 if you just need a "
-        "conservative default.");
-    return size;
-  }
-
-  js::UniquePtr<EdgeRange> edges(JSContext* cx, bool wantNames = true) const {
-    return base()->edges(cx, wantNames);
-  }
-
-  bool hasAllocationStack() const { return base()->hasAllocationStack(); }
-  StackFrame allocationStack() const { return base()->allocationStack(); }
-
-  using Id = Base::Id;
-  Id identifier() const {
-    auto id = base()->identifier();
-    MOZ_ASSERT(JS::Value::isNumberRepresentable(id));
-    return id;
-  }
-
-  // A hash policy for ubi::Nodes.
-  // This simply uses the stock PointerHasher on the ubi::Node's pointer.
-  // We specialize DefaultHasher below to make this the default.
-  class HashPolicy {
-    typedef js::PointerHasher<void*> PtrHash;
-
-   public:
-    typedef Node Lookup;
-
-    static js::HashNumber hash(const Lookup& l) {
-      return PtrHash::hash(l.base()->ptr);
-    }
-    static bool match(const Node& k, const Lookup& l) { return k == l; }
-    static void rekey(Node& k, const Node& newKey) { k = newKey; }
-  };
->>>>>>> upstream-releases
 };
 
 using NodeSet =
@@ -1709,7 +1029,6 @@ class MOZ_STACK_CLASS JS_PUBLIC_API RootList {
 
 /*** Concrete classes for ubi::Node referent types ****************************/
 
-<<<<<<< HEAD
 template <>
 class JS_PUBLIC_API Concrete<RootList> : public Base {
  protected:
@@ -1720,48 +1039,11 @@ class JS_PUBLIC_API Concrete<RootList> : public Base {
   static void construct(void* storage, RootList* ptr) {
     new (storage) Concrete(ptr);
   }
-||||||| merged common ancestors
-/*** Concrete classes for ubi::Node referent types ************************************************/
 
-template<>
-class JS_PUBLIC_API(Concrete<RootList>) : public Base {
-  protected:
-    explicit Concrete(RootList* ptr) : Base(ptr) { }
-    RootList& get() const { return *static_cast<RootList*>(ptr); }
-=======
-template <>
-class JS_PUBLIC_API Concrete<RootList> : public Base {
- protected:
-  explicit Concrete(RootList* ptr) : Base(ptr) {}
-  RootList& get() const { return *static_cast<RootList*>(ptr); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  js::UniquePtr<EdgeRange> edges(JSContext* cx, bool wantNames) const override;
-||||||| merged common ancestors
-  public:
-    static void construct(void* storage, RootList* ptr) { new (storage) Concrete(ptr); }
-=======
- public:
-  static void construct(void* storage, RootList* ptr) {
-    new (storage) Concrete(ptr);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  const char16_t* typeName() const override { return concreteTypeName; }
-  static const char16_t concreteTypeName[];
-||||||| merged common ancestors
-    js::UniquePtr<EdgeRange> edges(JSContext* cx, bool wantNames) const override;
-
-    const char16_t* typeName() const override { return concreteTypeName; }
-    static const char16_t concreteTypeName[];
-=======
   js::UniquePtr<EdgeRange> edges(JSContext* cx, bool wantNames) const override;
 
   const char16_t* typeName() const override { return concreteTypeName; }
   static const char16_t concreteTypeName[];
->>>>>>> upstream-releases
 };
 
 // A reusable ubi::Concrete specialization base class for types supported by
@@ -1792,7 +1074,6 @@ class JS_PUBLIC_API TracerConcreteWithRealm : public TracerConcrete<Referent> {
 
 // Define specializations for some commonly-used public JSAPI types.
 // These can use the generic templates above.
-<<<<<<< HEAD
 template <>
 class JS_PUBLIC_API Concrete<JS::Symbol> : TracerConcrete<JS::Symbol> {
  protected:
@@ -1802,50 +1083,13 @@ class JS_PUBLIC_API Concrete<JS::Symbol> : TracerConcrete<JS::Symbol> {
   static void construct(void* storage, JS::Symbol* ptr) {
     new (storage) Concrete(ptr);
   }
-||||||| merged common ancestors
-template<>
-class JS_PUBLIC_API(Concrete<JS::Symbol>) : TracerConcrete<JS::Symbol> {
-  protected:
-    explicit Concrete(JS::Symbol* ptr) : TracerConcrete(ptr) { }
 
-  public:
-    static void construct(void* storage, JS::Symbol* ptr) {
-        new (storage) Concrete(ptr);
-    }
-=======
-template <>
-class JS_PUBLIC_API Concrete<JS::Symbol> : TracerConcrete<JS::Symbol> {
- protected:
-  explicit Concrete(JS::Symbol* ptr) : TracerConcrete(ptr) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  Size size(mozilla::MallocSizeOf mallocSizeOf) const override;
-||||||| merged common ancestors
-    Size size(mozilla::MallocSizeOf mallocSizeOf) const override;
-=======
- public:
-  static void construct(void* storage, JS::Symbol* ptr) {
-    new (storage) Concrete(ptr);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  const char16_t* typeName() const override { return concreteTypeName; }
-  static const char16_t concreteTypeName[];
-||||||| merged common ancestors
-    const char16_t* typeName() const override { return concreteTypeName; }
-    static const char16_t concreteTypeName[];
-=======
   Size size(mozilla::MallocSizeOf mallocSizeOf) const override;
 
   const char16_t* typeName() const override { return concreteTypeName; }
   static const char16_t concreteTypeName[];
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
 template <>
 class JS_PUBLIC_API Concrete<JS::BigInt> : TracerConcrete<JS::BigInt> {
  protected:
@@ -1855,28 +1099,6 @@ class JS_PUBLIC_API Concrete<JS::BigInt> : TracerConcrete<JS::BigInt> {
   static void construct(void* storage, JS::BigInt* ptr) {
     new (storage) Concrete(ptr);
   }
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-template<>
-class JS_PUBLIC_API(Concrete<JS::BigInt>) : TracerConcrete<JS::BigInt> {
-  protected:
-    explicit Concrete(JS::BigInt* ptr) : TracerConcrete(ptr) {}
-
-  public:
-    static void construct(void* storage, JS::BigInt* ptr) {
-        new (storage) Concrete(ptr);
-    }
-=======
-template <>
-class JS_PUBLIC_API Concrete<JS::BigInt> : TracerConcrete<JS::BigInt> {
- protected:
-  explicit Concrete(JS::BigInt* ptr) : TracerConcrete(ptr) {}
-
- public:
-  static void construct(void* storage, JS::BigInt* ptr) {
-    new (storage) Concrete(ptr);
-  }
->>>>>>> upstream-releases
 
   Size size(mozilla::MallocSizeOf mallocSizeOf) const override;
 

@@ -60,20 +60,9 @@ enum ErrNum {
 // use in static_assert.
 #if defined(DEBUG) && (defined(__clang__) || defined(__GNUC__))
 uint16_t constexpr ErrorFormatNumArgs[] = {
-<<<<<<< HEAD
-#define MSG_DEF(_name, _argc, _exn, _str) _argc,
-#include "mozilla/dom/Errors.msg"
-#undef MSG_DEF
-||||||| merged common ancestors
-#define MSG_DEF(_name, _argc, _exn, _str) \
-  _argc,
-#include "mozilla/dom/Errors.msg"
-#undef MSG_DEF
-=======
 #  define MSG_DEF(_name, _argc, _exn, _str) _argc,
 #  include "mozilla/dom/Errors.msg"
 #  undef MSG_DEF
->>>>>>> upstream-releases
 };
 #endif
 

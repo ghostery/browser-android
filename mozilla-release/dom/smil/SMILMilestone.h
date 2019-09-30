@@ -36,115 +36,40 @@ namespace mozilla {
  * of instance times available before committing to a new interval. Once an
  * interval is entered, the begin time is fixed.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-class nsSMILMilestone {
- public:
-  nsSMILMilestone(nsSMILTime aTime, bool aIsEnd)
-      : mTime(aTime), mIsEnd(aIsEnd) {}
-||||||| merged common ancestors
-class nsSMILMilestone
-{
-public:
-  nsSMILMilestone(nsSMILTime aTime, bool aIsEnd)
-    : mTime(aTime), mIsEnd(aIsEnd)
-  { }
-=======
 class SMILMilestone {
  public:
   SMILMilestone(SMILTime aTime, bool aIsEnd) : mTime(aTime), mIsEnd(aIsEnd) {}
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  nsSMILMilestone() : mTime(0), mIsEnd(false) {}
-||||||| merged common ancestors
-  nsSMILMilestone()
-    : mTime(0), mIsEnd(false)
-  { }
-=======
   SMILMilestone() : mTime(0), mIsEnd(false) {}
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  bool operator==(const nsSMILMilestone& aOther) const {
-||||||| merged common ancestors
-  bool operator==(const nsSMILMilestone& aOther) const
-  {
-=======
   bool operator==(const SMILMilestone& aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
     return mTime == aOther.mTime && mIsEnd == aOther.mIsEnd;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  bool operator!=(const nsSMILMilestone& aOther) const {
-||||||| merged common ancestors
-  bool operator!=(const nsSMILMilestone& aOther) const
-  {
-=======
   bool operator!=(const SMILMilestone& aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
     return !(*this == aOther);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  bool operator<(const nsSMILMilestone& aOther) const {
-||||||| merged common ancestors
-  bool operator<(const nsSMILMilestone& aOther) const
-  {
-=======
   bool operator<(const SMILMilestone& aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
     // Earlier times sort first, and for equal times end milestones sort first
     return mTime < aOther.mTime ||
            (mTime == aOther.mTime && mIsEnd && !aOther.mIsEnd);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  bool operator<=(const nsSMILMilestone& aOther) const {
-||||||| merged common ancestors
-  bool operator<=(const nsSMILMilestone& aOther) const
-  {
-=======
   bool operator<=(const SMILMilestone& aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
     return *this == aOther || *this < aOther;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  bool operator>=(const nsSMILMilestone& aOther) const {
-||||||| merged common ancestors
-  bool operator>=(const nsSMILMilestone& aOther) const
-  {
-=======
   bool operator>=(const SMILMilestone& aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
     return !(*this < aOther);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-  nsSMILTime mTime;  // The milestone time. This may be in container time or
-                     // parent container time depending on where it is used.
-  bool mIsEnd;       // true if this milestone corresponds to an interval
-                     // end, false otherwise.
-||||||| merged common ancestors
-  nsSMILTime   mTime;  // The milestone time. This may be in container time or
-                       // parent container time depending on where it is used.
-  bool mIsEnd; // true if this milestone corresponds to an interval
-                       // end, false otherwise.
-=======
   SMILTime mTime;  // The milestone time. This may be in container time or
                    // parent container time depending on where it is used.
   bool mIsEnd;     // true if this milestone corresponds to an interval
                    // end, false otherwise.
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILMilestone.h
-#endif  // NS_SMILMILESTONE_H_
-||||||| merged common ancestors
-#endif // NS_SMILMILESTONE_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILMilestone_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILMilestone.h

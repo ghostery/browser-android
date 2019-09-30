@@ -46,13 +46,8 @@ class StructuredOutputParser(OutputParser):
 
         self.worst_log_level = INFO
         self.tbpl_status = TBPL_SUCCESS
-<<<<<<< HEAD
-        self.harness_retry_re = TinderBoxPrintRe['harness_error']['retry_regex']
-||||||| merged common ancestors
-=======
         self.harness_retry_re = TinderBoxPrintRe['harness_error']['retry_regex']
         self.prev_was_unstructured = False
->>>>>>> upstream-releases
 
     def _get_mozlog_module(self):
         try:

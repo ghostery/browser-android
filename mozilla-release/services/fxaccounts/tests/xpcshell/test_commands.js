@@ -8,42 +8,6 @@ const { FxAccountsCommands, SendTab } = ChromeUtils.import(
 );
 
 add_task(async function test_sendtab_isDeviceCompatible() {
-<<<<<<< HEAD
-  const sendTab = new SendTab(null, null);
-  let device = {name: "My device"};
-  Assert.ok(!sendTab.isDeviceCompatible(device));
-  device = {name: "My device", availableCommands: {}};
-  Assert.ok(!sendTab.isDeviceCompatible(device));
-  device = {name: "My device", availableCommands: {
-    "https://identity.mozilla.com/cmd/open-uri": "payload",
-  }};
-  Assert.ok(sendTab.isDeviceCompatible(device));
-||||||| merged common ancestors
-  const fxAccounts = {
-    getKeys() {
-      return {
-        kXCS: "abcd",
-      };
-    },
-  };
-  const sendTab = new SendTab(null, fxAccounts);
-  let device = {name: "My device"};
-  Assert.ok(!(await sendTab.isDeviceCompatible(device)));
-  device = {name: "My device", availableCommands: {}};
-  Assert.ok(!(await sendTab.isDeviceCompatible(device)));
-  device = {name: "My device", availableCommands: {
-    "https://identity.mozilla.com/cmd/open-uri": JSON.stringify({
-      kid: "dcba",
-    }),
-  }};
-  Assert.ok(!(await sendTab.isDeviceCompatible(device)));
-  device = {name: "My device", availableCommands: {
-    "https://identity.mozilla.com/cmd/open-uri": JSON.stringify({
-      kid: "abcd",
-    }),
-  }};
-  Assert.ok((await sendTab.isDeviceCompatible(device)));
-=======
   const sendTab = new SendTab(null, null);
   let device = { name: "My device" };
   Assert.ok(!sendTab.isDeviceCompatible(device));
@@ -56,7 +20,6 @@ add_task(async function test_sendtab_isDeviceCompatible() {
     },
   };
   Assert.ok(sendTab.isDeviceCompatible(device));
->>>>>>> upstream-releases
 });
 
 add_task(async function test_sendtab_send() {

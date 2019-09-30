@@ -47,31 +47,6 @@ struct FrameStatisticsData {
   uint64_t mInterKeyFrameMax_us = 0;
 
   FrameStatisticsData() = default;
-<<<<<<< HEAD
-  FrameStatisticsData(uint64_t aParsed, uint64_t aDecoded, uint64_t aDropped,
-                      uint64_t aPresented)
-      : mParsedFrames(aParsed),
-        mDecodedFrames(aDecoded),
-        mPresentedFrames(aPresented),
-        mDroppedFrames(aDropped) {}
-
-  void Accumulate(const FrameStatisticsData& aStats) {
-||||||| merged common ancestors
-  FrameStatisticsData(uint64_t aParsed,
-                      uint64_t aDecoded,
-                      uint64_t aDropped,
-                      uint64_t aPresented)
-    : mParsedFrames(aParsed)
-    , mDecodedFrames(aDecoded)
-    , mPresentedFrames(aPresented)
-    , mDroppedFrames(aDropped)
-  {
-  }
-
-  void
-  Accumulate(const FrameStatisticsData& aStats)
-  {
-=======
   FrameStatisticsData(uint64_t aParsed, uint64_t aDecoded, uint64_t aPresented,
                       uint64_t aDroppedDecodedFrames,
                       uint64_t aDroppedSinkFrames,
@@ -84,7 +59,6 @@ struct FrameStatisticsData {
         mPresentedFrames(aPresented) {}
 
   void Accumulate(const FrameStatisticsData& aStats) {
->>>>>>> upstream-releases
     mParsedFrames += aStats.mParsedFrames;
     mDecodedFrames += aStats.mDecodedFrames;
     mPresentedFrames += aStats.mPresentedFrames;

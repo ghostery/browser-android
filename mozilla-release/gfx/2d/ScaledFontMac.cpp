@@ -39,26 +39,10 @@ namespace gfx {
 
 // Simple helper class to automatically release a CFObject when it goes out
 // of scope.
-<<<<<<< HEAD
-template <class T>
-class AutoRelease {
- public:
-  explicit AutoRelease(T aObject) : mObject(aObject) {}
-||||||| merged common ancestors
-template<class T>
-class AutoRelease
-{
-public:
-  explicit AutoRelease(T aObject)
-    : mObject(aObject)
-  {
-  }
-=======
 template <class T>
 class AutoRelease final {
  public:
   explicit AutoRelease(T aObject) : mObject(aObject) {}
->>>>>>> upstream-releases
 
   ~AutoRelease() {
     if (mObject) {
@@ -204,31 +188,6 @@ already_AddRefed<Path> ScaledFontMac::GetPathForGlyphs(
   return ScaledFontBase::GetPathForGlyphs(aBuffer, aTarget);
 }
 
-<<<<<<< HEAD
-uint32_t CalcTableChecksum(const uint32_t* tableStart, uint32_t length,
-                           bool skipChecksumAdjust = false) {
-  uint32_t sum = 0L;
-  const uint32_t* table = tableStart;
-  const uint32_t* end = table + length / sizeof(uint32_t);
-  while (table < end) {
-    if (skipChecksumAdjust && (table - tableStart) == 2) {
-      table++;
-    } else {
-      sum += CFSwapInt32BigToHost(*table++);
-||||||| merged common ancestors
-uint32_t
-CalcTableChecksum(const uint32_t *tableStart, uint32_t length, bool skipChecksumAdjust = false)
-{
-    uint32_t sum = 0L;
-    const uint32_t *table = tableStart;
-    const uint32_t *end = table + length / sizeof(uint32_t);
-    while (table < end) {
-        if (skipChecksumAdjust && (table - tableStart) == 2) {
-            table++;
-        } else {
-            sum += CFSwapInt32BigToHost(*table++);
-        }
-=======
 static uint32_t CalcTableChecksum(const uint32_t* tableStart, uint32_t length,
                                   bool skipChecksumAdjust = false) {
   uint32_t sum = 0L;
@@ -239,7 +198,6 @@ static uint32_t CalcTableChecksum(const uint32_t* tableStart, uint32_t length,
       table++;
     } else {
       sum += CFSwapInt32BigToHost(*table++);
->>>>>>> upstream-releases
     }
   }
 
@@ -263,24 +221,6 @@ struct TableRecord {
   CFDataRef data;
 };
 
-<<<<<<< HEAD
-int maxPow2LessThan(int a) {
-  int x = 1;
-  int shift = 0;
-  while ((x << (shift + 1)) < a) {
-    shift++;
-  }
-  return shift;
-||||||| merged common ancestors
-int maxPow2LessThan(int a)
-{
-    int x = 1;
-    int shift = 0;
-    while ((x<<(shift+1)) < a) {
-        shift++;
-    }
-    return shift;
-=======
 static int maxPow2LessThan(int a) {
   int x = 1;
   int shift = 0;
@@ -288,35 +228,14 @@ static int maxPow2LessThan(int a) {
     shift++;
   }
   return shift;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-struct writeBuf {
-  explicit writeBuf(int size) {
-    this->data = new unsigned char[size];
-    this->offset = 0;
-  }
-  ~writeBuf() { delete[] this->data; }
-||||||| merged common ancestors
-struct writeBuf
-{
-    explicit writeBuf(int size)
-    {
-        this->data = new unsigned char [size];
-        this->offset = 0;
-    }
-    ~writeBuf() {
-        delete[] this->data;
-    }
-=======
 struct writeBuf final {
   explicit writeBuf(int size) {
     this->data = new unsigned char[size];
     this->offset = 0;
   }
   ~writeBuf() { delete[] this->data; }
->>>>>>> upstream-releases
 
   template <class T>
   void writeElement(T a) {

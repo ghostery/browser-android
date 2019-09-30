@@ -34,10 +34,6 @@ class BaseAction {
   constructor() {
     this.state = BaseAction.STATE_PREPARING;
     this.log = LogManager.getLogger(`action.${this.name}`);
-<<<<<<< HEAD
-    this.lastError = null;
-||||||| merged common ancestors
-=======
     this.lastError = null;
   }
 
@@ -51,7 +47,6 @@ class BaseAction {
     if (this.state !== BaseAction.STATE_PREPARING) {
       return;
     }
->>>>>>> upstream-releases
 
     try {
       this._preExecution();
@@ -60,20 +55,6 @@ class BaseAction {
         this.state = BaseAction.STATE_READY;
       }
     } catch (err) {
-<<<<<<< HEAD
-      // Sometimes err.message is editable. If it is, add helpful details.
-      // Otherwise log the helpful details and move on.
-      try {
-        err.message = `Could not initialize action ${this.name}: ${err.message}`;
-      } catch (_e) {
-        this.log.error(`Could not initialize action ${this.name}, error follows.`);
-      }
-      this.fail(err);
-||||||| merged common ancestors
-      err.message = `Could not initialize action ${this.name}: ${err.message}`;
-      Cu.reportError(err);
-      this.fail(Uptake.ACTION_PRE_EXECUTION_ERROR);
-=======
       // Sometimes err.message is editable. If it is, add helpful details.
       // Otherwise log the helpful details and move on.
       try {
@@ -86,7 +67,6 @@ class BaseAction {
         );
       }
       this.fail(err);
->>>>>>> upstream-releases
     }
   }
 

@@ -8,27 +8,6 @@
 
 NS_IMPL_ISUPPORTS(nsProfilerStartParams, nsIProfilerStartParams)
 
-<<<<<<< HEAD
-nsProfilerStartParams::nsProfilerStartParams(
-    uint32_t aEntries, const mozilla::Maybe<double>& aDuration,
-    double aInterval, uint32_t aFeatures, const nsTArray<nsCString>& aFilters)
-    : mEntries(aEntries),
-      mDuration(aDuration),
-      mInterval(aInterval),
-      mFeatures(aFeatures),
-      mFilters(aFilters) {}
-||||||| merged common ancestors
-nsProfilerStartParams::nsProfilerStartParams(uint32_t aEntries,
-                                             double aInterval,
-                                             uint32_t aFeatures,
-                                             const nsTArray<nsCString>& aFilters) :
-  mEntries(aEntries),
-  mInterval(aInterval),
-  mFeatures(aFeatures),
-  mFilters(aFilters)
-{
-}
-=======
 nsProfilerStartParams::nsProfilerStartParams(
     uint32_t aEntries, const mozilla::Maybe<double>& aDuration,
     double aInterval, uint32_t aFeatures, nsTArray<nsCString>&& aFilters)
@@ -37,7 +16,6 @@ nsProfilerStartParams::nsProfilerStartParams(
       mInterval(aInterval),
       mFeatures(aFeatures),
       mFilters(std::move(aFilters)) {}
->>>>>>> upstream-releases
 
 nsProfilerStartParams::~nsProfilerStartParams() {}
 

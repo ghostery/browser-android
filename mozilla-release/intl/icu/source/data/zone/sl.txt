@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 sl{
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.42"}
->>>>>>> upstream-releases
     zoneStrings{
         "Africa:Abidjan"{
             ec{"Abidžan"}
@@ -958,11 +952,6 @@ sl{
             ec{"Sydney"}
         }
         "Etc:UTC"{
-<<<<<<< HEAD
-            ls{"univerzalni koordinirani čas"}
-||||||| merged common ancestors
-            ls{"Univerzalni koordinirani čas"}
-=======
             ls{"univerzalni koordinirani čas"}
         }
         "Etc:Unknown"{
@@ -1006,7 +995,6 @@ sl{
         }
         "Europe:Copenhagen"{
             ec{"Köbenhavn"}
->>>>>>> upstream-releases
         }
         "Europe:Dublin"{
             ec{"Dublin"}

@@ -27,19 +27,10 @@ class DOMSVGStringList;
 
 namespace dom {
 
-<<<<<<< HEAD
-class SVGTests : public nsISupports {
- public:
-||||||| merged common ancestors
-class SVGTests : public nsISupports
-{
-public:
-=======
 class SVGElement;
 
 class SVGTests : public nsISupports {
  public:
->>>>>>> upstream-releases
   NS_DECLARE_STATIC_IID_ACCESSOR(MOZILLA_DOMSVGTESTS_IID)
 
   SVGTests();
@@ -109,44 +100,17 @@ class SVGTests : public nsISupports {
 
   virtual SVGElement* AsSVGElement() = 0;
 
-<<<<<<< HEAD
-  const nsSVGElement* AsSVGElement() const {
-||||||| merged common ancestors
-  const nsSVGElement* AsSVGElement() const
-  {
-=======
   const SVGElement* AsSVGElement() const {
->>>>>>> upstream-releases
     return const_cast<SVGTests*>(this)->AsSVGElement();
   }
 
-<<<<<<< HEAD
- protected:
-  virtual ~SVGTests() {}
-||||||| merged common ancestors
-protected:
-  virtual ~SVGTests() {}
-=======
  protected:
   virtual ~SVGTests() = default;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  enum { FEATURES, EXTENSIONS, LANGUAGE };
-  SVGStringList mStringListAttributes[3];
-  static nsStaticAtom* const sStringListNames[3];
-||||||| merged common ancestors
-private:
-  enum { FEATURES, EXTENSIONS, LANGUAGE };
-  SVGStringList mStringListAttributes[3];
-  static nsStaticAtom* const sStringListNames[3];
-=======
  private:
   enum { EXTENSIONS, LANGUAGE };
   SVGStringList mStringListAttributes[2];
   static nsStaticAtom* const sStringListNames[2];
->>>>>>> upstream-releases
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(SVGTests, MOZILLA_DOMSVGTESTS_IID)

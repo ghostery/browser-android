@@ -44,14 +44,8 @@ const { DebuggerServer: WorkerDebuggerServer } = worker.require(
 );
 const { DebuggerClient } = require("devtools/shared/client/debugger-client");
 const ObjectClient = require("devtools/shared/client/object-client");
-<<<<<<< HEAD
-const {TargetFactory} = require("devtools/client/framework/target");
-||||||| merged common ancestors
-const { MemoryFront } = require("devtools/shared/fronts/memory");
-=======
 const { LongStringFront } = require("devtools/shared/fronts/string");
 const { TargetFactory } = require("devtools/client/framework/target");
->>>>>>> upstream-releases
 
 const { addDebuggerToGlobal } = ChromeUtils.import(
   "resource://gre/modules/jsdebugger.jsm"
@@ -97,88 +91,11 @@ async function createTargetForMainProcess() {
 }
 
 /**
-<<<<<<< HEAD
  * Create a MemoryFront for a fake test tab.
- *
- * When the test ends, the front should be detached and we should call
- * `finishClient(client)`.
-||||||| merged common ancestors
- * Create a `run_test` function that runs the given generator in a task after
- * having attached to a memory actor. When done, the memory actor is detached
- * from, the client is finished, and the test is finished.
- *
- * @param {GeneratorFunction} testGeneratorFunction
- *        The generator function is passed (DebuggerClient, MemoryFront)
- *        arguments.
- *
- * @returns `run_test` function
-=======
- * Create a MemoryFront for a fake test tab.
->>>>>>> upstream-releases
  */
-<<<<<<< HEAD
-async function createTabMemoryFront() {
-  const client = await startTestDebuggerServer("test_MemoryActor");
-
-  // MemoryFront requires the HeadSnapshotActor actor to be available
-  // as a global actor. This isn't registered by startTestDebuggerServer which
-  // only register the target actors and not the browser ones.
-  DebuggerServer.registerActors({ browser: true });
-
-  const { tabs } = await listTabs(client);
-  const tab = findTab(tabs, "test_MemoryActor");
-  const options = {
-    form: tab,
-    client,
-    chrome: false,
-  };
-  const target = await TargetFactory.forRemoteTab(options);
-
-  const memoryFront = await target.getFront("memory");
-  await memoryFront.attach();
-||||||| merged common ancestors
-function makeMemoryActorTest(testGeneratorFunction) {
-  const TEST_GLOBAL_NAME = "test_MemoryActor";
-
-  return function run_test() {
-    do_test_pending();
-    startTestDebuggerServer(TEST_GLOBAL_NAME).then(client => {
-      ActorRegistry.registerModule("devtools/server/actors/heap-snapshot-file", {
-        prefix: "heapSnapshotFile",
-        constructor: "HeapSnapshotFileActor",
-        type: { global: true },
-      });
-
-      getTestTab(client, TEST_GLOBAL_NAME, function(tabForm, rootForm) {
-        if (!tabForm || !rootForm) {
-          ok(false, "Could not attach to test tab: " + TEST_GLOBAL_NAME);
-          return;
-        }
-=======
 async function createTabMemoryFront() {
   const target = await createTargetForFakeTab("test_memory");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return { client, memoryFront };
-||||||| merged common ancestors
-        (async function() {
-          try {
-            const memoryFront = new MemoryFront(client, tabForm, rootForm);
-            await memoryFront.attach();
-            await testGeneratorFunction(client, memoryFront);
-            await memoryFront.detach();
-          } catch (err) {
-            DevToolsUtils.reportException("makeMemoryActorTest", err);
-            ok(false, "Got an error: " + err);
-          }
-
-          finishClient(client);
-        })();
-      });
-    });
-  };
-=======
   // MemoryFront requires the HeadSnapshotActor actor to be available
   // as a global actor. This isn't registered by startTestDebuggerServer which
   // only register the target actors and not the browser ones.
@@ -217,15 +134,9 @@ async function createTabPromisesFront() {
   });
 
   return { debuggee, client: target.client, promisesFront };
->>>>>>> upstream-releases
 }
 
 /**
-<<<<<<< HEAD
- * Same as createTabMemoryFront but attaches the MemoryFront to the MemoryActor
-||||||| merged common ancestors
- * Save as makeMemoryActorTest but attaches the MemoryFront to the MemoryActor
-=======
  * Create a PromisesFront for the main process target actor.
  */
 async function createMainProcessPromisesFront() {
@@ -246,34 +157,8 @@ async function createMainProcessPromisesFront() {
 
 /**
  * Same as createTabMemoryFront but attaches the MemoryFront to the MemoryActor
->>>>>>> upstream-releases
  * scoped to the full runtime rather than to a tab.
  */
-<<<<<<< HEAD
-async function createFullRuntimeMemoryFront() {
-  DebuggerServer.init();
-  DebuggerServer.registerAllActors();
-  DebuggerServer.allowChromeProcess = true;
-
-  const client = new DebuggerClient(DebuggerServer.connectPipe());
-  await client.connect();
-||||||| merged common ancestors
-function makeFullRuntimeMemoryActorTest(testGeneratorFunction) {
-  return function run_test() {
-    do_test_pending();
-    startTestDebuggerServer("test_MemoryActor").then(client => {
-      ActorRegistry.registerModule("devtools/server/actors/heap-snapshot-file", {
-        prefix: "heapSnapshotFile",
-        constructor: "HeapSnapshotFileActor",
-        type: { global: true },
-      });
-
-      getParentProcessActors(client).then(function(form) {
-        if (!form) {
-          ok(false, "Could not attach to chrome actors");
-          return;
-        }
-=======
 async function createMainProcessMemoryFront() {
   const target = await createTargetForMainProcess();
 
@@ -288,40 +173,7 @@ async function createMainProcessMemoryFront() {
     // Close the client to cleanup everything.
     await target.client.close();
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const front = await client.mainRoot.getMainProcess();
-  const options = {
-    activeTab: front,
-    client,
-    chrome: true,
-  };
-  const target = await TargetFactory.forRemoteTab(options);
-
-  const memoryFront = await target.getFront("memory");
-  await memoryFront.attach();
-
-  return { client, memoryFront };
-||||||| merged common ancestors
-        (async function() {
-          try {
-            const rootForm = await listTabs(client);
-            const memoryFront = new MemoryFront(client, form, rootForm);
-            await memoryFront.attach();
-            await testGeneratorFunction(client, memoryFront);
-            await memoryFront.detach();
-          } catch (err) {
-            DevToolsUtils.reportException("makeMemoryActorTest", err);
-            ok(false, "Got an error: " + err);
-          }
-
-          finishClient(client);
-        })();
-      });
-    });
-  };
-=======
   return { client: target.client, memoryFront };
 }
 
@@ -334,7 +186,6 @@ function createLongStringFront(conn, form) {
   front.actorID = form.actor;
   front.manage(front);
   return front;
->>>>>>> upstream-releases
 }
 
 function createTestGlobal(name) {
@@ -370,20 +221,6 @@ function findTab(tabs, title) {
   return null;
 }
 
-<<<<<<< HEAD
-function attachTarget(client, tab) {
-  dump("Attaching to tab with title '" + tab.title + "'.\n");
-  return client.attachTarget(tab);
-}
-
-||||||| merged common ancestors
-function attachTarget(client, tab) {
-  dump("Attaching to tab with title '" + tab.title + "'.\n");
-  return client.attachTarget(tab.actor);
-}
-
-=======
->>>>>>> upstream-releases
 function waitForNewSource(threadClient, url) {
   dump("Waiting for new source with url '" + url + "'.\n");
   return waitForEvent(threadClient, "newSource", function(packet) {
@@ -552,60 +389,22 @@ function addTestGlobal(name, server = DebuggerServer) {
 
 // List the DebuggerClient |client|'s tabs, look for one whose title is
 // |title|, and apply |callback| to the packet's entry for that tab.
-<<<<<<< HEAD
-function getTestTab(client, title, callback) {
-  client.listTabs().then(function(response) {
-    for (const tab of response.tabs) {
-      if (tab.title === title) {
-        callback(tab);
-        return;
-      }
-||||||| merged common ancestors
-function getTestTab(client, title, callback) {
-  client.listTabs().then(function(response) {
-    for (const tab of response.tabs) {
-      if (tab.title === title) {
-        callback(tab, response);
-        return;
-      }
-=======
 async function getTestTab(client, title) {
   const tabs = await client.mainRoot.listTabs();
   for (const tab of tabs) {
     if (tab.title === title) {
       return tab;
->>>>>>> upstream-releases
     }
   }
   return null;
 }
 
-<<<<<<< HEAD
-// Attach to |client|'s tab whose title is |title|; pass |callback| the
-// response packet and a TargetFront instance referring to that tab.
-function attachTestTab(client, title, callback) {
-  getTestTab(client, title, function(tab) {
-    client.attachTarget(tab).then(([response, targetFront]) => {
-      callback(response, targetFront);
-    });
-  });
-||||||| merged common ancestors
-// Attach to |client|'s tab whose title is |title|; pass |callback| the
-// response packet and a TargetFront instance referring to that tab.
-function attachTestTab(client, title, callback) {
-  getTestTab(client, title, function(tab) {
-    client.attachTarget(tab.actor).then(([response, targetFront]) => {
-      callback(response, targetFront);
-    });
-  });
-=======
 // Attach to |client|'s tab whose title is |title|; and return the targetFront instance
 // referring to that tab.
 async function attachTestTab(client, title) {
   const targetFront = await getTestTab(client, title);
   await targetFront.attach();
   return targetFront;
->>>>>>> upstream-releases
 }
 
 // Attach to |client|'s tab whose title is |title|, and then attach to
@@ -667,7 +466,6 @@ async function startTestDebuggerServer(title, server = DebuggerServer) {
   const transport = DebuggerServer.connectPipe();
   const client = new DebuggerClient(transport);
 
-<<<<<<< HEAD
   await connect(client);
   return client;
 }
@@ -676,50 +474,6 @@ async function finishClient(client) {
   await client.close();
   DebuggerServer.destroy();
   do_test_finished();
-||||||| merged common ancestors
-  return connect(client).then(() => client);
-}
-
-function finishClient(client) {
-  client.close(function() {
-    DebuggerServer.destroy();
-    do_test_finished();
-  });
-}
-
-// Create a server, connect to it and fetch actors targeting the parent process;
-// pass |callback| the debugger client and target actor form with all actor IDs.
-function get_parent_process_actors(callback) {
-  DebuggerServer.init();
-  DebuggerServer.registerAllActors();
-  DebuggerServer.allowChromeProcess = true;
-
-  const client = new DebuggerClient(DebuggerServer.connectPipe());
-  client.connect()
-    .then(() => client.mainRoot.getProcess(0))
-    .then(response => {
-      callback(client, response.form);
-    });
-=======
-  await connect(client);
-  return client;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-function getParentProcessActors(client, server = DebuggerServer) {
-  server.allowChromeProcess = true;
-  return client.mainRoot.getMainProcess().then(response => response.targetForm);
-||||||| merged common ancestors
-function getParentProcessActors(client, server = DebuggerServer) {
-  server.allowChromeProcess = true;
-  return client.mainRoot.getProcess(0).then(response => response.form);
-=======
-async function finishClient(client) {
-  await client.close();
-  DebuggerServer.destroy();
-  do_test_finished();
->>>>>>> upstream-releases
 }
 
 /**
@@ -1209,77 +963,6 @@ function threadClientTest(test, options = {}) {
 
     // Run the test function
     await test({ threadClient, debuggee, client, server, targetFront });
-
-    // Cleanup the client after the test ran
-    await client.close();
-
-    server.removeTestGlobal(debuggee);
-
-    // Also cleanup the created server
-    server.destroy();
-  }
-
-  return async () => {
-    dump(">>> Run thread client test against a regular DebuggerServer\n");
-    await runThreadClientTestWithServer(DebuggerServer, test);
-
-    // Skip tests that fail in the worker context
-    if (!doNotRunWorker) {
-      dump(">>> Run thread client test against a worker DebuggerServer\n");
-      await runThreadClientTestWithServer(WorkerDebuggerServer, test);
-    }
-  };
-}
-
-/**
- * Run the given test function twice, one with a regular DebuggerServer,
- * testing against a fake tab. And another one against a WorkerDebuggerServer,
- * testing the worker codepath.
- *
- * @param Function test
- *        Test function to run twice.
- *        This test function is called with a dictionary:
- *        - Sandbox debuggee
- *          The custom JS debuggee created for this test. This is a Sandbox using system
- *           principals by default.
- *        - ThreadClient threadClient
- *          A reference to a ThreadClient instance that is attached to the debuggee.
- *        - DebuggerClient client
- *          A reference to the DebuggerClient used to communicated with the RDP server.
- * @param Object options
- *        Optional arguments to tweak test environment
- *        - JSPrincipal principal
- *          Principal to use for the debuggee.
- *        - boolean doNotRunWorker
- *          If true, do not run this tests in worker debugger context.
- */
-function threadClientTest(test, options = {}) {
-  let { principal, doNotRunWorker } = options;
-  if (!principal) {
-    principal = systemPrincipal;
-  }
-
-  async function runThreadClientTestWithServer(server, test) {
-    // Setup a server and connect a client to it.
-    initTestDebuggerServer(server);
-
-    // Create a custom debuggee and register it to the server.
-    // We are using a custom Sandbox as debuggee.
-    const debuggee = Cu.Sandbox(principal);
-    const scriptName = "debuggee.js";
-    debuggee.__name = scriptName;
-    server.addTestGlobal(debuggee);
-
-    const client = new DebuggerClient(server.connectPipe());
-    await client.connect();
-
-    // Attach to the fake tab target and retrieve the ThreadClient instance.
-    // Automatically resume as the thread is paused by default after attach.
-    const [, , threadClient] =
-      await attachTestTabAndResume(client, scriptName);
-
-    // Run the test function
-    await test({ threadClient, debuggee, client });
 
     // Cleanup the client after the test ran
     await client.close();

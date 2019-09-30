@@ -20,14 +20,8 @@ from .util.verify import (
     verify_docs,
     verifications,
 )
-<<<<<<< HEAD
-from .config import load_graph_config, GraphConfig
-||||||| merged common ancestors
-from .config import load_graph_config
-=======
 from .util.yaml import load_yaml
 from .config import load_graph_config, GraphConfig
->>>>>>> upstream-releases
 
 logger = logging.getLogger(__name__)
 
@@ -254,22 +248,12 @@ class TaskGraphGenerator(object):
                 edges.add((kind.name, dep, 'kind-dependency'))
         kind_graph = Graph(set(kinds), edges)
 
-<<<<<<< HEAD
-        if self._target_kind:
-            logger.info(
-                "Limiting kinds to {target_kind} and dependencies".format(
-                    target_kind=self._target_kind))
-            kind_graph = kind_graph.transitive_closure({self._target_kind})
-
-||||||| merged common ancestors
-=======
         if self._target_kind:
             logger.info(
                 "Limiting kinds to {target_kind} and dependencies".format(
                     target_kind=self._target_kind))
             kind_graph = kind_graph.transitive_closure({self._target_kind, 'docker-image'})
 
->>>>>>> upstream-releases
         logger.info("Generating full task set")
         all_tasks = {}
         for kind_name in kind_graph.visit_postorder():

@@ -219,13 +219,7 @@ ta{
         }
         traditional{"taml"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         chinese{
             DateTimePatterns{

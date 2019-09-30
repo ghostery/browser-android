@@ -18,22 +18,6 @@ class ShmemCreated : public IPC::Message {
  private:
   typedef Shmem::id_t id_t;
 
-<<<<<<< HEAD
- public:
-  ShmemCreated(int32_t routingId, id_t aIPDLId, size_t aSize,
-               SharedMemory::SharedMemoryType aType)
-      : IPC::Message(routingId, SHMEM_CREATED_MESSAGE_TYPE, 0,
-                     HeaderFlags(NESTED_INSIDE_CPOW)) {
-||||||| merged common ancestors
-public:
-  ShmemCreated(int32_t routingId,
-               id_t aIPDLId,
-               size_t aSize,
-               SharedMemory::SharedMemoryType aType) :
-    IPC::Message(routingId, SHMEM_CREATED_MESSAGE_TYPE, 0,
-                 HeaderFlags(NESTED_INSIDE_CPOW))
-  {
-=======
  public:
   ShmemCreated(int32_t routingId, id_t aIPDLId, size_t aSize,
                SharedMemory::SharedMemoryType aType)
@@ -41,27 +25,14 @@ public:
                      HeaderFlags(NESTED_INSIDE_CPOW)) {
     MOZ_RELEASE_ASSERT(aSize < std::numeric_limits<uint32_t>::max(),
                        "Tried to create Shmem with size larger than 4GB");
->>>>>>> upstream-releases
     IPC::WriteParam(this, aIPDLId);
     IPC::WriteParam(this, uint32_t(aSize));
     IPC::WriteParam(this, int32_t(aType));
   }
 
-<<<<<<< HEAD
-  static bool ReadInfo(const Message* msg, PickleIterator* iter, id_t* aIPDLId,
-                       size_t* aSize, SharedMemory::SharedMemoryType* aType) {
-||||||| merged common ancestors
-  static bool
-  ReadInfo(const Message* msg, PickleIterator* iter,
-           id_t* aIPDLId,
-           size_t* aSize,
-           SharedMemory::SharedMemoryType* aType)
-  {
-=======
   static bool ReadInfo(const Message* msg, PickleIterator* iter, id_t* aIPDLId,
                        size_t* aSize, SharedMemory::SharedMemoryType* aType) {
     uint32_t size = 0;
->>>>>>> upstream-releases
     if (!IPC::ReadParam(msg, iter, aIPDLId) ||
         !IPC::ReadParam(msg, iter, &size) ||
         !IPC::ReadParam(msg, iter, reinterpret_cast<int32_t*>(aType))) {
@@ -463,18 +434,8 @@ IPC::Message* Shmem::UnshareFrom(PrivateIPDLCaller, int32_t routingId) {
   return new ShmemDestroyed(routingId, mId);
 }
 
-<<<<<<< HEAD
-void IPDLParamTraits<Shmem>::Write(IPC::Message* aMsg, IProtocol* aActor,
-                                   Shmem& aParam) {
-||||||| merged common ancestors
-void
-IPDLParamTraits<Shmem>::Write(IPC::Message* aMsg, IProtocol* aActor,
-                              Shmem& aParam)
-{
-=======
 void IPDLParamTraits<Shmem>::Write(IPC::Message* aMsg, IProtocol* aActor,
                                    Shmem&& aParam) {
->>>>>>> upstream-releases
   WriteIPDLParam(aMsg, aActor, aParam.mId);
 
   aParam.RevokeRights(Shmem::PrivateIPDLCaller());

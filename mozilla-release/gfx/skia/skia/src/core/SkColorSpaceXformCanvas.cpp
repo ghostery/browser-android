@@ -112,55 +112,6 @@ public:
         fTarget->drawVertices(vertices, bones, boneCount, mode, fXformer->apply(paint));
     }
 
-<<<<<<< HEAD
-    void onDrawText(const void* ptr, size_t len,
-                    SkScalar x, SkScalar y,
-                    const SkPaint& paint) override {
-        fTarget->drawText(ptr, len, x, y, fXformer->apply(paint));
-    }
-    void onDrawPosText(const void* ptr, size_t len,
-                       const SkPoint* xys,
-                       const SkPaint& paint) override {
-        fTarget->drawPosText(ptr, len, xys, fXformer->apply(paint));
-    }
-    void onDrawPosTextH(const void* ptr, size_t len,
-                        const SkScalar* xs, SkScalar y,
-                        const SkPaint& paint) override {
-        fTarget->drawPosTextH(ptr, len, xs, y, fXformer->apply(paint));
-    }
-    void onDrawTextRSXform(const void* ptr, size_t len,
-                           const SkRSXform* xforms, const SkRect* cull,
-                           const SkPaint& paint) override {
-        fTarget->drawTextRSXform(ptr, len, xforms, cull, fXformer->apply(paint));
-    }
-||||||| merged common ancestors
-    void onDrawText(const void* ptr, size_t len,
-                    SkScalar x, SkScalar y,
-                    const SkPaint& paint) override {
-        fTarget->drawText(ptr, len, x, y, fXformer->apply(paint));
-    }
-    void onDrawPosText(const void* ptr, size_t len,
-                       const SkPoint* xys,
-                       const SkPaint& paint) override {
-        fTarget->drawPosText(ptr, len, xys, fXformer->apply(paint));
-    }
-    void onDrawPosTextH(const void* ptr, size_t len,
-                        const SkScalar* xs, SkScalar y,
-                        const SkPaint& paint) override {
-        fTarget->drawPosTextH(ptr, len, xs, y, fXformer->apply(paint));
-    }
-    void onDrawTextOnPath(const void* ptr, size_t len,
-                          const SkPath& path, const SkMatrix* matrix,
-                          const SkPaint& paint) override {
-        fTarget->drawTextOnPath(ptr, len, path, matrix, fXformer->apply(paint));
-    }
-    void onDrawTextRSXform(const void* ptr, size_t len,
-                           const SkRSXform* xforms, const SkRect* cull,
-                           const SkPaint& paint) override {
-        fTarget->drawTextRSXform(ptr, len, xforms, cull, fXformer->apply(paint));
-    }
-=======
->>>>>>> upstream-releases
     void onDrawTextBlob(const SkTextBlob* blob,
                         SkScalar x, SkScalar y,
                         const SkPaint& paint) override {

@@ -16,25 +16,11 @@ class gfxContext;
 class nsPresContext;
 
 class nsHTMLButtonControlFrame : public nsContainerFrame,
-<<<<<<< HEAD
-                                 public nsIFormControlFrame {
- public:
-  explicit nsHTMLButtonControlFrame(ComputedStyle* aStyle)
-      : nsHTMLButtonControlFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-                                 public nsIFormControlFrame
-{
-public:
-  explicit nsHTMLButtonControlFrame(ComputedStyle* aStyle)
-    : nsHTMLButtonControlFrame(aStyle, kClassID)
-  {}
-=======
                                  public nsIFormControlFrame {
  public:
   explicit nsHTMLButtonControlFrame(ComputedStyle* aStyle,
                                     nsPresContext* aPresContext)
       : nsHTMLButtonControlFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   ~nsHTMLButtonControlFrame();
 
@@ -111,17 +97,9 @@ public:
   // Return the ::-moz-button-content anonymous box.
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
-<<<<<<< HEAD
- protected:
-  nsHTMLButtonControlFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID);
-||||||| merged common ancestors
-protected:
-  nsHTMLButtonControlFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID);
-=======
  protected:
   nsHTMLButtonControlFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                            nsIFrame::ClassID aID);
->>>>>>> upstream-releases
 
   virtual bool IsInput() { return false; }
 

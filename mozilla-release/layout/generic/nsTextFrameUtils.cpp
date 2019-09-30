@@ -17,19 +17,6 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-static bool IsDiscardable(char16_t ch, nsTextFrameUtils::Flags* aFlags) {
-  // Unlike IS_DISCARDABLE, we don't discard \r. \r will be ignored by
-  // gfxTextRun and discarding it would force us to copy text in many cases of
-  // preformatted text containing \r\n.
-||||||| merged common ancestors
-static bool
-IsDiscardable(char16_t ch, nsTextFrameUtils::Flags* aFlags)
-{
-  // Unlike IS_DISCARDABLE, we don't discard \r. \r will be ignored by gfxTextRun
-  // and discarding it would force us to copy text in many cases of preformatted
-  // text containing \r\n.
-=======
 // static
 bool nsTextFrameUtils::IsSpaceCombiningSequenceTail(const char16_t* aChars,
                                                     int32_t aLength) {
@@ -43,7 +30,6 @@ static bool IsDiscardable(char16_t ch, nsTextFrameUtils::Flags* aFlags) {
   // Unlike IS_DISCARDABLE, we don't discard \r. \r will be ignored by
   // gfxTextRun and discarding it would force us to copy text in many cases of
   // preformatted text containing \r\n.
->>>>>>> upstream-releases
   if (ch == CH_SHY) {
     *aFlags |= nsTextFrameUtils::Flags::HasShy;
     return true;
@@ -67,26 +53,10 @@ static bool IsSpaceOrTabOrSegmentBreak(char16_t aCh) {
   return IsSpaceOrTab(aCh) || IsSegmentBreak(aCh);
 }
 
-<<<<<<< HEAD
-template <typename CharT>
-/* static */ bool nsTextFrameUtils::IsSkippableCharacterForTransformText(
-    CharT aChar) {
-  return aChar == ' ' || aChar == '\t' || aChar == '\n' || aChar == CH_SHY ||
-||||||| merged common ancestors
-template<typename CharT>
-/* static */ bool
-nsTextFrameUtils::IsSkippableCharacterForTransformText(CharT aChar)
-{
-  return aChar == ' ' ||
-         aChar == '\t' ||
-         aChar == '\n' ||
-         aChar == CH_SHY ||
-=======
 template <typename CharT>
 /* static */
 bool nsTextFrameUtils::IsSkippableCharacterForTransformText(CharT aChar) {
   return aChar == ' ' || aChar == '\t' || aChar == '\n' || aChar == CH_SHY ||
->>>>>>> upstream-releases
          (aChar > 0xFF && IsBidiControl(aChar));
 }
 
@@ -369,21 +339,9 @@ template bool nsTextFrameUtils::IsSkippableCharacterForTransformText(
 template bool nsTextFrameUtils::IsSkippableCharacterForTransformText(
     char16_t aChar);
 
-<<<<<<< HEAD
-uint32_t nsTextFrameUtils::ComputeApproximateLengthWithWhitespaceCompression(
-    nsIContent* aContent, const nsStyleText* aStyleText) {
-  const nsTextFragment* frag = aContent->GetText();
-||||||| merged common ancestors
-uint32_t
-nsTextFrameUtils::ComputeApproximateLengthWithWhitespaceCompression(
-                    nsIContent *aContent, const nsStyleText *aStyleText)
-{
-  const nsTextFragment *frag = aContent->GetText();
-=======
 uint32_t nsTextFrameUtils::ComputeApproximateLengthWithWhitespaceCompression(
     Text* aText, const nsStyleText* aStyleText) {
   const nsTextFragment* frag = &aText->TextFragment();
->>>>>>> upstream-releases
   // This is an approximation so we don't really need anything
   // too fancy here.
   uint32_t len;
@@ -430,16 +388,9 @@ bool nsSkipCharsRunIterator::NextRun() {
         mRemainingLength -= mRunLength;
       }
     }
-<<<<<<< HEAD
-    if (!mRemainingLength) return false;
-||||||| merged common ancestors
-    if (!mRemainingLength)
-      return false;
-=======
     if (!mRemainingLength) {
       return false;
     }
->>>>>>> upstream-releases
     int32_t length;
     mSkipped = mIterator.IsOriginalCharSkipped(&length);
     mRunLength = std::min(length, mRemainingLength);

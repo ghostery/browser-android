@@ -4,43 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-||||||| merged common ancestors
-async function run_test() {
-  try {
-    do_test_pending();
-    await run_test_with_server(DebuggerServer);
-
-    // TODO: The server currently doesn't handle request errors
-    // in workers well, so this test doesn't work with the worker server.
-    // await run_test_with_server(WorkerDebuggerServer);
-  } finally {
-    do_test_finished();
-  }
-}
-
-async function run_test_with_server(server) {
-  initTestDebuggerServer(server);
-  const debuggee = addTestGlobal("test-grips", server);
-  debuggee.eval(`
-    function stopMe(arg1) {
-      debugger;
-    }
-  `);
-
-  const dbgClient = new DebuggerClient(server.connectPipe());
-  await dbgClient.connect();
-  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
-=======
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
@@ -53,21 +16,10 @@ add_task(
         debugger;
       }.toString()
     );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  await test_object_grip(debuggee, threadClient);
-}));
-||||||| merged common ancestors
-  await test_object_grip(debuggee, threadClient);
-
-  await dbgClient.close();
-}
-=======
     await test_object_grip(debuggee, threadClient);
   })
 );
->>>>>>> upstream-releases
 
 async function test_object_grip(debuggee, threadClient) {
   const code = `
@@ -90,13 +42,7 @@ async function test_object_grip(debuggee, threadClient) {
   const objClient = threadClient.pauseGrip(obj);
 
   const method = threadClient.pauseGrip(
-<<<<<<< HEAD
-    (await objClient.getPropertyValue("method", null)).value.return,
-||||||| merged common ancestors
-    (await objClient.getPropertyValue("method")).value.return,
-=======
     (await objClient.getPropertyValue("method", null)).value.return
->>>>>>> upstream-releases
   );
 
   try {

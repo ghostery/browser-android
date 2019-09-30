@@ -11,24 +11,6 @@
  * Used by |gfxFont| to represent the MATH table of an OpenType font.
  * Each |gfxFont| owns at most one |gfxMathTable| instance.
  */
-<<<<<<< HEAD
-class gfxMathTable {
- public:
-  /**
-   * @param aFace The HarfBuzz face containing the math table.
-   * @param aSize The font size to pass to HarfBuzz.
-   */
-  gfxMathTable(hb_face_t *aFace, gfxFloat aSize);
-||||||| merged common ancestors
-class gfxMathTable
-{
-public:
-    /**
-     * @param aFace The HarfBuzz face containing the math table.
-     * @param aSize The font size to pass to HarfBuzz.
-     */
-    gfxMathTable(hb_face_t *aFace, gfxFloat aSize);
-=======
 class gfxMathTable {
  public:
   /**
@@ -36,7 +18,6 @@ class gfxMathTable {
    * @param aSize The font size to pass to HarfBuzz.
    */
   gfxMathTable(hb_face_t* aFace, gfxFloat aSize);
->>>>>>> upstream-releases
 
   /**
    * Releases our reference to the MATH table and cleans up everything else.
@@ -151,19 +132,9 @@ class gfxMathTable {
   bool VariantsParts(uint32_t aGlyphID, bool aVertical,
                      uint32_t aGlyphs[4]) const;
 
-<<<<<<< HEAD
- private:
-  // size-specific font object, owned by the gfxMathTable
-  hb_font_t *mHBFont;
-||||||| merged common ancestors
-private:
-    // size-specific font object, owned by the gfxMathTable
-    hb_font_t *mHBFont;
-=======
  private:
   // size-specific font object, owned by the gfxMathTable
   hb_font_t* mHBFont;
->>>>>>> upstream-releases
 
   static const unsigned int kMaxCachedSizeCount = 10;
   struct MathVariantCacheEntry {

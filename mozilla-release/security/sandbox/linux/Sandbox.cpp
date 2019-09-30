@@ -402,25 +402,12 @@ static void BroadcastSetThreadSandbox(const sock_fprog* aFilter) {
         if (now.tv_sec > timeLimit.tv_sec ||
             (now.tv_sec == timeLimit.tv_sec &&
              now.tv_nsec > timeLimit.tv_nsec)) {
-<<<<<<< HEAD
-          SANDBOX_LOG_ERROR(
-              "Thread %d unresponsive for %d seconds."
-              "  Killing process.",
-              tid, crashDelay);
-          MOZ_CRASH();
-||||||| merged common ancestors
-          SANDBOX_LOG_ERROR("Thread %d unresponsive for %d seconds."
-                            "  Killing process.",
-                            tid, crashDelay);
-          MOZ_CRASH();
-=======
           SANDBOX_LOG_ERROR(
               "Thread %d unresponsive for %d seconds."
               "  Killing process.",
               tid, crashDelay);
 
           MOZ_CRASH("failed while waiting for unresponsive thread");
->>>>>>> upstream-releases
         }
       }
     }
@@ -431,19 +418,9 @@ static void BroadcastSetThreadSandbox(const sock_fprog* aFilter) {
   oldHandler = signal(tsyncSignum, SIG_DFL);
   if (oldHandler != SetThreadSandboxHandler) {
     // See the comment on FindFreeSignalNumber about race conditions.
-<<<<<<< HEAD
-    SANDBOX_LOG_ERROR("handler for signal %d was changed to %p!", tsyncSignum,
-                      oldHandler);
-    MOZ_CRASH();
-||||||| merged common ancestors
-    SANDBOX_LOG_ERROR("handler for signal %d was changed to %p!",
-                      tsyncSignum, oldHandler);
-    MOZ_CRASH();
-=======
     SANDBOX_LOG_ERROR("handler for signal %d was changed to %p!", tsyncSignum,
                       oldHandler);
     MOZ_CRASH("handler for the signal was changed to another");
->>>>>>> upstream-releases
   }
   gSeccompTsyncBroadcastSignum = 0;
   Unused << closedir(taskdp);
@@ -511,15 +488,6 @@ void SandboxEarlyInit() {
     oldHandler = signal(tsyncSignum, SetThreadSandboxHandler);
     if (oldHandler != SIG_DFL) {
       // See the comment on FindFreeSignalNumber about race conditions.
-<<<<<<< HEAD
-      SANDBOX_LOG_ERROR("signal %d in use by handler %p!\n", tsyncSignum,
-                        oldHandler);
-      MOZ_CRASH();
-||||||| merged common ancestors
-      SANDBOX_LOG_ERROR("signal %d in use by handler %p!\n",
-                        tsyncSignum, oldHandler);
-      MOZ_CRASH();
-=======
       if (oldHandler == SIG_ERR) {
         MOZ_CRASH("failed while registering the signal handler");
       } else {
@@ -527,7 +495,6 @@ void SandboxEarlyInit() {
       }
       SANDBOX_LOG_ERROR("signal %d in use by handler %p!\n", tsyncSignum,
                         oldHandler);
->>>>>>> upstream-releases
     }
   }
 }
@@ -643,16 +610,6 @@ bool SetContentProcessSandbox(ContentProcessSandboxParams&& aParams) {
       GetContentSandboxPolicy(sBroker, std::move(aParams)));
   return true;
 }
-<<<<<<< HEAD
-#endif  // MOZ_CONTENT_SANDBOX
-
-#ifdef MOZ_GMP_SANDBOX
-||||||| merged common ancestors
-#endif // MOZ_CONTENT_SANDBOX
-
-#ifdef MOZ_GMP_SANDBOX
-=======
->>>>>>> upstream-releases
 /**
  * Starts the seccomp sandbox for a media plugin process.  Should be
  * called only once, and before any potentially harmful content is
@@ -675,19 +632,9 @@ void SetMediaPluginSandbox(const char* aFilePath) {
 
   SandboxOpenedFile plugin(aFilePath);
   if (!plugin.IsOpen()) {
-<<<<<<< HEAD
-    SANDBOX_LOG_ERROR("failed to open plugin file %s: %s", aFilePath,
-                      strerror(errno));
-    MOZ_CRASH();
-||||||| merged common ancestors
-    SANDBOX_LOG_ERROR("failed to open plugin file %s: %s",
-                      aFilePath, strerror(errno));
-    MOZ_CRASH();
-=======
     SANDBOX_LOG_ERROR("failed to open plugin file %s: %s", aFilePath,
                       strerror(errno));
     MOZ_CRASH("failed while trying to open the plugin file ");
->>>>>>> upstream-releases
   }
 
   auto files = new SandboxOpenedFiles();
@@ -703,18 +650,7 @@ void SetMediaPluginSandbox(const char* aFilePath) {
   // Finally, start the sandbox.
   SetCurrentProcessSandbox(GetMediaSandboxPolicy(files));
 }
-<<<<<<< HEAD
-#endif  // MOZ_GMP_SANDBOX
-||||||| merged common ancestors
-#endif // MOZ_GMP_SANDBOX
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 void SetRemoteDataDecoderSandbox(int aBroker) {
   if (!SandboxInfo::Get().Test(SandboxInfo::kHasSeccompBPF) ||
       PR_GetEnv("MOZ_DISABLE_RDD_SANDBOX")) {
@@ -737,4 +673,3 @@ void SetRemoteDataDecoderSandbox(int aBroker) {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

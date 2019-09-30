@@ -36,20 +36,11 @@ nsStyleSheetService* nsStyleSheetService::gInstance = nullptr;
 nsStyleSheetService::nsStyleSheetService() {
   static_assert(0 == AGENT_SHEET && 1 == USER_SHEET && 2 == AUTHOR_SHEET,
                 "Convention for Style Sheet");
-<<<<<<< HEAD
-  NS_ASSERTION(!gInstance,
-               "Someone is using CreateInstance instead of GetService");
-  gInstance = this;
-||||||| merged common ancestors
-  NS_ASSERTION(!gInstance, "Someone is using CreateInstance instead of GetService");
-  gInstance = this;
-=======
   NS_ASSERTION(!gInstance,
                "Someone is using CreateInstance instead of GetService");
   if (!gInstance) {
     gInstance = this;
   }
->>>>>>> upstream-releases
   nsLayoutStatics::AddRef();
 }
 
@@ -109,21 +100,7 @@ int32_t nsStyleSheetService::FindSheetByURI(uint32_t aSheetType,
   return -1;
 }
 
-<<<<<<< HEAD
 nsresult nsStyleSheetService::Init() {
-  // If you make changes here, consider whether
-  // SVGDocument::EnsureNonSVGUserAgentStyleSheetsLoaded should be updated too.
-
-||||||| merged common ancestors
-nsresult
-nsStyleSheetService::Init()
-{
-  // If you make changes here, consider whether
-  // SVGDocument::EnsureNonSVGUserAgentStyleSheetsLoaded should be updated too.
-
-=======
-nsresult nsStyleSheetService::Init() {
->>>>>>> upstream-releases
   // Child processes get their style sheets from the ContentParent.
   if (XRE_IsContentProcess()) {
     return NS_OK;
@@ -413,28 +390,12 @@ size_t nsStyleSheetService::SizeOfIncludingThis(
   return n;
 }
 
-<<<<<<< HEAD
-void nsStyleSheetService::RegisterPresShell(nsIPresShell* aPresShell) {
-||||||| merged common ancestors
-void
-nsStyleSheetService::RegisterPresShell(nsIPresShell* aPresShell)
-{
-=======
 void nsStyleSheetService::RegisterPresShell(PresShell* aPresShell) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mPresShells.Contains(aPresShell));
   mPresShells.AppendElement(aPresShell);
 }
 
-<<<<<<< HEAD
-void nsStyleSheetService::UnregisterPresShell(nsIPresShell* aPresShell) {
-||||||| merged common ancestors
-void
-nsStyleSheetService::UnregisterPresShell(nsIPresShell* aPresShell)
-{
-=======
 void nsStyleSheetService::UnregisterPresShell(PresShell* aPresShell) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mPresShells.Contains(aPresShell));
   mPresShells.RemoveElement(aPresShell);
 }

@@ -49,24 +49,10 @@ MacIOSurfaceTextureData* MacIOSurfaceTextureData::Create(const IntSize& aSize,
   return Create(surf, aBackend);
 }
 
-<<<<<<< HEAD
-bool MacIOSurfaceTextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
-  aOutDescriptor = SurfaceDescriptorMacIOSurface(
-      mSurface->GetIOSurfaceID(), mSurface->GetContentsScaleFactor(),
-      !mSurface->HasAlpha());
-||||||| merged common ancestors
-bool
-MacIOSurfaceTextureData::Serialize(SurfaceDescriptor& aOutDescriptor)
-{
-  aOutDescriptor = SurfaceDescriptorMacIOSurface(mSurface->GetIOSurfaceID(),
-                                                 mSurface->GetContentsScaleFactor(),
-                                                 !mSurface->HasAlpha());
-=======
 bool MacIOSurfaceTextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
   aOutDescriptor = SurfaceDescriptorMacIOSurface(
       mSurface->GetIOSurfaceID(), mSurface->GetContentsScaleFactor(),
       !mSurface->HasAlpha(), mSurface->GetYUVColorSpace());
->>>>>>> upstream-releases
   return true;
 }
 

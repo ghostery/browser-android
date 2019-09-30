@@ -75,64 +75,6 @@ impl<'a> TraitImpl<'a> {
 }
 
 impl<'a> TraitImpl<'a> {
-    /// Get all declared type parameters.
-    pub fn declared_type_params(&self) -> IdentSet {
-        self.generics
-            .type_params()
-            .map(|tp| tp.ident.clone())
-            .collect()
-    }
-
-    /// Get the type parameters which are used by non-skipped fields.
-    pub fn used_type_params(&self) -> IdentSet {
-        self.type_params_matching(|f| !f.skip, |v| !v.skip)
-    }
-
-    /// Get the type parameters which are used by skipped fields.
-    pub fn skipped_type_params(&self) -> IdentSet {
-        self.type_params_matching(|f| f.skip, |v| v.skip)
-    }
-
-    fn type_params_matching<'b, F, V>(&'b self, field_filter: F, variant_filter: V) -> IdentSet
-    where
-        F: Fn(&&Field) -> bool,
-        V: Fn(&&Variant) -> bool,
-    {
-        let declared = self.declared_type_params();
-        match self.data {
-            Data::Struct(ref v) => self.type_params_in_fields(v, &field_filter, &declared),
-            Data::Enum(ref v) => v.iter().filter(variant_filter).fold(
-                Default::default(),
-                |mut state, variant| {
-                    state.extend(self.type_params_in_fields(
-                        &variant.data,
-                        &field_filter,
-                        &declared,
-                    ));
-                    state
-                },
-            ),
-        }
-    }
-
-    /// Get the type parameters of all fields in a set matching some filter
-    fn type_params_in_fields<'b, F>(
-        &'b self,
-        fields: &'b Fields<Field<'a>>,
-        field_filter: F,
-        declared: &IdentSet,
-    ) -> IdentSet
-    where
-        F: Fn(&&'b Field) -> bool,
-    {
-        fields
-            .iter()
-            .filter(field_filter)
-            .collect_type_params_cloned(&Purpose::BoundImpl.into(), declared)
-    }
-}
-
-impl<'a> TraitImpl<'a> {
     /// Gets the `let` declaration for errors accumulated during parsing.
     pub fn declare_errors(&self) -> ErrorDeclaration {
         ErrorDeclaration::default()
@@ -185,50 +127,14 @@ impl<'a> TraitImpl<'a> {
         }
     }
 
-<<<<<<< HEAD
-    pub(in codegen) fn initializers(&self) -> TokenStream {
-        let foo = match self.data {
-            Data::Enum(_) => panic!("Core loop on enums isn't supported"),
-            Data::Struct(ref data) => FieldsGen(data),
-        };
-
-        foo.initializers()
-||||||| merged common ancestors
-    pub(in codegen) fn initializers(&self) -> Tokens {
-        let foo = match self.data {
-            Data::Enum(_) => panic!("Core loop on enums isn't supported"),
-            Data::Struct(ref data) => {
-                FieldsGen(data)
-            }
-        };
-
-        foo.initializers()
-=======
     pub(in codegen) fn initializers(&self) -> TokenStream {
         self.make_field_ctx().initializers()
->>>>>>> upstream-releases
     }
 
     /// Generate the loop which walks meta items looking for property matches.
-<<<<<<< HEAD
-    pub(in codegen) fn core_loop(&self) -> TokenStream {
-        let foo = match self.data {
-            Data::Enum(_) => panic!("Core loop on enums isn't supported"),
-            Data::Struct(ref data) => FieldsGen(data),
-        };
-||||||| merged common ancestors
-    pub(in codegen) fn core_loop(&self) -> Tokens {
-        let foo = match self.data {
-            Data::Enum(_) => panic!("Core loop on enums isn't supported"),
-            Data::Struct(ref data) => {
-                FieldsGen(data)
-            }
-        };
-=======
     pub(in codegen) fn core_loop(&self) -> TokenStream {
         self.make_field_ctx().core_loop()
     }
->>>>>>> upstream-releases
 
     fn make_field_ctx(&'a self) -> FieldsGen<'a> {
         match self.data {

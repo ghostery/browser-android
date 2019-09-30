@@ -30,32 +30,15 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(XULFrameElement, nsXULElement)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mFrameLoader, mOpener)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(XULFrameElement, nsXULElement,
-                                             nsIFrameLoaderOwner)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(XULFrameElement,
-                                             nsXULElement,
-                                             nsIFrameLoaderOwner)
-=======
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(XULFrameElement, nsXULElement,
                                              nsFrameLoaderOwner)
->>>>>>> upstream-releases
 
 JSObject* XULFrameElement::WrapNode(JSContext* aCx,
                                     JS::Handle<JSObject*> aGivenProto) {
   return XULFrameElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsIDocShell* XULFrameElement::GetDocShell() {
-||||||| merged common ancestors
-nsIDocShell*
-XULFrameElement::GetDocShell()
-{
-=======
 nsDocShell* XULFrameElement::GetDocShell() {
->>>>>>> upstream-releases
   RefPtr<nsFrameLoader> frameLoader = GetFrameLoader();
   return frameLoader ? frameLoader->GetDocShell(IgnoreErrors()) : nullptr;
 }
@@ -66,18 +49,8 @@ already_AddRefed<nsIWebNavigation> XULFrameElement::GetWebNavigation() {
   return webnav.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> XULFrameElement::GetContentWindow() {
-  nsCOMPtr<nsIDocShell> docShell = GetDocShell();
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-XULFrameElement::GetContentWindow()
-{
-  nsCOMPtr<nsIDocShell> docShell = GetDocShell();
-=======
 Nullable<WindowProxyHolder> XULFrameElement::GetContentWindow() {
   RefPtr<nsDocShell> docShell = GetDocShell();
->>>>>>> upstream-releases
   if (docShell) {
     return WindowProxyHolder(docShell->GetWindowProxy());
   }
@@ -85,17 +58,6 @@ Nullable<WindowProxyHolder> XULFrameElement::GetContentWindow() {
   return nullptr;
 }
 
-<<<<<<< HEAD
-nsIDocument* XULFrameElement::GetContentDocument() {
-  nsCOMPtr<nsPIDOMWindowOuter> win = GetContentWindow();
-  return win ? win->GetDoc() : nullptr;
-||||||| merged common ancestors
-nsIDocument*
-XULFrameElement::GetContentDocument()
-{
-  nsCOMPtr<nsPIDOMWindowOuter> win = GetContentWindow();
-  return win ? win->GetDoc() : nullptr;
-=======
 Document* XULFrameElement::GetContentDocument() {
   nsCOMPtr<nsIDocShell> docShell = GetDocShell();
   if (docShell) {
@@ -105,7 +67,6 @@ Document* XULFrameElement::GetContentDocument() {
     }
   }
   return nullptr;
->>>>>>> upstream-releases
 }
 
 void XULFrameElement::LoadSrc() {
@@ -159,15 +120,6 @@ void XULFrameElement::SwapFrameLoaders(XULFrameElement& aOtherLoaderOwner,
   aOtherLoaderOwner.SwapFrameLoaders(this, rv);
 }
 
-<<<<<<< HEAD
-void XULFrameElement::SwapFrameLoaders(nsIFrameLoaderOwner* aOtherLoaderOwner,
-                                       mozilla::ErrorResult& rv) {
-||||||| merged common ancestors
-void
-XULFrameElement::SwapFrameLoaders(nsIFrameLoaderOwner* aOtherLoaderOwner,
-                                  mozilla::ErrorResult& rv)
-{
-=======
 void XULFrameElement::SwapFrameLoaders(nsFrameLoaderOwner* aOtherLoaderOwner,
                                        mozilla::ErrorResult& rv) {
   if (RefPtr<Document> doc = GetComposedDoc()) {
@@ -175,7 +127,6 @@ void XULFrameElement::SwapFrameLoaders(nsFrameLoaderOwner* aOtherLoaderOwner,
     doc->FlushPendingNotifications(FlushType::Frames);
   }
 
->>>>>>> upstream-releases
   RefPtr<nsFrameLoader> loader = GetFrameLoader();
   RefPtr<nsFrameLoader> otherLoader = aOtherLoaderOwner->GetFrameLoader();
   if (!loader || !otherLoader) {
@@ -186,22 +137,8 @@ void XULFrameElement::SwapFrameLoaders(nsFrameLoaderOwner* aOtherLoaderOwner,
   rv = loader->SwapWithOtherLoader(otherLoader, this, aOtherLoaderOwner);
 }
 
-<<<<<<< HEAD
-nsresult XULFrameElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-  nsresult rv = nsXULElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-XULFrameElement::BindToTree(nsIDocument* aDocument,
-                            nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-  nsresult rv = nsXULElement::BindToTree(aDocument, aParent, aBindingParent);
-=======
 nsresult XULFrameElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = nsXULElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (IsInUncomposedDoc()) {
@@ -214,15 +151,7 @@ nsresult XULFrameElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void XULFrameElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-XULFrameElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void XULFrameElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   RefPtr<nsFrameLoader> frameLoader = GetFrameLoader();
   if (frameLoader) {
     frameLoader->Destroy();

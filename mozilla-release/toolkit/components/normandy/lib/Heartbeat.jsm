@@ -195,18 +195,10 @@ var Heartbeat = class {
     // Build the heartbeat stars
     if (!this.options.engagementButtonLabel) {
       const numStars = this.options.engagementButtonLabel ? 0 : 5;
-<<<<<<< HEAD
-      this.ratingContainer = this.chromeWindow.document.createXULElement("hbox");
-      this.ratingContainer.id = "star-rating-container";
-||||||| merged common ancestors
-      const ratingContainer = this.chromeWindow.document.createXULElement("hbox");
-      ratingContainer.id = "star-rating-container";
-=======
       this.ratingContainer = this.chromeWindow.document.createXULElement(
         "hbox"
       );
       this.ratingContainer.id = "star-rating-container";
->>>>>>> upstream-releases
 
       for (let i = 0; i < numStars; i++) {
         // create a star rating element
@@ -252,22 +244,6 @@ var Heartbeat = class {
 
     // Add Learn More Link
     if (this.options.learnMoreMessage && this.options.learnMoreUrl) {
-<<<<<<< HEAD
-      this.learnMore = this.chromeWindow.document.createXULElement("label");
-      this.learnMore.className = "text-link";
-      this.learnMore.href = this.options.learnMoreUrl.toString();
-      this.learnMore.setAttribute("value", this.options.learnMoreMessage);
-      this.learnMore.addEventListener("click",
-        () => this.maybeNotifyHeartbeat("LearnMore"));
-      frag.appendChild(this.learnMore);
-||||||| merged common ancestors
-      const learnMore = this.chromeWindow.document.createXULElement("label");
-      learnMore.className = "text-link";
-      learnMore.href = this.options.learnMoreUrl.toString();
-      learnMore.setAttribute("value", this.options.learnMoreMessage);
-      learnMore.addEventListener("click", () => this.maybeNotifyHeartbeat("LearnMore"));
-      frag.appendChild(learnMore);
-=======
       this.learnMore = this.chromeWindow.document.createXULElement("label", {
         is: "text-link",
       });
@@ -277,7 +253,6 @@ var Heartbeat = class {
         this.maybeNotifyHeartbeat("LearnMore")
       );
       frag.appendChild(this.learnMore);
->>>>>>> upstream-releases
     }
 
     // Append the fragment and apply the styling

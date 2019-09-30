@@ -15,43 +15,15 @@
 % locale browser @AB_CD@ %locale/browser/
 # bookmarks.html is produced by LOCALIZED_GENERATED_FILES.
     locale/browser/bookmarks.html                  (bookmarks.html)
-<<<<<<< HEAD
-    locale/browser/aboutPrivateBrowsing.dtd        (%chrome/browser/aboutPrivateBrowsing.dtd)
-    locale/browser/aboutRobots.dtd                 (%chrome/browser/aboutRobots.dtd)
-||||||| merged common ancestors
-    locale/browser/aboutDialog.dtd                 (%chrome/browser/aboutDialog.dtd)
-    locale/browser/aboutPrivateBrowsing.dtd        (%chrome/browser/aboutPrivateBrowsing.dtd)
-    locale/browser/aboutRobots.dtd                 (%chrome/browser/aboutRobots.dtd)
-=======
 
->>>>>>> upstream-releases
     locale/browser/accounts.properties             (%chrome/browser/accounts.properties)
-<<<<<<< HEAD
-    locale/browser/aboutTabCrashed.dtd             (%chrome/browser/aboutTabCrashed.dtd)
-||||||| merged common ancestors
-    locale/browser/aboutSearchReset.dtd            (%chrome/browser/aboutSearchReset.dtd)
-    locale/browser/aboutSessionRestore.dtd         (%chrome/browser/aboutSessionRestore.dtd)
-    locale/browser/aboutTabCrashed.dtd             (%chrome/browser/aboutTabCrashed.dtd)
-=======
     locale/browser/app-extension-fields.properties (%chrome/browser/app-extension-fields.properties)
->>>>>>> upstream-releases
     locale/browser/browser.dtd                     (%chrome/browser/browser.dtd)
     locale/browser/baseMenuOverlay.dtd             (%chrome/browser/baseMenuOverlay.dtd)
     locale/browser/browser.properties              (%chrome/browser/browser.properties)
     locale/browser/customizableui/customizableWidgets.properties (%chrome/browser/customizableui/customizableWidgets.properties)
     locale/browser/uiDensity.properties            (%chrome/browser/uiDensity.properties)
-<<<<<<< HEAD
-    locale/browser/pageInfo.dtd                    (%chrome/browser/pageInfo.dtd)
-    locale/browser/pageInfo.properties             (%chrome/browser/pageInfo.properties)
-    locale/browser/safeMode.dtd                    (%chrome/browser/safeMode.dtd)
-||||||| merged common ancestors
-    locale/browser/pageInfo.dtd                    (%chrome/browser/pageInfo.dtd)
-    locale/browser/pageInfo.properties             (%chrome/browser/pageInfo.properties)
-    locale/browser/safeMode.dtd                    (%chrome/browser/safeMode.dtd)
-    locale/browser/sanitize.dtd                    (%chrome/browser/sanitize.dtd)
-=======
     locale/browser/pocket.properties               (%chrome/browser/pocket.properties)
->>>>>>> upstream-releases
     locale/browser/search.properties               (%chrome/browser/search.properties)
     locale/browser/siteData.properties             (%chrome/browser/siteData.properties)
     locale/browser/sitePermissions.properties      (%chrome/browser/sitePermissions.properties)

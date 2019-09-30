@@ -146,14 +146,7 @@ void HTMLListBulletAccessible::AppendTextTo(nsAString& aText,
                                             uint32_t aLength) {
   nsAutoString bulletText;
   nsBlockFrame* blockFrame = do_QueryFrame(mContent->GetPrimaryFrame());
-<<<<<<< HEAD
-  if (blockFrame) blockFrame->GetSpokenBulletText(bulletText);
-||||||| merged common ancestors
-  if (blockFrame)
-    blockFrame->GetSpokenBulletText(bulletText);
-=======
   if (blockFrame) blockFrame->GetSpokenMarkerText(bulletText);
->>>>>>> upstream-releases
 
   aText.Append(Substring(bulletText, aStartOffset, aLength));
 }

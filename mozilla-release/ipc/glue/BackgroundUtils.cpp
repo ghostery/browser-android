@@ -157,15 +157,6 @@ already_AddRefed<nsIPrincipal> PrincipalInfoToPrincipal(
   MOZ_CRASH("Should never get here!");
 }
 
-<<<<<<< HEAD
-nsresult PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
-                                  PrincipalInfo* aPrincipalInfo) {
-||||||| merged common ancestors
-nsresult
-PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
-                         PrincipalInfo* aPrincipalInfo)
-{
-=======
 already_AddRefed<nsIContentSecurityPolicy> CSPInfoToCSP(
     const CSPInfo& aCSPInfo, Document* aRequestingDoc,
     nsresult* aOptionalResult) {
@@ -268,7 +259,6 @@ nsresult CSPToCSPInfo(nsIContentSecurityPolicy* aCSP, CSPInfo* aCSPInfo) {
 nsresult PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
                                   PrincipalInfo* aPrincipalInfo,
                                   bool aSkipBaseDomain) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aPrincipal);
   MOZ_ASSERT(aPrincipalInfo);
@@ -296,37 +286,7 @@ nsresult PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIScriptSecurityManager> secMan =
-      nsContentUtils::GetSecurityManager();
-  if (!secMan) {
-    return NS_ERROR_FAILURE;
-  }
-
-  bool isSystemPrincipal;
-  nsresult rv = secMan->IsSystemPrincipal(aPrincipal, &isSystemPrincipal);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  if (isSystemPrincipal) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIScriptSecurityManager> secMan =
-    nsContentUtils::GetSecurityManager();
-  if (!secMan) {
-    return NS_ERROR_FAILURE;
-  }
-
-  bool isSystemPrincipal;
-  nsresult rv = secMan->IsSystemPrincipal(aPrincipal, &isSystemPrincipal);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  if (isSystemPrincipal) {
-=======
   if (aPrincipal->IsSystemPrincipal()) {
->>>>>>> upstream-releases
     *aPrincipalInfo = SystemPrincipalInfo();
     return NS_OK;
   }
@@ -339,16 +299,8 @@ nsresult PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
     nsTArray<PrincipalInfo> allowlistInfo;
     PrincipalInfo info;
 
-<<<<<<< HEAD
-    for (auto& prin : expanded->AllowList()) {
-      rv = PrincipalToPrincipalInfo(prin, &info);
-||||||| merged common ancestors
-    for (auto& prin : expanded->WhiteList()) {
-      rv = PrincipalToPrincipalInfo(prin, &info);
-=======
     for (auto& prin : expanded->AllowList()) {
       rv = PrincipalToPrincipalInfo(prin, &info, aSkipBaseDomain);
->>>>>>> upstream-releases
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -463,18 +415,8 @@ nsresult RHEntryToRHEntryInfo(nsIRedirectHistoryEntry* aRHEntry,
   return PrincipalToPrincipalInfo(principal, &aRHEntryInfo->principalInfo());
 }
 
-<<<<<<< HEAD
-nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
-                                OptionalLoadInfoArgs* aOptionalLoadInfoArgs) {
-||||||| merged common ancestors
-nsresult
-LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
-                       OptionalLoadInfoArgs* aOptionalLoadInfoArgs)
-{
-=======
 nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
                                 Maybe<LoadInfoArgs>* aOptionalLoadInfoArgs) {
->>>>>>> upstream-releases
   if (!aLoadInfo) {
     // if there is no loadInfo, then there is nothing to serialize
     *aOptionalLoadInfoArgs = Nothing();
@@ -514,16 +456,8 @@ nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
     sandboxedLoadingPrincipalInfo = Some(sandboxedLoadingPrincipalInfoTemp);
   }
 
-<<<<<<< HEAD
-  OptionalPrincipalInfo topLevelPrincipalInfo = mozilla::void_t();
-  if (aLoadInfo->GetTopLevelPrincipal()) {
-||||||| merged common ancestors
-  OptionalPrincipalInfo topLevelPrincipalInfo = mozilla::void_t();
-  if (aLoadInfo->TopLevelPrincipal()) {
-=======
   Maybe<PrincipalInfo> topLevelPrincipalInfo;
   if (aLoadInfo->GetTopLevelPrincipal()) {
->>>>>>> upstream-releases
     PrincipalInfo topLevelPrincipalInfoTemp;
     rv = PrincipalToPrincipalInfo(aLoadInfo->GetTopLevelPrincipal(),
                                   &topLevelPrincipalInfoTemp);
@@ -531,16 +465,8 @@ nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
     topLevelPrincipalInfo = Some(topLevelPrincipalInfoTemp);
   }
 
-<<<<<<< HEAD
-  OptionalPrincipalInfo topLevelStorageAreaPrincipalInfo = mozilla::void_t();
-  if (aLoadInfo->GetTopLevelStorageAreaPrincipal()) {
-||||||| merged common ancestors
-  OptionalPrincipalInfo topLevelStorageAreaPrincipalInfo = mozilla::void_t();
-  if (aLoadInfo->TopLevelStorageAreaPrincipal()) {
-=======
   Maybe<PrincipalInfo> topLevelStorageAreaPrincipalInfo;
   if (aLoadInfo->GetTopLevelStorageAreaPrincipal()) {
->>>>>>> upstream-releases
     PrincipalInfo topLevelStorageAreaPrincipalInfoTemp;
     rv = PrincipalToPrincipalInfo(aLoadInfo->GetTopLevelStorageAreaPrincipal(),
                                   &topLevelStorageAreaPrincipalInfoTemp);
@@ -588,34 +514,16 @@ nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
     ipcClientInfo.emplace(clientInfo.ref().ToIPC());
   }
 
-<<<<<<< HEAD
-  OptionalIPCClientInfo ipcReservedClientInfo = mozilla::void_t();
-  const Maybe<ClientInfo>& reservedClientInfo =
-      aLoadInfo->GetReservedClientInfo();
-||||||| merged common ancestors
-  OptionalIPCClientInfo ipcReservedClientInfo = mozilla::void_t();
-  const Maybe<ClientInfo>& reservedClientInfo = aLoadInfo->GetReservedClientInfo();
-=======
   Maybe<IPCClientInfo> ipcReservedClientInfo;
   const Maybe<ClientInfo>& reservedClientInfo =
       aLoadInfo->GetReservedClientInfo();
->>>>>>> upstream-releases
   if (reservedClientInfo.isSome()) {
     ipcReservedClientInfo.emplace(reservedClientInfo.ref().ToIPC());
   }
 
-<<<<<<< HEAD
-  OptionalIPCClientInfo ipcInitialClientInfo = mozilla::void_t();
-  const Maybe<ClientInfo>& initialClientInfo =
-      aLoadInfo->GetInitialClientInfo();
-||||||| merged common ancestors
-  OptionalIPCClientInfo ipcInitialClientInfo = mozilla::void_t();
-  const Maybe<ClientInfo>& initialClientInfo = aLoadInfo->GetInitialClientInfo();
-=======
   Maybe<IPCClientInfo> ipcInitialClientInfo;
   const Maybe<ClientInfo>& initialClientInfo =
       aLoadInfo->GetInitialClientInfo();
->>>>>>> upstream-releases
   if (initialClientInfo.isSome()) {
     ipcInitialClientInfo.emplace(initialClientInfo.ref().ToIPC());
   }
@@ -623,31 +531,6 @@ nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
   Maybe<IPCServiceWorkerDescriptor> ipcController;
   const Maybe<ServiceWorkerDescriptor>& controller = aLoadInfo->GetController();
   if (controller.isSome()) {
-<<<<<<< HEAD
-    ipcController = controller.ref().ToIPC();
-  }
-
-  *aOptionalLoadInfoArgs = LoadInfoArgs(
-      loadingPrincipalInfo, triggeringPrincipalInfo, principalToInheritInfo,
-      sandboxedLoadingPrincipalInfo, topLevelPrincipalInfo,
-      topLevelStorageAreaPrincipalInfo, optionalResultPrincipalURI,
-      aLoadInfo->GetSecurityFlags(), aLoadInfo->InternalContentPolicyType(),
-||||||| merged common ancestors
-    ipcController = controller.ref().ToIPC();
-  }
-
-  *aOptionalLoadInfoArgs =
-    LoadInfoArgs(
-      loadingPrincipalInfo,
-      triggeringPrincipalInfo,
-      principalToInheritInfo,
-      sandboxedLoadingPrincipalInfo,
-      topLevelPrincipalInfo,
-      topLevelStorageAreaPrincipalInfo,
-      optionalResultPrincipalURI,
-      aLoadInfo->GetSecurityFlags(),
-      aLoadInfo->InternalContentPolicyType(),
-=======
     ipcController.emplace(controller.ref().ToIPC());
   }
 
@@ -677,40 +560,19 @@ nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
       sandboxedLoadingPrincipalInfo, topLevelPrincipalInfo,
       topLevelStorageAreaPrincipalInfo, optionalResultPrincipalURI,
       aLoadInfo->GetSecurityFlags(), aLoadInfo->InternalContentPolicyType(),
->>>>>>> upstream-releases
       static_cast<uint32_t>(aLoadInfo->GetTainting()),
       aLoadInfo->GetUpgradeInsecureRequests(),
       aLoadInfo->GetBrowserUpgradeInsecureRequests(),
       aLoadInfo->GetBrowserWouldUpgradeInsecureRequests(),
-<<<<<<< HEAD
-      aLoadInfo->GetVerifySignedContent(), aLoadInfo->GetEnforceSRI(),
-||||||| merged common ancestors
-      aLoadInfo->GetVerifySignedContent(),
-      aLoadInfo->GetEnforceSRI(),
-=======
->>>>>>> upstream-releases
       aLoadInfo->GetForceAllowDataURI(),
       aLoadInfo->GetAllowInsecureRedirectToDataURI(),
       aLoadInfo->GetBypassCORSChecks(),
       aLoadInfo->GetSkipContentPolicyCheckForWebRequest(),
       aLoadInfo->GetForceInheritPrincipalDropped(),
-<<<<<<< HEAD
-      aLoadInfo->GetInnerWindowID(), aLoadInfo->GetOuterWindowID(),
-      aLoadInfo->GetParentOuterWindowID(), aLoadInfo->GetTopOuterWindowID(),
-      aLoadInfo->GetFrameOuterWindowID(), aLoadInfo->GetEnforceSecurity(),
-||||||| merged common ancestors
-      aLoadInfo->GetInnerWindowID(),
-      aLoadInfo->GetOuterWindowID(),
-      aLoadInfo->GetParentOuterWindowID(),
-      aLoadInfo->GetTopOuterWindowID(),
-      aLoadInfo->GetFrameOuterWindowID(),
-      aLoadInfo->GetEnforceSecurity(),
-=======
       aLoadInfo->GetInnerWindowID(), aLoadInfo->GetOuterWindowID(),
       aLoadInfo->GetParentOuterWindowID(), aLoadInfo->GetTopOuterWindowID(),
       aLoadInfo->GetFrameOuterWindowID(), aLoadInfo->GetBrowsingContextID(),
       aLoadInfo->GetFrameBrowsingContextID(),
->>>>>>> upstream-releases
       aLoadInfo->GetInitialSecurityCheckDone(),
       aLoadInfo->GetIsInThirdPartyContext(), aLoadInfo->GetIsDocshellReload(),
       aLoadInfo->GetSendCSPViolationEvents(), aLoadInfo->GetOriginAttributes(),
@@ -721,67 +583,28 @@ nsresult LoadInfoToLoadInfoArgs(nsILoadInfo* aLoadInfo,
       aLoadInfo->GetIsPreflight(), aLoadInfo->GetLoadTriggeredFromExternal(),
       aLoadInfo->GetServiceWorkerTaintingSynthesized(),
       aLoadInfo->GetDocumentHasUserInteracted(),
-<<<<<<< HEAD
-      aLoadInfo->GetDocumentHasLoaded(),
-      aLoadInfo->GetIsFromProcessingFrameAttributes());
-||||||| merged common ancestors
-      aLoadInfo->GetDocumentHasLoaded(),
-      aLoadInfo->GetIsFromProcessingFrameAttributes()
-      );
-=======
       aLoadInfo->GetDocumentHasLoaded(), cspNonce,
       aLoadInfo->GetIsFromProcessingFrameAttributes(), cookieSettingsArgs,
       aLoadInfo->GetRequestBlockingReason(), maybeCspToInheritInfo));
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LoadInfoArgsToLoadInfo(
-    const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
-    nsILoadInfo** outLoadInfo) {
-  if (aOptionalLoadInfoArgs.type() == OptionalLoadInfoArgs::Tvoid_t) {
-||||||| merged common ancestors
-nsresult
-LoadInfoArgsToLoadInfo(const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
-                       nsILoadInfo** outLoadInfo)
-{
-  if (aOptionalLoadInfoArgs.type() == OptionalLoadInfoArgs::Tvoid_t) {
-=======
 nsresult LoadInfoArgsToLoadInfo(
     const Maybe<LoadInfoArgs>& aOptionalLoadInfoArgs,
     nsILoadInfo** outLoadInfo) {
   if (aOptionalLoadInfoArgs.isNothing()) {
->>>>>>> upstream-releases
     *outLoadInfo = nullptr;
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  const LoadInfoArgs& loadInfoArgs = aOptionalLoadInfoArgs.get_LoadInfoArgs();
-||||||| merged common ancestors
-  const LoadInfoArgs& loadInfoArgs =
-    aOptionalLoadInfoArgs.get_LoadInfoArgs();
-=======
   const LoadInfoArgs& loadInfoArgs = aOptionalLoadInfoArgs.ref();
->>>>>>> upstream-releases
 
   nsresult rv = NS_OK;
   nsCOMPtr<nsIPrincipal> loadingPrincipal;
-<<<<<<< HEAD
-  if (loadInfoArgs.requestingPrincipalInfo().type() !=
-      OptionalPrincipalInfo::Tvoid_t) {
-    loadingPrincipal =
-        PrincipalInfoToPrincipal(loadInfoArgs.requestingPrincipalInfo(), &rv);
-||||||| merged common ancestors
-  if (loadInfoArgs.requestingPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
-    loadingPrincipal = PrincipalInfoToPrincipal(loadInfoArgs.requestingPrincipalInfo(), &rv);
-=======
   if (loadInfoArgs.requestingPrincipalInfo().isSome()) {
     loadingPrincipal = PrincipalInfoToPrincipal(
         loadInfoArgs.requestingPrincipalInfo().ref(), &rv);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -791,73 +614,30 @@ nsresult LoadInfoArgsToLoadInfo(
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsCOMPtr<nsIPrincipal> principalToInherit;
-<<<<<<< HEAD
-  if (loadInfoArgs.principalToInheritInfo().type() !=
-      OptionalPrincipalInfo::Tvoid_t) {
-    principalToInherit =
-        PrincipalInfoToPrincipal(loadInfoArgs.principalToInheritInfo(), &rv);
-||||||| merged common ancestors
-  if (loadInfoArgs.principalToInheritInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
-    principalToInherit = PrincipalInfoToPrincipal(loadInfoArgs.principalToInheritInfo(), &rv);
-=======
   if (loadInfoArgs.principalToInheritInfo().isSome()) {
     principalToInherit = PrincipalInfoToPrincipal(
         loadInfoArgs.principalToInheritInfo().ref(), &rv);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   nsCOMPtr<nsIPrincipal> sandboxedLoadingPrincipal;
-<<<<<<< HEAD
-  if (loadInfoArgs.sandboxedLoadingPrincipalInfo().type() !=
-      OptionalPrincipalInfo::Tvoid_t) {
-    sandboxedLoadingPrincipal = PrincipalInfoToPrincipal(
-        loadInfoArgs.sandboxedLoadingPrincipalInfo(), &rv);
-||||||| merged common ancestors
-  if (loadInfoArgs.sandboxedLoadingPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
-    sandboxedLoadingPrincipal =
-      PrincipalInfoToPrincipal(loadInfoArgs.sandboxedLoadingPrincipalInfo(), &rv);
-=======
   if (loadInfoArgs.sandboxedLoadingPrincipalInfo().isSome()) {
     sandboxedLoadingPrincipal = PrincipalInfoToPrincipal(
         loadInfoArgs.sandboxedLoadingPrincipalInfo().ref(), &rv);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   nsCOMPtr<nsIPrincipal> topLevelPrincipal;
-<<<<<<< HEAD
-  if (loadInfoArgs.topLevelPrincipalInfo().type() !=
-      OptionalPrincipalInfo::Tvoid_t) {
-    topLevelPrincipal =
-        PrincipalInfoToPrincipal(loadInfoArgs.topLevelPrincipalInfo(), &rv);
-||||||| merged common ancestors
-  if (loadInfoArgs.topLevelPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
-    topLevelPrincipal =
-      PrincipalInfoToPrincipal(loadInfoArgs.topLevelPrincipalInfo(), &rv);
-=======
   if (loadInfoArgs.topLevelPrincipalInfo().isSome()) {
     topLevelPrincipal = PrincipalInfoToPrincipal(
         loadInfoArgs.topLevelPrincipalInfo().ref(), &rv);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   nsCOMPtr<nsIPrincipal> topLevelStorageAreaPrincipal;
-<<<<<<< HEAD
-  if (loadInfoArgs.topLevelStorageAreaPrincipalInfo().type() !=
-      OptionalPrincipalInfo::Tvoid_t) {
-    topLevelStorageAreaPrincipal = PrincipalInfoToPrincipal(
-        loadInfoArgs.topLevelStorageAreaPrincipalInfo(), &rv);
-||||||| merged common ancestors
-  if (loadInfoArgs.topLevelStorageAreaPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
-    topLevelStorageAreaPrincipal =
-      PrincipalInfoToPrincipal(loadInfoArgs.topLevelStorageAreaPrincipalInfo(), &rv);
-=======
   if (loadInfoArgs.topLevelStorageAreaPrincipalInfo().isSome()) {
     topLevelStorageAreaPrincipal = PrincipalInfoToPrincipal(
         loadInfoArgs.topLevelStorageAreaPrincipalInfo().ref(), &rv);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -896,55 +676,20 @@ nsresult LoadInfoArgsToLoadInfo(
   }
 
   Maybe<ClientInfo> clientInfo;
-<<<<<<< HEAD
-  if (loadInfoArgs.clientInfo().type() != OptionalIPCClientInfo::Tvoid_t) {
-    clientInfo.emplace(
-        ClientInfo(loadInfoArgs.clientInfo().get_IPCClientInfo()));
-||||||| merged common ancestors
-  if (loadInfoArgs.clientInfo().type() != OptionalIPCClientInfo::Tvoid_t) {
-    clientInfo.emplace(ClientInfo(loadInfoArgs.clientInfo().get_IPCClientInfo()));
-=======
   if (loadInfoArgs.clientInfo().isSome()) {
     clientInfo.emplace(ClientInfo(loadInfoArgs.clientInfo().ref()));
->>>>>>> upstream-releases
   }
 
   Maybe<ClientInfo> reservedClientInfo;
-<<<<<<< HEAD
-  if (loadInfoArgs.reservedClientInfo().type() !=
-      OptionalIPCClientInfo::Tvoid_t) {
-||||||| merged common ancestors
-  if (loadInfoArgs.reservedClientInfo().type() != OptionalIPCClientInfo::Tvoid_t) {
-=======
   if (loadInfoArgs.reservedClientInfo().isSome()) {
->>>>>>> upstream-releases
     reservedClientInfo.emplace(
-<<<<<<< HEAD
-        ClientInfo(loadInfoArgs.reservedClientInfo().get_IPCClientInfo()));
-||||||| merged common ancestors
-      ClientInfo(loadInfoArgs.reservedClientInfo().get_IPCClientInfo()));
-=======
         ClientInfo(loadInfoArgs.reservedClientInfo().ref()));
->>>>>>> upstream-releases
   }
 
   Maybe<ClientInfo> initialClientInfo;
-<<<<<<< HEAD
-  if (loadInfoArgs.initialClientInfo().type() !=
-      OptionalIPCClientInfo::Tvoid_t) {
-||||||| merged common ancestors
-  if (loadInfoArgs.initialClientInfo().type() != OptionalIPCClientInfo::Tvoid_t) {
-=======
   if (loadInfoArgs.initialClientInfo().isSome()) {
->>>>>>> upstream-releases
     initialClientInfo.emplace(
-<<<<<<< HEAD
-        ClientInfo(loadInfoArgs.initialClientInfo().get_IPCClientInfo()));
-||||||| merged common ancestors
-      ClientInfo(loadInfoArgs.initialClientInfo().get_IPCClientInfo()));
-=======
         ClientInfo(loadInfoArgs.initialClientInfo().ref()));
->>>>>>> upstream-releases
   }
 
   // We can have an initial client info or a reserved client info, but not both.
@@ -955,94 +700,6 @@ nsresult LoadInfoArgsToLoadInfo(
       NS_ERROR_UNEXPECTED);
 
   Maybe<ServiceWorkerDescriptor> controller;
-<<<<<<< HEAD
-  if (loadInfoArgs.controller().type() !=
-      OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
-    controller.emplace(ServiceWorkerDescriptor(
-        loadInfoArgs.controller().get_IPCServiceWorkerDescriptor()));
-  }
-
-  RefPtr<mozilla::LoadInfo> loadInfo = new mozilla::LoadInfo(
-      loadingPrincipal, triggeringPrincipal, principalToInherit,
-      sandboxedLoadingPrincipal, topLevelPrincipal,
-      topLevelStorageAreaPrincipal, resultPrincipalURI, clientInfo,
-      reservedClientInfo, initialClientInfo, controller,
-      loadInfoArgs.securityFlags(), loadInfoArgs.contentPolicyType(),
-      static_cast<LoadTainting>(loadInfoArgs.tainting()),
-      loadInfoArgs.upgradeInsecureRequests(),
-      loadInfoArgs.browserUpgradeInsecureRequests(),
-      loadInfoArgs.browserWouldUpgradeInsecureRequests(),
-      loadInfoArgs.verifySignedContent(), loadInfoArgs.enforceSRI(),
-      loadInfoArgs.forceAllowDataURI(),
-      loadInfoArgs.allowInsecureRedirectToDataURI(),
-      loadInfoArgs.skipContentPolicyCheckForWebRequest(),
-      loadInfoArgs.forceInheritPrincipalDropped(), loadInfoArgs.innerWindowID(),
-      loadInfoArgs.outerWindowID(), loadInfoArgs.parentOuterWindowID(),
-      loadInfoArgs.topOuterWindowID(), loadInfoArgs.frameOuterWindowID(),
-      loadInfoArgs.enforceSecurity(), loadInfoArgs.initialSecurityCheckDone(),
-      loadInfoArgs.isInThirdPartyContext(), loadInfoArgs.isDocshellReload(),
-      loadInfoArgs.sendCSPViolationEvents(), loadInfoArgs.originAttributes(),
-      redirectChainIncludingInternalRedirects, redirectChain,
-      std::move(ancestorPrincipals), loadInfoArgs.ancestorOuterWindowIDs(),
-      loadInfoArgs.corsUnsafeHeaders(), loadInfoArgs.forcePreflight(),
-      loadInfoArgs.isPreflight(), loadInfoArgs.loadTriggeredFromExternal(),
-      loadInfoArgs.serviceWorkerTaintingSynthesized(),
-      loadInfoArgs.documentHasUserInteracted(),
-      loadInfoArgs.documentHasLoaded());
-||||||| merged common ancestors
-  if (loadInfoArgs.controller().type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
-    controller.emplace(ServiceWorkerDescriptor(
-      loadInfoArgs.controller().get_IPCServiceWorkerDescriptor()));
-  }
-
-  RefPtr<mozilla::LoadInfo> loadInfo =
-    new mozilla::LoadInfo(loadingPrincipal,
-                          triggeringPrincipal,
-                          principalToInherit,
-                          sandboxedLoadingPrincipal,
-                          topLevelPrincipal,
-                          topLevelStorageAreaPrincipal,
-                          resultPrincipalURI,
-                          clientInfo,
-                          reservedClientInfo,
-                          initialClientInfo,
-                          controller,
-                          loadInfoArgs.securityFlags(),
-                          loadInfoArgs.contentPolicyType(),
-                          static_cast<LoadTainting>(loadInfoArgs.tainting()),
-                          loadInfoArgs.upgradeInsecureRequests(),
-                          loadInfoArgs.browserUpgradeInsecureRequests(),
-                          loadInfoArgs.browserWouldUpgradeInsecureRequests(),
-                          loadInfoArgs.verifySignedContent(),
-                          loadInfoArgs.enforceSRI(),
-                          loadInfoArgs.forceAllowDataURI(),
-                          loadInfoArgs.allowInsecureRedirectToDataURI(),
-                          loadInfoArgs.skipContentPolicyCheckForWebRequest(),
-                          loadInfoArgs.forceInheritPrincipalDropped(),
-                          loadInfoArgs.innerWindowID(),
-                          loadInfoArgs.outerWindowID(),
-                          loadInfoArgs.parentOuterWindowID(),
-                          loadInfoArgs.topOuterWindowID(),
-                          loadInfoArgs.frameOuterWindowID(),
-                          loadInfoArgs.enforceSecurity(),
-                          loadInfoArgs.initialSecurityCheckDone(),
-                          loadInfoArgs.isInThirdPartyContext(),
-                          loadInfoArgs.isDocshellReload(),
-                          loadInfoArgs.sendCSPViolationEvents(),
-                          loadInfoArgs.originAttributes(),
-                          redirectChainIncludingInternalRedirects,
-                          redirectChain,
-                          std::move(ancestorPrincipals),
-                          loadInfoArgs.ancestorOuterWindowIDs(),
-                          loadInfoArgs.corsUnsafeHeaders(),
-                          loadInfoArgs.forcePreflight(),
-                          loadInfoArgs.isPreflight(),
-                          loadInfoArgs.loadTriggeredFromExternal(),
-                          loadInfoArgs.serviceWorkerTaintingSynthesized(),
-                          loadInfoArgs.documentHasUserInteracted(),
-                          loadInfoArgs.documentHasLoaded()
-                          );
-=======
   if (loadInfoArgs.controller().isSome()) {
     controller.emplace(
         ServiceWorkerDescriptor(loadInfoArgs.controller().ref()));
@@ -1089,7 +746,6 @@ nsresult LoadInfoArgsToLoadInfo(
       loadInfoArgs.documentHasUserInteracted(),
       loadInfoArgs.documentHasLoaded(), loadInfoArgs.cspNonce(),
       loadInfoArgs.requestBlockingReason());
->>>>>>> upstream-releases
 
   if (loadInfoArgs.isFromProcessingFrameAttributes()) {
     loadInfo->SetIsFromProcessingFrameAttributes();
@@ -1102,24 +758,6 @@ nsresult LoadInfoArgsToLoadInfo(
 void LoadInfoToParentLoadInfoForwarder(
     nsILoadInfo* aLoadInfo, ParentLoadInfoForwarderArgs* aForwarderArgsOut) {
   if (!aLoadInfo) {
-<<<<<<< HEAD
-    *aForwarderArgsOut = ParentLoadInfoForwarderArgs(
-        false, void_t(), nsILoadInfo::TAINTING_BASIC,
-        false,  // serviceWorkerTaintingSynthesized
-        false,  // documentHasUserInteracted
-        false   // documentHasLoaded
-    );
-||||||| merged common ancestors
-    *aForwarderArgsOut = ParentLoadInfoForwarderArgs(false, void_t(),
-                                                     nsILoadInfo::TAINTING_BASIC,
-                                                     false, // serviceWorkerTaintingSynthesized
-                                                     false, // isTracker
-                                                     false, // isTrackerBlocked
-                                                     mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED::all, // trackerBlockedReason
-                                                     false, // documentHasUserInteracted
-                                                     false  // documentHasLoaded
-                                                    );
-=======
     *aForwarderArgsOut = ParentLoadInfoForwarderArgs(
         false, false, Nothing(), nsILoadInfo::TAINTING_BASIC,
         false,  // serviceWorkerTaintingSynthesized
@@ -1127,7 +765,6 @@ void LoadInfoToParentLoadInfoForwarder(
         false,  // documentHasLoaded
         Maybe<CookieSettingsArgs>(),
         nsILoadInfo::BLOCKING_REASON_NONE);  // requestBlockingReason
->>>>>>> upstream-releases
     return;
   }
 
@@ -1140,13 +777,6 @@ void LoadInfoToParentLoadInfoForwarder(
   uint32_t tainting = nsILoadInfo::TAINTING_BASIC;
   Unused << aLoadInfo->GetTainting(&tainting);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED label =
-    mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED::all;
-  Unused << aLoadInfo->GetTrackerBlockedReason(&label);
-
-=======
   Maybe<CookieSettingsArgs> cookieSettingsArgs;
 
   nsCOMPtr<nsICookieSettings> cookieSettings;
@@ -1158,32 +788,13 @@ void LoadInfoToParentLoadInfoForwarder(
     cookieSettingsArgs = Some(args);
   }
 
->>>>>>> upstream-releases
   *aForwarderArgsOut = ParentLoadInfoForwarderArgs(
-<<<<<<< HEAD
-      aLoadInfo->GetAllowInsecureRedirectToDataURI(), ipcController, tainting,
-      aLoadInfo->GetServiceWorkerTaintingSynthesized(),
-      aLoadInfo->GetDocumentHasUserInteracted(),
-      aLoadInfo->GetDocumentHasLoaded());
-||||||| merged common ancestors
-    aLoadInfo->GetAllowInsecureRedirectToDataURI(),
-    ipcController,
-    tainting,
-    aLoadInfo->GetServiceWorkerTaintingSynthesized(),
-    aLoadInfo->GetIsTracker(),
-    aLoadInfo->GetIsTrackerBlocked(),
-    label,
-    aLoadInfo->GetDocumentHasUserInteracted(),
-    aLoadInfo->GetDocumentHasLoaded()
-  );
-=======
       aLoadInfo->GetAllowInsecureRedirectToDataURI(),
       aLoadInfo->GetBypassCORSChecks(), ipcController, tainting,
       aLoadInfo->GetServiceWorkerTaintingSynthesized(),
       aLoadInfo->GetDocumentHasUserInteracted(),
       aLoadInfo->GetDocumentHasLoaded(), cookieSettingsArgs,
       aLoadInfo->GetRequestBlockingReason());
->>>>>>> upstream-releases
 }
 
 nsresult MergeParentLoadInfoForwarder(
@@ -1195,32 +806,16 @@ nsresult MergeParentLoadInfoForwarder(
   nsresult rv;
 
   rv = aLoadInfo->SetAllowInsecureRedirectToDataURI(
-<<<<<<< HEAD
-      aForwarderArgs.allowInsecureRedirectToDataURI());
-||||||| merged common ancestors
-    aForwarderArgs.allowInsecureRedirectToDataURI());
-=======
       aForwarderArgs.allowInsecureRedirectToDataURI());
   NS_ENSURE_SUCCESS(rv, rv);
 
   rv = aLoadInfo->SetBypassCORSChecks(aForwarderArgs.bypassCORSChecks());
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   aLoadInfo->ClearController();
   auto& controller = aForwarderArgs.controller();
-<<<<<<< HEAD
-  if (controller.type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
-    aLoadInfo->SetController(
-        ServiceWorkerDescriptor(controller.get_IPCServiceWorkerDescriptor()));
-||||||| merged common ancestors
-  if (controller.type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
-    aLoadInfo->SetController(
-      ServiceWorkerDescriptor(controller.get_IPCServiceWorkerDescriptor()));
-=======
   if (controller.isSome()) {
     aLoadInfo->SetController(ServiceWorkerDescriptor(controller.ref()));
->>>>>>> upstream-releases
   }
 
   if (aForwarderArgs.serviceWorkerTaintingSynthesized()) {
@@ -1230,18 +825,6 @@ nsresult MergeParentLoadInfoForwarder(
     aLoadInfo->MaybeIncreaseTainting(aForwarderArgs.tainting());
   }
 
-<<<<<<< HEAD
-  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetDocumentHasUserInteracted(
-      aForwarderArgs.documentHasUserInteracted()));
-  MOZ_ALWAYS_SUCCEEDS(
-      aLoadInfo->SetDocumentHasLoaded(aForwarderArgs.documentHasLoaded()));
-||||||| merged common ancestors
-  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetIsTracker(aForwarderArgs.isTracker()));
-  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetIsTrackerBlocked(aForwarderArgs.isTrackerBlocked()));
-  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetTrackerBlockedReason(aForwarderArgs.trackerBlockedReason()));
-  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetDocumentHasUserInteracted(aForwarderArgs.documentHasUserInteracted()));
-  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetDocumentHasLoaded(aForwarderArgs.documentHasLoaded()));
-=======
   MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetDocumentHasUserInteracted(
       aForwarderArgs.documentHasUserInteracted()));
   MOZ_ALWAYS_SUCCEEDS(
@@ -1259,7 +842,6 @@ nsresult MergeParentLoadInfoForwarder(
           ->Merge(cookieSettingsArgs.ref());
     }
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1267,16 +849,8 @@ nsresult MergeParentLoadInfoForwarder(
 void LoadInfoToChildLoadInfoForwarder(
     nsILoadInfo* aLoadInfo, ChildLoadInfoForwarderArgs* aForwarderArgsOut) {
   if (!aLoadInfo) {
-<<<<<<< HEAD
-    *aForwarderArgsOut =
-        ChildLoadInfoForwarderArgs(void_t(), void_t(), void_t());
-||||||| merged common ancestors
-    *aForwarderArgsOut = ChildLoadInfoForwarderArgs(void_t(), void_t(),
-                                                    void_t());
-=======
     *aForwarderArgsOut =
         ChildLoadInfoForwarderArgs(Nothing(), Nothing(), Nothing());
->>>>>>> upstream-releases
     return;
   }
 
@@ -1347,18 +921,8 @@ nsresult MergeChildLoadInfoForwarder(
 
   aLoadInfo->ClearController();
   auto& controller = aForwarderArgs.controller();
-<<<<<<< HEAD
-  if (controller.type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
-    aLoadInfo->SetController(
-        ServiceWorkerDescriptor(controller.get_IPCServiceWorkerDescriptor()));
-||||||| merged common ancestors
-  if (controller.type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
-    aLoadInfo->SetController(
-      ServiceWorkerDescriptor(controller.get_IPCServiceWorkerDescriptor()));
-=======
   if (controller.isSome()) {
     aLoadInfo->SetController(ServiceWorkerDescriptor(controller.ref()));
->>>>>>> upstream-releases
   }
 
   return NS_OK;

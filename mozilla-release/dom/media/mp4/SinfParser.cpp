@@ -55,15 +55,9 @@ Result<Ok, nsresult> SinfParser::ParseTenc(Box& aBox) {
     return Err(NS_ERROR_FAILURE);
   }
 
-<<<<<<< HEAD
-  MOZ_TRY(reader->ReadU32());  // flags -- ignore
-||||||| merged common ancestors
-  MOZ_TRY(reader->ReadU32()); // flags -- ignore
-=======
   uint32_t flags;
   MOZ_TRY_VAR(flags, reader->ReadU32());
   uint8_t version = flags >> 24;
->>>>>>> upstream-releases
 
   // Skip reserved byte
   MOZ_TRY(reader->ReadU8());

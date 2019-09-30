@@ -274,68 +274,11 @@ bool RangeAnalysis::addBetaNodes() {
             bound = intbound;
           }
         }
-<<<<<<< HEAD
         comp.setDouble(bound, conservativeUpper);
 
         // Negative zero is not greater than zero.
         if (bound == 0) {
           comp.refineToExcludeNegativeZero();
-||||||| merged common ancestors
-        out.printf(")");
-    }
-    if (max_exponent_ < IncludesInfinity && IsExponentInteresting(this)) {
-        out.printf(" (< pow(2, %d+1))", max_exponent_);
-    }
-}
-
-void
-Range::dump() const
-{
-    Fprinter out(stderr);
-    dump(out);
-    out.printf("\n");
-    out.finish();
-}
-
-Range*
-Range::intersect(TempAllocator& alloc, const Range* lhs, const Range* rhs, bool* emptyRange)
-{
-    *emptyRange = false;
-
-    if (!lhs && !rhs) {
-        return nullptr;
-    }
-
-    if (!lhs) {
-        return new(alloc) Range(*rhs);
-    }
-    if (!rhs) {
-        return new(alloc) Range(*lhs);
-    }
-
-    int32_t newLower = Max(lhs->lower_, rhs->lower_);
-    int32_t newUpper = Min(lhs->upper_, rhs->upper_);
-
-    // If upper < lower, then we have conflicting constraints. Consider:
-    //
-    // if (x < 0) {
-    //   if (x > 0) {
-    //     [Some code.]
-    //   }
-    // }
-    //
-    // In this case, the block is unreachable.
-    if (newUpper < newLower) {
-        // If both ranges can be NaN, the result can still be NaN.
-        if (!lhs->canBeNaN() || !rhs->canBeNaN()) {
-            *emptyRange = true;
-=======
-        comp.setDouble(bound, conservativeUpper);
-
-        // Negative zero is not greater than zero.
-        if (bound == 0) {
-          comp.refineToExcludeNegativeZero();
->>>>>>> upstream-releases
         }
         break;
       case JSOP_STRICTEQ:
@@ -368,71 +311,6 @@ Range::intersect(TempAllocator& alloc, const Range* lhs, const Range* rhs, bool*
         continue;
     }
 
-<<<<<<< HEAD
-    if (JitSpewEnabled(JitSpew_Range)) {
-      JitSpewHeader(JitSpew_Range);
-      Fprinter& out = JitSpewPrinter();
-      out.printf("Adding beta node for %d with range ", val->id());
-      comp.dump(out);
-||||||| merged common ancestors
-    // As a special case, MUrsh is permitted to claim a result type of
-    // MIRType::Int32 while actually returning values in [0,UINT32_MAX] without
-    // bailouts. If range analysis hasn't ruled out values in
-    // (INT32_MAX,UINT32_MAX], set the range to be conservatively correct for
-    // use as either a uint32 or an int32.
-    if (!hasInt32UpperBound() &&
-        def->isUrsh() &&
-        def->toUrsh()->bailoutsDisabled() &&
-        def->type() != MIRType::Int64)
-    {
-        lower_ = INT32_MIN;
-    }
-
-    assertInvariants();
-}
-
-static uint16_t
-ExponentImpliedByDouble(double d)
-{
-    // Handle the special values.
-    if (IsNaN(d)) {
-        return Range::IncludesInfinityAndNaN;
-    }
-    if (IsInfinite(d)) {
-        return Range::IncludesInfinity;
-    }
-
-    // Otherwise take the exponent part and clamp it at zero, since the Range
-    // class doesn't track fractional ranges.
-    return uint16_t(Max(int_fast16_t(0), ExponentComponent(d)));
-}
-
-void
-Range::setDouble(double l, double h)
-{
-    MOZ_ASSERT(!(l > h));
-
-    // Infer lower_, upper_, hasInt32LowerBound_, and hasInt32UpperBound_.
-    if (l >= INT32_MIN && l <= INT32_MAX) {
-        lower_ = int32_t(::floor(l));
-        hasInt32LowerBound_ = true;
-    } else if (l >= INT32_MAX) {
-        lower_ = INT32_MAX;
-        hasInt32LowerBound_ = true;
-    } else {
-        lower_ = INT32_MIN;
-        hasInt32LowerBound_ = false;
-    }
-    if (h >= INT32_MIN && h <= INT32_MAX) {
-        upper_ = int32_t(::ceil(h));
-        hasInt32UpperBound_ = true;
-    } else if (h <= INT32_MIN) {
-        upper_ = INT32_MIN;
-        hasInt32UpperBound_ = true;
-    } else {
-        upper_ = INT32_MAX;
-        hasInt32UpperBound_ = false;
-=======
     if (JitSpewEnabled(JitSpew_Range)) {
       JitSpewHeader(JitSpew_Range);
       Fprinter& out = JitSpewPrinter();
@@ -440,12 +318,6 @@ Range::setDouble(double l, double h)
       comp.dump(out);
     }
 
-    if (!alloc().ensureBallast()) {
-      return false;
->>>>>>> upstream-releases
-    }
-
-<<<<<<< HEAD
     if (!alloc().ensureBallast()) {
       return false;
     }
@@ -456,42 +328,6 @@ Range::setDouble(double l, double h)
   }
 
   return true;
-||||||| merged common ancestors
-    // Infer max_exponent_.
-    uint16_t lExp = ExponentImpliedByDouble(l);
-    uint16_t hExp = ExponentImpliedByDouble(h);
-    max_exponent_ = Max(lExp, hExp);
-
-    canHaveFractionalPart_ = ExcludesFractionalParts;
-    canBeNegativeZero_ = ExcludesNegativeZero;
-
-    // Infer the canHaveFractionalPart_ setting. We can have a
-    // fractional part if the range crosses through the neighborhood of zero. We
-    // won't have a fractional value if the value is always beyond the point at
-    // which double precision can't represent fractional values.
-    uint16_t minExp = Min(lExp, hExp);
-    bool includesNegative = IsNaN(l) || l < 0;
-    bool includesPositive = IsNaN(h) || h > 0;
-    bool crossesZero = includesNegative && includesPositive;
-    if (crossesZero || minExp < MaxTruncatableExponent) {
-        canHaveFractionalPart_ = IncludesFractionalParts;
-    }
-
-    // Infer the canBeNegativeZero_ setting. We can have a negative zero if
-    // either bound is zero.
-    if (!(l > 0) && !(h < 0)) {
-        canBeNegativeZero_ = IncludesNegativeZero;
-    }
-
-    optimize();
-=======
-    MBeta* beta = MBeta::New(alloc(), val, new (alloc()) Range(comp));
-    block->insertBefore(*block->begin(), beta);
-    replaceDominatedUsesWith(val, beta, block);
-  }
-
-  return true;
->>>>>>> upstream-releases
 }
 
 bool RangeAnalysis::removeBetaNodes() {
@@ -514,7 +350,6 @@ bool RangeAnalysis::removeBetaNodes() {
         break;
       }
     }
-<<<<<<< HEAD
   }
   return true;
 }
@@ -524,59 +359,6 @@ void SymbolicBound::dump(GenericPrinter& out) const {
     out.printf("[loop] ");
   }
   sum.dump(out);
-||||||| merged common ancestors
-
-    assertInvariants();
-}
-
-static inline bool
-MissingAnyInt32Bounds(const Range* lhs, const Range* rhs)
-{
-    return !lhs->hasInt32Bounds() || !rhs->hasInt32Bounds();
-}
-
-Range*
-Range::add(TempAllocator& alloc, const Range* lhs, const Range* rhs)
-{
-    int64_t l = (int64_t) lhs->lower_ + (int64_t) rhs->lower_;
-    if (!lhs->hasInt32LowerBound() || !rhs->hasInt32LowerBound()) {
-        l = NoInt32LowerBound;
-    }
-
-    int64_t h = (int64_t) lhs->upper_ + (int64_t) rhs->upper_;
-    if (!lhs->hasInt32UpperBound() || !rhs->hasInt32UpperBound()) {
-        h = NoInt32UpperBound;
-    }
-
-    // The exponent is at most one greater than the greater of the operands'
-    // exponents, except for NaN and infinity cases.
-    uint16_t e = Max(lhs->max_exponent_, rhs->max_exponent_);
-    if (e <= Range::MaxFiniteExponent) {
-        ++e;
-    }
-
-    // Infinity + -Infinity is NaN.
-    if (lhs->canBeInfiniteOrNaN() && rhs->canBeInfiniteOrNaN()) {
-        e = Range::IncludesInfinityAndNaN;
-    }
-
-    return new(alloc) Range(l, h,
-                            FractionalPartFlag(lhs->canHaveFractionalPart() ||
-                                               rhs->canHaveFractionalPart()),
-                            NegativeZeroFlag(lhs->canBeNegativeZero() &&
-                                             rhs->canBeNegativeZero()),
-                            e);
-=======
-  }
-  return true;
-}
-
-void SymbolicBound::dump(GenericPrinter& out) const {
-  if (loop) {
-    out.printf("[loop] ");
-  }
-  sum.dump(out);
->>>>>>> upstream-releases
 }
 
 void SymbolicBound::dump() const {
@@ -1520,24 +1302,10 @@ void MClampToUint8::computeRange(TempAllocator& alloc) {
   setRange(Range::NewUInt32Range(alloc, 0, 255));
 }
 
-<<<<<<< HEAD
-void MBitAnd::computeRange(TempAllocator& alloc) {
-  if (specialization_ == MIRType::Int64) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MBitAnd::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ == MIRType::Int64) {
-        return;
-    }
-=======
 void MBitAnd::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
   }
->>>>>>> upstream-releases
 
   Range left(getOperand(0));
   Range right(getOperand(1));
@@ -1547,24 +1315,10 @@ void MBitAnd::computeRange(TempAllocator& alloc) {
   setRange(Range::and_(alloc, &left, &right));
 }
 
-<<<<<<< HEAD
-void MBitOr::computeRange(TempAllocator& alloc) {
-  if (specialization_ == MIRType::Int64) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MBitOr::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ == MIRType::Int64) {
-        return;
-    }
-=======
 void MBitOr::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
   }
->>>>>>> upstream-releases
 
   Range left(getOperand(0));
   Range right(getOperand(1));
@@ -1574,24 +1328,10 @@ void MBitOr::computeRange(TempAllocator& alloc) {
   setRange(Range::or_(alloc, &left, &right));
 }
 
-<<<<<<< HEAD
-void MBitXor::computeRange(TempAllocator& alloc) {
-  if (specialization_ == MIRType::Int64) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MBitXor::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ == MIRType::Int64) {
-        return;
-    }
-=======
 void MBitXor::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
   }
->>>>>>> upstream-releases
 
   Range left(getOperand(0));
   Range right(getOperand(1));
@@ -1601,17 +1341,6 @@ void MBitXor::computeRange(TempAllocator& alloc) {
   setRange(Range::xor_(alloc, &left, &right));
 }
 
-<<<<<<< HEAD
-void MBitNot::computeRange(TempAllocator& alloc) {
-  Range op(getOperand(0));
-  op.wrapAroundToInt32();
-||||||| merged common ancestors
-void
-MBitNot::computeRange(TempAllocator& alloc)
-{
-    Range op(getOperand(0));
-    op.wrapAroundToInt32();
-=======
 void MBitNot::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
@@ -1619,29 +1348,14 @@ void MBitNot::computeRange(TempAllocator& alloc) {
 
   Range op(getOperand(0));
   op.wrapAroundToInt32();
->>>>>>> upstream-releases
 
   setRange(Range::not_(alloc, &op));
 }
 
-<<<<<<< HEAD
-void MLsh::computeRange(TempAllocator& alloc) {
-  if (specialization_ == MIRType::Int64) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MLsh::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ == MIRType::Int64) {
-        return;
-    }
-=======
 void MLsh::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
   }
->>>>>>> upstream-releases
 
   Range left(getOperand(0));
   Range right(getOperand(1));
@@ -1658,24 +1372,10 @@ void MLsh::computeRange(TempAllocator& alloc) {
   setRange(Range::lsh(alloc, &left, &right));
 }
 
-<<<<<<< HEAD
-void MRsh::computeRange(TempAllocator& alloc) {
-  if (specialization_ == MIRType::Int64) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MRsh::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ == MIRType::Int64) {
-        return;
-    }
-=======
 void MRsh::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
   }
->>>>>>> upstream-releases
 
   Range left(getOperand(0));
   Range right(getOperand(1));
@@ -1692,24 +1392,10 @@ void MRsh::computeRange(TempAllocator& alloc) {
   setRange(Range::rsh(alloc, &left, &right));
 }
 
-<<<<<<< HEAD
-void MUrsh::computeRange(TempAllocator& alloc) {
-  if (specialization_ == MIRType::Int64) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MUrsh::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ == MIRType::Int64) {
-        return;
-    }
-=======
 void MUrsh::computeRange(TempAllocator& alloc) {
   if (specialization_ != MIRType::Int32) {
     return;
   }
->>>>>>> upstream-releases
 
   Range left(getOperand(0));
   Range right(getOperand(1));
@@ -1722,23 +1408,6 @@ void MUrsh::computeRange(TempAllocator& alloc) {
   left.wrapAroundToInt32();
   right.wrapAroundToShiftCount();
 
-<<<<<<< HEAD
-  MConstant* rhsConst = getOperand(1)->maybeConstantValue();
-  if (rhsConst && rhsConst->type() == MIRType::Int32) {
-    int32_t c = rhsConst->toInt32();
-    setRange(Range::ursh(alloc, &left, c));
-  } else {
-    setRange(Range::ursh(alloc, &left, &right));
-  }
-||||||| merged common ancestors
-    MConstant* rhsConst = getOperand(1)->maybeConstantValue();
-    if (rhsConst && rhsConst->type() == MIRType::Int32) {
-        int32_t c = rhsConst->toInt32();
-        setRange(Range::ursh(alloc, &left, c));
-    } else {
-        setRange(Range::ursh(alloc, &left, &right));
-    }
-=======
   MConstant* rhsConst = getOperand(1)->maybeConstantValue();
   if (rhsConst && rhsConst->type() == MIRType::Int32) {
     int32_t c = rhsConst->toInt32();
@@ -1914,180 +1583,7 @@ void MMod::computeRange(TempAllocator& alloc) {
     // any rounding to worry about.
     MOZ_ASSERT(!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart());
     --rhsBound;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(range()->lower() >= 0);
-}
-
-void MAbs::computeRange(TempAllocator& alloc) {
-  if (specialization_ != MIRType::Int32 && specialization_ != MIRType::Double) {
-    return;
-  }
-
-  Range other(getOperand(0));
-  Range* next = Range::abs(alloc, &other);
-  if (implicitTruncate_) {
-    next->wrapAroundToInt32();
-  }
-  setRange(next);
-}
-
-void MFloor::computeRange(TempAllocator& alloc) {
-  Range other(getOperand(0));
-  setRange(Range::floor(alloc, &other));
-}
-
-void MCeil::computeRange(TempAllocator& alloc) {
-  Range other(getOperand(0));
-  setRange(Range::ceil(alloc, &other));
-}
-
-void MClz::computeRange(TempAllocator& alloc) {
-  if (type() != MIRType::Int32) {
-    return;
-  }
-  setRange(Range::NewUInt32Range(alloc, 0, 32));
-}
-
-void MCtz::computeRange(TempAllocator& alloc) {
-  if (type() != MIRType::Int32) {
-    return;
-  }
-  setRange(Range::NewUInt32Range(alloc, 0, 32));
-}
-
-void MPopcnt::computeRange(TempAllocator& alloc) {
-  if (type() != MIRType::Int32) {
-    return;
-  }
-  setRange(Range::NewUInt32Range(alloc, 0, 32));
-}
-
-void MMinMax::computeRange(TempAllocator& alloc) {
-  if (specialization_ != MIRType::Int32 && specialization_ != MIRType::Double) {
-    return;
-  }
-
-  Range left(getOperand(0));
-  Range right(getOperand(1));
-  setRange(isMax() ? Range::max(alloc, &left, &right)
-                   : Range::min(alloc, &left, &right));
-}
-
-void MAdd::computeRange(TempAllocator& alloc) {
-  if (specialization() != MIRType::Int32 &&
-      specialization() != MIRType::Double) {
-    return;
-  }
-  Range left(getOperand(0));
-  Range right(getOperand(1));
-  Range* next = Range::add(alloc, &left, &right);
-  if (isTruncated()) {
-    next->wrapAroundToInt32();
-  }
-  setRange(next);
-}
-
-void MSub::computeRange(TempAllocator& alloc) {
-  if (specialization() != MIRType::Int32 &&
-      specialization() != MIRType::Double) {
-    return;
-  }
-  Range left(getOperand(0));
-  Range right(getOperand(1));
-  Range* next = Range::sub(alloc, &left, &right);
-  if (isTruncated()) {
-    next->wrapAroundToInt32();
-  }
-  setRange(next);
-}
-
-void MMul::computeRange(TempAllocator& alloc) {
-  if (specialization() != MIRType::Int32 &&
-      specialization() != MIRType::Double) {
-    return;
-  }
-  Range left(getOperand(0));
-  Range right(getOperand(1));
-  if (canBeNegativeZero()) {
-    canBeNegativeZero_ = Range::negativeZeroMul(&left, &right);
-  }
-  Range* next = Range::mul(alloc, &left, &right);
-  if (!next->canBeNegativeZero()) {
-    canBeNegativeZero_ = false;
-  }
-  // Truncated multiplications could overflow in both directions
-  if (isTruncated()) {
-    next->wrapAroundToInt32();
-  }
-  setRange(next);
-}
-
-void MMod::computeRange(TempAllocator& alloc) {
-  if (specialization() != MIRType::Int32 &&
-      specialization() != MIRType::Double) {
-    return;
-  }
-  Range lhs(getOperand(0));
-  Range rhs(getOperand(1));
-
-  // If either operand is a NaN, the result is NaN. This also conservatively
-  // handles Infinity cases.
-  if (!lhs.hasInt32Bounds() || !rhs.hasInt32Bounds()) {
-    return;
-  }
-
-  // If RHS can be zero, the result can be NaN.
-  if (rhs.lower() <= 0 && rhs.upper() >= 0) {
-    return;
-  }
-
-  // If both operands are non-negative integers, we can optimize this to an
-  // unsigned mod.
-  if (specialization() == MIRType::Int32 && rhs.lower() > 0) {
-    bool hasDoubles = lhs.lower() < 0 || lhs.canHaveFractionalPart() ||
-                      rhs.canHaveFractionalPart();
-    // It is not possible to check that lhs.lower() >= 0, since the range
-    // of a ursh with rhs a 0 constant is wrapped around the int32 range in
-    // Range::Range(). However, IsUint32Type() will only return true for
-    // nodes that lie in the range [0, UINT32_MAX].
-    bool hasUint32s =
-        IsUint32Type(getOperand(0)) &&
-        getOperand(1)->type() == MIRType::Int32 &&
-        (IsUint32Type(getOperand(1)) || getOperand(1)->isConstant());
-    if (!hasDoubles || hasUint32s) {
-      unsigned_ = true;
-    }
-  }
-
-  // For unsigned mod, we have to convert both operands to unsigned.
-  // Note that we handled the case of a zero rhs above.
-  if (unsigned_) {
-    // The result of an unsigned mod will never be unsigned-greater than
-    // either operand.
-    uint32_t lhsBound = Max<uint32_t>(lhs.lower(), lhs.upper());
-    uint32_t rhsBound = Max<uint32_t>(rhs.lower(), rhs.upper());
-
-    // If either range crosses through -1 as a signed value, it could be
-    // the maximum unsigned value when interpreted as unsigned. If the range
-    // doesn't include -1, then the simple max value we computed above is
-    // correct.
-    if (lhs.lower() <= -1 && lhs.upper() >= -1) {
-      lhsBound = UINT32_MAX;
-    }
-    if (rhs.lower() <= -1 && rhs.upper() >= -1) {
-      rhsBound = UINT32_MAX;
-    }
-
-    // The result will never be equal to the rhs, and we shouldn't have
-    // any rounding to worry about.
-    MOZ_ASSERT(!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart());
-    --rhsBound;
-||||||| merged common ancestors
-    MOZ_ASSERT(range()->lower() >= 0);
-}
-=======
     // This gives us two upper bounds, so we can take the best one.
     setRange(Range::NewUInt32Range(alloc, 0, Min(lhsBound, rhsBound)));
     return;
@@ -2168,105 +1664,7 @@ void MDiv::computeRange(TempAllocator& alloc) {
     setRange(Range::NewUInt32Range(alloc, 0, UINT32_MAX));
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // This gives us two upper bounds, so we can take the best one.
-    setRange(Range::NewUInt32Range(alloc, 0, Min(lhsBound, rhsBound)));
-    return;
-  }
-
-  // Math.abs(lhs % rhs) == Math.abs(lhs) % Math.abs(rhs).
-  // First, the absolute value of the result will always be less than the
-  // absolute value of rhs. (And if rhs is zero, the result is NaN).
-  int64_t a = Abs<int64_t>(rhs.lower());
-  int64_t b = Abs<int64_t>(rhs.upper());
-  if (a == 0 && b == 0) {
-    return;
-  }
-  int64_t rhsAbsBound = Max(a, b);
-
-  // If the value is known to be integer, less-than abs(rhs) is equivalent
-  // to less-than-or-equal abs(rhs)-1. This is important for being able to
-  // say that the result of x%256 is an 8-bit unsigned number.
-  if (!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart()) {
-    --rhsAbsBound;
-  }
-
-  // Next, the absolute value of the result will never be greater than the
-  // absolute value of lhs.
-  int64_t lhsAbsBound =
-      Max(Abs<int64_t>(lhs.lower()), Abs<int64_t>(lhs.upper()));
-
-  // This gives us two upper bounds, so we can take the best one.
-  int64_t absBound = Min(lhsAbsBound, rhsAbsBound);
-
-  // Now consider the sign of the result.
-  // If lhs is non-negative, the result will be non-negative.
-  // If lhs is non-positive, the result will be non-positive.
-  int64_t lower = lhs.lower() >= 0 ? 0 : -absBound;
-  int64_t upper = lhs.upper() <= 0 ? 0 : absBound;
-
-  Range::FractionalPartFlag newCanHaveFractionalPart =
-      Range::FractionalPartFlag(lhs.canHaveFractionalPart() ||
-                                rhs.canHaveFractionalPart());
-
-  // If the lhs can have the sign bit set and we can return a zero, it'll be a
-  // negative zero.
-  Range::NegativeZeroFlag newMayIncludeNegativeZero =
-      Range::NegativeZeroFlag(lhs.canHaveSignBitSet());
-
-  setRange(new (alloc) Range(lower, upper, newCanHaveFractionalPart,
-                             newMayIncludeNegativeZero,
-                             Min(lhs.exponent(), rhs.exponent())));
-}
-
-void MDiv::computeRange(TempAllocator& alloc) {
-  if (specialization() != MIRType::Int32 &&
-      specialization() != MIRType::Double) {
-    return;
-  }
-  Range lhs(getOperand(0));
-  Range rhs(getOperand(1));
-
-  // If either operand is a NaN, the result is NaN. This also conservatively
-  // handles Infinity cases.
-  if (!lhs.hasInt32Bounds() || !rhs.hasInt32Bounds()) {
-    return;
-  }
-
-  // Something simple for now: When dividing by a positive rhs, the result
-  // won't be further from zero than lhs.
-  if (lhs.lower() >= 0 && rhs.lower() >= 1) {
-    setRange(new (alloc) Range(0, lhs.upper(), Range::IncludesFractionalParts,
-                               Range::IncludesNegativeZero, lhs.exponent()));
-  } else if (unsigned_ && rhs.lower() >= 1) {
-    // We shouldn't set the unsigned flag if the inputs can have
-    // fractional parts.
-    MOZ_ASSERT(!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart());
-    // We shouldn't set the unsigned flag if the inputs can be
-    // negative zero.
-    MOZ_ASSERT(!lhs.canBeNegativeZero() && !rhs.canBeNegativeZero());
-    // Unsigned division by a non-zero rhs will return a uint32 value.
-    setRange(Range::NewUInt32Range(alloc, 0, UINT32_MAX));
-  }
-}
-||||||| merged common ancestors
-void
-MAbs::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ != MIRType::Int32 && specialization_ != MIRType::Double) {
-        return;
-    }
-
-    Range other(getOperand(0));
-    Range* next = Range::abs(alloc, &other);
-    if (implicitTruncate_) {
-        next->wrapAroundToInt32();
-    }
-    setRange(next);
-}
-=======
 void MSqrt::computeRange(TempAllocator& alloc) {
   Range input(getOperand(0));
 
@@ -2275,128 +1673,33 @@ void MSqrt::computeRange(TempAllocator& alloc) {
   if (!input.hasInt32Bounds()) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void MSqrt::computeRange(TempAllocator& alloc) {
-  Range input(getOperand(0));
-||||||| merged common ancestors
-void
-MFloor::computeRange(TempAllocator& alloc)
-{
-    Range other(getOperand(0));
-    setRange(Range::floor(alloc, &other));
-}
-=======
   // Sqrt of a negative non-zero value is NaN.
   if (input.lower() < 0) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // If either operand is a NaN, the result is NaN. This also conservatively
-  // handles Infinity cases.
-  if (!input.hasInt32Bounds()) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MCeil::computeRange(TempAllocator& alloc)
-{
-    Range other(getOperand(0));
-    setRange(Range::ceil(alloc, &other));
-}
-=======
   // Something simple for now: When taking the sqrt of a positive value, the
   // result won't be further from zero than the input.
   // And, sqrt of an integer may have a fractional part.
   setRange(new (alloc) Range(0, input.upper(), Range::IncludesFractionalParts,
                              input.canBeNegativeZero(), input.exponent()));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Sqrt of a negative non-zero value is NaN.
-  if (input.lower() < 0) {
-    return;
-  }
-||||||| merged common ancestors
-void
-MClz::computeRange(TempAllocator& alloc)
-{
-    if (type() != MIRType::Int32) {
-        return;
-    }
-    setRange(Range::NewUInt32Range(alloc, 0, 32));
-}
-=======
 void MToDouble::computeRange(TempAllocator& alloc) {
   setRange(new (alloc) Range(getOperand(0)));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Something simple for now: When taking the sqrt of a positive value, the
-  // result won't be further from zero than the input.
-  // And, sqrt of an integer may have a fractional part.
-  setRange(new (alloc) Range(0, input.upper(), Range::IncludesFractionalParts,
-                             input.canBeNegativeZero(), input.exponent()));
-}
-||||||| merged common ancestors
-void
-MCtz::computeRange(TempAllocator& alloc)
-{
-    if (type() != MIRType::Int32) {
-        return;
-    }
-    setRange(Range::NewUInt32Range(alloc, 0, 32));
-}
-=======
-void MToFloat32::computeRange(TempAllocator& alloc) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void MToDouble::computeRange(TempAllocator& alloc) {
-  setRange(new (alloc) Range(getOperand(0)));
-||||||| merged common ancestors
-void
-MPopcnt::computeRange(TempAllocator& alloc)
-{
-    if (type() != MIRType::Int32) {
-        return;
-    }
-    setRange(Range::NewUInt32Range(alloc, 0, 32));
-=======
-void MTruncateToInt32::computeRange(TempAllocator& alloc) {
-  Range* output = new (alloc) Range(getOperand(0));
-  output->wrapAroundToInt32();
-  setRange(output);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 void MToFloat32::computeRange(TempAllocator& alloc) {}
 
 void MTruncateToInt32::computeRange(TempAllocator& alloc) {
   Range* output = new (alloc) Range(getOperand(0));
   output->wrapAroundToInt32();
   setRange(output);
-||||||| merged common ancestors
-void
-MMinMax::computeRange(TempAllocator& alloc)
-{
-    if (specialization_ != MIRType::Int32 && specialization_ != MIRType::Double) {
-        return;
-    }
+}
 
-    Range left(getOperand(0));
-    Range right(getOperand(1));
-    setRange(isMax() ? Range::max(alloc, &left, &right) : Range::min(alloc, &left, &right));
-=======
 void MToNumeric::computeRange(TempAllocator& alloc) {
   setRange(new (alloc) Range(getOperand(0)));
->>>>>>> upstream-releases
 }
 
 void MToNumberInt32::computeRange(TempAllocator& alloc) {
@@ -2413,268 +1716,6 @@ void MFilterTypeSet::computeRange(TempAllocator& alloc) {
   setRange(new (alloc) Range(getOperand(0)));
 }
 
-<<<<<<< HEAD
-static Range* GetTypedArrayRange(TempAllocator& alloc, Scalar::Type type) {
-  switch (type) {
-    case Scalar::Uint8Clamped:
-    case Scalar::Uint8:
-      return Range::NewUInt32Range(alloc, 0, UINT8_MAX);
-    case Scalar::Uint16:
-      return Range::NewUInt32Range(alloc, 0, UINT16_MAX);
-    case Scalar::Uint32:
-      return Range::NewUInt32Range(alloc, 0, UINT32_MAX);
-
-    case Scalar::Int8:
-      return Range::NewInt32Range(alloc, INT8_MIN, INT8_MAX);
-    case Scalar::Int16:
-      return Range::NewInt32Range(alloc, INT16_MIN, INT16_MAX);
-    case Scalar::Int32:
-      return Range::NewInt32Range(alloc, INT32_MIN, INT32_MAX);
-
-    case Scalar::Int64:
-    case Scalar::Float32:
-    case Scalar::Float64:
-    case Scalar::MaxTypedArrayViewType:
-      break;
-  }
-  return nullptr;
-||||||| merged common ancestors
-void
-MMod::computeRange(TempAllocator& alloc)
-{
-    if (specialization() != MIRType::Int32 && specialization() != MIRType::Double) {
-        return;
-    }
-    Range lhs(getOperand(0));
-    Range rhs(getOperand(1));
-
-    // If either operand is a NaN, the result is NaN. This also conservatively
-    // handles Infinity cases.
-    if (!lhs.hasInt32Bounds() || !rhs.hasInt32Bounds()) {
-        return;
-    }
-
-    // If RHS can be zero, the result can be NaN.
-    if (rhs.lower() <= 0 && rhs.upper() >= 0) {
-        return;
-    }
-
-    // If both operands are non-negative integers, we can optimize this to an
-    // unsigned mod.
-    if (specialization() == MIRType::Int32 && rhs.lower() > 0) {
-        bool hasDoubles = lhs.lower() < 0 || lhs.canHaveFractionalPart() ||
-            rhs.canHaveFractionalPart();
-        // It is not possible to check that lhs.lower() >= 0, since the range
-        // of a ursh with rhs a 0 constant is wrapped around the int32 range in
-        // Range::Range(). However, IsUint32Type() will only return true for
-        // nodes that lie in the range [0, UINT32_MAX].
-        bool hasUint32s = IsUint32Type(getOperand(0)) &&
-            getOperand(1)->type() == MIRType::Int32 &&
-            (IsUint32Type(getOperand(1)) || getOperand(1)->isConstant());
-        if (!hasDoubles || hasUint32s) {
-            unsigned_ = true;
-        }
-    }
-
-    // For unsigned mod, we have to convert both operands to unsigned.
-    // Note that we handled the case of a zero rhs above.
-    if (unsigned_) {
-        // The result of an unsigned mod will never be unsigned-greater than
-        // either operand.
-        uint32_t lhsBound = Max<uint32_t>(lhs.lower(), lhs.upper());
-        uint32_t rhsBound = Max<uint32_t>(rhs.lower(), rhs.upper());
-
-        // If either range crosses through -1 as a signed value, it could be
-        // the maximum unsigned value when interpreted as unsigned. If the range
-        // doesn't include -1, then the simple max value we computed above is
-        // correct.
-        if (lhs.lower() <= -1 && lhs.upper() >= -1) {
-            lhsBound = UINT32_MAX;
-        }
-        if (rhs.lower() <= -1 && rhs.upper() >= -1) {
-            rhsBound = UINT32_MAX;
-        }
-
-        // The result will never be equal to the rhs, and we shouldn't have
-        // any rounding to worry about.
-        MOZ_ASSERT(!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart());
-        --rhsBound;
-
-        // This gives us two upper bounds, so we can take the best one.
-        setRange(Range::NewUInt32Range(alloc, 0, Min(lhsBound, rhsBound)));
-        return;
-    }
-
-    // Math.abs(lhs % rhs) == Math.abs(lhs) % Math.abs(rhs).
-    // First, the absolute value of the result will always be less than the
-    // absolute value of rhs. (And if rhs is zero, the result is NaN).
-    int64_t a = Abs<int64_t>(rhs.lower());
-    int64_t b = Abs<int64_t>(rhs.upper());
-    if (a == 0 && b == 0) {
-        return;
-    }
-    int64_t rhsAbsBound = Max(a, b);
-
-    // If the value is known to be integer, less-than abs(rhs) is equivalent
-    // to less-than-or-equal abs(rhs)-1. This is important for being able to
-    // say that the result of x%256 is an 8-bit unsigned number.
-    if (!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart()) {
-        --rhsAbsBound;
-    }
-
-    // Next, the absolute value of the result will never be greater than the
-    // absolute value of lhs.
-    int64_t lhsAbsBound = Max(Abs<int64_t>(lhs.lower()), Abs<int64_t>(lhs.upper()));
-
-    // This gives us two upper bounds, so we can take the best one.
-    int64_t absBound = Min(lhsAbsBound, rhsAbsBound);
-
-    // Now consider the sign of the result.
-    // If lhs is non-negative, the result will be non-negative.
-    // If lhs is non-positive, the result will be non-positive.
-    int64_t lower = lhs.lower() >= 0 ? 0 : -absBound;
-    int64_t upper = lhs.upper() <= 0 ? 0 : absBound;
-
-    Range::FractionalPartFlag newCanHaveFractionalPart =
-        Range::FractionalPartFlag(lhs.canHaveFractionalPart() ||
-                                  rhs.canHaveFractionalPart());
-
-    // If the lhs can have the sign bit set and we can return a zero, it'll be a
-    // negative zero.
-    Range::NegativeZeroFlag newMayIncludeNegativeZero =
-        Range::NegativeZeroFlag(lhs.canHaveSignBitSet());
-
-    setRange(new(alloc) Range(lower, upper,
-                              newCanHaveFractionalPart,
-                              newMayIncludeNegativeZero,
-                              Min(lhs.exponent(), rhs.exponent())));
-}
-
-void
-MDiv::computeRange(TempAllocator& alloc)
-{
-    if (specialization() != MIRType::Int32 && specialization() != MIRType::Double) {
-        return;
-    }
-    Range lhs(getOperand(0));
-    Range rhs(getOperand(1));
-
-    // If either operand is a NaN, the result is NaN. This also conservatively
-    // handles Infinity cases.
-    if (!lhs.hasInt32Bounds() || !rhs.hasInt32Bounds()) {
-        return;
-    }
-
-    // Something simple for now: When dividing by a positive rhs, the result
-    // won't be further from zero than lhs.
-    if (lhs.lower() >= 0 && rhs.lower() >= 1) {
-        setRange(new(alloc) Range(0, lhs.upper(),
-                                  Range::IncludesFractionalParts,
-                                  Range::IncludesNegativeZero,
-                                  lhs.exponent()));
-    } else if (unsigned_ && rhs.lower() >= 1) {
-        // We shouldn't set the unsigned flag if the inputs can have
-        // fractional parts.
-        MOZ_ASSERT(!lhs.canHaveFractionalPart() && !rhs.canHaveFractionalPart());
-        // We shouldn't set the unsigned flag if the inputs can be
-        // negative zero.
-        MOZ_ASSERT(!lhs.canBeNegativeZero() && !rhs.canBeNegativeZero());
-        // Unsigned division by a non-zero rhs will return a uint32 value.
-        setRange(Range::NewUInt32Range(alloc, 0, UINT32_MAX));
-    }
-}
-
-void
-MSqrt::computeRange(TempAllocator& alloc)
-{
-    Range input(getOperand(0));
-
-    // If either operand is a NaN, the result is NaN. This also conservatively
-    // handles Infinity cases.
-    if (!input.hasInt32Bounds()) {
-        return;
-    }
-
-    // Sqrt of a negative non-zero value is NaN.
-    if (input.lower() < 0) {
-        return;
-    }
-
-    // Something simple for now: When taking the sqrt of a positive value, the
-    // result won't be further from zero than the input.
-    // And, sqrt of an integer may have a fractional part.
-    setRange(new(alloc) Range(0, input.upper(),
-                              Range::IncludesFractionalParts,
-                              input.canBeNegativeZero(),
-                              input.exponent()));
-}
-
-void
-MToDouble::computeRange(TempAllocator& alloc)
-{
-    setRange(new(alloc) Range(getOperand(0)));
-}
-
-void
-MToFloat32::computeRange(TempAllocator& alloc)
-{
-}
-
-void
-MTruncateToInt32::computeRange(TempAllocator& alloc)
-{
-    Range* output = new(alloc) Range(getOperand(0));
-    output->wrapAroundToInt32();
-    setRange(output);
-}
-
-void
-MToNumberInt32::computeRange(TempAllocator& alloc)
-{
-    // No clamping since this computes the range *before* bailouts.
-    setRange(new(alloc) Range(getOperand(0)));
-}
-
-void
-MLimitedTruncate::computeRange(TempAllocator& alloc)
-{
-    Range* output = new(alloc) Range(input());
-    setRange(output);
-}
-
-void
-MFilterTypeSet::computeRange(TempAllocator& alloc)
-{
-    setRange(new(alloc) Range(getOperand(0)));
-}
-
-static Range*
-GetTypedArrayRange(TempAllocator& alloc, Scalar::Type type)
-{
-    switch (type) {
-      case Scalar::Uint8Clamped:
-      case Scalar::Uint8:
-        return Range::NewUInt32Range(alloc, 0, UINT8_MAX);
-      case Scalar::Uint16:
-        return Range::NewUInt32Range(alloc, 0, UINT16_MAX);
-      case Scalar::Uint32:
-        return Range::NewUInt32Range(alloc, 0, UINT32_MAX);
-
-      case Scalar::Int8:
-        return Range::NewInt32Range(alloc, INT8_MIN, INT8_MAX);
-      case Scalar::Int16:
-        return Range::NewInt32Range(alloc, INT16_MIN, INT16_MAX);
-      case Scalar::Int32:
-        return Range::NewInt32Range(alloc, INT32_MIN, INT32_MAX);
-
-      case Scalar::Int64:
-      case Scalar::Float32:
-      case Scalar::Float64:
-      case Scalar::MaxTypedArrayViewType:
-        break;
-    }
-    return nullptr;
-=======
 static Range* GetTypedArrayRange(TempAllocator& alloc, Scalar::Type type) {
   switch (type) {
     case Scalar::Uint8Clamped:
@@ -2714,72 +1755,21 @@ void MArrayLength::computeRange(TempAllocator& alloc) {
   // nodes when the value is known to be int32 (see the
   // OBJECT_FLAG_LENGTH_OVERFLOW flag).
   setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MLoadUnboxedScalar::computeRange(TempAllocator& alloc) {
-  // We have an Int32 type and if this is a UInt32 load it may produce a value
-  // outside of our range, but we have a bailout to handle those cases.
-  setRange(GetTypedArrayRange(alloc, readType()));
-||||||| merged common ancestors
-void
-MLoadUnboxedScalar::computeRange(TempAllocator& alloc)
-{
-    // We have an Int32 type and if this is a UInt32 load it may produce a value
-    // outside of our range, but we have a bailout to handle those cases.
-    setRange(GetTypedArrayRange(alloc, readType()));
-=======
 void MInitializedLength::computeRange(TempAllocator& alloc) {
   setRange(
       Range::NewUInt32Range(alloc, 0, NativeObject::MAX_DENSE_ELEMENTS_COUNT));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MArrayLength::computeRange(TempAllocator& alloc) {
-  // Array lengths can go up to UINT32_MAX, but we only create MArrayLength
-  // nodes when the value is known to be int32 (see the
-  // OBJECT_FLAG_LENGTH_OVERFLOW flag).
-  setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
-||||||| merged common ancestors
-void
-MArrayLength::computeRange(TempAllocator& alloc)
-{
-    // Array lengths can go up to UINT32_MAX, but we only create MArrayLength
-    // nodes when the value is known to be int32 (see the
-    // OBJECT_FLAG_LENGTH_OVERFLOW flag).
-    setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
-=======
 void MTypedArrayLength::computeRange(TempAllocator& alloc) {
   setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MInitializedLength::computeRange(TempAllocator& alloc) {
-  setRange(
-      Range::NewUInt32Range(alloc, 0, NativeObject::MAX_DENSE_ELEMENTS_COUNT));
-||||||| merged common ancestors
-void
-MInitializedLength::computeRange(TempAllocator& alloc)
-{
-    setRange(Range::NewUInt32Range(alloc, 0, NativeObject::MAX_DENSE_ELEMENTS_COUNT));
-=======
 void MTypedArrayByteOffset::computeRange(TempAllocator& alloc) {
   setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MTypedArrayLength::computeRange(TempAllocator& alloc) {
-  setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
-||||||| merged common ancestors
-void
-MTypedArrayLength::computeRange(TempAllocator& alloc)
-{
-    setRange(Range::NewUInt32Range(alloc, 0, INT32_MAX));
-=======
 void MTypedArrayElementShift::computeRange(TempAllocator& alloc) {
   using mozilla::tl::FloorLog2;
 
@@ -2792,7 +1782,6 @@ void MTypedArrayElementShift::computeRange(TempAllocator& alloc) {
 #undef ASSERT_MAX_SHIFT
 
   setRange(Range::NewUInt32Range(alloc, 0, MaxTypedArrayShift));
->>>>>>> upstream-releases
 }
 
 void MStringLength::computeRange(TempAllocator& alloc) {
@@ -2986,77 +1975,6 @@ bool RangeAnalysis::analyzeLoop(MBasicBlock* header) {
 
 // Unbox beta nodes in order to hoist instruction properly, and not be limited
 // by the beta nodes which are added after each branch.
-<<<<<<< HEAD
-static inline MDefinition* DefinitionOrBetaInputDefinition(MDefinition* ins) {
-  while (ins->isBeta()) {
-    ins = ins->toBeta()->input();
-  }
-  return ins;
-}
-
-LoopIterationBound* RangeAnalysis::analyzeLoopIterationCount(
-    MBasicBlock* header, MTest* test, BranchDirection direction) {
-  SimpleLinearSum lhs(nullptr, 0);
-  MDefinition* rhs;
-  bool lessEqual;
-  if (!ExtractLinearInequality(test, direction, &lhs, &rhs, &lessEqual)) {
-    return nullptr;
-  }
-
-  // Ensure the rhs is a loop invariant term.
-  if (rhs && rhs->block()->isMarked()) {
-    if (lhs.term && lhs.term->block()->isMarked()) {
-      return nullptr;
-||||||| merged common ancestors
-static inline MDefinition*
-DefinitionOrBetaInputDefinition(MDefinition* ins)
-{
-    while (ins->isBeta()) {
-        ins = ins->toBeta()->input();
-    }
-    return ins;
-}
-
-LoopIterationBound*
-RangeAnalysis::analyzeLoopIterationCount(MBasicBlock* header,
-                                         MTest* test, BranchDirection direction)
-{
-    SimpleLinearSum lhs(nullptr, 0);
-    MDefinition* rhs;
-    bool lessEqual;
-    if (!ExtractLinearInequality(test, direction, &lhs, &rhs, &lessEqual)) {
-        return nullptr;
-    }
-
-    // Ensure the rhs is a loop invariant term.
-    if (rhs && rhs->block()->isMarked()) {
-        if (lhs.term && lhs.term->block()->isMarked()) {
-            return nullptr;
-        }
-        MDefinition* temp = lhs.term;
-        lhs.term = rhs;
-        rhs = temp;
-        if (!SafeSub(0, lhs.constant, &lhs.constant)) {
-            return nullptr;
-        }
-        lessEqual = !lessEqual;
-    }
-
-    MOZ_ASSERT_IF(rhs, !rhs->block()->isMarked());
-
-    // Ensure the lhs is a phi node from the start of the loop body.
-    if (!lhs.term || !lhs.term->isPhi() || lhs.term->block() != header) {
-        return nullptr;
-    }
-
-    // Check that the value of the lhs changes by a constant amount with each
-    // loop iteration. This requires that the lhs be written in every loop
-    // iteration with a value that is a constant difference from its value at
-    // the start of the iteration.
-
-    if (lhs.term->toPhi()->numOperands() != 2) {
-        return nullptr;
-=======
 static inline MDefinition* DefinitionOrBetaInputDefinition(MDefinition* ins) {
   while (ins->isBeta()) {
     ins = ins->toBeta()->input();
@@ -3083,73 +2001,17 @@ LoopIterationBound* RangeAnalysis::analyzeLoopIterationCount(
     rhs = temp;
     if (!SafeSub(0, lhs.constant, &lhs.constant)) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    MDefinition* temp = lhs.term;
-    lhs.term = rhs;
-    rhs = temp;
-    if (!SafeSub(0, lhs.constant, &lhs.constant)) {
-      return nullptr;
-    }
-    lessEqual = !lessEqual;
-  }
-||||||| merged common ancestors
-
-    // The first operand of the phi should be the lhs' value at the start of
-    // the first executed iteration, and not a value written which could
-    // replace the second operand below during the middle of execution.
-    MDefinition* lhsInitial = lhs.term->toPhi()->getLoopPredecessorOperand();
-    if (lhsInitial->block()->isMarked()) {
-        return nullptr;
-    }
-=======
     lessEqual = !lessEqual;
   }
 
   MOZ_ASSERT_IF(rhs, !rhs->block()->isMarked());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT_IF(rhs, !rhs->block()->isMarked());
-||||||| merged common ancestors
-    // The second operand of the phi should be a value written by an add/sub
-    // in every loop iteration, i.e. in a block which dominates the backedge.
-    MDefinition* lhsWrite =
-        DefinitionOrBetaInputDefinition(lhs.term->toPhi()->getLoopBackedgeOperand());
-    if (!lhsWrite->isAdd() && !lhsWrite->isSub()) {
-        return nullptr;
-    }
-    if (!lhsWrite->block()->isMarked()) {
-        return nullptr;
-    }
-    MBasicBlock* bb = header->backedge();
-    for (; bb != lhsWrite->block() && bb != header; bb = bb->immediateDominator()) {}
-    if (bb != lhsWrite->block()) {
-        return nullptr;
-    }
-=======
   // Ensure the lhs is a phi node from the start of the loop body.
   if (!lhs.term || !lhs.term->isPhi() || lhs.term->block() != header) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Ensure the lhs is a phi node from the start of the loop body.
-  if (!lhs.term || !lhs.term->isPhi() || lhs.term->block() != header) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    SimpleLinearSum lhsModified = ExtractLinearSum(lhsWrite);
-=======
-  // Check that the value of the lhs changes by a constant amount with each
-  // loop iteration. This requires that the lhs be written in every loop
-  // iteration with a value that is a constant difference from its value at
-  // the start of the iteration.
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Check that the value of the lhs changes by a constant amount with each
   // loop iteration. This requires that the lhs be written in every loop
   // iteration with a value that is a constant difference from its value at
@@ -3158,25 +2020,6 @@ LoopIterationBound* RangeAnalysis::analyzeLoopIterationCount(
   if (lhs.term->toPhi()->numOperands() != 2) {
     return nullptr;
   }
-||||||| merged common ancestors
-    // Check that the value of the lhs at the backedge is of the form
-    // 'old(lhs) + N'. We can be sure that old(lhs) is the value at the start
-    // of the iteration, and not that written to lhs in a previous iteration,
-    // as such a previous value could not appear directly in the addition:
-    // it could not be stored in lhs as the lhs add/sub executes in every
-    // iteration, and if it were stored in another variable its use here would
-    // be as an operand to a phi node for that variable.
-    if (lhsModified.term != lhs.term) {
-        return nullptr;
-    }
-
-    LinearSum iterationBound(alloc());
-    LinearSum currentIteration(alloc());
-=======
-  if (lhs.term->toPhi()->numOperands() != 2) {
-    return nullptr;
-  }
->>>>>>> upstream-releases
 
   // The first operand of the phi should be the lhs' value at the start of
   // the first executed iteration, and not a value written which could
@@ -3367,46 +2210,6 @@ void RangeAnalysis::analyzeLoopPhi(LoopIterationBound* loopBound, MPhi* phi) {
 
 // Whether bound is valid at the specified bounds check instruction in a loop,
 // and may be used to hoist ins.
-<<<<<<< HEAD
-static inline bool SymbolicBoundIsValid(MBasicBlock* header, MBoundsCheck* ins,
-                                        const SymbolicBound* bound) {
-  if (!bound->loop) {
-    return true;
-  }
-  if (ins->block() == header) {
-    return false;
-  }
-  MBasicBlock* bb = ins->block()->immediateDominator();
-  while (bb != header && bb != bound->loop->test->block()) {
-    bb = bb->immediateDominator();
-  }
-  return bb == bound->loop->test->block();
-}
-
-bool RangeAnalysis::tryHoistBoundsCheck(MBasicBlock* header,
-                                        MBoundsCheck* ins) {
-  // The bounds check's length must be loop invariant.
-  MDefinition* length = DefinitionOrBetaInputDefinition(ins->length());
-  if (length->block()->isMarked()) {
-    return false;
-  }
-||||||| merged common ancestors
-static inline bool
-SymbolicBoundIsValid(MBasicBlock* header, MBoundsCheck* ins, const SymbolicBound* bound)
-{
-    if (!bound->loop) {
-        return true;
-    }
-    if (ins->block() == header) {
-        return false;
-    }
-    MBasicBlock* bb = ins->block()->immediateDominator();
-    while (bb != header && bb != bound->loop->test->block()) {
-        bb = bb->immediateDominator();
-    }
-    return bb == bound->loop->test->block();
-}
-=======
 static inline bool SymbolicBoundIsValid(MBasicBlock* header, MBoundsCheck* ins,
                                         const SymbolicBound* bound) {
   if (!bound->loop) {
@@ -3429,7 +2232,6 @@ bool RangeAnalysis::tryHoistBoundsCheck(MBasicBlock* header,
   if (length->block()->isMarked() && !length->isConstant()) {
     return false;
   }
->>>>>>> upstream-releases
 
   // The bounds check's index should not be loop invariant (else we would
   // already have hoisted it during LICM).
@@ -3453,49 +2255,6 @@ bool RangeAnalysis::tryHoistBoundsCheck(MBasicBlock* header,
     return false;
   }
 
-<<<<<<< HEAD
-  MBasicBlock* preLoop = header->loopPredecessor();
-  MOZ_ASSERT(!preLoop->isMarked());
-
-  MDefinition* lowerTerm = ConvertLinearSum(alloc(), preLoop, lower->sum);
-  if (!lowerTerm) {
-    return false;
-  }
-
-  MDefinition* upperTerm = ConvertLinearSum(alloc(), preLoop, upper->sum);
-  if (!upperTerm) {
-    return false;
-  }
-
-  // We are checking that index + indexConstant >= 0, and know that
-  // index >= lowerTerm + lowerConstant. Thus, check that:
-  //
-  // lowerTerm + lowerConstant + indexConstant >= 0
-  // lowerTerm >= -lowerConstant - indexConstant
-
-  int32_t lowerConstant = 0;
-  if (!SafeSub(lowerConstant, index.constant, &lowerConstant)) {
-    return false;
-  }
-  if (!SafeSub(lowerConstant, lower->sum.constant(), &lowerConstant)) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Check for a symbolic lower and upper bound on the index. If either
-    // condition depends on an iteration bound for the loop, only hoist if
-    // the bounds check is dominated by the iteration bound's test.
-    if (!index.term->range()) {
-        return false;
-    }
-    const SymbolicBound* lower = index.term->range()->symbolicLower();
-    if (!lower || !SymbolicBoundIsValid(header, ins, lower)) {
-        return false;
-    }
-    const SymbolicBound* upper = index.term->range()->symbolicUpper();
-    if (!upper || !SymbolicBoundIsValid(header, ins, upper)) {
-        return false;
-    }
-=======
   MBasicBlock* preLoop = header->loopPredecessor();
   MOZ_ASSERT(!preLoop->isMarked());
 
@@ -3548,41 +2307,7 @@ bool RangeAnalysis::tryHoistBoundsCheck(MBasicBlock* header,
       MInstruction* lengthIns = length->toInstruction();
       lengthIns->block()->moveBefore(preLoop->lastIns(), lengthIns);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // We are checking that index < boundsLength, and know that
-  // index <= upperTerm + upperConstant. Thus, check that:
-  //
-  // upperTerm + upperConstant < boundsLength
-||||||| merged common ancestors
-    MBasicBlock* preLoop = header->loopPredecessor();
-    MOZ_ASSERT(!preLoop->isMarked());
-=======
-    MBoundsCheck* upperCheck = MBoundsCheck::New(alloc(), upperTerm, length);
-    upperCheck->setMinimum(upperConstant);
-    upperCheck->setMaximum(upperConstant);
-    upperCheck->computeRange(alloc());
-    upperCheck->collectRangeInfoPreTrunc();
-    preLoop->insertBefore(preLoop->lastIns(), upperCheck);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  int32_t upperConstant = index.constant;
-  if (!SafeAdd(upper->sum.constant(), upperConstant, &upperConstant)) {
-    return false;
-  }
-
-  // Hoist the loop invariant lower bounds checks.
-  MBoundsCheckLower* lowerCheck = MBoundsCheckLower::New(alloc(), lowerTerm);
-  lowerCheck->setMinimum(lowerConstant);
-  lowerCheck->computeRange(alloc());
-  lowerCheck->collectRangeInfoPreTrunc();
-  preLoop->insertBefore(preLoop->lastIns(), lowerCheck);
-
-  // Hoist the loop invariant upper bounds checks.
-  if (upperTerm != length || upperConstant >= 0) {
     MBoundsCheck* upperCheck = MBoundsCheck::New(alloc(), upperTerm, length);
     upperCheck->setMinimum(upperConstant);
     upperCheck->setMaximum(upperConstant);
@@ -3618,90 +2343,12 @@ bool RangeAnalysis::analyze() {
       if (!alloc().ensureBallast()) {
         return false;
       }
-||||||| merged common ancestors
-    MDefinition* lowerTerm = ConvertLinearSum(alloc(), preLoop, lower->sum);
-    if (!lowerTerm) {
-        return false;
-    }
-=======
-  return true;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      def->computeRange(alloc());
-      JitSpew(JitSpew_Range, "computing range on %d", def->id());
-      SpewRange(def);
-    }
-||||||| merged common ancestors
-    MDefinition* upperTerm = ConvertLinearSum(alloc(), preLoop, upper->sum);
-    if (!upperTerm) {
-        return false;
-    }
-=======
-bool RangeAnalysis::analyze() {
-  JitSpew(JitSpew_Range, "Doing range propagation");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    // Beta node range analysis may have marked this block unreachable. If
-    // so, it's no longer interesting to continue processing it.
-    if (block->unreachable()) {
-      continue;
-||||||| merged common ancestors
-    // We are checking that index + indexConstant >= 0, and know that
-    // index >= lowerTerm + lowerConstant. Thus, check that:
-    //
-    // lowerTerm + lowerConstant + indexConstant >= 0
-    // lowerTerm >= -lowerConstant - indexConstant
-
-    int32_t lowerConstant = 0;
-    if (!SafeSub(lowerConstant, index.constant, &lowerConstant)) {
-        return false;
-    }
-    if (!SafeSub(lowerConstant, lower->sum.constant(), &lowerConstant)) {
-        return false;
-=======
-  for (ReversePostorderIterator iter(graph_.rpoBegin());
-       iter != graph_.rpoEnd(); iter++) {
-    MBasicBlock* block = *iter;
-    // No blocks are supposed to be unreachable, except when we have an OSR
-    // block, in which case the Value Numbering phase add fixup blocks which
-    // are unreachable.
-    MOZ_ASSERT(!block->unreachable() || graph_.osrBlock());
-
-    // If the block's immediate dominator is unreachable, the block is
-    // unreachable. Iterating in RPO, we'll always see the immediate
-    // dominator before the block.
-    if (block->immediateDominator()->unreachable()) {
-      block->setUnreachableUnchecked();
-      continue;
-    }
-
-    for (MDefinitionIterator iter(block); iter; iter++) {
-      MDefinition* def = *iter;
-      if (!alloc().ensureBallast()) {
-        return false;
-      }
 
       def->computeRange(alloc());
       JitSpew(JitSpew_Range, "computing range on %d", def->id());
       SpewRange(def);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (block->isLoopHeader()) {
-      if (!analyzeLoop(block)) {
-||||||| merged common ancestors
-    // We are checking that index < boundsLength, and know that
-    // index <= upperTerm + upperConstant. Thus, check that:
-    //
-    // upperTerm + upperConstant < boundsLength
-
-    int32_t upperConstant = index.constant;
-    if (!SafeAdd(upper->sum.constant(), upperConstant, &upperConstant)) {
-=======
     // Beta node range analysis may have marked this block unreachable. If
     // so, it's no longer interesting to continue processing it.
     if (block->unreachable()) {
@@ -3710,7 +2357,6 @@ bool RangeAnalysis::analyze() {
 
     if (block->isLoopHeader()) {
       if (!analyzeLoop(block)) {
->>>>>>> upstream-releases
         return false;
       }
     }

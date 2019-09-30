@@ -23,20 +23,9 @@ namespace mozilla {
 // This provides a convenient interface for attribute mappers
 // (MapAttributesIntoRule) to modify the presentation attribute declaration
 // block for a given element.
-<<<<<<< HEAD
-class MappedDeclarations final {
- public:
-  explicit MappedDeclarations(nsIDocument* aDoc,
-||||||| merged common ancestors
-class MappedDeclarations final
-{
-public:
-  explicit MappedDeclarations(nsIDocument* aDoc,
-=======
 class MappedDeclarations final {
  public:
   explicit MappedDeclarations(dom::Document* aDoc,
->>>>>>> upstream-releases
                               already_AddRefed<RawServoDeclarationBlock> aDecls)
       : mDocument(aDoc), mDecl(aDecls) {
     MOZ_ASSERT(mDecl);
@@ -44,16 +33,7 @@ class MappedDeclarations final {
 
   ~MappedDeclarations() { MOZ_ASSERT(!mDecl, "Forgot to take the block?"); }
 
-<<<<<<< HEAD
-  nsIDocument* Document() { return mDocument; }
-||||||| merged common ancestors
-  nsIDocument* Document()
-  {
-    return mDocument;
-  }
-=======
   dom::Document* Document() { return mDocument; }
->>>>>>> upstream-releases
 
   already_AddRefed<RawServoDeclarationBlock> TakeDeclarationBlock() {
     MOZ_ASSERT(mDecl);
@@ -193,17 +173,8 @@ class MappedDeclarations final {
   }
 
   // Set font-family to a string
-<<<<<<< HEAD
-  void SetFontFamily(const nsString& aValue) {
-    Servo_DeclarationBlock_SetFontFamily(mDecl, aValue);
-||||||| merged common ancestors
-  void SetFontFamily(const nsString& aValue)
-  {
-    Servo_DeclarationBlock_SetFontFamily(mDecl, aValue);
-=======
   void SetFontFamily(const nsString& aValue) {
     Servo_DeclarationBlock_SetFontFamily(mDecl, &aValue);
->>>>>>> upstream-releases
   }
 
   // Add a quirks-mode override to the decoration color of elements nested in
@@ -214,16 +185,8 @@ class MappedDeclarations final {
 
   void SetBackgroundImage(const nsAttrValue& value);
 
-<<<<<<< HEAD
- private:
-  nsIDocument* const mDocument;
-||||||| merged common ancestors
-private:
-  nsIDocument* const mDocument;
-=======
  private:
   dom::Document* const mDocument;
->>>>>>> upstream-releases
   RefPtr<RawServoDeclarationBlock> mDecl;
 };
 

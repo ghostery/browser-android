@@ -100,17 +100,6 @@ class SeleniumTestharnessProtocolPart(TestharnessProtocolPart):
                 self.webdriver.close()
             except exceptions.NoSuchWindowException:
                 pass
-<<<<<<< HEAD
-        self.webdriver.switch_to_window(self.runner_handle)
-        return self.runner_handle
-
-    def get_test_window(self, window_id, parent):
-||||||| merged common ancestors
-        self.webdriver.switch_to_window(exclude)
-        return exclude
-
-    def get_test_window(self, window_id, parent):
-=======
         self.webdriver.switch_to_window(self.runner_handle)
         return self.runner_handle
 
@@ -124,7 +113,6 @@ class SeleniumTestharnessProtocolPart(TestharnessProtocolPart):
         :param timeout: The time in seconds to wait for the window to appear. This is because in
                         some implementations there's a race between calling window.open and the
                         window being added to the list of WebDriver accessible windows."""
->>>>>>> upstream-releases
         test_window = None
         end_time = time.time() + timeout
         while time.time() < end_time:
@@ -336,24 +324,13 @@ class SeleniumTestharnessExecutor(TestharnessExecutor):
 
         parent_window = protocol.testharness.close_old_windows()
         # Now start the test harness
-<<<<<<< HEAD
-        protocol.base.execute_script(self.script % format_map, async=True)
-        test_window = protocol.testharness.get_test_window(self.window_id, parent_window)
-
-||||||| merged common ancestors
-        protocol.base.execute_script(self.script % format_map)
-        test_window = protocol.testharness.get_test_window(self.window_id, parent_window)
-
-=======
         protocol.base.execute_script("window.open('about:blank', '%s', 'noopener')" % self.window_id)
         test_window = protocol.testharness.get_test_window(self.window_id, parent_window,
                                                            timeout=5*self.timeout_multiplier)
         self.protocol.base.set_window(test_window)
         protocol.webdriver.get(url)
->>>>>>> upstream-releases
         handler = CallbackHandler(self.logger, protocol, test_window)
         while True:
-            self.protocol.base.set_window(test_window)
             result = protocol.base.execute_script(
                 self.script_resume % format_map, async=True)
             done, rv = handler(result)

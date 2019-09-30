@@ -136,16 +136,8 @@ const TEST_DATA = [
     test: fragment => {
       is(countAll(fragment), 1);
       is(getUrl(fragment), "images/arrow.gif");
-<<<<<<< HEAD
-      is(fragment.textContent, "url(\"images/arrow.gif\")!important");
-    },
-||||||| merged common ancestors
-      is(fragment.textContent, "url(\"images/arrow.gif\")!important");
-    }
-=======
       is(fragment.textContent, 'url("images/arrow.gif")!important');
     },
->>>>>>> upstream-releases
   },
   {
     name: "-moz-binding",
@@ -200,19 +192,11 @@ const TEST_DATA = [
       'url("http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t")',
     test: fragment => {
       is(countAll(fragment), 1);
-<<<<<<< HEAD
-      is(getUrl(fragment), "http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t");
-    },
-||||||| merged common ancestors
-      is(getUrl(fragment), "http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t");
-    }
-=======
       is(
         getUrl(fragment),
         "http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t"
       );
     },
->>>>>>> upstream-releases
   },
   {
     name: "background-image",
@@ -239,21 +223,11 @@ const TEST_DATA = [
       "../red.blue.green.svg   )",
     test: fragment => {
       is(countAll(fragment), 1);
-<<<<<<< HEAD
-      is(getUrl(fragment), "../../../look/at/this/folder/structure/../" +
-                           "../red.blue.green.svg");
-    },
-||||||| merged common ancestors
-      is(getUrl(fragment), "../../../look/at/this/folder/structure/../" +
-                           "../red.blue.green.svg");
-    }
-=======
       is(
         getUrl(fragment),
         "../../../look/at/this/folder/structure/../" + "../red.blue.green.svg"
       );
     },
->>>>>>> upstream-releases
   },
   {
     name: "transition-timing-function",
@@ -328,13 +302,6 @@ const TEST_DATA = [
     value: "rgb(255, var(--g-value, 0), 192)",
     test: fragment => {
       is(fragment.textContent, "rgb(255, var(--g-value, 0), 192)");
-<<<<<<< HEAD
-    },
-  },
-||||||| merged common ancestors
-    }
-  }
-=======
     },
   },
   {
@@ -345,7 +312,6 @@ const TEST_DATA = [
       is(fragment.textContent, "url(())");
     },
   },
->>>>>>> upstream-releases
 ];
 
 add_task(async function() {
@@ -354,16 +320,8 @@ add_task(async function() {
     target: {
       client: {},
       hasActor: () => false,
-<<<<<<< HEAD
-      getFront: typeName => ({getCSSDatabase: () => CSS_PROPERTIES_DB}),
-    },
-||||||| merged common ancestors
-      getFront: typeName => ({getCSSDatabase: () => CSS_PROPERTIES_DB})
-    }
-=======
       getFront: typeName => ({ getCSSDatabase: () => CSS_PROPERTIES_DB }),
     },
->>>>>>> upstream-releases
   };
   await initCssProperties(toolbox);
   const cssProperties = getCssProperties(toolbox);
@@ -371,26 +329,6 @@ add_task(async function() {
   const parser = new OutputParser(document, cssProperties);
   for (let i = 0; i < TEST_DATA.length; i++) {
     const data = TEST_DATA[i];
-<<<<<<< HEAD
-    info("Output-parser test data " + i + ". {" + data.name + " : " +
-      data.value + ";}");
-    data.test(parser.parseCssProperty(data.name, data.value, {
-      colorClass: COLOR_CLASS,
-      urlClass: URL_CLASS,
-      bezierClass: CUBIC_BEZIER_CLASS,
-      angleClass: ANGLE_CLASS,
-    }));
-||||||| merged common ancestors
-    info("Output-parser test data " + i + ". {" + data.name + " : " +
-      data.value + ";}");
-    data.test(parser.parseCssProperty(data.name, data.value, {
-      colorClass: COLOR_CLASS,
-      urlClass: URL_CLASS,
-      bezierClass: CUBIC_BEZIER_CLASS,
-      angleClass: ANGLE_CLASS,
-      defaultColorType: false
-    }));
-=======
     info(
       "Output-parser test data " +
         i +
@@ -408,7 +346,6 @@ add_task(async function() {
         angleClass: ANGLE_CLASS,
       })
     );
->>>>>>> upstream-releases
   }
 });
 

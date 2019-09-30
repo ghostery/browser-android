@@ -249,17 +249,7 @@ async function gotoPref(aCategory) {
   let mainContent = document.querySelector(".main-content");
   mainContent.scrollTop = 0;
 
-<<<<<<< HEAD
-  spotlight(subcategory);
-||||||| merged common ancestors
-  spotlight(subcategory);
-
-  Services.telemetry
-          .getHistogramById("FX_PREFERENCES_CATEGORY_OPENED_V2")
-          .add(telemetryBucketForCategory(friendlyName));
-=======
   spotlight(subcategory, category);
->>>>>>> upstream-releases
 }
 
 function search(aQuery, aAttribute) {
@@ -328,17 +318,6 @@ async function scrollAndHighlight(subcategory, category) {
  */
 function getClosestDisplayedHeader(element) {
   let header = element.closest("groupbox");
-<<<<<<< HEAD
-  let searchHeader = header.querySelector(".search-header");
-  if (searchHeader && searchHeader.hidden &&
-      header.previousSibling.classList.contains("subcategory")) {
-    header = header.previousSibling;
-||||||| merged common ancestors
-  let searchHeader = header.querySelector("caption.search-header");
-  if (searchHeader && searchHeader.hidden &&
-      header.previousSibling.classList.contains("subcategory")) {
-    header = header.previousSibling;
-=======
   let searchHeader = header.querySelector(".search-header");
   if (
     searchHeader &&
@@ -346,7 +325,6 @@ function getClosestDisplayedHeader(element) {
     header.previousElementSibling.classList.contains("subcategory")
   ) {
     header = header.previousElementSibling;
->>>>>>> upstream-releases
   }
   return header;
 }

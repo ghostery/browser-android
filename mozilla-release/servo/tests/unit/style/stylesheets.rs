@@ -27,16 +27,8 @@ use style::stylesheets::{Stylesheet, StylesheetContents, NamespaceRule, CssRule,
 use style::stylesheets::keyframes_rule::{Keyframe, KeyframeSelector, KeyframePercentage};
 use style::values::{KeyframesName, CustomIdent};
 use style::values::computed::Percentage;
-<<<<<<< HEAD
-use style::values::specified::{LengthOrPercentageOrAuto, PositionComponent};
-use style::values::specified::TimingFunction;
-||||||| merged common ancestors
-use style::values::specified::{LengthOrPercentageOrAuto, PositionComponent};
-use style::values::specified::transform::TimingFunction;
-=======
 use style::values::specified::{LengthPercentageOrAuto, PositionComponent};
 use style::values::specified::TimingFunction;
->>>>>>> upstream-releases
 
 pub fn block_from<I>(iterable: I) -> PropertyDeclarationBlock
 where I: IntoIterator<Item=(PropertyDeclaration, Importance)> {

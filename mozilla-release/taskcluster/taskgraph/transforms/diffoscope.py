@@ -45,19 +45,6 @@ diff_description_schema = Schema({
     # Extra arguments to pass to diffoscope, that can be set per job.
     Optional('extra-args'): basestring,
 
-<<<<<<< HEAD
-transforms = TransformSequence()
-transforms.add_validate(diff_description_schema)
-||||||| merged common ancestors
-
-@transforms.add
-def validate(config, tasks):
-    for task in tasks:
-        validate_schema(
-            diff_description_schema, task,
-            "In diff task {!r}:".format(task.get('name', 'unknown')))
-        yield task
-=======
     # Fail the task when differences are detected.
     Optional('fail-on-diff'): bool,
 
@@ -72,7 +59,6 @@ def validate(config, tasks):
 
 transforms = TransformSequence()
 transforms.add_validate(diff_description_schema)
->>>>>>> upstream-releases
 
 
 @transforms.add

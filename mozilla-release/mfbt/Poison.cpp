@@ -13,35 +13,8 @@
 
 #include "mozilla/Assertions.h"
 #ifdef _WIN32
-<<<<<<< HEAD
-#include <windows.h>
-||||||| merged common ancestors
-# include <windows.h>
-=======
 #  include <windows.h>
->>>>>>> upstream-releases
 #elif !defined(__OS2__)
-<<<<<<< HEAD
-#include <unistd.h>
-#include <sys/mman.h>
-#ifndef MAP_ANON
-#ifdef MAP_ANONYMOUS
-#define MAP_ANON MAP_ANONYMOUS
-#else
-#error "Don't know how to get anonymous memory"
-#endif
-#endif
-||||||| merged common ancestors
-# include <unistd.h>
-# include <sys/mman.h>
-# ifndef MAP_ANON
-#  ifdef MAP_ANONYMOUS
-#   define MAP_ANON MAP_ANONYMOUS
-#  else
-#   error "Don't know how to get anonymous memory"
-#  endif
-# endif
-=======
 #  include <unistd.h>
 #  include <sys/mman.h>
 #  ifndef MAP_ANON
@@ -51,7 +24,6 @@
 #      error "Don't know how to get anonymous memory"
 #    endif
 #  endif
->>>>>>> upstream-releases
 #endif
 
 extern "C" {
@@ -132,26 +104,11 @@ static void ReleaseRegion(void* aRegion, uintptr_t aSize) {
   munmap(aRegion, aSize);
 }
 
-<<<<<<< HEAD
-static bool ProbeRegion(uintptr_t aRegion, uintptr_t aSize) {
-#ifdef XP_SOLARIS
-  if (posix_madvise(reinterpret_cast<void*>(aRegion), aSize,
-                    POSIX_MADV_NORMAL)) {
-#else
-||||||| merged common ancestors
-static bool
-ProbeRegion(uintptr_t aRegion, uintptr_t aSize)
-{
-#ifdef XP_SOLARIS
-  if (posix_madvise(reinterpret_cast<void*>(aRegion), aSize, POSIX_MADV_NORMAL)) {
-#else
-=======
 static bool ProbeRegion(uintptr_t aRegion, uintptr_t aSize) {
 #  ifdef XP_SOLARIS
   if (posix_madvise(reinterpret_cast<void*>(aRegion), aSize,
                     POSIX_MADV_NORMAL)) {
 #  else
->>>>>>> upstream-releases
   if (madvise(reinterpret_cast<void*>(aRegion), aSize, MADV_NORMAL)) {
 #  endif
     return true;

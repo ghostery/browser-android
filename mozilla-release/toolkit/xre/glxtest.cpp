@@ -54,15 +54,6 @@ typedef XID GLXPbuffer;
 // stuff from gl.h
 typedef uint8_t GLubyte;
 typedef uint32_t GLenum;
-<<<<<<< HEAD
-#define GL_VENDOR 0x1F00
-#define GL_RENDERER 0x1F01
-#define GL_VERSION 0x1F02
-||||||| merged common ancestors
-#define GL_VENDOR       0x1F00
-#define GL_RENDERER     0x1F01
-#define GL_VERSION      0x1F02
-=======
 #define GL_VENDOR 0x1F00
 #define GL_RENDERER 0x1F01
 #define GL_VERSION 0x1F02
@@ -82,7 +73,6 @@ typedef uint32_t GLenum;
 #define GLX_RENDERER_OPENGL_ES2_PROFILE_VERSION_MESA           0x818D
 #define GLX_RENDERER_ID_MESA                                   0x818E
 // clang-format on
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace widget {
@@ -99,46 +89,18 @@ static int write_end_of_the_pipe = -1;
 // C++ standard collides with C standard in that it doesn't allow casting void*
 // to function pointer types. So the work-around is to convert first to size_t.
 // http://www.trilithium.com/johan/2004/12/problem-with-dlsym/
-<<<<<<< HEAD
-template <typename func_ptr_type>
-static func_ptr_type cast(void *ptr) {
-  return reinterpret_cast<func_ptr_type>(reinterpret_cast<size_t>(ptr));
-||||||| merged common ancestors
-template<typename func_ptr_type>
-static func_ptr_type cast(void *ptr)
-{
-  return reinterpret_cast<func_ptr_type>(
-           reinterpret_cast<size_t>(ptr)
-         );
-=======
 template <typename func_ptr_type>
 static func_ptr_type cast(void* ptr) {
   return reinterpret_cast<func_ptr_type>(reinterpret_cast<size_t>(ptr));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void fatal_error(const char *str) {
-||||||| merged common ancestors
-static void fatal_error(const char *str)
-{
-=======
 static void fatal_error(const char* str) {
->>>>>>> upstream-releases
   mozilla::Unused << write(write_end_of_the_pipe, str, strlen(str));
   mozilla::Unused << write(write_end_of_the_pipe, "\n", 1);
   _exit(EXIT_FAILURE);
 }
 
-<<<<<<< HEAD
-static int x_error_handler(Display *, XErrorEvent *ev) {
-||||||| merged common ancestors
-static int
-x_error_handler(Display *, XErrorEvent *ev)
-{
-=======
 static int x_error_handler(Display*, XErrorEvent* ev) {
->>>>>>> upstream-releases
   enum { bufsize = 1024 };
   char buf[bufsize];
   int length = snprintf(buf, bufsize,
@@ -156,12 +118,6 @@ static int x_error_handler(Display*, XErrorEvent* ev) {
 // care about leaking memory
 extern "C" {
 
-<<<<<<< HEAD
-void glxtest() {
-||||||| merged common ancestors
-void glxtest()
-{
-=======
 static int get_egl_status(char* buf, int bufsize) {
   void* libegl = dlopen("libEGL.so.1", RTLD_LAZY);
   if (!libegl) {
@@ -232,7 +188,6 @@ static int get_egl_status(char* buf, int bufsize) {
 }
 
 void glxtest() {
->>>>>>> upstream-releases
   // we want to redirect to /dev/null stdout, stderr, and while we're at it,
   // any PR logging file descriptors. To that effect, we redirect all positive
   // file descriptors up to what open() returns here. In particular, 1 is stdout
@@ -245,148 +200,50 @@ void glxtest() {
     fatal_error(
         "The MOZ_AVOID_OPENGL_ALTOGETHER environment variable is defined");
 
-<<<<<<< HEAD
-    ///// Open libGL and load needed symbols /////
-#ifdef __OpenBSD__
-#define LIBGL_FILENAME "libGL.so"
-||||||| merged common ancestors
-  ///// Open libGL and load needed symbols /////
-#ifdef __OpenBSD__
-  #define LIBGL_FILENAME "libGL.so"
-=======
     ///// Open libGL and load needed symbols /////
 #if defined(__OpenBSD__) || defined(__NetBSD__)
 #  define LIBGL_FILENAME "libGL.so"
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define LIBGL_FILENAME "libGL.so.1"
-||||||| merged common ancestors
-  #define LIBGL_FILENAME "libGL.so.1"
-=======
 #  define LIBGL_FILENAME "libGL.so.1"
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  void *libgl = dlopen(LIBGL_FILENAME, RTLD_LAZY);
-  if (!libgl) fatal_error("Unable to load " LIBGL_FILENAME);
-||||||| merged common ancestors
-  void *libgl = dlopen(LIBGL_FILENAME, RTLD_LAZY);
-  if (!libgl)
-    fatal_error("Unable to load " LIBGL_FILENAME);
-=======
   void* libgl = dlopen(LIBGL_FILENAME, RTLD_LAZY);
   if (!libgl) fatal_error("Unable to load " LIBGL_FILENAME);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef void *(*PFNGLXGETPROCADDRESS)(const char *);
-  PFNGLXGETPROCADDRESS glXGetProcAddress =
-      cast<PFNGLXGETPROCADDRESS>(dlsym(libgl, "glXGetProcAddress"));
-||||||| merged common ancestors
-  typedef void* (* PFNGLXGETPROCADDRESS) (const char *);
-  PFNGLXGETPROCADDRESS glXGetProcAddress = cast<PFNGLXGETPROCADDRESS>(dlsym(libgl, "glXGetProcAddress"));
-=======
   typedef void* (*PFNGLXGETPROCADDRESS)(const char*);
   PFNGLXGETPROCADDRESS glXGetProcAddress =
       cast<PFNGLXGETPROCADDRESS>(dlsym(libgl, "glXGetProcAddress"));
->>>>>>> upstream-releases
 
   if (!glXGetProcAddress)
     fatal_error("Unable to find glXGetProcAddress in " LIBGL_FILENAME);
 
-<<<<<<< HEAD
-  typedef GLXFBConfig *(*PFNGLXQUERYEXTENSION)(Display *, int *, int *);
-  PFNGLXQUERYEXTENSION glXQueryExtension =
-      cast<PFNGLXQUERYEXTENSION>(glXGetProcAddress("glXQueryExtension"));
-||||||| merged common ancestors
-  typedef GLXFBConfig* (* PFNGLXQUERYEXTENSION) (Display *, int *, int *);
-  PFNGLXQUERYEXTENSION glXQueryExtension = cast<PFNGLXQUERYEXTENSION>(glXGetProcAddress("glXQueryExtension"));
-=======
   typedef GLXFBConfig* (*PFNGLXQUERYEXTENSION)(Display*, int*, int*);
   PFNGLXQUERYEXTENSION glXQueryExtension =
       cast<PFNGLXQUERYEXTENSION>(glXGetProcAddress("glXQueryExtension"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef GLXFBConfig *(*PFNGLXQUERYVERSION)(Display *, int *, int *);
-  PFNGLXQUERYVERSION glXQueryVersion =
-      cast<PFNGLXQUERYVERSION>(dlsym(libgl, "glXQueryVersion"));
-||||||| merged common ancestors
-  typedef GLXFBConfig* (* PFNGLXQUERYVERSION) (Display *, int *, int *);
-  PFNGLXQUERYVERSION glXQueryVersion = cast<PFNGLXQUERYVERSION>(dlsym(libgl, "glXQueryVersion"));
-=======
   typedef GLXFBConfig* (*PFNGLXQUERYVERSION)(Display*, int*, int*);
   PFNGLXQUERYVERSION glXQueryVersion =
       cast<PFNGLXQUERYVERSION>(dlsym(libgl, "glXQueryVersion"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef XVisualInfo *(*PFNGLXCHOOSEVISUAL)(Display *, int, int *);
-  PFNGLXCHOOSEVISUAL glXChooseVisual =
-      cast<PFNGLXCHOOSEVISUAL>(glXGetProcAddress("glXChooseVisual"));
-||||||| merged common ancestors
-  typedef XVisualInfo* (* PFNGLXCHOOSEVISUAL) (Display *, int, int *);
-  PFNGLXCHOOSEVISUAL glXChooseVisual = cast<PFNGLXCHOOSEVISUAL>(glXGetProcAddress("glXChooseVisual"));
-=======
   typedef XVisualInfo* (*PFNGLXCHOOSEVISUAL)(Display*, int, int*);
   PFNGLXCHOOSEVISUAL glXChooseVisual =
       cast<PFNGLXCHOOSEVISUAL>(glXGetProcAddress("glXChooseVisual"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef GLXContext (*PFNGLXCREATECONTEXT)(Display *, XVisualInfo *,
-                                            GLXContext, Bool);
-  PFNGLXCREATECONTEXT glXCreateContext =
-      cast<PFNGLXCREATECONTEXT>(glXGetProcAddress("glXCreateContext"));
-||||||| merged common ancestors
-  typedef GLXContext (* PFNGLXCREATECONTEXT) (Display *, XVisualInfo *, GLXContext, Bool);
-  PFNGLXCREATECONTEXT glXCreateContext = cast<PFNGLXCREATECONTEXT>(glXGetProcAddress("glXCreateContext"));
-=======
   typedef GLXContext (*PFNGLXCREATECONTEXT)(Display*, XVisualInfo*, GLXContext,
                                             Bool);
   PFNGLXCREATECONTEXT glXCreateContext =
       cast<PFNGLXCREATECONTEXT>(glXGetProcAddress("glXCreateContext"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef Bool (*PFNGLXMAKECURRENT)(Display *, GLXDrawable, GLXContext);
-  PFNGLXMAKECURRENT glXMakeCurrent =
-      cast<PFNGLXMAKECURRENT>(glXGetProcAddress("glXMakeCurrent"));
-||||||| merged common ancestors
-  typedef Bool (* PFNGLXMAKECURRENT) (Display*, GLXDrawable, GLXContext);
-  PFNGLXMAKECURRENT glXMakeCurrent = cast<PFNGLXMAKECURRENT>(glXGetProcAddress("glXMakeCurrent"));
-=======
   typedef Bool (*PFNGLXMAKECURRENT)(Display*, GLXDrawable, GLXContext);
   PFNGLXMAKECURRENT glXMakeCurrent =
       cast<PFNGLXMAKECURRENT>(glXGetProcAddress("glXMakeCurrent"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef void (*PFNGLXDESTROYCONTEXT)(Display *, GLXContext);
-  PFNGLXDESTROYCONTEXT glXDestroyContext =
-      cast<PFNGLXDESTROYCONTEXT>(glXGetProcAddress("glXDestroyContext"));
-||||||| merged common ancestors
-  typedef void (* PFNGLXDESTROYCONTEXT) (Display*, GLXContext);
-  PFNGLXDESTROYCONTEXT glXDestroyContext = cast<PFNGLXDESTROYCONTEXT>(glXGetProcAddress("glXDestroyContext"));
-=======
   typedef void (*PFNGLXDESTROYCONTEXT)(Display*, GLXContext);
   PFNGLXDESTROYCONTEXT glXDestroyContext =
       cast<PFNGLXDESTROYCONTEXT>(glXGetProcAddress("glXDestroyContext"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  typedef GLubyte *(*PFNGLGETSTRING)(GLenum);
-  PFNGLGETSTRING glGetString =
-      cast<PFNGLGETSTRING>(glXGetProcAddress("glGetString"));
-||||||| merged common ancestors
-  typedef GLubyte* (* PFNGLGETSTRING) (GLenum);
-  PFNGLGETSTRING glGetString = cast<PFNGLGETSTRING>(glXGetProcAddress("glGetString"));
-=======
   typedef GLubyte* (*PFNGLGETSTRING)(GLenum);
   PFNGLGETSTRING glGetString =
       cast<PFNGLGETSTRING>(glXGetProcAddress("glGetString"));
->>>>>>> upstream-releases
 
   if (!glXQueryExtension || !glXQueryVersion || !glXChooseVisual ||
       !glXCreateContext || !glXMakeCurrent || !glXDestroyContext ||
@@ -394,17 +251,8 @@ void glxtest() {
     fatal_error("glXGetProcAddress couldn't find required functions");
   }
   ///// Open a connection to the X server /////
-<<<<<<< HEAD
-  Display *dpy = XOpenDisplay(nullptr);
-  if (!dpy) fatal_error("Unable to open a connection to the X server");
-||||||| merged common ancestors
-  Display *dpy = XOpenDisplay(nullptr);
-  if (!dpy)
-    fatal_error("Unable to open a connection to the X server");
-=======
   Display* dpy = XOpenDisplay(nullptr);
   if (!dpy) fatal_error("Unable to open a connection to the X server");
->>>>>>> upstream-releases
 
   ///// Check that the GLX extension is present /////
   if (!glXQueryExtension(dpy, nullptr, nullptr))
@@ -413,27 +261,10 @@ void glxtest() {
   XSetErrorHandler(x_error_handler);
 
   ///// Get a visual /////
-<<<<<<< HEAD
-  int attribs[] = {GLX_RGBA, GLX_RED_SIZE,  1, GLX_GREEN_SIZE,
-                   1,        GLX_BLUE_SIZE, 1, None};
-  XVisualInfo *vInfo = glXChooseVisual(dpy, DefaultScreen(dpy), attribs);
-  if (!vInfo) fatal_error("No visuals found");
-||||||| merged common ancestors
-   int attribs[] = {
-      GLX_RGBA,
-      GLX_RED_SIZE, 1,
-      GLX_GREEN_SIZE, 1,
-      GLX_BLUE_SIZE, 1,
-      None };
-  XVisualInfo *vInfo = glXChooseVisual(dpy, DefaultScreen(dpy), attribs);
-  if (!vInfo)
-    fatal_error("No visuals found");
-=======
   int attribs[] = {GLX_RGBA, GLX_RED_SIZE,  1, GLX_GREEN_SIZE,
                    1,        GLX_BLUE_SIZE, 1, None};
   XVisualInfo* vInfo = glXChooseVisual(dpy, DefaultScreen(dpy), attribs);
   if (!vInfo) fatal_error("No visuals found");
->>>>>>> upstream-releases
 
   // using a X11 Window instead of a GLXPixmap does not crash
   // fglrx in indirect rendering. bug 680644
@@ -452,7 +283,7 @@ void glxtest() {
   glXMakeCurrent(dpy, window, context);
 
   ///// Look for this symbol to determine texture_from_pixmap support /////
-  void *glXBindTexImageEXT = glXGetProcAddress("glXBindTexImageEXT");
+  void* glXBindTexImageEXT = glXGetProcAddress("glXBindTexImageEXT");
 
   ///// Get GL vendor/renderer/versions strings /////
   enum { bufsize = 2048 };
@@ -471,20 +302,6 @@ void glxtest() {
   if (length >= bufsize)
     fatal_error("GL strings length too large for buffer size");
 
-<<<<<<< HEAD
-  ///// Clean up. Indeed, the parent process might fail to kill us (e.g. if it
-  ///// doesn't need to check GL info) so we might be staying alive for longer
-  ///// than expected, so it's important to consume as little memory as
-  ///// possible. Also we want to check that we're able to do that too without
-  ///// generating X errors.
-  glXMakeCurrent(dpy, None,
-                 nullptr);  // must release the GL context before destroying it
-||||||| merged common ancestors
-  ///// Clean up. Indeed, the parent process might fail to kill us (e.g. if it doesn't need to check GL info)
-  ///// so we might be staying alive for longer than expected, so it's important to consume as little memory as
-  ///// possible. Also we want to check that we're able to do that too without generating X errors.
-  glXMakeCurrent(dpy, None, nullptr); // must release the GL context before destroying it
-=======
   // If GLX_MESA_query_renderer is available, populate additional data.
   typedef Bool (*PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC)(
       int attribute, unsigned int* value);
@@ -542,7 +359,6 @@ void glxtest() {
   ///// generating X errors.
   glXMakeCurrent(dpy, None,
                  nullptr);  // must release the GL context before destroying it
->>>>>>> upstream-releases
   glXDestroyContext(dpy, context);
   XDestroyWindow(dpy, window);
   XFreeColormap(dpy, swa.colormap);

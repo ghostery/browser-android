@@ -59,15 +59,9 @@ class WebRenderBridgeChild final : public PWebRenderBridgeChild,
                                    public CompositableForwarder {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(WebRenderBridgeChild, override)
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   friend class PWebRenderBridgeChild;
 
  public:
->>>>>>> upstream-releases
   explicit WebRenderBridgeChild(const wr::PipelineId& aPipelineId);
 
   void AddWebRenderParentCommand(const WebRenderParentCommand& aCmd,
@@ -79,48 +73,19 @@ public:
   void UpdateResources(wr::IpcResourceUpdateQueue& aResources,
                        wr::RenderRoot aRenderRoot);
   void BeginTransaction();
-<<<<<<< HEAD
-  void EndTransaction(const wr::LayoutSize& aContentSize,
-                      wr::BuiltDisplayList& dl,
-                      wr::IpcResourceUpdateQueue& aResources,
-                      const gfx::IntSize& aSize, TransactionId aTransactionId,
-                      const WebRenderScrollData& aScrollData,
-                      bool aContainsSVGroup, const mozilla::VsyncId& aVsyncId,
-||||||| merged common ancestors
-  void EndTransaction(const wr::LayoutSize& aContentSize,
-                      wr::BuiltDisplayList& dl,
-                      wr::IpcResourceUpdateQueue& aResources,
-                      const gfx::IntSize& aSize,
-                      TransactionId aTransactionId,
-                      const WebRenderScrollData& aScrollData,
-                      bool aContainsSVGroup,
-=======
   void EndTransaction(nsTArray<RenderRootDisplayListData>& aRenderRoots,
                       TransactionId aTransactionId, bool aContainsSVGroup,
                       const mozilla::VsyncId& aVsyncId,
                       const mozilla::TimeStamp& aVsyncStartTime,
->>>>>>> upstream-releases
                       const mozilla::TimeStamp& aRefreshStartTime,
                       const mozilla::TimeStamp& aTxnStartTime,
                       const nsCString& aTxtURL);
   void EndEmptyTransaction(const FocusTarget& aFocusTarget,
-<<<<<<< HEAD
-                           const ScrollUpdatesMap& aUpdates,
-                           Maybe<wr::IpcResourceUpdateQueue>& aResources,
-||||||| merged common ancestors
-                           const ScrollUpdatesMap& aUpdates,
-=======
                            nsTArray<RenderRootUpdates>& aRenderRootUpdates,
->>>>>>> upstream-releases
                            uint32_t aPaintSequenceNumber,
                            TransactionId aTransactionId,
-<<<<<<< HEAD
-                           const mozilla::VsyncId& aVsyncId,
-||||||| merged common ancestors
-=======
                            const mozilla::VsyncId& aVsyncId,
                            const mozilla::TimeStamp& aVsyncStartTime,
->>>>>>> upstream-releases
                            const mozilla::TimeStamp& aRefreshStartTime,
                            const mozilla::TimeStamp& aTxnStartTime,
                            const nsCString& aTxtURL);
@@ -142,23 +107,11 @@ public:
                                          const CompositableHandle& aHandlee,
                                          wr::RenderRoot aRenderRoot);
   void AddPipelineIdForCompositable(const wr::PipelineId& aPipelineId,
-<<<<<<< HEAD
-                                    const CompositableHandle& aHandlee);
-  void RemovePipelineIdForCompositable(const wr::PipelineId& aPipelineId);
-
-||||||| merged common ancestors
-                                    const CompositableHandle& aHandlee);
-  void RemovePipelineIdForCompositable(const wr::PipelineId& aPipelineId);
-
-  void DeallocExternalImageId(const wr::ExternalImageId& aImageId);
-
-=======
                                     const CompositableHandle& aHandlee,
                                     wr::RenderRoot aRenderRoot);
   void RemovePipelineIdForCompositable(const wr::PipelineId& aPipelineId,
                                        wr::RenderRoot aRenderRoot);
 
->>>>>>> upstream-releases
   /// Release TextureClient that is bounded to ImageKey.
   /// It is used for recycling TextureClient.
   void ReleaseTextureOfImage(const wr::ImageKey& aKey,
@@ -198,26 +151,12 @@ public:
                   bool aBackfaceVisible,
                   const wr::GlyphOptions* aGlyphOptions = nullptr);
 
-<<<<<<< HEAD
-  wr::FontInstanceKey GetFontKeyForScaledFont(
-      gfx::ScaledFont* aScaledFont,
-      wr::IpcResourceUpdateQueue* aResources = nullptr);
-  wr::FontKey GetFontKeyForUnscaledFont(
-      gfx::UnscaledFont* aUnscaledFont,
-      wr::IpcResourceUpdateQueue* aResources = nullptr);
-||||||| merged common ancestors
-  wr::FontInstanceKey GetFontKeyForScaledFont(gfx::ScaledFont* aScaledFont,
-                                              wr::IpcResourceUpdateQueue* aResources = nullptr);
-  wr::FontKey GetFontKeyForUnscaledFont(gfx::UnscaledFont* aUnscaledFont,
-                                        wr::IpcResourceUpdateQueue* aResources = nullptr);
-=======
   Maybe<wr::FontInstanceKey> GetFontKeyForScaledFont(
       gfx::ScaledFont* aScaledFont, wr::RenderRoot aRenderRoot,
       wr::IpcResourceUpdateQueue* aResources = nullptr);
   Maybe<wr::FontKey> GetFontKeyForUnscaledFont(
       gfx::UnscaledFont* aUnscaledFont, wr::RenderRoot aRenderRoot,
       wr::IpcResourceUpdateQueue* aResources = nullptr);
->>>>>>> upstream-releases
   void RemoveExpiredFontKeys(wr::IpcResourceUpdateQueue& aResources);
 
   void BeginClearCachedResources();
@@ -280,22 +219,11 @@ public:
 
   void DoDestroy();
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvWrUpdated(
-      const wr::IdNamespace& aNewIdNamespace,
-      const TextureFactoryIdentifier& textureFactoryIdentifier) override;
-  mozilla::ipc::IPCResult RecvWrReleasedImages(
-      nsTArray<wr::ExternalImageKeyPair>&& aPairs) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvWrUpdated(const wr::IdNamespace& aNewIdNamespace,
-                                        const TextureFactoryIdentifier& textureFactoryIdentifier) override;
-=======
   mozilla::ipc::IPCResult RecvWrUpdated(
       const wr::IdNamespace& aNewIdNamespace,
       const TextureFactoryIdentifier& textureFactoryIdentifier);
   mozilla::ipc::IPCResult RecvWrReleasedImages(
       nsTArray<wr::ExternalImageKeyPair>&& aPairs);
->>>>>>> upstream-releases
 
   void AddIPDLReference() {
     MOZ_ASSERT(mIPCOpen == false);

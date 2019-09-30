@@ -8,35 +8,21 @@
 add_task(async function() {
   let originalWindowWidth = window.outerWidth;
   let navbar = document.getElementById(CustomizableUI.AREA_NAVBAR);
-<<<<<<< HEAD
-  ok(!navbar.hasAttribute("overflowing"), "Should start with a non-overflowing toolbar.");
-  let oldChildCount = CustomizableUI.getCustomizationTarget(navbar).childElementCount;
-||||||| merged common ancestors
-  ok(!navbar.hasAttribute("overflowing"), "Should start with a non-overflowing toolbar.");
-  let oldChildCount = navbar.customizationTarget.childElementCount;
-=======
   ok(
     !navbar.hasAttribute("overflowing"),
     "Should start with a non-overflowing toolbar."
   );
   let oldChildCount = CustomizableUI.getCustomizationTarget(navbar)
     .childElementCount;
->>>>>>> upstream-releases
   window.resizeTo(kForceOverflowWidthPx, window.outerHeight);
   await TestUtils.waitForCondition(() => navbar.hasAttribute("overflowing"));
   ok(navbar.hasAttribute("overflowing"), "Should have an overflowing toolbar.");
 
-<<<<<<< HEAD
-  ok(CustomizableUI.getCustomizationTarget(navbar).childElementCount < oldChildCount, "Should have fewer children.");
-||||||| merged common ancestors
-  ok(navbar.customizationTarget.childElementCount < oldChildCount, "Should have fewer children.");
-=======
   ok(
     CustomizableUI.getCustomizationTarget(navbar).childElementCount <
       oldChildCount,
     "Should have fewer children."
   );
->>>>>>> upstream-releases
   let newWindow = await openAndLoadWindow();
   let otherNavBar = newWindow.document.getElementById(
     CustomizableUI.AREA_NAVBAR

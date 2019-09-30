@@ -194,16 +194,6 @@ PromptFactory.prototype = {
   },
 
   _dispatchEvents: function(aElement) {
-<<<<<<< HEAD
-    // Fire both "input" and "change" events for <select> and <input> for
-    // date/time.
-    aElement.dispatchEvent(new aElement.ownerGlobal.Event("input", { bubbles: true }));
-    aElement.dispatchEvent(new aElement.ownerGlobal.Event("change", { bubbles: true }));
-||||||| merged common ancestors
-    // Fire both "input" and "change" events for <select> and <input>.
-    aElement.dispatchEvent(new aElement.ownerGlobal.Event("input", { bubbles: true }));
-    aElement.dispatchEvent(new aElement.ownerGlobal.Event("change", { bubbles: true }));
-=======
     // Fire both "input" and "change" events for <select> and <input> for
     // date/time.
     aElement.dispatchEvent(
@@ -212,7 +202,6 @@ PromptFactory.prototype = {
     aElement.dispatchEvent(
       new aElement.ownerGlobal.Event("change", { bubbles: true })
     );
->>>>>>> upstream-releases
   },
 
   _handleContextMenu: function(aEvent) {

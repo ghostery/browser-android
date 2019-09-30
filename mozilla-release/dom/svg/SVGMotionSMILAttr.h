@@ -20,14 +20,8 @@ class SMILValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD
-}  // namespace dom
-||||||| merged common ancestors
-} // namespace dom
-=======
 class SVGElement;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * SVGMotionSMILAttr: Implements the SMILAttr interface for SMIL animations
@@ -36,35 +30,6 @@ class SVGElement;
  * NOTE: Even though there's technically no "motion" attribute, we behave in
  * many ways as if there were, for simplicity.
  */
-<<<<<<< HEAD
-class SVGMotionSMILAttr : public nsISMILAttr {
- public:
-  explicit SVGMotionSMILAttr(nsSVGElement* aSVGElement)
-      : mSVGElement(aSVGElement) {}
-
-  // nsISMILAttr methods
-  virtual nsresult ValueFromString(
-      const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
-      nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
-  virtual nsSMILValue GetBaseValue() const override;
-  virtual nsresult SetAnimValue(const nsSMILValue& aValue) override;
-  virtual void ClearAnimValue() override;
-||||||| merged common ancestors
-class SVGMotionSMILAttr : public nsISMILAttr
-{
-public:
-  explicit SVGMotionSMILAttr(nsSVGElement* aSVGElement)
-    : mSVGElement(aSVGElement) {}
-
-  // nsISMILAttr methods
-  virtual nsresult ValueFromString(const nsAString& aStr,
-                                   const dom::SVGAnimationElement* aSrcElement,
-                                   nsSMILValue& aValue,
-                                   bool& aPreventCachingOfSandwich) const override;
-  virtual nsSMILValue GetBaseValue() const override;
-  virtual nsresult    SetAnimValue(const nsSMILValue& aValue) override;
-  virtual void        ClearAnimValue() override;
-=======
 class SVGMotionSMILAttr : public SMILAttr {
  public:
   explicit SVGMotionSMILAttr(dom::SVGElement* aSVGElement)
@@ -77,7 +42,6 @@ class SVGMotionSMILAttr : public SMILAttr {
   virtual SMILValue GetBaseValue() const override;
   virtual nsresult SetAnimValue(const SMILValue& aValue) override;
   virtual void ClearAnimValue() override;
->>>>>>> upstream-releases
   virtual const nsIContent* GetTargetNode() const override;
 
  protected:

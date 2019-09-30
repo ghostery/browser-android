@@ -58,22 +58,11 @@ enum class EditorCommandParamType : uint16_t {
 
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(EditorCommandParamType)
 
-<<<<<<< HEAD
-class EditorCommandBase : public nsIControllerCommand {
- public:
-  EditorCommandBase();
-||||||| merged common ancestors
-class EditorCommandBase : public nsIControllerCommand
-{
-public:
-  EditorCommandBase();
-=======
 /**
  * This is a base class for commands registered with the editor controller.
  * Note that such commands are designed as singleton classes.  So, MUST be
  * stateless. Any state must be stored via the refCon (an nsIEditor).
  */
->>>>>>> upstream-releases
 
 class EditorCommand : public nsIControllerCommand {
  public:
@@ -350,15 +339,6 @@ class EditorCommand : public nsIControllerCommand {
                                    nsICommandParams* aParams,
                                    nsISupports* aCommandRefCon) final;
 
-<<<<<<< HEAD
- protected:
-  virtual ~EditorCommandBase() {}
-};
-||||||| merged common ancestors
-protected:
-  virtual ~EditorCommandBase() {}
-};
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual bool IsCommandEnabled(Command aCommand,
                                 TextEditor* aTextEditor) const = 0;
@@ -389,43 +369,7 @@ protected:
     MOZ_ASSERT_UNREACHABLE("Wrong overload is called");
     return NS_ERROR_NOT_IMPLEMENTED;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_DECL_EDITOR_COMMAND(_cmd)                                        \
-  class _cmd final : public EditorCommandBase {                             \
-   public:                                                                  \
-    NS_IMETHOD IsCommandEnabled(const char* aCommandName,                   \
-                                nsISupports* aCommandRefCon,                \
-                                bool* aIsEnabled) override;                 \
-    NS_IMETHOD DoCommand(const char* aCommandName,                          \
-                         nsISupports* aCommandRefCon) override;             \
-    NS_IMETHOD DoCommandParams(const char* aCommandName,                    \
-                               nsICommandParams* aParams,                   \
-                               nsISupports* aCommandRefCon) override;       \
-    NS_IMETHOD GetCommandStateParams(const char* aCommandName,              \
-                                     nsICommandParams* aParams,             \
-                                     nsISupports* aCommandRefCon) override; \
-  };
-||||||| merged common ancestors
-
-#define NS_DECL_EDITOR_COMMAND(_cmd)                                           \
-class _cmd final : public EditorCommandBase                                    \
-{                                                                              \
-public:                                                                        \
-  NS_IMETHOD IsCommandEnabled(const char* aCommandName,                        \
-                              nsISupports* aCommandRefCon,                     \
-                              bool* aIsEnabled) override;                      \
-  NS_IMETHOD DoCommand(const char* aCommandName,                               \
-                       nsISupports* aCommandRefCon) override;                  \
-  NS_IMETHOD DoCommandParams(const char* aCommandName,                         \
-                             nsICommandParams* aParams,                        \
-                             nsISupports* aCommandRefCon) override;            \
-  NS_IMETHOD GetCommandStateParams(const char* aCommandName,                   \
-                                   nsICommandParams* aParams,                  \
-                                   nsISupports* aCommandRefCon) override;      \
-};
-=======
   /**
    * Called only when the result of EditorCommand::GetParamType(aCommand)
    * includes EditorCommandParamType::Bool.  If aBoolParam is Nothing, it
@@ -486,7 +430,6 @@ public:                                                                        \
   EditorCommand() = default;
   virtual ~EditorCommand() = default;
 };
->>>>>>> upstream-releases
 
 #define NS_DECL_EDITOR_COMMAND_COMMON_METHODS                              \
  public:                                                                   \
@@ -627,64 +570,6 @@ NS_DECL_EDITOR_COMMAND_FOR_NO_PARAM_WITH_DELEGATE(SelectAllCommand)
 NS_DECL_EDITOR_COMMAND_FOR_NO_PARAM_WITH_DELEGATE(SelectionMoveCommands)
 
 // Insert content commands
-<<<<<<< HEAD
-NS_DECL_EDITOR_COMMAND(InsertPlaintextCommand)
-NS_DECL_EDITOR_COMMAND(InsertParagraphCommand)
-NS_DECL_EDITOR_COMMAND(InsertLineBreakCommand)
-NS_DECL_EDITOR_COMMAND(PasteQuotationCommand)
-
-#if 0
-// template for new command
-NS_IMETHODIMP
-FooCommand::IsCommandEnabled(const char* aCommandName,
-                             nsISupports* aCommandRefCon,
-                             bool* aIsEnabled)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-NS_IMETHODIMP
-FooCommand::DoCommand(const char* aCommandName,
-                      const nsAString& aCommandParams,
-                      nsISupports* aCommandRefCon)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-#endif
-
-}  // namespace mozilla
-
-#endif  // #ifndef EditorCommands_h_
-||||||| merged common ancestors
-NS_DECL_EDITOR_COMMAND(InsertPlaintextCommand)
-NS_DECL_EDITOR_COMMAND(InsertParagraphCommand)
-NS_DECL_EDITOR_COMMAND(InsertLineBreakCommand)
-NS_DECL_EDITOR_COMMAND(PasteQuotationCommand)
-
-
-#if 0
-// template for new command
-NS_IMETHODIMP
-FooCommand::IsCommandEnabled(const char* aCommandName,
-                             nsISupports* aCommandRefCon,
-                             bool* aIsEnabled)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-NS_IMETHODIMP
-FooCommand::DoCommand(const char* aCommandName,
-                      const nsAString& aCommandParams,
-                      nsISupports* aCommandRefCon)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-#endif
-
-} // namespace mozilla
-
-#endif // #ifndef EditorCommands_h_
-=======
 NS_DECL_EDITOR_COMMAND_FOR_STRING_PARAM(InsertPlaintextCommand)
 NS_DECL_EDITOR_COMMAND_FOR_NO_PARAM_WITH_DELEGATE(InsertParagraphCommand)
 NS_DECL_EDITOR_COMMAND_FOR_NO_PARAM_WITH_DELEGATE(InsertLineBreakCommand)
@@ -1058,4 +943,3 @@ NS_DECL_EDITOR_COMMAND_FOR_STRING_PARAM(InsertHTMLCommand)
 }  // namespace mozilla
 
 #endif  // #ifndef mozilla_EditorCommands_h
->>>>>>> upstream-releases

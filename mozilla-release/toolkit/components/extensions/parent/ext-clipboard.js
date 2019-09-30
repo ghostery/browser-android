@@ -27,16 +27,10 @@ this.clipboard = class extends ExtensionAPI {
           }
           let img;
           try {
-<<<<<<< HEAD
-            img = imgTools.decodeImageFromArrayBuffer(imageData, `image/${imageType}`);
-||||||| merged common ancestors
-            img = imgTools.decodeImageFromArrayBuffer(imageData, mimeType);
-=======
             img = imgTools.decodeImageFromArrayBuffer(
               imageData,
               `image/${imageType}`
             );
->>>>>>> upstream-releases
           } catch (e) {
             return Promise.reject({
               message: `Data is not a valid ${imageType} image`,

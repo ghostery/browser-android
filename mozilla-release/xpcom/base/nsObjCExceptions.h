@@ -114,24 +114,10 @@ __attribute__((unused)) static void nsObjCExceptionLog(NSException* aException) 
     } else {
       NSLog(@"<No stack information available for Obj-C exception>");
     }
-<<<<<<< HEAD
-  } @catch (NSException* exn) {
-    NSLog(@"Failed to generate stack trace for Obj-C exception [%@: %@]", [exn name], [exn reason]);
-  }
-#endif
-||||||| merged common ancestors
-  }
-  @catch (NSException* exn) {
-    NSLog(@"Failed to generate stack trace for Obj-C exception [%@: %@]",
-          [exn name], [exn reason]);
-  }
-#endif
-=======
   } @catch (NSException* exn) {
     NSLog(@"Failed to generate stack trace for Obj-C exception [%@: %@]", [exn name], [exn reason]);
   }
 #  endif
->>>>>>> upstream-releases
 }
 
 __attribute__((unused)) static void nsObjCExceptionAbort() {
@@ -147,22 +133,6 @@ __attribute__((unused)) static void nsObjCExceptionLogAbort(NSException* aExcept
   nsObjCExceptionAbort();
 }
 
-<<<<<<< HEAD
-#define NS_OBJC_TRY(_e, _fail)    \
-  @try {                          \
-    _e;                           \
-  } @catch (NSException * _exn) { \
-    nsObjCExceptionLog(_exn);     \
-    _fail;                        \
-  }
-||||||| merged common ancestors
-#define NS_OBJC_TRY(_e, _fail)                     \
-@try { _e; }                                       \
-@catch(NSException *_exn) {                        \
-  nsObjCExceptionLog(_exn);                        \
-  _fail;                                           \
-}
-=======
 #  define NS_OBJC_TRY(_e, _fail)    \
     @try {                          \
       _e;                           \
@@ -170,32 +140,7 @@ __attribute__((unused)) static void nsObjCExceptionLogAbort(NSException* aExcept
       nsObjCExceptionLog(_exn);     \
       _fail;                        \
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_OBJC_TRY_EXPR(_e, _fail) \
-  ({                                \
-    typeof(_e) _tmp;                \
-    @try {                          \
-      _tmp = (_e);                  \
-    } @catch (NSException * _exn) { \
-      nsObjCExceptionLog(_exn);     \
-      _fail;                        \
-    }                               \
-    _tmp;                           \
-  })
-||||||| merged common ancestors
-#define NS_OBJC_TRY_EXPR(_e, _fail)                \
-({                                                 \
-   typeof(_e) _tmp;                                \
-   @try { _tmp = (_e); }                           \
-   @catch(NSException *_exn) {                     \
-     nsObjCExceptionLog(_exn);                     \
-     _fail;                                        \
-   }                                               \
-   _tmp;                                           \
-})
-=======
 #  define NS_OBJC_TRY_EXPR(_e, _fail) \
     ({                                \
       typeof(_e) _tmp;                \
@@ -207,73 +152,21 @@ __attribute__((unused)) static void nsObjCExceptionLogAbort(NSException* aExcept
       }                               \
       _tmp;                           \
     })
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_OBJC_TRY_EXPR_NULL(_e) NS_OBJC_TRY_EXPR(_e, 0)
-||||||| merged common ancestors
-#define NS_OBJC_TRY_EXPR_NULL(_e)                  \
-NS_OBJC_TRY_EXPR(_e, 0)
-=======
 #  define NS_OBJC_TRY_EXPR_NULL(_e) NS_OBJC_TRY_EXPR(_e, 0)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_OBJC_TRY_IGNORE(_e) NS_OBJC_TRY(_e, )
-||||||| merged common ancestors
-#define NS_OBJC_TRY_IGNORE(_e)                     \
-NS_OBJC_TRY(_e, )
-=======
 #  define NS_OBJC_TRY_IGNORE(_e) NS_OBJC_TRY(_e, )
->>>>>>> upstream-releases
 
 // To reduce code size the abort versions do not reuse above macros. This allows
 // catch blocks to only contain one call.
 
-<<<<<<< HEAD
-#define NS_OBJC_TRY_ABORT(_e)     \
-  @try {                          \
-    _e;                           \
-  } @catch (NSException * _exn) { \
-    nsObjCExceptionLog(_exn);     \
-  }
-||||||| merged common ancestors
-#define NS_OBJC_TRY_ABORT(_e)                      \
-@try { _e; }                                       \
-@catch(NSException *_exn) {                        \
-  nsObjCExceptionLog(_exn);                        \
-}
-=======
 #  define NS_OBJC_TRY_ABORT(_e)     \
     @try {                          \
       _e;                           \
     } @catch (NSException * _exn) { \
       nsObjCExceptionLog(_exn);     \
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_OBJC_TRY_EXPR_ABORT(_e)  \
-  ({                                \
-    typeof(_e) _tmp;                \
-    @try {                          \
-      _tmp = (_e);                  \
-    } @catch (NSException * _exn) { \
-      nsObjCExceptionLog(_exn);     \
-    }                               \
-    _tmp;                           \
-  })
-||||||| merged common ancestors
-#define NS_OBJC_TRY_EXPR_ABORT(_e)                 \
-({                                                 \
-   typeof(_e) _tmp;                                \
-   @try { _tmp = (_e); }                           \
-   @catch(NSException *_exn) {                     \
-     nsObjCExceptionLog(_exn);                     \
-   }                                               \
-   _tmp;                                           \
-})
-=======
 #  define NS_OBJC_TRY_EXPR_ABORT(_e)  \
     ({                                \
       typeof(_e) _tmp;                \
@@ -284,95 +177,19 @@ NS_OBJC_TRY(_e, )
       }                               \
       _tmp;                           \
     })
->>>>>>> upstream-releases
 
 // For wrapping blocks of Obj-C calls. Does not actually terminate.
-<<<<<<< HEAD
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK \
-  }                                 \
-  @catch (NSException * _exn) {     \
-    nsObjCExceptionLog(_exn);       \
-  }
-||||||| merged common ancestors
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK   } @catch(NSException *_exn) {             \
-                                        nsObjCExceptionLog(_exn);               \
-                                      }
-=======
 #  define NS_OBJC_BEGIN_TRY_ABORT_BLOCK @try {
 #  define NS_OBJC_END_TRY_ABORT_BLOCK \
     }                                 \
     @catch (NSException * _exn) {     \
       nsObjCExceptionLog(_exn);       \
     }
->>>>>>> upstream-releases
 
 // Same as above ABORT_BLOCK but returns a value after the try/catch block to
 // suppress compiler warnings. This allows us to avoid having to refactor code
 // to get scoping right when wrapping an entire method.
 
-<<<<<<< HEAD
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NIL @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_NIL \
-  }                                     \
-  @catch (NSException * _exn) {         \
-    nsObjCExceptionLog(_exn);           \
-  }                                     \
-  return nil;
-
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSNULL @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_NSNULL \
-  }                                        \
-  @catch (NSException * _exn) {            \
-    nsObjCExceptionLog(_exn);              \
-  }                                        \
-  return nullptr;
-
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_NSRESULT \
-  }                                          \
-  @catch (NSException * _exn) {              \
-    nsObjCExceptionLog(_exn);                \
-  }                                          \
-  return NS_ERROR_FAILURE;
-
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_RETURN @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_RETURN(_rv) \
-  }                                             \
-  @catch (NSException * _exn) {                 \
-    nsObjCExceptionLog(_exn);                   \
-  }                                             \
-  return _rv;
-
-#endif  // nsObjCExceptions_h_
-||||||| merged common ancestors
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NIL @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_NIL   } @catch(NSException *_exn) {         \
-                                            nsObjCExceptionLog(_exn);           \
-                                          }                                     \
-                                          return nil;
-
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSNULL @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_NSNULL   } @catch(NSException *_exn) {      \
-                                               nsObjCExceptionLog(_exn);        \
-                                             }                                  \
-                                             return nullptr;
-
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_NSRESULT   } @catch(NSException *_exn) {    \
-                                                 nsObjCExceptionLog(_exn);      \
-                                               }                                \
-                                               return NS_ERROR_FAILURE;
-
-#define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_RETURN    @try {
-#define NS_OBJC_END_TRY_ABORT_BLOCK_RETURN(_rv) } @catch(NSException *_exn) {   \
-                                                  nsObjCExceptionLog(_exn);\
-                                                }                               \
-                                                return _rv;
-
-#endif // nsObjCExceptions_h_
-=======
 #  define NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NIL @try {
 #  define NS_OBJC_END_TRY_ABORT_BLOCK_NIL \
     }                                     \
@@ -406,4 +223,3 @@ NS_OBJC_TRY(_e, )
     return _rv;
 
 #endif  // nsObjCExceptions_h_
->>>>>>> upstream-releases

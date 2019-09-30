@@ -26,26 +26,9 @@ using namespace gfx;
  * Used for images specific to this one canvas. Required
  * due to CORS security.
  */
-<<<<<<< HEAD
-struct ImageCacheKey {
-  ImageCacheKey(imgIContainer* aImage, HTMLCanvasElement* aCanvas,
-                bool aIsAccelerated)
-      : mImage(aImage), mCanvas(aCanvas), mIsAccelerated(aIsAccelerated) {}
-||||||| merged common ancestors
-struct ImageCacheKey
-{
-  ImageCacheKey(imgIContainer* aImage,
-                HTMLCanvasElement* aCanvas,
-                bool aIsAccelerated)
-    : mImage(aImage)
-    , mCanvas(aCanvas)
-    , mIsAccelerated(aIsAccelerated)
-  {}
-=======
 struct ImageCacheKey {
   ImageCacheKey(imgIContainer* aImage, HTMLCanvasElement* aCanvas)
       : mImage(aImage), mCanvas(aCanvas) {}
->>>>>>> upstream-releases
   nsCOMPtr<imgIContainer> mImage;
   HTMLCanvasElement* mCanvas;
 };
@@ -56,38 +39,12 @@ struct ImageCacheKey {
  */
 struct ImageCacheEntryData {
   ImageCacheEntryData(const ImageCacheEntryData& aOther)
-<<<<<<< HEAD
-      : mImage(aOther.mImage),
-        mCanvas(aOther.mCanvas),
-        mIsAccelerated(aOther.mIsAccelerated),
-        mSourceSurface(aOther.mSourceSurface),
-        mSize(aOther.mSize) {}
-||||||| merged common ancestors
-    : mImage(aOther.mImage)
-    , mCanvas(aOther.mCanvas)
-    , mIsAccelerated(aOther.mIsAccelerated)
-    , mSourceSurface(aOther.mSourceSurface)
-    , mSize(aOther.mSize)
-  {}
-=======
       : mImage(aOther.mImage),
         mCanvas(aOther.mCanvas),
         mSourceSurface(aOther.mSourceSurface),
         mSize(aOther.mSize) {}
->>>>>>> upstream-releases
   explicit ImageCacheEntryData(const ImageCacheKey& aKey)
-<<<<<<< HEAD
-      : mImage(aKey.mImage),
-        mCanvas(aKey.mCanvas),
-        mIsAccelerated(aKey.mIsAccelerated) {}
-||||||| merged common ancestors
-    : mImage(aKey.mImage)
-    , mCanvas(aKey.mCanvas)
-    , mIsAccelerated(aKey.mIsAccelerated)
-  {}
-=======
       : mImage(aKey.mImage), mCanvas(aKey.mCanvas) {}
->>>>>>> upstream-releases
 
   nsExpirationState* GetExpirationState() { return &mState; }
   size_t SizeInBytes() { return mSize.width * mSize.height * 4; }
@@ -112,34 +69,13 @@ class ImageCacheEntry : public PLDHashEntryHdr {
       : mData(new ImageCacheEntryData(*toCopy.mData)) {}
   ~ImageCacheEntry() {}
 
-<<<<<<< HEAD
-  bool KeyEquals(KeyTypePointer key) const {
-    return mData->mImage == key->mImage && mData->mCanvas == key->mCanvas &&
-           mData->mIsAccelerated == key->mIsAccelerated;
-||||||| merged common ancestors
-  bool KeyEquals(KeyTypePointer key) const
-  {
-    return mData->mImage == key->mImage &&
-           mData->mCanvas == key->mCanvas &&
-           mData->mIsAccelerated == key->mIsAccelerated;
-=======
   bool KeyEquals(KeyTypePointer key) const {
     return mData->mImage == key->mImage && mData->mCanvas == key->mCanvas;
->>>>>>> upstream-releases
   }
 
   static KeyTypePointer KeyToPointer(KeyType& key) { return &key; }
-<<<<<<< HEAD
-  static PLDHashNumber HashKey(KeyTypePointer key) {
-    return HashGeneric(key->mImage.get(), key->mCanvas, key->mIsAccelerated);
-||||||| merged common ancestors
-  static PLDHashNumber HashKey(KeyTypePointer key)
-  {
-    return HashGeneric(key->mImage.get(), key->mCanvas, key->mIsAccelerated);
-=======
   static PLDHashNumber HashKey(KeyTypePointer key) {
     return HashGeneric(key->mImage.get(), key->mCanvas);
->>>>>>> upstream-releases
   }
   enum { ALLOW_MEMMOVE = true };
 
@@ -149,22 +85,8 @@ class ImageCacheEntry : public PLDHashEntryHdr {
 /**
  * Used for all images across all canvases.
  */
-<<<<<<< HEAD
-struct AllCanvasImageCacheKey {
-  AllCanvasImageCacheKey(imgIContainer* aImage, bool aIsAccelerated)
-      : mImage(aImage), mIsAccelerated(aIsAccelerated) {}
-||||||| merged common ancestors
-struct AllCanvasImageCacheKey
-{
-  AllCanvasImageCacheKey(imgIContainer* aImage,
-                         bool aIsAccelerated)
-    : mImage(aImage)
-    , mIsAccelerated(aIsAccelerated)
-  {}
-=======
 struct AllCanvasImageCacheKey {
   explicit AllCanvasImageCacheKey(imgIContainer* aImage) : mImage(aImage) {}
->>>>>>> upstream-releases
 
   nsCOMPtr<imgIContainer> mImage;
 };
@@ -175,60 +97,18 @@ class AllCanvasImageCacheEntry : public PLDHashEntryHdr {
   typedef const AllCanvasImageCacheKey* KeyTypePointer;
 
   explicit AllCanvasImageCacheEntry(const KeyType* aKey)
-<<<<<<< HEAD
-      : mImage(aKey->mImage), mIsAccelerated(aKey->mIsAccelerated) {}
-||||||| merged common ancestors
-    : mImage(aKey->mImage)
-    , mIsAccelerated(aKey->mIsAccelerated)
-  {}
-=======
       : mImage(aKey->mImage) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AllCanvasImageCacheEntry(const AllCanvasImageCacheEntry& toCopy)
-      : mImage(toCopy.mImage),
-        mIsAccelerated(toCopy.mIsAccelerated),
-        mSourceSurface(toCopy.mSourceSurface) {}
-||||||| merged common ancestors
-  AllCanvasImageCacheEntry(const AllCanvasImageCacheEntry &toCopy)
-    : mImage(toCopy.mImage)
-    , mIsAccelerated(toCopy.mIsAccelerated)
-    , mSourceSurface(toCopy.mSourceSurface)
-  {}
-=======
   AllCanvasImageCacheEntry(const AllCanvasImageCacheEntry& toCopy)
       : mImage(toCopy.mImage), mSourceSurface(toCopy.mSourceSurface) {}
->>>>>>> upstream-releases
 
   ~AllCanvasImageCacheEntry() {}
 
-<<<<<<< HEAD
-  bool KeyEquals(KeyTypePointer key) const {
-    return mImage == key->mImage && mIsAccelerated == key->mIsAccelerated;
-  }
-||||||| merged common ancestors
-  bool KeyEquals(KeyTypePointer key) const
-  {
-    return mImage == key->mImage &&
-           mIsAccelerated == key->mIsAccelerated;
-  }
-=======
   bool KeyEquals(KeyTypePointer key) const { return mImage == key->mImage; }
->>>>>>> upstream-releases
 
   static KeyTypePointer KeyToPointer(KeyType& key) { return &key; }
-<<<<<<< HEAD
-  static PLDHashNumber HashKey(KeyTypePointer key) {
-    return HashGeneric(key->mImage.get(), key->mIsAccelerated);
-||||||| merged common ancestors
-  static PLDHashNumber HashKey(KeyTypePointer key)
-  {
-    return HashGeneric(key->mImage.get(), key->mIsAccelerated);
-=======
   static PLDHashNumber HashKey(KeyTypePointer key) {
     return HashGeneric(key->mImage.get());
->>>>>>> upstream-releases
   }
   enum { ALLOW_MEMMOVE = true };
 
@@ -254,24 +134,10 @@ class ImageCache final : public nsExpirationTracker<ImageCacheEntryData, 4> {
 
     // Remove from the all canvas cache entry first since nsExpirationTracker
     // will delete aObject.
-<<<<<<< HEAD
-    mAllCanvasCache.RemoveEntry(
-        AllCanvasImageCacheKey(aObject->mImage, aObject->mIsAccelerated));
-||||||| merged common ancestors
-    mAllCanvasCache.RemoveEntry(AllCanvasImageCacheKey(aObject->mImage, aObject->mIsAccelerated));
-=======
     mAllCanvasCache.RemoveEntry(AllCanvasImageCacheKey(aObject->mImage));
->>>>>>> upstream-releases
 
     // Deleting the entry will delete aObject since the entry owns aObject.
-<<<<<<< HEAD
-    mCache.RemoveEntry(ImageCacheKey(aObject->mImage, aObject->mCanvas,
-                                     aObject->mIsAccelerated));
-||||||| merged common ancestors
-    mCache.RemoveEntry(ImageCacheKey(aObject->mImage, aObject->mCanvas, aObject->mIsAccelerated));
-=======
     mCache.RemoveEntry(ImageCacheKey(aObject->mImage, aObject->mCanvas));
->>>>>>> upstream-releases
   }
 
   nsTHashtable<ImageCacheEntry> mCache;
@@ -388,26 +254,10 @@ static already_AddRefed<imgIContainer> GetImageContainer(dom::Element* aImage) {
   return imgContainer.forget();
 }
 
-<<<<<<< HEAD
-void CanvasImageCache::NotifyDrawImage(Element* aImage,
-                                       HTMLCanvasElement* aCanvas,
-                                       SourceSurface* aSource,
-                                       const IntSize& aSize,
-                                       bool aIsAccelerated) {
-||||||| merged common ancestors
-void
-CanvasImageCache::NotifyDrawImage(Element* aImage,
-                                  HTMLCanvasElement* aCanvas,
-                                  SourceSurface* aSource,
-                                  const IntSize& aSize,
-                                  bool aIsAccelerated)
-{
-=======
 void CanvasImageCache::NotifyDrawImage(Element* aImage,
                                        HTMLCanvasElement* aCanvas,
                                        SourceSurface* aSource,
                                        const IntSize& aSize) {
->>>>>>> upstream-releases
   if (!gImageCache) {
     gImageCache = new ImageCache();
     nsContentUtils::RegisterShutdownObserver(
@@ -450,17 +300,7 @@ void CanvasImageCache::NotifyDrawImage(Element* aImage,
     gImageCache->AgeOneGeneration();
 }
 
-<<<<<<< HEAD
-SourceSurface* CanvasImageCache::LookupAllCanvas(Element* aImage,
-                                                 bool aIsAccelerated) {
-||||||| merged common ancestors
-SourceSurface*
-CanvasImageCache::LookupAllCanvas(Element* aImage,
-                                  bool aIsAccelerated)
-{
-=======
 SourceSurface* CanvasImageCache::LookupAllCanvas(Element* aImage) {
->>>>>>> upstream-releases
   if (!gImageCache) {
     return nullptr;
   }
@@ -470,16 +310,8 @@ SourceSurface* CanvasImageCache::LookupAllCanvas(Element* aImage) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  AllCanvasImageCacheEntry* entry = gImageCache->mAllCanvasCache.GetEntry(
-      AllCanvasImageCacheKey(imgContainer, aIsAccelerated));
-||||||| merged common ancestors
-  AllCanvasImageCacheEntry* entry =
-    gImageCache->mAllCanvasCache.GetEntry(AllCanvasImageCacheKey(imgContainer, aIsAccelerated));
-=======
   AllCanvasImageCacheEntry* entry = gImageCache->mAllCanvasCache.GetEntry(
       AllCanvasImageCacheKey(imgContainer));
->>>>>>> upstream-releases
   if (!entry) {
     return nullptr;
   }
@@ -487,23 +319,9 @@ SourceSurface* CanvasImageCache::LookupAllCanvas(Element* aImage) {
   return entry->mSourceSurface;
 }
 
-<<<<<<< HEAD
-SourceSurface* CanvasImageCache::LookupCanvas(Element* aImage,
-                                              HTMLCanvasElement* aCanvas,
-                                              IntSize* aSizeOut,
-                                              bool aIsAccelerated) {
-||||||| merged common ancestors
-SourceSurface*
-CanvasImageCache::LookupCanvas(Element* aImage,
-                               HTMLCanvasElement* aCanvas,
-                               IntSize* aSizeOut,
-                               bool aIsAccelerated)
-{
-=======
 SourceSurface* CanvasImageCache::LookupCanvas(Element* aImage,
                                               HTMLCanvasElement* aCanvas,
                                               IntSize* aSizeOut) {
->>>>>>> upstream-releases
   if (!gImageCache) {
     return nullptr;
   }
@@ -513,16 +331,8 @@ SourceSurface* CanvasImageCache::LookupCanvas(Element* aImage,
     return nullptr;
   }
 
-<<<<<<< HEAD
-  ImageCacheEntry* entry = gImageCache->mCache.GetEntry(
-      ImageCacheKey(imgContainer, aCanvas, aIsAccelerated));
-||||||| merged common ancestors
-  ImageCacheEntry* entry =
-    gImageCache->mCache.GetEntry(ImageCacheKey(imgContainer, aCanvas, aIsAccelerated));
-=======
   ImageCacheEntry* entry =
       gImageCache->mCache.GetEntry(ImageCacheKey(imgContainer, aCanvas));
->>>>>>> upstream-releases
   if (!entry) {
     return nullptr;
   }

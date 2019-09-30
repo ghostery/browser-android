@@ -22,9 +22,6 @@ class GrRecordingContext;
 class ShapeData;
 class ShapeDataKey;
 
-class ShapeData;
-class ShapeDataKey;
-
 class GrSmallPathRenderer : public GrPathRenderer, public GrOnFlushCallbackObject {
 public:
     GrSmallPathRenderer();
@@ -50,23 +47,6 @@ public:
         }
     }
 
-<<<<<<< HEAD
-    using ShapeCache = SkTDynamicHash<ShapeData, ShapeDataKey>;
-    typedef SkTInternalLList<ShapeData> ShapeDataList;
-
-    static std::unique_ptr<GrDrawOp> createOp_TestingOnly(GrContext*,
-                                                          GrPaint&&,
-                                                          const GrShape&,
-                                                          const SkMatrix& viewMatrix,
-                                                          GrDrawOpAtlas* atlas,
-                                                          ShapeCache*,
-                                                          ShapeDataList*,
-                                                          bool gammaCorrect,
-                                                          const GrUserStencilSettings*);
-    struct PathTestStruct;
-
-||||||| merged common ancestors
-=======
     using ShapeCache = SkTDynamicHash<ShapeData, ShapeDataKey>;
     typedef SkTInternalLList<ShapeData> ShapeDataList;
 
@@ -81,7 +61,6 @@ public:
                                                           const GrUserStencilSettings*);
     struct PathTestStruct;
 
->>>>>>> upstream-releases
 private:
     class SmallPathOp;
 

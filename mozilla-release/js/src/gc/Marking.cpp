@@ -123,54 +123,6 @@ using mozilla::PodCopy;
 /*** Tracing Invariants *****************************************************/
 
 #if defined(DEBUG)
-<<<<<<< HEAD
-template <typename T>
-static inline bool IsThingPoisoned(T* thing) {
-  const uint8_t poisonBytes[] = {
-      JS_FRESH_NURSERY_PATTERN,     JS_SWEPT_NURSERY_PATTERN,
-      JS_ALLOCATED_NURSERY_PATTERN, JS_FRESH_TENURED_PATTERN,
-      JS_MOVED_TENURED_PATTERN,     JS_SWEPT_TENURED_PATTERN,
-      JS_ALLOCATED_TENURED_PATTERN, JS_FREED_HEAP_PTR_PATTERN,
-      JS_SWEPT_TI_PATTERN,          JS_SWEPT_CODE_PATTERN,
-      JS_FREED_CHUNK_PATTERN};
-  const int numPoisonBytes = sizeof(poisonBytes) / sizeof(poisonBytes[0]);
-  uint32_t* p =
-      reinterpret_cast<uint32_t*>(reinterpret_cast<FreeSpan*>(thing) + 1);
-  // Note: all free patterns are odd to make the common, not-poisoned case a
-  // single test.
-  if ((*p & 1) == 0) {
-||||||| merged common ancestors
-template<typename T>
-static inline bool
-IsThingPoisoned(T* thing)
-{
-    const uint8_t poisonBytes[] = {
-        JS_FRESH_NURSERY_PATTERN,
-        JS_SWEPT_NURSERY_PATTERN,
-        JS_ALLOCATED_NURSERY_PATTERN,
-        JS_FRESH_TENURED_PATTERN,
-        JS_MOVED_TENURED_PATTERN,
-        JS_SWEPT_TENURED_PATTERN,
-        JS_ALLOCATED_TENURED_PATTERN,
-        JS_FREED_HEAP_PTR_PATTERN,
-        JS_SWEPT_TI_PATTERN,
-        JS_SWEPT_CODE_PATTERN,
-        JS_FREED_CHUNK_PATTERN
-    };
-    const int numPoisonBytes = sizeof(poisonBytes) / sizeof(poisonBytes[0]);
-    uint32_t* p = reinterpret_cast<uint32_t*>(reinterpret_cast<FreeSpan*>(thing) + 1);
-    // Note: all free patterns are odd to make the common, not-poisoned case a single test.
-    if ((*p & 1) == 0) {
-        return false;
-    }
-    for (int i = 0; i < numPoisonBytes; ++i) {
-        const uint8_t pb = poisonBytes[i];
-        const uint32_t pw = pb | (pb << 8) | (pb << 16) | (pb << 24);
-        if (*p == pw) {
-            return true;
-        }
-    }
-=======
 template <typename T>
 static inline bool IsThingPoisoned(T* thing) {
   const uint8_t poisonBytes[] = {
@@ -190,7 +142,6 @@ static inline bool IsThingPoisoned(T* thing) {
   // Note: all free patterns are odd to make the common, not-poisoned case a
   // single test.
   if ((*p & 1) == 0) {
->>>>>>> upstream-releases
     return false;
   }
   for (int i = 0; i < numPoisonBytes; ++i) {
@@ -203,21 +154,9 @@ static inline bool IsThingPoisoned(T* thing) {
   return false;
 }
 
-<<<<<<< HEAD
-static bool IsMovingTracer(JSTracer* trc) {
-  return trc->isCallbackTracer() && trc->asCallbackTracer()->getTracerKind() ==
-                                        JS::CallbackTracer::TracerKind::Moving;
-||||||| merged common ancestors
-static bool
-IsMovingTracer(JSTracer *trc)
-{
-    return trc->isCallbackTracer() &&
-           trc->asCallbackTracer()->getTracerKind() == JS::CallbackTracer::TracerKind::Moving;
-=======
 bool js::IsTracerKind(JSTracer* trc, JS::CallbackTracer::TracerKind kind) {
   return trc->isCallbackTracer() &&
          trc->asCallbackTracer()->getTracerKind() == kind;
->>>>>>> upstream-releases
 }
 #endif
 
@@ -251,76 +190,12 @@ static inline bool IsOwnedByOtherRuntime(JSRuntime* rt, T thing) {
 template <typename T>
 void js::CheckTracedThing(JSTracer* trc, T* thing) {
 #ifdef DEBUG
-<<<<<<< HEAD
   MOZ_ASSERT(trc);
   MOZ_ASSERT(thing);
 
   if (!trc->checkEdges()) {
     return;
   }
-||||||| merged common ancestors
-    MOZ_ASSERT(trc);
-    MOZ_ASSERT(thing);
-
-    if (!trc->checkEdges()) {
-        return;
-    }
-
-    if (IsForwarded(thing)) {
-        thing = Forwarded(thing);
-    }
-
-    /* This function uses data that's not available in the nursery. */
-    if (IsInsideNursery(thing)) {
-        return;
-    }
-
-    MOZ_ASSERT_IF(!IsMovingTracer(trc) && !trc->isTenuringTracer(), !IsForwarded(thing));
-
-    /*
-     * Permanent atoms and things in the self-hosting zone are not associated
-     * with this runtime, but will be ignored during marking.
-     */
-    if (IsOwnedByOtherRuntime(trc->runtime(), thing)) {
-        return;
-    }
-
-    Zone* zone = thing->zoneFromAnyThread();
-    JSRuntime* rt = trc->runtime();
-
-    if (!IsMovingTracer(trc) && !IsBufferGrayRootsTracer(trc) && !IsClearEdgesTracer(trc)) {
-        MOZ_ASSERT(CurrentThreadCanAccessZone(zone));
-        MOZ_ASSERT(CurrentThreadCanAccessRuntime(rt));
-    }
-
-    MOZ_ASSERT(zone->runtimeFromAnyThread() == trc->runtime());
-
-    // It shouldn't be possible to trace into zones used by helper threads.
-    MOZ_ASSERT(!zone->usedByHelperThread());
-
-    MOZ_ASSERT(thing->isAligned());
-    MOZ_ASSERT(MapTypeToTraceKind<typename mozilla::RemovePointer<T>::Type>::kind ==
-               thing->getTraceKind());
-
-    /*
-     * Do not check IsMarkingTracer directly -- it should only be used in paths
-     * where we cannot be the gray buffering tracer.
-     */
-    bool isGcMarkingTracer = trc->isMarkingTracer();
-
-    MOZ_ASSERT_IF(zone->requireGCTracer(),
-                  isGcMarkingTracer ||
-                  IsBufferGrayRootsTracer(trc) ||
-                  IsUnmarkGrayTracer(trc) ||
-                  IsClearEdgesTracer(trc));
-=======
-  MOZ_ASSERT(trc);
-  MOZ_ASSERT(thing);
-
-  if (!trc->checkEdges()) {
-    return;
-  }
->>>>>>> upstream-releases
 
   if (IsForwarded(thing)) {
     thing = Forwarded(thing);
@@ -331,103 +206,10 @@ void js::CheckTracedThing(JSTracer* trc, T* thing) {
     return;
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT_IF(!IsMovingTracer(trc) && !trc->isTenuringTracer(),
-                !IsForwarded(thing));
-||||||| merged common ancestors
-        MOZ_ASSERT(!(zone->isGCSweeping() || zone->isGCFinished() || zone->isGCCompacting()));
-    }
-=======
   MOZ_ASSERT_IF(!IsTracerKind(trc, JS::CallbackTracer::TracerKind::Moving) &&
                     !trc->isTenuringTracer(),
                 !IsForwarded(thing));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /*
-   * Permanent atoms and things in the self-hosting zone are not associated
-   * with this runtime, but will be ignored during marking.
-   */
-  if (IsOwnedByOtherRuntime(trc->runtime(), thing)) {
-    return;
-  }
-
-  Zone* zone = thing->zoneFromAnyThread();
-  JSRuntime* rt = trc->runtime();
-
-  if (!IsMovingTracer(trc) && !IsBufferGrayRootsTracer(trc) &&
-      !IsClearEdgesTracer(trc)) {
-    MOZ_ASSERT(CurrentThreadCanAccessZone(zone));
-    MOZ_ASSERT(CurrentThreadCanAccessRuntime(rt));
-  }
-
-  MOZ_ASSERT(zone->runtimeFromAnyThread() == trc->runtime());
-
-  // It shouldn't be possible to trace into zones used by helper threads.
-  MOZ_ASSERT(!zone->usedByHelperThread());
-
-  MOZ_ASSERT(thing->isAligned());
-  MOZ_ASSERT(
-      MapTypeToTraceKind<typename mozilla::RemovePointer<T>::Type>::kind ==
-      thing->getTraceKind());
-
-  /*
-   * Do not check IsMarkingTracer directly -- it should only be used in paths
-   * where we cannot be the gray buffering tracer.
-   */
-  bool isGcMarkingTracer = trc->isMarkingTracer();
-
-  MOZ_ASSERT_IF(zone->requireGCTracer(),
-                isGcMarkingTracer || IsBufferGrayRootsTracer(trc) ||
-                    IsUnmarkGrayTracer(trc) || IsClearEdgesTracer(trc));
-
-  if (isGcMarkingTracer) {
-    GCMarker* gcMarker = GCMarker::fromTracer(trc);
-    MOZ_ASSERT_IF(gcMarker->shouldCheckCompartments(),
-                  zone->isCollecting() || zone->isAtomsZone());
-
-    MOZ_ASSERT_IF(gcMarker->markColor() == MarkColor::Gray,
-                  !zone->isGCMarkingBlack() || zone->isAtomsZone());
-
-    MOZ_ASSERT(!(zone->isGCSweeping() || zone->isGCFinished() ||
-                 zone->isGCCompacting()));
-  }
-
-  /*
-   * Try to assert that the thing is allocated.
-   *
-   * We would like to assert that the thing is not in the free list, but this
-   * check is very slow. Instead we check whether the thing has been poisoned:
-   * if it has not then we assume it is allocated, but if it has then it is
-   * either free or uninitialized in which case we check the free list.
-   *
-   * Further complications are that background sweeping may be running and
-   * concurrently modifiying the free list and that tracing is done off
-   * thread during compacting GC and reading the contents of the thing by
-   * IsThingPoisoned would be racy in this case.
-   */
-  MOZ_ASSERT_IF(JS::RuntimeHeapIsBusy() && !zone->isGCSweeping() &&
-                    !zone->isGCFinished() && !zone->isGCCompacting(),
-                !IsThingPoisoned(thing) ||
-                    !InFreeList(thing->asTenured().arena(), thing));
-||||||| merged common ancestors
-    /*
-     * Try to assert that the thing is allocated.
-     *
-     * We would like to assert that the thing is not in the free list, but this
-     * check is very slow. Instead we check whether the thing has been poisoned:
-     * if it has not then we assume it is allocated, but if it has then it is
-     * either free or uninitialized in which case we check the free list.
-     *
-     * Further complications are that background sweeping may be running and
-     * concurrently modifiying the free list and that tracing is done off
-     * thread during compacting GC and reading the contents of the thing by
-     * IsThingPoisoned would be racy in this case.
-     */
-    MOZ_ASSERT_IF(JS::RuntimeHeapIsBusy() &&
-                  !zone->isGCSweeping() && !zone->isGCFinished() && !zone->isGCCompacting(),
-                  !IsThingPoisoned(thing) || !InFreeList(thing->asTenured().arena(), thing));
-=======
   /*
    * Permanent atoms and things in the self-hosting zone are not associated
    * with this runtime, but will be ignored during marking.
@@ -494,69 +276,23 @@ void js::CheckTracedThing(JSTracer* trc, T* thing) {
                     !zone->isGCFinished() && !zone->isGCCompacting(),
                 !IsThingPoisoned(thing) ||
                     !InFreeList(thing->asTenured().arena(), thing));
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-template <typename S>
-struct CheckTracedFunctor : public VoidDefaultAdaptor<S> {
-  template <typename T>
-  void operator()(T* t, JSTracer* trc) {
-    CheckTracedThing(trc, t);
-  }
-};
-
-template <typename T>
-void js::CheckTracedThing(JSTracer* trc, T thing) {
-  DispatchTyped(CheckTracedFunctor<T>(), thing, trc);
-||||||| merged common ancestors
-template <typename S>
-struct CheckTracedFunctor : public VoidDefaultAdaptor<S> {
-    template <typename T> void operator()(T* t, JSTracer* trc) { CheckTracedThing(trc, t); }
-};
-
-template<typename T>
-void
-js::CheckTracedThing(JSTracer* trc, T thing)
-{
-    DispatchTyped(CheckTracedFunctor<T>(), thing, trc);
-=======
 template <typename T>
 void js::CheckTracedThing(JSTracer* trc, T thing) {
   ApplyGCThingTyped(thing, [](auto t) { CheckTracedThing(t); });
->>>>>>> upstream-releases
 }
 
 namespace js {
-<<<<<<< HEAD
-#define IMPL_CHECK_TRACED_THING(_, type, __) \
-  template void CheckTracedThing<type>(JSTracer*, type*);
-||||||| merged common ancestors
-#define IMPL_CHECK_TRACED_THING(_, type, __) \
-    template void CheckTracedThing<type>(JSTracer*, type*);
-=======
 #define IMPL_CHECK_TRACED_THING(_, type, _1, _2) \
   template void CheckTracedThing<type>(JSTracer*, type*);
->>>>>>> upstream-releases
 JS_FOR_EACH_TRACEKIND(IMPL_CHECK_TRACED_THING);
 #undef IMPL_CHECK_TRACED_THING
 }  // namespace js
 
 static bool UnmarkGrayGCThing(JSRuntime* rt, JS::GCCellPtr thing);
 
-<<<<<<< HEAD
-static inline bool ShouldMarkCrossCompartment(GCMarker* marker, JSObject* src,
-                                              Cell* dstCell) {
-  MarkColor color = marker->markColor();
-||||||| merged common ancestors
-static bool
-ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src, Cell* cell)
-{
-    if (!trc->isMarkingTracer()) {
-        return true;
-    }
-=======
 static inline bool ShouldMarkCrossCompartment(GCMarker* marker, JSObject* src,
                                               Cell* dstCell) {
   MarkColor color = marker->markColor();
@@ -566,72 +302,17 @@ static inline bool ShouldMarkCrossCompartment(GCMarker* marker, JSObject* src,
     return false;
   }
   TenuredCell& dst = dstCell->asTenured();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!dstCell->isTenured()) {
-    MOZ_ASSERT(color == MarkColor::Black);
-    return false;
-  }
-  TenuredCell& dst = dstCell->asTenured();
-||||||| merged common ancestors
-    MarkColor color = GCMarker::fromTracer(trc)->markColor();
-=======
   JS::Zone* dstZone = dst.zone();
   if (!src->zone()->isGCMarking() && !dstZone->isGCMarking()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::Zone* dstZone = dst.zone();
-  if (!src->zone()->isGCMarking() && !dstZone->isGCMarking()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!cell->isTenured()) {
-        MOZ_ASSERT(color == MarkColor::Black);
-        return false;
-    }
-    TenuredCell& tenured = cell->asTenured();
-=======
   if (color == MarkColor::Black) {
     // Check our sweep groups are correct: we should never have to
     // mark something in a zone that we have started sweeping.
     MOZ_ASSERT_IF(!dst.isMarkedBlack(), !dstZone->isGCSweeping());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (color == MarkColor::Black) {
-    /*
-     * Having black->gray edges violates our promise to the cycle
-     * collector. This can happen if we're collecting a compartment and it
-     * has an edge to an uncollected compartment: it's possible that the
-     * source and destination of the cross-compartment edge should be gray,
-     * but the source was marked black by the write barrier.
-     */
-    if (dst.isMarkedGray()) {
-      MOZ_ASSERT(!dstZone->isCollecting());
-      UnmarkGrayGCThing(marker->runtime(),
-                        JS::GCCellPtr(&dst, dst.getTraceKind()));
-    }
-    return dstZone->isGCMarking();
-  } else {
-    if (dstZone->isGCMarkingBlack()) {
-      /*
-       * The destination compartment is being not being marked gray now,
-       * but it will be later, so record the cell so it can be marked gray
-       * at the appropriate time.
-       */
-      if (!dst.isMarkedAny()) {
-        DelayCrossCompartmentGrayMarking(src);
-      }
-      return false;
-||||||| merged common ancestors
-    JS::Zone* zone = tenured.zone();
-    if (!src->zone()->isGCMarking() && !zone->isGCMarking()) {
-        return false;
-=======
     /*
      * Having black->gray edges violates our promise to the cycle collector so
      * we ensure that gray things we encounter when marking black end up getting
@@ -671,65 +352,12 @@ static inline bool ShouldMarkCrossCompartment(GCMarker* marker, JSObject* src,
         DelayCrossCompartmentGrayMarking(src);
       }
       return false;
->>>>>>> upstream-releases
     }
-    return dstZone->isGCMarkingGray();
-  }
-}
 
-<<<<<<< HEAD
-static bool ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src,
-                                        Cell* dstCell) {
-  if (!trc->isMarkingTracer()) {
-    return true;
-  }
-
-  return ShouldMarkCrossCompartment(GCMarker::fromTracer(trc), src, dstCell);
-||||||| merged common ancestors
-    if (color == MarkColor::Black) {
-        /*
-         * Having black->gray edges violates our promise to the cycle
-         * collector. This can happen if we're collecting a compartment and it
-         * has an edge to an uncollected compartment: it's possible that the
-         * source and destination of the cross-compartment edge should be gray,
-         * but the source was marked black by the write barrier.
-         */
-        if (tenured.isMarkedGray()) {
-            MOZ_ASSERT(!zone->isCollecting());
-            UnmarkGrayGCThing(trc->runtime(), JS::GCCellPtr(cell, cell->getTraceKind()));
-        }
-        return zone->isGCMarking();
-    } else {
-        if (zone->isGCMarkingBlack()) {
-            /*
-             * The destination compartment is being not being marked gray now,
-             * but it will be later, so record the cell so it can be marked gray
-             * at the appropriate time.
-             */
-            if (!tenured.isMarkedAny()) {
-                DelayCrossCompartmentGrayMarking(src);
-            }
-            return false;
-        }
-        return zone->isGCMarkingGray();
-    }
-=======
     return dstZone->isGCMarkingBlackAndGray();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src,
-                                        const Value& val) {
-  return val.isGCThing() &&
-         ShouldTraceCrossCompartment(trc, src, val.toGCThing());
-||||||| merged common ancestors
-static bool
-ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src, const Value& val)
-{
-    return val.isGCThing() && ShouldTraceCrossCompartment(trc, src, val.toGCThing());
-=======
 static bool ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src,
                                         Cell* dstCell) {
   if (!trc->isMarkingTracer()) {
@@ -737,38 +365,19 @@ static bool ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src,
   }
 
   return ShouldMarkCrossCompartment(GCMarker::fromTracer(trc), src, dstCell);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void AssertShouldMarkInZone(Cell* thing) {
-  MOZ_ASSERT(thing->asTenured().zone()->shouldMarkInZone());
-||||||| merged common ancestors
-static void
-AssertShouldMarkInZone(Cell* thing)
-{
-    MOZ_ASSERT(thing->asTenured().zone()->shouldMarkInZone());
-=======
 static bool ShouldTraceCrossCompartment(JSTracer* trc, JSObject* src,
                                         const Value& val) {
   return val.isGCThing() &&
          ShouldTraceCrossCompartment(trc, src, val.toGCThing());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void AssertShouldMarkInZone(JSString* str) {
-||||||| merged common ancestors
-static void
-AssertShouldMarkInZone(JSString* str)
-{
-=======
 static void AssertShouldMarkInZone(Cell* thing) {
   MOZ_ASSERT(thing->asTenured().zone()->shouldMarkInZone());
 }
 
 static void AssertShouldMarkInZone(JSString* str) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   Zone* zone = str->zone();
   MOZ_ASSERT(zone->shouldMarkInZone() || zone->isAtomsZone());
@@ -792,24 +401,6 @@ void js::gc::AssertRootMarkingPhase(JSTracer* trc) {
 
 /*** Tracing Interface ******************************************************/
 
-<<<<<<< HEAD
-template <typename T>
-T DoCallback(JS::CallbackTracer* trc, T* thingp, const char* name);
-template <typename T>
-void DoMarking(GCMarker* gcmarker, T* thing);
-template <typename T>
-void DoMarking(GCMarker* gcmarker, const T& thing);
-template <typename T>
-void NoteWeakEdge(GCMarker* gcmarker, T** thingp);
-template <typename T>
-void NoteWeakEdge(GCMarker* gcmarker, T* thingp);
-||||||| merged common ancestors
-template <typename T> T DoCallback(JS::CallbackTracer* trc, T* thingp, const char* name);
-template <typename T> void DoMarking(GCMarker* gcmarker, T* thing);
-template <typename T> void DoMarking(GCMarker* gcmarker, const T& thing);
-template <typename T> void NoteWeakEdge(GCMarker* gcmarker, T** thingp);
-template <typename T> void NoteWeakEdge(GCMarker* gcmarker, T* thingp);
-=======
 template <typename T>
 T* DoCallback(JS::CallbackTracer* trc, T** thingp, const char* name);
 template <typename T>
@@ -818,7 +409,6 @@ template <typename T>
 void DoMarking(GCMarker* gcmarker, T* thing);
 template <typename T>
 void DoMarking(GCMarker* gcmarker, const T& thing);
->>>>>>> upstream-releases
 
 template <typename T>
 JS_PUBLIC_API void js::gc::TraceExternalEdge(JSTracer* trc, T* thingp,
@@ -863,34 +453,13 @@ INSTANTIATE_PUBLIC_TRACE_FUNCTIONS(AbstractGeneratorObject*);
 namespace js {
 namespace gc {
 
-<<<<<<< HEAD
-#define INSTANTIATE_INTERNAL_TRACE_FUNCTIONS(type)                          \
-  template void TraceEdgeInternal<type>(JSTracer*, type*, const char*);     \
-  template void TraceWeakEdgeInternal<type>(JSTracer*, type*, const char*); \
-  template void TraceRangeInternal<type>(JSTracer*, size_t len, type*,      \
-                                         const char*);
-||||||| merged common ancestors
-#define INSTANTIATE_INTERNAL_TRACE_FUNCTIONS(type) \
-    template void TraceEdgeInternal<type>(JSTracer*, type*, const char*); \
-    template void TraceWeakEdgeInternal<type>(JSTracer*, type*, const char*); \
-    template void TraceRangeInternal<type>(JSTracer*, size_t len, type*, const char*);
-=======
 #define INSTANTIATE_INTERNAL_TRACE_FUNCTIONS(type)                      \
   template void TraceEdgeInternal<type>(JSTracer*, type*, const char*); \
   template void TraceRangeInternal<type>(JSTracer*, size_t len, type*,  \
                                          const char*);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define INSTANTIATE_INTERNAL_TRACE_FUNCTIONS_FROM_TRACEKIND(_1, type, _2) \
-  INSTANTIATE_INTERNAL_TRACE_FUNCTIONS(type*)
-||||||| merged common ancestors
-#define INSTANTIATE_INTERNAL_TRACE_FUNCTIONS_FROM_TRACEKIND(_1, type, _2) \
-    INSTANTIATE_INTERNAL_TRACE_FUNCTIONS(type*)
-=======
 #define INSTANTIATE_INTERNAL_TRACE_FUNCTIONS_FROM_TRACEKIND(_1, type, _2, _3) \
   INSTANTIATE_INTERNAL_TRACE_FUNCTIONS(type*)
->>>>>>> upstream-releases
 
 JS_FOR_EACH_TRACEKIND(INSTANTIATE_INTERNAL_TRACE_FUNCTIONS_FROM_TRACEKIND)
 FOR_EACH_PUBLIC_TAGGED_GC_POINTER_TYPE(INSTANTIATE_INTERNAL_TRACE_FUNCTIONS)
@@ -902,7 +471,6 @@ FOR_EACH_PUBLIC_TAGGED_GC_POINTER_TYPE(INSTANTIATE_INTERNAL_TRACE_FUNCTIONS)
 }  // namespace js
 
 template <typename T>
-<<<<<<< HEAD
 void js::TraceManuallyBarrieredCrossCompartmentEdge(JSTracer* trc,
                                                     JSObject* src, T* dst,
                                                     const char* name) {
@@ -916,155 +484,22 @@ template void js::TraceManuallyBarrieredCrossCompartmentEdge<JSScript*>(
     JSTracer*, JSObject*, JSScript**, const char*);
 template void js::TraceManuallyBarrieredCrossCompartmentEdge<LazyScript*>(
     JSTracer*, JSObject*, LazyScript**, const char*);
-
-void js::TraceCrossCompartmentEdge(JSTracer* trc, JSObject* src,
-                                   WriteBarrieredBase<Value>* dst,
-                                   const char* name) {
-  if (ShouldTraceCrossCompartment(trc, src, dst->get())) {
-    TraceEdgeInternal(trc, dst->unsafeUnbarrieredForTracing(), name);
-  }
-}
-||||||| merged common ancestors
-void
-js::TraceManuallyBarrieredCrossCompartmentEdge(JSTracer* trc, JSObject* src, T* dst,
-                                               const char* name)
-{
-    if (ShouldTraceCrossCompartment(trc, src, *dst)) {
-        TraceEdgeInternal(trc, dst, name);
-    }
-}
-template void js::TraceManuallyBarrieredCrossCompartmentEdge<JSObject*>(JSTracer*, JSObject*,
-                                                                        JSObject**, const char*);
-template void js::TraceManuallyBarrieredCrossCompartmentEdge<JSScript*>(JSTracer*, JSObject*,
-                                                                        JSScript**, const char*);
-template void js::TraceManuallyBarrieredCrossCompartmentEdge<LazyScript*>(JSTracer*, JSObject*,
-                                                                          LazyScript**, const char*);
-
-void
-js::TraceCrossCompartmentEdge(JSTracer* trc, JSObject* src, WriteBarrieredBase<Value>* dst,
-                              const char* name)
-{
-    if (ShouldTraceCrossCompartment(trc, src, dst->get())) {
-        TraceEdgeInternal(trc, dst->unsafeUnbarrieredForTracing(), name);
-    }
-}
-=======
-void js::TraceManuallyBarrieredCrossCompartmentEdge(JSTracer* trc,
-                                                    JSObject* src, T* dst,
-                                                    const char* name) {
-  if (ShouldTraceCrossCompartment(trc, src, *dst)) {
-    TraceEdgeInternal(trc, dst, name);
-  }
-}
-template void js::TraceManuallyBarrieredCrossCompartmentEdge<JSObject*>(
-    JSTracer*, JSObject*, JSObject**, const char*);
-template void js::TraceManuallyBarrieredCrossCompartmentEdge<JSScript*>(
-    JSTracer*, JSObject*, JSScript**, const char*);
-template void js::TraceManuallyBarrieredCrossCompartmentEdge<LazyScript*>(
-    JSTracer*, JSObject*, LazyScript**, const char*);
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-void js::TraceProcessGlobalRoot(JSTracer* trc, T* thing, const char* name) {
-  AssertRootMarkingPhase(trc);
-  MOZ_ASSERT(ThingIsPermanentAtomOrWellKnownSymbol(thing));
-
-  // We have to mark permanent atoms and well-known symbols through a special
-  // method because the default DoMarking implementation automatically skips
-  // them. Fortunately, atoms (permanent and non) cannot refer to other GC
-  // things so they do not need to go through the mark stack and may simply
-  // be marked directly.  Moreover, well-known symbols can refer only to
-  // permanent atoms, so likewise require no subsquent marking.
-  CheckTracedThing(trc, *ConvertToBase(&thing));
-  if (trc->isMarkingTracer()) {
-    thing->asTenured().markIfUnmarked(gc::MarkColor::Black);
-  } else {
-    DoCallback(trc->asCallbackTracer(), ConvertToBase(&thing), name);
-  }
-}
-template void js::TraceProcessGlobalRoot<JSAtom>(JSTracer*, JSAtom*,
-                                                 const char*);
-template void js::TraceProcessGlobalRoot<JS::Symbol>(JSTracer*, JS::Symbol*,
-                                                     const char*);
-||||||| merged common ancestors
-void
-js::TraceProcessGlobalRoot(JSTracer* trc, T* thing, const char* name)
-{
-    AssertRootMarkingPhase(trc);
-    MOZ_ASSERT(ThingIsPermanentAtomOrWellKnownSymbol(thing));
-
-    // We have to mark permanent atoms and well-known symbols through a special
-    // method because the default DoMarking implementation automatically skips
-    // them. Fortunately, atoms (permanent and non) cannot refer to other GC
-    // things so they do not need to go through the mark stack and may simply
-    // be marked directly.  Moreover, well-known symbols can refer only to
-    // permanent atoms, so likewise require no subsquent marking.
-    CheckTracedThing(trc, *ConvertToBase(&thing));
-    if (trc->isMarkingTracer()) {
-        thing->asTenured().markIfUnmarked(gc::MarkColor::Black);
-    } else {
-        DoCallback(trc->asCallbackTracer(), ConvertToBase(&thing), name);
-    }
-}
-template void js::TraceProcessGlobalRoot<JSAtom>(JSTracer*, JSAtom*, const char*);
-template void js::TraceProcessGlobalRoot<JS::Symbol>(JSTracer*, JS::Symbol*, const char*);
-=======
 void js::TraceCrossCompartmentEdge(JSTracer* trc, JSObject* src,
                                    WriteBarriered<T>* dst, const char* name) {
   if (ShouldTraceCrossCompartment(trc, src, dst->get())) {
     TraceEdgeInternal(trc, dst->unsafeUnbarrieredForTracing(), name);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// A typed functor adaptor for TraceRoot.
-struct TraceRootFunctor {
-  template <typename T>
-  void operator()(JSTracer* trc, Cell** thingp, const char* name) {
-    TraceRoot(trc, reinterpret_cast<T**>(thingp), name);
-  }
-};
-||||||| merged common ancestors
-// A typed functor adaptor for TraceRoot.
-struct TraceRootFunctor {
-    template <typename T>
-    void operator()(JSTracer* trc, Cell** thingp, const char* name) {
-        TraceRoot(trc, reinterpret_cast<T**>(thingp), name);
-    }
-};
-=======
 template void js::TraceCrossCompartmentEdge<Value>(JSTracer* trc, JSObject* src,
                                                    WriteBarriered<Value>* dst,
                                                    const char* name);
 template void js::TraceCrossCompartmentEdge<JSScript*>(
     JSTracer* trc, JSObject* src, WriteBarriered<JSScript*>* dst,
     const char* name);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void js::TraceGenericPointerRoot(JSTracer* trc, Cell** thingp,
-                                 const char* name) {
-  MOZ_ASSERT(thingp);
-  if (!*thingp) {
-    return;
-  }
-  TraceRootFunctor f;
-  DispatchTraceKindTyped(f, (*thingp)->getTraceKind(), trc, thingp, name);
-}
-||||||| merged common ancestors
-void
-js::TraceGenericPointerRoot(JSTracer* trc, Cell** thingp, const char* name)
-{
-    MOZ_ASSERT(thingp);
-    if (!*thingp) {
-        return;
-    }
-    TraceRootFunctor f;
-    DispatchTraceKindTyped(f, (*thingp)->getTraceKind(), trc, thingp, name);
-}
-=======
 template <typename T>
 void js::TraceProcessGlobalRoot(JSTracer* trc, T* thing, const char* name) {
   AssertRootMarkingPhase(trc);
@@ -1113,25 +548,7 @@ void js::TraceManuallyBarrieredGenericPointerEdge(JSTracer* trc, Cell** thingp,
   if (!*thingp) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// A typed functor adaptor for TraceManuallyBarrieredEdge.
-struct TraceManuallyBarrieredEdgeFunctor {
-  template <typename T>
-  void operator()(JSTracer* trc, Cell** thingp, const char* name) {
-    TraceManuallyBarrieredEdge(trc, reinterpret_cast<T**>(thingp), name);
-  }
-};
-||||||| merged common ancestors
-// A typed functor adaptor for TraceManuallyBarrieredEdge.
-struct TraceManuallyBarrieredEdgeFunctor {
-    template <typename T>
-    void operator()(JSTracer* trc, Cell** thingp, const char* name) {
-        TraceManuallyBarrieredEdge(trc, reinterpret_cast<T**>(thingp), name);
-    }
-};
-=======
   auto traced = MapGCThingTyped(thing, thing->getTraceKind(),
                                 [trc, name](auto t) -> Cell* {
                                   TraceManuallyBarrieredEdge(trc, &t, name);
@@ -1141,62 +558,19 @@ struct TraceManuallyBarrieredEdgeFunctor {
     *thingp = traced;
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void js::TraceManuallyBarrieredGenericPointerEdge(JSTracer* trc, Cell** thingp,
-                                                  const char* name) {
-  MOZ_ASSERT(thingp);
-  if (!*thingp) {
-    return;
-  }
-  TraceManuallyBarrieredEdgeFunctor f;
-  DispatchTraceKindTyped(f, (*thingp)->getTraceKind(), trc, thingp, name);
-||||||| merged common ancestors
-void
-js::TraceManuallyBarrieredGenericPointerEdge(JSTracer* trc, Cell** thingp, const char* name)
-{
-    MOZ_ASSERT(thingp);
-    if (!*thingp) {
-        return;
-    }
-    TraceManuallyBarrieredEdgeFunctor f;
-    DispatchTraceKindTyped(f, (*thingp)->getTraceKind(), trc, thingp, name);
-=======
 void StackGCCellPtr::trace(JSTracer* trc) {
   Cell* thing = ptr_.asCell();
   TraceGenericPointerRoot(trc, &thing, "stack-gc-cell-ptr");
   if (thing != ptr_.asCell()) {
     ptr_ = JS::GCCellPtr(thing, ptr_.kind());
   }
->>>>>>> upstream-releases
 }
 
 // This method is responsible for dynamic dispatch to the real tracer
 // implementation. Consider replacing this choke point with virtual dispatch:
 // a sufficiently smart C++ compiler may be able to devirtualize some paths.
 template <typename T>
-<<<<<<< HEAD
-void js::gc::TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name) {
-#define IS_SAME_TYPE_OR(name, type, _) mozilla::IsSame<type*, T>::value ||
-  static_assert(JS_FOR_EACH_TRACEKIND(IS_SAME_TYPE_OR)
-                        mozilla::IsSame<T, JS::Value>::value ||
-                    mozilla::IsSame<T, jsid>::value ||
-                    mozilla::IsSame<T, TaggedProto>::value,
-                "Only the base cell layout types are allowed into "
-                "marking/tracing internals");
-||||||| merged common ancestors
-void
-js::gc::TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name)
-{
-#define IS_SAME_TYPE_OR(name, type, _) mozilla::IsSame<type*, T>::value ||
-    static_assert(
-            JS_FOR_EACH_TRACEKIND(IS_SAME_TYPE_OR)
-            mozilla::IsSame<T, JS::Value>::value ||
-            mozilla::IsSame<T, jsid>::value ||
-            mozilla::IsSame<T, TaggedProto>::value,
-            "Only the base cell layout types are allowed into marking/tracing internals");
-=======
 void js::gc::TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name) {
 #define IS_SAME_TYPE_OR(name, type, _, _1) mozilla::IsSame<type*, T>::value ||
   static_assert(JS_FOR_EACH_TRACEKIND(IS_SAME_TYPE_OR)
@@ -1205,9 +579,7 @@ void js::gc::TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name) {
                     mozilla::IsSame<T, TaggedProto>::value,
                 "Only the base cell layout types are allowed into "
                 "marking/tracing internals");
->>>>>>> upstream-releases
 #undef IS_SAME_TYPE_OR
-<<<<<<< HEAD
   if (trc->isMarkingTracer()) {
     return DoMarking(GCMarker::fromTracer(trc), *thingp);
   }
@@ -1216,53 +588,6 @@ void js::gc::TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name) {
   }
   MOZ_ASSERT(trc->isCallbackTracer());
   DoCallback(trc->asCallbackTracer(), thingp, name);
-}
-
-template <typename T>
-void js::gc::TraceWeakEdgeInternal(JSTracer* trc, T* thingp, const char* name) {
-  if (!trc->isMarkingTracer()) {
-    // Non-marking tracers can select whether or not they see weak edges.
-    if (trc->traceWeakEdges()) {
-      TraceEdgeInternal(trc, thingp, name);
-    }
-    return;
-  }
-
-  NoteWeakEdge(GCMarker::fromTracer(trc), thingp);
-||||||| merged common ancestors
-    if (trc->isMarkingTracer()) {
-        return DoMarking(GCMarker::fromTracer(trc), *thingp);
-    }
-    if (trc->isTenuringTracer()) {
-        return static_cast<TenuringTracer*>(trc)->traverse(thingp);
-    }
-    MOZ_ASSERT(trc->isCallbackTracer());
-    DoCallback(trc->asCallbackTracer(), thingp, name);
-}
-
-template <typename T>
-void
-js::gc::TraceWeakEdgeInternal(JSTracer* trc, T* thingp, const char* name)
-{
-    if (!trc->isMarkingTracer()) {
-        // Non-marking tracers can select whether or not they see weak edges.
-        if (trc->traceWeakEdges()) {
-            TraceEdgeInternal(trc, thingp, name);
-        }
-        return;
-    }
-
-    NoteWeakEdge(GCMarker::fromTracer(trc), thingp);
-=======
-  if (trc->isMarkingTracer()) {
-    return DoMarking(GCMarker::fromTracer(trc), *thingp);
-  }
-  if (trc->isTenuringTracer()) {
-    return static_cast<TenuringTracer*>(trc)->traverse(thingp);
-  }
-  MOZ_ASSERT(trc->isCallbackTracer());
-  DoCallback(trc->asCallbackTracer(), thingp, name);
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1301,22 +626,6 @@ struct ImplicitEdgeHolderType<JSScript*> {
   typedef JSScript* Type;
 };
 
-<<<<<<< HEAD
-void GCMarker::markEphemeronValues(gc::Cell* markedCell,
-                                   WeakEntryVector& values) {
-  size_t initialLen = values.length();
-  for (size_t i = 0; i < initialLen; i++) {
-    values[i].weakmap->markEntry(this, markedCell, values[i].key);
-  }
-||||||| merged common ancestors
-void
-GCMarker::markEphemeronValues(gc::Cell* markedCell, WeakEntryVector& values)
-{
-    size_t initialLen = values.length();
-    for (size_t i = 0; i < initialLen; i++) {
-        values[i].weakmap->markEntry(this, markedCell, values[i].key);
-    }
-=======
 template <>
 struct ImplicitEdgeHolderType<LazyScript*> {
   typedef LazyScript* Type;
@@ -1331,19 +640,7 @@ void GCMarker::markEphemeronValues(gc::Cell* markedCell,
         markable.weakmap->markColor == gc::MarkColor::Gray) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The vector should not be appended to during iteration because the key is
-  // already marked, and even in cases where we have a multipart key, we
-  // should only be inserting entries for the unmarked portions.
-  MOZ_ASSERT(values.length() == initialLen);
-||||||| merged common ancestors
-    // The vector should not be appended to during iteration because the key is
-    // already marked, and even in cases where we have a multipart key, we
-    // should only be inserting entries for the unmarked portions.
-    MOZ_ASSERT(values.length() == initialLen);
-=======
     markable.weakmap->markEntry(this, markedCell, markable.key);
   }
 
@@ -1351,7 +648,6 @@ void GCMarker::markEphemeronValues(gc::Cell* markedCell,
   // already marked, and even in cases where we have a multipart key, we
   // should only be inserting entries for the unmarked portions.
   MOZ_ASSERT(values.length() == initialLen);
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1364,25 +660,11 @@ void GCMarker::markImplicitEdgesHelper(T markedThing) {
   MOZ_ASSERT(zone->isGCMarking());
   MOZ_ASSERT(!zone->isGCSweeping());
 
-<<<<<<< HEAD
-  auto p = zone->gcWeakKeys().get(JS::GCCellPtr(markedThing));
-  if (!p) {
-    return;
-  }
-  WeakEntryVector& markables = p->value;
-||||||| merged common ancestors
-    auto p = zone->gcWeakKeys().get(JS::GCCellPtr(markedThing));
-    if (!p) {
-        return;
-    }
-    WeakEntryVector& markables = p->value;
-=======
   auto p = zone->gcWeakKeys().get(markedThing);
   if (!p) {
     return;
   }
   WeakEntryVector& markables = p->value;
->>>>>>> upstream-releases
 
   markEphemeronValues(markedThing, markables);
   markables.clear();  // If key address is reused, it should do nothing
@@ -1460,150 +742,33 @@ void DoMarking(GCMarker* gcmarker, T* thing) {
   SetMaybeAliveFlag(thing);
 }
 
-<<<<<<< HEAD
-template <typename S>
-struct DoMarkingFunctor : public VoidDefaultAdaptor<S> {
-  template <typename T>
-  void operator()(T* t, GCMarker* gcmarker) {
-    DoMarking(gcmarker, t);
-  }
-};
-
-||||||| merged common ancestors
-template <typename S>
-struct DoMarkingFunctor : public VoidDefaultAdaptor<S> {
-    template <typename T> void operator()(T* t, GCMarker* gcmarker) { DoMarking(gcmarker, t); }
-};
-
-=======
->>>>>>> upstream-releases
 template <typename T>
-<<<<<<< HEAD
-void DoMarking(GCMarker* gcmarker, const T& thing) {
-  DispatchTyped(DoMarkingFunctor<T>(), thing, gcmarker);
-||||||| merged common ancestors
-void
-DoMarking(GCMarker* gcmarker, const T& thing)
-{
-    DispatchTyped(DoMarkingFunctor<T>(), thing, gcmarker);
-=======
 void DoMarking(GCMarker* gcmarker, const T& thing) {
   ApplyGCThingTyped(thing, [gcmarker](auto t) { DoMarking(gcmarker, t); });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename T>
-void NoteWeakEdge(GCMarker* gcmarker, T** thingp) {
-  // Do per-type marking precondition checks.
-  if (!ShouldMark(gcmarker, *thingp)) {
-    return;
-  }
-
-  CheckTracedThing(gcmarker, *thingp);
-||||||| merged common ancestors
-template <typename T>
-void
-NoteWeakEdge(GCMarker* gcmarker, T** thingp)
-{
-    // Do per-type marking precondition checks.
-    if (!ShouldMark(gcmarker, *thingp)) {
-        return;
-    }
-
-    CheckTracedThing(gcmarker, *thingp);
-=======
 JS_PUBLIC_API void js::gc::PerformIncrementalReadBarrier(JS::GCCellPtr thing) {
   // Optimized marking for read barriers. This is called from
   // ExposeGCThingToActiveJS which has already checked the prerequisites for
   // performing a read barrier. This means we can skip a bunch of checks and
   // call info the tracer directly.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // If the target is already marked, there's no need to store the edge.
-  if (IsMarkedUnbarriered(gcmarker->runtime(), thingp)) {
-    return;
-  }
-||||||| merged common ancestors
-    // If the target is already marked, there's no need to store the edge.
-    if (IsMarkedUnbarriered(gcmarker->runtime(), thingp)) {
-        return;
-    }
-=======
   MOZ_ASSERT(thing);
   MOZ_ASSERT(!JS::RuntimeHeapIsMajorCollecting());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  gcmarker->noteWeakEdge(thingp);
-}
-||||||| merged common ancestors
-    gcmarker->noteWeakEdge(thingp);
-}
-=======
   TenuredCell* cell = &thing.asCell()->asTenured();
   Zone* zone = cell->zone();
   MOZ_ASSERT(zone->needsIncrementalBarrier());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename T>
-void NoteWeakEdge(GCMarker* gcmarker, T* thingp) {
-  MOZ_CRASH("the gc does not support tagged pointers as weak edges");
-}
-||||||| merged common ancestors
-template <typename T>
-void
-NoteWeakEdge(GCMarker* gcmarker, T* thingp)
-{
-    MOZ_CRASH("the gc does not support tagged pointers as weak edges");
-}
-=======
   // Skip disptaching on known tracer type.
   GCMarker* gcmarker = GCMarker::fromTracer(zone->barrierTracer());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename T>
-void js::GCMarker::noteWeakEdge(T* edge) {
-  static_assert(IsBaseOf<Cell, typename mozilla::RemovePointer<T>::Type>::value,
-                "edge must point to a GC pointer");
-  MOZ_ASSERT((*edge)->isTenured());
-
-  // Note: we really want the *source* Zone here. The edge may start in a
-  // non-gc heap location, however, so we use the fact that cross-zone weak
-  // references are not allowed and use the *target's* zone.
-  JS::Zone::WeakEdges& weakRefs = (*edge)->asTenured().zone()->gcWeakRefs();
-  AutoEnterOOMUnsafeRegion oomUnsafe;
-  if (!weakRefs.append(reinterpret_cast<TenuredCell**>(edge))) {
-    oomUnsafe.crash("Failed to record a weak edge for sweeping.");
-  }
-||||||| merged common ancestors
-template <typename T>
-void
-js::GCMarker::noteWeakEdge(T* edge)
-{
-    static_assert(IsBaseOf<Cell, typename mozilla::RemovePointer<T>::Type>::value,
-                  "edge must point to a GC pointer");
-    MOZ_ASSERT((*edge)->isTenured());
-
-    // Note: we really want the *source* Zone here. The edge may start in a
-    // non-gc heap location, however, so we use the fact that cross-zone weak
-    // references are not allowed and use the *target's* zone.
-    JS::Zone::WeakEdges &weakRefs = (*edge)->asTenured().zone()->gcWeakRefs();
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    if (!weakRefs.append(reinterpret_cast<TenuredCell**>(edge))) {
-        oomUnsafe.crash("Failed to record a weak edge for sweeping.");
-    }
-=======
   // Mark the argument, as DoMarking above.
   ApplyGCThingTyped(thing, [gcmarker](auto thing) {
     MOZ_ASSERT(ShouldMark(gcmarker, thing));
     CheckTracedThing(gcmarker, thing);
     gcmarker->traverse(thing);
   });
->>>>>>> upstream-releases
 }
 
 // The simplest traversal calls out to the fully generic traceChildren function
@@ -1621,35 +786,6 @@ void js::GCMarker::markAndTraceChildren(T* thing) {
   }
 }
 namespace js {
-<<<<<<< HEAD
-template <>
-void GCMarker::traverse(BaseShape* thing) {
-  markAndTraceChildren(thing);
-}
-template <>
-void GCMarker::traverse(JS::Symbol* thing) {
-  markAndTraceChildren(thing);
-}
-#ifdef ENABLE_BIGINT
-template <>
-void GCMarker::traverse(JS::BigInt* thing) {
-  markAndTraceChildren(thing);
-}
-#endif
-template <>
-void GCMarker::traverse(RegExpShared* thing) {
-  markAndTraceChildren(thing);
-}
-}  // namespace js
-||||||| merged common ancestors
-template <> void GCMarker::traverse(BaseShape* thing) { markAndTraceChildren(thing); }
-template <> void GCMarker::traverse(JS::Symbol* thing) { markAndTraceChildren(thing); }
-#ifdef ENABLE_BIGINT
-template <> void GCMarker::traverse(JS::BigInt* thing) { markAndTraceChildren(thing); }
-#endif
-template <> void GCMarker::traverse(RegExpShared* thing) { markAndTraceChildren(thing); }
-} // namespace js
-=======
 template <>
 void GCMarker::traverse(BaseShape* thing) {
   markAndTraceChildren(thing);
@@ -1667,7 +803,6 @@ void GCMarker::traverse(RegExpShared* thing) {
   markAndTraceChildren(thing);
 }
 }  // namespace js
->>>>>>> upstream-releases
 
 // Strings, LazyScripts, Shapes, and Scopes are extremely common, but have
 // simple patterns of recursion. We traverse trees of these edges immediately,
@@ -1775,72 +910,14 @@ void js::GCMarker::traverseEdge(S source, T* target) {
   traverse(target);
 }
 
-<<<<<<< HEAD
-template <typename V, typename S>
-struct TraverseEdgeFunctor : public VoidDefaultAdaptor<V> {
-  template <typename T>
-  void operator()(T t, GCMarker* gcmarker, S s) {
-    return gcmarker->traverseEdge(s, t);
-  }
-};
-
-||||||| merged common ancestors
-template <typename V, typename S> struct TraverseEdgeFunctor : public VoidDefaultAdaptor<V> {
-    template <typename T> void operator()(T t, GCMarker* gcmarker, S s) {
-        return gcmarker->traverseEdge(s, t);
-    }
-};
-
-=======
->>>>>>> upstream-releases
 template <typename S, typename T>
-<<<<<<< HEAD
-void js::GCMarker::traverseEdge(S source, const T& thing) {
-  DispatchTyped(TraverseEdgeFunctor<T, S>(), thing, this, source);
-||||||| merged common ancestors
-void
-js::GCMarker::traverseEdge(S source, const T& thing)
-{
-    DispatchTyped(TraverseEdgeFunctor<T, S>(), thing, this, source);
-=======
 void js::GCMarker::traverseEdge(S source, const T& thing) {
   ApplyGCThingTyped(thing,
                     [this, source](auto t) { this->traverseEdge(source, t); });
->>>>>>> upstream-releases
 }
 
 namespace {
 
-<<<<<<< HEAD
-template <typename T>
-struct TypeParticipatesInCC {};
-#define EXPAND_PARTICIPATES_IN_CC(_, type, addToCCKind) \
-  template <>                                           \
-  struct TypeParticipatesInCC<type> {                   \
-    static const bool value = addToCCKind;              \
-  };
-JS_FOR_EACH_TRACEKIND(EXPAND_PARTICIPATES_IN_CC)
-#undef EXPAND_PARTICIPATES_IN_CC
-
-struct ParticipatesInCCFunctor {
-  template <typename T>
-  bool operator()() {
-    return TypeParticipatesInCC<T>::value;
-  }
-||||||| merged common ancestors
-template <typename T> struct TypeParticipatesInCC {};
-#define EXPAND_PARTICIPATES_IN_CC(_, type, addToCCKind) \
-    template <> struct TypeParticipatesInCC<type> { static const bool value = addToCCKind; };
-JS_FOR_EACH_TRACEKIND(EXPAND_PARTICIPATES_IN_CC)
-#undef EXPAND_PARTICIPATES_IN_CC
-
-struct ParticipatesInCCFunctor
-{
-    template <typename T>
-    bool operator()() {
-        return TypeParticipatesInCC<T>::value;
-    }
-=======
 template <typename T>
 struct TraceKindCanBeGray {};
 #define EXPAND_TRACEKIND_DEF(_, type, canBeGray, _1) \
@@ -1858,29 +935,13 @@ struct TraceKindCanBeGrayFunctor {
   bool operator()() {
     return TraceKindCanBeGray<T>::value;
   }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-}  // namespace
-
-static bool TraceKindParticipatesInCC(JS::TraceKind kind) {
-  return DispatchTraceKindTyped(ParticipatesInCCFunctor(), kind);
-||||||| merged common ancestors
-} // namespace
-
-static bool
-TraceKindParticipatesInCC(JS::TraceKind kind)
-{
-    return DispatchTraceKindTyped(ParticipatesInCCFunctor(), kind);
-=======
 static bool TraceKindCanBeMarkedGray(JS::TraceKind kind) {
   return DispatchTraceKindTyped(TraceKindCanBeGrayFunctor(), kind);
->>>>>>> upstream-releases
 }
 
 template <typename T>
-<<<<<<< HEAD
 bool js::GCMarker::mark(T* thing) {
   if (IsInsideNursery(thing)) {
     return false;
@@ -1888,41 +949,10 @@ bool js::GCMarker::mark(T* thing) {
   AssertShouldMarkInZone(thing);
   TenuredCell* cell = TenuredCell::fromPointer(thing);
 
-  if (!TypeParticipatesInCC<T>::value) {
-    return cell->markIfUnmarked(MarkColor::Black);
-  }
-||||||| merged common ancestors
-bool
-js::GCMarker::mark(T* thing)
-{
-    if (IsInsideNursery(thing)) {
-        return false;
-    }
-    AssertShouldMarkInZone(thing);
-    TenuredCell* cell = TenuredCell::fromPointer(thing);
-
-    if (!TypeParticipatesInCC<T>::value) {
-        return cell->markIfUnmarked(MarkColor::Black);
-    }
-=======
-bool js::GCMarker::mark(T* thing) {
-  if (IsInsideNursery(thing)) {
-    return false;
-  }
-  AssertShouldMarkInZone(thing);
-  TenuredCell* cell = TenuredCell::fromPointer(thing);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return cell->markIfUnmarked(markColor());
-||||||| merged common ancestors
-    return cell->markIfUnmarked(markColor());
-=======
   MarkColor color =
       TraceKindCanBeGray<T>::value ? markColor() : MarkColor::Black;
   markCount++;
   return cell->markIfUnmarked(color);
->>>>>>> upstream-releases
 }
 
 /*** Inline, Eager GC Marking ***********************************************/
@@ -1931,221 +961,6 @@ bool js::GCMarker::mark(T* thing) {
 // out-of-line, generic tracing code for comparison. Both paths must end up
 // traversing equivalent subgraphs.
 
-<<<<<<< HEAD
-void LazyScript::traceChildren(JSTracer* trc) {
-  if (script_) {
-    TraceWeakEdge(trc, &script_, "script");
-  }
-
-  if (function_) {
-    TraceEdge(trc, &function_, "function");
-  }
-
-  if (sourceObject_) {
-    TraceEdge(trc, &sourceObject_, "sourceObject");
-  }
-
-  if (enclosingLazyScriptOrScope_) {
-    TraceGenericPointerRoot(
-        trc,
-        reinterpret_cast<Cell**>(
-            enclosingLazyScriptOrScope_.unsafeUnbarrieredForTracing()),
-        "enclosingScope or enclosingLazyScript");
-  }
-
-  // We rely on the fact that atoms are always tenured.
-  JSAtom** closedOverBindings = this->closedOverBindings();
-  for (auto i : IntegerRange(numClosedOverBindings())) {
-    if (closedOverBindings[i]) {
-      TraceManuallyBarrieredEdge(trc, &closedOverBindings[i],
-                                 "closedOverBinding");
-    }
-  }
-
-  GCPtrFunction* innerFunctions = this->innerFunctions();
-  for (auto i : IntegerRange(numInnerFunctions())) {
-    TraceEdge(trc, &innerFunctions[i], "lazyScriptInnerFunction");
-  }
-
-  if (trc->isMarkingTracer()) {
-    return GCMarker::fromTracer(trc)->markImplicitEdges(this);
-  }
-}
-inline void js::GCMarker::eagerlyMarkChildren(LazyScript* thing) {
-  if (thing->script_) {
-    noteWeakEdge(thing->script_.unsafeUnbarrieredForTracing());
-  }
-
-  if (thing->function_) {
-    traverseEdge(thing, static_cast<JSObject*>(thing->function_));
-  }
-
-  if (thing->sourceObject_) {
-    traverseEdge(thing, static_cast<JSObject*>(thing->sourceObject_));
-  }
-
-  if (thing->enclosingLazyScriptOrScope_) {
-    TraceManuallyBarrieredGenericPointerEdge(
-        this,
-        reinterpret_cast<Cell**>(
-            thing->enclosingLazyScriptOrScope_.unsafeUnbarrieredForTracing()),
-        "enclosingScope or enclosingLazyScript");
-  }
-
-  // We rely on the fact that atoms are always tenured.
-  JSAtom** closedOverBindings = thing->closedOverBindings();
-  for (auto i : IntegerRange(thing->numClosedOverBindings())) {
-    if (closedOverBindings[i]) {
-      traverseEdge(thing, static_cast<JSString*>(closedOverBindings[i]));
-    }
-  }
-
-  GCPtrFunction* innerFunctions = thing->innerFunctions();
-  for (auto i : IntegerRange(thing->numInnerFunctions())) {
-    traverseEdge(thing, static_cast<JSObject*>(innerFunctions[i]));
-  }
-}
-
-void Shape::traceChildren(JSTracer* trc) {
-  TraceEdge(trc, &base_, "base");
-  TraceEdge(trc, &propidRef(), "propid");
-  if (parent) {
-    TraceEdge(trc, &parent, "parent");
-  }
-
-  if (hasGetterObject()) {
-    TraceManuallyBarrieredEdge(trc, &asAccessorShape().getterObj, "getter");
-  }
-  if (hasSetterObject()) {
-    TraceManuallyBarrieredEdge(trc, &asAccessorShape().setterObj, "setter");
-  }
-}
-inline void js::GCMarker::eagerlyMarkChildren(Shape* shape) {
-  MOZ_ASSERT_IF(markColor() == MarkColor::Gray, shape->isMarkedGray());
-  MOZ_ASSERT_IF(markColor() == MarkColor::Black, shape->isMarkedBlack());
-
-  do {
-    // Special case: if a base shape has a shape table then all its pointers
-    // must point to this shape or an anscestor.  Since these pointers will
-    // be traced by this loop they do not need to be traced here as well.
-    BaseShape* base = shape->base();
-    CheckTraversedEdge(shape, base);
-    if (mark(base)) {
-      MOZ_ASSERT(base->canSkipMarkingShapeTable(shape));
-      base->traceChildrenSkipShapeTable(this);
-    }
-
-    traverseEdge(shape, shape->propidRef().get());
-
-    // When triggered between slices on belhalf of a barrier, these
-    // objects may reside in the nursery, so require an extra check.
-    // FIXME: Bug 1157967 - remove the isTenured checks.
-    if (shape->hasGetterObject() && shape->getterObject()->isTenured()) {
-      traverseEdge(shape, shape->getterObject());
-    }
-    if (shape->hasSetterObject() && shape->setterObject()->isTenured()) {
-      traverseEdge(shape, shape->setterObject());
-    }
-
-    shape = shape->previous();
-  } while (shape && mark(shape));
-}
-
-void JSString::traceChildren(JSTracer* trc) {
-  if (hasBase()) {
-    traceBase(trc);
-  } else if (isRope()) {
-    asRope().traceChildren(trc);
-  }
-}
-inline void GCMarker::eagerlyMarkChildren(JSString* str) {
-  if (str->isLinear()) {
-    eagerlyMarkChildren(&str->asLinear());
-  } else {
-    eagerlyMarkChildren(&str->asRope());
-  }
-}
-
-void JSString::traceBase(JSTracer* trc) {
-  MOZ_ASSERT(hasBase());
-  TraceManuallyBarrieredEdge(trc, &d.s.u3.base, "base");
-}
-inline void js::GCMarker::eagerlyMarkChildren(JSLinearString* linearStr) {
-  AssertShouldMarkInZone(linearStr);
-  MOZ_ASSERT(linearStr->isMarkedAny());
-  MOZ_ASSERT(linearStr->JSString::isLinear());
-
-  // Use iterative marking to avoid blowing out the stack.
-  while (linearStr->hasBase()) {
-    linearStr = linearStr->base();
-    MOZ_ASSERT(linearStr->JSString::isLinear());
-    if (linearStr->isPermanentAtom()) {
-      break;
-    }
-    AssertShouldMarkInZone(linearStr);
-    if (!mark(static_cast<JSString*>(linearStr))) {
-      break;
-    }
-  }
-}
-
-void JSRope::traceChildren(JSTracer* trc) {
-  js::TraceManuallyBarrieredEdge(trc, &d.s.u2.left, "left child");
-  js::TraceManuallyBarrieredEdge(trc, &d.s.u3.right, "right child");
-}
-inline void js::GCMarker::eagerlyMarkChildren(JSRope* rope) {
-  // This function tries to scan the whole rope tree using the marking stack
-  // as temporary storage. If that becomes full, the unscanned ropes are
-  // added to the delayed marking list. When the function returns, the
-  // marking stack is at the same depth as it was on entry. This way we avoid
-  // using tags when pushing ropes to the stack as ropes never leak to other
-  // users of the stack. This also assumes that a rope can only point to
-  // other ropes or linear strings, it cannot refer to GC things of other
-  // types.
-  size_t savedPos = stack.position();
-  JS_DIAGNOSTICS_ASSERT(rope->getTraceKind() == JS::TraceKind::String);
-#ifdef JS_DEBUG
-  static const size_t DEEP_ROPE_THRESHOLD = 100000;
-  static const size_t ROPE_CYCLE_HISTORY = 100;
-  DebugOnly<size_t> ropeDepth = 0;
-  JSRope* history[ROPE_CYCLE_HISTORY];
-#endif
-  while (true) {
-#ifdef JS_DEBUG
-    if (++ropeDepth >= DEEP_ROPE_THRESHOLD) {
-      // Bug 1011786 comment 294 - detect cyclic ropes. There are some
-      // legitimate deep ropes, at least in tests. So if we hit a deep
-      // rope, start recording the nodes we visit and check whether we
-      // repeat. But do it on a finite window size W so that we're not
-      // scanning the full history for every node. And only check every
-      // Wth push, to add only constant overhead per node. This will only
-      // catch cycles of size up to W (but it seems most likely that any
-      // cycles will be size 1 or maybe 2.)
-      if ((ropeDepth > DEEP_ROPE_THRESHOLD + ROPE_CYCLE_HISTORY) &&
-          (ropeDepth % ROPE_CYCLE_HISTORY) == 0) {
-        for (size_t i = 0; i < ROPE_CYCLE_HISTORY; i++) {
-          MOZ_ASSERT(history[i] != rope, "cycle detected in rope");
-        }
-      }
-      history[ropeDepth % ROPE_CYCLE_HISTORY] = rope;
-    }
-#endif
-||||||| merged common ancestors
-void
-LazyScript::traceChildren(JSTracer* trc)
-{
-    if (script_) {
-        TraceWeakEdge(trc, &script_, "script");
-    }
-
-    if (function_) {
-        TraceEdge(trc, &function_, "function");
-    }
-
-    if (sourceObject_) {
-        TraceEdge(trc, &sourceObject_, "sourceObject");
-    }
-=======
 void LazyScript::traceChildren(JSTracer* trc) {
   if (trc->traceWeakEdges()) {
     TraceNullableEdge(trc, &script_, "script");
@@ -2158,29 +973,7 @@ void LazyScript::traceChildren(JSTracer* trc) {
   if (sourceObject_) {
     TraceEdge(trc, &sourceObject_, "sourceObject");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    JS_DIAGNOSTICS_ASSERT(rope->getTraceKind() == JS::TraceKind::String);
-    JS_DIAGNOSTICS_ASSERT(rope->JSString::isRope());
-    AssertShouldMarkInZone(rope);
-    MOZ_ASSERT(rope->isMarkedAny());
-    JSRope* next = nullptr;
-
-    JSString* right = rope->rightChild();
-    if (!right->isPermanentAtom() && mark(right)) {
-      if (right->isLinear()) {
-        eagerlyMarkChildren(&right->asLinear());
-      } else {
-        next = &right->asRope();
-      }
-    }
-||||||| merged common ancestors
-    if (enclosingLazyScriptOrScope_) {
-        TraceGenericPointerRoot(trc, reinterpret_cast<Cell**>(enclosingLazyScriptOrScope_.unsafeUnbarrieredForTracing()),
-                                "enclosingScope or enclosingLazyScript");
-    }
-=======
   if (enclosingLazyScriptOrScope_) {
     TraceGenericPointerRoot(
         trc,
@@ -2188,277 +981,27 @@ void LazyScript::traceChildren(JSTracer* trc) {
             enclosingLazyScriptOrScope_.unsafeUnbarrieredForTracing()),
         "enclosingScope or enclosingLazyScript");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    JSString* left = rope->leftChild();
-    if (!left->isPermanentAtom() && mark(left)) {
-      if (left->isLinear()) {
-        eagerlyMarkChildren(&left->asLinear());
-      } else {
-        // When both children are ropes, set aside the right one to
-        // scan it later.
-        if (next && !stack.pushTempRope(next)) {
-          delayMarkingChildren(next);
-        }
-        next = &left->asRope();
-      }
-||||||| merged common ancestors
-    // We rely on the fact that atoms are always tenured.
-    JSAtom** closedOverBindings = this->closedOverBindings();
-    for (auto i : IntegerRange(numClosedOverBindings())) {
-        if (closedOverBindings[i]) {
-            TraceManuallyBarrieredEdge(trc, &closedOverBindings[i], "closedOverBinding");
-        }
-=======
   // We rely on the fact that atoms are always tenured.
   for (GCPtrAtom& closedOverBinding : closedOverBindings()) {
     if (closedOverBinding) {
       TraceEdge(trc, &closedOverBinding, "closedOverBinding");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (next) {
-      rope = next;
-    } else if (savedPos != stack.position()) {
-      MOZ_ASSERT(savedPos < stack.position());
-      rope = stack.popPtr().asTempRope();
-    } else {
-      break;
-||||||| merged common ancestors
-
-    GCPtrFunction* innerFunctions = this->innerFunctions();
-    for (auto i : IntegerRange(numInnerFunctions())) {
-        TraceEdge(trc, &innerFunctions[i], "lazyScriptInnerFunction");
-=======
   }
 
   for (GCPtrFunction& innerFunction : innerFunctions()) {
     if (innerFunction) {
       TraceEdge(trc, &innerFunction, "lazyScriptInnerFunction");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-  MOZ_ASSERT(savedPos == stack.position());
-||||||| merged common ancestors
-=======
   }
 
   if (trc->isMarkingTracer()) {
     GCMarker::fromTracer(trc)->markImplicitEdges(this);
   }
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-inline void
-js::GCMarker::eagerlyMarkChildren(LazyScript *thing)
-{
-    if (thing->script_) {
-        noteWeakEdge(thing->script_.unsafeUnbarrieredForTracing());
-    }
-=======
 inline void js::GCMarker::eagerlyMarkChildren(LazyScript* thing) {
   // script_ is weak so is not traced here.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static inline void TraceBindingNames(JSTracer* trc, BindingName* names,
-                                     uint32_t length) {
-  for (uint32_t i = 0; i < length; i++) {
-    JSAtom* name = names[i].name();
-    MOZ_ASSERT(name);
-    TraceManuallyBarrieredEdge(trc, &name, "scope name");
-  }
-};
-static inline void TraceNullableBindingNames(JSTracer* trc, BindingName* names,
-                                             uint32_t length) {
-  for (uint32_t i = 0; i < length; i++) {
-    if (JSAtom* name = names[i].name()) {
-      TraceManuallyBarrieredEdge(trc, &name, "scope name");
-    }
-  }
-};
-void BindingName::trace(JSTracer* trc) {
-  if (JSAtom* atom = name()) {
-    TraceManuallyBarrieredEdge(trc, &atom, "binding name");
-  }
-}
-void BindingIter::trace(JSTracer* trc) {
-  TraceNullableBindingNames(trc, names_, length_);
-}
-void LexicalScope::Data::trace(JSTracer* trc) {
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void FunctionScope::Data::trace(JSTracer* trc) {
-  TraceNullableEdge(trc, &canonicalFunction, "scope canonical function");
-  TraceNullableBindingNames(trc, trailingNames.start(), length);
-}
-void VarScope::Data::trace(JSTracer* trc) {
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void GlobalScope::Data::trace(JSTracer* trc) {
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void EvalScope::Data::trace(JSTracer* trc) {
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void ModuleScope::Data::trace(JSTracer* trc) {
-  TraceNullableEdge(trc, &module, "scope module");
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void WasmInstanceScope::Data::trace(JSTracer* trc) {
-  TraceNullableEdge(trc, &instance, "wasm instance");
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void WasmFunctionScope::Data::trace(JSTracer* trc) {
-  TraceBindingNames(trc, trailingNames.start(), length);
-}
-void Scope::traceChildren(JSTracer* trc) {
-  TraceNullableEdge(trc, &enclosing_, "scope enclosing");
-  TraceNullableEdge(trc, &environmentShape_, "scope env shape");
-  switch (kind_) {
-    case ScopeKind::Function:
-      as<FunctionScope>().data().trace(trc);
-      break;
-    case ScopeKind::FunctionBodyVar:
-    case ScopeKind::ParameterExpressionVar:
-      as<VarScope>().data().trace(trc);
-      break;
-    case ScopeKind::Lexical:
-    case ScopeKind::SimpleCatch:
-    case ScopeKind::Catch:
-    case ScopeKind::NamedLambda:
-    case ScopeKind::StrictNamedLambda:
-      as<LexicalScope>().data().trace(trc);
-      break;
-    case ScopeKind::Global:
-    case ScopeKind::NonSyntactic:
-      as<GlobalScope>().data().trace(trc);
-      break;
-    case ScopeKind::Eval:
-    case ScopeKind::StrictEval:
-      as<EvalScope>().data().trace(trc);
-      break;
-    case ScopeKind::Module:
-      as<ModuleScope>().data().trace(trc);
-      break;
-    case ScopeKind::With:
-      break;
-    case ScopeKind::WasmInstance:
-      as<WasmInstanceScope>().data().trace(trc);
-      break;
-    case ScopeKind::WasmFunction:
-      as<WasmFunctionScope>().data().trace(trc);
-      break;
-  }
-}
-inline void js::GCMarker::eagerlyMarkChildren(Scope* scope) {
-  if (scope->enclosing_) {
-    traverseEdge(scope, scope->enclosing_.get());
-  }
-  if (scope->environmentShape_) {
-    traverseEdge(scope, scope->environmentShape_.get());
-  }
-  TrailingNamesArray* names = nullptr;
-  uint32_t length = 0;
-  switch (scope->kind()) {
-    case ScopeKind::Function: {
-      FunctionScope::Data& data = scope->as<FunctionScope>().data();
-      traverseObjectEdge(scope, data.canonicalFunction);
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::FunctionBodyVar:
-    case ScopeKind::ParameterExpressionVar: {
-      VarScope::Data& data = scope->as<VarScope>().data();
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::Lexical:
-    case ScopeKind::SimpleCatch:
-    case ScopeKind::Catch:
-    case ScopeKind::NamedLambda:
-    case ScopeKind::StrictNamedLambda: {
-      LexicalScope::Data& data = scope->as<LexicalScope>().data();
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::Global:
-    case ScopeKind::NonSyntactic: {
-      GlobalScope::Data& data = scope->as<GlobalScope>().data();
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::Eval:
-    case ScopeKind::StrictEval: {
-      EvalScope::Data& data = scope->as<EvalScope>().data();
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::Module: {
-      ModuleScope::Data& data = scope->as<ModuleScope>().data();
-      traverseObjectEdge(scope, data.module);
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::With:
-      break;
-
-    case ScopeKind::WasmInstance: {
-      WasmInstanceScope::Data& data = scope->as<WasmInstanceScope>().data();
-      traverseObjectEdge(scope, data.instance);
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-
-    case ScopeKind::WasmFunction: {
-      WasmFunctionScope::Data& data = scope->as<WasmFunctionScope>().data();
-      names = &data.trailingNames;
-      length = data.length;
-      break;
-    }
-  }
-  if (scope->kind_ == ScopeKind::Function) {
-    for (uint32_t i = 0; i < length; i++) {
-      if (JSAtom* name = names->get(i).name()) {
-        traverseStringEdge(scope, name);
-      }
-    }
-  } else {
-    for (uint32_t i = 0; i < length; i++) {
-      traverseStringEdge(scope, names->get(i).name());
-    }
-  }
-}
-||||||| merged common ancestors
-    if (thing->function_) {
-        traverseEdge(thing, static_cast<JSObject*>(thing->function_));
-    }
-
-    if (thing->sourceObject_) {
-        traverseEdge(thing, static_cast<JSObject*>(thing->sourceObject_));
-    }
-
-    if (thing->enclosingLazyScriptOrScope_) {
-        TraceManuallyBarrieredGenericPointerEdge(this, reinterpret_cast<Cell**>(thing->enclosingLazyScriptOrScope_.unsafeUnbarrieredForTracing()),
-                                                 "enclosingScope or enclosingLazyScript");
-    }
-=======
   if (thing->function_) {
     traverseEdge(thing, static_cast<JSObject*>(thing->function_));
   }
@@ -2474,70 +1017,23 @@ inline void js::GCMarker::eagerlyMarkChildren(Scope* scope) {
             thing->enclosingLazyScriptOrScope_.unsafeUnbarrieredForTracing()),
         "enclosingScope or enclosingLazyScript");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void js::ObjectGroup::traceChildren(JSTracer* trc) {
-  AutoSweepObjectGroup sweep(this);
-||||||| merged common ancestors
-    // We rely on the fact that atoms are always tenured.
-    JSAtom** closedOverBindings = thing->closedOverBindings();
-    for (auto i : IntegerRange(thing->numClosedOverBindings())) {
-        if (closedOverBindings[i]) {
-            traverseEdge(thing, static_cast<JSString*>(closedOverBindings[i]));
-        }
-    }
-=======
   // We rely on the fact that atoms are always tenured.
   for (GCPtrAtom& closedOverBinding : thing->closedOverBindings()) {
     if (closedOverBinding) {
       traverseEdge(thing, static_cast<JSString*>(closedOverBinding));
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!trc->canSkipJsids()) {
-    unsigned count = getPropertyCount(sweep);
-    for (unsigned i = 0; i < count; i++) {
-      if (ObjectGroup::Property* prop = getProperty(sweep, i)) {
-        TraceEdge(trc, &prop->id, "group_property");
-      }
-||||||| merged common ancestors
-    GCPtrFunction* innerFunctions = thing->innerFunctions();
-    for (auto i : IntegerRange(thing->numInnerFunctions())) {
-        traverseEdge(thing, static_cast<JSObject*>(innerFunctions[i]));
-=======
   for (GCPtrFunction& innerFunction : thing->innerFunctions()) {
     if (innerFunction) {
       traverseEdge(thing, static_cast<JSObject*>(innerFunction));
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-}
-=======
   }
 
   markImplicitEdges(thing);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (proto().isObject()) {
-    TraceEdge(trc, &proto(), "group_proto");
-  }
-||||||| merged common ancestors
-void
-Shape::traceChildren(JSTracer* trc)
-{
-    TraceEdge(trc, &base_, "base");
-    TraceEdge(trc, &propidRef(), "propid");
-    if (parent) {
-        TraceEdge(trc, &parent, "parent");
-    }
-=======
 void Shape::traceChildren(JSTracer* trc) {
   TraceEdge(trc, &base_, "base");
   TraceEdge(trc, &propidRef(), "propid");
@@ -2565,37 +1061,7 @@ inline void js::GCMarker::eagerlyMarkChildren(Shape* shape) {
       MOZ_ASSERT(base->canSkipMarkingShapeCache(shape));
       base->traceChildrenSkipShapeCache(this);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (trc->isMarkingTracer()) {
-    realm()->mark();
-  }
-||||||| merged common ancestors
-    if (hasGetterObject()) {
-        TraceManuallyBarrieredEdge(trc, &asAccessorShape().getterObj, "getter");
-    }
-    if (hasSetterObject()) {
-        TraceManuallyBarrieredEdge(trc, &asAccessorShape().setterObj, "setter");
-    }
-}
-inline void
-js::GCMarker::eagerlyMarkChildren(Shape* shape)
-{
-    MOZ_ASSERT_IF(markColor() == MarkColor::Gray, shape->isMarkedGray());
-    MOZ_ASSERT_IF(markColor() == MarkColor::Black, shape->isMarkedBlack());
-
-    do {
-        // Special case: if a base shape has a shape table then all its pointers
-        // must point to this shape or an anscestor.  Since these pointers will
-        // be traced by this loop they do not need to be traced here as well.
-        BaseShape* base = shape->base();
-        CheckTraversedEdge(shape, base);
-        if (mark(base)) {
-            MOZ_ASSERT(base->canSkipMarkingShapeTable(shape));
-            base->traceChildrenSkipShapeTable(this);
-        }
-=======
     traverseEdge(shape, shape->propidRef().get());
 
     // When triggered between slices on behalf of a barrier, these
@@ -2607,35 +1073,11 @@ js::GCMarker::eagerlyMarkChildren(Shape* shape)
     if (shape->hasSetterObject() && shape->setterObject()->isTenured()) {
       traverseEdge(shape, shape->setterObject());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (JSObject* global = realm()->unsafeUnbarrieredMaybeGlobal()) {
-    TraceManuallyBarrieredEdge(trc, &global, "group_global");
-  }
-||||||| merged common ancestors
-        traverseEdge(shape, shape->propidRef().get());
-=======
     shape = shape->previous();
   } while (shape && mark(shape));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (newScript(sweep)) {
-    newScript(sweep)->trace(trc);
-  }
-||||||| merged common ancestors
-        // When triggered between slices on belhalf of a barrier, these
-        // objects may reside in the nursery, so require an extra check.
-        // FIXME: Bug 1157967 - remove the isTenured checks.
-        if (shape->hasGetterObject() && shape->getterObject()->isTenured()) {
-            traverseEdge(shape, shape->getterObject());
-        }
-        if (shape->hasSetterObject() && shape->setterObject()->isTenured()) {
-            traverseEdge(shape, shape->setterObject());
-        }
-=======
 void JSString::traceChildren(JSTracer* trc) {
   if (hasBase()) {
     traceBase(trc);
@@ -2650,17 +1092,7 @@ inline void GCMarker::eagerlyMarkChildren(JSString* str) {
     eagerlyMarkChildren(&str->asRope());
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (maybePreliminaryObjects(sweep)) {
-    maybePreliminaryObjects(sweep)->trace(trc);
-  }
-||||||| merged common ancestors
-        shape = shape->previous();
-    } while (shape && mark(shape));
-}
-=======
 void JSString::traceBase(JSTracer* trc) {
   MOZ_ASSERT(hasBase());
   TraceManuallyBarrieredEdge(trc, &d.s.u3.base, "base");
@@ -2669,130 +1101,7 @@ inline void js::GCMarker::eagerlyMarkChildren(JSLinearString* linearStr) {
   AssertShouldMarkInZone(linearStr);
   MOZ_ASSERT(linearStr->isMarkedAny());
   MOZ_ASSERT(linearStr->JSString::isLinear());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (maybeUnboxedLayout(sweep)) {
-    unboxedLayout(sweep).trace(trc);
-  }
-
-  if (ObjectGroup* unboxedGroup = maybeOriginalUnboxedGroup()) {
-    TraceManuallyBarrieredEdge(trc, &unboxedGroup,
-                               "group_original_unboxed_group");
-    setOriginalUnboxedGroup(unboxedGroup);
-  }
-
-  if (JSObject* descr = maybeTypeDescr()) {
-    TraceManuallyBarrieredEdge(trc, &descr, "group_type_descr");
-    setTypeDescr(&descr->as<TypeDescr>());
-  }
-
-  if (JSObject* fun = maybeInterpretedFunction()) {
-    TraceManuallyBarrieredEdge(trc, &fun, "group_function");
-    setInterpretedFunction(&fun->as<JSFunction>());
-  }
-}
-void js::GCMarker::lazilyMarkChildren(ObjectGroup* group) {
-  AutoSweepObjectGroup sweep(group);
-  unsigned count = group->getPropertyCount(sweep);
-  for (unsigned i = 0; i < count; i++) {
-    if (ObjectGroup::Property* prop = group->getProperty(sweep, i)) {
-      traverseEdge(group, prop->id.get());
-    }
-  }
-||||||| merged common ancestors
-void
-JSString::traceChildren(JSTracer* trc)
-{
-    if (hasBase()) {
-        traceBase(trc);
-    } else if (isRope()) {
-        asRope().traceChildren(trc);
-    }
-}
-inline void
-GCMarker::eagerlyMarkChildren(JSString* str)
-{
-    if (str->isLinear()) {
-        eagerlyMarkChildren(&str->asLinear());
-    } else {
-        eagerlyMarkChildren(&str->asRope());
-    }
-}
-
-void
-JSString::traceBase(JSTracer* trc)
-{
-    MOZ_ASSERT(hasBase());
-    TraceManuallyBarrieredEdge(trc, &d.s.u3.base, "base");
-}
-inline void
-js::GCMarker::eagerlyMarkChildren(JSLinearString* linearStr)
-{
-    AssertShouldMarkInZone(linearStr);
-    MOZ_ASSERT(linearStr->isMarkedAny());
-    MOZ_ASSERT(linearStr->JSString::isLinear());
-
-    // Use iterative marking to avoid blowing out the stack.
-    while (linearStr->hasBase()) {
-        linearStr = linearStr->base();
-        MOZ_ASSERT(linearStr->JSString::isLinear());
-        if (linearStr->isPermanentAtom()) {
-            break;
-        }
-        AssertShouldMarkInZone(linearStr);
-        if (!mark(static_cast<JSString*>(linearStr))) {
-            break;
-        }
-    }
-}
-
-void
-JSRope::traceChildren(JSTracer* trc) {
-    js::TraceManuallyBarrieredEdge(trc, &d.s.u2.left, "left child");
-    js::TraceManuallyBarrieredEdge(trc, &d.s.u3.right, "right child");
-}
-inline void
-js::GCMarker::eagerlyMarkChildren(JSRope* rope)
-{
-    // This function tries to scan the whole rope tree using the marking stack
-    // as temporary storage. If that becomes full, the unscanned ropes are
-    // added to the delayed marking list. When the function returns, the
-    // marking stack is at the same depth as it was on entry. This way we avoid
-    // using tags when pushing ropes to the stack as ropes never leak to other
-    // users of the stack. This also assumes that a rope can only point to
-    // other ropes or linear strings, it cannot refer to GC things of other
-    // types.
-    size_t savedPos = stack.position();
-    JS_DIAGNOSTICS_ASSERT(rope->getTraceKind() == JS::TraceKind::String);
-#ifdef JS_DEBUG
-    static const size_t DEEP_ROPE_THRESHOLD = 100000;
-    static const size_t ROPE_CYCLE_HISTORY = 100;
-    DebugOnly<size_t> ropeDepth = 0;
-    JSRope* history[ROPE_CYCLE_HISTORY];
-#endif
-    while (true) {
-#ifdef JS_DEBUG
-        if (++ropeDepth >= DEEP_ROPE_THRESHOLD) {
-            // Bug 1011786 comment 294 - detect cyclic ropes. There are some
-            // legitimate deep ropes, at least in tests. So if we hit a deep
-            // rope, start recording the nodes we visit and check whether we
-            // repeat. But do it on a finite window size W so that we're not
-            // scanning the full history for every node. And only check every
-            // Wth push, to add only constant overhead per node. This will only
-            // catch cycles of size up to W (but it seems most likely that any
-            // cycles will be size 1 or maybe 2.)
-            if ((ropeDepth > DEEP_ROPE_THRESHOLD + ROPE_CYCLE_HISTORY) &&
-                (ropeDepth % ROPE_CYCLE_HISTORY) == 0)
-            {
-                for (size_t i = 0; i < ROPE_CYCLE_HISTORY; i++) {
-                    MOZ_ASSERT(history[i] != rope, "cycle detected in rope");
-                }
-            }
-            history[ropeDepth % ROPE_CYCLE_HISTORY] = rope;
-        }
-#endif
-=======
   // Use iterative marking to avoid blowing out the stack.
   while (linearStr->hasBase()) {
     linearStr = linearStr->base();
@@ -2849,30 +1158,7 @@ inline void js::GCMarker::eagerlyMarkChildren(JSRope* rope) {
       history[ropeDepth % ROPE_CYCLE_HISTORY] = rope;
     }
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (group->proto().isObject()) {
-    traverseEdge(group, group->proto().toObject());
-  }
-||||||| merged common ancestors
-        JS_DIAGNOSTICS_ASSERT(rope->getTraceKind() == JS::TraceKind::String);
-        JS_DIAGNOSTICS_ASSERT(rope->JSString::isRope());
-        AssertShouldMarkInZone(rope);
-        MOZ_ASSERT(rope->isMarkedAny());
-        JSRope* next = nullptr;
-
-        JSString* right = rope->rightChild();
-        if (!right->isPermanentAtom() &&
-            mark(right))
-        {
-            if (right->isLinear()) {
-                eagerlyMarkChildren(&right->asLinear());
-            } else {
-                next = &right->asRope();
-            }
-        }
-=======
     JS_DIAGNOSTICS_ASSERT(rope->getTraceKind() == JS::TraceKind::String);
     JS_DIAGNOSTICS_ASSERT(rope->JSString::isRope());
     AssertShouldMarkInZone(rope);
@@ -2887,325 +1173,7 @@ inline void js::GCMarker::eagerlyMarkChildren(JSRope* rope) {
         next = &right->asRope();
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  group->realm()->mark();
-
-  if (GlobalObject* global = group->realm()->unsafeUnbarrieredMaybeGlobal()) {
-    traverseEdge(group, static_cast<JSObject*>(global));
-  }
-||||||| merged common ancestors
-        JSString* left = rope->leftChild();
-        if (!left->isPermanentAtom() &&
-            mark(left))
-        {
-            if (left->isLinear()) {
-                eagerlyMarkChildren(&left->asLinear());
-            } else {
-                // When both children are ropes, set aside the right one to
-                // scan it later.
-                if (next && !stack.pushTempRope(next)) {
-                    delayMarkingChildren(next);
-                }
-                next = &left->asRope();
-            }
-        }
-        if (next) {
-            rope = next;
-        } else if (savedPos != stack.position()) {
-            MOZ_ASSERT(savedPos < stack.position());
-            rope = stack.popPtr().asTempRope();
-        } else {
-            break;
-        }
-    }
-    MOZ_ASSERT(savedPos == stack.position());
-}
-
-static inline void
-TraceBindingNames(JSTracer* trc, BindingName* names, uint32_t length)
-{
-    for (uint32_t i = 0; i < length; i++) {
-        JSAtom* name = names[i].name();
-        MOZ_ASSERT(name);
-        TraceManuallyBarrieredEdge(trc, &name, "scope name");
-    }
-};
-static inline void
-TraceNullableBindingNames(JSTracer* trc, BindingName* names, uint32_t length)
-{
-    for (uint32_t i = 0; i < length; i++) {
-        if (JSAtom* name = names[i].name()) {
-            TraceManuallyBarrieredEdge(trc, &name, "scope name");
-        }
-    }
-};
-void
-BindingName::trace(JSTracer* trc)
-{
-    if (JSAtom* atom = name()) {
-        TraceManuallyBarrieredEdge(trc, &atom, "binding name");
-    }
-}
-void
-BindingIter::trace(JSTracer* trc)
-{
-    TraceNullableBindingNames(trc, names_, length_);
-}
-void
-LexicalScope::Data::trace(JSTracer* trc)
-{
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-FunctionScope::Data::trace(JSTracer* trc)
-{
-    TraceNullableEdge(trc, &canonicalFunction, "scope canonical function");
-    TraceNullableBindingNames(trc, trailingNames.start(), length);
-}
-void
-VarScope::Data::trace(JSTracer* trc)
-{
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-GlobalScope::Data::trace(JSTracer* trc)
-{
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-EvalScope::Data::trace(JSTracer* trc)
-{
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-ModuleScope::Data::trace(JSTracer* trc)
-{
-    TraceNullableEdge(trc, &module, "scope module");
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-WasmInstanceScope::Data::trace(JSTracer* trc)
-{
-    TraceNullableEdge(trc, &instance, "wasm instance");
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-WasmFunctionScope::Data::trace(JSTracer* trc)
-{
-    TraceBindingNames(trc, trailingNames.start(), length);
-}
-void
-Scope::traceChildren(JSTracer* trc)
-{
-    TraceNullableEdge(trc, &enclosing_, "scope enclosing");
-    TraceNullableEdge(trc, &environmentShape_, "scope env shape");
-    switch (kind_) {
-      case ScopeKind::Function:
-        as<FunctionScope>().data().trace(trc);
-        break;
-      case ScopeKind::FunctionBodyVar:
-      case ScopeKind::ParameterExpressionVar:
-        as<VarScope>().data().trace(trc);
-        break;
-      case ScopeKind::Lexical:
-      case ScopeKind::SimpleCatch:
-      case ScopeKind::Catch:
-      case ScopeKind::NamedLambda:
-      case ScopeKind::StrictNamedLambda:
-        as<LexicalScope>().data().trace(trc);
-        break;
-      case ScopeKind::Global:
-      case ScopeKind::NonSyntactic:
-        as<GlobalScope>().data().trace(trc);
-        break;
-      case ScopeKind::Eval:
-      case ScopeKind::StrictEval:
-        as<EvalScope>().data().trace(trc);
-        break;
-      case ScopeKind::Module:
-        as<ModuleScope>().data().trace(trc);
-        break;
-      case ScopeKind::With:
-        break;
-      case ScopeKind::WasmInstance:
-        as<WasmInstanceScope>().data().trace(trc);
-        break;
-      case ScopeKind::WasmFunction:
-        as<WasmFunctionScope>().data().trace(trc);
-        break;
-    }
-}
-inline void
-js::GCMarker::eagerlyMarkChildren(Scope* scope)
-{
-    if (scope->enclosing_) {
-        traverseEdge(scope, scope->enclosing_.get());
-    }
-    if (scope->environmentShape_) {
-        traverseEdge(scope, scope->environmentShape_.get());
-    }
-    TrailingNamesArray* names = nullptr;
-    uint32_t length = 0;
-    switch (scope->kind()) {
-      case ScopeKind::Function: {
-        FunctionScope::Data& data = scope->as<FunctionScope>().data();
-        traverseObjectEdge(scope, data.canonicalFunction);
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::FunctionBodyVar:
-      case ScopeKind::ParameterExpressionVar: {
-        VarScope::Data& data = scope->as<VarScope>().data();
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::Lexical:
-      case ScopeKind::SimpleCatch:
-      case ScopeKind::Catch:
-      case ScopeKind::NamedLambda:
-      case ScopeKind::StrictNamedLambda: {
-        LexicalScope::Data& data = scope->as<LexicalScope>().data();
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::Global:
-      case ScopeKind::NonSyntactic: {
-        GlobalScope::Data& data = scope->as<GlobalScope>().data();
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::Eval:
-      case ScopeKind::StrictEval: {
-        EvalScope::Data& data = scope->as<EvalScope>().data();
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::Module: {
-        ModuleScope::Data& data = scope->as<ModuleScope>().data();
-        traverseObjectEdge(scope, data.module);
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::With:
-        break;
-
-      case ScopeKind::WasmInstance: {
-        WasmInstanceScope::Data& data = scope->as<WasmInstanceScope>().data();
-        traverseObjectEdge(scope, data.instance);
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-
-      case ScopeKind::WasmFunction: {
-        WasmFunctionScope::Data& data = scope->as<WasmFunctionScope>().data();
-        names = &data.trailingNames;
-        length = data.length;
-        break;
-      }
-    }
-    if (scope->kind_ == ScopeKind::Function) {
-        for (uint32_t i = 0; i < length; i++) {
-            if (JSAtom* name = names->get(i).name()) {
-                traverseStringEdge(scope, name);
-            }
-        }
-    } else {
-        for (uint32_t i = 0; i < length; i++) {
-            traverseStringEdge(scope, names->get(i).name());
-        }
-    }
-}
-
-void
-js::ObjectGroup::traceChildren(JSTracer* trc)
-{
-    AutoSweepObjectGroup sweep(this);
-
-    if (!trc->canSkipJsids()) {
-        unsigned count = getPropertyCount(sweep);
-        for (unsigned i = 0; i < count; i++) {
-            if (ObjectGroup::Property* prop = getProperty(sweep, i)) {
-                TraceEdge(trc, &prop->id, "group_property");
-            }
-        }
-    }
-
-    if (proto().isObject()) {
-        TraceEdge(trc, &proto(), "group_proto");
-    }
-
-    if (trc->isMarkingTracer()) {
-        realm()->mark();
-    }
-
-    if (JSObject* global = realm()->unsafeUnbarrieredMaybeGlobal()) {
-        TraceManuallyBarrieredEdge(trc, &global, "group_global");
-    }
-
-
-    if (newScript(sweep)) {
-        newScript(sweep)->trace(trc);
-    }
-
-    if (maybePreliminaryObjects(sweep)) {
-        maybePreliminaryObjects(sweep)->trace(trc);
-    }
-
-    if (maybeUnboxedLayout(sweep)) {
-        unboxedLayout(sweep).trace(trc);
-    }
-
-    if (ObjectGroup* unboxedGroup = maybeOriginalUnboxedGroup()) {
-        TraceManuallyBarrieredEdge(trc, &unboxedGroup, "group_original_unboxed_group");
-        setOriginalUnboxedGroup(unboxedGroup);
-    }
-
-    if (JSObject* descr = maybeTypeDescr()) {
-        TraceManuallyBarrieredEdge(trc, &descr, "group_type_descr");
-        setTypeDescr(&descr->as<TypeDescr>());
-    }
-
-    if (JSObject* fun = maybeInterpretedFunction()) {
-        TraceManuallyBarrieredEdge(trc, &fun, "group_function");
-        setInterpretedFunction(&fun->as<JSFunction>());
-    }
-}
-void
-js::GCMarker::lazilyMarkChildren(ObjectGroup* group)
-{
-    AutoSweepObjectGroup sweep(group);
-    unsigned count = group->getPropertyCount(sweep);
-    for (unsigned i = 0; i < count; i++) {
-        if (ObjectGroup::Property* prop = group->getProperty(sweep, i)) {
-            traverseEdge(group, prop->id.get());
-        }
-    }
-
-    if (group->proto().isObject()) {
-        traverseEdge(group, group->proto().toObject());
-    }
-
-    group->realm()->mark();
-
-    if (GlobalObject* global = group->realm()->unsafeUnbarrieredMaybeGlobal()) {
-        traverseEdge(group, static_cast<JSObject*>(global));
-    }
-=======
     JSString* left = rope->leftChild();
     if (!left->isPermanentAtom() && mark(left)) {
       if (left->isLinear()) {
@@ -3439,43 +1407,9 @@ void js::GCMarker::lazilyMarkChildren(ObjectGroup* group) {
   if (group->newScript(sweep)) {
     group->newScript(sweep)->trace(this);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (group->newScript(sweep)) {
-    group->newScript(sweep)->trace(this);
-  }
-||||||| merged common ancestors
-    if (group->newScript(sweep)) {
-        group->newScript(sweep)->trace(this);
-    }
-=======
   if (group->maybePreliminaryObjects(sweep)) {
     group->maybePreliminaryObjects(sweep)->trace(this);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (group->maybePreliminaryObjects(sweep)) {
-    group->maybePreliminaryObjects(sweep)->trace(this);
-  }
-||||||| merged common ancestors
-    if (group->maybePreliminaryObjects(sweep)) {
-        group->maybePreliminaryObjects(sweep)->trace(this);
-    }
-=======
-  if (TypeDescr* descr = group->maybeTypeDescr()) {
-    traverseEdge(group, static_cast<JSObject*>(descr));
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (group->maybeUnboxedLayout(sweep)) {
-    group->unboxedLayout(sweep).trace(this);
-  }
-
-  if (ObjectGroup* unboxedGroup = group->maybeOriginalUnboxedGroup()) {
-    traverseEdge(group, unboxedGroup);
   }
 
   if (TypeDescr* descr = group->maybeTypeDescr()) {
@@ -3485,91 +1419,16 @@ void js::GCMarker::lazilyMarkChildren(ObjectGroup* group) {
   if (JSFunction* fun = group->maybeInterpretedFunction()) {
     traverseEdge(group, static_cast<JSObject*>(fun));
   }
-||||||| merged common ancestors
-    if (group->maybeUnboxedLayout(sweep)) {
-        group->unboxedLayout(sweep).trace(this);
-    }
-
-    if (ObjectGroup* unboxedGroup = group->maybeOriginalUnboxedGroup()) {
-        traverseEdge(group, unboxedGroup);
-    }
-
-    if (TypeDescr* descr = group->maybeTypeDescr()) {
-        traverseEdge(group, static_cast<JSObject*>(descr));
-    }
-
-    if (JSFunction* fun = group->maybeInterpretedFunction()) {
-        traverseEdge(group, static_cast<JSObject*>(fun));
-    }
-=======
-  if (JSFunction* fun = group->maybeInterpretedFunction()) {
-    traverseEdge(group, static_cast<JSObject*>(fun));
-  }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
 void JS::BigInt::traceChildren(JSTracer* trc) { return; }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-void
-JS::BigInt::traceChildren(JSTracer* trc)
-{
-    return;
-}
-#endif
-=======
-void JS::BigInt::traceChildren(JSTracer* trc) { return; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-struct TraverseObjectFunctor {
-  template <typename T>
-  void operator()(T* thing, GCMarker* gcmarker, JSObject* src) {
-    gcmarker->traverseEdge(src, *thing);
-  }
-};
-||||||| merged common ancestors
-struct TraverseObjectFunctor
-{
-    template <typename T>
-    void operator()(T* thing, GCMarker* gcmarker, JSObject* src) {
-        gcmarker->traverseEdge(src, *thing);
-    }
-};
-=======
 template <typename Functor>
 static void VisitTraceList(const Functor& f, const uint32_t* traceList,
                            uint8_t* memory);
->>>>>>> upstream-releases
 
 // Call the trace hook set on the object, if present. If further tracing of
 // NativeObject fields is required, this will return the native object.
-<<<<<<< HEAD
-enum class CheckGeneration { DoChecks, NoChecks };
-template <typename Functor, typename... Args>
-static inline NativeObject* CallTraceHook(Functor f, JSTracer* trc,
-                                          JSObject* obj, CheckGeneration check,
-                                          Args&&... args) {
-  const Class* clasp = obj->getClass();
-  MOZ_ASSERT(clasp);
-  MOZ_ASSERT(obj->isNative() == clasp->isNative());
-
-  if (!clasp->hasTrace()) {
-    return &obj->as<NativeObject>();
-  }
-||||||| merged common ancestors
-enum class CheckGeneration { DoChecks, NoChecks};
-template <typename Functor, typename... Args>
-static inline NativeObject*
-CallTraceHook(Functor f, JSTracer* trc, JSObject* obj, CheckGeneration check, Args&&... args)
-{
-    const Class* clasp = obj->getClass();
-    MOZ_ASSERT(clasp);
-    MOZ_ASSERT(obj->isNative() == clasp->isNative());
-=======
 enum class CheckGeneration { DoChecks, NoChecks };
 template <typename Functor>
 static inline NativeObject* CallTraceHook(Functor&& f, JSTracer* trc,
@@ -3586,60 +1445,18 @@ static inline NativeObject* CallTraceHook(Functor&& f, JSTracer* trc,
   if (clasp->isTrace(InlineTypedObject::obj_trace)) {
     Shape** pshape = obj->as<InlineTypedObject>().addressOfShapeFromGC();
     f(pshape);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (clasp->isTrace(InlineTypedObject::obj_trace)) {
-    Shape** pshape = obj->as<InlineTypedObject>().addressOfShapeFromGC();
-    f(pshape, std::forward<Args>(args)...);
-||||||| merged common ancestors
-    if (!clasp->hasTrace()) {
-        return &obj->as<NativeObject>();
-    }
-=======
     InlineTypedObject& tobj = obj->as<InlineTypedObject>();
     if (tobj.typeDescr().hasTraceList()) {
       VisitTraceList(f, tobj.typeDescr().traceList(),
                      tobj.inlineTypedMemForGC());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    InlineTypedObject& tobj = obj->as<InlineTypedObject>();
-    if (tobj.typeDescr().hasTraceList()) {
-      VisitTraceList(f, tobj.typeDescr().traceList(),
-                     tobj.inlineTypedMemForGC(), std::forward<Args>(args)...);
-    }
-||||||| merged common ancestors
-    if (clasp->isTrace(InlineTypedObject::obj_trace)) {
-        Shape** pshape = obj->as<InlineTypedObject>().addressOfShapeFromGC();
-        f(pshape, std::forward<Args>(args)...);
-=======
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    return nullptr;
-  }
-||||||| merged common ancestors
-        InlineTypedObject& tobj = obj->as<InlineTypedObject>();
-        if (tobj.typeDescr().hasTraceList()) {
-            VisitTraceList(f, tobj.typeDescr().traceList(), tobj.inlineTypedMemForGC(),
-                           std::forward<Args>(args)...);
-        }
-=======
   clasp->doTrace(trc, obj);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (clasp == &UnboxedPlainObject::class_) {
-    JSObject** pexpando = obj->as<UnboxedPlainObject>().addressOfExpando();
-    if (*pexpando) {
-      f(pexpando, std::forward<Args>(args)...);
-||||||| merged common ancestors
-        return nullptr;
-=======
   if (!clasp->isNative()) {
     return nullptr;
   }
@@ -3660,7 +1477,6 @@ static void VisitTraceList(const Functor& f, const uint32_t* traceList,
     JSObject** objp = reinterpret_cast<JSObject**>(memory + *traceList);
     if (*objp) {
       f(objp);
->>>>>>> upstream-releases
     }
     traceList++;
   }
@@ -3670,34 +1486,6 @@ static void VisitTraceList(const Functor& f, const uint32_t* traceList,
   }
 }
 
-<<<<<<< HEAD
-    UnboxedPlainObject& unboxed = obj->as<UnboxedPlainObject>();
-    const UnboxedLayout& layout = check == CheckGeneration::DoChecks
-                                      ? unboxed.layout()
-                                      : unboxed.layoutDontCheckGeneration();
-    if (layout.traceList()) {
-      VisitTraceList(f, layout.traceList(), unboxed.data(),
-                     std::forward<Args>(args)...);
-    }
-||||||| merged common ancestors
-    if (clasp == &UnboxedPlainObject::class_) {
-        JSObject** pexpando = obj->as<UnboxedPlainObject>().addressOfExpando();
-        if (*pexpando) {
-            f(pexpando, std::forward<Args>(args)...);
-        }
-
-        UnboxedPlainObject& unboxed = obj->as<UnboxedPlainObject>();
-        const UnboxedLayout& layout = check == CheckGeneration::DoChecks
-                                      ? unboxed.layout()
-                                      : unboxed.layoutDontCheckGeneration();
-        if (layout.traceList()) {
-            VisitTraceList(f, layout.traceList(), unboxed.data(),
-                           std::forward<Args>(args)...);
-        }
-
-        return nullptr;
-    }
-=======
 /*** Mark-stack Marking *****************************************************/
 
 GCMarker::MarkQueueProgress GCMarker::processMarkQueue() {
@@ -3728,14 +1516,7 @@ GCMarker::MarkQueueProgress GCMarker::processMarkQueue() {
       if (!zone->isGCMarking() || obj->isMarkedAtLeast(markColor())) {
         continue;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    return nullptr;
-  }
-||||||| merged common ancestors
-    clasp->doTrace(trc, obj);
-=======
       // If we have started sweeping, obey sweep group ordering. But note that
       // we will first be called during the initial sweep slice, when the sweep
       // group indexes have not yet been computed. In that case, we can mark
@@ -3752,79 +1533,14 @@ GCMarker::MarkQueueProgress GCMarker::processMarkQueue() {
           return QueueSuspended;
         }
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  clasp->doTrace(trc, obj);
-
-  if (!clasp->isNative()) {
-    return nullptr;
-  }
-  return &obj->as<NativeObject>();
-}
-||||||| merged common ancestors
-    if (!clasp->isNative()) {
-        return nullptr;
-    }
-    return &obj->as<NativeObject>();
-}
-=======
       if (markColor() == MarkColor::Gray && zone->isGCMarkingBlackOnly()) {
         // Have not yet reached the point where we can mark this object, so
         // continue with the GC.
         queuePos--;
         return QueueSuspended;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename F, typename... Args>
-static void VisitTraceList(F f, const int32_t* traceList, uint8_t* memory,
-                           Args&&... args) {
-  while (*traceList != -1) {
-    f(reinterpret_cast<JSString**>(memory + *traceList),
-      std::forward<Args>(args)...);
-    traceList++;
-  }
-  traceList++;
-  while (*traceList != -1) {
-    JSObject** objp = reinterpret_cast<JSObject**>(memory + *traceList);
-    if (*objp) {
-      f(objp, std::forward<Args>(args)...);
-    }
-    traceList++;
-  }
-  traceList++;
-  while (*traceList != -1) {
-    f(reinterpret_cast<Value*>(memory + *traceList),
-      std::forward<Args>(args)...);
-    traceList++;
-  }
-}
-||||||| merged common ancestors
-template <typename F, typename... Args>
-static void
-VisitTraceList(F f, const int32_t* traceList, uint8_t* memory, Args&&... args)
-{
-    while (*traceList != -1) {
-        f(reinterpret_cast<JSString**>(memory + *traceList), std::forward<Args>(args)...);
-        traceList++;
-    }
-    traceList++;
-    while (*traceList != -1) {
-        JSObject** objp = reinterpret_cast<JSObject**>(memory + *traceList);
-        if (*objp) {
-            f(objp, std::forward<Args>(args)...);
-        }
-        traceList++;
-    }
-    traceList++;
-    while (*traceList != -1) {
-        f(reinterpret_cast<Value*>(memory + *traceList), std::forward<Args>(args)...);
-        traceList++;
-    }
-}
-=======
       // Mark the object and push it onto the stack.
       traverse(obj);
 
@@ -3871,46 +1587,17 @@ VisitTraceList(F f, const int32_t* traceList, uint8_t* memory, Args&&... args)
     }
   }
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*** Mark-stack Marking *****************************************************/
-||||||| merged common ancestors
-
-/*** Mark-stack Marking ***************************************************************************/
-=======
   return QueueComplete;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool GCMarker::markUntilBudgetExhaused(SliceBudget& budget) {
-||||||| merged common ancestors
-bool
-GCMarker::drainMarkStack(SliceBudget& budget)
-{
-=======
 bool GCMarker::markUntilBudgetExhausted(SliceBudget& budget) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   MOZ_ASSERT(!strictCompartmentChecking);
   strictCompartmentChecking = true;
   auto acc = mozilla::MakeScopeExit([&] { strictCompartmentChecking = false; });
 #endif
 
-<<<<<<< HEAD
-  if (budget.isOverBudget()) {
-    return false;
-  }
-
-  for (;;) {
-    while (!stack.isEmpty()) {
-      processMarkStackTop(budget);
-      if (budget.isOverBudget()) {
-        saveValueRanges();
-||||||| merged common ancestors
-    if (budget.isOverBudget()) {
-=======
   if (budget.isOverBudget()) {
     return false;
   }
@@ -3927,38 +1614,10 @@ bool GCMarker::markUntilBudgetExhausted(SliceBudget& budget) {
       MOZ_ASSERT(markColor() == MarkColor::Black);
       processMarkStackTop(budget);
       if (budget.isOverBudget()) {
->>>>>>> upstream-releases
         return false;
       }
     }
 
-<<<<<<< HEAD
-    if (!hasDelayedChildren()) {
-      break;
-||||||| merged common ancestors
-    for (;;) {
-        while (!stack.isEmpty()) {
-            processMarkStackTop(budget);
-            if (budget.isOverBudget()) {
-                saveValueRanges();
-                return false;
-            }
-        }
-
-        if (!hasDelayedChildren()) {
-            break;
-        }
-
-        /*
-         * Mark children of things that caused too deep recursion during the
-         * above tracing. Don't do this until we're done with everything
-         * else.
-         */
-        if (!markDelayedChildren(budget)) {
-            saveValueRanges();
-            return false;
-        }
-=======
     if (hasGrayEntries()) {
       AutoSetMarkColor autoSetGray(*this, MarkColor::Gray);
       do {
@@ -3979,65 +1638,25 @@ bool GCMarker::markUntilBudgetExhausted(SliceBudget& budget) {
       // get collected and then we could re-wrap the delegate and look it up in
       // the map again.)
       continue;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    return true;
-}
-
-inline static bool
-ObjectDenseElementsMayBeMarkable(NativeObject* nobj)
-{
-=======
     if (!hasDelayedChildren()) {
       break;
     }
 
->>>>>>> upstream-releases
     /*
      * Mark children of things that caused too deep recursion during the
      * above tracing. Don't do this until we're done with everything
      * else.
      */
-<<<<<<< HEAD
-    if (!markDelayedChildren(budget)) {
-      saveValueRanges();
-      return false;
-||||||| merged common ancestors
-    const unsigned MinElementsLength = 32;
-    if (nobj->getDenseInitializedLength() < MinElementsLength || nobj->isSingleton()) {
-        return true;
-=======
     if (!markAllDelayedChildren(budget)) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
   return true;
 }
 
-<<<<<<< HEAD
-inline static bool ObjectDenseElementsMayBeMarkable(NativeObject* nobj) {
-  /*
-   * For arrays that are large enough it's worth checking the type information
-   * to see if the object's elements contain any GC pointers.  If not, we
-   * don't need to trace them.
-   */
-  const unsigned MinElementsLength = 32;
-  if (nobj->getDenseInitializedLength() < MinElementsLength ||
-      nobj->isSingleton()) {
-    return true;
-  }
-||||||| merged common ancestors
-    // This typeset doesn't escape this function so avoid sweeping here.
-    HeapTypeSet* typeSet = group->maybeGetPropertyDontCheckGeneration(JSID_VOID);
-    if (!typeSet) {
-        return true;
-    }
-=======
 inline static bool ObjectDenseElementsMayBeMarkable(NativeObject* nobj) {
   /*
    * For arrays that are large enough it's worth checking the type information
@@ -4060,37 +1679,12 @@ inline static bool ObjectDenseElementsMayBeMarkable(NativeObject* nobj) {
   if (!typeSet) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ObjectGroup* group = nobj->group();
-  if (group->needsSweep() || group->unknownPropertiesDontCheckGeneration()) {
-    return true;
-  }
-
-  // This typeset doesn't escape this function so avoid sweeping here.
-  HeapTypeSet* typeSet = group->maybeGetPropertyDontCheckGeneration(JSID_VOID);
-  if (!typeSet) {
-    return true;
-  }
-
-  static const uint32_t flagMask = TYPE_FLAG_STRING | TYPE_FLAG_SYMBOL |
-                                   TYPE_FLAG_LAZYARGS | TYPE_FLAG_ANYOBJECT |
-                                   IF_BIGINT(TYPE_FLAG_BIGINT, 0);
-  bool mayBeMarkable =
-      typeSet->hasAnyFlag(flagMask) || typeSet->getObjectCount() != 0;
-||||||| merged common ancestors
-    static const uint32_t flagMask =
-        TYPE_FLAG_STRING | TYPE_FLAG_SYMBOL | TYPE_FLAG_LAZYARGS | TYPE_FLAG_ANYOBJECT |
-        IF_BIGINT(TYPE_FLAG_BIGINT, 0);
-    bool mayBeMarkable = typeSet->hasAnyFlag(flagMask) || typeSet->getObjectCount() != 0;
-=======
   static const uint32_t flagMask = TYPE_FLAG_STRING | TYPE_FLAG_SYMBOL |
                                    TYPE_FLAG_LAZYARGS | TYPE_FLAG_ANYOBJECT |
                                    TYPE_FLAG_BIGINT;
   bool mayBeMarkable =
       typeSet->hasAnyFlag(flagMask) || typeSet->getObjectCount() != 0;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   if (!mayBeMarkable) {
@@ -4126,37 +1720,8 @@ inline void GCMarker::processMarkStackTop(SliceBudget& budget) {
   HeapSlot* end;
   JSObject* obj;
 
-<<<<<<< HEAD
-  switch (stack.peekTag()) {
-    case MarkStack::ValueArrayTag: {
-      auto array = stack.popValueArray();
-      obj = array.ptr.asValueArrayObject();
-      vp = array.start;
-      end = array.end;
-      goto scan_value_array;
-    }
-||||||| merged common ancestors
-      case MarkStack::ObjectTag: {
-        obj = stack.popPtr().as<JSObject>();
-        AssertShouldMarkInZone(obj);
-        goto scan_obj;
-      }
-=======
   gc::MarkStack& stack = currentStack();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case MarkStack::ObjectTag: {
-      obj = stack.popPtr().as<JSObject>();
-      AssertShouldMarkInZone(obj);
-      goto scan_obj;
-    }
-||||||| merged common ancestors
-      case MarkStack::GroupTag: {
-        auto group = stack.popPtr().as<ObjectGroup>();
-        return lazilyMarkChildren(group);
-      }
-=======
   switch (stack.peekTag()) {
     case MarkStack::ValueArrayTag: {
       auto array = stack.popValueArray();
@@ -4165,100 +1730,28 @@ inline void GCMarker::processMarkStackTop(SliceBudget& budget) {
       end = array.end;
       goto scan_value_array;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case MarkStack::GroupTag: {
-      auto group = stack.popPtr().as<ObjectGroup>();
-      return lazilyMarkChildren(group);
-    }
-||||||| merged common ancestors
-      case MarkStack::JitCodeTag: {
-        auto code = stack.popPtr().as<jit::JitCode>();
-        return code->traceChildren(this);
-      }
-=======
     case MarkStack::ObjectTag: {
       obj = stack.popPtr().as<JSObject>();
       AssertShouldMarkInZone(obj);
       goto scan_obj;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case MarkStack::JitCodeTag: {
-      auto code = stack.popPtr().as<jit::JitCode>();
-      return code->traceChildren(this);
-    }
-||||||| merged common ancestors
-      case MarkStack::ScriptTag: {
-        auto script = stack.popPtr().as<JSScript>();
-        return script->traceChildren(this);
-      }
-=======
     case MarkStack::GroupTag: {
       auto group = stack.popPtr().as<ObjectGroup>();
       return lazilyMarkChildren(group);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case MarkStack::ScriptTag: {
-      auto script = stack.popPtr().as<JSScript>();
-      return script->traceChildren(this);
-    }
-||||||| merged common ancestors
-      case MarkStack::SavedValueArrayTag: {
-        auto savedArray = stack.popSavedValueArray();
-        JSObject* obj = savedArray.ptr.asSavedValueArrayObject();
-        if (restoreValueArray(savedArray, &vp, &end)) {
-            pushValueArray(obj, vp, end);
-        } else {
-            repush(obj);
-        }
-        return;
-      }
-=======
     case MarkStack::JitCodeTag: {
       auto code = stack.popPtr().as<jit::JitCode>();
       return code->traceChildren(this);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case MarkStack::SavedValueArrayTag: {
-      auto savedArray = stack.popSavedValueArray();
-      JSObject* obj = savedArray.ptr.asSavedValueArrayObject();
-      if (restoreValueArray(savedArray, &vp, &end)) {
-        pushValueArray(obj, vp, end);
-      } else {
-        repush(obj);
-      }
-      return;
-||||||| merged common ancestors
-      default: MOZ_CRASH("Invalid tag in mark stack");
-=======
     case MarkStack::ScriptTag: {
       auto script = stack.popPtr().as<JSScript>();
       return script->traceChildren(this);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    default:
-      MOZ_CRASH("Invalid tag in mark stack");
-  }
-  return;
-||||||| merged common ancestors
-  scan_value_array:
-    MOZ_ASSERT(vp <= end);
-    while (vp != end) {
-        budget.step();
-        if (budget.isOverBudget()) {
-            pushValueArray(obj, vp, end);
-            return;
-        }
-=======
     case MarkStack::SavedValueArrayTag: {
       auto savedArray = stack.popSavedValueArray();
       JSObject* obj = savedArray.ptr.asSavedValueArrayObject();
@@ -4283,38 +1776,13 @@ scan_value_array:
       pushValueArray(obj, vp, end);
       return;
     }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-scan_value_array:
-  MOZ_ASSERT(vp <= end);
-  while (vp != end) {
-    budget.step();
-    if (budget.isOverBudget()) {
-      pushValueArray(obj, vp, end);
-      return;
-    }
 
     const Value& v = *vp++;
     if (v.isString()) {
       traverseEdge(obj, v.toString());
     } else if (v.isObject()) {
       JSObject* obj2 = &v.toObject();
-||||||| merged common ancestors
-        const Value& v = *vp++;
-        if (v.isString()) {
-            traverseEdge(obj, v.toString());
-        } else if (v.isObject()) {
-            JSObject* obj2 = &v.toObject();
-=======
-    const Value& v = *vp++;
-    if (v.isString()) {
-      traverseEdge(obj, v.toString());
-    } else if (v.isObject()) {
-      JSObject* obj2 = &v.toObject();
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
       if (!obj2) {
         fprintf(stderr,
                 "processMarkStackTop found ObjectValue(nullptr) "
@@ -4323,77 +1791,6 @@ scan_value_array:
         DumpObject(obj);
       }
 #endif
-      CheckForCompartmentMismatch(obj, obj2);
-      if (mark(obj2)) {
-        // Save the rest of this value array for later and start scanning obj2's
-        // children.
-        pushValueArray(obj, vp, end);
-        obj = obj2;
-        goto scan_obj;
-      }
-    } else if (v.isSymbol()) {
-      traverseEdge(obj, v.toSymbol());
-    }
-#ifdef ENABLE_BIGINT
-    else if (v.isBigInt()) {
-      traverseEdge(obj, v.toBigInt());
-    }
-||||||| merged common ancestors
-            if (!obj2) {
-                fprintf(stderr,
-                        "processMarkStackTop found ObjectValue(nullptr) "
-                        "at %zu Values from end of array in object:\n",
-                        size_t(end - (vp - 1)));
-                DumpObject(obj);
-            }
-#endif
-            CheckForCompartmentMismatch(obj, obj2);
-            if (mark(obj2)) {
-                // Save the rest of this value array for later and start scanning obj2's children.
-                pushValueArray(obj, vp, end);
-                obj = obj2;
-                goto scan_obj;
-            }
-        } else if (v.isSymbol()) {
-            traverseEdge(obj, v.toSymbol());
-        }
-#ifdef ENABLE_BIGINT
-        else if (v.isBigInt()) {
-            traverseEdge(obj, v.toBigInt());
-        }
-=======
-      if (!obj2) {
-        fprintf(stderr,
-                "processMarkStackTop found ObjectValue(nullptr) "
-                "at %zu Values from end of array in object:\n",
-                size_t(end - (vp - 1)));
-        DumpObject(obj);
-      }
->>>>>>> upstream-releases
-#endif
-<<<<<<< HEAD
-    else if (v.isPrivateGCThing()) {
-      // v.toGCCellPtr cannot be inlined, so construct one manually.
-      Cell* cell = v.toGCThing();
-      traverseEdge(obj, JS::GCCellPtr(cell, cell->getTraceKind()));
-    }
-  }
-  return;
-
-scan_obj : {
-  AssertShouldMarkInZone(obj);
-
-  budget.step();
-  if (budget.isOverBudget()) {
-    repush(obj);
-||||||| merged common ancestors
-        else if (v.isPrivateGCThing()) {
-            // v.toGCCellPtr cannot be inlined, so construct one manually.
-            Cell* cell = v.toGCThing();
-            traverseEdge(obj, JS::GCCellPtr(cell, cell->getTraceKind()));
-        }
-    }
-=======
       CheckForCompartmentMismatch(obj, obj2);
       if (mark(obj2)) {
         // Save the rest of this value array for later and start scanning obj2's
@@ -4420,7 +1817,6 @@ scan_obj : {
   budget.step();
   if (budget.isOverBudget()) {
     repush(obj);
->>>>>>> upstream-releases
     return;
   }
 
@@ -4428,33 +1824,18 @@ scan_obj : {
   ObjectGroup* group = obj->groupFromGC();
   traverseEdge(obj, group);
 
-<<<<<<< HEAD
-  NativeObject* nobj = CallTraceHook(TraverseObjectFunctor(), this, obj,
-                                     CheckGeneration::DoChecks, this, obj);
-  if (!nobj) {
-    return;
-  }
-||||||| merged common ancestors
-        budget.step();
-        if (budget.isOverBudget()) {
-            repush(obj);
-            return;
-        }
-=======
   NativeObject* nobj = CallTraceHook(
       [this, obj](auto thingp) { this->traverseEdge(obj, *thingp); }, this, obj,
       CheckGeneration::DoChecks);
   if (!nobj) {
     return;
   }
->>>>>>> upstream-releases
 
   Shape* shape = nobj->lastProperty();
   traverseEdge(obj, shape);
 
   unsigned nslots = nobj->slotSpan();
 
-<<<<<<< HEAD
   do {
     if (nobj->hasEmptyElements()) {
       break;
@@ -4467,95 +1848,6 @@ scan_obj : {
         break;
       }
     }
-
-    if (!ObjectDenseElementsMayBeMarkable(nobj)) {
-      break;
-    }
-
-    vp = nobj->getDenseElementsAllowCopyOnWrite();
-    end = vp + nobj->getDenseInitializedLength();
-
-    if (!nslots) {
-      goto scan_value_array;
-||||||| merged common ancestors
-        Shape* shape = nobj->lastProperty();
-        traverseEdge(obj, shape);
-
-        unsigned nslots = nobj->slotSpan();
-
-        do {
-            if (nobj->hasEmptyElements()) {
-                break;
-            }
-
-            if (nobj->denseElementsAreCopyOnWrite()) {
-                JSObject* owner = nobj->getElementsHeader()->ownerObject();
-                if (owner != nobj) {
-                    traverseEdge(obj, owner);
-                    break;
-                }
-            }
-
-            if (!ObjectDenseElementsMayBeMarkable(nobj)) {
-                break;
-            }
-
-            vp = nobj->getDenseElementsAllowCopyOnWrite();
-            end = vp + nobj->getDenseInitializedLength();
-
-            if (!nslots) {
-                goto scan_value_array;
-            }
-            pushValueArray(nobj, vp, end);
-        } while (false);
-
-        vp = nobj->fixedSlots();
-        if (nobj->slots_) {
-            unsigned nfixed = nobj->numFixedSlots();
-            if (nslots > nfixed) {
-                pushValueArray(nobj, vp, vp + nfixed);
-                vp = nobj->slots_;
-                end = vp + (nslots - nfixed);
-                goto scan_value_array;
-            }
-        }
-        MOZ_ASSERT(nslots <= nobj->numFixedSlots());
-        end = vp + nslots;
-        goto scan_value_array;
-=======
-  do {
-    if (nobj->hasEmptyElements()) {
-      break;
-    }
-
-    if (nobj->denseElementsAreCopyOnWrite()) {
-      JSObject* owner = nobj->getElementsHeader()->ownerObject();
-      if (owner != nobj) {
-        traverseEdge(obj, owner);
-        break;
-      }
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    pushValueArray(nobj, vp, end);
-  } while (false);
-
-  vp = nobj->fixedSlots();
-  if (nobj->slots_) {
-    unsigned nfixed = nobj->numFixedSlots();
-    if (nslots > nfixed) {
-      pushValueArray(nobj, vp, vp + nfixed);
-      vp = nobj->slots_;
-      end = vp + (nslots - nfixed);
-      goto scan_value_array;
-    }
-  }
-  MOZ_ASSERT(nslots <= nobj->numFixedSlots());
-  end = vp + nslots;
-  goto scan_value_array;
-}
-||||||| merged common ancestors
-=======
 
     if (!ObjectDenseElementsMayBeMarkable(nobj)) {
       break;
@@ -4584,7 +1876,6 @@ scan_obj : {
   end = vp + nslots;
   goto scan_value_array;
 }
->>>>>>> upstream-releases
 }
 
 /*
@@ -4596,38 +1887,6 @@ scan_obj : {
  * replaced with the kind of index (properties vs. elements).
  */
 
-<<<<<<< HEAD
-void GCMarker::saveValueRanges() {
-  MarkStackIter iter(stack);
-  while (!iter.done()) {
-    auto tag = iter.peekTag();
-    if (tag == MarkStack::ValueArrayTag) {
-      const auto& array = iter.peekValueArray();
-      auto savedArray = saveValueRange(array);
-      iter.saveValueArray(savedArray);
-      iter.nextArray();
-    } else if (tag == MarkStack::SavedValueArrayTag) {
-      iter.nextArray();
-    } else {
-      iter.nextPtr();
-||||||| merged common ancestors
-void
-GCMarker::saveValueRanges()
-{
-    MarkStackIter iter(stack);
-    while (!iter.done()) {
-        auto tag = iter.peekTag();
-        if (tag == MarkStack::ValueArrayTag) {
-            const auto& array = iter.peekValueArray();
-            auto savedArray = saveValueRange(array);
-            iter.saveValueArray(savedArray);
-            iter.nextArray();
-        } else if (tag == MarkStack::SavedValueArrayTag) {
-            iter.nextArray();
-        } else {
-            iter.nextPtr();
-        }
-=======
 void GCMarker::saveValueRanges() {
   gc::MarkStack* stacks[2] = {&blackStack, &grayStack};
   for (auto& stack : stacks) {
@@ -4644,21 +1903,11 @@ void GCMarker::saveValueRanges() {
       } else {
         iter.nextPtr();
       }
->>>>>>> upstream-releases
     }
-  }
 
-<<<<<<< HEAD
-  // This is also a convenient point to poison unused stack memory.
-  stack.poisonUnused();
-||||||| merged common ancestors
-    // This is also a convenient point to poison unused stack memory.
-    stack.poisonUnused();
-=======
     // This is also a convenient point to poison unused stack memory.
     stack->poisonUnused();
   }
->>>>>>> upstream-releases
 }
 
 bool GCMarker::restoreValueArray(const MarkStack::SavedValueArray& savedArray,
@@ -4877,17 +2126,6 @@ MarkStack::MarkStack(size_t maxCapacity)
 {
 }
 
-<<<<<<< HEAD
-MarkStack::~MarkStack() {
-  MOZ_ASSERT(isEmpty());
-  MOZ_ASSERT(iteratorCount_ == 0);
-}
-||||||| merged common ancestors
-bool
-MarkStack::init(JSGCMode gcMode)
-{
-    MOZ_ASSERT(isEmpty());
-=======
 MarkStack::~MarkStack() {
   MOZ_ASSERT(isEmpty());
   MOZ_ASSERT(iteratorCount_ == 0);
@@ -4895,18 +2133,8 @@ MarkStack::~MarkStack() {
 
 bool MarkStack::init(JSGCMode gcMode) {
   MOZ_ASSERT(isEmpty());
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool MarkStack::init(JSGCMode gcMode) {
-  MOZ_ASSERT(isEmpty());
 
   return setCapacityForMode(gcMode);
-||||||| merged common ancestors
-    return setCapacityForMode(gcMode);
-=======
-  return setCapacityForMode(gcMode);
->>>>>>> upstream-releases
 }
 
 void MarkStack::setGCMode(JSGCMode gcMode) {
@@ -4917,31 +2145,6 @@ void MarkStack::setGCMode(JSGCMode gcMode) {
 bool MarkStack::setCapacityForMode(JSGCMode mode) {
   size_t capacity;
 
-<<<<<<< HEAD
-  switch (mode) {
-    case JSGC_MODE_GLOBAL:
-    case JSGC_MODE_ZONE:
-      capacity = NON_INCREMENTAL_MARK_STACK_BASE_CAPACITY;
-      break;
-    case JSGC_MODE_INCREMENTAL:
-      capacity = INCREMENTAL_MARK_STACK_BASE_CAPACITY;
-      break;
-    default:
-      MOZ_CRASH("bad gc mode");
-  }
-||||||| merged common ancestors
-    switch (mode) {
-      case JSGC_MODE_GLOBAL:
-      case JSGC_MODE_ZONE:
-        capacity = NON_INCREMENTAL_MARK_STACK_BASE_CAPACITY;
-        break;
-      case JSGC_MODE_INCREMENTAL:
-        capacity = INCREMENTAL_MARK_STACK_BASE_CAPACITY;
-        break;
-      default:
-        MOZ_CRASH("bad gc mode");
-    }
-=======
   switch (mode) {
     case JSGC_MODE_GLOBAL:
     case JSGC_MODE_ZONE:
@@ -4954,7 +2157,6 @@ bool MarkStack::setCapacityForMode(JSGCMode mode) {
     default:
       MOZ_CRASH("bad gc mode");
   }
->>>>>>> upstream-releases
 
   if (capacity > maxCapacity_) {
     capacity = maxCapacity_;
@@ -5094,18 +2296,8 @@ inline void MarkStack::poisonUnused() {
                 "The mark stack poison pattern must not look like a valid "
                 "tagged pointer");
 
-<<<<<<< HEAD
-  JS_POISON(stack().begin() + topIndex_, JS_FRESH_MARK_STACK_PATTERN,
-            stack().capacity() - topIndex_, MemCheckKind::MakeUndefined);
-||||||| merged common ancestors
-    JS_POISON(stack().begin() + topIndex_,
-              JS_FRESH_MARK_STACK_PATTERN,
-              stack().capacity() - topIndex_,
-              MemCheckKind::MakeUndefined);
-=======
   AlwaysPoison(stack().begin() + topIndex_, JS_FRESH_MARK_STACK_PATTERN,
                stack().capacity() - topIndex_, MemCheckKind::MakeUndefined);
->>>>>>> upstream-releases
 }
 
 size_t MarkStack::sizeOfExcludingThis(
@@ -5190,59 +2382,26 @@ void MarkStackIter::saveValueArray(
  * key.
  */
 GCMarker::GCMarker(JSRuntime* rt)
-<<<<<<< HEAD
-    : JSTracer(rt, JSTracer::TracerKindTag::Marking, ExpandWeakMaps),
-      stack(),
-      color(MarkColor::Black),
-      unmarkedArenaStackTop(nullptr)
-||||||| merged common ancestors
-  : JSTracer(rt, JSTracer::TracerKindTag::Marking, ExpandWeakMaps),
-    stack(),
-    color(MarkColor::Black),
-    unmarkedArenaStackTop(nullptr)
-=======
     : JSTracer(rt, JSTracer::TracerKindTag::Marking, ExpandWeakMaps),
       blackStack(),
       grayStack(),
       color(MarkColor::Black),
       delayedMarkingList(nullptr),
       delayedMarkingWorkAdded(false)
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-      ,
-      markLaterArenas(0),
-      started(false),
-      strictCompartmentChecking(false)
-||||||| merged common ancestors
-  , markLaterArenas(0)
-  , started(false)
-  , strictCompartmentChecking(false)
-=======
       ,
       markLaterArenas(0),
       started(false),
       strictCompartmentChecking(false),
       markQueue(rt),
       queuePos(0)
->>>>>>> upstream-releases
 #endif
 {
 }
 
-<<<<<<< HEAD
-bool GCMarker::init(JSGCMode gcMode) { return stack.init(gcMode); }
-||||||| merged common ancestors
-bool
-GCMarker::init(JSGCMode gcMode)
-{
-    return stack.init(gcMode);
-}
-=======
 bool GCMarker::init(JSGCMode gcMode) {
   return blackStack.init(gcMode) && grayStack.init(gcMode);
 }
->>>>>>> upstream-releases
 
 void GCMarker::start() {
 #ifdef DEBUG
@@ -5252,13 +2411,6 @@ void GCMarker::start() {
   color = MarkColor::Black;
   linearWeakMarkingDisabled_ = false;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(!unmarkedArenaStackTop);
-  MOZ_ASSERT(markLaterArenas == 0);
-||||||| merged common ancestors
-    MOZ_ASSERT(!unmarkedArenaStackTop);
-    MOZ_ASSERT(markLaterArenas == 0);
-=======
 #ifdef DEBUG
   queuePos = 0;
   queueMarkColor.reset();
@@ -5266,7 +2418,6 @@ void GCMarker::start() {
 
   MOZ_ASSERT(!delayedMarkingList);
   MOZ_ASSERT(markLaterArenas == 0);
->>>>>>> upstream-releases
 }
 
 void GCMarker::stop() {
@@ -5276,34 +2427,10 @@ void GCMarker::stop() {
   MOZ_ASSERT(started);
   started = false;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(!unmarkedArenaStackTop);
-  MOZ_ASSERT(markLaterArenas == 0);
-||||||| merged common ancestors
-    MOZ_ASSERT(!unmarkedArenaStackTop);
-    MOZ_ASSERT(markLaterArenas == 0);
-=======
   MOZ_ASSERT(!delayedMarkingList);
   MOZ_ASSERT(markLaterArenas == 0);
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-  /* Free non-ballast stack memory. */
-  stack.clear();
-  AutoEnterOOMUnsafeRegion oomUnsafe;
-  for (GCZonesIter zone(runtime()); !zone.done(); zone.next()) {
-    if (!zone->gcWeakKeys().clear()) {
-      oomUnsafe.crash("clearing weak keys in GCMarker::stop()");
-||||||| merged common ancestors
-    /* Free non-ballast stack memory. */
-    stack.clear();
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    for (GCZonesIter zone(runtime()); !zone.done(); zone.next()) {
-        if (!zone->gcWeakKeys().clear()) {
-            oomUnsafe.crash("clearing weak keys in GCMarker::stop()");
-        }
-=======
   /* Free non-ballast stack memory. */
   blackStack.clear();
   grayStack.clear();
@@ -5314,20 +2441,10 @@ void GCMarker::stop() {
     }
     if (!zone->gcNurseryWeakKeys().clear()) {
       oomUnsafe.crash("clearing (nursery) weak keys in GCMarker::stop()");
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-void GCMarker::reset() {
-  color = MarkColor::Black;
-||||||| merged common ancestors
-void
-GCMarker::reset()
-{
-    color = MarkColor::Black;
-=======
 template <typename F>
 inline void GCMarker::forEachDelayedMarkingArena(F&& f) {
   Arena* arena = delayedMarkingList;
@@ -5338,81 +2455,21 @@ inline void GCMarker::forEachDelayedMarkingArena(F&& f) {
     arena = next;
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  stack.clear();
-  MOZ_ASSERT(isMarkStackEmpty());
-||||||| merged common ancestors
-    stack.clear();
-    MOZ_ASSERT(isMarkStackEmpty());
-=======
 void GCMarker::reset() {
   color = MarkColor::Black;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  while (unmarkedArenaStackTop) {
-    Arena* arena = unmarkedArenaStackTop;
-    MOZ_ASSERT(arena->hasDelayedMarking);
-    MOZ_ASSERT(markLaterArenas);
-    unmarkedArenaStackTop = arena->getNextDelayedMarking();
-    arena->unsetDelayedMarking();
-||||||| merged common ancestors
-    while (unmarkedArenaStackTop) {
-        Arena* arena = unmarkedArenaStackTop;
-        MOZ_ASSERT(arena->hasDelayedMarking);
-        MOZ_ASSERT(markLaterArenas);
-        unmarkedArenaStackTop = arena->getNextDelayedMarking();
-        arena->unsetDelayedMarking();
-        arena->markOverflow = 0;
-=======
   blackStack.clear();
   grayStack.clear();
   MOZ_ASSERT(isMarkStackEmpty());
->>>>>>> upstream-releases
 
   forEachDelayedMarkingArena([&](Arena* arena) {
     MOZ_ASSERT(arena->onDelayedMarkingList());
     arena->clearDelayedMarkingState();
 #ifdef DEBUG
-<<<<<<< HEAD
-    markLaterArenas--;
-||||||| merged common ancestors
-        markLaterArenas--;
-=======
     MOZ_ASSERT(markLaterArenas);
     markLaterArenas--;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  }
-  MOZ_ASSERT(isDrained());
-  MOZ_ASSERT(!markLaterArenas);
-}
-
-void GCMarker::setMarkColor(gc::MarkColor newColor) {
-  if (color == newColor) {
-    return;
-  }
-  if (newColor == gc::MarkColor::Black) {
-    setMarkColorBlack();
-  } else {
-    setMarkColorGray();
-  }
-}
-
-void GCMarker::setMarkColorGray() {
-  MOZ_ASSERT(isDrained());
-  MOZ_ASSERT(color == gc::MarkColor::Black);
-  MOZ_ASSERT(runtime()->gc.state() == State::Sweep);
-
-  color = gc::MarkColor::Gray;
-||||||| merged common ancestors
-    }
-    MOZ_ASSERT(isDrained());
-    MOZ_ASSERT(!markLaterArenas);
-=======
   });
   delayedMarkingList = nullptr;
 
@@ -5429,19 +2486,8 @@ void GCMarker::setMarkColor(gc::MarkColor newColor) {
   } else {
     setMarkColorGray();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GCMarker::setMarkColorBlack() {
-  MOZ_ASSERT(isDrained());
-  MOZ_ASSERT(color == gc::MarkColor::Gray);
-  MOZ_ASSERT(runtime()->gc.state() == State::Sweep);
-
-  color = gc::MarkColor::Black;
-}
-||||||| merged common ancestors
-=======
 void GCMarker::setMarkColorGray() {
   MOZ_ASSERT(color == gc::MarkColor::Black);
   MOZ_ASSERT(runtime()->gc.state() == State::Sweep);
@@ -5455,24 +2501,8 @@ void GCMarker::setMarkColorBlack() {
 
   color = gc::MarkColor::Black;
 }
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-void GCMarker::pushTaggedPtr(T* ptr) {
-  checkZone(ptr);
-  if (!stack.push(ptr)) {
-    delayMarkingChildren(ptr);
-  }
-||||||| merged common ancestors
-void
-GCMarker::pushTaggedPtr(T* ptr)
-{
-    checkZone(ptr);
-    if (!stack.push(ptr)) {
-        delayMarkingChildren(ptr);
-    }
-=======
 void GCMarker::pushTaggedPtr(T* ptr) {
   checkZone(ptr);
   if (!currentStack().push(ptr)) {
@@ -5528,18 +2558,8 @@ void GCMarker::enterWeakMarkingMode() {
       }
     }
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GCMarker::pushValueArray(JSObject* obj, HeapSlot* start, HeapSlot* end) {
-  checkZone(obj);
-||||||| merged common ancestors
-void
-GCMarker::pushValueArray(JSObject* obj, HeapSlot* start, HeapSlot* end)
-{
-    checkZone(obj);
-=======
 void GCMarker::leaveWeakMarkingMode() {
   MOZ_ASSERT_IF(
       weakMapAction() == ExpandWeakMaps && !linearWeakMarkingDisabled_,
@@ -5574,17 +2594,7 @@ void GCMarker::delayMarkingChildren(Cell* cell) {
 void GCMarker::markDelayedChildren(Arena* arena, MarkColor color) {
   JS::TraceKind kind = MapAllocToTraceKind(arena->getAllocKind());
   MOZ_ASSERT_IF(color == MarkColor::Gray, TraceKindCanBeMarkedGray(kind));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (start == end) {
-    return;
-  }
-||||||| merged common ancestors
-    if (start == end) {
-        return;
-    }
-=======
   AutoSetMarkColor setColor(*this, color);
   for (ArenaCellIterUnderGC i(arena); !i.done(); i.next()) {
     TenuredCell* t = i.getCell();
@@ -5593,19 +2603,7 @@ void GCMarker::markDelayedChildren(Arena* arena, MarkColor color) {
     }
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!stack.push(obj, start, end)) {
-    delayMarkingChildren(obj);
-  }
-}
-||||||| merged common ancestors
-    if (!stack.push(obj, start, end)) {
-        delayMarkingChildren(obj);
-    }
-}
-=======
 /*
  * Process arenas from |delayedMarkingList| by marking the unmarked children of
  * marked cells of color |color|. Return early if the |budget| is exceeded.
@@ -5635,145 +2633,25 @@ bool GCMarker::processDelayedMarkingList(MarkColor color, SliceBudget& budget) {
       }
     }
   } while (delayedMarkingWorkAdded);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void GCMarker::repush(JSObject* obj) {
-  MOZ_ASSERT_IF(markColor() == MarkColor::Gray,
-                gc::TenuredCell::fromPointer(obj)->isMarkedGray());
-  MOZ_ASSERT_IF(markColor() == MarkColor::Black,
-                gc::TenuredCell::fromPointer(obj)->isMarkedBlack());
-  pushTaggedPtr(obj);
-||||||| merged common ancestors
-void
-GCMarker::repush(JSObject* obj)
-{
-    MOZ_ASSERT_IF(markColor() == MarkColor::Gray, gc::TenuredCell::fromPointer(obj)->isMarkedGray());
-    MOZ_ASSERT_IF(markColor() == MarkColor::Black, gc::TenuredCell::fromPointer(obj)->isMarkedBlack());
-    pushTaggedPtr(obj);
-=======
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GCMarker::enterWeakMarkingMode() {
-  MOZ_ASSERT(tag_ == TracerKindTag::Marking);
-  if (linearWeakMarkingDisabled_) {
-    return;
-  }
-
-  // During weak marking mode, we maintain a table mapping weak keys to
-  // entries in known-live weakmaps. Initialize it with the keys of marked
-  // weakmaps -- or more precisely, the keys of marked weakmaps that are
-  // mapped to not yet live values. (Once bug 1167452 implements incremental
-  // weakmap marking, this initialization step will become unnecessary, as
-  // the table will already hold all such keys.)
-  if (weakMapAction() == ExpandWeakMaps) {
-    tag_ = TracerKindTag::WeakMarking;
-
-    for (SweepGroupZonesIter zone(runtime()); !zone.done(); zone.next()) {
-      for (WeakMapBase* m : zone->gcWeakMapList()) {
-        if (m->marked) {
-          (void)m->markIteratively(this);
-        }
-      }
-    }
-  }
-}
-||||||| merged common ancestors
-void
-GCMarker::enterWeakMarkingMode()
-{
-    MOZ_ASSERT(tag_ == TracerKindTag::Marking);
-    if (linearWeakMarkingDisabled_) {
-        return;
-    }
-
-    // During weak marking mode, we maintain a table mapping weak keys to
-    // entries in known-live weakmaps. Initialize it with the keys of marked
-    // weakmaps -- or more precisely, the keys of marked weakmaps that are
-    // mapped to not yet live values. (Once bug 1167452 implements incremental
-    // weakmap marking, this initialization step will become unnecessary, as
-    // the table will already hold all such keys.)
-    if (weakMapAction() == ExpandWeakMaps) {
-        tag_ = TracerKindTag::WeakMarking;
-
-        for (SweepGroupZonesIter zone(runtime()); !zone.done(); zone.next()) {
-            for (WeakMapBase* m : zone->gcWeakMapList()) {
-                if (m->marked) {
-                    (void) m->markIteratively(this);
-                }
-            }
-        }
-    }
-}
-=======
 bool GCMarker::markAllDelayedChildren(SliceBudget& budget) {
   MOZ_ASSERT(!hasBlackEntries());
   MOZ_ASSERT(markColor() == MarkColor::Black);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void GCMarker::leaveWeakMarkingMode() {
-  MOZ_ASSERT_IF(
-      weakMapAction() == ExpandWeakMaps && !linearWeakMarkingDisabled_,
-      tag_ == TracerKindTag::WeakMarking);
-  tag_ = TracerKindTag::Marking;
-||||||| merged common ancestors
-void
-GCMarker::leaveWeakMarkingMode()
-{
-    MOZ_ASSERT_IF(weakMapAction() == ExpandWeakMaps && !linearWeakMarkingDisabled_,
-                  tag_ == TracerKindTag::WeakMarking);
-    tag_ = TracerKindTag::Marking;
-=======
   GCRuntime& gc = runtime()->gc;
   gcstats::AutoPhase ap(gc.stats(), gc.state() == State::Mark,
                         gcstats::PhaseKind::MARK_DELAYED);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Table is expensive to maintain when not in weak marking mode, so we'll
-  // rebuild it upon entry rather than allow it to contain stale data.
-  AutoEnterOOMUnsafeRegion oomUnsafe;
-  for (GCZonesIter zone(runtime()); !zone.done(); zone.next()) {
-    if (!zone->gcWeakKeys().clear()) {
-      oomUnsafe.crash("clearing weak keys in GCMarker::leaveWeakMarkingMode()");
-    }
-  }
-}
-||||||| merged common ancestors
-    // Table is expensive to maintain when not in weak marking mode, so we'll
-    // rebuild it upon entry rather than allow it to contain stale data.
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    for (GCZonesIter zone(runtime()); !zone.done(); zone.next()) {
-        if (!zone->gcWeakKeys().clear()) {
-            oomUnsafe.crash("clearing weak keys in GCMarker::leaveWeakMarkingMode()");
-        }
-    }
-}
-=======
   // We have a list of arenas containing marked cells with unmarked children
   // where we ran out of stack space during marking.
   //
   // Both black and gray cells in these arenas may have unmarked children, and
   // we must mark gray children first as gray entries always sit before black
   // entries on the mark stack. Therefore the list is processed in two stages.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void GCMarker::markDelayedChildren(Arena* arena) {
-  JS::TraceKind kind = MapAllocToTraceKind(arena->getAllocKind());
-||||||| merged common ancestors
-void
-GCMarker::markDelayedChildren(Arena* arena)
-{
-    MOZ_ASSERT(arena->markOverflow);
-    arena->markOverflow = 0;
-
-    JS::TraceKind kind = MapAllocToTraceKind(arena->getAllocKind());
-=======
   MOZ_ASSERT(delayedMarkingList);
 
   bool finished;
@@ -5782,87 +2660,16 @@ GCMarker::markDelayedChildren(Arena* arena)
   if (!finished) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Whether we need to mark children of gray or black cells in the arena
-  // depends on which kind of marking we were doing when the arena as pushed
-  // onto the list.  We never change mark color without draining the mark
-  // stack though so this is the same as the current color.
-  bool markGrayCells =
-      markColor() == MarkColor::Gray && TraceKindParticipatesInCC(kind);
-||||||| merged common ancestors
-    // Whether we need to mark children of gray or black cells in the arena
-    // depends on which kind of marking we were doing when the arena as pushed
-    // onto the list.  We never change mark color without draining the mark
-    // stack though so this is the same as the current color.
-    bool markGrayCells = markColor() == MarkColor::Gray && TraceKindParticipatesInCC(kind);
-=======
   finished = processDelayedMarkingList(MarkColor::Black, budget);
   rebuildDelayedMarkingList();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (ArenaCellIterUnderGC i(arena); !i.done(); i.next()) {
-    TenuredCell* t = i.getCell();
-    if ((markGrayCells && t->isMarkedGray()) ||
-        (!markGrayCells && t->isMarkedBlack())) {
-      js::TraceChildren(this, t, kind);
-    }
-  }
-||||||| merged common ancestors
-    for (ArenaCellIterUnderGC i(arena); !i.done(); i.next()) {
-        TenuredCell* t = i.getCell();
-        if ((markGrayCells && t->isMarkedGray()) || (!markGrayCells && t->isMarkedBlack())) {
-            js::TraceChildren(this, t, kind);
-        }
-    }
-=======
   MOZ_ASSERT_IF(finished, !delayedMarkingList);
   MOZ_ASSERT_IF(finished, !markLaterArenas);
 
   return finished;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GCMarker::markDelayedChildren(SliceBudget& budget) {
-  GCRuntime& gc = runtime()->gc;
-  gcstats::AutoPhase ap(gc.stats(), gc.state() == State::Mark,
-                        gcstats::PhaseKind::MARK_DELAYED);
-
-  MOZ_ASSERT(unmarkedArenaStackTop);
-  do {
-    /*
-     * If marking gets delayed at the same arena again, we must repeat
-     * marking of its things. For that we pop arena from the stack and
-     * clear its hasDelayedMarking flag before we begin the marking.
-     */
-    Arena* arena = unmarkedArenaStackTop;
-    MOZ_ASSERT(arena->hasDelayedMarking);
-    MOZ_ASSERT(markLaterArenas);
-    unmarkedArenaStackTop = arena->getNextDelayedMarking();
-    arena->unsetDelayedMarking();
-||||||| merged common ancestors
-bool
-GCMarker::markDelayedChildren(SliceBudget& budget)
-{
-    GCRuntime& gc = runtime()->gc;
-    gcstats::AutoPhase ap(gc.stats(), gc.state() == State::Mark, gcstats::PhaseKind::MARK_DELAYED);
-
-    MOZ_ASSERT(unmarkedArenaStackTop);
-    do {
-        /*
-         * If marking gets delayed at the same arena again, we must repeat
-         * marking of its things. For that we pop arena from the stack and
-         * clear its hasDelayedMarking flag before we begin the marking.
-         */
-        Arena* arena = unmarkedArenaStackTop;
-        MOZ_ASSERT(arena->hasDelayedMarking);
-        MOZ_ASSERT(markLaterArenas);
-        unmarkedArenaStackTop = arena->getNextDelayedMarking();
-        arena->unsetDelayedMarking();
-=======
 void GCMarker::rebuildDelayedMarkingList() {
   // Rebuild the delayed marking list, removing arenas which do not need further
   // marking.
@@ -5871,52 +2678,18 @@ void GCMarker::rebuildDelayedMarkingList() {
   forEachDelayedMarkingArena([&](Arena* arena) {
     if (!arena->hasAnyDelayedMarking()) {
       arena->clearDelayedMarkingState();
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-    markLaterArenas--;
-||||||| merged common ancestors
-        markLaterArenas--;
-=======
       MOZ_ASSERT(markLaterArenas);
       markLaterArenas--;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-    markDelayedChildren(arena);
-||||||| merged common ancestors
-        markDelayedChildren(arena);
-=======
       return;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    budget.step(150);
-    if (budget.isOverBudget()) {
-      return false;
-    }
-  } while (unmarkedArenaStackTop);
-  MOZ_ASSERT(!markLaterArenas);
-||||||| merged common ancestors
-        budget.step(150);
-        if (budget.isOverBudget()) {
-            return false;
-        }
-    } while (unmarkedArenaStackTop);
-    MOZ_ASSERT(!markLaterArenas);
-=======
     appendToDelayedMarkingList(&listTail, arena);
   });
   appendToDelayedMarkingList(&listTail, nullptr);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
 inline void GCMarker::appendToDelayedMarkingList(Arena** listTail,
                                                  Arena* arena) {
   if (*listTail) {
@@ -5925,7 +2698,6 @@ inline void GCMarker::appendToDelayedMarkingList(Arena** listTail,
     delayedMarkingList = arena;
   }
   *listTail = arena;
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -5956,61 +2728,6 @@ void GCMarker::checkZone(void* p) {
 }
 #endif
 
-<<<<<<< HEAD
-size_t GCMarker::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-  size_t size = stack.sizeOfExcludingThis(mallocSizeOf);
-  for (ZonesIter zone(runtime(), WithAtoms); !zone.done(); zone.next()) {
-    size += zone->gcGrayRoots().sizeOfExcludingThis(mallocSizeOf);
-  }
-  return size;
-||||||| merged common ancestors
-size_t
-GCMarker::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const
-{
-    size_t size = stack.sizeOfExcludingThis(mallocSizeOf);
-    for (ZonesIter zone(runtime(), WithAtoms); !zone.done(); zone.next()) {
-        size += zone->gcGrayRoots().sizeOfExcludingThis(mallocSizeOf);
-    }
-    return size;
-}
-
-#ifdef DEBUG
-Zone*
-GCMarker::stackContainsCrossZonePointerTo(const Cell* target)
-{
-    MOZ_ASSERT(!JS::RuntimeHeapIsCollecting());
-
-    Zone* targetZone = target->asTenured().zone();
-
-    for (MarkStackIter iter(stack); !iter.done(); iter.next()) {
-        if (iter.peekTag() != MarkStack::ObjectTag) {
-            continue;
-        }
-
-        auto source = iter.peekPtr().as<JSObject>();
-        Zone* sourceZone = source->zone();
-        if (sourceZone == targetZone) {
-            continue;
-        }
-
-        // The private slot of proxy objects might contain a cross-compartment
-        // pointer.
-        if (source->is<ProxyObject>()) {
-            Value value = source->as<ProxyObject>().private_();
-            MOZ_ASSERT_IF(!IsCrossCompartmentWrapper(source),
-                          IsObjectValueInCompartment(value, source->compartment()));
-            if (value.isObject() && &value.toObject() == target) {
-                return sourceZone;
-            }
-        }
-
-        if (Debugger::isDebuggerCrossCompartmentEdge(source, target)) {
-            return sourceZone;
-        }
-    }
-
-    return nullptr;
-=======
 size_t GCMarker::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
   size_t size = blackStack.sizeOfExcludingThis(mallocSizeOf);
   size += grayStack.sizeOfExcludingThis(mallocSizeOf);
@@ -6018,7 +2735,6 @@ size_t GCMarker::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
     size += zone->gcGrayRoots().SizeOfExcludingThis(mallocSizeOf);
   }
   return size;
->>>>>>> upstream-releases
 }
 
 /*** Tenuring Tracer ********************************************************/
@@ -6059,24 +2775,6 @@ void TenuringTracer::traverse(JSString** strp) {
   }
 }
 
-<<<<<<< HEAD
-template <typename S>
-struct TenuringTraversalFunctor : public IdentityDefaultAdaptor<S> {
-  template <typename T>
-  S operator()(T* t, TenuringTracer* trc) {
-    trc->traverse(&t);
-    return js::gc::RewrapTaggedPointer<S, T>::wrap(t);
-  }
-};
-||||||| merged common ancestors
-template <typename S>
-struct TenuringTraversalFunctor : public IdentityDefaultAdaptor<S> {
-    template <typename T> S operator()(T* t, TenuringTracer* trc) {
-        trc->traverse(&t);
-        return js::gc::RewrapTaggedPointer<S, T>::wrap(t);
-    }
-};
-=======
 template <typename T>
 void TenuringTracer::traverse(T* thingp) {
   auto tenured = MapGCThingTyped(*thingp, [this](auto t) {
@@ -6089,18 +2787,8 @@ void TenuringTracer::traverse(T* thingp) {
 }
 
 }  // namespace js
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-void TenuringTracer::traverse(T* thingp) {
-  *thingp = DispatchTyped(TenuringTraversalFunctor<T>(), *thingp, this);
-||||||| merged common ancestors
-void
-TenuringTracer::traverse(T* thingp)
-{
-    *thingp = DispatchTyped(TenuringTraversalFunctor<T>(), *thingp, this);
-=======
 void js::gc::StoreBuffer::MonoTypeBuffer<T>::trace(TenuringTracer& mover) {
   mozilla::ReentrancyGuard g(*owner_);
   MOZ_ASSERT(owner_->isEnabled());
@@ -6110,40 +2798,9 @@ void js::gc::StoreBuffer::MonoTypeBuffer<T>::trace(TenuringTracer& mover) {
   for (typename StoreSet::Range r = stores_.all(); !r.empty(); r.popFront()) {
     r.front().trace(mover);
   }
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-}  // namespace js
-||||||| merged common ancestors
-} // namespace js
-=======
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-void js::gc::StoreBuffer::MonoTypeBuffer<T>::trace(StoreBuffer* owner,
-                                                   TenuringTracer& mover) {
-  mozilla::ReentrancyGuard g(*owner);
-  MOZ_ASSERT(owner->isEnabled());
-  if (last_) {
-    last_.trace(mover);
-  }
-  for (typename StoreSet::Range r = stores_.all(); !r.empty(); r.popFront()) {
-    r.front().trace(mover);
-  }
-||||||| merged common ancestors
-void
-js::gc::StoreBuffer::MonoTypeBuffer<T>::trace(StoreBuffer* owner, TenuringTracer& mover)
-{
-    mozilla::ReentrancyGuard g(*owner);
-    MOZ_ASSERT(owner->isEnabled());
-    if (last_) {
-        last_.trace(mover);
-    }
-    for (typename StoreSet::Range r = stores_.all(); !r.empty(); r.popFront()) {
-        r.front().trace(mover);
-    }
-=======
 template <typename CellType>
 void js::gc::StoreBuffer::MonoTypeBuffer<T>::traceTyped(TenuringTracer& mover) {
   mozilla::ReentrancyGuard g(*owner_);
@@ -6154,96 +2811,10 @@ void js::gc::StoreBuffer::MonoTypeBuffer<T>::traceTyped(TenuringTracer& mover) {
   for (typename StoreSet::Range r = stores_.all(); !r.empty(); r.popFront()) {
     r.front().template traceTyped<CellType>(mover);
   }
->>>>>>> upstream-releases
 }
 
 namespace js {
 namespace gc {
-<<<<<<< HEAD
-template void StoreBuffer::MonoTypeBuffer<StoreBuffer::ValueEdge>::trace(
-    StoreBuffer*, TenuringTracer&);
-template void StoreBuffer::MonoTypeBuffer<StoreBuffer::SlotsEdge>::trace(
-    StoreBuffer*, TenuringTracer&);
-template void StoreBuffer::MonoTypeBuffer<StoreBuffer::CellPtrEdge>::trace(
-    StoreBuffer*, TenuringTracer&);
-}  // namespace gc
-}  // namespace js
-
-void js::gc::StoreBuffer::SlotsEdge::trace(TenuringTracer& mover) const {
-  NativeObject* obj = object();
-  MOZ_ASSERT(IsCellPointerValid(obj));
-
-  // Beware JSObject::swap exchanging a native object for a non-native one.
-  if (!obj->isNative()) {
-    return;
-  }
-
-  MOZ_ASSERT(!IsInsideNursery(obj), "obj shouldn't live in nursery.");
-
-  if (kind() == ElementKind) {
-    uint32_t initLen = obj->getDenseInitializedLength();
-    uint32_t numShifted = obj->getElementsHeader()->numShiftedElements();
-    uint32_t clampedStart = start_;
-    clampedStart = numShifted < clampedStart ? clampedStart - numShifted : 0;
-    clampedStart = Min(clampedStart, initLen);
-    uint32_t clampedEnd = start_ + count_;
-    clampedEnd = numShifted < clampedEnd ? clampedEnd - numShifted : 0;
-    clampedEnd = Min(clampedEnd, initLen);
-    MOZ_ASSERT(clampedStart <= clampedEnd);
-    mover.traceSlots(
-        static_cast<HeapSlot*>(obj->getDenseElements() + clampedStart)
-            ->unsafeUnbarrieredForTracing(),
-        clampedEnd - clampedStart);
-  } else {
-    uint32_t start = Min(start_, obj->slotSpan());
-    uint32_t end = Min(start_ + count_, obj->slotSpan());
-    MOZ_ASSERT(start <= end);
-    mover.traceObjectSlots(obj, start, end - start);
-  }
-||||||| merged common ancestors
-template void
-StoreBuffer::MonoTypeBuffer<StoreBuffer::ValueEdge>::trace(StoreBuffer*, TenuringTracer&);
-template void
-StoreBuffer::MonoTypeBuffer<StoreBuffer::SlotsEdge>::trace(StoreBuffer*, TenuringTracer&);
-template void
-StoreBuffer::MonoTypeBuffer<StoreBuffer::CellPtrEdge>::trace(StoreBuffer*, TenuringTracer&);
-} // namespace gc
-} // namespace js
-
-void
-js::gc::StoreBuffer::SlotsEdge::trace(TenuringTracer& mover) const
-{
-    NativeObject* obj = object();
-    MOZ_ASSERT(IsCellPointerValid(obj));
-
-    // Beware JSObject::swap exchanging a native object for a non-native one.
-    if (!obj->isNative()) {
-        return;
-    }
-
-    if (IsInsideNursery(obj)) {
-        return;
-    }
-
-    if (kind() == ElementKind) {
-        uint32_t initLen = obj->getDenseInitializedLength();
-        uint32_t numShifted = obj->getElementsHeader()->numShiftedElements();
-        uint32_t clampedStart = start_;
-        clampedStart = numShifted < clampedStart ? clampedStart - numShifted : 0;
-        clampedStart = Min(clampedStart, initLen);
-        uint32_t clampedEnd = start_ + count_;
-        clampedEnd = numShifted < clampedEnd ? clampedEnd - numShifted : 0;
-        clampedEnd = Min(clampedEnd, initLen);
-        MOZ_ASSERT(clampedStart <= clampedEnd);
-        mover.traceSlots(static_cast<HeapSlot*>(obj->getDenseElements() + clampedStart)
-                            ->unsafeUnbarrieredForTracing(), clampedEnd - clampedStart);
-    } else {
-        uint32_t start = Min(start_, obj->slotSpan());
-        uint32_t end = Min(start_ + count_, obj->slotSpan());
-        MOZ_ASSERT(start <= end);
-        mover.traceObjectSlots(obj, start, end - start);
-    }
-=======
 template void StoreBuffer::MonoTypeBuffer<StoreBuffer::ValueEdge>::trace(
     TenuringTracer&);
 template void StoreBuffer::MonoTypeBuffer<StoreBuffer::SlotsEdge>::trace(
@@ -6286,48 +2857,10 @@ void js::gc::StoreBuffer::SlotsEdge::trace(TenuringTracer& mover) const {
     MOZ_ASSERT(start <= end);
     mover.traceObjectSlots(obj, start, end - start);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 static inline void TraceWholeCell(TenuringTracer& mover, JSObject* object) {
   mover.traceObject(object);
-
-  // Additionally trace the expando object attached to any unboxed plain
-  // objects. Baseline and Ion can write properties to the expando while
-  // only adding a post barrier to the owning unboxed object. Note that
-  // it isn't possible for a nursery unboxed object to have a tenured
-  // expando, so that adding a post barrier on the original object will
-  // capture any tenured->nursery edges in the expando as well.
-
-  if (object->is<UnboxedPlainObject>()) {
-    if (UnboxedExpandoObject* expando =
-            object->as<UnboxedPlainObject>().maybeExpando()) {
-      expando->traceChildren(&mover);
-    }
-  }
-||||||| merged common ancestors
-static inline void
-TraceWholeCell(TenuringTracer& mover, JSObject* object)
-{
-    mover.traceObject(object);
-
-    // Additionally trace the expando object attached to any unboxed plain
-    // objects. Baseline and Ion can write properties to the expando while
-    // only adding a post barrier to the owning unboxed object. Note that
-    // it isn't possible for a nursery unboxed object to have a tenured
-    // expando, so that adding a post barrier on the original object will
-    // capture any tenured->nursery edges in the expando as well.
-
-    if (object->is<UnboxedPlainObject>()) {
-        if (UnboxedExpandoObject* expando = object->as<UnboxedPlainObject>().maybeExpando()) {
-            expando->traceChildren(&mover);
-        }
-    }
-=======
-static inline void TraceWholeCell(TenuringTracer& mover, JSObject* object) {
-  mover.traceObject(object);
->>>>>>> upstream-releases
 }
 
 static inline void TraceWholeCell(TenuringTracer& mover, JSString* str) {
@@ -6355,63 +2888,6 @@ static void TraceBufferedCells(TenuringTracer& mover, Arena* arena,
   }
 }
 
-<<<<<<< HEAD
-void js::gc::StoreBuffer::WholeCellBuffer::trace(StoreBuffer* owner,
-                                                 TenuringTracer& mover) {
-  MOZ_ASSERT(owner->isEnabled());
-
-  for (ArenaCellSet* cells = head_; cells; cells = cells->next) {
-    cells->check();
-
-    Arena* arena = cells->arena;
-    arena->bufferedCells() = &ArenaCellSet::Empty;
-
-    JS::TraceKind kind = MapAllocToTraceKind(arena->getAllocKind());
-    switch (kind) {
-      case JS::TraceKind::Object:
-        TraceBufferedCells<JSObject>(mover, arena, cells);
-        break;
-      case JS::TraceKind::String:
-        TraceBufferedCells<JSString>(mover, arena, cells);
-        break;
-      case JS::TraceKind::Script:
-        TraceBufferedCells<JSScript>(mover, arena, cells);
-        break;
-      case JS::TraceKind::JitCode:
-        TraceBufferedCells<jit::JitCode>(mover, arena, cells);
-        break;
-      default:
-        MOZ_CRASH("Unexpected trace kind");
-||||||| merged common ancestors
-void
-js::gc::StoreBuffer::WholeCellBuffer::trace(StoreBuffer* owner, TenuringTracer& mover)
-{
-    MOZ_ASSERT(owner->isEnabled());
-
-    for (ArenaCellSet* cells = head_; cells; cells = cells->next) {
-        cells->check();
-
-        Arena* arena = cells->arena;
-        arena->bufferedCells() = &ArenaCellSet::Empty;
-
-        JS::TraceKind kind = MapAllocToTraceKind(arena->getAllocKind());
-        switch (kind) {
-          case JS::TraceKind::Object:
-            TraceBufferedCells<JSObject>(mover, arena, cells);
-            break;
-          case JS::TraceKind::String:
-            TraceBufferedCells<JSString>(mover, arena, cells);
-            break;
-          case JS::TraceKind::Script:
-            TraceBufferedCells<JSScript>(mover, arena, cells);
-            break;
-          case JS::TraceKind::JitCode:
-            TraceBufferedCells<jit::JitCode>(mover, arena, cells);
-            break;
-          default:
-            MOZ_CRASH("Unexpected trace kind");
-        }
-=======
 void js::gc::StoreBuffer::WholeCellBuffer::trace(TenuringTracer& mover) {
   MOZ_ASSERT(owner_->isEnabled());
 
@@ -6437,81 +2913,29 @@ void js::gc::StoreBuffer::WholeCellBuffer::trace(TenuringTracer& mover) {
         break;
       default:
         MOZ_CRASH("Unexpected trace kind");
->>>>>>> upstream-releases
     }
   }
 
   head_ = nullptr;
 }
 
-<<<<<<< HEAD
-void js::gc::StoreBuffer::CellPtrEdge::trace(TenuringTracer& mover) const {
-  if (!*edge) {
-    return;
-  }
-||||||| merged common ancestors
-void
-js::gc::StoreBuffer::CellPtrEdge::trace(TenuringTracer& mover) const
-{
-    if (!*edge) {
-        return;
-    }
-=======
 template <typename CellType>
 void js::gc::StoreBuffer::CellPtrEdge::traceTyped(TenuringTracer& mover) const {
   if (!*edge) {
     return;
   }
->>>>>>> upstream-releases
 
   MOZ_ASSERT(IsCellPointerValid(*edge));
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  auto traceKind = (*edge)->getTraceKind();
-  MOZ_ASSERT(traceKind == JS::TraceKind::Object ||
-             traceKind == JS::TraceKind::String);
-||||||| merged common ancestors
-    auto traceKind = (*edge)->getTraceKind();
-    MOZ_ASSERT(traceKind == JS::TraceKind::Object || traceKind == JS::TraceKind::String);
-=======
   auto traceKind = (*edge)->getTraceKind();
   MOZ_ASSERT(traceKind == JS::TraceKind::Object ||
              traceKind == JS::TraceKind::String);
   MOZ_ASSERT(traceKind == JS::MapTypeToTraceKind<CellType>::kind,
              "traceKind mismatch.");
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-  // Bug 1376646: Make separate store buffers for strings and objects, and
-  // only check IsInsideNursery once.
-
-  if (!IsInsideNursery(*edge)) {
-    return;
-  }
-
-  if ((*edge)->nurseryCellIsString()) {
-    mover.traverse(reinterpret_cast<JSString**>(edge));
-  } else {
-    mover.traverse(reinterpret_cast<JSObject**>(edge));
-  }
-||||||| merged common ancestors
-    // Bug 1376646: Make separate store buffers for strings and objects, and
-    // only check IsInsideNursery once.
-
-    if (!IsInsideNursery(*edge)) {
-        return;
-    }
-
-    if ((*edge)->nurseryCellIsString()) {
-        mover.traverse(reinterpret_cast<JSString**>(edge));
-    } else {
-        mover.traverse(reinterpret_cast<JSObject**>(edge));
-    }
-=======
   mover.traverse(reinterpret_cast<CellType**>(edge));
->>>>>>> upstream-releases
 }
 
 void js::gc::StoreBuffer::ValueEdge::trace(TenuringTracer& mover) const {
@@ -6520,44 +2944,7 @@ void js::gc::StoreBuffer::ValueEdge::trace(TenuringTracer& mover) const {
   }
 }
 
-<<<<<<< HEAD
-struct TenuringFunctor {
-  template <typename T>
-  void operator()(T* thing, TenuringTracer& mover) {
-    mover.traverse(thing);
-  }
-};
-
-||||||| merged common ancestors
-
-struct TenuringFunctor
-{
-    template <typename T>
-    void operator()(T* thing, TenuringTracer& mover) {
-        mover.traverse(thing);
-    }
-};
-
-=======
->>>>>>> upstream-releases
 // Visit all object children of the object and trace them.
-<<<<<<< HEAD
-void js::TenuringTracer::traceObject(JSObject* obj) {
-  NativeObject* nobj = CallTraceHook(TenuringFunctor(), this, obj,
-                                     CheckGeneration::NoChecks, *this);
-  if (!nobj) {
-    return;
-  }
-||||||| merged common ancestors
-void
-js::TenuringTracer::traceObject(JSObject* obj)
-{
-    NativeObject *nobj = CallTraceHook(TenuringFunctor(), this, obj,
-                                       CheckGeneration::NoChecks, *this);
-    if (!nobj) {
-        return;
-    }
-=======
 void js::TenuringTracer::traceObject(JSObject* obj) {
   NativeObject* nobj =
       CallTraceHook([this](auto thingp) { this->traverse(thingp); }, this, obj,
@@ -6565,7 +2952,6 @@ void js::TenuringTracer::traceObject(JSObject* obj) {
   if (!nobj) {
     return;
   }
->>>>>>> upstream-releases
 
   // Note: the contents of copy on write elements pointers are filled in
   // during parsing and cannot contain nursery pointers.
@@ -6625,267 +3011,6 @@ inline void js::TenuringTracer::insertIntoObjectFixupList(
 }
 
 template <typename T>
-<<<<<<< HEAD
-inline T* js::TenuringTracer::allocTenured(Zone* zone, AllocKind kind) {
-  return static_cast<T*>(static_cast<Cell*>(AllocateCellInGC(zone, kind)));
-}
-
-JSObject* js::TenuringTracer::moveToTenuredSlow(JSObject* src) {
-  MOZ_ASSERT(IsInsideNursery(src));
-  MOZ_ASSERT(!src->zone()->usedByHelperThread());
-  MOZ_ASSERT(!src->is<PlainObject>());
-
-  AllocKind dstKind = src->allocKindForTenure(nursery());
-  auto dst = allocTenured<JSObject>(src->zone(), dstKind);
-
-  size_t srcSize = Arena::thingSize(dstKind);
-  size_t dstSize = srcSize;
-
-  /*
-   * Arrays do not necessarily have the same AllocKind between src and dst.
-   * We deal with this by copying elements manually, possibly re-inlining
-   * them if there is adequate room inline in dst.
-   *
-   * For Arrays we're reducing tenuredSize to the smaller srcSize
-   * because moveElementsToTenured() accounts for all Array elements,
-   * even if they are inlined.
-   */
-  if (src->is<ArrayObject>()) {
-    dstSize = srcSize = sizeof(NativeObject);
-  } else if (src->is<TypedArrayObject>()) {
-    TypedArrayObject* tarray = &src->as<TypedArrayObject>();
-    // Typed arrays with inline data do not necessarily have the same
-    // AllocKind between src and dst. The nursery does not allocate an
-    // inline data buffer that has the same size as the slow path will do.
-    // In the slow path, the Typed Array Object stores the inline data
-    // in the allocated space that fits the AllocKind. In the fast path,
-    // the nursery will allocate another buffer that is directly behind the
-    // minimal JSObject. That buffer size plus the JSObject size is not
-    // necessarily as large as the slow path's AllocKind size.
-    if (tarray->hasInlineElements()) {
-      AllocKind srcKind = GetGCObjectKind(TypedArrayObject::FIXED_DATA_START);
-      size_t headerSize = Arena::thingSize(srcKind);
-      srcSize = headerSize + tarray->byteLength();
-    }
-  }
-
-  tenuredSize += dstSize;
-  tenuredCells++;
-
-  // Copy the Cell contents.
-  MOZ_ASSERT(OffsetToChunkEnd(src) >= ptrdiff_t(srcSize));
-  js_memcpy(dst, src, srcSize);
-
-  // Move the slots and elements, if we need to.
-  if (src->isNative()) {
-    NativeObject* ndst = &dst->as<NativeObject>();
-    NativeObject* nsrc = &src->as<NativeObject>();
-    tenuredSize += moveSlotsToTenured(ndst, nsrc);
-    tenuredSize += moveElementsToTenured(ndst, nsrc, dstKind);
-
-    // There is a pointer into a dictionary mode object from the head of its
-    // shape list. This is updated in Nursery::sweepDictionaryModeObjects().
-  }
-
-  JSObjectMovedOp op = dst->getClass()->extObjectMovedOp();
-  MOZ_ASSERT_IF(src->is<ProxyObject>(), op == proxy_ObjectMoved);
-  if (op) {
-    // Tell the hazard analysis that the object moved hook can't GC.
-    JS::AutoSuppressGCAnalysis nogc;
-    tenuredSize += op(dst, src);
-  } else {
-    MOZ_ASSERT_IF(src->getClass()->hasFinalize(),
-                  CanNurseryAllocateFinalizedClass(src->getClass()));
-  }
-
-  RelocationOverlay* overlay = RelocationOverlay::fromCell(src);
-  overlay->forwardTo(dst);
-  insertIntoObjectFixupList(overlay);
-
-  gcTracer.tracePromoteToTenured(src, dst);
-  return dst;
-}
-
-inline JSObject* js::TenuringTracer::movePlainObjectToTenured(
-    PlainObject* src) {
-  // Fast path version of moveToTenuredSlow() for specialized for PlainObject.
-
-  MOZ_ASSERT(IsInsideNursery(src));
-  MOZ_ASSERT(!src->zone()->usedByHelperThread());
-
-  AllocKind dstKind = src->allocKindForTenure();
-  auto dst = allocTenured<PlainObject>(src->zone(), dstKind);
-
-  size_t srcSize = Arena::thingSize(dstKind);
-  tenuredSize += srcSize;
-  tenuredCells++;
-
-  // Copy the Cell contents.
-  MOZ_ASSERT(OffsetToChunkEnd(src) >= ptrdiff_t(srcSize));
-  js_memcpy(dst, src, srcSize);
-
-  // Move the slots and elements.
-  tenuredSize += moveSlotsToTenured(dst, src);
-  tenuredSize += moveElementsToTenured(dst, src, dstKind);
-
-  MOZ_ASSERT(!dst->getClass()->extObjectMovedOp());
-
-  RelocationOverlay* overlay = RelocationOverlay::fromCell(src);
-  overlay->forwardTo(dst);
-  insertIntoObjectFixupList(overlay);
-
-  gcTracer.tracePromoteToTenured(src, dst);
-  return dst;
-}
-
-size_t js::TenuringTracer::moveSlotsToTenured(NativeObject* dst,
-                                              NativeObject* src) {
-  /* Fixed slots have already been copied over. */
-  if (!src->hasDynamicSlots()) {
-    return 0;
-  }
-
-  if (!nursery().isInside(src->slots_)) {
-    nursery().removeMallocedBuffer(src->slots_);
-    return 0;
-  }
-
-  Zone* zone = src->zone();
-  size_t count = src->numDynamicSlots();
-
-  {
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    dst->slots_ = zone->pod_malloc<HeapSlot>(count);
-    if (!dst->slots_) {
-      oomUnsafe.crash(sizeof(HeapSlot) * count,
-                      "Failed to allocate slots while tenuring.");
-    }
-  }
-
-  PodCopy(dst->slots_, src->slots_, count);
-  nursery().setSlotsForwardingPointer(src->slots_, dst->slots_, count);
-  return count * sizeof(HeapSlot);
-}
-
-size_t js::TenuringTracer::moveElementsToTenured(NativeObject* dst,
-                                                 NativeObject* src,
-                                                 AllocKind dstKind) {
-  if (src->hasEmptyElements() || src->denseElementsAreCopyOnWrite()) {
-    return 0;
-  }
-
-  void* srcAllocatedHeader = src->getUnshiftedElementsHeader();
-
-  /* TODO Bug 874151: Prefer to put element data inline if we have space. */
-  if (!nursery().isInside(srcAllocatedHeader)) {
-    MOZ_ASSERT(src->elements_ == dst->elements_);
-    nursery().removeMallocedBuffer(srcAllocatedHeader);
-    return 0;
-  }
-
-  ObjectElements* srcHeader = src->getElementsHeader();
-
-  // Shifted elements are copied too.
-  uint32_t numShifted = srcHeader->numShiftedElements();
-  size_t nslots = srcHeader->numAllocatedElements();
-
-  /* Unlike other objects, Arrays can have fixed elements. */
-  if (src->is<ArrayObject>() && nslots <= GetGCKindSlots(dstKind)) {
-    dst->as<ArrayObject>().setFixedElements();
-    js_memcpy(dst->getElementsHeader(), srcAllocatedHeader,
-              nslots * sizeof(HeapSlot));
-    dst->elements_ += numShifted;
-    nursery().setElementsForwardingPointer(srcHeader, dst->getElementsHeader(),
-                                           srcHeader->capacity);
-    return nslots * sizeof(HeapSlot);
-  }
-
-  MOZ_ASSERT(nslots >= 2);
-
-  Zone* zone = src->zone();
-  ObjectElements* dstHeader;
-  {
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    dstHeader =
-        reinterpret_cast<ObjectElements*>(zone->pod_malloc<HeapSlot>(nslots));
-    if (!dstHeader) {
-      oomUnsafe.crash(sizeof(HeapSlot) * nslots,
-                      "Failed to allocate elements while tenuring.");
-||||||| merged common ancestors
-inline T*
-js::TenuringTracer::allocTenured(Zone* zone, AllocKind kind) {
-    return static_cast<T*>(static_cast<Cell*>(AllocateCellInGC(zone, kind)));
-}
-
-JSObject*
-js::TenuringTracer::moveToTenuredSlow(JSObject* src)
-{
-    MOZ_ASSERT(IsInsideNursery(src));
-    MOZ_ASSERT(!src->zone()->usedByHelperThread());
-    MOZ_ASSERT(!src->is<PlainObject>());
-
-    AllocKind dstKind = src->allocKindForTenure(nursery());
-    auto dst = allocTenured<JSObject>(src->zone(), dstKind);
-
-    size_t srcSize = Arena::thingSize(dstKind);
-    size_t dstSize = srcSize;
-
-    /*
-     * Arrays do not necessarily have the same AllocKind between src and dst.
-     * We deal with this by copying elements manually, possibly re-inlining
-     * them if there is adequate room inline in dst.
-     *
-     * For Arrays we're reducing tenuredSize to the smaller srcSize
-     * because moveElementsToTenured() accounts for all Array elements,
-     * even if they are inlined.
-     */
-    if (src->is<ArrayObject>()) {
-        dstSize = srcSize = sizeof(NativeObject);
-    } else if (src->is<TypedArrayObject>()) {
-        TypedArrayObject* tarray = &src->as<TypedArrayObject>();
-        // Typed arrays with inline data do not necessarily have the same
-        // AllocKind between src and dst. The nursery does not allocate an
-        // inline data buffer that has the same size as the slow path will do.
-        // In the slow path, the Typed Array Object stores the inline data
-        // in the allocated space that fits the AllocKind. In the fast path,
-        // the nursery will allocate another buffer that is directly behind the
-        // minimal JSObject. That buffer size plus the JSObject size is not
-        // necessarily as large as the slow path's AllocKind size.
-        if (tarray->hasInlineElements()) {
-            AllocKind srcKind = GetGCObjectKind(TypedArrayObject::FIXED_DATA_START);
-            size_t headerSize = Arena::thingSize(srcKind);
-            srcSize = headerSize + tarray->byteLength();
-        }
-    }
-
-    tenuredSize += dstSize;
-    tenuredCells++;
-
-    // Copy the Cell contents.
-    MOZ_ASSERT(OffsetToChunkEnd(src) >= ptrdiff_t(srcSize));
-    js_memcpy(dst, src, srcSize);
-
-    // Move the slots and elements, if we need to.
-    if (src->isNative()) {
-        NativeObject* ndst = &dst->as<NativeObject>();
-        NativeObject* nsrc = &src->as<NativeObject>();
-        tenuredSize += moveSlotsToTenured(ndst, nsrc);
-        tenuredSize += moveElementsToTenured(ndst, nsrc, dstKind);
-
-        // There is a pointer into a dictionary mode object from the head of its
-        // shape list. This is updated in Nursery::sweepDictionaryModeObjects().
-    }
-
-    JSObjectMovedOp op = dst->getClass()->extObjectMovedOp();
-    MOZ_ASSERT_IF(src->is<ProxyObject>(), op == proxy_ObjectMoved);
-    if (op) {
-        // Tell the hazard analysis that the object moved hook can't GC.
-        JS::AutoSuppressGCAnalysis nogc;
-        tenuredSize += op(dst, src);
-    } else {
-        MOZ_ASSERT_IF(src->getClass()->hasFinalize(),
-                      CanNurseryAllocateFinalizedClass(src->getClass()));
-=======
 inline T* js::TenuringTracer::allocTenured(Zone* zone, AllocKind kind) {
   return static_cast<T*>(static_cast<Cell*>(AllocateCellInGC(zone, kind)));
 }
@@ -7020,95 +3145,9 @@ size_t js::TenuringTracer::moveSlotsToTenured(NativeObject* dst,
     if (!dst->slots_) {
       oomUnsafe.crash(sizeof(HeapSlot) * count,
                       "Failed to allocate slots while tenuring.");
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  js_memcpy(dstHeader, srcAllocatedHeader, nslots * sizeof(HeapSlot));
-  dst->elements_ = dstHeader->elements() + numShifted;
-  nursery().setElementsForwardingPointer(srcHeader, dst->getElementsHeader(),
-                                         srcHeader->capacity);
-  return nslots * sizeof(HeapSlot);
-}
-
-inline void js::TenuringTracer::insertIntoStringFixupList(
-    RelocationOverlay* entry) {
-  *stringTail = entry;
-  stringTail = &entry->nextRef();
-  *stringTail = nullptr;
-}
-||||||| merged common ancestors
-    RelocationOverlay* overlay = RelocationOverlay::fromCell(src);
-    overlay->forwardTo(dst);
-    insertIntoObjectFixupList(overlay);
-
-    gcTracer.tracePromoteToTenured(src, dst);
-    return dst;
-}
-
-inline JSObject*
-js::TenuringTracer::movePlainObjectToTenured(PlainObject* src)
-{
-    // Fast path version of moveToTenuredSlow() for specialized for PlainObject.
-
-    MOZ_ASSERT(IsInsideNursery(src));
-    MOZ_ASSERT(!src->zone()->usedByHelperThread());
-
-    AllocKind dstKind = src->allocKindForTenure();
-    auto dst = allocTenured<PlainObject>(src->zone(), dstKind);
-
-    size_t srcSize = Arena::thingSize(dstKind);
-    tenuredSize += srcSize;
-    tenuredCells++;
-
-    // Copy the Cell contents.
-    MOZ_ASSERT(OffsetToChunkEnd(src) >= ptrdiff_t(srcSize));
-    js_memcpy(dst, src, srcSize);
-
-    // Move the slots and elements.
-    tenuredSize += moveSlotsToTenured(dst, src);
-    tenuredSize += moveElementsToTenured(dst, src, dstKind);
-
-    MOZ_ASSERT(!dst->getClass()->extObjectMovedOp());
-
-    RelocationOverlay* overlay = RelocationOverlay::fromCell(src);
-    overlay->forwardTo(dst);
-    insertIntoObjectFixupList(overlay);
-
-    gcTracer.tracePromoteToTenured(src, dst);
-    return dst;
-}
-
-size_t
-js::TenuringTracer::moveSlotsToTenured(NativeObject* dst, NativeObject* src)
-{
-    /* Fixed slots have already been copied over. */
-    if (!src->hasDynamicSlots()) {
-        return 0;
-    }
-
-    if (!nursery().isInside(src->slots_)) {
-        nursery().removeMallocedBuffer(src->slots_);
-        return 0;
-    }
-
-    Zone* zone = src->zone();
-    size_t count = src->numDynamicSlots();
-
-    {
-        AutoEnterOOMUnsafeRegion oomUnsafe;
-        dst->slots_ = zone->pod_malloc<HeapSlot>(count);
-        if (!dst->slots_) {
-            oomUnsafe.crash(sizeof(HeapSlot) * count, "Failed to allocate slots while tenuring.");
-        }
-    }
-
-    PodCopy(dst->slots_, src->slots_, count);
-    nursery().setSlotsForwardingPointer(src->slots_, dst->slots_, count);
-    return count * sizeof(HeapSlot);
-}
-=======
   AddCellMemory(dst, count * sizeof(HeapSlot), MemoryUse::ObjectSlots);
 
   PodCopy(dst->slots_, src->slots_, count);
@@ -7134,45 +3173,7 @@ size_t js::TenuringTracer::moveElementsToTenured(NativeObject* dst,
   if (!nursery().isInside(srcAllocatedHeader)) {
     MOZ_ASSERT(src->elements_ == dst->elements_);
     nursery().removeMallocedBuffer(srcAllocatedHeader);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-JSString* js::TenuringTracer::moveToTenured(JSString* src) {
-  MOZ_ASSERT(IsInsideNursery(src));
-  MOZ_ASSERT(!src->zone()->usedByHelperThread());
-||||||| merged common ancestors
-size_t
-js::TenuringTracer::moveElementsToTenured(NativeObject* dst, NativeObject* src, AllocKind dstKind)
-{
-    if (src->hasEmptyElements() || src->denseElementsAreCopyOnWrite()) {
-        return 0;
-    }
-
-    void* srcAllocatedHeader = src->getUnshiftedElementsHeader();
-
-    /* TODO Bug 874151: Prefer to put element data inline if we have space. */
-    if (!nursery().isInside(srcAllocatedHeader)) {
-        MOZ_ASSERT(src->elements_ == dst->elements_);
-        nursery().removeMallocedBuffer(srcAllocatedHeader);
-        return 0;
-    }
-
-    ObjectElements* srcHeader = src->getElementsHeader();
-
-    // Shifted elements are copied too.
-    uint32_t numShifted = srcHeader->numShiftedElements();
-    size_t nslots = srcHeader->numAllocatedElements();
-
-    /* Unlike other objects, Arrays can have fixed elements. */
-    if (src->is<ArrayObject>() && nslots <= GetGCKindSlots(dstKind)) {
-        dst->as<ArrayObject>().setFixedElements();
-        js_memcpy(dst->getElementsHeader(), srcAllocatedHeader, nslots * sizeof(HeapSlot));
-        dst->elements_ += numShifted;
-        nursery().setElementsForwardingPointer(srcHeader, dst->getElementsHeader(),
-                                               srcHeader->capacity);
-        return nslots * sizeof(HeapSlot);
-    }
-=======
     AddCellMemory(dst, nslots * sizeof(HeapSlot), MemoryUse::ObjectElements);
 
     return 0;
@@ -7204,100 +3205,23 @@ js::TenuringTracer::moveElementsToTenured(NativeObject* dst, NativeObject* src, 
                       "Failed to allocate elements while tenuring.");
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AllocKind dstKind = src->getAllocKind();
-  Zone* zone = src->zone();
-  zone->tenuredStrings++;
-||||||| merged common ancestors
-    MOZ_ASSERT(nslots >= 2);
-=======
   AddCellMemory(dst, nslots * sizeof(HeapSlot), MemoryUse::ObjectElements);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSString* dst = allocTenured<JSString>(zone, dstKind);
-  tenuredSize += moveStringToTenured(dst, src, dstKind);
-  tenuredCells++;
-
-  RelocationOverlay* overlay = RelocationOverlay::fromCell(src);
-  overlay->forwardTo(dst);
-  insertIntoStringFixupList(overlay);
-||||||| merged common ancestors
-    Zone* zone = src->zone();
-    ObjectElements* dstHeader;
-    {
-        AutoEnterOOMUnsafeRegion oomUnsafe;
-        dstHeader = reinterpret_cast<ObjectElements*>(zone->pod_malloc<HeapSlot>(nslots));
-        if (!dstHeader) {
-            oomUnsafe.crash(sizeof(HeapSlot) * nslots,
-                            "Failed to allocate elements while tenuring.");
-        }
-    }
-
-    js_memcpy(dstHeader, srcAllocatedHeader, nslots * sizeof(HeapSlot));
-    dst->elements_ = dstHeader->elements() + numShifted;
-    nursery().setElementsForwardingPointer(srcHeader, dst->getElementsHeader(),
-                                           srcHeader->capacity);
-    return nslots * sizeof(HeapSlot);
-}
-=======
   js_memcpy(dstHeader, srcAllocatedHeader, nslots * sizeof(HeapSlot));
   dst->elements_ = dstHeader->elements() + numShifted;
   nursery().setElementsForwardingPointer(srcHeader, dst->getElementsHeader(),
                                          srcHeader->capacity);
   return nslots * sizeof(HeapSlot);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  gcTracer.tracePromoteToTenured(src, dst);
-  return dst;
-||||||| merged common ancestors
-inline void
-js::TenuringTracer::insertIntoStringFixupList(RelocationOverlay* entry) {
-    *stringTail = entry;
-    stringTail = &entry->nextRef();
-    *stringTail = nullptr;
-=======
 inline void js::TenuringTracer::insertIntoStringFixupList(
     RelocationOverlay* entry) {
   *stringTail = entry;
   stringTail = &entry->nextRef();
   *stringTail = nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void js::Nursery::collectToFixedPoint(TenuringTracer& mover,
-                                      TenureCountCache& tenureCounts) {
-  for (RelocationOverlay* p = mover.objHead; p; p = p->next()) {
-    JSObject* obj = static_cast<JSObject*>(p->forwardingAddress());
-    mover.traceObject(obj);
-||||||| merged common ancestors
-JSString*
-js::TenuringTracer::moveToTenured(JSString* src)
-{
-    MOZ_ASSERT(IsInsideNursery(src));
-    MOZ_ASSERT(!src->zone()->usedByHelperThread());
-
-    AllocKind dstKind = src->getAllocKind();
-    Zone* zone = src->zone();
-    zone->tenuredStrings++;
-
-    JSString* dst = allocTenured<JSString>(zone, dstKind);
-    tenuredSize += moveStringToTenured(dst, src, dstKind);
-    tenuredCells++;
-
-    RelocationOverlay* overlay = RelocationOverlay::fromCell(src);
-    overlay->forwardTo(dst);
-    insertIntoStringFixupList(overlay);
-
-    gcTracer.tracePromoteToTenured(src, dst);
-    return dst;
-}
-=======
 JSString* js::TenuringTracer::moveToTenured(JSString* src) {
   MOZ_ASSERT(IsInsideNursery(src));
   MOZ_ASSERT(!src->zone()->usedByHelperThread());
@@ -7317,50 +3241,13 @@ JSString* js::TenuringTracer::moveToTenured(JSString* src) {
   gcTracer.tracePromoteToTenured(src, dst);
   return dst;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    TenureCount& entry = tenureCounts.findEntry(obj->groupRaw());
-    if (entry.group == obj->groupRaw()) {
-      entry.count++;
-    } else if (!entry.group) {
-      entry.group = obj->groupRaw();
-      entry.count = 1;
-    }
-  }
-||||||| merged common ancestors
-void
-js::Nursery::collectToFixedPoint(TenuringTracer& mover, TenureCountCache& tenureCounts)
-{
-    for (RelocationOverlay* p = mover.objHead; p; p = p->next()) {
-        JSObject* obj = static_cast<JSObject*>(p->forwardingAddress());
-        mover.traceObject(obj);
-
-        TenureCount& entry = tenureCounts.findEntry(obj->groupRaw());
-        if (entry.group == obj->groupRaw()) {
-            entry.count++;
-        } else if (!entry.group) {
-            entry.group = obj->groupRaw();
-            entry.count = 1;
-        }
-    }
-=======
 void js::Nursery::collectToFixedPoint(TenuringTracer& mover,
                                       TenureCountCache& tenureCounts) {
   for (RelocationOverlay* p = mover.objHead; p; p = p->next()) {
     JSObject* obj = static_cast<JSObject*>(p->forwardingAddress());
     mover.traceObject(obj);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (RelocationOverlay* p = mover.stringHead; p; p = p->next()) {
-    mover.traceString(static_cast<JSString*>(p->forwardingAddress()));
-  }
-||||||| merged common ancestors
-    for (RelocationOverlay* p = mover.stringHead; p; p = p->next()) {
-        mover.traceString(static_cast<JSString*>(p->forwardingAddress()));
-    }
-=======
     TenureCount& entry = tenureCounts.findEntry(obj->groupRaw());
     if (entry.group == obj->groupRaw()) {
       entry.count++;
@@ -7373,7 +3260,6 @@ void js::Nursery::collectToFixedPoint(TenuringTracer& mover,
   for (RelocationOverlay* p = mover.stringHead; p; p = p->next()) {
     mover.traceString(static_cast<JSString*>(p->forwardingAddress()));
   }
->>>>>>> upstream-releases
 }
 
 size_t js::TenuringTracer::moveStringToTenured(JSString* dst, JSString* src,
@@ -7393,16 +3279,11 @@ size_t js::TenuringTracer::moveStringToTenured(JSString* dst, JSString* src,
       void* chars = src->asLinear().nonInlineCharsRaw();
       nursery().removeMallocedBuffer(chars);
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   }
 
   if (dst->isFlat() && !dst->isInline()) {
     AddCellMemory(dst, dst->asFlat().allocSize(), MemoryUse::StringContents);
   }
->>>>>>> upstream-releases
 
   return size;
 }
@@ -7410,27 +3291,11 @@ size_t js::TenuringTracer::moveStringToTenured(JSString* dst, JSString* src,
 /*** IsMarked / IsAboutToBeFinalized ****************************************/
 
 template <typename T>
-<<<<<<< HEAD
-static inline void CheckIsMarkedThing(T* thingp) {
-#define IS_SAME_TYPE_OR(name, type, _) mozilla::IsSame<type*, T>::value ||
-  static_assert(JS_FOR_EACH_TRACEKIND(IS_SAME_TYPE_OR) false,
-                "Only the base cell layout types are allowed into "
-                "marking/tracing internals");
-||||||| merged common ancestors
-static inline void
-CheckIsMarkedThing(T* thingp)
-{
-#define IS_SAME_TYPE_OR(name, type, _) mozilla::IsSame<type*, T>::value ||
-    static_assert(
-            JS_FOR_EACH_TRACEKIND(IS_SAME_TYPE_OR)
-            false, "Only the base cell layout types are allowed into marking/tracing internals");
-=======
 static inline void CheckIsMarkedThing(T* thingp) {
 #define IS_SAME_TYPE_OR(name, type, _, _1) mozilla::IsSame<type*, T>::value ||
   static_assert(JS_FOR_EACH_TRACEKIND(IS_SAME_TYPE_OR) false,
                 "Only the base cell layout types are allowed into "
                 "marking/tracing internals");
->>>>>>> upstream-releases
 #undef IS_SAME_TYPE_OR
 
 #ifdef DEBUG
@@ -7446,66 +3311,22 @@ static inline void CheckIsMarkedThing(T* thingp) {
 }
 
 template <typename T>
-<<<<<<< HEAD
-static bool IsMarkedInternalCommon(T* thingp) {
-  CheckIsMarkedThing(thingp);
-  MOZ_ASSERT(!IsInsideNursery(*thingp));
-||||||| merged common ancestors
-static bool
-IsMarkedInternalCommon(T* thingp)
-{
-    CheckIsMarkedThing(thingp);
-    MOZ_ASSERT(!IsInsideNursery(*thingp));
-=======
 static inline bool ShouldCheckMarkState(JSRuntime* rt, T** thingp) {
   CheckIsMarkedThing(thingp);
   MOZ_ASSERT(!IsInsideNursery(*thingp));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TenuredCell& thing = (*thingp)->asTenured();
-  Zone* zone = thing.zoneFromAnyThread();
-  if (!zone->isCollectingFromAnyThread() || zone->isGCFinished()) {
-    return true;
-  }
-||||||| merged common ancestors
-    TenuredCell& thing = (*thingp)->asTenured();
-    Zone* zone = thing.zoneFromAnyThread();
-    if (!zone->isCollectingFromAnyThread() || zone->isGCFinished()) {
-        return true;
-    }
-=======
   TenuredCell& thing = (*thingp)->asTenured();
   Zone* zone = thing.zoneFromAnyThread();
   if (!zone->isCollectingFromAnyThread() || zone->isGCFinished()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (zone->isGCCompacting() && IsForwarded(*thingp)) {
-    *thingp = Forwarded(*thingp);
-    return true;
-  }
-||||||| merged common ancestors
-    if (zone->isGCCompacting() && IsForwarded(*thingp)) {
-        *thingp = Forwarded(*thingp);
-        return true;
-    }
-=======
   if (zone->isGCCompacting() && IsForwarded(*thingp)) {
     *thingp = Forwarded(*thingp);
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return thing.isMarkedAny();
-||||||| merged common ancestors
-    return thing.isMarkedAny();
-=======
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -7526,75 +3347,19 @@ bool js::gc::IsMarkedInternal(JSRuntime* rt, T** thingp) {
     return Nursery::getForwardedPointer(cellp);
   }
 
-<<<<<<< HEAD
-  return IsMarkedInternalCommon(thingp);
-}
-||||||| merged common ancestors
-    return IsMarkedInternalCommon(thingp);
-}
-=======
   if (!ShouldCheckMarkState(rt, thingp)) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename S>
-struct IsMarkedFunctor : public IdentityDefaultAdaptor<S> {
-  template <typename T>
-  S operator()(T* t, JSRuntime* rt, bool* rv) {
-    *rv = IsMarkedInternal(rt, &t);
-    return js::gc::RewrapTaggedPointer<S, T>::wrap(t);
-  }
-};
-||||||| merged common ancestors
-template <typename S>
-struct IsMarkedFunctor : public IdentityDefaultAdaptor<S> {
-    template <typename T> S operator()(T* t, JSRuntime* rt, bool* rv) {
-        *rv = IsMarkedInternal(rt, &t);
-        return js::gc::RewrapTaggedPointer<S, T>::wrap(t);
-    }
-};
-=======
   return (*thingp)->asTenured().isMarkedAny();
 }
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-bool js::gc::IsMarkedInternal(JSRuntime* rt, T* thingp) {
-  bool rv = true;
-  *thingp = DispatchTyped(IsMarkedFunctor<T>(), *thingp, rt, &rv);
-  return rv;
-}
-||||||| merged common ancestors
-bool
-js::gc::IsMarkedInternal(JSRuntime* rt, T* thingp)
-{
-    bool rv = true;
-    *thingp = DispatchTyped(IsMarkedFunctor<T>(), *thingp, rt, &rv);
-    return rv;
-}
-=======
 bool js::gc::IsMarkedBlackInternal(JSRuntime* rt, T** thingp) {
   if (IsOwnedByOtherRuntime(rt, *thingp)) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool js::gc::IsAboutToBeFinalizedDuringSweep(TenuredCell& tenured) {
-  MOZ_ASSERT(!IsInsideNursery(&tenured));
-  MOZ_ASSERT(tenured.zoneFromAnyThread()->isGCSweeping());
-  return !tenured.isMarkedAny();
-||||||| merged common ancestors
-bool
-js::gc::IsAboutToBeFinalizedDuringSweep(TenuredCell& tenured)
-{
-    MOZ_ASSERT(!IsInsideNursery(&tenured));
-    MOZ_ASSERT(tenured.zoneFromAnyThread()->isGCSweeping());
-    return !tenured.isMarkedAny();
-=======
   if (MightBeNurseryAllocated<T>::value && IsInsideNursery(*thingp)) {
     MOZ_ASSERT(CurrentThreadCanAccessRuntime(rt));
     Cell** cellp = reinterpret_cast<Cell**>(thingp);
@@ -7606,46 +3371,9 @@ js::gc::IsAboutToBeFinalizedDuringSweep(TenuredCell& tenured)
   }
 
   return (*thingp)->asTenured().isMarkedBlack();
->>>>>>> upstream-releases
 }
 
 template <typename T>
-<<<<<<< HEAD
-bool js::gc::IsAboutToBeFinalizedInternal(T** thingp) {
-  CheckIsMarkedThing(thingp);
-  T* thing = *thingp;
-  JSRuntime* rt = thing->runtimeFromAnyThread();
-
-  /* Permanent atoms are never finalized by non-owning runtimes. */
-  if (ThingIsPermanentAtomOrWellKnownSymbol(thing) &&
-      TlsContext.get()->runtime() != rt) {
-||||||| merged common ancestors
-bool
-js::gc::IsAboutToBeFinalizedInternal(T** thingp)
-{
-    CheckIsMarkedThing(thingp);
-    T* thing = *thingp;
-    JSRuntime* rt = thing->runtimeFromAnyThread();
-
-    /* Permanent atoms are never finalized by non-owning runtimes. */
-    if (ThingIsPermanentAtomOrWellKnownSymbol(thing) && TlsContext.get()->runtime() != rt) {
-        return false;
-    }
-
-    if (IsInsideNursery(thing)) {
-        return JS::RuntimeHeapIsMinorCollecting() &&
-               !Nursery::getForwardedPointer(reinterpret_cast<Cell**>(thingp));
-    }
-
-    Zone* zone = thing->asTenured().zoneFromAnyThread();
-    if (zone->isGCSweeping()) {
-        return IsAboutToBeFinalizedDuringSweep(thing->asTenured());
-    } else if (zone->isGCCompacting() && IsForwarded(thing)) {
-        *thingp = Forwarded(thing);
-        return false;
-    }
-
-=======
 bool js::gc::IsMarkedInternal(JSRuntime* rt, T* thingp) {
   bool marked = true;
   auto thing = MapGCThingTyped(*thingp, [rt, &marked](auto t) {
@@ -7686,9 +3414,7 @@ bool js::gc::IsAboutToBeFinalizedInternal(T** thingp) {
   /* Permanent atoms are never finalized by non-owning runtimes. */
   if (ThingIsPermanentAtomOrWellKnownSymbol(thing) &&
       TlsContext.get()->runtime() != rt) {
->>>>>>> upstream-releases
     return false;
-<<<<<<< HEAD
   }
 
   if (IsInsideNursery(thing)) {
@@ -7706,62 +3432,8 @@ bool js::gc::IsAboutToBeFinalizedInternal(T** thingp) {
 
   return false;
 }
-||||||| merged common ancestors
-}
-=======
-  }
-
-  if (IsInsideNursery(thing)) {
-    return JS::RuntimeHeapIsMinorCollecting() &&
-           !Nursery::getForwardedPointer(reinterpret_cast<Cell**>(thingp));
-  }
-
-  Zone* zone = thing->asTenured().zoneFromAnyThread();
-  if (zone->isGCSweeping()) {
-    return IsAboutToBeFinalizedDuringSweep(thing->asTenured());
-  } else if (zone->isGCCompacting() && IsForwarded(thing)) {
-    *thingp = Forwarded(thing);
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-template <typename S>
-struct IsAboutToBeFinalizedInternalFunctor : public IdentityDefaultAdaptor<S> {
-  template <typename T>
-  S operator()(T* t, bool* rv) {
-    *rv = IsAboutToBeFinalizedInternal(&t);
-    return js::gc::RewrapTaggedPointer<S, T>::wrap(t);
-  }
-};
-||||||| merged common ancestors
-template <typename S>
-struct IsAboutToBeFinalizedInternalFunctor : public IdentityDefaultAdaptor<S> {
-    template <typename T> S operator()(T* t, bool* rv) {
-        *rv = IsAboutToBeFinalizedInternal(&t);
-        return js::gc::RewrapTaggedPointer<S, T>::wrap(t);
-    }
-};
-=======
-  return false;
-}
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-bool js::gc::IsAboutToBeFinalizedInternal(T* thingp) {
-  bool rv = false;
-  *thingp =
-      DispatchTyped(IsAboutToBeFinalizedInternalFunctor<T>(), *thingp, &rv);
-  return rv;
-||||||| merged common ancestors
-bool
-js::gc::IsAboutToBeFinalizedInternal(T* thingp)
-{
-    bool rv = false;
-    *thingp = DispatchTyped(IsAboutToBeFinalizedInternalFunctor<T>(), *thingp, &rv);
-    return rv;
-=======
 bool js::gc::IsAboutToBeFinalizedInternal(T* thingp) {
   bool dying = false;
   auto thing = MapGCThingTyped(*thingp, [&dying](auto t) {
@@ -7772,7 +3444,6 @@ bool js::gc::IsAboutToBeFinalizedInternal(T* thingp) {
     *thingp = thing.value();
   }
   return dying;
->>>>>>> upstream-releases
 }
 
 namespace js {
@@ -7796,32 +3467,14 @@ FOR_EACH_PUBLIC_GC_POINTER_TYPE(INSTANTIATE_ALL_VALID_HEAP_TRACE_FUNCTIONS)
 FOR_EACH_PUBLIC_TAGGED_GC_POINTER_TYPE(
     INSTANTIATE_ALL_VALID_HEAP_TRACE_FUNCTIONS)
 
-<<<<<<< HEAD
-#define INSTANTIATE_INTERNAL_MARKING_FUNCTIONS(type)          \
-  template bool IsMarkedInternal(JSRuntime* rt, type* thing); \
-  template bool IsAboutToBeFinalizedInternal(type* thingp);
-||||||| merged common ancestors
-#define INSTANTIATE_INTERNAL_MARKING_FUNCTIONS(type) \
-    template bool IsMarkedInternal(JSRuntime* rt, type* thing); \
-    template bool IsAboutToBeFinalizedInternal(type* thingp);
-=======
 #define INSTANTIATE_INTERNAL_MARKING_FUNCTIONS(type)               \
   template bool IsMarkedInternal(JSRuntime* rt, type* thing);      \
   template bool IsMarkedBlackInternal(JSRuntime* rt, type* thing); \
   template bool IsAboutToBeFinalizedInternal(type* thingp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define INSTANTIATE_INTERNAL_MARKING_FUNCTIONS_FROM_TRACEKIND(_1, type, _2) \
-  INSTANTIATE_INTERNAL_MARKING_FUNCTIONS(type*)
-||||||| merged common ancestors
-#define INSTANTIATE_INTERNAL_MARKING_FUNCTIONS_FROM_TRACEKIND(_1, type, _2) \
-    INSTANTIATE_INTERNAL_MARKING_FUNCTIONS(type*)
-=======
 #define INSTANTIATE_INTERNAL_MARKING_FUNCTIONS_FROM_TRACEKIND(_1, type, _2, \
                                                               _3)           \
   INSTANTIATE_INTERNAL_MARKING_FUNCTIONS(type*)
->>>>>>> upstream-releases
 
 JS_FOR_EACH_TRACEKIND(INSTANTIATE_INTERNAL_MARKING_FUNCTIONS_FROM_TRACEKIND)
 FOR_EACH_PUBLIC_TAGGED_GC_POINTER_TYPE(INSTANTIATE_INTERNAL_MARKING_FUNCTIONS)
@@ -7867,19 +3520,6 @@ FOR_EACH_PUBLIC_TAGGED_GC_POINTER_TYPE(INSTANTIATE_INTERNAL_MARKING_FUNCTIONS)
  */
 
 #ifdef DEBUG
-<<<<<<< HEAD
-struct AssertNonGrayTracer : public JS::CallbackTracer {
-  explicit AssertNonGrayTracer(JSRuntime* rt) : JS::CallbackTracer(rt) {}
-  void onChild(const JS::GCCellPtr& thing) override {
-    MOZ_ASSERT(!thing.asCell()->isMarkedGray());
-  }
-||||||| merged common ancestors
-struct AssertNonGrayTracer : public JS::CallbackTracer {
-    explicit AssertNonGrayTracer(JSRuntime* rt) : JS::CallbackTracer(rt) {}
-    void onChild(const JS::GCCellPtr& thing) override {
-        MOZ_ASSERT(!thing.asCell()->isMarkedGray());
-    }
-=======
 struct AssertNonGrayTracer final : public JS::CallbackTracer {
   explicit AssertNonGrayTracer(JSRuntime* rt) : JS::CallbackTracer(rt) {}
   void onChild(const JS::GCCellPtr& thing) override {
@@ -7889,33 +3529,9 @@ struct AssertNonGrayTracer final : public JS::CallbackTracer {
   // as the non-gray tracer to not trigger assertions.  Do not use it in another
   // context without making this more generic.
   TracerKind getTracerKind() const override { return TracerKind::UnmarkGray; }
->>>>>>> upstream-releases
 };
 #endif
 
-<<<<<<< HEAD
-class UnmarkGrayTracer : public JS::CallbackTracer {
- public:
-  // We set weakMapAction to DoNotTraceWeakMaps because the cycle collector
-  // will fix up any color mismatches involving weakmaps when it runs.
-  explicit UnmarkGrayTracer(JSRuntime* rt)
-      : JS::CallbackTracer(rt, DoNotTraceWeakMaps),
-        unmarkedAny(false),
-        oom(false),
-        stack(rt->gc.unmarkGrayStack) {}
-||||||| merged common ancestors
-class UnmarkGrayTracer : public JS::CallbackTracer
-{
-  public:
-    // We set weakMapAction to DoNotTraceWeakMaps because the cycle collector
-    // will fix up any color mismatches involving weakmaps when it runs.
-    explicit UnmarkGrayTracer(JSRuntime *rt)
-      : JS::CallbackTracer(rt, DoNotTraceWeakMaps)
-      , unmarkedAny(false)
-      , oom(false)
-      , stack(rt->gc.unmarkGrayStack)
-    {}
-=======
 class UnmarkGrayTracer final : public JS::CallbackTracer {
  public:
   // We set weakMapAction to DoNotTraceWeakMaps because the cycle collector
@@ -7925,7 +3541,6 @@ class UnmarkGrayTracer final : public JS::CallbackTracer {
         unmarkedAny(false),
         oom(false),
         stack(rt->gc.unmarkGrayStack) {}
->>>>>>> upstream-releases
 
   void unmark(JS::GCCellPtr cell);
 
@@ -7949,40 +3564,15 @@ class UnmarkGrayTracer final : public JS::CallbackTracer {
 void UnmarkGrayTracer::onChild(const JS::GCCellPtr& thing) {
   Cell* cell = thing.asCell();
 
-<<<<<<< HEAD
-  // Cells in the nursery cannot be gray, and therefore must necessarily point
-  // to only black edges.
-  if (!cell->isTenured()) {
-||||||| merged common ancestors
-    // Cells in the nursery cannot be gray, and therefore must necessarily point
-    // to only black edges.
-    if (!cell->isTenured()) {
-=======
   // Cells in the nursery cannot be gray, and nor can certain kinds of tenured
   // cells. These must necessarily point only to black edges.
   if (!cell->isTenured() ||
       !TraceKindCanBeMarkedGray(cell->asTenured().getTraceKind())) {
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-    AssertNonGrayTracer nongray(runtime());
-    TraceChildren(&nongray, cell, thing.kind());
-||||||| merged common ancestors
-        AssertNonGrayTracer nongray(runtime());
-        TraceChildren(&nongray, cell, thing.kind());
-=======
     MOZ_ASSERT(!cell->isMarkedGray());
     AssertNonGrayTracer nongray(runtime());
     TraceChildren(&nongray, cell, thing.kind());
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-    return;
-  }
-||||||| merged common ancestors
-        return;
-    }
-=======
     return;
   }
 
@@ -8003,23 +3593,10 @@ void UnmarkGrayTracer::onChild(const JS::GCCellPtr& thing) {
     }
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TenuredCell& tenured = cell->asTenured();
   if (!tenured.isMarkedGray()) {
     return;
   }
-||||||| merged common ancestors
-    TenuredCell& tenured = cell->asTenured();
-    if (!tenured.isMarkedGray()) {
-        return;
-    }
-=======
-  if (!tenured.isMarkedGray()) {
-    return;
-  }
->>>>>>> upstream-releases
 
   tenured.markBlack();
   unmarkedAny = true;
@@ -8047,56 +3624,17 @@ void UnmarkGrayTracer::unmark(JS::GCCellPtr cell) {
   }
 }
 
-<<<<<<< HEAD
-#ifdef DEBUG
-bool js::IsUnmarkGrayTracer(JSTracer* trc) {
-  return trc->isCallbackTracer() &&
-         trc->asCallbackTracer()->getTracerKind() ==
-             JS::CallbackTracer::TracerKind::UnmarkGray;
-}
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-bool
-js::IsUnmarkGrayTracer(JSTracer* trc)
-{
-    return trc->isCallbackTracer() &&
-           trc->asCallbackTracer()->getTracerKind() == JS::CallbackTracer::TracerKind::UnmarkGray;
-}
-#endif
-=======
 static bool UnmarkGrayGCThing(JSRuntime* rt, JS::GCCellPtr thing) {
   MOZ_ASSERT(thing);
   MOZ_ASSERT(thing.asCell()->isMarkedGray());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool UnmarkGrayGCThing(JSRuntime* rt, JS::GCCellPtr thing) {
-  MOZ_ASSERT(thing);
-||||||| merged common ancestors
-static bool
-UnmarkGrayGCThing(JSRuntime* rt, JS::GCCellPtr thing)
-{
-    MOZ_ASSERT(thing);
-=======
   // Gray cell unmarking can occur at different points between recording and
   // replay, so disallow recorded events from occurring in the tracer.
   mozilla::recordreplay::AutoDisallowThreadEvents d;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Gray cell unmarking can occur at different points between recording and
-  // replay, so disallow recorded events from occurring in the tracer.
-  mozilla::recordreplay::AutoDisallowThreadEvents d;
-||||||| merged common ancestors
-    // Gray cell unmarking can occur at different points between recording and
-    // replay, so disallow recorded events from occurring in the tracer.
-    mozilla::recordreplay::AutoDisallowThreadEvents d;
-=======
   AutoGeckoProfilerEntry profilingStackFrame(rt->mainContextFromOwnThread(),
                                              "UnmarkGrayGCThing",
                                              JS::ProfilingCategoryPair::GCCC);
->>>>>>> upstream-releases
 
   UnmarkGrayTracer unmarker(rt);
   gcstats::AutoPhase innerPhase(rt->gc.stats(),

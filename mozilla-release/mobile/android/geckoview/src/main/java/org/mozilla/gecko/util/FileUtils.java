@@ -4,15 +4,6 @@
 
 package org.mozilla.gecko.util;
 
-<<<<<<< HEAD
-import android.content.ContentResolver;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-||||||| merged common ancestors
-=======
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -24,7 +15,6 @@ import android.os.storage.StorageVolume;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
->>>>>>> upstream-releases
 import android.util.Log;
 
 import java.io.File;
@@ -308,56 +298,6 @@ public class FileUtils {
         } while (!result.mkdirs());
         return result;
     }
-<<<<<<< HEAD
-
-    public static String resolveContentUri(final Context context, final Uri uri) {
-        String path;
-        try {
-            path = getOriginalFilePathFromUri(context, uri);
-        } catch (IllegalArgumentException ex) {
-            // We cannot always successfully guess the original path of the file behind the
-            // content:// URI, so we need a fallback. This will break local subresources and
-            // relative links, but unfortunately there's nothing else we can do
-            // (see https://issuetracker.google.com/issues/77406791).
-            path = getTempFilePathFromContentUri(context, uri);
-        }
-        return !TextUtils.isEmpty(path) ? String.format(FILE_ABSOLUTE_URI, path) : path;
-    }
-
-    public static String getFileNameFromContentUri(Context context, Uri uri) {
-        final ContentResolver cr = context.getContentResolver();
-        final String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
-        String fileName = null;
-
-        try (Cursor metaCursor = cr.query(uri, projection, null, null, null);) {
-            if (metaCursor.moveToFirst()) {
-                fileName = metaCursor.getString(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try (InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-             OutputStream outputStream = new FileOutputStream(dstFile)) {
-            IOUtils.copy(inputStream, outputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static boolean isContentUri(Uri uri) {
-        return uri != null && uri.getScheme() != null && CONTENT_SCHEME.equals(uri.getScheme());
-    }
-
-    public static boolean isContentUri(String sUri) {
-        return sUri != null && sUri.startsWith(CONTENT_SCHEME);
-    }
-||||||| merged common ancestors
-=======
 
     public static String resolveContentUri(final Context context, final Uri uri) {
         String path = getOriginalFilePathFromUri(context, uri);
@@ -476,5 +416,4 @@ public class FileUtils {
             return absPath.contains("/sdcard0") || absPath.contains("/storage/emulated");
         }
     }
->>>>>>> upstream-releases
 }

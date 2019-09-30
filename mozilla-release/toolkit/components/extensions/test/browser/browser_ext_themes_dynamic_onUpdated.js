@@ -20,141 +20,57 @@ add_task(async function test_on_updated() {
       const TEXT_COLOR_2 = "#0ef325";
 
       const theme1 = {
-<<<<<<< HEAD
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-        "images": {
-          "headerURL": "image1.png",
-=======
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": ACCENT_COLOR_1,
-          "tab_background_text": TEXT_COLOR_1,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": ACCENT_COLOR_1,
-          "textcolor": TEXT_COLOR_1,
-=======
         colors: {
           frame: ACCENT_COLOR_1,
           tab_background_text: TEXT_COLOR_1,
->>>>>>> upstream-releases
         },
       };
 
       const theme2 = {
-<<<<<<< HEAD
-        "images": {
-          "theme_frame": "image2.png",
-||||||| merged common ancestors
-        "images": {
-          "headerURL": "image2.png",
-=======
         images: {
           theme_frame: "image2.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": ACCENT_COLOR_2,
-          "tab_background_text": TEXT_COLOR_2,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": ACCENT_COLOR_2,
-          "textcolor": TEXT_COLOR_2,
-=======
         colors: {
           frame: ACCENT_COLOR_2,
           tab_background_text: TEXT_COLOR_2,
->>>>>>> upstream-releases
         },
       };
 
       function testTheme1(returnedTheme) {
         browser.test.assertTrue(
-<<<<<<< HEAD
-          returnedTheme.images.theme_frame.includes("image1.png"),
-          "Theme 1 theme_frame image should be applied");
-||||||| merged common ancestors
-          returnedTheme.images.headerURL.includes("image1.png"),
-          "Theme 1 header URL should be applied");
-=======
           returnedTheme.images.theme_frame.includes("image1.png"),
           "Theme 1 theme_frame image should be applied"
         );
->>>>>>> upstream-releases
         browser.test.assertEq(
-<<<<<<< HEAD
-          ACCENT_COLOR_1, returnedTheme.colors.frame,
-          "Theme 1 frame color should be applied");
-||||||| merged common ancestors
-          ACCENT_COLOR_1, returnedTheme.colors.accentcolor,
-          "Theme 1 accent color should be applied");
-=======
           ACCENT_COLOR_1,
           returnedTheme.colors.frame,
           "Theme 1 frame color should be applied"
         );
->>>>>>> upstream-releases
         browser.test.assertEq(
-<<<<<<< HEAD
-          TEXT_COLOR_1, returnedTheme.colors.tab_background_text,
-          "Theme 1 tab_background_text color should be applied");
-||||||| merged common ancestors
-          TEXT_COLOR_1, returnedTheme.colors.textcolor,
-          "Theme 1 text color should be applied");
-=======
           TEXT_COLOR_1,
           returnedTheme.colors.tab_background_text,
           "Theme 1 tab_background_text color should be applied"
         );
->>>>>>> upstream-releases
       }
 
       function testTheme2(returnedTheme) {
         browser.test.assertTrue(
-<<<<<<< HEAD
-          returnedTheme.images.theme_frame.includes("image2.png"),
-          "Theme 2 theme_frame image should be applied");
-||||||| merged common ancestors
-          returnedTheme.images.headerURL.includes("image2.png"),
-          "Theme 2 header URL should be applied");
-=======
           returnedTheme.images.theme_frame.includes("image2.png"),
           "Theme 2 theme_frame image should be applied"
         );
->>>>>>> upstream-releases
         browser.test.assertEq(
-<<<<<<< HEAD
-          ACCENT_COLOR_2, returnedTheme.colors.frame,
-          "Theme 2 frame color should be applied");
-||||||| merged common ancestors
-          ACCENT_COLOR_2, returnedTheme.colors.accentcolor,
-          "Theme 2 accent color should be applied");
-=======
           ACCENT_COLOR_2,
           returnedTheme.colors.frame,
           "Theme 2 frame color should be applied"
         );
->>>>>>> upstream-releases
         browser.test.assertEq(
-<<<<<<< HEAD
-          TEXT_COLOR_2, returnedTheme.colors.tab_background_text,
-          "Theme 2 tab_background_text color should be applied");
-||||||| merged common ancestors
-          TEXT_COLOR_2, returnedTheme.colors.textcolor,
-          "Theme 2 text color should be applied");
-=======
           TEXT_COLOR_2,
           returnedTheme.colors.tab_background_text,
           "Theme 2 tab_background_text color should be applied"
         );
->>>>>>> upstream-releases
       }
 
       const firstWin = await browser.windows.getCurrent();

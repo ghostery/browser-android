@@ -84,17 +84,8 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=607584
     onStatusChange : function(aWebProgress, aRequest, aStatus, aMessage)
       {
       },
-<<<<<<< HEAD
-  
-    onSecurityChange : function(aWebProgress, aRequest, aState)
-||||||| merged common ancestors
-  
-    onSecurityChange : function(aWebProgress, aRequest, aOldState, aState,
-                                aContentBlockingLogJSON)
-=======
 
     onSecurityChange : function(aWebProgress, aRequest, aState)
->>>>>>> upstream-releases
       {
       },
 

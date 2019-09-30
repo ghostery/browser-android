@@ -17,20 +17,6 @@
 #include "nsIGlobalObject.h"
 #include "nsTHashtable.h"
 
-<<<<<<< HEAD
-class nsIDocument;
-
-||||||| merged common ancestors
-// GetCurrentTime is defined in winbase.h as zero argument macro forwarding to
-// GetTickCount().
-#ifdef GetCurrentTime
-#undef GetCurrentTime
-#endif
-
-class nsIDocument;
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 
@@ -43,19 +29,8 @@ class AnimationTimeline : public nsISupports, public nsWrapperCache {
     MOZ_ASSERT(mWindow);
   }
 
-<<<<<<< HEAD
- protected:
-  virtual ~AnimationTimeline() { mAnimationOrder.clear(); }
-||||||| merged common ancestors
-protected:
-  virtual ~AnimationTimeline()
-  {
-    mAnimationOrder.clear();
-  }
-=======
  protected:
   virtual ~AnimationTimeline();
->>>>>>> upstream-releases
 
  public:
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS

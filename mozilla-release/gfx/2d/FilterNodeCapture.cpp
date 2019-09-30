@@ -11,23 +11,11 @@ namespace gfx {
 
 struct Setter {
   Setter(FilterNode* aNode, DrawTarget* aDT, bool aInputsChanged)
-<<<<<<< HEAD
-      : mNode{aNode}, mIndex{0}, mDT{aDT}, mInputsChanged{aInputsChanged} {}
-  template <typename T>
-  void match(T& aValue) {
-    mNode->SetAttribute(mIndex, aValue);
-  }
-||||||| merged common ancestors
-    : mNode{aNode}, mIndex{0}, mDT{aDT}, mInputsChanged{aInputsChanged} {}
-  template<typename T>
-  void match(T& aValue) { mNode->SetAttribute(mIndex, aValue); }
-=======
       : mNode{aNode}, mIndex{0}, mDT{aDT}, mInputsChanged{aInputsChanged} {}
   template <typename T>
   void operator()(T& aValue) {
     mNode->SetAttribute(mIndex, aValue);
   }
->>>>>>> upstream-releases
 
   FilterNode* mNode;
   uint32_t mIndex;
@@ -35,52 +23,22 @@ struct Setter {
   bool mInputsChanged;
 };
 
-<<<<<<< HEAD
-template <>
-void Setter::match<std::vector<Float>>(std::vector<Float>& aValue) {
-||||||| merged common ancestors
-template<>
-void
-Setter::match<std::vector<Float>>(std::vector<Float>& aValue)
-{
-=======
 template <>
 void Setter::operator()<std::vector<Float>>(std::vector<Float>& aValue) {
->>>>>>> upstream-releases
   mNode->SetAttribute(mIndex, aValue.data(), aValue.size());
 }
 
-<<<<<<< HEAD
-template <>
-void Setter::match<RefPtr<SourceSurface>>(RefPtr<SourceSurface>& aSurface) {
-||||||| merged common ancestors
-template<>
-void
-Setter::match<RefPtr<SourceSurface>>(RefPtr<SourceSurface>& aSurface)
-{
-=======
 template <>
 void Setter::operator()<RefPtr<SourceSurface>>(
     RefPtr<SourceSurface>& aSurface) {
->>>>>>> upstream-releases
   if (!mInputsChanged) {
     return;
   }
   mNode->SetInput(mIndex, aSurface);
 }
 
-<<<<<<< HEAD
-template <>
-void Setter::match<RefPtr<FilterNode>>(RefPtr<FilterNode>& aNode) {
-||||||| merged common ancestors
-template<>
-void
-Setter::match<RefPtr<FilterNode>>(RefPtr<FilterNode>& aNode)
-{
-=======
 template <>
 void Setter::operator()<RefPtr<FilterNode>>(RefPtr<FilterNode>& aNode) {
->>>>>>> upstream-releases
   RefPtr<FilterNode> node = aNode;
   if (node->GetBackendType() == FilterBackend::FILTER_BACKEND_CAPTURE) {
     FilterNodeCapture* captureNode =

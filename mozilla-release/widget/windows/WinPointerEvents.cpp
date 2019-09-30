@@ -20,17 +20,8 @@ const wchar_t WinPointerEvents::kPointerLibraryName[] = L"user32.dll";
 HMODULE WinPointerEvents::sLibraryHandle = nullptr;
 WinPointerEvents::GetPointerTypePtr WinPointerEvents::getPointerType = nullptr;
 WinPointerEvents::GetPointerInfoPtr WinPointerEvents::getPointerInfo = nullptr;
-<<<<<<< HEAD
 WinPointerEvents::GetPointerPenInfoPtr WinPointerEvents::getPointerPenInfo =
     nullptr;
-bool WinPointerEvents::sPointerEventEnabled = true;
-||||||| merged common ancestors
-WinPointerEvents::GetPointerPenInfoPtr WinPointerEvents::getPointerPenInfo = nullptr;
-bool WinPointerEvents::sPointerEventEnabled = true;
-=======
-WinPointerEvents::GetPointerPenInfoPtr WinPointerEvents::getPointerPenInfo =
-    nullptr;
->>>>>>> upstream-releases
 bool WinPointerEvents::sFirePointerEventsByWinPointerMessages = false;
 
 WinPointerEvents::WinPointerEvents() {
@@ -95,18 +86,8 @@ bool WinPointerEvents::ShouldHandleWinPointerMessages(UINT aMsg,
   return (pointerType == PT_PEN);
 }
 
-<<<<<<< HEAD
-bool WinPointerEvents::GetPointerType(uint32_t aPointerId,
-                                      POINTER_INPUT_TYPE *aPointerType) {
-||||||| merged common ancestors
-bool
-WinPointerEvents::GetPointerType(uint32_t aPointerId,
-                                 POINTER_INPUT_TYPE *aPointerType)
-{
-=======
 bool WinPointerEvents::GetPointerType(uint32_t aPointerId,
                                       POINTER_INPUT_TYPE* aPointerType) {
->>>>>>> upstream-releases
   if (!getPointerType) {
     return false;
   }
@@ -120,36 +101,16 @@ WinPointerEvents::GetPointerType(uint32_t aPointerId) {
   return pointerType;
 }
 
-<<<<<<< HEAD
-bool WinPointerEvents::GetPointerInfo(uint32_t aPointerId,
-                                      POINTER_INFO *aPointerInfo) {
-||||||| merged common ancestors
-bool
-WinPointerEvents::GetPointerInfo(uint32_t aPointerId,
-                                 POINTER_INFO *aPointerInfo)
-{
-=======
 bool WinPointerEvents::GetPointerInfo(uint32_t aPointerId,
                                       POINTER_INFO* aPointerInfo) {
->>>>>>> upstream-releases
   if (!getPointerInfo) {
     return false;
   }
   return getPointerInfo(aPointerId, aPointerInfo);
 }
 
-<<<<<<< HEAD
-bool WinPointerEvents::GetPointerPenInfo(uint32_t aPointerId,
-                                         POINTER_PEN_INFO *aPenInfo) {
-||||||| merged common ancestors
-bool
-WinPointerEvents::GetPointerPenInfo(uint32_t aPointerId,
-                                    POINTER_PEN_INFO *aPenInfo)
-{
-=======
 bool WinPointerEvents::GetPointerPenInfo(uint32_t aPointerId,
                                          POINTER_PEN_INFO* aPenInfo) {
->>>>>>> upstream-releases
   if (!getPointerPenInfo) {
     return false;
   }
@@ -170,35 +131,14 @@ bool WinPointerEvents::ShouldRollupOnPointerEvent(UINT aMsg, WPARAM aWParam) {
          ShouldFirePointerEventByWinPointerMessages();
 }
 
-<<<<<<< HEAD
-bool WinPointerEvents::ShouldFirePointerEventByWinPointerMessages() {
-  MOZ_ASSERT(sLibraryHandle && sPointerEventEnabled);
-||||||| merged common ancestors
-bool
-WinPointerEvents::ShouldFirePointerEventByWinPointerMessages()
-{
-  MOZ_ASSERT(sLibraryHandle && sPointerEventEnabled);
-=======
 bool WinPointerEvents::ShouldFirePointerEventByWinPointerMessages() {
   MOZ_ASSERT(sLibraryHandle && StaticPrefs::dom_w3c_pointer_events_enabled());
->>>>>>> upstream-releases
   return sFirePointerEventsByWinPointerMessages;
 }
 
-<<<<<<< HEAD
-WinPointerInfo *WinPointerEvents::GetCachedPointerInfo(UINT aMsg,
-                                                       WPARAM aWParam) {
-  if (!sLibraryHandle || !sPointerEventEnabled ||
-||||||| merged common ancestors
-WinPointerInfo*
-WinPointerEvents::GetCachedPointerInfo(UINT aMsg, WPARAM aWParam)
-{
-  if (!sLibraryHandle || !sPointerEventEnabled ||
-=======
 WinPointerInfo* WinPointerEvents::GetCachedPointerInfo(UINT aMsg,
                                                        WPARAM aWParam) {
   if (!sLibraryHandle || !StaticPrefs::dom_w3c_pointer_events_enabled() ||
->>>>>>> upstream-releases
       MOUSE_INPUT_SOURCE() != dom::MouseEvent_Binding::MOZ_SOURCE_PEN ||
       ShouldFirePointerEventByWinPointerMessages()) {
     return nullptr;
@@ -242,18 +182,8 @@ void WinPointerEvents::ConvertAndCachePointerInfo(UINT aMsg, WPARAM aWParam) {
   }
 }
 
-<<<<<<< HEAD
-void WinPointerEvents::ConvertAndCachePointerInfo(WPARAM aWParam,
-                                                  WinPointerInfo *aInfo) {
-||||||| merged common ancestors
-void
-WinPointerEvents::ConvertAndCachePointerInfo(WPARAM aWParam,
-                                             WinPointerInfo* aInfo)
-{
-=======
 void WinPointerEvents::ConvertAndCachePointerInfo(WPARAM aWParam,
                                                   WinPointerInfo* aInfo) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!sFirePointerEventsByWinPointerMessages);
   aInfo->pointerId = GetPointerId(aWParam);
   MOZ_ASSERT(GetPointerType(aInfo->pointerId) == PT_PEN);

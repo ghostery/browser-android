@@ -18,18 +18,8 @@
 #include "nsContentUtils.h"
 #include "nsIContent.h"
 #include "nsIContentInlines.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"
-#include "nsIDocumentInlines.h"  // for nsIDocument and HTMLBodyElement
-#include "nsIPresShell.h"
-||||||| merged common ancestors
-#include "nsIDocument.h"
-#include "nsIDocumentInlines.h"         // for nsIDocument and HTMLBodyElement
-#include "nsIPresShell.h"
-=======
 #include "mozilla/dom/Document.h"
 #include "DocumentInlines.h"  // for Document and HTMLBodyElement
->>>>>>> upstream-releases
 #include "nsIScrollableFrame.h"
 #include "nsITextControlElement.h"
 #include "nsITimer.h"
@@ -52,43 +42,16 @@ DeltaValues::DeltaValues(WidgetWheelEvent* aEvent)
 /* mozilla::WheelHandlingUtils                                    */
 /******************************************************************/
 
-<<<<<<< HEAD
-/* static */ bool WheelHandlingUtils::CanScrollInRange(nscoord aMin,
-                                                       nscoord aValue,
-                                                       nscoord aMax,
-                                                       double aDirection) {
-  return aDirection > 0.0 ? aValue < static_cast<double>(aMax)
-                          : static_cast<double>(aMin) < aValue;
-||||||| merged common ancestors
-/* static */ bool
-WheelHandlingUtils::CanScrollInRange(nscoord aMin, nscoord aValue, nscoord aMax,
-                                     double aDirection)
-{
-  return aDirection > 0.0 ? aValue < static_cast<double>(aMax) :
-                            static_cast<double>(aMin) < aValue;
-=======
 /* static */
 bool WheelHandlingUtils::CanScrollInRange(nscoord aMin, nscoord aValue,
                                           nscoord aMax, double aDirection) {
   return aDirection > 0.0 ? aValue < static_cast<double>(aMax)
                           : static_cast<double>(aMin) < aValue;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool WheelHandlingUtils::CanScrollOn(nsIFrame* aFrame,
-                                                  double aDirectionX,
-                                                  double aDirectionY) {
-||||||| merged common ancestors
-/* static */ bool
-WheelHandlingUtils::CanScrollOn(nsIFrame* aFrame,
-                                double aDirectionX, double aDirectionY)
-{
-=======
 /* static */
 bool WheelHandlingUtils::CanScrollOn(nsIFrame* aFrame, double aDirectionX,
                                      double aDirectionY) {
->>>>>>> upstream-releases
   nsIScrollableFrame* scrollableFrame = do_QueryFrame(aFrame);
   if (scrollableFrame) {
     return CanScrollOn(scrollableFrame, aDirectionX, aDirectionY);
@@ -97,19 +60,9 @@ bool WheelHandlingUtils::CanScrollOn(nsIFrame* aFrame, double aDirectionX,
   return pluginFrame && pluginFrame->WantsToHandleWheelEventAsDefaultAction();
 }
 
-<<<<<<< HEAD
-/* static */ bool WheelHandlingUtils::CanScrollOn(
-    nsIScrollableFrame* aScrollFrame, double aDirectionX, double aDirectionY) {
-||||||| merged common ancestors
-/* static */ bool
-WheelHandlingUtils::CanScrollOn(nsIScrollableFrame* aScrollFrame,
-                                double aDirectionX, double aDirectionY)
-{
-=======
 /* static */
 bool WheelHandlingUtils::CanScrollOn(nsIScrollableFrame* aScrollFrame,
                                      double aDirectionX, double aDirectionY) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aScrollFrame);
   NS_ASSERTION(aDirectionX || aDirectionY,
                "One of the delta values must be non-zero at least");
@@ -160,49 +113,18 @@ nsITimer* WheelTransaction::sTimer = nullptr;
 int32_t WheelTransaction::sScrollSeriesCounter = 0;
 bool WheelTransaction::sOwnScrollbars = false;
 
-<<<<<<< HEAD
-/* static */ bool WheelTransaction::OutOfTime(uint32_t aBaseTime,
-                                              uint32_t aThreshold) {
-||||||| merged common ancestors
-/* static */ bool
-WheelTransaction::OutOfTime(uint32_t aBaseTime, uint32_t aThreshold)
-{
-=======
 /* static */
 bool WheelTransaction::OutOfTime(uint32_t aBaseTime, uint32_t aThreshold) {
->>>>>>> upstream-releases
   uint32_t now = PR_IntervalToMilliseconds(PR_IntervalNow());
   return (now - aBaseTime > aThreshold);
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::OwnScrollbars(bool aOwn) {
-  sOwnScrollbars = aOwn;
-}
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::OwnScrollbars(bool aOwn)
-{
-  sOwnScrollbars = aOwn;
-}
-=======
 /* static */
 void WheelTransaction::OwnScrollbars(bool aOwn) { sOwnScrollbars = aOwn; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::BeginTransaction(
-    nsIFrame* aTargetFrame, const WidgetWheelEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::BeginTransaction(nsIFrame* aTargetFrame,
-                                   const WidgetWheelEvent* aEvent)
-{
-=======
 /* static */
 void WheelTransaction::BeginTransaction(nsIFrame* aTargetFrame,
                                         const WidgetWheelEvent* aEvent) {
->>>>>>> upstream-releases
   NS_ASSERTION(!sTargetFrame, "previous transaction is not finished!");
   MOZ_ASSERT(aEvent->mMessage == eWheel,
              "Transaction must be started with a wheel event");
@@ -215,17 +137,8 @@ void WheelTransaction::BeginTransaction(nsIFrame* aTargetFrame,
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool WheelTransaction::UpdateTransaction(
-    const WidgetWheelEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ bool
-WheelTransaction::UpdateTransaction(const WidgetWheelEvent* aEvent)
-{
-=======
 /* static */
 bool WheelTransaction::UpdateTransaction(const WidgetWheelEvent* aEvent) {
->>>>>>> upstream-releases
   nsIFrame* scrollToFrame = GetTargetFrame();
   nsIScrollableFrame* scrollableFrame = scrollToFrame->GetScrollTargetFrame();
   if (scrollableFrame) {
@@ -256,16 +169,8 @@ bool WheelTransaction::UpdateTransaction(const WidgetWheelEvent* aEvent) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::MayEndTransaction() {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::MayEndTransaction()
-{
-=======
 /* static */
 void WheelTransaction::MayEndTransaction() {
->>>>>>> upstream-releases
   if (!sOwnScrollbars && ScrollbarsForWheel::IsActive()) {
     ScrollbarsForWheel::OwnWheelTransaction(true);
   } else {
@@ -273,16 +178,8 @@ void WheelTransaction::MayEndTransaction() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::EndTransaction() {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::EndTransaction()
-{
-=======
 /* static */
 void WheelTransaction::EndTransaction() {
->>>>>>> upstream-releases
   if (sTimer) {
     sTimer->Cancel();
   }
@@ -295,19 +192,9 @@ void WheelTransaction::EndTransaction() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool WheelTransaction::WillHandleDefaultAction(
-    WidgetWheelEvent* aWheelEvent, AutoWeakFrame& aTargetWeakFrame) {
-||||||| merged common ancestors
-/* static */ bool
-WheelTransaction::WillHandleDefaultAction(WidgetWheelEvent* aWheelEvent,
-                                          AutoWeakFrame& aTargetWeakFrame)
-{
-=======
 /* static */
 bool WheelTransaction::WillHandleDefaultAction(
     WidgetWheelEvent* aWheelEvent, AutoWeakFrame& aTargetWeakFrame) {
->>>>>>> upstream-releases
   nsIFrame* lastTargetFrame = GetTargetFrame();
   if (!lastTargetFrame) {
     BeginTransaction(aTargetWeakFrame.GetFrame(), aWheelEvent);
@@ -330,16 +217,8 @@ bool WheelTransaction::WillHandleDefaultAction(
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::OnEvent(WidgetEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::OnEvent(WidgetEvent* aEvent)
-{
-=======
 /* static */
 void WheelTransaction::OnEvent(WidgetEvent* aEvent) {
->>>>>>> upstream-releases
   if (!sTargetFrame) {
     return;
   }
@@ -404,29 +283,11 @@ void WheelTransaction::OnEvent(WidgetEvent* aEvent) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::Shutdown() { NS_IF_RELEASE(sTimer); }
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::Shutdown()
-{
-  NS_IF_RELEASE(sTimer);
-}
-=======
 /* static */
 void WheelTransaction::Shutdown() { NS_IF_RELEASE(sTimer); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::OnFailToScrollTarget() {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::OnFailToScrollTarget()
-{
-=======
 /* static */
 void WheelTransaction::OnFailToScrollTarget() {
->>>>>>> upstream-releases
   MOZ_ASSERT(sTargetFrame, "We don't have mouse scrolling transaction");
 
   if (Prefs::sTestMouseScroll) {
@@ -443,17 +304,8 @@ void WheelTransaction::OnFailToScrollTarget() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::OnTimeout(nsITimer* aTimer,
-                                              void* aClosure) {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::OnTimeout(nsITimer* aTimer, void* aClosure)
-{
-=======
 /* static */
 void WheelTransaction::OnTimeout(nsITimer* aTimer, void* aClosure) {
->>>>>>> upstream-releases
   if (!sTargetFrame) {
     // The transaction target was destroyed already
     EndTransaction();
@@ -474,16 +326,8 @@ void WheelTransaction::OnTimeout(nsITimer* aTimer, void* aClosure) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::SetTimeout() {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::SetTimeout()
-{
-=======
 /* static */
 void WheelTransaction::SetTimeout() {
->>>>>>> upstream-releases
   if (!sTimer) {
     sTimer = NS_NewTimer().take();
     if (!sTimer) {
@@ -498,35 +342,16 @@ void WheelTransaction::SetTimeout() {
                        "nsITimer::InitWithFuncCallback failed");
 }
 
-<<<<<<< HEAD
-/* static */ LayoutDeviceIntPoint WheelTransaction::GetScreenPoint(
-    WidgetGUIEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ LayoutDeviceIntPoint
-WheelTransaction::GetScreenPoint(WidgetGUIEvent* aEvent)
-{
-=======
 /* static */
 LayoutDeviceIntPoint WheelTransaction::GetScreenPoint(WidgetGUIEvent* aEvent) {
->>>>>>> upstream-releases
   NS_ASSERTION(aEvent, "aEvent is null");
   NS_ASSERTION(aEvent->mWidget, "aEvent-mWidget is null");
   return aEvent->mRefPoint + aEvent->mWidget->WidgetToScreenOffset();
 }
 
-<<<<<<< HEAD
-/* static */ DeltaValues WheelTransaction::AccelerateWheelDelta(
-    WidgetWheelEvent* aEvent, bool aAllowScrollSpeedOverride) {
-||||||| merged common ancestors
-/* static */ DeltaValues
-WheelTransaction::AccelerateWheelDelta(WidgetWheelEvent* aEvent,
-                                       bool aAllowScrollSpeedOverride)
-{
-=======
 /* static */
 DeltaValues WheelTransaction::AccelerateWheelDelta(
     WidgetWheelEvent* aEvent, bool aAllowScrollSpeedOverride) {
->>>>>>> upstream-releases
   DeltaValues result(aEvent);
 
   // Don't accelerate the delta values if the event isn't line scrolling.
@@ -551,37 +376,16 @@ DeltaValues WheelTransaction::AccelerateWheelDelta(
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ double WheelTransaction::ComputeAcceleratedWheelDelta(
-    double aDelta, int32_t aFactor) {
-  return mozilla::ComputeAcceleratedWheelDelta(aDelta, sScrollSeriesCounter,
-                                               aFactor);
-||||||| merged common ancestors
-/* static */ double
-WheelTransaction::ComputeAcceleratedWheelDelta(double aDelta, int32_t aFactor)
-{
-  return mozilla::ComputeAcceleratedWheelDelta(aDelta, sScrollSeriesCounter, aFactor);
-=======
 /* static */
 double WheelTransaction::ComputeAcceleratedWheelDelta(double aDelta,
                                                       int32_t aFactor) {
   return mozilla::ComputeAcceleratedWheelDelta(aDelta, sScrollSeriesCounter,
                                                aFactor);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ DeltaValues WheelTransaction::OverrideSystemScrollSpeed(
-    WidgetWheelEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ DeltaValues
-WheelTransaction::OverrideSystemScrollSpeed(WidgetWheelEvent* aEvent)
-{
-=======
 /* static */
 DeltaValues WheelTransaction::OverrideSystemScrollSpeed(
     WidgetWheelEvent* aEvent) {
->>>>>>> upstream-releases
   MOZ_ASSERT(sTargetFrame, "We don't have mouse scrolling transaction");
   MOZ_ASSERT(aEvent->mDeltaMode == dom::WheelEvent_Binding::DOM_DELTA_LINE);
 
@@ -609,21 +413,10 @@ AutoWeakFrame ScrollbarsForWheel::sActivatedScrollTargets[kNumberOfTargets] = {
 bool ScrollbarsForWheel::sHadWheelStart = false;
 bool ScrollbarsForWheel::sOwnWheelTransaction = false;
 
-<<<<<<< HEAD
-/* static */ void ScrollbarsForWheel::PrepareToScrollText(
-    EventStateManager* aESM, nsIFrame* aTargetFrame, WidgetWheelEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::PrepareToScrollText(EventStateManager* aESM,
-                                        nsIFrame* aTargetFrame,
-                                        WidgetWheelEvent* aEvent)
-{
-=======
 /* static */
 void ScrollbarsForWheel::PrepareToScrollText(EventStateManager* aESM,
                                              nsIFrame* aTargetFrame,
                                              WidgetWheelEvent* aEvent) {
->>>>>>> upstream-releases
   if (aEvent->mMessage == eWheelOperationStart) {
     WheelTransaction::OwnScrollbars(false);
     if (!IsActive()) {
@@ -635,18 +428,9 @@ void ScrollbarsForWheel::PrepareToScrollText(EventStateManager* aESM,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ScrollbarsForWheel::SetActiveScrollTarget(
-    nsIScrollableFrame* aScrollTarget) {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::SetActiveScrollTarget(nsIScrollableFrame* aScrollTarget)
-{
-=======
 /* static */
 void ScrollbarsForWheel::SetActiveScrollTarget(
     nsIScrollableFrame* aScrollTarget) {
->>>>>>> upstream-releases
   if (!sHadWheelStart) {
     return;
   }
@@ -659,16 +443,8 @@ void ScrollbarsForWheel::SetActiveScrollTarget(
   scrollbarMediator->ScrollbarActivityStarted();
 }
 
-<<<<<<< HEAD
-/* static */ void ScrollbarsForWheel::MayInactivate() {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::MayInactivate()
-{
-=======
 /* static */
 void ScrollbarsForWheel::MayInactivate() {
->>>>>>> upstream-releases
   if (!sOwnWheelTransaction && WheelTransaction::GetTargetFrame()) {
     WheelTransaction::OwnScrollbars(true);
   } else {
@@ -676,16 +452,8 @@ void ScrollbarsForWheel::MayInactivate() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ScrollbarsForWheel::Inactivate() {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::Inactivate()
-{
-=======
 /* static */
 void ScrollbarsForWheel::Inactivate() {
->>>>>>> upstream-releases
   nsIScrollbarMediator* scrollbarMediator = do_QueryFrame(sActiveOwner);
   if (scrollbarMediator) {
     scrollbarMediator->ScrollbarActivityStopped();
@@ -699,16 +467,8 @@ void ScrollbarsForWheel::Inactivate() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool ScrollbarsForWheel::IsActive() {
-||||||| merged common ancestors
-/* static */ bool
-ScrollbarsForWheel::IsActive()
-{
-=======
 /* static */
 bool ScrollbarsForWheel::IsActive() {
->>>>>>> upstream-releases
   if (sActiveOwner) {
     return true;
   }
@@ -720,35 +480,14 @@ bool ScrollbarsForWheel::IsActive() {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ void ScrollbarsForWheel::OwnWheelTransaction(bool aOwn) {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::OwnWheelTransaction(bool aOwn)
-{
-=======
 /* static */
 void ScrollbarsForWheel::OwnWheelTransaction(bool aOwn) {
->>>>>>> upstream-releases
   sOwnWheelTransaction = aOwn;
 }
 
-<<<<<<< HEAD
-/* static */ void
-ScrollbarsForWheel::TemporarilyActivateAllPossibleScrollTargets(
-    EventStateManager* aESM, nsIFrame* aTargetFrame, WidgetWheelEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::TemporarilyActivateAllPossibleScrollTargets(
-                      EventStateManager* aESM,
-                      nsIFrame* aTargetFrame,
-                      WidgetWheelEvent* aEvent)
-{
-=======
 /* static */
 void ScrollbarsForWheel::TemporarilyActivateAllPossibleScrollTargets(
     EventStateManager* aESM, nsIFrame* aTargetFrame, WidgetWheelEvent* aEvent) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < kNumberOfTargets; i++) {
     const DeltaValues* dir = &directions[i];
     AutoWeakFrame* scrollTarget = &sActivatedScrollTargets[i];
@@ -765,17 +504,8 @@ void ScrollbarsForWheel::TemporarilyActivateAllPossibleScrollTargets(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void
-ScrollbarsForWheel::DeactivateAllTemporarilyActivatedScrollTargets() {
-||||||| merged common ancestors
-/* static */ void
-ScrollbarsForWheel::DeactivateAllTemporarilyActivatedScrollTargets()
-{
-=======
 /* static */
 void ScrollbarsForWheel::DeactivateAllTemporarilyActivatedScrollTargets() {
->>>>>>> upstream-releases
   for (size_t i = 0; i < kNumberOfTargets; i++) {
     AutoWeakFrame* scrollTarget = &sActivatedScrollTargets[i];
     if (*scrollTarget) {
@@ -798,16 +528,8 @@ uint32_t WheelTransaction::Prefs::sMouseWheelTransactionTimeout = 1500;
 uint32_t WheelTransaction::Prefs::sMouseWheelTransactionIgnoreMoveDelay = 100;
 bool WheelTransaction::Prefs::sTestMouseScroll = false;
 
-<<<<<<< HEAD
-/* static */ void WheelTransaction::Prefs::InitializeStatics() {
-||||||| merged common ancestors
-/* static */ void
-WheelTransaction::Prefs::InitializeStatics()
-{
-=======
 /* static */
 void WheelTransaction::Prefs::InitializeStatics() {
->>>>>>> upstream-releases
   static bool sIsInitialized = false;
   if (!sIsInitialized) {
     Preferences::AddIntVarCache(&sMouseWheelAccelerationStart,

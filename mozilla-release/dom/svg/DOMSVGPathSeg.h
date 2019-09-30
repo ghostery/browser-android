@@ -17,20 +17,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-#define CHECK_ARG_COUNT_IN_SYNC(segType)                                   \
-  MOZ_ASSERT(                                                              \
-      ArrayLength(mArgs) ==                                                \
-              SVGPathSegUtils::ArgCountForType(uint32_t(segType)) ||       \
-          uint32_t(segType) == dom::SVGPathSeg_Binding::PATHSEG_CLOSEPATH, \
-      "Arg count/array size out of sync")
-||||||| merged common ancestors
-#define CHECK_ARG_COUNT_IN_SYNC(segType)                                      \
-  MOZ_ASSERT(ArrayLength(mArgs) ==                                            \
-               SVGPathSegUtils::ArgCountForType(uint32_t(segType)) ||         \
-             uint32_t(segType) == dom::SVGPathSeg_Binding::PATHSEG_CLOSEPATH,  \
-             "Arg count/array size out of sync")
-=======
 namespace dom {
 class SVGElement;
 }
@@ -41,7 +27,6 @@ class SVGElement;
               SVGPathSegUtils::ArgCountForType(uint32_t(segType)) ||       \
           uint32_t(segType) == dom::SVGPathSeg_Binding::PATHSEG_CLOSEPATH, \
       "Arg count/array size out of sync")
->>>>>>> upstream-releases
 
 #define IMPL_SVGPATHSEG_SUBCLASS_COMMON(segName, segType)                     \
   explicit DOMSVGPathSeg##segName(const float* aArgs) : DOMSVGPathSeg() {     \
@@ -149,13 +134,7 @@ class DOMSVGPathSeg : public nsWrapperCache {
    * encoded into a float, followed by its arguments in the same order as they
    * are given in the <path> element's 'd' attribute).
    */
-<<<<<<< HEAD
-  void ToSVGPathSegEncodedData(float* aData);
-||||||| merged common ancestors
-  void ToSVGPathSegEncodedData(float *aData);
-=======
   void ToSVGPathSegEncodedData(float* aRaw);
->>>>>>> upstream-releases
 
   /**
    * The type of this path segment.
@@ -194,15 +173,7 @@ class DOMSVGPathSeg : public nsWrapperCache {
     }
   }
 
-<<<<<<< HEAD
-  nsSVGElement* Element() { return mList->Element(); }
-||||||| merged common ancestors
-  nsSVGElement* Element() {
-    return mList->Element();
-  }
-=======
   dom::SVGElement* Element() { return mList->Element(); }
->>>>>>> upstream-releases
 
   /**
    * Get a reference to the internal SVGPathSeg list item that this DOM wrapper

@@ -17,7 +17,7 @@ class TableCellAccessible;
 class ia2AccessibleTableCell : public IAccessibleTableCell {
  public:
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleTableCell
 
@@ -54,21 +54,11 @@ class ia2AccessibleTableCell : public IAccessibleTableCell {
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_isSelected(
       /* [out, retval] */ boolean* isSelected);
 
-<<<<<<< HEAD
- protected:
-  ia2AccessibleTableCell(TableCellAccessible *aTableCell)
-      : mTableCell(aTableCell) {}
-||||||| merged common ancestors
-protected:
-  ia2AccessibleTableCell(TableCellAccessible* aTableCell) :
-    mTableCell(aTableCell) {}
-=======
  protected:
   ia2AccessibleTableCell(TableCellAccessible* aTableCell)
       : mTableCell(aTableCell) {}
->>>>>>> upstream-releases
 
-  TableCellAccessible *mTableCell;
+  TableCellAccessible* mTableCell;
 };
 
 }  // namespace a11y

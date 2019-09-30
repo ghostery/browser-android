@@ -899,19 +899,6 @@
     "bug_numbers": [1381777],
     "description": "How long a GC slice ran over its budget in microseconds"
   },
-<<<<<<< HEAD
-  "GC_NURSERY_PROMOTION_RATE": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": ["dev-telemetry-gc-alerts@mozilla.org", "jcoppeard@mozilla.com"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "high": 100,
-    "n_buckets": 50,
-    "bug_numbers": [1485299],
-    "description": "The percentage of nursery objects that were promoted to tenured heap."
-  },
-||||||| merged common ancestors
-=======
   "GC_NURSERY_PROMOTION_RATE": {
     "record_in_processes": ["main", "content"],
     "alert_emails": ["dev-telemetry-gc-alerts@mozilla.org", "jcoppeard@mozilla.com"],
@@ -966,7 +953,6 @@
     "bug_numbers": [1556467],
     "description": "The number of slices in an incremental GC for the main runtime"
   },
->>>>>>> upstream-releases
   "GEOLOCATION_ACCURACY_EXPONENTIAL": {
     "record_in_processes": ["main", "content"],
     "expires_in_version": "never",
@@ -996,23 +982,11 @@
   "GEOLOCATION_REQUEST_GRANTED": {
     "record_in_processes": ["main", "content"],
     "alert_emails": ["tdsmith@mozilla.com"],
-<<<<<<< HEAD
-    "expires_in_version": "67",
-||||||| merged common ancestors
-    "expires_in_version": "65",
-=======
     "expires_in_version": "72",
->>>>>>> upstream-releases
     "kind": "enumerated",
     "n_values": 20,
     "releaseChannelCollection": "opt-out",
-<<<<<<< HEAD
-    "bug_numbers": [1230209, 1494496, 1519170],
-||||||| merged common ancestors
-    "bug_numbers": [1230209, 1494496],
-=======
     "bug_numbers": [1230209, 1494496, 1519170, 1544539],
->>>>>>> upstream-releases
     "description": "Geolocation requests either granted or denied (0=denied/other, 1=denied/http, 2=denied/https, ..., 10=granted/other, 11=granted/http, 12=granted/https)"
   },
   "GEOLOCATION_WATCHPOSITION_SECURE_ORIGIN" : {
@@ -2240,28 +2214,6 @@
     "labels": ["Suspended", "NotSuspended", "SuspendedLocal", "NotSuspendedLocal"],
     "description": "Collect whether the resource is suspended by back pressure. And split by local-ness."
   },
-<<<<<<< HEAD
-  "NETWORK_BACK_PRESSURE_SUSPENSION_CP_TYPE": {
-    "record_in_processes": ["main"],
-    "expires_in_version": "68",
-    "alert_emails": ["necko@mozilla.com", "junior@mozilla.com"],
-    "bug_numbers": [1487559],
-    "kind": "enumerated",
-    "n_values": 64,
-    "description": "Collect the content policy when the resource is non-local and suspended by back pressure (0-44 from nsContentPolicyType in nsIContentPolicy.idl)."
-  },
-  "NETWORK_BACK_PRESSURE_SUSPENSION_DELAY_TIME_MS": {
-    "record_in_processes": ["main"],
-    "expires_in_version": "68",
-    "alert_emails": ["necko@mozilla.com", "junior@mozilla.com"],
-    "bug_numbers": [1498434],
-    "kind": "exponential",
-    "high": 60000,
-    "n_buckets": 100,
-    "description": "The delay caused by the e10s back pressure suspension(ms)"
-  },
-||||||| merged common ancestors
-=======
   "NETWORK_BACK_PRESSURE_SUSPENSION_CP_TYPE": {
     "record_in_processes": ["main"],
     "expires_in_version": "76",
@@ -2281,7 +2233,6 @@
     "n_buckets": 100,
     "description": "The delay caused by the e10s back pressure suspension(ms)"
   },
->>>>>>> upstream-releases
   "NETWORK_HTTP_REDIRECT_TO_SCHEME" :{
     "record_in_processes": ["main"],
     "alert_emails": ["necko@mozilla.com", "seceng-telemetry@mozilla.com", "jkt@mozilla.com"],
@@ -6375,32 +6326,6 @@
     "n_buckets": 20,
     "description": "Firefox: Time in ms spent on switching tabs in response to a tab click"
   },
-<<<<<<< HEAD
-  "FX_TAB_REMOTE_NAVIGATION_DELAY_MS": {
-    "record_in_processes": ["content"],
-    "alert_emails": ["mconley@mozilla.com"],
-    "bug_numbers": [1352961, 1501295],
-    "expires_in_version": "69",
-    "kind": "exponential",
-    "high": 4000,
-    "n_buckets": 100,
-    "keyed": true,
-    "description": "Time taken (in ms) from the point of the parent sending the naviagion triggering message to the content and the content receiving it. This message can be either SessionStore:restoreTabContent or WebNavigation:LoadURI and these names are used as keys for this histogram. This is e10s only and recorded in the content process."
-  },
-||||||| merged common ancestors
-  "FX_TAB_REMOTE_NAVIGATION_DELAY_MS": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": ["mconley@mozilla.com"],
-    "bug_numbers": [1352961],
-    "expires_in_version": "66",
-    "kind": "exponential",
-    "high": 4000,
-    "n_buckets": 100,
-    "keyed": true,
-    "description": "Time taken (in ms) from the point of the parent sending the naviagion triggering message to the content and the content receiving it. This message can be either SessionStore:restoreTabContent or WebNavigation:LoadURI and these names are used as keys for this histogram. This is e10s only and recorded in the content process."
-  },
-=======
->>>>>>> upstream-releases
   "FX_BOOKMARKS_TOOLBAR_INIT_MS": {
     "record_in_processes": ["main", "content"],
     "expires_in_version": "never",
@@ -6433,24 +6358,6 @@
     "kind": "exponential",
     "high": 10000,
     "n_buckets": 20,
-<<<<<<< HEAD
-    "description": "Firefox: Time taken to load a page (ms). This includes all static contents, no dynamic content. Loading of about: pages is not counted.",
-    "bug_numbers": [790213, 1504247],
-    "alert_emails": ["tdsmith@mozilla.com"]
-  },
-  "FX_PAGE_LOAD_MS_2": {
-    "record_in_processes": ["main", "content"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "high": 10000,
-    "n_buckets": 200,
-    "description": "Firefox: Time taken to load a page (ms). This includes all static contents, no dynamic content. Loading of about: pages is not counted.",
-    "bug_numbers": [1504247],
-    "alert_emails": ["tdsmith@mozilla.com", "perfteam@mozilla.com", "product-metrics-telemetry-alerts@mozilla.com"],
-    "releaseChannelCollection": "opt-out"
-||||||| merged common ancestors
-    "description": "Firefox: Time taken to load a page (ms). This includes all static contents, no dynamic content. Loading of about: pages is not counted."
-=======
     "description": "Firefox: Time taken to load a page (ms). This includes all static contents, no dynamic content. Loading of about: pages is not counted.",
     "bug_numbers": [790213, 1504247],
     "alert_emails": ["tdsmith@mozilla.com"]
@@ -6487,7 +6394,6 @@
     "bug_numbers": [1549519],
     "alert_emails": ["sefeng@mozilla.com", "perfteam@mozilla.com", "product-metrics-telemetry-alerts@mozilla.com"],
     "releaseChannelCollection": "opt-out"
->>>>>>> upstream-releases
   },
   "FX_SCHEDULE_PRESSURE_IDLE_SAMPLE_MS": {
     "record_in_processes": ["main"],
@@ -6719,50 +6625,6 @@
     "releaseChannelCollection": "opt-out",
     "description": "Whether the browser we migrated from was the browser with the most recent data. Keyed by that browser's identifier (e.g. 'ie', 'edge', 'safari', etc.)."
   },
-<<<<<<< HEAD
-  "FX_PREFERENCES_OPENED_VIA": {
-    "record_in_processes": ["main", "content"],
-    "bug_numbers": [1330315, 1420062, 1427973],
-    "alert_emails": ["jaws@mozilla.com"],
-    "expires_in_version": "63",
-    "kind": "categorical",
-    "labels": ["aboutHome", "aboutTelemetry", "browserMedia", "commandLine", "commandLineLegacy", "ContainersCommand", "contentSearch", "dataReporting", "doorhanger", "devDisconnectedAlert", "experimentsOpenPref", "fxa", "fxaSignedin", "fxaError", "offlineApps", "prefserviceDefaults", "preferencesButton", "paneSync", "storagePressure", "translationInfobar", "UITour", "menubar", "notifOpenSettings", "other", "autofillFooter", "autofillDoorhanger", "mozscreenshots", "searchChangeSettings"],
-    "releaseChannelCollection": "opt-out",
-    "description":"Count how the Preferences are opened."
-  },
-||||||| merged common ancestors
-  "FX_PREFERENCES_CATEGORY_OPENED": {
-    "record_in_processes": ["main", "content"],
-    "bug_numbers": [1324167],
-    "alert_emails": ["jaws@mozilla.com"],
-    "expires_in_version": "59",
-    "kind": "categorical",
-    "labels": ["unknown", "general", "search", "content", "applications", "privacy", "security", "sync", "advancedGeneral", "advancedDataChoices", "advancedNetwork", "advancedUpdates", "advancedCerts"],
-    "releaseChannelCollection": "opt-out",
-    "description": "Count how often each preference category is opened."
-  },
-  "FX_PREFERENCES_CATEGORY_OPENED_V2": {
-    "record_in_processes": ["main", "content"],
-    "bug_numbers": [1335907, 1425173, 1451006],
-    "alert_emails": ["jaws@mozilla.com"],
-    "expires_in_version": "66",
-    "kind": "categorical",
-    "labels": ["unknown", "searchresults", "general", "applications", "privacy", "sync", "advanced", "search", "home"],
-    "releaseChannelCollection": "opt-out",
-    "description": "Count how often each preference category is opened."
-  },
-  "FX_PREFERENCES_OPENED_VIA": {
-    "record_in_processes": ["main", "content"],
-    "bug_numbers": [1330315, 1420062, 1427973],
-    "alert_emails": ["jaws@mozilla.com"],
-    "expires_in_version": "63",
-    "kind": "categorical",
-    "labels": ["aboutHome", "aboutTelemetry", "browserMedia", "commandLine", "commandLineLegacy", "ContainersCommand", "contentSearch", "dataReporting", "doorhanger", "devDisconnectedAlert", "experimentsOpenPref", "fxa", "fxaSignedin", "fxaError", "offlineApps", "prefserviceDefaults", "preferencesButton", "paneSync", "storagePressure", "translationInfobar", "UITour", "menubar", "notifOpenSettings", "other", "autofillFooter", "autofillDoorhanger", "mozscreenshots", "searchChangeSettings"],
-    "releaseChannelCollection": "opt-out",
-    "description":"Count how the Preferences are opened."
-  },
-=======
->>>>>>> upstream-releases
   "FX_PAGE_ACTION_ADDED": {
     "record_in_processes": ["main"],
     "alert_emails": ["gijs@mozilla.com"],
@@ -7151,19 +7013,6 @@
   },
   "ENCODING_OVERRIDE_SITUATION": {
     "record_in_processes": ["main", "content"],
-<<<<<<< HEAD
-    "alert_emails": ["hsivonen@mozilla.com"],
-    "bug_numbers": [840476, 977573, 1513473],
-    "expires_in_version": "69",
-    "releaseChannelCollection": "opt-out",
-    "kind": "categorical",
-    "labels": ["Local", "RemoteTld", "RemoteNonTld", "LocalChardet", "RemoteChardet", "Labeled", "AlreadyOverridden", "Bug"],
-    "description": "Labeling status of top-level page when overriding encoding"
-||||||| merged common ancestors
-    "expires_in_version": "never",
-    "kind": "flag",
-    "description": "Whether the character encoding menu was used to override an encoding in this session."
-=======
     "alert_emails": ["hsivonen@mozilla.com"],
     "bug_numbers": [840476, 977573, 1513473, 1554592],
     "expires_in_version": "72",
@@ -7171,7 +7020,6 @@
     "kind": "categorical",
     "labels": ["Local", "RemoteTld", "RemoteNonTld", "LocalChardet", "RemoteChardet", "Labeled", "AlreadyOverridden", "Bug"],
     "description": "Labeling status of top-level page when overriding encoding"
->>>>>>> upstream-releases
   },
   "LONG_REFLOW_INTERRUPTIBLE": {
     "record_in_processes": ["main", "content"],
@@ -8139,79 +7987,9 @@
     "description": "a testing histogram; not meant to be touched",
     "operating_systems": ["mac"]
   },
-<<<<<<< HEAD
   "TELEMETRY_TEST_MAIN_ONLY": {
     "record_in_processes": ["main"],
     "alert_emails": ["telemetry-client-dev@mozilla.com"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "low": 1,
-    "high": 2147483646,
-    "n_buckets": 10,
-    "bug_numbers": [1498164],
-    "description": "a testing histogram; not meant to be touched",
-    "record_into_store": ["main"]
-  },
-  "TELEMETRY_TEST_SYNC_ONLY": {
-    "record_in_processes": ["main"],
-    "alert_emails": ["telemetry-client-dev@mozilla.com"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "low": 1,
-    "high": 2147483646,
-    "n_buckets": 10,
-    "bug_numbers": [1498164],
-    "description": "a testing histogram; not meant to be touched",
-    "record_into_store": ["sync"]
-  },
-  "TELEMETRY_TEST_MULTIPLE_STORES": {
-    "record_in_processes": ["main"],
-    "alert_emails": ["telemetry-client-dev@mozilla.com"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "low": 1,
-    "high": 2147483646,
-    "n_buckets": 10,
-    "bug_numbers": [1498164],
-    "description": "a testing histogram; not meant to be touched",
-    "record_into_store": ["main", "sync"]
-  },
-  "TELEMETRY_TEST_KEYED_SYNC_ONLY": {
-    "record_in_processes": ["main"],
-    "alert_emails": ["telemetry-client-dev@mozilla.com"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "keyed": true,
-    "low": 1,
-    "high": 2147483646,
-    "n_buckets": 10,
-    "bug_numbers": [1498164],
-    "description": "a testing histogram; not meant to be touched",
-    "record_into_store": ["sync"]
-  },
-  "TELEMETRY_TEST_KEYED_MULTIPLE_STORES": {
-    "record_in_processes": ["main"],
-    "alert_emails": ["telemetry-client-dev@mozilla.com"],
-    "expires_in_version": "never",
-    "kind": "linear",
-    "keyed": true,
-    "low": 1,
-    "high": 2147483646,
-    "n_buckets": 10,
-    "bug_numbers": [1498164],
-    "description": "a testing histogram; not meant to be touched",
-    "record_into_store": ["main", "sync"]
-  },
-  "STARTUP_CRASH_DETECTED": {
-    "record_in_processes": ["main", "content"],
-||||||| merged common ancestors
-  "STARTUP_CRASH_DETECTED": {
-    "record_in_processes": ["main", "content"],
-=======
-  "TELEMETRY_TEST_MAIN_ONLY": {
-    "record_in_processes": ["main"],
-    "alert_emails": ["telemetry-client-dev@mozilla.com"],
->>>>>>> upstream-releases
     "expires_in_version": "never",
     "kind": "linear",
     "low": 1,
@@ -9278,20 +9056,6 @@
     "expires_in_version": "74",
     "kind": "categorical",
     "labels": ["Unknown", "Aes128CmHmacSha1_80", "Aes128CmHmacSha1_32", "AeadAes128Gcm", "AeadAes256Gcm"],
-<<<<<<< HEAD
-    "description": "The SRTP cipher (as label) negotiated for a RTCPeerConnection."
-  },
-  "WEBRTC_DTLS_PROTOCOL_VERSION": {
-    "record_in_processes": ["content"],
-    "alert_emails": ["webrtc-dtls-telemetry-alerts@mozilla.com", "nohlmeier@mozilla.com"],
-    "bug_numbers": [1491511],
-    "expires_in_version": "68",
-    "kind": "categorical",
-    "labels": ["Unknown", "Dtls_version_1_0", "Dtls_version_1_2", "Dtls_version_1_3"],
-    "description": "The DTLS protocol version (as label) negotiated for a RTCPeerConnection."
-||||||| merged common ancestors
-    "description": "The SRTP cipher (as integer) negotiated for a RTCPeerConnection. See TransportLayerDtls::RecordCipherTelemetry for the meaning of the values"
-=======
     "description": "The SRTP cipher (as label) negotiated for a RTCPeerConnection."
   },
   "WEBRTC_DTLS_PROTOCOL_VERSION": {
@@ -9303,7 +9067,6 @@
     "kind": "categorical",
     "labels": ["Unknown", "Dtls_version_1_0", "Dtls_version_1_2", "Dtls_version_1_3"],
     "description": "The DTLS protocol version (as label) negotiated for a RTCPeerConnection."
->>>>>>> upstream-releases
   },
   "WEBRTC_ICE_FINAL_CONNECTION_STATE": {
     "record_in_processes": ["main", "content"],
@@ -10259,20 +10022,6 @@
     "releaseChannelCollection": "opt-out",
     "description": "How long has the application panel been active (seconds)."
   },
-<<<<<<< HEAD
-  "DEVTOOLS_FLEXBOX_HIGHLIGHTER_TIME_ACTIVE_SECONDS": {
-    "record_in_processes": ["main", "content"],
-    "expires_in_version": "never",
-    "kind": "exponential",
-    "high": 86400,
-    "n_buckets": 100,
-    "bug_numbers": [1509907],
-    "alert_emails": ["dev-developer-tools@lists.mozilla.org", "mbalfanz@mozilla.com"],
-    "releaseChannelCollection": "opt-out",
-    "description": "How long has the flexbox highlighter been active (seconds)."
-  },
-||||||| merged common ancestors
-=======
   "DEVTOOLS_FLEXBOX_HIGHLIGHTER_TIME_ACTIVE_SECONDS": {
     "record_in_processes": ["main", "content"],
     "expires_in_version": "never",
@@ -10295,7 +10044,6 @@
     "releaseChannelCollection": "opt-out",
     "description": "How long has the grid highlighter been active (seconds)."
   },
->>>>>>> upstream-releases
   "DEVTOOLS_TOOLBOX_TIME_ACTIVE_SECONDS": {
     "record_in_processes": ["main", "content"],
     "expires_in_version": "never",
@@ -10843,16 +10591,6 @@
     "releaseChannelCollection": "opt-out",
     "kind": "categorical",
     "labels": ["variable", "nonvariable"]
-  },
-  "DEVTOOLS_FLEXINSPECTOR_ELEMENT_TYPE_DISPLAYED": {
-    "record_in_processes": ["main"],
-    "alert_emails": ["dev-developer-tools@lists.mozilla.org", "mbalfanz@mozilla.com"],
-    "expires_in_version": "68",
-    "bug_numbers": [1503197],
-    "description": "Records the type of flex element displayed in the flex inspector (container, item, or both)",
-    "releaseChannelCollection": "opt-out",
-    "kind": "categorical",
-    "labels": ["container", "item", "both"]
   },
   "BROWSER_IS_USER_DEFAULT": {
     "record_in_processes": ["main"],
@@ -12091,13 +11829,6 @@
       "gmplugin-crash",
       "gmplugin-hang",
       "gpu-crash",
-<<<<<<< HEAD
-      "gpu-hang",
-      "rdd-crash",
-      "rdd-hang"
-||||||| merged common ancestors
-      "gpu-hang"
-=======
       "gpu-hang",
       "vr-crash",
       "vr-hang",
@@ -12105,7 +11836,6 @@
       "rdd-hang",
       "socket-crash",
       "socket-hang"
->>>>>>> upstream-releases
     ],
     "releaseChannelCollection": "opt-out",
     "description": "An attempt to submit a crash. Keyed on the CrashManager Crash.type."
@@ -13635,20 +13365,6 @@
     "n_buckets": 50,
     "description": "Time spent in the paint pipeline for content in milliseconds."
   },
-<<<<<<< HEAD
-  "CONTENT_FULL_PAINT_TIME": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "jmuizelaar@mozilla.com", "dbolter@mozilla.com"],
-    "bug_numbers": [1505858],
-    "expires_in_version": "never",
-    "releaseChannelCollection": "opt-out",
-    "kind": "exponential",
-    "high": 1000,
-    "n_buckets": 50,
-    "description": "Time spent in the paint pipeline until it's ready for composition in milliseconds."
-  },
-||||||| merged common ancestors
-=======
   "CONTENT_FULL_PAINT_TIME": {
     "record_in_processes": ["main", "content", "gpu"],
     "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "jmuizelaar@mozilla.com", "dbolter@mozilla.com"],
@@ -13660,7 +13376,6 @@
     "n_buckets": 50,
     "description": "Time spent in the paint pipeline until it's ready for composition in milliseconds."
   },
->>>>>>> upstream-releases
   "CONTENT_FRAME_TIME": {
     "record_in_processes": ["main", "gpu"],
     "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "rhunt@mozilla.com"],
@@ -13695,38 +13410,6 @@
     "n_buckets": 50,
     "description": "The time, in percentage of a vsync interval, spent from beginning a paint in the content process until that frame is presented in the compositor, for frames that contained an SVG to be drawn by WebRender"
   },
-<<<<<<< HEAD
-  "CONTENT_FRAME_TIME_WITHOUT_RESOURCE_UPLOAD": {
-    "record_in_processes": ["main", "gpu"],
-    "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "mwoodrow@mozilla.com"],
-    "bug_numbers": [1503405],
-    "expires_in_version": "70",
-    "kind": "exponential",
-    "high": 5000,
-    "n_buckets": 50,
-    "description": "The time, in percentage of a vsync interval, spent from beginning a paint in the content process until that frame is presented in the compositor by WebRender, excluding time spent uploading resources"
-  },
-  "CONTENT_FRAME_TIME_WITHOUT_UPLOAD": {
-    "record_in_processes": ["main", "gpu"],
-    "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "mwoodrow@mozilla.com"],
-    "bug_numbers": [1503405],
-    "expires_in_version": "70",
-    "kind": "exponential",
-    "high": 5000,
-    "n_buckets": 50,
-    "description": "The time, in percentage of a vsync interval, spent from beginning a paint in the content process until that frame is presented in the compositor by WebRender, excluding time spent uploading any content"
-  },
-  "CONTENT_FRAME_TIME_REASON": {
-    "record_in_processes": ["main", "gpu"],
-    "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "mwoodrow@mozilla.com"],
-    "bug_numbers": [1510853],
-    "expires_in_version": "73",
-    "kind": "categorical",
-    "description": "The reason that CONTENT_FRAME_TIME recorded a slow (>200) result, if any.",
-    "labels": ["OnTime", "NoVsync", "MissedComposite", "SlowComposite"]
-  },
-||||||| merged common ancestors
-=======
   "CONTENT_FRAME_TIME_WITHOUT_RESOURCE_UPLOAD": {
     "record_in_processes": ["main", "gpu"],
     "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "mwoodrow@mozilla.com"],
@@ -13756,7 +13439,6 @@
     "description": "The reason that CONTENT_FRAME_TIME recorded a slow (>200) result, if any.",
     "labels": ["OnTime", "NoVsync", "MissedComposite", "SlowComposite", "MissedCompositeMid", "MissedCompositeLong", "MissedCompositeLow", "NoVsyncNoId"]
   },
->>>>>>> upstream-releases
   "CONTENT_LARGE_PAINT_PHASE_WEIGHT": {
     "record_in_processes": ["main", "content"],
     "alert_emails": ["gfx-telemetry-alerts@mozilla.com", "mwoodrow@mozilla.com"],
@@ -14804,19 +14486,6 @@
     "n_buckets": 20,
     "description": "Total number of http:// and https:// doc groups per tab group, including docgroups fully in bfcache. Collected at the point when the top level document of the tab group is unloaded."
   },
-<<<<<<< HEAD
-  "QUIRKS_MODE": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": ["emilio@mozilla.com"],
-    "bug_numbers": [1505117],
-    "expires_in_version": "70",
-    "kind": "categorical",
-    "releaseChannelCollection": "opt-out",
-    "labels": ["FullStandards", "AlmostStandards", "NavQuirks"],
-    "description": "HTML document compat mode (quirks mode)"
-  },
-||||||| merged common ancestors
-=======
   "QUIRKS_MODE": {
     "record_in_processes": ["main", "content"],
     "alert_emails": ["emilio@mozilla.com"],
@@ -14856,7 +14525,6 @@
     "releaseChannelCollection": "opt-out",
     "description": "Whether bfcache is used when loading a page from session history"
   },
->>>>>>> upstream-releases
   "HIDDEN_VIEWPORT_OVERFLOW_TYPE": {
     "record_in_processes": ["main", "content"],
     "alert_emails": ["mozilla-telemetry@upsuper.org", "botond@mozilla.com"],
@@ -14992,71 +14660,6 @@
     "releaseChannelCollection": "opt-out",
     "alert_emails": ["ttung@mozilla.com"],
     "description": "Time (ms) for the QuotaManager to initialize repositories."
-<<<<<<< HEAD
-  },
-  "GV_PAGE_LOAD_PROGRESS_MS": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": [
-      "geckoview-team@mozilla.com",
-      "esawin@mozilla.com"
-    ],
-    "expires_in_version": "never",
-    "kind": "exponential",
-    "high": 100000,
-    "n_buckets": 100,
-    "bug_numbers": [1499418],
-    "description": "GeckoView: The time between page load progress start (0) and completion (100) in ms."
-  },
-  "GV_PAGE_LOAD_MS": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": [
-      "geckoview-team@mozilla.com",
-      "esawin@mozilla.com"
-    ],
-    "expires_in_version": "never",
-    "kind": "exponential",
-    "high": 100000,
-    "n_buckets": 100,
-    "bug_numbers": [1499418],
-    "description": "GeckoView: Time taken to load a page in ms. This includes all static contents, no dynamic content. Loading of about: pages is not counted."
-  },
-  "GV_STARTUP_RUNTIME_MS": {
-    "record_in_processes": ["main", "content"],
-    "alert_emails": [
-      "geckoview-team@mozilla.com",
-      "esawin@mozilla.com"
-    ],
-    "expires_in_version": "never",
-    "kind": "exponential",
-    "high": 10000,
-    "n_buckets": 50,
-    "bug_numbers": [1499418],
-    "description": "GeckoView: Time taken to initialize GeckoRuntime in ms."
-  },
-  "GV_STARTUP_MODULES_MS": {
-    "record_in_processes": ["main"],
-    "alert_emails": [
-      "geckoview-team@mozilla.com",
-      "esawin@mozilla.com"
-    ],
-    "expires_in_version": "never",
-    "kind": "exponential",
-    "high": 5000,
-    "n_buckets": 50,
-    "bug_numbers": [1499418],
-    "description": "GeckoView: Time taken to initialize all GeckoView modules in ms."
-  },
-  "CLIQZ_ADDON_VERSION": {
-    "record_in_processes": ["main"],
-    "expires_in_version": "never",
-    "releaseChannelCollection": "opt-out",
-    "kind": "categorical",
-    "labels": ["missing", "v8_2_16", "v8_2_17", "v8_2_18", "v8_2_19", "v8_2_20", "v8_2_21", "v8_2_22", "v8_2_23", "v8_2_24", "v8_2_25", "v8_2_26", "v8_2_27", "v8_2_28", "v8_2_29", "v8_2_30"],
-    "description": "Cliqz addon version",
-    "alert_emails": [],
-    "bug_numbers": []
-||||||| merged common ancestors
-=======
   },
   "GV_PAGE_LOAD_PROGRESS_MS": {
     "record_in_processes": ["main", "content"],
@@ -15282,6 +14885,5 @@
     "n_buckets": 100,
     "keyed": true,
     "description": "How many milliseconds it took before 100 wakeups for the thread was done because of new Runnables."
->>>>>>> upstream-releases
   }
 }

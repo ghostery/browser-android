@@ -120,16 +120,8 @@ namespace layers {
  * alternative of making mIndex a int32_t that can store -1, but then having
  * to cast to uint32_t all over the place.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS LayerMetricsWrapper {
- public:
-||||||| merged common ancestors
-class MOZ_STACK_CLASS LayerMetricsWrapper {
-public:
-=======
 class MOZ_STACK_CLASS LayerMetricsWrapper final {
  public:
->>>>>>> upstream-releases
   enum StartAt {
     TOP,
     BOTTOM,
@@ -290,12 +282,6 @@ class MOZ_STACK_CLASS LayerMetricsWrapper final {
     return false;
   }
 
-<<<<<<< HEAD
-  EventRegions GetEventRegions() const {
-||||||| merged common ancestors
-  EventRegions GetEventRegions() const
-  {
-=======
   bool Combines3DTransformWithAncestors() const {
     MOZ_ASSERT(IsValid());
 
@@ -303,7 +289,6 @@ class MOZ_STACK_CLASS LayerMetricsWrapper final {
   }
 
   EventRegions GetEventRegions() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsValid());
 
     if (AtBottomLayer()) {
@@ -352,16 +337,9 @@ class MOZ_STACK_CLASS LayerMetricsWrapper final {
     return Nothing();
   }
 
-<<<<<<< HEAD
-  Maybe<ParentLayerIntRect> GetClipRect() const {
-||||||| merged common ancestors
-  Maybe<ParentLayerIntRect> GetClipRect() const
-  {
-=======
   Maybe<wr::RenderRoot> GetReferentRenderRoot() const { return Nothing(); }
 
   Maybe<ParentLayerIntRect> GetClipRect() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsValid());
 
     Maybe<ParentLayerIntRect> result;
@@ -407,14 +385,7 @@ class MOZ_STACK_CLASS LayerMetricsWrapper final {
     return mLayer->GetScrollbarData();
   }
 
-<<<<<<< HEAD
-  uint64_t GetScrollbarAnimationId() const {
-||||||| merged common ancestors
-  uint64_t GetScrollbarAnimationId() const
-  {
-=======
   Maybe<uint64_t> GetScrollbarAnimationId() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsValid());
     // This function is only really needed for template-compatibility with
     // WebRenderScrollDataWrapper. Although it will be called, the return

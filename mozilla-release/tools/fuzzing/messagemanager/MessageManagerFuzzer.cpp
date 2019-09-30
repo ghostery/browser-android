@@ -27,16 +27,11 @@
 #include "nsLocalFile.h"
 #include "nsTArray.h"
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 #ifdef IsLoggingEnabled
 // This is defined in the Windows SDK urlmon.h
 #  undef IsLoggingEnabled
 #endif
 
->>>>>>> upstream-releases
 #define MESSAGEMANAGER_FUZZER_DEFAULT_MUTATION_PROBABILITY 2
 #define MSGMGR_FUZZER_LOG(fmt, args...)                        \
   if (MessageManagerFuzzer::IsLoggingEnabled()) {              \

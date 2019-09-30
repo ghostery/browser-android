@@ -12,81 +12,6 @@
 #include <SystemConfiguration/SCNetworkReachability.h>
 #include <SystemConfiguration/SystemConfiguration.h>
 
-<<<<<<< HEAD
-class nsNetworkLinkService : public nsINetworkLinkService, public nsIObserver {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSINETWORKLINKSERVICE
-  NS_DECL_NSIOBSERVER
-
-  nsNetworkLinkService();
-
-  nsresult Init();
-  nsresult Shutdown();
-
- protected:
-  virtual ~nsNetworkLinkService();
-
- private:
-  bool mLinkUp;
-  bool mStatusKnown;
-
-  // Toggles allowing the sending of network-changed event.
-  bool mAllowChangedEvent;
-
-  SCNetworkReachabilityRef mReachability;
-  CFRunLoopRef mCFRunLoop;
-  CFRunLoopSourceRef mRunLoopSource;
-  SCDynamicStoreRef mStoreRef;
-
-  void UpdateReachability();
-  void SendEvent(bool aNetworkChanged);
-  static void ReachabilityChanged(SCNetworkReachabilityRef target,
-                                  SCNetworkConnectionFlags flags, void *info);
-  static void IPConfigChanged(SCDynamicStoreRef store, CFArrayRef changedKeys,
-                              void *info);
-  void calculateNetworkId(void);
-  nsCString mNetworkId;
-||||||| merged common ancestors
-class nsNetworkLinkService : public nsINetworkLinkService,
-                             public nsIObserver
-{
-public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSINETWORKLINKSERVICE
-    NS_DECL_NSIOBSERVER
-
-    nsNetworkLinkService();
-
-    nsresult Init();
-    nsresult Shutdown();
-
-protected:
-    virtual ~nsNetworkLinkService();
-
-private:
-    bool mLinkUp;
-    bool mStatusKnown;
-
-    // Toggles allowing the sending of network-changed event.
-    bool mAllowChangedEvent;
-
-    SCNetworkReachabilityRef mReachability;
-    CFRunLoopRef mCFRunLoop;
-    CFRunLoopSourceRef mRunLoopSource;
-    SCDynamicStoreRef mStoreRef;
-
-    void UpdateReachability();
-    void SendEvent(bool aNetworkChanged);
-    static void ReachabilityChanged(SCNetworkReachabilityRef target,
-                                    SCNetworkConnectionFlags flags,
-                                    void *info);
-    static void IPConfigChanged(SCDynamicStoreRef store,
-                                CFArrayRef changedKeys,
-                                void *info);
-    void calculateNetworkId(void);
-    nsCString mNetworkId;
-=======
 class nsNetworkLinkService : public nsINetworkLinkService, public nsIObserver {
  public:
   NS_DECL_ISUPPORTS
@@ -123,7 +48,6 @@ class nsNetworkLinkService : public nsINetworkLinkService, public nsIObserver {
 
   mozilla::Mutex mMutex;
   nsCString mNetworkId;
->>>>>>> upstream-releases
 };
 
 #endif /* NSNETWORKLINKSERVICEMAC_H_ */

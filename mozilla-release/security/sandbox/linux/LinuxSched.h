@@ -14,52 +14,22 @@
 // speaking; CLONE_NEWUTS is present since kernel 2.6.19 in 2006).
 
 #ifndef CLONE_NEWUTS
-<<<<<<< HEAD
-#define CLONE_NEWUTS 0x04000000
-||||||| merged common ancestors
-#define CLONE_NEWUTS  0x04000000
-=======
 #  define CLONE_NEWUTS 0x04000000
->>>>>>> upstream-releases
 #endif
 #ifndef CLONE_NEWIPC
-<<<<<<< HEAD
-#define CLONE_NEWIPC 0x08000000
-||||||| merged common ancestors
-#define CLONE_NEWIPC  0x08000000
-=======
 #  define CLONE_NEWIPC 0x08000000
->>>>>>> upstream-releases
 #endif
 #ifndef CLONE_NEWUSER
 #  define CLONE_NEWUSER 0x10000000
 #endif
 #ifndef CLONE_NEWPID
-<<<<<<< HEAD
-#define CLONE_NEWPID 0x20000000
-||||||| merged common ancestors
-#define CLONE_NEWPID  0x20000000
-=======
 #  define CLONE_NEWPID 0x20000000
->>>>>>> upstream-releases
 #endif
 #ifndef CLONE_NEWNET
-<<<<<<< HEAD
-#define CLONE_NEWNET 0x40000000
-||||||| merged common ancestors
-#define CLONE_NEWNET  0x40000000
-=======
 #  define CLONE_NEWNET 0x40000000
->>>>>>> upstream-releases
 #endif
 #ifndef CLONE_IO
-<<<<<<< HEAD
-#define CLONE_IO 0x80000000
-||||||| merged common ancestors
-#define CLONE_IO      0x80000000
-=======
 #  define CLONE_IO 0x80000000
->>>>>>> upstream-releases
 #endif
 
 #endif

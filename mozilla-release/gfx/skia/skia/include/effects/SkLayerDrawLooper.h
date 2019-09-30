@@ -76,18 +76,6 @@ public:
 
     bool asABlurShadow(BlurShadowRec* rec) const override;
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer& buffer);
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-
-    Factory getFactory() const override { return CreateProc; }
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer& buffer);
-
-=======
->>>>>>> upstream-releases
 protected:
     sk_sp<SkDrawLooper> onMakeColorSpace(SkColorSpaceXformer*) const override;
 

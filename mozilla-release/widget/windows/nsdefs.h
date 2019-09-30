@@ -9,37 +9,12 @@
 #include <windows.h>
 
 #ifdef _DEBUG
-<<<<<<< HEAD
-#define BREAK_TO_DEBUGGER DebugBreak()
-#else
-#define BREAK_TO_DEBUGGER
-#endif
-||||||| merged common ancestors
-  #define BREAK_TO_DEBUGGER           DebugBreak()
-#else   
-  #define BREAK_TO_DEBUGGER
-#endif  
-=======
 #  define BREAK_TO_DEBUGGER DebugBreak()
 #else
 #  define BREAK_TO_DEBUGGER
 #endif
->>>>>>> upstream-releases
 
 #ifdef _DEBUG
-<<<<<<< HEAD
-#define VERIFY(exp)    \
-  if (!(exp)) {        \
-    GetLastError();    \
-    BREAK_TO_DEBUGGER; \
-  }
-#else  // !_DEBUG
-#define VERIFY(exp) (exp)
-||||||| merged common ancestors
-  #define VERIFY(exp)                 if (!(exp)) { GetLastError(); BREAK_TO_DEBUGGER; }
-#else   // !_DEBUG
-  #define VERIFY(exp)                 (exp)
-=======
 #  define VERIFY(exp)    \
     if (!(exp)) {        \
       GetLastError();    \
@@ -47,7 +22,6 @@
     }
 #else  // !_DEBUG
 #  define VERIFY(exp) (exp)
->>>>>>> upstream-releases
 #endif  // !_DEBUG
 
 // Win32 logging modules:

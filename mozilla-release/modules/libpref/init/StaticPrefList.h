@@ -192,36 +192,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, false
 )
 
-<<<<<<< HEAD
-// Whehter Mozilla specific "text" event should be dispatched only in the
-// system group or not in content.
-VARCACHE_PREF(
-  "dom.compositionevent.text.dispatch_only_system_group_in_content",
-   dom_compositionevent_text_dispatch_only_system_group_in_content,
-   bool, true
-)
-
-// How long a content process can take before closing its IPC channel
-// after shutdown is initiated.  If the process exceeds the timeout,
-// we fear the worst and kill it.
-#if !defined(DEBUG) && !defined(MOZ_ASAN) && !defined(MOZ_VALGRIND) && \
-    !defined(MOZ_TSAN)
-# define PREF_VALUE 5
-#else
-# define PREF_VALUE 0
-#endif
-||||||| merged common ancestors
-// How long a content process can take before closing its IPC channel
-// after shutdown is initiated.  If the process exceeds the timeout,
-// we fear the worst and kill it.
-#if !defined(DEBUG) && !defined(MOZ_ASAN) && !defined(MOZ_VALGRIND) && \
-    !defined(MOZ_TSAN)
-# define PREF_VALUE 5
-#else
-# define PREF_VALUE 0
-#endif
-=======
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "apz.axis_lock.breakout_angle",
@@ -292,18 +262,6 @@ VARCACHE_PREF(
   RelaxedAtomicUint32, 15000
 )
 
-<<<<<<< HEAD
-// SW Cache API
-||||||| merged common ancestors
-// Disable the ImageBitmap-extensions for now.
-VARCACHE_PREF(
-  "canvas.imagebitmap_extensions.enabled",
-   canvas_imagebitmap_extensions_enabled,
-  RelaxedAtomicBool, false
-)
-
-// SW Cache API
-=======
 VARCACHE_PREF(
   Live,
   "apz.drag.enabled",
@@ -311,7 +269,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, false
 )
 
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "apz.drag.initial.enabled",
@@ -488,46 +445,6 @@ VARCACHE_PREF(
   RelaxedAtomicInt32, 300
 )
 
-<<<<<<< HEAD
-// Block multiple window.open() per single event.
-VARCACHE_PREF(
-  "dom.block_multiple_popups",
-   dom_block_multiple_popups,
-  bool, true
-)
-
-// For area and anchor elements with target=_blank and no rel set to
-// opener/noopener, this pref sets noopener by default.
-#ifdef EARLY_BETA_OR_EARLIER
-#define PREF_VALUE true
-#else
-#define PREF_VALUE false
-#endif
-VARCACHE_PREF(
-  "dom.targetBlankNoOpener.enabled",
-   dom_targetBlankNoOpener_enabled,
-  bool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-// Storage-access API.
-VARCACHE_PREF(
-  "dom.storage_access.enabled",
-   dom_storage_access_enabled,
-  bool, false
-)
-
-//---------------------------------------------------------------------------
-// Clear-Site-Data prefs
-//---------------------------------------------------------------------------
-
-||||||| merged common ancestors
-//---------------------------------------------------------------------------
-// Clear-Site-Data prefs
-//---------------------------------------------------------------------------
-
-=======
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "apz.max_velocity_inches_per_ms",
@@ -563,32 +480,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, true
 )
 
-<<<<<<< HEAD
-#ifdef RELEASE_OR_BETA
-# define PREF_VALUE false
-#else
-# define PREF_VALUE true
-#endif
-VARCACHE_PREF(
-  "gfx.omta.background-color",
-   gfx_omta_background_color,
-  bool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-//---------------------------------------------------------------------------
-// HTML5 parser prefs
-//---------------------------------------------------------------------------
-
-// Toggle which thread the HTML5 parser uses for stream parsing.
-||||||| merged common ancestors
-//---------------------------------------------------------------------------
-// HTML5 parser prefs
-//---------------------------------------------------------------------------
-
-// Toggle which thread the HTML5 parser uses for stream parsing.
-=======
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "apz.overscroll.enabled",
@@ -750,12 +641,6 @@ VARCACHE_PREF(
   AtomicFloat, 1.5f
 )
 
-<<<<<<< HEAD
-// Are -moz-prefixed gradient functions enabled?
-||||||| merged common ancestors
-// Is -moz-prefixed gradient functions enabled?
-=======
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "apz.x_stationary_size_multiplier",
@@ -777,24 +662,6 @@ VARCACHE_PREF(
   AtomicFloat, 2.5f
 )
 
-<<<<<<< HEAD
-// Should the :visited selector ever match (otherwise :link matches instead)?
-||||||| merged common ancestors
-// Is support for the frames() timing function enabled?
-#ifdef RELEASE_OR_BETA
-# define PREF_VALUE false
-#else
-# define PREF_VALUE true
-#endif
-VARCACHE_PREF(
-  "layout.css.frames-timing.enabled",
-   layout_css_frames_timing_enabled,
-  bool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-// Should the :visited selector ever match (otherwise :link matches instead)?
-=======
 VARCACHE_PREF(
   Live,
   "apz.y_stationary_size_multiplier",
@@ -802,7 +669,6 @@ VARCACHE_PREF(
   AtomicFloat, 3.5f
 )
 
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "apz.zoom_animation_duration_ms",
@@ -923,18 +789,6 @@ VARCACHE_PREF(
   uint32_t, 1
 )
 
-<<<<<<< HEAD
-// Does arbitrary ::-webkit-* pseudo-element parsed?
-||||||| merged common ancestors
-// Does overflow-break: break-word affect intrinsic size?
-VARCACHE_PREF(
-  "layout.css.overflow-break.intrinsic-size",
-   layout_css_overflow_break_intrinsic_size,
-  bool, false
-)
-
-// Does arbitrary ::-webkit-* pseudo-element parsed?
-=======
 PREF("browser.display.focus_background_color", String, "")
 
 // 0=solid, 1=dotted
@@ -948,7 +802,6 @@ VARCACHE_PREF(
 PREF("browser.display.focus_text_color", String, "")
 PREF("browser.display.foreground_color", String, "")
 
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "browser.display.show_focus_rings",
@@ -978,29 +831,12 @@ VARCACHE_PREF(
   bool, false
 )
 
-<<<<<<< HEAD
-// Is steps(jump-*) supported in easing functions?
-VARCACHE_PREF(
-  "layout.css.step-position-jump.enabled",
-   layout_css_step_position_jump_enabled,
-  bool, true
-)
-
-//---------------------------------------------------------------------------
-// JavaScript prefs
-//---------------------------------------------------------------------------
-||||||| merged common ancestors
-//---------------------------------------------------------------------------
-// JavaScript prefs
-//---------------------------------------------------------------------------
-=======
 VARCACHE_PREF(
   Live,
   "browser.display.use_system_colors",
   browser_display_use_system_colors,
   bool, true
 )
->>>>>>> upstream-releases
 
 // IMPORTANT: Keep this in condition in sync with all.js. The value
 // of MOZILLA_OFFICIAL is different between full and artifact builds, so without
@@ -1058,18 +894,6 @@ VARCACHE_PREF(
   bool, true
 )
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
-// BigInt API
-VARCACHE_PREF(
-  "javascript.options.bigint",
-   javascript_options_bigint,
-  RelaxedAtomicBool, false
-)
-#endif
-
-||||||| merged common ancestors
-=======
 // Maximum size for an array to store the safebrowsing prefixset.
 VARCACHE_PREF(
   Live,
@@ -1077,7 +901,6 @@ VARCACHE_PREF(
   browser_safebrowsing_prefixset_max_array_size,
   RelaxedAtomicUint32, 512*1024
 )
->>>>>>> upstream-releases
 
 // ContentSessionStore prefs
 // Maximum number of bytes of DOMSessionStorage data we collect per origin.
@@ -6901,34 +6724,6 @@ VARCACHE_PREF(
   int32_t, 60
 )
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-# define PREF_VALUE true
-#else
-# define PREF_VALUE false
-#endif
-VARCACHE_PREF(
-  "media.rdd-process.enabled",
-   MediaRddProcessEnabled,
-  RelaxedAtomicBool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-VARCACHE_PREF(
-  "media.rdd-process.startup_timeout_ms",
-   MediaRddProcessStartupTimeoutMs,
-  RelaxedAtomicInt32, 5000
-)
-
-#ifdef ANDROID
-
-// Enable the MediaCodec PlatformDecoderModule by default.
-||||||| merged common ancestors
-#ifdef ANDROID
-
-// Enable the MediaCodec PlatformDecoderModule by default.
-=======
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "network.predictor.prefetch-force-valid-for",
@@ -6954,67 +6749,13 @@ VARCACHE_PREF(
 
 PREF("network.predictor.cleaned-up", bool, false)
 
-<<<<<<< HEAD
-// Use MediaDataDecoder API for VP8/VP9 in WebRTC. This includes hardware
-// acceleration for decoding.
-// disable on android bug 1509316
-#if defined(NIGHTLY_BUILD) && !defined(ANDROID)
-# define PREF_VALUE true
-#else
-# define PREF_VALUE false
-#endif
-VARCACHE_PREF(
-  "media.navigator.mediadatadecoder_vpx_enabled",
-   MediaNavigatorMediadatadecoderVPXEnabled,
-  RelaxedAtomicBool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-// Use MediaDataDecoder API for H264 in WebRTC. This includes hardware
-// acceleration for decoding.
-# if defined(ANDROID)
-#  define PREF_VALUE false // Bug 1509316
-# else
-#  define PREF_VALUE true
-# endif
-
-||||||| merged common ancestors
-// Use MediaDataDecoder API for WebRTC. This includes hardware acceleration for
-// decoding.
-VARCACHE_PREF(
-  "media.navigator.mediadatadecoder_enabled",
-   MediaNavigatorMediadatadecoderEnabled,
-  bool, false
-)
-// Use MediaDataDecoder API for WebRTC. This includes hardware acceleration for
-// decoding.
-=======
 // A testing flag.
->>>>>>> upstream-releases
 VARCACHE_PREF(
-<<<<<<< HEAD
-  "media.navigator.mediadatadecoder_h264_enabled",
-   MediaNavigatorMediadatadecoderH264Enabled,
-  RelaxedAtomicBool, PREF_VALUE
-||||||| merged common ancestors
-  "media.navigator.mediadatadecoder_h264_enabled",
-   MediaNavigatorMediadatadecoderH264Enabled,
-  bool, false
-=======
   Live,
   "network.predictor.doing-tests",
   network_predictor_doing_tests,
   bool, false
->>>>>>> upstream-releases
 )
-<<<<<<< HEAD
-#undef PREF_VALUE
-
-#endif // MOZ_WEBRTC
-||||||| merged common ancestors
-#endif // MOZ_WEBRTC
-=======
->>>>>>> upstream-releases
 
 // Telemetry of traffic categories
 VARCACHE_PREF(
@@ -7323,38 +7064,11 @@ VARCACHE_PREF(
   int32_t, 1000
 )
 
-<<<<<<< HEAD
-// AV1
-#if defined(XP_WIN)
-# define PREF_VALUE true
-#else
-# define PREF_VALUE false
-#endif
-||||||| merged common ancestors
-// AV1
-=======
->>>>>>> upstream-releases
 VARCACHE_PREF(
-<<<<<<< HEAD
-  "media.av1.enabled",
-   MediaAv1Enabled,
-  RelaxedAtomicBool, PREF_VALUE
-)
-#undef PREF_VALUE
-VARCACHE_PREF(
-  "media.av1.use-dav1d",
-   MediaAv1UseDav1d,
-  RelaxedAtomicBool, false
-||||||| merged common ancestors
-  "media.av1.enabled",
-   MediaAv1Enabled,
-  RelaxedAtomicBool, false
-=======
   Live,
   "privacy.window.maxInnerHeight",
   privacy_window_maxInnerHeight,
   int32_t, 1000
->>>>>>> upstream-releases
 )
 
 //---------------------------------------------------------------------------
@@ -7502,12 +7216,6 @@ VARCACHE_PREF(
   "toolkit.scrollbox.verticalScrollDistance",
    toolkit_scrollbox_verticalScrollDistance,
   RelaxedAtomicInt32, 3
-)
-
-VARCACHE_PREF(
-  "media.test.video-suspend",
-   MediaTestVideoSuspend,
-  RelaxedAtomicBool, false
 )
 
 //---------------------------------------------------------------------------
@@ -7700,45 +7408,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, false
 )
 
-<<<<<<< HEAD
-//---------------------------------------------------------------------------
-// Preferences prefs
-//---------------------------------------------------------------------------
-
-PREF("preferences.allow.omt-write", bool, true)
-
-//---------------------------------------------------------------------------
-// Privacy prefs
-//---------------------------------------------------------------------------
-
-// Whether Content Blocking Third-Party Cookies UI has been enabled.
-||||||| merged common ancestors
-//---------------------------------------------------------------------------
-// Preferences prefs
-//---------------------------------------------------------------------------
-
-PREF("preferences.allow.omt-write", bool, true)
-
-//---------------------------------------------------------------------------
-// Privacy prefs
-//---------------------------------------------------------------------------
-
-// Whether Content Blocking has been enabled.
-VARCACHE_PREF(
-  "browser.contentblocking.enabled",
-   browser_contentblocking_enabled,
-  bool, true
-)
-
-// Whether Content Blocking UI has been enabled.
-VARCACHE_PREF(
-  "browser.contentblocking.ui.enabled",
-   browser_contentblocking_ui_enabled,
-  bool, true
-)
-
-// Whether Content Blocking Third-Party Cookies UI has been enabled.
-=======
 VARCACHE_PREF(
   Live,
   "webgl.enable-webgl2",
@@ -7753,7 +7422,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, false
 )
 
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "webgl.force-layers-readback",
@@ -7775,18 +7443,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, false
 )
 
-<<<<<<< HEAD
-// Anti-tracking permission expiration
-||||||| merged common ancestors
-// Whether FastBlock has been enabled.
-VARCACHE_PREF(
-  "browser.fastblock.enabled",
-  browser_fastblock_enabled,
-  bool, false
-)
-
-// Anti-tracking permission expiration
-=======
 VARCACHE_PREF(
   Live,
   "webgl.max-contexts",
@@ -7794,7 +7450,6 @@ VARCACHE_PREF(
   RelaxedAtomicUint32, 32
 )
 
->>>>>>> upstream-releases
 VARCACHE_PREF(
   Live,
   "webgl.max-contexts-per-principal",
@@ -7879,24 +7534,6 @@ VARCACHE_PREF(
   RelaxedAtomicBool, false
 )
 
-#ifdef MOZILLA_OFFICIAL
-# define PREF_VALUE false
-#else
-# define PREF_VALUE true
-#endif
-VARCACHE_PREF(
-  "devtools.console.stdout.chrome",
-   devtools_console_stdout_chrome,
-  RelaxedAtomicBool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-VARCACHE_PREF(
-  "devtools.console.stdout.content",
-   devtools_console_stdout_content,
-  RelaxedAtomicBool, false
-)
-
 //---------------------------------------------------------------------------
 // Prefs starting with "xul."
 //---------------------------------------------------------------------------
@@ -7909,103 +7546,15 @@ VARCACHE_PREF(
 #else
 #define PREF_VALUE true
 #endif
-// This pref enables FeaturePolicy logic and the parsing of 'allow' attribute in
-// HTMLIFrameElement objects.
 VARCACHE_PREF(
   Live,
   "xul.panel-animations.enabled",
   xul_panel_animations_enabled,
   bool, PREF_VALUE
 )
-
-// This pref enables the featurePolicy header support.
-VARCACHE_PREF(
-  "dom.security.featurePolicy.header.enabled",
-   dom_security_featurePolicy_header_enabled,
-  bool, PREF_VALUE
-)
-
-// Expose the 'policy' attribute in document and HTMLIFrameElement
-VARCACHE_PREF(
-  "dom.security.featurePolicy.webidl.enabled",
-   dom_security_featurePolicy_webidl_enabled,
-  bool, PREF_VALUE
-)
 #undef PREF_VALUE
 
-//---------------------------------------------------------------------------
-// Reporting API
-//---------------------------------------------------------------------------
 
-#ifdef NIGHTLY_BUILD
-# define PREF_VALUE true
-#else
-# define PREF_VALUE false
-#endif
-VARCACHE_PREF(
-  "dom.reporting.enabled",
-   dom_reporting_enabled,
-  RelaxedAtomicBool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-VARCACHE_PREF(
-  "dom.reporting.testing.enabled",
-   dom_reporting_testing_enabled,
-  RelaxedAtomicBool, false
-)
-
-#ifdef NIGHTLY_BUILD
-# define PREF_VALUE true
-#else
-# define PREF_VALUE false
-#endif
-VARCACHE_PREF(
-  "dom.reporting.featurePolicy.enabled",
-   dom_reporting_featurePolicy_enabled,
-  RelaxedAtomicBool, PREF_VALUE
-)
-#undef PREF_VALUE
-
-<<<<<<< HEAD
-VARCACHE_PREF(
-  "dom.reporting.header.enabled",
-   dom_reporting_header_enabled,
-  RelaxedAtomicBool, false
-)
-
-// In seconds. The timeout to remove not-active report-to endpoints.
-VARCACHE_PREF(
-  "dom.reporting.cleanup.timeout",
-   dom_reporting_cleanup_timeout,
-  uint32_t, 3600
-)
-
-// Any X seconds the reports are dispatched to endpoints.
-VARCACHE_PREF(
-  "dom.reporting.delivering.timeout",
-   dom_reporting_delivering_timeout,
-  uint32_t, 5
-)
-
-// How many times the delivering of a report should be tried.
-VARCACHE_PREF(
-  "dom.reporting.delivering.maxFailures",
-   dom_reporting_delivering_maxFailures,
-  uint32_t, 3
-)
-
-// How many reports should be stored in the report queue before being delivered.
-VARCACHE_PREF(
-  "dom.reporting.delivering.maxReports",
-   dom_reporting_delivering_maxReports,
-  uint32_t, 100
-)
-
-||||||| merged common ancestors
-=======
-
->>>>>>> upstream-releases
 //---------------------------------------------------------------------------
 // End of prefs
 //---------------------------------------------------------------------------

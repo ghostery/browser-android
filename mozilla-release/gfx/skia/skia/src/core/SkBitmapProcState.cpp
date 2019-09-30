@@ -9,21 +9,6 @@
 #include "SkBitmapController.h"
 #include "SkBitmapProcState.h"
 #include "SkColorData.h"
-<<<<<<< HEAD
-#include "SkMacros.h"
-#include "SkPaint.h"
-#include "SkShader.h"   // for tilemodes
-#include "SkUtilsArm.h"
-#include "SkMipMap.h"
-#include "SkPixelRef.h"
-||||||| merged common ancestors
-#include "SkPaint.h"
-#include "SkShader.h"   // for tilemodes
-#include "SkUtilsArm.h"
-#include "SkMipMap.h"
-#include "SkPixelRef.h"
-=======
->>>>>>> upstream-releases
 #include "SkImageEncoder.h"
 #include "SkMacros.h"
 #include "SkMipMap.h"

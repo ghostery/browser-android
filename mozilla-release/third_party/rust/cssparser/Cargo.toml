@@ -12,13 +12,7 @@
 
 [package]
 name = "cssparser"
-<<<<<<< HEAD
-version = "0.25.0"
-||||||| merged common ancestors
-version = "0.24.1"
-=======
 version = "0.25.5"
->>>>>>> upstream-releases
 authors = ["Simon Sapin <simon.sapin@exyr.org>"]
 build = "build.rs"
 exclude = ["src/css-parsing-tests/**", "src/big-data-url.css"]

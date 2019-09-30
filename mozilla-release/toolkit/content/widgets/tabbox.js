@@ -143,56 +143,10 @@
             this.tabs.advanceSelectedTab(event.shiftKey ? -1 : 1, true);
             event.preventDefault();
           }
-<<<<<<< HEAD
-        break;
-      case event.DOM_VK_PAGE_UP:
-        if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey &&
-            this.tabs) {
-          this.tabs.advanceSelectedTab(-1, true);
-          event.preventDefault();
-        }
-        break;
-      case event.DOM_VK_PAGE_DOWN:
-        if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey &&
-            this.tabs) {
-          this.tabs.advanceSelectedTab(1, true);
-          event.preventDefault();
-        }
-        break;
-      case event.DOM_VK_LEFT:
-        if (event.metaKey && event.altKey && !event.shiftKey && !event.ctrlKey)
-          if (this.tabs && this._handleMetaAltArrows) {
-            let offset = window.getComputedStyle(this)
-              .direction == "ltr" ? -1 : 1;
-            this.tabs.advanceSelectedTab(offset, true);
-||||||| merged common ancestors
-        break;
-      case event.DOM_VK_PAGE_UP:
-        if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey &&
-          this.tabs) {
-          this.tabs.advanceSelectedTab(-1, true);
-          event.preventDefault();
-        }
-        break;
-      case event.DOM_VK_PAGE_DOWN:
-        if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey &&
-          this.tabs) {
-          this.tabs.advanceSelectedTab(1, true);
-          event.preventDefault();
-        }
-        break;
-      case event.DOM_VK_LEFT:
-        if (event.metaKey && event.altKey && !event.shiftKey && !event.ctrlKey)
-          if (this.tabs && this._handleMetaAltArrows) {
-            let offset = window.getComputedStyle(this)
-              .direction == "ltr" ? -1 : 1;
-            this.tabs.advanceSelectedTab(offset, true);
-=======
           break;
         case ShortcutUtils.PREVIOUS_TAB:
           if (this.tabs) {
             this.tabs.advanceSelectedTab(-1, true);
->>>>>>> upstream-releases
             event.preventDefault();
           }
           break;

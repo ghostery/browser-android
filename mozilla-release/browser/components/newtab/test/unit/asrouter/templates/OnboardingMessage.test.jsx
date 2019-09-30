@@ -1,35 +1,9 @@
-<<<<<<< HEAD
-import {GlobalOverrider} from "test/unit/utils";
-import {OnboardingMessageProvider} from "lib/OnboardingMessageProvider.jsm";
-||||||| merged common ancestors
-import {OnboardingMessageProvider} from "lib/OnboardingMessageProvider.jsm";
-=======
 import { GlobalOverrider } from "test/unit/utils";
 import { OnboardingMessageProvider } from "lib/OnboardingMessageProvider.jsm";
->>>>>>> upstream-releases
 import schema from "content-src/asrouter/templates/OnboardingMessage/OnboardingMessage.schema.json";
 import badgeSchema from "content-src/asrouter/templates/OnboardingMessage/ToolbarBadgeMessage.schema.json";
 
 const DEFAULT_CONTENT = {
-<<<<<<< HEAD
-  "title": "A title",
-  "text": "A description",
-  "icon": "icon",
-  "primary_button": {
-    "label": "some_button_label",
-    "action": {
-      "type": "SOME_TYPE",
-      "data": {"args": "example.com"},
-    },
-||||||| merged common ancestors
-  "title": "A title",
-  "text": "A description",
-  "icon": "icon",
-  "button_label": "some_button_label",
-  "button_action": {
-    "type": "SOME_TYPE",
-    "data": {"args": "example.com"},
-=======
   title: "A title",
   text: "A description",
   icon: "icon",
@@ -39,26 +13,10 @@ const DEFAULT_CONTENT = {
       type: "SOME_TYPE",
       data: { args: "example.com" },
     },
->>>>>>> upstream-releases
   },
 };
 
 const L10N_CONTENT = {
-<<<<<<< HEAD
-  "title": {string_id: "onboarding-private-browsing-title"},
-  "text": {string_id: "onboarding-private-browsing-text"},
-  "icon": "icon",
-  "primary_button": {
-    "label": {string_id: "onboarding-button-label-try-now"},
-    "action": {type: "SOME_TYPE"},
-  },
-||||||| merged common ancestors
-  "title": {string_id: "onboarding-private-browsing-title"},
-  "text": {string_id: "onboarding-private-browsing-text"},
-  "icon": "icon",
-  "button_label": {string_id: "onboarding-button-label-try-now"},
-  "button_action": {type: "SOME_TYPE"},
-=======
   title: { string_id: "onboarding-private-browsing-title" },
   text: { string_id: "onboarding-private-browsing-text" },
   icon: "icon",
@@ -66,24 +24,9 @@ const L10N_CONTENT = {
     label: { string_id: "onboarding-button-label-try-now" },
     action: { type: "SOME_TYPE" },
   },
->>>>>>> upstream-releases
 };
 
 describe("OnboardingMessage", () => {
-<<<<<<< HEAD
-  let globals;
-  let sandbox;
-  beforeEach(() => {
-    globals = new GlobalOverrider();
-    sandbox = sinon.createSandbox();
-    globals.set("FxAccountsConfig", {promiseEmailFirstURI: sandbox.stub().resolves("some/url")});
-  });
-  afterEach(() => {
-    sandbox.restore();
-    globals.restore();
-  });
-||||||| merged common ancestors
-=======
   let globals;
   let sandbox;
   beforeEach(() => {
@@ -106,23 +49,12 @@ describe("OnboardingMessage", () => {
     sandbox.restore();
     globals.restore();
   });
->>>>>>> upstream-releases
   it("should validate DEFAULT_CONTENT", () => {
     assert.jsonSchema(DEFAULT_CONTENT, schema);
   });
   it("should validate L10N_CONTENT", () => {
     assert.jsonSchema(L10N_CONTENT, schema);
   });
-<<<<<<< HEAD
-  it("should validate all messages from OnboardingMessageProvider", async () => {
-    const messages = await OnboardingMessageProvider.getUntranslatedMessages();
-    // FXA_1 doesn't have content - so filter it out
-    messages.filter(msg => msg.content).forEach(msg => assert.jsonSchema(msg.content, schema));
-||||||| merged common ancestors
-  it("should validate all messages from OnboardingMessageProvider", () => {
-    const messages = OnboardingMessageProvider.getUntranslatedMessages();
-    messages.forEach(msg => assert.jsonSchema(msg.content, schema));
-=======
   it("should validate all messages from OnboardingMessageProvider", async () => {
     const messages = await OnboardingMessageProvider.getUntranslatedMessages();
     // FXA_1 doesn't have content - so filter it out
@@ -354,6 +286,5 @@ describe("OnboardingMessage", () => {
     );
     assert.lengthOf(translatedMessages, msgs.length - 1);
     assert.lengthOf(returnToAMOMsgs, 0);
->>>>>>> upstream-releases
   });
 });

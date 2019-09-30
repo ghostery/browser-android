@@ -14,16 +14,8 @@
 #include "mozilla/mozalloc.h"  // for operator delete, etc
 #include "mozilla/layers/TextureClientRecycleAllocator.h"
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include "gfxWindowsPlatform.h"  // for gfxWindowsPlatform
-#include "mozilla/layers/TextureD3D11.h"
-||||||| merged common ancestors
-#include "gfxWindowsPlatform.h"         // for gfxWindowsPlatform
-#include "mozilla/layers/TextureD3D11.h"
-=======
 #  include "gfxWindowsPlatform.h"  // for gfxWindowsPlatform
 #  include "mozilla/layers/TextureD3D11.h"
->>>>>>> upstream-releases
 #endif
 #include "gfxUtils.h"
 #include "IPDLActor.h"
@@ -133,19 +125,9 @@ void CompositableClient::HandleMemoryPressure() {
   }
 }
 
-<<<<<<< HEAD
-void CompositableClient::RemoveTexture(TextureClient* aTexture) {
-  mForwarder->RemoveTextureFromCompositable(this, aTexture);
-||||||| merged common ancestors
-void
-CompositableClient::RemoveTexture(TextureClient* aTexture)
-{
-  mForwarder->RemoveTextureFromCompositable(this, aTexture);
-=======
 void CompositableClient::RemoveTexture(
     TextureClient* aTexture, const Maybe<wr::RenderRoot>& aRenderRoot) {
   mForwarder->RemoveTextureFromCompositable(this, aTexture, aRenderRoot);
->>>>>>> upstream-releases
 }
 
 TextureClientRecycleAllocator* CompositableClient::GetTextureClientRecycler() {

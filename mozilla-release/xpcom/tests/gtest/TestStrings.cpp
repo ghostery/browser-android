@@ -1443,136 +1443,44 @@ TEST_F(Strings, huge_capacity) {
   // some of the allocations above will exhaust the address space.
   if (sizeof(void*) >= 8) {
     EXPECT_TRUE(a.SetCapacity(1, fallible));
-<<<<<<< HEAD
-    EXPECT_FALSE(a.SetCapacity(nsString::size_type(-1)/2, fallible));
-    a.Truncate();  // free the allocated memory
-||||||| merged common ancestors
-    EXPECT_FALSE(a.SetCapacity(nsString::size_type(-1)/2, fallible));
-    EXPECT_TRUE(a.SetCapacity(0, fallible));  // free the allocated memory
-=======
     EXPECT_FALSE(a.SetCapacity(nsString::size_type(-1) / 2, fallible));
     a.Truncate();  // free the allocated memory
->>>>>>> upstream-releases
 
     EXPECT_TRUE(b.SetCapacity(1, fallible));
-<<<<<<< HEAD
-    EXPECT_FALSE(b.SetCapacity(nsString::size_type(-1)/2 - 1, fallible));
-    b.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(b.SetCapacity(nsString::size_type(-1)/2 - 1, fallible));
-    EXPECT_TRUE(b.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(b.SetCapacity(nsString::size_type(-1) / 2 - 1, fallible));
     b.Truncate();
->>>>>>> upstream-releases
 
     EXPECT_TRUE(c.SetCapacity(1, fallible));
-<<<<<<< HEAD
-    EXPECT_FALSE(c.SetCapacity(nsString::size_type(-1)/2, fallible));
-    c.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(c.SetCapacity(nsString::size_type(-1)/2, fallible));
-    EXPECT_TRUE(c.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(c.SetCapacity(nsString::size_type(-1) / 2, fallible));
     c.Truncate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EXPECT_FALSE(d.SetCapacity(nsString::size_type(-1)/2 - 1, fallible));
-    EXPECT_FALSE(d.SetCapacity(nsString::size_type(-1)/2, fallible));
-    d.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(d.SetCapacity(nsString::size_type(-1)/2 - 1, fallible));
-    EXPECT_FALSE(d.SetCapacity(nsString::size_type(-1)/2, fallible));
-    EXPECT_TRUE(d.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(d.SetCapacity(nsString::size_type(-1) / 2 - 1, fallible));
     EXPECT_FALSE(d.SetCapacity(nsString::size_type(-1) / 2, fallible));
     d.Truncate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EXPECT_FALSE(e.SetCapacity(nsString::size_type(-1)/4, fallible));
-    EXPECT_FALSE(e.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-    e.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(e.SetCapacity(nsString::size_type(-1)/4, fallible));
-    EXPECT_FALSE(e.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-    EXPECT_TRUE(e.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(e.SetCapacity(nsString::size_type(-1) / 4, fallible));
     EXPECT_FALSE(e.SetCapacity(nsString::size_type(-1) / 4 + 1, fallible));
     e.Truncate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EXPECT_FALSE(f.SetCapacity(nsString::size_type(-1)/2, fallible));
-    f.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(f.SetCapacity(nsString::size_type(-1)/2, fallible));
-    EXPECT_TRUE(f.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(f.SetCapacity(nsString::size_type(-1) / 2, fallible));
     f.Truncate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EXPECT_FALSE(g.SetCapacity(nsString::size_type(-1)/4 + 1000, fallible));
-    EXPECT_FALSE(g.SetCapacity(nsString::size_type(-1)/4 + 1001, fallible));
-    g.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(g.SetCapacity(nsString::size_type(-1)/4 + 1000, fallible));
-    EXPECT_FALSE(g.SetCapacity(nsString::size_type(-1)/4 + 1001, fallible));
-    EXPECT_TRUE(g.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(g.SetCapacity(nsString::size_type(-1) / 4 + 1000, fallible));
     EXPECT_FALSE(g.SetCapacity(nsString::size_type(-1) / 4 + 1001, fallible));
     g.Truncate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EXPECT_FALSE(h.SetCapacity(nsString::size_type(-1)/4+1, fallible));
-    EXPECT_FALSE(h.SetCapacity(nsString::size_type(-1)/2, fallible));
-    h.Truncate();
-||||||| merged common ancestors
-    EXPECT_FALSE(h.SetCapacity(nsString::size_type(-1)/4+1, fallible));
-    EXPECT_FALSE(h.SetCapacity(nsString::size_type(-1)/2, fallible));
-    EXPECT_TRUE(h.SetCapacity(0, fallible));
-=======
     EXPECT_FALSE(h.SetCapacity(nsString::size_type(-1) / 4 + 1, fallible));
     EXPECT_FALSE(h.SetCapacity(nsString::size_type(-1) / 2, fallible));
     h.Truncate();
->>>>>>> upstream-releases
 
     EXPECT_TRUE(i.SetCapacity(1, fallible));
-<<<<<<< HEAD
-    EXPECT_TRUE(i.SetCapacity(nsString::size_type(-1)/4 - 1000, fallible));
-    EXPECT_FALSE(i.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-    i.Truncate();
-||||||| merged common ancestors
-    EXPECT_TRUE(i.SetCapacity(nsString::size_type(-1)/4 - 1000, fallible));
-    EXPECT_FALSE(i.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-    EXPECT_TRUE(i.SetCapacity(0, fallible));
-=======
     EXPECT_TRUE(i.SetCapacity(nsString::size_type(-1) / 4 - 1000, fallible));
     EXPECT_FALSE(i.SetCapacity(nsString::size_type(-1) / 4 + 1, fallible));
     i.Truncate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    EXPECT_TRUE(j.SetCapacity(nsString::size_type(-1)/4 - 1000, fallible));
-    EXPECT_FALSE(j.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-    j.Truncate();
-||||||| merged common ancestors
-    EXPECT_TRUE(j.SetCapacity(nsString::size_type(-1)/4 - 1000, fallible));
-    EXPECT_FALSE(j.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-    EXPECT_TRUE(j.SetCapacity(0, fallible));
-=======
     EXPECT_TRUE(j.SetCapacity(nsString::size_type(-1) / 4 - 1000, fallible));
     EXPECT_FALSE(j.SetCapacity(nsString::size_type(-1) / 4 + 1, fallible));
     j.Truncate();
->>>>>>> upstream-releases
 
 // Disabled due to intermittent failures.
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1493458
@@ -1581,60 +1489,6 @@ TEST_F(Strings, huge_capacity) {
     EXPECT_TRUE(k.SetCapacity(nsString::size_type(-1)/4 - 1001, fallible));
     EXPECT_TRUE(k.SetCapacity(nsString::size_type(-1)/4 - 998, fallible));
     EXPECT_FALSE(k.SetCapacity(nsString::size_type(-1)/4 + 1, fallible));
-<<<<<<< HEAD
-    k.Truncate();
-#endif
-
-    EXPECT_TRUE(l.SetCapacity(nsString::size_type(-1)/8, fallible));
-    EXPECT_TRUE(l.SetCapacity(nsString::size_type(-1)/8 + 1, fallible));
-    EXPECT_TRUE(l.SetCapacity(nsString::size_type(-1)/8 + 2, fallible));
-    l.Truncate();
-
-    EXPECT_TRUE(m.SetCapacity(nsString::size_type(-1)/8 + 1000, fallible));
-    EXPECT_TRUE(m.SetCapacity(nsString::size_type(-1)/8 + 1001, fallible));
-    m.Truncate();
-
-    EXPECT_TRUE(n.SetCapacity(nsString::size_type(-1)/8+1, fallible));
-    EXPECT_FALSE(n.SetCapacity(nsString::size_type(-1)/4, fallible));
-    n.Truncate();
-
-    n.Truncate();
-    EXPECT_TRUE(n.SetCapacity((nsString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 2 - 2, fallible));
-    n.Truncate();
-    EXPECT_FALSE(n.SetCapacity((nsString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 2 - 1, fallible));
-    n.Truncate();
-    n1.Truncate();
-    EXPECT_TRUE(n1.SetCapacity((nsCString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 1 - 2, fallible));
-    n1.Truncate();
-    EXPECT_FALSE(n1.SetCapacity((nsCString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 1 - 1, fallible));
-    n1.Truncate();
-||||||| merged common ancestors
-    EXPECT_TRUE(k.SetCapacity(0, fallible));
-
-    EXPECT_TRUE(l.SetCapacity(nsString::size_type(-1)/8, fallible));
-    EXPECT_TRUE(l.SetCapacity(nsString::size_type(-1)/8 + 1, fallible));
-    EXPECT_TRUE(l.SetCapacity(nsString::size_type(-1)/8 + 2, fallible));
-    EXPECT_TRUE(l.SetCapacity(0, fallible));
-
-    EXPECT_TRUE(m.SetCapacity(nsString::size_type(-1)/8 + 1000, fallible));
-    EXPECT_TRUE(m.SetCapacity(nsString::size_type(-1)/8 + 1001, fallible));
-    EXPECT_TRUE(m.SetCapacity(0, fallible));
-
-    EXPECT_TRUE(n.SetCapacity(nsString::size_type(-1)/8+1, fallible));
-    EXPECT_FALSE(n.SetCapacity(nsString::size_type(-1)/4, fallible));
-    EXPECT_TRUE(n.SetCapacity(0, fallible));
-
-    EXPECT_TRUE(n.SetCapacity(0, fallible));
-    EXPECT_TRUE(n.SetCapacity((nsString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 2 - 2, fallible));
-    EXPECT_TRUE(n.SetCapacity(0, fallible));
-    EXPECT_FALSE(n.SetCapacity((nsString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 2 - 1, fallible));
-    EXPECT_TRUE(n.SetCapacity(0, fallible));
-    EXPECT_TRUE(n1.SetCapacity(0, fallible));
-    EXPECT_TRUE(n1.SetCapacity((nsCString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 1 - 2, fallible));
-    EXPECT_TRUE(n1.SetCapacity(0, fallible));
-    EXPECT_FALSE(n1.SetCapacity((nsCString::size_type(-1)/2 - sizeof(nsStringBuffer)) / 1 - 1, fallible));
-    EXPECT_TRUE(n1.SetCapacity(0, fallible));
-=======
     k.Truncate();
 #endif
 
@@ -1669,7 +1523,6 @@ TEST_F(Strings, huge_capacity) {
         (nsCString::size_type(-1) / 2 - sizeof(nsStringBuffer)) / 1 - 1,
         fallible));
     n1.Truncate();
->>>>>>> upstream-releases
   }
 }
 

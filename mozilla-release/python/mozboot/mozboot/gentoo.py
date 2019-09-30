@@ -5,11 +5,6 @@
 from __future__ import absolute_import
 
 from mozboot.base import BaseBootstrapper
-<<<<<<< HEAD
-from mozboot.linux_common import NodeInstall, StyloInstall, ClangStaticAnalysisInstall
-||||||| merged common ancestors
-from mozboot.linux_common import NodeInstall, StyloInstall
-=======
 from mozboot.linux_common import (
     ClangStaticAnalysisInstall,
     NasmInstall,
@@ -17,7 +12,6 @@ from mozboot.linux_common import (
     SccacheInstall,
     StyloInstall,
 )
->>>>>>> upstream-releases
 
 try:
     from urllib2 import urlopen
@@ -28,16 +22,9 @@ import re
 import subprocess
 
 
-<<<<<<< HEAD
-class GentooBootstrapper(NodeInstall, StyloInstall, ClangStaticAnalysisInstall,
-                         BaseBootstrapper):
-||||||| merged common ancestors
-class GentooBootstrapper(NodeInstall, StyloInstall, BaseBootstrapper):
-=======
 class GentooBootstrapper(NasmInstall, NodeInstall, StyloInstall, ClangStaticAnalysisInstall,
                          SccacheInstall, BaseBootstrapper):
 
->>>>>>> upstream-releases
     def __init__(self, version, dist_id, **kwargs):
         BaseBootstrapper.__init__(self, **kwargs)
 

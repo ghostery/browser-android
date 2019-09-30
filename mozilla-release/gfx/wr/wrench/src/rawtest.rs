@@ -47,13 +47,7 @@ impl<'a> RawtestHarness<'a> {
         self.test_clear_cache();
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-    fn render_and_get_pixels(&mut self, window_rect: DeviceIntRect) -> Vec<u8> {
-||||||| merged common ancestors
-    fn render_and_get_pixels(&mut self, window_rect: DeviceUintRect) -> Vec<u8> {
-=======
     fn render_and_get_pixels(&mut self, window_rect: FramebufferIntRect) -> Vec<u8> {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
         self.rx.recv().unwrap();
         self.wrench.render();
         self.wrench.renderer.read_pixels_rgba8(window_rect)
@@ -259,24 +253,10 @@ impl<'a> RawtestHarness<'a> {
 
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(800, 800);
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(800, 800);
-=======
         let test_size = FramebufferIntSize::new(800, 800);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let window_rect = DeviceIntRect::new(
-            DeviceIntPoint::new(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let window_rect = DeviceUintRect::new(
-            DeviceUintPoint::new(0, window_size.height - test_size.height),
-=======
         let window_rect = FramebufferIntRect::new(
             FramebufferIntPoint::new(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
 
@@ -398,19 +378,9 @@ impl<'a> RawtestHarness<'a> {
         assert_eq!(self.wrench.device_pixel_ratio, 1.);
 
         let window_size = self.window.get_inner_size();
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(800, 800);
-        let window_rect = DeviceIntRect::new(
-            DeviceIntPoint::new(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(800, 800);
-        let window_rect = DeviceUintRect::new(
-            DeviceUintPoint::new(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(800, 800);
         let window_rect = FramebufferIntRect::new(
             point2(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
         let layout_size = LayoutSize::new(800.0, 800.0);
@@ -500,21 +470,9 @@ impl<'a> RawtestHarness<'a> {
 
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(800, 800);
-
-        let window_rect = DeviceIntRect::new(
-            DeviceIntPoint::new(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(800, 800);
-
-        let window_rect = DeviceUintRect::new(
-            DeviceUintPoint::new(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(800, 800);
         let window_rect = FramebufferIntRect::new(
             point2(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
 
@@ -625,21 +583,9 @@ impl<'a> RawtestHarness<'a> {
         let blob_img;
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(400, 400);
-
-        let window_rect = DeviceIntRect::new(
-            DeviceIntPoint::new(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(400, 400);
-
-        let window_rect = DeviceUintRect::new(
-            DeviceUintPoint::new(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(400, 400);
         let window_rect = FramebufferIntRect::new(
             FramebufferIntPoint::new(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
         let layout_size = LayoutSize::new(400., 400.);
@@ -727,21 +673,9 @@ impl<'a> RawtestHarness<'a> {
         let (blob_img, blob_img2);
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(400, 400);
-
-        let window_rect = DeviceIntRect::new(
-            point(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(400, 400);
-
-        let window_rect = DeviceUintRect::new(
-            point(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(400, 400);
         let window_rect = FramebufferIntRect::new(
             point2(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
         let layout_size = LayoutSize::new(400., 400.);
@@ -868,21 +802,9 @@ impl<'a> RawtestHarness<'a> {
         println!("\tblob update test...");
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(400, 400);
-
-        let window_rect = DeviceIntRect::new(
-            point(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(400, 400);
-
-        let window_rect = DeviceUintRect::new(
-            point(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(400, 400);
         let window_rect = FramebufferIntRect::new(
             point2(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
         let layout_size = LayoutSize::new(400., 400.);
@@ -980,21 +902,9 @@ impl<'a> RawtestHarness<'a> {
         println!("\tsave/restore...");
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(400, 400);
-
-        let window_rect = DeviceIntRect::new(
-            DeviceIntPoint::new(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(400, 400);
-
-        let window_rect = DeviceUintRect::new(
-            DeviceUintPoint::new(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(400, 400);
         let window_rect = FramebufferIntRect::new(
             point2(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
         let layout_size = LayoutSize::new(400., 400.);
@@ -1099,21 +1009,9 @@ impl<'a> RawtestHarness<'a> {
         println!("\tblur cache...");
         let window_size = self.window.get_inner_size();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let test_size = DeviceIntSize::new(400, 400);
-
-        let window_rect = DeviceIntRect::new(
-            DeviceIntPoint::new(0, window_size.height - test_size.height),
-||||||| merged common ancestors
-        let test_size = DeviceUintSize::new(400, 400);
-
-        let window_rect = DeviceUintRect::new(
-            DeviceUintPoint::new(0, window_size.height - test_size.height),
-=======
         let test_size = FramebufferIntSize::new(400, 400);
         let window_rect = FramebufferIntRect::new(
             point2(0, window_size.height - test_size.height),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
             test_size,
         );
         let layout_size = LayoutSize::new(400., 400.);
@@ -1162,19 +1060,9 @@ impl<'a> RawtestHarness<'a> {
         let path = "../captures/test";
         let layout_size = LayoutSize::new(400., 400.);
         let dim = self.window.get_inner_size();
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/rawtest.rs
-        let window_rect = DeviceIntRect::new(
-            point(0, dim.height - layout_size.height as i32),
-            size(layout_size.width as i32, layout_size.height as i32),
-||||||| merged common ancestors
-        let window_rect = DeviceUintRect::new(
-            point(0, dim.height - layout_size.height as u32),
-            size(layout_size.width as u32, layout_size.height as u32),
-=======
         let window_rect = FramebufferIntRect::new(
             point2(0, dim.height - layout_size.height as i32),
             size2(layout_size.width as i32, layout_size.height as i32),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/rawtest.rs
         );
 
         // 1. render some scene

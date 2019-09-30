@@ -8,21 +8,11 @@
 #ifndef GrDrawOpAtlas_DEFINED
 #define GrDrawOpAtlas_DEFINED
 
-<<<<<<< HEAD
-#include <cmath>
-
-#include "SkGlyphRun.h"
-#include "SkIPoint16.h"
-#include "SkSize.h"
-||||||| merged common ancestors
-#include "SkPoint.h"
-=======
 #include <cmath>
 
 #include "SkGlyphRunPainter.h"
 #include "SkIPoint16.h"
 #include "SkSize.h"
->>>>>>> upstream-releases
 #include "SkTDArray.h"
 #include "SkTInternalLList.h"
 
@@ -31,81 +21,6 @@
 class GrOnFlushResourceProvider;
 class GrRectanizer;
 
-<<<<<<< HEAD
-// There are three atlases (A8, 565, ARGB) that are kept in relation with one another. In
-// general, the A8 dimensions are NxN and 565 and ARGB are N/2xN with the constraint that an atlas
-// size will always contain at least one plot. Since the ARGB atlas takes the most space, its
-// dimensions are used to size the other two atlases.
-class GrDrawOpAtlasConfig {
-public:
-    GrDrawOpAtlasConfig(int maxDimension, size_t maxBytes)
-            : fPlotsPerLongDimension{PlotsPerLongDimensionForARGB(maxDimension, maxBytes)} {
-        SkASSERT(kPlotSize >= SkGlyphCacheCommon::kSkSideTooBigForAtlas);
-    }
-
-    // For testing only - make minimum sized atlases -- 1x1 plots wide.
-    GrDrawOpAtlasConfig() : fPlotsPerLongDimension{1} {
-        SkASSERT(kPlotSize >= SkGlyphCacheCommon::kSkSideTooBigForAtlas);
-    }
-
-    SkISize numPlots(GrMaskFormat type) const {
-        switch(type) {
-            case kA8_GrMaskFormat:
-                return {fPlotsPerLongDimension, fPlotsPerLongDimension};
-            case kA565_GrMaskFormat:
-            case kARGB_GrMaskFormat: {
-                int plotsPerWidth = std::max(1, fPlotsPerLongDimension / 2);
-                return {plotsPerWidth, fPlotsPerLongDimension};
-            }
-        }
-
-        // This make some compilers happy.
-        return {1,1};
-    }
-
-    SkISize atlasDimensions(GrMaskFormat type) const {
-        SkISize plots = this->numPlots(type);
-        return {plots.width() * kPlotSize, plots.height() * kPlotSize};
-    }
-
-private:
-    static int PlotsPerLongDimensionForARGB(size_t maxDimension, size_t maxBytes) {
-        // Find the largest area of pixels in a width:height with a proportion of 1:2 that fits in
-        // maxTextureBytes. In the following P is pixel size, H is height, and W is width.
-        // P*H*W = maxTextureSize => P*H*(H/2) = maxTextureSize => H = sqrt(2*maxTextureSize/P)
-        double fitsHeight =
-                std::sqrt(2.0 * maxBytes /  GrMaskFormatBytesPerPixel(kARGB_GrMaskFormat));
-
-        // Because of limitations of the distance field text, the largest an atlas can be is 2048.
-        maxDimension = std::min(maxDimension, SkTo<size_t>(2048));
-
-        // Limit height to the maximum texture dimension and the minimum atlas size.
-        double height = std::max(std::min(fitsHeight, (double)maxDimension), (double)kPlotSize);
-
-        // Find the greatest power of 2 that is less than height.
-        double alignedHeight = std::exp2(std::floor(std::log2(height)));
-
-        // Calculate the atlas dimensions.
-        return (int)alignedHeight / kPlotSize;
-    }
-
-    // The width and height of a plot.
-    static constexpr int kPlotSize = 512;
-
-    // This is the height (longest dimension) of the ARGB atlas divided by the plot size.
-    const int fPlotsPerLongDimension;
-};
-||||||| merged common ancestors
-struct GrDrawOpAtlasConfig {
-    int numPlotsX() const { return fWidth / fPlotWidth; }
-    int numPlotsY() const { return fHeight / fPlotWidth; }
-    int fWidth;
-    int fHeight;
-    int fPlotWidth;
-    int fPlotHeight;
-};
-=======
->>>>>>> upstream-releases
 
 /**
  * This class manages one or more atlas textures on behalf of GrDrawOps. The draw ops that use the
@@ -176,20 +91,11 @@ public:
      *                          eviction occurs
      *  @return                 An initialized GrDrawOpAtlas, or nullptr if creation fails
      */
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOpAtlas> Make(GrProxyProvider*, GrPixelConfig,
-                                               int width, int height,
-                                               int numPlotsX, int numPlotsY,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOpAtlas> Make(GrContext*, GrPixelConfig, int width, int height,
-                                               int numPlotsX, int numPlotsY,
-=======
     static std::unique_ptr<GrDrawOpAtlas> Make(GrProxyProvider*,
                                                const GrBackendFormat& format,
                                                GrPixelConfig,
                                                int width, int height,
                                                int plotWidth, int plotHeight,
->>>>>>> upstream-releases
                                                AllowMultitexturing allowMultitexturing,
                                                GrDrawOpAtlas::EvictionFunc func, void* data);
 
@@ -336,17 +242,6 @@ public:
         return fMaxPages;
     }
 
-<<<<<<< HEAD
-    int numAllocated_TestingOnly() const;
-    void setMaxPages_TestingOnly(uint32_t maxPages);
-
-private:
-    GrDrawOpAtlas(GrProxyProvider*, GrPixelConfig, int width, int height, int numPlotsX,
-                  int numPlotsY, AllowMultitexturing allowMultitexturing);
-||||||| merged common ancestors
-    GrDrawOpAtlas(GrContext*, GrPixelConfig config, int width, int height, int numPlotsX,
-                  int numPlotsY, AllowMultitexturing allowMultitexturing);
-=======
     int numAllocated_TestingOnly() const;
     void setMaxPages_TestingOnly(uint32_t maxPages);
 
@@ -354,7 +249,6 @@ private:
     GrDrawOpAtlas(GrProxyProvider*, const GrBackendFormat& format, GrPixelConfig, int width,
                   int height, int plotWidth, int plotHeight,
                   AllowMultitexturing allowMultitexturing);
->>>>>>> upstream-releases
 
     /**
      * The backing GrTexture for a GrDrawOpAtlas is broken into a spatial grid of Plots. The Plots
@@ -490,12 +384,7 @@ private:
         plot->resetRects();
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    GrContext*            fContext;
-=======
     GrBackendFormat       fFormat;
->>>>>>> upstream-releases
     GrPixelConfig         fPixelConfig;
     int                   fTextureWidth;
     int                   fTextureHeight;
@@ -523,14 +412,6 @@ private:
     // proxies kept separate to make it easier to pass them up to client
     sk_sp<GrTextureProxy> fProxies[kMaxMultitexturePages];
     Page fPages[kMaxMultitexturePages];
-<<<<<<< HEAD
-    uint32_t fMaxPages;
-
-    uint32_t fNumActivePages;
-||||||| merged common ancestors
-    AllowMultitexturing fAllowMultitexturing;
-    uint32_t fNumPages;
-=======
     uint32_t fMaxPages;
 
     uint32_t fNumActivePages;
@@ -562,7 +443,6 @@ private:
 
     SkISize fARGBDimensions;
     int     fMaxTextureSize;
->>>>>>> upstream-releases
 };
 
 #endif

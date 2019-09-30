@@ -27,28 +27,12 @@ class nsTableWrapperFrame : public nsContainerFrame {
   NS_DECL_FRAMEARENA_HELPERS(nsTableWrapperFrame)
 
   /** instantiate a new instance of nsTableRowFrame.
-<<<<<<< HEAD
-   * @param aPresShell the pres shell for this frame
-   *
-   * @return           the frame that was created
-   */
-  friend nsTableWrapperFrame* NS_NewTableWrapperFrame(nsIPresShell* aPresShell,
-                                                      ComputedStyle* aStyle);
-||||||| merged common ancestors
-    * @param aPresShell the pres shell for this frame
-    *
-    * @return           the frame that was created
-    */
-  friend nsTableWrapperFrame* NS_NewTableWrapperFrame(nsIPresShell* aPresShell,
-                                                      ComputedStyle* aStyle);
-=======
    * @param aPresShell the pres shell for this frame
    *
    * @return           the frame that was created
    */
   friend nsTableWrapperFrame* NS_NewTableWrapperFrame(
       mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   // nsIFrame overrides - see there for a description
 
@@ -85,17 +69,10 @@ class nsTableWrapperFrame : public nsContainerFrame {
 
   bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
                                  BaselineSharingGroup aBaselineGroup,
-<<<<<<< HEAD
-                                 nscoord* aBaseline) const override {
-||||||| merged common ancestors
-                                 nscoord*             aBaseline) const override
-  {
-=======
                                  nscoord* aBaseline) const override {
     if (StyleDisplay()->IsContainLayout()) {
       return false;
     }
->>>>>>> upstream-releases
     auto innerTable = InnerTableFrame();
     nscoord offset;
     if (innerTable->GetNaturalBaselineBOffset(aWM, aBaselineGroup, &offset)) {
@@ -205,17 +182,10 @@ class nsTableWrapperFrame : public nsContainerFrame {
   NS_DECLARE_FRAME_PROPERTY_DELETABLE(GridItemCBSizeProperty,
                                       mozilla::LogicalSize);
 
-<<<<<<< HEAD
- protected:
-  explicit nsTableWrapperFrame(ComputedStyle* aStyle, ClassID aID = kClassID);
-||||||| merged common ancestors
-  explicit nsTableWrapperFrame(ComputedStyle* aStyle, ClassID aID = kClassID);
-=======
  protected:
   explicit nsTableWrapperFrame(ComputedStyle* aStyle,
                                nsPresContext* aPresContext,
                                ClassID aID = kClassID);
->>>>>>> upstream-releases
   virtual ~nsTableWrapperFrame();
 
   void InitChildReflowInput(nsPresContext& aPresContext,

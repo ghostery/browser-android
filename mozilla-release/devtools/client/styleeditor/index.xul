@@ -69,36 +69,8 @@
     <menupopup id="sidebar-context" incontentshell="false">
       <menuitem id="context-openlinknewtab"
         label="&openLinkNewTab.label;"/>
-<<<<<<< HEAD
       <menuitem id="context-copyurl"
         label="&copyUrl.label;"/>
-    </menupopup>
-    <menupopup id="style-editor-options-popup"
-               position="before_start">
-      <menuitem id="options-origsources"
-                type="checkbox"
-                label="&showOriginalSources.label;"
-                accesskey="&showOriginalSources.accesskey;"/>
-      <menuitem id="options-show-media"
-                type="checkbox"
-                label="&showMediaSidebar.label;"
-                accesskey="&showMediaSidebar.accesskey;"/>
-||||||| merged common ancestors
-    </menupopup>
-    <menupopup id="style-editor-options-popup"
-               position="before_start">
-      <menuitem id="options-origsources"
-                type="checkbox"
-                label="&showOriginalSources.label;"
-                accesskey="&showOriginalSources.accesskey;"/>
-      <menuitem id="options-show-media"
-                type="checkbox"
-                label="&showMediaSidebar.label;"
-                accesskey="&showMediaSidebar.accesskey;"/>
-=======
-      <menuitem id="context-copyurl"
-        label="&copyUrl.label;"/>
->>>>>>> upstream-releases
     </menupopup>
   </popupset>
 

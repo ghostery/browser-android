@@ -1,9 +1,6 @@
 //! Code to convert the Rust-styled field/variant (e.g. `my_field`, `MyType`) to the
 //! case of the source (e.g. `my-field`, `MY_FIELD`).
 
-//! Code to convert the Rust-styled field/variant (e.g. `my_field`, `MyType`) to the
-//! case of the source (e.g. `my-field`, `MY_FIELD`).
-
 // See https://users.rust-lang.org/t/psa-dealing-with-warning-unused-import-std-ascii-asciiext-in-today-s-nightly/13726
 #[allow(deprecated, unused_imports)]
 use std::ascii::AsciiExt;
@@ -12,15 +9,8 @@ use std::str::FromStr;
 
 use self::RenameRule::*;
 
-<<<<<<< HEAD
-/// The different possible ways to change case of fields in a struct, or variants in an enum.
-#[derive(PartialEq)]
-||||||| merged common ancestors
-#[derive(PartialEq)]
-=======
 /// The different possible ways to change case of fields in a struct, or variants in an enum.
 #[derive(Copy, Clone, PartialEq)]
->>>>>>> upstream-releases
 pub enum RenameRule {
     /// Don't apply a default rename rule.
     None,

@@ -9,7 +9,6 @@
 
 #include "SkBitmap.h"
 #include "SkColorSpaceXformer.h"
-#include "SkFlattenablePriv.h"
 #include "SkImageFilterPriv.h"
 #include "SkReadBuffer.h"
 #include "SkSpecialImage.h"
@@ -301,31 +300,15 @@ sk_sp<SkSpecialImage> SkDisplacementMapEffect::onFilterImage(SkSpecialImage* sou
         paint.setPorterDuffXPFactory(SkBlendMode::kSrc);
         SkMatrix matrix;
         matrix.setTranslate(-SkIntToScalar(colorBounds.x()), -SkIntToScalar(colorBounds.y()));
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkDisplacementMapEffect.cpp
-        GrPixelConfig config = SkColorType2GrPixelConfig(ctx.outputProperties().colorType());
-||||||| merged common ancestors
-=======
         SkColorType colorType = ctx.outputProperties().colorType();
         GrPixelConfig config = SkColorType2GrPixelConfig(colorType);
         GrBackendFormat format =
                 context->priv().caps()->getBackendFormatFromColorType(colorType);
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkDisplacementMapEffect.cpp
 
         sk_sp<GrRenderTargetContext> renderTargetContext(
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkDisplacementMapEffect.cpp
-            context->contextPriv().makeDeferredRenderTargetContext(SkBackingFit::kApprox,
-                                                     bounds.width(), bounds.height(),
-                                                     config, sk_ref_sp(colorSpace)));
-||||||| merged common ancestors
-            context->makeDeferredRenderTargetContext(SkBackingFit::kApprox,
-                                                     bounds.width(), bounds.height(),
-                                                     GrRenderableConfigForColorSpace(colorSpace),
-                                                     sk_ref_sp(colorSpace)));
-=======
             context->priv().makeDeferredRenderTargetContext(
                     format, SkBackingFit::kApprox, bounds.width(), bounds.height(), config,
                     sk_ref_sp(colorSpace)));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkDisplacementMapEffect.cpp
         if (!renderTargetContext) {
             return nullptr;
         }
@@ -609,16 +592,8 @@ void GrGLDisplacementMapEffect::emitCode(EmitArgs& args) {
 void GrGLDisplacementMapEffect::onSetData(const GrGLSLProgramDataManager& pdman,
                                           const GrFragmentProcessor& proc) {
     const GrDisplacementMapEffect& displacementMap = proc.cast<GrDisplacementMapEffect>();
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkDisplacementMapEffect.cpp
-    GrSurfaceProxy* proxy = displacementMap.textureSampler(1).proxy();
-    GrTexture* colorTex = proxy->peekTexture();
-||||||| merged common ancestors
-    GrSurfaceProxy* proxy = displacementMap.textureSampler(1).proxy();
-    GrTexture* colorTex = proxy->priv().peekTexture();
-=======
     GrTextureProxy* proxy = displacementMap.textureSampler(1).proxy();
     GrTexture* colorTex = proxy->peekTexture();
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkDisplacementMapEffect.cpp
 
     SkScalar scaleX = displacementMap.scale().fX / colorTex->width();
     SkScalar scaleY = displacementMap.scale().fY / colorTex->height();

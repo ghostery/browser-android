@@ -15,37 +15,15 @@
 #include "nsIContent.h"
 #include "nsGlobalWindow.h"
 #include "nsString.h"
-<<<<<<< HEAD
-#include "xpcpublic.h"  // For xpc::NativeGlobal
-#include "mozilla/EffectSet.h"
-#include "mozilla/dom/KeyframeEffect.h"
-#include "mozilla/Preferences.h"
-||||||| merged common ancestors
-#include "xpcpublic.h" // For xpc::NativeGlobal
-#include "mozilla/EffectSet.h"
-#include "mozilla/dom/KeyframeEffect.h"
-#include "mozilla/Preferences.h"
-=======
 #include "xpcpublic.h"  // For xpc::NativeGlobal
 
 using namespace mozilla::dom;
->>>>>>> upstream-releases
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ void AnimationUtils::LogAsyncAnimationFailure(
-    nsCString& aMessage, const nsIContent* aContent) {
-||||||| merged common ancestors
-/* static */ void
-AnimationUtils::LogAsyncAnimationFailure(nsCString& aMessage,
-                                         const nsIContent* aContent)
-{
-=======
 /* static */
 void AnimationUtils::LogAsyncAnimationFailure(nsCString& aMessage,
                                               const nsIContent* aContent) {
->>>>>>> upstream-releases
   if (aContent) {
     aMessage.AppendLiteral(" [");
     aMessage.Append(nsAtomCString(aContent->NodeInfo()->NameAtom()));
@@ -62,17 +40,8 @@ void AnimationUtils::LogAsyncAnimationFailure(nsCString& aMessage,
   printf_stderr("%s", aMessage.get());
 }
 
-<<<<<<< HEAD
-/* static */ nsIDocument* AnimationUtils::GetCurrentRealmDocument(
-    JSContext* aCx) {
-||||||| merged common ancestors
-/* static */ nsIDocument*
-AnimationUtils::GetCurrentRealmDocument(JSContext* aCx)
-{
-=======
 /* static */
 Document* AnimationUtils::GetCurrentRealmDocument(JSContext* aCx) {
->>>>>>> upstream-releases
   nsGlobalWindowInner* win = xpc::CurrentWindowOrNull(aCx);
   if (!win) {
     return nullptr;
@@ -80,17 +49,8 @@ Document* AnimationUtils::GetCurrentRealmDocument(JSContext* aCx) {
   return win->GetDoc();
 }
 
-<<<<<<< HEAD
-/* static */ nsIDocument* AnimationUtils::GetDocumentFromGlobal(
-    JSObject* aGlobalObject) {
-||||||| merged common ancestors
-/* static */ nsIDocument*
-AnimationUtils::GetDocumentFromGlobal(JSObject* aGlobalObject)
-{
-=======
 /* static */
 Document* AnimationUtils::GetDocumentFromGlobal(JSObject* aGlobalObject) {
->>>>>>> upstream-releases
   nsGlobalWindowInner* win = xpc::WindowOrNull(aGlobalObject);
   if (!win) {
     return nullptr;
@@ -98,16 +58,8 @@ Document* AnimationUtils::GetDocumentFromGlobal(JSObject* aGlobalObject) {
   return win->GetDoc();
 }
 
-<<<<<<< HEAD
-/* static */ bool AnimationUtils::IsOffscreenThrottlingEnabled() {
-||||||| merged common ancestors
-/* static */ bool
-AnimationUtils::IsOffscreenThrottlingEnabled()
-{
-=======
 /* static */
 bool AnimationUtils::IsOffscreenThrottlingEnabled() {
->>>>>>> upstream-releases
   static bool sOffscreenThrottlingEnabled;
   static bool sPrefCached = false;
 
@@ -120,17 +72,6 @@ bool AnimationUtils::IsOffscreenThrottlingEnabled() {
   return sOffscreenThrottlingEnabled;
 }
 
-<<<<<<< HEAD
-/* static */ bool AnimationUtils::EffectSetContainsAnimatedScale(
-    EffectSet& aEffects, const nsIFrame* aFrame) {
-  for (const dom::KeyframeEffect* effect : aEffects) {
-||||||| merged common ancestors
-/* static */ bool
-AnimationUtils::EffectSetContainsAnimatedScale(EffectSet& aEffects,
-                                               const nsIFrame* aFrame)
-{
-  for (const dom::KeyframeEffect* effect : aEffects) {
-=======
 /* static */
 bool AnimationUtils::FrameHasAnimatedScale(const nsIFrame* aFrame) {
   EffectSet* effectSet = EffectSet::GetEffectSetForFrame(
@@ -140,7 +81,6 @@ bool AnimationUtils::FrameHasAnimatedScale(const nsIFrame* aFrame) {
   }
 
   for (const dom::KeyframeEffect* effect : *effectSet) {
->>>>>>> upstream-releases
     if (effect->ContainsAnimatedScale(aFrame)) {
       return true;
     }
@@ -149,11 +89,6 @@ bool AnimationUtils::FrameHasAnimatedScale(const nsIFrame* aFrame) {
   return false;
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 /* static */
 bool AnimationUtils::HasCurrentTransitions(const Element* aElement,
                                            PseudoStyleType aPseudoType) {
@@ -176,4 +111,3 @@ bool AnimationUtils::HasCurrentTransitions(const Element* aElement,
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

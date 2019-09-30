@@ -398,19 +398,9 @@ class BufferList : private AllocPolicy {
   size_t mStandardCapacity;
 };
 
-<<<<<<< HEAD
-template <typename AllocPolicy>
-bool BufferList<AllocPolicy>::WriteBytes(const char* aData, size_t aSize) {
-||||||| merged common ancestors
-template<typename AllocPolicy>
-bool
-BufferList<AllocPolicy>::WriteBytes(const char* aData, size_t aSize)
-{
-=======
 template <typename AllocPolicy>
 MOZ_MUST_USE bool BufferList<AllocPolicy>::WriteBytes(const char* aData,
                                                       size_t aSize) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(mOwning);
   MOZ_RELEASE_ASSERT(mStandardCapacity);
 

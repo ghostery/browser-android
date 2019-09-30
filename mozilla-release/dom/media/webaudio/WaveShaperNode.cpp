@@ -292,30 +292,10 @@ WaveShaperNode::WaveShaperNode(AudioContext* aContext)
       aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<WaveShaperNode> WaveShaperNode::Create(
-    AudioContext& aAudioContext, const WaveShaperOptions& aOptions,
-    ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-||||||| merged common ancestors
-/* static */ already_AddRefed<WaveShaperNode>
-WaveShaperNode::Create(AudioContext& aAudioContext,
-                       const WaveShaperOptions& aOptions,
-                       ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-=======
 /* static */
 already_AddRefed<WaveShaperNode> WaveShaperNode::Create(
     AudioContext& aAudioContext, const WaveShaperOptions& aOptions,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<WaveShaperNode> audioNode = new WaveShaperNode(&aAudioContext);
 
   audioNode->Initialize(aOptions, aRv);

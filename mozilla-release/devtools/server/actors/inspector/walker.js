@@ -85,44 +85,6 @@ loader.lazyRequireGetter(
 
 loader.lazyRequireGetter(this, "throttle", "devtools/shared/throttle", true);
 
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "allAnonymousContentTreeWalkerFilter", "devtools/server/actors/inspector/utils", true);
-loader.lazyRequireGetter(this, "isNodeDead", "devtools/server/actors/inspector/utils", true);
-loader.lazyRequireGetter(this, "nodeDocument", "devtools/server/actors/inspector/utils", true);
-loader.lazyRequireGetter(this, "standardTreeWalkerFilter", "devtools/server/actors/inspector/utils", true);
-
-loader.lazyRequireGetter(this, "CustomElementWatcher", "devtools/server/actors/inspector/custom-element-watcher", true);
-loader.lazyRequireGetter(this, "DocumentWalker", "devtools/server/actors/inspector/document-walker", true);
-loader.lazyRequireGetter(this, "SKIP_TO_SIBLING", "devtools/server/actors/inspector/document-walker", true);
-loader.lazyRequireGetter(this, "NodeActor", "devtools/server/actors/inspector/node", true);
-loader.lazyRequireGetter(this, "NodeListActor", "devtools/server/actors/inspector/node", true);
-loader.lazyRequireGetter(this, "LayoutActor", "devtools/server/actors/layout", true);
-loader.lazyRequireGetter(this, "findFlexOrGridParentContainerForNode", "devtools/server/actors/layout", true);
-loader.lazyRequireGetter(this, "getLayoutChangesObserver", "devtools/server/actors/reflow", true);
-loader.lazyRequireGetter(this, "releaseLayoutChangesObserver", "devtools/server/actors/reflow", true);
-loader.lazyRequireGetter(this, "WalkerSearch", "devtools/server/actors/utils/walker-search", true);
-
-loader.lazyServiceGetter(this, "eventListenerService",
-  "@mozilla.org/eventlistenerservice;1", "nsIEventListenerService");
-||||||| merged common ancestors
-loader.lazyRequireGetter(this, "allAnonymousContentTreeWalkerFilter", "devtools/server/actors/inspector/utils", true);
-loader.lazyRequireGetter(this, "isNodeDead", "devtools/server/actors/inspector/utils", true);
-loader.lazyRequireGetter(this, "nodeDocument", "devtools/server/actors/inspector/utils", true);
-loader.lazyRequireGetter(this, "standardTreeWalkerFilter", "devtools/server/actors/inspector/utils", true);
-
-loader.lazyRequireGetter(this, "CustomElementWatcher", "devtools/server/actors/inspector/custom-element-watcher", true);
-loader.lazyRequireGetter(this, "DocumentWalker", "devtools/server/actors/inspector/document-walker", true);
-loader.lazyRequireGetter(this, "SKIP_TO_SIBLING", "devtools/server/actors/inspector/document-walker", true);
-loader.lazyRequireGetter(this, "NodeActor", "devtools/server/actors/inspector/node", true);
-loader.lazyRequireGetter(this, "NodeListActor", "devtools/server/actors/inspector/node", true);
-loader.lazyRequireGetter(this, "LayoutActor", "devtools/server/actors/layout", true);
-loader.lazyRequireGetter(this, "getLayoutChangesObserver", "devtools/server/actors/reflow", true);
-loader.lazyRequireGetter(this, "releaseLayoutChangesObserver", "devtools/server/actors/reflow", true);
-loader.lazyRequireGetter(this, "WalkerSearch", "devtools/server/actors/utils/walker-search", true);
-
-loader.lazyServiceGetter(this, "eventListenerService",
-  "@mozilla.org/eventlistenerservice;1", "nsIEventListenerService");
-=======
 loader.lazyRequireGetter(
   this,
   "allAnonymousContentTreeWalkerFilter",
@@ -215,7 +177,6 @@ loader.lazyServiceGetter(
   "@mozilla.org/eventlistenerservice;1",
   "nsIEventListenerService"
 );
->>>>>>> upstream-releases
 
 loader.lazyRequireGetter(this, "ChromeUtils");
 
@@ -752,18 +713,6 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
    */
   inlineTextChild: function({ rawNode }) {
     // Quick checks to prevent creating a new walker if possible.
-<<<<<<< HEAD
-    if (isBeforePseudoElement(rawNode) ||
-        isAfterPseudoElement(rawNode) ||
-        isShadowHost(rawNode) ||
-        rawNode.nodeType != Node.ELEMENT_NODE ||
-        rawNode.children.length > 0) {
-||||||| merged common ancestors
-    if (isBeforePseudoElement(node.rawNode) ||
-        isAfterPseudoElement(node.rawNode) ||
-        node.rawNode.nodeType != Node.ELEMENT_NODE ||
-        node.rawNode.children.length > 0) {
-=======
     if (
       isMarkerPseudoElement(rawNode) ||
       isBeforePseudoElement(rawNode) ||
@@ -772,30 +721,10 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
       rawNode.nodeType != Node.ELEMENT_NODE ||
       rawNode.children.length > 0
     ) {
->>>>>>> upstream-releases
       return undefined;
     }
 
-<<<<<<< HEAD
-    let walker;
-    try {
-      // By default always try to use an anonymous walker. Even for DirectShadowHostChild,
-      // children should be available through an anonymous walker (unless the child is not
-      // slotted, see catch block).
-      walker = this.getDocumentWalker(rawNode);
-    } catch (e) {
-      // Using an anonymous walker might throw, for instance on unslotted shadow host
-      // children.
-      walker = this.getNonAnonymousWalker(rawNode);
-    }
-
-||||||| merged common ancestors
-    const walker = isDirectShadowHostChild(node.rawNode)
-      ? this.getNonAnonymousWalker(node.rawNode)
-      : this.getDocumentWalker(node.rawNode);
-=======
     const walker = this.getDocumentWalker(rawNode);
->>>>>>> upstream-releases
     const firstChild = walker.firstChild();
 
     // Bail out if:
@@ -811,25 +740,6 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
       rawNode.nodeName === "SLOT" &&
       isDirectShadowHostChild(firstChild);
 
-<<<<<<< HEAD
-    const isFlexItem =
-      !!firstChild &&
-      findFlexOrGridParentContainerForNode(firstChild, "flex", this);
-
-    if (!firstChild ||
-        walker.nextSibling() ||
-        firstChild.nodeType !== Node.TEXT_NODE ||
-        firstChild.nodeValue.length > gValueSummaryLength ||
-        isAssignedSlot ||
-        isFlexItem) {
-||||||| merged common ancestors
-    if (!firstChild ||
-        walker.nextSibling() ||
-        firstChild.nodeType !== Node.TEXT_NODE ||
-        firstChild.nodeValue.length > gValueSummaryLength ||
-        isAssignedSlot
-        ) {
-=======
     const isFlexItem = !!(firstChild && firstChild.parentFlexElement);
 
     if (
@@ -840,7 +750,6 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
       isAssignedSlot ||
       isFlexItem
     ) {
->>>>>>> upstream-releases
       return undefined;
     }
 
@@ -1015,16 +924,6 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
     const shadowHost = isShadowHost(node.rawNode);
     const shadowRoot = isShadowRoot(node.rawNode);
 
-<<<<<<< HEAD
-    // UA Widgets are internal Firefox widgets such as videocontrols implemented
-    // using shadow DOM. By default, their shadow root should be hidden for web
-    // developers.
-    const isUAWidget = shadowHost && node.rawNode.openOrClosedShadowRoot.isUAWidget();
-    const hideShadowRoot = isUAWidget && !this.showUserAgentShadowRoots;
-
-    const templateElement = isTemplateElement(node.rawNode);
-||||||| merged common ancestors
-=======
     // UA Widgets are internal Firefox widgets such as videocontrols implemented
     // using shadow DOM. By default, their shadow root should be hidden for web
     // developers.
@@ -1035,7 +934,6 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
       isUAWidget && this.showUserAgentShadowRoots;
 
     const templateElement = isTemplateElement(node.rawNode);
->>>>>>> upstream-releases
     if (templateElement) {
       // <template> tags should have a single child pointing to the element's template
       // content.
@@ -1180,15 +1078,9 @@ var WalkerActor = protocol.ActorClassWithSpec(walkerSpec, {
 
       nodes = [
         // #shadow-root
-<<<<<<< HEAD
-        ...(hideShadowRoot ? [] : [node.rawNode.openOrClosedShadowRoot]),
-||||||| merged common ancestors
-        node.rawNode.openOrClosedShadowRoot,
-=======
         ...(hideShadowRoot ? [] : [node.rawNode.openOrClosedShadowRoot]),
         // ::marker
         ...(hasMarker ? [first] : []),
->>>>>>> upstream-releases
         // ::before
         ...(hasBefore ? [maybeBeforeNode] : []),
         // shadow host direct children

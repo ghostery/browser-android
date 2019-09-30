@@ -255,44 +255,6 @@ class SelectionStyleProvider final {
                                      GTK_STYLE_PROVIDER(mProvider),
                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
-<<<<<<< HEAD
-  }
-
-  void OnThemeChanged() {
-    // fcitx refers GtkStyle::text[GTK_STATE_SELECTED] and
-    // GtkStyle::bg[GTK_STATE_SELECTED] (although pair of text and *base*
-    // or *fg* and bg is correct).  gtk_style_update_from_context() will
-    // set these colors using the widget's GtkStyleContext and so the
-    // colors can be controlled by a ":selected" CSS rule.
-    nsAutoCString style(":selected{");
-    // FYI: LookAndFeel always returns selection colors of GtkTextView.
-    nscolor selectionForegroundColor;
-    if (NS_SUCCEEDED(
-            LookAndFeel::GetColor(LookAndFeel::eColorID_TextSelectForeground,
-                                  &selectionForegroundColor))) {
-      double alpha =
-          static_cast<double>(NS_GET_A(selectionForegroundColor)) / 0xFF;
-      style.AppendPrintf("color:rgba(%u,%u,%u,%f);",
-                         NS_GET_R(selectionForegroundColor),
-                         NS_GET_G(selectionForegroundColor),
-                         NS_GET_B(selectionForegroundColor), alpha);
-    }
-    nscolor selectionBackgroundColor;
-    if (NS_SUCCEEDED(
-            LookAndFeel::GetColor(LookAndFeel::eColorID_TextSelectBackground,
-                                  &selectionBackgroundColor))) {
-      double alpha =
-          static_cast<double>(NS_GET_A(selectionBackgroundColor)) / 0xFF;
-      style.AppendPrintf("background-color:rgba(%u,%u,%u,%f);",
-                         NS_GET_R(selectionBackgroundColor),
-                         NS_GET_G(selectionBackgroundColor),
-                         NS_GET_B(selectionBackgroundColor), alpha);
-    }
-    style.AppendLiteral("}");
-    gtk_css_provider_load_from_data(mProvider, style.get(), -1, nullptr);
-  }
-||||||| merged common ancestors
-=======
   }
 
   void OnThemeChanged() {
@@ -334,7 +296,6 @@ class SelectionStyleProvider final {
     style.AppendLiteral("}");
     gtk_css_provider_load_from_data(mProvider, style.get(), -1, nullptr);
   }
->>>>>>> upstream-releases
 
  private:
   static SelectionStyleProvider* sInstance;
@@ -442,21 +403,6 @@ nsDependentCSubstring IMContextWrapper::GetIMName() const {
 
   nsDependentCSubstring im(contextIDChar, strlen(contextIDChar));
 
-<<<<<<< HEAD
-  // If the context is XIM, actual engine must be specified with
-  // |XMODIFIERS=@im=foo|.
-  const char* xmodifiersChar = PR_GetEnv("XMODIFIERS");
-  if (!im.EqualsLiteral("xim") || !xmodifiersChar) {
-    return im;
-  }
-||||||| merged common ancestors
-    // If the context is XIM, actual engine must be specified with
-    // |XMODIFIERS=@im=foo|.
-    const char* xmodifiersChar = PR_GetEnv("XMODIFIERS");
-    if (!im.EqualsLiteral("xim") || !xmodifiersChar) {
-        return im;
-    }
-=======
   // If the context is XIM, actual engine must be specified with
   // |XMODIFIERS=@im=foo|.
   const char* xmodifiersChar = PR_GetEnv("XMODIFIERS");
@@ -464,7 +410,6 @@ nsDependentCSubstring IMContextWrapper::GetIMName() const {
       (!im.EqualsLiteral("xim") && !im.EqualsLiteral("wayland"))) {
     return im;
   }
->>>>>>> upstream-releases
 
   nsDependentCString xmodifiers(xmodifiersChar);
   int32_t atIMValueStart = xmodifiers.Find("@im=") + 4;
@@ -871,135 +816,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
     mSetCursorPositionOnKeyEvent = false;
   }
 
-<<<<<<< HEAD
-  // Let's support dead key event even if active keyboard layout also
-  // supports complicated composition like CJK IME.
-  bool isDeadKey =
-      KeymapWrapper::ComputeDOMKeyNameIndex(aEvent) == KEY_NAME_INDEX_Dead;
-  mMaybeInDeadKeySequence |= isDeadKey;
-
-  // If current context is mSimpleContext, both ibus and fcitx handles key
-  // events synchronously.  So, only when current context is mContext which
-  // is GtkIMMulticontext, the key event may be handled by IME asynchronously.
-  bool maybeHandledAsynchronously =
-      mIsIMInAsyncKeyHandlingMode && currentContext == mContext;
-
-  // If we've decided that the event won't be synthesized asyncrhonously
-  // by IME, but actually IME did it, this is set to true.
-  bool isUnexpectedAsyncEvent = false;
-
-  // If IM is ibus or fcitx and it handles key events asynchronously,
-  // they mark aEvent->state as "handled by me" when they post key event
-  // to another process.  Unfortunately, we need to check this hacky
-  // flag because it's difficult to store all pending key events by
-  // an array or a hashtable.
-  if (maybeHandledAsynchronously) {
-    switch (mIMContextID) {
-      case IMContextID::eIBus: {
-        // See src/ibustypes.h
-        static const guint IBUS_IGNORED_MASK = 1 << 25;
-        // If IBUS_IGNORED_MASK was set to aEvent->state, the event
-        // has already been handled by another process and it wasn't
-        // used by IME.
-        bool isHandlingAsyncEvent = !!(aEvent->state & IBUS_IGNORED_MASK);
-        if (!isHandlingAsyncEvent) {
-          // On some environments, IBUS_IGNORED_MASK flag is not set as
-          // expected.  In such case, we keep pusing all events into the queue.
-          // I.e., that causes eating a lot of memory until it's blurred.
-          // Therefore, we need to check whether there is same timestamp event
-          // in the queue.  This redundant cost should be low because in most
-          // causes, key events in the queue should be 2 or 4.
-          isHandlingAsyncEvent =
-              mPostingKeyEvents.IndexOf(aEvent) != GdkEventKeyQueue::NoIndex();
-          if (isHandlingAsyncEvent) {
-            MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                    ("0x%p   OnKeyEvent(), aEvent->state does not have "
-                     "IBUS_IGNORED_MASK but "
-                     "same event in the queue.  So, assuming it's a "
-                     "synthesized event",
-                     this));
-          }
-||||||| merged common ancestors
-    // Let's support dead key event even if active keyboard layout also
-    // supports complicated composition like CJK IME.
-    bool isDeadKey =
-        KeymapWrapper::ComputeDOMKeyNameIndex(aEvent) == KEY_NAME_INDEX_Dead;
-    mMaybeInDeadKeySequence |= isDeadKey;
-
-    // If current context is mSimpleContext, both ibus and fcitx handles key
-    // events synchronously.  So, only when current context is mContext which
-    // is GtkIMMulticontext, the key event may be handled by IME asynchronously.
-    bool maybeHandledAsynchronously =
-        mIsIMInAsyncKeyHandlingMode && currentContext == mContext;
-
-    // If IM is ibus or fcitx and it handles key events asynchronously,
-    // they mark aEvent->state as "handled by me" when they post key event
-    // to another process.  Unfortunately, we need to check this hacky
-    // flag because it's difficult to store all pending key events by
-    // an array or a hashtable.
-    if (maybeHandledAsynchronously) {
-        switch (mIMContextID) {
-            case IMContextID::eIBus:
-                // ibus won't send back key press events in a dead key sequcne.
-                if (mMaybeInDeadKeySequence && aEvent->type == GDK_KEY_PRESS) {
-                    maybeHandledAsynchronously = false;
-                    break;
-                }
-                // ibus handles key events synchronously if focused editor is
-                // <input type="password"> or |ime-mode: disabled;|.
-                if (mInputContext.mIMEState.mEnabled == IMEState::PASSWORD) {
-                    maybeHandledAsynchronously = false;
-                    break;
-                }
-                // See src/ibustypes.h
-                static const guint IBUS_IGNORED_MASK = 1 << 25;
-                // If IBUS_IGNORED_MASK was set to aEvent->state, the event
-                // has already been handled by another process and it wasn't
-                // used by IME.
-                if (aEvent->state & IBUS_IGNORED_MASK) {
-                    MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                        ("0x%p   OnKeyEvent(), aEvent->state has "
-                         "IBUS_IGNORED_MASK, so, it won't be handled "
-                         "asynchronously anymore. Removing posted events from "
-                         "the queue",
-                         this));
-                    maybeHandledAsynchronously = false;
-                    mPostingKeyEvents.RemoveEvent(aEvent);
-                    break;
-                }
-                break;
-            case IMContextID::eFcitx:
-                // fcitx won't send back key press events in a dead key sequcne.
-                if (mMaybeInDeadKeySequence && aEvent->type == GDK_KEY_PRESS) {
-                    maybeHandledAsynchronously = false;
-                    break;
-                }
-
-                // fcitx handles key events asynchronously even if focused
-                // editor cannot use IME actually.
-
-                // See src/lib/fcitx-utils/keysym.h
-                static const guint FcitxKeyState_IgnoredMask = 1 << 25;
-                // If FcitxKeyState_IgnoredMask was set to aEvent->state,
-                // the event has already been handled by another process and
-                // it wasn't used by IME.
-                if (aEvent->state & FcitxKeyState_IgnoredMask) {
-                    MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                        ("0x%p   OnKeyEvent(), aEvent->state has "
-                         "FcitxKeyState_IgnoredMask, so, it won't be handled "
-                         "asynchronously anymore. Removing posted events from "
-                         "the queue",
-                         this));
-                    maybeHandledAsynchronously = false;
-                    mPostingKeyEvents.RemoveEvent(aEvent);
-                    break;
-                }
-                break;
-            default:
-                MOZ_ASSERT_UNREACHABLE("IME may handle key event "
-                    "asyncrhonously, but not yet confirmed if it comes agian "
-                    "actually");
-=======
   // Let's support dead key event even if active keyboard layout also
   // supports complicated composition like CJK IME.
   bool isDeadKey =
@@ -1055,65 +871,8 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
                      "synthesized event",
                      this));
           }
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        // ibus won't send back key press events in a dead key sequcne.
-        if (mMaybeInDeadKeySequence && aEvent->type == GDK_KEY_PRESS) {
-          maybeHandledAsynchronously = false;
-          if (isHandlingAsyncEvent) {
-            isUnexpectedAsyncEvent = true;
-            break;
-          }
-          // Some keyboard layouts which have dead keys may send
-          // "empty" key event to make us call
-          // gtk_im_context_filter_keypress() to commit composed
-          // character during a GDK_KEY_PRESS event dispatching.
-          if (!gdk_keyval_to_unicode(aEvent->keyval) &&
-              !aEvent->hardware_keycode) {
-            isUnexpectedAsyncEvent = true;
-            break;
-          }
-        }
-        // ibus handles key events synchronously if focused editor is
-        // <input type="password"> or |ime-mode: disabled;|.
-        if (mInputContext.mIMEState.mEnabled == IMEState::PASSWORD) {
-          maybeHandledAsynchronously = false;
-          isUnexpectedAsyncEvent = isHandlingAsyncEvent;
-          break;
-        }
-||||||| merged common ancestors
-    mKeyboardEventWasDispatched = aKeyboardEventWasDispatched;
-    mFallbackToKeyEvent = false;
-    mProcessingKeyEvent = aEvent;
-    gboolean isFiltered =
-        gtk_im_context_filter_keypress(currentContext, aEvent);
-
-    // The caller of this shouldn't handle aEvent anymore if we've dispatched
-    // composition events or modified content with other events.
-    bool filterThisEvent = isFiltered && !mFallbackToKeyEvent;
-
-    if (IsComposingOnCurrentContext() && !isFiltered &&
-        aEvent->type == GDK_KEY_PRESS &&
-        mDispatchedCompositionString.IsEmpty()) {
-        // A Hangul input engine for SCIM doesn't emit preedit_end
-        // signal even when composition string becomes empty.  On the
-        // other hand, we should allow to make composition with empty
-        // string for other languages because there *might* be such
-        // IM.  For compromising this issue, we should dispatch
-        // compositionend event, however, we don't need to reset IM
-        // actually.
-        // NOTE: Don't dispatch key events as "processed by IME" since
-        // we need to dispatch keyboard events as IME wasn't handled it.
-        mProcessingKeyEvent = nullptr;
-        DispatchCompositionCommitEvent(currentContext, &EmptyString());
-        mProcessingKeyEvent = aEvent;
-        // In this case, even though we handle the keyboard event here,
-        // but we should dispatch keydown event as
-        filterThisEvent = false;
-    }
-=======
         // If it's a synthesized event, let's remove it from the posting
         // event queue first.  Otherwise the following blocks cannot use
         // `break`.
@@ -1128,29 +887,7 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
           probablyHandledAsynchronously = false;
           mPostingKeyEvents.RemoveEvent(aEvent);
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        if (isHandlingAsyncEvent) {
-          MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                  ("0x%p   OnKeyEvent(), aEvent->state has IBUS_IGNORED_MASK "
-                   "or aEvent is in the "
-                   "posting event queue, so, it won't be handled "
-                   "asynchronously anymore. Removing "
-                   "the posted events from the queue",
-                   this));
-          maybeHandledAsynchronously = false;
-          mPostingKeyEvents.RemoveEvent(aEvent);
-          break;
-||||||| merged common ancestors
-    if (filterThisEvent && !mKeyboardEventWasDispatched) {
-        // If IME handled the key event but we've not dispatched eKeyDown nor
-        // eKeyUp event yet, we need to dispatch here unless the key event is
-        // now being handled by other IME process.
-        if (!maybeHandledAsynchronously) {
-            MaybeDispatchKeyEventAsProcessedByIME(eVoidEvent);
-            // Be aware, the widget might have been gone here.
-=======
         // ibus won't send back key press events in a dead key sequcne.
         if (mMaybeInDeadKeySequence && aEvent->type == GDK_KEY_PRESS) {
           probablyHandledAsynchronously = false;
@@ -1168,38 +905,7 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
             break;
           }
           break;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        break;
-      }
-      case IMContextID::eFcitx: {
-        // See src/lib/fcitx-utils/keysym.h
-        static const guint FcitxKeyState_IgnoredMask = 1 << 25;
-        // If FcitxKeyState_IgnoredMask was set to aEvent->state,
-        // the event has already been handled by another process and
-        // it wasn't used by IME.
-        bool isHandlingAsyncEvent =
-            !!(aEvent->state & FcitxKeyState_IgnoredMask);
-        if (!isHandlingAsyncEvent) {
-          // On some environments, FcitxKeyState_IgnoredMask flag *might* be not
-          // set as expected. If there were such cases, we'd keep pusing all
-          // events into the queue.  I.e., that would cause eating a lot of
-          // memory until it'd be blurred.  Therefore, we should check whether
-          // there is same timestamp event in the queue.  This redundant cost
-          // should be low because in most causes, key events in the queue
-          // should be 2 or 4.
-          isHandlingAsyncEvent =
-              mPostingKeyEvents.IndexOf(aEvent) != GdkEventKeyQueue::NoIndex();
-          if (isHandlingAsyncEvent) {
-||||||| merged common ancestors
-        // If we need to wait reply from IM, IM may send some signals to us
-        // without sending the key event again.  In such case, we need to
-        // dispatch keyboard events with a copy of aEvent.  Therefore, we
-        // need to use information of this key event to dispatch an KeyDown
-        // or eKeyUp event later.
-        else {
-=======
         // ibus may handle key events synchronously if focused editor is
         // <input type="password"> or |ime-mode: disabled;|.  However, in
         // some environments, not so actually.  Therefore, we need to check
@@ -1229,7 +935,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
           isHandlingAsyncEvent =
               mPostingKeyEvents.IndexOf(aEvent) != GdkEventKeyQueue::NoIndex();
           if (isHandlingAsyncEvent) {
->>>>>>> upstream-releases
             MOZ_LOG(gGtkIMLog, LogLevel::Info,
                     ("0x%p   OnKeyEvent(), aEvent->state does not have "
                      "FcitxKeyState_IgnoredMask "
@@ -1238,72 +943,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
                      this));
           }
         }
-<<<<<<< HEAD
-
-        // fcitx won't send back key press events in a dead key sequcne.
-        if (mMaybeInDeadKeySequence && aEvent->type == GDK_KEY_PRESS) {
-          maybeHandledAsynchronously = false;
-          if (isHandlingAsyncEvent) {
-            isUnexpectedAsyncEvent = true;
-            break;
-          }
-          // Some keyboard layouts which have dead keys may send
-          // "empty" key event to make us call
-          // gtk_im_context_filter_keypress() to commit composed
-          // character during a GDK_KEY_PRESS event dispatching.
-          if (!gdk_keyval_to_unicode(aEvent->keyval) &&
-              !aEvent->hardware_keycode) {
-            isUnexpectedAsyncEvent = true;
-            break;
-          }
-        }
-
-        // fcitx handles key events asynchronously even if focused
-        // editor cannot use IME actually.
-
-        if (isHandlingAsyncEvent) {
-          MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                  ("0x%p   OnKeyEvent(), aEvent->state has "
-                   "FcitxKeyState_IgnoredMask or aEvent is in "
-                   "the posting event queue, so, it won't be handled "
-                   "asynchronously anymore. "
-                   "Removing the posted events from the queue",
-                   this));
-          maybeHandledAsynchronously = false;
-          mPostingKeyEvents.RemoveEvent(aEvent);
-          break;
-        }
-        break;
-      }
-      default:
-        MOZ_ASSERT_UNREACHABLE(
-            "IME may handle key event "
-            "asyncrhonously, but not yet confirmed if it comes agian "
-            "actually");
-    }
-  }
-
-  if (!isUnexpectedAsyncEvent) {
-    mKeyboardEventWasDispatched = aKeyboardEventWasDispatched;
-    mKeyboardEventWasConsumed = false;
-  } else {
-    // If we didn't expect this event, we've alreday dispatched eKeyDown
-    // event or eKeyUp event for that.
-    mKeyboardEventWasDispatched = true;
-    // And in this case, we need to assume that another key event hasn't
-    // been receivied and mKeyboardEventWasConsumed keeps storing the
-    // dispatched eKeyDown or eKeyUp event's state.
-  }
-  mFallbackToKeyEvent = false;
-  mProcessingKeyEvent = aEvent;
-  gboolean isFiltered = gtk_im_context_filter_keypress(currentContext, aEvent);
-  if (aEvent->type == GDK_KEY_PRESS) {
-    if (isFiltered && maybeHandledAsynchronously) {
-      sWaitingSynthesizedKeyPressHardwareKeyCode = aEvent->hardware_keycode;
-    } else {
-      sWaitingSynthesizedKeyPressHardwareKeyCode = 0;
-||||||| merged common ancestors
-=======
 
         // fcitx won't send back key press events in a dead key sequcne.
         if (mMaybeInDeadKeySequence && aEvent->type == GDK_KEY_PRESS) {
@@ -1377,7 +1016,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
       sWaitingSynthesizedKeyPressHardwareKeyCode = aEvent->hardware_keycode;
     } else {
       sWaitingSynthesizedKeyPressHardwareKeyCode = 0;
->>>>>>> upstream-releases
     }
   }
 
@@ -1404,33 +1042,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
     filterThisEvent = false;
   }
 
-<<<<<<< HEAD
-  if (filterThisEvent && !mKeyboardEventWasDispatched) {
-    // If IME handled the key event but we've not dispatched eKeyDown nor
-    // eKeyUp event yet, we need to dispatch here unless the key event is
-    // now being handled by other IME process.
-    if (!maybeHandledAsynchronously) {
-      MaybeDispatchKeyEventAsProcessedByIME(eVoidEvent);
-      // Be aware, the widget might have been gone here.
-    }
-    // If we need to wait reply from IM, IM may send some signals to us
-    // without sending the key event again.  In such case, we need to
-    // dispatch keyboard events with a copy of aEvent.  Therefore, we
-    // need to use information of this key event to dispatch an KeyDown
-    // or eKeyUp event later.
-    else {
-      MOZ_LOG(gGtkIMLog, LogLevel::Info,
-              ("0x%p   OnKeyEvent(), putting aEvent into the queue...", this));
-      mPostingKeyEvents.PutEvent(aEvent);
-||||||| merged common ancestors
-    if (aEvent->type == GDK_KEY_PRESS && !filterThisEvent) {
-        // If the key event hasn't been handled by active IME nor keyboard
-        // layout, we can assume that the dead key sequence has been or was
-        // ended.  Note that we should not reset it when the key event is
-        // GDK_KEY_RELEASE since it may not be filtered by active keyboard
-        // layout even in composition.
-        mMaybeInDeadKeySequence = false;
-=======
   if (filterThisEvent && !mKeyboardEventWasDispatched) {
     // If IME handled the key event but we've not dispatched eKeyDown nor
     // eKeyUp event yet, we need to dispatch here unless the key event is
@@ -1448,7 +1059,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
       MOZ_LOG(gGtkIMLog, LogLevel::Info,
               ("0x%p   OnKeyEvent(), putting aEvent into the queue...", this));
       mPostingKeyEvents.PutEvent(aEvent);
->>>>>>> upstream-releases
     }
   }
 
@@ -1463,40 +1073,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
     mMaybeInDeadKeySequence = false;
   }
 
-<<<<<<< HEAD
-  MOZ_LOG(gGtkIMLog, LogLevel::Debug,
-          ("0x%p   OnKeyEvent(), succeeded, filterThisEvent=%s "
-           "(isFiltered=%s, mFallbackToKeyEvent=%s, "
-           "maybeHandledAsynchronously=%s), mPostingKeyEvents.Length()=%zu, "
-           "mCompositionState=%s, mMaybeInDeadKeySequence=%s, "
-           "mKeyboardEventWasDispatched=%s, mKeyboardEventWasConsumed=%s",
-           this, ToChar(filterThisEvent), ToChar(isFiltered),
-           ToChar(mFallbackToKeyEvent), ToChar(maybeHandledAsynchronously),
-           mPostingKeyEvents.Length(), GetCompositionStateName(),
-           ToChar(mMaybeInDeadKeySequence), ToChar(mKeyboardEventWasDispatched),
-           ToChar(mKeyboardEventWasConsumed)));
-
-  if (filterThisEvent) {
-    return KeyHandlingState::eHandled;
-  }
-  // If another call of this method has already dispatched eKeyDown event,
-  // we should return KeyHandlingState::eNotHandledButEventDispatched because
-  // the caller should've stopped handling the event if preceding eKeyDown
-  // event was consumed.
-  if (aKeyboardEventWasDispatched) {
-    return KeyHandlingState::eNotHandledButEventDispatched;
-  }
-  if (!mKeyboardEventWasDispatched) {
-    return KeyHandlingState::eNotHandled;
-  }
-  return mKeyboardEventWasConsumed
-             ? KeyHandlingState::eNotHandledButEventConsumed
-             : KeyHandlingState::eNotHandledButEventDispatched;
-||||||| merged common ancestors
-    // We shouldn't carry over the removed string to another editor.
-    mSelectedStringRemovedByComposition.Truncate();
-    mSelection.Clear();
-=======
   MOZ_LOG(
       gGtkIMLog, LogLevel::Debug,
       ("0x%p   OnKeyEvent(), succeeded, filterThisEvent=%s "
@@ -1527,7 +1103,6 @@ KeyHandlingState IMContextWrapper::OnKeyEvent(
   return mKeyboardEventWasConsumed
              ? KeyHandlingState::eNotHandledButEventConsumed
              : KeyHandlingState::eNotHandledButEventDispatched;
->>>>>>> upstream-releases
 }
 
 void IMContextWrapper::OnFocusChangeInGecko(bool aFocus) {
@@ -1537,7 +1112,6 @@ void IMContextWrapper::OnFocusChangeInGecko(bool aFocus) {
        "mCompositionState=%s, mIsIMFocused=%s",
        this, ToChar(aFocus), GetCompositionStateName(), ToChar(mIsIMFocused)));
 
-<<<<<<< HEAD
   // We shouldn't carry over the removed string to another editor.
   mSelectedStringRemovedByComposition.Truncate();
   mSelection.Clear();
@@ -1547,125 +1121,20 @@ void IMContextWrapper::ResetIME() {
   MOZ_LOG(gGtkIMLog, LogLevel::Info,
           ("0x%p ResetIME(), mCompositionState=%s, mIsIMFocused=%s", this,
            GetCompositionStateName(), ToChar(mIsIMFocused)));
-||||||| merged common ancestors
-    GtkIMContext* activeContext = GetActiveContext();
-    if (MOZ_UNLIKELY(!activeContext)) {
-        MOZ_LOG(gGtkIMLog, LogLevel::Error,
-            ("0x%p   ResetIME(), FAILED, there are no context",
-             this));
-        return;
-    }
-=======
-  // We shouldn't carry over the removed string to another editor.
-  mSelectedStringRemovedByComposition.Truncate();
-  mSelection.Clear();
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   GtkIMContext* activeContext = GetActiveContext();
   if (MOZ_UNLIKELY(!activeContext)) {
     MOZ_LOG(gGtkIMLog, LogLevel::Error,
             ("0x%p   ResetIME(), FAILED, there are no context", this));
     return;
   }
-||||||| merged common ancestors
-    RefPtr<IMContextWrapper> kungFuDeathGrip(this);
-    RefPtr<nsWindow> lastFocusedWindow(mLastFocusedWindow);
-=======
-void IMContextWrapper::ResetIME() {
-  MOZ_LOG(gGtkIMLog, LogLevel::Info,
-          ("0x%p ResetIME(), mCompositionState=%s, mIsIMFocused=%s", this,
-           GetCompositionStateName(), ToChar(mIsIMFocused)));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   RefPtr<IMContextWrapper> kungFuDeathGrip(this);
   RefPtr<nsWindow> lastFocusedWindow(mLastFocusedWindow);
-||||||| merged common ancestors
-    mPendingResettingIMContext = false;
-    gtk_im_context_reset(activeContext);
-=======
-  GtkIMContext* activeContext = GetActiveContext();
-  if (MOZ_UNLIKELY(!activeContext)) {
-    MOZ_LOG(gGtkIMLog, LogLevel::Error,
-            ("0x%p   ResetIME(), FAILED, there are no context", this));
-    return;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   mPendingResettingIMContext = false;
   gtk_im_context_reset(activeContext);
-||||||| merged common ancestors
-    // The last focused window might have been destroyed by a DOM event handler
-    // which was called by us during a call of gtk_im_context_reset().
-    if (!lastFocusedWindow ||
-        NS_WARN_IF(lastFocusedWindow != mLastFocusedWindow) ||
-        lastFocusedWindow->Destroyed()) {
-        return;
-    }
-=======
-  RefPtr<IMContextWrapper> kungFuDeathGrip(this);
-  RefPtr<nsWindow> lastFocusedWindow(mLastFocusedWindow);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The last focused window might have been destroyed by a DOM event handler
-  // which was called by us during a call of gtk_im_context_reset().
-  if (!lastFocusedWindow ||
-      NS_WARN_IF(lastFocusedWindow != mLastFocusedWindow) ||
-      lastFocusedWindow->Destroyed()) {
-    return;
-  }
-||||||| merged common ancestors
-    nsAutoString compositionString;
-    GetCompositionString(activeContext, compositionString);
-=======
-  mPendingResettingIMContext = false;
-  gtk_im_context_reset(activeContext);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsAutoString compositionString;
-  GetCompositionString(activeContext, compositionString);
-
-  MOZ_LOG(
-      gGtkIMLog, LogLevel::Debug,
-      ("0x%p   ResetIME() called gtk_im_context_reset(), "
-       "activeContext=0x%p, mCompositionState=%s, compositionString=%s, "
-       "mIsIMFocused=%s",
-       this, activeContext, GetCompositionStateName(),
-       NS_ConvertUTF16toUTF8(compositionString).get(), ToChar(mIsIMFocused)));
-
-  // XXX IIIMF (ATOK X3 which is one of the Language Engine of it is still
-  //     used in Japan!) sends only "preedit_changed" signal with empty
-  //     composition string synchronously.  Therefore, if composition string
-  //     is now empty string, we should assume that the IME won't send
-  //     "commit" signal.
-  if (IsComposing() && compositionString.IsEmpty()) {
-    // WARNING: The widget might have been gone after this.
-    DispatchCompositionCommitEvent(activeContext, &EmptyString());
-  }
-||||||| merged common ancestors
-    MOZ_LOG(gGtkIMLog, LogLevel::Debug,
-        ("0x%p   ResetIME() called gtk_im_context_reset(), "
-         "activeContext=0x%p, mCompositionState=%s, compositionString=%s, "
-         "mIsIMFocused=%s",
-         this, activeContext, GetCompositionStateName(),
-         NS_ConvertUTF16toUTF8(compositionString).get(),
-         ToChar(mIsIMFocused)));
-
-    // XXX IIIMF (ATOK X3 which is one of the Language Engine of it is still
-    //     used in Japan!) sends only "preedit_changed" signal with empty
-    //     composition string synchronously.  Therefore, if composition string
-    //     is now empty string, we should assume that the IME won't send
-    //     "commit" signal.
-    if (IsComposing() && compositionString.IsEmpty()) {
-        // WARNING: The widget might have been gone after this.
-        DispatchCompositionCommitEvent(activeContext, &EmptyString());
-    }
-=======
   // The last focused window might have been destroyed by a DOM event handler
   // which was called by us during a call of gtk_im_context_reset().
   if (!lastFocusedWindow ||
@@ -1694,7 +1163,6 @@ void IMContextWrapper::ResetIME() {
     // WARNING: The widget might have been gone after this.
     DispatchCompositionCommitEvent(activeContext, &EmptyString());
   }
->>>>>>> upstream-releases
 }
 
 nsresult IMContextWrapper::EndIMEComposition(nsWindow* aCaller) {
@@ -1960,7 +1428,6 @@ void IMContextWrapper::Blur() {
   mIsIMFocused = false;
 }
 
-<<<<<<< HEAD
 void IMContextWrapper::OnSelectionChange(
     nsWindow* aCaller, const IMENotification& aIMENotification) {
   mSelection.Assign(aIMENotification);
@@ -1970,33 +1437,6 @@ void IMContextWrapper::OnSelectionChange(
   if (MOZ_UNLIKELY(IsDestroyed())) {
     return;
   }
-||||||| merged common ancestors
-void
-IMContextWrapper::OnSelectionChange(nsWindow* aCaller,
-                                    const IMENotification& aIMENotification)
-{
-    mSelection.Assign(aIMENotification);
-    bool retrievedSurroundingSignalReceived =
-      mRetrieveSurroundingSignalReceived;
-    mRetrieveSurroundingSignalReceived = false;
-
-    if (MOZ_UNLIKELY(IsDestroyed())) {
-        return;
-    }
-
-    const IMENotification::SelectionChangeDataBase& selectionChangeData =
-        aIMENotification.mSelectionChangeData;
-=======
-void IMContextWrapper::OnSelectionChange(
-    nsWindow* aCaller, const IMENotification& aIMENotification) {
-  mSelection.Assign(aIMENotification);
-  bool retrievedSurroundingSignalReceived = mRetrieveSurroundingSignalReceived;
-  mRetrieveSurroundingSignalReceived = false;
-
-  if (MOZ_UNLIKELY(IsDestroyed())) {
-    return;
-  }
->>>>>>> upstream-releases
 
   const IMENotification::SelectionChangeDataBase& selectionChangeData =
       aIMENotification.mSelectionChangeData;
@@ -2482,86 +1922,6 @@ bool IMContextWrapper::MaybeDispatchKeyEventAsProcessedByIME(
     return true;
   }
 
-<<<<<<< HEAD
-  // A "keydown" or "keyup" event handler may change focus with the
-  // following event.  In such case, we need to cancel this composition.
-  // So, we need to store IM context now because mComposingContext may be
-  // overwritten with different context if calling this method recursively.
-  // Note that we don't need to grab the context here because |context|
-  // will be used only for checking if it's same as mComposingContext.
-  GtkIMContext* oldCurrentContext = GetCurrentContext();
-  GtkIMContext* oldComposingContext = mComposingContext;
-
-  RefPtr<nsWindow> lastFocusedWindow(mLastFocusedWindow);
-
-  if (mProcessingKeyEvent || !mPostingKeyEvents.IsEmpty()) {
-    if (mProcessingKeyEvent) {
-      mKeyboardEventWasDispatched = true;
-    }
-    // If we're not handling a key event synchronously, the signal may be
-    // sent by IME without sending key event to us.  In such case, we
-    // should dispatch keyboard event for the last key event which was
-    // posted to other IME process.
-    GdkEventKey* sourceEvent = mProcessingKeyEvent
-                                   ? mProcessingKeyEvent
-                                   : mPostingKeyEvents.GetFirstEvent();
-
-    MOZ_LOG(
-        gGtkIMLog, LogLevel::Info,
-        ("0x%p MaybeDispatchKeyEventAsProcessedByIME("
-         "aFollowingEvent=%s), dispatch %s %s "
-         "event: { type=%s, keyval=%s, unicode=0x%X, state=%s, "
-         "time=%u, hardware_keycode=%u, group=%u }",
-         this, ToChar(aFollowingEvent),
-         ToChar(sourceEvent->type == GDK_KEY_PRESS ? eKeyDown : eKeyUp),
-         mProcessingKeyEvent ? "processing" : "posted",
-         GetEventType(sourceEvent), gdk_keyval_name(sourceEvent->keyval),
-         gdk_keyval_to_unicode(sourceEvent->keyval),
-         GetEventStateName(sourceEvent->state, mIMContextID).get(),
-         sourceEvent->time, sourceEvent->hardware_keycode, sourceEvent->group));
-
-    // Let's dispatch eKeyDown event or eKeyUp event now.  Note that only
-    // when we're not in a dead key composition, we should mark the
-    // eKeyDown and eKeyUp event as "processed by IME" since we should
-    // expose raw keyCode and key value to web apps the key event is a
-    // part of a dead key sequence.
-    // FYI: We should ignore if default of preceding keydown or keyup
-    //      event is prevented since even on the other browsers, web
-    //      applications cannot cancel the following composition event.
-    //      Spec bug: https://github.com/w3c/uievents/issues/180
-    lastFocusedWindow->DispatchKeyDownOrKeyUpEvent(
-        sourceEvent, !mMaybeInDeadKeySequence, &mKeyboardEventWasConsumed);
-    MOZ_LOG(gGtkIMLog, LogLevel::Info,
-||||||| merged common ancestors
-        MOZ_LOG(gGtkIMLog, LogLevel::Info,
-            ("0x%p MaybeDispatchKeyEventAsProcessedByIME("
-             "aFollowingEvent=%s), dispatch %s %s "
-             "event: { type=%s, keyval=%s, unicode=0x%X, state=%s, "
-             "time=%u, hardware_keycode=%u, group=%u }",
-             this, ToChar(aFollowingEvent),
-             ToChar(sourceEvent->type == GDK_KEY_PRESS ? eKeyDown : eKeyUp),
-             mProcessingKeyEvent ? "processing" : "posted",
-             GetEventType(sourceEvent), gdk_keyval_name(sourceEvent->keyval),
-             gdk_keyval_to_unicode(sourceEvent->keyval),
-             GetEventStateName(sourceEvent->state, mIMContextID).get(),
-             sourceEvent->time, sourceEvent->hardware_keycode,
-             sourceEvent->group));
-
-        // Let's dispatch eKeyDown event or eKeyUp event now.  Note that only
-        // when we're not in a dead key composition, we should mark the
-        // eKeyDown and eKeyUp event as "processed by IME" since we should
-        // expose raw keyCode and key value to web apps the key event is a
-        // part of a dead key sequence.
-        // FYI: We should ignore if default of preceding keydown or keyup
-        //      event is prevented since even on the other browsers, web
-        //      applications cannot cancel the following composition event.
-        //      Spec bug: https://github.com/w3c/uievents/issues/180
-        bool isCancelled;
-        lastFocusedWindow->DispatchKeyDownOrKeyUpEvent(sourceEvent,
-                                                       !mMaybeInDeadKeySequence,
-                                                       &isCancelled);
-        MOZ_LOG(gGtkIMLog, LogLevel::Info,
-=======
   // A "keydown" or "keyup" event handler may change focus with the
   // following event.  In such case, we need to cancel this composition.
   // So, we need to store IM context now because mComposingContext may be
@@ -2612,147 +1972,10 @@ bool IMContextWrapper::MaybeDispatchKeyEventAsProcessedByIME(
                                                !mMaybeInDeadKeySequence,
                                                &mKeyboardEventWasConsumed);
     MOZ_LOG(gGtkIMLog, LogLevel::Info,
->>>>>>> upstream-releases
             ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), keydown or keyup "
              "event is dispatched",
              this));
 
-<<<<<<< HEAD
-    if (!mProcessingKeyEvent) {
-      MOZ_LOG(gGtkIMLog, LogLevel::Info,
-              ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), removing first "
-               "event from the queue",
-               this));
-      mPostingKeyEvents.RemoveEvent(sourceEvent);
-    }
-  } else {
-    MOZ_ASSERT(mIsKeySnooped);
-    // Currently, we support key snooper mode of uim only.
-    MOZ_ASSERT(mIMContextID == IMContextID::eUim);
-    // uim sends "preedit_start" signal and "preedit_changed" separately
-    // at starting composition, "commit" and "preedit_end" separately at
-    // committing composition.
-
-    // Currently, we should dispatch only fake eKeyDown event because
-    // we cannot decide which is the last signal of each key operation
-    // and Chromium also dispatches only "keydown" event in this case.
-    bool dispatchFakeKeyDown = false;
-    switch (aFollowingEvent) {
-      case eCompositionStart:
-      case eCompositionCommit:
-      case eCompositionCommitAsIs:
-        dispatchFakeKeyDown = true;
-        break;
-      // XXX Unfortunately, I don't have a good idea to prevent to
-      //     dispatch redundant eKeyDown event for eCompositionStart
-      //     immediately after "delete_surrounding" signal.  However,
-      //     not dispatching eKeyDown event is worse than dispatching
-      //     redundant eKeyDown events.
-      case eContentCommandDelete:
-        dispatchFakeKeyDown = true;
-        break;
-      // We need to prevent to dispatch redundant eKeyDown event for
-      // eCompositionChange immediately after eCompositionStart.  So,
-      // We should not dispatch eKeyDown event if dispatched composition
-      // string is still empty string.
-      case eCompositionChange:
-        dispatchFakeKeyDown = !mDispatchedCompositionString.IsEmpty();
-        break;
-      default:
-        MOZ_ASSERT_UNREACHABLE("Do you forget to handle the case?");
-        break;
-    }
-
-    if (dispatchFakeKeyDown) {
-      WidgetKeyboardEvent fakeKeyDownEvent(true, eKeyDown, lastFocusedWindow);
-      fakeKeyDownEvent.mKeyCode = NS_VK_PROCESSKEY;
-      fakeKeyDownEvent.mKeyNameIndex = KEY_NAME_INDEX_Process;
-      // It's impossible to get physical key information in this case but
-      // this should be okay since web apps shouldn't do anything with
-      // physical key information during composition.
-      fakeKeyDownEvent.mCodeNameIndex = CODE_NAME_INDEX_UNKNOWN;
-
-      MOZ_LOG(gGtkIMLog, LogLevel::Info,
-              ("0x%p MaybeDispatchKeyEventAsProcessedByIME("
-               "aFollowingEvent=%s), dispatch fake eKeyDown event",
-               this, ToChar(aFollowingEvent)));
-
-      lastFocusedWindow->DispatchKeyDownOrKeyUpEvent(
-          fakeKeyDownEvent, &mKeyboardEventWasConsumed);
-      MOZ_LOG(gGtkIMLog, LogLevel::Info,
-              ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), "
-               "fake keydown event is dispatched",
-               this));
-||||||| merged common ancestors
-        if (!mProcessingKeyEvent) {
-            MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), removing first "
-                 "event from the queue",
-                 this));
-            mPostingKeyEvents.RemoveEvent(sourceEvent);
-        }
-    } else {
-        MOZ_ASSERT(mIsKeySnooped);
-        // Currently, we support key snooper mode of uim only.
-        MOZ_ASSERT(mIMContextID == IMContextID::eUim);
-        // uim sends "preedit_start" signal and "preedit_changed" separately
-        // at starting composition, "commit" and "preedit_end" separately at
-        // committing composition.
-
-        // Currently, we should dispatch only fake eKeyDown event because
-        // we cannot decide which is the last signal of each key operation
-        // and Chromium also dispatches only "keydown" event in this case.
-        bool dispatchFakeKeyDown = false;
-        switch (aFollowingEvent) {
-            case eCompositionStart:
-            case eCompositionCommit:
-            case eCompositionCommitAsIs:
-                dispatchFakeKeyDown = true;
-                break;
-            // XXX Unfortunately, I don't have a good idea to prevent to
-            //     dispatch redundant eKeyDown event for eCompositionStart
-            //     immediately after "delete_surrounding" signal.  However,
-            //     not dispatching eKeyDown event is worse than dispatching
-            //     redundant eKeyDown events.
-            case eContentCommandDelete:
-                dispatchFakeKeyDown = true;
-                break;
-            // We need to prevent to dispatch redundant eKeyDown event for
-            // eCompositionChange immediately after eCompositionStart.  So,
-            // We should not dispatch eKeyDown event if dispatched composition
-            // string is still empty string.
-            case eCompositionChange:
-                dispatchFakeKeyDown = !mDispatchedCompositionString.IsEmpty();
-                break;
-            default:
-                MOZ_ASSERT_UNREACHABLE("Do you forget to handle the case?");
-                break;
-        }
-
-        if (dispatchFakeKeyDown) {
-            WidgetKeyboardEvent fakeKeyDownEvent(true, eKeyDown,
-                                                 lastFocusedWindow);
-            fakeKeyDownEvent.mKeyCode = NS_VK_PROCESSKEY;
-            fakeKeyDownEvent.mKeyNameIndex = KEY_NAME_INDEX_Process;
-            // It's impossible to get physical key information in this case but
-            // this should be okay since web apps shouldn't do anything with
-            // physical key information during composition.
-            fakeKeyDownEvent.mCodeNameIndex = CODE_NAME_INDEX_UNKNOWN;
-
-            MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                ("0x%p MaybeDispatchKeyEventAsProcessedByIME("
-                 "aFollowingEvent=%s), dispatch fake eKeyDown event",
-                 this, ToChar(aFollowingEvent)));
-
-            bool isCancelled;
-            lastFocusedWindow->DispatchKeyDownOrKeyUpEvent(fakeKeyDownEvent,
-                                                           &isCancelled);
-            MOZ_LOG(gGtkIMLog, LogLevel::Info,
-                ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), "
-                 "fake keydown event is dispatched",
-                 this));
-        }
-=======
     if (!mProcessingKeyEvent) {
       MOZ_LOG(gGtkIMLog, LogLevel::Info,
               ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), removing first "
@@ -2818,7 +2041,6 @@ bool IMContextWrapper::MaybeDispatchKeyEventAsProcessedByIME(
               ("0x%p   MaybeDispatchKeyEventAsProcessedByIME(), "
                "fake keydown event is dispatched",
                this));
->>>>>>> upstream-releases
     }
   }
 
@@ -3242,65 +2464,17 @@ already_AddRefed<TextRangeArray> IMContextWrapper::CreateTextRangeArray(
     return textRangeArray.forget();
   }
 
-<<<<<<< HEAD
-  uint32_t minOffsetOfClauses = aCompositionString.Length();
-  do {
-||||||| merged common ancestors
-=======
   uint32_t minOffsetOfClauses = aCompositionString.Length();
   uint32_t maxOffsetOfClauses = 0;
   do {
->>>>>>> upstream-releases
     TextRange range;
-<<<<<<< HEAD
-    if (!SetTextRange(iter, preedit_string, caretOffsetInUTF16, range)) {
-      continue;
-    }
-    MOZ_ASSERT(range.Length());
-    minOffsetOfClauses = std::min(minOffsetOfClauses, range.mStartOffset);
-||||||| merged common ancestors
-    range.mStartOffset = range.mEndOffset = caretOffsetInUTF16;
-    range.mRangeType = TextRangeType::eCaret;
-=======
     if (!SetTextRange(iter, preedit_string, caretOffsetInUTF16, range)) {
       continue;
     }
     MOZ_ASSERT(range.Length());
     minOffsetOfClauses = std::min(minOffsetOfClauses, range.mStartOffset);
     maxOffsetOfClauses = std::max(maxOffsetOfClauses, range.mEndOffset);
->>>>>>> upstream-releases
     textRangeArray->AppendElement(range);
-<<<<<<< HEAD
-  } while (pango_attr_iterator_next(iter));
-
-  // If the IME doesn't define clause from the start of the composition,
-  // we should insert dummy clause information since TextRangeArray assumes
-  // that there must be a clause whose start is 0 when there is one or
-  // more clauses.
-  if (minOffsetOfClauses) {
-    TextRange dummyClause;
-    dummyClause.mStartOffset = 0;
-    dummyClause.mEndOffset = minOffsetOfClauses;
-    dummyClause.mRangeType = TextRangeType::eRawClause;
-    textRangeArray->InsertElementAt(0, dummyClause);
-    MOZ_LOG(gGtkIMLog, LogLevel::Warning,
-            ("0x%p   CreateTextRangeArray(), inserting a dummy clause "
-             "at the beginning of the composition string mStartOffset=%u, "
-             "mEndOffset=%u, mRangeType=%s",
-             this, dummyClause.mStartOffset, dummyClause.mEndOffset,
-             ToChar(dummyClause.mRangeType)));
-  }
-||||||| merged common ancestors
-    MOZ_LOG(gGtkIMLog, LogLevel::Debug,
-        ("0x%p   CreateTextRangeArray(), mStartOffset=%u, "
-         "mEndOffset=%u, mRangeType=%s",
-         this, range.mStartOffset, range.mEndOffset,
-         ToChar(range.mRangeType)));
-
-    pango_attr_iterator_destroy(iter);
-    pango_attr_list_unref(feedback_list);
-    g_free(preedit_string);
-=======
   } while (pango_attr_iterator_next(iter));
 
   // If the IME doesn't define clause from the start of the composition,
@@ -3340,7 +2514,6 @@ already_AddRefed<TextRangeArray> IMContextWrapper::CreateTextRangeArray(
              this, dummyClause.mStartOffset, dummyClause.mEndOffset,
              ToChar(dummyClause.mRangeType)));
   }
->>>>>>> upstream-releases
 
   TextRange range;
   range.mStartOffset = range.mEndOffset = caretOffsetInUTF16;
@@ -3397,17 +2570,6 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
       return false;
     }
 
-<<<<<<< HEAD
-    aTextRange.mStartOffset = utf16PreviousClausesLength;
-    g_free(utf16PreviousClausesString);
-  }
-||||||| merged common ancestors
-    glong utf16CurrentClauseLength;
-    gunichar2* utf16CurrentClauseString =
-        g_utf8_to_utf16(aUTF8CompositionString + utf8ClauseStart,
-                        utf8ClauseEnd - utf8ClauseStart,
-                        nullptr, &utf16CurrentClauseLength, nullptr);
-=======
     aTextRange.mStartOffset = utf16PreviousClausesLength;
     g_free(utf16PreviousClausesString);
   }
@@ -3416,23 +2578,9 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
   gunichar2* utf16CurrentClauseString = g_utf8_to_utf16(
       aUTF8CompositionString + utf8ClauseStart, utf8ClauseEnd - utf8ClauseStart,
       nullptr, &utf16CurrentClauseLength, nullptr);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  glong utf16CurrentClauseLength;
-  gunichar2* utf16CurrentClauseString = g_utf8_to_utf16(
-      aUTF8CompositionString + utf8ClauseStart, utf8ClauseEnd - utf8ClauseStart,
-      nullptr, &utf16CurrentClauseLength, nullptr);
 
   if (NS_WARN_IF(!utf16CurrentClauseString)) {
     MOZ_LOG(gGtkIMLog, LogLevel::Error,
-||||||| merged common ancestors
-    if (NS_WARN_IF(!utf16CurrentClauseString)) {
-        MOZ_LOG(gGtkIMLog, LogLevel::Error,
-=======
-  if (NS_WARN_IF(!utf16CurrentClauseString)) {
-    MOZ_LOG(gGtkIMLog, LogLevel::Error,
->>>>>>> upstream-releases
             ("0x%p   SetTextRange(), FAILED, due to g_utf8_to_utf16() "
              "failure (retrieving current clause)",
              this));
@@ -3450,7 +2598,6 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
     return false;
   }
 
-<<<<<<< HEAD
   aTextRange.mEndOffset = aTextRange.mStartOffset + utf16CurrentClauseLength;
   g_free(utf16CurrentClauseString);
   utf16CurrentClauseString = nullptr;
@@ -3497,74 +2644,10 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
     style.mLineStyle = TextRangeStyle::LINESTYLE_NONE;
     style.mDefinedStyles |= TextRangeStyle::DEFINED_LINESTYLE;
   }
-||||||| merged common ancestors
-    aTextRange.mEndOffset = aTextRange.mStartOffset + utf16CurrentClauseLength;
-    g_free(utf16CurrentClauseString);
-    utf16CurrentClauseString = nullptr;
 
-    // Set styles
-    TextRangeStyle& style = aTextRange.mRangeStyle;
-
-    // Underline
-    PangoAttrInt* attrUnderline =
-        reinterpret_cast<PangoAttrInt*>(
-            pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_UNDERLINE));
-    if (attrUnderline) {
-        switch (attrUnderline->value) {
-            case PANGO_UNDERLINE_NONE:
-                style.mLineStyle = TextRangeStyle::LINESTYLE_NONE;
-                break;
-            case PANGO_UNDERLINE_DOUBLE:
-                style.mLineStyle = TextRangeStyle::LINESTYLE_DOUBLE;
-                break;
-            case PANGO_UNDERLINE_ERROR:
-                style.mLineStyle = TextRangeStyle::LINESTYLE_WAVY;
-                break;
-            case PANGO_UNDERLINE_SINGLE:
-            case PANGO_UNDERLINE_LOW:
-                style.mLineStyle = TextRangeStyle::LINESTYLE_SOLID;
-                break;
-            default:
-                MOZ_LOG(gGtkIMLog, LogLevel::Warning,
-                    ("0x%p   SetTextRange(), retrieved unknown underline "
-                     "style: %d",
-                     this, attrUnderline->value));
-                style.mLineStyle = TextRangeStyle::LINESTYLE_SOLID;
-                break;
-        }
-        style.mDefinedStyles |= TextRangeStyle::DEFINED_LINESTYLE;
-
-        // Underline color
-        PangoAttrColor* attrUnderlineColor =
-            reinterpret_cast<PangoAttrColor*>(
-                pango_attr_iterator_get(aPangoAttrIter,
-                                        PANGO_ATTR_UNDERLINE_COLOR));
-        if (attrUnderlineColor) {
-            style.mUnderlineColor = ToNscolor(attrUnderlineColor);
-            style.mDefinedStyles |= TextRangeStyle::DEFINED_UNDERLINE_COLOR;
-        }
-    } else {
-        style.mLineStyle = TextRangeStyle::LINESTYLE_NONE;
-        style.mDefinedStyles |= TextRangeStyle::DEFINED_LINESTYLE;
-    }
-=======
-  aTextRange.mEndOffset = aTextRange.mStartOffset + utf16CurrentClauseLength;
-  g_free(utf16CurrentClauseString);
-  utf16CurrentClauseString = nullptr;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Don't set colors if they are not specified.  They should be computed by
   // textframe if only one of the colors are specified.
-||||||| merged common ancestors
-    // Don't set colors if they are not specified.  They should be computed by
-    // textframe if only one of the colors are specified.
-=======
-  // Set styles
-  TextRangeStyle& style = aTextRange.mRangeStyle;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   // Foreground color (text color)
   PangoAttrColor* attrForeground = reinterpret_cast<PangoAttrColor*>(
       pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_FOREGROUND));
@@ -3572,58 +2655,7 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
     style.mForegroundColor = ToNscolor(attrForeground);
     style.mDefinedStyles |= TextRangeStyle::DEFINED_FOREGROUND_COLOR;
   }
-||||||| merged common ancestors
-    // Foreground color (text color)
-    PangoAttrColor* attrForeground =
-        reinterpret_cast<PangoAttrColor*>(
-            pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_FOREGROUND));
-    if (attrForeground) {
-        style.mForegroundColor = ToNscolor(attrForeground);
-        style.mDefinedStyles |= TextRangeStyle::DEFINED_FOREGROUND_COLOR;
-    }
-=======
-  // Underline
-  PangoAttrInt* attrUnderline = reinterpret_cast<PangoAttrInt*>(
-      pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_UNDERLINE));
-  if (attrUnderline) {
-    switch (attrUnderline->value) {
-      case PANGO_UNDERLINE_NONE:
-        style.mLineStyle = TextRangeStyle::LINESTYLE_NONE;
-        break;
-      case PANGO_UNDERLINE_DOUBLE:
-        style.mLineStyle = TextRangeStyle::LINESTYLE_DOUBLE;
-        break;
-      case PANGO_UNDERLINE_ERROR:
-        style.mLineStyle = TextRangeStyle::LINESTYLE_WAVY;
-        break;
-      case PANGO_UNDERLINE_SINGLE:
-      case PANGO_UNDERLINE_LOW:
-        style.mLineStyle = TextRangeStyle::LINESTYLE_SOLID;
-        break;
-      default:
-        MOZ_LOG(gGtkIMLog, LogLevel::Warning,
-                ("0x%p   SetTextRange(), retrieved unknown underline "
-                 "style: %d",
-                 this, attrUnderline->value));
-        style.mLineStyle = TextRangeStyle::LINESTYLE_SOLID;
-        break;
-    }
-    style.mDefinedStyles |= TextRangeStyle::DEFINED_LINESTYLE;
 
-    // Underline color
-    PangoAttrColor* attrUnderlineColor = reinterpret_cast<PangoAttrColor*>(
-        pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_UNDERLINE_COLOR));
-    if (attrUnderlineColor) {
-      style.mUnderlineColor = ToNscolor(attrUnderlineColor);
-      style.mDefinedStyles |= TextRangeStyle::DEFINED_UNDERLINE_COLOR;
-    }
-  } else {
-    style.mLineStyle = TextRangeStyle::LINESTYLE_NONE;
-    style.mDefinedStyles |= TextRangeStyle::DEFINED_LINESTYLE;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Background color
   PangoAttrColor* attrBackground = reinterpret_cast<PangoAttrColor*>(
       pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_BACKGROUND));
@@ -3631,151 +2663,7 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
     style.mBackgroundColor = ToNscolor(attrBackground);
     style.mDefinedStyles |= TextRangeStyle::DEFINED_BACKGROUND_COLOR;
   }
-||||||| merged common ancestors
-    // Background color
-    PangoAttrColor* attrBackground =
-        reinterpret_cast<PangoAttrColor*>(
-            pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_BACKGROUND));
-    if (attrBackground) {
-        style.mBackgroundColor = ToNscolor(attrBackground);
-        style.mDefinedStyles |= TextRangeStyle::DEFINED_BACKGROUND_COLOR;
-    }
-=======
-  // Don't set colors if they are not specified.  They should be computed by
-  // textframe if only one of the colors are specified.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /**
-   * We need to judge the meaning of the clause for a11y.  Before we support
-   * IME specific composition string style, we used following rules:
-   *
-   *   1: If attrUnderline and attrForground are specified, we assumed the
-   *      clause is TextRangeType::eSelectedClause.
-   *   2: If only attrUnderline is specified, we assumed the clause is
-   *      TextRangeType::eConvertedClause.
-   *   3: If only attrForground is specified, we assumed the clause is
-   *      TextRangeType::eSelectedRawClause.
-   *   4: If neither attrUnderline nor attrForeground is specified, we assumed
-   *      the clause is TextRangeType::eRawClause.
-   *
-   * However, this rules are odd since there can be two or more selected
-   * clauses.  Additionally, our old rules caused that IME developers/users
-   * cannot specify composition string style as they want.
-   *
-   * So, we shouldn't guess the meaning from its visual style.
-   */
-
-  if (!attrUnderline && !attrForeground && !attrBackground) {
-    MOZ_LOG(gGtkIMLog, LogLevel::Warning,
-            ("0x%p   SetTextRange(), FAILED, due to no attr, "
-             "aTextRange= { mStartOffset=%u, mEndOffset=%u }",
-             this, aTextRange.mStartOffset, aTextRange.mEndOffset));
-    return false;
-  }
-||||||| merged common ancestors
-    /**
-     * We need to judge the meaning of the clause for a11y.  Before we support
-     * IME specific composition string style, we used following rules:
-     *
-     *   1: If attrUnderline and attrForground are specified, we assumed the
-     *      clause is TextRangeType::eSelectedClause.
-     *   2: If only attrUnderline is specified, we assumed the clause is
-     *      TextRangeType::eConvertedClause.
-     *   3: If only attrForground is specified, we assumed the clause is
-     *      TextRangeType::eSelectedRawClause.
-     *   4: If neither attrUnderline nor attrForeground is specified, we assumed
-     *      the clause is TextRangeType::eRawClause.
-     *
-     * However, this rules are odd since there can be two or more selected
-     * clauses.  Additionally, our old rules caused that IME developers/users
-     * cannot specify composition string style as they want.
-     *
-     * So, we shouldn't guess the meaning from its visual style.
-     */
-
-    if (!attrUnderline && !attrForeground && !attrBackground) {
-        MOZ_LOG(gGtkIMLog, LogLevel::Warning,
-            ("0x%p   SetTextRange(), FAILED, due to no attr, "
-             "aTextRange= { mStartOffset=%u, mEndOffset=%u }",
-             this, aTextRange.mStartOffset, aTextRange.mEndOffset));
-        return false;
-    }
-=======
-  // Foreground color (text color)
-  PangoAttrColor* attrForeground = reinterpret_cast<PangoAttrColor*>(
-      pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_FOREGROUND));
-  if (attrForeground) {
-    style.mForegroundColor = ToNscolor(attrForeground);
-    style.mDefinedStyles |= TextRangeStyle::DEFINED_FOREGROUND_COLOR;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // If the range covers whole of composition string and the caret is at
-  // the end of the composition string, the range is probably not converted.
-  if (!utf8ClauseStart &&
-      utf8ClauseEnd == static_cast<gint>(strlen(aUTF8CompositionString)) &&
-      aTextRange.mEndOffset == aUTF16CaretOffset) {
-    aTextRange.mRangeType = TextRangeType::eRawClause;
-  }
-  // Typically, the caret is set at the start of the selected clause.
-  // So, if the caret is in the clause, we can assume that the clause is
-  // selected.
-  else if (aTextRange.mStartOffset <= aUTF16CaretOffset &&
-           aTextRange.mEndOffset > aUTF16CaretOffset) {
-    aTextRange.mRangeType = TextRangeType::eSelectedClause;
-  }
-  // Otherwise, we should assume that the clause is converted but not
-  // selected.
-  else {
-    aTextRange.mRangeType = TextRangeType::eConvertedClause;
-  }
-||||||| merged common ancestors
-    // If the range covers whole of composition string and the caret is at
-    // the end of the composition string, the range is probably not converted.
-    if (!utf8ClauseStart &&
-        utf8ClauseEnd == static_cast<gint>(strlen(aUTF8CompositionString)) &&
-        aTextRange.mEndOffset == aUTF16CaretOffset) {
-        aTextRange.mRangeType = TextRangeType::eRawClause;
-    }
-    // Typically, the caret is set at the start of the selected clause.
-    // So, if the caret is in the clause, we can assume that the clause is
-    // selected.
-    else if (aTextRange.mStartOffset <= aUTF16CaretOffset &&
-             aTextRange.mEndOffset > aUTF16CaretOffset) {
-        aTextRange.mRangeType = TextRangeType::eSelectedClause;
-    }
-    // Otherwise, we should assume that the clause is converted but not
-    // selected.
-    else {
-        aTextRange.mRangeType = TextRangeType::eConvertedClause;
-    }
-=======
-  // Background color
-  PangoAttrColor* attrBackground = reinterpret_cast<PangoAttrColor*>(
-      pango_attr_iterator_get(aPangoAttrIter, PANGO_ATTR_BACKGROUND));
-  if (attrBackground) {
-    style.mBackgroundColor = ToNscolor(attrBackground);
-    style.mDefinedStyles |= TextRangeStyle::DEFINED_BACKGROUND_COLOR;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  MOZ_LOG(gGtkIMLog, LogLevel::Debug,
-          ("0x%p   SetTextRange(), succeeded, aTextRange= { "
-           "mStartOffset=%u, mEndOffset=%u, mRangeType=%s, mRangeStyle=%s }",
-           this, aTextRange.mStartOffset, aTextRange.mEndOffset,
-           ToChar(aTextRange.mRangeType),
-           GetTextRangeStyleText(aTextRange.mRangeStyle).get()));
-||||||| merged common ancestors
-    MOZ_LOG(gGtkIMLog, LogLevel::Debug,
-        ("0x%p   SetTextRange(), succeeded, aTextRange= { "
-         "mStartOffset=%u, mEndOffset=%u, mRangeType=%s, mRangeStyle=%s }",
-         this, aTextRange.mStartOffset, aTextRange.mEndOffset,
-         ToChar(aTextRange.mRangeType),
-         GetTextRangeStyleText(aTextRange.mRangeStyle).get()));
-=======
   /**
    * We need to judge the meaning of the clause for a11y.  Before we support
    * IME specific composition string style, we used following rules:
@@ -3815,13 +2703,7 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
   else {
     aTextRange.mRangeType = TextRangeType::eConvertedClause;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   MOZ_LOG(gGtkIMLog, LogLevel::Debug,
           ("0x%p   SetTextRange(), succeeded, aTextRange= { "
            "mStartOffset=%u, mEndOffset=%u, mRangeType=%s, mRangeStyle=%s }",
@@ -3830,7 +2712,6 @@ bool IMContextWrapper::SetTextRange(PangoAttrIterator* aPangoAttrIter,
            GetTextRangeStyleText(aTextRange.mRangeStyle).get()));
 
   return true;
->>>>>>> upstream-releases
 }
 
 void IMContextWrapper::SetCursorPosition(GtkIMContext* aContext) {
@@ -3922,58 +2803,11 @@ nsresult IMContextWrapper::GetCurrentParagraph(nsAString& aText,
             ("0x%p   GetCurrentParagraph(), FAILED, there are no "
              "focused window in this module",
              this));
-<<<<<<< HEAD
     return NS_ERROR_NULL_POINTER;
   }
 
   nsEventStatus status;
-||||||| merged common ancestors
-        return NS_ERROR_NULL_POINTER;
-    }
 
-    nsEventStatus status;
-=======
-    return NS_ERROR_NULL_POINTER;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  uint32_t selOffset = mCompositionStart;
-  uint32_t selLength = mSelectedStringRemovedByComposition.Length();
-||||||| merged common ancestors
-    uint32_t selOffset = mCompositionStart;
-    uint32_t selLength = mSelectedStringRemovedByComposition.Length();
-=======
-  nsEventStatus status;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // If focused editor doesn't have composition string, we should use
-  // current selection.
-  if (!EditorHasCompositionString()) {
-    // Query cursor position & selection
-    if (NS_WARN_IF(!EnsureToCacheSelection())) {
-      MOZ_LOG(gGtkIMLog, LogLevel::Error,
-              ("0x%p   GetCurrentParagraph(), FAILED, due to no "
-               "valid selection information",
-               this));
-      return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-    // If focused editor doesn't have composition string, we should use
-    // current selection.
-    if (!EditorHasCompositionString()) {
-        // Query cursor position & selection
-        if (NS_WARN_IF(!EnsureToCacheSelection())) {
-            MOZ_LOG(gGtkIMLog, LogLevel::Error,
-                ("0x%p   GetCurrentParagraph(), FAILED, due to no "
-                 "valid selection information",
-                 this));
-            return NS_ERROR_FAILURE;
-        }
-
-        selOffset = mSelection.mOffset;
-        selLength = mSelection.Length();
-=======
   uint32_t selOffset = mCompositionStart;
   uint32_t selLength = mSelectedStringRemovedByComposition.Length();
 
@@ -3987,7 +2821,6 @@ nsresult IMContextWrapper::GetCurrentParagraph(nsAString& aText,
                "valid selection information",
                this));
       return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
     }
 
     selOffset = mSelection.mOffset;

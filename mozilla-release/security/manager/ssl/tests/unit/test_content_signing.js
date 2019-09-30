@@ -58,15 +58,6 @@ function check_telemetry(expected_index, expected, expectedId) {
       equal(k, expectedId);
       equal(errorSnapshot[k].values[i] || 0, expected_value);
     }
-<<<<<<< HEAD
-    equal(VERIFICATION_HISTOGRAM.snapshot().values[i] || 0, expected_value,
-      "count " + i + ": " + VERIFICATION_HISTOGRAM.snapshot().values[i] +
-      " expected " + expected_value);
-||||||| merged common ancestors
-    equal(VERIFICATION_HISTOGRAM.snapshot().counts[i], expected_value,
-      "count " + i + ": " + VERIFICATION_HISTOGRAM.snapshot().counts[i] +
-      " expected " + expected_value);
-=======
     equal(
       VERIFICATION_HISTOGRAM.snapshot().values[i] || 0,
       expected_value,
@@ -77,7 +68,6 @@ function check_telemetry(expected_index, expected, expectedId) {
         " expected " +
         expected_value
     );
->>>>>>> upstream-releases
   }
   VERIFICATION_HISTOGRAM.clear();
   ERROR_HISTOGRAM.clear();

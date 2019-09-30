@@ -70,43 +70,6 @@ class StackTrace extends Component {
         );
       }
 
-<<<<<<< HEAD
-      const source = s.filename;
-      frames.push("\t", Frame({
-        key: `${i}-frame`,
-        frame: {
-          functionDisplayName: s.functionName,
-          source,
-          line: s.lineNumber,
-          column: s.columnNumber,
-        },
-        showFunctionName: true,
-        showAnonymousFunctionName: true,
-        showFullSourceUrl: true,
-        onClick: (/^Scratchpad\/\d+$/.test(source))
-          ? onViewSourceInScratchpad
-          : onViewSourceInDebugger,
-        sourceMapService,
-      }), "\n");
-||||||| merged common ancestors
-      const source = s.filename.split(" -> ").pop();
-      frames.push("\t", Frame({
-        key: `${i}-frame`,
-        frame: {
-          functionDisplayName: s.functionName,
-          source,
-          line: s.lineNumber,
-          column: s.columnNumber,
-        },
-        showFunctionName: true,
-        showAnonymousFunctionName: true,
-        showFullSourceUrl: true,
-        onClick: (/^Scratchpad\/\d+$/.test(source))
-          ? onViewSourceInScratchpad
-          : onViewSourceInDebugger,
-        sourceMapService,
-      }), "\n");
-=======
       const source = s.filename;
       frames.push(
         "\t",
@@ -128,7 +91,6 @@ class StackTrace extends Component {
         }),
         "\n"
       );
->>>>>>> upstream-releases
     });
 
     return dom.div({ className: "stack-trace" }, frames);

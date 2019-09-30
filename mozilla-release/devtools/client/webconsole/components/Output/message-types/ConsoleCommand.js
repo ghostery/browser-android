@@ -51,13 +51,8 @@ function ConsoleCommand(props) {
     indent,
     timeStamp,
     timestampsVisible,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/ConsoleCommand.js
-    maybeScrollToBottom,
-||||||| merged common ancestors
-=======
     maybeScrollToBottom,
     message,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/ConsoleCommand.js
   });
 }
 

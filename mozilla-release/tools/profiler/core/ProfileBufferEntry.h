@@ -25,72 +25,6 @@ class ProfilerMarker;
 
 // NOTE!  If you add entries, you need to verify if they need to be added to the
 // switch statement in DuplicateLastSample!
-<<<<<<< HEAD
-#define FOR_EACH_PROFILE_BUFFER_ENTRY_KIND(MACRO)                   \
-  MACRO(Category, int)                                              \
-  MACRO(CollectionStart, double)                                    \
-  MACRO(CollectionEnd, double)                                      \
-  MACRO(Label, const char*)                                         \
-  MACRO(FrameFlags, uint64_t)                                       \
-  MACRO(DynamicStringFragment, char*) /* char[kNumChars], really */ \
-  MACRO(JitReturnAddr, void*)                                       \
-  MACRO(LineNumber, int)                                            \
-  MACRO(ColumnNumber, int)                                          \
-  MACRO(NativeLeafAddr, void*)                                      \
-  MACRO(Marker, ProfilerMarker*)                                    \
-  MACRO(Pause, double)                                              \
-  MACRO(Responsiveness, double)                                     \
-  MACRO(Resume, double)                                             \
-  MACRO(ThreadId, int)                                              \
-  MACRO(Time, double)                                               \
-  MACRO(ResidentMemory, uint64_t)                                   \
-  MACRO(UnsharedMemory, uint64_t)                                   \
-  MACRO(CounterId, void*)                                           \
-  MACRO(CounterKey, uint64_t)                                       \
-  MACRO(Number, uint64_t)                                           \
-  MACRO(Count, int64_t)
-
-// NB: Packing this structure has been shown to cause SIGBUS issues on ARM.
-#if !defined(GP_ARCH_arm)
-#pragma pack(push, 1)
-#endif
-
-class ProfileBufferEntry {
- public:
-||||||| merged common ancestors
-#define FOR_EACH_PROFILE_BUFFER_ENTRY_KIND(macro) \
-  macro(Category,              int) \
-  macro(CollectionStart,       double) \
-  macro(CollectionEnd,         double) \
-  macro(Label,                 const char*) \
-  macro(DynamicStringFragment, char*) /* char[kNumChars], really */ \
-  macro(JitReturnAddr,         void*) \
-  macro(LineNumber,            int) \
-  macro(ColumnNumber,          int) \
-  macro(NativeLeafAddr,        void*) \
-  macro(Marker,                ProfilerMarker*) \
-  macro(Pause,                 double) \
-  macro(Responsiveness,        double) \
-  macro(Resume,                double) \
-  macro(ThreadId,              int) \
-  macro(Time,                  double) \
-  macro(ResidentMemory,        uint64_t) \
-  macro(UnsharedMemory,        uint64_t) \
-  macro(CounterId,             void*) \
-  macro(CounterKey,            uint64_t) \
-  macro(Number,                uint64_t) \
-  macro(Count,                 int64_t)
-
-
-// NB: Packing this structure has been shown to cause SIGBUS issues on ARM.
-#if !defined(GP_ARCH_arm)
-#pragma pack(push, 1)
-#endif
-
-class ProfileBufferEntry
-{
-public:
-=======
 #define FOR_EACH_PROFILE_BUFFER_ENTRY_KIND(MACRO)                   \
   MACRO(CategoryPair, int)                                          \
   MACRO(CollectionStart, double)                                    \
@@ -119,7 +53,6 @@ public:
 
 class ProfileBufferEntry {
  public:
->>>>>>> upstream-releases
   enum class Kind : uint8_t {
     INVALID = 0,
 #define KIND(k, t) k,
@@ -169,29 +102,6 @@ class ProfileBufferEntry {
   friend class ProfileBuffer;
 
   Kind mKind;
-<<<<<<< HEAD
-  union {
-    const char* mString;
-    char mChars[kNumChars];
-    void* mPtr;
-    ProfilerMarker* mMarker;
-    double mDouble;
-    int mInt;
-    int64_t mInt64;
-    uint64_t mUint64;
-  } u;
-||||||| merged common ancestors
-  union {
-    const char*     mString;
-    char            mChars[kNumChars];
-    void*           mPtr;
-    ProfilerMarker* mMarker;
-    double          mDouble;
-    int             mInt;
-    int64_t         mInt64;
-    uint64_t        mUint64;
-  } u;
-=======
   uint8_t mStorage[kNumChars];
 
   const char* GetString() const;
@@ -202,7 +112,6 @@ class ProfileBufferEntry {
   int64_t GetInt64() const;
   uint64_t GetUint64() const;
   void CopyCharsInto(char (&aOutArray)[kNumChars]) const;
->>>>>>> upstream-releases
 };
 
 // Packed layout: 1 byte for the tag + 8 bytes for the value.
@@ -246,20 +155,6 @@ struct JITFrameInfoForBufferRange final {
   uint64_t mRangeStart;
   uint64_t mRangeEnd;  // mRangeEnd marks the first invalid index.
 
-<<<<<<< HEAD
-  struct JITFrameKey {
-    uint32_t Hash() const;
-    bool operator==(const JITFrameKey& aOther) const;
-    bool operator!=(const JITFrameKey& aOther) const {
-      return !(*this == aOther);
-    }
-||||||| merged common ancestors
-  struct JITFrameKey
-  {
-    uint32_t Hash() const;
-    bool operator==(const JITFrameKey& aOther) const;
-    bool operator!=(const JITFrameKey& aOther) const { return !(*this == aOther); }
-=======
   struct JITFrameKey {
     bool operator==(const JITFrameKey& aOther) const {
       return mCanonicalAddress == aOther.mCanonicalAddress &&
@@ -268,20 +163,10 @@ struct JITFrameInfoForBufferRange final {
     bool operator!=(const JITFrameKey& aOther) const {
       return !(*this == aOther);
     }
->>>>>>> upstream-releases
 
     void* mCanonicalAddress;
     uint32_t mDepth;
   };
-<<<<<<< HEAD
-  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>>
-      mJITAddressToJITFramesMap;
-  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString>
-      mJITFrameToFrameJSONMap;
-||||||| merged common ancestors
-  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>> mJITAddressToJITFramesMap;
-  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString> mJITFrameToFrameJSONMap;
-=======
   struct JITFrameKeyHasher {
     using Lookup = JITFrameKey;
 
@@ -307,7 +192,6 @@ struct JITFrameInfoForBufferRange final {
   using JITFrameToFrameJSONMap =
       mozilla::HashMap<JITFrameKey, nsCString, JITFrameKeyHasher>;
   JITFrameToFrameJSONMap mJITFrameToFrameJSONMap;
->>>>>>> upstream-releases
 };
 
 // Contains JITFrameInfoForBufferRange objects for multiple profiler buffer
@@ -332,17 +216,8 @@ struct JITFrameInfo final {
 
   // Returns whether the information stored in this object is still relevant
   // for any entries in the buffer.
-<<<<<<< HEAD
-  bool HasExpired(uint64_t aCurrentBufferRangeStart) const {
-    if (mRanges.IsEmpty()) {
-||||||| merged common ancestors
-  bool HasExpired(uint64_t aCurrentBufferRangeStart) const
-  {
-    if (mRanges.IsEmpty()) {
-=======
   bool HasExpired(uint64_t aCurrentBufferRangeStart) const {
     if (mRanges.empty()) {
->>>>>>> upstream-releases
       // No information means no relevant information. Allow this object to be
       // discarded.
       return true;
@@ -371,20 +246,9 @@ class UniqueStacks {
     FrameKey(nsCString&& aLocation, bool aRelevantForJS,
              const mozilla::Maybe<unsigned>& aLine,
              const mozilla::Maybe<unsigned>& aColumn,
-<<<<<<< HEAD
-             const mozilla::Maybe<unsigned>& aCategory)
-        : mData(NormalFrameData{aLocation, aRelevantForJS, aLine, aColumn,
-                                aCategory}) {}
-||||||| merged common ancestors
-             const mozilla::Maybe<unsigned>& aCategory)
-      : mData(NormalFrameData{ nsCString(aLocation), aLine, aColumn, aCategory })
-    {
-    }
-=======
              const mozilla::Maybe<JS::ProfilingCategoryPair>& aCategoryPair)
         : mData(NormalFrameData{aLocation, aRelevantForJS, aLine, aColumn,
                                 aCategoryPair}) {}
->>>>>>> upstream-releases
 
     FrameKey(void* aJITAddress, uint32_t aJITDepth, uint32_t aRangeIndex)
         : mData(JITFrameData{aJITAddress, aJITDepth, aRangeIndex}) {}
@@ -477,13 +341,6 @@ class UniqueStacks {
              mFrameIndex == aOther.mFrameIndex;
     }
 
-<<<<<<< HEAD
-   private:
-    uint32_t mHash;
-||||||| merged common ancestors
-  private:
-    uint32_t mHash;
-=======
    private:
     mozilla::HashNumber mHash;
   };
@@ -502,7 +359,6 @@ class UniqueStacks {
     static void rekey(StackKey& aKey, const StackKey& aNewKey) {
       aKey = aNewKey;
     }
->>>>>>> upstream-releases
   };
 
   explicit UniqueStacks(JITFrameInfo&& aJITFrameInfo);
@@ -612,21 +468,6 @@ class UniqueStacks {
 //   {
 //     "schema":
 //     {
-<<<<<<< HEAD
-//       "location": 0,       /* index into stringTable */
-//       "implementation": 1, /* index into stringTable */
-//       "optimizations": 2,  /* arbitrary JSON */
-//       "line": 3,           /* number */
-//       "column": 4,         /* number */
-//       "category": 5        /* number */
-||||||| merged common ancestors
-//       "location": 0,        /* index into stringTable */
-//       "implementation": 1,  /* index into stringTable */
-//       "optimizations": 2,   /* arbitrary JSON */
-//       "line": 3,            /* number */
-//       "column": 4,          /* number */
-//       "category": 5         /* number */
-=======
 //       "location": 0,       /* index into stringTable */
 //       "relevantForJS": 1,  /* bool */
 //       "implementation": 2, /* index into stringTable */
@@ -636,7 +477,6 @@ class UniqueStacks {
 //       "category": 6        /* index into profile.meta.categories */
 //       "subcategory": 7     /* index into
 //       profile.meta.categories[category].subcategories */
->>>>>>> upstream-releases
 //     },
 //     "data":
 //     [

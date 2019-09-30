@@ -67,28 +67,12 @@ class CriticalSection {
 #endif
 
 /// RAII helper.
-<<<<<<< HEAD
-struct CriticalSectionAutoEnter {
-  explicit CriticalSectionAutoEnter(CriticalSection* aSection)
-      : mSection(aSection) {
-    mSection->Enter();
-  }
-  ~CriticalSectionAutoEnter() { mSection->Leave(); }
-||||||| merged common ancestors
-struct CriticalSectionAutoEnter {
-    explicit CriticalSectionAutoEnter(CriticalSection* aSection) : mSection(aSection) { mSection->Enter(); }
-    ~CriticalSectionAutoEnter() { mSection->Leave(); }
-protected:
-    CriticalSection* mSection;
-};
-=======
 struct CriticalSectionAutoEnter final {
   explicit CriticalSectionAutoEnter(CriticalSection* aSection)
       : mSection(aSection) {
     mSection->Enter();
   }
   ~CriticalSectionAutoEnter() { mSection->Leave(); }
->>>>>>> upstream-releases
 
  protected:
   CriticalSection* mSection;

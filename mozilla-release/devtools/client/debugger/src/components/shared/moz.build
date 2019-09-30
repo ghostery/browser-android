@@ -7,14 +7,8 @@ DIRS += [
     'Button',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/shared/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
     'AccessibleImage.js',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/shared/moz.build
     'Accordion.js',
     'Badge.js',
     'BracketArrow.js',

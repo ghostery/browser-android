@@ -10,29 +10,11 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-class ByteWriter {
- public:
-  explicit ByteWriter(nsTArray<uint8_t>& aData) : mPtr(aData) {}
-  ~ByteWriter() {}
-||||||| merged common ancestors
-class ByteWriter
-{
-public:
-  explicit ByteWriter(nsTArray<uint8_t>& aData)
-    : mPtr(aData)
-  {
-  }
-  ~ByteWriter()
-  {
-  }
-=======
 template <typename Endianess>
 class ByteWriter {
  public:
   explicit ByteWriter(nsTArray<uint8_t>& aData) : mPtr(aData) {}
   ~ByteWriter() {}
->>>>>>> upstream-releases
 
   MOZ_MUST_USE bool WriteU8(uint8_t aByte) { return Write(&aByte, 1); }
 

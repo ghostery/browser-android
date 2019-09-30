@@ -69,13 +69,6 @@ nsresult KeychainSecret::StoreSecret(const nsACString& aSecret,
   // platform enforces this restriction using the application-identifier
   // entitlement that each application bundle should have. See
   // https://developer.apple.com/documentation/security/1401659-secitemadd?language=objc#discussion
-<<<<<<< HEAD
-  const CFStringRef keys[] = {kSecClass, kSecAttrAccount, kSecValueData};
-||||||| merged common ancestors
-  const CFStringRef keys[] = { kSecClass,
-                               kSecAttrAccount,
-                               kSecValueData };
-=======
 
   // The keychain does not overwrite secrets by default (unlike other backends
   // like libsecret and credential manager). To be consistent, we first delete
@@ -87,7 +80,6 @@ nsresult KeychainSecret::StoreSecret(const nsACString& aSecret,
     return rv;
   }
   const CFStringRef keys[] = {kSecClass, kSecAttrAccount, kSecValueData};
->>>>>>> upstream-releases
   ScopedCFType<CFStringRef> label(MozillaStringToCFString(aLabel));
   if (!label) {
     MOZ_LOG(gKeychainSecretLog, LogLevel::Debug,

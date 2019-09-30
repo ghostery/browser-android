@@ -90,19 +90,8 @@ const TEST_CONDITIONS = {
 const TESTS = {
   // Correct sizes and hashes should work
   checkSizeHash: {
-<<<<<<< HEAD
-    // updateList is populated in setup()
-    updateList: [ ],
-||||||| merged common ancestors
-    updateList: [
-      { id: "system2@tests.mozilla.org", version: "3.0", path: "system2_3.xpi", size: 4697 },
-      { id: "system3@tests.mozilla.org", version: "3.0", path: "system3_3.xpi", hashFunction: "sha1", hashValue: "a4c7198d56deb315511c02937fd96c696de6cb84" },
-      { id: "system5@tests.mozilla.org", version: "1.0", path: "system5_1.xpi", size: 4691, hashFunction: "sha1", hashValue: "6887b916a1a9a5338b0df4181f6187f5396861eb" },
-    ],
-=======
     // updateList is populated in setup()
     updateList: [],
->>>>>>> upstream-releases
     finalState: {
       blank: [
         { isUpgrade: false, version: null },
@@ -143,38 +132,6 @@ add_task(async function setup() {
   await overrideBuiltIns({ system: [] });
   await promiseStartupManager();
   await promiseShutdownManager();
-<<<<<<< HEAD
-
-  let list = TESTS.checkSizeHash.updateList;
-  let xpi = await getSystemAddonXPI(2, "3.0");
-  list.push({
-    id: "system2@tests.mozilla.org",
-    version: "3.0",
-    path: "system2_3.xpi",
-    xpi,
-    size: xpi.fileSize,
-  });
-
-  xpi = await getSystemAddonXPI(3, "3.0");
-  let [hashFunction, hashValue] = do_get_file_hash(xpi, "sha1").split(":");
-  list.push({
-    id: "system3@tests.mozilla.org",
-    version: "3.0",
-    path: "system3_3.xpi",
-    xpi, hashFunction, hashValue,
-  });
-
-  xpi = await getSystemAddonXPI(5, "1.0");
-  [hashFunction, hashValue] = do_get_file_hash(xpi, "sha1").split(":");
-  list.push({
-    id: "system5@tests.mozilla.org",
-    version: "1.0",
-    path: "system5_1.xpi",
-    size: xpi.fileSize,
-    xpi, hashFunction, hashValue,
-  });
-||||||| merged common ancestors
-=======
 
   let list = TESTS.checkSizeHash.updateList;
   let xpi = await getSystemAddonXPI(2, "3.0");
@@ -208,7 +165,6 @@ add_task(async function setup() {
     hashFunction,
     hashValue,
   });
->>>>>>> upstream-releases
 });
 
 add_task(async function() {
@@ -219,13 +175,7 @@ add_task(async function() {
       let setup = TEST_CONDITIONS[setupName];
       let test = TESTS[testName];
 
-<<<<<<< HEAD
-        await execSystemAddonTest(setupName, setup, test, distroDir);
-||||||| merged common ancestors
-        await execSystemAddonTest(setupName, setup, test, distroDir, root, testserver);
-=======
       await execSystemAddonTest(setupName, setup, test, distroDir);
->>>>>>> upstream-releases
     }
   }
 });

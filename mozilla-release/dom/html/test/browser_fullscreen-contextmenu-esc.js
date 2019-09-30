@@ -1,14 +1,5 @@
 "use strict";
 
-<<<<<<< HEAD
-// This test tends to trigger a race in the fullscreen time telemetry,
-// where the fullscreen enter and fullscreen exit events (which use the
-// same histogram ID) overlap. That causes TelemetryStopwatch to log an
-// error.
-SimpleTest.ignoreAllUncaughtExceptions(true);
-
-||||||| merged common ancestors
-=======
 // This test tends to trigger a race in the fullscreen time telemetry,
 // where the fullscreen enter and fullscreen exit events (which use the
 // same histogram ID) overlap. That causes TelemetryStopwatch to log an
@@ -16,7 +7,6 @@ SimpleTest.ignoreAllUncaughtExceptions(true);
 SimpleTest.ignoreAllUncaughtExceptions(true);
 
 /* eslint-disable mozilla/no-arbitrary-setTimeout */
->>>>>>> upstream-releases
 function frameScript() {
   addMessageListener("Test:RequestFullscreen", () => {
     content.document.body.requestFullscreen();

@@ -1549,11 +1549,5 @@ pa{
         one{"{0} {1}"}
         other{"{0} {1}"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.20"}
->>>>>>> upstream-releases
 }

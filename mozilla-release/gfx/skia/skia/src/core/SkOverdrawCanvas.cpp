@@ -61,178 +61,18 @@ SkOverdrawCanvas::SkOverdrawCanvas(SkCanvas* canvas)
     fPaint.setColorFilter(SkColorFilter::MakeMatrixFilterRowMajor255(kIncrementAlpha));
 }
 
-<<<<<<< HEAD
-void SkOverdrawCanvas::onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
-                                  const SkPaint& paint) {
-    SK_ABORT("This canvas does not support draw text.");
-}
-
-void SkOverdrawCanvas::drawPosTextCommon(const void* text, size_t byteLength, const SkScalar pos[],
-||||||| merged common ancestors
-void SkOverdrawCanvas::onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
-                                  const SkPaint& paint) {
-    ProcessOneGlyphBounds processBounds(this);
-    SkSurfaceProps props(0, kUnknown_SkPixelGeometry);
-    this->getProps(&props);
-    SkAutoGlyphCache cache(paint, &props, SkScalerContextFlags::kNone, &this->getTotalMatrix());
-    SkFindAndPlaceGlyph::ProcessText(paint.getTextEncoding(), (const char*) text, byteLength,
-                                     SkPoint::Make(x, y), SkMatrix(), paint.getTextAlign(),
-                                     cache.get(), processBounds);
-}
-
-void SkOverdrawCanvas::drawPosTextCommon(const void* text, size_t byteLength, const SkScalar pos[],
-=======
 void SkOverdrawCanvas::drawPosTextCommon(const SkGlyphID glyphs[], int count, const SkScalar pos[],
->>>>>>> upstream-releases
                                          int scalarsPerPos, const SkPoint& offset,
                                          const SkFont& font, const SkPaint& paint) {
     ProcessOneGlyphBounds processBounds(this);
     SkSurfaceProps props(0, kUnknown_SkPixelGeometry);
     this->getProps(&props);
-<<<<<<< HEAD
-    auto cache = SkStrikeCache::FindOrCreateStrikeExclusive(
-            paint, &props, SkScalerContextFlags::kNone, &this->getTotalMatrix());
-    SkFindAndPlaceGlyph::ProcessPosText(paint.getTextEncoding(), (const char*) text, byteLength,
-||||||| merged common ancestors
-    SkAutoGlyphCache cache(paint, &props, SkScalerContextFlags::kNone, &this->getTotalMatrix());
-    SkFindAndPlaceGlyph::ProcessPosText(paint.getTextEncoding(), (const char*) text, byteLength,
-=======
     auto cache = SkStrikeCache::FindOrCreateStrikeExclusive(
                                 font, paint, props,
                                 SkScalerContextFlags::kNone, this->getTotalMatrix());
     SkFindAndPlaceGlyph::ProcessPosText(glyphs, count,
->>>>>>> upstream-releases
                                         SkPoint::Make(0, 0), SkMatrix(), (const SkScalar*) pos, 2,
-<<<<<<< HEAD
                                         cache.get(), processBounds);
-}
-
-void SkOverdrawCanvas::onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
-                                     const SkPaint& paint) {
-    this->drawPosTextCommon(text, byteLength, (SkScalar*) pos, 2, SkPoint::Make(0, 0), paint);
-}
-
-void SkOverdrawCanvas::onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xs[],
-                                      SkScalar y, const SkPaint& paint) {
-    this->drawPosTextCommon(text, byteLength, (SkScalar*) xs, 1, SkPoint::Make(0, y), paint);
-}
-
-typedef int (*CountTextProc)(const char* text, const char* stop);
-static int count_utf16(const char* text, const char* stop) {
-    const uint16_t* prev = (const uint16_t*)text;
-    (void)SkUTF::NextUTF16(&prev, (const uint16_t*)stop);
-    return SkToInt((const char*)prev - text);
-}
-static int return_4(const char* text, const char* stop) { return 4; }
-static int return_2(const char* text, const char* stop) { return 2; }
-static int count_utf8(const char* text, const char* stop) {
-    const char* ptr = text;
-    (void)SkUTF::NextUTF8(&ptr, stop);
-    return SkToInt(ptr - text);
-}
-
-void SkOverdrawCanvas::onDrawTextRSXform(const void* text, size_t byteLength,
-                                         const SkRSXform xform[], const SkRect*,
-                                         const SkPaint& paint) {
-    const char* stop = (const char*)text + byteLength;
-    CountTextProc proc = nullptr;
-    switch (paint.getTextEncoding()) {
-        case SkPaint::kUTF8_TextEncoding:
-            proc = count_utf8;
-            break;
-        case SkPaint::kUTF16_TextEncoding:
-            proc = count_utf16;
-            break;
-        case SkPaint::kUTF32_TextEncoding:
-            proc = return_4;
-            break;
-        case SkPaint::kGlyphID_TextEncoding:
-            proc = return_2;
-            break;
-    }
-    SkASSERT(proc);
-
-    SkMatrix matrix;
-    const void* stopText = (const char*)text + byteLength;
-    while ((const char*)text < (const char*)stopText) {
-        matrix.setRSXform(*xform++);
-        matrix.setConcat(this->getTotalMatrix(), matrix);
-        int subLen = proc((const char*)text, stop);
-        SkASSERT(subLen > 0);
-
-        this->save();
-        this->concat(matrix);
-        this->drawText(text, subLen, 0, 0, paint);
-        this->restore();
-
-        text = (const char*)text + subLen;
-    }
-||||||| merged common ancestors
-                                        paint.getTextAlign(), cache.get(), processBounds);
-}
-
-void SkOverdrawCanvas::onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
-                                     const SkPaint& paint) {
-    this->drawPosTextCommon(text, byteLength, (SkScalar*) pos, 2, SkPoint::Make(0, 0), paint);
-}
-
-void SkOverdrawCanvas::onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xs[],
-                                      SkScalar y, const SkPaint& paint) {
-    this->drawPosTextCommon(text, byteLength, (SkScalar*) xs, 1, SkPoint::Make(0, y), paint);
-}
-
-void SkOverdrawCanvas::onDrawTextOnPath(const void* text, size_t byteLength, const SkPath& path,
-                                        const SkMatrix* matrix, const SkPaint& paint) {
-    SkASSERT(false);
-    return;
-}
-
-typedef int (*CountTextProc)(const char* text);
-static int count_utf16(const char* text) {
-    const uint16_t* prev = (uint16_t*)text;
-    (void)SkUTF16_NextUnichar(&prev);
-    return SkToInt((const char*)prev - text);
-}
-static int return_4(const char* text) { return 4; }
-static int return_2(const char* text) { return 2; }
-
-void SkOverdrawCanvas::onDrawTextRSXform(const void* text, size_t byteLength,
-                                         const SkRSXform xform[], const SkRect*,
-                                         const SkPaint& paint) {
-    CountTextProc proc = nullptr;
-    switch (paint.getTextEncoding()) {
-        case SkPaint::kUTF8_TextEncoding:
-            proc = SkUTF8_CountUTF8Bytes;
-            break;
-        case SkPaint::kUTF16_TextEncoding:
-            proc = count_utf16;
-            break;
-        case SkPaint::kUTF32_TextEncoding:
-            proc = return_4;
-            break;
-        case SkPaint::kGlyphID_TextEncoding:
-            proc = return_2;
-            break;
-    }
-    SkASSERT(proc);
-
-    SkMatrix matrix;
-    const void* stopText = (const char*)text + byteLength;
-    while ((const char*)text < (const char*)stopText) {
-        matrix.setRSXform(*xform++);
-        matrix.setConcat(this->getTotalMatrix(), matrix);
-        int subLen = proc((const char*)text);
-
-        this->save();
-        this->concat(matrix);
-        this->drawText(text, subLen, 0, 0, paint);
-        this->restore();
-
-        text = (const char*)text + subLen;
-    }
-=======
-                                        cache.get(), processBounds);
->>>>>>> upstream-releases
 }
 
 void SkOverdrawCanvas::onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScalar y,
@@ -241,55 +81,20 @@ void SkOverdrawCanvas::onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScal
     for (;!it.done(); it.next()) {
         const SkPoint& offset = it.offset();
         switch (it.positioning()) {
-<<<<<<< HEAD
-            case SkTextBlobRunIterator::kDefault_Positioning:
-                this->onDrawText(it.glyphs(), textLen, x + offset.x(), y + offset.y(), runPaint);
-||||||| merged common ancestors
-            case SkTextBlob::kDefault_Positioning:
-                this->onDrawText(it.glyphs(), textLen, x + offset.x(), y + offset.y(), runPaint);
-=======
             case SkTextBlobRunIterator::kDefault_Positioning:
                 SK_ABORT("This canvas does not support draw text.");
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-            case SkTextBlobRunIterator::kHorizontal_Positioning:
-                this->drawPosTextCommon(it.glyphs(), textLen, it.pos(), 1,
-                                        SkPoint::Make(x, y + offset.y()), runPaint);
-||||||| merged common ancestors
-            case SkTextBlob::kHorizontal_Positioning:
-                this->drawPosTextCommon(it.glyphs(), textLen, it.pos(), 1,
-                                        SkPoint::Make(x, y + offset.y()), runPaint);
-=======
             case SkTextBlobRunIterator::kHorizontal_Positioning:
                 this->drawPosTextCommon(it.glyphs(), it.glyphCount(), it.pos(), 1,
                                         SkPoint::Make(x, y + offset.y()), it.font(), paint);
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-            case SkTextBlobRunIterator::kFull_Positioning:
-                this->drawPosTextCommon(it.glyphs(), textLen, it.pos(), 2, SkPoint::Make(x, y),
-                                        runPaint);
-||||||| merged common ancestors
-            case SkTextBlob::kFull_Positioning:
-                this->drawPosTextCommon(it.glyphs(), textLen, it.pos(), 2, SkPoint::Make(x, y),
-                                        runPaint);
-=======
             case SkTextBlobRunIterator::kFull_Positioning:
                 this->drawPosTextCommon(it.glyphs(), it.glyphCount(), it.pos(), 2, {x, y},
                                         it.font(), paint);
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-||||||| merged common ancestors
-            default:
-                SkASSERT(false);
-                break;
-=======
             case SkTextBlobRunIterator::kRSXform_Positioning:
                 // unimplemented ...
                 break;
->>>>>>> upstream-releases
         }
     }
 }

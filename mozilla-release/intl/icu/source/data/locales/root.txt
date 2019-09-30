@@ -174,13 +174,7 @@ root{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.58"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             AmPmMarkers:alias{"/LOCALE/calendar/gregorian/AmPmMarkers"}
@@ -824,47 +818,6 @@ root{
                 wide:alias{"/LOCALE/calendar/generic/eras/abbreviated"}
             }
             intervalFormats{
-<<<<<<< HEAD
-                Gy{
-                    G{"G y – G y"}
-                    y{"G y–y"}
-                }
-                GyM{
-                    G{"GGGGG y-MM – GGGGG y-MM"}
-                    M{"GGGGG y-MM – y-MM"}
-                    y{"GGGGG y-MM – y-MM"}
-                }
-                GyMEd{
-                    G{"GGGGG y-MM-dd, E – GGGGG y-MM-dd, E"}
-                    M{"GGGGG y-MM-dd, E – y-MM-dd, E"}
-                    d{"GGGGG y-MM-dd, E – y-MM-dd, E"}
-                    y{"GGGGG y-MM-dd, E – y-MM-dd, E"}
-                }
-                GyMMM{
-                    G{"G y MMM – G y MMM"}
-                    M{"G y MMM–MMM"}
-                    y{"G y MMM – y MMM"}
-                }
-                GyMMMEd{
-                    G{"G y MMM d, E – G y MMM d, E"}
-                    M{"G y MMM d, E – MMM d, E"}
-                    d{"G y MMM d, E – MMM d, E"}
-                    y{"G y MMM d, E – y MMM d, E"}
-                }
-                GyMMMd{
-                    G{"G y MMM d – G y MMM d"}
-                    M{"G y MMM d – MMM d"}
-                    d{"G y MMM d–d"}
-                    y{"G y MMM d – y MMM d"}
-                }
-                GyMd{
-                    G{"GGGGG y-MM-dd – GGGGG y-MM-dd"}
-                    M{"GGGGG y-MM-dd – y-MM-dd"}
-                    d{"GGGGG y-MM-dd – y-MM-dd"}
-                    y{"GGGGG y-MM-dd – y-MM-dd"}
-                }
-||||||| merged common ancestors
-=======
                 Bh{
                     B{"h B – h B"}
                     h{"h–h B"}
@@ -912,7 +865,6 @@ root{
                     d{"GGGGG y-MM-dd – y-MM-dd"}
                     y{"GGGGG y-MM-dd – y-MM-dd"}
                 }
->>>>>>> upstream-releases
                 H{
                     H{"HH–HH"}
                 }
@@ -1173,47 +1125,6 @@ root{
                 wide:alias{"/LOCALE/calendar/gregorian/eras/abbreviated"}
             }
             intervalFormats{
-<<<<<<< HEAD
-                Gy{
-                    G{"G y – G y"}
-                    y{"G y–y"}
-                }
-                GyM{
-                    G{"GGGGG y-MM – GGGGG y-MM"}
-                    M{"GGGGG y-MM – y-MM"}
-                    y{"GGGGG y-MM – y-MM"}
-                }
-                GyMEd{
-                    G{"GGGGG y-MM-dd, E – GGGGG y-MM-dd, E"}
-                    M{"GGGGG y-MM-dd, E – y-MM-dd, E"}
-                    d{"GGGGG y-MM-dd, E – y-MM-dd, E"}
-                    y{"GGGGG y-MM-dd, E – y-MM-dd, E"}
-                }
-                GyMMM{
-                    G{"G y MMM – G y MMM"}
-                    M{"G y MMM–MMM"}
-                    y{"G y MMM – y MMM"}
-                }
-                GyMMMEd{
-                    G{"G y MMM d, E – G y MMM d, E"}
-                    M{"G y MMM d, E – MMM d, E"}
-                    d{"G y MMM d, E – MMM d, E"}
-                    y{"G y MMM d, E – y MMM d, E"}
-                }
-                GyMMMd{
-                    G{"G y MMM d – G y MMM d"}
-                    M{"G y MMM d – MMM d"}
-                    d{"G y MMM d–d"}
-                    y{"G y MMM d – y MMM d"}
-                }
-                GyMd{
-                    G{"GGGGG y-MM-dd – GGGGG y-MM-dd"}
-                    M{"GGGGG y-MM-dd – y-MM-dd"}
-                    d{"GGGGG y-MM-dd – y-MM-dd"}
-                    y{"GGGGG y-MM-dd – y-MM-dd"}
-                }
-||||||| merged common ancestors
-=======
                 Bh{
                     B{"h B – h B"}
                     h{"h–h B"}
@@ -1261,7 +1172,6 @@ root{
                     d{"GGGGG y-MM-dd – y-MM-dd"}
                     y{"GGGGG y-MM-dd – y-MM-dd"}
                 }
->>>>>>> upstream-releases
                 H{
                     H{"HH–HH"}
                 }
@@ -1908,12 +1818,7 @@ root{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
->>>>>>> upstream-releases
                 }
                 narrow{
                     "Taika (645–650)",
@@ -2152,12 +2057,7 @@ root{
                     "T",
                     "S",
                     "H",
-<<<<<<< HEAD
-                    "Q",
-||||||| merged common ancestors
-=======
                     "R",
->>>>>>> upstream-releases
                 }
                 wide:alias{"/LOCALE/calendar/japanese/eras/abbreviated"}
             }

@@ -12,38 +12,8 @@ use std::fmt;
 #[derive(Clone, Copy, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct nsresult(pub u32);
 
-<<<<<<< HEAD
-/// An extension trait that adds methods to `nsresult` types.
-pub trait NsresultExt {
-    fn failed(self) -> bool;
-    fn succeeded(self) -> bool;
-    fn to_result(self) -> Result<(), nsresult>;
-
-    /// Get a printable name for the nsresult error code. This function returns
-    /// a nsCString<'static>, which implements `Display`.
-    fn error_name(self) -> nsCString;
-}
-
-impl NsresultExt for nsresult {
-    fn failed(self) -> bool {
-||||||| merged common ancestors
-/// An extension trait that adds methods to `nsresult` types.
-pub trait NsresultExt {
-    fn failed(self) -> bool;
-    fn succeeded(self) -> bool;
-    fn to_result(self) -> Result<nsresult, nsresult>;
-
-    /// Get a printable name for the nsresult error code. This function returns
-    /// a nsCString<'static>, which implements `Display`.
-    fn error_name(self) -> nsCString;
-}
-
-impl NsresultExt for nsresult {
-    fn failed(self) -> bool {
-=======
 impl nsresult {
     pub fn failed(self) -> bool {
->>>>>>> upstream-releases
         (self.0 >> 31) != 0
     }
 
@@ -51,13 +21,7 @@ impl nsresult {
         !self.failed()
     }
 
-<<<<<<< HEAD
-    fn to_result(self) -> Result<(), nsresult> {
-||||||| merged common ancestors
-    fn to_result(self) -> Result<nsresult, nsresult> {
-=======
     pub fn to_result(self) -> Result<(), nsresult> {
->>>>>>> upstream-releases
         if self.failed() {
             Err(self)
         } else {

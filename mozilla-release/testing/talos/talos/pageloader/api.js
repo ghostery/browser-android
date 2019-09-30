@@ -37,15 +37,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-=======
 const { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -54,7 +45,6 @@ const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
 const { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyServiceGetter(
   this,
@@ -80,16 +70,10 @@ async function talosStart() {
     defaultWin = await new Promise(resolve => {
       const listener = {
         onOpenWindow(win) {
-<<<<<<< HEAD
-          if (win.docShell.domWindow.location.href == AppConstants.BROWSER_CHROME_URL) {
-||||||| merged common ancestors
-          if (win.docShell.domWindow.location.href == BROWSER_XUL) {
-=======
           if (
             win.docShell.domWindow.location.href ==
             AppConstants.BROWSER_CHROME_URL
           ) {
->>>>>>> upstream-releases
             Services.wm.removeListener(listener);
             resolve(win);
           }

@@ -289,22 +289,12 @@ var get_tooltip_info = async function(addonEl, managerWindow) {
   tooltip.hidePopup();
   await promise;
 
-<<<<<<< HEAD
-  let expectedName = addon.getAttribute("name");
-  is(tiptext.substring(0, expectedName.length), expectedName,
-     "Tooltip should always start with the expected name");
-||||||| merged common ancestors
-  let expectedName = addon.getAttribute("name");
-  ok(tiptext.substring(0, expectedName.length), expectedName,
-     "Tooltip should always start with the expected name");
-=======
   let expectedName = addonEl.getAttribute("name");
   is(
     tiptext.substring(0, expectedName.length),
     expectedName,
     "Tooltip should always start with the expected name"
   );
->>>>>>> upstream-releases
 
   if (expectedName.length == tiptext.length) {
     return {

@@ -78,66 +78,6 @@ static force_inline int pixman_fixed_to_bilinear_weight(pixman_fixed_t x) {
          ((1 << BILINEAR_INTERPOLATION_BITS) - 1);
 }
 
-<<<<<<< HEAD
-static void pixman_transform_point_31_16_3d(const pixman_transform_t *t,
-                                            const pixman_vector_48_16_t *v,
-                                            pixman_vector_48_16_t *result) {
-  int i;
-  int64_t tmp[3][2];
-
-  /* input vector values must have no more than 31 bits (including sign)
-   * in the integer part */
-  assert(v->v[0] < ((pixman_fixed_48_16_t)1 << (30 + 16)));
-  assert(v->v[0] >= -((pixman_fixed_48_16_t)1 << (30 + 16)));
-  assert(v->v[1] < ((pixman_fixed_48_16_t)1 << (30 + 16)));
-  assert(v->v[1] >= -((pixman_fixed_48_16_t)1 << (30 + 16)));
-  assert(v->v[2] < ((pixman_fixed_48_16_t)1 << (30 + 16)));
-  assert(v->v[2] >= -((pixman_fixed_48_16_t)1 << (30 + 16)));
-
-  for (i = 0; i < 3; i++) {
-    tmp[i][0] = (int64_t)t->matrix[i][0] * (v->v[0] >> 16);
-    tmp[i][1] = (int64_t)t->matrix[i][0] * (v->v[0] & 0xFFFF);
-    tmp[i][0] += (int64_t)t->matrix[i][1] * (v->v[1] >> 16);
-    tmp[i][1] += (int64_t)t->matrix[i][1] * (v->v[1] & 0xFFFF);
-    tmp[i][0] += (int64_t)t->matrix[i][2] * (v->v[2] >> 16);
-    tmp[i][1] += (int64_t)t->matrix[i][2] * (v->v[2] & 0xFFFF);
-  }
-
-  result->v[0] = tmp[0][0] + ((tmp[0][1] + 0x8000) >> 16);
-  result->v[1] = tmp[1][0] + ((tmp[1][1] + 0x8000) >> 16);
-  result->v[2] = tmp[2][0] + ((tmp[2][1] + 0x8000) >> 16);
-||||||| merged common ancestors
-static void
-pixman_transform_point_31_16_3d (const pixman_transform_t    *t,
-                                 const pixman_vector_48_16_t *v,
-                                 pixman_vector_48_16_t       *result)
-{
-    int i;
-    int64_t tmp[3][2];
-
-    /* input vector values must have no more than 31 bits (including sign)
-     * in the integer part */
-    assert (v->v[0] <   ((pixman_fixed_48_16_t)1 << (30 + 16)));
-    assert (v->v[0] >= -((pixman_fixed_48_16_t)1 << (30 + 16)));
-    assert (v->v[1] <   ((pixman_fixed_48_16_t)1 << (30 + 16)));
-    assert (v->v[1] >= -((pixman_fixed_48_16_t)1 << (30 + 16)));
-    assert (v->v[2] <   ((pixman_fixed_48_16_t)1 << (30 + 16)));
-    assert (v->v[2] >= -((pixman_fixed_48_16_t)1 << (30 + 16)));
-
-    for (i = 0; i < 3; i++)
-    {
-        tmp[i][0] = (int64_t)t->matrix[i][0] * (v->v[0] >> 16);
-        tmp[i][1] = (int64_t)t->matrix[i][0] * (v->v[0] & 0xFFFF);
-        tmp[i][0] += (int64_t)t->matrix[i][1] * (v->v[1] >> 16);
-        tmp[i][1] += (int64_t)t->matrix[i][1] * (v->v[1] & 0xFFFF);
-        tmp[i][0] += (int64_t)t->matrix[i][2] * (v->v[2] >> 16);
-        tmp[i][1] += (int64_t)t->matrix[i][2] * (v->v[2] & 0xFFFF);
-    }
-
-    result->v[0] = tmp[0][0] + ((tmp[0][1] + 0x8000) >> 16);
-    result->v[1] = tmp[1][0] + ((tmp[1][1] + 0x8000) >> 16);
-    result->v[2] = tmp[2][0] + ((tmp[2][1] + 0x8000) >> 16);
-=======
 static void pixman_transform_point_31_16_3d(const pixman_transform_t* t,
                                             const pixman_vector_48_16_t* v,
                                             pixman_vector_48_16_t* result) {
@@ -165,33 +105,14 @@ static void pixman_transform_point_31_16_3d(const pixman_transform_t* t,
   result->v[0] = tmp[0][0] + ((tmp[0][1] + 0x8000) >> 16);
   result->v[1] = tmp[1][0] + ((tmp[1][1] + 0x8000) >> 16);
   result->v[2] = tmp[2][0] + ((tmp[2][1] + 0x8000) >> 16);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static pixman_bool_t pixman_transform_point_3d(
-    const struct pixman_transform *transform, struct pixman_vector *vector) {
-  pixman_vector_48_16_t tmp;
-  tmp.v[0] = vector->vector[0];
-  tmp.v[1] = vector->vector[1];
-  tmp.v[2] = vector->vector[2];
-||||||| merged common ancestors
-static pixman_bool_t
-pixman_transform_point_3d (const struct pixman_transform *transform,
-                           struct pixman_vector *         vector)
-{
-    pixman_vector_48_16_t tmp;
-    tmp.v[0] = vector->vector[0];
-    tmp.v[1] = vector->vector[1];
-    tmp.v[2] = vector->vector[2];
-=======
 static pixman_bool_t pixman_transform_point_3d(
     const struct pixman_transform* transform, struct pixman_vector* vector) {
   pixman_vector_48_16_t tmp;
   tmp.v[0] = vector->vector[0];
   tmp.v[1] = vector->vector[1];
   tmp.v[2] = vector->vector[2];
->>>>>>> upstream-releases
 
   pixman_transform_point_31_16_3d(transform, &tmp, &tmp);
 
@@ -203,24 +124,10 @@ static pixman_bool_t pixman_transform_point_3d(
          vector->vector[2] == tmp.v[2];
 }
 
-<<<<<<< HEAD
-struct bits_image_t {
-  uint32_t *bits;
-  int rowstride;
-  pixman_transform_t *transform;
-||||||| merged common ancestors
-
-struct bits_image_t
-{
-    uint32_t *                 bits;
-    int                        rowstride;
-    pixman_transform_t *transform;
-=======
 struct bits_image_t {
   uint32_t* bits;
   int rowstride;
   pixman_transform_t* transform;
->>>>>>> upstream-releases
 };
 
 typedef struct bits_image_t bits_image_t;
@@ -229,30 +136,6 @@ typedef struct {
 } pixman_iter_info_t;
 
 typedef struct pixman_iter_t pixman_iter_t;
-<<<<<<< HEAD
-typedef void (*pixman_iter_fini_t)(pixman_iter_t *iter);
-
-struct pixman_iter_t {
-  int x, y;
-  pixman_iter_fini_t fini;
-  bits_image_t *image;
-  uint32_t *buffer;
-  int width;
-  int height;
-  void *data;
-||||||| merged common ancestors
-typedef void      (* pixman_iter_fini_t)         (pixman_iter_t *iter);
-
-struct pixman_iter_t
-{
-    int x, y;
-    pixman_iter_fini_t          fini;
-    bits_image_t *image;
-    uint32_t *                  buffer;
-    int width;
-    int height;
-    void *                      data;
-=======
 typedef void (*pixman_iter_fini_t)(pixman_iter_t* iter);
 
 struct pixman_iter_t {
@@ -263,23 +146,11 @@ struct pixman_iter_t {
   int width;
   int height;
   void* data;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-typedef struct {
-  int y;
-  uint64_t *buffer;
-||||||| merged common ancestors
-typedef struct
-{
-    int		y;
-    uint64_t *	buffer;
-=======
 typedef struct {
   int y;
   uint64_t* buffer;
->>>>>>> upstream-releases
 } line_t;
 
 typedef struct {
@@ -289,40 +160,6 @@ typedef struct {
   uint64_t data[1];
 } bilinear_info_t;
 
-<<<<<<< HEAD
-static void ssse3_fetch_horizontal(bits_image_t *image, line_t *line, int y,
-                                   pixman_fixed_t x, pixman_fixed_t ux, int n) {
-  uint32_t *bits = image->bits + y * image->rowstride;
-  __m128i vx = _mm_set_epi16(-(x + 1), x, -(x + 1), x, -(x + ux + 1), x + ux,
-                             -(x + ux + 1), x + ux);
-  __m128i vux = _mm_set_epi16(-2 * ux, 2 * ux, -2 * ux, 2 * ux, -2 * ux, 2 * ux,
-                              -2 * ux, 2 * ux);
-  __m128i vaddc = _mm_set_epi16(1, 0, 1, 0, 1, 0, 1, 0);
-  __m128i *b = (__m128i *)line->buffer;
-  __m128i vrl0, vrl1;
-
-  while ((n -= 2) >= 0) {
-    __m128i vw, vr, s;
-||||||| merged common ancestors
-static void
-ssse3_fetch_horizontal (bits_image_t *image, line_t *line,
-			int y, pixman_fixed_t x, pixman_fixed_t ux, int n)
-{
-    uint32_t *bits = image->bits + y * image->rowstride;
-    __m128i vx = _mm_set_epi16 (
-	- (x + 1), x, - (x + 1), x,
-	- (x + ux + 1), x + ux,  - (x + ux + 1), x + ux);
-    __m128i vux = _mm_set_epi16 (
-	- 2 * ux, 2 * ux, - 2 * ux, 2 * ux,
-	- 2 * ux, 2 * ux, - 2 * ux, 2 * ux);
-    __m128i vaddc = _mm_set_epi16 (1, 0, 1, 0, 1, 0, 1, 0);
-    __m128i *b = (__m128i *)line->buffer;
-    __m128i vrl0, vrl1;
-
-    while ((n -= 2) >= 0)
-    {
-        __m128i vw, vr, s;
-=======
 static void ssse3_fetch_horizontal(bits_image_t* image, line_t* line, int y,
                                    pixman_fixed_t x, pixman_fixed_t ux, int n) {
   uint32_t* bits = image->bits + y * image->rowstride;
@@ -336,30 +173,7 @@ static void ssse3_fetch_horizontal(bits_image_t* image, line_t* line, int y,
 
   while ((n -= 2) >= 0) {
     __m128i vw, vr, s;
->>>>>>> upstream-releases
 #ifdef HACKY_PADDING
-<<<<<<< HEAD
-    if (pixman_fixed_to_int(x + ux) >= image->rowstride) {
-      vrl1 = _mm_setzero_si128();
-      printf("overread 2loop\n");
-    } else {
-      if (pixman_fixed_to_int(x + ux) < 0) printf("underflow\n");
-      vrl1 = _mm_loadl_epi64(
-          (__m128i *)(bits + (pixman_fixed_to_int(x + ux) < 0
-                                  ? 0
-                                  : pixman_fixed_to_int(x + ux))));
-    }
-||||||| merged common ancestors
-        if (pixman_fixed_to_int(x + ux) >= image->rowstride) {
-            vrl1 = _mm_setzero_si128();
-            printf("overread 2loop\n");
-         } else {
-                 if (pixman_fixed_to_int(x + ux) < 0)
-                         printf("underflow\n");
-        vrl1 = _mm_loadl_epi64(
-            (__m128i *)(bits + (pixman_fixed_to_int(x + ux) < 0 ? 0 : pixman_fixed_to_int(x + ux))));
-        }
-=======
     if (pixman_fixed_to_int(x + ux) >= image->rowstride) {
       vrl1 = _mm_setzero_si128();
       printf("overread 2loop\n");
@@ -370,42 +184,18 @@ static void ssse3_fetch_horizontal(bits_image_t* image, line_t* line, int y,
                                  ? 0
                                  : pixman_fixed_to_int(x + ux))));
     }
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-    vrl1 = _mm_loadl_epi64((__m128i *)(bits + pixman_fixed_to_int(x + ux)));
-||||||| merged common ancestors
-        vrl1 = _mm_loadl_epi64(
-            (__m128i *)(bits + pixman_fixed_to_int(x + ux)));
-=======
     vrl1 = _mm_loadl_epi64((__m128i*)(bits + pixman_fixed_to_int(x + ux)));
->>>>>>> upstream-releases
 #endif
     /* vrl1: R1, L1 */
 
   final_pixel:
 #ifdef HACKY_PADDING
-<<<<<<< HEAD
-    vrl0 = _mm_loadl_epi64(
-        (__m128i *)(bits +
-                    (pixman_fixed_to_int(x) < 0 ? 0 : pixman_fixed_to_int(x))));
-||||||| merged common ancestors
-	vrl0 = _mm_loadl_epi64 (
-	    (__m128i *)(bits + (pixman_fixed_to_int (x) < 0 ? 0 : pixman_fixed_to_int (x))));
-=======
     vrl0 = _mm_loadl_epi64(
         (__m128i*)(bits +
                    (pixman_fixed_to_int(x) < 0 ? 0 : pixman_fixed_to_int(x))));
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-    vrl0 = _mm_loadl_epi64((__m128i *)(bits + pixman_fixed_to_int(x)));
-||||||| merged common ancestors
-        vrl0 = _mm_loadl_epi64 (
-	    (__m128i *)(bits + pixman_fixed_to_int (x)));
-=======
     vrl0 = _mm_loadl_epi64((__m128i*)(bits + pixman_fixed_to_int(x)));
->>>>>>> upstream-releases
 #endif
     /* vrl0: R0, L0 */
 
@@ -478,55 +268,6 @@ static void ssse3_fetch_horizontal(bits_image_t* image, line_t* line, int y,
     _mm_store_si128(b++, vr);
   }
 
-<<<<<<< HEAD
-  if (n == -1) {
-    vrl1 = _mm_setzero_si128();
-    goto final_pixel;
-  }
-
-  line->y = y;
-}
-
-// scale a line of destination pixels
-static uint32_t *ssse3_fetch_bilinear_cover(pixman_iter_t *iter,
-                                            const uint32_t *mask) {
-  pixman_fixed_t fx, ux;
-  bilinear_info_t *info = iter->data;
-  line_t *line0, *line1;
-  int y0, y1;
-  int32_t dist_y;
-  __m128i vw, uvw;
-  int i;
-
-  fx = info->x;
-  ux = iter->image->transform->matrix[0][0];
-
-  y0 = pixman_fixed_to_int(info->y);
-  if (y0 < 0) *(volatile char *)0 = 9;
-  y1 = y0 + 1;
-
-  // clamping in y direction
-  if (y1 >= iter->height) {
-    y1 = iter->height - 1;
-  }
-
-  line0 = &info->lines[y0 & 0x01];
-  line1 = &info->lines[y1 & 0x01];
-
-  if (line0->y != y0) {
-    ssse3_fetch_horizontal(iter->image, line0, y0, fx, ux, iter->width);
-  }
-
-  if (line1->y != y1) {
-    ssse3_fetch_horizontal(iter->image, line1, y1, fx, ux, iter->width);
-  }
-||||||| merged common ancestors
-#else
-    // setup the weights for the top (vw) and bottom (uvw) lines
-    dist_y = pixman_fixed_to_bilinear_weight (info->y);
-    // we use 15 instead of 16 because we need an extra bit to handle when the weights are 0 and 1
-    dist_y <<= (15 - BILINEAR_INTERPOLATION_BITS);
-=======
   if (n == -1) {
     vrl1 = _mm_setzero_si128();
     goto final_pixel;
@@ -568,7 +309,6 @@ static uint32_t* ssse3_fetch_bilinear_cover(pixman_iter_t* iter,
   if (line1->y != y1) {
     ssse3_fetch_horizontal(iter->image, line1, y1, fx, ux, iter->width);
   }
->>>>>>> upstream-releases
 
 #ifdef PIXMAN_STYLE_INTERPOLATION
   dist_y = pixman_fixed_to_bilinear_weight(info->y);
@@ -594,26 +334,11 @@ static uint32_t* ssse3_fetch_bilinear_cover(pixman_iter_t* iter,
                       dist_y);
 #endif
 
-<<<<<<< HEAD
-  for (i = 0; i + 3 < iter->width; i += 4) {
-    __m128i top0 = _mm_load_si128((__m128i *)(line0->buffer + i));
-    __m128i bot0 = _mm_load_si128((__m128i *)(line1->buffer + i));
-    __m128i top1 = _mm_load_si128((__m128i *)(line0->buffer + i + 2));
-    __m128i bot1 = _mm_load_si128((__m128i *)(line1->buffer + i + 2));
-||||||| merged common ancestors
-    for (i = 0; i + 3 < iter->width; i += 4)
-    {
-	__m128i top0 = _mm_load_si128 ((__m128i *)(line0->buffer + i));
-	__m128i bot0 = _mm_load_si128 ((__m128i *)(line1->buffer + i));
-	__m128i top1 = _mm_load_si128 ((__m128i *)(line0->buffer + i + 2));
-	__m128i bot1 = _mm_load_si128 ((__m128i *)(line1->buffer + i + 2));
-=======
   for (i = 0; i + 3 < iter->width; i += 4) {
     __m128i top0 = _mm_load_si128((__m128i*)(line0->buffer + i));
     __m128i bot0 = _mm_load_si128((__m128i*)(line1->buffer + i));
     __m128i top1 = _mm_load_si128((__m128i*)(line0->buffer + i + 2));
     __m128i bot1 = _mm_load_si128((__m128i*)(line1->buffer + i + 2));
->>>>>>> upstream-releases
 #ifdef PIXMAN_STYLE_INTERPOLATION
     __m128i r0, r1, tmp, p;
 
@@ -653,34 +378,13 @@ static uint32_t* ssse3_fetch_bilinear_cover(pixman_iter_t* iter,
     r1 = _mm_srli_epi16(r1, BILINEAR_INTERPOLATION_BITS - 1);
 #endif
 
-<<<<<<< HEAD
-    p = _mm_packus_epi16(r0, r1);
-    _mm_storeu_si128((__m128i *)(iter->buffer + i), p);
-  }
-||||||| merged common ancestors
-	p = _mm_packus_epi16 (r0, r1);
-	_mm_storeu_si128 ((__m128i *)(iter->buffer + i), p);
-    }
-=======
     p = _mm_packus_epi16(r0, r1);
     _mm_storeu_si128((__m128i*)(iter->buffer + i), p);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  while (i < iter->width) {
-    __m128i top0 = _mm_load_si128((__m128i *)(line0->buffer + i));
-    __m128i bot0 = _mm_load_si128((__m128i *)(line1->buffer + i));
-||||||| merged common ancestors
-    while (i < iter->width)
-    {
-	__m128i top0 = _mm_load_si128 ((__m128i *)(line0->buffer + i));
-	__m128i bot0 = _mm_load_si128 ((__m128i *)(line1->buffer + i));
-=======
   while (i < iter->width) {
     __m128i top0 = _mm_load_si128((__m128i*)(line0->buffer + i));
     __m128i bot0 = _mm_load_si128((__m128i*)(line1->buffer + i));
->>>>>>> upstream-releases
 
 #ifdef PIXMAN_STYLE_INTERPOLATION
     __m128i r0, tmp, p;
@@ -701,29 +405,6 @@ static uint32_t* ssse3_fetch_bilinear_cover(pixman_iter_t* iter,
     r0 = _mm_srli_epi16(r0, BILINEAR_INTERPOLATION_BITS - 1);
 #endif
 
-<<<<<<< HEAD
-    p = _mm_packus_epi16(r0, r0);
-
-    if (iter->width - i == 1) {
-      *(uint32_t *)(iter->buffer + i) = _mm_cvtsi128_si32(p);
-      i++;
-    } else {
-      _mm_storel_epi64((__m128i *)(iter->buffer + i), p);
-      i += 2;
-||||||| merged common ancestors
-	p = _mm_packus_epi16 (r0, r0);
-
-	if (iter->width - i == 1)
-	{
-	    *(uint32_t *)(iter->buffer + i) = _mm_cvtsi128_si32 (p);
-	    i++;
-	}
-	else
-	{
-	    _mm_storel_epi64 ((__m128i *)(iter->buffer + i), p);
-	    i += 2;
-	}
-=======
     p = _mm_packus_epi16(r0, r0);
 
     if (iter->width - i == 1) {
@@ -732,7 +413,6 @@ static uint32_t* ssse3_fetch_bilinear_cover(pixman_iter_t* iter,
     } else {
       _mm_storel_epi64((__m128i*)(iter->buffer + i), p);
       i += 2;
->>>>>>> upstream-releases
     }
   }
 
@@ -741,38 +421,14 @@ static uint32_t* ssse3_fetch_bilinear_cover(pixman_iter_t* iter,
   return iter->buffer;
 }
 
-<<<<<<< HEAD
-static void ssse3_bilinear_cover_iter_fini(pixman_iter_t *iter) {
-  free(iter->data);
-||||||| merged common ancestors
-static void
-ssse3_bilinear_cover_iter_fini (pixman_iter_t *iter)
-{
-    free (iter->data);
-=======
 static void ssse3_bilinear_cover_iter_fini(pixman_iter_t* iter) {
   free(iter->data);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void ssse3_bilinear_cover_iter_init(pixman_iter_t *iter) {
-  int width = iter->width;
-  bilinear_info_t *info;
-  pixman_vector_t v;
-||||||| merged common ancestors
-static void
-ssse3_bilinear_cover_iter_init (pixman_iter_t *iter)
-{
-    int width = iter->width;
-    bilinear_info_t *info;
-    pixman_vector_t v;
-=======
 static void ssse3_bilinear_cover_iter_init(pixman_iter_t* iter) {
   int width = iter->width;
   bilinear_info_t* info;
   pixman_vector_t v;
->>>>>>> upstream-releases
 
   if (iter->x > PIXMAN_FIXED_INT_MAX || iter->x < PIXMAN_FIXED_INT_MIN ||
       iter->y > PIXMAN_FIXED_INT_MAX || iter->y < PIXMAN_FIXED_INT_MIN)
@@ -791,14 +447,7 @@ static void ssse3_bilinear_cover_iter_init(pixman_iter_t* iter) {
   info->x = v.vector[0] - pixman_fixed_1 / 2;
   info->y = v.vector[1] - pixman_fixed_1 / 2;
 
-<<<<<<< HEAD
-#define ALIGN(addr) ((void *)((((uintptr_t)(addr)) + 15) & (~15)))
-||||||| merged common ancestors
-#define ALIGN(addr)							\
-    ((void *)((((uintptr_t)(addr)) + 15) & (~15)))
-=======
 #define ALIGN(addr) ((void*)((((uintptr_t)(addr)) + 15) & (~15)))
->>>>>>> upstream-releases
 
   /* It is safe to set the y coordinates to -1 initially
    * because COVER_CLIP_BILINEAR ensures that we will only
@@ -824,32 +473,6 @@ fail:
 /* scale the src from src_width/height to dest_width/height drawn
  * into the rectangle x,y width,height
  * src_stride and dst_stride are 4 byte units */
-<<<<<<< HEAD
-bool ssse3_scale_data(uint32_t *src, int src_width, int src_height,
-                      int src_stride, uint32_t *dest, int dest_width,
-                      int dest_height, int dest_stride, int x, int y, int width,
-                      int height) {
-  // XXX: assert(src_width > 1)
-  pixman_transform_t transform = {
-      {{pixman_fixed_1, 0, 0}, {0, pixman_fixed_1, 0}, {0, 0, pixman_fixed_1}}};
-  double width_scale = ((double)src_width) / dest_width;
-  double height_scale = ((double)src_height) / dest_height;
-||||||| merged common ancestors
-bool ssse3_scale_data(uint32_t *src, int src_width, int src_height, int src_stride,
-                      uint32_t *dest, int dest_width, int dest_height,
-                      int dest_stride,
-                      int x, int y,
-                      int width, int height)
-{
-    //XXX: assert(src_width > 1)
-    pixman_transform_t transform = {
-        { { pixman_fixed_1, 0, 0 },
-            { 0, pixman_fixed_1, 0 },
-            { 0, 0, pixman_fixed_1 } }
-    };
-    double width_scale = ((double)src_width)/dest_width;
-    double height_scale = ((double)src_height)/dest_height;
-=======
 bool ssse3_scale_data(uint32_t* src, int src_width, int src_height,
                       int src_stride, uint32_t* dest, int dest_width,
                       int dest_height, int dest_stride, int x, int y, int width,
@@ -859,7 +482,6 @@ bool ssse3_scale_data(uint32_t* src, int src_width, int src_height,
       {{pixman_fixed_1, 0, 0}, {0, pixman_fixed_1, 0}, {0, 0, pixman_fixed_1}}};
   double width_scale = ((double)src_width) / dest_width;
   double height_scale = ((double)src_height) / dest_height;
->>>>>>> upstream-releases
 #define AVOID_PADDING
 #ifdef AVOID_PADDING
   // scale up by enough that we don't read outside of the bounds of the source

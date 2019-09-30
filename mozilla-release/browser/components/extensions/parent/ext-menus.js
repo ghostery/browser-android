@@ -763,20 +763,12 @@ MenuItem.prototype = {
     }
 
     if (createProperties.documentUrlPatterns != null) {
-<<<<<<< HEAD
-      this.documentUrlMatchPattern = new MatchPatternSet(this.documentUrlPatterns, {
-        restrictSchemes: this.extension.restrictSchemes,
-      });
-||||||| merged common ancestors
-      this.documentUrlMatchPattern = new MatchPatternSet(this.documentUrlPatterns);
-=======
       this.documentUrlMatchPattern = new MatchPatternSet(
         this.documentUrlPatterns,
         {
           restrictSchemes: this.extension.restrictSchemes,
         }
       );
->>>>>>> upstream-releases
     }
 
     if (createProperties.targetUrlPatterns != null) {

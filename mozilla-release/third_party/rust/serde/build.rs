@@ -11,12 +11,6 @@ fn main() {
         None => return,
     };
 
-<<<<<<< HEAD
-    let target = env::var("TARGET").unwrap();
-    let emscripten = target == "asmjs-unknown-emscripten" || target == "wasm32-unknown-emscripten";
-
-||||||| merged common ancestors
-=======
     let target = env::var("TARGET").unwrap();
     let emscripten = target == "asmjs-unknown-emscripten" || target == "wasm32-unknown-emscripten";
 
@@ -29,7 +23,6 @@ fn main() {
         println!("cargo:rustc-cfg=collections_bound");
     }
 
->>>>>>> upstream-releases
     // CString::into_boxed_c_str stabilized in Rust 1.20:
     // https://doc.rust-lang.org/std/ffi/struct.CString.html#method.into_boxed_c_str
     if minor >= 20 {

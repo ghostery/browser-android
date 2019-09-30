@@ -33,29 +33,16 @@
 #define LTI_DEBUG 0
 
 #if LTI_DEBUG
-<<<<<<< HEAD
-#define LTI_DEEPER(aPrefix) nsPrintfCString("%s  ", aPrefix).get()
-#define LTI_DUMP(rgn, label)                                                \
-  if (!(rgn).IsEmpty())                                                     \
-    printf_stderr("%s%p: " label " portion is %s\n", aPrefix, mLayer.get(), \
-                  Stringify(rgn).c_str());
-#define LTI_LOG(...) printf_stderr(__VA_ARGS__)
-||||||| merged common ancestors
-#  define LTI_DEEPER(aPrefix) nsPrintfCString("%s  ", aPrefix).get()
-#  define LTI_DUMP(rgn, label) if (!(rgn).IsEmpty()) printf_stderr("%s%p: " label " portion is %s\n", aPrefix, mLayer.get(), Stringify(rgn).c_str());
-#  define LTI_LOG(...) printf_stderr(__VA_ARGS__)
-=======
 #  define LTI_DEEPER(aPrefix) nsPrintfCString("%s  ", aPrefix).get()
 #  define LTI_DUMP(rgn, label)                                                \
     if (!(rgn).IsEmpty())                                                     \
       printf_stderr("%s%p: " label " portion is %s\n", aPrefix, mLayer.get(), \
                     Stringify(rgn).c_str());
 #  define LTI_LOG(...) printf_stderr(__VA_ARGS__)
->>>>>>> upstream-releases
 #else
-#define LTI_DEEPER(aPrefix) nullptr
-#define LTI_DUMP(rgn, label)
-#define LTI_LOG(...)
+#  define LTI_DEEPER(aPrefix) nullptr
+#  define LTI_DUMP(rgn, label)
+#  define LTI_LOG(...)
 #endif
 
 using namespace mozilla::gfx;
@@ -172,29 +159,14 @@ static void NotifySubdocumentInvalidation(
       },
       [aCallback](Layer* layer) {
         ContainerLayer* container = layer->AsContainerLayer();
-<<<<<<< HEAD
-        if (container) {
-          nsIntRegion region =
-              container->GetLocalVisibleRegion().ToUnknownRegion();
-||||||| merged common ancestors
-        if (container) {
-          nsIntRegion region = container->GetLocalVisibleRegion().ToUnknownRegion();
-=======
         if (container && !container->Extend3DContext()) {
           nsIntRegion region =
               container->GetLocalVisibleRegion().ToUnknownRegion();
->>>>>>> upstream-releases
           aCallback(container, &region);
         }
       });
 }
 
-<<<<<<< HEAD
-struct LayerPropertiesBase : public LayerProperties {
-||||||| merged common ancestors
-struct LayerPropertiesBase : public LayerProperties
-{
-=======
 static void SetChildrenChangedRecursive(Layer* aLayer) {
   ForEachNode<ForwardIterator>(aLayer, [](Layer* layer) {
     ContainerLayer* container = layer->AsContainerLayer();
@@ -206,26 +178,7 @@ static void SetChildrenChangedRecursive(Layer* aLayer) {
 }
 
 struct LayerPropertiesBase : public LayerProperties {
->>>>>>> upstream-releases
   explicit LayerPropertiesBase(Layer* aLayer)
-<<<<<<< HEAD
-      : mLayer(aLayer),
-        mMaskLayer(nullptr),
-        mVisibleRegion(mLayer->GetLocalVisibleRegion().ToUnknownRegion()),
-        mPostXScale(aLayer->GetPostXScale()),
-        mPostYScale(aLayer->GetPostYScale()),
-        mOpacity(aLayer->GetLocalOpacity()),
-        mUseClipRect(!!aLayer->GetLocalClipRect()) {
-||||||| merged common ancestors
-    : mLayer(aLayer)
-    , mMaskLayer(nullptr)
-    , mVisibleRegion(mLayer->GetLocalVisibleRegion().ToUnknownRegion())
-    , mPostXScale(aLayer->GetPostXScale())
-    , mPostYScale(aLayer->GetPostYScale())
-    , mOpacity(aLayer->GetLocalOpacity())
-    , mUseClipRect(!!aLayer->GetLocalClipRect())
-  {
-=======
       : mLayer(aLayer),
         mMaskLayer(nullptr),
         mVisibleRegion(mLayer->Extend3DContext()
@@ -235,7 +188,6 @@ struct LayerPropertiesBase : public LayerProperties {
         mPostYScale(aLayer->GetPostYScale()),
         mOpacity(aLayer->GetLocalOpacity()),
         mUseClipRect(!!aLayer->GetLocalClipRect()) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(LayerPropertiesBase);
     if (aLayer->GetMaskLayer()) {
       mMaskLayer =
@@ -260,16 +212,7 @@ struct LayerPropertiesBase : public LayerProperties {
         mUseClipRect(false) {
     MOZ_COUNT_CTOR(LayerPropertiesBase);
   }
-<<<<<<< HEAD
-  ~LayerPropertiesBase() override { MOZ_COUNT_DTOR(LayerPropertiesBase); }
-||||||| merged common ancestors
-  ~LayerPropertiesBase() override
-  {
-    MOZ_COUNT_DTOR(LayerPropertiesBase);
-  }
-=======
   virtual ~LayerPropertiesBase() { MOZ_COUNT_DTOR(LayerPropertiesBase); }
->>>>>>> upstream-releases
 
  protected:
   LayerPropertiesBase(const LayerPropertiesBase& a) = delete;
@@ -394,21 +337,7 @@ struct LayerPropertiesBase : public LayerProperties {
                          mTransform);
   }
 
-<<<<<<< HEAD
-  virtual Maybe<IntRect> NewTransformedBounds() {
-    return Some(TransformRect(
-        mLayer->GetLocalVisibleRegion().GetBounds().ToUnknownRect(),
-        GetTransformForInvalidation(mLayer)));
-  }
-||||||| merged common ancestors
-  virtual Maybe<IntRect> NewTransformedBounds()
-  {
-    return Some(TransformRect(mLayer->GetLocalVisibleRegion().GetBounds().ToUnknownRect(),
-                              GetTransformForInvalidation(mLayer)));
-  }
-=======
   Maybe<IntRect> NewTransformedBounds() { return TransformedBounds(mLayer); }
->>>>>>> upstream-releases
 
   virtual Maybe<IntRect> OldTransformedBounds() {
     return Some(
@@ -563,17 +492,6 @@ struct ContainerLayerProperties : public LayerPropertiesBase {
         }
       }
       if (invalidateChildsCurrentArea) {
-<<<<<<< HEAD
-        LTI_DUMP(child->GetLocalVisibleRegion().ToUnknownRegion(),
-                 "invalidateChildsCurrentArea");
-        AddTransformedRegion(result,
-                             child->GetLocalVisibleRegion().ToUnknownRegion(),
-                             GetTransformForInvalidation(child));
-||||||| merged common ancestors
-        LTI_DUMP(child->GetLocalVisibleRegion().ToUnknownRegion(), "invalidateChildsCurrentArea");
-        AddTransformedRegion(result, child->GetLocalVisibleRegion().ToUnknownRegion(),
-                             GetTransformForInvalidation(child));
-=======
         LTI_DUMP(child->GetLocalVisibleRegion().ToUnknownRegion(),
                  "invalidateChildsCurrentArea");
         if (Maybe<IntRect> bounds = TransformedBounds(child)) {
@@ -581,7 +499,6 @@ struct ContainerLayerProperties : public LayerPropertiesBase {
         } else {
           areaOverflowed = true;
         }
->>>>>>> upstream-releases
         if (aCallback) {
           NotifySubdocumentInvalidation(child, aCallback);
         } else {
@@ -645,58 +562,7 @@ struct ContainerLayerProperties : public LayerPropertiesBase {
     return true;
   }
 
-<<<<<<< HEAD
-  Maybe<IntRect> NewTransformedBounds() override {
-    if (mLayer->Extend3DContext()) {
-      IntRect result;
-      for (UniquePtr<LayerPropertiesBase>& child : mChildren) {
-        Maybe<IntRect> childBounds = child->NewTransformedBounds();
-        if (!childBounds) {
-          return Nothing();
-        }
-        Maybe<IntRect> combined = result.SafeUnion(childBounds.value());
-        if (!combined) {
-          LTI_LOG("overflowed bounds of container %p accumulating child %p\n",
-                  this, child->mLayer.get());
-          return Nothing();
-        }
-        result = combined.value();
-      }
-      return Some(result);
-    }
-
-    return LayerPropertiesBase::NewTransformedBounds();
-  }
-
   Maybe<IntRect> OldTransformedBounds() override {
-||||||| merged common ancestors
-  Maybe<IntRect> NewTransformedBounds() override
-  {
-    if (mLayer->Extend3DContext()) {
-      IntRect result;
-      for (UniquePtr<LayerPropertiesBase>& child : mChildren) {
-        Maybe<IntRect> childBounds = child->NewTransformedBounds();
-        if (!childBounds) {
-          return Nothing();
-        }
-        Maybe<IntRect> combined = result.SafeUnion(childBounds.value());
-        if (!combined) {
-          LTI_LOG("overflowed bounds of container %p accumulating child %p\n", this, child->mLayer.get());
-          return Nothing();
-        }
-        result = combined.value();
-      }
-      return Some(result);
-    }
-
-    return LayerPropertiesBase::NewTransformedBounds();
-  }
-
-  Maybe<IntRect> OldTransformedBounds() override
-  {
-=======
-  Maybe<IntRect> OldTransformedBounds() override {
->>>>>>> upstream-releases
     if (mLayer->Extend3DContext()) {
       IntRect result;
       for (UniquePtr<LayerPropertiesBase>& child : mChildren) {
@@ -900,50 +766,11 @@ UniquePtr<LayerPropertiesBase> CloneLayerTreePropertiesInternal(
   return MakeUnique<LayerPropertiesBase>(aRoot);
 }
 
-<<<<<<< HEAD
-/* static */ UniquePtr<LayerProperties> LayerProperties::CloneFrom(
-    Layer* aRoot) {
-||||||| merged common ancestors
-/* static */ UniquePtr<LayerProperties>
-LayerProperties::CloneFrom(Layer* aRoot)
-{
-=======
 /* static */
 UniquePtr<LayerProperties> LayerProperties::CloneFrom(Layer* aRoot) {
->>>>>>> upstream-releases
   return CloneLayerTreePropertiesInternal(aRoot);
 }
 
-<<<<<<< HEAD
-/* static */ void LayerProperties::ClearInvalidations(Layer* aLayer) {
-  ForEachNode<ForwardIterator>(aLayer, [](Layer* layer) {
-    layer->ClearInvalidRegion();
-    if (layer->GetMaskLayer()) {
-      ClearInvalidations(layer->GetMaskLayer());
-    }
-    for (size_t i = 0; i < layer->GetAncestorMaskLayerCount(); i++) {
-      ClearInvalidations(layer->GetAncestorMaskLayerAt(i));
-    }
-  });
-||||||| merged common ancestors
-/* static */ void
-LayerProperties::ClearInvalidations(Layer *aLayer)
-{
-  ForEachNode<ForwardIterator>(
-        aLayer,
-        [] (Layer* layer)
-        {
-          layer->ClearInvalidRegion();
-          if (layer->GetMaskLayer()) {
-            ClearInvalidations(layer->GetMaskLayer());
-          }
-          for (size_t i = 0; i < layer->GetAncestorMaskLayerCount(); i++) {
-            ClearInvalidations(layer->GetAncestorMaskLayerAt(i));
-          }
-
-        }
-      );
-=======
 /* static */
 void LayerProperties::ClearInvalidations(Layer* aLayer) {
   ForEachNode<ForwardIterator>(aLayer, [](Layer* layer) {
@@ -955,7 +782,6 @@ void LayerProperties::ClearInvalidations(Layer* aLayer) {
       ClearInvalidations(layer->GetAncestorMaskLayerAt(i));
     }
   });
->>>>>>> upstream-releases
 }
 
 bool LayerPropertiesBase::ComputeDifferences(

@@ -63,20 +63,9 @@ class GLBlitTextureImageHelper;
  * This is primarily intended for direct texturing APIs that need to attach
  * shared objects (such as an EGLImage) to a gl texture.
  */
-<<<<<<< HEAD
-class CompositorTexturePoolOGL {
- protected:
-  virtual ~CompositorTexturePoolOGL() {}
-||||||| merged common ancestors
-class CompositorTexturePoolOGL
-{
-protected:
-  virtual ~CompositorTexturePoolOGL() {}
-=======
 class CompositorTexturePoolOGL {
  protected:
   virtual ~CompositorTexturePoolOGL() = default;
->>>>>>> upstream-releases
 
  public:
   NS_INLINE_DECL_REFCOUNTING(CompositorTexturePoolOGL)
@@ -92,45 +81,12 @@ class CompositorTexturePoolOGL {
  * Agressively reuses textures. One gl texture per texture unit in total.
  * So far this hasn't shown the best results on b2g.
  */
-<<<<<<< HEAD
-class PerUnitTexturePoolOGL : public CompositorTexturePoolOGL {
- public:
-  explicit PerUnitTexturePoolOGL(gl::GLContext* aGL)
-      : mTextureTarget(0)  // zero is never a valid texture target
-        ,
-        mGL(aGL) {}
-
-  virtual ~PerUnitTexturePoolOGL() { DestroyTextures(); }
-||||||| merged common ancestors
-class PerUnitTexturePoolOGL : public CompositorTexturePoolOGL
-{
-public:
-  explicit PerUnitTexturePoolOGL(gl::GLContext* aGL)
-  : mTextureTarget(0) // zero is never a valid texture target
-  , mGL(aGL)
-  {}
-
-  virtual ~PerUnitTexturePoolOGL()
-  {
-    DestroyTextures();
-  }
-=======
 class PerUnitTexturePoolOGL : public CompositorTexturePoolOGL {
  public:
   explicit PerUnitTexturePoolOGL(gl::GLContext* aGL);
   virtual ~PerUnitTexturePoolOGL();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Clear() override { DestroyTextures(); }
-||||||| merged common ancestors
-  virtual void Clear() override
-  {
-    DestroyTextures();
-  }
-=======
   void Clear() override { DestroyTextures(); }
->>>>>>> upstream-releases
 
   GLuint GetTexture(GLenum aTarget, GLenum aUnit) override;
 
@@ -153,204 +109,67 @@ class CompositorOGL final : public Compositor {
   friend class CompositingRenderTargetOGL;
 
   std::map<ShaderConfigOGL, ShaderProgramOGL*> mPrograms;
-<<<<<<< HEAD
 
- public:
-  explicit CompositorOGL(CompositorBridgeParent* aParent,
-                         widget::CompositorWidget* aWidget,
-                         int aSurfaceWidth = -1, int aSurfaceHeight = -1,
-                         bool aUseExternalSurfaceSize = false);
-||||||| merged common ancestors
-public:
-  explicit CompositorOGL(CompositorBridgeParent* aParent,
-                         widget::CompositorWidget* aWidget,
-                         int aSurfaceWidth = -1, int aSurfaceHeight = -1,
-                         bool aUseExternalSurfaceSize = false);
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
  public:
   CompositorOGL(CompositorBridgeParent* aParent,
                 widget::CompositorWidget* aWidget, int aSurfaceWidth = -1,
                 int aSurfaceHeight = -1, bool aUseExternalSurfaceSize = false);
 
  protected:
->>>>>>> upstream-releases
   virtual ~CompositorOGL();
 
-<<<<<<< HEAD
- public:
-  virtual CompositorOGL* AsCompositorOGL() override { return this; }
-||||||| merged common ancestors
-public:
-  virtual CompositorOGL* AsCompositorOGL() override { return this; }
-=======
  public:
   CompositorOGL* AsCompositorOGL() override { return this; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<DataTextureSource> CreateDataTextureSource(
-      TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<DataTextureSource>
-  CreateDataTextureSource(TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
-=======
   already_AddRefed<DataTextureSource> CreateDataTextureSource(
       TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
->>>>>>> upstream-releases
 
   already_AddRefed<DataTextureSource> CreateDataTextureSourceAroundYCbCr(
       TextureHost* aTexture) override;
 
-<<<<<<< HEAD
-  virtual already_AddRefed<DataTextureSource> CreateDataTextureSourceAround(
-      gfx::DataSourceSurface* aSurface) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<DataTextureSource>
-  CreateDataTextureSourceAround(gfx::DataSourceSurface* aSurface) override;
-=======
   already_AddRefed<DataTextureSource> CreateDataTextureSourceAround(
       gfx::DataSourceSurface* aSurface) override;
->>>>>>> upstream-releases
 
   bool Initialize(nsCString* const out_failureReason) override;
 
   void Destroy() override;
 
-<<<<<<< HEAD
-  virtual TextureFactoryIdentifier GetTextureFactoryIdentifier() override {
-    TextureFactoryIdentifier result = TextureFactoryIdentifier(
-        LayersBackend::LAYERS_OPENGL, XRE_GetProcessType(), GetMaxTextureSize(),
-        SupportsTextureDirectMapping(), false,
-        mFBOTextureTarget == LOCAL_GL_TEXTURE_2D,
-        SupportsPartialTextureUpdate());
-||||||| merged common ancestors
-  virtual TextureFactoryIdentifier GetTextureFactoryIdentifier() override
-  {
-    TextureFactoryIdentifier result =
-      TextureFactoryIdentifier(LayersBackend::LAYERS_OPENGL,
-                               XRE_GetProcessType(),
-                               GetMaxTextureSize(),
-                               SupportsTextureDirectMapping(),
-                               false,
-                               mFBOTextureTarget == LOCAL_GL_TEXTURE_2D,
-                               SupportsPartialTextureUpdate());
-=======
   TextureFactoryIdentifier GetTextureFactoryIdentifier() override {
     TextureFactoryIdentifier result = TextureFactoryIdentifier(
         LayersBackend::LAYERS_OPENGL, XRE_GetProcessType(), GetMaxTextureSize(),
         SupportsTextureDirectMapping(), false,
         mFBOTextureTarget == LOCAL_GL_TEXTURE_2D,
         SupportsPartialTextureUpdate());
->>>>>>> upstream-releases
     return result;
   }
 
-<<<<<<< HEAD
-  virtual already_AddRefed<CompositingRenderTarget> CreateRenderTarget(
-      const gfx::IntRect& aRect, SurfaceInitMode aInit) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<CompositingRenderTarget>
-  CreateRenderTarget(const gfx::IntRect &aRect, SurfaceInitMode aInit) override;
-=======
   already_AddRefed<CompositingRenderTarget> CreateRenderTarget(
       const gfx::IntRect& aRect, SurfaceInitMode aInit) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<CompositingRenderTarget>
-  CreateRenderTargetFromSource(const gfx::IntRect& aRect,
-                               const CompositingRenderTarget* aSource,
-                               const gfx::IntPoint& aSourcePoint) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<CompositingRenderTarget>
-  CreateRenderTargetFromSource(const gfx::IntRect &aRect,
-                               const CompositingRenderTarget *aSource,
-                               const gfx::IntPoint &aSourcePoint) override;
-=======
   already_AddRefed<CompositingRenderTarget> CreateRenderTargetFromSource(
       const gfx::IntRect& aRect, const CompositingRenderTarget* aSource,
       const gfx::IntPoint& aSourcePoint) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void SetRenderTarget(CompositingRenderTarget* aSurface) override;
-  virtual CompositingRenderTarget* GetCurrentRenderTarget() const override;
-  virtual CompositingRenderTarget* GetWindowRenderTarget() const override;
-||||||| merged common ancestors
-  virtual void SetRenderTarget(CompositingRenderTarget *aSurface) override;
-  virtual CompositingRenderTarget* GetCurrentRenderTarget() const override;
-  virtual CompositingRenderTarget* GetWindowRenderTarget() const override;
-=======
   void SetRenderTarget(CompositingRenderTarget* aSurface) override;
   already_AddRefed<CompositingRenderTarget> GetCurrentRenderTarget()
       const override;
   already_AddRefed<CompositingRenderTarget> GetWindowRenderTarget()
       const override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool ReadbackRenderTarget(CompositingRenderTarget* aSource,
-                                    AsyncReadbackBuffer* aDest) override;
-||||||| merged common ancestors
-  virtual bool
-  ReadbackRenderTarget(CompositingRenderTarget* aSource,
-                       AsyncReadbackBuffer* aDest) override;
-=======
   bool ReadbackRenderTarget(CompositingRenderTarget* aSource,
                             AsyncReadbackBuffer* aDest) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<AsyncReadbackBuffer> CreateAsyncReadbackBuffer(
-      const gfx::IntSize& aSize) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<AsyncReadbackBuffer>
-  CreateAsyncReadbackBuffer(const gfx::IntSize& aSize) override;
-=======
   already_AddRefed<AsyncReadbackBuffer> CreateAsyncReadbackBuffer(
       const gfx::IntSize& aSize) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool BlitRenderTarget(CompositingRenderTarget* aSource,
-                                const gfx::IntSize& aSourceSize,
-                                const gfx::IntSize& aDestSize) override;
-||||||| merged common ancestors
-  virtual bool
-  BlitRenderTarget(CompositingRenderTarget* aSource,
-                   const gfx::IntSize& aSourceSize,
-                   const gfx::IntSize& aDestSize) override;
-=======
   bool BlitRenderTarget(CompositingRenderTarget* aSource,
                         const gfx::IntSize& aSourceSize,
                         const gfx::IntSize& aDestSize) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void DrawQuad(const gfx::Rect& aRect, const gfx::IntRect& aClipRect,
-                        const EffectChain& aEffectChain, gfx::Float aOpacity,
-                        const gfx::Matrix4x4& aTransform,
-                        const gfx::Rect& aVisibleRect) override;
-||||||| merged common ancestors
-  virtual void DrawQuad(const gfx::Rect& aRect,
-                        const gfx::IntRect& aClipRect,
-                        const EffectChain &aEffectChain,
-                        gfx::Float aOpacity,
-                        const gfx::Matrix4x4& aTransform,
-                        const gfx::Rect& aVisibleRect) override;
-=======
   void DrawQuad(const gfx::Rect& aRect, const gfx::IntRect& aClipRect,
                 const EffectChain& aEffectChain, gfx::Float aOpacity,
                 const gfx::Matrix4x4& aTransform,
                 const gfx::Rect& aVisibleRect) override;
->>>>>>> upstream-releases
 
   void DrawTriangles(const nsTArray<gfx::TexturedTriangle>& aTriangles,
                      const gfx::Rect& aRect, const gfx::IntRect& aClipRect,
@@ -364,18 +183,8 @@ public:
 
   bool SupportsPartialTextureUpdate() override;
 
-<<<<<<< HEAD
-  virtual bool CanUseCanvasLayerForSize(const gfx::IntSize& aSize) override {
-    if (!mGLContext) return false;
-||||||| merged common ancestors
-  virtual bool CanUseCanvasLayerForSize(const gfx::IntSize &aSize) override
-  {
-    if (!mGLContext)
-      return false;
-=======
   bool CanUseCanvasLayerForSize(const gfx::IntSize& aSize) override {
     if (!mGLContext) return false;
->>>>>>> upstream-releases
     int32_t maxSize = GetMaxTextureSize();
     return aSize <= gfx::IntSize(maxSize, maxSize);
   }
@@ -395,16 +204,8 @@ public:
   void MakeCurrent(MakeCurrentFlags aFlags = 0) override;
 
 #ifdef MOZ_DUMP_PAINTING
-<<<<<<< HEAD
-  virtual const char* Name() const override { return "OGL"; }
-#endif  // MOZ_DUMP_PAINTING
-||||||| merged common ancestors
-  virtual const char* Name() const override { return "OGL"; }
-#endif // MOZ_DUMP_PAINTING
-=======
   const char* Name() const override { return "OGL"; }
 #endif  // MOZ_DUMP_PAINTING
->>>>>>> upstream-releases
 
   LayersBackend GetBackendType() const override {
     return LayersBackend::LAYERS_OPENGL;
@@ -417,17 +218,8 @@ public:
   GLContext* GetGLContext() const override { return mGLContext; }
 
 #ifdef XP_DARWIN
-<<<<<<< HEAD
-  virtual void MaybeUnlockBeforeNextComposition(
-      TextureHost* aTextureHost) override;
-  virtual void TryUnlockTextures() override;
-||||||| merged common ancestors
-  virtual void MaybeUnlockBeforeNextComposition(TextureHost* aTextureHost) override;
-  virtual void TryUnlockTextures() override;
-=======
   void MaybeUnlockBeforeNextComposition(TextureHost* aTextureHost) override;
   void TryUnlockTextures() override;
->>>>>>> upstream-releases
 #endif
 
   /**
@@ -467,16 +259,6 @@ public:
     mSurfaceOrigin = aOrigin;
   }
 
-<<<<<<< HEAD
- private:
-  template <typename Geometry>
-  void DrawGeometry(const Geometry& aGeometry, const gfx::Rect& aRect,
-||||||| merged common ancestors
-private:
-  template<typename Geometry>
-  void DrawGeometry(const Geometry& aGeometry,
-                    const gfx::Rect& aRect,
-=======
   // Register TextureSource which own device data that have to be deleted before
   // destroying this CompositorOGL.
   void RegisterTextureSource(TextureSource* aTextureSource);
@@ -485,7 +267,6 @@ private:
  private:
   template <typename Geometry>
   void DrawGeometry(const Geometry& aGeometry, const gfx::Rect& aRect,
->>>>>>> upstream-releases
                     const gfx::IntRect& aClipRect,
                     const EffectChain& aEffectChain, gfx::Float aOpacity,
                     const gfx::Matrix4x4& aTransform,
@@ -556,28 +337,12 @@ private:
   /* Start a new frame. If aClipRectIn is null and aClipRectOut is non-null,
    * sets *aClipRectOut to the screen dimensions.
    */
-<<<<<<< HEAD
-  virtual void BeginFrame(const nsIntRegion& aInvalidRegion,
-                          const gfx::IntRect* aClipRectIn,
-                          const gfx::IntRect& aRenderBounds,
-                          const nsIntRegion& aOpaqueRegion,
-                          gfx::IntRect* aClipRectOut = nullptr,
-                          gfx::IntRect* aRenderBoundsOut = nullptr) override;
-||||||| merged common ancestors
-  virtual void BeginFrame(const nsIntRegion& aInvalidRegion,
-                          const gfx::IntRect *aClipRectIn,
-                          const gfx::IntRect& aRenderBounds,
-                          const nsIntRegion& aOpaqueRegion,
-                          gfx::IntRect *aClipRectOut = nullptr,
-                          gfx::IntRect *aRenderBoundsOut = nullptr) override;
-=======
   void BeginFrame(const nsIntRegion& aInvalidRegion,
                   const gfx::IntRect* aClipRectIn,
                   const gfx::IntRect& aRenderBounds,
                   const nsIntRegion& aOpaqueRegion,
                   gfx::IntRect* aClipRectOut = nullptr,
                   gfx::IntRect* aRenderBoundsOut = nullptr) override;
->>>>>>> upstream-releases
 
   ShaderConfigOGL GetShaderConfigFor(
       Effect* aEffect, TextureSourceOGL* aSourceMask = nullptr,

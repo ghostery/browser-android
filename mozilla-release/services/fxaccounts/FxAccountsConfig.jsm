@@ -81,10 +81,6 @@ var FxAccountsConfig = {
     });
   },
 
-  async promiseEmailFirstURI(entrypoint) {
-    return this._buildURL("", {entrypoint});
-  },
-
   async promiseForceSigninURI(entrypoint) {
     return this._buildURL("force_auth", {
       extraParams: { entrypoint },

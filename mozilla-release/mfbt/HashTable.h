@@ -171,15 +171,7 @@ class HashMap {
 
   explicit HashMap(AllocPolicy aAllocPolicy = AllocPolicy(),
                    uint32_t aLen = Impl::sDefaultLen)
-<<<<<<< HEAD
-      : mImpl(aAllocPolicy, aLen) {}
-||||||| merged common ancestors
-    : mImpl(aAllocPolicy, aLen)
-  {
-  }
-=======
       : mImpl(std::move(aAllocPolicy), aLen) {}
->>>>>>> upstream-releases
 
   explicit HashMap(uint32_t aLen) : mImpl(AllocPolicy(), aLen) {}
 
@@ -464,15 +456,7 @@ class HashSet {
 
   explicit HashSet(AllocPolicy aAllocPolicy = AllocPolicy(),
                    uint32_t aLen = Impl::sDefaultLen)
-<<<<<<< HEAD
-      : mImpl(aAllocPolicy, aLen) {}
-||||||| merged common ancestors
-    : mImpl(aAllocPolicy, aLen)
-  {
-  }
-=======
       : mImpl(std::move(aAllocPolicy), aLen) {}
->>>>>>> upstream-releases
 
   explicit HashSet(uint32_t aLen) : mImpl(AllocPolicy(), aLen) {}
 
@@ -959,23 +943,12 @@ namespace detail {
 template <class T, class HashPolicy, class AllocPolicy>
 class HashTable;
 
-<<<<<<< HEAD
-template <typename T>
-class HashTableEntry {
- private:
-||||||| merged common ancestors
-template<typename T>
-class HashTableEntry
-{
-private:
-=======
 template <typename T>
 class EntrySlot;
 
 template <typename T>
 class HashTableEntry {
  private:
->>>>>>> upstream-releases
   using NonConstT = typename RemoveConst<T>::Type;
 
   // Instead of having a hash table entry store that looks like this:
@@ -1071,42 +1044,11 @@ class HashTableEntry {
  public:
   HashTableEntry() = default;
 
-<<<<<<< HEAD
-  ~HashTableEntry() {
-    if (isLive()) {
-      destroyStoredT();
-    }
-||||||| merged common ancestors
-  ~HashTableEntry()
-  {
-    if (isLive()) {
-      destroyStoredT();
-    }
-=======
   ~HashTableEntry() { MOZ_MAKE_MEM_UNDEFINED(this, sizeof(*this)); }
->>>>>>> upstream-releases
 
   void destroy() { destroyStoredT(); }
 
-<<<<<<< HEAD
-  void destroy() {
-    MOZ_ASSERT(isLive());
-    destroyStoredT();
-  }
-
-  void swap(HashTableEntry* aOther) {
-||||||| merged common ancestors
-  void destroy()
-  {
-    MOZ_ASSERT(isLive());
-    destroyStoredT();
-  }
-
-  void swap(HashTableEntry* aOther)
-  {
-=======
   void swap(HashTableEntry* aOther, bool aIsLive) {
->>>>>>> upstream-releases
     if (this == aOther) {
       return;
     }
@@ -1118,16 +1060,6 @@ class HashTableEntry {
     }
   }
 
-<<<<<<< HEAD
-  T& get() {
-    MOZ_ASSERT(isLive());
-    return *valuePtr();
-||||||| merged common ancestors
-  T& get()
-  {
-    MOZ_ASSERT(isLive());
-    return *valuePtr();
-=======
   T& get() { return *valuePtr(); }
 
   NonConstT& getMutable() { return *valuePtr(); }
@@ -1167,41 +1099,22 @@ class EntrySlot {
     ++mEntry;
     ++mKeyHash;
     return *this;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  NonConstT& getMutable() {
-    MOZ_ASSERT(isLive());
-    return *valuePtr();
-||||||| merged common ancestors
-  NonConstT& getMutable()
-  {
-    MOZ_ASSERT(isLive());
-    return *valuePtr();
-=======
   void destroy() { mEntry->destroy(); }
 
   void swap(EntrySlot& aOther) {
     mEntry->swap(aOther.mEntry, aOther.isLive());
     Swap(*mKeyHash, *aOther.mKeyHash);
->>>>>>> upstream-releases
   }
 
   T& get() const { return mEntry->get(); }
 
-<<<<<<< HEAD
-  void clearLive() {
-||||||| merged common ancestors
-  void clearLive()
-  {
-=======
   NonConstT& getMutable() { return mEntry->getMutable(); }
 
   bool isFree() const { return *mKeyHash == Entry::sFreeKey; }
 
   void clearLive() {
->>>>>>> upstream-releases
     MOZ_ASSERT(isLive());
     *mKeyHash = Entry::sFreeKey;
     mEntry->destroyStoredT();
@@ -1236,44 +1149,11 @@ class EntrySlot {
   }
   HashNumber getKeyHash() const { return *mKeyHash & ~Entry::sCollisionBit; }
 
-<<<<<<< HEAD
-  void unsetCollision() { mKeyHash &= ~sCollisionBit; }
-
-  bool hasCollision() const { return mKeyHash & sCollisionBit; }
-
-  bool matchHash(HashNumber hn) { return (mKeyHash & ~sCollisionBit) == hn; }
-
-  HashNumber getKeyHash() const { return mKeyHash & ~sCollisionBit; }
-
   template <typename... Args>
   void setLive(HashNumber aHashNumber, Args&&... aArgs) {
-||||||| merged common ancestors
-  void unsetCollision() { mKeyHash &= ~sCollisionBit; }
-
-  bool hasCollision() const { return mKeyHash & sCollisionBit; }
-
-  bool matchHash(HashNumber hn) { return (mKeyHash & ~sCollisionBit) == hn; }
-
-  HashNumber getKeyHash() const { return mKeyHash & ~sCollisionBit; }
-
-  template<typename... Args>
-  void setLive(HashNumber aHashNumber, Args&&... aArgs)
-  {
-=======
-  template <typename... Args>
-  void setLive(HashNumber aHashNumber, Args&&... aArgs) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!isLive());
-<<<<<<< HEAD
-    mKeyHash = aHashNumber;
-    new (KnownNotNull, valuePtr()) T(std::forward<Args>(aArgs)...);
-||||||| merged common ancestors
-    mKeyHash = aHashNumber;
-    new (valuePtr()) T(std::forward<Args>(aArgs)...);
-=======
     *mKeyHash = aHashNumber;
     new (KnownNotNull, mEntry->valuePtr()) T(std::forward<Args>(aArgs)...);
->>>>>>> upstream-releases
     MOZ_ASSERT(isLive());
   }
 
@@ -1316,19 +1196,9 @@ class HashTable : private AllocPolicy {
     Generation mGeneration;
 #endif
 
-<<<<<<< HEAD
-   protected:
-    Ptr(Entry& aEntry, const HashTable& aTable)
-        : mEntry(&aEntry)
-||||||| merged common ancestors
-  protected:
-    Ptr(Entry& aEntry, const HashTable& aTable)
-      : mEntry(&aEntry)
-=======
    protected:
     Ptr(Slot aSlot, const HashTable& aTable)
         : mSlot(aSlot)
->>>>>>> upstream-releases
 #ifdef DEBUG
           ,
           mTable(&aTable),
@@ -1339,13 +1209,7 @@ class HashTable : private AllocPolicy {
 
     // This constructor is used only by AddPtr() within lookupForAdd().
     explicit Ptr(const HashTable& aTable)
-<<<<<<< HEAD
-        : mEntry(nullptr)
-||||||| merged common ancestors
-      : mEntry(nullptr)
-=======
         : mSlot(nullptr, nullptr)
->>>>>>> upstream-releases
 #ifdef DEBUG
           ,
           mTable(&aTable),
@@ -1358,13 +1222,7 @@ class HashTable : private AllocPolicy {
 
    public:
     Ptr()
-<<<<<<< HEAD
-        : mEntry(nullptr)
-||||||| merged common ancestors
-      : mEntry(nullptr)
-=======
         : mSlot(nullptr, nullptr)
->>>>>>> upstream-releases
 #ifdef DEBUG
           ,
           mTable(nullptr),
@@ -1423,19 +1281,9 @@ class HashTable : private AllocPolicy {
     uint64_t mMutationCount;
 #endif
 
-<<<<<<< HEAD
-    AddPtr(Entry& aEntry, const HashTable& aTable, HashNumber aHashNumber)
-        : Ptr(aEntry, aTable),
-          mKeyHash(aHashNumber)
-||||||| merged common ancestors
-    AddPtr(Entry& aEntry, const HashTable& aTable, HashNumber aHashNumber)
-      : Ptr(aEntry, aTable)
-      , mKeyHash(aHashNumber)
-=======
     AddPtr(Slot aSlot, const HashTable& aTable, HashNumber aHashNumber)
         : Ptr(aSlot, aTable),
           mKeyHash(aHashNumber)
->>>>>>> upstream-releases
 #ifdef DEBUG
           ,
           mMutationCount(aTable.mMutationCount)
@@ -1466,14 +1314,6 @@ class HashTable : private AllocPolicy {
   // A hash table iterator that (mostly) doesn't allow table modifications.
   // As with Ptr/AddPtr, Iterator objects must not be used after any mutating
   // hash table operation unless the |generation()| is tested.
-<<<<<<< HEAD
-  class Iterator {
-   protected:
-||||||| merged common ancestors
-  class Iterator
-  {
-  protected:
-=======
   class Iterator {
     void moveToNextLiveEntry() {
       while (++mCur < mEnd && !mCur.isLive()) {
@@ -1482,20 +1322,11 @@ class HashTable : private AllocPolicy {
     }
 
    protected:
->>>>>>> upstream-releases
     friend class HashTable;
 
     explicit Iterator(const HashTable& aTable)
-<<<<<<< HEAD
-        : mCur(aTable.mTable),
-          mEnd(aTable.mTable + aTable.capacity())
-||||||| merged common ancestors
-      : mCur(aTable.mTable)
-      , mEnd(aTable.mTable + aTable.capacity())
-=======
         : mCur(aTable.slotForIndex(0)),
           mEnd(aTable.slotForIndex(aTable.capacity()))
->>>>>>> upstream-releases
 #ifdef DEBUG
           ,
           mTable(aTable),
@@ -1582,17 +1413,8 @@ class HashTable : private AllocPolicy {
 
     // Removes the current element from the table, leaving |get()|
     // invalid until the next call to |next()|.
-<<<<<<< HEAD
-    void remove() {
-      mTable.remove(*this->mCur);
-||||||| merged common ancestors
-    void remove()
-    {
-      mTable.remove(*this->mCur);
-=======
     void remove() {
       mTable.remove(this->mCur);
->>>>>>> upstream-releases
       mRemoved = true;
 #ifdef DEBUG
       this->mValidEntry = false;
@@ -1613,20 +1435,9 @@ class HashTable : private AllocPolicy {
     // Removes the current element and re-inserts it into the table with
     // a new key at the new Lookup position.  |get()| is invalid after
     // this operation until the next call to |next()|.
-<<<<<<< HEAD
-    void rekey(const Lookup& l, const Key& k) {
-      MOZ_ASSERT(&k != &HashPolicy::getKey(this->mCur->get()));
-      Ptr p(*this->mCur, mTable);
-||||||| merged common ancestors
-    void rekey(const Lookup& l, const Key& k)
-    {
-      MOZ_ASSERT(&k != &HashPolicy::getKey(this->mCur->get()));
-      Ptr p(*this->mCur, mTable);
-=======
     void rekey(const Lookup& l, const Key& k) {
       MOZ_ASSERT(&k != &HashPolicy::getKey(this->mCur.get()));
       Ptr p(this->mCur, mTable);
->>>>>>> upstream-releases
       mTable.rekeyWithoutRehash(p, l, k);
       mRekeyed = true;
 #ifdef DEBUG
@@ -1699,20 +1510,8 @@ class HashTable : private AllocPolicy {
   };
 
   // HashTable is movable
-<<<<<<< HEAD
-  HashTable(HashTable&& aRhs) : AllocPolicy(aRhs) {
-    PodAssign(this, &aRhs);
-    aRhs.mTable = nullptr;
-||||||| merged common ancestors
-  HashTable(HashTable&& aRhs)
-    : AllocPolicy(aRhs)
-  {
-    PodAssign(this, &aRhs);
-    aRhs.mTable = nullptr;
-=======
   HashTable(HashTable&& aRhs) : AllocPolicy(std::move(aRhs)) {
     moveFrom(aRhs);
->>>>>>> upstream-releases
   }
   void operator=(HashTable&& aRhs) {
     MOZ_ASSERT(this != &aRhs, "self-move assignment is prohibited");
@@ -1737,40 +1536,18 @@ class HashTable : private AllocPolicy {
     aRhs.mTable = nullptr;
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   // HashTable is not copyable or assignable
   HashTable(const HashTable&) = delete;
   void operator=(const HashTable&) = delete;
 
   static const uint32_t CAP_BITS = 30;
 
-<<<<<<< HEAD
- public:
-  uint64_t mGen : 56;       // entry storage generation number
-  uint64_t mHashShift : 8;  // multiplicative hash shift
-  Entry* mTable;            // entry storage
-  uint32_t mEntryCount;     // number of entries in mTable
-  uint32_t mRemovedCount;   // removed entry sentinels in mTable
-||||||| merged common ancestors
-public:
-  uint64_t mGen : 56;      // entry storage generation number
-  uint64_t mHashShift : 8; // multiplicative hash shift
-  Entry* mTable;           // entry storage
-  uint32_t mEntryCount;    // number of entries in mTable
-  uint32_t mRemovedCount;  // removed entry sentinels in mTable
-=======
  public:
   uint64_t mGen : 56;       // entry storage generation number
   uint64_t mHashShift : 8;  // multiplicative hash shift
   char* mTable;             // entry storage
   uint32_t mEntryCount;     // number of entries in mTable
   uint32_t mRemovedCount;   // removed entry sentinels in mTable
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   uint64_t mMutationCount;
@@ -1796,24 +1573,6 @@ public:
   static const HashNumber sRemovedKey = Entry::sRemovedKey;
   static const HashNumber sCollisionBit = Entry::sCollisionBit;
 
-<<<<<<< HEAD
-  static uint32_t bestCapacity(uint32_t aLen) {
-    static_assert(
-        (sMaxInit * sAlphaDenominator) / sAlphaDenominator == sMaxInit,
-        "multiplication in numerator below could overflow");
-    static_assert(
-        sMaxInit * sAlphaDenominator <= UINT32_MAX - sMaxAlphaNumerator,
-        "numerator calculation below could potentially overflow");
-||||||| merged common ancestors
-  static uint32_t bestCapacity(uint32_t aLen)
-  {
-    static_assert((sMaxInit * sAlphaDenominator) / sAlphaDenominator ==
-                    sMaxInit,
-                  "multiplication in numerator below could overflow");
-    static_assert(sMaxInit * sAlphaDenominator <=
-                    UINT32_MAX - sMaxAlphaNumerator,
-                  "numerator calculation below could potentially overflow");
-=======
   static uint32_t bestCapacity(uint32_t aLen) {
     static_assert(
         (sMaxInit * sAlphaDenominator) / sAlphaDenominator == sMaxInit,
@@ -1824,7 +1583,6 @@ public:
 
     // Callers should ensure this is true.
     MOZ_ASSERT(aLen <= sMaxInit);
->>>>>>> upstream-releases
 
     // Compute the smallest capacity allowing |aLen| elements to be
     // inserted without rehashing: ceil(aLen / max-alpha).  (Ceiling
@@ -1862,15 +1620,6 @@ public:
     return keyHash & ~sCollisionBit;
   }
 
-<<<<<<< HEAD
-  enum FailureBehavior { DontReportFailure = false, ReportFailure = true };
-||||||| merged common ancestors
-  enum FailureBehavior
-  {
-    DontReportFailure = false,
-    ReportFailure = true
-  };
-=======
   enum FailureBehavior { DontReportFailure = false, ReportFailure = true };
 
   // Fake a struct that we're going to alloc. See the comments in
@@ -1878,24 +1627,7 @@ public:
   struct FakeSlot {
     unsigned char c[sizeof(HashNumber) + sizeof(typename Entry::NonConstT)];
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static Entry* createTable(AllocPolicy& aAllocPolicy, uint32_t aCapacity,
-                            FailureBehavior aReportFailure = ReportFailure) {
-    Entry* table =
-        aReportFailure
-            ? aAllocPolicy.template pod_malloc<Entry>(aCapacity)
-            : aAllocPolicy.template maybe_pod_malloc<Entry>(aCapacity);
-||||||| merged common ancestors
-  static Entry* createTable(AllocPolicy& aAllocPolicy,
-                            uint32_t aCapacity,
-                            FailureBehavior aReportFailure = ReportFailure)
-  {
-    Entry* table = aReportFailure
-                     ? aAllocPolicy.template pod_malloc<Entry>(aCapacity)
-                     : aAllocPolicy.template maybe_pod_malloc<Entry>(aCapacity);
-=======
   static char* createTable(AllocPolicy& aAllocPolicy, uint32_t aCapacity,
                            FailureBehavior aReportFailure = ReportFailure) {
     FakeSlot* fake =
@@ -1903,45 +1635,15 @@ public:
             ? aAllocPolicy.template pod_malloc<FakeSlot>(aCapacity)
             : aAllocPolicy.template maybe_pod_malloc<FakeSlot>(aCapacity);
     char* table = reinterpret_cast<char*>(fake);
->>>>>>> upstream-releases
     if (table) {
-<<<<<<< HEAD
-      for (uint32_t i = 0; i < aCapacity; i++) {
-        new (KnownNotNull, &table[i]) Entry();
-      }
-||||||| merged common ancestors
-      for (uint32_t i = 0; i < aCapacity; i++) {
-        new (&table[i]) Entry();
-      }
-=======
       forEachSlot(table, aCapacity, [&](Slot& slot) {
         *slot.mKeyHash = sFreeKey;
         new (KnownNotNull, slot.toEntry()) Entry();
       });
->>>>>>> upstream-releases
     }
     return table;
   }
 
-<<<<<<< HEAD
-  static void destroyTable(AllocPolicy& aAllocPolicy, Entry* aOldTable,
-                           uint32_t aCapacity) {
-    Entry* end = aOldTable + aCapacity;
-    for (Entry* e = aOldTable; e < end; ++e) {
-      e->~Entry();
-    }
-    aAllocPolicy.free_(aOldTable, aCapacity);
-||||||| merged common ancestors
-  static void destroyTable(AllocPolicy& aAllocPolicy,
-                           Entry* aOldTable,
-                           uint32_t aCapacity)
-  {
-    Entry* end = aOldTable + aCapacity;
-    for (Entry* e = aOldTable; e < end; ++e) {
-      e->~Entry();
-    }
-    aAllocPolicy.free_(aOldTable, aCapacity);
-=======
   static void destroyTable(AllocPolicy& aAllocPolicy, char* aOldTable,
                            uint32_t aCapacity) {
     forEachSlot(aOldTable, aCapacity, [&](const Slot& slot) {
@@ -1956,33 +1658,16 @@ public:
                         uint32_t aCapacity) {
     FakeSlot* fake = reinterpret_cast<FakeSlot*>(aOldTable);
     aAllocPolicy.free_(fake, aCapacity);
->>>>>>> upstream-releases
   }
 
  public:
   HashTable(AllocPolicy aAllocPolicy, uint32_t aLen)
-<<<<<<< HEAD
-      : AllocPolicy(aAllocPolicy),
-        mGen(0),
-        mHashShift(hashShift(aLen)),
-        mTable(nullptr),
-        mEntryCount(0),
-        mRemovedCount(0)
-||||||| merged common ancestors
-    : AllocPolicy(aAllocPolicy)
-    , mGen(0)
-    , mHashShift(hashShift(aLen))
-    , mTable(nullptr)
-    , mEntryCount(0)
-    , mRemovedCount(0)
-=======
       : AllocPolicy(std::move(aAllocPolicy)),
         mGen(0),
         mHashShift(hashShift(aLen)),
         mTable(nullptr),
         mEntryCount(0),
         mRemovedCount(0)
->>>>>>> upstream-releases
 #ifdef DEBUG
         ,
         mMutationCount(0),
@@ -2020,28 +1705,10 @@ public:
     return (aHash1 - aDoubleHash.mHash2) & aDoubleHash.mSizeMask;
   }
 
-<<<<<<< HEAD
-  static MOZ_ALWAYS_INLINE bool match(Entry& aEntry, const Lookup& aLookup) {
-    return HashPolicy::match(HashPolicy::getKey(aEntry.get()), aLookup);
-||||||| merged common ancestors
-  static MOZ_ALWAYS_INLINE bool match(Entry& aEntry, const Lookup& aLookup)
-  {
-    return HashPolicy::match(HashPolicy::getKey(aEntry.get()), aLookup);
-=======
   static MOZ_ALWAYS_INLINE bool match(T& aEntry, const Lookup& aLookup) {
     return HashPolicy::match(HashPolicy::getKey(aEntry), aLookup);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  enum LookupReason { ForNonAdd, ForAdd };
-||||||| merged common ancestors
-  enum LookupReason
-  {
-    ForNonAdd,
-    ForAdd
-  };
-=======
   enum LookupReason { ForNonAdd, ForAdd };
 
   Slot slotForIndex(HashNumber aIndex) const {
@@ -2049,24 +1716,12 @@ public:
     auto entries = reinterpret_cast<Entry*>(&hashes[capacity()]);
     return Slot(&entries[aIndex], &hashes[aIndex]);
   }
->>>>>>> upstream-releases
 
   // Warning: in order for readonlyThreadsafeLookup() to be safe this
   // function must not modify the table in any way when Reason==ForNonAdd.
-<<<<<<< HEAD
-  template <LookupReason Reason>
-  MOZ_ALWAYS_INLINE Entry& lookup(const Lookup& aLookup,
-                                  HashNumber aKeyHash) const {
-||||||| merged common ancestors
-  template<LookupReason Reason>
-  MOZ_ALWAYS_INLINE Entry& lookup(const Lookup& aLookup,
-                                  HashNumber aKeyHash) const
-  {
-=======
   template <LookupReason Reason>
   MOZ_ALWAYS_INLINE Slot lookup(const Lookup& aLookup,
                                 HashNumber aKeyHash) const {
->>>>>>> upstream-releases
     MOZ_ASSERT(isLiveHash(aKeyHash));
     MOZ_ASSERT(!(aKeyHash & sCollisionBit));
     MOZ_ASSERT(mTable);
@@ -2116,14 +1771,7 @@ public:
   // This is a copy of lookup() hardcoded to the assumptions:
   //   1. the lookup is for an add;
   //   2. the key, whose |keyHash| has been passed, is not in the table.
-<<<<<<< HEAD
-  Entry& findNonLiveEntry(HashNumber aKeyHash) {
-||||||| merged common ancestors
-  Entry& findNonLiveEntry(HashNumber aKeyHash)
-  {
-=======
   Slot findNonLiveSlot(HashNumber aKeyHash) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!(aKeyHash & sCollisionBit));
     MOZ_ASSERT(mTable);
 
@@ -2184,27 +1832,11 @@ public:
     mTable = newTable;
 
     // Copy only live entries, leaving removed ones behind.
-<<<<<<< HEAD
-    Entry* end = oldTable + oldCapacity;
-    for (Entry* src = oldTable; src < end; ++src) {
-      if (src->isLive()) {
-        HashNumber hn = src->getKeyHash();
-        findNonLiveEntry(hn).setLive(
-            hn, std::move(const_cast<typename Entry::NonConstT&>(src->get())));
-||||||| merged common ancestors
-    Entry* end = oldTable + oldCapacity;
-    for (Entry* src = oldTable; src < end; ++src) {
-      if (src->isLive()) {
-        HashNumber hn = src->getKeyHash();
-        findNonLiveEntry(hn).setLive(
-          hn, std::move(const_cast<typename Entry::NonConstT&>(src->get())));
-=======
     forEachSlot(oldTable, oldCapacity, [&](Slot& slot) {
       if (slot.isLive()) {
         HashNumber hn = slot.getKeyHash();
         findNonLiveSlot(hn).setLive(
             hn, std::move(const_cast<typename Entry::NonConstT&>(slot.get())));
->>>>>>> upstream-releases
       }
 
       slot.clear();
@@ -2244,14 +1876,7 @@ public:
     }
   }
 
-<<<<<<< HEAD
-  void remove(Entry& aEntry) {
-||||||| merged common ancestors
-  void remove(Entry& aEntry)
-  {
-=======
   void remove(Slot& aSlot) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mTable);
 
     if (aSlot.hasCollision()) {
@@ -2342,26 +1967,9 @@ public:
 #endif
   }
 
-<<<<<<< HEAD
- public:
-  void clear() {
-    Entry* end = mTable + capacity();
-    for (Entry* e = mTable; e < end; ++e) {
-      e->clear();
-    }
-||||||| merged common ancestors
-public:
-  void clear()
-  {
-    Entry* end = mTable + capacity();
-    for (Entry* e = mTable; e < end; ++e) {
-      e->clear();
-    }
-=======
  public:
   void clear() {
     forEachSlot(mTable, capacity(), [&](Slot& slot) { slot.clear(); });
->>>>>>> upstream-releases
     mRemovedCount = 0;
     mEntryCount = 0;
 #ifdef DEBUG

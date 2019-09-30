@@ -20,42 +20,10 @@ namespace layers {
 
 using namespace mozilla::gfx;
 
-<<<<<<< HEAD
 void ColorLayerComposite::RenderLayer(const gfx::IntRect& aClipRect,
                                       const Maybe<gfx::Polygon>& aGeometry) {
-  Rect rect(GetBounds());
-
-||||||| merged common ancestors
-void
-ColorLayerComposite::RenderLayer(const gfx::IntRect& aClipRect,
-                                 const Maybe<gfx::Polygon>& aGeometry)
-{
-  Rect rect(GetBounds());
-
-=======
-void ColorLayerComposite::RenderLayer(const gfx::IntRect& aClipRect,
-                                      const Maybe<gfx::Polygon>& aGeometry) {
->>>>>>> upstream-releases
   const Matrix4x4& transform = GetEffectiveTransform();
 
-<<<<<<< HEAD
-  RenderWithAllMasks(this, mCompositor, aClipRect,
-                     [&](EffectChain& effectChain, const IntRect& clipRect) {
-                       GenEffectChain(effectChain);
-
-                       mCompositor->DrawGeometry(rect, clipRect, effectChain,
-                                                 GetEffectiveOpacity(),
-                                                 transform, aGeometry);
-                     });
-||||||| merged common ancestors
-  RenderWithAllMasks(this, mCompositor, aClipRect,
-                     [&](EffectChain& effectChain, const IntRect& clipRect) {
-    GenEffectChain(effectChain);
-
-    mCompositor->DrawGeometry(rect, clipRect, effectChain,
-                              GetEffectiveOpacity(), transform, aGeometry);
-  });
-=======
 #ifdef MOZ_GFX_OPTIMIZE_MOBILE
   // On desktop we want to draw a single rectangle to avoid possible
   // seams if we're resampling. On mobile we'd prefer to use the accurate
@@ -78,7 +46,6 @@ void ColorLayerComposite::RenderLayer(const gfx::IntRect& aClipRect,
                              GetEffectiveOpacity(), transform, aGeometry);
                        });
   }
->>>>>>> upstream-releases
 
   Rect rect(GetBounds());
   mCompositor->DrawDiagnostics(DiagnosticFlags::COLOR, rect, aClipRect,

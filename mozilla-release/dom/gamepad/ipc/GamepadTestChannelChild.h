@@ -13,32 +13,17 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class GamepadTestChannelChild final : public PGamepadTestChannelChild {
-||||||| merged common ancestors
-class GamepadTestChannelChild final : public PGamepadTestChannelChild
-{
-=======
 class GamepadTestChannelChild final : public PGamepadTestChannelChild {
   friend class PGamepadTestChannelChild;
 
->>>>>>> upstream-releases
  public:
   GamepadTestChannelChild() {}
   ~GamepadTestChannelChild() {}
   void AddPromise(const uint32_t& aID, Promise* aPromise);
 
  private:
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvReplyGamepadIndex(
-      const uint32_t& aID, const uint32_t& aIndex) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvReplyGamepadIndex(const uint32_t& aID,
-                                                        const uint32_t& aIndex) override;
-=======
   mozilla::ipc::IPCResult RecvReplyGamepadIndex(const uint32_t& aID,
                                                 const uint32_t& aIndex);
->>>>>>> upstream-releases
 
   nsRefPtrHashtable<nsUint32HashKey, dom::Promise> mPromiseList;
 };

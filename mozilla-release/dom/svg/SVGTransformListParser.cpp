@@ -134,17 +134,8 @@ bool SVGTransformListParser::ParseTranslate() {
     case 1:
       t[1] = 0.f;
       MOZ_FALLTHROUGH;
-<<<<<<< HEAD
-    case 2: {
-      nsSVGTransform* transform = mTransforms.AppendElement(fallible);
-||||||| merged common ancestors
-    case 2:
-    {
-      nsSVGTransform* transform = mTransforms.AppendElement(fallible);
-=======
     case 2: {
       SVGTransform* transform = mTransforms.AppendElement(fallible);
->>>>>>> upstream-releases
       if (!transform) {
         return false;
       }
@@ -168,17 +159,8 @@ bool SVGTransformListParser::ParseScale() {
     case 1:
       s[1] = s[0];
       MOZ_FALLTHROUGH;
-<<<<<<< HEAD
-    case 2: {
-      nsSVGTransform* transform = mTransforms.AppendElement(fallible);
-||||||| merged common ancestors
-    case 2:
-    {
-      nsSVGTransform* transform = mTransforms.AppendElement(fallible);
-=======
     case 2: {
       SVGTransform* transform = mTransforms.AppendElement(fallible);
->>>>>>> upstream-releases
       if (!transform) {
         return false;
       }
@@ -202,17 +184,8 @@ bool SVGTransformListParser::ParseRotate() {
     case 1:
       r[1] = r[2] = 0.f;
       MOZ_FALLTHROUGH;
-<<<<<<< HEAD
-    case 3: {
-      nsSVGTransform* transform = mTransforms.AppendElement(fallible);
-||||||| merged common ancestors
-    case 3:
-    {
-      nsSVGTransform* transform = mTransforms.AppendElement(fallible);
-=======
     case 3: {
       SVGTransform* transform = mTransforms.AppendElement(fallible);
->>>>>>> upstream-releases
       if (!transform) {
         return false;
       }

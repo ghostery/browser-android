@@ -16,26 +16,11 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-class FileChannelChild : public nsFileChannel,
-                         public nsIChildChannel,
-                         public PFileChannelChild {
- public:
-  explicit FileChannelChild(nsIURI *uri);
-||||||| merged common ancestors
-class FileChannelChild : public nsFileChannel
-                       , public nsIChildChannel
-                       , public PFileChannelChild
-{
-public:
-  explicit FileChannelChild(nsIURI *uri);
-=======
 class FileChannelChild : public nsFileChannel,
                          public nsIChildChannel,
                          public PFileChannelChild {
  public:
   explicit FileChannelChild(nsIURI* uri);
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSICHILDCHANNEL

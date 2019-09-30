@@ -141,13 +141,8 @@ EXTRA_JS_MODULES += [
     'ContentMetaHandler.jsm',
     'ContentObservers.js',
     'ContentSearch.jsm',
-<<<<<<< HEAD
-    'Discovery.jsm',
-||||||| merged common ancestors
-=======
     'Discovery.jsm',
     'EveryWindow.jsm',
->>>>>>> upstream-releases
     'ExtensionsUI.jsm',
     'FaviconLoader.jsm',
     'FormValidationHandler.jsm',

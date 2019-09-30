@@ -11,18 +11,8 @@
 
 const initialAsyncRequestState = [];
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/reducers/async-requests.js
-function update(state = initialAsyncRequestState, action) {
-  const { seqId } = action;
-||||||| merged common ancestors
-function update(state = initialAsyncRequestState, action) {
-  const {
-    seqId
-  } = action;
-=======
 function update(state: string[] = initialAsyncRequestState, action: any) {
   const { seqId } = action;
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/reducers/async-requests.js
 
   if (action.type === "NAVIGATE") {
     return initialAsyncRequestState;

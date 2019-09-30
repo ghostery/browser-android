@@ -56,16 +56,8 @@ function runTests() {
 
   function listProcess() {
     // Call listProcesses in order to start receiving new process notifications
-<<<<<<< HEAD
-    client.mainRoot.on("processListChanged", function listener() {
-      client.removeListener("processListChanged", listener);
-||||||| merged common ancestors
-    client.addListener("processListChanged", function listener() {
-      client.removeListener("processListChanged", listener);
-=======
     client.mainRoot.on("processListChanged", function listener() {
       client.off("processListChanged", listener);
->>>>>>> upstream-releases
       ok(true, "Received processListChanged event");
       getProcess();
     });

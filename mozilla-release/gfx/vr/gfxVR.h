@@ -26,15 +26,7 @@ class PTextureParent;
 namespace dom {
 enum class GamepadMappingType : uint8_t;
 enum class GamepadHand : uint8_t;
-<<<<<<< HEAD
-struct GamepadPoseState;
 }  // namespace dom
-||||||| merged common ancestors
-struct GamepadPoseState;
-}
-=======
-}  // namespace dom
->>>>>>> upstream-releases
 namespace gfx {
 class VRLayerParent;
 class VRDisplayHost;
@@ -66,55 +58,24 @@ struct VRDisplayInfo {
   VRControllerState mControllerState[kVRControllerMaxCount];
 
   VRHMDSensorState mLastSensorState[kVRMaxLatencyFrames];
-<<<<<<< HEAD
-  TimeStamp mLastFrameStart[kVRMaxLatencyFrames];
-  const VRHMDSensorState& GetSensorState() const {
-||||||| merged common ancestors
-  TimeStamp mLastFrameStart[kVRMaxLatencyFrames];
-  const VRHMDSensorState& GetSensorState() const
-  {
-=======
   void Clear() { memset(this, 0, sizeof(VRDisplayInfo)); }
   const VRHMDSensorState& GetSensorState() const {
->>>>>>> upstream-releases
     return mLastSensorState[mFrameId % kVRMaxLatencyFrames];
   }
 
   uint32_t GetDisplayID() const { return mDisplayID; }
-<<<<<<< HEAD
-  const char* GetDisplayName() const { return mDisplayState.mDisplayName; }
-  VRDisplayCapabilityFlags GetCapabilities() const {
-    return mDisplayState.mCapabilityFlags;
-  }
-||||||| merged common ancestors
-  const char* GetDisplayName() const { return mDisplayState.mDisplayName; }
-  VRDisplayCapabilityFlags GetCapabilities() const { return mDisplayState.mCapabilityFlags; }
-=======
   const char* GetDisplayName() const { return mDisplayState.displayName; }
   VRDisplayCapabilityFlags GetCapabilities() const {
     return mDisplayState.capabilityFlags;
   }
->>>>>>> upstream-releases
 
   const IntSize SuggestedEyeResolution() const;
   const Point3D GetEyeTranslation(uint32_t whichEye) const;
-<<<<<<< HEAD
-  const VRFieldOfView& GetEyeFOV(uint32_t whichEye) const {
-    return mDisplayState.mEyeFOV[whichEye];
-  }
-  bool GetIsConnected() const { return mDisplayState.mIsConnected; }
-  bool GetIsMounted() const { return mDisplayState.mIsMounted; }
-||||||| merged common ancestors
-  const VRFieldOfView& GetEyeFOV(uint32_t whichEye) const { return mDisplayState.mEyeFOV[whichEye]; }
-  bool GetIsConnected() const { return mDisplayState.mIsConnected; }
-  bool GetIsMounted() const { return mDisplayState.mIsMounted; }
-=======
   const VRFieldOfView& GetEyeFOV(uint32_t whichEye) const {
     return mDisplayState.eyeFOV[whichEye];
   }
   bool GetIsConnected() const { return mDisplayState.isConnected; }
   bool GetIsMounted() const { return mDisplayState.isMounted; }
->>>>>>> upstream-releases
   uint32_t GetPresentingGroups() const { return mPresentingGroups; }
   uint32_t GetGroupMask() const { return mGroupMask; }
   const Size GetStageSize() const;
@@ -127,21 +88,6 @@ struct VRDisplayInfo {
         return false;
       }
     }
-<<<<<<< HEAD
-    // Note that mDisplayState and mControllerState are asserted to be POD
-    // types, so memcmp is safe
-    return mType == other.mType && mDisplayID == other.mDisplayID &&
-           memcmp(&mDisplayState, &other.mDisplayState,
-                  sizeof(VRDisplayState)) == 0 &&
-           memcmp(mControllerState, other.mControllerState,
-                  sizeof(VRControllerState) * kVRControllerMaxCount) == 0 &&
-||||||| merged common ancestors
-    // Note that mDisplayState and mControllerState are asserted to be POD types, so memcmp is safe
-    return mType == other.mType &&
-           mDisplayID == other.mDisplayID &&
-           memcmp(&mDisplayState, &other.mDisplayState, sizeof(VRDisplayState)) == 0 &&
-           memcmp(mControllerState, other.mControllerState, sizeof(VRControllerState) * kVRControllerMaxCount) == 0 &&
-=======
     // Note that mDisplayState and mControllerState are asserted to be POD
     // types, so memcmp is safe
     return mDisplayID == other.mDisplayID &&
@@ -149,7 +95,6 @@ struct VRDisplayInfo {
                   sizeof(VRDisplayState)) == 0 &&
            memcmp(mControllerState, other.mControllerState,
                   sizeof(VRControllerState) * kVRControllerMaxCount) == 0 &&
->>>>>>> upstream-releases
            mPresentingGroups == other.mPresentingGroups &&
            mGroupMask == other.mGroupMask && mFrameId == other.mFrameId;
   }
@@ -159,17 +104,10 @@ struct VRDisplayInfo {
   }
 };
 
-<<<<<<< HEAD
-struct VRSubmitFrameResultInfo {
-||||||| merged common ancestors
-struct VRSubmitFrameResultInfo
-{
-=======
 static_assert(std::is_pod<VRDisplayInfo>::value,
               "VRDisplayInfo must be a POD type.");
 
 struct VRSubmitFrameResultInfo {
->>>>>>> upstream-releases
   VRSubmitFrameResultInfo()
       : mFormat(SurfaceFormat::UNKNOWN), mFrameNum(0), mWidth(0), mHeight(0) {}
 
@@ -180,16 +118,7 @@ struct VRSubmitFrameResultInfo {
   uint32_t mHeight;
 };
 
-<<<<<<< HEAD
 struct VRControllerInfo {
-  VRDeviceType GetType() const { return mType; }
-||||||| merged common ancestors
-struct VRControllerInfo
-{
-  VRDeviceType GetType() const { return mType; }
-=======
-struct VRControllerInfo {
->>>>>>> upstream-releases
   uint32_t GetControllerID() const { return mControllerID; }
   const char* GetControllerName() const {
     return mControllerState.controllerName;
@@ -206,28 +135,12 @@ struct VRControllerInfo {
   uint32_t mDisplayID;
   VRControllerState mControllerState;
   bool operator==(const VRControllerInfo& other) const {
-<<<<<<< HEAD
-    // Note that mControllerState is asserted to be a POD type, so memcmp is
-    // safe
-    return mType == other.mType && mControllerID == other.mControllerID &&
-           memcmp(&mControllerState, &other.mControllerState,
-                  sizeof(VRControllerState)) == 0 &&
-           mMappingType == other.mMappingType && mDisplayID == other.mDisplayID;
-||||||| merged common ancestors
-    // Note that mControllerState is asserted to be a POD type, so memcmp is safe
-    return mType == other.mType &&
-           mControllerID == other.mControllerID &&
-           memcmp(&mControllerState, &other.mControllerState, sizeof(VRControllerState)) == 0 &&
-           mMappingType == other.mMappingType &&
-           mDisplayID == other.mDisplayID;
-=======
     // Note that mControllerState is asserted to be a POD type, so memcmp is
     // safe
     return mControllerID == other.mControllerID &&
            memcmp(&mControllerState, &other.mControllerState,
                   sizeof(VRControllerState)) == 0 &&
            mMappingType == other.mMappingType && mDisplayID == other.mDisplayID;
->>>>>>> upstream-releases
   }
 
   bool operator!=(const VRControllerInfo& other) const {
@@ -249,105 +162,7 @@ struct VRTelemetry {
   int32_t mLastDroppedFrameCount;
 };
 
-<<<<<<< HEAD
-class VRSystemManager {
- public:
-  static uint32_t AllocateDisplayID();
-  static uint32_t AllocateControllerID();
-
- protected:
-  static Atomic<uint32_t> sDisplayBase;
-  static Atomic<uint32_t> sControllerBase;
-
- public:
-  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VRSystemManager)
-
-  virtual void Destroy() = 0;
-  virtual void Shutdown() = 0;
-  virtual void Enumerate() = 0;
-  virtual void NotifyVSync();
-  virtual void Run1msTasks(double aDeltaTime);
-  virtual void Run10msTasks();
-  virtual void Run100msTasks();
-  virtual bool ShouldInhibitEnumeration();
-  virtual void GetHMDs(nsTArray<RefPtr<VRDisplayHost>>& aHMDResult) = 0;
-  virtual bool GetIsPresenting() = 0;
-  virtual void HandleInput() = 0;
-  virtual void GetControllers(
-      nsTArray<RefPtr<VRControllerHost>>& aControllerResult) = 0;
-  virtual void ScanForControllers() = 0;
-  virtual void RemoveControllers() = 0;
-  virtual void VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
-                             double aIntensity, double aDuration,
-                             const VRManagerPromise& aPromise) = 0;
-  virtual void StopVibrateHaptic(uint32_t aControllerIdx) = 0;
-  void NewButtonEvent(uint32_t aIndex, uint32_t aButton, bool aPressed,
-                      bool aTouched, double aValue);
-  void NewAxisMove(uint32_t aIndex, uint32_t aAxis, double aValue);
-  void NewPoseState(uint32_t aIndex, const dom::GamepadPoseState& aPose);
-  void NewHandChangeEvent(uint32_t aIndex, const dom::GamepadHand aHand);
-  void AddGamepad(const VRControllerInfo& controllerInfo);
-  void RemoveGamepad(uint32_t aIndex);
-
- protected:
-  VRSystemManager() : mControllerCount(0) {}
-  virtual ~VRSystemManager() = default;
-
-  uint32_t mControllerCount;
-};
-
 }  // namespace gfx
 }  // namespace mozilla
-||||||| merged common ancestors
-class VRSystemManager {
-public:
-  static uint32_t AllocateDisplayID();
-  static uint32_t AllocateControllerID();
-
-protected:
-  static Atomic<uint32_t> sDisplayBase;
-  static Atomic<uint32_t> sControllerBase;
-
-public:
-  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VRSystemManager)
-
-  virtual void Destroy() = 0;
-  virtual void Shutdown() = 0;
-  virtual void Enumerate() = 0;
-  virtual void NotifyVSync();
-  virtual void Run1msTasks(double aDeltaTime);
-  virtual void Run10msTasks();
-  virtual void Run100msTasks();
-  virtual bool ShouldInhibitEnumeration();
-  virtual void GetHMDs(nsTArray<RefPtr<VRDisplayHost>>& aHMDResult) = 0;
-  virtual bool GetIsPresenting() = 0;
-  virtual void HandleInput() = 0;
-  virtual void GetControllers(nsTArray<RefPtr<VRControllerHost>>& aControllerResult) = 0;
-  virtual void ScanForControllers() = 0;
-  virtual void RemoveControllers() = 0;
-  virtual void VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
-                             double aIntensity, double aDuration, const VRManagerPromise& aPromise) = 0;
-  virtual void StopVibrateHaptic(uint32_t aControllerIdx) = 0;
-  void NewButtonEvent(uint32_t aIndex, uint32_t aButton, bool aPressed, bool aTouched,
-                      double aValue);
-  void NewAxisMove(uint32_t aIndex, uint32_t aAxis, double aValue);
-  void NewPoseState(uint32_t aIndex, const dom::GamepadPoseState& aPose);
-  void NewHandChangeEvent(uint32_t aIndex, const dom::GamepadHand aHand);
-  void AddGamepad(const VRControllerInfo& controllerInfo);
-  void RemoveGamepad(uint32_t aIndex);
-
-protected:
-  VRSystemManager() : mControllerCount(0) { }
-  virtual ~VRSystemManager() = default;
-
-  uint32_t mControllerCount;
-};
-
-} // namespace gfx
-} // namespace mozilla
-=======
-}  // namespace gfx
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* GFX_VR_H */

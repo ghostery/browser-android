@@ -28,24 +28,10 @@ JSObject* SVGAElement::WrapNode(JSContext* aCx,
   return SVGAElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringInfo SVGAElement::sStringInfo[3] = {
-    {nsGkAtoms::href, kNameSpaceID_None, true},
-    {nsGkAtoms::href, kNameSpaceID_XLink, true},
-    {nsGkAtoms::target, kNameSpaceID_None, true}};
-||||||| merged common ancestors
-nsSVGElement::StringInfo SVGAElement::sStringInfo[3] =
-{
-  { nsGkAtoms::href, kNameSpaceID_None, true },
-  { nsGkAtoms::href, kNameSpaceID_XLink, true },
-  { nsGkAtoms::target, kNameSpaceID_None, true }
-};
-=======
 SVGElement::StringInfo SVGAElement::sStringInfo[3] = {
     {nsGkAtoms::href, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_XLink, true},
     {nsGkAtoms::target, kNameSpaceID_None, true}};
->>>>>>> upstream-releases
 
 // static
 const DOMTokenListSupportedToken SVGAElement::sSupportedRelValues[] = {
@@ -67,32 +53,9 @@ NS_IMPL_RELEASE_INHERITED(SVGAElement, SVGAElementBase)
 // Implementation
 
 SVGAElement::SVGAElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-<<<<<<< HEAD
     : SVGAElementBase(std::move(aNodeInfo)), Link(this) {}
 
-SVGAElement::~SVGAElement() {}
-||||||| merged common ancestors
-  : SVGAElementBase(std::move(aNodeInfo))
-  , Link(this)
-{
-}
-
-SVGAElement::~SVGAElement()
-{
-}
-=======
-    : SVGAElementBase(std::move(aNodeInfo)), Link(this) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGAElement::Href() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGAElement::Href()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGAElement::Href() {
->>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -123,15 +86,7 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGAElement)
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGAElement::Target() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGAElement::Target()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGAElement::Target() {
->>>>>>> upstream-releases
   return mStringAttributes[TARGET].ToDOMAnimatedString(this);
 }
 
@@ -200,27 +155,10 @@ void SVGAElement::SetText(const nsAString& aText, mozilla::ErrorResult& rv) {
 //----------------------------------------------------------------------
 // nsIContent methods
 
-<<<<<<< HEAD
-nsresult SVGAElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                 nsIContent* aBindingParent) {
-||||||| merged common ancestors
-nsresult
-SVGAElement::BindToTree(nsIDocument *aDocument, nsIContent *aParent,
-                        nsIContent *aBindingParent)
-{
-=======
 nsresult SVGAElement::BindToTree(BindContext& aContext, nsINode& aParent) {
->>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
-<<<<<<< HEAD
-  nsresult rv = SVGAElementBase::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  nsresult rv = SVGAElementBase::BindToTree(aDocument, aParent,
-                                            aBindingParent);
-=======
   nsresult rv = SVGAElementBase::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (Document* doc = aContext.GetComposedDoc()) {
@@ -230,21 +168,9 @@ nsresult SVGAElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void SVGAElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  // If this link is ever reinserted into a document, it might
-  // be under a different xml:base, so forget the cached state now.
-||||||| merged common ancestors
-void
-SVGAElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  // If this link is ever reinserted into a document, it might
-  // be under a different xml:base, so forget the cached state now.
-=======
 void SVGAElement::UnbindFromTree(bool aNullParent) {
   // Without removing the link state we risk a dangling pointer
   // in the mStyledLinks hashtable
->>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
   SVGAElementBase::UnbindFromTree(aNullParent);
@@ -282,22 +208,10 @@ static bool IsNodeInEditableRegion(nsINode* aNode) {
   return false;
 }
 
-<<<<<<< HEAD
-bool SVGAElement::IsSVGFocusable(bool* aIsFocusable, int32_t* aTabIndex) {
-  if (nsSVGElement::IsSVGFocusable(aIsFocusable, aTabIndex)) {
-    return true;
-||||||| merged common ancestors
-bool
-SVGAElement::IsSVGFocusable(bool* aIsFocusable, int32_t* aTabIndex)
-{
-  if (nsSVGElement::IsSVGFocusable(aIsFocusable, aTabIndex)) {
-    return true;
-=======
 bool SVGAElement::IsFocusableInternal(int32_t* aTabIndex, bool aWithMouse) {
   bool isFocusable = false;
   if (IsSVGFocusable(&isFocusable, aTabIndex)) {
     return isFocusable;
->>>>>>> upstream-releases
   }
 
   // cannot focus links if there is no link handler
@@ -426,15 +340,7 @@ nsresult SVGAElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGAElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGAElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGAElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

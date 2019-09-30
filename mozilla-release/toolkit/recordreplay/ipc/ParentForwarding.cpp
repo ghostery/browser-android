@@ -19,14 +19,6 @@ namespace mozilla {
 namespace recordreplay {
 namespace parent {
 
-<<<<<<< HEAD
-static bool HandleMessageInMiddleman(ipc::Side aSide,
-                                     const IPC::Message& aMessage) {
-||||||| merged common ancestors
-static bool
-HandleMessageInMiddleman(ipc::Side aSide, const IPC::Message& aMessage)
-{
-=======
 static bool ActiveChildIsRecording() {
   ChildProcessInfo* child = GetActiveChild();
   return child && child->IsRecording();
@@ -34,7 +26,6 @@ static bool ActiveChildIsRecording() {
 
 static bool HandleMessageInMiddleman(ipc::Side aSide,
                                      const IPC::Message& aMessage) {
->>>>>>> upstream-releases
   IPC::Message::msgid_t type = aMessage.type();
 
   if (aSide == ipc::ParentSide) {
@@ -43,17 +34,9 @@ static bool HandleMessageInMiddleman(ipc::Side aSide,
 
   // Handle messages that should be sent to both the middleman and the
   // child process.
-<<<<<<< HEAD
-  if (  // Initialization that must be performed in both processes.
-      type == dom::PContent::Msg_PBrowserConstructor__ID ||
-||||||| merged common ancestors
-  if (// Initialization that must be performed in both processes.
-      type == dom::PContent::Msg_PBrowserConstructor__ID ||
-=======
   if (  // Initialization that must be performed in both processes.
       type == dom::PContent::Msg_ConstructBrowser__ID ||
       type == dom::PContent::Msg_RegisterBrowsingContextGroup__ID ||
->>>>>>> upstream-releases
       type == dom::PContent::Msg_RegisterChrome__ID ||
       type == dom::PContent::Msg_SetXPCOMProcessAttributes__ID ||
       type == dom::PContent::Msg_UpdateSharedData__ID ||
@@ -222,12 +205,6 @@ class MiddlemanProtocol : public ipc::IToplevelProtocol {
     MOZ_CRASH("MiddlemanProtocol::RemoveManagee");
   }
 
-<<<<<<< HEAD
-  static void ForwardMessageAsync(MiddlemanProtocol* aProtocol,
-                                  Message* aMessage) {
-||||||| merged common ancestors
-  static void ForwardMessageAsync(MiddlemanProtocol* aProtocol, Message* aMessage) {
-=======
   virtual void DeallocManagee(int32_t, IProtocol*) override {
     MOZ_CRASH("MiddlemanProtocol::DeallocManagee");
   }
@@ -239,7 +216,6 @@ class MiddlemanProtocol : public ipc::IToplevelProtocol {
 
   static void ForwardMessageAsync(MiddlemanProtocol* aProtocol,
                                   Message* aMessage) {
->>>>>>> upstream-releases
     if (ActiveChildIsRecording() || AlwaysForwardMessage(*aMessage)) {
       PrintSpew("ForwardAsyncMsg %s %s %d\n",
                 (aProtocol->mSide == ipc::ChildSide) ? "Child" : "Parent",

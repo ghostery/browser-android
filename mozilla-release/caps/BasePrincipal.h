@@ -68,19 +68,10 @@ class SiteIdentifier {
  *
  * We should merge nsJSPrincipals into this class at some point.
  */
-<<<<<<< HEAD
-class BasePrincipal : public nsJSPrincipals {
- public:
-||||||| merged common ancestors
-class BasePrincipal : public nsJSPrincipals
-{
-public:
-=======
 class BasePrincipal : public nsJSPrincipals {
  public:
   // Warning: this enum impacts Principal serialization into JSON format.
   // Only update if you know exactly what you are doing
->>>>>>> upstream-releases
   enum PrincipalKind {
     eNullPrincipal = 0,
     eCodebasePrincipal,
@@ -121,24 +112,6 @@ class BasePrincipal : public nsJSPrincipals {
   NS_IMETHOD CheckMayLoad(nsIURI* uri, bool report,
                           bool allowIfInheritsPrincipal) final;
   NS_IMETHOD GetAddonPolicy(nsISupports** aResult) final;
-<<<<<<< HEAD
-  NS_IMETHOD GetCsp(nsIContentSecurityPolicy** aCsp) override;
-  NS_IMETHOD SetCsp(nsIContentSecurityPolicy* aCsp) override;
-  NS_IMETHOD EnsureCSP(nsIDocument* aDocument,
-                       nsIContentSecurityPolicy** aCSP) override;
-  NS_IMETHOD GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP) override;
-  NS_IMETHOD EnsurePreloadCSP(nsIDocument* aDocument,
-                              nsIContentSecurityPolicy** aCSP) override;
-  NS_IMETHOD GetCspJSON(nsAString& outCSPinJSON) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetCsp(nsIContentSecurityPolicy** aCsp) override;
-  NS_IMETHOD SetCsp(nsIContentSecurityPolicy* aCsp) override;
-  NS_IMETHOD EnsureCSP(nsIDocument* aDocument, nsIContentSecurityPolicy** aCSP) override;
-  NS_IMETHOD GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP) override;
-  NS_IMETHOD EnsurePreloadCSP(nsIDocument* aDocument, nsIContentSecurityPolicy** aCSP) override;
-  NS_IMETHOD GetCspJSON(nsAString& outCSPinJSON) override;
-=======
->>>>>>> upstream-releases
   NS_IMETHOD GetIsNullPrincipal(bool* aResult) override;
   NS_IMETHOD GetIsCodebasePrincipal(bool* aResult) override;
   NS_IMETHOD GetIsExpandedPrincipal(bool* aResult) override;
@@ -147,17 +120,8 @@ class BasePrincipal : public nsJSPrincipals {
   NS_IMETHOD GetOriginAttributes(JSContext* aCx,
                                  JS::MutableHandle<JS::Value> aVal) final;
   NS_IMETHOD GetOriginSuffix(nsACString& aOriginSuffix) final;
-<<<<<<< HEAD
-  NS_IMETHOD GetAppId(uint32_t* aAppId) final;
   NS_IMETHOD GetIsInIsolatedMozBrowserElement(
       bool* aIsInIsolatedMozBrowserElement) final;
-||||||| merged common ancestors
-  NS_IMETHOD GetAppId(uint32_t* aAppId) final;
-  NS_IMETHOD GetIsInIsolatedMozBrowserElement(bool* aIsInIsolatedMozBrowserElement) final;
-=======
-  NS_IMETHOD GetIsInIsolatedMozBrowserElement(
-      bool* aIsInIsolatedMozBrowserElement) final;
->>>>>>> upstream-releases
   NS_IMETHOD GetUserContextId(uint32_t* aUserContextId) final;
   NS_IMETHOD GetPrivateBrowsingId(uint32_t* aPrivateBrowsingId) final;
   NS_IMETHOD GetSiteOrigin(nsACString& aOrigin) override;
@@ -172,13 +136,6 @@ class BasePrincipal : public nsJSPrincipals {
 
   virtual bool IsCodebasePrincipal() const { return false; };
 
-<<<<<<< HEAD
-  static BasePrincipal* Cast(nsIPrincipal* aPrin) {
-    return static_cast<BasePrincipal*>(aPrin);
-  }
-||||||| merged common ancestors
-  static BasePrincipal* Cast(nsIPrincipal* aPrin) { return static_cast<BasePrincipal*>(aPrin); }
-=======
   static BasePrincipal* Cast(nsIPrincipal* aPrin) {
     return static_cast<BasePrincipal*>(aPrin);
   }
@@ -186,7 +143,6 @@ class BasePrincipal : public nsJSPrincipals {
   static const BasePrincipal* Cast(const nsIPrincipal* aPrin) {
     return static_cast<const BasePrincipal*>(aPrin);
   }
->>>>>>> upstream-releases
 
   static already_AddRefed<BasePrincipal> CreateCodebasePrincipal(
       const nsACString& aOrigin);
@@ -198,19 +154,9 @@ class BasePrincipal : public nsJSPrincipals {
   static already_AddRefed<BasePrincipal> CreateCodebasePrincipal(
       nsIURI* aURI, const OriginAttributes& aAttrs);
 
-<<<<<<< HEAD
   const OriginAttributes& OriginAttributesRef() final {
     return mOriginAttributes;
   }
-  uint32_t AppId() const { return mOriginAttributes.mAppId; }
-||||||| merged common ancestors
-  const OriginAttributes& OriginAttributesRef() final { return mOriginAttributes; }
-  uint32_t AppId() const { return mOriginAttributes.mAppId; }
-=======
-  const OriginAttributes& OriginAttributesRef() final {
-    return mOriginAttributes;
-  }
->>>>>>> upstream-releases
   extensions::WebExtensionPolicy* AddonPolicy();
   uint32_t UserContextId() const { return mOriginAttributes.mUserContextId; }
   uint32_t PrivateBrowsingId() const {
@@ -222,15 +168,8 @@ class BasePrincipal : public nsJSPrincipals {
 
   PrincipalKind Kind() const { return mKind; }
 
-<<<<<<< HEAD
-  already_AddRefed<BasePrincipal>
-  CloneStrippingUserContextIdAndFirstPartyDomain();
-||||||| merged common ancestors
-  already_AddRefed<BasePrincipal> CloneStrippingUserContextIdAndFirstPartyDomain();
-=======
   already_AddRefed<BasePrincipal> CloneForcingOriginAttributes(
       const OriginAttributes& aOriginAttributes);
->>>>>>> upstream-releases
 
   // If this is an add-on content script principal, returns its AddonPolicy.
   // Otherwise returns null.
@@ -265,24 +204,7 @@ class BasePrincipal : public nsJSPrincipals {
    * subsume the document principal, and add-on codebase principals regardless
    * of whether they subsume the document principal.
    */
-<<<<<<< HEAD
   bool OverridesCSP(nsIPrincipal* aDocumentPrincipal) {
-    // SystemPrincipal can override the page's CSP by definition.
-    if (mKind == eSystemPrincipal) {
-      return true;
-    }
-
-||||||| merged common ancestors
-  bool OverridesCSP(nsIPrincipal* aDocumentPrincipal)
-  {
-    // SystemPrincipal can override the page's CSP by definition.
-    if (mKind == eSystemPrincipal) {
-      return true;
-    }
-
-=======
-  bool OverridesCSP(nsIPrincipal* aDocumentPrincipal) {
->>>>>>> upstream-releases
     // Expanded principals override CSP if and only if they subsume the document
     // principal.
     if (mKind == eExpandedPrincipal) {
@@ -315,46 +237,18 @@ class BasePrincipal : public nsJSPrincipals {
 
   void SetHasExplicitDomain() { mHasExplicitDomain = true; }
 
-<<<<<<< HEAD
-  // This function should be called as the last step of the initialization of
-  // the principal objects.  It's typically called as the last step from the
-  // Init() method of the child classes.
-||||||| merged common ancestors
-  // This function should be called as the last step of the initialization of the
-  // principal objects.  It's typically called as the last step from the Init()
-  // method of the child classes.
-=======
   // Either of these functions should be called as the last step of the
   // initialization of the principal objects.  It's typically called as the
   // last step from the Init() method of the child classes.
->>>>>>> upstream-releases
   void FinishInit(const nsACString& aOriginNoSuffix,
                   const OriginAttributes& aOriginAttributes);
   void FinishInit(BasePrincipal* aOther,
                   const OriginAttributes& aOriginAttributes);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIContentSecurityPolicy> mCSP;
-  nsCOMPtr<nsIContentSecurityPolicy> mPreloadCSP;
-
  private:
   static already_AddRefed<BasePrincipal> CreateCodebasePrincipal(
       nsIURI* aURI, const OriginAttributes& aAttrs,
       const nsACString& aOriginNoSuffix);
-||||||| merged common ancestors
-  nsCOMPtr<nsIContentSecurityPolicy> mCSP;
-  nsCOMPtr<nsIContentSecurityPolicy> mPreloadCSP;
-
-private:
-  static already_AddRefed<BasePrincipal>
-  CreateCodebasePrincipal(nsIURI* aURI, const OriginAttributes& aAttrs,
-                          const nsACString& aOriginNoSuffix);
-=======
- private:
-  static already_AddRefed<BasePrincipal> CreateCodebasePrincipal(
-      nsIURI* aURI, const OriginAttributes& aAttrs,
-      const nsACString& aOriginNoSuffix);
->>>>>>> upstream-releases
 
   inline bool FastSubsumesIgnoringFPD(
       nsIPrincipal* aOther, DocumentDomainConsideration aConsideration);
@@ -444,11 +338,6 @@ inline bool BasePrincipal::FastSubsumesConsideringDomainIgnoringFPD(
   return FastSubsumesIgnoringFPD(aOther, ConsiderDocumentDomain);
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 inline bool BasePrincipal::IsSystemPrincipal() const {
   return Kind() == eSystemPrincipal;
 }
@@ -458,6 +347,5 @@ inline bool BasePrincipal::IsSystemPrincipal() const {
 inline bool nsIPrincipal::IsSystemPrincipal() const {
   return mozilla::BasePrincipal::Cast(this)->IsSystemPrincipal();
 }
->>>>>>> upstream-releases
 
 #endif /* mozilla_BasePrincipal_h */

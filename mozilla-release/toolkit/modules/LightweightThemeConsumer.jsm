@@ -182,15 +182,6 @@ function LightweightThemeConsumer(aDocument) {
 
   Services.obs.addObserver(this, "lightweight-theme-styling-update");
 
-<<<<<<< HEAD
-  var temp = {};
-  ChromeUtils.import("resource://gre/modules/LightweightThemeManager.jsm", temp);
-  this._update(temp.LightweightThemeManager.currentThemeWithPersistedData);
-||||||| merged common ancestors
-  var temp = {};
-  ChromeUtils.import("resource://gre/modules/LightweightThemeManager.jsm", temp);
-  this._update(temp.LightweightThemeManager.currentThemeForDisplay);
-=======
   // We're responsible for notifying LightweightThemeManager when the OS is in
   // dark mode so it can activate the dark theme. We don't want this on Linux
   // as the default theme picks up the right colors from dark GTK themes.
@@ -203,7 +194,6 @@ function LightweightThemeConsumer(aDocument) {
     "resource://gre/modules/LightweightThemeManager.jsm"
   );
   this._update(LightweightThemeManager.themeData);
->>>>>>> upstream-releases
 
   this._win.addEventListener("resolutionchange", this);
   this._win.addEventListener("unload", this, { once: true });
@@ -312,40 +302,6 @@ LightweightThemeConsumer.prototype = {
         }
       }
     }
-<<<<<<< HEAD
-
-    this._lastExperimentData = {};
-
-    if (!active || !experiment) {
-      return;
-    }
-
-    let usedVariables = [];
-    if (properties.colors) {
-      for (const property in properties.colors) {
-        const cssVariable = experiment.colors[property];
-        const value = _sanitizeCSSColor(root.ownerDocument, properties.colors[property]);
-        usedVariables.push([cssVariable, value]);
-||||||| merged common ancestors
-    if (active && experiment) {
-      this._lastExperimentData = {};
-      if (experiment.stylesheet) {
-        /* Stylesheet URLs are validated using WebExtension schemas */
-        let stylesheetAttr = `href="${experiment.stylesheet}" type="text/css"`;
-        let stylesheet = this._doc.createProcessingInstruction("xml-stylesheet",
-          stylesheetAttr);
-        this._doc.insertBefore(stylesheet, root);
-        this._lastExperimentData.stylesheet = stylesheet;
-      }
-      let usedVariables = [];
-      if (properties.colors) {
-        for (const property in properties.colors) {
-          const cssVariable = experiment.colors[property];
-          const value = _sanitizeCSSColor(root.ownerDocument, properties.colors[property]);
-          _setProperty(root, active, cssVariable, value);
-          usedVariables.push(cssVariable);
-        }
-=======
 
     this._lastExperimentData = {};
 
@@ -362,23 +318,7 @@ LightweightThemeConsumer.prototype = {
           properties.colors[property]
         );
         usedVariables.push([cssVariable, value]);
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-    }
-
-    if (properties.images) {
-      for (const property in properties.images) {
-        const cssVariable = experiment.images[property];
-        usedVariables.push([cssVariable, `url(${properties.images[property]})`]);
-||||||| merged common ancestors
-      if (properties.images) {
-        for (const property in properties.images) {
-          const cssVariable = experiment.images[property];
-          _setProperty(root, active, cssVariable, `url(${properties.images[property]})`);
-          usedVariables.push(cssVariable);
-        }
-=======
     }
 
     if (properties.images) {
@@ -388,7 +328,6 @@ LightweightThemeConsumer.prototype = {
           cssVariable,
           `url(${properties.images[property]})`,
         ]);
->>>>>>> upstream-releases
       }
     }
     if (properties.properties) {
@@ -396,25 +335,6 @@ LightweightThemeConsumer.prototype = {
         const cssVariable = experiment.properties[property];
         usedVariables.push([cssVariable, properties.properties[property]]);
       }
-<<<<<<< HEAD
-    }
-    for (const [variable, value] of usedVariables) {
-      _setProperty(root, true, variable, value);
-    }
-    this._lastExperimentData.usedVariables = usedVariables;
-
-    if (experiment.stylesheet) {
-      /* Stylesheet URLs are validated using WebExtension schemas */
-      let stylesheetAttr = `href="${experiment.stylesheet}" type="text/css"`;
-      let stylesheet = this._doc.createProcessingInstruction("xml-stylesheet",
-        stylesheetAttr);
-      this._doc.insertBefore(stylesheet, root);
-      this._lastExperimentData.stylesheet = stylesheet;
-||||||| merged common ancestors
-      this._lastExperimentData.usedVariables = usedVariables;
-    } else {
-      this._lastExperimentData = null;
-=======
     }
     for (const [variable, value] of usedVariables) {
       _setProperty(root, true, variable, value);
@@ -430,7 +350,6 @@ LightweightThemeConsumer.prototype = {
       );
       this._doc.insertBefore(stylesheet, root);
       this._lastExperimentData.stylesheet = stylesheet;
->>>>>>> upstream-releases
     }
   },
 };
@@ -479,18 +398,9 @@ function _setProperties(root, active, themeData) {
         processColor,
         isColor = true,
       } = definition;
-<<<<<<< HEAD
-      let elem = optionalElementID ? root.ownerDocument.getElementById(optionalElementID)
-                                   : root;
-||||||| merged common ancestors
-      let elem = optionalElementID ? root.ownerDocument.getElementById(optionalElementID)
-                                   : root;
-
-=======
       let elem = optionalElementID
         ? root.ownerDocument.getElementById(optionalElementID)
         : root;
->>>>>>> upstream-releases
       let val = themeData[lwtProperty];
       if (isColor) {
         val = _sanitizeCSSColor(root.ownerDocument, val);

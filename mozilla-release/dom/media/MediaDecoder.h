@@ -5,60 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MediaDecoder_h_)
-<<<<<<< HEAD
-#define MediaDecoder_h_
-
-#include "BackgroundVideoDecodingPermissionObserver.h"
-#include "DecoderDoctorDiagnostics.h"
-#include "MediaContainerType.h"
-#include "MediaDecoderOwner.h"
-#include "MediaEventSource.h"
-#include "MediaMetadataManager.h"
-#include "MediaPromiseDefs.h"
-#include "MediaResource.h"
-#include "MediaStatistics.h"
-#include "MediaStreamGraph.h"
-#include "SeekTarget.h"
-#include "TimeUnits.h"
-#include "TrackID.h"
-#include "mozilla/Atomics.h"
-#include "mozilla/CDMProxy.h"
-#include "mozilla/MozPromise.h"
-#include "mozilla/ReentrantMonitor.h"
-#include "mozilla/StateMirroring.h"
-#include "mozilla/StateWatching.h"
-#include "nsAutoPtr.h"
-#include "nsCOMPtr.h"
-#include "nsIObserver.h"
-#include "nsISupports.h"
-#include "nsITimer.h"
-||||||| merged common ancestors
-#define MediaDecoder_h_
-
-#include "BackgroundVideoDecodingPermissionObserver.h"
-#include "DecoderDoctorDiagnostics.h"
-#include "MediaContainerType.h"
-#include "MediaDecoderOwner.h"
-#include "MediaEventSource.h"
-#include "MediaMetadataManager.h"
-#include "MediaPromiseDefs.h"
-#include "MediaResource.h"
-#include "MediaStatistics.h"
-#include "MediaStreamGraph.h"
-#include "SeekTarget.h"
-#include "TimeUnits.h"
-#include "mozilla/Atomics.h"
-#include "mozilla/CDMProxy.h"
-#include "mozilla/MozPromise.h"
-#include "mozilla/ReentrantMonitor.h"
-#include "mozilla/StateMirroring.h"
-#include "mozilla/StateWatching.h"
-#include "nsAutoPtr.h"
-#include "nsCOMPtr.h"
-#include "nsIObserver.h"
-#include "nsISupports.h"
-#include "nsITimer.h"
-=======
 #  define MediaDecoder_h_
 
 #  include "BackgroundVideoDecodingPermissionObserver.h"
@@ -86,7 +32,6 @@
 #  include "nsIObserver.h"
 #  include "nsISupports.h"
 #  include "nsITimer.h"
->>>>>>> upstream-releases
 
 class nsIPrincipal;
 
@@ -107,24 +52,11 @@ struct MediaPlaybackEvent;
 enum class Visibility : uint8_t;
 
 // GetCurrentTime is defined in winbase.h as zero argument macro forwarding to
-<<<<<<< HEAD
-// GetTickCount() and conflicts with MediaDecoder::GetCurrentTime
-// implementation.
-#ifdef GetCurrentTime
-#undef GetCurrentTime
-#endif
-||||||| merged common ancestors
-// GetTickCount() and conflicts with MediaDecoder::GetCurrentTime implementation.
-#ifdef GetCurrentTime
-#undef GetCurrentTime
-#endif
-=======
 // GetTickCount() and conflicts with MediaDecoder::GetCurrentTime
 // implementation.
 #  ifdef GetCurrentTime
 #    undef GetCurrentTime
 #  endif
->>>>>>> upstream-releases
 
 struct MOZ_STACK_CLASS MediaDecoderInit {
   MediaDecoderOwner* const mOwner;
@@ -536,17 +468,7 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
   // the next frame is available.
   // An arbitrary value of 250ms is used.
   static constexpr auto DEFAULT_NEXT_FRAME_AVAILABLE_BUFFERED =
-<<<<<<< HEAD
       media::TimeUnit::FromMicroseconds(250000);
-
-  virtual nsCString GetDebugInfo();
-||||||| merged common ancestors
-    media::TimeUnit::FromMicroseconds(250000);
-
-  virtual nsCString GetDebugInfo();
-=======
-      media::TimeUnit::FromMicroseconds(250000);
->>>>>>> upstream-releases
 
  private:
   // Called when the owner's activity changed.

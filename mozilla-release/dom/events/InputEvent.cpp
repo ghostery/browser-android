@@ -27,13 +27,6 @@ InputEvent::InputEvent(EventTarget* aOwner, nsPresContext* aPresContext,
   }
 }
 
-<<<<<<< HEAD
-bool InputEvent::IsComposing() {
-||||||| merged common ancestors
-bool
-InputEvent::IsComposing()
-{
-=======
 void InputEvent::GetData(nsAString& aData, CallerType aCallerType) {
   InternalEditorInputEvent* editorInputEvent = mEvent->AsEditorInputEvent();
   MOZ_ASSERT(editorInputEvent);
@@ -81,7 +74,6 @@ void InputEvent::GetInputType(nsAString& aInputType) {
 }
 
 bool InputEvent::IsComposing() {
->>>>>>> upstream-releases
   return mEvent->AsEditorInputEvent()->mIsComposing;
 }
 

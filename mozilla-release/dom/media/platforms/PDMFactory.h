@@ -72,19 +72,10 @@ class PDMFactory final {
   bool mFFmpegFailedToLoad = false;
   bool mGMPPDMFailedToStartup = false;
 
-<<<<<<< HEAD
-  void EnsureInit() const;
-  template <class T>
-  friend class StaticAutoPtr;
-||||||| merged common ancestors
-  void EnsureInit() const;
-  template<class T> friend class StaticAutoPtr;
-=======
   friend class RemoteVideoDecoderParent;
   static void EnsureInit();
   template <class T>
   friend class StaticAutoPtr;
->>>>>>> upstream-releases
   static StaticAutoPtr<PDMFactoryImpl> sInstance;
   static StaticMutex sMonitor;
 };

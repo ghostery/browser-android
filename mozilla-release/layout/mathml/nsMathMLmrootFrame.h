@@ -23,15 +23,8 @@ class nsMathMLmrootFrame final : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmrootFrame)
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewMathMLmrootFrame(nsIPresShell* aPresShell,
-                                          ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewMathMLmrootFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewMathMLmrootFrame(mozilla::PresShell* aPresShell,
                                           ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   virtual void SetAdditionalComputedStyle(
       int32_t aIndex, ComputedStyle* aComputedStyle) override;
@@ -62,17 +55,9 @@ class nsMathMLmrootFrame final : public nsMathMLContainerFrame {
     return (aFrame && aFrame == mFrames.LastChild()) ? 2 : 0;
   }
 
-<<<<<<< HEAD
- protected:
-  explicit nsMathMLmrootFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-protected:
-  explicit nsMathMLmrootFrame(ComputedStyle* aStyle);
-=======
  protected:
   explicit nsMathMLmrootFrame(ComputedStyle* aStyle,
                               nsPresContext* aPresContext);
->>>>>>> upstream-releases
   virtual ~nsMathMLmrootFrame();
 
   nsMathMLChar mSqrChar;

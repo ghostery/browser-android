@@ -12,13 +12,8 @@
 #include "Units.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/layers/GeckoContentController.h"  // for APZStateChange
-<<<<<<< HEAD
-#include "mozilla/layers/ScrollableLayerGuid.h"     // for ScrollableLayerGuid
-||||||| merged common ancestors
-=======
 #include "mozilla/layers/ScrollableLayerGuid.h"     // for ScrollableLayerGuid
 #include "mozilla/layers/TouchCounter.h"            // for TouchCounter
->>>>>>> upstream-releases
 #include "mozilla/RefPtr.h"
 #include "nsCOMPtr.h"
 #include "nsISupportsImpl.h"        // for NS_INLINE_DECL_REFCOUNTING
@@ -59,29 +54,11 @@ class APZEventState final {
 
   void ProcessSingleTap(const CSSPoint& aPoint,
                         const CSSToLayoutDeviceScale& aScale,
-<<<<<<< HEAD
-                        Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
-                        int32_t aClickCount);
-||||||| merged common ancestors
-                        Modifiers aModifiers,
-                        const ScrollableLayerGuid& aGuid,
-                        int32_t aClickCount);
-=======
                         Modifiers aModifiers, int32_t aClickCount);
->>>>>>> upstream-releases
   MOZ_CAN_RUN_SCRIPT
   void ProcessLongTap(PresShell* aPresShell, const CSSPoint& aPoint,
                       const CSSToLayoutDeviceScale& aScale,
-<<<<<<< HEAD
-                      Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
-                      uint64_t aInputBlockId);
-||||||| merged common ancestors
-                      Modifiers aModifiers,
-                      const ScrollableLayerGuid& aGuid,
-                      uint64_t aInputBlockId);
-=======
                       Modifiers aModifiers, uint64_t aInputBlockId);
->>>>>>> upstream-releases
   MOZ_CAN_RUN_SCRIPT
   void ProcessLongTapUp(PresShell* aPresShell, const CSSPoint& aPoint,
                         const CSSToLayoutDeviceScale& aScale,

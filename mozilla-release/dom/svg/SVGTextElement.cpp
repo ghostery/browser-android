@@ -24,30 +24,11 @@ SVGTextElement::SVGTextElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGTextElementBase(std::move(aNodeInfo)) {}
 
-<<<<<<< HEAD
-nsSVGElement::EnumAttributesInfo SVGTextElement::GetEnumInfo() {
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
-||||||| merged common ancestors
-nsSVGElement::EnumAttributesInfo
-SVGTextElement::GetEnumInfo()
-{
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
-                            ArrayLength(sEnumInfo));
-=======
 SVGElement::EnumAttributesInfo SVGTextElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthAttributesInfo SVGTextElement::GetLengthInfo() {
-||||||| merged common ancestors
-nsSVGElement::LengthAttributesInfo
-SVGTextElement::GetLengthInfo()
-{
-=======
 SVGElement::LengthAttributesInfo SVGTextElement::GetLengthInfo() {
->>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }

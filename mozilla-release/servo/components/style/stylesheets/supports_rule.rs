@@ -222,18 +222,8 @@ impl SupportsCondition {
 
 #[cfg(feature = "gecko")]
 fn eval_moz_bool_pref(name: &CStr, cx: &ParserContext) -> bool {
-<<<<<<< HEAD
-    use crate::gecko_bindings::bindings;
-    use crate::stylesheets::Origin;
-    if cx.stylesheet_origin != Origin::UserAgent && !cx.chrome_rules_enabled() {
-||||||| merged common ancestors
-    use gecko_bindings::bindings;
-    use stylesheets::Origin;
-    if cx.stylesheet_origin != Origin::UserAgent && !cx.chrome_rules_enabled() {
-=======
     use crate::gecko_bindings::bindings;
     if !cx.in_ua_or_chrome_sheet() {
->>>>>>> upstream-releases
         return false;
     }
     unsafe { bindings::Gecko_GetBoolPrefValue(name.as_ptr()) }
@@ -333,80 +323,15 @@ impl RawSelector {
     pub fn eval(&self, context: &ParserContext, namespaces: &Namespaces) -> bool {
         #[cfg(feature = "gecko")]
         {
-<<<<<<< HEAD
-            if unsafe {
-                !crate::gecko_bindings::structs::StaticPrefs_sVarCache_layout_css_supports_selector_enabled
-            } {
-||||||| merged common ancestors
-            if unsafe { !::gecko_bindings::structs::StaticPrefs_sVarCache_layout_css_supports_selector_enabled } {
-=======
             if unsafe {
                 !crate::gecko_bindings::structs::StaticPrefs::sVarCache_layout_css_supports_selector_enabled
             } {
->>>>>>> upstream-releases
                 return false;
             }
         }
 
         let mut input = ParserInput::new(&self.0);
         let mut input = Parser::new(&mut input);
-<<<<<<< HEAD
-        input
-            .parse_entirely(|input| -> Result<(), CssParseError<()>> {
-                let parser = SelectorParser {
-                    namespaces,
-                    stylesheet_origin: context.stylesheet_origin,
-                    url_data: Some(context.url_data),
-                };
-
-                #[allow(unused_variables)]
-                let selector = Selector::<SelectorImpl>::parse(&parser, input)
-                    .map_err(|_| input.new_custom_error(()))?;
-
-                #[cfg(feature = "gecko")]
-                {
-                    use crate::selector_parser::PseudoElement;
-                    use selectors::parser::Component;
-
-                    let has_any_unknown_webkit_pseudo = selector.has_pseudo_element() && selector
-                        .iter_raw_match_order()
-                        .any(|component| {
-                            matches!(
-                                *component,
-                                Component::PseudoElement(PseudoElement::UnknownWebkit(..))
-                            )
-                        });
-                    if has_any_unknown_webkit_pseudo {
-                        return Err(input.new_custom_error(()));
-                    }
-||||||| merged common ancestors
-        input.parse_entirely(|input| -> Result<(), CssParseError<()>> {
-            let parser = SelectorParser {
-                namespaces,
-                stylesheet_origin: context.stylesheet_origin,
-                url_data: Some(context.url_data),
-            };
-
-            #[allow(unused_variables)]
-            let selector = Selector::<SelectorImpl>::parse(&parser, input)
-                .map_err(|_| input.new_custom_error(()))?;
-
-            #[cfg(feature = "gecko")]
-            {
-                use selector_parser::PseudoElement;
-                use selectors::parser::Component;
-
-                let has_any_unknown_webkit_pseudo =
-                    selector.has_pseudo_element() &&
-                    selector.iter_raw_match_order().any(|component| {
-                        matches!(
-                            *component,
-                            Component::PseudoElement(PseudoElement::UnknownWebkit(..))
-                        )
-                    });
-                if has_any_unknown_webkit_pseudo {
-                    return Err(input.new_custom_error(()));
-=======
         input
             .parse_entirely(|input| -> Result<(), CssParseError<()>> {
                 let parser = SelectorParser {
@@ -434,7 +359,6 @@ impl RawSelector {
                     if has_any_unknown_webkit_pseudo {
                         return Err(input.new_custom_error(()));
                     }
->>>>>>> upstream-releases
                 }
 
                 Ok(())

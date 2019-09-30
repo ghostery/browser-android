@@ -93,61 +93,18 @@ class JSErrorBase {
   // Source file name, URL, etc., or null.
   const char* filename;
 
-<<<<<<< HEAD
-  // Source line number.
-  unsigned lineno;
-||||||| merged common ancestors
-    // Source line number.
-    unsigned lineno;
-=======
   // Unique identifier for the script source.
   unsigned sourceId;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Zero-based column index in line.
-  unsigned column;
-||||||| merged common ancestors
-    // Zero-based column index in line.
-    unsigned column;
-=======
   // Source line number.
   unsigned lineno;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // the error number, e.g. see js.msg.
-  unsigned errorNumber;
-||||||| merged common ancestors
-    // the error number, e.g. see js.msg.
-    unsigned errorNumber;
-=======
   // Zero-based column index in line.
   unsigned column;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  bool ownsMessage_ : 1;
-||||||| merged common ancestors
-  private:
-    bool ownsMessage_ : 1;
-=======
   // the error number, e.g. see js.msg.
   unsigned errorNumber;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  JSErrorBase()
-      : filename(nullptr),
-        lineno(0),
-        column(0),
-||||||| merged common ancestors
-  public:
-    JSErrorBase()
-      : filename(nullptr), lineno(0), column(0),
-=======
  private:
   bool ownsMessage_ : 1;
 
@@ -157,7 +114,6 @@ class JSErrorBase {
         sourceId(0),
         lineno(0),
         column(0),
->>>>>>> upstream-releases
         errorNumber(0),
         ownsMessage_(false) {}
 
@@ -184,116 +140,6 @@ class JSErrorBase {
 /**
  * Notes associated with JSErrorReport.
  */
-<<<<<<< HEAD
-class JSErrorNotes {
- public:
-  class Note final : public JSErrorBase {};
-
- private:
-  // Stores pointers to each note.
-  js::Vector<js::UniquePtr<Note>, 1, js::SystemAllocPolicy> notes_;
-
- public:
-  JSErrorNotes();
-  ~JSErrorNotes();
-
-  // Add an note to the given position.
-  bool addNoteASCII(JSContext* cx, const char* filename, unsigned lineno,
-                    unsigned column, JSErrorCallback errorCallback,
-                    void* userRef, const unsigned errorNumber, ...);
-  bool addNoteLatin1(JSContext* cx, const char* filename, unsigned lineno,
-                     unsigned column, JSErrorCallback errorCallback,
-                     void* userRef, const unsigned errorNumber, ...);
-  bool addNoteUTF8(JSContext* cx, const char* filename, unsigned lineno,
-                   unsigned column, JSErrorCallback errorCallback,
-                   void* userRef, const unsigned errorNumber, ...);
-
-  JS_PUBLIC_API size_t length();
-
-  // Create a deep copy of notes.
-  js::UniquePtr<JSErrorNotes> copy(JSContext* cx);
-
-  class iterator final
-      : public std::iterator<std::input_iterator_tag, js::UniquePtr<Note>> {
-   private:
-    js::UniquePtr<Note>* note_;
-
-   public:
-    explicit iterator(js::UniquePtr<Note>* note = nullptr) : note_(note) {}
-
-    bool operator==(iterator other) const { return note_ == other.note_; }
-    bool operator!=(iterator other) const { return !(*this == other); }
-    iterator& operator++() {
-      note_++;
-      return *this;
-    }
-    reference operator*() { return *note_; }
-  };
-
-  JS_PUBLIC_API iterator begin();
-  JS_PUBLIC_API iterator end();
-||||||| merged common ancestors
-class JSErrorNotes
-{
-  public:
-    class Note final : public JSErrorBase
-    {};
-
-  private:
-    // Stores pointers to each note.
-    js::Vector<js::UniquePtr<Note>, 1, js::SystemAllocPolicy> notes_;
-
-  public:
-    JSErrorNotes();
-    ~JSErrorNotes();
-
-    // Add an note to the given position.
-    bool addNoteASCII(JSContext* cx,
-                      const char* filename, unsigned lineno, unsigned column,
-                      JSErrorCallback errorCallback, void* userRef,
-                      const unsigned errorNumber, ...);
-    bool addNoteLatin1(JSContext* cx,
-                       const char* filename, unsigned lineno, unsigned column,
-                       JSErrorCallback errorCallback, void* userRef,
-                       const unsigned errorNumber, ...);
-    bool addNoteUTF8(JSContext* cx,
-                     const char* filename, unsigned lineno, unsigned column,
-                     JSErrorCallback errorCallback, void* userRef,
-                     const unsigned errorNumber, ...);
-
-    JS_PUBLIC_API(size_t) length();
-
-    // Create a deep copy of notes.
-    js::UniquePtr<JSErrorNotes> copy(JSContext* cx);
-
-    class iterator final
-      : public std::iterator<std::input_iterator_tag, js::UniquePtr<Note>>
-    {
-      private:
-        js::UniquePtr<Note>* note_;
-
-      public:
-        explicit iterator(js::UniquePtr<Note>* note = nullptr) : note_(note)
-        {}
-
-        bool operator==(iterator other) const {
-            return note_ == other.note_;
-        }
-        bool operator!=(iterator other) const {
-            return !(*this == other);
-        }
-        iterator& operator++() {
-            note_++;
-            return *this;
-        }
-        reference operator*() {
-            return *note_;
-        }
-    };
-
-    JS_PUBLIC_API(iterator) begin();
-    JS_PUBLIC_API(iterator) end();
-=======
 class JSErrorNotes {
  public:
   class Note final : public JSErrorBase {};
@@ -349,7 +195,6 @@ class JSErrorNotes {
 
   JS_PUBLIC_API iterator begin();
   JS_PUBLIC_API iterator end();
->>>>>>> upstream-releases
 };
 
 /**
@@ -415,22 +260,10 @@ class JSErrorReport : public JSErrorBase {
 /*
  * JSErrorReport flag values.  These may be freely composed.
  */
-<<<<<<< HEAD
-#define JSREPORT_ERROR 0x0     /* pseudo-flag for default case */
-#define JSREPORT_WARNING 0x1   /* reported via JS_ReportWarning */
-#define JSREPORT_EXCEPTION 0x2 /* exception was thrown */
-#define JSREPORT_STRICT 0x4    /* error or warning due to strict option */
-||||||| merged common ancestors
-#define JSREPORT_ERROR      0x0     /* pseudo-flag for default case */
-#define JSREPORT_WARNING    0x1     /* reported via JS_ReportWarning */
-#define JSREPORT_EXCEPTION  0x2     /* exception was thrown */
-#define JSREPORT_STRICT     0x4     /* error or warning due to strict option */
-=======
 #define JSREPORT_ERROR 0x0     /* pseudo-flag for default case */
 #define JSREPORT_WARNING 0x1   /* reported via JS::Warn* */
 #define JSREPORT_EXCEPTION 0x2 /* exception was thrown */
 #define JSREPORT_STRICT 0x4    /* error or warning due to strict option */
->>>>>>> upstream-releases
 
 #define JSREPORT_USER_1 0x8 /* user-defined flag */
 

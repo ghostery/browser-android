@@ -18,16 +18,8 @@ StaticRefPtr<FileSystemSecurity> gFileSystemSecurity;
 
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<FileSystemSecurity> FileSystemSecurity::Get() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<FileSystemSecurity>
-FileSystemSecurity::Get()
-{
-=======
 /* static */
 already_AddRefed<FileSystemSecurity> FileSystemSecurity::Get() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   AssertIsInMainProcess();
 
@@ -35,17 +27,8 @@ already_AddRefed<FileSystemSecurity> FileSystemSecurity::Get() {
   return service.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<FileSystemSecurity>
-FileSystemSecurity::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<FileSystemSecurity>
-FileSystemSecurity::GetOrCreate()
-{
-=======
 /* static */
 already_AddRefed<FileSystemSecurity> FileSystemSecurity::GetOrCreate() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   AssertIsInMainProcess();
 

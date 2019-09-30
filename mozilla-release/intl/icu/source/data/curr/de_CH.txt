@@ -56,11 +56,5 @@ de_CH{
             other{"VES"}
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.50"}
-||||||| merged common ancestors
-    Version{"2.1.39.37"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
 }

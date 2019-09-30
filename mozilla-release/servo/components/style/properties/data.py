@@ -362,13 +362,8 @@ class Longhand(object):
                 "TextTransform",
                 "TouchAction",
                 "TransformStyle",
-<<<<<<< HEAD
-                "UserSelect",
-||||||| merged common ancestors
-=======
                 "UserSelect",
                 "WordBreak",
->>>>>>> upstream-releases
                 "XSpan",
                 "XTextZoom",
                 "ZIndex",
@@ -417,13 +412,6 @@ class Shorthand(object):
             and allowed_in_keyframe_block != "False"
 
     def get_animatable(self):
-<<<<<<< HEAD
-        if self.ident == "all":
-            return False
-||||||| merged common ancestors
-        animatable = False
-=======
->>>>>>> upstream-releases
         for sub in self.sub_properties:
             if sub.animatable:
                 return True

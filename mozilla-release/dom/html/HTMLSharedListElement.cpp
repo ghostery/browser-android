@@ -110,21 +110,6 @@ void HTMLSharedListElement::MapOLAttributesIntoRule(
 }
 
 NS_IMETHODIMP_(bool)
-<<<<<<< HEAD
-HTMLSharedListElement::IsAttributeMapped(const nsAtom* aAttribute) const {
-  if (mNodeInfo->Equals(nsGkAtoms::ol) || mNodeInfo->Equals(nsGkAtoms::ul)) {
-    static const MappedAttributeEntry attributes[] = {{nsGkAtoms::type},
-                                                      {nullptr}};
-||||||| merged common ancestors
-HTMLSharedListElement::IsAttributeMapped(const nsAtom* aAttribute) const
-{
-  if (mNodeInfo->Equals(nsGkAtoms::ol) ||
-      mNodeInfo->Equals(nsGkAtoms::ul)) {
-    static const MappedAttributeEntry attributes[] = {
-      { nsGkAtoms::type },
-      { nullptr }
-    };
-=======
 HTMLSharedListElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   if (mNodeInfo->Equals(nsGkAtoms::ul)) {
     static const MappedAttributeEntry attributes[] = {{nsGkAtoms::type},
@@ -134,7 +119,6 @@ HTMLSharedListElement::IsAttributeMapped(const nsAtom* aAttribute) const {
         attributes,
         sCommonAttributeMap,
     };
->>>>>>> upstream-releases
 
     return FindAttributeDependence(aAttribute, map);
   }
@@ -156,21 +140,9 @@ HTMLSharedListElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   return nsGenericHTMLElement::IsAttributeMapped(aAttribute);
 }
 
-<<<<<<< HEAD
-nsMapRuleToAttributesFunc HTMLSharedListElement::GetAttributeMappingFunction()
-    const {
-  if (mNodeInfo->Equals(nsGkAtoms::ol) || mNodeInfo->Equals(nsGkAtoms::ul)) {
-||||||| merged common ancestors
-nsMapRuleToAttributesFunc
-HTMLSharedListElement::GetAttributeMappingFunction() const
-{
-  if (mNodeInfo->Equals(nsGkAtoms::ol) ||
-      mNodeInfo->Equals(nsGkAtoms::ul)) {
-=======
 nsMapRuleToAttributesFunc HTMLSharedListElement::GetAttributeMappingFunction()
     const {
   if (mNodeInfo->Equals(nsGkAtoms::ul)) {
->>>>>>> upstream-releases
     return &MapAttributesIntoRule;
   }
   if (mNodeInfo->Equals(nsGkAtoms::ol)) {

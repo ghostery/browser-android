@@ -125,20 +125,9 @@ RefPtr<MediaDataDecoder::DecodePromise> WaveDataDecoder::ProcessDecode(
   }
 
   return DecodePromise::CreateAndResolve(
-<<<<<<< HEAD
-      DecodedData{new AudioData(aOffset, aSample->mTime, duration, frames,
-                                std::move(buffer), mInfo.mChannels,
-                                mInfo.mRate)},
-      __func__);
-||||||| merged common ancestors
-    DecodedData{ new AudioData(aOffset, aSample->mTime, duration, frames,
-                               std::move(buffer), mInfo.mChannels, mInfo.mRate) },
-    __func__);
-=======
       DecodedData{new AudioData(aOffset, aSample->mTime, std::move(buffer),
                                 mInfo.mChannels, mInfo.mRate)},
       __func__);
->>>>>>> upstream-releases
 }
 
 RefPtr<MediaDataDecoder::DecodePromise> WaveDataDecoder::Drain() {

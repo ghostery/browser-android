@@ -24,29 +24,13 @@ WinCompositorWindowThread::WinCompositorWindowThread(base::Thread* aThread)
 
 WinCompositorWindowThread::~WinCompositorWindowThread() { delete mThread; }
 
-<<<<<<< HEAD
-/* static */ WinCompositorWindowThread* WinCompositorWindowThread::Get() {
-||||||| merged common ancestors
-/* static */ WinCompositorWindowThread*
-WinCompositorWindowThread::Get()
-{
-=======
 /* static */
 WinCompositorWindowThread* WinCompositorWindowThread::Get() {
->>>>>>> upstream-releases
   return sWinCompositorWindowThread;
 }
 
-<<<<<<< HEAD
-/* static */ void WinCompositorWindowThread::Start() {
-||||||| merged common ancestors
-/* static */ void
-WinCompositorWindowThread::Start()
-{
-=======
 /* static */
 void WinCompositorWindowThread::Start() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!sWinCompositorWindowThread);
 
@@ -64,16 +48,8 @@ void WinCompositorWindowThread::Start() {
   sWinCompositorWindowThread = new WinCompositorWindowThread(thread);
 }
 
-<<<<<<< HEAD
-/* static */ void WinCompositorWindowThread::ShutDown() {
-||||||| merged common ancestors
-/* static */ void
-WinCompositorWindowThread::ShutDown()
-{
-=======
 /* static */
 void WinCompositorWindowThread::ShutDown() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(sWinCompositorWindowThread);
 
@@ -92,42 +68,18 @@ void WinCompositorWindowThread::ShutDownTask(layers::SynchronousTask* aTask) {
   MOZ_ASSERT(IsInCompositorWindowThread());
 }
 
-<<<<<<< HEAD
-/* static */ MessageLoop* WinCompositorWindowThread::Loop() {
-  return sWinCompositorWindowThread
-             ? sWinCompositorWindowThread->mThread->message_loop()
-             : nullptr;
-||||||| merged common ancestors
-/* static */ MessageLoop*
-WinCompositorWindowThread::Loop()
-{
-  return sWinCompositorWindowThread ? sWinCompositorWindowThread->mThread->message_loop() : nullptr;
-=======
 /* static */
 MessageLoop* WinCompositorWindowThread::Loop() {
   return sWinCompositorWindowThread
              ? sWinCompositorWindowThread->mThread->message_loop()
              : nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool WinCompositorWindowThread::IsInCompositorWindowThread() {
-  return sWinCompositorWindowThread &&
-         sWinCompositorWindowThread->mThread->thread_id() ==
-             PlatformThread::CurrentId();
-||||||| merged common ancestors
-/* static */ bool
-WinCompositorWindowThread::IsInCompositorWindowThread()
-{
-  return sWinCompositorWindowThread && sWinCompositorWindowThread->mThread->thread_id() == PlatformThread::CurrentId();
-=======
 /* static */
 bool WinCompositorWindowThread::IsInCompositorWindowThread() {
   return sWinCompositorWindowThread &&
          sWinCompositorWindowThread->mThread->thread_id() ==
              PlatformThread::CurrentId();
->>>>>>> upstream-releases
 }
 
 const wchar_t kClassNameCompositorInitalParent[] =
@@ -138,12 +90,6 @@ ATOM g_compositor_inital_parent_window_class;
 ATOM g_compositor_window_class;
 
 // This runs on the window owner thread.
-<<<<<<< HEAD
-void InitializeWindowClass() {
-||||||| merged common ancestors
-void InitializeWindowClass() {
-
-=======
 void InitializeInitialParentWindowClass() {
   if (g_compositor_inital_parent_window_class) {
     return;
@@ -165,7 +111,6 @@ void InitializeInitialParentWindowClass() {
 
 // This runs on the window owner thread.
 void InitializeWindowClass() {
->>>>>>> upstream-releases
   if (g_compositor_window_class) {
     return;
   }
@@ -184,17 +129,8 @@ void InitializeWindowClass() {
   g_compositor_window_class = ::RegisterClassW(&wc);
 }
 
-<<<<<<< HEAD
-/* static */ HWND WinCompositorWindowThread::CreateCompositorWindow(
-    HWND aParentWnd) {
-||||||| merged common ancestors
-/* static */ HWND
-WinCompositorWindowThread::CreateCompositorWindow(HWND aParentWnd)
-{
-=======
 /* static */
 WinCompositorWnds WinCompositorWindowThread::CreateCompositorWindow() {
->>>>>>> upstream-releases
   MOZ_ASSERT(Loop());
 
   if (!Loop()) {
@@ -206,34 +142,6 @@ WinCompositorWnds WinCompositorWindowThread::CreateCompositorWindow() {
   HWND initialParentWnd = nullptr;
   HWND compositorWnd = nullptr;
 
-<<<<<<< HEAD
-  RefPtr<Runnable> runnable = NS_NewRunnableFunction(
-      "WinCompositorWindowThread::CreateCompositorWindow::Runnable", [&]() {
-        layers::AutoCompleteTask complete(&task);
-
-        InitializeWindowClass();
-
-        compositorWnd = ::CreateWindowEx(
-            WS_EX_NOPARENTNOTIFY, kClassNameCompositor, nullptr,
-            WS_CHILDWINDOW | WS_DISABLED | WS_VISIBLE, 0, 0, 1, 1, aParentWnd,
-            0, GetModuleHandle(nullptr), 0);
-      });
-||||||| merged common ancestors
-  RefPtr<Runnable> runnable =
-    NS_NewRunnableFunction("WinCompositorWindowThread::CreateCompositorWindow::Runnable", [&]() {
-      layers::AutoCompleteTask complete(&task);
-
-      InitializeWindowClass();
-
-      compositorWnd =
-        ::CreateWindowEx(WS_EX_NOPARENTNOTIFY,
-                         kClassNameCompositor,
-                         nullptr,
-                         WS_CHILDWINDOW | WS_DISABLED | WS_VISIBLE,
-                         0, 0, 1, 1,
-                         aParentWnd, 0, GetModuleHandle(nullptr), 0);
-    });
-=======
   RefPtr<Runnable> runnable = NS_NewRunnableFunction(
       "WinCompositorWindowThread::CreateCompositorWindow::Runnable", [&]() {
         layers::AutoCompleteTask complete(&task);
@@ -256,7 +164,6 @@ WinCompositorWnds WinCompositorWindowThread::CreateCompositorWindow() {
             WS_CHILDWINDOW | WS_DISABLED | WS_VISIBLE, 0, 0, 1, 1,
             initialParentWnd, 0, GetModuleHandle(nullptr), 0);
       });
->>>>>>> upstream-releases
 
   Loop()->PostTask(runnable.forget());
 
@@ -265,44 +172,22 @@ WinCompositorWnds WinCompositorWindowThread::CreateCompositorWindow() {
   return WinCompositorWnds(compositorWnd, initialParentWnd);
 }
 
-<<<<<<< HEAD
-/* static */ void WinCompositorWindowThread::DestroyCompositorWindow(
-    HWND aWnd) {
-  MOZ_ASSERT(aWnd);
-||||||| merged common ancestors
-/* static */ void
-WinCompositorWindowThread::DestroyCompositorWindow(HWND aWnd)
-{
-  MOZ_ASSERT(aWnd);
-=======
 /* static */
 void WinCompositorWindowThread::DestroyCompositorWindow(
     WinCompositorWnds aWnds) {
   MOZ_ASSERT(aWnds.mCompositorWnd);
   MOZ_ASSERT(aWnds.mInitialParentWnd);
->>>>>>> upstream-releases
   MOZ_ASSERT(Loop());
 
   if (!Loop()) {
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<Runnable> runnable = NS_NewRunnableFunction(
-      "WinCompositorWidget::CreateNativeWindow::Runnable",
-      [aWnd]() { ::DestroyWindow(aWnd); });
-||||||| merged common ancestors
-  RefPtr<Runnable> runnable =
-    NS_NewRunnableFunction("WinCompositorWidget::CreateNativeWindow::Runnable", [aWnd]() {
-      ::DestroyWindow(aWnd);
-  });
-=======
   RefPtr<Runnable> runnable = NS_NewRunnableFunction(
       "WinCompositorWidget::CreateNativeWindow::Runnable", [aWnds]() {
         ::DestroyWindow(aWnds.mCompositorWnd);
         ::DestroyWindow(aWnds.mInitialParentWnd);
       });
->>>>>>> upstream-releases
 
   Loop()->PostTask(runnable.forget());
 }

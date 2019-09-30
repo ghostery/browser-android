@@ -229,31 +229,9 @@ already_AddRefed<LineBreaker> LineBreaker::Create() {
 
 #define MAX_CLASSES 12
 
-<<<<<<< HEAD
-static const uint16_t gPair[MAX_CLASSES] = {0x0FFF, 0x0C02, 0x0806, 0x0842,
-                                            0x0802, 0x0C02, 0x0ED2, 0x0EC2,
-                                            0x0902, 0x0FFF, 0x0CC2, 0x0FFF};
-||||||| merged common ancestors
-static const uint16_t gPair[MAX_CLASSES] = {
-  0x0FFF,
-  0x0C02,
-  0x0806,
-  0x0842,
-  0x0802,
-  0x0C02,
-  0x0ED2,
-  0x0EC2,
-  0x0902,
-  0x0FFF,
-  0x0CC2,
-  0x0FFF
-};
-
-=======
 static const uint16_t gPair[MAX_CLASSES] = {0x0FFF, 0x0C02, 0x0806, 0x0842,
                                             0x0802, 0x0C06, 0x0ED2, 0x0EC2,
                                             0x0902, 0x0FFF, 0x0CC2, 0x0FFF};
->>>>>>> upstream-releases
 
 /*
 
@@ -298,28 +276,8 @@ static const uint16_t gPair[MAX_CLASSES] = {0x0FFF, 0x0C02, 0x0806, 0x0842,
 */
 
 static const uint16_t gPairConservative[MAX_CLASSES] = {
-<<<<<<< HEAD
-    0x0FFF, 0x0EC2, 0x0EC6, 0x0EC2, 0x0EC2, 0x0C02,
-    0x0FDF, 0x0FDF, 0x0FC2, 0x0FFF, 0x0FDF, 0x0FFF};
-||||||| merged common ancestors
-  0x0FFF,
-  0x0EC2,
-  0x0EC6,
-  0x0EC2,
-  0x0EC2,
-  0x0C02,
-  0x0FDF,
-  0x0FDF,
-  0x0FC2,
-  0x0FFF,
-  0x0FDF,
-  0x0FFF
-};
-
-=======
     0x0FFF, 0x0EC2, 0x0EC6, 0x0EC2, 0x0EC2, 0x0C06,
     0x0FDF, 0x0FDF, 0x0FC2, 0x0FFF, 0x0FDF, 0x0FFF};
->>>>>>> upstream-releases
 
 /*
 
@@ -415,13 +373,6 @@ static inline bool IS_HYPHEN(char16_t u) {
           u == 0x2013);                    // EN DASH
 }
 
-<<<<<<< HEAD
-static int8_t GetClass(uint32_t u) {
-||||||| merged common ancestors
-static int8_t
-GetClass(uint32_t u)
-{
-=======
 static int8_t GetClass(uint32_t u, LineBreaker::Strictness aLevel,
                        bool aIsChineseOrJapanese) {
   // Mapping for Unicode LineBreak.txt classes to the (simplified) set of
@@ -573,7 +524,6 @@ static int8_t GetClass(uint32_t u, LineBreaker::Strictness aLevel,
       break;
   }
 
->>>>>>> upstream-releases
   if (u < 0x10000) {
     uint16_t h = u & 0xFF00;
     uint16_t l = u & 0x00ff;
@@ -606,40 +556,6 @@ static int8_t GetClass(uint32_t u, LineBreaker::Strictness aLevel,
       }
       if (l < 0x00a0) {  // Halfwidth Katakana variants
         switch (l) {
-<<<<<<< HEAD
-          case 0x61:
-            return GetClass(0x3002);
-          case 0x62:
-            return GetClass(0x300c);
-          case 0x63:
-            return GetClass(0x300d);
-          case 0x64:
-            return GetClass(0x3001);
-          case 0x65:
-            return GetClass(0x30fb);
-          case 0x9e:
-            return GetClass(0x309b);
-          case 0x9f:
-            return GetClass(0x309c);
-          default:
-            if (IS_HALFWIDTH_IN_JISx4051_CLASS3(u)) {
-              return CLASS_CLOSE;  // jis x4051 class 3
-            }
-            return CLASS_BREAKABLE;  // jis x4051 class 11
-||||||| merged common ancestors
-        case 0x61: return GetClass(0x3002);
-        case 0x62: return GetClass(0x300c);
-        case 0x63: return GetClass(0x300d);
-        case 0x64: return GetClass(0x3001);
-        case 0x65: return GetClass(0x30fb);
-        case 0x9e: return GetClass(0x309b);
-        case 0x9f: return GetClass(0x309c);
-        default:
-          if (IS_HALFWIDTH_IN_JISx4051_CLASS3(u)) {
-            return CLASS_CLOSE; // jis x4051 class 3
-          }
-          return CLASS_BREAKABLE; // jis x4051 class 11
-=======
           case 0x61:
             return GetClass(0x3002, aLevel, aIsChineseOrJapanese);
           case 0x62:
@@ -659,7 +575,6 @@ static int8_t GetClass(uint32_t u, LineBreaker::Strictness aLevel,
               return CLASS_CLOSE;  // jis x4051 class 3
             }
             return CLASS_BREAKABLE;  // jis x4051 class 11
->>>>>>> upstream-releases
         }
       }
       if (l < 0x00e0) {
@@ -667,20 +582,9 @@ static int8_t GetClass(uint32_t u, LineBreaker::Strictness aLevel,
       }
       if (l < 0x00f0) {
         static char16_t NarrowFFEx[16] = {
-<<<<<<< HEAD
-            0x00A2, 0x00A3, 0x00AC, 0x00AF, 0x00A6, 0x00A5, 0x20A9, 0x0000,
-            0x2502, 0x2190, 0x2191, 0x2192, 0x2193, 0x25A0, 0x25CB, 0x0000};
-        return GetClass(NarrowFFEx[l - 0x00e0]);
-||||||| merged common ancestors
-          0x00A2, 0x00A3, 0x00AC, 0x00AF, 0x00A6, 0x00A5, 0x20A9, 0x0000,
-          0x2502, 0x2190, 0x2191, 0x2192, 0x2193, 0x25A0, 0x25CB, 0x0000
-        };
-        return GetClass(NarrowFFEx[l - 0x00e0]);
-=======
             0x00A2, 0x00A3, 0x00AC, 0x00AF, 0x00A6, 0x00A5, 0x20A9, 0x0000,
             0x2502, 0x2190, 0x2191, 0x2192, 0x2193, 0x25A0, 0x25CB, 0x0000};
         return GetClass(NarrowFFEx[l - 0x00e0], aLevel, aIsChineseOrJapanese);
->>>>>>> upstream-releases
       }
     } else if (0x3100 == h) {
       if (l <= 0xbf) {  // Hangul Compatibility Jamo, Bopomofo, Kanbun
@@ -717,131 +621,6 @@ static int8_t GetClass(uint32_t u, LineBreaker::Strictness aLevel,
     }
   }
 
-<<<<<<< HEAD
-  // Mapping for Unicode LineBreak.txt classes to the (simplified) set of
-  // character classes used here.
-  // XXX The mappings here were derived by comparing the Unicode LineBreak
-  //     values of BMP characters to the classes our existing GetClass returns
-  //     for the same codepoints; in cases where characters with the same
-  //     LineBreak class mapped to various classes here, I picked what seemed
-  //     the most prevalent equivalence.
-  //     Some of these are unclear to me, but currently they are ONLY used
-  //     for characters not handled by the old code above, so all the JISx405
-  //     special cases should already be accounted for.
-  static const int8_t sUnicodeLineBreakToClass[] = {
-      /* UNKNOWN = 0,                       [XX] */ CLASS_CHARACTER,
-      /* AMBIGUOUS = 1,                     [AI] */ CLASS_CHARACTER,
-      /* ALPHABETIC = 2,                    [AL] */ CLASS_CHARACTER,
-      /* BREAK_BOTH = 3,                    [B2] */ CLASS_CHARACTER,
-      /* BREAK_AFTER = 4,                   [BA] */ CLASS_CHARACTER,
-      /* BREAK_BEFORE = 5,                  [BB] */ CLASS_OPEN_LIKE_CHARACTER,
-      /* MANDATORY_BREAK = 6,               [BK] */ CLASS_CHARACTER,
-      /* CONTINGENT_BREAK = 7,              [CB] */ CLASS_CHARACTER,
-      /* CLOSE_PUNCTUATION = 8,             [CL] */ CLASS_CHARACTER,
-      /* COMBINING_MARK = 9,                [CM] */ CLASS_CHARACTER,
-      /* CARRIAGE_RETURN = 10,              [CR] */ CLASS_BREAKABLE,
-      /* EXCLAMATION = 11,                  [EX] */ CLASS_CHARACTER,
-      /* GLUE = 12,                         [GL] */ CLASS_NON_BREAKABLE,
-      /* HYPHEN = 13,                       [HY] */ CLASS_CHARACTER,
-      /* IDEOGRAPHIC = 14,                  [ID] */ CLASS_BREAKABLE,
-      /* INSEPARABLE = 15,                  [IN] */ CLASS_CLOSE_LIKE_CHARACTER,
-      /* INFIX_NUMERIC = 16,                [IS] */ CLASS_CHARACTER,
-      /* LINE_FEED = 17,                    [LF] */ CLASS_BREAKABLE,
-      /* NONSTARTER = 18,                   [NS] */ CLASS_CLOSE_LIKE_CHARACTER,
-      /* NUMERIC = 19,                      [NU] */ CLASS_CHARACTER,
-      /* OPEN_PUNCTUATION = 20,             [OP] */ CLASS_CHARACTER,
-      /* POSTFIX_NUMERIC = 21,              [PO] */ CLASS_CHARACTER,
-      /* PREFIX_NUMERIC = 22,               [PR] */ CLASS_CHARACTER,
-      /* QUOTATION = 23,                    [QU] */ CLASS_CHARACTER,
-      /* COMPLEX_CONTEXT = 24,              [SA] */ CLASS_CHARACTER,
-      /* SURROGATE = 25,                    [SG] */ CLASS_CHARACTER,
-      /* SPACE = 26,                        [SP] */ CLASS_BREAKABLE,
-      /* BREAK_SYMBOLS = 27,                [SY] */ CLASS_CHARACTER,
-      /* ZWSPACE = 28,                      [ZW] */ CLASS_BREAKABLE,
-      /* NEXT_LINE = 29,                    [NL] */ CLASS_CHARACTER,
-      /* WORD_JOINER = 30,                  [WJ] */ CLASS_NON_BREAKABLE,
-      /* H2 = 31,                           [H2] */ CLASS_BREAKABLE,
-      /* H3 = 32,                           [H3] */ CLASS_BREAKABLE,
-      /* JL = 33,                           [JL] */ CLASS_CHARACTER,
-      /* JT = 34,                           [JT] */ CLASS_CHARACTER,
-      /* JV = 35,                           [JV] */ CLASS_CHARACTER,
-      /* CLOSE_PARENTHESIS = 36,            [CP] */ CLASS_CLOSE_LIKE_CHARACTER,
-      /* CONDITIONAL_JAPANESE_STARTER = 37, [CJ] */ CLASS_CLOSE,
-      /* HEBREW_LETTER = 38,                [HL] */ CLASS_CHARACTER,
-      /* REGIONAL_INDICATOR = 39,           [RI] */ CLASS_CHARACTER,
-      /* E_BASE = 40,                       [EB] */ CLASS_BREAKABLE,
-      /* E_MODIFIER = 41,                   [EM] */ CLASS_CHARACTER,
-      /* ZWJ = 42,                          [ZWJ]*/ CLASS_CHARACTER};
-
-  static_assert(U_LB_COUNT == mozilla::ArrayLength(sUnicodeLineBreakToClass),
-                "Gecko vs ICU LineBreak class mismatch");
-
-  auto cls = mozilla::unicode::GetLineBreakClass(u);
-  MOZ_ASSERT(cls < mozilla::ArrayLength(sUnicodeLineBreakToClass));
-||||||| merged common ancestors
-  // Mapping for Unicode LineBreak.txt classes to the (simplified) set of
-  // character classes used here.
-  // XXX The mappings here were derived by comparing the Unicode LineBreak
-  //     values of BMP characters to the classes our existing GetClass returns
-  //     for the same codepoints; in cases where characters with the same
-  //     LineBreak class mapped to various classes here, I picked what seemed
-  //     the most prevalent equivalence.
-  //     Some of these are unclear to me, but currently they are ONLY used
-  //     for characters not handled by the old code above, so all the JISx405
-  //     special cases should already be accounted for.
-  static const int8_t sUnicodeLineBreakToClass[] = {
-    /* UNKNOWN = 0,                       [XX] */ CLASS_CHARACTER,
-    /* AMBIGUOUS = 1,                     [AI] */ CLASS_CHARACTER,
-    /* ALPHABETIC = 2,                    [AL] */ CLASS_CHARACTER,
-    /* BREAK_BOTH = 3,                    [B2] */ CLASS_CHARACTER,
-    /* BREAK_AFTER = 4,                   [BA] */ CLASS_CHARACTER,
-    /* BREAK_BEFORE = 5,                  [BB] */ CLASS_OPEN_LIKE_CHARACTER,
-    /* MANDATORY_BREAK = 6,               [BK] */ CLASS_CHARACTER,
-    /* CONTINGENT_BREAK = 7,              [CB] */ CLASS_CHARACTER,
-    /* CLOSE_PUNCTUATION = 8,             [CL] */ CLASS_CHARACTER,
-    /* COMBINING_MARK = 9,                [CM] */ CLASS_CHARACTER,
-    /* CARRIAGE_RETURN = 10,              [CR] */ CLASS_BREAKABLE,
-    /* EXCLAMATION = 11,                  [EX] */ CLASS_CHARACTER,
-    /* GLUE = 12,                         [GL] */ CLASS_NON_BREAKABLE,
-    /* HYPHEN = 13,                       [HY] */ CLASS_CHARACTER,
-    /* IDEOGRAPHIC = 14,                  [ID] */ CLASS_BREAKABLE,
-    /* INSEPARABLE = 15,                  [IN] */ CLASS_CLOSE_LIKE_CHARACTER,
-    /* INFIX_NUMERIC = 16,                [IS] */ CLASS_CHARACTER,
-    /* LINE_FEED = 17,                    [LF] */ CLASS_BREAKABLE,
-    /* NONSTARTER = 18,                   [NS] */ CLASS_CLOSE_LIKE_CHARACTER,
-    /* NUMERIC = 19,                      [NU] */ CLASS_CHARACTER,
-    /* OPEN_PUNCTUATION = 20,             [OP] */ CLASS_CHARACTER,
-    /* POSTFIX_NUMERIC = 21,              [PO] */ CLASS_CHARACTER,
-    /* PREFIX_NUMERIC = 22,               [PR] */ CLASS_CHARACTER,
-    /* QUOTATION = 23,                    [QU] */ CLASS_CHARACTER,
-    /* COMPLEX_CONTEXT = 24,              [SA] */ CLASS_CHARACTER,
-    /* SURROGATE = 25,                    [SG] */ CLASS_CHARACTER,
-    /* SPACE = 26,                        [SP] */ CLASS_BREAKABLE,
-    /* BREAK_SYMBOLS = 27,                [SY] */ CLASS_CHARACTER,
-    /* ZWSPACE = 28,                      [ZW] */ CLASS_BREAKABLE,
-    /* NEXT_LINE = 29,                    [NL] */ CLASS_CHARACTER,
-    /* WORD_JOINER = 30,                  [WJ] */ CLASS_NON_BREAKABLE,
-    /* H2 = 31,                           [H2] */ CLASS_BREAKABLE,
-    /* H3 = 32,                           [H3] */ CLASS_BREAKABLE,
-    /* JL = 33,                           [JL] */ CLASS_CHARACTER,
-    /* JT = 34,                           [JT] */ CLASS_CHARACTER,
-    /* JV = 35,                           [JV] */ CLASS_CHARACTER,
-    /* CLOSE_PARENTHESIS = 36,            [CP] */ CLASS_CLOSE_LIKE_CHARACTER,
-    /* CONDITIONAL_JAPANESE_STARTER = 37, [CJ] */ CLASS_CLOSE,
-    /* HEBREW_LETTER = 38,                [HL] */ CLASS_CHARACTER,
-    /* REGIONAL_INDICATOR = 39,           [RI] */ CLASS_CHARACTER,
-    /* E_BASE = 40,                       [EB] */ CLASS_BREAKABLE,
-    /* E_MODIFIER = 41,                   [EM] */ CLASS_CHARACTER,
-    /* ZWJ = 42,                          [ZWJ]*/ CLASS_CHARACTER
-  };
-
-  static_assert(U_LB_COUNT == mozilla::ArrayLength(sUnicodeLineBreakToClass),
-                "Gecko vs ICU LineBreak class mismatch");
-
-  auto cls = mozilla::unicode::GetLineBreakClass(u);
-  MOZ_ASSERT(cls < mozilla::ArrayLength(sUnicodeLineBreakToClass));
-=======
->>>>>>> upstream-releases
   return sUnicodeLineBreakToClass[cls];
 }
 
@@ -1027,20 +806,10 @@ class ContextState {
   bool mHasPreviousBackslash;   // True if we have seen a U_BACKSLASH
 };
 
-<<<<<<< HEAD
-static int8_t ContextualAnalysis(char32_t prev, char32_t cur, char32_t next,
-                                 ContextState& aState) {
-||||||| merged common ancestors
-static int8_t
-ContextualAnalysis(char32_t prev, char32_t cur, char32_t next,
-                   ContextState &aState)
-{
-=======
 static int8_t ContextualAnalysis(char32_t prev, char32_t cur, char32_t next,
                                  ContextState& aState,
                                  LineBreaker::Strictness aLevel,
                                  bool aIsChineseOrJapanese) {
->>>>>>> upstream-releases
   // Don't return CLASS_OPEN/CLASS_CLOSE if aState.UseJISX4051 is FALSE.
 
   if (IS_HYPHEN(cur)) {
@@ -1150,16 +919,8 @@ int32_t LineBreaker::WordMove(const char16_t* aText, uint32_t aLen,
       ret = end;
     }
   } else {
-<<<<<<< HEAD
-    GetJISx4051Breaks(aText + begin, end - begin,
-                      LineBreaker::kWordBreak_Normal, breakState.Elements());
-||||||| merged common ancestors
-    GetJISx4051Breaks(aText + begin, end - begin, LineBreaker::kWordBreak_Normal,
-                      breakState.Elements());
-=======
     GetJISx4051Breaks(aText + begin, end - begin, WordBreak::Normal,
                       Strictness::Auto, false, breakState.Elements());
->>>>>>> upstream-releases
 
     ret = aPos;
     do {
@@ -1188,21 +949,10 @@ int32_t LineBreaker::Prev(const char16_t* aText, uint32_t aLen, uint32_t aPos) {
   return prevPos > 0 ? prevPos : NS_LINEBREAKER_NEED_MORE_TEXT;
 }
 
-<<<<<<< HEAD
-void LineBreaker::GetJISx4051Breaks(const char16_t* aChars, uint32_t aLength,
-                                    uint8_t aWordBreak, uint8_t* aBreakBefore) {
-||||||| merged common ancestors
-void
-LineBreaker::GetJISx4051Breaks(const char16_t* aChars, uint32_t aLength,
-                               uint8_t aWordBreak,
-                               uint8_t* aBreakBefore)
-{
-=======
 void LineBreaker::GetJISx4051Breaks(const char16_t* aChars, uint32_t aLength,
                                     WordBreak aWordBreak, Strictness aLevel,
                                     bool aIsChineseOrJapanese,
                                     uint8_t* aBreakBefore) {
->>>>>>> upstream-releases
   uint32_t cur;
   int8_t lastClass = CLASS_NONE;
   ContextState state(aChars, aLength);
@@ -1262,26 +1012,11 @@ void LineBreaker::GetJISx4051Breaks(const char16_t* aChars, uint32_t aLength,
     if (cur > 0) {
       NS_ASSERTION(CLASS_COMPLEX != lastClass || CLASS_COMPLEX != cl,
                    "Loop should have prevented adjacent complex chars here");
-<<<<<<< HEAD
-      if (aWordBreak == LineBreaker::kWordBreak_Normal) {
-        allowBreak = (state.UseConservativeBreaking())
-                         ? GetPairConservative(lastClass, cl)
-                         : GetPair(lastClass, cl);
-      } else if (aWordBreak == LineBreaker::kWordBreak_BreakAll) {
-        allowBreak = true;
-||||||| merged common ancestors
-      if (aWordBreak == LineBreaker::kWordBreak_Normal) {
-        allowBreak = (state.UseConservativeBreaking()) ?
-          GetPairConservative(lastClass, cl) : GetPair(lastClass, cl);
-      } else if (aWordBreak == LineBreaker::kWordBreak_BreakAll) {
-        allowBreak = true;
-=======
       if (aWordBreak == WordBreak::Normal ||
           aWordBreak == WordBreak::BreakAll) {
         allowBreak = (state.UseConservativeBreaking())
                          ? GetPairConservative(lastClass, cl)
                          : GetPair(lastClass, cl);
->>>>>>> upstream-releases
       }
     }
     aBreakBefore[cur] = allowBreak;
@@ -1329,21 +1064,10 @@ void LineBreaker::GetJISx4051Breaks(const char16_t* aChars, uint32_t aLength,
   }
 }
 
-<<<<<<< HEAD
-void LineBreaker::GetJISx4051Breaks(const uint8_t* aChars, uint32_t aLength,
-                                    uint8_t aWordBreak, uint8_t* aBreakBefore) {
-||||||| merged common ancestors
-void
-LineBreaker::GetJISx4051Breaks(const uint8_t* aChars, uint32_t aLength,
-                               uint8_t aWordBreak,
-                               uint8_t* aBreakBefore)
-{
-=======
 void LineBreaker::GetJISx4051Breaks(const uint8_t* aChars, uint32_t aLength,
                                     WordBreak aWordBreak, Strictness aLevel,
                                     bool aIsChineseOrJapanese,
                                     uint8_t* aBreakBefore) {
->>>>>>> upstream-releases
   uint32_t cur;
   int8_t lastClass = CLASS_NONE;
   ContextState state(aChars, aLength);
@@ -1373,26 +1097,11 @@ void LineBreaker::GetJISx4051Breaks(const uint8_t* aChars, uint32_t aLength,
 
     bool allowBreak = false;
     if (cur > 0) {
-<<<<<<< HEAD
-      if (aWordBreak == LineBreaker::kWordBreak_Normal) {
-        allowBreak = (state.UseConservativeBreaking())
-                         ? GetPairConservative(lastClass, cl)
-                         : GetPair(lastClass, cl);
-      } else if (aWordBreak == LineBreaker::kWordBreak_BreakAll) {
-        allowBreak = true;
-||||||| merged common ancestors
-      if (aWordBreak == LineBreaker::kWordBreak_Normal) {
-        allowBreak = (state.UseConservativeBreaking()) ?
-          GetPairConservative(lastClass, cl) : GetPair(lastClass, cl);
-      } else if (aWordBreak == LineBreaker::kWordBreak_BreakAll) {
-        allowBreak = true;
-=======
       if (aWordBreak == WordBreak::Normal ||
           aWordBreak == WordBreak::BreakAll) {
         allowBreak = (state.UseConservativeBreaking())
                          ? GetPairConservative(lastClass, cl)
                          : GetPair(lastClass, cl);
->>>>>>> upstream-releases
       }
     }
     aBreakBefore[cur] = allowBreak;

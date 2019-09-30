@@ -66,12 +66,6 @@ static void LoadSettings() {
   }
 }
 
-<<<<<<< HEAD
-void SaveSettings() {
-||||||| merged common ancestors
-void SaveSettings()
-{
-=======
 static string Escape(const string& str) {
   string ret;
   for (auto c : str) {
@@ -120,7 +114,6 @@ static bool WriteStringsToFile(const string& path, const string& header,
 }
 
 void SaveSettings() {
->>>>>>> upstream-releases
   /*
    * NOTE! This code needs to stay in sync with the preference setting
    *       code in in nsExceptionHandler.cpp.
@@ -149,16 +142,7 @@ void SaveSettings() {
                      true);
 }
 
-<<<<<<< HEAD
 void SendReport() {
-#ifdef MOZ_ENABLE_GCONF
-||||||| merged common ancestors
-void SendReport()
-{
-#ifdef MOZ_ENABLE_GCONF
-=======
-void SendReport() {
->>>>>>> upstream-releases
   LoadProxyinfo();
 
   // spawn a thread to do the sending
@@ -514,14 +498,7 @@ bool UIShowCrashUI(const StringTable& files, const StringTable& queryParameters,
   g_signal_connect(commentBuffer, "insert-text", G_CALLBACK(CommentInsert), 0);
 
   gtk_container_add(GTK_CONTAINER(scrolled), gCommentText);
-<<<<<<< HEAD
-  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCommentText), GTK_WRAP_WORD);
-||||||| merged common ancestors
-  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCommentText),
-                              GTK_WRAP_WORD);
-=======
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCommentText), GTK_WRAP_WORD_CHAR);
->>>>>>> upstream-releases
   gtk_widget_set_size_request(GTK_WIDGET(gCommentText), -1, 100);
 
   if (gQueryParameters.find("URL") != gQueryParameters.end()) {

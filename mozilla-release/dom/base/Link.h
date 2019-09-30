@@ -38,7 +38,7 @@ class Link : public nsISupports {
   /**
    * aElement is the element pointer corresponding to this link.
    */
-  explicit Link(Element *aElement);
+  explicit Link(Element* aElement);
 
   /**
    * This constructor is only used for testing.
@@ -57,18 +57,8 @@ class Link : public nsISupports {
   /**
    * @return the URI this link is for, if available.
    */
-<<<<<<< HEAD
-  nsIURI *GetURI() const;
-  virtual nsIURI *GetURIExternal() const { return GetURI(); }
-||||||| merged common ancestors
-  nsIURI* GetURI() const;
-  virtual nsIURI* GetURIExternal() const {
-    return GetURI();
-  }
-=======
   nsIURI* GetURI() const;
   virtual nsIURI* GetURIExternal() const { return GetURI(); }
->>>>>>> upstream-releases
 
   /**
    * Helper methods for modifying and obtaining parts of the URI of the Link.
@@ -103,7 +93,7 @@ class Link : public nsISupports {
   void ResetLinkState(bool aNotify, bool aHasHref);
 
   // This method nevers returns a null element.
-  Element *GetElement() const { return mElement; }
+  Element* GetElement() const { return mElement; }
 
   /**
    * DNS prefetch has been deferred until later, e.g. page load complete.
@@ -125,14 +115,7 @@ class Link : public nsISupports {
    */
   virtual bool HasDeferredDNSPrefetchRequest() { return true; }
 
-<<<<<<< HEAD
-  virtual size_t SizeOfExcludingThis(mozilla::SizeOfState &aState) const;
-||||||| merged common ancestors
-  virtual size_t
-    SizeOfExcludingThis(mozilla::SizeOfState& aState) const;
-=======
   virtual size_t SizeOfExcludingThis(mozilla::SizeOfState& aState) const;
->>>>>>> upstream-releases
 
   virtual bool ElementHasHref() const;
 
@@ -143,8 +126,8 @@ class Link : public nsISupports {
 
   // This is called by HTMLLinkElement.
   void TryDNSPrefetchOrPreconnectOrPrefetchOrPreloadOrPrerender();
-  void UpdatePreload(nsAtom *aName, const nsAttrValue *aValue,
-                     const nsAttrValue *aOldValue);
+  void UpdatePreload(nsAtom* aName, const nsAttrValue* aValue,
+                     const nsAttrValue* aOldValue);
   void CancelPrefetchOrPreload();
 
   bool HasPendingLinkUpdate() const { return mHasPendingLinkUpdate; }
@@ -155,33 +138,16 @@ class Link : public nsISupports {
   // similar to the one in Element. Overriders must call
   // ClearHasPendingLinkUpdate().
   // If you change this, change also the method in Element.
-<<<<<<< HEAD
-  virtual void NodeInfoChanged(nsIDocument *aOldDoc) = 0;
-||||||| merged common ancestors
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) = 0;
-=======
   virtual void NodeInfoChanged(Document* aOldDoc) = 0;
->>>>>>> upstream-releases
 
   bool IsInDNSPrefetch() { return mInDNSPrefetch; }
   void SetIsInDNSPrefetch() { mInDNSPrefetch = true; }
   void ClearIsInDNSPrefetch() { mInDNSPrefetch = false; }
 
-<<<<<<< HEAD
-  static void ParseAsValue(const nsAString &aValue, nsAttrValue &aResult);
-  static nsContentPolicyType AsValueToContentPolicy(const nsAttrValue &aValue);
-
- protected:
-||||||| merged common ancestors
-  static void ParseAsValue(const nsAString& aValue, nsAttrValue& aResult);
-  static nsContentPolicyType AsValueToContentPolicy(const nsAttrValue& aValue);
-protected:
-=======
   static void ParseAsValue(const nsAString& aValue, nsAttrValue& aResult);
   static nsContentPolicyType AsValueToContentPolicy(const nsAttrValue& aValue);
 
  protected:
->>>>>>> upstream-releases
   virtual ~Link();
 
   /**
@@ -195,7 +161,7 @@ protected:
     return !!GetURI();
   }
 
-  nsIURI *GetCachedURI() const { return mCachedURI; }
+  nsIURI* GetCachedURI() const { return mCachedURI; }
   bool HasCachedURI() const { return !!mCachedURI; }
 
  private:
@@ -207,30 +173,13 @@ protected:
 
   void SetHrefAttribute(nsIURI* aURI);
 
-<<<<<<< HEAD
-  void GetContentPolicyMimeTypeMedia(nsAttrValue &aAsAttr,
-                                     nsContentPolicyType &aPolicyType,
-                                     nsString &aMimeType, nsAString &aMedia);
-||||||| merged common ancestors
-  void GetContentPolicyMimeTypeMedia(nsAttrValue& aAsAttr,
-                                     nsContentPolicyType& aPolicyType,
-                                     nsString& aMimeType,
-                                     nsAString& aMedia);
-=======
   void GetContentPolicyMimeTypeMedia(nsAttrValue& aAsAttr,
                                      nsContentPolicyType& aPolicyType,
                                      nsString& aMimeType, nsAString& aMedia);
->>>>>>> upstream-releases
 
   mutable nsCOMPtr<nsIURI> mCachedURI;
 
-<<<<<<< HEAD
-  Element *const mElement;
-||||||| merged common ancestors
-  Element * const mElement;
-=======
   Element* const mElement;
->>>>>>> upstream-releases
 
   uint16_t mLinkState;
 

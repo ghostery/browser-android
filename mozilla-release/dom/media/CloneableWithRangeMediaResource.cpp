@@ -164,16 +164,6 @@ CloneableWithRangeMediaResource::GetCurrentPrincipal() {
   return principal.forget();
 }
 
-<<<<<<< HEAD
-nsresult CloneableWithRangeMediaResource::ReadFromCache(char* aBuffer,
-                                                        int64_t aOffset,
-                                                        uint32_t aCount) {
-||||||| merged common ancestors
-nsresult
-CloneableWithRangeMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
-                                               uint32_t aCount)
-{
-=======
 bool CloneableWithRangeMediaResource::HadCrossOriginRedirects() {
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -191,7 +181,6 @@ bool CloneableWithRangeMediaResource::HadCrossOriginRedirects() {
 nsresult CloneableWithRangeMediaResource::ReadFromCache(char* aBuffer,
                                                         int64_t aOffset,
                                                         uint32_t aCount) {
->>>>>>> upstream-releases
   MaybeInitialize();
   if (!aCount) {
     return NS_OK;

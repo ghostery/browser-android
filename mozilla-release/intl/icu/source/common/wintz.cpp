@@ -62,15 +62,6 @@ uprv_detectWindowsTimeZone()
     uprv_memset(dynamicTZKeyName, 0, sizeof(dynamicTZKeyName));
     uprv_memset(tmpid, 0, sizeof(tmpid));
 
-<<<<<<< HEAD
-    /* Obtain TIME_ZONE_INFORMATION from the API and get the non-localized time zone name. */
-    if (TIME_ZONE_ID_INVALID == GetDynamicTimeZoneInformation(&dynamicTZI)) {
-        return nullptr;
-    }
-||||||| merged common ancestors
-    BOOL tryPreVistaFallback;
-    OSVERSIONINFO osVerInfo;
-=======
     /* Obtain TIME_ZONE_INFORMATION from the API and get the non-localized time zone name. */
     if (TIME_ZONE_ID_INVALID == GetDynamicTimeZoneInformation(&dynamicTZI)) {
         return nullptr;
@@ -78,215 +69,34 @@ uprv_detectWindowsTimeZone()
 
     id = GetUserGeoID(GEOCLASS_NATION);
     errorCode = GetGeoInfoW(id, GEO_ISO2, ISOcodeW, 3, 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    id = GetUserGeoID(GEOCLASS_NATION);
-    errorCode = GetGeoInfoW(id, GEO_ISO2, ISOcodeW, 3, 0);
-||||||| merged common ancestors
-    /* Obtain TIME_ZONE_INFORMATION from the API, and then convert it
-       to TZI.  We could also interrogate the registry directly; we do
-       this below if needed. */
-    uprv_memset(&apiTZI, 0, sizeof(apiTZI));
-    uprv_memset(&tziKey, 0, sizeof(tziKey));
-    uprv_memset(&tziReg, 0, sizeof(tziReg));
-    GetTimeZoneInformation(&apiTZI);
-    tziKey.bias = apiTZI.Bias;
-    uprv_memcpy((char *)&tziKey.standardDate, (char*)&apiTZI.StandardDate,
-           sizeof(apiTZI.StandardDate));
-    uprv_memcpy((char *)&tziKey.daylightDate, (char*)&apiTZI.DaylightDate,
-           sizeof(apiTZI.DaylightDate));
-=======
     // convert from wchar_t* (UTF-16 on Windows) to char* (UTF-8).
     u_strToUTF8(ISOcode, UPRV_LENGTHOF(ISOcode), nullptr,
         reinterpret_cast<const UChar*>(ISOcodeW), UPRV_LENGTHOF(ISOcodeW), &status);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // convert from wchar_t* (UTF-16 on Windows) to char* (UTF-8).
-    u_strToUTF8(ISOcode, UPRV_LENGTHOF(ISOcode), nullptr,
-        reinterpret_cast<const UChar*>(ISOcodeW), UPRV_LENGTHOF(ISOcodeW), &status);
-||||||| merged common ancestors
-    /* Convert the wchar_t* standard name to char* */
-    uprv_memset(apiStdName, 0, sizeof(apiStdName));
-    wcstombs(apiStdName, apiTZI.StandardName, MAX_LENGTH_ID);
-=======
     LocalUResourceBundlePointer bundle(ures_openDirect(nullptr, "windowsZones", &status));
     ures_getByKey(bundle.getAlias(), "mapTimezones", bundle.getAlias(), &status);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    LocalUResourceBundlePointer bundle(ures_openDirect(nullptr, "windowsZones", &status));
-    ures_getByKey(bundle.getAlias(), "mapTimezones", bundle.getAlias(), &status);
-||||||| merged common ancestors
-    tmpid[0] = 0;
-=======
     // convert from wchar_t* (UTF-16 on Windows) to char* (UTF-8).
     u_strToUTF8(dynamicTZKeyName, UPRV_LENGTHOF(dynamicTZKeyName), nullptr,
         reinterpret_cast<const UChar*>(dynamicTZI.TimeZoneKeyName), -1, &status);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // convert from wchar_t* (UTF-16 on Windows) to char* (UTF-8).
-    u_strToUTF8(dynamicTZKeyName, UPRV_LENGTHOF(dynamicTZKeyName), nullptr,
-        reinterpret_cast<const UChar*>(dynamicTZI.TimeZoneKeyName), -1, &status);
-||||||| merged common ancestors
-    id = GetUserGeoID(GEOCLASS_NATION);
-    errorCode = GetGeoInfoW(id, GEO_ISO2, ISOcodeW, 3, 0);
-    u_strToUTF8(ISOcodeA, 3, NULL, (const UChar *)ISOcodeW, 3, &status);
-=======
     if (U_FAILURE(status)) {
         return nullptr;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (U_FAILURE(status)) {
-        return nullptr;
-    }
-||||||| merged common ancestors
-    bundle = ures_openDirect(NULL, "windowsZones", &status);
-    ures_getByKey(bundle, "mapTimezones", bundle, &status);
-=======
     if (dynamicTZI.TimeZoneKeyName[0] != 0) {
         StackUResourceBundle winTZ;
         ures_getByKey(bundle.getAlias(), dynamicTZKeyName, winTZ.getAlias(), &status);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (dynamicTZI.TimeZoneKeyName[0] != 0) {
-        UResourceBundle winTZ;
-        ures_initStackObject(&winTZ);
-        ures_getByKey(bundle.getAlias(), dynamicTZKeyName, &winTZ, &status);
-        
-        if (U_SUCCESS(status)) {
-            const UChar* icuTZ = nullptr;
-            if (errorCode != 0) {
-                icuTZ = ures_getStringByKey(&winTZ, ISOcode, &len, &status);
-||||||| merged common ancestors
-    /*
-        Windows Vista+ provides us with a "TimeZoneKeyName" that is not localized
-        and can be used to directly map a name in our bundle. Try to use that first
-        if we're on Vista or higher
-    */
-    uprv_memset(&osVerInfo, 0, sizeof(osVerInfo));
-    osVerInfo.dwOSVersionInfoSize = sizeof(osVerInfo);
-    tryPreVistaFallback = TRUE;
-    result = getTZKeyName(regStdName, sizeof(regStdName));
-    if(ERROR_SUCCESS == result) 
-    {
-        UResourceBundle* winTZ = ures_getByKey(bundle, regStdName, NULL, &status);
-        if(U_SUCCESS(status)) 
-        {
-            const UChar* icuTZ = NULL;
-            if (errorCode != 0) 
-            {
-                icuTZ = ures_getStringByKey(winTZ, ISOcodeA, &len, &status);
-=======
         if (U_SUCCESS(status)) {
             const UChar* icuTZ = nullptr;
             if (errorCode != 0) {
                 icuTZ = ures_getStringByKey(winTZ.getAlias(), ISOcode, &len, &status);
->>>>>>> upstream-releases
             }
             if (errorCode == 0 || icuTZ == nullptr) {
                 /* fallback to default "001" and reset status */
                 status = U_ZERO_ERROR;
-<<<<<<< HEAD
-                icuTZ = ures_getStringByKey(&winTZ, "001", &len, &status);
-            }
-
-            if (U_SUCCESS(status)) {
-                int index = 0;
-
-                while (!(*icuTZ == '\0' || *icuTZ == ' ')) {
-                    // time zone IDs only contain ASCII invariant characters.
-                    tmpid[index++] = (char)(*icuTZ++);
-||||||| merged common ancestors
-                icuTZ = ures_getStringByKey(winTZ, "001", &len, &status);
-            }
-
-            if(U_SUCCESS(status)) 
-            {
-                int index=0;
-                while (! (*icuTZ == '\0' || *icuTZ ==' ')) 
-                {
-                    tmpid[index++]=(char)(*icuTZ++);  /* safe to assume 'char' is ASCII compatible on windows */
-                }
-                tmpid[index]='\0';
-                tryPreVistaFallback = FALSE;
-            }
-        }
-        ures_close(winTZ);
-    }
-
-    if(tryPreVistaFallback)
-    {
-        /* Note: We get the winid not from static tables but from resource bundle. */
-        while (U_SUCCESS(status) && ures_hasNext(bundle))
-        {
-            UBool idFound = FALSE;
-            const char* winid;
-            UResourceBundle* winTZ = ures_getNextResource(bundle, NULL, &status);
-            if (U_FAILURE(status)) 
-            {
-                break;
-            }
-            winid = ures_getKey(winTZ);
-            result = getTZI(winid, &tziReg);
-
-            if (result == ERROR_SUCCESS)
-            {
-                /* Windows alters the DaylightBias in some situations.
-                   Using the bias and the rules suffices, so overwrite
-                   these unreliable fields. */
-                tziKey.standardBias = tziReg.standardBias;
-                tziKey.daylightBias = tziReg.daylightBias;
-
-                if (uprv_memcmp((char *)&tziKey, (char*)&tziReg, sizeof(tziKey)) == 0)
-                {
-                    const UChar* icuTZ = NULL;
-                    if (errorCode != 0)
-                    {
-                        icuTZ = ures_getStringByKey(winTZ, ISOcodeA, &len, &status);
-                    }
-                    if (errorCode==0 || icuTZ==NULL) 
-                    {
-                        /* fallback to default "001" and reset status */
-                        status = U_ZERO_ERROR;
-                        icuTZ = ures_getStringByKey(winTZ, "001", &len, &status);
-                    }
-
-                    if (U_SUCCESS(status)) 
-                    {
-                        /* Get the standard name from the registry key to compare with
-                           the one from Windows API call. */
-                        uprv_memset(regStdName, 0, sizeof(regStdName));
-                        result = getSTDName(winid, regStdName, sizeof(regStdName));
-                        if (result == ERROR_SUCCESS) 
-                        {
-                            if (uprv_strcmp(apiStdName, regStdName) == 0) 
-                            {
-                                idFound = TRUE;
-                            }
-                        }
-
-                        /* tmpid buffer holds the ICU timezone ID corresponding to the timezone ID from Windows.
-                         * If none is found, tmpid buffer will contain a fallback ID (i.e. the time zone ID matching
-                         * the current time zone information)
-                         */
-                        if (idFound || tmpid[0] == 0) 
-                        {
-                            /* if icuTZ has more than one city, take only the first (i.e. terminate icuTZ at first space) */
-                            int index=0;
-                            while (! (*icuTZ == '\0' || *icuTZ ==' ')) 
-                            {
-                                tmpid[index++]=(char)(*icuTZ++);  /* safe to assume 'char' is ASCII compatible on windows */
-                            }
-                            tmpid[index]='\0';
-                        }
-                    }
-=======
                 icuTZ = ures_getStringByKey(winTZ.getAlias(), "001", &len, &status);
             }
 
@@ -296,12 +106,10 @@ uprv_detectWindowsTimeZone()
                 while (!(*icuTZ == '\0' || *icuTZ == ' ')) {
                     // time zone IDs only contain ASCII invariant characters.
                     tmpid[index++] = (char)(*icuTZ++);
->>>>>>> upstream-releases
                 }
                 tmpid[index] = '\0';
             }
         }
-        ures_close(&winTZ);
     }
 
     // Copy the timezone ID to icuid to be returned.

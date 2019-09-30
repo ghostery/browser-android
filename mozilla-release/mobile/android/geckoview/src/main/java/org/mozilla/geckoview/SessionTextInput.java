@@ -521,15 +521,8 @@ public final class SessionTextInput {
      *
      * @return TextInputDelegate instance or a default instance if no delegate has been set.
      */
-<<<<<<< HEAD
-    @UiThread
-    public GeckoSession.TextInputDelegate getDelegate() {
-||||||| merged common ancestors
-    public GeckoSession.TextInputDelegate getDelegate() {
-=======
     @UiThread
     public @NonNull GeckoSession.TextInputDelegate getDelegate() {
->>>>>>> upstream-releases
         ThreadUtils.assertOnUiThread();
         if (mDelegate == null) {
             mDelegate = DefaultDelegate.INSTANCE;

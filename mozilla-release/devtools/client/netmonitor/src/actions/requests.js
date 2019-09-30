@@ -84,21 +84,10 @@ function sendCustomRequest(connector, requestId = null) {
 
     // Send a new HTTP request using the data in the custom request form
     const data = {
-<<<<<<< HEAD
-      cause: selected.cause,
-      url: selected.url,
-      method: selected.method,
-      httpVersion: selected.httpVersion,
-||||||| merged common ancestors
-      url: selected.url,
-      method: selected.method,
-      httpVersion: selected.httpVersion,
-=======
       cause: request.cause,
       url: request.url,
       method: request.method,
       httpVersion: request.httpVersion,
->>>>>>> upstream-releases
     };
     if (request.requestHeaders) {
       data.headers = request.requestHeaders.headers;

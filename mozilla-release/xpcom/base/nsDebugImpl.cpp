@@ -42,28 +42,12 @@
 #  include "nsString.h"
 #endif
 
-<<<<<<< HEAD
-#if defined(XP_MACOSX) || defined(__DragonFly__) || defined(__FreeBSD__) || \
-    defined(__NetBSD__) || defined(__OpenBSD__)
-#include <stdbool.h>
-#include <unistd.h>
-#include <sys/param.h>
-#include <sys/sysctl.h>
-||||||| merged common ancestors
-#if defined(XP_MACOSX) || defined(__DragonFly__) || defined(__FreeBSD__) \
- || defined(__NetBSD__) || defined(__OpenBSD__)
-#include <stdbool.h>
-#include <unistd.h>
-#include <sys/param.h>
-#include <sys/sysctl.h>
-=======
 #if defined(XP_MACOSX) || defined(__DragonFly__) || defined(__FreeBSD__) || \
     defined(__NetBSD__) || defined(__OpenBSD__)
 #  include <stdbool.h>
 #  include <unistd.h>
 #  include <sys/param.h>
 #  include <sys/sysctl.h>
->>>>>>> upstream-releases
 #endif
 
 #if defined(__OpenBSD__)
@@ -104,19 +88,9 @@ static void RealBreak();
 static void Break(const char* aMsg);
 
 #if defined(_WIN32)
-<<<<<<< HEAD
-#include <windows.h>
-#include <signal.h>
-#include <malloc.h>  // for _alloca
-||||||| merged common ancestors
-#include <windows.h>
-#include <signal.h>
-#include <malloc.h> // for _alloca
-=======
 #  include <windows.h>
 #  include <signal.h>
 #  include <malloc.h>  // for _alloca
->>>>>>> upstream-releases
 #elif defined(XP_UNIX)
 #  include <stdlib.h>
 #endif
@@ -228,16 +202,8 @@ nsDebugImpl::GetIsDebuggerAttached(bool* aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void nsDebugImpl::SetMultiprocessMode(const char* aDesc) {
-||||||| merged common ancestors
-/* static */ void
-nsDebugImpl::SetMultiprocessMode(const char* aDesc)
-{
-=======
 /* static */
 void nsDebugImpl::SetMultiprocessMode(const char* aDesc) {
->>>>>>> upstream-releases
   sMultiprocessDescription = aDesc;
 }
 
@@ -482,27 +448,6 @@ static void RealBreak() {
   asm("int $3");
 #elif defined(__arm__)
   asm(
-<<<<<<< HEAD
-#ifdef __ARM_ARCH_4T__
-      /* ARMv4T doesn't support the BKPT instruction, so if the compiler target
-       * is ARMv4T, we want to ensure the assembler will understand that ARMv5T
-       * instruction, while keeping the resulting object tagged as ARMv4T.
-       */
-      ".arch armv5t\n"
-      ".object_arch armv4t\n"
-#endif
-      "BKPT #0");
-||||||| merged common ancestors
-#ifdef __ARM_ARCH_4T__
-    /* ARMv4T doesn't support the BKPT instruction, so if the compiler target
-     * is ARMv4T, we want to ensure the assembler will understand that ARMv5T
-     * instruction, while keeping the resulting object tagged as ARMv4T.
-     */
-    ".arch armv5t\n"
-    ".object_arch armv4t\n"
-#endif
-    "BKPT #0");
-=======
 #  ifdef __ARM_ARCH_4T__
       /* ARMv4T doesn't support the BKPT instruction, so if the compiler target
        * is ARMv4T, we want to ensure the assembler will understand that ARMv5T
@@ -512,7 +457,6 @@ static void RealBreak() {
       ".object_arch armv4t\n"
 #  endif
       "BKPT #0");
->>>>>>> upstream-releases
 #elif defined(__aarch64__)
   asm("brk #0");
 #elif defined(SOLARIS)

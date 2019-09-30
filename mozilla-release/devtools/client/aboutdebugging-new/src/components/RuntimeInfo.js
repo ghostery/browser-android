@@ -36,52 +36,18 @@ class RuntimeInfo extends PureComponent {
 
     return dom.h1(
       {
-<<<<<<< HEAD
-        className: "main-heading",
-||||||| merged common ancestors
-        className: "runtime-info",
-=======
         className: "main-heading runtime-info",
->>>>>>> upstream-releases
       },
-<<<<<<< HEAD
-      dom.img(
-        {
-          className: "main-heading__icon",
-          src: icon,
-        }
-      ),
-||||||| merged common ancestors
-      dom.img(
-        {
-          className: "runtime-info__icon",
-          src: icon,
-        }
-      ),
-=======
       dom.img({
         className: "main-heading__icon runtime-info__icon qa-runtime-icon",
         src: icon,
       }),
->>>>>>> upstream-releases
       Localized(
         {
           id: "about-debugging-runtime-name",
           $name: name,
           $version: version,
         },
-<<<<<<< HEAD
-        dom.label(
-          {
-            className: "js-runtime-info",
-          },
-          `${ name } on ${ deviceName } (${ version })`
-        )
-      )
-||||||| merged common ancestors
-        dom.label({}, `${ name } on ${ deviceName } (${ version })`)
-      )
-=======
         dom.label(
           {
             className: "qa-runtime-name runtime-info__title",
@@ -114,7 +80,6 @@ class RuntimeInfo extends PureComponent {
             )
           )
         : null
->>>>>>> upstream-releases
     );
   }
 }

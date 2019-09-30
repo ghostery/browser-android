@@ -22,36 +22,20 @@ add_task(async function() {
   );
   is(await front.isActive(), false, "The profiler is not active yet.");
 
-<<<<<<< HEAD
-  front.once("profiler-started", (entries, interval, features, duration) => {
-    is(entries, 1000, "Should apply entries by startProfiler");
-||||||| merged common ancestors
-  front.once("profiler-started", (entries, interval, features) => {
-    is(entries, 1000, "Should apply entries by startProfiler");
-=======
   front.once("profiler-started", (entries, interval, features, duration) => {
     is(entries, 1024, "Should apply entries by startProfiler");
->>>>>>> upstream-releases
     is(interval, 0.1, "Should apply interval by startProfiler");
     is(features, 0x202, "Should apply features by startProfiler");
     is(duration, 2, "Should apply duration by startProfiler");
   });
 
   // Start the profiler.
-<<<<<<< HEAD
-  await front.startProfiler({ entries: 1000, duration: 2, interval: 0.1,
-                              features: ["js", "stackwalk"] });
-||||||| merged common ancestors
-  await front.startProfiler({ entries: 1000, interval: 0.1,
-                              features: ["js", "stackwalk"] });
-=======
   await front.startProfiler({
     entries: 1000,
     duration: 2,
     interval: 0.1,
     features: ["js", "stackwalk"],
   });
->>>>>>> upstream-releases
 
   is(await front.isActive(), true, "The profiler is active.");
 

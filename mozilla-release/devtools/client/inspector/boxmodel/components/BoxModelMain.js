@@ -223,15 +223,9 @@ class BoxModelMain extends PureComponent {
    */
   moveFocus({ target, shiftKey }, level) {
     const editBoxes = [
-<<<<<<< HEAD
-      ...this.positionLayout.querySelectorAll(`[data-box="${level}"].boxmodel-editable`),
-||||||| merged common ancestors
-      ...this.positionLayout.querySelectorAll(`[data-box="${level}"].boxmodel-editable`)
-=======
       ...this.positionLayout.querySelectorAll(
         `[data-box="${level}"].boxmodel-editable`
       ),
->>>>>>> upstream-releases
     ];
     const editingMode = target.tagName === "input";
     // target.nextSibling is input field
@@ -436,93 +430,6 @@ class BoxModelMain extends PureComponent {
     height = this.getHeightValue(height);
     width = this.getWidthValue(width);
 
-<<<<<<< HEAD
-    const contentBox = layout["box-sizing"] == "content-box" ?
-      dom.div({ className: "boxmodel-size" },
-        BoxModelEditable({
-          box: "content",
-          focusable,
-          level,
-          property: "width",
-          ref: editable => {
-            this.contentEditable = editable;
-          },
-          textContent: width,
-          onShowBoxModelEditor,
-        }),
-        dom.span({}, "\u00D7"),
-        BoxModelEditable({
-          box: "content",
-          focusable,
-          level,
-          property: "height",
-          textContent: height,
-          onShowBoxModelEditor,
-        })
-      )
-      :
-      dom.p({ className: "boxmodel-size" },
-        dom.span({ title: "content" },
-          SHARED_L10N.getFormatStr("dimensions", width, height)
-        )
-      );
-
-    return (
-      dom.div(
-        {
-          className: "boxmodel-main devtools-monospace",
-          "data-box": "position",
-          ref: div => {
-            this.positionLayout = div;
-          },
-          onClick: this.onLevelClick,
-          onKeyDown: this.onKeyDown,
-          onMouseOver: this.onHighlightMouseOver,
-          onMouseOut: this.props.onHideBoxModelHighlighter,
-||||||| merged common ancestors
-    const contentBox = layout["box-sizing"] == "content-box" ?
-      dom.div({ className: "boxmodel-size" },
-        BoxModelEditable({
-          box: "content",
-          focusable,
-          level,
-          property: "width",
-          ref: editable => {
-            this.contentEditable = editable;
-          },
-          textContent: width,
-          onShowBoxModelEditor
-        }),
-        dom.span({}, "\u00D7"),
-        BoxModelEditable({
-          box: "content",
-          focusable,
-          level,
-          property: "height",
-          textContent: height,
-          onShowBoxModelEditor
-        })
-      )
-      :
-      dom.p({ className: "boxmodel-size" },
-        dom.span({ title: "content" },
-          SHARED_L10N.getFormatStr("dimensions", width, height)
-        )
-      );
-
-    return (
-      dom.div(
-        {
-          className: "boxmodel-main devtools-monospace",
-          "data-box": "position",
-          ref: div => {
-            this.positionLayout = div;
-          },
-          onClick: this.onLevelClick,
-          onKeyDown: this.onKeyDown,
-          onMouseOver: this.onHighlightMouseOver,
-          onMouseOut: this.props.onHideBoxModelHighlighter,
-=======
     const contentBox =
       layout["box-sizing"] == "content-box"
         ? dom.div(
@@ -564,7 +471,6 @@ class BoxModelMain extends PureComponent {
         "data-box": "position",
         ref: div => {
           this.positionLayout = div;
->>>>>>> upstream-releases
         },
         onClick: this.onLevelClick,
         onKeyDown: this.onKeyDown,

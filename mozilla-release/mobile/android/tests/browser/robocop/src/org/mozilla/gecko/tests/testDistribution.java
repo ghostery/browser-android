@@ -410,24 +410,6 @@ public class testDistribution extends ContentProviderTest implements BundleEvent
     }
 
     private void checkAddon() {
-<<<<<<< HEAD
-        /* Bug 1511211
-        try {
-            final String[] prefNames = { "distribution.test.addonEnabled" };
-            final JSONArray preferences = getPrefs(prefNames);
-            final JSONObject pref = (JSONObject) preferences.get(0);
-            mAsserter.is(pref.getBoolean("value"), true, "check distribution add-on is enabled");
-        } catch (JSONException e) {
-            mAsserter.ok(false, "exception getting preferences", e.toString());
-||||||| merged common ancestors
-        try {
-            final String[] prefNames = { "distribution.test.addonEnabled" };
-            final JSONArray preferences = getPrefs(prefNames);
-            final JSONObject pref = (JSONObject) preferences.get(0);
-            mAsserter.is(pref.getBoolean("value"), true, "check distribution add-on is enabled");
-        } catch (JSONException e) {
-            mAsserter.ok(false, "exception getting preferences", e.toString());
-=======
         if (!mAddonEnabled) {
             mAsserter.dumpLog("Waiting for AddonEnabled event");
             synchronized (mAddonSignal) {
@@ -437,15 +419,9 @@ public class testDistribution extends ContentProviderTest implements BundleEvent
                     mAsserter.ok(false, "InterruptedException waiting for AddonEnabled event", e.toString());
                 }
             }
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        */
-||||||| merged common ancestors
-=======
         mAsserter.ok(mAddonEnabled, "Not enabled.",
                      "Distribution extension is not enabled");
->>>>>>> upstream-releases
     }
 
     private JSONArray getPrefs(String[] prefNames) throws JSONException {

@@ -8,14 +8,6 @@
 
 #include "mozilla/dom/SVGSVGElement.h"
 #include "mozilla/dom/SVGViewElement.h"
-<<<<<<< HEAD
-#include "nsContentUtils.h"  // for nsCharSeparatedTokenizerTemplate
-#include "nsSVGAnimatedTransformList.h"
-||||||| merged common ancestors
-#include "nsContentUtils.h" // for nsCharSeparatedTokenizerTemplate
-#include "nsSVGAnimatedTransformList.h"
-=======
->>>>>>> upstream-releases
 #include "nsCharSeparatedTokenizer.h"
 #include "nsContentUtils.h"  // for nsCharSeparatedTokenizerTemplate
 #include "SVGAnimatedTransformList.h"
@@ -34,17 +26,8 @@ static bool IsMatchingParameter(const nsAString& aString,
 
 inline bool IgnoreWhitespace(char16_t aChar) { return false; }
 
-<<<<<<< HEAD
-static SVGViewElement* GetViewElement(nsIDocument* aDocument,
-                                      const nsAString& aId) {
-||||||| merged common ancestors
-static SVGViewElement*
-GetViewElement(nsIDocument* aDocument, const nsAString& aId)
-{
-=======
 static SVGViewElement* GetViewElement(Document* aDocument,
                                       const nsAString& aId) {
->>>>>>> upstream-releases
   Element* element = aDocument->GetElementById(aId);
   return (element && element->IsSVGElement(nsGkAtoms::view))
              ? static_cast<SVGViewElement*>(element)
@@ -105,18 +88,9 @@ class MOZ_RAII AutoSVGViewHandler {
       if (mSVGView->mTransforms) {
         return false;
       }
-<<<<<<< HEAD
-      mSVGView->mTransforms = new nsSVGAnimatedTransformList();
-      if (NS_FAILED(
-              mSVGView->mTransforms->SetBaseValueString(aParams, mRoot))) {
-||||||| merged common ancestors
-      mSVGView->mTransforms = new nsSVGAnimatedTransformList();
-      if (NS_FAILED(mSVGView->mTransforms->SetBaseValueString(aParams, mRoot))) {
-=======
       mSVGView->mTransforms = new SVGAnimatedTransformList();
       if (NS_FAILED(
               mSVGView->mTransforms->SetBaseValueString(aParams, mRoot))) {
->>>>>>> upstream-releases
         return false;
       }
     } else if (IsMatchingParameter(aToken, NS_LITERAL_STRING("zoomAndPan"))) {
@@ -185,18 +159,8 @@ bool SVGFragmentIdentifier::ProcessSVGViewSpec(const nsAString& aViewSpec,
   return true;
 }
 
-<<<<<<< HEAD
-bool SVGFragmentIdentifier::ProcessFragmentIdentifier(
-    nsIDocument* aDocument, const nsAString& aAnchorName) {
-||||||| merged common ancestors
-bool
-SVGFragmentIdentifier::ProcessFragmentIdentifier(nsIDocument* aDocument,
-                                                 const nsAString& aAnchorName)
-{
-=======
 bool SVGFragmentIdentifier::ProcessFragmentIdentifier(
     Document* aDocument, const nsAString& aAnchorName) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument->GetRootElement()->IsSVGElement(nsGkAtoms::svg),
              "expecting an SVG root element");
 

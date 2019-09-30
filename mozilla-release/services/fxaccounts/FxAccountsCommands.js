@@ -200,20 +200,6 @@ class SendTab {
   }
 
   // Returns true if the target device is compatible with FxA Commands Send tab.
-<<<<<<< HEAD
-  isDeviceCompatible(device) {
-    return Services.prefs.getBoolPref("identity.fxaccounts.commands.enabled", true) &&
-           device.availableCommands && device.availableCommands[COMMAND_SENDTAB];
-||||||| merged common ancestors
-  async isDeviceCompatible(device) {
-    if (!Services.prefs.getBoolPref("identity.fxaccounts.commands.enabled", true) ||
-        !device.availableCommands || !device.availableCommands[COMMAND_SENDTAB]) {
-      return false;
-    }
-    const {kid: theirKid} = JSON.parse(device.availableCommands[COMMAND_SENDTAB]);
-    const ourKid = await this._getKid();
-    return theirKid == ourKid;
-=======
   isDeviceCompatible(device) {
     return (
       Services.prefs.getBoolPref(
@@ -223,7 +209,6 @@ class SendTab {
       device.availableCommands &&
       device.availableCommands[COMMAND_SENDTAB]
     );
->>>>>>> upstream-releases
   }
 
   // Handle incoming send tab payload, called by FxAccountsCommands.
@@ -239,40 +224,13 @@ class SendTab {
       title,
       uri,
     };
-<<<<<<< HEAD
-    const {title, url: uri} = data.entries[current];
-    log.info(`Tab received with FxA commands: ${title} from ${tabSender.name}.`);
-    Observers.notify("fxaccounts:commands:open-uri", [{uri, title, sender: tabSender}]);
   }
 
-||||||| merged common ancestors
-    const {title, url: uri} = data.entries[current];
-    log.info(`Tab received with FxA commands: ${title} from ${tabSender.name}.`);
-    Observers.notify("fxaccounts:commands:open-uri", [{uri, title, sender: tabSender}]);
-  }
-
-  async _getKid() {
-    let {kXCS} = await this._fxAccounts.getKeys();
-    return kXCS;
-  }
-
-=======
-  }
-
->>>>>>> upstream-releases
   async _encrypt(bytes, device) {
     let bundle = device.availableCommands[COMMAND_SENDTAB];
     if (!bundle) {
       throw new Error(`Device ${device.id} does not have send tab keys.`);
     }
-<<<<<<< HEAD
-    const {kSync, kXCS: ourKid} = await this._fxAccounts.getKeys();
-    const {kid: theirKid} = JSON.parse(device.availableCommands[COMMAND_SENDTAB]);
-    if (theirKid != ourKid) {
-      throw new Error("Target Send Tab key ID is different from ours");
-    }
-||||||| merged common ancestors
-=======
     const { kSync, kXCS: ourKid } = await this._fxAccounts.getKeys();
     const { kid: theirKid } = JSON.parse(
       device.availableCommands[COMMAND_SENDTAB]
@@ -280,17 +238,9 @@ class SendTab {
     if (theirKid != ourKid) {
       throw new Error("Target Send Tab key ID is different from ours");
     }
->>>>>>> upstream-releases
     const json = JSON.parse(bundle);
     const wrapper = new CryptoWrapper();
-<<<<<<< HEAD
-    wrapper.deserialize({payload: json});
-||||||| merged common ancestors
-    wrapper.deserialize({payload: json});
-    const {kSync} = await this._fxAccounts.getKeys();
-=======
     wrapper.deserialize({ payload: json });
->>>>>>> upstream-releases
     const syncKeyBundle = BulkKeyBundle.fromHexKey(kSync);
     let { publicKey, authSecret } = await wrapper.decrypt(syncKeyBundle);
     authSecret = urlsafeBase64Decode(authSecret);
@@ -358,24 +308,12 @@ class SendTab {
       publicKey: sendTabKeys.publicKey,
       authSecret: sendTabKeys.authSecret,
     };
-<<<<<<< HEAD
-    // getEncryptedKey() can be called right after a sign-in/up to FxA:
-    // We get -cached- keys using getSignedInUser() instead of getKeys()
-    // because we will await on getKeys() which is already awaiting on
-    // the promise we return.
-    const {kSync, kXCS} = await this._fxAccounts.getSignedInUser();
-    if (!kSync || !kXCS) {
-||||||| merged common ancestors
-    const {kSync} = await this._fxAccounts.getSignedInUser();
-    if (!kSync) {
-=======
     // getEncryptedKey() can be called right after a sign-in/up to FxA:
     // We get -cached- keys using getSignedInUser() instead of getKeys()
     // because we will await on getKeys() which is already awaiting on
     // the promise we return.
     const { kSync, kXCS } = await this._fxAccounts.getSignedInUser();
     if (!kSync || !kXCS) {
->>>>>>> upstream-releases
       return null;
     }
     const wrapper = new CryptoWrapper();

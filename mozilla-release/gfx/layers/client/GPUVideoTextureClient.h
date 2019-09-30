@@ -17,20 +17,9 @@ class RemoteDecoderManagerChild;
 
 namespace layers {
 
-<<<<<<< HEAD
-class GPUVideoTextureData : public TextureData {
- public:
-  GPUVideoTextureData(dom::VideoDecoderManagerChild* aManager,
-||||||| merged common ancestors
-class GPUVideoTextureData : public TextureData
-{
-public:
-  GPUVideoTextureData(dom::VideoDecoderManagerChild* aManager,
-=======
 class GPUVideoTextureData : public TextureData {
  public:
   GPUVideoTextureData(RemoteDecoderManagerChild* aManager,
->>>>>>> upstream-releases
                       const SurfaceDescriptorGPUVideo& aSD,
                       const gfx::IntSize& aSize);
   virtual ~GPUVideoTextureData();
@@ -39,13 +28,7 @@ class GPUVideoTextureData : public TextureData {
 
   bool Lock(OpenMode) override { return true; };
 
-<<<<<<< HEAD
-  virtual void Unlock() override{};
-||||||| merged common ancestors
-  virtual void Unlock() override {};
-=======
   void Unlock() override{};
->>>>>>> upstream-releases
 
   bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
 
@@ -55,27 +38,10 @@ class GPUVideoTextureData : public TextureData {
 
   already_AddRefed<gfx::SourceSurface> GetAsSourceSurface();
 
-<<<<<<< HEAD
-  virtual GPUVideoTextureData* AsGPUVideoTextureData() override { return this; }
-||||||| merged common ancestors
-  virtual GPUVideoTextureData* AsGPUVideoTextureData() override
-  {
-    return this;
-  }
-=======
   GPUVideoTextureData* AsGPUVideoTextureData() override { return this; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  RefPtr<dom::VideoDecoderManagerChild> mManager;
-||||||| merged common ancestors
-protected:
-  RefPtr<dom::VideoDecoderManagerChild> mManager;
-=======
  protected:
   RefPtr<RemoteDecoderManagerChild> mManager;
->>>>>>> upstream-releases
   SurfaceDescriptorGPUVideo mSD;
   gfx::IntSize mSize;
 

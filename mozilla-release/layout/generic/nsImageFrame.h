@@ -84,17 +84,8 @@ class nsImageFrame : public nsAtomicContainerFrame, public nsIReflowCallback {
   virtual nscoord GetMinISize(gfxContext* aRenderingContext) override;
   virtual nscoord GetPrefISize(gfxContext* aRenderingContext) override;
   virtual mozilla::IntrinsicSize GetIntrinsicSize() override;
-<<<<<<< HEAD
-  virtual nsSize GetIntrinsicRatio() override;
-  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
-||||||| merged common ancestors
-  virtual nsSize GetIntrinsicRatio() override;
-  virtual void Reflow(nsPresContext*           aPresContext,
-                      ReflowOutput&     aDesiredSize,
-=======
   virtual mozilla::AspectRatio GetIntrinsicRatio() override;
   virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
->>>>>>> upstream-releases
                       const ReflowInput& aReflowInput,
                       nsReflowStatus& aStatus) override;
 
@@ -103,19 +94,8 @@ class nsImageFrame : public nsAtomicContainerFrame, public nsIReflowCallback {
   virtual nsresult HandleEvent(nsPresContext* aPresContext,
                                mozilla::WidgetGUIEvent* aEvent,
                                nsEventStatus* aEventStatus) override;
-<<<<<<< HEAD
-  virtual nsresult GetCursor(const nsPoint& aPoint,
-                             nsIFrame::Cursor& aCursor) override;
-  virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
-||||||| merged common ancestors
-  virtual nsresult GetCursor(const nsPoint& aPoint,
-                             nsIFrame::Cursor& aCursor) override;
-  virtual nsresult AttributeChanged(int32_t aNameSpaceID,
-                                    nsAtom* aAttribute,
-=======
   mozilla::Maybe<Cursor> GetCursor(const nsPoint&) override;
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
->>>>>>> upstream-releases
                                     int32_t aModType) override;
 
   void OnVisibilityChange(
@@ -169,14 +149,6 @@ class nsImageFrame : public nsAtomicContainerFrame, public nsIReflowCallback {
                                         ComputedStyle& aStyle);
 
   ImgDrawResult DisplayAltFeedback(gfxContext& aRenderingContext,
-<<<<<<< HEAD
-                                   const nsRect& aDirtyRect, nsPoint aPt,
-                                   uint32_t aFlags);
-||||||| merged common ancestors
-                                const nsRect& aDirtyRect,
-                                nsPoint aPt,
-                                uint32_t aFlags);
-=======
                                    const nsRect& aDirtyRect, nsPoint aPt,
                                    uint32_t aFlags);
 
@@ -186,7 +158,6 @@ class nsImageFrame : public nsAtomicContainerFrame, public nsIReflowCallback {
       const mozilla::layers::StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder, nsPoint aPt, uint32_t aFlags);
->>>>>>> upstream-releases
 
   nsRect GetInnerArea() const;
 
@@ -227,55 +198,21 @@ class nsImageFrame : public nsAtomicContainerFrame, public nsIReflowCallback {
   nsImageFrame* CreateContinuingFrame(mozilla::PresShell*,
                                       ComputedStyle*) const;
 
-<<<<<<< HEAD
- private:
-  friend nsIFrame* NS_NewImageFrame(nsIPresShell*, ComputedStyle*);
-  friend nsIFrame* NS_NewImageFrameForContentProperty(nsIPresShell*,
-                                                      ComputedStyle*);
-  friend nsIFrame* NS_NewImageFrameForGeneratedContentIndex(nsIPresShell*,
-                                                            ComputedStyle*);
-||||||| merged common ancestors
-private:
-  friend nsIFrame* NS_NewImageFrame(nsIPresShell*, ComputedStyle*);
-  friend nsIFrame* NS_NewImageFrameForContentProperty(nsIPresShell*, ComputedStyle*);
-  friend nsIFrame* NS_NewImageFrameForGeneratedContentIndex(nsIPresShell*, ComputedStyle*);
-=======
  private:
   friend nsIFrame* NS_NewImageFrame(mozilla::PresShell*, ComputedStyle*);
   friend nsIFrame* NS_NewImageFrameForContentProperty(mozilla::PresShell*,
                                                       ComputedStyle*);
   friend nsIFrame* NS_NewImageFrameForGeneratedContentIndex(mozilla::PresShell*,
                                                             ComputedStyle*);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsImageFrame(ComputedStyle* aStyle, Kind aKind)
-      : nsImageFrame(aStyle, kClassID, aKind) {}
-||||||| merged common ancestors
-  nsImageFrame(ComputedStyle* aStyle, Kind aKind)
-    : nsImageFrame(aStyle, kClassID, aKind)
-  { }
-=======
   nsImageFrame(ComputedStyle* aStyle, nsPresContext* aPresContext, Kind aKind)
       : nsImageFrame(aStyle, aPresContext, kClassID, aKind) {}
->>>>>>> upstream-releases
 
   nsImageFrame(ComputedStyle*, nsPresContext* aPresContext, ClassID, Kind);
 
-<<<<<<< HEAD
- protected:
-  nsImageFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsImageFrame(aStyle, aID, Kind::ImageElement) {}
-||||||| merged common ancestors
-protected:
-  nsImageFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsImageFrame(aStyle, aID, Kind::ImageElement)
-  { }
-=======
  protected:
   nsImageFrame(ComputedStyle* aStyle, nsPresContext* aPresContext, ClassID aID)
       : nsImageFrame(aStyle, aPresContext, aID, Kind::ImageElement) {}
->>>>>>> upstream-releases
 
   virtual ~nsImageFrame();
 
@@ -555,26 +492,6 @@ class nsDisplayImage final : public nsDisplayImageContainer {
   virtual nsRegion GetOpaqueRegion(nsDisplayListBuilder* aBuilder,
                                    bool* aSnap) const override;
 
-<<<<<<< HEAD
-  virtual already_AddRefed<Layer> BuildLayer(
-      nsDisplayListBuilder* aBuilder, LayerManager* aManager,
-      const ContainerLayerParameters& aContainerParameters) override;
-  virtual bool CreateWebRenderCommands(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<Layer> BuildLayer(nsDisplayListBuilder* aBuilder,
-                                             LayerManager* aManager,
-                                             const ContainerLayerParameters& aContainerParameters) override;
-  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                       const StackingContextHelper& aSc,
-                                       mozilla::layers::WebRenderLayerManager* aManager,
-                                       nsDisplayListBuilder* aDisplayListBuilder) override;
-=======
   virtual already_AddRefed<Layer> BuildLayer(
       nsDisplayListBuilder* aBuilder, LayerManager* aManager,
       const ContainerLayerParameters& aContainerParameters) override;
@@ -584,7 +501,6 @@ class nsDisplayImage final : public nsDisplayImageContainer {
       const StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override;
->>>>>>> upstream-releases
 
   NS_DISPLAY_DECL_NAME("Image", TYPE_IMAGE)
  private:

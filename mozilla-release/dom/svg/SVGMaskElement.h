@@ -43,26 +43,6 @@ class SVGMaskElement final : public SVGMaskElementBase {
   virtual bool HasValidDimensions() const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedEnumeration> MaskUnits();
-  already_AddRefed<SVGAnimatedEnumeration> MaskContentUnits();
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedEnumeration> MaskUnits();
-  already_AddRefed<SVGAnimatedEnumeration> MaskContentUnits();
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedEnumeration> MaskUnits();
   already_AddRefed<DOMSVGAnimatedEnumeration> MaskContentUnits();
   already_AddRefed<DOMSVGAnimatedLength> X();
@@ -71,7 +51,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedLength> Height();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
   virtual EnumAttributesInfo GetEnumInfo() override;
 

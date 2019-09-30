@@ -95,18 +95,6 @@ using safe_browsing::ClientDownloadRequest_SignatureInfo;
   "browser.safebrowsing.downloads.remote.block_uncommon"
 
 // MOZ_LOG=ApplicationReputation:5
-<<<<<<< HEAD
-mozilla::LazyLogModule ApplicationReputationService::prlog(
-    "ApplicationReputation");
-#define LOG(args) \
-  MOZ_LOG(ApplicationReputationService::prlog, mozilla::LogLevel::Debug, args)
-#define LOG_ENABLED() \
-  MOZ_LOG_TEST(ApplicationReputationService::prlog, mozilla::LogLevel::Debug)
-||||||| merged common ancestors
-mozilla::LazyLogModule ApplicationReputationService::prlog("ApplicationReputation");
-#define LOG(args) MOZ_LOG(ApplicationReputationService::prlog, mozilla::LogLevel::Debug, args)
-#define LOG_ENABLED() MOZ_LOG_TEST(ApplicationReputationService::prlog, mozilla::LogLevel::Debug)
-=======
 mozilla::LazyLogModule ApplicationReputationService::prlog(
     "ApplicationReputation");
 #define LOG(args) \
@@ -532,7 +520,6 @@ const char* const ApplicationReputationService::kBinaryFileExtensions[] = {
     ".zipx",  // WinZip
               //".zpaq",
 };
->>>>>>> upstream-releases
 
 enum class LookupType { AllowlistOnly, BlocklistOnly, BothLists };
 
@@ -802,13 +789,7 @@ nsresult PendingDBLookup::LookupSpecInternal(const nsACString& aSpec) {
   // blacklisted.
   LOG(("Checking DB service for principal %s [this = %p]", mSpec.get(), this));
   nsCOMPtr<nsIUrlClassifierDBService> dbService =
-<<<<<<< HEAD
-      do_GetService(NS_URLCLASSIFIERDBSERVICE_CONTRACTID, &rv);
-||||||| merged common ancestors
-    do_GetService(NS_URLCLASSIFIERDBSERVICE_CONTRACTID, &rv);
-=======
       mozilla::components::UrlClassifierDB::Service(&rv);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsAutoCString tables;
@@ -879,649 +860,6 @@ PendingLookup::~PendingLookup() {
   LOG(("Destroying pending lookup [this = %p]", this));
 }
 
-<<<<<<< HEAD
-static const char* const kBinaryFileExtensions[] = {
-    // Extracted from the "File Type Policies" Chrome extension
-    //".001",
-    //".7z",
-    //".ace",
-    //".action", // Mac script
-    //".ad", // Windows
-    ".ade",  // MS Access
-    ".adp",  // MS Access
-    ".apk",  // Android package
-    ".app",  // Executable application
-    ".applescript",
-    ".application",  // MS ClickOnce
-    ".appref-ms",    // MS ClickOnce
-    //".arc",
-    //".arj",
-    ".as",   // Mac archive
-    ".asp",  // Windows Server script
-    ".asx",  // Windows Media Player
-    //".b64",
-    //".balz",
-    ".bas",   // Basic script
-    ".bash",  // Linux shell
-    ".bat",   // Windows shell
-    //".bhx",
-    //".bin",
-    ".btapp",      // uTorrent and Transmission
-    ".btinstall",  // uTorrent and Transmission
-    ".btkey",      // uTorrent and Transmission
-    ".btsearch",   // uTorrent and Transmission
-    ".btskin",     // uTorrent and Transmission
-    ".bz",         // Linux archive (bzip)
-    ".bz2",        // Linux archive (bzip2)
-    ".bzip2",      // Linux archive (bzip2)
-    ".cab",        // Windows archive
-    ".cdr",        // Mac disk image
-    ".cfg",        // Windows
-    ".chi",        // Windows Help
-    ".chm",        // Windows Help
-    ".class",      // Java
-    ".cmd",        // Windows executable
-    ".com",        // Windows executable
-    ".command",    // Mac script
-    ".cpgz",       // Mac archive
-    //".cpio",
-    ".cpl",         // Windows executable
-    ".crt",         // Windows signed certificate
-    ".crx",         // Chrome extensions
-    ".csh",         // Linux shell
-    ".dart",        // Mac disk image
-    ".dc42",        // Apple DiskCopy Image
-    ".deb",         // Linux package
-    ".dex",         // Android
-    ".dhtml",       // HTML
-    ".dhtm",        // HTML
-    ".dht",         // HTML
-    ".diskcopy42",  // Apple DiskCopy Image
-    ".dll",         // Windows executable
-    ".dmg",         // Mac disk image
-    ".dmgpart",     // Mac disk image
-    //".docb", // MS Office
-    //".docm", // MS Word
-    //".docx", // MS Word
-    //".dotm", // MS Word
-    //".dott", // MS Office
-    ".drv",   // Windows driver
-    ".dvdr",  // Mac Disk image
-    ".efi",   // Firmware
-    ".eml",   // MS Outlook
-    ".exe",   // Windows executable
-    //".fat",
-    ".fon",     // Windows font
-    ".fxp",     // MS FoxPro
-    ".gadget",  // Windows
-    ".grp",     // Windows
-    ".gz",      // Linux archive (gzip)
-    ".gzip",    // Linux archive (gzip)
-    ".hfs",     // Mac disk image
-    ".hlp",     // Windows Help
-    ".hqx",     // Mac archive
-    ".hta",     // HTML trusted application
-    ".htm", ".html",
-    ".htt",      // MS HTML template
-    ".img",      // Mac disk image
-    ".imgpart",  // Mac disk image
-    ".inf",      // Windows installer
-    ".ini",      // Generic config file
-    ".ins",      // IIS config
-    //".inx", // InstallShield
-    ".iso",  // CD image
-    ".isp",  // IIS config
-    //".isu", // InstallShield
-    ".jar",   // Java
-    ".jnlp",  // Java
-    //".job", // Windows
-    ".js",   // JavaScript script
-    ".jse",  // JScript
-    ".ksh",  // Linux shell
-    //".lha",
-    ".lnk",    // Windows
-    ".local",  // Windows
-    //".lpaq1",
-    //".lpaq5",
-    //".lpaq8",
-    //".lzh",
-    //".lzma",
-    ".mad",       // MS Access
-    ".maf",       // MS Access
-    ".mag",       // MS Access
-    ".mam",       // MS Access
-    ".manifest",  // Windows
-    ".maq",       // MS Access
-    ".mar",       // MS Access
-    ".mas",       // MS Access
-    ".mat",       // MS Access
-    ".mau",       // Media attachment
-    ".mav",       // MS Access
-    ".maw",       // MS Access
-    ".mda",       // MS Access
-    ".mdb",       // MS Access
-    ".mde",       // MS Access
-    ".mdt",       // MS Access
-    ".mdw",       // MS Access
-    ".mdz",       // MS Access
-    ".mht",       // MS HTML
-    ".mhtml",     // MS HTML
-    ".mim",       // MS Mail
-    ".mmc",       // MS Office
-    ".mof",       // Windows
-    ".mpkg",      // Mac installer
-    ".msc",       // Windows executable
-    ".msg",       // MS Outlook
-    ".msh",       // Windows shell
-    ".msh1",      // Windows shell
-    ".msh1xml",   // Windows shell
-    ".msh2",      // Windows shell
-    ".msh2xml",   // Windows shell
-    ".mshxml",    // Windows
-    ".msi",       // Windows installer
-    ".msp",       // Windows installer
-    ".mst",       // Windows installer
-    ".ndif",      // Mac disk image
-    //".ntfs", // 7z
-    ".ocx",   // ActiveX
-    ".ops",   // MS Office
-    ".osas",  // AppleScript
-    ".osax",  // AppleScript
-    //".out", // Linux binary
-    ".oxt",  // OpenOffice extension, can execute arbitrary code
-    //".paf", // PortableApps package
-    //".paq8f",
-    //".paq8jd",
-    //".paq8l",
-    //".paq8o",
-    ".partial",  // Downloads
-    ".pax",      // Mac archive
-    ".pcd",      // Microsoft Visual Test
-    ".pdf",      // Adobe Acrobat
-    //".pea",
-    ".pet",  // Linux package
-    ".pif",  // Windows
-    ".pkg",  // Mac installer
-    ".pl",   // Perl script
-    ".plg",  // MS Visual Studio
-    //".potx", // MS PowerPoint
-    //".ppam", // MS PowerPoint
-    //".ppsx", // MS PowerPoint
-    //".pptm", // MS PowerPoint
-    //".pptx", // MS PowerPoint
-    ".prf",     // MS Outlook
-    ".prg",     // Windows
-    ".ps1",     // Windows shell
-    ".ps1xml",  // Windows shell
-    ".ps2",     // Windows shell
-    ".ps2xml",  // Windows shell
-    ".psc1",    // Windows shell
-    ".psc2",    // Windows shell
-    ".pst",     // MS Outlook
-    ".pup",     // Linux package
-    ".py",      // Python script
-    ".pyc",     // Python binary
-    ".pyd",     // Equivalent of a DLL, for python libraries
-    ".pyo",     // Compiled python code
-    ".pyw",     // Python GUI
-    //".quad",
-    //".r00",
-    //".r01",
-    //".r02",
-    //".r03",
-    //".r04",
-    //".r05",
-    //".r06",
-    //".r07",
-    //".r08",
-    //".r09",
-    //".r10",
-    //".r11",
-    //".r12",
-    //".r13",
-    //".r14",
-    //".r15",
-    //".r16",
-    //".r17",
-    //".r18",
-    //".r19",
-    //".r20",
-    //".r21",
-    //".r22",
-    //".r23",
-    //".r24",
-    //".r25",
-    //".r26",
-    //".r27",
-    //".r28",
-    //".r29",
-    //".rar",
-    ".rb",    // Ruby script
-    ".reg",   // Windows Registry
-    ".rels",  // MS Office
-    //".rgs", // Windows Registry
-    ".rpm",  // Linux package
-    //".rtf", // MS Office
-    //".run", // Linux shell
-    ".scf",                // Windows shell
-    ".scpt",               // AppleScript
-    ".scptd",              // AppleScript
-    ".scr",                // Windows
-    ".sct",                // Windows shell
-    ".search-ms",          // Windows
-    ".seplugin",           // AppleScript
-    ".settingcontent-ms",  // Windows settings
-    ".sh",                 // Linux shell
-    ".shar",               // Linux shell
-    ".shb",                // Windows
-    ".shs",                // Windows shell
-    ".shtml",              // HTML
-    ".shtm",               // HTML
-    ".sht",                // HTML
-    //".sldm", // MS PowerPoint
-    //".sldx", // MS PowerPoint
-    ".slk",           // MS Excel
-    ".slp",           // Linux package
-    ".smi",           // Mac disk image
-    ".sparsebundle",  // Mac disk image
-    ".sparseimage",   // Mac disk image
-    ".spl",           // Adobe Flash
-    //".squashfs",
-    ".svg",
-    ".swf",   // Adobe Flash
-    ".swm",   // Windows Imaging
-    ".sys",   // Windows
-    ".tar",   // Linux archive
-    ".taz",   // Linux archive (bzip2)
-    ".tbz",   // Linux archive (bzip2)
-    ".tbz2",  // Linux archive (bzip2)
-    ".tcsh",  // Linux shell
-    ".tgz",   // Linux archive (gzip)
-    //".toast", // Roxio disk image
-    ".torrent",  // Bittorrent
-    ".tpz",      // Linux archive (gzip)
-    ".txz",      // Linux archive (xz)
-    ".tz",       // Linux archive (gzip)
-    //".u3p", // U3 Smart Apps
-    ".udf",   // MS Excel
-    ".udif",  // Mac disk image
-    ".url",   // Windows
-    //".uu",
-    //".uue",
-    ".vb",   // Visual Basic script
-    ".vbe",  // Visual Basic script
-    ".vbs",  // Visual Basic script
-    //".vbscript", // Visual Basic script
-    ".vdx",       // MS Visio
-    ".vhd",       // Windows virtual hard drive
-    ".vhdx",      // Windows virtual hard drive
-    ".vmdk",      // VMware virtual disk
-    ".vsd",       // MS Visio
-    ".vsdm",      // MS Visio
-    ".vsdx",      // MS Visio
-    ".vsmacros",  // MS Visual Studio
-    ".vss",       // MS Visio
-    ".vssm",      // MS Visio
-    ".vssx",      // MS Visio
-    ".vst",       // MS Visio
-    ".vstm",      // MS Visio
-    ".vstx",      // MS Visio
-    ".vsw",       // MS Visio
-    ".vsx",       // MS Visio
-    ".vtx",       // MS Visio
-    ".website",   // Windows
-    ".wim",       // Windows Imaging
-    //".workflow", // Mac Automator
-    //".wrc", // FreeArc archive
-    ".ws",    // Windows script
-    ".wsc",   // Windows script
-    ".wsf",   // Windows script
-    ".wsh",   // Windows script
-    ".xar",   // MS Excel
-    ".xbap",  // XAML Browser Application
-    ".xhtml", ".xhtm", ".xht",
-    ".xip",  // Mac archive
-    //".xlsm", // MS Excel
-    //".xlsx", // MS Excel
-    //".xltm", // MS Excel
-    //".xltx", // MS Excel
-    ".xml",
-    ".xnk",     // MS Exchange
-    ".xrm-ms",  // Windows
-    ".xsl",     // XML Stylesheet
-    //".xxe",
-    ".xz",     // Linux archive (xz)
-    ".z",      // InstallShield
-#ifdef XP_WIN  // disable on Mac/Linux, see 1167493
-    ".zip",    // Generic archive
-#endif
-    ".zipx",  // WinZip
-              //".zpaq",
-};
-
-||||||| merged common ancestors
-static const char* const kBinaryFileExtensions[] = {
-    // Extracted from the "File Type Policies" Chrome extension
-    //".001",
-    //".7z",
-    //".ace",
-    //".action", // Mac script
-    //".ad", // Windows
-    ".ade", // MS Access
-    ".adp", // MS Access
-    ".apk", // Android package
-    ".app", // Executable application
-    ".applescript",
-    ".application", // MS ClickOnce
-    ".appref-ms", // MS ClickOnce
-    //".arc",
-    //".arj",
-    ".as", // Mac archive
-    ".asp", // Windows Server script
-    ".asx", // Windows Media Player
-    //".b64",
-    //".balz",
-    ".bas", // Basic script
-    ".bash", // Linux shell
-    ".bat", // Windows shell
-    //".bhx",
-    //".bin",
-    ".btapp", // uTorrent and Transmission
-    ".btinstall", // uTorrent and Transmission
-    ".btkey", // uTorrent and Transmission
-    ".btsearch", // uTorrent and Transmission
-    ".btskin", // uTorrent and Transmission
-    ".bz", // Linux archive (bzip)
-    ".bz2", // Linux archive (bzip2)
-    ".bzip2", // Linux archive (bzip2)
-    ".cab", // Windows archive
-    ".cdr", // Mac disk image
-    ".cfg", // Windows
-    ".chi", // Windows Help
-    ".chm", // Windows Help
-    ".class", // Java
-    ".cmd", // Windows executable
-    ".com", // Windows executable
-    ".command", // Mac script
-    ".cpgz", // Mac archive
-    //".cpio",
-    ".cpl", // Windows executable
-    ".crt", // Windows signed certificate
-    ".crx", // Chrome extensions
-    ".csh", // Linux shell
-    ".dart", // Mac disk image
-    ".dc42", // Apple DiskCopy Image
-    ".deb", // Linux package
-    ".dex", // Android
-    ".dhtml", // HTML
-    ".dhtm", // HTML
-    ".dht", // HTML
-    ".diskcopy42", // Apple DiskCopy Image
-    ".dll", // Windows executable
-    ".dmg", // Mac disk image
-    ".dmgpart", // Mac disk image
-    //".docb", // MS Office
-    //".docm", // MS Word
-    //".docx", // MS Word
-    //".dotm", // MS Word
-    //".dott", // MS Office
-    ".drv", // Windows driver
-    ".dvdr", // Mac Disk image
-    ".efi", // Firmware
-    ".eml", // MS Outlook
-    ".exe", // Windows executable
-    //".fat",
-    ".fon", // Windows font
-    ".fxp", // MS FoxPro
-    ".gadget", // Windows
-    ".grp", // Windows
-    ".gz", // Linux archive (gzip)
-    ".gzip", // Linux archive (gzip)
-    ".hfs", // Mac disk image
-    ".hlp", // Windows Help
-    ".hqx", // Mac archive
-    ".hta", // HTML trusted application
-    ".htm",
-    ".html",
-    ".htt", // MS HTML template
-    ".img", // Mac disk image
-    ".imgpart", // Mac disk image
-    ".inf", // Windows installer
-    ".ini", // Generic config file
-    ".ins", // IIS config
-    //".inx", // InstallShield
-    ".iso", // CD image
-    ".isp", // IIS config
-    //".isu", // InstallShield
-    ".jar", // Java
-    ".jnlp", // Java
-    //".job", // Windows
-    ".js", // JavaScript script
-    ".jse", // JScript
-    ".ksh", // Linux shell
-    //".lha",
-    ".lnk", // Windows
-    ".local", // Windows
-    //".lpaq1",
-    //".lpaq5",
-    //".lpaq8",
-    //".lzh",
-    //".lzma",
-    ".mad", // MS Access
-    ".maf", // MS Access
-    ".mag", // MS Access
-    ".mam", // MS Access
-    ".manifest", // Windows
-    ".maq", // MS Access
-    ".mar", // MS Access
-    ".mas", // MS Access
-    ".mat", // MS Access
-    ".mau", // Media attachment
-    ".mav", // MS Access
-    ".maw", // MS Access
-    ".mda", // MS Access
-    ".mdb", // MS Access
-    ".mde", // MS Access
-    ".mdt", // MS Access
-    ".mdw", // MS Access
-    ".mdz", // MS Access
-    ".mht", // MS HTML
-    ".mhtml", // MS HTML
-    ".mim", // MS Mail
-    ".mmc", // MS Office
-    ".mof", // Windows
-    ".mpkg", // Mac installer
-    ".msc", // Windows executable
-    ".msg", // MS Outlook
-    ".msh", // Windows shell
-    ".msh1", // Windows shell
-    ".msh1xml", // Windows shell
-    ".msh2", // Windows shell
-    ".msh2xml", // Windows shell
-    ".mshxml", // Windows
-    ".msi", // Windows installer
-    ".msp", // Windows installer
-    ".mst", // Windows installer
-    ".ndif", // Mac disk image
-    //".ntfs", // 7z
-    ".ocx", // ActiveX
-    ".ops", // MS Office
-    ".osas", // AppleScript
-    ".osax", // AppleScript
-    //".out", // Linux binary
-    ".oxt", // OpenOffice extension, can execute arbitrary code
-    //".paf", // PortableApps package
-    //".paq8f",
-    //".paq8jd",
-    //".paq8l",
-    //".paq8o",
-    ".partial", // Downloads
-    ".pax", // Mac archive
-    ".pcd", // Microsoft Visual Test
-    ".pdf", // Adobe Acrobat
-    //".pea",
-    ".pet", // Linux package
-    ".pif", // Windows
-    ".pkg", // Mac installer
-    ".pl", // Perl script
-    ".plg", // MS Visual Studio
-    //".potx", // MS PowerPoint
-    //".ppam", // MS PowerPoint
-    //".ppsx", // MS PowerPoint
-    //".pptm", // MS PowerPoint
-    //".pptx", // MS PowerPoint
-    ".prf", // MS Outlook
-    ".prg", // Windows
-    ".ps1", // Windows shell
-    ".ps1xml", // Windows shell
-    ".ps2", // Windows shell
-    ".ps2xml", // Windows shell
-    ".psc1", // Windows shell
-    ".psc2", // Windows shell
-    ".pst", // MS Outlook
-    ".pup", // Linux package
-    ".py", // Python script
-    ".pyc", // Python binary
-    ".pyw", // Python GUI
-    //".quad",
-    //".r00",
-    //".r01",
-    //".r02",
-    //".r03",
-    //".r04",
-    //".r05",
-    //".r06",
-    //".r07",
-    //".r08",
-    //".r09",
-    //".r10",
-    //".r11",
-    //".r12",
-    //".r13",
-    //".r14",
-    //".r15",
-    //".r16",
-    //".r17",
-    //".r18",
-    //".r19",
-    //".r20",
-    //".r21",
-    //".r22",
-    //".r23",
-    //".r24",
-    //".r25",
-    //".r26",
-    //".r27",
-    //".r28",
-    //".r29",
-    //".rar",
-    ".rb", // Ruby script
-    ".reg", // Windows Registry
-    ".rels", // MS Office
-    //".rgs", // Windows Registry
-    ".rpm", // Linux package
-    //".rtf", // MS Office
-    //".run", // Linux shell
-    ".scf", // Windows shell
-    ".scpt", // AppleScript
-    ".scptd", // AppleScript
-    ".scr", // Windows
-    ".sct", // Windows shell
-    ".search-ms", // Windows
-    ".seplugin", // AppleScript
-    ".settingcontent-ms", // Windows settings
-    ".sh", // Linux shell
-    ".shar", // Linux shell
-    ".shb", // Windows
-    ".shs", // Windows shell
-    ".shtml", // HTML
-    ".shtm", // HTML
-    ".sht", // HTML
-    //".sldm", // MS PowerPoint
-    //".sldx", // MS PowerPoint
-    ".slk", // MS Excel
-    ".slp", // Linux package
-    ".smi", // Mac disk image
-    ".sparsebundle", // Mac disk image
-    ".sparseimage", // Mac disk image
-    ".spl", // Adobe Flash
-    //".squashfs",
-    ".svg",
-    ".swf", // Adobe Flash
-    ".swm", // Windows Imaging
-    ".sys", // Windows
-    ".tar", // Linux archive
-    ".taz", // Linux archive (bzip2)
-    ".tbz", // Linux archive (bzip2)
-    ".tbz2", // Linux archive (bzip2)
-    ".tcsh", // Linux shell
-    ".tgz", // Linux archive (gzip)
-    //".toast", // Roxio disk image
-    ".torrent", // Bittorrent
-    ".tpz", // Linux archive (gzip)
-    ".txz", // Linux archive (xz)
-    ".tz", // Linux archive (gzip)
-    //".u3p", // U3 Smart Apps
-    ".udf", // MS Excel
-    ".udif", // Mac disk image
-    ".url", // Windows
-    //".uu",
-    //".uue",
-    ".vb", // Visual Basic script
-    ".vbe", // Visual Basic script
-    ".vbs", // Visual Basic script
-    //".vbscript", // Visual Basic script
-    ".vdx", // MS Visio
-    ".vhd", // Windows virtual hard drive
-    ".vhdx", // Windows virtual hard drive
-    ".vmdk", // VMware virtual disk
-    ".vsd", // MS Visio
-    ".vsdm", // MS Visio
-    ".vsdx", // MS Visio
-    ".vsmacros", // MS Visual Studio
-    ".vss", // MS Visio
-    ".vssm", // MS Visio
-    ".vssx", // MS Visio
-    ".vst", // MS Visio
-    ".vstm", // MS Visio
-    ".vstx", // MS Visio
-    ".vsw", // MS Visio
-    ".vsx", // MS Visio
-    ".vtx", // MS Visio
-    ".website",  // Windows
-    ".wim", // Windows Imaging
-    //".workflow", // Mac Automator
-    //".wrc", // FreeArc archive
-    ".ws", // Windows script
-    ".wsc", // Windows script
-    ".wsf", // Windows script
-    ".wsh", // Windows script
-    ".xar", // MS Excel
-    ".xbap", // XAML Browser Application
-    ".xhtml",
-    ".xhtm",
-    ".xht",
-    ".xip", // Mac archive
-    //".xlsm", // MS Excel
-    //".xlsx", // MS Excel
-    //".xltm", // MS Excel
-    //".xltx", // MS Excel
-    ".xml",
-    ".xnk", // MS Exchange
-    ".xrm-ms", // Windows
-    ".xsl", // XML Stylesheet
-    //".xxe",
-    ".xz", // Linux archive (xz)
-    ".z", // InstallShield
-#ifdef XP_WIN // disable on Mac/Linux, see 1167493
-    ".zip", // Generic archive
-#endif
-    ".zipx", // WinZip
-    //".zpaq",
-};
-
-=======
->>>>>>> upstream-releases
 static const char* const kDmgFileExtensions[] = {
     ".cdr",          ".dart",        ".dc42",  ".diskcopy42",
     ".dmg",          ".dmgpart",     ".dvdr",  ".img",
@@ -1541,22 +879,9 @@ static const char* const kZipFileExtensions[] = {
     ".zipx",  // WinZip
 };
 
-<<<<<<< HEAD
-// Returns true if the file extension matches one in the given array.
-static bool IsFileType(const nsACString& aFilename,
-                       const char* const aFileExtensions[],
-                       const size_t aLength) {
-||||||| merged common ancestors
-// Returns true if the file extension matches one in the given array.
-static bool
-IsFileType(const nsACString& aFilename, const char* const aFileExtensions[],
-           const size_t aLength)
-{
-=======
 static const char* GetFileExt(const nsACString& aFilename,
                               const char* const aFileExtensions[],
                               const size_t aLength) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < aLength; ++i) {
     if (StringEndsWith(aFilename, nsDependentCString(aFileExtensions[i]))) {
       return aFileExtensions[i];
@@ -1565,17 +890,6 @@ static const char* GetFileExt(const nsACString& aFilename,
   return nullptr;
 }
 
-<<<<<<< HEAD
-ClientDownloadRequest::DownloadType PendingLookup::GetDownloadType(
-    const nsACString& aFilename) {
-  MOZ_ASSERT(IsFileType(aFilename, kBinaryFileExtensions,
-                        ArrayLength(kBinaryFileExtensions)));
-||||||| merged common ancestors
-ClientDownloadRequest::DownloadType
-PendingLookup::GetDownloadType(const nsACString& aFilename) {
-  MOZ_ASSERT(IsFileType(aFilename, kBinaryFileExtensions,
-                        ArrayLength(kBinaryFileExtensions)));
-=======
 static const char* GetFileExt(const nsACString& aFilename) {
 #define _GetFileExt(_f, _l) GetFileExt(_f, _l, ArrayLength(_l))
   const char* ext = _GetFileExt(
@@ -1594,14 +908,7 @@ static bool IsFileType(const nsACString& aFilename,
                        const size_t aLength) {
   return GetFileExt(aFilename, aFileExtensions, aLength) != nullptr;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // From
-  // https://cs.chromium.org/chromium/src/chrome/common/safe_browsing/download_protection_util.cc?l=17
-||||||| merged common ancestors
-  // From https://cs.chromium.org/chromium/src/chrome/common/safe_browsing/download_protection_util.cc?l=17
-=======
 static bool IsBinary(const nsACString& aFilename) {
   return IsFileType(aFilename,
                     ApplicationReputationService::kBinaryFileExtensions,
@@ -1620,7 +927,6 @@ ClientDownloadRequest::DownloadType PendingLookup::GetDownloadType(
 
   // From
   // https://cs.chromium.org/chromium/src/chrome/common/safe_browsing/download_protection_util.cc?l=17
->>>>>>> upstream-releases
   if (StringEndsWith(aFilename, NS_LITERAL_CSTRING(".zip"))) {
     return ClientDownloadRequest::ZIPPED_EXECUTABLE;
   } else if (StringEndsWith(aFilename, NS_LITERAL_CSTRING(".apk"))) {
@@ -2073,21 +1379,9 @@ nsresult PendingLookup::DoLookupInternal() {
 
   rv = mQuery->GetSuggestedFileName(mFileName);
   if (NS_SUCCEEDED(rv) && !mFileName.IsEmpty()) {
-<<<<<<< HEAD
-    mIsBinaryFile = IsFileType(mFileName, kBinaryFileExtensions,
-                               ArrayLength(kBinaryFileExtensions));
-    LOG(("Suggested filename: %s [binary = %d, this = %p]", mFileName.get(),
-         mIsBinaryFile, this));
-||||||| merged common ancestors
-    mIsBinaryFile = IsFileType(mFileName, kBinaryFileExtensions,
-                               ArrayLength(kBinaryFileExtensions));
-    LOG(("Suggested filename: %s [binary = %d, this = %p]",
-         mFileName.get(), mIsBinaryFile, this));
-=======
     mIsBinaryFile = IsBinary(mFileName);
     LOG(("Suggested filename: %s [binary = %d, this = %p]", mFileName.get(),
          mIsBinaryFile, this));
->>>>>>> upstream-releases
   } else {
     nsAutoCString errorName;
     mozilla::GetErrorName(rv, errorName);
@@ -2239,23 +1533,12 @@ nsresult PendingLookup::ParseCertificates(nsIArray* aSigArray) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PendingLookup::SendRemoteQuery() {
-  Reason reason = Reason::NotSet;
-  nsresult rv = SendRemoteQueryInternal(reason);
-||||||| merged common ancestors
-nsresult
-PendingLookup::SendRemoteQuery()
-{
-  nsresult rv = SendRemoteQueryInternal();
-=======
 nsresult PendingLookup::SendRemoteQuery() {
   MOZ_ASSERT(!IsFileType(
       mFileName, ApplicationReputationService::kNonBinaryExecutables,
       ArrayLength(ApplicationReputationService::kNonBinaryExecutables)));
   Reason reason = Reason::NotSet;
   nsresult rv = SendRemoteQueryInternal(reason);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return OnComplete(nsIApplicationReputationService::VERDICT_SAFE, reason,
                       rv);
@@ -2390,56 +1673,20 @@ nsresult PendingLookup::SendRemoteQueryInternal(Reason& aReason) {
 
   // Set up the channel to transmit the request to the service.
   nsCOMPtr<nsIIOService> ios = do_GetService(NS_IOSERVICE_CONTRACTID, &rv);
-<<<<<<< HEAD
-  rv = ios->NewChannel2(serviceUrl, nullptr, nullptr,
-                        nullptr,  // aLoadingNode
-                        nsContentUtils::GetSystemPrincipal(),
-                        nullptr,  // aTriggeringPrincipal
-                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                        nsIContentPolicy::TYPE_OTHER, getter_AddRefs(mChannel));
-||||||| merged common ancestors
-  rv = ios->NewChannel2(serviceUrl,
-                        nullptr,
-                        nullptr,
-                        nullptr, // aLoadingNode
-                        nsContentUtils::GetSystemPrincipal(),
-                        nullptr, // aTriggeringPrincipal
-                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                        nsIContentPolicy::TYPE_OTHER,
-                        getter_AddRefs(mChannel));
-=======
   rv = ios->NewChannel(serviceUrl, nullptr, nullptr,
                        nullptr,  // aLoadingNode
                        nsContentUtils::GetSystemPrincipal(),
                        nullptr,  // aTriggeringPrincipal
                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
                        nsIContentPolicy::TYPE_OTHER, getter_AddRefs(mChannel));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
-  if (loadInfo) {
-    mozilla::OriginAttributes attrs;
-    attrs.mFirstPartyDomain.AssignLiteral(
-        NECKO_SAFEBROWSING_FIRST_PARTY_DOMAIN);
-    loadInfo->SetOriginAttributes(attrs);
-  }
-||||||| merged common ancestors
-  nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
-  if (loadInfo) {
-    mozilla::OriginAttributes attrs;
-    attrs.mFirstPartyDomain.AssignLiteral(NECKO_SAFEBROWSING_FIRST_PARTY_DOMAIN);
-    loadInfo->SetOriginAttributes(attrs);
-  }
-=======
   mChannel->SetLoadFlags(nsIChannel::LOAD_BYPASS_URL_CLASSIFIER);
 
   nsCOMPtr<nsILoadInfo> loadInfo = mChannel->LoadInfo();
   mozilla::OriginAttributes attrs;
   attrs.mFirstPartyDomain.AssignLiteral(NECKO_SAFEBROWSING_FIRST_PARTY_DOMAIN);
   loadInfo->SetOriginAttributes(attrs);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIHttpChannel> httpChannel(do_QueryInterface(mChannel, &rv));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -2508,49 +1755,17 @@ static nsresult AppendSegmentToString(nsIInputStream* inputStream,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PendingLookup::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                               nsIInputStream* aStream, uint64_t offset,
-                               uint32_t count) {
-||||||| merged common ancestors
-PendingLookup::OnDataAvailable(nsIRequest *aRequest,
-                               nsISupports *aContext,
-                               nsIInputStream *aStream,
-                               uint64_t offset,
-                               uint32_t count) {
-=======
 PendingLookup::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
                                uint64_t offset, uint32_t count) {
->>>>>>> upstream-releases
   uint32_t read;
   return aStream->ReadSegments(AppendSegmentToString, &mResponse, count, &read);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PendingLookup::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  return NS_OK;
-}
-||||||| merged common ancestors
-PendingLookup::OnStartRequest(nsIRequest *aRequest,
-                              nsISupports *aContext) {
-  return NS_OK;
-}
-=======
 PendingLookup::OnStartRequest(nsIRequest* aRequest) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PendingLookup::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                             nsresult aResult) {
-||||||| merged common ancestors
-PendingLookup::OnStopRequest(nsIRequest *aRequest,
-                             nsISupports *aContext,
-                             nsresult aResult) {
-=======
 PendingLookup::OnStopRequest(nsIRequest* aRequest, nsresult aResult) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mCallback);
 
   if (aResult != NS_ERROR_NET_TIMEOUT) {
@@ -2567,23 +1782,11 @@ PendingLookup::OnStopRequest(nsIRequest* aRequest, nsresult aResult) {
         msecs);
   }
 
-<<<<<<< HEAD
-  uint32_t verdict = nsIApplicationReputationService::VERDICT_SAFE;
-  Reason reason = Reason::NotSet;
-  nsresult rv =
-      OnStopRequestInternal(aRequest, aContext, aResult, verdict, reason);
-  OnComplete(verdict, reason, rv);
-||||||| merged common ancestors
-  nsresult rv = OnStopRequestInternal(aRequest, aContext, aResult,
-                                      &shouldBlock, &verdict);
-  OnComplete(shouldBlock, rv, verdict);
-=======
   uint32_t verdict = nsIApplicationReputationService::VERDICT_SAFE;
   Reason reason = Reason::NotSet;
   nsresult rv =
       OnStopRequestInternal(aRequest, nullptr, aResult, verdict, reason);
   OnComplete(verdict, reason, rv);
->>>>>>> upstream-releases
   return rv;
 }
 
@@ -2653,19 +1856,11 @@ nsresult PendingLookup::OnStopRequestInternal(nsIRequest* aRequest,
 
   // Clamp responses 0-7, we only know about 0-4 for now.
   Accumulate(mozilla::Telemetry::APPLICATION_REPUTATION_SERVER_VERDICT,
-<<<<<<< HEAD
-             std::min<uint32_t>(response.verdict(), 7));
-  switch (response.verdict()) {
-||||||| merged common ancestors
-    std::min<uint32_t>(response.verdict(), 7));
-  switch(response.verdict()) {
-=======
              std::min<uint32_t>(response.verdict(), 7));
   const char* ext = GetFileExt(mFileName);
   AccumulateCategoricalKeyed(nsCString(ext), VerdictToLabel(std::min<uint32_t>(
                                                  response.verdict(), 7)));
   switch (response.verdict()) {
->>>>>>> upstream-releases
     case safe_browsing::ClientDownloadResponse::DANGEROUS:
       aVerdict = nsIApplicationReputationService::VERDICT_DANGEROUS;
       aReason = Reason::VerdictDangerous;

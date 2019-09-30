@@ -62,22 +62,11 @@ decorate_task(
     const enrollSpy = sinon.spy(action, "enroll");
     const updateSpy = sinon.spy(action, "update");
     await action.runRecipe(recipe);
-<<<<<<< HEAD
-    is(action.lastError, null, "lastError should be null");
-    Assert.deepEqual(enrollSpy.args, [], "enroll should not be called");
-    Assert.deepEqual(sendEventStub.args, [], "no events should be sent");
-  },
-||||||| merged common ancestors
-    Assert.deepEqual(enrollSpy.args, [], "enroll should not be called");
-    Assert.deepEqual(sendEventStub.args, [], "no events should be sent");
-  },
-=======
     is(action.lastError, null, "lastError should be null");
     ok(!enrollSpy.called, "enroll should not be called");
     ok(updateSpy.called, "update should be called");
     sendEventStub.assertEvents([]);
   }
->>>>>>> upstream-releases
 );
 
 // Test that if the add-on fails to install, the database is cleaned up and the
@@ -936,19 +925,12 @@ decorate_task(
       "the action should be disabled"
     );
     await action.finalize();
-<<<<<<< HEAD
-    is(action.state, AddonStudyAction.STATE_FINALIZED, "the action should be finalized");
-    is(action.lastError, null, "lastError should be null");
-||||||| merged common ancestors
-    is(action.state, AddonStudyAction.STATE_FINALIZED, "the action should be finalized");
-=======
     is(
       action.state,
       AddonStudyAction.STATE_FINALIZED,
       "the action should be finalized"
     );
     is(action.lastError, null, "lastError should be null");
->>>>>>> upstream-releases
     Assert.deepEqual(enrollSpy.args, [], "enroll should not be called");
     sendEventStub.assertEvents([]);
   }
@@ -1141,14 +1123,6 @@ decorate_task(
     const action = new AddonStudyAction();
     const unenrollSpy = sinon.stub(action, "unenroll");
     await action.finalize();
-<<<<<<< HEAD
-    is(action.lastError, null, "lastError should be null");
-    Assert.deepEqual(unenrollSpy.args, [[study.recipeId, "recipe-not-seen"]], "unenroll should be called");
-  },
-||||||| merged common ancestors
-    Assert.deepEqual(unenrollSpy.args, [[study.recipeId, "recipe-not-seen"]], "unenroll should be called");
-  },
-=======
     is(action.lastError, null, "lastError should be null");
     Assert.deepEqual(
       unenrollSpy.args,
@@ -1156,5 +1130,4 @@ decorate_task(
       "unenroll should be called"
     );
   }
->>>>>>> upstream-releases
 );

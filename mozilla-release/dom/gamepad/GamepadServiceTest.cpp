@@ -87,43 +87,17 @@ void GamepadServiceTest::DestroyPBackgroundActor() {
   mChild = nullptr;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> GamepadServiceTest::AddGamepad(
-    const nsAString& aID, GamepadMappingType aMapping, GamepadHand aHand,
-    uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-GamepadServiceTest::AddGamepad(const nsAString& aID,
-                               GamepadMappingType aMapping,
-                               GamepadHand aHand,
-                               uint32_t aNumButtons,
-                               uint32_t aNumAxes,
-                               uint32_t aNumHaptics,
-                               ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> GamepadServiceTest::AddGamepad(
     const nsAString& aID, GamepadMappingType aMapping, GamepadHand aHand,
     uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics,
     uint32_t aNumLightIndicator, uint32_t aNumTouchEvents, ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (mShuttingDown) {
     return nullptr;
   }
 
   // Only VR controllers has displayID, we give 0 to the general gamepads.
-<<<<<<< HEAD
-  GamepadAdded a(nsString(aID), aMapping, aHand, 0, aNumButtons, aNumAxes,
-                 aNumHaptics);
-||||||| merged common ancestors
-  GamepadAdded a(nsString(aID),
-                 aMapping, aHand, 0,
-                 aNumButtons, aNumAxes, aNumHaptics);
-=======
   GamepadAdded a(nsString(aID), aMapping, aHand, 0, aNumButtons, aNumAxes,
                  aNumHaptics, aNumLightIndicator, aNumTouchEvents);
->>>>>>> upstream-releases
   GamepadChangeEventBody body(a);
   GamepadChangeEvent e(0, GamepadServiceType::Standard, body);
 
@@ -272,14 +246,6 @@ void GamepadServiceTest::NewPoseMove(
   mChild->SendGamepadTestEvent(id, e);
 }
 
-<<<<<<< HEAD
-JSObject* GamepadServiceTest::WrapObject(JSContext* aCx,
-                                         JS::HandleObject aGivenProto) {
-||||||| merged common ancestors
-JSObject*
-GamepadServiceTest::WrapObject(JSContext* aCx, JS::HandleObject aGivenProto)
-{
-=======
 void GamepadServiceTest::NewTouch(uint32_t aIndex, uint32_t aTouchArrayIndex,
                                   uint32_t aTouchId, uint8_t aSurfaceId,
                                   const Float32Array& aPos,
@@ -316,7 +282,6 @@ void GamepadServiceTest::NewTouch(uint32_t aIndex, uint32_t aTouchArrayIndex,
 
 JSObject* GamepadServiceTest::WrapObject(JSContext* aCx,
                                          JS::HandleObject aGivenProto) {
->>>>>>> upstream-releases
   return GamepadServiceTest_Binding::Wrap(aCx, this, aGivenProto);
 }
 

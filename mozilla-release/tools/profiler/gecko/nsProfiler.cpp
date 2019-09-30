@@ -118,34 +118,15 @@ static nsresult FillVectorFromStringArray(Vector<const char*>& aVector,
 
 NS_IMETHODIMP
 nsProfiler::StartProfiler(uint32_t aEntries, double aInterval,
-<<<<<<< HEAD
-                          const char** aFeatures, uint32_t aFeatureCount,
-                          const char** aFilters, uint32_t aFilterCount,
-                          double aDuration) {
-||||||| merged common ancestors
-                          const char** aFeatures, uint32_t aFeatureCount,
-                          const char** aFilters, uint32_t aFilterCount)
-{
-=======
                           const nsTArray<nsCString>& aFeatures,
                           const nsTArray<nsCString>& aFilters,
                           double aDuration) {
->>>>>>> upstream-releases
   if (mLockedForPrivateBrowsing) {
     return NS_ERROR_NOT_AVAILABLE;
   }
 
   ResetGathering();
 
-<<<<<<< HEAD
-  uint32_t features = ParseFeaturesFromStringArray(aFeatures, aFeatureCount);
-  Maybe<double> duration = aDuration > 0.0 ? Some(aDuration) : Nothing();
-  profiler_start(aEntries, aInterval, features, aFilters, aFilterCount,
-                 duration);
-||||||| merged common ancestors
-  uint32_t features = ParseFeaturesFromStringArray(aFeatures, aFeatureCount);
-  profiler_start(aEntries, aInterval, features, aFilters, aFilterCount);
-=======
   Vector<const char*> featureStringVector;
   nsresult rv = FillVectorFromStringArray(featureStringVector, aFeatures);
   if (NS_FAILED(rv)) {
@@ -163,7 +144,6 @@ nsProfiler::StartProfiler(uint32_t aEntries, double aInterval,
   profiler_start(PowerOfTwo32(aEntries), aInterval, features,
                  filterStringVector.begin(), filterStringVector.length(),
                  duration);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -200,27 +180,12 @@ nsProfiler::ResumeSampling() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProfiler::AddMarker(const char* aMarker) {
-  profiler_add_marker(aMarker);
-||||||| merged common ancestors
-nsProfiler::AddMarker(const char *aMarker)
-{
-  profiler_add_marker(aMarker);
-=======
 nsProfiler::AddMarker(const char* aMarker) {
   profiler_add_marker(aMarker, JS::ProfilingCategoryPair::OTHER);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProfiler::GetProfile(double aSinceTime, char** aProfile) {
-||||||| merged common ancestors
-nsProfiler::GetProfile(double aSinceTime, char** aProfile)
-{
-=======
 nsProfiler::ClearAllPages() {
   profiler_clear_all_pages();
   return NS_OK;
@@ -228,7 +193,6 @@ nsProfiler::ClearAllPages() {
 
 NS_IMETHODIMP
 nsProfiler::GetProfile(double aSinceTime, char** aProfile) {
->>>>>>> upstream-releases
   mozilla::UniquePtr<char[]> profile = profiler_get_profile(aSinceTime);
   *aProfile = profile.release();
   return NS_OK;
@@ -315,81 +279,6 @@ nsProfiler::GetProfileDataAsync(double aSinceTime, JSContext* aCx,
     return result.StealNSResult();
   }
 
-<<<<<<< HEAD
-  StartGathering(aSinceTime)
-      ->Then(GetMainThreadSerialEventTarget(), __func__,
-             [promise](nsCString aResult) {
-               AutoJSAPI jsapi;
-               if (NS_WARN_IF(!jsapi.Init(promise->GlobalJSObject()))) {
-                 // We're really hosed if we can't get a JS context for some
-                 // reason.
-                 promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-                 return;
-               }
-
-               JSContext* cx = jsapi.cx();
-
-               // Now parse the JSON so that we resolve with a JS Object.
-               JS::RootedValue val(cx);
-               {
-                 NS_ConvertUTF8toUTF16 js_string(aResult);
-                 if (!JS_ParseJSON(
-                         cx, static_cast<const char16_t*>(js_string.get()),
-                         js_string.Length(), &val)) {
-                   if (!jsapi.HasException()) {
-                     promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-                   } else {
-                     JS::RootedValue exn(cx);
-                     DebugOnly<bool> gotException = jsapi.StealException(&exn);
-                     MOZ_ASSERT(gotException);
-
-                     jsapi.ClearException();
-                     promise->MaybeReject(cx, exn);
-                   }
-                 } else {
-                   promise->MaybeResolve(val);
-                 }
-               }
-             },
-             [promise](nsresult aRv) { promise->MaybeReject(aRv); });
-||||||| merged common ancestors
-  StartGathering(aSinceTime)->Then(
-    GetMainThreadSerialEventTarget(), __func__,
-    [promise](nsCString aResult) {
-      AutoJSAPI jsapi;
-      if (NS_WARN_IF(!jsapi.Init(promise->GlobalJSObject()))) {
-        // We're really hosed if we can't get a JS context for some reason.
-        promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-        return;
-      }
-
-      JSContext* cx = jsapi.cx();
-
-      // Now parse the JSON so that we resolve with a JS Object.
-      JS::RootedValue val(cx);
-      {
-        NS_ConvertUTF8toUTF16 js_string(aResult);
-        if (!JS_ParseJSON(cx, static_cast<const char16_t*>(js_string.get()),
-                          js_string.Length(), &val)) {
-          if (!jsapi.HasException()) {
-            promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-          } else {
-            JS::RootedValue exn(cx);
-            DebugOnly<bool> gotException = jsapi.StealException(&exn);
-            MOZ_ASSERT(gotException);
-
-            jsapi.ClearException();
-            promise->MaybeReject(cx, exn);
-          }
-        } else {
-          promise->MaybeResolve(val);
-        }
-      }
-    },
-    [promise](nsresult aRv) {
-      promise->MaybeReject(aRv);
-    });
-=======
   StartGathering(aSinceTime)
       ->Then(
           GetMainThreadSerialEventTarget(), __func__,
@@ -427,7 +316,6 @@ nsProfiler::GetProfileDataAsync(double aSinceTime, JSContext* aCx,
             }
           },
           [promise](nsresult aRv) { promise->MaybeReject(aRv); });
->>>>>>> upstream-releases
 
   promise.forget(aPromise);
   return NS_OK;
@@ -457,56 +345,6 @@ nsProfiler::GetProfileDataAsArrayBuffer(double aSinceTime, JSContext* aCx,
     return result.StealNSResult();
   }
 
-<<<<<<< HEAD
-  StartGathering(aSinceTime)
-      ->Then(GetMainThreadSerialEventTarget(), __func__,
-             [promise](nsCString aResult) {
-               AutoJSAPI jsapi;
-               if (NS_WARN_IF(!jsapi.Init(promise->GlobalJSObject()))) {
-                 // We're really hosed if we can't get a JS context for some
-                 // reason.
-                 promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-                 return;
-               }
-
-               JSContext* cx = jsapi.cx();
-               JSObject* typedArray = dom::ArrayBuffer::Create(
-                   cx, aResult.Length(),
-                   reinterpret_cast<const uint8_t*>(aResult.Data()));
-               if (typedArray) {
-                 JS::RootedValue val(cx, JS::ObjectValue(*typedArray));
-                 promise->MaybeResolve(val);
-               } else {
-                 promise->MaybeReject(NS_ERROR_OUT_OF_MEMORY);
-               }
-             },
-             [promise](nsresult aRv) { promise->MaybeReject(aRv); });
-||||||| merged common ancestors
-  StartGathering(aSinceTime)->Then(
-    GetMainThreadSerialEventTarget(), __func__,
-    [promise](nsCString aResult) {
-      AutoJSAPI jsapi;
-      if (NS_WARN_IF(!jsapi.Init(promise->GlobalJSObject()))) {
-        // We're really hosed if we can't get a JS context for some reason.
-        promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-        return;
-      }
-
-      JSContext* cx = jsapi.cx();
-      JSObject* typedArray =
-        dom::ArrayBuffer::Create(cx, aResult.Length(),
-                                 reinterpret_cast<const uint8_t*>(aResult.Data()));
-      if (typedArray) {
-        JS::RootedValue val(cx, JS::ObjectValue(*typedArray));
-        promise->MaybeResolve(val);
-      } else {
-        promise->MaybeReject(NS_ERROR_OUT_OF_MEMORY);
-      }
-    },
-    [promise](nsresult aRv) {
-      promise->MaybeReject(aRv);
-    });
-=======
   StartGathering(aSinceTime)
       ->Then(
           GetMainThreadSerialEventTarget(), __func__,
@@ -625,7 +463,6 @@ nsProfiler::GetProfileDataAsGzippedArrayBuffer(double aSinceTime,
             }
           },
           [promise](nsresult aRv) { promise->MaybeReject(aRv); });
->>>>>>> upstream-releases
 
   promise.forget(aPromise);
   return NS_OK;
@@ -658,48 +495,6 @@ nsProfiler::DumpProfileToFileAsync(const nsACString& aFilename,
 
   nsCString filename(aFilename);
 
-<<<<<<< HEAD
-  StartGathering(aSinceTime)
-      ->Then(GetMainThreadSerialEventTarget(), __func__,
-             [filename, promise](const nsCString& aResult) {
-               nsCOMPtr<nsIFile> file =
-                   do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
-               nsresult rv = file->InitWithNativePath(filename);
-               if (NS_FAILED(rv)) {
-                 MOZ_CRASH();
-               }
-               nsCOMPtr<nsIFileOutputStream> of = do_CreateInstance(
-                   "@mozilla.org/network/file-output-stream;1");
-               of->Init(file, -1, -1, 0);
-               uint32_t sz;
-               of->Write(aResult.get(), aResult.Length(), &sz);
-               of->Close();
-
-               promise->MaybeResolveWithUndefined();
-             },
-             [promise](nsresult aRv) { promise->MaybeReject(aRv); });
-||||||| merged common ancestors
-  StartGathering(aSinceTime)->Then(
-    GetMainThreadSerialEventTarget(), __func__,
-    [filename, promise](const nsCString& aResult) {
-      nsCOMPtr<nsIFile> file = do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
-      nsresult rv = file->InitWithNativePath(filename);
-      if (NS_FAILED(rv)) {
-        MOZ_CRASH();
-      }
-      nsCOMPtr<nsIFileOutputStream> of =
-        do_CreateInstance("@mozilla.org/network/file-output-stream;1");
-      of->Init(file, -1, -1, 0);
-      uint32_t sz;
-      of->Write(aResult.get(), aResult.Length(), &sz);
-      of->Close();
-
-      promise->MaybeResolveWithUndefined();
-    },
-    [promise](nsresult aRv) {
-      promise->MaybeReject(aRv);
-    });
-=======
   StartGathering(aSinceTime)
       ->Then(
           GetMainThreadSerialEventTarget(), __func__,
@@ -720,7 +515,6 @@ nsProfiler::DumpProfileToFileAsync(const nsACString& aFilename,
             promise->MaybeResolveWithUndefined();
           },
           [promise](nsresult aRv) { promise->MaybeReject(aRv); });
->>>>>>> upstream-releases
 
   promise.forget(aPromise);
   return NS_OK;
@@ -749,82 +543,6 @@ nsProfiler::GetSymbolTable(const nsACString& aDebugPath,
     return result.StealNSResult();
   }
 
-<<<<<<< HEAD
-  GetSymbolTableMozPromise(aDebugPath, aBreakpadID)
-      ->Then(
-          GetMainThreadSerialEventTarget(), __func__,
-          [promise](const SymbolTable& aSymbolTable) {
-            AutoJSAPI jsapi;
-            if (NS_WARN_IF(!jsapi.Init(promise->GlobalJSObject()))) {
-              // We're really hosed if we can't get a JS context for some
-              // reason.
-              promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-              return;
-            }
-
-            JSContext* cx = jsapi.cx();
-
-            JS::RootedObject addrsArray(
-                cx, dom::Uint32Array::Create(cx, aSymbolTable.mAddrs.Length(),
-                                             aSymbolTable.mAddrs.Elements()));
-            JS::RootedObject indexArray(
-                cx, dom::Uint32Array::Create(cx, aSymbolTable.mIndex.Length(),
-                                             aSymbolTable.mIndex.Elements()));
-            JS::RootedObject bufferArray(
-                cx, dom::Uint8Array::Create(cx, aSymbolTable.mBuffer.Length(),
-                                            aSymbolTable.mBuffer.Elements()));
-
-            if (addrsArray && indexArray && bufferArray) {
-              JS::RootedObject tuple(cx, JS_NewArrayObject(cx, 3));
-              JS_SetElement(cx, tuple, 0, addrsArray);
-              JS_SetElement(cx, tuple, 1, indexArray);
-              JS_SetElement(cx, tuple, 2, bufferArray);
-              promise->MaybeResolve(tuple);
-            } else {
-              promise->MaybeReject(NS_ERROR_FAILURE);
-            }
-          },
-          [promise](nsresult aRv) { promise->MaybeReject(aRv); });
-||||||| merged common ancestors
-  GetSymbolTableMozPromise(aDebugPath, aBreakpadID)->Then(
-    GetMainThreadSerialEventTarget(), __func__,
-    [promise](const SymbolTable& aSymbolTable) {
-      AutoJSAPI jsapi;
-      if (NS_WARN_IF(!jsapi.Init(promise->GlobalJSObject()))) {
-        // We're really hosed if we can't get a JS context for some reason.
-        promise->MaybeReject(NS_ERROR_DOM_UNKNOWN_ERR);
-        return;
-      }
-
-      JSContext* cx = jsapi.cx();
-
-      JS::RootedObject addrsArray(
-        cx,
-        dom::Uint32Array::Create(
-          cx, aSymbolTable.mAddrs.Length(), aSymbolTable.mAddrs.Elements()));
-      JS::RootedObject indexArray(
-        cx,
-        dom::Uint32Array::Create(
-          cx, aSymbolTable.mIndex.Length(), aSymbolTable.mIndex.Elements()));
-      JS::RootedObject bufferArray(
-        cx,
-        dom::Uint8Array::Create(
-          cx, aSymbolTable.mBuffer.Length(), aSymbolTable.mBuffer.Elements()));
-
-      if (addrsArray && indexArray && bufferArray) {
-        JS::RootedObject tuple(cx, JS_NewArrayObject(cx, 3));
-        JS_SetElement(cx, tuple, 0, addrsArray);
-        JS_SetElement(cx, tuple, 1, indexArray);
-        JS_SetElement(cx, tuple, 2, bufferArray);
-        promise->MaybeResolve(tuple);
-      } else {
-        promise->MaybeReject(NS_ERROR_FAILURE);
-      }
-    },
-    [promise](nsresult aRv) {
-      promise->MaybeReject(aRv);
-    });
-=======
   GetSymbolTableMozPromise(aDebugPath, aBreakpadID)
       ->Then(
           GetMainThreadSerialEventTarget(), __func__,
@@ -860,7 +578,6 @@ nsProfiler::GetSymbolTable(const nsACString& aDebugPath,
             }
           },
           [promise](nsresult aRv) { promise->MaybeReject(aRv); });
->>>>>>> upstream-releases
 
   promise.forget(aPromise);
   return NS_OK;
@@ -878,30 +595,12 @@ nsProfiler::IsActive(bool* aIsActive) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static void GetArrayOfStringsForFeatures(uint32_t aFeatures, uint32_t* aCount,
-                                         char*** aFeatureList) {
-#define COUNT_IF_SET(n_, str_, Name_)           \
-  if (ProfilerFeature::Has##Name_(aFeatures)) { \
-    len++;                                      \
-  }
-||||||| merged common ancestors
-static void
-GetArrayOfStringsForFeatures(uint32_t aFeatures,
-                             uint32_t* aCount, char*** aFeatureList)
-{
-  #define COUNT_IF_SET(n_, str_, Name_) \
-    if (ProfilerFeature::Has##Name_(aFeatures)) { \
-      len++; \
-    }
-=======
 static void GetArrayOfStringsForFeatures(uint32_t aFeatures,
                                          nsTArray<nsCString>& aFeatureList) {
 #define COUNT_IF_SET(n_, str_, Name_, desc_)    \
   if (ProfilerFeature::Has##Name_(aFeatures)) { \
     len++;                                      \
   }
->>>>>>> upstream-releases
 
   // Count the number of features in use.
   uint32_t len = 0;
@@ -911,106 +610,31 @@ static void GetArrayOfStringsForFeatures(uint32_t aFeatures,
 
   aFeatureList.SetCapacity(len);
 
-<<<<<<< HEAD
-#define DUP_IF_SET(n_, str_, Name_)             \
-  if (ProfilerFeature::Has##Name_(aFeatures)) { \
-    featureList[i] = moz_xstrdup(str_);         \
-    i++;                                        \
-  }
-||||||| merged common ancestors
-  #define DUP_IF_SET(n_, str_, Name_) \
-    if (ProfilerFeature::Has##Name_(aFeatures)) { \
-      featureList[i] = moz_xstrdup(str_); \
-      i++; \
-    }
-=======
 #define DUP_IF_SET(n_, str_, Name_, desc_)      \
   if (ProfilerFeature::Has##Name_(aFeatures)) { \
     aFeatureList.AppendElement(str_);           \
   }
->>>>>>> upstream-releases
 
   // Insert the strings for the features in use.
   PROFILER_FOR_EACH_FEATURE(DUP_IF_SET)
 
-<<<<<<< HEAD
 #undef DUP_IF_SET
-
-  *aFeatureList = featureList;
-  *aCount = len;
-||||||| merged common ancestors
-  #undef DUP_IF_SET
-
-  *aFeatureList = featureList;
-  *aCount = len;
-=======
-#undef DUP_IF_SET
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProfiler::GetFeatures(uint32_t* aCount, char*** aFeatureList) {
-||||||| merged common ancestors
-nsProfiler::GetFeatures(uint32_t* aCount, char*** aFeatureList)
-{
-=======
 nsProfiler::GetFeatures(nsTArray<nsCString>& aFeatureList) {
->>>>>>> upstream-releases
   uint32_t features = profiler_get_available_features();
   GetArrayOfStringsForFeatures(features, aFeatureList);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProfiler::GetAllFeatures(uint32_t* aCount, char*** aFeatureList) {
-  GetArrayOfStringsForFeatures((uint32_t)-1, aCount, aFeatureList);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-||||||| merged common ancestors
-nsProfiler::GetAllFeatures(uint32_t* aCount, char*** aFeatureList)
-{
-  GetArrayOfStringsForFeatures((uint32_t)-1, aCount, aFeatureList);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsProfiler::GetStartParams(nsIProfilerStartParams** aRetVal)
-{
-  if (!profiler_is_active()) {
-    *aRetVal = nullptr;
-  } else {
-    int entries = 0;
-    double interval = 0;
-    uint32_t features = 0;
-    mozilla::Vector<const char*> filters;
-    profiler_get_start_params(&entries, &interval, &features, &filters);
-
-    nsTArray<nsCString> filtersArray;
-    for (uint32_t i = 0; i < filters.length(); ++i) {
-      filtersArray.AppendElement(filters[i]);
-    }
-
-    nsCOMPtr<nsIProfilerStartParams> startParams =
-      new nsProfilerStartParams(entries, interval, features, filtersArray);
-
-    startParams.forget(aRetVal);
-  }
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-=======
 nsProfiler::GetAllFeatures(nsTArray<nsCString>& aFeatureList) {
   GetArrayOfStringsForFeatures((uint32_t)-1, aFeatureList);
   return NS_OK;
 }
 
 NS_IMETHODIMP
->>>>>>> upstream-releases
 nsProfiler::GetBufferInfo(uint32_t* aCurrentPosition, uint32_t* aTotalSize,
                           uint32_t* aGeneration) {
   MOZ_ASSERT(aCurrentPosition);
@@ -1061,41 +685,7 @@ void nsProfiler::GatheredOOPProfile(const nsACString& aProfile) {
 
 void nsProfiler::ReceiveShutdownProfile(const nsCString& aProfile) {
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-
-  Maybe<ProfilerBufferInfo> bufferInfo = profiler_get_buffer_info();
-  if (!bufferInfo) {
-    // The profiler is not running. Discard the profile.
-    return;
-  }
-
-  // Append the exit profile to mExitProfiles so that it can be picked up when
-  // a profile is requested.
-  uint64_t bufferPosition = bufferInfo->mRangeEnd;
-  mExitProfiles.AppendElement(ExitProfile{aProfile, bufferPosition});
-
-  // This is a good time to clear out exit profiles whose time ranges have no
-  // overlap with this process's profile buffer contents any more.
-  ClearExpiredExitProfiles();
-||||||| merged common ancestors
-
-  Maybe<ProfilerBufferInfo> bufferInfo = profiler_get_buffer_info();
-  if (!bufferInfo) {
-    // The profiler is not running. Discard the profile.
-    return;
-  }
-
-  // Append the exit profile to mExitProfiles so that it can be picked up when
-  // a profile is requested.
-  uint64_t bufferPosition = bufferInfo->mRangeEnd;
-  mExitProfiles.AppendElement(ExitProfile{ aProfile, bufferPosition });
-
-  // This is a good time to clear out exit profiles whose time ranges have no
-  // overlap with this process's profile buffer contents any more.
-  ClearExpiredExitProfiles();
-=======
   profiler_received_exit_profile(aProfile);
->>>>>>> upstream-releases
 }
 
 RefPtr<nsProfiler::GatheringPromise> nsProfiler::StartGathering(
@@ -1153,27 +743,6 @@ RefPtr<nsProfiler::GatheringPromise> nsProfiler::StartGathering(
   mPendingProfiles = profiles.Length();
   RefPtr<nsProfiler> self = this;
   for (auto profile : profiles) {
-<<<<<<< HEAD
-    profile->Then(GetMainThreadSerialEventTarget(), __func__,
-                  [self](const mozilla::ipc::Shmem& aResult) {
-                    const nsDependentCSubstring profileString(
-                        aResult.get<char>(), aResult.Size<char>() - 1);
-                    self->GatheredOOPProfile(profileString);
-                  },
-                  [self](ipc::ResponseRejectReason aReason) {
-                    self->GatheredOOPProfile(NS_LITERAL_CSTRING(""));
-                  });
-||||||| merged common ancestors
-    profile->Then(GetMainThreadSerialEventTarget(), __func__,
-      [self](const mozilla::ipc::Shmem& aResult) {
-        const nsDependentCSubstring profileString(aResult.get<char>(),
-                                                  aResult.Size<char>() - 1);
-        self->GatheredOOPProfile(profileString);
-      },
-      [self](ipc::ResponseRejectReason aReason) {
-        self->GatheredOOPProfile(NS_LITERAL_CSTRING(""));
-      });
-=======
     profile->Then(
         GetMainThreadSerialEventTarget(), __func__,
         [self](mozilla::ipc::Shmem&& aResult) {
@@ -1184,7 +753,6 @@ RefPtr<nsProfiler::GatheringPromise> nsProfiler::StartGathering(
         [self](ipc::ResponseRejectReason&& aReason) {
           self->GatheredOOPProfile(NS_LITERAL_CSTRING(""));
         });
->>>>>>> upstream-releases
   }
   if (!mPendingProfiles) {
     FinishGathering();
@@ -1260,30 +828,3 @@ void nsProfiler::ResetGathering() {
   mGathering = false;
   mWriter.reset();
 }
-<<<<<<< HEAD
-
-void nsProfiler::ClearExpiredExitProfiles() {
-  Maybe<ProfilerBufferInfo> bufferInfo = profiler_get_buffer_info();
-  MOZ_RELEASE_ASSERT(bufferInfo,
-                     "the profiler should be running at the moment");
-  uint64_t bufferRangeStart = bufferInfo->mRangeStart;
-  // Discard any exit profiles that were gathered before bufferRangeStart.
-  mExitProfiles.RemoveElementsBy([bufferRangeStart](ExitProfile& aExitProfile) {
-    return aExitProfile.mBufferPositionAtGatherTime < bufferRangeStart;
-  });
-}
-||||||| merged common ancestors
-
-void
-nsProfiler::ClearExpiredExitProfiles()
-{
-  Maybe<ProfilerBufferInfo> bufferInfo = profiler_get_buffer_info();
-  MOZ_RELEASE_ASSERT(bufferInfo, "the profiler should be running at the moment");
-  uint64_t bufferRangeStart = bufferInfo->mRangeStart;
-  // Discard any exit profiles that were gathered before bufferRangeStart.
-  mExitProfiles.RemoveElementsBy([bufferRangeStart](ExitProfile& aExitProfile){
-    return aExitProfile.mBufferPositionAtGatherTime < bufferRangeStart;
-  });
-}
-=======
->>>>>>> upstream-releases

@@ -19,34 +19,13 @@
         data-l10n-attrs="buttonlabelcancel"
         onload="gUpdateHistory.onLoad();">
 
-<<<<<<< HEAD
-  <linkset>
-    <link rel="localization" href="toolkit/updates/history.ftl"/>
-  </linkset>
-
-  <script type="application/javascript"
-          src="chrome://mozapps/content/update/history.js"/>
-||||||| merged common ancestors
-  <script type="application/javascript"
-          src="chrome://mozapps/content/update/history.js"/>
-=======
   <linkset>
     <html:link rel="localization" href="toolkit/updates/history.ftl"/>
   </linkset>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  <label data-l10n-id="history-intro"></label>
-||||||| merged common ancestors
-  <stringbundle id="updateBundle"
-                src="chrome://mozapps/locale/update/updates.properties"/>
-
-  <label>&history2.intro;</label>
-=======
   <script src="chrome://mozapps/content/update/history.js"/>
 
   <label data-l10n-id="history-intro"></label>
->>>>>>> upstream-releases
   <separator class="thin"/>
   <richlistbox id="historyItems" flex="1">
     <label data-l10n-id="no-updates-label"></label>

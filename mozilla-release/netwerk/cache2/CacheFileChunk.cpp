@@ -15,30 +15,6 @@ namespace net {
 
 #define kMinBufSize 512
 
-<<<<<<< HEAD
-CacheFileChunkBuffer::CacheFileChunkBuffer(CacheFileChunk *aChunk)
-    : mChunk(aChunk),
-      mBuf(nullptr),
-      mBufSize(0),
-      mDataSize(0),
-      mReadHandlesCount(0),
-      mWriteHandleExists(false) {}
-
-CacheFileChunkBuffer::~CacheFileChunkBuffer() {
-||||||| merged common ancestors
-CacheFileChunkBuffer::CacheFileChunkBuffer(CacheFileChunk *aChunk)
-  : mChunk(aChunk)
-  , mBuf(nullptr)
-  , mBufSize(0)
-  , mDataSize(0)
-  , mReadHandlesCount(0)
-  , mWriteHandleExists(false)
-{
-}
-
-CacheFileChunkBuffer::~CacheFileChunkBuffer()
-{
-=======
 CacheFileChunkBuffer::CacheFileChunkBuffer(CacheFileChunk* aChunk)
     : mChunk(aChunk),
       mBuf(nullptr),
@@ -48,7 +24,6 @@ CacheFileChunkBuffer::CacheFileChunkBuffer(CacheFileChunk* aChunk)
       mWriteHandleExists(false) {}
 
 CacheFileChunkBuffer::~CacheFileChunkBuffer() {
->>>>>>> upstream-releases
   if (mBuf) {
     CacheFileUtils::FreeBuffer(mBuf);
     mBuf = nullptr;
@@ -57,32 +32,14 @@ CacheFileChunkBuffer::~CacheFileChunkBuffer() {
   }
 }
 
-<<<<<<< HEAD
-void CacheFileChunkBuffer::CopyFrom(CacheFileChunkBuffer *aOther) {
-||||||| merged common ancestors
-void
-CacheFileChunkBuffer::CopyFrom(CacheFileChunkBuffer *aOther)
-{
-=======
 void CacheFileChunkBuffer::CopyFrom(CacheFileChunkBuffer* aOther) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(mBufSize >= aOther->mDataSize);
   mDataSize = aOther->mDataSize;
   memcpy(mBuf, aOther->mBuf, mDataSize);
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunkBuffer::FillInvalidRanges(
-    CacheFileChunkBuffer *aOther, CacheFileUtils::ValidityMap *aMap) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunkBuffer::FillInvalidRanges(CacheFileChunkBuffer *aOther,
-                                        CacheFileUtils::ValidityMap *aMap)
-{
-=======
 nsresult CacheFileChunkBuffer::FillInvalidRanges(
     CacheFileChunkBuffer* aOther, CacheFileUtils::ValidityMap* aMap) {
->>>>>>> upstream-releases
   nsresult rv;
 
   rv = EnsureBufSize(aOther->mDataSize);
@@ -210,14 +167,7 @@ uint32_t CacheFileChunkHandle::Offset() {
   return mBuf->mChunk->Index() * kChunkSize;
 }
 
-<<<<<<< HEAD
-CacheFileChunkReadHandle::CacheFileChunkReadHandle(CacheFileChunkBuffer *aBuf) {
-||||||| merged common ancestors
-CacheFileChunkReadHandle::CacheFileChunkReadHandle(CacheFileChunkBuffer *aBuf)
-{
-=======
 CacheFileChunkReadHandle::CacheFileChunkReadHandle(CacheFileChunkBuffer* aBuf) {
->>>>>>> upstream-releases
   mBuf = aBuf;
   mBuf->mReadHandlesCount++;
 }
@@ -226,28 +176,10 @@ CacheFileChunkReadHandle::~CacheFileChunkReadHandle() {
   mBuf->RemoveReadHandle();
 }
 
-<<<<<<< HEAD
-const char *CacheFileChunkReadHandle::Buf() { return mBuf->mBuf; }
-||||||| merged common ancestors
-const char *
-CacheFileChunkReadHandle::Buf()
-{
-  return mBuf->mBuf;
-}
-=======
 const char* CacheFileChunkReadHandle::Buf() { return mBuf->mBuf; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-CacheFileChunkWriteHandle::CacheFileChunkWriteHandle(
-    CacheFileChunkBuffer *aBuf) {
-||||||| merged common ancestors
-CacheFileChunkWriteHandle::CacheFileChunkWriteHandle(CacheFileChunkBuffer *aBuf)
-{
-=======
 CacheFileChunkWriteHandle::CacheFileChunkWriteHandle(
     CacheFileChunkBuffer* aBuf) {
->>>>>>> upstream-releases
   mBuf = aBuf;
   if (mBuf) {
     MOZ_ASSERT(!mBuf->mWriteHandleExists);
@@ -261,17 +193,7 @@ CacheFileChunkWriteHandle::~CacheFileChunkWriteHandle() {
   }
 }
 
-<<<<<<< HEAD
-char *CacheFileChunkWriteHandle::Buf() { return mBuf ? mBuf->mBuf : nullptr; }
-||||||| merged common ancestors
-char *
-CacheFileChunkWriteHandle::Buf()
-{
-  return mBuf ? mBuf->mBuf : nullptr;
-}
-=======
 char* CacheFileChunkWriteHandle::Buf() { return mBuf ? mBuf->mBuf : nullptr; }
->>>>>>> upstream-releases
 
 void CacheFileChunkWriteHandle::UpdateDataSize(uint32_t aOffset,
                                                uint32_t aLen) {
@@ -287,29 +209,12 @@ void CacheFileChunkWriteHandle::UpdateDataSize(uint32_t aOffset,
 }
 
 class NotifyUpdateListenerEvent : public Runnable {
-<<<<<<< HEAD
- public:
-  NotifyUpdateListenerEvent(CacheFileChunkListener *aCallback,
-                            CacheFileChunk *aChunk)
-      : Runnable("net::NotifyUpdateListenerEvent"),
-        mCallback(aCallback),
-        mChunk(aChunk) {
-||||||| merged common ancestors
-public:
-  NotifyUpdateListenerEvent(CacheFileChunkListener* aCallback,
-                            CacheFileChunk* aChunk)
-    : Runnable("net::NotifyUpdateListenerEvent")
-    , mCallback(aCallback)
-    , mChunk(aChunk)
-  {
-=======
  public:
   NotifyUpdateListenerEvent(CacheFileChunkListener* aCallback,
                             CacheFileChunk* aChunk)
       : Runnable("net::NotifyUpdateListenerEvent"),
         mCallback(aCallback),
         mChunk(aChunk) {
->>>>>>> upstream-releases
     LOG(("NotifyUpdateListenerEvent::NotifyUpdateListenerEvent() [this=%p]",
          this));
   }
@@ -426,21 +331,9 @@ void CacheFileChunk::InitNew() {
   mState = READY;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::Read(CacheFileHandle *aHandle, uint32_t aLen,
-                              CacheHash::Hash16_t aHash,
-                              CacheFileChunkListener *aCallback) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::Read(CacheFileHandle *aHandle, uint32_t aLen,
-                     CacheHash::Hash16_t aHash,
-                     CacheFileChunkListener *aCallback)
-{
-=======
 nsresult CacheFileChunk::Read(CacheFileHandle* aHandle, uint32_t aLen,
                               CacheHash::Hash16_t aHash,
                               CacheFileChunkListener* aCallback) {
->>>>>>> upstream-releases
   AssertOwnsLock();
 
   LOG(("CacheFileChunk::Read() [this=%p, handle=%p, len=%d, listener=%p]", this,
@@ -485,18 +378,8 @@ nsresult CacheFileChunk::Read(CacheFileHandle* aHandle, uint32_t aLen,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::Write(CacheFileHandle *aHandle,
-                               CacheFileChunkListener *aCallback) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::Write(CacheFileHandle *aHandle,
-                      CacheFileChunkListener *aCallback)
-{
-=======
 nsresult CacheFileChunk::Write(CacheFileHandle* aHandle,
                                CacheFileChunkListener* aCallback) {
->>>>>>> upstream-releases
   AssertOwnsLock();
 
   LOG(("CacheFileChunk::Write() [this=%p, handle=%p, listener=%p]", this,
@@ -528,15 +411,7 @@ nsresult CacheFileChunk::Write(CacheFileHandle* aHandle,
   return rv;
 }
 
-<<<<<<< HEAD
-void CacheFileChunk::WaitForUpdate(CacheFileChunkListener *aCallback) {
-||||||| merged common ancestors
-void
-CacheFileChunk::WaitForUpdate(CacheFileChunkListener *aCallback)
-{
-=======
 void CacheFileChunk::WaitForUpdate(CacheFileChunkListener* aCallback) {
->>>>>>> upstream-releases
   AssertOwnsLock();
 
   LOG(("CacheFileChunk::WaitForUpdate() [this=%p, listener=%p]", this,
@@ -566,15 +441,7 @@ void CacheFileChunk::WaitForUpdate(CacheFileChunkListener* aCallback) {
   mUpdateListeners.AppendElement(item);
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::CancelWait(CacheFileChunkListener *aCallback) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::CancelWait(CacheFileChunkListener *aCallback)
-{
-=======
 nsresult CacheFileChunk::CancelWait(CacheFileChunkListener* aCallback) {
->>>>>>> upstream-releases
   AssertOwnsLock();
 
   LOG(("CacheFileChunk::CancelWait() [this=%p, listener=%p]", this, aCallback));
@@ -582,16 +449,8 @@ nsresult CacheFileChunk::CancelWait(CacheFileChunkListener* aCallback) {
   MOZ_ASSERT(IsReady());
 
   uint32_t i;
-<<<<<<< HEAD
-  for (i = 0; i < mUpdateListeners.Length(); i++) {
-    ChunkListenerItem *item = mUpdateListeners[i];
-||||||| merged common ancestors
-  for (i = 0 ; i < mUpdateListeners.Length() ; i++) {
-    ChunkListenerItem *item = mUpdateListeners[i];
-=======
   for (i = 0; i < mUpdateListeners.Length(); i++) {
     ChunkListenerItem* item = mUpdateListeners[i];
->>>>>>> upstream-releases
 
     if (item->mCallback == aCallback) {
       mUpdateListeners.RemoveElementAt(i);
@@ -619,16 +478,8 @@ nsresult CacheFileChunk::NotifyUpdateListeners() {
   nsresult rv, rv2;
 
   rv = NS_OK;
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < mUpdateListeners.Length(); i++) {
-    ChunkListenerItem *item = mUpdateListeners[i];
-||||||| merged common ancestors
-  for (uint32_t i = 0 ; i < mUpdateListeners.Length() ; i++) {
-    ChunkListenerItem *item = mUpdateListeners[i];
-=======
   for (uint32_t i = 0; i < mUpdateListeners.Length(); i++) {
     ChunkListenerItem* item = mUpdateListeners[i];
->>>>>>> upstream-releases
 
     LOG(
         ("CacheFileChunk::NotifyUpdateListeners() - Notifying listener %p "
@@ -710,43 +561,18 @@ nsresult CacheFileChunk::Truncate(uint32_t aOffset) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::OnFileOpened(CacheFileHandle *aHandle,
-                                      nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::OnFileOpened(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileChunk::OnFileOpened(CacheFileHandle* aHandle,
                                       nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileChunk::OnFileOpened should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::OnDataWritten(CacheFileHandle *aHandle,
-                                       const char *aBuf, nsresult aResult) {
-  LOG((
-      "CacheFileChunk::OnDataWritten() [this=%p, handle=%p, result=0x%08" PRIx32
-      "]",
-      this, aHandle, static_cast<uint32_t>(aResult)));
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
-                              nsresult aResult)
-{
-  LOG(("CacheFileChunk::OnDataWritten() [this=%p, handle=%p, result=0x%08" PRIx32 "]",
-       this, aHandle, static_cast<uint32_t>(aResult)));
-=======
 nsresult CacheFileChunk::OnDataWritten(CacheFileHandle* aHandle,
                                        const char* aBuf, nsresult aResult) {
   LOG((
       "CacheFileChunk::OnDataWritten() [this=%p, handle=%p, result=0x%08" PRIx32
       "]",
       this, aHandle, static_cast<uint32_t>(aResult)));
->>>>>>> upstream-releases
 
   nsCOMPtr<CacheFileChunkListener> listener;
 
@@ -771,23 +597,10 @@ nsresult CacheFileChunk::OnDataWritten(CacheFileHandle* aHandle,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                                    nsresult aResult) {
-  LOG(("CacheFileChunk::OnDataRead() [this=%p, handle=%p, result=0x%08" PRIx32
-       "]",
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                           nsresult aResult)
-{
-  LOG(("CacheFileChunk::OnDataRead() [this=%p, handle=%p, result=0x%08" PRIx32 "]",
-=======
 nsresult CacheFileChunk::OnDataRead(CacheFileHandle* aHandle, char* aBuf,
                                     nsresult aResult) {
   LOG(("CacheFileChunk::OnDataRead() [this=%p, handle=%p, result=0x%08" PRIx32
        "]",
->>>>>>> upstream-releases
        this, aHandle, static_cast<uint32_t>(aResult)));
 
   nsCOMPtr<CacheFileChunkListener> listener;
@@ -848,45 +661,19 @@ nsresult CacheFileChunk::OnDataRead(CacheFileHandle* aHandle, char* aBuf,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::OnFileDoomed(CacheFileHandle *aHandle,
-                                      nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileChunk::OnFileDoomed(CacheFileHandle* aHandle,
                                       nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileChunk::OnFileDoomed should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::OnEOFSet(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileChunk::OnEOFSet(CacheFileHandle* aHandle, nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileChunk::OnEOFSet should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileChunk::OnFileRenamed(CacheFileHandle *aHandle,
-                                       nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileChunk::OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileChunk::OnFileRenamed(CacheFileHandle* aHandle,
                                        nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileChunk::OnFileRenamed should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
@@ -1045,16 +832,8 @@ void CacheFileChunk::BuffersAllocationChanged(uint32_t aFreed,
        static_cast<uint32_t>(ChunksMemoryUsage()), this));
 }
 
-<<<<<<< HEAD
-mozilla::Atomic<uint32_t, ReleaseAcquire> &CacheFileChunk::ChunksMemoryUsage()
-    const {
-||||||| merged common ancestors
-mozilla::Atomic<uint32_t, ReleaseAcquire>& CacheFileChunk::ChunksMemoryUsage() const
-{
-=======
 mozilla::Atomic<uint32_t, ReleaseAcquire>& CacheFileChunk::ChunksMemoryUsage()
     const {
->>>>>>> upstream-releases
   static mozilla::Atomic<uint32_t, ReleaseAcquire> chunksMemoryUsage(0);
   static mozilla::Atomic<uint32_t, ReleaseAcquire> prioChunksMemoryUsage(0);
   return mIsPriority ? prioChunksMemoryUsage : chunksMemoryUsage;

@@ -41,17 +41,8 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ bool DecoderTraits::IsHttpLiveStreamingType(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/* static */ bool
-DecoderTraits::IsHttpLiveStreamingType(const MediaContainerType& aType)
-{
-=======
 /* static */
 bool DecoderTraits::IsHttpLiveStreamingType(const MediaContainerType& aType) {
->>>>>>> upstream-releases
   const auto& mimeType = aType.Type();
   return  // For m3u8.
           // https://tools.ietf.org/html/draft-pantos-http-live-streaming-19#section-10
@@ -62,36 +53,17 @@ bool DecoderTraits::IsHttpLiveStreamingType(const MediaContainerType& aType) {
       mimeType == MEDIAMIMETYPE("audio/x-mpegurl");
 }
 
-<<<<<<< HEAD
-/* static */ bool DecoderTraits::IsMatroskaType(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/* static */ bool
-DecoderTraits::IsMatroskaType(const MediaContainerType& aType)
-{
-=======
 /* static */
 bool DecoderTraits::IsMatroskaType(const MediaContainerType& aType) {
->>>>>>> upstream-releases
   const auto& mimeType = aType.Type();
   // https://matroska.org/technical/specs/notes.html
   return mimeType == MEDIAMIMETYPE("audio/x-matroska") ||
          mimeType == MEDIAMIMETYPE("video/x-matroska");
 }
 
-<<<<<<< HEAD
-/* static */ bool DecoderTraits::IsMP4SupportedType(
-    const MediaContainerType& aType, DecoderDoctorDiagnostics* aDiagnostics) {
-||||||| merged common ancestors
-/* static */ bool
-DecoderTraits::IsMP4SupportedType(const MediaContainerType& aType,
-                                  DecoderDoctorDiagnostics* aDiagnostics)
-{
-=======
 /* static */
 bool DecoderTraits::IsMP4SupportedType(const MediaContainerType& aType,
                                        DecoderDoctorDiagnostics* aDiagnostics) {
->>>>>>> upstream-releases
 #ifdef MOZ_FMP4
   return MP4Decoder::IsSupportedType(aType, aDiagnostics);
 #else
@@ -343,18 +315,9 @@ bool DecoderTraits::IsSupportedInVideoDocument(const nsACString& aType) {
          false;
 }
 
-<<<<<<< HEAD
-/* static */ nsTArray<UniquePtr<TrackInfo>> DecoderTraits::GetTracksInfo(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/* static */ nsTArray<UniquePtr<TrackInfo>>
-DecoderTraits::GetTracksInfo(const MediaContainerType& aType)
-{
-=======
 /* static */
 nsTArray<UniquePtr<TrackInfo>> DecoderTraits::GetTracksInfo(
     const MediaContainerType& aType) {
->>>>>>> upstream-releases
   // Container type with just the MIME type/subtype, no codecs.
   const MediaContainerType mimeType(aType.Type());
 

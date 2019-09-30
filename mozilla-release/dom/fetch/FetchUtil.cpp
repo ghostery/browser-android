@@ -109,22 +109,9 @@ bool FetchUtil::ExtractHeader(nsACString::const_iterator& aStart,
 }
 
 // static
-<<<<<<< HEAD
-nsresult FetchUtil::SetRequestReferrer(nsIPrincipal* aPrincipal,
-                                       nsIDocument* aDoc,
-                                       nsIHttpChannel* aChannel,
-                                       InternalRequest* aRequest) {
-||||||| merged common ancestors
-nsresult
-FetchUtil::SetRequestReferrer(nsIPrincipal* aPrincipal,
-                              nsIDocument* aDoc,
-                              nsIHttpChannel* aChannel,
-                              InternalRequest* aRequest) {
-=======
 nsresult FetchUtil::SetRequestReferrer(nsIPrincipal* aPrincipal, Document* aDoc,
                                        nsIHttpChannel* aChannel,
                                        InternalRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsresult rv = NS_OK;
@@ -137,22 +124,10 @@ nsresult FetchUtil::SetRequestReferrer(nsIPrincipal* aPrincipal, Document* aDoc,
     // This is the case request’s referrer is "no-referrer"
     referrerInfo = new ReferrerInfo(nullptr, net::RP_No_Referrer);
   } else if (referrer.EqualsLiteral(kFETCH_CLIENT_REFERRER_STR)) {
-<<<<<<< HEAD
-    rv = nsContentUtils::SetFetchReferrerURIWithPolicy(aPrincipal, aDoc,
-                                                       aChannel, policy);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = nsContentUtils::SetFetchReferrerURIWithPolicy(aPrincipal,
-                                                       aDoc,
-                                                       aChannel,
-                                                       policy);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     referrerInfo = ReferrerInfo::CreateForFetch(aPrincipal, aDoc);
     // In the first step, we should use referrer info from requetInit
     referrerInfo = static_cast<ReferrerInfo*>(referrerInfo.get())
                        ->CloneWithNewPolicy(policy);
->>>>>>> upstream-releases
   } else {
     // From "Determine request's Referrer" step 3
     // "If request's referrer is a URL, let referrerSource be request's
@@ -390,78 +365,16 @@ class JSStreamConsumer final : public nsIInputStreamCallback {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  static bool Start(nsIInputStream* aStream, JS::StreamConsumer* aConsumer,
-                    nsIGlobalObject* aGlobal, WorkerPrivate* aMaybeWorker) {
-    nsresult rv;
-
-    bool nonBlocking = false;
-    rv = aStream->IsNonBlocking(&nonBlocking);
-||||||| merged common ancestors
-  static bool Start(nsIInputStream* aStream,
-                    JS::StreamConsumer* aConsumer,
-                    nsIGlobalObject* aGlobal,
-                    WorkerPrivate* aMaybeWorker)
-  {
-    nsresult rv;
-
-    bool nonBlocking = false;
-    rv = aStream->IsNonBlocking(&nonBlocking);
-=======
   static bool Start(nsCOMPtr<nsIInputStream>&& aStream,
                     JS::StreamConsumer* aConsumer, nsIGlobalObject* aGlobal,
                     WorkerPrivate* aMaybeWorker) {
     nsCOMPtr<nsIAsyncInputStream> asyncStream;
     nsresult rv = NS_MakeAsyncNonBlockingInputStream(
         aStream.forget(), getter_AddRefs(asyncStream));
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return false;
     }
 
-<<<<<<< HEAD
-    // Use a pipe to create an nsIAsyncInputStream if we don't already have one.
-    nsCOMPtr<nsIAsyncInputStream> asyncStream = do_QueryInterface(aStream);
-    if (!asyncStream || !nonBlocking) {
-      nsCOMPtr<nsIAsyncOutputStream> pipe;
-      rv = NS_NewPipe2(getter_AddRefs(asyncStream), getter_AddRefs(pipe), true,
-                       true);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return false;
-      }
-
-      nsCOMPtr<nsIEventTarget> thread =
-          do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID);
-
-      rv = NS_AsyncCopy(aStream, pipe, thread, NS_ASYNCCOPY_VIA_WRITESEGMENTS);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return false;
-      }
-    }
-
-||||||| merged common ancestors
-    // Use a pipe to create an nsIAsyncInputStream if we don't already have one.
-    nsCOMPtr<nsIAsyncInputStream> asyncStream = do_QueryInterface(aStream);
-    if (!asyncStream || !nonBlocking) {
-      nsCOMPtr<nsIAsyncOutputStream> pipe;
-      rv = NS_NewPipe2(getter_AddRefs(asyncStream), getter_AddRefs(pipe),
-                       true, true);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return false;
-      }
-
-      nsCOMPtr<nsIEventTarget> thread =
-        do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID);
-
-      rv = NS_AsyncCopy(aStream, pipe, thread,
-                        NS_ASYNCCOPY_VIA_WRITESEGMENTS);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return false;
-      }
-    }
-
-=======
->>>>>>> upstream-releases
     RefPtr<JSStreamConsumer> consumer;
     if (aMaybeWorker) {
       RefPtr<WorkerStreamOwner> owner =

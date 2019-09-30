@@ -74,16 +74,8 @@ const font = (exports.font = {
   variationAxes: PropTypes.arrayOf(PropTypes.shape(fontVariationAxis)),
 
   // The variation instances of the font
-<<<<<<< HEAD
-  variationInstances: PropTypes.arrayOf(PropTypes.shape(fontVariationInstance)),
-};
-||||||| merged common ancestors
-  variationInstances: PropTypes.arrayOf(PropTypes.shape(fontVariationInstance))
-};
-=======
   variationInstances: PropTypes.arrayOf(PropTypes.shape(fontVariationInstance)),
 });
->>>>>>> upstream-releases
 
 exports.fontOptions = {
   // The current preview text

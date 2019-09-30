@@ -65,17 +65,12 @@ UNIFIED_SOURCES += [
     'nsWindow.cpp',
     'ProcInfo.cpp',
     'ScreenHelperAndroid.cpp',
-<<<<<<< HEAD
-    'WebExecutorSupport.cpp',
-||||||| merged common ancestors
-=======
     'WebAuthnTokenManager.cpp',
     'WebExecutorSupport.cpp',
 ]
 
 XPCOM_MANIFESTS += [
     'components.conf',
->>>>>>> upstream-releases
 ]
 
 include('/ipc/chromium/chromium-config.mozbuild')

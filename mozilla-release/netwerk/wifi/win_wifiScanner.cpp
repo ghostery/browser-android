@@ -42,15 +42,7 @@ class InterfaceScanCallbackData {
   HANDLE mAllInterfacesDoneScanningEvent;
 };
 
-<<<<<<< HEAD
-static void OnScanComplete(PWLAN_NOTIFICATION_DATA data, PVOID context) {
-||||||| merged common ancestors
-static void
-OnScanComplete(PWLAN_NOTIFICATION_DATA data, PVOID context)
-{
-=======
 static void WINAPI OnScanComplete(PWLAN_NOTIFICATION_DATA data, PVOID context) {
->>>>>>> upstream-releases
   if (WLAN_NOTIFICATION_SOURCE_ACM != data->NotificationSource) {
     return;
   }
@@ -60,16 +52,8 @@ static void WINAPI OnScanComplete(PWLAN_NOTIFICATION_DATA data, PVOID context) {
     return;
   }
 
-<<<<<<< HEAD
-  InterfaceScanCallbackData *cbData =
-      reinterpret_cast<InterfaceScanCallbackData *>(context);
-||||||| merged common ancestors
-  InterfaceScanCallbackData* cbData =
-    reinterpret_cast<InterfaceScanCallbackData*>(context);
-=======
   InterfaceScanCallbackData* cbData =
       reinterpret_cast<InterfaceScanCallbackData*>(context);
->>>>>>> upstream-releases
   cbData->OnInterfaceScanComplete();
 }
 
@@ -88,17 +72,8 @@ WinWifiScanner::WinWifiScanner() {
 
 WinWifiScanner::~WinWifiScanner() {}
 
-<<<<<<< HEAD
-nsresult WinWifiScanner::GetAccessPointsFromWLAN(
-    nsCOMArray<nsWifiAccessPoint> &accessPoints) {
-||||||| merged common ancestors
-nsresult
-WinWifiScanner::GetAccessPointsFromWLAN(nsCOMArray<nsWifiAccessPoint> &accessPoints)
-{
-=======
 nsresult WinWifiScanner::GetAccessPointsFromWLAN(
     nsCOMArray<nsWifiAccessPoint>& accessPoints) {
->>>>>>> upstream-releases
   accessPoints.Clear();
 
   // NOTE: We do not try to load the WLAN library if we previously failed
@@ -157,28 +132,6 @@ nsresult WinWifiScanner::GetAccessPointsFromWLAN(
 
   // Go through the list of interfaces and get the data for each.
   for (uint32_t i = 0; i < interface_list->dwNumberOfItems; ++i) {
-<<<<<<< HEAD
-    WLAN_BSS_LIST *bss_list;
-    if (ERROR_SUCCESS != (*mWlanLibrary->GetWlanGetNetworkBssListPtr())(
-                             mWlanLibrary->GetWLANHandle(),
-                             &interface_list->InterfaceInfo[i].InterfaceGuid,
-                             nullptr,  // Use all SSIDs.
-                             DOT11_BSS_TYPE_UNUSED,
-                             false,    // bSecurityEnabled - unused
-                             nullptr,  // reserved
-                             &bss_list)) {
-||||||| merged common ancestors
-    WLAN_BSS_LIST *bss_list;
-    if (ERROR_SUCCESS !=
-        (*mWlanLibrary->GetWlanGetNetworkBssListPtr())(
-                           mWlanLibrary->GetWLANHandle(),
-                           &interface_list->InterfaceInfo[i].InterfaceGuid,
-                           nullptr,  // Use all SSIDs.
-                           DOT11_BSS_TYPE_UNUSED,
-                           false,    // bSecurityEnabled - unused
-                           nullptr,  // reserved
-                           &bss_list)) {
-=======
     WLAN_BSS_LIST* bss_list;
     if (ERROR_SUCCESS != (*mWlanLibrary->GetWlanGetNetworkBssListPtr())(
                              mWlanLibrary->GetWLANHandle(),
@@ -188,7 +141,6 @@ nsresult WinWifiScanner::GetAccessPointsFromWLAN(
                              false,    // bSecurityEnabled - unused
                              nullptr,  // reserved
                              &bss_list)) {
->>>>>>> upstream-releases
       continue;
     }
 
@@ -197,7 +149,7 @@ nsresult WinWifiScanner::GetAccessPointsFromWLAN(
 
     // Store each discovered access point in our outparam
     for (int j = 0; j < static_cast<int>(bss_list->dwNumberOfItems); ++j) {
-      nsWifiAccessPoint *ap = new nsWifiAccessPoint();
+      nsWifiAccessPoint* ap = new nsWifiAccessPoint();
       if (!ap) {
         continue;
       }
@@ -205,7 +157,7 @@ nsresult WinWifiScanner::GetAccessPointsFromWLAN(
       const WLAN_BSS_ENTRY bss_entry = bss_list->wlanBssEntries[j];
       ap->setMac(bss_entry.dot11Bssid);
       ap->setSignal(bss_entry.lRssi);
-      ap->setSSID(reinterpret_cast<char const *>(bss_entry.dot11Ssid.ucSSID),
+      ap->setSSID(reinterpret_cast<char const*>(bss_entry.dot11Ssid.ucSSID),
                   bss_entry.dot11Ssid.uSSIDLength);
 
       accessPoints.AppendObject(ap);

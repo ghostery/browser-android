@@ -14,40 +14,7 @@
 
 using namespace mozilla::dom;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-static nsSVGAttrTearoffTable<nsSVGNumberPair,
-                             nsSVGNumberPair::DOMAnimatedNumber>
-    sSVGFirstAnimatedNumberTearoffTable;
-static nsSVGAttrTearoffTable<nsSVGNumberPair,
-                             nsSVGNumberPair::DOMAnimatedNumber>
-    sSVGSecondAnimatedNumberTearoffTable;
-
-static nsresult ParseNumberOptionalNumber(const nsAString& aValue,
-                                          float aValues[2]) {
-  nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
-      aValue, ',', nsCharSeparatedTokenizer::SEPARATOR_OPTIONAL);
-  if (tokenizer.whitespaceBeforeFirstToken()) {
-    return NS_ERROR_DOM_SYNTAX_ERR;
-  }
-||||||| merged common ancestors
-static nsSVGAttrTearoffTable<nsSVGNumberPair, nsSVGNumberPair::DOMAnimatedNumber>
-  sSVGFirstAnimatedNumberTearoffTable;
-static nsSVGAttrTearoffTable<nsSVGNumberPair, nsSVGNumberPair::DOMAnimatedNumber>
-  sSVGSecondAnimatedNumberTearoffTable;
-
-static nsresult
-ParseNumberOptionalNumber(const nsAString& aValue,
-                          float aValues[2])
-{
-  nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace>
-    tokenizer(aValue, ',',
-              nsCharSeparatedTokenizer::SEPARATOR_OPTIONAL);
-  if (tokenizer.whitespaceBeforeFirstToken()) {
-    return NS_ERROR_DOM_SYNTAX_ERR;
-  }
-=======
 namespace mozilla {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
 
 static SVGAttrTearoffTable<SVGAnimatedNumberPair,
                            SVGAnimatedNumberPair::DOMAnimatedNumber>
@@ -79,18 +46,8 @@ static nsresult ParseNumberOptionalNumber(const nsAString& aValue,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-nsresult nsSVGNumberPair::SetBaseValueString(const nsAString& aValueAsString,
-                                             nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-nsresult
-nsSVGNumberPair::SetBaseValueString(const nsAString &aValueAsString,
-                                    nsSVGElement *aSVGElement)
-{
-=======
 nsresult SVGAnimatedNumberPair::SetBaseValueString(
     const nsAString& aValueAsString, SVGElement* aSVGElement) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   float val[2];
 
   nsresult rv = ParseNumberOptionalNumber(aValueAsString, val);
@@ -114,16 +71,8 @@ nsresult SVGAnimatedNumberPair::SetBaseValueString(
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-void nsSVGNumberPair::GetBaseValueString(nsAString& aValueAsString) const {
-||||||| merged common ancestors
-void
-nsSVGNumberPair::GetBaseValueString(nsAString &aValueAsString) const
-{
-=======
 void SVGAnimatedNumberPair::GetBaseValueString(
     nsAString& aValueAsString) const {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   aValueAsString.Truncate();
   aValueAsString.AppendFloat(mBaseVal[0]);
   if (mBaseVal[0] != mBaseVal[1]) {
@@ -132,18 +81,8 @@ void SVGAnimatedNumberPair::GetBaseValueString(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-void nsSVGNumberPair::SetBaseValue(float aValue, PairIndex aPairIndex,
-                                   nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-void
-nsSVGNumberPair::SetBaseValue(float aValue, PairIndex aPairIndex,
-                              nsSVGElement *aSVGElement)
-{
-=======
 void SVGAnimatedNumberPair::SetBaseValue(float aValue, PairIndex aPairIndex,
                                          SVGElement* aSVGElement) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   uint32_t index = (aPairIndex == eFirst ? 0 : 1);
   if (mIsBaseSet && mBaseVal[index] == aValue) {
     return;
@@ -159,18 +98,8 @@ void SVGAnimatedNumberPair::SetBaseValue(float aValue, PairIndex aPairIndex,
   aSVGElement->DidChangeNumberPair(mAttrEnum, emptyOrOldValue);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-void nsSVGNumberPair::SetBaseValues(float aValue1, float aValue2,
-                                    nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-void
-nsSVGNumberPair::SetBaseValues(float aValue1, float aValue2,
-                               nsSVGElement *aSVGElement)
-{
-=======
 void SVGAnimatedNumberPair::SetBaseValues(float aValue1, float aValue2,
                                           SVGElement* aSVGElement) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   if (mIsBaseSet && mBaseVal[0] == aValue1 && mBaseVal[1] == aValue2) {
     return;
   }
@@ -187,17 +116,8 @@ void SVGAnimatedNumberPair::SetBaseValues(float aValue1, float aValue2,
   aSVGElement->DidChangeNumberPair(mAttrEnum, emptyOrOldValue);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-void nsSVGNumberPair::SetAnimValue(const float aValue[2],
-                                   nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-void
-nsSVGNumberPair::SetAnimValue(const float aValue[2], nsSVGElement *aSVGElement)
-{
-=======
 void SVGAnimatedNumberPair::SetAnimValue(const float aValue[2],
                                          SVGElement* aSVGElement) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   if (mIsAnimated && mAnimVal[0] == aValue[0] && mAnimVal[1] == aValue[1]) {
     return;
   }
@@ -207,19 +127,9 @@ void SVGAnimatedNumberPair::SetAnimValue(const float aValue[2],
   aSVGElement->DidAnimateNumberPair(mAttrEnum);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-already_AddRefed<SVGAnimatedNumber> nsSVGNumberPair::ToDOMAnimatedNumber(
-    PairIndex aIndex, nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedNumber>
-nsSVGNumberPair::ToDOMAnimatedNumber(PairIndex aIndex,
-                                     nsSVGElement* aSVGElement)
-{
-=======
 already_AddRefed<DOMSVGAnimatedNumber>
 SVGAnimatedNumberPair::ToDOMAnimatedNumber(PairIndex aIndex,
                                            SVGElement* aSVGElement) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   RefPtr<DOMAnimatedNumber> domAnimatedNumber =
       aIndex == eFirst ? sSVGFirstAnimatedNumberTearoffTable.GetTearoff(this)
                        : sSVGSecondAnimatedNumberTearoffTable.GetTearoff(this);
@@ -235,14 +145,7 @@ SVGAnimatedNumberPair::ToDOMAnimatedNumber(PairIndex aIndex,
   return domAnimatedNumber.forget();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-nsSVGNumberPair::DOMAnimatedNumber::~DOMAnimatedNumber() {
-||||||| merged common ancestors
-nsSVGNumberPair::DOMAnimatedNumber::~DOMAnimatedNumber()
-{
-=======
 SVGAnimatedNumberPair::DOMAnimatedNumber::~DOMAnimatedNumber() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   if (mIndex == eFirst) {
     sSVGFirstAnimatedNumberTearoffTable.RemoveTearoff(mVal);
   } else {
@@ -250,34 +153,13 @@ SVGAnimatedNumberPair::DOMAnimatedNumber::~DOMAnimatedNumber() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-UniquePtr<nsISMILAttr> nsSVGNumberPair::ToSMILAttr(nsSVGElement* aSVGElement) {
-||||||| merged common ancestors
-UniquePtr<nsISMILAttr>
-nsSVGNumberPair::ToSMILAttr(nsSVGElement *aSVGElement)
-{
-=======
 UniquePtr<SMILAttr> SVGAnimatedNumberPair::ToSMILAttr(SVGElement* aSVGElement) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   return MakeUnique<SMILNumberPair>(this, aSVGElement);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-nsresult nsSVGNumberPair::SMILNumberPair::ValueFromString(
-    const nsAString& aStr, const dom::SVGAnimationElement* /*aSrcElement*/,
-    nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const {
-||||||| merged common ancestors
-nsresult
-nsSVGNumberPair::SMILNumberPair::ValueFromString(const nsAString& aStr,
-                                                 const dom::SVGAnimationElement* /*aSrcElement*/,
-                                                 nsSMILValue& aValue,
-                                                 bool& aPreventCachingOfSandwich) const
-{
-=======
 nsresult SVGAnimatedNumberPair::SMILNumberPair::ValueFromString(
     const nsAString& aStr, const dom::SVGAnimationElement* /*aSrcElement*/,
     SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   float values[2];
 
   nsresult rv = ParseNumberOptionalNumber(aStr, values);
@@ -294,32 +176,14 @@ nsresult SVGAnimatedNumberPair::SMILNumberPair::ValueFromString(
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-nsSMILValue nsSVGNumberPair::SMILNumberPair::GetBaseValue() const {
-  nsSMILValue val(&SVGNumberPairSMILType::sSingleton);
-||||||| merged common ancestors
-nsSMILValue
-nsSVGNumberPair::SMILNumberPair::GetBaseValue() const
-{
-  nsSMILValue val(&SVGNumberPairSMILType::sSingleton);
-=======
 SMILValue SVGAnimatedNumberPair::SMILNumberPair::GetBaseValue() const {
   SMILValue val(&SVGNumberPairSMILType::sSingleton);
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   val.mU.mNumberPair[0] = mVal->mBaseVal[0];
   val.mU.mNumberPair[1] = mVal->mBaseVal[1];
   return val;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-void nsSVGNumberPair::SMILNumberPair::ClearAnimValue() {
-||||||| merged common ancestors
-void
-nsSVGNumberPair::SMILNumberPair::ClearAnimValue()
-{
-=======
 void SVGAnimatedNumberPair::SMILNumberPair::ClearAnimValue() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   if (mVal->mIsAnimated) {
     mVal->mIsAnimated = false;
     mVal->mAnimVal[0] = mVal->mBaseVal[0];
@@ -328,17 +192,8 @@ void SVGAnimatedNumberPair::SMILNumberPair::ClearAnimValue() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGNumberPair.cpp
-nsresult nsSVGNumberPair::SMILNumberPair::SetAnimValue(
-    const nsSMILValue& aValue) {
-||||||| merged common ancestors
-nsresult
-nsSVGNumberPair::SMILNumberPair::SetAnimValue(const nsSMILValue& aValue)
-{
-=======
 nsresult SVGAnimatedNumberPair::SMILNumberPair::SetAnimValue(
     const SMILValue& aValue) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAnimatedNumberPair.cpp
   NS_ASSERTION(aValue.mType == &SVGNumberPairSMILType::sSingleton,
                "Unexpected type to assign animated value");
   if (aValue.mType == &SVGNumberPairSMILType::sSingleton) {

@@ -77,18 +77,8 @@ interface XULElement : Element {
   [Throws, ChromeOnly]
   readonly attribute XULControllers             controllers;
 
-<<<<<<< HEAD
   [SetterThrows]
   attribute long tabIndex;
-  [Throws]
-  void                      focus();
-||||||| merged common ancestors
-  [Throws]
-  void                      focus();
-=======
-  [SetterThrows]
-  attribute long tabIndex;
->>>>>>> upstream-releases
   [Throws]
   void                      blur();
   [NeedsCallerType]

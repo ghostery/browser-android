@@ -190,15 +190,8 @@ class nsITextControlElement : public nsISupports {
   /**
    * Callback called whenever the value is changed.
    */
-<<<<<<< HEAD
-  NS_IMETHOD_(void)
-  OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) = 0;
-||||||| merged common ancestors
-  NS_IMETHOD_(void) OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) = 0;
-=======
   NS_IMETHOD_(void)
   OnValueChanged(bool aNotify, ValueChangeKind) = 0;
->>>>>>> upstream-releases
 
   /**
    * Helpers for value manipulation from SetRangeText.

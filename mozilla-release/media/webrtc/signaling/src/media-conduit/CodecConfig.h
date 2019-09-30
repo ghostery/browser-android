@@ -85,17 +85,8 @@ class VideoCodecConfig {
   struct Encoding {
     std::string rid;
     EncodingConstraints constraints;
-<<<<<<< HEAD
-    bool operator==(const SimulcastEncoding& aOther) const {
-      return rid == aOther.rid && constraints == aOther.constraints;
-||||||| merged common ancestors
-    bool operator==(const SimulcastEncoding& aOther) const {
-      return rid == aOther.rid &&
-        constraints == aOther.constraints;
-=======
     bool operator==(const Encoding& aOther) const {
       return rid == aOther.rid && constraints == aOther.constraints;
->>>>>>> upstream-releases
     }
   };
   std::vector<Encoding> mEncodings;
@@ -151,32 +142,13 @@ class VideoCodecConfig {
     }
   }
 
-<<<<<<< HEAD
-  bool ResolutionEquals(const VideoCodecConfig& aConfig) const {
-    if (mSimulcastEncodings.size() != aConfig.mSimulcastEncodings.size()) {
-||||||| merged common ancestors
-  bool ResolutionEquals(const VideoCodecConfig& aConfig) const
-  {
-    if (mSimulcastEncodings.size() != aConfig.mSimulcastEncodings.size()) {
-=======
   bool ResolutionEquals(const VideoCodecConfig& aConfig) const {
     if (mEncodings.size() != aConfig.mEncodings.size()) {
->>>>>>> upstream-releases
       return false;
     }
-<<<<<<< HEAD
-    for (size_t i = 0; i < mSimulcastEncodings.size(); ++i) {
-      if (!mSimulcastEncodings[i].constraints.ResolutionEquals(
-              aConfig.mSimulcastEncodings[i].constraints)) {
-||||||| merged common ancestors
-    for (size_t i = 0; i < mSimulcastEncodings.size(); ++i) {
-      if (!mSimulcastEncodings[i].constraints.ResolutionEquals(
-            aConfig.mSimulcastEncodings[i].constraints)) {
-=======
     for (size_t i = 0; i < mEncodings.size(); ++i) {
       if (!mEncodings[i].constraints.ResolutionEquals(
               aConfig.mEncodings[i].constraints)) {
->>>>>>> upstream-releases
         return false;
       }
     }

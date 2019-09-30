@@ -38,23 +38,6 @@ static inline bool OnHelperThread() {
   return false;
 }
 
-<<<<<<< HEAD
-void CheckThreadLocal::check() const {
-  JSContext* cx = TlsContext.get();
-  MOZ_ASSERT(cx);
-  MOZ_ASSERT_IF(cx->isMainThreadContext(),
-                CurrentThreadCanAccessRuntime(cx->runtime()));
-  MOZ_ASSERT(id == ThisThread::GetId());
-||||||| merged common ancestors
-void
-CheckThreadLocal::check() const
-{
-    JSContext* cx = TlsContext.get();
-    MOZ_ASSERT(cx);
-    MOZ_ASSERT_IF(cx->isMainThreadContext(),
-                  CurrentThreadCanAccessRuntime(cx->runtime()));
-    MOZ_ASSERT(id == ThisThread::GetId());
-=======
 void CheckThreadLocal::check() const {
   JSContext* cx = TlsContext.get();
   MOZ_ASSERT(cx);
@@ -69,7 +52,6 @@ void CheckContextLocal::check() const {
   MOZ_ASSERT_IF(cx->isMainThreadContext(),
                 CurrentThreadCanAccessRuntime(cx->runtime()));
   MOZ_ASSERT(cx_ == cx);
->>>>>>> upstream-releases
 }
 
 template <AllowedHelperThread Helper>

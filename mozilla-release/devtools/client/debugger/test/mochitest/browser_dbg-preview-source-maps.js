@@ -34,19 +34,6 @@ function assertPreviewPopup(dbg, { field, value, expression }) {
 }
 
 add_task(async function() {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-preview-source-maps.js
-  const dbg = await initDebugger("doc-sourcemaps.html", "entry.js", "output.js", "times2.js", "opts.js");
-  const {
-    selectors: { getSelectedSource },
-    getState
-  } = dbg;
-||||||| merged common ancestors
-  const dbg = await initDebugger("doc-sourcemaps.html");
-  const {
-    selectors: { getSelectedSource },
-    getState
-  } = dbg;
-=======
   const dbg = await initDebugger(
     "doc-sourcemaps.html",
     "entry.js",
@@ -54,7 +41,6 @@ add_task(async function() {
     "times2.js",
     "opts.js"
   );
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-preview-source-maps.js
 
   await selectSource(dbg, "times2");
   await addBreakpoint(dbg, "times2", 2);

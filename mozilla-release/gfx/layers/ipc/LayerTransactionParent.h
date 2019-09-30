@@ -38,30 +38,16 @@ class LayerTransactionParent final : public PLayerTransactionParent,
   typedef InfallibleTArray<OpDestroy> OpDestroyArray;
   typedef InfallibleTArray<PluginWindowData> PluginsArray;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   friend class PLayerTransactionParent;
 
  public:
->>>>>>> upstream-releases
   LayerTransactionParent(HostLayerManager* aManager,
                          CompositorBridgeParentBase* aBridge,
                          CompositorAnimationStorage* aAnimStorage, LayersId aId,
                          TimeDuration aVsyncRate);
 
-<<<<<<< HEAD
- protected:
-  ~LayerTransactionParent();
-||||||| merged common ancestors
-protected:
-  ~LayerTransactionParent();
-=======
  protected:
   virtual ~LayerTransactionParent();
->>>>>>> upstream-releases
 
  public:
   void Destroy();
@@ -87,46 +73,15 @@ protected:
 
   bool IsSameProcess() const override;
 
-<<<<<<< HEAD
-  const TransactionId& GetPendingTransactionId() { return mPendingTransaction; }
-  void SetPendingTransactionId(TransactionId aId, const VsyncId& aVsyncId,
-||||||| merged common ancestors
-  const TransactionId& GetPendingTransactionId() { return mPendingTransaction; }
-  void SetPendingTransactionId(TransactionId aId,
-=======
   void SetPendingTransactionId(TransactionId aId, const VsyncId& aVsyncId,
                                const TimeStamp& aVsyncStartTime,
->>>>>>> upstream-releases
                                const TimeStamp& aRefreshStartTime,
                                const TimeStamp& aTxnStartTime,
-<<<<<<< HEAD
-                               const nsCString& aURL,
-                               const TimeStamp& aFwdTime) {
-    mPendingTransaction = aId;
-    mTxnVsyncId = aVsyncId;
-    mRefreshStartTime = aRefreshStartTime;
-    mTxnStartTime = aTxnStartTime;
-    mTxnURL = aURL;
-    mFwdTime = aFwdTime;
-  }
-  TransactionId FlushTransactionId(const VsyncId& aId,
-                                   TimeStamp& aCompositeEnd);
-||||||| merged common ancestors
-                               const TimeStamp& aFwdTime)
-  {
-    mPendingTransaction = aId;
-    mRefreshStartTime = aRefreshStartTime;
-    mTxnStartTime = aTxnStartTime;
-    mFwdTime = aFwdTime;
-  }
-  TransactionId FlushTransactionId(TimeStamp& aCompositeEnd);
-=======
                                const TimeStamp& aTxnEndTime, bool aContainsSVG,
                                const nsCString& aURL,
                                const TimeStamp& aFwdTime);
   TransactionId FlushTransactionId(const VsyncId& aId,
                                    TimeStamp& aCompositeEnd);
->>>>>>> upstream-releases
 
   // CompositableParentManager
   void SendAsyncMessage(
@@ -141,64 +96,15 @@ protected:
 
   base::ProcessId GetChildProcessId() override { return OtherPid(); }
 
-<<<<<<< HEAD
- protected:
-  mozilla::ipc::IPCResult RecvShutdown() override;
-  mozilla::ipc::IPCResult RecvShutdownSync() override;
-||||||| merged common ancestors
-protected:
-  mozilla::ipc::IPCResult RecvShutdown() override;
-  mozilla::ipc::IPCResult RecvShutdownSync() override;
-=======
  protected:
   mozilla::ipc::IPCResult RecvShutdown();
   mozilla::ipc::IPCResult RecvShutdownSync();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvPaintTime(
-      const TransactionId& aTransactionId,
-      const TimeDuration& aPaintTime) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvPaintTime(const TransactionId& aTransactionId,
-                                        const TimeDuration& aPaintTime) override;
-=======
   mozilla::ipc::IPCResult RecvPaintTime(const TransactionId& aTransactionId,
                                         const TimeDuration& aPaintTime);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvUpdate(const TransactionInfo& aInfo);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvSetLayersObserverEpoch(
-      const LayersObserverEpoch& aChildEpoch) override;
-  mozilla::ipc::IPCResult RecvNewCompositable(
-      const CompositableHandle& aHandle, const TextureInfo& aInfo) override;
-  mozilla::ipc::IPCResult RecvReleaseLayer(const LayerHandle& aHandle) override;
-  mozilla::ipc::IPCResult RecvReleaseCompositable(
-      const CompositableHandle& aHandle) override;
-
-  mozilla::ipc::IPCResult RecvClearCachedResources() override;
-  mozilla::ipc::IPCResult RecvScheduleComposite() override;
-  mozilla::ipc::IPCResult RecvSetTestSampleTime(
-      const TimeStamp& aTime) override;
-  mozilla::ipc::IPCResult RecvLeaveTestMode() override;
-  mozilla::ipc::IPCResult RecvGetAnimationValue(
-      const uint64_t& aCompositorAnimationsId, OMTAValue* aValue) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvSetLayersObserverEpoch(const LayersObserverEpoch& aChildEpoch) override;
-  mozilla::ipc::IPCResult RecvNewCompositable(const CompositableHandle& aHandle,
-                                              const TextureInfo& aInfo) override;
-  mozilla::ipc::IPCResult RecvReleaseLayer(const LayerHandle& aHandle) override;
-  mozilla::ipc::IPCResult RecvReleaseCompositable(const CompositableHandle& aHandle) override;
-
-  mozilla::ipc::IPCResult RecvClearCachedResources() override;
-  mozilla::ipc::IPCResult RecvScheduleComposite() override;
-  mozilla::ipc::IPCResult RecvSetTestSampleTime(const TimeStamp& aTime) override;
-  mozilla::ipc::IPCResult RecvLeaveTestMode() override;
-  mozilla::ipc::IPCResult RecvGetAnimationValue(const uint64_t& aCompositorAnimationsId,
-                                                OMTAValue* aValue) override;
-=======
   mozilla::ipc::IPCResult RecvSetLayersObserverEpoch(
       const LayersObserverEpoch& aChildEpoch);
   mozilla::ipc::IPCResult RecvNewCompositable(const CompositableHandle& aHandle,
@@ -213,40 +119,7 @@ protected:
   mozilla::ipc::IPCResult RecvLeaveTestMode();
   mozilla::ipc::IPCResult RecvGetAnimationValue(
       const uint64_t& aCompositorAnimationsId, OMTAValue* aValue);
->>>>>>> upstream-releases
   mozilla::ipc::IPCResult RecvGetTransform(const LayerHandle& aHandle,
-<<<<<<< HEAD
-                                           MaybeTransform* aTransform) override;
-  mozilla::ipc::IPCResult RecvSetAsyncScrollOffset(
-      const ScrollableLayerGuid::ViewID& aId, const float& aX,
-      const float& aY) override;
-  mozilla::ipc::IPCResult RecvSetAsyncZoom(
-      const ScrollableLayerGuid::ViewID& aId, const float& aValue) override;
-  mozilla::ipc::IPCResult RecvFlushApzRepaints() override;
-  mozilla::ipc::IPCResult RecvGetAPZTestData(APZTestData* aOutData) override;
-  mozilla::ipc::IPCResult RecvRequestProperty(const nsString& aProperty,
-                                              float* aValue) override;
-  mozilla::ipc::IPCResult RecvSetConfirmedTargetAPZC(
-      const uint64_t& aBlockId,
-      nsTArray<ScrollableLayerGuid>&& aTargets) override;
-  mozilla::ipc::IPCResult RecvRecordPaintTimes(
-      const PaintTiming& aTiming) override;
-  mozilla::ipc::IPCResult RecvGetTextureFactoryIdentifier(
-      TextureFactoryIdentifier* aIdentifier) override;
-||||||| merged common ancestors
-                                           MaybeTransform* aTransform) override;
-  mozilla::ipc::IPCResult RecvSetAsyncScrollOffset(const FrameMetrics::ViewID& aId,
-                                                   const float& aX, const float& aY) override;
-  mozilla::ipc::IPCResult RecvSetAsyncZoom(const FrameMetrics::ViewID& aId,
-                                           const float& aValue) override;
-  mozilla::ipc::IPCResult RecvFlushApzRepaints() override;
-  mozilla::ipc::IPCResult RecvGetAPZTestData(APZTestData* aOutData) override;
-  mozilla::ipc::IPCResult RecvRequestProperty(const nsString& aProperty, float* aValue) override;
-  mozilla::ipc::IPCResult RecvSetConfirmedTargetAPZC(const uint64_t& aBlockId,
-                                                     nsTArray<ScrollableLayerGuid>&& aTargets) override;
-  mozilla::ipc::IPCResult RecvRecordPaintTimes(const PaintTiming& aTiming) override;
-  mozilla::ipc::IPCResult RecvGetTextureFactoryIdentifier(TextureFactoryIdentifier* aIdentifier) override;
-=======
                                            Maybe<Matrix4x4>* aTransform);
   mozilla::ipc::IPCResult RecvSetAsyncScrollOffset(
       const ScrollableLayerGuid::ViewID& aId, const float& aX, const float& aY);
@@ -261,7 +134,6 @@ protected:
   mozilla::ipc::IPCResult RecvRecordPaintTimes(const PaintTiming& aTiming);
   mozilla::ipc::IPCResult RecvGetTextureFactoryIdentifier(
       TextureFactoryIdentifier* aIdentifier);
->>>>>>> upstream-releases
 
   bool SetLayerAttributes(const OpSetLayerAttributes& aOp);
 
@@ -290,14 +162,7 @@ protected:
     Release();
   }
   friend class CompositorBridgeParent;
-<<<<<<< HEAD
-  friend class CrossProcessCompositorBridgeParent;
-||||||| merged common ancestors
-  friend class CrossProcessCompositorBridgeParent;
-  friend class layout::RenderFrameParent;
-=======
   friend class ContentCompositorBridgeParent;
->>>>>>> upstream-releases
 
  private:
   // This is a function so we can log or breakpoint on why hit
@@ -329,19 +194,6 @@ protected:
 
   TimeDuration mVsyncRate;
 
-<<<<<<< HEAD
-  TransactionId mPendingTransaction;
-  VsyncId mTxnVsyncId;
-  TimeStamp mRefreshStartTime;
-  TimeStamp mTxnStartTime;
-  TimeStamp mFwdTime;
-  nsCString mTxnURL;
-||||||| merged common ancestors
-  TransactionId mPendingTransaction;
-  TimeStamp mRefreshStartTime;
-  TimeStamp mTxnStartTime;
-  TimeStamp mFwdTime;
-=======
   struct PendingTransaction {
     TransactionId mId;
     VsyncId mTxnVsyncId;
@@ -354,7 +206,6 @@ protected:
     bool mContainsSVG;
   };
   AutoTArray<PendingTransaction, 2> mPendingTransactions;
->>>>>>> upstream-releases
 
   // When the widget/frame/browser stuff in this process begins its
   // destruction process, we need to Disconnect() all the currently

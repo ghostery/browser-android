@@ -20,51 +20,6 @@
 
 #if defined(OS_POSIX)
 
-<<<<<<< HEAD
-#include <errno.h>
-
-#define HANDLE_EINTR(x)                                     \
-  ({                                                        \
-    decltype(x) eintr_wrapper_result;                       \
-    do {                                                    \
-      eintr_wrapper_result = (x);                           \
-    } while (eintr_wrapper_result == -1 && errno == EINTR); \
-    eintr_wrapper_result;                                   \
-  })
-
-#define IGNORE_EINTR(x)                                   \
-  ({                                                      \
-    decltype(x) eintr_wrapper_result;                     \
-    do {                                                  \
-      eintr_wrapper_result = (x);                         \
-      if (eintr_wrapper_result == -1 && errno == EINTR) { \
-        eintr_wrapper_result = 0;                         \
-      }                                                   \
-    } while (0);                                          \
-    eintr_wrapper_result;                                 \
-  })
-||||||| merged common ancestors
-#include <errno.h>
-
-#define HANDLE_EINTR(x) ({ \
-  decltype(x) eintr_wrapper_result; \
-  do { \
-    eintr_wrapper_result = (x); \
-  } while (eintr_wrapper_result == -1 && errno == EINTR); \
-  eintr_wrapper_result; \
-})
-
-#define IGNORE_EINTR(x) ({ \
-  decltype(x) eintr_wrapper_result; \
-  do { \
-    eintr_wrapper_result = (x); \
-    if (eintr_wrapper_result == -1 && errno == EINTR) { \
-      eintr_wrapper_result = 0; \
-    } \
-  } while (0); \
-  eintr_wrapper_result; \
-})
-=======
 #  include <errno.h>
 
 #  define HANDLE_EINTR(x)                                     \
@@ -87,7 +42,6 @@
       } while (0);                                          \
       eintr_wrapper_result;                                 \
     })
->>>>>>> upstream-releases
 
 #else
 

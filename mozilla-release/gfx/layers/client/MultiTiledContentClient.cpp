@@ -305,28 +305,10 @@ void ClientMultiTiledLayerBuffer::Update(const nsIntRegion& newValidRegion,
   mValidRegion = newValidRegion;
 }
 
-<<<<<<< HEAD
 bool ClientMultiTiledLayerBuffer::ValidateTile(TileClient& aTile,
                                                const nsIntPoint& aTileOrigin,
                                                nsIntRegion& aDirtyRegion,
                                                TilePaintFlags aFlags) {
-  AUTO_PROFILER_LABEL("ClientMultiTiledLayerBuffer::ValidateTile", GRAPHICS);
-
-||||||| merged common ancestors
-bool
-ClientMultiTiledLayerBuffer::ValidateTile(TileClient& aTile,
-                                          const nsIntPoint& aTileOrigin,
-                                          nsIntRegion& aDirtyRegion,
-                                          TilePaintFlags aFlags)
-{
-  AUTO_PROFILER_LABEL("ClientMultiTiledLayerBuffer::ValidateTile", GRAPHICS);
-
-=======
-bool ClientMultiTiledLayerBuffer::ValidateTile(TileClient& aTile,
-                                               const nsIntPoint& aTileOrigin,
-                                               nsIntRegion& aDirtyRegion,
-                                               TilePaintFlags aFlags) {
->>>>>>> upstream-releases
 #ifdef GFX_TILEDLAYER_PREF_WARNINGS
   if (aDirtyRegion.IsComplex()) {
     printf_stderr("Complex region\n");

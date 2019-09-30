@@ -4264,22 +4264,10 @@ SSLExp_SetResumptionToken(PRFileDesc *fd, const PRUint8 *token,
     sid->u.ssl3.sessionIDLength = SSL3_SESSIONID_BYTES;
     /* Use the sid->cached as marker that this is from an external cache and
      * we don't have to look up anything in the NSS internal cache. */
-<<<<<<< HEAD
-    sid->cached = in_external_cache;
-    sid->lastAccessTime = ssl_TimeSec();
-
-    ss->sec.ci.sid = sid;
-||||||| merged common ancestors
-    ss->sec.ci.sid->cached = in_external_cache;
-    // This has to be 2 to not free this in sendClientHello.
-    ss->sec.ci.sid->references = 2;
-    ss->sec.ci.sid->lastAccessTime = ssl_TimeSec();
-=======
     sid->cached = in_external_cache;
     sid->lastAccessTime = ssl_Time(ss);
 
     ss->sec.ci.sid = sid;
->>>>>>> upstream-releases
 
     ssl_ReleaseSSL3HandshakeLock(ss);
     ssl_Release1stHandshakeLock(ss);

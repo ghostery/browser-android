@@ -15,60 +15,20 @@
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-template <class S, class T>
-struct ElementStreamFormat {
-  static void Write(S &aStream, const T &aElement) {
-    aStream.write(reinterpret_cast<const char *>(&aElement), sizeof(T));
-||||||| merged common ancestors
-template<class S, class T>
-struct ElementStreamFormat
-{
-  static void Write(S &aStream, const T &aElement)
-  {
-    aStream.write(reinterpret_cast<const char*>(&aElement), sizeof(T));
-=======
 template <class S, class T>
 struct ElementStreamFormat {
   static void Write(S& aStream, const T& aElement) {
     aStream.write(reinterpret_cast<const char*>(&aElement), sizeof(T));
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  static void Read(S &aStream, T &aElement) {
-    aStream.read(reinterpret_cast<char *>(&aElement), sizeof(T));
-||||||| merged common ancestors
-  static void Read(S &aStream, T &aElement)
-  {
-    aStream.read(reinterpret_cast<char *>(&aElement), sizeof(T));
-=======
   static void Read(S& aStream, T& aElement) {
     aStream.read(reinterpret_cast<char*>(&aElement), sizeof(T));
->>>>>>> upstream-releases
   }
 };
 
-<<<<<<< HEAD
-template <class S, class T>
-void WriteElement(S &aStream, const T &aElement) {
-||||||| merged common ancestors
-template<class S, class T>
-void WriteElement(S &aStream, const T &aElement)
-{
-=======
 template <class S, class T>
 void WriteElement(S& aStream, const T& aElement) {
->>>>>>> upstream-releases
   ElementStreamFormat<S, T>::Write(aStream, aElement);
 }
-<<<<<<< HEAD
-template <class S, class T>
-void ReadElement(S &aStream, T &aElement) {
-||||||| merged common ancestors
-template<class S, class T>
-void ReadElement(S &aStream, T &aElement)
-{
-=======
 template <class S, class T>
 void WriteVector(S& aStream, const std::vector<T>& aVector) {
   size_t size = aVector.size();
@@ -83,7 +43,6 @@ void WriteVector(S& aStream, const std::vector<T>& aVector) {
 template <class S, class T,
           typename = typename std::enable_if<!std::is_enum<T>::value>::type>
 void ReadElement(S& aStream, T& aElement) {
->>>>>>> upstream-releases
   ElementStreamFormat<S, T>::Read(aStream, aElement);
 }
 template <class S, class T>

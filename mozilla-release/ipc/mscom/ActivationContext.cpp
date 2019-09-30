@@ -87,17 +87,8 @@ ActivationContext::~ActivationContext() { Release(); }
   return reinterpret_cast<uintptr_t>(actCtx);
 }
 
-<<<<<<< HEAD
-/* static */ HRESULT ActivationContext::GetCurrentManifestPath(
-    nsAString& aOutManifestPath) {
-||||||| merged common ancestors
-/* static */ HRESULT
-ActivationContext::GetCurrentManifestPath(nsAString& aOutManifestPath)
-{
-=======
 /* static */
 HRESULT ActivationContext::GetCurrentManifestPath(nsAString& aOutManifestPath) {
->>>>>>> upstream-releases
   aOutManifestPath.Truncate();
 
   SIZE_T bytesNeeded;

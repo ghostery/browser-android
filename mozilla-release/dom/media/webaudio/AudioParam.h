@@ -32,31 +32,15 @@ class AudioParam final : public nsWrapperCache, public AudioParamTimeline {
   NS_IMETHOD_(MozExternalRefCountType) Release(void);
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(AudioParam)
 
-<<<<<<< HEAD
-  AudioContext* GetParentObject() const { return mNode->Context(); }
-||||||| merged common ancestors
-  AudioContext* GetParentObject() const
-  {
-    return mNode->Context();
-  }
-=======
   AudioContext* GetParentObject() const { return mNode->Context(); }
 
   JSObject* WrapObject(JSContext* aCx,
                        JS::Handle<JSObject*> aGivenProto) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSObject* WrapObject(JSContext* aCx,
-                       JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   float Value() {
     return AudioParamTimeline::GetValueAtTime<double>(
         GetParentObject()->CurrentTime());
   }
->>>>>>> upstream-releases
 
   // We override SetValueCurveAtTime to convert the Float32Array to the wrapper
   // object.
@@ -165,31 +149,13 @@ class AudioParam final : public nsWrapperCache, public AudioParamTimeline {
 
   float DefaultValue() const { return mDefaultValue; }
 
-<<<<<<< HEAD
-  float MinValue() const { return mMinValue; }
-||||||| merged common ancestors
-  float MinValue() const
-  {
-    return mMinValue;
-  }
-=======
   float MinValue() const { return mMinValue; }
 
   float MaxValue() const { return mMaxValue; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  float MaxValue() const { return mMaxValue; }
-||||||| merged common ancestors
-  float MaxValue() const
-  {
-    return mMaxValue;
-  }
-=======
   bool IsStreamSuspended() const {
     return mStream ? mStream->IsSuspended() : false;
   }
->>>>>>> upstream-releases
 
   const nsTArray<AudioNode::InputNode>& InputNodes() const {
     return mInputNodes;
@@ -204,17 +170,10 @@ class AudioParam final : public nsWrapperCache, public AudioParamTimeline {
   // May create the stream if it doesn't exist
   MediaStream* Stream();
 
-<<<<<<< HEAD
-  size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const override {
-||||||| merged common ancestors
-  size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const override
-  {
-=======
   // Return nullptr if stream doesn't exist.
   MediaStream* GetStream() const;
 
   size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const override {
->>>>>>> upstream-releases
     size_t amount = AudioParamTimeline::SizeOfExcludingThis(aMallocSizeOf);
     // Not owned:
     // - mNode

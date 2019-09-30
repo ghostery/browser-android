@@ -169,15 +169,6 @@ var gReplacedMethods = [
   "getShortcutOrURIAndPostData",
 ];
 
-<<<<<<< HEAD
-// Returns the target object for the replaced method.
-function getStub(replacedMethod) {
-  let targetObj = replacedMethod == "getShortcutOrURIAndPostData" ? UrlbarUtils : gTestWin;
-  return targetObj[replacedMethod];
-}
-
-||||||| merged common ancestors
-=======
 // Returns the target object for the replaced method.
 function getStub(replacedMethod) {
   let targetObj =
@@ -185,35 +176,19 @@ function getStub(replacedMethod) {
   return targetObj[replacedMethod];
 }
 
->>>>>>> upstream-releases
 // Reference to the new window.
 var gTestWin = null;
 
 // The test currently running.
 var gCurrentTest = null;
 
-var sandbox;
-
 function test() {
   waitForExplicitFinish();
 
-<<<<<<< HEAD
-  /* global sinon */
-  Services.scriptloader.loadSubScript("resource://testing-common/sinon-2.3.2.js");
-  sandbox = sinon.sandbox.create();
-
-  registerCleanupFunction(function() {
-    sandbox.restore();
-    delete window.sinon;
-  });
-
-||||||| merged common ancestors
-=======
   registerCleanupFunction(function() {
     sinon.restore();
   });
 
->>>>>>> upstream-releases
   gTestWin = openDialog(location, "", "chrome,all,dialog=no", "about:blank");
   whenDelayedStartupFinished(gTestWin, function() {
     info("Browser window opened");
@@ -262,27 +237,6 @@ var gClickHandler = {
     );
 
     // Check that all required methods have been called.
-<<<<<<< HEAD
-    for (let expectedMethod of gCurrentTest.expectedInvokedMethods) {
-      ok(getStub(expectedMethod).called,
-        `${gCurrentTest.desc}:${expectedMethod} should have been invoked`);
-    }
-
-    for (let method of gReplacedMethods) {
-      if (getStub(method).called &&
-          !gCurrentTest.expectedInvokedMethods.includes(method)) {
-        ok(false, `Should have not called ${method}`);
-      }
-||||||| merged common ancestors
-    gCurrentTest.expectedInvokedMethods.forEach(function(aExpectedMethodName) {
-      isnot(gInvokedMethods.indexOf(aExpectedMethodName), -1,
-            gCurrentTest.desc + ":" + aExpectedMethodName + " was invoked");
-    });
-
-    if (gInvokedMethods.length != gCurrentTest.expectedInvokedMethods.length) {
-      ok(false, "Wrong number of invoked methods");
-      gInvokedMethods.forEach(method => info(method + " was invoked"));
-=======
     for (let expectedMethod of gCurrentTest.expectedInvokedMethods) {
       ok(
         getStub(expectedMethod).called,
@@ -297,7 +251,6 @@ var gClickHandler = {
       ) {
         ok(false, `Should have not called ${method}`);
       }
->>>>>>> upstream-releases
     }
 
     event.preventDefault();
@@ -313,20 +266,10 @@ function setupTestBrowserWindow() {
   gTestWin.addEventListener("auxclick", gClickHandler, true);
 
   // Replace methods.
-<<<<<<< HEAD
-  gReplacedMethods.forEach(function(methodName) {
-    let targetObj = methodName == "getShortcutOrURIAndPostData" ? UrlbarUtils : gTestWin;
-    sandbox.stub(targetObj, methodName).returnsArg(0);
-||||||| merged common ancestors
-  gReplacedMethods.forEach(function(aMethodName) {
-    gTestWin["old_" + aMethodName] = gTestWin[aMethodName];
-    gTestWin[aMethodName] = wrapperMethod(gInvokedMethods, aMethodName);
-=======
   gReplacedMethods.forEach(function(methodName) {
     let targetObj =
       methodName == "getShortcutOrURIAndPostData" ? UrlbarUtils : gTestWin;
     sinon.stub(targetObj, methodName).returnsArg(0);
->>>>>>> upstream-releases
   });
 
   // Inject links in content.
@@ -362,13 +305,7 @@ function runNextTest() {
   }
 
   // Move to next target.
-<<<<<<< HEAD
-  sandbox.resetHistory();
-||||||| merged common ancestors
-  gInvokedMethods.length = 0;
-=======
   sinon.resetHistory();
->>>>>>> upstream-releases
   let target = gCurrentTest.targets.shift();
 
   info(gCurrentTest.desc + ": testing " + target);
@@ -386,18 +323,7 @@ function runNextTest() {
 function finishTest() {
   info("Restoring browser...");
   gTestWin.removeEventListener("click", gClickHandler, true);
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-  // Restore original methods.
-  gReplacedMethods.forEach(function(aMethodName) {
-    gTestWin[aMethodName] = gTestWin["old_" + aMethodName];
-    delete gTestWin["old_" + aMethodName];
-  });
-
-=======
   gTestWin.removeEventListener("auxclick", gClickHandler, true);
->>>>>>> upstream-releases
   gTestWin.close();
   finish();
 }

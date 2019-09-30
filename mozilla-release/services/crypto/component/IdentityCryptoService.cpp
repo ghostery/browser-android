@@ -453,60 +453,6 @@ SignRunnable::Run() {
 
 // XPCOM module registration
 
-<<<<<<< HEAD
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(IdentityCryptoService, Init)
-
-#define NS_IDENTITYCRYPTOSERVICE_CID                 \
-  {                                                  \
-    0xbea13a3a, 0x44e8, 0x4d7f, {                    \
-      0xa0, 0xa2, 0x2c, 0x67, 0xf8, 0x4e, 0x3a, 0x97 \
-    }                                                \
-  }
-
-NS_DEFINE_NAMED_CID(NS_IDENTITYCRYPTOSERVICE_CID);
-
-const mozilla::Module::CIDEntry kCIDs[] = {
-    {&kNS_IDENTITYCRYPTOSERVICE_CID, false, nullptr,
-     IdentityCryptoServiceConstructor},
-    {nullptr}};
-
-const mozilla::Module::ContractIDEntry kContracts[] = {
-    {"@mozilla.org/identity/crypto-service;1", &kNS_IDENTITYCRYPTOSERVICE_CID},
-    {nullptr}};
-
-const mozilla::Module kModule = {mozilla::Module::kVersion, kCIDs, kContracts};
-
-}  // unnamed namespace
-
-NSMODULE_DEFN(identity) = &kModule;
-||||||| merged common ancestors
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(IdentityCryptoService, Init)
-
-#define NS_IDENTITYCRYPTOSERVICE_CID \
-  {0xbea13a3a, 0x44e8, 0x4d7f, {0xa0, 0xa2, 0x2c, 0x67, 0xf8, 0x4e, 0x3a, 0x97}}
-
-NS_DEFINE_NAMED_CID(NS_IDENTITYCRYPTOSERVICE_CID);
-
-const mozilla::Module::CIDEntry kCIDs[] = {
-  { &kNS_IDENTITYCRYPTOSERVICE_CID, false, nullptr, IdentityCryptoServiceConstructor },
-  { nullptr }
-};
-
-const mozilla::Module::ContractIDEntry kContracts[] = {
-  { "@mozilla.org/identity/crypto-service;1", &kNS_IDENTITYCRYPTOSERVICE_CID },
-  { nullptr }
-};
-
-const mozilla::Module kModule = {
-  mozilla::Module::kVersion,
-  kCIDs,
-  kContracts
-};
-
-} // unnamed namespace
-
-NSMODULE_DEFN(identity) = &kModule;
-=======
 NS_IMPL_COMPONENT_FACTORY(nsIIdentityCryptoService) {
   auto inst = MakeRefPtr<IdentityCryptoService>();
   if (NS_SUCCEEDED(inst->Init())) {
@@ -514,4 +460,3 @@ NS_IMPL_COMPONENT_FACTORY(nsIIdentityCryptoService) {
   }
   return nullptr;
 }
->>>>>>> upstream-releases

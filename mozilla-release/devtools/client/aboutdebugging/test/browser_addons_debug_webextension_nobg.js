@@ -38,39 +38,6 @@ add_task(async function testWebExtensionsToolboxNoBackgroundPage() {
     addonFile
   );
 
-<<<<<<< HEAD
-  // Be careful, this JS function is going to be executed in the addon toolbox,
-  // which lives in another process. So do not try to use any scope variable!
-  const env = Cc["@mozilla.org/process/environment;1"]
-        .getService(Ci.nsIEnvironment);
-  const testScript = function() {
-    /* eslint-disable no-undef */
-    // This is webextension toolbox process. So we can't access mochitest framework.
-    const waitUntil = async function(predicate, interval = 10) {
-      if (await predicate()) {
-        return true;
-      }
-      return new Promise(resolve => {
-        toolbox.win.setTimeout(function() {
-          waitUntil(predicate, interval).then(() => resolve(true));
-        }, interval);
-      });
-    };
-||||||| merged common ancestors
-  // Be careful, this JS function is going to be executed in the addon toolbox,
-  // which lives in another process. So do not try to use any scope variable!
-  const env = Cc["@mozilla.org/process/environment;1"]
-        .getService(Ci.nsIEnvironment);
-  const testScript = function() {
-    /* eslint-disable no-undef */
-    toolbox.selectTool("inspector").then(async inspector => {
-      const nodeActor = await inspector.walker.querySelector(
-        inspector.walker.rootNode, "body");
-
-      if (!nodeActor) {
-        throw new Error("nodeActor not found");
-      }
-=======
   const onToolboxReady = gDevTools.once("toolbox-ready");
   const onToolboxClose = gDevTools.once("toolbox-destroyed");
   debugBtn.click();
@@ -79,30 +46,11 @@ add_task(async function testWebExtensionsToolboxNoBackgroundPage() {
 
   await onToolboxClose;
   ok(true, "Addon toolbox closed");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    toolbox.selectTool("inspector").then(async inspector => {
-      let nodeActor;
-||||||| merged common ancestors
-      if (!(nodeActor.inlineTextChild)) {
-        throw new Error("inlineTextChild not found");
-      }
-=======
   await uninstallAddon({ document, id: ADDON_NOBG_ID, name: ADDON_NOBG_NAME });
   await closeAboutDebugging(tab);
 });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      dump(`Wait the fallback window to be fully loaded\n`);
-      await waitUntil(async () => {
-        nodeActor = await inspector.walker.querySelector(inspector.walker.rootNode, "h1");
-        return nodeActor && nodeActor.inlineTextChild;
-      });
-||||||| merged common ancestors
-      dump("Got a nodeActor with an inline text child\n");
-=======
 const testScript = function(toolbox) {
   toolbox
     .selectTool("inspector")
@@ -117,7 +65,6 @@ const testScript = function(toolbox) {
         );
         return nodeActor && nodeActor.inlineTextChild;
       });
->>>>>>> upstream-releases
 
       dump("Got a nodeActor with an inline text child\n");
       const expectedValue = "Your addon does not have any document opened yet.";

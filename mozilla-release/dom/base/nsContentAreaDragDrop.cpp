@@ -59,40 +59,6 @@
 using namespace mozilla::dom;
 using mozilla::IgnoreErrors;
 
-<<<<<<< HEAD
-class MOZ_STACK_CLASS DragDataProducer {
- public:
-  DragDataProducer(nsPIDOMWindowOuter* aWindow, nsIContent* aTarget,
-                   nsIContent* aSelectionTargetNode, bool aIsAltKeyPressed);
-  nsresult Produce(DataTransfer* aDataTransfer, bool* aCanDrag,
-                   Selection** aSelection, nsIContent** aDragNode,
-                   nsACString& aPrincipalURISpec);
-
- private:
-  void AddString(DataTransfer* aDataTransfer, const nsAString& aFlavor,
-                 const nsAString& aData, nsIPrincipal* aPrincipal,
-                 bool aHidden = false);
-||||||| merged common ancestors
-class MOZ_STACK_CLASS DragDataProducer
-{
-public:
-  DragDataProducer(nsPIDOMWindowOuter* aWindow,
-                   nsIContent* aTarget,
-                   nsIContent* aSelectionTargetNode,
-                   bool aIsAltKeyPressed);
-  nsresult Produce(DataTransfer* aDataTransfer,
-                   bool* aCanDrag,
-                   Selection** aSelection,
-                   nsIContent** aDragNode,
-                   nsACString& aPrincipalURISpec);
-
-private:
-  void AddString(DataTransfer* aDataTransfer,
-                 const nsAString& aFlavor,
-                 const nsAString& aData,
-                 nsIPrincipal* aPrincipal,
-                 bool aHidden=false);
-=======
 class MOZ_STACK_CLASS DragDataProducer {
  public:
   DragDataProducer(nsPIDOMWindowOuter* aWindow, nsIContent* aTarget,
@@ -105,7 +71,6 @@ class MOZ_STACK_CLASS DragDataProducer {
   void AddString(DataTransfer* aDataTransfer, const nsAString& aFlavor,
                  const nsAString& aData, nsIPrincipal* aPrincipal,
                  bool aHidden = false);
->>>>>>> upstream-releases
   nsresult AddStringsToDataTransfer(nsIContent* aDragNode,
                                     DataTransfer* aDataTransfer);
   nsresult GetImageData(imgIContainer* aImage, imgIRequest* aRequest);
@@ -141,32 +106,11 @@ class MOZ_STACK_CLASS DragDataProducer {
   nsCOMPtr<imgIContainer> mImage;
 };
 
-<<<<<<< HEAD
-nsresult nsContentAreaDragDrop::GetDragData(
-    nsPIDOMWindowOuter* aWindow, nsIContent* aTarget,
-    nsIContent* aSelectionTargetNode, bool aIsAltKeyPressed,
-    DataTransfer* aDataTransfer, bool* aCanDrag, Selection** aSelection,
-    nsIContent** aDragNode, nsACString& aPrincipalURISpec) {
-||||||| merged common ancestors
-
-nsresult
-nsContentAreaDragDrop::GetDragData(nsPIDOMWindowOuter* aWindow,
-                                   nsIContent* aTarget,
-                                   nsIContent* aSelectionTargetNode,
-                                   bool aIsAltKeyPressed,
-                                   DataTransfer* aDataTransfer,
-                                   bool* aCanDrag,
-                                   Selection** aSelection,
-                                   nsIContent** aDragNode,
-                                   nsACString& aPrincipalURISpec)
-{
-=======
 nsresult nsContentAreaDragDrop::GetDragData(
     nsPIDOMWindowOuter* aWindow, nsIContent* aTarget,
     nsIContent* aSelectionTargetNode, bool aIsAltKeyPressed,
     DataTransfer* aDataTransfer, bool* aCanDrag, Selection** aSelection,
     nsIContent** aDragNode, nsIPrincipal** aPrincipal) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(aSelectionTargetNode, NS_ERROR_INVALID_ARG);
 
   *aCanDrag = true;
@@ -276,25 +220,11 @@ nsContentAreaDragDropDataProvider::GetFlavorData(nsITransferable* aTransferable,
     // get the URI from the kFilePromiseURLMime flavor
     NS_ENSURE_ARG(aTransferable);
     nsCOMPtr<nsISupports> tmp;
-<<<<<<< HEAD
-    aTransferable->GetTransferData(kFilePromiseURLMime, getter_AddRefs(tmp));
-    nsCOMPtr<nsISupportsString> supportsString = do_QueryInterface(tmp);
-    if (!supportsString) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-    uint32_t dataSize = 0;
-    aTransferable->GetTransferData(kFilePromiseURLMime,
-                                   getter_AddRefs(tmp), &dataSize);
-    nsCOMPtr<nsISupportsString> supportsString =
-      do_QueryInterface(tmp);
-    if (!supportsString)
-      return NS_ERROR_FAILURE;
-=======
     rv = aTransferable->GetTransferData(kFilePromiseURLMime,
                                         getter_AddRefs(tmp));
     NS_ENSURE_SUCCESS(rv, rv);
     nsCOMPtr<nsISupportsString> supportsString = do_QueryInterface(tmp);
     if (!supportsString) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
     nsAutoString sourceURLString;
     supportsString->GetData(sourceURLString);
@@ -304,17 +234,9 @@ nsContentAreaDragDropDataProvider::GetFlavorData(nsITransferable* aTransferable,
     rv = NS_NewURI(getter_AddRefs(sourceURI), sourceURLString);
     NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-    aTransferable->GetTransferData(kFilePromiseDestFilename,
-                                   getter_AddRefs(tmp));
-||||||| merged common ancestors
-    aTransferable->GetTransferData(kFilePromiseDestFilename,
-                                   getter_AddRefs(tmp), &dataSize);
-=======
     rv = aTransferable->GetTransferData(kFilePromiseDestFilename,
                                         getter_AddRefs(tmp));
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
     supportsString = do_QueryInterface(tmp);
     if (!supportsString) return NS_ERROR_FAILURE;
 
@@ -330,16 +252,9 @@ nsContentAreaDragDropDataProvider::GetFlavorData(nsITransferable* aTransferable,
     // because sandboxing blocks access to MIME-handler info from
     // content processes.
     if (XRE_IsParentProcess()) {
-<<<<<<< HEAD
-      aTransferable->GetTransferData(kImageRequestMime, getter_AddRefs(tmp));
-||||||| merged common ancestors
-      aTransferable->GetTransferData(kImageRequestMime,
-                                     getter_AddRefs(tmp), &dataSize);
-=======
       rv = aTransferable->GetTransferData(kImageRequestMime,
                                           getter_AddRefs(tmp));
       NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
       supportsString = do_QueryInterface(tmp);
       if (!supportsString) return NS_ERROR_FAILURE;
 
@@ -384,18 +299,9 @@ nsContentAreaDragDropDataProvider::GetFlavorData(nsITransferable* aTransferable,
     // get the target directory from the kFilePromiseDirectoryMime
     // flavor
     nsCOMPtr<nsISupports> dirPrimitive;
-<<<<<<< HEAD
-    aTransferable->GetTransferData(kFilePromiseDirectoryMime,
-                                   getter_AddRefs(dirPrimitive));
-||||||| merged common ancestors
-    dataSize = 0;
-    aTransferable->GetTransferData(kFilePromiseDirectoryMime,
-                                   getter_AddRefs(dirPrimitive), &dataSize);
-=======
     rv = aTransferable->GetTransferData(kFilePromiseDirectoryMime,
                                         getter_AddRefs(dirPrimitive));
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
     nsCOMPtr<nsIFile> destDirectory = do_QueryInterface(dirPrimitive);
     if (!destDirectory) return NS_ERROR_FAILURE;
 
@@ -582,25 +488,10 @@ nsresult DragDataProducer::GetImageData(imgIContainer* aImage,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult DragDataProducer::Produce(DataTransfer* aDataTransfer, bool* aCanDrag,
-                                   Selection** aSelection,
-                                   nsIContent** aDragNode,
-                                   nsACString& aPrincipalURISpec) {
-||||||| merged common ancestors
-nsresult
-DragDataProducer::Produce(DataTransfer* aDataTransfer,
-                          bool* aCanDrag,
-                          Selection** aSelection,
-                          nsIContent** aDragNode,
-                          nsACString& aPrincipalURISpec)
-{
-=======
 nsresult DragDataProducer::Produce(DataTransfer* aDataTransfer, bool* aCanDrag,
                                    Selection** aSelection,
                                    nsIContent** aDragNode,
                                    nsIPrincipal** aPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCanDrag && aSelection && aDataTransfer && aDragNode,
              "null pointer passed to Produce");
   NS_ASSERTION(mWindow, "window not set");

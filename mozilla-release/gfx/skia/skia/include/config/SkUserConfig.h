@@ -141,14 +141,8 @@
 
 #define SK_SUPPORT_DEPRECATED_CLIPOPS
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-#define SK_DISABLE_EXPLICIT_GPU_RESOURCE_ALLOCATION
-
-=======
 #define SK_SUPPORT_GPU 0
 
->>>>>>> upstream-releases
 #ifndef MOZ_IMPLICIT
 #  ifdef MOZ_CLANG_PLUGIN
 #    define MOZ_IMPLICIT __attribute__((annotate("moz_implicit")))

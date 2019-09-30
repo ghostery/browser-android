@@ -52,32 +52,12 @@ class DataSourceSurfaceCairo : public DataSourceSurface {
 
   explicit DataSourceSurfaceCairo(cairo_surface_t* imageSurf);
   virtual ~DataSourceSurfaceCairo();
-<<<<<<< HEAD
-  virtual unsigned char* GetData() override;
-  virtual int32_t Stride() override;
-||||||| merged common ancestors
-  virtual unsigned char *GetData() override;
-  virtual int32_t Stride() override;
-=======
   unsigned char* GetData() override;
   int32_t Stride() override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual SurfaceType GetType() const override {
-    return SurfaceType::CAIRO_IMAGE;
-  }
-  virtual IntSize GetSize() const override;
-  virtual SurfaceFormat GetFormat() const override;
-||||||| merged common ancestors
-  virtual SurfaceType GetType() const override { return SurfaceType::CAIRO_IMAGE; }
-  virtual IntSize GetSize() const override;
-  virtual SurfaceFormat GetFormat() const override;
-=======
   SurfaceType GetType() const override { return SurfaceType::CAIRO_IMAGE; }
   IntSize GetSize() const override;
   SurfaceFormat GetFormat() const override;
->>>>>>> upstream-releases
 
   cairo_surface_t* GetSurface() const;
 

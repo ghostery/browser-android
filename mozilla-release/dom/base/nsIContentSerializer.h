@@ -69,15 +69,8 @@ class nsIContentSerializer : public nsISupports {
    * serialized by other methods. XML declaration is the most likely
    * thing this method can produce.
    */
-<<<<<<< HEAD
-  NS_IMETHOD AppendDocumentStart(nsIDocument* aDocument, nsAString& aStr) = 0;
-||||||| merged common ancestors
-  NS_IMETHOD AppendDocumentStart(nsIDocument *aDocument,
-                                 nsAString& aStr) = 0;
-=======
   NS_IMETHOD AppendDocumentStart(mozilla::dom::Document* aDocument,
                                  nsAString& aStr) = 0;
->>>>>>> upstream-releases
 
   // If Init() sets *aNeedsPerformatScanning to true, then these methods are
   // called when elements are started and ended, before AppendElementStart

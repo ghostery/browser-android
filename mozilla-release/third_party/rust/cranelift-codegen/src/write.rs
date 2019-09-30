@@ -3,20 +3,6 @@
 //! The `write` module provides the `write_function` function which converts an IR `Function` to an
 //! equivalent textual form. This textual form can be read back by the `cranelift-reader` crate.
 
-<<<<<<< HEAD
-use entity::SecondaryMap;
-use ir::entities::AnyEntity;
-use ir::{DataFlowGraph, Ebb, Function, Inst, SigRef, Type, Value, ValueDef};
-use isa::{RegInfo, TargetIsa};
-use packed_option::ReservedValue;
-use std::fmt::{self, Write};
-||||||| merged common ancestors
-use ir::entities::AnyEntity;
-use ir::{DataFlowGraph, Ebb, Function, Inst, SigRef, Type, Value, ValueDef};
-use isa::{RegInfo, TargetIsa};
-use packed_option::ReservedValue;
-use std::fmt::{self, Write};
-=======
 use crate::entity::SecondaryMap;
 use crate::ir::entities::AnyEntity;
 use crate::ir::{
@@ -28,25 +14,11 @@ use crate::packed_option::ReservedValue;
 use crate::value_label::ValueLabelsRanges;
 use core::fmt::{self, Write};
 use std::collections::HashSet;
->>>>>>> upstream-releases
 use std::string::String;
 use std::vec::Vec;
 
 /// A `FuncWriter` used to decorate functions during printing.
 pub trait FuncWriter {
-<<<<<<< HEAD
-    /// Write the extended basic block header for the current function.
-    fn write_ebb_header(
-        &mut self,
-        w: &mut Write,
-        func: &Function,
-        isa: Option<&TargetIsa>,
-        ebb: Ebb,
-        indent: usize,
-    ) -> fmt::Result;
-
-||||||| merged common ancestors
-=======
     /// Write the extended basic block header for the current function.
     fn write_ebb_header(
         &mut self,
@@ -57,21 +29,13 @@ pub trait FuncWriter {
         indent: usize,
     ) -> fmt::Result;
 
->>>>>>> upstream-releases
     /// Write the given `inst` to `w`.
     fn write_instruction(
         &mut self,
         w: &mut dyn Write,
         func: &Function,
-<<<<<<< HEAD
-        aliases: &SecondaryMap<Value, Vec<Value>>,
-        isa: Option<&TargetIsa>,
-||||||| merged common ancestors
-        isa: Option<&TargetIsa>,
-=======
         aliases: &SecondaryMap<Value, Vec<Value>>,
         isa: Option<&dyn TargetIsa>,
->>>>>>> upstream-releases
         inst: Inst,
         indent: usize,
     ) -> fmt::Result;
@@ -173,34 +137,11 @@ impl FuncWriter for PlainWriter {
         &mut self,
         w: &mut dyn Write,
         func: &Function,
-<<<<<<< HEAD
-        aliases: &SecondaryMap<Value, Vec<Value>>,
-        isa: Option<&TargetIsa>,
-||||||| merged common ancestors
-        isa: Option<&TargetIsa>,
-=======
         aliases: &SecondaryMap<Value, Vec<Value>>,
         isa: Option<&dyn TargetIsa>,
->>>>>>> upstream-releases
         inst: Inst,
         indent: usize,
     ) -> fmt::Result {
-<<<<<<< HEAD
-        write_instruction(w, func, aliases, isa, inst, indent)
-    }
-
-    fn write_ebb_header(
-        &mut self,
-        w: &mut Write,
-        func: &Function,
-        isa: Option<&TargetIsa>,
-        ebb: Ebb,
-        indent: usize,
-    ) -> fmt::Result {
-        write_ebb_header(w, func, isa, ebb, indent)
-||||||| merged common ancestors
-        write_instruction(w, func, isa, inst, indent)
-=======
         write_instruction(w, func, aliases, isa, inst, indent)
     }
 
@@ -213,7 +154,6 @@ impl FuncWriter for PlainWriter {
         indent: usize,
     ) -> fmt::Result {
         write_ebb_header(w, func, isa, ebb, indent)
->>>>>>> upstream-releases
     }
 }
 
@@ -225,18 +165,6 @@ pub fn write_function(
     annotations: &DisplayFunctionAnnotations,
 ) -> fmt::Result {
     decorate_function(&mut PlainWriter, w, func, annotations)
-}
-
-/// Create a reverse-alias map from a value to all aliases having that value as a direct target
-fn alias_map(func: &Function) -> SecondaryMap<Value, Vec<Value>> {
-    let mut aliases = SecondaryMap::<_, Vec<_>>::new();
-    for v in func.dfg.values() {
-        // VADFS returns the immediate target of an alias
-        if let Some(k) = func.dfg.value_alias_dest_for_serialization(v) {
-            aliases[k].push(v);
-        }
-    }
-    aliases
 }
 
 /// Create a reverse-alias map from a value to all aliases having that value as a direct target
@@ -272,13 +200,7 @@ pub fn decorate_function<FW: FuncWriter>(
         if any {
             writeln!(w)?;
         }
-<<<<<<< HEAD
-        decorate_ebb(func_w, w, func, &aliases, isa, ebb)?;
-||||||| merged common ancestors
-        decorate_ebb(func_w, w, func, isa, ebb)?;
-=======
         decorate_ebb(func_w, w, func, &aliases, annotations, ebb)?;
->>>>>>> upstream-releases
         any = true;
     }
     writeln!(w, "}}")
@@ -391,15 +313,8 @@ fn decorate_ebb<FW: FuncWriter>(
     func_w: &mut FW,
     w: &mut dyn Write,
     func: &Function,
-<<<<<<< HEAD
-    aliases: &SecondaryMap<Value, Vec<Value>>,
-    isa: Option<&TargetIsa>,
-||||||| merged common ancestors
-    isa: Option<&TargetIsa>,
-=======
     aliases: &SecondaryMap<Value, Vec<Value>>,
     annotations: &DisplayFunctionAnnotations,
->>>>>>> upstream-releases
     ebb: Ebb,
 ) -> fmt::Result {
     // Indent all instructions if any encodings are present.
@@ -415,18 +330,6 @@ fn decorate_ebb<FW: FuncWriter>(
         write_value_aliases(w, aliases, a, indent)?;
     }
 
-<<<<<<< HEAD
-    func_w.write_ebb_header(w, func, isa, ebb, indent)?;
-    for a in func.dfg.ebb_params(ebb).iter().cloned() {
-        write_value_aliases(w, aliases, a, indent)?;
-    }
-    for inst in func.layout.ebb_insts(ebb) {
-        func_w.write_instruction(w, func, aliases, isa, inst, indent)?;
-||||||| merged common ancestors
-    write_ebb_header(w, func, isa, ebb, indent)?;
-    for inst in func.layout.ebb_insts(ebb) {
-        func_w.write_instruction(w, func, isa, inst, indent)?;
-=======
     if isa.is_some() && !func.offsets.is_empty() {
         let encinfo = isa.unwrap().encoding_info();
         let regs = &isa.unwrap().register_info();
@@ -442,7 +345,6 @@ fn decorate_ebb<FW: FuncWriter>(
         for inst in func.layout.ebb_insts(ebb) {
             func_w.write_instruction(w, func, aliases, isa, inst, indent)?;
         }
->>>>>>> upstream-releases
     }
 
     Ok(())
@@ -486,27 +388,6 @@ fn type_suffix(func: &Function, inst: Inst) -> Option<Type> {
     Some(rtype)
 }
 
-<<<<<<< HEAD
-/// Write out any aliases to the given target, including indirect aliases
-fn write_value_aliases(
-    w: &mut Write,
-    aliases: &SecondaryMap<Value, Vec<Value>>,
-    target: Value,
-    indent: usize,
-) -> fmt::Result {
-    let mut todo_stack = vec![target];
-    while let Some(target) = todo_stack.pop() {
-        for &a in &aliases[target] {
-            writeln!(w, "{1:0$}{2} -> {3}", indent, "", a, target)?;
-            todo_stack.push(a);
-||||||| merged common ancestors
-// Write out any value aliases appearing in `inst`.
-fn write_value_aliases(w: &mut Write, func: &Function, inst: Inst, indent: usize) -> fmt::Result {
-    for &arg in func.dfg.inst_args(inst) {
-        let resolved = func.dfg.resolve_aliases(arg);
-        if resolved != arg {
-            writeln!(w, "{1:0$}{2} -> {3}", indent, "", arg, resolved)?;
-=======
 /// Write out any aliases to the given target, including indirect aliases
 fn write_value_aliases(
     w: &mut dyn Write,
@@ -519,7 +400,6 @@ fn write_value_aliases(
         for &a in &aliases[target] {
             writeln!(w, "{1:0$}{2} -> {3}", indent, "", a, target)?;
             todo_stack.push(a);
->>>>>>> upstream-releases
         }
     }
 
@@ -529,15 +409,8 @@ fn write_value_aliases(
 fn write_instruction(
     w: &mut dyn Write,
     func: &Function,
-<<<<<<< HEAD
-    aliases: &SecondaryMap<Value, Vec<Value>>,
-    isa: Option<&TargetIsa>,
-||||||| merged common ancestors
-    isa: Option<&TargetIsa>,
-=======
     aliases: &SecondaryMap<Value, Vec<Value>>,
     isa: Option<&dyn TargetIsa>,
->>>>>>> upstream-releases
     inst: Inst,
     indent: usize,
 ) -> fmt::Result {
@@ -593,17 +466,6 @@ fn write_instruction(
     }
 
     write_operands(w, &func.dfg, isa, inst)?;
-<<<<<<< HEAD
-    writeln!(w)?;
-
-    // Value aliases come out on lines after the instruction defining the referrent.
-    for r in func.dfg.inst_results(inst) {
-        write_value_aliases(w, aliases, *r, indent)?;
-    }
-    Ok(())
-||||||| merged common ancestors
-    writeln!(w)
-=======
     writeln!(w)?;
 
     // Value aliases come out on lines after the instruction defining the referent.
@@ -611,7 +473,6 @@ fn write_instruction(
         write_value_aliases(w, aliases, *r, indent)?;
     }
     Ok(())
->>>>>>> upstream-releases
 }
 
 /// Write the operands of `inst` to `w` with a prepended space.
@@ -920,45 +781,6 @@ mod tests {
             "function %foo() fast {\n    ss0 = explicit_slot 4\n\nebb0(v0: i8, v1: f32x4):\n    return\n}\n"
         );
     }
-<<<<<<< HEAD
-
-    #[test]
-    fn aliases() {
-        use ir::InstBuilder;
-
-        let mut func = Function::new();
-        {
-            let ebb0 = func.dfg.make_ebb();
-            let mut pos = FuncCursor::new(&mut func);
-            pos.insert_ebb(ebb0);
-
-            // make some detached values for change_to_alias
-            let v0 = pos.func.dfg.append_ebb_param(ebb0, types::I32);
-            let v1 = pos.func.dfg.append_ebb_param(ebb0, types::I32);
-            let v2 = pos.func.dfg.append_ebb_param(ebb0, types::I32);
-            pos.func.dfg.detach_ebb_params(ebb0);
-
-            // alias to a param--will be printed at beginning of ebb defining param
-            let v3 = pos.func.dfg.append_ebb_param(ebb0, types::I32);
-            pos.func.dfg.change_to_alias(v0, v3);
-
-            // alias to an alias--should print attached to alias, not ultimate target
-            pos.func.dfg.make_value_alias_for_serialization(v0, v2); // v0 <- v2
-
-            // alias to a result--will be printed after instruction producing result
-            let _dummy0 = pos.ins().iconst(types::I32, 42);
-            let v4 = pos.ins().iadd(v0, v0);
-            pos.func.dfg.change_to_alias(v1, v4);
-            let _dummy1 = pos.ins().iconst(types::I32, 23);
-            let _v7 = pos.ins().iadd(v1, v1);
-        }
-        assert_eq!(
-            func.to_string(),
-            "function u0:0() fast {\nebb0(v3: i32):\n    v0 -> v3\n    v2 -> v0\n    v4 = iconst.i32 42\n    v5 = iadd v0, v0\n    v1 -> v5\n    v6 = iconst.i32 23\n    v7 = iadd v1, v1\n}\n"
-        );
-    }
-||||||| merged common ancestors
-=======
 
     #[test]
     fn aliases() {
@@ -995,5 +817,4 @@ mod tests {
             "function u0:0() fast {\nebb0(v3: i32):\n    v0 -> v3\n    v2 -> v0\n    v4 = iconst.i32 42\n    v5 = iadd v0, v0\n    v1 -> v5\n    v6 = iconst.i32 23\n    v7 = iadd v1, v1\n}\n"
         );
     }
->>>>>>> upstream-releases
 }

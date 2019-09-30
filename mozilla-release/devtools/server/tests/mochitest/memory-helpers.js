@@ -28,16 +28,8 @@ async function getTargetForSelectedTab() {
 
 async function startServerAndGetSelectedTabMemory() {
   const target = await getTargetForSelectedTab();
-<<<<<<< HEAD
-  const memory = await target.getFront("memory");
-  return {memory, target};
-||||||| merged common ancestors
-  const memory = target.getFront("memory");
-  return {memory, target};
-=======
   const memory = await target.getFront("memory");
   return { memory, target };
->>>>>>> upstream-releases
 }
 
 async function destroyServerAndFinish(target) {

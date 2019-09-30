@@ -16,18 +16,6 @@ class nsWindow;
 namespace mozilla {
 namespace widget {
 
-<<<<<<< HEAD
-class PlatformCompositorWidgetDelegate : public CompositorWidgetDelegate {
- public:
-  virtual void NotifyClientSizeChanged(
-      const LayoutDeviceIntSize& aClientSize) = 0;
-||||||| merged common ancestors
-class PlatformCompositorWidgetDelegate
-  : public CompositorWidgetDelegate
-{
-public:
-  virtual void NotifyClientSizeChanged(const LayoutDeviceIntSize& aClientSize) = 0;
-=======
 class PlatformCompositorWidgetDelegate : public CompositorWidgetDelegate {
  public:
   virtual void NotifyClientSizeChanged(
@@ -36,7 +24,6 @@ class PlatformCompositorWidgetDelegate : public CompositorWidgetDelegate {
 #ifdef MOZ_WAYLAND
   virtual void RequestsUpdatingEGLSurface() = 0;
 #endif
->>>>>>> upstream-releases
 
   // CompositorWidgetDelegate Overrides
 
@@ -82,17 +69,11 @@ class GtkCompositorWidget : public CompositorWidget,
 
   void NotifyClientSizeChanged(const LayoutDeviceIntSize& aClientSize) override;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
 #ifdef MOZ_WAYLAND
   void RequestsUpdatingEGLSurface() override;
   bool WaylandRequestsUpdatingEGLSurface();
 #endif
  protected:
->>>>>>> upstream-releases
   nsWindow* mWidget;
 
  private:

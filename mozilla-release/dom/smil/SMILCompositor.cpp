@@ -15,28 +15,12 @@
 namespace mozilla {
 
 // PLDHashEntryHdr methods
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-bool nsSMILCompositor::KeyEquals(KeyTypePointer aKey) const {
-||||||| merged common ancestors
-bool
-nsSMILCompositor::KeyEquals(KeyTypePointer aKey) const
-{
-=======
 bool SMILCompositor::KeyEquals(KeyTypePointer aKey) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   return aKey && aKey->Equals(mKey);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-/*static*/ PLDHashNumber nsSMILCompositor::HashKey(KeyTypePointer aKey) {
-||||||| merged common ancestors
-/*static*/ PLDHashNumber
-nsSMILCompositor::HashKey(KeyTypePointer aKey)
-{
-=======
 /*static*/
 PLDHashNumber SMILCompositor::HashKey(KeyTypePointer aKey) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   // Combine the 3 values into one numeric value, which will be hashed.
   // NOTE: We right-shift one of the pointers by 2 to get some randomness in
   // its 2 lowest-order bits. (Those shifted-off bits will always be 0 since
@@ -46,52 +30,22 @@ PLDHashNumber SMILCompositor::HashKey(KeyTypePointer aKey) {
 }
 
 // Cycle-collection support
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-void nsSMILCompositor::Traverse(nsCycleCollectionTraversalCallback* aCallback) {
-  if (!mKey.mElement) return;
-||||||| merged common ancestors
-void
-nsSMILCompositor::Traverse(nsCycleCollectionTraversalCallback* aCallback)
-{
-  if (!mKey.mElement)
-    return;
-=======
 void SMILCompositor::Traverse(nsCycleCollectionTraversalCallback* aCallback) {
   if (!mKey.mElement) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
 
   NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(*aCallback, "Compositor mKey.mElement");
   aCallback->NoteXPCOMChild(mKey.mElement);
 }
 
 // Other methods
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-void nsSMILCompositor::AddAnimationFunction(nsSMILAnimationFunction* aFunc) {
-||||||| merged common ancestors
-void
-nsSMILCompositor::AddAnimationFunction(nsSMILAnimationFunction* aFunc)
-{
-=======
 void SMILCompositor::AddAnimationFunction(SMILAnimationFunction* aFunc) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   if (aFunc) {
     mAnimationFunctions.AppendElement(aFunc);
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-void nsSMILCompositor::ComposeAttribute(bool& aMightHavePendingStyleUpdates) {
-  if (!mKey.mElement) return;
-||||||| merged common ancestors
-void
-nsSMILCompositor::ComposeAttribute(bool& aMightHavePendingStyleUpdates)
-{
-  if (!mKey.mElement)
-    return;
-=======
 void SMILCompositor::ComposeAttribute(bool& aMightHavePendingStyleUpdates) {
   if (!mKey.mElement) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
 
   // If we might need to resolve base styles, grab a suitable ComputedStyle
   // for initializing our SMILAttr with.
@@ -154,19 +108,8 @@ void SMILCompositor::ComposeAttribute(bool& aMightHavePendingStyleUpdates) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-void nsSMILCompositor::ClearAnimationEffects() {
-  if (!mKey.mElement || !mKey.mAttributeName) return;
-||||||| merged common ancestors
-void
-nsSMILCompositor::ClearAnimationEffects()
-{
-  if (!mKey.mElement || !mKey.mAttributeName)
-    return;
-=======
 void SMILCompositor::ClearAnimationEffects() {
   if (!mKey.mElement || !mKey.mAttributeName) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
 
   UniquePtr<SMILAttr> smilAttr = CreateSMILAttr(nullptr);
   if (!smilAttr) {
@@ -178,17 +121,8 @@ void SMILCompositor::ClearAnimationEffects() {
 
 // Protected Helper Functions
 // --------------------------
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-UniquePtr<nsISMILAttr> nsSMILCompositor::CreateSMILAttr(
-    ComputedStyle* aBaseComputedStyle) {
-||||||| merged common ancestors
-UniquePtr<nsISMILAttr>
-nsSMILCompositor::CreateSMILAttr(ComputedStyle* aBaseComputedStyle)
-{
-=======
 UniquePtr<SMILAttr> SMILCompositor::CreateSMILAttr(
     ComputedStyle* aBaseComputedStyle) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   nsCSSPropertyID propID = GetCSSPropertyToAnimate();
 
   if (propID != eCSSProperty_UNKNOWN) {
@@ -200,15 +134,7 @@ UniquePtr<SMILAttr> SMILCompositor::CreateSMILAttr(
                                         mKey.mAttributeName);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-nsCSSPropertyID nsSMILCompositor::GetCSSPropertyToAnimate() const {
-||||||| merged common ancestors
-nsCSSPropertyID
-nsSMILCompositor::GetCSSPropertyToAnimate() const
-{
-=======
 nsCSSPropertyID SMILCompositor::GetCSSPropertyToAnimate() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   if (mKey.mAttributeNamespaceID != kNameSpaceID_None) {
     return eCSSProperty_UNKNOWN;
   }
@@ -242,15 +168,7 @@ nsCSSPropertyID SMILCompositor::GetCSSPropertyToAnimate() const {
   return propID;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-bool nsSMILCompositor::MightNeedBaseStyle() const {
-||||||| merged common ancestors
-bool
-nsSMILCompositor::MightNeedBaseStyle() const
-{
-=======
 bool SMILCompositor::MightNeedBaseStyle() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   if (GetCSSPropertyToAnimate() == eCSSProperty_UNKNOWN) {
     return false;
   }
@@ -266,15 +184,7 @@ bool SMILCompositor::MightNeedBaseStyle() const {
   return false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-uint32_t nsSMILCompositor::GetFirstFuncToAffectSandwich() {
-||||||| merged common ancestors
-uint32_t
-nsSMILCompositor::GetFirstFuncToAffectSandwich()
-{
-=======
 uint32_t SMILCompositor::GetFirstFuncToAffectSandwich() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   // For performance reasons, we throttle most animations on elements in
   // display:none subtrees. (We can't throttle animations that target the
   // "display" property itself, though -- if we did, display:none elements
@@ -289,13 +199,7 @@ uint32_t SMILCompositor::GetFirstFuncToAffectSandwich() {
 
   uint32_t i;
   for (i = mAnimationFunctions.Length(); i > 0; --i) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-    nsSMILAnimationFunction* curAnimFunc = mAnimationFunctions[i - 1];
-||||||| merged common ancestors
-    nsSMILAnimationFunction* curAnimFunc = mAnimationFunctions[i-1];
-=======
     SMILAnimationFunction* curAnimFunc = mAnimationFunctions[i - 1];
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
     // In the following, the lack of short-circuit behavior of |= means that we
     // will ALWAYS run UpdateCachedTarget (even if mForceCompositing is true)
     // but only call HasChanged and WasSkippedInPrevSample if necessary.  This
@@ -324,15 +228,7 @@ uint32_t SMILCompositor::GetFirstFuncToAffectSandwich() {
   return i;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.cpp
-void nsSMILCompositor::UpdateCachedBaseValue(const nsSMILValue& aBaseValue) {
-||||||| merged common ancestors
-void
-nsSMILCompositor::UpdateCachedBaseValue(const nsSMILValue& aBaseValue)
-{
-=======
 void SMILCompositor::UpdateCachedBaseValue(const SMILValue& aBaseValue) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.cpp
   if (mCachedBaseValue != aBaseValue) {
     // Base value has changed since last sample.
     mCachedBaseValue = aBaseValue;

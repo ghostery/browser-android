@@ -9,12 +9,7 @@ add_task(async function() {
         default_popup: "popup.html",
         unrecognized_property: "with-a-random-value",
       },
-<<<<<<< HEAD
-      icons: {32: "icon.png"},
-||||||| merged common ancestors
-=======
       icons: { 32: "icon.png" },
->>>>>>> upstream-releases
     },
 
     files: {

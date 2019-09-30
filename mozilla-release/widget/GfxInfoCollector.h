@@ -20,52 +20,19 @@ namespace widget {
 class MOZ_STACK_CLASS InfoObject {
   friend class GfxInfoBase;
 
-<<<<<<< HEAD
- public:
-  void DefineProperty(const char *name, int value);
-  void DefineProperty(const char *name, nsAString &value);
-  void DefineProperty(const char *name, const char *value);
-||||||| merged common ancestors
-  public:
-  void DefineProperty(const char *name, int value);
-  void DefineProperty(const char *name, nsAString &value);
-  void DefineProperty(const char *name, const char *value);
-=======
  public:
   void DefineProperty(const char* name, int value);
   void DefineProperty(const char* name, nsAString& value);
   void DefineProperty(const char* name, const char* value);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  // We need to ensure that this object lives on the stack so that GC sees it
-  // properly
-  explicit InfoObject(JSContext *aCx);
-  InfoObject(InfoObject &);
-||||||| merged common ancestors
-  private:
-  // We need to ensure that this object lives on the stack so that GC sees it properly
-  explicit InfoObject(JSContext *aCx);
-  InfoObject(InfoObject&);
-=======
  private:
   // We need to ensure that this object lives on the stack so that GC sees it
   // properly
   explicit InfoObject(JSContext* aCx);
   InfoObject(InfoObject&);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSContext *mCx;
-  JS::Rooted<JSObject *> mObj;
-||||||| merged common ancestors
-  JSContext *mCx;
-  JS::Rooted<JSObject*> mObj;
-=======
   JSContext* mCx;
   JS::Rooted<JSObject*> mObj;
->>>>>>> upstream-releases
   bool mOk;
 };
 
@@ -103,46 +70,16 @@ class GfxInfoCollectorBase {
   virtual ~GfxInfoCollectorBase();
 };
 
-<<<<<<< HEAD
-template <class T>
-class GfxInfoCollector : public GfxInfoCollectorBase {
- public:
-  GfxInfoCollector(T *aPointer, void (T::*aFunc)(InfoObject &obj))
-      : mPointer(aPointer), mFunc(aFunc) {}
-  virtual void GetInfo(InfoObject &obj) override { (mPointer->*mFunc)(obj); }
-||||||| merged common ancestors
-template<class T>
-class GfxInfoCollector : public GfxInfoCollectorBase
-{
-  public:
-  GfxInfoCollector(T* aPointer, void (T::*aFunc)(InfoObject &obj)) : mPointer(aPointer), mFunc(aFunc) {
-  }
-  virtual void GetInfo(InfoObject &obj) override {
-    (mPointer->*mFunc)(obj);
-  }
-
-  protected:
-  T* mPointer;
-  void (T::*mFunc)(InfoObject &obj);
-=======
 template <class T>
 class GfxInfoCollector : public GfxInfoCollectorBase {
  public:
   GfxInfoCollector(T* aPointer, void (T::*aFunc)(InfoObject& obj))
       : mPointer(aPointer), mFunc(aFunc) {}
   virtual void GetInfo(InfoObject& obj) override { (mPointer->*mFunc)(obj); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  T *mPointer;
-  void (T::*mFunc)(InfoObject &obj);
-||||||| merged common ancestors
-=======
  protected:
   T* mPointer;
   void (T::*mFunc)(InfoObject& obj);
->>>>>>> upstream-releases
 };
 
 }  // namespace widget

@@ -36,40 +36,6 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(nsHtml5Parser)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
 nsHtml5Parser::nsHtml5Parser()
-<<<<<<< HEAD
-    : mLastWasCR(false),
-      mDocWriteSpeculativeLastWasCR(false),
-      mBlocked(0),
-      mDocWriteSpeculatorActive(false),
-      mInsertionPointPushLevel(0),
-      mDocumentClosed(false),
-      mInDocumentWrite(false),
-      mInsertionPointPermanentlyUndefined(false),
-      mFirstBuffer(new nsHtml5OwningUTF16Buffer((void*)nullptr)),
-      mLastBuffer(mFirstBuffer),
-      mExecutor(new nsHtml5TreeOpExecutor()),
-      mTreeBuilder(new nsHtml5TreeBuilder(mExecutor, nullptr)),
-      mTokenizer(new nsHtml5Tokenizer(mTreeBuilder, false)),
-      mRootContextLineNumber(1),
-      mReturnToStreamParserPermitted(false) {
-||||||| merged common ancestors
-  : mLastWasCR(false)
-  , mDocWriteSpeculativeLastWasCR(false)
-  , mBlocked(0)
-  , mDocWriteSpeculatorActive(false)
-  , mInsertionPointPushLevel(0)
-  , mDocumentClosed(false)
-  , mInDocumentWrite(false)
-  , mInsertionPointPermanentlyUndefined(false)
-  , mFirstBuffer(new nsHtml5OwningUTF16Buffer((void*)nullptr))
-  , mLastBuffer(mFirstBuffer)
-  , mExecutor(new nsHtml5TreeOpExecutor())
-  , mTreeBuilder(new nsHtml5TreeBuilder(mExecutor, nullptr))
-  , mTokenizer(new nsHtml5Tokenizer(mTreeBuilder, false))
-  , mRootContextLineNumber(1)
-  , mReturnToStreamParserPermitted(false)
-{
-=======
     : mLastWasCR(false),
       mDocWriteSpeculativeLastWasCR(false),
       mBlocked(0),
@@ -85,7 +51,6 @@ nsHtml5Parser::nsHtml5Parser()
       mTokenizer(new nsHtml5Tokenizer(mTreeBuilder, false)),
       mRootContextLineNumber(1),
       mReturnToStreamParserPermitted(false) {
->>>>>>> upstream-releases
   mTokenizer->setInterner(&mAtomTable);
 }
 
@@ -208,23 +173,8 @@ nsHtml5Parser::Parse(nsIURI* aURL, nsIRequestObserver* aObserver,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsHtml5Parser::Parse(const nsAString& aSourceBuffer, void* aKey,
-                              const nsACString& aContentType, bool aLastCall,
-                              nsDTDMode aMode)  // ignored
-{
-||||||| merged common ancestors
-nsresult
-nsHtml5Parser::Parse(const nsAString& aSourceBuffer,
-                     void* aKey,
-                     const nsACString& aContentType,
-                     bool aLastCall,
-                     nsDTDMode aMode) // ignored
-{
-=======
 nsresult nsHtml5Parser::Parse(const nsAString& aSourceBuffer, void* aKey,
                               bool aLastCall) {
->>>>>>> upstream-releases
   nsresult rv;
   if (NS_FAILED(rv = mExecutor->IsBroken())) {
     return rv;
@@ -550,33 +500,13 @@ bool nsHtml5Parser::IsInsertionPointDefined() {
          (!GetStreamParser() || mScriptNestingLevel != 0);
 }
 
-<<<<<<< HEAD
-void nsHtml5Parser::PushDefinedInsertionPoint() { ++mInsertionPointPushLevel; }
-||||||| merged common ancestors
-void
-nsHtml5Parser::PushDefinedInsertionPoint()
-{
-  ++mInsertionPointPushLevel;
-}
-=======
 void nsHtml5Parser::IncrementScriptNestingLevel() { ++mScriptNestingLevel; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void nsHtml5Parser::PopDefinedInsertionPoint() { --mInsertionPointPushLevel; }
-||||||| merged common ancestors
-void
-nsHtml5Parser::PopDefinedInsertionPoint()
-{
-  --mInsertionPointPushLevel;
-}
-=======
 void nsHtml5Parser::DecrementScriptNestingLevel() { --mScriptNestingLevel; }
 
 bool nsHtml5Parser::HasNonzeroScriptNestingLevel() const {
   return mScriptNestingLevel != 0;
 }
->>>>>>> upstream-releases
 
 void nsHtml5Parser::MarkAsNotScriptCreated(const char* aCommand) {
   MOZ_ASSERT(!mStreamListener, "Must not call this twice.");
@@ -710,20 +640,6 @@ nsresult nsHtml5Parser::ParseUntilBlocked() {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsHtml5Parser::Initialize(nsIDocument* aDoc, nsIURI* aURI,
-                                   nsISupports* aContainer,
-                                   nsIChannel* aChannel) {
-  return mExecutor->Init(aDoc, aURI, aContainer, aChannel);
-||||||| merged common ancestors
-nsresult
-nsHtml5Parser::Initialize(nsIDocument* aDoc,
-                          nsIURI* aURI,
-                          nsISupports* aContainer,
-                          nsIChannel* aChannel)
-{
-  return mExecutor->Init(aDoc, aURI, aContainer, aChannel);
-=======
 nsresult nsHtml5Parser::StartExecutor() {
   MOZ_ASSERT(!GetStreamParser(),
              "Had stream parser but document.write started life cycle.");
@@ -742,17 +658,8 @@ nsresult nsHtml5Parser::StartExecutor() {
    * have a script global andthe WillBuildModel call is safe.
    */
   return executor->WillBuildModel(eDTDMode_unknown);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsHtml5Parser::StartTokenizer(bool aScriptingEnabled) {
-||||||| merged common ancestors
-void
-nsHtml5Parser::StartTokenizer(bool aScriptingEnabled)
-{
-
-=======
 nsresult nsHtml5Parser::Initialize(mozilla::dom::Document* aDoc, nsIURI* aURI,
                                    nsISupports* aContainer,
                                    nsIChannel* aChannel) {
@@ -760,7 +667,6 @@ nsresult nsHtml5Parser::Initialize(mozilla::dom::Document* aDoc, nsIURI* aURI,
 }
 
 void nsHtml5Parser::StartTokenizer(bool aScriptingEnabled) {
->>>>>>> upstream-releases
   bool isSrcdoc = false;
   nsCOMPtr<nsIChannel> channel;
   nsresult rv = GetChannel(getter_AddRefs(channel));

@@ -22,15 +22,8 @@ class nsMathMLmpaddedFrame final : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmpaddedFrame)
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewMathMLmpaddedFrame(nsIPresShell* aPresShell,
-                                            ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewMathMLmpaddedFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewMathMLmpaddedFrame(mozilla::PresShell* aPresShell,
                                             ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   NS_IMETHOD
   InheritAutomaticData(nsIFrame* aParent) override;
@@ -51,36 +44,6 @@ class nsMathMLmpaddedFrame final : public nsMathMLContainerFrame {
     return mFrames.FirstChild() != mFrames.LastChild() || !mFrames.FirstChild();
   }
 
-<<<<<<< HEAD
- protected:
-  explicit nsMathMLmpaddedFrame(ComputedStyle* aStyle)
-      : nsMathMLContainerFrame(aStyle, kClassID),
-        mWidthSign(0),
-        mHeightSign(0),
-        mDepthSign(0),
-        mLeadingSpaceSign(0),
-        mVerticalOffsetSign(0),
-        mWidthPseudoUnit(0),
-        mHeightPseudoUnit(0),
-        mDepthPseudoUnit(0),
-        mLeadingSpacePseudoUnit(0),
-        mVerticalOffsetPseudoUnit(0) {}
-||||||| merged common ancestors
-protected:
-  explicit nsMathMLmpaddedFrame(ComputedStyle* aStyle)
-    : nsMathMLContainerFrame(aStyle, kClassID)
-    , mWidthSign(0)
-    , mHeightSign(0)
-    , mDepthSign(0)
-    , mLeadingSpaceSign(0)
-    , mVerticalOffsetSign(0)
-    , mWidthPseudoUnit(0)
-    , mHeightPseudoUnit(0)
-    , mDepthPseudoUnit(0)
-    , mLeadingSpacePseudoUnit(0)
-    , mVerticalOffsetPseudoUnit(0)
-  {}
-=======
  protected:
   explicit nsMathMLmpaddedFrame(ComputedStyle* aStyle,
                                 nsPresContext* aPresContext)
@@ -95,7 +58,6 @@ protected:
         mDepthPseudoUnit(0),
         mLeadingSpacePseudoUnit(0),
         mVerticalOffsetPseudoUnit(0) {}
->>>>>>> upstream-releases
 
   virtual ~nsMathMLmpaddedFrame();
 

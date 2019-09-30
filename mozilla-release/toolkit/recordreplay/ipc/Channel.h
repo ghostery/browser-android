@@ -61,74 +61,8 @@ namespace recordreplay {
   /* (potentially) idling indefinitely. This has no effect on a replaying process. */ \
   _Macro(CreateCheckpoint)                                     \
                                                                \
-<<<<<<< HEAD
-  /* Debugger JSON messages are initially sent from the parent. The child unpauses */ \
-  /* after receiving the message and will pause after it sends a DebuggerResponse. */ \
-  _Macro(DebuggerRequest)                                      \
-                                                               \
-  /* Add a breakpoint position to stop at. Because a single entry point is used for */ \
-  /* calling into the ReplayDebugger after pausing, the set of breakpoints is simply */ \
-  /* a set of positions at which the child process should pause and send a HitBreakpoint */ \
-  /* message. */                                               \
-  _Macro(AddBreakpoint)                                        \
-                                                               \
-  /* Clear all installed breakpoints. */                       \
-  _Macro(ClearBreakpoints)                                     \
-                                                               \
-  /* Unpause the child and play execution either to the next point when a */ \
-  /* breakpoint is hit, or to the next checkpoint. Resumption may be either */ \
-  /* forward or backward. */                                   \
-  _Macro(Resume)                                               \
-                                                               \
-  /* Rewind to a particular saved checkpoint in the past. */   \
-  _Macro(RestoreCheckpoint)                                    \
-                                                               \
-  /* Run forward to a particular execution point between the current checkpoint */ \
-  /* and the next one. */                                      \
-  _Macro(RunToPoint)                                           \
-                                                               \
-  /* Notify the child whether it is the active child and should send paint and similar */ \
-  /* messages to the middleman. */                             \
-  _Macro(SetIsActive)                                          \
-                                                               \
-  /* Set whether to perform intentional crashes, for testing. */ \
-  _Macro(SetAllowIntentionalCrashes)                           \
-                                                               \
-  /* Set whether to save a particular checkpoint. */           \
-  _Macro(SetSaveCheckpoint)                                    \
-||||||| merged common ancestors
-  /* Debugger JSON messages are initially sent from the parent. The child unpauses */ \
-  /* after receiving the message and will pause after it sends a DebuggerResponse. */ \
-  _Macro(DebuggerRequest)                                      \
-                                                               \
-  /* Set or clear a JavaScript breakpoint. */                  \
-  _Macro(SetBreakpoint)                                        \
-                                                               \
-  /* Unpause the child and play execution either to the next point when a */ \
-  /* breakpoint is hit, or to the next checkpoint. Resumption may be either */ \
-  /* forward or backward. */                                   \
-  _Macro(Resume)                                               \
-                                                               \
-  /* Rewind to a particular saved checkpoint in the past. */   \
-  _Macro(RestoreCheckpoint)                                    \
-                                                               \
-  /* Run forward to a particular execution point between the current checkpoint */ \
-  /* and the next one. */                                      \
-  _Macro(RunToPoint)                                           \
-                                                               \
-  /* Notify the child whether it is the active child and should send paint and similar */ \
-  /* messages to the middleman. */                             \
-  _Macro(SetIsActive)                                          \
-                                                               \
-  /* Set whether to perform intentional crashes, for testing. */ \
-  _Macro(SetAllowIntentionalCrashes)                           \
-                                                               \
-  /* Set whether to save a particular checkpoint. */           \
-  _Macro(SetSaveCheckpoint)                                    \
-=======
   /* Unpause the child and perform a debugger-defined operation. */ \
   _Macro(ManifestStart)                                             \
->>>>>>> upstream-releases
                                                                \
   /* Respond to a MiddlemanCallRequest message. */             \
   _Macro(MiddlemanCallResponse)                                \
@@ -173,31 +107,12 @@ struct Message {
   // Total message size, including the header.
   uint32_t mSize;
 
-<<<<<<< HEAD
- protected:
-  Message(MessageType aType, uint32_t aSize) : mType(aType), mSize(aSize) {
-||||||| merged common ancestors
-protected:
-  Message(MessageType aType, uint32_t aSize)
-    : mType(aType), mSize(aSize)
-  {
-=======
  protected:
   Message(MessageType aType, uint32_t aSize)
       : mType(aType), mReceiveTime(0), mSize(aSize) {
->>>>>>> upstream-releases
     MOZ_RELEASE_ASSERT(mSize >= sizeof(*this));
   }
 
-<<<<<<< HEAD
- public:
-  Message* Clone() const {
-    char* res = (char*)malloc(mSize);
-||||||| merged common ancestors
-public:
-  Message* Clone() const {
-    char* res = (char*) malloc(mSize);
-=======
  public:
   struct FreePolicy {
     void operator()(Message* msg) { /*free(msg);*/
@@ -207,15 +122,8 @@ public:
 
   UniquePtr Clone() const {
     Message* res = static_cast<Message*>(malloc(mSize));
->>>>>>> upstream-releases
     memcpy(res, this, mSize);
-<<<<<<< HEAD
-    return (Message*)res;
-||||||| merged common ancestors
-    return (Message*) res;
-=======
     return UniquePtr(res);
->>>>>>> upstream-releases
   }
 
   const char* TypeString() const {
@@ -232,23 +140,11 @@ public:
   // Return whether this is a middleman->child message that can be sent while
   // the child is unpaused.
   bool CanBeSentWhileUnpaused() const {
-<<<<<<< HEAD
-    return mType == MessageType::CreateCheckpoint ||
-           mType == MessageType::SetDebuggerRunsInMiddleman ||
-           mType == MessageType::MiddlemanCallResponse ||
-           mType == MessageType::Terminate;
-||||||| merged common ancestors
-    return mType == MessageType::CreateCheckpoint
-        || mType == MessageType::SetDebuggerRunsInMiddleman
-        || mType == MessageType::MiddlemanCallResponse
-        || mType == MessageType::Terminate;
-=======
     return mType == MessageType::CreateCheckpoint ||
            mType == MessageType::SetDebuggerRunsInMiddleman ||
            mType == MessageType::MiddlemanCallResponse ||
            mType == MessageType::Terminate ||
            mType == MessageType::Introduction;
->>>>>>> upstream-releases
   }
 
  protected:
@@ -345,180 +241,10 @@ struct JSONMessage : public Message {
   }
 };
 
-<<<<<<< HEAD
-typedef JSONMessage<MessageType::DebuggerRequest> DebuggerRequestMessage;
-typedef JSONMessage<MessageType::DebuggerResponse> DebuggerResponseMessage;
-
-struct AddBreakpointMessage : public Message {
-  js::BreakpointPosition mPosition;
-
-  explicit AddBreakpointMessage(const js::BreakpointPosition& aPosition)
-      : Message(MessageType::AddBreakpoint, sizeof(*this)),
-        mPosition(aPosition) {}
-};
-
-typedef EmptyMessage<MessageType::ClearBreakpoints> ClearBreakpointsMessage;
-
-struct ResumeMessage : public Message {
-  // Whether to travel forwards or backwards.
-  bool mForward;
-
-  explicit ResumeMessage(bool aForward)
-      : Message(MessageType::Resume, sizeof(*this)), mForward(aForward) {}
-};
-
-struct RestoreCheckpointMessage : public Message {
-  // The checkpoint to restore.
-  size_t mCheckpoint;
-
-  explicit RestoreCheckpointMessage(size_t aCheckpoint)
-      : Message(MessageType::RestoreCheckpoint, sizeof(*this)),
-        mCheckpoint(aCheckpoint) {}
-};
-
-struct RunToPointMessage : public Message {
-  // The target execution point.
-  js::ExecutionPoint mTarget;
-
-  explicit RunToPointMessage(const js::ExecutionPoint& aTarget)
-      : Message(MessageType::RunToPoint, sizeof(*this)), mTarget(aTarget) {}
-};
-
-struct SetIsActiveMessage : public Message {
-  // Whether this is the active child process (see ParentIPC.cpp).
-  bool mActive;
-||||||| merged common ancestors
-typedef JSONMessage<MessageType::DebuggerRequest> DebuggerRequestMessage;
-typedef JSONMessage<MessageType::DebuggerResponse> DebuggerResponseMessage;
-
-struct SetBreakpointMessage : public Message
-{
-  // ID of the breakpoint to change.
-  size_t mId;
-
-  // New position of the breakpoint. If this is invalid then the breakpoint is
-  // being cleared.
-  js::BreakpointPosition mPosition;
-
-  SetBreakpointMessage(size_t aId, const js::BreakpointPosition& aPosition)
-    : Message(MessageType::SetBreakpoint, sizeof(*this))
-    , mId(aId)
-    , mPosition(aPosition)
-  {}
-};
-
-struct ResumeMessage : public Message
-{
-  // Whether to travel forwards or backwards.
-  bool mForward;
-
-  explicit ResumeMessage(bool aForward)
-    : Message(MessageType::Resume, sizeof(*this))
-    , mForward(aForward)
-  {}
-};
-
-struct RestoreCheckpointMessage : public Message
-{
-  // The checkpoint to restore.
-  size_t mCheckpoint;
-
-  explicit RestoreCheckpointMessage(size_t aCheckpoint)
-    : Message(MessageType::RestoreCheckpoint, sizeof(*this))
-    , mCheckpoint(aCheckpoint)
-  {}
-};
-
-struct RunToPointMessage : public Message
-{
-  // The target execution point.
-  js::ExecutionPoint mTarget;
-
-  explicit RunToPointMessage(const js::ExecutionPoint& aTarget)
-    : Message(MessageType::RunToPoint, sizeof(*this))
-    , mTarget(aTarget)
-  {}
-};
-
-struct SetIsActiveMessage : public Message
-{
-  // Whether this is the active child process (see ParentIPC.cpp).
-  bool mActive;
-=======
 typedef JSONMessage<MessageType::ManifestStart> ManifestStartMessage;
 typedef JSONMessage<MessageType::ManifestFinished> ManifestFinishedMessage;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  explicit SetIsActiveMessage(bool aActive)
-      : Message(MessageType::SetIsActive, sizeof(*this)), mActive(aActive) {}
-};
-
-struct SetAllowIntentionalCrashesMessage : public Message {
-  // Whether to allow intentional crashes in the future or not.
-  bool mAllowed;
-
-  explicit SetAllowIntentionalCrashesMessage(bool aAllowed)
-      : Message(MessageType::SetAllowIntentionalCrashes, sizeof(*this)),
-        mAllowed(aAllowed) {}
-};
-
-struct SetSaveCheckpointMessage : public Message {
-  // The checkpoint in question.
-  size_t mCheckpoint;
-
-  // Whether to save this checkpoint whenever it is encountered.
-  bool mSave;
-
-  SetSaveCheckpointMessage(size_t aCheckpoint, bool aSave)
-      : Message(MessageType::SetSaveCheckpoint, sizeof(*this)),
-        mCheckpoint(aCheckpoint),
-        mSave(aSave) {}
-};
-
-typedef EmptyMessage<MessageType::RecordingFlushed> RecordingFlushedMessage;
 
 struct FatalErrorMessage : public Message {
-||||||| merged common ancestors
-  explicit SetIsActiveMessage(bool aActive)
-    : Message(MessageType::SetIsActive, sizeof(*this))
-    , mActive(aActive)
-  {}
-};
-
-struct SetAllowIntentionalCrashesMessage : public Message
-{
-  // Whether to allow intentional crashes in the future or not.
-  bool mAllowed;
-
-  explicit SetAllowIntentionalCrashesMessage(bool aAllowed)
-    : Message(MessageType::SetAllowIntentionalCrashes, sizeof(*this))
-    , mAllowed(aAllowed)
-  {}
-};
-
-struct SetSaveCheckpointMessage : public Message
-{
-  // The checkpoint in question.
-  size_t mCheckpoint;
-
-  // Whether to save this checkpoint whenever it is encountered.
-  bool mSave;
-
-  SetSaveCheckpointMessage(size_t aCheckpoint, bool aSave)
-    : Message(MessageType::SetSaveCheckpoint, sizeof(*this))
-    , mCheckpoint(aCheckpoint)
-    , mSave(aSave)
-  {}
-};
-
-typedef EmptyMessage<MessageType::RecordingFlushed> RecordingFlushedMessage;
-
-struct FatalErrorMessage : public Message
-{
-=======
-struct FatalErrorMessage : public Message {
->>>>>>> upstream-releases
   explicit FatalErrorMessage(uint32_t aSize)
       : Message(MessageType::FatalError, aSize) {}
 
@@ -546,78 +272,6 @@ struct PaintMessage : public Message {
         mHeight(aHeight) {}
 };
 
-<<<<<<< HEAD
-struct HitCheckpointMessage : public Message {
-  uint32_t mCheckpointId;
-  bool mRecordingEndpoint;
-
-  // When recording, the amount of non-idle time taken to get to this
-  // checkpoint from the previous one.
-  double mDurationMicroseconds;
-
-  HitCheckpointMessage(uint32_t aCheckpointId, bool aRecordingEndpoint,
-                       double aDurationMicroseconds)
-      : Message(MessageType::HitCheckpoint, sizeof(*this)),
-        mCheckpointId(aCheckpointId),
-        mRecordingEndpoint(aRecordingEndpoint),
-        mDurationMicroseconds(aDurationMicroseconds) {}
-};
-
-struct HitBreakpointMessage : public Message {
-  bool mRecordingEndpoint;
-
-  explicit HitBreakpointMessage(bool aRecordingEndpoint)
-      : Message(MessageType::HitBreakpoint, sizeof(*this)),
-        mRecordingEndpoint(aRecordingEndpoint) {}
-};
-
-typedef EmptyMessage<MessageType::AlwaysMarkMajorCheckpoints>
-    AlwaysMarkMajorCheckpointsMessage;
-
-||||||| merged common ancestors
-struct HitCheckpointMessage : public Message
-{
-  uint32_t mCheckpointId;
-  bool mRecordingEndpoint;
-
-  // When recording, the amount of non-idle time taken to get to this
-  // checkpoint from the previous one.
-  double mDurationMicroseconds;
-
-  HitCheckpointMessage(uint32_t aCheckpointId, bool aRecordingEndpoint, double aDurationMicroseconds)
-    : Message(MessageType::HitCheckpoint, sizeof(*this))
-    , mCheckpointId(aCheckpointId)
-    , mRecordingEndpoint(aRecordingEndpoint)
-    , mDurationMicroseconds(aDurationMicroseconds)
-  {}
-};
-
-struct HitBreakpointMessage : public Message
-{
-  bool mRecordingEndpoint;
-
-  HitBreakpointMessage(uint32_t aSize, bool aRecordingEndpoint)
-    : Message(MessageType::HitBreakpoint, aSize)
-    , mRecordingEndpoint(aRecordingEndpoint)
-  {}
-
-  const uint32_t* Breakpoints() const { return Data<HitBreakpointMessage, uint32_t>(); }
-  uint32_t NumBreakpoints() const { return DataSize<HitBreakpointMessage, uint32_t>(); }
-
-  static HitBreakpointMessage* New(bool aRecordingEndpoint,
-                                   const uint32_t* aBreakpoints, size_t aNumBreakpoints) {
-    HitBreakpointMessage* res =
-      NewWithData<HitBreakpointMessage, uint32_t>(aNumBreakpoints, aRecordingEndpoint);
-    MOZ_RELEASE_ASSERT(res->NumBreakpoints() == aNumBreakpoints);
-    PodCopy(res->Data<HitBreakpointMessage, uint32_t>(), aBreakpoints, aNumBreakpoints);
-    return res;
-  }
-};
-
-typedef EmptyMessage<MessageType::AlwaysMarkMajorCheckpoints> AlwaysMarkMajorCheckpointsMessage;
-
-=======
->>>>>>> upstream-releases
 template <MessageType Type>
 struct BinaryMessage : public Message {
   explicit BinaryMessage(uint32_t aSize) : Message(Type, aSize) {}
@@ -636,33 +290,6 @@ struct BinaryMessage : public Message {
   }
 };
 
-<<<<<<< HEAD
-typedef BinaryMessage<MessageType::MiddlemanCallRequest>
-    MiddlemanCallRequestMessage;
-typedef BinaryMessage<MessageType::MiddlemanCallResponse>
-    MiddlemanCallResponseMessage;
-typedef EmptyMessage<MessageType::ResetMiddlemanCalls>
-    ResetMiddlemanCallsMessage;
-
-static inline MiddlemanCallResponseMessage* ProcessMiddlemanCallMessage(
-    const MiddlemanCallRequestMessage& aMsg) {
-  InfallibleVector<char> outputData;
-  ProcessMiddlemanCall(aMsg.BinaryData(), aMsg.BinaryDataSize(), &outputData);
-  return MiddlemanCallResponseMessage::New(outputData.begin(),
-                                           outputData.length());
-}
-
-class Channel {
- public:
-||||||| merged common ancestors
-typedef BinaryMessage<MessageType::MiddlemanCallRequest> MiddlemanCallRequestMessage;
-typedef BinaryMessage<MessageType::MiddlemanCallResponse> MiddlemanCallResponseMessage;
-typedef EmptyMessage<MessageType::ResetMiddlemanCalls> ResetMiddlemanCallsMessage;
-
-class Channel
-{
-public:
-=======
 typedef BinaryMessage<MessageType::MiddlemanCallRequest>
     MiddlemanCallRequestMessage;
 typedef BinaryMessage<MessageType::MiddlemanCallResponse>
@@ -672,7 +299,6 @@ typedef EmptyMessage<MessageType::ResetMiddlemanCalls>
 
 class Channel {
  public:
->>>>>>> upstream-releases
   // Note: the handler is responsible for freeing its input message. It will be
   // called on the channel's message thread.
   typedef std::function<void(Message::UniquePtr)> MessageHandler;

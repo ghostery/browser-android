@@ -175,53 +175,6 @@
 @RESPATH@/components/nsUpdateService.manifest
 #endif
 @RESPATH@/components/ProcessSingleton.manifest
-<<<<<<< HEAD
-@RESPATH@/components/MainProcessSingleton.js
-@RESPATH@/components/ContentProcessSingleton.js
-@RESPATH@/components/nsURLFormatter.manifest
-@RESPATH@/components/nsURLFormatter.js
-@RESPATH@/components/toolkitplaces.manifest
-@RESPATH@/components/nsTaggingService.js
-@RESPATH@/components/UnifiedComplete.js
-@RESPATH@/components/nsPlacesExpiration.js
-@RESPATH@/components/PageIconProtocolHandler.js
-@RESPATH@/components/PlacesCategoriesStarter.js
-@RESPATH@/components/ColorAnalyzer.js
-@RESPATH@/components/PageThumbsStorageService.js
-@RESPATH@/components/mozProtocolHandler.js
-@RESPATH@/components/mozProtocolHandler.manifest
-@RESPATH@/components/nsDefaultCLH.manifest
-@RESPATH@/components/nsDefaultCLH.js
-@RESPATH@/components/ContentPrefService2.manifest
-@RESPATH@/components/ContentPrefService2.js
-@RESPATH@/components/nsContentDispatchChooser.manifest
-@RESPATH@/components/nsContentDispatchChooser.js
-||||||| merged common ancestors
-@RESPATH@/components/MainProcessSingleton.js
-@RESPATH@/components/ContentProcessSingleton.js
-@RESPATH@/components/nsURLFormatter.manifest
-@RESPATH@/components/nsURLFormatter.js
-@RESPATH@/components/txEXSLTRegExFunctions.manifest
-@RESPATH@/components/txEXSLTRegExFunctions.js
-@RESPATH@/components/toolkitplaces.manifest
-@RESPATH@/components/nsLivemarkService.js
-@RESPATH@/components/nsTaggingService.js
-@RESPATH@/components/UnifiedComplete.js
-@RESPATH@/components/nsPlacesExpiration.js
-@RESPATH@/components/PageIconProtocolHandler.js
-@RESPATH@/components/PlacesCategoriesStarter.js
-@RESPATH@/components/ColorAnalyzer.js
-@RESPATH@/components/PageThumbsStorageService.js
-@RESPATH@/components/mozProtocolHandler.js
-@RESPATH@/components/mozProtocolHandler.manifest
-@RESPATH@/components/nsDefaultCLH.manifest
-@RESPATH@/components/nsDefaultCLH.js
-@RESPATH@/components/ContentPrefService2.manifest
-@RESPATH@/components/ContentPrefService2.js
-@RESPATH@/components/nsContentDispatchChooser.manifest
-@RESPATH@/components/nsContentDispatchChooser.js
-=======
->>>>>>> upstream-releases
 @RESPATH@/components/HandlerService.manifest
 @RESPATH@/components/HandlerService.js
 #ifdef XP_MACOSX

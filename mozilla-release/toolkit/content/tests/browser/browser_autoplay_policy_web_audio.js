@@ -110,22 +110,12 @@ function startAudioContext(method) {
   node.start();
 }
 
-<<<<<<< HEAD
-async function testAutoplayExistingPermission({name, permission}) {
-  info(`- starting \"${name}\" -`);
-  const tab = await BrowserTestUtils.openNewForegroundTab(window.gBrowser, PAGE);
-||||||| merged common ancestors
-async function testAutoplayExistingPermission(args) {
-  info(`- starting \"${args.name}\" -`);
-  const tab = await BrowserTestUtils.openNewForegroundTab(window.gBrowser, PAGE);
-=======
 async function testAutoplayExistingPermission({ name, permission }) {
   info(`- starting \"${name}\" -`);
   const tab = await BrowserTestUtils.openNewForegroundTab(
     window.gBrowser,
     PAGE
   );
->>>>>>> upstream-releases
   const browser = tab.linkedBrowser;
 
   info(`- set the 'autoplay-media' permission -`);
@@ -138,19 +128,6 @@ async function testAutoplayExistingPermission({ name, permission }) {
   loadFrameScript(browser, createAudioContext);
 
   info(`- check AudioContext status -`);
-<<<<<<< HEAD
-  const isAllowedToStart = permission === SitePermissions.ALLOW;
-  await ContentTask.spawn(browser, isAllowedToStart,
-                          checkIfAudioContextIsAllowedToStart);
-  await ContentTask.spawn(browser, isAllowedToStart,
-                          resumeAudioContext);
-||||||| merged common ancestors
-  const isAllowedToStart = args.permission === SitePermissions.ALLOW;
-  await ContentTask.spawn(browser, isAllowedToStart,
-                          checkIfAudioContextIsAllowedToStart);
-  await ContentTask.spawn(browser, isAllowedToStart,
-                          resumeAudioContext);
-=======
   const isAllowedToStart = permission === SitePermissions.ALLOW;
   await ContentTask.spawn(
     browser,
@@ -158,29 +135,18 @@ async function testAutoplayExistingPermission({ name, permission }) {
     checkIfAudioContextIsAllowedToStart
   );
   await ContentTask.spawn(browser, isAllowedToStart, resumeAudioContext);
->>>>>>> upstream-releases
 
   info(`- remove tab -`);
   SitePermissions.remove(browser.currentURI, "autoplay-media");
   await BrowserTestUtils.removeTab(tab);
 }
 
-<<<<<<< HEAD
-async function testAutoplayUnknownPermission({name, button, method}) {
-  info(`- starting \"${name}\" -`);
-  const tab = await BrowserTestUtils.openNewForegroundTab(window.gBrowser, PAGE);
-||||||| merged common ancestors
-async function testAutoplayUnknownPermission(args) {
-  info(`- starting \"${args.name}\" -`);
-  const tab = await BrowserTestUtils.openNewForegroundTab(window.gBrowser, PAGE);
-=======
 async function testAutoplayUnknownPermission({ name, method }) {
   info(`- starting \"${name}\" -`);
   const tab = await BrowserTestUtils.openNewForegroundTab(
     window.gBrowser,
     PAGE
   );
->>>>>>> upstream-releases
   const browser = tab.linkedBrowser;
 
   info(`- set the 'autoplay-media' permission to UNKNOWN -`);
@@ -193,71 +159,6 @@ async function testAutoplayUnknownPermission({ name, method }) {
   );
   ok(!promptShow(), `should not be showing permission prompt yet`);
 
-<<<<<<< HEAD
-  info(`- create AudioContext which should not start until user approves -`);
-  loadFrameScript(browser, createAudioContext);
-  await ContentTask.spawn(browser, false, checkIfAudioContextIsAllowedToStart);
-
-  info(`- try to start AudioContext and show doorhanger to ask for user's approval -`);
-  const popupShow = BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popupshown");
-  await ContentTask.spawn(browser, method, startAudioContext);
-  await popupShow;
-  ok(promptShow(), `should now be showing permission prompt`);
-
-  info(`- simulate clicking button on doorhanger -`);
-  if (button == "allow") {
-    PopupNotifications.panel.firstElementChild.button.click();
-  } else if (button == "block") {
-    PopupNotifications.panel.firstChild.secondaryButton.click();
-  } else {
-    ok(false, `invalid button field`);
-  }
-||||||| merged common ancestors
-  info(`- create audio context -`);
-  const popupShow = BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popupshown");
-  // We want the same audio context to be used across different content
-  // tasks, so it needs to be loaded by a frame script.
-  const mm = tab.linkedBrowser.messageManager;
-  mm.loadFrameScript("data:,(" + createAudioContext.toString() + ")();", false);
-  await popupShow;
-  ok(promptShow(), `should now be showing permission prompt`);
-
-  info(`- AudioContext should not be started before user responds to doorhanger -`);
-  await ContentTask.spawn(browser, "suspended",
-                          checkAudioContextState);
-
-  if (args.ignoreDoorhanger) {
-    const popupHide = BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popuphidden");
-    await ContentTask.spawn(browser, null, () => {
-      info(`- user ingores the doorhanger and interacts with page directly -`);
-      content.document.notifyUserGestureActivation();
-    });
-
-    await ContentTask.spawn(browser, true,
-                            resumeAudioContext);
-    ok(promptShow(), `doorhanger would only be dismissed when audible media starts`);
-    await ContentTask.spawn(browser, null,
-                            connectAudibleNodeToContext);
-    await popupHide;
-    ok(true, `doorhanger should dismiss after AudioContext starts audible`);
-  } else {
-    info(`- simulate clicking button on doorhanger-`);
-    if (args.button == "allow") {
-      PopupNotifications.panel.firstElementChild.button.click();
-    } else if (args.button == "block") {
-      PopupNotifications.panel.firstChild.secondaryButton.click();
-    } else {
-      ok(false, `Invalid button field`);
-    }
-
-    info(`- check AudioContext status -`);
-    const isAllowedToStart = args.button === "allow";
-    await ContentTask.spawn(browser, isAllowedToStart,
-                            checkIfAudioContextIsAllowedToStart);
-    await ContentTask.spawn(browser, isAllowedToStart,
-                            resumeAudioContext);
-  }
-=======
   info(`- create AudioContext which should not start -`);
   loadFrameScript(browser, createAudioContext);
   await ContentTask.spawn(browser, false, checkIfAudioContextIsAllowedToStart);
@@ -281,14 +182,6 @@ async function testAutoplayUnknownPermission({ name, method }) {
     true /* allow to start */,
     resumeAudioContext
   );
->>>>>>> upstream-releases
-
-  info(`- check AudioContext status -`);
-  const isAllowedToStart = button === "allow";
-  await ContentTask.spawn(browser, isAllowedToStart,
-                          checkIfAudioContextIsAllowedToStart);
-  await ContentTask.spawn(browser, isAllowedToStart,
-                          resumeAudioContext);
 
   info(`- remove tab -`);
   SitePermissions.remove(browser.currentURI, "autoplay-media");
@@ -307,35 +200,6 @@ add_task(async function start_tests() {
     name: "Prexisting block permission",
     permission: SitePermissions.BLOCK,
   });
-<<<<<<< HEAD
-  const startMethods = ["AudioContext", "AudioBufferSourceNode",
-                        "ConstantSourceNode", "OscillatorNode"];
-  for (let method of startMethods) {
-    await testAutoplayUnknownPermission({
-      name: "Unknown permission and click allow button on doorhanger",
-      button: "allow",
-      method,
-    });
-    await testAutoplayUnknownPermission({
-      name: "Unknown permission and click block button on doorhanger",
-      button: "block",
-      method,
-    });
-  }
-||||||| merged common ancestors
-  await testAutoplayUnknownPermission({
-    name: "Unknown permission and click allow button on doorhanger",
-    button: "allow",
-  });
-  await testAutoplayUnknownPermission({
-    name: "Unknown permission and click block button on doorhanger",
-    button: "block",
-  });
-  await testAutoplayUnknownPermission({
-    name: "Unknown permission and ignore doorhanger",
-    ignoreDoorhanger: true,
-  });
-=======
   const startMethods = [
     "AudioContext",
     "AudioBufferSourceNode",
@@ -349,5 +213,4 @@ add_task(async function start_tests() {
       method,
     });
   }
->>>>>>> upstream-releases
 });

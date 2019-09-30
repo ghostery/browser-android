@@ -4,10 +4,6 @@
 
 //! `<length>` computed values, and related ones.
 
-<<<<<<< HEAD
-use super::{Context, Number, Percentage, ToComputedValue};
-||||||| merged common ancestors
-=======
 use super::{Context, Number, Percentage, ToComputedValue};
 use crate::values::animated::ToAnimatedValue;
 use crate::values::computed::NonNegativeNumber;
@@ -21,17 +17,7 @@ use crate::values::specified::length::ViewportPercentageLength;
 use crate::values::specified::length::{AbsoluteLength, FontBaseSize, FontRelativeLength};
 use crate::values::{specified, CSSFloat};
 use crate::Zero;
->>>>>>> upstream-releases
 use app_units::Au;
-use crate::values::animated::{Animate, Procedure, ToAnimatedValue, ToAnimatedZero};
-use crate::values::distance::{ComputeSquaredDistance, SquaredDistance};
-use crate::values::generics::length::MaxLength as GenericMaxLength;
-use crate::values::generics::length::MozLength as GenericMozLength;
-use crate::values::generics::transform::IsZeroLength;
-use crate::values::generics::NonNegative;
-use crate::values::specified::length::ViewportPercentageLength;
-use crate::values::specified::length::{AbsoluteLength, FontBaseSize, FontRelativeLength};
-use crate::values::{specified, Auto, CSSFloat, Either, IsAuto, Normal};
 use ordered_float::NotNan;
 use std::fmt::{self, Write};
 use std::ops::{Add, Neg};
@@ -244,75 +230,7 @@ impl ToCss for LengthPercentage {
     where
         W: Write,
     {
-<<<<<<< HEAD
-        use num_traits::Zero;
-
-        let length = self.unclamped_length();
-        match self.percentage {
-            Some(p) => {
-                if length.px() == 0. && self.clamping_mode.clamp(p.0) == p.0 {
-                    return p.to_css(dest);
-                }
-            },
-            None => {
-                if self.clamping_mode.clamp(length.px()) == length.px() {
-                    return length.to_css(dest);
-                }
-            },
-        }
-
-        dest.write_str("calc(")?;
-        if let Some(percentage) = self.percentage {
-            percentage.to_css(dest)?;
-            if length.px() != 0. {
-                dest.write_str(if length.px() < Zero::zero() {
-                    " - "
-                } else {
-                    " + "
-                })?;
-                length.abs().to_css(dest)?;
-            }
-        } else {
-            length.to_css(dest)?;
-        }
-
-        dest.write_str(")")
-||||||| merged common ancestors
-        use num_traits::Zero;
-
-        let length = self.unclamped_length();
-        match self.percentage {
-            Some(p) => {
-                if length.px() == 0. && self.clamping_mode.clamp(p.0) == p.0 {
-                    return p.to_css(dest);
-                }
-            }
-            None => {
-                if self.clamping_mode.clamp(length.px()) == length.px() {
-                    return length.to_css(dest);
-                }
-            }
-        }
-
-        dest.write_str("calc(")?;
-        if let Some(percentage) = self.percentage {
-            percentage.to_css(dest)?;
-            if length.px() != 0. {
-                dest.write_str(if length.px() < Zero::zero() {
-                    " - "
-                } else {
-                    " + "
-                })?;
-                length.abs().to_css(dest)?;
-            }
-        } else {
-            length.to_css(dest)?;
-        }
-
-        dest.write_str(")")
-=======
         specified::LengthPercentage::from_computed_value(self).to_css(dest)
->>>>>>> upstream-releases
     }
 }
 
@@ -508,115 +426,13 @@ impl ToComputedValue for specified::LengthPercentage {
             return specified::LengthPercentage::Percentage(p);
         }
 
-<<<<<<< HEAD
-impl IsZeroLength for LengthOrPercentage {
-    #[inline]
-    fn is_zero_length(&self) -> bool {
-        match *self {
-            LengthOrPercentage::Length(l) => l.0 == 0.0,
-            LengthOrPercentage::Percentage(p) => p.0 == 0.0,
-            LengthOrPercentage::Calc(c) => c.unclamped_length().0 == 0.0 && c.percentage() == 0.0,
-        }
-    }
-}
-
-#[allow(missing_docs)]
-#[animate(fallback = "Self::animate_fallback")]
-#[css(derive_debug)]
-#[derive(Animate, Clone, ComputeSquaredDistance, Copy, MallocSizeOf, PartialEq, ToCss)]
-#[distance(fallback = "Self::compute_squared_distance_fallback")]
-pub enum LengthOrPercentageOrAuto {
-    Length(Length),
-    Percentage(Percentage),
-    Auto,
-    Calc(CalcLengthOrPercentage),
-}
-
-impl LengthOrPercentageOrAuto {
-    /// <https://drafts.csswg.org/css-transitions/#animtype-lpcalc>
-    fn animate_fallback(&self, other: &Self, procedure: Procedure) -> Result<Self, ()> {
-        let this = <Option<CalcLengthOrPercentage>>::from(*self);
-        let other = <Option<CalcLengthOrPercentage>>::from(*other);
-        Ok(LengthOrPercentageOrAuto::Calc(
-            this.animate(&other, procedure)?.ok_or(())?,
-        ))
-    }
-
-    #[inline]
-    fn compute_squared_distance_fallback(&self, other: &Self) -> Result<SquaredDistance, ()> {
-        <Option<CalcLengthOrPercentage>>::compute_squared_distance(
-            &(*self).into(),
-            &(*other).into(),
-        )
-    }
-}
-
-/// A wrapper of LengthOrPercentageOrAuto, whose value must be >= 0.
-pub type NonNegativeLengthOrPercentageOrAuto = NonNegative<LengthOrPercentageOrAuto>;
-||||||| merged common ancestors
-#[allow(missing_docs)]
-#[animate(fallback = "Self::animate_fallback")]
-#[css(derive_debug)]
-#[derive(Animate, Clone, ComputeSquaredDistance, Copy, MallocSizeOf, PartialEq, ToCss)]
-#[distance(fallback = "Self::compute_squared_distance_fallback")]
-pub enum LengthOrPercentageOrAuto {
-    Length(Length),
-    Percentage(Percentage),
-    Auto,
-    Calc(CalcLengthOrPercentage),
-}
-
-impl LengthOrPercentageOrAuto {
-    /// <https://drafts.csswg.org/css-transitions/#animtype-lpcalc>
-    fn animate_fallback(&self, other: &Self, procedure: Procedure) -> Result<Self, ()> {
-        let this = <Option<CalcLengthOrPercentage>>::from(*self);
-        let other = <Option<CalcLengthOrPercentage>>::from(*other);
-        Ok(LengthOrPercentageOrAuto::Calc(
-            this.animate(&other, procedure)?.ok_or(())?,
-        ))
-    }
-
-    #[inline]
-    fn compute_squared_distance_fallback(&self, other: &Self) -> Result<SquaredDistance, ()> {
-        <Option<CalcLengthOrPercentage>>::compute_squared_distance(
-            &(*self).into(),
-            &(*other).into(),
-        )
-    }
-}
-
-/// A wrapper of LengthOrPercentageOrAuto, whose value must be >= 0.
-pub type NonNegativeLengthOrPercentageOrAuto = NonNegative<LengthOrPercentageOrAuto>;
-=======
         if !computed.has_percentage {
             return specified::LengthPercentage::Length(ToComputedValue::from_computed_value(
                 &computed.length(),
             ));
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-impl IsAuto for NonNegativeLengthOrPercentageOrAuto {
-    #[inline]
-    fn is_auto(&self) -> bool {
-        *self == Self::auto()
-    }
-}
-
-impl NonNegativeLengthOrPercentageOrAuto {
-    /// `auto`
-    #[inline]
-    pub fn auto() -> Self {
-        NonNegative(LengthOrPercentageOrAuto::Auto)
-||||||| merged common ancestors
-impl NonNegativeLengthOrPercentageOrAuto {
-    /// `auto`
-    #[inline]
-    pub fn auto() -> Self {
-        NonNegative(LengthOrPercentageOrAuto::Auto)
-=======
         specified::LengthPercentage::Calc(Box::new(ToComputedValue::from_computed_value(computed)))
->>>>>>> upstream-releases
     }
 }
 
@@ -976,23 +792,6 @@ pub type NonNegativeLengthOrNumber = GenericLengthOrNumber<NonNegativeLength, No
 /// block-size, and inline-size.
 #[allow(missing_docs)]
 #[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
-<<<<<<< HEAD
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToComputedValue,
-    ToCss,
-)]
-||||||| merged common ancestors
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, Parse, PartialEq, SpecifiedValueInfo,
-         ToComputedValue, ToCss)]
-=======
 #[derive(
     Clone,
     Copy,
@@ -1011,7 +810,6 @@ pub type NonNegativeLengthOrNumber = GenericLengthOrNumber<NonNegativeLength, No
     ToShmem,
 )]
 #[repr(u8)]
->>>>>>> upstream-releases
 pub enum ExtremumLength {
     #[parse(aliases = "-moz-max-content")]
     MaxContent,

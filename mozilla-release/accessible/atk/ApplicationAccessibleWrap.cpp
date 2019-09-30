@@ -44,15 +44,8 @@ gboolean toplevel_event_watcher(GSignalInvocationHint* ihint,
 
   // GTK native dialog
   if (!IS_MAI_OBJECT(child) &&
-<<<<<<< HEAD
-      (atk_object_get_role(child) == ATK_ROLE_DIALOG)) {
-||||||| merged common ancestors
-      (atk_object_get_role(child) == ATK_ROLE_DIALOG)) {
-
-=======
       (role == ATK_ROLE_DIALOG || role == ATK_ROLE_FILE_CHOOSER ||
        role == ATK_ROLE_COLOR_CHOOSER || role == ATK_ROLE_FONT_CHOOSER)) {
->>>>>>> upstream-releases
     if (data == reinterpret_cast<gpointer>(nsIAccessibleEvent::EVENT_SHOW)) {
       // Attach the dialog accessible to app accessible tree
       Accessible* windowAcc = GetAccService()->AddNativeRootAccessible(child);

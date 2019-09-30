@@ -12,28 +12,12 @@ add_task(async function test_management_themes() {
 
   let theme = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "name": "Simple theme test",
-      "version": "1.0",
-      "description": "test theme",
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-      "name": "Simple theme test",
-      "version": "1.0",
-      "description": "test theme",
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-=======
       name: "Simple theme test",
       version: "1.0",
       description: "test theme",
       theme: {
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
       },
     },

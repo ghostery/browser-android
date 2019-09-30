@@ -59,16 +59,7 @@ const BACKDROP_FILTER_ENABLED = Services.prefs.getBoolPref(
   "layout.css.backdrop-filter.enabled"
 );
 
-<<<<<<< HEAD
-const FLEXBOX_HIGHLIGHTER_ENABLED_PREF = "devtools.inspector.flexboxHighlighter.enabled";
-const CSS_SHAPES_ENABLED_PREF = "devtools.inspector.shapesHighlighter.enabled";
-||||||| merged common ancestors
-const FLEXBOX_HIGHLIGHTER_ENABLED_PREF = "devtools.inspector.flexboxHighlighter.enabled";
-const CSS_SHAPES_ENABLED_PREF = "devtools.inspector.shapesHighlighter.enabled";
-const CSS_SHAPE_OUTSIDE_ENABLED_PREF = "layout.css.shape-outside.enabled";
-=======
 const HTML_NS = "http://www.w3.org/1999/xhtml";
->>>>>>> upstream-releases
 
 /**
  * This module is used to process text for output by developer tools. This means
@@ -128,20 +119,10 @@ OutputParser.prototype = {
 
     options.expectCubicBezier = this.supportsType(name, "timing-function");
     options.expectDisplay = name === "display";
-<<<<<<< HEAD
-    options.expectFilter = name === "filter";
-    options.expectShape = name === "clip-path" || name === "shape-outside";
-||||||| merged common ancestors
-    options.expectFilter = name === "filter";
-    options.expectShape = name === "clip-path" ||
-                          (name === "shape-outside"
-                           && Services.prefs.getBoolPref(CSS_SHAPE_OUTSIDE_ENABLED_PREF));
-=======
     options.expectFilter =
       name === "filter" ||
       (BACKDROP_FILTER_ENABLED && name === "backdrop-filter");
     options.expectShape = name === "clip-path" || name === "shape-outside";
->>>>>>> upstream-releases
     options.expectFont = name === "font-family";
     options.supportsColor =
       this.supportsType(name, "color") || this.supportsType(name, "gradient");
@@ -1513,14 +1494,8 @@ OutputParser.prototype = {
         // Not having a type means that the default color type will be automatically used.
         colorObj.colorUnit = colorUtils.classifyColor(color);
       }
-<<<<<<< HEAD
-      color = colorObj.toString();
-      container.dataset.color = color;
-||||||| merged common ancestors
-=======
       color = colorObj.toString();
       container.dataset.color = color;
->>>>>>> upstream-releases
 
       const value = this._createNode(
         "span",

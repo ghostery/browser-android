@@ -7,37 +7,6 @@
 #ifndef MOZILLA_GFX_SHAREDSURFACESCHILD_H
 #define MOZILLA_GFX_SHAREDSURFACESCHILD_H
 
-<<<<<<< HEAD
-#include <stdint.h>                            // for uint32_t, uint64_t
-#include "mozilla/Attributes.h"                // for override
-#include "mozilla/Maybe.h"                     // for Maybe
-#include "mozilla/RefPtr.h"                    // for already_AddRefed
-#include "mozilla/StaticPtr.h"                 // for StaticRefPtr
-#include "mozilla/gfx/UserData.h"              // for UserDataKey
-#include "mozilla/webrender/WebRenderTypes.h"  // for wr::ImageKey
-#include "nsTArray.h"                          // for AutoTArray
-
-namespace mozilla {
-namespace layers {
-class AnimationImageKeyData;
-}  // namespace layers
-}  // namespace mozilla
-
-template <>
-struct nsTArray_CopyChooser<mozilla::layers::AnimationImageKeyData> {
-  typedef nsTArray_CopyWithConstructors<mozilla::layers::AnimationImageKeyData>
-      Type;
-};
-||||||| merged common ancestors
-#include <stddef.h>                     // for size_t
-#include <stdint.h>                     // for uint32_t, uint64_t
-#include "mozilla/Attributes.h"         // for override
-#include "mozilla/Maybe.h"              // for Maybe
-#include "mozilla/RefPtr.h"             // for already_AddRefed
-#include "mozilla/StaticPtr.h"          // for StaticRefPtr
-#include "mozilla/gfx/UserData.h"       // for UserDataKey
-#include "mozilla/webrender/WebRenderTypes.h" // for wr::ImageKey
-=======
 #include <stdint.h>                            // for uint32_t, uint64_t
 #include "mozilla/Attributes.h"                // for override
 #include "mozilla/Maybe.h"                     // for Maybe
@@ -60,7 +29,6 @@ struct nsTArray_CopyChooser<mozilla::layers::AnimationImageKeyData> {
   typedef nsTArray_CopyWithConstructors<mozilla::layers::AnimationImageKeyData>
       Type;
 };
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace gfx {
@@ -77,17 +45,8 @@ class CompositorManagerChild;
 class ImageContainer;
 class RenderRootStateManager;
 
-<<<<<<< HEAD
-class SharedSurfacesChild final {
- public:
-||||||| merged common ancestors
-class SharedSurfacesChild final
-{
-public:
-=======
 class SharedSurfacesChild {
  public:
->>>>>>> upstream-releases
   /**
    * Request that the surface be mapped into the compositor thread's memory
    * space. This is useful for when the caller itself has no present need for
@@ -140,53 +99,9 @@ class SharedSurfacesChild {
    * Get the external ID, if any, bound to the shared surface. Used for memory
    * reporting purposes.
    */
-<<<<<<< HEAD
   static Maybe<wr::ExternalImageId> GetExternalId(
       const gfx::SourceSurfaceSharedData* aSurface);
 
-  /**
-   * Get the surface (or its underlying surface) as a SourceSurfaceSharedData
-   * pointer, if valid.
-   */
-  static gfx::SourceSurfaceSharedData* AsSourceSurfaceSharedData(
-      gfx::SourceSurface* aSurface);
-
-  static nsresult UpdateAnimation(ImageContainer* aContainer,
-                                  gfx::SourceSurface* aSurface,
-                                  const gfx::IntRect& aDirtyRect);
-
-  class ImageKeyData {
-   public:
-    ImageKeyData(WebRenderLayerManager* aManager,
-                 const wr::ImageKey& aImageKey);
-    ~ImageKeyData();
-
-    ImageKeyData(ImageKeyData&& aOther);
-    ImageKeyData& operator=(ImageKeyData&& aOther);
-    ImageKeyData(const ImageKeyData&) = delete;
-    ImageKeyData& operator=(const ImageKeyData&) = delete;
-
-    void MergeDirtyRect(const Maybe<gfx::IntRect>& aDirtyRect);
-
-    Maybe<gfx::IntRect> TakeDirtyRect() { return std::move(mDirtyRect); }
-||||||| merged common ancestors
-  static Maybe<wr::ExternalImageId>
-  GetExternalId(const gfx::SourceSurfaceSharedData* aSurface);
-=======
-  static Maybe<wr::ExternalImageId> GetExternalId(
-      const gfx::SourceSurfaceSharedData* aSurface);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    RefPtr<WebRenderLayerManager> mManager;
-    Maybe<gfx::IntRect> mDirtyRect;
-    wr::ImageKey mImageKey;
-  };
-
- private:
-||||||| merged common ancestors
-private:
-=======
   /**
    * Get the surface (or its underlying surface) as a SourceSurfaceSharedData
    * pointer, if valid.
@@ -219,56 +134,9 @@ private:
   };
 
  private:
->>>>>>> upstream-releases
   SharedSurfacesChild() = delete;
   ~SharedSurfacesChild() = delete;
 
-<<<<<<< HEAD
-  friend class SharedSurfacesAnimation;
-
-  class SharedUserData final {
-   public:
-    SharedUserData() : mShared(false) {}
-
-    explicit SharedUserData(const wr::ExternalImageId& aId)
-        : mId(aId), mShared(false) {}
-
-    ~SharedUserData();
-
-    SharedUserData(const SharedUserData& aOther) = delete;
-    SharedUserData& operator=(const SharedUserData& aOther) = delete;
-
-    SharedUserData(SharedUserData&& aOther) = delete;
-    SharedUserData& operator=(SharedUserData&& aOther) = delete;
-
-    const wr::ExternalImageId& Id() const { return mId; }
-
-    void SetId(const wr::ExternalImageId& aId) {
-      mId = aId;
-      mKeys.Clear();
-      mShared = false;
-    }
-
-    bool IsShared() const { return mShared; }
-
-    void MarkShared() {
-      MOZ_ASSERT(!mShared);
-      mShared = true;
-    }
-
-    wr::ImageKey UpdateKey(WebRenderLayerManager* aManager,
-                           wr::IpcResourceUpdateQueue& aResources,
-                           const Maybe<gfx::IntRect>& aDirtyRect);
-
-   protected:
-    AutoTArray<ImageKeyData, 1> mKeys;
-    wr::ExternalImageId mId;
-    bool mShared : 1;
-  };
-||||||| merged common ancestors
-  class ImageKeyData;
-  class SharedUserData;
-=======
   friend class SharedSurfacesAnimation;
 
   class SharedUserData final : public Runnable {
@@ -310,7 +178,6 @@ private:
     wr::ExternalImageId mId;
     bool mShared : 1;
   };
->>>>>>> upstream-releases
 
   static nsresult ShareInternal(gfx::SourceSurfaceSharedData* aSurface,
                                 SharedUserData** aUserData);
@@ -323,92 +190,6 @@ private:
   static gfx::UserDataKey sSharedKey;
 };
 
-<<<<<<< HEAD
-class AnimationImageKeyData final : public SharedSurfacesChild::ImageKeyData {
- public:
-  AnimationImageKeyData(WebRenderLayerManager* aManager,
-                        const wr::ImageKey& aImageKey);
-
-  ~AnimationImageKeyData();
-
-  AnimationImageKeyData(AnimationImageKeyData&& aOther);
-  AnimationImageKeyData& operator=(AnimationImageKeyData&& aOther);
-
-  AutoTArray<RefPtr<gfx::SourceSurface>, 2> mPendingRelease;
-  bool mRecycling;
-};
-
-/**
- * This helper class owns a single ImageKey which will map to different external
- * image IDs representing different frames in an animation.
- */
-class SharedSurfacesAnimation final {
- public:
-  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(SharedSurfacesAnimation)
-
-  SharedSurfacesAnimation() {}
-
-  void Destroy();
-
-  /**
-   * Set the animation to display the given frame.
-   * @param aParentSurface The owning surface of aSurface. This may be the same
-   *                       or it may be a wrapper surface such as
-   *                       RecyclingSourceSurface.
-   * @param aSurface    The current frame.
-   * @param aDirtyRect  Dirty rect representing the change between the new frame
-   *                    and the previous frame. We will request only the delta
-   *                    be reuploaded by WebRender.
-   */
-  nsresult SetCurrentFrame(gfx::SourceSurface* aParentSurface,
-                           gfx::SourceSurfaceSharedData* aSurface,
-                           const gfx::IntRect& aDirtyRect);
-
-  /**
-   * Generate an ImageKey for the given frame.
-   * @param aParentSurface The owning surface of aSurface. This may be the same
-   *                       or it may be a wrapper surface such as
-   *                       RecyclingSourceSurface.
-   * @param aSurface  The current frame. This should match what was cached via
-   *                  SetCurrentFrame, but if it does not, it will need to
-   *                  regenerate the cached ImageKey.
-   */
-  nsresult UpdateKey(gfx::SourceSurface* aParentSurface,
-                     gfx::SourceSurfaceSharedData* aSurface,
-                     WebRenderLayerManager* aManager,
-                     wr::IpcResourceUpdateQueue& aResources,
-                     wr::ImageKey& aKey);
-
-  /**
-   * Release our reference to all frames up to and including the frame which
-   * has an external image ID which matches aId.
-   */
-  void ReleasePreviousFrame(WebRenderLayerManager* aManager,
-                            const wr::ExternalImageId& aId);
-
-  /**
-   * Destroy any state information bound for the given layer manager. Any
-   * image keys are already invalid.
-   */
-  void Invalidate(WebRenderLayerManager* aManager);
-
- private:
-  ~SharedSurfacesAnimation();
-
-  void HoldSurfaceForRecycling(AnimationImageKeyData& aEntry,
-                               gfx::SourceSurface* aParentSurface,
-                               gfx::SourceSurfaceSharedData* aSurface);
-
-  AutoTArray<AnimationImageKeyData, 1> mKeys;
-  wr::ExternalImageId mId;
-};
-
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 class AnimationImageKeyData final : public SharedSurfacesChild::ImageKeyData {
  public:
   AnimationImageKeyData(RenderRootStateManager* aManager,
@@ -489,6 +270,5 @@ class SharedSurfacesAnimation final {
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif

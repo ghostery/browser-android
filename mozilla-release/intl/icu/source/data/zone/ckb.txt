@@ -1,11 +1,5 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 ckb{
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.71"}
-=======
     Version{"2.1.47.72"}
->>>>>>> upstream-releases
 }

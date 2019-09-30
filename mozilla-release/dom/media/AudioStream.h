@@ -92,20 +92,10 @@ class AudioClock {
  * A bookkeeping class to track the read/write position of an audio buffer.
  */
 class AudioBufferCursor {
-<<<<<<< HEAD
- public:
-  AudioBufferCursor(AudioDataValue* aPtr, uint32_t aChannels, uint32_t aFrames)
-      : mPtr(aPtr), mChannels(aChannels), mFrames(aFrames) {}
-||||||| merged common ancestors
-public:
-  AudioBufferCursor(AudioDataValue* aPtr, uint32_t aChannels, uint32_t aFrames)
-    : mPtr(aPtr), mChannels(aChannels), mFrames(aFrames) {}
-=======
  public:
   AudioBufferCursor(Span<AudioDataValue> aSpan, uint32_t aChannels,
                     uint32_t aFrames)
       : mChannels(aChannels), mSpan(aSpan), mFrames(aFrames) {}
->>>>>>> upstream-releases
 
   // Advance the cursor to account for frames that are consumed.
   uint32_t Advance(uint32_t aFrames) {
@@ -125,18 +115,10 @@ public:
     return mSpan.Elements() + mOffset;
   }
 
-<<<<<<< HEAD
- protected:
-  AudioDataValue* mPtr;
-||||||| merged common ancestors
-protected:
-  AudioDataValue* mPtr;
-=======
  protected:
   bool Contains(uint32_t aFrames) const {
     return mSpan.Length() >= mOffset + mChannels * aFrames;
   }
->>>>>>> upstream-releases
   const uint32_t mChannels;
 
  private:
@@ -150,20 +132,10 @@ protected:
  * the underlying audio buffer.
  */
 class AudioBufferWriter : private AudioBufferCursor {
-<<<<<<< HEAD
- public:
-  AudioBufferWriter(AudioDataValue* aPtr, uint32_t aChannels, uint32_t aFrames)
-      : AudioBufferCursor(aPtr, aChannels, aFrames) {}
-||||||| merged common ancestors
-public:
-  AudioBufferWriter(AudioDataValue* aPtr, uint32_t aChannels, uint32_t aFrames)
-    : AudioBufferCursor(aPtr, aChannels, aFrames) {}
-=======
  public:
   AudioBufferWriter(Span<AudioDataValue> aSpan, uint32_t aChannels,
                     uint32_t aFrames)
       : AudioBufferCursor(aSpan, aChannels, aFrames) {}
->>>>>>> upstream-releases
 
   uint32_t WriteZeros(uint32_t aFrames) {
     MOZ_DIAGNOSTIC_ASSERT(Contains(aFrames));
@@ -196,19 +168,9 @@ public:
 // GetPosition, GetPositionInFrames, SetVolume, and Get{Rate,Channels},
 // SetMicrophoneActive is thread-safe without external synchronization.
 class AudioStream final
-<<<<<<< HEAD
-#if defined(XP_WIN)
-    : public audio::DeviceChangeListener
-#endif
-||||||| merged common ancestors
-#if defined(XP_WIN)
-  : public audio::DeviceChangeListener
-#endif
-=======
 #  if defined(XP_WIN)
     : public audio::DeviceChangeListener
 #  endif
->>>>>>> upstream-releases
 {
   virtual ~AudioStream();
 
@@ -239,18 +201,9 @@ class AudioStream final
     virtual bool Ended() const = 0;
     // Notify that all data is drained by the AudioStream.
     virtual void Drained() = 0;
-<<<<<<< HEAD
-
-   protected:
-    virtual ~DataSource() {}
-||||||| merged common ancestors
-  protected:
-    virtual ~DataSource() {}
-=======
 
    protected:
     virtual ~DataSource() = default;
->>>>>>> upstream-releases
   };
 
   explicit AudioStream(DataSource& aSource);

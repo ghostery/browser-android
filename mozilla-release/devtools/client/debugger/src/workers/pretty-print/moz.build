@@ -7,12 +7,6 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/workers/search/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/workers/pretty-print/moz.build
     'index.js',
 )

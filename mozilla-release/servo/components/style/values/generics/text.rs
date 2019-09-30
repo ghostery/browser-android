@@ -4,17 +4,8 @@
 
 //! Generic types for text properties.
 
-<<<<<<< HEAD
-use app_units::Au;
-use crate::parser::ParserContext;
-use crate::values::animated::{Animate, Procedure, ToAnimatedZero};
-use crate::values::distance::{ComputeSquaredDistance, SquaredDistance};
-||||||| merged common ancestors
-use app_units::Au;
-=======
 use crate::parser::ParserContext;
 use crate::values::animated::ToAnimatedZero;
->>>>>>> upstream-releases
 use cssparser::Parser;
 use style_traits::ParseError;
 

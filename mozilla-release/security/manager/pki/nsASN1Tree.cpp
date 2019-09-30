@@ -255,14 +255,7 @@ nsNSSASN1Tree::GetDisplayData(uint32_t index, nsAString& _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNSSASN1Tree::SetTree(nsITreeBoxObject* tree) {
-||||||| merged common ancestors
-nsNSSASN1Tree::SetTree(nsITreeBoxObject* tree)
-{
-=======
 nsNSSASN1Tree::SetTree(mozilla::dom::XULTreeElement* tree) {
->>>>>>> upstream-releases
   // Note: |tree| is allowed to be null.
   mTree = tree;
   return NS_OK;

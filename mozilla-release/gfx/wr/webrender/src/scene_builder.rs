@@ -9,39 +9,6 @@ use api::{ClipIntern, FilterDataIntern, MemoryReport, PrimitiveKeyKind};
 use api::channel::MsgSender;
 use api::units::LayoutSize;
 #[cfg(feature = "capture")]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-use capture::CaptureConfig;
-use frame_builder::{FrameBuilderConfig, FrameBuilder};
-use clip::{ClipDataInterner, ClipDataUpdateList};
-use clip_scroll_tree::ClipScrollTree;
-use display_list_flattener::DisplayListFlattener;
-use intern::{Internable, Interner};
-use internal_types::{FastHashMap, FastHashSet};
-use prim_store::{PrimitiveDataInterner, PrimitiveDataUpdateList, PrimitiveKeyKind};
-use prim_store::PrimitiveStoreStats;
-use prim_store::gradient::{
-    LinearGradient, LinearGradientDataInterner, LinearGradientDataUpdateList,
-    RadialGradient, RadialGradientDataInterner, RadialGradientDataUpdateList
-};
-use prim_store::text_run::{TextRunDataInterner, TextRun, TextRunDataUpdateList};
-use resource_cache::{BlobImageRasterizerEpoch, FontInstanceMap};
-use render_backend::DocumentView;
-use renderer::{PipelineInfo, SceneBuilderHooks};
-use scene::Scene;
-||||||| merged common ancestors
-use capture::CaptureConfig;
-use frame_builder::{FrameBuilderConfig, FrameBuilder};
-use clip::{ClipDataInterner, ClipDataUpdateList};
-use clip_scroll_tree::ClipScrollTree;
-use display_list_flattener::DisplayListFlattener;
-use internal_types::{FastHashMap, FastHashSet};
-use picture::PictureIdGenerator;
-use prim_store::{PrimitiveDataInterner, PrimitiveDataUpdateList};
-use resource_cache::FontInstanceMap;
-use render_backend::DocumentView;
-use renderer::{PipelineInfo, SceneBuilderHooks};
-use scene::Scene;
-=======
 use crate::capture::CaptureConfig;
 use crate::frame_builder::{FrameBuilderConfig, FrameBuilder};
 use crate::clip_scroll_tree::ClipScrollTree;
@@ -62,7 +29,6 @@ use crate::render_backend::DocumentView;
 use crate::renderer::{PipelineInfo, SceneBuilderHooks};
 use crate::scene::Scene;
 use std::iter;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
 use std::sync::mpsc::{channel, Receiver, Sender};
 use std::mem::replace;
 use time::precise_time_ns;
@@ -70,21 +36,6 @@ use crate::util::drain_filter;
 use std::thread;
 use std::time::Duration;
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-pub struct DocumentResourceUpdates {
-    pub clip_updates: ClipDataUpdateList,
-    pub prim_updates: PrimitiveDataUpdateList,
-    pub linear_grad_updates: LinearGradientDataUpdateList,
-    pub radial_grad_updates: RadialGradientDataUpdateList,
-    pub text_run_updates: TextRunDataUpdateList,
-}
-||||||| merged common ancestors
-pub struct DocumentResourceUpdates {
-    pub clip_updates: ClipDataUpdateList,
-    pub prim_updates: PrimitiveDataUpdateList,
-}
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
 
 /// Represents the work associated to a transaction before scene building.
 pub struct Transaction {
@@ -94,13 +45,7 @@ pub struct Transaction {
     pub epoch_updates: Vec<(PipelineId, Epoch)>,
     pub request_scene_build: Option<SceneRequest>,
     pub blob_requests: Vec<BlobImageParams>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-    pub blob_rasterizer: Option<(Box<AsyncBlobImageRasterizer>, BlobImageRasterizerEpoch)>,
-||||||| merged common ancestors
-    pub blob_rasterizer: Option<Box<AsyncBlobImageRasterizer>>,
-=======
     pub blob_rasterizer: Option<(Box<dyn AsyncBlobImageRasterizer>, AsyncBlobImageInfo)>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
     pub rasterized_blobs: Vec<(BlobImageRequest, BlobImageResult)>,
     pub resource_updates: Vec<ResourceUpdate>,
     pub frame_ops: Vec<FrameMsg>,
@@ -124,16 +69,6 @@ impl Transaction {
         !self.display_list_updates.is_empty() ||
             self.set_root_pipeline.is_some()
     }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-
-    fn rasterize_blobs(&mut self, is_low_priority: bool) {
-        if let Some((ref mut rasterizer, _)) = self.blob_rasterizer {
-            let rasterized_blobs = rasterizer.rasterize(&self.blob_requests, is_low_priority);
-            self.rasterized_blobs.extend(rasterized_blobs);
-        }
-    }
-||||||| merged common ancestors
-=======
 
     fn rasterize_blobs(&mut self, is_low_priority: bool) {
         if let Some((ref mut rasterizer, _)) = self.blob_rasterizer {
@@ -146,7 +81,6 @@ impl Transaction {
             }
         }
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
 }
 
 /// Represent the remaining work associated to a transaction after the scene building
@@ -156,13 +90,7 @@ pub struct BuiltTransaction {
     pub built_scene: Option<BuiltScene>,
     pub resource_updates: Vec<ResourceUpdate>,
     pub rasterized_blobs: Vec<(BlobImageRequest, BlobImageResult)>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-    pub blob_rasterizer: Option<(Box<AsyncBlobImageRasterizer>, BlobImageRasterizerEpoch)>,
-||||||| merged common ancestors
-    pub blob_rasterizer: Option<Box<AsyncBlobImageRasterizer>>,
-=======
     pub blob_rasterizer: Option<(Box<dyn AsyncBlobImageRasterizer>, AsyncBlobImageInfo)>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
     pub frame_ops: Vec<FrameMsg>,
     pub removed_pipelines: Vec<(PipelineId, DocumentId)>,
     pub notifications: Vec<NotificationRequest>,
@@ -243,35 +171,6 @@ pub enum SceneSwapResult {
     Aborted,
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-// This struct contains all items that can be shared between
-// display lists. We want to intern and share the same clips,
-// primitives and other things between display lists so that:
-// - GPU cache handles remain valid, reducing GPU cache updates.
-// - Comparison of primitives and pictures between two
-//   display lists is (a) fast (b) done during scene building.
-#[cfg_attr(feature = "capture", derive(Serialize))]
-#[cfg_attr(feature = "replay", derive(Deserialize))]
-#[derive(Default)]
-pub struct DocumentResources {
-    pub clip_interner: ClipDataInterner,
-    pub prim_interner: PrimitiveDataInterner,
-    pub linear_grad_interner: LinearGradientDataInterner,
-    pub radial_grad_interner: RadialGradientDataInterner,
-    pub text_run_interner: TextRunDataInterner,
-||||||| merged common ancestors
-// This struct contains all items that can be shared between
-// display lists. We want to intern and share the same clips,
-// primitives and other things between display lists so that:
-// - GPU cache handles remain valid, reducing GPU cache updates.
-// - Comparison of primitives and pictures between two
-//   display lists is (a) fast (b) done during scene building.
-#[cfg_attr(feature = "capture", derive(Serialize))]
-#[cfg_attr(feature = "replay", derive(Deserialize))]
-pub struct DocumentResources {
-    pub clip_interner: ClipDataInterner,
-    pub prim_interner: PrimitiveDataInterner,
-=======
 macro_rules! declare_interners {
     ( $( $name:ident : $ty:ident, )+ ) => {
         /// This struct contains all items that can be shared between
@@ -335,55 +234,16 @@ enumerate_interners!(declare_interners);
 pub struct DocumentStats {
     pub prim_store_stats: PrimitiveStoreStats,
     pub hit_test_stats: HitTestingSceneStats,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-// Access to `DocumentResources` interners by `Internable`
-pub trait InternerMut<I: Internable>
-{
-    fn interner_mut(&mut self) -> &mut Interner<I::Source, I::InternData, I::Marker>;
-}
-
-impl InternerMut<PrimitiveKeyKind> for DocumentResources {
-    fn interner_mut(&mut self) -> &mut PrimitiveDataInterner {
-        &mut self.prim_interner
-    }
-}
-
-impl InternerMut<LinearGradient> for DocumentResources {
-    fn interner_mut(&mut self) -> &mut LinearGradientDataInterner {
-        &mut self.linear_grad_interner
-    }
-}
-
-impl InternerMut<RadialGradient> for DocumentResources {
-    fn interner_mut(&mut self) -> &mut RadialGradientDataInterner {
-        &mut self.radial_grad_interner
-    }
-}
-
-impl InternerMut<TextRun> for DocumentResources {
-    fn interner_mut(&mut self) -> &mut TextRunDataInterner {
-        &mut self.text_run_interner
-||||||| merged common ancestors
-impl DocumentResources {
-    fn new() -> Self {
-        DocumentResources {
-            clip_interner: ClipDataInterner::new(),
-            prim_interner: PrimitiveDataInterner::new(),
-        }
-=======
 impl DocumentStats {
     pub fn empty() -> DocumentStats {
         DocumentStats {
             prim_store_stats: PrimitiveStoreStats::empty(),
             hit_test_stats: HitTestingSceneStats::empty(),
         }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
     }
 }
-
 
 // A document in the scene builder contains the current scene,
 // as well as a persistent clip interner. This allows clips
@@ -391,30 +251,16 @@ impl DocumentStats {
 // display lists.
 struct Document {
     scene: Scene,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-    resources: DocumentResources,
-    prim_store_stats: PrimitiveStoreStats,
-||||||| merged common ancestors
-    resources: DocumentResources,
-=======
     interners: Interners,
     doc_stats: DocumentStats,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
 }
 
 impl Document {
     fn new(scene: Scene) -> Self {
         Document {
             scene,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-            resources: DocumentResources::default(),
-            prim_store_stats: PrimitiveStoreStats::empty(),
-||||||| merged common ancestors
-            resources: DocumentResources::new(),
-=======
             interners: Interners::default(),
             doc_stats: DocumentStats::empty(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
         }
     }
 }
@@ -425,14 +271,7 @@ pub struct SceneBuilder {
     tx: Sender<SceneBuilderResult>,
     api_tx: MsgSender<ApiMsg>,
     config: FrameBuilderConfig,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-    hooks: Option<Box<SceneBuilderHooks + Send>>,
-||||||| merged common ancestors
-    hooks: Option<Box<SceneBuilderHooks + Send>>,
-    picture_id_generator: PictureIdGenerator,
-=======
     hooks: Option<Box<dyn SceneBuilderHooks + Send>>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
     simulate_slow_ms: u32,
     size_of_ops: Option<MallocSizeOfOps>,
 }
@@ -454,12 +293,7 @@ impl SceneBuilder {
                 api_tx,
                 config,
                 hooks,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-||||||| merged common ancestors
-                picture_id_generator: PictureIdGenerator::new(),
-=======
                 size_of_ops,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 simulate_slow_ms: 0,
             },
             in_tx,
@@ -574,75 +408,12 @@ impl SceneBuilder {
                     &item.output_pipelines,
                     &self.config,
                     &mut new_scene,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-                    &mut item.doc_resources,
-                    &PrimitiveStoreStats::empty(),
-||||||| merged common ancestors
-                    item.scene_id,
-                    &mut self.picture_id_generator,
-                    &mut item.doc_resources,
-=======
                     &mut item.interners,
                     &DocumentStats::empty(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 );
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-                // TODO(djg): Can we do better than this?  Use a #[derive] to
-                // write the code for us, or unify updates into one enum/list?
-                let clip_updates = item
-                    .doc_resources
-                    .clip_interner
-                    .end_frame_and_get_pending_updates();
-
-                let prim_updates = item
-                    .doc_resources
-                    .prim_interner
-                    .end_frame_and_get_pending_updates();
-
-                let linear_grad_updates = item
-                    .doc_resources
-                    .linear_grad_interner
-                    .end_frame_and_get_pending_updates();
-
-                let radial_grad_updates = item
-                    .doc_resources
-                    .radial_grad_interner
-                    .end_frame_and_get_pending_updates();
-
-                let text_run_updates = item
-                    .doc_resources
-                    .text_run_interner
-                    .end_frame_and_get_pending_updates();
-
-                doc_resource_updates = Some(
-                    DocumentResourceUpdates {
-                        clip_updates,
-                        prim_updates,
-                        linear_grad_updates,
-                        radial_grad_updates,
-                        text_run_updates,
-                    }
-||||||| merged common ancestors
-                let clip_updates = item
-                    .doc_resources
-                    .clip_interner
-                    .end_frame_and_get_pending_updates();
-
-                let prim_updates = item
-                    .doc_resources
-                    .prim_interner
-                    .end_frame_and_get_pending_updates();
-
-                doc_resource_updates = Some(
-                    DocumentResourceUpdates {
-                        clip_updates,
-                        prim_updates,
-                    }
-=======
                 interner_updates = Some(
                     item.interners.end_frame_and_get_pending_updates()
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 );
 
                 built_scene = Some(BuiltScene {
@@ -656,15 +427,8 @@ impl SceneBuilder {
                 item.document_id,
                 Document {
                     scene: item.scene,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-                    resources: item.doc_resources,
-                    prim_store_stats: PrimitiveStoreStats::empty(),
-||||||| merged common ancestors
-                    resources: item.doc_resources,
-=======
                     interners: item.interners,
                     doc_stats: DocumentStats::empty(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 },
             );
 
@@ -739,84 +503,16 @@ impl SceneBuilder {
                     &request.output_pipelines,
                     &self.config,
                     &mut new_scene,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-                    &mut doc.resources,
-                    &doc.prim_store_stats,
-||||||| merged common ancestors
-                    request.scene_id,
-                    &mut self.picture_id_generator,
-                    &mut doc.resources,
-=======
                     &mut doc.interners,
                     &doc.doc_stats,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 );
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-                // Update the allocation stats for next scene
-                doc.prim_store_stats = frame_builder.prim_store.get_stats();
-
-||||||| merged common ancestors
-=======
                 // Update the allocation stats for next scene
                 doc.doc_stats = frame_builder.get_stats();
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 // Retrieve the list of updates from the clip interner.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-                let clip_updates = doc
-                    .resources
-                    .clip_interner
-                    .end_frame_and_get_pending_updates();
-
-                let prim_updates = doc
-                    .resources
-                    .prim_interner
-                    .end_frame_and_get_pending_updates();
-
-                let linear_grad_updates = doc
-                    .resources
-                    .linear_grad_interner
-                    .end_frame_and_get_pending_updates();
-
-                let radial_grad_updates = doc
-                    .resources
-                    .radial_grad_interner
-                    .end_frame_and_get_pending_updates();
-
-                let text_run_updates = doc
-                    .resources
-                    .text_run_interner
-                    .end_frame_and_get_pending_updates();
-
-                doc_resource_updates = Some(
-                    DocumentResourceUpdates {
-                        clip_updates,
-                        prim_updates,
-                        linear_grad_updates,
-                        radial_grad_updates,
-                        text_run_updates,
-                    }
-||||||| merged common ancestors
-                let clip_updates = doc
-                    .resources
-                    .clip_interner
-                    .end_frame_and_get_pending_updates();
-
-                let prim_updates = doc
-                    .resources
-                    .prim_interner
-                    .end_frame_and_get_pending_updates();
-
-                doc_resource_updates = Some(
-                    DocumentResourceUpdates {
-                        clip_updates,
-                        prim_updates,
-                    }
-=======
                 interner_updates = Some(
                     doc.interners.end_frame_and_get_pending_updates()
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
                 );
 
                 built_scene = Some(BuiltScene {
@@ -924,10 +620,6 @@ impl SceneBuilder {
             if let &Some(ref hooks) = &self.hooks {
                 hooks.post_empty_scene_build();
             }
-        } else {
-            if let &Some(ref hooks) = &self.hooks {
-                hooks.post_empty_scene_build();
-            }
         }
     }
 
@@ -986,18 +678,8 @@ impl LowPrioritySceneBuilder {
 
     fn process_transaction(&mut self, mut txn: Box<Transaction>) -> Box<Transaction> {
         let is_low_priority = true;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
-        txn.rasterize_blobs(is_low_priority);
-||||||| merged common ancestors
-        let mut more_rasterized_blobs = txn.blob_rasterizer.as_mut().map_or(
-            Vec::new(),
-            |rasterizer| rasterizer.rasterize(&blob_requests, is_low_priority),
-        );
-        txn.rasterized_blobs.append(&mut more_rasterized_blobs);
-=======
         txn.rasterize_blobs(is_low_priority);
         txn.blob_requests = Vec::new();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/scene_builder.rs
 
         if self.simulate_slow_ms > 0 {
             thread::sleep(Duration::from_millis(self.simulate_slow_ms as u64));

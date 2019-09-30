@@ -84,17 +84,9 @@ ${helpers.predefined_type(
 )}
 
 ${helpers.predefined_type(
-<<<<<<< HEAD
-    "stroke-width", "SVGWidth",
-    "computed::SVGWidth::one()",
-||||||| merged common ancestors
-    "stroke-width", "SVGWidth",
-    "::values::computed::NonNegativeLength::new(1.).into()",
-=======
     "stroke-width",
     "SVGWidth",
     "computed::SVGWidth::one()",
->>>>>>> upstream-releases
     products="gecko",
     animation_value_type="crate::values::computed::SVGWidth",
     spec="https://www.w3.org/TR/SVG2/painting.html#StrokeWidth",
@@ -121,16 +113,8 @@ ${helpers.predefined_type(
     "NonNegativeNumber",
     "From::from(4.0)",
     products="gecko",
-<<<<<<< HEAD
-    animation_value_type="crate::values::computed::GreaterThanOrEqualToOneNumber",
-    spec="https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty",
-||||||| merged common ancestors
-    animation_value_type="::values::computed::GreaterThanOrEqualToOneNumber",
-    spec="https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty",
-=======
     animation_value_type="crate::values::computed::NonNegativeNumber",
     spec="https://www.w3.org/TR/SVG2/painting.html#StrokeMiterlimitProperty",
->>>>>>> upstream-releases
 )}
 
 ${helpers.predefined_type(

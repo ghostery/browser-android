@@ -40,45 +40,6 @@ static PRLibrary* libcanberra = nullptr;
 typedef struct _ca_context ca_context;
 typedef struct _ca_proplist ca_proplist;
 
-<<<<<<< HEAD
-typedef void (*ca_finish_callback_t)(ca_context *c, uint32_t id, int error_code,
-                                     void *userdata);
-
-typedef int (*ca_context_create_fn)(ca_context **);
-typedef int (*ca_context_destroy_fn)(ca_context *);
-typedef int (*ca_context_play_fn)(ca_context *c, uint32_t id, ...);
-typedef int (*ca_context_change_props_fn)(ca_context *c, ...);
-typedef int (*ca_proplist_create_fn)(ca_proplist **);
-typedef int (*ca_proplist_destroy_fn)(ca_proplist *);
-typedef int (*ca_proplist_sets_fn)(ca_proplist *c, const char *key,
-                                   const char *value);
-typedef int (*ca_context_play_full_fn)(ca_context *c, uint32_t id,
-                                       ca_proplist *p, ca_finish_callback_t cb,
-                                       void *userdata);
-||||||| merged common ancestors
-typedef void (*ca_finish_callback_t) (ca_context *c,
-                                      uint32_t id,
-                                      int error_code,
-                                      void *userdata);
-
-typedef int (*ca_context_create_fn) (ca_context **);
-typedef int (*ca_context_destroy_fn) (ca_context *);
-typedef int (*ca_context_play_fn) (ca_context *c,
-                                   uint32_t id,
-                                   ...);
-typedef int (*ca_context_change_props_fn) (ca_context *c,
-                                           ...);
-typedef int (*ca_proplist_create_fn) (ca_proplist **);
-typedef int (*ca_proplist_destroy_fn) (ca_proplist *);
-typedef int (*ca_proplist_sets_fn) (ca_proplist *c,
-                                    const char *key,
-                                    const char *value);
-typedef int (*ca_context_play_full_fn) (ca_context *c,
-                                        uint32_t id,
-                                        ca_proplist *p,
-                                        ca_finish_callback_t cb,
-                                        void *userdata);
-=======
 typedef void (*ca_finish_callback_t)(ca_context* c, uint32_t id, int error_code,
                                      void* userdata);
 
@@ -93,7 +54,6 @@ typedef int (*ca_proplist_sets_fn)(ca_proplist* c, const char* key,
 typedef int (*ca_context_play_full_fn)(ca_context* c, uint32_t id,
                                        ca_proplist* p, ca_finish_callback_t cb,
                                        void* userdata);
->>>>>>> upstream-releases
 
 static ca_context_create_fn ca_context_create;
 static ca_context_destroy_fn ca_context_destroy;
@@ -105,13 +65,7 @@ static ca_proplist_sets_fn ca_proplist_sets;
 static ca_context_play_full_fn ca_context_play_full;
 
 struct ScopedCanberraFile {
-<<<<<<< HEAD
-  explicit ScopedCanberraFile(nsIFile *file) : mFile(file){};
-||||||| merged common ancestors
-    explicit ScopedCanberraFile(nsIFile *file): mFile(file) {};
-=======
   explicit ScopedCanberraFile(nsIFile* file) : mFile(file){};
->>>>>>> upstream-releases
 
   ~ScopedCanberraFile() {
     if (mFile) {
@@ -119,100 +73,20 @@ struct ScopedCanberraFile {
     }
   }
 
-<<<<<<< HEAD
-  void forget() { mozilla::Unused << mFile.forget(); }
-  nsIFile *operator->() { return mFile; }
-  operator nsIFile *() { return mFile; }
-||||||| merged common ancestors
-    void forget() {
-        mozilla::Unused << mFile.forget();
-    }
-    nsIFile* operator->() { return mFile; }
-    operator nsIFile*() { return mFile; }
-=======
   void forget() { mozilla::Unused << mFile.forget(); }
   nsIFile* operator->() { return mFile; }
   operator nsIFile*() { return mFile; }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIFile> mFile;
 };
 
-<<<<<<< HEAD
-static ca_context *ca_context_get_default() {
-  // This allows us to avoid race conditions with freeing the context by handing
-  // that responsibility to Glib, and still use one context at a time
-  static GStaticPrivate ctx_static_private = G_STATIC_PRIVATE_INIT;
-||||||| merged common ancestors
-static ca_context*
-ca_context_get_default()
-{
-    // This allows us to avoid race conditions with freeing the context by handing that
-    // responsibility to Glib, and still use one context at a time
-    static GStaticPrivate ctx_static_private = G_STATIC_PRIVATE_INIT;
-
-    ca_context* ctx = (ca_context*) g_static_private_get(&ctx_static_private);
-
-    if (ctx) {
-        return ctx;
-    }
-
-    ca_context_create(&ctx);
-    if (!ctx) {
-        return nullptr;
-    }
-
-    g_static_private_set(&ctx_static_private, ctx, (GDestroyNotify) ca_context_destroy);
-=======
 static ca_context* ca_context_get_default() {
   // This allows us to avoid race conditions with freeing the context by handing
   // that responsibility to Glib, and still use one context at a time
   static GStaticPrivate ctx_static_private = G_STATIC_PRIVATE_INIT;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ca_context *ctx = (ca_context *)g_static_private_get(&ctx_static_private);
-||||||| merged common ancestors
-    GtkSettings* settings = gtk_settings_get_default();
-    if (g_object_class_find_property(G_OBJECT_GET_CLASS(settings),
-                                     "gtk-sound-theme-name")) {
-        gchar* sound_theme_name = nullptr;
-        g_object_get(settings, "gtk-sound-theme-name", &sound_theme_name,
-                     nullptr);
-=======
   ca_context* ctx = (ca_context*)g_static_private_get(&ctx_static_private);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (ctx) {
-    return ctx;
-  }
-
-  ca_context_create(&ctx);
-  if (!ctx) {
-    return nullptr;
-  }
-
-  g_static_private_set(&ctx_static_private, ctx,
-                       (GDestroyNotify)ca_context_destroy);
-
-  GtkSettings *settings = gtk_settings_get_default();
-  if (g_object_class_find_property(G_OBJECT_GET_CLASS(settings),
-                                   "gtk-sound-theme-name")) {
-    gchar *sound_theme_name = nullptr;
-    g_object_get(settings, "gtk-sound-theme-name", &sound_theme_name, nullptr);
-
-    if (sound_theme_name) {
-      ca_context_change_props(ctx, "canberra.xdg-theme.name", sound_theme_name,
-                              nullptr);
-      g_free(sound_theme_name);
-||||||| merged common ancestors
-        if (sound_theme_name) {
-            ca_context_change_props(ctx, "canberra.xdg-theme.name",
-                                    sound_theme_name, nullptr);
-            g_free(sound_theme_name);
-        }
-=======
   if (ctx) {
     return ctx;
   }
@@ -235,7 +109,6 @@ static ca_context* ca_context_get_default() {
       ca_context_change_props(ctx, "canberra.xdg-theme.name", sound_theme_name,
                               nullptr);
       g_free(sound_theme_name);
->>>>>>> upstream-releases
     }
   }
 
@@ -258,27 +131,6 @@ static ca_context* ca_context_get_default() {
   return ctx;
 }
 
-<<<<<<< HEAD
-static void ca_finish_cb(ca_context *c, uint32_t id, int error_code,
-                         void *userdata) {
-  nsIFile *file = reinterpret_cast<nsIFile *>(userdata);
-  if (file) {
-    file->Remove(false);
-    NS_RELEASE(file);
-  }
-||||||| merged common ancestors
-static void
-ca_finish_cb(ca_context *c,
-             uint32_t id,
-             int error_code,
-             void *userdata)
-{
-    nsIFile *file = reinterpret_cast<nsIFile *>(userdata);
-    if (file) {
-        file->Remove(false);
-        NS_RELEASE(file);
-    }
-=======
 static void ca_finish_cb(ca_context* c, uint32_t id, int error_code,
                          void* userdata) {
   nsIFile* file = reinterpret_cast<nsIFile*>(userdata);
@@ -286,7 +138,6 @@ static void ca_finish_cb(ca_context* c, uint32_t id, int error_code,
     file->Remove(false);
     NS_RELEASE(file);
   }
->>>>>>> upstream-releases
 }
 
 NS_IMPL_ISUPPORTS(nsSound, nsISound, nsIStreamLoaderObserver)
@@ -331,19 +182,6 @@ nsSound::Init() {
             libcanberra, "ca_context_play_full");
       }
     }
-<<<<<<< HEAD
-  }
-
-  return NS_OK;
-}
-
-/* static */ void nsSound::Shutdown() {
-  if (libcanberra) {
-    PR_UnloadLibrary(libcanberra);
-    libcanberra = nullptr;
-  }
-||||||| merged common ancestors
-=======
   }
 
   return NS_OK;
@@ -355,38 +193,12 @@ void nsSound::Shutdown() {
     PR_UnloadLibrary(libcanberra);
     libcanberra = nullptr;
   }
->>>>>>> upstream-releases
 }
 
 namespace mozilla {
 namespace sound {
 StaticRefPtr<nsISound> sInstance;
 }
-<<<<<<< HEAD
-}  // namespace mozilla
-/* static */ already_AddRefed<nsISound> nsSound::GetInstance() {
-  using namespace mozilla::sound;
-
-  if (!sInstance) {
-    if (gfxPlatform::IsHeadless()) {
-      sInstance = new mozilla::widget::HeadlessSound();
-    } else {
-      sInstance = new nsSound();
-||||||| merged common ancestors
-}
-/* static */ already_AddRefed<nsISound>
-nsSound::GetInstance()
-{
-    using namespace mozilla::sound;
-
-    if (!sInstance) {
-        if (gfxPlatform::IsHeadless()) {
-            sInstance = new mozilla::widget::HeadlessSound();
-        } else {
-            sInstance = new nsSound();
-        }
-        ClearOnShutdown(&sInstance);
-=======
 }  // namespace mozilla
 /* static */
 already_AddRefed<nsISound> nsSound::GetInstance() {
@@ -397,7 +209,6 @@ already_AddRefed<nsISound> nsSound::GetInstance() {
       sInstance = new mozilla::widget::HeadlessSound();
     } else {
       sInstance = new nsSound();
->>>>>>> upstream-releases
     }
     ClearOnShutdown(&sInstance);
   }
@@ -406,28 +217,11 @@ already_AddRefed<nsISound> nsSound::GetInstance() {
   return service.forget();
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader *aLoader,
-                                        nsISupports *context, nsresult aStatus,
-                                        uint32_t dataLen, const uint8_t *data) {
-  // print a load error on bad status, and return
-  if (NS_FAILED(aStatus)) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader *aLoader,
-                                        nsISupports *context,
-                                        nsresult aStatus,
-                                        uint32_t dataLen,
-                                        const uint8_t *data)
-{
-    // print a load error on bad status, and return
-    if (NS_FAILED(aStatus)) {
-=======
 NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
                                         nsISupports* context, nsresult aStatus,
                                         uint32_t dataLen, const uint8_t* data) {
   // print a load error on bad status, and return
   if (NS_FAILED(aStatus)) {
->>>>>>> upstream-releases
 #ifdef DEBUG
     if (aLoader) {
       nsCOMPtr<nsIRequest> request;
@@ -441,7 +235,6 @@ NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
             printf("Failed to load %s\n", uri->GetSpecOrDefault().get());
           }
         }
-<<<<<<< HEAD
       }
     }
 #endif
@@ -451,44 +244,6 @@ NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
   nsCOMPtr<nsIFile> tmpFile;
   nsDirectoryService::gService->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile),
                                     getter_AddRefs(tmpFile));
-||||||| merged common ancestors
-#endif
-        return aStatus;
-    }
-
-    nsCOMPtr<nsIFile> tmpFile;
-    nsDirectoryService::gService->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile),
-                                      getter_AddRefs(tmpFile));
-
-    nsresult rv = tmpFile->AppendNative(nsDependentCString("mozilla_audio_sample"));
-    if (NS_FAILED(rv)) {
-        return rv;
-    }
-
-    rv = tmpFile->CreateUnique(nsIFile::NORMAL_FILE_TYPE, PR_IRUSR | PR_IWUSR);
-    if (NS_FAILED(rv)) {
-        return rv;
-    }
-
-    ScopedCanberraFile canberraFile(tmpFile);
-
-    mozilla::AutoFDClose fd;
-    rv = canberraFile->OpenNSPRFileDesc(PR_WRONLY, PR_IRUSR | PR_IWUSR,
-                                        &fd.rwget());
-    if (NS_FAILED(rv)) {
-        return rv;
-    }
-=======
-      }
-    }
-#endif
-    return aStatus;
-  }
-
-  nsCOMPtr<nsIFile> tmpFile;
-  nsDirectoryService::gService->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile),
-                                    getter_AddRefs(tmpFile));
->>>>>>> upstream-releases
 
   nsresult rv =
       tmpFile->AppendNative(nsDependentCString("mozilla_audio_sample"));
@@ -517,29 +272,6 @@ NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
     if (amount < 0) {
       return NS_ERROR_FAILURE;
     }
-<<<<<<< HEAD
-    length -= amount;
-    data += amount;
-  }
-
-  ca_context *ctx = ca_context_get_default();
-  if (!ctx) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  ca_proplist *p;
-  ca_proplist_create(&p);
-  if (!p) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  nsAutoCString path;
-  rv = canberraFile->GetNativePath(path);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-||||||| merged common ancestors
-=======
     length -= amount;
     data += amount;
   }
@@ -560,7 +292,6 @@ NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
   if (NS_FAILED(rv)) {
     return rv;
   }
->>>>>>> upstream-releases
 
   ca_proplist_sets(p, "media.filename", path.get());
   if (ca_context_play_full(ctx, 0, p, ca_finish_cb, canberraFile) >= 0) {
@@ -577,51 +308,9 @@ NS_IMETHODIMP nsSound::Beep() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsSound::Play(nsIURL *aURL) {
-  if (!mInited) Init();
-||||||| merged common ancestors
-NS_IMETHODIMP nsSound::Play(nsIURL *aURL)
-{
-    if (!mInited)
-        Init();
-=======
 NS_IMETHODIMP nsSound::Play(nsIURL* aURL) {
   if (!mInited) Init();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!libcanberra) return NS_ERROR_NOT_AVAILABLE;
-
-  bool isFile;
-  nsresult rv = aURL->SchemeIs("file", &isFile);
-  if (NS_SUCCEEDED(rv) && isFile) {
-    ca_context *ctx = ca_context_get_default();
-    if (!ctx) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-||||||| merged common ancestors
-    if (!libcanberra)
-        return NS_ERROR_NOT_AVAILABLE;
-
-    bool isFile;
-    nsresult rv = aURL->SchemeIs("file", &isFile);
-    if (NS_SUCCEEDED(rv) && isFile) {
-        ca_context* ctx = ca_context_get_default();
-        if (!ctx) {
-            return NS_ERROR_OUT_OF_MEMORY;
-        }
-
-        nsAutoCString spec;
-        rv = aURL->GetSpec(spec);
-        if (NS_FAILED(rv)) {
-            return rv;
-        }
-        gchar *path = g_filename_from_uri(spec.get(), nullptr, nullptr);
-        if (!path) {
-            return NS_ERROR_FILE_UNRECOGNIZED_PATH;
-        }
-=======
   if (!libcanberra) return NS_ERROR_NOT_AVAILABLE;
 
   bool isFile;
@@ -631,29 +320,7 @@ NS_IMETHODIMP nsSound::Play(nsIURL* aURL) {
     if (!ctx) {
       return NS_ERROR_OUT_OF_MEMORY;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsAutoCString spec;
-    rv = aURL->GetSpec(spec);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-    gchar *path = g_filename_from_uri(spec.get(), nullptr, nullptr);
-    if (!path) {
-      return NS_ERROR_FILE_UNRECOGNIZED_PATH;
-||||||| merged common ancestors
-        ca_context_play(ctx, 0, "media.filename", path, nullptr);
-        g_free(path);
-    } else {
-        nsCOMPtr<nsIStreamLoader> loader;
-        rv = NS_NewStreamLoader(getter_AddRefs(loader),
-                                aURL,
-                                this, // aObserver
-                                nsContentUtils::GetSystemPrincipal(),
-                                nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                                nsIContentPolicy::TYPE_OTHER);
-=======
     nsAutoCString spec;
     rv = aURL->GetSpec(spec);
     if (NS_FAILED(rv)) {
@@ -662,7 +329,6 @@ NS_IMETHODIMP nsSound::Play(nsIURL* aURL) {
     gchar* path = g_filename_from_uri(spec.get(), nullptr, nullptr);
     if (!path) {
       return NS_ERROR_FILE_UNRECOGNIZED_PATH;
->>>>>>> upstream-releases
     }
 
     ca_context_play(ctx, 0, "media.filename", path, nullptr);
@@ -679,46 +345,13 @@ NS_IMETHODIMP nsSound::Play(nsIURL* aURL) {
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsSound::PlayEventSound(uint32_t aEventId) {
-  if (!mInited) Init();
-||||||| merged common ancestors
-NS_IMETHODIMP nsSound::PlayEventSound(uint32_t aEventId)
-{
-    if (!mInited)
-        Init();
-
-    if (!libcanberra)
-        return NS_OK;
-
-    // Do we even want alert sounds?
-    GtkSettings* settings = gtk_settings_get_default();
-=======
 NS_IMETHODIMP nsSound::PlayEventSound(uint32_t aEventId) {
   if (!mInited) Init();
 
   if (!libcanberra) return NS_OK;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!libcanberra) return NS_OK;
-
-  // Do we even want alert sounds?
-  GtkSettings *settings = gtk_settings_get_default();
-||||||| merged common ancestors
-    if (g_object_class_find_property(G_OBJECT_GET_CLASS(settings),
-                                     "gtk-enable-event-sounds")) {
-        gboolean enable_sounds = TRUE;
-        g_object_get(settings, "gtk-enable-event-sounds", &enable_sounds, nullptr);
-
-        if (!enable_sounds) {
-            return NS_OK;
-        }
-    }
-=======
   // Do we even want alert sounds?
   GtkSettings* settings = gtk_settings_get_default();
->>>>>>> upstream-releases
 
   if (g_object_class_find_property(G_OBJECT_GET_CLASS(settings),
                                    "gtk-enable-event-sounds")) {
@@ -728,35 +361,6 @@ NS_IMETHODIMP nsSound::PlayEventSound(uint32_t aEventId) {
     if (!enable_sounds) {
       return NS_OK;
     }
-<<<<<<< HEAD
-  }
-
-  ca_context *ctx = ca_context_get_default();
-  if (!ctx) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  switch (aEventId) {
-    case EVENT_ALERT_DIALOG_OPEN:
-      ca_context_play(ctx, 0, "event.id", "dialog-warning", nullptr);
-      break;
-    case EVENT_CONFIRM_DIALOG_OPEN:
-      ca_context_play(ctx, 0, "event.id", "dialog-question", nullptr);
-      break;
-    case EVENT_NEW_MAIL_RECEIVED:
-      ca_context_play(ctx, 0, "event.id", "message-new-email", nullptr);
-      break;
-    case EVENT_MENU_EXECUTE:
-      ca_context_play(ctx, 0, "event.id", "menu-click", nullptr);
-      break;
-    case EVENT_MENU_POPUP:
-      ca_context_play(ctx, 0, "event.id", "menu-popup", nullptr);
-      break;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
   }
 
   ca_context* ctx = ca_context_get_default();
@@ -782,5 +386,4 @@ NS_IMETHODIMP nsSound::PlayEventSound(uint32_t aEventId) {
       break;
   }
   return NS_OK;
->>>>>>> upstream-releases
 }

@@ -140,25 +140,11 @@ class AddConsolePrefWatchers : public Runnable {
   NS_IMETHOD Run() override {
 #if defined(ANDROID)
     Preferences::AddBoolVarCache(&gLoggingLogcat, "consoleservice.logcat",
-<<<<<<< HEAD
-#ifdef RELEASE_OR_BETA
-                                 false
-#else
-                                 true
-#endif
-||||||| merged common ancestors
-    #ifdef RELEASE_OR_BETA
-      false
-    #else
-      true
-    #endif
-=======
 #  ifdef RELEASE_OR_BETA
                                  false
 #  else
                                  true
 #  endif
->>>>>>> upstream-releases
     );
 #endif  // defined(ANDROID)
 
@@ -375,81 +361,18 @@ nsConsoleService::LogStringMessage(const char16_t* aMessage) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsConsoleService::GetMessageArray(uint32_t* aCount,
-                                  nsIConsoleMessage*** aMessages) {
-||||||| merged common ancestors
-nsConsoleService::GetMessageArray(uint32_t* aCount,
-                                  nsIConsoleMessage*** aMessages)
-{
-=======
 nsConsoleService::GetMessageArray(
     nsTArray<RefPtr<nsIConsoleMessage>>& aMessages) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
 
   MutexAutoLock lock(mLock);
 
   if (mMessages.isEmpty()) {
-<<<<<<< HEAD
-    /*
-     * Make a 1-length output array so that nobody gets confused,
-     * and return a count of 0.  This should result in a 0-length
-     * array object when called from script.
-     */
-    nsIConsoleMessage** messageArray =
-        (nsIConsoleMessage**)moz_xmalloc(sizeof(nsIConsoleMessage*));
-    *messageArray = nullptr;
-    *aMessages = messageArray;
-    *aCount = 0;
-
-||||||| merged common ancestors
-    /*
-     * Make a 1-length output array so that nobody gets confused,
-     * and return a count of 0.  This should result in a 0-length
-     * array object when called from script.
-     */
-    nsIConsoleMessage** messageArray = (nsIConsoleMessage**)
-      moz_xmalloc(sizeof(nsIConsoleMessage*));
-    *messageArray = nullptr;
-    *aMessages = messageArray;
-    *aCount = 0;
-
-=======
->>>>>>> upstream-releases
     return NS_OK;
   }
 
   MOZ_ASSERT(mCurrentSize <= mMaximumSize);
-<<<<<<< HEAD
-  nsIConsoleMessage** messageArray = static_cast<nsIConsoleMessage**>(
-      moz_xmalloc(sizeof(nsIConsoleMessage*) * mCurrentSize));
-
-  uint32_t i = 0;
-  for (MessageElement* e = mMessages.getFirst(); e != nullptr;
-       e = e->getNext()) {
-    nsCOMPtr<nsIConsoleMessage> m = e->Get();
-    m.forget(&messageArray[i]);
-    i++;
-  }
-
-  MOZ_ASSERT(i == mCurrentSize);
-||||||| merged common ancestors
-  nsIConsoleMessage** messageArray =
-    static_cast<nsIConsoleMessage**>(moz_xmalloc(sizeof(nsIConsoleMessage*)
-                                                 * mCurrentSize));
-
-  uint32_t i = 0;
-  for (MessageElement* e = mMessages.getFirst(); e != nullptr; e = e->getNext()) {
-    nsCOMPtr<nsIConsoleMessage> m = e->Get();
-    m.forget(&messageArray[i]);
-    i++;
-  }
-
-  MOZ_ASSERT(i == mCurrentSize);
-=======
   aMessages.SetCapacity(mCurrentSize);
->>>>>>> upstream-releases
 
   for (MessageElement* e = mMessages.getFirst(); e != nullptr;
        e = e->getNext()) {

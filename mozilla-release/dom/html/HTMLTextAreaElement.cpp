@@ -48,39 +48,6 @@ NS_IMPL_NS_NEW_HTML_ELEMENT_CHECK_PARSER(TextArea)
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-HTMLTextAreaElement::HTMLTextAreaElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-    FromParser aFromParser)
-    : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), NS_FORM_TEXTAREA),
-      mValueChanged(false),
-      mLastValueChangeWasInteractive(false),
-      mHandlingSelect(false),
-      mDoneAddingChildren(!aFromParser),
-      mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)),
-      mDisabledChanged(false),
-      mCanShowInvalidUI(true),
-      mCanShowValidUI(true),
-      mIsPreviewEnabled(false),
-      mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
-      mState(this) {
-||||||| merged common ancestors
-HTMLTextAreaElement::HTMLTextAreaElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                                         FromParser aFromParser)
-  : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), NS_FORM_TEXTAREA),
-    mValueChanged(false),
-    mLastValueChangeWasInteractive(false),
-    mHandlingSelect(false),
-    mDoneAddingChildren(!aFromParser),
-    mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)),
-    mDisabledChanged(false),
-    mCanShowInvalidUI(true),
-    mCanShowValidUI(true),
-    mIsPreviewEnabled(false),
-    mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
-    mState(this)
-{
-=======
 HTMLTextAreaElement::HTMLTextAreaElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     FromParser aFromParser)
@@ -97,7 +64,6 @@ HTMLTextAreaElement::HTMLTextAreaElement(
       mIsPreviewEnabled(false),
       mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
       mState(this) {
->>>>>>> upstream-releases
   AddMutationObserver(this);
 
   // Set up our default state.  By default we're enabled (since we're
@@ -291,15 +257,8 @@ HTMLTextAreaElement::EnablePreview() {
 
   mIsPreviewEnabled = true;
   // Reconstruct the frame to append an anonymous preview node
-<<<<<<< HEAD
-  nsLayoutUtils::PostRestyleEvent(this, nsRestyleHint(0),
-                                  nsChangeHint_ReconstructFrame);
-||||||| merged common ancestors
-  nsLayoutUtils::PostRestyleEvent(this, nsRestyleHint(0), nsChangeHint_ReconstructFrame);
-=======
   nsLayoutUtils::PostRestyleEvent(this, RestyleHint{0},
                                   nsChangeHint_ReconstructFrame);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP_(bool)
@@ -492,34 +451,6 @@ void HTMLTextAreaElement::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
     mHandlingSelect = true;
   }
 
-<<<<<<< HEAD
-  // If noContentDispatch is true we will not allow content to handle
-  // this event.  But to allow middle mouse button paste to work we must allow
-  // middle clicks to go to text fields anyway.
-  if (aVisitor.mEvent->mFlags.mNoContentDispatch) {
-    aVisitor.mItemFlags |= NS_NO_CONTENT_DISPATCH;
-  }
-  if (aVisitor.mEvent->mMessage == eMouseClick &&
-      aVisitor.mEvent->AsMouseEvent()->button ==
-          WidgetMouseEvent::eMiddleButton) {
-    aVisitor.mEvent->mFlags.mNoContentDispatch = false;
-  }
-
-||||||| merged common ancestors
-  // If noContentDispatch is true we will not allow content to handle
-  // this event.  But to allow middle mouse button paste to work we must allow
-  // middle clicks to go to text fields anyway.
-  if (aVisitor.mEvent->mFlags.mNoContentDispatch) {
-    aVisitor.mItemFlags |= NS_NO_CONTENT_DISPATCH;
-  }
-  if (aVisitor.mEvent->mMessage == eMouseClick &&
-      aVisitor.mEvent->AsMouseEvent()->button ==
-        WidgetMouseEvent::eMiddleButton) {
-    aVisitor.mEvent->mFlags.mNoContentDispatch = false;
-  }
-
-=======
->>>>>>> upstream-releases
   if (aVisitor.mEvent->mMessage == eBlur) {
     // Set mWantsPreHandleEvent and fire change event in PreHandleEvent to
     // prevent it breaks event target chain creation.
@@ -576,18 +507,6 @@ nsresult HTMLTextAreaElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
     UpdateState(true);
   }
 
-<<<<<<< HEAD
-  // Reset the flag for other content besides this text field
-  aVisitor.mEvent->mFlags.mNoContentDispatch =
-      ((aVisitor.mItemFlags & NS_NO_CONTENT_DISPATCH) != 0);
-
-||||||| merged common ancestors
-  // Reset the flag for other content besides this text field
-  aVisitor.mEvent->mFlags.mNoContentDispatch =
-    ((aVisitor.mItemFlags & NS_NO_CONTENT_DISPATCH) != 0);
-
-=======
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -620,19 +539,9 @@ nsIControllers* HTMLTextAreaElement::GetControllers(ErrorResult& aError) {
       return nullptr;
     }
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIController> controller =
-        nsBaseCommandController::CreateEditorController();
-    if (!controller) {
-||||||| merged common ancestors
-    nsCOMPtr<nsIController> controller =
-      nsBaseCommandController::CreateEditorController();
-    if (!controller) {
-=======
     RefPtr<nsBaseCommandController> commandController =
         nsBaseCommandController::CreateEditorController();
     if (!commandController) {
->>>>>>> upstream-releases
       aError.Throw(NS_ERROR_FAILURE);
       return nullptr;
     }
@@ -871,25 +780,10 @@ EventStates HTMLTextAreaElement::IntrinsicState() const {
   return state;
 }
 
-<<<<<<< HEAD
-nsresult HTMLTextAreaElement::BindToTree(nsIDocument* aDocument,
-                                         nsIContent* aParent,
-                                         nsIContent* aBindingParent) {
-  nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(
-      aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLTextAreaElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(aDocument, aParent,
-                                                              aBindingParent);
-=======
 nsresult HTMLTextAreaElement::BindToTree(BindContext& aContext,
                                          nsINode& aParent) {
   nsresult rv =
       nsGenericHTMLFormElementWithState::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // If there is a disabled fieldset in the parent chain, the element is now
@@ -903,18 +797,8 @@ nsresult HTMLTextAreaElement::BindToTree(BindContext& aContext,
   return rv;
 }
 
-<<<<<<< HEAD
-void HTMLTextAreaElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-HTMLTextAreaElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
-=======
 void HTMLTextAreaElement::UnbindFromTree(bool aNullParent) {
   nsGenericHTMLFormElementWithState::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 
   // We might be no longer disabled because of parent chain changed.
   UpdateValueMissingValidityState();
@@ -1102,96 +986,6 @@ nsresult HTMLTextAreaElement::GetValidationMessage(
     nsAString& aValidationMessage, ValidityStateType aType) {
   nsresult rv = NS_OK;
 
-<<<<<<< HEAD
-  switch (aType) {
-    case VALIDITY_STATE_TOO_LONG: {
-      nsAutoString message;
-      int32_t maxLength = MaxLength();
-      int32_t textLength = GetTextLength();
-      nsAutoString strMaxLength;
-      nsAutoString strTextLength;
-
-      strMaxLength.AppendInt(maxLength);
-      strTextLength.AppendInt(textLength);
-
-      const char16_t* params[] = {strMaxLength.get(), strTextLength.get()};
-      rv = nsContentUtils::FormatLocalizedString(
-          nsContentUtils::eDOM_PROPERTIES, "FormValidationTextTooLong", params,
-          message);
-      aValidationMessage = message;
-    } break;
-    case VALIDITY_STATE_TOO_SHORT: {
-      nsAutoString message;
-      int32_t minLength = MinLength();
-      int32_t textLength = GetTextLength();
-      nsAutoString strMinLength;
-      nsAutoString strTextLength;
-
-      strMinLength.AppendInt(minLength);
-      strTextLength.AppendInt(textLength);
-
-      const char16_t* params[] = {strMinLength.get(), strTextLength.get()};
-      rv = nsContentUtils::FormatLocalizedString(
-          nsContentUtils::eDOM_PROPERTIES, "FormValidationTextTooShort", params,
-          message);
-      aValidationMessage = message;
-    } break;
-    case VALIDITY_STATE_VALUE_MISSING: {
-      nsAutoString message;
-      rv = nsContentUtils::GetLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-                                              "FormValidationValueMissing",
-                                              message);
-      aValidationMessage = message;
-    } break;
-||||||| merged common ancestors
-  switch (aType)
-  {
-    case VALIDITY_STATE_TOO_LONG:
-      {
-        nsAutoString message;
-        int32_t maxLength = MaxLength();
-        int32_t textLength = GetTextLength();
-        nsAutoString strMaxLength;
-        nsAutoString strTextLength;
-
-        strMaxLength.AppendInt(maxLength);
-        strTextLength.AppendInt(textLength);
-
-        const char16_t* params[] = { strMaxLength.get(), strTextLength.get() };
-        rv = nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-                                                   "FormValidationTextTooLong",
-                                                   params, message);
-        aValidationMessage = message;
-      }
-      break;
-    case VALIDITY_STATE_TOO_SHORT:
-      {
-        nsAutoString message;
-        int32_t minLength = MinLength();
-        int32_t textLength = GetTextLength();
-        nsAutoString strMinLength;
-        nsAutoString strTextLength;
-
-        strMinLength.AppendInt(minLength);
-        strTextLength.AppendInt(textLength);
-
-        const char16_t* params[] = { strMinLength.get(), strTextLength.get() };
-        rv = nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-                                                   "FormValidationTextTooShort",
-                                                   params, message);
-        aValidationMessage = message;
-      }
-      break;
-    case VALIDITY_STATE_VALUE_MISSING:
-      {
-        nsAutoString message;
-        rv = nsContentUtils::GetLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-                                                "FormValidationValueMissing",
-                                                message);
-        aValidationMessage = message;
-      }
-      break;
-=======
   switch (aType) {
     case VALIDITY_STATE_TOO_LONG: {
       nsAutoString message;
@@ -1230,7 +1024,6 @@ nsresult HTMLTextAreaElement::GetValidationMessage(
                                               message);
       aValidationMessage = message;
     } break;
->>>>>>> upstream-releases
     default:
       rv = nsIConstraintValidation::GetValidationMessage(aValidationMessage,
                                                          aType);
@@ -1296,20 +1089,10 @@ HTMLTextAreaElement::InitializeKeyboardEventListeners() {
 }
 
 NS_IMETHODIMP_(void)
-<<<<<<< HEAD
-HTMLTextAreaElement::OnValueChanged(bool aNotify,
-                                    bool aWasInteractiveUserChange) {
-  mLastValueChangeWasInteractive = aWasInteractiveUserChange;
-||||||| merged common ancestors
-HTMLTextAreaElement::OnValueChanged(bool aNotify, bool aWasInteractiveUserChange)
-{
-  mLastValueChangeWasInteractive = aWasInteractiveUserChange;
-=======
 HTMLTextAreaElement::OnValueChanged(bool aNotify, ValueChangeKind aKind) {
   if (aKind != ValueChangeKind::Internal) {
     mLastValueChangeWasInteractive = aKind == ValueChangeKind::UserInteraction;
   }
->>>>>>> upstream-releases
 
   // Update the validity state
   bool validBefore = IsValid();

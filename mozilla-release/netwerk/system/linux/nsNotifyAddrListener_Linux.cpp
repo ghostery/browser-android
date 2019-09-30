@@ -45,23 +45,6 @@ NS_IMPL_ISUPPORTS(nsNotifyAddrListener, nsINetworkLinkService, nsIRunnable,
                   nsIObserver)
 
 nsNotifyAddrListener::nsNotifyAddrListener()
-<<<<<<< HEAD
-    : mLinkUp(true)  // assume true by default
-      ,
-      mStatusKnown(false),
-      mAllowChangedEvent(true),
-      mCoalescingActive(false) {
-  mShutdownPipe[0] = -1;
-  mShutdownPipe[1] = -1;
-||||||| merged common ancestors
-    : mLinkUp(true)  // assume true by default
-    , mStatusKnown(false)
-    , mAllowChangedEvent(true)
-    , mCoalescingActive(false)
-{
-    mShutdownPipe[0] = -1;
-    mShutdownPipe[1] = -1;
-=======
     : mMutex("nsNotifyAddrListener::mMutex"),
       mLinkUp(true),  // assume true by default
       mStatusKnown(false),
@@ -69,7 +52,6 @@ nsNotifyAddrListener::nsNotifyAddrListener()
       mCoalescingActive(false) {
   mShutdownPipe[0] = -1;
   mShutdownPipe[1] = -1;
->>>>>>> upstream-releases
 }
 
 nsNotifyAddrListener::~nsNotifyAddrListener() {
@@ -84,54 +66,21 @@ nsNotifyAddrListener::~nsNotifyAddrListener() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNotifyAddrListener::GetIsLinkUp(bool *aIsUp) {
-  // XXX This function has not yet been implemented for this platform
-  *aIsUp = mLinkUp;
-  return NS_OK;
-||||||| merged common ancestors
-nsNotifyAddrListener::GetIsLinkUp(bool *aIsUp)
-{
-    // XXX This function has not yet been implemented for this platform
-    *aIsUp = mLinkUp;
-    return NS_OK;
-=======
 nsNotifyAddrListener::GetIsLinkUp(bool* aIsUp) {
   // XXX This function has not yet been implemented for this platform
   *aIsUp = mLinkUp;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNotifyAddrListener::GetLinkStatusKnown(bool *aIsUp) {
-  // XXX This function has not yet been implemented for this platform
-  *aIsUp = mStatusKnown;
-  return NS_OK;
-||||||| merged common ancestors
-nsNotifyAddrListener::GetLinkStatusKnown(bool *aIsUp)
-{
-    // XXX This function has not yet been implemented for this platform
-    *aIsUp = mStatusKnown;
-    return NS_OK;
-=======
 nsNotifyAddrListener::GetLinkStatusKnown(bool* aIsUp) {
   // XXX This function has not yet been implemented for this platform
   *aIsUp = mStatusKnown;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNotifyAddrListener::GetLinkType(uint32_t *aLinkType) {
-||||||| merged common ancestors
-nsNotifyAddrListener::GetLinkType(uint32_t *aLinkType)
-{
-=======
 nsNotifyAddrListener::GetLinkType(uint32_t* aLinkType) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aLinkType);
 
   // XXX This function has not yet been implemented for this platform
@@ -153,37 +102,6 @@ nsNotifyAddrListener::GetNetworkID(nsACString& aNetworkID) {
 // address of that IP in the ARP table before it hashes that string (to avoid
 // information leakage).
 //
-<<<<<<< HEAD
-void nsNotifyAddrListener::calculateNetworkId(void) {
-  const char *kProcRoute = "/proc/net/route"; /* IPv4 routes */
-  const char *kProcArp = "/proc/net/arp";
-  bool found = false;
-
-  FILE *froute = fopen(kProcRoute, "r");
-  if (froute) {
-    char buffer[512];
-    uint32_t gw = 0;
-    char *l = fgets(buffer, sizeof(buffer), froute);
-    if (l) {
-      /* skip the title line  */
-      while (l) {
-        char interf[32];
-        uint32_t dest;
-        uint32_t gateway;
-        l = fgets(buffer, sizeof(buffer), froute);
-||||||| merged common ancestors
-void nsNotifyAddrListener::calculateNetworkId(void)
-{
-    const char *kProcRoute = "/proc/net/route"; /* IPv4 routes */
-    const char *kProcArp = "/proc/net/arp";
-    bool found = false;
-
-    FILE *froute = fopen(kProcRoute, "r");
-    if (froute) {
-        char buffer[512];
-        uint32_t gw = 0;
-        char *l = fgets(buffer, sizeof(buffer), froute);
-=======
 static bool ipv4NetworkId(SHA1Sum* sha1) {
   const char* kProcRoute = "/proc/net/route"; /* IPv4 routes */
   const char* kProcArp = "/proc/net/arp";
@@ -201,9 +119,7 @@ static bool ipv4NetworkId(SHA1Sum* sha1) {
         uint32_t dest;
         uint32_t gateway;
         l = fgets(buffer, sizeof(buffer), froute);
->>>>>>> upstream-releases
         if (l) {
-<<<<<<< HEAD
           buffer[511] = 0; /* as a precaution */
           int val = sscanf(buffer, "%31s %x %x", interf, &dest, &gateway);
           if ((3 == val) && !dest) {
@@ -211,167 +127,6 @@ static bool ipv4NetworkId(SHA1Sum* sha1) {
             break;
           }
         }
-      }
-    }
-    fclose(froute);
-
-    if (gw) {
-      /* create a string to search for in the arp table */
-      char searchfor[16];
-      SprintfLiteral(searchfor, "%d.%d.%d.%d", gw & 0xff, (gw >> 8) & 0xff,
-                     (gw >> 16) & 0xff, gw >> 24);
-
-      FILE *farp = fopen(kProcArp, "r");
-      if (farp) {
-        l = fgets(buffer, sizeof(buffer), farp);
-        while (l) {
-          /* skip the title line  */
-          l = fgets(buffer, sizeof(buffer), farp);
-          if (l) {
-            buffer[511] = 0; /* as a precaution */
-            int p[4];
-            char type[16];
-            char flags[16];
-            char hw[32];
-            if (7 == sscanf(buffer, "%u.%u.%u.%u %15s %15s %31s", &p[0], &p[1],
-                            &p[2], &p[3], type, flags, hw)) {
-              uint32_t searchip =
-                  p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
-              if (gw == searchip) {
-                LOG(("networkid: MAC %s\n", hw));
-                nsAutoCString mac(hw);
-                // This 'addition' could potentially be a
-                // fixed number from the profile or something.
-                nsAutoCString addition("local-rubbish");
-                nsAutoCString output;
-                SHA1Sum sha1;
-                nsCString combined(mac + addition);
-                sha1.update(combined.get(), combined.Length());
-                uint8_t digest[SHA1Sum::kHashSize];
-                sha1.finish(digest);
-                nsCString newString(reinterpret_cast<char *>(digest),
-                                    SHA1Sum::kHashSize);
-                nsresult rv = Base64Encode(newString, output);
-                MOZ_RELEASE_ASSERT(NS_SUCCEEDED(rv));
-                LOG(("networkid: id %s\n", output.get()));
-                if (mNetworkId != output) {
-                  // new id
-                  Telemetry::Accumulate(Telemetry::NETWORK_ID, 1);
-                  mNetworkId = output;
-                } else {
-                  // same id
-                  Telemetry::Accumulate(Telemetry::NETWORK_ID, 2);
-                }
-                found = true;
-                break;
-              }
-            }
-          }
-||||||| merged common ancestors
-            /* skip the title line  */
-            while (l) {
-                char interf[32];
-                uint32_t dest;
-                uint32_t gateway;
-                l = fgets(buffer, sizeof(buffer), froute);
-                if (l) {
-                    buffer[511]=0; /* as a precaution */
-                    int val = sscanf(buffer, "%31s %x %x",
-                                     interf, &dest, &gateway);
-                    if ((3 == val) && !dest) {
-                        gw = gateway;
-                        break;
-                    }
-                }
-            }
-=======
-          buffer[511] = 0; /* as a precaution */
-          int val = sscanf(buffer, "%31s %x %x", interf, &dest, &gateway);
-          if ((3 == val) && !dest) {
-            gw = gateway;
-            break;
-          }
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        fclose(farp);
-      } /* if (farp) */
-    }   /* if (gw) */
-  }     /* if (froute) */
-  if (!found) {
-    // no id
-    Telemetry::Accumulate(Telemetry::NETWORK_ID, 0);
-  }
-||||||| merged common ancestors
-        fclose(froute);
-
-        if (gw) {
-            /* create a string to search for in the arp table */
-            char searchfor[16];
-            SprintfLiteral(searchfor, "%d.%d.%d.%d",
-                           gw & 0xff,
-                           (gw >> 8) & 0xff,
-                           (gw >> 16) & 0xff,
-                           gw >> 24);
-
-            FILE *farp = fopen(kProcArp, "r");
-            if (farp) {
-                l = fgets(buffer, sizeof(buffer), farp);
-                while (l) {
-                    /* skip the title line  */
-                    l = fgets(buffer, sizeof(buffer), farp);
-                    if (l) {
-                        buffer[511]=0; /* as a precaution */
-                        int p[4];
-                        char type[16];
-                        char flags[16];
-                        char hw[32];
-                        if (7 == sscanf(buffer, "%u.%u.%u.%u %15s %15s %31s",
-                                        &p[0], &p[1], &p[2], &p[3],
-                                        type, flags, hw)) {
-                            uint32_t searchip = p[0] | (p[1] << 8) |
-                                (p[2] << 16) | (p[3] << 24);
-                            if (gw == searchip) {
-                                LOG(("networkid: MAC %s\n", hw));
-                                nsAutoCString mac(hw);
-                                // This 'addition' could potentially be a
-                                // fixed number from the profile or something.
-                                nsAutoCString addition("local-rubbish");
-                                nsAutoCString output;
-                                SHA1Sum sha1;
-                                nsCString combined(mac + addition);
-                                sha1.update(combined.get(), combined.Length());
-                                uint8_t digest[SHA1Sum::kHashSize];
-                                sha1.finish(digest);
-                                nsCString newString(reinterpret_cast<char*>(digest),
-                                                    SHA1Sum::kHashSize);
-                                nsresult rv = Base64Encode(newString, output);
-                                MOZ_RELEASE_ASSERT(NS_SUCCEEDED(rv));
-                                LOG(("networkid: id %s\n", output.get()));
-                                if (mNetworkId != output) {
-                                    // new id
-                                    Telemetry::Accumulate(Telemetry::NETWORK_ID, 1);
-                                    mNetworkId = output;
-                                }
-                                else {
-                                    // same id
-                                    Telemetry::Accumulate(Telemetry::NETWORK_ID, 2);
-                                }
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                fclose(farp);
-            } /* if (farp) */
-        } /* if (gw) */
-    } /* if (froute) */
-    if (!found) {
-        // no id
-        Telemetry::Accumulate(Telemetry::NETWORK_ID, 0);
-    }
-=======
       }
     }
     fclose(froute);
@@ -413,53 +168,10 @@ static bool ipv4NetworkId(SHA1Sum* sha1) {
     }   /* if (gw) */
   }     /* if (froute) */
   return found;
->>>>>>> upstream-releases
 }
 
 // Figure out the current IPv6 "network identification" string.
 //
-<<<<<<< HEAD
-// Check if there's a network interface available to do networking on.
-//
-void nsNotifyAddrListener::checkLink(void) {
-  struct ifaddrs *list;
-  struct ifaddrs *ifa;
-  bool link = false;
-  bool prevLinkUp = mLinkUp;
-||||||| merged common ancestors
-// Check if there's a network interface available to do networking on.
-//
-void nsNotifyAddrListener::checkLink(void)
-{
-    struct ifaddrs *list;
-    struct ifaddrs *ifa;
-    bool link = false;
-    bool prevLinkUp = mLinkUp;
-
-    if (getifaddrs(&list))
-        return;
-
-    // Walk through the linked list, maintaining head pointer so we can free
-    // list later
-
-    for (ifa = list; ifa != nullptr; ifa = ifa->ifa_next) {
-        int family;
-        if (ifa->ifa_addr == nullptr)
-            continue;
-
-        family = ifa->ifa_addr->sa_family;
-
-        if ((family == AF_INET || family == AF_INET6) &&
-            (ifa->ifa_flags & IFF_RUNNING) &&
-            !(ifa->ifa_flags & IFF_LOOPBACK)) {
-            // An interface that is UP and not loopback
-            link = true;
-            break;
-        }
-    }
-    mLinkUp = link;
-    freeifaddrs(list);
-=======
 static bool ipv6NetworkId(SHA1Sum* sha1) {
   bool found = false;
   FILE* ifs = fopen("/proc/net/if_inet6", "r");
@@ -537,18 +249,7 @@ static bool ipv6NetworkId(SHA1Sum* sha1) {
   }
   return found;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (getifaddrs(&list)) return;
-||||||| merged common ancestors
-    if (prevLinkUp != mLinkUp) {
-        // UP/DOWN status changed, send appropriate UP/DOWN event
-        SendEvent(mLinkUp ?
-                  NS_NETWORK_LINK_DATA_UP : NS_NETWORK_LINK_DATA_DOWN);
-    }
-}
-=======
 // Figure out the "network identification".
 //
 void nsNotifyAddrListener::calculateNetworkId(void) {
@@ -594,16 +295,7 @@ void nsNotifyAddrListener::calculateNetworkId(void) {
     Telemetry::Accumulate(Telemetry::NETWORK_ID2, 0);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Walk through the linked list, maintaining head pointer so we can free
-  // list later
-||||||| merged common ancestors
-void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket)
-{
-    struct  nlmsghdr *nlh;
-=======
 //
 // Check if there's a network interface available to do networking on.
 //
@@ -612,43 +304,12 @@ void nsNotifyAddrListener::checkLink(void) {
   struct ifaddrs* ifa;
   bool link = false;
   bool prevLinkUp = mLinkUp;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (ifa = list; ifa != nullptr; ifa = ifa->ifa_next) {
-    int family;
-    if (ifa->ifa_addr == nullptr) continue;
-||||||| merged common ancestors
-    // The buffer size below, (4095) was chosen partly based on testing and
-    // partly on existing sample source code using this size. It needs to be
-    // large enough to hold the netlink messages from the kernel.
-    char buffer[4095];
-    struct rtattr *attr;
-    int attr_len;
-    const struct ifaddrmsg* newifam;
-=======
   if (getifaddrs(&list)) return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    family = ifa->ifa_addr->sa_family;
-||||||| merged common ancestors
-=======
   // Walk through the linked list, maintaining head pointer so we can free
   // list later
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if ((family == AF_INET || family == AF_INET6) &&
-        (ifa->ifa_flags & IFF_RUNNING) && !(ifa->ifa_flags & IFF_LOOPBACK)) {
-      // An interface that is UP and not loopback
-      link = true;
-      break;
-||||||| merged common ancestors
-    ssize_t rc = EINTR_RETRY(recv(aNetlinkSocket, buffer, sizeof(buffer), 0));
-    if (rc < 0) {
-        return;
-=======
   for (ifa = list; ifa != nullptr; ifa = ifa->ifa_next) {
     int family;
     if (ifa->ifa_addr == nullptr) continue;
@@ -660,7 +321,6 @@ void nsNotifyAddrListener::checkLink(void) {
       // An interface that is UP and not loopback
       link = true;
       break;
->>>>>>> upstream-releases
     }
   }
   mLinkUp = link;
@@ -672,27 +332,9 @@ void nsNotifyAddrListener::checkLink(void) {
   }
 }
 
-<<<<<<< HEAD
-void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
-  struct nlmsghdr *nlh;
-||||||| merged common ancestors
-    nlh = reinterpret_cast<struct nlmsghdr *>(buffer);
-=======
 void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
   struct nlmsghdr* nlh;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The buffer size below, (4095) was chosen partly based on testing and
-  // partly on existing sample source code using this size. It needs to be
-  // large enough to hold the netlink messages from the kernel.
-  char buffer[4095];
-  struct rtattr *attr;
-  int attr_len;
-  const struct ifaddrmsg *newifam;
-||||||| merged common ancestors
-    bool networkChange = false;
-=======
   // The buffer size below, (4095) was chosen partly based on testing and
   // partly on existing sample source code using this size. It needs to be
   // large enough to hold the netlink messages from the kernel.
@@ -700,7 +342,6 @@ void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
   struct rtattr* attr;
   int attr_len;
   const struct ifaddrmsg* newifam;
->>>>>>> upstream-releases
 
   ssize_t rc = EINTR_RETRY(recv(aNetlinkSocket, buffer, sizeof(buffer), 0));
   if (rc < 0) {
@@ -708,85 +349,16 @@ void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
   }
   size_t netlink_bytes = rc;
 
-<<<<<<< HEAD
-  nlh = reinterpret_cast<struct nlmsghdr *>(buffer);
-||||||| merged common ancestors
-        if (NLMSG_DONE == nlh->nlmsg_type) {
-            break;
-        }
-=======
   nlh = reinterpret_cast<struct nlmsghdr*>(buffer);
->>>>>>> upstream-releases
 
   bool networkChange = false;
 
-<<<<<<< HEAD
-  for (; NLMSG_OK(nlh, netlink_bytes); nlh = NLMSG_NEXT(nlh, netlink_bytes)) {
-    char prefixaddr[INET6_ADDRSTRLEN];
-    char localaddr[INET6_ADDRSTRLEN];
-    char *addr = nullptr;
-    prefixaddr[0] = localaddr[0] = '\0';
-||||||| merged common ancestors
-        if ((newifam->ifa_family != AF_INET) &&
-            (newifam->ifa_family != AF_INET6)) {
-            continue;
-        }
-=======
   for (; NLMSG_OK(nlh, netlink_bytes); nlh = NLMSG_NEXT(nlh, netlink_bytes)) {
     char prefixaddr[INET6_ADDRSTRLEN];
     char localaddr[INET6_ADDRSTRLEN];
     char* addr = nullptr;
     prefixaddr[0] = localaddr[0] = '\0';
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (NLMSG_DONE == nlh->nlmsg_type) {
-      break;
-    }
-
-    LOG(("nsNotifyAddrListener::OnNetlinkMessage: new/deleted address\n"));
-    newifam = reinterpret_cast<struct ifaddrmsg *>(NLMSG_DATA(nlh));
-
-    if ((newifam->ifa_family != AF_INET) && (newifam->ifa_family != AF_INET6)) {
-      continue;
-    }
-
-    attr = IFA_RTA(newifam);
-    attr_len = IFA_PAYLOAD(nlh);
-    for (; attr_len && RTA_OK(attr, attr_len);
-         attr = RTA_NEXT(attr, attr_len)) {
-      if (attr->rta_type == IFA_ADDRESS) {
-        if (newifam->ifa_family == AF_INET) {
-          struct in_addr *in = (struct in_addr *)RTA_DATA(attr);
-          inet_ntop(AF_INET, in, prefixaddr, INET_ADDRSTRLEN);
-||||||| merged common ancestors
-        attr = IFA_RTA (newifam);
-        attr_len = IFA_PAYLOAD (nlh);
-        for (;attr_len && RTA_OK (attr, attr_len);
-             attr = RTA_NEXT (attr, attr_len)) {
-            if (attr->rta_type == IFA_ADDRESS) {
-                if (newifam->ifa_family == AF_INET) {
-                    struct in_addr* in = (struct in_addr*)RTA_DATA(attr);
-                    inet_ntop(AF_INET, in, prefixaddr, INET_ADDRSTRLEN);
-                } else {
-                    struct in6_addr* in = (struct in6_addr*)RTA_DATA(attr);
-                    inet_ntop(AF_INET6, in, prefixaddr, INET6_ADDRSTRLEN);
-                }
-            } else if (attr->rta_type == IFA_LOCAL) {
-                if (newifam->ifa_family == AF_INET) {
-                    struct in_addr* in = (struct in_addr*)RTA_DATA(attr);
-                    inet_ntop(AF_INET, in, localaddr, INET_ADDRSTRLEN);
-                } else {
-                    struct in6_addr* in = (struct in6_addr*)RTA_DATA(attr);
-                    inet_ntop(AF_INET6, in, localaddr, INET6_ADDRSTRLEN);
-                }
-            }
-        }
-        if (localaddr[0]) {
-            addr = localaddr;
-        } else if (prefixaddr[0]) {
-            addr = prefixaddr;
-=======
     if (NLMSG_DONE == nlh->nlmsg_type) {
       break;
     }
@@ -806,67 +378,17 @@ void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
         if (newifam->ifa_family == AF_INET) {
           struct in_addr* in = (struct in_addr*)RTA_DATA(attr);
           inet_ntop(AF_INET, in, prefixaddr, INET_ADDRSTRLEN);
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-          struct in6_addr *in = (struct in6_addr *)RTA_DATA(attr);
-          inet_ntop(AF_INET6, in, prefixaddr, INET6_ADDRSTRLEN);
-||||||| merged common ancestors
-            continue;
-=======
           struct in6_addr* in = (struct in6_addr*)RTA_DATA(attr);
           inet_ntop(AF_INET6, in, prefixaddr, INET6_ADDRSTRLEN);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      } else if (attr->rta_type == IFA_LOCAL) {
-        if (newifam->ifa_family == AF_INET) {
-          struct in_addr *in = (struct in_addr *)RTA_DATA(attr);
-          inet_ntop(AF_INET, in, localaddr, INET_ADDRSTRLEN);
-||||||| merged common ancestors
-        if (nlh->nlmsg_type == RTM_NEWADDR) {
-            LOG(("nsNotifyAddrListener::OnNetlinkMessage: a new address "
-                 "- %s.", addr));
-            struct ifaddrmsg* ifam;
-            nsCString addrStr;
-            addrStr.Assign(addr);
-            if (auto entry = mAddressInfo.LookupForAdd(addrStr)) {
-                ifam = entry.Data();
-                LOG(("nsNotifyAddrListener::OnNetlinkMessage: the address "
-                     "already known."));
-                if (memcmp(ifam, newifam, sizeof(struct ifaddrmsg))) {
-                    LOG(("nsNotifyAddrListener::OnNetlinkMessage: but "
-                         "the address info has been changed."));
-                    networkChange = true;
-                    memcpy(ifam, newifam, sizeof(struct ifaddrmsg));
-                }
-            } else {
-                networkChange = true;
-                ifam = (struct ifaddrmsg*)malloc(sizeof(struct ifaddrmsg));
-                memcpy(ifam, newifam, sizeof(struct ifaddrmsg));
-                entry.OrInsert([ifam] () { return ifam; });
-            }
-=======
       } else if (attr->rta_type == IFA_LOCAL) {
         if (newifam->ifa_family == AF_INET) {
           struct in_addr* in = (struct in_addr*)RTA_DATA(attr);
           inet_ntop(AF_INET, in, localaddr, INET_ADDRSTRLEN);
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-          struct in6_addr *in = (struct in6_addr *)RTA_DATA(attr);
-          inet_ntop(AF_INET6, in, localaddr, INET6_ADDRSTRLEN);
-||||||| merged common ancestors
-            LOG(("nsNotifyAddrListener::OnNetlinkMessage: an address "
-                 "has been deleted - %s.", addr));
-            networkChange = true;
-            nsCString addrStr;
-            addrStr.Assign(addr);
-            mAddressInfo.Remove(addrStr);
-=======
           struct in6_addr* in = (struct in6_addr*)RTA_DATA(attr);
           inet_ntop(AF_INET6, in, localaddr, INET6_ADDRSTRLEN);
->>>>>>> upstream-releases
         }
       }
     }
@@ -877,47 +399,6 @@ void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
     } else {
       continue;
     }
-<<<<<<< HEAD
-    if (nlh->nlmsg_type == RTM_NEWADDR) {
-      LOG(
-          ("nsNotifyAddrListener::OnNetlinkMessage: a new address "
-           "- %s.",
-           addr));
-      struct ifaddrmsg *ifam;
-      nsCString addrStr;
-      addrStr.Assign(addr);
-      if (auto entry = mAddressInfo.LookupForAdd(addrStr)) {
-        ifam = entry.Data();
-        LOG(
-            ("nsNotifyAddrListener::OnNetlinkMessage: the address "
-             "already known."));
-        if (memcmp(ifam, newifam, sizeof(struct ifaddrmsg))) {
-          LOG(
-              ("nsNotifyAddrListener::OnNetlinkMessage: but "
-               "the address info has been changed."));
-          networkChange = true;
-          memcpy(ifam, newifam, sizeof(struct ifaddrmsg));
-        }
-      } else {
-        networkChange = true;
-        ifam = (struct ifaddrmsg *)malloc(sizeof(struct ifaddrmsg));
-        memcpy(ifam, newifam, sizeof(struct ifaddrmsg));
-        entry.OrInsert([ifam]() { return ifam; });
-      }
-    } else {
-      LOG(
-          ("nsNotifyAddrListener::OnNetlinkMessage: an address "
-           "has been deleted - %s.",
-           addr));
-      networkChange = true;
-      nsCString addrStr;
-      addrStr.Assign(addr);
-      mAddressInfo.Remove(addrStr);
-||||||| merged common ancestors
-
-    if (networkChange) {
-        checkLink();
-=======
     if (nlh->nlmsg_type == RTM_NEWADDR) {
       LOG(
           ("nsNotifyAddrListener::OnNetlinkMessage: a new address "
@@ -953,7 +434,6 @@ void nsNotifyAddrListener::OnNetlinkMessage(int aNetlinkSocket) {
       nsCString addrStr;
       addrStr.Assign(addr);
       mAddressInfo.Remove(addrStr);
->>>>>>> upstream-releases
     }
   }
 
@@ -979,52 +459,6 @@ nsNotifyAddrListener::Run() {
   addr.nl_family = AF_NETLINK;
   addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
 
-<<<<<<< HEAD
-  if (bind(netlinkSocket, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-    // failure!
-    EINTR_RETRY(close(netlinkSocket));
-    return NS_ERROR_FAILURE;
-  }
-
-  // switch the socket into non-blocking
-  int flags = fcntl(netlinkSocket, F_GETFL, 0);
-  (void)fcntl(netlinkSocket, F_SETFL, flags | O_NONBLOCK);
-
-  struct pollfd fds[2];
-  fds[0].fd = mShutdownPipe[0];
-  fds[0].events = POLLIN;
-  fds[0].revents = 0;
-
-  fds[1].fd = netlinkSocket;
-  fds[1].events = POLLIN;
-  fds[1].revents = 0;
-
-  calculateNetworkId();
-
-  nsresult rv = NS_OK;
-  bool shutdown = false;
-  int pollWait = -1;
-  while (!shutdown) {
-    int rc = EINTR_RETRY(poll(fds, 2, pollWait));
-
-    if (rc > 0) {
-      if (fds[0].revents & POLLIN) {
-        // shutdown, abort the loop!
-        LOG(("thread shutdown received, dying...\n"));
-        shutdown = true;
-      } else if (fds[1].revents & POLLIN) {
-        LOG(("netlink message received, handling it...\n"));
-        OnNetlinkMessage(netlinkSocket);
-      }
-    } else if (rc < 0) {
-      rv = NS_ERROR_FAILURE;
-      break;
-||||||| merged common ancestors
-    if (bind(netlinkSocket, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-        // failure!
-        EINTR_RETRY(close(netlinkSocket));
-        return NS_ERROR_FAILURE;
-=======
   if (bind(netlinkSocket, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
     // failure!
     EINTR_RETRY(close(netlinkSocket));
@@ -1064,72 +498,7 @@ nsNotifyAddrListener::Run() {
     } else if (rc < 0) {
       rv = NS_ERROR_FAILURE;
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (mCoalescingActive) {
-      // check if coalescing period should continue
-      double period = (TimeStamp::Now() - mChangeTime).ToMilliseconds();
-      if (period >= kNetworkChangeCoalescingPeriod) {
-        SendEvent(NS_NETWORK_LINK_DATA_CHANGED);
-        calculateNetworkId();
-        mCoalescingActive = false;
-        pollWait = -1;  // restore to default
-      } else {
-        // wait no longer than to the end of the period
-        pollWait = static_cast<int>(kNetworkChangeCoalescingPeriod - period);
-      }
-||||||| merged common ancestors
-
-    // switch the socket into non-blocking
-    int flags = fcntl(netlinkSocket, F_GETFL, 0);
-    (void)fcntl(netlinkSocket, F_SETFL, flags | O_NONBLOCK);
-
-    struct pollfd fds[2];
-    fds[0].fd = mShutdownPipe[0];
-    fds[0].events = POLLIN;
-    fds[0].revents = 0;
-
-    fds[1].fd = netlinkSocket;
-    fds[1].events = POLLIN;
-    fds[1].revents = 0;
-
-    calculateNetworkId();
-
-    nsresult rv = NS_OK;
-    bool shutdown = false;
-    int pollWait = -1;
-    while (!shutdown) {
-        int rc = EINTR_RETRY(poll(fds, 2, pollWait));
-
-        if (rc > 0) {
-            if (fds[0].revents & POLLIN) {
-                // shutdown, abort the loop!
-                LOG(("thread shutdown received, dying...\n"));
-                shutdown = true;
-            } else if (fds[1].revents & POLLIN) {
-                LOG(("netlink message received, handling it...\n"));
-                OnNetlinkMessage(netlinkSocket);
-            }
-        } else if (rc < 0) {
-            rv = NS_ERROR_FAILURE;
-            break;
-        }
-        if (mCoalescingActive) {
-            // check if coalescing period should continue
-            double period = (TimeStamp::Now() - mChangeTime).ToMilliseconds();
-            if (period >= kNetworkChangeCoalescingPeriod) {
-                SendEvent(NS_NETWORK_LINK_DATA_CHANGED);
-                calculateNetworkId();
-                mCoalescingActive = false;
-                pollWait = -1; // restore to default
-            } else {
-                // wait no longer than to the end of the period
-                pollWait = static_cast<int>
-                    (kNetworkChangeCoalescingPeriod - period);
-            }
-        }
-=======
     if (mCoalescingActive) {
       // check if coalescing period should continue
       double period = (TimeStamp::Now() - mChangeTime).ToMilliseconds();
@@ -1141,7 +510,6 @@ nsNotifyAddrListener::Run() {
         // wait no longer than to the end of the period
         pollWait = static_cast<int>(kNetworkChangeCoalescingPeriod - period);
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -1151,27 +519,11 @@ nsNotifyAddrListener::Run() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNotifyAddrListener::Observe(nsISupports *subject, const char *topic,
-                              const char16_t *data) {
-  if (!strcmp("xpcom-shutdown-threads", topic)) {
-    Shutdown();
-  }
-||||||| merged common ancestors
-nsNotifyAddrListener::Observe(nsISupports *subject,
-                              const char *topic,
-                              const char16_t *data)
-{
-    if (!strcmp("xpcom-shutdown-threads", topic)) {
-        Shutdown();
-    }
-=======
 nsNotifyAddrListener::Observe(nsISupports* subject, const char* topic,
                               const char16_t* data) {
   if (!strcmp("xpcom-shutdown-threads", topic)) {
     Shutdown();
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1242,30 +594,6 @@ nsresult nsNotifyAddrListener::NetworkChanged() {
 /* Sends the given event.  Assumes aEventID never goes out of scope (static
  * strings are ideal).
  */
-<<<<<<< HEAD
-nsresult nsNotifyAddrListener::SendEvent(const char *aEventID) {
-  if (!aEventID) return NS_ERROR_NULL_POINTER;
-
-  LOG(("SendEvent: %s\n", aEventID));
-  nsresult rv = NS_OK;
-  nsCOMPtr<nsIRunnable> event = new ChangeEvent(this, aEventID);
-  if (NS_FAILED(rv = NS_DispatchToMainThread(event)))
-    NS_WARNING("Failed to dispatch ChangeEvent");
-  return rv;
-||||||| merged common ancestors
-nsresult
-nsNotifyAddrListener::SendEvent(const char *aEventID)
-{
-    if (!aEventID)
-        return NS_ERROR_NULL_POINTER;
-
-    LOG(("SendEvent: %s\n", aEventID));
-    nsresult rv = NS_OK;
-    nsCOMPtr<nsIRunnable> event = new ChangeEvent(this, aEventID);
-    if (NS_FAILED(rv = NS_DispatchToMainThread(event)))
-        NS_WARNING("Failed to dispatch ChangeEvent");
-    return rv;
-=======
 nsresult nsNotifyAddrListener::SendEvent(const char* aEventID) {
   if (!aEventID) return NS_ERROR_NULL_POINTER;
 
@@ -1276,7 +604,6 @@ nsresult nsNotifyAddrListener::SendEvent(const char* aEventID) {
   if (NS_FAILED(rv = NS_DispatchToMainThread(event)))
     NS_WARNING("Failed to dispatch ChangeEvent");
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

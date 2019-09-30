@@ -70,48 +70,5 @@ JSDebugger::AddClass(JS::Handle<JS::Value> global, JSContext* cx) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
 }  // namespace jsdebugger
 }  // namespace mozilla
-
-NS_DEFINE_NAMED_CID(JSDEBUGGER_CID);
-
-static const mozilla::Module::CIDEntry kJSDebuggerCIDs[] = {
-    {&kJSDEBUGGER_CID, false, nullptr,
-     mozilla::jsdebugger::JSDebuggerConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kJSDebuggerContracts[] = {
-    {JSDEBUGGER_CONTRACTID, &kJSDEBUGGER_CID}, {nullptr}};
-
-static const mozilla::Module kJSDebuggerModule = {
-    mozilla::Module::kVersion, kJSDebuggerCIDs, kJSDebuggerContracts};
-
-NSMODULE_DEFN(jsdebugger) = &kJSDebuggerModule;
-||||||| merged common ancestors
-} // namespace jsdebugger
-} // namespace mozilla
-
-NS_DEFINE_NAMED_CID(JSDEBUGGER_CID);
-
-static const mozilla::Module::CIDEntry kJSDebuggerCIDs[] = {
-  { &kJSDEBUGGER_CID, false, nullptr, mozilla::jsdebugger::JSDebuggerConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kJSDebuggerContracts[] = {
-  { JSDEBUGGER_CONTRACTID, &kJSDEBUGGER_CID },
-  { nullptr }
-};
-
-static const mozilla::Module kJSDebuggerModule = {
-  mozilla::Module::kVersion,
-  kJSDebuggerCIDs,
-  kJSDebuggerContracts
-};
-
-NSMODULE_DEFN(jsdebugger) = &kJSDebuggerModule;
-=======
-}  // namespace jsdebugger
-}  // namespace mozilla
->>>>>>> upstream-releases

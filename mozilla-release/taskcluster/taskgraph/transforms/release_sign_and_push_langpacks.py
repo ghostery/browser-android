@@ -10,29 +10,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 from taskgraph.loader.single_dep import schema
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
-<<<<<<< HEAD
-from taskgraph.util.schema import resolve_keyed_by, optionally_keyed_by
-||||||| merged common ancestors
-from taskgraph.util.schema import validate_schema, Schema, resolve_keyed_by, optionally_keyed_by
-=======
 from taskgraph.util.schema import resolve_keyed_by, optionally_keyed_by
 from taskgraph.util.treeherder import inherit_treeherder_from_dep
->>>>>>> upstream-releases
 from taskgraph.transforms.task import task_description_schema
 from voluptuous import Any, Required
 
-<<<<<<< HEAD
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-||||||| merged common ancestors
-
-transforms = TransformSequence()
-
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-
-=======
->>>>>>> upstream-releases
 transforms = TransformSequence()
 
 langpack_sign_push_description_schema = schema.extend({

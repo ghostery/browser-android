@@ -5,22 +5,10 @@
 
 /* globals ReaderMode */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/ReaderMode.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Task.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/ReaderMode.jsm");
-Cu.import("resource://gre/modules/Services.jsm");
-Cu.import("resource://gre/modules/Task.jsm");
-=======
 const { ReaderMode } = ChromeUtils.import(
   "resource://gre/modules/ReaderMode.jsm"
 );
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 var Reader = Services.wm.getMostRecentWindow("navigator:browser").Reader;
 

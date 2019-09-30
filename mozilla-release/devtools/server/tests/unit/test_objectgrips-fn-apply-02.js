@@ -9,16 +9,6 @@ registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-<<<<<<< HEAD
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-||||||| merged common ancestors
-  const dbgClient = new DebuggerClient(server.connectPipe());
-  await dbgClient.connect();
-  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
-=======
 add_task(
   threadClientTest(async ({ threadClient, debuggee, client }) => {
     debuggee.eval(
@@ -26,21 +16,10 @@ add_task(
         debugger;
       }.toString()
     );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  await test_object_grip(debuggee, threadClient);
-}));
-||||||| merged common ancestors
-  await test_object_grip(debuggee, threadClient);
-
-  await dbgClient.close();
-}
-=======
     await test_object_grip(debuggee, threadClient);
   })
 );
->>>>>>> upstream-releases
 
 async function test_object_grip(debuggee, threadClient) {
   const code = `
@@ -65,13 +44,7 @@ async function test_object_grip(debuggee, threadClient) {
   const objClient = threadClient.pauseGrip(obj);
 
   const method = threadClient.pauseGrip(
-<<<<<<< HEAD
-    (await objClient.getPropertyValue("method", null)).value.return,
-||||||| merged common ancestors
-    (await objClient.getPropertyValue("method")).value.return,
-=======
     (await objClient.getPropertyValue("method", null)).value.return
->>>>>>> upstream-releases
   );
 
   // Ensure that we actually paused at the `debugger;` line.

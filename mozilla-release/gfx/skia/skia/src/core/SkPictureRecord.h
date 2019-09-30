@@ -165,24 +165,6 @@ protected:
 
     void onDrawDRRect(const SkRRect&, const SkRRect&, const SkPaint&) override;
 
-<<<<<<< HEAD
-    void onDrawText(const void* text, size_t, SkScalar x, SkScalar y, const SkPaint&) override;
-    void onDrawPosText(const void* text, size_t, const SkPoint pos[], const SkPaint&) override;
-    void onDrawPosTextH(const void* text, size_t, const SkScalar xpos[], SkScalar constY,
-                        const SkPaint&) override;
-    void onDrawTextRSXform(const void* text, size_t byteLength, const SkRSXform xform[],
-                           const SkRect* cull, const SkPaint&) override;
-||||||| merged common ancestors
-    void onDrawText(const void* text, size_t, SkScalar x, SkScalar y, const SkPaint&) override;
-    void onDrawPosText(const void* text, size_t, const SkPoint pos[], const SkPaint&) override;
-    void onDrawPosTextH(const void* text, size_t, const SkScalar xpos[], SkScalar constY,
-                        const SkPaint&) override;
-    void onDrawTextOnPath(const void* text, size_t byteLength, const SkPath& path,
-                                  const SkMatrix* matrix, const SkPaint&) override;
-    void onDrawTextRSXform(const void* text, size_t byteLength, const SkRSXform xform[],
-                           const SkRect* cull, const SkPaint&) override;
-=======
->>>>>>> upstream-releases
     void onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScalar y,
                                 const SkPaint& paint) override;
 

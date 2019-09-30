@@ -5,45 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "RotatedBuffer.h"
-<<<<<<< HEAD
-#include <sys/types.h>              // for int32_t
-#include <algorithm>                // for max
-#include "BasicImplData.h"          // for BasicImplData
-#include "BasicLayersImpl.h"        // for ToData
-#include "GeckoProfiler.h"          // for AUTO_PROFILER_LABEL
-#include "Layers.h"                 // for PaintedLayer, Layer, etc
-#include "gfxPlatform.h"            // for gfxPlatform
-#include "gfxPrefs.h"               // for gfxPrefs
-#include "gfxUtils.h"               // for gfxUtils
-#include "mozilla/ArrayUtils.h"     // for ArrayLength
-#include "mozilla/gfx/BasePoint.h"  // for BasePoint
-#include "mozilla/gfx/BaseRect.h"   // for BaseRect
-#include "mozilla/gfx/BaseSize.h"   // for BaseSize
-#include "mozilla/gfx/Matrix.h"     // for Matrix
-#include "mozilla/gfx/Point.h"      // for Point, IntPoint
-#include "mozilla/gfx/Rect.h"       // for Rect, IntRect
-#include "mozilla/gfx/Types.h"      // for ExtendMode::ExtendMode::CLAMP, etc
-#include "mozilla/layers/ShadowLayers.h"   // for ShadowableLayer
-||||||| merged common ancestors
-#include <sys/types.h>                  // for int32_t
-#include <algorithm>                    // for max
-#include "BasicImplData.h"              // for BasicImplData
-#include "BasicLayersImpl.h"            // for ToData
-#include "GeckoProfiler.h"              // for AUTO_PROFILER_LABEL
-#include "Layers.h"                     // for PaintedLayer, Layer, etc
-#include "gfxPlatform.h"                // for gfxPlatform
-#include "gfxPrefs.h"                   // for gfxPrefs
-#include "gfxUtils.h"                   // for gfxUtils
-#include "mozilla/ArrayUtils.h"         // for ArrayLength
-#include "mozilla/gfx/BasePoint.h"      // for BasePoint
-#include "mozilla/gfx/BaseRect.h"       // for BaseRect
-#include "mozilla/gfx/BaseSize.h"       // for BaseSize
-#include "mozilla/gfx/Matrix.h"         // for Matrix
-#include "mozilla/gfx/Point.h"          // for Point, IntPoint
-#include "mozilla/gfx/Rect.h"           // for Rect, IntRect
-#include "mozilla/gfx/Types.h"          // for ExtendMode::ExtendMode::CLAMP, etc
-#include "mozilla/layers/ShadowLayers.h"  // for ShadowableLayer
-=======
 #include <sys/types.h>              // for int32_t
 #include <algorithm>                // for max
 #include "BasicImplData.h"          // for BasicImplData
@@ -61,19 +22,10 @@
 #include "mozilla/gfx/Rect.h"       // for Rect, IntRect
 #include "mozilla/gfx/Types.h"      // for ExtendMode::ExtendMode::CLAMP, etc
 #include "mozilla/layers/ShadowLayers.h"   // for ShadowableLayer
->>>>>>> upstream-releases
 #include "mozilla/layers/TextureClient.h"  // for TextureClient
-<<<<<<< HEAD
-#include "mozilla/Move.h"                  // for Move
-#include "mozilla/gfx/Point.h"             // for IntSize
-||||||| merged common ancestors
-#include "mozilla/Move.h"               // for Move
-#include "mozilla/gfx/Point.h"          // for IntSize
-=======
 #include "mozilla/Move.h"                  // for Move
 #include "mozilla/StaticPrefs.h"           // for StaticPrefs
 #include "mozilla/gfx/Point.h"             // for IntSize
->>>>>>> upstream-releases
 #include "gfx2DGlue.h"
 #include "nsLayoutUtils.h"  // for invalidation debugging
 #include "PaintThread.h"
@@ -123,15 +75,8 @@ void RotatedBuffer::BeginCapture() {
 
   MOZ_ASSERT(!mCapture);
   MOZ_ASSERT(target);
-<<<<<<< HEAD
-  mCapture = Factory::CreateCaptureDrawTargetForTarget(
-      target, gfxPrefs::LayersOMTPCaptureLimit());
-||||||| merged common ancestors
-  mCapture = Factory::CreateCaptureDrawTargetForTarget(target, gfxPrefs::LayersOMTPCaptureLimit());
-=======
   mCapture = Factory::CreateCaptureDrawTargetForTarget(
       target, StaticPrefs::layers_omtp_capture_limit());
->>>>>>> upstream-releases
 }
 
 RefPtr<gfx::DrawTargetCapture> RotatedBuffer::EndCapture() {
@@ -248,15 +193,8 @@ void RotatedBuffer::DrawBufferWithRotation(
                      aMaskTransform);
 }
 
-<<<<<<< HEAD
-bool IsClippingCheap(gfx::DrawTarget* aTarget, const nsIntRegion& aRegion) {
-||||||| merged common ancestors
-bool IsClippingCheap(gfx::DrawTarget* aTarget, const nsIntRegion& aRegion)
-{
-=======
 static bool IsClippingCheap(gfx::DrawTarget* aTarget,
                             const nsIntRegion& aRegion) {
->>>>>>> upstream-releases
   // Assume clipping is cheap if the draw target just has an integer
   // translation, and the visible region is simple.
   return !aTarget->GetTransform().HasNonIntegerTranslation() &&

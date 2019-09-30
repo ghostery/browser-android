@@ -16,16 +16,8 @@ namespace dom {
 static StaticRefPtr<PerformanceService> gPerformanceService;
 static StaticMutex gPerformanceServiceMutex;
 
-<<<<<<< HEAD
-/* static */ PerformanceService* PerformanceService::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ PerformanceService*
-PerformanceService::GetOrCreate()
-{
-=======
 /* static */
 PerformanceService* PerformanceService::GetOrCreate() {
->>>>>>> upstream-releases
   StaticMutexAutoLock al(gPerformanceServiceMutex);
 
   if (!gPerformanceService) {

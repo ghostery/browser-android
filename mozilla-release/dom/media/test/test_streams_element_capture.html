@@ -28,80 +28,12 @@ async function startTest(test, token) {
   const v = document.createElement('video');
   const vout = document.createElement('video');
 
-<<<<<<< HEAD
-  v.src = test.name;
-  var stream;
-
-  var checkEnded = function() {
-    if (test.duration) {
-      isGreaterThanOrEqualEps(vout.currentTime, test.duration,
-         test.name + " current time at end");
-    }
-    is(vout.readyState, vout.HAVE_CURRENT_DATA, test.name + " checking readyState");
-    ok(vout.ended, test.name + " checking playback has ended");
-    if (test.type.match(/^video/)) {
-      checkDrawImage(vout);
-    }
-    vout.remove();
-    removeNodeAndSource(v);
-    SimpleTest.finish();
-  };
-  vout.addEventListener("ended", checkEnded);
-||||||| merged common ancestors
-  v.src = test.name;
-  var stream;
-
-  var checkEnded = function() {
-    is(stream.currentTime, vout.currentTime, test.name + " stream final currentTime");
-    if (test.duration) {
-      isGreaterThanOrEqualEps(vout.currentTime, test.duration,
-         test.name + " current time at end");
-    }
-    is(vout.readyState, vout.HAVE_CURRENT_DATA, test.name + " checking readyState");
-    ok(vout.ended, test.name + " checking playback has ended");
-    if (test.type.match(/^video/)) {
-      checkDrawImage(vout);
-    }
-    vout.remove();
-    removeNodeAndSource(v);
-    SimpleTest.finish();
-  };
-  vout.addEventListener("ended", checkEnded);
-=======
   v.token = token;
   v.id = "MediaDecoder";
   vout.id = "MediaStream";
->>>>>>> upstream-releases
 
   document.body.appendChild(vout);
 
-<<<<<<< HEAD
-  var onloadedmetadata = function (ev) {
-    stream = v.mozCaptureStreamUntilEnded();
-    vout.srcObject = stream;
-    is(vout.srcObject, stream, test.name + " set output element .srcObject correctly");
-    v.play();
-    vout.play();
-  }
-
-  v.preload = 'metadata';
-  v.addEventListener('loadedmetadata', onloadedmetadata);
-
-||||||| merged common ancestors
-  var onloadedmetadata = function (ev) {
-    stream = v.mozCaptureStreamUntilEnded();
-    is(stream.currentTime, 0, test.name + " stream initial currentTime");
-    vout.srcObject = stream;
-    is(vout.srcObject, stream, test.name + " set output element .srcObject correctly");
-    v.play();
-    vout.play();
-  }
-
-  v.preload = 'metadata';
-  v.addEventListener('loadedmetadata', onloadedmetadata);
-
-=======
->>>>>>> upstream-releases
   // Log events for debugging.
   const events = ["suspend", "play", "canplay", "canplaythrough", "loadstart", "loadedmetadata",
                 "loadeddata", "playing", "ended", "error", "stalled", "emptied", "abort",

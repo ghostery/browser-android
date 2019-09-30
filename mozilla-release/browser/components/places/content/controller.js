@@ -171,88 +171,6 @@ PlacesController.prototype = {
         let selectedNode = this._view.selectedNode;
         return selectedNode && PlacesUtils.nodeIsURI(selectedNode);
       }
-<<<<<<< HEAD
-      return false;
-    case "placesCmd_open":
-    case "placesCmd_open:window":
-    case "placesCmd_open:privatewindow":
-    case "placesCmd_open:tab": {
-      let selectedNode = this._view.selectedNode;
-      return selectedNode && PlacesUtils.nodeIsURI(selectedNode);
-    }
-    case "placesCmd_new:folder":
-      return this._canInsert();
-    case "placesCmd_new:bookmark":
-      return this._canInsert();
-    case "placesCmd_new:separator":
-      return this._canInsert() &&
-             !PlacesUtils.asQuery(this._view.result.root).queryOptions.excludeItems &&
-             this._view.result.sortingMode ==
-                 Ci.nsINavHistoryQueryOptions.SORT_BY_NONE;
-    case "placesCmd_show:info": {
-      let selectedNode = this._view.selectedNode;
-      return selectedNode && (PlacesUtils.nodeIsTagQuery(selectedNode) ||
-                              PlacesUtils.nodeIsBookmark(selectedNode) ||
-                              (PlacesUtils.nodeIsFolder(selectedNode) &&
-                               !PlacesUtils.isQueryGeneratedFolder(selectedNode)));
-    }
-    case "placesCmd_sortBy:name": {
-      let selectedNode = this._view.selectedNode;
-      return selectedNode &&
-             PlacesUtils.nodeIsFolder(selectedNode) &&
-             !PlacesUIUtils.isFolderReadOnly(selectedNode) &&
-             this._view.result.sortingMode ==
-                 Ci.nsINavHistoryQueryOptions.SORT_BY_NONE;
-    }
-    case "placesCmd_createBookmark":
-      var node = this._view.selectedNode;
-      return node && PlacesUtils.nodeIsURI(node) && node.itemId == -1;
-    default:
-      return false;
-||||||| merged common ancestors
-      return false;
-    case "placesCmd_open":
-    case "placesCmd_open:window":
-    case "placesCmd_open:privatewindow":
-    case "placesCmd_open:tab": {
-      let selectedNode = this._view.selectedNode;
-      return selectedNode && PlacesUtils.nodeIsURI(selectedNode);
-    }
-    case "placesCmd_new:folder":
-      return this._canInsert();
-    case "placesCmd_new:bookmark":
-      return this._canInsert();
-    case "placesCmd_new:separator":
-      return this._canInsert() &&
-             !PlacesUtils.asQuery(this._view.result.root).queryOptions.excludeItems &&
-             this._view.result.sortingMode ==
-                 Ci.nsINavHistoryQueryOptions.SORT_BY_NONE;
-    case "placesCmd_show:info": {
-      let selectedNode = this._view.selectedNode;
-      return selectedNode && (PlacesUtils.nodeIsTagQuery(selectedNode) ||
-                              PlacesUtils.nodeIsBookmark(selectedNode) ||
-                              (PlacesUtils.nodeIsFolder(selectedNode) &&
-                               !PlacesUtils.isQueryGeneratedFolder(selectedNode)));
-    }
-    case "placesCmd_reload": {
-      // Livemark containers
-      let selectedNode = this._view.selectedNode;
-      return selectedNode && this.hasCachedLivemarkInfo(selectedNode);
-    }
-    case "placesCmd_sortBy:name": {
-      let selectedNode = this._view.selectedNode;
-      return selectedNode &&
-             PlacesUtils.nodeIsFolder(selectedNode) &&
-             !PlacesUIUtils.isFolderReadOnly(selectedNode, this._view) &&
-             this._view.result.sortingMode ==
-                 Ci.nsINavHistoryQueryOptions.SORT_BY_NONE;
-    }
-    case "placesCmd_createBookmark":
-      var node = this._view.selectedNode;
-      return node && PlacesUtils.nodeIsURI(node) && node.itemId == -1;
-    default:
-      return false;
-=======
       case "placesCmd_new:folder":
         return this._canInsert();
       case "placesCmd_new:bookmark":
@@ -290,162 +208,11 @@ PlacesController.prototype = {
         return node && PlacesUtils.nodeIsURI(node) && node.itemId == -1;
       default:
         return false;
->>>>>>> upstream-releases
     }
   },
 
   doCommand: function PC_doCommand(aCommand) {
     switch (aCommand) {
-<<<<<<< HEAD
-    case "cmd_undo":
-      PlacesTransactions.undo().catch(Cu.reportError);
-      break;
-    case "cmd_redo":
-      PlacesTransactions.redo().catch(Cu.reportError);
-      break;
-    case "cmd_cut":
-    case "placesCmd_cut":
-      this.cut();
-      break;
-    case "cmd_copy":
-    case "placesCmd_copy":
-      this.copy();
-      break;
-    case "cmd_paste":
-    case "placesCmd_paste":
-      this.paste().catch(Cu.reportError);
-      break;
-    case "cmd_delete":
-    case "placesCmd_delete":
-      this.remove("Remove Selection").catch(Cu.reportError);
-      break;
-    case "placesCmd_deleteDataHost":
-      let host;
-      if (PlacesUtils.nodeIsHost(this._view.selectedNode)) {
-        host = this._view.selectedNode.query.domain;
-      } else {
-        host = Services.io.newURI(this._view.selectedNode.uri).host;
-      }
-      let {ForgetAboutSite} = ChromeUtils.import("resource://gre/modules/ForgetAboutSite.jsm", {});
-      ForgetAboutSite.removeDataFromDomain(host)
-                     .catch(Cu.reportError);
-      break;
-    case "cmd_selectAll":
-      this.selectAll();
-      break;
-    case "placesCmd_open":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "current", this._view);
-      break;
-    case "placesCmd_open:window":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "window", this._view);
-      break;
-    case "placesCmd_open:privatewindow":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "window", this._view, true);
-      break;
-    case "placesCmd_open:tab":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "tab", this._view);
-      break;
-    case "placesCmd_new:folder":
-      this.newItem("folder").catch(Cu.reportError);
-      break;
-    case "placesCmd_new:bookmark":
-      this.newItem("bookmark").catch(Cu.reportError);
-      break;
-    case "placesCmd_new:separator":
-      this.newSeparator().catch(Cu.reportError);
-      break;
-    case "placesCmd_show:info":
-      this.showBookmarkPropertiesForSelection();
-      break;
-    case "placesCmd_sortBy:name":
-      this.sortFolderByName().catch(Cu.reportError);
-      break;
-    case "placesCmd_createBookmark":
-      let node = this._view.selectedNode;
-      PlacesUIUtils.showBookmarkDialog({ action: "add",
-                                         type: "bookmark",
-                                         hiddenRows: [ "keyword", "location" ],
-                                         uri: Services.io.newURI(node.uri),
-                                         title: node.title,
-                                       }, window.top);
-      break;
-||||||| merged common ancestors
-    case "cmd_undo":
-      PlacesTransactions.undo().catch(Cu.reportError);
-      break;
-    case "cmd_redo":
-      PlacesTransactions.redo().catch(Cu.reportError);
-      break;
-    case "cmd_cut":
-    case "placesCmd_cut":
-      this.cut();
-      break;
-    case "cmd_copy":
-    case "placesCmd_copy":
-      this.copy();
-      break;
-    case "cmd_paste":
-    case "placesCmd_paste":
-      this.paste().catch(Cu.reportError);
-      break;
-    case "cmd_delete":
-    case "placesCmd_delete":
-      this.remove("Remove Selection").catch(Cu.reportError);
-      break;
-    case "placesCmd_deleteDataHost":
-      let host;
-      if (PlacesUtils.nodeIsHost(this._view.selectedNode)) {
-        host = this._view.selectedNode.query.domain;
-      } else {
-        host = Services.io.newURI(this._view.selectedNode.uri).host;
-      }
-      let {ForgetAboutSite} = ChromeUtils.import("resource://gre/modules/ForgetAboutSite.jsm", {});
-      ForgetAboutSite.removeDataFromDomain(host)
-                     .catch(Cu.reportError);
-      break;
-    case "cmd_selectAll":
-      this.selectAll();
-      break;
-    case "placesCmd_open":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "current", this._view);
-      break;
-    case "placesCmd_open:window":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "window", this._view);
-      break;
-    case "placesCmd_open:privatewindow":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "window", this._view, true);
-      break;
-    case "placesCmd_open:tab":
-      PlacesUIUtils.openNodeIn(this._view.selectedNode, "tab", this._view);
-      break;
-    case "placesCmd_new:folder":
-      this.newItem("folder").catch(Cu.reportError);
-      break;
-    case "placesCmd_new:bookmark":
-      this.newItem("bookmark").catch(Cu.reportError);
-      break;
-    case "placesCmd_new:separator":
-      this.newSeparator().catch(Cu.reportError);
-      break;
-    case "placesCmd_show:info":
-      this.showBookmarkPropertiesForSelection();
-      break;
-    case "placesCmd_reload":
-      this.reloadSelectedLivemark();
-      break;
-    case "placesCmd_sortBy:name":
-      this.sortFolderByName().catch(Cu.reportError);
-      break;
-    case "placesCmd_createBookmark":
-      let node = this._view.selectedNode;
-      PlacesUIUtils.showBookmarkDialog({ action: "add",
-                                         type: "bookmark",
-                                         hiddenRows: [ "keyword", "location" ],
-                                         uri: Services.io.newURI(node.uri),
-                                         title: node.title,
-                                       }, window.top);
-      break;
-=======
       case "cmd_undo":
         PlacesTransactions.undo().catch(Cu.reportError);
         break;
@@ -532,7 +299,6 @@ PlacesController.prototype = {
           window.top
         );
         break;
->>>>>>> upstream-releases
     }
   },
 
@@ -564,13 +330,7 @@ PlacesController.prototype = {
           return false;
         }
 
-<<<<<<< HEAD
-        if (!PlacesUIUtils.canUserRemove(nodes[i]))
-||||||| merged common ancestors
-        if (!PlacesUIUtils.canUserRemove(nodes[i], this._view))
-=======
         if (!PlacesUIUtils.canUserRemove(nodes[i])) {
->>>>>>> upstream-releases
           return false;
         }
       }
@@ -622,17 +382,9 @@ PlacesController.prototype = {
 
     try {
       // getAnyTransferData will throw if no data is available.
-<<<<<<< HEAD
-      var data = { }, type = { };
-      xferable.getAnyTransferData(type, data);
-||||||| merged common ancestors
-      var data = { }, type = { };
-      xferable.getAnyTransferData(type, data, { });
-=======
       var data = {},
         type = {};
       xferable.getAnyTransferData(type, data);
->>>>>>> upstream-releases
       data = data.value.QueryInterface(Ci.nsISupportsString).data;
       if (
         type.value != PlacesUtils.TYPE_X_MOZ_URL &&
@@ -948,39 +700,6 @@ PlacesController.prototype = {
     let node = this._view.selectedNode;
     if (!node) {
       return;
-<<<<<<< HEAD
-
-    PlacesUIUtils.showBookmarkDialog({ action: "edit",
-                                       node,
-                                       hiddenRows: [ "folderPicker" ],
-                                     }, window.top);
-  },
-
-  /**
-||||||| merged common ancestors
-
-    PlacesUIUtils.showBookmarkDialog({ action: "edit",
-                                       node,
-                                       hiddenRows: [ "folderPicker" ],
-                                     }, window.top);
-  },
-
-  /**
-   * Reloads the selected livemark if any.
-   */
-  reloadSelectedLivemark: function PC_reloadSelectedLivemark() {
-    var selectedNode = this._view.selectedNode;
-    if (selectedNode) {
-      let itemId = selectedNode.itemId;
-      PlacesUtils.livemarks.getLivemark({ id: itemId })
-        .then(aLivemark => {
-          aLivemark.reload(true);
-        }, Cu.reportError);
-    }
-  },
-
-  /**
-=======
     }
 
     PlacesUIUtils.showBookmarkDialog(
@@ -990,7 +709,6 @@ PlacesController.prototype = {
   },
 
   /**
->>>>>>> upstream-releases
    * Opens the links in the selected folder, or the selected links in new tabs.
    */
   openSelectionInTabs: function PC_openLinksInTabs(aEvent) {
@@ -1358,20 +1076,10 @@ PlacesController.prototype = {
       xferable.init(null);
       xferable.addDataFlavor(PlacesUtils.TYPE_X_MOZ_PLACE_ACTION);
       this.clipboard.getData(xferable, Ci.nsIClipboard.kGlobalClipboard);
-<<<<<<< HEAD
-      xferable.getTransferData(PlacesUtils.TYPE_X_MOZ_PLACE_ACTION, action);
-      [action, actionOwner] =
-        action.value.QueryInterface(Ci.nsISupportsString).data.split(",");
-||||||| merged common ancestors
-      xferable.getTransferData(PlacesUtils.TYPE_X_MOZ_PLACE_ACTION, action, {});
-      [action, actionOwner] =
-        action.value.QueryInterface(Ci.nsISupportsString).data.split(",");
-=======
       xferable.getTransferData(PlacesUtils.TYPE_X_MOZ_PLACE_ACTION, action);
       [action, actionOwner] = action.value
         .QueryInterface(Ci.nsISupportsString)
         .data.split(",");
->>>>>>> upstream-releases
     } catch (ex) {
       // Paste from external sources don't have any associated action, just
       // fallback to a copy action.
@@ -1425,17 +1133,8 @@ PlacesController.prototype = {
       }
       if (PlacesUtils.nodeIsFolder(node)) {
         copiedFolders.push(node);
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-      let livemarkInfo = this.getCachedLivemarkInfo(node);
-      let feedURI = livemarkInfo && livemarkInfo.feedURI.spec;
-
-=======
       }
 
->>>>>>> upstream-releases
       contents.forEach(function(content) {
         content.entries.push(PlacesUtils.wrapNode(node, content.type));
       });
@@ -1594,54 +1293,10 @@ PlacesController.prototype = {
 
     if (itemsToSelect.length > 0) {
       this._view.selectItems(itemsToSelect, false);
-<<<<<<< HEAD
-  },
-
-  /**
-||||||| merged common ancestors
-  },
-
-  /**
-   * Cache the livemark info for a node.  This allows the controller and the
-   * views to treat the given node as a livemark.
-   * @param aNode
-   *        a places result node.
-   * @param aLivemarkInfo
-   *        a mozILivemarkInfo object.
-   */
-  cacheLivemarkInfo: function PC_cacheLivemarkInfo(aNode, aLivemarkInfo) {
-    this._cachedLivemarkInfoObjects.set(aNode, aLivemarkInfo);
-  },
-
-  /**
-   * Returns whether or not there's cached mozILivemarkInfo object for a node.
-   * @param aNode
-   *        a places result node.
-   * @return true if there's a cached mozILivemarkInfo object for
-   *         aNode, false otherwise.
-   */
-  hasCachedLivemarkInfo: function PC_hasCachedLivemarkInfo(aNode) {
-    return this._cachedLivemarkInfoObjects.has(aNode);
-  },
-
-  /**
-   * Returns the cached livemark info for a node, if set by cacheLivemarkInfo,
-   * null otherwise.
-   * @param aNode
-   *        a places result node.
-   * @return the mozILivemarkInfo object for aNode, if set, null otherwise.
-   */
-  getCachedLivemarkInfo: function PC_getCachedLivemarkInfo(aNode) {
-    return this._cachedLivemarkInfoObjects.get(aNode, null);
-  },
-
-  /**
-=======
     }
   },
 
   /**
->>>>>>> upstream-releases
    * Checks if we can insert into a container.
    * @param   container
    *          The container were we are want to drop
@@ -1651,21 +1306,11 @@ PlacesController.prototype = {
       throw new Error("empty container");
     }
     // Allow dropping into Tag containers and editable folders.
-<<<<<<< HEAD
-    return !PlacesUtils.nodeIsTagQuery(container) &&
-           (!PlacesUtils.nodeIsFolder(container) ||
-            PlacesUIUtils.isFolderReadOnly(container));
-||||||| merged common ancestors
-    return !PlacesUtils.nodeIsTagQuery(container) &&
-           (!PlacesUtils.nodeIsFolder(container) ||
-            PlacesUIUtils.isFolderReadOnly(container, this._view));
-=======
     return (
       !PlacesUtils.nodeIsTagQuery(container) &&
       (!PlacesUtils.nodeIsFolder(container) ||
         PlacesUIUtils.isFolderReadOnly(container))
     );
->>>>>>> upstream-releases
   },
 
   /**
@@ -1684,17 +1329,6 @@ PlacesController.prototype = {
     // Once tags and bookmarked are divorced, the tag-query check should be
     // removed.
     let parentNode = node.parent;
-<<<<<<< HEAD
-    return parentNode != null &&
-           PlacesUtils.nodeIsFolder(parentNode) &&
-           !PlacesUIUtils.isFolderReadOnly(parentNode) &&
-           !PlacesUtils.nodeIsTagQuery(parentNode);
-||||||| merged common ancestors
-    return parentNode != null &&
-           PlacesUtils.nodeIsFolder(parentNode) &&
-           !PlacesUIUtils.isFolderReadOnly(parentNode, this._view) &&
-           !PlacesUtils.nodeIsTagQuery(parentNode);
-=======
     if (!parentNode) {
       return false;
     }
@@ -1710,7 +1344,6 @@ PlacesController.prototype = {
         !PlacesUIUtils.isFolderReadOnly(parentNode)) ||
       PlacesUtils.nodeIsQuery(parentNode)
     );
->>>>>>> upstream-releases
   },
 };
 

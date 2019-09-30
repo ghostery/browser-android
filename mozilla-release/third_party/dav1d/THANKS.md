@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-# The dav1d project and VideoLAN association would like to thank
-
-## AOM
-The Alliance for Open Media (AOM) for funding this project.
-
-## Companies
-* Two Orioles LLC, for important coding effort
-* VideoLabs SAS
-
-## Projects
-* VideoLAN
-* FFmpeg
-
-## Individual
-
-And all the dav1d Authors (git shortlog -sn)
-||||||| merged common ancestors
-=======
 # The dav1d project and VideoLAN association would like to thank
 
 ## AOM
@@ -45,4 +26,3 @@ Rupert Swarbrick, Jan Beich, Dale Curtis, SmilingWolf, Tristan Laurent,
 Vittorio Giovara, Rostislav Pehlivanov, Shiz, skal, Steinar Midtskogen,
 Luca Barbato, Justin Bull, Jean-Yves Avenard, Timo Gurr, Fred Barbier,
 Anisse Astier, Pablo Stebler, Nicolas Frattaroli, Mark Shuttleworth.
->>>>>>> upstream-releases

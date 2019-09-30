@@ -122,11 +122,6 @@ class SpliceableChunkedJSONWriter : public SpliceableJSONWriter {
   virtual void TakeAndSplice(ChunkedJSONWriteFunc* aFunc) override;
 };
 
-<<<<<<< HEAD:mozilla-release/tools/profiler/public/ProfileJSONWriter.h
-#endif  // PROFILEJSONWRITER_H
-||||||| merged common ancestors
-#endif // PROFILEJSONWRITER_H
-=======
 class JSONSchemaWriter {
   mozilla::JSONWriter& mWriter;
   uint32_t mIndex;
@@ -144,4 +139,3 @@ class JSONSchemaWriter {
 };
 
 #endif  // PROFILEJSONWRITER_H
->>>>>>> upstream-releases:mozilla-release/tools/profiler/public/ProfileJSONWriter.h

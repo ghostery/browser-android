@@ -24,22 +24,6 @@ WebGLExtensionDrawBuffers::WebGLExtensionDrawBuffers(WebGLContext* webgl)
 
 WebGLExtensionDrawBuffers::~WebGLExtensionDrawBuffers() {}
 
-<<<<<<< HEAD
-void WebGLExtensionDrawBuffers::DrawBuffersWEBGL(
-    const dom::Sequence<GLenum>& buffers) {
-  if (mIsLost) {
-    mContext->ErrorInvalidOperation("drawBuffersWEBGL: Extension is lost.");
-    return;
-  }
-||||||| merged common ancestors
-void
-WebGLExtensionDrawBuffers::DrawBuffersWEBGL(const dom::Sequence<GLenum>& buffers)
-{
-    if (mIsLost) {
-        mContext->ErrorInvalidOperation("drawBuffersWEBGL: Extension is lost.");
-        return;
-    }
-=======
 void WebGLExtensionDrawBuffers::DrawBuffersWEBGL(
     const dom::Sequence<GLenum>& buffers) {
   if (mIsLost) {
@@ -48,29 +32,13 @@ void WebGLExtensionDrawBuffers::DrawBuffersWEBGL(
     }
     return;
   }
->>>>>>> upstream-releases
 
   mContext->DrawBuffers(buffers);
 }
 
-<<<<<<< HEAD
-bool WebGLExtensionDrawBuffers::IsSupported(const WebGLContext* webgl) {
-  gl::GLContext* gl = webgl->GL();
-||||||| merged common ancestors
-bool
-WebGLExtensionDrawBuffers::IsSupported(const WebGLContext* webgl)
-{
-    gl::GLContext* gl = webgl->GL();
-=======
 bool WebGLExtensionDrawBuffers::IsSupported(const WebGLContext* webgl) {
   if (webgl->IsWebGL2()) return false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return gl->IsSupported(gl::GLFeature::draw_buffers);
-||||||| merged common ancestors
-    return gl->IsSupported(gl::GLFeature::draw_buffers);
-=======
   gl::GLContext* gl = webgl->GL();
   if (gl->IsGLES() && gl->Version() >= 300) {
     // ANGLE's shader translator can't translate ESSL1 exts to ESSL3. (bug
@@ -78,7 +46,6 @@ bool WebGLExtensionDrawBuffers::IsSupported(const WebGLContext* webgl) {
     return false;
   }
   return gl->IsSupported(gl::GLFeature::draw_buffers);
->>>>>>> upstream-releases
 }
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionDrawBuffers, WEBGL_draw_buffers)

@@ -102,14 +102,6 @@ bool TreeWalker::Seek(nsIContent* aChildNode) {
   do {
     childNode = parentNode->AsContent();
     parentNode = childNode->HasFlag(NODE_MAY_BE_IN_BINDING_MNGR) &&
-<<<<<<< HEAD
-                         (mChildFilter & nsIContent::eAllButXBL)
-                     ? childNode->GetParentNode()
-                     : childNode->GetFlattenedTreeParent();
-||||||| merged common ancestors
-      (mChildFilter & nsIContent::eAllButXBL) ?
-      childNode->GetParentNode() : childNode->GetFlattenedTreeParent();
-=======
                          (mChildFilter & nsIContent::eAllButXBL)
                      ? childNode->GetParentNode()
                      : childNode->GetFlattenedTreeParent();
@@ -122,7 +114,6 @@ bool TreeWalker::Seek(nsIContent* aChildNode) {
       }
       continue;
     }
->>>>>>> upstream-releases
 
     if (!parentNode || !parentNode->IsElement()) {
       return false;

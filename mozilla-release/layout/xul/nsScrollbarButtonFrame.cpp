@@ -33,21 +33,10 @@ using namespace mozilla;
 //
 // Creates a new Toolbar frame and returns it
 //
-<<<<<<< HEAD
-nsIFrame* NS_NewScrollbarButtonFrame(nsIPresShell* aPresShell,
-                                     ComputedStyle* aStyle) {
-  return new (aPresShell) nsScrollbarButtonFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewScrollbarButtonFrame (nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsScrollbarButtonFrame(aStyle);
-=======
 nsIFrame* NS_NewScrollbarButtonFrame(PresShell* aPresShell,
                                      ComputedStyle* aStyle) {
   return new (aPresShell)
       nsScrollbarButtonFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsScrollbarButtonFrame)
@@ -192,17 +181,8 @@ bool nsScrollbarButtonFrame::HandleButtonPress(nsPresContext* aPresContext,
 NS_IMETHODIMP
 nsScrollbarButtonFrame::HandleRelease(nsPresContext* aPresContext,
                                       WidgetGUIEvent* aEvent,
-<<<<<<< HEAD
-                                      nsEventStatus* aEventStatus) {
-  nsIPresShell::SetCapturingContent(nullptr, 0);
-||||||| merged common ancestors
-                                      nsEventStatus* aEventStatus)
-{
-  nsIPresShell::SetCapturingContent(nullptr, 0);
-=======
                                       nsEventStatus* aEventStatus) {
   PresShell::ReleaseCapturingContent();
->>>>>>> upstream-releases
   // we're not active anymore
   mContent->AsElement()->UnsetAttr(kNameSpaceID_None, nsGkAtoms::active, true);
   StopRepeat();

@@ -29,29 +29,14 @@ class WinTaskbar final : public nsIWinTaskbar {
   // Registers the global app user model id for the instance.
   // See comments in WinTaskbar.cpp for more information.
   static bool RegisterAppUserModelID();
-<<<<<<< HEAD
-  static bool GetAppUserModelID(nsAString &aDefaultGroupId);
-||||||| merged common ancestors
-  static bool GetAppUserModelID(nsAString & aDefaultGroupId);
-=======
   static bool GetAppUserModelID(nsAString& aDefaultGroupId);
->>>>>>> upstream-releases
 
  private:
   bool Initialize();
 
-<<<<<<< HEAD
-  typedef HRESULT(WINAPI *SetCurrentProcessExplicitAppUserModelIDPtr)(
-      PCWSTR AppID);
-  ITaskbarList4 *mTaskbar;
-||||||| merged common ancestors
-  typedef HRESULT (WINAPI * SetCurrentProcessExplicitAppUserModelIDPtr)(PCWSTR AppID);
-  ITaskbarList4 *mTaskbar;
-=======
   typedef HRESULT(WINAPI* SetCurrentProcessExplicitAppUserModelIDPtr)(
       PCWSTR AppID);
   ITaskbarList4* mTaskbar;
->>>>>>> upstream-releases
 };
 
 }  // namespace widget

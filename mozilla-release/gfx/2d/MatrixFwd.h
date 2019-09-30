@@ -24,13 +24,7 @@ typedef BaseMatrix<Double> MatrixDouble;
 
 struct UnknownUnits;
 
-<<<<<<< HEAD
-template <class SourceUnits, class TargetUnits>
-||||||| merged common ancestors
-template<class SourceUnits, class TargetUnits>
-=======
 template <class SourceUnits, class TargetUnits, class T = Float>
->>>>>>> upstream-releases
 class Matrix4x4Typed;
 template <class SourceUnits, class TargetUnits>
 class Matrix4x4TypedFlagged;

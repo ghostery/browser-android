@@ -12,28 +12,6 @@
 #include "js/SourceText.h"                // JS::Source{Ownership,Text}
 #include "jsapi-tests/tests.h"
 
-<<<<<<< HEAD
-BEGIN_TEST(testGCOutOfMemory) {
-  // Count the number of allocations until we hit OOM, and store it in 'max'.
-  static const char source[] =
-      "var max = 0; (function() {"
-      "    var array = [];"
-      "    for (; ; ++max)"
-      "        array.push({});"
-      "    array = []; array.push(0);"
-      "})();";
-||||||| merged common ancestors
-BEGIN_TEST(testGCOutOfMemory)
-{
-    // Count the number of allocations until we hit OOM, and store it in 'max'.
-    static const char source[] =
-        "var max = 0; (function() {"
-        "    var array = [];"
-        "    for (; ; ++max)"
-        "        array.push({});"
-        "    array = []; array.push(0);"
-        "})();";
-=======
 BEGIN_TEST(testGCOutOfMemory) {
   // Count the number of allocations until we hit OOM, and store it in 'max'.
   static const char source[] =
@@ -45,27 +23,12 @@ BEGIN_TEST(testGCOutOfMemory) {
       "})();";
 
   JS::CompileOptions opts(cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::CompileOptions opts(cx);
-||||||| merged common ancestors
-    JS::CompileOptions opts(cx);
-=======
   JS::SourceText<mozilla::Utf8Unit> srcBuf;
   CHECK(srcBuf.init(cx, source, strlen(source), JS::SourceOwnership::Borrowed));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::RootedValue root(cx);
-  bool ok = JS::EvaluateUtf8(cx, opts, source, strlen(source), &root);
-||||||| merged common ancestors
-    JS::RootedValue root(cx);
-    bool ok = JS::EvaluateUtf8(cx, opts, source, strlen(source), &root);
-=======
   JS::RootedValue root(cx);
   bool ok = JS::EvaluateDontInflate(cx, opts, srcBuf, &root);
->>>>>>> upstream-releases
 
   /* Check that we get OOM. */
   CHECK(!ok);
@@ -94,35 +57,6 @@ BEGIN_TEST(testGCOutOfMemory) {
 }
 
 virtual JSContext* createContext() override {
-<<<<<<< HEAD
-  // Note that the max nursery size must be less than the whole heap size, or
-  // the test will fail because 'max' (the number of allocations required for
-  // OOM) will be based on the nursery size, and that will overflow the
-  // tenured heap, which will cause the second pass with max/4 allocations to
-  // OOM. (Actually, this only happens with nursery zeal, because normally
-  // the nursery will start out with only a single chunk before triggering a
-  // major GC.)
-  JSContext* cx = JS_NewContext(1024 * 1024, 128 * 1024);
-  if (!cx) {
-    return nullptr;
-  }
-  setNativeStackQuota(cx);
-  return cx;
-||||||| merged common ancestors
-    // Note that the max nursery size must be less than the whole heap size, or
-    // the test will fail because 'max' (the number of allocations required for
-    // OOM) will be based on the nursery size, and that will overflow the
-    // tenured heap, which will cause the second pass with max/4 allocations to
-    // OOM. (Actually, this only happens with nursery zeal, because normally
-    // the nursery will start out with only a single chunk before triggering a
-    // major GC.)
-    JSContext* cx = JS_NewContext(1024 * 1024, 128 * 1024);
-    if (!cx) {
-        return nullptr;
-    }
-    setNativeStackQuota(cx);
-    return cx;
-=======
   // Note that the max nursery size must be less than the whole heap size, or
   // the test will fail because 'max' (the number of allocations required for
   // OOM) will be based on the nursery size, and that will overflow the
@@ -136,7 +70,6 @@ virtual JSContext* createContext() override {
   }
   setNativeStackQuota(cx);
   return cx;
->>>>>>> upstream-releases
 }
 
 virtual void destroyContext() override { JS_DestroyContext(cx); }

@@ -41,66 +41,23 @@ class SrtpFlow {
   static unsigned int KeySize(int cipher_suite);
   static unsigned int SaltSize(int cipher_suite);
 
-<<<<<<< HEAD
-  static RefPtr<SrtpFlow> Create(int cipher_suite, bool inbound,
-                                 const void *key, size_t key_len);
-||||||| merged common ancestors
-  static RefPtr<SrtpFlow> Create(int cipher_suite,
-                                          bool inbound,
-                                          const void *key,
-                                          size_t key_len);
-=======
   static RefPtr<SrtpFlow> Create(int cipher_suite, bool inbound,
                                  const void* key, size_t key_len);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult ProtectRtp(void *in, int in_len, int max_len, int *out_len);
-  nsresult UnprotectRtp(void *in, int in_len, int max_len, int *out_len);
-  nsresult ProtectRtcp(void *in, int in_len, int max_len, int *out_len);
-  nsresult UnprotectRtcp(void *in, int in_len, int max_len, int *out_len);
-||||||| merged common ancestors
-  nsresult ProtectRtp(void *in, int in_len,
-                      int max_len, int *out_len);
-  nsresult UnprotectRtp(void *in, int in_len,
-                        int max_len, int *out_len);
-  nsresult ProtectRtcp(void *in, int in_len,
-                       int max_len, int *out_len);
-  nsresult UnprotectRtcp(void *in, int in_len,
-                         int max_len, int *out_len);
-=======
   nsresult ProtectRtp(void* in, int in_len, int max_len, int* out_len);
   nsresult UnprotectRtp(void* in, int in_len, int max_len, int* out_len);
   nsresult ProtectRtcp(void* in, int in_len, int max_len, int* out_len);
   nsresult UnprotectRtcp(void* in, int in_len, int max_len, int* out_len);
->>>>>>> upstream-releases
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(SrtpFlow)
 
-<<<<<<< HEAD
-  static void srtp_event_handler(srtp_event_data_t *data);
-
-||||||| merged common ancestors
-  static void srtp_event_handler(srtp_event_data_t *data);
-
-
-=======
   static void srtp_event_handler(srtp_event_data_t* data);
 
->>>>>>> upstream-releases
  private:
   SrtpFlow() : session_(nullptr) {}
 
-<<<<<<< HEAD
-  nsresult CheckInputs(bool protect, void *in, int in_len, int max_len,
-                       int *out_len);
-||||||| merged common ancestors
-  nsresult CheckInputs(bool protect, void *in, int in_len,
-                       int max_len, int *out_len);
-=======
   nsresult CheckInputs(bool protect, void* in, int in_len, int max_len,
                        int* out_len);
->>>>>>> upstream-releases
 
   static nsresult Init();
   static bool initialized;  // Was libsrtp initialized? Only happens once.

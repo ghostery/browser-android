@@ -8,13 +8,7 @@ tr{
                 "[import und-u-co-search]"
                 "[import tr-u-co-standard]"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -26,13 +20,7 @@ tr{
                 "&S<ş<<<Ş"
                 "&U<ü<<<Ü"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

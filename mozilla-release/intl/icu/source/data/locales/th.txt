@@ -26,9 +26,7 @@ th{
     NumberElements{
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}-{1}"}
             }
             patterns{
@@ -175,13 +173,7 @@ th{
         minimumGroupingDigits{"1"}
         native{"thai"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.89"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -2126,12 +2118,7 @@ th{
                     "ทะอิโช",
                     "โชวะ",
                     "เฮเซ",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "เรวะ",
->>>>>>> upstream-releases
                 }
             }
         }

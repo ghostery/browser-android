@@ -555,13 +555,7 @@
   background-color: rgba(0,0,0,.1);
 }
 
-<<<<<<< HEAD
-#TabsToolbar[brighttext] .tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected=true]) {
-||||||| merged common ancestors
-#TabsToolbar[brighttext] > #tabbrowser-tabs > .tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected=true]) {
-=======
 #TabsToolbar[brighttext] .tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected=true]):not([multiselected]) {
->>>>>>> upstream-releases
   background-color: rgba(255,255,255,.1);
 }
 
@@ -581,42 +575,10 @@
   background-color: rgba(255,255,255,.2);
 }
 
-<<<<<<< HEAD
-.tabbrowser-tab:hover > .tab-stack > .tab-background > .tab-line:not([selected=true])[multiselected],
-#TabsToolbar[brighttext] .tabbrowser-tab:hover > .tab-stack > .tab-background > .tab-line:not([selected=true])[multiselected] {
-||||||| merged common ancestors
-.tabbrowser-tab:hover > .tab-stack > .tab-background > .tab-line:not([selected=true])[multiselected],
-#TabsToolbar[brighttext] > #tabbrowser-tabs > .tabbrowser-tab:hover > .tab-stack > .tab-background > .tab-line:not([selected=true])[multiselected] {
-=======
 .tabbrowser-tab:hover > .tab-stack > .tab-background > .tab-line[multiselected]:not([selected=true]) {
->>>>>>> upstream-releases
   opacity: 0.5;
 }
 
-<<<<<<< HEAD
-/* Tab multi-selected */
-
-.tabbrowser-tab[multiselected] > .tab-stack > .tab-background:not([selected=true]) {
-  background-color: rgba(0,0,0,.1);
-}
-
-#TabsToolbar[brighttext] .tabbrowser-tab[multiselected] > .tab-stack > .tab-background:not([selected=true]) {
-  background-color: rgba(255,255,255,.1);
-}
-
-||||||| merged common ancestors
-/* Tab multi-selected */
-
-.tabbrowser-tab[multiselected] > .tab-stack > .tab-background:not([selected=true]) {
-  background-color: rgba(0,0,0,.1);
-}
-
-#TabsToolbar[brighttext] > #tabbrowser-tabs > .tabbrowser-tab[multiselected] > .tab-stack > .tab-background:not([selected=true]) {
-  background-color: rgba(255,255,255,.1);
-}
-
-=======
->>>>>>> upstream-releases
 /* Pinned tabs */
 
 /* Pinned tab separators need position: absolute when positioned (during overflow). */

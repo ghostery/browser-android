@@ -12,17 +12,9 @@ function mapRecordingOptions(type, options) {
   if (type === "profiler") {
     return {
       entries: options.bufferSize,
-<<<<<<< HEAD
-      interval: options.sampleFrequency ? (1000 / options.sampleFrequency)
-                                        : void 0,
-||||||| merged common ancestors
-      interval: options.sampleFrequency ? (1000 / (options.sampleFrequency * 1000))
-                                        : void 0,
-=======
       interval: options.sampleFrequency
         ? 1000 / options.sampleFrequency
         : void 0,
->>>>>>> upstream-releases
     };
   }
 

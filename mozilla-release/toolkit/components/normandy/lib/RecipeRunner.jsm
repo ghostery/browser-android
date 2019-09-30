@@ -388,40 +388,7 @@ var RecipeRunner = {
         recipesToRun.push(recipe);
       }
     }
-<<<<<<< HEAD
-
-    // Execute recipes, if we have any.
-    if (recipesToRun.length === 0) {
-      log.debug("No recipes to execute");
-    } else {
-      for (const recipe of recipesToRun) {
-        await actions.runRecipe(recipe);
-      }
-    }
-
-    await actions.finalize();
-
-    Uptake.reportRunner(Uptake.RUNNER_SUCCESS);
-||||||| merged common ancestors
-
-    // Execute recipes, if we have any.
-    if (recipesToRun.length === 0) {
-      log.debug("No recipes to execute");
-    } else {
-      for (const recipe of recipesToRun) {
-        await actions.runRecipe(recipe);
-      }
-    }
-
-    await actions.finalize();
-
-    // Close storage connections
-    await AddonStudies.close();
-
-    Uptake.reportRunner(Uptake.RUNNER_SUCCESS);
-=======
     return recipesToRun;
->>>>>>> upstream-releases
   },
 
   getFilterContext(recipe) {

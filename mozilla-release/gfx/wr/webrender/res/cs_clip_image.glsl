@@ -4,16 +4,8 @@
 
 #include shared,clip_shared
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
-varying vec2 vLocalPos;
-varying vec2 vClipMaskImageUv;
-||||||| merged common ancestors
-varying vec3 vLocalPos;
-varying vec3 vClipMaskImageUv;
-=======
 varying vec4 vLocalPos;
 varying vec2 vClipMaskImageUv;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
 
 flat varying vec4 vClipMaskUvRect;
 flat varying vec4 vClipMaskUvInnerRect;
@@ -48,19 +40,10 @@ void main(void) {
         cmi.screen_origin,
         cmi.device_pixel_scale
     );
-    vLocalPos = vi.local_pos.xy / vi.local_pos.z;
+    vLocalPos = vi.local_pos;
     vLayer = res.layer;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
-    vClipMaskImageUv = (vLocalPos - cmi.tile_rect.p0) / cmi.tile_rect.size;
-||||||| merged common ancestors
-
-    vec2 local_pos = vLocalPos.xy / vLocalPos.z;
-
-    vClipMaskImageUv = vec3((local_pos - local_rect.p0) / local_rect.size, 0.0);
-=======
     vClipMaskImageUv = (vi.local_pos.xy - cmi.tile_rect.p0 * vi.local_pos.w) / cmi.tile_rect.size;
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
     vec2 texture_size = vec2(textureSize(sColor0, 0));
     vClipMaskUvRect = vec4(res.uv_rect.p0, res.uv_rect.p1 - res.uv_rect.p0) / texture_size.xyxy;
     // applying a half-texel offset to the UV boundaries to prevent linear samples from the outside
@@ -71,46 +54,19 @@ void main(void) {
 
 #ifdef WR_FRAGMENT_SHADER
 void main(void) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
-    float alpha = init_transform_fs(vLocalPos);
-||||||| merged common ancestors
-    vec2 local_pos = vLocalPos.xy / vLocalPos.z;
-=======
     vec2 local_pos = vLocalPos.xy / vLocalPos.w;
     float alpha = vLocalPos.w > 0.0 ? init_transform_fs(local_pos) : 0.0;
 
     // TODO: Handle repeating masks?
     vec2 clamped_mask_uv = clamp(vClipMaskImageUv, vec2(0.0, 0.0), vLocalPos.ww);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
-
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
-    // TODO: Handle repeating masks?
-    vec2 clamped_mask_uv = clamp(vClipMaskImageUv, vec2(0.0, 0.0), vec2(1.0, 1.0));
 
     // Ensure we don't draw outside of our tile.
     // FIXME(emilio): Can we do this earlier?
     if (clamped_mask_uv != vClipMaskImageUv)
         discard;
-||||||| merged common ancestors
-    float alpha = init_transform_fs(local_pos);
-=======
-    // Ensure we don't draw outside of our tile.
-    // FIXME(emilio): Can we do this earlier?
-    if (clamped_mask_uv != vClipMaskImageUv)
-        discard;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
-    vec2 source_uv = clamp(clamped_mask_uv * vClipMaskUvRect.zw + vClipMaskUvRect.xy,
-||||||| merged common ancestors
-    bool repeat_mask = false; //TODO
-    vec2 clamped_mask_uv = repeat_mask ? fract(vClipMaskImageUv.xy) :
-        clamp(vClipMaskImageUv.xy, vec2(0.0, 0.0), vec2(1.0, 1.0));
-    vec2 source_uv = clamp(clamped_mask_uv * vClipMaskUvRect.zw + vClipMaskUvRect.xy,
-=======
     vec2 source_uv = clamp(
         clamped_mask_uv / vLocalPos.w * vClipMaskUvRect.zw + vClipMaskUvRect.xy,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/cs_clip_image.glsl
         vClipMaskUvInnerRect.xy, vClipMaskUvInnerRect.zw);
     float clip_alpha = texture(sColor0, vec3(source_uv, vLayer)).r; //careful: texture has type A8
     oFragColor = vec4(alpha * clip_alpha, 1.0, 1.0, 1.0);

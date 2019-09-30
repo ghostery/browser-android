@@ -16,13 +16,8 @@
 #include "jstypes.h"  // JS_PUBLIC_API
 
 struct JSContext;
-<<<<<<< HEAD
-struct JSRuntime;
-||||||| merged common ancestors
-=======
 class JSObject;
 struct JSRuntime;
->>>>>>> upstream-releases
 
 struct JSFreeOp {
  protected:
@@ -46,12 +41,6 @@ extern JS_PUBLIC_API void* JS_realloc(JSContext* cx, void* p, size_t oldBytes,
  * A wrapper for |js_free(p)| that may delay |js_free(p)| invocation as a
  * performance optimization.  |cx| may be nullptr.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API void JS_free(JSContext* cx, void* p);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-JS_free(JSContext* cx, void* p);
-=======
 extern JS_PUBLIC_API void JS_free(JSContext* cx, void* p);
 
 /**
@@ -65,18 +54,11 @@ extern JS_PUBLIC_API void* JS_string_realloc(JSContext* cx, void* p,
                                              size_t oldBytes, size_t newBytes);
 
 extern JS_PUBLIC_API void JS_string_free(JSContext* cx, void* p);
->>>>>>> upstream-releases
 
 /**
  * A wrapper for |js_free(p)| that may delay |js_free(p)| invocation as a
  * performance optimization as specified by the given JSFreeOp instance.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API void JS_freeop(JSFreeOp* fop, void* p);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-JS_freeop(JSFreeOp* fop, void* p);
-=======
 extern JS_PUBLIC_API void JS_freeop(JSFreeOp* fop, void* p);
 
 namespace JS {
@@ -119,15 +101,7 @@ extern JS_PUBLIC_API void AddAssociatedMemory(JSObject* obj, size_t nbytes,
  */
 extern JS_PUBLIC_API void RemoveAssociatedMemory(JSObject* obj, size_t nbytes,
                                                  MemoryUse use);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API void JS_updateMallocCounter(JSContext* cx, size_t nbytes);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-JS_updateMallocCounter(JSContext* cx, size_t nbytes);
-=======
 }  // namespace JS
->>>>>>> upstream-releases
 
 #endif /* js_MemoryFunctions_h */

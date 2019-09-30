@@ -25,26 +25,6 @@ namespace gfx {
 using namespace mozilla::widget;
 using mozilla::layers::AutoTextureLock;
 
-<<<<<<< HEAD
-/* static */ bool D3D11Checks::DoesRenderTargetViewNeedRecreating(
-    ID3D11Device* aDevice) {
-  bool result = false;
-  // CreateTexture2D is known to crash on lower feature levels, see bugs
-  // 1170211 and 1089413.
-  if (aDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_10_0) {
-    return true;
-  }
-||||||| merged common ancestors
-/* static */ bool
-D3D11Checks::DoesRenderTargetViewNeedRecreating(ID3D11Device *aDevice)
-{
-    bool result = false;
-    // CreateTexture2D is known to crash on lower feature levels, see bugs
-    // 1170211 and 1089413.
-    if (aDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_10_0) {
-        return true;
-    }
-=======
 /* static */
 bool D3D11Checks::DoesRenderTargetViewNeedRecreating(ID3D11Device* aDevice) {
   bool result = false;
@@ -53,7 +33,6 @@ bool D3D11Checks::DoesRenderTargetViewNeedRecreating(ID3D11Device* aDevice) {
   if (aDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_10_0) {
     return true;
   }
->>>>>>> upstream-releases
 
   RefPtr<ID3D11DeviceContext> deviceContext;
   aDevice->GetImmediateContext(getter_AddRefs(deviceContext));
@@ -152,33 +131,16 @@ bool D3D11Checks::DoesRenderTargetViewNeedRecreating(ID3D11Device* aDevice) {
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ bool D3D11Checks::DoesDeviceWork() {
-||||||| merged common ancestors
-/* static */ bool
-D3D11Checks::DoesDeviceWork()
-{
-=======
 /* static */
 bool D3D11Checks::DoesDeviceWork() {
->>>>>>> upstream-releases
   static bool checked = false;
   static bool result = false;
 
   if (checked) return result;
   checked = true;
 
-<<<<<<< HEAD
-  if (gfxPrefs::Direct2DForceEnabled() ||
-      gfxConfig::IsForcedOnByUser(Feature::HW_COMPOSITING)) {
-||||||| merged common ancestors
-  if (gfxPrefs::Direct2DForceEnabled() ||
-      gfxConfig::IsForcedOnByUser(Feature::HW_COMPOSITING))
-  {
-=======
   if (StaticPrefs::gfx_direct2d_force_enabled() ||
       gfxConfig::IsForcedOnByUser(Feature::HW_COMPOSITING)) {
->>>>>>> upstream-releases
     result = true;
     return true;
   }
@@ -238,17 +200,8 @@ static bool DoesTextureSharingWorkInternal(ID3D11Device* device,
     return false;
   }
 
-<<<<<<< HEAD
-  if (gfxPrefs::Direct2DForceEnabled() ||
-      gfxConfig::IsForcedOnByUser(Feature::HW_COMPOSITING)) {
-||||||| merged common ancestors
-  if (gfxPrefs::Direct2DForceEnabled() ||
-      gfxConfig::IsForcedOnByUser(Feature::HW_COMPOSITING))
-  {
-=======
   if (StaticPrefs::gfx_direct2d_force_enabled() ||
       gfxConfig::IsForcedOnByUser(Feature::HW_COMPOSITING)) {
->>>>>>> upstream-releases
     return true;
   }
 
@@ -409,54 +362,21 @@ static bool DoesTextureSharingWorkInternal(ID3D11Device* device,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool D3D11Checks::DoesTextureSharingWork(ID3D11Device* device) {
-  return DoesTextureSharingWorkInternal(
-      device, DXGI_FORMAT_B8G8R8A8_UNORM,
-      D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-||||||| merged common ancestors
-/* static */ bool
-D3D11Checks::DoesTextureSharingWork(ID3D11Device *device)
-{
-  return DoesTextureSharingWorkInternal(device, DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-=======
 /* static */
 bool D3D11Checks::DoesTextureSharingWork(ID3D11Device* device) {
   return DoesTextureSharingWorkInternal(
       device, DXGI_FORMAT_B8G8R8A8_UNORM,
       D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool D3D11Checks::DoesAlphaTextureSharingWork(
-    ID3D11Device* device) {
-  return DoesTextureSharingWorkInternal(device, DXGI_FORMAT_R8_UNORM,
-                                        D3D11_BIND_SHADER_RESOURCE);
-||||||| merged common ancestors
-/* static */ bool
-D3D11Checks::DoesAlphaTextureSharingWork(ID3D11Device *device)
-{
-  return DoesTextureSharingWorkInternal(device, DXGI_FORMAT_R8_UNORM, D3D11_BIND_SHADER_RESOURCE);
-=======
 /* static */
 bool D3D11Checks::DoesAlphaTextureSharingWork(ID3D11Device* device) {
   return DoesTextureSharingWorkInternal(device, DXGI_FORMAT_R8_UNORM,
                                         D3D11_BIND_SHADER_RESOURCE);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool D3D11Checks::GetDxgiDesc(ID3D11Device* device,
-                                           DXGI_ADAPTER_DESC* out) {
-||||||| merged common ancestors
-/* static */ bool
-D3D11Checks::GetDxgiDesc(ID3D11Device* device, DXGI_ADAPTER_DESC* out)
-{
-=======
 /* static */
 bool D3D11Checks::GetDxgiDesc(ID3D11Device* device, DXGI_ADAPTER_DESC* out) {
->>>>>>> upstream-releases
   RefPtr<IDXGIDevice> dxgiDevice;
   HRESULT hr =
       device->QueryInterface(__uuidof(IDXGIDevice), getter_AddRefs(dxgiDevice));
@@ -472,16 +392,8 @@ bool D3D11Checks::GetDxgiDesc(ID3D11Device* device, DXGI_ADAPTER_DESC* out) {
   return SUCCEEDED(dxgiAdapter->GetDesc(out));
 }
 
-<<<<<<< HEAD
-/* static */ void D3D11Checks::WarnOnAdapterMismatch(ID3D11Device* device) {
-||||||| merged common ancestors
-/* static */ void
-D3D11Checks::WarnOnAdapterMismatch(ID3D11Device *device)
-{
-=======
 /* static */
 void D3D11Checks::WarnOnAdapterMismatch(ID3D11Device* device) {
->>>>>>> upstream-releases
   DXGI_ADAPTER_DESC desc;
   PodZero(&desc);
   GetDxgiDesc(device, &desc);
@@ -497,21 +409,10 @@ void D3D11Checks::WarnOnAdapterMismatch(ID3D11Device* device) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool D3D11Checks::DoesRemotePresentWork(IDXGIAdapter* adapter) {
-  // Remote presentation was added in DXGI 1.2, for Windows 8 and the Platform
-  // Update to Windows 7.
-||||||| merged common ancestors
-/* static */ bool
-D3D11Checks::DoesRemotePresentWork(IDXGIAdapter* adapter)
-{
-  // Remote presentation was added in DXGI 1.2, for Windows 8 and the Platform Update to Windows 7.
-=======
 /* static */
 bool D3D11Checks::DoesRemotePresentWork(IDXGIAdapter* adapter) {
   // Remote presentation was added in DXGI 1.2, for Windows 8 and the Platform
   // Update to Windows 7.
->>>>>>> upstream-releases
   RefPtr<IDXGIAdapter2> check;
   HRESULT hr =
       adapter->QueryInterface(__uuidof(IDXGIAdapter2), getter_AddRefs(check));

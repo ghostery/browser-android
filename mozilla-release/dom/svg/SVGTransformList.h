@@ -14,16 +14,8 @@
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class SVGTransform;
-}  // namespace dom
-||||||| merged common ancestors
-class SVGTransform;
-} // namespace dom
-=======
 class DOMSVGTransform;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * ATTENTION! WARNING! WATCH OUT!!
@@ -34,33 +26,14 @@ class DOMSVGTransform;
  *
  * The DOM wrapper class for this class is DOMSVGTransformList.
  */
-<<<<<<< HEAD
-class SVGTransformList {
-  friend class nsSVGAnimatedTransformList;
-||||||| merged common ancestors
-class SVGTransformList
-{
-  friend class nsSVGAnimatedTransformList;
-=======
 class SVGTransformList {
   friend class SVGAnimatedTransformList;
->>>>>>> upstream-releases
   friend class DOMSVGTransformList;
   friend class dom::DOMSVGTransform;
 
-<<<<<<< HEAD
- public:
-  SVGTransformList() {}
-  ~SVGTransformList() {}
-||||||| merged common ancestors
-public:
-  SVGTransformList() {}
-  ~SVGTransformList() {}
-=======
  public:
   SVGTransformList() = default;
   ~SVGTransformList() = default;
->>>>>>> upstream-releases
 
   // Only methods that don't make/permit modification to this list are public.
   // Only our friend classes can access methods that may change us.
@@ -90,23 +63,10 @@ public:
   // limited. This is to reduce the chances of someone modifying objects of
   // this type without taking the necessary steps to keep DOM wrappers in sync.
   // If you need wider access to these methods, consider adding a method to
-<<<<<<< HEAD
-  // SVGAnimatedTransformList and having that class act as an intermediary so it
-  // can take care of keeping DOM wrappers in sync.
-
- protected:
-||||||| merged common ancestors
-  // SVGAnimatedTransformList and having that class act as an intermediary so it
-  // can take care of keeping DOM wrappers in sync.
-
-protected:
-
-=======
   // DOMSVGAnimatedTransformList and having that class act as an intermediary so
   // it can take care of keeping DOM wrappers in sync.
 
  protected:
->>>>>>> upstream-releases
   /**
    * These may fail on OOM if the internal capacity needs to be increased, in
    * which case the list will be left unmodified.
@@ -114,15 +74,7 @@ protected:
   nsresult CopyFrom(const SVGTransformList& rhs);
   nsresult CopyFrom(const nsTArray<SVGTransform>& aTransformArray);
 
-<<<<<<< HEAD
-  nsSVGTransform& operator[](uint32_t aIndex) { return mItems[aIndex]; }
-||||||| merged common ancestors
-  nsSVGTransform& operator[](uint32_t aIndex) {
-    return mItems[aIndex];
-  }
-=======
   SVGTransform& operator[](uint32_t aIndex) { return mItems[aIndex]; }
->>>>>>> upstream-releases
 
   /**
    * This may fail (return false) on OOM if the internal capacity is being
@@ -166,18 +118,9 @@ protected:
 
  protected:
   /*
-<<<<<<< HEAD
-   * See SVGLengthList for the rationale for using
-   * FallibleTArray<nsSVGTransform> instead of FallibleTArray<nsSVGTransform,
-   * 1>.
-||||||| merged common ancestors
-   * See SVGLengthList for the rationale for using FallibleTArray<nsSVGTransform>
-   * instead of FallibleTArray<nsSVGTransform, 1>.
-=======
    * See SVGLengthList for the rationale for using
    * FallibleTArray<SVGTransform> instead of FallibleTArray<SVGTransform,
    * 1>.
->>>>>>> upstream-releases
    */
   FallibleTArray<SVGTransform> mItems;
 };

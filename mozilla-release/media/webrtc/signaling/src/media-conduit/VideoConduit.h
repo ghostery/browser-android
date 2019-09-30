@@ -25,13 +25,7 @@
 #include "webrtc/call/call.h"
 #include "webrtc/common_types.h"
 #ifdef FF
-<<<<<<< HEAD
-#undef FF  // Avoid name collision between scoped_ptr.h and nsCRTGlue.h.
-||||||| merged common ancestors
-#undef FF // Avoid name collision between scoped_ptr.h and nsCRTGlue.h.
-=======
 #  undef FF  // Avoid name collision between scoped_ptr.h and nsCRTGlue.h.
->>>>>>> upstream-releases
 #endif
 #include "webrtc/api/video_codecs/video_decoder.h"
 #include "webrtc/api/video_codecs/video_encoder.h"
@@ -260,64 +254,20 @@ class WebrtcVideoConduit
 
   void PollStats();
   void UpdateVideoStatsTimer();
-<<<<<<< HEAD
-  bool GetVideoEncoderStats(double* framerateMean, double* framerateStdDev,
-                            double* bitrateMean, double* bitrateStdDev,
-                            uint32_t* droppedFrames,
-                            uint32_t* framesEncoded) override;
-  bool GetVideoDecoderStats(double* framerateMean, double* framerateStdDev,
-                            double* bitrateMean, double* bitrateStdDev,
-||||||| merged common ancestors
-  bool GetVideoEncoderStats(double* framerateMean,
-                            double* framerateStdDev,
-                            double* bitrateMean,
-                            double* bitrateStdDev,
-                            uint32_t* droppedFrames,
-                            uint32_t* framesEncoded) override;
-  bool GetVideoDecoderStats(double* framerateMean,
-                            double* framerateStdDev,
-                            double* bitrateMean,
-                            double* bitrateStdDev,
-=======
   bool GetVideoEncoderStats(double* framerateMean, double* framerateStdDev,
                             double* bitrateMean, double* bitrateStdDev,
                             uint32_t* droppedFrames, uint32_t* framesEncoded,
                             Maybe<uint64_t>* qpSum) override;
   bool GetVideoDecoderStats(double* framerateMean, double* framerateStdDev,
                             double* bitrateMean, double* bitrateStdDev,
->>>>>>> upstream-releases
                             uint32_t* discardedPackets,
                             uint32_t* framesDecoded) override;
-<<<<<<< HEAD
-  bool GetAVStats(int32_t* jitterBufferDelayMs, int32_t* playoutBufferDelayMs,
-                  int32_t* avSyncOffsetMs) override;
-  bool GetRTPStats(unsigned int* jitterMs,
-                   unsigned int* cumulativeLost) override;
-  bool GetRTCPReceiverReport(uint32_t* jitterMs, uint32_t* packetsReceived,
-                             uint64_t* bytesReceived, uint32_t* cumulativeLost,
-                             int32_t* rttMs) override;
-  bool GetRTCPSenderReport(unsigned int* packetsSent,
-||||||| merged common ancestors
-  bool GetAVStats(int32_t* jitterBufferDelayMs,
-                  int32_t* playoutBufferDelayMs,
-                  int32_t* avSyncOffsetMs) override;
-  bool GetRTPStats(unsigned int* jitterMs, unsigned int* cumulativeLost) override;
-  bool GetRTCPReceiverReport(DOMHighResTimeStamp* timestamp,
-                             uint32_t* jitterMs,
-                             uint32_t* packetsReceived,
-                             uint64_t* bytesReceived,
-                             uint32_t* cumulativeLost,
-                             int32_t* rttMs) override;
-  bool GetRTCPSenderReport(DOMHighResTimeStamp* timestamp,
-                           unsigned int* packetsSent,
-=======
   bool GetRTPReceiverStats(unsigned int* jitterMs,
                            unsigned int* cumulativeLost) override;
   bool GetRTCPReceiverReport(uint32_t* jitterMs, uint32_t* packetsReceived,
                              uint64_t* bytesReceived, uint32_t* cumulativeLost,
                              Maybe<double>* aOutRttSec) override;
   bool GetRTCPSenderReport(unsigned int* packetsSent,
->>>>>>> upstream-releases
                            uint64_t* bytesSent) override;
   uint64_t MozVideoLatencyAvg();
 
@@ -326,11 +276,6 @@ class WebrtcVideoConduit
     mAllowSsrcChange = false;
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   Maybe<RefPtr<VideoSessionConduit>> AsVideoSessionConduit() override {
     return Some(RefPtr<VideoSessionConduit>(this));
   }
@@ -342,7 +287,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   // Don't allow copying/assigning.
   WebrtcVideoConduit(const WebrtcVideoConduit&) = delete;
   void operator=(const WebrtcVideoConduit&) = delete;
@@ -356,31 +300,13 @@ private:
     explicit CallStatistics(nsCOMPtr<nsIEventTarget> aStatsThread)
         : mStatsThread(aStatsThread) {}
     void Update(const webrtc::Call::Stats& aStats);
-<<<<<<< HEAD
-    int32_t RttMs() const;
-
-   protected:
-||||||| merged common ancestors
-    int32_t RttMs() const;
-  protected:
-=======
     Maybe<DOMHighResTimeStamp> RttSec() const;
 
    protected:
->>>>>>> upstream-releases
     const nsCOMPtr<nsIEventTarget> mStatsThread;
-<<<<<<< HEAD
-
-   private:
-    int32_t mRttMs = 0;
-||||||| merged common ancestors
-  private:
-    int32_t mRttMs = 0;
-=======
 
    private:
     Maybe<DOMHighResTimeStamp> mRttSec = Nothing();
->>>>>>> upstream-releases
   };
 
   /**
@@ -400,15 +326,6 @@ private:
      * @param aOutBrMean: mean bitrate
      * @param aOutBrStdDev: standard deviation of bitrate
      */
-<<<<<<< HEAD
-    bool GetVideoStreamStats(double& aOutFrMean, double& aOutFrStdDev,
-                             double& aOutBrMean, double& aOutBrStdDev) const;
-||||||| merged common ancestors
-    bool GetVideoStreamStats(double& aOutFrMean,
-        double& aOutFrStdDev,
-        double& aOutBrMean,
-        double& aOutBrStdDev) const;
-=======
     bool GetVideoStreamStats(double& aOutFrMean, double& aOutFrStdDev,
                              double& aOutBrMean, double& aOutBrStdDev) const;
 
@@ -416,20 +333,12 @@ private:
      * Accumulates video quality telemetry
      */
     void RecordTelemetry() const;
->>>>>>> upstream-releases
     const webrtc::RtcpPacketTypeCounter& PacketCounts() const;
     bool Active() const;
     void SetActive(bool aActive);
-<<<<<<< HEAD
-
-   protected:
-||||||| merged common ancestors
-  protected:
-=======
     virtual bool IsSend() const { return false; };
 
    protected:
->>>>>>> upstream-releases
     const nsCOMPtr<nsIEventTarget> mStatsThread;
 
    private:
@@ -467,17 +376,10 @@ private:
     uint32_t PacketsLost() const;
     uint64_t BytesReceived() const;
     uint32_t PacketsReceived() const;
-<<<<<<< HEAD
-
-   private:
-||||||| merged common ancestors
-  private:
-=======
     Maybe<uint64_t> QpSum() const;
     bool IsSend() const override { return true; };
 
    private:
->>>>>>> upstream-releases
     uint32_t mDroppedFrames = 0;
     uint32_t mFramesEncoded = 0;
     int32_t mFramesDeliveredToEncoder = 0;
@@ -523,81 +425,6 @@ private:
     uint32_t mSsrc = 0;
   };
 
-<<<<<<< HEAD
-  /**
-   * Stores encoder configuration information and produces
-   * a VideoEncoderConfig from it.
-   */
-  class VideoEncoderConfigBuilder {
-   public:
-    /**
-     * Stores extended data for Simulcast Streams
-     */
-    class SimulcastStreamConfig {
-     public:
-      int jsMaxBitrate;            // user-controlled max bitrate
-      double jsScaleDownBy = 1.0;  // user-controlled downscale
-    };
-    void SetEncoderSpecificSettings(
-        rtc::scoped_refptr<webrtc::VideoEncoderConfig::EncoderSpecificSettings>
-            aSettings);
-    void SetVideoStreamFactory(rtc::scoped_refptr<VideoStreamFactory> aFactory);
-    void SetMinTransmitBitrateBps(int aXmitMinBps);
-    void SetContentType(webrtc::VideoEncoderConfig::ContentType aContentType);
-    void SetMaxEncodings(size_t aMaxStreams);
-    void AddStream(webrtc::VideoStream aStream);
-    void AddStream(webrtc::VideoStream aStream,
-                   const SimulcastStreamConfig& aSimulcastConfig);
-    size_t StreamCount() const;
-    void ClearStreams();
-    void ForEachStream(
-        const std::function<void(webrtc::VideoStream&, SimulcastStreamConfig&,
-                                 const size_t index)>&& f);
-    webrtc::VideoEncoderConfig CopyConfig() const { return mConfig.Copy(); }
-    size_t NumberOfStreams() const { return mConfig.number_of_streams; }
-
-   private:
-    webrtc::VideoEncoderConfig mConfig;
-    std::vector<SimulcastStreamConfig> mSimulcastStreams;
-  };
-
-||||||| merged common ancestors
-  /**
-   * Stores encoder configuration information and produces
-   * a VideoEncoderConfig from it.
-   */
-  class VideoEncoderConfigBuilder {
-  public:
-    /**
-     * Stores extended data for Simulcast Streams
-     */
-    class SimulcastStreamConfig {
-    public:
-      int jsMaxBitrate; // user-controlled max bitrate
-      double jsScaleDownBy=1.0; // user-controlled downscale
-    };
-    void SetEncoderSpecificSettings(rtc::scoped_refptr<webrtc::VideoEncoderConfig::EncoderSpecificSettings> aSettings);
-    void SetVideoStreamFactory(rtc::scoped_refptr<VideoStreamFactory> aFactory);
-    void SetMinTransmitBitrateBps(int aXmitMinBps);
-    void SetContentType(webrtc::VideoEncoderConfig::ContentType aContentType);
-    void SetResolutionDivisor(unsigned char aDivisor);
-    void SetMaxEncodings(size_t aMaxStreams);
-    void AddStream(webrtc::VideoStream aStream);
-    void AddStream(webrtc::VideoStream aStream,const SimulcastStreamConfig& aSimulcastConfig);
-    size_t StreamCount() const;
-    void ClearStreams();
-    void ForEachStream(
-      const std::function<void(webrtc::VideoStream&, SimulcastStreamConfig&, const size_t index)> && f);
-    webrtc::VideoEncoderConfig CopyConfig() const { return mConfig.Copy(); }
-    size_t NumberOfStreams() const { return mConfig.number_of_streams; }
-
-  private:
-    webrtc::VideoEncoderConfig mConfig;
-    std::vector<SimulcastStreamConfig> mSimulcastStreams;
-  };
-
-=======
->>>>>>> upstream-releases
   // Utility function to dump recv codec database
   void DumpCodecDB() const;
 
@@ -609,19 +436,6 @@ private:
   MediaConduitErrorCode CreateRecvStream();
   void DeleteRecvStream();
 
-<<<<<<< HEAD
-  std::unique_ptr<webrtc::VideoDecoder> CreateDecoder(
-      webrtc::VideoCodecType aType);
-  std::unique_ptr<webrtc::VideoEncoder> CreateEncoder(
-      webrtc::VideoCodecType aType, bool enable_simulcast);
-
-  // webrtc::VideoEncoderFactory
-  std::vector<webrtc::SdpVideoFormat> GetSupportedFormats() const override;
-||||||| merged common ancestors
-  webrtc::VideoDecoder* CreateDecoder(webrtc::VideoCodecType aType);
-  webrtc::VideoEncoder* CreateEncoder(webrtc::VideoCodecType aType,
-                                      bool enable_simulcast);
-=======
   std::unique_ptr<webrtc::VideoDecoder> CreateDecoder(
       webrtc::VideoCodecType aType);
   std::unique_ptr<webrtc::VideoEncoder> CreateEncoder(
@@ -632,24 +446,11 @@ private:
 
   CodecInfo QueryVideoEncoder(
       const webrtc::SdpVideoFormat& format) const override;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  CodecInfo QueryVideoEncoder(
-      const webrtc::SdpVideoFormat& format) const override;
 
   std::unique_ptr<webrtc::VideoEncoder> CreateVideoEncoder(
       const webrtc::SdpVideoFormat& format) override;
 
   MediaConduitErrorCode DeliverPacket(const void* data, int len) override;
-||||||| merged common ancestors
-  MediaConduitErrorCode DeliverPacket(const void *data, int len);
-=======
-  std::unique_ptr<webrtc::VideoEncoder> CreateVideoEncoder(
-      const webrtc::SdpVideoFormat& format) override;
-
-  MediaConduitErrorCode DeliverPacket(const void* data, int len) override;
->>>>>>> upstream-releases
 
   bool RequiresNewSendStream(const VideoCodecConfig& newConfig) const;
 
@@ -803,19 +604,8 @@ private:
   // and when receiving packets (sts).
   Atomic<uint32_t> mRecvSSRC;  // this can change during a stream!
 
-<<<<<<< HEAD
-  RtpPacketQueue mRtpPacketQueue;
-||||||| merged common ancestors
-  struct QueuedPacket {
-    int mLen;
-    uint8_t mData[1];
-  };
-  // Accessed only on mStsThread.
-  nsTArray<UniquePtr<QueuedPacket>> mQueuedPackets;
-=======
   // Accessed only on mStsThread.
   RtpPacketQueue mRtpPacketQueue;
->>>>>>> upstream-releases
 
   // The lifetime of these codecs are maintained by the VideoConduit instance.
   // They are passed to the webrtc::VideoSendStream or VideoReceiveStream,

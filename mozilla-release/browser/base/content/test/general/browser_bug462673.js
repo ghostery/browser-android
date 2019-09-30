@@ -50,13 +50,6 @@ add_task(async function() {
     is(win.gBrowser.tabs.length, 1, "Window has one tab");
     is(win.gBrowser.browsers.length, 1, "Window has one browser");
     is(win.gBrowser.selectedTab, newTab, "Remaining tab is selected");
-<<<<<<< HEAD
-    is(win.gBrowser.selectedBrowser, newBrowser, "Browser for remaining tab is selected");
-    is(win.gBrowser.tabbox.selectedPanel, newBrowser.parentNode.parentNode.parentNode, "Panel for remaining tab is selected");
-||||||| merged common ancestors
-    is(win.gBrowser.selectedBrowser, newBrowser, "Browser for remaining tab is selected");
-    is(win.gBrowser.tabbox.selectedPanel, newBrowser.parentNode.parentNode.parentNode.parentNode, "Panel for remaining tab is selected");
-=======
     is(
       win.gBrowser.selectedBrowser,
       newBrowser,
@@ -67,7 +60,6 @@ add_task(async function() {
       newBrowser.parentNode.parentNode.parentNode,
       "Panel for remaining tab is selected"
     );
->>>>>>> upstream-releases
   }
 
   await promiseWindowClosed(win);

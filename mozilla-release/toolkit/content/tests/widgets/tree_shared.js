@@ -286,28 +286,6 @@ function testtag_tree_columns(tree, expectedColumns, testid) {
     is(column.index, c, adjtestid + "index");
     is(column.primary, primary == column, adjtestid + "column is primary");
 
-<<<<<<< HEAD
-    is(column.cycler, "cycler" in expectedColumn && expectedColumn.cycler,
-                  adjtestid + "column is cycler");
-    is(column.editable, "editable" in expectedColumn && expectedColumn.editable,
-                  adjtestid + "column is editable");
-
-    is(column.type, "type" in expectedColumn ? expectedColumn.type : 1, adjtestid + "type");
-
-    is(column.getPrevious(), c > 0 ? columns[c - 1] : null, adjtestid + "getPrevious");
-    is(column.getNext(), c < columns.length - 1 ? columns[c + 1] : null, adjtestid + "getNext");
-||||||| merged common ancestors
-    is(column.cycler, "cycler" in expectedColumn && expectedColumn.cycler,
-                  adjtestid + "column is cycler");
-    is(column.selectable, true, adjtestid + "column is selectable");
-    is(column.editable, "editable" in expectedColumn && expectedColumn.editable,
-                  adjtestid + "column is editable");
-
-    is(column.type, "type" in expectedColumn ? expectedColumn.type : 1, adjtestid + "type");
-
-    is(column.getPrevious(), c > 0 ? columns[c - 1] : null, adjtestid + "getPrevious");
-    is(column.getNext(), c < columns.length - 1 ? columns[c + 1] : null, adjtestid + "getNext");
-=======
     is(
       column.cycler,
       "cycler" in expectedColumn && expectedColumn.cycler,
@@ -335,7 +313,6 @@ function testtag_tree_columns(tree, expectedColumns, testid) {
       c < columns.length - 1 ? columns[c + 1] : null,
       adjtestid + "getNext"
     );
->>>>>>> upstream-releases
 
     // check the view's getColumnProperties method
     var properties = tree.view.getColumnProperties(column);
@@ -1354,24 +1331,6 @@ function testtag_tree_TreeView_rows(tree, testid, rowInfo, startRow) {
     },
   };
 
-<<<<<<< HEAD
-  var checkCellMethods =
-  {
-    getCellText(row, cell) { return cell.label; },
-    getCellValue(row, cell) { return cell.value; },
-    getCellProperties(row, cell) { return cell.properties; },
-    isEditable(row, cell) { return cell.editable; },
-    getImageSrc(row, cell) { return cell.image; },
-||||||| merged common ancestors
-  var checkCellMethods =
-  {
-    getCellText(row, cell) { return cell.label; },
-    getCellValue(row, cell) { return cell.value; },
-    getCellProperties(row, cell) { return cell.properties; },
-    isEditable(row, cell) { return cell.editable; },
-    isSelectable(row, cell) { return cell.selectable; },
-    getImageSrc(row, cell) { return cell.image; },
-=======
   var checkCellMethods = {
     getCellText(row, cell) {
       return cell.label;
@@ -1388,7 +1347,6 @@ function testtag_tree_TreeView_rows(tree, testid, rowInfo, startRow) {
     getImageSrc(row, cell) {
       return cell.image;
     },
->>>>>>> upstream-releases
   };
 
   var failedMethods = {};

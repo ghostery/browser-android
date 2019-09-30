@@ -146,14 +146,8 @@ class FontEditor extends PureComponent {
 
     return dom.div(
       {
-<<<<<<< HEAD
-        className: "font-group",
-||||||| merged common ancestors
-        className: "font-group"
-=======
         key: family,
         className: "font-group",
->>>>>>> upstream-releases
       },
       dom.div(
         {
@@ -260,17 +254,6 @@ class FontEditor extends PureComponent {
     const instanceSelect = dom.select(
       {
         className: "font-control-input font-value-select",
-<<<<<<< HEAD
-        onChange: (e) => {
-          const instance = fontInstances.find(inst => e.target.value === inst.name);
-          instance && this.props.onInstanceChange(instance.name, instance.values);
-        },
-||||||| merged common ancestors
-        onChange: (e) => {
-          const instance = fontInstances.find(inst => e.target.value === inst.name);
-          instance && this.props.onInstanceChange(instance.name, instance.values);
-        }
-=======
         value: selectedInstance.name || customInstance.name,
         onChange: e => {
           const instance = fontInstances.find(
@@ -279,7 +262,6 @@ class FontEditor extends PureComponent {
           instance &&
             this.props.onInstanceChange(instance.name, instance.values);
         },
->>>>>>> upstream-releases
       },
       instanceOptions
     );

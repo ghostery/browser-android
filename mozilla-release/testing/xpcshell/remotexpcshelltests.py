@@ -132,21 +132,9 @@ class RemoteXPCShellTestThread(xpcshell.XPCShellTestThread):
         self.testharnessdir = self.remoteScriptsDir
         xpcsCmd = xpcshell.XPCShellTestThread.buildXpcsCmd(self)
         # remove "-g <dir> -a <dir>" and add "--greomni <apk>"
-<<<<<<< HEAD
-        del xpcsCmd[1:5]
-        if self.options['localAPK']:
-            xpcsCmd.insert(3, '--greomni')
-            xpcsCmd.insert(4, self.remoteAPK)
-||||||| merged common ancestors
-        del(self.xpcsCmd[1:5])
-        if self.options['localAPK']:
-            self.xpcsCmd.insert(3, '--greomni')
-            self.xpcsCmd.insert(4, self.remoteAPK)
-=======
         del xpcsCmd[1:5]
         xpcsCmd.insert(3, '--greomni')
         xpcsCmd.insert(4, self.remoteAPK)
->>>>>>> upstream-releases
 
         if self.remoteDebugger:
             # for example, "/data/local/gdbserver" "localhost:12345"

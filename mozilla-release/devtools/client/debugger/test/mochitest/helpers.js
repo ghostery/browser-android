@@ -330,22 +330,6 @@ function assertDebugLine(dbg, line) {
 
   const markedSpans = lineInfo.handle.markedSpans;
   if (markedSpans && markedSpans.length > 0) {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-    const classMatch = markedSpans.filter(
-      span => span.marker.className && span.marker.className.includes("debug-expression")
-    ).length > 0;
-
-    ok(
-      classMatch,
-      "expression is highlighted as paused"
-    );
-||||||| merged common ancestors
-    const marker = markedSpans[0].marker;
-    ok(
-      marker.className.includes("debug-expression"),
-      "expression is highlighted as paused"
-    );
-=======
     const classMatch =
       markedSpans.filter(
         span =>
@@ -354,7 +338,6 @@ function assertDebugLine(dbg, line) {
       ).length > 0;
 
     ok(classMatch, "expression is highlighted as paused");
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   }
 }
 
@@ -549,30 +532,14 @@ async function clearDebuggerPreferences() {
  * @return {Promise} dbg
  * @static
  */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-async function initDebugger(url, ...sources) {
-  clearDebuggerPreferences();
-||||||| merged common ancestors
-async function initDebugger(url) {
-  clearDebuggerPreferences();
-=======
 async function initDebugger(url, ...sources) {
   await clearDebuggerPreferences();
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   const toolbox = await openNewTabAndToolbox(EXAMPLE_URL + url, "jsdebugger");
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  const dbg = createDebuggerContext(toolbox);
-  await waitForSources(dbg, ...sources)
-  return dbg;
-||||||| merged common ancestors
-  return createDebuggerContext(toolbox);
-=======
   const dbg = createDebuggerContext(toolbox);
   dbg.client.waitForWorkers(false);
 
   await waitForSources(dbg, ...sources);
   return dbg;
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
 }
 
 async function initPane(url, pane) {
@@ -877,15 +844,7 @@ function findBreakpoint(dbg, url, line) {
 
 async function loadAndAddBreakpoint(dbg, filename, line, column) {
   const {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-    selectors: { getBreakpoint, getBreakpointCount, getBreakpointsMap },
-    getState
-||||||| merged common ancestors
-    selectors: { getBreakpoint, getBreakpoints },
-    getState
-=======
     selectors: { getBreakpoint, getBreakpointCount, getBreakpointsMap }
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   } = dbg;
 
   await waitForSources(dbg, filename);
@@ -898,19 +857,9 @@ async function loadAndAddBreakpoint(dbg, filename, line, column) {
   // Test that breakpoint is not off by a line.
   await addBreakpoint(dbg, source, line, column);
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  is(getBreakpointCount(getState()), 1, "One breakpoint exists");
-  if (!getBreakpoint(getState(), { sourceId: source.id, line, column })) {
-    const breakpoints = getBreakpointsMap(getState());
-||||||| merged common ancestors
-  is(getBreakpoints(getState()).size, 1, "One breakpoint exists");
-  if (!getBreakpoint(getState(), { sourceId: source.id, line, column })) {
-    const breakpoints = getBreakpoints(getState()).toJS();
-=======
   is(getBreakpointCount(), 1, "One breakpoint exists");
   if (!getBreakpoint({ sourceId: source.id, line, column })) {
     const breakpoints = getBreakpointsMap();
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
     const id = Object.keys(breakpoints).pop();
     const loc = breakpoints[id].location;
     ok(
@@ -931,20 +880,6 @@ async function invokeWithBreakpoint(
   { line, column },
   handler
 ) {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  const {
-    selectors: { getBreakpointCount },
-    getState
-  } = dbg;
-
-||||||| merged common ancestors
-  const {
-    selectors: { getBreakpoints },
-    getState
-  } = dbg;
-
-=======
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   const source = await loadAndAddBreakpoint(dbg, filename, line, column);
 
   const invokeResult = invokeInTab(fnName);
@@ -962,13 +897,7 @@ async function invokeWithBreakpoint(
 
   await removeBreakpoint(dbg, source.id, line, column);
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  is(getBreakpointCount(getState()), 0, "Breakpoint reverted");
-||||||| merged common ancestors
-  is(getBreakpoints(getState()).size, 0, "Breakpoint reverted");
-=======
   is(dbg.selectors.getBreakpointCount(), 0, "Breakpoint reverted");
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
 
   await handler(source);
 
@@ -1257,21 +1186,6 @@ const selectors = {
   expressionPlus: ".watch-expressions-pane button.plus",
   scopesHeader: ".scopes-pane ._header",
   breakpointItem: i => `.breakpoints-list div:nth-of-type(${i})`,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  breakpointItems: `.breakpoints-list .breakpoint`,
-  breakpointContextMenu: {
-    disableSelf: "#node-menu-disable-self",
-    disableAll: "#node-menu-disable-all",
-    disableOthers: "#node-menu-disable-others",
-    enableSelf: "#node-menu-enable-self",
-    enableOthers: "#node-menu-enable-others",
-    remove: "#node-menu-delete-self",
-    removeOthers: "#node-menu-delete-other",
-    removeCondition: "#node-menu-remove-condition"
-  },
-||||||| merged common ancestors
-  breakpointItems: `.breakpoints-list .breakpoint`,
-=======
   breakpointLabel: i => `${selectors.breakpointItem(i)} .breakpoint-label`,
   breakpointItems: ".breakpoints-list .breakpoint",
   breakpointContextMenu: {
@@ -1285,7 +1199,6 @@ const selectors = {
     removeCondition: "#node-menu-remove-condition"
   },
   columnBreakpoints: ".column-breakpoint",
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   scopes: ".scopes-list",
   scopeNode: i => `.scopes-list .tree-node:nth-child(${i}) .object-label`,
   scopeValue: i =>
@@ -1294,13 +1207,6 @@ const selectors = {
   frame: i => `.frames [role="list"] [role="listitem"]:nth-child(${i})`,
   frames: '.frames [role="list"] [role="listitem"]',
   gutter: i => `.CodeMirror-code *:nth-child(${i}) .CodeMirror-linenumber`,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  gutterContextMenu: {
-    addConditionalBreakpoint: "#node-menu-add-conditional-breakpoint",
-    editBreakpoint: "#node-menu-edit-conditional-breakpoint"
-  },
-||||||| merged common ancestors
-=======
   addConditionItem:
     "#node-menu-add-condition, #node-menu-add-conditional-breakpoint",
   editConditionItem:
@@ -1308,7 +1214,6 @@ const selectors = {
   addLogItem: "#node-menu-add-log-point",
   editLogItem: "#node-menu-edit-log-point",
   disableItem: "#node-menu-disable-breakpoint",
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   menuitem: i => `menupopup menuitem:nth-child(${i})`,
   pauseOnExceptions: ".pause-exceptions",
   breakpoint: ".CodeMirror-code > .new-breakpoint",
@@ -1458,11 +1363,6 @@ function rightClickElement(dbg, elementName, ...args) {
   return rightClickEl(dbg, doc.querySelector(selector));
 }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-function selectContextMenuItem(dbg, selector) {
-||||||| merged common ancestors
-function selectMenuItem(dbg, index) {
-=======
 function rightClickEl(dbg, el) {
   const doc = dbg.win.document;
   EventUtils.synthesizeMouseAtCenter(el, { type: "contextmenu" }, dbg.win);
@@ -1474,20 +1374,12 @@ async function clickGutter(dbg, line) {
 }
 
 function selectContextMenuItem(dbg, selector) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
   // the context menu is in the toolbox window
   const doc = dbg.toolbox.topDoc;
 
   // there are several context menus, we want the one with the menu-api
   const popup = doc.querySelector('menupopup[menu-api="true"]');
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-  const item = popup.querySelector(selector);
-  return EventUtils.synthesizeMouseAtCenter(item, {}, dbg.toolbox.win);
-||||||| merged common ancestors
-  const item = popup.querySelector(`menuitem:nth-child(${index})`);
-  return EventUtils.synthesizeMouseAtCenter(item, {}, dbg.toolbox.win);
-=======
   const item = popup.querySelector(selector);
   return EventUtils.synthesizeMouseAtCenter(item, {}, dbg.toolbox.topWindow);
 }
@@ -1499,7 +1391,6 @@ async function typeInPanel(dbg, text) {
   pressKey(dbg, "End");
   type(dbg, text);
   pressKey(dbg, "Enter");
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js
 }
 
 /**
@@ -1746,27 +1637,6 @@ async function assertSourceCount(dbg, count) {
   await waitForSourceCount(dbg, count);
   is(findAllElements(dbg, "sourceNodes").length, count, `${count} sources`);
 }
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/helpers.js
-
-async function waitForNodeToGainFocus(dbg, index) {
-  await waitUntil(() => {
-    const element = findElement(dbg, "sourceNode", index);
-
-    if (element) {
-      return element.classList.contains("focused");
-    }
-
-    return false;
-  }, `waiting for source node ${index} to be focused`);
-}
-
-async function assertNodeIsFocused(dbg, index) {
-  await waitForNodeToGainFocus(dbg, index);
-  const node = findElement(dbg, "sourceNode", index);
-  ok(node.classList.contains("focused"), `node ${index} is focused`);
-}
-||||||| merged common ancestors
-=======
 
 async function waitForNodeToGainFocus(dbg, index) {
   await waitUntil(() => {
@@ -1900,4 +1770,3 @@ async function hasConsoleMessage(dbg, msg) {
     return messages.length > 0;
   });
 }
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/helpers.js

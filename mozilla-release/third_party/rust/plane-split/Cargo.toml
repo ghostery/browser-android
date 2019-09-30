@@ -12,13 +12,7 @@
 
 [package]
 name = "plane-split"
-<<<<<<< HEAD
-version = "0.13.3"
-||||||| merged common ancestors
-version = "0.13.2"
-=======
 version = "0.13.9"
->>>>>>> upstream-releases
 authors = ["Dzmitry Malyshau <kvark@mozilla.com>"]
 description = "Plane splitting"
 documentation = "https://docs.rs/plane-split"

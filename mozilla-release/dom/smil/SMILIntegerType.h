@@ -12,27 +12,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-class SMILIntegerType : public nsISMILType {
- public:
-  virtual void Init(nsSMILValue& aValue) const override;
-  virtual void Destroy(nsSMILValue& aValue) const override;
-  virtual nsresult Assign(nsSMILValue& aDest,
-                          const nsSMILValue& aSrc) const override;
-  virtual bool IsEqual(const nsSMILValue& aLeft,
-                       const nsSMILValue& aRight) const override;
-  virtual nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-||||||| merged common ancestors
-class SMILIntegerType : public nsISMILType
-{
-public:
-  virtual void Init(nsSMILValue& aValue) const override;
-  virtual void Destroy(nsSMILValue& aValue) const override;
-  virtual nsresult Assign(nsSMILValue& aDest, const nsSMILValue& aSrc) const override;
-  virtual bool IsEqual(const nsSMILValue& aLeft,
-                       const nsSMILValue& aRight) const override;
-  virtual nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-=======
 class SMILIntegerType : public SMILType {
  public:
   virtual void Init(SMILValue& aValue) const override;
@@ -42,54 +21,22 @@ class SMILIntegerType : public SMILType {
   virtual bool IsEqual(const SMILValue& aLeft,
                        const SMILValue& aRight) const override;
   virtual nsresult Add(SMILValue& aDest, const SMILValue& aValueToAdd,
->>>>>>> upstream-releases
                        uint32_t aCount) const override;
   virtual nsresult ComputeDistance(const SMILValue& aFrom, const SMILValue& aTo,
                                    double& aDistance) const override;
-<<<<<<< HEAD
-  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal, double aUnitDistance,
-                               nsSMILValue& aResult) const override;
-
-  static SMILIntegerType* Singleton() {
-||||||| merged common ancestors
-  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal,
-                               double aUnitDistance,
-                               nsSMILValue& aResult) const override;
-
-  static SMILIntegerType*
-  Singleton()
-  {
-=======
   virtual nsresult Interpolate(const SMILValue& aStartVal,
                                const SMILValue& aEndVal, double aUnitDistance,
                                SMILValue& aResult) const override;
 
   static SMILIntegerType* Singleton() {
->>>>>>> upstream-releases
     static SMILIntegerType sSingleton;
     return &sSingleton;
   }
 
-<<<<<<< HEAD
- private:
-  constexpr SMILIntegerType() {}
-||||||| merged common ancestors
-private:
-  constexpr SMILIntegerType() {}
-=======
  private:
   constexpr SMILIntegerType() = default;
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // MOZILLA_SMILINTEGERTYPE_H_
-||||||| merged common ancestors
-#endif // MOZILLA_SMILINTEGERTYPE_H_
-=======
 #endif  // mozilla_SMILIntegerType_h
->>>>>>> upstream-releases

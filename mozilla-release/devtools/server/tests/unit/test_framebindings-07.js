@@ -15,12 +15,6 @@ registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
 // Test that the EnvironmentClient's getBindings() method works as expected.
 function run_test() {
   initTestDebuggerServer();

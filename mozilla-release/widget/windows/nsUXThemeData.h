@@ -19,13 +19,7 @@
 
 // These window messages are not defined in dwmapi.h
 #ifndef WM_DWMCOMPOSITIONCHANGED
-<<<<<<< HEAD
-#define WM_DWMCOMPOSITIONCHANGED 0x031E
-||||||| merged common ancestors
-#define WM_DWMCOMPOSITIONCHANGED        0x031E
-=======
 #  define WM_DWMCOMPOSITIONCHANGED 0x031E
->>>>>>> upstream-releases
 #endif
 
 // Windows 7 additions

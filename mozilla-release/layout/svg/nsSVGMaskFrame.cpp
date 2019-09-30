@@ -37,18 +37,8 @@ static LuminanceType GetLuminanceType(uint8_t aNSMaskType) {
   }
 }
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGMaskFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGMaskFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGMaskFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGMaskFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGMaskFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGMaskFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGMaskFrame)
@@ -75,145 +65,46 @@ already_AddRefed<SourceSurface> nsSVGMaskFrame::GetMaskForMaskedFrame(
   gfxRect maskSurfaceRectDouble = aParams.toUserSpace.TransformBounds(maskArea);
   Rect maskSurfaceRect = ToRect(maskSurfaceRectDouble);
   maskSurfaceRect.RoundOut();
-<<<<<<< HEAD
-  context->Restore();
-
-  bool resultOverflows;
-  IntSize maskSurfaceSize = nsSVGUtils::ConvertToSurfaceSize(
-      maskSurfaceRect.Size(), &resultOverflows);
-
-  if (resultOverflows || maskSurfaceSize.IsEmpty()) {
-    // Return value other then ImgDrawResult::SUCCESS, so the caller can skip
-    // painting the masked frame(aParams.maskedFrame).
-    return nullptr;
-  }
-||||||| merged common ancestors
-  context->Restore();
-
-  bool resultOverflows;
-  IntSize maskSurfaceSize =
-    nsSVGUtils::ConvertToSurfaceSize(maskSurfaceRect.Size(), &resultOverflows);
-
-  if (resultOverflows || maskSurfaceSize.IsEmpty()) {
-    // Return value other then ImgDrawResult::SUCCESS, so the caller can skip
-    // painting the masked frame(aParams.maskedFrame).
-    return nullptr;
-  }
-=======
->>>>>>> upstream-releases
 
   uint8_t maskType;
   if (aParams.maskMode == StyleMaskMode::MatchSource) {
     maskType = StyleSVGReset()->mMaskType;
   } else {
-<<<<<<< HEAD
-    maskType = aParams.maskMode == NS_STYLE_MASK_MODE_LUMINANCE
-                   ? NS_STYLE_MASK_TYPE_LUMINANCE
-                   : NS_STYLE_MASK_TYPE_ALPHA;
-||||||| merged common ancestors
-    maskType = aParams.maskMode == NS_STYLE_MASK_MODE_LUMINANCE
-               ? NS_STYLE_MASK_TYPE_LUMINANCE : NS_STYLE_MASK_TYPE_ALPHA;
-=======
     maskType = aParams.maskMode == StyleMaskMode::Luminance
                    ? NS_STYLE_MASK_TYPE_LUMINANCE
                    : NS_STYLE_MASK_TYPE_ALPHA;
->>>>>>> upstream-releases
   }
 
   RefPtr<DrawTarget> maskDT;
   if (maskType == NS_STYLE_MASK_TYPE_LUMINANCE) {
-<<<<<<< HEAD
-    maskDT = context->GetDrawTarget()->CreateSimilarDrawTarget(
-        maskSurfaceSize, SurfaceFormat::B8G8R8A8);
-||||||| merged common ancestors
-    maskDT = context->GetDrawTarget()->CreateSimilarDrawTarget(
-               maskSurfaceSize, SurfaceFormat::B8G8R8A8);
-=======
     maskDT = context->GetDrawTarget()->CreateClippedDrawTarget(
         maskSurfaceRect, SurfaceFormat::B8G8R8A8);
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    maskDT = context->GetDrawTarget()->CreateSimilarDrawTarget(
-        maskSurfaceSize, SurfaceFormat::A8);
-||||||| merged common ancestors
-    maskDT = context->GetDrawTarget()->CreateSimilarDrawTarget(
-               maskSurfaceSize, SurfaceFormat::A8);
-=======
     maskDT = context->GetDrawTarget()->CreateClippedDrawTarget(
         maskSurfaceRect, SurfaceFormat::A8);
->>>>>>> upstream-releases
   }
 
   if (!maskDT || !maskDT->IsValid()) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  Matrix maskSurfaceMatrix =
-      context->CurrentMatrix() *
-      ToMatrix(gfxMatrix::Translation(-maskSurfaceRect.TopLeft()));
-||||||| merged common ancestors
-  Matrix maskSurfaceMatrix =
-    context->CurrentMatrix() * ToMatrix(gfxMatrix::Translation(-maskSurfaceRect.TopLeft()));
-=======
   RefPtr<gfxContext> tmpCtx =
       gfxContext::CreatePreservingTransformOrNull(maskDT);
   MOZ_ASSERT(tmpCtx);  // already checked the draw target above
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<gfxContext> tmpCtx = gfxContext::CreateOrNull(maskDT);
-  MOZ_ASSERT(tmpCtx);  // already checked the draw target above
-  tmpCtx->SetMatrix(maskSurfaceMatrix);
-||||||| merged common ancestors
-  RefPtr<gfxContext> tmpCtx = gfxContext::CreateOrNull(maskDT);
-  MOZ_ASSERT(tmpCtx); // already checked the draw target above
-  tmpCtx->SetMatrix(maskSurfaceMatrix);
-=======
   mMatrixForChildren =
       GetMaskTransform(aParams.maskedFrame) * aParams.toUserSpace;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mMatrixForChildren =
-      GetMaskTransform(aParams.maskedFrame) * aParams.toUserSpace;
-||||||| merged common ancestors
-  mMatrixForChildren = GetMaskTransform(aParams.maskedFrame) *
-                       aParams.toUserSpace;
-=======
   for (nsIFrame* kid = mFrames.FirstChild(); kid; kid = kid->GetNextSibling()) {
     gfxMatrix m = mMatrixForChildren;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (nsIFrame* kid = mFrames.FirstChild(); kid; kid = kid->GetNextSibling()) {
-||||||| merged common ancestors
-  for (nsIFrame* kid = mFrames.FirstChild(); kid;
-       kid = kid->GetNextSibling()) {
-=======
->>>>>>> upstream-releases
     // The CTM of each frame referencing us can be different
     nsSVGDisplayableFrame* SVGFrame = do_QueryFrame(kid);
     if (SVGFrame) {
       SVGFrame->NotifySVGChanged(nsSVGDisplayableFrame::TRANSFORM_CHANGED);
       m = nsSVGUtils::GetTransformMatrixInUserSpace(kid) * m;
     }
-<<<<<<< HEAD
-    gfxMatrix m = mMatrixForChildren;
-    if (kid->GetContent()->IsSVGElement()) {
-      m = static_cast<nsSVGElement*>(kid->GetContent())
-              ->PrependLocalTransformsTo(m, eUserSpaceToParent);
-    }
-||||||| merged common ancestors
-    gfxMatrix m = mMatrixForChildren;
-    if (kid->GetContent()->IsSVGElement()) {
-      m = static_cast<nsSVGElement*>(kid->GetContent())->
-            PrependLocalTransformsTo(m, eUserSpaceToParent);
-    }
-=======
 
->>>>>>> upstream-releases
     nsSVGUtils::PaintFrameWithEffects(kid, *tmpCtx, m, aParams.imgParams);
   }
 
@@ -231,19 +122,9 @@ already_AddRefed<SourceSurface> nsSVGMaskFrame::GetMaskForMaskedFrame(
     }
     surface = maskSnapshot.forget();
   } else {
-<<<<<<< HEAD
-    maskDT->SetTransform(Matrix());
-    maskDT->FillRect(Rect(0, 0, maskSurfaceSize.width, maskSurfaceSize.height),
-                     ColorPattern(Color(1.0f, 1.0f, 1.0f, aParams.opacity)),
-                     DrawOptions(1, CompositionOp::OP_IN));
-||||||| merged common ancestors
-    maskDT->SetTransform(Matrix());
-    maskDT->FillRect(Rect(0, 0, maskSurfaceSize.width, maskSurfaceSize.height), ColorPattern(Color(1.0f, 1.0f, 1.0f, aParams.opacity)), DrawOptions(1, CompositionOp::OP_IN));
-=======
     maskDT->FillRect(maskSurfaceRect,
                      ColorPattern(Color(1.0f, 1.0f, 1.0f, aParams.opacity)),
                      DrawOptions(1, CompositionOp::OP_IN));
->>>>>>> upstream-releases
     RefPtr<SourceSurface> maskSnapshot = maskDT->Snapshot();
     if (!maskSnapshot) {
       return nullptr;
@@ -304,16 +185,8 @@ gfxMatrix nsSVGMaskFrame::GetCanvasTM() { return mMatrixForChildren; }
 gfxMatrix nsSVGMaskFrame::GetMaskTransform(nsIFrame* aMaskedFrame) {
   SVGMaskElement* content = static_cast<SVGMaskElement*>(GetContent());
 
-<<<<<<< HEAD
-  nsSVGEnum* maskContentUnits =
-      &content->mEnumAttributes[SVGMaskElement::MASKCONTENTUNITS];
-||||||| merged common ancestors
-  nsSVGEnum* maskContentUnits =
-    &content->mEnumAttributes[SVGMaskElement::MASKCONTENTUNITS];
-=======
   SVGAnimatedEnumeration* maskContentUnits =
       &content->mEnumAttributes[SVGMaskElement::MASKCONTENTUNITS];
->>>>>>> upstream-releases
 
   uint32_t flags = nsSVGUtils::eBBoxIncludeFillGeometry |
                    (aMaskedFrame->StyleBorder()->mBoxDecorationBreak ==

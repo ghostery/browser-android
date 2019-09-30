@@ -73,14 +73,7 @@
 #include "js/Value.h"
 
 /* Typedef for native functions called by the JS VM. */
-<<<<<<< HEAD
-typedef bool (*JSNative)(JSContext* cx, unsigned argc, JS::Value* vp);
-||||||| merged common ancestors
-typedef bool
-(* JSNative)(JSContext* cx, unsigned argc, JS::Value* vp);
-=======
 using JSNative = bool (*)(JSContext* cx, unsigned argc, JS::Value* vp);
->>>>>>> upstream-releases
 
 namespace JS {
 
@@ -204,110 +197,6 @@ class MOZ_STACK_CLASS CallArgsBase {
       return true;
     }
 
-<<<<<<< HEAD
-    return ComputeThis(cx, base(), thisObject);
-  }
-
-  // ARGUMENTS
-
-  /* Returns the number of arguments. */
-  unsigned length() const { return argc_; }
-
-  /* Returns the i-th zero-indexed argument. */
-  MutableHandleValue operator[](unsigned i) const {
-    MOZ_ASSERT(i < argc_);
-    return MutableHandleValue::fromMarkedLocation(&this->argv_[i]);
-  }
-
-  /*
-   * Returns the i-th zero-indexed argument, or |undefined| if there's no
-   * such argument.
-   */
-  HandleValue get(unsigned i) const {
-    return i < length() ? HandleValue::fromMarkedLocation(&this->argv_[i])
-                        : UndefinedHandleValue;
-  }
-
-  /*
-   * Returns true if the i-th zero-indexed argument is present and is not
-   * |undefined|.
-   */
-  bool hasDefined(unsigned i) const {
-    return i < argc_ && !this->argv_[i].isUndefined();
-  }
-
-  // RETURN VALUE
-
-  /*
-   * Returns the currently-set return value.  The initial contents of this
-   * value are unspecified.  Once this method has been called, callee() and
-   * calleev() can no longer be used.  (If you're compiling against a debug
-   * build of SpiderMonkey, these methods will assert to aid debugging.)
-   *
-   * If the method you're implementing succeeds by returning true, you *must*
-   * set this.  (SpiderMonkey doesn't currently assert this, but it will do
-   * so eventually.)  You don't need to use or change this if your method
-   * fails.
-   */
-  MutableHandleValue rval() const {
-    this->setUsedRval();
-    return MutableHandleValue::fromMarkedLocation(&argv_[-2]);
-  }
-
- public:
-  // These methods are publicly exposed, but they are *not* to be used when
-  // implementing a JSNative method and encapsulating access to |vp| within
-  // it.  You probably don't want to use these!
-
-  void setCallee(const Value& aCalleev) const {
-    this->clearUsedRval();
-    argv_[-2] = aCalleev;
-  }
-
-  void setThis(const Value& aThisv) const { argv_[-1] = aThisv; }
-
-  MutableHandleValue mutableThisv() const {
-    return MutableHandleValue::fromMarkedLocation(&argv_[-1]);
-  }
-
- public:
-  // These methods are publicly exposed, but we're unsure of the interfaces
-  // (because they're hackish and drop assertions).  Avoid using these if you
-  // can.
-
-  Value* array() const { return argv_; }
-  Value* end() const { return argv_ + argc_ + constructing_; }
-
- public:
-  // These methods are only intended for internal use.  Embedders shouldn't
-  // use them!
-
-  Value* base() const { return argv_ - 2; }
-
-  Value* spAfterCall() const {
-    this->setUsedRval();
-    return argv_ - 1;
-  }
-||||||| merged common ancestors
-  public:
-    // These methods are publicly exposed, but we're unsure of the interfaces
-    // (because they're hackish and drop assertions).  Avoid using these if you
-    // can.
-
-    Value* array() const { return argv_; }
-    Value* end() const { return argv_ + argc_ + constructing_; }
-
-  public:
-    // These methods are only intended for internal use.  Embedders shouldn't
-    // use them!
-
-    Value* base() const { return argv_ - 2; }
-
-    Value* spAfterCall() const {
-        this->setUsedRval();
-        return argv_ - 1;
-    }
-=======
     return ComputeThis(cx, base(), thisObject);
   }
 
@@ -398,7 +287,6 @@ class MOZ_STACK_CLASS CallArgsBase {
     this->setUsedRval();
     return argv_ - 1;
   }
->>>>>>> upstream-releases
 };
 
 }  // namespace detail
@@ -419,48 +307,11 @@ class MOZ_STACK_CLASS CallArgs
     args.constructing_ = constructing;
     args.ignoresReturnValue_ = ignoresReturnValue;
 #ifdef DEBUG
-<<<<<<< HEAD
-    MOZ_ASSERT(ValueIsNotGray(args.thisv()));
-    MOZ_ASSERT(ValueIsNotGray(args.calleev()));
-    for (unsigned i = 0; i < argc; ++i) {
-      MOZ_ASSERT(ValueIsNotGray(argv[i]));
-||||||| merged common ancestors
-        MOZ_ASSERT(ValueIsNotGray(args.thisv()));
-        MOZ_ASSERT(ValueIsNotGray(args.calleev()));
-        for (unsigned i = 0; i < argc; ++i) {
-            MOZ_ASSERT(ValueIsNotGray(argv[i]));
-        }
-#endif
-        return args;
-=======
     AssertValueIsNotGray(args.thisv());
     AssertValueIsNotGray(args.calleev());
     for (unsigned i = 0; i < argc; ++i) {
       AssertValueIsNotGray(argv[i]);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#endif
-    return args;
-  }
-
- public:
-  /*
-   * Returns true if there are at least |required| arguments passed in. If
-   * false, it reports an error message on the context.
-   */
-  JS_PUBLIC_API bool requireAtLeast(JSContext* cx, const char* fnname,
-                                    unsigned required) const;
-||||||| merged common ancestors
-
-  public:
-    /*
-     * Returns true if there are at least |required| arguments passed in. If
-     * false, it reports an error message on the context.
-     */
-    JS_PUBLIC_API(bool) requireAtLeast(JSContext* cx, const char* fnname, unsigned required) const;
-
-=======
 #endif
     return args;
   }
@@ -475,18 +326,8 @@ class MOZ_STACK_CLASS CallArgs
                                                  const char* fnname,
                                                  unsigned required,
                                                  unsigned actual);
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE CallArgs CallArgsFromVp(unsigned argc, Value* vp) {
-  return CallArgs::create(argc, vp + 2, vp[1].isMagic(JS_IS_CONSTRUCTING));
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE CallArgs
-CallArgsFromVp(unsigned argc, Value* vp)
-{
-    return CallArgs::create(argc, vp + 2, vp[1].isMagic(JS_IS_CONSTRUCTING));
-=======
 namespace detail {
 template <class WantUsedRval>
 JS_PUBLIC_API inline bool CallArgsBase<WantUsedRval>::requireAtLeast(
@@ -502,7 +343,6 @@ JS_PUBLIC_API inline bool CallArgsBase<WantUsedRval>::requireAtLeast(
 
 MOZ_ALWAYS_INLINE CallArgs CallArgsFromVp(unsigned argc, Value* vp) {
   return CallArgs::create(argc, vp + 2, vp[1].isMagic(JS_IS_CONSTRUCTING));
->>>>>>> upstream-releases
 }
 
 // This method is only intended for internal use in SpiderMonkey.  We may

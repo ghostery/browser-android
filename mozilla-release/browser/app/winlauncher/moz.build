@@ -9,16 +9,9 @@ Library('winlauncher')
 FORCE_STATIC_LIB = True
 
 UNIFIED_SOURCES += [
-<<<<<<< HEAD
-    'DllBlocklistWin.cpp',
-    'ErrorHandler.cpp',
-||||||| merged common ancestors
-    'DllBlocklistWin.cpp',
-=======
     '/ipc/mscom/ProcessRuntime.cpp',
     '/widget/windows/WindowsConsole.cpp',
     'ErrorHandler.cpp',
->>>>>>> upstream-releases
     'LauncherProcessWin.cpp',
     'LaunchUnelevated.cpp',
 ]

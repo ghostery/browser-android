@@ -56,8 +56,6 @@ public:
 
     SkEdge** edgeList() { return (SkEdge**)fEdgeList; }
 
-    bool isFinite() const { return fIsFinite; }
-
 private:
     Combine combineVertical(const SkEdge* edge, SkEdge* last);
 
@@ -73,20 +71,11 @@ private:
     const int fClipShift;
 };
 
-<<<<<<< HEAD
-    int         fShiftUp;
-    EdgeType    fEdgeType;
-    bool        fIsFinite = true;
-||||||| merged common ancestors
-    int         fShiftUp;
-    EdgeType    fEdgeType;
-=======
 class SkAnalyticEdgeBuilder final : public SkEdgeBuilder {
 public:
     SkAnalyticEdgeBuilder() {}
 
     SkAnalyticEdge** analyticEdgeList() { return (SkAnalyticEdge**)fEdgeList; }
->>>>>>> upstream-releases
 
 private:
     Combine combineVertical(const SkAnalyticEdge* edge, SkAnalyticEdge* last);

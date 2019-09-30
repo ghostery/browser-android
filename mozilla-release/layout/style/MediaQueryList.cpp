@@ -118,70 +118,13 @@ void MediaQueryList::RecomputeMatches() {
     return;
   }
 
-<<<<<<< HEAD
-  // FIXME(emilio, bug 1490401): We shouldn't need a pres context to evaluate
-  // media queries.
-  nsPresContext* presContext = mDocument->GetPresContext();
-  if (!presContext && mDocument->GetParentDocument()) {
-    // Flush frames on the parent so our prescontext will get
-    // created if needed.
-    mDocument->GetParentDocument()->FlushPendingNotifications(
-        FlushType::Frames);
-    // That might have killed our document, so recheck that.
-    if (!mDocument) {
-      return;
-    }
-
-    presContext = mDocument->GetPresContext();
-  }
-
-  if (!presContext) {
-    // XXXbz What's the right behavior here?  Spec doesn't say.
-    return;
-  }
-
-  mMatches = mMediaList->Matches(presContext);
-||||||| merged common ancestors
-  // FIXME(emilio, bug 1490401): We shouldn't need a pres context to evaluate
-  // media queries.
-  nsPresContext* presContext = mDocument->GetPresContext();
-  if (!presContext && mDocument->GetParentDocument()) {
-    // Flush frames on the parent so our prescontext will get
-    // created if needed.
-    mDocument->GetParentDocument()->FlushPendingNotifications(FlushType::Frames);
-    // That might have killed our document, so recheck that.
-    if (!mDocument) {
-      return;
-    }
-
-    presContext = mDocument->GetPresContext();
-  }
-
-  if (!presContext) {
-    // XXXbz What's the right behavior here?  Spec doesn't say.
-    return;
-  }
-
-  mMatches = mMediaList->Matches(presContext);
-=======
   mMatches = mMediaList->Matches(*mDocument);
->>>>>>> upstream-releases
   mMatchesValid = true;
 }
 
-<<<<<<< HEAD
-nsISupports* MediaQueryList::GetParentObject() const { return mDocument; }
-||||||| merged common ancestors
-nsISupports*
-MediaQueryList::GetParentObject() const
-{
-  return mDocument;
-}
-=======
 nsISupports* MediaQueryList::GetParentObject() const {
   return ToSupports(mDocument);
 }
->>>>>>> upstream-releases
 
 JSObject* MediaQueryList::WrapObject(JSContext* aCx,
                                      JS::Handle<JSObject*> aGivenProto) {

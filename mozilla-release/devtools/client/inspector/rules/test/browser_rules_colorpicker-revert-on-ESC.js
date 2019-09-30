@@ -30,17 +30,9 @@ async function testPressingEscapeRevertsChanges(view) {
     {
       selector: "body",
       name: "background-color",
-<<<<<<< HEAD
-      value: "rgb(0, 0, 0)",
-    });
-||||||| merged common ancestors
-      value: "rgb(0, 0, 0)"
-    });
-=======
       value: "rgb(0, 0, 0)",
     }
   );
->>>>>>> upstream-releases
 
   is(
     swatch.style.backgroundColor,

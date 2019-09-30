@@ -117,41 +117,6 @@ add_task(async function test_value_combo() {
   deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
 
   let menuInfo = await PlacesUtils.bookmarks.fetch(
-<<<<<<< HEAD
-    PlacesUtils.bookmarks.menuGuid);
-  deepEqual(changesToUpload, {
-    bzBmk_______: {
-      tombstone: false,
-      counter: 1,
-      synced: false,
-      cleartext: {
-        id: "bzBmk_______",
-        type: "bookmark",
-        parentid: "toolbar",
-        hasDupe: true,
-        parentName: BookmarksToolbarTitle,
-        dateAdded: bzBmk.dateAdded.getTime(),
-        bmkUri: "https://bugzilla.mozilla.org/",
-        title: "Bugzilla",
-        tags: ["new", "tag"],
-||||||| merged common ancestors
-    PlacesUtils.bookmarks.menuGuid);
-  deepEqual(changesToUpload, {
-    bzBmk_______: {
-      tombstone: false,
-      counter: 3,
-      synced: false,
-      cleartext: {
-        id: "bzBmk_______",
-        type: "bookmark",
-        parentid: "toolbar",
-        hasDupe: true,
-        parentName: BookmarksToolbarTitle,
-        dateAdded: bzBmk.dateAdded.getTime(),
-        bmkUri: "https://bugzilla.mozilla.org/",
-        title: "Bugzilla",
-        tags: ["new", "tag"],
-=======
     PlacesUtils.bookmarks.menuGuid
   );
   deepEqual(
@@ -187,38 +152,8 @@ add_task(async function test_value_combo() {
           title: BookmarksToolbarTitle,
           children: ["fxBmk_______", "tFolder_____", "bzBmk_______"],
         },
->>>>>>> upstream-releases
       },
     },
-<<<<<<< HEAD
-    toolbar: {
-      tombstone: false,
-      counter: 1,
-      synced: false,
-      cleartext: {
-        id: "toolbar",
-        type: "folder",
-        parentid: "places",
-        hasDupe: true,
-        parentName: "",
-        dateAdded: menuInfo.dateAdded.getTime(),
-        title: BookmarksToolbarTitle,
-        children: ["fxBmk_______", "tFolder_____", "bzBmk_______"],
-||||||| merged common ancestors
-    toolbar: {
-      tombstone: false,
-      counter: 2,
-      synced: false,
-      cleartext: {
-        id: "toolbar",
-        type: "folder",
-        parentid: "places",
-        hasDupe: true,
-        parentName: "",
-        dateAdded: menuInfo.dateAdded.getTime(),
-        title: BookmarksToolbarTitle,
-        children: ["fxBmk_______", "tFolder_____", "bzBmk_______"],
-=======
     "Should upload new local bookmarks and parents"
   );
 
@@ -242,7 +177,6 @@ add_task(async function test_value_combo() {
         guid: "fxBmk_______",
         parentGuid: PlacesUtils.bookmarks.toolbarGuid,
         source: PlacesUtils.bookmarks.SOURCES.SYNC,
->>>>>>> upstream-releases
       },
     },
     {
@@ -886,142 +820,6 @@ add_task(async function test_conflicting_keywords() {
   await PlacesSyncUtils.bookmarks.reset();
 });
 
-add_task(async function test_conflicting_keywords() {
-  let buf = await openMirror("conflicting_keywords");
-  let dateAdded = new Date();
-
-  info("Set up mirror");
-  await PlacesUtils.bookmarks.insertTree({
-    guid: PlacesUtils.bookmarks.menuGuid,
-    children: [{
-      guid: "bookmarkAAAA",
-      title: "A",
-      url: "http://example.com/a",
-      keyword: "one",
-      dateAdded,
-    }],
-  });
-  await storeRecords(buf, shuffle([{
-    id: "menu",
-    type: "folder",
-    children: ["bookmarkAAAA"],
-  }, {
-    id: "bookmarkAAAA",
-    type: "bookmark",
-    title: "A",
-    bmkUri: "http://example.com/a",
-    keyword: "one",
-    dateAdded: dateAdded.getTime(),
-  }]), { needsMerge: false });
-  await PlacesTestUtils.markBookmarksAsSynced();
-
-  {
-    let entryByKeyword = await PlacesUtils.keywords.fetch("one");
-    equal(entryByKeyword.url.href, "http://example.com/a",
-      "Should return new keyword entry by URL");
-    let entryByURL = await PlacesUtils.keywords.fetch({
-      url: "http://example.com/a",
-    });
-    equal(entryByURL.keyword, "one", "Should return new entry by keyword");
-  }
-
-  info("Insert new bookmark with same URL and different keyword");
-  {
-    await storeRecords(buf, shuffle([{
-      id: "toolbar",
-      type: "folder",
-      children: ["bookmarkAAA1"],
-    }, {
-      id: "bookmarkAAA1",
-      type: "bookmark",
-      title: "A1",
-      bmkUri: "http://example.com/a",
-      keyword: "two",
-      dateAdded: dateAdded.getTime(),
-    }]));
-    let changesToUpload = await buf.apply();
-    deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
-    deepEqual(changesToUpload, {
-      bookmarkAAAA: {
-        tombstone: false,
-        counter: 1,
-        synced: false,
-        cleartext: {
-          id: "bookmarkAAAA",
-          type: "bookmark",
-          parentid: "menu",
-          hasDupe: true,
-          parentName: BookmarksMenuTitle,
-          dateAdded: dateAdded.getTime(),
-          bmkUri: "http://example.com/a",
-          title: "A",
-          keyword: "two",
-        },
-      },
-    }, "Should reupload bookmarks with different keyword");
-    await setChangesSynced(buf, changesToUpload);
-
-    let entryByOldKeyword = await PlacesUtils.keywords.fetch("one");
-    ok(!entryByOldKeyword,
-      "Should remove old entry when inserting bookmark with different keyword");
-    let entryByNewKeyword = await PlacesUtils.keywords.fetch("two");
-    equal(entryByNewKeyword.url.href, "http://example.com/a",
-      "Should return new keyword entry by URL");
-    let entryByURL = await PlacesUtils.keywords.fetch({
-      url: "http://example.com/a",
-    });
-    equal(entryByURL.keyword, "two", "Should return new entry by URL");
-  }
-
-  info("Update bookmark with different keyword");
-  {
-    await storeRecords(buf, shuffle([{
-      id: "bookmarkAAAA",
-      type: "bookmark",
-      title: "A",
-      bmkUri: "http://example.com/a",
-      keyword: "three",
-      dateAdded: dateAdded.getTime(),
-    }]));
-    let changesToUpload = await buf.apply();
-    deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
-    deepEqual(changesToUpload, {
-      bookmarkAAA1: {
-        tombstone: false,
-        counter: 1,
-        synced: false,
-        cleartext: {
-          id: "bookmarkAAA1",
-          type: "bookmark",
-          parentid: "toolbar",
-          hasDupe: true,
-          parentName: BookmarksToolbarTitle,
-          dateAdded: dateAdded.getTime(),
-          bmkUri: "http://example.com/a",
-          title: "A1",
-          keyword: "three",
-        },
-      },
-    }, "Should reupload bookmarks with updated keyword");
-    await setChangesSynced(buf, changesToUpload);
-
-    let entryByOldKeyword = await PlacesUtils.keywords.fetch("two");
-    ok(!entryByOldKeyword,
-      "Should remove old entry when updating bookmark keyword");
-    let entryByNewKeyword = await PlacesUtils.keywords.fetch("three");
-    equal(entryByNewKeyword.url.href, "http://example.com/a",
-      "Should return updated keyword entry by URL");
-    let entryByURL = await PlacesUtils.keywords.fetch({
-      url: "http://example.com/a",
-    });
-    equal(entryByURL.keyword, "three", "Should return updated entry by URL");
-  }
-
-  await buf.finalize();
-  await PlacesUtils.bookmarks.eraseEverything();
-  await PlacesSyncUtils.bookmarks.reset();
-});
-
 add_task(async function test_keywords() {
   let buf = await openMirror("keywords");
 
@@ -1138,17 +936,6 @@ add_task(async function test_keywords() {
   deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
 
   let idsToUpload = inspectChangeRecords(changesToUpload);
-<<<<<<< HEAD
-  deepEqual(idsToUpload, {
-    updated: ["bookmarkBBBB", "bookmarkCCCC", "bookmarkDDDD"],
-    deleted: [],
-  }, "Should reupload all local records with changed keywords");
-||||||| merged common ancestors
-  deepEqual(idsToUpload, {
-    updated: ["bookmarkAAAA", "bookmarkCCCC", "bookmarkDDDD"],
-    deleted: [],
-  }, "Should reupload all local records with changed keywords");
-=======
   deepEqual(
     idsToUpload,
     {
@@ -1157,7 +944,6 @@ add_task(async function test_keywords() {
     },
     "Should reupload all local records with changed keywords"
   );
->>>>>>> upstream-releases
 
   let entryForOne = await PlacesUtils.keywords.fetch("one");
   ok(!entryForOne, "Should remove existing keyword from A");

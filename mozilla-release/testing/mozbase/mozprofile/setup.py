@@ -7,13 +7,7 @@ from __future__ import absolute_import
 from setuptools import setup
 
 PACKAGE_NAME = 'mozprofile'
-<<<<<<< HEAD
-PACKAGE_VERSION = '2.1.0'
-||||||| merged common ancestors
-PACKAGE_VERSION = '2.0.0'
-=======
 PACKAGE_VERSION = '2.2.0'
->>>>>>> upstream-releases
 
 deps = [
     'mozfile>=1.2',

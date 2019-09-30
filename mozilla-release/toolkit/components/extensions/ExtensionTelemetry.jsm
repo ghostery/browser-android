@@ -7,21 +7,11 @@
 
 var EXPORTED_SYMBOLS = ["ExtensionTelemetry", "getTrimmedString"];
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "Services",
-                               "resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "Services",
-                               "resource://gre/modules/Services.jsm");
-ChromeUtils.defineModuleGetter(this, "TelemetryStopwatch",
-                               "resource://gre/modules/TelemetryStopwatch.jsm");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "Services",
   "resource://gre/modules/Services.jsm"
 );
->>>>>>> upstream-releases
 
 // Map of the base histogram ids for the metrics recorded for the extensions.
 const histograms = {

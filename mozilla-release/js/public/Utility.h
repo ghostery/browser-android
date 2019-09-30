@@ -48,13 +48,7 @@ extern MOZ_NORETURN MOZ_COLD JS_PUBLIC_API void JS_Assert(const char* s,
  * Custom allocator support for SpiderMonkey
  */
 #if defined JS_USE_CUSTOM_ALLOCATOR
-<<<<<<< HEAD
-#include "jscustomallocator.h"
-||||||| merged common ancestors
-# include "jscustomallocator.h"
-=======
 #  include "jscustomallocator.h"
->>>>>>> upstream-releases
 #else
 
 namespace js {
@@ -68,36 +62,6 @@ namespace js {
  * adding new thread types.
  */
 enum ThreadType {
-<<<<<<< HEAD
-  THREAD_TYPE_NONE = 0,      // 0
-  THREAD_TYPE_MAIN,          // 1
-  THREAD_TYPE_WASM,          // 2
-  THREAD_TYPE_ION,           // 3
-  THREAD_TYPE_PARSE,         // 4
-  THREAD_TYPE_COMPRESS,      // 5
-  THREAD_TYPE_GCHELPER,      // 6
-  THREAD_TYPE_GCPARALLEL,    // 7
-  THREAD_TYPE_PROMISE_TASK,  // 8
-  THREAD_TYPE_ION_FREE,      // 9
-  THREAD_TYPE_WASM_TIER2,    // 10
-  THREAD_TYPE_WORKER,        // 11
-  THREAD_TYPE_MAX            // Used to check shell function arguments
-||||||| merged common ancestors
-    THREAD_TYPE_NONE = 0,       // 0
-    THREAD_TYPE_MAIN,           // 1
-    THREAD_TYPE_WASM,           // 2
-    THREAD_TYPE_ION,            // 3
-    THREAD_TYPE_PARSE,          // 4
-    THREAD_TYPE_COMPRESS,       // 5
-    THREAD_TYPE_GCHELPER,       // 6
-    THREAD_TYPE_GCPARALLEL,     // 7
-    THREAD_TYPE_PROMISE_TASK,   // 8
-    THREAD_TYPE_ION_FREE,       // 9
-    THREAD_TYPE_WASM_TIER2,     // 10
-    THREAD_TYPE_WORKER,         // 11
-    THREAD_TYPE_CURRENT,        // 12 -- Special code to only track the current thread.
-    THREAD_TYPE_MAX             // Used to check shell function arguments
-=======
   THREAD_TYPE_NONE = 0,      // 0
   THREAD_TYPE_MAIN,          // 1
   THREAD_TYPE_WASM,          // 2
@@ -120,7 +84,6 @@ enum ThreadType {
 struct RunnableTask {
   virtual ThreadType threadType() = 0;
   virtual void runTask() = 0;
->>>>>>> upstream-releases
 };
 
 namespace oom {
@@ -134,13 +97,7 @@ namespace oom {
  * Getter/Setter functions to encapsulate mozilla::ThreadLocal, implementation
  * is in jsutil.cpp.
  */
-<<<<<<< HEAD
-#if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
-||||||| merged common ancestors
-# if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
-=======
 #  if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
->>>>>>> upstream-releases
 
 // Define the range of threads tested by simulated OOM testing and the
 // like. Testing worker threads is not supported.
@@ -151,13 +108,7 @@ extern bool InitThreadType(void);
 extern void SetThreadType(ThreadType);
 extern JS_FRIEND_API uint32_t GetThreadType(void);
 
-<<<<<<< HEAD
-#else
-||||||| merged common ancestors
-# else
-=======
 #  else
->>>>>>> upstream-releases
 
 inline bool InitThreadType(void) { return true; }
 inline void SetThreadType(ThreadType t){};
@@ -166,39 +117,13 @@ inline uint32_t GetAllocationThreadType(void) { return 0; }
 inline uint32_t GetStackCheckThreadType(void) { return 0; }
 inline uint32_t GetInterruptCheckThreadType(void) { return 0; }
 
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-# endif
-=======
 #  endif
->>>>>>> upstream-releases
 
 } /* namespace oom */
 } /* namespace js */
 
-<<<<<<< HEAD
-#if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
-||||||| merged common ancestors
-# if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
-=======
 #  if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef JS_OOM_BREAKPOINT
-#if defined(_MSC_VER)
-static MOZ_NEVER_INLINE void js_failedAllocBreakpoint() {
-  __asm {}
-  ;
-}
-#else
-||||||| merged common ancestors
-#ifdef JS_OOM_BREAKPOINT
-#  if defined(_MSC_VER)
-static MOZ_NEVER_INLINE void js_failedAllocBreakpoint() { __asm { }; }
-#  else
-=======
 #    ifdef JS_OOM_BREAKPOINT
 #      if defined(_MSC_VER)
 static MOZ_NEVER_INLINE void js_failedAllocBreakpoint() {
@@ -206,23 +131,7 @@ static MOZ_NEVER_INLINE void js_failedAllocBreakpoint() {
   ;
 }
 #      else
->>>>>>> upstream-releases
 static MOZ_NEVER_INLINE void js_failedAllocBreakpoint() { asm(""); }
-<<<<<<< HEAD
-#endif
-#define JS_OOM_CALL_BP_FUNC() js_failedAllocBreakpoint()
-#else
-#define JS_OOM_CALL_BP_FUNC() \
-  do {                        \
-  } while (0)
-#endif
-||||||| merged common ancestors
-#  endif
-#define JS_OOM_CALL_BP_FUNC() js_failedAllocBreakpoint()
-#else
-#define JS_OOM_CALL_BP_FUNC() do {} while(0)
-#endif
-=======
 #      endif
 #      define JS_OOM_CALL_BP_FUNC() js_failedAllocBreakpoint()
 #    else
@@ -230,7 +139,6 @@ static MOZ_NEVER_INLINE void js_failedAllocBreakpoint() { asm(""); }
         do {                        \
         } while (0)
 #    endif
->>>>>>> upstream-releases
 
 namespace js {
 namespace oom {
@@ -325,171 +233,21 @@ inline bool HadSimulatedStackOOM() {
  * Interrupt testing support, similar to OOM testing functions.
  */
 
-<<<<<<< HEAD
 inline bool IsSimulatedInterruptCheck() {
   return simulator.isSimulatedFailure(FailureSimulator::Kind::Interrupt);
 }
 
 inline bool ShouldFailWithInterrupt() {
   return simulator.shouldFail(FailureSimulator::Kind::Interrupt);
-||||||| merged common ancestors
-extern JS_PUBLIC_DATA(uint32_t) interruptTargetThread;
-extern JS_PUBLIC_DATA(uint64_t) maxInterruptChecks;
-extern JS_PUBLIC_DATA(uint64_t) interruptCheckCounter;
-extern JS_PUBLIC_DATA(bool) interruptCheckFailAlways;
-
-extern void
-SimulateInterruptAfter(uint64_t checks, uint32_t thread, bool always);
-
-extern void
-ResetSimulatedInterrupt();
-
-inline bool
-IsThreadSimulatingInterrupt()
-{
-    return js::oom::interruptTargetThread &&
-        js::oom::interruptTargetThread == js::oom::GetInterruptCheckThreadType();
-}
-
-inline bool
-IsSimulatedInterruptCheck()
-{
-    return IsThreadSimulatingInterrupt() &&
-           (interruptCheckCounter == maxInterruptChecks || (interruptCheckCounter > maxInterruptChecks && interruptCheckFailAlways));
-=======
-inline bool IsSimulatedInterruptCheck() {
-  return simulator.isSimulatedFailure(FailureSimulator::Kind::Interrupt);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-inline bool HadSimulatedInterrupt() {
-  return simulator.hadFailure(FailureSimulator::Kind::Interrupt);
-||||||| merged common ancestors
-inline bool
-ShouldFailWithInterrupt()
-{
-    if (!IsThreadSimulatingInterrupt()) {
-        return false;
-    }
-
-    interruptCheckCounter++;
-    if (IsSimulatedInterruptCheck()) {
-        JS_OOM_CALL_BP_FUNC();
-        return true;
-    }
-    return false;
-}
-
-inline bool
-HadSimulatedInterrupt()
-{
-    return interruptCheckCounter >= maxInterruptChecks;
-=======
-inline bool ShouldFailWithInterrupt() {
-  return simulator.shouldFail(FailureSimulator::Kind::Interrupt);
 }
 
 inline bool HadSimulatedInterrupt() {
   return simulator.hadFailure(FailureSimulator::Kind::Interrupt);
->>>>>>> upstream-releases
 }
 
 } /* namespace oom */
 } /* namespace js */
 
-<<<<<<< HEAD
-#define JS_OOM_POSSIBLY_FAIL()                        \
-  do {                                                \
-    if (js::oom::ShouldFailWithOOM()) return nullptr; \
-  } while (0)
-
-#define JS_OOM_POSSIBLY_FAIL_BOOL()                 \
-  do {                                              \
-    if (js::oom::ShouldFailWithOOM()) return false; \
-  } while (0)
-
-#define JS_STACK_OOM_POSSIBLY_FAIL()                     \
-  do {                                                   \
-    if (js::oom::ShouldFailWithStackOOM()) return false; \
-  } while (0)
-
-#define JS_STACK_OOM_POSSIBLY_FAIL_REPORT()  \
-  do {                                       \
-    if (js::oom::ShouldFailWithStackOOM()) { \
-      ReportOverRecursed(cx);                \
-      return false;                          \
-    }                                        \
-  } while (0)
-
-#define JS_INTERRUPT_POSSIBLY_FAIL()                             \
-  do {                                                           \
-    if (MOZ_UNLIKELY(js::oom::ShouldFailWithInterrupt())) {      \
-      cx->requestInterrupt(js::InterruptReason::CallbackUrgent); \
-      return cx->handleInterrupt();                              \
-    }                                                            \
-  } while (0)
-
-#else
-
-#define JS_OOM_POSSIBLY_FAIL() \
-  do {                         \
-  } while (0)
-#define JS_OOM_POSSIBLY_FAIL_BOOL() \
-  do {                              \
-  } while (0)
-#define JS_STACK_OOM_POSSIBLY_FAIL() \
-  do {                               \
-  } while (0)
-#define JS_STACK_OOM_POSSIBLY_FAIL_REPORT() \
-  do {                                      \
-  } while (0)
-#define JS_INTERRUPT_POSSIBLY_FAIL() \
-  do {                               \
-  } while (0)
-||||||| merged common ancestors
-#  define JS_OOM_POSSIBLY_FAIL()                                              \
-    do {                                                                      \
-        if (js::oom::ShouldFailWithOOM())                                     \
-            return nullptr;                                                   \
-    } while (0)
-
-#  define JS_OOM_POSSIBLY_FAIL_BOOL()                                         \
-    do {                                                                      \
-        if (js::oom::ShouldFailWithOOM())                                     \
-            return false;                                                     \
-    } while (0)
-
-#  define JS_STACK_OOM_POSSIBLY_FAIL()                                        \
-    do {                                                                      \
-        if (js::oom::ShouldFailWithStackOOM())                                \
-            return false;                                                     \
-    } while (0)
-
-#  define JS_STACK_OOM_POSSIBLY_FAIL_REPORT()                                 \
-    do {                                                                      \
-        if (js::oom::ShouldFailWithStackOOM()) {                              \
-            ReportOverRecursed(cx);                                           \
-            return false;                                                     \
-        }                                                                     \
-    } while (0)
-
-#  define JS_INTERRUPT_POSSIBLY_FAIL()                                        \
-    do {                                                                      \
-        if (MOZ_UNLIKELY(js::oom::ShouldFailWithInterrupt())) {               \
-            cx->requestInterrupt(js::InterruptReason::CallbackUrgent);        \
-            return cx->handleInterrupt();                                     \
-        }                                                                     \
-    } while (0)
-
-# else
-
-#  define JS_OOM_POSSIBLY_FAIL() do {} while(0)
-#  define JS_OOM_POSSIBLY_FAIL_BOOL() do {} while(0)
-#  define JS_STACK_OOM_POSSIBLY_FAIL() do {} while(0)
-#  define JS_STACK_OOM_POSSIBLY_FAIL_REPORT() do {} while(0)
-#  define JS_INTERRUPT_POSSIBLY_FAIL() do {} while(0)
-=======
 #    define JS_OOM_POSSIBLY_FAIL()                        \
       do {                                                \
         if (js::oom::ShouldFailWithOOM()) return nullptr; \
@@ -538,7 +296,6 @@ inline bool HadSimulatedInterrupt() {
 #    define JS_INTERRUPT_POSSIBLY_FAIL() \
       do {                               \
       } while (0)
->>>>>>> upstream-releases
 namespace js {
 namespace oom {
 static inline bool IsSimulatedOOMAllocation() { return false; }
@@ -546,11 +303,6 @@ static inline bool ShouldFailWithOOM() { return false; }
 } /* namespace oom */
 } /* namespace js */
 
-<<<<<<< HEAD
-#endif /* DEBUG || JS_OOM_BREAKPOINT */
-||||||| merged common ancestors
-# endif /* DEBUG || JS_OOM_BREAKPOINT */
-=======
 #  endif /* DEBUG || JS_OOM_BREAKPOINT */
 
 #  ifdef FUZZING
@@ -576,7 +328,6 @@ extern void InitLargeAllocLimit();
       do {                          \
       } while (0)
 #  endif
->>>>>>> upstream-releases
 
 namespace js {
 
@@ -592,32 +343,12 @@ struct MOZ_RAII JS_PUBLIC_DATA AutoEnterOOMUnsafeRegion {
     annotateOOMSizeCallback = callback;
   }
 
-<<<<<<< HEAD
-#if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
-  AutoEnterOOMUnsafeRegion()
-      : oomEnabled_(oom::simulator.isThreadSimulatingAny()) {
-    if (oomEnabled_) {
-      MOZ_ALWAYS_TRUE(owner_.compareExchange(nullptr, this));
-      oom::simulator.setInUnsafeRegion(true);
-||||||| merged common ancestors
-#if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
-    AutoEnterOOMUnsafeRegion()
-      : oomEnabled_(oom::IsThreadSimulatingOOM() && oom::maxAllocations != UINT64_MAX),
-        oomAfter_(0)
-    {
-        if (oomEnabled_) {
-            MOZ_ALWAYS_TRUE(owner_.compareExchange(nullptr, this));
-            oomAfter_ = int64_t(oom::maxAllocations) - int64_t(oom::counter);
-            oom::maxAllocations = UINT64_MAX;
-        }
-=======
 #  if defined(DEBUG) || defined(JS_OOM_BREAKPOINT)
   AutoEnterOOMUnsafeRegion()
       : oomEnabled_(oom::simulator.isThreadSimulatingAny()) {
     if (oomEnabled_) {
       MOZ_ALWAYS_TRUE(owner_.compareExchange(nullptr, this));
       oom::simulator.setInUnsafeRegion(true);
->>>>>>> upstream-releases
     }
   }
 
@@ -632,17 +363,8 @@ struct MOZ_RAII JS_PUBLIC_DATA AutoEnterOOMUnsafeRegion {
   // Used to catch concurrent use from other threads.
   static mozilla::Atomic<AutoEnterOOMUnsafeRegion*> owner_;
 
-<<<<<<< HEAD
-  bool oomEnabled_;
-#endif
-||||||| merged common ancestors
-    bool oomEnabled_;
-    int64_t oomAfter_;
-#endif
-=======
   bool oomEnabled_;
 #  endif
->>>>>>> upstream-releases
 };
 
 } /* namespace js */
@@ -651,17 +373,9 @@ struct MOZ_RAII JS_PUBLIC_DATA AutoEnterOOMUnsafeRegion {
 
 namespace js {
 
-<<<<<<< HEAD
-extern JS_PUBLIC_DATA arena_id_t MallocArena;
-extern JS_PUBLIC_DATA arena_id_t ArrayBufferContentsArena;
-||||||| merged common ancestors
-extern JS_PUBLIC_DATA(arena_id_t) MallocArena;
-extern JS_PUBLIC_DATA(arena_id_t) ArrayBufferContentsArena;
-=======
 extern JS_PUBLIC_DATA arena_id_t MallocArena;
 extern JS_PUBLIC_DATA arena_id_t ArrayBufferContentsArena;
 extern JS_PUBLIC_DATA arena_id_t StringBufferArena;
->>>>>>> upstream-releases
 
 extern void InitMallocAllocator();
 extern void ShutDownMallocAllocator();
@@ -672,16 +386,6 @@ extern void AssertJSStringBufferInCorrectArena(const void* ptr);
 
 } /* namespace js */
 
-<<<<<<< HEAD
-static inline void* js_arena_malloc(arena_id_t arena, size_t bytes) {
-  JS_OOM_POSSIBLY_FAIL();
-  return moz_arena_malloc(arena, bytes);
-||||||| merged common ancestors
-static inline void* js_arena_malloc(arena_id_t arena, size_t bytes)
-{
-    JS_OOM_POSSIBLY_FAIL();
-    return moz_arena_malloc(arena, bytes);
-=======
 static inline void* js_arena_malloc(arena_id_t arena, size_t bytes) {
   JS_OOM_POSSIBLY_FAIL();
   JS_CHECK_LARGE_ALLOC(bytes);
@@ -690,54 +394,23 @@ static inline void* js_arena_malloc(arena_id_t arena, size_t bytes) {
 
 static inline void* js_malloc(size_t bytes) {
   return js_arena_malloc(js::MallocArena, bytes);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline void* js_malloc(size_t bytes) {
-  return js_arena_malloc(js::MallocArena, bytes);
-||||||| merged common ancestors
-static inline void* js_malloc(size_t bytes)
-{
-    return js_arena_malloc(js::MallocArena, bytes);
-=======
 static inline void* js_arena_calloc(arena_id_t arena, size_t bytes) {
   JS_OOM_POSSIBLY_FAIL();
   JS_CHECK_LARGE_ALLOC(bytes);
   return moz_arena_calloc(arena, bytes, 1);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline void* js_arena_calloc(arena_id_t arena, size_t nmemb,
-                                    size_t size) {
-  JS_OOM_POSSIBLY_FAIL();
-  return moz_arena_calloc(arena, nmemb, size);
-||||||| merged common ancestors
-static inline void* js_arena_calloc(arena_id_t arena, size_t nmemb, size_t size)
-{
-    JS_OOM_POSSIBLY_FAIL();
-    return moz_arena_calloc(arena, nmemb, size);
-=======
 static inline void* js_arena_calloc(arena_id_t arena, size_t nmemb,
                                     size_t size) {
   JS_OOM_POSSIBLY_FAIL();
   JS_CHECK_LARGE_ALLOC(nmemb * size);
   return moz_arena_calloc(arena, nmemb, size);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline void* js_calloc(size_t bytes) {
-  return js_arena_calloc(js::MallocArena, bytes, 1);
-||||||| merged common ancestors
-static inline void* js_calloc(size_t bytes)
-{
-    return js_arena_calloc(js::MallocArena, bytes, 1);
-=======
 static inline void* js_calloc(size_t bytes) {
   return js_arena_calloc(js::MallocArena, bytes);
->>>>>>> upstream-releases
 }
 
 static inline void* js_calloc(size_t nmemb, size_t size) {
@@ -750,17 +423,9 @@ static inline void* js_arena_realloc(arena_id_t arena, void* p, size_t bytes) {
   // indicates failure and that |p| is still valid.
   MOZ_ASSERT(bytes != 0);
 
-<<<<<<< HEAD
-  JS_OOM_POSSIBLY_FAIL();
-  return moz_arena_realloc(arena, p, bytes);
-||||||| merged common ancestors
-    JS_OOM_POSSIBLY_FAIL();
-    return moz_arena_realloc(arena, p, bytes);
-=======
   JS_OOM_POSSIBLY_FAIL();
   JS_CHECK_LARGE_ALLOC(bytes);
   return moz_arena_realloc(arena, p, bytes);
->>>>>>> upstream-releases
 }
 
 static inline void* js_realloc(void* p, size_t bytes) {
@@ -835,25 +500,6 @@ static inline void js_free(void* p) {
  * Note: Do not add a ; at the end of a use of JS_DECLARE_NEW_METHODS,
  * or the build will break.
  */
-<<<<<<< HEAD
-#define JS_DECLARE_NEW_METHODS(NEWNAME, ALLOCATOR, QUALIFIERS)              \
-  template <class T, typename... Args>                                      \
-  QUALIFIERS T* MOZ_HEAP_ALLOCATOR NEWNAME(Args&&... args) {                \
-    void* memory = ALLOCATOR(sizeof(T));                                    \
-    return MOZ_LIKELY(memory) ? new (memory) T(std::forward<Args>(args)...) \
-                              : nullptr;                                    \
-  }
-||||||| merged common ancestors
-#define JS_DECLARE_NEW_METHODS(NEWNAME, ALLOCATOR, QUALIFIERS) \
-    template <class T, typename... Args> \
-    QUALIFIERS T * \
-    NEWNAME(Args&&... args) MOZ_HEAP_ALLOCATOR { \
-        void* memory = ALLOCATOR(sizeof(T)); \
-        return MOZ_LIKELY(memory) \
-            ? new(memory) T(std::forward<Args>(args)...) \
-            : nullptr; \
-    }
-=======
 #define JS_DECLARE_NEW_METHODS(NEWNAME, ALLOCATOR, QUALIFIERS)              \
   template <class T, typename... Args>                                      \
   QUALIFIERS T* MOZ_HEAP_ALLOCATOR NEWNAME(Args&&... args) {                \
@@ -877,7 +523,6 @@ static inline void js_free(void* p) {
     return MOZ_LIKELY(memory) ? new (memory) T(std::forward<Args>(args)...)    \
                               : nullptr;                                       \
   }
->>>>>>> upstream-releases
 
 /*
  * Given a class which should provide 'make' methods, add
@@ -976,26 +621,6 @@ static MOZ_ALWAYS_INLINE T* js_pod_calloc(size_t numElems) {
 }
 
 template <class T>
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE T* js_pod_realloc(T* prior, size_t oldSize,
-                                           size_t newSize) {
-  MOZ_ASSERT(!(oldSize & mozilla::tl::MulOverflowMask<sizeof(T)>::value));
-  size_t bytes;
-  if (MOZ_UNLIKELY(!js::CalculateAllocSize<T>(newSize, &bytes))) {
-    return nullptr;
-  }
-  return static_cast<T*>(js_realloc(prior, bytes));
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE T*
-js_pod_realloc(T* prior, size_t oldSize, size_t newSize)
-{
-    MOZ_ASSERT(!(oldSize & mozilla::tl::MulOverflowMask<sizeof(T)>::value));
-    size_t bytes;
-    if (MOZ_UNLIKELY(!js::CalculateAllocSize<T>(newSize, &bytes))) {
-        return nullptr;
-    }
-    return static_cast<T*>(js_realloc(prior, bytes));
-=======
 static MOZ_ALWAYS_INLINE T* js_pod_arena_realloc(arena_id_t arena, T* prior,
                                                  size_t oldSize,
                                                  size_t newSize) {
@@ -1011,7 +636,6 @@ template <class T>
 static MOZ_ALWAYS_INLINE T* js_pod_realloc(T* prior, size_t oldSize,
                                            size_t newSize) {
   return js_pod_arena_realloc<T>(js::MallocArena, prior, oldSize, newSize);
->>>>>>> upstream-releases
 }
 
 namespace JS {
@@ -1040,59 +664,6 @@ typedef mozilla::UniquePtr<char16_t[], JS::FreePolicy> UniqueTwoByteChars;
 
 /* sixgill annotation defines */
 #ifndef HAVE_STATIC_ANNOTATIONS
-<<<<<<< HEAD
-#define HAVE_STATIC_ANNOTATIONS
-#ifdef XGILL_PLUGIN
-#define STATIC_PRECONDITION(COND) __attribute__((precondition(#COND)))
-#define STATIC_PRECONDITION_ASSUME(COND) \
-  __attribute__((precondition_assume(#COND)))
-#define STATIC_POSTCONDITION(COND) __attribute__((postcondition(#COND)))
-#define STATIC_POSTCONDITION_ASSUME(COND) \
-  __attribute__((postcondition_assume(#COND)))
-#define STATIC_INVARIANT(COND) __attribute__((invariant(#COND)))
-#define STATIC_INVARIANT_ASSUME(COND) __attribute__((invariant_assume(#COND)))
-#define STATIC_ASSUME(COND)                                          \
-  JS_BEGIN_MACRO                                                     \
-    __attribute__((assume_static(#COND), unused)) int STATIC_PASTE1( \
-        assume_static_, __COUNTER__);                                \
-  JS_END_MACRO
-#else                                     /* XGILL_PLUGIN */
-#define STATIC_PRECONDITION(COND)         /* nothing */
-#define STATIC_PRECONDITION_ASSUME(COND)  /* nothing */
-#define STATIC_POSTCONDITION(COND)        /* nothing */
-#define STATIC_POSTCONDITION_ASSUME(COND) /* nothing */
-#define STATIC_INVARIANT(COND)            /* nothing */
-#define STATIC_INVARIANT_ASSUME(COND)     /* nothing */
-#define STATIC_ASSUME(COND)    \
-  JS_BEGIN_MACRO /* nothing */ \
-  JS_END_MACRO
-#endif /* XGILL_PLUGIN */
-#define STATIC_SKIP_INFERENCE STATIC_INVARIANT(skip_inference())
-||||||| merged common ancestors
-# define HAVE_STATIC_ANNOTATIONS
-# ifdef XGILL_PLUGIN
-#  define STATIC_PRECONDITION(COND)         __attribute__((precondition(#COND)))
-#  define STATIC_PRECONDITION_ASSUME(COND)  __attribute__((precondition_assume(#COND)))
-#  define STATIC_POSTCONDITION(COND)        __attribute__((postcondition(#COND)))
-#  define STATIC_POSTCONDITION_ASSUME(COND) __attribute__((postcondition_assume(#COND)))
-#  define STATIC_INVARIANT(COND)            __attribute__((invariant(#COND)))
-#  define STATIC_INVARIANT_ASSUME(COND)     __attribute__((invariant_assume(#COND)))
-#  define STATIC_ASSUME(COND)                        \
-  JS_BEGIN_MACRO                                     \
-    __attribute__((assume_static(#COND), unused))    \
-    int STATIC_PASTE1(assume_static_, __COUNTER__);  \
-  JS_END_MACRO
-# else /* XGILL_PLUGIN */
-#  define STATIC_PRECONDITION(COND)          /* nothing */
-#  define STATIC_PRECONDITION_ASSUME(COND)   /* nothing */
-#  define STATIC_POSTCONDITION(COND)         /* nothing */
-#  define STATIC_POSTCONDITION_ASSUME(COND)  /* nothing */
-#  define STATIC_INVARIANT(COND)             /* nothing */
-#  define STATIC_INVARIANT_ASSUME(COND)      /* nothing */
-#  define STATIC_ASSUME(COND)          JS_BEGIN_MACRO /* nothing */ JS_END_MACRO
-# endif /* XGILL_PLUGIN */
-# define STATIC_SKIP_INFERENCE STATIC_INVARIANT(skip_inference())
-=======
 #  define HAVE_STATIC_ANNOTATIONS
 #  ifdef XGILL_PLUGIN
 #    define STATIC_PRECONDITION(COND) __attribute__((precondition(#    COND)))
@@ -1121,7 +692,6 @@ typedef mozilla::UniquePtr<char16_t[], JS::FreePolicy> UniqueTwoByteChars;
       JS_END_MACRO
 #  endif /* XGILL_PLUGIN */
 #  define STATIC_SKIP_INFERENCE STATIC_INVARIANT(skip_inference())
->>>>>>> upstream-releases
 #endif /* HAVE_STATIC_ANNOTATIONS */
 
 #endif /* js_Utility_h */

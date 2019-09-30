@@ -2,26 +2,13 @@ from __future__ import absolute_import
 
 import json
 import os
-import sys
 
 import pytest
 
-<<<<<<< HEAD
-# need this so raptor imports work both from /raptor and via mach
-||||||| merged common ancestors
-=======
 from argparse import Namespace
 
 # need this so raptor imports work both from /raptor and via mach
->>>>>>> upstream-releases
 here = os.path.abspath(os.path.dirname(__file__))
-if os.environ.get('SCRIPTSPATH', None) is not None:
-    # in production it is env SCRIPTS_PATH
-    mozharness_dir = os.environ['SCRIPTSPATH']
-else:
-    # locally it's in source tree
-    mozharness_dir = os.path.join(here, '../../mozharness')
-sys.path.insert(0, mozharness_dir)
 
 from raptor.raptor import RaptorDesktopFirefox
 

@@ -147,14 +147,7 @@ UNIFIED_SOURCES += [
     'HashFunctions.cpp',
     'JSONWriter.cpp',
     'Poison.cpp',
-<<<<<<< HEAD
     'RandomNum.cpp',
-    'RecordReplay.cpp',
-||||||| merged common ancestors
-    'RecordReplay.cpp',
-=======
-    'RandomNum.cpp',
->>>>>>> upstream-releases
     'SHA1.cpp',
     'TaggedAnonymousMemory.cpp',
     'Unused.cpp',

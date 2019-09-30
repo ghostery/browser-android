@@ -12,39 +12,6 @@
 use crate::binemit::{
     relax_branches, shrink_instructions, CodeInfo, MemoryCodeSink, RelocSink, TrapSink,
 };
-<<<<<<< HEAD
-use dce::do_dce;
-use dominator_tree::DominatorTree;
-use flowgraph::ControlFlowGraph;
-use ir::Function;
-use isa::TargetIsa;
-use legalize_function;
-use licm::do_licm;
-use loop_analysis::LoopAnalysis;
-use nan_canonicalization::do_nan_canonicalization;
-use postopt::do_postopt;
-use regalloc;
-use result::CodegenResult;
-use settings::{FlagsOrIsa, OptLevel};
-use simple_gvn::do_simple_gvn;
-use simple_preopt::do_preopt;
-||||||| merged common ancestors
-use dce::do_dce;
-use dominator_tree::DominatorTree;
-use flowgraph::ControlFlowGraph;
-use ir::Function;
-use isa::TargetIsa;
-use legalize_function;
-use licm::do_licm;
-use loop_analysis::LoopAnalysis;
-use nan_canonicalization::do_nan_canonicalization;
-use postopt::do_postopt;
-use preopt::do_preopt;
-use regalloc;
-use result::CodegenResult;
-use settings::{FlagsOrIsa, OptLevel};
-use simple_gvn::do_simple_gvn;
-=======
 use crate::dce::do_dce;
 use crate::dominator_tree::DominatorTree;
 use crate::flowgraph::ControlFlowGraph;
@@ -64,7 +31,6 @@ use crate::timing;
 use crate::unreachable_code::eliminate_unreachable_code;
 use crate::value_label::{build_value_labels_ranges, ComparableSourceLoc, ValueLabelsRanges};
 use crate::verifier::{verify_context, verify_locations, VerifierErrors, VerifierResult};
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// Persistent data structures and compilation pipeline.
@@ -137,28 +103,11 @@ impl Context {
     ) -> CodegenResult<CodeInfo> {
         let info = self.compile(isa)?;
         let old_len = mem.len();
-<<<<<<< HEAD
-        mem.resize(old_len + code_size as usize, 0);
-        unsafe { self.emit_to_memory(isa, mem.as_mut_ptr().add(old_len), relocs, traps) };
-        Ok(())
-||||||| merged common ancestors
-        mem.resize(old_len + code_size as usize, 0);
-        unsafe {
-            self.emit_to_memory(
-                isa,
-                mem.as_mut_ptr().offset(old_len as isize),
-                relocs,
-                traps,
-            )
-        };
-        Ok(())
-=======
         mem.resize(old_len + info.total_size as usize, 0);
         let new_info =
             unsafe { self.emit_to_memory(isa, mem.as_mut_ptr().add(old_len), relocs, traps) };
         debug_assert!(new_info == info);
         Ok(info)
->>>>>>> upstream-releases
     }
 
     /// Compile the function.
@@ -335,13 +284,7 @@ impl Context {
     }
 
     /// Perform LICM on the function.
-<<<<<<< HEAD
-    pub fn licm(&mut self, isa: &TargetIsa) -> CodegenResult<()> {
-||||||| merged common ancestors
-    pub fn licm<'a, FOI: Into<FlagsOrIsa<'a>>>(&mut self, fisa: FOI) -> CodegenResult<()> {
-=======
     pub fn licm(&mut self, isa: &dyn TargetIsa) -> CodegenResult<()> {
->>>>>>> upstream-releases
         do_licm(
             isa,
             &mut self.func,
@@ -389,12 +332,6 @@ impl Context {
         let info = relax_branches(&mut self.func, isa)?;
         self.verify_if(isa)?;
         self.verify_locations_if(isa)?;
-<<<<<<< HEAD
-        Ok(code_size)
-||||||| merged common ancestors
-
-        Ok(code_size)
-=======
         Ok(info)
     }
 
@@ -408,6 +345,5 @@ impl Context {
             &self.regalloc,
             isa,
         ))
->>>>>>> upstream-releases
     }
 }

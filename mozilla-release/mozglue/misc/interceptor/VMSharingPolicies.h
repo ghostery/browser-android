@@ -15,25 +15,6 @@
 namespace mozilla {
 namespace interceptor {
 
-<<<<<<< HEAD
-template <typename MMPolicy, uint32_t kChunkSize>
-class VMSharingPolicyUnique : public MMPolicy {
- public:
-  template <typename... Args>
-  explicit VMSharingPolicyUnique(Args... aArgs)
-      : MMPolicy(std::forward<Args>(aArgs)...), mNextChunkIndex(0) {}
-||||||| merged common ancestors
-template <typename MMPolicy, uint32_t kChunkSize>
-class VMSharingPolicyUnique : public MMPolicy
-{
-public:
-  template <typename... Args>
-  explicit VMSharingPolicyUnique(Args... aArgs)
-    : MMPolicy(std::forward<Args>(aArgs)...)
-    , mNextChunkIndex(0)
-  {
-  }
-=======
 /**
  * This class is an abstraction of a reservation of virtual address space that
  * has been obtained from a VMSharingPolicy via the policy's |Reserve| method.
@@ -66,59 +47,18 @@ class MOZ_STACK_CLASS TrampolinePool final {
   Maybe<Trampoline<MMPolicyT>> GetNextTrampoline() {
     return mVMPolicy.GetNextTrampoline(mInner);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool Reserve(uint32_t aCount, const ReservationFlags aFlags) {
-    MOZ_ASSERT(aCount);
-    uint32_t bytesReserved = MMPolicy::Reserve(aCount * kChunkSize, aFlags);
-    return !!bytesReserved;
-||||||| merged common ancestors
-  bool Reserve(uint32_t aCount)
-  {
-    MOZ_ASSERT(aCount);
-    uint32_t bytesReserved = MMPolicy::Reserve(aCount * kChunkSize);
-    return !!bytesReserved;
-=======
 #if defined(_M_X64)
   bool IsInLowest2GB() const {
     return mVMPolicy.IsTrampolineSpaceInLowest2GB(mInner);
->>>>>>> upstream-releases
   }
 #endif  // defined(_M_X64)
 
-<<<<<<< HEAD
-  Trampoline<MMPolicy> GetNextTrampoline() {
-    uint32_t offset = mNextChunkIndex * kChunkSize;
-    if (!this->MaybeCommitNextPage(offset, kChunkSize)) {
-      return nullptr;
-    }
-||||||| merged common ancestors
-  Trampoline<MMPolicy> GetNextTrampoline()
-  {
-    uint32_t offset = mNextChunkIndex * kChunkSize;
-    if (!this->MaybeCommitNextPage(offset, kChunkSize)) {
-      return nullptr;
-    }
-=======
  private:
   VMPolicyT& mVMPolicy;
   InnerT mInner;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    Trampoline<MMPolicy> result(this, this->GetLocalView() + offset,
-                                this->GetRemoteView() + offset, kChunkSize);
-    if (!!result) {
-      ++mNextChunkIndex;
-||||||| merged common ancestors
-
-    Trampoline<MMPolicy> result(this, this->GetLocalView() + offset,
-                                this->GetRemoteView() + offset, kChunkSize);
-    if (!!result) {
-      ++mNextChunkIndex;
-=======
 /**
  * This specialization is the base case for TrampolinePool, and is used by
  * VMSharingPolicyUnique (since that policy does not delegate anything).
@@ -178,7 +118,6 @@ class VMSharingPolicyUnique : public MMPolicy {
     uint32_t bytesReserved = MMPolicy::Reserve(aSize, aBounds);
     if (!bytesReserved) {
       return Nothing();
->>>>>>> upstream-releases
     }
 
     return Some(PoolType(*this));
@@ -209,33 +148,6 @@ class VMSharingPolicyUnique : public MMPolicy {
     return *this;
   }
 
-<<<<<<< HEAD
- private:
-  uint32_t mNextChunkIndex;
-};
-
-template <typename MMPolicy, uint32_t kChunkSize>
-class VMSharingPolicyShared;
-
-// We only support this policy for in-proc MMPolicy
-template <uint32_t kChunkSize>
-class VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>
-    : public MMPolicyBase {
-  typedef VMSharingPolicyUnique<MMPolicyInProcess, kChunkSize> UniquePolicyT;
-||||||| merged common ancestors
-private:
-  uint32_t  mNextChunkIndex;
-};
-
-template <typename MMPolicy, uint32_t kChunkSize>
-class VMSharingPolicyShared;
-
-// We only support this policy for in-proc MMPolicy
-template <uint32_t kChunkSize>
-class VMSharingPolicyShared<MMPolicyInProcess, kChunkSize> : public MMPolicyBase
-{
-  typedef VMSharingPolicyUnique<MMPolicyInProcess, kChunkSize> UniquePolicyT;
-=======
  protected:
   // In VMSharingPolicyUnique we do not implement the overload that accepts
   // an inner trampoline pool, as this policy is expected to be the
@@ -245,152 +157,34 @@ class VMSharingPolicyShared<MMPolicyInProcess, kChunkSize> : public MMPolicyBase
     if (!this->MaybeCommitNextPage(offset, kChunkSize)) {
       return Nothing();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  typedef MMPolicyInProcess MMPolicyT;
-||||||| merged common ancestors
-public:
-  typedef MMPolicyInProcess MMPolicyT;
-=======
     Trampoline<MMPolicy> result(this, this->GetLocalView() + offset,
                                 this->GetRemoteView() + offset, kChunkSize);
     if (!!result) {
       ++mNextChunkIndex;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  VMSharingPolicyShared() {
-    static const bool isAlloc = []() -> bool {
-      DWORD flags = 0;
-#if defined(RELEASE_OR_BETA)
-      flags |= CRITICAL_SECTION_NO_DEBUG_INFO;
-#endif  // defined(RELEASE_OR_BETA)
-      ::InitializeCriticalSectionEx(&sCS, 4000, flags);
-      return true;
-    }();
-    Unused << isAlloc;
-||||||| merged common ancestors
-  VMSharingPolicyShared()
-  {
-    static const bool isAlloc = []() -> bool {
-      DWORD flags = 0;
-#if defined(RELEASE_OR_BETA)
-      flags |= CRITICAL_SECTION_NO_DEBUG_INFO;
-#endif // defined(RELEASE_OR_BETA)
-      ::InitializeCriticalSectionEx(&sCS, 4000, flags);
-      return true;
-    }();
-    Unused << isAlloc;
-=======
     return Some(std::move(result));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  explicit operator bool() const {
-    AutoCriticalSection lock(&sCS);
-    return !!sUniqueVM;
-  }
-||||||| merged common ancestors
-  explicit operator bool() const
-  {
-    AutoCriticalSection lock(&sCS);
-    return !!sUniqueVM;
-  }
-=======
  private:
   uint32_t mNextChunkIndex;
   static const uint32_t kChunkSize = 128;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  operator const MMPolicyInProcess&() const {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM;
-  }
-||||||| merged common ancestors
-  operator const MMPolicyInProcess&() const
-  {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM;
-  }
-=======
   template <typename VMPolicyT, typename FriendT>
   friend class TrampolinePool;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool ShouldUnhookUponDestruction() const {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.ShouldUnhookUponDestruction();
-  }
-||||||| merged common ancestors
-  bool ShouldUnhookUponDestruction() const
-  {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.ShouldUnhookUponDestruction();
-  }
-=======
 }  // namespace interceptor
 }  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool Reserve(uint32_t aCount, const ReservationFlags aFlags) {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.Reserve(aCount, aFlags);
-  }
-||||||| merged common ancestors
-  bool Reserve(uint32_t aCount)
-  {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.Reserve(aCount);
-  }
-=======
 // We don't include RangeMap.h until this point because it depends on the
 // TrampolinePool definitions from above.
 #include "mozilla/interceptor/RangeMap.h"
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool IsPageAccessible(void* aVAddress) const {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.IsPageAccessible(aVAddress);
-  }
-||||||| merged common ancestors
-  bool IsPageAccessible(void* aVAddress) const
-  {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.IsPageAccessible(aVAddress);
-  }
-=======
 namespace mozilla {
 namespace interceptor {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if defined(_M_X64)
-  bool IsTrampolineSpaceInLowest2GB() const {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.IsTrampolineSpaceInLowest2GB();
-  }
-#endif  // defined(_M_X64)
-
-  Trampoline<MMPolicyInProcess> GetNextTrampoline() {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.GetNextTrampoline();
-  }
-||||||| merged common ancestors
-  Trampoline<MMPolicyInProcess> GetNextTrampoline()
-  {
-    AutoCriticalSection lock(&sCS);
-    return sUniqueVM.GetNextTrampoline();
-  }
-=======
 template <typename MMPolicy, bool Dummy>
 class VMSharingPolicyShared;
 
@@ -428,24 +222,12 @@ class MOZ_TRIVIAL_CTOR_DTOR VMSharingPolicyShared<MMPolicyInProcess, Dummy>
     if (!uniquePol) {
       return Nothing();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TrampolineCollection<MMPolicyInProcess> Items() const {
-    AutoCriticalSection lock(&sCS);
-    TrampolineCollection<MMPolicyInProcess> items(std::move(sUniqueVM.Items()));
-||||||| merged common ancestors
-  TrampolineCollection<MMPolicyInProcess> Items() const
-  {
-    AutoCriticalSection lock(&sCS);
-    TrampolineCollection<MMPolicyInProcess> items(std::move(sUniqueVM.Items()));
-=======
     Maybe<UniquePolicyT::PoolType> maybeUnique =
         uniquePol->Reserve(len, maybeBounds);
     if (!maybeUnique) {
       return Nothing();
     }
->>>>>>> upstream-releases
 
     return Some(PoolType(*this, std::move(maybeUnique.ref())));
   }
@@ -465,13 +247,6 @@ class MOZ_TRIVIAL_CTOR_DTOR VMSharingPolicyShared<MMPolicyInProcess, Dummy>
   VMSharingPolicyShared& operator=(const VMSharingPolicyShared&) = delete;
   VMSharingPolicyShared& operator=(VMSharingPolicyShared&&) = delete;
 
-<<<<<<< HEAD
- private:
-  static UniquePolicyT sUniqueVM;
-||||||| merged common ancestors
-private:
-  static UniquePolicyT sUniqueVM;
-=======
  private:
   static CRITICAL_SECTION* GetCS() {
     static const bool isAlloc = []() -> bool {
@@ -509,44 +284,17 @@ private:
   friend class TrampolinePool;
 
   static RangeMap<MMPolicyInProcess> sVMMap;
->>>>>>> upstream-releases
   static CRITICAL_SECTION sCS;
 };
 
-<<<<<<< HEAD
-template <uint32_t kChunkSize>
-typename VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>::UniquePolicyT
-    VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>::sUniqueVM;
-
-template <uint32_t kChunkSize>
-CRITICAL_SECTION VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>::sCS;
-||||||| merged common ancestors
-template <uint32_t kChunkSize>
-typename VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>::UniquePolicyT
-  VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>::sUniqueVM;
-
-template <uint32_t kChunkSize>
-CRITICAL_SECTION VMSharingPolicyShared<MMPolicyInProcess, kChunkSize>::sCS;
-=======
 template <bool Dummy>
 RangeMap<MMPolicyInProcess>
     VMSharingPolicyShared<MMPolicyInProcess, Dummy>::sVMMap;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-}  // namespace interceptor
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace interceptor
-} // namespace mozilla
-
-#endif // mozilla_interceptor_VMSharingPolicies_h
-=======
 template <bool Dummy>
 CRITICAL_SECTION VMSharingPolicyShared<MMPolicyInProcess, Dummy>::sCS;
 
 }  // namespace interceptor
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_interceptor_VMSharingPolicies_h

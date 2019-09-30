@@ -107,113 +107,23 @@ class MessageIterator {
 // exactly the above idea.
 //
 
-<<<<<<< HEAD
-template <class P>
-struct ParamTraits;
-
-// When WriteParam or ReadParam is passed a pointer type like RefPtr<T> or T*,
-// we want to invoke Write() on ParamTraits<T>, as the intype is often T*, while
-// the ReadParam type may be RefPtr<T>.
-namespace detail {
-template <typename T>
-struct StripPointers {
-  typedef T Type;
-};
-template <typename T>
-struct StripPointers<T*> {
-  typedef T Type;
-};
-template <typename T>
-struct StripPointers<RefPtr<T>> {
-  typedef T Type;
-};
-template <typename T>
-struct StripPointers<nsCOMPtr<T>> {
-  typedef T Type;
-};
-}  // namespace detail
-
-// NOTE: This helper is also used in IPDLParamTraits.h
-template <typename T>
-struct ParamTraitsSelector
-    : public detail::StripPointers<typename mozilla::Decay<T>::Type> {};
-
-template <typename P>
-static inline void WriteParam(Message* m, P&& p) {
-  ParamTraits<typename ParamTraitsSelector<P>::Type>::Write(m,
-                                                            std::forward<P>(p));
-||||||| merged common ancestors
-template <class P> struct ParamTraits;
-
-// When WriteParam or ReadParam is passed a pointer type like RefPtr<T> or T*,
-// we want to invoke Write() on ParamTraits<T>, as the intype is often T*, while
-// the ReadParam type may be RefPtr<T>.
-namespace detail {
-template<typename T>
-struct StripPointers{ typedef T Type; };
-template<typename T>
-struct StripPointers<T*> { typedef T Type; };
-template<typename T>
-struct StripPointers<RefPtr<T>> { typedef T Type; };
-template<typename T>
-struct StripPointers<nsCOMPtr<T>> { typedef T Type; };
-} // namespace detail
-
-// NOTE: This helper is also used in IPDLParamTraits.h
-template<typename T>
-struct ParamTraitsSelector
-  : public detail::StripPointers<typename mozilla::Decay<T>::Type>
-{};
-
-template<typename P>
-static inline void
-WriteParam(Message* m, P&& p) {
-  ParamTraits<typename ParamTraitsSelector<P>::Type>
-    ::Write(m, std::forward<P>(p));
-=======
 template <class P>
 struct ParamTraits;
 
 template <typename P>
 static inline void WriteParam(Message* m, P&& p) {
   ParamTraits<typename mozilla::Decay<P>::Type>::Write(m, std::forward<P>(p));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename P>
-static inline bool WARN_UNUSED_RESULT ReadParam(const Message* m,
-                                                PickleIterator* iter, P* p) {
-  return ParamTraits<typename ParamTraitsSelector<P>::Type>::Read(m, iter, p);
-||||||| merged common ancestors
-template<typename P>
-static inline bool WARN_UNUSED_RESULT
-ReadParam(const Message* m, PickleIterator* iter,
-          P* p)
-{
-  return ParamTraits<typename ParamTraitsSelector<P>::Type>::Read(m, iter, p);
-=======
 template <typename P>
 static inline bool WARN_UNUSED_RESULT ReadParam(const Message* m,
                                                 PickleIterator* iter, P* p) {
   return ParamTraits<P>::Read(m, iter, p);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename P>
-static inline void LogParam(const P& p, std::wstring* l) {
-  ParamTraits<typename ParamTraitsSelector<P>::Type>::Log(p, l);
-||||||| merged common ancestors
-template<typename P>
-static inline void
-LogParam(const P& p, std::wstring* l) {
-  ParamTraits<typename ParamTraitsSelector<P>::Type>::Log(p, l);
-=======
 template <typename P>
 static inline void LogParam(const P& p, std::wstring* l) {
   ParamTraits<P>::Log(p, l);
->>>>>>> upstream-releases
 }
 
 // Fundamental types.
@@ -376,46 +286,6 @@ struct ParamTraitsFixed<uint64_t> {
   }
 };
 
-<<<<<<< HEAD
-// Other standard C types.
-
-template <class P>
-struct ParamTraitsLibC : ParamTraitsFixed<P> {};
-
-template <>
-struct ParamTraitsLibC<size_t> {
-  typedef size_t param_type;
-  static void Write(Message* m, const param_type& p) { m->WriteSize(p); }
-  static bool Read(const Message* m, PickleIterator* iter, param_type* r) {
-    return m->ReadSize(iter, r);
-  }
-  static void Log(const param_type& p, std::wstring* l) {
-    l->append(StringPrintf(L"%u", p));
-  }
-};
-
-||||||| merged common ancestors
-// Other standard C types.
-
-template <class P>
-struct ParamTraitsLibC : ParamTraitsFixed<P> {};
-
-template <>
-struct ParamTraitsLibC<size_t> {
-  typedef size_t param_type;
-  static void Write(Message* m, const param_type& p) {
-    m->WriteSize(p);
-  }
-  static bool Read(const Message* m, PickleIterator* iter, param_type* r) {
-    return m->ReadSize(iter, r);
-  }
-  static void Log(const param_type& p, std::wstring* l) {
-    l->append(StringPrintf(L"%u", p));
-  }
-};
-
-=======
->>>>>>> upstream-releases
 // std::* types.
 
 template <class P>
@@ -476,14 +346,6 @@ template <class P>
 struct ParamTraitsWindows : ParamTraitsStd<P> {};
 
 #if defined(OS_WIN)
-<<<<<<< HEAD
-// NOTE: HANDLE is a pointer, which we need to strip off, otherwise we won't
-// find this specialization.
-||||||| merged common ancestors
-// NOTE: HANDLE is a pointer, which we need to strip off, otherwise we won't find
-// this specialization.
-=======
->>>>>>> upstream-releases
 template <>
 struct ParamTraitsWindows<HANDLE> {
   static_assert(sizeof(HANDLE) == sizeof(intptr_t), "Wrong size for HANDLE?");

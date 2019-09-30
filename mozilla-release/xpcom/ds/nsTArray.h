@@ -48,18 +48,10 @@ class nsRegion;
 namespace mozilla {
 namespace layers {
 struct TileClient;
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 struct RenderRootDisplayListData;
 struct RenderRootUpdates;
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 namespace mozilla {
 struct SerializedStructuredCloneBuffer;
@@ -780,18 +772,9 @@ struct IsCompareMethod<T, U,
 template <typename T, typename U, bool IsCompare = IsCompareMethod<T, U>::value>
 struct CompareWrapper {
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(push)
-#pragma warning(disable : 4180) /* Silence "qualifier applied to function type \
-                                   has no meaning" warning */
-||||||| merged common ancestors
-#pragma warning(push)
-#pragma warning(disable:4180) /* Silence "qualifier applied to function type has no meaning" warning */
-=======
 #  pragma warning(push)
 #  pragma warning(disable : 4180) /* Silence "qualifier applied to function \
                                      type has no meaning" warning */
->>>>>>> upstream-releases
 #endif
   MOZ_IMPLICIT CompareWrapper(const T& aComparator)
       : mComparator(aComparator) {}
@@ -1146,24 +1129,10 @@ class nsTArray_Impl
   // @param aItem  The item to search for.
   // @param aComp  The Comparator used to determine element equality.
   // @return       true if the element was found.
-<<<<<<< HEAD
-  template <class Item, class Comparator>
-  bool Contains(const Item& aItem, const Comparator& aComp) const {
-    return ApplyIf(aItem, 0, aComp, []() { return true; },
-                   []() { return false; });
-||||||| merged common ancestors
-  template<class Item, class Comparator>
-  bool Contains(const Item& aItem, const Comparator& aComp) const
-  {
-    return ApplyIf(aItem, 0, aComp,
-                   []() { return true; },
-                   []() { return false; });
-=======
   template <class Item, class Comparator>
   bool Contains(const Item& aItem, const Comparator& aComp) const {
     return ApplyIf(
         aItem, 0, aComp, []() { return true; }, []() { return false; });
->>>>>>> upstream-releases
   }
 
   // Like Contains(), but assumes a sorted array.
@@ -1269,31 +1238,6 @@ class nsTArray_Impl
 
     size_t index;
     bool found = BinarySearchIf(
-<<<<<<< HEAD
-        *this, 0, Length(),
-        // Note: We pass the Compare() args here in reverse order and negate the
-        // results for compatibility reasons. Some existing callers use Equals()
-        // functions with first arguments which match aElement but not aItem, or
-        // second arguments that match aItem but not aElement. To accommodate
-        // those callers, we preserve the argument order of the older version of
-        // this API. These callers, however, should be fixed, and this special
-        // case removed.
-        [&](const elem_type& aElement) {
-          return -comp.Compare(aElement, aItem);
-        },
-        &index);
-||||||| merged common ancestors
-      *this, 0, Length(),
-      // Note: We pass the Compare() args here in reverse order and negate the
-      // results for compatibility reasons. Some existing callers use Equals()
-      // functions with first arguments which match aElement but not aItem, or
-      // second arguments that match aItem but not aElement. To accommodate
-      // those callers, we preserve the argument order of the older version of
-      // this API. These callers, however, should be fixed, and this special
-      // case removed.
-      [&] (const elem_type& aElement) { return -comp.Compare(aElement, aItem); },
-      &index);
-=======
         Elements(), 0, Length(),
         // Note: We pass the Compare() args here in reverse order and negate the
         // results for compatibility reasons. Some existing callers use Equals()
@@ -1306,7 +1250,6 @@ class nsTArray_Impl
           return -comp.Compare(aElement, aItem);
         },
         &index);
->>>>>>> upstream-releases
     return found ? index : NoIndex;
   }
 
@@ -1570,24 +1513,12 @@ class nsTArray_Impl
     ::detail::CompareWrapper<Comparator, Item> comp(aComp);
 
     size_t index;
-<<<<<<< HEAD
-    BinarySearchIf(*this, 0, Length(),
-                   [&](const elem_type& aElement) {
-                     return comp.Compare(aElement, aItem) <= 0 ? 1 : -1;
-                   },
-                   &index);
-||||||| merged common ancestors
-    BinarySearchIf(*this, 0, Length(),
-                   [&] (const elem_type& aElement) { return comp.Compare(aElement, aItem) <= 0 ? 1 : -1; },
-                   &index);
-=======
     BinarySearchIf(
         Elements(), 0, Length(),
         [&](const elem_type& aElement) {
           return comp.Compare(aElement, aItem) <= 0 ? 1 : -1;
         },
         &index);
->>>>>>> upstream-releases
     return index;
   }
 
@@ -2717,11 +2648,6 @@ Span<const ElementType> MakeSpan(
   return aTArray;
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace mozilla
 
 // MOZ_DBG support
@@ -2731,7 +2657,6 @@ std::ostream& operator<<(std::ostream& aOut,
                          const nsTArray_Impl<E, Alloc>& aTArray) {
   return aOut << mozilla::MakeSpan(aTArray);
 }
->>>>>>> upstream-releases
 
 // Assert that AutoTArray doesn't have any extra padding inside.
 //

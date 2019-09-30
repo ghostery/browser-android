@@ -395,13 +395,8 @@ UNIFIED_SOURCES += [
     'SelectionChangeEventDispatcher.cpp',
     'SerializedStackHolder.cpp',
     'ShadowRoot.cpp',
-<<<<<<< HEAD
-    'StorageAccessPermissionRequest.cpp',
-||||||| merged common ancestors
-=======
     'StaticRange.cpp',
     'StorageAccessPermissionRequest.cpp',
->>>>>>> upstream-releases
     'StructuredCloneBlob.cpp',
     'StructuredCloneHolder.cpp',
     'StructuredCloneTester.cpp',

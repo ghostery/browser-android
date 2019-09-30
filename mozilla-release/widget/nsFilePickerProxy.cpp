@@ -23,20 +23,9 @@ nsFilePickerProxy::~nsFilePickerProxy() {}
 
 NS_IMETHODIMP
 nsFilePickerProxy::Init(mozIDOMWindowProxy* aParent, const nsAString& aTitle,
-<<<<<<< HEAD
-                        int16_t aMode) {
-  TabChild* tabChild = TabChild::GetFrom(aParent);
-  if (!tabChild) {
-||||||| merged common ancestors
-                        int16_t aMode)
-{
-  TabChild* tabChild = TabChild::GetFrom(aParent);
-  if (!tabChild) {
-=======
                         int16_t aMode) {
   BrowserChild* browserChild = BrowserChild::GetFrom(aParent);
   if (!browserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 

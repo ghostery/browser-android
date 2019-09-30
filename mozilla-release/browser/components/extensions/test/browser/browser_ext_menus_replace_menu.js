@@ -30,15 +30,8 @@ function checkIsDefaultMenuItemVisible(visibleMenuItemIds) {
 // - overrideContext can be called from shadow DOM.
 add_task(async function overrideContext_in_extension_tab() {
   await SpecialPowers.pushPrefEnv({
-<<<<<<< HEAD
-    set: [["security.allow_eval_with_system_principal", true]]});
-||||||| merged common ancestors
-    set: [["dom.webcomponents.shadowdom.enabled", true],
-          ["security.allow_eval_with_system_principal", true]]});
-=======
     set: [["security.allow_eval_with_system_principal", true]],
   });
->>>>>>> upstream-releases
 
   function extensionTabScript() {
     document.addEventListener(

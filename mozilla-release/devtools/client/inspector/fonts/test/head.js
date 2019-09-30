@@ -236,17 +236,9 @@ function getPropertyValue(viewDoc, name) {
       viewDoc.querySelector(selector) &&
       parseFloat(viewDoc.querySelector(selector).value),
     // Ensure unit dropdown exists before querying its value
-<<<<<<< HEAD
-    unit: viewDoc.querySelector(selector + ` ~ .font-value-select`) &&
-          viewDoc.querySelector(selector + ` ~ .font-value-select`).value,
-||||||| merged common ancestors
-    unit: viewDoc.querySelector(selector + ` ~ .font-value-select`) &&
-          viewDoc.querySelector(selector + ` ~ .font-value-select`).value
-=======
     unit:
       viewDoc.querySelector(selector + ` ~ .font-value-select`) &&
       viewDoc.querySelector(selector + ` ~ .font-value-select`).value,
->>>>>>> upstream-releases
   };
 }
 

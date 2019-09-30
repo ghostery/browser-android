@@ -17,18 +17,9 @@ class nsFirstLetterFrame final : public nsContainerFrame {
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsFirstLetterFrame)
 
-<<<<<<< HEAD
-  explicit nsFirstLetterFrame(ComputedStyle* aStyle)
-      : nsContainerFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-  explicit nsFirstLetterFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID)
-  {}
-=======
   explicit nsFirstLetterFrame(ComputedStyle* aStyle,
                               nsPresContext* aPresContext)
       : nsContainerFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                 const nsDisplayListSet& aLists) override;

@@ -18,23 +18,6 @@ match_data = [
     ("/*.c", True, ["a.c", ".c"]),
     ("**/b", False, ["a/b", "a/c/b"]),
     ("*b", True, ["ab"]),
-<<<<<<< HEAD
-    ("*b", True, ["a/b"]),
-    ("**/b", False, ["a/b"]),
-    ("a/", True, ["a"]),
-    ("a[/]b", True, []),
-    ("**/b", False, ["a/c/b"]),
-    ("a?c", True, ["abc"]),
-    ("a[^b]c", True, ["acc"]),
-    ("a[b-c]c", True, ["abc", "acc"]),
-    ("a[^]c", True, ["ac"]),  # This is probably wrong
-    ("a[^]c", True, ["ac"]),  # This is probably wrong
-]
-||||||| merged common ancestors
-    ("**/b", True, ["a/b"]),
-    ("a/", True, ["a", "a/b", "a/b/c"])
-]
-=======
     ("*b", True, ["a/b"]),
     ("**/b", False, ["a/b"]),
     ("a/", True, ["a"]),
@@ -46,30 +29,8 @@ match_data = [
     ("a[^]c", True, ["ac"]),  # This is probably wrong
     ("a[^]c", True, ["ac"]),  # This is probably wrong
 ]  # type: Sequence[Tuple[str, bool, Iterable[str]]]
->>>>>>> upstream-releases
 
 mismatch_data = [
-<<<<<<< HEAD
-    ("foo", True, ["foob", "afoo"]),
-    ("*.a", True, ["a", "foo:a", "a.a/foo"]),
-    ("*.py[co]", True, ["a.pyd", "pyo", "a.py"]),
-    ("a", True, ["ab"]),
-    ("a?c", True, ["ac", "abbc"]),
-    ("a[^b]c", True, ["abc"]),
-    ("a[b-c]c", True, ["adc"]),
-]
-||||||| merged common ancestors
-    ("foo", False, ["foob", "afoo"]),
-    ("*.a", False, ["a", "foo:a", "a.a/foo"]),
-    ("*.py[co]", False, ["a.pyd", "pyo"]),
-    ("/*.c", False, ["a/b.c"]),
-    ("*b", True, ["a/b"]),
-    ("**b", True, ["a/b"]),
-    ("a[/]b", True, ["a/b"]),
-    ("**/b", True, ["a/c/b"]),
-    ("a", True, ["ab"])
-]
-=======
     ("foo", True, ["foob", "afoo"]),
     ("*.a", True, ["a", "foo:a", "a.a/foo"]),
     ("*.py[co]", True, ["a.pyd", "pyo", "a.py"]),
@@ -78,7 +39,6 @@ mismatch_data = [
     ("a[^b]c", True, ["abc"]),
     ("a[b-c]c", True, ["adc"]),
 ]  # type: Sequence[Tuple[str, bool, Iterable[str]]]
->>>>>>> upstream-releases
 
 invalid_data = [
     "[a",
@@ -90,23 +50,6 @@ invalid_data = [
 ]
 
 filter_data = [
-<<<<<<< HEAD
-    (["foo", "bar/", "/a", "*.py"],
-     [("", ["foo", "bar", "baz"], ["a"]),
-      ("baz", ["a"], ["foo", "bar"])],
-     [(["baz"], []),
-      (["a"], ["bar"])]),
-    (["#foo", "", "a*", "!a.py"],
-     [("", ["foo"], ["a", "a.foo", "a.py"])],
-     [(["foo"], ["a.py"])]),
-||||||| merged common ancestors
-    ("foo", True),
-    ("a", False),
-    ("a/b", False),
-    ("a/c", True),
-    ("a/c/", False),
-    ("c/b", True)
-=======
     (["foo", "bar/", "/a", "*.py"],
      [("", ["foo", "bar", "baz"], ["a"]),
       ("baz", ["a"], ["foo", "bar"])],
@@ -118,19 +61,12 @@ filter_data = [
     (["a.foo", "!a.py"],
      [("", ["foo"], ["a", "a.foo", "a.py"])],
      [(["foo"], ["a", "a.py"])]),
->>>>>>> upstream-releases
 ]
 
 
 def expand_data(compact_data):
-<<<<<<< HEAD
-    for pattern, name_only, inputs in compact_data:
-||||||| merged common ancestors
-    for pattern, path_name, inputs in compact_data:
-=======
     # type: (Sequence[Tuple[str, bool, Iterable[str]]]) -> Iterable[Tuple[str, bool, str]]
     for pattern, name_only, inputs in compact_data:
->>>>>>> upstream-releases
         for input in inputs:
             yield pattern, name_only, input
 

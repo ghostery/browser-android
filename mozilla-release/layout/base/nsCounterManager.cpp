@@ -51,19 +51,8 @@ bool nsCounterUseNode::InitBullet(nsGenConList* aList, nsIFrame* aBullet) {
 
 // assign the correct |mValueAfter| value to a node that has been inserted
 // Should be called immediately after calling |Insert|.
-<<<<<<< HEAD
-void nsCounterUseNode::Calc(nsCounterList* aList) {
-  NS_ASSERTION(!aList->IsDirty(), "Why are we calculating with a dirty list?");
-||||||| merged common ancestors
-void
-nsCounterUseNode::Calc(nsCounterList* aList)
-{
-  NS_ASSERTION(!aList->IsDirty(),
-               "Why are we calculating with a dirty list?");
-=======
 void nsCounterUseNode::Calc(nsCounterList* aList, bool aNotify) {
   NS_ASSERTION(!aList->IsDirty(), "Why are we calculating with a dirty list?");
->>>>>>> upstream-releases
   mValueAfter = nsCounterList::ValueBefore(this);
   if (mText) {
     nsAutoString contentString;
@@ -105,18 +94,10 @@ void nsCounterUseNode::GetText(nsString& aResult) {
     }
   }
 
-<<<<<<< HEAD
-  WritingMode wm =
-      mPseudoFrame ? mPseudoFrame->GetWritingMode() : WritingMode();
-||||||| merged common ancestors
-  WritingMode wm = mPseudoFrame ?
-    mPseudoFrame->GetWritingMode() : WritingMode();
-=======
   WritingMode wm = mPseudoFrame->GetWritingMode();
   CounterStyle* style =
       mPseudoFrame->PresContext()->CounterStyleManager()->ResolveCounterStyle(
           mCounterStyle);
->>>>>>> upstream-releases
   for (uint32_t i = stack.Length() - 1;; --i) {
     nsCounterNode* n = stack[i];
     nsAutoString text;
@@ -213,13 +194,6 @@ static bool HasCounters(const nsStyleContent& aStyle) {
          aStyle.CounterSetCount();
 }
 
-<<<<<<< HEAD
-bool nsCounterManager::AddCounterResetsAndIncrements(nsIFrame* aFrame) {
-||||||| merged common ancestors
-bool
-nsCounterManager::AddCounterResetsAndIncrements(nsIFrame* aFrame)
-{
-=======
 bool nsCounterManager::AddCounterChanges(nsIFrame* aFrame) {
   // For elements with 'display:list-item' we add a default
   // 'counter-increment:list-item' unless 'counter-increment' already has a
@@ -233,7 +207,6 @@ bool nsCounterManager::AddCounterChanges(nsIFrame* aFrame) {
       aFrame->StyleDisplay()->mDisplay == StyleDisplay::ListItem &&
       !aFrame->Style()->IsAnonBox();
 
->>>>>>> upstream-releases
   const nsStyleContent* styleContent = aFrame->StyleContent();
 
   if (!requiresListItemIncrement && !HasCounters(*styleContent)) {
@@ -273,21 +246,9 @@ bool nsCounterManager::AddCounterChanges(nsIFrame* aFrame) {
   return dirty;
 }
 
-<<<<<<< HEAD
-bool nsCounterManager::AddResetOrIncrement(
-    nsIFrame* aFrame, int32_t aIndex, const nsStyleCounterData& aCounterData,
-    nsCounterNode::Type aType) {
-||||||| merged common ancestors
-bool
-nsCounterManager::AddResetOrIncrement(nsIFrame* aFrame, int32_t aIndex,
-                                      const nsStyleCounterData& aCounterData,
-                                      nsCounterNode::Type aType)
-{
-=======
 bool nsCounterManager::AddCounterChangeNode(
     nsIFrame* aFrame, int32_t aIndex, const nsStyleCounterData& aCounterData,
     nsCounterNode::Type aType) {
->>>>>>> upstream-releases
   nsCounterChangeNode* node =
       new nsCounterChangeNode(aFrame, aType, aCounterData.mValue, aIndex);
 
@@ -308,16 +269,8 @@ bool nsCounterManager::AddCounterChangeNode(
   return false;
 }
 
-<<<<<<< HEAD
-nsCounterList* nsCounterManager::CounterListFor(const nsAString& aCounterName) {
-||||||| merged common ancestors
-nsCounterList*
-nsCounterManager::CounterListFor(const nsAString& aCounterName)
-{
-=======
 nsCounterList* nsCounterManager::CounterListFor(nsAtom* aCounterName) {
   MOZ_ASSERT(aCounterName);
->>>>>>> upstream-releases
   return mNames.LookupForAdd(aCounterName).OrInsert([]() {
     return new nsCounterList();
   });
@@ -356,35 +309,11 @@ bool nsCounterManager::DestroyNodesFor(nsIFrame* aFrame) {
 void nsCounterManager::Dump() {
   printf("\n\nCounter Manager Lists:\n");
   for (auto iter = mNames.Iter(); !iter.Done(); iter.Next()) {
-<<<<<<< HEAD
-    printf("Counter named \"%s\":\n", NS_ConvertUTF16toUTF8(iter.Key()).get());
-||||||| merged common ancestors
-    printf("Counter named \"%s\":\n",
-           NS_ConvertUTF16toUTF8(iter.Key()).get());
-=======
     printf("Counter named \"%s\":\n", nsAtomCString(iter.Key()).get());
->>>>>>> upstream-releases
 
     nsCounterList* list = iter.UserData();
     int32_t i = 0;
     for (nsCounterNode* node = list->First(); node; node = list->Next(node)) {
-<<<<<<< HEAD
-      const char* types[] = {"RESET", "INCREMENT", "USE"};
-      printf(
-          "  Node #%d @%p frame=%p index=%d type=%s valAfter=%d\n"
-          "       scope-start=%p scope-prev=%p",
-          i++, (void*)node, (void*)node->mPseudoFrame, node->mContentIndex,
-          types[node->mType], node->mValueAfter, (void*)node->mScopeStart,
-          (void*)node->mScopePrev);
-||||||| merged common ancestors
-      const char* types[] = { "RESET", "INCREMENT", "USE" };
-      printf("  Node #%d @%p frame=%p index=%d type=%s valAfter=%d\n"
-             "       scope-start=%p scope-prev=%p",
-             i++, (void*)node, (void*)node->mPseudoFrame,
-             node->mContentIndex, types[node->mType],
-             node->mValueAfter, (void*)node->mScopeStart,
-             (void*)node->mScopePrev);
-=======
       const char* types[] = {"RESET", "SET", "INCREMENT", "USE"};
       printf(
           "  Node #%d @%p frame=%p index=%d type=%s valAfter=%d\n"
@@ -392,7 +321,6 @@ void nsCounterManager::Dump() {
           i++, (void*)node, (void*)node->mPseudoFrame, node->mContentIndex,
           types[node->mType], node->mValueAfter, (void*)node->mScopeStart,
           (void*)node->mScopePrev);
->>>>>>> upstream-releases
       if (node->mType == nsCounterNode::USE) {
         nsAutoString text;
         node->UseNode()->GetText(text);

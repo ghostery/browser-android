@@ -61,7 +61,7 @@ class NrIceResolverFake {
   NrIceResolverFake();
   ~NrIceResolverFake();
 
-  void SetAddr(const std::string &hostname, const PRNetAddr &addr) {
+  void SetAddr(const std::string& hostname, const PRNetAddr& addr) {
     switch (addr.raw.family) {
       case AF_INET:
         addrs_[hostname] = addr;
@@ -80,40 +80,15 @@ class NrIceResolverFake {
 
  private:
   // Implementations of vtbl functions
-<<<<<<< HEAD
-  static int destroy(void **objp);
-  static int resolve(void *obj, nr_resolver_resource *resource,
-                     int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                     void *cb_arg, void **handle);
-  static void resolve_cb(NR_SOCKET s, int how, void *cb_arg);
-  static int cancel(void *obj, void *handle);
-||||||| merged common ancestors
-  static int destroy(void **objp);
-  static int resolve(void *obj,
-                     nr_resolver_resource *resource,
-                     int (*cb)(void *cb_arg,
-                               nr_transport_addr *addr),
-                     void *cb_arg,
-                     void **handle);
-  static void resolve_cb(NR_SOCKET s, int how, void *cb_arg);
-  static int cancel(void *obj, void *handle);
-=======
   static int destroy(void** objp);
   static int resolve(void* obj, nr_resolver_resource* resource,
                      int (*cb)(void* cb_arg, nr_transport_addr* addr),
                      void* cb_arg, void** handle);
   static void resolve_cb(NR_SOCKET s, int how, void* cb_arg);
   static int cancel(void* obj, void* handle);
->>>>>>> upstream-releases
 
   // Get an address.
-<<<<<<< HEAD
-  const PRNetAddr *Resolve(const std::string &hostname, int address_family) {
-||||||| merged common ancestors
-  const PRNetAddr *Resolve(const std::string& hostname, int address_family) {
-=======
   const PRNetAddr* Resolve(const std::string& hostname, int address_family) {
->>>>>>> upstream-releases
     switch (address_family) {
       case AF_INET:
         if (!addrs_.count(hostname)) return nullptr;
@@ -129,37 +104,6 @@ class NrIceResolverFake {
   }
 
   struct PendingResolution {
-<<<<<<< HEAD
-    PendingResolution(NrIceResolverFake *resolver, const std::string &hostname,
-                      uint16_t port, int transport, int address_family,
-                      int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                      void *cb_arg)
-        : resolver_(resolver),
-          hostname_(hostname),
-          port_(port),
-          transport_(transport),
-          address_family_(address_family),
-          cb_(cb),
-          cb_arg_(cb_arg) {}
-
-    NrIceResolverFake *resolver_;
-||||||| merged common ancestors
-    PendingResolution(NrIceResolverFake *resolver,
-                      const std::string& hostname,
-                      uint16_t port,
-                      int transport,
-                      int address_family,
-                      int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                      void *cb_arg) :
-        resolver_(resolver),
-        hostname_(hostname),
-        port_(port),
-        transport_(transport),
-        address_family_(address_family),
-        cb_(cb), cb_arg_(cb_arg) {}
-
-    NrIceResolverFake *resolver_;
-=======
     PendingResolution(NrIceResolverFake* resolver, const std::string& hostname,
                       uint16_t port, int transport, int address_family,
                       int (*cb)(void* cb_arg, nr_transport_addr* addr),
@@ -173,7 +117,6 @@ class NrIceResolverFake {
           cb_arg_(cb_arg) {}
 
     NrIceResolverFake* resolver_;
->>>>>>> upstream-releases
     std::string hostname_;
     uint16_t port_;
     int transport_;
@@ -183,7 +126,7 @@ class NrIceResolverFake {
     void* timer_handle_;
   };
 
-  nr_resolver_vtbl *vtbl_;
+  nr_resolver_vtbl* vtbl_;
   std::map<std::string, PRNetAddr> addrs_;
   std::map<std::string, PRNetAddr> addrs6_;
   uint32_t delay_ms_;

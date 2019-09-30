@@ -22,14 +22,6 @@ WebAuthnManagerBase::WebAuthnManagerBase(nsPIDOMWindowInner* aParent)
   MOZ_ASSERT(aParent);
 }
 
-<<<<<<< HEAD
-WebAuthnManagerBase::~WebAuthnManagerBase() { MOZ_ASSERT(NS_IsMainThread()); }
-||||||| merged common ancestors
-WebAuthnManagerBase::~WebAuthnManagerBase()
-{
-  MOZ_ASSERT(NS_IsMainThread());
-}
-=======
 WebAuthnManagerBase::~WebAuthnManagerBase() { MOZ_ASSERT(NS_IsMainThread()); }
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(WebAuthnManagerBase)
@@ -41,7 +33,6 @@ NS_IMPL_CYCLE_COLLECTION(WebAuthnManagerBase, mParent)
 
 NS_IMPL_CYCLE_COLLECTING_ADDREF(WebAuthnManagerBase)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(WebAuthnManagerBase)
->>>>>>> upstream-releases
 
 /***********************************************************************
  * IPC Protocol Implementation

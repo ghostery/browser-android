@@ -16,32 +16,6 @@
 using namespace js;
 using namespace js::frontend;
 
-<<<<<<< HEAD
-NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, Kind kind)
-    : bce_(bce),
-      kind_(kind),
-      name_(bce_->cx, name),
-      loc_(bce_->lookupName(name_)) {}
-
-NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, JSAtom* name,
-                             const NameLocation& loc, Kind kind)
-    : bce_(bce), kind_(kind), name_(bce_->cx, name), loc_(loc) {}
-||||||| merged common ancestors
-NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, Kind kind)
-  : bce_(bce),
-    kind_(kind),
-    name_(bce_->cx, name),
-    loc_(bce_->lookupName(name_))
-{}
-
-NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, const NameLocation& loc,
-                             Kind kind)
-  : bce_(bce),
-    kind_(kind),
-    name_(bce_->cx, name),
-    loc_(loc)
-{}
-=======
 NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, Handle<JSAtom*> name,
                              Kind kind)
     : bce_(bce), kind_(kind), name_(name), loc_(bce_->lookupName(name_)) {}
@@ -49,7 +23,6 @@ NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, Handle<JSAtom*> name,
 NameOpEmitter::NameOpEmitter(BytecodeEmitter* bce, Handle<JSAtom*> name,
                              const NameLocation& loc, Kind kind)
     : bce_(bce), kind_(kind), name_(name), loc_(loc) {}
->>>>>>> upstream-releases
 
 bool NameOpEmitter::emitGet() {
   MOZ_ASSERT(state_ == State::Start);
@@ -377,36 +350,6 @@ bool NameOpEmitter::emitAssignment() {
 bool NameOpEmitter::emitIncDec() {
   MOZ_ASSERT(state_ == State::Start);
 
-<<<<<<< HEAD
-  JSOp binOp = isInc() ? JSOP_ADD : JSOP_SUB;
-  if (!prepareForRhs()) {
-    //              [stack] ENV? V
-    return false;
-  }
-  if (!bce_->emit1(JSOP_POS)) {
-    //              [stack] ENV? N
-    return false;
-  }
-  if (isPostIncDec()) {
-    if (!bce_->emit1(JSOP_DUP)) {
-      //            [stack] ENV? N? N
-      return false;
-||||||| merged common ancestors
-    JSOp binOp = isInc() ? JSOP_ADD : JSOP_SUB;
-    if (!prepareForRhs()) {                           // ENV? V
-        return false;
-    }
-    if (!bce_->emit1(JSOP_POS)) {                     // ENV? N
-        return false;
-    }
-    if (isPostIncDec()) {
-        if (!bce_->emit1(JSOP_DUP)) {                 // ENV? N? N
-            return false;
-        }
-    }
-    if (!bce_->emit1(JSOP_ONE)) {                     // ENV? N? N 1
-        return false;
-=======
   JSOp incOp = isInc() ? JSOP_INC : JSOP_DEC;
   if (!prepareForRhs()) {
     //              [stack] ENV? V
@@ -420,26 +363,7 @@ bool NameOpEmitter::emitIncDec() {
     if (!bce_->emit1(JSOP_DUP)) {
       //            [stack] ENV? N? N
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-  if (!bce_->emit1(JSOP_ONE)) {
-    //              [stack] ENV? N? N 1
-    return false;
-  }
-  if (!bce_->emit1(binOp)) {
-    //              [stack] ENV? N? N+1
-    return false;
-  }
-  if (isPostIncDec() && emittedBindOp()) {
-    if (!bce_->emit2(JSOP_PICK, 2)) {
-      //            [stack] N? N+1 ENV?
-      return false;
-||||||| merged common ancestors
-    if (!bce_->emit1(binOp)) {                        // ENV? N? N+1
-        return false;
-=======
   }
   if (!bce_->emit1(incOp)) {
     //              [stack] ENV? N? N+1
@@ -449,7 +373,6 @@ bool NameOpEmitter::emitIncDec() {
     if (!bce_->emit2(JSOP_PICK, 2)) {
       //            [stack] N? N+1 ENV?
       return false;
->>>>>>> upstream-releases
     }
     if (!bce_->emit1(JSOP_SWAP)) {
       //            [stack] N? ENV? N+1

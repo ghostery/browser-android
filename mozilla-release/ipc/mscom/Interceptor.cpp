@@ -192,22 +192,10 @@ static detail::LiveSet& GetLiveSet() {
 
 MOZ_THREAD_LOCAL(bool) Interceptor::tlsCreatingStdMarshal;
 
-<<<<<<< HEAD
-/* static */ HRESULT Interceptor::Create(STAUniquePtr<IUnknown> aTarget,
-                                         IInterceptorSink* aSink,
-                                         REFIID aInitialIid,
-                                         void** aOutInterface) {
-||||||| merged common ancestors
-/* static */ HRESULT
-Interceptor::Create(STAUniquePtr<IUnknown> aTarget, IInterceptorSink* aSink,
-                    REFIID aInitialIid, void** aOutInterface)
-{
-=======
 /* static */
 HRESULT Interceptor::Create(STAUniquePtr<IUnknown> aTarget,
                             IInterceptorSink* aSink, REFIID aInitialIid,
                             void** aOutInterface) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOutInterface && aTarget && aSink);
   if (!aOutInterface) {
     return E_INVALIDARG;
@@ -824,17 +812,8 @@ Interceptor::AddRef() { return WeakReferenceSupport::AddRef(); }
 ULONG
 Interceptor::Release() { return WeakReferenceSupport::Release(); }
 
-<<<<<<< HEAD
-/* static */ HRESULT Interceptor::DisconnectRemotesForTarget(
-    IUnknown* aTarget) {
-||||||| merged common ancestors
-/* static */ HRESULT
-Interceptor::DisconnectRemotesForTarget(IUnknown* aTarget)
-{
-=======
 /* static */
 HRESULT Interceptor::DisconnectRemotesForTarget(IUnknown* aTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aTarget);
 
   detail::LiveSetAutoLock lock(GetLiveSet());

@@ -47,15 +47,8 @@ class BlobImpl : public nsISupports {
                               SystemCallerGuarantee /* unused */,
                               ErrorResult& aRv) = 0;
 
-<<<<<<< HEAD
-  virtual void GetMozFullPathInternal(nsAString& aFileName,
-                                      ErrorResult& aRv) const = 0;
-||||||| merged common ancestors
-  virtual void GetMozFullPathInternal(nsAString& aFileName, ErrorResult& aRv) const = 0;
-=======
   virtual void GetMozFullPathInternal(nsAString& aFileName,
                                       ErrorResult& aRv) = 0;
->>>>>>> upstream-releases
 
   virtual uint64_t GetSize(ErrorResult& aRv) = 0;
 

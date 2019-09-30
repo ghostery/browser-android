@@ -7,78 +7,6 @@ using namespace mozilla;
 using namespace mozilla::safebrowsing;
 
 namespace {
-<<<<<<< HEAD
-
-// |Base64EncodedStringArray| and |MakeBase64EncodedStringArray|
-// works together to make us able to do things "literally" and easily.
-
-// Given a nsCString array, construct an object which can be implicitly
-// casted to |const char**|, where all owning c-style strings have been
-// base64 encoded. The memory life cycle of what the "cast operator"
-// returns is just as the object itself.
-class Base64EncodedStringArray {
- public:
-  Base64EncodedStringArray(nsCString aArray[], size_t N);
-  operator const char**() const { return (const char**)&mArray[0]; }
-
- private:
-  // Since we can't guarantee the layout of nsCString (can we?),
-  // an additional nsTArray<nsCString> is required to manage the
-  // allocated string.
-  nsTArray<const char*> mArray;
-  nsTArray<nsCString> mStringStorage;
-};
-
-// Simply used to infer the fixed-array size automatically.
-template <size_t N>
-Base64EncodedStringArray MakeBase64EncodedStringArray(nsCString (&aArray)[N]) {
-  return Base64EncodedStringArray(aArray, N);
-}
-
-}  // end of unnamed namespace.
-
-TEST(UrlClassifierFindFullHash, Request) {
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService("@mozilla.org/url-classifier/utils;1");
-||||||| merged common ancestors
-
-// |Base64EncodedStringArray| and |MakeBase64EncodedStringArray|
-// works together to make us able to do things "literally" and easily.
-
-// Given a nsCString array, construct an object which can be implicitly
-// casted to |const char**|, where all owning c-style strings have been
-// base64 encoded. The memory life cycle of what the "cast operator"
-// returns is just as the object itself.
-class Base64EncodedStringArray
-{
-public:
-  Base64EncodedStringArray(nsCString aArray[], size_t N);
-  operator const char** () const { return (const char**)&mArray[0]; }
-
-private:
-  // Since we can't guarantee the layout of nsCString (can we?),
-  // an additional nsTArray<nsCString> is required to manage the
-  // allocated string.
-  nsTArray<const char*> mArray;
-  nsTArray<nsCString> mStringStorage;
-};
-
-// Simply used to infer the fixed-array size automatically.
-template<size_t N>
-Base64EncodedStringArray
-MakeBase64EncodedStringArray(nsCString (&aArray)[N])
-{
-  return Base64EncodedStringArray(aArray, N);
-}
-
-} // end of unnamed namespace.
-
-
-TEST(UrlClassifierFindFullHash, Request)
-{
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService("@mozilla.org/url-classifier/utils;1");
-=======
 template <size_t N>
 void ToBase64EncodedStringArray(nsCString (&aInput)[N],
                                 nsTArray<nsCString>& aEncodedArray);
@@ -87,44 +15,16 @@ void ToBase64EncodedStringArray(nsCString (&aInput)[N],
 TEST(UrlClassifierFindFullHash, Request)
 {
   nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const char* listNames[] = {"test-phish-proto", "test-unwanted-proto"};
-||||||| merged common ancestors
-  const char* listNames[] = { "test-phish-proto", "test-unwanted-proto" };
-=======
   nsTArray<nsCString> listNames;
   listNames.AppendElement("moztest-phish-proto");
   listNames.AppendElement("moztest-unwanted-proto");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCString listStates[] = {nsCString("sta\x00te1", 7),
-                            nsCString("sta\x00te2", 7)};
-||||||| merged common ancestors
-  nsCString listStates[] = { nsCString("sta\x00te1", 7),
-                             nsCString("sta\x00te2", 7) };
-=======
   nsCString listStates[] = {nsCString("sta\x00te1", 7),
                             nsCString("sta\x00te2", 7)};
   nsTArray<nsCString> listStateArray;
   ToBase64EncodedStringArray(listStates, listStateArray);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCString prefixes[] = {nsCString("\x00\x00\x00\x01", 4),
-                          nsCString("\x00\x00\x00\x00\x01", 5),
-                          nsCString("\x00\xFF\x00\x01", 4),
-                          nsCString("\x00\xFF\x00\x01\x11\x23\xAA\xBC", 8),
-                          nsCString("\x00\x00\x00\x01\x00\x01\x98", 7)};
-||||||| merged common ancestors
-  nsCString prefixes[] = { nsCString("\x00\x00\x00\x01", 4),
-                           nsCString("\x00\x00\x00\x00\x01", 5),
-                           nsCString("\x00\xFF\x00\x01", 4),
-                           nsCString("\x00\xFF\x00\x01\x11\x23\xAA\xBC", 8),
-                           nsCString("\x00\x00\x00\x01\x00\x01\x98", 7) };
-=======
   nsCString prefixes[] = {nsCString("\x00\x00\x00\x01", 4),
                           nsCString("\x00\x00\x00\x00\x01", 5),
                           nsCString("\x00\xFF\x00\x01", 4),
@@ -132,26 +32,11 @@ TEST(UrlClassifierFindFullHash, Request)
                           nsCString("\x00\x00\x00\x01\x00\x01\x98", 7)};
   nsTArray<nsCString> prefixArray;
   ToBase64EncodedStringArray(prefixes, prefixArray);
->>>>>>> upstream-releases
 
   nsCString requestBase64;
   nsresult rv;
-<<<<<<< HEAD
-  rv = urlUtil->MakeFindFullHashRequestV4(
-      listNames, MakeBase64EncodedStringArray(listStates),
-      MakeBase64EncodedStringArray(prefixes), ArrayLength(listNames),
-      ArrayLength(prefixes), requestBase64);
-||||||| merged common ancestors
-  rv = urlUtil->MakeFindFullHashRequestV4(listNames,
-                                          MakeBase64EncodedStringArray(listStates),
-                                          MakeBase64EncodedStringArray(prefixes),
-                                          ArrayLength(listNames),
-                                          ArrayLength(prefixes),
-                                          requestBase64);
-=======
   rv = urlUtil->MakeFindFullHashRequestV4(listNames, listStateArray,
                                           prefixArray, requestBase64);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
 
   // Base64 URL decode first.
@@ -258,16 +143,8 @@ class MyParseCallback final : public nsIUrlClassifierParseFindFullHashCallback {
     ASSERT_TRUE(aCompleteHash.Equals(expected.mCompleteHash));
 
     // Verify aTableNames
-<<<<<<< HEAD
-    nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-        do_GetService("@mozilla.org/url-classifier/utils;1");
-||||||| merged common ancestors
-    nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService("@mozilla.org/url-classifier/utils;1");
-=======
     nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
 
->>>>>>> upstream-releases
     nsCString tableNames;
     nsresult rv =
         urlUtil->ConvertThreatTypeToListNames(expected.mThreatType, tableNames);
@@ -292,7 +169,8 @@ NS_IMPL_ISUPPORTS(MyParseCallback, nsIUrlClassifierParseFindFullHashCallback)
 
 }  // end of unnamed namespace.
 
-TEST(UrlClassifierFindFullHash, ParseRequest) {
+TEST(UrlClassifierFindFullHash, ParseRequest)
+{
   // Build response.
   FindFullHashesResponse r;
 
@@ -319,21 +197,9 @@ TEST(UrlClassifierFindFullHash, ParseRequest) {
   nsCOMPtr<nsIUrlClassifierParseFindFullHashCallback> callback =
       new MyParseCallback(callbackCount);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService("@mozilla.org/url-classifier/utils;1");
-  nsresult rv = urlUtil->ParseFindFullHashResponseV4(
-      nsCString(s.c_str(), s.size()), callback);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService("@mozilla.org/url-classifier/utils;1");
-  nsresult rv = urlUtil->ParseFindFullHashResponseV4(nsCString(s.c_str(), s.size()),
-                                                     callback);
-=======
   nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
   nsresult rv = urlUtil->ParseFindFullHashResponseV4(
       nsCString(s.c_str(), s.size()), callback);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS_VOID(rv);
 
   ASSERT_EQ(callbackCount, ArrayLength(EXPECTED_MATCH));
@@ -342,18 +208,9 @@ TEST(UrlClassifierFindFullHash, ParseRequest) {
 /////////////////////////////////////////////////////////////
 namespace {
 
-<<<<<<< HEAD
-Base64EncodedStringArray::Base64EncodedStringArray(nsCString aArray[],
-                                                   size_t N) {
-||||||| merged common ancestors
-Base64EncodedStringArray::Base64EncodedStringArray(nsCString aArray[],
-                                                   size_t N)
-{
-=======
 template <size_t N>
 void ToBase64EncodedStringArray(nsCString (&aArray)[N],
                                 nsTArray<nsCString>& aEncodedArray) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < N; i++) {
     nsCString encoded;
     nsresult rv = Base64Encode(aArray[i], encoded);

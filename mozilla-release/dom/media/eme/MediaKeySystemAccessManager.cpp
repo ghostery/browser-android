@@ -165,38 +165,6 @@ void MediaKeySystemAccessManager::Request(
   nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
   nsDataHashtable<nsCharPtrHashKey, bool> warnings;
   std::function<void(const char*)> deprecationWarningLogFn =
-<<<<<<< HEAD
-      [&](const char* aMsgName) {
-        EME_LOG("Logging deprecation warning '%s' to WebConsole.", aMsgName);
-        warnings.Put(aMsgName, true);
-        nsString uri;
-        if (doc) {
-          Unused << doc->GetDocumentURI(uri);
-        }
-        const char16_t* params[] = {uri.get()};
-        nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                        NS_LITERAL_CSTRING("Media"), doc,
-                                        nsContentUtils::eDOM_PROPERTIES,
-                                        aMsgName, params, ArrayLength(params));
-      };
-||||||| merged common ancestors
-    [&](const char* aMsgName) {
-      EME_LOG("Logging deprecation warning '%s' to WebConsole.", aMsgName);
-      warnings.Put(aMsgName, true);
-      nsString uri;
-      if (doc) {
-        Unused << doc->GetDocumentURI(uri);
-      }
-      const char16_t* params[] = { uri.get() };
-      nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                      NS_LITERAL_CSTRING("Media"),
-                                      doc,
-                                      nsContentUtils::eDOM_PROPERTIES,
-                                      aMsgName,
-                                      params,
-                                      ArrayLength(params));
-    };
-=======
       [&](const char* aMsgName) {
         EME_LOG("Logging deprecation warning '%s' to WebConsole.", aMsgName);
         warnings.Put(aMsgName, true);
@@ -209,7 +177,6 @@ void MediaKeySystemAccessManager::Request(
             nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Media"), doc,
             nsContentUtils::eDOM_PROPERTIES, aMsgName, params);
       };
->>>>>>> upstream-releases
 
   bool isPrivateBrowsing =
       mWindow->GetExtantDoc() &&

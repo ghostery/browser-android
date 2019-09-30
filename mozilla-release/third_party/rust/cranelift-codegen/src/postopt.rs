@@ -179,18 +179,9 @@ struct MemOpInfo {
     offset: Offset32,
 }
 
-<<<<<<< HEAD
-fn optimize_complex_addresses(pos: &mut EncCursor, inst: Inst, isa: &TargetIsa) {
-    // Look for simple loads and stores we can optimize.
-    let info = match pos.func.dfg[inst] {
-||||||| merged common ancestors
-fn optimize_complex_addresses(pos: &mut EncCursor, inst: Inst, isa: &TargetIsa) {
-    let mut info = match pos.func.dfg[inst] {
-=======
 fn optimize_complex_addresses(pos: &mut EncCursor, inst: Inst, isa: &dyn TargetIsa) {
     // Look for simple loads and stores we can optimize.
     let info = match pos.func.dfg[inst] {
->>>>>>> upstream-releases
         InstructionData::Load {
             opcode,
             arg,

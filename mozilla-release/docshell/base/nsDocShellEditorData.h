@@ -24,28 +24,11 @@ class nsDocShellEditorData {
 
   MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult MakeEditable(bool aWaitForUriLoad);
   bool GetEditable();
-<<<<<<< HEAD
-  nsresult CreateEditor();
-  nsresult GetEditingSession(nsIEditingSession** aResult);
-  mozilla::HTMLEditor* GetHTMLEditor() const { return mHTMLEditor; }
-  nsresult SetHTMLEditor(mozilla::HTMLEditor* aHTMLEditor);
-  void TearDownEditor();
-||||||| merged common ancestors
-  nsresult CreateEditor();
-  nsresult GetEditingSession(nsIEditingSession** aResult);
-  mozilla::HTMLEditor* GetHTMLEditor() const
-  {
-    return mHTMLEditor;
-  }
-  nsresult SetHTMLEditor(mozilla::HTMLEditor* aHTMLEditor);
-  void TearDownEditor();
-=======
   nsEditingSession* GetEditingSession();
   mozilla::HTMLEditor* GetHTMLEditor() const { return mHTMLEditor; }
   MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult
   SetHTMLEditor(mozilla::HTMLEditor* aHTMLEditor);
   MOZ_CAN_RUN_SCRIPT_BOUNDARY void TearDownEditor();
->>>>>>> upstream-releases
   nsresult DetachFromWindow();
   nsresult ReattachToWindow(nsIDocShell* aDocShell);
   bool WaitingForLoad() const { return mMakeEditable; }

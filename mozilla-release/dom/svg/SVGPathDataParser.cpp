@@ -15,59 +15,25 @@
 using namespace mozilla::dom::SVGPathSeg_Binding;
 using namespace mozilla::gfx;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-static inline char16_t ToUpper(char16_t aCh) {
-||||||| merged common ancestors
-static inline char16_t ToUpper(char16_t aCh)
-{
-=======
 namespace mozilla {
 
 static inline char16_t ToUpper(char16_t aCh) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   return aCh >= 'a' && aCh <= 'z' ? aCh - 'a' + 'A' : aCh;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::Parse() {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::Parse()
-{
-=======
 bool SVGPathDataParser::Parse() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   mPathSegList->Clear();
   return ParsePath();
 }
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseCoordPair(float& aX, float& aY) {
-  return SVGContentUtils::ParseNumber(mIter, mEnd, aX) && SkipCommaWsp() &&
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseCoordPair(float& aX, float& aY)
-{
-  return SVGContentUtils::ParseNumber(mIter, mEnd, aX) &&
-         SkipCommaWsp() &&
-=======
 bool SVGPathDataParser::ParseCoordPair(float& aX, float& aY) {
   return SVGContentUtils::ParseNumber(mIter, mEnd, aX) && SkipCommaWsp() &&
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
          SVGContentUtils::ParseNumber(mIter, mEnd, aY);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseFlag(bool& aFlag) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseFlag(bool& aFlag)
-{
-=======
 bool SVGPathDataParser::ParseFlag(bool& aFlag) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   if (mIter == mEnd || (*mIter != '0' && *mIter != '1')) {
     return false;
   }
@@ -79,15 +45,7 @@ bool SVGPathDataParser::ParseFlag(bool& aFlag) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParsePath() {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParsePath()
-{
-=======
 bool SVGPathDataParser::ParsePath() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (SkipWsp()) {
     if (!ParseSubPath()) {
       return false;
@@ -99,27 +57,11 @@ bool SVGPathDataParser::ParsePath() {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseSubPath() {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseSubPath()
-{
-=======
 bool SVGPathDataParser::ParseSubPath() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   return ParseMoveto() && ParseSubPathElements();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseSubPathElements() {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseSubPathElements()
-{
-=======
 bool SVGPathDataParser::ParseSubPathElements() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (SkipWsp() && !IsStartOfSubPath()) {
     char16_t commandType = ToUpper(*mIter);
 
@@ -137,18 +79,8 @@ bool SVGPathDataParser::ParseSubPathElements() {
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseSubPathElement(char16_t aCommandType,
-                                              bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseSubPathElement(char16_t aCommandType,
-                                         bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseSubPathElement(char16_t aCommandType,
                                             bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   switch (aCommandType) {
     case 'Z':
       return ParseClosePath();
@@ -172,29 +104,13 @@ bool SVGPathDataParser::ParseSubPathElement(char16_t aCommandType,
   return false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::IsStartOfSubPath() const {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::IsStartOfSubPath() const
-{
-=======
 bool SVGPathDataParser::IsStartOfSubPath() const {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   return *mIter == 'm' || *mIter == 'M';
 }
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseMoveto() {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseMoveto()
-{
-=======
 bool SVGPathDataParser::ParseMoveto() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   if (!IsStartOfSubPath()) {
     return false;
   }
@@ -229,29 +145,13 @@ bool SVGPathDataParser::ParseMoveto() {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseClosePath() {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseClosePath()
-{
-=======
 bool SVGPathDataParser::ParseClosePath() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   return NS_SUCCEEDED(mPathSegList->AppendSeg(PATHSEG_CLOSEPATH));
 }
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseLineto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseLineto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseLineto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float x, y;
     if (!ParseCoordPair(x, y)) {
@@ -273,15 +173,7 @@ bool SVGPathDataParser::ParseLineto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseHorizontalLineto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseHorizontalLineto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseHorizontalLineto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float x;
     if (!SVGContentUtils::ParseNumber(mIter, mEnd, x)) {
@@ -305,15 +197,7 @@ bool SVGPathDataParser::ParseHorizontalLineto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseVerticalLineto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseVerticalLineto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseVerticalLineto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float y;
     if (!SVGContentUtils::ParseNumber(mIter, mEnd, y)) {
@@ -337,15 +221,7 @@ bool SVGPathDataParser::ParseVerticalLineto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseCurveto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseCurveto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseCurveto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float x1, y1, x2, y2, x, y;
 
@@ -370,15 +246,7 @@ bool SVGPathDataParser::ParseCurveto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseSmoothCurveto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseSmoothCurveto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseSmoothCurveto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float x2, y2, x, y;
     if (!(ParseCoordPair(x2, y2) && SkipCommaWsp() && ParseCoordPair(x, y))) {
@@ -402,15 +270,7 @@ bool SVGPathDataParser::ParseSmoothCurveto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseQuadBezierCurveto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseQuadBezierCurveto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseQuadBezierCurveto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float x1, y1, x, y;
     if (!(ParseCoordPair(x1, y1) && SkipCommaWsp() && ParseCoordPair(x, y))) {
@@ -434,15 +294,7 @@ bool SVGPathDataParser::ParseQuadBezierCurveto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseSmoothQuadBezierCurveto(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseSmoothQuadBezierCurveto(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseSmoothQuadBezierCurveto(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float x, y;
     if (!ParseCoordPair(x, y)) {
@@ -466,15 +318,7 @@ bool SVGPathDataParser::ParseSmoothQuadBezierCurveto(bool aAbsCoords) {
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGPathDataParser::ParseEllipticalArc(bool aAbsCoords) {
-||||||| merged common ancestors
-bool
-nsSVGPathDataParser::ParseEllipticalArc(bool aAbsCoords)
-{
-=======
 bool SVGPathDataParser::ParseEllipticalArc(bool aAbsCoords) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   while (true) {
     float r1, r2, angle, x, y;
     bool largeArcFlag, sweepFlag;
@@ -512,24 +356,9 @@ static double CalcVectorAngle(double ux, double uy, double vx, double vy) {
   return 2 * M_PI - (ta - tb);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-nsSVGArcConverter::nsSVGArcConverter(const Point& from, const Point& to,
-                                     const Point& radii, double angle,
-                                     bool largeArcFlag, bool sweepFlag) {
-||||||| merged common ancestors
-
-nsSVGArcConverter::nsSVGArcConverter(const Point& from,
-                                     const Point& to,
-                                     const Point& radii,
-                                     double angle,
-                                     bool largeArcFlag,
-                                     bool sweepFlag)
-{
-=======
 SVGArcConverter::SVGArcConverter(const Point& from, const Point& to,
                                  const Point& radii, double angle,
                                  bool largeArcFlag, bool sweepFlag) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   MOZ_ASSERT(radii.x != 0.0f && radii.y != 0.0f, "Bad radii");
 
   const double radPerDeg = M_PI / 180.0;
@@ -600,15 +429,7 @@ SVGArcConverter::SVGArcConverter(const Point& from, const Point& to,
   mFrom = from;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGPathDataParser.cpp
-bool nsSVGArcConverter::GetNextSegment(Point* cp1, Point* cp2, Point* to) {
-||||||| merged common ancestors
-bool
-nsSVGArcConverter::GetNextSegment(Point* cp1, Point* cp2, Point* to)
-{
-=======
 bool SVGArcConverter::GetNextSegment(Point* cp1, Point* cp2, Point* to) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGPathDataParser.cpp
   if (mSegIndex == mNumSegs) {
     return false;
   }

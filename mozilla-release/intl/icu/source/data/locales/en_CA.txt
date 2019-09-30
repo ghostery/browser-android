@@ -9,13 +9,7 @@ en_CA{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
     calendar{
         chinese{
             DateTimePatterns{
@@ -209,18 +203,6 @@ en_CA{
                 yMMMEd{"E, MMM d, y"}
                 yMMMd{"MMM d, y"}
                 yMd{"y-MM-dd"}
-<<<<<<< HEAD
-                yw{
-                    one{"'week' w 'of' Y"}
-                    other{"'week' w 'of' Y"}
-                }
-||||||| merged common ancestors
-                yw{
-                    one{"'week' w 'of' y"}
-                    other{"'week' w 'of' y"}
-                }
-=======
->>>>>>> upstream-releases
             }
             dayNames{
                 format{
@@ -251,22 +233,12 @@ en_CA{
                         pm{"p.m."}
                     }
                     narrow{
-<<<<<<< HEAD
-                        afternoon1{"aft"}
-                        evening1{"eve"}
-                        midnight{"mid"}
-                        morning1{"mor"}
-||||||| merged common ancestors
-                        am{"a.m."}
-                        pm{"p.m."}
-=======
                         afternoon1{"aft"}
                         am{"a.m."}
                         evening1{"eve"}
                         midnight{"mid"}
                         morning1{"mor"}
                         pm{"pm"}
->>>>>>> upstream-releases
                     }
                     wide{
                         am{"a.m."}
@@ -465,39 +437,6 @@ en_CA{
                 }
             }
         }
-<<<<<<< HEAD
-        mon-narrow{
-            relative{
-                "-1"{"last Mo"}
-                "0"{"this Mo"}
-                "1"{"next Mo"}
-            }
-            relativeTime{
-                future{
-                    one{"in {0} Mo"}
-                    other{"in {0} Mo’s"}
-                }
-                past{
-                    one{"{0} Mo ago"}
-                    other{"{0} Mo’s ago"}
-                }
-            }
-        }
-||||||| merged common ancestors
-        mon-narrow{
-            relativeTime{
-                future{
-                    one{"in {0} M"}
-                    other{"in {0} M’s"}
-                }
-                past{
-                    one{"{0} M ago"}
-                    other{"{0} M’s ago"}
-                }
-            }
-        }
-=======
->>>>>>> upstream-releases
         mon-short{
             relativeTime{
                 future{

@@ -15,27 +15,6 @@ use crate::error;
 
 static SHIFTWIDTH: usize = 4;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-struct _IndentedScope {
-    fmt: Formatter,
-    after: Option<String>,
-}
-
-impl _IndentedScope {
-    fn _enter(&mut self) {
-        self.fmt._indent_push();
-    }
-
-    fn _exit(&mut self) {
-        self.fmt._indent_pop();
-        if let Some(ref s) = self.after {
-            self.fmt.line(&s);
-        }
-    }
-}
-
-=======
 /// A macro that simplifies the usage of the Formatter by allowing format
 /// strings.
 macro_rules! fmtln {
@@ -56,7 +35,6 @@ macro_rules! fmtln {
     };
 }
 
->>>>>>> upstream-releases
 pub struct Formatter {
     indent: usize,
     lines: Vec<String>,
@@ -101,24 +79,10 @@ impl Formatter {
 
     /// Get a string containing whitespace outdented one level. Used for
     /// lines of code that are inside a single indented block.
-<<<<<<< HEAD
-    fn _get_outdent(&mut self) -> String {
-        self.indent_push();
-||||||| merged common ancestors
-    fn _get_outdent(&mut self) -> String {
-        self._indent_push();
-=======
     fn get_outdent(&mut self) -> String {
         self.indent_pop();
->>>>>>> upstream-releases
         let s = self.get_indent();
-<<<<<<< HEAD
-        self.indent_pop();
-||||||| merged common ancestors
-        self._indent_pop();
-=======
         self.indent_push();
->>>>>>> upstream-releases
         s
     }
 
@@ -245,15 +209,8 @@ fn parse_multiline(s: &str) -> Vec<String> {
     let indent = lines
         .iter()
         .skip(1)
-<<<<<<< HEAD
-        .map(|l| l.len() - l.trim_left().len())
-||||||| merged common ancestors
-        .map(|l| l.len() - l.trim_left().len())
-        .filter(|&i| i > 0)
-=======
         .filter(|l| !l.trim().is_empty())
         .map(|l| l.len() - l.trim_start().len())
->>>>>>> upstream-releases
         .min();
 
     // Strip off leading blank lines.
@@ -448,19 +405,9 @@ match x {
     fn formatter_basic_example_works() {
         let mut fmt = Formatter::new();
         fmt.line("Hello line 1");
-<<<<<<< HEAD
-        fmt.indent_push();
-        fmt._comment("Nested comment");
-        fmt.indent_pop();
-||||||| merged common ancestors
-        fmt._indent_push();
-        fmt._comment("Nested comment");
-        fmt._indent_pop();
-=======
         fmt.indent_push();
         fmt.comment("Nested comment");
         fmt.indent_pop();
->>>>>>> upstream-releases
         fmt.line("Back home again");
         let expected_lines = vec![
             "Hello line 1\n",

@@ -26,122 +26,54 @@ using namespace mozilla::gfx;
 namespace mozilla {
 namespace image {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageOps::Freeze(Image* aImage) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageOps::Freeze(Image* aImage)
-{
-=======
 /* static */
 already_AddRefed<Image> ImageOps::Freeze(Image* aImage) {
->>>>>>> upstream-releases
   RefPtr<Image> frozenImage = new FrozenImage(aImage);
   return frozenImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<imgIContainer> ImageOps::Freeze(
-    imgIContainer* aImage) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<imgIContainer>
-ImageOps::Freeze(imgIContainer* aImage)
-{
-=======
 /* static */
 already_AddRefed<imgIContainer> ImageOps::Freeze(imgIContainer* aImage) {
->>>>>>> upstream-releases
   nsCOMPtr<imgIContainer> frozenImage =
       new FrozenImage(static_cast<Image*>(aImage));
   return frozenImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageOps::Clip(
-    Image* aImage, nsIntRect aClip, const Maybe<nsSize>& aSVGViewportSize) {
-  RefPtr<Image> clippedImage =
-      new ClippedImage(aImage, aClip, aSVGViewportSize);
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageOps::Clip(Image* aImage, nsIntRect aClip,
-               const Maybe<nsSize>& aSVGViewportSize)
-{
-  RefPtr<Image> clippedImage = new ClippedImage(aImage, aClip, aSVGViewportSize);
-=======
 /* static */
 already_AddRefed<Image> ImageOps::Clip(Image* aImage, nsIntRect aClip,
                                        const Maybe<nsSize>& aSVGViewportSize) {
   RefPtr<Image> clippedImage =
       new ClippedImage(aImage, aClip, aSVGViewportSize);
->>>>>>> upstream-releases
   return clippedImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<imgIContainer> ImageOps::Clip(
-    imgIContainer* aImage, nsIntRect aClip,
-    const Maybe<nsSize>& aSVGViewportSize) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<imgIContainer>
-ImageOps::Clip(imgIContainer* aImage, nsIntRect aClip,
-               const Maybe<nsSize>& aSVGViewportSize)
-{
-=======
 /* static */
 already_AddRefed<imgIContainer> ImageOps::Clip(
     imgIContainer* aImage, nsIntRect aClip,
     const Maybe<nsSize>& aSVGViewportSize) {
->>>>>>> upstream-releases
   nsCOMPtr<imgIContainer> clippedImage =
       new ClippedImage(static_cast<Image*>(aImage), aClip, aSVGViewportSize);
   return clippedImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageOps::Orient(
-    Image* aImage, Orientation aOrientation) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageOps::Orient(Image* aImage, Orientation aOrientation)
-{
-=======
 /* static */
 already_AddRefed<Image> ImageOps::Orient(Image* aImage,
                                          Orientation aOrientation) {
->>>>>>> upstream-releases
   RefPtr<Image> orientedImage = new OrientedImage(aImage, aOrientation);
   return orientedImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<imgIContainer> ImageOps::Orient(
-    imgIContainer* aImage, Orientation aOrientation) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<imgIContainer>
-ImageOps::Orient(imgIContainer* aImage, Orientation aOrientation)
-{
-=======
 /* static */
 already_AddRefed<imgIContainer> ImageOps::Orient(imgIContainer* aImage,
                                                  Orientation aOrientation) {
->>>>>>> upstream-releases
   nsCOMPtr<imgIContainer> orientedImage =
       new OrientedImage(static_cast<Image*>(aImage), aOrientation);
   return orientedImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<imgIContainer> ImageOps::CreateFromDrawable(
-    gfxDrawable* aDrawable) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<imgIContainer>
-ImageOps::CreateFromDrawable(gfxDrawable* aDrawable)
-{
-=======
 /* static */
 already_AddRefed<imgIContainer> ImageOps::CreateFromDrawable(
     gfxDrawable* aDrawable) {
->>>>>>> upstream-releases
   nsCOMPtr<imgIContainer> drawableImage = new DynamicImage(aDrawable);
   return drawableImage.forget();
 }
@@ -209,43 +141,19 @@ ImageOps::CreateImageBuffer(already_AddRefed<nsIInputStream> aInputStream) {
   return imageBuffer.forget();
 }
 
-<<<<<<< HEAD
-/* static */ nsresult ImageOps::DecodeMetadata(
-    already_AddRefed<nsIInputStream> aInputStream, const nsACString& aMimeType,
-    ImageMetadata& aMetadata) {
-||||||| merged common ancestors
-/* static */ nsresult
-ImageOps::DecodeMetadata(already_AddRefed<nsIInputStream> aInputStream,
-                         const nsACString& aMimeType,
-                         ImageMetadata& aMetadata)
-{
-=======
 /* static */
 nsresult ImageOps::DecodeMetadata(already_AddRefed<nsIInputStream> aInputStream,
                                   const nsACString& aMimeType,
                                   ImageMetadata& aMetadata) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIInputStream> inputStream = std::move(aInputStream);
   RefPtr<ImageBuffer> buffer = CreateImageBuffer(inputStream.forget());
   return DecodeMetadata(buffer, aMimeType, aMetadata);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult ImageOps::DecodeMetadata(ImageBuffer* aBuffer,
-                                               const nsACString& aMimeType,
-                                               ImageMetadata& aMetadata) {
-||||||| merged common ancestors
-/* static */ nsresult
-ImageOps::DecodeMetadata(ImageBuffer* aBuffer,
-                         const nsACString& aMimeType,
-                         ImageMetadata& aMetadata)
-{
-=======
 /* static */
 nsresult ImageOps::DecodeMetadata(ImageBuffer* aBuffer,
                                   const nsACString& aMimeType,
                                   ImageMetadata& aMetadata) {
->>>>>>> upstream-releases
   if (!aBuffer) {
     return NS_ERROR_FAILURE;
   }

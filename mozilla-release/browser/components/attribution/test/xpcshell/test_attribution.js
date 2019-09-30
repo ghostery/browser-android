@@ -4,17 +4,10 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource:///modules/AttributionCode.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { AttributionCode } = ChromeUtils.import(
   "resource:///modules/AttributionCode.jsm"
 );
->>>>>>> upstream-releases
 
 add_task(async function test_attribution() {
   let appPath = Services.dirsvc.get("GreD", Ci.nsIFile).parent.parent.path;
@@ -36,12 +29,6 @@ add_task(async function test_attribution() {
   attributionSvc.setReferrerUrl(appPath, "http://test.com", false);
   referrer = attributionSvc.getReferrerUrl(appPath);
   equal(referrer, url, "referrer url is not changed");
-<<<<<<< HEAD
-
-  let result = await AttributionCode.getAttrDataAsync();
-  Assert.deepEqual(result, {content: "foo", source: "bar"}, "parsed attributes match");
-||||||| merged common ancestors
-=======
 
   let result = await AttributionCode.getAttrDataAsync();
   Assert.deepEqual(
@@ -49,5 +36,4 @@ add_task(async function test_attribution() {
     { content: "foo", source: "bar" },
     "parsed attributes match"
   );
->>>>>>> upstream-releases
 });

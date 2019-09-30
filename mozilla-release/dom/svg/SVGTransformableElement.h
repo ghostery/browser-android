@@ -23,28 +23,11 @@ class SVGMatrix;
 class SVGRect;
 struct SVGBoundingBoxOptions;
 
-<<<<<<< HEAD
-class SVGTransformableElement : public nsSVGElement {
- public:
-||||||| merged common ancestors
-class SVGTransformableElement : public nsSVGElement
-{
-public:
-=======
 class SVGTransformableElement : public SVGElement {
  public:
->>>>>>> upstream-releases
   explicit SVGTransformableElement(already_AddRefed<dom::NodeInfo>&& aNodeInfo)
-<<<<<<< HEAD
-      : nsSVGElement(std::move(aNodeInfo)) {}
-  virtual ~SVGTransformableElement() {}
-||||||| merged common ancestors
-    : nsSVGElement(std::move(aNodeInfo)) {}
-  virtual ~SVGTransformableElement() {}
-=======
       : SVGElement(std::move(aNodeInfo)) {}
   virtual ~SVGTransformableElement() = default;
->>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override = 0;
 
@@ -66,14 +49,7 @@ class SVGTransformableElement : public SVGElement {
   nsChangeHint GetAttributeChangeHint(const nsAtom* aAttribute,
                                       int32_t aModType) const override;
 
-<<<<<<< HEAD
-  // nsSVGElement overrides
-||||||| merged common ancestors
-
-  // nsSVGElement overrides
-=======
   // SVGElement overrides
->>>>>>> upstream-releases
   virtual bool IsEventAttributeNameInternal(nsAtom* aName) override;
 
   virtual gfxMatrix PrependLocalTransformsTo(
@@ -82,16 +58,8 @@ class SVGTransformableElement : public SVGElement {
   virtual const gfx::Matrix* GetAnimateMotionTransform() const override;
   virtual void SetAnimateMotionTransform(const gfx::Matrix* aMatrix) override;
 
-<<<<<<< HEAD
-  virtual nsSVGAnimatedTransformList* GetAnimatedTransformList(
-      uint32_t aFlags = 0) override;
-||||||| merged common ancestors
-  virtual nsSVGAnimatedTransformList*
-    GetAnimatedTransformList(uint32_t aFlags = 0) override;
-=======
   virtual SVGAnimatedTransformList* GetAnimatedTransformList(
       uint32_t aFlags = 0) override;
->>>>>>> upstream-releases
   virtual nsStaticAtom* GetTransformListAttrName() const override {
     return nsGkAtoms::transform;
   }
@@ -107,16 +75,8 @@ class SVGTransformableElement : public SVGElement {
    * returned.
    */
   static gfxMatrix GetUserToParentTransform(
-<<<<<<< HEAD
-      const gfx::Matrix* aAnimateMotionTransform,
-      const nsSVGAnimatedTransformList* aTransforms);
-||||||| merged common ancestors
-                     const gfx::Matrix* aAnimateMotionTransform,
-                     const nsSVGAnimatedTransformList* aTransforms);
-=======
       const gfx::Matrix* aAnimateMotionTransform,
       const SVGAnimatedTransformList* aTransforms);
->>>>>>> upstream-releases
 
   nsAutoPtr<SVGAnimatedTransformList> mTransforms;
 

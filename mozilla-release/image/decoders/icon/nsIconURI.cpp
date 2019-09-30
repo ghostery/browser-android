@@ -416,17 +416,8 @@ nsMozIconURI::EqualsExceptRef(nsIURI* other, bool* result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMozIconURI::SchemeIs(const char* aScheme, bool* aEquals) {
-  NS_ENSURE_ARG_POINTER(aEquals);
-||||||| merged common ancestors
-nsMozIconURI::SchemeIs(const char* aScheme, bool* aEquals)
-{
-  NS_ENSURE_ARG_POINTER(aEquals);
-=======
 nsMozIconURI::SchemeIs(const char* aScheme, bool* aEquals) {
   MOZ_ASSERT(aEquals, "null pointer");
->>>>>>> upstream-releases
   if (!aScheme) {
     *aEquals = false;
     return NS_OK;

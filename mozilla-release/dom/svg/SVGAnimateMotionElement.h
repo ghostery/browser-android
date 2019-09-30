@@ -35,19 +35,9 @@ class SVGAnimateMotionElement final : public SVGAnimationElement {
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // SVGAnimationElement
-<<<<<<< HEAD
-  virtual nsSMILAnimationFunction& AnimationFunction() override;
-  virtual bool GetTargetAttributeName(int32_t* aNamespaceID,
-                                      nsAtom** aLocalName) const override;
-||||||| merged common ancestors
-  virtual nsSMILAnimationFunction& AnimationFunction() override;
-  virtual bool GetTargetAttributeName(int32_t *aNamespaceID,
-                                      nsAtom **aLocalName) const override;
-=======
   virtual SMILAnimationFunction& AnimationFunction() override;
   virtual bool GetTargetAttributeName(int32_t* aNamespaceID,
                                       nsAtom** aLocalName) const override;
->>>>>>> upstream-releases
 
   // SVGElement
   virtual nsStaticAtom* GetPathDataAttrName() const override {

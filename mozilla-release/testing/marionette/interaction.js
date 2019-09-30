@@ -3,24 +3,6 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 "use strict";
-<<<<<<< HEAD
-/* eslint-disable no-restricted-globals */
-
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-ChromeUtils.import("chrome://marionette/content/accessibility.js");
-ChromeUtils.import("chrome://marionette/content/atom.js");
-ChromeUtils.import("chrome://marionette/content/element.js");
-||||||| merged common ancestors
-
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-ChromeUtils.import("chrome://marionette/content/accessibility.js");
-ChromeUtils.import("chrome://marionette/content/atom.js");
-ChromeUtils.import("chrome://marionette/content/element.js");
-=======
 /* eslint-disable no-restricted-globals */
 
 const { Preferences } = ChromeUtils.import(
@@ -37,7 +19,6 @@ const { atom } = ChromeUtils.import("chrome://marionette/content/atom.js");
 const { element } = ChromeUtils.import(
   "chrome://marionette/content/element.js"
 );
->>>>>>> upstream-releases
 const {
   ElementClickInterceptedError,
   ElementNotInteractableError,
@@ -581,26 +562,6 @@ interaction.setFormControlValue = function(el, value) {
  * @param {boolean=} webdriverClick
  *     Use WebDriver specification compatible interactability definition.
  */
-<<<<<<< HEAD
-interaction.sendKeysToElement = async function(el, value,
-    {
-      strictFileInteractability = false,
-      accessibilityChecks = false,
-      webdriverClick = false,
-    } = {}) {
-  const a11y = accessibility.get(accessibilityChecks);
-
-  if (webdriverClick) {
-    await webdriverSendKeysToElement(
-        el, value, a11y, strictFileInteractability);
-||||||| merged common ancestors
-interaction.sendKeysToElement = async function(
-    el, value, strict = false, specCompat = false) {
-  const a11y = accessibility.get(strict);
-
-  if (specCompat) {
-    await webdriverSendKeysToElement(el, value, a11y);
-=======
 interaction.sendKeysToElement = async function(
   el,
   value,
@@ -619,49 +580,28 @@ interaction.sendKeysToElement = async function(
       a11y,
       strictFileInteractability
     );
->>>>>>> upstream-releases
   } else {
     await legacySendKeysToElement(el, value, a11y);
   }
 };
 
-<<<<<<< HEAD
-async function webdriverSendKeysToElement(el, value,
-    a11y, strictFileInteractability) {
-||||||| merged common ancestors
-async function webdriverSendKeysToElement(el, value, a11y) {
-=======
 async function webdriverSendKeysToElement(
   el,
   value,
   a11y,
   strictFileInteractability
 ) {
->>>>>>> upstream-releases
   const win = getWindow(el);
 
   if (el.type != "file" || strictFileInteractability) {
     let containerEl = element.getContainer(el);
 
-<<<<<<< HEAD
-    // TODO: Wait for element to be keyboard-interactible
-    if (!interaction.isKeyboardInteractable(containerEl)) {
-      throw new ElementNotInteractableError(
-          pprint`Element ${el} is not reachable by keyboard`);
-    }
-||||||| merged common ancestors
-  // TODO: Wait for element to be keyboard-interactible
-  if (!interaction.isKeyboardInteractable(containerEl)) {
-    throw new ElementNotInteractableError(
-        pprint`Element ${el} is not reachable by keyboard`);
-=======
     // TODO: Wait for element to be keyboard-interactible
     if (!interaction.isKeyboardInteractable(containerEl)) {
       throw new ElementNotInteractableError(
         pprint`Element ${el} is not reachable by keyboard`
       );
     }
->>>>>>> upstream-releases
   }
 
   let acc = await a11y.getAccessible(el, true);

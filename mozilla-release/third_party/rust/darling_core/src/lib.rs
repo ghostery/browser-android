@@ -5,16 +5,7 @@
 extern crate quote;
 #[macro_use]
 extern crate syn;
-<<<<<<< HEAD
-extern crate proc_macro2;
-
 extern crate fnv;
-||||||| merged common ancestors
-extern crate proc_macro2;
-
-=======
-extern crate fnv;
->>>>>>> upstream-releases
 extern crate ident_case;
 #[cfg(feature = "diagnostics")]
 extern crate proc_macro;
@@ -38,15 +29,8 @@ mod from_generics;
 mod from_meta;
 mod from_type_param;
 mod from_variant;
-<<<<<<< HEAD
-pub mod options;
-pub mod usage;
-||||||| merged common ancestors
-pub mod options;
-=======
 pub(crate) mod options;
 pub mod usage;
->>>>>>> upstream-releases
 pub mod util;
 
 pub use error::{Error, Result};
@@ -58,17 +42,6 @@ pub use from_meta::FromMeta;
 pub use from_type_param::FromTypeParam;
 pub use from_variant::FromVariant;
 
-<<<<<<< HEAD
 // Re-export tokenizer
 #[doc(hidden)]
 pub use quote::ToTokens;
-||||||| merged common ancestors
-#[cfg(test)]
-mod tests {
-    
-}
-=======
-// Re-export tokenizer
-#[doc(hidden)]
-pub use quote::ToTokens;
->>>>>>> upstream-releases

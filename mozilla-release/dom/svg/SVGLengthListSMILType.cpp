@@ -21,15 +21,7 @@ SVGLengthListSMILType SVGLengthListSMILType::sSingleton;
 //----------------------------------------------------------------------
 // nsISMILType implementation
 
-<<<<<<< HEAD
-void SVGLengthListSMILType::Init(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGLengthListSMILType::Init(nsSMILValue &aValue) const
-{
-=======
 void SVGLengthListSMILType::Init(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.IsNull(), "Unexpected value type");
 
   SVGLengthListAndInfo* lengthList = new SVGLengthListAndInfo();
@@ -41,33 +33,15 @@ void SVGLengthListSMILType::Init(SMILValue& aValue) const {
   aValue.mType = this;
 }
 
-<<<<<<< HEAD
-void SVGLengthListSMILType::Destroy(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGLengthListSMILType::Destroy(nsSMILValue& aValue) const
-{
-=======
 void SVGLengthListSMILType::Destroy(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == this, "Unexpected SMIL value type");
   delete static_cast<SVGLengthListAndInfo*>(aValue.mU.mPtr);
   aValue.mU.mPtr = nullptr;
   aValue.mType = SMILNullType::Singleton();
 }
 
-<<<<<<< HEAD
-nsresult SVGLengthListSMILType::Assign(nsSMILValue& aDest,
-                                       const nsSMILValue& aSrc) const {
-||||||| merged common ancestors
-nsresult
-SVGLengthListSMILType::Assign(nsSMILValue& aDest,
-                              const nsSMILValue& aSrc) const
-{
-=======
 nsresult SVGLengthListSMILType::Assign(SMILValue& aDest,
                                        const SMILValue& aSrc) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == aSrc.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL value");
 
@@ -79,18 +53,8 @@ nsresult SVGLengthListSMILType::Assign(SMILValue& aDest,
   return dest->CopyFrom(*src);
 }
 
-<<<<<<< HEAD
-bool SVGLengthListSMILType::IsEqual(const nsSMILValue& aLeft,
-                                    const nsSMILValue& aRight) const {
-||||||| merged common ancestors
-bool
-SVGLengthListSMILType::IsEqual(const nsSMILValue& aLeft,
-                               const nsSMILValue& aRight) const
-{
-=======
 bool SVGLengthListSMILType::IsEqual(const SMILValue& aLeft,
                                     const SMILValue& aRight) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLeft.mType == aRight.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aLeft.mType == this, "Unexpected type for SMIL value");
 
@@ -98,21 +62,9 @@ bool SVGLengthListSMILType::IsEqual(const SMILValue& aLeft,
          *static_cast<const SVGLengthListAndInfo*>(aRight.mU.mPtr);
 }
 
-<<<<<<< HEAD
-nsresult SVGLengthListSMILType::Add(nsSMILValue& aDest,
-                                    const nsSMILValue& aValueToAdd,
-                                    uint32_t aCount) const {
-||||||| merged common ancestors
-nsresult
-SVGLengthListSMILType::Add(nsSMILValue& aDest,
-                           const nsSMILValue& aValueToAdd,
-                           uint32_t aCount) const
-{
-=======
 nsresult SVGLengthListSMILType::Add(SMILValue& aDest,
                                     const SMILValue& aValueToAdd,
                                     uint32_t aCount) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aValueToAdd.mType == this, "Incompatible SMIL type");
 
@@ -196,21 +148,9 @@ nsresult SVGLengthListSMILType::Add(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGLengthListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                                const nsSMILValue& aTo,
-                                                double& aDistance) const {
-||||||| merged common ancestors
-nsresult
-SVGLengthListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                       const nsSMILValue& aTo,
-                                       double& aDistance) const
-{
-=======
 nsresult SVGLengthListSMILType::ComputeDistance(const SMILValue& aFrom,
                                                 const SMILValue& aTo,
                                                 double& aDistance) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrom.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aTo.mType == this, "Incompatible SMIL type");
 
@@ -223,19 +163,9 @@ nsresult SVGLengthListSMILType::ComputeDistance(const SMILValue& aFrom,
   // and documenting SVGLengthListAndInfo::CanZeroPadList().
 
   NS_ASSERTION((from.CanZeroPadList() == to.CanZeroPadList()) ||
-<<<<<<< HEAD
-                   (from.CanZeroPadList() && from.IsEmpty()) ||
-                   (to.CanZeroPadList() && to.IsEmpty()),
-               "Only \"zero\" nsSMILValues from the SMIL engine should "
-||||||| merged common ancestors
-               (from.CanZeroPadList() && from.IsEmpty()) ||
-               (to.CanZeroPadList() && to.IsEmpty()),
-               "Only \"zero\" nsSMILValues from the SMIL engine should "
-=======
                    (from.CanZeroPadList() && from.IsEmpty()) ||
                    (to.CanZeroPadList() && to.IsEmpty()),
                "Only \"zero\" SMILValues from the SMIL engine should "
->>>>>>> upstream-releases
                "return true for CanZeroPadList() when the attribute "
                "being animated can't be zero padded");
 
@@ -285,24 +215,10 @@ nsresult SVGLengthListSMILType::ComputeDistance(const SMILValue& aFrom,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGLengthListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                            const nsSMILValue& aEndVal,
-                                            double aUnitDistance,
-                                            nsSMILValue& aResult) const {
-||||||| merged common ancestors
-nsresult
-SVGLengthListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                   const nsSMILValue& aEndVal,
-                                   double aUnitDistance,
-                                   nsSMILValue& aResult) const
-{
-=======
 nsresult SVGLengthListSMILType::Interpolate(const SMILValue& aStartVal,
                                             const SMILValue& aEndVal,
                                             double aUnitDistance,
                                             SMILValue& aResult) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartVal.mType == aEndVal.mType,
              "Trying to interpolate different types");
   MOZ_ASSERT(aStartVal.mType == this, "Unexpected types for interpolation");
@@ -319,19 +235,9 @@ nsresult SVGLengthListSMILType::Interpolate(const SMILValue& aStartVal,
   // and documenting SVGLengthListAndInfo::CanZeroPadList().
 
   NS_ASSERTION((start.CanZeroPadList() == end.CanZeroPadList()) ||
-<<<<<<< HEAD
-                   (start.CanZeroPadList() && start.IsEmpty()) ||
-                   (end.CanZeroPadList() && end.IsEmpty()),
-               "Only \"zero\" nsSMILValues from the SMIL engine should "
-||||||| merged common ancestors
-               (start.CanZeroPadList() && start.IsEmpty()) ||
-               (end.CanZeroPadList() && end.IsEmpty()),
-               "Only \"zero\" nsSMILValues from the SMIL engine should "
-=======
                    (start.CanZeroPadList() && start.IsEmpty()) ||
                    (end.CanZeroPadList() && end.IsEmpty()),
                "Only \"zero\" SMILValues from the SMIL engine should "
->>>>>>> upstream-releases
                "return true for CanZeroPadList() when the attribute "
                "being animated can't be zero padded");
 

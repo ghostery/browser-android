@@ -45,96 +45,43 @@ class AsyncStatementClassInfo : public nsIClassInfo {
   NS_DECL_ISUPPORTS_INHERITED
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetInterfaces(uint32_t *_count, nsIID ***_array) override {
-    return NS_CI_INTERFACE_GETTER_NAME(AsyncStatement)(_count, _array);
-||||||| merged common ancestors
-  GetInterfaces(uint32_t *_count, nsIID ***_array) override
-  {
-    return NS_CI_INTERFACE_GETTER_NAME(AsyncStatement)(_count, _array);
-=======
   GetInterfaces(nsTArray<nsIID>& _array) override {
     return NS_CI_INTERFACE_GETTER_NAME(AsyncStatement)(_array);
->>>>>>> upstream-releases
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetScriptableHelper(nsIXPCScriptable **_helper) override {
-||||||| merged common ancestors
-  GetScriptableHelper(nsIXPCScriptable **_helper) override
-  {
-=======
   GetScriptableHelper(nsIXPCScriptable** _helper) override {
->>>>>>> upstream-releases
     static AsyncStatementJSHelper sJSHelper;
     *_helper = &sJSHelper;
     return NS_OK;
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetContractID(nsACString &aContractID) override {
-||||||| merged common ancestors
-  GetContractID(nsACString& aContractID) override
-  {
-=======
   GetContractID(nsACString& aContractID) override {
->>>>>>> upstream-releases
     aContractID.SetIsVoid(true);
     return NS_OK;
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetClassDescription(nsACString &aDesc) override {
-||||||| merged common ancestors
-  GetClassDescription(nsACString& aDesc) override
-  {
-=======
   GetClassDescription(nsACString& aDesc) override {
->>>>>>> upstream-releases
     aDesc.SetIsVoid(true);
     return NS_OK;
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetClassID(nsCID **_id) override {
-||||||| merged common ancestors
-  GetClassID(nsCID **_id) override
-  {
-=======
   GetClassID(nsCID** _id) override {
->>>>>>> upstream-releases
     *_id = nullptr;
     return NS_OK;
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetFlags(uint32_t *_flags) override {
-||||||| merged common ancestors
-  GetFlags(uint32_t *_flags) override
-  {
-=======
   GetFlags(uint32_t* _flags) override {
->>>>>>> upstream-releases
     *_flags = 0;
     return NS_OK;
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  GetClassIDNoAlloc(nsCID *_cid) override { return NS_ERROR_NOT_AVAILABLE; }
-||||||| merged common ancestors
-  GetClassIDNoAlloc(nsCID *_cid) override
-  {
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-=======
   GetClassIDNoAlloc(nsCID* _cid) override { return NS_ERROR_NOT_AVAILABLE; }
->>>>>>> upstream-releases
 };
 
 NS_IMETHODIMP_(MozExternalRefCountType) AsyncStatementClassInfo::AddRef() {
@@ -153,21 +100,9 @@ static AsyncStatementClassInfo sAsyncStatementClassInfo;
 AsyncStatement::AsyncStatement()
     : StorageBaseStatementInternal(), mFinalized(false) {}
 
-<<<<<<< HEAD
-nsresult AsyncStatement::initialize(Connection *aDBConnection,
-                                    sqlite3 *aNativeConnection,
-                                    const nsACString &aSQLStatement) {
-||||||| merged common ancestors
-nsresult
-AsyncStatement::initialize(Connection *aDBConnection,
-                           sqlite3 *aNativeConnection,
-                           const nsACString &aSQLStatement)
-{
-=======
 nsresult AsyncStatement::initialize(Connection* aDBConnection,
                                     sqlite3* aNativeConnection,
                                     const nsACString& aSQLStatement) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDBConnection, "No database connection given!");
   MOZ_ASSERT(aDBConnection->isConnectionReadyOnThisThread(),
              "Database connection should be valid");
@@ -219,15 +154,7 @@ nsresult AsyncStatement::initialize(Connection* aDBConnection,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-mozIStorageBindingParams *AsyncStatement::getParams() {
-||||||| merged common ancestors
-mozIStorageBindingParams *
-AsyncStatement::getParams()
-{
-=======
 mozIStorageBindingParams* AsyncStatement::getParams() {
->>>>>>> upstream-releases
   nsresult rv;
 
   // If we do not have an array object yet, make it.
@@ -296,46 +223,17 @@ NS_INTERFACE_MAP_BEGIN(AsyncStatement)
   NS_INTERFACE_MAP_ENTRY(mozIStorageBindingParams)
   NS_INTERFACE_MAP_ENTRY(mozilla::storage::StorageBaseStatementInternal)
   if (aIID.Equals(NS_GET_IID(nsIClassInfo))) {
-<<<<<<< HEAD
-    foundInterface = static_cast<nsIClassInfo *>(&sAsyncStatementClassInfo);
-  } else
-    NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, mozIStorageAsyncStatement)
-||||||| merged common ancestors
-    foundInterface = static_cast<nsIClassInfo *>(&sAsyncStatementClassInfo);
-  }
-  else
-  NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, mozIStorageAsyncStatement)
-=======
     foundInterface = static_cast<nsIClassInfo*>(&sAsyncStatementClassInfo);
   } else
     NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, mozIStorageAsyncStatement)
->>>>>>> upstream-releases
 NS_INTERFACE_MAP_END
 
 ////////////////////////////////////////////////////////////////////////////////
 //// StorageBaseStatementInternal
 
-<<<<<<< HEAD
-Connection *AsyncStatement::getOwner() { return mDBConnection; }
-||||||| merged common ancestors
-Connection *
-AsyncStatement::getOwner()
-{
-  return mDBConnection;
-}
-=======
 Connection* AsyncStatement::getOwner() { return mDBConnection; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-int AsyncStatement::getAsyncStatement(sqlite3_stmt **_stmt) {
-||||||| merged common ancestors
-int
-AsyncStatement::getAsyncStatement(sqlite3_stmt **_stmt)
-{
-=======
 int AsyncStatement::getAsyncStatement(sqlite3_stmt** _stmt) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   // Make sure we are never called on the connection's owning thread.
   bool onOpenedThread = false;
@@ -365,19 +263,8 @@ int AsyncStatement::getAsyncStatement(sqlite3_stmt** _stmt) {
   return SQLITE_OK;
 }
 
-<<<<<<< HEAD
-nsresult AsyncStatement::getAsynchronousStatementData(StatementData &_data) {
-  if (mFinalized) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-nsresult
-AsyncStatement::getAsynchronousStatementData(StatementData &_data)
-{
-  if (mFinalized)
-    return NS_ERROR_UNEXPECTED;
-=======
 nsresult AsyncStatement::getAsynchronousStatementData(StatementData& _data) {
   if (mFinalized) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
   // Pass null for the sqlite3_stmt; it will be requested on demand from the
   // async thread.
@@ -386,21 +273,9 @@ nsresult AsyncStatement::getAsynchronousStatementData(StatementData& _data) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-already_AddRefed<mozIStorageBindingParams> AsyncStatement::newBindingParams(
-    mozIStorageBindingParamsArray *aOwner) {
-  if (mFinalized) return nullptr;
-||||||| merged common ancestors
-already_AddRefed<mozIStorageBindingParams>
-AsyncStatement::newBindingParams(mozIStorageBindingParamsArray *aOwner)
-{
-  if (mFinalized)
-    return nullptr;
-=======
 already_AddRefed<mozIStorageBindingParams> AsyncStatement::newBindingParams(
     mozIStorageBindingParamsArray* aOwner) {
   if (mFinalized) return nullptr;
->>>>>>> upstream-releases
 
   nsCOMPtr<mozIStorageBindingParams> params(new AsyncBindingParams(aOwner));
   return params.forget();
@@ -436,30 +311,11 @@ AsyncStatement::Finalize() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AsyncStatement::BindParameters(mozIStorageBindingParamsArray *aParameters) {
-  if (mFinalized) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-AsyncStatement::BindParameters(mozIStorageBindingParamsArray *aParameters)
-{
-  if (mFinalized)
-    return NS_ERROR_UNEXPECTED;
-=======
 AsyncStatement::BindParameters(mozIStorageBindingParamsArray* aParameters) {
   if (mFinalized) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  BindingParamsArray *array = static_cast<BindingParamsArray *>(aParameters);
-  if (array->getOwner() != this) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-  BindingParamsArray *array = static_cast<BindingParamsArray *>(aParameters);
-  if (array->getOwner() != this)
-    return NS_ERROR_UNEXPECTED;
-=======
   BindingParamsArray* array = static_cast<BindingParamsArray*>(aParameters);
   if (array->getOwner() != this) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
   if (array->length() == 0) return NS_ERROR_UNEXPECTED;
 
@@ -470,14 +326,7 @@ AsyncStatement::BindParameters(mozIStorageBindingParamsArray* aParameters) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AsyncStatement::GetState(int32_t *_state) {
-||||||| merged common ancestors
-AsyncStatement::GetState(int32_t *_state)
-{
-=======
 AsyncStatement::GetState(int32_t* _state) {
->>>>>>> upstream-releases
   if (mFinalized)
     *_state = MOZ_STORAGE_STATEMENT_INVALID;
   else

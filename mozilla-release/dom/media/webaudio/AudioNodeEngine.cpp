@@ -60,22 +60,9 @@ void AudioBufferCopyWithScale(const float* aInput, float aScale, float* aOutput,
   }
 }
 
-<<<<<<< HEAD
-void AudioBufferAddWithScale(const float* aInput, float aScale, float* aOutput,
-                             uint32_t aSize) {
-#ifdef BUILD_ARM_NEON
-||||||| merged common ancestors
-void AudioBufferAddWithScale(const float* aInput,
-                             float aScale,
-                             float* aOutput,
-                             uint32_t aSize)
-{
-#ifdef BUILD_ARM_NEON
-=======
 void AudioBufferAddWithScale(const float* aInput, float aScale, float* aOutput,
                              uint32_t aSize) {
 #ifdef USE_NEON
->>>>>>> upstream-releases
   if (mozilla::supports_neon()) {
     AudioBufferAddWithScale_NEON(aInput, aScale, aOutput, aSize);
     return;
@@ -187,24 +174,10 @@ float AudioBufferPeakValue(const float* aInput, uint32_t aSize) {
   return max;
 }
 
-<<<<<<< HEAD
-void AudioBlockCopyChannelWithScale(const float aInput[WEBAUDIO_BLOCK_SIZE],
-                                    const float aScale[WEBAUDIO_BLOCK_SIZE],
-                                    float aOutput[WEBAUDIO_BLOCK_SIZE]) {
-#ifdef BUILD_ARM_NEON
-||||||| merged common ancestors
-void
-AudioBlockCopyChannelWithScale(const float aInput[WEBAUDIO_BLOCK_SIZE],
-                               const float aScale[WEBAUDIO_BLOCK_SIZE],
-                               float aOutput[WEBAUDIO_BLOCK_SIZE])
-{
-#ifdef BUILD_ARM_NEON
-=======
 void AudioBlockCopyChannelWithScale(const float aInput[WEBAUDIO_BLOCK_SIZE],
                                     const float aScale[WEBAUDIO_BLOCK_SIZE],
                                     float aOutput[WEBAUDIO_BLOCK_SIZE]) {
 #ifdef USE_NEON
->>>>>>> upstream-releases
   if (mozilla::supports_neon()) {
     AudioBlockCopyChannelWithScale_NEON(aInput, aScale, aOutput);
     return;
@@ -255,20 +228,8 @@ void AudioBufferInPlaceScale(float* aBlock, float aScale, uint32_t aSize) {
   }
 }
 
-<<<<<<< HEAD
-void AudioBufferInPlaceScale(float* aBlock, float* aScale, uint32_t aSize) {
-#ifdef BUILD_ARM_NEON
-||||||| merged common ancestors
-void
-AudioBufferInPlaceScale(float* aBlock,
-                        float* aScale,
-                        uint32_t aSize)
-{
-#ifdef BUILD_ARM_NEON
-=======
 void AudioBufferInPlaceScale(float* aBlock, float* aScale, uint32_t aSize) {
 #ifdef USE_NEON
->>>>>>> upstream-releases
   if (mozilla::supports_neon()) {
     AudioBufferInPlaceScale_NEON(aBlock, aScale, aSize);
     return;
@@ -304,30 +265,12 @@ void AudioBlockPanMonoToStereo(const float aInput[WEBAUDIO_BLOCK_SIZE],
   AudioBlockCopyChannelWithScale(aInput, aGainR, aOutputR);
 }
 
-<<<<<<< HEAD
-void AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
-                                 const float aInputR[WEBAUDIO_BLOCK_SIZE],
-                                 float aGainL, float aGainR, bool aIsOnTheLeft,
-                                 float aOutputL[WEBAUDIO_BLOCK_SIZE],
-                                 float aOutputR[WEBAUDIO_BLOCK_SIZE]) {
-#ifdef BUILD_ARM_NEON
-||||||| merged common ancestors
-void
-AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
-                            const float aInputR[WEBAUDIO_BLOCK_SIZE],
-                            float aGainL, float aGainR, bool aIsOnTheLeft,
-                            float aOutputL[WEBAUDIO_BLOCK_SIZE],
-                            float aOutputR[WEBAUDIO_BLOCK_SIZE])
-{
-#ifdef BUILD_ARM_NEON
-=======
 void AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
                                  const float aInputR[WEBAUDIO_BLOCK_SIZE],
                                  float aGainL, float aGainR, bool aIsOnTheLeft,
                                  float aOutputL[WEBAUDIO_BLOCK_SIZE],
                                  float aOutputR[WEBAUDIO_BLOCK_SIZE]) {
 #ifdef USE_NEON
->>>>>>> upstream-releases
   if (mozilla::supports_neon()) {
     AudioBlockPanStereoToStereo_NEON(aInputL, aInputR, aGainL, aGainR,
                                      aIsOnTheLeft, aOutputL, aOutputR);
@@ -358,34 +301,6 @@ void AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
   }
 }
 
-<<<<<<< HEAD
-void AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
-                                 const float aInputR[WEBAUDIO_BLOCK_SIZE],
-                                 float aGainL[WEBAUDIO_BLOCK_SIZE],
-                                 float aGainR[WEBAUDIO_BLOCK_SIZE],
-                                 bool aIsOnTheLeft[WEBAUDIO_BLOCK_SIZE],
-                                 float aOutputL[WEBAUDIO_BLOCK_SIZE],
-                                 float aOutputR[WEBAUDIO_BLOCK_SIZE]) {
-#ifdef BUILD_ARM_NEON
-  if (mozilla::supports_neon()) {
-    AudioBlockPanStereoToStereo_NEON(aInputL, aInputR, aGainL, aGainR,
-                                     aIsOnTheLeft, aOutputL, aOutputR);
-||||||| merged common ancestors
-void
-AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
-                            const float aInputR[WEBAUDIO_BLOCK_SIZE],
-                            float aGainL[WEBAUDIO_BLOCK_SIZE],
-                            float aGainR[WEBAUDIO_BLOCK_SIZE],
-                            bool  aIsOnTheLeft[WEBAUDIO_BLOCK_SIZE],
-                            float aOutputL[WEBAUDIO_BLOCK_SIZE],
-                            float aOutputR[WEBAUDIO_BLOCK_SIZE])
-{
-#ifdef BUILD_ARM_NEON
-   if (mozilla::supports_neon()) {
-     AudioBlockPanStereoToStereo_NEON(aInputL, aInputR,
-                                      aGainL, aGainR, aIsOnTheLeft,
-                                      aOutputL, aOutputR);
-=======
 void AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
                                  const float aInputR[WEBAUDIO_BLOCK_SIZE],
                                  float aGainL[WEBAUDIO_BLOCK_SIZE],
@@ -397,7 +312,6 @@ void AudioBlockPanStereoToStereo(const float aInputL[WEBAUDIO_BLOCK_SIZE],
   if (mozilla::supports_neon()) {
     AudioBlockPanStereoToStereo_NEON(aInputL, aInputR, aGainL, aGainR,
                                      aIsOnTheLeft, aOutputL, aOutputR);
->>>>>>> upstream-releases
     return;
   }
 #endif
@@ -449,22 +363,6 @@ float AudioBufferSumOfSquares(const float* aInput, uint32_t aLength) {
 }
 
 AudioNodeEngine::AudioNodeEngine(dom::AudioNode* aNode)
-<<<<<<< HEAD
-    : mNode(aNode),
-      mNodeType(aNode ? aNode->NodeType() : nullptr),
-      mInputCount(aNode ? aNode->NumberOfInputs() : 1),
-      mOutputCount(aNode ? aNode->NumberOfOutputs() : 0),
-      mAbstractMainThread(aNode ? aNode->AbstractMainThread()
-                                : AbstractThread::MainThread()) {
-||||||| merged common ancestors
-  : mNode(aNode)
-  , mNodeType(aNode ? aNode->NodeType() : nullptr)
-  , mInputCount(aNode ? aNode->NumberOfInputs() : 1)
-  , mOutputCount(aNode ? aNode->NumberOfOutputs() : 0)
-  , mAbstractMainThread(
-      aNode ? aNode->AbstractMainThread() : AbstractThread::MainThread())
-{
-=======
     : mNode(aNode),
       mNodeType(aNode ? aNode->NodeType() : nullptr),
       mInputCount(aNode ? aNode->NumberOfInputs() : 1),
@@ -472,7 +370,6 @@ AudioNodeEngine::AudioNodeEngine(dom::AudioNode* aNode)
       mAbstractMainThread(aNode && aNode->GetAbstractMainThread()
                               ? aNode->GetAbstractMainThread()
                               : AbstractThread::MainThread()) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_COUNT_CTOR(AudioNodeEngine);
 }

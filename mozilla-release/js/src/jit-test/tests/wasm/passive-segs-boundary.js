@@ -293,28 +293,12 @@ tab_test_nofail("elem.drop 1", "",
 
 // init with no table
 tab_test("(table.init 1 (i32.const 12) (i32.const 1) (i32.const 1))", "",
-<<<<<<< HEAD
-         WebAssembly.CompileError, /table index out of range/,
-         false);
-||||||| merged common ancestors
-         WebAssembly.CompileError, /can't table.init without a table/,
-         false);
-=======
          WebAssembly.CompileError, /table index out of range/,
          /*haveStorage=*/false, /*haveInitA=*/false, /*haveInitP=*/false);
->>>>>>> upstream-releases
 
 // drop with elem seg ix out of range
-<<<<<<< HEAD
-tab_test("table.drop 4", "",
-         WebAssembly.CompileError, /element segment index out of range for table.drop/);
-||||||| merged common ancestors
-tab_test("table.drop 4", "",
-         WebAssembly.CompileError, /table.drop index out of range/);
-=======
 tab_test("elem.drop 4", "",
          WebAssembly.CompileError, /element segment index out of range for elem.drop/);
->>>>>>> upstream-releases
 
 // init with elem seg ix out of range
 tab_test("(table.init 4 (i32.const 12) (i32.const 1) (i32.const 1))", "",

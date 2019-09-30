@@ -25,42 +25,6 @@ class VRMockDisplay final : public DOMEventTargetHelper {
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(VRMockDisplay, DOMEventTargetHelper)
 
-<<<<<<< HEAD
-  VRMockDisplay(const nsCString& aID, uint32_t aDeviceID);
-  void SetEyeParameter(VREye aEye, double aOffsetX, double aOffsetY,
-                       double aOffsetZ, double aUpDegree, double aRightDegree,
-                       double aDownDegree, double aLeftDegree);
-  void SetEyeResolution(unsigned long aRenderWidth,
-                        unsigned long aRenderHeight);
-  void SetPose(const Nullable<Float32Array>& aPosition,
-               const Nullable<Float32Array>& aLinearVelocity,
-               const Nullable<Float32Array>& aLinearAcceleration,
-               const Nullable<Float32Array>& aOrientation,
-               const Nullable<Float32Array>& aAngularVelocity,
-               const Nullable<Float32Array>& aAngularAcceleration);
-  void SetMountState(bool aIsMounted) {
-    mDisplayInfo.mDisplayState.mIsMounted = aIsMounted;
-  }
-  void Update();
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-
- private:
-||||||| merged common ancestors
-  VRMockDisplay(const nsCString& aID, uint32_t aDeviceID);
-  void SetEyeParameter(VREye aEye, double aOffsetX, double aOffsetY, double aOffsetZ,
-                       double aUpDegree, double aRightDegree,
-                       double aDownDegree, double aLeftDegree);
-  void SetEyeResolution(unsigned long aRenderWidth, unsigned long aRenderHeight);
-  void SetPose(const Nullable<Float32Array>& aPosition, const Nullable<Float32Array>& aLinearVelocity,
-               const Nullable<Float32Array>& aLinearAcceleration, const Nullable<Float32Array>& aOrientation,
-               const Nullable<Float32Array>& aAngularVelocity, const Nullable<Float32Array>& aAngularAcceleration);
-  void SetMountState(bool aIsMounted) { mDisplayInfo.mDisplayState.mIsMounted = aIsMounted; }
-  void Update();
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-private:
-=======
   explicit VRMockDisplay(VRServiceTest* aVRServiceTest);
 
   void Create();
@@ -107,7 +71,6 @@ private:
                                JS::Handle<JSObject*> aGivenProto) override;
 
  private:
->>>>>>> upstream-releases
   ~VRMockDisplay() = default;
   gfx::VRDisplayState& DisplayState() const;
   gfx::VRHMDSensorState& SensorState() const;
@@ -120,36 +83,6 @@ private:
 class VRMockController : public DOMEventTargetHelper {
  public:
   NS_DECL_ISUPPORTS_INHERITED
-<<<<<<< HEAD
-  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(VRMockController,
-                                           DOMEventTargetHelper)
-
-  VRMockController(const nsCString& aID, uint32_t aDeviceID);
-  void NewButtonEvent(unsigned long aButton, bool aPressed);
-  void NewAxisMoveEvent(unsigned long aAxis, double aValue);
-  void NewPoseMove(const Nullable<Float32Array>& aPosition,
-                   const Nullable<Float32Array>& aLinearVelocity,
-                   const Nullable<Float32Array>& aLinearAcceleration,
-                   const Nullable<Float32Array>& aOrientation,
-                   const Nullable<Float32Array>& aAngularVelocity,
-                   const Nullable<Float32Array>& aAngularAcceleration);
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-
- private:
-||||||| merged common ancestors
-  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(VRMockController, DOMEventTargetHelper)
-
-  VRMockController(const nsCString& aID, uint32_t aDeviceID);
-  void NewButtonEvent(unsigned long aButton, bool aPressed);
-  void NewAxisMoveEvent(unsigned long aAxis, double aValue);
-  void NewPoseMove(const Nullable<Float32Array>& aPosition, const Nullable<Float32Array>& aLinearVelocity,
-                   const Nullable<Float32Array>& aLinearAcceleration, const Nullable<Float32Array>& aOrientation,
-                   const Nullable<Float32Array>& aAngularVelocity, const Nullable<Float32Array>& aAngularAcceleration);
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-private:
-=======
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(VRMockController,
                                            DOMEventTargetHelper)
 
@@ -188,7 +121,6 @@ private:
                                JS::Handle<JSObject*> aGivenProto) override;
 
  private:
->>>>>>> upstream-releases
   ~VRMockController() = default;
   gfx::VRControllerState& ControllerState() const;
   void SetCapFlag(GamepadCapabilityFlags aFlag, bool aEnabled);
@@ -202,15 +134,6 @@ class VRServiceTest final : public DOMEventTargetHelper {
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(VRServiceTest, DOMEventTargetHelper)
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> AttachVRDisplay(const nsAString& aID,
-                                            ErrorResult& aRv);
-  already_AddRefed<Promise> AttachVRController(const nsAString& aID,
-                                               ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise> AttachVRDisplay(const nsAString& aID, ErrorResult& aRv);
-  already_AddRefed<Promise> AttachVRController(const nsAString& aID, ErrorResult& aRv);
-=======
   // WebIDL interface
 
   void ClearAll();
@@ -235,23 +158,7 @@ class VRServiceTest final : public DOMEventTargetHelper {
   void StopTimer();
 
   // Implementation
->>>>>>> upstream-releases
   void Shutdown();
-<<<<<<< HEAD
-
-  static already_AddRefed<VRServiceTest> CreateTestService(
-      nsPIDOMWindowInner* aWindow);
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-
- private:
-||||||| merged common ancestors
-
-  static already_AddRefed<VRServiceTest> CreateTestService(nsPIDOMWindowInner* aWindow);
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-private:
-=======
   void AddCommand(uint64_t aCommand);
   static already_AddRefed<VRServiceTest> CreateTestService(
       nsPIDOMWindowInner* aWindow);
@@ -260,7 +167,6 @@ private:
   gfx::VRSystemState& SystemState();
 
  private:
->>>>>>> upstream-releases
   explicit VRServiceTest(nsPIDOMWindowInner* aWindow);
   ~VRServiceTest() = default;
   void EncodeData();

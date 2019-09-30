@@ -201,16 +201,8 @@ initFromResourceBundle(UErrorCode& sts) {
                     // a timezone key uses a colon instead of a slash in the resource.
                     // e.g. America:Los_Angeles
                     if (uprv_strchr(legacyTypeId, ':') != NULL) {
-<<<<<<< HEAD
-                        int32_t legacyTypeIdLen = static_cast<int32_t>(uprv_strlen(legacyTypeId));
-                        char* legacyTypeIdBuf = (char*)uprv_malloc(legacyTypeIdLen + 1);
-||||||| merged common ancestors
-                        int32_t legacyTypeIdLen = uprv_strlen(legacyTypeId);
-                        char* legacyTypeIdBuf = (char*)uprv_malloc(legacyTypeIdLen + 1);
-=======
                         icu::CharString* legacyTypeIdBuf =
                                 gKeyTypeStringPool->create(legacyTypeId, sts);
->>>>>>> upstream-releases
                         if (legacyTypeIdBuf == NULL) {
                             sts = U_MEMORY_ALLOCATION_ERROR;
                             break;
@@ -285,16 +277,8 @@ initFromResourceBundle(UErrorCode& sts) {
                             if (isTZ) {
                                 // replace colon with slash if necessary
                                 if (uprv_strchr(from, ':') != NULL) {
-<<<<<<< HEAD
-                                    int32_t fromLen = static_cast<int32_t>(uprv_strlen(from));
-                                    char* fromBuf = (char*)uprv_malloc(fromLen + 1);
-||||||| merged common ancestors
-                                    int32_t fromLen = uprv_strlen(from);
-                                    char* fromBuf = (char*)uprv_malloc(fromLen + 1);
-=======
                                     icu::CharString* fromBuf =
                                             gKeyTypeStringPool->create(from, sts);
->>>>>>> upstream-releases
                                     if (fromBuf == NULL) {
                                         sts = U_MEMORY_ALLOCATION_ERROR;
                                         break;

@@ -60,125 +60,6 @@ def method(prop):
         return prop.camel_case[1:]
     return prop.camel_case
 
-<<<<<<< HEAD
-# Colors, integers and lengths are easy as well.
-#
-# TODO(emilio): This will go away once the rest of the longhands have been
-# moved or perhaps using a blacklist for the ones with non-layout-dependence
-# but other non-trivial dependence like scrollbar colors.
-SERIALIZED_PREDEFINED_TYPES = [
-    "Appearance",
-    "BackgroundRepeat",
-    "BackgroundSize",
-    "BorderImageRepeat",
-    "BorderStyle",
-    "BreakBetween",
-    "BreakWithin",
-    "Clear",
-    "ClipRectOrAuto",
-    "Color",
-    "Content",
-    "CounterIncrement",
-    "CounterReset",
-    "FillRule",
-    "Float",
-    "FontFamily",
-    "FontFeatureSettings",
-    "FontLanguageOverride",
-    "FontSize",
-    "FontSizeAdjust",
-    "FontStretch",
-    "FontStyle",
-    "FontSynthesis",
-    "FontVariant",
-    "FontVariantAlternates",
-    "FontVariantEastAsian",
-    "FontVariantLigatures",
-    "FontVariantNumeric",
-    "FontVariationSettings",
-    "FontWeight",
-    "Integer",
-    "ImageLayer",
-    "Length",
-    "LengthOrPercentage",
-    "NonNegativeLength",
-    "NonNegativeLengthOrPercentage",
-    "ListStyleType",
-    "OffsetPath",
-    "Opacity",
-    "OutlineStyle",
-    "OverflowWrap",
-    "Position",
-    "Quotes",
-    "Resize",
-    "Rotate",
-    "Scale",
-    "TextAlign",
-    "Translate",
-    "TimingFunction",
-    "TransformStyle",
-    "UserSelect",
-    "background::BackgroundSize",
-    "basic_shape::ClippingShape",
-    "basic_shape::FloatAreaShape",
-    "position::HorizontalPosition",
-    "position::VerticalPosition",
-    "url::ImageUrlOrNone",
-    "Appearance",
-    "OverscrollBehavior",
-    "OverflowClipBox",
-    "ScrollSnapType",
-    "Float",
-||||||| merged common ancestors
-# Colors, integers and lengths are easy as well.
-#
-# TODO(emilio): This will go away once the rest of the longhands have been
-# moved or perhaps using a blacklist for the ones with non-layout-dependence
-# but other non-trivial dependence like scrollbar colors.
-SERIALIZED_PREDEFINED_TYPES = [
-    "Appearance",
-    "BackgroundRepeat",
-    "BackgroundSize",
-    "Clear",
-    "ClipRectOrAuto",
-    "Color",
-    "Content",
-    "CounterIncrement",
-    "CounterReset",
-    "Float",
-    "FontFamily",
-    "FontFeatureSettings",
-    "FontLanguageOverride",
-    "FontSize",
-    "FontSizeAdjust",
-    "FontStretch",
-    "FontStyle",
-    "FontSynthesis",
-    "FontVariant",
-    "FontVariantAlternates",
-    "FontVariantEastAsian",
-    "FontVariantLigatures",
-    "FontVariantNumeric",
-    "FontVariationSettings",
-    "FontWeight",
-    "Integer",
-    "ImageLayer",
-    "Length",
-    "LengthOrPercentage",
-    "NonNegativeLength",
-    "NonNegativeLengthOrPercentage",
-    "ListStyleType",
-    "OffsetPath",
-    "Opacity",
-    "Resize",
-    "TransformStyle",
-    "background::BackgroundSize",
-    "basic_shape::ClippingShape",
-    "basic_shape::FloatAreaShape",
-    "position::HorizontalPosition",
-    "position::VerticalPosition",
-    "url::ImageUrlOrNone",
-=======
 # TODO(emilio): Get this to zero.
 LONGHANDS_NOT_SERIALIZED_WITH_SERVO = [
     # Servo serializes one value when both are the same, a few tests expect two.
@@ -199,7 +80,6 @@ LONGHANDS_NOT_SERIALIZED_WITH_SERVO = [
 
     # resistfingerprinting stuff.
     "-moz-osx-font-smoothing",
->>>>>>> upstream-releases
 ]
 
 def serialized_by_servo(prop):

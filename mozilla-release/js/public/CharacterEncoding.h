@@ -247,19 +247,6 @@ JS_PUBLIC_API uint32_t Utf8ToOneUcs4Char(const uint8_t* utf8Buffer,
  * - On success, returns a malloc'd TwoByteCharsZ, and updates |outlen| to hold
  *   its length;  the length value excludes the trailing null.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API TwoByteCharsZ UTF8CharsToNewTwoByteCharsZ(
-    JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-
-/*
- * Like UTF8CharsToNewTwoByteCharsZ, but for WTF8Chars.
- */
-extern JS_PUBLIC_API TwoByteCharsZ WTF8CharsToNewTwoByteCharsZ(
-    JSContext* cx, const WTF8Chars wtf8, size_t* outlen);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(TwoByteCharsZ)
-UTF8CharsToNewTwoByteCharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-=======
 extern JS_PUBLIC_API TwoByteCharsZ
 UTF8CharsToNewTwoByteCharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen,
                             arena_id_t destArenaId);
@@ -270,51 +257,26 @@ UTF8CharsToNewTwoByteCharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen,
 extern JS_PUBLIC_API TwoByteCharsZ
 WTF8CharsToNewTwoByteCharsZ(JSContext* cx, const WTF8Chars wtf8, size_t* outlen,
                             arena_id_t destArenaId);
->>>>>>> upstream-releases
 
 /*
  * Like UTF8CharsToNewTwoByteCharsZ, but for ConstUTF8CharsZ.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API TwoByteCharsZ UTF8CharsToNewTwoByteCharsZ(
-    JSContext* cx, const ConstUTF8CharsZ& utf8, size_t* outlen);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(TwoByteCharsZ)
-UTF8CharsToNewTwoByteCharsZ(JSContext* cx, const ConstUTF8CharsZ& utf8, size_t* outlen);
-=======
 extern JS_PUBLIC_API TwoByteCharsZ
 UTF8CharsToNewTwoByteCharsZ(JSContext* cx, const ConstUTF8CharsZ& utf8,
                             size_t* outlen, arena_id_t destArenaId);
->>>>>>> upstream-releases
 
 /*
  * The same as UTF8CharsToNewTwoByteCharsZ(), except that any malformed UTF-8
  * characters will be replaced by \uFFFD. No exception will be thrown for
  * malformed UTF-8 input.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API TwoByteCharsZ LossyUTF8CharsToNewTwoByteCharsZ(
-    JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(TwoByteCharsZ)
-LossyUTF8CharsToNewTwoByteCharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-=======
 extern JS_PUBLIC_API TwoByteCharsZ
 LossyUTF8CharsToNewTwoByteCharsZ(JSContext* cx, const UTF8Chars utf8,
                                  size_t* outlen, arena_id_t destArenaId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API TwoByteCharsZ LossyUTF8CharsToNewTwoByteCharsZ(
-    JSContext* cx, const ConstUTF8CharsZ& utf8, size_t* outlen);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(TwoByteCharsZ)
-LossyUTF8CharsToNewTwoByteCharsZ(JSContext* cx, const ConstUTF8CharsZ& utf8, size_t* outlen);
-=======
 extern JS_PUBLIC_API TwoByteCharsZ
 LossyUTF8CharsToNewTwoByteCharsZ(JSContext* cx, const ConstUTF8CharsZ& utf8,
                                  size_t* outlen, arena_id_t destArenaId);
->>>>>>> upstream-releases
 
 /*
  * Returns the length of the char buffer required to encode |s| as UTF8.
@@ -358,34 +320,18 @@ JS_PUBLIC_API SmallestEncoding FindSmallestEncoding(UTF8Chars utf8);
  * report an error if the string contains non-Latin-1 codepoints.  Returns
  * Latin1CharsZ() on failure.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API Latin1CharsZ
-UTF8CharsToNewLatin1CharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(Latin1CharsZ)
-UTF8CharsToNewLatin1CharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-=======
 extern JS_PUBLIC_API Latin1CharsZ
 UTF8CharsToNewLatin1CharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen,
                            arena_id_t destArenaId);
->>>>>>> upstream-releases
 
 /*
  * Return a null-terminated Latin-1 string copied from the input string,
  * storing its length (excluding null terminator) in |*outlen|.  Non-Latin-1
  * codepoints are replaced by '?'.  Returns Latin1CharsZ() on failure.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API Latin1CharsZ LossyUTF8CharsToNewLatin1CharsZ(
-    JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(Latin1CharsZ)
-LossyUTF8CharsToNewLatin1CharsZ(JSContext* cx, const UTF8Chars utf8, size_t* outlen);
-=======
 extern JS_PUBLIC_API Latin1CharsZ
 LossyUTF8CharsToNewLatin1CharsZ(JSContext* cx, const UTF8Chars utf8,
                                 size_t* outlen, arena_id_t destArenaId);
->>>>>>> upstream-releases
 
 /*
  * Returns true if all characters in the given null-terminated string are

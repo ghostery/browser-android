@@ -181,18 +181,9 @@ ia2Accessible::role(long* aRole) {
   return S_OK;
 }
 
-<<<<<<< HEAD
-STDMETHODIMP
-ia2Accessible::scrollTo(enum IA2ScrollType aScrollType) {
-||||||| merged common ancestors
-STDMETHODIMP
-ia2Accessible::scrollTo(enum IA2ScrollType aScrollType)
-{
-=======
 // XXX Use MOZ_CAN_RUN_SCRIPT_BOUNDARY for now due to bug 1543294.
 MOZ_CAN_RUN_SCRIPT_BOUNDARY STDMETHODIMP
 ia2Accessible::scrollTo(enum IA2ScrollType aScrollType) {
->>>>>>> upstream-releases
   AccessibleWrap* acc = static_cast<AccessibleWrap*>(this);
   if (acc->IsDefunct()) return CO_E_OBJNOTCONNECTED;
 

@@ -16,13 +16,7 @@
   --accessibility-arrow-horizontal-padding: 4px;
   --accessibility-tree-row-height: 21px;
   --accessibility-unfocused-tree-focused-node-background: var(--grey-20);
-<<<<<<< HEAD
-  --accessibility-unfocused-tree-focused-node-twisty-fill: var(--theme-twisty-fill);
-||||||| merged common ancestors
-  --accessibility-tree-focused-node-twisty-brightness: brightness(20%);
-=======
   --accessibility-unfocused-tree-focused-node-twisty-fill: var(--theme-icon-dimmed-color);
->>>>>>> upstream-releases
   --accessibility-link-color: var(--blue-60);
   --accessibility-link-color-active: var(--blue-70);
   --accessibility-body-background-a90: rgba(255, 255, 255, 0.9);
@@ -39,13 +33,7 @@
 
 :root.theme-dark {
   --accessibility-unfocused-tree-focused-node-background: var(--grey-70);
-<<<<<<< HEAD
-  --accessibility-unfocused-tree-focused-node-twisty-fill: var(--theme-twisty-selected-fill);
-||||||| merged common ancestors
-  --accessibility-tree-focused-node-twisty-brightness: unset;
-=======
   --accessibility-unfocused-tree-focused-node-twisty-fill: var(--theme-selection-color);
->>>>>>> upstream-releases
   --accessibility-link-color: var(--theme-highlight-blue);
   --accessibility-link-color-active: var(--blue-40);
   --accessibility-body-background-a90: rgba(42, 42, 46, 0.9);
@@ -83,23 +71,12 @@ body {
 
 .accessible .tree .node.focused .theme-twisty,
 .treeTable .treeRow.selected .theme-twisty {
-<<<<<<< HEAD
-  fill: var(--theme-twisty-selected-fill);
-||||||| merged common ancestors
-  background-position: -28px -14px;
-}
-
-.accessible .tree .node.focused .theme-twisty.open,
-.treeTable .treeRow.selected .theme-twisty.open {
-  background-position: -42px -14px;
-=======
   fill: var(--theme-selection-color);
 }
 
 .mainFrame {
   height: 100%;
   color: var(--theme-toolbar-color);
->>>>>>> upstream-releases
 }
 
 .main-panel {
@@ -347,16 +324,8 @@ body {
   background-color: var(--accessibility-unfocused-tree-focused-node-background);
 }
 
-<<<<<<< HEAD
-.treeTable:not(:focus) tbody:not(:focus) .treeRow.selected .theme-twisty {
-  fill: var(--accessibility-unfocused-tree-focused-node-twisty-fill);
-||||||| merged common ancestors
-.treeTable:not(:focus) tbody:not(:focus) .treeRow.selected .theme-twisty {
-  filter: var(--accessibility-tree-focused-node-twisty-brightness);
-=======
 .treeTable:not(:focus):not(:focus-within) .treeRow.selected .theme-twisty {
   fill: var(--accessibility-unfocused-tree-focused-node-twisty-fill);
->>>>>>> upstream-releases
 }
 
 .treeTable:not(:focus):not(:focus-within) .treeRow.selected *,

@@ -32,101 +32,6 @@ class Proxy {
   static bool defineProperty(JSContext* cx, HandleObject proxy, HandleId id,
                              Handle<JS::PropertyDescriptor> desc,
                              ObjectOpResult& result);
-<<<<<<< HEAD
-  static bool ownPropertyKeys(JSContext* cx, HandleObject proxy,
-                              AutoIdVector& props);
-  static bool delete_(JSContext* cx, HandleObject proxy, HandleId id,
-                      ObjectOpResult& result);
-  static JSObject* enumerate(JSContext* cx, HandleObject proxy);
-  static bool isExtensible(JSContext* cx, HandleObject proxy, bool* extensible);
-  static bool preventExtensions(JSContext* cx, HandleObject proxy,
-                                ObjectOpResult& result);
-  static bool getPrototype(JSContext* cx, HandleObject proxy,
-                           MutableHandleObject protop);
-  static bool setPrototype(JSContext* cx, HandleObject proxy,
-                           HandleObject proto, ObjectOpResult& result);
-  static bool getPrototypeIfOrdinary(JSContext* cx, HandleObject proxy,
-                                     bool* isOrdinary,
-                                     MutableHandleObject protop);
-  static bool setImmutablePrototype(JSContext* cx, HandleObject proxy,
-                                    bool* succeeded);
-  static bool has(JSContext* cx, HandleObject proxy, HandleId id, bool* bp);
-  static bool get(JSContext* cx, HandleObject proxy, HandleValue receiver,
-                  HandleId id, MutableHandleValue vp);
-  static bool getInternal(JSContext* cx, HandleObject proxy,
-                          HandleValue receiver, HandleId id,
-                          MutableHandleValue vp);
-  static bool set(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v,
-                  HandleValue receiver, ObjectOpResult& result);
-  static bool setInternal(JSContext* cx, HandleObject proxy, HandleId id,
-                          HandleValue v, HandleValue receiver,
-                          ObjectOpResult& result);
-  static bool call(JSContext* cx, HandleObject proxy, const CallArgs& args);
-  static bool construct(JSContext* cx, HandleObject proxy,
-                        const CallArgs& args);
-
-  /* SpiderMonkey extensions. */
-  static bool getPropertyDescriptor(JSContext* cx, HandleObject proxy,
-                                    HandleId id,
-                                    MutableHandle<JS::PropertyDescriptor> desc);
-  static bool hasOwn(JSContext* cx, HandleObject proxy, HandleId id, bool* bp);
-  static bool getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject proxy,
-                                           AutoIdVector& props);
-  static bool nativeCall(JSContext* cx, IsAcceptableThis test, NativeImpl impl,
-                         const CallArgs& args);
-  static bool hasInstance(JSContext* cx, HandleObject proxy,
-                          MutableHandleValue v, bool* bp);
-  static bool getBuiltinClass(JSContext* cx, HandleObject proxy, ESClass* cls);
-  static bool isArray(JSContext* cx, HandleObject proxy,
-                      JS::IsArrayAnswer* answer);
-  static const char* className(JSContext* cx, HandleObject proxy);
-  static JSString* fun_toString(JSContext* cx, HandleObject proxy,
-                                bool isToSource);
-  static RegExpShared* regexp_toShared(JSContext* cx, HandleObject proxy);
-  static bool boxedValue_unbox(JSContext* cx, HandleObject proxy,
-                               MutableHandleValue vp);
-
-  static bool getElements(JSContext* cx, HandleObject obj, uint32_t begin,
-                          uint32_t end, ElementAdder* adder);
-
-  static void trace(JSTracer* trc, JSObject* obj);
-||||||| merged common ancestors
-    static bool getPrototypeIfOrdinary(JSContext* cx, HandleObject proxy, bool* isOrdinary,
-                                       MutableHandleObject protop);
-    static bool setImmutablePrototype(JSContext* cx, HandleObject proxy, bool* succeeded);
-    static bool has(JSContext* cx, HandleObject proxy, HandleId id, bool* bp);
-    static bool get(JSContext* cx, HandleObject proxy, HandleValue receiver, HandleId id,
-                    MutableHandleValue vp);
-    static bool getInternal(JSContext* cx, HandleObject proxy, HandleValue receiver,
-                            HandleId id, MutableHandleValue vp);
-    static bool set(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v,
-                    HandleValue receiver, ObjectOpResult& result);
-    static bool setInternal(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v,
-                            HandleValue receiver, ObjectOpResult& result);
-    static bool call(JSContext* cx, HandleObject proxy, const CallArgs& args);
-    static bool construct(JSContext* cx, HandleObject proxy, const CallArgs& args);
-
-    /* SpiderMonkey extensions. */
-    static bool getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
-                                      MutableHandle<JS::PropertyDescriptor> desc);
-    static bool hasOwn(JSContext* cx, HandleObject proxy, HandleId id, bool* bp);
-    static bool getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject proxy,
-                                             AutoIdVector& props);
-    static bool nativeCall(JSContext* cx, IsAcceptableThis test, NativeImpl impl,
-                           const CallArgs& args);
-    static bool hasInstance(JSContext* cx, HandleObject proxy, MutableHandleValue v, bool* bp);
-    static bool getBuiltinClass(JSContext* cx, HandleObject proxy, ESClass* cls);
-    static bool isArray(JSContext* cx, HandleObject proxy, JS::IsArrayAnswer* answer);
-    static const char* className(JSContext* cx, HandleObject proxy);
-    static JSString* fun_toString(JSContext* cx, HandleObject proxy, bool isToSource);
-    static RegExpShared* regexp_toShared(JSContext* cx, HandleObject proxy);
-    static bool boxedValue_unbox(JSContext* cx, HandleObject proxy, MutableHandleValue vp);
-
-    static bool getElements(JSContext* cx, HandleObject obj, uint32_t begin, uint32_t end,
-                            ElementAdder* adder);
-
-    static void trace(JSTracer* trc, JSObject* obj);
-=======
   static bool ownPropertyKeys(JSContext* cx, HandleObject proxy,
                               MutableHandleIdVector props);
   static bool delete_(JSContext* cx, HandleObject proxy, HandleId id,
@@ -182,7 +87,6 @@ class Proxy {
                           uint32_t end, ElementAdder* adder);
 
   static void trace(JSTracer* trc, JSObject* obj);
->>>>>>> upstream-releases
 };
 
 size_t proxy_ObjectMoved(JSObject* obj, JSObject* old);

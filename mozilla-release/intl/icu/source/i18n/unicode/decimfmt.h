@@ -63,30 +63,6 @@ class NumberParserImpl;
 }
 }
 
-<<<<<<< HEAD
-/**
- * \cond
- * explicit template instantiation. see digitlst.h
- * (When building DLLs for Windows this is required.)
- */
-#if U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN && !defined(U_IN_DOXYGEN)
-template class U_I18N_API    EnumSet<UNumberFormatAttribute,
-            UNUM_MAX_NONBOOLEAN_ATTRIBUTE+1,
-            UNUM_LIMIT_BOOLEAN_ATTRIBUTE>;
-#endif
-/** \endcond */
-
-||||||| merged common ancestors
-// explicit template instantiation. see digitlst.h
-// (When building DLLs for Windows this is required.)
-#if U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
-template class U_I18N_API    EnumSet<UNumberFormatAttribute,
-            UNUM_MAX_NONBOOLEAN_ATTRIBUTE+1,
-            UNUM_LIMIT_BOOLEAN_ATTRIBUTE>;
-#endif
-
-=======
->>>>>>> upstream-releases
 /**
  * **IMPORTANT:** New users are strongly encouraged to see if
  * numberformatter.h fits their use case.  Although not deprecated, this header
@@ -2145,19 +2121,10 @@ class U_I18N_API DecimalFormat : public NumberFormat {
      * The new signature should be used in case an error occurs while returning the
      * LocalizedNumberFormatter.
      *
-<<<<<<< HEAD
-     * @return The output variable, for chaining.
-     * @draft ICU 62
-||||||| merged common ancestors
-     * @param output The variable into which to store the LocalizedNumberFormatter.
-     * @return The output variable, for chaining.
-     * @draft ICU 62
-=======
      * This old signature will be removed in ICU 65.
      *
      * @return A reference to an internal object.
      * @deprecated ICU 64
->>>>>>> upstream-releases
      */
     const number::LocalizedNumberFormatter& toNumberFormatter() const;
 #endif  /* U_HIDE_DEPRECATED_API */

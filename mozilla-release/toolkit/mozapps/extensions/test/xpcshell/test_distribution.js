@@ -30,18 +30,6 @@ async function setOldModificationTime() {
 
 const ID = "addon@tests.mozilla.org";
 
-<<<<<<< HEAD
-async function writeDistroAddon(version) {
-  let xpi = await createTempWebExtensionFile({
-    manifest: {
-      version,
-      applications: {gecko: {id: ID}},
-    },
-  });
-  xpi.copyTo(distroDir, `${ID}.xpi`);
-||||||| merged common ancestors
-  run_test_1();
-=======
 async function writeDistroAddon(version) {
   let xpi = await createTempWebExtensionFile({
     manifest: {
@@ -50,7 +38,6 @@ async function writeDistroAddon(version) {
     },
   });
   xpi.copyTo(distroDir, `${ID}.xpi`);
->>>>>>> upstream-releases
 }
 
 // Tests that on the first startup the add-on gets installed

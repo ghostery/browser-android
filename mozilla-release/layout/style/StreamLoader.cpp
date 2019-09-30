@@ -25,14 +25,7 @@ NS_IMPL_ISUPPORTS(StreamLoader, nsIStreamListener)
 
 /* nsIRequestObserver implementation */
 NS_IMETHODIMP
-<<<<<<< HEAD
-StreamLoader::OnStartRequest(nsIRequest* aRequest, nsISupports*) {
-||||||| merged common ancestors
-StreamLoader::OnStartRequest(nsIRequest* aRequest, nsISupports*)
-{
-=======
 StreamLoader::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   // It's kinda bad to let Web content send a number that results
   // in a potentially large allocation directly, but efficiency of
   // compression bombs is so great that it doesn't make much sense
@@ -54,17 +47,7 @@ StreamLoader::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-StreamLoader::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                            nsresult aStatus) {
-||||||| merged common ancestors
-StreamLoader::OnStopRequest(nsIRequest* aRequest,
-                            nsISupports* aContext,
-                            nsresult aStatus)
-{
-=======
 StreamLoader::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   // Decoded data
   nsCString utf8String;
   {
@@ -130,21 +113,8 @@ StreamLoader::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
 
 /* nsIStreamListener implementation */
 NS_IMETHODIMP
-<<<<<<< HEAD
-StreamLoader::OnDataAvailable(nsIRequest*, nsISupports*,
-                              nsIInputStream* aInputStream, uint64_t,
-                              uint32_t aCount) {
-||||||| merged common ancestors
-StreamLoader::OnDataAvailable(nsIRequest*,
-                              nsISupports*,
-                              nsIInputStream* aInputStream,
-                              uint64_t,
-                              uint32_t aCount)
-{
-=======
 StreamLoader::OnDataAvailable(nsIRequest*, nsIInputStream* aInputStream,
                               uint64_t, uint32_t aCount) {
->>>>>>> upstream-releases
   if (NS_FAILED(mStatus)) {
     return mStatus;
   }

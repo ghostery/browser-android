@@ -15,21 +15,7 @@ const TEST_DATA = [
     expectedPathList: [
       {
         selector: ".animation-iteration-path",
-<<<<<<< HEAD
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ]
-=======
         path: [{ x: 0, y: 100 }, { x: 50000, y: 50 }, { x: 100000, y: 0 }],
->>>>>>> upstream-releases
       },
     ],
     expectedTooltip: "Playback rate: -1",
@@ -40,21 +26,7 @@ const TEST_DATA = [
     expectedPathList: [
       {
         selector: ".animation-iteration-path",
-<<<<<<< HEAD
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ]
-=======
         path: [{ x: 0, y: 100 }, { x: 50000, y: 50 }, { x: 100000, y: 0 }],
->>>>>>> upstream-releases
       },
     ],
     expectedTooltip: "Playback rate: -2",
@@ -74,21 +46,7 @@ const TEST_DATA = [
     expectedPathList: [
       {
         selector: ".animation-iteration-path",
-<<<<<<< HEAD
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ]
-=======
         path: [{ x: 0, y: 100 }, { x: 50000, y: 50 }, { x: 100000, y: 0 }],
->>>>>>> upstream-releases
       },
     ],
     expectedTooltip: "Playback rate: -1",
@@ -107,37 +65,11 @@ const TEST_DATA = [
     expectedPathList: [
       {
         selector: ".animation-iteration-path",
-<<<<<<< HEAD
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 50000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 0, y: 100 },
-          { x: 50000, y: 50 },
-          { x: 50000, y: 0 },
-        ]
-=======
         path: [{ x: 0, y: 100 }, { x: 50000, y: 50 }, { x: 50000, y: 0 }],
->>>>>>> upstream-releases
       },
       {
         selector: ".animation-negative-delay-path path",
-<<<<<<< HEAD
-        path: [
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 50000, y: 50 },
-          { x: 100000, y: 0 },
-        ]
-=======
         path: [{ x: 50000, y: 50 }, { x: 100000, y: 0 }],
->>>>>>> upstream-releases
       },
     ],
     expectedTooltip: "Playback rate: -1",
@@ -157,21 +89,7 @@ const TEST_DATA = [
     expectedPathList: [
       {
         selector: ".animation-iteration-path",
-<<<<<<< HEAD
-        path: [
-          { x: 50000, y: 100 },
-          { x: 100000, y: 50 },
-          { x: 150000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 50000, y: 100 },
-          { x: 100000, y: 50 },
-          { x: 150000, y: 0 },
-        ]
-=======
         path: [{ x: 50000, y: 100 }, { x: 100000, y: 50 }, { x: 150000, y: 0 }],
->>>>>>> upstream-releases
       },
     ],
     expectedTooltip: "Playback rate: -1",
@@ -191,35 +109,11 @@ const TEST_DATA = [
     expectedPathList: [
       {
         selector: ".animation-iteration-path",
-<<<<<<< HEAD
-        path: [
-          { x: 0, y: 50 },
-          { x: 50000, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: 0, y: 50 },
-          { x: 50000, y: 0 },
-        ]
-=======
         path: [{ x: 0, y: 50 }, { x: 50000, y: 0 }],
->>>>>>> upstream-releases
       },
       {
         selector: ".animation-negative-end-delay-path path",
-<<<<<<< HEAD
-        path: [
-          { x: -50000, y: 100 },
-          { x: 0, y: 0 },
-        ],
-||||||| merged common ancestors
-        path: [
-          { x: -50000, y: 100 },
-          { x: 0, y: 0 },
-        ]
-=======
         path: [{ x: -50000, y: 100 }, { x: 0, y: 0 }],
->>>>>>> upstream-releases
       },
     ],
     expectedTooltip: "Playback rate: -1",

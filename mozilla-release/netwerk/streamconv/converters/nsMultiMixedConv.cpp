@@ -22,44 +22,6 @@
 #include "nsHttpHeaderArray.h"
 #include "mozilla/AutoRestore.h"
 
-<<<<<<< HEAD
-nsPartChannel::nsPartChannel(nsIChannel *aMultipartChannel, uint32_t aPartID,
-                             nsIStreamListener *aListener)
-    : mMultipartChannel(aMultipartChannel),
-      mListener(aListener),
-      mStatus(NS_OK),
-      mLoadFlags(0),
-      mContentDisposition(0),
-      mContentLength(UINT64_MAX),
-      mIsByteRangeRequest(false),
-      mByteRangeStart(0),
-      mByteRangeEnd(0),
-      mPartID(aPartID),
-      mIsLastPart(false) {
-  // Inherit the load flags from the original channel...
-  mMultipartChannel->GetLoadFlags(&mLoadFlags);
-
-  mMultipartChannel->GetLoadGroup(getter_AddRefs(mLoadGroup));
-||||||| merged common ancestors
-nsPartChannel::nsPartChannel(nsIChannel *aMultipartChannel, uint32_t aPartID,
-                             nsIStreamListener* aListener) :
-  mMultipartChannel(aMultipartChannel),
-  mListener(aListener),
-  mStatus(NS_OK),
-  mLoadFlags(0),
-  mContentDisposition(0),
-  mContentLength(UINT64_MAX),
-  mIsByteRangeRequest(false),
-  mByteRangeStart(0),
-  mByteRangeEnd(0),
-  mPartID(aPartID),
-  mIsLastPart(false)
-{
-    // Inherit the load flags from the original channel...
-    mMultipartChannel->GetLoadFlags(&mLoadFlags);
-
-    mMultipartChannel->GetLoadGroup(getter_AddRefs(mLoadGroup));
-=======
 nsPartChannel::nsPartChannel(nsIChannel* aMultipartChannel, uint32_t aPartID,
                              nsIStreamListener* aListener)
     : mMultipartChannel(aMultipartChannel),
@@ -77,7 +39,6 @@ nsPartChannel::nsPartChannel(nsIChannel* aMultipartChannel, uint32_t aPartID,
   mMultipartChannel->GetLoadFlags(&mLoadFlags);
 
   mMultipartChannel->GetLoadGroup(getter_AddRefs(mLoadGroup));
->>>>>>> upstream-releases
 }
 
 void nsPartChannel::InitializeByteRange(int64_t aStart, int64_t aEnd) {
@@ -87,83 +48,24 @@ void nsPartChannel::InitializeByteRange(int64_t aStart, int64_t aEnd) {
   mByteRangeEnd = aEnd;
 }
 
-<<<<<<< HEAD
-nsresult nsPartChannel::SendOnStartRequest(nsISupports *aContext) {
-  return mListener->OnStartRequest(this, aContext);
-||||||| merged common ancestors
-nsresult nsPartChannel::SendOnStartRequest(nsISupports* aContext)
-{
-    return mListener->OnStartRequest(this, aContext);
-=======
 nsresult nsPartChannel::SendOnStartRequest(nsISupports* aContext) {
   return mListener->OnStartRequest(this);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsPartChannel::SendOnDataAvailable(nsISupports *aContext,
-                                            nsIInputStream *aStream,
-                                            uint64_t aOffset, uint32_t aLen) {
-  return mListener->OnDataAvailable(this, aContext, aStream, aOffset, aLen);
-||||||| merged common ancestors
-nsresult nsPartChannel::SendOnDataAvailable(nsISupports* aContext,
-                                            nsIInputStream* aStream,
-                                            uint64_t aOffset, uint32_t aLen)
-{
-    return mListener->OnDataAvailable(this, aContext, aStream, aOffset, aLen);
-=======
 nsresult nsPartChannel::SendOnDataAvailable(nsISupports* aContext,
                                             nsIInputStream* aStream,
                                             uint64_t aOffset, uint32_t aLen) {
   return mListener->OnDataAvailable(this, aStream, aOffset, aLen);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsPartChannel::SendOnStopRequest(nsISupports *aContext,
-                                          nsresult aStatus) {
-  // Drop the listener
-  nsCOMPtr<nsIStreamListener> listener;
-  listener.swap(mListener);
-  return listener->OnStopRequest(this, aContext, aStatus);
-||||||| merged common ancestors
-nsresult nsPartChannel::SendOnStopRequest(nsISupports* aContext,
-                                          nsresult aStatus)
-{
-    // Drop the listener
-    nsCOMPtr<nsIStreamListener> listener;
-    listener.swap(mListener);
-    return listener->OnStopRequest(this, aContext, aStatus);
-=======
 nsresult nsPartChannel::SendOnStopRequest(nsISupports* aContext,
                                           nsresult aStatus) {
   // Drop the listener
   nsCOMPtr<nsIStreamListener> listener;
   listener.swap(mListener);
   return listener->OnStopRequest(this, aStatus);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsPartChannel::SetContentDisposition(
-    const nsACString &aContentDispositionHeader) {
-  mContentDispositionHeader = aContentDispositionHeader;
-  nsCOMPtr<nsIURI> uri;
-  GetURI(getter_AddRefs(uri));
-  NS_GetFilenameFromDisposition(mContentDispositionFilename,
-                                mContentDispositionHeader, uri);
-  mContentDisposition =
-      NS_GetContentDispositionFromHeader(mContentDispositionHeader, this);
-||||||| merged common ancestors
-void nsPartChannel::SetContentDisposition(const nsACString& aContentDispositionHeader)
-{
-    mContentDispositionHeader = aContentDispositionHeader;
-    nsCOMPtr<nsIURI> uri;
-    GetURI(getter_AddRefs(uri));
-    NS_GetFilenameFromDisposition(mContentDispositionFilename,
-                                  mContentDispositionHeader, uri);
-    mContentDisposition = NS_GetContentDispositionFromHeader(mContentDispositionHeader, this);
-=======
 void nsPartChannel::SetContentDisposition(
     const nsACString& aContentDispositionHeader) {
   mContentDispositionHeader = aContentDispositionHeader;
@@ -173,7 +75,6 @@ void nsPartChannel::SetContentDisposition(
                                 mContentDispositionHeader, uri);
   mContentDisposition =
       NS_GetContentDispositionFromHeader(mContentDispositionHeader, this);
->>>>>>> upstream-releases
 }
 
 //
@@ -196,63 +97,19 @@ NS_INTERFACE_MAP_END
 //
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetName(nsACString &aResult) {
-  return mMultipartChannel->GetName(aResult);
-||||||| merged common ancestors
-nsPartChannel::GetName(nsACString &aResult)
-{
-    return mMultipartChannel->GetName(aResult);
-=======
 nsPartChannel::GetName(nsACString& aResult) {
   return mMultipartChannel->GetName(aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::IsPending(bool *aResult) {
-  // For now, consider the active lifetime of each part the same as
-  // the underlying multipart channel...  This is not exactly right,
-  // but it is good enough :-)
-  return mMultipartChannel->IsPending(aResult);
-||||||| merged common ancestors
-nsPartChannel::IsPending(bool *aResult)
-{
-    // For now, consider the active lifetime of each part the same as
-    // the underlying multipart channel...  This is not exactly right,
-    // but it is good enough :-)
-    return mMultipartChannel->IsPending(aResult);
-=======
 nsPartChannel::IsPending(bool* aResult) {
   // For now, consider the active lifetime of each part the same as
   // the underlying multipart channel...  This is not exactly right,
   // but it is good enough :-)
   return mMultipartChannel->IsPending(aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetStatus(nsresult *aResult) {
-  nsresult rv = NS_OK;
-
-  if (NS_FAILED(mStatus)) {
-    *aResult = mStatus;
-  } else {
-    rv = mMultipartChannel->GetStatus(aResult);
-  }
-||||||| merged common ancestors
-nsPartChannel::GetStatus(nsresult *aResult)
-{
-    nsresult rv = NS_OK;
-
-    if (NS_FAILED(mStatus)) {
-        *aResult = mStatus;
-    } else {
-        rv = mMultipartChannel->GetStatus(aResult);
-    }
-=======
 nsPartChannel::GetStatus(nsresult* aResult) {
   nsresult rv = NS_OK;
 
@@ -261,7 +118,6 @@ nsPartChannel::GetStatus(nsresult* aResult) {
   } else {
     rv = mMultipartChannel->GetStatus(aResult);
   }
->>>>>>> upstream-releases
 
   return rv;
 }
@@ -296,109 +152,31 @@ nsPartChannel::Resume(void) {
 //
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetOriginalURI(nsIURI **aURI) {
-  return mMultipartChannel->GetOriginalURI(aURI);
-||||||| merged common ancestors
-nsPartChannel::GetOriginalURI(nsIURI * *aURI)
-{
-    return mMultipartChannel->GetOriginalURI(aURI);
-=======
 nsPartChannel::GetOriginalURI(nsIURI** aURI) {
   return mMultipartChannel->GetOriginalURI(aURI);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetOriginalURI(nsIURI *aURI) {
-  return mMultipartChannel->SetOriginalURI(aURI);
-||||||| merged common ancestors
-nsPartChannel::SetOriginalURI(nsIURI *aURI)
-{
-    return mMultipartChannel->SetOriginalURI(aURI);
-=======
 nsPartChannel::SetOriginalURI(nsIURI* aURI) {
   return mMultipartChannel->SetOriginalURI(aURI);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetURI(nsIURI **aURI) { return mMultipartChannel->GetURI(aURI); }
-||||||| merged common ancestors
-nsPartChannel::GetURI(nsIURI * *aURI)
-{
-    return mMultipartChannel->GetURI(aURI);
-}
-=======
 nsPartChannel::GetURI(nsIURI** aURI) { return mMultipartChannel->GetURI(aURI); }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::Open(nsIInputStream **result) {
-  // This channel cannot be opened!
-  return NS_ERROR_FAILURE;
-}
-||||||| merged common ancestors
-nsPartChannel::Open(nsIInputStream **result)
-{
-    // This channel cannot be opened!
-    return NS_ERROR_FAILURE;
-}
-=======
 nsPartChannel::Open(nsIInputStream** aStream) {
   nsCOMPtr<nsIStreamListener> listener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsPartChannel::Open2(nsIInputStream **aStream) {
-  nsCOMPtr<nsIStreamListener> listener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return Open(aStream);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsPartChannel::Open2(nsIInputStream** aStream)
-{
-    nsCOMPtr<nsIStreamListener> listener;
-    nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-    NS_ENSURE_SUCCESS(rv, rv);
-    return Open(aStream);
-=======
-  // This channel cannot be opened!
-  return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
-}
-
-NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::AsyncOpen(nsIStreamListener *aListener, nsISupports *aContext) {
   // This channel cannot be opened!
   return NS_ERROR_FAILURE;
 }
 
 NS_IMETHODIMP
-nsPartChannel::AsyncOpen2(nsIStreamListener *aListener) {
-||||||| merged common ancestors
-nsPartChannel::AsyncOpen(nsIStreamListener *aListener, nsISupports *aContext)
-{
-    // This channel cannot be opened!
-    return NS_ERROR_FAILURE;
-}
-
-NS_IMETHODIMP
-nsPartChannel::AsyncOpen2(nsIStreamListener *aListener)
-{
-=======
 nsPartChannel::AsyncOpen(nsIStreamListener* aListener) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIStreamListener> listener = aListener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
@@ -409,20 +187,9 @@ nsPartChannel::AsyncOpen(nsIStreamListener* aListener) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetLoadFlags(nsLoadFlags *aLoadFlags) {
-  *aLoadFlags = mLoadFlags;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetLoadFlags(nsLoadFlags *aLoadFlags)
-{
-    *aLoadFlags = mLoadFlags;
-    return NS_OK;
-=======
 nsPartChannel::GetLoadFlags(nsLoadFlags* aLoadFlags) {
   *aLoadFlags = mLoadFlags;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -432,239 +199,90 @@ nsPartChannel::SetLoadFlags(nsLoadFlags aLoadFlags) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetIsDocument(bool *aIsDocument) {
-  return NS_GetIsDocumentChannel(this, aIsDocument);
-||||||| merged common ancestors
-nsPartChannel::GetIsDocument(bool *aIsDocument)
-{
-    return NS_GetIsDocumentChannel(this, aIsDocument);
-=======
 nsPartChannel::GetIsDocument(bool* aIsDocument) {
   return NS_GetIsDocumentChannel(this, aIsDocument);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetLoadGroup(nsILoadGroup **aLoadGroup) {
-  *aLoadGroup = mLoadGroup;
-  NS_IF_ADDREF(*aLoadGroup);
-||||||| merged common ancestors
-nsPartChannel::GetLoadGroup(nsILoadGroup* *aLoadGroup)
-{
-    *aLoadGroup = mLoadGroup;
-    NS_IF_ADDREF(*aLoadGroup);
-=======
 nsPartChannel::GetLoadGroup(nsILoadGroup** aLoadGroup) {
   *aLoadGroup = mLoadGroup;
   NS_IF_ADDREF(*aLoadGroup);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetLoadGroup(nsILoadGroup *aLoadGroup) {
-  mLoadGroup = aLoadGroup;
-||||||| merged common ancestors
-nsPartChannel::SetLoadGroup(nsILoadGroup* aLoadGroup)
-{
-    mLoadGroup = aLoadGroup;
-=======
 nsPartChannel::SetLoadGroup(nsILoadGroup* aLoadGroup) {
   mLoadGroup = aLoadGroup;
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetOwner(nsISupports **aOwner) {
-  return mMultipartChannel->GetOwner(aOwner);
-||||||| merged common ancestors
-nsPartChannel::GetOwner(nsISupports* *aOwner)
-{
-    return mMultipartChannel->GetOwner(aOwner);
-=======
 nsPartChannel::GetOwner(nsISupports** aOwner) {
   return mMultipartChannel->GetOwner(aOwner);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetOwner(nsISupports *aOwner) {
-  return mMultipartChannel->SetOwner(aOwner);
-||||||| merged common ancestors
-nsPartChannel::SetOwner(nsISupports* aOwner)
-{
-    return mMultipartChannel->SetOwner(aOwner);
-=======
 nsPartChannel::SetOwner(nsISupports* aOwner) {
   return mMultipartChannel->SetOwner(aOwner);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetLoadInfo(nsILoadInfo **aLoadInfo) {
-  return mMultipartChannel->GetLoadInfo(aLoadInfo);
-||||||| merged common ancestors
-nsPartChannel::GetLoadInfo(nsILoadInfo* *aLoadInfo)
-{
-    return mMultipartChannel->GetLoadInfo(aLoadInfo);
-=======
 nsPartChannel::GetLoadInfo(nsILoadInfo** aLoadInfo) {
   return mMultipartChannel->GetLoadInfo(aLoadInfo);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetLoadInfo(nsILoadInfo *aLoadInfo) {
-  return mMultipartChannel->SetLoadInfo(aLoadInfo);
-||||||| merged common ancestors
-nsPartChannel::SetLoadInfo(nsILoadInfo* aLoadInfo)
-{
-    return mMultipartChannel->SetLoadInfo(aLoadInfo);
-=======
 nsPartChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
   MOZ_RELEASE_ASSERT(aLoadInfo, "loadinfo can't be null");
   return mMultipartChannel->SetLoadInfo(aLoadInfo);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetNotificationCallbacks(nsIInterfaceRequestor **aCallbacks) {
-  return mMultipartChannel->GetNotificationCallbacks(aCallbacks);
-||||||| merged common ancestors
-nsPartChannel::GetNotificationCallbacks(nsIInterfaceRequestor* *aCallbacks)
-{
-    return mMultipartChannel->GetNotificationCallbacks(aCallbacks);
-=======
 nsPartChannel::GetNotificationCallbacks(nsIInterfaceRequestor** aCallbacks) {
   return mMultipartChannel->GetNotificationCallbacks(aCallbacks);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks) {
-  return mMultipartChannel->SetNotificationCallbacks(aCallbacks);
-||||||| merged common ancestors
-nsPartChannel::SetNotificationCallbacks(nsIInterfaceRequestor* aCallbacks)
-{
-    return mMultipartChannel->SetNotificationCallbacks(aCallbacks);
-=======
 nsPartChannel::SetNotificationCallbacks(nsIInterfaceRequestor* aCallbacks) {
   return mMultipartChannel->SetNotificationCallbacks(aCallbacks);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetSecurityInfo(nsISupports **aSecurityInfo) {
-  return mMultipartChannel->GetSecurityInfo(aSecurityInfo);
-||||||| merged common ancestors
-nsPartChannel::GetSecurityInfo(nsISupports * *aSecurityInfo)
-{
-    return mMultipartChannel->GetSecurityInfo(aSecurityInfo);
-=======
 nsPartChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
   return mMultipartChannel->GetSecurityInfo(aSecurityInfo);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetContentType(nsACString &aContentType) {
-  aContentType = mContentType;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetContentType(nsACString &aContentType)
-{
-    aContentType = mContentType;
-    return NS_OK;
-=======
 nsPartChannel::GetContentType(nsACString& aContentType) {
   aContentType = mContentType;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetContentType(const nsACString &aContentType) {
-  bool dummy;
-  net_ParseContentType(aContentType, mContentType, mContentCharset, &dummy);
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::SetContentType(const nsACString &aContentType)
-{
-    bool dummy;
-    net_ParseContentType(aContentType, mContentType, mContentCharset, &dummy);
-    return NS_OK;
-=======
 nsPartChannel::SetContentType(const nsACString& aContentType) {
   bool dummy;
   net_ParseContentType(aContentType, mContentType, mContentCharset, &dummy);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetContentCharset(nsACString &aContentCharset) {
-  aContentCharset = mContentCharset;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetContentCharset(nsACString &aContentCharset)
-{
-    aContentCharset = mContentCharset;
-    return NS_OK;
-=======
 nsPartChannel::GetContentCharset(nsACString& aContentCharset) {
   aContentCharset = mContentCharset;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetContentCharset(const nsACString &aContentCharset) {
-  mContentCharset = aContentCharset;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::SetContentCharset(const nsACString &aContentCharset)
-{
-    mContentCharset = aContentCharset;
-    return NS_OK;
-=======
 nsPartChannel::SetContentCharset(const nsACString& aContentCharset) {
   mContentCharset = aContentCharset;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetContentLength(int64_t *aContentLength) {
-  *aContentLength = mContentLength;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetContentLength(int64_t *aContentLength)
-{
-    *aContentLength = mContentLength;
-    return NS_OK;
-=======
 nsPartChannel::GetContentLength(int64_t* aContentLength) {
   *aContentLength = mContentLength;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -674,18 +292,8 @@ nsPartChannel::SetContentLength(int64_t aContentLength) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetContentDisposition(uint32_t *aContentDisposition) {
-  if (mContentDispositionHeader.IsEmpty()) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsPartChannel::GetContentDisposition(uint32_t *aContentDisposition)
-{
-    if (mContentDispositionHeader.IsEmpty())
-        return NS_ERROR_NOT_AVAILABLE;
-=======
 nsPartChannel::GetContentDisposition(uint32_t* aContentDisposition) {
   if (mContentDispositionHeader.IsEmpty()) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *aContentDisposition = mContentDisposition;
   return NS_OK;
@@ -697,93 +305,39 @@ nsPartChannel::SetContentDisposition(uint32_t aContentDisposition) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetContentDispositionFilename(
-    nsAString &aContentDispositionFilename) {
-  if (mContentDispositionFilename.IsEmpty()) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsPartChannel::GetContentDispositionFilename(nsAString &aContentDispositionFilename)
-{
-    if (mContentDispositionFilename.IsEmpty())
-        return NS_ERROR_NOT_AVAILABLE;
-=======
 nsPartChannel::GetContentDispositionFilename(
     nsAString& aContentDispositionFilename) {
   if (mContentDispositionFilename.IsEmpty()) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   aContentDispositionFilename = mContentDispositionFilename;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::SetContentDispositionFilename(
-    const nsAString &aContentDispositionFilename) {
-  return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsPartChannel::SetContentDispositionFilename(const nsAString &aContentDispositionFilename)
-{
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsPartChannel::SetContentDispositionFilename(
     const nsAString& aContentDispositionFilename) {
   return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetContentDispositionHeader(
-    nsACString &aContentDispositionHeader) {
-  if (mContentDispositionHeader.IsEmpty()) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsPartChannel::GetContentDispositionHeader(nsACString &aContentDispositionHeader)
-{
-    if (mContentDispositionHeader.IsEmpty())
-        return NS_ERROR_NOT_AVAILABLE;
-=======
 nsPartChannel::GetContentDispositionHeader(
     nsACString& aContentDispositionHeader) {
   if (mContentDispositionHeader.IsEmpty()) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   aContentDispositionHeader = mContentDispositionHeader;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetPartID(uint32_t *aPartID) {
-  *aPartID = mPartID;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetPartID(uint32_t *aPartID)
-{
-    *aPartID = mPartID;
-    return NS_OK;
-=======
 nsPartChannel::GetPartID(uint32_t* aPartID) {
   *aPartID = mPartID;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetIsLastPart(bool *aIsLastPart) {
-  *aIsLastPart = mIsLastPart;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetIsLastPart(bool *aIsLastPart)
-{
-    *aIsLastPart = mIsLastPart;
-    return NS_OK;
-=======
 nsPartChannel::GetIsLastPart(bool* aIsLastPart) {
   *aIsLastPart = mIsLastPart;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 //
@@ -791,66 +345,28 @@ nsPartChannel::GetIsLastPart(bool* aIsLastPart) {
 //
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetIsByteRangeRequest(bool *aIsByteRangeRequest) {
-  *aIsByteRangeRequest = mIsByteRangeRequest;
-||||||| merged common ancestors
-nsPartChannel::GetIsByteRangeRequest(bool *aIsByteRangeRequest)
-{
-    *aIsByteRangeRequest = mIsByteRangeRequest;
-=======
 nsPartChannel::GetIsByteRangeRequest(bool* aIsByteRangeRequest) {
   *aIsByteRangeRequest = mIsByteRangeRequest;
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetStartRange(int64_t *aStartRange) {
-  *aStartRange = mByteRangeStart;
-||||||| merged common ancestors
-nsPartChannel::GetStartRange(int64_t *aStartRange)
-{
-    *aStartRange = mByteRangeStart;
-=======
 nsPartChannel::GetStartRange(int64_t* aStartRange) {
   *aStartRange = mByteRangeStart;
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetEndRange(int64_t *aEndRange) {
-  *aEndRange = mByteRangeEnd;
-  return NS_OK;
-||||||| merged common ancestors
-nsPartChannel::GetEndRange(int64_t *aEndRange)
-{
-    *aEndRange = mByteRangeEnd;
-    return NS_OK;
-=======
 nsPartChannel::GetEndRange(int64_t* aEndRange) {
   *aEndRange = mByteRangeEnd;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPartChannel::GetBaseChannel(nsIChannel **aReturn) {
-  NS_ENSURE_ARG_POINTER(aReturn);
-||||||| merged common ancestors
-nsPartChannel::GetBaseChannel(nsIChannel ** aReturn)
-{
-    NS_ENSURE_ARG_POINTER(aReturn);
-=======
 nsPartChannel::GetBaseChannel(nsIChannel** aReturn) {
   NS_ENSURE_ARG_POINTER(aReturn);
->>>>>>> upstream-releases
 
   *aReturn = mMultipartChannel;
   NS_IF_ADDREF(*aReturn);
@@ -865,67 +381,21 @@ NS_IMPL_ISUPPORTS(nsMultiMixedConv, nsIStreamConverter, nsIStreamListener,
 
 // No syncronous conversion at this time.
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMultiMixedConv::Convert(nsIInputStream *aFromStream, const char *aFromType,
-                          const char *aToType, nsISupports *aCtxt,
-                          nsIInputStream **_retval) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsMultiMixedConv::Convert(nsIInputStream *aFromStream,
-                          const char *aFromType,
-                          const char *aToType,
-                          nsISupports *aCtxt, nsIInputStream **_retval) {
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsMultiMixedConv::Convert(nsIInputStream* aFromStream, const char* aFromType,
                           const char* aToType, nsISupports* aCtxt,
                           nsIInputStream** _retval) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
 // Stream converter service calls this to initialize the actual stream converter
 // (us).
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMultiMixedConv::AsyncConvertData(const char *aFromType, const char *aToType,
-                                   nsIStreamListener *aListener,
-                                   nsISupports *aCtxt) {
-  NS_ASSERTION(aListener && aFromType && aToType,
-               "null pointer passed into multi mixed converter");
-
-  // hook up our final listener. this guy gets the various On*() calls we want
-  // to throw at him.
-  //
-  // WARNING: this listener must be able to handle multiple OnStartRequest,
-  // OnDataAvail() and OnStopRequest() call combinations. We call of series
-  // of these for each sub-part in the raw stream.
-  mFinalListener = aListener;
-||||||| merged common ancestors
-nsMultiMixedConv::AsyncConvertData(const char *aFromType, const char *aToType,
-                                   nsIStreamListener *aListener, nsISupports *aCtxt) {
-    NS_ASSERTION(aListener && aFromType && aToType, "null pointer passed into multi mixed converter");
-=======
 nsMultiMixedConv::AsyncConvertData(const char* aFromType, const char* aToType,
                                    nsIStreamListener* aListener,
                                    nsISupports* aCtxt) {
   NS_ASSERTION(aListener && aFromType && aToType,
                "null pointer passed into multi mixed converter");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-||||||| merged common ancestors
-    // hook up our final listener. this guy gets the various On*() calls we want to throw
-    // at him.
-    //
-    // WARNING: this listener must be able to handle multiple OnStartRequest, OnDataAvail()
-    //  and OnStopRequest() call combinations. We call of series of these for each sub-part
-    //  in the raw stream.
-    mFinalListener = aListener;
-
-    return NS_OK;
-=======
   // hook up our final listener. this guy gets the various On*() calls we want
   // to throw at him.
   //
@@ -935,46 +405,22 @@ nsMultiMixedConv::AsyncConvertData(const char* aFromType, const char* aToType,
   mFinalListener = aListener;
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 // nsIRequestObserver implementation
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMultiMixedConv::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
-  // we're assuming the content-type is available at this stage
-  NS_ASSERTION(mBoundary.IsEmpty(), "a second on start???");
-||||||| merged common ancestors
-nsMultiMixedConv::OnStartRequest(nsIRequest *request, nsISupports *ctxt)
-{
-    // we're assuming the content-type is available at this stage
-    NS_ASSERTION(mBoundary.IsEmpty(), "a second on start???");
-
-    nsresult rv;
-=======
 nsMultiMixedConv::OnStartRequest(nsIRequest* request) {
   // we're assuming the content-type is available at this stage
   NS_ASSERTION(mBoundary.IsEmpty(), "a second on start???");
->>>>>>> upstream-releases
 
   nsresult rv;
 
-<<<<<<< HEAD
-  mContext = ctxt;
   mTotalSent = 0;
   mChannel = do_QueryInterface(request, &rv);
   if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    nsAutoCString contentType;
-=======
-  mTotalSent = 0;
-  mChannel = do_QueryInterface(request, &rv);
-  if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   nsAutoCString contentType;
 
-<<<<<<< HEAD
   // ask the HTTP channel for the content-type and extract the boundary from it.
   nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(mChannel, &rv);
   if (NS_SUCCEEDED(rv)) {
@@ -988,34 +434,6 @@ nsMultiMixedConv::OnStartRequest(nsIRequest* request) {
         NS_LITERAL_CSTRING("content-security-policy"), csp);
     if (NS_SUCCEEDED(rv)) {
       mRootContentSecurityPolicy = csp;
-||||||| merged common ancestors
-    Tokenizer p(contentType);
-    p.SkipUntil(Token::Char(';'));
-    if (!p.CheckChar(';')) {
-        return NS_ERROR_CORRUPTED_CONTENT;
-    }
-    p.SkipWhites();
-    if (!p.CheckWord("boundary")) {
-        return NS_ERROR_CORRUPTED_CONTENT;
-    }
-    p.SkipWhites();
-    if (!p.CheckChar('=')) {
-        return NS_ERROR_CORRUPTED_CONTENT;
-=======
-  // ask the HTTP channel for the content-type and extract the boundary from it.
-  nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(mChannel, &rv);
-  if (NS_SUCCEEDED(rv)) {
-    rv = httpChannel->GetResponseHeader(NS_LITERAL_CSTRING("content-type"),
-                                        contentType);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-    nsCString csp;
-    rv = httpChannel->GetResponseHeader(
-        NS_LITERAL_CSTRING("content-security-policy"), csp);
-    if (NS_SUCCEEDED(rv)) {
-      mRootContentSecurityPolicy = csp;
->>>>>>> upstream-releases
     }
   } else {
     // try asking the channel directly
@@ -1077,32 +495,6 @@ nsMultiMixedConv::OnStartRequest(nsIRequest* request) {
 
 // nsIStreamListener implementation
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMultiMixedConv::OnDataAvailable(nsIRequest *request, nsISupports *context,
-                                  nsIInputStream *inStr, uint64_t sourceOffset,
-                                  uint32_t count) {
-  // Failing these assertions may indicate that some of the target listeners of
-  // this converter is looping the thead queue, which is harmful to how we
-  // collect the raw (content) data.
-  MOZ_DIAGNOSTIC_ASSERT(!mInOnDataAvailable,
-                        "nsMultiMixedConv::OnDataAvailable reentered!");
-  MOZ_DIAGNOSTIC_ASSERT(
-      !mRawData, "There are unsent data from the previous tokenizer feed!");
-||||||| merged common ancestors
-nsMultiMixedConv::OnDataAvailable(nsIRequest *request, nsISupports *context,
-                                  nsIInputStream *inStr, uint64_t sourceOffset,
-                                  uint32_t count)
-{
-    // Failing these assertions may indicate that some of the target listeners of this converter
-    // is looping the thead queue, which is harmful to how we collect the raw (content) data.
-    MOZ_DIAGNOSTIC_ASSERT(!mInOnDataAvailable, "nsMultiMixedConv::OnDataAvailable reentered!");
-    MOZ_DIAGNOSTIC_ASSERT(!mRawData, "There are unsent data from the previous tokenizer feed!");
-
-    if (mInOnDataAvailable) {
-        // The multipart logic is incapable of being reentered.
-        return NS_ERROR_UNEXPECTED;
-    }
-=======
 nsMultiMixedConv::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
                                   uint64_t sourceOffset, uint32_t count) {
   // Failing these assertions may indicate that some of the target listeners of
@@ -1112,7 +504,6 @@ nsMultiMixedConv::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
                         "nsMultiMixedConv::OnDataAvailable reentered!");
   MOZ_DIAGNOSTIC_ASSERT(
       !mRawData, "There are unsent data from the previous tokenizer feed!");
->>>>>>> upstream-releases
 
   if (mInOnDataAvailable) {
     // The multipart logic is incapable of being reentered.
@@ -1132,19 +523,8 @@ nsMultiMixedConv::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMultiMixedConv::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
-                                nsresult aStatus) {
-  nsresult rv;
-||||||| merged common ancestors
-nsMultiMixedConv::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
-                                nsresult aStatus)
-{
-    nsresult rv;
-=======
 nsMultiMixedConv::OnStopRequest(nsIRequest* request, nsresult aStatus) {
   nsresult rv;
->>>>>>> upstream-releases
 
   if (mBoundary.IsEmpty()) {  // no token, no love.
     return NS_ERROR_FAILURE;
@@ -1171,32 +551,14 @@ nsMultiMixedConv::OnStopRequest(nsIRequest* request, nsresult aStatus) {
     // the middle of sending data. if we were, mPartChannel,
     // above, would have been non-null.
 
-<<<<<<< HEAD
-    (void)mFinalListener->OnStartRequest(request, ctxt);
-    (void)mFinalListener->OnStopRequest(request, ctxt, aStatus);
-  }
-||||||| merged common ancestors
-        (void) mFinalListener->OnStartRequest(request, ctxt);
-        (void) mFinalListener->OnStopRequest(request, ctxt, aStatus);
-    }
-=======
     (void)mFinalListener->OnStartRequest(request);
     (void)mFinalListener->OnStopRequest(request, aStatus);
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsMultiMixedConv::ConsumeToken(Token const &token) {
-||||||| merged common ancestors
-nsresult
-nsMultiMixedConv::ConsumeToken(Token const & token)
-{
-=======
 nsresult nsMultiMixedConv::ConsumeToken(Token const& token) {
->>>>>>> upstream-releases
   nsresult rv;
 
   switch (mParserState) {
@@ -1432,20 +794,9 @@ nsresult nsMultiMixedConv::SendStart() {
   // before starting up another "part." that would be bad.
   MOZ_ASSERT(!mPartChannel, "tisk tisk, shouldn't be overwriting a channel");
 
-<<<<<<< HEAD
-  nsPartChannel *newChannel;
-  newChannel = new nsPartChannel(mChannel, mCurrentPartID++, partListener);
-  if (!newChannel) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-    nsPartChannel *newChannel;
-    newChannel = new nsPartChannel(mChannel, mCurrentPartID++, partListener);
-    if (!newChannel)
-        return NS_ERROR_OUT_OF_MEMORY;
-=======
   nsPartChannel* newChannel;
   newChannel = new nsPartChannel(mChannel, mCurrentPartID++, partListener);
   if (!newChannel) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
 
   if (mIsByteRangeRequest) {
     newChannel->InitializeByteRange(mByteRangeStart, mByteRangeEnd);
@@ -1515,64 +866,6 @@ nsresult nsMultiMixedConv::SendStop(nsresult aStatus) {
   return rv;
 }
 
-<<<<<<< HEAD
-void nsMultiMixedConv::AccumulateData(Token const &aToken) {
-  if (!mRawData) {
-    // This is the first read of raw data during this FeedInput loop
-    // of the incremental tokenizer.  All 'raw' tokens are coming from
-    // the same linear buffer, hence begining of this loop raw data
-    // is begining of the first raw token.  Length of this loop raw
-    // data is just sum of all 'raw' tokens we collect during this loop.
-    //
-    // It's ensured we flush (send to to the listener via OnDataAvailable)
-    // and nullify the collected raw data right after FeedInput call.
-    // Hence, the reference can't outlive the actual buffer.
-    mRawData = aToken.Fragment().BeginReading();
-    mRawDataLength = 0;
-  }
-||||||| merged common ancestors
-nsresult
-nsMultiMixedConv::SendStop(nsresult aStatus)
-{
-    // Make sure we send out all accumulcated data prior call to OnStopRequest.
-    // If there is no data, this is a no-op.
-    nsresult rv = SendData();
-    if (NS_SUCCEEDED(aStatus)) {
-        aStatus = rv;
-    }
-    if (mPartChannel) {
-        rv = mPartChannel->SendOnStopRequest(mContext, aStatus);
-        // don't check for failure here, we need to remove the channel from
-        // the loadgroup.
-
-        // Remove the channel from its load group (if any)
-        nsCOMPtr<nsILoadGroup> loadGroup;
-        (void) mPartChannel->GetLoadGroup(getter_AddRefs(loadGroup));
-        if (loadGroup)
-            (void) loadGroup->RemoveRequest(mPartChannel, mContext, aStatus);
-    }
-
-    mPartChannel = nullptr;
-    return rv;
-}
-
-void
-nsMultiMixedConv::AccumulateData(Token const & aToken)
-{
-    if (!mRawData) {
-        // This is the first read of raw data during this FeedInput loop
-        // of the incremental tokenizer.  All 'raw' tokens are coming from
-        // the same linear buffer, hence begining of this loop raw data
-        // is begining of the first raw token.  Length of this loop raw
-        // data is just sum of all 'raw' tokens we collect during this loop.
-        //
-        // It's ensured we flush (send to to the listener via OnDataAvailable)
-        // and nullify the collected raw data right after FeedInput call.
-        // Hence, the reference can't outlive the actual buffer.
-        mRawData = aToken.Fragment().BeginReading();
-        mRawDataLength = 0;
-    }
-=======
 void nsMultiMixedConv::AccumulateData(Token const& aToken) {
   if (!mRawData) {
     // This is the first read of raw data during this FeedInput loop
@@ -1587,7 +880,6 @@ void nsMultiMixedConv::AccumulateData(Token const& aToken) {
     mRawData = aToken.Fragment().BeginReading();
     mRawDataLength = 0;
   }
->>>>>>> upstream-releases
 
   mRawDataLength += aToken.Fragment().Length();
 }
@@ -1661,14 +953,7 @@ nsresult nsMultiMixedConv::ProcessHeader() {
           do_QueryInterface(mChannel);
       mResponseHeaderValue.CompressWhitespace();
       if (httpInternal) {
-<<<<<<< HEAD
-        DebugOnly<nsresult> rv =
-            httpInternal->SetCookie(mResponseHeaderValue.get());
-||||||| merged common ancestors
-        DebugOnly<nsresult> rv = httpInternal->SetCookie(mResponseHeaderValue.get());
-=======
         DebugOnly<nsresult> rv = httpInternal->SetCookie(mResponseHeaderValue);
->>>>>>> upstream-releases
         MOZ_ASSERT(NS_SUCCEEDED(rv));
       }
       break;
@@ -1723,22 +1008,9 @@ nsresult nsMultiMixedConv::ProcessHeader() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult NS_NewMultiMixedConv(nsMultiMixedConv **aMultiMixedConv) {
-  MOZ_ASSERT(aMultiMixedConv != nullptr, "null ptr");
-  if (!aMultiMixedConv) return NS_ERROR_NULL_POINTER;
-||||||| merged common ancestors
-nsresult
-NS_NewMultiMixedConv(nsMultiMixedConv** aMultiMixedConv)
-{
-    MOZ_ASSERT(aMultiMixedConv != nullptr, "null ptr");
-    if (! aMultiMixedConv)
-        return NS_ERROR_NULL_POINTER;
-=======
 nsresult NS_NewMultiMixedConv(nsMultiMixedConv** aMultiMixedConv) {
   MOZ_ASSERT(aMultiMixedConv != nullptr, "null ptr");
   if (!aMultiMixedConv) return NS_ERROR_NULL_POINTER;
->>>>>>> upstream-releases
 
   *aMultiMixedConv = new nsMultiMixedConv();
 

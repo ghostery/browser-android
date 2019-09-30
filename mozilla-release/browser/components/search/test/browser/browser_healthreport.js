@@ -75,17 +75,11 @@ function test() {
       case "engine-default":
         // We may be called again when resetting the engine at the end.
         if (!calledTestTelemetry) {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_healthreport.js
-          is(Services.search.defaultEngine.name, "Foo", "Current engine is Foo");
-||||||| merged common ancestors
-          is(Services.search.currentEngine.name, "Foo", "Current engine is Foo");
-=======
           is(
             Services.search.defaultEngine.name,
             "Foo",
             "Current engine is Foo"
           );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_healthreport.js
           testTelemetry();
         }
         break;
@@ -100,19 +94,11 @@ function test() {
 
   Services.obs.addObserver(observer, "browser-search-engine-modified");
   gCUITestUtils.addSearchBar().then(function() {
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_healthreport.js
-    Services.search.addEngine("http://mochi.test:8888/browser/browser/components/search/test/browser/testEngine.xml",
-                              "data:image/x-icon,%00", false);
-||||||| merged common ancestors
-    Services.search.addEngine("http://mochi.test:8888/browser/browser/components/search/test/testEngine.xml",
-                              "data:image/x-icon,%00", false);
-=======
     Services.search.addEngine(
       "http://mochi.test:8888/browser/browser/components/search/test/browser/testEngine.xml",
       "data:image/x-icon,%00",
       false
     );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_healthreport.js
   });
 }
 

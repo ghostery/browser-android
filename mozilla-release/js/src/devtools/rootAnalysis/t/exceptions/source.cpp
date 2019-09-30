@@ -37,25 +37,6 @@ extern Cell* getcell();
 extern void usevar(Cell* cell);
 
 void f() {
-<<<<<<< HEAD
-  Cell* thing = nullptr;  // Live range starts here
-
-  // When compiling with -fexceptions, there should be a hazard below. With
-  // -fno-exceptions, there should not be one. We will check both.
-  {
-    AutoSomething smth;  // Constructor can GC only if exceptions are enabled
-    usevar(thing);       // Live range ends here
-  }  // In particular, 'thing' is dead at the destructor, so no hazard
-||||||| merged common ancestors
-    Cell* thing = nullptr; // Live range starts here
-
-    // When compiling with -fexceptions, there should be a hazard below. With
-    // -fno-exceptions, there should not be one. We will check both.
-    {
-        AutoSomething smth; // Constructor can GC only if exceptions are enabled
-        usevar(thing); // Live range ends here
-    } // In particular, 'thing' is dead at the destructor, so no hazard
-=======
   Cell* thing = getcell();  // Live range starts here
 
   // When compiling with -fexceptions, there should be a hazard below. With
@@ -64,5 +45,4 @@ void f() {
     AutoSomething smth;  // Constructor can GC only if exceptions are enabled
     usevar(thing);       // Live range ends here
   }  // In particular, 'thing' is dead at the destructor, so no hazard
->>>>>>> upstream-releases
 }

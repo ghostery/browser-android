@@ -4,20 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-#include <ostream>
-#include "platform.h"
-#include "mozilla/HashFunctions.h"
-#include "mozilla/Sprintf.h"
-#include "mozilla/Logging.h"
-||||||| merged common ancestors
-#include <ostream>
-#include "platform.h"
-#include "mozilla/HashFunctions.h"
-#include "mozilla/Sprintf.h"
-=======
 #include "ProfileBufferEntry.h"
->>>>>>> upstream-releases
 
 #include "platform.h"
 #include "ProfileBuffer.h"
@@ -38,134 +25,46 @@ using namespace mozilla;
 ////////////////////////////////////////////////////////////////////////
 // BEGIN ProfileBufferEntry
 
-<<<<<<< HEAD
-ProfileBufferEntry::ProfileBufferEntry() : mKind(Kind::INVALID) {
-  u.mString = nullptr;
-}
-||||||| merged common ancestors
-ProfileBufferEntry::ProfileBufferEntry()
-  : mKind(Kind::INVALID)
-{
-  u.mString = nullptr;
-}
-=======
 ProfileBufferEntry::ProfileBufferEntry()
     : mKind(Kind::INVALID), mStorage{0, 0, 0, 0, 0, 0, 0, 0} {}
->>>>>>> upstream-releases
 
 // aString must be a static string.
-<<<<<<< HEAD
-ProfileBufferEntry::ProfileBufferEntry(Kind aKind, const char* aString)
-    : mKind(aKind) {
-  u.mString = aString;
-||||||| merged common ancestors
-ProfileBufferEntry::ProfileBufferEntry(Kind aKind, const char *aString)
-  : mKind(aKind)
-{
-  u.mString = aString;
-=======
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, const char* aString)
     : mKind(aKind) {
   memcpy(mStorage, &aString, sizeof(aString));
->>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, char aChars[kNumChars])
-<<<<<<< HEAD
-    : mKind(aKind) {
-  memcpy(u.mChars, aChars, kNumChars);
-||||||| merged common ancestors
-  : mKind(aKind)
-{
-  memcpy(u.mChars, aChars, kNumChars);
-=======
     : mKind(aKind) {
   memcpy(mStorage, aChars, kNumChars);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-ProfileBufferEntry::ProfileBufferEntry(Kind aKind, void* aPtr) : mKind(aKind) {
-  u.mPtr = aPtr;
-||||||| merged common ancestors
-ProfileBufferEntry::ProfileBufferEntry(Kind aKind, void* aPtr)
-  : mKind(aKind)
-{
-  u.mPtr = aPtr;
-=======
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, void* aPtr) : mKind(aKind) {
   memcpy(mStorage, &aPtr, sizeof(aPtr));
->>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, ProfilerMarker* aMarker)
-<<<<<<< HEAD
-    : mKind(aKind) {
-  u.mMarker = aMarker;
-||||||| merged common ancestors
-  : mKind(aKind)
-{
-  u.mMarker = aMarker;
-=======
     : mKind(aKind) {
   memcpy(mStorage, &aMarker, sizeof(aMarker));
->>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, double aDouble)
-<<<<<<< HEAD
-    : mKind(aKind) {
-  u.mDouble = aDouble;
-||||||| merged common ancestors
-  : mKind(aKind)
-{
-  u.mDouble = aDouble;
-=======
     : mKind(aKind) {
   memcpy(mStorage, &aDouble, sizeof(aDouble));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int aInt) : mKind(aKind) {
-  u.mInt = aInt;
-||||||| merged common ancestors
-ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int aInt)
-  : mKind(aKind)
-{
-  u.mInt = aInt;
-=======
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int aInt) : mKind(aKind) {
   memcpy(mStorage, &aInt, sizeof(aInt));
->>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int64_t aInt64)
-<<<<<<< HEAD
-    : mKind(aKind) {
-  u.mInt64 = aInt64;
-||||||| merged common ancestors
-  : mKind(aKind)
-{
-  u.mInt64 = aInt64;
-=======
     : mKind(aKind) {
   memcpy(mStorage, &aInt64, sizeof(aInt64));
->>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, uint64_t aUint64)
-<<<<<<< HEAD
-    : mKind(aKind) {
-  u.mUint64 = aUint64;
-||||||| merged common ancestors
-  : mKind(aKind)
-{
-  u.mUint64 = aUint64;
-=======
     : mKind(aKind) {
   memcpy(mStorage, &aUint64, sizeof(aUint64));
->>>>>>> upstream-releases
 }
 
 const char* ProfileBufferEntry::GetString() const {
@@ -174,82 +73,30 @@ const char* ProfileBufferEntry::GetString() const {
   return result;
 }
 
-<<<<<<< HEAD
-class JSONSchemaWriter {
-  JSONWriter& mWriter;
-  uint32_t mIndex;
-||||||| merged common ancestors
-class JSONSchemaWriter
-{
-  JSONWriter& mWriter;
-  uint32_t mIndex;
-=======
 void* ProfileBufferEntry::GetPtr() const {
   void* result;
   memcpy(&result, mStorage, sizeof(result));
   return result;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  explicit JSONSchemaWriter(JSONWriter& aWriter) : mWriter(aWriter), mIndex(0) {
-    aWriter.StartObjectProperty("schema",
-                                SpliceableJSONWriter::SingleLineStyle);
-  }
-||||||| merged common ancestors
-public:
-  explicit JSONSchemaWriter(JSONWriter& aWriter)
-   : mWriter(aWriter)
-   , mIndex(0)
-  {
-    aWriter.StartObjectProperty("schema",
-                                SpliceableJSONWriter::SingleLineStyle);
-  }
-=======
 ProfilerMarker* ProfileBufferEntry::GetMarker() const {
   ProfilerMarker* result;
   memcpy(&result, mStorage, sizeof(result));
   return result;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void WriteField(const char* aName) { mWriter.IntProperty(aName, mIndex++); }
-||||||| merged common ancestors
-  void WriteField(const char* aName) {
-    mWriter.IntProperty(aName, mIndex++);
-  }
-=======
 double ProfileBufferEntry::GetDouble() const {
   double result;
   memcpy(&result, mStorage, sizeof(result));
   return result;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ~JSONSchemaWriter() { mWriter.EndObject(); }
-};
-||||||| merged common ancestors
-  ~JSONSchemaWriter() {
-    mWriter.EndObject();
-  }
-};
-=======
 int ProfileBufferEntry::GetInt() const {
   int result;
   memcpy(&result, mStorage, sizeof(result));
   return result;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-struct TypeInfo {
-||||||| merged common ancestors
-struct TypeInfo
-{
-=======
 int64_t ProfileBufferEntry::GetInt64() const {
   int64_t result;
   memcpy(&result, mStorage, sizeof(result));
@@ -270,7 +117,6 @@ void ProfileBufferEntry::CopyCharsInto(char (&aOutArray)[kNumChars]) const {
 ////////////////////////////////////////////////////////////////////////
 
 struct TypeInfo {
->>>>>>> upstream-releases
   Maybe<nsCString> mKeyedBy;
   Maybe<nsCString> mName;
   Maybe<nsCString> mLocation;
@@ -308,24 +154,11 @@ class ForEachTrackedOptimizationTypeInfoLambdaOp
   LambdaT mLambda;
 };
 
-<<<<<<< HEAD
-template <typename LambdaT>
-ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
-MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda) {
-  return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(
-      std::move(aLambda));
-||||||| merged common ancestors
-template<typename LambdaT> ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
-MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda)
-{
-  return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(std::move(aLambda));
-=======
 template <typename LambdaT>
 ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
 MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda) {
   return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(
       std::forward<LambdaT>(aLambda));
->>>>>>> upstream-releases
 }
 
 // As mentioned in ProfileBufferEntry.h, the JSON format contains many
@@ -443,17 +276,6 @@ UniqueJSONStrings::UniqueJSONStrings() { mStringTableWriter.StartBareList(); }
 
 UniqueJSONStrings::UniqueJSONStrings(const UniqueJSONStrings& aOther) {
   mStringTableWriter.StartBareList();
-<<<<<<< HEAD
-  if (aOther.mStringToIndexMap.Count() > 0) {
-    for (auto iter = aOther.mStringToIndexMap.ConstIter(); !iter.Done();
-         iter.Next()) {
-      mStringToIndexMap.Put(iter.Key(), iter.Data());
-||||||| merged common ancestors
-  if (aOther.mStringToIndexMap.Count() > 0) {
-    for (auto iter = aOther.mStringToIndexMap.ConstIter();
-         !iter.Done(); iter.Next()) {
-      mStringToIndexMap.Put(iter.Key(), iter.Data());
-=======
   uint32_t count = mStringHashToIndexMap.count();
   if (count != 0) {
     MOZ_RELEASE_ASSERT(mStringHashToIndexMap.reserve(count));
@@ -461,7 +283,6 @@ UniqueJSONStrings::UniqueJSONStrings(const UniqueJSONStrings& aOther) {
          iter.next()) {
       mStringHashToIndexMap.putNewInfallible(iter.get().key(),
                                              iter.get().value());
->>>>>>> upstream-releases
     }
     UniquePtr<char[]> stringTableJSON =
         aOther.mStringTableWriter.WriteFunc()->CopyData();
@@ -469,38 +290,16 @@ UniqueJSONStrings::UniqueJSONStrings(const UniqueJSONStrings& aOther) {
   }
 }
 
-<<<<<<< HEAD
-uint32_t UniqueJSONStrings::GetOrAddIndex(const char* aStr) {
-  nsDependentCString str(aStr);
-
-  uint32_t count = mStringToIndexMap.Count();
-  auto entry = mStringToIndexMap.LookupForAdd(str);
-||||||| merged common ancestors
-uint32_t
-UniqueJSONStrings::GetOrAddIndex(const char* aStr)
-{
-  nsDependentCString str(aStr);
-
-  uint32_t count = mStringToIndexMap.Count();
-  auto entry = mStringToIndexMap.LookupForAdd(str);
-=======
 uint32_t UniqueJSONStrings::GetOrAddIndex(const char* aStr) {
   uint32_t count = mStringHashToIndexMap.count();
   HashNumber hash = HashString(aStr);
   auto entry = mStringHashToIndexMap.lookupForAdd(hash);
->>>>>>> upstream-releases
   if (entry) {
     MOZ_ASSERT(entry->value() < count);
     return entry->value();
   }
 
-<<<<<<< HEAD
-  entry.OrInsert([&] { return count; });
-||||||| merged common ancestors
-  entry.OrInsert([&]{ return count; });
-=======
   MOZ_RELEASE_ASSERT(mStringHashToIndexMap.add(entry, hash, count));
->>>>>>> upstream-releases
   mStringTableWriter.StringElement(aStr);
   return count;
 }
@@ -509,54 +308,12 @@ UniqueStacks::StackKey UniqueStacks::BeginStack(const FrameKey& aFrame) {
   return StackKey(GetOrAddFrameIndex(aFrame));
 }
 
-<<<<<<< HEAD
 UniqueStacks::StackKey UniqueStacks::AppendFrame(const StackKey& aStack,
                                                  const FrameKey& aFrame) {
   return StackKey(aStack, GetOrAddStackIndex(aStack),
                   GetOrAddFrameIndex(aFrame));
 }
 
-uint32_t JITFrameInfoForBufferRange::JITFrameKey::Hash() const {
-  uint32_t hash = 0;
-  hash = AddToHash(hash, mCanonicalAddress);
-  hash = AddToHash(hash, mDepth);
-  return hash;
-||||||| merged common ancestors
-UniqueStacks::StackKey
-UniqueStacks::AppendFrame(const StackKey& aStack, const FrameKey& aFrame)
-{
-  return StackKey(aStack, GetOrAddStackIndex(aStack), GetOrAddFrameIndex(aFrame));
-}
-
-uint32_t
-JITFrameInfoForBufferRange::JITFrameKey::Hash() const
-{
-  uint32_t hash = 0;
-  hash = AddToHash(hash, mCanonicalAddress);
-  hash = AddToHash(hash, mDepth);
-  return hash;
-=======
-UniqueStacks::StackKey UniqueStacks::AppendFrame(const StackKey& aStack,
-                                                 const FrameKey& aFrame) {
-  return StackKey(aStack, GetOrAddStackIndex(aStack),
-                  GetOrAddFrameIndex(aFrame));
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool JITFrameInfoForBufferRange::JITFrameKey::operator==(
-    const JITFrameKey& aOther) const {
-  return mCanonicalAddress == aOther.mCanonicalAddress &&
-         mDepth == aOther.mDepth;
-}
-||||||| merged common ancestors
-bool
-JITFrameInfoForBufferRange::JITFrameKey::operator==(const JITFrameKey& aOther) const
-{
-  return mCanonicalAddress == aOther.mCanonicalAddress &&
-         mDepth == aOther.mDepth;
-}
-=======
 JITFrameInfoForBufferRange JITFrameInfoForBufferRange::Clone() const {
   JITFrameInfoForBufferRange::JITAddressToJITFramesMap jitAddressToJITFramesMap;
   MOZ_RELEASE_ASSERT(
@@ -569,60 +326,18 @@ JITFrameInfoForBufferRange JITFrameInfoForBufferRange::Clone() const {
     jitAddressToJITFramesMap.putNewInfallible(iter.get().key(),
                                               std::move(destKeys));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <class KeyClass, class T>
-void CopyClassHashtable(nsClassHashtable<KeyClass, T>& aDest,
-                        const nsClassHashtable<KeyClass, T>& aSrc) {
-  for (auto iter = aSrc.ConstIter(); !iter.Done(); iter.Next()) {
-    const T& objRef = *iter.Data();
-    aDest.LookupOrAdd(iter.Key(), objRef);
-||||||| merged common ancestors
-template<class KeyClass, class T> void
-CopyClassHashtable(nsClassHashtable<KeyClass, T>& aDest,
-                   const nsClassHashtable<KeyClass, T>& aSrc)
-{
-  for (auto iter = aSrc.ConstIter(); !iter.Done(); iter.Next()) {
-    const T& objRef = *iter.Data();
-    aDest.LookupOrAdd(iter.Key(), objRef);
-=======
   JITFrameInfoForBufferRange::JITFrameToFrameJSONMap jitFrameToFrameJSONMap;
   MOZ_RELEASE_ASSERT(
       jitFrameToFrameJSONMap.reserve(mJITFrameToFrameJSONMap.count()));
   for (auto iter = mJITFrameToFrameJSONMap.iter(); !iter.done(); iter.next()) {
     jitFrameToFrameJSONMap.putNewInfallible(iter.get().key(),
                                             iter.get().value());
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-JITFrameInfoForBufferRange JITFrameInfoForBufferRange::Clone() const {
-  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>>
-      jitAddressToJITFramesMap;
-  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString>
-      jitFrameToFrameJSONMap;
-  CopyClassHashtable(jitAddressToJITFramesMap, mJITAddressToJITFramesMap);
-  CopyClassHashtable(jitFrameToFrameJSONMap, mJITFrameToFrameJSONMap);
   return JITFrameInfoForBufferRange{mRangeStart, mRangeEnd,
                                     std::move(jitAddressToJITFramesMap),
                                     std::move(jitFrameToFrameJSONMap)};
-||||||| merged common ancestors
-JITFrameInfoForBufferRange
-JITFrameInfoForBufferRange::Clone() const
-{
-  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>> jitAddressToJITFramesMap;
-  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString> jitFrameToFrameJSONMap;
-  CopyClassHashtable(jitAddressToJITFramesMap, mJITAddressToJITFramesMap);
-  CopyClassHashtable(jitFrameToFrameJSONMap, mJITFrameToFrameJSONMap);
-  return JITFrameInfoForBufferRange{
-    mRangeStart, mRangeEnd,
-    std::move(jitAddressToJITFramesMap), std::move(jitFrameToFrameJSONMap) };
-=======
-  return JITFrameInfoForBufferRange{mRangeStart, mRangeEnd,
-                                    std::move(jitAddressToJITFramesMap),
-                                    std::move(jitFrameToFrameJSONMap)};
->>>>>>> upstream-releases
 }
 
 JITFrameInfo::JITFrameInfo(const JITFrameInfo& aOther)
@@ -635,83 +350,14 @@ JITFrameInfo::JITFrameInfo(const JITFrameInfo& aOther)
 bool UniqueStacks::FrameKey::NormalFrameData::operator==(
     const NormalFrameData& aOther) const {
   return mLocation == aOther.mLocation &&
-<<<<<<< HEAD
-         mRelevantForJS == aOther.mRelevantForJS && mLine == aOther.mLine &&
-         mColumn == aOther.mColumn && mCategory == aOther.mCategory;
-||||||| merged common ancestors
-         mLine == aOther.mLine &&
-         mColumn == aOther.mColumn &&
-         mCategory == aOther.mCategory;
-=======
          mRelevantForJS == aOther.mRelevantForJS && mLine == aOther.mLine &&
          mColumn == aOther.mColumn && mCategoryPair == aOther.mCategoryPair;
->>>>>>> upstream-releases
 }
 
 bool UniqueStacks::FrameKey::JITFrameData::operator==(
     const JITFrameData& aOther) const {
   return mCanonicalAddress == aOther.mCanonicalAddress &&
-<<<<<<< HEAD
          mDepth == aOther.mDepth && mRangeIndex == aOther.mRangeIndex;
-}
-
-uint32_t UniqueStacks::FrameKey::Hash() const {
-  uint32_t hash = 0;
-  if (mData.is<NormalFrameData>()) {
-    const NormalFrameData& data = mData.as<NormalFrameData>();
-    if (!data.mLocation.IsEmpty()) {
-      hash = AddToHash(hash, HashString(data.mLocation.get()));
-    }
-    hash = AddToHash(hash, data.mRelevantForJS);
-    if (data.mLine.isSome()) {
-      hash = AddToHash(hash, *data.mLine);
-    }
-    if (data.mColumn.isSome()) {
-      hash = AddToHash(hash, *data.mColumn);
-    }
-    if (data.mCategory.isSome()) {
-      hash = AddToHash(hash, *data.mCategory);
-    }
-  } else {
-    const JITFrameData& data = mData.as<JITFrameData>();
-    hash = AddToHash(hash, data.mCanonicalAddress);
-    hash = AddToHash(hash, data.mDepth);
-    hash = AddToHash(hash, data.mRangeIndex);
-  }
-  return hash;
-||||||| merged common ancestors
-         mDepth == aOther.mDepth &&
-         mRangeIndex == aOther.mRangeIndex;
-}
-
-uint32_t
-UniqueStacks::FrameKey::Hash() const
-{
-  uint32_t hash = 0;
-  if (mData.is<NormalFrameData>()) {
-    const NormalFrameData& data = mData.as<NormalFrameData>();
-    if (!data.mLocation.IsEmpty()) {
-      hash = AddToHash(hash, HashString(data.mLocation.get()));
-    }
-    if (data.mLine.isSome()) {
-      hash = AddToHash(hash, *data.mLine);
-    }
-    if (data.mColumn.isSome()) {
-      hash = AddToHash(hash, *data.mColumn);
-    }
-    if (data.mCategory.isSome()) {
-      hash = AddToHash(hash, *data.mCategory);
-    }
-  } else {
-    const JITFrameData& data = mData.as<JITFrameData>();
-    hash = AddToHash(hash, data.mCanonicalAddress);
-    hash = AddToHash(hash, data.mDepth);
-    hash = AddToHash(hash, data.mRangeIndex);
-  }
-  return hash;
-=======
-         mDepth == aOther.mDepth && mRangeIndex == aOther.mRangeIndex;
->>>>>>> upstream-releases
 }
 
 // Consume aJITFrameInfo by stealing its string table and its JIT frame info
@@ -725,32 +371,15 @@ UniqueStacks::UniqueStacks(JITFrameInfo&& aJITFrameInfo)
   mStackTableWriter.StartBareList();
 }
 
-<<<<<<< HEAD
-uint32_t UniqueStacks::GetOrAddStackIndex(const StackKey& aStack) {
-  uint32_t count = mStackToIndexMap.Count();
-  auto entry = mStackToIndexMap.LookupForAdd(aStack);
-||||||| merged common ancestors
-uint32_t UniqueStacks::GetOrAddStackIndex(const StackKey& aStack)
-{
-  uint32_t count = mStackToIndexMap.Count();
-  auto entry = mStackToIndexMap.LookupForAdd(aStack);
-=======
 uint32_t UniqueStacks::GetOrAddStackIndex(const StackKey& aStack) {
   uint32_t count = mStackToIndexMap.count();
   auto entry = mStackToIndexMap.lookupForAdd(aStack);
->>>>>>> upstream-releases
   if (entry) {
     MOZ_ASSERT(entry->value() < count);
     return entry->value();
   }
 
-<<<<<<< HEAD
-  entry.OrInsert([&] { return count; });
-||||||| merged common ancestors
-  entry.OrInsert([&]{ return count; });
-=======
   MOZ_RELEASE_ASSERT(mStackToIndexMap.add(entry, aStack, count));
->>>>>>> upstream-releases
   StreamStack(aStack);
   return count;
 }
@@ -768,22 +397,6 @@ struct PositionInRangeComparator final {
 
 Maybe<Vector<UniqueStacks::FrameKey>>
 UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
-<<<<<<< HEAD
-                                                     uint64_t aBufferPos) {
-  size_t rangeIndex = mJITInfoRanges.BinaryIndexOf(
-      aBufferPos,
-      PositionInRangeComparator<JITFrameInfoForBufferRange, uint64_t>());
-  MOZ_RELEASE_ASSERT(
-      rangeIndex != mJITInfoRanges.NoIndex,
-      "Buffer position of jit address needs to be in one of the ranges");
-||||||| merged common ancestors
-                                                     uint64_t aBufferPos)
-{
-  size_t rangeIndex = mJITInfoRanges.BinaryIndexOf(aBufferPos,
-    PositionInRangeComparator<JITFrameInfoForBufferRange, uint64_t>());
-  MOZ_RELEASE_ASSERT(rangeIndex != mJITInfoRanges.NoIndex,
-                     "Buffer position of jit address needs to be in one of the ranges");
-=======
                                                      uint64_t aBufferPos) {
   JITFrameInfoForBufferRange* rangeIter =
       std::lower_bound(mJITInfoRanges.begin(), mJITInfoRanges.end(), aBufferPos,
@@ -794,44 +407,18 @@ UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
           rangeIter->mRangeStart <= aBufferPos &&
           aBufferPos < rangeIter->mRangeEnd,
       "Buffer position of jit address needs to be in one of the ranges");
->>>>>>> upstream-releases
 
   using JITFrameKey = JITFrameInfoForBufferRange::JITFrameKey;
 
-<<<<<<< HEAD
-  const JITFrameInfoForBufferRange& jitFrameInfoRange =
-      mJITInfoRanges[rangeIndex];
-  const nsTArray<JITFrameKey>* jitFrameKeys =
-      jitFrameInfoRange.mJITAddressToJITFramesMap.Get(aJITAddress);
-||||||| merged common ancestors
-  const JITFrameInfoForBufferRange& jitFrameInfoRange = mJITInfoRanges[rangeIndex];
-  const nsTArray<JITFrameKey>* jitFrameKeys =
-    jitFrameInfoRange.mJITAddressToJITFramesMap.Get(aJITAddress);
-=======
   const JITFrameInfoForBufferRange& jitFrameInfoRange = *rangeIter;
   auto jitFrameKeys =
       jitFrameInfoRange.mJITAddressToJITFramesMap.lookup(aJITAddress);
->>>>>>> upstream-releases
   if (!jitFrameKeys) {
     return Nothing();
   }
 
   // Map the array of JITFrameKeys to an array of FrameKeys, and ensure that
   // each of the FrameKeys exists in mFrameToIndexMap.
-<<<<<<< HEAD
-  nsTArray<FrameKey> frameKeys;
-  for (const JITFrameKey& jitFrameKey : *jitFrameKeys) {
-    FrameKey frameKey(jitFrameKey.mCanonicalAddress, jitFrameKey.mDepth,
-                      rangeIndex);
-    uint32_t index = mFrameToIndexMap.Count();
-    auto entry = mFrameToIndexMap.LookupForAdd(frameKey);
-||||||| merged common ancestors
-  nsTArray<FrameKey> frameKeys;
-  for (const JITFrameKey& jitFrameKey : *jitFrameKeys) {
-    FrameKey frameKey(jitFrameKey.mCanonicalAddress, jitFrameKey.mDepth, rangeIndex);
-    uint32_t index = mFrameToIndexMap.Count();
-    auto entry = mFrameToIndexMap.LookupForAdd(frameKey);
-=======
   Vector<FrameKey> frameKeys;
   MOZ_RELEASE_ASSERT(frameKeys.initCapacity(jitFrameKeys->value().length()));
   for (const JITFrameKey& jitFrameKey : jitFrameKeys->value()) {
@@ -839,21 +426,12 @@ UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
                       rangeIter - mJITInfoRanges.begin());
     uint32_t index = mFrameToIndexMap.count();
     auto entry = mFrameToIndexMap.lookupForAdd(frameKey);
->>>>>>> upstream-releases
     if (!entry) {
       // We need to add this frame to our frame table. The JSON for this frame
       // already exists in jitFrameInfoRange, we just need to splice it into
       // the frame table and give it an index.
-<<<<<<< HEAD
-      const nsCString* frameJSON =
-          jitFrameInfoRange.mJITFrameToFrameJSONMap.Get(jitFrameKey);
-||||||| merged common ancestors
-      const nsCString* frameJSON =
-        jitFrameInfoRange.mJITFrameToFrameJSONMap.Get(jitFrameKey);
-=======
       auto frameJSON =
           jitFrameInfoRange.mJITFrameToFrameJSONMap.lookup(jitFrameKey);
->>>>>>> upstream-releases
       MOZ_RELEASE_ASSERT(frameJSON, "Should have cached JSON for this frame");
       mFrameTableWriter.Splice(frameJSON->value().get());
       MOZ_RELEASE_ASSERT(mFrameToIndexMap.add(entry, frameKey, index));
@@ -863,33 +441,15 @@ UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
   return Some(std::move(frameKeys));
 }
 
-<<<<<<< HEAD
-uint32_t UniqueStacks::GetOrAddFrameIndex(const FrameKey& aFrame) {
-  uint32_t count = mFrameToIndexMap.Count();
-  auto entry = mFrameToIndexMap.LookupForAdd(aFrame);
-||||||| merged common ancestors
-uint32_t
-UniqueStacks::GetOrAddFrameIndex(const FrameKey& aFrame)
-{
-  uint32_t count = mFrameToIndexMap.Count();
-  auto entry = mFrameToIndexMap.LookupForAdd(aFrame);
-=======
 uint32_t UniqueStacks::GetOrAddFrameIndex(const FrameKey& aFrame) {
   uint32_t count = mFrameToIndexMap.count();
   auto entry = mFrameToIndexMap.lookupForAdd(aFrame);
->>>>>>> upstream-releases
   if (entry) {
     MOZ_ASSERT(entry->value() < count);
     return entry->value();
   }
 
-<<<<<<< HEAD
-  entry.OrInsert([&] { return count; });
-||||||| merged common ancestors
-  entry.OrInsert([&]{ return count; });
-=======
   MOZ_RELEASE_ASSERT(mFrameToIndexMap.add(entry, aFrame, count));
->>>>>>> upstream-releases
   StreamNonJITFrame(aFrame);
   return count;
 }
@@ -919,20 +479,6 @@ void UniqueStacks::StreamNonJITFrame(const FrameKey& aFrame) {
 
   enum Schema : uint32_t {
     LOCATION = 0,
-<<<<<<< HEAD
-    RELEVANT_FOR_JS = 1,
-    IMPLEMENTATION = 2,
-    OPTIMIZATIONS = 3,
-    LINE = 4,
-    COLUMN = 5,
-    CATEGORY = 6
-||||||| merged common ancestors
-    IMPLEMENTATION = 1,
-    OPTIMIZATIONS = 2,
-    LINE = 3,
-    COLUMN = 4,
-    CATEGORY = 5
-=======
     RELEVANT_FOR_JS = 1,
     IMPLEMENTATION = 2,
     OPTIMIZATIONS = 3,
@@ -940,7 +486,6 @@ void UniqueStacks::StreamNonJITFrame(const FrameKey& aFrame) {
     COLUMN = 5,
     CATEGORY = 6,
     SUBCATEGORY = 7
->>>>>>> upstream-releases
   };
 
   AutoArraySchemaWriter writer(mFrameTableWriter, *mUniqueStrings);
@@ -1055,20 +600,6 @@ static void StreamJITFrame(JSContext* aContext, SpliceableJSONWriter& aWriter,
                            const JS::ProfiledFrameHandle& aJITFrame) {
   enum Schema : uint32_t {
     LOCATION = 0,
-<<<<<<< HEAD
-    RELEVANT_FOR_JS = 1,
-    IMPLEMENTATION = 2,
-    OPTIMIZATIONS = 3,
-    LINE = 4,
-    COLUMN = 5,
-    CATEGORY = 6
-||||||| merged common ancestors
-    IMPLEMENTATION = 1,
-    OPTIMIZATIONS = 2,
-    LINE = 3,
-    COLUMN = 4,
-    CATEGORY = 5
-=======
     RELEVANT_FOR_JS = 1,
     IMPLEMENTATION = 2,
     OPTIMIZATIONS = 3,
@@ -1076,7 +607,6 @@ static void StreamJITFrame(JSContext* aContext, SpliceableJSONWriter& aWriter,
     COLUMN = 5,
     CATEGORY = 6,
     SUBCATEGORY = 7
->>>>>>> upstream-releases
   };
 
   AutoArraySchemaWriter writer(aWriter, aUniqueStrings);
@@ -1140,43 +670,11 @@ void JITFrameInfo::AddInfoForRange(
 
   using JITFrameKey = JITFrameInfoForBufferRange::JITFrameKey;
 
-<<<<<<< HEAD
-  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>>
-      jitAddressToJITFrameMap;
-  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString>
-      jitFrameToFrameJSONMap;
-||||||| merged common ancestors
-  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>> jitAddressToJITFrameMap;
-  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString> jitFrameToFrameJSONMap;
-=======
   JITFrameInfoForBufferRange::JITAddressToJITFramesMap jitAddressToJITFrameMap;
   JITFrameInfoForBufferRange::JITFrameToFrameJSONMap jitFrameToFrameJSONMap;
->>>>>>> upstream-releases
 
   aJITAddressProvider([&](void* aJITAddress) {
     // Make sure that we have cached data for aJITAddress.
-<<<<<<< HEAD
-    if (!jitAddressToJITFrameMap.Contains(aJITAddress)) {
-      nsTArray<JITFrameKey>& jitFrameKeys =
-          *jitAddressToJITFrameMap.LookupOrAdd(aJITAddress);
-      for (JS::ProfiledFrameHandle handle :
-           JS::GetProfiledFrames(aCx, aJITAddress)) {
-        uint32_t depth = jitFrameKeys.Length();
-        JITFrameKey jitFrameKey{handle.canonicalAddress(), depth};
-        if (!jitFrameToFrameJSONMap.Contains(jitFrameKey)) {
-          nsCString& json = *jitFrameToFrameJSONMap.LookupOrAdd(jitFrameKey);
-          json = JSONForJITFrame(aCx, handle, *mUniqueStrings);
-||||||| merged common ancestors
-    if (!jitAddressToJITFrameMap.Contains(aJITAddress)) {
-      nsTArray<JITFrameKey>& jitFrameKeys =
-        *jitAddressToJITFrameMap.LookupOrAdd(aJITAddress);
-      for (JS::ProfiledFrameHandle handle : JS::GetProfiledFrames(aCx, aJITAddress)) {
-        uint32_t depth = jitFrameKeys.Length();
-        JITFrameKey jitFrameKey{ handle.canonicalAddress(), depth };
-        if (!jitFrameToFrameJSONMap.Contains(jitFrameKey)) {
-          nsCString& json = *jitFrameToFrameJSONMap.LookupOrAdd(jitFrameKey);
-          json = JSONForJITFrame(aCx, handle, *mUniqueStrings);
-=======
     auto addressEntry = jitAddressToJITFrameMap.lookupForAdd(aJITAddress);
     if (!addressEntry) {
       Vector<JITFrameKey> jitFrameKeys;
@@ -1189,7 +687,6 @@ void JITFrameInfo::AddInfoForRange(
           MOZ_RELEASE_ASSERT(jitFrameToFrameJSONMap.add(
               frameEntry, jitFrameKey,
               JSONForJITFrame(aCx, handle, *mUniqueStrings)));
->>>>>>> upstream-releases
         }
         MOZ_RELEASE_ASSERT(jitFrameKeys.append(jitFrameKey));
       }
@@ -1198,20 +695,9 @@ void JITFrameInfo::AddInfoForRange(
     }
   });
 
-<<<<<<< HEAD
-  mRanges.AppendElement(JITFrameInfoForBufferRange{
-      aRangeStart, aRangeEnd, std::move(jitAddressToJITFrameMap),
-      std::move(jitFrameToFrameJSONMap)});
-||||||| merged common ancestors
-  mRanges.AppendElement(JITFrameInfoForBufferRange{
-    aRangeStart, aRangeEnd,
-    std::move(jitAddressToJITFrameMap), std::move(jitFrameToFrameJSONMap)
-  });
-=======
   MOZ_RELEASE_ASSERT(mRanges.append(JITFrameInfoForBufferRange{
       aRangeStart, aRangeEnd, std::move(jitAddressToJITFrameMap),
       std::move(jitFrameToFrameJSONMap)}));
->>>>>>> upstream-releases
 }
 
 struct ProfileSample {
@@ -1282,13 +768,7 @@ class EntryGetter {
 //     ThreadId
 //     Time
 //     ( NativeLeafAddr
-<<<<<<< HEAD
-//     | Label FrameFlags? DynamicStringFragment* LineNumber? Category?
-||||||| merged common ancestors
-//     | Label DynamicStringFragment* LineNumber? Category?
-=======
 //     | Label FrameFlags? DynamicStringFragment* LineNumber? CategoryPair?
->>>>>>> upstream-releases
 //     | JitReturnAddr
 //     )+
 //     Marker*
@@ -1527,35 +1007,9 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
       } else if (e.Get().IsLabel()) {
         numFrames++;
 
-<<<<<<< HEAD
-        const char* label = e.Get().u.mString;
-||||||| merged common ancestors
-        // Copy the label into strbuf.
-        const char* label = e.Get().u.mString;
-        strncpy(strbuf.get(), label, kMaxFrameKeyLength);
-        size_t i = strlen(label);
-=======
         const char* label = e.Get().GetString();
->>>>>>> upstream-releases
         e.Next();
 
-<<<<<<< HEAD
-        using FrameFlags = js::ProfilingStackFrame::Flags;
-        uint32_t frameFlags = 0;
-        if (e.Has() && e.Get().IsFrameFlags()) {
-          frameFlags = uint32_t(e.Get().u.mUint64);
-          e.Next();
-        }
-
-        bool relevantForJS = frameFlags & uint32_t(FrameFlags::RELEVANT_FOR_JS);
-
-        // Copy potential dynamic string fragments into dynStrBuf, so that
-        // dynStrBuf will then contain the entire dynamic string.
-        size_t i = 0;
-        dynStrBuf[0] = '\0';
-||||||| merged common ancestors
-        bool seenFirstDynamicStringFragment = false;
-=======
         using FrameFlags = js::ProfilingStackFrame::Flags;
         uint32_t frameFlags = 0;
         if (e.Has() && e.Get().IsFrameFlags()) {
@@ -1569,39 +1023,13 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
         // dynStrBuf will then contain the entire dynamic string.
         size_t i = 0;
         dynStrBuf[0] = '\0';
->>>>>>> upstream-releases
         while (e.Has()) {
           if (e.Get().IsDynamicStringFragment()) {
-<<<<<<< HEAD
-            for (size_t j = 0; j < ProfileBufferEntry::kNumChars; j++) {
-              const char* chars = e.Get().u.mChars;
-||||||| merged common ancestors
-            // If this is the first dynamic string fragment and we have a
-            // non-empty label, insert a ' ' after the label and before the
-            // dynamic string.
-            if (!seenFirstDynamicStringFragment) {
-              if (i > 0 && i < kMaxFrameKeyLength) {
-                strbuf[i] = ' ';
-                i++;
-              }
-              seenFirstDynamicStringFragment = true;
-            }
-
-            for (size_t j = 0; j < ProfileBufferEntry::kNumChars; j++) {
-              const char* chars = e.Get().u.mChars;
-=======
             char chars[ProfileBufferEntry::kNumChars];
             e.Get().CopyCharsInto(chars);
             for (char c : chars) {
->>>>>>> upstream-releases
               if (i < kMaxFrameKeyLength) {
-<<<<<<< HEAD
-                dynStrBuf[i] = chars[j];
-||||||| merged common ancestors
-                strbuf[i] = chars[j];
-=======
                 dynStrBuf[i] = c;
->>>>>>> upstream-releases
                 i++;
               }
             }
@@ -1652,35 +1080,17 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
         }
 
         stack = aUniqueStacks.AppendFrame(
-<<<<<<< HEAD
-            stack, UniqueStacks::FrameKey(std::move(frameLabel), relevantForJS,
-                                          line, column, category));
-||||||| merged common ancestors
-          stack, UniqueStacks::FrameKey(strbuf.get(), line, column, category));
-=======
             stack, UniqueStacks::FrameKey(std::move(frameLabel), relevantForJS,
                                           line, column, categoryPair));
->>>>>>> upstream-releases
 
       } else if (e.Get().IsJitReturnAddr()) {
         numFrames++;
 
         // A JIT frame may expand to multiple frames due to inlining.
-<<<<<<< HEAD
-        void* pc = e.Get().u.mPtr;
-        const Maybe<nsTArray<UniqueStacks::FrameKey>>& frameKeys =
-            aUniqueStacks.LookupFramesForJITAddressFromBufferPos(pc,
-                                                                 e.CurPos());
-||||||| merged common ancestors
-        void* pc = e.Get().u.mPtr;
-        const Maybe<nsTArray<UniqueStacks::FrameKey>>& frameKeys =
-          aUniqueStacks.LookupFramesForJITAddressFromBufferPos(pc, e.CurPos());
-=======
         void* pc = e.Get().GetPtr();
         const Maybe<Vector<UniqueStacks::FrameKey>>& frameKeys =
             aUniqueStacks.LookupFramesForJITAddressFromBufferPos(pc,
                                                                  e.CurPos());
->>>>>>> upstream-releases
         MOZ_RELEASE_ASSERT(frameKeys,
                            "Attempting to stream samples for a buffer range "
                            "for which we don't have JITFrameInfo?");
@@ -1755,42 +1165,20 @@ void ProfileBuffer::AddJITInfoForRange(uint64_t aRangeStart, int aThreadId,
             break;
           }
 
-<<<<<<< HEAD
-          MOZ_ASSERT(e.Get().IsThreadId());
-          int threadId = e.Get().u.mInt;
-          e.Next();
-||||||| merged common ancestors
-        MOZ_ASSERT(e.Get().IsThreadId());
-        int threadId = e.Get().u.mInt;
-        e.Next();
-=======
           MOZ_ASSERT(e.Get().IsThreadId());
           int threadId = e.Get().GetInt();
           e.Next();
->>>>>>> upstream-releases
 
           // Ignore samples that are for a different thread.
           if (threadId != aThreadId) {
             continue;
           }
 
-<<<<<<< HEAD
-          while (e.Has() && !e.Get().IsThreadId()) {
-            if (e.Get().IsJitReturnAddr()) {
-              aJITAddressConsumer(e.Get().u.mPtr);
-            }
-            e.Next();
-||||||| merged common ancestors
-        while (e.Has() && !e.Get().IsThreadId()) {
-          if (e.Get().IsJitReturnAddr()) {
-            aJITAddressConsumer(e.Get().u.mPtr);
-=======
           while (e.Has() && !e.Get().IsThreadId()) {
             if (e.Get().IsJitReturnAddr()) {
               aJITAddressConsumer(e.Get().GetPtr());
             }
             e.Next();
->>>>>>> upstream-releases
           }
         }
       });
@@ -1821,13 +1209,6 @@ void ProfileBuffer::StreamMarkersToJSON(SpliceableJSONWriter& aWriter,
   }
 }
 
-<<<<<<< HEAD
-struct CounterKeyedSample {
-||||||| merged common ancestors
-
-struct CounterKeyedSample
-{
-=======
 void ProfileBuffer::StreamProfilerOverheadToJSON(
     SpliceableJSONWriter& aWriter, const TimeStamp& aProcessStartTime,
     double aSinceTime) const {
@@ -1961,7 +1342,6 @@ void ProfileBuffer::StreamProfilerOverheadToJSON(
 }
 
 struct CounterKeyedSample {
->>>>>>> upstream-releases
   double mTime;
   uint64_t mNumber;
   int64_t mCount;
@@ -1971,12 +1351,7 @@ using CounterKeyedSamples = Vector<CounterKeyedSample>;
 
 static LazyLogModule sFuzzyfoxLog("Fuzzyfox");
 
-<<<<<<< HEAD
-static LazyLogModule sFuzzyfoxLog("Fuzzyfox");
-||||||| merged common ancestors
-=======
 using CounterMap = HashMap<uint64_t, CounterKeyedSamples>;
->>>>>>> upstream-releases
 
 // HashMap lookup, if not found, a default value is inserted.
 // Returns reference to (existing or new) value inside the HashMap.
@@ -2080,21 +1455,10 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
   }
 
   aWriter.StartArrayProperty("counters");
-<<<<<<< HEAD
-  for (auto iter = counters.Iter(); !iter.Done(); iter.Next()) {
-    CounterMap& counter = iter.Data();
-    const BaseProfilerCount* base_counter =
-        static_cast<const BaseProfilerCount*>(iter.Key());
-||||||| merged common ancestors
-  for (auto iter = counters.Iter(); !iter.Done(); iter.Next()) {
-    CounterMap& counter = iter.Data();
-    const BaseProfilerCount* base_counter = static_cast<const BaseProfilerCount*>(iter.Key());
-=======
   for (auto iter = counters.iter(); !iter.done(); iter.next()) {
     CounterMap& counter = iter.get().value();
     const BaseProfilerCount* base_counter =
         static_cast<const BaseProfilerCount*>(iter.get().key());
->>>>>>> upstream-releases
 
     aWriter.Start();
     aWriter.StringProperty("name", base_counter->mLabel);
@@ -2102,21 +1466,10 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
     aWriter.StringProperty("description", base_counter->mDescription);
 
     aWriter.StartObjectProperty("sample_groups");
-<<<<<<< HEAD
-    for (auto counter_iter = counter.Iter(); !counter_iter.Done();
-         counter_iter.Next()) {
-      CounterKeyedSamples& samples = counter_iter.Data();
-      uint64_t key = counter_iter.Key();
-||||||| merged common ancestors
-    for (auto counter_iter = counter.Iter(); !counter_iter.Done(); counter_iter.Next()) {
-      CounterKeyedSamples& samples = counter_iter.Data();
-      uint64_t key = counter_iter.Key();
-=======
     for (auto counter_iter = counter.iter(); !counter_iter.done();
          counter_iter.next()) {
       CounterKeyedSamples& samples = counter_iter.get().value();
       uint64_t key = counter_iter.get().key();
->>>>>>> upstream-releases
 
       size_t size = samples.length();
       if (size == 0) {
@@ -2146,21 +1499,6 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
           }
           MOZ_ASSERT(i == 0 || samples[i].mTime >= samples[i - 1].mTime);
           MOZ_ASSERT(samples[i].mNumber >= previousNumber);
-<<<<<<< HEAD
-
-          aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
-          aWriter.DoubleElement(samples[i].mTime);
-          aWriter.IntElement(samples[i].mNumber - previousNumber);  // uint64_t
-          aWriter.IntElement(samples[i].mCount - previousCount);    // int64_t
-          aWriter.EndArray();
-||||||| merged common ancestors
-
-          aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
-          aWriter.DoubleElement(samples[i].mTime);
-          aWriter.IntElement(samples[i].mNumber - previousNumber); // uint64_t
-          aWriter.IntElement(samples[i].mCount - previousCount); // int64_t
-          aWriter.EndArray();
-=======
           MOZ_ASSERT(samples[i].mNumber - previousNumber <=
                      uint64_t(std::numeric_limits<int64_t>::max()));
 
@@ -2169,7 +1507,6 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
           writer.IntElement(NUMBER, static_cast<int64_t>(samples[i].mNumber -
                                                          previousNumber));
           writer.IntElement(COUNT, samples[i].mCount - previousCount);
->>>>>>> upstream-releases
           previousNumber = samples[i].mNumber;
           previousCount = samples[i].mCount;
         }
@@ -2223,27 +1560,11 @@ void ProfileBuffer::StreamMemoryToJSON(SpliceableJSONWriter& aWriter,
           double time = e.Get().GetDouble();
           if (time >= aSinceTime &&
               (previous_rss != rss || previous_uss != uss)) {
-<<<<<<< HEAD
-            aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
-            aWriter.DoubleElement(time);
-            aWriter.IntElement(rss);  // int64_t
-||||||| merged common ancestors
-            aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
-            aWriter.DoubleElement(time);
-            aWriter.IntElement(rss); // int64_t
-=======
             AutoArraySchemaWriter writer(aWriter);
             writer.DoubleElement(TIME, time);
             writer.IntElement(RSS, rss);
->>>>>>> upstream-releases
             if (uss != 0) {
-<<<<<<< HEAD
-              aWriter.IntElement(uss);  // int64_t
-||||||| merged common ancestors
-              aWriter.IntElement(uss); // int64_t
-=======
               writer.IntElement(USS, uss);
->>>>>>> upstream-releases
             }
             previous_rss = rss;
             previous_uss = uss;
@@ -2290,30 +1611,14 @@ void ProfileBuffer::StreamPausedRangesToJSON(SpliceableJSONWriter& aWriter,
     if (e.Get().IsPause()) {
       currentPauseStartTime = Some(e.Get().GetDouble());
     } else if (e.Get().IsResume()) {
-<<<<<<< HEAD
-      AddPausedRange(aWriter, "profiler-paused", currentPauseStartTime,
-                     Some(e.Get().u.mDouble));
-||||||| merged common ancestors
-      AddPausedRange(aWriter, "profiler-paused",
-                     currentPauseStartTime, Some(e.Get().u.mDouble));
-=======
       AddPausedRange(aWriter, "profiler-paused", currentPauseStartTime,
                      Some(e.Get().GetDouble()));
->>>>>>> upstream-releases
       currentPauseStartTime = Nothing();
     } else if (e.Get().IsCollectionStart()) {
       currentCollectionStartTime = Some(e.Get().GetDouble());
     } else if (e.Get().IsCollectionEnd()) {
-<<<<<<< HEAD
-      AddPausedRange(aWriter, "collecting", currentCollectionStartTime,
-                     Some(e.Get().u.mDouble));
-||||||| merged common ancestors
-      AddPausedRange(aWriter, "collecting",
-                     currentCollectionStartTime, Some(e.Get().u.mDouble));
-=======
       AddPausedRange(aWriter, "collecting", currentCollectionStartTime,
                      Some(e.Get().GetDouble()));
->>>>>>> upstream-releases
       currentCollectionStartTime = Nothing();
     }
     e.Next();
@@ -2364,13 +1669,7 @@ bool ProfileBuffer::DuplicateLastSample(int aThreadId,
       case ProfileBufferEntry::Kind::Time:
         // Copy with new time
         AddEntry(ProfileBufferEntry::Time(
-<<<<<<< HEAD
-            (TimeStamp::Now() - aProcessStartTime).ToMilliseconds()));
-||||||| merged common ancestors
-          (TimeStamp::Now() - aProcessStartTime).ToMilliseconds()));
-=======
             (TimeStamp::NowUnfuzzed() - aProcessStartTime).ToMilliseconds()));
->>>>>>> upstream-releases
         break;
       case ProfileBufferEntry::Kind::Marker:
       case ProfileBufferEntry::Kind::ResidentMemory:
@@ -2436,52 +1735,6 @@ bool ProfileBuffer::DuplicateLastSample(int aThreadId,
   return true;
 }
 
-<<<<<<< HEAD
-void ProfileBuffer::DiscardSamplesBeforeTime(double aTime) {
-  EntryGetter e(*this);
-  for (;;) {
-    // This block skips entries until we find the start of the next sample.
-    // This is useful in three situations.
-    //
-    // - The circular buffer overwrites old entries, so when we start parsing
-    //   we might be in the middle of a sample, and we must skip forward to the
-    //   start of the next sample.
-    //
-    // - We skip samples that don't have an appropriate ThreadId or Time.
-    //
-    // - We skip range Pause, Resume, CollectionStart, Marker, and CollectionEnd
-    //   entries between samples.
-    while (e.Has()) {
-      if (e.Get().IsThreadId()) {
-        break;
-      } else {
-        e.Next();
-      }
-    }
-
-    if (!e.Has()) {
-      break;
-    }
-
-    MOZ_RELEASE_ASSERT(e.Get().IsThreadId());
-    uint64_t sampleStartPos = e.CurPos();
-    e.Next();
-
-    if (e.Has() && e.Get().IsTime()) {
-      double sampleTime = e.Get().u.mDouble;
-
-      if (sampleTime >= aTime) {
-        // This is the first sample within the window of time that we want to
-        // keep. Throw away all samples before sampleStartPos and return.
-        mRangeStart = sampleStartPos;
-        return;
-      }
-    }
-  }
-}
-
-||||||| merged common ancestors
-=======
 void ProfileBuffer::DiscardSamplesBeforeTime(double aTime) {
   EntryGetter e(*this);
   for (;;) {
@@ -2525,6 +1778,5 @@ void ProfileBuffer::DiscardSamplesBeforeTime(double aTime) {
   }
 }
 
->>>>>>> upstream-releases
 // END ProfileBuffer
 ////////////////////////////////////////////////////////////////////////

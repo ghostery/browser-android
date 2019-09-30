@@ -21,16 +21,8 @@
 #if defined(XP_WIN)
 #  include <processthreadsapi.h>  // for GetCurrentProcessId()
 #else
-<<<<<<< HEAD
-#include <unistd.h>  // for getpid()
-#endif               // defined(XP_WIN)
-||||||| merged common ancestors
-#include <unistd.h> // for getpid()
-#endif // defined(XP_WIN)
-=======
 #  include <unistd.h>  // for getpid()
 #endif                 // defined(XP_WIN)
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -109,16 +101,8 @@ class CompileDebuggerScriptRunnable final : public WorkerDebuggerRunnable {
 
     ErrorResult rv;
     JSAutoRealm ar(aCx, global);
-<<<<<<< HEAD
-    workerinternals::LoadMainScript(aWorkerPrivate, mScriptURL, DebuggerScript,
-                                    rv);
-||||||| merged common ancestors
-    workerinternals::LoadMainScript(aWorkerPrivate, mScriptURL,
-                                    DebuggerScript, rv);
-=======
     workerinternals::LoadMainScript(aWorkerPrivate, nullptr, mScriptURL,
                                     DebuggerScript, rv);
->>>>>>> upstream-releases
     rv.WouldReportJSException();
     // Explicitly ignore NS_BINDING_ABORTED on rv.  Or more precisely, still
     // return false and don't SetWorkerScriptExecutedSuccessfully() in that
@@ -332,12 +316,6 @@ WorkerDebugger::GetServiceWorkerID(uint32_t* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WorkerDebugger::Initialize(const nsAString& aURL) {
-||||||| merged common ancestors
-WorkerDebugger::Initialize(const nsAString& aURL)
-{
-=======
 WorkerDebugger::GetId(nsAString& aResult) {
   AssertIsOnMainThread();
 
@@ -351,7 +329,6 @@ WorkerDebugger::GetId(nsAString& aResult) {
 
 NS_IMETHODIMP
 WorkerDebugger::Initialize(const nsAString& aURL) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
 
   if (!mWorkerPrivate) {
@@ -412,20 +389,12 @@ WorkerDebugger::RemoveListener(nsIWorkerDebuggerListener* aListener) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void WorkerDebugger::Close() {
-||||||| merged common ancestors
-void
-WorkerDebugger::Close()
-{
-=======
 NS_IMETHODIMP
 WorkerDebugger::SetDebuggerReady(bool aReady) {
   return mWorkerPrivate->SetIsDebuggerReady(aReady);
 }
 
 void WorkerDebugger::Close() {
->>>>>>> upstream-releases
   MOZ_ASSERT(mWorkerPrivate);
   mWorkerPrivate = nullptr;
 
@@ -439,17 +408,9 @@ void WorkerDebugger::PostMessageToDebugger(const nsAString& aMessage) {
   mWorkerPrivate->AssertIsOnWorkerThread();
 
   RefPtr<PostDebuggerMessageRunnable> runnable =
-<<<<<<< HEAD
-      new PostDebuggerMessageRunnable(this, aMessage);
-  if (NS_FAILED(mWorkerPrivate->DispatchToMainThread(runnable.forget()))) {
-||||||| merged common ancestors
-    new PostDebuggerMessageRunnable(this, aMessage);
-  if (NS_FAILED(mWorkerPrivate->DispatchToMainThread(runnable.forget()))) {
-=======
       new PostDebuggerMessageRunnable(this, aMessage);
   if (NS_FAILED(mWorkerPrivate->DispatchToMainThreadForMessaging(
           runnable.forget()))) {
->>>>>>> upstream-releases
     NS_WARNING("Failed to post message to debugger on main thread!");
   }
 }
@@ -470,17 +431,9 @@ void WorkerDebugger::ReportErrorToDebugger(const nsAString& aFilename,
   mWorkerPrivate->AssertIsOnWorkerThread();
 
   RefPtr<ReportDebuggerErrorRunnable> runnable =
-<<<<<<< HEAD
-      new ReportDebuggerErrorRunnable(this, aFilename, aLineno, aMessage);
-  if (NS_FAILED(mWorkerPrivate->DispatchToMainThread(runnable.forget()))) {
-||||||| merged common ancestors
-    new ReportDebuggerErrorRunnable(this, aFilename, aLineno, aMessage);
-  if (NS_FAILED(mWorkerPrivate->DispatchToMainThread(runnable.forget()))) {
-=======
       new ReportDebuggerErrorRunnable(this, aFilename, aLineno, aMessage);
   if (NS_FAILED(mWorkerPrivate->DispatchToMainThreadForMessaging(
           runnable.forget()))) {
->>>>>>> upstream-releases
     NS_WARNING("Failed to report error to debugger on main thread!");
   }
 }
@@ -539,19 +492,10 @@ RefPtr<PerformanceInfoPromise> WorkerDebugger::ReportPerformanceInfo() {
 
   // getting the worker URL
   RefPtr<nsIURI> scriptURI = mWorkerPrivate->GetResolvedScriptURI();
-<<<<<<< HEAD
-  if (NS_WARN_IF(!scriptURI)) {
-    // This can happen at shutdown, let's stop here.
-    return PerformanceInfoPromise::CreateAndReject(NS_ERROR_FAILURE,
-                                                   __func__);
-  }
-||||||| merged common ancestors
-=======
   if (NS_WARN_IF(!scriptURI)) {
     // This can happen at shutdown, let's stop here.
     return PerformanceInfoPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
   }
->>>>>>> upstream-releases
   nsCString url = scriptURI->GetSpecOrDefault();
 
   // Workers only produce metrics for a single category -
@@ -575,36 +519,6 @@ RefPtr<PerformanceInfoPromise> WorkerDebugger::ReportPerformanceInfo() {
     }
   }
 
-<<<<<<< HEAD
-  if (!isTopLevel) {
-    return PerformanceInfoPromise::CreateAndResolve(
-        PerformanceInfo(url, pid, windowID, duration, perfId, true, isTopLevel,
-                        memoryInfo, items),
-        __func__);
-  }
-
-  // We need to keep a ref on workerPrivate, passed to the promise,
-  // to make sure it's still aloive when collecting the info.
-  RefPtr<WorkerPrivate> workerRef = mWorkerPrivate;
-  RefPtr<AbstractThread> mainThread =
-      SystemGroup::AbstractMainThreadFor(TaskCategory::Performance);
-
-  return CollectMemoryInfo(top, mainThread)
-      ->Then(mainThread, __func__,
-             [workerRef, url, pid, perfId, windowID, duration, isTopLevel,
-              items](const PerformanceMemoryInfo& aMemoryInfo) {
-               return PerformanceInfoPromise::CreateAndResolve(
-                   PerformanceInfo(url, pid, windowID, duration, perfId, true,
-                                   isTopLevel, aMemoryInfo, items),
-                   __func__);
-             },
-             [workerRef]() {
-               return PerformanceInfoPromise::CreateAndReject(NS_ERROR_FAILURE,
-                                                              __func__);
-             });
-||||||| merged common ancestors
-  return PerformanceInfo(url, pid, windowID, duration, perfId, true, isTopLevel, items);
-=======
   if (!isTopLevel) {
     return PerformanceInfoPromise::CreateAndResolve(
         PerformanceInfo(url, pid, windowID, duration, perfId, true, isTopLevel,
@@ -632,7 +546,6 @@ RefPtr<PerformanceInfoPromise> WorkerDebugger::ReportPerformanceInfo() {
             return PerformanceInfoPromise::CreateAndReject(NS_ERROR_FAILURE,
                                                            __func__);
           });
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

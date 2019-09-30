@@ -43,15 +43,7 @@ ur{
         }
         latn{
             miscPatterns{
-<<<<<<< HEAD
-                approximately{"~{0}"}
                 atLeast{"≥{0}"}
-                atMost{"≤{0}"}
-||||||| merged common ancestors
-                atLeast{"⩾{0}"}
-=======
-                atLeast{"≥{0}"}
->>>>>>> upstream-releases
                 range{"{0}–{1}"}
             }
             patterns{
@@ -238,13 +230,7 @@ ur{
         minimumGroupingDigits{"1"}
         native{"arabext"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.3"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         coptic{
             eras{

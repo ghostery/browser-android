@@ -27,52 +27,16 @@ class SVGPathData;
 class SVGPointList;
 class SVGStringList;
 class SVGTransformList;
-<<<<<<< HEAD
-}  // namespace mozilla
 
-namespace mozilla {
-||||||| merged common ancestors
-} // namespace mozilla
-
-namespace mozilla {
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-class SVGAttrValueWrapper {
- public:
-  static void ToString(const nsSVGAngle* aAngle, nsAString& aResult);
-  static void ToString(const nsSVGIntegerPair* aIntegerPair,
-||||||| merged common ancestors
-class SVGAttrValueWrapper
-{
-public:
-  static void ToString(const nsSVGAngle* aAngle, nsAString& aResult);
-  static void ToString(const nsSVGIntegerPair* aIntegerPair,
-=======
 class SVGAttrValueWrapper {
  public:
   static void ToString(const SVGAnimatedIntegerPair* aIntegerPair,
->>>>>>> upstream-releases
                        nsAString& aResult);
   static void ToString(const SVGAnimatedLength* aLength, nsAString& aResult);
   static void ToString(const SVGAnimatedNumberPair* aNumberPair,
                        nsAString& aResult);
   static void ToString(const SVGAnimatedOrient* aOrient, nsAString& aResult);
   static void ToString(
-<<<<<<< HEAD
-      const mozilla::SVGAnimatedPreserveAspectRatio* aPreserveAspectRatio,
-      nsAString& aResult);
-  static void ToString(const mozilla::SVGStringList* aStringList,
-                       nsAString& aResult);
-  static void ToString(const mozilla::SVGTransformList* aTransformList,
-||||||| merged common ancestors
-    const mozilla::SVGAnimatedPreserveAspectRatio* aPreserveAspectRatio,
-    nsAString& aResult);
-  static void ToString(const mozilla::SVGStringList* aStringList,
-                       nsAString& aResult);
-  static void ToString(const mozilla::SVGTransformList* aTransformList,
-=======
       const SVGAnimatedPreserveAspectRatio* aPreserveAspectRatio,
       nsAString& aResult);
   static void ToString(const SVGAnimatedViewBox* aViewBox, nsAString& aResult);
@@ -82,7 +46,6 @@ class SVGAttrValueWrapper {
   static void ToString(const SVGPointList* aPointList, nsAString& aResult);
   static void ToString(const SVGStringList* aStringList, nsAString& aResult);
   static void ToString(const SVGTransformList* aTransformList,
->>>>>>> upstream-releases
                        nsAString& aResult);
 };
 

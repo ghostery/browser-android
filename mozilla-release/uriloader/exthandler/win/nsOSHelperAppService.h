@@ -31,45 +31,19 @@ class nsOSHelperAppService : public nsExternalHelperAppService {
   virtual ~nsOSHelperAppService();
 
   // override nsIExternalProtocolService methods
-<<<<<<< HEAD
-  nsresult OSProtocolHandlerExists(const char* aProtocolScheme,
-                                   bool* aHandlerExists);
-  nsresult LoadUriInternal(nsIURI* aURL);
-  NS_IMETHOD GetApplicationDescription(const nsACString& aScheme,
-                                       nsAString& _retval) override;
-||||||| merged common ancestors
-  nsresult OSProtocolHandlerExists(const char * aProtocolScheme, bool * aHandlerExists);
-  nsresult LoadUriInternal(nsIURI * aURL);
-  NS_IMETHOD GetApplicationDescription(const nsACString& aScheme, nsAString& _retval) override;
-=======
   NS_IMETHOD OSProtocolHandlerExists(const char* aProtocolScheme,
                                      bool* aHandlerExists) override;
   nsresult LoadUriInternal(nsIURI* aURL);
   NS_IMETHOD GetApplicationDescription(const nsACString& aScheme,
                                        nsAString& _retval) override;
->>>>>>> upstream-releases
 
   // method overrides for windows registry look up steps....
-<<<<<<< HEAD
-  already_AddRefed<nsIMIMEInfo> GetMIMEInfoFromOS(const nsACString& aMIMEType,
-                                                  const nsACString& aFileExt,
-                                                  bool* aFound);
-  NS_IMETHOD GetProtocolHandlerInfoFromOS(const nsACString& aScheme,
-                                          bool* found,
-                                          nsIHandlerInfo** _retval);
-||||||| merged common ancestors
-  already_AddRefed<nsIMIMEInfo> GetMIMEInfoFromOS(const nsACString& aMIMEType, const nsACString& aFileExt, bool *aFound);
-  NS_IMETHOD GetProtocolHandlerInfoFromOS(const nsACString &aScheme, 
-                                          bool *found,
-                                          nsIHandlerInfo **_retval);
-=======
   NS_IMETHOD GetMIMEInfoFromOS(const nsACString& aMIMEType,
                                const nsACString& aFileExt, bool* aFound,
                                nsIMIMEInfo** aMIMEInfo) override;
   NS_IMETHOD GetProtocolHandlerInfoFromOS(const nsACString& aScheme,
                                           bool* found,
                                           nsIHandlerInfo** _retval);
->>>>>>> upstream-releases
   virtual bool GetMIMETypeFromOSForExtension(const nsACString& aExtension,
                                              nsACString& aMIMEType) override;
 

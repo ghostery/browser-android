@@ -54,25 +54,6 @@ namespace net {
 #ifdef MOZ_USE_WIFI_TICKLER
 
 // 8f769ed6-207c-4af9-9f7e-9e832da3754e
-<<<<<<< HEAD
-#define NS_TICKLER_IID                               \
-  {                                                  \
-    0x8f769ed6, 0x207c, 0x4af9, {                    \
-      0x9f, 0x7e, 0x9e, 0x83, 0x2d, 0xa3, 0x75, 0x4e \
-    }                                                \
-  }
-
-class Tickler final : public nsSupportsWeakReference {
- public:
-||||||| merged common ancestors
-#define NS_TICKLER_IID \
-{ 0x8f769ed6, 0x207c, 0x4af9, \
-  { 0x9f, 0x7e, 0x9e, 0x83, 0x2d, 0xa3, 0x75, 0x4e } }
-
-class Tickler final : public nsSupportsWeakReference
-{
-public:
-=======
 #  define NS_TICKLER_IID                               \
     {                                                  \
       0x8f769ed6, 0x207c, 0x4af9, {                    \
@@ -82,7 +63,6 @@ public:
 
 class Tickler final : public nsSupportsWeakReference {
  public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_TICKLER_IID)
 

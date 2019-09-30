@@ -51,17 +51,6 @@ describe("MessageLoaderUtils", () => {
       assert.propertyVal(message, "id", "foo");
       assert.propertyVal(message, "provider", "provider123");
     });
-<<<<<<< HEAD
-    it("should filter out local messages listed in the `exclude` field", async () => {
-      const sourceMessage = {id: "foo"};
-      const provider = {id: "provider123", type: "local", messages: [sourceMessage], exclude: ["foo"]};
-
-      const result = await MessageLoaderUtils.loadMessagesForProvider(provider, FAKE_STORAGE);
-
-      assert.lengthOf(result.messages, 0);
-    });
-||||||| merged common ancestors
-=======
     it("should filter out local messages listed in the `exclude` field", async () => {
       const sourceMessage = { id: "foo" };
       const provider = {
@@ -78,7 +67,6 @@ describe("MessageLoaderUtils", () => {
 
       assert.lengthOf(result.messages, 0);
     });
->>>>>>> upstream-releases
     it("should return messages for remote provider", async () => {
       const sourceMessage = { id: "foo" };
       fetchStub.resolves({
@@ -494,12 +482,6 @@ describe("MessageLoaderUtils", () => {
     let installAddonStub;
     beforeEach(() => {
       globals = new GlobalOverrider();
-<<<<<<< HEAD
-      sandbox = sinon.createSandbox();
-||||||| merged common ancestors
-      sandbox = sinon.sandbox.create();
-=======
->>>>>>> upstream-releases
       getInstallStub = sandbox.stub();
       installAddonStub = sandbox.stub();
       sandbox.stub(MessageLoaderUtils, "_loadAddonIconInURLBar").returns(null);

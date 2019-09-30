@@ -33,39 +33,6 @@ class NoAnimationPanel extends Component {
       {
         className: "animation-error-message devtools-sidepanel-no-result",
       },
-<<<<<<< HEAD
-      dom.p(
-        null,
-        L10N.getStr("panel.noAnimation")
-      ),
-      dom.button(
-        {
-          className: "animation-element-picker devtools-button" +
-                     (elementPickerEnabled ? " checked" : ""),
-          "data-standalone": true,
-          onClick: event => {
-            event.stopPropagation();
-            toggleElementPicker();
-          },
-        }
-      )
-||||||| merged common ancestors
-      dom.p(
-        null,
-        L10N.getStr("panel.noAnimation")
-      ),
-      dom.button(
-        {
-          className: "animation-element-picker devtools-button" +
-                     (elementPickerEnabled ? " checked" : ""),
-          "data-standalone": true,
-          onClick: event => {
-            event.stopPropagation();
-            toggleElementPicker();
-          }
-        }
-      )
-=======
       dom.p(null, L10N.getStr("panel.noAnimation")),
       dom.button({
         className:
@@ -77,7 +44,6 @@ class NoAnimationPanel extends Component {
           toggleElementPicker();
         },
       })
->>>>>>> upstream-releases
     );
   }
 }

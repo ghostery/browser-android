@@ -13,13 +13,8 @@
 #include "mozilla/PresShell.h"
 #include "mozilla/Types.h"
 #include "mozilla/WritingModes.h"
-<<<<<<< HEAD
-#include "nsPresContext.h"
-||||||| merged common ancestors
-=======
 #include "nsPresContext.h"
 #include "nsPresContextInlines.h"
->>>>>>> upstream-releases
 #include "nsString.h"
 #include "nsTArray.h"
 #include "nsTHashtable.h"
@@ -29,20 +24,7 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-struct AdditiveSymbol {
-  CounterValue weight;
-  nsString symbol;
-};
-||||||| merged common ancestors
-struct AdditiveSymbol
-{
-  CounterValue weight;
-  nsString symbol;
-};
-=======
 using AdditiveSymbol = StyleAdditiveSymbol;
->>>>>>> upstream-releases
 
 struct NegativeType {
   nsString before, after;
@@ -63,45 +45,18 @@ struct PadType {
 // points outside the BMP will need 2 16-bit units.
 #define LENGTH_LIMIT 150
 
-<<<<<<< HEAD
-static bool GetCyclicCounterText(CounterValue aOrdinal, nsAString& aResult,
-                                 const nsTArray<nsString>& aSymbols) {
-  MOZ_ASSERT(aSymbols.Length() >= 1, "No symbol available for cyclic counter.");
-||||||| merged common ancestors
-static bool
-GetCyclicCounterText(CounterValue aOrdinal,
-                     nsAString& aResult,
-                     const nsTArray<nsString>& aSymbols)
-{
-  MOZ_ASSERT(aSymbols.Length() >= 1,
-             "No symbol available for cyclic counter.");
-=======
 static bool GetCyclicCounterText(CounterValue aOrdinal, nsAString& aResult,
                                  Span<const nsString> aSymbols) {
   MOZ_ASSERT(aSymbols.Length() >= 1, "No symbol available for cyclic counter.");
->>>>>>> upstream-releases
   auto n = aSymbols.Length();
   CounterValue index = (aOrdinal - 1) % n;
   aResult = aSymbols[index >= 0 ? index : index + n];
   return true;
 }
 
-<<<<<<< HEAD
-static bool GetFixedCounterText(CounterValue aOrdinal, nsAString& aResult,
-                                CounterValue aStart,
-                                const nsTArray<nsString>& aSymbols) {
-||||||| merged common ancestors
-static bool
-GetFixedCounterText(CounterValue aOrdinal,
-                    nsAString& aResult,
-                    CounterValue aStart,
-                    const nsTArray<nsString>& aSymbols)
-{
-=======
 static bool GetFixedCounterText(CounterValue aOrdinal, nsAString& aResult,
                                 CounterValue aStart,
                                 Span<const nsString> aSymbols) {
->>>>>>> upstream-releases
   CounterValue index = aOrdinal - aStart;
   if (index >= 0 && index < CounterValue(aSymbols.Length())) {
     aResult = aSymbols[index];
@@ -111,19 +66,8 @@ static bool GetFixedCounterText(CounterValue aOrdinal, nsAString& aResult,
   }
 }
 
-<<<<<<< HEAD
-static bool GetSymbolicCounterText(CounterValue aOrdinal, nsAString& aResult,
-                                   const nsTArray<nsString>& aSymbols) {
-||||||| merged common ancestors
-static bool
-GetSymbolicCounterText(CounterValue aOrdinal,
-                       nsAString& aResult,
-                       const nsTArray<nsString>& aSymbols)
-{
-=======
 static bool GetSymbolicCounterText(CounterValue aOrdinal, nsAString& aResult,
                                    Span<const nsString> aSymbols) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSymbols.Length() >= 1,
              "No symbol available for symbolic counter.");
   MOZ_ASSERT(aOrdinal >= 0, "Invalid ordinal.");
@@ -148,23 +92,9 @@ static bool GetSymbolicCounterText(CounterValue aOrdinal, nsAString& aResult,
   return true;
 }
 
-<<<<<<< HEAD
-static bool GetAlphabeticCounterText(CounterValue aOrdinal, nsAString& aResult,
-                                     const nsTArray<nsString>& aSymbols) {
-  MOZ_ASSERT(aSymbols.Length() >= 2, "Too few symbols for alphabetic counter.");
-||||||| merged common ancestors
-static bool
-GetAlphabeticCounterText(CounterValue aOrdinal,
-                         nsAString& aResult,
-                         const nsTArray<nsString>& aSymbols)
-{
-  MOZ_ASSERT(aSymbols.Length() >= 2,
-             "Too few symbols for alphabetic counter.");
-=======
 static bool GetAlphabeticCounterText(CounterValue aOrdinal, nsAString& aResult,
                                      Span<const nsString> aSymbols) {
   MOZ_ASSERT(aSymbols.Length() >= 2, "Too few symbols for alphabetic counter.");
->>>>>>> upstream-releases
   MOZ_ASSERT(aOrdinal >= 0, "Invalid ordinal.");
   if (aOrdinal == 0) {
     return false;
@@ -188,23 +118,9 @@ static bool GetAlphabeticCounterText(CounterValue aOrdinal, nsAString& aResult,
   return true;
 }
 
-<<<<<<< HEAD
-static bool GetNumericCounterText(CounterValue aOrdinal, nsAString& aResult,
-                                  const nsTArray<nsString>& aSymbols) {
-  MOZ_ASSERT(aSymbols.Length() >= 2, "Too few symbols for numeric counter.");
-||||||| merged common ancestors
-static bool
-GetNumericCounterText(CounterValue aOrdinal,
-                      nsAString& aResult,
-                      const nsTArray<nsString>& aSymbols)
-{
-  MOZ_ASSERT(aSymbols.Length() >= 2,
-             "Too few symbols for numeric counter.");
-=======
 static bool GetNumericCounterText(CounterValue aOrdinal, nsAString& aResult,
                                   Span<const nsString> aSymbols) {
   MOZ_ASSERT(aSymbols.Length() >= 2, "Too few symbols for numeric counter.");
->>>>>>> upstream-releases
   MOZ_ASSERT(aOrdinal >= 0, "Invalid ordinal.");
 
   if (aOrdinal == 0) {
@@ -226,19 +142,8 @@ static bool GetNumericCounterText(CounterValue aOrdinal, nsAString& aResult,
   return true;
 }
 
-<<<<<<< HEAD
-static bool GetAdditiveCounterText(CounterValue aOrdinal, nsAString& aResult,
-                                   const nsTArray<AdditiveSymbol>& aSymbols) {
-||||||| merged common ancestors
-static bool
-GetAdditiveCounterText(CounterValue aOrdinal,
-                       nsAString& aResult,
-                       const nsTArray<AdditiveSymbol>& aSymbols)
-{
-=======
 static bool GetAdditiveCounterText(CounterValue aOrdinal, nsAString& aResult,
                                    Span<const AdditiveSymbol> aSymbols) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOrdinal >= 0, "Invalid ordinal.");
 
   if (aOrdinal == 0) {
@@ -604,18 +509,9 @@ static bool SystemUsesNegativeSign(uint8_t aSystem) {
 class BuiltinCounterStyle : public CounterStyle {
  public:
   constexpr BuiltinCounterStyle(int32_t aStyle, nsStaticAtom* aName)
-<<<<<<< HEAD
-      : CounterStyle(aStyle), mName(aName) {}
-||||||| merged common ancestors
-    : CounterStyle(aStyle)
-    , mName(aName)
-  {
-  }
-=======
       : CounterStyle(aStyle), mName(aName) {}
 
   nsStaticAtom* GetStyleName() const { return mName; }
->>>>>>> upstream-releases
 
   virtual void GetPrefix(nsAString& aResult) override;
   virtual void GetSuffix(nsAString& aResult) override;
@@ -635,87 +531,21 @@ class BuiltinCounterStyle : public CounterStyle {
 
   virtual bool GetInitialCounterText(CounterValue aOrdinal,
                                      WritingMode aWritingMode,
-<<<<<<< HEAD
                                      nsAString& aResult, bool& aIsRTL) override;
 
- protected:
-  BuiltinCounterStyle(const BuiltinCounterStyle& aOther)
-      : CounterStyle(aOther.mStyle), mName(aOther.mName) {}
-
- private:
-  // The atom for the name of the builtin counter style.
-  // Extra indirection to point to nsGkAtoms members rather than the
-  // nsAtom, because members of nsGkAtoms are updated at runtime but
-  // we want to construct BuiltinCounterStyle at compile time.
-  nsStaticAtom* const mName;
-};
-||||||| merged common ancestors
-                                     nsAString& aResult,
-                                     bool& aIsRTL) override;
-
-protected:
-  BuiltinCounterStyle(const BuiltinCounterStyle& aOther)
-    : CounterStyle(aOther.mStyle)
-    , mName(aOther.mName)
-  {
-  }
-
-private:
-  // The atom for the name of the builtin counter style.
-  // Extra indirection to point to nsGkAtoms members rather than the
-  // nsAtom, because members of nsGkAtoms are updated at runtime but
-  // we want to construct BuiltinCounterStyle at compile time.
-  nsStaticAtom* const mName;
-};
-=======
-                                     nsAString& aResult, bool& aIsRTL) override;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-/* virtual */ nsStaticAtom* BuiltinCounterStyle::GetStyleName() const {
-  return mName;
-}
-||||||| merged common ancestors
-/* virtual */ nsStaticAtom*
-BuiltinCounterStyle::GetStyleName() const
-{
-  return mName;
-}
-=======
  protected:
   constexpr BuiltinCounterStyle(const BuiltinCounterStyle& aOther)
       : CounterStyle(aOther.mStyle), mName(aOther.mName) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* virtual */ void BuiltinCounterStyle::GetPrefix(nsAString& aResult) {
-  aResult.Truncate();
-}
-||||||| merged common ancestors
-/* virtual */ void
-BuiltinCounterStyle::GetPrefix(nsAString& aResult)
-{
-  aResult.Truncate();
-}
-=======
  private:
   nsStaticAtom* mName;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* virtual */ void BuiltinCounterStyle::GetSuffix(nsAString& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-BuiltinCounterStyle::GetSuffix(nsAString& aResult)
-{
-=======
 /* virtual */
 void BuiltinCounterStyle::GetPrefix(nsAString& aResult) { aResult.Truncate(); }
 
 /* virtual */
 void BuiltinCounterStyle::GetSuffix(nsAString& aResult) {
->>>>>>> upstream-releases
   switch (mStyle) {
     case NS_STYLE_LIST_STYLE_NONE:
       aResult.Truncate();
@@ -758,24 +588,11 @@ static const char16_t kRightPointingCharacter = 0x25b8;
 static const char16_t kLeftPointingCharacter = 0x25c2;
 static const char16_t kDownPointingCharacter = 0x25be;
 
-<<<<<<< HEAD
-/* virtual */ void BuiltinCounterStyle::GetSpokenCounterText(
-    CounterValue aOrdinal, WritingMode aWritingMode, nsAString& aResult,
-    bool& aIsBullet) {
-||||||| merged common ancestors
-/* virtual */ void
-BuiltinCounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
-                                          WritingMode aWritingMode,
-                                          nsAString& aResult,
-                                          bool& aIsBullet)
-{
-=======
 /* virtual */
 void BuiltinCounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
                                                WritingMode aWritingMode,
                                                nsAString& aResult,
                                                bool& aIsBullet) {
->>>>>>> upstream-releases
   switch (mStyle) {
     case NS_STYLE_LIST_STYLE_NONE:
     case NS_STYLE_LIST_STYLE_DISC:
@@ -796,16 +613,8 @@ void BuiltinCounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool BuiltinCounterStyle::IsBullet() {
-||||||| merged common ancestors
-/* virtual */ bool
-BuiltinCounterStyle::IsBullet()
-{
-=======
 /* virtual */
 bool BuiltinCounterStyle::IsBullet() {
->>>>>>> upstream-releases
   switch (mStyle) {
     case NS_STYLE_LIST_STYLE_DISC:
     case NS_STYLE_LIST_STYLE_CIRCLE:
@@ -825,16 +634,8 @@ static const char16_t gKoreanNegative[] = {0xb9c8, 0xc774, 0xb108,
 static const char16_t gSimpChineseNegative[] = {0x8d1f, 0x0000};
 static const char16_t gTradChineseNegative[] = {0x8ca0, 0x0000};
 
-<<<<<<< HEAD
-/* virtual */ void BuiltinCounterStyle::GetNegative(NegativeType& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-BuiltinCounterStyle::GetNegative(NegativeType& aResult)
-{
-=======
 /* virtual */
 void BuiltinCounterStyle::GetNegative(NegativeType& aResult) {
->>>>>>> upstream-releases
   switch (mStyle) {
     case NS_STYLE_LIST_STYLE_JAPANESE_FORMAL:
     case NS_STYLE_LIST_STYLE_JAPANESE_INFORMAL:
@@ -863,17 +664,8 @@ void BuiltinCounterStyle::GetNegative(NegativeType& aResult) {
   aResult.after.Truncate();
 }
 
-<<<<<<< HEAD
-/* virtual */ bool BuiltinCounterStyle::IsOrdinalInRange(
-    CounterValue aOrdinal) {
-||||||| merged common ancestors
-/* virtual */ bool
-BuiltinCounterStyle::IsOrdinalInRange(CounterValue aOrdinal)
-{
-=======
 /* virtual */
 bool BuiltinCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
->>>>>>> upstream-releases
   switch (mStyle) {
     default:
     // cyclic
@@ -907,17 +699,8 @@ bool BuiltinCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool BuiltinCounterStyle::IsOrdinalInAutoRange(
-    CounterValue aOrdinal) {
-||||||| merged common ancestors
-/* virtual */ bool
-BuiltinCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal)
-{
-=======
 /* virtual */
 bool BuiltinCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal) {
->>>>>>> upstream-releases
   switch (mStyle) {
     // cyclic:
     case NS_STYLE_LIST_STYLE_NONE:
@@ -953,45 +736,21 @@ bool BuiltinCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void BuiltinCounterStyle::GetPad(PadType& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-BuiltinCounterStyle::GetPad(PadType& aResult)
-{
-=======
 /* virtual */
 void BuiltinCounterStyle::GetPad(PadType& aResult) {
->>>>>>> upstream-releases
   aResult.width = 0;
   aResult.symbol.Truncate();
 }
 
-<<<<<<< HEAD
-/* virtual */ CounterStyle* BuiltinCounterStyle::GetFallback() {
-||||||| merged common ancestors
-/* virtual */ CounterStyle*
-BuiltinCounterStyle::GetFallback()
-{
-=======
 /* virtual */
 CounterStyle* BuiltinCounterStyle::GetFallback() {
->>>>>>> upstream-releases
   // Fallback of dependent builtin counter styles are handled in class
   // DependentBuiltinCounterStyle.
   return CounterStyleManager::GetDecimalStyle();
 }
 
-<<<<<<< HEAD
-/* virtual */ uint8_t BuiltinCounterStyle::GetSpeakAs() {
-||||||| merged common ancestors
-/* virtual */ uint8_t
-BuiltinCounterStyle::GetSpeakAs()
-{
-=======
 /* virtual */
 uint8_t BuiltinCounterStyle::GetSpeakAs() {
->>>>>>> upstream-releases
   switch (mStyle) {
     case NS_STYLE_LIST_STYLE_NONE:
     case NS_STYLE_LIST_STYLE_DISC:
@@ -1005,16 +764,8 @@ uint8_t BuiltinCounterStyle::GetSpeakAs() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool BuiltinCounterStyle::UseNegativeSign() {
-||||||| merged common ancestors
-/* virtual */ bool
-BuiltinCounterStyle::UseNegativeSign()
-{
-=======
 /* virtual */
 bool BuiltinCounterStyle::UseNegativeSign() {
->>>>>>> upstream-releases
   switch (mStyle) {
     case NS_STYLE_LIST_STYLE_NONE:
     case NS_STYLE_LIST_STYLE_DISC:
@@ -1028,24 +779,11 @@ bool BuiltinCounterStyle::UseNegativeSign() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool BuiltinCounterStyle::GetInitialCounterText(
-    CounterValue aOrdinal, WritingMode aWritingMode, nsAString& aResult,
-    bool& aIsRTL) {
-||||||| merged common ancestors
-/* virtual */ bool
-BuiltinCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
-                                           WritingMode aWritingMode,
-                                           nsAString& aResult,
-                                           bool& aIsRTL)
-{
-=======
 /* virtual */
 bool BuiltinCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
                                                 WritingMode aWritingMode,
                                                 nsAString& aResult,
                                                 bool& aIsRTL) {
->>>>>>> upstream-releases
   aIsRTL = false;
   switch (mStyle) {
     // used by counters & extends counter-style code only
@@ -1146,17 +884,8 @@ class DependentBuiltinCounterStyle final : public BuiltinCounterStyle {
         eArenaObjectID_DependentBuiltinCounterStyle, sz);
   }
 
-<<<<<<< HEAD
-  void Destroy() {
-    nsIPresShell* shell = mManager->PresContext()->PresShell();
-||||||| merged common ancestors
-  void Destroy()
-  {
-    nsIPresShell* shell = mManager->PresContext()->PresShell();
-=======
   void Destroy() {
     PresShell* presShell = mManager->PresContext()->PresShell();
->>>>>>> upstream-releases
     this->~DependentBuiltinCounterStyle();
     presShell->FreeByObjectID(eArenaObjectID_DependentBuiltinCounterStyle,
                               this);
@@ -1168,16 +897,8 @@ class DependentBuiltinCounterStyle final : public BuiltinCounterStyle {
   CounterStyleManager* mManager;
 };
 
-<<<<<<< HEAD
-/* virtual */ CounterStyle* DependentBuiltinCounterStyle::GetFallback() {
-||||||| merged common ancestors
-/* virtual */ CounterStyle*
-DependentBuiltinCounterStyle::GetFallback()
-{
-=======
 /* virtual */
 CounterStyle* DependentBuiltinCounterStyle::GetFallback() {
->>>>>>> upstream-releases
   switch (GetStyle()) {
     case NS_STYLE_LIST_STYLE_JAPANESE_INFORMAL:
     case NS_STYLE_LIST_STYLE_JAPANESE_FORMAL:
@@ -1199,49 +920,10 @@ CounterStyle* DependentBuiltinCounterStyle::GetFallback() {
   }
 }
 
-<<<<<<< HEAD
-class CustomCounterStyle final : public CounterStyle {
- public:
-  CustomCounterStyle(nsAtom* aName, CounterStyleManager* aManager,
-||||||| merged common ancestors
-class CustomCounterStyle final : public CounterStyle
-{
-public:
-  CustomCounterStyle(nsAtom* aName,
-                     CounterStyleManager* aManager,
-=======
 class CustomCounterStyle final : public CounterStyle {
  public:
   CustomCounterStyle(CounterStyleManager* aManager,
->>>>>>> upstream-releases
                      const RawServoCounterStyleRule* aRule)
-<<<<<<< HEAD
-      : CounterStyle(NS_STYLE_LIST_STYLE_CUSTOM),
-        mName(aName),
-        mManager(aManager),
-        mRule(aRule),
-        mRuleGeneration(Servo_CounterStyleRule_GetGeneration(aRule)),
-        mSystem(Servo_CounterStyleRule_GetSystem(aRule)),
-        mFlags(0),
-        mFallback(nullptr),
-        mSpeakAsCounter(nullptr),
-        mExtends(nullptr),
-        mExtendsRoot(nullptr) {}
-||||||| merged common ancestors
-    : CounterStyle(NS_STYLE_LIST_STYLE_CUSTOM),
-      mName(aName),
-      mManager(aManager),
-      mRule(aRule),
-      mRuleGeneration(Servo_CounterStyleRule_GetGeneration(aRule)),
-      mSystem(Servo_CounterStyleRule_GetSystem(aRule)),
-      mFlags(0),
-      mFallback(nullptr),
-      mSpeakAsCounter(nullptr),
-      mExtends(nullptr),
-      mExtendsRoot(nullptr)
-  {
-  }
-=======
       : CounterStyle(NS_STYLE_LIST_STYLE_CUSTOM),
         mManager(aManager),
         mRule(aRule),
@@ -1252,7 +934,6 @@ class CustomCounterStyle final : public CounterStyle {
         mSpeakAsCounter(nullptr),
         mExtends(nullptr),
         mExtendsRoot(nullptr) {}
->>>>>>> upstream-releases
 
   // This method will clear all cached data in the style and update the
   // generation number of the rule. It should be called when the rule of
@@ -1299,17 +980,8 @@ class CustomCounterStyle final : public CounterStyle {
         eArenaObjectID_CustomCounterStyle, sz);
   }
 
-<<<<<<< HEAD
-  void Destroy() {
-    nsIPresShell* shell = mManager->PresContext()->PresShell();
-||||||| merged common ancestors
-  void Destroy()
-  {
-    nsIPresShell* shell = mManager->PresContext()->PresShell();
-=======
   void Destroy() {
     PresShell* presShell = mManager->PresContext()->PresShell();
->>>>>>> upstream-releases
     this->~CustomCounterStyle();
     presShell->FreeByObjectID(eArenaObjectID_CustomCounterStyle, this);
   }
@@ -1317,29 +989,8 @@ class CustomCounterStyle final : public CounterStyle {
  private:
   ~CustomCounterStyle() {}
 
-<<<<<<< HEAD
-  nsCSSValue GetDesc(nsCSSCounterDesc aDesc) const {
-    nsCSSValue value;
-    Servo_CounterStyleRule_GetDescriptor(mRule, aDesc, &value);
-    return value;
-  }
-
-  const nsTArray<nsString>& GetSymbols();
-  const nsTArray<AdditiveSymbol>& GetAdditiveSymbols();
-||||||| merged common ancestors
-  nsCSSValue GetDesc(nsCSSCounterDesc aDesc) const
-  {
-    nsCSSValue value;
-    Servo_CounterStyleRule_GetDescriptor(mRule, aDesc, &value);
-    return value;
-  }
-
-  const nsTArray<nsString>& GetSymbols();
-  const nsTArray<AdditiveSymbol>& GetAdditiveSymbols();
-=======
   Span<const nsString> GetSymbols();
   Span<const AdditiveSymbol> GetAdditiveSymbols();
->>>>>>> upstream-releases
 
   // The speak-as values of counter styles may form a loop, and the
   // loops may have complex interaction with the loop formed by
@@ -1437,24 +1088,8 @@ void CustomCounterStyle::ResetDependentData() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ nsAtom* CustomCounterStyle::GetStyleName() const { return mName; }
-
-/* virtual */ void CustomCounterStyle::GetPrefix(nsAString& aResult) {
-||||||| merged common ancestors
-/* virtual */ nsAtom*
-CustomCounterStyle::GetStyleName() const
-{
-  return mName;
-}
-
-/* virtual */ void
-CustomCounterStyle::GetPrefix(nsAString& aResult)
-{
-=======
 /* virtual */
 void CustomCounterStyle::GetPrefix(nsAString& aResult) {
->>>>>>> upstream-releases
   if (!(mFlags & FLAG_PREFIX_INITED)) {
     mFlags |= FLAG_PREFIX_INITED;
 
@@ -1469,16 +1104,8 @@ void CustomCounterStyle::GetPrefix(nsAString& aResult) {
   aResult = mPrefix;
 }
 
-<<<<<<< HEAD
-/* virtual */ void CustomCounterStyle::GetSuffix(nsAString& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-CustomCounterStyle::GetSuffix(nsAString& aResult)
-{
-=======
 /* virtual */
 void CustomCounterStyle::GetSuffix(nsAString& aResult) {
->>>>>>> upstream-releases
   if (!(mFlags & FLAG_SUFFIX_INITED)) {
     mFlags |= FLAG_SUFFIX_INITED;
 
@@ -1493,24 +1120,11 @@ void CustomCounterStyle::GetSuffix(nsAString& aResult) {
   aResult = mSuffix;
 }
 
-<<<<<<< HEAD
-/* virtual */ void CustomCounterStyle::GetSpokenCounterText(
-    CounterValue aOrdinal, WritingMode aWritingMode, nsAString& aResult,
-    bool& aIsBullet) {
-||||||| merged common ancestors
-/* virtual */ void
-CustomCounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
-                                         WritingMode aWritingMode,
-                                         nsAString& aResult,
-                                         bool& aIsBullet)
-{
-=======
 /* virtual */
 void CustomCounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
                                               WritingMode aWritingMode,
                                               nsAString& aResult,
                                               bool& aIsBullet) {
->>>>>>> upstream-releases
   if (GetSpeakAs() != NS_STYLE_COUNTER_SPEAKAS_OTHER) {
     CounterStyle::GetSpokenCounterText(aOrdinal, aWritingMode, aResult,
                                        aIsBullet);
@@ -1522,16 +1136,8 @@ void CustomCounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool CustomCounterStyle::IsBullet() {
-||||||| merged common ancestors
-/* virtual */ bool
-CustomCounterStyle::IsBullet()
-{
-=======
 /* virtual */
 bool CustomCounterStyle::IsBullet() {
->>>>>>> upstream-releases
   switch (mSystem) {
     case NS_STYLE_COUNTER_SYSTEM_CYCLIC:
       // Only use ::-moz-list-bullet for cyclic system
@@ -1543,16 +1149,8 @@ bool CustomCounterStyle::IsBullet() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void CustomCounterStyle::GetNegative(NegativeType& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-CustomCounterStyle::GetNegative(NegativeType& aResult)
-{
-=======
 /* virtual */
 void CustomCounterStyle::GetNegative(NegativeType& aResult) {
->>>>>>> upstream-releases
   if (!(mFlags & FLAG_NEGATIVE_INITED)) {
     mFlags |= FLAG_NEGATIVE_INITED;
     if (!Servo_CounterStyleRule_GetNegative(mRule, &mNegative.before,
@@ -1568,47 +1166,6 @@ void CustomCounterStyle::GetNegative(NegativeType& aResult) {
   aResult = mNegative;
 }
 
-<<<<<<< HEAD
-static inline bool IsRangeValueInfinite(const nsCSSValue& aValue) {
-  return aValue.GetUnit() == eCSSUnit_Enumerated &&
-         aValue.GetIntValue() == NS_STYLE_COUNTER_RANGE_INFINITE;
-}
-
-/* virtual */ bool CustomCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
-  nsCSSValue value = GetDesc(eCSSCounterDesc_Range);
-  if (value.GetUnit() == eCSSUnit_PairList) {
-    for (const nsCSSValuePairList* item = value.GetPairListValue();
-         item != nullptr; item = item->mNext) {
-      const nsCSSValue& lowerBound = item->mXValue;
-      const nsCSSValue& upperBound = item->mYValue;
-      if ((IsRangeValueInfinite(lowerBound) ||
-           aOrdinal >= lowerBound.GetIntValue()) &&
-          (IsRangeValueInfinite(upperBound) ||
-           aOrdinal <= upperBound.GetIntValue())) {
-        return true;
-||||||| merged common ancestors
-static inline bool
-IsRangeValueInfinite(const nsCSSValue& aValue)
-{
-  return aValue.GetUnit() == eCSSUnit_Enumerated &&
-         aValue.GetIntValue() == NS_STYLE_COUNTER_RANGE_INFINITE;
-}
-
-/* virtual */ bool
-CustomCounterStyle::IsOrdinalInRange(CounterValue aOrdinal)
-{
-  nsCSSValue value = GetDesc(eCSSCounterDesc_Range);
-  if (value.GetUnit() == eCSSUnit_PairList) {
-    for (const nsCSSValuePairList* item = value.GetPairListValue();
-         item != nullptr; item = item->mNext) {
-      const nsCSSValue& lowerBound = item->mXValue;
-      const nsCSSValue& upperBound = item->mYValue;
-      if ((IsRangeValueInfinite(lowerBound) ||
-           aOrdinal >= lowerBound.GetIntValue()) &&
-          (IsRangeValueInfinite(upperBound) ||
-           aOrdinal <= upperBound.GetIntValue())) {
-        return true;
-=======
 /* virtual */
 bool CustomCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
   auto inRange = Servo_CounterStyleRule_IsInRange(mRule, aOrdinal);
@@ -1620,7 +1177,6 @@ bool CustomCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
     case StyleIsOrdinalInRange::NoOrdinalSpecified:
       if (IsExtendsSystem()) {
         return GetExtends()->IsOrdinalInRange(aOrdinal);
->>>>>>> upstream-releases
       }
       break;
     case StyleIsOrdinalInRange::Auto:
@@ -1631,17 +1187,8 @@ bool CustomCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
   return IsOrdinalInAutoRange(aOrdinal);
 }
 
-<<<<<<< HEAD
-/* virtual */ bool CustomCounterStyle::IsOrdinalInAutoRange(
-    CounterValue aOrdinal) {
-||||||| merged common ancestors
-/* virtual */ bool
-CustomCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal)
-{
-=======
 /* virtual */
 bool CustomCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal) {
->>>>>>> upstream-releases
   switch (mSystem) {
     case NS_STYLE_COUNTER_SYSTEM_CYCLIC:
     case NS_STYLE_COUNTER_SYSTEM_NUMERIC:
@@ -1660,16 +1207,8 @@ bool CustomCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void CustomCounterStyle::GetPad(PadType& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-CustomCounterStyle::GetPad(PadType& aResult)
-{
-=======
 /* virtual */
 void CustomCounterStyle::GetPad(PadType& aResult) {
->>>>>>> upstream-releases
   if (!(mFlags & FLAG_PAD_INITED)) {
     mFlags |= FLAG_PAD_INITED;
     if (!Servo_CounterStyleRule_GetPad(mRule, &mPad.width, &mPad.symbol)) {
@@ -1684,16 +1223,8 @@ void CustomCounterStyle::GetPad(PadType& aResult) {
   aResult = mPad;
 }
 
-<<<<<<< HEAD
-/* virtual */ CounterStyle* CustomCounterStyle::GetFallback() {
-||||||| merged common ancestors
-/* virtual */ CounterStyle*
-CustomCounterStyle::GetFallback()
-{
-=======
 /* virtual */
 CounterStyle* CustomCounterStyle::GetFallback() {
->>>>>>> upstream-releases
   if (!mFallback) {
     mFallback = CounterStyleManager::GetDecimalStyle();
     if (nsAtom* fallback = Servo_CounterStyleRule_GetFallback(mRule)) {
@@ -1705,55 +1236,26 @@ CounterStyle* CustomCounterStyle::GetFallback() {
   return mFallback;
 }
 
-<<<<<<< HEAD
-/* virtual */ uint8_t CustomCounterStyle::GetSpeakAs() {
-||||||| merged common ancestors
-/* virtual */ uint8_t
-CustomCounterStyle::GetSpeakAs()
-{
-=======
 /* virtual */
 uint8_t CustomCounterStyle::GetSpeakAs() {
->>>>>>> upstream-releases
   if (!(mFlags & FLAG_SPEAKAS_INITED)) {
     ComputeSpeakAs();
   }
   return mSpeakAs;
 }
 
-<<<<<<< HEAD
-/* virtual */ bool CustomCounterStyle::UseNegativeSign() {
-||||||| merged common ancestors
-/* virtual */ bool
-CustomCounterStyle::UseNegativeSign()
-{
-=======
 /* virtual */
 bool CustomCounterStyle::UseNegativeSign() {
->>>>>>> upstream-releases
   if (mSystem == NS_STYLE_COUNTER_SYSTEM_EXTENDS) {
     return GetExtendsRoot()->UseNegativeSign();
   }
   return SystemUsesNegativeSign(mSystem);
 }
 
-<<<<<<< HEAD
-/* virtual */ void CustomCounterStyle::CallFallbackStyle(
-    CounterValue aOrdinal, WritingMode aWritingMode, nsAString& aResult,
-    bool& aIsRTL) {
-||||||| merged common ancestors
-/* virtual */ void
-CustomCounterStyle::CallFallbackStyle(CounterValue aOrdinal,
-                                      WritingMode aWritingMode,
-                                      nsAString& aResult,
-                                      bool& aIsRTL)
-{
-=======
 /* virtual */
 void CustomCounterStyle::CallFallbackStyle(CounterValue aOrdinal,
                                            WritingMode aWritingMode,
                                            nsAString& aResult, bool& aIsRTL) {
->>>>>>> upstream-releases
   CounterStyle* fallback = GetFallback();
   // If it recursively falls back to this counter style again,
   // it will then fallback to decimal to break the loop.
@@ -1762,24 +1264,11 @@ void CustomCounterStyle::CallFallbackStyle(CounterValue aOrdinal,
   mFallback = fallback;
 }
 
-<<<<<<< HEAD
-/* virtual */ bool CustomCounterStyle::GetInitialCounterText(
-    CounterValue aOrdinal, WritingMode aWritingMode, nsAString& aResult,
-    bool& aIsRTL) {
-||||||| merged common ancestors
-/* virtual */ bool
-CustomCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
-                                          WritingMode aWritingMode,
-                                          nsAString& aResult,
-                                          bool& aIsRTL)
-{
-=======
 /* virtual */
 bool CustomCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
                                                WritingMode aWritingMode,
                                                nsAString& aResult,
                                                bool& aIsRTL) {
->>>>>>> upstream-releases
   switch (mSystem) {
     case NS_STYLE_COUNTER_SYSTEM_CYCLIC:
       return GetCyclicCounterText(aOrdinal, aResult, GetSymbols());
@@ -1804,70 +1293,16 @@ bool CustomCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
   }
 }
 
-<<<<<<< HEAD
-const nsTArray<nsString>& CustomCounterStyle::GetSymbols() {
-||||||| merged common ancestors
-const nsTArray<nsString>&
-CustomCounterStyle::GetSymbols()
-{
-=======
 Span<const nsString> CustomCounterStyle::GetSymbols() {
->>>>>>> upstream-releases
   if (mSymbols.IsEmpty()) {
-<<<<<<< HEAD
-    nsCSSValue values = GetDesc(eCSSCounterDesc_Symbols);
-    for (const nsCSSValueList* item = values.GetListValue(); item;
-         item = item->mNext) {
-      nsString* symbol = mSymbols.AppendElement();
-      item->mValue.GetStringValue(*symbol);
-    }
-    mSymbols.Compact();
-||||||| merged common ancestors
-    nsCSSValue values = GetDesc(eCSSCounterDesc_Symbols);
-    for (const nsCSSValueList* item = values.GetListValue();
-         item; item = item->mNext) {
-      nsString* symbol = mSymbols.AppendElement();
-      item->mValue.GetStringValue(*symbol);
-    }
-    mSymbols.Compact();
-=======
     Servo_CounterStyleRule_GetSymbols(mRule, &mSymbols);
->>>>>>> upstream-releases
   }
   return mSymbols.AsSpan();
 }
 
-<<<<<<< HEAD
-const nsTArray<AdditiveSymbol>& CustomCounterStyle::GetAdditiveSymbols() {
-||||||| merged common ancestors
-const nsTArray<AdditiveSymbol>&
-CustomCounterStyle::GetAdditiveSymbols()
-{
-=======
 Span<const AdditiveSymbol> CustomCounterStyle::GetAdditiveSymbols() {
->>>>>>> upstream-releases
   if (mAdditiveSymbols.IsEmpty()) {
-<<<<<<< HEAD
-    nsCSSValue values = GetDesc(eCSSCounterDesc_AdditiveSymbols);
-    for (const nsCSSValuePairList* item = values.GetPairListValue(); item;
-         item = item->mNext) {
-      AdditiveSymbol* symbol = mAdditiveSymbols.AppendElement();
-      symbol->weight = item->mXValue.GetIntValue();
-      item->mYValue.GetStringValue(symbol->symbol);
-    }
-    mAdditiveSymbols.Compact();
-||||||| merged common ancestors
-    nsCSSValue values = GetDesc(eCSSCounterDesc_AdditiveSymbols);
-    for (const nsCSSValuePairList* item = values.GetPairListValue();
-         item; item = item->mNext) {
-      AdditiveSymbol* symbol = mAdditiveSymbols.AppendElement();
-      symbol->weight = item->mXValue.GetIntValue();
-      item->mYValue.GetStringValue(symbol->symbol);
-    }
-    mAdditiveSymbols.Compact();
-=======
     Servo_CounterStyleRule_GetAdditiveSymbols(mRule, &mAdditiveSymbols);
->>>>>>> upstream-releases
   }
   return mAdditiveSymbols.AsSpan();
 }
@@ -2074,97 +1509,20 @@ AnonymousCounterStyle::AnonymousCounterStyle(const nsAString& aContent)
   mSymbols.AppendElement(aContent);
 }
 
-<<<<<<< HEAD
-static nsTArray<nsString> CollectSymbolsFromCSSValueList(
-    const nsCSSValueList* aList) {
-  nsTArray<nsString> symbols;
-  for (const nsCSSValueList* item = aList; item; item = item->mNext) {
-    item->mValue.GetStringValue(*symbols.AppendElement());
-  }
-  symbols.Compact();
-  return symbols;
-}
-
-AnonymousCounterStyle::AnonymousCounterStyle(const nsCSSValue::Array* aParams)
-    : AnonymousCounterStyle(
-          aParams->Item(0).GetIntValue(),
-          CollectSymbolsFromCSSValueList(aParams->Item(1).GetListValue())) {}
-
-||||||| merged common ancestors
-static nsTArray<nsString>
-CollectSymbolsFromCSSValueList(const nsCSSValueList* aList)
-{
-  nsTArray<nsString> symbols;
-  for (const nsCSSValueList* item = aList; item; item = item->mNext) {
-    item->mValue.GetStringValue(*symbols.AppendElement());
-  }
-  symbols.Compact();
-  return symbols;
-}
-
-AnonymousCounterStyle::AnonymousCounterStyle(const nsCSSValue::Array* aParams)
-  : AnonymousCounterStyle(
-      aParams->Item(0).GetIntValue(),
-      CollectSymbolsFromCSSValueList(aParams->Item(1).GetListValue()))
-{
-}
-
-=======
->>>>>>> upstream-releases
 AnonymousCounterStyle::AnonymousCounterStyle(uint8_t aSystem,
                                              nsTArray<nsString> aSymbols)
-<<<<<<< HEAD
     : CounterStyle(NS_STYLE_LIST_STYLE_CUSTOM),
       mSingleString(false),
       mSystem(aSystem),
       mSymbols(std::move(aSymbols)) {}
 
-/* virtual */ nsAtom* AnonymousCounterStyle::GetStyleName() const {
-  return nullptr;
-}
-||||||| merged common ancestors
-  : CounterStyle(NS_STYLE_LIST_STYLE_CUSTOM)
-  , mSingleString(false)
-  , mSystem(aSystem)
-  , mSymbols(std::move(aSymbols))
-{
-}
-
-/* virtual */ nsAtom*
-AnonymousCounterStyle::GetStyleName() const
-{
-  return nullptr;
-}
-=======
-    : CounterStyle(NS_STYLE_LIST_STYLE_CUSTOM),
-      mSingleString(false),
-      mSystem(aSystem),
-      mSymbols(std::move(aSymbols)) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-/* virtual */ void AnonymousCounterStyle::GetPrefix(nsAString& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-AnonymousCounterStyle::GetPrefix(nsAString& aResult)
-{
-=======
 /* virtual */
 void AnonymousCounterStyle::GetPrefix(nsAString& aResult) {
->>>>>>> upstream-releases
   aResult.Truncate();
 }
 
-<<<<<<< HEAD
-/* virtual */ void AnonymousCounterStyle::GetSuffix(nsAString& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-AnonymousCounterStyle::GetSuffix(nsAString& aResult)
-{
-=======
 /* virtual */
 void AnonymousCounterStyle::GetSuffix(nsAString& aResult) {
->>>>>>> upstream-releases
   if (IsSingleString()) {
     aResult.Truncate();
   } else {
@@ -2172,16 +1530,8 @@ void AnonymousCounterStyle::GetSuffix(nsAString& aResult) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool AnonymousCounterStyle::IsBullet() {
-||||||| merged common ancestors
-/* virtual */ bool
-AnonymousCounterStyle::IsBullet()
-{
-=======
 /* virtual */
 bool AnonymousCounterStyle::IsBullet() {
->>>>>>> upstream-releases
   switch (mSystem) {
     case NS_STYLE_COUNTER_SYSTEM_CYCLIC:
       // Only use ::-moz-list-bullet for cyclic system
@@ -2191,31 +1541,14 @@ bool AnonymousCounterStyle::IsBullet() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void AnonymousCounterStyle::GetNegative(NegativeType& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-AnonymousCounterStyle::GetNegative(NegativeType& aResult)
-{
-=======
 /* virtual */
 void AnonymousCounterStyle::GetNegative(NegativeType& aResult) {
->>>>>>> upstream-releases
   aResult.before.AssignLiteral(u"-");
   aResult.after.Truncate();
 }
 
-<<<<<<< HEAD
-/* virtual */ bool AnonymousCounterStyle::IsOrdinalInRange(
-    CounterValue aOrdinal) {
-||||||| merged common ancestors
-/* virtual */ bool
-AnonymousCounterStyle::IsOrdinalInRange(CounterValue aOrdinal)
-{
-=======
 /* virtual */
 bool AnonymousCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
->>>>>>> upstream-releases
   switch (mSystem) {
     case NS_STYLE_COUNTER_SYSTEM_CYCLIC:
     case NS_STYLE_COUNTER_SYSTEM_NUMERIC:
@@ -2230,91 +1563,37 @@ bool AnonymousCounterStyle::IsOrdinalInRange(CounterValue aOrdinal) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ bool AnonymousCounterStyle::IsOrdinalInAutoRange(
-    CounterValue aOrdinal) {
-||||||| merged common ancestors
-/* virtual */ bool
-AnonymousCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal)
-{
-=======
 /* virtual */
 bool AnonymousCounterStyle::IsOrdinalInAutoRange(CounterValue aOrdinal) {
->>>>>>> upstream-releases
   return AnonymousCounterStyle::IsOrdinalInRange(aOrdinal);
 }
 
-<<<<<<< HEAD
-/* virtual */ void AnonymousCounterStyle::GetPad(PadType& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-AnonymousCounterStyle::GetPad(PadType& aResult)
-{
-=======
 /* virtual */
 void AnonymousCounterStyle::GetPad(PadType& aResult) {
->>>>>>> upstream-releases
   aResult.width = 0;
   aResult.symbol.Truncate();
 }
 
-<<<<<<< HEAD
-/* virtual */ CounterStyle* AnonymousCounterStyle::GetFallback() {
-||||||| merged common ancestors
-/* virtual */ CounterStyle*
-AnonymousCounterStyle::GetFallback()
-{
-=======
 /* virtual */
 CounterStyle* AnonymousCounterStyle::GetFallback() {
->>>>>>> upstream-releases
   return CounterStyleManager::GetDecimalStyle();
 }
 
-<<<<<<< HEAD
-/* virtual */ uint8_t AnonymousCounterStyle::GetSpeakAs() {
-||||||| merged common ancestors
-/* virtual */ uint8_t
-AnonymousCounterStyle::GetSpeakAs()
-{
-=======
 /* virtual */
 uint8_t AnonymousCounterStyle::GetSpeakAs() {
->>>>>>> upstream-releases
   return GetDefaultSpeakAsForSystem(mSystem);
 }
 
-<<<<<<< HEAD
-/* virtual */ bool AnonymousCounterStyle::UseNegativeSign() {
-||||||| merged common ancestors
-/* virtual */ bool
-AnonymousCounterStyle::UseNegativeSign()
-{
-=======
 /* virtual */
 bool AnonymousCounterStyle::UseNegativeSign() {
->>>>>>> upstream-releases
   return SystemUsesNegativeSign(mSystem);
 }
 
-<<<<<<< HEAD
-/* virtual */ bool AnonymousCounterStyle::GetInitialCounterText(
-    CounterValue aOrdinal, WritingMode aWritingMode, nsAString& aResult,
-    bool& aIsRTL) {
-||||||| merged common ancestors
-/* virtual */ bool
-AnonymousCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
-                                             WritingMode aWritingMode,
-                                             nsAString& aResult,
-                                             bool& aIsRTL)
-{
-=======
 /* virtual */
 bool AnonymousCounterStyle::GetInitialCounterText(CounterValue aOrdinal,
                                                   WritingMode aWritingMode,
                                                   nsAString& aResult,
                                                   bool& aIsRTL) {
->>>>>>> upstream-releases
   switch (mSystem) {
     case NS_STYLE_COUNTER_SYSTEM_CYCLIC:
       return GetCyclicCounterText(aOrdinal, aResult, mSymbols);
@@ -2413,27 +1692,11 @@ void CounterStyle::GetCounterText(CounterValue aOrdinal,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void CounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
-                                                      WritingMode aWritingMode,
-                                                      nsAString& aResult,
-                                                      bool& aIsBullet) {
-  bool isRTL;  // we don't care about direction for spoken text
-||||||| merged common ancestors
-/* virtual */ void
-CounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
-                                   WritingMode aWritingMode,
-                                   nsAString& aResult,
-                                   bool& aIsBullet)
-{
-  bool isRTL; // we don't care about direction for spoken text
-=======
 /* virtual */
 void CounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
                                         WritingMode aWritingMode,
                                         nsAString& aResult, bool& aIsBullet) {
   bool isRTL;  // we don't care about direction for spoken text
->>>>>>> upstream-releases
   aIsBullet = false;
   switch (GetSpeakAs()) {
     case NS_STYLE_COUNTER_SPEAKAS_BULLETS:
@@ -2459,24 +1722,10 @@ void CounterStyle::GetSpokenCounterText(CounterValue aOrdinal,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void CounterStyle::CallFallbackStyle(CounterValue aOrdinal,
-                                                   WritingMode aWritingMode,
-                                                   nsAString& aResult,
-                                                   bool& aIsRTL) {
-||||||| merged common ancestors
-/* virtual */ void
-CounterStyle::CallFallbackStyle(CounterValue aOrdinal,
-                                WritingMode aWritingMode,
-                                nsAString& aResult,
-                                bool& aIsRTL)
-{
-=======
 /* virtual */
 void CounterStyle::CallFallbackStyle(CounterValue aOrdinal,
                                      WritingMode aWritingMode,
                                      nsAString& aResult, bool& aIsRTL) {
->>>>>>> upstream-releases
   GetFallback()->GetCounterText(aOrdinal, aWritingMode, aResult, aIsRTL);
 }
 
@@ -2517,15 +1766,7 @@ void CounterStyleManager::Disconnect() {
   mPresContext = nullptr;
 }
 
-<<<<<<< HEAD
-CounterStyle* CounterStyleManager::BuildCounterStyle(nsAtom* aName) {
-||||||| merged common ancestors
-CounterStyle*
-CounterStyleManager::BuildCounterStyle(nsAtom* aName)
-{
-=======
 CounterStyle* CounterStyleManager::ResolveCounterStyle(nsAtom* aName) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   CounterStyle* data = GetCounterStyle(aName);
   if (data) {
@@ -2558,17 +1799,8 @@ CounterStyle* CounterStyleManager::ResolveCounterStyle(nsAtom* aName) {
   return data;
 }
 
-<<<<<<< HEAD
-/* static */ CounterStyle* CounterStyleManager::GetBuiltinStyle(
-    int32_t aStyle) {
-||||||| merged common ancestors
-/* static */ CounterStyle*
-CounterStyleManager::GetBuiltinStyle(int32_t aStyle)
-{
-=======
 /* static */
 CounterStyle* CounterStyleManager::GetBuiltinStyle(int32_t aStyle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(0 <= aStyle && size_t(aStyle) < sizeof(gBuiltinStyleTable),
              "Require a valid builtin style constant");
   MOZ_ASSERT(!gBuiltinStyleTable[aStyle].IsDependentStyle(),
@@ -2578,29 +1810,7 @@ CounterStyle* CounterStyleManager::GetBuiltinStyle(int32_t aStyle) {
   return const_cast<BuiltinCounterStyle*>(&gBuiltinStyleTable[aStyle]);
 }
 
-<<<<<<< HEAD
-/* static */ nsAtom* CounterStyleManager::GetStyleNameFromType(int32_t aStyle) {
-  MOZ_ASSERT(0 <= aStyle && size_t(aStyle) < sizeof(gBuiltinStyleTable),
-             "Require a valid builtin style constant");
-  return gBuiltinStyleTable[aStyle].GetStyleName();
-}
-
 bool CounterStyleManager::NotifyRuleChanged() {
-||||||| merged common ancestors
-/* static */ nsAtom*
-CounterStyleManager::GetStyleNameFromType(int32_t aStyle)
-{
-  MOZ_ASSERT(0 <= aStyle && size_t(aStyle) < sizeof(gBuiltinStyleTable),
-             "Require a valid builtin style constant");
-  return gBuiltinStyleTable[aStyle].GetStyleName();
-}
-
-bool
-CounterStyleManager::NotifyRuleChanged()
-{
-=======
-bool CounterStyleManager::NotifyRuleChanged() {
->>>>>>> upstream-releases
   bool changed = false;
   for (auto iter = mStyles.Iter(); !iter.Done(); iter.Next()) {
     CounterStyle* style = iter.Data();

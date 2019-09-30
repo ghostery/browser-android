@@ -40,20 +40,9 @@ class WebRenderScrollData;
 // each layer in the layer tree and sent over PWebRenderBridge to the APZ code.
 // Each WebRenderLayerScrollData is conceptually associated with an "owning"
 // WebRenderScrollData.
-<<<<<<< HEAD
-class WebRenderLayerScrollData {
- public:
-  WebRenderLayerScrollData();  // needed for IPC purposes
-||||||| merged common ancestors
-class WebRenderLayerScrollData
-{
-public:
-  WebRenderLayerScrollData(); // needed for IPC purposes
-=======
 class WebRenderLayerScrollData final {
  public:
   WebRenderLayerScrollData();  // needed for IPC purposes
->>>>>>> upstream-releases
   ~WebRenderLayerScrollData();
 
   void InitializeRoot(int32_t aDescendantCount);
@@ -114,39 +103,13 @@ class WebRenderLayerScrollData final {
 
   void SetScrollbarData(const ScrollbarData& aData) { mScrollbarData = aData; }
   const ScrollbarData& GetScrollbarData() const { return mScrollbarData; }
-<<<<<<< HEAD
-  void SetScrollbarAnimationId(const uint64_t& aId) {
-    mScrollbarAnimationId = aId;
-  }
-  const uint64_t& GetScrollbarAnimationId() const {
-    return mScrollbarAnimationId;
-  }
-
-  void SetFixedPositionScrollContainerId(ScrollableLayerGuid::ViewID aId) {
-    mFixedPosScrollContainerId = aId;
-  }
-  ScrollableLayerGuid::ViewID GetFixedPositionScrollContainerId() const {
-    return mFixedPosScrollContainerId;
-  }
-||||||| merged common ancestors
-  void SetScrollbarAnimationId(const uint64_t& aId) { mScrollbarAnimationId = aId; }
-  const uint64_t& GetScrollbarAnimationId() const { return mScrollbarAnimationId; }
-=======
   void SetScrollbarAnimationId(const uint64_t& aId) {
     mScrollbarAnimationId = Some(aId);
   }
   Maybe<uint64_t> GetScrollbarAnimationId() const {
     return mScrollbarAnimationId;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetZoomAnimationId(const uint64_t& aId) { mZoomAnimationId = Some(aId); }
-  Maybe<uint64_t> GetZoomAnimationId() const { return mZoomAnimationId; }
-||||||| merged common ancestors
-  void SetFixedPositionScrollContainerId(FrameMetrics::ViewID aId) { mFixedPosScrollContainerId = aId; }
-  FrameMetrics::ViewID GetFixedPositionScrollContainerId() const { return mFixedPosScrollContainerId; }
-=======
   void SetFixedPositionScrollContainerId(ScrollableLayerGuid::ViewID aId) {
     mFixedPosScrollContainerId = aId;
   }
@@ -166,7 +129,6 @@ class WebRenderLayerScrollData final {
     return mAsyncZoomContainerId;
   }
   bool IsAsyncZoomContainer() const { return mAsyncZoomContainerId.isSome(); }
->>>>>>> upstream-releases
 
   void Dump(const WebRenderScrollData& aOwner) const;
 
@@ -197,37 +159,19 @@ class WebRenderLayerScrollData final {
   Maybe<RenderRootBoundary> mBoundaryRoot;
   EventRegionsOverride mEventRegionsOverride;
   ScrollbarData mScrollbarData;
-<<<<<<< HEAD
-  uint64_t mScrollbarAnimationId;
-  ScrollableLayerGuid::ViewID mFixedPosScrollContainerId;
-  Maybe<uint64_t> mZoomAnimationId;
-||||||| merged common ancestors
-  uint64_t mScrollbarAnimationId;
-  FrameMetrics::ViewID mFixedPosScrollContainerId;
-=======
   Maybe<uint64_t> mScrollbarAnimationId;
   ScrollableLayerGuid::ViewID mFixedPosScrollContainerId;
   wr::RenderRoot mRenderRoot;
   Maybe<uint64_t> mZoomAnimationId;
   Maybe<ScrollableLayerGuid::ViewID> mAsyncZoomContainerId;
->>>>>>> upstream-releases
 };
 
 // Data needed by APZ, for the whole layer tree. One instance of this class
 // is created for each transaction sent over PWebRenderBridge. It is populated
 // with information from the WebRender layer tree on the client side and the
 // information is used by APZ on the parent side.
-<<<<<<< HEAD
-class WebRenderScrollData {
- public:
-||||||| merged common ancestors
-class WebRenderScrollData
-{
-public:
-=======
 class WebRenderScrollData final {
  public:
->>>>>>> upstream-releases
   WebRenderScrollData();
   explicit WebRenderScrollData(WebRenderLayerManager* aManager);
 
@@ -247,21 +191,8 @@ class WebRenderScrollData final {
   const WebRenderLayerScrollData* GetLayerData(size_t aIndex) const;
 
   const ScrollMetadata& GetScrollMetadata(size_t aIndex) const;
-<<<<<<< HEAD
   Maybe<size_t> HasMetadataFor(
       const ScrollableLayerGuid::ViewID& aScrollId) const;
-
-  const FocusTarget& GetFocusTarget() const { return mFocusTarget; }
-  void SetFocusTarget(const FocusTarget& aFocusTarget);
-||||||| merged common ancestors
-  Maybe<size_t> HasMetadataFor(const FrameMetrics::ViewID& aScrollId) const;
-
-  const FocusTarget& GetFocusTarget() const { return mFocusTarget; }
-  void SetFocusTarget(const FocusTarget& aFocusTarget);
-=======
-  Maybe<size_t> HasMetadataFor(
-      const ScrollableLayerGuid::ViewID& aScrollId) const;
->>>>>>> upstream-releases
 
   void SetIsFirstPaint();
   bool IsFirstPaint() const;
@@ -347,48 +278,11 @@ struct ParamTraits<mozilla::layers::WebRenderLayerScrollData> {
     WriteParam(aMsg, aParam.mScrollbarData);
     WriteParam(aMsg, aParam.mScrollbarAnimationId);
     WriteParam(aMsg, aParam.mFixedPosScrollContainerId);
-<<<<<<< HEAD
-    WriteParam(aMsg, aParam.mZoomAnimationId);
-||||||| merged common ancestors
-=======
     WriteParam(aMsg, aParam.mRenderRoot);
     WriteParam(aMsg, aParam.mZoomAnimationId);
     WriteParam(aMsg, aParam.mAsyncZoomContainerId);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  static bool Read(const Message* aMsg, PickleIterator* aIter,
-                   paramType* aResult) {
-    return ReadParam(aMsg, aIter, &aResult->mDescendantCount) &&
-           ReadParam(aMsg, aIter, &aResult->mScrollIds) &&
-           ReadParam(aMsg, aIter, &aResult->mAncestorTransform) &&
-           ReadParam(aMsg, aIter, &aResult->mTransform) &&
-           ReadParam(aMsg, aIter, &aResult->mTransformIsPerspective) &&
-           ReadParam(aMsg, aIter, &aResult->mVisibleRegion) &&
-           ReadParam(aMsg, aIter, &aResult->mReferentId) &&
-           ReadParam(aMsg, aIter, &aResult->mEventRegionsOverride) &&
-           ReadParam(aMsg, aIter, &aResult->mScrollbarData) &&
-           ReadParam(aMsg, aIter, &aResult->mScrollbarAnimationId) &&
-           ReadParam(aMsg, aIter, &aResult->mFixedPosScrollContainerId) &&
-           ReadParam(aMsg, aIter, &aResult->mZoomAnimationId);
-||||||| merged common ancestors
-  static bool
-  Read(const Message* aMsg, PickleIterator* aIter, paramType* aResult)
-  {
-    return ReadParam(aMsg, aIter, &aResult->mDescendantCount)
-        && ReadParam(aMsg, aIter, &aResult->mScrollIds)
-        && ReadParam(aMsg, aIter, &aResult->mAncestorTransform)
-        && ReadParam(aMsg, aIter, &aResult->mTransform)
-        && ReadParam(aMsg, aIter, &aResult->mTransformIsPerspective)
-        && ReadParam(aMsg, aIter, &aResult->mEventRegions)
-        && ReadParam(aMsg, aIter, &aResult->mVisibleRegion)
-        && ReadParam(aMsg, aIter, &aResult->mReferentId)
-        && ReadParam(aMsg, aIter, &aResult->mEventRegionsOverride)
-        && ReadParam(aMsg, aIter, &aResult->mScrollbarData)
-        && ReadParam(aMsg, aIter, &aResult->mScrollbarAnimationId)
-        && ReadParam(aMsg, aIter, &aResult->mFixedPosScrollContainerId);
-=======
   static bool Read(const Message* aMsg, PickleIterator* aIter,
                    paramType* aResult) {
     return ReadParam(aMsg, aIter, &aResult->mDescendantCount) &&
@@ -407,7 +301,6 @@ struct ParamTraits<mozilla::layers::WebRenderLayerScrollData> {
            ReadParam(aMsg, aIter, &aResult->mRenderRoot) &&
            ReadParam(aMsg, aIter, &aResult->mZoomAnimationId) &&
            ReadParam(aMsg, aIter, &aResult->mAsyncZoomContainerId);
->>>>>>> upstream-releases
   }
 };
 
@@ -422,26 +315,6 @@ struct ParamTraits<mozilla::layers::WebRenderScrollData> {
     WriteParam(aMsg, aParam.mPaintSequenceNumber);
   }
 
-<<<<<<< HEAD
-  static bool Read(const Message* aMsg, PickleIterator* aIter,
-                   paramType* aResult) {
-    return ReadParam(aMsg, aIter, &aResult->mScrollMetadatas) &&
-           ReadParam(aMsg, aIter, &aResult->mLayerScrollData) &&
-           ReadParam(aMsg, aIter, &aResult->mFocusTarget) &&
-           ReadParam(aMsg, aIter, &aResult->mIsFirstPaint) &&
-           ReadParam(aMsg, aIter, &aResult->mPaintSequenceNumber) &&
-           aResult->RepopulateMap();
-||||||| merged common ancestors
-  static bool
-  Read(const Message* aMsg, PickleIterator* aIter, paramType* aResult)
-  {
-    return ReadParam(aMsg, aIter, &aResult->mScrollMetadatas)
-        && ReadParam(aMsg, aIter, &aResult->mLayerScrollData)
-        && ReadParam(aMsg, aIter, &aResult->mFocusTarget)
-        && ReadParam(aMsg, aIter, &aResult->mIsFirstPaint)
-        && ReadParam(aMsg, aIter, &aResult->mPaintSequenceNumber)
-        && aResult->RepopulateMap();
-=======
   static bool Read(const Message* aMsg, PickleIterator* aIter,
                    paramType* aResult) {
     return ReadParam(aMsg, aIter, &aResult->mScrollMetadatas) &&
@@ -449,7 +322,6 @@ struct ParamTraits<mozilla::layers::WebRenderScrollData> {
            ReadParam(aMsg, aIter, &aResult->mIsFirstPaint) &&
            ReadParam(aMsg, aIter, &aResult->mPaintSequenceNumber) &&
            aResult->RepopulateMap();
->>>>>>> upstream-releases
   }
 };
 

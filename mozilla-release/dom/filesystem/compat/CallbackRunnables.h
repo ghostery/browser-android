@@ -27,19 +27,9 @@ class EntryCallbackRunnable final : public Runnable {
   // bug 1535398.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override;
 
-<<<<<<< HEAD
- private:
-  RefPtr<FileSystemEntryCallback> mCallback;
-  RefPtr<FileSystemEntry> mEntry;
-||||||| merged common ancestors
-private:
-  RefPtr<FileSystemEntryCallback> mCallback;
-  RefPtr<FileSystemEntry> mEntry;
-=======
  private:
   const RefPtr<FileSystemEntryCallback> mCallback;
   const RefPtr<FileSystemEntry> mEntry;
->>>>>>> upstream-releases
 };
 
 class ErrorCallbackRunnable final : public Runnable {
@@ -65,16 +55,8 @@ class EmptyEntriesCallbackRunnable final : public Runnable {
   // bug 1535398.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override;
 
-<<<<<<< HEAD
- private:
-  RefPtr<FileSystemEntriesCallback> mCallback;
-||||||| merged common ancestors
-private:
-  RefPtr<FileSystemEntriesCallback> mCallback;
-=======
  private:
   const RefPtr<FileSystemEntriesCallback> mCallback;
->>>>>>> upstream-releases
 };
 
 class GetEntryHelper final : public PromiseNativeHandler {
@@ -89,17 +71,9 @@ class GetEntryHelper final : public PromiseNativeHandler {
 
   void Run();
 
-<<<<<<< HEAD
-  virtual void ResolvedCallback(JSContext* aCx,
-                                JS::Handle<JS::Value> aValue) override;
-||||||| merged common ancestors
-  virtual void
-  ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void ResolvedCallback(JSContext* aCx,
                                 JS::Handle<JS::Value> aValue) override;
->>>>>>> upstream-releases
 
   virtual void RejectedCallback(JSContext* aCx,
                                 JS::Handle<JS::Value> aValue) override;
@@ -111,14 +85,7 @@ class GetEntryHelper final : public PromiseNativeHandler {
 
   void ContinueRunning(JSObject* aObj);
 
-<<<<<<< HEAD
-  void CompleteOperation(JSObject* aObj);
-||||||| merged common ancestors
-  void
-  CompleteOperation(JSObject* aObj);
-=======
   MOZ_CAN_RUN_SCRIPT void CompleteOperation(JSObject* aObj);
->>>>>>> upstream-releases
 
   RefPtr<FileSystemDirectoryEntry> mParentEntry;
   RefPtr<Directory> mDirectory;

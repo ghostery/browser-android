@@ -31,12 +31,6 @@ void* get_proc_address_from_glcontext(void* glcontext_ptr,
 void gecko_profiler_register_thread(const char* threadname);
 void gecko_profiler_unregister_thread();
 
-<<<<<<< HEAD
-void gecko_profiler_start_marker(const char* name);
-void gecko_profiler_end_marker(const char* name);
-
-||||||| merged common ancestors
-=======
 void gecko_profiler_start_marker(const char* name);
 void gecko_profiler_end_marker(const char* name);
 void gecko_profiler_add_text_marker(const char* name, const char* text_ptr,
@@ -59,124 +53,15 @@ bool gecko_profiler_thread_is_being_profiled();
   macro(text_run);                         \
   macro(filterdata);
 
->>>>>>> upstream-releases
 // Prelude of types necessary before including webrender_ffi_generated.h
 namespace mozilla {
 namespace wr {
 
-<<<<<<< HEAD
-struct FontInstanceFlags {
-  uint32_t bits;
-
-  bool operator==(const FontInstanceFlags& aOther) const {
-    return bits == aOther.bits;
-  }
-
-  FontInstanceFlags& operator=(uint32_t aBits) {
-    bits = aBits;
-    return *this;
-  }
-
-  FontInstanceFlags& operator|=(uint32_t aBits) {
-    bits |= aBits;
-    return *this;
-  }
-
-  FontInstanceFlags operator|(uint32_t aBits) const {
-    FontInstanceFlags flags = {bits | aBits};
-    return flags;
-  }
-
-  FontInstanceFlags& operator&=(uint32_t aBits) {
-    bits &= aBits;
-    return *this;
-  }
-
-  FontInstanceFlags operator&(uint32_t aBits) const {
-    FontInstanceFlags flags = {bits & aBits};
-    return flags;
-  }
-
-  MOZ_IMPLICIT operator bool() const { return bits != 0; }
-
-  enum : uint32_t {
-    SYNTHETIC_BOLD = 1 << 1,
-    EMBEDDED_BITMAPS = 1 << 2,
-    SUBPIXEL_BGR = 1 << 3,
-    TRANSPOSE = 1 << 4,
-    FLIP_X = 1 << 5,
-    FLIP_Y = 1 << 6,
-    SUBPIXEL_POSITION = 1 << 7,
-
-    FORCE_GDI = 1 << 16,
-
-    FONT_SMOOTHING = 1 << 16,
-
-    FORCE_AUTOHINT = 1 << 16,
-    NO_AUTOHINT = 1 << 17,
-    VERTICAL_LAYOUT = 1 << 18,
-    LCD_VERTICAL = 1 << 19
-  };
-||||||| merged common ancestors
-struct FontInstanceFlags {
-  uint32_t bits;
-
-  bool operator==(const FontInstanceFlags& aOther) const {
-    return bits == aOther.bits;
-  }
-
-  FontInstanceFlags& operator=(uint32_t aBits) {
-    bits = aBits;
-    return *this;
-  }
-
-  FontInstanceFlags& operator|=(uint32_t aBits) {
-    bits |= aBits;
-    return *this;
-  }
-
-  FontInstanceFlags operator|(uint32_t aBits) const {
-    FontInstanceFlags flags = { bits | aBits };
-    return flags;
-  }
-
-  FontInstanceFlags& operator&=(uint32_t aBits) {
-    bits &= aBits;
-    return *this;
-  }
-
-  FontInstanceFlags operator&(uint32_t aBits) const {
-    FontInstanceFlags flags = { bits & aBits };
-    return flags;
-  }
-
-  MOZ_IMPLICIT operator bool() const { return bits != 0; }
-
-  enum : uint32_t {
-    SYNTHETIC_BOLD    = 1 << 1,
-    EMBEDDED_BITMAPS  = 1 << 2,
-    SUBPIXEL_BGR      = 1 << 3,
-    TRANSPOSE         = 1 << 4,
-    FLIP_X            = 1 << 5,
-    FLIP_Y            = 1 << 6,
-    SUBPIXEL_POSITION = 1 << 7,
-
-    FORCE_GDI         = 1 << 16,
-
-    FONT_SMOOTHING    = 1 << 16,
-
-    FORCE_AUTOHINT    = 1 << 16,
-    NO_AUTOHINT       = 1 << 17,
-    VERTICAL_LAYOUT   = 1 << 18,
-    LCD_VERTICAL      = 1 << 19
-  };
-=======
 // Because this struct is macro-generated on the Rust side, cbindgen can't see
 // it. Work around that by re-declaring it here.
 #define DECLARE_MEMBER(id) uintptr_t id;
 struct InternerSubReport {
   WEBRENDER_FOR_EACH_INTERNER(DECLARE_MEMBER)
->>>>>>> upstream-releases
 };
 
 #undef DECLARE_MEMBER
@@ -186,18 +71,10 @@ struct WrWindowId;
 struct DocumentId;
 struct WrPipelineInfo;
 
-<<<<<<< HEAD
-}  // namespace wr
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace wr
-} // namespace mozilla
-=======
 const uint64_t ROOT_CLIP_CHAIN = ~0;
 
 }  // namespace wr
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 void apz_register_updater(mozilla::wr::WrWindowId aWindowId);
 void apz_pre_scene_swap(mozilla::wr::WrWindowId aWindowId);
@@ -207,60 +84,11 @@ void apz_run_updater(mozilla::wr::WrWindowId aWindowId);
 void apz_deregister_updater(mozilla::wr::WrWindowId aWindowId);
 
 void apz_register_sampler(mozilla::wr::WrWindowId aWindowId);
-<<<<<<< HEAD
-void apz_sample_transforms(mozilla::wr::WrWindowId aWindowId,
-                           mozilla::wr::Transaction* aTransaction);
-||||||| merged common ancestors
-void apz_sample_transforms(mozilla::wr::WrWindowId aWindowId, mozilla::wr::Transaction *aTransaction);
-=======
 void apz_sample_transforms(mozilla::wr::WrWindowId aWindowId,
                            mozilla::wr::Transaction* aTransaction,
                            mozilla::wr::DocumentId aRenderRootId);
->>>>>>> upstream-releases
 void apz_deregister_sampler(mozilla::wr::WrWindowId aWindowId);
-<<<<<<< HEAD
 }  // extern "C"
-
-// Some useful defines to stub out webrender binding functions for when we
-// build gecko without webrender. We try to tell the compiler these functions
-// are unreachable in that case, but VC++ emits a warning if it finds any
-// unreachable functions invoked from destructors. That warning gets turned into
-// an error and causes the build to fail. So for wr_* functions called by
-// destructors in C++ classes, use WR_DESTRUCTOR_SAFE_FUNC instead, which omits
-// the unreachable annotation.
-#ifdef MOZ_BUILD_WEBRENDER
-#define WR_INLINE
-#define WR_FUNC
-#define WR_DESTRUCTOR_SAFE_FUNC
-#else
-#define WR_INLINE inline
-#define WR_FUNC \
-  { MOZ_MAKE_COMPILER_ASSUME_IS_UNREACHABLE("WebRender disabled"); }
-#define WR_DESTRUCTOR_SAFE_FUNC \
-  {}
-#endif
-||||||| merged common ancestors
-} // extern "C"
-
-// Some useful defines to stub out webrender binding functions for when we
-// build gecko without webrender. We try to tell the compiler these functions
-// are unreachable in that case, but VC++ emits a warning if it finds any
-// unreachable functions invoked from destructors. That warning gets turned into
-// an error and causes the build to fail. So for wr_* functions called by
-// destructors in C++ classes, use WR_DESTRUCTOR_SAFE_FUNC instead, which omits
-// the unreachable annotation.
-#ifdef MOZ_BUILD_WEBRENDER
-#  define WR_INLINE
-#  define WR_FUNC
-#  define WR_DESTRUCTOR_SAFE_FUNC
-#else
-#  define WR_INLINE inline
-#  define WR_FUNC { MOZ_MAKE_COMPILER_ASSUME_IS_UNREACHABLE("WebRender disabled"); }
-#  define WR_DESTRUCTOR_SAFE_FUNC {}
-#endif
-=======
-}  // extern "C"
->>>>>>> upstream-releases
 
 #include "webrender_ffi_generated.h"
 

@@ -11,25 +11,12 @@
 #include "nsIChannel.h"
 #include <functional>
 
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
-#define TRACKING_DUMMY_CHANNEL_IID                   \
-  {                                                  \
-    0x70ceb97d, 0xbfa6, 0x4255, {                    \
-      0xb7, 0x08, 0xe1, 0xb4, 0x4a, 0x1e, 0x0e, 0x9a \
-    }                                                \
-  }
-||||||| merged common ancestors
-#define TRACKING_DUMMY_CHANNEL_IID \
-  { 0x70ceb97d, 0xbfa6, 0x4255, \
-    { 0xb7, 0x08, 0xe1, 0xb4, 0x4a, 0x1e, 0x0e, 0x9a } }
-=======
 #define CLASSIFIER_DUMMY_CHANNEL_IID                 \
   {                                                  \
     0x70ceb97d, 0xbfa6, 0x4255, {                    \
       0xb7, 0x08, 0xe1, 0xb4, 0x4a, 0x1e, 0x0e, 0x9a \
     }                                                \
   }
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h
 
 class nsIChannel;
 
@@ -57,23 +44,10 @@ namespace net {
  * 1496997 we can remove this implementation.  Bug 1498259 covers removing this
  * hack in particular.
  */
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
-class TrackingDummyChannel final : public nsIChannel,
-                                   public nsIHttpChannelInternal {
- public:
-  NS_DECLARE_STATIC_IID_ACCESSOR(TRACKING_DUMMY_CHANNEL_IID)
-||||||| merged common ancestors
-class TrackingDummyChannel final : public nsIChannel
-                                 , public nsIHttpChannelInternal
-{
-public:
-  NS_DECLARE_STATIC_IID_ACCESSOR(TRACKING_DUMMY_CHANNEL_IID)
-=======
 class ClassifierDummyChannel final : public nsIChannel,
                                      public nsIHttpChannelInternal {
  public:
   NS_DECLARE_STATIC_IID_ACCESSOR(CLASSIFIER_DUMMY_CHANNEL_IID)
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h
 
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIREQUEST
@@ -89,47 +63,15 @@ class ClassifierDummyChannel final : public nsIChannel,
   static StorageAllowedState StorageAllowed(
       nsIChannel* aChannel, const std::function<void(bool)>& aCallback);
 
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
-  TrackingDummyChannel(nsIURI* aURI, nsIURI* aTopWindowURI,
-                       nsresult aTopWindowURIResult, nsILoadInfo* aLoadInfo);
-||||||| merged common ancestors
-  TrackingDummyChannel(nsIURI* aURI,
-                       nsIURI* aTopWindowURI,
-                       nsresult aTopWindowURIResult,
-                       nsILoadInfo* aLoadInfo);
-=======
   ClassifierDummyChannel(nsIURI* aURI, nsIURI* aTopWindowURI,
                          nsresult aTopWindowURIResult, nsILoadInfo* aLoadInfo);
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h
 
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
-  bool IsTrackingResource() const;
-||||||| merged common ancestors
-  bool
-  IsTrackingResource() const;
-=======
   uint32_t ClassificationFlags() const;
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h
 
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
-  void SetIsTrackingResource();
-||||||| merged common ancestors
-  void
-  SetIsTrackingResource();
-=======
   void AddClassificationFlags(uint32_t);
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h
 
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
- private:
-  ~TrackingDummyChannel();
-||||||| merged common ancestors
-private:
-  ~TrackingDummyChannel();
-=======
  private:
   ~ClassifierDummyChannel();
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h
 
   nsCOMPtr<nsILoadInfo> mLoadInfo;
   nsCOMPtr<nsIURI> mURI;
@@ -145,10 +87,4 @@ NS_DEFINE_STATIC_IID_ACCESSOR(ClassifierDummyChannel,
 }  // namespace net
 }  // namespace mozilla
 
-<<<<<<< HEAD:mozilla-release/netwerk/protocol/http/TrackingDummyChannel.h
-#endif  // mozilla_net_TrackingDummyChannel_h
-||||||| merged common ancestors
-#endif // mozilla_net_TrackingDummyChannel_h
-=======
 #endif  // mozilla_net_ClassifierDummyChannel_h
->>>>>>> upstream-releases:mozilla-release/netwerk/protocol/http/ClassifierDummyChannel.h

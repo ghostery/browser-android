@@ -23,42 +23,6 @@ using namespace mozilla;
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsTableColFrame::nsTableColFrame(ComputedStyle* aStyle)
-    : nsSplittableFrame(aStyle, kClassID),
-      mMinCoord(0),
-      mPrefCoord(0),
-      mSpanMinCoord(0),
-      mSpanPrefCoord(0),
-      mPrefPercent(0.0f),
-      mSpanPrefPercent(0.0f),
-      mFinalISize(0),
-      mColIndex(0),
-      mIStartBorderWidth(0),
-      mIEndBorderWidth(0),
-      mBStartContBorderWidth(0),
-      mIEndContBorderWidth(0),
-      mBEndContBorderWidth(0),
-      mHasSpecifiedCoord(false) {
-||||||| merged common ancestors
-nsTableColFrame::nsTableColFrame(ComputedStyle* aStyle)
-  : nsSplittableFrame(aStyle, kClassID)
-  , mMinCoord(0)
-  , mPrefCoord(0)
-  , mSpanMinCoord(0)
-  , mSpanPrefCoord(0)
-  , mPrefPercent(0.0f)
-  , mSpanPrefPercent(0.0f)
-  , mFinalISize(0)
-  , mColIndex(0)
-  , mIStartBorderWidth(0)
-  , mIEndBorderWidth(0)
-  , mBStartContBorderWidth(0)
-  , mIEndContBorderWidth(0)
-  , mBEndContBorderWidth(0)
-  , mHasSpecifiedCoord(false)
-{
-=======
 nsTableColFrame::nsTableColFrame(ComputedStyle* aStyle,
                                  nsPresContext* aPresContext)
     : nsSplittableFrame(aStyle, aPresContext, kClassID),
@@ -76,7 +40,6 @@ nsTableColFrame::nsTableColFrame(ComputedStyle* aStyle,
       mIEndContBorderWidth(0),
       mBEndContBorderWidth(0),
       mHasSpecifiedCoord(false) {
->>>>>>> upstream-releases
   SetColType(eColContent);
   ResetIntrinsics();
   ResetSpanIntrinsics();
@@ -100,17 +63,8 @@ void nsTableColFrame::SetColType(nsTableColType aType) {
   AddStateBits(nsFrameState(type << COL_TYPE_OFFSET));
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsTableColFrame::DidSetComputedStyle(
-    ComputedStyle* aOldComputedStyle) {
-||||||| merged common ancestors
-/* virtual */ void
-nsTableColFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
-{
-=======
 /* virtual */
 void nsTableColFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
->>>>>>> upstream-releases
   nsSplittableFrame::DidSetComputedStyle(aOldComputedStyle);
 
   if (!aOldComputedStyle)  // avoid this on init
@@ -158,17 +112,6 @@ void nsTableColFrame::Reflow(nsPresContext* aPresContext,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aDesiredSize);
 }
 
-<<<<<<< HEAD
-void nsTableColFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
-                                       const nsDisplayListSet& aLists) {
-  nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists);
-||||||| merged common ancestors
-void
-nsTableColFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
-                                  const nsDisplayListSet& aLists)
-{
-  nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists);
-=======
 void nsTableColFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                        const nsDisplayListSet& aLists) {
   // Per https://drafts.csswg.org/css-tables-3/#global-style-overrides:
@@ -177,7 +120,6 @@ void nsTableColFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   // CSS outlines and box-shadows fall into this category, so we skip them
   // on these boxes.
   MOZ_ASSERT_UNREACHABLE("Cols don't paint themselves");
->>>>>>> upstream-releases
 }
 
 int32_t nsTableColFrame::GetSpan() { return StyleTable()->mSpan; }
@@ -218,20 +160,9 @@ void nsTableColFrame::Dump(int32_t aIndent) {
 #endif
 /* ----- global methods ----- */
 
-<<<<<<< HEAD
-nsTableColFrame* NS_NewTableColFrame(nsIPresShell* aPresShell,
-                                     ComputedStyle* aStyle) {
-  return new (aPresShell) nsTableColFrame(aStyle);
-||||||| merged common ancestors
-nsTableColFrame*
-NS_NewTableColFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsTableColFrame(aStyle);
-=======
 nsTableColFrame* NS_NewTableColFrame(PresShell* aPresShell,
                                      ComputedStyle* aStyle) {
   return new (aPresShell) nsTableColFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTableColFrame)

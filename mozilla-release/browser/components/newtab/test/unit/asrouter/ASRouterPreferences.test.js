@@ -211,17 +211,6 @@ describe("ASRouterPreferences", () => {
       assert.isTrue(ASRouterPreferences.getUserPreference("snippets"));
     });
   });
-<<<<<<< HEAD
-  describe("#getAllUserPreferences", () => {
-    it("should return all user preferences", () => {
-      boolPrefStub.withArgs(SNIPPETS_USER_PREF).returns(true);
-      boolPrefStub.withArgs(CFR_USER_PREF).returns(false);
-      const result = ASRouterPreferences.getAllUserPreferences();
-      assert.deepEqual(result, {snippets: true, cfr: false});
-    });
-  });
-||||||| merged common ancestors
-=======
   describe("#getAllUserPreferences", () => {
     it("should return all user preferences", () => {
       boolPrefStub.withArgs(SNIPPETS_USER_PREF).returns(true);
@@ -235,7 +224,6 @@ describe("ASRouterPreferences", () => {
       });
     });
   });
->>>>>>> upstream-releases
   describe("#enableOrDisableProvider", () => {
     it("should enable an existing provider if second param is true", () => {
       const setStub = sandbox.stub(global.Services.prefs, "setStringPref");

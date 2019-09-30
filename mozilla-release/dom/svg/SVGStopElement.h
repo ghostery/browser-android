@@ -10,37 +10,12 @@
 #include "mozilla/dom/SVGElement.h"
 #include "SVGAnimatedNumber.h"
 
-<<<<<<< HEAD
 nsresult NS_NewSVGStopElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-
-typedef nsSVGElement SVGStopElementBase;
-||||||| merged common ancestors
-nsresult NS_NewSVGStopElement(nsIContent **aResult,
-                              already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-
-typedef nsSVGElement SVGStopElementBase;
-=======
-nsresult NS_NewSVGStopElement(
-    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class SVGStopElement final : public SVGStopElementBase {
- protected:
-  friend nsresult(::NS_NewSVGStopElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-||||||| merged common ancestors
-class SVGStopElement final : public SVGStopElementBase
-{
-protected:
-  friend nsresult (::NS_NewSVGStopElement(nsIContent **aResult,
-                                          already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-=======
 typedef SVGElement SVGStopElementBase;
 
 class SVGStopElement final : public SVGStopElementBase {
@@ -48,7 +23,6 @@ class SVGStopElement final : public SVGStopElementBase {
   friend nsresult(::NS_NewSVGStopElement(
       nsIContent** aResult,
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
->>>>>>> upstream-releases
   explicit SVGStopElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override;
@@ -60,20 +34,9 @@ class SVGStopElement final : public SVGStopElementBase {
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedNumber> Offset();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedNumber> Offset();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedNumber> Offset();
 
  protected:
->>>>>>> upstream-releases
   virtual NumberAttributesInfo GetNumberInfo() override;
   SVGAnimatedNumber mOffset;
   static NumberInfo sNumberInfo;

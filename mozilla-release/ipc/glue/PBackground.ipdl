@@ -124,30 +124,6 @@ parent:
 
   async PBackgroundSDBConnection(PrincipalInfo principalInfo);
 
-<<<<<<< HEAD
-  async PBackgroundLSDatabase(PrincipalInfo principalInfo,
-                              uint32_t privateBrowsingId,
-                              uint64_t datastoreId);
-
-  async PBackgroundLSObserver(uint64_t observerId);
-
-  /**
-   * Issue an asynchronous request that will be used in a synchronous fashion
-   * through complex machinations described in `PBackgroundLSRequest.ipdl` and
-   * `LSObject.h`.
-   */
-  async PBackgroundLSRequest(LSRequestParams params);
-
-  /**
-   * Issues a simple, non-cancelable asynchronous request that's used in an
-   * asynchronous fashion by callers.  (LSRequest is not simple because it used
-   * in a synchronous fashion which leads to complexities regarding cancelation,
-   * see `PBackgroundLSRequest.ipdl` for details.)
-   */
-  async PBackgroundLSSimpleRequest(LSSimpleRequestParams params);
-
-||||||| merged common ancestors
-=======
   async PBackgroundLSDatabase(PrincipalInfo principalInfo,
                               uint32_t privateBrowsingId,
                               uint64_t datastoreId);
@@ -178,7 +154,6 @@ parent:
    */
   async LSClearPrivateBrowsing();
 
->>>>>>> upstream-releases
   async PBackgroundLocalStorageCache(PrincipalInfo principalInfo,
                                      nsCString originKey,
                                      uint32_t privateBrowsingId);
@@ -258,13 +233,8 @@ child:
 
   async PPendingIPCBlob(IPCBlob blob);
 
-<<<<<<< HEAD
-  async PRemoteWorker(RemoteWorkerData data);
-||||||| merged common ancestors
-=======
   async PRemoteWorker(RemoteWorkerData data);
 
->>>>>>> upstream-releases
 both:
   // PIPCBlobInputStream is created on the parent side only if the child starts
   // a migration.

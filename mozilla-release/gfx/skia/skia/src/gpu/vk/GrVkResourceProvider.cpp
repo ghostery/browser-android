@@ -20,14 +20,7 @@
 #include "SkTaskGroup.h"
 
 #ifdef SK_TRACE_VK_RESOURCES
-<<<<<<< HEAD
-uint32_t GrVkResource::fKeyCounter = 0;
-||||||| merged common ancestors
-GrVkResource::Trace GrVkResource::fTrace;
-uint32_t GrVkResource::fKeyCounter = 0;
-=======
 std::atomic<uint32_t> GrVkResource::fKeyCounter{0};
->>>>>>> upstream-releases
 #endif
 
 GrVkResourceProvider::GrVkResourceProvider(GrVkGpu* gpu)
@@ -99,39 +92,18 @@ void GrVkResourceProvider::init() {
     fUniformDSHandle = GrVkDescriptorSetManager::Handle(0);
 }
 
-<<<<<<< HEAD
-GrVkPipeline* GrVkResourceProvider::createPipeline(const GrPrimitiveProcessor& primProc,
-                                                   const GrPipeline& pipeline,
-                                                   const GrStencilSettings& stencil,
-||||||| merged common ancestors
-GrVkPipeline* GrVkResourceProvider::createPipeline(const GrPipeline& pipeline,
-                                                   const GrStencilSettings& stencil,
-                                                   const GrPrimitiveProcessor& primProc,
-=======
 GrVkPipeline* GrVkResourceProvider::createPipeline(int numColorSamples,
                                                    const GrPrimitiveProcessor& primProc,
                                                    const GrPipeline& pipeline,
                                                    const GrStencilSettings& stencil,
->>>>>>> upstream-releases
                                                    VkPipelineShaderStageCreateInfo* shaderStageInfo,
                                                    int shaderStageCount,
                                                    GrPrimitiveType primitiveType,
                                                    VkRenderPass compatibleRenderPass,
                                                    VkPipelineLayout layout) {
-<<<<<<< HEAD
-    return GrVkPipeline::Create(fGpu, primProc, pipeline, stencil, shaderStageInfo,
-                                shaderStageCount, primitiveType, compatibleRenderPass, layout,
-                                fPipelineCache);
-||||||| merged common ancestors
-
-    return GrVkPipeline::Create(fGpu, pipeline, stencil, primProc, shaderStageInfo,
-                                shaderStageCount, primitiveType, renderPass, layout,
-                                fPipelineCache);
-=======
     return GrVkPipeline::Create(fGpu, numColorSamples, primProc, pipeline, stencil, shaderStageInfo,
                                 shaderStageCount, primitiveType, compatibleRenderPass, layout,
                                 this->pipelineCache());
->>>>>>> upstream-releases
 }
 
 GrVkCopyPipeline* GrVkResourceProvider::findOrCreateCopyPipeline(
@@ -150,19 +122,10 @@ GrVkCopyPipeline* GrVkResourceProvider::findOrCreateCopyPipeline(
                                             pipelineLayout,
                                             dst->numColorSamples(),
                                             *dst->simpleRenderPass(),
-<<<<<<< HEAD
-                                            fPipelineCache);
-        if (!pipeline) {
-            return nullptr;
-        }
-||||||| merged common ancestors
-                                            fPipelineCache);
-=======
                                             this->pipelineCache());
         if (!pipeline) {
             return nullptr;
         }
->>>>>>> upstream-releases
         fCopyPipelines.push_back(pipeline);
     }
     SkASSERT(pipeline);
@@ -292,25 +255,12 @@ GrVkSamplerYcbcrConversion* GrVkResourceProvider::findOrCreateCompatibleSamplerY
 }
 
 GrVkPipelineState* GrVkResourceProvider::findOrCreateCompatiblePipelineState(
-<<<<<<< HEAD
-        const GrPipeline& pipeline, const GrPrimitiveProcessor& proc, GrPrimitiveType primitiveType,
-        VkRenderPass compatibleRenderPass) {
-    return fPipelineStateCache->refPipelineState(proc, pipeline, primitiveType,
-                                                 compatibleRenderPass);
-||||||| merged common ancestors
-                                                                 const GrPipeline& pipeline,
-                                                                 const GrPrimitiveProcessor& proc,
-                                                                 GrPrimitiveType primitiveType,
-                                                                 const GrVkRenderPass& renderPass) {
-    return fPipelineStateCache->refPipelineState(pipeline, proc, primitiveType, renderPass);
-=======
         GrRenderTarget* renderTarget, GrSurfaceOrigin origin,
         const GrPipeline& pipeline, const GrPrimitiveProcessor& proc,
         const GrTextureProxy* const primProcProxies[], GrPrimitiveType primitiveType,
         VkRenderPass compatibleRenderPass) {
     return fPipelineStateCache->refPipelineState(renderTarget, origin, proc, primProcProxies,
                                                  pipeline, primitiveType, compatibleRenderPass);
->>>>>>> upstream-releases
 }
 
 void GrVkResourceProvider::getSamplerDescriptorSetHandle(VkDescriptorType type,
@@ -497,35 +447,9 @@ void GrVkResourceProvider::destroyResources(bool deviceLost) {
 }
 
 void GrVkResourceProvider::abandonResources() {
-<<<<<<< HEAD
-    // release our active command buffers
-    for (int i = 0; i < fActiveCommandBuffers.count(); ++i) {
-        SkASSERT(fActiveCommandBuffers[i]->unique());
-        fActiveCommandBuffers[i]->unrefAndAbandon();
-    }
-    fActiveCommandBuffers.reset();
-    // release our available command buffers
-    for (int i = 0; i < fAvailableCommandBuffers.count(); ++i) {
-        SkASSERT(fAvailableCommandBuffers[i]->unique());
-        fAvailableCommandBuffers[i]->unrefAndAbandon();
-||||||| merged common ancestors
-    // release our active command buffers
-    for (int i = 0; i < fActiveCommandBuffers.count(); ++i) {
-        SkASSERT(fActiveCommandBuffers[i]->finished(fGpu));
-        SkASSERT(fActiveCommandBuffers[i]->unique());
-        fActiveCommandBuffers[i]->unrefAndAbandon();
-    }
-    fActiveCommandBuffers.reset();
-    // release our available command buffers
-    for (int i = 0; i < fAvailableCommandBuffers.count(); ++i) {
-        SkASSERT(fAvailableCommandBuffers[i]->finished(fGpu));
-        SkASSERT(fAvailableCommandBuffers[i]->unique());
-        fAvailableCommandBuffers[i]->unrefAndAbandon();
-=======
     SkTaskGroup* taskGroup = fGpu->getContext()->priv().getTaskGroup();
     if (taskGroup) {
         taskGroup->wait();
->>>>>>> upstream-releases
     }
 
     // Abandon all command pools

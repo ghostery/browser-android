@@ -1,37 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-<<<<<<< HEAD
-		module.exports = factory(require("devtools/client/shared/vendor/react"), require("Services"), require("devtools/client/shared/vendor/react-prop-types"), require("devtools/client/shared/vendor/react-dom-factories"), require("devtools/client/shared/vendor/react-redux"));
-||||||| merged common ancestors
-		module.exports = factory(require("devtools/client/shared/vendor/react"), require("Services"), require("devtools/client/shared/vendor/react-redux"), require("devtools/client/shared/vendor/react-prop-types"), require("devtools/client/shared/vendor/react-dom-factories"));
-=======
 		module.exports = factory(require("devtools/client/shared/vendor/react-prop-types"), require("devtools/client/shared/vendor/react-dom-factories"), require("devtools/client/shared/vendor/react"), require("Services"), require("devtools/client/shared/vendor/react-redux"));
->>>>>>> upstream-releases
 	else if(typeof define === 'function' && define.amd)
-<<<<<<< HEAD
-		define(["devtools/client/shared/vendor/react", "Services", "devtools/client/shared/vendor/react-prop-types", "devtools/client/shared/vendor/react-dom-factories", "devtools/client/shared/vendor/react-redux"], factory);
-||||||| merged common ancestors
-		define(["devtools/client/shared/vendor/react", "Services", "devtools/client/shared/vendor/react-redux", "devtools/client/shared/vendor/react-prop-types", "devtools/client/shared/vendor/react-dom-factories"], factory);
-=======
 		define(["devtools/client/shared/vendor/react-prop-types", "devtools/client/shared/vendor/react-dom-factories", "devtools/client/shared/vendor/react", "Services", "devtools/client/shared/vendor/react-redux"], factory);
->>>>>>> upstream-releases
 	else {
-<<<<<<< HEAD
-		var a = typeof exports === 'object' ? factory(require("devtools/client/shared/vendor/react"), require("Services"), require("devtools/client/shared/vendor/react-prop-types"), require("devtools/client/shared/vendor/react-dom-factories"), require("devtools/client/shared/vendor/react-redux")) : factory(root["devtools/client/shared/vendor/react"], root["Services"], root["devtools/client/shared/vendor/react-prop-types"], root["devtools/client/shared/vendor/react-dom-factories"], root["devtools/client/shared/vendor/react-redux"]);
-||||||| merged common ancestors
-		var a = typeof exports === 'object' ? factory(require("devtools/client/shared/vendor/react"), require("Services"), require("devtools/client/shared/vendor/react-redux"), require("devtools/client/shared/vendor/react-prop-types"), require("devtools/client/shared/vendor/react-dom-factories")) : factory(root["devtools/client/shared/vendor/react"], root["Services"], root["devtools/client/shared/vendor/react-redux"], root["devtools/client/shared/vendor/react-prop-types"], root["devtools/client/shared/vendor/react-dom-factories"]);
-=======
 		var a = typeof exports === 'object' ? factory(require("devtools/client/shared/vendor/react-prop-types"), require("devtools/client/shared/vendor/react-dom-factories"), require("devtools/client/shared/vendor/react"), require("Services"), require("devtools/client/shared/vendor/react-redux")) : factory(root["devtools/client/shared/vendor/react-prop-types"], root["devtools/client/shared/vendor/react-dom-factories"], root["devtools/client/shared/vendor/react"], root["Services"], root["devtools/client/shared/vendor/react-redux"]);
->>>>>>> upstream-releases
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-<<<<<<< HEAD
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_1758__, __WEBPACK_EXTERNAL_MODULE_1759__, __WEBPACK_EXTERNAL_MODULE_1763__) {
-||||||| merged common ancestors
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_3592__, __WEBPACK_EXTERNAL_MODULE_3642__, __WEBPACK_EXTERNAL_MODULE_3643__) {
-=======
 })(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_37__, __WEBPACK_EXTERNAL_MODULE_484__) {
->>>>>>> upstream-releases
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -94,13 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/assets/build";
 /******/
 /******/ 	// Load entry module and return exports
-<<<<<<< HEAD
-/******/ 	return __webpack_require__(__webpack_require__.s = 2104);
-||||||| merged common ancestors
-/******/ 	return __webpack_require__(__webpack_require__.s = 3730);
-=======
 /******/ 	return __webpack_require__(__webpack_require__.s = 456);
->>>>>>> upstream-releases
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -139,27 +109,6 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1758:
-/***/ (function(module, exports) {
-||||||| merged common ancestors
-/***/ 22:
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_22__;
-
-/***/ }),
-
-/***/ 3592:
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_3592__;
-
-/***/ }),
-
-/***/ 3642:
-/***/ (function(module, exports) {
-=======
 /***/ 109:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -171,47 +120,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _react = __webpack_require__(6);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = __WEBPACK_EXTERNAL_MODULE_1758__;
-||||||| merged common ancestors
-module.exports = __WEBPACK_EXTERNAL_MODULE_3642__;
-=======
 var _react2 = _interopRequireDefault(_react);
->>>>>>> upstream-releases
 
 var _reactDomFactories = __webpack_require__(1);
 
-<<<<<<< HEAD
-/***/ 1759:
-/***/ (function(module, exports) {
-||||||| merged common ancestors
-/***/ 3643:
-/***/ (function(module, exports) {
-=======
 var _reactDomFactories2 = _interopRequireDefault(_reactDomFactories);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = __WEBPACK_EXTERNAL_MODULE_1759__;
-||||||| merged common ancestors
-module.exports = __WEBPACK_EXTERNAL_MODULE_3643__;
-=======
 var _propTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-<<<<<<< HEAD
-/***/ 1760:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3644:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
->>>>>>> upstream-releases
 
 const { Component, createFactory } = _react2.default; /* This Source Code Form is subject to the terms of the Mozilla Public
                                                        * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -222,25 +142,9 @@ __webpack_require__(110);
 // depth
 const AUTO_EXPAND_DEPTH = 0;
 
-<<<<<<< HEAD
-// Dependencies
-const validProtocols = /(http|https|ftp|data|resource|chrome):/i;
-const tokenSplitRegex = /(\s|\'|\"|\\)+/;
-const ELLIPSIS = "\u2026";
-const dom = __webpack_require__(1759);
-const { span } = dom;
-||||||| merged common ancestors
-// Dependencies
-const validProtocols = /(http|https|ftp|data|resource|chrome):/i;
-const tokenSplitRegex = /(\s|\'|\"|\\)+/;
-const ELLIPSIS = "\u2026";
-const dom = __webpack_require__(3643);
-const { span } = dom;
-=======
 // Simplied selector targetting elements that can receive the focus,
 // full version at https://stackoverflow.com/questions/1599660.
 const FOCUSABLE_SELECTOR = ["a[href]:not([tabindex='-1'])", "button:not([disabled]):not([tabindex='-1'])", "iframe:not([tabindex='-1'])", "input:not([disabled]):not([tabindex='-1'])", "select:not([disabled]):not([tabindex='-1'])", "textarea:not([disabled]):not([tabindex='-1'])", "[tabindex]:not([tabindex='-1'])"].join(", ");
->>>>>>> upstream-releases
 
 /**
  * An arrow that displays whether its node is expanded (▼) or collapsed
@@ -982,17 +886,9 @@ class Tree extends Component {
         this._focusPrevNode();
         return;
 
-<<<<<<< HEAD
-/***/ 1762:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3645:
-/***/ (function(module, exports, __webpack_require__) {
-=======
       case "ArrowDown":
         this._focusNextNode();
         return;
->>>>>>> upstream-releases
 
       case "ArrowLeft":
         if (this.props.isExpanded(this.props.focused) && this._nodeIsExpandable(this.props.focused)) {
@@ -1048,22 +944,7 @@ class Tree extends Component {
     // focused node. Focus the previous node in the DFS, if it exists. If it
     // doesn't exist, we're at the first node already.
 
-<<<<<<< HEAD
-/***/ 1763:
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_1763__;
-
-/***/ }),
-
-/***/ 1767:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3647:
-/***/ (function(module, exports, __webpack_require__) {
-=======
     let prev;
->>>>>>> upstream-releases
 
     const traversal = this._dfsFromRoots();
     const length = traversal.length;
@@ -1093,97 +974,18 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1763__;
     const length = traversal.length;
     let i = 0;
 
-<<<<<<< HEAD
-__webpack_require__(1830);
-||||||| merged common ancestors
-__webpack_require__(3672);
-=======
     while (i < length) {
       if (traversal[i].item === this.props.focused) {
         break;
       }
       i++;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Load all existing rep templates
-const Undefined = __webpack_require__(1831);
-const Null = __webpack_require__(1832);
-const StringRep = __webpack_require__(1770);
-const Number = __webpack_require__(1833);
-const ArrayRep = __webpack_require__(1774);
-const Obj = __webpack_require__(1834);
-const SymbolRep = __webpack_require__(1835);
-const InfinityRep = __webpack_require__(1836);
-const NaNRep = __webpack_require__(1837);
-const Accessor = __webpack_require__(1838);
-||||||| merged common ancestors
-// Load all existing rep templates
-const Undefined = __webpack_require__(3673);
-const Null = __webpack_require__(3674);
-const StringRep = __webpack_require__(3648);
-const Number = __webpack_require__(3675);
-const ArrayRep = __webpack_require__(3649);
-const Obj = __webpack_require__(3676);
-const SymbolRep = __webpack_require__(3677);
-const InfinityRep = __webpack_require__(3678);
-const NaNRep = __webpack_require__(3679);
-const Accessor = __webpack_require__(3680);
-=======
     if (i + 1 < traversal.length) {
       this._focus(traversal[i + 1].item, { alignTo: "bottom" });
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// DOM types (grips)
-const Accessible = __webpack_require__(1839);
-const Attribute = __webpack_require__(1840);
-const DateTime = __webpack_require__(1841);
-const Document = __webpack_require__(1842);
-const DocumentType = __webpack_require__(1843);
-const Event = __webpack_require__(1844);
-const Func = __webpack_require__(1794);
-const PromiseRep = __webpack_require__(1845);
-const RegExp = __webpack_require__(1846);
-const StyleSheet = __webpack_require__(1847);
-const CommentNode = __webpack_require__(1848);
-const ElementNode = __webpack_require__(1849);
-const TextNode = __webpack_require__(1850);
-const ErrorRep = __webpack_require__(1796);
-const Window = __webpack_require__(1851);
-const ObjectWithText = __webpack_require__(1852);
-const ObjectWithURL = __webpack_require__(1853);
-const GripArray = __webpack_require__(1797);
-const GripMap = __webpack_require__(1799);
-const GripMapEntry = __webpack_require__(1800);
-const Grip = __webpack_require__(1783);
-||||||| merged common ancestors
-// DOM types (grips)
-const Accessible = __webpack_require__(3787);
-const Attribute = __webpack_require__(3681);
-const DateTime = __webpack_require__(3682);
-const Document = __webpack_require__(3683);
-const DocumentType = __webpack_require__(3684);
-const Event = __webpack_require__(3685);
-const Func = __webpack_require__(3658);
-const PromiseRep = __webpack_require__(3686);
-const RegExp = __webpack_require__(3687);
-const StyleSheet = __webpack_require__(3688);
-const CommentNode = __webpack_require__(3689);
-const ElementNode = __webpack_require__(3690);
-const TextNode = __webpack_require__(3691);
-const ErrorRep = __webpack_require__(3660);
-const Window = __webpack_require__(3692);
-const ObjectWithText = __webpack_require__(3693);
-const ObjectWithURL = __webpack_require__(3694);
-const GripArray = __webpack_require__(3661);
-const GripMap = __webpack_require__(3663);
-const GripMapEntry = __webpack_require__(3664);
-const Grip = __webpack_require__(3656);
-=======
   /**
    * Handles the left arrow key, going back up to the current rows'
    * parent row.
@@ -1194,7 +996,6 @@ const Grip = __webpack_require__(3656);
       this._focusPrevNode(this.props.focused);
       return;
     }
->>>>>>> upstream-releases
 
     this._focus(parent, { alignTo: "top" });
   }
@@ -1301,13 +1102,7 @@ exports.default = Tree;
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1770:
-||||||| merged common ancestors
-/***/ 3648:
-=======
 /***/ 113:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1317,60 +1112,16 @@ exports.default = Tree;
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-// Dependencies
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-// Dependencies
-const PropTypes = __webpack_require__(3642);
-=======
 // ReactJS
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const {
-  containsURL,
-  isURL,
-  escapeString,
-  getGripType,
-  rawCropString,
-  sanitizeString,
-  wrapRender,
-  isGrip,
-  tokenSplitRegex,
-  ELLIPSIS
-} = __webpack_require__(1760);
-||||||| merged common ancestors
-const {
-  containsURL,
-  isURL,
-  escapeString,
-  getGripType,
-  rawCropString,
-  sanitizeString,
-  wrapRender,
-  isGrip,
-  tokenSplitRegex,
-  ELLIPSIS
-} = __webpack_require__(3644);
-=======
 // Dependencies
 const { interleave, isGrip, wrapRender } = __webpack_require__(2);
 const PropRep = __webpack_require__(39);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-const { a, span } = dom;
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-const { a, span } = dom;
-=======
 const dom = __webpack_require__(1);
 const { span } = dom;
->>>>>>> upstream-releases
 
 /**
  * Renders generic grip. Grip is client representation
@@ -1379,14 +1130,6 @@ const { span } = dom;
  */
 GripRep.propTypes = {
   object: PropTypes.object.isRequired,
-<<<<<<< HEAD
-  openLink: PropTypes.func,
-  className: PropTypes.string,
-  title: PropTypes.string
-||||||| merged common ancestors
-  openLink: PropTypes.func,
-  className: PropTypes.string
-=======
   // @TODO Change this to Object.values when supported in Node's version of V8
   mode: PropTypes.oneOf(Object.keys(MODE).map(key => MODE[key])),
   isInterestingProp: PropTypes.func,
@@ -1395,37 +1138,9 @@ GripRep.propTypes = {
   onDOMNodeMouseOut: PropTypes.func,
   onInspectIconClick: PropTypes.func,
   noGrip: PropTypes.bool
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-function StringRep(props) {
-  const {
-    className,
-    style,
-    cropLimit,
-    object,
-    useQuotes = true,
-    escapeWhitespace = true,
-    member,
-    openLink,
-    title
-  } = props;
-||||||| merged common ancestors
-function StringRep(props) {
-  const {
-    className,
-    style,
-    cropLimit,
-    object,
-    useQuotes = true,
-    escapeWhitespace = true,
-    member,
-    openLink
-  } = props;
-=======
 const DEFAULT_TITLE = "Object";
->>>>>>> upstream-releases
 
 function GripRep(props) {
   const { mode = MODE.SHORT, object } = props;
@@ -1453,23 +1168,8 @@ function GripRep(props) {
       }, "}"));
     }
 
-<<<<<<< HEAD
-  const config = getElementConfig({
-    className,
-    style,
-    actor: object.actor,
-    title
-  });
-||||||| merged common ancestors
-  const config = getElementConfig({
-    className,
-    style,
-    actor: object.actor
-  });
-=======
     return span(config, ...tinyModeItems);
   }
->>>>>>> upstream-releases
 
   const propsArray = safePropIterator(props, object, maxLengthMap.get(mode));
 
@@ -1514,17 +1214,9 @@ function safePropIterator(props, object, max) {
   return [];
 }
 
-<<<<<<< HEAD
-function getElementConfig(opts) {
-  const { className, style, actor, title } = opts;
-||||||| merged common ancestors
-function getElementConfig(opts) {
-  const { className, style, actor } = opts;
-=======
 function propIterator(props, object, max) {
   if (object.preview && Object.keys(object.preview).includes("wrappedValue")) {
     const { Rep } = __webpack_require__(24);
->>>>>>> upstream-releases
 
     return [Rep({
       object: object.preview.wrappedValue,
@@ -1546,19 +1238,6 @@ function propIterator(props, object, max) {
     properties = { ...properties, ...object.preview.safeGetterValues };
   }
 
-<<<<<<< HEAD
-  if (title) {
-    config.title = title;
-  }
-
-  const classNames = ["objectBox", "objectBox-string"];
-  if (className) {
-    classNames.push(className);
-||||||| merged common ancestors
-  const classNames = ["objectBox", "objectBox-string"];
-  if (className) {
-    classNames.push(className);
-=======
   let indexes = getPropIndexes(properties, max, isInterestingProp);
   if (indexes.length < max && indexes.length < propertiesLength) {
     // There are not enough props yet.
@@ -1594,7 +1273,6 @@ function propIterator(props, object, max) {
     });
 
     propsArray.push(...symbolsProps);
->>>>>>> upstream-releases
   }
 
   if (Object.keys(properties).length > max || propertiesLength > max ||
@@ -1729,13 +1407,7 @@ module.exports = Grip;
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1774:
-||||||| merged common ancestors
-/***/ 3649:
-=======
 /***/ 114:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1745,21 +1417,6 @@ module.exports = Grip;
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-// Dependencies
-const dom = __webpack_require__(1759);
-const PropTypes = __webpack_require__(1758);
-const { wrapRender } = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-const { span } = dom;
-||||||| merged common ancestors
-// Dependencies
-const dom = __webpack_require__(3643);
-const PropTypes = __webpack_require__(3642);
-const { wrapRender } = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-const { span } = dom;
-=======
 const { maybeEscapePropertyName } = __webpack_require__(2);
 const ArrayRep = __webpack_require__(38);
 const GripArrayRep = __webpack_require__(192);
@@ -1768,7 +1425,6 @@ const GripMapEntryRep = __webpack_require__(195);
 const ErrorRep = __webpack_require__(191);
 const BigIntRep = __webpack_require__(188);
 const { isLongString } = __webpack_require__(25);
->>>>>>> upstream-releases
 
 const MAX_NUMERICAL_PROPERTIES = 100;
 
@@ -1840,39 +1496,9 @@ function nodeIsEntries(item) {
   return getType(item) === NODE_TYPES.ENTRIES;
 }
 
-<<<<<<< HEAD
-    try {
-      item = ItemRep({
-        ...props,
-        ...config,
-        object: array[i]
-      });
-    } catch (exc) {
-      item = ItemRep({
-        ...props,
-        ...config,
-        object: exc
-      });
-    }
-    items.push(item);
-  }
-||||||| merged common ancestors
-    try {
-      item = ItemRep(_extends({}, props, config, {
-        object: array[i]
-      }));
-    } catch (exc) {
-      item = ItemRep(_extends({}, props, config, {
-        object: exc
-      }));
-    }
-    items.push(item);
-  }
-=======
 function nodeIsMapEntry(item) {
   return GripMapEntryRep.supportsObject(getValue(item));
 }
->>>>>>> upstream-releases
 
 function nodeHasChildren(item) {
   return Array.isArray(item.contents);
@@ -1886,37 +1512,14 @@ function nodeHasGetterValue(item) {
   return item && item.contents && item.contents.hasOwnProperty("getterValue");
 }
 
-<<<<<<< HEAD
-function ItemRep(props) {
-  const { Rep } = __webpack_require__(1767);
-||||||| merged common ancestors
-function ItemRep(props) {
-  const { Rep } = __webpack_require__(3647);
-=======
 function nodeIsObject(item) {
   const value = getValue(item);
   return value && value.type === "object";
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const { object, delim, mode } = props;
-  return span({}, Rep({
-    ...props,
-    object: object,
-    mode: mode
-  }), delim);
-||||||| merged common ancestors
-  const { object, delim, mode } = props;
-  return span({}, Rep(_extends({}, props, {
-    object: object,
-    mode: mode
-  })), delim);
-=======
 function nodeIsArrayLike(item) {
   const value = getValue(item);
   return GripArrayRep.supportsObject(value) || ArrayRep.supportsObject(value);
->>>>>>> upstream-releases
 }
 
 function nodeIsFunction(item) {
@@ -1950,18 +1553,10 @@ function nodeIsUnscopedBinding(item) {
   return value && value.unscoped;
 }
 
-<<<<<<< HEAD
-/***/ 1775:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3650:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function nodeIsMissingArguments(item) {
   const value = getValue(item);
   return !nodeHasChildren(item) && value && value.missingArguments;
 }
->>>>>>> upstream-releases
 
 function nodeHasProperties(item) {
   return !nodeHasChildren(item) && nodeIsObject(item);
@@ -1971,17 +1566,6 @@ function nodeIsPrimitive(item) {
   return nodeIsBigInt(item) || !nodeHasChildren(item) && !nodeHasProperties(item) && !nodeIsEntries(item) && !nodeIsMapEntry(item) && !nodeHasAccessors(item) && !nodeIsBucket(item) && !nodeIsLongString(item);
 }
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
 function nodeIsDefaultProperties(item) {
   return getType(item) === NODE_TYPES.DEFAULT_PROPERTIES;
 }
@@ -1989,34 +1573,15 @@ function nodeIsDefaultProperties(item) {
 function isDefaultWindowProperty(name) {
   return WINDOW_PROPERTIES.includes(name);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Dependencies
-const PropTypes = __webpack_require__(1758);
-const { maybeEscapePropertyName, wrapRender } = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-// Dependencies
-const PropTypes = __webpack_require__(3642);
-const { maybeEscapePropertyName, wrapRender } = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-=======
 function nodeIsPromise(item) {
   const value = getValue(item);
   if (!value) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { span } = __webpack_require__(1759);
-||||||| merged common ancestors
-const { span } = __webpack_require__(3643);
-=======
   return value.class == "Promise";
 }
->>>>>>> upstream-releases
 
 function nodeIsProxy(item) {
   const value = getValue(item);
@@ -2024,89 +1589,20 @@ function nodeIsProxy(item) {
     return false;
   }
 
-<<<<<<< HEAD
-/**
- * Function that given a name, a delimiter and an object returns an array
- * of React elements representing an object property (e.g. `name: value`)
- *
- * @param {Object} props
- * @return {Array} Array of React elements.
- */
-function PropRep(props) {
-  const Grip = __webpack_require__(1783);
-  const { Rep } = __webpack_require__(1767);
-||||||| merged common ancestors
-/**
- * Function that given a name, a delimiter and an object returns an array
- * of React elements representing an object property (e.g. `name: value`)
- *
- * @param {Object} props
- * @return {Array} Array of React elements.
- */
-function PropRep(props) {
-  const Grip = __webpack_require__(3656);
-  const { Rep } = __webpack_require__(3647);
-=======
   return value.class == "Proxy";
 }
->>>>>>> upstream-releases
 
 function nodeIsPrototype(item) {
   return getType(item) === NODE_TYPES.PROTOTYPE;
 }
 
-<<<<<<< HEAD
-  let key;
-  // The key can be a simple string, for plain objects,
-  // or another object for maps and weakmaps.
-  if (typeof name === "string") {
-    if (!suppressQuotes) {
-      name = maybeEscapePropertyName(name);
-    }
-    key = span({ className: "nodeName" }, name);
-  } else {
-    key = Rep({
-      ...props,
-      className: "nodeName",
-      object: name,
-      mode: mode || MODE.TINY,
-      defaultRep: Grip
-    });
-||||||| merged common ancestors
-  let key;
-  // The key can be a simple string, for plain objects,
-  // or another object for maps and weakmaps.
-  if (typeof name === "string") {
-    if (!suppressQuotes) {
-      name = maybeEscapePropertyName(name);
-    }
-    key = span({ className: "nodeName" }, name);
-  } else {
-    key = Rep(_extends({}, props, {
-      className: "nodeName",
-      object: name,
-      mode: mode || MODE.TINY,
-      defaultRep: Grip
-    }));
-=======
 function nodeIsWindow(item) {
   const value = getValue(item);
   if (!value) {
     return false;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return [key, span({
-    className: "objectEqual"
-  }, equal), Rep({ ...props })];
-||||||| merged common ancestors
-  return [key, span({
-    className: "objectEqual"
-  }, equal), Rep(_extends({}, props))];
-=======
   return value.class == "Window";
->>>>>>> upstream-releases
 }
 
 function nodeIsGetter(item) {
@@ -2117,17 +1613,9 @@ function nodeIsSetter(item) {
   return getType(item) === NODE_TYPES.SET;
 }
 
-<<<<<<< HEAD
-/***/ 1780:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3655:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function nodeIsBlock(item) {
   return getType(item) === NODE_TYPES.BLOCK;
 }
->>>>>>> upstream-releases
 
 function nodeIsError(item) {
   return ErrorRep.supportsObject(getValue(item));
@@ -2146,41 +1634,15 @@ function nodeHasFullText(item) {
   return nodeIsLongString(item) && value.hasOwnProperty("fullText");
 }
 
-<<<<<<< HEAD
-const { MODE } = __webpack_require__(1762);
-const { REPS, getRep } = __webpack_require__(1767);
-const objectInspector = __webpack_require__(1854);
-||||||| merged common ancestors
-const { MODE } = __webpack_require__(3645);
-const { REPS, getRep } = __webpack_require__(3647);
-const objectInspector = __webpack_require__(3695);
-=======
 function nodeHasGetter(item) {
   const getter = getNodeGetter(item);
   return getter && getter.type !== "undefined";
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const {
-  parseURLEncodedText,
-  parseURLParams,
-  maybeEscapePropertyName,
-  getGripPreviewItems
-} = __webpack_require__(1760);
-||||||| merged common ancestors
-const {
-  parseURLEncodedText,
-  parseURLParams,
-  maybeEscapePropertyName,
-  getGripPreviewItems
-} = __webpack_require__(3644);
-=======
 function nodeHasSetter(item) {
   const setter = getNodeSetter(item);
   return setter && setter.type !== "undefined";
 }
->>>>>>> upstream-releases
 
 function nodeHasAccessors(item) {
   return nodeHasGetter(item) || nodeHasSetter(item);
@@ -2201,19 +1663,11 @@ function nodeHasEntries(item) {
   return value.class === "Map" || value.class === "Set" || value.class === "WeakMap" || value.class === "WeakSet" || value.class === "Storage";
 }
 
-<<<<<<< HEAD
-/***/ 1783:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3656:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function nodeHasAllEntriesInPreview(item) {
   const { preview } = getValue(item) || {};
   if (!preview) {
     return false;
   }
->>>>>>> upstream-releases
 
   const { entries, items, length, size } = preview;
 
@@ -2221,59 +1675,20 @@ function nodeHasAllEntriesInPreview(item) {
     return false;
   }
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
   return entries ? entries.length === size : items.length === length;
 }
 
 function nodeNeedsNumericalBuckets(item) {
   return nodeSupportsNumericalBucketing(item) && getNumericalPropertiesCount(item) > MAX_NUMERICAL_PROPERTIES;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// ReactJS
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-// ReactJS
-const PropTypes = __webpack_require__(3642);
-=======
 function makeNodesForPromiseProperties(item) {
   const {
     promiseState: { reason, value, state }
   } = getValue(item);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Dependencies
-const { interleave, isGrip, wrapRender } = __webpack_require__(1760);
-const PropRep = __webpack_require__(1775);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-// Dependencies
-const { interleave, isGrip, wrapRender } = __webpack_require__(3644);
-const PropRep = __webpack_require__(3650);
-const { MODE } = __webpack_require__(3645);
-=======
   const properties = [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-const { span } = dom;
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-const { span } = dom;
-=======
   if (state) {
     properties.push(createNode({
       parent: item,
@@ -2282,7 +1697,6 @@ const { span } = dom;
       type: NODE_TYPES.PROMISE_STATE
     }));
   }
->>>>>>> upstream-releases
 
   if (reason) {
     properties.push(createNode({
@@ -2408,19 +1822,9 @@ function sortProperties(properties) {
 function makeNumericalBuckets(parent) {
   const numProperties = getNumericalPropertiesCount(parent);
 
-<<<<<<< HEAD
-function propIterator(props, object, max) {
-  if (object.preview && Object.keys(object.preview).includes("wrappedValue")) {
-    const { Rep } = __webpack_require__(1767);
-||||||| merged common ancestors
-function propIterator(props, object, max) {
-  if (object.preview && Object.keys(object.preview).includes("wrappedValue")) {
-    const { Rep } = __webpack_require__(3647);
-=======
   // We want to have at most a hundred slices.
   const bucketSize = 10 ** Math.max(2, Math.ceil(Math.log10(numProperties)) - 2);
   const numBuckets = Math.ceil(numProperties / bucketSize);
->>>>>>> upstream-releases
 
   const buckets = [];
   for (let i = 1; i <= numBuckets; i++) {
@@ -2459,15 +1863,6 @@ function makeDefaultPropsBucket(propertiesNames, parent, ownProperties) {
 
   const nodes = makeNodesForOwnProps(userPropertiesNames, parent, ownProperties);
 
-<<<<<<< HEAD
-  if (object.preview && object.preview.safeGetterValues) {
-    properties = { ...properties, ...object.preview.safeGetterValues };
-  }
-||||||| merged common ancestors
-  if (object.preview && object.preview.safeGetterValues) {
-    properties = _extends({}, properties, object.preview.safeGetterValues);
-  }
-=======
   if (defaultProperties.length > 0) {
     const defaultPropertiesNode = createNode({
       parent,
@@ -2475,7 +1870,6 @@ function makeDefaultPropsBucket(propertiesNames, parent, ownProperties) {
       contents: null,
       type: NODE_TYPES.DEFAULT_PROPERTIES
     });
->>>>>>> upstream-releases
 
     const defaultNodes = defaultProperties.map((name, index) => createNode({
       parent: defaultPropertiesNode,
@@ -2496,32 +1890,6 @@ function makeNodesForOwnProps(propertiesNames, parent, ownProperties) {
   }));
 }
 
-<<<<<<< HEAD
-    const symbolsProps = ownSymbols.slice(0, length).map(symbolItem => {
-      return PropRep({
-        ...props,
-        mode: MODE.TINY,
-        name: symbolItem,
-        object: symbolItem.descriptor.value,
-        equal: ": ",
-        defaultRep: Grip,
-        title: null,
-        suppressQuotes
-      });
-    });
-||||||| merged common ancestors
-    const symbolsProps = ownSymbols.slice(0, length).map(symbolItem => {
-      return PropRep(_extends({}, props, {
-        mode: MODE.TINY,
-        name: symbolItem,
-        object: symbolItem.descriptor.value,
-        equal: ": ",
-        defaultRep: Grip,
-        title: null,
-        suppressQuotes
-      }));
-    });
-=======
 function makeNodesForProperties(objProps, parent) {
   const {
     ownProperties = {},
@@ -2529,7 +1897,6 @@ function makeNodesForProperties(objProps, parent) {
     prototype,
     safeGetterValues
   } = objProps;
->>>>>>> upstream-releases
 
   const parentValue = getValue(parent);
 
@@ -2552,32 +1919,6 @@ function makeNodesForProperties(objProps, parent) {
     nodes = makeNodesForOwnProps(propertiesNames, parent, allProperties);
   }
 
-<<<<<<< HEAD
-    return PropRep({
-      ...componentProps,
-      mode: MODE.TINY,
-      name,
-      object: value,
-      equal: ": ",
-      defaultRep: Grip,
-      title: null,
-      suppressQuotes
-    });
-  });
-}
-||||||| merged common ancestors
-    return PropRep(_extends({}, componentProps, {
-      mode: MODE.TINY,
-      name,
-      object: value,
-      equal: ": ",
-      defaultRep: Grip,
-      title: null,
-      suppressQuotes
-    }));
-  });
-}
-=======
   if (Array.isArray(ownSymbols)) {
     ownSymbols.forEach((ownSymbol, index) => {
       nodes.push(createNode({
@@ -2588,7 +1929,6 @@ function makeNodesForProperties(objProps, parent) {
       }));
     }, this);
   }
->>>>>>> upstream-releases
 
   if (nodeIsPromise(parent)) {
     nodes.push(...makeNodesForPromiseProperties(parent));
@@ -2679,13 +2019,6 @@ function createNode(options) {
   };
 }
 
-<<<<<<< HEAD
-/***/ 1784:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3657:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function createGetterNode({ parent, property, name }) {
   return createNode({
     parent,
@@ -2694,7 +2027,6 @@ function createGetterNode({ parent, property, name }) {
     type: NODE_TYPES.GET
   });
 }
->>>>>>> upstream-releases
 
 function createSetterNode({ parent, property, name }) {
   return createNode({
@@ -2709,17 +2041,6 @@ function getSymbolDescriptor(symbol) {
   return symbol.toString().replace(/^(Symbol\()(.*)(\))$/, "$2");
 }
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
 function setNodeChildren(node, children) {
   node.contents = children;
   return node;
@@ -2729,177 +2050,44 @@ function getEvaluatedItem(item, evaluations) {
   if (!evaluations.has(item.path)) {
     return item;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { maybeEscapePropertyName } = __webpack_require__(1760);
-const ArrayRep = __webpack_require__(1774);
-const GripArrayRep = __webpack_require__(1797);
-const GripMap = __webpack_require__(1799);
-const GripMapEntryRep = __webpack_require__(1800);
-const ErrorRep = __webpack_require__(1796);
-const { isLongString } = __webpack_require__(1770);
-||||||| merged common ancestors
-const client = __webpack_require__(3665);
-const loadProperties = __webpack_require__(3666);
-const node = __webpack_require__(3667);
-const { nodeIsError, nodeIsPrimitive } = node;
-const selection = __webpack_require__(3698);
-=======
   return {
     ...item,
     contents: evaluations.get(item.path)
   };
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const MAX_NUMERICAL_PROPERTIES = 100;
-||||||| merged common ancestors
-const { MODE } = __webpack_require__(3645);
-const {
-  REPS: { Rep, Grip }
-} = __webpack_require__(3647);
-=======
 function getChildrenWithEvaluations(options) {
   const { item, loadedProperties, cachedNodes, evaluations } = options;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const NODE_TYPES = {
-  BUCKET: Symbol("[n…m]"),
-  DEFAULT_PROPERTIES: Symbol("<default properties>"),
-  ENTRIES: Symbol("<entries>"),
-  GET: Symbol("<get>"),
-  GRIP: Symbol("GRIP"),
-  MAP_ENTRY_KEY: Symbol("<key>"),
-  MAP_ENTRY_VALUE: Symbol("<value>"),
-  PROMISE_REASON: Symbol("<reason>"),
-  PROMISE_STATE: Symbol("<state>"),
-  PROMISE_VALUE: Symbol("<value>"),
-  PROXY_HANDLER: Symbol("<handler>"),
-  PROXY_TARGET: Symbol("<target>"),
-  SET: Symbol("<set>"),
-  PROTOTYPE: Symbol("<prototype>"),
-  BLOCK: Symbol("☲")
-};
-||||||| merged common ancestors
-=======
   const children = getChildren({
     loadedProperties,
     cachedNodes,
     item
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-let WINDOW_PROPERTIES = {};
-||||||| merged common ancestors
-function shouldRenderRootsInReps(roots) {
-  if (roots.length > 1) {
-    return false;
-  }
-=======
   if (Array.isArray(children)) {
     return children.map(i => getEvaluatedItem(i, evaluations));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-if (typeof window === "object") {
-  WINDOW_PROPERTIES = Object.getOwnPropertyNames(window);
-}
-||||||| merged common ancestors
-  const root = roots[0];
-  const name = root && root.name;
-  return (name === null || typeof name === "undefined") && (nodeIsPrimitive(root) || nodeIsError(root));
-}
-=======
   if (children) {
     return getEvaluatedItem(children, evaluations);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getType(item) {
-  return item.type;
-||||||| merged common ancestors
-function renderRep(item, props) {
-  return Rep(_extends({}, props, {
-    object: node.getValue(item),
-    mode: props.mode || MODE.TINY,
-    defaultRep: Grip
-  }));
-=======
   return [];
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getValue(item) {
-  if (nodeHasValue(item)) {
-    return item.contents.value;
-  }
-
-  if (nodeHasGetterValue(item)) {
-    return item.contents.getterValue;
-  }
-
-  if (nodeHasAccessors(item)) {
-    return item.contents;
-  }
-||||||| merged common ancestors
-module.exports = {
-  client,
-  loadProperties,
-  node,
-  renderRep,
-  selection,
-  shouldRenderRootsInReps
-};
-
-/***/ }),
-
-/***/ 3658:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function getChildren(options) {
   const { cachedNodes, item, loadedProperties = new Map() } = options;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return undefined;
-}
-||||||| merged common ancestors
-"use strict";
-=======
   const key = item.path;
   if (cachedNodes && cachedNodes.has(key)) {
     return cachedNodes.get(key);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getActor(item, roots) {
-  const isRoot = isNodeRoot(item, roots);
-  const value = getValue(item);
-  return isRoot || !value ? null : value.actor;
-}
-||||||| merged common ancestors
-=======
   const loadedProps = loadedProperties.get(key);
   const hasLoadedProps = loadedProperties.has(key);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function isNodeRoot(item, roots) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-||||||| merged common ancestors
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
   // Because we are dynamically creating the tree as the user
   // expands it (not precalculated tree structure), we cache child
   // arrays. This not only helps performance, but is necessary
@@ -2914,531 +2102,133 @@ function isNodeRoot(item, roots) {
     }
     return children;
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value && roots.some(root => {
-    const rootValue = getValue(root);
-    return rootValue && rootValue.actor === value.actor;
-  });
-}
-||||||| merged common ancestors
-// ReactJS
-const PropTypes = __webpack_require__(3642);
-=======
   // Nodes can either have children already, or be an object with
   // properties that we need to go and fetch.
   if (nodeHasChildren(item)) {
     return addToCache(item.contents);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsBucket(item) {
-  return getType(item) === NODE_TYPES.BUCKET;
-}
-||||||| merged common ancestors
-// Reps
-const { getGripType, isGrip, cropString, wrapRender } = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-=======
   if (nodeIsMapEntry(item)) {
     return addToCache(makeNodesForMapEntry(item));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsEntries(item) {
-  return getType(item) === NODE_TYPES.ENTRIES;
-}
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-const { span } = dom;
-=======
   if (nodeIsProxy(item) && hasLoadedProps) {
     return addToCache(makeNodesForProxyProperties(loadedProps, item));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsMapEntry(item) {
-  return GripMapEntryRep.supportsObject(getValue(item));
-}
-||||||| merged common ancestors
-const IGNORED_SOURCE_URLS = ["debugger eval code"];
-=======
   if (nodeIsLongString(item) && hasLoadedProps) {
     // Set longString object's fullText to fetched one.
     return addToCache(setNodeFullText(loadedProps, item));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasChildren(item) {
-  return Array.isArray(item.contents);
-}
-||||||| merged common ancestors
-/**
- * This component represents a template for Function objects.
- */
-FunctionRep.propTypes = {
-  object: PropTypes.object.isRequired,
-  parameterNames: PropTypes.array,
-  onViewSourceInDebugger: PropTypes.func
-};
-=======
   if (nodeNeedsNumericalBuckets(item) && hasLoadedProps) {
     // Even if we have numerical buckets, we should have loaded non indexed
     // properties.
     const bucketNodes = makeNumericalBuckets(item);
     return addToCache(bucketNodes.concat(makeNodesForProperties(loadedProps, item)));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasValue(item) {
-  return item && item.contents && item.contents.hasOwnProperty("value");
-}
-||||||| merged common ancestors
-function FunctionRep(props) {
-  const { object: grip, onViewSourceInDebugger, recordTelemetryEvent } = props;
-=======
   if (!nodeIsEntries(item) && !nodeIsBucket(item) && !nodeHasProperties(item)) {
     return [];
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasGetterValue(item) {
-  return item && item.contents && item.contents.hasOwnProperty("getterValue");
-}
-||||||| merged common ancestors
-  let jumpToDefinitionButton;
-  if (onViewSourceInDebugger && grip.location && grip.location.url && !IGNORED_SOURCE_URLS.includes(grip.location.url)) {
-    jumpToDefinitionButton = dom.button({
-      className: "jump-definition",
-      draggable: false,
-      title: "Jump to definition",
-      onClick: e => {
-        // Stop the event propagation so we don't trigger ObjectInspector
-        // expand/collapse.
-        e.stopPropagation();
-        if (recordTelemetryEvent) {
-          recordTelemetryEvent("jump_to_definition");
-        }
-        onViewSourceInDebugger(grip.location);
-      }
-    });
-  }
-=======
   if (!hasLoadedProps) {
     return [];
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsObject(item) {
-  const value = getValue(item);
-  return value && value.type === "object";
-||||||| merged common ancestors
-  return span({
-    "data-link-actor-id": grip.actor,
-    className: "objectBox objectBox-function",
-    // Set dir="ltr" to prevent function parentheses from
-    // appearing in the wrong direction
-    dir: "ltr"
-  }, getTitle(grip, props), getFunctionName(grip, props), "(", ...renderParams(props), ")", jumpToDefinitionButton);
-=======
   return addToCache(makeNodesForProperties(loadedProps, item));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function nodeIsArrayLike(item) {
-  const value = getValue(item);
-  return GripArrayRep.supportsObject(value) || ArrayRep.supportsObject(value);
-}
-||||||| merged common ancestors
-function getTitle(grip, props) {
-  const { mode } = props;
-=======
 function getParent(item) {
   return item.parent;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsFunction(item) {
-  const value = getValue(item);
-  return value && value.class === "Function";
-}
-||||||| merged common ancestors
-  if (mode === MODE.TINY && !grip.isGenerator && !grip.isAsync) {
-    return null;
-  }
-=======
 function getNumericalPropertiesCount(item) {
   if (nodeIsBucket(item)) {
     return item.meta.endIndex - item.meta.startIndex + 1;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsOptimizedOut(item) {
-  const value = getValue(item);
-  return !nodeHasChildren(item) && value && value.optimizedOut;
-}
-
-function nodeIsUninitializedBinding(item) {
-  const value = getValue(item);
-  return value && value.uninitialized;
-}
-||||||| merged common ancestors
-  let title = mode === MODE.TINY ? "" : "function ";
-
-  if (grip.isGenerator) {
-    title = mode === MODE.TINY ? "* " : "function* ";
-  }
-=======
   const value = getValue(getClosestGripNode(item));
   if (!value) {
     return 0;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Used to check if an item represents a binding that exists in a sourcemap's
-// original file content, but does not match up with a binding found in the
-// generated code.
-function nodeIsUnmappedBinding(item) {
-  const value = getValue(item);
-  return value && value.unmapped;
-}
-||||||| merged common ancestors
-  if (grip.isAsync) {
-    title = `${"async" + " "}${title}`;
-  }
-=======
   if (GripArrayRep.supportsObject(value)) {
     return GripArrayRep.getLength(value);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Used to check if an item represents a binding that exists in the debugger's
-// parser result, but does not match up with a binding returned by the
-// debugger server.
-function nodeIsUnscopedBinding(item) {
-  const value = getValue(item);
-  return value && value.unscoped;
-}
-
-function nodeIsMissingArguments(item) {
-  const value = getValue(item);
-  return !nodeHasChildren(item) && value && value.missingArguments;
-}
-
-function nodeHasProperties(item) {
-  return !nodeHasChildren(item) && nodeIsObject(item);
-}
-||||||| merged common ancestors
-  return span({
-    className: "objectTitle"
-  }, title);
-}
-
-/**
- * Returns a ReactElement representing the function name.
- *
- * @param {Object} grip : Function grip
- * @param {Object} props: Function rep props
- */
-function getFunctionName(grip, props = {}) {
-  let { functionName } = props;
-  let name;
-
-  if (functionName) {
-    const end = functionName.length - 1;
-    functionName = functionName.startsWith('"') && functionName.endsWith('"') ? functionName.substring(1, end) : functionName;
-  }
-=======
   if (GripMap.supportsObject(value)) {
     return GripMap.getLength(value);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsPrimitive(item) {
-  return !nodeHasChildren(item) && !nodeHasProperties(item) && !nodeIsEntries(item) && !nodeIsMapEntry(item) && !nodeHasAccessors(item) && !nodeIsBucket(item) && !nodeIsLongString(item);
-}
-||||||| merged common ancestors
-  if (grip.displayName != undefined && functionName != undefined && grip.displayName != functionName) {
-    name = `${functionName}:${grip.displayName}`;
-  } else {
-    name = cleanFunctionName(grip.userDisplayName || grip.displayName || grip.name || props.functionName || "");
-  }
-=======
   // TODO: We can also have numerical properties on Objects, but at the
   // moment we don't have a way to distinguish them from non-indexed properties,
   // as they are all computed in a ownPropertiesLength property.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsDefaultProperties(item) {
-  return getType(item) === NODE_TYPES.DEFAULT_PROPERTIES;
-||||||| merged common ancestors
-  return cropString(name, 100);
-=======
   return 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function isDefaultWindowProperty(name) {
-  return WINDOW_PROPERTIES.includes(name);
-}
-||||||| merged common ancestors
-const objectProperty = /([\w\d]+)$/;
-const arrayProperty = /\[(.*?)\]$/;
-const functionProperty = /([\w\d]+)[\/\.<]*?$/;
-const annonymousProperty = /([\w\d]+)\(\^\)$/;
-=======
 function getClosestGripNode(item) {
   const type = getType(item);
   if (type !== NODE_TYPES.BUCKET && type !== NODE_TYPES.DEFAULT_PROPERTIES && type !== NODE_TYPES.ENTRIES) {
     return item;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsPromise(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-||||||| merged common ancestors
-/**
- * Decodes an anonymous naming scheme that
- * spider monkey implements based on "Naming Anonymous JavaScript Functions"
- * http://johnjbarton.github.io/nonymous/index.html
- *
- * @param {String} name : Function name to clean up
- * @returns String
- */
-function cleanFunctionName(name) {
-  for (const reg of [objectProperty, arrayProperty, functionProperty, annonymousProperty]) {
-    const match = reg.exec(name);
-    if (match) {
-      return match[1];
-    }
-=======
   const parent = getParent(item);
   if (!parent) {
     return null;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return value.class == "Promise";
-||||||| merged common ancestors
-  return name;
-=======
   return getClosestGripNode(parent);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function nodeIsProxy(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-  }
-||||||| merged common ancestors
-function renderParams(props) {
-  const { parameterNames = [] } = props;
-=======
 function getClosestNonBucketNode(item) {
   const type = getType(item);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value.class == "Proxy";
-}
-||||||| merged common ancestors
-  return parameterNames.filter(param => param).reduce((res, param, index, arr) => {
-    res.push(span({ className: "param" }, param));
-    if (index < arr.length - 1) {
-      res.push(span({ className: "delimiter" }, ", "));
-    }
-    return res;
-  }, []);
-}
-=======
   if (type !== NODE_TYPES.BUCKET) {
     return item;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsPrototype(item) {
-  return getType(item) === NODE_TYPES.PROTOTYPE;
-}
-
-function nodeIsWindow(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-||||||| merged common ancestors
-// Registration
-function supportsObject(grip, noGrip = false) {
-  const type = getGripType(grip, noGrip);
-  if (noGrip === true || !isGrip(grip)) {
-    return type == "function";
-=======
   const parent = getParent(item);
   if (!parent) {
     return null;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return value.class == "Window";
-||||||| merged common ancestors
-  return type == "Function";
-=======
   return getClosestNonBucketNode(parent);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function nodeIsGetter(item) {
-  return getType(item) === NODE_TYPES.GET;
-}
-
-function nodeIsSetter(item) {
-  return getType(item) === NODE_TYPES.SET;
-}
-||||||| merged common ancestors
-// Exports from this module
-
-module.exports = {
-  rep: wrapRender(FunctionRep),
-  supportsObject,
-  cleanFunctionName,
-  // exported for testing purpose.
-  getFunctionName
-};
-=======
 function getParentGripNode(item) {
   const parentNode = getParent(item);
   if (!parentNode) {
     return null;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsBlock(item) {
-  return getType(item) === NODE_TYPES.BLOCK;
-}
-||||||| merged common ancestors
-/***/ }),
-=======
   return getClosestGripNode(parentNode);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsError(item) {
-  return ErrorRep.supportsObject(getValue(item));
-}
-||||||| merged common ancestors
-/***/ 3659:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 function getParentGripValue(item) {
   const parentGripNode = getParentGripNode(item);
   if (!parentGripNode) {
     return null;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeIsLongString(item) {
-  return isLongString(getValue(item));
-}
-||||||| merged common ancestors
-"use strict";
-=======
   return getValue(parentGripNode);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasFullText(item) {
-  const value = getValue(item);
-  return nodeIsLongString(item) && value.hasOwnProperty("fullText");
-}
-||||||| merged common ancestors
-=======
 function getNonPrototypeParentGripValue(item) {
   const parentGripNode = getParentGripNode(item);
   if (!parentGripNode) {
     return null;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasGetter(item) {
-  const getter = getNodeGetter(item);
-  return getter && getter.type !== "undefined";
-}
-||||||| merged common ancestors
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
   if (getType(parentGripNode) === NODE_TYPES.PROTOTYPE) {
     return getNonPrototypeParentGripValue(parentGripNode);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasSetter(item) {
-  const setter = getNodeSetter(item);
-  return setter && setter.type !== "undefined";
-}
-||||||| merged common ancestors
-module.exports = {
-  ELEMENT_NODE: 1,
-  ATTRIBUTE_NODE: 2,
-  TEXT_NODE: 3,
-  CDATA_SECTION_NODE: 4,
-  ENTITY_REFERENCE_NODE: 5,
-  ENTITY_NODE: 6,
-  PROCESSING_INSTRUCTION_NODE: 7,
-  COMMENT_NODE: 8,
-  DOCUMENT_NODE: 9,
-  DOCUMENT_TYPE_NODE: 10,
-  DOCUMENT_FRAGMENT_NODE: 11,
-  NOTATION_NODE: 12,
-=======
   return getValue(parentGripNode);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeHasAccessors(item) {
-  return nodeHasGetter(item) || nodeHasSetter(item);
-}
-||||||| merged common ancestors
-  // DocumentPosition
-  DOCUMENT_POSITION_DISCONNECTED: 0x01,
-  DOCUMENT_POSITION_PRECEDING: 0x02,
-  DOCUMENT_POSITION_FOLLOWING: 0x04,
-  DOCUMENT_POSITION_CONTAINS: 0x08,
-  DOCUMENT_POSITION_CONTAINED_BY: 0x10,
-  DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: 0x20
-};
-=======
 module.exports = {
   createNode,
   createGetterNode,
@@ -3492,44 +2282,15 @@ module.exports = {
   sortProperties,
   NODE_TYPES
 };
->>>>>>> upstream-releases
 
-function nodeSupportsNumericalBucketing(item) {
-  // We exclude elements with entries since it's the <entries> node
-  // itself that can have buckets.
-  return nodeIsArrayLike(item) && !nodeHasEntries(item) || nodeIsEntries(item) || nodeIsBucket(item);
-}
+/***/ }),
 
-<<<<<<< HEAD
-function nodeHasEntries(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-  }
-||||||| merged common ancestors
-/***/ 3660:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 /***/ 115:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-  return value.class === "Map" || value.class === "Set" || value.class === "WeakMap" || value.class === "WeakSet" || value.class === "Storage";
-}
+"use strict";
 
-function nodeHasAllEntriesInPreview(item) {
-  const { preview } = getValue(item) || {};
-  if (!preview) {
-    return false;
-  }
 
-<<<<<<< HEAD
-  const { entries, items, length, size } = preview;
-||||||| merged common ancestors
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
 function initialState() {
   return {
     expandedPaths: new Set(),
@@ -3540,132 +2301,35 @@ function initialState() {
 } /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!entries && !items) {
-    return false;
-  }
-||||||| merged common ancestors
-// ReactJS
-const PropTypes = __webpack_require__(3642);
-// Utils
-const { getGripType, isGrip, wrapRender } = __webpack_require__(3644);
-const { cleanFunctionName } = __webpack_require__(3658);
-const { isLongString } = __webpack_require__(3648);
-const { MODE } = __webpack_require__(3645);
-=======
 function reducer(state = initialState(), action = {}) {
   const { type, data } = action;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return entries ? entries.length === size : items.length === length;
-}
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-const { span } = dom;
-const IGNORED_SOURCE_URLS = ["debugger eval code"];
-=======
   const cloneState = overrides => ({ ...state, ...overrides });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function nodeNeedsNumericalBuckets(item) {
-  return nodeSupportsNumericalBucketing(item) && getNumericalPropertiesCount(item) > MAX_NUMERICAL_PROPERTIES;
-}
-||||||| merged common ancestors
-/**
- * Renders Error objects.
- */
-ErrorRep.propTypes = {
-  object: PropTypes.object.isRequired,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: PropTypes.oneOf(Object.keys(MODE).map(key => MODE[key]))
-};
-=======
   if (type === "NODE_EXPAND") {
     return cloneState({
       expandedPaths: new Set(state.expandedPaths).add(data.node.path)
     });
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function makeNodesForPromiseProperties(item) {
-  const {
-    promiseState: { reason, value, state }
-  } = getValue(item);
-||||||| merged common ancestors
-function ErrorRep(props) {
-  const object = props.object;
-  const preview = object.preview;
-=======
   if (type === "NODE_COLLAPSE") {
     const expandedPaths = new Set(state.expandedPaths);
     expandedPaths.delete(data.node.path);
     return cloneState({ expandedPaths });
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const properties = [];
-||||||| merged common ancestors
-  let name;
-  if (preview && preview.name && preview.kind) {
-    switch (preview.kind) {
-      case "Error":
-        name = preview.name;
-        break;
-      case "DOMException":
-        name = preview.kind;
-        break;
-      default:
-        throw new Error("Unknown preview kind for the Error rep.");
-    }
-  } else {
-    name = "Error";
-  }
-=======
   if (type === "NODE_PROPERTIES_LOADED") {
     return cloneState({
       actors: data.actor ? new Set(state.actors || []).add(data.actor) : state.actors,
       loadedProperties: new Map(state.loadedProperties).set(data.node.path, action.data.properties)
     });
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (state) {
-    properties.push(createNode({
-      parent: item,
-      name: "<state>",
-      contents: { value: state },
-      type: NODE_TYPES.PROMISE_STATE
-    }));
-  }
-||||||| merged common ancestors
-  const content = [];
-=======
   if (type === "ROOTS_CHANGED") {
     return cloneState();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (reason) {
-    properties.push(createNode({
-      parent: item,
-      name: "<reason>",
-      contents: { value: reason },
-      type: NODE_TYPES.PROMISE_REASON
-    }));
-||||||| merged common ancestors
-  if (props.mode === MODE.TINY) {
-    content.push(name);
-  } else {
-    content.push(`${name}: "${preview.message}"`);
-=======
   if (type === "GETTER_INVOKED") {
     return cloneState({
       actors: data.actor ? new Set(state.actors || []).add(data.result.from) : state.actors,
@@ -3673,178 +2337,29 @@ function ErrorRep(props) {
         getterValue: data.result && data.result.value && (data.result.value.throw || data.result.value.return)
       })
     });
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (value) {
-    properties.push(createNode({
-      parent: item,
-      name: "<value>",
-      contents: { value: value },
-      type: NODE_TYPES.PROMISE_VALUE
-    }));
-||||||| merged common ancestors
-  if (preview.stack && props.mode !== MODE.TINY) {
-    content.push("\n", getStacktraceElements(props, preview));
-=======
   // NOTE: we clear the state on resume because otherwise the scopes pane
   // would be out of date. Bug 1514760
   if (type === "RESUME" || type == "NAVIGATE") {
     return initialState();
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return properties;
-||||||| merged common ancestors
-  return span({
-    "data-link-actor-id": object.actor,
-    className: "objectBox-stackTrace"
-  }, content);
-=======
   return state;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function makeNodesForProxyProperties(item) {
-  const { proxyHandler, proxyTarget } = getValue(item);
-||||||| merged common ancestors
-/**
- * Returns a React element reprensenting the Error stacktrace, i.e.
- * transform error.stack from:
- *
- * semicolon@debugger eval code:1:109
- * jkl@debugger eval code:1:63
- * asdf@debugger eval code:1:28
- * @debugger eval code:1:227
- *
- * Into a column layout:
- *
- * semicolon  (<anonymous>:8:10)
- * jkl        (<anonymous>:5:10)
- * asdf       (<anonymous>:2:10)
- *            (<anonymous>:11:1)
- */
-function getStacktraceElements(props, preview) {
-  const stack = [];
-  if (!preview.stack) {
-    return stack;
-  }
-=======
 function getObjectInspectorState(state) {
   return state.objectInspector;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return [createNode({
-    parent: item,
-    name: "<target>",
-    contents: { value: proxyTarget },
-    type: NODE_TYPES.PROXY_TARGET
-  }), createNode({
-    parent: item,
-    name: "<handler>",
-    contents: { value: proxyHandler },
-    type: NODE_TYPES.PROXY_HANDLER
-  })];
-}
-||||||| merged common ancestors
-  const isStacktraceALongString = isLongString(preview.stack);
-  const stackString = isStacktraceALongString ? preview.stack.initial : preview.stack;
-=======
 function getExpandedPaths(state) {
   return getObjectInspectorState(state).expandedPaths;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function makeNodesForEntries(item) {
-  const nodeName = "<entries>";
-  const entriesPath = "<entries>";
-||||||| merged common ancestors
-  stackString.split("\n").forEach((frame, index, frames) => {
-    if (!frame) {
-      // Skip any blank lines
-      return;
-    }
-=======
 function getExpandedPathKeys(state) {
   return [...getExpandedPaths(state).keys()];
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (nodeHasAllEntriesInPreview(item)) {
-    let entriesNodes = [];
-    const { preview } = getValue(item);
-    if (preview.entries) {
-      entriesNodes = preview.entries.map(([key, value], index) => {
-        return createNode({
-          parent: item,
-          name: index,
-          path: `${entriesPath}/${index}`,
-          contents: { value: GripMapEntryRep.createGripMapEntry(key, value) }
-        });
-      });
-    } else if (preview.items) {
-      entriesNodes = preview.items.map((value, index) => {
-        return createNode({
-          parent: item,
-          name: index,
-          path: `${entriesPath}/${index}`,
-          contents: { value }
-        });
-      });
-    }
-    return createNode({
-      parent: item,
-      name: nodeName,
-      contents: entriesNodes,
-      type: NODE_TYPES.ENTRIES
-    });
-  }
-  return createNode({
-    parent: item,
-    name: nodeName,
-    contents: null,
-    type: NODE_TYPES.ENTRIES
-  });
-}
-||||||| merged common ancestors
-    // If the stacktrace is a longString, don't include the last frame in the
-    // array, since it is certainly incomplete.
-    // Can be removed when https://bugzilla.mozilla.org/show_bug.cgi?id=1448833
-    // is fixed.
-    if (isStacktraceALongString && index === frames.length - 1) {
-      return;
-    }
-
-    let functionName;
-    let location;
-
-    // Given the input: "functionName@scriptLocation:2:100"
-    // Result: [
-    //   "functionName@scriptLocation:2:100",
-    //   "functionName",
-    //   "scriptLocation:2:100"
-    // ]
-    const result = frame.match(/^(.*)@(.*)$/);
-    if (result && result.length === 3) {
-      functionName = result[1];
-
-      // If the resource was loaded by base-loader.js, the location looks like:
-      // resource://devtools/shared/base-loader.js -> resource://path/to/file.js .
-      // What's needed is only the last part after " -> ".
-      location = result[2].split(" -> ").pop();
-    }
-
-    if (!functionName) {
-      functionName = "<anonymous>";
-    }
-=======
 function getActors(state) {
   return getObjectInspectorState(state).actors;
 }
@@ -3869,44 +2384,13 @@ const selectors = {
   getLoadedProperties,
   getLoadedPropertyKeys
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function makeNodesForMapEntry(item) {
-  const nodeValue = getValue(item);
-  if (!nodeValue || !nodeValue.preview) {
-    return [];
-  }
-||||||| merged common ancestors
-    let onLocationClick;
-    // Given the input: "scriptLocation:2:100"
-    // Result:
-    // ["scriptLocation:2:100", "scriptLocation", "2", "100"]
-    const locationParts = location.match(/^(.*):(\d+):(\d+)$/);
-=======
 Object.defineProperty(module.exports, "__esModule", {
   value: true
 });
 module.exports = selectors;
 module.exports.default = reducer;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const { key, value } = nodeValue.preview;
-||||||| merged common ancestors
-    if (props.onViewSourceInDebugger && location && locationParts && !IGNORED_SOURCE_URLS.includes(locationParts[1])) {
-      const [, url, line, column] = locationParts;
-      onLocationClick = e => {
-        // Don't trigger ObjectInspector expand/collapse.
-        e.stopPropagation();
-        props.onViewSourceInDebugger({
-          url,
-          line: Number(line),
-          column: Number(column)
-        });
-      };
-    }
-=======
 /***/ }),
 
 /***/ 116:
@@ -3918,68 +2402,18 @@ module.exports.default = reducer;
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return [createNode({
-    parent: item,
-    name: "<key>",
-    contents: { value: key },
-    type: NODE_TYPES.MAP_ENTRY_KEY
-  }), createNode({
-    parent: item,
-    name: "<value>",
-    contents: { value },
-    type: NODE_TYPES.MAP_ENTRY_VALUE
-  })];
-}
-||||||| merged common ancestors
-    stack.push("\t", span({
-      key: `fn${index}`,
-      className: "objectBox-stackTrace-fn"
-    }, cleanFunctionName(functionName)), " ", span({
-      key: `location${index}`,
-      className: "objectBox-stackTrace-location",
-      onClick: onLocationClick,
-      title: onLocationClick ? `View source in debugger → ${location}` : undefined
-    }, location), "\n");
-  });
-=======
 const client = __webpack_require__(197);
 const loadProperties = __webpack_require__(196);
 const node = __webpack_require__(114);
 const { nodeIsError, nodeIsPrimitive } = node;
 const selection = __webpack_require__(488);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getNodeGetter(item) {
-  return item && item.contents ? item.contents.get : undefined;
-}
-||||||| merged common ancestors
-  return span({
-    key: "stack",
-    className: "objectBox-stackTrace-grid"
-  }, stack);
-}
-=======
 const { MODE } = __webpack_require__(4);
 const {
   REPS: { Rep, Grip }
 } = __webpack_require__(24);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getNodeSetter(item) {
-  return item && item.contents ? item.contents.set : undefined;
-||||||| merged common ancestors
-// Registration
-function supportsObject(object, noGrip = false) {
-  if (noGrip === true || !isGrip(object)) {
-    return false;
-  }
-  return object.preview && getGripType(object, noGrip) === "Error" || object.class === "DOMException";
-=======
 
 function shouldRenderRootsInReps(roots) {
   if (roots.length > 1) {
@@ -3998,22 +2432,8 @@ function renderRep(item, props) {
     mode: props.mode || MODE.TINY,
     defaultRep: Grip
   });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function sortProperties(properties) {
-  return properties.sort((a, b) => {
-    // Sort numbers in ascending order and sort strings lexicographically
-    const aInt = parseInt(a, 10);
-    const bInt = parseInt(b, 10);
-||||||| merged common ancestors
-// Exports from this module
-module.exports = {
-  rep: wrapRender(ErrorRep),
-  supportsObject
-};
-=======
 module.exports = {
   client,
   loadProperties,
@@ -4022,304 +2442,59 @@ module.exports = {
   selection,
   shouldRenderRootsInReps
 };
->>>>>>> upstream-releases
 
-    if (isNaN(aInt) || isNaN(bInt)) {
-      return a > b ? 1 : -1;
-    }
+/***/ }),
 
-<<<<<<< HEAD
-    return aInt - bInt;
-  });
-}
-||||||| merged common ancestors
-/***/ 3661:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 /***/ 188:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-function makeNumericalBuckets(parent) {
-  const numProperties = getNumericalPropertiesCount(parent);
+"use strict";
 
-  // We want to have at most a hundred slices.
-  const bucketSize = 10 ** Math.max(2, Math.ceil(Math.log10(numProperties)) - 2);
-  const numBuckets = Math.ceil(numProperties / bucketSize);
-
-<<<<<<< HEAD
-  const buckets = [];
-  for (let i = 1; i <= numBuckets; i++) {
-    const minKey = (i - 1) * bucketSize;
-    const maxKey = Math.min(i * bucketSize - 1, numProperties - 1);
-    const startIndex = nodeIsBucket(parent) ? parent.meta.startIndex : 0;
-    const minIndex = startIndex + minKey;
-    const maxIndex = startIndex + maxKey;
-    const bucketName = `[${minIndex}…${maxIndex}]`;
-
-    buckets.push(createNode({
-      parent,
-      name: bucketName,
-      contents: null,
-      type: NODE_TYPES.BUCKET,
-      meta: {
-        startIndex: minIndex,
-        endIndex: maxIndex
-      }
-    }));
-  }
-  return buckets;
-}
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function makeDefaultPropsBucket(propertiesNames, parent, ownProperties) {
-  const userPropertiesNames = [];
-  const defaultProperties = [];
-||||||| merged common ancestors
-// Dependencies
-const PropTypes = __webpack_require__(3642);
-=======
 // Dependencies
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  propertiesNames.forEach(name => {
-    if (isDefaultWindowProperty(name)) {
-      defaultProperties.push(name);
-    } else {
-      userPropertiesNames.push(name);
-    }
-  });
-||||||| merged common ancestors
-const { lengthBubble } = __webpack_require__(3662);
-const {
-  interleave,
-  getGripType,
-  isGrip,
-  wrapRender,
-  ellipsisElement
-} = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-=======
 const { getGripType, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const nodes = makeNodesForOwnProps(userPropertiesNames, parent, ownProperties);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-const { span } = dom;
-const { ModePropType } = __webpack_require__(3649);
-const DEFAULT_TITLE = "Array";
-=======
 const dom = __webpack_require__(1);
 const { span } = dom;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (defaultProperties.length > 0) {
-    const defaultPropertiesNode = createNode({
-      parent,
-      name: "<default properties>",
-      contents: null,
-      type: NODE_TYPES.DEFAULT_PROPERTIES
-    });
-||||||| merged common ancestors
-/**
- * Renders an array. The array is enclosed by left and right bracket
- * and the max number of rendered items depends on the current mode.
- */
-GripArray.propTypes = {
-  object: PropTypes.object.isRequired,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: ModePropType,
-  provider: PropTypes.object,
-  onDOMNodeMouseOver: PropTypes.func,
-  onDOMNodeMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func
-};
-=======
 /**
  * Renders a number
  */
 BigInt.propTypes = {
   object: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.bool]).isRequired
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    const defaultNodes = defaultProperties.map((name, index) => createNode({
-      parent: defaultPropertiesNode,
-      name: maybeEscapePropertyName(name),
-      path: `${index}/${name}`,
-      contents: ownProperties[name]
-    }));
-    nodes.push(setNodeChildren(defaultPropertiesNode, defaultNodes));
-  }
-  return nodes;
-}
-
-function makeNodesForOwnProps(propertiesNames, parent, ownProperties) {
-  return propertiesNames.map(name => createNode({
-    parent,
-    name: maybeEscapePropertyName(name),
-    contents: ownProperties[name]
-  }));
-}
-||||||| merged common ancestors
-function GripArray(props) {
-  const { object, mode = MODE.SHORT } = props;
-
-  let brackets;
-  const needSpace = function (space) {
-    return space ? { left: "[ ", right: " ]" } : { left: "[", right: "]" };
-  };
-=======
 function BigInt(props) {
   const { text } = props.object;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function makeNodesForProperties(objProps, parent) {
-  const {
-    ownProperties = {},
-    ownSymbols,
-    prototype,
-    safeGetterValues
-  } = objProps;
-||||||| merged common ancestors
-  const config = {
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-array"
-  };
-=======
   return span({ className: "objectBox objectBox-number" }, `${text}n`);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const parentValue = getValue(parent);
-||||||| merged common ancestors
-  const title = getTitle(props, object);
-=======
 function supportsObject(object, noGrip = false) {
   return getGripType(object, noGrip) === "BigInt";
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const allProperties = { ...ownProperties, ...safeGetterValues };
-||||||| merged common ancestors
-  if (mode === MODE.TINY) {
-    const isEmpty = getLength(object) === 0;
-=======
 // Exports from this module
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Ignore properties that are neither non-concrete nor getters/setters.
-  const propertiesNames = sortProperties(Object.keys(allProperties)).filter(name => {
-    if (!allProperties[name]) {
-      return false;
-    }
-||||||| merged common ancestors
-    // Omit bracketed ellipsis for non-empty non-Array arraylikes (f.e: Sets).
-    if (!isEmpty && object.class !== "Array") {
-      return span(config, title);
-    }
-=======
 module.exports = {
   rep: wrapRender(BigInt),
   supportsObject
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    const properties = Object.getOwnPropertyNames(allProperties[name]);
-    return properties.some(property => ["value", "getterValue", "get", "set"].includes(property));
-  });
-||||||| merged common ancestors
-    brackets = needSpace(false);
-    return span(config, title, span({
-      className: "arrayLeftBracket"
-    }, brackets.left), isEmpty ? null : ellipsisElement, span({
-      className: "arrayRightBracket"
-    }, brackets.right));
-  }
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let nodes = [];
-  if (parentValue && parentValue.class == "Window") {
-    nodes = makeDefaultPropsBucket(propertiesNames, parent, allProperties);
-  } else {
-    nodes = makeNodesForOwnProps(propertiesNames, parent, allProperties);
-  }
-||||||| merged common ancestors
-  const max = maxLengthMap.get(mode);
-  const items = arrayIterator(props, object, max);
-  brackets = needSpace(items.length > 0);
-
-  return span({
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-array"
-  }, title, span({
-    className: "arrayLeftBracket"
-  }, brackets.left), ...interleave(items, ", "), span({
-    className: "arrayRightBracket"
-  }, brackets.right), span({
-    className: "arrayProperties",
-    role: "group"
-  }));
-}
-
-function getLength(grip) {
-  if (!grip.preview) {
-    return 0;
-  }
-=======
 /***/ 189:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (Array.isArray(ownSymbols)) {
-    ownSymbols.forEach((ownSymbol, index) => {
-      nodes.push(createNode({
-        parent,
-        name: ownSymbol.name,
-        path: `symbol-${index}`,
-        contents: ownSymbol.descriptor || null
-      }));
-    }, this);
-  }
-||||||| merged common ancestors
-  return grip.preview.length || grip.preview.childNodesLength || 0;
-}
-
-function getTitle(props, object) {
-  const objectLength = getLength(object);
-  const isEmpty = objectLength === 0;
-
-  let title = props.title || object.class || DEFAULT_TITLE;
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
@@ -4330,49 +2505,12 @@ const PropTypes = __webpack_require__(0);
 // Reps
 const { getGripType, isGrip, cropString, wrapRender } = __webpack_require__(2);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (nodeIsPromise(parent)) {
-    nodes.push(...makeNodesForPromiseProperties(parent));
-  }
-||||||| merged common ancestors
-  const length = lengthBubble({
-    object,
-    mode: props.mode,
-    maxLengthMap,
-    getLength
-  });
-=======
 const dom = __webpack_require__(1);
 const { span } = dom;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (nodeHasEntries(parent)) {
-    nodes.push(makeNodesForEntries(parent));
-  }
-||||||| merged common ancestors
-  if (props.mode === MODE.TINY) {
-    if (isEmpty) {
-      if (object.class === DEFAULT_TITLE) {
-        return null;
-      }
-=======
 const IGNORED_SOURCE_URLS = ["debugger eval code"];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Add accessor nodes if needed
-  for (const name of propertiesNames) {
-    const property = allProperties[name];
-    if (property.get && property.get.type !== "undefined") {
-      nodes.push(createGetterNode({ parent, property, name }));
-    }
-||||||| merged common ancestors
-      return span({ className: "objectTitle" }, `${title} `);
-    }
-=======
 /**
  * This component represents a template for Function objects.
  */
@@ -4381,21 +2519,7 @@ FunctionRep.propTypes = {
   parameterNames: PropTypes.array,
   onViewSourceInDebugger: PropTypes.func
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (property.set && property.set.type !== "undefined") {
-      nodes.push(createSetterNode({ parent, property, name }));
-    }
-||||||| merged common ancestors
-    let trailingSpace;
-    if (object.class === DEFAULT_TITLE) {
-      title = null;
-      trailingSpace = " ";
-    }
-
-    return span({ className: "objectTitle" }, title, length, trailingSpace);
-=======
 function FunctionRep(props) {
   const { object: grip, onViewSourceInDebugger, recordTelemetryEvent } = props;
 
@@ -4415,21 +2539,8 @@ function FunctionRep(props) {
         onViewSourceInDebugger(grip.location);
       }
     });
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  // Add the prototype if it exists and is not null
-  if (prototype && prototype.type !== "null") {
-    nodes.push(makeNodeForPrototype(objProps, parent));
-||||||| merged common ancestors
-  return span({ className: "objectTitle" }, title, length, " ");
-}
-
-function getPreviewItems(grip) {
-  if (!grip.preview) {
-    return null;
-=======
   return span({
     "data-link-actor-id": grip.actor,
     className: "objectBox objectBox-function",
@@ -4444,148 +2555,23 @@ function getTitle(grip, props) {
 
   if (mode === MODE.TINY && !grip.isGenerator && !grip.isAsync) {
     return null;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return nodes;
-}
-
-function setNodeFullText(loadedProps, node) {
-  if (nodeHasFullText(node) || !nodeIsLongString(node)) {
-    return node;
-  }
-||||||| merged common ancestors
-  return grip.preview.items || grip.preview.childNodes || [];
-}
-
-function arrayIterator(props, grip, max) {
-  const { Rep } = __webpack_require__(3647);
-
-  let items = [];
-  const gripLength = getLength(grip);
-=======
   let title = mode === MODE.TINY ? "" : "function ";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const { fullText } = loadedProps;
-  if (nodeHasValue(node)) {
-    node.contents.value.fullText = fullText;
-  } else if (nodeHasGetterValue(node)) {
-    node.contents.getterValue.fullText = fullText;
-||||||| merged common ancestors
-  if (!gripLength) {
-    return items;
-=======
   if (grip.isGenerator) {
     title = mode === MODE.TINY ? "* " : "function* ";
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return node;
-}
-
-function makeNodeForPrototype(objProps, parent) {
-  const { prototype } = objProps || {};
-
-  // Add the prototype if it exists and is not null
-  if (prototype && prototype.type !== "null") {
-    return createNode({
-      parent,
-      name: "<prototype>",
-      contents: { value: prototype },
-      type: NODE_TYPES.PROTOTYPE
-    });
-  }
-
-  return null;
-}
-
-function createNode(options) {
-  const {
-    parent,
-    name,
-    path,
-    contents,
-    type = NODE_TYPES.GRIP,
-    meta
-  } = options;
-||||||| merged common ancestors
-  const previewItems = getPreviewItems(grip);
-  const provider = props.provider;
-
-  let emptySlots = 0;
-  let foldedEmptySlots = 0;
-  items = previewItems.reduce((res, itemGrip) => {
-    if (res.length >= max) {
-      return res;
-    }
-
-    let object;
-    try {
-      if (!provider && itemGrip === null) {
-        emptySlots++;
-        return res;
-      }
-
-      object = provider ? provider.getValue(itemGrip) : itemGrip;
-    } catch (exc) {
-      object = exc;
-    }
-
-    if (emptySlots > 0) {
-      res.push(getEmptySlotsElement(emptySlots));
-      foldedEmptySlots = foldedEmptySlots + emptySlots - 1;
-      emptySlots = 0;
-    }
-=======
   if (grip.isAsync) {
     title = `${"async" + " "}${title}`;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (contents === undefined) {
-    return null;
-  }
-||||||| merged common ancestors
-    if (res.length < max) {
-      res.push(Rep(_extends({}, props, {
-        object,
-        mode: MODE.TINY,
-        // Do not propagate title to array items reps
-        title: undefined
-      })));
-    }
-=======
   return span({
     className: "objectTitle"
   }, title);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The path is important to uniquely identify the item in the entire
-  // tree. This helps debugging & optimizes React's rendering of large
-  // lists. The path will be separated by property name, wrapped in a Symbol
-  // to avoid name clashing,
-  // i.e. `{ foo: { bar: { baz: 5 }}}` will have a path of Symbol(`foo/bar/baz`)
-  // for the inner object.
-  return {
-    parent,
-    name,
-    path: parent ? Symbol(`${getSymbolDescriptor(parent.path)}/${path || name}`) : Symbol(path || name),
-    contents,
-    type,
-    meta
-  };
-}
-||||||| merged common ancestors
-    return res;
-  }, []);
-=======
 /**
  * Returns a ReactElement representing the function name.
  *
@@ -4595,71 +2581,21 @@ function createNode(options) {
 function getFunctionName(grip, props = {}) {
   let { functionName } = props;
   let name;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function createGetterNode({ parent, property, name }) {
-  return createNode({
-    parent,
-    name: `<get ${name}()>`,
-    contents: { value: property.get },
-    type: NODE_TYPES.GET
-  });
-}
-||||||| merged common ancestors
-  // Handle trailing empty slots if there are some.
-  if (items.length < max && emptySlots > 0) {
-    items.push(getEmptySlotsElement(emptySlots));
-    foldedEmptySlots = foldedEmptySlots + emptySlots - 1;
-  }
-=======
   if (functionName) {
     const end = functionName.length - 1;
     functionName = functionName.startsWith('"') && functionName.endsWith('"') ? functionName.substring(1, end) : functionName;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function createSetterNode({ parent, property, name }) {
-  return createNode({
-    parent,
-    name: `<set ${name}()>`,
-    contents: { value: property.set },
-    type: NODE_TYPES.SET
-  });
-}
-||||||| merged common ancestors
-  const itemsShown = items.length + foldedEmptySlots;
-  if (gripLength > itemsShown) {
-    items.push(ellipsisElement);
-  }
-=======
   if (grip.displayName != undefined && functionName != undefined && grip.displayName != functionName) {
     name = `${functionName}:${grip.displayName}`;
   } else {
     name = cleanFunctionName(grip.userDisplayName || grip.displayName || grip.name || props.functionName || "");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getSymbolDescriptor(symbol) {
-  return symbol.toString().replace(/^(Symbol\()(.*)(\))$/, "$2");
-||||||| merged common ancestors
-  return items;
-=======
   return cropString(name, 100);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function setNodeChildren(node, children) {
-  node.contents = children;
-  return node;
-||||||| merged common ancestors
-function getEmptySlotsElement(number) {
-  // TODO: Use l10N - See https://github.com/devtools-html/reps/issues/141
-  return `<${number} empty slot${number > 1 ? "s" : ""}>`;
-=======
 const objectProperty = /([\w\d\$]+)$/;
 const arrayProperty = /\[(.*?)\]$/;
 const functionProperty = /([\w\d]+)[\/\.<]*?$/;
@@ -4694,60 +2630,18 @@ function renderParams(props) {
     }
     return res;
   }, []);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getEvaluatedItem(item, evaluations) {
-  if (!evaluations.has(item.path)) {
-    return item;
-||||||| merged common ancestors
-function supportsObject(grip, noGrip = false) {
-  if (noGrip === true || !isGrip(grip)) {
-    return false;
-=======
 // Registration
 function supportsObject(grip, noGrip = false) {
   const type = getGripType(grip, noGrip);
   if (noGrip === true || !isGrip(grip)) {
     return type == "function";
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return {
-    ...item,
-    contents: evaluations.get(item.path)
-  };
-||||||| merged common ancestors
-  return grip.preview && (grip.preview.kind == "ArrayLike" || getGripType(grip, noGrip) === "DocumentFragment");
-=======
   return type == "Function";
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getChildrenWithEvaluations(options) {
-  const { item, loadedProperties, cachedNodes, evaluations } = options;
-
-  const children = getChildren({
-    loadedProperties,
-    cachedNodes,
-    item
-  });
-||||||| merged common ancestors
-const maxLengthMap = new Map();
-maxLengthMap.set(MODE.SHORT, 3);
-maxLengthMap.set(MODE.LONG, 10);
-
-// Exports from this module
-module.exports = {
-  rep: wrapRender(GripArray),
-  supportsObject,
-  maxLengthMap,
-  getLength
-};
-=======
 // Exports from this module
 
 module.exports = {
@@ -4757,124 +2651,19 @@ module.exports = {
   // exported for testing purpose.
   getFunctionName
 };
->>>>>>> upstream-releases
-
-  if (Array.isArray(children)) {
-    return children.map(i => getEvaluatedItem(i, evaluations));
-  }
-
-<<<<<<< HEAD
-  if (children) {
-    return getEvaluatedItem(children, evaluations);
-  }
-||||||| merged common ancestors
-/***/ 3662:
-/***/ (function(module, exports, __webpack_require__) {
-=======
-/***/ 190:
-/***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
-
-  return [];
-}
-
-function getChildren(options) {
-  const { cachedNodes, item, loadedProperties = new Map() } = options;
-
-  const key = item.path;
-  if (cachedNodes && cachedNodes.has(key)) {
-    return cachedNodes.get(key);
-  }
-
-<<<<<<< HEAD
-  const loadedProps = loadedProperties.get(key);
-  const hasLoadedProps = loadedProperties.has(key);
-
-  // Because we are dynamically creating the tree as the user
-  // expands it (not precalculated tree structure), we cache child
-  // arrays. This not only helps performance, but is necessary
-  // because the expanded state depends on instances of nodes
-  // being the same across renders. If we didn't do this, each
-  // node would be a new instance every render.
-  // If the node needs properties, we only add children to
-  // the cache if the properties are loaded.
-  const addToCache = children => {
-    if (cachedNodes) {
-      cachedNodes.set(item.path, children);
-    }
-    return children;
-  };
-
-  // Nodes can either have children already, or be an object with
-  // properties that we need to go and fetch.
-  if (nodeHasChildren(item)) {
-    return addToCache(item.contents);
-  }
-
-  if (nodeIsMapEntry(item)) {
-    return addToCache(makeNodesForMapEntry(item));
-  }
-
-  if (nodeIsProxy(item)) {
-    return addToCache(makeNodesForProxyProperties(item));
-  }
-
-  if (nodeIsLongString(item) && hasLoadedProps) {
-    // Set longString object's fullText to fetched one.
-    return addToCache(setNodeFullText(loadedProps, item));
-  }
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-
-const { wrapRender } = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-const { ModePropType } = __webpack_require__(3649);
-
-const dom = __webpack_require__(3643);
-const { span } = dom;
-
-GripLengthBubble.propTypes = {
-  object: PropTypes.object.isRequired,
-  maxLengthMap: PropTypes.instanceOf(Map).isRequired,
-  getLength: PropTypes.func.isRequired,
-  mode: ModePropType,
-  visibilityThreshold: PropTypes.number
-};
-
-function GripLengthBubble(props) {
-  const {
-    object,
-    mode = MODE.SHORT,
-    visibilityThreshold = 2,
-    maxLengthMap,
-    getLength,
-    showZeroLength = false
-  } = props;
-
-  const length = getLength(object);
-  const isEmpty = length === 0;
-  const isObvious = [MODE.SHORT, MODE.LONG].includes(mode) && length > 0 && length <= maxLengthMap.get(mode) && length <= visibilityThreshold;
-  if (isEmpty && !showZeroLength || isObvious) {
-    return "";
-  }
-
-  return span({
-    className: "objectLengthBubble"
-  }, `(${length})`);
-}
-
-module.exports = {
-  lengthBubble: wrapRender(GripLengthBubble)
-};
 
 /***/ }),
 
-/***/ 3663:
+/***/ 190:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-=======
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
 module.exports = {
   ELEMENT_NODE: 1,
   ATTRIBUTE_NODE: 2,
@@ -4905,38 +2694,11 @@ module.exports = {
 
 "use strict";
 
->>>>>>> upstream-releases
 
-  if (nodeNeedsNumericalBuckets(item) && hasLoadedProps) {
-    // Even if we have numerical buckets, we should have loaded non indexed
-    // properties.
-    const bucketNodes = makeNumericalBuckets(item);
-    return addToCache(bucketNodes.concat(makeNodesForProperties(loadedProps, item)));
-  }
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-  if (!nodeIsEntries(item) && !nodeIsBucket(item) && !nodeHasProperties(item)) {
-    return [];
-  }
-
-  if (!hasLoadedProps) {
-    return [];
-  }
-||||||| merged common ancestors
-// Dependencies
-
-const { lengthBubble } = __webpack_require__(3662);
-const PropTypes = __webpack_require__(3642);
-const {
-  interleave,
-  isGrip,
-  wrapRender,
-  ellipsisElement
-} = __webpack_require__(3644);
-const PropRep = __webpack_require__(3650);
-const { MODE } = __webpack_require__(3645);
-const { ModePropType } = __webpack_require__(3649);
-=======
 // ReactJS
 const PropTypes = __webpack_require__(0);
 // Utils
@@ -4944,39 +2706,11 @@ const { getGripType, isGrip, wrapRender } = __webpack_require__(2);
 const { cleanFunctionName } = __webpack_require__(189);
 const { isLongString } = __webpack_require__(25);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return addToCache(makeNodesForProperties(loadedProps, item));
-}
-||||||| merged common ancestors
-const { span } = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
 const { span } = dom;
 const IGNORED_SOURCE_URLS = ["debugger eval code"];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getParent(item) {
-  return item.parent;
-}
-||||||| merged common ancestors
-/**
- * Renders an map. A map is represented by a list of its
- * entries enclosed in curly brackets.
- */
-GripMap.propTypes = {
-  object: PropTypes.object,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: ModePropType,
-  isInterestingEntry: PropTypes.func,
-  onDOMNodeMouseOver: PropTypes.func,
-  onDOMNodeMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func,
-  title: PropTypes.string
-};
-=======
 /**
  * Renders Error objects.
  */
@@ -4987,33 +2721,11 @@ ErrorRep.propTypes = {
   // An optional function that will be used to render the Error stacktrace.
   renderStacktrace: PropTypes.func
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getNumericalPropertiesCount(item) {
-  if (nodeIsBucket(item)) {
-    return item.meta.endIndex - item.meta.startIndex + 1;
-  }
-||||||| merged common ancestors
-function GripMap(props) {
-  const { mode, object } = props;
-=======
 function ErrorRep(props) {
   const object = props.object;
   const preview = object.preview;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const value = getValue(getClosestGripNode(item));
-  if (!value) {
-    return 0;
-  }
-||||||| merged common ancestors
-  const config = {
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-object"
-  };
-=======
   let name;
   if (preview && preview.name && preview.kind) {
     switch (preview.kind) {
@@ -5029,95 +2741,26 @@ function ErrorRep(props) {
   } else {
     name = "Error";
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (GripArrayRep.supportsObject(value)) {
-    return GripArrayRep.getLength(value);
-  }
-||||||| merged common ancestors
-  const title = getTitle(props, object);
-  const isEmpty = getLength(object) === 0;
-=======
   const content = [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (GripMap.supportsObject(value)) {
-    return GripMap.getLength(value);
-||||||| merged common ancestors
-  if (isEmpty || mode === MODE.TINY) {
-    return span(config, title);
-=======
   if (props.mode === MODE.TINY) {
     content.push(name);
   } else {
     content.push(`${name}: "${preview.message}"`);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  // TODO: We can also have numerical properties on Objects, but at the
-  // moment we don't have a way to distinguish them from non-indexed properties,
-  // as they are all computed in a ownPropertiesLength property.
-
-  return 0;
-}
-||||||| merged common ancestors
-  const propsArray = safeEntriesIterator(props, object, maxLengthMap.get(mode));
-
-  return span(config, title, span({
-    className: "objectLeftBrace"
-  }, " { "), ...interleave(propsArray, ", "), span({
-    className: "objectRightBrace"
-  }, " }"));
-}
-=======
   if (preview.stack && props.mode !== MODE.TINY) {
     const stacktrace = props.renderStacktrace ? props.renderStacktrace(parseStackString(preview.stack)) : getStacktraceElements(props, preview);
     content.push(stacktrace);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getClosestGripNode(item) {
-  const type = getType(item);
-  if (type !== NODE_TYPES.BUCKET && type !== NODE_TYPES.DEFAULT_PROPERTIES && type !== NODE_TYPES.ENTRIES) {
-    return item;
-  }
-||||||| merged common ancestors
-function getTitle(props, object) {
-  const title = props.title || (object && object.class ? object.class : "Map");
-  return span({
-    className: "objectTitle"
-  }, title, lengthBubble({
-    object,
-    mode: props.mode,
-    maxLengthMap,
-    getLength,
-    showZeroLength: true
-  }));
-}
-=======
   return span({
     "data-link-actor-id": object.actor,
     className: "objectBox-stackTrace"
   }, content);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const parent = getParent(item);
-  if (!parent) {
-    return null;
-||||||| merged common ancestors
-function safeEntriesIterator(props, object, max) {
-  max = typeof max === "undefined" ? 3 : max;
-  try {
-    return entriesIterator(props, object, max);
-  } catch (err) {
-    console.error(err);
-=======
 /**
  * Returns a React element reprensenting the Error stacktrace, i.e.
  * transform error.stack from:
@@ -5138,42 +2781,8 @@ function getStacktraceElements(props, preview) {
   const stack = [];
   if (!preview.stack) {
     return stack;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
 
-  return getClosestGripNode(parent);
-}
-
-function getClosestNonBucketNode(item) {
-  const type = getType(item);
-||||||| merged common ancestors
-  return [];
-}
-
-function entriesIterator(props, object, max) {
-  // Entry filter. Show only interesting entries to the user.
-  const isInterestingEntry = props.isInterestingEntry || ((type, value) => {
-    return type == "boolean" || type == "number" || type == "string" && value.length != 0;
-  });
-
-  const mapEntries = object.preview && object.preview.entries ? object.preview.entries : [];
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (type !== NODE_TYPES.BUCKET) {
-    return item;
-  }
-||||||| merged common ancestors
-  let indexes = getEntriesIndexes(mapEntries, max, isInterestingEntry);
-  if (indexes.length < max && indexes.length < mapEntries.length) {
-    // There are not enough entries yet, so we add uninteresting entries.
-    indexes = indexes.concat(getEntriesIndexes(mapEntries, max - indexes.length, (t, value, name) => {
-      return !isInterestingEntry(t, value, name);
-    }));
-  }
-=======
   parseStackString(preview.stack).forEach((frame, index, frames) => {
     let onLocationClick;
     const {
@@ -5195,20 +2804,7 @@ function entriesIterator(props, object, max) {
         });
       };
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const parent = getParent(item);
-  if (!parent) {
-    return null;
-  }
-||||||| merged common ancestors
-  const entries = getEntries(props, mapEntries, indexes);
-  if (entries.length < getLength(object)) {
-    // There are some undisplayed entries. Then display "…".
-    entries.push(ellipsisElement);
-  }
-=======
     stack.push("\t", span({
       key: `fn${index}`,
       className: "objectBox-stackTrace-fn"
@@ -5219,47 +2815,13 @@ function entriesIterator(props, object, max) {
       title: onLocationClick ? `View source in debugger → ${location}` : undefined
     }, location), "\n");
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return getClosestNonBucketNode(parent);
-||||||| merged common ancestors
-  return entries;
-=======
   return span({
     key: "stack",
     className: "objectBox-stackTrace-grid"
   }, stack);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getParentGripNode(item) {
-  const parentNode = getParent(item);
-  if (!parentNode) {
-    return null;
-  }
-||||||| merged common ancestors
-/**
- * Get entries ordered by index.
- *
- * @param {Object} props Component props.
- * @param {Array} entries Entries array.
- * @param {Array} indexes Indexes of entries.
- * @return {Array} Array of PropRep.
- */
-function getEntries(props, entries, indexes) {
-  const { onDOMNodeMouseOver, onDOMNodeMouseOut, onInspectIconClick } = props;
-
-  // Make indexes ordered by ascending.
-  indexes.sort(function (a, b) {
-    return a - b;
-  });
-
-  return indexes.map((index, i) => {
-    const [key, entryValue] = entries[index];
-    const value = entryValue.value !== undefined ? entryValue.value : entryValue;
-=======
 /**
  * Parse a string that should represent a stack trace and returns an array of
  * the frames. The shape of the frames are extremely important as they can then
@@ -5286,24 +2848,7 @@ function parseStackString(stack) {
       // Skip any blank lines
       return;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return getClosestGripNode(parentNode);
-}
-||||||| merged common ancestors
-    return PropRep({
-      name: key,
-      equal: " \u2192 ",
-      object: value,
-      mode: MODE.TINY,
-      onDOMNodeMouseOver,
-      onDOMNodeMouseOut,
-      onInspectIconClick
-    });
-  });
-}
-=======
     // If the stacktrace is a longString, don't include the last frame in the
     // array, since it is certainly incomplete.
     // Can be removed when https://bugzilla.mozilla.org/show_bug.cgi?id=1448833
@@ -5311,36 +2856,7 @@ function parseStackString(stack) {
     if (isStacktraceALongString && index === frames.length - 1) {
       return;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getParentGripValue(item) {
-  const parentGripNode = getParentGripNode(item);
-  if (!parentGripNode) {
-    return null;
-  }
-||||||| merged common ancestors
-/**
- * Get the indexes of entries in the map.
- *
- * @param {Array} entries Entries array.
- * @param {Number} max The maximum length of indexes array.
- * @param {Function} filter Filter the entry you want.
- * @return {Array} Indexes of filtered entries in the map.
- */
-function getEntriesIndexes(entries, max, filter) {
-  return entries.reduce((indexes, [key, entry], i) => {
-    if (indexes.length < max) {
-      const value = entry && entry.value !== undefined ? entry.value : entry;
-      // Type is specified in grip's "class" field and for primitive
-      // values use typeof.
-      const type = (value && value.class ? value.class : typeof value).toLowerCase();
-
-      if (filter(type, value, key)) {
-        indexes.push(i);
-      }
-    }
-=======
     let functionName;
     let location;
 
@@ -5359,32 +2875,11 @@ function getEntriesIndexes(entries, max, filter) {
       // What's needed is only the last part after " -> ".
       location = result[2].split(" -> ").pop();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return getValue(parentGripNode);
-}
-||||||| merged common ancestors
-    return indexes;
-  }, []);
-}
-=======
     if (!functionName) {
       functionName = "<anonymous>";
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getNonPrototypeParentGripValue(item) {
-  const parentGripNode = getParentGripNode(item);
-  if (!parentGripNode) {
-    return null;
-  }
-||||||| merged common ancestors
-function getLength(grip) {
-  return grip.preview.size || 0;
-}
-=======
     // Given the input: "scriptLocation:2:100"
     // Result:
     // ["scriptLocation:2:100", "scriptLocation", "2", "100"]
@@ -5404,138 +2899,17 @@ function getLength(grip) {
 
   return res;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (getType(parentGripNode) === NODE_TYPES.PROTOTYPE) {
-    return getNonPrototypeParentGripValue(parentGripNode);
-||||||| merged common ancestors
-function supportsObject(grip, noGrip = false) {
-  if (noGrip === true || !isGrip(grip)) {
-    return false;
-=======
 // Registration
 function supportsObject(object, noGrip = false) {
   if (noGrip === true || !isGrip(object)) {
     return false;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-||||||| merged common ancestors
-  return grip.preview && grip.preview.kind == "MapLike";
-}
-=======
   return object.preview && getGripType(object, noGrip) === "Error" || object.class === "DOMException";
 }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return getValue(parentGripNode);
-}
-
-||||||| merged common ancestors
-const maxLengthMap = new Map();
-maxLengthMap.set(MODE.SHORT, 3);
-maxLengthMap.set(MODE.LONG, 10);
 
 // Exports from this module
-=======
-// Exports from this module
->>>>>>> upstream-releases
 module.exports = {
-<<<<<<< HEAD
-  createNode,
-  createGetterNode,
-  createSetterNode,
-  getActor,
-  getChildren,
-  getChildrenWithEvaluations,
-  getClosestGripNode,
-  getClosestNonBucketNode,
-  getParent,
-  getParentGripValue,
-  getNonPrototypeParentGripValue,
-  getNumericalPropertiesCount,
-  getValue,
-  makeNodesForEntries,
-  makeNodesForPromiseProperties,
-  makeNodesForProperties,
-  makeNumericalBuckets,
-  nodeHasAccessors,
-  nodeHasAllEntriesInPreview,
-  nodeHasChildren,
-  nodeHasEntries,
-  nodeHasProperties,
-  nodeHasGetter,
-  nodeHasSetter,
-  nodeIsBlock,
-  nodeIsBucket,
-  nodeIsDefaultProperties,
-  nodeIsEntries,
-  nodeIsError,
-  nodeIsLongString,
-  nodeHasFullText,
-  nodeIsFunction,
-  nodeIsGetter,
-  nodeIsMapEntry,
-  nodeIsMissingArguments,
-  nodeIsObject,
-  nodeIsOptimizedOut,
-  nodeIsPrimitive,
-  nodeIsPromise,
-  nodeIsPrototype,
-  nodeIsProxy,
-  nodeIsSetter,
-  nodeIsUninitializedBinding,
-  nodeIsUnmappedBinding,
-  nodeIsUnscopedBinding,
-  nodeIsWindow,
-  nodeNeedsNumericalBuckets,
-  nodeSupportsNumericalBucketing,
-  setNodeChildren,
-  sortProperties,
-  NODE_TYPES
-||||||| merged common ancestors
-  rep: wrapRender(GripMap),
-  supportsObject,
-  maxLengthMap,
-  getLength
-};
-
-/***/ }),
-
-/***/ 3664:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-// Dependencies
-const PropTypes = __webpack_require__(3642);
-// Shortcuts
-const dom = __webpack_require__(3643);
-const { span } = dom;
-const { wrapRender } = __webpack_require__(3644);
-const PropRep = __webpack_require__(3650);
-const { MODE } = __webpack_require__(3645);
-/**
- * Renders an map entry. A map entry is represented by its key,
- * a column and its value.
- */
-GripMapEntry.propTypes = {
-  object: PropTypes.object,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: PropTypes.oneOf(Object.keys(MODE).map(key => MODE[key])),
-  onDOMNodeMouseOver: PropTypes.func,
-  onDOMNodeMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func
-=======
   rep: wrapRender(ErrorRep),
   supportsObject
 };
@@ -5582,206 +2956,43 @@ GripArray.propTypes = {
   onDOMNodeMouseOver: PropTypes.func,
   onDOMNodeMouseOut: PropTypes.func,
   onInspectIconClick: PropTypes.func
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-/***/ }),
-
-/***/ 1785:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-||||||| merged common ancestors
-function GripMapEntry(props) {
-  const { object } = props;
-
-  const { key, value } = object.preview;
-
-  return span({
-    className: "objectBox objectBox-map-entry"
-  }, PropRep(_extends({}, props, {
-    name: key,
-    object: value,
-    equal: " \u2192 ",
-    title: null,
-    suppressQuotes: false
-  })));
-}
-
-function supportsObject(grip, noGrip = false) {
-  if (noGrip === true) {
-    return false;
-  }
-  return grip && (grip.type === "mapEntry" || grip.type === "storageEntry") && grip.preview;
-}
-=======
 function GripArray(props) {
   const { object, mode = MODE.SHORT } = props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function initialState() {
-  return {
-    expandedPaths: new Set(),
-    loadedProperties: new Map(),
-    evaluations: new Map(),
-    actors: new Set()
-||||||| merged common ancestors
-function createGripMapEntry(key, value) {
-  return {
-    type: "mapEntry",
-    preview: {
-      key,
-      value
-    }
-=======
   let brackets;
   const needSpace = function (space) {
     return space ? { left: "[ ", right: " ]" } : { left: "[", right: "]" };
->>>>>>> upstream-releases
   };
-<<<<<<< HEAD
-} /* This Source Code Form is subject to the terms of the Mozilla Public
-   * License, v. 2.0. If a copy of the MPL was not distributed with this
-   * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-||||||| merged common ancestors
-}
-
-// Exports from this module
-module.exports = {
-  rep: wrapRender(GripMapEntry),
-  createGripMapEntry,
-  supportsObject
-};
-
-/***/ }),
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-function reducer(state = initialState(), action = {}) {
-  const { type, data } = action;
-||||||| merged common ancestors
-/***/ 3665:
-/***/ (function(module, exports, __webpack_require__) {
-=======
   const config = {
     "data-link-actor-id": object.actor,
     className: "objectBox objectBox-array"
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const cloneState = overrides => ({ ...state, ...overrides });
-||||||| merged common ancestors
-"use strict";
-=======
   const title = getTitle(props, object);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (type === "NODE_EXPAND") {
-    return cloneState({
-      expandedPaths: new Set(state.expandedPaths).add(data.node.path)
-    });
-  }
-||||||| merged common ancestors
-=======
   if (mode === MODE.TINY) {
     const isEmpty = getLength(object) === 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (type === "NODE_COLLAPSE") {
-    const expandedPaths = new Set(state.expandedPaths);
-    expandedPaths.delete(data.node.path);
-    return cloneState({ expandedPaths });
-  }
-||||||| merged common ancestors
-const { getValue, nodeHasFullText } = __webpack_require__(3667); /* This Source Code Form is subject to the terms of the Mozilla Public
-                                                                 * License, v. 2.0. If a copy of the MPL was not distributed with this
-                                                                 * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
     // Omit bracketed ellipsis for non-empty non-Array arraylikes (f.e: Sets).
     if (!isEmpty && object.class !== "Array") {
       return span(config, title);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (type === "NODE_PROPERTIES_LOADED") {
-    return cloneState({
-      actors: data.actor ? new Set(state.actors || []).add(data.actor) : state.actors,
-      loadedProperties: new Map(state.loadedProperties).set(data.node.path, action.data.properties)
-    });
-||||||| merged common ancestors
-async function enumIndexedProperties(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumProperties({
-      ignoreNonIndexedProperties: true
-    });
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumIndexedProperties", e);
-    return {};
-=======
     brackets = needSpace(false);
     return span(config, title, span({
       className: "arrayLeftBracket"
     }, brackets.left), isEmpty ? null : ellipsisElement, span({
       className: "arrayRightBracket"
     }, brackets.right));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (type === "ROOTS_CHANGED") {
-    return cloneState();
-  }
-||||||| merged common ancestors
-async function enumNonIndexedProperties(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumProperties({
-      ignoreIndexedProperties: true
-    });
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumNonIndexedProperties", e);
-    return {};
-  }
-}
-=======
   const max = maxLengthMap.get(mode);
   const items = arrayIterator(props, object, max);
   brackets = needSpace(items.length > 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (type === "GETTER_INVOKED") {
-    return cloneState({
-      actors: data.actor ? new Set(state.actors || []).add(data.result.from) : state.actors,
-      evaluations: new Map(state.evaluations).set(data.node.path, {
-        getterValue: data.result && data.result.value && (data.result.value.return || data.result.value.throw)
-      })
-    });
-  }
-||||||| merged common ancestors
-async function enumEntries(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumEntries();
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumEntries", e);
-    return {};
-  }
-}
-=======
   return span({
     "data-link-actor-id": object.actor,
     className: "objectBox objectBox-array"
@@ -5794,92 +3005,21 @@ async function enumEntries(objectClient, start, end) {
     role: "group"
   }));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // NOTE: we clear the state on resume because otherwise the scopes pane 
-  // would be out of date. Bug 1514760 
-  if (type === "RESUME" || type == "NAVIGATE") {
-    return initialState();
-||||||| merged common ancestors
-async function enumSymbols(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumSymbols();
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumSymbols", e);
-    return {};
-=======
 function getLength(grip) {
   if (!grip.preview) {
     return 0;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
 
-  return state;
-}
-||||||| merged common ancestors
-}
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-function getObjectInspectorState(state) {
-  return state.objectInspector;
-||||||| merged common ancestors
-async function getPrototype(objectClient) {
-  if (typeof objectClient.getPrototype !== "function") {
-    console.error("objectClient.getPrototype is not a function");
-    return Promise.resolve({});
-  }
-  return objectClient.getPrototype();
-=======
   return grip.preview.length || grip.preview.childNodesLength || 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getExpandedPaths(state) {
-  return getObjectInspectorState(state).expandedPaths;
-}
-||||||| merged common ancestors
-async function getFullText(longStringClient, item) {
-  const { initial, fullText, length } = getValue(item);
-=======
 function getTitle(props, object) {
   const objectLength = getLength(object);
   const isEmpty = objectLength === 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getExpandedPathKeys(state) {
-  return [...getExpandedPaths(state).keys()];
-}
-||||||| merged common ancestors
-  // Return fullText property if it exists so that it can be added to the
-  // loadedProperties map.
-  if (nodeHasFullText(item)) {
-    return Promise.resolve({ fullText });
-  }
-=======
   let title = props.title || object.class || DEFAULT_TITLE;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getActors(state) {
-  return getObjectInspectorState(state).actors;
-}
-||||||| merged common ancestors
-  return new Promise((resolve, reject) => {
-    longStringClient.substring(initial.length, length, response => {
-      if (response.error) {
-        console.error("LongStringClient.substring", `${response.error}: ${response.message}`);
-        reject({});
-        return;
-      }
-=======
   const length = lengthBubble({
     object,
     mode: props.mode,
@@ -5892,105 +3032,29 @@ function getActors(state) {
       if (object.class === DEFAULT_TITLE) {
         return null;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getLoadedProperties(state) {
-  return getObjectInspectorState(state).loadedProperties;
-}
-||||||| merged common ancestors
-      resolve({
-        fullText: initial + response.substring
-      });
-    });
-  });
-}
-=======
       return span({ className: "objectTitle" }, `${title} `);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getLoadedPropertyKeys(state) {
-  return [...getLoadedProperties(state).keys()];
-}
-||||||| merged common ancestors
-function iteratorSlice(iterator, start, end) {
-  start = start || 0;
-  const count = end ? end - start + 1 : iterator.count;
-=======
     let trailingSpace;
     if (object.class === DEFAULT_TITLE) {
       title = null;
       trailingSpace = " ";
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getEvaluations(state) {
-  return getObjectInspectorState(state).evaluations;
-}
-||||||| merged common ancestors
-  if (count === 0) {
-    return Promise.resolve({});
-  }
-  return iterator.slice(start, count);
-}
-=======
     return span({ className: "objectTitle" }, title, length, trailingSpace);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const selectors = {
-  getActors,
-  getEvaluations,
-  getExpandedPathKeys,
-  getExpandedPaths,
-  getLoadedProperties,
-  getLoadedPropertyKeys
-};
-||||||| merged common ancestors
-module.exports = {
-  enumEntries,
-  enumIndexedProperties,
-  enumNonIndexedProperties,
-  enumSymbols,
-  getPrototype,
-  getFullText
-};
-=======
   return span({ className: "objectTitle" }, title, length, " ");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Object.defineProperty(module.exports, "__esModule", {
-  value: true
-});
-module.exports = selectors;
-module.exports.default = reducer;
-
-/***/ }),
-||||||| merged common ancestors
-/***/ }),
-=======
 function getPreviewItems(grip) {
   if (!grip.preview) {
     return null;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1786:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-/***/ 3666:
-/***/ (function(module, exports, __webpack_require__) {
-=======
   return grip.preview.items || grip.preview.childNodes || [];
 }
->>>>>>> upstream-releases
 
 function arrayIterator(props, grip, max) {
   const { Rep } = __webpack_require__(24);
@@ -5998,76 +3062,20 @@ function arrayIterator(props, grip, max) {
   let items = [];
   const gripLength = getLength(grip);
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
   if (!gripLength) {
     return items;
   }
 
   const previewItems = getPreviewItems(grip);
   const provider = props.provider;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const client = __webpack_require__(1804);
-const loadProperties = __webpack_require__(1803);
-const node = __webpack_require__(1784);
-const { nodeIsError, nodeIsPrimitive } = node;
-const selection = __webpack_require__(1859);
-||||||| merged common ancestors
-const {
-  enumEntries,
-  enumIndexedProperties,
-  enumNonIndexedProperties,
-  getPrototype,
-  enumSymbols,
-  getFullText
-} = __webpack_require__(3665);
-=======
   let emptySlots = 0;
   let foldedEmptySlots = 0;
   items = previewItems.reduce((res, itemGrip) => {
     if (res.length >= max) {
       return res;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { MODE } = __webpack_require__(1762);
-const {
-  REPS: { Rep, Grip }
-} = __webpack_require__(1767);
-||||||| merged common ancestors
-const {
-  getClosestGripNode,
-  getClosestNonBucketNode,
-  getValue,
-  nodeHasAccessors,
-  nodeHasAllEntriesInPreview,
-  nodeHasProperties,
-  nodeIsBucket,
-  nodeIsDefaultProperties,
-  nodeIsEntries,
-  nodeIsMapEntry,
-  nodeIsPrimitive,
-  nodeIsProxy,
-  nodeNeedsNumericalBuckets,
-  nodeIsLongString
-} = __webpack_require__(3667);
-
-function loadItemProperties(item, createObjectClient, createLongStringClient, loadedProperties) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-=======
     let object;
     try {
       if (!provider && itemGrip === null) {
@@ -6079,77 +3087,13 @@ function loadItemProperties(item, createObjectClient, createLongStringClient, lo
     } catch (exc) {
       object = exc;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  const [start, end] = item.meta ? [item.meta.startIndex, item.meta.endIndex] : [];
-=======
     if (emptySlots > 0) {
       res.push(getEmptySlotsElement(emptySlots));
       foldedEmptySlots = foldedEmptySlots + emptySlots - 1;
       emptySlots = 0;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function shouldRenderRootsInReps(roots) {
-  if (roots.length > 1) {
-    return false;
-  }
-||||||| merged common ancestors
-  const promises = [];
-  let objectClient;
-  const getObjectClient = () => objectClient || createObjectClient(value);
-
-  if (shouldLoadItemIndexedProperties(item, loadedProperties)) {
-    promises.push(enumIndexedProperties(getObjectClient(), start, end));
-  }
-
-  if (shouldLoadItemNonIndexedProperties(item, loadedProperties)) {
-    promises.push(enumNonIndexedProperties(getObjectClient(), start, end));
-  }
-
-  if (shouldLoadItemEntries(item, loadedProperties)) {
-    promises.push(enumEntries(getObjectClient(), start, end));
-  }
-
-  if (shouldLoadItemPrototype(item, loadedProperties)) {
-    promises.push(getPrototype(getObjectClient()));
-  }
-
-  if (shouldLoadItemSymbols(item, loadedProperties)) {
-    promises.push(enumSymbols(getObjectClient(), start, end));
-  }
-
-  if (shouldLoadItemFullText(item, loadedProperties)) {
-    promises.push(getFullText(createLongStringClient(value), item));
-  }
-
-  return Promise.all(promises).then(mergeResponses);
-}
-
-function mergeResponses(responses) {
-  const data = {};
-
-  for (const response of responses) {
-    if (response.hasOwnProperty("ownProperties")) {
-      data.ownProperties = _extends({}, data.ownProperties, response.ownProperties);
-    }
-
-    if (response.ownSymbols && response.ownSymbols.length > 0) {
-      data.ownSymbols = response.ownSymbols;
-    }
-
-    if (response.prototype) {
-      data.prototype = response.prototype;
-    }
-
-    if (response.fullText) {
-      data.fullText = response.fullText;
-    }
-  }
-=======
     if (res.length < max) {
       res.push(Rep({
         ...props,
@@ -6201,107 +3145,28 @@ module.exports = {
   maxLengthMap,
   getLength
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const root = roots[0];
-  const name = root && root.name;
-  return (name === null || typeof name === "undefined") && (nodeIsPrimitive(root) || nodeIsError(root));
-}
-||||||| merged common ancestors
-  return data;
-}
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function renderRep(item, props) {
-  return Rep({
-    ...props,
-    object: node.getValue(item),
-    mode: props.mode || MODE.TINY,
-    defaultRep: Grip
-  });
-}
-||||||| merged common ancestors
-function shouldLoadItemIndexedProperties(item, loadedProperties = new Map()) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-
-  return value && nodeHasProperties(gripItem) && !loadedProperties.has(item.path) && !nodeIsProxy(item) && !nodeNeedsNumericalBuckets(item) && !nodeIsEntries(getClosestNonBucketNode(item)) &&
-  // The data is loaded when expanding the window node.
-  !nodeIsDefaultProperties(item);
-}
-=======
 /***/ 193:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = {
-  client,
-  loadProperties,
-  node,
-  renderRep,
-  selection,
-  shouldRenderRootsInReps
-};
-||||||| merged common ancestors
-function shouldLoadItemNonIndexedProperties(item, loadedProperties = new Map()) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-
-  return value && nodeHasProperties(gripItem) && !loadedProperties.has(item.path) && !nodeIsProxy(item) && !nodeIsEntries(getClosestNonBucketNode(item)) && !nodeIsBucket(item) &&
-  // The data is loaded when expanding the window node.
-  !nodeIsDefaultProperties(item);
-}
-=======
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-function shouldLoadItemEntries(item, loadedProperties = new Map()) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1791:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-  return value && nodeIsEntries(getClosestNonBucketNode(item)) && !nodeHasAllEntriesInPreview(gripItem) && !loadedProperties.has(item.path) && !nodeNeedsNumericalBuckets(item);
-}
-=======
 const { wrapRender } = __webpack_require__(2);
 const { MODE } = __webpack_require__(4);
 const { ModePropType } = __webpack_require__(38);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-"use strict";
-||||||| merged common ancestors
-function shouldLoadItemPrototype(item, loadedProperties = new Map()) {
-  const value = getValue(item);
-=======
 const dom = __webpack_require__(1);
 const { span } = dom;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  return value && !loadedProperties.has(item.path) && !nodeIsBucket(item) && !nodeIsMapEntry(item) && !nodeIsEntries(item) && !nodeIsDefaultProperties(item) && !nodeHasAccessors(item) && !nodeIsPrimitive(item) && !nodeIsLongString(item);
-}
-=======
 GripLengthBubble.propTypes = {
   object: PropTypes.object.isRequired,
   maxLengthMap: PropTypes.instanceOf(Map).isRequired,
@@ -6309,14 +3174,7 @@ GripLengthBubble.propTypes = {
   mode: ModePropType,
   visibilityThreshold: PropTypes.number
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-var _tree = __webpack_require__(1801);
-||||||| merged common ancestors
-function shouldLoadItemSymbols(item, loadedProperties = new Map()) {
-  const value = getValue(item);
-=======
 function GripLengthBubble(props) {
   const {
     object,
@@ -6326,65 +3184,26 @@ function GripLengthBubble(props) {
     getLength,
     showZeroLength = false
   } = props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-var _tree2 = _interopRequireDefault(_tree);
-||||||| merged common ancestors
-  return value && !loadedProperties.has(item.path) && !nodeIsBucket(item) && !nodeIsMapEntry(item) && !nodeIsEntries(item) && !nodeIsDefaultProperties(item) && !nodeHasAccessors(item) && !nodeIsPrimitive(item) && !nodeIsLongString(item) && !nodeIsProxy(item);
-}
-=======
   const length = getLength(object);
   const isEmpty = length === 0;
   const isObvious = [MODE.SHORT, MODE.LONG].includes(mode) && length > 0 && length <= maxLengthMap.get(mode) && length <= visibilityThreshold;
   if (isEmpty && !showZeroLength || isObvious) {
     return "";
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-||||||| merged common ancestors
-function shouldLoadItemFullText(item, loadedProperties = new Map()) {
-  return !loadedProperties.has(item.path) && nodeIsLongString(item);
-}
-=======
   return span({
     className: "objectLengthBubble"
   }, `(${length})`);
 }
->>>>>>> upstream-releases
 
 module.exports = {
-<<<<<<< HEAD
-  Tree: _tree2.default
-}; /* This Source Code Form is subject to the terms of the Mozilla Public
-    * License, v. 2.0. If a copy of the MPL was not distributed with this
-    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-||||||| merged common ancestors
-  loadItemProperties,
-  mergeResponses,
-  shouldLoadItemEntries,
-  shouldLoadItemIndexedProperties,
-  shouldLoadItemNonIndexedProperties,
-  shouldLoadItemPrototype,
-  shouldLoadItemSymbols,
-  shouldLoadItemFullText
-};
-=======
   lengthBubble: wrapRender(GripLengthBubble)
 };
->>>>>>> upstream-releases
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1794:
-||||||| merged common ancestors
-/***/ 3667:
-=======
 /***/ 194:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6394,28 +3213,8 @@ module.exports = {
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-// ReactJS
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const { maybeEscapePropertyName } = __webpack_require__(3644);
-const ArrayRep = __webpack_require__(3649);
-const GripArrayRep = __webpack_require__(3661);
-const GripMap = __webpack_require__(3663);
-const GripMapEntryRep = __webpack_require__(3664);
-const ErrorRep = __webpack_require__(3660);
-const { isLongString } = __webpack_require__(3648);
-=======
 // Dependencies
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Reps
-const { getGripType, isGrip, cropString, wrapRender } = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-const MAX_NUMERICAL_PROPERTIES = 100;
-=======
 const { lengthBubble } = __webpack_require__(193);
 const PropTypes = __webpack_require__(0);
 const {
@@ -6427,30 +3226,7 @@ const {
 const PropRep = __webpack_require__(39);
 const { MODE } = __webpack_require__(4);
 const { ModePropType } = __webpack_require__(38);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-const { span } = dom;
-||||||| merged common ancestors
-const NODE_TYPES = {
-  BUCKET: Symbol("[n…m]"),
-  DEFAULT_PROPERTIES: Symbol("<default properties>"),
-  ENTRIES: Symbol("<entries>"),
-  GET: Symbol("<get>"),
-  GRIP: Symbol("GRIP"),
-  MAP_ENTRY_KEY: Symbol("<key>"),
-  MAP_ENTRY_VALUE: Symbol("<value>"),
-  PROMISE_REASON: Symbol("<reason>"),
-  PROMISE_STATE: Symbol("<state>"),
-  PROMISE_VALUE: Symbol("<value>"),
-  PROXY_HANDLER: Symbol("<handler>"),
-  PROXY_TARGET: Symbol("<target>"),
-  SET: Symbol("<set>"),
-  PROTOTYPE: Symbol("<prototype>"),
-  BLOCK: Symbol("☲")
-};
-=======
 const { span } = __webpack_require__(1);
 
 /**
@@ -6467,31 +3243,10 @@ GripMap.propTypes = {
   onInspectIconClick: PropTypes.func,
   title: PropTypes.string
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const IGNORED_SOURCE_URLS = ["debugger eval code"];
-||||||| merged common ancestors
-let WINDOW_PROPERTIES = {};
-=======
 function GripMap(props) {
   const { mode, object } = props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * This component represents a template for Function objects.
- */
-FunctionRep.propTypes = {
-  object: PropTypes.object.isRequired,
-  parameterNames: PropTypes.array,
-  onViewSourceInDebugger: PropTypes.func
-};
-||||||| merged common ancestors
-if (typeof window === "object") {
-  WINDOW_PROPERTIES = Object.getOwnPropertyNames(window);
-}
-=======
   const config = {
     "data-link-actor-id": object.actor,
     className: "objectBox objectBox-object"
@@ -6512,16 +3267,7 @@ if (typeof window === "object") {
     className: "objectRightBrace"
   }, " }"));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function FunctionRep(props) {
-  const { object: grip, onViewSourceInDebugger, recordTelemetryEvent } = props;
-||||||| merged common ancestors
-function getType(item) {
-  return item.type;
-}
-=======
 function getTitle(props, object) {
   const title = props.title || (object && object.class ? object.class : "Map");
   return span({
@@ -6534,55 +3280,17 @@ function getTitle(props, object) {
     showZeroLength: true
   }));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let jumpToDefinitionButton;
-  if (onViewSourceInDebugger && grip.location && grip.location.url && !IGNORED_SOURCE_URLS.includes(grip.location.url)) {
-    jumpToDefinitionButton = dom.button({
-      className: "jump-definition",
-      draggable: false,
-      title: "Jump to definition",
-      onClick: e => {
-        // Stop the event propagation so we don't trigger ObjectInspector
-        // expand/collapse.
-        e.stopPropagation();
-        if (recordTelemetryEvent) {
-          recordTelemetryEvent("jump_to_definition");
-        }
-        onViewSourceInDebugger(grip.location);
-      }
-    });
-||||||| merged common ancestors
-function getValue(item) {
-  if (nodeHasValue(item)) {
-    return item.contents.value;
-=======
 function safeEntriesIterator(props, object, max) {
   max = typeof max === "undefined" ? 3 : max;
   try {
     return entriesIterator(props, object, max);
   } catch (err) {
     console.error(err);
->>>>>>> upstream-releases
   }
   return [];
 }
 
-<<<<<<< HEAD
-  return span({
-    "data-link-actor-id": grip.actor,
-    className: "objectBox objectBox-function",
-    // Set dir="ltr" to prevent function parentheses from
-    // appearing in the wrong direction
-    dir: "ltr"
-  }, getTitle(grip, props), getFunctionName(grip, props), "(", ...renderParams(props), ")", jumpToDefinitionButton);
-}
-||||||| merged common ancestors
-  if (nodeHasGetterValue(item)) {
-    return item.contents.getterValue;
-  }
-=======
 function entriesIterator(props, object, max) {
   // Entry filter. Show only interesting entries to the user.
   const isInterestingEntry = props.isInterestingEntry || ((type, value) => {
@@ -6598,46 +3306,16 @@ function entriesIterator(props, object, max) {
       return !isInterestingEntry(t, value, name);
     }));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getTitle(grip, props) {
-  const { mode } = props;
-
-  if (mode === MODE.TINY && !grip.isGenerator && !grip.isAsync) {
-    return null;
-||||||| merged common ancestors
-  if (nodeHasAccessors(item)) {
-    return item.contents;
-=======
   const entries = getEntries(props, mapEntries, indexes);
   if (entries.length < getLength(object)) {
     // There are some undisplayed entries. Then display "…".
     entries.push(ellipsisElement);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  let title = mode === MODE.TINY ? "" : "function ";
-||||||| merged common ancestors
-  return undefined;
-}
-=======
   return entries;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (grip.isGenerator) {
-    title = mode === MODE.TINY ? "* " : "function* ";
-  }
-||||||| merged common ancestors
-function getActor(item, roots) {
-  const isRoot = isNodeRoot(item, roots);
-  const value = getValue(item);
-  return isRoot || !value ? null : value.actor;
-}
-=======
 /**
  * Get entries ordered by index.
  *
@@ -6648,33 +3326,12 @@ function getActor(item, roots) {
  */
 function getEntries(props, entries, indexes) {
   const { onDOMNodeMouseOver, onDOMNodeMouseOut, onInspectIconClick } = props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (grip.isAsync) {
-    title = `${"async" + " "}${title}`;
-  }
-||||||| merged common ancestors
-function isNodeRoot(item, roots) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-=======
   // Make indexes ordered by ascending.
   indexes.sort(function (a, b) {
     return a - b;
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return span({
-    className: "objectTitle"
-  }, title);
-||||||| merged common ancestors
-  return value && roots.some(root => {
-    const rootValue = getValue(root);
-    return rootValue && rootValue.actor === value.actor;
-  });
-=======
   return indexes.map((index, i) => {
     const [key, entryValue] = entries[index];
     const value = entryValue.value !== undefined ? entryValue.value : entryValue;
@@ -6689,24 +3346,8 @@ function isNodeRoot(item, roots) {
       onInspectIconClick
     });
   });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/**
- * Returns a ReactElement representing the function name.
- *
- * @param {Object} grip : Function grip
- * @param {Object} props: Function rep props
- */
-function getFunctionName(grip, props = {}) {
-  let { functionName } = props;
-  let name;
-||||||| merged common ancestors
-function nodeIsBucket(item) {
-  return getType(item) === NODE_TYPES.BUCKET;
-}
-=======
 /**
  * Get the indexes of entries in the map.
  *
@@ -6722,18 +3363,7 @@ function getEntriesIndexes(entries, max, filter) {
       // Type is specified in grip's "class" field and for primitive
       // values use typeof.
       const type = (value && value.class ? value.class : typeof value).toLowerCase();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (functionName) {
-    const end = functionName.length - 1;
-    functionName = functionName.startsWith('"') && functionName.endsWith('"') ? functionName.substring(1, end) : functionName;
-  }
-||||||| merged common ancestors
-function nodeIsEntries(item) {
-  return getType(item) === NODE_TYPES.ENTRIES;
-}
-=======
       if (filter(type, value, key)) {
         indexes.push(i);
       }
@@ -6742,48 +3372,18 @@ function nodeIsEntries(item) {
     return indexes;
   }, []);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (grip.displayName != undefined && functionName != undefined && grip.displayName != functionName) {
-    name = `${functionName}:${grip.displayName}`;
-  } else {
-    name = cleanFunctionName(grip.userDisplayName || grip.displayName || grip.name || props.functionName || "");
-  }
-||||||| merged common ancestors
-function nodeIsMapEntry(item) {
-  return GripMapEntryRep.supportsObject(getValue(item));
-}
-=======
 function getLength(grip) {
   return grip.preview.size || 0;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return cropString(name, 100);
-||||||| merged common ancestors
-function nodeHasChildren(item) {
-  return Array.isArray(item.contents);
-=======
 function supportsObject(grip, noGrip = false) {
   if (noGrip === true || !isGrip(grip)) {
     return false;
   }
   return grip.preview && grip.preview.kind == "MapLike";
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const objectProperty = /([\w\d\$]+)$/;
-const arrayProperty = /\[(.*?)\]$/;
-const functionProperty = /([\w\d]+)[\/\.<]*?$/;
-const annonymousProperty = /([\w\d]+)\(\^\)$/;
-||||||| merged common ancestors
-function nodeHasValue(item) {
-  return item && item.contents && item.contents.hasOwnProperty("value");
-}
-=======
 const maxLengthMap = new Map();
 maxLengthMap.set(MODE.SHORT, 3);
 maxLengthMap.set(MODE.LONG, 10);
@@ -6831,49 +3431,7 @@ GripMapEntry.propTypes = {
 
 function GripMapEntry(props) {
   const { object } = props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * Decodes an anonymous naming scheme that
- * spider monkey implements based on "Naming Anonymous JavaScript Functions"
- * http://johnjbarton.github.io/nonymous/index.html
- *
- * @param {String} name : Function name to clean up
- * @returns String
- */
-function cleanFunctionName(name) {
-  for (const reg of [objectProperty, arrayProperty, functionProperty, annonymousProperty]) {
-    const match = reg.exec(name);
-    if (match) {
-      return match[1];
-    }
-  }
-||||||| merged common ancestors
-function nodeHasGetterValue(item) {
-  return item && item.contents && item.contents.hasOwnProperty("getterValue");
-}
-
-function nodeIsObject(item) {
-  const value = getValue(item);
-  return value && value.type === "object";
-}
-
-function nodeIsArrayLike(item) {
-  const value = getValue(item);
-  return GripArrayRep.supportsObject(value) || ArrayRep.supportsObject(value);
-}
-
-function nodeIsFunction(item) {
-  const value = getValue(item);
-  return value && value.class === "Function";
-}
-
-function nodeIsOptimizedOut(item) {
-  const value = getValue(item);
-  return !nodeHasChildren(item) && value && value.optimizedOut;
-}
-=======
   const { key, value } = object.preview;
 
   return span({
@@ -6911,92 +3469,19 @@ module.exports = {
   createGripMapEntry,
   supportsObject
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return name;
-}
-||||||| merged common ancestors
-function nodeIsUninitializedBinding(item) {
-  const value = getValue(item);
-  return value && value.uninitialized;
-}
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function renderParams(props) {
-  const { parameterNames = [] } = props;
-||||||| merged common ancestors
-// Used to check if an item represents a binding that exists in a sourcemap's
-// original file content, but does not match up with a binding found in the
-// generated code.
-function nodeIsUnmappedBinding(item) {
-  const value = getValue(item);
-  return value && value.unmapped;
-}
-=======
 /***/ 196:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return parameterNames.filter(param => param).reduce((res, param, index, arr) => {
-    res.push(span({ className: "param" }, param));
-    if (index < arr.length - 1) {
-      res.push(span({ className: "delimiter" }, ", "));
-    }
-    return res;
-  }, []);
-}
-||||||| merged common ancestors
-// Used to check if an item represents a binding that exists in the debugger's
-// parser result, but does not match up with a binding returned by the
-// debugger server.
-function nodeIsUnscopedBinding(item) {
-  const value = getValue(item);
-  return value && value.unscoped;
-}
-=======
 "use strict";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Registration
-function supportsObject(grip, noGrip = false) {
-  const type = getGripType(grip, noGrip);
-  if (noGrip === true || !isGrip(grip)) {
-    return type == "function";
-  }
-||||||| merged common ancestors
-function nodeIsMissingArguments(item) {
-  const value = getValue(item);
-  return !nodeHasChildren(item) && value && value.missingArguments;
-}
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return type == "Function";
-}
-||||||| merged common ancestors
-function nodeHasProperties(item) {
-  return !nodeHasChildren(item) && nodeIsObject(item);
-}
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Exports from this module
-||||||| merged common ancestors
-function nodeIsPrimitive(item) {
-  return !nodeHasChildren(item) && !nodeHasProperties(item) && !nodeIsEntries(item) && !nodeIsMapEntry(item) && !nodeHasAccessors(item) && !nodeIsBucket(item) && !nodeIsLongString(item);
-}
-=======
 const {
   enumEntries,
   enumIndexedProperties,
@@ -7006,21 +3491,7 @@ const {
   getFullText,
   getProxySlots
 } = __webpack_require__(197);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = {
-  rep: wrapRender(FunctionRep),
-  supportsObject,
-  cleanFunctionName,
-  // exported for testing purpose.
-  getFunctionName
-};
-||||||| merged common ancestors
-function nodeIsDefaultProperties(item) {
-  return getType(item) === NODE_TYPES.DEFAULT_PROPERTIES;
-}
-=======
 const {
   getClosestGripNode,
   getClosestNonBucketNode,
@@ -7037,614 +3508,118 @@ const {
   nodeNeedsNumericalBuckets,
   nodeIsLongString
 } = __webpack_require__(114);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-function isDefaultWindowProperty(name) {
-  return WINDOW_PROPERTIES.includes(name);
-}
-=======
 function loadItemProperties(item, createObjectClient, createLongStringClient, loadedProperties) {
   const gripItem = getClosestGripNode(item);
   const value = getValue(gripItem);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1795:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-function nodeIsPromise(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-  }
-=======
   const [start, end] = item.meta ? [item.meta.startIndex, item.meta.endIndex] : [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-"use strict";
-||||||| merged common ancestors
-  return value.class == "Promise";
-}
-=======
   const promises = [];
   let objectClient;
   const getObjectClient = () => objectClient || createObjectClient(value);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-function nodeIsProxy(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-  }
-=======
   if (shouldLoadItemIndexedProperties(item, loadedProperties)) {
     promises.push(enumIndexedProperties(getObjectClient(), start, end));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-  return value.class == "Proxy";
-}
-=======
   if (shouldLoadItemNonIndexedProperties(item, loadedProperties)) {
     promises.push(enumNonIndexedProperties(getObjectClient(), start, end));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = {
-  ELEMENT_NODE: 1,
-  ATTRIBUTE_NODE: 2,
-  TEXT_NODE: 3,
-  CDATA_SECTION_NODE: 4,
-  ENTITY_REFERENCE_NODE: 5,
-  ENTITY_NODE: 6,
-  PROCESSING_INSTRUCTION_NODE: 7,
-  COMMENT_NODE: 8,
-  DOCUMENT_NODE: 9,
-  DOCUMENT_TYPE_NODE: 10,
-  DOCUMENT_FRAGMENT_NODE: 11,
-  NOTATION_NODE: 12,
-||||||| merged common ancestors
-function nodeIsPrototype(item) {
-  return getType(item) === NODE_TYPES.PROTOTYPE;
-}
-=======
   if (shouldLoadItemEntries(item, loadedProperties)) {
     promises.push(enumEntries(getObjectClient(), start, end));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // DocumentPosition
-  DOCUMENT_POSITION_DISCONNECTED: 0x01,
-  DOCUMENT_POSITION_PRECEDING: 0x02,
-  DOCUMENT_POSITION_FOLLOWING: 0x04,
-  DOCUMENT_POSITION_CONTAINS: 0x08,
-  DOCUMENT_POSITION_CONTAINED_BY: 0x10,
-  DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: 0x20
-};
-||||||| merged common ancestors
-function nodeIsWindow(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-  }
-=======
   if (shouldLoadItemPrototype(item, loadedProperties)) {
     promises.push(getPrototype(getObjectClient()));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-  return value.class == "Window";
-}
-=======
   if (shouldLoadItemSymbols(item, loadedProperties)) {
     promises.push(enumSymbols(getObjectClient(), start, end));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1796:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-function nodeIsGetter(item) {
-  return getType(item) === NODE_TYPES.GET;
-}
-=======
   if (shouldLoadItemFullText(item, loadedProperties)) {
     promises.push(getFullText(createLongStringClient(value), item));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-"use strict";
-||||||| merged common ancestors
-function nodeIsSetter(item) {
-  return getType(item) === NODE_TYPES.SET;
-}
-=======
   if (shouldLoadItemProxySlots(item, loadedProperties)) {
     promises.push(getProxySlots(getObjectClient()));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-function nodeIsBlock(item) {
-  return getType(item) === NODE_TYPES.BLOCK;
-}
-=======
   return Promise.all(promises).then(mergeResponses);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-function nodeIsError(item) {
-  return ErrorRep.supportsObject(getValue(item));
-}
-=======
 function mergeResponses(responses) {
   const data = {};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// ReactJS
-const PropTypes = __webpack_require__(1758);
-// Utils
-const { getGripType, isGrip, wrapRender } = __webpack_require__(1760);
-const { cleanFunctionName } = __webpack_require__(1794);
-const { isLongString } = __webpack_require__(1770);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-function nodeIsLongString(item) {
-  return isLongString(getValue(item));
-}
-=======
   for (const response of responses) {
     if (response.hasOwnProperty("ownProperties")) {
       data.ownProperties = { ...data.ownProperties, ...response.ownProperties };
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-const { span } = dom;
-const IGNORED_SOURCE_URLS = ["debugger eval code"];
-||||||| merged common ancestors
-function nodeHasFullText(item) {
-  const value = getValue(item);
-  return nodeIsLongString(item) && value.hasOwnProperty("fullText");
-}
-=======
     if (response.ownSymbols && response.ownSymbols.length > 0) {
       data.ownSymbols = response.ownSymbols;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * Renders Error objects.
- */
-ErrorRep.propTypes = {
-  object: PropTypes.object.isRequired,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: PropTypes.oneOf(Object.keys(MODE).map(key => MODE[key])),
-  // An optional function that will be used to render the Error stacktrace.
-  renderStacktrace: PropTypes.func
-};
-||||||| merged common ancestors
-function nodeHasAccessors(item) {
-  return !!getNodeGetter(item) || !!getNodeSetter(item);
-}
-=======
     if (response.prototype) {
       data.prototype = response.prototype;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function ErrorRep(props) {
-  const object = props.object;
-  const preview = object.preview;
-||||||| merged common ancestors
-function nodeSupportsNumericalBucketing(item) {
-  // We exclude elements with entries since it's the <entries> node
-  // itself that can have buckets.
-  return nodeIsArrayLike(item) && !nodeHasEntries(item) || nodeIsEntries(item) || nodeIsBucket(item);
-}
-=======
     if (response.fullText) {
       data.fullText = response.fullText;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let name;
-  if (preview && preview.name && preview.kind) {
-    switch (preview.kind) {
-      case "Error":
-        name = preview.name;
-        break;
-      case "DOMException":
-        name = preview.kind;
-        break;
-      default:
-        throw new Error("Unknown preview kind for the Error rep.");
-    }
-  } else {
-    name = "Error";
-||||||| merged common ancestors
-function nodeHasEntries(item) {
-  const value = getValue(item);
-  if (!value) {
-    return false;
-=======
     if (response.proxyTarget && response.proxyHandler) {
       data.proxyTarget = response.proxyTarget;
       data.proxyHandler = response.proxyHandler;
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  const content = [];
-||||||| merged common ancestors
-  return value.class === "Map" || value.class === "Set" || value.class === "WeakMap" || value.class === "WeakSet" || value.class === "Storage";
-}
-=======
   return data;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (props.mode === MODE.TINY) {
-    content.push(name);
-  } else {
-    content.push(`${name}: "${preview.message}"`);
-  }
-
-  if (preview.stack && props.mode !== MODE.TINY) {
-    const stacktrace = props.renderStacktrace ? props.renderStacktrace(parseStackString(preview.stack)) : getStacktraceElements(props, preview);
-    content.push("\n", stacktrace);
-  }
-
-  return span({
-    "data-link-actor-id": object.actor,
-    className: "objectBox-stackTrace"
-  }, content);
-}
-||||||| merged common ancestors
-function nodeHasAllEntriesInPreview(item) {
-  const { preview } = getValue(item) || {};
-  if (!preview) {
-    return false;
-  }
-
-  const { entries, items, length, size } = preview;
-
-  if (!entries && !items) {
-    return false;
-  }
-
-  return entries ? entries.length === size : items.length === length;
-}
-=======
 function shouldLoadItemIndexedProperties(item, loadedProperties = new Map()) {
   const gripItem = getClosestGripNode(item);
   const value = getValue(gripItem);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * Returns a React element reprensenting the Error stacktrace, i.e.
- * transform error.stack from:
- *
- * semicolon@debugger eval code:1:109
- * jkl@debugger eval code:1:63
- * asdf@debugger eval code:1:28
- * @debugger eval code:1:227
- *
- * Into a column layout:
- *
- * semicolon  (<anonymous>:8:10)
- * jkl        (<anonymous>:5:10)
- * asdf       (<anonymous>:2:10)
- *            (<anonymous>:11:1)
- */
-function getStacktraceElements(props, preview) {
-  const stack = [];
-  if (!preview.stack) {
-    return stack;
-  }
-||||||| merged common ancestors
-function nodeNeedsNumericalBuckets(item) {
-  return nodeSupportsNumericalBucketing(item) && getNumericalPropertiesCount(item) > MAX_NUMERICAL_PROPERTIES;
-}
-=======
   return value && nodeHasProperties(gripItem) && !loadedProperties.has(item.path) && !nodeIsProxy(item) && !nodeNeedsNumericalBuckets(item) && !nodeIsEntries(getClosestNonBucketNode(item)) &&
   // The data is loaded when expanding the window node.
   !nodeIsDefaultProperties(item);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  parseStackString(preview.stack).forEach((frame, index, frames) => {
-    let onLocationClick;
-    const {
-      filename,
-      lineNumber,
-      columnNumber,
-      functionName,
-      location
-    } = frame;
-
-    if (props.onViewSourceInDebugger && !IGNORED_SOURCE_URLS.includes(filename)) {
-      onLocationClick = e => {
-        // Don't trigger ObjectInspector expand/collapse.
-        e.stopPropagation();
-        props.onViewSourceInDebugger({
-          url: filename,
-          line: lineNumber,
-          column: columnNumber
-        });
-      };
-    }
-||||||| merged common ancestors
-function makeNodesForPromiseProperties(item) {
-  const {
-    promiseState: { reason, value, state }
-  } = getValue(item);
-=======
 function shouldLoadItemNonIndexedProperties(item, loadedProperties = new Map()) {
   const gripItem = getClosestGripNode(item);
   const value = getValue(gripItem);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    stack.push("\t", span({
-      key: `fn${index}`,
-      className: "objectBox-stackTrace-fn"
-    }, cleanFunctionName(functionName)), " ", span({
-      key: `location${index}`,
-      className: "objectBox-stackTrace-location",
-      onClick: onLocationClick,
-      title: onLocationClick ? `View source in debugger → ${location}` : undefined
-    }, location), "\n");
-  });
-||||||| merged common ancestors
-  const properties = [];
-=======
   return value && nodeHasProperties(gripItem) && !loadedProperties.has(item.path) && !nodeIsProxy(item) && !nodeIsEntries(getClosestNonBucketNode(item)) && !nodeIsBucket(item) &&
   // The data is loaded when expanding the window node.
   !nodeIsDefaultProperties(item);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return span({
-    key: "stack",
-    className: "objectBox-stackTrace-grid"
-  }, stack);
-}
-||||||| merged common ancestors
-  if (state) {
-    properties.push(createNode({
-      parent: item,
-      name: "<state>",
-      contents: { value: state },
-      type: NODE_TYPES.PROMISE_STATE
-    }));
-  }
-=======
 function shouldLoadItemEntries(item, loadedProperties = new Map()) {
   const gripItem = getClosestGripNode(item);
   const value = getValue(gripItem);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * Parse a string that should represent a stack trace and returns an array of
- * the frames. The shape of the frames are extremely important as they can then
- * be processed here or in the toolbox by other components.
- * @param {String} stack
- * @returns {Array} Array of frames, which are object with the following shape:
- *                  - {String} filename
- *                  - {String} functionName
- *                  - {String} location
- *                  - {Number} columnNumber
- *                  - {Number} lineNumber
- */
-function parseStackString(stack) {
-  const res = [];
-  if (!stack) {
-    return res;
-  }
-||||||| merged common ancestors
-  if (reason) {
-    properties.push(createNode({
-      parent: item,
-      name: "<reason>",
-      contents: { value: reason },
-      type: NODE_TYPES.PROMISE_REASON
-    }));
-  }
-=======
   return value && nodeIsEntries(getClosestNonBucketNode(item)) && !nodeHasAllEntriesInPreview(gripItem) && !loadedProperties.has(item.path) && !nodeNeedsNumericalBuckets(item);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const isStacktraceALongString = isLongString(stack);
-  const stackString = isStacktraceALongString ? stack.initial : stack;
-||||||| merged common ancestors
-  if (value) {
-    properties.push(createNode({
-      parent: item,
-      name: "<value>",
-      contents: { value: value },
-      type: NODE_TYPES.PROMISE_VALUE
-    }));
-  }
-=======
 function shouldLoadItemPrototype(item, loadedProperties = new Map()) {
   const value = getValue(item);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  stackString.split("\n").forEach((frame, index, frames) => {
-    if (!frame) {
-      // Skip any blank lines
-      return;
-    }
-||||||| merged common ancestors
-  return properties;
-}
-=======
   return value && !loadedProperties.has(item.path) && !nodeIsBucket(item) && !nodeIsMapEntry(item) && !nodeIsEntries(item) && !nodeIsDefaultProperties(item) && !nodeHasAccessors(item) && !nodeIsPrimitive(item) && !nodeIsLongString(item) && !nodeIsProxy(item);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // If the stacktrace is a longString, don't include the last frame in the
-    // array, since it is certainly incomplete.
-    // Can be removed when https://bugzilla.mozilla.org/show_bug.cgi?id=1448833
-    // is fixed.
-    if (isStacktraceALongString && index === frames.length - 1) {
-      return;
-    }
-||||||| merged common ancestors
-function makeNodesForProxyProperties(item) {
-  const { proxyHandler, proxyTarget } = getValue(item);
-=======
 function shouldLoadItemSymbols(item, loadedProperties = new Map()) {
   const value = getValue(item);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    let functionName;
-    let location;
-||||||| merged common ancestors
-  return [createNode({
-    parent: item,
-    name: "<target>",
-    contents: { value: proxyTarget },
-    type: NODE_TYPES.PROXY_TARGET
-  }), createNode({
-    parent: item,
-    name: "<handler>",
-    contents: { value: proxyHandler },
-    type: NODE_TYPES.PROXY_HANDLER
-  })];
-}
-=======
   return value && !loadedProperties.has(item.path) && !nodeIsBucket(item) && !nodeIsMapEntry(item) && !nodeIsEntries(item) && !nodeIsDefaultProperties(item) && !nodeHasAccessors(item) && !nodeIsPrimitive(item) && !nodeIsLongString(item) && !nodeIsProxy(item);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Given the input: "functionName@scriptLocation:2:100"
-    // Result: [
-    //   "functionName@scriptLocation:2:100",
-    //   "functionName",
-    //   "scriptLocation:2:100"
-    // ]
-    const result = frame.match(/^(.*)@(.*)$/);
-    if (result && result.length === 3) {
-      functionName = result[1];
-||||||| merged common ancestors
-function makeNodesForEntries(item) {
-  const nodeName = "<entries>";
-  const entriesPath = "<entries>";
-=======
 function shouldLoadItemFullText(item, loadedProperties = new Map()) {
   return !loadedProperties.has(item.path) && nodeIsLongString(item);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // If the resource was loaded by base-loader.js, the location looks like:
-      // resource://devtools/shared/base-loader.js -> resource://path/to/file.js .
-      // What's needed is only the last part after " -> ".
-      location = result[2].split(" -> ").pop();
-    }
-
-    if (!functionName) {
-      functionName = "<anonymous>";
-    }
-
-    // Given the input: "scriptLocation:2:100"
-    // Result:
-    // ["scriptLocation:2:100", "scriptLocation", "2", "100"]
-    const locationParts = location.match(/^(.*):(\d+):(\d+)$/);
-
-    if (location && locationParts) {
-      const [, filename, line, column] = locationParts;
-      res.push({
-        filename,
-        functionName,
-        location,
-        columnNumber: Number(column),
-        lineNumber: Number(line)
-      });
-    }
-  });
-
-  return res;
-||||||| merged common ancestors
-  if (nodeHasAllEntriesInPreview(item)) {
-    let entriesNodes = [];
-    const { preview } = getValue(item);
-    if (preview.entries) {
-      entriesNodes = preview.entries.map(([key, value], index) => {
-        return createNode({
-          parent: item,
-          name: index,
-          path: `${entriesPath}/${index}`,
-          contents: { value: GripMapEntryRep.createGripMapEntry(key, value) }
-        });
-      });
-    } else if (preview.items) {
-      entriesNodes = preview.items.map((value, index) => {
-        return createNode({
-          parent: item,
-          name: index,
-          path: `${entriesPath}/${index}`,
-          contents: { value }
-        });
-      });
-    }
-    return createNode({
-      parent: item,
-      name: nodeName,
-      contents: entriesNodes,
-      type: NODE_TYPES.ENTRIES
-    });
-  }
-  return createNode({
-    parent: item,
-    name: nodeName,
-    contents: null,
-    type: NODE_TYPES.ENTRIES
-  });
-=======
 function shouldLoadItemProxySlots(item, loadedProperties = new Map()) {
   return !loadedProperties.has(item.path) && nodeIsProxy(item);
 }
@@ -7684,20 +3659,8 @@ async function enumIndexedProperties(objectClient, start, end) {
     console.error("Error in enumIndexedProperties", e);
     return {};
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// Registration
-function supportsObject(object, noGrip = false) {
-  if (noGrip === true || !isGrip(object)) {
-    return false;
-||||||| merged common ancestors
-function makeNodesForMapEntry(item) {
-  const nodeValue = getValue(item);
-  if (!nodeValue || !nodeValue.preview) {
-    return [];
-=======
 async function enumNonIndexedProperties(objectClient, start, end) {
   try {
     const { iterator } = await objectClient.enumProperties({
@@ -7708,40 +3671,9 @@ async function enumNonIndexedProperties(objectClient, start, end) {
   } catch (e) {
     console.error("Error in enumNonIndexedProperties", e);
     return {};
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  return object.preview && getGripType(object, noGrip) === "Error" || object.class === "DOMException";
 }
-||||||| merged common ancestors
-=======
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Exports from this module
-module.exports = {
-  rep: wrapRender(ErrorRep),
-  supportsObject
-};
-
-/***/ }),
-||||||| merged common ancestors
-  const { key, value } = nodeValue.preview;
-
-  return [createNode({
-    parent: item,
-    name: "<key>",
-    contents: { value: key },
-    type: NODE_TYPES.MAP_ENTRY_KEY
-  }), createNode({
-    parent: item,
-    name: "<value>",
-    contents: { value },
-    type: NODE_TYPES.MAP_ENTRY_VALUE
-  })];
-}
-=======
 async function enumEntries(objectClient, start, end) {
   try {
     const { iterator } = await objectClient.enumEntries();
@@ -7752,16 +3684,7 @@ async function enumEntries(objectClient, start, end) {
     return {};
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1797:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-function getNodeGetter(item) {
-  return item && item.contents ? item.contents.get : undefined;
-}
-=======
 async function enumSymbols(objectClient, start, end) {
   try {
     const { iterator } = await objectClient.enumSymbols();
@@ -7772,15 +3695,7 @@ async function enumSymbols(objectClient, start, end) {
     return {};
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-"use strict";
-||||||| merged common ancestors
-function getNodeSetter(item) {
-  return item && item.contents ? item.contents.set : undefined;
-}
-=======
 async function getPrototype(objectClient) {
   if (typeof objectClient.getPrototype !== "function") {
     console.error("objectClient.getPrototype is not a function");
@@ -7788,53 +3703,16 @@ async function getPrototype(objectClient) {
   }
   return objectClient.getPrototype();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-function makeNodesForAccessors(item) {
-  const accessors = [];
-=======
 async function getFullText(longStringClient, item) {
   const { initial, fullText, length } = getValue(item);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-  const getter = getNodeGetter(item);
-  if (getter && getter.type !== "undefined") {
-    accessors.push(createNode({
-      parent: item,
-      name: "<get>",
-      contents: { value: getter },
-      type: NODE_TYPES.GET
-    }));
-  }
-=======
   // Return fullText property if it exists so that it can be added to the
   // loadedProperties map.
   if (nodeHasFullText(item)) {
     return Promise.resolve({ fullText });
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Dependencies
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-  const setter = getNodeSetter(item);
-  if (setter && setter.type !== "undefined") {
-    accessors.push(createNode({
-      parent: item,
-      name: "<set>",
-      contents: { value: setter },
-      type: NODE_TYPES.SET
-    }));
-  }
-=======
   return new Promise((resolve, reject) => {
     longStringClient.substring(initial.length, length, response => {
       if (response.error) {
@@ -7842,95 +3720,28 @@ const PropTypes = __webpack_require__(1758);
         reject({});
         return;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { lengthBubble } = __webpack_require__(1798);
-const {
-  interleave,
-  getGripType,
-  isGrip,
-  wrapRender,
-  ellipsisElement
-} = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-  return accessors;
-}
-=======
       resolve({
         fullText: initial + response.substring
       });
     });
   });
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-const { span } = dom;
-const { ModePropType } = __webpack_require__(1774);
-const DEFAULT_TITLE = "Array";
-||||||| merged common ancestors
-function sortProperties(properties) {
-  return properties.sort((a, b) => {
-    // Sort numbers in ascending order and sort strings lexicographically
-    const aInt = parseInt(a, 10);
-    const bInt = parseInt(b, 10);
-=======
 async function getProxySlots(objectClient) {
   return objectClient.getProxySlots();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * Renders an array. The array is enclosed by left and right bracket
- * and the max number of rendered items depends on the current mode.
- */
-GripArray.propTypes = {
-  object: PropTypes.object.isRequired,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: ModePropType,
-  provider: PropTypes.object,
-  onDOMNodeMouseOver: PropTypes.func,
-  onDOMNodeMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func
-};
-||||||| merged common ancestors
-    if (isNaN(aInt) || isNaN(bInt)) {
-      return a > b ? 1 : -1;
-    }
-=======
 function iteratorSlice(iterator, start, end) {
   start = start || 0;
   const count = end ? end - start + 1 : iterator.count;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function GripArray(props) {
-  const { object, mode = MODE.SHORT } = props;
-||||||| merged common ancestors
-    return aInt - bInt;
-  });
-}
-=======
   if (count === 0) {
     return Promise.resolve({});
   }
   return iterator.slice(start, count);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let brackets;
-  const needSpace = function (space) {
-    return space ? { left: "[ ", right: " ]" } : { left: "[", right: "]" };
-  };
-||||||| merged common ancestors
-function makeNumericalBuckets(parent) {
-  const numProperties = getNumericalPropertiesCount(parent);
-=======
 module.exports = {
   enumEntries,
   enumIndexedProperties,
@@ -7940,87 +3751,15 @@ module.exports = {
   getFullText,
   getProxySlots
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const config = {
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-array"
-  };
-||||||| merged common ancestors
-  // We want to have at most a hundred slices.
-  const bucketSize = 10 ** Math.max(2, Math.ceil(Math.log10(numProperties)) - 2);
-  const numBuckets = Math.ceil(numProperties / bucketSize);
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const title = getTitle(props, object);
-||||||| merged common ancestors
-  const buckets = [];
-  for (let i = 1; i <= numBuckets; i++) {
-    const minKey = (i - 1) * bucketSize;
-    const maxKey = Math.min(i * bucketSize - 1, numProperties - 1);
-    const startIndex = nodeIsBucket(parent) ? parent.meta.startIndex : 0;
-    const minIndex = startIndex + minKey;
-    const maxIndex = startIndex + maxKey;
-    const bucketName = `[${minIndex}…${maxIndex}]`;
-=======
 /***/ 2:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mode === MODE.TINY) {
-    const isEmpty = getLength(object) === 0;
-||||||| merged common ancestors
-    buckets.push(createNode({
-      parent,
-      name: bucketName,
-      contents: null,
-      type: NODE_TYPES.BUCKET,
-      meta: {
-        startIndex: minIndex,
-        endIndex: maxIndex
-      }
-    }));
-  }
-  return buckets;
-}
-
-function makeDefaultPropsBucket(propertiesNames, parent, ownProperties) {
-  const userPropertiesNames = [];
-  const defaultProperties = [];
-=======
 "use strict";
 
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Omit bracketed ellipsis for non-empty non-Array arraylikes (f.e: Sets).
-    if (!isEmpty && object.class !== "Array") {
-      return span(config, title);
-    }
-||||||| merged common ancestors
-  propertiesNames.forEach(name => {
-    if (isDefaultWindowProperty(name)) {
-      defaultProperties.push(name);
-    } else {
-      userPropertiesNames.push(name);
-    }
-  });
-
-  const nodes = makeNodesForOwnProps(userPropertiesNames, parent, ownProperties);
-
-  if (defaultProperties.length > 0) {
-    const defaultPropertiesNode = createNode({
-      parent,
-      name: "<default properties>",
-      contents: null,
-      type: NODE_TYPES.DEFAULT_PROPERTIES
-    });
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
@@ -8087,84 +3826,18 @@ const uneatLastUrlCharsRegex = /(?:[),;.!?`'"]|[.!?]\)|\)[.!?])$/;
 const ELLIPSIS = "\u2026";
 const dom = __webpack_require__(1);
 const { span } = dom;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    brackets = needSpace(false);
-    return span(config, title, span({
-      className: "arrayLeftBracket"
-    }, brackets.left), isEmpty ? null : ellipsisElement, span({
-      className: "arrayRightBracket"
-    }, brackets.right));
-  }
-||||||| merged common ancestors
-    const defaultNodes = defaultProperties.map((name, index) => createNode({
-      parent: defaultPropertiesNode,
-      name: maybeEscapePropertyName(name),
-      path: `${index}/${name}`,
-      contents: ownProperties[name]
-    }));
-    nodes.push(setNodeChildren(defaultPropertiesNode, defaultNodes));
-  }
-  return nodes;
-}
-=======
 /**
  * Returns true if the given object is a grip (see RDP protocol)
  */
 function isGrip(object) {
   return object && object.actor;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const max = maxLengthMap.get(mode);
-  const items = arrayIterator(props, object, max);
-  brackets = needSpace(items.length > 0);
-
-  return span({
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-array"
-  }, title, span({
-    className: "arrayLeftBracket"
-  }, brackets.left), ...interleave(items, ", "), span({
-    className: "arrayRightBracket"
-  }, brackets.right), span({
-    className: "arrayProperties",
-    role: "group"
-  }));
-||||||| merged common ancestors
-function makeNodesForOwnProps(propertiesNames, parent, ownProperties) {
-  return propertiesNames.map(name => createNode({
-    parent,
-    name: maybeEscapePropertyName(name),
-    contents: ownProperties[name]
-  }));
-=======
 function escapeNewLines(value) {
   return value.replace(/\r/gm, "\\r").replace(/\n/gm, "\\n");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getLength(grip) {
-  if (!grip.preview) {
-    return 0;
-  }
-
-  return grip.preview.length || grip.preview.childNodesLength || 0;
-}
-||||||| merged common ancestors
-function makeNodesForProperties(objProps, parent) {
-  const {
-    ownProperties = {},
-    ownSymbols,
-    prototype,
-    safeGetterValues
-  } = objProps;
-
-  const parentValue = getValue(parent);
-=======
 // Map from character code to the corresponding escape sequence.  \0
 // isn't here because it would require special treatment in some
 // situations.  \b, \f, and \v aren't here because they aren't very
@@ -8182,15 +3855,7 @@ const escapeMap = {
   // Backslash.
   0x5c: "\\\\"
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function getTitle(props, object) {
-  const objectLength = getLength(object);
-  const isEmpty = objectLength === 0;
-||||||| merged common ancestors
-  const allProperties = _extends({}, ownProperties, safeGetterValues);
-=======
 // Regexp that matches any character we might possibly want to escape.
 // Note that we over-match here, because it's difficult to, say, match
 // an unpaired surrogate with a regexp.  The details are worked out by
@@ -8214,17 +3879,7 @@ const escapeRegexp = new RegExp("[" +
 "\u2028-\u2029" +
 // Private use area.
 "\ue000-\uf8ff" + "]", "g");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let title = props.title || object.class || DEFAULT_TITLE;
-||||||| merged common ancestors
-  // Ignore properties that are neither non-concrete nor getters/setters.
-  const propertiesNames = sortProperties(Object.keys(allProperties)).filter(name => {
-    if (!allProperties[name]) {
-      return false;
-    }
-=======
 /**
  * Escape a string so that the result is viewable and valid JS.
  * Control characters, other invisibles, invalid characters,
@@ -8272,33 +3927,7 @@ function escapeString(str, escapeWhitespace) {
     return `\\u${`0000${c.toString(16)}`.substr(-4)}`;
   })}"`;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const length = lengthBubble({
-    object,
-    mode: props.mode,
-    maxLengthMap,
-    getLength
-  });
-
-  if (props.mode === MODE.TINY) {
-    if (isEmpty) {
-      if (object.class === DEFAULT_TITLE) {
-        return null;
-      }
-||||||| merged common ancestors
-    const properties = Object.getOwnPropertyNames(allProperties[name]);
-    return properties.some(property => ["value", "getterValue", "get", "set"].includes(property));
-  });
-
-  let nodes = [];
-  if (parentValue && parentValue.class == "Window") {
-    nodes = makeDefaultPropsBucket(propertiesNames, parent, allProperties);
-  } else {
-    nodes = makeNodesForOwnProps(propertiesNames, parent, allProperties);
-  }
-=======
 /**
  * Escape a property name, if needed.  "Escaping" in this context
  * means surrounding the property name with quotes.
@@ -8321,116 +3950,36 @@ function maybeEscapePropertyName(name) {
   }
   return name;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return span({ className: "objectTitle" }, `${title} `);
-    }
-||||||| merged common ancestors
-  if (Array.isArray(ownSymbols)) {
-    ownSymbols.forEach((ownSymbol, index) => {
-      nodes.push(createNode({
-        parent,
-        name: ownSymbol.name,
-        path: `symbol-${index}`,
-        contents: ownSymbol.descriptor || null
-      }));
-    }, this);
-  }
-=======
 function cropMultipleLines(text, limit) {
   return escapeNewLines(cropString(text, limit));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    let trailingSpace;
-    if (object.class === DEFAULT_TITLE) {
-      title = null;
-      trailingSpace = " ";
-    }
-||||||| merged common ancestors
-  if (nodeIsPromise(parent)) {
-    nodes.push(...makeNodesForPromiseProperties(parent));
-  }
-=======
 function rawCropString(text, limit, alternativeText = ELLIPSIS) {
   // Crop the string only if a limit is actually specified.
   if (!limit || limit <= 0) {
     return text;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    return span({ className: "objectTitle" }, title, length, trailingSpace);
-||||||| merged common ancestors
-  if (nodeHasEntries(parent)) {
-    nodes.push(makeNodesForEntries(parent));
-=======
   // Set the limit at least to the length of the alternative text
   // plus one character of the original text.
   if (limit <= alternativeText.length) {
     limit = alternativeText.length + 1;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return span({ className: "objectTitle" }, title, length, " ");
-}
-
-function getPreviewItems(grip) {
-  if (!grip.preview) {
-    return null;
-||||||| merged common ancestors
-  // Add the prototype if it exists and is not null
-  if (prototype && prototype.type !== "null") {
-    nodes.push(makeNodeForPrototype(objProps, parent));
-=======
   const halfLimit = (limit - alternativeText.length) / 2;
 
   if (text.length > limit) {
     return text.substr(0, Math.ceil(halfLimit)) + alternativeText + text.substr(text.length - Math.floor(halfLimit));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return grip.preview.items || grip.preview.childNodes || [];
-||||||| merged common ancestors
-  return nodes;
-=======
   return text;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function arrayIterator(props, grip, max) {
-  const { Rep } = __webpack_require__(1767);
-||||||| merged common ancestors
-function setNodeFullText(loadedProps, node) {
-  if (nodeHasFullText(node) || !nodeIsLongString(node)) {
-    return node;
-  }
-=======
 function cropString(text, limit, alternativeText) {
   return rawCropString(sanitizeString(`${text}`), limit, alternativeText);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let items = [];
-  const gripLength = getLength(grip);
-
-  if (!gripLength) {
-    return items;
-  }
-||||||| merged common ancestors
-  const { fullText } = loadedProps;
-  if (nodeHasValue(node)) {
-    node.contents.value.fullText = fullText;
-  } else if (nodeHasGetterValue(node)) {
-    node.contents.getterValue.fullText = fullText;
-  }
-=======
 function sanitizeString(text) {
   // Replace all non-printable characters, except of
   // (horizontal) tab (HT: \x09) and newline (LF: \x0A, CR: \x0D),
@@ -8439,69 +3988,20 @@ function sanitizeString(text) {
   const re = new RegExp("[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", "g");
   return text.replace(re, "\ufffd");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const previewItems = getPreviewItems(grip);
-  const provider = props.provider;
-||||||| merged common ancestors
-  return node;
-}
-=======
 function parseURLParams(url) {
   url = new URL(url);
   return parseURLEncodedText(url.searchParams);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let emptySlots = 0;
-  let foldedEmptySlots = 0;
-  items = previewItems.reduce((res, itemGrip) => {
-    if (res.length >= max) {
-      return res;
-    }
-||||||| merged common ancestors
-function makeNodeForPrototype(objProps, parent) {
-  const { prototype } = objProps || {};
-=======
 function parseURLEncodedText(text) {
   const params = [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    let object;
-    try {
-      if (!provider && itemGrip === null) {
-        emptySlots++;
-        return res;
-      }
-||||||| merged common ancestors
-  // Add the prototype if it exists and is not null
-  if (prototype && prototype.type !== "null") {
-    return createNode({
-      parent,
-      name: "<prototype>",
-      contents: { value: prototype },
-      type: NODE_TYPES.PROTOTYPE
-    });
-  }
-=======
   // In case the text is empty just return the empty parameters
   if (text == "") {
     return params;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      object = provider ? provider.getValue(itemGrip) : itemGrip;
-    } catch (exc) {
-      object = exc;
-    }
-||||||| merged common ancestors
-  return null;
-}
-=======
   const searchParams = new URLSearchParams(text);
   const entries = [...searchParams.entries()];
   return entries.map(entry => {
@@ -8511,123 +4011,27 @@ function parseURLEncodedText(text) {
     };
   });
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (emptySlots > 0) {
-      res.push(getEmptySlotsElement(emptySlots));
-      foldedEmptySlots = foldedEmptySlots + emptySlots - 1;
-      emptySlots = 0;
-    }
-||||||| merged common ancestors
-function createNode(options) {
-  const {
-    parent,
-    name,
-    path,
-    contents,
-    type = NODE_TYPES.GRIP,
-    meta
-  } = options;
-=======
 function getFileName(url) {
   const split = splitURLBase(url);
   return split.name;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (res.length < max) {
-      res.push(Rep({
-        ...props,
-        object,
-        mode: MODE.TINY,
-        // Do not propagate title to array items reps
-        title: undefined
-      }));
-    }
-
-    return res;
-  }, []);
-
-  // Handle trailing empty slots if there are some.
-  if (items.length < max && emptySlots > 0) {
-    items.push(getEmptySlotsElement(emptySlots));
-    foldedEmptySlots = foldedEmptySlots + emptySlots - 1;
-||||||| merged common ancestors
-  if (contents === undefined) {
-    return null;
-=======
 function splitURLBase(url) {
   if (!isDataURL(url)) {
     return splitURLTrue(url);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-
-  const itemsShown = items.length + foldedEmptySlots;
-  if (gripLength > itemsShown) {
-    items.push(ellipsisElement);
-  }
-||||||| merged common ancestors
-
-  // The path is important to uniquely identify the item in the entire
-  // tree. This helps debugging & optimizes React's rendering of large
-  // lists. The path will be separated by property name, wrapped in a Symbol
-  // to avoid name clashing,
-  // i.e. `{ foo: { bar: { baz: 5 }}}` will have a path of Symbol(`foo/bar/baz`)
-  // for the inner object.
-  return {
-    parent,
-    name,
-    path: parent ? Symbol(`${getSymbolDescriptor(parent.path)}/${path || name}`) : Symbol(path || name),
-    contents,
-    type,
-    meta
-  };
-}
-=======
   return {};
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return items;
-||||||| merged common ancestors
-function getSymbolDescriptor(symbol) {
-  return symbol.toString().replace(/^(Symbol\()(.*)(\))$/, "$2");
-=======
 function getURLDisplayString(url) {
   return cropString(url);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function getEmptySlotsElement(number) {
-  // TODO: Use l10N - See https://github.com/devtools-html/reps/issues/141
-  return `<${number} empty slot${number > 1 ? "s" : ""}>`;
-||||||| merged common ancestors
-function setNodeChildren(node, children) {
-  node.contents = children;
-  return node;
-=======
 function isDataURL(url) {
   return url && url.substr(0, 5) == "data:";
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function supportsObject(grip, noGrip = false) {
-  if (noGrip === true || !isGrip(grip)) {
-    return false;
-||||||| merged common ancestors
-function getChildren(options) {
-  const { cachedNodes, loadedProperties = new Map(), item } = options;
-
-  const key = item.path;
-  if (cachedNodes && cachedNodes.has(key)) {
-    return cachedNodes.get(key);
-=======
 function splitURLTrue(url) {
   const reSplitFile = /(.*?):\/{2,3}([^\/]*)(.*?)([^\/]*?)($|\?.*)/;
   const m = reSplitFile.exec(url);
@@ -8644,72 +4048,8 @@ function splitURLTrue(url) {
       path: m[3],
       name: m[3] != "/" ? m[3] : m[2]
     };
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return grip.preview && (grip.preview.kind == "ArrayLike" || getGripType(grip, noGrip) === "DocumentFragment");
-}
-||||||| merged common ancestors
-  const loadedProps = loadedProperties.get(key);
-  const hasLoadedProps = loadedProperties.has(key);
-
-  // Because we are dynamically creating the tree as the user
-  // expands it (not precalculated tree structure), we cache child
-  // arrays. This not only helps performance, but is necessary
-  // because the expanded state depends on instances of nodes
-  // being the same across renders. If we didn't do this, each
-  // node would be a new instance every render.
-  // If the node needs properties, we only add children to
-  // the cache if the properties are loaded.
-  const addToCache = children => {
-    if (cachedNodes) {
-      cachedNodes.set(item.path, children);
-    }
-    return children;
-  };
-
-  // Nodes can either have children already, or be an object with
-  // properties that we need to go and fetch.
-  if (nodeHasChildren(item)) {
-    return addToCache(item.contents);
-  }
-
-  if (nodeHasAccessors(item)) {
-    return addToCache(makeNodesForAccessors(item));
-  }
-
-  if (nodeIsMapEntry(item)) {
-    return addToCache(makeNodesForMapEntry(item));
-  }
-
-  if (nodeIsProxy(item)) {
-    return addToCache(makeNodesForProxyProperties(item));
-  }
-
-  if (nodeIsLongString(item) && hasLoadedProps) {
-    // Set longString object's fullText to fetched one.
-    return addToCache(setNodeFullText(loadedProps, item));
-  }
-
-  if (nodeNeedsNumericalBuckets(item) && hasLoadedProps) {
-    // Even if we have numerical buckets, we should have loaded non indexed
-    // properties.
-    const bucketNodes = makeNumericalBuckets(item);
-    return addToCache(bucketNodes.concat(makeNodesForProperties(loadedProps, item)));
-  }
-
-  if (!nodeIsEntries(item) && !nodeIsBucket(item) && !nodeHasProperties(item)) {
-    return [];
-  }
-
-  if (!hasLoadedProps) {
-    return [];
-  }
-
-  return addToCache(makeNodesForProperties(loadedProps, item));
-}
-=======
   return {
     protocol: m[1],
     domain: m[2],
@@ -8790,79 +4130,18 @@ function getGripPreviewItems(grip) {
 
     const propertyKeys = Object.keys(grip.preview.ownProperties);
     propertiesValues = propertiesValues.concat(propertyKeys);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const maxLengthMap = new Map();
-maxLengthMap.set(MODE.SHORT, 3);
-maxLengthMap.set(MODE.LONG, 10);
-||||||| merged common ancestors
-function getParent(item) {
-  return item.parent;
-}
-=======
     // ArrayBuffer Grip
     if (grip.preview.safeGetterValues) {
       propertiesValues = propertiesValues.concat(Object.values(grip.preview.safeGetterValues).map(property => property.getterValue || property));
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Exports from this module
-module.exports = {
-  rep: wrapRender(GripArray),
-  supportsObject,
-  maxLengthMap,
-  getLength
-};
-||||||| merged common ancestors
-function getNumericalPropertiesCount(item) {
-  if (nodeIsBucket(item)) {
-    return item.meta.endIndex - item.meta.startIndex + 1;
-  }
-=======
     return propertiesValues;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-  const value = getValue(getClosestGripNode(item));
-  if (!value) {
-    return 0;
-  }
-=======
   return [];
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1798:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-  if (GripArrayRep.supportsObject(value)) {
-    return GripArrayRep.getLength(value);
-  }
-
-  if (GripMap.supportsObject(value)) {
-    return GripMap.getLength(value);
-  }
-
-  // TODO: We can also have numerical properties on Objects, but at the
-  // moment we don't have a way to distinguish them from non-indexed properties,
-  // as they are all computed in a ownPropertiesLength property.
-
-  return 0;
-}
-=======
 /**
  * Get the type of an object.
  *
@@ -8879,26 +4158,7 @@ function getGripType(object, noGrip) {
   }
   return object.type;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-
-const { wrapRender } = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-const { ModePropType } = __webpack_require__(1774);
-||||||| merged common ancestors
-function getClosestGripNode(item) {
-  const type = getType(item);
-  if (type !== NODE_TYPES.BUCKET && type !== NODE_TYPES.DEFAULT_PROPERTIES && type !== NODE_TYPES.ENTRIES) {
-    return item;
-  }
-
-  const parent = getParent(item);
-  if (!parent) {
-    return null;
-  }
-=======
 /**
  * Determines whether a grip is a string containing a URL.
  *
@@ -8912,55 +4172,10 @@ function containsURL(grip) {
   if (typeof grip !== "string" || grip.length < 5) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-const { span } = dom;
-||||||| merged common ancestors
-  return getClosestGripNode(parent);
-}
-=======
   return validProtocols.test(grip);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-GripLengthBubble.propTypes = {
-  object: PropTypes.object.isRequired,
-  maxLengthMap: PropTypes.instanceOf(Map).isRequired,
-  getLength: PropTypes.func.isRequired,
-  mode: ModePropType,
-  visibilityThreshold: PropTypes.number
-};
-
-function GripLengthBubble(props) {
-  const {
-    object,
-    mode = MODE.SHORT,
-    visibilityThreshold = 2,
-    maxLengthMap,
-    getLength,
-    showZeroLength = false
-  } = props;
-
-  const length = getLength(object);
-  const isEmpty = length === 0;
-  const isObvious = [MODE.SHORT, MODE.LONG].includes(mode) && length > 0 && length <= maxLengthMap.get(mode) && length <= visibilityThreshold;
-  if (isEmpty && !showZeroLength || isObvious) {
-    return "";
-||||||| merged common ancestors
-function getClosestNonBucketNode(item) {
-  const type = getType(item);
-
-  if (type !== NODE_TYPES.BUCKET) {
-    return item;
-  }
-
-  const parent = getParent(item);
-  if (!parent) {
-    return null;
-=======
 /**
  * Determines whether a string token is a valid URL.
  *
@@ -8978,17 +4193,9 @@ function isURL(token) {
     return true;
   } catch (e) {
     return false;
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-  return span({
-    className: "objectLengthBubble"
-  }, `(${length})`);
-||||||| merged common ancestors
-  return getClosestNonBucketNode(parent);
-=======
 /**
  * Returns new array in which `char` are interleaved between the original items.
  *
@@ -9003,7 +4210,6 @@ function interleave(items, char) {
     }
     return res.concat(item);
   }, []);
->>>>>>> upstream-releases
 }
 
 const ellipsisElement = span({
@@ -9013,54 +4219,6 @@ const ellipsisElement = span({
 }, ELLIPSIS);
 
 module.exports = {
-<<<<<<< HEAD
-  lengthBubble: wrapRender(GripLengthBubble)
-||||||| merged common ancestors
-  createNode,
-  getActor,
-  getChildren,
-  getClosestGripNode,
-  getClosestNonBucketNode,
-  getParent,
-  getNumericalPropertiesCount,
-  getValue,
-  makeNodesForEntries,
-  makeNodesForPromiseProperties,
-  makeNodesForProperties,
-  makeNumericalBuckets,
-  nodeHasAccessors,
-  nodeHasAllEntriesInPreview,
-  nodeHasChildren,
-  nodeHasEntries,
-  nodeHasProperties,
-  nodeIsBlock,
-  nodeIsBucket,
-  nodeIsDefaultProperties,
-  nodeIsEntries,
-  nodeIsError,
-  nodeIsLongString,
-  nodeHasFullText,
-  nodeIsFunction,
-  nodeIsGetter,
-  nodeIsMapEntry,
-  nodeIsMissingArguments,
-  nodeIsObject,
-  nodeIsOptimizedOut,
-  nodeIsPrimitive,
-  nodeIsPromise,
-  nodeIsPrototype,
-  nodeIsProxy,
-  nodeIsSetter,
-  nodeIsUninitializedBinding,
-  nodeIsUnmappedBinding,
-  nodeIsUnscopedBinding,
-  nodeIsWindow,
-  nodeNeedsNumericalBuckets,
-  nodeSupportsNumericalBucketing,
-  setNodeChildren,
-  sortProperties,
-  NODE_TYPES
-=======
   interleave,
   isGrip,
   isURL,
@@ -9082,50 +4240,22 @@ module.exports = {
   ELLIPSIS,
   uneatLastUrlCharsRegex,
   urlRegex
->>>>>>> upstream-releases
 };
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1799:
-||||||| merged common ancestors
-/***/ 3669:
-=======
 /***/ 24:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-var _tree = __webpack_require__(3670);
-
-var _tree2 = _interopRequireDefault(_tree);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 __webpack_require__(458);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Dependencies
-||||||| merged common ancestors
-module.exports = {
-  Tree: _tree2.default
-}; /* This Source Code Form is subject to the terms of the Mozilla Public
-    * License, v. 2.0. If a copy of the MPL was not distributed with this
-    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-=======
 // Load all existing rep templates
 const Undefined = __webpack_require__(459);
 const Null = __webpack_require__(460);
@@ -9137,23 +4267,7 @@ const SymbolRep = __webpack_require__(463);
 const InfinityRep = __webpack_require__(464);
 const NaNRep = __webpack_require__(465);
 const Accessor = __webpack_require__(466);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { lengthBubble } = __webpack_require__(1798);
-const PropTypes = __webpack_require__(1758);
-const {
-  interleave,
-  isGrip,
-  wrapRender,
-  ellipsisElement
-} = __webpack_require__(1760);
-const PropRep = __webpack_require__(1775);
-const { MODE } = __webpack_require__(1762);
-const { ModePropType } = __webpack_require__(1774);
-||||||| merged common ancestors
-/***/ }),
-=======
 // DOM types (grips)
 const Accessible = __webpack_require__(467);
 const Attribute = __webpack_require__(468);
@@ -9177,38 +4291,12 @@ const GripArray = __webpack_require__(192);
 const GripMap = __webpack_require__(194);
 const GripMapEntry = __webpack_require__(195);
 const Grip = __webpack_require__(113);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { span } = __webpack_require__(1759);
-||||||| merged common ancestors
-/***/ 3670:
-/***/ (function(module, exports, __webpack_require__) {
-=======
 // List of all registered template.
 // XXX there should be a way for extensions to register a new
 // or modify an existing rep.
 const reps = [RegExp, StyleSheet, Event, DateTime, CommentNode, Accessible, ElementNode, TextNode, Attribute, Func, PromiseRep, ArrayRep, Document, DocumentType, Window, ObjectWithText, ObjectWithURL, ErrorRep, GripArray, GripMap, GripMapEntry, Grip, Undefined, Null, StringRep, Number, BigInt, SymbolRep, InfinityRep, NaNRep, Accessor, Obj];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * Renders an map. A map is represented by a list of its
- * entries enclosed in curly brackets.
- */
-GripMap.propTypes = {
-  object: PropTypes.object,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: ModePropType,
-  isInterestingEntry: PropTypes.func,
-  onDOMNodeMouseOver: PropTypes.func,
-  onDOMNodeMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func,
-  title: PropTypes.string
-};
-||||||| merged common ancestors
-"use strict";
-=======
 /**
  * Generic rep that is used for rendering native JS types or an object.
  * The right template used for rendering is picked automatically according
@@ -9220,26 +4308,9 @@ const Rep = function (props) {
   const rep = getRep(object, defaultRep, props.noGrip);
   return rep(props);
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function GripMap(props) {
-  const { mode, object } = props;
-||||||| merged common ancestors
-=======
 // Helpers
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const config = {
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-object"
-  };
-||||||| merged common ancestors
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-=======
 /**
  * Return a rep object that is responsible for rendering given
  * object.
@@ -9268,25 +4339,10 @@ function getRep(object, defaultRep = Grip, noGrip = false) {
       console.error(err);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const title = getTitle(props, object);
-  const isEmpty = getLength(object) === 0;
-||||||| merged common ancestors
-var _react = __webpack_require__(0);
-=======
   return defaultRep.rep;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (isEmpty || mode === MODE.TINY) {
-    return span(config, title);
-  }
-||||||| merged common ancestors
-var _react2 = _interopRequireDefault(_react);
-=======
 module.exports = {
   Rep,
   REPS: {
@@ -9327,259 +4383,13 @@ module.exports = {
   // Exporting for tests
   getRep
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const propsArray = safeEntriesIterator(props, object, maxLengthMap.get(mode));
-||||||| merged common ancestors
-var _reactDomFactories = __webpack_require__(3643);
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return span(config, title, span({
-    className: "objectLeftBrace"
-  }, " { "), ...interleave(propsArray, ", "), span({
-    className: "objectRightBrace"
-  }, " }"));
-}
-||||||| merged common ancestors
-var _reactDomFactories2 = _interopRequireDefault(_reactDomFactories);
-=======
 /***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-function getTitle(props, object) {
-  const title = props.title || (object && object.class ? object.class : "Map");
-  return span({
-    className: "objectTitle"
-  }, title, lengthBubble({
-    object,
-    mode: props.mode,
-    maxLengthMap,
-    getLength,
-    showZeroLength: true
-  }));
-}
-
-function safeEntriesIterator(props, object, max) {
-  max = typeof max === "undefined" ? 3 : max;
-  try {
-    return entriesIterator(props, object, max);
-  } catch (err) {
-    console.error(err);
-  }
-  return [];
-}
-
-function entriesIterator(props, object, max) {
-  // Entry filter. Show only interesting entries to the user.
-  const isInterestingEntry = props.isInterestingEntry || ((type, value) => {
-    return type == "boolean" || type == "number" || type == "string" && value.length != 0;
-  });
-
-  const mapEntries = object.preview && object.preview.entries ? object.preview.entries : [];
-
-  let indexes = getEntriesIndexes(mapEntries, max, isInterestingEntry);
-  if (indexes.length < max && indexes.length < mapEntries.length) {
-    // There are not enough entries yet, so we add uninteresting entries.
-    indexes = indexes.concat(getEntriesIndexes(mapEntries, max - indexes.length, (t, value, name) => {
-      return !isInterestingEntry(t, value, name);
-    }));
-  }
-
-  const entries = getEntries(props, mapEntries, indexes);
-  if (entries.length < getLength(object)) {
-    // There are some undisplayed entries. Then display "…".
-    entries.push(ellipsisElement);
-  }
-
-  return entries;
-}
-
-/**
- * Get entries ordered by index.
- *
- * @param {Object} props Component props.
- * @param {Array} entries Entries array.
- * @param {Array} indexes Indexes of entries.
- * @return {Array} Array of PropRep.
- */
-function getEntries(props, entries, indexes) {
-  const { onDOMNodeMouseOver, onDOMNodeMouseOut, onInspectIconClick } = props;
-
-  // Make indexes ordered by ascending.
-  indexes.sort(function (a, b) {
-    return a - b;
-  });
-
-  return indexes.map((index, i) => {
-    const [key, entryValue] = entries[index];
-    const value = entryValue.value !== undefined ? entryValue.value : entryValue;
-
-    return PropRep({
-      name: key,
-      equal: " \u2192 ",
-      object: value,
-      mode: MODE.TINY,
-      onDOMNodeMouseOver,
-      onDOMNodeMouseOut,
-      onInspectIconClick
-    });
-  });
-}
-
-/**
- * Get the indexes of entries in the map.
- *
- * @param {Array} entries Entries array.
- * @param {Number} max The maximum length of indexes array.
- * @param {Function} filter Filter the entry you want.
- * @return {Array} Indexes of filtered entries in the map.
- */
-function getEntriesIndexes(entries, max, filter) {
-  return entries.reduce((indexes, [key, entry], i) => {
-    if (indexes.length < max) {
-      const value = entry && entry.value !== undefined ? entry.value : entry;
-      // Type is specified in grip's "class" field and for primitive
-      // values use typeof.
-      const type = (value && value.class ? value.class : typeof value).toLowerCase();
-
-      if (filter(type, value, key)) {
-        indexes.push(i);
-      }
-    }
-
-    return indexes;
-  }, []);
-}
-
-function getLength(grip) {
-  return grip.preview.size || 0;
-}
-
-function supportsObject(grip, noGrip = false) {
-  if (noGrip === true || !isGrip(grip)) {
-    return false;
-  }
-  return grip.preview && grip.preview.kind == "MapLike";
-}
-
-const maxLengthMap = new Map();
-maxLengthMap.set(MODE.SHORT, 3);
-maxLengthMap.set(MODE.LONG, 10);
-
-// Exports from this module
-module.exports = {
-  rep: wrapRender(GripMap),
-  supportsObject,
-  maxLengthMap,
-  getLength
-};
-
-/***/ }),
-
-/***/ 1800:
-/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-// Dependencies
-const PropTypes = __webpack_require__(1758);
-// Shortcuts
-const dom = __webpack_require__(1759);
-const { span } = dom;
-const { wrapRender } = __webpack_require__(1760);
-const PropRep = __webpack_require__(1775);
-const { MODE } = __webpack_require__(1762);
-/**
- * Renders an map entry. A map entry is represented by its key,
- * a column and its value.
- */
-GripMapEntry.propTypes = {
-  object: PropTypes.object,
-  // @TODO Change this to Object.values when supported in Node's version of V8
-  mode: PropTypes.oneOf(Object.keys(MODE).map(key => MODE[key])),
-  onDOMNodeMouseOver: PropTypes.func,
-  onDOMNodeMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func
-};
-
-function GripMapEntry(props) {
-  const { object } = props;
-
-  const { key, value } = object.preview;
-
-  return span({
-    className: "objectBox objectBox-map-entry"
-  }, PropRep({
-    ...props,
-    name: key,
-    object: value,
-    equal: " \u2192 ",
-    title: null,
-    suppressQuotes: false
-  }));
-}
-
-function supportsObject(grip, noGrip = false) {
-  if (noGrip === true) {
-    return false;
-  }
-  return grip && (grip.type === "mapEntry" || grip.type === "storageEntry") && grip.preview;
-}
-
-function createGripMapEntry(key, value) {
-  return {
-    type: "mapEntry",
-    preview: {
-      key,
-      value
-    }
-  };
-}
-
-// Exports from this module
-module.exports = {
-  rep: wrapRender(GripMapEntry),
-  createGripMapEntry,
-  supportsObject
-};
-
-/***/ }),
-
-/***/ 1801:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDomFactories = __webpack_require__(1759);
-
-var _reactDomFactories2 = _interopRequireDefault(_reactDomFactories);
-
-var _propTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-var _propTypes = __webpack_require__(3642);
-=======
-"use strict";
->>>>>>> upstream-releases
 
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -9589,11 +4399,6 @@ var _propTypes = __webpack_require__(3642);
 // Dependencies
 const PropTypes = __webpack_require__(0);
 
-<<<<<<< HEAD
-__webpack_require__(1802);
-||||||| merged common ancestors
-__webpack_require__(3671);
-=======
 const {
   containsURL,
   escapeString,
@@ -9606,7 +4411,6 @@ const {
   uneatLastUrlCharsRegex,
   urlRegex
 } = __webpack_require__(2);
->>>>>>> upstream-releases
 
 const dom = __webpack_require__(1);
 const { a, span } = dom;
@@ -9643,29 +4447,7 @@ function StringRep(props) {
     isInContentPage
   } = props;
 
-<<<<<<< HEAD
-    const classNames = ["arrow"];
-    if (expanded) {
-      classNames.push("expanded");
-    }
-    return _reactDomFactories2.default.button({
-      className: classNames.join(" ")
-    });
-  }
-}
-||||||| merged common ancestors
-    const classNames = ["arrow"];
-    if (expanded) {
-      classNames.push("expanded");
-    }
-    return _reactDomFactories2.default.img({
-      className: classNames.join(" ")
-    });
-  }
-}
-=======
   let text = object;
->>>>>>> upstream-releases
 
   const isLong = isLongString(object);
   const isOpen = member && member.open;
@@ -9896,339 +4678,12 @@ function getCroppedString(text, offset = 0, startCropIndex, endCropIndex) {
     return text.substring(0, cutIndex) + ELLIPSIS + (shouldCropStart ? text.substring(endCropIndex - start) : "");
   }
 
-<<<<<<< HEAD
-  componentWillReceiveProps(nextProps) {
-    this._autoExpand();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.focused && prevProps.focused !== this.props.focused) {
-      this._scrollNodeIntoView(this.props.focused);
-      // Always keep the focus on the tree itself.
-      this.treeRef.focus();
-    }
-  }
-
-  _autoExpand() {
-    if (!this.props.autoExpandDepth) {
-      return;
-    }
-
-    // Automatically expand the first autoExpandDepth levels for new items. Do
-    // not use the usual DFS infrastructure because we don't want to ignore
-    // collapsed nodes.
-    const autoExpand = (item, currentDepth) => {
-      if (currentDepth >= this.props.autoExpandDepth || this.state.seen.has(item)) {
-        return;
-      }
-
-      this.props.onExpand(item);
-      this.state.seen.add(item);
-
-      const children = this.props.getChildren(item);
-      const length = children.length;
-      for (let i = 0; i < length; i++) {
-        autoExpand(children[i], currentDepth + 1);
-      }
-    };
-
-    const roots = this.props.getRoots();
-    const length = roots.length;
-    if (this.props.autoExpandAll) {
-      for (let i = 0; i < length; i++) {
-        autoExpand(roots[i], 0);
-      }
-    } else if (length != 0) {
-      autoExpand(roots[0], 0);
-    }
-  }
-
-  _preventArrowKeyScrolling(e) {
-    switch (e.key) {
-      case "ArrowUp":
-      case "ArrowDown":
-      case "ArrowLeft":
-      case "ArrowRight":
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.nativeEvent) {
-          if (e.nativeEvent.preventDefault) {
-            e.nativeEvent.preventDefault();
-          }
-          if (e.nativeEvent.stopPropagation) {
-            e.nativeEvent.stopPropagation();
-          }
-        }
-    }
-  }
-
-  /**
-   * Perform a pre-order depth-first search from item.
-   */
-  _dfs(item, maxDepth = Infinity, traversal = [], _depth = 0) {
-    traversal.push({ item, depth: _depth });
-
-    if (!this.props.isExpanded(item)) {
-      return traversal;
-    }
-
-    const nextDepth = _depth + 1;
-
-    if (nextDepth > maxDepth) {
-      return traversal;
-    }
-
-    const children = this.props.getChildren(item);
-    const length = children.length;
-    for (let i = 0; i < length; i++) {
-      this._dfs(children[i], maxDepth, traversal, nextDepth);
-    }
-
-    return traversal;
-  }
-
-  /**
-   * Perform a pre-order depth-first search over the whole forest.
-   */
-  _dfsFromRoots(maxDepth = Infinity) {
-    const traversal = [];
-
-    const roots = this.props.getRoots();
-    const length = roots.length;
-    for (let i = 0; i < length; i++) {
-      this._dfs(roots[i], maxDepth, traversal);
-    }
-
-    return traversal;
-  }
-
-  /**
-   * Expands current row.
-   *
-   * @param {Object} item
-   * @param {Boolean} expandAllChildren
-   */
-  _onExpand(item, expandAllChildren) {
-    if (this.props.onExpand) {
-      this.props.onExpand(item);
-
-      if (expandAllChildren) {
-        const children = this._dfs(item);
-        const length = children.length;
-        for (let i = 0; i < length; i++) {
-          this.props.onExpand(children[i].item);
-        }
-      }
-    }
-  }
-
-  /**
-   * Collapses current row.
-   *
-   * @param {Object} item
-   */
-  _onCollapse(item) {
-    if (this.props.onCollapse) {
-      this.props.onCollapse(item);
-    }
-  }
-
-  /**
-   * Sets the passed in item to be the focused item.
-   *
-   * @param {Object|undefined} item
-   *        The item to be focused, or undefined to focus no item.
-   *
-   * @param {Object|undefined} options
-   *        An options object which can contain:
-   *          - dir: "up" or "down" to indicate if we should scroll the element
-   *                 to the top or the bottom of the scrollable container when
-   *                 the element is off canvas.
-   */
-  _focus(item, options = {}) {
-    const { preventAutoScroll } = options;
-    if (item && !preventAutoScroll) {
-      this._scrollNodeIntoView(item, options);
-    }
-    if (this.props.onFocus) {
-      this.props.onFocus(item);
-    }
-  }
-
-  /**
-   * Sets the passed in item to be the focused item.
-   *
-   * @param {Object|undefined} item
-   *        The item to be scrolled to.
-   *
-   * @param {Object|undefined} options
-   *        An options object which can contain:
-   *          - dir: "up" or "down" to indicate if we should scroll the element
-   *                 to the top or the bottom of the scrollable container when
-   *                 the element is off canvas.
-   */
-  _scrollNodeIntoView(item, options = {}) {
-    if (item !== undefined) {
-      const treeElement = this.treeRef;
-      const element = document.getElementById(this.props.getKey(item));
-
-      if (element) {
-        const { top, bottom } = element.getBoundingClientRect();
-        const closestScrolledParent = node => {
-          if (node == null) {
-            return null;
-          }
-
-          if (node.scrollHeight > node.clientHeight) {
-            return node;
-          }
-          return closestScrolledParent(node.parentNode);
-        };
-        const scrolledParent = closestScrolledParent(treeElement);
-        const scrolledParentRect = scrolledParent ? scrolledParent.getBoundingClientRect() : null;
-        const isVisible = !scrolledParent || top >= scrolledParentRect.top && bottom <= scrolledParentRect.bottom;
-
-        if (!isVisible) {
-          const { alignTo } = options;
-          const scrollToTop = alignTo ? alignTo === "top" : !scrolledParentRect || top < scrolledParentRect.top;
-          element.scrollIntoView(scrollToTop);
-        }
-      }
-    }
-  }
-
-  /**
-   * Sets the state to have no focused item.
-   */
-  _onBlur() {
-    if (!this.props.preventBlur) {
-      this._focus(undefined);
-    }
-  }
-
-  /**
-   * Handles key down events in the tree's container.
-   *
-   * @param {Event} e
-   */
-  _onKeyDown(e) {
-    if (this.props.focused == null) {
-      return;
-    }
-
-    // Allow parent nodes to use navigation arrows with modifiers.
-    if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
-      return;
-    }
-
-    this._preventArrowKeyScrolling(e);
-
-    switch (e.key) {
-      case "ArrowUp":
-        this._focusPrevNode();
-        return;
-
-      case "ArrowDown":
-        this._focusNextNode();
-        return;
-
-      case "ArrowLeft":
-        if (this.props.isExpanded(this.props.focused) && this._nodeIsExpandable(this.props.focused)) {
-          this._onCollapse(this.props.focused);
-        } else {
-          this._focusParentNode();
-        }
-        return;
-
-      case "ArrowRight":
-        if (this._nodeIsExpandable(this.props.focused) && !this.props.isExpanded(this.props.focused)) {
-          this._onExpand(this.props.focused);
-        } else {
-          this._focusNextNode();
-        }
-        return;
-
-      case "Home":
-        this._focusFirstNode();
-        return;
-
-      case "End":
-        this._focusLastNode();
-        return;
-
-      case "Enter":
-        this._activateNode();
-    }
-  }
-
-  /**
-   * Sets the previous node relative to the currently focused item, to focused.
-   */
-  _focusPrevNode() {
-    // Start a depth first search and keep going until we reach the currently
-    // focused node. Focus the previous node in the DFS, if it exists. If it
-    // doesn't exist, we're at the first node already.
-
-    let prev;
-
-    const traversal = this._dfsFromRoots();
-    const length = traversal.length;
-    for (let i = 0; i < length; i++) {
-      const item = traversal[i].item;
-      if (item === this.props.focused) {
-        break;
-      }
-      prev = item;
-    }
-    if (prev === undefined) {
-      return;
-    }
-
-    this._focus(prev, { alignTo: "top" });
-  }
-
-  /**
-   * Handles the down arrow key which will focus either the next child
-   * or sibling row.
-   */
-  _focusNextNode() {
-    // Start a depth first search and keep going until we reach the currently
-    // focused node. Focus the next node in the DFS, if it exists. If it
-    // doesn't exist, we're at the last node already.
-    const traversal = this._dfsFromRoots();
-    const length = traversal.length;
-    let i = 0;
-
-    while (i < length) {
-      if (traversal[i].item === this.props.focused) {
-        break;
-      }
-      i++;
-    }
-||||||| merged common ancestors
-  componentWillReceiveProps(nextProps) {
-    this._autoExpand();
-  }
-=======
   if (shouldCropStart) {
     // The string should be cropped at the beginning.
     const cutIndex = endCropIndex - start;
     return text.substring(cutIndex);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (i + 1 < traversal.length) {
-      this._focus(traversal[i + 1].item, { alignTo: "bottom" });
-    }
-||||||| merged common ancestors
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.focused && prevProps.focused !== this.props.focused) {
-      this._scrollNodeIntoView(this.props.focused);
-      // Always keep the focus on the tree itself.
-      this.treeRef.focus();
-    }
-=======
   return text;
 }
 
@@ -10239,250 +4694,34 @@ function isLongString(object) {
 function supportsObject(object, noGrip = false) {
   if (noGrip === false && isGrip(object)) {
     return isLongString(object);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  /**
-   * Handles the left arrow key, going back up to the current rows'
-   * parent row.
-   */
-  _focusParentNode() {
-    const parent = this.props.getParent(this.props.focused);
-    if (!parent) {
-      this._focusPrevNode(this.props.focused);
-      return;
-    }
-||||||| merged common ancestors
-  _autoExpand() {
-    if (!this.props.autoExpandDepth) {
-      return;
-    }
-=======
   return getGripType(object, noGrip) == "string";
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    this._focus(parent, { alignTo: "top" });
-  }
-||||||| merged common ancestors
-    // Automatically expand the first autoExpandDepth levels for new items. Do
-    // not use the usual DFS infrastructure because we don't want to ignore
-    // collapsed nodes.
-    const autoExpand = (item, currentDepth) => {
-      if (currentDepth >= this.props.autoExpandDepth || this.state.seen.has(item)) {
-        return;
-      }
-=======
 // Exports from this module
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  _focusFirstNode() {
-    const traversal = this._dfsFromRoots();
-    this._focus(traversal[0].item, { alignTo: "top" });
-  }
-||||||| merged common ancestors
-      this.props.onExpand(item);
-      this.state.seen.add(item);
-=======
 module.exports = {
   rep: wrapRender(StringRep),
   supportsObject,
   isLongString
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  _focusLastNode() {
-    const traversal = this._dfsFromRoots();
-    const lastIndex = traversal.length - 1;
-    this._focus(traversal[lastIndex].item, { alignTo: "bottom" });
-  }
-||||||| merged common ancestors
-      const children = this.props.getChildren(item);
-      const length = children.length;
-      for (let i = 0; i < length; i++) {
-        autoExpand(children[i], currentDepth + 1);
-      }
-    };
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  _activateNode() {
-    if (this.props.onActivate) {
-      this.props.onActivate(this.props.focused);
-    }
-  }
-||||||| merged common ancestors
-    const roots = this.props.getRoots();
-    const length = roots.length;
-    if (this.props.autoExpandAll) {
-      for (let i = 0; i < length; i++) {
-        autoExpand(roots[i], 0);
-      }
-    } else if (length != 0) {
-      autoExpand(roots[0], 0);
-    }
-  }
-=======
 /***/ 37:
 /***/ (function(module, exports) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  _nodeIsExpandable(item) {
-    return this.props.isExpandable ? this.props.isExpandable(item) : !!this.props.getChildren(item).length;
-  }
-
-  render() {
-    const traversal = this._dfsFromRoots();
-    const { focused } = this.props;
-
-    const nodes = traversal.map((v, i) => {
-      const { item, depth } = traversal[i];
-      const key = this.props.getKey(item, i);
-      return TreeNodeFactory({
-        key,
-        id: key,
-        index: i,
-        item,
-        depth,
-        renderItem: this.props.renderItem,
-        focused: focused === item,
-        expanded: this.props.isExpanded(item),
-        isExpandable: this._nodeIsExpandable(item),
-        onExpand: this._onExpand,
-        onCollapse: this._onCollapse,
-        onClick: e => {
-          // We can stop the propagation since click handler on the node can be
-          // created in `renderItem`.
-          e.stopPropagation();
-
-          // Since the user just clicked the node, there's no need to check if
-          // it should be scrolled into view.
-          this._focus(item, { preventAutoScroll: true });
-          if (this.props.isExpanded(item)) {
-            this.props.onCollapse(item);
-          } else {
-            this.props.onExpand(item, e.altKey);
-          }
-        }
-      });
-    });
-
-    const style = Object.assign({}, this.props.style || {}, {
-      padding: 0,
-      margin: 0
-    });
-
-    return _reactDomFactories2.default.div({
-      className: `tree ${this.props.className ? this.props.className : ""}`,
-      ref: el => {
-        this.treeRef = el;
-      },
-      role: "tree",
-      tabIndex: "0",
-      onKeyDown: this._onKeyDown,
-      onKeyPress: this._preventArrowKeyScrolling,
-      onKeyUp: this._preventArrowKeyScrolling,
-      onFocus: ({ nativeEvent }) => {
-        if (focused || !nativeEvent || !this.treeRef) {
-          return;
-        }
-
-        const { explicitOriginalTarget } = nativeEvent;
-        // Only set default focus to the first tree node if the focus came
-        // from outside the tree (e.g. by tabbing to the tree from other
-        // external elements).
-        if (explicitOriginalTarget !== this.treeRef && !this.treeRef.contains(explicitOriginalTarget)) {
-          this._focus(traversal[0].item);
-        }
-      },
-      onBlur: this._onBlur,
-      "aria-label": this.props.label,
-      "aria-labelledby": this.props.labelledby,
-      "aria-activedescendant": focused && this.props.getKey(focused),
-      style
-    }, nodes);
-  }
-}
-||||||| merged common ancestors
-  _preventArrowKeyScrolling(e) {
-    switch (e.key) {
-      case "ArrowUp":
-      case "ArrowDown":
-      case "ArrowLeft":
-      case "ArrowRight":
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.nativeEvent) {
-          if (e.nativeEvent.preventDefault) {
-            e.nativeEvent.preventDefault();
-          }
-          if (e.nativeEvent.stopPropagation) {
-            e.nativeEvent.stopPropagation();
-          }
-        }
-    }
-  }
-=======
 module.exports = __WEBPACK_EXTERNAL_MODULE_37__;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-exports.default = Tree;
-||||||| merged common ancestors
-  /**
-   * Perform a pre-order depth-first search from item.
-   */
-  _dfs(item, maxDepth = Infinity, traversal = [], _depth = 0) {
-    traversal.push({ item, depth: _depth });
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-    if (!this.props.isExpanded(item)) {
-      return traversal;
-    }
-=======
 /***/ 38:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1802:
-/***/ (function(module, exports) {
-||||||| merged common ancestors
-    const nextDepth = _depth + 1;
-=======
 "use strict";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// removed by extract-text-webpack-plugin
-||||||| merged common ancestors
-    if (nextDepth > maxDepth) {
-      return traversal;
-    }
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-    const children = this.props.getChildren(item);
-    const length = children.length;
-    for (let i = 0; i < length; i++) {
-      this._dfs(children[i], maxDepth, traversal, nextDepth);
-    }
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
@@ -10515,15 +4754,7 @@ function ArrayRep(props) {
   const needSpace = function (space) {
     return space ? { left: "[ ", right: " ]" } : { left: "[", right: "]" };
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1803:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-    return traversal;
-  }
-=======
   if (mode === MODE.TINY) {
     const isEmpty = object.length === 0;
     if (isEmpty) {
@@ -10539,24 +4770,7 @@ function ArrayRep(props) {
     items = arrayIterator(props, object, maxLengthMap.get(mode));
     brackets = needSpace(items.length > 0);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-"use strict";
-
-||||||| merged common ancestors
-  /**
-   * Perform a pre-order depth-first search over the whole forest.
-   */
-  _dfsFromRoots(maxDepth = Infinity) {
-    const traversal = [];
-
-    const roots = this.props.getRoots();
-    const length = roots.length;
-    for (let i = 0; i < length; i++) {
-      this._dfs(roots[i], maxDepth, traversal);
-    }
-=======
   return span({
     className: "objectBox objectBox-array"
   }, span({
@@ -10565,88 +4779,17 @@ function ArrayRep(props) {
     className: "arrayRightBracket"
   }, brackets.right));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-||||||| merged common ancestors
-    return traversal;
-  }
-=======
 function arrayIterator(props, array, max) {
   const items = [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const {
-  enumEntries,
-  enumIndexedProperties,
-  enumNonIndexedProperties,
-  getPrototype,
-  enumSymbols,
-  getFullText
-} = __webpack_require__(1804);
-||||||| merged common ancestors
-  /**
-   * Expands current row.
-   *
-   * @param {Object} item
-   * @param {Boolean} expandAllChildren
-   */
-  _onExpand(item, expandAllChildren) {
-    if (this.props.onExpand) {
-      this.props.onExpand(item);
-=======
   for (let i = 0; i < array.length && i < max; i++) {
     const config = {
       mode: MODE.TINY,
       delim: i == array.length - 1 ? "" : ", "
     };
     let item;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const {
-  getClosestGripNode,
-  getClosestNonBucketNode,
-  getValue,
-  nodeHasAccessors,
-  nodeHasAllEntriesInPreview,
-  nodeHasProperties,
-  nodeIsBucket,
-  nodeIsDefaultProperties,
-  nodeIsEntries,
-  nodeIsMapEntry,
-  nodeIsPrimitive,
-  nodeIsProxy,
-  nodeNeedsNumericalBuckets,
-  nodeIsLongString
-} = __webpack_require__(1784);
-
-function loadItemProperties(item, createObjectClient, createLongStringClient, loadedProperties) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-
-  const [start, end] = item.meta ? [item.meta.startIndex, item.meta.endIndex] : [];
-
-  const promises = [];
-  let objectClient;
-  const getObjectClient = () => objectClient || createObjectClient(value);
-
-  if (shouldLoadItemIndexedProperties(item, loadedProperties)) {
-    promises.push(enumIndexedProperties(getObjectClient(), start, end));
-||||||| merged common ancestors
-      if (expandAllChildren) {
-        const children = this._dfs(item);
-        const length = children.length;
-        for (let i = 0; i < length; i++) {
-          this.props.onExpand(children[i].item);
-        }
-      }
-    }
-=======
     try {
       item = ItemRep({
         ...props,
@@ -10661,84 +4804,18 @@ function loadItemProperties(item, createObjectClient, createLongStringClient, lo
       });
     }
     items.push(item);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (shouldLoadItemNonIndexedProperties(item, loadedProperties)) {
-    promises.push(enumNonIndexedProperties(getObjectClient(), start, end));
-||||||| merged common ancestors
-  /**
-   * Collapses current row.
-   *
-   * @param {Object} item
-   */
-  _onCollapse(item) {
-    if (this.props.onCollapse) {
-      this.props.onCollapse(item);
-    }
-=======
   if (array.length > max) {
     items.push(span({
       className: "more-ellipsis",
       title: "more…"
     }, "…"));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (shouldLoadItemEntries(item, loadedProperties)) {
-    promises.push(enumEntries(getObjectClient(), start, end));
-  }
-||||||| merged common ancestors
-  /**
-   * Sets the passed in item to be the focused item.
-   *
-   * @param {Object|undefined} item
-   *        The item to be focused, or undefined to focus no item.
-   *
-   * @param {Object|undefined} options
-   *        An options object which can contain:
-   *          - dir: "up" or "down" to indicate if we should scroll the element
-   *                 to the top or the bottom of the scrollable container when
-   *                 the element is off canvas.
-   */
-  _focus(item, options = {}) {
-    const { preventAutoScroll } = options;
-    if (item && !preventAutoScroll) {
-      this._scrollNodeIntoView(item, options);
-    }
-    if (this.props.onFocus) {
-      this.props.onFocus(item);
-    }
-  }
-=======
   return items;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (shouldLoadItemPrototype(item, loadedProperties)) {
-    promises.push(getPrototype(getObjectClient()));
-  }
-||||||| merged common ancestors
-  /**
-   * Sets the passed in item to be the focused item.
-   *
-   * @param {Object|undefined} item
-   *        The item to be scrolled to.
-   *
-   * @param {Object|undefined} options
-   *        An options object which can contain:
-   *          - dir: "up" or "down" to indicate if we should scroll the element
-   *                 to the top or the bottom of the scrollable container when
-   *                 the element is off canvas.
-   */
-  _scrollNodeIntoView(item, options = {}) {
-    if (item !== undefined) {
-      const treeElement = this.treeRef;
-      const element = document.getElementById(this.props.getKey(item));
-=======
 /**
  * Renders array item. Individual values are separated by a comma.
  */
@@ -10747,38 +4824,10 @@ ItemRep.propTypes = {
   delim: PropTypes.string.isRequired,
   mode: ModePropType
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (shouldLoadItemSymbols(item, loadedProperties)) {
-    promises.push(enumSymbols(getObjectClient(), start, end));
-  }
-||||||| merged common ancestors
-      if (element) {
-        const { top, bottom } = element.getBoundingClientRect();
-        const closestScrolledParent = node => {
-          if (node == null) {
-            return null;
-          }
-=======
 function ItemRep(props) {
   const { Rep } = __webpack_require__(24);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (shouldLoadItemFullText(item, loadedProperties)) {
-    promises.push(getFullText(createLongStringClient(value), item));
-  }
-||||||| merged common ancestors
-          if (node.scrollHeight > node.clientHeight) {
-            return node;
-          }
-          return closestScrolledParent(node.parentNode);
-        };
-        const scrolledParent = closestScrolledParent(treeElement);
-        const scrolledParentRect = scrolledParent ? scrolledParent.getBoundingClientRect() : null;
-        const isVisible = !scrolledParent || top >= scrolledParentRect.top && bottom <= scrolledParentRect.bottom;
-=======
   const { object, delim, mode } = props;
   return span({}, Rep({
     ...props,
@@ -10786,84 +4835,19 @@ function ItemRep(props) {
     mode: mode
   }), delim);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return Promise.all(promises).then(mergeResponses);
-}
-
-function mergeResponses(responses) {
-  const data = {};
-
-  for (const response of responses) {
-    if (response.hasOwnProperty("ownProperties")) {
-      data.ownProperties = { ...data.ownProperties, ...response.ownProperties };
-    }
-||||||| merged common ancestors
-        if (!isVisible) {
-          const { alignTo } = options;
-          const scrollToTop = alignTo ? alignTo === "top" : !scrolledParentRect || top < scrolledParentRect.top;
-          element.scrollIntoView(scrollToTop);
-        }
-      }
-    }
-  }
-=======
 function getLength(object) {
   return object.length;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (response.ownSymbols && response.ownSymbols.length > 0) {
-      data.ownSymbols = response.ownSymbols;
-    }
-||||||| merged common ancestors
-  /**
-   * Sets the state to have no focused item.
-   */
-  _onBlur() {
-    if (!this.props.preventBlur) {
-      this._focus(undefined);
-    }
-  }
-=======
 function supportsObject(object, noGrip = false) {
   return noGrip && (Array.isArray(object) || Object.prototype.toString.call(object) === "[object Arguments]");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (response.prototype) {
-      data.prototype = response.prototype;
-    }
-||||||| merged common ancestors
-  /**
-   * Handles key down events in the tree's container.
-   *
-   * @param {Event} e
-   */
-  _onKeyDown(e) {
-    if (this.props.focused == null) {
-      return;
-    }
-=======
 const maxLengthMap = new Map();
 maxLengthMap.set(MODE.SHORT, 3);
 maxLengthMap.set(MODE.LONG, 10);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (response.fullText) {
-      data.fullText = response.fullText;
-    }
-  }
-||||||| merged common ancestors
-    // Allow parent nodes to use navigation arrows with modifiers.
-    if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
-      return;
-    }
-=======
 // Exports from this module
 module.exports = {
   rep: wrapRender(ArrayRep),
@@ -10872,113 +4856,26 @@ module.exports = {
   getLength,
   ModePropType
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return data;
-}
-||||||| merged common ancestors
-    this._preventArrowKeyScrolling(e);
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function shouldLoadItemIndexedProperties(item, loadedProperties = new Map()) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-||||||| merged common ancestors
-    switch (e.key) {
-      case "ArrowUp":
-        this._focusPrevNode();
-        return;
-=======
 /***/ 39:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value && nodeHasProperties(gripItem) && !loadedProperties.has(item.path) && !nodeIsProxy(item) && !nodeNeedsNumericalBuckets(item) && !nodeIsEntries(getClosestNonBucketNode(item)) &&
-  // The data is loaded when expanding the window node.
-  !nodeIsDefaultProperties(item);
-}
-||||||| merged common ancestors
-      case "ArrowDown":
-        this._focusNextNode();
-        return;
-=======
 "use strict";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function shouldLoadItemNonIndexedProperties(item, loadedProperties = new Map()) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-||||||| merged common ancestors
-      case "ArrowLeft":
-        if (this.props.isExpanded(this.props.focused) && this._nodeIsExpandable(this.props.focused)) {
-          this._onCollapse(this.props.focused);
-        } else {
-          this._focusParentNode();
-        }
-        return;
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value && nodeHasProperties(gripItem) && !loadedProperties.has(item.path) && !nodeIsProxy(item) && !nodeIsEntries(getClosestNonBucketNode(item)) && !nodeIsBucket(item) &&
-  // The data is loaded when expanding the window node.
-  !nodeIsDefaultProperties(item);
-}
-||||||| merged common ancestors
-      case "ArrowRight":
-        if (this._nodeIsExpandable(this.props.focused) && !this.props.isExpanded(this.props.focused)) {
-          this._onExpand(this.props.focused);
-        } else {
-          this._focusNextNode();
-        }
-        return;
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function shouldLoadItemEntries(item, loadedProperties = new Map()) {
-  const gripItem = getClosestGripNode(item);
-  const value = getValue(gripItem);
-||||||| merged common ancestors
-      case "Home":
-        this._focusFirstNode();
-        return;
-=======
 // Dependencies
 const PropTypes = __webpack_require__(0);
 const { maybeEscapePropertyName, wrapRender } = __webpack_require__(2);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value && nodeIsEntries(getClosestNonBucketNode(item)) && !nodeHasAllEntriesInPreview(gripItem) && !loadedProperties.has(item.path) && !nodeNeedsNumericalBuckets(item);
-}
-||||||| merged common ancestors
-      case "End":
-        this._focusLastNode();
-        return;
-=======
 const { span } = __webpack_require__(1);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function shouldLoadItemPrototype(item, loadedProperties = new Map()) {
-  const value = getValue(item);
-||||||| merged common ancestors
-      case "Enter":
-        this._activateNode();
-    }
-  }
-=======
 /**
  * Property for Obj (local JS objects), Grip (remote JS objects)
  * and GripMap (remote JS maps and weakmaps) reps.
@@ -10999,20 +4896,7 @@ PropRep.propTypes = {
   // quoting.
   suppressQuotes: PropTypes.bool
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value && !loadedProperties.has(item.path) && !nodeIsBucket(item) && !nodeIsMapEntry(item) && !nodeIsEntries(item) && !nodeIsDefaultProperties(item) && !nodeHasAccessors(item) && !nodeIsPrimitive(item) && !nodeIsLongString(item);
-}
-||||||| merged common ancestors
-  /**
-   * Sets the previous node relative to the currently focused item, to focused.
-   */
-  _focusPrevNode() {
-    // Start a depth first search and keep going until we reach the currently
-    // focused node. Focus the previous node in the DFS, if it exists. If it
-    // doesn't exist, we're at the first node already.
-=======
 /**
  * Function that given a name, a delimiter and an object returns an array
  * of React elements representing an object property (e.g. `name: value`)
@@ -11023,41 +4907,9 @@ PropRep.propTypes = {
 function PropRep(props) {
   const Grip = __webpack_require__(113);
   const { Rep } = __webpack_require__(24);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function shouldLoadItemSymbols(item, loadedProperties = new Map()) {
-  const value = getValue(item);
-||||||| merged common ancestors
-    let prev;
-=======
   let { name, mode, equal, suppressQuotes } = props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return value && !loadedProperties.has(item.path) && !nodeIsBucket(item) && !nodeIsMapEntry(item) && !nodeIsEntries(item) && !nodeIsDefaultProperties(item) && !nodeHasAccessors(item) && !nodeIsPrimitive(item) && !nodeIsLongString(item) && !nodeIsProxy(item);
-}
-
-function shouldLoadItemFullText(item, loadedProperties = new Map()) {
-  return !loadedProperties.has(item.path) && nodeIsLongString(item);
-}
-||||||| merged common ancestors
-    const traversal = this._dfsFromRoots();
-    const length = traversal.length;
-    for (let i = 0; i < length; i++) {
-      const item = traversal[i].item;
-      if (item === this.props.focused) {
-        break;
-      }
-      prev = item;
-    }
-    if (prev === undefined) {
-      return;
-    }
-
-    this._focus(prev, { alignTo: "top" });
-  }
-=======
   let key;
   // The key can be a simple string, for plain objects,
   // or another object for maps and weakmaps.
@@ -11075,345 +4927,50 @@ function shouldLoadItemFullText(item, loadedProperties = new Map()) {
       defaultRep: Grip
     });
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = {
-  loadItemProperties,
-  mergeResponses,
-  shouldLoadItemEntries,
-  shouldLoadItemIndexedProperties,
-  shouldLoadItemNonIndexedProperties,
-  shouldLoadItemPrototype,
-  shouldLoadItemSymbols,
-  shouldLoadItemFullText
-};
-||||||| merged common ancestors
-  /**
-   * Handles the down arrow key which will focus either the next child
-   * or sibling row.
-   */
-  _focusNextNode() {
-    // Start a depth first search and keep going until we reach the currently
-    // focused node. Focus the next node in the DFS, if it exists. If it
-    // doesn't exist, we're at the last node already.
-    const traversal = this._dfsFromRoots();
-    const length = traversal.length;
-    let i = 0;
-=======
   return [key, span({
     className: "objectEqual"
   }, equal), Rep({ ...props })];
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-    while (i < length) {
-      if (traversal[i].item === this.props.focused) {
-        break;
-      }
-      i++;
-    }
-=======
 // Exports from this module
 module.exports = wrapRender(PropRep);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 1804:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-    if (i + 1 < traversal.length) {
-      this._focus(traversal[i + 1].item, { alignTo: "bottom" });
-    }
-  }
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-"use strict";
-||||||| merged common ancestors
-  /**
-   * Handles the left arrow key, going back up to the current rows'
-   * parent row.
-   */
-  _focusParentNode() {
-    const parent = this.props.getParent(this.props.focused);
-    if (!parent) {
-      this._focusPrevNode(this.props.focused);
-      return;
-    }
-=======
 /***/ 4:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-
-const { getValue, nodeHasFullText } = __webpack_require__(1784); /* This Source Code Form is subject to the terms of the Mozilla Public
-                                                                 * License, v. 2.0. If a copy of the MPL was not distributed with this
-                                                                 * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-async function enumIndexedProperties(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumProperties({
-      ignoreNonIndexedProperties: true
-    });
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumIndexedProperties", e);
-    return {};
-  }
-}
-
-async function enumNonIndexedProperties(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumProperties({
-      ignoreIndexedProperties: true
-    });
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumNonIndexedProperties", e);
-    return {};
-  }
-}
-||||||| merged common ancestors
-    this._focus(parent, { alignTo: "top" });
-  }
-=======
 "use strict";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-async function enumEntries(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumEntries();
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumEntries", e);
-    return {};
-  }
-}
-||||||| merged common ancestors
-  _focusFirstNode() {
-    const traversal = this._dfsFromRoots();
-    this._focus(traversal[0].item, { alignTo: "top" });
-  }
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-async function enumSymbols(objectClient, start, end) {
-  try {
-    const { iterator } = await objectClient.enumSymbols();
-    const response = await iteratorSlice(iterator, start, end);
-    return response;
-  } catch (e) {
-    console.error("Error in enumSymbols", e);
-    return {};
-  }
-}
-||||||| merged common ancestors
-  _focusLastNode() {
-    const traversal = this._dfsFromRoots();
-    const lastIndex = traversal.length - 1;
-    this._focus(traversal[lastIndex].item, { alignTo: "bottom" });
-  }
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-async function getPrototype(objectClient) {
-  if (typeof objectClient.getPrototype !== "function") {
-    console.error("objectClient.getPrototype is not a function");
-    return Promise.resolve({});
-||||||| merged common ancestors
-  _activateNode() {
-    if (this.props.onActivate) {
-      this.props.onActivate(this.props.focused);
-    }
-=======
 module.exports = {
   MODE: {
     TINY: Symbol("TINY"),
     SHORT: Symbol("SHORT"),
     LONG: Symbol("LONG")
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  return objectClient.getPrototype();
-}
-||||||| merged common ancestors
-=======
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-async function getFullText(longStringClient, item) {
-  const { initial, fullText, length } = getValue(item);
-||||||| merged common ancestors
-  _nodeIsExpandable(item) {
-    return this.props.isExpandable ? this.props.isExpandable(item) : !!this.props.getChildren(item).length;
-  }
-=======
 /***/ }),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Return fullText property if it exists so that it can be added to the
-  // loadedProperties map.
-  if (nodeHasFullText(item)) {
-    return Promise.resolve({ fullText });
-  }
-||||||| merged common ancestors
-  render() {
-    const traversal = this._dfsFromRoots();
-    const { focused } = this.props;
-=======
 /***/ 456:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return new Promise((resolve, reject) => {
-    longStringClient.substring(initial.length, length, response => {
-      if (response.error) {
-        console.error("LongStringClient.substring", `${response.error}: ${response.message}`);
-        reject({});
-        return;
-      }
-||||||| merged common ancestors
-    const nodes = traversal.map((v, i) => {
-      const { item, depth } = traversal[i];
-      const key = this.props.getKey(item, i);
-      return TreeNodeFactory({
-        key,
-        id: key,
-        index: i,
-        item,
-        depth,
-        renderItem: this.props.renderItem,
-        focused: focused === item,
-        expanded: this.props.isExpanded(item),
-        isExpandable: this._nodeIsExpandable(item),
-        onExpand: this._onExpand,
-        onCollapse: this._onCollapse,
-        onClick: e => {
-          // We can stop the propagation since click handler on the node can be
-          // created in `renderItem`.
-          e.stopPropagation();
-=======
 module.exports = __webpack_require__(457);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      resolve({
-        fullText: initial + response.substring
-      });
-    });
-  });
-}
-||||||| merged common ancestors
-          // Since the user just clicked the node, there's no need to check if
-          // it should be scrolled into view.
-          this._focus(item, { preventAutoScroll: true });
-          if (this.props.isExpanded(item)) {
-            this.props.onCollapse(item);
-          } else {
-            this.props.onExpand(item, e.altKey);
-          }
-        }
-      });
-    });
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function iteratorSlice(iterator, start, end) {
-  start = start || 0;
-  const count = end ? end - start + 1 : iterator.count;
-||||||| merged common ancestors
-    const style = Object.assign({}, this.props.style || {}, {
-      padding: 0,
-      margin: 0
-    });
-
-    return _reactDomFactories2.default.div({
-      className: `tree ${this.props.className ? this.props.className : ""}`,
-      ref: el => {
-        this.treeRef = el;
-      },
-      role: "tree",
-      tabIndex: "0",
-      onKeyDown: this._onKeyDown,
-      onKeyPress: this._preventArrowKeyScrolling,
-      onKeyUp: this._preventArrowKeyScrolling,
-      onFocus: ({ nativeEvent }) => {
-        if (focused || !nativeEvent || !this.treeRef) {
-          return;
-        }
-=======
 /***/ }),
 
 /***/ 457:
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (count === 0) {
-    return Promise.resolve({});
-  }
-  return iterator.slice(start, count);
-}
-||||||| merged common ancestors
-        const { explicitOriginalTarget } = nativeEvent;
-        // Only set default focus to the first tree node if the focus came
-        // from outside the tree (e.g. by tabbing to the tree from other
-        // external elements).
-        if (explicitOriginalTarget !== this.treeRef && !this.treeRef.contains(explicitOriginalTarget)) {
-          this._focus(traversal[0].item);
-        }
-      },
-      onBlur: this._onBlur,
-      "aria-label": this.props.label,
-      "aria-labelledby": this.props.labelledby,
-      "aria-activedescendant": focused && this.props.getKey(focused),
-      style
-    }, nodes);
-  }
-}
-=======
 "use strict";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = {
-  enumEntries,
-  enumIndexedProperties,
-  enumNonIndexedProperties,
-  enumSymbols,
-  getPrototype,
-  getFullText
-};
-||||||| merged common ancestors
-exports.default = Tree;
-
-/***/ }),
-
-/***/ 3671:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-=======
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11440,30 +4997,17 @@ module.exports = {
   getGripPreviewItems,
   objectInspector
 };
->>>>>>> upstream-releases
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1830:
-||||||| merged common ancestors
-/***/ 3672:
-=======
 /***/ 458:
->>>>>>> upstream-releases
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1831:
-||||||| merged common ancestors
-/***/ 3673:
-=======
 /***/ 459:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11474,21 +5018,9 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const { getGripType, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -11515,13 +5047,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1832:
-||||||| merged common ancestors
-/***/ 3674:
-=======
 /***/ 460:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11532,16 +5058,8 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const { wrapRender } = __webpack_require__(1760);
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const { wrapRender } = __webpack_require__(3644);
-const dom = __webpack_require__(3643);
-=======
 const { wrapRender } = __webpack_require__(2);
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -11572,13 +5090,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1833:
-||||||| merged common ancestors
-/***/ 3675:
-=======
 /***/ 461:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11589,29 +5101,11 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { getGripType, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -11646,13 +5140,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1834:
-||||||| merged common ancestors
-/***/ 3676:
-=======
 /***/ 462:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11663,30 +5151,12 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-const { wrapRender, ellipsisElement } = __webpack_require__(1760);
-const PropRep = __webpack_require__(1775);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-const { wrapRender, ellipsisElement } = __webpack_require__(3644);
-const PropRep = __webpack_require__(3650);
-const { MODE } = __webpack_require__(3645);
-=======
 const PropTypes = __webpack_require__(0);
 const { wrapRender, ellipsisElement } = __webpack_require__(2);
 const PropRep = __webpack_require__(39);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 const DEFAULT_TITLE = "Object";
@@ -11841,13 +5311,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1835:
-||||||| merged common ancestors
-/***/ 3677:
-=======
 /***/ 463:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11858,30 +5322,12 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { getGripType, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
 const { rep: StringRep } = __webpack_require__(25);
->>>>>>> upstream-releases
 const { span } = dom;
 
 const MAX_STRING_LENGTH = 50;
@@ -11925,13 +5371,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1836:
-||||||| merged common ancestors
-/***/ 3678:
-=======
 /***/ 464:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11942,29 +5382,11 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { getGripType, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -11993,13 +5415,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1837:
-||||||| merged common ancestors
-/***/ 3679:
-=======
 /***/ 465:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12010,21 +5426,9 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const { getGripType, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -12134,101 +5538,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1838:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-// Dependencies
-const dom = __webpack_require__(1759);
-const PropTypes = __webpack_require__(1758);
-const { wrapRender } = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-const { span } = dom;
-
-/**
- * Renders an object. An object is represented by a list of its
- * properties enclosed in curly brackets.
- */
-Accessor.propTypes = {
-  object: PropTypes.object.isRequired,
-  mode: PropTypes.oneOf(Object.values(MODE))
-};
-
-function Accessor(props) {
-  const { object, evaluation, onInvokeGetterButtonClick } = props;
-
-  if (evaluation) {
-    const { Rep, Grip } = __webpack_require__(1767);
-    return span({
-      className: "objectBox objectBox-accessor objectTitle"
-    }, Rep({
-      ...props,
-      object: evaluation.getterValue,
-      mode: props.mode || MODE.TINY,
-      defaultRep: Grip
-    }));
-  }
-
-  if (hasGetter(object) && onInvokeGetterButtonClick) {
-    return dom.button({
-      className: "invoke-getter",
-      title: "Invoke getter",
-      onClick: event => {
-        onInvokeGetterButtonClick();
-        event.stopPropagation();
-      }
-    });
-  }
-
-  const accessors = [];
-  if (hasGetter(object)) {
-    accessors.push("Getter");
-  }
-
-  if (hasSetter(object)) {
-    accessors.push("Setter");
-  }
-
-  return span({ className: "objectBox objectBox-accessor objectTitle" }, accessors.join(" & "));
-}
-
-function hasGetter(object) {
-  return object && object.get && object.get.type !== "undefined";
-}
-
-function hasSetter(object) {
-  return object && object.set && object.set.type !== "undefined";
-}
-
-function supportsObject(object, noGrip = false) {
-  if (noGrip !== true && (hasGetter(object) || hasSetter(object))) {
-    return true;
-  }
-
-  return false;
-}
-
-// Exports from this module
-module.exports = {
-  rep: wrapRender(Accessor),
-  supportsObject
-};
-
-/***/ }),
-
-/***/ 1839:
-||||||| merged common ancestors
-/***/ 3680:
-=======
 /***/ 467:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12238,71 +5548,6 @@ module.exports = {
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-// ReactJS
-const PropTypes = __webpack_require__(1758);
-const { button, span } = __webpack_require__(1759);
-
-// Utils
-const { isGrip, wrapRender } = __webpack_require__(1760);
-const { rep: StringRep } = __webpack_require__(1770);
-
-/**
- * Renders Accessible object.
- */
-Accessible.propTypes = {
-  object: PropTypes.object.isRequired,
-  inspectIconTitle: PropTypes.string,
-  nameMaxLength: PropTypes.number,
-  onAccessibleClick: PropTypes.func,
-  onAccessibleMouseOver: PropTypes.func,
-  onAccessibleMouseOut: PropTypes.func,
-  onInspectIconClick: PropTypes.func,
-  roleFirst: PropTypes.bool,
-  separatorText: PropTypes.string
-};
-
-function Accessible(props) {
-  const {
-    object,
-    inspectIconTitle,
-    nameMaxLength,
-    onAccessibleClick,
-    onAccessibleMouseOver,
-    onAccessibleMouseOut,
-    onInspectIconClick,
-    roleFirst,
-    separatorText
-  } = props;
-  const elements = getElements(object, nameMaxLength, roleFirst, separatorText);
-  const isInTree = object.preview && object.preview.isConnected === true;
-  const baseConfig = {
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-accessible"
-  };
-
-  let inspectIcon;
-  if (isInTree) {
-    if (onAccessibleClick) {
-      Object.assign(baseConfig, {
-        onClick: _ => onAccessibleClick(object),
-        className: `${baseConfig.className} clickable`
-      });
-    }
-
-<<<<<<< HEAD
-    if (onAccessibleMouseOver) {
-      Object.assign(baseConfig, {
-        onMouseOver: _ => onAccessibleMouseOver(object)
-      });
-    }
-||||||| merged common ancestors
-// Dependencies
-const dom = __webpack_require__(3643);
-const PropTypes = __webpack_require__(3642);
-const { wrapRender } = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-const { span } = dom;
-=======
 // ReactJS
 const PropTypes = __webpack_require__(0);
 const { button, span } = __webpack_require__(1);
@@ -12310,24 +5555,7 @@ const { button, span } = __webpack_require__(1);
 // Utils
 const { isGrip, wrapRender } = __webpack_require__(2);
 const { rep: StringRep } = __webpack_require__(25);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (onAccessibleMouseOut) {
-      Object.assign(baseConfig, {
-        onMouseOut: onAccessibleMouseOut
-      });
-    }
-||||||| merged common ancestors
-/**
- * Renders an object. An object is represented by a list of its
- * properties enclosed in curly brackets.
- */
-Accessor.propTypes = {
-  object: PropTypes.object.isRequired,
-  mode: PropTypes.oneOf(Object.values(MODE))
-};
-=======
 /**
  * Renders Accessible object.
  */
@@ -12342,21 +5570,7 @@ Accessible.propTypes = {
   roleFirst: PropTypes.bool,
   separatorText: PropTypes.string
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (onInspectIconClick) {
-      inspectIcon = button({
-        className: "open-accessibility-inspector",
-        title: inspectIconTitle,
-        onClick: e => {
-          if (onAccessibleClick) {
-            e.stopPropagation();
-          }
-||||||| merged common ancestors
-function Accessor(props) {
-  const { object } = props;
-=======
 function Accessible(props) {
   const {
     object,
@@ -12375,21 +5589,7 @@ function Accessible(props) {
     "data-link-actor-id": object.actor,
     className: "objectBox objectBox-accessible"
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-          onInspectIconClick(object, e);
-        }
-      });
-    }
-||||||| merged common ancestors
-  const accessors = [];
-  if (hasGetter(object)) {
-    accessors.push("Getter");
-  }
-  if (hasSetter(object)) {
-    accessors.push("Setter");
-=======
   let inspectIcon;
   if (isInTree) {
     if (onAccessibleClick) {
@@ -12424,7 +5624,6 @@ function Accessible(props) {
         }
       });
     }
->>>>>>> upstream-releases
   }
 
   return span(baseConfig, ...elements, inspectIcon);
@@ -12462,13 +5661,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1840:
-||||||| merged common ancestors
-/***/ 3681:
-=======
 /***/ 468:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12479,29 +5672,13 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-const dom = __webpack_require__(3643);
-=======
 const PropTypes = __webpack_require__(0);
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 // Reps
-<<<<<<< HEAD
-const { getGripType, isGrip, wrapRender } = __webpack_require__(1760);
-const { rep: StringRep } = __webpack_require__(1770);
-||||||| merged common ancestors
-const { getGripType, isGrip, wrapRender } = __webpack_require__(3644);
-const { rep: StringRep } = __webpack_require__(3648);
-=======
 const { getGripType, isGrip, wrapRender } = __webpack_require__(2);
 const { rep: StringRep } = __webpack_require__(25);
->>>>>>> upstream-releases
 
 /**
  * Renders DOM attribute
@@ -12540,13 +5717,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1841:
-||||||| merged common ancestors
-/***/ 3682:
-=======
 /***/ 469:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12557,30 +5728,12 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { getGripType, isGrip, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, isGrip, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, isGrip, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -12633,13 +5786,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1842:
-||||||| merged common ancestors
-/***/ 3683:
-=======
 /***/ 470:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12650,13 +5797,7 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
 const {
@@ -12664,21 +5805,9 @@ const {
   isGrip,
   getURLDisplayString,
   wrapRender
-<<<<<<< HEAD
-} = __webpack_require__(1760);
-||||||| merged common ancestors
-} = __webpack_require__(3644);
-=======
 } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -12726,13 +5855,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1843:
-||||||| merged common ancestors
-/***/ 3684:
-=======
 /***/ 471:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12743,25 +5866,11 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { getGripType, isGrip, wrapRender } = __webpack_require__(1760);
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const { getGripType, isGrip, wrapRender } = __webpack_require__(3644);
-const dom = __webpack_require__(3643);
-=======
 const { getGripType, isGrip, wrapRender } = __webpack_require__(2);
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -12798,13 +5907,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1844:
-||||||| merged common ancestors
-/***/ 3685:
-=======
 /***/ 472:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12815,33 +5918,13 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { isGrip, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { isGrip, wrapRender } = __webpack_require__(3644);
-=======
 const { isGrip, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { MODE } = __webpack_require__(1762);
-const { rep } = __webpack_require__(1783);
-||||||| merged common ancestors
-const { MODE } = __webpack_require__(3645);
-const { rep } = __webpack_require__(3656);
-=======
 const { MODE } = __webpack_require__(4);
 const { rep } = __webpack_require__(113);
->>>>>>> upstream-releases
 
 /**
  * Renders DOM event objects.
@@ -12931,13 +6014,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1845:
-||||||| merged common ancestors
-/***/ 3686:
-=======
 /***/ 473:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12948,40 +6025,14 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 // Dependencies
-<<<<<<< HEAD
-const { getGripType, isGrip, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, isGrip, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, isGrip, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const PropRep = __webpack_require__(1775);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-const PropRep = __webpack_require__(3650);
-const { MODE } = __webpack_require__(3645);
-=======
 const PropRep = __webpack_require__(39);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13006,13 +6057,7 @@ function PromiseRep(props) {
   };
 
   if (props.mode === MODE.TINY) {
-<<<<<<< HEAD
-    const { Rep } = __webpack_require__(1767);
-||||||| merged common ancestors
-    const { Rep } = __webpack_require__(3647);
-=======
     const { Rep } = __webpack_require__(24);
->>>>>>> upstream-releases
 
     return span(config, getTitle(object), span({
       className: "objectLeftBrace"
@@ -13077,13 +6122,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1846:
-||||||| merged common ancestors
-/***/ 3687:
-=======
 /***/ 474:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13094,30 +6133,12 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { getGripType, isGrip, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { getGripType, isGrip, wrapRender } = __webpack_require__(3644);
-=======
 const { getGripType, isGrip, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13157,13 +6178,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1847:
-||||||| merged common ancestors
-/***/ 3688:
-=======
 /***/ 475:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13174,13 +6189,7 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
 const {
@@ -13188,21 +6197,9 @@ const {
   isGrip,
   getURLDisplayString,
   wrapRender
-<<<<<<< HEAD
-} = __webpack_require__(1760);
-||||||| merged common ancestors
-} = __webpack_require__(3644);
-=======
 } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13250,13 +6247,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1848:
-||||||| merged common ancestors
-/***/ 3689:
-=======
 /***/ 476:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13267,34 +6258,16 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // Dependencies
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 const {
   isGrip,
   cropString,
   cropMultipleLines,
   wrapRender
-<<<<<<< HEAD
-} = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-const nodeConstants = __webpack_require__(1795);
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-} = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-const nodeConstants = __webpack_require__(3659);
-const dom = __webpack_require__(3643);
-=======
 } = __webpack_require__(2);
 const { MODE } = __webpack_require__(4);
 const nodeConstants = __webpack_require__(190);
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13338,13 +6311,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1849:
-||||||| merged common ancestors
-/***/ 3690:
-=======
 /***/ 477:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13355,39 +6322,15 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Utils
-<<<<<<< HEAD
-const { isGrip, wrapRender } = __webpack_require__(1760);
-const { rep: StringRep, isLongString } = __webpack_require__(1770);
-const { MODE } = __webpack_require__(1762);
-const nodeConstants = __webpack_require__(1795);
-||||||| merged common ancestors
-const { isGrip, wrapRender } = __webpack_require__(3644);
-const { rep: StringRep } = __webpack_require__(3648);
-const { MODE } = __webpack_require__(3645);
-const nodeConstants = __webpack_require__(3659);
-=======
 const { isGrip, wrapRender } = __webpack_require__(2);
 const { rep: StringRep, isLongString } = __webpack_require__(25);
 const { MODE } = __webpack_require__(4);
 const nodeConstants = __webpack_require__(190);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 const MAX_ATTRIBUTE_LENGTH = 50;
@@ -13546,13 +6489,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1850:
-||||||| merged common ancestors
-/***/ 3691:
-=======
 /***/ 478:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13563,33 +6500,13 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { isGrip, cropString, wrapRender } = __webpack_require__(1760);
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-const { isGrip, cropString, wrapRender } = __webpack_require__(3644);
-const { MODE } = __webpack_require__(3645);
-=======
 const { isGrip, cropString, wrapRender } = __webpack_require__(2);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13677,13 +6594,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1851:
-||||||| merged common ancestors
-/***/ 3692:
-=======
 /***/ 479:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13694,13 +6605,7 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
 const {
@@ -13708,29 +6613,11 @@ const {
   isGrip,
   getURLDisplayString,
   wrapRender
-<<<<<<< HEAD
-} = __webpack_require__(1760);
-||||||| merged common ancestors
-} = __webpack_require__(3644);
-=======
 } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const { MODE } = __webpack_require__(1762);
-||||||| merged common ancestors
-const { MODE } = __webpack_require__(3645);
-=======
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13786,13 +6673,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1852:
-||||||| merged common ancestors
-/***/ 3693:
-=======
 /***/ 480:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13803,38 +6684,14 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { isGrip, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { isGrip, wrapRender } = __webpack_require__(3644);
-=======
 const { isGrip, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const String = __webpack_require__(1770).rep;
-||||||| merged common ancestors
-const String = __webpack_require__(3648).rep;
-=======
 const String = __webpack_require__(25).rep;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13879,13 +6736,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1853:
-||||||| merged common ancestors
-/***/ 3694:
-=======
 /***/ 481:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13896,30 +6747,12 @@ module.exports = {
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 // ReactJS
-<<<<<<< HEAD
-const PropTypes = __webpack_require__(1758);
-||||||| merged common ancestors
-const PropTypes = __webpack_require__(3642);
-=======
 const PropTypes = __webpack_require__(0);
->>>>>>> upstream-releases
 
 // Reps
-<<<<<<< HEAD
-const { isGrip, getURLDisplayString, wrapRender } = __webpack_require__(1760);
-||||||| merged common ancestors
-const { isGrip, getURLDisplayString, wrapRender } = __webpack_require__(3644);
-=======
 const { isGrip, getURLDisplayString, wrapRender } = __webpack_require__(2);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const dom = __webpack_require__(1759);
-||||||| merged common ancestors
-const dom = __webpack_require__(3643);
-=======
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 const { span } = dom;
 
 /**
@@ -13966,13 +6799,7 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1854:
-||||||| merged common ancestors
-/***/ 3695:
-=======
 /***/ 482:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13982,49 +6809,21 @@ module.exports = {
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-const ObjectInspector = __webpack_require__(1855);
-const utils = __webpack_require__(1786);
-const reducer = __webpack_require__(1785);
-||||||| merged common ancestors
-const ObjectInspector = __webpack_require__(3696);
-const utils = __webpack_require__(3657);
-const reducer = __webpack_require__(3703);
-=======
 const ObjectInspector = __webpack_require__(483);
 const utils = __webpack_require__(116);
 const reducer = __webpack_require__(115);
->>>>>>> upstream-releases
 
 module.exports = { ObjectInspector, utils, reducer };
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1855:
-||||||| merged common ancestors
-/***/ 3696:
-=======
 /***/ 483:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-<<<<<<< HEAD
-var _devtoolsComponents = __webpack_require__(1791);
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _devtoolsServices = __webpack_require__(22);
-
-var _devtoolsServices2 = _interopRequireDefault(_devtoolsServices);
-
-var _devtoolsComponents = __webpack_require__(3669);
-=======
 var _devtoolsComponents = __webpack_require__(108);
->>>>>>> upstream-releases
 
 var _devtoolsComponents2 = _interopRequireDefault(_devtoolsComponents);
 
@@ -14034,82 +6833,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-const { Component, createFactory, createElement } = __webpack_require__(0);
-const { connect } = __webpack_require__(1763);
-const actions = __webpack_require__(1856);
-
-const selectors = __webpack_require__(1785);
-||||||| merged common ancestors
-const { Component, createFactory, createElement } = __webpack_require__(0);
-const dom = __webpack_require__(3643);
-const { connect } = __webpack_require__(3592);
-const actions = __webpack_require__(3699);
-
-const selectors = __webpack_require__(3703);
-
-const { appinfo } = _devtoolsServices2.default;
-const isMacOS = appinfo.OS === "Darwin";
-=======
 const { Component, createFactory, createElement } = __webpack_require__(6);
 const { connect } = __webpack_require__(484);
 const actions = __webpack_require__(485);
 
 const selectors = __webpack_require__(115);
->>>>>>> upstream-releases
 
 const Tree = createFactory(_devtoolsComponents2.default.Tree);
-<<<<<<< HEAD
-__webpack_require__(1857);
-
-const ObjectInspectorItem = createFactory(__webpack_require__(1858));
-||||||| merged common ancestors
-__webpack_require__(3697);
-=======
 __webpack_require__(486);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const classnames = __webpack_require__(175);
-||||||| merged common ancestors
-const classnames = __webpack_require__(175);
-const { MODE } = __webpack_require__(3645);
-=======
 const ObjectInspectorItem = createFactory(__webpack_require__(487));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const Utils = __webpack_require__(1786);
-const { renderRep, shouldRenderRootsInReps } = Utils;
-||||||| merged common ancestors
-const Utils = __webpack_require__(3657);
-const { renderRep, shouldRenderRootsInReps } = Utils;
-
-=======
 const classnames = __webpack_require__(67);
 
 const Utils = __webpack_require__(116);
 const { renderRep, shouldRenderRootsInReps } = Utils;
->>>>>>> upstream-releases
 const {
   getChildrenWithEvaluations,
   getActor,
   getParent,
-<<<<<<< HEAD
-||||||| merged common ancestors
   getValue,
-  nodeHasAccessors,
-  nodeHasProperties,
-  nodeIsBlock,
-  nodeIsDefaultProperties,
-  nodeIsFunction,
-  nodeIsGetter,
-  nodeIsMapEntry,
-  nodeIsMissingArguments,
-  nodeIsOptimizedOut,
-=======
-  getValue,
->>>>>>> upstream-releases
   nodeIsPrimitive,
   nodeHasGetter,
   nodeHasSetter
@@ -14155,13 +6898,8 @@ class ObjectInspector extends Component {
     self.focusItem = this.focusItem.bind(this);
     self.activateItem = this.activateItem.bind(this);
     self.getRoots = this.getRoots.bind(this);
-<<<<<<< HEAD
-    self.getNodeKey = this.getNodeKey.bind(this);
-||||||| merged common ancestors
-=======
     self.getNodeKey = this.getNodeKey.bind(this);
     self.shouldItemUpdate = this.shouldItemUpdate.bind(this);
->>>>>>> upstream-releases
   }
 
   componentWillMount() {
@@ -14182,55 +6920,9 @@ class ObjectInspector extends Component {
       if (this.props.rootsChanged) {
         this.props.rootsChanged();
       }
-      return;
     }
   }
 
-<<<<<<< HEAD
-  removeOutdatedNodesFromCache(nextProps) {
-    // When the roots changes, we can wipe out everything.
-    if (this.roots !== nextProps.roots) {
-      this.cachedNodes.clear();
-||||||| merged common ancestors
-  shouldComponentUpdate(nextProps) {
-    const { expandedPaths, loadedProperties } = this.props;
-
-    // We should update if:
-    // - there are new loaded properties
-    // - OR the expanded paths number changed, and all of them have properties
-    //      loaded
-    // - OR the expanded paths number did not changed, but old and new sets
-    //      differ
-    // - OR the focused node changed.
-    return loadedProperties.size !== nextProps.loadedProperties.size || expandedPaths.size !== nextProps.expandedPaths.size && [...nextProps.expandedPaths].every(path => nextProps.loadedProperties.has(path)) || expandedPaths.size === nextProps.expandedPaths.size && [...nextProps.expandedPaths].some(key => !expandedPaths.has(key)) || this.focusedItem !== nextProps.focusedItem || this.roots !== nextProps.roots;
-  }
-
-  componentWillUnmount() {
-    this.props.closeObjectInspector();
-  }
-
-  getItemChildren(item) {
-    const { loadedProperties } = this.props;
-    const { cachedNodes } = this;
-
-    return getChildren({
-      loadedProperties,
-      cachedNodes,
-      item
-    });
-  }
-
-  getRoots() {
-    return this.props.roots;
-  }
-
-  getNodeKey(item) {
-    return item.path && typeof item.path.toString === "function" ? item.path.toString() : JSON.stringify(item);
-  }
-
-  setExpanded(item, expand) {
-    if (nodeIsPrimitive(item)) {
-=======
   removeOutdatedNodesFromCache(nextProps) {
     // When the roots changes, we can wipe out everything.
     if (this.roots !== nextProps.roots) {
@@ -14302,51 +6994,9 @@ class ObjectInspector extends Component {
 
   setExpanded(item, expand) {
     if (!this.isNodeExpandable(item)) {
->>>>>>> upstream-releases
       return;
     }
 
-<<<<<<< HEAD
-    // If there are new evaluations, we want to remove the existing cached
-    // nodes from the cache.
-    if (nextProps.evaluations > this.props.evaluations) {
-      for (const key of nextProps.evaluations.keys()) {
-        if (!this.props.evaluations.has(key)) {
-          this.cachedNodes.delete(key);
-        }
-      }
-    }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const { expandedPaths, loadedProperties, evaluations } = this.props;
-
-    // We should update if:
-    // - there are new loaded properties
-    // - OR there are new evaluations
-    // - OR the expanded paths number changed, and all of them have properties
-    //      loaded
-    // - OR the expanded paths number did not changed, but old and new sets
-    //      differ
-    // - OR the focused node changed.
-    return loadedProperties.size !== nextProps.loadedProperties.size || evaluations.size !== nextProps.evaluations.size || expandedPaths.size !== nextProps.expandedPaths.size && [...nextProps.expandedPaths].every(path => nextProps.loadedProperties.has(path)) || expandedPaths.size === nextProps.expandedPaths.size && [...nextProps.expandedPaths].some(key => !expandedPaths.has(key)) || this.focusedItem !== nextProps.focusedItem || this.roots !== nextProps.roots;
-  }
-
-  componentWillUnmount() {
-    this.props.closeObjectInspector();
-  }
-
-  getItemChildren(item) {
-    const { loadedProperties, evaluations } = this.props;
-    const { cachedNodes } = this;
-
-    return getChildrenWithEvaluations({
-      evaluations,
-      loadedProperties,
-      cachedNodes,
-      item
-    });
-||||||| merged common ancestors
     const {
       nodeExpand,
       nodeCollapse,
@@ -14378,276 +7028,24 @@ class ObjectInspector extends Component {
     }
   }
 
-  // eslint-disable-next-line complexity
-  getTreeItemLabelAndValue(item, depth, expanded) {
-    const label = item.name;
-    const isPrimitive = nodeIsPrimitive(item);
-
-    if (nodeIsOptimizedOut(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(optimized away)")
-      };
-    }
-
-    if (nodeIsUninitializedBinding(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(uninitialized)")
-      };
-    }
-
-    if (nodeIsUnmappedBinding(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(unmapped)")
-      };
-    }
-
-    if (nodeIsUnscopedBinding(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(unscoped)")
-      };
-    }
-
-    const itemValue = getValue(item);
-    const unavailable = isPrimitive && itemValue && itemValue.hasOwnProperty && itemValue.hasOwnProperty("unavailable");
-
-    if (nodeIsMissingArguments(item) || unavailable) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(unavailable)")
-      };
-    }
-
-    if (nodeIsFunction(item) && !nodeIsGetter(item) && !nodeIsSetter(item) && (this.props.mode === MODE.TINY || !this.props.mode)) {
-      return {
-        label: Utils.renderRep(item, _extends({}, this.props, {
-          functionName: label
-        }))
-      };
-    }
-
-    if (nodeHasProperties(item) || nodeHasAccessors(item) || nodeIsMapEntry(item) || nodeIsLongString(item) || isPrimitive) {
-      const repProps = _extends({}, this.props);
-      if (depth > 0) {
-        repProps.mode = this.props.mode === MODE.LONG ? MODE.SHORT : MODE.TINY;
-      }
-      if (expanded) {
-        repProps.mode = MODE.TINY;
-      }
-
-      if (nodeIsLongString(item)) {
-        repProps.member = {
-          open: nodeHasFullText(item) && expanded
-        };
-      }
-
-      return {
-        label,
-        value: Utils.renderRep(item, repProps)
-      };
-    }
-
-    return {
-      label
-    };
-=======
-    const {
-      nodeExpand,
-      nodeCollapse,
-      recordTelemetryEvent,
-      roots
-    } = this.props;
-
-    if (expand === true) {
-      const actor = getActor(item, roots);
-      nodeExpand(item, actor);
-      if (recordTelemetryEvent) {
-        recordTelemetryEvent("object_expanded");
-      }
-    } else {
-      nodeCollapse(item);
-    }
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  getRoots() {
-    return this.props.roots;
-  }
-
-  getNodeKey(item) {
-    return item.path && typeof item.path.toString === "function" ? item.path.toString() : JSON.stringify(item);
-  }
-
-  isNodeExpandable(item) {
-    if (nodeIsPrimitive(item)) {
-      return false;
-    }
-||||||| merged common ancestors
-  renderTreeItemLabel(label, item, depth, focused, expanded) {
-    if (label === null || typeof label === "undefined") {
-      return null;
-    }
-
-    const { onLabelClick } = this.props;
-
-    return dom.span({
-      className: "object-label",
-      onClick: onLabelClick ? event => {
-        event.stopPropagation();
-=======
-  focusItem(item) {
-    const { focusable = true, onFocus } = this.props;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (nodeHasSetter(item) || nodeHasGetter(item)) {
-      return false;
-    }
-||||||| merged common ancestors
-        // If the user selected text, bail out.
-        if (Utils.selection.documentHasSelection()) {
-          return;
-        }
-=======
-    if (focusable && this.focusedItem !== item) {
-      this.focusedItem = item;
-      this.forceUpdate();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    return true;
-||||||| merged common ancestors
-        onLabelClick(item, {
-          depth,
-          focused,
-          expanded,
-          setExpanded: this.setExpanded
-        });
-      } : undefined
-    }, label);
-=======
-      if (onFocus) {
-        onFocus(item);
-      }
-    }
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  setExpanded(item, expand) {
-    if (!this.isNodeExpandable(item)) {
-      return;
-    }
-||||||| merged common ancestors
-  getTreeTopElementProps(item, depth, focused, expanded) {
-    const { onCmdCtrlClick, onDoubleClick, dimTopLevelWindow } = this.props;
-=======
   activateItem(item) {
     const { focusable = true, onActivate } = this.props;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    const {
-      nodeExpand,
-      nodeCollapse,
-      recordTelemetryEvent,
-      roots
-    } = this.props;
-||||||| merged common ancestors
-    const parentElementProps = {
-      className: classnames("node object-node", {
-        focused,
-        lessen: !expanded && (nodeIsDefaultProperties(item) || nodeIsPrototype(item) || dimTopLevelWindow === true && nodeIsWindow(item) && depth === 0),
-        block: nodeIsBlock(item)
-      }),
-      onClick: e => {
-        if (onCmdCtrlClick && (isMacOS && e.metaKey || !isMacOS && e.ctrlKey)) {
-          onCmdCtrlClick(item, {
-            depth,
-            event: e,
-            focused,
-            expanded
-          });
-          e.stopPropagation();
-          return;
-        }
-=======
     if (focusable && this.activeItem !== item) {
       this.activeItem = item;
       this.forceUpdate();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (expand === true) {
-      const actor = getActor(item, roots);
-      nodeExpand(item, actor);
-      if (recordTelemetryEvent) {
-        recordTelemetryEvent("object_expanded");
-||||||| merged common ancestors
-        // If this click happened because the user selected some text, bail out.
-        // Note that if the user selected some text before and then clicks here,
-        // the previously selected text will be first unselected, unless the
-        // user clicked on the arrow itself. Indeed because the arrow is an
-        // image, clicking on it does not remove any existing text selection.
-        // So we need to also check if the arrow was clicked.
-        if (Utils.selection.documentHasSelection() && !(e.target && e.target.matches && e.target.matches(".arrow"))) {
-          e.stopPropagation();
-        }
-=======
       if (onActivate) {
         onActivate(item);
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-    } else {
-      nodeCollapse(item);
-||||||| merged common ancestors
-    };
-
-    if (onDoubleClick) {
-      parentElementProps.onDoubleClick = e => {
-        e.stopPropagation();
-        onDoubleClick(item, {
-          depth,
-          focused,
-          expanded
-        });
-      };
-=======
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  focusItem(item) {
-    const { focusable = true, onFocus } = this.props;
-
-    if (focusable && this.focusedItem !== item) {
-      this.focusedItem = item;
-      this.forceUpdate();
-
-      if (onFocus) {
-        onFocus(item);
-      }
-    }
-||||||| merged common ancestors
-  renderTreeItem(item, depth, focused, arrow, expanded) {
-    const { label, value } = this.getTreeItemLabelAndValue(item, depth, expanded);
-    const labelElement = this.renderTreeItemLabel(label, item, depth, focused, expanded);
-    const delimiter = value && labelElement ? dom.span({ className: "object-delimiter" }, ": ") : null;
-
-    return dom.div(this.getTreeTopElementProps(item, depth, focused, expanded), arrow, labelElement, delimiter, value);
-=======
   shouldItemUpdate(prevItem, nextItem) {
     const value = getValue(nextItem);
     // Long string should always update because fullText loading will not
     // trigger item re-render.
     return value && value.type === "longString";
->>>>>>> upstream-releases
   }
 
   render() {
@@ -14685,19 +7083,6 @@ class ObjectInspector extends Component {
       onFocus: focusable ? this.focusItem : null,
       onActivate: focusable ? this.activateItem : null,
 
-<<<<<<< HEAD
-      renderItem: (item, depth, focused, arrow, expanded) => ObjectInspectorItem({
-        ...this.props,
-        item,
-        depth,
-        focused,
-        arrow,
-        expanded,
-        setExpanded: this.setExpanded
-      })
-||||||| merged common ancestors
-      renderItem: this.renderTreeItem
-=======
       shouldItemUpdate: this.shouldItemUpdate,
       renderItem: (item, depth, focused, arrow, expanded) => ObjectInspectorItem({
         ...this.props,
@@ -14708,7 +7093,6 @@ class ObjectInspector extends Component {
         expanded,
         setExpanded: this.setExpanded
       })
->>>>>>> upstream-releases
     });
   }
 }
@@ -14734,43 +7118,6 @@ module.exports = props => {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1856:
-||||||| merged common ancestors
-/***/ 3697:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 3698:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-function documentHasSelection() {
-  const selection = getSelection();
-  if (!selection) {
-    return false;
-  }
-
-  return selection.type === "Range";
-}
-
-module.exports = {
-  documentHasSelection
-};
-
-/***/ }),
-
-/***/ 3699:
-=======
 /***/ 484:
 /***/ (function(module, exports) {
 
@@ -14779,29 +7126,16 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_484__;
 /***/ }),
 
 /***/ 485:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-<<<<<<< HEAD
-const { loadItemProperties } = __webpack_require__(1803); /* This Source Code Form is subject to the terms of the Mozilla Public
-||||||| merged common ancestors
-const { loadItemProperties } = __webpack_require__(3666); /* This Source Code Form is subject to the terms of the Mozilla Public
-=======
 const { loadItemProperties } = __webpack_require__(196); /* This Source Code Form is subject to the terms of the Mozilla Public
->>>>>>> upstream-releases
                                                                     * License, v. 2.0. If a copy of the MPL was not distributed with this
                                                                     * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD
-const { getLoadedProperties, getActors } = __webpack_require__(1785);
-||||||| merged common ancestors
-const { getLoadedProperties, getActors } = __webpack_require__(3703);
-=======
 const { getLoadedProperties, getActors } = __webpack_require__(115);
->>>>>>> upstream-releases
 
 /**
  * This action is responsible for expanding a given node, which also means that
@@ -14912,18 +7246,6 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1857:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 1858:
-||||||| merged common ancestors
-/***/ 3703:
-=======
 /***/ 486:
 /***/ (function(module, exports) {
 
@@ -14932,207 +7254,32 @@ module.exports = {
 /***/ }),
 
 /***/ 487:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-<<<<<<< HEAD
-var _devtoolsServices = __webpack_require__(22);
-||||||| merged common ancestors
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-=======
 var _devtoolsServices = __webpack_require__(37);
->>>>>>> upstream-releases
 
 var _devtoolsServices2 = _interopRequireDefault(_devtoolsServices);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-<<<<<<< HEAD
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-const { Component } = __webpack_require__(0);
-const dom = __webpack_require__(1759);
-
-const { appinfo } = _devtoolsServices2.default;
-const isMacOS = appinfo.OS === "Darwin";
-
-const classnames = __webpack_require__(175);
-const { MODE } = __webpack_require__(1762);
-
-const Utils = __webpack_require__(1786);
-
-const {
-  getValue,
-  nodeHasAccessors,
-  nodeHasProperties,
-  nodeIsBlock,
-  nodeIsDefaultProperties,
-  nodeIsFunction,
-  nodeIsGetter,
-  nodeIsMapEntry,
-  nodeIsMissingArguments,
-  nodeIsOptimizedOut,
-  nodeIsPrimitive,
-  nodeIsPrototype,
-  nodeIsSetter,
-  nodeIsUninitializedBinding,
-  nodeIsUnmappedBinding,
-  nodeIsUnscopedBinding,
-  nodeIsWindow,
-  nodeIsLongString,
-  nodeHasFullText,
-  nodeHasGetter,
-  getParentGripValue,
-  getNonPrototypeParentGripValue
-} = Utils.node;
-
-class ObjectInspectorItem extends Component {
-  // eslint-disable-next-line complexity
-  getLabelAndValue() {
-    const { item, depth, expanded, mode } = this.props;
-
-    const label = item.name;
-    const isPrimitive = nodeIsPrimitive(item);
-
-    if (nodeIsOptimizedOut(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(optimized away)")
-      };
-    }
-
-    if (nodeIsUninitializedBinding(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(uninitialized)")
-      };
-    }
-
-    if (nodeIsUnmappedBinding(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(unmapped)")
-      };
-    }
-
-    if (nodeIsUnscopedBinding(item)) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(unscoped)")
-      };
-    }
-
-    const itemValue = getValue(item);
-    const unavailable = isPrimitive && itemValue && itemValue.hasOwnProperty && itemValue.hasOwnProperty("unavailable");
-
-    if (nodeIsMissingArguments(item) || unavailable) {
-      return {
-        label,
-        value: dom.span({ className: "unavailable" }, "(unavailable)")
-      };
-    }
-
-    if (nodeIsFunction(item) && !nodeIsGetter(item) && !nodeIsSetter(item) && (mode === MODE.TINY || !mode)) {
-      return {
-        label: Utils.renderRep(item, {
-          ...this.props,
-          functionName: label
-        })
-      };
-    }
-||||||| merged common ancestors
-function reducer(state = initialState(), action = {}) {
-  const { type, data } = action;
-=======
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (nodeHasProperties(item) || nodeHasAccessors(item) || nodeIsMapEntry(item) || nodeIsLongString(item) || isPrimitive) {
-      const repProps = { ...this.props };
-      if (depth > 0) {
-        repProps.mode = mode === MODE.LONG ? MODE.SHORT : MODE.TINY;
-      }
-      if (expanded) {
-        repProps.mode = MODE.TINY;
-      }
-||||||| merged common ancestors
-  const cloneState = overrides => _extends({}, state, overrides);
-=======
 const { Component } = __webpack_require__(6);
 const dom = __webpack_require__(1);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (nodeIsLongString(item)) {
-        repProps.member = {
-          open: nodeHasFullText(item) && expanded
-        };
-      }
-||||||| merged common ancestors
-  if (type === "NODE_EXPAND") {
-    return cloneState({
-      expandedPaths: new Set(state.expandedPaths).add(data.node.path)
-    });
-  }
-=======
 const { appinfo } = _devtoolsServices2.default;
 const isMacOS = appinfo.OS === "Darwin";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (nodeHasGetter(item)) {
-        const targetGrip = getParentGripValue(item);
-        const receiverGrip = getNonPrototypeParentGripValue(item);
-        if (targetGrip && receiverGrip) {
-          Object.assign(repProps, {
-            onInvokeGetterButtonClick: () => this.props.invokeGetter(item, targetGrip, receiverGrip.actor, item.name)
-          });
-        }
-      }
-||||||| merged common ancestors
-  if (type === "NODE_COLLAPSE") {
-    const expandedPaths = new Set(state.expandedPaths);
-    expandedPaths.delete(data.node.path);
-    return cloneState({ expandedPaths });
-  }
-=======
 const classnames = __webpack_require__(67);
 const { MODE } = __webpack_require__(4);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return {
-        label,
-        value: Utils.renderRep(item, repProps)
-      };
-    }
-||||||| merged common ancestors
-  if (type === "NODE_PROPERTIES_LOADED") {
-    return cloneState({
-      actors: data.actor ? new Set(state.actors || []).add(data.actor) : state.actors,
-      loadedProperties: new Map(state.loadedProperties).set(data.node.path, action.data.properties)
-    });
-  }
-=======
 const Utils = __webpack_require__(116);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    return {
-      label
-    };
-||||||| merged common ancestors
-  if (type === "ROOTS_CHANGED") {
-    return cloneState();
-=======
 const {
   getValue,
   nodeHasAccessors,
@@ -15247,7 +7394,6 @@ class ObjectInspectorItem extends Component {
     return {
       label
     };
->>>>>>> upstream-releases
   }
 
   getTreeItemProps() {
@@ -15346,13 +7492,7 @@ module.exports = ObjectInspectorItem;
 
 /***/ }),
 
-<<<<<<< HEAD
-/***/ 1859:
-||||||| merged common ancestors
-/***/ 3787:
-=======
 /***/ 488:
->>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15375,64 +7515,6 @@ module.exports = {
   documentHasSelection
 };
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-function Accessible(props) {
-  const {
-    object,
-    inspectIconTitle,
-    nameMaxLength,
-    onAccessibleClick,
-    onAccessibleMouseOver,
-    onAccessibleMouseOut,
-    onInspectIconClick,
-    roleFirst,
-    separatorText
-  } = props;
-  const elements = getElements(object, nameMaxLength, roleFirst, separatorText);
-  const isInTree = object.preview && object.preview.isConnected === true;
-  const baseConfig = {
-    "data-link-actor-id": object.actor,
-    className: "objectBox objectBox-accessible"
-  };
-
-  let inspectIcon;
-  if (isInTree) {
-    if (onAccessibleClick) {
-      Object.assign(baseConfig, {
-        onClick: _ => onAccessibleClick(object),
-        className: `${baseConfig.className} clickable`
-      });
-    }
-
-    if (onAccessibleMouseOver) {
-      Object.assign(baseConfig, {
-        onMouseOver: _ => onAccessibleMouseOver(object)
-      });
-    }
-
-    if (onAccessibleMouseOut) {
-      Object.assign(baseConfig, {
-        onMouseOut: onAccessibleMouseOut
-      });
-    }
-
-    if (onInspectIconClick) {
-      inspectIcon = button({
-        className: "open-accessibility-inspector",
-        title: inspectIconTitle,
-        onClick: e => {
-          if (onAccessibleClick) {
-            e.stopPropagation();
-          }
-
-          onInspectIconClick(object, e);
-        }
-      });
-    }
-  }
-=======
 /***/ }),
 
 /***/ 6:
@@ -15451,67 +7533,19 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
   http://jedwatson.github.io/classnames
 */
 /* global define */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 2104:
-/***/ (function(module, exports, __webpack_require__) {
-||||||| merged common ancestors
-  return span(baseConfig, ...elements, inspectIcon);
-}
-=======
 (function () {
 	'use strict';
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = __webpack_require__(1780);
-||||||| merged common ancestors
-function getElements(grip, nameMaxLength, roleFirst = false, separatorText = ": ") {
-  const { name, role } = grip.preview;
-  const elements = [];
-  if (name) {
-    elements.push(StringRep({
-      className: "accessible-name",
-      object: name,
-      cropLimit: nameMaxLength
-    }), span({ className: "separator" }, separatorText));
-  }
-=======
 	var hasOwn = {}.hasOwnProperty;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  elements.push(span({ className: "accessible-role" }, role));
-  return roleFirst ? elements.reverse() : elements;
-}
-=======
 	function classNames () {
 		var classes = [];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ }),
-||||||| merged common ancestors
-// Registration
-function supportsObject(object, noGrip = false) {
-  if (noGrip === true || !isGrip(object)) {
-    return false;
-  }
-=======
 		for (var i = 0; i < arguments.length; i++) {
 			var arg = arguments[i];
 			if (!arg) continue;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/***/ 22:
-/***/ (function(module, exports) {
-||||||| merged common ancestors
-  return object.preview && object.typeName && object.typeName === "accessible";
-}
-=======
 			var argType = typeof arg;
 
 			if (argType === 'string' || argType === 'number') {
@@ -15546,18 +7580,7 @@ function supportsObject(object, noGrip = false) {
 		window.classNames = classNames;
 	}
 }());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-module.exports = __WEBPACK_EXTERNAL_MODULE_22__;
-||||||| merged common ancestors
-// Exports from this module
-module.exports = {
-  rep: wrapRender(Accessible),
-  supportsObject
-};
-=======
->>>>>>> upstream-releases
 
 /***/ })
 

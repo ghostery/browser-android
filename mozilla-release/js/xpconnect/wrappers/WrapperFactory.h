@@ -11,105 +11,6 @@
 
 namespace xpc {
 
-<<<<<<< HEAD
-class WrapperFactory {
- public:
-  enum {
-    WAIVE_XRAY_WRAPPER_FLAG = js::Wrapper::LAST_USED_FLAG << 1,
-    IS_XRAY_WRAPPER_FLAG = WAIVE_XRAY_WRAPPER_FLAG << 1
-  };
-
-  // Return true if any of any of the nested wrappers have the flag set.
-  static bool HasWrapperFlag(JSObject* wrapper, unsigned flag) {
-    unsigned flags = 0;
-    js::UncheckedUnwrap(wrapper, true, &flags);
-    return !!(flags & flag);
-  }
-
-  static bool IsXrayWrapper(JSObject* wrapper) {
-    return HasWrapperFlag(wrapper, IS_XRAY_WRAPPER_FLAG);
-  }
-
-  static bool HasWaiveXrayFlag(JSObject* wrapper) {
-    return HasWrapperFlag(wrapper, WAIVE_XRAY_WRAPPER_FLAG);
-  }
-
-  static bool IsCOW(JSObject* wrapper);
-
-  static JSObject* GetXrayWaiver(JS::HandleObject obj);
-  static JSObject* CreateXrayWaiver(JSContext* cx, JS::HandleObject obj);
-  static JSObject* WaiveXray(JSContext* cx, JSObject* obj);
-
-  // Computes whether we should allow the creation of an Xray waiver from
-  // |target| to |origin|.
-  static bool AllowWaiver(JS::Compartment* target, JS::Compartment* origin);
-
-  // Convenience method for the above, operating on a wrapper.
-  static bool AllowWaiver(JSObject* wrapper);
-
-  // Prepare a given object for wrapping in a new compartment.
-  static void PrepareForWrapping(JSContext* cx, JS::HandleObject scope,
-                                 JS::HandleObject obj,
-                                 JS::HandleObject objectPassedToWrap,
-                                 JS::MutableHandleObject retObj);
-
-  // Rewrap an object that is about to cross compartment boundaries.
-  static JSObject* Rewrap(JSContext* cx, JS::HandleObject existing,
-                          JS::HandleObject obj);
-
-  // Wrap wrapped object into a waiver wrapper and then re-wrap it.
-  static bool WaiveXrayAndWrap(JSContext* cx, JS::MutableHandleValue vp);
-  static bool WaiveXrayAndWrap(JSContext* cx, JS::MutableHandleObject object);
-||||||| merged common ancestors
-class WrapperFactory {
-  public:
-    enum { WAIVE_XRAY_WRAPPER_FLAG = js::Wrapper::LAST_USED_FLAG << 1,
-           IS_XRAY_WRAPPER_FLAG    = WAIVE_XRAY_WRAPPER_FLAG << 1 };
-
-    // Return true if any of any of the nested wrappers have the flag set.
-    static bool HasWrapperFlag(JSObject* wrapper, unsigned flag) {
-        unsigned flags = 0;
-        js::UncheckedUnwrap(wrapper, true, &flags);
-        return !!(flags & flag);
-    }
-
-    static bool IsXrayWrapper(JSObject* wrapper) {
-        return HasWrapperFlag(wrapper, IS_XRAY_WRAPPER_FLAG);
-    }
-
-    static bool HasWaiveXrayFlag(JSObject* wrapper) {
-        return HasWrapperFlag(wrapper, WAIVE_XRAY_WRAPPER_FLAG);
-    }
-
-    static bool IsCOW(JSObject* wrapper);
-
-    static JSObject* GetXrayWaiver(JS::HandleObject obj);
-    static JSObject* CreateXrayWaiver(JSContext* cx, JS::HandleObject obj);
-    static JSObject* WaiveXray(JSContext* cx, JSObject* obj);
-
-    // Computes whether we should allow the creation of an Xray waiver from
-    // |target| to |origin|.
-    static bool AllowWaiver(JS::Compartment* target, JS::Compartment* origin);
-
-    // Convenience method for the above, operating on a wrapper.
-    static bool AllowWaiver(JSObject* wrapper);
-
-    // Prepare a given object for wrapping in a new compartment.
-    static void PrepareForWrapping(JSContext* cx,
-                                   JS::HandleObject scope,
-                                   JS::HandleObject obj,
-                                   JS::HandleObject objectPassedToWrap,
-                                   JS::MutableHandleObject retObj);
-
-    // Rewrap an object that is about to cross compartment boundaries.
-    static JSObject* Rewrap(JSContext* cx,
-                            JS::HandleObject existing,
-                            JS::HandleObject obj);
-
-    // Wrap wrapped object into a waiver wrapper and then re-wrap it.
-    static bool WaiveXrayAndWrap(JSContext* cx, JS::MutableHandleValue vp);
-    static bool WaiveXrayAndWrap(JSContext* cx, JS::MutableHandleObject object);
-=======
 /**
  * A wrapper that's only used for cross-origin objects. This should be
  * just like a CrossCompartmentWrapper but (as an implementation
@@ -141,7 +42,6 @@ class CrossOriginObjectWrapper : public js::Wrapper {
                                    JSContext* cx) const override;
 
   static const CrossOriginObjectWrapper singleton;
->>>>>>> upstream-releases
 };
 
 class WrapperFactory {

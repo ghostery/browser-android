@@ -67,27 +67,6 @@ class LocalStorageCacheChild final : public PBackgroundLocalStorageCacheChild {
   void SendDeleteMeInternal();
 
   // IPDL methods are only called by IPDL.
-<<<<<<< HEAD
-  void ActorDestroy(ActorDestroyReason aWhy) override;
-
-  mozilla::ipc::IPCResult RecvObserve(const PrincipalInfo& aPrincipalInfo,
-                                      const uint32_t& aPrivateBrowsingId,
-                                      const nsString& aDocumentURI,
-                                      const nsString& aKey,
-                                      const nsString& aOldValue,
-                                      const nsString& aNewValue) override;
-||||||| merged common ancestors
-  void
-  ActorDestroy(ActorDestroyReason aWhy) override;
-
-  mozilla::ipc::IPCResult
-  RecvObserve(const PrincipalInfo& aPrincipalInfo,
-              const uint32_t& aPrivateBrowsingId,
-              const nsString& aDocumentURI,
-              const nsString& aKey,
-              const nsString& aOldValue,
-              const nsString& aNewValue) override;
-=======
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
   mozilla::ipc::IPCResult RecvObserve(const PrincipalInfo& aPrincipalInfo,
@@ -97,7 +76,6 @@ class LocalStorageCacheChild final : public PBackgroundLocalStorageCacheChild {
                                       const nsString& aKey,
                                       const nsString& aOldValue,
                                       const nsString& aNewValue) override;
->>>>>>> upstream-releases
 };
 
 // Child side of the IPC protocol, exposes as DB interface but
@@ -244,15 +222,9 @@ class LocalStorageCacheParent final
 
   NS_INLINE_DECL_REFCOUNTING(mozilla::dom::LocalStorageCacheParent)
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   const PrincipalInfo& PrincipalInfo() const { return mPrincipalInfo; }
 
  private:
->>>>>>> upstream-releases
   // Reference counted.
   ~LocalStorageCacheParent();
 
@@ -422,17 +394,6 @@ class StorageDBParent final : public PBackgroundStorageParent {
   bool mIPCOpen;
 };
 
-<<<<<<< HEAD
-PBackgroundLocalStorageCacheParent* AllocPBackgroundLocalStorageCacheParent(
-    const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
-    const nsCString& aOriginKey, const uint32_t& aPrivateBrowsingId);
-||||||| merged common ancestors
-PBackgroundLocalStorageCacheParent*
-AllocPBackgroundLocalStorageCacheParent(
-                              const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
-                              const nsCString& aOriginKey,
-                              const uint32_t& aPrivateBrowsingId);
-=======
 class SessionStorageObserverParent final : public PSessionStorageObserverParent,
                                            public StorageObserverSink {
   bool mActorDestroyed;
@@ -472,69 +433,19 @@ bool DeallocPBackgroundLocalStorageCacheParent(
 
 PBackgroundStorageParent* AllocPBackgroundStorageParent(
     const nsString& aProfilePath);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult RecvPBackgroundLocalStorageCacheConstructor(
-    mozilla::ipc::PBackgroundParent* aBackgroundActor,
-    PBackgroundLocalStorageCacheParent* aActor,
-    const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
-    const nsCString& aOriginKey, const uint32_t& aPrivateBrowsingId);
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-RecvPBackgroundLocalStorageCacheConstructor(
-                              mozilla::ipc::PBackgroundParent* aBackgroundActor,
-                              PBackgroundLocalStorageCacheParent* aActor,
-                              const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
-                              const nsCString& aOriginKey,
-                              const uint32_t& aPrivateBrowsingId);
-=======
 mozilla::ipc::IPCResult RecvPBackgroundStorageConstructor(
     PBackgroundStorageParent* aActor, const nsString& aProfilePath);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool DeallocPBackgroundLocalStorageCacheParent(
-    PBackgroundLocalStorageCacheParent* aActor);
-||||||| merged common ancestors
-bool
-DeallocPBackgroundLocalStorageCacheParent(
-                                    PBackgroundLocalStorageCacheParent* aActor);
-=======
 bool DeallocPBackgroundStorageParent(PBackgroundStorageParent* aActor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-PBackgroundStorageParent* AllocPBackgroundStorageParent(
-    const nsString& aProfilePath);
-||||||| merged common ancestors
-PBackgroundStorageParent*
-AllocPBackgroundStorageParent(const nsString& aProfilePath);
-=======
 PSessionStorageObserverParent* AllocPSessionStorageObserverParent();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult RecvPBackgroundStorageConstructor(
-    PBackgroundStorageParent* aActor, const nsString& aProfilePath);
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-RecvPBackgroundStorageConstructor(PBackgroundStorageParent* aActor,
-                                  const nsString& aProfilePath);
-=======
 bool RecvPSessionStorageObserverConstructor(
     PSessionStorageObserverParent* aActor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool DeallocPBackgroundStorageParent(PBackgroundStorageParent* aActor);
-||||||| merged common ancestors
-bool
-DeallocPBackgroundStorageParent(PBackgroundStorageParent* aActor);
-=======
 bool DeallocPSessionStorageObserverParent(
     PSessionStorageObserverParent* aActor);
->>>>>>> upstream-releases
 
 }  // namespace dom
 }  // namespace mozilla

@@ -75,13 +75,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 // Serde types in rustdoc of other crates get linked to here.
-<<<<<<< HEAD
-#![doc(html_root_url = "https://docs.rs/serde/1.0.80")]
-||||||| merged common ancestors
-#![doc(html_root_url = "https://docs.rs/serde/1.0.66")]
-=======
 #![doc(html_root_url = "https://docs.rs/serde/1.0.88")]
->>>>>>> upstream-releases
 // Support using Serde without the standard library!
 #![cfg_attr(not(feature = "std"), no_std)]
 // Unstable functionality only if the user asks for it. For tracking and
@@ -96,20 +90,6 @@
 #![cfg_attr(
     feature = "cargo-clippy",
     allow(
-<<<<<<< HEAD
-        cast_lossless,
-        const_static_lifetime,
-        doc_markdown,
-        linkedlist,
-        needless_pass_by_value,
-        redundant_field_names,
-        type_complexity,
-        unreadable_literal,
-        zero_prefixed_literal
-||||||| merged common ancestors
-        cast_lossless, const_static_lifetime, doc_markdown, linkedlist, needless_pass_by_value,
-        redundant_field_names, type_complexity, unreadable_literal, zero_prefixed_literal
-=======
         // not available in our oldest supported compiler
         const_static_lifetime,
         empty_enum,
@@ -131,73 +111,10 @@
         similar_names,
         // preference
         doc_markdown,
->>>>>>> upstream-releases
     )
 )]
-<<<<<<< HEAD
-// Whitelisted clippy_pedantic lints
-#![cfg_attr(feature = "cargo-clippy", allow(
-// integer and float ser/de requires these sorts of casts
-    cast_possible_truncation,
-    cast_possible_wrap,
-    cast_precision_loss,
-    cast_sign_loss,
-// simplifies some macros
-    invalid_upcast_comparisons,
-// things are often more readable this way
-    decimal_literal_representation,
-    option_unwrap_used,
-    result_unwrap_used,
-    shadow_reuse,
-    single_match_else,
-    stutter,
-    use_self,
-// not practical
-    indexing_slicing,
-    many_single_char_names,
-    missing_docs_in_private_items,
-    similar_names,
-// alternative is not stable
-    empty_enum,
-    use_debug,
-))]
-// Blacklisted Rust lints.
-//
-// Compiler bug involving unused_imports:
-// https://github.com/rust-lang/rust/issues/51661
-#![deny(missing_docs, /*unused_imports*/)]
-||||||| merged common ancestors
-// Whitelisted clippy_pedantic lints
-#![cfg_attr(feature = "cargo-clippy", allow(
-// integer and float ser/de requires these sorts of casts
-    cast_possible_truncation,
-    cast_possible_wrap,
-    cast_precision_loss,
-    cast_sign_loss,
-// simplifies some macros
-    invalid_upcast_comparisons,
-// things are often more readable this way
-    decimal_literal_representation,
-    option_unwrap_used,
-    result_unwrap_used,
-    shadow_reuse,
-    single_match_else,
-    stutter,
-    use_self,
-// not practical
-    many_single_char_names,
-    missing_docs_in_private_items,
-    similar_names,
-// alternative is not stable
-    empty_enum,
-    use_debug,
-))]
-// Blacklisted Rust lints.
-#![deny(missing_docs, unused_imports)]
-=======
 // Rustc lints.
 #![deny(missing_docs, unused_imports)]
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -287,12 +204,6 @@ mod lib {
 
     #[cfg(any(core_duration, feature = "std"))]
     pub use self::core::time::Duration;
-<<<<<<< HEAD
-
-    #[cfg(range_inclusive)]
-    pub use self::core::ops::RangeInclusive;
-||||||| merged common ancestors
-=======
 
     #[cfg(range_inclusive)]
     pub use self::core::ops::RangeInclusive;
@@ -302,7 +213,6 @@ mod lib {
 
     #[cfg(ops_bound)]
     pub use self::core::ops::Bound;
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////

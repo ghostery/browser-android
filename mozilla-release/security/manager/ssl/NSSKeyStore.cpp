@@ -89,23 +89,11 @@ nsresult NSSKeyStore::Unlock() {
     // Forward to the main thread synchronously.
     nsresult result = NS_ERROR_FAILURE;
     SyncRunnable::DispatchToThread(
-<<<<<<< HEAD
-        mainThread, new SyncRunnable(NS_NewRunnableFunction(
-                        "NSSKeyStoreMainThreadUnlock", [slot = mSlot.get()]() {
-                          NSSKeyStoreMainThreadUnlock(slot);
-                        })));
-||||||| merged common ancestors
-      mainThread,
-      new SyncRunnable(NS_NewRunnableFunction(
-        "NSSKeyStoreMainThreadUnlock",
-        [slot = mSlot.get()]() { NSSKeyStoreMainThreadUnlock(slot); })));
-=======
         mainThread, new SyncRunnable(NS_NewRunnableFunction(
                         "NSSKeyStoreMainThreadUnlock",
                         [slot = mSlot.get(), result = &result]() {
                           *result = NSSKeyStoreMainThreadUnlock(slot);
                         })));
->>>>>>> upstream-releases
 
     return result;
   }

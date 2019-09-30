@@ -64,15 +64,6 @@ public:
     Type getType() const { return fType; }
     const FocalData& getFocalData() const { return fFocalData; }
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkTwoPointConicalGradient)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkTwoPointConicalGradient)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer& buffer) const override;
     sk_sp<SkShader> onMakeColorSpace(SkColorSpaceXformer* xformer) const override;

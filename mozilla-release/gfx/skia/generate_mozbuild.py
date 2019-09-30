@@ -81,35 +81,7 @@ if CONFIG['INTEL_ARCHITECTURE']:
     SOURCES['skia/src/opts/SkOpts_sse41.cpp'].flags += ['-msse4.1']
     SOURCES['skia/src/opts/SkOpts_sse42.cpp'].flags += ['-msse4.2']
     SOURCES['skia/src/opts/SkOpts_avx.cpp'].flags += ['-mavx']
-<<<<<<< HEAD
     SOURCES['skia/src/opts/SkOpts_hsw.cpp'].flags += ['-mavx2', '-mf16c', '-mfma']
-elif CONFIG['CC_TYPE'] in ('msvc', 'clang-cl') and CONFIG['INTEL_ARCHITECTURE']:
-    # MSVC doesn't need special compiler flags, but Skia needs to be told that these files should
-    # be built with the required SSE level or it will simply compile in stubs and cause runtime crashes
-    SOURCES['skia/src/opts/SkBitmapProcState_opts_SSE2.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=20']
-    SOURCES['skia/src/opts/SkBitmapProcState_opts_SSSE3.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=31']
-    SOURCES['skia/src/opts/SkBlitRow_opts_SSE2.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=20']
-    SOURCES['skia/src/opts/SkOpts_ssse3.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=31']
-    SOURCES['skia/src/opts/SkOpts_sse41.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=41']
-    SOURCES['skia/src/opts/SkOpts_sse42.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=42']
-    SOURCES['skia/src/opts/SkOpts_avx.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=51']
-    SOURCES['skia/src/opts/SkOpts_hsw.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=52']
-||||||| merged common ancestors
-    SOURCES['skia/src/opts/SkOpts_hsw.cpp'].flags += ['-mavx2']
-elif CONFIG['CC_TYPE'] in ('msvc', 'clang-cl') and CONFIG['INTEL_ARCHITECTURE']:
-    # MSVC doesn't need special compiler flags, but Skia needs to be told that these files should
-    # be built with the required SSE level or it will simply compile in stubs and cause runtime crashes
-    SOURCES['skia/src/opts/SkBitmapProcState_opts_SSE2.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=20']
-    SOURCES['skia/src/opts/SkBitmapProcState_opts_SSSE3.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=31']
-    SOURCES['skia/src/opts/SkBlitRow_opts_SSE2.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=20']
-    SOURCES['skia/src/opts/SkOpts_ssse3.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=31']
-    SOURCES['skia/src/opts/SkOpts_sse41.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=41']
-    SOURCES['skia/src/opts/SkOpts_sse42.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=42']
-    SOURCES['skia/src/opts/SkOpts_avx.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=51']
-    SOURCES['skia/src/opts/SkOpts_hsw.cpp'].flags += ['-DSK_CPU_SSE_LEVEL=52']
-=======
-    SOURCES['skia/src/opts/SkOpts_hsw.cpp'].flags += ['-mavx2', '-mf16c', '-mfma']
->>>>>>> upstream-releases
 elif CONFIG['CPU_ARCH'] == 'arm' and CONFIG['CC_TYPE'] in ('clang', 'gcc'):
     CXXFLAGS += CONFIG['NEON_FLAGS']
 elif CONFIG['CPU_ARCH'] == 'aarch64' and CONFIG['CC_TYPE'] in ('clang', 'gcc'):
@@ -259,21 +231,8 @@ def generate_separated_sources(platform_sources):
       'skia/src/codec/SkMasks.cpp',
       'skia/src/effects/imagefilters/SkBlurImageFilter.cpp',
       'skia/src/effects/SkDashPathEffect.cpp',
-<<<<<<< HEAD
-      'skia/src/gpu/gl/GrGLMakeNativeInterface_none.cpp',
-||||||| merged common ancestors
-      'skia/src/effects/SkImageSource.cpp',
-      'skia/src/gpu/gl/GrGLMakeNativeInterface_none.cpp',
-=======
->>>>>>> upstream-releases
       'skia/src/ports/SkDiscardableMemory_none.cpp',
-<<<<<<< HEAD
       'skia/src/ports/SkGlobalInitialization_default.cpp',
-      'skia/src/ports/SkGlobalInitialization_default_imagefilters.cpp',
-||||||| merged common ancestors
-=======
-      'skia/src/ports/SkGlobalInitialization_default.cpp',
->>>>>>> upstream-releases
       'skia/src/ports/SkMemory_mozalloc.cpp',
       'skia/src/ports/SkImageGenerator_none.cpp',
       'skia/third_party/skcms/skcms.cc',
@@ -371,32 +330,6 @@ unified_blacklist = [
   'SkParse.cpp',
   'SkPDFFont.cpp',
   'SkPictureData.cpp',
-<<<<<<< HEAD
-  'skia/src/gpu/effects/',
-  'skia/src/gpu/gradients/',
-  'GrResourceCache',
-  'GrResourceProvider',
-  'GrAA',
-  'GrGL',
-  'GrCCPathProcessor',
-  'GrCCStrokeGeometry',
-  'GrMSAAPathRenderer.cpp',
-  'GrNonAAFillRect',
-  'GrPathUtils',
-  'GrShadowRRectOp',
-||||||| merged common ancestors
-  'skia/src/gpu/effects/',
-  'GrResourceCache',
-  'GrResourceProvider',
-  'GrAA',
-  'GrGL',
-  'GrCCPathProcessor',
-  'GrMSAAPathRenderer.cpp',
-  'GrNonAAFillRect',
-  'GrPathUtils',
-  'GrShadowRRectOp',
-=======
->>>>>>> upstream-releases
   'SkColorSpace',
   'SkPathOpsDebug.cpp',
   'SkParsePath.cpp',
@@ -406,22 +339,8 @@ unified_blacklist = [
   'SkMatrix44.cpp',
   'SkRTree.cpp',
   'SkVertices.cpp',
-<<<<<<< HEAD
-  'SkJumper',
   'SkSLHCodeGenerator.cpp',
-||||||| merged common ancestors
-  'SkJumper',
-=======
-  'SkSLHCodeGenerator.cpp',
->>>>>>> upstream-releases
   'SkSLLexer.cpp',
-<<<<<<< HEAD
-  'SkSLLayoutLexer.cpp',
-||||||| merged common ancestors
-  'SkSLLayoutLexer.cpp',
-  'SkThreadedBMPDevice.cpp',
-=======
->>>>>>> upstream-releases
 ] + opt_whitelist
 
 def write_sources(f, values, indent):

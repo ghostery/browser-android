@@ -80,16 +80,8 @@ class RemoteWebProgressManager {
       deserialized.QueryInterface(Ci.nsITransportSecurityInfo);
     }
 
-<<<<<<< HEAD
-    return [deserialized, aState];
-  },
-||||||| merged common ancestors
-    return deserialized;
-  },
-=======
     return [deserialized, aState];
   }
->>>>>>> upstream-releases
 
   setCurrentURI(aURI) {
     // This function is simpler than nsDocShell::SetCurrentURI since
@@ -223,131 +215,6 @@ class RemoteWebProgressManager {
     }
 
     switch (aMessage.name) {
-<<<<<<< HEAD
-    case "Content:StateChange":
-      if (isTopLevel) {
-        this._browser._documentURI = Services.io.newURI(json.documentURI);
-      }
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_STATE_ALL, "onStateChange", webProgress,
-        request, json.stateFlags, json.status
-      );
-      break;
-
-    case "Content:LocationChange":
-      let location = Services.io.newURI(json.location);
-      let flags = json.flags;
-      let remoteWebNav = this._browser._remoteWebNavigationImpl;
-
-      // These properties can change even for a sub-frame navigation.
-      remoteWebNav.canGoBack = json.canGoBack;
-      remoteWebNav.canGoForward = json.canGoForward;
-
-      if (isTopLevel) {
-        remoteWebNav._currentURI = location;
-        this._browser._documentURI = Services.io.newURI(json.documentURI);
-        this._browser._contentTitle = json.title;
-        this._browser._imageDocument = null;
-        this._browser._contentPrincipal = json.principal;
-        this._browser._isSyntheticDocument = json.synthetic;
-        this._browser._innerWindowID = json.innerWindowID;
-        this._browser._contentRequestContextID = json.requestContextID;
-      }
-
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_LOCATION, "onLocationChange", webProgress,
-        request, location, flags
-      );
-      break;
-
-    case "Content:SecurityChange":
-      let [secInfo, state] = this._fixSecInfoAndState(json.secInfo, json.state);
-
-      if (isTopLevel) {
-        // Invoking this getter triggers the generation of the underlying object,
-        // which we need to access with ._securityUI, because .securityUI returns
-        // a wrapper that makes _update inaccessible.
-        void this._browser.securityUI;
-        this._browser._securityUI._update(secInfo, state);
-      }
-
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_SECURITY, "onSecurityChange", webProgress,
-        request, state
-      );
-      break;
-
-    case "Content:StatusChange":
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_STATUS, "onStatusChange", webProgress, request,
-        json.status, json.message
-      );
-      break;
-||||||| merged common ancestors
-    case "Content:StateChange":
-      if (isTopLevel) {
-        this._browser._documentURI = Services.io.newURI(json.documentURI);
-      }
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_STATE_ALL, "onStateChange", webProgress,
-        request, json.stateFlags, json.status
-      );
-      break;
-
-    case "Content:LocationChange":
-      let location = Services.io.newURI(json.location);
-      let flags = json.flags;
-      let remoteWebNav = this._browser._remoteWebNavigationImpl;
-
-      // These properties can change even for a sub-frame navigation.
-      remoteWebNav.canGoBack = json.canGoBack;
-      remoteWebNav.canGoForward = json.canGoForward;
-
-      if (isTopLevel) {
-        remoteWebNav._currentURI = location;
-        this._browser._documentURI = Services.io.newURI(json.documentURI);
-        this._browser._contentTitle = json.title;
-        this._browser._imageDocument = null;
-        this._browser._contentPrincipal = json.principal;
-        this._browser._isSyntheticDocument = json.synthetic;
-        this._browser._innerWindowID = json.innerWindowID;
-        this._browser._contentRequestContextID = json.requestContextID;
-      }
-
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_LOCATION, "onLocationChange", webProgress,
-        request, location, flags
-      );
-      break;
-
-    case "Content:SecurityChange":
-      let secInfo = this._fixSecInfo(json.secInfo);
-      let oldState = json.oldState;
-      let state = json.state;
-      let contentBlockingLogJSON = json.contentBlockingLogJSON;
-
-      if (isTopLevel) {
-        // Invoking this getter triggers the generation of the underlying object,
-        // which we need to access with ._securityUI, because .securityUI returns
-        // a wrapper that makes _update inaccessible.
-        void this._browser.securityUI;
-        this._browser._securityUI._update(secInfo, oldState, state,
-                                          contentBlockingLogJSON);
-      }
-
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_SECURITY, "onSecurityChange", webProgress,
-        request, oldState, state, contentBlockingLogJSON
-      );
-      break;
-
-    case "Content:StatusChange":
-      this._callProgressListeners(
-        Ci.nsIWebProgress.NOTIFY_STATUS, "onStatusChange", webProgress, request,
-        json.status, json.message
-      );
-      break;
-=======
       case "Content:SecurityChange":
         let [secInfo, state] = this._fixSecInfoAndState(
           json.secInfo,
@@ -361,7 +228,6 @@ class RemoteWebProgressManager {
           void this._browser.securityUI;
           this._browser._securityUI._update(secInfo, state);
         }
->>>>>>> upstream-releases
 
         this.onSecurityChange(webProgress, request, state);
         break;

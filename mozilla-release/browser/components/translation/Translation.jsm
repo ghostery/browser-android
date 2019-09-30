@@ -295,14 +295,6 @@ TranslationUI.prototype = {
 
   showTranslationInfoBar() {
     let notificationBox = this.notificationBox;
-<<<<<<< HEAD
-    let notif = notificationBox.appendNotification("", "translation", null,
-      notificationBox.PRIORITY_INFO_HIGH, null, null,
-      "translation-notification");
-||||||| merged common ancestors
-    let notif = notificationBox.appendNotification("", "translation", null,
-                                                   notificationBox.PRIORITY_INFO_HIGH);
-=======
     let notif = notificationBox.appendNotification(
       "",
       "translation",
@@ -312,7 +304,6 @@ TranslationUI.prototype = {
       null,
       "translation-notification"
     );
->>>>>>> upstream-releases
     notif.init(this);
     return notif;
   },

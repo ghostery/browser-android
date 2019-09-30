@@ -7,35 +7,8 @@
 
 #include "GrGLSL.h"
 #include "GrShaderCaps.h"
-<<<<<<< HEAD
-
-const char* GrGLSLTypeString(const GrShaderCaps* shaderCaps, GrSLType t) {
-||||||| merged common ancestors
-#include "SkString.h"
-#include "../private/GrGLSL.h"
-
-bool GrGLSLSupportsNamedFragmentShaderOutputs(GrGLSLGeneration gen) {
-    switch (gen) {
-        case k110_GrGLSLGeneration:
-            return false;
-        case k130_GrGLSLGeneration:
-        case k140_GrGLSLGeneration:
-        case k150_GrGLSLGeneration:
-        case k330_GrGLSLGeneration:
-        case k400_GrGLSLGeneration:
-        case k420_GrGLSLGeneration:
-        case k310es_GrGLSLGeneration:
-        case k320es_GrGLSLGeneration:
-            return true;
-    }
-    return false;
-}
-
-const char* GrGLSLTypeString(const GrShaderCaps* shaderCaps, GrSLType t) {
-=======
 
 const char* GrGLSLTypeString(GrSLType t) {
->>>>>>> upstream-releases
     switch (t) {
         case kVoid_GrSLType:
             return "void";

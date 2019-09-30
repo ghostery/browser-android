@@ -46,15 +46,9 @@ class Worklet final : public nsISupports, public nsWrapperCache {
                                       const WorkletOptions& aOptions,
                                       CallerType aCallerType, ErrorResult& aRv);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   WorkletImpl* Impl() const { return mImpl; }
 
  private:
->>>>>>> upstream-releases
   ~Worklet();
 
   WorkletFetchHandler* GetImportFetchHandler(const nsACString& aURI);

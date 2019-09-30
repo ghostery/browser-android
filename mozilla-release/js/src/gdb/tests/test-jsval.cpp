@@ -1,14 +1,7 @@
 #include "gdb-tests.h"
 #include "jsapi.h"
 
-<<<<<<< HEAD
 #include "js/Symbol.h"
-#ifdef ENABLE_BIGINT
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-=======
-#include "js/Symbol.h"
->>>>>>> upstream-releases
 #include "vm/BigIntType.h"
 
 FRAGMENT(jsval, simple) {

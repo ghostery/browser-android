@@ -24,14 +24,8 @@ class InspectAction extends PureComponent {
   static get propTypes() {
     return {
       dispatch: PropTypes.func.isRequired,
-<<<<<<< HEAD
-      target: Types.debugTarget.isRequired,
-||||||| merged common ancestors
-      target: PropTypes.object.isRequired,
-=======
       target: Types.debugTarget.isRequired,
       disabled: PropTypes.bool,
->>>>>>> upstream-releases
     };
   }
 
@@ -50,14 +44,8 @@ class InspectAction extends PureComponent {
       dom.button(
         {
           onClick: e => this.inspect(),
-<<<<<<< HEAD
-          className: "default-button  js-debug-target-inspect-button",
-||||||| merged common ancestors
-          className: "aboutdebugging-button",
-=======
           className: "default-button  qa-debug-target-inspect-button",
           disabled,
->>>>>>> upstream-releases
         },
         "Inspect"
       )

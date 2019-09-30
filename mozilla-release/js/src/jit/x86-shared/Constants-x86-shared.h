@@ -94,42 +94,6 @@ inline const char* XMMRegName(XMMRegisterID reg) {
 }
 
 #ifdef JS_CODEGEN_X64
-<<<<<<< HEAD
-inline const char* GPReg64Name(RegisterID reg) {
-  static const char* const names[] = {"%rax",
-                                      "%rcx",
-                                      "%rdx",
-                                      "%rbx",
-                                      "%rsp",
-                                      "%rbp",
-                                      "%rsi",
-                                      "%rdi"
-#ifdef JS_CODEGEN_X64
-                                      ,
-                                      "%r8",
-                                      "%r9",
-                                      "%r10",
-                                      "%r11",
-                                      "%r12",
-                                      "%r13",
-                                      "%r14",
-                                      "%r15"
-#endif
-  };
-  MOZ_ASSERT(size_t(reg) < mozilla::ArrayLength(names));
-  return names[reg];
-||||||| merged common ancestors
-inline const char* GPReg64Name(RegisterID reg)
-{
-    static const char* const names[] = {
-        "%rax", "%rcx", "%rdx", "%rbx", "%rsp", "%rbp", "%rsi", "%rdi"
-#ifdef JS_CODEGEN_X64
-       ,"%r8", "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15"
-#endif
-    };
-    MOZ_ASSERT(size_t(reg) < mozilla::ArrayLength(names));
-    return names[reg];
-=======
 inline const char* GPReg64Name(RegisterID reg) {
   static const char* const names[] = {"%rax",
                                       "%rcx",
@@ -153,7 +117,6 @@ inline const char* GPReg64Name(RegisterID reg) {
   };
   MOZ_ASSERT(size_t(reg) < mozilla::ArrayLength(names));
   return names[reg];
->>>>>>> upstream-releases
 }
 #endif
 

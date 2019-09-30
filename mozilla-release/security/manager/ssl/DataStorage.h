@@ -115,17 +115,7 @@ class DataStorage : public nsIObserver {
   // aItems is used in the content process to initialize a cache of the items
   // received from the parent process over IPC. nullptr must be passed for the
   // parent process.
-<<<<<<< HEAD
-  nsresult Init(
-      /*out*/ bool& aDataWillPersist,
-      const InfallibleTArray<mozilla::dom::DataStorageItem>* aItems = nullptr);
-||||||| merged common ancestors
-  nsresult Init(/*out*/bool& aDataWillPersist,
-                const InfallibleTArray<mozilla::dom::DataStorageItem>*
-                  aItems = nullptr);
-=======
   nsresult Init(const InfallibleTArray<mozilla::dom::DataStorageItem>* aItems);
->>>>>>> upstream-releases
   // Given a key and a type of data, returns a value. Returns an empty string if
   // the key is not present for that type of data. If Get is called before the
   // "data-storage-ready" event is observed, it will block. NB: It is not

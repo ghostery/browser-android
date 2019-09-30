@@ -276,11 +276,6 @@ var AddonStudies = {
    */
   async getAll({ branched = AddonStudies.FILTER_ALL } = {}) {
     const db = await getDatabase();
-<<<<<<< HEAD
-    return getStore(db, "readonly").getAll();
-||||||| merged common ancestors
-    return getStore(db).getAll();
-=======
     let results = await getStore(db, "readonly").getAll();
 
     if (branched == AddonStudies.FILTER_BRANCHED_ONLY) {
@@ -301,7 +296,6 @@ var AddonStudies = {
    */
   async getAllActive(options) {
     return (await this.getAll(options)).filter(study => study.active);
->>>>>>> upstream-releases
   },
 
   /**
@@ -310,11 +304,6 @@ var AddonStudies = {
    */
   async add(study) {
     const db = await getDatabase();
-<<<<<<< HEAD
-    return getStore(db, "readwrite").add(study);
-||||||| merged common ancestors
-    return getStore(db).add(study);
-=======
     return getStore(db, "readwrite").add(study);
   },
 
@@ -325,7 +314,6 @@ var AddonStudies = {
   async update(study) {
     const db = await getDatabase();
     return getStore(db, "readwrite").put(study);
->>>>>>> upstream-releases
   },
 
   /**

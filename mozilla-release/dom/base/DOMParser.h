@@ -33,70 +33,16 @@ class DOMParser final : public nsISupports, public nsWrapperCache {
   static already_AddRefed<DOMParser> Constructor(const GlobalObject& aOwner,
                                                  mozilla::ErrorResult& rv);
 
-<<<<<<< HEAD
-  already_AddRefed<nsIDocument> ParseFromString(const nsAString& aStr,
-                                                SupportedType aType,
-                                                ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<nsIDocument>
-  ParseFromString(const nsAString& aStr, SupportedType aType, ErrorResult& aRv);
-=======
   already_AddRefed<Document> ParseFromString(const nsAString& aStr,
                                              SupportedType aType,
                                              ErrorResult& aRv);
->>>>>>> upstream-releases
 
   // Sequence converts to Span, so we can use this overload for both
   // the Sequence case and our internal uses.
-<<<<<<< HEAD
-  already_AddRefed<nsIDocument> ParseFromBuffer(Span<const uint8_t> aBuf,
-                                                SupportedType aType,
-                                                ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<nsIDocument>
-  ParseFromBuffer(Span<const uint8_t> aBuf, SupportedType aType,
-                  ErrorResult& aRv);
-
-  already_AddRefed<nsIDocument>
-  ParseFromBuffer(const Uint8Array& aBuf, SupportedType aType,
-                  ErrorResult& aRv);
-
-  already_AddRefed<nsIDocument>
-  ParseFromStream(nsIInputStream* aStream, const nsAString& aCharset,
-                  int32_t aContentLength, SupportedType aType,
-                  ErrorResult& aRv);
-
-  void
-  ForceEnableXULXBL()
-  {
-    mForceEnableXULXBL = true;
-  }
-=======
   already_AddRefed<Document> ParseFromBuffer(Span<const uint8_t> aBuf,
                                              SupportedType aType,
                                              ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  already_AddRefed<nsIDocument> ParseFromBuffer(const Uint8Array& aBuf,
-                                                SupportedType aType,
-                                                ErrorResult& aRv);
-
-  already_AddRefed<nsIDocument> ParseFromStream(nsIInputStream* aStream,
-                                                const nsAString& aCharset,
-                                                int32_t aContentLength,
-                                                SupportedType aType,
-                                                ErrorResult& aRv);
-
-  void ForceEnableXULXBL() { mForceEnableXULXBL = true; }
-
-  nsIGlobalObject* GetParentObject() const { return mOwner; }
-||||||| merged common ancestors
-  nsIGlobalObject* GetParentObject() const
-  {
-    return mOwner;
-  }
-=======
   already_AddRefed<Document> ParseFromBuffer(const Uint8Array& aBuf,
                                              SupportedType aType,
                                              ErrorResult& aRv);
@@ -110,7 +56,6 @@ class DOMParser final : public nsISupports, public nsWrapperCache {
   void ForceEnableXULXBL() { mForceEnableXULXBL = true; }
 
   nsIGlobalObject* GetParentObject() const { return mOwner; }
->>>>>>> upstream-releases
 
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override {

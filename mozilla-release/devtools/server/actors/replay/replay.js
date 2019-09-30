@@ -211,26 +211,6 @@ dbg.onNewScript = function(script) {
   installPendingHandlers();
 };
 
-const gConsoleObjectProperties = new Map();
-
-function shouldSaveConsoleProperty({ desc }) {
-  // When logging an object to the console, only properties captured here will
-  // be shown. We limit this to non-object data properties, as more complex
-  // properties have two problems: A) to inspect them we will need to switch to
-  // a replaying child process, which is very slow when there are many console
-  // messages, and B) trying to access objects transitively referred to by
-  // logged console objects will fail when unpaused, and depends on the current
-  // state of the process otherwise.
-  return "value" in desc && !isNonNullObject(desc.value);
-}
-
-function saveConsoleObjectProperties(obj) {
-  if (obj instanceof Debugger.Object) {
-    const properties = getObjectProperties(obj).filter(shouldSaveConsoleProperty);
-    gConsoleObjectProperties.set(obj, properties);
-  }
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // Object Snapshots
 ///////////////////////////////////////////////////////////////////////////////
@@ -347,25 +327,12 @@ Services.obs.addObserver(
         }
       }
 
-<<<<<<< HEAD
-    // Message arguments are preserved as debuggee values.
-    if (apiMessage.arguments) {
-      contents.arguments = apiMessage.arguments.map(makeDebuggeeValue);
-      contents.arguments.forEach(saveConsoleObjectProperties);
-    }
-||||||| merged common ancestors
-    // Message arguments are preserved as debuggee values.
-    if (apiMessage.arguments) {
-      contents.arguments = apiMessage.arguments.map(makeDebuggeeValue);
-    }
-=======
       // Message arguments are preserved as debuggee values.
       if (apiMessage.arguments) {
         contents.arguments = apiMessage.arguments.map(v => {
           return convertValue(makeDebuggeeValue(v), { snapshot: true });
         });
       }
->>>>>>> upstream-releases
 
       newConsoleMessage("ConsoleAPI", null, contents);
     },
@@ -1016,27 +983,6 @@ function forwardToScript(name) {
   return request => gScripts.getObject(request.id)[name](request.value);
 }
 
-<<<<<<< HEAD
-function getObjectProperties(object) {
-  const names = object.getOwnPropertyNames();
-
-  return names.map(name => {
-    const desc = object.getOwnPropertyDescriptor(name);
-    if ("value" in desc) {
-      desc.value = convertValue(desc.value);
-    }
-    if ("get" in desc) {
-      desc.get = getObjectId(desc.get);
-    }
-    if ("set" in desc) {
-      desc.set = getObjectId(desc.set);
-    }
-    return { name, desc };
-  });
-}
-
-||||||| merged common ancestors
-=======
 function getFrameData(index) {
   const frame = scriptFrameForIndex(index);
 
@@ -1336,7 +1282,6 @@ function getPauseData() {
   return rv;
 }
 
->>>>>>> upstream-releases
 ///////////////////////////////////////////////////////////////////////////////
 // Handlers
 ///////////////////////////////////////////////////////////////////////////////
@@ -1411,29 +1356,6 @@ const gRequestHandlers = {
     return getObjectProperties(object);
   },
 
-<<<<<<< HEAD
-  getObjectPropertiesForConsole(request) {
-    const object = gPausedObjects.getObject(request.id);
-    const properties = gConsoleObjectProperties.get(object);
-    if (!properties) {
-      throw new Error("Console object properties not saved");
-    }
-    return properties;
-||||||| merged common ancestors
-    return names.map(name => {
-      const desc = object.getOwnPropertyDescriptor(name);
-      if ("value" in desc) {
-        desc.value = convertValue(desc.value);
-      }
-      if ("get" in desc) {
-        desc.get = getObjectId(desc.get);
-      }
-      if ("set" in desc) {
-        desc.set = getObjectId(desc.set);
-      }
-      return { name, desc };
-    });
-=======
   objectApply(request) {
     divergeFromRecording();
     const obj = gPausedObjects.getObject(request.id);
@@ -1441,44 +1363,12 @@ const gRequestHandlers = {
     const args = request.args.map(v => convertValueFromParent(v));
     const rv = obj.apply(thisv, args);
     return convertCompletionValue(rv);
->>>>>>> upstream-releases
   },
 
   getEnvironmentNames(request) {
-<<<<<<< HEAD
-    if (!RecordReplayControl.maybeDivergeFromRecording()) {
-      return [{name: "Unknown names",
-               value: "Recording divergence in getEnvironmentNames" }];
-    }
-
-    try {
-      const env = gPausedObjects.getObject(request.id);
-      const names = env.names();
-
-      return names.map(name => {
-        return { name, value: convertValue(env.getVariable(name)) };
-      });
-    } catch (e) {
-      return [{name: "Unknown names",
-               value: "Exception thrown in getEnvironmentNames" }];
-    }
-||||||| merged common ancestors
-    if (!RecordReplayControl.maybeDivergeFromRecording()) {
-      return [{name: "Unknown names",
-               value: "Recording divergence in getEnvironmentNames" }];
-    }
-
-    const env = gPausedObjects.getObject(request.id);
-    const names = env.names();
-
-    return names.map(name => {
-      return { name, value: convertValue(env.getVariable(name)) };
-    });
-=======
     divergeFromRecording();
     const env = gPausedObjects.getObject(request.id);
     return getEnvironmentNames(env);
->>>>>>> upstream-releases
   },
 
   getFrame(request) {
@@ -1589,14 +1479,6 @@ const gRequestHandlers = {
     }
     const obj = makeDebuggeeValue(element);
     return { id: getObjectId(obj) };
-  },
-
-  currentExecutionPoint(request) {
-    return RecordReplayControl.currentExecutionPoint();
-  },
-
-  recordingEndpoint(request) {
-    return RecordReplayControl.recordingEndpoint();
   },
 };
 

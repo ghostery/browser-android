@@ -118,25 +118,6 @@ nsIGlobalObject* GetCurrentGlobal();
 //   Components.utils.
 nsIPrincipal* GetWebIDLCallerPrincipal();
 
-<<<<<<< HEAD
-// This may be used by callers that know that their incumbent global is non-
-// null (i.e. they know there have been no System Caller pushes since the
-// inner-most script execution).
-inline JSObject& IncumbentJSGlobal() {
-  return *GetIncumbentGlobal()->GetGlobalJSObject();
-}
-
-||||||| merged common ancestors
-// This may be used by callers that know that their incumbent global is non-
-// null (i.e. they know there have been no System Caller pushes since the
-// inner-most script execution).
-inline JSObject& IncumbentJSGlobal()
-{
-  return *GetIncumbentGlobal()->GetGlobalJSObject();
-}
-
-=======
->>>>>>> upstream-releases
 // Returns whether JSAPI is active right now.  If it is not, working with a
 // JSContext you grab from somewhere random is not OK and you should be doing
 // AutoJSAPI or AutoEntryScript to get yourself a properly set up JSContext.
@@ -335,35 +316,19 @@ class MOZ_STACK_CLASS AutoJSAPI : protected ScriptSettingsStackEntry {
  *
  */
 class MOZ_STACK_CLASS AutoEntryScript : public AutoJSAPI {
-<<<<<<< HEAD
- public:
-  AutoEntryScript(nsIGlobalObject* aGlobalObject, const char* aReason,
-||||||| merged common ancestors
-public:
-  AutoEntryScript(nsIGlobalObject* aGlobalObject,
-                  const char *aReason,
-=======
  public:
   // Constructing the AutoEntryScript will ensure that it enters the
   // Realm of aGlobalObject's JSObject and exposes that JSObject to active JS.
   AutoEntryScript(nsIGlobalObject* aGlobalObject, const char* aReason,
->>>>>>> upstream-releases
                   bool aIsMainThread = NS_IsMainThread());
 
   // aObject can be any object from the relevant global. It must not be a
   // cross-compartment wrapper because CCWs are not associated with a single
   // global.
-<<<<<<< HEAD
-  AutoEntryScript(JSObject* aObject, const char* aReason,
-||||||| merged common ancestors
-  AutoEntryScript(JSObject* aObject,
-                  const char *aReason,
-=======
   //
   // Constructing the AutoEntryScript will ensure that it enters the
   // Realm of aObject JSObject and exposes aObject's global to active JS.
   AutoEntryScript(JSObject* aObject, const char* aReason,
->>>>>>> upstream-releases
                   bool aIsMainThread = NS_IsMainThread());
 
   ~AutoEntryScript();

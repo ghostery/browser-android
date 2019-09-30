@@ -28,20 +28,10 @@ add_task(async function() {
   ];
   const allSectionTitles = allSections.map(el => el.textContent);
 
-<<<<<<< HEAD
-  ["Base Size", "Flexibility", "Final Size"].forEach((expectedTitle, i) => {
-    ok(allSectionTitles[i].includes(expectedTitle),
-       `Sizing section #${i + 1} (${expectedTitle}) was found`);
-  });
-||||||| merged common ancestors
-  ok(expectedTitles.every(title => allSectionTitles.includes(title)),
-     "The 3 main sizing sections where found");
-=======
   ["Base Size", "Flexibility", "Final Size"].forEach((expectedTitle, i) => {
     ok(
       allSectionTitles[i].includes(expectedTitle),
       `Sizing section #${i + 1} (${expectedTitle}) was found`
     );
   });
->>>>>>> upstream-releases
 });

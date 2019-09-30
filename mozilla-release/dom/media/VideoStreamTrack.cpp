@@ -14,15 +14,6 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-void VideoStreamTrack::AddVideoOutput(MediaStreamVideoSink* aSink) {
-  GetOwnedStream()->AddVideoOutput(aSink, mTrackID);
-||||||| merged common ancestors
-void
-VideoStreamTrack::AddVideoOutput(MediaStreamVideoSink* aSink)
-{
-  GetOwnedStream()->AddVideoOutput(aSink, mTrackID);
-=======
 VideoStreamTrack::VideoStreamTrack(DOMMediaStream* aStream, TrackID aTrackID,
                                    TrackID aInputTrackID,
                                    MediaStreamTrackSource* aSource,
@@ -52,18 +43,8 @@ void VideoStreamTrack::AddVideoOutput(VideoOutput* aOutput) {
   mVideoOutputs.AppendElement(aOutput);
   AddDirectListener(aOutput);
   AddListener(aOutput);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void VideoStreamTrack::RemoveVideoOutput(MediaStreamVideoSink* aSink) {
-  GetOwnedStream()->RemoveVideoOutput(aSink, mTrackID);
-||||||| merged common ancestors
-void
-VideoStreamTrack::RemoveVideoOutput(MediaStreamVideoSink* aSink)
-{
-  GetOwnedStream()->RemoveVideoOutput(aSink, mTrackID);
-=======
 void VideoStreamTrack::RemoveVideoOutput(VideoFrameContainer* aSink) {
   for (const auto& output : nsTArray<RefPtr<VideoOutput>>(mVideoOutputs)) {
     if (output->mVideoFrameContainer == aSink) {
@@ -82,7 +63,6 @@ void VideoStreamTrack::RemoveVideoOutput(VideoOutput* aOutput) {
       RemoveListener(aOutput);
     }
   }
->>>>>>> upstream-releases
 }
 
 void VideoStreamTrack::GetLabel(nsAString& aLabel, CallerType aCallerType) {

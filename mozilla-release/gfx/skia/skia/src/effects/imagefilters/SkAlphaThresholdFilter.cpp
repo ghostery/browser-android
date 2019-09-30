@@ -16,12 +16,7 @@
 #include "SkRegion.h"
 
 #if SK_SUPPORT_GPU
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkAlphaThresholdFilter.cpp
-||||||| merged common ancestors
-#include "GrAlphaThresholdFragmentProcessor.h"
-=======
 #include "GrCaps.h"
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkAlphaThresholdFilter.cpp
 #include "GrColorSpaceXform.h"
 #include "GrContext.h"
 #include "GrFixedClip.h"
@@ -39,16 +34,7 @@ public:
                                SkScalar outerThreshold, sk_sp<SkImageFilter> input,
                                const CropRect* cropRect = nullptr);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkAlphaThresholdFilter.cpp
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkAlphaThresholdFilterImpl)
-    friend void SkAlphaThresholdFilter::InitializeFlattenables();
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkAlphaThresholdFilterImpl)
-    friend void SkAlphaThresholdFilter::InitializeFlattenables();
-=======
     friend void SkAlphaThresholdFilter::RegisterFlattenables();
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkAlphaThresholdFilter.cpp
 
 protected:
     void flatten(SkWriteBuffer&) const override;
@@ -122,24 +108,12 @@ SkAlphaThresholdFilterImpl::SkAlphaThresholdFilterImpl(const SkRegion& region,
 sk_sp<GrTextureProxy> SkAlphaThresholdFilterImpl::createMaskTexture(GrRecordingContext* context,
                                                                     const SkMatrix& inMatrix,
                                                                     const SkIRect& bounds) const {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkAlphaThresholdFilter.cpp
-
-    sk_sp<GrRenderTargetContext> rtContext(
-        context->contextPriv().makeDeferredRenderTargetContextWithFallback(
-            SkBackingFit::kApprox, bounds.width(), bounds.height(), kAlpha_8_GrPixelConfig,
-            nullptr));
-||||||| merged common ancestors
-
-    sk_sp<GrRenderTargetContext> rtContext(context->makeDeferredRenderTargetContextWithFallback(
-        SkBackingFit::kApprox, bounds.width(), bounds.height(), kAlpha_8_GrPixelConfig, nullptr));
-=======
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(kAlpha_8_SkColorType);
     sk_sp<GrRenderTargetContext> rtContext(
         context->priv().makeDeferredRenderTargetContextWithFallback(
             format, SkBackingFit::kApprox, bounds.width(), bounds.height(), kAlpha_8_GrPixelConfig,
             nullptr));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkAlphaThresholdFilter.cpp
     if (!rtContext) {
         return nullptr;
     }

@@ -6,16 +6,6 @@
  */
 
 #include "GrPathRenderer.h"
-<<<<<<< HEAD
-#include "GrCaps.h"
-#include "GrContextPriv.h"
-#include "GrPaint.h"
-#include "GrRenderTargetContext.h"
-#include "GrShape.h"
-#include "GrUserStencilSettings.h"
-#include "SkDrawProcs.h"
-||||||| merged common ancestors
-=======
 #include "GrCaps.h"
 #include "GrPaint.h"
 #include "GrRecordingContextPriv.h"
@@ -23,7 +13,6 @@
 #include "GrShape.h"
 #include "GrUserStencilSettings.h"
 #include "SkDrawProcs.h"
->>>>>>> upstream-releases
 
 #ifdef SK_DEBUG
 void GrPathRenderer::StencilPathArgs::validate() const {
@@ -38,66 +27,6 @@ void GrPathRenderer::StencilPathArgs::validate() const {
     fShape->asPath(&path);
     SkASSERT(!path.isInverseFillType());
 }
-<<<<<<< HEAD
-#endif
-
-//////////////////////////////////////////////////////////////////////////////
-
-GrPathRenderer::GrPathRenderer() {}
-
-GrPathRenderer::StencilSupport GrPathRenderer::getStencilSupport(const GrShape& shape) const {
-    SkDEBUGCODE(SkPath path;)
-    SkDEBUGCODE(shape.asPath(&path);)
-    SkASSERT(shape.style().isSimpleFill());
-    SkASSERT(!path.isInverseFillType());
-    return this->onGetStencilSupport(shape);
-}
-
-bool GrPathRenderer::drawPath(const DrawPathArgs& args) {
-#ifdef SK_DEBUG
-    args.validate();
-    CanDrawPathArgs canArgs;
-    canArgs.fCaps = args.fContext->contextPriv().caps();
-    canArgs.fClipConservativeBounds = args.fClipConservativeBounds;
-    canArgs.fViewMatrix = args.fViewMatrix;
-    canArgs.fShape = args.fShape;
-    canArgs.fAAType = args.fAAType;
-    canArgs.validate();
-
-    canArgs.fHasUserStencilSettings = !args.fUserStencilSettings->isUnused();
-    SkASSERT(!(canArgs.fAAType == GrAAType::kMSAA &&
-               GrFSAAType::kUnifiedMSAA != args.fRenderTargetContext->fsaaType()));
-    SkASSERT(!(canArgs.fAAType == GrAAType::kMixedSamples &&
-               GrFSAAType::kMixedSamples != args.fRenderTargetContext->fsaaType()));
-    SkASSERT(CanDrawPath::kNo != this->canDrawPath(canArgs));
-    if (!args.fUserStencilSettings->isUnused()) {
-        SkPath path;
-        args.fShape->asPath(&path);
-        SkASSERT(args.fShape->style().isSimpleFill());
-        SkASSERT(kNoRestriction_StencilSupport == this->getStencilSupport(*args.fShape));
-    }
-#endif
-    return this->onDrawPath(args);
-}
-
-bool GrPathRenderer::IsStrokeHairlineOrEquivalent(const GrStyle& style, const SkMatrix& matrix,
-                                                  SkScalar* outCoverage) {
-    if (style.pathEffect()) {
-        return false;
-    }
-    const SkStrokeRec& stroke = style.strokeRec();
-    if (stroke.isHairlineStyle()) {
-        if (outCoverage) {
-            *outCoverage = SK_Scalar1;
-        }
-        return true;
-    }
-    return stroke.getStyle() == SkStrokeRec::kStroke_Style &&
-           SkDrawTreatAAStrokeAsHairline(stroke.getWidth(), matrix, outCoverage);
-}
-
-||||||| merged common ancestors
-=======
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -156,7 +85,6 @@ bool GrPathRenderer::IsStrokeHairlineOrEquivalent(const GrStyle& style, const Sk
            SkDrawTreatAAStrokeAsHairline(stroke.getWidth(), matrix, outCoverage);
 }
 
->>>>>>> upstream-releases
 
 void GrPathRenderer::GetPathDevBounds(const SkPath& path,
                                       int devW, int devH,

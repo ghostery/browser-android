@@ -1,14 +1,6 @@
 /* import-globals-from head.js */
-<<<<<<< HEAD
-/* import-globals-from browser_imageCache4.js */
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-/* import-globals-from browser_imageCache1.js */
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-=======
 /* import-globals-from antitracking_head.js */
 /* import-globals-from browser_imageCache4.js */
->>>>>>> upstream-releases
 
 AntiTracking.runTest(
   "Image cache - should load the image three times.",

@@ -5,20 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if defined(MOZILLA_INTERNAL_API)
-<<<<<<< HEAD
-#error This code is NOT for internal Gecko use!
-#endif  // defined(MOZILLA_INTERNAL_API)
-
-#define INITGUID
-||||||| merged common ancestors
-#error This code is NOT for internal Gecko use!
-#endif // defined(MOZILLA_INTERNAL_API)
-
-#define INITGUID
-=======
 #  error This code is NOT for internal Gecko use!
 #endif  // defined(MOZILLA_INTERNAL_API)
->>>>>>> upstream-releases
 
 #include "AccessibleHandler.h"
 #include "AccessibleHandlerControl.h"

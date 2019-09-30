@@ -39,14 +39,7 @@
 
 using namespace js;
 
-<<<<<<< HEAD
-using JS::DispatchTyped;
-||||||| merged common ancestors
-using mozilla::RangedPtr;
-using JS::DispatchTyped;
-=======
 using JS::ApplyGCThingTyped;
->>>>>>> upstream-releases
 using JS::HandleValue;
 using JS::Value;
 using JS::ZoneSet;
@@ -79,42 +72,11 @@ struct CopyToBufferMatcher {
     return i;
   }
 
-<<<<<<< HEAD
-  size_t match(JSAtom* atom) {
-    if (!atom) {
-      return 0;
-    }
-||||||| merged common ancestors
-    size_t
-    match(const char16_t* chars)
-    {
-        if (!chars) {
-            return 0;
-        }
-=======
   size_t operator()(JSAtom* atom) {
     if (!atom) {
       return 0;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    size_t length = std::min(atom->length(), maxLength);
-    JS::AutoCheckCannotGC noGC;
-    return atom->hasTwoByteChars()
-               ? copyToBufferHelper(atom->twoByteChars(noGC), destination,
-                                    length)
-               : copyToBufferHelper(atom->latin1Chars(noGC), destination,
-                                    length);
-  }
-
-  size_t match(const char16_t* chars) {
-    if (!chars) {
-      return 0;
-||||||| merged common ancestors
-        size_t length = std::min(js_strlen(chars), maxLength);
-        return copyToBufferHelper(chars, destination, length);
-=======
     size_t length = std::min(atom->length(), maxLength);
     JS::AutoCheckCannotGC noGC;
     return atom->hasTwoByteChars()
@@ -127,7 +89,6 @@ struct CopyToBufferMatcher {
   size_t operator()(const char16_t* chars) {
     if (!chars) {
       return 0;
->>>>>>> upstream-releases
     }
 
     size_t length = std::min(js_strlen(chars), maxLength);
@@ -141,35 +102,12 @@ size_t JS::ubi::AtomOrTwoByteChars::copyToBuffer(
   return match(m);
 }
 
-<<<<<<< HEAD
-struct LengthMatcher {
-  size_t match(JSAtom* atom) { return atom ? atom->length() : 0; }
-||||||| merged common ancestors
-struct LengthMatcher
-{
-    size_t
-    match(JSAtom* atom)
-    {
-        return atom ? atom->length() : 0;
-    }
-=======
 struct LengthMatcher {
   size_t operator()(JSAtom* atom) { return atom ? atom->length() : 0; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  size_t match(const char16_t* chars) { return chars ? js_strlen(chars) : 0; }
-||||||| merged common ancestors
-    size_t
-    match(const char16_t* chars)
-    {
-        return chars ? js_strlen(chars) : 0;
-    }
-=======
   size_t operator()(const char16_t* chars) {
     return chars ? js_strlen(chars) : 0;
   }
->>>>>>> upstream-releases
 };
 
 size_t JS::ubi::AtomOrTwoByteChars::length() {
@@ -206,37 +144,10 @@ JS::Compartment* Concrete<void>::compartment() const {
 }
 JS::Realm* Concrete<void>::realm() const { MOZ_CRASH("null ubi::Node"); }
 
-<<<<<<< HEAD
 UniquePtr<EdgeRange> Concrete<void>::edges(JSContext*, bool) const {
   MOZ_CRASH("null ubi::Node");
 }
 
-Node::Size Concrete<void>::size(mozilla::MallocSizeOf mallocSizeof) const {
-  MOZ_CRASH("null ubi::Node");
-||||||| merged common ancestors
-Node::Size
-Concrete<void>::size(mozilla::MallocSizeOf mallocSizeof) const
-{
-    MOZ_CRASH("null ubi::Node");
-=======
-UniquePtr<EdgeRange> Concrete<void>::edges(JSContext*, bool) const {
-  MOZ_CRASH("null ubi::Node");
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-struct Node::ConstructFunctor : public js::BoolDefaultAdaptor<Value, false> {
-  template <typename T>
-  bool operator()(T* t, Node* node) {
-    node->construct(t);
-    return true;
-  }
-};
-||||||| merged common ancestors
-struct Node::ConstructFunctor : public js::BoolDefaultAdaptor<Value, false> {
-    template <typename T> bool operator()(T* t, Node* node) { node->construct(t); return true; }
-};
-=======
 Node::Size Concrete<void>::size(mozilla::MallocSizeOf mallocSizeof) const {
   MOZ_CRASH("null ubi::Node");
 }
@@ -244,35 +155,13 @@ Node::Size Concrete<void>::size(mozilla::MallocSizeOf mallocSizeof) const {
 Node::Node(const JS::GCCellPtr& thing) {
   ApplyGCThingTyped(thing, [this](auto t) { this->construct(t); });
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Node::Node(const JS::GCCellPtr& thing) {
-  DispatchTyped(ConstructFunctor(), thing, this);
-||||||| merged common ancestors
-Node::Node(const JS::GCCellPtr &thing)
-{
-    DispatchTyped(ConstructFunctor(), thing, this);
-=======
 Node::Node(HandleValue value) {
   if (!ApplyGCThingTyped(value, [this](auto t) { this->construct(t); })) {
     construct<void>(nullptr);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-Node::Node(HandleValue value) {
-  if (!DispatchTyped(ConstructFunctor(), value, this)) {
-    construct<void>(nullptr);
-  }
-||||||| merged common ancestors
-Node::Node(HandleValue value)
-{
-    if (!DispatchTyped(ConstructFunctor(), value, this)) {
-        construct<void>(nullptr);
-    }
-=======
 Value Node::exposeToJS() const {
   Value v;
 
@@ -298,41 +187,8 @@ Value Node::exposeToJS() const {
   ExposeValueToActiveJS(v);
 
   return v;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-Value Node::exposeToJS() const {
-  Value v;
-
-  if (is<JSObject>()) {
-    JSObject& obj = *as<JSObject>();
-    if (obj.is<js::EnvironmentObject>()) {
-      v.setUndefined();
-    } else if (obj.is<JSFunction>() && js::IsInternalFunctionObject(obj)) {
-      v.setUndefined();
-    } else {
-      v.setObject(obj);
-||||||| merged common ancestors
-Value
-Node::exposeToJS() const
-{
-    Value v;
-
-    if (is<JSObject>()) {
-        JSObject& obj = *as<JSObject>();
-        if (obj.is<js::EnvironmentObject>()) {
-            v.setUndefined();
-        } else if (obj.is<JSFunction>() && js::IsInternalFunctionObject(obj)) {
-            v.setUndefined();
-        } else {
-            v.setObject(obj);
-        }
-    } else if (is<JSString>()) {
-        v.setString(as<JSString>());
-    } else if (is<JS::Symbol>()) {
-        v.setSymbol(as<JS::Symbol>());
-=======
 // A JS::CallbackTracer subclass that adds a Edge to a Vector for each
 // edge on which it is invoked.
 class EdgeVectorTracer final : public JS::CallbackTracer {
@@ -345,89 +201,6 @@ class EdgeVectorTracer final : public JS::CallbackTracer {
   void onChild(const JS::GCCellPtr& thing) override {
     if (!okay) {
       return;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } else if (is<JSString>()) {
-    v.setString(as<JSString>());
-  } else if (is<JS::Symbol>()) {
-    v.setSymbol(as<JS::Symbol>());
-  }
-#ifdef ENABLE_BIGINT
-  else if (is<BigInt>()) {
-    v.setBigInt(as<BigInt>());
-  }
-#endif
-  else {
-    v.setUndefined();
-  }
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    else if (is<BigInt>()) {
-        v.setBigInt(as<BigInt>());
-    }
-#endif
-    else {
-        v.setUndefined();
-    }
-=======
-
-    // Don't trace permanent atoms and well-known symbols that are owned by
-    // a parent JSRuntime.
-    if (thing.is<JSString>() && thing.as<JSString>().isPermanentAtom()) {
-      return;
-    }
-    if (thing.is<JS::Symbol>() && thing.as<JS::Symbol>().isWellKnownSymbol()) {
-      return;
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  ExposeValueToActiveJS(v);
-
-  return v;
-}
-||||||| merged common ancestors
-    ExposeValueToActiveJS(v);
-
-    return v;
-}
-=======
-    char16_t* name16 = nullptr;
-    if (wantNames) {
-      // Ask the tracer to compute an edge name for us.
-      char buffer[1024];
-      getTracingEdgeName(buffer, sizeof(buffer));
-      const char* name = buffer;
-
-      // Convert the name to char16_t characters.
-      name16 = js_pod_malloc<char16_t>(strlen(name) + 1);
-      if (!name16) {
-        okay = false;
-        return;
-      }
-
-      size_t i;
-      for (i = 0; name[i]; i++) {
-        name16[i] = name[i];
-      }
-      name16[i] = '\0';
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-// A JS::CallbackTracer subclass that adds a Edge to a Vector for each
-// edge on which it is invoked.
-class EdgeVectorTracer : public JS::CallbackTracer {
-  // The vector to which we add Edges.
-  EdgeVector* vec;
-
-  // True if we should populate the edge's names.
-  bool wantNames;
-
-  void onChild(const JS::GCCellPtr& thing) override {
-    if (!okay) {
-      return;
     }
 
     // Don't trace permanent atoms and well-known symbols that are owned by
@@ -458,72 +231,8 @@ class EdgeVectorTracer : public JS::CallbackTracer {
         name16[i] = name[i];
       }
       name16[i] = '\0';
-||||||| merged common ancestors
-// A JS::CallbackTracer subclass that adds a Edge to a Vector for each
-// edge on which it is invoked.
-class EdgeVectorTracer : public JS::CallbackTracer {
-    // The vector to which we add Edges.
-    EdgeVector* vec;
-
-    // True if we should populate the edge's names.
-    bool wantNames;
-
-    void onChild(const JS::GCCellPtr& thing) override {
-        if (!okay) {
-            return;
-        }
-
-        // Don't trace permanent atoms and well-known symbols that are owned by
-        // a parent JSRuntime.
-        if (thing.is<JSString>() && thing.as<JSString>().isPermanentAtom()) {
-            return;
-        }
-        if (thing.is<JS::Symbol>() && thing.as<JS::Symbol>().isWellKnownSymbol()) {
-            return;
-        }
-
-        char16_t* name16 = nullptr;
-        if (wantNames) {
-            // Ask the tracer to compute an edge name for us.
-            char buffer[1024];
-            getTracingEdgeName(buffer, sizeof(buffer));
-            const char* name = buffer;
-
-            // Convert the name to char16_t characters.
-            name16 = js_pod_malloc<char16_t>(strlen(name) + 1);
-            if (!name16) {
-                okay = false;
-                return;
-            }
-
-            size_t i;
-            for (i = 0; name[i]; i++) {
-                name16[i] = name[i];
-            }
-            name16[i] = '\0';
-        }
-
-        // The simplest code is correct! The temporary Edge takes
-        // ownership of name; if the append succeeds, the vector element
-        // then takes ownership; if the append fails, then the temporary
-        // retains it, and its destructor will free it.
-        if (!vec->append(Edge(name16, Node(thing)))) {
-            okay = false;
-            return;
-        }
-=======
-    // The simplest code is correct! The temporary Edge takes
-    // ownership of name; if the append succeeds, the vector element
-    // then takes ownership; if the append fails, then the temporary
-    // retains it, and its destructor will free it.
-    if (!vec->append(Edge(name16, Node(thing)))) {
-      okay = false;
-      return;
->>>>>>> upstream-releases
     }
-  }
 
-<<<<<<< HEAD
     // The simplest code is correct! The temporary Edge takes
     // ownership of name; if the append succeeds, the vector element
     // then takes ownership; if the append fails, then the temporary
@@ -537,15 +246,6 @@ class EdgeVectorTracer : public JS::CallbackTracer {
  public:
   // True if no errors (OOM, say) have yet occurred.
   bool okay;
-||||||| merged common ancestors
-  public:
-    // True if no errors (OOM, say) have yet occurred.
-    bool okay;
-=======
- public:
-  // True if no errors (OOM, say) have yet occurred.
-  bool okay;
->>>>>>> upstream-releases
 
   EdgeVectorTracer(JSRuntime* rt, EdgeVector* vec, bool wantNames)
       : JS::CallbackTracer(rt), vec(vec), wantNames(wantNames), okay(true) {}
@@ -587,53 +287,6 @@ UniquePtr<EdgeRange> TracerConcrete<Referent>::edges(JSContext* cx,
   return UniquePtr<EdgeRange>(range.release());
 }
 
-<<<<<<< HEAD
-template UniquePtr<EdgeRange> TracerConcrete<JSScript>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::LazyScript>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::Shape>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::BaseShape>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::ObjectGroup>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::RegExpShared>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::Scope>::edges(
-    JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<JS::Symbol>::edges(
-    JSContext* cx, bool wantNames) const;
-#ifdef ENABLE_BIGINT
-template UniquePtr<EdgeRange> TracerConcrete<BigInt>::edges(
-    JSContext* cx, bool wantNames) const;
-#endif
-template UniquePtr<EdgeRange> TracerConcrete<JSString>::edges(
-    JSContext* cx, bool wantNames) const;
-
-template <typename Referent>
-JS::Compartment* TracerConcreteWithRealm<Referent>::compartment() const {
-  return TracerBase::get().compartment();
-||||||| merged common ancestors
-template UniquePtr<EdgeRange> TracerConcrete<JSScript>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::LazyScript>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::Shape>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::BaseShape>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::ObjectGroup>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::RegExpShared>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<js::Scope>::edges(JSContext* cx, bool wantNames) const;
-template UniquePtr<EdgeRange> TracerConcrete<JS::Symbol>::edges(JSContext* cx, bool wantNames) const;
-#ifdef ENABLE_BIGINT
-template UniquePtr<EdgeRange> TracerConcrete<BigInt>::edges(JSContext* cx, bool wantNames) const;
-#endif
-template UniquePtr<EdgeRange> TracerConcrete<JSString>::edges(JSContext* cx, bool wantNames) const;
-
-template<typename Referent>
-JS::Compartment*
-TracerConcreteWithRealm<Referent>::compartment() const
-{
-    return TracerBase::get().compartment();
-=======
 template UniquePtr<EdgeRange> TracerConcrete<JSScript>::edges(
     JSContext* cx, bool wantNames) const;
 template UniquePtr<EdgeRange> TracerConcrete<js::LazyScript>::edges(
@@ -658,7 +311,6 @@ template UniquePtr<EdgeRange> TracerConcrete<JSString>::edges(
 template <typename Referent>
 JS::Compartment* TracerConcreteWithRealm<Referent>::compartment() const {
   return TracerBase::get().compartment();
->>>>>>> upstream-releases
 }
 
 template <typename Referent>
@@ -791,63 +443,10 @@ bool RootList::init(CompartmentSet& debuggees) {
   return true;
 }
 
-<<<<<<< HEAD
 bool RootList::init(HandleObject debuggees) {
   MOZ_ASSERT(debuggees && JS::dbg::IsDebugger(*debuggees));
   js::Debugger* dbg = js::Debugger::fromJSObject(debuggees.get());
 
-  CompartmentSet debuggeeCompartments;
-||||||| merged common ancestors
-bool
-RootList::init(HandleObject debuggees)
-{
-    MOZ_ASSERT(debuggees && JS::dbg::IsDebugger(*debuggees));
-    js::Debugger* dbg = js::Debugger::fromJSObject(debuggees.get());
-
-    CompartmentSet debuggeeCompartments;
-=======
-bool RootList::init(HandleObject debuggees) {
-  MOZ_ASSERT(debuggees && JS::dbg::IsDebugger(*debuggees));
-  js::Debugger* dbg = js::Debugger::fromJSObject(debuggees.get());
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  for (js::WeakGlobalObjectSet::Range r = dbg->allDebuggees(); !r.empty();
-       r.popFront()) {
-    if (!debuggeeCompartments.put(r.front()->compartment())) {
-      return false;
-    }
-  }
-
-  if (!init(debuggeeCompartments)) {
-    return false;
-  }
-
-  // Ensure that each of our debuggee globals are in the root list.
-  for (js::WeakGlobalObjectSet::Range r = dbg->allDebuggees(); !r.empty();
-       r.popFront()) {
-    if (!addRoot(JS::ubi::Node(static_cast<JSObject*>(r.front())),
-                 u"debuggee global")) {
-      return false;
-||||||| merged common ancestors
-    for (js::WeakGlobalObjectSet::Range r = dbg->allDebuggees(); !r.empty(); r.popFront()) {
-        if (!debuggeeCompartments.put(r.front()->compartment())) {
-            return false;
-        }
-    }
-
-    if (!init(debuggeeCompartments)) {
-        return false;
-    }
-
-    // Ensure that each of our debuggee globals are in the root list.
-    for (js::WeakGlobalObjectSet::Range r = dbg->allDebuggees(); !r.empty(); r.popFront()) {
-        if (!addRoot(JS::ubi::Node(static_cast<JSObject*>(r.front())),
-                     u"debuggee global"))
-        {
-            return false;
-        }
-=======
   CompartmentSet debuggeeCompartments;
 
   for (js::WeakGlobalObjectSet::Range r = dbg->allDebuggees(); !r.empty();
@@ -867,7 +466,6 @@ bool RootList::init(HandleObject debuggees) {
     if (!addRoot(JS::ubi::Node(static_cast<JSObject*>(r.front())),
                  u"debuggee global")) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
@@ -926,13 +524,6 @@ void SetConstructUbiNodeForDOMObjectCallback(JSContext* cx,
   cx->runtime()->constructUbiNodeForDOMObjectCallback = callback;
 }
 
-<<<<<<< HEAD
-}  // namespace ubi
-}  // namespace JS
-||||||| merged common ancestors
-} // namespace ubi
-} // namespace JS
-=======
 JS_PUBLIC_API const char* CoarseTypeToString(CoarseType type) {
   switch (type) {
     case CoarseType::Other:
@@ -952,4 +543,3 @@ JS_PUBLIC_API const char* CoarseTypeToString(CoarseType type) {
 
 }  // namespace ubi
 }  // namespace JS
->>>>>>> upstream-releases

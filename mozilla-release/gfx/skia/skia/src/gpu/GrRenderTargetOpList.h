@@ -62,53 +62,23 @@ public:
     void onPrepare(GrOpFlushState* flushState) override;
     bool onExecute(GrOpFlushState* flushState) override;
 
-<<<<<<< HEAD
-    /**
-     * Returns this opList's id if the Op was recorded, or SK_InvalidUniqueID if it was combined
-     * into an existing Op or otherwise deleted.
-     */
-    uint32_t addOp(std::unique_ptr<GrOp> op, const GrCaps& caps) {
-||||||| merged common ancestors
-    uint32_t addOp(std::unique_ptr<GrOp> op, const GrCaps& caps) {
-=======
     void addOp(std::unique_ptr<GrOp> op, const GrCaps& caps) {
->>>>>>> upstream-releases
         auto addDependency = [ &caps, this ] (GrSurfaceProxy* p) {
             this->addDependency(p, caps);
         };
 
         op->visitProxies(addDependency);
 
-<<<<<<< HEAD
-        return this->recordOp(std::move(op), caps);
-||||||| merged common ancestors
-        this->recordOp(std::move(op), caps);
-
-        return this->uniqueID();
-=======
         this->recordOp(std::move(op), GrProcessorSet::EmptySetAnalysis(), nullptr, nullptr, caps);
     }
 
     void addWaitOp(std::unique_ptr<GrOp> op, const GrCaps& caps) {
         fHasWaitOp= true;
         this->addOp(std::move(op), caps);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    /**
-     * Returns this opList's id if the Op was recorded, or SK_InvalidUniqueID if it was combined
-     * into an existing Op or otherwise deleted.
-     */
-    uint32_t addOp(std::unique_ptr<GrOp> op, const GrCaps& caps,
-                   GrAppliedClip&& clip, const DstProxy& dstProxy) {
-||||||| merged common ancestors
-    uint32_t addOp(std::unique_ptr<GrOp> op, const GrCaps& caps,
-                   GrAppliedClip&& clip, const DstProxy& dstProxy) {
-=======
     void addDrawOp(std::unique_ptr<GrDrawOp> op, const GrProcessorSet::Analysis& processorAnalysis,
                    GrAppliedClip&& clip, const DstProxy& dstProxy, const GrCaps& caps) {
->>>>>>> upstream-releases
         auto addDependency = [ &caps, this ] (GrSurfaceProxy* p) {
             this->addDependency(p, caps);
         };
@@ -119,30 +89,12 @@ public:
             addDependency(dstProxy.proxy());
         }
 
-<<<<<<< HEAD
-        return this->recordOp(std::move(op), caps, clip.doesClip() ? &clip : nullptr, &dstProxy);
-||||||| merged common ancestors
-        this->recordOp(std::move(op), caps, clip.doesClip() ? &clip : nullptr, &dstProxy);
-
-        return this->uniqueID();
-=======
         this->recordOp(std::move(op), processorAnalysis, clip.doesClip() ? &clip : nullptr,
                        &dstProxy, caps);
->>>>>>> upstream-releases
     }
 
     void discard();
 
-<<<<<<< HEAD
-    /** Clears the entire render target */
-    void fullClear(GrContext*, GrColor color);
-
-||||||| merged common ancestors
-    /** Clears the entire render target */
-    void fullClear(const GrCaps& caps, GrColor color);
-
-=======
->>>>>>> upstream-releases
     /**
      * Copies a pixel rectangle from one surface to another. This call may finalize
      * reserved vertex/index data (as though a draw call was made). The src pixels
@@ -153,13 +105,7 @@ public:
      * depending on the type of surface, configs, etc, and the backend-specific
      * limitations.
      */
-<<<<<<< HEAD
-    bool copySurface(GrContext*,
-||||||| merged common ancestors
-    bool copySurface(const GrCaps& caps,
-=======
     bool copySurface(GrRecordingContext*,
->>>>>>> upstream-releases
                      GrSurfaceProxy* dst,
                      GrSurfaceProxy* src,
                      const SkIRect& srcRect,
@@ -167,42 +113,13 @@ public:
 
     GrRenderTargetOpList* asRenderTargetOpList() override { return this; }
 
-<<<<<<< HEAD
     SkDEBUGCODE(void dump(bool printDependencies) const override;)
-
-    SkDEBUGCODE(int numOps() const override { return fRecordedOps.count(); })
-||||||| merged common ancestors
-    SkDEBUGCODE(void dump() const override;)
-
-    SkDEBUGCODE(int numOps() const override { return fRecordedOps.count(); })
-=======
-    SkDEBUGCODE(void dump(bool printDependencies) const override;)
->>>>>>> upstream-releases
     SkDEBUGCODE(int numClips() const override { return fNumClips; })
     SkDEBUGCODE(void visitProxies_debugOnly(const GrOp::VisitProxyFunc&) const;)
 
 private:
     friend class GrRenderTargetContextPriv; // for stencil clip state. TODO: this is invasive
 
-<<<<<<< HEAD
-    void deleteOps();
-
-    struct RecordedOp {
-        RecordedOp(std::unique_ptr<GrOp> op, GrAppliedClip* appliedClip, const DstProxy* dstProxy)
-                : fOp(std::move(op)), fAppliedClip(appliedClip) {
-            if (dstProxy) {
-                fDstProxy = *dstProxy;
-            }
-        }
-||||||| merged common ancestors
-    struct RecordedOp {
-        RecordedOp(std::unique_ptr<GrOp> op, GrAppliedClip* appliedClip, const DstProxy* dstProxy)
-                : fOp(std::move(op)), fAppliedClip(appliedClip) {
-            if (dstProxy) {
-                fDstProxy = *dstProxy;
-            }
-        }
-=======
     // The RTC and RTOpList have to work together to handle buffer clears. In most cases, buffer
     // clearing can be done natively, in which case the op list's load ops are sufficient. In other
     // cases, draw ops must be used, which makes the RTC the best place for those decisions. This,
@@ -218,38 +135,7 @@ private:
         static const SkPMColor4f kDefaultClearColor = {0.f, 0.f, 0.f, 0.f};
         this->setColorLoadOp(op, kDefaultClearColor);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        ~RecordedOp() {
-            // The ops are stored in a GrMemoryPool so had better have been handled separately
-            SkASSERT(!fOp);
-        }
-
-        void deleteOp(GrOpMemoryPool* opMemoryPool);
-
-        void visitProxies(const GrOp::VisitProxyFunc& func) const {
-            if (fOp) {
-                fOp->visitProxies(func);
-            }
-            if (fDstProxy.proxy()) {
-                func(fDstProxy.proxy());
-            }
-            if (fAppliedClip) {
-                fAppliedClip->visitProxies(func);
-            }
-||||||| merged common ancestors
-        void visitProxies(const GrOp::VisitProxyFunc& func) const {
-            if (fOp) {
-                fOp->visitProxies(func);
-            }
-            if (fDstProxy.proxy()) {
-                func(fDstProxy.proxy());
-            }
-            if (fAppliedClip) {
-                fAppliedClip->visitProxies(func);
-            }
-=======
     // Perform book-keeping for a fullscreen clear, regardless of how the clear is implemented later
     // (i.e. setColorLoadOp(), adding a ClearOp, or adding a GrFillRectOp that covers the device).
     // Returns true if the clear can be converted into a load op (barring device caps).
@@ -266,18 +152,8 @@ private:
         ~OpChain() {
             // The ops are stored in a GrMemoryPool and must be explicitly deleted via the pool.
             SkASSERT(fList.empty());
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        std::unique_ptr<GrOp> fOp;
-        DstProxy              fDstProxy;
-        GrAppliedClip*        fAppliedClip;
-||||||| merged common ancestors
-        std::unique_ptr<GrOp> fOp;
-        DstProxy fDstProxy;
-        GrAppliedClip* fAppliedClip;
-=======
         void visitProxies(const GrOp::VisitProxyFunc&, GrOp::VisitorType) const;
 
         GrOp* head() const { return fList.head(); }
@@ -336,39 +212,17 @@ private:
         DstProxy fDstProxy;
         GrAppliedClip* fAppliedClip;
         SkRect fBounds;
->>>>>>> upstream-releases
     };
 
     void purgeOpsWithUninstantiatedProxies() override;
 
     void gatherProxyIntervals(GrResourceAllocator*) const override;
 
-<<<<<<< HEAD
-    // Returns this opList's id if the Op was recorded, or SK_InvalidUniqueID if it was combined
-    // into an existing Op or otherwise deleted.
-    uint32_t recordOp(std::unique_ptr<GrOp>, const GrCaps& caps,
-                      GrAppliedClip* = nullptr, const DstProxy* = nullptr);
-||||||| merged common ancestors
-    void recordOp(std::unique_ptr<GrOp>, const GrCaps& caps,
-                  GrAppliedClip* = nullptr, const DstProxy* = nullptr);
-=======
     void recordOp(std::unique_ptr<GrOp>, GrProcessorSet::Analysis, GrAppliedClip*, const DstProxy*,
                   const GrCaps& caps);
->>>>>>> upstream-releases
 
     void forwardCombine(const GrCaps&);
 
-<<<<<<< HEAD
-    GrOp::CombineResult combineIfPossible(const RecordedOp& a, GrOp* b, const GrAppliedClip* bClip,
-                                          const DstProxy* bDstTexture, const GrCaps&);
-
-||||||| merged common ancestors
-    // If this returns true then b has been merged into a's op.
-    bool combineIfPossible(const RecordedOp& a, GrOp* b, const GrAppliedClip* bClip,
-                           const DstProxy* bDstTexture, const GrCaps&);
-
-=======
->>>>>>> upstream-releases
     uint32_t                       fLastClipStackGenID;
     SkIRect                        fLastDevClipBounds;
     int                            fLastClipNumAnalyticFPs;
@@ -377,13 +231,7 @@ private:
     bool fHasWaitOp = false;;
 
     // For ops/opList we have mean: 5 stdDev: 28
-<<<<<<< HEAD
-    SkSTArray<25, RecordedOp, true> fRecordedOps;
-||||||| merged common ancestors
-    SkSTArray<5, RecordedOp, true> fRecordedOps;
-=======
     SkSTArray<25, OpChain, true> fOpChains;
->>>>>>> upstream-releases
 
     // MDB TODO: 4096 for the first allocation of the clip space will be huge overkill.
     // Gather statistics to determine the correct size.

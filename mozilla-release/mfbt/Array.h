@@ -89,11 +89,6 @@ class Array<T, 0> {
   }
 };
 
-<<<<<<< HEAD
-} /* namespace mozilla */
-||||||| merged common ancestors
-}  /* namespace mozilla */
-=======
 // MOZ_DBG support
 
 template <typename T, size_t Length>
@@ -102,6 +97,5 @@ std::ostream& operator<<(std::ostream& aOut, const Array<T, Length>& aArray) {
 }
 
 } /* namespace mozilla */
->>>>>>> upstream-releases
 
 #endif /* mozilla_Array_h */

@@ -11,45 +11,6 @@
 using namespace js;
 using namespace JS;
 
-<<<<<<< HEAD
-class CustomProxyHandler : public Wrapper {
- public:
-  CustomProxyHandler() : Wrapper(0) {}
-
-  bool getPropertyDescriptor(
-      JSContext* cx, HandleObject proxy, HandleId id,
-      MutableHandle<PropertyDescriptor> desc) const override {
-    return impl(cx, proxy, id, desc, false);
-  }
-
-  bool getOwnPropertyDescriptor(
-      JSContext* cx, HandleObject proxy, HandleId id,
-      MutableHandle<PropertyDescriptor> desc) const override {
-    return impl(cx, proxy, id, desc, true);
-  }
-
-  bool set(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v,
-           HandleValue receiver, ObjectOpResult& result) const override {
-    Rooted<PropertyDescriptor> desc(cx);
-    if (!Wrapper::getPropertyDescriptor(cx, proxy, id, &desc)) {
-      return false;
-||||||| merged common ancestors
-class CustomProxyHandler : public Wrapper
-{
-  public:
-    CustomProxyHandler() : Wrapper(0) {}
-
-    bool getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
-                               MutableHandle<PropertyDescriptor> desc) const override
-    {
-        return impl(cx, proxy, id, desc, false);
-    }
-
-    bool getOwnPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
-                                  MutableHandle<PropertyDescriptor> desc) const override
-    {
-        return impl(cx, proxy, id, desc, true);
-=======
 class CustomProxyHandler : public Wrapper {
  public:
   CustomProxyHandler() : Wrapper(0) {}
@@ -63,88 +24,20 @@ class CustomProxyHandler : public Wrapper {
       desc.attributesRef() = JSPROP_ENUMERATE;
       desc.value().setInt32(42);
       return true;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return SetPropertyIgnoringNamedGetter(cx, proxy, id, v, receiver, desc,
-                                          result);
-  }
-
- private:
-  bool impl(JSContext* cx, HandleObject proxy, HandleId id,
-            MutableHandle<PropertyDescriptor> desc, bool ownOnly) const {
-    if (JSID_IS_STRING(id)) {
-      bool match;
-      if (!JS_StringEqualsAscii(cx, JSID_TO_STRING(id), "phantom", &match)) {
-        return false;
-      }
-      if (match) {
-        desc.object().set(proxy);
-        desc.attributesRef() = JSPROP_ENUMERATE;
-        desc.value().setInt32(42);
-        return true;
-      }
-    }
-||||||| merged common ancestors
-
-    bool set(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v, HandleValue receiver,
-             ObjectOpResult& result) const override
-    {
-        Rooted<PropertyDescriptor> desc(cx);
-        if (!Wrapper::getPropertyDescriptor(cx, proxy, id, &desc)) {
-            return false;
-        }
-        return SetPropertyIgnoringNamedGetter(cx, proxy, id, v, receiver, desc, result);
-    }
-=======
 
     return Wrapper::getOwnPropertyDescriptor(cx, proxy, id, desc);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (ownOnly) {
-      return Wrapper::getOwnPropertyDescriptor(cx, proxy, id, desc);
-||||||| merged common ancestors
-  private:
-    bool impl(JSContext* cx, HandleObject proxy, HandleId id,
-              MutableHandle<PropertyDescriptor> desc, bool ownOnly) const
-    {
-        if (JSID_IS_STRING(id)) {
-            bool match;
-            if (!JS_StringEqualsAscii(cx, JSID_TO_STRING(id), "phantom", &match)) {
-                return false;
-            }
-            if (match) {
-                desc.object().set(proxy);
-                desc.attributesRef() = JSPROP_ENUMERATE;
-                desc.value().setInt32(42);
-                return true;
-            }
-        }
-
-        if (ownOnly) {
-            return Wrapper::getOwnPropertyDescriptor(cx, proxy, id, desc);
-        }
-        return Wrapper::getPropertyDescriptor(cx, proxy, id, desc);
-=======
   bool set(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v,
            HandleValue receiver, ObjectOpResult& result) const override {
     Rooted<PropertyDescriptor> desc(cx);
     if (!Wrapper::getOwnPropertyDescriptor(cx, proxy, id, &desc)) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return Wrapper::getPropertyDescriptor(cx, proxy, id, desc);
-  }
-||||||| merged common ancestors
-
-=======
     return SetPropertyIgnoringNamedGetter(cx, proxy, id, v, receiver, desc,
                                           result);
   }
->>>>>>> upstream-releases
 };
 
 const CustomProxyHandler customProxyHandler;

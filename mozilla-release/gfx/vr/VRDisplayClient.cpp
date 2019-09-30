@@ -59,79 +59,26 @@ already_AddRefed<VRDisplayPresentation> VRDisplayClient::BeginPresentation(
 
 void VRDisplayClient::PresentationDestroyed() { --mPresentationCount; }
 
-<<<<<<< HEAD
-void VRDisplayClient::ZeroSensor() {
-  VRManagerChild* vm = VRManagerChild::Get();
-  vm->SendResetSensor(mDisplayInfo.mDisplayID);
-}
-
 void VRDisplayClient::SetGroupMask(uint32_t aGroupMask) {
   VRManagerChild* vm = VRManagerChild::Get();
-||||||| merged common ancestors
-void
-VRDisplayClient::ZeroSensor()
-{
-  VRManagerChild *vm = VRManagerChild::Get();
-  vm->SendResetSensor(mDisplayInfo.mDisplayID);
-}
-
-void
-VRDisplayClient::SetGroupMask(uint32_t aGroupMask)
-{
-  VRManagerChild *vm = VRManagerChild::Get();
-=======
-void VRDisplayClient::SetGroupMask(uint32_t aGroupMask) {
-  VRManagerChild* vm = VRManagerChild::Get();
->>>>>>> upstream-releases
   vm->SendSetGroupMask(mDisplayInfo.mDisplayID, aGroupMask);
 }
 
-<<<<<<< HEAD
-bool VRDisplayClient::IsPresentationGenerationCurrent() const {
-  if (mLastPresentingGeneration !=
-      mDisplayInfo.mDisplayState.mPresentingGeneration) {
-||||||| merged common ancestors
-bool
-VRDisplayClient::IsPresentationGenerationCurrent() const
-{
-  if (mLastPresentingGeneration != mDisplayInfo.mDisplayState.mPresentingGeneration) {
-=======
 bool VRDisplayClient::IsPresentationGenerationCurrent() const {
   if (mLastPresentingGeneration !=
       mDisplayInfo.mDisplayState.presentingGeneration) {
->>>>>>> upstream-releases
     return false;
   }
 
   return true;
 }
 
-<<<<<<< HEAD
-void VRDisplayClient::MakePresentationGenerationCurrent() {
-  mLastPresentingGeneration = mDisplayInfo.mDisplayState.mPresentingGeneration;
-||||||| merged common ancestors
-void
-VRDisplayClient::MakePresentationGenerationCurrent()
-{
-  mLastPresentingGeneration = mDisplayInfo.mDisplayState.mPresentingGeneration;
-=======
 void VRDisplayClient::MakePresentationGenerationCurrent() {
   mLastPresentingGeneration = mDisplayInfo.mDisplayState.presentingGeneration;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void VRDisplayClient::FireEvents() {
-  VRManagerChild* vm = VRManagerChild::Get();
-||||||| merged common ancestors
-void
-VRDisplayClient::FireEvents()
-{
-  VRManagerChild *vm = VRManagerChild::Get();
-=======
 void VRDisplayClient::FireEvents() {
   RefPtr<VRManagerChild> vm = VRManagerChild::Get();
->>>>>>> upstream-releases
   // Only fire these events for non-chrome VR sessions
   bool isPresenting = (mDisplayInfo.mPresentingGroups & kVRGroupContent) != 0;
 
@@ -157,19 +104,9 @@ void VRDisplayClient::FireEvents() {
     }
   }
 
-<<<<<<< HEAD
-  if (mLastPresentingGeneration !=
-      mDisplayInfo.mDisplayState.mPresentingGeneration) {
-    mLastPresentingGeneration =
-        mDisplayInfo.mDisplayState.mPresentingGeneration;
-||||||| merged common ancestors
-  if (mLastPresentingGeneration != mDisplayInfo.mDisplayState.mPresentingGeneration) {
-    mLastPresentingGeneration = mDisplayInfo.mDisplayState.mPresentingGeneration;
-=======
   if (mLastPresentingGeneration !=
       mDisplayInfo.mDisplayState.presentingGeneration) {
     mLastPresentingGeneration = mDisplayInfo.mDisplayState.presentingGeneration;
->>>>>>> upstream-releases
     vm->NotifyPresentationGenerationChanged(mDisplayInfo.mDisplayID);
   }
 
@@ -210,38 +147,16 @@ void VRDisplayClient::FireGamepadEvents() {
     }
 
     // Send events to notify that new controllers are added
-<<<<<<< HEAD
-    RefPtr<dom::Gamepad> existing =
-        gamepadManager->GetGamepad(gamepadId, dom::GamepadServiceType::VR);
-    if (lastState.controllerName[0] == '\0' || !existing) {
-||||||| merged common ancestors
-    RefPtr<dom::Gamepad> existing = gamepadManager->GetGamepad(gamepadId, dom::GamepadServiceType::VR);
-    if (lastState.controllerName[0] == '\0' || !existing) {
-=======
     RefPtr<dom::Gamepad> existing =
         gamepadManager->GetGamepad(gamepadId, dom::GamepadServiceType::VR);
     // ControllerState in OpenVR action-based API gets delay to query btn and
     // axis count. So, we need to check if they are more than zero.
     if ((lastState.controllerName[0] == '\0' || !existing) &&
         (state.numButtons > 0 || state.numAxes > 0)) {
->>>>>>> upstream-releases
       dom::GamepadAdded info(NS_ConvertUTF8toUTF16(state.controllerName),
-<<<<<<< HEAD
-                             dom::GamepadMappingType::_empty, state.hand,
-                             mDisplayInfo.mDisplayID, state.numButtons,
-                             state.numAxes, state.numHaptics);
-||||||| merged common ancestors
-                             dom::GamepadMappingType::_empty,
-                             state.hand,
-                             mDisplayInfo.mDisplayID,
-                             state.numButtons,
-                             state.numAxes,
-                             state.numHaptics);
-=======
                              dom::GamepadMappingType::_empty, state.hand,
                              mDisplayInfo.mDisplayID, state.numButtons,
                              state.numAxes, state.numHaptics, 0, 0);
->>>>>>> upstream-releases
       dom::GamepadChangeEventBody body(info);
       dom::GamepadChangeEvent event(gamepadId, dom::GamepadServiceType::VR,
                                     body);
@@ -346,15 +261,7 @@ void VRDisplayClient::FireGamepadEvents() {
          sizeof(VRControllerState) * kVRControllerMaxCount);
 }
 
-<<<<<<< HEAD
-VRHMDSensorState VRDisplayClient::GetSensorState() {
-||||||| merged common ancestors
-VRHMDSensorState
-VRDisplayClient::GetSensorState()
-{
-=======
 const VRHMDSensorState& VRDisplayClient::GetSensorState() const {
->>>>>>> upstream-releases
   return mDisplayInfo.GetSensorState();
 }
 
@@ -362,18 +269,8 @@ bool VRDisplayClient::GetIsConnected() const {
   return mDisplayInfo.GetIsConnected();
 }
 
-<<<<<<< HEAD
-void VRDisplayClient::NotifyDisconnected() {
-  mDisplayInfo.mDisplayState.mIsConnected = false;
-||||||| merged common ancestors
-void
-VRDisplayClient::NotifyDisconnected()
-{
-  mDisplayInfo.mDisplayState.mIsConnected = false;
-=======
 void VRDisplayClient::NotifyDisconnected() {
   mDisplayInfo.mDisplayState.isConnected = false;
->>>>>>> upstream-releases
 }
 
 void VRDisplayClient::UpdateSubmitFrameResult(

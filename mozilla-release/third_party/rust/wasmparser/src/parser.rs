@@ -17,100 +17,16 @@
 use std::boxed::Box;
 use std::vec::Vec;
 
-<<<<<<< HEAD
-use limits::{
-    MAX_WASM_FUNCTIONS, MAX_WASM_FUNCTION_LOCALS, MAX_WASM_STRING_SIZE, MAX_WASM_TABLE_ENTRIES,
-};
-||||||| merged common ancestors
-use limits::{MAX_WASM_FUNCTION_LOCALS, MAX_WASM_FUNCTION_PARAMS, MAX_WASM_FUNCTION_RETURNS,
-             MAX_WASM_FUNCTION_SIZE, MAX_WASM_STRING_SIZE, MAX_WASM_FUNCTIONS,
-             MAX_WASM_TABLE_ENTRIES};
-=======
 use crate::limits::{
     MAX_WASM_FUNCTIONS, MAX_WASM_FUNCTION_LOCALS, MAX_WASM_STRING_SIZE, MAX_WASM_TABLE_ENTRIES,
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-use primitives::{
-    BinaryReaderError, CustomSectionKind, ExternalKind, FuncType, GlobalType,
-    ImportSectionEntryType, LinkingType, MemoryType, Naming, Operator, RelocType, Result,
-    SectionCode, TableType, Type,
-};
-||||||| merged common ancestors
-const MAX_WASM_BR_TABLE_SIZE: usize = MAX_WASM_FUNCTION_SIZE;
-=======
 use crate::primitives::{
     BinaryReaderError, CustomSectionKind, ExternalKind, FuncType, GlobalType,
     ImportSectionEntryType, LinkingType, MemoryType, Naming, Operator, RelocType, Result,
     SectionCode, TableType, Type,
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-use readers::{
-    CodeSectionReader, Data, DataSectionReader, Element, ElementItems, ElementSectionReader,
-    Export, ExportSectionReader, FunctionBody, FunctionSectionReader, Global, GlobalSectionReader,
-    Import, ImportSectionReader, LinkingSectionReader, MemorySectionReader, ModuleReader, Name,
-    NameSectionReader, NamingReader, OperatorsReader, Reloc, RelocSectionReader, Section,
-    SectionReader, TableSectionReader, TypeSectionReader,
-};
-||||||| merged common ancestors
-const MAX_DATA_CHUNK_SIZE: usize = MAX_WASM_STRING_SIZE;
-
-#[derive(Debug,Copy,Clone)]
-pub struct BinaryReaderError {
-    pub message: &'static str,
-    pub offset: usize,
-}
-
-pub type Result<T> = result::Result<T, BinaryReaderError>;
-
-#[derive(Debug,Copy,Clone,PartialEq,Eq,PartialOrd,Ord)]
-pub enum CustomSectionKind {
-    Unknown,
-    Name,
-    SourceMappingURL,
-    Reloc,
-    Linking,
-}
-
-/// Section code as defined [here].
-///
-/// [here]: https://webassembly.github.io/spec/binary/modules.html#sections
-#[derive(Debug,Copy,Clone,PartialEq,Eq,PartialOrd,Ord)]
-pub enum SectionCode<'a> {
-    Custom {
-        name: &'a [u8],
-        kind: CustomSectionKind,
-    },
-    Type, // Function signature declarations
-    Import, // Import declarations
-    Function, // Function declarations
-    Table, // Indirect function table and other tables
-    Memory, // Memory attributes
-    Global, // Global declarations
-    Export, // Exports
-    Start, // Start function declaration
-    Element, // Elements section
-    Code, // Function bodies (code)
-    Data, // Data segments
-}
-
-/// Types as defined [here].
-///
-/// [here]: https://webassembly.github.io/spec/syntax/types.html#types
-#[derive(Debug,Copy,Clone,PartialEq,Eq)]
-pub enum Type {
-    I32,
-    I64,
-    F32,
-    F64,
-    AnyFunc,
-    Func,
-    EmptyBlockType,
-}
-=======
 use crate::readers::{
     CodeSectionReader, Data, DataKind, DataSectionReader, Element, ElementItems, ElementKind,
     ElementSectionReader, Export, ExportSectionReader, FunctionBody, FunctionSectionReader, Global,
@@ -120,28 +36,8 @@ use crate::readers::{
 };
 
 use crate::binary_reader::{BinaryReader, Range};
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-use binary_reader::{BinaryReader, Range};
 
 const MAX_DATA_CHUNK_SIZE: usize = MAX_WASM_STRING_SIZE;
-||||||| merged common ancestors
-#[derive(Debug)]
-pub enum NameType {
-    Module,
-    Function,
-    Local,
-}
-
-#[derive(Debug)]
-pub struct Naming<'a> {
-    pub index: u32,
-    pub name: &'a [u8],
-}
-=======
-const MAX_DATA_CHUNK_SIZE: usize = MAX_WASM_STRING_SIZE;
->>>>>>> upstream-releases
 
 #[derive(Debug)]
 pub struct LocalName<'a> {
@@ -151,162 +47,9 @@ pub struct LocalName<'a> {
 
 #[derive(Debug)]
 pub enum NameEntry<'a> {
-<<<<<<< HEAD
-    Module(&'a [u8]),
-    Function(Box<[Naming<'a>]>),
-    Local(Box<[LocalName<'a>]>),
-||||||| merged common ancestors
-    Module(&'a [u8]),
-    Function(Vec<Naming<'a>>),
-    Local(Vec<LocalName<'a>>),
-}
-
-/// External types as defined [here].
-///
-/// [here]: https://webassembly.github.io/spec/syntax/types.html#external-types
-#[derive(Debug, Copy, Clone)]
-pub enum ExternalKind {
-    Function,
-    Table,
-    Memory,
-    Global,
-}
-
-#[derive(Debug,Clone)]
-pub struct FuncType {
-    pub form: Type,
-    pub params: Vec<Type>,
-    pub returns: Vec<Type>,
-}
-
-#[derive(Debug,Copy,Clone)]
-pub struct ResizableLimits {
-    pub initial: u32,
-    pub maximum: Option<u32>,
-}
-
-#[derive(Debug,Copy,Clone)]
-pub struct TableType {
-    pub element_type: Type,
-    pub limits: ResizableLimits,
-}
-
-#[derive(Debug,Copy,Clone)]
-pub struct MemoryType {
-    pub limits: ResizableLimits,
-    pub shared: bool,
-}
-
-#[derive(Debug,Copy,Clone)]
-pub struct GlobalType {
-    pub content_type: Type,
-    pub mutable: bool,
-}
-
-#[derive(Debug)]
-pub struct MemoryImmediate {
-    pub flags: u32,
-    pub offset: u32,
-}
-
-/// A br_table entries representation.
-#[derive(Debug)]
-pub struct BrTable<'a> {
-    buffer: &'a [u8],
-}
-
-impl<'a> BrTable<'a> {
-    /// Reads br_table entries.
-    ///
-    /// # Examples
-    /// ```rust
-    /// let buf = vec![0x0e, 0x02, 0x01, 0x02, 0x00];
-    /// let mut reader = wasmparser::BinaryReader::new(&buf);
-    /// let op = reader.read_operator().unwrap();
-    /// if let wasmparser::Operator::BrTable { ref table } = op {
-    ///     let br_table_depths = table.read_table();
-    ///     assert!(br_table_depths.0 == vec![1,2] &&
-    ///             br_table_depths.1 == 0);
-    /// } else {
-    ///     unreachable!();
-    /// }
-    /// ```
-    pub fn read_table(&self) -> (Vec<u32>, u32) {
-        let mut reader = BinaryReader::new(self.buffer);
-        let mut table = Vec::new();
-        while !reader.eof() {
-            table.push(reader.read_var_u32().unwrap());
-        }
-        let default_target = table.pop().unwrap();
-        (table, default_target)
-    }
-}
-
-/// Iterator for `BrTable`.
-///
-/// #Examples
-/// ```rust
-/// let buf = vec![0x0e, 0x02, 0x01, 0x02, 0x00];
-/// let mut reader = wasmparser::BinaryReader::new(&buf);
-/// let op = reader.read_operator().unwrap();
-/// if let wasmparser::Operator::BrTable { ref table } = op {
-///     for depth in table {
-///         println!("BrTable depth: {}", depth);
-///     }
-/// }
-/// ```
-pub struct BrTableIterator<'a> {
-    reader: BinaryReader<'a>,
-}
-
-impl<'a> IntoIterator for &'a BrTable<'a> {
-    type Item = u32;
-    type IntoIter = BrTableIterator<'a>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        BrTableIterator { reader: BinaryReader::new(self.buffer) }
-    }
-}
-
-impl<'a> Iterator for BrTableIterator<'a> {
-    type Item = u32;
-
-    fn next(&mut self) -> Option<u32> {
-        if self.reader.eof() {
-            return None;
-        }
-        Some(self.reader.read_var_u32().unwrap())
-    }
-}
-
-#[derive(Debug)]
-pub enum ImportSectionEntryType {
-    Function(u32),
-    Table(TableType),
-    Memory(MemoryType),
-    Global(GlobalType),
-}
-
-#[derive(Debug)]
-pub enum RelocType {
-    FunctionIndexLEB,
-    TableIndexSLEB,
-    TableIndexI32,
-    GlobalAddrLEB,
-    GlobalAddrSLEB,
-    GlobalAddrI32,
-    TypeIndexLEB,
-    GlobalIndexLEB,
-}
-
-#[derive(Debug)]
-pub enum LinkingType {
-    StackPointer(u32),
-=======
     Module(&'a str),
     Function(Box<[Naming<'a>]>),
     Local(Box<[LocalName<'a>]>),
->>>>>>> upstream-releases
 }
 
 #[derive(Debug)]
@@ -373,17 +116,9 @@ pub enum ParserState<'a> {
     EndFunctionBody,
     SkippingFunctionBody,
 
-<<<<<<< HEAD
-    BeginElementSectionEntry(u32),
-    ElementSectionEntryBody(Box<[u32]>),
-||||||| merged common ancestors
-    BeginElementSectionEntry(u32),
-    ElementSectionEntryBody(Vec<u32>),
-=======
     BeginPassiveElementSectionEntry(Type),
     BeginActiveElementSectionEntry(u32),
     ElementSectionEntryBody(Box<[u32]>),
->>>>>>> upstream-releases
     EndElementSectionEntry,
 
     BeginPassiveDataSectionEntry,
@@ -516,91 +251,6 @@ impl<'a> Parser<'a> {
     }
 
     pub fn current_position(&self) -> usize {
-<<<<<<< HEAD
-        if let ParserState::Initial = self.state {
-            return 0;
-        }
-        if self.binary_reader.is_some() {
-            return self
-                .binary_reader
-                .as_ref()
-                .expect("binary reader")
-                .original_position();
-        }
-        if self.operators_reader.is_some() {
-            return self
-                .operators_reader
-                .as_ref()
-                .expect("operators reader")
-                .original_position();
-        }
-        match self.section_reader {
-            ParserSectionReader::CodeSectionReader(ref reader) => return reader.original_position(),
-            ParserSectionReader::DataSectionReader(ref reader) => return reader.original_position(),
-            ParserSectionReader::ElementSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::ExportSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::FunctionSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::GlobalSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::ImportSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::MemorySectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::TableSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::TypeSectionReader(ref reader) => return reader.original_position(),
-            ParserSectionReader::NameSectionReader(ref reader) => return reader.original_position(),
-            ParserSectionReader::LinkingSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            ParserSectionReader::RelocSectionReader(ref reader) => {
-                return reader.original_position()
-            }
-            _ => (),
-        };
-        // TODO might not cover all cases
-        self.module_reader
-            .as_ref()
-            .expect("module reader")
-            .current_position()
-    }
-
-    fn read_module(&mut self) -> Result<()> {
-        let module_reader = ModuleReader::new(self.data)?;
-        let version = module_reader.get_version();
-        self.module_reader = Some(module_reader);
-        self.state = ParserState::BeginWasm { version };
-||||||| merged common ancestors
-        self.reader.current_position()
-    }
-
-    fn read_header(&mut self) -> Result<()> {
-        let magic_number = self.reader.read_u32()?;
-        if magic_number != WASM_MAGIC_NUMBER {
-            return Err(BinaryReaderError {
-                           message: "Bad magic number",
-                           offset: self.reader.position - 4,
-                       });
-        }
-        let version = self.reader.read_u32()?;
-        if version != WASM_SUPPORTED_VERSION && version != WASM_EXPERIMENTAL_VERSION {
-            return Err(BinaryReaderError {
-                           message: "Bad version number",
-                           offset: self.reader.position - 4,
-                       });
-        }
-        self.state = ParserState::BeginWasm { version: version };
-=======
         if let ParserState::Initial = self.state {
             return 0;
         }
@@ -672,44 +322,14 @@ impl<'a> Parser<'a> {
         let version = module_reader.get_version();
         self.module_reader = Some(module_reader);
         self.state = ParserState::BeginWasm { version };
->>>>>>> upstream-releases
         Ok(())
     }
 
     fn read_section_header(&mut self) -> Result<()> {
-<<<<<<< HEAD
-        let section = self.module_reader.as_mut().expect("module reader").read()?;
-        let code = section.code;
-        let range = section.get_range();
-        self.current_section = Some(section);
-||||||| merged common ancestors
-        let id_position = self.reader.position;
-        let id = self.reader.read_var_u7()?;
-        let payload_len = self.reader.read_var_u32()? as usize;
-        let payload_end = self.reader.position + payload_len;
-        let code = self.reader.read_section_code(id, id_position)?;
-        if self.reader.buffer.len() < payload_end {
-            return Err(BinaryReaderError {
-                           message: "Section body extends past end of file",
-                           offset: self.reader.buffer.len(),
-                       });
-        }
-        if self.reader.position > payload_end {
-            return Err(BinaryReaderError {
-                           message: "Section header is too big to fit into section body",
-                           offset: payload_end,
-                       });
-        }
-        let range = Range {
-            start: self.reader.position,
-            end: payload_end,
-        };
-=======
         let section = self.module_reader.as_mut().expect("module reader").read()?;
         let code = section.code;
         let range = section.range();
         self.current_section = Some(section);
->>>>>>> upstream-releases
         self.state = ParserState::BeginSection { code, range };
         Ok(())
     }
@@ -726,44 +346,10 @@ impl<'a> Parser<'a> {
 
     fn read_import_entry(&mut self) -> Result<()> {
         if self.section_entries_left == 0 {
-<<<<<<< HEAD
             return self.check_section_end();
         }
         let Import { module, field, ty } = section_reader!(self, ImportSectionReader).read()?;
         self.state = ParserState::ImportSectionEntry { module, field, ty };
-||||||| merged common ancestors
-            return self.position_to_section_end();
-        }
-        let module = self.reader.read_string()?;
-        let field = self.reader.read_string()?;
-        let kind = self.reader.read_external_kind()?;
-        let ty: ImportSectionEntryType;
-        match kind {
-            ExternalKind::Function => {
-                ty = ImportSectionEntryType::Function(self.reader.read_var_u32()?)
-            }
-            ExternalKind::Table => {
-                ty = ImportSectionEntryType::Table(self.reader.read_table_type()?)
-            }
-            ExternalKind::Memory => {
-                ty = ImportSectionEntryType::Memory(self.reader.read_memory_type()?)
-            }
-            ExternalKind::Global => {
-                ty = ImportSectionEntryType::Global(self.reader.read_global_type()?)
-            }
-        }
-
-        self.state = ParserState::ImportSectionEntry {
-            module: module,
-            field: field,
-            ty: ty,
-        };
-=======
-            return self.check_section_end();
-        }
-        let Import { module, field, ty } = section_reader!(self, ImportSectionReader).read()?;
-        self.state = ParserState::ImportSectionEntry { module, field, ty };
->>>>>>> upstream-releases
         self.section_entries_left -= 1;
         Ok(())
     }
@@ -831,22 +417,6 @@ impl<'a> Parser<'a> {
 
     fn read_element_entry(&mut self) -> Result<()> {
         if self.section_entries_left == 0 {
-<<<<<<< HEAD
-            return self.check_section_end();
-        }
-        let Element {
-            table_index,
-            init_expr,
-            items,
-        } = section_reader!(self, ElementSectionReader).read()?;
-        self.state = ParserState::BeginElementSectionEntry(table_index);
-        self.operators_reader = Some(init_expr.get_operators_reader());
-        self.element_items = Some(items);
-||||||| merged common ancestors
-            return self.position_to_section_end();
-        }
-        self.state = ParserState::BeginElementSectionEntry(self.reader.read_var_u32()?);
-=======
             return self.check_section_end();
         }
         let Element { kind, items } = section_reader!(self, ElementSectionReader).read()?;
@@ -863,7 +433,6 @@ impl<'a> Parser<'a> {
             }
         }
         self.element_items = Some(items);
->>>>>>> upstream-releases
         self.section_entries_left -= 1;
         Ok(())
     }
@@ -894,20 +463,8 @@ impl<'a> Parser<'a> {
             self.current_function_body = None;
             return self.check_section_end();
         }
-<<<<<<< HEAD
-        let function_body = section_reader!(self, CodeSectionReader).read()?;
-        let range = function_body.get_range();
-||||||| merged common ancestors
-        let size = self.reader.read_var_u32()? as usize;
-        let body_end = self.reader.position + size;
-        let range = Range {
-            start: self.reader.position,
-            end: body_end,
-        };
-=======
         let function_body = section_reader!(self, CodeSectionReader).read()?;
         let range = function_body.range();
->>>>>>> upstream-releases
         self.state = ParserState::BeginFunctionBody { range };
         self.current_function_body = Some(function_body);
         self.section_entries_left -= 1;
@@ -987,23 +544,6 @@ impl<'a> Parser<'a> {
 
     fn read_data_entry(&mut self) -> Result<()> {
         if self.section_entries_left == 0 {
-<<<<<<< HEAD
-            return self.check_section_end();
-        }
-        let Data {
-            memory_index,
-            init_expr,
-            data,
-        } = section_reader!(self, DataSectionReader).read()?;
-        self.state = ParserState::BeginDataSectionEntry(memory_index);
-        self.operators_reader = Some(init_expr.get_operators_reader());
-        self.current_data_segment = Some(data);
-||||||| merged common ancestors
-            return self.position_to_section_end();
-        }
-        let index = self.reader.read_var_u32()?;
-        self.state = ParserState::BeginDataSectionEntry(index);
-=======
             return self.check_section_end();
         }
         let Data { kind, data } = section_reader!(self, DataSectionReader).read()?;
@@ -1020,7 +560,6 @@ impl<'a> Parser<'a> {
             }
         }
         self.current_data_segment = Some(data);
->>>>>>> upstream-releases
         self.section_entries_left -= 1;
         Ok(())
     }
@@ -1204,21 +743,6 @@ impl<'a> Parser<'a> {
                 start_section_reader!(self, DataSectionReader, get_data_section_reader);
                 self.read_data_entry()?;
             }
-<<<<<<< HEAD
-            ParserState::BeginSection {
-                code: SectionCode::Start,
-                ..
-            } => {
-                let func_index = self
-                    .current_section
-                    .as_ref()
-                    .expect("section")
-                    .get_start_section_content()?;
-                self.state = ParserState::StartSectionEntry(func_index);
-||||||| merged common ancestors
-            ParserState::BeginSection { code: SectionCode::Start, .. } => {
-                self.state = ParserState::StartSectionEntry(self.reader.read_var_u32()?);
-=======
             ParserState::BeginSection {
                 code: SectionCode::Start,
                 ..
@@ -1240,7 +764,6 @@ impl<'a> Parser<'a> {
                     .expect("section")
                     .get_data_count_section_content()?;
                 self.state = ParserState::DataCountSectionEntry(func_index);
->>>>>>> upstream-releases
             }
             ParserState::BeginSection {
                 code: SectionCode::Custom { .. },
@@ -1285,16 +808,9 @@ impl<'a> Parser<'a> {
                 start_section_reader!(self, LinkingSectionReader, get_linking_section_reader);
                 self.read_linking_entry()?;
             }
-<<<<<<< HEAD
-            ParserState::ReadingCustomSection(CustomSectionKind::Unknown) => {
-                self.create_custom_section_binary_reader();
-||||||| merged common ancestors
-            ParserState::ReadingCustomSection(CustomSectionKind::Unknown) => {
-=======
             ParserState::ReadingCustomSection(CustomSectionKind::Producers)
             | ParserState::ReadingCustomSection(CustomSectionKind::Unknown) => {
                 self.create_custom_section_binary_reader();
->>>>>>> upstream-releases
                 self.read_section_body_bytes()?;
             }
             _ => unreachable!(),
@@ -1398,16 +914,6 @@ impl<'a> Parser<'a> {
             ParserState::BeginActiveElementSectionEntry(_) => {
                 self.read_init_expression_body(InitExpressionContinuation::ElementSection)
             }
-<<<<<<< HEAD
-            ParserState::BeginInitExpressionBody | ParserState::InitExpressionOperator(_) => {
-                self.read_init_expression_operator()?
-            }
-            ParserState::BeginDataSectionEntry(_) => {
-||||||| merged common ancestors
-            ParserState::BeginInitExpressionBody |
-            ParserState::InitExpressionOperator(_) => self.read_init_expression_operator()?,
-            ParserState::BeginDataSectionEntry(_) => {
-=======
             ParserState::BeginInitExpressionBody | ParserState::InitExpressionOperator(_) => {
                 self.read_init_expression_operator()?
             }
@@ -1415,7 +921,6 @@ impl<'a> Parser<'a> {
                 self.read_data_entry_body()?;
             }
             ParserState::BeginActiveDataSectionEntry(_) => {
->>>>>>> upstream-releases
                 self.read_init_expression_body(InitExpressionContinuation::DataSection)
             }
             ParserState::EndInitExpressionBody => {

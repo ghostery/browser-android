@@ -31,20 +31,6 @@ using namespace mozilla;
 using namespace mozilla::gfx;
 using namespace mozilla::image;
 
-<<<<<<< HEAD
-static already_AddRefed<SourceSurface>
-CheckDecoderState(const ImageTestCase& aTestCase, Decoder* aDecoder)
-{
-  // Decoder should match what we asked for in the MIME type.
-  EXPECT_NE(aDecoder->GetType(), DecoderType::UNKNOWN);
-  EXPECT_EQ(aDecoder->GetType(),
-            DecoderFactory::GetDecoderType(aTestCase.mMimeType));
-
-||||||| merged common ancestors
-static already_AddRefed<SourceSurface>
-CheckDecoderState(const ImageTestCase& aTestCase, Decoder* aDecoder)
-{
-=======
 static already_AddRefed<SourceSurface> CheckDecoderState(
     const ImageTestCase& aTestCase, Decoder* aDecoder) {
   // Decoder should match what we asked for in the MIME type.
@@ -52,7 +38,6 @@ static already_AddRefed<SourceSurface> CheckDecoderState(
   EXPECT_EQ(aDecoder->GetType(),
             DecoderFactory::GetDecoderType(aTestCase.mMimeType));
 
->>>>>>> upstream-releases
   EXPECT_TRUE(aDecoder->GetDecodeDone());
   EXPECT_EQ(bool(aTestCase.mFlags & TEST_CASE_HAS_ERROR), aDecoder->HasError());
 
@@ -133,15 +118,8 @@ void WithSingleChunkDecode(const ImageTestCase& aTestCase,
       decoderType, sourceBuffer, aOutputSize, DecoderFlags::FIRST_FRAME_ONLY,
       DefaultSurfaceFlags());
   ASSERT_TRUE(decoder != nullptr);
-<<<<<<< HEAD
-  RefPtr<IDecodingTask> task =
-    new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ false);
-||||||| merged common ancestors
-  RefPtr<IDecodingTask> task = new AnonymousDecodingTask(WrapNotNull(decoder));
-=======
   RefPtr<IDecodingTask> task =
       new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ false);
->>>>>>> upstream-releases
 
   // Run the full decoder synchronously.
   task->Run();
@@ -156,67 +134,6 @@ static void CheckDecoderSingleChunk(const ImageTestCase& aTestCase) {
   });
 }
 
-<<<<<<< HEAD
-template <typename Func>
-void WithDelayedChunkDecode(const ImageTestCase& aTestCase,
-                           const Maybe<IntSize>& aOutputSize,
-                           Func aResultChecker)
-{
-  nsCOMPtr<nsIInputStream> inputStream = LoadFile(aTestCase.mPath);
-  ASSERT_TRUE(inputStream != nullptr);
-
-  // Figure out how much data we have.
-  uint64_t length;
-  nsresult rv = inputStream->Available(&length);
-  ASSERT_TRUE(NS_SUCCEEDED(rv));
-
-  // Prepare an empty SourceBuffer.
-  auto sourceBuffer = MakeNotNull<RefPtr<SourceBuffer>>();
-
-  // Create a decoder.
-  DecoderType decoderType =
-    DecoderFactory::GetDecoderType(aTestCase.mMimeType);
-  RefPtr<Decoder> decoder =
-    DecoderFactory::CreateAnonymousDecoder(decoderType, sourceBuffer, aOutputSize,
-                                           DecoderFlags::FIRST_FRAME_ONLY,
-                                           DefaultSurfaceFlags());
-  ASSERT_TRUE(decoder != nullptr);
-  RefPtr<IDecodingTask> task =
-    new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ true);
-
-  // Run the full decoder synchronously. It should now be waiting on
-  // the iterator to yield some data since we haven't written anything yet.
-  task->Run();
-
-  // Writing all of the data should wake up the decoder to complete.
-  sourceBuffer->ExpectLength(length);
-  rv = sourceBuffer->AppendFromInputStream(inputStream, length);
-  ASSERT_TRUE(NS_SUCCEEDED(rv));
-  sourceBuffer->Complete(NS_OK);
-
-  // It would have gotten posted to the main thread to avoid mutex contention.
-  SpinPendingEvents();
-
-  // Call the lambda to verify the expected results.
-  aResultChecker(decoder);
-}
-
-static void
-CheckDecoderDelayedChunk(const ImageTestCase& aTestCase)
-{
-  WithDelayedChunkDecode(aTestCase, Nothing(), [&](Decoder* aDecoder) {
-    CheckDecoderResults(aTestCase, aDecoder);
-  });
-}
-
-static void
-CheckDecoderMultiChunk(const ImageTestCase& aTestCase, uint64_t aChunkSize = 1)
-{
-||||||| merged common ancestors
-static void
-CheckDecoderMultiChunk(const ImageTestCase& aTestCase)
-{
-=======
 template <typename Func>
 void WithDelayedChunkDecode(const ImageTestCase& aTestCase,
                             const Maybe<IntSize>& aOutputSize,
@@ -266,7 +183,6 @@ static void CheckDecoderDelayedChunk(const ImageTestCase& aTestCase) {
 
 static void CheckDecoderMultiChunk(const ImageTestCase& aTestCase,
                                    uint64_t aChunkSize = 1) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIInputStream> inputStream = LoadFile(aTestCase.mPath);
   ASSERT_TRUE(inputStream != nullptr);
 
@@ -283,20 +199,6 @@ static void CheckDecoderMultiChunk(const ImageTestCase& aTestCase,
       decoderType, sourceBuffer, Nothing(), DecoderFlags::FIRST_FRAME_ONLY,
       DefaultSurfaceFlags());
   ASSERT_TRUE(decoder != nullptr);
-<<<<<<< HEAD
-  RefPtr<IDecodingTask> task =
-    new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ true);
-
-  // Run the full decoder synchronously. It should now be waiting on
-  // the iterator to yield some data since we haven't written anything yet.
-  task->Run();
-
-  while (length > 0) {
-    uint64_t read = length > aChunkSize ? aChunkSize : length;
-    length -= read;
-||||||| merged common ancestors
-  RefPtr<IDecodingTask> task = new AnonymousDecodingTask(WrapNotNull(decoder));
-=======
   RefPtr<IDecodingTask> task =
       new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ true);
 
@@ -307,7 +209,6 @@ static void CheckDecoderMultiChunk(const ImageTestCase& aTestCase,
   while (length > 0) {
     uint64_t read = length > aChunkSize ? aChunkSize : length;
     length -= read;
->>>>>>> upstream-releases
 
     uint64_t available = 0;
     rv = inputStream->Available(&available);
@@ -472,210 +373,15 @@ static void CheckAnimationDecoderSingleChunk(const ImageTestCase& aTestCase) {
       });
 }
 
-<<<<<<< HEAD
-static void
-CheckDecoderFrameFirst(const ImageTestCase& aTestCase)
-{
-||||||| merged common ancestors
-class ImageDecoders : public ::testing::Test
-{
-protected:
-  AutoInitializeImageLib mInit;
-};
-
-TEST_F(ImageDecoders, PNGSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenPNGTestCase());
-}
-
-TEST_F(ImageDecoders, PNGMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenPNGTestCase());
-}
-
-TEST_F(ImageDecoders, PNGDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledPNGTestCase());
-}
-
-TEST_F(ImageDecoders, GIFSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenGIFTestCase());
-}
-
-TEST_F(ImageDecoders, GIFMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenGIFTestCase());
-}
-
-TEST_F(ImageDecoders, GIFDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledGIFTestCase());
-}
-
-TEST_F(ImageDecoders, JPGSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenJPGTestCase());
-}
-
-TEST_F(ImageDecoders, JPGMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenJPGTestCase());
-}
-
-TEST_F(ImageDecoders, JPGDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledJPGTestCase());
-}
-
-TEST_F(ImageDecoders, BMPSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenBMPTestCase());
-}
-
-TEST_F(ImageDecoders, BMPMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenBMPTestCase());
-}
-
-TEST_F(ImageDecoders, BMPDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledBMPTestCase());
-}
-
-TEST_F(ImageDecoders, ICOSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICOMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICODownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICOWithANDMaskDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledTransparentICOWithANDMaskTestCase());
-}
-
-TEST_F(ImageDecoders, IconSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenIconTestCase());
-}
-
-TEST_F(ImageDecoders, IconMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenIconTestCase());
-}
-
-TEST_F(ImageDecoders, IconDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledIconTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFWithBlendedFrames)
-{
-  CheckAnimationDecoderSingleChunk(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedPNGSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenFirstFrameAnimatedPNGTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedPNGMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenFirstFrameAnimatedPNGTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedPNGWithBlendedFrames)
-{
-  CheckAnimationDecoderSingleChunk(GreenFirstFrameAnimatedPNGTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptBMPWithTruncatedHeaderSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptBMPWithTruncatedHeader());
-}
-
-TEST_F(ImageDecoders, CorruptBMPWithTruncatedHeaderMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptBMPWithTruncatedHeader());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPWidthSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptICOWithBadBMPWidthTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPWidthMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptICOWithBadBMPWidthTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPHeightSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptICOWithBadBMPHeightTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPHeightMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptICOWithBadBMPHeightTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBppSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptICOWithBadBppTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFWithFRAME_FIRST)
-{
-  ImageTestCase testCase = GreenFirstFrameAnimatedGIFTestCase();
-
-=======
 static void CheckDecoderFrameFirst(const ImageTestCase& aTestCase) {
->>>>>>> upstream-releases
   // Verify that we can decode this test case and retrieve the first frame using
   // imgIContainer::FRAME_FIRST. This ensures that we correctly trigger a
   // single-frame decode rather than an animated decode when
   // imgIContainer::FRAME_FIRST is requested.
 
   // Create an image.
-<<<<<<< HEAD
-  RefPtr<Image> image =
-    ImageFactory::CreateAnonymousImage(nsDependentCString(aTestCase.mMimeType));
-||||||| merged common ancestors
-  RefPtr<Image> image =
-    ImageFactory::CreateAnonymousImage(nsDependentCString(testCase.mMimeType));
-=======
   RefPtr<Image> image = ImageFactory::CreateAnonymousImage(
       nsDependentCString(aTestCase.mMimeType));
->>>>>>> upstream-releases
   ASSERT_TRUE(!image->HasError());
 
   nsCOMPtr<nsIInputStream> inputStream = LoadFile(aTestCase.mPath);
@@ -777,34 +483,15 @@ static void CheckDecoderFrameFirst(const ImageTestCase& aTestCase) {
   }
 }
 
-<<<<<<< HEAD
-static void
-CheckDecoderFrameCurrent(const ImageTestCase& aTestCase)
-{
-||||||| merged common ancestors
-TEST_F(ImageDecoders, AnimatedGIFWithFRAME_CURRENT)
-{
-  ImageTestCase testCase = GreenFirstFrameAnimatedGIFTestCase();
-
-=======
 static void CheckDecoderFrameCurrent(const ImageTestCase& aTestCase) {
->>>>>>> upstream-releases
   // Verify that we can decode this test case and retrieve the entire sequence
   // of frames using imgIContainer::FRAME_CURRENT. This ensures that we
   // correctly trigger an animated decode rather than a single-frame decode when
   // imgIContainer::FRAME_CURRENT is requested.
 
   // Create an image.
-<<<<<<< HEAD
-  RefPtr<Image> image =
-    ImageFactory::CreateAnonymousImage(nsDependentCString(aTestCase.mMimeType));
-||||||| merged common ancestors
-  RefPtr<Image> image =
-    ImageFactory::CreateAnonymousImage(nsDependentCString(testCase.mMimeType));
-=======
   RefPtr<Image> image = ImageFactory::CreateAnonymousImage(
       nsDependentCString(aTestCase.mMimeType));
->>>>>>> upstream-releases
   ASSERT_TRUE(!image->HasError());
 
   nsCOMPtr<nsIInputStream> inputStream = LoadFile(aTestCase.mPath);
@@ -909,274 +596,6 @@ static void CheckDecoderFrameCurrent(const ImageTestCase& aTestCase) {
   }
 }
 
-<<<<<<< HEAD
-class ImageDecoders : public ::testing::Test
-{
-protected:
-  AutoInitializeImageLib mInit;
-};
-
-TEST_F(ImageDecoders, PNGSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenPNGTestCase());
-}
-
-TEST_F(ImageDecoders, PNGDelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenPNGTestCase());
-}
-
-TEST_F(ImageDecoders, PNGMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenPNGTestCase());
-}
-
-TEST_F(ImageDecoders, PNGDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledPNGTestCase());
-}
-
-TEST_F(ImageDecoders, GIFSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenGIFTestCase());
-}
-
-TEST_F(ImageDecoders, GIFDelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenGIFTestCase());
-}
-
-TEST_F(ImageDecoders, GIFMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenGIFTestCase());
-}
-
-TEST_F(ImageDecoders, GIFDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledGIFTestCase());
-}
-
-TEST_F(ImageDecoders, JPGSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenJPGTestCase());
-}
-
-TEST_F(ImageDecoders, JPGDelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenJPGTestCase());
-}
-
-TEST_F(ImageDecoders, JPGMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenJPGTestCase());
-}
-
-TEST_F(ImageDecoders, JPGDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledJPGTestCase());
-}
-
-TEST_F(ImageDecoders, BMPSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenBMPTestCase());
-}
-
-TEST_F(ImageDecoders, BMPDelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenBMPTestCase());
-}
-
-TEST_F(ImageDecoders, BMPMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenBMPTestCase());
-}
-
-TEST_F(ImageDecoders, BMPDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledBMPTestCase());
-}
-
-TEST_F(ImageDecoders, ICOSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICODelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICOMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICODownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledICOTestCase());
-}
-
-TEST_F(ImageDecoders, ICOWithANDMaskDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledTransparentICOWithANDMaskTestCase());
-}
-
-TEST_F(ImageDecoders, IconSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenIconTestCase());
-}
-
-TEST_F(ImageDecoders, IconDelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenIconTestCase());
-}
-
-TEST_F(ImageDecoders, IconMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenIconTestCase());
-}
-
-TEST_F(ImageDecoders, IconDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledIconTestCase());
-}
-
-TEST_F(ImageDecoders, WebPSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenWebPTestCase());
-}
-
-TEST_F(ImageDecoders, WebPDelayedChunk)
-{
-  CheckDecoderDelayedChunk(GreenWebPTestCase());
-}
-
-TEST_F(ImageDecoders, WebPMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenWebPTestCase());
-}
-
-TEST_F(ImageDecoders, WebPLargeMultiChunk)
-{
-  CheckDecoderMultiChunk(LargeWebPTestCase(), /* aChunkSize */ 64);
-}
-
-TEST_F(ImageDecoders, WebPDownscaleDuringDecode)
-{
-  CheckDownscaleDuringDecode(DownscaledWebPTestCase());
-}
-
-TEST_F(ImageDecoders, WebPIccSrgbMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenWebPIccSrgbTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFWithBlendedFrames)
-{
-  CheckAnimationDecoderSingleChunk(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedPNGSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenFirstFrameAnimatedPNGTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedPNGMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenFirstFrameAnimatedPNGTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedPNGWithBlendedFrames)
-{
-  CheckAnimationDecoderSingleChunk(GreenFirstFrameAnimatedPNGTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedWebPSingleChunk)
-{
-  CheckDecoderSingleChunk(GreenFirstFrameAnimatedWebPTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedWebPMultiChunk)
-{
-  CheckDecoderMultiChunk(GreenFirstFrameAnimatedWebPTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedWebPWithBlendedFrames)
-{
-  CheckAnimationDecoderSingleChunk(GreenFirstFrameAnimatedWebPTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptBMPWithTruncatedHeaderSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptBMPWithTruncatedHeader());
-}
-
-TEST_F(ImageDecoders, CorruptBMPWithTruncatedHeaderMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptBMPWithTruncatedHeader());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPWidthSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptICOWithBadBMPWidthTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPWidthMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptICOWithBadBMPWidthTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPHeightSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptICOWithBadBMPHeightTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBMPHeightMultiChunk)
-{
-  CheckDecoderMultiChunk(CorruptICOWithBadBMPHeightTestCase());
-}
-
-TEST_F(ImageDecoders, CorruptICOWithBadBppSingleChunk)
-{
-  CheckDecoderSingleChunk(CorruptICOWithBadBppTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFWithFRAME_FIRST)
-{
-  CheckDecoderFrameFirst(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFWithFRAME_CURRENT)
-{
-  CheckDecoderFrameCurrent(GreenFirstFrameAnimatedGIFTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedGIFWithExtraImageSubBlocks)
-{
-||||||| merged common ancestors
-TEST_F(ImageDecoders, AnimatedGIFWithExtraImageSubBlocks)
-{
-=======
 class ImageDecoders : public ::testing::Test {
  protected:
   AutoInitializeImageLib mInit;
@@ -1395,7 +814,6 @@ TEST_F(ImageDecoders, AnimatedGIFWithFRAME_CURRENT) {
 }
 
 TEST_F(ImageDecoders, AnimatedGIFWithExtraImageSubBlocks) {
->>>>>>> upstream-releases
   ImageTestCase testCase = ExtraImageSubBlocksAnimatedGIFTestCase();
 
   // Verify that we can decode this test case and get two frames, even though
@@ -1461,23 +879,6 @@ TEST_F(ImageDecoders, AnimatedGIFWithExtraImageSubBlocks) {
   EXPECT_TRUE(bool(partialFrame));
 }
 
-<<<<<<< HEAD
-TEST_F(ImageDecoders, AnimatedWebPWithFRAME_FIRST)
-{
-  CheckDecoderFrameFirst(GreenFirstFrameAnimatedWebPTestCase());
-}
-
-TEST_F(ImageDecoders, AnimatedWebPWithFRAME_CURRENT)
-{
-  CheckDecoderFrameCurrent(GreenFirstFrameAnimatedWebPTestCase());
-}
-
-TEST_F(ImageDecoders, TruncatedSmallGIFSingleChunk)
-{
-||||||| merged common ancestors
-TEST_F(ImageDecoders, TruncatedSmallGIFSingleChunk)
-{
-=======
 TEST_F(ImageDecoders, AnimatedWebPWithFRAME_FIRST) {
   CheckDecoderFrameFirst(GreenFirstFrameAnimatedWebPTestCase());
 }
@@ -1487,7 +888,6 @@ TEST_F(ImageDecoders, AnimatedWebPWithFRAME_CURRENT) {
 }
 
 TEST_F(ImageDecoders, TruncatedSmallGIFSingleChunk) {
->>>>>>> upstream-releases
   CheckDecoderSingleChunk(TruncatedSmallGIFTestCase());
 }
 
@@ -1495,18 +895,8 @@ TEST_F(ImageDecoders, LargeICOWithBMPSingleChunk) {
   CheckDecoderSingleChunk(LargeICOWithBMPTestCase());
 }
 
-<<<<<<< HEAD
-TEST_F(ImageDecoders, LargeICOWithBMPMultiChunk)
-{
-  CheckDecoderMultiChunk(LargeICOWithBMPTestCase(), /* aChunkSize */ 64);
-||||||| merged common ancestors
-TEST_F(ImageDecoders, LargeICOWithBMPMultiChunk)
-{
-  CheckDecoderMultiChunk(LargeICOWithBMPTestCase());
-=======
 TEST_F(ImageDecoders, LargeICOWithBMPMultiChunk) {
   CheckDecoderMultiChunk(LargeICOWithBMPTestCase(), /* aChunkSize */ 64);
->>>>>>> upstream-releases
 }
 
 TEST_F(ImageDecoders, LargeICOWithPNGSingleChunk) {

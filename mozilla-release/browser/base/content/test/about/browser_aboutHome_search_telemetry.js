@@ -9,21 +9,6 @@ add_task(async function() {
     "Check that performing a search fires a search event and records to Telemetry."
   );
 
-<<<<<<< HEAD
-  await BrowserTestUtils.withNewTab({ gBrowser, url: "about:home" }, async function(browser) {
-    let currEngine = Services.search.defaultEngine;
-    let engine = await promiseNewEngine("searchSuggestionEngine.xml");
-    // Make this actually work in healthreport by giving it an ID:
-    Object.defineProperty(engine.wrappedJSObject, "identifier",
-                          { value: "org.mozilla.testsearchsuggestions" });
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({ gBrowser, url: "about:home" }, async function(browser) {
-    let currEngine = Services.search.currentEngine;
-    let engine = await promiseNewEngine("searchSuggestionEngine.xml");
-    // Make this actually work in healthreport by giving it an ID:
-    Object.defineProperty(engine.wrappedJSObject, "identifier",
-                          { value: "org.mozilla.testsearchsuggestions" });
-=======
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: "about:home" },
     async function(browser) {
@@ -33,22 +18,11 @@ add_task(async function() {
       Object.defineProperty(engine.wrappedJSObject, "identifier", {
         value: "org.mozilla.testsearchsuggestions",
       });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    let p = promiseContentSearchChange(browser, engine.name);
-    Services.search.defaultEngine = engine;
-    await p;
-||||||| merged common ancestors
-    let p = promiseContentSearchChange(browser, engine.name);
-    Services.search.currentEngine = engine;
-    await p;
-=======
       await Promise.all([
         promiseContentSearchChange(browser, engine.name),
         Services.search.setDefault(engine),
       ]);
->>>>>>> upstream-releases
 
       await ContentTask.spawn(
         browser,
@@ -80,15 +54,6 @@ add_task(async function() {
 
       let searchStr = "a search";
 
-<<<<<<< HEAD
-    let expectedURL = Services.search.defaultEngine
-      .getSubmission(searchStr, null, "homepage").uri.spec;
-    let promise = waitForDocLoadAndStopIt(expectedURL, browser);
-||||||| merged common ancestors
-    let expectedURL = Services.search.currentEngine
-      .getSubmission(searchStr, null, "homepage").uri.spec;
-    let promise = waitForDocLoadAndStopIt(expectedURL, browser);
-=======
       let expectedURL = (await Services.search.getDefault()).getSubmission(
         searchStr,
         null,
@@ -98,7 +63,6 @@ add_task(async function() {
         expectedURL,
         browser
       );
->>>>>>> upstream-releases
 
       // Perform a search to increase the SEARCH_COUNT histogram.
       await ContentTask.spawn(browser, { searchStr }, async function(args) {
@@ -122,24 +86,10 @@ add_task(async function() {
         "histogram sum should be incremented"
       );
 
-<<<<<<< HEAD
-    Services.search.defaultEngine = currEngine;
-    try {
-      Services.search.removeEngine(engine);
-    } catch (ex) {}
-  });
-||||||| merged common ancestors
-    Services.search.currentEngine = currEngine;
-    try {
-      Services.search.removeEngine(engine);
-    } catch (ex) {}
-  });
-=======
       await Services.search.setDefault(currEngine);
       try {
         await Services.search.removeEngine(engine);
       } catch (ex) {}
     }
   );
->>>>>>> upstream-releases
 });

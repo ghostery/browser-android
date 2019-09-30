@@ -63,19 +63,9 @@
 #include "chrome/common/ipc_channel.h"  // for IPC::Channel::kMaximumMessageSize
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#if defined(SendMessage)
-#undef SendMessage
-#endif
-||||||| merged common ancestors
-# if defined(SendMessage)
-#  undef SendMessage
-# endif
-=======
 #  if defined(SendMessage)
 #    undef SendMessage
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #ifdef FUZZING
@@ -177,39 +167,15 @@ void MessageManagerCallback::DoGetRemoteType(nsAString& aRemoteType,
   parent->GetRemoteType(aRemoteType, aError);
 }
 
-<<<<<<< HEAD
-bool MessageManagerCallback::BuildClonedMessageDataForParent(
-    nsIContentParent* aParent, StructuredCloneData& aData,
-    ClonedMessageData& aClonedData) {
-||||||| merged common ancestors
-bool
-MessageManagerCallback::BuildClonedMessageDataForParent(nsIContentParent* aParent,
-                                                        StructuredCloneData& aData,
-                                                        ClonedMessageData& aClonedData)
-{
-=======
 bool MessageManagerCallback::BuildClonedMessageDataForParent(
     ContentParent* aParent, StructuredCloneData& aData,
     ClonedMessageData& aClonedData) {
->>>>>>> upstream-releases
   return aData.BuildClonedMessageDataForParent(aParent, aClonedData);
 }
 
-<<<<<<< HEAD
-bool MessageManagerCallback::BuildClonedMessageDataForChild(
-    nsIContentChild* aChild, StructuredCloneData& aData,
-    ClonedMessageData& aClonedData) {
-||||||| merged common ancestors
-bool
-MessageManagerCallback::BuildClonedMessageDataForChild(nsIContentChild* aChild,
-                                                       StructuredCloneData& aData,
-                                                       ClonedMessageData& aClonedData)
-{
-=======
 bool MessageManagerCallback::BuildClonedMessageDataForChild(
     ContentChild* aChild, StructuredCloneData& aData,
     ClonedMessageData& aClonedData) {
->>>>>>> upstream-releases
   return aData.BuildClonedMessageDataForChild(aChild, aClonedData);
 }
 
@@ -414,24 +380,11 @@ void nsFrameMessageManager::GetDelayedScripts(
   }
 }
 
-<<<<<<< HEAD
-static bool GetParamsForMessage(JSContext* aCx, const JS::Value& aValue,
-                                const JS::Value& aTransfer,
-                                StructuredCloneData& aData) {
-||||||| merged common ancestors
-static bool
-GetParamsForMessage(JSContext* aCx,
-                    const JS::Value& aValue,
-                    const JS::Value& aTransfer,
-                    StructuredCloneData& aData)
-{
-=======
 /* static */
 bool nsFrameMessageManager::GetParamsForMessage(JSContext* aCx,
                                                 const JS::Value& aValue,
                                                 const JS::Value& aTransfer,
                                                 StructuredCloneData& aData) {
->>>>>>> upstream-releases
   // First try to use structured clone on the whole thing.
   JS::RootedValue v(aCx, aValue);
   JS::RootedValue t(aCx, aTransfer);
@@ -868,25 +821,12 @@ void nsFrameMessageManager::ReceiveMessage(
           nsCOMPtr<nsIConsoleService> console(
               do_GetService(NS_CONSOLESERVICE_CONTRACTID));
           if (console) {
-<<<<<<< HEAD
-            nsCOMPtr<nsIScriptError> error(
-                do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
-            error->Init(msg, EmptyString(), EmptyString(), 0, 0,
-                        nsIScriptError::warningFlag, "chrome javascript",
-                        false /* from private window */);
-||||||| merged common ancestors
-            nsCOMPtr<nsIScriptError> error(do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
-            error->Init(msg, EmptyString(), EmptyString(),
-                        0, 0, nsIScriptError::warningFlag, "chrome javascript",
-                        false /* from private window */);
-=======
             nsCOMPtr<nsIScriptError> error(
                 do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
             error->Init(msg, EmptyString(), EmptyString(), 0, 0,
                         nsIScriptError::warningFlag, "chrome javascript",
                         false /* from private window */,
                         true /* from chrome context */);
->>>>>>> upstream-releases
             console->LogMessage(error);
           }
 

@@ -479,19 +479,6 @@ add_task(async function test_update() {
     )
   );
 
-<<<<<<< HEAD
-  // Decryption failure of existing record should not prevent it from being updated.
-  creditCard = profileStorage.creditCards._data[0];
-  creditCard["cc-number-encrypted"] = "INVALID";
-  await profileStorage.creditCards.update(profileStorage.creditCards._data[0].guid, TEST_CREDIT_CARD_WITH_EMPTY_COMPUTED_FIELD, false);
-  creditCard = profileStorage.creditCards._data[0];
-  Assert.equal(creditCard["cc-number"],
-    CreditCard.getLongMaskedNumber(TEST_CREDIT_CARD_WITH_EMPTY_COMPUTED_FIELD["cc-number"]));
-
-  await Assert.rejects(profileStorage.creditCards.update("INVALID_GUID", TEST_CREDIT_CARD_3),
-||||||| merged common ancestors
-  await Assert.rejects(profileStorage.creditCards.update("INVALID_GUID", TEST_CREDIT_CARD_3),
-=======
   // Decryption failure of existing record should not prevent it from being updated.
   creditCard = profileStorage.creditCards._data[0];
   creditCard["cc-number-encrypted"] = "INVALID";
@@ -510,7 +497,6 @@ add_task(async function test_update() {
 
   await Assert.rejects(
     profileStorage.creditCards.update("INVALID_GUID", TEST_CREDIT_CARD_3),
->>>>>>> upstream-releases
     /No matching record\./
   );
 
@@ -820,41 +806,6 @@ add_task(async function test_getDuplicateGuid() {
   record["cc-number"] = "************" + last4Digits;
   Assert.equal(await profileStorage.creditCards.getDuplicateGuid(record), null);
 });
-<<<<<<< HEAD
-
-add_task(async function test_creditCardFillDisabled() {
-  Services.prefs.setBoolPref("extensions.formautofill.creditCards.enabled", false);
-
-  let path = getTempFile(TEST_STORE_FILE_NAME).path;
-  let profileStorage = new FormAutofillStorage(path);
-  await profileStorage.initialize();
-
-  Assert.equal(!!profileStorage.creditCards, true,
-               "credit card records initialized and available.");
-
-  Services.prefs.setBoolPref("extensions.formautofill.creditCards.enabled", true);
-});
-
-add_task(async function test_creditCardFillUnavailable() {
-  Services.prefs.setBoolPref("extensions.formautofill.creditCards.available", false);
-
-  let path = getTempFile(TEST_STORE_FILE_NAME).path;
-  let profileStorage = new FormAutofillStorage(path);
-  await profileStorage.initialize();
-
-  try {
-    profileStorage.creditCards; // eslint-disable-line no-unused-expressions
-    throw new Error("Access credit card didn't throw.");
-  } catch (err) {
-    Assert.equal(err.message,
-                 "CreditCards is not initialized. " +
-                 "Please restart if you flip the pref manually.");
-  }
-
-  Services.prefs.setBoolPref("extensions.formautofill.creditCards.available", true);
-});
-||||||| merged common ancestors
-=======
 
 add_task(async function test_creditCardFillDisabled() {
   Services.prefs.setBoolPref(
@@ -904,4 +855,3 @@ add_task(async function test_creditCardFillUnavailable() {
     true
   );
 });
->>>>>>> upstream-releases

@@ -16,18 +16,6 @@
 namespace js {
 namespace jit {
 
-<<<<<<< HEAD
-enum CalleeTokenTag {
-  CalleeToken_Function = 0x0,  // untagged
-  CalleeToken_FunctionConstructing = 0x1,
-  CalleeToken_Script = 0x2
-||||||| merged common ancestors
-enum CalleeTokenTag
-{
-    CalleeToken_Function = 0x0, // untagged
-    CalleeToken_FunctionConstructing = 0x1,
-    CalleeToken_Script = 0x2
-=======
 struct SafepointSlotEntry;
 struct VMFunctionData;
 
@@ -35,7 +23,6 @@ enum CalleeTokenTag {
   CalleeToken_Function = 0x0,  // untagged
   CalleeToken_FunctionConstructing = 0x1,
   CalleeToken_Script = 0x2
->>>>>>> upstream-releases
 };
 
 // Any CalleeToken with this bit set must be CalleeToken_Script.
@@ -430,72 +417,6 @@ enum class ExitFrameType : uint8_t {
 };
 
 // GC related data used to keep alive data surrounding the Exit frame.
-<<<<<<< HEAD
-class ExitFooterFrame {
-  // Stores the ExitFrameType or, for ExitFrameType::VMFunction, the
-  // VMFunction*.
-  uintptr_t data_;
-
- public:
-  static inline size_t Size() { return sizeof(ExitFooterFrame); }
-  void setBareExitFrame() { data_ = uintptr_t(ExitFrameType::Bare); }
-  ExitFrameType type() const {
-    static_assert(sizeof(ExitFrameType) == sizeof(uint8_t),
-                  "Code assumes ExitFrameType fits in a byte");
-    if (data_ > UINT8_MAX) {
-      return ExitFrameType::VMFunction;
-    }
-    MOZ_ASSERT(ExitFrameType(data_) != ExitFrameType::VMFunction);
-    return ExitFrameType(data_);
-  }
-  inline const VMFunction* function() const {
-    MOZ_ASSERT(type() == ExitFrameType::VMFunction);
-    return reinterpret_cast<const VMFunction*>(data_);
-  }
-
-  // This should only be called for function()->outParam == Type_Handle
-  template <typename T>
-  T* outParam() {
-    uint8_t* address = reinterpret_cast<uint8_t*>(this);
-    address = alignDoubleSpillWithOffset(address, sizeof(intptr_t));
-    return reinterpret_cast<T*>(address - sizeof(T));
-  }
-||||||| merged common ancestors
-class ExitFooterFrame
-{
-    // Stores the ExitFrameType or, for ExitFrameType::VMFunction, the
-    // VMFunction*.
-    uintptr_t data_;
-
-  public:
-    static inline size_t Size() {
-        return sizeof(ExitFooterFrame);
-    }
-    void setBareExitFrame() {
-        data_ = uintptr_t(ExitFrameType::Bare);
-    }
-    ExitFrameType type() const {
-        static_assert(sizeof(ExitFrameType) == sizeof(uint8_t),
-                      "Code assumes ExitFrameType fits in a byte");
-        if (data_ > UINT8_MAX) {
-            return ExitFrameType::VMFunction;
-        }
-        MOZ_ASSERT(ExitFrameType(data_) != ExitFrameType::VMFunction);
-        return ExitFrameType(data_);
-    }
-    inline const VMFunction* function() const {
-        MOZ_ASSERT(type() == ExitFrameType::VMFunction);
-        return reinterpret_cast<const VMFunction*>(data_);
-    }
-
-    // This should only be called for function()->outParam == Type_Handle
-    template <typename T>
-    T* outParam() {
-        uint8_t* address = reinterpret_cast<uint8_t*>(this);
-        address = alignDoubleSpillWithOffset(address, sizeof(intptr_t));
-        return reinterpret_cast<T*>(address - sizeof(T));
-    }
-=======
 class ExitFooterFrame {
   // Stores the ExitFrameType or, for ExitFrameType::VMFunction, the
   // VMFunctionData*.
@@ -525,7 +446,6 @@ class ExitFooterFrame {
     address = alignDoubleSpillWithOffset(address, sizeof(intptr_t));
     return reinterpret_cast<T*>(address - sizeof(T));
   }
->>>>>>> upstream-releases
 };
 
 class NativeExitFrameLayout;
@@ -533,7 +453,6 @@ class IonOOLNativeExitFrameLayout;
 class IonOOLProxyExitFrameLayout;
 class IonDOMExitFrameLayout;
 
-<<<<<<< HEAD
 // this is the frame layout when we are exiting ion code, and about to enter
 // platform ABI code
 class ExitFrameLayout : public CommonFrameLayout {
@@ -573,91 +492,6 @@ class ExitFrameLayout : public CommonFrameLayout {
     MOZ_ASSERT(this->is<T>());
     return reinterpret_cast<T*>(footer());
   }
-||||||| merged common ancestors
-// this is the frame layout when we are exiting ion code, and about to enter platform ABI code
-class ExitFrameLayout : public CommonFrameLayout
-{
-    inline uint8_t* top() {
-        return reinterpret_cast<uint8_t*>(this + 1);
-    }
-
-  public:
-    static inline size_t Size() {
-        return sizeof(ExitFrameLayout);
-    }
-    static inline size_t SizeWithFooter() {
-        return Size() + ExitFooterFrame::Size();
-    }
-
-    inline ExitFooterFrame* footer() {
-        uint8_t* sp = reinterpret_cast<uint8_t*>(this);
-        return reinterpret_cast<ExitFooterFrame*>(sp - ExitFooterFrame::Size());
-    }
-
-    // argBase targets the point which precedes the exit frame. Arguments of VM
-    // each wrapper are pushed before the exit frame.  This correspond exactly
-    // to the value of the argBase register of the generateVMWrapper function.
-    inline uint8_t* argBase() {
-        MOZ_ASSERT(isWrapperExit());
-        return top();
-    }
-
-    inline bool isWrapperExit() {
-        return footer()->type() == ExitFrameType::VMFunction;
-    }
-    inline bool isBareExit() {
-        return footer()->type() == ExitFrameType::Bare;
-    }
-
-    // See the various exit frame layouts below.
-    template <typename T> inline bool is() {
-        return footer()->type() == T::Type();
-    }
-    template <typename T> inline T* as() {
-        MOZ_ASSERT(this->is<T>());
-        return reinterpret_cast<T*>(footer());
-    }
-=======
-// this is the frame layout when we are exiting ion code, and about to enter
-// platform ABI code
-class ExitFrameLayout : public CommonFrameLayout {
-  inline uint8_t* top() { return reinterpret_cast<uint8_t*>(this + 1); }
-
- public:
-  static inline size_t Size() { return sizeof(ExitFrameLayout); }
-  static inline size_t SizeWithFooter() {
-    return Size() + ExitFooterFrame::Size();
-  }
-
-  inline ExitFooterFrame* footer() {
-    uint8_t* sp = reinterpret_cast<uint8_t*>(this);
-    return reinterpret_cast<ExitFooterFrame*>(sp - ExitFooterFrame::Size());
-  }
-
-  // argBase targets the point which precedes the exit frame. Arguments of VM
-  // each wrapper are pushed before the exit frame.  This correspond exactly
-  // to the value of the argBase register of the generateVMWrapper function.
-  inline uint8_t* argBase() {
-    MOZ_ASSERT(isWrapperExit());
-    return top();
-  }
-
-  inline bool isWrapperExit() {
-    return footer()->type() == ExitFrameType::VMFunction;
-  }
-  inline bool isBareExit() { return footer()->type() == ExitFrameType::Bare; }
-
-  // See the various exit frame layouts below.
-  template <typename T>
-  inline bool is() {
-    return footer()->type() == T::Type();
-  }
-  template <typename T>
-  inline T* as() {
-    MOZ_ASSERT(this->is<T>());
-    return reinterpret_cast<T*>(footer());
-  }
->>>>>>> upstream-releases
 };
 
 // Cannot inherit implementation since we need to extend the top of

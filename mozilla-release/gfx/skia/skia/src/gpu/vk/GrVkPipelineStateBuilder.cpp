@@ -15,31 +15,9 @@
 #include "vk/GrVkGpu.h"
 #include "vk/GrVkRenderPass.h"
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 typedef size_t shader_size;
 
->>>>>>> upstream-releases
 GrVkPipelineState* GrVkPipelineStateBuilder::CreatePipelineState(
-<<<<<<< HEAD
-        GrVkGpu* gpu,
-        const GrPrimitiveProcessor& primProc,
-        const GrPipeline& pipeline,
-        const GrStencilSettings& stencil,
-        GrPrimitiveType primitiveType,
-        Desc* desc,
-        VkRenderPass compatibleRenderPass) {
-||||||| merged common ancestors
-                                                               GrVkGpu* gpu,
-                                                               const GrPipeline& pipeline,
-                                                               const GrStencilSettings& stencil,
-                                                               const GrPrimitiveProcessor& primProc,
-                                                               GrPrimitiveType primitiveType,
-                                                               GrVkPipelineState::Desc* desc,
-                                                               const GrVkRenderPass& renderPass) {
-=======
         GrVkGpu* gpu,
         GrRenderTarget* renderTarget, GrSurfaceOrigin origin,
         const GrPrimitiveProcessor& primProc,
@@ -49,7 +27,6 @@ GrVkPipelineState* GrVkPipelineStateBuilder::CreatePipelineState(
         GrPrimitiveType primitiveType,
         Desc* desc,
         VkRenderPass compatibleRenderPass) {
->>>>>>> upstream-releases
     // create a builder.  This will be handed off to effects so they can use it to add
     // uniforms, varyings, textures, etc
     GrVkPipelineStateBuilder builder(gpu, renderTarget, origin, pipeline, primProc,
@@ -69,23 +46,10 @@ GrVkPipelineStateBuilder::GrVkPipelineStateBuilder(GrVkGpu* gpu,
                                                    const GrPrimitiveProcessor& primProc,
                                                    const GrTextureProxy* const primProcProxies[],
                                                    GrProgramDesc* desc)
-<<<<<<< HEAD
-        : INHERITED(primProc, pipeline, desc)
-        , fGpu(gpu)
-        , fVaryingHandler(this)
-        , fUniformHandler(this) {}
-||||||| merged common ancestors
-    : INHERITED(pipeline, primProc, desc)
-    , fGpu(gpu)
-    , fVaryingHandler(this)
-    , fUniformHandler(this) {
-}
-=======
         : INHERITED(renderTarget, origin, primProc, primProcProxies, pipeline, desc)
         , fGpu(gpu)
         , fVaryingHandler(this)
         , fUniformHandler(this) {}
->>>>>>> upstream-releases
 
 const GrCaps* GrVkPipelineStateBuilder::caps() const {
     return fGpu->caps();
@@ -104,15 +68,9 @@ bool GrVkPipelineStateBuilder::createVkShaderModule(VkShaderStageFlagBits stage,
                                                     VkShaderModule* shaderModule,
                                                     VkPipelineShaderStageCreateInfo* stageInfo,
                                                     const SkSL::Program::Settings& settings,
-<<<<<<< HEAD
-                                                    Desc* desc) {
-||||||| merged common ancestors
-                                                    GrVkPipelineState::Desc* desc) {
-=======
                                                     Desc* desc,
                                                     SkSL::String* outSPIRV,
                                                     SkSL::Program::Inputs* outInputs) {
->>>>>>> upstream-releases
     SkString shaderString;
     for (int i = 0; i < builder.fCompilerStrings.count(); ++i) {
         if (builder.fCompilerStrings[i]) {
@@ -317,60 +275,6 @@ GrVkPipelineState* GrVkPipelineStateBuilder::finalize(const GrStencilSettings& s
     VkPipelineShaderStageCreateInfo shaderStageInfo[3];
     SkSL::Program::Settings settings;
     settings.fCaps = this->caps()->shaderCaps();
-<<<<<<< HEAD
-    settings.fFlipY = this->pipeline().proxy()->origin() != kTopLeft_GrSurfaceOrigin;
-    settings.fSharpenTextures = this->gpu()->getContext()->contextPriv().sharpenMipmappedTextures();
-    SkASSERT(!this->fragColorIsInOut());
-    SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_VERTEX_BIT,
-                                              fVS,
-                                              &vertShaderModule,
-                                              &shaderStageInfo[0],
-                                              settings,
-                                              desc));
-
-    SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_FRAGMENT_BIT,
-                                              fFS,
-                                              &fragShaderModule,
-                                              &shaderStageInfo[1],
-                                              settings,
-                                              desc));
-
-    int numShaderStages = 2; // We always have at least vertex and fragment stages.
-    if (this->primitiveProcessor().willUseGeoShader()) {
-        SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_GEOMETRY_BIT,
-                                                  fGS,
-                                                  &geomShaderModule,
-                                                  &shaderStageInfo[2],
-                                                  settings,
-                                                  desc));
-        ++numShaderStages;
-||||||| merged common ancestors
-    settings.fFlipY = this->pipeline().proxy()->origin() != kTopLeft_GrSurfaceOrigin;
-    settings.fSharpenTextures = this->gpu()->getContext()->contextPriv().sharpenMipmappedTextures();
-    SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_VERTEX_BIT,
-                                              fVS,
-                                              &vertShaderModule,
-                                              &shaderStageInfo[0],
-                                              settings,
-                                              desc));
-
-    SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_FRAGMENT_BIT,
-                                              fFS,
-                                              &fragShaderModule,
-                                              &shaderStageInfo[1],
-                                              settings,
-                                              desc));
-
-    int numShaderStages = 2; // We always have at least vertex and fragment stages.
-    if (this->primitiveProcessor().willUseGeoShader()) {
-        SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_GEOMETRY_BIT,
-                                                  fGS,
-                                                  &geomShaderModule,
-                                                  &shaderStageInfo[2],
-                                                  settings,
-                                                  desc));
-        ++numShaderStages;
-=======
     settings.fFlipY = this->origin() != kTopLeft_GrSurfaceOrigin;
     settings.fSharpenTextures =
                         this->gpu()->getContext()->priv().options().fSharpenMipmappedTextures;
@@ -381,7 +285,6 @@ GrVkPipelineState* GrVkPipelineStateBuilder::finalize(const GrStencilSettings& s
     if (persistentCache) {
         sk_sp<SkData> key = SkData::MakeWithoutCopy(desc->asKey(), desc->shaderKeyLength());
         cached = persistentCache->load(*key);
->>>>>>> upstream-releases
     }
     int numShaderStages;
     if (cached) {
@@ -404,15 +307,6 @@ GrVkPipelineState* GrVkPipelineStateBuilder::finalize(const GrStencilSettings& s
                                                   &vert,
                                                   &vertInputs));
 
-<<<<<<< HEAD
-    GrVkPipeline* pipeline = resourceProvider.createPipeline(fPrimProc,
-                                                             fPipeline,
-                                                             stencil,
-||||||| merged common ancestors
-    GrVkPipeline* pipeline = resourceProvider.createPipeline(fPipeline,
-                                                             stencil,
-                                                             fPrimProc,
-=======
         SkAssertResult(this->createVkShaderModule(VK_SHADER_STAGE_FRAGMENT_BIT,
                                                   fFS,
                                                   &fragShaderModule,
@@ -441,7 +335,6 @@ GrVkPipelineState* GrVkPipelineStateBuilder::finalize(const GrStencilSettings& s
                                                              fPrimProc,
                                                              fPipeline,
                                                              stencil,
->>>>>>> upstream-releases
                                                              shaderStageInfo,
                                                              numShaderStages,
                                                              primitiveType,
@@ -472,72 +365,13 @@ GrVkPipelineState* GrVkPipelineStateBuilder::finalize(const GrStencilSettings& s
                                  fUniformHandler.fUniforms,
                                  fUniformHandler.fCurrentGeometryUBOOffset,
                                  fUniformHandler.fCurrentFragmentUBOOffset,
-<<<<<<< HEAD
-                                 (uint32_t)fUniformHandler.numSamplers(),
-||||||| merged common ancestors
-                                 (uint32_t)fUniformHandler.numSamplers(),
-                                 (uint32_t)fUniformHandler.numTexelBuffers(),
-=======
                                  fUniformHandler.fSamplers,
->>>>>>> upstream-releases
                                  std::move(fGeometryProcessor),
                                  std::move(fXferProcessor),
-<<<<<<< HEAD
                                  std::move(fFragmentProcessors),
                                  fFragmentProcessorCnt);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
-uint32_t get_blend_info_key(const GrPipeline& pipeline) {
-    GrXferProcessor::BlendInfo blendInfo;
-    pipeline.getXferProcessor().getBlendInfo(&blendInfo);
-
-    static const uint32_t kBlendWriteShift = 1;
-    static const uint32_t kBlendCoeffShift = 5;
-    GR_STATIC_ASSERT(kLast_GrBlendCoeff < (1 << kBlendCoeffShift));
-    GR_STATIC_ASSERT(kFirstAdvancedGrBlendEquation - 1 < 4);
-
-    uint32_t key = blendInfo.fWriteColor;
-    key |= (blendInfo.fSrcBlend << kBlendWriteShift);
-    key |= (blendInfo.fDstBlend << (kBlendWriteShift + kBlendCoeffShift));
-    key |= (blendInfo.fEquation << (kBlendWriteShift + 2 * kBlendCoeffShift));
-
-    return key;
-||||||| merged common ancestors
-                                 fFragmentProcessors);
-=======
-                                 std::move(fFragmentProcessors),
-                                 fFragmentProcessorCnt);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool GrVkPipelineStateBuilder::Desc::Build(Desc* desc,
-                                           const GrPrimitiveProcessor& primProc,
-                                           const GrPipeline& pipeline,
-                                           const GrStencilSettings& stencil,
-                                           GrPrimitiveType primitiveType,
-                                           const GrShaderCaps& caps) {
-    if (!INHERITED::Build(desc, primProc, primitiveType == GrPrimitiveType::kPoints, pipeline,
-                          caps)) {
-        return false;
-    }
-
-    GrProcessorKeyBuilder b(&desc->key());
-    GrVkRenderTarget* vkRT = (GrVkRenderTarget*)pipeline.renderTarget();
-    vkRT->simpleRenderPass()->genKey(&b);
-
-    stencil.genKey(&b);
-
-    b.add32(get_blend_info_key(pipeline));
-
-    b.add32((uint32_t)primitiveType);
-
-    return true;
-}
-||||||| merged common ancestors
-=======
 //////////////////////////////////////////////////////////////////////////////
 
 bool GrVkPipelineStateBuilder::Desc::Build(Desc* desc,
@@ -570,4 +404,3 @@ bool GrVkPipelineStateBuilder::Desc::Build(Desc* desc,
 
     return true;
 }
->>>>>>> upstream-releases

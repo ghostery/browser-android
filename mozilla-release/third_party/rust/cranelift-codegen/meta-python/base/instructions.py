@@ -150,46 +150,6 @@ br_table = Instruction(
         function in a dynamic library, that will typically use
         ``call_indirect``.
         """,
-<<<<<<< HEAD
-        ins=(x, EBB, JT), is_branch=True, is_terminator=True)
-
-Size = Operand('Size', uimm8, 'Size in bytes')
-jump_table_entry = Instruction(
-    'jump_table_entry', r"""
-    Get an entry from a jump table.
-
-    Load a serialized ``entry`` from a jump table ``JT`` at a given index
-    ``addr`` with a specific ``Size``. The retrieved entry may need to be
-    decoded after loading, depending upon the jump table type used.
-
-    Currently, the only type supported is entries which are relative to the
-    base of the jump table.
-    """,
-    ins=(x, addr, Size, JT), outs=entry)
-
-jump_table_base = Instruction(
-    'jump_table_base', r"""
-    Get the absolute base address of a jump table.
-
-    This is used for jump tables wherein the entries are stored relative to
-    the base of jump table. In order to use these, generated code should first
-    load an entry using ``jump_table_entry``, then use this instruction to add
-    the relative base back to it.
-    """,
-    ins=JT, outs=addr)
-
-indirect_jump_table_br = Instruction(
-    'indirect_jump_table_br', r"""
-    Branch indirectly via a jump table entry.
-
-    Unconditionally jump via a jump table entry that was previously loaded
-    with the ``jump_table_entry`` instruction.
-    """,
-    ins=(addr, JT),
-    is_branch=True, is_indirect_branch=True, is_terminator=True)
-||||||| merged common ancestors
-        ins=(x, JT), is_branch=True)
-=======
         ins=(x, EBB, JT), is_branch=True, is_terminator=True)
 
 Size = Operand('Size', uimm8, 'Size in bytes')
@@ -230,7 +190,6 @@ indirect_jump_table_br = Instruction(
 debugtrap = Instruction('debugtrap', r"""
     Encodes an assembly debug trap.
     """, can_load=True, can_store=True, other_side_effects=True)
->>>>>>> upstream-releases
 
 code = Operand('code', trapcode)
 trap = Instruction(

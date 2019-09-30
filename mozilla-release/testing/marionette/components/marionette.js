@@ -347,13 +347,6 @@ class MarionetteParentProcess {
 
       case "profile-after-change":
         Services.obs.addObserver(this, "command-line-startup");
-<<<<<<< HEAD
-        Services.obs.addObserver(this, "sessionstore-windows-restored");
-        Services.obs.addObserver(this, "mail-startup-done");
-||||||| merged common ancestors
-        Services.obs.addObserver(this, "sessionstore-windows-restored");
-=======
->>>>>>> upstream-releases
         Services.obs.addObserver(this, "toplevel-window-ready");
         Services.obs.addObserver(this, "marionette-startup-requested");
 
@@ -415,19 +408,7 @@ class MarionetteParentProcess {
         );
         break;
 
-<<<<<<< HEAD
-      // Thunderbird only, instead of sessionstore-windows-restored.
-      case "mail-startup-done":
-        this.finalUIStartup = true;
-        this.init();
-        break;
-
-      case "sessionstore-windows-restored":
-||||||| merged common ancestors
-      case "sessionstore-windows-restored":
-=======
       case "marionette-startup-requested":
->>>>>>> upstream-releases
         Services.obs.removeObserver(this, topic);
 
         // When Firefox starts on Windows, an additional GFX sanity test
@@ -444,15 +425,9 @@ class MarionetteParentProcess {
         }
 
         if (this.gfxWindow) {
-<<<<<<< HEAD
-          log.trace("GFX sanity window detected, waiting until it has been closed...");
-||||||| merged common ancestors
-          log.debug("GFX sanity window detected, waiting until it has been closed...");
-=======
           log.trace(
             "GFX sanity window detected, waiting until it has been closed..."
           );
->>>>>>> upstream-releases
           Services.obs.addObserver(this, "domwindowclosed");
         } else {
           Services.obs.removeObserver(this, "toplevel-window-ready");
@@ -473,27 +448,6 @@ class MarionetteParentProcess {
   }
 
   suppressSafeModeDialog(win) {
-<<<<<<< HEAD
-    win.addEventListener("load", () => {
-      if (win.document.getElementById("safeModeDialog")) {
-        // accept the dialog to start in safe-mode
-        log.trace("Safe mode detected, supressing dialog");
-        win.setTimeout(() => {
-          win.document.documentElement.getButton("accept").click();
-        });
-      }
-    }, {once: true});
-||||||| merged common ancestors
-    win.addEventListener("load", () => {
-      if (win.document.getElementById("safeModeDialog")) {
-        // accept the dialog to start in safe-mode
-        log.debug("Safe mode detected, supressing dialog");
-        win.setTimeout(() => {
-          win.document.documentElement.getButton("accept").click();
-        });
-      }
-    }, {once: true});
-=======
     win.addEventListener(
       "load",
       () => {
@@ -507,7 +461,6 @@ class MarionetteParentProcess {
       },
       { once: true }
     );
->>>>>>> upstream-releases
   }
 
   init(quit = true) {
@@ -519,29 +472,14 @@ class MarionetteParentProcess {
       return;
     }
 
-<<<<<<< HEAD
-    log.trace(`Waiting until startup recorder finished recording startup scripts...`);
-||||||| merged common ancestors
-    log.debug(`Waiting for delayed startup...`);
-=======
     log.trace(
       `Waiting until startup recorder finished recording startup scripts...`
     );
->>>>>>> upstream-releases
     Services.tm.idleDispatchToMainThread(async () => {
       let startupRecorder = Promise.resolve();
       if ("@mozilla.org/test/startuprecorder;1" in Cc) {
-<<<<<<< HEAD
-        startupRecorder = Cc["@mozilla.org/test/startuprecorder;1"]
-            .getService().wrappedJSObject.done;
-||||||| merged common ancestors
-        log.debug(`Waiting for startup tests...`);
-        startupRecorder = Cc["@mozilla.org/test/startuprecorder;1"]
-            .getService().wrappedJSObject.done;
-=======
         startupRecorder = Cc["@mozilla.org/test/startuprecorder;1"].getService()
           .wrappedJSObject.done;
->>>>>>> upstream-releases
       }
       await startupRecorder;
       log.trace(`All scripts recorded.`);

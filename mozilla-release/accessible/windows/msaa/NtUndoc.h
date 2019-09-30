@@ -44,17 +44,8 @@ struct SYSTEM_HANDLE_INFORMATION_EX {
   SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX mHandles[1];
 };
 
-<<<<<<< HEAD
-enum UndocObjectInformationClass { ObjectNameInformation = 1 };
-||||||| merged common ancestors
-enum UndocObjectInformationClass
-{
-  ObjectNameInformation = 1
-};
-=======
 #ifndef __MINGW32__
 enum UndocObjectInformationClass { ObjectNameInformation = 1 };
->>>>>>> upstream-releases
 
 struct OBJECT_NAME_INFORMATION {
   UNICODE_STRING mName;

@@ -25,35 +25,16 @@ class AudioConverter;
 class AudioSink : private AudioStream::DataSource {
   using PlaybackParams = MediaSink::PlaybackParams;
 
-<<<<<<< HEAD
- public:
-  AudioSink(AbstractThread* aThread, MediaQueue<AudioData>& aAudioQueue,
-            const TimeUnit& aStartTime, const AudioInfo& aInfo);
-||||||| merged common ancestors
-public:
-  AudioSink(AbstractThread* aThread,
-            MediaQueue<AudioData>& aAudioQueue,
-            const TimeUnit& aStartTime,
-            const AudioInfo& aInfo);
-=======
  public:
   AudioSink(AbstractThread* aThread, MediaQueue<AudioData>& aAudioQueue,
             const media::TimeUnit& aStartTime, const AudioInfo& aInfo);
->>>>>>> upstream-releases
 
   ~AudioSink();
 
   // Return a promise which will be resolved when AudioSink
   // finishes playing, or rejected if any error.
-<<<<<<< HEAD
-  nsresult Init(const PlaybackParams& aParams,
-                RefPtr<GenericPromise>& aEndPromise);
-||||||| merged common ancestors
-  nsresult Init(const PlaybackParams& aParams, RefPtr<GenericPromise>& aEndPromise);
-=======
   nsresult Init(const PlaybackParams& aParams,
                 RefPtr<MediaSink::EndedPromise>& aEndedPromise);
->>>>>>> upstream-releases
 
   /*
    * All public functions are not thread-safe.
@@ -173,14 +154,6 @@ public:
   MediaQueue<AudioData>& mAudioQueue;
 };
 
-<<<<<<< HEAD
-}  // namespace media
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace media
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // AudioSink_h__

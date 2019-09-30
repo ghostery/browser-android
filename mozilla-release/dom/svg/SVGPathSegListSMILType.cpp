@@ -23,47 +23,21 @@ namespace mozilla {
 //----------------------------------------------------------------------
 // nsISMILType implementation
 
-<<<<<<< HEAD
-void SVGPathSegListSMILType::Init(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGPathSegListSMILType::Init(nsSMILValue &aValue) const
-{
-=======
 void SVGPathSegListSMILType::Init(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.IsNull(), "Unexpected value type");
   aValue.mU.mPtr = new SVGPathDataAndInfo();
   aValue.mType = this;
 }
 
-<<<<<<< HEAD
-void SVGPathSegListSMILType::Destroy(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGPathSegListSMILType::Destroy(nsSMILValue& aValue) const
-{
-=======
 void SVGPathSegListSMILType::Destroy(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == this, "Unexpected SMIL value type");
   delete static_cast<SVGPathDataAndInfo*>(aValue.mU.mPtr);
   aValue.mU.mPtr = nullptr;
   aValue.mType = SMILNullType::Singleton();
 }
 
-<<<<<<< HEAD
-nsresult SVGPathSegListSMILType::Assign(nsSMILValue& aDest,
-                                        const nsSMILValue& aSrc) const {
-||||||| merged common ancestors
-nsresult
-SVGPathSegListSMILType::Assign(nsSMILValue& aDest,
-                               const nsSMILValue& aSrc) const
-{
-=======
 nsresult SVGPathSegListSMILType::Assign(SMILValue& aDest,
                                         const SMILValue& aSrc) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == aSrc.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL value");
 
@@ -74,18 +48,8 @@ nsresult SVGPathSegListSMILType::Assign(SMILValue& aDest,
   return dest->CopyFrom(*src);
 }
 
-<<<<<<< HEAD
-bool SVGPathSegListSMILType::IsEqual(const nsSMILValue& aLeft,
-                                     const nsSMILValue& aRight) const {
-||||||| merged common ancestors
-bool
-SVGPathSegListSMILType::IsEqual(const nsSMILValue& aLeft,
-                                const nsSMILValue& aRight) const
-{
-=======
 bool SVGPathSegListSMILType::IsEqual(const SMILValue& aLeft,
                                      const SMILValue& aRight) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLeft.mType == aRight.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aLeft.mType == this, "Unexpected type for SMIL value");
 
@@ -406,21 +370,9 @@ static void ConvertAllPathSegmentData(
              "Failed to convert all path segment data! (Corrupt?)");
 }
 
-<<<<<<< HEAD
-nsresult SVGPathSegListSMILType::Add(nsSMILValue& aDest,
-                                     const nsSMILValue& aValueToAdd,
-                                     uint32_t aCount) const {
-||||||| merged common ancestors
-nsresult
-SVGPathSegListSMILType::Add(nsSMILValue& aDest,
-                            const nsSMILValue& aValueToAdd,
-                            uint32_t aCount) const
-{
-=======
 nsresult SVGPathSegListSMILType::Add(SMILValue& aDest,
                                      const SMILValue& aValueToAdd,
                                      uint32_t aCount) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aValueToAdd.mType == this, "Incompatible SMIL type");
 
@@ -454,21 +406,9 @@ nsresult SVGPathSegListSMILType::Add(SMILValue& aDest,
   return AddWeightedPathSegLists(1.0, dest, aCount, valueToAdd, dest);
 }
 
-<<<<<<< HEAD
-nsresult SVGPathSegListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                                 const nsSMILValue& aTo,
-                                                 double& aDistance) const {
-||||||| merged common ancestors
-nsresult
-SVGPathSegListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                        const nsSMILValue& aTo,
-                                        double& aDistance) const
-{
-=======
 nsresult SVGPathSegListSMILType::ComputeDistance(const SMILValue& aFrom,
                                                  const SMILValue& aTo,
                                                  double& aDistance) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrom.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aTo.mType == this, "Incompatible SMIL type");
 
@@ -478,24 +418,10 @@ nsresult SVGPathSegListSMILType::ComputeDistance(const SMILValue& aFrom,
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-<<<<<<< HEAD
-nsresult SVGPathSegListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                             const nsSMILValue& aEndVal,
-                                             double aUnitDistance,
-                                             nsSMILValue& aResult) const {
-||||||| merged common ancestors
-nsresult
-SVGPathSegListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                    const nsSMILValue& aEndVal,
-                                    double aUnitDistance,
-                                    nsSMILValue& aResult) const
-{
-=======
 nsresult SVGPathSegListSMILType::Interpolate(const SMILValue& aStartVal,
                                              const SMILValue& aEndVal,
                                              double aUnitDistance,
                                              SMILValue& aResult) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartVal.mType == aEndVal.mType,
              "Trying to interpolate different types");
   MOZ_ASSERT(aStartVal.mType == this, "Unexpected types for interpolation");

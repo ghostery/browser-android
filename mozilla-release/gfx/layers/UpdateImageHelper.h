@@ -52,14 +52,7 @@ class UpdateImageHelper {
     return target.forget();
   }
 
-<<<<<<< HEAD
-  bool UpdateImage() {
-||||||| merged common ancestors
-  bool UpdateImage()
-  {
-=======
   bool UpdateImage(wr::RenderRoot aRenderRoot) {
->>>>>>> upstream-releases
     if (!mTexture) {
       return false;
     }
@@ -72,14 +65,8 @@ class UpdateImageHelper {
     RefPtr<TextureWrapperImage> image = new TextureWrapperImage(
         mTexture, gfx::IntRect(gfx::IntPoint(0, 0), mImageSize));
     mImageContainer->SetCurrentImageInTransaction(image);
-<<<<<<< HEAD
-    return mImageClient->UpdateImage(mImageContainer, /* unused */ 0);
-||||||| merged common ancestors
-    return mImageClient->UpdateImage(mImageContainer, /* unused */0);
-=======
     return mImageClient->UpdateImage(mImageContainer, /* unused */ 0,
                                      Some(aRenderRoot));
->>>>>>> upstream-releases
   }
 
  private:

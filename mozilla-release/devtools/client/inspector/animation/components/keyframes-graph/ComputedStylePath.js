@@ -156,27 +156,6 @@ class ComputedStylePath extends PureComponent {
           className: "hint",
         },
         dom.title({}, startKeyframe.easing),
-<<<<<<< HEAD
-        dom.path(
-          {
-            d: `M${ hintSegments[0].x },${ hintSegments[0].y } ` +
-               toPathString(hintSegments),
-            style: {
-              "stroke-width": easingHintStrokeWidth,
-            },
-          }
-        )
-||||||| merged common ancestors
-        dom.path(
-          {
-            d: `M${ hintSegments[0].x },${ hintSegments[0].y } ` +
-               toPathString(hintSegments),
-            style: {
-              "stroke-width": easingHintStrokeWidth,
-            }
-          }
-        )
-=======
         dom.path({
           d:
             `M${hintSegments[0].x},${hintSegments[0].y} ` +
@@ -185,7 +164,6 @@ class ComputedStylePath extends PureComponent {
             "stroke-width": easingHintStrokeWidth,
           },
         })
->>>>>>> upstream-releases
       );
 
       hints.push(g);
@@ -219,19 +197,7 @@ class ComputedStylePath extends PureComponent {
       segments.push(...keyframesSegments);
     }
 
-<<<<<<< HEAD
-    return [
-      this.renderPathSegments(segments),
-      this.renderEasingHint(segments),
-    ];
-||||||| merged common ancestors
-    return [
-      this.renderPathSegments(segments),
-      this.renderEasingHint(segments)
-    ];
-=======
     return [this.renderPathSegments(segments), this.renderEasingHint(segments)];
->>>>>>> upstream-releases
   }
 
   /**

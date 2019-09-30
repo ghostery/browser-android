@@ -16,20 +16,9 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-class DIBTextureData : public TextureData {
- public:
-  virtual bool Lock(OpenMode) override { return true; }
-||||||| merged common ancestors
-class DIBTextureData : public TextureData
-{
-public:
-  virtual bool Lock(OpenMode) override { return true; }
-=======
 class DIBTextureData : public TextureData {
  public:
   bool Lock(OpenMode) override { return true; }
->>>>>>> upstream-releases
 
   void Unlock() override {}
 
@@ -65,14 +54,7 @@ class TextureHostDirectUpload : public TextureHost {
 
   void DeallocateDeviceData() override;
 
-<<<<<<< HEAD
-  virtual void SetTextureSourceProvider(
-      TextureSourceProvider* aProvider) override;
-||||||| merged common ancestors
-  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
-=======
   void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
->>>>>>> upstream-releases
 
   gfx::SurfaceFormat GetFormat() const override { return mFormat; }
 
@@ -84,18 +66,8 @@ class TextureHostDirectUpload : public TextureHost {
 
   bool HasIntermediateBuffer() const { return true; }
 
-<<<<<<< HEAD
-  virtual bool BindTextureSource(
-      CompositableTextureSourceRef& aTexture) override;
-  virtual bool AcquireTextureSource(
-      CompositableTextureSourceRef& aTexture) override;
-||||||| merged common ancestors
-  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
-  virtual bool AcquireTextureSource(CompositableTextureSourceRef& aTexture) override;
-=======
   bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
   bool AcquireTextureSource(CompositableTextureSourceRef& aTexture) override;
->>>>>>> upstream-releases
 
  protected:
   RefPtr<TextureSourceProvider> mProvider;
@@ -109,29 +81,12 @@ class DIBTextureHost : public TextureHostDirectUpload {
  public:
   DIBTextureHost(TextureFlags aFlags, const SurfaceDescriptorDIB& aDescriptor);
 
-<<<<<<< HEAD
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
-    return nullptr;  // TODO: cf bug 872568
-||||||| merged common ancestors
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override
-  {
-    return nullptr; // TODO: cf bug 872568
-=======
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
     return nullptr;  // TODO: cf bug 872568
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
- protected:
-  virtual void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
-||||||| merged common ancestors
-protected:
-  virtual void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
-=======
  protected:
   void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
->>>>>>> upstream-releases
 
   RefPtr<gfxWindowsSurface> mSurface;
 };
@@ -142,30 +97,15 @@ class TextureHostFileMapping : public TextureHostDirectUpload {
                          const SurfaceDescriptorFileMapping& aDescriptor);
   ~TextureHostFileMapping();
 
-<<<<<<< HEAD
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
-||||||| merged common ancestors
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override
-  {
-=======
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
->>>>>>> upstream-releases
     MOZ_CRASH("GFX: TextureHostFileMapping::GetAsSurface not implemented");
     // Not implemented! It would be tricky to keep track of the
     // scope of the file mapping. We could do this through UserData
     // on the DataSourceSurface but we don't need this right now.
   }
 
-<<<<<<< HEAD
- protected:
-  virtual void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
-||||||| merged common ancestors
-protected:
-  virtual void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
-=======
  protected:
   void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
->>>>>>> upstream-releases
 
   HANDLE mFileMapping;
 };

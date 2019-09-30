@@ -476,15 +476,6 @@ function testTextAddSelection(aID, aStartOffset, aEndOffset, aSelectionsCount) {
 
   acc.addSelection(aStartOffset, aEndOffset);
 
-<<<<<<< HEAD
-  is(acc.selectionCount, aSelectionsCount,
-     text + ": failed to add selection from offset '" + aStartOffset +
-     "' to offset '" + aEndOffset + "': selectionCount after");
-||||||| merged common ancestors
-  ok(acc.selectionCount, aSelectionsCount,
-     text + ": failed to add selection from offset '" + aStartOffset +
-     "' to offset '" + aEndOffset + "': selectionCount after");
-=======
   is(
     acc.selectionCount,
     aSelectionsCount,
@@ -495,7 +486,6 @@ function testTextAddSelection(aID, aStartOffset, aEndOffset, aSelectionsCount) {
       aEndOffset +
       "': selectionCount after"
   );
->>>>>>> upstream-releases
 }
 
 /**
@@ -512,15 +502,6 @@ function testTextRemoveSelection(aID, aSelectionIndex, aSelectionsCount) {
 
   acc.removeSelection(aSelectionIndex);
 
-<<<<<<< HEAD
-  is(acc.selectionCount, aSelectionsCount,
-     text + ": failed to remove selection at index '" +
-     aSelectionIndex + "': selectionCount after");
-||||||| merged common ancestors
-  ok(acc.selectionCount, aSelectionsCount,
-     text + ": failed to remove selection at index '" +
-     aSelectionIndex + "': selectionCount after");
-=======
   is(
     acc.selectionCount,
     aSelectionsCount,
@@ -529,7 +510,6 @@ function testTextRemoveSelection(aID, aSelectionIndex, aSelectionsCount) {
       aSelectionIndex +
       "': selectionCount after"
   );
->>>>>>> upstream-releases
 }
 
 /**

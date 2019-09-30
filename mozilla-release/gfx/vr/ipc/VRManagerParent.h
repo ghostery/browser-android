@@ -21,36 +21,12 @@ namespace gfx {
 
 class VRManager;
 
-<<<<<<< HEAD
-namespace impl {
-class VRDisplayPuppet;
-class VRControllerPuppet;
-}  // namespace impl
-
 class VRManagerParent final : public PVRManagerParent {
-||||||| merged common ancestors
-namespace impl {
-class VRDisplayPuppet;
-class VRControllerPuppet;
-} // namespace impl
-
-class VRManagerParent final : public PVRManagerParent
-{
-=======
-class VRManagerParent final : public PVRManagerParent {
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VRManagerParent);
-<<<<<<< HEAD
-
- public:
-||||||| merged common ancestors
-public:
-=======
 
   friend class PVRManagerParent;
 
  public:
->>>>>>> upstream-releases
   explicit VRManagerParent(ProcessId aChildProcessId, bool aIsContentChild);
 
   static VRManagerParent* CreateSameProcess();
@@ -60,14 +36,7 @@ public:
   bool IsSameProcess() const;
   bool HaveEventListener();
   bool HaveControllerListener();
-<<<<<<< HEAD
   bool GetVRActiveStatus();
-  bool SendGamepadUpdate(const GamepadChangeEvent& aGamepadEvent);
-||||||| merged common ancestors
-  bool SendGamepadUpdate(const GamepadChangeEvent& aGamepadEvent);
-=======
-  bool GetVRActiveStatus();
->>>>>>> upstream-releases
   bool SendReplyGamepadVibrateHaptic(const uint32_t& aPromiseID);
 
  protected:
@@ -80,73 +49,6 @@ public:
   virtual void ActorDestroy(ActorDestroyReason why) override;
   void OnChannelConnected(int32_t pid) override;
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvRefreshDisplays() override;
-  virtual mozilla::ipc::IPCResult RecvResetSensor(
-      const uint32_t& aDisplayID) override;
-  virtual mozilla::ipc::IPCResult RecvSetGroupMask(
-      const uint32_t& aDisplayID, const uint32_t& aGroupMask) override;
-  virtual mozilla::ipc::IPCResult RecvSetHaveEventListener(
-      const bool& aHaveEventListener) override;
-  virtual mozilla::ipc::IPCResult RecvControllerListenerAdded() override;
-  virtual mozilla::ipc::IPCResult RecvControllerListenerRemoved() override;
-  virtual mozilla::ipc::IPCResult RecvVibrateHaptic(
-      const uint32_t& aControllerIdx, const uint32_t& aHapticIndex,
-      const double& aIntensity, const double& aDuration,
-      const uint32_t& aPromiseID) override;
-  virtual mozilla::ipc::IPCResult RecvStopVibrateHaptic(
-      const uint32_t& aControllerIdx) override;
-  virtual mozilla::ipc::IPCResult RecvCreateVRTestSystem() override;
-  virtual mozilla::ipc::IPCResult RecvCreateVRServiceTestDisplay(
-      const nsCString& aID, const uint32_t& aPromiseID) override;
-  virtual mozilla::ipc::IPCResult RecvCreateVRServiceTestController(
-      const nsCString& aID, const uint32_t& aPromiseID) override;
-  virtual mozilla::ipc::IPCResult RecvSetDisplayInfoToMockDisplay(
-      const uint32_t& aDeviceID, const VRDisplayInfo& aDisplayInfo) override;
-  virtual mozilla::ipc::IPCResult RecvSetSensorStateToMockDisplay(
-      const uint32_t& aDeviceID, const VRHMDSensorState& aSensorState) override;
-  virtual mozilla::ipc::IPCResult RecvNewButtonEventToMockController(
-      const uint32_t& aDeviceID, const long& aButton,
-      const bool& aPressed) override;
-  virtual mozilla::ipc::IPCResult RecvNewAxisMoveEventToMockController(
-      const uint32_t& aDeviceID, const long& aAxis,
-      const double& aValue) override;
-  virtual mozilla::ipc::IPCResult RecvNewPoseMoveToMockController(
-      const uint32_t& aDeviceID, const GamepadPoseState& pose) override;
-  virtual mozilla::ipc::IPCResult RecvStartVRNavigation(
-      const uint32_t& aDeviceID) override;
-  virtual mozilla::ipc::IPCResult RecvStopVRNavigation(
-      const uint32_t& aDeviceID, const TimeDuration& aTimeout) override;
-  virtual mozilla::ipc::IPCResult RecvStartActivity() override;
-  virtual mozilla::ipc::IPCResult RecvStopActivity() override;
-
- private:
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvRefreshDisplays() override;
-  virtual mozilla::ipc::IPCResult RecvResetSensor(const uint32_t& aDisplayID) override;
-  virtual mozilla::ipc::IPCResult RecvSetGroupMask(const uint32_t& aDisplayID, const uint32_t& aGroupMask) override;
-  virtual mozilla::ipc::IPCResult RecvSetHaveEventListener(const bool& aHaveEventListener) override;
-  virtual mozilla::ipc::IPCResult RecvControllerListenerAdded() override;
-  virtual mozilla::ipc::IPCResult RecvControllerListenerRemoved() override;
-  virtual mozilla::ipc::IPCResult RecvVibrateHaptic(const uint32_t& aControllerIdx, const uint32_t& aHapticIndex,
-                                                    const double& aIntensity, const double& aDuration, const uint32_t& aPromiseID) override;
-  virtual mozilla::ipc::IPCResult RecvStopVibrateHaptic(const uint32_t& aControllerIdx) override;
-  virtual mozilla::ipc::IPCResult RecvCreateVRTestSystem() override;
-  virtual mozilla::ipc::IPCResult RecvCreateVRServiceTestDisplay(const nsCString& aID, const uint32_t& aPromiseID) override;
-  virtual mozilla::ipc::IPCResult RecvCreateVRServiceTestController(const nsCString& aID, const uint32_t& aPromiseID) override;
-  virtual mozilla::ipc::IPCResult RecvSetDisplayInfoToMockDisplay(const uint32_t& aDeviceID,
-                                                                  const VRDisplayInfo& aDisplayInfo) override;
-  virtual mozilla::ipc::IPCResult RecvSetSensorStateToMockDisplay(const uint32_t& aDeviceID,
-                                                                  const VRHMDSensorState& aSensorState) override;
-  virtual mozilla::ipc::IPCResult RecvNewButtonEventToMockController(const uint32_t& aDeviceID, const long& aButton,
-                                                                     const bool& aPressed) override;
-  virtual mozilla::ipc::IPCResult RecvNewAxisMoveEventToMockController(const uint32_t& aDeviceID, const long& aAxis,
-                                                                       const double& aValue) override;
-  virtual mozilla::ipc::IPCResult RecvNewPoseMoveToMockController(const uint32_t& aDeviceID, const GamepadPoseState& pose) override;
-  virtual mozilla::ipc::IPCResult RecvStartVRNavigation(const uint32_t& aDeviceID) override;
-  virtual mozilla::ipc::IPCResult RecvStopVRNavigation(const uint32_t& aDeviceID, const TimeDuration& aTimeout) override;
-private:
-=======
   mozilla::ipc::IPCResult RecvRefreshDisplays();
   mozilla::ipc::IPCResult RecvSetGroupMask(const uint32_t& aDisplayID,
                                            const uint32_t& aGroupMask);
@@ -171,7 +73,6 @@ private:
   mozilla::ipc::IPCResult RecvResetPuppet();
 
  private:
->>>>>>> upstream-releases
   void RegisterWithManager();
   void UnregisterFromManager();
 
@@ -180,13 +81,6 @@ private:
   static void RegisterVRManagerInCompositorThread(VRManagerParent* aVRManager);
 
   void DeferredDestroy();
-<<<<<<< HEAD
-  already_AddRefed<impl::VRControllerPuppet> GetControllerPuppet(
-      uint32_t aDeviceID);
-||||||| merged common ancestors
-  already_AddRefed<impl::VRControllerPuppet> GetControllerPuppet(uint32_t aDeviceID);
-=======
->>>>>>> upstream-releases
 
   // This keeps us alive until ActorDestroy(), at which point we do a
   // deferred destruction of ourselves.
@@ -196,15 +90,6 @@ private:
 
   // Keep the VRManager alive, until we have destroyed ourselves.
   RefPtr<VRManager> mVRManagerHolder;
-<<<<<<< HEAD
-  nsRefPtrHashtable<nsUint32HashKey, impl::VRControllerPuppet>
-      mVRControllerTests;
-  uint32_t mControllerTestID;
-||||||| merged common ancestors
-  nsRefPtrHashtable<nsUint32HashKey, impl::VRControllerPuppet> mVRControllerTests;
-  uint32_t mControllerTestID;
-=======
->>>>>>> upstream-releases
   bool mHaveEventListener;
   bool mHaveControllerListener;
   bool mIsContentChild;

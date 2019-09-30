@@ -15,27 +15,6 @@ namespace dom {
 class WindowNamedPropertiesHandler : public BaseDOMProxyHandler {
  public:
   constexpr WindowNamedPropertiesHandler()
-<<<<<<< HEAD
-      : BaseDOMProxyHandler(nullptr, /* hasPrototype = */ true) {}
-  virtual bool getOwnPropDescriptor(
-      JSContext* aCx, JS::Handle<JSObject*> aProxy, JS::Handle<jsid> aId,
-      bool /* unused */,
-      JS::MutableHandle<JS::PropertyDescriptor> aDesc) const override;
-  virtual bool defineProperty(JSContext* aCx, JS::Handle<JSObject*> aProxy,
-                              JS::Handle<jsid> aId,
-                              JS::Handle<JS::PropertyDescriptor> aDesc,
-                              JS::ObjectOpResult& result) const override;
-  virtual bool ownPropNames(JSContext* aCx, JS::Handle<JSObject*> aProxy,
-                            unsigned flags,
-                            JS::AutoIdVector& aProps) const override;
-  virtual bool delete_(JSContext* aCx, JS::Handle<JSObject*> aProxy,
-||||||| merged common ancestors
-    : BaseDOMProxyHandler(nullptr, /* hasPrototype = */ true)
-  {
-  }
-  virtual bool
-  getOwnPropDescriptor(JSContext* aCx, JS::Handle<JSObject*> aProxy,
-=======
       : BaseDOMProxyHandler(nullptr, /* hasPrototype = */ true) {}
   virtual bool getOwnPropDescriptor(
       JSContext* aCx, JS::Handle<JSObject*> aProxy, JS::Handle<jsid> aId,
@@ -49,7 +28,6 @@ class WindowNamedPropertiesHandler : public BaseDOMProxyHandler {
       JSContext* aCx, JS::Handle<JSObject*> aProxy, unsigned flags,
       JS::MutableHandleVector<jsid> aProps) const override;
   virtual bool delete_(JSContext* aCx, JS::Handle<JSObject*> aProxy,
->>>>>>> upstream-releases
                        JS::Handle<jsid> aId,
                        JS::ObjectOpResult& aResult) const override;
 

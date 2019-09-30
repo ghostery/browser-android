@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
@@ -23,9 +22,6 @@ import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPage;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPagerAdapter;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.home.HomePager;
-import org.mozilla.gecko.preferences.PreferenceManager;
-import org.mozilla.gecko.widget.themed.ThemedImageView;
-import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,12 +32,6 @@ public class TopPanelRow extends StreamViewHolder {
     public static final int LAYOUT_ID = R.layout.activity_stream_main_toppanel;
 
     private final ViewPager topSitesPager;
-
-    /* Cliqz Start */
-    private final PreferenceManager mPreferenceManager;
-
-    private final View emptyTopSitesOnboarding;
-    /* Cliqz End */
 
     private static class SwipeListener extends ViewPager.SimpleOnPageChangeListener {
         int currentPosition = 0;
@@ -73,11 +63,6 @@ public class TopPanelRow extends StreamViewHolder {
             final OnCardLongClickListener onCardLongClickListener) {
         super(itemView);
 
-        /* Cliqz Start */
-        mPreferenceManager = PreferenceManager.getInstance();
-        emptyTopSitesOnboarding = itemView.findViewById(R.id.empty_topsites_onboarding);
-        /* Cliqz End */
-
         topSitesPager = (ViewPager) itemView.findViewById(R.id.topsites_pager);
         topSitesPager.setAdapter(new TopSitesPagerAdapter(itemView.getContext(), onUrlOpenListener, onCardLongClickListener));
         topSitesPager.addOnPageChangeListener(swipeListener);
@@ -106,17 +91,6 @@ public class TopPanelRow extends StreamViewHolder {
             rows = 0;
         }
 
-        /* Cliqz Start */
-        if (cursor != null && cursor.getCount() == 0) {
-            emptyTopSitesOnboarding.setVisibility(View.VISIBLE);
-            topSitesPager.setVisibility(View.GONE);
-            return;
-        } else {
-            emptyTopSitesOnboarding.setVisibility(View.GONE);
-            topSitesPager.setVisibility(View.VISIBLE);
-        }
-        /* Cliqz End */
-
         ViewGroup.LayoutParams layoutParams = topSitesPager.getLayoutParams();
         layoutParams.height = rows > 0 ? (tilesSize * rows) + (tilesMargin * 2) : 0;
         topSitesPager.setLayoutParams(layoutParams);
@@ -127,28 +101,6 @@ public class TopPanelRow extends StreamViewHolder {
         swipeListener.currentPosition = 0;
     }
 
-<<<<<<< HEAD
-    /* Cliqz Start */
-    public void updateTheme() {
-        ((TopSitesPagerAdapter) topSitesPager.getAdapter())
-                .setLightTheme(mPreferenceManager.isLightThemeEnabled());
-        if (emptyTopSitesOnboarding != null) {
-            final ThemedTextView emptyTopSitesText =
-                    emptyTopSitesOnboarding.findViewById(R.id.empty_topsites_text);
-            emptyTopSitesText.setLightTheme(mPreferenceManager.isLightThemeEnabled());
-            final LinearLayout placeholderView =
-                    emptyTopSitesOnboarding.findViewById(R.id.empty_topsites_placeholders);
-            for (int i = 0; i < placeholderView.getChildCount(); i++) {
-                if (placeholderView.getChildAt(i) instanceof ThemedImageView) {
-                    ((ThemedImageView) placeholderView.getChildAt(i)).setLightTheme(mPreferenceManager.isLightThemeEnabled());
-                }
-            }
-        }
-    }
-    /* Cliqz End */
-
-||||||| merged common ancestors
-=======
     @Nullable
     private Cursor getCursorForUniqueBaseUrls(final Cursor cursor) {
         if (cursor == null || !cursor.moveToFirst()) {
@@ -209,7 +161,6 @@ public class TopPanelRow extends StreamViewHolder {
         }
     }
 
->>>>>>> upstream-releases
     public interface OnCardLongClickListener {
         boolean onLongClick(TopSite topSite, int absolutePosition, View tabletContextMenuAnchor, int faviconWidth, int faviconHeight);
     }

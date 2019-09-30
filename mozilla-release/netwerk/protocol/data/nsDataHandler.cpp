@@ -17,32 +17,10 @@
 
 NS_IMPL_ISUPPORTS(nsDataHandler, nsIProtocolHandler, nsISupportsWeakReference)
 
-<<<<<<< HEAD
-nsresult nsDataHandler::Create(nsISupports* aOuter, const nsIID& aIID,
-                               void** aResult) {
-  nsDataHandler* ph = new nsDataHandler();
-  if (ph == nullptr) return NS_ERROR_OUT_OF_MEMORY;
-  NS_ADDREF(ph);
-  nsresult rv = ph->QueryInterface(aIID, aResult);
-  NS_RELEASE(ph);
-  return rv;
-||||||| merged common ancestors
-nsresult
-nsDataHandler::Create(nsISupports* aOuter, const nsIID& aIID, void* *aResult) {
-
-    nsDataHandler* ph = new nsDataHandler();
-    if (ph == nullptr)
-        return NS_ERROR_OUT_OF_MEMORY;
-    NS_ADDREF(ph);
-    nsresult rv = ph->QueryInterface(aIID, aResult);
-    NS_RELEASE(ph);
-    return rv;
-=======
 nsresult nsDataHandler::Create(nsISupports* aOuter, const nsIID& aIID,
                                void** aResult) {
   RefPtr<nsDataHandler> ph = new nsDataHandler();
   return ph->QueryInterface(aIID, aResult);
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,76 +47,6 @@ nsDataHandler::GetProtocolFlags(uint32_t* result) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsDataHandler::NewURI(const nsACString& aSpec,
-                      const char* aCharset,  // ignore charset info
-                      nsIURI* aBaseURI, nsIURI** result) {
-  nsresult rv;
-  nsCOMPtr<nsIURI> uri;
-
-  nsCString spec(aSpec);
-
-  if (aBaseURI && !spec.IsEmpty() && spec[0] == '#') {
-    // Looks like a reference instead of a fully-specified URI.
-    // --> initialize |uri| as a clone of |aBaseURI|, with ref appended.
-    rv = NS_MutateURI(aBaseURI).SetRef(spec).Finalize(uri);
-  } else {
-    // Otherwise, we'll assume |spec| is a fully-specified data URI
-    nsAutoCString contentType;
-    bool base64;
-    rv = ParseURI(spec, contentType, /* contentCharset = */ nullptr, base64,
-                  /* dataBuffer = */ nullptr);
-    if (NS_FAILED(rv)) return rv;
-
-    // Strip whitespace unless this is text, where whitespace is important
-    // Don't strip escaped whitespace though (bug 391951)
-    if (base64 || (strncmp(contentType.get(), "text/", 5) != 0 &&
-                   contentType.Find("xml") == kNotFound)) {
-      // it's ascii encoded binary, don't let any spaces in
-      if (!spec.StripWhitespace(mozilla::fallible)) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsDataHandler::NewURI(const nsACString &aSpec,
-                      const char *aCharset, // ignore charset info
-                      nsIURI *aBaseURI,
-                      nsIURI **result) {
-    nsresult rv;
-    nsCOMPtr<nsIURI> uri;
-
-    nsCString spec(aSpec);
-
-    if (aBaseURI && !spec.IsEmpty() && spec[0] == '#') {
-        // Looks like a reference instead of a fully-specified URI.
-        // --> initialize |uri| as a clone of |aBaseURI|, with ref appended.
-        rv = NS_MutateURI(aBaseURI)
-               .SetRef(spec)
-               .Finalize(uri);
-    } else {
-        // Otherwise, we'll assume |spec| is a fully-specified data URI
-        nsAutoCString contentType;
-        bool base64;
-        rv = ParseURI(spec, contentType, /* contentCharset = */ nullptr,
-                      base64, /* dataBuffer = */ nullptr);
-        if (NS_FAILED(rv))
-            return rv;
-
-        // Strip whitespace unless this is text, where whitespace is important
-        // Don't strip escaped whitespace though (bug 391951)
-        if (base64 || (strncmp(contentType.get(),"text/",5) != 0 &&
-                       contentType.Find("xml") == kNotFound)) {
-            // it's ascii encoded binary, don't let any spaces in
-            if (!spec.StripWhitespace(mozilla::fallible)) {
-                return NS_ERROR_OUT_OF_MEMORY;
-            }
-        }
-
-        rv = NS_MutateURI(new mozilla::net::nsSimpleURI::Mutator())
-               .SetSpec(spec)
-               .Finalize(uri);
-=======
 /* static */ nsresult nsDataHandler::CreateNewURI(const nsACString& aSpec,
                                                   const char* aCharset,
                                                   nsIURI* aBaseURI,
@@ -168,7 +76,6 @@ nsDataHandler::NewURI(const nsACString &aSpec,
       if (!spec.StripWhitespace(mozilla::fallible)) {
         return NS_ERROR_OUT_OF_MEMORY;
       }
->>>>>>> upstream-releases
     }
 
     rv = NS_MutateURI(new mozilla::net::nsSimpleURI::Mutator())
@@ -183,43 +90,6 @@ nsDataHandler::NewURI(const nsACString &aSpec,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDataHandler::NewChannel2(nsIURI* uri, nsILoadInfo* aLoadInfo,
-                           nsIChannel** result) {
-  NS_ENSURE_ARG_POINTER(uri);
-  nsDataChannel* channel;
-  if (XRE_IsParentProcess()) {
-    channel = new nsDataChannel(uri);
-  } else {
-    channel = new mozilla::net::DataChannelChild(uri);
-  }
-  NS_ADDREF(channel);
-
-  nsresult rv = channel->Init();
-  if (NS_FAILED(rv)) {
-    NS_RELEASE(channel);
-    return rv;
-  }
-||||||| merged common ancestors
-nsDataHandler::NewChannel2(nsIURI* uri,
-                           nsILoadInfo* aLoadInfo,
-                           nsIChannel** result)
-{
-    NS_ENSURE_ARG_POINTER(uri);
-    nsDataChannel* channel;
-    if (XRE_IsParentProcess()) {
-        channel = new nsDataChannel(uri);
-    } else {
-        channel = new mozilla::net::DataChannelChild(uri);
-    }
-    NS_ADDREF(channel);
-
-    nsresult rv = channel->Init();
-    if (NS_FAILED(rv)) {
-        NS_RELEASE(channel);
-        return rv;
-    }
-=======
 nsDataHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
                           nsIChannel** result) {
   NS_ENSURE_ARG_POINTER(uri);
@@ -234,46 +104,15 @@ nsDataHandler::NewChannel(nsIURI* uri, nsILoadInfo* aLoadInfo,
   if (NS_FAILED(rv)) {
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // set the loadInfo on the new channel
-  rv = channel->SetLoadInfo(aLoadInfo);
-  if (NS_FAILED(rv)) {
-    NS_RELEASE(channel);
-    return rv;
-  }
-||||||| merged common ancestors
-    // set the loadInfo on the new channel
-    rv = channel->SetLoadInfo(aLoadInfo);
-    if (NS_FAILED(rv)) {
-        NS_RELEASE(channel);
-        return rv;
-    }
-=======
   // set the loadInfo on the new channel
   rv = channel->SetLoadInfo(aLoadInfo);
   if (NS_FAILED(rv)) {
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *result = channel;
-  return NS_OK;
-||||||| merged common ancestors
-    *result = channel;
-    return NS_OK;
-=======
   channel.forget(result);
   return NS_OK;
->>>>>>> upstream-releases
-}
-
-NS_IMETHODIMP
-<<<<<<< HEAD
-nsDataHandler::NewChannel(nsIURI* uri, nsIChannel** result) {
-  return NewChannel2(uri, nullptr, result);
 }
 
 NS_IMETHODIMP
@@ -281,23 +120,6 @@ nsDataHandler::AllowPort(int32_t port, const char* scheme, bool* _retval) {
   // don't override anything.
   *_retval = false;
   return NS_OK;
-||||||| merged common ancestors
-nsDataHandler::NewChannel(nsIURI* uri, nsIChannel* *result)
-{
-    return NewChannel2(uri, nullptr, result);
-}
-
-NS_IMETHODIMP
-nsDataHandler::AllowPort(int32_t port, const char *scheme, bool *_retval) {
-    // don't override anything.
-    *_retval = false;
-    return NS_OK;
-=======
-nsDataHandler::AllowPort(int32_t port, const char* scheme, bool* _retval) {
-  // don't override anything.
-  *_retval = false;
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 /**

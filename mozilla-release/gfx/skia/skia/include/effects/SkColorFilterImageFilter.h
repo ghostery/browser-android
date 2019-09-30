@@ -17,15 +17,6 @@ public:
                                      sk_sp<SkImageFilter> input,
                                      const CropRect* cropRect = nullptr);
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorFilterImageFilter)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,
@@ -41,8 +32,6 @@ private:
     SkColorFilterImageFilter(sk_sp<SkColorFilter> cf,
                              sk_sp<SkImageFilter> input,
                              const CropRect* cropRect);
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
 
     sk_sp<SkColorFilter> fColorFilter;
 

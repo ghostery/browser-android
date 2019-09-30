@@ -7,25 +7,11 @@
 #include "mozilla/layers/CompositorBridgeChild.h"
 #include "mozilla/layers/CompositorBridgeParent.h"
 #include "mozilla/layers/CompositorThread.h"
-<<<<<<< HEAD
-#include <stddef.h>              // for size_t
-#include "ClientLayerManager.h"  // for ClientLayerManager
-#include "base/message_loop.h"   // for MessageLoop
-#include "base/task.h"           // for NewRunnableMethod, etc
-#include "gfxPrefs.h"
-||||||| merged common ancestors
-#include <stddef.h>                     // for size_t
-#include "ClientLayerManager.h"         // for ClientLayerManager
-#include "base/message_loop.h"          // for MessageLoop
-#include "base/task.h"                  // for NewRunnableMethod, etc
-#include "gfxPrefs.h"
-=======
 #include <stddef.h>              // for size_t
 #include "ClientLayerManager.h"  // for ClientLayerManager
 #include "base/message_loop.h"   // for MessageLoop
 #include "base/task.h"           // for NewRunnableMethod, etc
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/TabGroup.h"
 #include "mozilla/layers/CompositorManagerChild.h"
 #include "mozilla/layers/ImageBridgeChild.h"
@@ -63,18 +49,11 @@
 #endif
 #include "mozilla/widget/CompositorWidget.h"
 #ifdef MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING
-<<<<<<< HEAD
-#include "mozilla/widget/CompositorWidgetChild.h"
-||||||| merged common ancestors
-# include "mozilla/widget/CompositorWidgetChild.h"
-=======
 #  include "mozilla/widget/CompositorWidgetChild.h"
->>>>>>> upstream-releases
 #endif
 #include "VsyncSource.h"
 
 using mozilla::Unused;
-using mozilla::dom::TabChildBase;
 using mozilla::gfx::GPUProcessManager;
 using mozilla::layers::LayerTransactionChild;
 
@@ -300,16 +279,8 @@ void CompositorBridgeChild::InitForWidget(uint64_t aProcessToken,
   mIdNamespace = aNamespace;
 }
 
-<<<<<<< HEAD
-/*static*/ CompositorBridgeChild* CompositorBridgeChild::Get() {
-||||||| merged common ancestors
-/*static*/ CompositorBridgeChild*
-CompositorBridgeChild::Get()
-{
-=======
 /*static*/
 CompositorBridgeChild* CompositorBridgeChild::Get() {
->>>>>>> upstream-releases
   // This is only expected to be used in child processes. While the parent
   // process does have CompositorBridgeChild instances, it has _multiple_ (one
   // per window), and therefore there is no global singleton available.
@@ -322,16 +293,8 @@ bool CompositorBridgeChild::ChildProcessHasCompositorBridge() {
   return sCompositorBridge != nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ bool CompositorBridgeChild::CompositorIsInGPUProcess() {
-||||||| merged common ancestors
-/* static */ bool
-CompositorBridgeChild::CompositorIsInGPUProcess()
-{
-=======
 /* static */
 bool CompositorBridgeChild::CompositorIsInGPUProcess() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (XRE_IsParentProcess()) {
@@ -357,13 +320,7 @@ PLayerTransactionChild* CompositorBridgeChild::AllocPLayerTransactionChild(
   // Do the DOM Labeling.
   if (browserChild) {
     nsCOMPtr<nsIEventTarget> target =
-<<<<<<< HEAD
-        tabChild->TabGroup()->EventTargetFor(TaskCategory::Other);
-||||||| merged common ancestors
-      tabChild->TabGroup()->EventTargetFor(TaskCategory::Other);
-=======
         browserChild->TabGroup()->EventTargetFor(TaskCategory::Other);
->>>>>>> upstream-releases
     SetEventTargetForActor(c, target);
     MOZ_ASSERT(c->GetActorEventTarget());
   }
@@ -494,19 +451,9 @@ mozilla::ipc::IPCResult CompositorBridgeChild::RecvUpdatePluginConfigurations(
         // Work around for flash's crummy sandbox. See bug 762948. This call
         // digs down into the window hirearchy, invalidating regions on
         // windows owned by other processes.
-<<<<<<< HEAD
-        mozilla::widget::WinUtils::InvalidatePluginAsWorkaround(widget,
-                                                                visibleBounds);
-#else
-||||||| merged common ancestors
-        mozilla::widget::WinUtils::InvalidatePluginAsWorkaround(
-          widget, visibleBounds);
-#else
-=======
         mozilla::widget::WinUtils::InvalidatePluginAsWorkaround(widget,
                                                                 visibleBounds);
 #  else
->>>>>>> upstream-releases
         widget->Invalidate(visibleBounds);
 #  endif
         visiblePluginIds.AppendElement(aPlugins[pluginsIdx].windowId());
@@ -709,27 +656,6 @@ uint32_t CompositorBridgeChild::SharedFrameMetricsData::GetAPZCId() {
 
 mozilla::ipc::IPCResult CompositorBridgeChild::RecvRemotePaintIsReady() {
   // Used on the content thread, this bounces the message to the
-<<<<<<< HEAD
-  // TabParent (via the TabChild) if the notification was previously requested.
-  // XPCOM gives a soup of compiler errors when trying to do_QueryReference
-  // so I'm using static_cast<>
-  MOZ_LAYERS_LOG(
-      ("[RemoteGfx] CompositorBridgeChild received RemotePaintIsReady"));
-  RefPtr<nsISupports> iTabChildBase(do_QueryReferent(mWeakTabChild));
-  if (!iTabChildBase) {
-    MOZ_LAYERS_LOG(
-        ("[RemoteGfx] Note: TabChild was released before RemotePaintIsReady. "
-         "MozAfterRemotePaint will not be sent to listener."));
-||||||| merged common ancestors
-  // TabParent (via the TabChild) if the notification was previously requested.
-  // XPCOM gives a soup of compiler errors when trying to do_QueryReference
-  // so I'm using static_cast<>
-  MOZ_LAYERS_LOG(("[RemoteGfx] CompositorBridgeChild received RemotePaintIsReady"));
-  RefPtr<nsISupports> iTabChildBase(do_QueryReferent(mWeakTabChild));
-  if (!iTabChildBase) {
-    MOZ_LAYERS_LOG(("[RemoteGfx] Note: TabChild was released before RemotePaintIsReady. "
-        "MozAfterRemotePaint will not be sent to listener."));
-=======
   // BrowserParent (via the BrowserChild) if the notification was previously
   // requested. XPCOM gives a soup of compiler errors when trying to
   // do_QueryReference so I'm using static_cast<>
@@ -741,7 +667,6 @@ mozilla::ipc::IPCResult CompositorBridgeChild::RecvRemotePaintIsReady() {
         ("[RemoteGfx] Note: BrowserChild was released before "
          "RemotePaintIsReady. "
          "MozAfterRemotePaint will not be sent to listener."));
->>>>>>> upstream-releases
     return IPC_OK();
   }
   BrowserChild* browserChild = static_cast<BrowserChild*>(iBrowserChild.get());
@@ -751,21 +676,6 @@ mozilla::ipc::IPCResult CompositorBridgeChild::RecvRemotePaintIsReady() {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void CompositorBridgeChild::RequestNotifyAfterRemotePaint(TabChild* aTabChild) {
-  MOZ_ASSERT(aTabChild,
-             "NULL TabChild not allowed in "
-             "CompositorBridgeChild::RequestNotifyAfterRemotePaint");
-  mWeakTabChild =
-      do_GetWeakReference(static_cast<dom::TabChildBase*>(aTabChild));
-||||||| merged common ancestors
-
-void
-CompositorBridgeChild::RequestNotifyAfterRemotePaint(TabChild* aTabChild)
-{
-  MOZ_ASSERT(aTabChild, "NULL TabChild not allowed in CompositorBridgeChild::RequestNotifyAfterRemotePaint");
-  mWeakTabChild = do_GetWeakReference( static_cast<dom::TabChildBase*>(aTabChild) );
-=======
 void CompositorBridgeChild::RequestNotifyAfterRemotePaint(
     BrowserChild* aBrowserChild) {
   MOZ_ASSERT(aBrowserChild,
@@ -773,29 +683,16 @@ void CompositorBridgeChild::RequestNotifyAfterRemotePaint(
              "CompositorBridgeChild::RequestNotifyAfterRemotePaint");
   mWeakBrowserChild =
       do_GetWeakReference(static_cast<dom::BrowserChild*>(aBrowserChild));
->>>>>>> upstream-releases
   if (!mCanSend) {
     return;
   }
   Unused << SendRequestNotifyAfterRemotePaint();
 }
 
-<<<<<<< HEAD
-void CompositorBridgeChild::CancelNotifyAfterRemotePaint(TabChild* aTabChild) {
-  RefPtr<nsISupports> iTabChildBase(do_QueryReferent(mWeakTabChild));
-  if (!iTabChildBase) {
-||||||| merged common ancestors
-void
-CompositorBridgeChild::CancelNotifyAfterRemotePaint(TabChild* aTabChild)
-{
-  RefPtr<nsISupports> iTabChildBase(do_QueryReferent(mWeakTabChild));
-  if (!iTabChildBase) {
-=======
 void CompositorBridgeChild::CancelNotifyAfterRemotePaint(
     BrowserChild* aBrowserChild) {
   RefPtr<nsIBrowserChild> iBrowserChild(do_QueryReferent(mWeakBrowserChild));
   if (!iBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
   BrowserChild* browserChild = static_cast<BrowserChild*>(iBrowserChild.get());
@@ -931,46 +828,15 @@ mozilla::ipc::IPCResult CompositorBridgeChild::RecvObserveLayersUpdate(
   MOZ_ASSERT(aLayersId.IsValid());
   MOZ_ASSERT(XRE_IsParentProcess());
 
-<<<<<<< HEAD
-  if (RefPtr<dom::TabParent> tab =
-          dom::TabParent::GetTabParentFromLayersId(aLayersId)) {
-||||||| merged common ancestors
-  if (RefPtr<dom::TabParent> tab = dom::TabParent::GetTabParentFromLayersId(aLayersId)) {
-=======
   if (RefPtr<dom::BrowserParent> tab =
           dom::BrowserParent::GetBrowserParentFromLayersId(aLayersId)) {
->>>>>>> upstream-releases
     tab->LayerTreeUpdate(aEpoch, aActive);
   }
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult CompositorBridgeChild::RecvNotifyWebRenderError(
-    const WebRenderError& aError) {
-  MOZ_ASSERT(XRE_IsParentProcess());
-  GPUProcessManager::Get()->NotifyWebRenderError(aError);
-  return IPC_OK();
-}
-
 void CompositorBridgeChild::HoldUntilCompositableRefReleasedIfNecessary(
     TextureClient* aClient) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-CompositorBridgeChild::RecvNotifyWebRenderError(const WebRenderError& aError)
-{
-  MOZ_ASSERT(XRE_IsParentProcess());
-  GPUProcessManager::Get()->NotifyWebRenderError(aError);
-  return IPC_OK();
-}
-
-void
-CompositorBridgeChild::HoldUntilCompositableRefReleasedIfNecessary(TextureClient* aClient)
-{
-=======
-void CompositorBridgeChild::HoldUntilCompositableRefReleasedIfNecessary(
-    TextureClient* aClient) {
->>>>>>> upstream-releases
   if (!aClient) {
     return;
   }
@@ -986,23 +852,10 @@ void CompositorBridgeChild::HoldUntilCompositableRefReleasedIfNecessary(
   mTexturesWaitingNotifyNotUsed.emplace(aClient->GetSerial(), aClient);
 }
 
-<<<<<<< HEAD
-void CompositorBridgeChild::NotifyNotUsed(uint64_t aTextureId,
-                                          uint64_t aFwdTransactionId) {
-  auto it = mTexturesWaitingRecycled.find(aTextureId);
-  if (it != mTexturesWaitingRecycled.end()) {
-||||||| merged common ancestors
-void
-CompositorBridgeChild::NotifyNotUsed(uint64_t aTextureId, uint64_t aFwdTransactionId)
-{
-  auto it = mTexturesWaitingRecycled.find(aTextureId);
-  if (it != mTexturesWaitingRecycled.end()) {
-=======
 void CompositorBridgeChild::NotifyNotUsed(uint64_t aTextureId,
                                           uint64_t aFwdTransactionId) {
   auto it = mTexturesWaitingNotifyNotUsed.find(aTextureId);
   if (it != mTexturesWaitingNotifyNotUsed.end()) {
->>>>>>> upstream-releases
     if (aFwdTransactionId < it->second->GetLastFwdTransactionId()) {
       // Released on host side, but client already requested newer use texture.
       return;
@@ -1011,18 +864,8 @@ void CompositorBridgeChild::NotifyNotUsed(uint64_t aTextureId,
   }
 }
 
-<<<<<<< HEAD
-void CompositorBridgeChild::CancelWaitForRecycle(uint64_t aTextureId) {
-  mTexturesWaitingRecycled.erase(aTextureId);
-||||||| merged common ancestors
-void
-CompositorBridgeChild::CancelWaitForRecycle(uint64_t aTextureId)
-{
-  mTexturesWaitingRecycled.erase(aTextureId);
-=======
 void CompositorBridgeChild::CancelWaitForNotifyNotUsed(uint64_t aTextureId) {
   mTexturesWaitingNotifyNotUsed.erase(aTextureId);
->>>>>>> upstream-releases
 }
 
 TextureClientPool* CompositorBridgeChild::GetTexturePool(
@@ -1038,29 +881,6 @@ TextureClientPool* CompositorBridgeChild::GetTexturePool(
     }
   }
 
-<<<<<<< HEAD
-  mTexturePools.AppendElement(new TextureClientPool(
-      aAllocator->GetCompositorBackendType(),
-      aAllocator->SupportsTextureDirectMapping(),
-      aAllocator->GetMaxTextureSize(), aFormat, gfx::gfxVars::TileSize(),
-      aFlags, gfxPrefs::LayersTilePoolShrinkTimeout(),
-      gfxPrefs::LayersTilePoolClearTimeout(),
-      gfxPrefs::LayersTileInitialPoolSize(),
-      gfxPrefs::LayersTilePoolUnusedSize(), this));
-||||||| merged common ancestors
-  mTexturePools.AppendElement(
-      new TextureClientPool(aAllocator->GetCompositorBackendType(),
-                            aAllocator->SupportsTextureDirectMapping(),
-                            aAllocator->GetMaxTextureSize(),
-                            aFormat,
-                            gfx::gfxVars::TileSize(),
-                            aFlags,
-                            gfxPrefs::LayersTilePoolShrinkTimeout(),
-                            gfxPrefs::LayersTilePoolClearTimeout(),
-                            gfxPrefs::LayersTileInitialPoolSize(),
-                            gfxPrefs::LayersTilePoolUnusedSize(),
-                            this));
-=======
   mTexturePools.AppendElement(new TextureClientPool(
       aAllocator->GetCompositorBackendType(),
       aAllocator->SupportsTextureDirectMapping(),
@@ -1069,7 +889,6 @@ TextureClientPool* CompositorBridgeChild::GetTexturePool(
       StaticPrefs::layers_tile_pool_clear_timeout(),
       StaticPrefs::layers_tile_initial_pool_size(),
       StaticPrefs::layers_tile_pool_unused_size(), this));
->>>>>>> upstream-releases
 
   return mTexturePools.LastElement();
 }
@@ -1116,17 +935,6 @@ PTextureChild* CompositorBridgeChild::CreateTexture(
       LayersId{0} /* FIXME? */, aSerial, aExternalImageId);
 }
 
-<<<<<<< HEAD
-bool CompositorBridgeChild::AllocUnsafeShmem(
-    size_t aSize, ipc::SharedMemory::SharedMemoryType aType,
-    ipc::Shmem* aShmem) {
-||||||| merged common ancestors
-bool
-CompositorBridgeChild::AllocUnsafeShmem(size_t aSize,
-                                   ipc::SharedMemory::SharedMemoryType aType,
-                                   ipc::Shmem* aShmem)
-{
-=======
 already_AddRefed<CanvasChild> CompositorBridgeChild::GetCanvasChild() {
   return do_AddRef(mCanvasChild);
 }
@@ -1140,7 +948,6 @@ void CompositorBridgeChild::EndCanvasTransaction() {
 bool CompositorBridgeChild::AllocUnsafeShmem(
     size_t aSize, ipc::SharedMemory::SharedMemoryType aType,
     ipc::Shmem* aShmem) {
->>>>>>> upstream-releases
   ShmemAllocated(this);
   return PCompositorBridgeChild::AllocUnsafeShmem(aSize, aType, aShmem);
 }
@@ -1185,13 +992,7 @@ PAPZCTreeManagerChild* CompositorBridgeChild::AllocPAPZCTreeManagerChild(
     BrowserChild* browserChild = BrowserChild::GetFrom(aLayersId);
     if (browserChild) {
       SetEventTargetForActor(
-<<<<<<< HEAD
-          child, tabChild->TabGroup()->EventTargetFor(TaskCategory::Other));
-||||||| merged common ancestors
-        child, tabChild->TabGroup()->EventTargetFor(TaskCategory::Other));
-=======
           child, browserChild->TabGroup()->EventTargetFor(TaskCategory::Other));
->>>>>>> upstream-releases
       MOZ_ASSERT(child->GetActorEventTarget());
     }
   }
@@ -1210,23 +1011,10 @@ bool CompositorBridgeChild::DeallocPAPZChild(PAPZChild* aActor) {
   return true;
 }
 
-<<<<<<< HEAD
-bool CompositorBridgeChild::DeallocPAPZCTreeManagerChild(
-    PAPZCTreeManagerChild* aActor) {
-  APZCTreeManagerChild* parent = static_cast<APZCTreeManagerChild*>(aActor);
-  parent->Release();
-||||||| merged common ancestors
-bool
-CompositorBridgeChild::DeallocPAPZCTreeManagerChild(PAPZCTreeManagerChild* aActor)
-{
-  APZCTreeManagerChild* parent = static_cast<APZCTreeManagerChild*>(aActor);
-  parent->Release();
-=======
 bool CompositorBridgeChild::DeallocPAPZCTreeManagerChild(
     PAPZCTreeManagerChild* aActor) {
   APZCTreeManagerChild* child = static_cast<APZCTreeManagerChild*>(aActor);
   child->ReleaseIPDLReference();
->>>>>>> upstream-releases
   return true;
 }
 

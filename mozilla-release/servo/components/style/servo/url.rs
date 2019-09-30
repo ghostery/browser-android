@@ -4,36 +4,13 @@
 
 //! Common handling for the specified value CSS url() values.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::stylesheets::CorsMode;
 use crate::values::computed::{Context, ToComputedValue};
->>>>>>> upstream-releases
 use cssparser::Parser;
-<<<<<<< HEAD
-||||||| merged common ancestors
-use parser::{Parse, ParserContext};
-=======
 use servo_arc::Arc;
->>>>>>> upstream-releases
 use servo_url::ServoUrl;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-// Note: We use std::sync::Arc rather than servo_arc::Arc here because the
-// nonzero optimization is important in keeping the size of SpecifiedUrl below
-// the threshold.
-use crate::values::computed::{Context, ToComputedValue};
-use std::sync::Arc;
-||||||| merged common ancestors
-// Note: We use std::sync::Arc rather than servo_arc::Arc here because the
-// nonzero optimization is important in keeping the size of SpecifiedUrl below
-// the threshold.
-use std::sync::Arc;
-=======
->>>>>>> upstream-releases
 use style_traits::{CssWriter, ParseError, ToCss};
 
 /// A CSS url() value for servo.

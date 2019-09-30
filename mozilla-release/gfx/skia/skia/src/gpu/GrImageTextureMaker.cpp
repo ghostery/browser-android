@@ -8,24 +8,6 @@
 #include "GrColorSpaceXform.h"
 #include "GrImageTextureMaker.h"
 #include "SkGr.h"
-<<<<<<< HEAD
-#include "SkImage_Lazy.h"
-
-GrImageTextureMaker::GrImageTextureMaker(GrContext* context, const SkImage* client,
-                                         SkImage::CachingHint chint)
-        : INHERITED(context, client->width(), client->height(), client->isAlphaOnly())
-        , fImage(static_cast<const SkImage_Lazy*>(client))
-||||||| merged common ancestors
-#include "SkImage_Base.h"
-#include "SkImageCacherator.h"
-#include "SkPixelRef.h"
-
-GrImageTextureMaker::GrImageTextureMaker(GrContext* context, const SkImage* client,
-                                         SkImage::CachingHint chint)
-        : INHERITED(context, client->width(), client->height(), client->isAlphaOnly())
-        , fCacher(as_IB(client)->peekCacherator())
-        , fClient(client)
-=======
 #include "SkImage_GpuYUVA.h"
 #include "SkImage_Lazy.h"
 #include "effects/GrYUVtoRGBEffect.h"
@@ -34,7 +16,6 @@ GrImageTextureMaker::GrImageTextureMaker(GrRecordingContext* context, const SkIm
                                          SkImage::CachingHint chint, bool useDecal)
         : INHERITED(context, client->width(), client->height(), client->isAlphaOnly(), useDecal)
         , fImage(static_cast<const SkImage_Lazy*>(client))
->>>>>>> upstream-releases
         , fCachingHint(chint) {
     SkASSERT(client->isLazyGenerated());
     GrMakeKeyFromImageID(&fOriginalKey, client->uniqueID(),
@@ -43,16 +24,8 @@ GrImageTextureMaker::GrImageTextureMaker(GrRecordingContext* context, const SkIm
 
 sk_sp<GrTextureProxy> GrImageTextureMaker::refOriginalTextureProxy(bool willBeMipped,
                                                                    AllowedTexGenType onlyIfFast) {
-<<<<<<< HEAD
-    return fImage->lockTextureProxy(this->context(), fOriginalKey, fCachingHint,
-                                    willBeMipped, dstColorSpace, onlyIfFast);
-||||||| merged common ancestors
-    return fCacher->lockTextureProxy(this->context(), fOriginalKey, fCachingHint,
-                                     willBeMipped, dstColorSpace, onlyIfFast);
-=======
     return fImage->lockTextureProxy(this->context(), fOriginalKey, fCachingHint,
                                     willBeMipped, onlyIfFast);
->>>>>>> upstream-releases
 }
 
 void GrImageTextureMaker::makeCopyKey(const CopyParams& stretch, GrUniqueKey* paramsCopyKey) {
@@ -63,17 +36,6 @@ void GrImageTextureMaker::makeCopyKey(const CopyParams& stretch, GrUniqueKey* pa
     }
 }
 
-<<<<<<< HEAD
-SkAlphaType GrImageTextureMaker::alphaType() const {
-    return fImage->alphaType();
-||||||| merged common ancestors
-void GrImageTextureMaker::didCacheCopy(const GrUniqueKey& copyKey) {
-    as_IB(fClient)->notifyAddedToCache();
-}
-
-SkAlphaType GrImageTextureMaker::alphaType() const {
-    return fClient->alphaType();
-=======
 SkAlphaType GrImageTextureMaker::alphaType() const {
     return fImage->alphaType();
 }
@@ -90,15 +52,7 @@ GrYUVAImageTextureMaker::GrYUVAImageTextureMaker(GrContext* context, const SkIma
     SkASSERT(as_IB(client)->isYUVA());
     GrMakeKeyFromImageID(&fOriginalKey, client->uniqueID(),
                          SkIRect::MakeWH(this->width(), this->height()));
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-sk_sp<SkColorSpace> GrImageTextureMaker::getColorSpace(SkColorSpace* dstColorSpace) {
-    return fImage->refColorSpace();
-||||||| merged common ancestors
-sk_sp<SkColorSpace> GrImageTextureMaker::getColorSpace(SkColorSpace* dstColorSpace) {
-    return fCacher->getColorSpace(this->context(), dstColorSpace);
-=======
 
 sk_sp<GrTextureProxy> GrYUVAImageTextureMaker::refOriginalTextureProxy(bool willBeMipped,
                                                                    AllowedTexGenType onlyIfFast) {
@@ -166,5 +120,4 @@ std::unique_ptr<GrFragmentProcessor> GrYUVAImageTextureMaker::createFragmentProc
                                            fImage->alphaType(), fImage->fTargetColorSpace.get());
     }
     return fp;
->>>>>>> upstream-releases
 }

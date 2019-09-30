@@ -332,17 +332,11 @@ function getBoundsFromPoints(points) {
  *         - {Boolean} hasNodeTransformations
  *           true if the node has transformed and false otherwise.
  */
-<<<<<<< HEAD
-function getCurrentMatrix(element, window, { ignoreWritingModeAndTextDirection } = {}) {
-||||||| merged common ancestors
-function getCurrentMatrix(element, window) {
-=======
 function getCurrentMatrix(
   element,
   window,
   { ignoreWritingModeAndTextDirection } = {}
 ) {
->>>>>>> upstream-releases
   const computedStyle = getComputedStyle(element);
 
   const paddingTop = parseFloat(computedStyle.paddingTop);

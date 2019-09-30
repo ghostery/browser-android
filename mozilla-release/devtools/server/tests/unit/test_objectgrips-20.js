@@ -10,177 +10,11 @@
 
 const DO_NOT_CHECK_VALUE = Symbol();
 
-<<<<<<< HEAD
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-||||||| merged common ancestors
-async function run_test_with_server(server) {
-  initTestDebuggerServer(server);
-  const debuggee = addTestGlobal("test-grips", server);
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-=======
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  await Promise.all([{
-    evaledObject: { a: 10 },
-    expectedIndexedProperties: [],
-    expectedNonIndexedProperties: [["a", 10]],
-  }, {
-    evaledObject: { length: 10 },
-    expectedIndexedProperties: [],
-    expectedNonIndexedProperties: [["length", 10]],
-  }, {
-    evaledObject: { a: 10, 0: "indexed" },
-    expectedIndexedProperties: [["0", "indexed"]],
-    expectedNonIndexedProperties: [["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: 42, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", 42], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: 2.34, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", 2.34], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: -0, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", -0], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: -10, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", -10], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: true, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", true], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: null, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", DO_NOT_CHECK_VALUE], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: Math.pow(2, 53), a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", 9007199254740992], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: "fake", a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", "fake"], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: Infinity, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", DO_NOT_CHECK_VALUE], ["a", 10]],
-  }, {
-    evaledObject: { 0: 0, length: 0},
-    expectedIndexedProperties: [["0", 0]],
-    expectedNonIndexedProperties: [["length", 0]],
-  }, {
-    evaledObject: { 0: 0, 1: 1, length: 1},
-    expectedIndexedProperties: [["0", 0], ["1", 1]],
-    expectedNonIndexedProperties: [["length", 1]],
-  }, {
-    evaledObject: { length: 0},
-    expectedIndexedProperties: [],
-    expectedNonIndexedProperties: [["length", 0]],
-  }, {
-    evaledObject: { 1: 1 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [],
-  }, {
-    evaledObject: { a: 1, [2 ** 32 - 2]: 2, [2 ** 32 - 1]: 3 },
-    expectedIndexedProperties: [["4294967294", 2]],
-    expectedNonIndexedProperties: [["a", 1], ["4294967295", 3]],
-  }, {
-    evaledObject: `(() => {
-||||||| merged common ancestors
-  const dbgClient = new DebuggerClient(server.connectPipe());
-  await dbgClient.connect();
-  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
-
-  [{
-    evaledObject: { a: 10 },
-    expectedIndexedProperties: [],
-    expectedNonIndexedProperties: [["a", 10]],
-  }, {
-    evaledObject: { length: 10 },
-    expectedIndexedProperties: [],
-    expectedNonIndexedProperties: [["length", 10]],
-  }, {
-    evaledObject: { a: 10, 0: "indexed" },
-    expectedIndexedProperties: [["0", "indexed"]],
-    expectedNonIndexedProperties: [["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: 42, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", 42], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: 2.34, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", 2.34], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: -0, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", -0], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: -10, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", -10], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: true, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", true], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: null, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", DO_NOT_CHECK_VALUE], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: Math.pow(2, 53), a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", 9007199254740992], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: "fake", a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", "fake"], ["a", 10]],
-  }, {
-    evaledObject: { 1: 1, length: Infinity, a: 10 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [["length", DO_NOT_CHECK_VALUE], ["a", 10]],
-  }, {
-    evaledObject: { 0: 0, length: 0},
-    expectedIndexedProperties: [["0", 0]],
-    expectedNonIndexedProperties: [["length", 0]],
-  }, {
-    evaledObject: { 0: 0, 1: 1, length: 1},
-    expectedIndexedProperties: [["0", 0], ["1", 1]],
-    expectedNonIndexedProperties: [["length", 1]],
-  }, {
-    evaledObject: { length: 0},
-    expectedIndexedProperties: [],
-    expectedNonIndexedProperties: [["length", 0]],
-  }, {
-    evaledObject: { 1: 1 },
-    expectedIndexedProperties: [["1", 1]],
-    expectedNonIndexedProperties: [],
-  }, {
-    evaledObject: { a: 1, [2 ** 32 - 2]: 2, [2 ** 32 - 1]: 3 },
-    expectedIndexedProperties: [["4294967294", 2]],
-    expectedNonIndexedProperties: [["a", 1], ["4294967295", 3]],
-  }, {
-    evaledObject: `(() => {
-=======
 add_task(
   threadClientTest(async ({ threadClient, debuggee, client }) => {
     debuggee.eval(
@@ -283,7 +117,6 @@ add_task(
       },
       {
         evaledObject: `(() => {
->>>>>>> upstream-releases
       x = [12, 42];
       x.foo = 90;
       return x;
@@ -392,23 +225,6 @@ add_task(
       Object.setPrototypeOf(x, null);
       return x;
     })()`,
-<<<<<<< HEAD
-    expectedIndexedProperties: [["0", 1], ["1", 2]],
-    expectedNonIndexedProperties: [],
-  }].map(async (testData) => {
-    await test_object_grip(debuggee, client, threadClient, testData);
-  }));
-}));
-||||||| merged common ancestors
-    expectedIndexedProperties: [["0", 1], ["1", 2]],
-    expectedNonIndexedProperties: [],
-  }].forEach(async (testData) => {
-    await test_object_grip(debuggee, dbgClient, threadClient, testData);
-  });
-
-  await dbgClient.close();
-}
-=======
           expectedIndexedProperties: [["0", 1], ["1", 2]],
           expectedNonIndexedProperties: [],
         },
@@ -421,7 +237,6 @@ add_task(
     { doNotRunWorker: true }
   )
 );
->>>>>>> upstream-releases
 
 async function test_object_grip(
   debuggee,

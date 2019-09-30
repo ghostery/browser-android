@@ -80,30 +80,6 @@ struct list_state {
   uint32_t numlines;      /* number of lines seen */
 };
 
-<<<<<<< HEAD
-struct list_result {
-  int32_t fe_type;        /* 'd'(dir) or 'l'(link) or 'f'(file) */
-  const char *fe_fname;   /* pointer to filename */
-  uint32_t fe_fnlen;      /* length of filename */
-  const char *fe_lname;   /* pointer to symlink name */
-  uint32_t fe_lnlen;      /* length of symlink name */
-  char fe_size[40];       /* size of file in bytes (<= (2^128 - 1)) */
-  PRExplodedTime fe_time; /* last-modified time */
-  int32_t fe_cinfs;       /* file system is definitely case insensitive */
-                          /* (converting all-upcase names may be desirable) */
-||||||| merged common ancestors
-struct list_result
-{
-  int32_t           fe_type;      /* 'd'(dir) or 'l'(link) or 'f'(file) */
-  const char *      fe_fname;     /* pointer to filename */
-  uint32_t          fe_fnlen;     /* length of filename */
-  const char *      fe_lname;     /* pointer to symlink name */
-  uint32_t          fe_lnlen;     /* length of symlink name */
-  char              fe_size[40];  /* size of file in bytes (<= (2^128 - 1)) */
-  PRExplodedTime    fe_time;      /* last-modified time */
-  int32_t           fe_cinfs;     /* file system is definitely case insensitive */
-                                  /* (converting all-upcase names may be desirable) */
-=======
 struct list_result {
   int32_t fe_type;        /* 'd'(dir) or 'l'(link) or 'f'(file) */
   const char* fe_fname;   /* pointer to filename */
@@ -114,22 +90,12 @@ struct list_result {
   PRExplodedTime fe_time; /* last-modified time */
   int32_t fe_cinfs;       /* file system is definitely case insensitive */
                           /* (converting all-upcase names may be desirable) */
->>>>>>> upstream-releases
 };
 
 typedef PRTime (*NowTimeFn)();
 
-<<<<<<< HEAD
-int ParseFTPList(const char *line, struct list_state *state,
-                 struct list_result *result,
-||||||| merged common ancestors
-int ParseFTPList(const char *line,
-                 struct list_state *state,
-                 struct list_result *result,
-=======
 int ParseFTPList(const char* line, struct list_state* state,
                  struct list_result* result,
->>>>>>> upstream-releases
                  PRTimeParamFn timeParam = PR_LocalTimeParameters,
                  NowTimeFn nowTimeFn = PR_Now);
 

@@ -33,52 +33,14 @@ WebGLExtensionColorBufferFloat::WebGLExtensionColorBufferFloat(
 #undef FOO
 }
 
-<<<<<<< HEAD
-WebGLExtensionColorBufferFloat::~WebGLExtensionColorBufferFloat() {}
-
-bool WebGLExtensionColorBufferFloat::IsSupported(const WebGLContext* webgl) {
-  const auto& gl = webgl->gl;
-  if (gl->IsANGLE()) {
-    // ANGLE supports this, but doesn't have a way to advertize its support,
-    // since it's compliant with WEBGL_color_buffer_float's clamping, but not
-    // EXT_color_buffer_float.
-    // TODO: This probably isn't necessary anymore.
-    return true;
-  }
-||||||| merged common ancestors
-WebGLExtensionColorBufferFloat::~WebGLExtensionColorBufferFloat()
-{
-}
-=======
 WebGLExtensionColorBufferFloat::~WebGLExtensionColorBufferFloat() {}
 
 bool WebGLExtensionColorBufferFloat::IsSupported(const WebGLContext* webgl) {
   if (webgl->IsWebGL2()) return false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return gl->IsSupported(gl::GLFeature::renderbuffer_color_float) &&
-         gl->IsSupported(gl::GLFeature::frag_color_float);
-||||||| merged common ancestors
-bool
-WebGLExtensionColorBufferFloat::IsSupported(const WebGLContext* webgl)
-{
-    const auto& gl = webgl->gl;
-    if (gl->IsANGLE()) {
-        // ANGLE supports this, but doesn't have a way to advertize its support,
-        // since it's compliant with WEBGL_color_buffer_float's clamping, but not
-        // EXT_color_buffer_float.
-        // TODO: This probably isn't necessary anymore.
-        return true;
-    }
-
-    return gl->IsSupported(gl::GLFeature::renderbuffer_color_float) &&
-           gl->IsSupported(gl::GLFeature::frag_color_float);
-=======
   const auto& gl = webgl->gl;
   return gl->IsSupported(gl::GLFeature::renderbuffer_color_float) &&
          gl->IsSupported(gl::GLFeature::frag_color_float);
->>>>>>> upstream-releases
 }
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionColorBufferFloat,

@@ -6,24 +6,12 @@ async function loadExtension(options) {
   let extension = ExtensionTestUtils.loadExtension({
     useAddonManager: "temporary",
 
-<<<<<<< HEAD
-    manifest: Object.assign({
-      "permissions": ["tabs"],
-    }, options.manifest),
-||||||| merged common ancestors
-    embedded: options.embedded,
-
-    manifest: Object.assign({
-      "permissions": ["tabs"],
-    }, options.manifest),
-=======
     manifest: Object.assign(
       {
         permissions: ["tabs"],
       },
       options.manifest
     ),
->>>>>>> upstream-releases
 
     files: {
       "options.html": `<!DOCTYPE html>
@@ -74,23 +62,11 @@ async function loadExtension(options) {
   return extension;
 }
 
-<<<<<<< HEAD
-add_task(async function test_inline_options() {
-  info(`Test options opened inline`);
-
-  let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, "http://example.com/");
-||||||| merged common ancestors
-add_tasks(async function test_inline_options(extraOptions) {
-  info(`Test options opened inline (${JSON.stringify(extraOptions)})`);
-
-  let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, "http://example.com/");
-=======
 async function run_test_inline_options() {
   let tab = await BrowserTestUtils.openNewForegroundTab(
     gBrowser,
     "http://example.com/"
   );
->>>>>>> upstream-releases
 
   let extension = await loadExtension({
     manifest: {

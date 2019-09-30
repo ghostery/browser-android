@@ -35,20 +35,8 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(AnimationEffect)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-AnimationEffect::AnimationEffect(nsIDocument* aDocument, TimingParams&& aTiming)
-    : mDocument(aDocument), mTiming(std::move(aTiming)) {}
-||||||| merged common ancestors
-AnimationEffect::AnimationEffect(nsIDocument* aDocument,
-                                 TimingParams&& aTiming)
-  : mDocument(aDocument)
-  , mTiming(std::move(aTiming))
-{
-}
-=======
 AnimationEffect::AnimationEffect(Document* aDocument, TimingParams&& aTiming)
     : mDocument(aDocument), mTiming(std::move(aTiming)) {}
->>>>>>> upstream-releases
 
 AnimationEffect::~AnimationEffect() = default;
 

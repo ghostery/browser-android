@@ -82,19 +82,9 @@ nsresult SubstitutingURL::EnsureFile() {
   return net_GetFileFromURLSpec(spec, getter_AddRefs(mFile));
 }
 
-<<<<<<< HEAD
-/* virtual */ nsStandardURL* SubstitutingURL::StartClone() {
-  SubstitutingURL* clone = new SubstitutingURL();
-||||||| merged common ancestors
-/* virtual */ nsStandardURL*
-SubstitutingURL::StartClone()
-{
-  SubstitutingURL *clone = new SubstitutingURL();
-=======
 /* virtual */
 nsStandardURL* SubstitutingURL::StartClone() {
   SubstitutingURL* clone = new SubstitutingURL();
->>>>>>> upstream-releases
   return clone;
 }
 
@@ -104,12 +94,6 @@ SubstitutingURL::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-SubstitutingProtocolHandler::SubstitutingProtocolHandler(const char* aScheme,
-                                                         uint32_t aFlags,
-||||||| merged common ancestors
-SubstitutingProtocolHandler::SubstitutingProtocolHandler(const char* aScheme, uint32_t aFlags,
-=======
 // SubstitutingJARURI
 
 SubstitutingJARURI::SubstitutingJARURI(nsIURL* source, nsIJARURI* resolved)
@@ -214,41 +198,20 @@ NS_IMPL_CI_INTERFACE_GETTER(SubstitutingJARURI, nsIURI, nsIJARURI, nsIURL,
 
 SubstitutingProtocolHandler::SubstitutingProtocolHandler(const char* aScheme,
                                                          uint32_t aFlags,
->>>>>>> upstream-releases
                                                          bool aEnforceFileOrJar)
-<<<<<<< HEAD
-    : mScheme(aScheme),
-      mSubstitutions(16),
-      mEnforceFileOrJar(aEnforceFileOrJar) {
-||||||| merged common ancestors
-  : mScheme(aScheme)
-  , mSubstitutions(16)
-  , mEnforceFileOrJar(aEnforceFileOrJar)
-{
-=======
     : mScheme(aScheme),
       mSubstitutionsLock("SubstitutingProtocolHandler::mSubstitutions"),
       mSubstitutions(16),
       mEnforceFileOrJar(aEnforceFileOrJar) {
->>>>>>> upstream-releases
   mFlags.emplace(aFlags);
   ConstructInternal();
 }
 
 SubstitutingProtocolHandler::SubstitutingProtocolHandler(const char* aScheme)
-<<<<<<< HEAD
-    : mScheme(aScheme), mSubstitutions(16), mEnforceFileOrJar(true) {
-||||||| merged common ancestors
-  : mScheme(aScheme)
-  , mSubstitutions(16)
-  , mEnforceFileOrJar(true)
-{
-=======
     : mScheme(aScheme),
       mSubstitutionsLock("SubstitutingProtocolHandler::mSubstitutions"),
       mSubstitutions(16),
       mEnforceFileOrJar(true) {
->>>>>>> upstream-releases
   ConstructInternal();
 }
 
@@ -262,18 +225,9 @@ void SubstitutingProtocolHandler::ConstructInternal() {
 // IPC marshalling.
 //
 
-<<<<<<< HEAD
-nsresult SubstitutingProtocolHandler::CollectSubstitutions(
-    InfallibleTArray<SubstitutionMapping>& aMappings) {
-||||||| merged common ancestors
-nsresult
-SubstitutingProtocolHandler::CollectSubstitutions(InfallibleTArray<SubstitutionMapping>& aMappings)
-{
-=======
 nsresult SubstitutingProtocolHandler::CollectSubstitutions(
     InfallibleTArray<SubstitutionMapping>& aMappings) {
   AutoReadLock lock(mSubstitutionsLock);
->>>>>>> upstream-releases
   for (auto iter = mSubstitutions.ConstIter(); !iter.Done(); iter.Next()) {
     SubstitutionEntry& entry = iter.Data();
     nsCOMPtr<nsIURI> uri = entry.baseURI;
@@ -345,24 +299,10 @@ nsresult SubstitutingProtocolHandler::GetProtocolFlags(uint32_t* result) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SubstitutingProtocolHandler::NewURI(const nsACString& aSpec,
-                                             const char* aCharset,
-                                             nsIURI* aBaseURI,
-                                             nsIURI** result) {
-||||||| merged common ancestors
-nsresult
-SubstitutingProtocolHandler::NewURI(const nsACString &aSpec,
-                                    const char *aCharset,
-                                    nsIURI *aBaseURI,
-                                    nsIURI **result)
-{
-=======
 nsresult SubstitutingProtocolHandler::NewURI(const nsACString& aSpec,
                                              const char* aCharset,
                                              nsIURI* aBaseURI,
                                              nsIURI** aResult) {
->>>>>>> upstream-releases
   // unescape any %2f and %2e to make sure nsStandardURL coalesces them.
   // Later net_GetFileFromURLSpec() will do a full unescape and we want to
   // treat them the same way the file system will. (bugs 380994, 394075)
@@ -399,28 +339,8 @@ nsresult SubstitutingProtocolHandler::NewURI(const nsACString& aSpec,
   if (last < end) {
     spec.Append(last, end - last);
   }
-<<<<<<< HEAD
-  if (last < src) spec.Append(last, src - last);
-||||||| merged common ancestors
-  if (last < src)
-    spec.Append(last, src-last);
-=======
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIURI> base(aBaseURI);
-<<<<<<< HEAD
-  return NS_MutateURI(new SubstitutingURL::Mutator())
-      .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                              nsIStandardURL::URLTYPE_STANDARD, -1, spec,
-                              aCharset, base, nullptr))
-      .Finalize(result);
-||||||| merged common ancestors
-  return NS_MutateURI(new SubstitutingURL::Mutator())
-    .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                            nsIStandardURL::URLTYPE_STANDARD,
-                            -1, spec, aCharset, base, nullptr))
-    .Finalize(result);
-=======
   nsCOMPtr<nsIURL> uri;
   rv = NS_MutateURI(new SubstitutingURL::Mutator())
            .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
@@ -473,24 +393,11 @@ nsresult SubstitutingProtocolHandler::ResolveJARURI(nsIURL* aURL,
   result.forget(aResult);
 
   return rv;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult SubstitutingProtocolHandler::NewChannel2(nsIURI* uri,
-                                                  nsILoadInfo* aLoadInfo,
-                                                  nsIChannel** result) {
-||||||| merged common ancestors
-nsresult
-SubstitutingProtocolHandler::NewChannel2(nsIURI* uri,
-                                         nsILoadInfo* aLoadInfo,
-                                         nsIChannel** result)
-{
-=======
 nsresult SubstitutingProtocolHandler::NewChannel(nsIURI* uri,
                                                  nsILoadInfo* aLoadInfo,
                                                  nsIChannel** result) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(uri);
   NS_ENSURE_ARG_POINTER(aLoadInfo);
 
@@ -521,30 +428,9 @@ nsresult SubstitutingProtocolHandler::NewChannel(nsIURI* uri,
   return SubstituteChannel(uri, aLoadInfo, result);
 }
 
-<<<<<<< HEAD
-nsresult SubstitutingProtocolHandler::NewChannel(nsIURI* uri,
-                                                 nsIChannel** result) {
-  return NewChannel2(uri, nullptr, result);
-}
-
 nsresult SubstitutingProtocolHandler::AllowPort(int32_t port,
                                                 const char* scheme,
                                                 bool* _retval) {
-||||||| merged common ancestors
-nsresult
-SubstitutingProtocolHandler::NewChannel(nsIURI* uri, nsIChannel* *result)
-{
-  return NewChannel2(uri, nullptr, result);
-}
-
-nsresult
-SubstitutingProtocolHandler::AllowPort(int32_t port, const char *scheme, bool *_retval)
-{
-=======
-nsresult SubstitutingProtocolHandler::AllowPort(int32_t port,
-                                                const char* scheme,
-                                                bool* _retval) {
->>>>>>> upstream-releases
   // don't override anything.
   *_retval = false;
   return NS_OK;
@@ -581,17 +467,9 @@ nsresult SubstitutingProtocolHandler::SetSubstitutionWithFlags(
   nsresult rv = baseURI->GetScheme(scheme);
   NS_ENSURE_SUCCESS(rv, rv);
   if (!scheme.Equals(mScheme)) {
-<<<<<<< HEAD
-    if (mEnforceFileOrJar && !scheme.EqualsLiteral("file") &&
-        !scheme.EqualsLiteral("jar") && !scheme.EqualsLiteral("app")) {
-||||||| merged common ancestors
-    if (mEnforceFileOrJar && !scheme.EqualsLiteral("file") && !scheme.EqualsLiteral("jar")
-        && !scheme.EqualsLiteral("app")) {
-=======
     if (mEnforceFileOrJar && !scheme.EqualsLiteral("file") &&
         !scheme.EqualsLiteral("jar") && !scheme.EqualsLiteral("app") &&
         !scheme.EqualsLiteral("resource")) {
->>>>>>> upstream-releases
       NS_WARNING("Refusing to create substituting URI to non-file:// target");
       return NS_ERROR_INVALID_ARG;
     }

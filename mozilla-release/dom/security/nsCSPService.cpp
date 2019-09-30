@@ -34,15 +34,7 @@ CSPService::~CSPService() {}
 NS_IMPL_ISUPPORTS(CSPService, nsIContentPolicy, nsIChannelEventSink)
 
 // Helper function to identify protocols and content types not subject to CSP.
-<<<<<<< HEAD
-bool subjectToCSP(nsIURI *aURI, nsContentPolicyType aContentType) {
-||||||| merged common ancestors
-bool
-subjectToCSP(nsIURI* aURI, nsContentPolicyType aContentType) {
-
-=======
 bool subjectToCSP(nsIURI* aURI, nsContentPolicyType aContentType) {
->>>>>>> upstream-releases
   nsContentPolicyType contentType =
       nsContentUtils::InternalContentPolicyTypeToExternal(aContentType);
 
@@ -121,25 +113,10 @@ bool subjectToCSP(nsIURI* aURI, nsContentPolicyType aContentType) {
   return true;
 }
 
-<<<<<<< HEAD
-/* nsIContentPolicy implementation */
-NS_IMETHODIMP
-CSPService::ShouldLoad(nsIURI *aContentLocation, nsILoadInfo *aLoadInfo,
-                       const nsACString &aMimeTypeGuess, int16_t *aDecision) {
-||||||| merged common ancestors
-/* nsIContentPolicy implementation */
-NS_IMETHODIMP
-CSPService::ShouldLoad(nsIURI *aContentLocation,
-                       nsILoadInfo* aLoadInfo,
-                       const nsACString &aMimeTypeGuess,
-                       int16_t *aDecision)
-{
-=======
 /* static */ nsresult CSPService::ConsultCSP(nsIURI* aContentLocation,
                                              nsILoadInfo* aLoadInfo,
                                              const nsACString& aMimeTypeGuess,
                                              int16_t* aDecision) {
->>>>>>> upstream-releases
   if (!aContentLocation) {
     return NS_ERROR_FAILURE;
   }
@@ -176,46 +153,9 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  // Find a principal to retrieve the CSP from. If we don't have a context node
-  // (because, for instance, the load originates in a service worker), or the
-  // requesting principal's CSP overrides our document CSP, use the request
-  // principal. Otherwise, use the document principal.
-  nsCOMPtr<nsINode> node(do_QueryInterface(requestContext));
-  nsCOMPtr<nsIPrincipal> principal;
-  if (!node ||
-      (requestPrincipal && BasePrincipal::Cast(requestPrincipal)
-                               ->OverridesCSP(node->NodePrincipal()))) {
-    principal = requestPrincipal;
-  } else {
-    principal = node->NodePrincipal();
-  }
-  if (!principal) {
-    // if we can't query a principal, then there is nothing to do.
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  // Find a principal to retrieve the CSP from. If we don't have a context node
-  // (because, for instance, the load originates in a service worker), or the
-  // requesting principal's CSP overrides our document CSP, use the request
-  // principal. Otherwise, use the document principal.
-  nsCOMPtr<nsINode> node(do_QueryInterface(requestContext));
-  nsCOMPtr<nsIPrincipal> principal;
-  if (!node || (requestPrincipal &&
-                BasePrincipal::Cast(requestPrincipal)->OverridesCSP(node->NodePrincipal()))) {
-    principal = requestPrincipal;
-  } else  {
-    principal = node->NodePrincipal();
-  }
-  if (!principal) {
-    // if we can't query a principal, then there is nothing to do.
-    return NS_OK;
-  }
-=======
   nsAutoString cspNonce;
   rv = aLoadInfo->GetCspNonce(cspNonce);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   // 1) Apply speculate CSP for preloads
   bool isPreload = nsContentUtils::IsPreloadType(contentType);
@@ -224,29 +164,11 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
     nsCOMPtr<nsIContentSecurityPolicy> preloadCsp = aLoadInfo->GetPreloadCsp();
     if (preloadCsp) {
       // obtain the enforcement decision
-<<<<<<< HEAD
-      rv = preloadCsp->ShouldLoad(
-          contentType, cspEventListener, aContentLocation, requestOrigin,
-          requestContext, aMimeTypeGuess,
-          nullptr,  // no redirect, aOriginal URL is null.
-          aLoadInfo->GetSendCSPViolationEvents(), aDecision);
-||||||| merged common ancestors
-      rv = preloadCsp->ShouldLoad(contentType,
-                                  cspEventListener,
-                                  aContentLocation,
-                                  requestOrigin,
-                                  requestContext,
-                                  aMimeTypeGuess,
-                                  nullptr, // no redirect, aOriginal URL is null.
-                                  aLoadInfo->GetSendCSPViolationEvents(),
-                                  aDecision);
-=======
       rv = preloadCsp->ShouldLoad(
           contentType, cspEventListener, aContentLocation, requestOrigin,
           requestContext, aMimeTypeGuess,
           nullptr,  // no redirect, aOriginal URL is null.
           aLoadInfo->GetSendCSPViolationEvents(), cspNonce, aDecision);
->>>>>>> upstream-releases
       NS_ENSURE_SUCCESS(rv, rv);
 
       // if the preload policy already denied the load, then there
@@ -268,22 +190,6 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
 
   if (csp) {
     // obtain the enforcement decision
-<<<<<<< HEAD
-    rv = csp->ShouldLoad(contentType, cspEventListener, aContentLocation,
-                         requestOrigin, requestContext, aMimeTypeGuess,
-                         nullptr,  // no redirect, aOriginal URL is null.
-                         aLoadInfo->GetSendCSPViolationEvents(), aDecision);
-||||||| merged common ancestors
-    rv = csp->ShouldLoad(contentType,
-                         cspEventListener,
-                         aContentLocation,
-                         requestOrigin,
-                         requestContext,
-                         aMimeTypeGuess,
-                         nullptr, // no redirect, aOriginal URL is null.
-                         aLoadInfo->GetSendCSPViolationEvents(),
-                         aDecision);
-=======
     rv = csp->ShouldLoad(contentType, cspEventListener, aContentLocation,
                          requestOrigin, requestContext, aMimeTypeGuess,
                          nullptr,  // no redirect, aOriginal URL is null.
@@ -295,7 +201,6 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
           aLoadInfo, nsILoadInfo::BLOCKING_REASON_CONTENT_POLICY_GENERAL);
     }
 
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
   return NS_OK;
@@ -309,21 +214,9 @@ CSPService::ShouldLoad(nsIURI* aContentLocation, nsILoadInfo* aLoadInfo,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CSPService::ShouldProcess(nsIURI *aContentLocation, nsILoadInfo *aLoadInfo,
-                          const nsACString &aMimeTypeGuess,
-                          int16_t *aDecision) {
-||||||| merged common ancestors
-CSPService::ShouldProcess(nsIURI           *aContentLocation,
-                          nsILoadInfo*     aLoadInfo,
-                          const nsACString &aMimeTypeGuess,
-                          int16_t          *aDecision)
-{
-=======
 CSPService::ShouldProcess(nsIURI* aContentLocation, nsILoadInfo* aLoadInfo,
                           const nsACString& aMimeTypeGuess,
                           int16_t* aDecision) {
->>>>>>> upstream-releases
   if (!aContentLocation) {
     return NS_ERROR_FAILURE;
   }
@@ -353,21 +246,9 @@ CSPService::ShouldProcess(nsIURI* aContentLocation, nsILoadInfo* aLoadInfo,
 
 /* nsIChannelEventSink implementation */
 NS_IMETHODIMP
-<<<<<<< HEAD
-CSPService::AsyncOnChannelRedirect(nsIChannel *oldChannel,
-                                   nsIChannel *newChannel, uint32_t flags,
-                                   nsIAsyncVerifyRedirectCallback *callback) {
-||||||| merged common ancestors
-CSPService::AsyncOnChannelRedirect(nsIChannel *oldChannel,
-                                   nsIChannel *newChannel,
-                                   uint32_t flags,
-                                   nsIAsyncVerifyRedirectCallback *callback)
-{
-=======
 CSPService::AsyncOnChannelRedirect(nsIChannel* oldChannel,
                                    nsIChannel* newChannel, uint32_t flags,
                                    nsIAsyncVerifyRedirectCallback* callback) {
->>>>>>> upstream-releases
   net::nsAsyncRedirectAutoCallback autoCallback(callback);
 
   if (XRE_IsE10sParentProcess()) {
@@ -436,28 +317,6 @@ CSPService::AsyncOnChannelRedirect(nsIChannel* oldChannel,
     nsCOMPtr<nsIContentSecurityPolicy> preloadCsp = loadInfo->GetPreloadCsp();
     if (preloadCsp) {
       // Pass  originalURI to indicate the redirect
-<<<<<<< HEAD
-      preloadCsp->ShouldLoad(
-          policyType,  // load type per nsIContentPolicy (uint32_t)
-          cspEventListener,
-          newUri,          // nsIURI
-          nullptr,         // nsIURI
-          requestContext,  // nsISupports
-          EmptyCString(),  // ACString - MIME guess
-          originalUri,     // Original nsIURI
-          true,            // aSendViolationReports
-          &aDecision);
-||||||| merged common ancestors
-      preloadCsp->ShouldLoad(policyType,     // load type per nsIContentPolicy (uint32_t)
-                             cspEventListener,
-                             newUri,         // nsIURI
-                             nullptr,        // nsIURI
-                             requestContext, // nsISupports
-                             EmptyCString(), // ACString - MIME guess
-                             originalUri,    // Original nsIURI
-                             true,           // aSendViolationReports
-                             &aDecision);
-=======
       preloadCsp->ShouldLoad(
           policyType,  // load type per nsIContentPolicy (uint32_t)
           cspEventListener,
@@ -469,7 +328,6 @@ CSPService::AsyncOnChannelRedirect(nsIChannel* oldChannel,
           true,            // aSendViolationReports
           cspNonce,        // nonce
           &aDecision);
->>>>>>> upstream-releases
 
       // if the preload policy already denied the load, then there
       // is no point in checking the real policy
@@ -487,21 +345,6 @@ CSPService::AsyncOnChannelRedirect(nsIChannel* oldChannel,
     // Pass  originalURI to indicate the redirect
     csp->ShouldLoad(policyType,  // load type per nsIContentPolicy (uint32_t)
                     cspEventListener,
-<<<<<<< HEAD
-                    newUri,          // nsIURI
-                    nullptr,         // nsIURI
-                    requestContext,  // nsISupports
-                    EmptyCString(),  // ACString - MIME guess
-                    originalUri,     // Original nsIURI
-                    true,            // aSendViolationReports
-||||||| merged common ancestors
-                    newUri,         // nsIURI
-                    nullptr,        // nsIURI
-                    requestContext, // nsISupports
-                    EmptyCString(), // ACString - MIME guess
-                    originalUri,    // Original nsIURI
-                    true,           // aSendViolationReports
-=======
                     newUri,          // nsIURI
                     nullptr,         // nsIURI
                     requestContext,  // nsISupports
@@ -509,7 +352,6 @@ CSPService::AsyncOnChannelRedirect(nsIChannel* oldChannel,
                     originalUri,     // Original nsIURI
                     true,            // aSendViolationReports
                     cspNonce,        // nonce
->>>>>>> upstream-releases
                     &aDecision);
   }
 

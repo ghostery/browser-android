@@ -88,19 +88,6 @@ add_task(async function test_update_highlighted() {
       }, "unhighlighting active tab with no multiselection");
 
       await expectResults(async () => {
-<<<<<<< HEAD
-        await browser.tabs.update(tab1, {highlighted: true});
-        return {active: tab1, highlighted: [tab1, tab2], events: [
-          ["onActivated", {tabId: tab1, previousTabId: tab2, windowId}],
-          ["onHighlighted", {tabIds: [tab1, tab2], windowId}],
-        ]};
-||||||| merged common ancestors
-        await browser.tabs.update(tab1, {highlighted: true});
-        return {active: tab1, highlighted: [tab1, tab2], events: [
-          ["onActivated", {tabId: tab1, windowId}],
-          ["onHighlighted", {tabIds: [tab1, tab2], windowId}],
-        ]};
-=======
         await browser.tabs.update(tab1, { highlighted: true });
         return {
           active: tab1,
@@ -110,7 +97,6 @@ add_task(async function test_update_highlighted() {
             ["onHighlighted", { tabIds: [tab1, tab2], windowId }],
           ],
         };
->>>>>>> upstream-releases
       }, "highlighting non-highlighted tab");
 
       await expectResults(async () => {
@@ -119,19 +105,6 @@ add_task(async function test_update_highlighted() {
       }, "highlighting inactive highlighted tab");
 
       await expectResults(async () => {
-<<<<<<< HEAD
-        await browser.tabs.update(tab1, {highlighted: false});
-        return {active: tab2, highlighted: [tab2], events: [
-          ["onActivated", {tabId: tab2, previousTabId: tab1, windowId}],
-          ["onHighlighted", {tabIds: [tab2], windowId}],
-        ]};
-||||||| merged common ancestors
-        await browser.tabs.update(tab1, {highlighted: false});
-        return {active: tab2, highlighted: [tab2], events: [
-          ["onActivated", {tabId: tab2, windowId}],
-          ["onHighlighted", {tabIds: [tab2], windowId}],
-        ]};
-=======
         await browser.tabs.update(tab1, { highlighted: false });
         return {
           active: tab2,
@@ -141,23 +114,9 @@ add_task(async function test_update_highlighted() {
             ["onHighlighted", { tabIds: [tab2], windowId }],
           ],
         };
->>>>>>> upstream-releases
       }, "unhighlighting active tab with multiselection");
 
       await expectResults(async () => {
-<<<<<<< HEAD
-        await browser.tabs.update(tab1, {highlighted: true});
-        return {active: tab1, highlighted: [tab1, tab2], events: [
-          ["onActivated", {tabId: tab1, previousTabId: tab2, windowId}],
-          ["onHighlighted", {tabIds: [tab1, tab2], windowId}],
-        ]};
-||||||| merged common ancestors
-        await browser.tabs.update(tab1, {highlighted: true});
-        return {active: tab1, highlighted: [tab1, tab2], events: [
-          ["onActivated", {tabId: tab1, windowId}],
-          ["onHighlighted", {tabIds: [tab1, tab2], windowId}],
-        ]};
-=======
         await browser.tabs.update(tab1, { highlighted: true });
         return {
           active: tab1,
@@ -167,7 +126,6 @@ add_task(async function test_update_highlighted() {
             ["onHighlighted", { tabIds: [tab1, tab2], windowId }],
           ],
         };
->>>>>>> upstream-releases
       }, "highlighting non-highlighted tab");
 
       await expectResults(async () => {
@@ -189,19 +147,6 @@ add_task(async function test_update_highlighted() {
       }, "highlighting without activating non-highlighted tab");
 
       await expectResults(async () => {
-<<<<<<< HEAD
-        await browser.tabs.update(tab2, {highlighted: true, active: true});
-        return {active: tab2, highlighted: [tab2], events: [
-          ["onActivated", {tabId: tab2, previousTabId: tab1, windowId}],
-          ["onHighlighted", {tabIds: [tab2], windowId}],
-        ]};
-||||||| merged common ancestors
-        await browser.tabs.update(tab2, {highlighted: true, active: true});
-        return {active: tab2, highlighted: [tab2], events: [
-          ["onActivated", {tabId: tab2, windowId}],
-          ["onHighlighted", {tabIds: [tab2], windowId}],
-        ]};
-=======
         await browser.tabs.update(tab2, { highlighted: true, active: true });
         return {
           active: tab2,
@@ -211,23 +156,9 @@ add_task(async function test_update_highlighted() {
             ["onHighlighted", { tabIds: [tab2], windowId }],
           ],
         };
->>>>>>> upstream-releases
       }, "highlighting and activating inactive highlighted tab");
 
       await expectResults(async () => {
-<<<<<<< HEAD
-        await browser.tabs.update(tab1, {active: true, highlighted: true});
-        return {active: tab1, highlighted: [tab1], events: [
-          ["onActivated", {tabId: tab1, previousTabId: tab2, windowId}],
-          ["onHighlighted", {tabIds: [tab1], windowId}],
-        ]};
-||||||| merged common ancestors
-        await browser.tabs.update(tab1, {active: true, highlighted: true});
-        return {active: tab1, highlighted: [tab1], events: [
-          ["onActivated", {tabId: tab1, windowId}],
-          ["onHighlighted", {tabIds: [tab1], windowId}],
-        ]};
-=======
         await browser.tabs.update(tab1, { active: true, highlighted: true });
         return {
           active: tab1,
@@ -237,7 +168,6 @@ add_task(async function test_update_highlighted() {
             ["onHighlighted", { tabIds: [tab1], windowId }],
           ],
         };
->>>>>>> upstream-releases
       }, "highlighting and activating non-highlighted tab");
 
       await browser.tabs.remove([tab1, tab2]);

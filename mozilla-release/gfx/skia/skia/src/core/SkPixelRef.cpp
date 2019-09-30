@@ -30,14 +30,7 @@ SkPixelRef::SkPixelRef(int width, int height, void* pixels, size_t rowBytes)
     , fHeight(height)
     , fPixels(pixels)
     , fRowBytes(rowBytes)
-<<<<<<< HEAD
-||||||| merged common ancestors
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    , fStableID(SkNextID::ImageID())
-#endif
-=======
     , fAddedToCache(false)
->>>>>>> upstream-releases
 {
     this->needsNewGenID();
     fMutability = kMutable;

@@ -6,13 +6,7 @@
 {
     let bin = wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
           (type $point (struct
                         (field $x f64)
@@ -32,16 +26,8 @@
            (global.set $g2 (global.get $g1)))
 
           (func (export "clear")
-<<<<<<< HEAD
-           (set_global $g1 (get_global $g3))
-           (set_global $g2 (ref.null))))`);
-||||||| merged common ancestors
-           (set_global $g1 (get_global $g3))
-           (set_global $g2 (ref.null (ref $point)))))`);
-=======
            (global.set $g1 (global.get $g3))
            (global.set $g2 (ref.null))))`);
->>>>>>> upstream-releases
 
     let mod = new WebAssembly.Module(bin);
     let ins = new WebAssembly.Instance(mod).exports;
@@ -56,13 +42,7 @@
 {
     let bin = wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
           (type $point (struct
                         (field $x f64)
@@ -77,13 +57,7 @@
            (global.set $glob (struct.new $point (f64.const 3.5) (f64.const 37.25))))
 
           (func (export "clear")
-<<<<<<< HEAD
-           (set_global $glob (ref.null)))
-||||||| merged common ancestors
-           (set_global $glob (ref.null (ref $point))))
-=======
            (global.set $glob (ref.null)))
->>>>>>> upstream-releases
 
           (func (export "x") (result f64)
            (struct.get $point 0 (global.get $glob)))
@@ -113,13 +87,7 @@
 {
     let bin = wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (import $g "" "g" (global anyref))
           (global $glob anyref (global.get $g))
           (func (export "get") (result anyref)
@@ -137,13 +105,7 @@
 {
     let bin = wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $box (struct (field $val i32)))
           (import "m" "g" (global (mut (ref $box)))))`);
 
@@ -158,13 +120,7 @@
 {
     let bin = wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $box (struct (field $val i32)))
           (global $boxg (export "box") (mut (ref $box)) (ref.null)))`);
 

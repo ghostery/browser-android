@@ -36,19 +36,10 @@ namespace layers {
  * This class encodes each screenshot to a JPEG data URL, on a separate thread.
  * This class manages that thread and recycles memory buffers.
  */
-<<<<<<< HEAD
-class ProfilerScreenshots final {
- public:
-||||||| merged common ancestors
-class ProfilerScreenshots final
-{
-public:
-=======
 class ProfilerScreenshots final {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(ProfilerScreenshots)
 
  public:
->>>>>>> upstream-releases
   ProfilerScreenshots();
 
   /**
@@ -82,16 +73,6 @@ class ProfilerScreenshots final {
    *   which needs to copy the screenshot pixel data into the surface that's
    *   supplied to the callback. Called zero or one times, synchronously.
    */
-<<<<<<< HEAD
-  void SubmitScreenshot(
-      uintptr_t aWindowIdentifier, const gfx::IntSize& aOriginalSize,
-      const gfx::IntSize& aScaledSize, const TimeStamp& aTimeStamp,
-      const std::function<bool(gfx::DataSourceSurface*)>& aPopulateSurface);
-||||||| merged common ancestors
-  void SubmitScreenshot(uintptr_t aWindowIdentifier, const gfx::IntSize& aOriginalSize,
-                        const gfx::IntSize& aScaledSize, const TimeStamp& aTimeStamp,
-                        const std::function<bool(gfx::DataSourceSurface*)>& aPopulateSurface);
-=======
   void SubmitScreenshot(
       uintptr_t aWindowIdentifier, const gfx::IntSize& aOriginalSize,
       const gfx::IntSize& aScaledSize, const TimeStamp& aTimeStamp,
@@ -99,14 +80,7 @@ class ProfilerScreenshots final {
 
  private:
   ~ProfilerScreenshots();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   /**
    * Recycle a surface from mAvailableSurfaces or create a new one if all
    * surfaces are currently in use, up to some maximum limit.

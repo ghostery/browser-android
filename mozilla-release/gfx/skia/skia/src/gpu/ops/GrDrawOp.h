@@ -43,12 +43,6 @@ public:
      * at this time the op must report whether a copy of the destination (or destination texture
      * itself) needs to be provided to the GrXferProcessor when this op executes.
      */
-<<<<<<< HEAD
-    virtual RequiresDstTexture finalize(const GrCaps&, const GrAppliedClip*) = 0;
-||||||| merged common ancestors
-    virtual RequiresDstTexture finalize(const GrCaps&, const GrAppliedClip*,
-                                        GrPixelConfigIsClamped) = 0;
-=======
     virtual GrProcessorSet::Analysis finalize(const GrCaps&, const GrAppliedClip*, GrFSAAType) = 0;
 
 #ifdef SK_DEBUG
@@ -58,7 +52,6 @@ public:
         SkASSERT(fAddDrawOpCalled);
     }
 #endif
->>>>>>> upstream-releases
 
 private:
     typedef GrOp INHERITED;

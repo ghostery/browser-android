@@ -30,14 +30,7 @@ class WebRenderTextureHost : public TextureHost {
 
   void DeallocateDeviceData() override {}
 
-<<<<<<< HEAD
-  virtual void SetTextureSourceProvider(
-      TextureSourceProvider* aProvider) override;
-||||||| merged common ancestors
-  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
-=======
   bool Lock() override;
->>>>>>> upstream-releases
 
   void Unlock() override;
 
@@ -54,18 +47,7 @@ class WebRenderTextureHost : public TextureHost {
   // textureHosts use their special data representation internally, but we could
   // treat these textureHost as the read-format when we read them.
   // Please check TextureHost::GetReadFormat().
-<<<<<<< HEAD
-  virtual gfx::SurfaceFormat GetReadFormat() const override;
-
-  virtual bool BindTextureSource(
-      CompositableTextureSourceRef& aTexture) override;
-||||||| merged common ancestors
-  virtual gfx::SurfaceFormat GetReadFormat() const override;
-
-  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
-=======
   gfx::SurfaceFormat GetReadFormat() const override;
->>>>>>> upstream-releases
 
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
 
@@ -77,29 +59,14 @@ class WebRenderTextureHost : public TextureHost {
   const char* Name() override { return "WebRenderTextureHost"; }
 #endif
 
-<<<<<<< HEAD
-  virtual WebRenderTextureHost* AsWebRenderTextureHost() override {
-    return this;
-  }
-||||||| merged common ancestors
-  virtual WebRenderTextureHost* AsWebRenderTextureHost() override { return this; }
-=======
   WebRenderTextureHost* AsWebRenderTextureHost() override { return this; }
 
   virtual void PrepareForUse() override;
->>>>>>> upstream-releases
 
   wr::ExternalImageId GetExternalImageKey() { return mExternalImageId; }
 
   int32_t GetRGBStride();
 
-<<<<<<< HEAD
-  virtual bool HasIntermediateBuffer() const override;
-
-  virtual uint32_t NumSubTextures() const override;
-||||||| merged common ancestors
-  virtual uint32_t NumSubTextures() const override;
-=======
   bool HasIntermediateBuffer() const override;
 
   uint32_t NumSubTextures() override;
@@ -113,7 +80,6 @@ class WebRenderTextureHost : public TextureHost {
                         const wr::LayoutRect& aBounds,
                         const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
                         const Range<wr::ImageKey>& aImageKeys) override;
->>>>>>> upstream-releases
 
   bool SupportsWrNativeTexture() override;
 

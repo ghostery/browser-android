@@ -11,58 +11,14 @@
 #include "ProfileJSONWriter.h"
 #include "ProfilerMarkerPayload.h"
 
-<<<<<<< HEAD
-template <typename T>
-||||||| merged common ancestors
-template<typename T>
-=======
 #include "mozilla/UniquePtrExtensions.h"
 
 template <typename T>
->>>>>>> upstream-releases
 class ProfilerLinkedList;
 
 class ProfilerMarker {
   friend class ProfilerLinkedList<ProfilerMarker>;
 
-<<<<<<< HEAD
- public:
-  explicit ProfilerMarker(
-      const char* aMarkerName, int aThreadId,
-      mozilla::UniquePtr<ProfilerMarkerPayload> aPayload = nullptr,
-      double aTime = 0)
-      : mMarkerName(strdup(aMarkerName)),
-        mPayload(std::move(aPayload)),
-        mNext{nullptr},
-        mTime(aTime),
-        mPositionInBuffer{0},
-        mThreadId{aThreadId} {}
-
-  void SetPositionInBuffer(uint64_t aPosition) {
-    mPositionInBuffer = aPosition;
-  }
-
-  bool HasExpired(uint64_t aBufferRangeStart) const {
-||||||| merged common ancestors
-public:
-  explicit ProfilerMarker(const char* aMarkerName,
-                          int aThreadId,
-                          mozilla::UniquePtr<ProfilerMarkerPayload>
-                            aPayload = nullptr,
-                          double aTime = 0)
-    : mMarkerName(strdup(aMarkerName))
-    , mPayload(std::move(aPayload))
-    , mNext{nullptr}
-    , mTime(aTime)
-    , mPositionInBuffer{0}
-    , mThreadId{aThreadId}
-    {}
-
-  void SetPositionInBuffer(uint64_t aPosition) { mPositionInBuffer = aPosition; }
-
-  bool HasExpired(uint64_t aBufferRangeStart) const
-  {
-=======
  public:
   explicit ProfilerMarker(
       const char* aMarkerName, JS::ProfilingCategoryPair aCategoryPair,
@@ -82,7 +38,6 @@ public:
   }
 
   bool HasExpired(uint64_t aBufferRangeStart) const {
->>>>>>> upstream-releases
     return mPositionInBuffer < aBufferRangeStart;
   }
 

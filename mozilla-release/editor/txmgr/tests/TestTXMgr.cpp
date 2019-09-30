@@ -12,24 +12,6 @@
 
 using mozilla::TransactionManager;
 
-<<<<<<< HEAD
-static int32_t sConstructorCount = 0;
-static int32_t sDoCount = 0;
-static int32_t *sDoOrderArr = 0;
-static int32_t sUndoCount = 0;
-static int32_t *sUndoOrderArr = 0;
-static int32_t sRedoCount = 0;
-static int32_t *sRedoOrderArr = 0;
-||||||| merged common ancestors
-static int32_t sConstructorCount     = 0;
-static int32_t sDoCount              = 0;
-static int32_t *sDoOrderArr          = 0;
-static int32_t sUndoCount            = 0;
-static int32_t *sUndoOrderArr        = 0;
-static int32_t sRedoCount            = 0;
-static int32_t *sRedoOrderArr        = 0;
-
-=======
 static int32_t sConstructorCount = 0;
 static int32_t sDoCount = 0;
 static int32_t* sDoOrderArr = 0;
@@ -37,7 +19,6 @@ static int32_t sUndoCount = 0;
 static int32_t* sUndoOrderArr = 0;
 static int32_t sRedoCount = 0;
 static int32_t* sRedoOrderArr = 0;
->>>>>>> upstream-releases
 
 int32_t sSimpleTestDoOrderArr[] = {
     1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
@@ -337,28 +318,14 @@ class SimpleTransaction : public TestTransaction {
     return (mFlags & THROWS_REDO_ERROR_FLAG) ? NS_ERROR_FAILURE : NS_OK;
   }
 
-<<<<<<< HEAD
-  NS_IMETHOD GetIsTransient(bool *aIsTransient) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetIsTransient(bool *aIsTransient) override
-  {
-=======
   NS_IMETHOD GetIsTransient(bool* aIsTransient) override {
->>>>>>> upstream-releases
     if (aIsTransient) {
       *aIsTransient = (mFlags & TRANSIENT_FLAG) ? true : false;
     }
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  NS_IMETHOD Merge(nsITransaction *aTransaction, bool *aDidMerge) override {
-||||||| merged common ancestors
-  NS_IMETHOD Merge(nsITransaction *aTransaction, bool *aDidMerge) override
-  {
-=======
   NS_IMETHOD Merge(nsITransaction* aTransaction, bool* aDidMerge) override {
->>>>>>> upstream-releases
     if (aDidMerge) {
       *aDidMerge = (mFlags & MERGE_FLAG) ? true : false;
     }
@@ -366,21 +333,9 @@ class SimpleTransaction : public TestTransaction {
   }
 };
 
-<<<<<<< HEAD
-class AggregateTransaction : public SimpleTransaction {
- private:
-  AggregateTransaction(nsITransactionManager *aTXMgr, int32_t aLevel,
-||||||| merged common ancestors
-class AggregateTransaction : public SimpleTransaction
-{
-private:
-
-  AggregateTransaction(nsITransactionManager *aTXMgr, int32_t aLevel,
-=======
 class AggregateTransaction : public SimpleTransaction {
  private:
   AggregateTransaction(nsITransactionManager* aTXMgr, int32_t aLevel,
->>>>>>> upstream-releases
                        int32_t aNumber, int32_t aMaxLevel,
                        int32_t aNumChildrenPerNode, int32_t aFlags) {
     mLevel = aLevel;
@@ -402,31 +357,6 @@ class AggregateTransaction : public SimpleTransaction {
   int32_t mMaxLevel;
   int32_t mNumChildrenPerNode;
 
-<<<<<<< HEAD
- public:
-  AggregateTransaction(nsITransactionManager *aTXMgr, int32_t aMaxLevel,
-                       int32_t aNumChildrenPerNode,
-                       int32_t aFlags = NONE_FLAG) {
-    mLevel = 1;
-    mNumber = 1;
-    mFlags = aFlags & (~ALL_ERROR_FLAGS);
-    mErrorFlags = aFlags & ALL_ERROR_FLAGS;
-    mTXMgr = aTXMgr;
-    mMaxLevel = aMaxLevel;
-||||||| merged common ancestors
-public:
-
-  AggregateTransaction(nsITransactionManager *aTXMgr,
-                       int32_t aMaxLevel, int32_t aNumChildrenPerNode,
-                       int32_t aFlags=NONE_FLAG)
-  {
-    mLevel              = 1;
-    mNumber             = 1;
-    mFlags              = aFlags & (~ALL_ERROR_FLAGS);
-    mErrorFlags         = aFlags & ALL_ERROR_FLAGS;
-    mTXMgr              = aTXMgr;
-    mMaxLevel           = aMaxLevel;
-=======
  public:
   AggregateTransaction(nsITransactionManager* aTXMgr, int32_t aMaxLevel,
                        int32_t aNumChildrenPerNode,
@@ -437,7 +367,6 @@ public:
     mErrorFlags = aFlags & ALL_ERROR_FLAGS;
     mTXMgr = aTXMgr;
     mMaxLevel = aMaxLevel;
->>>>>>> upstream-releases
     mNumChildrenPerNode = aNumChildrenPerNode;
   }
 
@@ -503,45 +432,17 @@ public:
   }
 };
 
-<<<<<<< HEAD
-class TestTransactionFactory {
- public:
-  virtual TestTransaction *create(nsITransactionManager *txmgr,
-                                  int32_t flags) = 0;
-||||||| merged common ancestors
-class TestTransactionFactory
-{
-public:
-  virtual TestTransaction *create(nsITransactionManager *txmgr, int32_t flags) = 0;
-=======
 class TestTransactionFactory {
  public:
   virtual TestTransaction* create(nsITransactionManager* txmgr,
                                   int32_t flags) = 0;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-class SimpleTransactionFactory : public TestTransactionFactory {
- public:
-  TestTransaction *create(nsITransactionManager *txmgr,
-                          int32_t flags) override {
-    return (TestTransaction *)new SimpleTransaction(flags);
-||||||| merged common ancestors
-class SimpleTransactionFactory : public TestTransactionFactory
-{
-public:
-
-  TestTransaction *create(nsITransactionManager *txmgr, int32_t flags) override
-  {
-    return (TestTransaction *)new SimpleTransaction(flags);
-=======
 class SimpleTransactionFactory : public TestTransactionFactory {
  public:
   TestTransaction* create(nsITransactionManager* txmgr,
                           int32_t flags) override {
     return (TestTransaction*)new SimpleTransaction(flags);
->>>>>>> upstream-releases
   }
 };
 
@@ -553,29 +454,6 @@ class AggregateTransactionFactory : public TestTransactionFactory {
 
  public:
   AggregateTransactionFactory(int32_t aMaxLevel, int32_t aNumChildrenPerNode,
-<<<<<<< HEAD
-                              int32_t aFixedFlags = NONE_FLAG)
-      : mMaxLevel(aMaxLevel),
-        mNumChildrenPerNode(aNumChildrenPerNode),
-        mFixedFlags(aFixedFlags) {}
-
-  TestTransaction *create(nsITransactionManager *txmgr,
-                          int32_t flags) override {
-    return (TestTransaction *)new AggregateTransaction(
-        txmgr, mMaxLevel, mNumChildrenPerNode, flags | mFixedFlags);
-||||||| merged common ancestors
-                              int32_t aFixedFlags=NONE_FLAG)
-      : mMaxLevel(aMaxLevel), mNumChildrenPerNode(aNumChildrenPerNode),
-        mFixedFlags(aFixedFlags)
-  {
-  }
-
-  TestTransaction *create(nsITransactionManager *txmgr, int32_t flags) override
-  {
-    return (TestTransaction *)new AggregateTransaction(txmgr, mMaxLevel,
-                                                       mNumChildrenPerNode,
-                                                       flags | mFixedFlags);
-=======
                               int32_t aFixedFlags = NONE_FLAG)
       : mMaxLevel(aMaxLevel),
         mNumChildrenPerNode(aNumChildrenPerNode),
@@ -585,7 +463,6 @@ class AggregateTransactionFactory : public TestTransactionFactory {
                           int32_t flags) override {
     return (TestTransaction*)new AggregateTransaction(
         txmgr, mMaxLevel, mNumChildrenPerNode, flags | mFixedFlags);
->>>>>>> upstream-releases
   }
 };
 
@@ -605,15 +482,7 @@ void reset_globals() {
 /**
  * Test behaviors in non-batch mode.
  **/
-<<<<<<< HEAD
-void quick_test(TestTransactionFactory *factory) {
-||||||| merged common ancestors
-void
-quick_test(TestTransactionFactory *factory)
-{
-=======
 void quick_test(TestTransactionFactory* factory) {
->>>>>>> upstream-releases
   /*******************************************************************
    *
    * Create a transaction manager implementation:
@@ -1310,7 +1179,8 @@ void quick_test(TestTransactionFactory* factory) {
   EXPECT_TRUE(NS_SUCCEEDED(rv));
 }
 
-TEST(TestTXMgr, SimpleTest) {
+TEST(TestTXMgr, SimpleTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -1332,7 +1202,8 @@ TEST(TestTXMgr, SimpleTest) {
   quick_test(&factory);
 }
 
-TEST(TestTXMgr, AggregationTest) {
+TEST(TestTXMgr, AggregationTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -1358,15 +1229,7 @@ TEST(TestTXMgr, AggregationTest) {
 /**
  * Test behaviors in batch mode.
  **/
-<<<<<<< HEAD
-void quick_batch_test(TestTransactionFactory *factory) {
-||||||| merged common ancestors
-void
-quick_batch_test(TestTransactionFactory *factory)
-{
-=======
 void quick_batch_test(TestTransactionFactory* factory) {
->>>>>>> upstream-releases
   /*******************************************************************
    *
    * Create a transaction manager implementation:
@@ -1945,7 +1808,8 @@ void quick_batch_test(TestTransactionFactory* factory) {
   EXPECT_TRUE(NS_SUCCEEDED(rv));
 }
 
-TEST(TestTXMgr, SimpleBatchTest) {
+TEST(TestTXMgr, SimpleBatchTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -1966,7 +1830,8 @@ TEST(TestTXMgr, SimpleBatchTest) {
   quick_batch_test(&factory);
 }
 
-TEST(TestTXMgr, AggregationBatchTest) {
+TEST(TestTXMgr, AggregationBatchTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -1993,15 +1858,7 @@ TEST(TestTXMgr, AggregationBatchTest) {
  * Create 'iterations * (iterations + 1) / 2' transactions;
  * do/undo/redo/undo them.
  **/
-<<<<<<< HEAD
-void stress_test(TestTransactionFactory *factory, int32_t iterations) {
-||||||| merged common ancestors
-void
-stress_test(TestTransactionFactory *factory, int32_t iterations)
-{
-=======
 void stress_test(TestTransactionFactory* factory, int32_t iterations) {
->>>>>>> upstream-releases
   /*******************************************************************
    *
    * Create a transaction manager:
@@ -2066,7 +1923,8 @@ void stress_test(TestTransactionFactory* factory, int32_t iterations) {
   EXPECT_TRUE(NS_SUCCEEDED(rv));
 }
 
-TEST(TestTXMgr, SimpleStressTest) {
+TEST(TestTXMgr, SimpleStressTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -2096,7 +1954,8 @@ TEST(TestTXMgr, SimpleStressTest) {
   stress_test(&factory, iterations);
 }
 
-TEST(TestTXMgr, AggregationStressTest) {
+TEST(TestTXMgr, AggregationStressTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -2126,7 +1985,8 @@ TEST(TestTXMgr, AggregationStressTest) {
   stress_test(&factory, iterations);
 }
 
-TEST(TestTXMgr, AggregationBatchStressTest) {
+TEST(TestTXMgr, AggregationBatchStressTest)
+{
   /*******************************************************************
    *
    * Initialize globals for test.
@@ -2145,35 +2005,8 @@ TEST(TestTXMgr, AggregationBatchStressTest) {
 
   int32_t iterations =
 #ifdef DEBUG
-<<<<<<< HEAD
       10
 #else
-#if defined(MOZ_ASAN) || defined(MOZ_WIDGET_ANDROID)
-      // See Bug 929985: 500 is too many for ASAN and Android, 100 is safe.
-      100
-||||||| merged common ancestors
-  10
-#else
-#if defined(MOZ_ASAN) || defined(MOZ_WIDGET_ANDROID)
-  // See Bug 929985: 500 is too many for ASAN and Android, 100 is safe.
-  100
-=======
-      10
->>>>>>> upstream-releases
-#else
-<<<<<<< HEAD
-      //
-      // 500 iterations sends 2,630,250 transactions through the system!!
-      //
-      500
-#endif
-||||||| merged common ancestors
-  //
-  // 500 iterations sends 2,630,250 transactions through the system!!
-  //
-  500
-#endif
-=======
 #  if defined(MOZ_ASAN) || defined(MOZ_WIDGET_ANDROID)
       // See Bug 929985: 500 is too many for ASAN and Android, 100 is safe.
       100
@@ -2183,7 +2016,6 @@ TEST(TestTXMgr, AggregationBatchStressTest) {
       //
       500
 #  endif
->>>>>>> upstream-releases
 #endif
       ;
   stress_test(&factory, iterations);

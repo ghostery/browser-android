@@ -18,14 +18,9 @@
 #include "mozilla/Move.h"
 #include "mozilla/NativeNt.h"
 #include "mozilla/ScopeExit.h"
-<<<<<<< HEAD
-#include "mozilla/TypedEnumBits.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/TypedEnumBits.h"
 #include "mozilla/Types.h"
 #include "mozilla/Unused.h"
->>>>>>> upstream-releases
 
 #define COPY_CODES(NBYTES)                          \
   do {                                              \
@@ -36,18 +31,6 @@
 namespace mozilla {
 namespace interceptor {
 
-<<<<<<< HEAD
-enum class DetourFlags : uint32_t {
-  eDefault = 0,
-  eEnable10BytePatch = 1,  // Allow 10-byte patches when conditions allow
-  eTestOnlyForce10BytePatch =
-      3,  // Force 10-byte patches at all times (testing only)
-};
-
-MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(DetourFlags)
-
-||||||| merged common ancestors
-=======
 enum class DetourFlags : uint32_t {
   eDefault = 0,
   eEnable10BytePatch = 1,  // Allow 10-byte patches when conditions allow
@@ -57,42 +40,21 @@ enum class DetourFlags : uint32_t {
 
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(DetourFlags)
 
->>>>>>> upstream-releases
 template <typename VMPolicy>
 class WindowsDllDetourPatcher final : public WindowsDllPatcherBase<VMPolicy> {
   typedef typename VMPolicy::MMPolicyT MMPolicyT;
-<<<<<<< HEAD
-  DetourFlags mFlags;
-||||||| merged common ancestors
-=======
   typedef typename VMPolicy::PoolType TrampPoolT;
   Maybe<DetourFlags> mFlags;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
 #if defined(_M_ARM64)
   // LDR x16, .+8
   static const uint32_t kLdrX16Plus8 = 0x58000050U;
 #endif  // defined(_M_ARM64)
 
  public:
->>>>>>> upstream-releases
   template <typename... Args>
   explicit WindowsDllDetourPatcher(Args... aArgs)
-<<<<<<< HEAD
-      : WindowsDllPatcherBase<VMPolicy>(std::forward<Args>(aArgs)...),
-        mFlags(DetourFlags::eDefault) {}
-||||||| merged common ancestors
-    : WindowsDllPatcherBase<VMPolicy>(std::forward<Args>(aArgs)...)
-  {
-  }
-=======
       : WindowsDllPatcherBase<VMPolicy>(std::forward<Args>(aArgs)...) {}
->>>>>>> upstream-releases
 
   ~WindowsDllDetourPatcher() { Clear(); }
 
@@ -118,19 +80,6 @@ public:
 
     const auto& tramps = this->mVMPolicy.Items();
     for (auto&& tramp : tramps) {
-<<<<<<< HEAD
-#if defined(_M_ARM64)
-      MOZ_RELEASE_ASSERT(false, "Shouldn't get here");
-#endif
-
-||||||| merged common ancestors
-
-#if defined(_M_ARM64)
-      MOZ_RELEASE_ASSERT(false, "Shouldn't get here");
-#endif
-
-=======
->>>>>>> upstream-releases
       // First we read the pointer to the interceptor instance.
       Maybe<uintptr_t> instance = tramp.ReadEncodedPointer();
       if (!instance) {
@@ -184,20 +133,6 @@ public:
       if (!origBytes) {
         continue;
       }
-<<<<<<< HEAD
-||||||| merged common ancestors
-#elif defined(_M_X64)
-      // Ensure the MOV R11 from CreateTrampoline is where we expect it to be.
-      MOZ_ASSERT(opcode1 == 0x49);
-      if (opcode1 != 0x49) {
-        continue;
-      }
-
-      Maybe<uint8_t> maybeOpcode2 = origBytes.ReadByte();
-      if (!maybeOpcode2) {
-        continue;
-      }
-=======
 
       origBytes.Commit();
 #  elif defined(_M_X64)
@@ -219,30 +154,7 @@ public:
         continue;
       }
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      origBytes.Commit();
-#elif defined(_M_X64)
-      if (opcode1 == 0x49) {
-        if (!Clear13BytePatch(origBytes, tramp.GetCurrentRemoteAddress())) {
-          continue;
-        }
-      } else if (opcode1 == 0xB8) {
-        if (!Clear10BytePatch(origBytes)) {
-          continue;
-        }
-      } else {
-        MOZ_ASSERT_UNREACHABLE("Unrecognized patch!");
-||||||| merged common ancestors
-      uint8_t opcode2 = maybeOpcode2.value();
-      if (opcode2 != 0xBB) {
-        continue;
-      }
-
-      origBytes.WritePointer(tramp.GetCurrentRemoteAddress());
-      if (!origBytes) {
-=======
 #elif defined(_M_ARM64)
 
       // Ensure that we see the instruction that we expect
@@ -261,7 +173,6 @@ public:
         }
       } else {
         MOZ_ASSERT_UNREACHABLE("Unrecognized patch!");
->>>>>>> upstream-releases
         continue;
       }
 
@@ -273,76 +184,6 @@ public:
     this->mVMPolicy.Clear();
   }
 
-<<<<<<< HEAD
-  bool Clear13BytePatch(WritableTargetFunction<MMPolicyT>& aOrigBytes,
-                        const uintptr_t aResetToAddress) {
-    Maybe<uint8_t> maybeOpcode2 = aOrigBytes.ReadByte();
-    if (!maybeOpcode2) {
-      return false;
-    }
-
-    uint8_t opcode2 = maybeOpcode2.value();
-    if (opcode2 != 0xBB) {
-      return false;
-    }
-
-    aOrigBytes.WritePointer(aResetToAddress);
-    if (!aOrigBytes) {
-      return false;
-    }
-
-    return aOrigBytes.Commit();
-  }
-
-  bool Clear10BytePatch(WritableTargetFunction<MMPolicyT>& aOrigBytes) {
-    Maybe<uint32_t> maybePtr32 = aOrigBytes.ReadLong();
-    if (!maybePtr32) {
-      return false;
-    }
-
-    uint32_t ptr32 = maybePtr32.value();
-    // We expect the high bit to be clear
-    if (ptr32 & 0x80000000) {
-      return false;
-    }
-
-    uintptr_t trampPtr = ptr32;
-
-    // trampPtr points to an intermediate trampoline that contains a 13-byte
-    // patch. We back up by sizeof(uintptr_t) so that we can access the pointer
-    // to the stub trampoline.
-    WritableTargetFunction<MMPolicyT> writableIntermediate(
-        this->mVMPolicy, trampPtr - sizeof(uintptr_t), 13 + sizeof(uintptr_t));
-    if (!writableIntermediate) {
-      return false;
-    }
-
-    Maybe<uintptr_t> stubTramp = writableIntermediate.ReadEncodedPtr();
-    if (!stubTramp || !stubTramp.value()) {
-      return false;
-    }
-
-    Maybe<uint8_t> maybeOpcode1 = writableIntermediate.ReadByte();
-    if (!maybeOpcode1) {
-      return false;
-    }
-
-    // We expect this opcode to be the beginning of our normal mov r11, ptr
-    // patch sequence.
-    uint8_t opcode1 = maybeOpcode1.value();
-    if (opcode1 != 0x49) {
-      return false;
-    }
-
-    // Now we can just delegate the rest to our normal 13-byte patch clearing.
-    return Clear13BytePatch(writableIntermediate, stubTramp.value());
-  }
-
-  void Init(DetourFlags aFlags = DetourFlags::eDefault, int aNumHooks = 0) {
-||||||| merged common ancestors
-  void Init(int aNumHooks = 0)
-  {
-=======
 #if defined(_M_X64)
   bool Clear13BytePatch(WritableTargetFunction<MMPolicyT>& aOrigBytes,
                         const uintptr_t aResetToAddress) {
@@ -492,55 +333,19 @@ public:
 #endif  // defined(_M_ARM64)
 
   void Init(DetourFlags aFlags = DetourFlags::eDefault) {
->>>>>>> upstream-releases
     if (Initialized()) {
       return;
     }
 
-<<<<<<< HEAD
-    mFlags = aFlags;
-
-    if (aNumHooks == 0) {
-      // Win32 allocates VM addresses at a 64KiB granularity, so by default we
-      // might as well utilize that entire 64KiB reservation instead of
-      // artifically constraining ourselves to the page size.
-      aNumHooks = this->mVMPolicy.GetAllocGranularity() / kHookSize;
-||||||| merged common ancestors
-    if (aNumHooks == 0) {
-      // Win32 allocates VM addresses at a 64KiB granularity, so by default we
-      // might as well utilize that entire 64KiB reservation instead of
-      // artifically constraining ourselves to the page size.
-      aNumHooks = this->mVMPolicy.GetAllocGranularity() / kHookSize;
-=======
 #if defined(_M_X64)
     if (aFlags & DetourFlags::eTestOnlyForceShortPatch) {
       aFlags |= DetourFlags::eEnable10BytePatch;
->>>>>>> upstream-releases
     }
 #endif  // defined(_M_X64)
 
-<<<<<<< HEAD
-    ReservationFlags resFlags = ReservationFlags::eDefault;
-    if (aFlags & DetourFlags::eEnable10BytePatch) {
-      resFlags |= ReservationFlags::eForceFirst2GB;
-    }
-||||||| merged common ancestors
-    this->mVMPolicy.Reserve(aNumHooks);
-  }
-=======
     mFlags = Some(aFlags);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    this->mVMPolicy.Reserve(aNumHooks, resFlags);
-  }
-||||||| merged common ancestors
-  bool Initialized() const
-  {
-    return !!this->mVMPolicy;
-  }
-=======
   bool Initialized() const { return mFlags.isSome(); }
 
   bool AddHook(FARPROC aTargetFn, intptr_t aHookDest, void** aOrigFunc) {
@@ -548,19 +353,7 @@ public:
         this->ResolveRedirectedAddress(aTargetFn));
 
     TrampPoolT* trampPool = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool Initialized() const { return !!this->mVMPolicy; }
-
-  bool AddHook(FARPROC aTargetFn, intptr_t aHookDest, void** aOrigFunc) {
-    ReadOnlyTargetFunction<MMPolicyT> target(
-        this->ResolveRedirectedAddress(aTargetFn));
-||||||| merged common ancestors
-  bool AddHook(FARPROC aTargetFn, intptr_t aHookDest, void** aOrigFunc)
-  {
-    ReadOnlyTargetFunction<MMPolicyT> target(this->ResolveRedirectedAddress(aTargetFn));
-=======
 #if defined(_M_ARM64)
     // ARM64 uses two passes to build its trampoline. The first pass uses a
     // null tramp to determine how many bytes are needed. Once that is known,
@@ -579,7 +372,6 @@ public:
     if (!maybeTramp) {
       return false;
     }
->>>>>>> upstream-releases
 
     Trampoline<MMPolicyT> tramp(std::move(maybeTramp.ref()));
 #endif
@@ -592,11 +384,6 @@ public:
     return true;
   }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
  private:
   /**
    * This function returns a maximum distance that can be reached by a single
@@ -668,7 +455,6 @@ protected:
  protected:
 #if !defined(_M_ARM64)
 
->>>>>>> upstream-releases
   const static int kPageSize = 4096;
 
   // rex bits
@@ -765,33 +551,11 @@ protected:
     return numBytes;
   }
 
-<<<<<<< HEAD
-#if defined(_M_X64)
-  enum class JumpType{Je, Jne, Jmp, Call};
-
-  static bool GenerateJump(Trampoline<MMPolicyT>& aTramp,
-                           uintptr_t aAbsTargetAddress, const JumpType aType) {
-||||||| merged common ancestors
-#if defined(_M_X64)
-  enum class JumpType
-  {
-   Je,
-   Jne,
-   Jmp,
-   Call
-  };
-
-  static bool
-  GenerateJump(Trampoline<MMPolicyT>& aTramp, uintptr_t aAbsTargetAddress,
-               const JumpType aType)
-  {
-=======
 #  if defined(_M_X64)
   enum class JumpType{Je, Jne, Jmp, Call};
 
   static bool GenerateJump(Trampoline<MMPolicyT>& aTramp,
                            uintptr_t aAbsTargetAddress, const JumpType aType) {
->>>>>>> upstream-releases
     // Near call, absolute indirect, address given in r/m32
     if (aType == JumpType::Call) {
       // CALL [RIP+0]
@@ -827,28 +591,9 @@ protected:
   }
 #  endif
 
-<<<<<<< HEAD
-  enum ePrefixGroupBits {
-    eNoPrefixes = 0,
-    ePrefixGroup1 = (1 << 0),
-    ePrefixGroup2 = (1 << 1),
-    ePrefixGroup3 = (1 << 2),
-    ePrefixGroup4 = (1 << 3)
-  };
-||||||| merged common ancestors
-  enum ePrefixGroupBits
-  {
-    eNoPrefixes = 0,
-    ePrefixGroup1 = (1 << 0),
-    ePrefixGroup2 = (1 << 1),
-    ePrefixGroup3 = (1 << 2),
-    ePrefixGroup4 = (1 << 3)
-  };
-=======
   enum ePrefixGroupBits{eNoPrefixes = 0, ePrefixGroup1 = (1 << 0),
                         ePrefixGroup2 = (1 << 1), ePrefixGroup3 = (1 << 2),
                         ePrefixGroup4 = (1 << 3)};
->>>>>>> upstream-releases
 
   int CountPrefixBytes(const ReadOnlyTargetFunction<MMPolicyT>& aBytes,
                        const int aBytesIndex, unsigned char* aOutGroupBits) {
@@ -958,15 +703,8 @@ protected:
   }
 
   void CreateTrampoline(ReadOnlyTargetFunction<MMPolicyT>& origBytes,
-<<<<<<< HEAD
-                        intptr_t aDest, void** aOutTramp) {
-||||||| merged common ancestors
-                        intptr_t aDest, void** aOutTramp)
-  {
-=======
                         TrampPoolT* aTrampPool, Trampoline<MMPolicyT>& aTramp,
                         intptr_t aDest, void** aOutTramp) {
->>>>>>> upstream-releases
     *aOutTramp = nullptr;
 
     Trampoline<MMPolicyT>& tramp = aTramp;
@@ -1087,18 +825,9 @@ protected:
         // jmp [disp32]
         origBytes += 6;
       } else if (*origBytes == 0xc2) {
-<<<<<<< HEAD
-        // ret imm16.  We can't handle this but it happens.  We don't ASSERT but
-        // we do fail to hook.
-#if defined(MOZILLA_INTERNAL_API)
-||||||| merged common ancestors
-        // ret imm16.  We can't handle this but it happens.  We don't ASSERT but we do fail to hook.
-#if defined(MOZILLA_INTERNAL_API)
-=======
         // ret imm16.  We can't handle this but it happens.  We don't ASSERT but
         // we do fail to hook.
 #  if defined(MOZILLA_INTERNAL_API)
->>>>>>> upstream-releases
         NS_WARNING("Cannot hook method -- RET opcode found");
 #  endif
         return;
@@ -1118,20 +847,6 @@ protected:
     }
 #elif defined(_M_X64)
     bool foundJmp = false;
-<<<<<<< HEAD
-    // |use10BytePatch| should always default to |false| in production. It is
-    // not set to true unless we detect that a 10-byte patch is necessary.
-    // OTOH, for testing purposes, if we want to force a 10-byte patch, we
-    // always initialize |use10BytePatch| to |true|.
-    bool use10BytePatch = (mFlags & DetourFlags::eTestOnlyForce10BytePatch) ==
-                          DetourFlags::eTestOnlyForce10BytePatch;
-    const uint32_t bytesRequired = use10BytePatch ? 10 : 13;
-
-    while (origBytes.GetOffset() < bytesRequired) {
-||||||| merged common ancestors
-
-    while (origBytes.GetOffset() < 13) {
-=======
     // |use10BytePatch| should always default to |false| in production. It is
     // not set to true unless we detect that a 10-byte patch is necessary.
     // OTOH, for testing purposes, if we want to force a 10-byte patch, we
@@ -1142,7 +857,6 @@ protected:
     const uint32_t bytesRequired = use10BytePatch ? 10 : 13;
 
     while (origBytes.GetOffset() < bytesRequired) {
->>>>>>> upstream-releases
       // If we found JMP 32bit offset, we require that the next bytes must
       // be NOP or INT3.  There is no reason to copy them.
       // TODO: This used to trigger for Je as well.  Now that I allow
@@ -1156,18 +870,6 @@ protected:
           ++origBytes;
           continue;
         }
-<<<<<<< HEAD
-
-        // If our trampoline space is located in the lowest 2GB, we can do a ten
-        // byte patch instead of a thirteen byte patch.
-        if (this->mVMPolicy.IsTrampolineSpaceInLowest2GB() &&
-            origBytes.GetOffset() >= 10) {
-          use10BytePatch = true;
-          break;
-        }
-
-||||||| merged common ancestors
-=======
 
         // If our trampoline space is located in the lowest 2GB, we can do a ten
         // byte patch instead of a thirteen byte patch.
@@ -1177,7 +879,6 @@ protected:
           break;
         }
 
->>>>>>> upstream-releases
         MOZ_ASSERT_UNREACHABLE("Opcode sequence includes commands after JMP");
         return;
       }
@@ -1726,75 +1427,6 @@ protected:
     target.WriteByte(0xe9);     // jmp
     target.WriteDisp32(aDest);  // hook displacement
 #elif defined(_M_X64)
-<<<<<<< HEAD
-    if (use10BytePatch) {
-      // Okay, now we can write the actual tramp.
-      // Note: Even if the target function is also below 2GB, we still use an
-      // intermediary trampoline so that we consistently have a 64-bit pointer
-      // that we can use to reset the trampoline upon interceptor shutdown.
-      Trampoline<MMPolicyT> callTramp(this->mVMPolicy.GetNextTrampoline());
-      if (!callTramp) {
-        return;
-      }
-
-      // Write a null instance so that Clear() does not consider this tramp to
-      // be a normal tramp to be torn down.
-      callTramp.WriteEncodedPointer(nullptr);
-      // Use the second pointer slot to store a pointer to the primary tramp
-      callTramp.WriteEncodedPointer(trampPtr);
-      callTramp.StartExecutableCode();
-
-      // mov r11, address
-      callTramp.WriteByte(0x49);
-      callTramp.WriteByte(0xbb);
-      callTramp.WritePointer(aDest);
-
-      // jmp r11
-      callTramp.WriteByte(0x41);
-      callTramp.WriteByte(0xff);
-      callTramp.WriteByte(0xe3);
-
-      void* callTrampStart = callTramp.EndExecutableCode();
-      if (!callTrampStart) {
-        return;
-      }
-
-      target.WriteByte(0xB8);  // MOV EAX, IMM32
-
-      // Assert that the topmost 33 bits are 0
-      MOZ_ASSERT(
-          !(reinterpret_cast<uintptr_t>(callTrampStart) & (~0x7FFFFFFFULL)));
-
-      target.WriteLong(static_cast<uint32_t>(
-          reinterpret_cast<uintptr_t>(callTrampStart) & 0x7FFFFFFFU));
-      target.WriteByte(0x48);  // REX.W
-      target.WriteByte(0x63);  // MOVSXD r64, r/m32
-      // dest: rax, src: eax
-      target.WriteByte(BuildModRmByte(kModReg, kRegAx, kRegAx));
-      target.WriteByte(0xFF);                                // JMP /4
-      target.WriteByte(BuildModRmByte(kModReg, 4, kRegAx));  // rax
-    } else {
-      // mov r11, address
-      target.WriteByte(0x49);
-      target.WriteByte(0xbb);
-      target.WritePointer(aDest);
-
-      // jmp r11
-      target.WriteByte(0x41);
-      target.WriteByte(0xff);
-      target.WriteByte(0xe3);
-    }
-||||||| merged common ancestors
-    // mov r11, address
-    target.WriteByte(0x49);
-    target.WriteByte(0xbb);
-    target.WritePointer(aDest);
-
-    // jmp r11
-    target.WriteByte(0x41);
-    target.WriteByte(0xff);
-    target.WriteByte(0xe3);
-=======
     if (use10BytePatch) {
       // Okay, now we can write the actual tramp.
       // Note: Even if the target function is also below 2GB, we still use an
@@ -1890,7 +1522,6 @@ protected:
 
 #else
 #  error "Unsupported processor architecture"
->>>>>>> upstream-releases
 #endif
 
     if (!target.Commit()) {

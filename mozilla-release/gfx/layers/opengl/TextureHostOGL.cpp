@@ -6,18 +6,8 @@
 
 #include "TextureHostOGL.h"
 
-<<<<<<< HEAD
-#include "EGLUtils.h"
-#include "GLContext.h"     // for GLContext, etc
-#include "GLLibraryEGL.h"  // for GLLibraryEGL
-||||||| merged common ancestors
-#include "EGLUtils.h"
-#include "GLContext.h"                  // for GLContext, etc
-#include "GLLibraryEGL.h"               // for GLLibraryEGL
-=======
 #include "GLContextEGL.h"  // for GLContext, etc
 #include "GLLibraryEGL.h"  // for GLLibraryEGL
->>>>>>> upstream-releases
 #include "GLUploadHelpers.h"
 #include "GLReadTexImageHelper.h"
 #include "gfx2DGlue.h"             // for ContentForFormat, etc
@@ -25,16 +15,9 @@
 #include "mozilla/gfx/BaseSize.h"  // for BaseSize
 #include "mozilla/gfx/Logging.h"   // for gfxCriticalError
 #include "mozilla/layers/ISurfaceAllocator.h"
-<<<<<<< HEAD
-#include "mozilla/webrender/WebRenderAPI.h"
-#include "nsRegion.h"  // for nsIntRegion
-||||||| merged common ancestors
-#include "nsRegion.h"                   // for nsIntRegion
-=======
 #include "mozilla/webrender/RenderEGLImageTextureHost.h"
 #include "mozilla/webrender/WebRenderAPI.h"
 #include "nsRegion.h"  // for nsIntRegion
->>>>>>> upstream-releases
 #include "AndroidSurfaceTexture.h"
 #include "GfxTexturesReporter.h"  // for GfxTexturesReporter
 #include "GLBlitTextureImageHelper.h"
@@ -48,10 +31,6 @@
 #  include "mozilla/webrender/RenderAndroidSurfaceTextureHostOGL.h"
 #endif
 
-#ifdef MOZ_WIDGET_ANDROID
-#include "mozilla/webrender/RenderAndroidSurfaceTextureHostOGL.h"
-#endif
-
 using namespace mozilla::gl;
 using namespace mozilla::gfx;
 
@@ -60,18 +39,6 @@ namespace layers {
 
 class Compositor;
 
-<<<<<<< HEAD
-already_AddRefed<TextureHost> CreateTextureHostOGL(
-    const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
-    LayersBackend aBackend, TextureFlags aFlags) {
-||||||| merged common ancestors
-already_AddRefed<TextureHost>
-CreateTextureHostOGL(const SurfaceDescriptor& aDesc,
-                     ISurfaceAllocator* aDeallocator,
-                     LayersBackend aBackend,
-                     TextureFlags aFlags)
-{
-=======
 void ApplySamplingFilterToBoundTexture(gl::GLContext* aGL,
                                        gfx::SamplingFilter aSamplingFilter,
                                        GLuint aTarget) {
@@ -86,7 +53,6 @@ void ApplySamplingFilterToBoundTexture(gl::GLContext* aGL,
 already_AddRefed<TextureHost> CreateTextureHostOGL(
     const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
     LayersBackend aBackend, TextureFlags aFlags) {
->>>>>>> upstream-releases
   RefPtr<TextureHost> result;
   switch (aDesc.type()) {
 #ifdef MOZ_WIDGET_ANDROID
@@ -148,19 +114,6 @@ static gl::TextureImage::Flags FlagsToGLFlags(TextureFlags aFlags) {
   return static_cast<gl::TextureImage::Flags>(result);
 }
 
-<<<<<<< HEAD
-bool TextureImageTextureSourceOGL::Update(gfx::DataSourceSurface* aSurface,
-                                          nsIntRegion* aDestRegion,
-                                          gfx::IntPoint* aSrcOffset) {
-  GLContext* gl = mGL;
-||||||| merged common ancestors
-bool
-TextureImageTextureSourceOGL::Update(gfx::DataSourceSurface* aSurface,
-                                     nsIntRegion* aDestRegion,
-                                     gfx::IntPoint* aSrcOffset)
-{
-  GLContext *gl = mGL;
-=======
 TextureImageTextureSourceOGL::TextureImageTextureSourceOGL(
     CompositorOGL* aCompositor, TextureFlags aFlags)
     : mGL(aCompositor->gl()),
@@ -189,7 +142,6 @@ bool TextureImageTextureSourceOGL::Update(gfx::DataSourceSurface* aSurface,
                                           nsIntRegion* aDestRegion,
                                           gfx::IntPoint* aSrcOffset) {
   GLContext* gl = mGL;
->>>>>>> upstream-releases
   MOZ_ASSERT(gl);
   if (!gl || !gl->MakeCurrent()) {
     NS_WARNING(
@@ -674,64 +626,6 @@ void SurfaceTextureHost::DeallocateDeviceData() {
   }
 }
 
-<<<<<<< HEAD
-void SurfaceTextureHost::CreateRenderTexture(
-    const wr::ExternalImageId& aExternalImageId) {
-  RefPtr<wr::RenderTextureHost> texture =
-      new wr::RenderAndroidSurfaceTextureHostOGL(mSurfTex, mSize, mFormat,
-                                                 mContinuousUpdate);
-  wr::RenderThread::Get()->RegisterExternalImage(wr::AsUint64(aExternalImageId),
-                                                 texture.forget());
-}
-
-void SurfaceTextureHost::PushResourceUpdates(
-    wr::TransactionBuilder& aResources, ResourceUpdateOp aOp,
-    const Range<wr::ImageKey>& aImageKeys, const wr::ExternalImageId& aExtID) {
-  auto method = aOp == TextureHost::ADD_IMAGE
-                    ? &wr::TransactionBuilder::AddExternalImage
-                    : &wr::TransactionBuilder::UpdateExternalImage;
-  auto bufferType = wr::WrExternalImageBufferType::TextureExternalHandle;
-
-  switch (GetFormat()) {
-    case gfx::SurfaceFormat::R8G8B8X8:
-    case gfx::SurfaceFormat::R8G8B8A8: {
-      MOZ_ASSERT(aImageKeys.length() == 1);
-
-      // XXX Add RGBA handling. Temporary hack to avoid crash
-      // With BGRA format setting, rendering works without problem.
-      auto format = GetFormat() == gfx::SurfaceFormat::R8G8B8A8
-                        ? gfx::SurfaceFormat::B8G8R8A8
-                        : gfx::SurfaceFormat::B8G8R8X8;
-      wr::ImageDescriptor descriptor(GetSize(), format);
-      (aResources.*method)(aImageKeys[0], descriptor, aExtID, bufferType, 0);
-      break;
-    }
-    default: { MOZ_ASSERT_UNREACHABLE("unexpected to be called"); }
-  }
-}
-
-void SurfaceTextureHost::PushDisplayItems(
-    wr::DisplayListBuilder& aBuilder, const wr::LayoutRect& aBounds,
-    const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
-    const Range<wr::ImageKey>& aImageKeys) {
-  switch (GetFormat()) {
-    case gfx::SurfaceFormat::R8G8B8X8:
-    case gfx::SurfaceFormat::R8G8B8A8:
-    case gfx::SurfaceFormat::B8G8R8A8:
-    case gfx::SurfaceFormat::B8G8R8X8: {
-      MOZ_ASSERT(aImageKeys.length() == 1);
-      aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0],
-                         !(mFlags & TextureFlags::NON_PREMULTIPLIED));
-      break;
-    }
-    default: { MOZ_ASSERT_UNREACHABLE("unexpected to be called"); }
-  }
-}
-
-#endif  // MOZ_WIDGET_ANDROID
-||||||| merged common ancestors
-#endif // MOZ_WIDGET_ANDROID
-=======
 void SurfaceTextureHost::CreateRenderTexture(
     const wr::ExternalImageId& aExternalImageId) {
   RefPtr<wr::RenderTextureHost> texture =
@@ -791,7 +685,6 @@ void SurfaceTextureHost::PushDisplayItems(
 }
 
 #endif  // MOZ_WIDGET_ANDROID
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -936,12 +829,6 @@ void EGLImageTextureHost::SetTextureSourceProvider(
 
 gfx::SurfaceFormat EGLImageTextureHost::GetFormat() const {
   MOZ_ASSERT(mTextureSource);
-<<<<<<< HEAD
-  return mTextureSource ? mTextureSource->GetFormat()
-                        : gfx::SurfaceFormat::UNKNOWN;
-||||||| merged common ancestors
-  return mTextureSource ? mTextureSource->GetFormat() : gfx::SurfaceFormat::UNKNOWN;
-=======
   return mTextureSource ? mTextureSource->GetFormat()
                         : gfx::SurfaceFormat::UNKNOWN;
 }
@@ -983,7 +870,6 @@ void EGLImageTextureHost::PushDisplayItems(
   MOZ_ASSERT(aImageKeys.length() == 1);
   aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0],
                      !(mFlags & TextureFlags::NON_PREMULTIPLIED));
->>>>>>> upstream-releases
 }
 
 //

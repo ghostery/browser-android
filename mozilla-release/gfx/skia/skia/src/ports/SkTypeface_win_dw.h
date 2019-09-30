@@ -87,10 +87,6 @@ public:
     SkTScopedComPtr<IDWriteFontFace> fDWriteFontFace;
     SkTScopedComPtr<IDWriteFontFace1> fDWriteFontFace1;
     SkTScopedComPtr<IDWriteFontFace2> fDWriteFontFace2;
-<<<<<<< HEAD
-    SkTScopedComPtr<IDWriteFontFace4> fDWriteFontFace4;
-||||||| merged common ancestors
-=======
     SkTScopedComPtr<IDWriteFontFace4> fDWriteFontFace4;
 
     static sk_sp<DWriteFontTypeface> Make(
@@ -105,7 +101,6 @@ public:
             new DWriteFontTypeface(get_style(font), factory, fontFace, font, fontFamily,
                                    fontFileLoader, fontCollectionLoader));
     }
->>>>>>> upstream-releases
 
     static DWriteFontTypeface* Create(IDWriteFactory* factory,
                                       IDWriteFontFace* fontFace,
@@ -139,15 +134,8 @@ protected:
         INHERITED::weak_dispose();
     }
 
-<<<<<<< HEAD
-    sk_sp<SkTypeface> onMakeClone(const SkFontArguments&) const override;
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override;
-||||||| merged common ancestors
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override;
-=======
     sk_sp<SkTypeface> onMakeClone(const SkFontArguments&) const override;
     std::unique_ptr<SkStreamAsset> onOpenStream(int* ttcIndex) const override;
->>>>>>> upstream-releases
     SkScalerContext* onCreateScalerContext(const SkScalerContextEffects&,
                                            const SkDescriptor*) const override;
     void onFilterRec(SkScalerContextRec*) const override;

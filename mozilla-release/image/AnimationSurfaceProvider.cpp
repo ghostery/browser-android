@@ -5,15 +5,8 @@
 
 #include "AnimationSurfaceProvider.h"
 
-<<<<<<< HEAD
-#include "gfxPrefs.h"
-#include "mozilla/gfx/gfxVars.h"
-||||||| merged common ancestors
-#include "gfxPrefs.h"
-=======
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/gfx/gfxVars.h"
->>>>>>> upstream-releases
 #include "nsProxyRelease.h"
 
 #include "DecodePool.h"
@@ -38,41 +31,14 @@ AnimationSurfaceProvider::AnimationSurfaceProvider(
   MOZ_ASSERT(!mDecoder->IsFirstFrameDecode(),
              "Use DecodedSurfaceProvider for single-frame image decodes");
 
-<<<<<<< HEAD
-  // We may produce paletted surfaces for GIF which means the frames are smaller
-  // than one would expect.
-  size_t pixelSize = !aDecoder->ShouldBlendAnimation() &&
-                             aDecoder->GetType() == DecoderType::GIF
-                         ? sizeof(uint8_t)
-                         : sizeof(uint32_t);
-
-||||||| merged common ancestors
-  // We may produce paletted surfaces for GIF which means the frames are smaller
-  // than one would expect.
-  size_t pixelSize = !aDecoder->ShouldBlendAnimation() &&
-                     aDecoder->GetType() == DecoderType::GIF
-                     ? sizeof(uint8_t) : sizeof(uint32_t);
-
-=======
->>>>>>> upstream-releases
   // Calculate how many frames we need to decode in this animation before we
   // enter decode-on-demand mode.
   IntSize frameSize = aSurfaceKey.Size();
   size_t threshold =
-<<<<<<< HEAD
-      (size_t(gfxPrefs::ImageAnimatedDecodeOnDemandThresholdKB()) * 1024) /
-      (pixelSize * frameSize.width * frameSize.height);
-  size_t batch = gfxPrefs::ImageAnimatedDecodeOnDemandBatchSize();
-||||||| merged common ancestors
-    (size_t(gfxPrefs::ImageAnimatedDecodeOnDemandThresholdKB()) * 1024) /
-    (pixelSize * frameSize.width * frameSize.height);
-  size_t batch = gfxPrefs::ImageAnimatedDecodeOnDemandBatchSize();
-=======
       (size_t(StaticPrefs::image_animated_decode_on_demand_threshold_kb()) *
        1024) /
       (sizeof(uint32_t) * frameSize.width * frameSize.height);
   size_t batch = StaticPrefs::image_animated_decode_on_demand_batch_size();
->>>>>>> upstream-releases
 
   mFrames.reset(
       new AnimationFrameRetainedBuffer(threshold, batch, aCurrentFrame));
@@ -181,7 +147,6 @@ already_AddRefed<imgFrame> AnimationSurfaceProvider::GetFrame(size_t aFrame) {
   MutexAutoLock lock(mFramesMutex);
 
   if (Availability().IsPlaceholder()) {
-<<<<<<< HEAD
     MOZ_ASSERT_UNREACHABLE("Calling GetFrame() on a placeholder");
     return nullptr;
   }
@@ -189,26 +154,6 @@ already_AddRefed<imgFrame> AnimationSurfaceProvider::GetFrame(size_t aFrame) {
   RefPtr<imgFrame> frame = mFrames->Get(aFrame, /* aForDisplay */ false);
   MOZ_ASSERT_IF(frame, frame->IsFinished());
   return frame.forget();
-||||||| merged common ancestors
-    MOZ_ASSERT_UNREACHABLE("Calling RawAccessRef() on a placeholder");
-    return RawAccessFrameRef();
-  }
-
-  imgFrame* frame = mFrames.Get(aFrame);
-  if (!frame) {
-    return RawAccessFrameRef();
-  }
-
-  return frame->RawAccessRef(/* aOnlyFinished */ true);
-=======
-    MOZ_ASSERT_UNREACHABLE("Calling GetFrame() on a placeholder");
-    return nullptr;
-  }
-
-  RefPtr<imgFrame> frame = mFrames->Get(aFrame, /* aForDisplay */ false);
-  MOZ_ASSERT_IF(frame, frame->IsFinished());
-  return frame.forget();
->>>>>>> upstream-releases
 }
 
 bool AnimationSurfaceProvider::IsFinished() const {
@@ -449,40 +394,6 @@ bool AnimationSurfaceProvider::CheckForNewFrameAtTerminalState() {
   return continueDecoding;
 }
 
-<<<<<<< HEAD
-void AnimationSurfaceProvider::RequestFrameDiscarding() {
-  mDecodingMutex.AssertCurrentThreadOwns();
-  mFramesMutex.AssertCurrentThreadOwns();
-  MOZ_ASSERT(mDecoder);
-
-  if (mFrames->MayDiscard() || mFrames->IsRecycling()) {
-    MOZ_ASSERT_UNREACHABLE("Already replaced frame queue!");
-    return;
-  }
-
-  auto oldFrameQueue =
-      static_cast<AnimationFrameRetainedBuffer*>(mFrames.get());
-
-  // We only recycle if it is a full frame. Partial frames may be sized
-  // differently from each other. We do not support recycling with WebRender
-  // and shared surfaces at this time as there is additional synchronization
-  // required to know when it is safe to recycle.
-  MOZ_ASSERT(!mDecoder->GetFrameRecycler());
-  if (gfxPrefs::ImageAnimatedDecodeOnDemandRecycle() &&
-      mDecoder->ShouldBlendAnimation()) {
-    mFrames.reset(new AnimationFrameRecyclingQueue(std::move(*oldFrameQueue)));
-    mDecoder->SetFrameRecycler(this);
-  } else {
-    mFrames.reset(new AnimationFrameDiscardingQueue(std::move(*oldFrameQueue)));
-  }
-}
-
-void AnimationSurfaceProvider::AnnounceSurfaceAvailable() {
-||||||| merged common ancestors
-void
-AnimationSurfaceProvider::AnnounceSurfaceAvailable()
-{
-=======
 void AnimationSurfaceProvider::RequestFrameDiscarding() {
   mDecodingMutex.AssertCurrentThreadOwns();
   mFramesMutex.AssertCurrentThreadOwns();
@@ -506,7 +417,6 @@ void AnimationSurfaceProvider::RequestFrameDiscarding() {
 }
 
 void AnimationSurfaceProvider::AnnounceSurfaceAvailable() {
->>>>>>> upstream-releases
   mFramesMutex.AssertNotCurrentThreadOwns();
   MOZ_ASSERT(mImage);
 
@@ -566,20 +476,5 @@ RawAccessFrameRef AnimationSurfaceProvider::RecycleFrame(
   return mFrames->RecycleFrame(aRecycleRect);
 }
 
-<<<<<<< HEAD
-RawAccessFrameRef AnimationSurfaceProvider::RecycleFrame(
-    gfx::IntRect& aRecycleRect) {
-  MutexAutoLock lock(mFramesMutex);
-  MOZ_ASSERT(mFrames->IsRecycling());
-  return mFrames->RecycleFrame(aRecycleRect);
-}
-
 }  // namespace image
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace image
-} // namespace mozilla
-=======
-}  // namespace image
-}  // namespace mozilla
->>>>>>> upstream-releases

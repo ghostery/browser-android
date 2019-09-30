@@ -18,20 +18,9 @@ class GradientStopsD2D : public GradientStops {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GradientStopsD2D, override)
 
-<<<<<<< HEAD
-  GradientStopsD2D(ID2D1GradientStopCollection *aStopCollection,
-                   ID3D11Device *aDevice)
-      : mStopCollection(aStopCollection), mDevice(aDevice) {}
-||||||| merged common ancestors
-  GradientStopsD2D(ID2D1GradientStopCollection *aStopCollection, ID3D11Device *aDevice)
-    : mStopCollection(aStopCollection)
-    , mDevice(aDevice)
-  {}
-=======
   GradientStopsD2D(ID2D1GradientStopCollection* aStopCollection,
                    ID3D11Device* aDevice)
       : mStopCollection(aStopCollection), mDevice(aDevice) {}
->>>>>>> upstream-releases
 
   virtual BackendType GetBackendType() const { return BackendType::DIRECT2D; }
 

@@ -133,20 +133,10 @@ ScriptSettingsStackEntry::ScriptSettingsStackEntry(nsIGlobalObject* aGlobal,
   MOZ_ASSERT_IF(IsIncumbentCandidate() && !NoJSAPI(), mGlobalObject);
   MOZ_ASSERT(!mGlobalObject || mGlobalObject->HasJSGlobal(),
              "Must have an actual JS global for the duration on the stack");
-<<<<<<< HEAD
-  MOZ_ASSERT(
-      !mGlobalObject || JS_IsGlobalObject(mGlobalObject->GetGlobalJSObject()),
-      "No outer windows allowed");
-||||||| merged common ancestors
-  MOZ_ASSERT(!mGlobalObject ||
-             JS_IsGlobalObject(mGlobalObject->GetGlobalJSObject()),
-             "No outer windows allowed");
-=======
   MOZ_ASSERT(
       !mGlobalObject ||
           JS_IsGlobalObject(mGlobalObject->GetGlobalJSObjectPreserveColor()),
       "No outer windows allowed");
->>>>>>> upstream-releases
 }
 
 ScriptSettingsStackEntry::~ScriptSettingsStackEntry() {
@@ -191,15 +181,7 @@ nsIGlobalObject* GetEntryGlobal() {
   return ClampToSubject(ScriptSettingsStack::EntryGlobal());
 }
 
-<<<<<<< HEAD
-nsIDocument* GetEntryDocument() {
-||||||| merged common ancestors
-nsIDocument*
-GetEntryDocument()
-{
-=======
 Document* GetEntryDocument() {
->>>>>>> upstream-releases
   nsIGlobalObject* global = GetEntryGlobal();
   nsCOMPtr<nsPIDOMWindowInner> entryWin = do_QueryInterface(global);
 
@@ -532,15 +514,8 @@ void AutoJSAPI::ReportException() {
       } else {
         JS::Rooted<JSObject*> stack(cx());
         JS::Rooted<JSObject*> stackGlobal(cx());
-<<<<<<< HEAD
-        xpc::FindExceptionStackForConsoleReport(inner, exn, &stack,
-                                                &stackGlobal);
-||||||| merged common ancestors
-        xpc::FindExceptionStackForConsoleReport(inner, exn, &stack, &stackGlobal);
-=======
         xpc::FindExceptionStackForConsoleReport(inner, exn, exnStack, &stack,
                                                 &stackGlobal);
->>>>>>> upstream-releases
         xpcReport->LogToConsoleWithStack(stack, stackGlobal);
       }
     } else {
@@ -575,13 +550,6 @@ bool AutoJSAPI::PeekException(JS::MutableHandle<JS::Value> aVal) {
   return true;
 }
 
-<<<<<<< HEAD
-bool AutoJSAPI::StealException(JS::MutableHandle<JS::Value> aVal) {
-||||||| merged common ancestors
-bool
-AutoJSAPI::StealException(JS::MutableHandle<JS::Value> aVal)
-{
-=======
 bool AutoJSAPI::StealException(JS::MutableHandle<JS::Value> aVal) {
   JS::Rooted<JSObject*> stack(cx());
   return StealExceptionAndStack(aVal, &stack);
@@ -589,7 +557,6 @@ bool AutoJSAPI::StealException(JS::MutableHandle<JS::Value> aVal) {
 
 bool AutoJSAPI::StealExceptionAndStack(JS::MutableHandle<JS::Value> aVal,
                                        JS::MutableHandle<JSObject*> aStack) {
->>>>>>> upstream-releases
   if (!PeekException(aVal)) {
     return false;
   }
@@ -613,20 +580,10 @@ AutoEntryScript::AutoEntryScript(nsIGlobalObject* aGlobalObject,
       ,
       mCallerOverride(cx())
 #ifdef MOZ_GECKO_PROFILER
-<<<<<<< HEAD
-      ,
-      mAutoProfilerLabel(
-          "", aReason, js::ProfilingStackFrame::Category::JS,
-          uint32_t(js::ProfilingStackFrame::Flags::RELEVANT_FOR_JS))
-||||||| merged common ancestors
-  , mAutoProfilerLabel("AutoEntryScript", aReason, __LINE__,
-                       js::ProfilingStackFrame::Category::JS)
-=======
       ,
       mAutoProfilerLabel(
           "", aReason, JS::ProfilingCategoryPair::JS,
           uint32_t(js::ProfilingStackFrame::Flags::RELEVANT_FOR_JS))
->>>>>>> upstream-releases
 #endif
 {
   MOZ_ASSERT(aGlobalObject);

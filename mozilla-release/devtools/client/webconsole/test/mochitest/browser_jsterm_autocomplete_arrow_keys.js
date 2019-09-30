@@ -85,34 +85,6 @@ async function checkArrowLeftDismissPopup(hud) {
     ];
   }
 
-<<<<<<< HEAD
-  info("Test that arrow right selects selected autocomplete item");
-  onPopUpClose = popup.once("popup-closed");
-  EventUtils.synthesizeKey("KEY_ArrowRight");
-  await onPopUpClose;
-  checkInput("window.foo.aa|");
-  is(popup.isOpen, false, "popup is closed");
-  checkJsTermCompletionValue(jsterm, "", "completeNode is empty");
-
-  await setInputValueForAutocompletion(jsterm, "window.foo.a");
-  const prefix = jsterm.getInputValue().replace(/[\S]/g, " ");
-  checkJsTermCompletionValue(jsterm, prefix + "a", "completeNode has expected value");
-
-  const isOSX = Services.appinfo.OS == "Darwin";
-  EventUtils.synthesizeKey("KEY_ArrowLeft", {
-    [isOSX ? "metaKey" : "ctrlKey"]: true,
-  });
-  checkJsTermCompletionValue(jsterm, "",
-    "completeNode was cleared after Ctrl/Cmd + left");
-||||||| merged common ancestors
-  info("Test that arrow right selects selected autocomplete item");
-  onPopUpClose = popup.once("popup-closed");
-  EventUtils.synthesizeKey("KEY_ArrowRight");
-  await onPopUpClose;
-  checkInput("window.foo.aa|");
-  is(popup.isOpen, false, "popup is closed");
-  checkJsTermCompletionValue(jsterm, "", "completeNode is empty");
-=======
   for (const test of tests) {
     info("Trigger autocomplete popup opening");
     const onPopUpOpen = popup.once("popup-opened");
@@ -290,5 +262,4 @@ async function checkWordNavigation(hud, oldJsterm) {
   checkInputValueAndCursorPosition(hud, "aa bb cc dd|");
 
   setInputValue(hud, "");
->>>>>>> upstream-releases
 }

@@ -3,16 +3,9 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const { ExtensionTestUtils } = ChromeUtils.import("resource://testing-common/ExtensionXPCShellUtils.jsm", {});
-||||||| merged common ancestors
-const EventEmitter = require("devtools/shared/event-emitter");
-const { ExtensionTestUtils } = ChromeUtils.import("resource://testing-common/ExtensionXPCShellUtils.jsm", {});
-=======
 const { ExtensionTestUtils } = ChromeUtils.import(
   "resource://testing-common/ExtensionXPCShellUtils.jsm"
 );
->>>>>>> upstream-releases
 const { NetUtil } = require("resource://gre/modules/NetUtil.jsm");
 const { getFileForBinary } = require("devtools/shared/adb/adb-binary");
 const { check } = require("devtools/shared/adb/adb-running-checker");
@@ -173,53 +166,20 @@ add_task(
 
     await extension.startup();
 
-<<<<<<< HEAD
-  // Call start() once and call stop() afterwards.
-  await adbProcess.start();
-  ok(adbProcess.ready);
-  ok(await check(), "adb is now running");
-
-  await adbProcess.stop();
-  ok(!adbProcess.ready);
-  ok(!(await check()), "adb is no longer running");
-||||||| merged common ancestors
-  await ADB.start();
-  ok(ADB.ready);
-=======
     // Call start() once and call stop() afterwards.
     await adbProcess.start();
     ok(adbProcess.ready);
     ok(await check(), "adb is now running");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Call start() twice and call stop() afterwards.
-  await adbProcess.start();
-  await adbProcess.start();
-  ok(adbProcess.ready);
-  ok(await check(), "adb is now running");
-||||||| merged common ancestors
-  ok(await check(), "adb is now running");
-=======
     await adbProcess.stop();
     ok(!adbProcess.ready);
     ok(!(await check()), "adb is no longer running");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  await adbProcess.stop();
-  ok(!adbProcess.ready);
-  ok(!(await check()), "adb is no longer running");
-||||||| merged common ancestors
-  await ADB.stop();
-  ok(!ADB.ready);
-=======
     // Call start() twice and call stop() afterwards.
     await adbProcess.start();
     await adbProcess.start();
     ok(adbProcess.ready);
     ok(await check(), "adb is now running");
->>>>>>> upstream-releases
 
     await adbProcess.stop();
     ok(!adbProcess.ready);
@@ -254,64 +214,23 @@ add_task(
 
     await extension.startup();
 
-<<<<<<< HEAD
-  await adbProcess.start();
-  ok(adbProcess.ready);
-||||||| merged common ancestors
-  await ADB.start();
-  ok(ADB.ready);
-=======
     await adbProcess.start();
     ok(adbProcess.ready);
->>>>>>> upstream-releases
 
     ok(await check(), "adb is now running");
 
-<<<<<<< HEAD
-  const receivedDeviceId = await new Promise(resolve => {
-    const trackDevicesCommand = new TrackDevicesCommand();
-    trackDevicesCommand.on("device-connected", deviceId => {
-      resolve(deviceId);
-||||||| merged common ancestors
-  const receivedDeviceId = await new Promise(resolve => {
-    EventEmitter.on(ADB, "device-connected", deviceId => {
-      resolve(deviceId);
-=======
     const receivedDeviceId = await new Promise(resolve => {
       const trackDevicesCommand = new TrackDevicesCommand();
       trackDevicesCommand.on("device-connected", deviceId => {
         resolve(deviceId);
       });
       trackDevicesCommand.run();
->>>>>>> upstream-releases
     });
-<<<<<<< HEAD
-    trackDevicesCommand.run();
-  });
-||||||| merged common ancestors
-    ADB.trackDevices();
-  });
-=======
->>>>>>> upstream-releases
 
     equal(receivedDeviceId, "1234567890");
 
-<<<<<<< HEAD
-  await adbProcess.stop();
-  ok(!adbProcess.ready);
-
-  await extension.unload();
-});
-||||||| merged common ancestors
-  await ADB.stop();
-  ok(!ADB.ready);
-
-  await extension.unload();
-});
-=======
     await adbProcess.stop();
     ok(!adbProcess.ready);
->>>>>>> upstream-releases
 
     await extension.unload();
   }

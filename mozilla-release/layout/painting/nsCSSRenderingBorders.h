@@ -84,22 +84,10 @@ class nsCSSBorderRenderer final {
   friend class nsDisplayButtonBorder;
   friend class nsDisplayButtonForeground;
 
-<<<<<<< HEAD
- public:
-  nsCSSBorderRenderer(nsPresContext* aPresContext, const nsIDocument* aDocument,
-                      DrawTarget* aDrawTarget, const Rect& aDirtyRect,
-||||||| merged common ancestors
-public:
-  nsCSSBorderRenderer(nsPresContext* aPresContext,
-                      const nsIDocument* aDocument,
-                      DrawTarget* aDrawTarget,
-                      const Rect& aDirtyRect,
-=======
  public:
   nsCSSBorderRenderer(nsPresContext* aPresContext,
                       const mozilla::dom::Document* aDocument,
                       DrawTarget* aDrawTarget, const Rect& aDirtyRect,
->>>>>>> upstream-releases
                       Rect& aOuterRect,
                       const mozilla::StyleBorderStyle* aBorderStyles,
                       const Float* aBorderWidths, RectCornerRadii& aBorderRadii,
@@ -283,29 +271,12 @@ class nsCSSBorderImageRenderer final {
                                                 nsIFrame* aForFrame,
                                                 const nsRect& aDirtyRect);
   mozilla::image::ImgDrawResult CreateWebRenderCommands(
-<<<<<<< HEAD
-      nsDisplayItem* aItem, nsIFrame* aForFrame,
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder);
-||||||| merged common ancestors
-    nsDisplayItem* aItem,
-    nsIFrame* aForFrame,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder);
-=======
       nsDisplayItem* aItem, nsIFrame* aForFrame,
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder);
->>>>>>> upstream-releases
 
   nsCSSBorderImageRenderer(const nsCSSBorderImageRenderer& aRhs);
   nsCSSBorderImageRenderer& operator=(const nsCSSBorderImageRenderer& aRhs);

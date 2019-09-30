@@ -13,41 +13,15 @@ var originalCount1, originalCount2, originalCount3;
 function run_test() {
   let histogram = Telemetry.getHistogramById(HIST_NAME);
   let snapshot = histogram.snapshot();
-<<<<<<< HEAD
-  originalCount1 = Object.values(snapshot.values).reduce((a, b) => a += b, 0);
-||||||| merged common ancestors
-  originalCount1 = snapshot.counts.reduce((a, b) => a += b);
-=======
   originalCount1 = Object.values(snapshot.values).reduce((a, b) => (a += b), 0);
->>>>>>> upstream-releases
 
   histogram = Telemetry.getHistogramById(HIST_NAME2);
   snapshot = histogram.snapshot();
-<<<<<<< HEAD
-  originalCount2 = Object.values(snapshot.values).reduce((a, b) => a += b, 0);
-||||||| merged common ancestors
-  originalCount2 = snapshot.counts.reduce((a, b) => a += b);
-=======
   originalCount2 = Object.values(snapshot.values).reduce((a, b) => (a += b), 0);
->>>>>>> upstream-releases
 
   histogram = Telemetry.getKeyedHistogramById(KEYED_HIST.id);
-<<<<<<< HEAD
-  snapshot = histogram.snapshot()[KEYED_HIST.key] || {values: []};
-  originalCount3 = Object.values(snapshot.values).reduce((a, b) => a += b, 0);
-||||||| merged common ancestors
-  snapshot = histogram.snapshot(KEYED_HIST.key);
-  originalCount3 = snapshot.counts.reduce((a, b) => a += b);
-
-  Assert.ok(!TelemetryStopwatch.start(3));
-  Assert.ok(!TelemetryStopwatch.start({}));
-  Assert.ok(!TelemetryStopwatch.start("", 3));
-  Assert.ok(!TelemetryStopwatch.start("", ""));
-  Assert.ok(!TelemetryStopwatch.start({}, {}));
-=======
   snapshot = histogram.snapshot()[KEYED_HIST.key] || { values: [] };
   originalCount3 = Object.values(snapshot.values).reduce((a, b) => (a += b), 0);
->>>>>>> upstream-releases
 
   Assert.ok(TelemetryStopwatch.start("mark1"));
   Assert.ok(TelemetryStopwatch.start("mark2"));
@@ -179,17 +153,10 @@ function run_test() {
 
   // Verify that keyed histograms can only be canceled through "keyed" API.
   Assert.ok(TelemetryStopwatch.startKeyed(KEYED_HIST.id, KEYED_HIST.key));
-<<<<<<< HEAD
-  Assert.throws(() => TelemetryStopwatch.cancel(KEYED_HIST.id, KEYED_HIST.key),
-                /is not an object/);
-||||||| merged common ancestors
-  Assert.ok(!TelemetryStopwatch.cancel(KEYED_HIST.id, KEYED_HIST.key));
-=======
   Assert.throws(
     () => TelemetryStopwatch.cancel(KEYED_HIST.id, KEYED_HIST.key),
     /is not an object/
   );
->>>>>>> upstream-releases
   Assert.ok(TelemetryStopwatch.cancelKeyed(KEYED_HIST.id, KEYED_HIST.key));
   Assert.ok(!TelemetryStopwatch.cancelKeyed(KEYED_HIST.id, KEYED_HIST.key));
 
@@ -199,13 +166,7 @@ function run_test() {
 function finishTest() {
   let histogram = Telemetry.getHistogramById(HIST_NAME);
   let snapshot = histogram.snapshot();
-<<<<<<< HEAD
-  let newCount = Object.values(snapshot.values).reduce((a, b) => a += b, 0);
-||||||| merged common ancestors
-  let newCount = snapshot.counts.reduce((a, b) => a += b);
-=======
   let newCount = Object.values(snapshot.values).reduce((a, b) => (a += b), 0);
->>>>>>> upstream-releases
 
   Assert.equal(
     newCount - originalCount1,
@@ -215,13 +176,7 @@ function finishTest() {
 
   histogram = Telemetry.getHistogramById(HIST_NAME2);
   snapshot = histogram.snapshot();
-<<<<<<< HEAD
-  newCount = Object.values(snapshot.values).reduce((a, b) => a += b, 0);
-||||||| merged common ancestors
-  newCount = snapshot.counts.reduce((a, b) => a += b);
-=======
   newCount = Object.values(snapshot.values).reduce((a, b) => (a += b), 0);
->>>>>>> upstream-releases
 
   Assert.equal(
     newCount - originalCount2,
@@ -230,17 +185,6 @@ function finishTest() {
   );
 
   histogram = Telemetry.getKeyedHistogramById(KEYED_HIST.id);
-<<<<<<< HEAD
-  snapshot = histogram.snapshot()[KEYED_HIST.key];
-  newCount = Object.values(snapshot.values).reduce((a, b) => a += b, 0);
-
-  Assert.equal(newCount - originalCount3, 2, "The correct number of histograms were added for histogram 3.");
-||||||| merged common ancestors
-  snapshot = histogram.snapshot(KEYED_HIST.key);
-  newCount = snapshot.counts.reduce((a, b) => a += b);
-
-  Assert.equal(newCount - originalCount3, 2, "The correct number of histograms were added for histogram 3.");
-=======
   snapshot = histogram.snapshot()[KEYED_HIST.key];
   newCount = Object.values(snapshot.values).reduce((a, b) => (a += b), 0);
 
@@ -249,5 +193,4 @@ function finishTest() {
     2,
     "The correct number of histograms were added for histogram 3."
   );
->>>>>>> upstream-releases
 }

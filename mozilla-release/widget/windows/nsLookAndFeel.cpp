@@ -37,22 +37,9 @@ LookAndFeel::OperatingSystemVersion nsLookAndFeel::GetOperatingSystemVersion() {
   return version;
 }
 
-<<<<<<< HEAD
-static nsresult GetColorFromTheme(nsUXThemeClass cls, int32_t aPart,
-                                  int32_t aState, int32_t aPropId,
-                                  nscolor &aColor) {
-||||||| merged common ancestors
-static nsresult GetColorFromTheme(nsUXThemeClass cls,
-                           int32_t aPart,
-                           int32_t aState,
-                           int32_t aPropId,
-                           nscolor &aColor)
-{
-=======
 static nsresult GetColorFromTheme(nsUXThemeClass cls, int32_t aPart,
                                   int32_t aState, int32_t aPropId,
                                   nscolor& aColor) {
->>>>>>> upstream-releases
   COLORREF color;
   HRESULT hr = GetThemeColor(nsUXThemeData::GetTheme(cls), aPart, aState,
                              aPropId, &color);
@@ -68,15 +55,7 @@ static int32_t GetSystemParam(long flag, int32_t def) {
   return ::SystemParametersInfo(flag, 0, &value, 0) ? value : def;
 }
 
-<<<<<<< HEAD
-static nsresult SystemWantsDarkTheme(int32_t &darkThemeEnabled) {
-||||||| merged common ancestors
-static nsresult
-SystemWantsDarkTheme(int32_t& darkThemeEnabled)
-{
-=======
 static nsresult SystemWantsDarkTheme(int32_t& darkThemeEnabled) {
->>>>>>> upstream-releases
   if (!IsWin10OrLater()) {
     darkThemeEnabled = 0;
     return NS_OK;
@@ -128,16 +107,8 @@ nsLookAndFeel::~nsLookAndFeel() {}
 
 void nsLookAndFeel::NativeInit() { EnsureInit(); }
 
-<<<<<<< HEAD
-/* virtual */ void nsLookAndFeel::RefreshImpl() {
-||||||| merged common ancestors
-/* virtual */ void
-nsLookAndFeel::RefreshImpl()
-{
-=======
 /* virtual */
 void nsLookAndFeel::RefreshImpl() {
->>>>>>> upstream-releases
   nsXPLookAndFeel::RefreshImpl();
 
   for (auto e = mSystemFontCache.begin(), end = mSystemFontCache.end();
@@ -149,142 +120,13 @@ void nsLookAndFeel::RefreshImpl() {
   mInitialized = false;
 }
 
-<<<<<<< HEAD
-nsresult nsLookAndFeel::NativeGetColor(ColorID aID, nscolor &aColor) {
-||||||| merged common ancestors
-nsresult
-nsLookAndFeel::NativeGetColor(ColorID aID, nscolor &aColor)
-{
-=======
 nsresult nsLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
->>>>>>> upstream-releases
   EnsureInit();
 
   nsresult res = NS_OK;
 
   int idx;
   switch (aID) {
-<<<<<<< HEAD
-    case eColorID_WindowBackground:
-      idx = COLOR_WINDOW;
-      break;
-    case eColorID_WindowForeground:
-      idx = COLOR_WINDOWTEXT;
-      break;
-    case eColorID_WidgetBackground:
-      idx = COLOR_BTNFACE;
-      break;
-    case eColorID_WidgetForeground:
-      idx = COLOR_BTNTEXT;
-      break;
-    case eColorID_WidgetSelectBackground:
-      idx = COLOR_HIGHLIGHT;
-      break;
-    case eColorID_WidgetSelectForeground:
-      idx = COLOR_HIGHLIGHTTEXT;
-      break;
-    case eColorID_Widget3DHighlight:
-      idx = COLOR_BTNHIGHLIGHT;
-      break;
-    case eColorID_Widget3DShadow:
-      idx = COLOR_BTNSHADOW;
-      break;
-    case eColorID_TextBackground:
-      idx = COLOR_WINDOW;
-      break;
-    case eColorID_TextForeground:
-      idx = COLOR_WINDOWTEXT;
-      break;
-    case eColorID_TextSelectBackground:
-    case eColorID_IMESelectedRawTextBackground:
-    case eColorID_IMESelectedConvertedTextBackground:
-      idx = COLOR_HIGHLIGHT;
-      break;
-    case eColorID_TextSelectForeground:
-    case eColorID_IMESelectedRawTextForeground:
-    case eColorID_IMESelectedConvertedTextForeground:
-      idx = COLOR_HIGHLIGHTTEXT;
-      break;
-    case eColorID_IMERawInputBackground:
-    case eColorID_IMEConvertedTextBackground:
-      aColor = NS_TRANSPARENT;
-      return NS_OK;
-    case eColorID_IMERawInputForeground:
-    case eColorID_IMEConvertedTextForeground:
-      aColor = NS_SAME_AS_FOREGROUND_COLOR;
-      return NS_OK;
-    case eColorID_IMERawInputUnderline:
-    case eColorID_IMEConvertedTextUnderline:
-      aColor = NS_SAME_AS_FOREGROUND_COLOR;
-      return NS_OK;
-    case eColorID_IMESelectedRawTextUnderline:
-    case eColorID_IMESelectedConvertedTextUnderline:
-      aColor = NS_TRANSPARENT;
-      return NS_OK;
-    case eColorID_SpellCheckerUnderline:
-      aColor = NS_RGB(0xff, 0, 0);
-      return NS_OK;
-||||||| merged common ancestors
-    case eColorID_WindowBackground:
-        idx = COLOR_WINDOW;
-        break;
-    case eColorID_WindowForeground:
-        idx = COLOR_WINDOWTEXT;
-        break;
-    case eColorID_WidgetBackground:
-        idx = COLOR_BTNFACE;
-        break;
-    case eColorID_WidgetForeground:
-        idx = COLOR_BTNTEXT;
-        break;
-    case eColorID_WidgetSelectBackground:
-        idx = COLOR_HIGHLIGHT;
-        break;
-    case eColorID_WidgetSelectForeground:
-        idx = COLOR_HIGHLIGHTTEXT;
-        break;
-    case eColorID_Widget3DHighlight:
-        idx = COLOR_BTNHIGHLIGHT;
-        break;
-    case eColorID_Widget3DShadow:
-        idx = COLOR_BTNSHADOW;
-        break;
-    case eColorID_TextBackground:
-        idx = COLOR_WINDOW;
-        break;
-    case eColorID_TextForeground:
-        idx = COLOR_WINDOWTEXT;
-        break;
-    case eColorID_TextSelectBackground:
-    case eColorID_IMESelectedRawTextBackground:
-    case eColorID_IMESelectedConvertedTextBackground:
-        idx = COLOR_HIGHLIGHT;
-        break;
-    case eColorID_TextSelectForeground:
-    case eColorID_IMESelectedRawTextForeground:
-    case eColorID_IMESelectedConvertedTextForeground:
-        idx = COLOR_HIGHLIGHTTEXT;
-        break;
-    case eColorID_IMERawInputBackground:
-    case eColorID_IMEConvertedTextBackground:
-        aColor = NS_TRANSPARENT;
-        return NS_OK;
-    case eColorID_IMERawInputForeground:
-    case eColorID_IMEConvertedTextForeground:
-        aColor = NS_SAME_AS_FOREGROUND_COLOR;
-        return NS_OK;
-    case eColorID_IMERawInputUnderline:
-    case eColorID_IMEConvertedTextUnderline:
-        aColor = NS_SAME_AS_FOREGROUND_COLOR;
-        return NS_OK;
-    case eColorID_IMESelectedRawTextUnderline:
-    case eColorID_IMESelectedConvertedTextUnderline:
-        aColor = NS_TRANSPARENT;
-        return NS_OK;
-    case eColorID_SpellCheckerUnderline:
-        aColor = NS_RGB(0xff, 0, 0);
-        return NS_OK;
-=======
     case ColorID::WindowBackground:
       idx = COLOR_WINDOW;
       break;
@@ -344,7 +186,6 @@ nsresult nsLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
     case ColorID::SpellCheckerUnderline:
       aColor = NS_RGB(0xff, 0, 0);
       return NS_OK;
->>>>>>> upstream-releases
 
     // New CSS 2 Color definitions
     case ColorID::Activeborder:
@@ -519,15 +360,7 @@ nsresult nsLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
   return res;
 }
 
-<<<<<<< HEAD
-nsresult nsLookAndFeel::GetIntImpl(IntID aID, int32_t &aResult) {
-||||||| merged common ancestors
-nsresult
-nsLookAndFeel::GetIntImpl(IntID aID, int32_t &aResult)
-{
-=======
 nsresult nsLookAndFeel::GetIntImpl(IntID aID, int32_t& aResult) {
->>>>>>> upstream-releases
   nsresult res = nsXPLookAndFeel::GetIntImpl(aID, aResult);
   if (NS_SUCCEEDED(res)) return res;
   res = NS_OK;
@@ -773,15 +606,7 @@ nsresult nsLookAndFeel::GetIntImpl(IntID aID, int32_t& aResult) {
   return res;
 }
 
-<<<<<<< HEAD
-nsresult nsLookAndFeel::GetFloatImpl(FloatID aID, float &aResult) {
-||||||| merged common ancestors
-nsresult
-nsLookAndFeel::GetFloatImpl(FloatID aID, float &aResult)
-{
-=======
 nsresult nsLookAndFeel::GetFloatImpl(FloatID aID, float& aResult) {
->>>>>>> upstream-releases
   nsresult res = nsXPLookAndFeel::GetFloatImpl(aID, aResult);
   if (NS_SUCCEEDED(res)) return res;
   res = NS_OK;
@@ -800,22 +625,9 @@ nsresult nsLookAndFeel::GetFloatImpl(FloatID aID, float& aResult) {
   return res;
 }
 
-<<<<<<< HEAD
-static bool GetSysFontInfo(HDC aHDC, LookAndFeel::FontID anID,
-                           nsString &aFontName, gfxFontStyle &aFontStyle) {
-  const LOGFONTW *ptrLogFont = nullptr;
-||||||| merged common ancestors
-static bool
-GetSysFontInfo(HDC aHDC, LookAndFeel::FontID anID,
-               nsString &aFontName,
-               gfxFontStyle &aFontStyle)
-{
-  const LOGFONTW* ptrLogFont = nullptr;
-=======
 static bool GetSysFontInfo(HDC aHDC, LookAndFeel::FontID anID,
                            nsString& aFontName, gfxFontStyle& aFontStyle) {
   const LOGFONTW* ptrLogFont = nullptr;
->>>>>>> upstream-releases
   LOGFONTW logFont;
   NONCLIENTMETRICSW ncm;
   char16_t name[LF_FACESIZE];
@@ -930,23 +742,9 @@ static bool GetSysFontInfo(HDC aHDC, LookAndFeel::FontID anID,
   return true;
 }
 
-<<<<<<< HEAD
-bool nsLookAndFeel::GetFontImpl(FontID anID, nsString &aFontName,
-                                gfxFontStyle &aFontStyle,
-                                float aDevPixPerCSSPixel) {
-  CachedSystemFont &cacheSlot = mSystemFontCache[anID];
-||||||| merged common ancestors
-bool
-nsLookAndFeel::GetFontImpl(FontID anID, nsString &aFontName,
-                           gfxFontStyle &aFontStyle,
-                           float aDevPixPerCSSPixel)
-{
-  CachedSystemFont &cacheSlot = mSystemFontCache[anID];
-=======
 bool nsLookAndFeel::GetFontImpl(FontID anID, nsString& aFontName,
                                 gfxFontStyle& aFontStyle) {
   CachedSystemFont& cacheSlot = mSystemFontCache[anID];
->>>>>>> upstream-releases
 
   bool status;
   if (cacheSlot.mCacheValid) {
@@ -967,15 +765,6 @@ bool nsLookAndFeel::GetFontImpl(FontID anID, nsString& aFontName,
       cacheSlot.mFontStyle = aFontStyle;
     }
   }
-<<<<<<< HEAD
-  // now convert the logical font size from GetSysFontInfo into device pixels
-  // for layout
-  aFontStyle.size *= aDevPixPerCSSPixel;
-||||||| merged common ancestors
-  // now convert the logical font size from GetSysFontInfo into device pixels for layout
-  aFontStyle.size *= aDevPixPerCSSPixel;
-=======
->>>>>>> upstream-releases
   return status;
 }
 
@@ -1005,17 +794,8 @@ nsTArray<LookAndFeelInt> nsLookAndFeel::GetIntCacheImpl() {
   return lookAndFeelIntCache;
 }
 
-<<<<<<< HEAD
-void nsLookAndFeel::SetIntCacheImpl(
-    const nsTArray<LookAndFeelInt> &aLookAndFeelIntCache) {
-||||||| merged common ancestors
-void
-nsLookAndFeel::SetIntCacheImpl(const nsTArray<LookAndFeelInt>& aLookAndFeelIntCache)
-{
-=======
 void nsLookAndFeel::SetIntCacheImpl(
     const nsTArray<LookAndFeelInt>& aLookAndFeelIntCache) {
->>>>>>> upstream-releases
   for (auto entry : aLookAndFeelIntCache) {
     switch (entry.id) {
       case eIntID_UseAccessibilityTheme:
@@ -1031,16 +811,8 @@ void nsLookAndFeel::SetIntCacheImpl(
   }
 }
 
-<<<<<<< HEAD
-/* static */ nsresult nsLookAndFeel::GetAccentColor(nscolor &aColor) {
-||||||| merged common ancestors
-/* static */ nsresult
-nsLookAndFeel::GetAccentColor(nscolor& aColor)
-{
-=======
 /* static */
 nsresult nsLookAndFeel::GetAccentColor(nscolor& aColor) {
->>>>>>> upstream-releases
   nsresult rv;
 
   if (!mDwmKey) {
@@ -1074,16 +846,8 @@ nsresult nsLookAndFeel::GetAccentColor(nscolor& aColor) {
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult nsLookAndFeel::GetAccentColorText(nscolor &aColor) {
-||||||| merged common ancestors
-/* static */ nsresult
-nsLookAndFeel::GetAccentColorText(nscolor& aColor)
-{
-=======
 /* static */
 nsresult nsLookAndFeel::GetAccentColorText(nscolor& aColor) {
->>>>>>> upstream-releases
   nscolor accentColor;
   nsresult rv = GetAccentColor(accentColor);
   if (NS_WARN_IF(NS_FAILED(rv))) {

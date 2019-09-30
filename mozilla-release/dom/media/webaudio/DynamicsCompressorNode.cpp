@@ -161,46 +161,6 @@ class DynamicsCompressorNodeEngine final : public AudioNodeEngine {
 };
 
 DynamicsCompressorNode::DynamicsCompressorNode(AudioContext* aContext)
-<<<<<<< HEAD
-    : AudioNode(aContext, 2, ChannelCountMode::Explicit,
-                ChannelInterpretation::Speakers),
-      mThreshold(new AudioParam(this, DynamicsCompressorNodeEngine::THRESHOLD,
-                                "threshold", -24.f, -100.f, 0.f)),
-      mKnee(new AudioParam(this, DynamicsCompressorNodeEngine::KNEE, "knee",
-                           30.f, 0.f, 40.f)),
-      mRatio(new AudioParam(this, DynamicsCompressorNodeEngine::RATIO, "ratio",
-                            12.f, 1.f, 20.f)),
-      mReduction(0),
-      mAttack(new AudioParam(this, DynamicsCompressorNodeEngine::ATTACK,
-                             "attack", 0.003f, 0.f, 1.f)),
-      mRelease(new AudioParam(this, DynamicsCompressorNodeEngine::RELEASE,
-                              "release", 0.25f, 0.f, 1.f)) {
-  DynamicsCompressorNodeEngine* engine =
-      new DynamicsCompressorNodeEngine(this, aContext->Destination());
-  mStream = AudioNodeStream::Create(
-      aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
-||||||| merged common ancestors
-  : AudioNode(aContext,
-              2,
-              ChannelCountMode::Explicit,
-              ChannelInterpretation::Speakers)
-  , mThreshold(new AudioParam(this, DynamicsCompressorNodeEngine::THRESHOLD,
-                              "threshold", -24.f, -100.f, 0.f))
-  , mKnee(new AudioParam(this, DynamicsCompressorNodeEngine::KNEE,
-                         "knee", 30.f, 0.f, 40.f))
-  , mRatio(new AudioParam(this, DynamicsCompressorNodeEngine::RATIO,
-                          "ratio", 12.f, 1.f, 20.f))
-  , mReduction(0)
-  , mAttack(new AudioParam(this, DynamicsCompressorNodeEngine::ATTACK,
-                           "attack", 0.003f, 0.f, 1.f))
-  , mRelease(new AudioParam(this, DynamicsCompressorNodeEngine::RELEASE,
-                            "release", 0.25f, 0.f, 1.f))
-{
-  DynamicsCompressorNodeEngine* engine = new DynamicsCompressorNodeEngine(this, aContext->Destination());
-  mStream = AudioNodeStream::Create(aContext, engine,
-                                    AudioNodeStream::NO_STREAM_FLAGS,
-                                    aContext->Graph());
-=======
     : AudioNode(aContext, 2, ChannelCountMode::Clamped_max,
                 ChannelInterpretation::Speakers),
       mReduction(0) {
@@ -218,34 +178,12 @@ DynamicsCompressorNode::DynamicsCompressorNode(AudioContext* aContext)
       new DynamicsCompressorNodeEngine(this, aContext->Destination());
   mStream = AudioNodeStream::Create(
       aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DynamicsCompressorNode>
-DynamicsCompressorNode::Create(AudioContext& aAudioContext,
-                               const DynamicsCompressorOptions& aOptions,
-                               ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-||||||| merged common ancestors
-/* static */ already_AddRefed<DynamicsCompressorNode>
-DynamicsCompressorNode::Create(AudioContext& aAudioContext,
-                               const DynamicsCompressorOptions& aOptions,
-                               ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-=======
 /* static */
 already_AddRefed<DynamicsCompressorNode> DynamicsCompressorNode::Create(
     AudioContext& aAudioContext, const DynamicsCompressorOptions& aOptions,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<DynamicsCompressorNode> audioNode =
       new DynamicsCompressorNode(&aAudioContext);
 

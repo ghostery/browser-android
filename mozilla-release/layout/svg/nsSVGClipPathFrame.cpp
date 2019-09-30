@@ -27,20 +27,9 @@ using namespace mozilla::image;
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGClipPathFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGClipPathFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGClipPathFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGClipPathFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGClipPathFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell)
       nsSVGClipPathFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGClipPathFrame)
@@ -67,21 +56,6 @@ void nsSVGClipPathFrame::ApplyClipPath(gfxContext& aContext,
     SVGGeometryFrame* pathFrame = do_QueryFrame(singleClipPathChild);
     if (pathFrame && pathFrame->StyleVisibility()->IsVisible()) {
       SVGGeometryElement* pathElement =
-<<<<<<< HEAD
-          static_cast<SVGGeometryElement*>(pathFrame->GetContent());
-      gfxMatrix toChildsUserSpace = pathElement->PrependLocalTransformsTo(
-          GetClipPathTransform(aClippedFrame) * aMatrix, eUserSpaceToParent);
-      gfxMatrix newMatrix = aContext.CurrentMatrixDouble()
-                                .PreMultiply(toChildsUserSpace)
-                                .NudgeToIntegers();
-||||||| merged common ancestors
-        static_cast<SVGGeometryElement*>(pathFrame->GetContent());
-      gfxMatrix toChildsUserSpace = pathElement->
-        PrependLocalTransformsTo(GetClipPathTransform(aClippedFrame) * aMatrix,
-                                 eUserSpaceToParent);
-      gfxMatrix newMatrix =
-        aContext.CurrentMatrixDouble().PreMultiply(toChildsUserSpace).NudgeToIntegers();
-=======
           static_cast<SVGGeometryElement*>(pathFrame->GetContent());
 
       gfxMatrix toChildsUserSpace =
@@ -91,7 +65,6 @@ void nsSVGClipPathFrame::ApplyClipPath(gfxContext& aContext,
       gfxMatrix newMatrix = aContext.CurrentMatrixDouble()
                                 .PreMultiply(toChildsUserSpace)
                                 .NudgeToIntegers();
->>>>>>> upstream-releases
       if (!newMatrix.IsSingular()) {
         aContext.SetMatrixDouble(newMatrix);
         FillRule clipRule =
@@ -110,56 +83,8 @@ void nsSVGClipPathFrame::ApplyClipPath(gfxContext& aContext,
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<DrawTarget> nsSVGClipPathFrame::CreateClipMask(
-    gfxContext& aReferenceContext, IntPoint& aOffset) {
-  IntRect bounds = RoundedOut(
-      ToRect(aReferenceContext.GetClipExtents(gfxContext::eDeviceSpace)));
-  if (bounds.IsEmpty()) {
-    // We don't need to create a mask surface, all drawing is clipped anyway.
-    return nullptr;
-  }
-
-  DrawTarget* referenceDT = aReferenceContext.GetDrawTarget();
-  RefPtr<DrawTarget> maskDT =
-      referenceDT->CreateSimilarDrawTarget(bounds.Size(), SurfaceFormat::A8);
-
-  aOffset = bounds.TopLeft();
-
-  return maskDT.forget();
-}
-
 static void ComposeExtraMask(DrawTarget* aTarget, SourceSurface* aExtraMask,
                              const Matrix& aExtraMasksTransform) {
-||||||| merged common ancestors
-already_AddRefed<DrawTarget>
-nsSVGClipPathFrame::CreateClipMask(gfxContext& aReferenceContext,
-                                   IntPoint& aOffset)
-{
-  IntRect bounds =
-    RoundedOut(ToRect(aReferenceContext.GetClipExtents(gfxContext::eDeviceSpace)));
-  if (bounds.IsEmpty()) {
-    // We don't need to create a mask surface, all drawing is clipped anyway.
-    return nullptr;
-  }
-
-  DrawTarget* referenceDT = aReferenceContext.GetDrawTarget();
-  RefPtr<DrawTarget> maskDT =
-    referenceDT->CreateSimilarDrawTarget(bounds.Size(), SurfaceFormat::A8);
-
-  aOffset = bounds.TopLeft();
-
-  return maskDT.forget();
-}
-
-static void
-ComposeExtraMask(DrawTarget* aTarget,
-                 SourceSurface* aExtraMask, const Matrix& aExtraMasksTransform)
-{
-=======
-static void ComposeExtraMask(DrawTarget* aTarget, SourceSurface* aExtraMask,
-                             const Matrix& aExtraMasksTransform) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aExtraMask);
 
   Matrix origin = aTarget->GetTransform();
@@ -169,29 +94,11 @@ static void ComposeExtraMask(DrawTarget* aTarget, SourceSurface* aExtraMask,
   aTarget->SetTransform(origin);
 }
 
-<<<<<<< HEAD
-void nsSVGClipPathFrame::PaintClipMask(gfxContext& aMaskContext,
-                                       nsIFrame* aClippedFrame,
-                                       const gfxMatrix& aMatrix,
-                                       Matrix* aMaskTransform,
-                                       SourceSurface* aExtraMask,
-                                       const Matrix& aExtraMasksTransform) {
-||||||| merged common ancestors
-void
-nsSVGClipPathFrame::PaintClipMask(gfxContext& aMaskContext,
-                                  nsIFrame* aClippedFrame,
-                                  const gfxMatrix& aMatrix,
-                                  Matrix* aMaskTransform,
-                                  SourceSurface* aExtraMask,
-                                  const Matrix& aExtraMasksTransform)
-{
-=======
 void nsSVGClipPathFrame::PaintClipMask(gfxContext& aMaskContext,
                                        nsIFrame* aClippedFrame,
                                        const gfxMatrix& aMatrix,
                                        SourceSurface* aExtraMask,
                                        const Matrix& aExtraMasksTransform) {
->>>>>>> upstream-releases
   static int16_t sRefChainLengthCounter = AutoReferenceChainGuard::noChain;
 
   // A clipPath can reference another clipPath, creating a chain of clipPaths
@@ -223,20 +130,6 @@ void nsSVGClipPathFrame::PaintClipMask(gfxContext& aMaskContext,
     clipPathThatClipsClipPath->ApplyClipPath(aMaskContext, aClippedFrame,
                                              aMatrix);
   } else if (maskUsage.shouldGenerateClipMaskLayer) {
-<<<<<<< HEAD
-    Matrix maskTransform;
-    RefPtr<SourceSurface> maskSurface = clipPathThatClipsClipPath->GetClipMask(
-        aMaskContext, aClippedFrame, aMatrix, &maskTransform);
-    aMaskContext.PushGroupForBlendBack(gfxContentType::ALPHA, 1.0, maskSurface,
-                                       maskTransform);
-||||||| merged common ancestors
-    Matrix maskTransform;
-    RefPtr<SourceSurface> maskSurface =
-      clipPathThatClipsClipPath->GetClipMask(aMaskContext, aClippedFrame,
-                                             aMatrix, &maskTransform);
-    aMaskContext.PushGroupForBlendBack(gfxContentType::ALPHA, 1.0,
-                                       maskSurface, maskTransform);
-=======
     RefPtr<SourceSurface> maskSurface = clipPathThatClipsClipPath->GetClipMask(
         aMaskContext, aClippedFrame, aMatrix);
     // We want the mask to be untransformed so use the inverse of the current
@@ -245,23 +138,13 @@ void nsSVGClipPathFrame::PaintClipMask(gfxContext& aMaskContext,
     maskTransform.Invert();
     aMaskContext.PushGroupForBlendBack(gfxContentType::ALPHA, 1.0, maskSurface,
                                        maskTransform);
->>>>>>> upstream-releases
     // The corresponding PopGroupAndBlend call below will mask the
     // blend using |maskSurface|.
   }
 
   // Paint our children into the mask:
-<<<<<<< HEAD
-  for (nsIFrame* kid = mFrames.FirstChild(); kid; kid = kid->GetNextSibling()) {
-    PaintFrameIntoMask(kid, aClippedFrame, aMaskContext, aMatrix);
-||||||| merged common ancestors
-  for (nsIFrame* kid = mFrames.FirstChild(); kid;
-       kid = kid->GetNextSibling()) {
-    PaintFrameIntoMask(kid, aClippedFrame, aMaskContext, aMatrix);
-=======
   for (nsIFrame* kid = mFrames.FirstChild(); kid; kid = kid->GetNextSibling()) {
     PaintFrameIntoMask(kid, aClippedFrame, aMaskContext);
->>>>>>> upstream-releases
   }
 
   if (maskUsage.shouldGenerateClipMaskLayer) {
@@ -275,23 +158,9 @@ void nsSVGClipPathFrame::PaintClipMask(gfxContext& aMaskContext,
   }
 }
 
-<<<<<<< HEAD
-void nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame* aFrame,
-                                            nsIFrame* aClippedFrame,
-                                            gfxContext& aTarget,
-                                            const gfxMatrix& aMatrix) {
-||||||| merged common ancestors
-void
-nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame *aFrame,
-                                       nsIFrame* aClippedFrame,
-                                       gfxContext& aTarget,
-                                       const gfxMatrix& aMatrix)
-{
-=======
 void nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame* aFrame,
                                             nsIFrame* aClippedFrame,
                                             gfxContext& aTarget) {
->>>>>>> upstream-releases
   nsSVGDisplayableFrame* frame = do_QueryFrame(aFrame);
   if (!frame) {
     return;
@@ -315,20 +184,6 @@ void nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame* aFrame,
     clipPathThatClipsChild->ApplyClipPath(aTarget, aClippedFrame,
                                           mMatrixForChildren);
   } else if (maskUsage.shouldGenerateClipMaskLayer) {
-<<<<<<< HEAD
-    Matrix maskTransform;
-    RefPtr<SourceSurface> maskSurface = clipPathThatClipsChild->GetClipMask(
-        aTarget, aClippedFrame, aMatrix, &maskTransform);
-    aTarget.PushGroupForBlendBack(gfxContentType::ALPHA, 1.0, maskSurface,
-                                  maskTransform);
-||||||| merged common ancestors
-    Matrix maskTransform;
-    RefPtr<SourceSurface> maskSurface =
-      clipPathThatClipsChild->GetClipMask(aTarget, aClippedFrame,
-                                          aMatrix, &maskTransform);
-    aTarget.PushGroupForBlendBack(gfxContentType::ALPHA, 1.0,
-                                  maskSurface, maskTransform);
-=======
     RefPtr<SourceSurface> maskSurface = clipPathThatClipsChild->GetClipMask(
         aTarget, aClippedFrame, mMatrixForChildren);
 
@@ -338,7 +193,6 @@ void nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame* aFrame,
     maskTransform.Invert();
     aTarget.PushGroupForBlendBack(gfxContentType::ALPHA, 1.0, maskSurface,
                                   maskTransform);
->>>>>>> upstream-releases
     // The corresponding PopGroupAndBlend call below will mask the
     // blend using |maskSurface|.
   }
@@ -348,15 +202,7 @@ void nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame* aFrame,
   nsIContent* childContent = child->GetContent();
   if (childContent->IsSVGElement()) {
     toChildsUserSpace =
-<<<<<<< HEAD
-        static_cast<const nsSVGElement*>(childContent)
-            ->PrependLocalTransformsTo(mMatrixForChildren, eUserSpaceToParent);
-||||||| merged common ancestors
-      static_cast<const nsSVGElement*>(childContent)->
-        PrependLocalTransformsTo(mMatrixForChildren, eUserSpaceToParent);
-=======
         nsSVGUtils::GetTransformMatrixInUserSpace(child) * mMatrixForChildren;
->>>>>>> upstream-releases
   }
 
   // clipPath does not result in any image rendering, so we just use a dummy
@@ -375,25 +221,6 @@ void nsSVGClipPathFrame::PaintFrameIntoMask(nsIFrame* aFrame,
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<SourceSurface> nsSVGClipPathFrame::GetClipMask(
-    gfxContext& aReferenceContext, nsIFrame* aClippedFrame,
-    const gfxMatrix& aMatrix, Matrix* aMaskTransform, SourceSurface* aExtraMask,
-    const Matrix& aExtraMasksTransform) {
-  IntPoint offset;
-  RefPtr<DrawTarget> maskDT = CreateClipMask(aReferenceContext, offset);
-||||||| merged common ancestors
-already_AddRefed<SourceSurface>
-nsSVGClipPathFrame::GetClipMask(gfxContext& aReferenceContext,
-                                nsIFrame* aClippedFrame,
-                                const gfxMatrix& aMatrix,
-                                Matrix* aMaskTransform,
-                                SourceSurface* aExtraMask,
-                                const Matrix& aExtraMasksTransform)
-{
-  IntPoint offset;
-  RefPtr<DrawTarget> maskDT = CreateClipMask(aReferenceContext, offset);
-=======
 already_AddRefed<SourceSurface> nsSVGClipPathFrame::GetClipMask(
     gfxContext& aReferenceContext, nsIFrame* aClippedFrame,
     const gfxMatrix& aMatrix, SourceSurface* aExtraMask,
@@ -401,7 +228,6 @@ already_AddRefed<SourceSurface> nsSVGClipPathFrame::GetClipMask(
   RefPtr<DrawTarget> maskDT =
       aReferenceContext.GetDrawTarget()->CreateClippedDrawTarget(
           Rect(), SurfaceFormat::A8);
->>>>>>> upstream-releases
   if (!maskDT) {
     return nullptr;
   }
@@ -456,17 +282,8 @@ bool nsSVGClipPathFrame::PointIsInsideClipPath(nsIFrame* aClippedFrame,
     nsSVGDisplayableFrame* SVGFrame = do_QueryFrame(kid);
     if (SVGFrame) {
       gfxPoint pointForChild = point;
-<<<<<<< HEAD
-      gfxMatrix m =
-          static_cast<nsSVGElement*>(kid->GetContent())
-              ->PrependLocalTransformsTo(gfxMatrix(), eUserSpaceToParent);
-||||||| merged common ancestors
-      gfxMatrix m = static_cast<nsSVGElement*>(kid->GetContent())->
-        PrependLocalTransformsTo(gfxMatrix(), eUserSpaceToParent);
-=======
 
       gfxMatrix m = nsSVGUtils::GetTransformMatrixInUserSpace(kid);
->>>>>>> upstream-releases
       if (!m.IsIdentity()) {
         if (!m.Invert()) {
           return false;
@@ -500,16 +317,9 @@ bool nsSVGClipPathFrame::IsTrivial(nsSVGDisplayableFrame** aSingleChild) {
     if (svgChild) {
       // We consider a non-trivial clipPath to be one containing
       // either more than one svg child and/or a svg container
-<<<<<<< HEAD
-      if (foundChild || svgChild->IsDisplayContainer()) return false;
-||||||| merged common ancestors
-      if (foundChild || svgChild->IsDisplayContainer())
-        return false;
-=======
       if (foundChild || svgChild->IsDisplayContainer()) {
         return false;
       }
->>>>>>> upstream-releases
 
       // or where the child is itself clipped
       if (SVGObserverUtils::GetAndObserveClipPath(kid, nullptr) ==
@@ -602,16 +412,8 @@ gfxMatrix nsSVGClipPathFrame::GetClipPathTransform(nsIFrame* aClippedFrame) {
   gfxMatrix tm = content->PrependLocalTransformsTo({}, eChildToUserSpace) *
                  nsSVGUtils::GetTransformMatrixInUserSpace(this);
 
-<<<<<<< HEAD
-  nsSVGEnum* clipPathUnits =
-      &content->mEnumAttributes[SVGClipPathElement::CLIPPATHUNITS];
-||||||| merged common ancestors
-  nsSVGEnum* clipPathUnits =
-    &content->mEnumAttributes[SVGClipPathElement::CLIPPATHUNITS];
-=======
   SVGAnimatedEnumeration* clipPathUnits =
       &content->mEnumAttributes[SVGClipPathElement::CLIPPATHUNITS];
->>>>>>> upstream-releases
 
   uint32_t flags = nsSVGUtils::eBBoxIncludeFillGeometry |
                    (aClippedFrame->StyleBorder()->mBoxDecorationBreak ==
@@ -641,15 +443,8 @@ SVGBBox nsSVGClipPathFrame::GetBBoxForClipPathFrame(const SVGBBox& aBBox,
     if (frame) {
       nsSVGDisplayableFrame* svg = do_QueryFrame(frame);
       if (svg) {
-<<<<<<< HEAD
-        gfxMatrix matrix =
-            svgNode->PrependLocalTransformsTo(aMatrix, eUserSpaceToParent);
-||||||| merged common ancestors
-        gfxMatrix matrix = svgNode->PrependLocalTransformsTo(aMatrix, eUserSpaceToParent);
-=======
         gfxMatrix matrix =
             nsSVGUtils::GetTransformMatrixInUserSpace(frame) * aMatrix;
->>>>>>> upstream-releases
         tmpBBox = svg->GetBBoxContribution(mozilla::gfx::ToMatrix(matrix),
                                            nsSVGUtils::eBBoxIncludeFill);
         nsSVGClipPathFrame* clipPathFrame;

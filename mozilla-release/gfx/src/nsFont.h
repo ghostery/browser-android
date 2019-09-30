@@ -14,59 +14,13 @@
 #include "gfxFontFeatures.h"
 #include "gfxFontVariations.h"
 #include "mozilla/FontPropertyTypes.h"
-<<<<<<< HEAD
-#include "mozilla/RefPtr.h"  // for RefPtr
-#include "nsColor.h"         // for nsColor and NS_RGBA
-#include "nsCoord.h"         // for nscoord
-#include "nsTArray.h"        // for nsTArray
-||||||| merged common ancestors
-#include "mozilla/RefPtr.h"             // for RefPtr
-#include "nsColor.h"                    // for nsColor and NS_RGBA
-#include "nsCoord.h"                    // for nscoord
-#include "nsTArray.h"                   // for nsTArray
-=======
 #include "mozilla/RefPtr.h"             // for RefPtr
 #include "mozilla/StyleColorInlines.h"  // for StyleRGBA
 #include "nsCoord.h"                    // for nscoord
 #include "nsTArray.h"                   // for nsTArray
->>>>>>> upstream-releases
 
 struct gfxFontStyle;
 
-<<<<<<< HEAD
-// IDs for generic fonts
-// NOTE: 0, 1 are reserved for the special IDs of the default variable
-// and fixed fonts in the presentation context, see nsPresContext.h
-const uint8_t kGenericFont_NONE = 0x00;
-// Special
-const uint8_t kGenericFont_moz_variable =
-    0x00;  // for the default variable width font
-const uint8_t kGenericFont_moz_fixed =
-    0x01;  // our special "use the user's fixed font"
-// CSS
-const uint8_t kGenericFont_serif = 0x02;
-const uint8_t kGenericFont_sans_serif = 0x04;
-const uint8_t kGenericFont_monospace = 0x08;
-const uint8_t kGenericFont_cursive = 0x10;
-const uint8_t kGenericFont_fantasy = 0x20;
-
-||||||| merged common ancestors
-// IDs for generic fonts
-// NOTE: 0, 1 are reserved for the special IDs of the default variable
-// and fixed fonts in the presentation context, see nsPresContext.h
-const uint8_t kGenericFont_NONE         = 0x00;
-// Special
-const uint8_t kGenericFont_moz_variable = 0x00; // for the default variable width font
-const uint8_t kGenericFont_moz_fixed    = 0x01; // our special "use the user's fixed font"
-// CSS
-const uint8_t kGenericFont_serif        = 0x02;
-const uint8_t kGenericFont_sans_serif   = 0x04;
-const uint8_t kGenericFont_monospace    = 0x08;
-const uint8_t kGenericFont_cursive      = 0x10;
-const uint8_t kGenericFont_fantasy      = 0x20;
-
-=======
->>>>>>> upstream-releases
 // Font structure.
 struct nsFont final {
   typedef mozilla::FontStretch FontStretch;
@@ -97,14 +51,8 @@ struct nsFont final {
 
   // The estimated background color behind the text. Enables a special
   // rendering mode when NS_GET_A(.) > 0. Only used for text in the chrome.
-<<<<<<< HEAD
-  nscolor fontSmoothingBackgroundColor = NS_RGBA(0, 0, 0, 0);
-||||||| merged common ancestors
-  nscolor fontSmoothingBackgroundColor = NS_RGBA(0,0,0,0);
-=======
   mozilla::StyleRGBA fontSmoothingBackgroundColor =
       mozilla::StyleRGBA::Transparent();
->>>>>>> upstream-releases
 
   // Language system tag, to override document language;
   // this is an OpenType "language system" tag represented as a 32-bit integer

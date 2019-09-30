@@ -103,23 +103,6 @@ this.tabs = class extends ExtensionAPI {
 
     let self = {
       tabs: {
-<<<<<<< HEAD
-        onActivated: makeGlobalEvent(context, "tabs.onActivated", "Tab:Selected", (fire, data) => {
-          let tab = tabManager.get(data.id);
-
-          fire.async({
-            tabId: tab.id,
-            previousTabId: data.previousTabId,
-            windowId: tab.windowId,
-          });
-        }),
-||||||| merged common ancestors
-        onActivated: makeGlobalEvent(context, "tabs.onActivated", "Tab:Selected", (fire, data) => {
-          let tab = tabManager.get(data.id);
-
-          fire.async({tabId: tab.id, windowId: tab.windowId});
-        }),
-=======
         onActivated: makeGlobalEvent(
           context,
           "tabs.onActivated",
@@ -134,7 +117,6 @@ this.tabs = class extends ExtensionAPI {
             });
           }
         ),
->>>>>>> upstream-releases
 
         onCreated: new EventManager({
           context,

@@ -234,23 +234,10 @@ const char* HOST_LOCATOR_SCHEMES[] = {
 
 const char* WILDCARD_SCHEMES[] = {"http", "https", "ws", "wss", nullptr};
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MatchPattern> MatchPattern::Constructor(
-    dom::GlobalObject& aGlobal, const nsAString& aPattern,
-    const MatchPatternOptions& aOptions, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MatchPattern>
-MatchPattern::Constructor(dom::GlobalObject& aGlobal,
-                          const nsAString& aPattern,
-                          const MatchPatternOptions& aOptions,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MatchPattern> MatchPattern::Constructor(
     dom::GlobalObject& aGlobal, const nsAString& aPattern,
     const MatchPatternOptions& aOptions, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<MatchPattern> pattern = new MatchPattern(aGlobal.GetAsSupports());
   pattern->Init(aGlobal.Context(), aPattern, aOptions.mIgnorePath,
                 aOptions.mRestrictSchemes, aRv);
@@ -475,16 +462,8 @@ JSObject* MatchPattern::WrapObject(JSContext* aCx,
   return MatchPattern_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ bool MatchPattern::MatchesAllURLs(const URLInfo& aURL) {
-||||||| merged common ancestors
-/* static */ bool
-MatchPattern::MatchesAllURLs(const URLInfo& aURL)
-{
-=======
 /* static */
 bool MatchPattern::MatchesAllURLs(const URLInfo& aURL) {
->>>>>>> upstream-releases
   RefPtr<AtomSet> permittedSchemes = AtomSet::Get<PERMITTED_SCHEMES>();
   return permittedSchemes->Contains(aURL.Scheme());
 }
@@ -503,25 +482,11 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(MatchPattern)
  * MatchPatternSet
  *****************************************************************************/
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MatchPatternSet> MatchPatternSet::Constructor(
-    dom::GlobalObject& aGlobal,
-    const nsTArray<dom::OwningStringOrMatchPattern>& aPatterns,
-    const MatchPatternOptions& aOptions, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MatchPatternSet>
-MatchPatternSet::Constructor(dom::GlobalObject& aGlobal,
-                             const nsTArray<dom::OwningStringOrMatchPattern>& aPatterns,
-                             const MatchPatternOptions& aOptions,
-                             ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MatchPatternSet> MatchPatternSet::Constructor(
     dom::GlobalObject& aGlobal,
     const nsTArray<dom::OwningStringOrMatchPattern>& aPatterns,
     const MatchPatternOptions& aOptions, ErrorResult& aRv) {
->>>>>>> upstream-releases
   ArrayType patterns;
 
   for (auto& elem : aPatterns) {
@@ -582,13 +547,6 @@ bool MatchPatternSet::Subsumes(const MatchPattern& aPattern) const {
   return false;
 }
 
-<<<<<<< HEAD
-bool MatchPatternSet::Overlaps(const MatchPatternSet& aPatternSet) const {
-||||||| merged common ancestors
-bool
-MatchPatternSet::Overlaps(const MatchPatternSet& aPatternSet) const
-{
-=======
 bool MatchPatternSet::SubsumesDomain(const MatchPattern& aPattern) const {
   for (const auto& pattern : mPatterns) {
     if (pattern->SubsumesDomain(aPattern)) {
@@ -599,7 +557,6 @@ bool MatchPatternSet::SubsumesDomain(const MatchPattern& aPattern) const {
 }
 
 bool MatchPatternSet::Overlaps(const MatchPatternSet& aPatternSet) const {
->>>>>>> upstream-releases
   for (const auto& pattern : aPatternSet.mPatterns) {
     if (Overlaps(*pattern)) {
       return true;
@@ -647,24 +604,11 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(MatchPatternSet)
 
 MatchGlob::~MatchGlob() { mozilla::DropJSObjects(this); }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MatchGlob> MatchGlob::Constructor(
-    dom::GlobalObject& aGlobal, const nsAString& aGlob, bool aAllowQuestion,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MatchGlob>
-MatchGlob::Constructor(dom::GlobalObject& aGlobal,
-                       const nsAString& aGlob,
-                       bool aAllowQuestion,
-                       ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MatchGlob> MatchGlob::Constructor(dom::GlobalObject& aGlobal,
                                                    const nsAString& aGlob,
                                                    bool aAllowQuestion,
                                                    ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<MatchGlob> glob = new MatchGlob(aGlobal.GetAsSupports());
   glob->Init(aGlobal.Context(), aGlob, aAllowQuestion, aRv);
   if (aRv.Failed()) {
@@ -739,16 +683,8 @@ bool MatchGlob::Matches(const nsAString& aString) const {
     nsString input(aString);
 
     size_t index = 0;
-<<<<<<< HEAD
-    if (!JS_ExecuteRegExpNoStatics(cx, regexp, input.BeginWriting(),
-                                   aString.Length(), &index, true, &result)) {
-||||||| merged common ancestors
-    if (!JS_ExecuteRegExpNoStatics(cx, regexp, input.BeginWriting(), aString.Length(),
-                                   &index, true, &result)) {
-=======
     if (!JS::ExecuteRegExpNoStatics(cx, regexp, input.BeginWriting(),
                                     aString.Length(), &index, true, &result)) {
->>>>>>> upstream-releases
       return false;
     }
 

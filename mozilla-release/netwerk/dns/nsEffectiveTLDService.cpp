@@ -39,30 +39,13 @@ NS_IMPL_ISUPPORTS(nsEffectiveTLDService, nsIEffectiveTLDService,
 static nsEffectiveTLDService* gService = nullptr;
 
 nsEffectiveTLDService::nsEffectiveTLDService()
-<<<<<<< HEAD
-    : mIDNService(), mGraph(etld_dafsa::kDafsa) {}
-||||||| merged common ancestors
-  : mIDNService()
-  , mGraph(etld_dafsa::kDafsa)
-{
-}
-=======
     : mIDNService(), mGraph(etld_dafsa::kDafsa) {}
 
 nsresult nsEffectiveTLDService::Init() {
   if (gService) {
     return NS_ERROR_ALREADY_INITIALIZED;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult nsEffectiveTLDService::Init() {
-||||||| merged common ancestors
-nsresult
-nsEffectiveTLDService::Init()
-{
-=======
->>>>>>> upstream-releases
   nsresult rv;
   mIDNService = do_GetService(NS_IDNSERVICE_CONTRACTID, &rv);
   if (NS_FAILED(rv)) return rv;
@@ -104,29 +87,12 @@ MOZ_DEFINE_MALLOC_SIZE_OF(EffectiveTLDServiceMallocSizeOf)
 // Nonetheless, we keep this code here in anticipation of bug 1083971 which will
 // change ETLDEntries::entries to a heap-allocated array modifiable at runtime.
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::CollectReports(nsIHandleReportCallback *aHandleReport,
-                                      nsISupports *aData, bool aAnonymize) {
-  MOZ_COLLECT_REPORT("explicit/network/effective-TLD-service", KIND_HEAP,
-                     UNITS_BYTES,
-                     SizeOfIncludingThis(EffectiveTLDServiceMallocSizeOf),
-                     "Memory used by the effective TLD service.");
-||||||| merged common ancestors
-nsEffectiveTLDService::CollectReports(nsIHandleReportCallback* aHandleReport,
-                                      nsISupports* aData, bool aAnonymize)
-{
-  MOZ_COLLECT_REPORT(
-    "explicit/network/effective-TLD-service", KIND_HEAP, UNITS_BYTES,
-    SizeOfIncludingThis(EffectiveTLDServiceMallocSizeOf),
-    "Memory used by the effective TLD service.");
-=======
 nsEffectiveTLDService::CollectReports(nsIHandleReportCallback* aHandleReport,
                                       nsISupports* aData, bool aAnonymize) {
   MOZ_COLLECT_REPORT("explicit/network/effective-TLD-service", KIND_HEAP,
                      UNITS_BYTES,
                      SizeOfIncludingThis(EffectiveTLDServiceMallocSizeOf),
                      "Memory used by the effective TLD service.");
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -146,17 +112,8 @@ size_t nsEffectiveTLDService::SizeOfIncludingThis(
 // Pulls out the host portion from an nsIURI, and calls through to
 // GetPublicSuffixFromHost().
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::GetPublicSuffix(nsIURI *aURI,
-                                       nsACString &aPublicSuffix) {
-||||||| merged common ancestors
-nsEffectiveTLDService::GetPublicSuffix(nsIURI     *aURI,
-                                       nsACString &aPublicSuffix)
-{
-=======
 nsEffectiveTLDService::GetPublicSuffix(nsIURI* aURI,
                                        nsACString& aPublicSuffix) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aURI);
 
   nsAutoCString host;
@@ -172,32 +129,10 @@ nsEffectiveTLDService::GetPublicSuffix(nsIURI* aURI,
 // Pulls out the host portion from an nsIURI, and calls through to
 // GetBaseDomainFromHost().
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::GetBaseDomain(nsIURI *aURI, uint32_t aAdditionalParts,
-                                     nsACString &aBaseDomain) {
-||||||| merged common ancestors
-nsEffectiveTLDService::GetBaseDomain(nsIURI     *aURI,
-                                     uint32_t    aAdditionalParts,
-                                     nsACString &aBaseDomain)
-{
-=======
 nsEffectiveTLDService::GetBaseDomain(nsIURI* aURI, uint32_t aAdditionalParts,
                                      nsACString& aBaseDomain) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aURI);
-<<<<<<< HEAD
   NS_ENSURE_TRUE(((int32_t)aAdditionalParts) >= 0, NS_ERROR_INVALID_ARG);
-
-  nsCOMPtr<nsIURI> innerURI = NS_GetInnermostURI(aURI);
-  NS_ENSURE_ARG_POINTER(innerURI);
-||||||| merged common ancestors
-  NS_ENSURE_TRUE( ((int32_t)aAdditionalParts) >= 0, NS_ERROR_INVALID_ARG);
-
-  nsCOMPtr<nsIURI> innerURI = NS_GetInnermostURI(aURI);
-  NS_ENSURE_ARG_POINTER(innerURI);
-=======
-  NS_ENSURE_TRUE(((int32_t)aAdditionalParts) >= 0, NS_ERROR_INVALID_ARG);
->>>>>>> upstream-releases
 
   nsAutoCString host;
   nsresult rv = NS_GetInnermostURIHost(aURI, host);
@@ -211,17 +146,8 @@ nsEffectiveTLDService::GetBaseDomain(nsIURI* aURI, uint32_t aAdditionalParts,
 // External function for dealing with a host string directly: finds the public
 // suffix (e.g. co.uk) for the given hostname. See GetBaseDomainInternal().
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::GetPublicSuffixFromHost(const nsACString &aHostname,
-                                               nsACString &aPublicSuffix) {
-||||||| merged common ancestors
-nsEffectiveTLDService::GetPublicSuffixFromHost(const nsACString &aHostname,
-                                               nsACString       &aPublicSuffix)
-{
-=======
 nsEffectiveTLDService::GetPublicSuffixFromHost(const nsACString& aHostname,
                                                nsACString& aPublicSuffix) {
->>>>>>> upstream-releases
   // Create a mutable copy of the hostname and normalize it to ACE.
   // This will fail if the hostname includes invalid characters.
   nsAutoCString normHostname(aHostname);
@@ -235,23 +161,10 @@ nsEffectiveTLDService::GetPublicSuffixFromHost(const nsACString& aHostname,
 // domain (e.g. www.co.uk) for the given hostname and number of subdomain parts
 // requested. See GetBaseDomainInternal().
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::GetBaseDomainFromHost(const nsACString &aHostname,
-                                             uint32_t aAdditionalParts,
-                                             nsACString &aBaseDomain) {
-  NS_ENSURE_TRUE(((int32_t)aAdditionalParts) >= 0, NS_ERROR_INVALID_ARG);
-||||||| merged common ancestors
-nsEffectiveTLDService::GetBaseDomainFromHost(const nsACString &aHostname,
-                                             uint32_t          aAdditionalParts,
-                                             nsACString       &aBaseDomain)
-{
-  NS_ENSURE_TRUE( ((int32_t)aAdditionalParts) >= 0, NS_ERROR_INVALID_ARG);
-=======
 nsEffectiveTLDService::GetBaseDomainFromHost(const nsACString& aHostname,
                                              uint32_t aAdditionalParts,
                                              nsACString& aBaseDomain) {
   NS_ENSURE_TRUE(((int32_t)aAdditionalParts) >= 0, NS_ERROR_INVALID_ARG);
->>>>>>> upstream-releases
 
   // Create a mutable copy of the hostname and normalize it to ACE.
   // This will fail if the hostname includes invalid characters.
@@ -263,17 +176,8 @@ nsEffectiveTLDService::GetBaseDomainFromHost(const nsACString& aHostname,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::GetNextSubDomain(const nsACString &aHostname,
-                                        nsACString &aBaseDomain) {
-||||||| merged common ancestors
-nsEffectiveTLDService::GetNextSubDomain(const nsACString& aHostname,
-                                        nsACString&       aBaseDomain)
-{
-=======
 nsEffectiveTLDService::GetNextSubDomain(const nsACString& aHostname,
                                         nsACString& aBaseDomain) {
->>>>>>> upstream-releases
   // Create a mutable copy of the hostname and normalize it to ACE.
   // This will fail if the hostname includes invalid characters.
   nsAutoCString normHostname(aHostname);
@@ -288,21 +192,9 @@ nsEffectiveTLDService::GetNextSubDomain(const nsACString& aHostname,
 // if more subdomain parts are requested than are available, or if the hostname
 // includes characters that are not valid in a URL. Normalization is performed
 // on the host string and the result will be in UTF8.
-<<<<<<< HEAD
-nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString &aHostname,
-                                                      int32_t aAdditionalParts,
-                                                      nsACString &aBaseDomain) {
-||||||| merged common ancestors
-nsresult
-nsEffectiveTLDService::GetBaseDomainInternal(nsCString  &aHostname,
-                                             int32_t    aAdditionalParts,
-                                             nsACString &aBaseDomain)
-{
-=======
 nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
                                                       int32_t aAdditionalParts,
                                                       nsACString& aBaseDomain) {
->>>>>>> upstream-releases
   const int kExceptionRule = 1;
   const int kWildcardRule = 2;
 
@@ -317,21 +209,6 @@ nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
   if (aHostname.IsEmpty() || aHostname.Last() == '.')
     return NS_ERROR_INVALID_ARG;
 
-<<<<<<< HEAD
-  // Check if we're dealing with an IPv4/IPv6 hostname, and return
-  PRNetAddr addr;
-  PRStatus result = PR_StringToNetAddr(aHostname.get(), &addr);
-  if (result == PR_SUCCESS) return NS_ERROR_HOST_IS_IP_ADDRESS;
-
-||||||| merged common ancestors
-  // Check if we're dealing with an IPv4/IPv6 hostname, and return
-  PRNetAddr addr;
-  PRStatus result = PR_StringToNetAddr(aHostname.get(), &addr);
-  if (result == PR_SUCCESS)
-    return NS_ERROR_HOST_IS_IP_ADDRESS;
-
-=======
->>>>>>> upstream-releases
   // Lookup in the cache if this is a normal query. This is restricted to
   // main thread-only as the cache is not thread-safe.
   Maybe<TldCache::Entry> entry;
@@ -380,12 +257,6 @@ nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
     // sanity check the string we're about to look up: it should not begin with
     // a '.'; this would mean the hostname began with a '.' or had an
     // embedded '..' sequence.
-<<<<<<< HEAD
-    if (*currDomain == '.') return NS_ERROR_INVALID_ARG;
-||||||| merged common ancestors
-    if (*currDomain == '.')
-      return NS_ERROR_INVALID_ARG;
-=======
     if (*currDomain == '.') {
       // Update the MRU table if in use.
       if (entry) {
@@ -395,7 +266,6 @@ nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
 
       return NS_ERROR_INVALID_ARG;
     }
->>>>>>> upstream-releases
 
     // Perform the lookup.
     const int result = mGraph.Lookup(Substring(currDomain, end));
@@ -457,12 +327,6 @@ nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
     }
   }
 
-<<<<<<< HEAD
-  if (aAdditionalParts != 0) return NS_ERROR_INSUFFICIENT_DOMAIN_LEVELS;
-||||||| merged common ancestors
-  if (aAdditionalParts != 0)
-    return NS_ERROR_INSUFFICIENT_DOMAIN_LEVELS;
-=======
   if (aAdditionalParts != 0) {
     // Update the MRU table if in use.
     if (entry) {
@@ -472,7 +336,6 @@ nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
 
     return NS_ERROR_INSUFFICIENT_DOMAIN_LEVELS;
   }
->>>>>>> upstream-releases
 
   aBaseDomain = Substring(iter, end);
 
@@ -490,15 +353,7 @@ nsresult nsEffectiveTLDService::GetBaseDomainInternal(nsCString& aHostname,
 // Normalizes the given hostname, component by component.  ASCII/ACE
 // components are lower-cased, and UTF-8 components are normalized per
 // RFC 3454 and converted to ACE.
-<<<<<<< HEAD
-nsresult nsEffectiveTLDService::NormalizeHostname(nsCString &aHostname) {
-||||||| merged common ancestors
-nsresult
-nsEffectiveTLDService::NormalizeHostname(nsCString &aHostname)
-{
-=======
 nsresult nsEffectiveTLDService::NormalizeHostname(nsCString& aHostname) {
->>>>>>> upstream-releases
   if (!IsASCII(aHostname)) {
     nsresult rv = mIDNService->ConvertUTF8toACE(aHostname, aHostname);
     if (NS_FAILED(rv)) return rv;
@@ -509,18 +364,8 @@ nsresult nsEffectiveTLDService::NormalizeHostname(nsCString& aHostname) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEffectiveTLDService::HasRootDomain(const nsACString &aInput,
-                                     const nsACString &aHost, bool *aResult) {
-||||||| merged common ancestors
-nsEffectiveTLDService::HasRootDomain(const nsACString& aInput,
-                                     const nsACString& aHost,
-                                     bool* aResult)
-{
-=======
 nsEffectiveTLDService::HasRootDomain(const nsACString& aInput,
                                      const nsACString& aHost, bool* aResult) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aResult)) {
     return NS_ERROR_FAILURE;
   }

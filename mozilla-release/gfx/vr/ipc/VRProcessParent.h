@@ -20,18 +20,6 @@ namespace gfx {
 
 class VRChild;
 
-<<<<<<< HEAD
-class VRProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
- public:
-  explicit VRProcessParent();
-  ~VRProcessParent();
-||||||| merged common ancestors
-class VRProcessParent final : public mozilla::ipc::GeckoChildProcessHost
-{
-public:
-  explicit VRProcessParent();
-  ~VRProcessParent();
-=======
 class VRProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
  public:
   class Listener {
@@ -45,7 +33,6 @@ class VRProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
   };
 
   explicit VRProcessParent(Listener* aListener);
->>>>>>> upstream-releases
 
   // Launch the subprocess asynchronously. On failure, false is returned.
   // Otherwise, true is returned, and the OnProcessLaunchComplete listener
@@ -69,13 +56,6 @@ class VRProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
   bool IsConnected() const;
 
   base::ProcessId OtherPid();
-<<<<<<< HEAD
-  VRChild* GetActor() const { return mVRChild.get(); }
-||||||| merged common ancestors
-  VRChild* GetActor() const {
-    return mVRChild.get();
-  }
-=======
   VRChild* GetActor() const { return mVRChild.get(); }
   // Return a unique id for this process, guaranteed not to be shared with any
   // past or future instance of VRProcessParent.
@@ -83,14 +63,7 @@ class VRProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
 
  private:
   ~VRProcessParent();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   DISALLOW_COPY_AND_ASSIGN(VRProcessParent);
 
   void InitAfterConnect(bool aSucceeded);
@@ -111,10 +84,4 @@ private:
 }  // namespace gfx
 }  // namespace mozilla
 
-<<<<<<< HEAD
 #endif  // ifndef GFX_VR_PROCESS_PARENT_H
-||||||| merged common ancestors
-#endif // ifndef GFX_VR_PROCESS_PARENT_H
-=======
-#endif  // ifndef GFX_VR_PROCESS_PARENT_H
->>>>>>> upstream-releases

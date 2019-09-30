@@ -36,33 +36,11 @@ class TestCloseWindow(WindowManagerMixin, MarionetteTestCase):
 
     @skip_if_mobile("Interacting with chrome windows not available for Fennec")
     def test_close_chrome_window_for_non_browser_window(self):
-<<<<<<< HEAD
-        win = self.open_chrome_window("chrome://marionette/content/test.xul")
-        self.marionette.switch_to_window(win)
-
-        self.assertIn(win, self.marionette.chrome_window_handles)
-        self.assertNotIn(win, self.marionette.window_handles)
-||||||| merged common ancestors
-
-        def open_window_with_js():
-            with self.marionette.using_context("chrome"):
-                self.marionette.execute_script("""
-                  window.open('chrome://marionette/content/test.xul',
-                              'foo', 'chrome,centerscreen');
-                """)
-
-        win = self.open_window(trigger=open_window_with_js)
-        self.marionette.switch_to_window(win)
-
-        self.assertIn(win, self.marionette.chrome_window_handles)
-        self.assertNotIn(win, self.marionette.window_handles)
-=======
         new_window = self.open_chrome_window("chrome://marionette/content/test.xul")
         self.marionette.switch_to_window(new_window)
 
         self.assertIn(new_window, self.marionette.chrome_window_handles)
         self.assertNotIn(new_window, self.marionette.window_handles)
->>>>>>> upstream-releases
         chrome_window_handles = self.marionette.close_chrome_window()
         self.assertNotIn(new_window, chrome_window_handles)
         self.assertListEqual(self.start_windows, chrome_window_handles)

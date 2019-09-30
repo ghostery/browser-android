@@ -30,27 +30,10 @@ class CanvasLayerComposite : public CanvasLayer, public LayerComposite {
  protected:
   virtual ~CanvasLayerComposite();
 
-<<<<<<< HEAD
- public:
-  virtual bool SetCompositableHost(CompositableHost* aHost) override;
-||||||| merged common ancestors
-public:
-  virtual bool SetCompositableHost(CompositableHost* aHost) override;
-=======
  public:
   bool SetCompositableHost(CompositableHost* aHost) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Disconnect() override { Destroy(); }
-||||||| merged common ancestors
-  virtual void Disconnect() override
-  {
-    Destroy();
-  }
-=======
   void Disconnect() override { Destroy(); }
->>>>>>> upstream-releases
 
   void SetLayerManager(HostLayerManager* aManager) override;
 
@@ -74,14 +57,7 @@ public:
     return nullptr;
   }
 
-<<<<<<< HEAD
-  virtual void PrintInfo(std::stringstream& aStream,
-                         const char* aPrefix) override;
-||||||| merged common ancestors
-  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
-=======
   void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
->>>>>>> upstream-releases
 
  private:
   gfx::SamplingFilter GetSamplingFilter();

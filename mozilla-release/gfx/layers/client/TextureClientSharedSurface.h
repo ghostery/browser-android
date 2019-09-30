@@ -37,15 +37,8 @@ class SharedSurfaceTextureData : public TextureData {
 
   explicit SharedSurfaceTextureData(UniquePtr<gl::SharedSurface> surf);
 
-<<<<<<< HEAD
- public:
-  ~SharedSurfaceTextureData();
-||||||| merged common ancestors
-  ~SharedSurfaceTextureData();
-=======
  public:
   virtual ~SharedSurfaceTextureData();
->>>>>>> upstream-releases
 
   bool Lock(OpenMode) override { return false; }
 

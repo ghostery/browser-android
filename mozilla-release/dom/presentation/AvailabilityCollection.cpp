@@ -16,16 +16,8 @@ namespace dom {
 StaticAutoPtr<AvailabilityCollection> AvailabilityCollection::sSingleton;
 static bool gOnceAliveNowDead = false;
 
-<<<<<<< HEAD
-/* static */ AvailabilityCollection* AvailabilityCollection::GetSingleton() {
-||||||| merged common ancestors
-/* static */ AvailabilityCollection*
-AvailabilityCollection::GetSingleton()
-{
-=======
 /* static */
 AvailabilityCollection* AvailabilityCollection::GetSingleton() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!sSingleton && !gOnceAliveNowDead) {

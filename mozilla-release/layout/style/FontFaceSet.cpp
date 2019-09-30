@@ -61,25 +61,10 @@ using namespace mozilla;
 using namespace mozilla::css;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
 #define LOG(args) \
   MOZ_LOG(gfxUserFontSet::GetUserFontsLog(), mozilla::LogLevel::Debug, args)
 #define LOG_ENABLED() \
   MOZ_LOG_TEST(gfxUserFontSet::GetUserFontsLog(), LogLevel::Debug)
-
-#define FONT_LOADING_API_ENABLED_PREF "layout.css.font-loading-api.enabled"
-||||||| merged common ancestors
-#define LOG(args) MOZ_LOG(gfxUserFontSet::GetUserFontsLog(), mozilla::LogLevel::Debug, args)
-#define LOG_ENABLED() MOZ_LOG_TEST(gfxUserFontSet::GetUserFontsLog(), \
-                                  LogLevel::Debug)
-
-#define FONT_LOADING_API_ENABLED_PREF "layout.css.font-loading-api.enabled"
-=======
-#define LOG(args) \
-  MOZ_LOG(gfxUserFontSet::GetUserFontsLog(), mozilla::LogLevel::Debug, args)
-#define LOG_ENABLED() \
-  MOZ_LOG_TEST(gfxUserFontSet::GetUserFontsLog(), LogLevel::Debug)
->>>>>>> upstream-releases
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(FontFaceSet)
 
@@ -123,35 +108,6 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(FontFaceSet)
   NS_INTERFACE_MAP_ENTRY(nsICSSLoaderObserver)
 NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 
-<<<<<<< HEAD
-FontFaceSet::FontFaceSet(nsPIDOMWindowInner* aWindow, nsIDocument* aDocument)
-    : DOMEventTargetHelper(aWindow),
-      mDocument(aDocument),
-      mStandardFontLoadPrincipal(
-          new gfxFontSrcPrincipal(mDocument->NodePrincipal())),
-      mResolveLazilyCreatedReadyPromise(false),
-      mStatus(FontFaceSetLoadStatus::Loaded),
-      mNonRuleFacesDirty(false),
-      mHasLoadingFontFaces(false),
-      mHasLoadingFontFacesIsDirty(false),
-      mDelayedLoadCheck(false),
-      mBypassCache(false),
-      mPrivateBrowsing(false) {
-||||||| merged common ancestors
-FontFaceSet::FontFaceSet(nsPIDOMWindowInner* aWindow, nsIDocument* aDocument)
-  : DOMEventTargetHelper(aWindow)
-  , mDocument(aDocument)
-  , mStandardFontLoadPrincipal(new gfxFontSrcPrincipal(mDocument->NodePrincipal()))
-  , mResolveLazilyCreatedReadyPromise(false)
-  , mStatus(FontFaceSetLoadStatus::Loaded)
-  , mNonRuleFacesDirty(false)
-  , mHasLoadingFontFaces(false)
-  , mHasLoadingFontFacesIsDirty(false)
-  , mDelayedLoadCheck(false)
-  , mBypassCache(false)
-  , mPrivateBrowsing(false)
-{
-=======
 FontFaceSet::FontFaceSet(nsPIDOMWindowInner* aWindow, dom::Document* aDocument)
     : DOMEventTargetHelper(aWindow),
       mDocument(aDocument),
@@ -165,7 +121,6 @@ FontFaceSet::FontFaceSet(nsPIDOMWindowInner* aWindow, dom::Document* aDocument)
       mDelayedLoadCheck(false),
       mBypassCache(false),
       mPrivateBrowsing(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mDocument, "We should get a valid document from the caller!");
 
   mStandardFontLoadPrincipal =
@@ -462,13 +417,6 @@ bool FontFaceSet::HasRuleFontFace(FontFace* aFontFace) {
 }
 #endif
 
-<<<<<<< HEAD
-void FontFaceSet::Add(FontFace& aFontFace, ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-FontFaceSet::Add(FontFace& aFontFace, ErrorResult& aRv)
-{
-=======
 static bool IsPdfJs(nsIPrincipal* aPrincipal) {
   if (!aPrincipal) {
     return false;
@@ -480,7 +428,6 @@ static bool IsPdfJs(nsIPrincipal* aPrincipal) {
 }
 
 void FontFaceSet::Add(FontFace& aFontFace, ErrorResult& aRv) {
->>>>>>> upstream-releases
   FlushUserFontSet();
 
   if (aFontFace.IsInFontFaceSet(this)) {
@@ -653,44 +600,17 @@ nsresult FontFaceSet::StartLoad(gfxUserFontEntry* aUserFontEntry,
   // node and a principal.  This is because the document where the font is
   // being loaded might have a different origin from the principal of the
   // stylesheet that initiated the font load.
-<<<<<<< HEAD
-  rv = NS_NewChannelWithTriggeringPrincipal(
-      getter_AddRefs(channel), aFontFaceSrc->mURI->get(), mDocument,
-      principal ? principal->get() : nullptr,
-      nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS, nsIContentPolicy::TYPE_FONT,
-      nullptr,  // PerformanceStorage
-      loadGroup);
-||||||| merged common ancestors
-  rv = NS_NewChannelWithTriggeringPrincipal(getter_AddRefs(channel),
-                                            aFontFaceSrc->mURI->get(),
-                                            mDocument,
-                                            principal ? principal->get() : nullptr,
-                                            nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS,
-                                            nsIContentPolicy::TYPE_FONT,
-                                            nullptr, // PerformanceStorage
-                                            loadGroup);
-=======
   rv = NS_NewChannelWithTriggeringPrincipal(
       getter_AddRefs(channel), aFontFaceSrc->mURI->get(), mDocument,
       principal ? principal->get() : nullptr, securityFlags,
       nsIContentPolicy::TYPE_FONT,
       nullptr,  // PerformanceStorage
       loadGroup);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  RefPtr<nsFontFaceLoader> fontLoader = new nsFontFaceLoader(
-      aUserFontEntry, aFontFaceSrc->mURI->get(), this, channel);
-||||||| merged common ancestors
-  RefPtr<nsFontFaceLoader> fontLoader =
-    new nsFontFaceLoader(aUserFontEntry, aFontFaceSrc->mURI->get(), this,
-                         channel);
-=======
   RefPtr<nsFontFaceLoader> fontLoader = new nsFontFaceLoader(
       aUserFontEntry, aFontFaceSrc->mURI->get(), this, channel);
   mLoaders.PutEntry(fontLoader);
->>>>>>> upstream-releases
 
   if (LOG_ENABLED()) {
     LOG(
@@ -709,27 +629,11 @@ nsresult FontFaceSet::StartLoad(gfxUserFontEntry* aUserFontEntry,
     rv = httpChannel->SetReferrerInfoWithoutClone(referrerInfo);
     Unused << NS_WARN_IF(NS_FAILED(rv));
 
-<<<<<<< HEAD
-    nsAutoCString accept("application/font-woff;q=0.9,*/*;q=0.8");
-    if (Preferences::GetBool(GFX_PREF_WOFF2_ENABLED)) {
-      accept.InsertLiteral("application/font-woff2;q=1.0,", 0);
-    }
-    rv = httpChannel->SetRequestHeader(NS_LITERAL_CSTRING("Accept"), accept,
-                                       false);
-||||||| merged common ancestors
-    nsAutoCString accept("application/font-woff;q=0.9,*/*;q=0.8");
-    if (Preferences::GetBool(GFX_PREF_WOFF2_ENABLED)) {
-      accept.InsertLiteral("application/font-woff2;q=1.0,", 0);
-    }
-    rv = httpChannel->SetRequestHeader(NS_LITERAL_CSTRING("Accept"),
-                                       accept, false);
-=======
     rv = httpChannel->SetRequestHeader(
         NS_LITERAL_CSTRING("Accept"),
         NS_LITERAL_CSTRING("application/font-woff2;q=1.0,application/"
                            "font-woff;q=0.9,*/*;q=0.8"),
         false);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
 
     // For WOFF and WOFF2, we should tell servers/proxies/etc NOT to try
@@ -917,16 +821,8 @@ void FontFaceSet::InsertNonRuleFontFace(FontFace* aFontFace,
   if (!aFontFace->GetUserFontEntry()) {
     // XXX Should we be checking mUserFontSet->mLocalRulesUsed like
     // InsertRuleFontFace does?
-<<<<<<< HEAD
-    RefPtr<gfxUserFontEntry> entry = FindOrCreateUserFontEntryFromFontFace(
-        family, aFontFace, SheetType::Doc);
-||||||| merged common ancestors
-    RefPtr<gfxUserFontEntry> entry =
-      FindOrCreateUserFontEntryFromFontFace(family, aFontFace, SheetType::Doc);
-=======
     RefPtr<gfxUserFontEntry> entry = FindOrCreateUserFontEntryFromFontFace(
         family, aFontFace, StyleOrigin::Author);
->>>>>>> upstream-releases
     if (!entry) {
       return;
     }
@@ -937,22 +833,10 @@ void FontFaceSet::InsertNonRuleFontFace(FontFace* aFontFace,
   mUserFontSet->AddUserFontEntry(family, aFontFace->GetUserFontEntry());
 }
 
-<<<<<<< HEAD
-void FontFaceSet::InsertRuleFontFace(FontFace* aFontFace, SheetType aSheetType,
-                                     nsTArray<FontFaceRecord>& aOldRecords,
-                                     bool& aFontSetModified) {
-||||||| merged common ancestors
-void
-FontFaceSet::InsertRuleFontFace(FontFace* aFontFace, SheetType aSheetType,
-                                nsTArray<FontFaceRecord>& aOldRecords,
-                                bool& aFontSetModified)
-{
-=======
 void FontFaceSet::InsertRuleFontFace(FontFace* aFontFace,
                                      StyleOrigin aSheetType,
                                      nsTArray<FontFaceRecord>& aOldRecords,
                                      bool& aFontSetModified) {
->>>>>>> upstream-releases
   nsAtom* fontFamily = aFontFace->GetFamilyName();
   if (!fontFamily) {
     // If there is no family name, this rule cannot contribute a
@@ -971,15 +855,7 @@ void FontFaceSet::InsertRuleFontFace(FontFace* aFontFace,
   for (size_t i = 0; i < aOldRecords.Length(); ++i) {
     FontFaceRecord& rec = aOldRecords[i];
 
-<<<<<<< HEAD
-    if (rec.mFontFace == aFontFace && rec.mSheetType == aSheetType) {
-||||||| merged common ancestors
-    if (rec.mFontFace == aFontFace &&
-        rec.mSheetType == aSheetType) {
-
-=======
     if (rec.mFontFace == aFontFace && rec.mOrigin == Some(aSheetType)) {
->>>>>>> upstream-releases
       // if local rules were used, don't use the old font entry
       // for rules containing src local usage
       if (mUserFontSet->mLocalRulesUsed && mUserFontSet->mRebuildLocalRules) {
@@ -1054,18 +930,9 @@ void FontFaceSet::InsertRuleFontFace(FontFace* aFontFace,
   mUserFontSet->AddUserFontEntry(family, entry);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<gfxUserFontEntry>
-FontFaceSet::FindOrCreateUserFontEntryFromFontFace(FontFace* aFontFace) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<gfxUserFontEntry>
-FontFaceSet::FindOrCreateUserFontEntryFromFontFace(FontFace* aFontFace)
-{
-=======
 /* static */
 already_AddRefed<gfxUserFontEntry>
 FontFaceSet::FindOrCreateUserFontEntryFromFontFace(FontFace* aFontFace) {
->>>>>>> upstream-releases
   nsAtom* fontFamily = aFontFace->GetFamilyName();
   if (!fontFamily) {
     // If there is no family name, this rule cannot contribute a
@@ -1073,16 +940,8 @@ FontFaceSet::FindOrCreateUserFontEntryFromFontFace(FontFace* aFontFace) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  return FindOrCreateUserFontEntryFromFontFace(nsAtomCString(fontFamily),
-                                               aFontFace, SheetType::Doc);
-||||||| merged common ancestors
-  return FindOrCreateUserFontEntryFromFontFace(nsAtomCString(fontFamily), aFontFace,
-                                               SheetType::Doc);
-=======
   return FindOrCreateUserFontEntryFromFontFace(nsAtomCString(fontFamily),
                                                aFontFace, StyleOrigin::Author);
->>>>>>> upstream-releases
 }
 
 static WeightRange GetWeightRangeForDescriptor(
@@ -1130,22 +989,10 @@ static StretchRange GetStretchRangeForDescriptor(
 // TODO(emilio): Should this take an nsAtom* aFamilyName instead?
 //
 // All callers have one handy.
-<<<<<<< HEAD
-/* static */ already_AddRefed<gfxUserFontEntry>
-FontFaceSet::FindOrCreateUserFontEntryFromFontFace(
-    const nsACString& aFamilyName, FontFace* aFontFace, SheetType aSheetType) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<gfxUserFontEntry>
-FontFaceSet::FindOrCreateUserFontEntryFromFontFace(const nsACString& aFamilyName,
-                                                   FontFace* aFontFace,
-                                                   SheetType aSheetType)
-{
-=======
 /* static */
 already_AddRefed<gfxUserFontEntry>
 FontFaceSet::FindOrCreateUserFontEntryFromFontFace(
     const nsACString& aFamilyName, FontFace* aFontFace, StyleOrigin aOrigin) {
->>>>>>> upstream-releases
   FontFaceSet* set = aFontFace->GetPrimaryFontFaceSet();
 
   uint32_t languageOverride = NO_FONT_LANGUAGE_OVERRIDE;
@@ -1214,16 +1061,9 @@ FontFaceSet::FindOrCreateUserFontEntryFromFontFace(
 
   if (aFontFace->HasFontData()) {
     gfxFontFaceSrc* face = srcArray.AppendElement();
-<<<<<<< HEAD
-    if (!face) return nullptr;
-||||||| merged common ancestors
-    if (!face)
-      return nullptr;
-=======
     if (!face) {
       return nullptr;
     }
->>>>>>> upstream-releases
 
     face->mSourceType = gfxFontFaceSrc::eSourceType_Buffer;
     face->mBuffer = aFontFace->CreateBufferSource();
@@ -1254,28 +1094,14 @@ FontFaceSet::FindOrCreateUserFontEntryFromFontFace(
           face->mReferrer = extraData.GetReferrer();
           face->mReferrerPolicy = extraData.GetReferrerPolicy();
           face->mOriginPrincipal =
-<<<<<<< HEAD
-              new gfxFontSrcPrincipal(extraData->Principal());
-||||||| merged common ancestors
-            new gfxFontSrcPrincipal(extraData->Principal());
-=======
               new gfxFontSrcPrincipal(extraData.Principal());
->>>>>>> upstream-releases
 
           // agent and user stylesheets are treated slightly differently,
           // the same-site origin check and access control headers are
           // enforced against the sheet principal rather than the document
           // principal to allow user stylesheets to include @font-face rules
-<<<<<<< HEAD
-          face->mUseOriginPrincipal =
-              (aSheetType == SheetType::User || aSheetType == SheetType::Agent);
-||||||| merged common ancestors
-          face->mUseOriginPrincipal = (aSheetType == SheetType::User ||
-                                       aSheetType == SheetType::Agent);
-=======
           face->mUseOriginPrincipal =
               aOrigin == StyleOrigin::User || aOrigin == StyleOrigin::UserAgent;
->>>>>>> upstream-releases
 
           face->mLocalName.Truncate();
           face->mFormatFlags = 0;
@@ -1381,22 +1207,6 @@ RawServoFontFaceRule* FontFaceSet::FindRuleForUserFontEntry(
   return nullptr;
 }
 
-<<<<<<< HEAD
-nsresult FontFaceSet::LogMessage(gfxUserFontEntry* aUserFontEntry,
-                                 const char* aMessage, uint32_t aFlags,
-                                 nsresult aStatus) {
-  nsCOMPtr<nsIConsoleService> console(
-      do_GetService(NS_CONSOLESERVICE_CONTRACTID));
-||||||| merged common ancestors
-nsresult
-FontFaceSet::LogMessage(gfxUserFontEntry* aUserFontEntry,
-                        const char* aMessage,
-                        uint32_t aFlags,
-                        nsresult aStatus)
-{
-  nsCOMPtr<nsIConsoleService>
-    console(do_GetService(NS_CONSOLESERVICE_CONTRACTID));
-=======
 nsresult FontFaceSet::LogMessage(gfxUserFontEntry* aUserFontEntry,
                                  const char* aMessage, uint32_t aFlags,
                                  nsresult aStatus) {
@@ -1406,7 +1216,6 @@ nsresult FontFaceSet::LogMessage(gfxUserFontEntry* aUserFontEntry,
 
   nsCOMPtr<nsIConsoleService> console(
       do_GetService(NS_CONSOLESERVICE_CONTRACTID));
->>>>>>> upstream-releases
   if (!console) {
     return NS_ERROR_NOT_AVAILABLE;
   }
@@ -1902,31 +1711,9 @@ FontFaceSet::HandleEvent(Event* aEvent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ bool FontFaceSet::PrefEnabled() {
-  static bool initialized = false;
-  static bool enabled;
-  if (!initialized) {
-    initialized = true;
-    Preferences::AddBoolVarCache(&enabled, FONT_LOADING_API_ENABLED_PREF);
-  }
-  return enabled;
-||||||| merged common ancestors
-/* static */ bool
-FontFaceSet::PrefEnabled()
-{
-  static bool initialized = false;
-  static bool enabled;
-  if (!initialized) {
-    initialized = true;
-    Preferences::AddBoolVarCache(&enabled, FONT_LOADING_API_ENABLED_PREF);
-  }
-  return enabled;
-=======
 /* static */
 bool FontFaceSet::PrefEnabled() {
   return StaticPrefs::layout_css_font_loading_api_enabled();
->>>>>>> upstream-releases
 }
 
 // nsICSSLoaderObserver
@@ -1985,51 +1772,22 @@ void FontFaceSet::CopyNonRuleFacesTo(FontFaceSet* aFontFaceSet) const {
 
 // -- FontFaceSet::UserFontSet ------------------------------------------------
 
-<<<<<<< HEAD
-/* virtual */ bool FontFaceSet::UserFontSet::IsFontLoadAllowed(
-    const gfxFontFaceSrc& aSrc) {
-||||||| merged common ancestors
-/* virtual */ bool
-FontFaceSet::UserFontSet::IsFontLoadAllowed(const gfxFontFaceSrc& aSrc)
-{
-=======
 /* virtual */
 bool FontFaceSet::UserFontSet::IsFontLoadAllowed(const gfxFontFaceSrc& aSrc) {
->>>>>>> upstream-releases
   return mFontFaceSet && mFontFaceSet->IsFontLoadAllowed(aSrc);
 }
 
-<<<<<<< HEAD
-/* virtual */ void FontFaceSet::UserFontSet::DispatchFontLoadViolations(
-    nsTArray<nsCOMPtr<nsIRunnable>>& aViolations) {
-||||||| merged common ancestors
-/* virtual */ void
-FontFaceSet::UserFontSet::DispatchFontLoadViolations(
-    nsTArray<nsCOMPtr<nsIRunnable>>& aViolations)
-{
-=======
 /* virtual */
 void FontFaceSet::UserFontSet::DispatchFontLoadViolations(
     nsTArray<nsCOMPtr<nsIRunnable>>& aViolations) {
->>>>>>> upstream-releases
   if (mFontFaceSet) {
     mFontFaceSet->DispatchFontLoadViolations(aViolations);
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult FontFaceSet::UserFontSet::StartLoad(
-    gfxUserFontEntry* aUserFontEntry, const gfxFontFaceSrc* aFontFaceSrc) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-FontFaceSet::UserFontSet::StartLoad(gfxUserFontEntry* aUserFontEntry,
-                                    const gfxFontFaceSrc* aFontFaceSrc)
-{
-=======
 /* virtual */
 nsresult FontFaceSet::UserFontSet::StartLoad(
     gfxUserFontEntry* aUserFontEntry, const gfxFontFaceSrc* aFontFaceSrc) {
->>>>>>> upstream-releases
   if (!mFontFaceSet) {
     return NS_ERROR_FAILURE;
   }
@@ -2054,47 +1812,21 @@ void FontFaceSet::UserFontSet::RecordFontLoadDone(uint32_t aFontSize,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult FontFaceSet::UserFontSet::LogMessage(
-    gfxUserFontEntry* aUserFontEntry, const char* aMessage, uint32_t aFlags,
-    nsresult aStatus) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-FontFaceSet::UserFontSet::LogMessage(gfxUserFontEntry* aUserFontEntry,
-                                     const char* aMessage,
-                                     uint32_t aFlags,
-                                     nsresult aStatus)
-{
-=======
 /* virtual */
 nsresult FontFaceSet::UserFontSet::LogMessage(gfxUserFontEntry* aUserFontEntry,
                                               const char* aMessage,
                                               uint32_t aFlags,
                                               nsresult aStatus) {
->>>>>>> upstream-releases
   if (!mFontFaceSet) {
     return NS_ERROR_FAILURE;
   }
   return mFontFaceSet->LogMessage(aUserFontEntry, aMessage, aFlags, aStatus);
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult FontFaceSet::UserFontSet::SyncLoadFontData(
-    gfxUserFontEntry* aFontToLoad, const gfxFontFaceSrc* aFontFaceSrc,
-    uint8_t*& aBuffer, uint32_t& aBufferLength) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-FontFaceSet::UserFontSet::SyncLoadFontData(gfxUserFontEntry* aFontToLoad,
-                                           const gfxFontFaceSrc* aFontFaceSrc,
-                                           uint8_t*& aBuffer,
-                                           uint32_t& aBufferLength)
-{
-=======
 /* virtual */
 nsresult FontFaceSet::UserFontSet::SyncLoadFontData(
     gfxUserFontEntry* aFontToLoad, const gfxFontFaceSrc* aFontFaceSrc,
     uint8_t*& aBuffer, uint32_t& aBufferLength) {
->>>>>>> upstream-releases
   if (!mFontFaceSet) {
     return NS_ERROR_FAILURE;
   }
@@ -2102,29 +1834,13 @@ nsresult FontFaceSet::UserFontSet::SyncLoadFontData(
                                         aBufferLength);
 }
 
-<<<<<<< HEAD
-/* virtual */ bool FontFaceSet::UserFontSet::GetPrivateBrowsing() {
-||||||| merged common ancestors
-/* virtual */ bool
-FontFaceSet::UserFontSet::GetPrivateBrowsing()
-{
-=======
 /* virtual */
 bool FontFaceSet::UserFontSet::GetPrivateBrowsing() {
->>>>>>> upstream-releases
   return mFontFaceSet && mFontFaceSet->mPrivateBrowsing;
 }
 
-<<<<<<< HEAD
-/* virtual */ void FontFaceSet::UserFontSet::DoRebuildUserFontSet() {
-||||||| merged common ancestors
-/* virtual */ void
-FontFaceSet::UserFontSet::DoRebuildUserFontSet()
-{
-=======
 /* virtual */
 void FontFaceSet::UserFontSet::DoRebuildUserFontSet() {
->>>>>>> upstream-releases
   if (!mFontFaceSet) {
     return;
   }

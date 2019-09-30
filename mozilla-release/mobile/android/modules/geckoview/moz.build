@@ -13,14 +13,8 @@ EXTRA_JS_MODULES += [
     'GeckoViewChildModule.jsm',
     'GeckoViewConsole.jsm',
     'GeckoViewContent.jsm',
-<<<<<<< HEAD
-    'GeckoViewMedia.jsm',
-||||||| merged common ancestors
-    'GeckoViewContentModule.jsm',
-=======
     'GeckoViewContentBlocking.jsm',
     'GeckoViewMedia.jsm',
->>>>>>> upstream-releases
     'GeckoViewModule.jsm',
     'GeckoViewNavigation.jsm',
     'GeckoViewProgress.jsm',
@@ -28,14 +22,7 @@ EXTRA_JS_MODULES += [
     'GeckoViewSettings.jsm',
     'GeckoViewStorageController.jsm',
     'GeckoViewTab.jsm',
-<<<<<<< HEAD
     'GeckoViewTelemetry.jsm',
-    'GeckoViewTrackingProtection.jsm',
-||||||| merged common ancestors
-    'GeckoViewTrackingProtection.jsm',
-=======
-    'GeckoViewTelemetry.jsm',
->>>>>>> upstream-releases
     'GeckoViewUtils.jsm',
     'GeckoViewWebExtension.jsm',
     'LoadURIDelegate.jsm',

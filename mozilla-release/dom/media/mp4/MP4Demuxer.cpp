@@ -510,18 +510,8 @@ RefPtr<MP4TrackDemuxer::SamplesPromise> MP4TrackDemuxer::GetSamples(
   }
   for (const auto& sample : samples->mSamples) {
     // Collect telemetry from h264 Annex B SPS.
-<<<<<<< HEAD
-    if (mNeedSPSForTelemetry && mIsH264 && AnnexB::IsAVCC(sample)) {
-      RefPtr<MediaByteBuffer> extradata = H264::ExtractExtraData(sample);
-||||||| merged common ancestors
-    if (mNeedSPSForTelemetry && mIsH264 &&
-        AnnexB::IsAVCC(sample)) {
-      RefPtr<MediaByteBuffer> extradata =
-        H264::ExtractExtraData(sample);
-=======
     if (mNeedSPSForTelemetry && mType == kH264 && AnnexB::IsAVCC(sample)) {
       RefPtr<MediaByteBuffer> extradata = H264::ExtractExtraData(sample);
->>>>>>> upstream-releases
       if (H264::HasSPS(extradata)) {
         RefPtr<MediaByteBuffer> extradata = H264::ExtractExtraData(sample);
         mNeedSPSForTelemetry = AccumulateSPSTelemetry(extradata);

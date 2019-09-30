@@ -7,16 +7,8 @@
 #include "nsISupportsImpl.h"
 #include "mozilla/Assertions.h"
 #ifdef MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
-<<<<<<< HEAD
-#include "nsThreadUtils.h"
-#endif  // MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
-||||||| merged common ancestors
-#include "nsThreadUtils.h"
-#endif // MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
-=======
 #  include "nsThreadUtils.h"
 #endif  // MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
->>>>>>> upstream-releases
 
 using namespace mozilla;
 

@@ -80,85 +80,6 @@ void PaymentMethodChangeEvent::GetMethodName(nsAString& aMethodName) {
   aMethodName.Assign(mMethodName);
 }
 
-<<<<<<< HEAD
-void PaymentMethodChangeEvent::SetMethodName(const nsAString& aMethodName) {
-  mMethodName = aMethodName;
-}
-
-void PaymentMethodChangeEvent::GetMethodDetails(
-    JSContext* aCx, JS::MutableHandle<JSObject*> aRetVal) {
-  MOZ_ASSERT(aCx);
-
-  if (mMethodDetails) {
-    aRetVal.set(mMethodDetails.get());
-    return;
-  }
-
-  RefPtr<BasicCardService> service = BasicCardService::GetService();
-  MOZ_ASSERT(service);
-  aRetVal.set(nullptr);
-  switch (mInternalDetails.type()) {
-    case ChangeDetails::GeneralMethodDetails: {
-      const GeneralDetails& rawDetails = mInternalDetails.generalDetails();
-      DeserializeToJSObject(rawDetails.details, aCx, aRetVal);
-      break;
-    }
-    case ChangeDetails::BasicCardMethodDetails: {
-      const BasicCardDetails& rawDetails = mInternalDetails.basicCardDetails();
-      BasicCardChangeDetails basicCardDetails;
-      PaymentOptions options;
-      mRequest->GetOptions(options);
-      if (options.mRequestBillingAddress) {
-        if (!rawDetails.billingAddress.country.IsEmpty() ||
-            !rawDetails.billingAddress.addressLine.IsEmpty() ||
-            !rawDetails.billingAddress.region.IsEmpty() ||
-            !rawDetails.billingAddress.regionCode.IsEmpty() ||
-            !rawDetails.billingAddress.city.IsEmpty() ||
-            !rawDetails.billingAddress.dependentLocality.IsEmpty() ||
-            !rawDetails.billingAddress.postalCode.IsEmpty() ||
-            !rawDetails.billingAddress.sortingCode.IsEmpty() ||
-            !rawDetails.billingAddress.organization.IsEmpty() ||
-            !rawDetails.billingAddress.recipient.IsEmpty() ||
-            !rawDetails.billingAddress.phone.IsEmpty()) {
-          nsCOMPtr<nsPIDOMWindowInner> window =
-              do_QueryInterface(GetParentObject());
-          basicCardDetails.mBillingAddress.Construct();
-          basicCardDetails.mBillingAddress.Value() =
-              new PaymentAddress(window, rawDetails.billingAddress.country,
-                                 rawDetails.billingAddress.addressLine,
-                                 rawDetails.billingAddress.region,
-                                 rawDetails.billingAddress.regionCode,
-                                 rawDetails.billingAddress.city,
-                                 rawDetails.billingAddress.dependentLocality,
-                                 rawDetails.billingAddress.postalCode,
-                                 rawDetails.billingAddress.sortingCode,
-                                 rawDetails.billingAddress.organization,
-                                 rawDetails.billingAddress.recipient,
-                                 rawDetails.billingAddress.phone);
-        }
-      }
-      MOZ_ASSERT(aCx);
-      JS::RootedValue value(aCx);
-      if (NS_WARN_IF(!basicCardDetails.ToObjectInternal(aCx, &value))) {
-        return;
-      }
-      aRetVal.set(&value.toObject());
-      break;
-    }
-    default: { break; }
-  }
-}
-
-void PaymentMethodChangeEvent::SetMethodDetails(
-    const ChangeDetails& aMethodDetails) {
-  mInternalDetails = aMethodDetails;
-||||||| merged common ancestors
-void
-PaymentMethodChangeEvent::GetMethodDetails(JSContext* cx,
-                                           JS::MutableHandle<JSObject*> retval)
-{
-  retval.set(mMethodDetails.get());
-=======
 void PaymentMethodChangeEvent::SetMethodName(const nsAString& aMethodName) {
   mMethodName = aMethodName;
 }
@@ -231,7 +152,6 @@ void PaymentMethodChangeEvent::GetMethodDetails(
 void PaymentMethodChangeEvent::SetMethodDetails(
     const ChangeDetails& aMethodDetails) {
   mInternalDetails = aMethodDetails;
->>>>>>> upstream-releases
 }
 
 PaymentMethodChangeEvent::~PaymentMethodChangeEvent() {

@@ -10,20 +10,6 @@ pub struct FieldsGen<'a> {
 }
 
 impl<'a> FieldsGen<'a> {
-<<<<<<< HEAD
-    pub(in codegen) fn declarations(&self) -> TokenStream {
-        match *self.0 {
-            Fields {
-                style: Style::Struct,
-                ref fields,
-            } => {
-                let vdr = fields.into_iter().map(Field::as_declaration);
-||||||| merged common ancestors
-    pub(in codegen) fn declarations(&self) -> Tokens {
-        match *self.0 {
-            Fields { style: Style::Struct, ref fields } => {
-                let vdr = fields.into_iter().map(Field::as_declaration);
-=======
     pub fn new(fields: &'a Fields<Field<'a>>, allow_unknown_fields: bool) -> Self {
         Self {
             fields,
@@ -39,7 +25,6 @@ impl<'a> FieldsGen<'a> {
                 ref fields,
             } => {
                 let vdr = fields.iter().map(Field::as_declaration);
->>>>>>> upstream-releases
                 quote!(#(#vdr)*)
             }
             _ => panic!("FieldsGen doesn't support tuples yet"),
@@ -47,13 +32,6 @@ impl<'a> FieldsGen<'a> {
     }
 
     /// Generate the loop which walks meta items looking for property matches.
-<<<<<<< HEAD
-    pub(in codegen) fn core_loop(&self) -> TokenStream {
-        let arms: Vec<field::MatchArm> = self.0.as_ref().map(Field::as_match).fields;
-||||||| merged common ancestors
-    pub(in codegen) fn core_loop(&self) -> Tokens {
-        let arms: Vec<field::MatchArm> = self.0.as_ref().map(Field::as_match).fields;
-=======
     pub(in codegen) fn core_loop(&self) -> TokenStream {
         let arms = self.fields.as_ref().map(Field::as_match);
 
@@ -75,7 +53,6 @@ impl<'a> FieldsGen<'a> {
                 __errors.push(::darling::Error::#err_fn.with_span(__inner));
             }
         };
->>>>>>> upstream-releases
 
         quote!(
             for __item in __items {
@@ -90,20 +67,6 @@ impl<'a> FieldsGen<'a> {
         )
     }
 
-<<<<<<< HEAD
-    pub fn require_fields(&self) -> TokenStream {
-        match *self.0 {
-            Fields {
-                style: Style::Struct,
-                ref fields,
-            } => {
-                let checks = fields.into_iter().map(Field::as_presence_check);
-||||||| merged common ancestors
-    pub fn require_fields(&self) -> Tokens {
-        match *self.0 {
-            Fields { style: Style::Struct, ref fields } => {
-                let checks = fields.into_iter().map(Field::as_presence_check);
-=======
     pub fn require_fields(&self) -> TokenStream {
         match *self.fields {
             Fields {
@@ -111,23 +74,14 @@ impl<'a> FieldsGen<'a> {
                 ref fields,
             } => {
                 let checks = fields.iter().map(Field::as_presence_check);
->>>>>>> upstream-releases
                 quote!(#(#checks)*)
             }
             _ => panic!("FieldsGen doesn't support tuples for requirement checks"),
         }
     }
 
-<<<<<<< HEAD
-    pub(in codegen) fn initializers(&self) -> TokenStream {
-        let inits: Vec<_> = self.0.as_ref().map(Field::as_initializer).fields;
-||||||| merged common ancestors
-    pub(in codegen) fn initializers(&self) -> Tokens {
-        let inits: Vec<_> = self.0.as_ref().map(Field::as_initializer).fields;
-=======
     pub(in codegen) fn initializers(&self) -> TokenStream {
         let inits = self.fields.as_ref().map(Field::as_initializer);
->>>>>>> upstream-releases
 
         quote!(#(#inits),*)
     }

@@ -22,49 +22,21 @@ class MediaDataDecoderProxy
       public DecoderDoctorLifeLogger<MediaDataDecoderProxy> {
  public:
   explicit MediaDataDecoderProxy(already_AddRefed<AbstractThread> aProxyThread)
-<<<<<<< HEAD
-      : mProxyThread(aProxyThread)
-#if defined(DEBUG)
-        ,
-        mIsShutdown(false)
-#endif
-||||||| merged common ancestors
-    : mProxyThread(aProxyThread)
-#if defined(DEBUG)
-    , mIsShutdown(false)
-#endif
-=======
       : mProxyThread(aProxyThread)
 #  if defined(DEBUG)
         ,
         mIsShutdown(false)
 #  endif
->>>>>>> upstream-releases
   {
   }
 
   explicit MediaDataDecoderProxy(
-<<<<<<< HEAD
-      already_AddRefed<MediaDataDecoder> aProxyDecoder)
-      : mProxyDecoder(aProxyDecoder)
-#if defined(DEBUG)
-        ,
-        mIsShutdown(false)
-#endif
-||||||| merged common ancestors
-    already_AddRefed<MediaDataDecoder> aProxyDecoder)
-    : mProxyDecoder(aProxyDecoder)
-#if defined(DEBUG)
-    , mIsShutdown(false)
-#endif
-=======
       already_AddRefed<MediaDataDecoder> aProxyDecoder)
       : mProxyDecoder(aProxyDecoder)
 #  if defined(DEBUG)
         ,
         mIsShutdown(false)
 #  endif
->>>>>>> upstream-releases
   {
     DDLINKCHILD("proxy decoder", mProxyDecoder.get());
   }

@@ -21,55 +21,21 @@ namespace dom {
 class SVGElement;
 }
 
-<<<<<<< HEAD
-class SVGAnimatedString : public nsISupports, public nsWrapperCache {
- public:
-  explicit SVGAnimatedString(nsSVGElement* aSVGElement)
-      : mSVGElement(aSVGElement) {}
-||||||| merged common ancestors
-class SVGAnimatedString : public nsISupports,
-                          public nsWrapperCache
-{
-public:
-  explicit SVGAnimatedString(nsSVGElement* aSVGElement)
-    : mSVGElement(aSVGElement)
-  {
-  }
-=======
 class SVGAnimatedString {
  public:
   typedef mozilla::dom::SVGElement SVGElement;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   void Init(uint8_t aAttrEnum) {
     mAnimVal = nullptr;
     mAttrEnum = aAttrEnum;
     mIsBaseSet = false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // WebIDL
-  nsSVGElement* GetParentObject() const { return mSVGElement; }
-||||||| merged common ancestors
-  // WebIDL
-  nsSVGElement* GetParentObject() const
-  {
-    return mSVGElement;
-  }
-=======
   void SetBaseValue(const nsAString& aValue, SVGElement* aSVGElement,
                     bool aDoSetAttr);
   void GetBaseValue(nsAString& aValue, const SVGElement* aSVGElement) const {
     aSVGElement->GetStringBaseValue(mAttrEnum, aValue);
   }
->>>>>>> upstream-releases
 
   void SetAnimValue(const nsAString& aValue, SVGElement* aSVGElement);
   void GetAnimValue(nsAString& aResult, const SVGElement* aSVGElement) const;
@@ -141,20 +107,6 @@ class SVGAnimatedString {
   };
 };
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_SVGAnimatedString_h
-||||||| merged common ancestors
-#endif // mozilla_dom_SVGAnimatedString_h
-=======
 #endif  //__NS_SVGSTRING_H__
->>>>>>> upstream-releases

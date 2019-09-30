@@ -352,18 +352,9 @@ nsresult nsXBLPrototypeHandler::ExecuteHandler(EventTarget* aTarget,
 
   // Build a scope chain in the XBL scope.
   RefPtr<Element> targetElement = do_QueryObject(scriptTarget);
-<<<<<<< HEAD
-  JS::AutoObjectVector scopeChain(cx);
-  ok = nsJSUtils::GetScopeChainForXBL(cx, targetElement, *mPrototypeBinding,
-                                      scopeChain);
-||||||| merged common ancestors
-  JS::AutoObjectVector scopeChain(cx);
-  ok = nsJSUtils::GetScopeChainForXBL(cx, targetElement, *mPrototypeBinding, scopeChain);
-=======
   JS::RootedVector<JSObject*> scopeChain(cx);
   ok = nsJSUtils::GetScopeChainForXBL(cx, targetElement, *mPrototypeBinding,
                                       &scopeChain);
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(ok, NS_ERROR_OUT_OF_MEMORY);
 
   // Next, clone the generic handler with our desired scope chain.
@@ -395,14 +386,7 @@ nsresult nsXBLPrototypeHandler::EnsureEventHandler(
 
   // Check to see if we've already compiled this
   JS::Rooted<JSObject*> globalObject(cx, JS::CurrentGlobalOrNull(cx));
-<<<<<<< HEAD
-  nsCOMPtr<nsPIDOMWindowInner> pWindow =
-      xpc::WindowOrNull(globalObject)->AsInner();
-||||||| merged common ancestors
-  nsCOMPtr<nsPIDOMWindowInner> pWindow = xpc::WindowOrNull(globalObject)->AsInner();
-=======
   nsCOMPtr<nsPIDOMWindowInner> pWindow = xpc::WindowOrNull(globalObject);
->>>>>>> upstream-releases
   if (pWindow) {
     JS::Rooted<JSObject*> cachedHandler(
         cx, pWindow->GetCachedXBLPrototypeHandler(this));
@@ -950,24 +934,11 @@ void nsXBLPrototypeHandler::ConstructPrototype(
   }
 }
 
-<<<<<<< HEAD
-void nsXBLPrototypeHandler::ReportKeyConflict(const char16_t* aKey,
-                                              const char16_t* aModifiers,
-                                              Element* aKeyElement,
-                                              const char* aMessageName) {
-  nsCOMPtr<nsIDocument> doc;
-||||||| merged common ancestors
-void
-nsXBLPrototypeHandler::ReportKeyConflict(const char16_t* aKey, const char16_t* aModifiers, Element* aKeyElement, const char *aMessageName)
-{
-  nsCOMPtr<nsIDocument> doc;
-=======
 void nsXBLPrototypeHandler::ReportKeyConflict(const char16_t* aKey,
                                               const char16_t* aModifiers,
                                               Element* aKeyElement,
                                               const char* aMessageName) {
   nsCOMPtr<Document> doc;
->>>>>>> upstream-releases
   if (mPrototypeBinding) {
     nsXBLDocumentInfo* docInfo = mPrototypeBinding->XBLDocumentInfo();
     if (docInfo) {
@@ -979,21 +950,6 @@ void nsXBLPrototypeHandler::ReportKeyConflict(const char16_t* aKey,
 
   nsAutoString id;
   aKeyElement->GetAttr(kNameSpaceID_None, nsGkAtoms::id, id);
-<<<<<<< HEAD
-  const char16_t* params[] = {aKey, aModifiers, id.get()};
-  nsContentUtils::ReportToConsole(
-      nsIScriptError::warningFlag, NS_LITERAL_CSTRING("XBL Prototype Handler"),
-      doc, nsContentUtils::eXBL_PROPERTIES, aMessageName, params,
-      ArrayLength(params), nullptr, EmptyString(), mLineNumber);
-||||||| merged common ancestors
-  const char16_t* params[] = { aKey, aModifiers, id.get() };
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("XBL Prototype Handler"), doc,
-                                  nsContentUtils::eXBL_PROPERTIES,
-                                  aMessageName,
-                                  params, ArrayLength(params),
-                                  nullptr, EmptyString(), mLineNumber);
-=======
   AutoTArray<nsString, 3> params;
   params.AppendElement(aKey);
   params.AppendElement(aModifiers);
@@ -1002,7 +958,6 @@ void nsXBLPrototypeHandler::ReportKeyConflict(const char16_t* aKey,
       nsIScriptError::warningFlag, NS_LITERAL_CSTRING("XBL Prototype Handler"),
       doc, nsContentUtils::eXBL_PROPERTIES, aMessageName, params, nullptr,
       EmptyString(), mLineNumber);
->>>>>>> upstream-releases
 }
 
 bool nsXBLPrototypeHandler::ModifiersMatchMask(

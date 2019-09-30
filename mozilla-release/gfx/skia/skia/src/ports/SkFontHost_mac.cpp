@@ -826,16 +826,8 @@ static SkUniqueCFRef<CTFontDescriptorRef> create_descriptor(const char familyNam
         CFDictionaryAddValue(cfTraits.get(), kCTFontWeightTrait, cfFontWeight.get());
     }
     // CTFontTraits (width)
-<<<<<<< HEAD
-    CGFloat ctWidth = fontstyle_to_ct_width(style.weight());
-    SkUniqueCFRef<CFNumberRef> cfFontWidth(
-||||||| merged common ancestors
-    CGFloat ctWidth = fontstyle_to_ct_width(style.weight());
-    UniqueCFRef<CFNumberRef> cfFontWidth(
-=======
     CGFloat ctWidth = fontstyle_to_ct_width(style.width());
     SkUniqueCFRef<CFNumberRef> cfFontWidth(
->>>>>>> upstream-releases
             CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &ctWidth));
     if (cfFontWidth) {
         CFDictionaryAddValue(cfTraits.get(), kCTFontWidthTrait, cfFontWidth.get());
@@ -916,16 +908,8 @@ protected:
     bool generateAdvance(SkGlyph* glyph) override;
     void generateMetrics(SkGlyph* glyph) override;
     void generateImage(const SkGlyph& glyph) override;
-<<<<<<< HEAD
-    bool generatePath(SkGlyphID glyph, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-||||||| merged common ancestors
-    void generatePath(SkGlyphID glyph, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-=======
     bool generatePath(SkGlyphID glyph, SkPath* path) override;
     void generateFontMetrics(SkFontMetrics*) override;
->>>>>>> upstream-releases
 
 private:
     static void CTPathElement(void *info, const CGPathElement *element);
@@ -1245,33 +1229,8 @@ void SkScalerContext_Mac::generateMetrics(SkGlyph* glyph) {
 
     // The following block produces cgAdvance in CG units (pixels, y up).
     CGSize cgAdvance;
-<<<<<<< HEAD
-    if (fVertical) {
-        CTFontGetAdvancesForGlyphs(fCTFont.get(), kCTFontOrientationVertical,
-                                   &cgGlyph, &cgAdvance, 1);
-        // Vertical advances are returned as widths instead of heights.
-        using std::swap;
-        swap(cgAdvance.height, cgAdvance.width);
-        cgAdvance.height = -cgAdvance.height;
-    } else {
-        CTFontGetAdvancesForGlyphs(fCTFont.get(), kCTFontOrientationHorizontal,
-                                   &cgGlyph, &cgAdvance, 1);
-    }
-||||||| merged common ancestors
-    if (fVertical) {
-        CTFontGetAdvancesForGlyphs(fCTFont.get(), kCTFontOrientationVertical,
-                                   &cgGlyph, &cgAdvance, 1);
-        // Vertical advances are returned as widths instead of heights.
-        SkTSwap(cgAdvance.height, cgAdvance.width);
-        cgAdvance.height = -cgAdvance.height;
-    } else {
-        CTFontGetAdvancesForGlyphs(fCTFont.get(), kCTFontOrientationHorizontal,
-                                   &cgGlyph, &cgAdvance, 1);
-    }
-=======
     CTFontGetAdvancesForGlyphs(fCTFont.get(), kCTFontOrientationHorizontal,
                                &cgGlyph, &cgAdvance, 1);
->>>>>>> upstream-releases
     cgAdvance = CGSizeApplyAffineTransform(cgAdvance, fTransform);
     glyph->fAdvanceX =  CGToFloat(cgAdvance.width);
     glyph->fAdvanceY = -CGToFloat(cgAdvance.height);
@@ -1439,24 +1398,12 @@ void SkScalerContext_Mac::generateImage(const SkGlyph& glyph) {
     CGGlyph cgGlyph = SkTo<CGGlyph>(glyph.getGlyphID());
 
     // FIXME: lcd smoothed un-hinted rasterization unsupported.
-<<<<<<< HEAD
-    bool requestSmooth = fRec.getHinting() != SkPaint::kNo_Hinting;
-||||||| merged common ancestors
-    bool generateA8FromLCD = fRec.getHinting() != SkPaint::kNo_Hinting;
-=======
     bool requestSmooth = fRec.getHinting() != kNo_SkFontHinting;
     bool lightOnDark = (fRec.fFlags & SkScalerContext::kLightOnDark_Flag) != 0;
->>>>>>> upstream-releases
 
     // Draw the glyph
     size_t cgRowBytes;
-<<<<<<< HEAD
-    CGRGBPixel* cgPixels = fOffscreen.getCG(*this, glyph, cgGlyph, &cgRowBytes, requestSmooth);
-||||||| merged common ancestors
-    CGRGBPixel* cgPixels = fOffscreen.getCG(*this, glyph, cgGlyph, &cgRowBytes, generateA8FromLCD);
-=======
     CGRGBPixel* cgPixels = fOffscreen.getCG(*this, glyph, cgGlyph, &cgRowBytes, requestSmooth, lightOnDark);
->>>>>>> upstream-releases
     if (cgPixels == nullptr) {
         return;
     }
@@ -1594,22 +1541,7 @@ bool SkScalerContext_Mac::generatePath(SkGlyphID glyph, SkPath* path) {
         m.setScale(SkScalarInvert(scaleX), SkScalarInvert(scaleY));
         path->transform(m);
     }
-<<<<<<< HEAD
-    if (fVertical) {
-        SkPoint offset;
-        getVerticalOffset(cgGlyph, &offset);
-        path->offset(offset.fX, offset.fY);
-    }
     return true;
-||||||| merged common ancestors
-    if (fVertical) {
-        SkPoint offset;
-        getVerticalOffset(cgGlyph, &offset);
-        path->offset(offset.fX, offset.fY);
-    }
-=======
-    return true;
->>>>>>> upstream-releases
 }
 
 void SkScalerContext_Mac::generateFontMetrics(SkFontMetrics* metrics) {
@@ -1934,19 +1866,8 @@ static SK_SFNT_ULONG get_font_type_tag(CTFontRef ctFont) {
     }
 }
 
-<<<<<<< HEAD
-SkStreamAsset* SkTypeface_Mac::onOpenStream(int* ttcIndex) const {
-    SK_SFNT_ULONG fontType = get_font_type_tag(fFontRef.get());
-||||||| merged common ancestors
-SkStreamAsset* SkTypeface_Mac::onOpenStream(int* ttcIndex) const {
-    SK_SFNT_ULONG fontType = get_font_type_tag(this);
-    if (0 == fontType) {
-        return nullptr;
-    }
-=======
 std::unique_ptr<SkStreamAsset> SkTypeface_Mac::onOpenStream(int* ttcIndex) const {
     SK_SFNT_ULONG fontType = get_font_type_tag(fFontRef.get());
->>>>>>> upstream-releases
 
     // get table tags
     int numTables = this->countTables();
@@ -2389,34 +2310,9 @@ void SkTypeface_Mac::onFilterRec(SkScalerContextRec* rec) const {
 
     rec->fFlags &= ~flagsWeDontSupport;
 
-<<<<<<< HEAD
-    SmoothBehavior smoothBehavior = smooth_behavior();
-||||||| merged common ancestors
-    bool lcdSupport = supports_LCD();
-=======
     const SmoothBehavior smoothBehavior = smooth_behavior();
->>>>>>> upstream-releases
 
     // Only two levels of hinting are supported.
-<<<<<<< HEAD
-    // kNo_Hinting means avoid CoreGraphics outline dilation.
-    // kNormal_Hinting means CoreGraphics outline dilation is allowed.
-    // If there is no lcd support, hinting (dilation) cannot be supported.
-    SkPaint::Hinting hinting = rec->getHinting();
-    if (SkPaint::kSlight_Hinting == hinting || smoothBehavior == SmoothBehavior::none) {
-        hinting = SkPaint::kNo_Hinting;
-    } else if (SkPaint::kFull_Hinting == hinting) {
-        hinting = SkPaint::kNormal_Hinting;
-||||||| merged common ancestors
-    // kNo_Hinting means avoid CoreGraphics outline dilation.
-    // kNormal_Hinting means CoreGraphics outline dilation is allowed.
-    // If there is no lcd support, hinting (dilation) cannot be supported.
-    SkPaint::Hinting hinting = rec->getHinting();
-    if (SkPaint::kSlight_Hinting == hinting || !lcdSupport) {
-        hinting = SkPaint::kNo_Hinting;
-    } else if (SkPaint::kFull_Hinting == hinting) {
-        hinting = SkPaint::kNormal_Hinting;
-=======
     // kNo_Hinting means avoid CoreGraphics outline dilation (smoothing).
     // kNormal_Hinting means CoreGraphics outline dilation (smoothing) is allowed.
     if (kSlight_SkFontHinting == rec->getHinting()) {
@@ -2427,7 +2323,6 @@ void SkTypeface_Mac::onFilterRec(SkScalerContextRec* rec) const {
     // If smoothing has no effect, don't request it.
     if (smoothBehavior == SmoothBehavior::none) {
         rec->setHinting(kNo_SkFontHinting);
->>>>>>> upstream-releases
     }
 
     // FIXME: lcd smoothed un-hinted rasterization unsupported.
@@ -2455,16 +2350,9 @@ void SkTypeface_Mac::onFilterRec(SkScalerContextRec* rec) const {
             rec->setHinting(kNormal_SkFontHinting);
         } else {
             rec->fMaskFormat = SkMask::kA8_Format;
-<<<<<<< HEAD
-            if (smoothBehavior == SmoothBehavior::some) {
-                rec->setHinting(SkPaint::kNormal_Hinting);
-            }
-||||||| merged common ancestors
-=======
             if (smoothBehavior != SmoothBehavior::none) {
                 rec->setHinting(kNormal_SkFontHinting);
             }
->>>>>>> upstream-releases
         }
     }
 

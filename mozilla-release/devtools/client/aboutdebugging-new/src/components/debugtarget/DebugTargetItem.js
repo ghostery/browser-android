@@ -26,16 +26,6 @@ class DebugTargetItem extends PureComponent {
 
   renderAction() {
     const { actionComponent, dispatch, target } = this.props;
-<<<<<<< HEAD
-    return dom.div(
-      {
-        className: "debug-target-item__action",
-      },
-      actionComponent({ dispatch, target }),
-    );
-||||||| merged common ancestors
-    return actionComponent({ dispatch, target });
-=======
     return dom.div(
       {
         className: "debug-target-item__action",
@@ -57,28 +47,16 @@ class DebugTargetItem extends PureComponent {
       },
       additionalActionsComponent({ dispatch, target })
     );
->>>>>>> upstream-releases
   }
 
   renderDetail() {
     const { detailComponent, target } = this.props;
-    return dom.div(
-      {
-        className: "debug-target-item__detail",
-      },
-      detailComponent({ target }),
-    );
+    return detailComponent({ target });
   }
 
   renderIcon() {
     return dom.img({
-<<<<<<< HEAD
-      className: "debug-target-item__icon js-debug-target-item-icon",
-||||||| merged common ancestors
-      className: "debug-target-item__icon",
-=======
       className: "debug-target-item__icon qa-debug-target-item-icon",
->>>>>>> upstream-releases
       src: this.props.target.icon,
     });
   }
@@ -89,20 +67,7 @@ class DebugTargetItem extends PureComponent {
         className: "debug-target-item__name ellipsis-text",
         title: this.props.target.name,
       },
-<<<<<<< HEAD
-      this.props.target.name,
-||||||| merged common ancestors
-      dom.div(
-        {
-          className: "debug-target-item__info__name ellipsis-text",
-          title: this.props.target.name,
-        },
-        this.props.target.name
-      ),
-      this.renderDetail(),
-=======
       this.props.target.name
->>>>>>> upstream-releases
     );
   }
 
@@ -114,13 +79,8 @@ class DebugTargetItem extends PureComponent {
       this.renderIcon(),
       this.renderName(),
       this.renderAction(),
-<<<<<<< HEAD
-      this.renderDetail(),
-||||||| merged common ancestors
-=======
       this.renderDetail(),
       this.renderAdditionalActions()
->>>>>>> upstream-releases
     );
   }
 }

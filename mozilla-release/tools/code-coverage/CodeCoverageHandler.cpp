@@ -23,25 +23,6 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-// The __gcov_flush function writes the coverage counters to gcda files and then
-// resets them to zero. It is defined at
-// https://github.com/gcc-mirror/gcc/blob/aad93da1a579b9ae23ede6b9cf8523360f0a08b4/libgcc/libgcov-interface.c.
-// __gcov_flush is protected by a mutex in GCC, but not in LLVM, so we are using
-// a CrossProcessMutex to protect it.
-
-// We rename __gcov_flush to __custom_llvm_gcov_flush in our build of LLVM for
-// Linux, to avoid naming clashes in builds which mix GCC and LLVM. So, when we
-// are building with LLVM exclusively, we need to use __custom_llvm_gcov_flush
-// instead.
-#if defined(XP_LINUX) && defined(__clang__)
-#define __gcov_flush __custom_llvm_gcov_flush
-#endif
-||||||| merged common ancestors
-// The __gcov_flush function writes the coverage counters to gcda files and then resets them to zero.
-// It is defined at https://github.com/gcc-mirror/gcc/blob/aad93da1a579b9ae23ede6b9cf8523360f0a08b4/libgcc/libgcov-interface.c.
-// __gcov_flush is protected by a mutex in GCC, but not in LLVM, so we are using a CrossProcessMutex to protect it.
-=======
 // The __gcov_flush function writes the coverage counters to gcda files and then
 // resets them to zero. It is defined at
 // https://github.com/gcc-mirror/gcc/blob/aad93da1a579b9ae23ede6b9cf8523360f0a08b4/libgcc/libgcov-interface.c.
@@ -55,7 +36,6 @@ using namespace mozilla;
 #if !defined(XP_WIN) && defined(__clang__)
 #  define __gcov_flush __custom_llvm_gcov_flush
 #endif
->>>>>>> upstream-releases
 
 extern "C" void __gcov_flush();
 

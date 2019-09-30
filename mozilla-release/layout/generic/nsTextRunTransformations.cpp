@@ -59,19 +59,10 @@ already_AddRefed<nsTransformedTextRun> nsTransformedTextRun::Create(
 void nsTransformedTextRun::SetCapitalization(uint32_t aStart, uint32_t aLength,
                                              bool* aCapitalization) {
   if (mCapitalize.IsEmpty()) {
-<<<<<<< HEAD
-    if (!mCapitalize.AppendElements(GetLength())) return;
-    memset(mCapitalize.Elements(), 0, GetLength() * sizeof(bool));
-||||||| merged common ancestors
-    if (!mCapitalize.AppendElements(GetLength()))
-      return;
-    memset(mCapitalize.Elements(), 0, GetLength()*sizeof(bool));
-=======
     if (!mCapitalize.AppendElements(GetLength())) {
       return;
     }
     memset(mCapitalize.Elements(), 0, GetLength() * sizeof(bool));
->>>>>>> upstream-releases
   }
   memcpy(mCapitalize.Elements() + aStart, aCapitalization,
          aLength * sizeof(bool));
@@ -141,22 +132,11 @@ void MergeCharactersInTextRun(gfxTextRun* aDest, gfxTextRun* aSrc,
       gfxTextRun::CompressedGlyph::MakeComplex(false, false, 0);
   while (iter.NextRun()) {
     const gfxTextRun::GlyphRun* run = iter.GetGlyphRun();
-<<<<<<< HEAD
-    nsresult rv = aDest->AddGlyphRun(run->mFont, run->mMatchType, offset, false,
-                                     run->mOrientation);
-    if (NS_FAILED(rv)) return;
-||||||| merged common ancestors
-    nsresult rv = aDest->AddGlyphRun(run->mFont, run->mMatchType,
-                                     offset, false, run->mOrientation);
-    if (NS_FAILED(rv))
-      return;
-=======
     nsresult rv = aDest->AddGlyphRun(run->mFont, run->mMatchType, offset, false,
                                      run->mOrientation);
     if (NS_FAILED(rv)) {
       return;
     }
->>>>>>> upstream-releases
 
     bool anyMissing = false;
     uint32_t mergeRunStart = iter.GetStringStart();
@@ -285,28 +265,6 @@ static LanguageSpecificCasingBehavior GetCasingFor(const nsAtom* aLang) {
   return eLSCB_None;
 }
 
-<<<<<<< HEAD
-bool nsCaseTransformTextRunFactory::TransformString(
-    const nsAString& aString, nsString& aConvertedString, bool aAllUppercase,
-    const nsAtom* aLanguage, nsTArray<bool>& aCharsToMergeArray,
-    nsTArray<bool>& aDeletedCharsArray, const nsTransformedTextRun* aTextRun,
-    uint32_t aOffsetInTextRun, nsTArray<uint8_t>* aCanBreakBeforeArray,
-    nsTArray<RefPtr<nsTransformedCharStyle>>* aStyleArray) {
-||||||| merged common ancestors
-bool
-nsCaseTransformTextRunFactory::TransformString(
-    const nsAString& aString,
-    nsString& aConvertedString,
-    bool aAllUppercase,
-    const nsAtom* aLanguage,
-    nsTArray<bool>& aCharsToMergeArray,
-    nsTArray<bool>& aDeletedCharsArray,
-    const nsTransformedTextRun* aTextRun,
-    uint32_t aOffsetInTextRun,
-    nsTArray<uint8_t>* aCanBreakBeforeArray,
-    nsTArray<RefPtr<nsTransformedCharStyle>>* aStyleArray)
-{
-=======
 bool nsCaseTransformTextRunFactory::TransformString(
     const nsAString& aString, nsString& aConvertedString, bool aAllUppercase,
     bool aCaseTransformsOnly, const nsAtom* aLanguage,
@@ -314,7 +272,6 @@ bool nsCaseTransformTextRunFactory::TransformString(
     const nsTransformedTextRun* aTextRun, uint32_t aOffsetInTextRun,
     nsTArray<uint8_t>* aCanBreakBeforeArray,
     nsTArray<RefPtr<nsTransformedCharStyle>>* aStyleArray) {
->>>>>>> upstream-releases
   bool auxiliaryOutputArrays = aCanBreakBeforeArray && aStyleArray;
   MOZ_ASSERT(!auxiliaryOutputArrays || aTextRun,
              "text run must be provided to use aux output arrays");
@@ -326,18 +283,10 @@ bool nsCaseTransformTextRunFactory::TransformString(
 
   bool capitalizeDutchIJ = false;
   bool prevIsLetter = false;
-<<<<<<< HEAD
-  bool ntPrefix = false;  // true immediately after a word-initial 'n' or 't'
-                          // when doing Irish lowercasing
-||||||| merged common ancestors
-  bool ntPrefix = false; // true immediately after a word-initial 'n' or 't'
-                         // when doing Irish lowercasing
-=======
   bool ntPrefix = false;  // true immediately after a word-initial 'n' or 't'
                           // when doing Irish lowercasing
   bool seenSoftDotted = false;  // true immediately after an I or J that is
                                 // converted to lowercase in Lithuanian mode
->>>>>>> upstream-releases
   uint32_t sigmaIndex = uint32_t(-1);
   nsUGenCategory cat;
 
@@ -366,18 +315,10 @@ bool nsCaseTransformTextRunFactory::TransformString(
     RefPtr<nsTransformedCharStyle> charStyle;
     if (aTextRun) {
       charStyle = aTextRun->mStyles[aOffsetInTextRun];
-<<<<<<< HEAD
-      style = aAllUppercase ? NS_STYLE_TEXT_TRANSFORM_UPPERCASE
-                            : charStyle->mTextTransform;
-||||||| merged common ancestors
-      style = aAllUppercase ? NS_STYLE_TEXT_TRANSFORM_UPPERCASE :
-        charStyle->mTextTransform;
-=======
       style = aAllUppercase
                   ? StyleTextTransform{StyleTextTransformCase::Uppercase,
                                        StyleTextTransformOther()}
                   : charStyle->mTextTransform;
->>>>>>> upstream-releases
       forceNonFullWidth = charStyle->mForceNonFullWidth;
 
       nsAtom* newLang =
@@ -402,38 +343,6 @@ bool nsCaseTransformTextRunFactory::TransformString(
       ch = SURROGATE_TO_UCS4(ch, str[i + 1]);
     }
 
-<<<<<<< HEAD
-    switch (style) {
-      case NS_STYLE_TEXT_TRANSFORM_LOWERCASE:
-        if (languageSpecificCasing == eLSCB_Turkish) {
-          if (ch == 'I') {
-            ch = LATIN_SMALL_LETTER_DOTLESS_I;
-            prevIsLetter = true;
-            sigmaIndex = uint32_t(-1);
-            break;
-          }
-          if (ch == LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE) {
-            ch = 'i';
-            prevIsLetter = true;
-            sigmaIndex = uint32_t(-1);
-            break;
-          }
-||||||| merged common ancestors
-    switch (style) {
-    case NS_STYLE_TEXT_TRANSFORM_LOWERCASE:
-      if (languageSpecificCasing == eLSCB_Turkish) {
-        if (ch == 'I') {
-          ch = LATIN_SMALL_LETTER_DOTLESS_I;
-          prevIsLetter = true;
-          sigmaIndex = uint32_t(-1);
-          break;
-        }
-        if (ch == LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE) {
-          ch = 'i';
-          prevIsLetter = true;
-          sigmaIndex = uint32_t(-1);
-          break;
-=======
     switch (style.case_) {
       case StyleTextTransformCase::None:
         break;
@@ -506,34 +415,10 @@ bool nsCaseTransformTextRunFactory::TransformString(
             sigmaIndex = uint32_t(-1);
             break;
           }
->>>>>>> upstream-releases
         }
 
         cat = mozilla::unicode::GetGenCategory(ch);
 
-<<<<<<< HEAD
-        if (languageSpecificCasing == eLSCB_Irish &&
-            cat == nsUGenCategory::kLetter) {
-          // See bug 1018805 for Irish lowercasing requirements
-          if (!prevIsLetter && (ch == 'n' || ch == 't')) {
-            ntPrefix = true;
-          } else {
-            if (ntPrefix && mozilla::IrishCasing::IsUpperVowel(ch)) {
-              aConvertedString.Append('-');
-              ++extraChars;
-            }
-            ntPrefix = false;
-||||||| merged common ancestors
-      if (languageSpecificCasing == eLSCB_Irish &&
-          cat == nsUGenCategory::kLetter) {
-        // See bug 1018805 for Irish lowercasing requirements
-        if (!prevIsLetter && (ch == 'n' || ch == 't')) {
-          ntPrefix = true;
-        } else {
-          if (ntPrefix && mozilla::IrishCasing::IsUpperVowel(ch)) {
-            aConvertedString.Append('-');
-            ++extraChars;
-=======
         if (languageSpecificCasing == eLSCB_Irish &&
             cat == nsUGenCategory::kLetter) {
           // See bug 1018805 for Irish lowercasing requirements
@@ -555,22 +440,8 @@ bool nsCaseTransformTextRunFactory::TransformString(
           if (ch == 0x0300 || ch == 0x0301 || ch == 0x0303) {
             aConvertedString.Append(0x0307);
             ++extraChars;
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-        } else {
-          ntPrefix = false;
-||||||| merged common ancestors
-          ntPrefix = false;
-=======
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-||||||| merged common ancestors
-      } else {
-        ntPrefix = false;
-      }
-=======
         seenSoftDotted = false;
 
         // Special lowercasing behavior for Greek Sigma: note that this is
@@ -599,60 +470,7 @@ bool nsCaseTransformTextRunFactory::TransformString(
             aConvertedString.SetCharAt(GREEK_SMALL_LETTER_SIGMA, sigmaIndex);
           }
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        // Special lowercasing behavior for Greek Sigma: note that this is
-        // listed as context-sensitive in Unicode's SpecialCasing.txt, but is
-        // *not* a language-specific mapping; it applies regardless of the
-        // language of the element.
-        //
-        // The lowercase mapping for CAPITAL SIGMA should be to SMALL SIGMA
-        // (i.e. the non-final form) whenever there is a following letter, or
-        // when the CAPITAL SIGMA occurs in isolation (neither preceded nor
-        // followed by a LETTER); and to FINAL SIGMA when it is preceded by
-        // another letter but not followed by one.
-        //
-        // To implement the context-sensitive nature of this mapping, we keep
-        // track of whether the previous character was a letter. If not, CAPITAL
-        // SIGMA will map directly to SMALL SIGMA. If the previous character
-        // was a letter, CAPITAL SIGMA maps to FINAL SIGMA and we record the
-        // position in the converted string; if we then encounter another
-        // letter, that FINAL SIGMA is replaced with a standard SMALL SIGMA.
-
-        // If sigmaIndex is not -1, it marks where we have provisionally mapped
-        // a CAPITAL SIGMA to FINAL SIGMA; if we now find another letter, we
-        // need to change it to SMALL SIGMA.
-        if (sigmaIndex != uint32_t(-1)) {
-          if (cat == nsUGenCategory::kLetter) {
-            aConvertedString.SetCharAt(GREEK_SMALL_LETTER_SIGMA, sigmaIndex);
-          }
-||||||| merged common ancestors
-      // Special lowercasing behavior for Greek Sigma: note that this is listed
-      // as context-sensitive in Unicode's SpecialCasing.txt, but is *not* a
-      // language-specific mapping; it applies regardless of the language of
-      // the element.
-      //
-      // The lowercase mapping for CAPITAL SIGMA should be to SMALL SIGMA (i.e.
-      // the non-final form) whenever there is a following letter, or when the
-      // CAPITAL SIGMA occurs in isolation (neither preceded nor followed by a
-      // LETTER); and to FINAL SIGMA when it is preceded by another letter but
-      // not followed by one.
-      //
-      // To implement the context-sensitive nature of this mapping, we keep
-      // track of whether the previous character was a letter. If not, CAPITAL
-      // SIGMA will map directly to SMALL SIGMA. If the previous character
-      // was a letter, CAPITAL SIGMA maps to FINAL SIGMA and we record the
-      // position in the converted string; if we then encounter another letter,
-      // that FINAL SIGMA is replaced with a standard SMALL SIGMA.
-
-      // If sigmaIndex is not -1, it marks where we have provisionally mapped
-      // a CAPITAL SIGMA to FINAL SIGMA; if we now find another letter, we
-      // need to change it to SMALL SIGMA.
-      if (sigmaIndex != uint32_t(-1)) {
-        if (cat == nsUGenCategory::kLetter) {
-          aConvertedString.SetCharAt(GREEK_SMALL_LETTER_SIGMA, sigmaIndex);
-=======
         if (ch == GREEK_CAPITAL_LETTER_SIGMA) {
           // If preceding char was a letter, map to FINAL instead of SMALL,
           // and note where it occurred by setting sigmaIndex; we'll change it
@@ -668,78 +486,16 @@ bool nsCaseTransformTextRunFactory::TransformString(
           }
           prevIsLetter = true;
           break;
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        if (ch == GREEK_CAPITAL_LETTER_SIGMA) {
-          // If preceding char was a letter, map to FINAL instead of SMALL,
-          // and note where it occurred by setting sigmaIndex; we'll change it
-          // to standard SMALL SIGMA later if another letter follows
-          if (prevIsLetter) {
-            ch = GREEK_SMALL_LETTER_FINAL_SIGMA;
-            sigmaIndex = aConvertedString.Length();
-          } else {
-            // CAPITAL SIGMA not preceded by a letter is unconditionally mapped
-            // to SMALL SIGMA
-            ch = GREEK_SMALL_LETTER_SIGMA;
-            sigmaIndex = uint32_t(-1);
-          }
-          prevIsLetter = true;
-          break;
-||||||| merged common ancestors
-      if (ch == GREEK_CAPITAL_LETTER_SIGMA) {
-        // If preceding char was a letter, map to FINAL instead of SMALL,
-        // and note where it occurred by setting sigmaIndex; we'll change it
-        // to standard SMALL SIGMA later if another letter follows
-        if (prevIsLetter) {
-          ch = GREEK_SMALL_LETTER_FINAL_SIGMA;
-          sigmaIndex = aConvertedString.Length();
-        } else {
-          // CAPITAL SIGMA not preceded by a letter is unconditionally mapped
-          // to SMALL SIGMA
-          ch = GREEK_SMALL_LETTER_SIGMA;
-          sigmaIndex = uint32_t(-1);
-=======
         // ignore diacritics for the purpose of contextual sigma mapping;
         // otherwise, reset prevIsLetter appropriately and clear the
         // sigmaIndex marker
         if (cat != nsUGenCategory::kMark) {
           prevIsLetter = (cat == nsUGenCategory::kLetter);
           sigmaIndex = uint32_t(-1);
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        // ignore diacritics for the purpose of contextual sigma mapping;
-        // otherwise, reset prevIsLetter appropriately and clear the
-        // sigmaIndex marker
-        if (cat != nsUGenCategory::kMark) {
-          prevIsLetter = (cat == nsUGenCategory::kLetter);
-          sigmaIndex = uint32_t(-1);
-||||||| merged common ancestors
-      mcm = mozilla::unicode::SpecialLower(ch);
-      if (mcm) {
-        int j = 0;
-        while (j < 2 && mcm->mMappedChars[j + 1]) {
-          aConvertedString.Append(mcm->mMappedChars[j]);
-          ++extraChars;
-          ++j;
-=======
-        mcm = mozilla::unicode::SpecialLower(ch);
-        if (mcm) {
-          int j = 0;
-          while (j < 2 && mcm->mMappedChars[j + 1]) {
-            aConvertedString.Append(mcm->mMappedChars[j]);
-            ++extraChars;
-            ++j;
-          }
-          ch = mcm->mMappedChars[j];
-          break;
->>>>>>> upstream-releases
-        }
-
-<<<<<<< HEAD
         mcm = mozilla::unicode::SpecialLower(ch);
         if (mcm) {
           int j = 0;
@@ -753,45 +509,12 @@ bool nsCaseTransformTextRunFactory::TransformString(
         }
 
         ch = ToLowerCase(ch);
-||||||| merged common ancestors
-      ch = ToLowerCase(ch);
-      break;
-
-    case NS_STYLE_TEXT_TRANSFORM_UPPERCASE:
-      if (languageSpecificCasing == eLSCB_Turkish && ch == 'i') {
-        ch = LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE;
-=======
-        ch = ToLowerCase(ch);
->>>>>>> upstream-releases
         break;
 
-<<<<<<< HEAD
-      case NS_STYLE_TEXT_TRANSFORM_UPPERCASE:
-        if (languageSpecificCasing == eLSCB_Turkish && ch == 'i') {
-          ch = LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE;
-          break;
-||||||| merged common ancestors
-      if (languageSpecificCasing == eLSCB_Greek) {
-        bool markEta;
-        bool updateEta;
-        ch = mozilla::GreekCasing::UpperCase(ch, greekState,
-                                             markEta, updateEta);
-        if (markEta) {
-          greekMark = aConvertedString.Length();
-        } else if (updateEta) {
-          // Remove the TONOS from an uppercase ETA-TONOS that turned out
-          // not to be disjunctive-eta.
-          MOZ_ASSERT(aConvertedString.Length() > 0 &&
-                     greekMark < aConvertedString.Length(),
-                     "bad greekMark!");
-          aConvertedString.SetCharAt(kGreekUpperEta, greekMark);
-          greekMark = uint32_t(-1);
-=======
       case StyleTextTransformCase::Uppercase:
         if (languageSpecificCasing == eLSCB_Turkish && ch == 'i') {
           ch = LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE;
           break;
->>>>>>> upstream-releases
         }
 
         if (languageSpecificCasing == eLSCB_Greek) {
@@ -811,37 +534,6 @@ bool nsCaseTransformTextRunFactory::TransformString(
             greekMark = uint32_t(-1);
           }
           break;
-<<<<<<< HEAD
-        }
-
-        if (languageSpecificCasing == eLSCB_Irish) {
-          bool mark;
-          uint8_t action;
-          ch = mozilla::IrishCasing::UpperCase(ch, irishState, mark, action);
-          if (mark) {
-            irishMark = aConvertedString.Length();
-            irishMarkSrc = i;
-||||||| merged common ancestors
-        } else if (action) {
-          nsString& str = aConvertedString; // shorthand
-          switch (action) {
-          case 1:
-            // lowercase a single prefix letter
-            NS_ASSERTION(str.Length() > 0 && irishMark < str.Length(),
-                         "bad irishMark!");
-            str.SetCharAt(ToLowerCase(str[irishMark]), irishMark);
-            irishMark = uint32_t(-1);
-            irishMarkSrc = uint32_t(-1);
-            break;
-          case 2:
-            // lowercase two prefix letters (immediately before current pos)
-            NS_ASSERTION(str.Length() >= 2 && irishMark == str.Length() - 2,
-                         "bad irishMark!");
-            str.SetCharAt(ToLowerCase(str[irishMark]), irishMark);
-            str.SetCharAt(ToLowerCase(str[irishMark + 1]), irishMark + 1);
-            irishMark = uint32_t(-1);
-            irishMarkSrc = uint32_t(-1);
-=======
         }
 
         if (languageSpecificCasing == eLSCB_Lithuanian) {
@@ -871,7 +563,6 @@ bool nsCaseTransformTextRunFactory::TransformString(
           if (mark) {
             irishMark = aConvertedString.Length();
             irishMarkSrc = i;
->>>>>>> upstream-releases
             break;
           } else if (action) {
             nsString& str = aConvertedString;  // shorthand
@@ -947,68 +638,14 @@ bool nsCaseTransformTextRunFactory::TransformString(
           ch = ToUpperCase(ch);
         }
         break;
-<<<<<<< HEAD
-
-      case NS_STYLE_TEXT_TRANSFORM_CAPITALIZE:
-        if (aTextRun) {
-          if (capitalizeDutchIJ && ch == 'j') {
-            ch = 'J';
-            capitalizeDutchIJ = false;
-||||||| merged common ancestors
-      }
-
-      // Bug 1476304: we exclude Georgian letters U+10D0..10FF because of lack
-      // of widespread font support for the corresponding Mtavruli characters
-      // at this time (July 2018).
-      // This condition is to be removed once the major platforms ship with
-      // fonts that support U+1C90..1CBF.
-      if (ch < 0x10D0 || ch > 0x10FF) {
-        ch = ToUpperCase(ch);
-      }
-      break;
-
-    case NS_STYLE_TEXT_TRANSFORM_CAPITALIZE:
-      if (aTextRun) {
-        if (capitalizeDutchIJ && ch == 'j') {
-          ch = 'J';
-          capitalizeDutchIJ = false;
-          break;
-        }
-        capitalizeDutchIJ = false;
-        if (aOffsetInTextRun < aTextRun->mCapitalize.Length() &&
-            aTextRun->mCapitalize[aOffsetInTextRun]) {
-          if (languageSpecificCasing == eLSCB_Turkish && ch == 'i') {
-            ch = LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE;
-            break;
-          }
-          if (languageSpecificCasing == eLSCB_Dutch && ch == 'i') {
-            ch = 'I';
-            capitalizeDutchIJ = true;
-=======
 
       case StyleTextTransformCase::Capitalize:
         if (aTextRun) {
           if (capitalizeDutchIJ && ch == 'j') {
             ch = 'J';
             capitalizeDutchIJ = false;
->>>>>>> upstream-releases
             break;
           }
-<<<<<<< HEAD
-          capitalizeDutchIJ = false;
-          if (aOffsetInTextRun < aTextRun->mCapitalize.Length() &&
-              aTextRun->mCapitalize[aOffsetInTextRun]) {
-            if (languageSpecificCasing == eLSCB_Turkish && ch == 'i') {
-              ch = LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE;
-              break;
-            }
-            if (languageSpecificCasing == eLSCB_Dutch && ch == 'i') {
-              ch = 'I';
-              capitalizeDutchIJ = true;
-              break;
-            }
-||||||| merged common ancestors
-=======
           capitalizeDutchIJ = false;
           if (aOffsetInTextRun < aTextRun->mCapitalize.Length() &&
               aTextRun->mCapitalize[aOffsetInTextRun]) {
@@ -1040,7 +677,6 @@ bool nsCaseTransformTextRunFactory::TransformString(
                 }
               }
             }
->>>>>>> upstream-releases
 
             mcm = mozilla::unicode::SpecialTitle(ch);
             if (mcm) {
@@ -1053,137 +689,17 @@ bool nsCaseTransformTextRunFactory::TransformString(
               ch = mcm->mMappedChars[j];
               break;
             }
-<<<<<<< HEAD
 
             ch = ToTitleCase(ch);
           }
         }
-        break;
-||||||| merged common ancestors
-            ch = mcm->mMappedChars[j];
-            break;
-          }
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      case NS_STYLE_TEXT_TRANSFORM_FULL_WIDTH:
-        ch = mozilla::unicode::GetFullWidth(ch);
-        break;
-
-      case NS_STYLE_TEXT_TRANSFORM_FULL_SIZE_KANA: {
-        // clang-format off
-        static const uint16_t kSmallKanas[] = {
-            // ぁ   ぃ      ぅ      ぇ      ぉ      っ      ゃ      ゅ      ょ
-            0x3041, 0x3043, 0x3045, 0x3047, 0x3049, 0x3063, 0x3083, 0x3085, 0x3087,
-            // ゎ   ゕ      ゖ
-            0x308E, 0x3095, 0x3096,
-            // ァ   ィ      ゥ      ェ      ォ      ッ      ャ      ュ      ョ
-            0x30A1, 0x30A3, 0x30A5, 0x30A7, 0x30A9, 0x30C3, 0x30E3, 0x30E5, 0x30E7,
-            // ヮ   ヵ      ヶ      ㇰ      ㇱ      ㇲ      ㇳ      ㇴ      ㇵ
-            0x30EE, 0x30F5, 0x30F6, 0x31F0, 0x31F1, 0x31F2, 0x31F3, 0x31F4, 0x31F5,
-            // ㇶ   ㇷ      ㇸ      ㇹ      ㇺ      ㇻ      ㇼ      ㇽ      ㇾ
-            0x31F6, 0x31F7, 0x31F8, 0x31F9, 0x31FA, 0x31FB, 0x31FC, 0x31FD, 0x31FE,
-            // ㇿ
-            0x31FF,
-            // ｧ    ｨ       ｩ       ｪ       ｫ       ｬ       ｭ       ｮ       ｯ
-            0xFF67, 0xFF68, 0xFF69, 0xFF6A, 0xFF6B, 0xFF6C, 0xFF6D, 0xFF6E, 0xFF6F};
-        static const uint16_t kFullSizeKanas[] = {
-            // あ   い      う      え      お      つ      や      ゆ      よ
-            0x3042, 0x3044, 0x3046, 0x3048, 0x304A, 0x3064, 0x3084, 0x3086, 0x3088,
-            // わ   か      け
-            0x308F, 0x304B, 0x3051,
-            // ア   イ      ウ      エ      オ      ツ      ヤ      ユ      ヨ
-            0x30A2, 0x30A4, 0x30A6, 0x30A8, 0x30AA, 0x30C4, 0x30E4, 0x30E6, 0x30E8,
-            // ワ   カ      ケ      ク      シ      ス      ト      ヌ      ハ
-            0x30EF, 0x30AB, 0x30B1, 0x30AF, 0x30B7, 0x30B9, 0x30C8, 0x30CC, 0x30CF,
-            // ヒ   フ      ヘ      ホ      ム      ラ      リ      ル      レ
-            0x30D2, 0x30D5, 0x30D8, 0x30DB, 0x30E0, 0x30E9, 0x30EA, 0x30EB, 0x30EC,
-            // ロ
-            0x30ED,
-            // ｱ    ｲ       ｳ       ｴ       ｵ       ﾔ       ﾕ       ﾖ        ﾂ
-            0xFF71, 0xFF72, 0xFF73, 0xFF74, 0xFF75, 0xFF94, 0xFF95, 0xFF96, 0xFF82};
-        // clang-format on
-
-        size_t index;
-        const uint16_t len = MOZ_ARRAY_LENGTH(kSmallKanas);
-        if (mozilla::BinarySearch(kSmallKanas, 0, len, ch, &index)) {
-          ch = kFullSizeKanas[index];
-||||||| merged common ancestors
-          ch = ToTitleCase(ch);
-=======
-            ch = ToTitleCase(ch);
-          }
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        break;
-      }
-||||||| merged common ancestors
-      }
-      break;
-
-    case NS_STYLE_TEXT_TRANSFORM_FULL_WIDTH:
-      ch = mozilla::unicode::GetFullWidth(ch);
-      break;
-
-    case NS_STYLE_TEXT_TRANSFORM_FULL_SIZE_KANA: {
-      static const uint16_t kSmallKanas[] = {
-        // ぁ   ぃ      ぅ      ぇ      ぉ      っ      ゃ      ゅ      ょ
-        0x3041, 0x3043, 0x3045, 0x3047, 0x3049, 0x3063, 0x3083, 0x3085, 0x3087,
-        // ゎ   ゕ      ゖ
-        0x308E, 0x3095, 0x3096,
-        // ァ   ィ      ゥ      ェ      ォ      ッ      ャ      ュ      ョ
-        0x30A1, 0x30A3, 0x30A5, 0x30A7, 0x30A9, 0x30C3, 0x30E3, 0x30E5, 0x30E7,
-        // ヮ   ヵ      ヶ      ㇰ      ㇱ      ㇲ      ㇳ      ㇴ      ㇵ
-        0x30EE, 0x30F5, 0x30F6, 0x31F0, 0x31F1, 0x31F2, 0x31F3, 0x31F4, 0x31F5,
-        // ㇶ   ㇷ      ㇸ      ㇹ      ㇺ      ㇻ      ㇼ      ㇽ      ㇾ
-        0x31F6, 0x31F7, 0x31F8, 0x31F9, 0x31FA, 0x31FB, 0x31FC, 0x31FD, 0x31FE,
-        // ㇿ
-        0x31FF,
-        // ｧ    ｨ       ｩ       ｪ       ｫ       ｬ       ｭ       ｮ       ｯ
-        0xFF67, 0xFF68, 0xFF69, 0xFF6A, 0xFF6B, 0xFF6C, 0xFF6D, 0xFF6E, 0xFF6F
-      };
-      static const uint16_t kFullSizeKanas[] = {
-        // あ   い      う      え      お      つ      や      ゆ      よ
-        0x3042, 0x3044, 0x3046, 0x3048, 0x304A, 0x3064, 0x3084, 0x3086, 0x3088,
-        // わ   か      け
-        0x308F, 0x304B, 0x3051,
-        // ア   イ      ウ      エ      オ      ツ      ヤ      ユ      ヨ
-        0x30A2, 0x30A4, 0x30A6, 0x30A8, 0x30AA, 0x30C4, 0x30E4, 0x30E6, 0x30E8,
-        // ワ   カ      ケ      ク      シ      ス      ト      ヌ      ハ
-        0x30EF, 0x30AB, 0x30B1, 0x30AF, 0x30B7, 0x30B9, 0x30C8, 0x30CC, 0x30CF,
-        // ヒ   フ      ヘ      ホ      ム      ラ      リ      ル      レ
-        0x30D2, 0x30D5, 0x30D8, 0x30DB, 0x30E0, 0x30E9, 0x30EA, 0x30EB, 0x30EC,
-        // ロ
-        0x30ED,
-        // ｱ    ｲ       ｳ       ｴ       ｵ       ﾔ       ﾕ       ﾖ        ﾂ
-        0xFF71, 0xFF72, 0xFF73, 0xFF74, 0xFF75, 0xFF94, 0xFF95, 0xFF96, 0xFF82
-      };
-
-      size_t index;
-      const uint16_t len = MOZ_ARRAY_LENGTH(kSmallKanas);
-      if (mozilla::BinarySearch(kSmallKanas, 0, len, ch, &index)) {
-        ch = kFullSizeKanas[index];
-      }
-      break;
-    }
-=======
         break;
 
       default:
         MOZ_ASSERT_UNREACHABLE("all cases should be handled");
         break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      default:
-        break;
-||||||| merged common ancestors
-    default:
-      break;
-=======
     if (!aCaseTransformsOnly) {
       if (!forceNonFullWidth &&
           (style.other_ & StyleTextTransformOther_FULL_WIDTH)) {
@@ -1230,7 +746,6 @@ bool nsCaseTransformTextRunFactory::TransformString(
           ch = kFullSizeKanas[index];
         }
       }
->>>>>>> upstream-releases
     }
 
     if (forceNonFullWidth) {
@@ -1283,32 +798,6 @@ void nsCaseTransformTextRunFactory::RebuildTextRun(
     nsTransformedTextRun* aTextRun, DrawTarget* aRefDrawTarget,
     gfxMissingFontRecorder* aMFR) {
   nsAutoString convertedString;
-<<<<<<< HEAD
-  AutoTArray<bool, 50> charsToMergeArray;
-  AutoTArray<bool, 50> deletedCharsArray;
-  AutoTArray<uint8_t, 50> canBreakBeforeArray;
-  AutoTArray<RefPtr<nsTransformedCharStyle>, 50> styleArray;
-
-  bool mergeNeeded =
-      TransformString(aTextRun->mString, convertedString, mAllUppercase,
-                      nullptr, charsToMergeArray, deletedCharsArray, aTextRun,
-                      0, &canBreakBeforeArray, &styleArray);
-||||||| merged common ancestors
-  AutoTArray<bool,50> charsToMergeArray;
-  AutoTArray<bool,50> deletedCharsArray;
-  AutoTArray<uint8_t,50> canBreakBeforeArray;
-  AutoTArray<RefPtr<nsTransformedCharStyle>,50> styleArray;
-
-  bool mergeNeeded = TransformString(aTextRun->mString,
-                                     convertedString,
-                                     mAllUppercase,
-                                     nullptr,
-                                     charsToMergeArray,
-                                     deletedCharsArray,
-                                     aTextRun, 0,
-                                     &canBreakBeforeArray,
-                                     &styleArray);
-=======
   AutoTArray<bool, 50> charsToMergeArray;
   AutoTArray<bool, 50> deletedCharsArray;
   AutoTArray<uint8_t, 50> canBreakBeforeArray;
@@ -1318,7 +807,6 @@ void nsCaseTransformTextRunFactory::RebuildTextRun(
       aTextRun->mString, convertedString, mAllUppercase,
       /* aCaseTransformsOnly = */ false, nullptr, charsToMergeArray,
       deletedCharsArray, aTextRun, 0, &canBreakBeforeArray, &styleArray);
->>>>>>> upstream-releases
 
   gfx::ShapedTextFlags flags;
   gfxTextRunFactory::Parameters innerParams =
@@ -1341,16 +829,9 @@ void nsCaseTransformTextRunFactory::RebuildTextRun(
         flags, nsTextFrameUtils::Flags(), aMFR);
     child = cachedChild.get();
   }
-<<<<<<< HEAD
-  if (!child) return;
-||||||| merged common ancestors
-  if (!child)
-    return;
-=======
   if (!child) {
     return;
   }
->>>>>>> upstream-releases
   // Copy potential linebreaks into child so they're preserved
   // (and also child will be shaped appropriately)
   NS_ASSERTION(convertedString.Length() == canBreakBeforeArray.Length(),

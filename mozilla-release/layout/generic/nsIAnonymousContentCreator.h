@@ -32,17 +32,9 @@ class nsIAnonymousContentCreator {
   NS_DECL_QUERYFRAME_TARGET(nsIAnonymousContentCreator)
 
   struct ContentInfo {
-<<<<<<< HEAD
-    explicit ContentInfo(nsIContent* aContent) : mContent(aContent) {}
-||||||| merged common ancestors
-    explicit ContentInfo(nsIContent* aContent)
-      : mContent(aContent)
-    {}
-=======
     explicit ContentInfo(nsIContent* aContent,
                          mozilla::AnonymousContentKey aKey = mozilla::AnonymousContentKey::None)
         : mContent(aContent), mKey(aKey) {}
->>>>>>> upstream-releases
 
     nsIContent* mContent;
     mozilla::AnonymousContentKey mKey;

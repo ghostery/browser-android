@@ -215,17 +215,8 @@ imgTools::DecodeImageFromBuffer(const char* aBuffer, uint32_t aSize,
 
   // Let's create a temporary inputStream.
   nsCOMPtr<nsIInputStream> stream;
-<<<<<<< HEAD
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream), aBuffer, aSize,
-                                      NS_ASSIGNMENT_DEPEND);
-||||||| merged common ancestors
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),
-                                      aBuffer, aSize,
-                                      NS_ASSIGNMENT_DEPEND);
-=======
   nsresult rv = NS_NewByteInputStream(
       getter_AddRefs(stream), MakeSpan(aBuffer, aSize), NS_ASSIGNMENT_DEPEND);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
   MOZ_ASSERT(stream);
   MOZ_ASSERT(NS_InputStreamIsBuffered(stream));
@@ -506,27 +497,13 @@ imgTools::CreateScriptedObserver(imgIScriptedNotificationObserver* aInner,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgTools::GetImgLoaderForDocument(nsIDocument* aDoc, imgILoader** aLoader) {
-||||||| merged common ancestors
-imgTools::GetImgLoaderForDocument(nsIDocument* aDoc, imgILoader** aLoader)
-{
-=======
 imgTools::GetImgLoaderForDocument(dom::Document* aDoc, imgILoader** aLoader) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aLoader = nsContentUtils::GetImgLoaderForDocument(aDoc));
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgTools::GetImgCacheForDocument(nsIDocument* aDoc, imgICache** aCache) {
-||||||| merged common ancestors
-imgTools::GetImgCacheForDocument(nsIDocument* aDoc, imgICache** aCache)
-{
-=======
 imgTools::GetImgCacheForDocument(dom::Document* aDoc, imgICache** aCache) {
->>>>>>> upstream-releases
   nsCOMPtr<imgILoader> loader;
   nsresult rv = GetImgLoaderForDocument(aDoc, getter_AddRefs(loader));
   NS_ENSURE_SUCCESS(rv, rv);

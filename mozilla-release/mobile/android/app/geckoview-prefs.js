@@ -29,22 +29,6 @@ pref("geckoview.logging", "Debug");
 // Disable Web Push until we get it working
 pref("dom.push.enabled", false);
 
-<<<<<<< HEAD
-// Unlike Fennec, GeckoView may have WebRender enabled, and with WebRender we're
-// going with containerless scrolling (because there are no layers at all with
-// WR, so why not go containerless). So we set this pref to pick up the value
-// in gfxPrefs.h from whether or not WR is enabled.
-pref("layout.scroll.root-frame-containers", 2);
-
-// Inherit locale from the OS, used for multi-locale builds
-pref("intl.locale.requested", "");
-||||||| merged common ancestors
-// Unlike Fennec, GeckoView may have WebRender enabled, and with WebRender we're
-// going with containerless scrolling (because there are no layers at all with
-// WR, so why not go containerless). So we set this pref to pick up the value
-// in gfxPrefs.h from whether or not WR is enabled.
-pref("layout.scroll.root-frame-containers", 2);
-=======
 // enable external storage API
 pref("dom.storageManager.enabled", true);
 
@@ -75,4 +59,3 @@ pref("ui.android.mouse_as_touch", 2);
 
 // Fenix is currently not whitelisted for Web Authentication
 pref("security.webauth.webauthn_enable_android_fido2", false);
->>>>>>> upstream-releases

@@ -21,30 +21,14 @@ class VRGPUChild final : public PVRGPUChild {
   static bool IsCreated();
   static void Shutdown();
 
-<<<<<<< HEAD
- protected:
-  explicit VRGPUChild() {}
-  ~VRGPUChild() {}
-||||||| merged common ancestors
-protected:
-  explicit VRGPUChild() {}
-  ~VRGPUChild() {}
-=======
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
   bool IsClosed();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  protected:
   explicit VRGPUChild() : mClosed(false) {}
   ~VRGPUChild() = default;
 
  private:
->>>>>>> upstream-releases
   DISALLOW_COPY_AND_ASSIGN(VRGPUChild);
 
   bool mClosed;

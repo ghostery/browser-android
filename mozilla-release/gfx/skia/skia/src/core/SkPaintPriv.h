@@ -8,28 +8,8 @@
 #ifndef SkPaintPriv_DEFINED
 #define SkPaintPriv_DEFINED
 
-<<<<<<< HEAD
-#include "SkImageInfo.h"
-#include "SkMatrix.h"
 #include "SkPaint.h"
-#include "SkTypeface.h"
-||||||| merged common ancestors
-#include "SkImageInfo.h"
-#include "SkPaint.h"
-#include "SkMatrix.h"
-=======
-#include "SkPaint.h"
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class SkBitmap;
-class SkImage;
-class SkReadBuffer;
-class SkWriteBuffer;
-||||||| merged common ancestors
-class SkBitmap;
-class SkImage;
-=======
 class SkFont;
 class SkReadBuffer;
 class SkWriteBuffer;
@@ -39,7 +19,6 @@ enum SkReadPaintResult {
     kSuccess_JustPaint,
     kSuccess_PaintAndFont,
 };
->>>>>>> upstream-releases
 
 class SkPaintPriv {
 public:
@@ -88,43 +67,8 @@ public:
     */
     static SkReadPaintResult Unflatten(SkPaint* paint, SkReadBuffer& buffer, SkFont* font);
 
-<<<<<<< HEAD
-    // returns -1 if buffer is invalid for specified encoding
-    static int ValidCountText(const void* text, size_t length, SkPaint::TextEncoding);
-
-    static SkTypeface* GetTypefaceOrDefault(const SkPaint& paint) {
-        return paint.getTypeface() ? paint.getTypeface() : SkTypeface::GetDefaultTypeface();
-    }
-
-    static sk_sp<SkTypeface> RefTypefaceOrDefault(const SkPaint& paint) {
-        return paint.getTypeface() ? paint.refTypeface() : SkTypeface::MakeDefault();
-    }
-
-    /** Serializes SkPaint into a buffer. A companion unflatten() call
-    can reconstitute the paint at a later time.
-
-    @param buffer  SkWriteBuffer receiving the flattened SkPaint data
-    */
-    static void Flatten(const SkPaint& paint, SkWriteBuffer& buffer);
-
-    /** Populates SkPaint, typically from a serialized stream, created by calling
-    flatten() at an earlier time.
-
-    SkReadBuffer class is not public, so unflatten() cannot be meaningfully called
-    by the client.
-
-    @param buffer  serialized data describing SkPaint content
-    @return        false if the buffer contains invalid data
-    */
-    static bool Unflatten(SkPaint* paint, SkReadBuffer& buffer);
-
-||||||| merged common ancestors
-    // returns 0 if buffer is invalid for specified encoding
-    static int ValidCountText(const void* text, size_t length, SkPaint::TextEncoding);
-=======
 private:
     static SkReadPaintResult Unflatten_PreV68(SkPaint* paint, SkReadBuffer& buffer, SkFont*);
->>>>>>> upstream-releases
 };
 
 #endif

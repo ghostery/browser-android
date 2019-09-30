@@ -50,80 +50,6 @@ async function attachConsoleToWorker(listeners, callback) {
   callback(state, response);
 }
 
-<<<<<<< HEAD
-var _attachConsole = async function(
-  listeners, attachToTab, attachToWorker
-) {
-  try {
-    const client = await connectToDebugger();
-
-    function waitForMessage(target) {
-      return new Promise(resolve => {
-        target.addEventListener("message", resolve, { once: true });
-      });
-||||||| merged common ancestors
-var _attachConsole = async function(
-  listeners, callback, attachToTab, attachToWorker
-) {
-  function _onAttachConsole(state, [response, webConsoleClient]) {
-    state.client = webConsoleClient;
-
-    callback(state, response);
-  }
-  function _onAttachError(state, response) {
-    console.error("attachConsole failed: " + response.error + " " +
-                  response.message);
-    callback(state, response);
-  }
-
-  function waitForMessage(target) {
-    return new Promise(resolve => {
-      target.addEventListener("message", resolve, { once: true });
-    });
-  }
-
-  let [state, response] = await connectToDebugger();
-  if (response.error) {
-    console.error("client.connect() failed: " + response.error + " " +
-                  response.message);
-    callback(state, response);
-    return;
-  }
-
-  if (!attachToTab) {
-    response = await state.dbgClient.mainRoot.getProcess(0);
-    await state.dbgClient.attachTarget(response.form.actor);
-    const consoleActor = response.form.consoleActor;
-    state.actor = consoleActor;
-    state.dbgClient.attachConsole(consoleActor, listeners)
-      .then(_onAttachConsole.bind(null, state), _onAttachError.bind(null, state));
-    return;
-  }
-  response = await state.dbgClient.listTabs();
-  if (response.error) {
-    console.error("listTabs failed: " + response.error + " " +
-                  response.message);
-    callback(state, response);
-    return;
-  }
-  const tab = response.tabs[response.selected];
-  const [, targetFront] = await state.dbgClient.attachTarget(tab.actor);
-  if (attachToWorker) {
-    const workerName = "console-test-worker.js#" + new Date().getTime();
-    const worker = new Worker(workerName);
-    // Keep a strong reference to the Worker to avoid it being
-    // GCd during the test (bug 1237492).
-    // eslint-disable-next-line camelcase
-    state._worker_ref = worker;
-    await waitForMessage(worker);
-
-    const { workers } = await targetFront.listWorkers();
-    const workerTargetActor = workers.filter(w => w.url == workerName)[0].actor;
-    if (!workerTargetActor) {
-      console.error("listWorkers failed. Unable to find the " +
-                    "worker actor\n");
-      return;
-=======
 var _attachConsole = async function(listeners, attachToTab, attachToWorker) {
   try {
     const client = await connectToDebugger();
@@ -132,45 +58,7 @@ var _attachConsole = async function(listeners, attachToTab, attachToWorker) {
       return new Promise(resolve => {
         target.addEventListener("message", resolve, { once: true });
       });
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    // Fetch the console actor out of the expected target
-    // ParentProcessTarget / WorkerTarget / FrameTarget
-    let consoleActor, worker;
-    if (!attachToTab) {
-      const front = await client.mainRoot.getMainProcess();
-      await front.attach();
-      consoleActor = front.targetForm.consoleActor;
-    } else {
-      const form = await client.getTab();
-      const [, targetFront] = await client.attachTarget(form.tab);
-      if (attachToWorker) {
-        const workerName = "console-test-worker.js#" + new Date().getTime();
-        worker = new Worker(workerName);
-        await waitForMessage(worker);
-
-        const { workers } = await targetFront.listWorkers();
-        const workerTargetFront = workers.filter(w => w.url == workerName)[0];
-        if (!workerTargetFront) {
-          console.error("listWorkers failed. Unable to find the worker actor\n");
-          return null;
-        }
-        await workerTargetFront.attach();
-        await workerTargetFront.attachThread({});
-        consoleActor = workerTargetFront.targetForm.consoleActor;
-      } else {
-        consoleActor = targetFront.targetForm.consoleActor;
-      }
-||||||| merged common ancestors
-    const [workerResponse, workerTargetFront] =
-      await targetFront.attachWorker(workerTargetActor);
-    if (!workerTargetFront || workerResponse.error) {
-      console.error("attachWorker failed. No worker target front or " +
-                    " error: " + workerResponse.error);
-      return;
-=======
 
     // Fetch the console actor out of the expected target
     // ParentProcessTarget / WorkerTarget / FrameTarget
@@ -195,38 +83,7 @@ var _attachConsole = async function(listeners, attachToTab, attachToWorker) {
           return null;
         }
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    // Instantiate the WebConsoleClient
-    const [ response, webConsoleClient ] = await client.attachConsole(consoleActor,
-      listeners);
-    return {
-      state: {
-        dbgClient: client,
-        client: webConsoleClient,
-        actor: consoleActor,
-        // Keep a strong reference to the Worker to avoid it being
-        // GCd during the test (bug 1237492).
-        // eslint-disable-next-line camelcase
-        _worker_ref: worker,
-      },
-      response,
-    };
-  } catch (error) {
-    console.error(`attachConsole failed: ${error.error} ${error.message} - ` +
-                  error.stack);
-||||||| merged common ancestors
-    await workerTargetFront.attachThread({});
-    state.actor = workerTargetFront.consoleActor;
-    state.dbgClient.attachConsole(workerTargetFront.consoleActor, listeners)
-      .then(_onAttachConsole.bind(null, state), _onAttachError.bind(null, state));
-  } else {
-    state.actor = tab.consoleActor;
-    state.dbgClient.attachConsole(tab.consoleActor, listeners)
-      .then(_onAttachConsole.bind(null, state), _onAttachError.bind(null, state));
-=======
 
     // Attach the Target in order to instantiate the console client
     await target.attach();
@@ -250,7 +107,6 @@ var _attachConsole = async function(listeners, attachToTab, attachToWorker) {
     console.error(
       `attachConsole failed: ${error.error} ${error.message} - ` + error.stack
     );
->>>>>>> upstream-releases
   }
   return null;
 };

@@ -193,17 +193,7 @@ nsresult NS_NewTimerWithFuncCallback(nsITimer** aTimer,
 //
 static mozilla::LazyLogModule sTimerFiringsLog("TimerFirings");
 
-<<<<<<< HEAD
-mozilla::LogModule* GetTimerFiringsLog() { return sTimerFiringsLog; }
-||||||| merged common ancestors
-mozilla::LogModule*
-GetTimerFiringsLog()
-{
-  return sTimerFiringsLog;
-}
-=======
 static mozilla::LogModule* GetTimerFiringsLog() { return sTimerFiringsLog; }
->>>>>>> upstream-releases
 
 #include <math.h>
 
@@ -248,24 +238,6 @@ nsTimer::Release(void) {
   return count;
 }
 
-<<<<<<< HEAD
-nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget)
-    : mEventTarget(aTarget),
-      mHolder(nullptr),
-      mType(0),
-      mGeneration(0),
-      mITimer(aTimer),
-      mMutex("nsTimerImpl::mMutex") {
-||||||| merged common ancestors
-nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget) :
-  mEventTarget(aTarget),
-  mHolder(nullptr),
-  mType(0),
-  mGeneration(0),
-  mITimer(aTimer),
-  mMutex("nsTimerImpl::mMutex")
-{
-=======
 nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget)
     : mEventTarget(aTarget),
       mHolder(nullptr),
@@ -274,7 +246,6 @@ nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget)
       mITimer(aTimer),
       mMutex("nsTimerImpl::mMutex"),
       mFiring(0) {
->>>>>>> upstream-releases
   // XXX some code creates timers during xpcom shutdown, when threads are no
   // longer available, so we cannot turn this on yet.
   // MOZ_ASSERT(mEventTarget);
@@ -436,22 +407,10 @@ void nsTimerImpl::CancelImpl(bool aClearITimer) {
 
     // Don't clear this if we're firing; once Fire returns, we'll get this call
     // again.
-<<<<<<< HEAD
-    if (aClearITimer &&
-        (mCallbackDuringFire.mType == Callback::Type::Unknown)) {
-      MOZ_RELEASE_ASSERT(
-          mITimer,
-          "mITimer was nulled already! "
-||||||| merged common ancestors
-    if (aClearITimer &&
-        (mCallbackDuringFire.mType == Callback::Type::Unknown)) {
-      MOZ_RELEASE_ASSERT(mITimer, "mITimer was nulled already! "
-=======
     if (aClearITimer && !mFiring) {
       MOZ_RELEASE_ASSERT(
           mITimer,
           "mITimer was nulled already! "
->>>>>>> upstream-releases
           "This indicates that someone has messed up the refcount on nsTimer!");
       timerTrash.swap(mITimer);
     }
@@ -611,12 +570,6 @@ void nsTimerImpl::Fire(int32_t aGeneration) {
     default:;
   }
 
-<<<<<<< HEAD
-  Callback trash;  // Swap into here to dispose of callback after the unlock
-||||||| merged common ancestors
-  Callback trash; // Swap into here to dispose of callback after the unlock
-=======
->>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
   if (aGeneration == mGeneration) {
     if (IsRepeating()) {
@@ -818,34 +771,17 @@ size_t nsTimer::SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const {
   return aMallocSizeOf(this);
 }
 
-<<<<<<< HEAD
-/* static */ RefPtr<nsTimer> nsTimer::WithEventTarget(nsIEventTarget* aTarget) {
-||||||| merged common ancestors
-/* static */ RefPtr<nsTimer>
-nsTimer::WithEventTarget(nsIEventTarget* aTarget)
-{
-=======
 /* static */
 RefPtr<nsTimer> nsTimer::WithEventTarget(nsIEventTarget* aTarget) {
->>>>>>> upstream-releases
   if (!aTarget) {
     aTarget = mozilla::GetCurrentThreadEventTarget();
   }
   return do_AddRef(new nsTimer(aTarget));
 }
 
-<<<<<<< HEAD
-/* static */ nsresult nsTimer::XPCOMConstructor(nsISupports* aOuter,
-                                                REFNSIID aIID, void** aResult) {
-||||||| merged common ancestors
-/* static */ nsresult
-nsTimer::XPCOMConstructor(nsISupports* aOuter, REFNSIID aIID, void** aResult)
-{
-=======
 /* static */
 nsresult nsTimer::XPCOMConstructor(nsISupports* aOuter, REFNSIID aIID,
                                    void** aResult) {
->>>>>>> upstream-releases
   *aResult = nullptr;
   if (aOuter != nullptr) {
     return NS_ERROR_NO_AGGREGATION;

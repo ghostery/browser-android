@@ -209,18 +209,11 @@ Push.prototype = {
       QueryInterface: ChromeUtils.generateQI([Ci.nsIContentPermissionRequest]),
       types: typeArray,
       principal: this._principal,
-<<<<<<< HEAD:mozilla-release/dom/push/Push.js
-      topLevelrincipal: this._topLevelPrincipal,
-      QueryInterface: ChromeUtils.generateQI([Ci.nsIContentPermissionRequest]),
-||||||| merged common ancestors
-      QueryInterface: ChromeUtils.generateQI([Ci.nsIContentPermissionRequest]),
-=======
       isHandlingUserInput,
       userHadInteractedWithDocument: this._window.document.userHasInteracted,
       documentDOMContentLoadedTimestamp: this._window.performance.timing
         .domContentLoadedEventEnd,
       topLevelPrincipal: this._topLevelPrincipal,
->>>>>>> upstream-releases:mozilla-release/dom/push/Push.jsm
       allow: allowCallback,
       cancel: cancelCallback,
       window: this._window,

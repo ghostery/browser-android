@@ -38,31 +38,14 @@ class TextComposition final {
 
   NS_INLINE_DECL_REFCOUNTING(TextComposition)
 
-<<<<<<< HEAD
- public:
-  typedef dom::TabParent TabParent;
-||||||| merged common ancestors
-public:
-  typedef dom::TabParent TabParent;
-=======
  public:
   typedef dom::BrowserParent BrowserParent;
->>>>>>> upstream-releases
   typedef dom::Text Text;
 
   static bool IsHandlingSelectionEvent() { return sHandlingSelectionEvent; }
 
-<<<<<<< HEAD
-  TextComposition(nsPresContext* aPresContext, nsINode* aNode,
-                  TabParent* aTabParent,
-||||||| merged common ancestors
-  TextComposition(nsPresContext* aPresContext,
-                  nsINode* aNode,
-                  TabParent* aTabParent,
-=======
   TextComposition(nsPresContext* aPresContext, nsINode* aNode,
                   BrowserParent* aBrowserParent,
->>>>>>> upstream-releases
                   WidgetCompositionEvent* aCompositionEvent);
 
   bool Destroyed() const { return !mPresContext; }
@@ -95,16 +78,7 @@ public:
     return mPresContext ? mPresContext->GetRootWidget() : nullptr;
   }
   // Returns the tab parent which has this composition in its remote process.
-<<<<<<< HEAD
-  TabParent* GetTabParent() const { return mTabParent; }
-||||||| merged common ancestors
-  TabParent* GetTabParent() const
-  {
-    return mTabParent;
-  }
-=======
   BrowserParent* GetBrowserParent() const { return mBrowserParent; }
->>>>>>> upstream-releases
   // Returns true if the composition is started with synthesized event which
   // came from nsDOMWindowUtils.
   bool IsSynthesizedForTests() const { return mIsSynthesizedForTests; }
@@ -493,20 +467,11 @@ public:
    * HandleSelectionEvent() sends the selection event to ContentEventHandler
    * or dispatches it to the focused child process.
    */
-<<<<<<< HEAD
-  void HandleSelectionEvent(WidgetSelectionEvent* aSelectionEvent) {
-    HandleSelectionEvent(mPresContext, mTabParent, aSelectionEvent);
-||||||| merged common ancestors
-  void HandleSelectionEvent(WidgetSelectionEvent* aSelectionEvent)
-  {
-    HandleSelectionEvent(mPresContext, mTabParent, aSelectionEvent);
-=======
   MOZ_CAN_RUN_SCRIPT
   void HandleSelectionEvent(WidgetSelectionEvent* aSelectionEvent) {
     RefPtr<nsPresContext> presContext(mPresContext);
     RefPtr<BrowserParent> browserParent(mBrowserParent);
     HandleSelectionEvent(presContext, browserParent, aSelectionEvent);
->>>>>>> upstream-releases
   }
   MOZ_CAN_RUN_SCRIPT
   static void HandleSelectionEvent(nsPresContext* aPresContext,

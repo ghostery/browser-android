@@ -26,58 +26,28 @@ add_task(async function() {
 
   await editContainer(inspector, testActor, {
     selector: "#node17",
-<<<<<<< HEAD
-    newValue: "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
-              "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
-    oldValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-              "Donec posuere placerat magna et imperdiet.",
-||||||| merged common ancestors
-    newValue: "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
-              "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
-    oldValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-              "Donec posuere placerat magna et imperdiet."
-=======
     newValue:
       "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
       "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
     oldValue:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
       "Donec posuere placerat magna et imperdiet.",
->>>>>>> upstream-releases
   });
 
   await editContainer(inspector, testActor, {
     selector: "#node17",
     newValue: "New value",
-<<<<<<< HEAD
-    oldValue: "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
-              "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
-||||||| merged common ancestors
-    oldValue: "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
-              "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET."
-=======
     oldValue:
       "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
       "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
->>>>>>> upstream-releases
   });
 
   await editContainer(inspector, testActor, {
     selector: "#node17",
-<<<<<<< HEAD
-    newValue: "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
-              "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
-    oldValue: "New value",
-||||||| merged common ancestors
-    newValue: "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
-              "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
-    oldValue: "New value"
-=======
     newValue:
       "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. " +
       "DONEC POSUERE PLACERAT MAGNA ET IMPERDIET.",
     oldValue: "New value",
->>>>>>> upstream-releases
   });
 });
 

@@ -65,18 +65,8 @@ BlobURL::Write(nsIObjectOutputStream* aStream) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// nsIIPCSerializableURI methods:
-void BlobURL::Serialize(mozilla::ipc::URIParams& aParams) {
-||||||| merged common ancestors
-// nsIIPCSerializableURI methods:
-void
-BlobURL::Serialize(mozilla::ipc::URIParams& aParams)
-{
-=======
 NS_IMETHODIMP_(void)
 BlobURL::Serialize(mozilla::ipc::URIParams& aParams) {
->>>>>>> upstream-releases
   using namespace mozilla::ipc;
 
   HostObjectURIParams hostParams;
@@ -136,22 +126,10 @@ nsresult BlobURL::CloneInternal(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult BlobURL::EqualsInternal(
-    nsIURI* aOther, mozilla::net::nsSimpleURI::RefHandlingEnum aRefHandlingMode,
-    bool* aResult) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-BlobURL::EqualsInternal(nsIURI* aOther,
-                        mozilla::net::nsSimpleURI::RefHandlingEnum aRefHandlingMode,
-                        bool* aResult)
-{
-=======
 /* virtual */
 nsresult BlobURL::EqualsInternal(
     nsIURI* aOther, mozilla::net::nsSimpleURI::RefHandlingEnum aRefHandlingMode,
     bool* aResult) {
->>>>>>> upstream-releases
   if (!aOther) {
     *aResult = false;
     return NS_OK;
@@ -173,18 +151,8 @@ nsresult BlobURL::EqualsInternal(
 }
 
 // Queries this list of interfaces. If none match, it queries mURI.
-<<<<<<< HEAD
-NS_IMPL_NSIURIMUTATOR_ISUPPORTS(BlobURL::Mutator, nsIURISetters, nsIURIMutator,
-                                nsISerializable)
-||||||| merged common ancestors
-NS_IMPL_NSIURIMUTATOR_ISUPPORTS(BlobURL::Mutator,
-                                nsIURISetters,
-                                nsIURIMutator,
-                                nsISerializable)
-=======
 NS_IMPL_NSIURIMUTATOR_ISUPPORTS(BlobURL::Mutator, nsIURISetters, nsIURIMutator,
                                 nsISerializable, nsIBlobURLMutator)
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 BlobURL::Mutate(nsIURIMutator** aMutator) {
@@ -199,19 +167,8 @@ BlobURL::Mutate(nsIURIMutator** aMutator) {
 
 // nsIClassInfo methods:
 NS_IMETHODIMP
-<<<<<<< HEAD
-BlobURL::GetInterfaces(uint32_t* count, nsIID*** array) {
-  *count = 0;
-  *array = nullptr;
-||||||| merged common ancestors
-BlobURL::GetInterfaces(uint32_t *count, nsIID * **array)
-{
-  *count = 0;
-  *array = nullptr;
-=======
 BlobURL::GetInterfaces(nsTArray<nsIID>& array) {
   array.Clear();
->>>>>>> upstream-releases
   return NS_OK;
 }
 

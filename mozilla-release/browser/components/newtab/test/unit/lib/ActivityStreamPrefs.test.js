@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-import {DefaultPrefs, Prefs} from "lib/ActivityStreamPrefs.jsm";
-||||||| merged common ancestors
-const ACTIVITY_STREAM_PREF_BRANCH = "browser.newtabpage.activity-stream.";
-import {DefaultPrefs, Prefs} from "lib/ActivityStreamPrefs.jsm";
-=======
 import { DefaultPrefs, Prefs } from "lib/ActivityStreamPrefs.jsm";
->>>>>>> upstream-releases
 
 const TEST_PREF_CONFIG = new Map([
   ["foo", { value: true }],

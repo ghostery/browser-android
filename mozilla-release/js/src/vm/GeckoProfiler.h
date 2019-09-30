@@ -107,117 +107,33 @@ namespace js {
 using ProfileStringMap = HashMap<JSScript*, UniqueChars,
                                  DefaultHasher<JSScript*>, SystemAllocPolicy>;
 
-<<<<<<< HEAD
-class GeckoProfilerRuntime {
-  JSRuntime* rt;
-  ExclusiveData<ProfileStringMap> strings;
-  bool slowAssertions;
-  uint32_t enabled_;
-  void (*eventMarker_)(const char*);
-||||||| merged common ancestors
-class GeckoProfilerRuntime
-{
-    JSRuntime*           rt;
-    ExclusiveData<ProfileStringMap> strings;
-    bool                 slowAssertions;
-    uint32_t             enabled_;
-    void                (*eventMarker_)(const char*);
-=======
 class GeckoProfilerRuntime {
   JSRuntime* rt;
   MainThreadData<ProfileStringMap> strings_;
   bool slowAssertions;
   uint32_t enabled_;
   void (*eventMarker_)(const char*);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  UniqueChars allocProfileString(JSScript* script, JSFunction* function);
-||||||| merged common ancestors
-    UniqueChars allocProfileString(JSScript* script, JSFunction* function);
-=======
  public:
   explicit GeckoProfilerRuntime(JSRuntime* rt);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  explicit GeckoProfilerRuntime(JSRuntime* rt);
-||||||| merged common ancestors
-  public:
-    explicit GeckoProfilerRuntime(JSRuntime* rt);
-=======
   /* management of whether instrumentation is on or off */
   bool enabled() { return enabled_; }
   void enable(bool enabled);
   void enableSlowAssertions(bool enabled) { slowAssertions = enabled; }
   bool slowAssertionsEnabled() { return slowAssertions; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /* management of whether instrumentation is on or off */
-  bool enabled() { return enabled_; }
-  void enable(bool enabled);
-  void enableSlowAssertions(bool enabled) { slowAssertions = enabled; }
-  bool slowAssertionsEnabled() { return slowAssertions; }
-||||||| merged common ancestors
-    /* management of whether instrumentation is on or off */
-    bool enabled() { return enabled_; }
-    void enable(bool enabled);
-    void enableSlowAssertions(bool enabled) { slowAssertions = enabled; }
-    bool slowAssertionsEnabled() { return slowAssertions; }
-=======
   void setEventMarker(void (*fn)(const char*));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void setEventMarker(void (*fn)(const char*));
-  const char* profileString(JSScript* script, JSFunction* maybeFun);
-  void onScriptFinalized(JSScript* script);
-||||||| merged common ancestors
-    void setEventMarker(void (*fn)(const char*));
-    const char* profileString(JSScript* script, JSFunction* maybeFun);
-    void onScriptFinalized(JSScript* script);
-=======
   static UniqueChars allocProfileString(JSContext* cx, JSScript* script);
   const char* profileString(JSContext* cx, JSScript* script);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void markEvent(const char* event);
-||||||| merged common ancestors
-    void markEvent(const char* event);
-=======
   void onScriptFinalized(JSScript* script);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /* meant to be used for testing, not recommended to call in normal code */
-  size_t stringsCount();
-  void stringsReset();
-||||||| merged common ancestors
-    /* meant to be used for testing, not recommended to call in normal code */
-    size_t stringsCount();
-    void stringsReset();
-=======
   void markEvent(const char* event);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t* addressOfEnabled() { return &enabled_; }
-||||||| merged common ancestors
-    uint32_t* addressOfEnabled() {
-        return &enabled_;
-    }
-=======
   ProfileStringMap& strings() { return strings_.ref(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void fixupStringsMapAfterMovingGC();
-||||||| merged common ancestors
-    void fixupStringsMapAfterMovingGC();
-=======
   /* meant to be used for testing, not recommended to call in normal code */
   size_t stringsCount();
   void stringsReset();
@@ -225,37 +141,14 @@ class GeckoProfilerRuntime {
   uint32_t* addressOfEnabled() { return &enabled_; }
 
   void fixupStringsMapAfterMovingGC();
->>>>>>> upstream-releases
 #ifdef JSGC_HASH_TABLE_CHECKS
   void checkStringsMapAfterMovingGC();
 #endif
 };
 
-<<<<<<< HEAD
-inline size_t GeckoProfilerRuntime::stringsCount() {
-  return strings.lock()->count();
-}
-||||||| merged common ancestors
-inline size_t
-GeckoProfilerRuntime::stringsCount()
-{
-    return strings.lock()->count();
-}
-=======
 inline size_t GeckoProfilerRuntime::stringsCount() { return strings().count(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline void GeckoProfilerRuntime::stringsReset() { strings.lock()->clear(); }
-||||||| merged common ancestors
-inline void
-GeckoProfilerRuntime::stringsReset()
-{
-    strings.lock()->clear();
-}
-=======
 inline void GeckoProfilerRuntime::stringsReset() { strings().clear(); }
->>>>>>> upstream-releases
 
 /*
  * This class is used in RunScript() to push the marker onto the sampling stack
@@ -281,31 +174,6 @@ class MOZ_RAII GeckoProfilerEntryMarker {
  *
  * NB: The `label` string must be statically allocated.
  */
-<<<<<<< HEAD
-class MOZ_NONHEAP_CLASS AutoGeckoProfilerEntry {
- public:
-  explicit MOZ_ALWAYS_INLINE AutoGeckoProfilerEntry(
-      JSContext* cx, const char* label,
-      ProfilingStackFrame::Category category =
-          ProfilingStackFrame::Category::JS,
-      uint32_t flags = 0 MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
-  MOZ_ALWAYS_INLINE ~AutoGeckoProfilerEntry();
-
- private:
-  GeckoProfilerThread* profiler_;
-||||||| merged common ancestors
-class MOZ_NONHEAP_CLASS AutoGeckoProfilerEntry
-{
-  public:
-    explicit MOZ_ALWAYS_INLINE
-    AutoGeckoProfilerEntry(JSContext* cx, const char* label,
-                           ProfilingStackFrame::Category category = ProfilingStackFrame::Category::JS
-                           MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
-    MOZ_ALWAYS_INLINE ~AutoGeckoProfilerEntry();
-
-  private:
-    GeckoProfilerThread* profiler_;
-=======
 class MOZ_NONHEAP_CLASS AutoGeckoProfilerEntry {
  public:
   explicit MOZ_ALWAYS_INLINE AutoGeckoProfilerEntry(
@@ -316,7 +184,6 @@ class MOZ_NONHEAP_CLASS AutoGeckoProfilerEntry {
 
  private:
   GeckoProfilerThread* profiler_;
->>>>>>> upstream-releases
 #ifdef DEBUG
   uint32_t spBefore_;
 #endif

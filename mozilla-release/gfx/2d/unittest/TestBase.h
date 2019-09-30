@@ -37,20 +37,8 @@ class TestBase {
   static void LogMessage(std::string aMessage);
 
   struct Test {
-<<<<<<< HEAD
-    Test(TestCall aCall, std::string aName, void *aImplPointer)
-        : funcCall(aCall), name(aName), implPointer(aImplPointer) {}
-||||||| merged common ancestors
-    Test(TestCall aCall, std::string aName, void *aImplPointer)
-      : funcCall(aCall)
-      , name(aName)
-      , implPointer(aImplPointer)
-    {
-    }
-=======
     Test(TestCall aCall, std::string aName, void* aImplPointer)
         : funcCall(aCall), name(aName), implPointer(aImplPointer) {}
->>>>>>> upstream-releases
     TestCall funcCall;
     std::string name;
     void* implPointer;

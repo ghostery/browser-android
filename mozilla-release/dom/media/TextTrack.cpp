@@ -24,16 +24,6 @@ extern mozilla::LazyLogModule gTextTrackLog;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION_INHERITED(TextTrack, DOMEventTargetHelper, mCueList,
-                                   mActiveCueList, mTextTrackList,
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION_INHERITED(TextTrack,
-                                   DOMEventTargetHelper,
-                                   mCueList,
-                                   mActiveCueList,
-                                   mTextTrackList,
-=======
 static const char* ToStateStr(const TextTrackMode aMode) {
   switch (aMode) {
     case TextTrackMode::Disabled:
@@ -84,7 +74,6 @@ static const char* ToTextTrackKindStr(const TextTrackKind aKind) {
 
 NS_IMPL_CYCLE_COLLECTION_INHERITED(TextTrack, DOMEventTargetHelper, mCueList,
                                    mActiveCueList, mTextTrackList,
->>>>>>> upstream-releases
                                    mTrackElement)
 
 NS_IMPL_ADDREF_INHERITED(TextTrack, DOMEventTargetHelper)
@@ -137,59 +126,6 @@ JSObject* TextTrack::WrapObject(JSContext* aCx,
   return TextTrack_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-void TextTrack::SetMode(TextTrackMode aValue) {
-  if (mMode != aValue) {
-    mMode = aValue;
-    if (aValue == TextTrackMode::Disabled) {
-      // Remove all the cues in MediaElement.
-      if (mTextTrackList) {
-        HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-        if (mediaElement) {
-          for (size_t i = 0; i < mCueList->Length(); ++i) {
-            mediaElement->NotifyCueRemoved(*(*mCueList)[i]);
-          }
-        }
-      }
-      SetCuesInactive();
-    } else {
-      // Add all the cues into MediaElement.
-      if (mTextTrackList) {
-        HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-        if (mediaElement) {
-          for (size_t i = 0; i < mCueList->Length(); ++i) {
-            mediaElement->NotifyCueAdded(*(*mCueList)[i]);
-          }
-        }
-      }
-||||||| merged common ancestors
-void
-TextTrack::SetMode(TextTrackMode aValue)
-{
-  if (mMode != aValue) {
-    mMode = aValue;
-    if (aValue == TextTrackMode::Disabled) {
-      // Remove all the cues in MediaElement.
-      if (mTextTrackList) {
-        HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-        if (mediaElement) {
-          for (size_t i = 0; i < mCueList->Length(); ++i) {
-            mediaElement->NotifyCueRemoved(*(*mCueList)[i]);
-          }
-        }
-      }
-      SetCuesInactive();
-    } else {
-      // Add all the cues into MediaElement.
-      if (mTextTrackList) {
-        HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-        if (mediaElement) {
-          for (size_t i = 0; i < mCueList->Length(); ++i) {
-            mediaElement->NotifyCueAdded(*(*mCueList)[i]);
-          }
-        }
-      }
-=======
 void TextTrack::SetMode(TextTrackMode aValue) {
   if (mMode == aValue) {
     return;
@@ -202,7 +138,6 @@ void TextTrack::SetMode(TextTrackMode aValue) {
   if (aValue == TextTrackMode::Disabled) {
     for (size_t i = 0; i < mCueList->Length() && mediaElement; ++i) {
       mediaElement->NotifyCueRemoved(*(*mCueList)[i]);
->>>>>>> upstream-releases
     }
     SetCuesInactive();
   } else {
@@ -232,16 +167,8 @@ void TextTrack::GetId(nsAString& aId) const {
   }
 }
 
-<<<<<<< HEAD
-void TextTrack::AddCue(TextTrackCue& aCue) {
-||||||| merged common ancestors
-void
-TextTrack::AddCue(TextTrackCue& aCue)
-{
-=======
 void TextTrack::AddCue(TextTrackCue& aCue) {
   WEBVTT_LOG("AddCue %p [%f:%f]", &aCue, aCue.StartTime(), aCue.EndTime());
->>>>>>> upstream-releases
   TextTrack* oldTextTrack = aCue.GetTrack();
   if (oldTextTrack) {
     ErrorResult dummy;
@@ -255,16 +182,8 @@ void TextTrack::AddCue(TextTrackCue& aCue) {
   }
 }
 
-<<<<<<< HEAD
-void TextTrack::RemoveCue(TextTrackCue& aCue, ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-TextTrack::RemoveCue(TextTrackCue& aCue, ErrorResult& aRv)
-{
-=======
 void TextTrack::RemoveCue(TextTrackCue& aCue, ErrorResult& aRv) {
   WEBVTT_LOG("RemoveCue %p", &aCue);
->>>>>>> upstream-releases
   // Bug1304948, check the aCue belongs to the TextTrack.
   mCueList->RemoveCue(aCue, aRv);
   if (aRv.Failed()) {
@@ -278,108 +197,17 @@ void TextTrack::RemoveCue(TextTrackCue& aCue, ErrorResult& aRv) {
   }
 }
 
-<<<<<<< HEAD
-void TextTrack::SetCuesDirty() {
-  for (uint32_t i = 0; i < mCueList->Length(); i++) {
-    ((*mCueList)[i])->Reset();
-||||||| merged common ancestors
-void
-TextTrack::SetCuesDirty()
-{
-  for (uint32_t i = 0; i < mCueList->Length(); i++) {
-    ((*mCueList)[i])->Reset();
-=======
 void TextTrack::ClearAllCues() {
   WEBVTT_LOG("ClearAllCues");
   ErrorResult dummy;
   while (!mCueList->IsEmpty()) {
     RemoveCue(*(*mCueList)[0], dummy);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void TextTrack::UpdateActiveCueList() {
-  if (!mTextTrackList) {
-    return;
-  }
-
-  HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-  if (!mediaElement) {
-    return;
-  }
-
-  // If we are dirty, i.e. an event happened that may cause the sorted mCueList
-  // to have changed like a seek or an insert for a cue, than we need to rebuild
-  // the active cue list from scratch.
-  if (mDirty) {
-    mCuePos = 0;
-    mDirty = false;
-    mActiveCueList->RemoveAll();
-  }
-
-  double playbackTime = mediaElement->CurrentTime();
-  // Remove all the cues from the active cue list whose end times now occur
-  // earlier then the current playback time.
-  for (uint32_t i = mActiveCueList->Length(); i > 0; i--) {
-    if ((*mActiveCueList)[i - 1]->EndTime() <= playbackTime) {
-      mActiveCueList->RemoveCueAt(i - 1);
-    }
-  }
-  // Add all the cues, starting from the position of the last cue that was
-  // added, that have valid start and end times for the current playback time.
-  // We can stop iterating safely once we encounter a cue that does not have
-  // a valid start time as the cue list is sorted.
-  for (; mCuePos < mCueList->Length() &&
-         (*mCueList)[mCuePos]->StartTime() <= playbackTime;
-       mCuePos++) {
-    if ((*mCueList)[mCuePos]->EndTime() > playbackTime) {
-      mActiveCueList->AddCue(*(*mCueList)[mCuePos]);
-    }
-||||||| merged common ancestors
-void
-TextTrack::UpdateActiveCueList()
-{
-  if (!mTextTrackList) {
-    return;
-  }
-
-  HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-  if (!mediaElement) {
-    return;
-  }
-
-  // If we are dirty, i.e. an event happened that may cause the sorted mCueList
-  // to have changed like a seek or an insert for a cue, than we need to rebuild
-  // the active cue list from scratch.
-  if (mDirty) {
-    mCuePos = 0;
-    mDirty = false;
-    mActiveCueList->RemoveAll();
-  }
-
-  double playbackTime = mediaElement->CurrentTime();
-  // Remove all the cues from the active cue list whose end times now occur
-  // earlier then the current playback time.
-  for (uint32_t i = mActiveCueList->Length(); i > 0; i--) {
-    if ((*mActiveCueList)[i - 1]->EndTime() <= playbackTime) {
-      mActiveCueList->RemoveCueAt(i - 1);
-    }
-  }
-  // Add all the cues, starting from the position of the last cue that was
-  // added, that have valid start and end times for the current playback time.
-  // We can stop iterating safely once we encounter a cue that does not have
-  // a valid start time as the cue list is sorted.
-  for (; mCuePos < mCueList->Length() &&
-         (*mCueList)[mCuePos]->StartTime() <= playbackTime; mCuePos++) {
-    if ((*mCueList)[mCuePos]->EndTime() > playbackTime) {
-      mActiveCueList->AddCue(*(*mCueList)[mCuePos]);
-    }
-=======
 void TextTrack::SetCuesDirty() {
   for (uint32_t i = 0; i < mCueList->Length(); i++) {
     ((*mCueList)[i])->Reset();
->>>>>>> upstream-releases
   }
 }
 
@@ -404,40 +232,12 @@ void TextTrack::SetReadyState(uint32_t aReadyState) {
   }
 }
 
-<<<<<<< HEAD
-void TextTrack::SetReadyState(TextTrackReadyState aState) {
-||||||| merged common ancestors
-void
-TextTrack::SetReadyState(TextTrackReadyState aState)
-{
-=======
 void TextTrack::SetReadyState(TextTrackReadyState aState) {
   WEBVTT_LOG("SetReadyState=%s", ToReadyStateStr(aState));
->>>>>>> upstream-releases
   mReadyState = aState;
-<<<<<<< HEAD
-
-  if (!mTextTrackList) {
-    return;
-  }
-
-  HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-  if (mediaElement && (mReadyState == TextTrackReadyState::Loaded ||
-                       mReadyState == TextTrackReadyState::FailedToLoad)) {
-||||||| merged common ancestors
-
-  if (!mTextTrackList) {
-    return;
-  }
-
-  HTMLMediaElement* mediaElement = mTextTrackList->GetMediaElement();
-  if (mediaElement && (mReadyState == TextTrackReadyState::Loaded||
-      mReadyState == TextTrackReadyState::FailedToLoad)) {
-=======
   HTMLMediaElement* mediaElement = GetMediaElement();
   if (mediaElement && (mReadyState == TextTrackReadyState::Loaded ||
                        mReadyState == TextTrackReadyState::FailedToLoad)) {
->>>>>>> upstream-releases
     mediaElement->RemoveTextTrack(this, true);
     mediaElement->UpdateReadyState();
   }
@@ -455,31 +255,13 @@ void TextTrack::SetTrackElement(HTMLTrackElement* aTrackElement) {
   mTrackElement = aTrackElement;
 }
 
-<<<<<<< HEAD
-void TextTrack::SetCuesInactive() { mCueList->SetCuesInactive(); }
-||||||| merged common ancestors
-void
-TextTrack::SetCuesInactive()
-{
-  mCueList->SetCuesInactive();
-}
-=======
 void TextTrack::SetCuesInactive() {
   WEBVTT_LOG("SetCuesInactive");
   mCueList->SetCuesInactive();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void TextTrack::NotifyCueUpdated(TextTrackCue* aCue) {
-||||||| merged common ancestors
-void
-TextTrack::NotifyCueUpdated(TextTrackCue *aCue)
-{
-=======
 void TextTrack::NotifyCueUpdated(TextTrackCue* aCue) {
   WEBVTT_LOG("NotifyCueUpdated, cue=%p", aCue);
->>>>>>> upstream-releases
   mCueList->NotifyCueUpdated(aCue);
   HTMLMediaElement* mediaElement = GetMediaElement();
   if (mediaElement) {
@@ -530,13 +312,6 @@ bool TextTrack::IsLoaded() {
   return (mReadyState >= Loaded);
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 void TextTrack::NotifyCueActiveStateChanged(TextTrackCue* aCue) {
   MOZ_ASSERT(aCue);
   if (aCue->GetActive()) {
@@ -616,4 +391,3 @@ HTMLMediaElement* TextTrack::GetMediaElement() const {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

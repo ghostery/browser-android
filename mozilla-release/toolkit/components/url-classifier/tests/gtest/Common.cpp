@@ -15,16 +15,10 @@ using namespace mozilla::safebrowsing;
 #define GTEST_SAFEBROWSING_DIR NS_LITERAL_CSTRING("safebrowsing")
 #define GTEST_TABLE NS_LITERAL_CSTRING("gtest-malware-proto")
 
-<<<<<<< HEAD
-template <typename Function>
-||||||| merged common ancestors
-template<typename Function>
-=======
 typedef nsCString _Prefix;
 typedef nsTArray<_Prefix> _PrefixArray;
 
 template <typename Function>
->>>>>>> upstream-releases
 void RunTestInNewThread(Function&& aFunction) {
   nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
       "RunTestInNewThread", std::forward<Function>(aFunction));
@@ -100,32 +94,10 @@ void ApplyUpdate(TableUpdateArray& updates) {
   RefPtr<Classifier> classifier = new Classifier();
   classifier->Open(*file);
 
-<<<<<<< HEAD
-  {
-    // Force nsIUrlClassifierUtils loading on main thread
-    // because nsIUrlClassifierDBService will not run in advance
-    // in gtest.
-    nsresult rv;
-    nsCOMPtr<nsIUrlClassifierUtils> dummy =
-        do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID, &rv);
-    ASSERT_TRUE(NS_SUCCEEDED(rv));
-  }
-||||||| merged common ancestors
-  {
-    // Force nsIUrlClassifierUtils loading on main thread
-    // because nsIUrlClassifierDBService will not run in advance
-    // in gtest.
-    nsresult rv;
-    nsCOMPtr<nsIUrlClassifierUtils> dummy =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID, &rv);
-      ASSERT_TRUE(NS_SUCCEEDED(rv));
-  }
-=======
   // Force nsUrlClassifierUtils loading on main thread
   // because nsIUrlClassifierDBService will not run in advance
   // in gtest.
   nsUrlClassifierUtils::GetInstance();
->>>>>>> upstream-releases
 
   SyncApplyUpdates(classifier, updates);
 }
@@ -178,14 +150,6 @@ nsCString GeneratePrefix(const nsCString& aFragment, uint8_t aLength) {
   return hash;
 }
 
-<<<<<<< HEAD
-static nsresult BuildCache(LookupCacheV2* cache,
-                           const _PrefixArray& prefixArray) {
-||||||| merged common ancestors
-static nsresult
-BuildCache(LookupCacheV2* cache, const _PrefixArray& prefixArray)
-{
-=======
 void SetupPrefixMap(const _PrefixArray& array, PrefixStringMap& map) {
   map.Clear();
 
@@ -241,7 +205,6 @@ void CheckContent(LookupCacheV4* cache, const _PrefixArray& array) {
 
 static nsresult BuildCache(LookupCacheV2* cache,
                            const _PrefixArray& prefixArray) {
->>>>>>> upstream-releases
   AddPrefixArray prefixes;
   AddCompleteArray completions;
   nsresult rv = PrefixArrayToAddPrefixArrayV2(prefixArray, prefixes);

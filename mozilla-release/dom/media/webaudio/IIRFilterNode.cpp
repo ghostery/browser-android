@@ -48,21 +48,10 @@ class IIRFilterNodeEngine final : public AudioNodeEngine {
           aStream->ScheduleCheckForInactive();
 
           RefPtr<PlayingRefChangeHandler> refchanged =
-<<<<<<< HEAD
-              new PlayingRefChangeHandler(aStream,
-                                          PlayingRefChangeHandler::RELEASE);
-          aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-              refchanged.forget());
-||||||| merged common ancestors
-            new PlayingRefChangeHandler(aStream, PlayingRefChangeHandler::RELEASE);
-          aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-=======
               new PlayingRefChangeHandler(aStream,
                                           PlayingRefChangeHandler::RELEASE);
           aStream->Graph()->DispatchToMainThreadStableState(
               refchanged.forget());
->>>>>>> upstream-releases
 
           aOutput->SetNull(WEBAUDIO_BLOCK_SIZE);
           return;
@@ -73,20 +62,9 @@ class IIRFilterNodeEngine final : public AudioNodeEngine {
     } else if (mIIRFilters.Length() != aInput.ChannelCount()) {
       if (mIIRFilters.IsEmpty()) {
         RefPtr<PlayingRefChangeHandler> refchanged =
-<<<<<<< HEAD
-            new PlayingRefChangeHandler(aStream,
-                                        PlayingRefChangeHandler::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-||||||| merged common ancestors
-          new PlayingRefChangeHandler(aStream, PlayingRefChangeHandler::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-          refchanged.forget());
-=======
             new PlayingRefChangeHandler(aStream,
                                         PlayingRefChangeHandler::ADDREF);
         aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
->>>>>>> upstream-releases
       } else {
         WebAudioUtils::LogToDeveloperConsole(
             mWindowID, "IIRFilterChannelCountChangeWarning");
@@ -170,39 +148,9 @@ IIRFilterNode::IIRFilterNode(AudioContext* aContext,
   // We check that this is exactly equal to one later in blink/IIRFilter.cpp
   elements[0] = 1.0;
 
-<<<<<<< HEAD
-  uint64_t windowID = aContext->GetParentObject()->WindowID();
-  IIRFilterNodeEngine* engine = new IIRFilterNodeEngine(
-      this, aContext->Destination(), mFeedforward, mFeedback, windowID);
-  mStream = AudioNodeStream::Create(
-      aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
-}
-
-/* static */ already_AddRefed<IIRFilterNode> IIRFilterNode::Create(
-    AudioContext& aAudioContext, const IIRFilterOptions& aOptions,
-    ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-||||||| merged common ancestors
-  uint64_t windowID = aContext->GetParentObject()->WindowID();
-  IIRFilterNodeEngine* engine = new IIRFilterNodeEngine(this, aContext->Destination(), mFeedforward, mFeedback, windowID);
-  mStream = AudioNodeStream::Create(aContext, engine,
-                                    AudioNodeStream::NO_STREAM_FLAGS,
-                                    aContext->Graph());
-}
-
-/* static */ already_AddRefed<IIRFilterNode>
-IIRFilterNode::Create(AudioContext& aAudioContext,
-                 const IIRFilterOptions& aOptions,
-                 ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-=======
   uint64_t windowID = 0;
   if (aContext->GetParentObject()) {
     windowID = aContext->GetParentObject()->WindowID();
->>>>>>> upstream-releases
   }
   IIRFilterNodeEngine* engine = new IIRFilterNodeEngine(
       this, aContext->Destination(), mFeedforward, mFeedback, windowID);
@@ -210,19 +158,12 @@ IIRFilterNode::Create(AudioContext& aAudioContext,
       aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
 }
 
-<<<<<<< HEAD
-  if (aOptions.mFeedforward.Length() == 0 ||
-      aOptions.mFeedforward.Length() > 20) {
-||||||| merged common ancestors
-  if (aOptions.mFeedforward.Length() == 0 || aOptions.mFeedforward.Length() > 20) {
-=======
 /* static */
 already_AddRefed<IIRFilterNode> IIRFilterNode::Create(
     AudioContext& aAudioContext, const IIRFilterOptions& aOptions,
     ErrorResult& aRv) {
   if (aOptions.mFeedforward.Length() == 0 ||
       aOptions.mFeedforward.Length() > 20) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;
   }

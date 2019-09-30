@@ -72,91 +72,6 @@ BEGIN_TEST(testSavedStacks_ApiDefaultValues) {
 }
 END_TEST(testSavedStacks_ApiDefaultValues)
 
-<<<<<<< HEAD
-BEGIN_TEST(testSavedStacks_RangeBasedForLoops) {
-  CHECK(js::DefineTestingFunctions(cx, global, false, false));
-
-  JS::RootedValue val(cx);
-  CHECK(
-      evaluate("(function one() {                      \n"   // 1
-               "  return (function two() {             \n"   // 2
-               "    return (function three() {         \n"   // 3
-               "      return saveStack();              \n"   // 4
-               "    }());                              \n"   // 5
-               "  }());                                \n"   // 6
-               "}());                                  \n",  // 7
-               "filename.js", 1, &val));
-
-  CHECK(val.isObject());
-  JS::RootedObject obj(cx, &val.toObject());
-
-  CHECK(obj->is<js::SavedFrame>());
-  JS::Rooted<js::SavedFrame*> savedFrame(cx, &obj->as<js::SavedFrame>());
-
-  JS::Rooted<js::SavedFrame*> rf(cx, savedFrame);
-  for (JS::Handle<js::SavedFrame*> frame :
-       js::SavedFrame::RootedRange(cx, rf)) {
-    JS_GC(cx);
-    CHECK(frame == rf);
-    rf = rf->getParent();
-  }
-  CHECK(rf == nullptr);
-
-  // Stack string
-  const char* SpiderMonkeyStack =
-      "three@filename.js:4:14\n"
-      "two@filename.js:3:22\n"
-      "one@filename.js:2:20\n"
-      "@filename.js:1:11\n";
-  const char* V8Stack =
-      "    at three (filename.js:4:14)\n"
-      "    at two (filename.js:3:22)\n"
-      "    at one (filename.js:2:20)\n"
-      "    at filename.js:1:11";
-  struct {
-    js::StackFormat format;
-    const char* expected;
-  } expectations[] = {{js::StackFormat::Default, SpiderMonkeyStack},
-                      {js::StackFormat::SpiderMonkey, SpiderMonkeyStack},
-                      {js::StackFormat::V8, V8Stack}};
-  auto CheckStacks = [&]() {
-    for (auto& expectation : expectations) {
-      JS::RootedString str(cx);
-      JSPrincipals* principals = cx->realm()->principals();
-      CHECK(JS::BuildStackString(cx, principals, savedFrame, &str, 0,
-                                 expectation.format));
-      JSLinearString* lin = str->ensureLinear(cx);
-      CHECK(lin);
-      CHECK(js::StringEqualsAscii(lin, expectation.expected));
-||||||| merged common ancestors
-BEGIN_TEST(testSavedStacks_RangeBasedForLoops)
-{
-    CHECK(js::DefineTestingFunctions(cx, global, false, false));
-
-    JS::RootedValue val(cx);
-    CHECK(evaluate("(function one() {                      \n"  // 1
-                   "  return (function two() {             \n"  // 2
-                   "    return (function three() {         \n"  // 3
-                   "      return saveStack();              \n"  // 4
-                   "    }());                              \n"  // 5
-                   "  }());                                \n"  // 6
-                   "}());                                  \n", // 7
-                   "filename.js",
-                   1,
-                   &val));
-
-    CHECK(val.isObject());
-    JS::RootedObject obj(cx, &val.toObject());
-
-    CHECK(obj->is<js::SavedFrame>());
-    JS::Rooted<js::SavedFrame*> savedFrame(cx, &obj->as<js::SavedFrame>());
-
-    JS::Rooted<js::SavedFrame*> rf(cx, savedFrame);
-    for (JS::Handle<js::SavedFrame*> frame : js::SavedFrame::RootedRange(cx, rf)) {
-        JS_GC(cx);
-        CHECK(frame == rf);
-        rf = rf->getParent();
-=======
 BEGIN_TEST(testSavedStacks_RangeBasedForLoops) {
   CHECK(js::DefineTestingFunctions(cx, global, false, false));
 
@@ -212,7 +127,6 @@ BEGIN_TEST(testSavedStacks_RangeBasedForLoops) {
       JSLinearString* lin = str->ensureLinear(cx);
       CHECK(lin);
       CHECK(js::StringEqualsAscii(lin, expectation.expected));
->>>>>>> upstream-releases
     }
     return true;
   };
@@ -228,62 +142,6 @@ BEGIN_TEST(testSavedStacks_RangeBasedForLoops) {
 }
 END_TEST(testSavedStacks_RangeBasedForLoops)
 
-<<<<<<< HEAD
-BEGIN_TEST(testSavedStacks_ErrorStackSpiderMonkey) {
-  JS::RootedValue val(cx);
-  CHECK(
-      evaluate("(function one() {                      \n"   // 1
-               "  return (function two() {             \n"   // 2
-               "    return (function three() {         \n"   // 3
-               "      return new Error('foo');         \n"   // 4
-               "    }());                              \n"   // 5
-               "  }());                                \n"   // 6
-               "}()).stack                             \n",  // 7
-               "filename.js", 1, &val));
-
-  CHECK(val.isString());
-  JS::RootedString stack(cx, val.toString());
-
-  // Stack string
-  const char* SpiderMonkeyStack =
-      "three@filename.js:4:14\n"
-      "two@filename.js:3:22\n"
-      "one@filename.js:2:20\n"
-      "@filename.js:1:11\n";
-  JSLinearString* lin = stack->ensureLinear(cx);
-  CHECK(lin);
-  CHECK(js::StringEqualsAscii(lin, SpiderMonkeyStack));
-
-  return true;
-||||||| merged common ancestors
-BEGIN_TEST(testSavedStacks_ErrorStackSpiderMonkey)
-{
-    JS::RootedValue val(cx);
-    CHECK(evaluate("(function one() {                      \n"  // 1
-                   "  return (function two() {             \n"  // 2
-                   "    return (function three() {         \n"  // 3
-                   "      return new Error('foo');         \n"  // 4
-                   "    }());                              \n"  // 5
-                   "  }());                                \n"  // 6
-                   "}()).stack                             \n", // 7
-                   "filename.js",
-                   1,
-                   &val));
-
-    CHECK(val.isString());
-    JS::RootedString stack(cx, val.toString());
-
-    // Stack string
-    const char* SpiderMonkeyStack = "three@filename.js:4:14\n"
-                                    "two@filename.js:3:22\n"
-                                    "one@filename.js:2:20\n"
-                                    "@filename.js:1:11\n";
-    JSLinearString* lin = stack->ensureLinear(cx);
-    CHECK(lin);
-    CHECK(js::StringEqualsAscii(lin, SpiderMonkeyStack));
-
-    return true;
-=======
 BEGIN_TEST(testSavedStacks_ErrorStackSpiderMonkey) {
   JS::RootedValue val(cx);
   CHECK(
@@ -310,72 +168,9 @@ BEGIN_TEST(testSavedStacks_ErrorStackSpiderMonkey) {
   CHECK(js::StringEqualsAscii(lin, SpiderMonkeyStack));
 
   return true;
->>>>>>> upstream-releases
 }
 END_TEST(testSavedStacks_ErrorStackSpiderMonkey)
 
-<<<<<<< HEAD
-BEGIN_TEST(testSavedStacks_ErrorStackV8) {
-  js::SetStackFormat(cx, js::StackFormat::V8);
-
-  JS::RootedValue val(cx);
-  CHECK(
-      evaluate("(function one() {                      \n"   // 1
-               "  return (function two() {             \n"   // 2
-               "    return (function three() {         \n"   // 3
-               "      return new Error('foo');         \n"   // 4
-               "    }());                              \n"   // 5
-               "  }());                                \n"   // 6
-               "}()).stack                             \n",  // 7
-               "filename.js", 1, &val));
-
-  CHECK(val.isString());
-  JS::RootedString stack(cx, val.toString());
-
-  // Stack string
-  const char* V8Stack =
-      "Error: foo\n"
-      "    at three (filename.js:4:14)\n"
-      "    at two (filename.js:3:22)\n"
-      "    at one (filename.js:2:20)\n"
-      "    at filename.js:1:11";
-  JSLinearString* lin = stack->ensureLinear(cx);
-  CHECK(lin);
-  CHECK(js::StringEqualsAscii(lin, V8Stack));
-
-  return true;
-||||||| merged common ancestors
-BEGIN_TEST(testSavedStacks_ErrorStackV8)
-{
-    js::SetStackFormat(cx, js::StackFormat::V8);
-
-    JS::RootedValue val(cx);
-    CHECK(evaluate("(function one() {                      \n"  // 1
-                   "  return (function two() {             \n"  // 2
-                   "    return (function three() {         \n"  // 3
-                   "      return new Error('foo');         \n"  // 4
-                   "    }());                              \n"  // 5
-                   "  }());                                \n"  // 6
-                   "}()).stack                             \n", // 7
-                   "filename.js",
-                   1,
-                   &val));
-
-    CHECK(val.isString());
-    JS::RootedString stack(cx, val.toString());
-
-    // Stack string
-    const char* V8Stack = "Error: foo\n"
-                          "    at three (filename.js:4:14)\n"
-                          "    at two (filename.js:3:22)\n"
-                          "    at one (filename.js:2:20)\n"
-                          "    at filename.js:1:11";
-    JSLinearString* lin = stack->ensureLinear(cx);
-    CHECK(lin);
-    CHECK(js::StringEqualsAscii(lin, V8Stack));
-
-    return true;
-=======
 BEGIN_TEST(testSavedStacks_ErrorStackV8) {
   js::SetStackFormat(cx, js::StackFormat::V8);
 
@@ -405,195 +200,9 @@ BEGIN_TEST(testSavedStacks_ErrorStackV8) {
   CHECK(js::StringEqualsAscii(lin, V8Stack));
 
   return true;
->>>>>>> upstream-releases
 }
 END_TEST(testSavedStacks_ErrorStackV8)
 
-<<<<<<< HEAD
-BEGIN_TEST(testSavedStacks_selfHostedFrames) {
-  CHECK(js::DefineTestingFunctions(cx, global, false, false));
-
-  JS::RootedValue val(cx);
-  //             0         1         2         3
-  //             0123456789012345678901234567890123456789
-  CHECK(
-      evaluate("(function one() {                      \n"   // 1
-               "  try {                                \n"   // 2
-               "    [1].map(function two() {           \n"   // 3
-               "      throw saveStack();               \n"   // 4
-               "    });                                \n"   // 5
-               "  } catch (stack) {                    \n"   // 6
-               "    return stack;                      \n"   // 7
-               "  }                                    \n"   // 8
-               "}())                                   \n",  // 9
-               "filename.js", 1, &val));
-
-  CHECK(val.isObject());
-  JS::RootedObject obj(cx, &val.toObject());
-
-  CHECK(obj->is<js::SavedFrame>());
-  JS::Rooted<js::SavedFrame*> savedFrame(cx, &obj->as<js::SavedFrame>());
-
-  JS::Rooted<js::SavedFrame*> selfHostedFrame(cx, savedFrame->getParent());
-  CHECK(selfHostedFrame->isSelfHosted(cx));
-
-  JSPrincipals* principals = cx->realm()->principals();
-
-  // Source
-  JS::RootedString str(cx);
-  JS::SavedFrameResult result = JS::GetSavedFrameSource(
-      cx, principals, selfHostedFrame, &str, JS::SavedFrameSelfHosted::Exclude);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  JSLinearString* lin = str->ensureLinear(cx);
-  CHECK(lin);
-  CHECK(js::StringEqualsAscii(lin, "filename.js"));
-
-  // Source, including self-hosted frames
-  result = JS::GetSavedFrameSource(cx, principals, selfHostedFrame, &str,
-                                   JS::SavedFrameSelfHosted::Include);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  lin = str->ensureLinear(cx);
-  CHECK(lin);
-  CHECK(js::StringEqualsAscii(lin, "self-hosted"));
-
-  // Line
-  uint32_t line = 123;
-  result = JS::GetSavedFrameLine(cx, principals, selfHostedFrame, &line,
-                                 JS::SavedFrameSelfHosted::Exclude);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  CHECK_EQUAL(line, 3U);
-
-  // Column
-  uint32_t column = 123;
-  result = JS::GetSavedFrameColumn(cx, principals, selfHostedFrame, &column,
-                                   JS::SavedFrameSelfHosted::Exclude);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  CHECK_EQUAL(column, 9U);
-
-  // Function display name
-  result = JS::GetSavedFrameFunctionDisplayName(
-      cx, principals, selfHostedFrame, &str, JS::SavedFrameSelfHosted::Exclude);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  lin = str->ensureLinear(cx);
-  CHECK(lin);
-  CHECK(js::StringEqualsAscii(lin, "one"));
-
-  // Parent
-  JS::RootedObject parent(cx);
-  result = JS::GetSavedFrameParent(cx, principals, savedFrame, &parent,
-                                   JS::SavedFrameSelfHosted::Exclude);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  // JS::GetSavedFrameParent does this super funky and potentially unexpected
-  // thing where it doesn't return the next subsumed parent but any next
-  // parent. This so that callers can still get the "asyncParent" property
-  // which is only on the first frame of the async parent stack and that frame
-  // might not be subsumed by the caller. It is expected that callers will
-  // still interact with the frame through the JSAPI accessors, so this should
-  // be safe and should not leak privileged info to unprivileged
-  // callers. However, because of that, we don't test that the parent we get
-  // here is the selfHostedFrame's parent (because, as just explained, it
-  // isn't) and instead check that asking for the source property gives us the
-  // expected value.
-  result = JS::GetSavedFrameSource(cx, principals, parent, &str,
-                                   JS::SavedFrameSelfHosted::Exclude);
-  CHECK(result == JS::SavedFrameResult::Ok);
-  lin = str->ensureLinear(cx);
-  CHECK(lin);
-  CHECK(js::StringEqualsAscii(lin, "filename.js"));
-||||||| merged common ancestors
-BEGIN_TEST(testSavedStacks_selfHostedFrames)
-{
-    CHECK(js::DefineTestingFunctions(cx, global, false, false));
-
-    JS::RootedValue val(cx);
-    //             0         1         2         3
-    //             0123456789012345678901234567890123456789
-    CHECK(evaluate("(function one() {                      \n"  // 1
-                   "  try {                                \n"  // 2
-                   "    [1].map(function two() {           \n"  // 3
-                   "      throw saveStack();               \n"  // 4
-                   "    });                                \n"  // 5
-                   "  } catch (stack) {                    \n"  // 6
-                   "    return stack;                      \n"  // 7
-                   "  }                                    \n"  // 8
-                   "}())                                   \n", // 9
-                   "filename.js",
-                   1,
-                   &val));
-
-    CHECK(val.isObject());
-    JS::RootedObject obj(cx, &val.toObject());
-
-    CHECK(obj->is<js::SavedFrame>());
-    JS::Rooted<js::SavedFrame*> savedFrame(cx, &obj->as<js::SavedFrame>());
-
-    JS::Rooted<js::SavedFrame*> selfHostedFrame(cx, savedFrame->getParent());
-    CHECK(selfHostedFrame->isSelfHosted(cx));
-
-    JSPrincipals* principals = cx->realm()->principals();
-
-    // Source
-    JS::RootedString str(cx);
-    JS::SavedFrameResult result = JS::GetSavedFrameSource(cx, principals, selfHostedFrame, &str,
-                                                          JS::SavedFrameSelfHosted::Exclude);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    JSLinearString* lin = str->ensureLinear(cx);
-    CHECK(lin);
-    CHECK(js::StringEqualsAscii(lin, "filename.js"));
-
-    // Source, including self-hosted frames
-    result = JS::GetSavedFrameSource(cx, principals, selfHostedFrame, &str,
-                                     JS::SavedFrameSelfHosted::Include);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    lin = str->ensureLinear(cx);
-    CHECK(lin);
-    CHECK(js::StringEqualsAscii(lin, "self-hosted"));
-
-    // Line
-    uint32_t line = 123;
-    result = JS::GetSavedFrameLine(cx, principals, selfHostedFrame, &line,
-                                   JS::SavedFrameSelfHosted::Exclude);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    CHECK_EQUAL(line, 3U);
-
-    // Column
-    uint32_t column = 123;
-    result = JS::GetSavedFrameColumn(cx, principals, selfHostedFrame, &column,
-                                     JS::SavedFrameSelfHosted::Exclude);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    CHECK_EQUAL(column, 9U);
-
-    // Function display name
-    result = JS::GetSavedFrameFunctionDisplayName(cx, principals, selfHostedFrame, &str,
-                                                  JS::SavedFrameSelfHosted::Exclude);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    lin = str->ensureLinear(cx);
-    CHECK(lin);
-    CHECK(js::StringEqualsAscii(lin, "one"));
-
-    // Parent
-    JS::RootedObject parent(cx);
-    result = JS::GetSavedFrameParent(cx, principals, savedFrame, &parent,
-                                     JS::SavedFrameSelfHosted::Exclude);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    // JS::GetSavedFrameParent does this super funky and potentially unexpected
-    // thing where it doesn't return the next subsumed parent but any next
-    // parent. This so that callers can still get the "asyncParent" property
-    // which is only on the first frame of the async parent stack and that frame
-    // might not be subsumed by the caller. It is expected that callers will
-    // still interact with the frame through the JSAPI accessors, so this should
-    // be safe and should not leak privileged info to unprivileged
-    // callers. However, because of that, we don't test that the parent we get
-    // here is the selfHostedFrame's parent (because, as just explained, it
-    // isn't) and instead check that asking for the source property gives us the
-    // expected value.
-    result = JS::GetSavedFrameSource(cx, principals, parent, &str,
-                                     JS::SavedFrameSelfHosted::Exclude);
-    CHECK(result == JS::SavedFrameResult::Ok);
-    lin = str->ensureLinear(cx);
-    CHECK(lin);
-    CHECK(js::StringEqualsAscii(lin, "filename.js"));
-=======
 BEGIN_TEST(testSavedStacks_selfHostedFrames) {
   CHECK(js::DefineTestingFunctions(cx, global, false, false));
 
@@ -778,17 +387,10 @@ BEGIN_TEST(test_JS_GetPendingExceptionStack) {
     } else {
       CHECK(!str);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
     i++;
   }
 
   return true;
->>>>>>> upstream-releases
 }
 END_TEST(test_JS_GetPendingExceptionStack)

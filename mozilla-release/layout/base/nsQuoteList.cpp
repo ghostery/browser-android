@@ -37,43 +37,13 @@ nsString nsQuoteNode::Text() {
   NS_ASSERTION(mType == StyleContentType::OpenQuote ||
                    mType == StyleContentType::CloseQuote,
                "should only be called when mText should be non-null");
-<<<<<<< HEAD
-||||||| merged common ancestors
-  const nsStyleQuoteValues::QuotePairArray& quotePairs =
-    mPseudoFrame->StyleList()->GetQuotePairs();
-  int32_t quotesCount = quotePairs.Length(); // 0 if 'quotes:none'
-  int32_t quoteDepth = Depth();
-=======
   nsString result;
   int32_t depth = Depth();
   MOZ_ASSERT(depth >= -1);
 
   Span<const StyleQuotePair> quotes =
       mPseudoFrame->StyleList()->mQuotes._0.AsSpan();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsString result;
-  Servo_Quotes_GetQuote(mPseudoFrame->StyleList()->mQuotes.get(), Depth(),
-                        mType, &result);
-||||||| merged common ancestors
-  // Reuse the last pair when the depth is greater than the number of
-  // pairs of quotes.  (Also make 'quotes: none' and close-quote from
-  // a depth of 0 equivalent for the next test.)
-  if (quoteDepth >= quotesCount)
-    quoteDepth = quotesCount - 1;
-
-  const nsString* result;
-  if (quoteDepth == -1) {
-    // close-quote from a depth of 0 or 'quotes: none' (we want a node
-    // with the empty string so dynamic changes are easier to handle)
-    result = &EmptyString();
-  } else {
-    result = StyleContentType::OpenQuote == mType
-               ? &quotePairs[quoteDepth].first
-               : &quotePairs[quoteDepth].second;
-  }
-=======
   // Reuse the last pair when the depth is greater than the number of
   // pairs of quotes.  (Also make 'quotes: none' and close-quote from
   // a depth of 0 equivalent for the next test.)
@@ -90,7 +60,6 @@ nsString nsQuoteNode::Text() {
   const StyleOwnedStr& quote =
       mType == StyleContentType::OpenQuote ? pair.opening : pair.closing;
   result.Assign(NS_ConvertUTF8toUTF16(quote.AsString()));
->>>>>>> upstream-releases
   return result;
 }
 

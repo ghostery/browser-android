@@ -52,13 +52,7 @@ impl FromMeta for IdentList {
             if let NestedMeta::Meta(Meta::Word(ref ident)) = *nmi {
                 idents.push(ident.clone());
             } else {
-<<<<<<< HEAD
-                return Err(Error::unexpected_type("non-word"));
-||||||| merged common ancestors
-                return Err(Error::unexpected_type("non-word"))
-=======
                 return Err(Error::unexpected_type("non-word").with_span(nmi));
->>>>>>> upstream-releases
             }
         }
 

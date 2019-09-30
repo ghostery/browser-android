@@ -22,13 +22,7 @@ set +x
 
 cd build/build-clang
 # |mach python| sets up a virtualenv for us!
-<<<<<<< HEAD
-../../mach python ./build-clang.py -c clang-7-macosx64.json
-||||||| merged common ancestors
-../../mach python ./build-clang.py -c clang-6-macosx64.json
-=======
 ../../mach python ./build-clang.py -c clang-8-macosx64.json
->>>>>>> upstream-releases
 
 set -x
 

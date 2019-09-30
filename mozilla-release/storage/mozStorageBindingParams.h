@@ -51,21 +51,10 @@ class BindingParams : public mozIStorageBindingParams,
    */
   const mozIStorageBindingParamsArray* getOwner() const;
 
-<<<<<<< HEAD
-  BindingParams(mozIStorageBindingParamsArray *aOwningArray,
-                Statement *aOwningStatement);
-
- protected:
-||||||| merged common ancestors
-  BindingParams(mozIStorageBindingParamsArray *aOwningArray,
-                Statement *aOwningStatement);
-protected:
-=======
   BindingParams(mozIStorageBindingParamsArray* aOwningArray,
                 Statement* aOwningStatement);
 
  protected:
->>>>>>> upstream-releases
   virtual ~BindingParams() {}
 
   explicit BindingParams(mozIStorageBindingParamsArray* aOwningArray);
@@ -101,34 +90,13 @@ protected:
  * We support *either* binding by name or binding by index.  Trying to do both
  * results in only binding by name at sqlite3_stmt bind time.
  */
-<<<<<<< HEAD
-class AsyncBindingParams : public BindingParams {
- public:
-  NS_IMETHOD BindByName(const nsACString &aName, nsIVariant *aValue) override;
-  NS_IMETHOD BindByIndex(uint32_t aIndex, nsIVariant *aValue) override;
-||||||| merged common ancestors
-class AsyncBindingParams : public BindingParams
-{
-public:
-  NS_IMETHOD BindByName(const nsACString & aName,
-                        nsIVariant *aValue) override;
-  NS_IMETHOD BindByIndex(uint32_t aIndex, nsIVariant *aValue) override;
-=======
 class AsyncBindingParams : public BindingParams {
  public:
   NS_IMETHOD BindByName(const nsACString& aName, nsIVariant* aValue) override;
   NS_IMETHOD BindByIndex(uint32_t aIndex, nsIVariant* aValue) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<mozIStorageError> bind(
-      sqlite3_stmt *aStatement) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<mozIStorageError> bind(sqlite3_stmt * aStatement) override;
-=======
   virtual already_AddRefed<mozIStorageError> bind(
       sqlite3_stmt* aStatement) override;
->>>>>>> upstream-releases
 
   explicit AsyncBindingParams(mozIStorageBindingParamsArray* aOwningArray);
   virtual ~AsyncBindingParams() {}

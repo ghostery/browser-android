@@ -103,25 +103,9 @@ nsresult ReadStream(const nsCOMPtr<nsIInputStream>& stream,
     return rv;
   }
 
-<<<<<<< HEAD
-  // Cap the maximum accepted size of signature-related files at 1MB (which is
-  // still crazily huge) to avoid OOM. The uncompressed length of an entry can
-  // be hundreds of times larger than the compressed version, especially if
-  // someone has speifically crafted the entry to cause OOM or to consume
-  // massive amounts of disk space.
-  static const uint32_t MAX_LENGTH = 1024 * 1024;
-||||||| merged common ancestors
-  // Cap the maximum accepted size of signature-related files at 1MB (which is
-  // still crazily huge) to avoid OOM. The uncompressed length of an entry can be
-  // hundreds of times larger than the compressed version, especially if
-  // someone has speifically crafted the entry to cause OOM or to consume
-  // massive amounts of disk space.
-  static const uint32_t MAX_LENGTH = 1024 * 1024;
-=======
   // Cap the maximum accepted size of signature-related files at 8MB (which
   // should be much larger than necessary for our purposes) to avoid OOM.
   static const uint32_t MAX_LENGTH = 8 * 1000 * 1000;
->>>>>>> upstream-releases
   if (length > MAX_LENGTH) {
     return NS_ERROR_FILE_TOO_BIG;
   }
@@ -1382,19 +1366,7 @@ nsNSSCertificateDB::OpenSignedAppFileAsync(
       Preferences::GetInt("security.signed_app_signatures.policy",
                           static_cast<int32_t>(sDefaultSignaturePolicy));
   SignaturePolicy policy(policyInt);
-<<<<<<< HEAD
-  RefPtr<OpenSignedAppFileTask> task(
-      new OpenSignedAppFileTask(aTrustedRoot, aJarFile, policy, aCallback));
-  return task->Dispatch("SignedJAR");
-||||||| merged common ancestors
-  RefPtr<OpenSignedAppFileTask> task(new OpenSignedAppFileTask(aTrustedRoot,
-                                                               aJarFile,
-                                                               policy,
-                                                               aCallback));
-  return task->Dispatch("SignedJAR");
-=======
   RefPtr<OpenSignedAppFileTask> task(
       new OpenSignedAppFileTask(aTrustedRoot, aJarFile, policy, aCallback));
   return task->Dispatch();
->>>>>>> upstream-releases
 }

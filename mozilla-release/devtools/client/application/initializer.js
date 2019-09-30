@@ -60,21 +60,9 @@ window.Application = {
         return toolbox.selectTool(toolId);
       },
     };
-<<<<<<< HEAD
-    this.toolbox.target.activeTab.on("workerListChanged", this.updateWorkers);
-    this.client.mainRoot.on("serviceWorkerRegistrationListChanged", this.updateWorkers);
-    this.client.addListener("registration-changed", this.updateWorkers);
-    this.client.mainRoot.on("processListChanged", this.updateWorkers);
-||||||| merged common ancestors
-    this.toolbox.target.activeTab.on("workerListChanged", this.updateWorkers);
-    this.client.addListener("serviceWorkerRegistrationListChanged", this.updateWorkers);
-    this.client.addListener("registration-changed", this.updateWorkers);
-    this.client.addListener("processListChanged", this.updateWorkers);
-=======
 
     this.workersListener = new WorkersListener(this.client.mainRoot);
     this.workersListener.addListener(this.updateWorkers);
->>>>>>> upstream-releases
     this.toolbox.target.on("navigate", this.updateDomain);
     addMultiE10sListener(this.updateCanDebugWorkers);
 
@@ -103,27 +91,11 @@ window.Application = {
     this.actions.updateDomain(this.toolbox.target.url);
   },
 
-<<<<<<< HEAD
-  destroy() {
-    this.toolbox.target.activeTab.off("workerListChanged", this.updateWorkers);
-    this.client.mainRoot.off("serviceWorkerRegistrationListChanged",
-      this.updateWorkers);
-    this.client.removeListener("registration-changed", this.updateWorkers);
-    this.client.mainRoot.off("processListChanged", this.updateWorkers);
-||||||| merged common ancestors
-  destroy() {
-    this.toolbox.target.activeTab.off("workerListChanged", this.updateWorkers);
-    this.client.removeListener("serviceWorkerRegistrationListChanged",
-      this.updateWorkers);
-    this.client.removeListener("registration-changed", this.updateWorkers);
-    this.client.removeListener("processListChanged", this.updateWorkers);
-=======
   updateCanDebugWorkers() {
     // NOTE: this API may change names for this function. See Bug 1531349.
     const canDebugWorkers = !isMultiE10s();
     this.actions.updateCanDebugWorkers(canDebugWorkers);
   },
->>>>>>> upstream-releases
 
   destroy() {
     this.workersListener.removeListener();

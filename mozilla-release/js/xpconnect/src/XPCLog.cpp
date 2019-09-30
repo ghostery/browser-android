@@ -16,19 +16,9 @@
 // this all only works for DEBUG...
 #ifdef DEBUG
 
-<<<<<<< HEAD
-#define SPACE_COUNT 200
-#define LINE_LEN 200
-#define INDENT_FACTOR 2
-||||||| merged common ancestors
-#define SPACE_COUNT     200
-#define LINE_LEN        200
-#define INDENT_FACTOR   2
-=======
 #  define SPACE_COUNT 200
 #  define LINE_LEN 200
 #  define INDENT_FACTOR 2
->>>>>>> upstream-releases
 
 #  define CAN_RUN (g_InitState == 1 || (g_InitState == 0 && Init()))
 

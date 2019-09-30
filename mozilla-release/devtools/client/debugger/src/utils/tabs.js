@@ -2,22 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/tabs.js
-// @flow
-
-import type { Source } from "../types";
-import type { TabList } from "../reducers";
-
-type SourcesList = Source[];
-||||||| merged common ancestors
-=======
 // @flow
 
 import type { Source } from "../types";
 import type { TabList } from "../reducers/tabs";
 
 type SourcesList = Source[];
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/tabs.js
 /*
  * Finds the hidden tabs by comparing the tabs' top offset.
  * hidden tabs will have a great top offset.
@@ -28,20 +18,11 @@ type SourcesList = Source[];
  * @returns Immutable.list
  */
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/tabs.js
-export function getHiddenTabs(
-  sourceTabs: SourcesList,
-  sourceTabEls: Array<any>
-) {
-  sourceTabEls = [].slice.call(sourceTabEls);
-||||||| merged common ancestors
-=======
 export function getHiddenTabs(
   sourceTabs: SourcesList,
   sourceTabEls: Array<any>
 ): SourcesList {
   sourceTabEls = [].slice.call(sourceTabEls);
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/tabs.js
   function getTopOffset() {
     const topOffsets = sourceTabEls.map(t => t.getBoundingClientRect().top);
     return Math.min(...topOffsets);
@@ -60,13 +41,7 @@ export function getHiddenTabs(
   });
 }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/tabs.js
-export function getFramework(tabs: TabList[], url: string) {
-||||||| merged common ancestors
-function getFramework(tabs, url) {
-=======
 export function getFramework(tabs: TabList, url: string) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/tabs.js
   const tab = tabs.find(t => t.url === url);
 
   if (tab) {

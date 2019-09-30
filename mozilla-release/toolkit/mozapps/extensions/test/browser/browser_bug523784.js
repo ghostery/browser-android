@@ -9,25 +9,6 @@ const URI_BLOCKLIST_DIALOG =
 // "Cancel" button is correctly renamed (to "Restart Later").
 var args = {
   restart: false,
-<<<<<<< HEAD
-  list: [{
-    name: "Bug 523784 softblocked addon",
-    version: "1",
-    icon: "chrome://global/skin/plugins/pluginGeneric.svg",
-    disable: false,
-    blocked: false,
-    url: "http://example.com/bug523784_1",
-  }],
-||||||| merged common ancestors
-  list: [{
-    name: "Bug 523784 softblocked addon",
-    version: "1",
-    icon: "chrome://mozapps/skin/plugins/pluginGeneric.svg",
-    disable: false,
-    blocked: false,
-    url: "http://example.com/bug523784_1",
-  }],
-=======
   list: [
     {
       name: "Bug 523784 softblocked addon",
@@ -38,7 +19,6 @@ var args = {
       url: "http://example.com/bug523784_1",
     },
   ],
->>>>>>> upstream-releases
 };
 
 function test() {

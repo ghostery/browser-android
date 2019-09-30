@@ -56,45 +56,6 @@ template void WSRunObject::NextVisibleNode(const EditorRawDOMPoint& aPoint,
                                            nsCOMPtr<nsINode>* outVisNode,
                                            int32_t* outVisOffset,
                                            WSType* outType) const;
-<<<<<<< HEAD
-template already_AddRefed<Element> WSRunObject::InsertBreak(
-    Selection& aSelection, const EditorDOMPoint& aPointToInsert,
-    nsIEditor::EDirection aSelect);
-template already_AddRefed<Element> WSRunObject::InsertBreak(
-    Selection& aSelection, const EditorRawDOMPoint& aPointToInsert,
-    nsIEditor::EDirection aSelect);
-template nsresult WSRunObject::InsertText(
-    nsIDocument& aDocument, const nsAString& aStringToInsert,
-    const EditorDOMPoint& aPointToInsert,
-    EditorRawDOMPoint* aPointAfterInsertedString);
-template nsresult WSRunObject::InsertText(
-    nsIDocument& aDocument, const nsAString& aStringToInsert,
-    const EditorRawDOMPoint& aPointToInsert,
-    EditorRawDOMPoint* aPointAfterInsertedString);
-
-template <typename PT, typename CT>
-||||||| merged common ancestors
-template already_AddRefed<Element>
-WSRunObject::InsertBreak(Selection& aSelection,
-                         const EditorDOMPoint& aPointToInsert,
-                         nsIEditor::EDirection aSelect);
-template already_AddRefed<Element>
-WSRunObject::InsertBreak(Selection& aSelection,
-                         const EditorRawDOMPoint& aPointToInsert,
-                         nsIEditor::EDirection aSelect);
-template nsresult
-WSRunObject::InsertText(nsIDocument& aDocument,
-                        const nsAString& aStringToInsert,
-                        const EditorDOMPoint& aPointToInsert,
-                        EditorRawDOMPoint* aPointAfterInsertedString);
-template nsresult
-WSRunObject::InsertText(nsIDocument& aDocument,
-                        const nsAString& aStringToInsert,
-                        const EditorRawDOMPoint& aPointToInsert,
-                        EditorRawDOMPoint* aPointAfterInsertedString);
-
-template<typename PT, typename CT>
-=======
 template void WSRunObject::GetASCIIWhitespacesBounds(
     int16_t aDir, const EditorDOMPoint& aPoint, dom::Text** outStartNode,
     int32_t* outStartOffset, dom::Text** outEndNode, int32_t* outEndOffset);
@@ -103,45 +64,7 @@ template void WSRunObject::GetASCIIWhitespacesBounds(
     int32_t* outStartOffset, dom::Text** outEndNode, int32_t* outEndOffset);
 
 template <typename PT, typename CT>
->>>>>>> upstream-releases
 WSRunObject::WSRunObject(HTMLEditor* aHTMLEditor,
-<<<<<<< HEAD
-                         const EditorDOMPointBase<PT, CT>& aPoint)
-    : WSRunObject(aHTMLEditor, aPoint.GetContainer(), aPoint.Offset()) {}
-
-WSRunObject::WSRunObject(HTMLEditor* aHTMLEditor, nsINode* aNode,
-                         int32_t aOffset)
-    : mNode(aNode),
-      mOffset(aOffset),
-      mPRE(false),
-      mStartOffset(0),
-      mEndOffset(0),
-      mFirstNBSPOffset(0),
-      mLastNBSPOffset(0),
-      mStartRun(nullptr),
-      mEndRun(nullptr),
-      mHTMLEditor(aHTMLEditor) {
-||||||| merged common ancestors
-                         const EditorDOMPointBase<PT, CT>& aPoint)
-  : WSRunObject(aHTMLEditor, aPoint.GetContainer(), aPoint.Offset())
-{
-}
-
-WSRunObject::WSRunObject(HTMLEditor* aHTMLEditor,
-                         nsINode* aNode,
-                         int32_t aOffset)
-  : mNode(aNode)
-  , mOffset(aOffset)
-  , mPRE(false)
-  , mStartOffset(0)
-  , mEndOffset(0)
-  , mFirstNBSPOffset(0)
-  , mLastNBSPOffset(0)
-  , mStartRun(nullptr)
-  , mEndRun(nullptr)
-  , mHTMLEditor(aHTMLEditor)
-{
-=======
                          const EditorDOMPointBase<PT, CT>& aScanStartPoint,
                          const EditorDOMPointBase<PT, CT>& aScanEndPoint)
     : mScanStartPoint(aScanStartPoint),
@@ -158,7 +81,6 @@ WSRunObject::WSRunObject(HTMLEditor* aHTMLEditor,
   MOZ_ASSERT(
       nsContentUtils::ComparePoints(aScanStartPoint.ToRawRangeBoundary(),
                                     aScanEndPoint.ToRawRangeBoundary()) <= 0);
->>>>>>> upstream-releases
   GetWSNodes();
   GetRuns();
 }
@@ -246,23 +168,9 @@ nsresult WSRunObject::PrepareToSplitAcrossBlocks(HTMLEditor* aHTMLEditor,
   return wsObj.PrepareToSplitAcrossBlocksPriv();
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-already_AddRefed<Element> WSRunObject::InsertBreak(
-    Selection& aSelection, const EditorDOMPointBase<PT, CT>& aPointToInsert,
-    nsIEditor::EDirection aSelect) {
-||||||| merged common ancestors
-template<typename PT, typename CT>
-already_AddRefed<Element>
-WSRunObject::InsertBreak(Selection& aSelection,
-                         const EditorDOMPointBase<PT, CT>& aPointToInsert,
-                         nsIEditor::EDirection aSelect)
-{
-=======
 already_AddRefed<Element> WSRunObject::InsertBreak(
     Selection& aSelection, const EditorDOMPoint& aPointToInsert,
     nsIEditor::EDirection aSelect) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aPointToInsert.IsSet())) {
     return nullptr;
   }
@@ -328,41 +236,18 @@ already_AddRefed<Element> WSRunObject::InsertBreak(
   }
 
   RefPtr<Element> newBrElement =
-<<<<<<< HEAD
-      mHTMLEditor->InsertBrElementWithTransaction(pointToInsert, aSelect);
-||||||| merged common ancestors
-    mHTMLEditor->InsertBrElementWithTransaction(aSelection, pointToInsert,
-                                                aSelect);
-=======
       MOZ_KnownLive(mHTMLEditor)
           ->InsertBrElementWithTransaction(pointToInsert, aSelect);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!newBrElement)) {
     return nullptr;
   }
   return newBrElement.forget();
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-nsresult WSRunObject::InsertText(
-    nsIDocument& aDocument, const nsAString& aStringToInsert,
-    const EditorDOMPointBase<PT, CT>& aPointToInsert,
-    EditorRawDOMPoint* aPointAfterInsertedString) {
-||||||| merged common ancestors
-template<typename PT, typename CT>
-nsresult
-WSRunObject::InsertText(nsIDocument& aDocument,
-                        const nsAString& aStringToInsert,
-                        const EditorDOMPointBase<PT, CT>& aPointToInsert,
-                        EditorRawDOMPoint* aPointAfterInsertedString)
-{
-=======
 nsresult WSRunObject::InsertText(Document& aDocument,
                                  const nsAString& aStringToInsert,
                                  EditorRawDOMPoint* aPointAfterInsertedString)
     MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
->>>>>>> upstream-releases
   // MOOSE: for now, we always assume non-PRE formatting.  Fix this later.
   // meanwhile, the pre case is handled in WillInsertText in
   // HTMLEditRules.cpp
@@ -371,21 +256,6 @@ nsresult WSRunObject::InsertText(Document& aDocument,
   // is very slow.  Will need to replace edit rules impl with a more efficient
   // text sink here that does the minimal amount of searching/replacing/copying
 
-<<<<<<< HEAD
-  if (NS_WARN_IF(!aPointToInsert.IsSet())) {
-    return NS_ERROR_INVALID_ARG;
-  }
-  MOZ_ASSERT(aPointToInsert.IsSet());
-
-||||||| merged common ancestors
-  if (NS_WARN_IF(!aPointToInsert.IsSet())) {
-    return NS_ERROR_INVALID_ARG;
-  }
-  MOZ_ASSERT(aPointToInsert.IsSet());
-
-
-=======
->>>>>>> upstream-releases
   if (aStringToInsert.IsEmpty()) {
     if (aPointAfterInsertedString) {
       *aPointAfterInsertedString = mScanStartPoint;
@@ -501,16 +371,6 @@ nsresult WSRunObject::InsertText(Document& aDocument,
     }
   }
 
-<<<<<<< HEAD
-  // Ready, aim, fire!
-  nsresult rv = mHTMLEditor->InsertTextWithTransaction(
-      aDocument, theString, pointToInsert, aPointAfterInsertedString);
-||||||| merged common ancestors
-  // Ready, aim, fire!
-  nsresult rv =
-    mHTMLEditor->InsertTextWithTransaction(aDocument, theString, pointToInsert,
-                                           aPointAfterInsertedString);
-=======
   // XXX If the point is not editable, InsertTextWithTransaction() returns
   //     error, but we keep handling it.  But I think that it wastes the
   //     runtime cost.  So, perhaps, we should return error code which couldn't
@@ -520,7 +380,6 @@ nsresult WSRunObject::InsertText(Document& aDocument,
       MOZ_KnownLive(mHTMLEditor)
           ->InsertTextWithTransaction(aDocument, theString, pointToInsert,
                                       aPointAfterInsertedString);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     // XXX Temporarily, set new insertion point to the original point.
     if (aPointAfterInsertedString) {
@@ -531,33 +390,15 @@ nsresult WSRunObject::InsertText(Document& aDocument,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult WSRunObject::DeleteWSBackward() {
-  WSPoint point = GetPreviousCharPoint(Point());
-||||||| merged common ancestors
-nsresult
-WSRunObject::DeleteWSBackward()
-{
-  WSPoint point = GetPreviousCharPoint(Point());
-=======
 nsresult WSRunObject::DeleteWSBackward() {
   WSPoint point = GetPreviousCharPoint(mScanStartPoint);
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(point.mTextNode, NS_OK);  // nothing to delete
 
   // Easy case, preformatted ws.
   if (mPRE && (nsCRT::IsAsciiSpace(point.mChar) || point.mChar == kNBSP)) {
     nsresult rv =
-<<<<<<< HEAD
-        DeleteRange(EditorRawDOMPoint(point.mTextNode, point.mOffset),
-                    EditorRawDOMPoint(point.mTextNode, point.mOffset + 1));
-||||||| merged common ancestors
-      DeleteRange(EditorRawDOMPoint(point.mTextNode, point.mOffset),
-                  EditorRawDOMPoint(point.mTextNode, point.mOffset + 1));
-=======
         DeleteRange(EditorDOMPoint(point.mTextNode, point.mOffset),
                     EditorDOMPoint(point.mTextNode, point.mOffset + 1));
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -577,20 +418,9 @@ nsresult WSRunObject::DeleteWSBackward() {
     // adjust surrounding ws
     nsCOMPtr<nsINode> startNode = startNodeText.get();
     nsCOMPtr<nsINode> endNode = endNodeText.get();
-<<<<<<< HEAD
-    nsresult rv = WSRunObject::PrepareToDeleteRange(
-        mHTMLEditor, address_of(startNode), &startOffset, address_of(endNode),
-        &endOffset);
-||||||| merged common ancestors
-    nsresult rv =
-      WSRunObject::PrepareToDeleteRange(mHTMLEditor,
-                                        address_of(startNode), &startOffset,
-                                        address_of(endNode), &endOffset);
-=======
     nsresult rv = WSRunObject::PrepareToDeleteRange(
         MOZ_KnownLive(mHTMLEditor), address_of(startNode), &startOffset,
         address_of(endNode), &endOffset);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
 
     // finally, delete that ws
@@ -607,20 +437,9 @@ nsresult WSRunObject::DeleteWSBackward() {
     // adjust surrounding ws
     int32_t startOffset = point.mOffset;
     int32_t endOffset = point.mOffset + 1;
-<<<<<<< HEAD
-    nsresult rv = WSRunObject::PrepareToDeleteRange(
-        mHTMLEditor, address_of(node), &startOffset, address_of(node),
-        &endOffset);
-||||||| merged common ancestors
-    nsresult rv =
-      WSRunObject::PrepareToDeleteRange(mHTMLEditor,
-                                        address_of(node), &startOffset,
-                                        address_of(node), &endOffset);
-=======
     nsresult rv = WSRunObject::PrepareToDeleteRange(
         MOZ_KnownLive(mHTMLEditor), address_of(node), &startOffset,
         address_of(node), &endOffset);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
 
     // finally, delete that ws
@@ -635,35 +454,15 @@ nsresult WSRunObject::DeleteWSBackward() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult WSRunObject::DeleteWSForward() {
-  WSPoint point = GetNextCharPoint(Point());
-  NS_ENSURE_TRUE(point.mTextNode, NS_OK);  // nothing to delete
-||||||| merged common ancestors
-nsresult
-WSRunObject::DeleteWSForward()
-{
-  WSPoint point = GetNextCharPoint(Point());
-  NS_ENSURE_TRUE(point.mTextNode, NS_OK); // nothing to delete
-=======
 nsresult WSRunObject::DeleteWSForward() {
   WSPoint point = GetNextCharPoint(mScanStartPoint);
   NS_ENSURE_TRUE(point.mTextNode, NS_OK);  // nothing to delete
->>>>>>> upstream-releases
 
   // Easy case, preformatted ws.
   if (mPRE && (nsCRT::IsAsciiSpace(point.mChar) || point.mChar == kNBSP)) {
     nsresult rv =
-<<<<<<< HEAD
-        DeleteRange(EditorRawDOMPoint(point.mTextNode, point.mOffset),
-                    EditorRawDOMPoint(point.mTextNode, point.mOffset + 1));
-||||||| merged common ancestors
-      DeleteRange(EditorRawDOMPoint(point.mTextNode, point.mOffset),
-                  EditorRawDOMPoint(point.mTextNode, point.mOffset + 1));
-=======
         DeleteRange(EditorDOMPoint(point.mTextNode, point.mOffset),
                     EditorDOMPoint(point.mTextNode, point.mOffset + 1));
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -682,20 +481,9 @@ nsresult WSRunObject::DeleteWSForward() {
 
     // Adjust surrounding ws
     nsCOMPtr<nsINode> startNode(startNodeText), endNode(endNodeText);
-<<<<<<< HEAD
-    nsresult rv = WSRunObject::PrepareToDeleteRange(
-        mHTMLEditor, address_of(startNode), &startOffset, address_of(endNode),
-        &endOffset);
-||||||| merged common ancestors
-    nsresult rv =
-      WSRunObject::PrepareToDeleteRange(mHTMLEditor,
-                                        address_of(startNode), &startOffset,
-                                        address_of(endNode), &endOffset);
-=======
     nsresult rv = WSRunObject::PrepareToDeleteRange(
         MOZ_KnownLive(mHTMLEditor), address_of(startNode), &startOffset,
         address_of(endNode), &endOffset);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
 
     // Finally, delete that ws
@@ -711,23 +499,10 @@ nsresult WSRunObject::DeleteWSForward() {
     nsCOMPtr<nsINode> node(point.mTextNode);
     // Adjust surrounding ws
     int32_t startOffset = point.mOffset;
-<<<<<<< HEAD
-    int32_t endOffset = point.mOffset + 1;
-    nsresult rv = WSRunObject::PrepareToDeleteRange(
-        mHTMLEditor, address_of(node), &startOffset, address_of(node),
-        &endOffset);
-||||||| merged common ancestors
-    int32_t endOffset = point.mOffset+1;
-    nsresult rv =
-      WSRunObject::PrepareToDeleteRange(mHTMLEditor,
-                                        address_of(node), &startOffset,
-                                        address_of(node), &endOffset);
-=======
     int32_t endOffset = point.mOffset + 1;
     nsresult rv = WSRunObject::PrepareToDeleteRange(
         MOZ_KnownLive(mHTMLEditor), address_of(node), &startOffset,
         address_of(node), &endOffset);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
 
     // Finally, delete that ws
@@ -860,17 +635,6 @@ nsresult WSRunObject::AdjustWhitespace() {
 //   protected methods
 //--------------------------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsINode* WSRunObject::GetWSBoundingParent() {
-  NS_ENSURE_TRUE(mNode, nullptr);
-  OwningNonNull<nsINode> wsBoundingParent = *mNode;
-||||||| merged common ancestors
-nsINode*
-WSRunObject::GetWSBoundingParent()
-{
-  NS_ENSURE_TRUE(mNode, nullptr);
-  OwningNonNull<nsINode> wsBoundingParent = *mNode;
-=======
 nsINode* WSRunObject::GetWSBoundingParent() {
   if (NS_WARN_IF(!mScanStartPoint.IsSet())) {
     return nullptr;
@@ -879,7 +643,6 @@ nsINode* WSRunObject::GetWSBoundingParent() {
   //     it's not collapsed only when inserting composition string so that
   //     it's possible but shouldn't occur actually.
   OwningNonNull<nsINode> wsBoundingParent = *mScanStartPoint.GetContainer();
->>>>>>> upstream-releases
   while (!IsBlockNode(wsBoundingParent)) {
     nsCOMPtr<nsINode> parent = wsBoundingParent->GetParentNode();
     if (!parent || !mHTMLEditor->IsEditable(parent)) {
@@ -943,15 +706,7 @@ nsresult WSRunObject::GetWSNodes() {
       } else if (priorNode->IsText() && priorNode->IsEditable()) {
         RefPtr<Text> textNode = priorNode->GetAsText();
         mNodeArray.InsertElementAt(0, textNode);
-<<<<<<< HEAD
-        const nsTextFragment* textFrag;
-        if (!textNode || !(textFrag = textNode->GetText())) {
-||||||| merged common ancestors
-        const nsTextFragment *textFrag;
-        if (!textNode || !(textFrag = textNode->GetText())) {
-=======
         if (!textNode) {
->>>>>>> upstream-releases
           return NS_ERROR_NULL_POINTER;
         }
         const nsTextFragment* textFrag = &textNode->TextFragment();
@@ -1013,24 +768,10 @@ nsresult WSRunObject::GetWSNodes() {
   // then look ahead to find following ws nodes
   if (Text* textNode = mScanEndPoint.GetContainerAsText()) {
     // don't need to put it on list. it already is from code above
-<<<<<<< HEAD
-    const nsTextFragment* textFrag = textNode->GetText();
-
-    uint32_t len = textNode->TextLength();
-    if (uint16_t(mOffset) < len) {
-      for (uint32_t pos = mOffset; pos < len; pos++) {
-||||||| merged common ancestors
-    const nsTextFragment *textFrag = textNode->GetText();
-
-    uint32_t len = textNode->TextLength();
-    if (uint16_t(mOffset)<len) {
-      for (uint32_t pos = mOffset; pos < len; pos++) {
-=======
     const nsTextFragment* textFrag = &textNode->TextFragment();
     if (!mScanEndPoint.IsEndOfContainer()) {
       for (uint32_t i = mScanEndPoint.Offset(); i < textNode->TextLength();
            i++) {
->>>>>>> upstream-releases
         // sanity bounds check the char position.  bug 136165
         if (i >= textFrag->GetLength()) {
           MOZ_ASSERT_UNREACHABLE("looking beyond end of text fragment");
@@ -1072,15 +813,7 @@ nsresult WSRunObject::GetWSNodes() {
       } else if (nextNode->IsText() && nextNode->IsEditable()) {
         RefPtr<Text> textNode = nextNode->GetAsText();
         mNodeArray.AppendElement(textNode);
-<<<<<<< HEAD
-        const nsTextFragment* textFrag;
-        if (!textNode || !(textFrag = textNode->GetText())) {
-||||||| merged common ancestors
-        const nsTextFragment *textFrag;
-        if (!textNode || !(textFrag = textNode->GetText())) {
-=======
         if (!textNode) {
->>>>>>> upstream-releases
           return NS_ERROR_NULL_POINTER;
         }
         const nsTextFragment* textFrag = &textNode->TextFragment();
@@ -1146,17 +879,6 @@ nsresult WSRunObject::GetWSNodes() {
 void WSRunObject::GetRuns() {
   ClearRuns();
 
-<<<<<<< HEAD
-  // handle some easy cases first
-  mPRE = EditorBase::IsPreformatted(mNode);
-  // if it's preformatedd, or if we are surrounded by text or special, it's all
-  // one big normal ws run
-||||||| merged common ancestors
-  // handle some easy cases first
-  mPRE = EditorBase::IsPreformatted(mNode);
-  // if it's preformatedd, or if we are surrounded by text or special, it's all one
-  // big normal ws run
-=======
   // Handle preformatted case first since it's simple.  Note that if end of
   // the scan range isn't in preformatted element, we need to check only the
   // style at mScanStartPoint since the range would be replaced and the start
@@ -1164,7 +886,6 @@ void WSRunObject::GetRuns() {
   mPRE = EditorBase::IsPreformatted(mScanStartPoint.GetContainer());
   // if it's preformatedd, or if we are surrounded by text or special, it's all
   // one big normal ws run
->>>>>>> upstream-releases
   if (mPRE ||
       ((mStartReason == WSType::text || mStartReason == WSType::special) &&
        (mEndReason == WSType::text || mEndReason == WSType::special ||
@@ -1505,16 +1226,8 @@ nsresult WSRunObject::PrepareToDeleteRangePriv(WSRunObject* aEndObject) {
 
   // trim after run of any leading ws
   if (afterRun && (afterRun->mType & WSType::leadingWS)) {
-<<<<<<< HEAD
-    nsresult rv =
-        aEndObject->DeleteRange(aEndObject->Point(), afterRun->EndPoint());
-||||||| merged common ancestors
-    nsresult rv =
-      aEndObject->DeleteRange(aEndObject->Point(), afterRun->EndPoint());
-=======
     nsresult rv = aEndObject->DeleteRange(aEndObject->mScanStartPoint,
                                           afterRun->EndPoint());
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -1522,24 +1235,11 @@ nsresult WSRunObject::PrepareToDeleteRangePriv(WSRunObject* aEndObject) {
   // adjust normal ws in afterRun if needed
   if (afterRun && afterRun->mType == WSType::normalWS && !aEndObject->mPRE) {
     if ((beforeRun && (beforeRun->mType & WSType::leadingWS)) ||
-<<<<<<< HEAD
-        (!beforeRun &&
-         ((mStartReason & WSType::block) || mStartReason == WSType::br))) {
-      // make sure leading char of following ws is an nbsp, so that it will show
-      // up
-      WSPoint point = aEndObject->GetNextCharPoint(aEndObject->Point());
-||||||| merged common ancestors
-        (!beforeRun && ((mStartReason & WSType::block) ||
-                        mStartReason == WSType::br))) {
-      // make sure leading char of following ws is an nbsp, so that it will show up
-      WSPoint point = aEndObject->GetNextCharPoint(aEndObject->Point());
-=======
         (!beforeRun &&
          ((mStartReason & WSType::block) || mStartReason == WSType::br))) {
       // make sure leading char of following ws is an nbsp, so that it will show
       // up
       WSPoint point = aEndObject->GetNextCharPoint(aEndObject->mScanStartPoint);
->>>>>>> upstream-releases
       if (point.mTextNode && nsCRT::IsAsciiSpace(point.mChar)) {
         nsresult rv =
             aEndObject->InsertNBSPAndRemoveFollowingASCIIWhitespaces(point);
@@ -1559,18 +1259,9 @@ nsresult WSRunObject::PrepareToDeleteRangePriv(WSRunObject* aEndObject) {
     if ((afterRun && (afterRun->mType & WSType::trailingWS)) ||
         (afterRun && afterRun->mType == WSType::normalWS) ||
         (!afterRun && (aEndObject->mEndReason & WSType::block))) {
-<<<<<<< HEAD
-      // make sure trailing char of starting ws is an nbsp, so that it will show
-      // up
-      WSPoint point = GetPreviousCharPoint(Point());
-||||||| merged common ancestors
-      // make sure trailing char of starting ws is an nbsp, so that it will show up
-      WSPoint point = GetPreviousCharPoint(Point());
-=======
       // make sure trailing char of starting ws is an nbsp, so that it will show
       // up
       WSPoint point = GetPreviousCharPoint(mScanStartPoint);
->>>>>>> upstream-releases
       if (point.mTextNode && nsCRT::IsAsciiSpace(point.mChar)) {
         RefPtr<Text> wsStartNode, wsEndNode;
         int32_t wsStartOffset, wsEndOffset;
@@ -1600,18 +1291,9 @@ nsresult WSRunObject::PrepareToSplitAcrossBlocksPriv() {
 
   // adjust normal ws in afterRun if needed
   if (afterRun && afterRun->mType == WSType::normalWS) {
-<<<<<<< HEAD
-    // make sure leading char of following ws is an nbsp, so that it will show
-    // up
-    WSPoint point = GetNextCharPoint(Point());
-||||||| merged common ancestors
-    // make sure leading char of following ws is an nbsp, so that it will show up
-    WSPoint point = GetNextCharPoint(Point());
-=======
     // make sure leading char of following ws is an nbsp, so that it will show
     // up
     WSPoint point = GetNextCharPoint(mScanStartPoint);
->>>>>>> upstream-releases
     if (point.mTextNode && nsCRT::IsAsciiSpace(point.mChar)) {
       nsresult rv = InsertNBSPAndRemoveFollowingASCIIWhitespaces(point);
       if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -1622,18 +1304,9 @@ nsresult WSRunObject::PrepareToSplitAcrossBlocksPriv() {
 
   // adjust normal ws in beforeRun if needed
   if (beforeRun && beforeRun->mType == WSType::normalWS) {
-<<<<<<< HEAD
-    // make sure trailing char of starting ws is an nbsp, so that it will show
-    // up
-    WSPoint point = GetPreviousCharPoint(Point());
-||||||| merged common ancestors
-    // make sure trailing char of starting ws is an nbsp, so that it will show up
-    WSPoint point = GetPreviousCharPoint(Point());
-=======
     // make sure trailing char of starting ws is an nbsp, so that it will show
     // up
     WSPoint point = GetPreviousCharPoint(mScanStartPoint);
->>>>>>> upstream-releases
     if (point.mTextNode && nsCRT::IsAsciiSpace(point.mChar)) {
       RefPtr<Text> wsStartNode, wsEndNode;
       int32_t wsStartOffset, wsEndOffset;
@@ -1651,25 +1324,9 @@ nsresult WSRunObject::PrepareToSplitAcrossBlocksPriv() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <typename PT1, typename CT1, typename PT2, typename CT2>
-nsresult WSRunObject::DeleteRange(
-    const EditorDOMPointBase<PT1, CT1>& aStartPoint,
-    const EditorDOMPointBase<PT2, CT2>& aEndPoint) {
-  if (NS_WARN_IF(!aStartPoint.IsSet()) || NS_WARN_IF(!aEndPoint.IsSet())) {
-||||||| merged common ancestors
-template<typename PT1, typename CT1, typename PT2, typename CT2>
-nsresult
-WSRunObject::DeleteRange(const EditorDOMPointBase<PT1, CT1>& aStartPoint,
-                         const EditorDOMPointBase<PT2, CT2>& aEndPoint)
-{
-  if (NS_WARN_IF(!aStartPoint.IsSet()) ||
-      NS_WARN_IF(!aEndPoint.IsSet())) {
-=======
 nsresult WSRunObject::DeleteRange(const EditorDOMPoint& aStartPoint,
                                   const EditorDOMPoint& aEndPoint) {
   if (NS_WARN_IF(!aStartPoint.IsSet()) || NS_WARN_IF(!aEndPoint.IsSet())) {
->>>>>>> upstream-releases
     return NS_ERROR_INVALID_ARG;
   }
   MOZ_ASSERT(aStartPoint.IsSetAndValid());
@@ -1690,17 +1347,8 @@ nsresult WSRunObject::DeleteRange(const EditorDOMPoint& aStartPoint,
       aStartPoint.IsInTextNode()) {
     RefPtr<Text> textNode = aStartPoint.GetContainerAsText();
     return htmlEditor->DeleteTextWithTransaction(
-<<<<<<< HEAD
-        *aStartPoint.GetContainerAsText(), aStartPoint.Offset(),
-        aEndPoint.Offset() - aStartPoint.Offset());
-||||||| merged common ancestors
-                         *aStartPoint.GetContainerAsText(),
-                         aStartPoint.Offset(),
-                         aEndPoint.Offset() - aStartPoint.Offset());
-=======
         *textNode, aStartPoint.Offset(),
         aEndPoint.Offset() - aStartPoint.Offset());
->>>>>>> upstream-releases
   }
 
   RefPtr<nsRange> range;
@@ -1746,13 +1394,7 @@ nsresult WSRunObject::DeleteRange(const EditorDOMPoint& aStartPoint,
       }
       bool nodeBefore, nodeAfter;
       nsresult rv =
-<<<<<<< HEAD
-          nsRange::CompareNodeToRange(node, range, &nodeBefore, &nodeAfter);
-||||||| merged common ancestors
-        nsRange::CompareNodeToRange(node, range, &nodeBefore, &nodeAfter);
-=======
           RangeUtils::CompareNodeToRange(node, range, &nodeBefore, &nodeAfter);
->>>>>>> upstream-releases
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -1882,19 +1524,9 @@ nsresult WSRunObject::InsertNBSPAndRemoveFollowingASCIIWhitespaces(
 
   // First, insert an NBSP.
   AutoTransactionsConserveSelection dontChangeMySelection(*htmlEditor);
-<<<<<<< HEAD
-  nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
-      nsDependentSubstring(&kNBSP, 1), *aPoint.mTextNode, aPoint.mOffset, true);
-||||||| merged common ancestors
-  nsresult rv =
-    htmlEditor->InsertTextIntoTextNodeWithTransaction(
-                  nsDependentSubstring(&kNBSP, 1),
-                  *aPoint.mTextNode, aPoint.mOffset, true);
-=======
   nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
       nsDependentSubstring(&kNBSP, 1), MOZ_KnownLive(*aPoint.mTextNode),
       aPoint.mOffset, true);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -1931,25 +1563,6 @@ nsresult WSRunObject::InsertNBSPAndRemoveFollowingASCIIWhitespaces(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void WSRunObject::GetASCIIWhitespacesBounds(
-    int16_t aDir, nsINode* aNode, int32_t aOffset, Text** outStartNode,
-    int32_t* outStartOffset, Text** outEndNode, int32_t* outEndOffset) {
-  MOZ_ASSERT(aNode && outStartNode && outStartOffset && outEndNode &&
-             outEndOffset);
-||||||| merged common ancestors
-void
-WSRunObject::GetASCIIWhitespacesBounds(int16_t aDir,
-                                       nsINode* aNode,
-                                       int32_t aOffset,
-                                       Text** outStartNode,
-                                       int32_t* outStartOffset,
-                                       Text** outEndNode,
-                                       int32_t* outEndOffset)
-{
-  MOZ_ASSERT(aNode && outStartNode && outStartOffset && outEndNode &&
-             outEndOffset);
-=======
 template <typename PT, typename CT>
 void WSRunObject::GetASCIIWhitespacesBounds(
     int16_t aDir, const EditorDOMPointBase<PT, CT>& aPoint, Text** outStartNode,
@@ -1959,7 +1572,6 @@ void WSRunObject::GetASCIIWhitespacesBounds(
   MOZ_ASSERT(outStartOffset);
   MOZ_ASSERT(outEndNode);
   MOZ_ASSERT(outEndOffset);
->>>>>>> upstream-releases
 
   RefPtr<Text> startNode, endNode;
   int32_t startOffset = 0, endOffset = 0;
@@ -2014,38 +1626,20 @@ WSRunObject::WSFragment* WSRunObject::FindNearestRun(
   MOZ_ASSERT(aPoint.IsSetAndValid());
 
   for (WSFragment* run = mStartRun; run; run = run->mRight) {
-<<<<<<< HEAD
-    int32_t comp = run->mStartNode ? nsContentUtils::ComparePoints(
-                                         aPoint, run->StartPoint())
-                                   : -1;
-||||||| merged common ancestors
-    int32_t comp = run->mStartNode ?
-      nsContentUtils::ComparePoints(aPoint, run->StartPoint()) : -1;
-=======
     int32_t comp = run->mStartNode ? nsContentUtils::ComparePoints(
                                          aPoint.ToRawRangeBoundary(),
                                          run->StartPoint().ToRawRangeBoundary())
                                    : -1;
->>>>>>> upstream-releases
     if (comp <= 0) {
       // aPoint equals or before start of the run.  Return the run if we're
       // scanning forward, otherwise, nullptr.
       return aForward ? run : nullptr;
     }
 
-<<<<<<< HEAD
-    comp = run->mEndNode
-               ? nsContentUtils::ComparePoints(aPoint, run->EndPoint())
-               : -1;
-||||||| merged common ancestors
-    comp = run->mEndNode ?
-      nsContentUtils::ComparePoints(aPoint, run->EndPoint()) : -1;
-=======
     comp = run->mEndNode ? nsContentUtils::ComparePoints(
                                aPoint.ToRawRangeBoundary(),
                                run->EndPoint().ToRawRangeBoundary())
                          : -1;
->>>>>>> upstream-releases
     if (comp < 0) {
       // If aPoint is in the run, return the run.
       return run;
@@ -2098,16 +1692,8 @@ WSRunObject::WSPoint WSRunObject::GetNextCharPointInternal(
   uint32_t firstNum = 0, curNum = numNodes / 2, lastNum = numNodes;
   while (curNum != lastNum) {
     Text* curNode = mNodeArray[curNum];
-<<<<<<< HEAD
-    int16_t cmp =
-        nsContentUtils::ComparePoints(aPoint, EditorRawDOMPoint(curNode, 0));
-||||||| merged common ancestors
-    int16_t cmp =
-      nsContentUtils::ComparePoints(aPoint, EditorRawDOMPoint(curNode, 0));
-=======
     int16_t cmp = nsContentUtils::ComparePoints(aPoint.ToRawRangeBoundary(),
                                                 RawRangeBoundary(curNode, 0));
->>>>>>> upstream-releases
     if (cmp < 0) {
       lastNum = curNum;
     } else {
@@ -2274,19 +1860,8 @@ nsresult WSRunObject::CheckTrailingNBSPOfRun(WSFragment* aRun) {
       // Now replace nbsp with space.  First, insert a space
       AutoTransactionsConserveSelection dontChangeMySelection(*htmlEditor);
       nsAutoString spaceStr(char16_t(32));
-<<<<<<< HEAD
-      nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
-          spaceStr, *thePoint.mTextNode, thePoint.mOffset, true);
-||||||| merged common ancestors
-      nsresult rv =
-        htmlEditor->InsertTextIntoTextNodeWithTransaction(spaceStr,
-                                                          *thePoint.mTextNode,
-                                                          thePoint.mOffset,
-                                                          true);
-=======
       nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
           spaceStr, MOZ_KnownLive(*thePoint.mTextNode), thePoint.mOffset, true);
->>>>>>> upstream-releases
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -2333,25 +1908,9 @@ nsresult WSRunObject::CheckTrailingNBSPOfRun(WSFragment* aRun) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-nsresult WSRunObject::ReplacePreviousNBSPIfUnncessary(
-    WSFragment* aRun, const EditorDOMPointBase<PT, CT>& aPoint) {
-  if (NS_WARN_IF(!aRun) || NS_WARN_IF(!aPoint.IsSet())) {
-||||||| merged common ancestors
-template<typename PT, typename CT>
-nsresult
-WSRunObject::ReplacePreviousNBSPIfUnncessary(
-               WSFragment* aRun,
-               const EditorDOMPointBase<PT, CT>& aPoint)
-{
-  if (NS_WARN_IF(!aRun) ||
-      NS_WARN_IF(!aPoint.IsSet())) {
-=======
 nsresult WSRunObject::ReplacePreviousNBSPIfUnncessary(
     WSFragment* aRun, const EditorDOMPoint& aPoint) {
   if (NS_WARN_IF(!aRun) || NS_WARN_IF(!aPoint.IsSet())) {
->>>>>>> upstream-releases
     return NS_ERROR_INVALID_ARG;
   }
   MOZ_ASSERT(aPoint.IsSetAndValid());
@@ -2393,18 +1952,8 @@ nsresult WSRunObject::ReplacePreviousNBSPIfUnncessary(
   // First, insert a space before the previous NBSP.
   AutoTransactionsConserveSelection dontChangeMySelection(*htmlEditor);
   nsAutoString spaceStr(char16_t(32));
-<<<<<<< HEAD
-  nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
-      spaceStr, *thePoint.mTextNode, thePoint.mOffset, true);
-||||||| merged common ancestors
-  nsresult rv =
-    htmlEditor->InsertTextIntoTextNodeWithTransaction(spaceStr,
-                                                      *thePoint.mTextNode,
-                                                      thePoint.mOffset, true);
-=======
   nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
       spaceStr, MOZ_KnownLive(*thePoint.mTextNode), thePoint.mOffset, true);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -2450,19 +1999,8 @@ nsresult WSRunObject::CheckLeadingNBSP(WSFragment* aRun, nsINode* aNode,
     // First, insert a space
     AutoTransactionsConserveSelection dontChangeMySelection(*htmlEditor);
     nsAutoString spaceStr(char16_t(32));
-<<<<<<< HEAD
-    nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
-        spaceStr, *thePoint.mTextNode, thePoint.mOffset, true);
-||||||| merged common ancestors
-    nsresult rv =
-      htmlEditor->InsertTextIntoTextNodeWithTransaction(spaceStr,
-                                                        *thePoint.mTextNode,
-                                                        thePoint.mOffset,
-                                                        true);
-=======
     nsresult rv = htmlEditor->InsertTextIntoTextNodeWithTransaction(
         spaceStr, MOZ_KnownLive(*thePoint.mTextNode), thePoint.mOffset, true);
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }

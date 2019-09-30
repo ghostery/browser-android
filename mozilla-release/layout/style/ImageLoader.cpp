@@ -28,29 +28,13 @@ using namespace mozilla::dom;
 namespace mozilla {
 namespace css {
 
-<<<<<<< HEAD
-/* static */ void ImageLoader::Init() {
-||||||| merged common ancestors
-/* static */ void
-ImageLoader::Init()
-{
-=======
 /* static */
 void ImageLoader::Init() {
->>>>>>> upstream-releases
   sImages = new nsClassHashtable<nsUint64HashKey, ImageTableEntry>();
 }
 
-<<<<<<< HEAD
-/* static */ void ImageLoader::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-ImageLoader::Shutdown()
-{
-=======
 /* static */
 void ImageLoader::Shutdown() {
->>>>>>> upstream-releases
   delete sImages;
   sImages = nullptr;
 }
@@ -221,15 +205,7 @@ void ImageLoader::AssociateRequestToFrame(imgIRequest* aRequest,
              "We should only add to one map iff we also add to the other map.");
 }
 
-<<<<<<< HEAD
-imgRequestProxy* ImageLoader::RegisterCSSImage(URLValue* aImage) {
-||||||| merged common ancestors
-imgRequestProxy*
-ImageLoader::RegisterCSSImage(URLValue* aImage)
-{
-=======
 imgRequestProxy* ImageLoader::RegisterCSSImage(const StyleLoadData& aData) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   uint64_t loadId = aData.load_id;
 
@@ -273,26 +249,9 @@ imgRequestProxy* ImageLoader::RegisterCSSImage(const StyleLoadData& aData) {
   return requestWeak;
 }
 
-<<<<<<< HEAD
-/* static */ void ImageLoader::DeregisterCSSImageFromAllLoaders(
-    URLValue* aImage) {
-  MOZ_ASSERT(aImage);
-
-  uint64_t loadID = aImage->LoadID();
-
-||||||| merged common ancestors
-/* static */ void
-ImageLoader::DeregisterCSSImageFromAllLoaders(URLValue* aImage)
-{
-  MOZ_ASSERT(aImage);
-
-  uint64_t loadID = aImage->LoadID();
-
-=======
 /* static */
 void ImageLoader::DeregisterCSSImageFromAllLoaders(const StyleLoadData& aData) {
   uint64_t loadID = aData.load_id;
->>>>>>> upstream-releases
   if (loadID == 0) {
     MOZ_ASSERT_UNREACHABLE("Image should have a valid LoadID");
     return;
@@ -307,17 +266,8 @@ void ImageLoader::DeregisterCSSImageFromAllLoaders(const StyleLoadData& aData) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ImageLoader::DeregisterCSSImageFromAllLoaders(
-    uint64_t aImageLoadID) {
-||||||| merged common ancestors
-/* static */ void
-ImageLoader::DeregisterCSSImageFromAllLoaders(uint64_t aImageLoadID)
-{
-=======
 /* static */
 void ImageLoader::DeregisterCSSImageFromAllLoaders(uint64_t aImageLoadID) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aImageLoadID != 0);
 
@@ -472,22 +422,6 @@ void ImageLoader::ClearFrames(nsPresContext* aPresContext) {
   mFrameToRequestMap.Clear();
 }
 
-<<<<<<< HEAD
-/* static */ void ImageLoader::LoadImage(URLValue* aImage,
-                                         nsIDocument* aLoadingDoc) {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aLoadingDoc);
-  MOZ_ASSERT(aImage);
-  MOZ_ASSERT(aImage->LoadID() != 0);
-||||||| merged common ancestors
-/* static */ void
-ImageLoader::LoadImage(URLValue* aImage, nsIDocument* aLoadingDoc)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aLoadingDoc);
-  MOZ_ASSERT(aImage);
-  MOZ_ASSERT(aImage->LoadID() != 0);
-=======
 static CORSMode EffectiveCorsMode(nsIURI* aURI,
                                   const StyleComputedImageUrl& aImage) {
   MOZ_ASSERT(aURI);
@@ -501,7 +435,6 @@ static CORSMode EffectiveCorsMode(nsIURI* aURI,
   }
   return CORSMode::CORS_ANONYMOUS;
 }
->>>>>>> upstream-releases
 
 /* static */
 void ImageLoader::LoadImage(const StyleComputedImageUrl& aImage,
@@ -529,42 +462,17 @@ void ImageLoader::LoadImage(const StyleComputedImageUrl& aImage,
     return;
   }
 
-<<<<<<< HEAD
-  int32_t loadFlags =
-      nsIRequest::LOAD_NORMAL |
-      nsContentUtils::CORSModeToLoadImageFlags(aImage->CorsMode());
-||||||| merged common ancestors
-  int32_t loadFlags = nsIRequest::LOAD_NORMAL |
-                      nsContentUtils::CORSModeToLoadImageFlags(aImage->CorsMode());
-=======
   int32_t loadFlags =
       nsIRequest::LOAD_NORMAL |
       nsContentUtils::CORSModeToLoadImageFlags(EffectiveCorsMode(uri, aImage));
->>>>>>> upstream-releases
 
   const URLExtraData& data = aImage.ExtraData();
 
   RefPtr<imgRequestProxy> request;
-<<<<<<< HEAD
-  nsresult rv = nsContentUtils::LoadImage(
-      uri, aLoadingDoc, aLoadingDoc, data->Principal(), 0, data->GetReferrer(),
-      data->GetReferrerPolicy(), nullptr, loadFlags, NS_LITERAL_STRING("css"),
-      getter_AddRefs(request));
-||||||| merged common ancestors
-  nsresult rv = nsContentUtils::LoadImage(uri, aLoadingDoc, aLoadingDoc,
-                                          data->Principal(), 0,
-                                          data->GetReferrer(),
-                                          data->GetReferrerPolicy(),
-                                          nullptr,
-                                          loadFlags,
-                                          NS_LITERAL_STRING("css"),
-                                          getter_AddRefs(request));
-=======
   nsresult rv = nsContentUtils::LoadImage(
       uri, &aLoadingDoc, &aLoadingDoc, data.Principal(), 0, data.GetReferrer(),
       data.GetReferrerPolicy(), nullptr, loadFlags, NS_LITERAL_STRING("css"),
       getter_AddRefs(request));
->>>>>>> upstream-releases
 
   if (NS_FAILED(rv) || !request) {
     return;
@@ -587,15 +495,7 @@ static bool IsRenderNoImages(uint32_t aDisplayItemKey) {
   return flags & TYPE_RENDERS_NO_IMAGES;
 }
 
-<<<<<<< HEAD
-static void InvalidateImages(nsIFrame* aFrame) {
-||||||| merged common ancestors
-static void
-InvalidateImages(nsIFrame* aFrame)
-{
-=======
 static void InvalidateImages(nsIFrame* aFrame, imgIRequest* aRequest) {
->>>>>>> upstream-releases
   bool invalidateFrame = false;
   const SmallPointerArray<DisplayItemData>& array = aFrame->DisplayItemData();
   for (uint32_t i = 0; i < array.Length(); i++) {
@@ -619,30 +519,6 @@ static void InvalidateImages(nsIFrame* aFrame, imgIRequest* aRequest) {
           aFrame->GetProperty(layers::WebRenderUserDataProperty::Key())) {
     for (auto iter = userDataTable->Iter(); !iter.Done(); iter.Next()) {
       RefPtr<layers::WebRenderUserData> data = iter.UserData();
-<<<<<<< HEAD
-      switch (data->GetType()) {
-        case layers::WebRenderUserData::UserDataType::eFallback:
-          if (!IsRenderNoImages(data->GetDisplayItemKey())) {
-            static_cast<layers::WebRenderFallbackData*>(data.get())
-                ->SetInvalid(true);
-          }
-          // XXX: handle Blob data
-          invalidateFrame = true;
-          break;
-        case layers::WebRenderUserData::UserDataType::eImage:
-          if (static_cast<layers::WebRenderImageData*>(data.get())
-                  ->IsAsyncAnimatedImage()) {
-            break;
-          }
-          MOZ_FALLTHROUGH;
-        default:
-          invalidateFrame = true;
-          break;
-||||||| merged common ancestors
-      if (data->GetType() == layers::WebRenderAnimationData::UserDataType::eFallback &&
-          !IsRenderNoImages(data->GetDisplayItemKey())) {
-        static_cast<layers::WebRenderFallbackData*>(data.get())->SetInvalid(true);
-=======
       switch (data->GetType()) {
         case layers::WebRenderUserData::UserDataType::eFallback:
           if (!IsRenderNoImages(data->GetDisplayItemKey())) {
@@ -661,7 +537,6 @@ static void InvalidateImages(nsIFrame* aFrame, imgIRequest* aRequest) {
         default:
           invalidateFrame = true;
           break;
->>>>>>> upstream-releases
       }
     }
   }
@@ -671,17 +546,9 @@ static void InvalidateImages(nsIFrame* aFrame, imgIRequest* aRequest) {
   }
 }
 
-<<<<<<< HEAD
-void ImageLoader::DoRedraw(FrameSet* aFrameSet, bool aForcePaint) {
-||||||| merged common ancestors
-void
-ImageLoader::DoRedraw(FrameSet* aFrameSet, bool aForcePaint)
-{
-=======
 void ImageLoader::RequestPaintIfNeeded(FrameSet* aFrameSet,
                                        imgIRequest* aRequest,
                                        bool aForcePaint) {
->>>>>>> upstream-releases
   NS_ASSERTION(aFrameSet, "Must have a frame set");
   NS_ASSERTION(mDocument, "Should have returned earlier!");
 

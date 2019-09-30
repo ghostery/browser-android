@@ -153,21 +153,6 @@ def mozharness_on_docker_worker_setup(config, job, taskdesc):
     # Running via mozharness assumes an image that contains build.sh:
     # by default, debian7-amd64-build, but it could be another image (like
     # android-build).
-<<<<<<< HEAD
-    taskdesc['worker'].setdefault('docker-image', {'in-tree': 'debian7-amd64-build'})
-
-    taskdesc['worker'].setdefault('artifacts', []).append({
-        'name': 'public/logs',
-        'path': '{workdir}/logs/'.format(**run),
-        'type': 'directory'
-    })
-    worker['taskcluster-proxy'] = run.get('taskcluster-proxy')
-||||||| merged common ancestors
-    taskdesc['worker'].setdefault('docker-image', {'in-tree': 'debian7-amd64-build'})
-
-    worker['taskcluster-proxy'] = run.get('taskcluster-proxy')
-
-=======
     worker.setdefault('docker-image', {'in-tree': 'debian7-amd64-build'})
 
     worker.setdefault('artifacts', []).append({
@@ -176,7 +161,6 @@ def mozharness_on_docker_worker_setup(config, job, taskdesc):
         'type': 'directory'
     })
     worker['taskcluster-proxy'] = run.pop('taskcluster-proxy', None)
->>>>>>> upstream-releases
     docker_worker_add_artifacts(config, job, taskdesc)
     docker_worker_add_workspace_cache(config, job, taskdesc,
                                       extra=run.pop('extra-workspace-cache-key', None))
@@ -271,14 +255,6 @@ def mozharness_on_generic_worker(config, job, taskdesc):
 
     worker = taskdesc['worker']
 
-<<<<<<< HEAD
-    taskdesc['worker'].setdefault('artifacts', []).append({
-        'name': 'public/logs',
-        'path': 'logs',
-        'type': 'directory'
-    })
-||||||| merged common ancestors
-=======
     setup_secrets(config, job, taskdesc)
 
     taskdesc['worker'].setdefault('artifacts', []).append({
@@ -286,7 +262,6 @@ def mozharness_on_generic_worker(config, job, taskdesc):
         'path': 'logs',
         'type': 'directory'
     })
->>>>>>> upstream-releases
     if not worker.get('skip-artifacts', False):
         generic_worker_add_artifacts(config, job, taskdesc)
     support_vcs_checkout(config, job, taskdesc)

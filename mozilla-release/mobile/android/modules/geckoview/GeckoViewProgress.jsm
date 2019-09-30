@@ -246,17 +246,8 @@ class GeckoViewProgress extends GeckoViewModule {
     }
   }
 
-<<<<<<< HEAD
-  onSecurityChange(aWebProgress, aRequest, aState) {
-    debug `onSecurityChange`;
-||||||| merged common ancestors
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON) {
-    debug `onSecurityChange`;
-=======
   onSecurityChange(aWebProgress, aRequest, aState) {
     debug`onSecurityChange`;
->>>>>>> upstream-releases
 
     // Don't need to do anything if the data we use to update the UI hasn't changed
     if (this._state === aState && !this._hostChanged) {

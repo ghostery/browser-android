@@ -25,19 +25,7 @@ function initDebuggerClient() {
   return new DebuggerClient(transport);
 }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-chrome-debugging.js
-function onNewSource(event, packet) {
-||||||| merged common ancestors
-async function attachThread(client, actor) {
-  let [response, targetFront] = await client.attachTarget(actor);
-  let [response2, threadClient] = await targetFront.attachThread(null);
-  return threadClient;
-}
-
-function onNewSource(event, packet) {
-=======
 function onNewSource(packet) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-chrome-debugging.js
   if (packet.source.url.startsWith("chrome:")) {
     ok(true, "Received a new chrome source: " + packet.source.url);
     gThreadClient.off("newSource", onNewSource);

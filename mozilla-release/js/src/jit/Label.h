@@ -77,20 +77,6 @@ class Label : public LabelBase {
  public:
   ~Label() {
 #ifdef DEBUG
-<<<<<<< HEAD
-    // The assertion below doesn't hold if an error occurred.
-    JitContext* context = MaybeGetJitContext();
-    bool hadError =
-        js::oom::HadSimulatedOOM() ||
-        (context && context->runtime && context->runtime->hadOutOfMemory());
-    MOZ_ASSERT_IF(!hadError, !used());
-||||||| merged common ancestors
-        // The assertion below doesn't hold if an error occurred.
-        JitContext* context = MaybeGetJitContext();
-        bool hadError = js::oom::HadSimulatedOOM() ||
-                        (context && context->runtime && context->runtime->hadOutOfMemory());
-        MOZ_ASSERT_IF(!hadError, !used());
-=======
     // The assertion below doesn't hold if an error occurred.
     JitContext* context = MaybeGetJitContext();
     bool hadError =
@@ -98,7 +84,6 @@ class Label : public LabelBase {
         (context && context->runtime && context->runtime->hadOutOfMemory()) ||
         (context && !context->runtime && context->hasOOM());
     MOZ_ASSERT_IF(!hadError, !used());
->>>>>>> upstream-releases
 #endif
   }
 };

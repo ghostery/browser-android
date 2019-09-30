@@ -106,26 +106,6 @@ class Toolbar extends PureComponent {
 
     return (
       dom.header(
-<<<<<<< HEAD
-        {
-          id: "toolbar",
-          className: leftAlignmentEnabled ? "left-aligned" : "",
-        },
-||||||| merged common ancestors
-        { id: "toolbar" },
-        DeviceSelector({
-          devices,
-          onChangeDevice,
-          onResizeViewport,
-          onUpdateDeviceModal,
-          selectedDevice,
-          viewportId: viewport.id,
-        }),
-        leftAlignmentEnabled ?
-          dom.div({ className: "devtools-separator" })
-          :
-          null,
-=======
         {
           id: "toolbar",
           className: [
@@ -133,25 +113,7 @@ class Toolbar extends PureComponent {
             showUserAgentInput ? "user-agent" : "",
           ].join(" ").trim(),
         },
->>>>>>> upstream-releases
         dom.div(
-<<<<<<< HEAD
-          { id: "toolbar-center-controls" },
-          DeviceSelector({
-            devices,
-            onChangeDevice,
-            onResizeViewport,
-            onUpdateDeviceModal,
-            selectedDevice,
-            viewportId: viewport.id,
-          }),
-          dom.div({ className: "devtools-separator" }),
-||||||| merged common ancestors
-          {
-            id: "toolbar-center-controls",
-            className: leftAlignmentEnabled ? "left-aligned" : "",
-          },
-=======
           { id: "toolbar-center-controls" },
           DeviceSelector({
             devices,
@@ -162,7 +124,6 @@ class Toolbar extends PureComponent {
             viewportId: viewport.id,
           }),
           dom.div({ className: "devtools-separator" }),
->>>>>>> upstream-releases
           ViewportDimension({
             onRemoveDeviceAssociation,
             doResizeViewport,

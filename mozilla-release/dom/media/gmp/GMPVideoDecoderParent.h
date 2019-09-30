@@ -22,20 +22,6 @@ namespace gmp {
 
 class GMPContentParent;
 
-<<<<<<< HEAD
-class GMPVideoDecoderParent final : public PGMPVideoDecoderParent,
-                                    public GMPVideoDecoderProxy,
-                                    public GMPSharedMemManager,
-                                    public GMPCrashHelperHolder {
- public:
-||||||| merged common ancestors
-class GMPVideoDecoderParent final : public PGMPVideoDecoderParent
-                                  , public GMPVideoDecoderProxy
-                                  , public GMPSharedMemManager
-                                  , public GMPCrashHelperHolder
-{
-public:
-=======
 class GMPVideoDecoderParent final : public PGMPVideoDecoderParent,
                                     public GMPVideoDecoderProxy,
                                     public GMPSharedMemManager,
@@ -43,7 +29,6 @@ class GMPVideoDecoderParent final : public PGMPVideoDecoderParent,
   friend class PGMPVideoDecoderParent;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(GMPVideoDecoderParent)
 
   explicit GMPVideoDecoderParent(GMPContentParent* aPlugin);
@@ -75,16 +60,7 @@ class GMPVideoDecoderParent final : public PGMPVideoDecoderParent,
     return AllocUnsafeShmem(aSize, aType, aMem);
 #endif
   }
-<<<<<<< HEAD
-  void Dealloc(Shmem& aMem) override { DeallocShmem(aMem); }
-||||||| merged common ancestors
-  void Dealloc(Shmem& aMem) override
-  {
-    DeallocShmem(aMem);
-  }
-=======
   void Dealloc(Shmem&& aMem) override { DeallocShmem(aMem); }
->>>>>>> upstream-releases
 
  private:
   ~GMPVideoDecoderParent();

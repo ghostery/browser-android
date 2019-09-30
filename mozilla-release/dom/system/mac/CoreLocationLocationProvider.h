@@ -6,15 +6,8 @@
 
 #include "nsCOMPtr.h"
 #include "nsIGeolocationProvider.h"
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
 #include "mozilla/Attributes.h"
 
->>>>>>> upstream-releases
 /*
  * The CoreLocationObjects class contains the CoreLocation objects
  * we'll need.

@@ -33,18 +33,8 @@ class Mappable : public mozilla::RefCounted<Mappable> {
 
   virtual Kind GetKind() const = 0;
 
-<<<<<<< HEAD
- private:
-  virtual void munmap(void *addr, size_t length) { ::munmap(addr, length); }
-||||||| merged common ancestors
-private:
-  virtual void munmap(void *addr, size_t length) {
-    ::munmap(addr, length);
-  }
-=======
  private:
   virtual void munmap(void* addr, size_t length) { ::munmap(addr, length); }
->>>>>>> upstream-releases
   /* Limit use of Mappable::munmap to classes that keep track of the address
    * and size of the mapping. This allows to ignore ::munmap return value. */
   friend class Mappable1stPagePtr;
@@ -76,15 +66,8 @@ class MappableFile : public Mappable {
   static Mappable* Create(const char* path);
 
   /* Inherited from Mappable */
-<<<<<<< HEAD
-  virtual MemoryRange mmap(const void *addr, size_t length, int prot, int flags,
-                           off_t offset);
-||||||| merged common ancestors
-  virtual MemoryRange mmap(const void *addr, size_t length, int prot, int flags, off_t offset);
-=======
   virtual MemoryRange mmap(const void* addr, size_t length, int prot, int flags,
                            off_t offset);
->>>>>>> upstream-releases
   virtual void finalize();
   virtual size_t GetLength() const;
 
@@ -122,33 +105,16 @@ class MappableExtractFile : public MappableFile {
    * AutoUnlinkFile keeps track of a file name and removes (unlinks) the file
    * when the instance is destroyed.
    */
-<<<<<<< HEAD
-  struct UnlinkFile {
-    void operator()(char *value) {
-||||||| merged common ancestors
-  struct UnlinkFile
-  {
-    void operator()(char *value) {
-=======
   struct UnlinkFile {
     void operator()(char* value) {
->>>>>>> upstream-releases
       unlink(value);
       delete[] value;
     }
   };
   typedef mozilla::UniquePtr<char[], UnlinkFile> AutoUnlinkFile;
 
-<<<<<<< HEAD
-  MappableExtractFile(int fd, const char *path)
-      : MappableFile(fd), path(path) {}
-||||||| merged common ancestors
-  MappableExtractFile(int fd, const char* path)
-  : MappableFile(fd), path(path) { }
-=======
   MappableExtractFile(int fd, const char* path)
       : MappableFile(fd), path(path) {}
->>>>>>> upstream-releases
 
   /* Extracted file path */
   mozilla::UniquePtr<const char[]> path;
@@ -172,31 +138,15 @@ class MappableDeflate : public Mappable {
   static Mappable* Create(const char* name, Zip* zip, Zip::Stream* stream);
 
   /* Inherited from Mappable */
-<<<<<<< HEAD
-  virtual MemoryRange mmap(const void *addr, size_t length, int prot, int flags,
-                           off_t offset);
-||||||| merged common ancestors
-  virtual MemoryRange mmap(const void *addr, size_t length, int prot, int flags, off_t offset);
-=======
   virtual MemoryRange mmap(const void* addr, size_t length, int prot, int flags,
                            off_t offset);
->>>>>>> upstream-releases
   virtual void finalize();
   virtual size_t GetLength() const;
 
   virtual Kind GetKind() const { return MAPPABLE_DEFLATE; };
-<<<<<<< HEAD
-
- private:
-  MappableDeflate(_MappableBuffer *buf, Zip *zip, Zip::Stream *stream);
-||||||| merged common ancestors
-private:
-  MappableDeflate(_MappableBuffer *buf, Zip *zip, Zip::Stream *stream);
-=======
 
  private:
   MappableDeflate(_MappableBuffer* buf, Zip* zip, Zip::Stream* stream);
->>>>>>> upstream-releases
 
   /* Zip reference */
   RefPtr<Zip> zip;

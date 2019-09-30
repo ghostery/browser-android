@@ -36,109 +36,34 @@ namespace dom {
 
 namespace {
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-class BeginConsumeBodyRunnable final : public Runnable {
- public:
-  BeginConsumeBodyRunnable(FetchBodyConsumer<Derived>* aConsumer,
-||||||| merged common ancestors
-template <class Derived>
-class BeginConsumeBodyRunnable final : public Runnable
-{
-public:
-  BeginConsumeBodyRunnable(FetchBodyConsumer<Derived>* aConsumer,
-=======
 class BeginConsumeBodyRunnable final : public Runnable {
  public:
   BeginConsumeBodyRunnable(BodyConsumer* aConsumer,
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
                            ThreadSafeWorkerRef* aWorkerRef)
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-      : Runnable("BeginConsumeBodyRunnable"),
-        mFetchBodyConsumer(aConsumer),
-        mWorkerRef(aWorkerRef) {}
-||||||| merged common ancestors
-    : Runnable("BeginConsumeBodyRunnable")
-    , mFetchBodyConsumer(aConsumer)
-    , mWorkerRef(aWorkerRef)
-  { }
-=======
       : Runnable("BeginConsumeBodyRunnable"),
         mBodyConsumer(aConsumer),
         mWorkerRef(aWorkerRef) {}
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   NS_IMETHOD
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  Run() override {
-    mFetchBodyConsumer->BeginConsumeBodyMainThread(mWorkerRef);
-||||||| merged common ancestors
-  Run() override
-  {
-    mFetchBodyConsumer->BeginConsumeBodyMainThread(mWorkerRef);
-=======
   Run() override {
     mBodyConsumer->BeginConsumeBodyMainThread(mWorkerRef);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     return NS_OK;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- private:
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-||||||| merged common ancestors
-private:
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-=======
  private:
   RefPtr<BodyConsumer> mBodyConsumer;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   RefPtr<ThreadSafeWorkerRef> mWorkerRef;
 };
 
 /*
  * Called on successfully reading the complete stream.
  */
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-class ContinueConsumeBodyRunnable final : public MainThreadWorkerRunnable {
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-||||||| merged common ancestors
-template <class Derived>
-class ContinueConsumeBodyRunnable final : public MainThreadWorkerRunnable
-{
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-=======
 class ContinueConsumeBodyRunnable final : public MainThreadWorkerRunnable {
   RefPtr<BodyConsumer> mBodyConsumer;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   nsresult mStatus;
   uint32_t mLength;
   uint8_t* mResult;
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- public:
-  ContinueConsumeBodyRunnable(FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-                              WorkerPrivate* aWorkerPrivate, nsresult aStatus,
-                              uint32_t aLength, uint8_t* aResult)
-      : MainThreadWorkerRunnable(aWorkerPrivate),
-        mFetchBodyConsumer(aFetchBodyConsumer),
-        mStatus(aStatus),
-        mLength(aLength),
-        mResult(aResult) {
-||||||| merged common ancestors
-public:
-  ContinueConsumeBodyRunnable(FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-                              WorkerPrivate* aWorkerPrivate,
-                              nsresult aStatus, uint32_t aLength,
-                              uint8_t* aResult)
-    : MainThreadWorkerRunnable(aWorkerPrivate)
-    , mFetchBodyConsumer(aFetchBodyConsumer)
-    , mStatus(aStatus)
-    , mLength(aLength)
-    , mResult(aResult)
-  {
-=======
  public:
   ContinueConsumeBodyRunnable(BodyConsumer* aBodyConsumer,
                               WorkerPrivate* aWorkerPrivate, nsresult aStatus,
@@ -148,83 +73,32 @@ public:
         mStatus(aStatus),
         mLength(aLength),
         mResult(aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     MOZ_ASSERT(NS_IsMainThread());
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
-    mFetchBodyConsumer->ContinueConsumeBody(mStatus, mLength, mResult);
-||||||| merged common ancestors
-  bool
-  WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override
-  {
-    mFetchBodyConsumer->ContinueConsumeBody(mStatus, mLength, mResult);
-=======
   bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
     mBodyConsumer->ContinueConsumeBody(mStatus, mLength, mResult);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     return true;
   }
 };
 
 // ControlRunnable used to complete the releasing of resources on the worker
 // thread when already shutting down.
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-class AbortConsumeBodyControlRunnable final
-    : public MainThreadWorkerControlRunnable {
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-||||||| merged common ancestors
-template <class Derived>
-class AbortConsumeBodyControlRunnable final : public MainThreadWorkerControlRunnable
-{
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-=======
 class AbortConsumeBodyControlRunnable final
     : public MainThreadWorkerControlRunnable {
   RefPtr<BodyConsumer> mBodyConsumer;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- public:
-  AbortConsumeBodyControlRunnable(
-      FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-      WorkerPrivate* aWorkerPrivate)
-      : MainThreadWorkerControlRunnable(aWorkerPrivate),
-        mFetchBodyConsumer(aFetchBodyConsumer) {
-||||||| merged common ancestors
-public:
-  AbortConsumeBodyControlRunnable(FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-                                  WorkerPrivate* aWorkerPrivate)
-    : MainThreadWorkerControlRunnable(aWorkerPrivate)
-    , mFetchBodyConsumer(aFetchBodyConsumer)
-  {
-=======
  public:
   AbortConsumeBodyControlRunnable(BodyConsumer* aBodyConsumer,
                                   WorkerPrivate* aWorkerPrivate)
       : MainThreadWorkerControlRunnable(aWorkerPrivate),
         mBodyConsumer(aBodyConsumer) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     MOZ_ASSERT(NS_IsMainThread());
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
-    mFetchBodyConsumer->ContinueConsumeBody(NS_BINDING_ABORTED, 0, nullptr,
-                                            true /* shutting down */);
-||||||| merged common ancestors
-  bool
-  WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override
-  {
-    mFetchBodyConsumer->ContinueConsumeBody(NS_BINDING_ABORTED, 0, nullptr,
-                                            true /* shutting down */);
-=======
   bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
     mBodyConsumer->ContinueConsumeBody(NS_BINDING_ABORTED, 0, nullptr,
                                        true /* shutting down */);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     return true;
   }
 };
@@ -233,22 +107,9 @@ public:
  * In case of failure to create a stream pump or dispatch stream completion to
  * worker, ensure we cleanup properly. Thread agnostic.
  */
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-class MOZ_STACK_CLASS AutoFailConsumeBody final {
- public:
-  AutoFailConsumeBody(FetchBodyConsumer<Derived>* aBodyConsumer,
-||||||| merged common ancestors
-template <class Derived>
-class MOZ_STACK_CLASS AutoFailConsumeBody final
-{
-public:
-  AutoFailConsumeBody(FetchBodyConsumer<Derived>* aBodyConsumer,
-=======
 class MOZ_STACK_CLASS AutoFailConsumeBody final {
  public:
   AutoFailConsumeBody(BodyConsumer* aBodyConsumer,
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
                       ThreadSafeWorkerRef* aWorkerRef)
       : mBodyConsumer(aBodyConsumer), mWorkerRef(aWorkerRef) {}
 
@@ -261,19 +122,9 @@ class MOZ_STACK_CLASS AutoFailConsumeBody final {
 
     // Web Worker
     if (mWorkerRef) {
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-      RefPtr<AbortConsumeBodyControlRunnable<Derived>> r =
-          new AbortConsumeBodyControlRunnable<Derived>(mBodyConsumer,
-                                                       mWorkerRef->Private());
-||||||| merged common ancestors
-      RefPtr<AbortConsumeBodyControlRunnable<Derived>> r =
-        new AbortConsumeBodyControlRunnable<Derived>(mBodyConsumer,
-                                                     mWorkerRef->Private());
-=======
       RefPtr<AbortConsumeBodyControlRunnable> r =
           new AbortConsumeBodyControlRunnable(mBodyConsumer,
                                               mWorkerRef->Private());
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
       if (!r->Dispatch()) {
         MOZ_CRASH("We are going to leak");
       }
@@ -286,55 +137,18 @@ class MOZ_STACK_CLASS AutoFailConsumeBody final {
 
   void DontFail() { mBodyConsumer = nullptr; }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- private:
-  RefPtr<FetchBodyConsumer<Derived>> mBodyConsumer;
-||||||| merged common ancestors
-private:
-  RefPtr<FetchBodyConsumer<Derived>> mBodyConsumer;
-=======
  private:
   RefPtr<BodyConsumer> mBodyConsumer;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   RefPtr<ThreadSafeWorkerRef> mWorkerRef;
 };
 
 /*
  * Called on successfully reading the complete stream for Blob.
  */
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-class ContinueConsumeBlobBodyRunnable final : public MainThreadWorkerRunnable {
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-||||||| merged common ancestors
-template <class Derived>
-class ContinueConsumeBlobBodyRunnable final : public MainThreadWorkerRunnable
-{
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-=======
 class ContinueConsumeBlobBodyRunnable final : public MainThreadWorkerRunnable {
   RefPtr<BodyConsumer> mBodyConsumer;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   RefPtr<BlobImpl> mBlobImpl;
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- public:
-  ContinueConsumeBlobBodyRunnable(
-      FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-      WorkerPrivate* aWorkerPrivate, BlobImpl* aBlobImpl)
-      : MainThreadWorkerRunnable(aWorkerPrivate),
-        mFetchBodyConsumer(aFetchBodyConsumer),
-        mBlobImpl(aBlobImpl) {
-||||||| merged common ancestors
-public:
-  ContinueConsumeBlobBodyRunnable(FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-                                  WorkerPrivate* aWorkerPrivate,
-                                  BlobImpl* aBlobImpl)
-    : MainThreadWorkerRunnable(aWorkerPrivate)
-    , mFetchBodyConsumer(aFetchBodyConsumer)
-    , mBlobImpl(aBlobImpl)
-  {
-=======
  public:
   ContinueConsumeBlobBodyRunnable(BodyConsumer* aBodyConsumer,
                                   WorkerPrivate* aWorkerPrivate,
@@ -342,23 +156,12 @@ public:
       : MainThreadWorkerRunnable(aWorkerPrivate),
         mBodyConsumer(aBodyConsumer),
         mBlobImpl(aBlobImpl) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     MOZ_ASSERT(NS_IsMainThread());
     MOZ_ASSERT(mBlobImpl);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
-    mFetchBodyConsumer->ContinueConsumeBlobBody(mBlobImpl);
-||||||| merged common ancestors
-  bool
-  WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override
-  {
-    mFetchBodyConsumer->ContinueConsumeBlobBody(mBlobImpl);
-=======
   bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
     mBodyConsumer->ContinueConsumeBlobBody(mBlobImpl);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     return true;
   }
 };
@@ -366,89 +169,31 @@ public:
 // ControlRunnable used to complete the releasing of resources on the worker
 // thread when already shutting down.
 class AbortConsumeBlobBodyControlRunnable final
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-    : public MainThreadWorkerControlRunnable {
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-||||||| merged common ancestors
-  : public MainThreadWorkerControlRunnable
-{
-  RefPtr<FetchBodyConsumer<Derived>> mFetchBodyConsumer;
-=======
     : public MainThreadWorkerControlRunnable {
   RefPtr<BodyConsumer> mBodyConsumer;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- public:
-  AbortConsumeBlobBodyControlRunnable(
-      FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-      WorkerPrivate* aWorkerPrivate)
-      : MainThreadWorkerControlRunnable(aWorkerPrivate),
-        mFetchBodyConsumer(aFetchBodyConsumer) {
-||||||| merged common ancestors
-public:
-  AbortConsumeBlobBodyControlRunnable(FetchBodyConsumer<Derived>* aFetchBodyConsumer,
-                                      WorkerPrivate* aWorkerPrivate)
-    : MainThreadWorkerControlRunnable(aWorkerPrivate)
-    , mFetchBodyConsumer(aFetchBodyConsumer)
-  {
-=======
  public:
   AbortConsumeBlobBodyControlRunnable(BodyConsumer* aBodyConsumer,
                                       WorkerPrivate* aWorkerPrivate)
       : MainThreadWorkerControlRunnable(aWorkerPrivate),
         mBodyConsumer(aBodyConsumer) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     MOZ_ASSERT(NS_IsMainThread());
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
-    mFetchBodyConsumer->ContinueConsumeBlobBody(nullptr,
-                                                true /* shutting down */);
-||||||| merged common ancestors
-  bool
-  WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override
-  {
-    mFetchBodyConsumer->ContinueConsumeBlobBody(nullptr,
-                                                true /* shutting down */);
-=======
   bool WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override {
     mBodyConsumer->ContinueConsumeBlobBody(nullptr, true /* shutting down */);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     return true;
   }
 };
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
 class ConsumeBodyDoneObserver final : public nsIStreamLoaderObserver,
                                       public MutableBlobStorageCallback {
  public:
-||||||| merged common ancestors
-template <class Derived>
-class ConsumeBodyDoneObserver final : public nsIStreamLoaderObserver
-                                    , public MutableBlobStorageCallback
-{
-public:
-=======
-class ConsumeBodyDoneObserver final : public nsIStreamLoaderObserver,
-                                      public MutableBlobStorageCallback {
- public:
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   NS_DECL_THREADSAFE_ISUPPORTS
 
   ConsumeBodyDoneObserver(BodyConsumer* aBodyConsumer,
                           ThreadSafeWorkerRef* aWorkerRef)
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-      : mFetchBodyConsumer(aFetchBodyConsumer), mWorkerRef(aWorkerRef) {}
-||||||| merged common ancestors
-    : mFetchBodyConsumer(aFetchBodyConsumer)
-    , mWorkerRef(aWorkerRef)
-  { }
-=======
       : mBodyConsumer(aBodyConsumer), mWorkerRef(aWorkerRef) {}
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   NS_IMETHOD
   OnStreamComplete(nsIStreamLoader* aLoader, nsISupports* aCtxt,
@@ -472,23 +217,9 @@ class ConsumeBodyDoneObserver final : public nsIStreamLoaderObserver,
 
     // Web Worker.
     {
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-      RefPtr<ContinueConsumeBodyRunnable<Derived>> r =
-          new ContinueConsumeBodyRunnable<Derived>(
-              mFetchBodyConsumer, mWorkerRef->Private(), aStatus, aResultLength,
-              nonconstResult);
-||||||| merged common ancestors
-      RefPtr<ContinueConsumeBodyRunnable<Derived>> r =
-        new ContinueConsumeBodyRunnable<Derived>(mFetchBodyConsumer,
-                                                 mWorkerRef->Private(),
-                                                 aStatus,
-                                                 aResultLength,
-                                                 nonconstResult);
-=======
       RefPtr<ContinueConsumeBodyRunnable> r = new ContinueConsumeBodyRunnable(
           mBodyConsumer, mWorkerRef->Private(), aStatus, aResultLength,
           nonconstResult);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
       if (r->Dispatch()) {
         // The caller is responsible for data.
         return NS_SUCCESS_ADOPTED_DATA;
@@ -498,19 +229,9 @@ class ConsumeBodyDoneObserver final : public nsIStreamLoaderObserver,
     // The worker is shutting down. Let's use a control runnable to complete the
     // shutting down procedure.
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-    RefPtr<AbortConsumeBodyControlRunnable<Derived>> r =
-        new AbortConsumeBodyControlRunnable<Derived>(mFetchBodyConsumer,
-                                                     mWorkerRef->Private());
-||||||| merged common ancestors
-    RefPtr<AbortConsumeBodyControlRunnable<Derived>> r =
-      new AbortConsumeBodyControlRunnable<Derived>(mFetchBodyConsumer,
-                                                   mWorkerRef->Private());
-=======
     RefPtr<AbortConsumeBodyControlRunnable> r =
         new AbortConsumeBodyControlRunnable(mBodyConsumer,
                                             mWorkerRef->Private());
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     if (NS_WARN_IF(!r->Dispatch())) {
       return NS_ERROR_FAILURE;
     }
@@ -541,67 +262,8 @@ class ConsumeBodyDoneObserver final : public nsIStreamLoaderObserver,
   RefPtr<ThreadSafeWorkerRef> mWorkerRef;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-NS_IMPL_ADDREF(ConsumeBodyDoneObserver<Derived>)
-template <class Derived>
-NS_IMPL_RELEASE(ConsumeBodyDoneObserver<Derived>)
-template <class Derived>
-NS_INTERFACE_MAP_BEGIN(ConsumeBodyDoneObserver<Derived>)
-NS_INTERFACE_MAP_ENTRY(nsIStreamLoaderObserver)
-    NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIStreamLoaderObserver)
-NS_INTERFACE_MAP_END
-
-}  // anonymous
-
-template <class Derived>
-/* static */ already_AddRefed<Promise> FetchBodyConsumer<Derived>::Create(
-    nsIGlobalObject* aGlobal, nsIEventTarget* aMainThreadEventTarget,
-    FetchBody<Derived>* aBody, nsIInputStream* aBodyStream,
-    AbortSignalImpl* aSignalImpl, FetchConsumeType aType, ErrorResult& aRv) {
-  MOZ_ASSERT(aBody);
-  MOZ_ASSERT(aBodyStream);
-  MOZ_ASSERT(aMainThreadEventTarget);
-||||||| merged common ancestors
-template <class Derived>
-NS_IMPL_ADDREF(ConsumeBodyDoneObserver<Derived>)
-template <class Derived>
-NS_IMPL_RELEASE(ConsumeBodyDoneObserver<Derived>)
-template <class Derived>
-NS_INTERFACE_MAP_BEGIN(ConsumeBodyDoneObserver<Derived>)
-  NS_INTERFACE_MAP_ENTRY(nsIStreamLoaderObserver)
-  NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIStreamLoaderObserver)
-NS_INTERFACE_MAP_END
-
-} // anonymous
-
-template <class Derived>
-/* static */ already_AddRefed<Promise>
-FetchBodyConsumer<Derived>::Create(nsIGlobalObject* aGlobal,
-                                   nsIEventTarget* aMainThreadEventTarget,
-                                   FetchBody<Derived>* aBody,
-                                   AbortSignalImpl* aSignalImpl,
-                                   FetchConsumeType aType,
-                                   ErrorResult& aRv)
-{
-  MOZ_ASSERT(aBody);
-  MOZ_ASSERT(aMainThreadEventTarget);
-=======
 NS_IMPL_ISUPPORTS(ConsumeBodyDoneObserver, nsIStreamLoaderObserver)
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-||||||| merged common ancestors
-  nsCOMPtr<nsIInputStream> bodyStream;
-  aBody->DerivedClass()->GetBody(getter_AddRefs(bodyStream));
-  if (!bodyStream) {
-    aRv = NS_NewCStringInputStream(getter_AddRefs(bodyStream), EmptyCString());
-    if (NS_WARN_IF(aRv.Failed())) {
-      return nullptr;
-    }
-  }
-
-=======
 }  // namespace
 
 /* static */ already_AddRefed<Promise> BodyConsumer::Create(
@@ -614,25 +276,14 @@ NS_IMPL_ISUPPORTS(ConsumeBodyDoneObserver, nsIStreamLoaderObserver)
   MOZ_ASSERT(aBodyStream);
   MOZ_ASSERT(aMainThreadEventTarget);
 
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   RefPtr<Promise> promise = Promise::Create(aGlobal, aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  RefPtr<FetchBodyConsumer<Derived>> consumer = new FetchBodyConsumer<Derived>(
-      aMainThreadEventTarget, aGlobal, aBody, aBodyStream, promise, aType);
-||||||| merged common ancestors
-  RefPtr<FetchBodyConsumer<Derived>> consumer =
-    new FetchBodyConsumer<Derived>(aMainThreadEventTarget, aGlobal,
-                                   aBody, bodyStream, promise,
-                                   aType);
-=======
   RefPtr<BodyConsumer> consumer = new BodyConsumer(
       aMainThreadEventTarget, aGlobal, aBodyStream, promise, aType,
       aBodyBlobURISpec, aBodyLocalPath, aBodyMimeType, aBlobStorageType);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   RefPtr<ThreadSafeWorkerRef> workerRef;
 
@@ -640,21 +291,9 @@ NS_IMPL_ISUPPORTS(ConsumeBodyDoneObserver, nsIStreamLoaderObserver)
     WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
     MOZ_ASSERT(workerPrivate);
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-    RefPtr<StrongWorkerRef> strongWorkerRef = StrongWorkerRef::Create(
-        workerPrivate, "FetchBodyConsumer",
-        [consumer]() { consumer->ShutDownMainThreadConsuming(); });
-||||||| merged common ancestors
-    RefPtr<StrongWorkerRef> strongWorkerRef =
-      StrongWorkerRef::Create(workerPrivate, "FetchBodyConsumer",
-                              [consumer]() {
-        consumer->ShutDownMainThreadConsuming();
-      });
-=======
     RefPtr<StrongWorkerRef> strongWorkerRef = StrongWorkerRef::Create(
         workerPrivate, "BodyConsumer",
         [consumer]() { consumer->ShutDownMainThreadConsuming(); });
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     if (NS_WARN_IF(!strongWorkerRef)) {
       aRv.Throw(NS_ERROR_FAILURE);
       return nullptr;
@@ -679,15 +318,7 @@ NS_IMPL_ISUPPORTS(ConsumeBodyDoneObserver, nsIStreamLoaderObserver)
     }
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  nsCOMPtr<nsIRunnable> r =
-      new BeginConsumeBodyRunnable<Derived>(consumer, workerRef);
-||||||| merged common ancestors
-  nsCOMPtr<nsIRunnable> r =
-    new BeginConsumeBodyRunnable<Derived>(consumer, workerRef);
-=======
   nsCOMPtr<nsIRunnable> r = new BeginConsumeBodyRunnable(consumer, workerRef);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   aRv = aMainThreadEventTarget->Dispatch(r.forget(), NS_DISPATCH_NORMAL);
   if (NS_WARN_IF(aRv.Failed())) {
     return nullptr;
@@ -700,17 +331,7 @@ NS_IMPL_ISUPPORTS(ConsumeBodyDoneObserver, nsIStreamLoaderObserver)
   return promise.forget();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::ReleaseObject() {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::ReleaseObject()
-{
-=======
 void BodyConsumer::ReleaseObject() {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnTargetThread();
 
   if (NS_IsMainThread()) {
@@ -726,52 +347,6 @@ void BodyConsumer::ReleaseObject() {
   Unfollow();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-FetchBodyConsumer<Derived>::FetchBodyConsumer(
-    nsIEventTarget* aMainThreadEventTarget, nsIGlobalObject* aGlobalObject,
-    FetchBody<Derived>* aBody, nsIInputStream* aBodyStream, Promise* aPromise,
-    FetchConsumeType aType)
-    : mTargetThread(NS_GetCurrentThread()),
-      mMainThreadEventTarget(aMainThreadEventTarget)
-#ifdef DEBUG
-      ,
-      mBody(aBody)
-#endif
-      ,
-      mBodyStream(aBodyStream),
-      mBlobStorageType(MutableBlobStorage::eOnlyInMemory),
-      mBodyBlobURISpec(aBody ? aBody->BodyBlobURISpec() : VoidCString()),
-      mBodyLocalPath(aBody ? aBody->BodyLocalPath() : VoidString()),
-      mGlobal(aGlobalObject),
-      mConsumeType(aType),
-      mConsumePromise(aPromise),
-      mBodyConsumed(false),
-      mShuttingDown(false) {
-||||||| merged common ancestors
-template <class Derived>
-FetchBodyConsumer<Derived>::FetchBodyConsumer(nsIEventTarget* aMainThreadEventTarget,
-                                              nsIGlobalObject* aGlobalObject,
-                                              FetchBody<Derived>* aBody,
-                                              nsIInputStream* aBodyStream,
-                                              Promise* aPromise,
-                                              FetchConsumeType aType)
-  : mTargetThread(NS_GetCurrentThread())
-  , mMainThreadEventTarget(aMainThreadEventTarget)
-#ifdef DEBUG
-  , mBody(aBody)
-#endif
-  , mBodyStream(aBodyStream)
-  , mBlobStorageType(MutableBlobStorage::eOnlyInMemory)
-  , mBodyBlobURISpec(aBody ? aBody->BodyBlobURISpec() : VoidCString())
-  , mBodyLocalPath(aBody ? aBody->BodyLocalPath() : VoidString())
-  , mGlobal(aGlobalObject)
-  , mConsumeType(aType)
-  , mConsumePromise(aPromise)
-  , mBodyConsumed(false)
-  , mShuttingDown(false)
-{
-=======
 BodyConsumer::BodyConsumer(
     nsIEventTarget* aMainThreadEventTarget, nsIGlobalObject* aGlobalObject,
     nsIInputStream* aBodyStream, Promise* aPromise, ConsumeType aType,
@@ -790,111 +365,30 @@ BodyConsumer::BodyConsumer(
       mConsumePromise(aPromise),
       mBodyConsumed(false),
       mShuttingDown(false) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   MOZ_ASSERT(aMainThreadEventTarget);
   MOZ_ASSERT(aBodyStream);
   MOZ_ASSERT(aPromise);
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-
-  const mozilla::UniquePtr<mozilla::ipc::PrincipalInfo>& principalInfo =
-      aBody->DerivedClass()->GetPrincipalInfo();
-  // We support temporary file for blobs only if the principal is known and
-  // it's system or content not in private Browsing.
-  if (principalInfo &&
-      (principalInfo->type() ==
-           mozilla::ipc::PrincipalInfo::TSystemPrincipalInfo ||
-       (principalInfo->type() ==
-            mozilla::ipc::PrincipalInfo::TContentPrincipalInfo &&
-        principalInfo->get_ContentPrincipalInfo().attrs().mPrivateBrowsingId ==
-            0))) {
-    mBlobStorageType = MutableBlobStorage::eCouldBeInTemporaryFile;
-  }
-
-  mBodyMimeType = aBody->MimeType();
-||||||| merged common ancestors
-
-  const mozilla::UniquePtr<mozilla::ipc::PrincipalInfo>& principalInfo =
-    aBody->DerivedClass()->GetPrincipalInfo();
-  // We support temporary file for blobs only if the principal is known and
-  // it's system or content not in private Browsing.
-  if (principalInfo &&
-      (principalInfo->type() == mozilla::ipc::PrincipalInfo::TSystemPrincipalInfo ||
-       (principalInfo->type() == mozilla::ipc::PrincipalInfo::TContentPrincipalInfo &&
-        principalInfo->get_ContentPrincipalInfo().attrs().mPrivateBrowsingId == 0))) {
-    mBlobStorageType = MutableBlobStorage::eCouldBeInTemporaryFile;
-  }
-
-  mBodyMimeType = aBody->MimeType();
-=======
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-FetchBodyConsumer<Derived>::~FetchBodyConsumer() {}
-||||||| merged common ancestors
-template <class Derived>
-FetchBodyConsumer<Derived>::~FetchBodyConsumer()
-{
-}
-=======
 BodyConsumer::~BodyConsumer() = default;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::AssertIsOnTargetThread() const {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::AssertIsOnTargetThread() const
-{
-=======
 void BodyConsumer::AssertIsOnTargetThread() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   MOZ_ASSERT(NS_GetCurrentThread() == mTargetThread);
 }
 
 namespace {
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
 class FileCreationHandler final : public PromiseNativeHandler {
  public:
-||||||| merged common ancestors
-template <class Derived>
-class FileCreationHandler final : public PromiseNativeHandler
-{
-public:
-=======
-class FileCreationHandler final : public PromiseNativeHandler {
- public:
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  static void Create(Promise* aPromise, FetchBodyConsumer<Derived>* aConsumer,
-                     ThreadSafeWorkerRef* aWorkerRef) {
-||||||| merged common ancestors
-  static void
-  Create(Promise* aPromise, FetchBodyConsumer<Derived>* aConsumer)
-  {
-=======
   static void Create(Promise* aPromise, BodyConsumer* aConsumer,
                      ThreadSafeWorkerRef* aWorkerRef) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     AssertIsOnMainThread();
     MOZ_ASSERT(aPromise);
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-    RefPtr<FileCreationHandler> handler =
-        new FileCreationHandler<Derived>(aConsumer, aWorkerRef);
-||||||| merged common ancestors
-    RefPtr<FileCreationHandler> handler = new FileCreationHandler<Derived>(aConsumer);
-=======
     RefPtr<FileCreationHandler> handler =
         new FileCreationHandler(aConsumer, aWorkerRef);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     aPromise->AppendNativeHandler(handler);
   }
 
@@ -921,75 +415,24 @@ class FileCreationHandler final : public PromiseNativeHandler {
     mConsumer->OnBlobResult(nullptr, mWorkerRef);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
- private:
-  FileCreationHandler<Derived>(FetchBodyConsumer<Derived>* aConsumer,
-                               ThreadSafeWorkerRef* aWorkerRef)
-      : mConsumer(aConsumer), mWorkerRef(aWorkerRef) {
-||||||| merged common ancestors
-private:
-  explicit FileCreationHandler<Derived>(FetchBodyConsumer<Derived>* aConsumer)
-    : mConsumer(aConsumer)
-  {
-=======
  private:
   FileCreationHandler(BodyConsumer* aConsumer, ThreadSafeWorkerRef* aWorkerRef)
       : mConsumer(aConsumer), mWorkerRef(aWorkerRef) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
     AssertIsOnMainThread();
     MOZ_ASSERT(aConsumer);
   }
 
   ~FileCreationHandler() = default;
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  RefPtr<FetchBodyConsumer<Derived>> mConsumer;
-  RefPtr<ThreadSafeWorkerRef> mWorkerRef;
-||||||| merged common ancestors
-  RefPtr<FetchBodyConsumer<Derived>> mConsumer;
-=======
   RefPtr<BodyConsumer> mConsumer;
   RefPtr<ThreadSafeWorkerRef> mWorkerRef;
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 };
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-NS_IMPL_ADDREF(FileCreationHandler<Derived>)
-template <class Derived>
-NS_IMPL_RELEASE(FileCreationHandler<Derived>)
-template <class Derived>
-NS_INTERFACE_MAP_BEGIN(FileCreationHandler<Derived>)
-NS_INTERFACE_MAP_ENTRY(nsISupports)
-NS_INTERFACE_MAP_END
-
-}  // namespace
-
-template <class Derived>
-nsresult FetchBodyConsumer<Derived>::GetBodyLocalFile(nsIFile** aFile) const {
-||||||| merged common ancestors
-template <class Derived>
-NS_IMPL_ADDREF(FileCreationHandler<Derived>)
-template <class Derived>
-NS_IMPL_RELEASE(FileCreationHandler<Derived>)
-template <class Derived>
-NS_INTERFACE_MAP_BEGIN(FileCreationHandler<Derived>)
-  NS_INTERFACE_MAP_ENTRY(nsISupports)
-NS_INTERFACE_MAP_END
-
-} // namespace
-
-template <class Derived>
-nsresult
-FetchBodyConsumer<Derived>::GetBodyLocalFile(nsIFile** aFile) const
-{
-=======
 NS_IMPL_ISUPPORTS0(FileCreationHandler)
 
 }  // namespace
 
 nsresult BodyConsumer::GetBodyLocalFile(nsIFile** aFile) const {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnMainThread();
 
   if (!mBodyLocalPath.Length()) {
@@ -1028,18 +471,7 @@ nsresult BodyConsumer::GetBodyLocalFile(nsIFile** aFile) const {
  * and clean up on any failures, so there is no need for callers to do so,
  * reflected in a lack of error return code.
  */
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::BeginConsumeBodyMainThread(
-    ThreadSafeWorkerRef* aWorkerRef) {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::BeginConsumeBodyMainThread(ThreadSafeWorkerRef* aWorkerRef)
-{
-=======
 void BodyConsumer::BeginConsumeBodyMainThread(ThreadSafeWorkerRef* aWorkerRef) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnMainThread();
 
   AutoFailConsumeBody autoReject(this, aWorkerRef);
@@ -1082,12 +514,7 @@ void BodyConsumer::BeginConsumeBodyMainThread(ThreadSafeWorkerRef* aWorkerRef) {
       }
 
       autoReject.DontFail();
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-      FileCreationHandler<Derived>::Create(promise, this, aWorkerRef);
-||||||| merged common ancestors
-=======
       FileCreationHandler::Create(promise, this, aWorkerRef);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
       return;
     }
   }
@@ -1100,16 +527,8 @@ void BodyConsumer::BeginConsumeBodyMainThread(ThreadSafeWorkerRef* aWorkerRef) {
     return;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  RefPtr<ConsumeBodyDoneObserver<Derived>> p =
-      new ConsumeBodyDoneObserver<Derived>(this, aWorkerRef);
-||||||| merged common ancestors
-  RefPtr<ConsumeBodyDoneObserver<Derived>> p =
-   new ConsumeBodyDoneObserver<Derived>(this, aWorkerRef);
-=======
   RefPtr<ConsumeBodyDoneObserver> p =
       new ConsumeBodyDoneObserver(this, aWorkerRef);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   nsCOMPtr<nsIStreamListener> listener;
   if (mConsumeType == CONSUME_BLOB) {
@@ -1155,26 +574,6 @@ void BodyConsumer::BeginConsumeBodyMainThread(ThreadSafeWorkerRef* aWorkerRef) {
  * been wrapped by FileCreationHandler). The blob is sent to the target thread
  * and ContinueConsumeBody is called.
  */
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::OnBlobResult(Blob* aBlob,
-                                              ThreadSafeWorkerRef* aWorkerRef) {
-  AssertIsOnMainThread();
-
-  DispatchContinueConsumeBlobBody(aBlob ? aBlob->Impl() : nullptr, aWorkerRef);
-}
-
-template <class Derived>
-void FetchBodyConsumer<Derived>::DispatchContinueConsumeBlobBody(
-    BlobImpl* aBlobImpl, ThreadSafeWorkerRef* aWorkerRef) {
-  AssertIsOnMainThread();
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::OnBlobResult(Blob* aBlob, ThreadSafeWorkerRef* aWorkerRef)
-{
-  MOZ_ASSERT(aBlob);
-=======
 void BodyConsumer::OnBlobResult(Blob* aBlob, ThreadSafeWorkerRef* aWorkerRef) {
   AssertIsOnMainThread();
 
@@ -1184,7 +583,6 @@ void BodyConsumer::OnBlobResult(Blob* aBlob, ThreadSafeWorkerRef* aWorkerRef) {
 void BodyConsumer::DispatchContinueConsumeBlobBody(
     BlobImpl* aBlobImpl, ThreadSafeWorkerRef* aWorkerRef) {
   AssertIsOnMainThread();
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   // Main-thread.
   if (!aWorkerRef) {
@@ -1197,25 +595,6 @@ void BodyConsumer::DispatchContinueConsumeBlobBody(
   }
 
   // Web Worker.
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  if (aBlobImpl) {
-    RefPtr<ContinueConsumeBlobBodyRunnable<Derived>> r =
-        new ContinueConsumeBlobBodyRunnable<Derived>(
-            this, aWorkerRef->Private(), aBlobImpl);
-
-    if (r->Dispatch()) {
-      return;
-    }
-  } else {
-    RefPtr<ContinueConsumeBodyRunnable<Derived>> r =
-        new ContinueConsumeBodyRunnable<Derived>(
-            this, aWorkerRef->Private(), NS_ERROR_DOM_ABORT_ERR, 0, nullptr);
-||||||| merged common ancestors
-  {
-    RefPtr<ContinueConsumeBlobBodyRunnable<Derived>> r =
-      new ContinueConsumeBlobBodyRunnable<Derived>(this, aWorkerRef->Private(),
-                                                   aBlob->Impl());
-=======
   if (aBlobImpl) {
     RefPtr<ContinueConsumeBlobBodyRunnable> r =
         new ContinueConsumeBlobBodyRunnable(this, aWorkerRef->Private(),
@@ -1227,7 +606,6 @@ void BodyConsumer::DispatchContinueConsumeBlobBody(
   } else {
     RefPtr<ContinueConsumeBodyRunnable> r = new ContinueConsumeBodyRunnable(
         this, aWorkerRef->Private(), NS_ERROR_DOM_ABORT_ERR, 0, nullptr);
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
     if (r->Dispatch()) {
       return;
@@ -1237,18 +615,8 @@ void BodyConsumer::DispatchContinueConsumeBlobBody(
   // The worker is shutting down. Let's use a control runnable to complete the
   // shutting down procedure.
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  RefPtr<AbortConsumeBlobBodyControlRunnable<Derived>> r =
-      new AbortConsumeBlobBodyControlRunnable<Derived>(this,
-                                                       aWorkerRef->Private());
-||||||| merged common ancestors
-  RefPtr<AbortConsumeBlobBodyControlRunnable<Derived>> r =
-    new AbortConsumeBlobBodyControlRunnable<Derived>(this,
-                                                     aWorkerRef->Private());
-=======
   RefPtr<AbortConsumeBlobBodyControlRunnable> r =
       new AbortConsumeBlobBodyControlRunnable(this, aWorkerRef->Private());
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   Unused << NS_WARN_IF(!r->Dispatch());
 }
@@ -1259,24 +627,8 @@ void BodyConsumer::DispatchContinueConsumeBlobBody(
  * rejected based on whether the fetch succeeded, and the body can be
  * converted into the expected type of JS object.
  */
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::ContinueConsumeBody(nsresult aStatus,
-                                                     uint32_t aResultLength,
-                                                     uint8_t* aResult,
-                                                     bool aShuttingDown) {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::ContinueConsumeBody(nsresult aStatus,
-                                                uint32_t aResultLength,
-                                                uint8_t* aResult,
-                                                bool aShuttingDown)
-{
-=======
 void BodyConsumer::ContinueConsumeBody(nsresult aStatus, uint32_t aResultLength,
                                        uint8_t* aResult, bool aShuttingDown) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnTargetThread();
 
   // This makes sure that we free the data correctly.
@@ -1290,20 +642,9 @@ void BodyConsumer::ContinueConsumeBody(nsresult aStatus, uint32_t aResultLength,
   MOZ_ASSERT(mConsumePromise);
   RefPtr<Promise> localPromise = mConsumePromise.forget();
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-  RefPtr<FetchBodyConsumer<Derived>> self = this;
-  auto autoReleaseObject =
-      mozilla::MakeScopeExit([self] { self->ReleaseObject(); });
-||||||| merged common ancestors
-  RefPtr<FetchBodyConsumer<Derived>> self = this;
-  auto autoReleaseObject = mozilla::MakeScopeExit([self] {
-    self->ReleaseObject();
-  });
-=======
   RefPtr<BodyConsumer> self = this;
   auto autoReleaseObject =
       mozilla::MakeScopeExit([self] { self->ReleaseObject(); });
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
   if (aShuttingDown) {
     // If shutting down, we don't want to resolve any promise.
@@ -1400,20 +741,8 @@ void BodyConsumer::ContinueConsumeBody(nsresult aStatus, uint32_t aResultLength,
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::ContinueConsumeBlobBody(BlobImpl* aBlobImpl,
-                                                         bool aShuttingDown) {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::ContinueConsumeBlobBody(BlobImpl* aBlobImpl,
-                                                    bool aShuttingDown)
-{
-=======
 void BodyConsumer::ContinueConsumeBlobBody(BlobImpl* aBlobImpl,
                                            bool aShuttingDown) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnTargetThread();
   MOZ_ASSERT(mConsumeType == CONSUME_BLOB);
 
@@ -1435,31 +764,13 @@ void BodyConsumer::ContinueConsumeBlobBody(BlobImpl* aBlobImpl,
   ReleaseObject();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::ShutDownMainThreadConsuming() {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::ShutDownMainThreadConsuming()
-{
-=======
 void BodyConsumer::ShutDownMainThreadConsuming() {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   if (!NS_IsMainThread()) {
     RefPtr<BodyConsumer> self = this;
 
     nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-        "FetchBodyConsumer::ShutDownMainThreadConsuming",
-        [self]() { self->ShutDownMainThreadConsuming(); });
-||||||| merged common ancestors
-      "FetchBodyConsumer::ShutDownMainThreadConsuming",
-      [self] () { self->ShutDownMainThreadConsuming(); });
-=======
         "BodyConsumer::ShutDownMainThreadConsuming",
         [self]() { self->ShutDownMainThreadConsuming(); });
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
     mMainThreadEventTarget->Dispatch(r.forget(), NS_DISPATCH_NORMAL);
     return;
@@ -1475,22 +786,8 @@ void BodyConsumer::ShutDownMainThreadConsuming() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-NS_IMETHODIMP FetchBodyConsumer<Derived>::Observe(nsISupports* aSubject,
-                                                  const char* aTopic,
-                                                  const char16_t* aData) {
-||||||| merged common ancestors
-template <class Derived>
-NS_IMETHODIMP
-FetchBodyConsumer<Derived>::Observe(nsISupports* aSubject,
-                                    const char* aTopic,
-                                    const char16_t* aData)
-{
-=======
 NS_IMETHODIMP BodyConsumer::Observe(nsISupports* aSubject, const char* aTopic,
                                     const char16_t* aData) {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnMainThread();
 
   MOZ_ASSERT((strcmp(aTopic, DOM_WINDOW_FROZEN_TOPIC) == 0) ||
@@ -1504,46 +801,13 @@ NS_IMETHODIMP BodyConsumer::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-void FetchBodyConsumer<Derived>::Abort() {
-||||||| merged common ancestors
-template <class Derived>
-void
-FetchBodyConsumer<Derived>::Abort()
-{
-=======
 void BodyConsumer::Abort() {
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
   AssertIsOnTargetThread();
   ShutDownMainThreadConsuming();
   ContinueConsumeBody(NS_ERROR_DOM_ABORT_ERR, 0, nullptr);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/fetch/FetchConsumer.cpp
-template <class Derived>
-NS_IMPL_ADDREF(FetchBodyConsumer<Derived>)
-
-template <class Derived>
-NS_IMPL_RELEASE(FetchBodyConsumer<Derived>)
-
-template <class Derived>
-NS_IMPL_QUERY_INTERFACE(FetchBodyConsumer<Derived>, nsIObserver,
-                        nsISupportsWeakReference)
-||||||| merged common ancestors
-template <class Derived>
-NS_IMPL_ADDREF(FetchBodyConsumer<Derived>)
-
-template <class Derived>
-NS_IMPL_RELEASE(FetchBodyConsumer<Derived>)
-
-template <class Derived>
-NS_IMPL_QUERY_INTERFACE(FetchBodyConsumer<Derived>,
-                        nsIObserver,
-                        nsISupportsWeakReference)
-=======
 NS_IMPL_ISUPPORTS(BodyConsumer, nsIObserver, nsISupportsWeakReference)
->>>>>>> upstream-releases:mozilla-release/dom/base/BodyConsumer.cpp
 
 }  // namespace dom
 }  // namespace mozilla

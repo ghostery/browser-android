@@ -14,21 +14,10 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsPageContentFrame* NS_NewPageContentFrame(nsIPresShell* aPresShell,
-                                           ComputedStyle* aStyle) {
-  return new (aPresShell) nsPageContentFrame(aStyle);
-||||||| merged common ancestors
-nsPageContentFrame*
-NS_NewPageContentFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsPageContentFrame(aStyle);
-=======
 nsPageContentFrame* NS_NewPageContentFrame(PresShell* aPresShell,
                                            ComputedStyle* aStyle) {
   return new (aPresShell)
       nsPageContentFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsPageContentFrame)

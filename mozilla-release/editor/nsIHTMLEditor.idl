@@ -413,14 +413,8 @@ interface nsIHTMLEditor : nsISupports
    * editor (and/or its document/window) could be broken by mutation observers.
    * FYI: Current user in script is only BlueGriffon.
    */
-<<<<<<< HEAD
-  void checkSelectionStateForAnonymousButtons();
-||||||| merged common ancestors
-  void checkSelectionStateForAnonymousButtons(in Selection aSelection);
-=======
   [can_run_script]
   void checkSelectionStateForAnonymousButtons();
->>>>>>> upstream-releases
 
   boolean isAnonymousElement(in Element aElement);
 

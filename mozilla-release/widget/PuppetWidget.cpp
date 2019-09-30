@@ -46,21 +46,10 @@ static void InvalidateRegion(nsIWidget* aWidget,
   }
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<nsIWidget> nsIWidget::CreatePuppetWidget(
-    TabChild* aTabChild) {
-  MOZ_ASSERT(!aTabChild || nsIWidget::UsePuppetWidgets(),
-||||||| merged common ancestors
-/*static*/ already_AddRefed<nsIWidget>
-nsIWidget::CreatePuppetWidget(TabChild* aTabChild)
-{
-  MOZ_ASSERT(!aTabChild || nsIWidget::UsePuppetWidgets(),
-=======
 /*static*/
 already_AddRefed<nsIWidget> nsIWidget::CreatePuppetWidget(
     BrowserChild* aBrowserChild) {
   MOZ_ASSERT(!aBrowserChild || nsIWidget::UsePuppetWidgets(),
->>>>>>> upstream-releases
              "PuppetWidgets not allowed in this configuration");
 
   nsCOMPtr<nsIWidget> widget = new PuppetWidget(aBrowserChild);
@@ -90,40 +79,6 @@ const size_t PuppetWidget::kMaxDimension = 4000;
 static bool gRemoteDesktopBehaviorEnabled = false;
 static bool gRemoteDesktopBehaviorInitialized = false;
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS_INHERITED(PuppetWidget, nsBaseWidget,
-                            TextEventDispatcherListener)
-
-PuppetWidget::PuppetWidget(TabChild* aTabChild)
-    : mTabChild(aTabChild),
-      mMemoryPressureObserver(nullptr),
-      mDPI(-1),
-      mRounding(1),
-      mDefaultScale(-1),
-      mCursorHotspotX(0),
-      mCursorHotspotY(0),
-      mEnabled(false),
-      mVisible(false),
-      mNeedIMEStateInit(false),
-      mIgnoreCompositionEvents(false) {
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS_INHERITED(PuppetWidget, nsBaseWidget
-                                        , TextEventDispatcherListener)
-
-PuppetWidget::PuppetWidget(TabChild* aTabChild)
-  : mTabChild(aTabChild)
-  , mMemoryPressureObserver(nullptr)
-  , mDPI(-1)
-  , mRounding(1)
-  , mDefaultScale(-1)
-  , mCursorHotspotX(0)
-  , mCursorHotspotY(0)
-  , mEnabled(false)
-  , mVisible(false)
-  , mNeedIMEStateInit(false)
-  , mIgnoreCompositionEvents(false)
-{
-=======
 NS_IMPL_ISUPPORTS_INHERITED(PuppetWidget, nsBaseWidget,
                             TextEventDispatcherListener)
 
@@ -139,7 +94,6 @@ PuppetWidget::PuppetWidget(BrowserChild* aBrowserChild)
       mVisible(false),
       mNeedIMEStateInit(false),
       mIgnoreCompositionEvents(false) {
->>>>>>> upstream-releases
   // Setting 'Unknown' means "not yet cached".
   mInputContext.mIMEState.mEnabled = IMEState::UNKNOWN;
 
@@ -186,18 +140,8 @@ nsresult PuppetWidget::Create(nsIWidget* aParent, nsNativeWidget aNativeParent,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PuppetWidget::InitIMEState() {
-  MOZ_ASSERT(mTabChild);
-||||||| merged common ancestors
-void
-PuppetWidget::InitIMEState()
-{
-  MOZ_ASSERT(mTabChild);
-=======
 void PuppetWidget::InitIMEState() {
   MOZ_ASSERT(mBrowserChild);
->>>>>>> upstream-releases
   if (mNeedIMEStateInit) {
     mContentCache.Clear();
     mBrowserChild->SendUpdateContentCache(mContentCache);
@@ -210,25 +154,11 @@ already_AddRefed<nsIWidget> PuppetWidget::CreateChild(
     const LayoutDeviceIntRect& aRect, nsWidgetInitData* aInitData,
     bool aForceUseIWidgetParent) {
   bool isPopup = IsPopup(aInitData);
-<<<<<<< HEAD
-  nsCOMPtr<nsIWidget> widget = nsIWidget::CreatePuppetWidget(mTabChild);
-  return ((widget && NS_SUCCEEDED(widget->Create(isPopup ? nullptr : this,
-                                                 nullptr, aRect, aInitData)))
-              ? widget.forget()
-              : nullptr);
-||||||| merged common ancestors
-  nsCOMPtr<nsIWidget> widget = nsIWidget::CreatePuppetWidget(mTabChild);
-  return ((widget &&
-           NS_SUCCEEDED(widget->Create(isPopup ? nullptr: this, nullptr, aRect,
-                                       aInitData))) ?
-          widget.forget() : nullptr);
-=======
   nsCOMPtr<nsIWidget> widget = nsIWidget::CreatePuppetWidget(mBrowserChild);
   return ((widget && NS_SUCCEEDED(widget->Create(isPopup ? nullptr : this,
                                                  nullptr, aRect, aInitData)))
               ? widget.forget()
               : nullptr);
->>>>>>> upstream-releases
 }
 
 void PuppetWidget::Destroy() {
@@ -330,21 +260,9 @@ nsresult PuppetWidget::ConfigureChildren(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::SetFocus(bool aRaise) {
-  if (aRaise && mTabChild) {
-    mTabChild->SendRequestFocus(true);
-||||||| merged common ancestors
-nsresult
-PuppetWidget::SetFocus(bool aRaise)
-{
-  if (aRaise && mTabChild) {
-    mTabChild->SendRequestFocus(true);
-=======
 void PuppetWidget::SetFocus(Raise aRaise) {
   if (aRaise == Raise::Yes && mBrowserChild) {
     mBrowserChild->SendRequestFocus(true);
->>>>>>> upstream-releases
   }
 }
 
@@ -368,14 +286,6 @@ void PuppetWidget::Invalidate(const LayoutDeviceIntRect& aRect) {
   }
 }
 
-<<<<<<< HEAD
-void PuppetWidget::InitEvent(WidgetGUIEvent& aEvent,
-                             LayoutDeviceIntPoint* aPoint) {
-||||||| merged common ancestors
-void
-PuppetWidget::InitEvent(WidgetGUIEvent& aEvent, LayoutDeviceIntPoint* aPoint)
-{
-=======
 mozilla::LayoutDeviceToLayoutDeviceMatrix4x4
 PuppetWidget::WidgetToTopLevelWidgetTransform() {
   if (!GetOwningBrowserChild()) {
@@ -387,7 +297,6 @@ PuppetWidget::WidgetToTopLevelWidgetTransform() {
 
 void PuppetWidget::InitEvent(WidgetGUIEvent& aEvent,
                              LayoutDeviceIntPoint* aPoint) {
->>>>>>> upstream-releases
   if (nullptr == aPoint) {
     aEvent.mRefPoint = LayoutDeviceIntPoint(0, 0);
   } else {
@@ -505,36 +414,14 @@ nsEventStatus PuppetWidget::DispatchInputEvent(WidgetInputEvent* aEvent) {
 
   switch (aEvent->mClass) {
     case eWheelEventClass:
-<<<<<<< HEAD
-      Unused << mTabChild->SendDispatchWheelEvent(*aEvent->AsWheelEvent());
-||||||| merged common ancestors
-      Unused <<
-        mTabChild->SendDispatchWheelEvent(*aEvent->AsWheelEvent());
-=======
       Unused << mBrowserChild->SendDispatchWheelEvent(*aEvent->AsWheelEvent());
->>>>>>> upstream-releases
       break;
     case eMouseEventClass:
-<<<<<<< HEAD
-      Unused << mTabChild->SendDispatchMouseEvent(*aEvent->AsMouseEvent());
-||||||| merged common ancestors
-      Unused <<
-        mTabChild->SendDispatchMouseEvent(*aEvent->AsMouseEvent());
-=======
       Unused << mBrowserChild->SendDispatchMouseEvent(*aEvent->AsMouseEvent());
->>>>>>> upstream-releases
       break;
     case eKeyboardEventClass:
-<<<<<<< HEAD
-      Unused << mTabChild->SendDispatchKeyboardEvent(
-          *aEvent->AsKeyboardEvent());
-||||||| merged common ancestors
-      Unused <<
-        mTabChild->SendDispatchKeyboardEvent(*aEvent->AsKeyboardEvent());
-=======
       Unused << mBrowserChild->SendDispatchKeyboardEvent(
           *aEvent->AsKeyboardEvent());
->>>>>>> upstream-releases
       break;
     default:
       MOZ_ASSERT_UNREACHABLE("unsupported event type");
@@ -565,17 +452,8 @@ nsresult PuppetWidget::SynthesizeNativeMouseEvent(
   if (!mBrowserChild) {
     return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
-  mTabChild->SendSynthesizeNativeMouseEvent(
-      aPoint, aNativeMessage, aModifierFlags, notifier.SaveObserver());
-||||||| merged common ancestors
-  mTabChild->SendSynthesizeNativeMouseEvent(aPoint, aNativeMessage,
-                                            aModifierFlags,
-                                            notifier.SaveObserver());
-=======
   mBrowserChild->SendSynthesizeNativeMouseEvent(
       aPoint, aNativeMessage, aModifierFlags, notifier.SaveObserver());
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -597,21 +475,9 @@ nsresult PuppetWidget::SynthesizeNativeMouseScrollEvent(
   if (!mBrowserChild) {
     return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
-  mTabChild->SendSynthesizeNativeMouseScrollEvent(
-      aPoint, aNativeMessage, aDeltaX, aDeltaY, aDeltaZ, aModifierFlags,
-      aAdditionalFlags, notifier.SaveObserver());
-||||||| merged common ancestors
-  mTabChild->SendSynthesizeNativeMouseScrollEvent(aPoint, aNativeMessage,
-                                                  aDeltaX, aDeltaY, aDeltaZ,
-                                                  aModifierFlags,
-                                                  aAdditionalFlags,
-                                                  notifier.SaveObserver());
-=======
   mBrowserChild->SendSynthesizeNativeMouseScrollEvent(
       aPoint, aNativeMessage, aDeltaX, aDeltaY, aDeltaZ, aModifierFlags,
       aAdditionalFlags, notifier.SaveObserver());
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -623,20 +489,9 @@ nsresult PuppetWidget::SynthesizeNativeTouchPoint(
   if (!mBrowserChild) {
     return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
-  mTabChild->SendSynthesizeNativeTouchPoint(
-      aPointerId, aPointerState, aPoint, aPointerPressure, aPointerOrientation,
-      notifier.SaveObserver());
-||||||| merged common ancestors
-  mTabChild->SendSynthesizeNativeTouchPoint(aPointerId, aPointerState,
-                                            aPoint, aPointerPressure,
-                                            aPointerOrientation,
-                                            notifier.SaveObserver());
-=======
   mBrowserChild->SendSynthesizeNativeTouchPoint(
       aPointerId, aPointerState, aPoint, aPointerPressure, aPointerOrientation,
       notifier.SaveObserver());
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -661,66 +516,24 @@ nsresult PuppetWidget::ClearNativeTouchSequence(nsIObserver* aObserver) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PuppetWidget::SetConfirmedTargetAPZC(
-    uint64_t aInputBlockId,
-    const nsTArray<ScrollableLayerGuid>& aTargets) const {
-  if (mTabChild) {
-    mTabChild->SetTargetAPZC(aInputBlockId, aTargets);
-||||||| merged common ancestors
-void
-PuppetWidget::SetConfirmedTargetAPZC(
-                uint64_t aInputBlockId,
-                const nsTArray<ScrollableLayerGuid>& aTargets) const
-{
-  if (mTabChild) {
-    mTabChild->SetTargetAPZC(aInputBlockId, aTargets);
-=======
 void PuppetWidget::SetConfirmedTargetAPZC(
     uint64_t aInputBlockId,
     const nsTArray<SLGuidAndRenderRoot>& aTargets) const {
   if (mBrowserChild) {
     mBrowserChild->SetTargetAPZC(aInputBlockId, aTargets);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void PuppetWidget::UpdateZoomConstraints(
-    const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
-    const Maybe<ZoomConstraints>& aConstraints) {
-  if (mTabChild) {
-    mTabChild->DoUpdateZoomConstraints(aPresShellId, aViewId, aConstraints);
-||||||| merged common ancestors
-void
-PuppetWidget::UpdateZoomConstraints(const uint32_t& aPresShellId,
-                                    const FrameMetrics::ViewID& aViewId,
-                                    const Maybe<ZoomConstraints>& aConstraints)
-{
-  if (mTabChild) {
-    mTabChild->DoUpdateZoomConstraints(aPresShellId, aViewId, aConstraints);
-=======
 void PuppetWidget::UpdateZoomConstraints(
     const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
     const Maybe<ZoomConstraints>& aConstraints) {
   if (mBrowserChild) {
     mBrowserChild->DoUpdateZoomConstraints(aPresShellId, aViewId, aConstraints);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-bool PuppetWidget::AsyncPanZoomEnabled() const {
-  return mTabChild && mTabChild->AsyncPanZoomEnabled();
-||||||| merged common ancestors
-bool
-PuppetWidget::AsyncPanZoomEnabled() const
-{
-  return mTabChild && mTabChild->AsyncPanZoomEnabled();
-=======
 bool PuppetWidget::AsyncPanZoomEnabled() const {
   return mBrowserChild && mBrowserChild->AsyncPanZoomEnabled();
->>>>>>> upstream-releases
 }
 
 void PuppetWidget::GetEditCommands(NativeKeyBindingsType aType,
@@ -779,18 +592,8 @@ bool PuppetWidget::CreateRemoteLayerManager(
   return true;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::RequestIMEToCommitComposition(bool aCancel) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::RequestIMEToCommitComposition(bool aCancel)
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::RequestIMEToCommitComposition(bool aCancel) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -825,16 +628,8 @@ nsresult PuppetWidget::RequestIMEToCommitComposition(bool aCancel) {
 
   bool isCommitted = false;
   nsAutoString committedString;
-<<<<<<< HEAD
-  if (NS_WARN_IF(!mTabChild->SendRequestIMEToCommitComposition(
-          aCancel, &isCommitted, &committedString))) {
-||||||| merged common ancestors
-  if (NS_WARN_IF(!mTabChild->SendRequestIMEToCommitComposition(
-                               aCancel, &isCommitted, &committedString))) {
-=======
   if (NS_WARN_IF(!mBrowserChild->SendRequestIMEToCommitComposition(
           aCancel, &isCommitted, &committedString))) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -861,16 +656,8 @@ nsresult PuppetWidget::RequestIMEToCommitComposition(bool aCancel) {
   // eCompositionStart event.
   mIgnoreCompositionEvents = true;
 
-<<<<<<< HEAD
-  Unused << mTabChild->SendOnEventNeedingAckHandled(
-      eCompositionCommitRequestHandled);
-||||||| merged common ancestors
-  Unused <<
-    mTabChild->SendOnEventNeedingAckHandled(eCompositionCommitRequestHandled);
-=======
   Unused << mBrowserChild->SendOnEventNeedingAckHandled(
       eCompositionCommitRequestHandled);
->>>>>>> upstream-releases
 
   // NOTE: PuppetWidget might be destroyed already.
   return NS_OK;
@@ -882,39 +669,11 @@ nsresult PuppetWidget::StartPluginIME(const WidgetKeyboardEvent& aKeyboardEvent,
   DebugOnly<bool> propagationAlreadyStopped =
       aKeyboardEvent.mFlags.mPropagationStopped;
   DebugOnly<bool> immediatePropagationAlreadyStopped =
-<<<<<<< HEAD
-      aKeyboardEvent.mFlags.mImmediatePropagationStopped;
-  if (!mTabChild || !mTabChild->SendStartPluginIME(aKeyboardEvent, aPanelX,
-                                                   aPanelY, &aCommitted)) {
-||||||| merged common ancestors
-    aKeyboardEvent.mFlags.mImmediatePropagationStopped;
-  if (!mTabChild ||
-      !mTabChild->SendStartPluginIME(aKeyboardEvent, aPanelX,
-                                     aPanelY, &aCommitted)) {
-=======
       aKeyboardEvent.mFlags.mImmediatePropagationStopped;
   if (!mBrowserChild || !mBrowserChild->SendStartPluginIME(
                             aKeyboardEvent, aPanelX, aPanelY, &aCommitted)) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
-  // TabChild::SendStartPluginIME() sends back the keyboard event to the main
-  // process synchronously.  At this time, ParamTraits<WidgetEvent>::Write()
-  // marks the event as "posted to remote process".  However, this is not
-  // correct here since the event has been handled synchronously in the main
-  // process.  So, we adjust the cross process dispatching state here.
-  const_cast<WidgetKeyboardEvent&>(aKeyboardEvent)
-      .ResetCrossProcessDispatchingState();
-||||||| merged common ancestors
-  // TabChild::SendStartPluginIME() sends back the keyboard event to the main
-  // process synchronously.  At this time, ParamTraits<WidgetEvent>::Write()
-  // marks the event as "posted to remote process".  However, this is not
-  // correct here since the event has been handled synchronously in the main
-  // process.  So, we adjust the cross process dispatching state here.
-  const_cast<WidgetKeyboardEvent&>(aKeyboardEvent).
-    ResetCrossProcessDispatchingState();
-=======
   // BrowserChild::SendStartPluginIME() sends back the keyboard event to the
   // main process synchronously.  At this time,
   // ParamTraits<WidgetEvent>::Write() marks the event as "posted to remote
@@ -923,7 +682,6 @@ nsresult PuppetWidget::StartPluginIME(const WidgetKeyboardEvent& aKeyboardEvent,
   // dispatching state here.
   const_cast<WidgetKeyboardEvent&>(aKeyboardEvent)
       .ResetCrossProcessDispatchingState();
->>>>>>> upstream-releases
   // Although it shouldn't occur in content process,
   // ResetCrossProcessDispatchingState() may reset propagation state too
   // if the event was posted to a remote process and we're waiting its
@@ -936,36 +694,14 @@ nsresult PuppetWidget::StartPluginIME(const WidgetKeyboardEvent& aKeyboardEvent,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PuppetWidget::SetPluginFocused(bool& aFocused) {
-  if (mTabChild) {
-    mTabChild->SendSetPluginFocused(aFocused);
-||||||| merged common ancestors
-void
-PuppetWidget::SetPluginFocused(bool& aFocused)
-{
-  if (mTabChild) {
-    mTabChild->SendSetPluginFocused(aFocused);
-=======
 void PuppetWidget::SetPluginFocused(bool& aFocused) {
   if (mBrowserChild) {
     mBrowserChild->SendSetPluginFocused(aFocused);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void PuppetWidget::DefaultProcOfPluginEvent(const WidgetPluginEvent& aEvent) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-void
-PuppetWidget::DefaultProcOfPluginEvent(const WidgetPluginEvent& aEvent)
-{
-  if (!mTabChild) {
-=======
 void PuppetWidget::DefaultProcOfPluginEvent(const WidgetPluginEvent& aEvent) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
   mBrowserChild->SendDefaultProcOfPluginEvent(aEvent);
@@ -1017,20 +753,9 @@ NativeIMEContext PuppetWidget::GetNativeIMEContext() {
   return mNativeIMEContext;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::NotifyIMEOfFocusChange(
-    const IMENotification& aIMENotification) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::NotifyIMEOfFocusChange(const IMENotification& aIMENotification)
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::NotifyIMEOfFocusChange(
     const IMENotification& aIMENotification) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -1057,26 +782,6 @@ nsresult PuppetWidget::NotifyIMEOfFocusChange(
   mIMENotificationRequestsOfParent =
       IMENotificationRequests(IMENotificationRequests::NOTIFY_ALL);
   RefPtr<PuppetWidget> self = this;
-<<<<<<< HEAD
-  mTabChild->SendNotifyIMEFocus(mContentCache, aIMENotification)
-      ->Then(mTabChild->TabGroup()->EventTargetFor(TaskCategory::UI), __func__,
-             [self](IMENotificationRequests aRequests) {
-               self->mIMENotificationRequestsOfParent = aRequests;
-             },
-             [self](mozilla::ipc::ResponseRejectReason aReason) {
-               NS_WARNING("SendNotifyIMEFocus got rejected.");
-             });
-||||||| merged common ancestors
-  mTabChild->SendNotifyIMEFocus(mContentCache, aIMENotification)->Then(
-    mTabChild->TabGroup()->EventTargetFor(TaskCategory::UI),
-    __func__,
-    [self] (IMENotificationRequests aRequests) {
-      self->mIMENotificationRequestsOfParent = aRequests;
-    },
-    [self] (mozilla::ipc::ResponseRejectReason aReason) {
-      NS_WARNING("SendNotifyIMEFocus got rejected.");
-    });
-=======
   mBrowserChild->SendNotifyIMEFocus(mContentCache, aIMENotification)
       ->Then(
           mBrowserChild->TabGroup()->EventTargetFor(TaskCategory::UI), __func__,
@@ -1090,26 +795,13 @@ nsresult PuppetWidget::NotifyIMEOfFocusChange(
           [self](mozilla::ipc::ResponseRejectReason&& aReason) {
             NS_WARNING("SendNotifyIMEFocus got rejected.");
           });
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::NotifyIMEOfCompositionUpdate(
-    const IMENotification& aIMENotification) {
-  if (NS_WARN_IF(!mTabChild)) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::NotifyIMEOfCompositionUpdate(
-                const IMENotification& aIMENotification)
-{
-  if (NS_WARN_IF(!mTabChild)) {
-=======
 nsresult PuppetWidget::NotifyIMEOfCompositionUpdate(
     const IMENotification& aIMENotification) {
   if (NS_WARN_IF(!mBrowserChild)) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -1180,21 +872,9 @@ nsresult PuppetWidget::NotifyIMEOfSelectionChange(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::NotifyIMEOfMouseButtonEvent(
-    const IMENotification& aIMENotification) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::NotifyIMEOfMouseButtonEvent(
-                const IMENotification& aIMENotification)
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::NotifyIMEOfMouseButtonEvent(
     const IMENotification& aIMENotification) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -1213,20 +893,9 @@ nsresult PuppetWidget::NotifyIMEOfMouseButtonEvent(
   return consumedByIME ? NS_SUCCESS_EVENT_CONSUMED : NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::NotifyIMEOfPositionChange(
-    const IMENotification& aIMENotification) {
-  if (NS_WARN_IF(!mTabChild)) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::NotifyIMEOfPositionChange(const IMENotification& aIMENotification)
-{
-  if (NS_WARN_IF(!mTabChild)) {
-=======
 nsresult PuppetWidget::NotifyIMEOfPositionChange(
     const IMENotification& aIMENotification) {
   if (NS_WARN_IF(!mBrowserChild)) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -1247,121 +916,27 @@ nsresult PuppetWidget::NotifyIMEOfPositionChange(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PuppetWidget::SetCursor(nsCursor aCursor) {
-  // Don't cache on windows, Windowless flash breaks this via async cursor
-  // updates.
-#if !defined(XP_WIN)
-  if (mCursor == aCursor && !mCustomCursor && !mUpdateCursor) {
-    return;
-  }
-#endif
-
-  mCustomCursor = nullptr;
-||||||| merged common ancestors
-void
-PuppetWidget::SetCursor(nsCursor aCursor)
-{
-  // Don't cache on windows, Windowless flash breaks this via async cursor updates.
-#if !defined(XP_WIN)
-  if (mCursor == aCursor && !mCustomCursor && !mUpdateCursor) {
-    return;
-  }
-#endif
-
-  mCustomCursor = nullptr;
-=======
 struct CursorSurface {
   UniquePtr<char[]> mData;
   IntSize mSize;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mTabChild && !mTabChild->SendSetCursor(aCursor, mUpdateCursor)) {
-||||||| merged common ancestors
-  if (mTabChild &&
-      !mTabChild->SendSetCursor(aCursor, mUpdateCursor)) {
-=======
 void PuppetWidget::SetCursor(nsCursor aCursor, imgIContainer* aCursorImage,
                              uint32_t aHotspotX, uint32_t aHotspotY) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
 
-<<<<<<< HEAD
-  mCursor = aCursor;
-  mUpdateCursor = false;
-}
-
-nsresult PuppetWidget::SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                                 uint32_t aHotspotY) {
-  if (!aCursor || !mTabChild) {
-    return NS_OK;
-  }
-
-||||||| merged common ancestors
-  mCursor = aCursor;
-  mUpdateCursor = false;
-}
-
-nsresult
-PuppetWidget::SetCursor(imgIContainer* aCursor,
-                        uint32_t aHotspotX, uint32_t aHotspotY)
-{
-  if (!aCursor || !mTabChild) {
-    return NS_OK;
-  }
-
-=======
   // Don't cache on windows, Windowless flash breaks this via async cursor
   // updates.
->>>>>>> upstream-releases
 #if !defined(XP_WIN)
-<<<<<<< HEAD
-  if (mCustomCursor == aCursor && mCursorHotspotX == aHotspotX &&
-      mCursorHotspotY == aHotspotY && !mUpdateCursor) {
-    return NS_OK;
-||||||| merged common ancestors
-  if (mCustomCursor == aCursor &&
-      mCursorHotspotX == aHotspotX &&
-      mCursorHotspotY == aHotspotY &&
-      !mUpdateCursor) {
-    return NS_OK;
-=======
   if (!mUpdateCursor && mCursor == aCursor && mCustomCursor == aCursorImage &&
       (!aCursorImage ||
        (mCursorHotspotX == aHotspotX && mCursorHotspotY == aHotspotY))) {
     return;
->>>>>>> upstream-releases
   }
 #endif
 
-<<<<<<< HEAD
-  RefPtr<mozilla::gfx::SourceSurface> surface = aCursor->GetFrame(
-      imgIContainer::FRAME_CURRENT, imgIContainer::FLAG_SYNC_DECODE);
-  if (!surface) {
-    return NS_ERROR_FAILURE;
-  }
-
-  RefPtr<mozilla::gfx::DataSourceSurface> dataSurface =
-      surface->GetDataSurface();
-  if (!dataSurface) {
-    return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  RefPtr<mozilla::gfx::SourceSurface> surface =
-    aCursor->GetFrame(imgIContainer::FRAME_CURRENT,
-                      imgIContainer::FLAG_SYNC_DECODE);
-  if (!surface) {
-    return NS_ERROR_FAILURE;
-  }
-
-  RefPtr<mozilla::gfx::DataSourceSurface> dataSurface =
-    surface->GetDataSurface();
-  if (!dataSurface) {
-    return NS_ERROR_FAILURE;
-=======
   bool hasCustomCursor = false;
   UniquePtr<char[]> customCursorData;
   size_t length = 0;
@@ -1382,38 +957,10 @@ PuppetWidget::SetCursor(imgIContainer* aCursor,
         format = dataSurface->GetFormat();
       }
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  size_t length;
-  int32_t stride;
-  mozilla::UniquePtr<char[]> surfaceData = nsContentUtils::GetSurfaceData(
-      WrapNotNull(dataSurface), &length, &stride);
-||||||| merged common ancestors
-  size_t length;
-  int32_t stride;
-  mozilla::UniquePtr<char[]> surfaceData =
-    nsContentUtils::GetSurfaceData(WrapNotNull(dataSurface), &length, &stride);
-=======
   mCustomCursor = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsDependentCString cursorData(surfaceData.get(), length);
-  mozilla::gfx::IntSize size = dataSurface->GetSize();
-  if (!mTabChild->SendSetCustomCursor(cursorData, size.width, size.height,
-                                      stride, dataSurface->GetFormat(),
-                                      aHotspotX, aHotspotY, mUpdateCursor)) {
-    return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  nsDependentCString cursorData(surfaceData.get(), length);
-  mozilla::gfx::IntSize size = dataSurface->GetSize();
-  if (!mTabChild->SendSetCustomCursor(cursorData, size.width, size.height, stride,
-                                      dataSurface->GetFormat(),
-                                      aHotspotX, aHotspotY, mUpdateCursor)) {
-    return NS_ERROR_FAILURE;
-=======
   nsDependentCString cursorData(customCursorData ? customCursorData.get() : "",
                                 length);
   if (!mBrowserChild->SendSetCursor(aCursor, hasCustomCursor, cursorData,
@@ -1421,7 +968,6 @@ PuppetWidget::SetCursor(imgIContainer* aCursor,
                                     customCursorSize.height, stride, format,
                                     aHotspotX, aHotspotY, force)) {
     return;
->>>>>>> upstream-releases
   }
 
   mCursor = aCursor;
@@ -1457,20 +1003,6 @@ nsresult PuppetWidget::Paint() {
                          0);
 #endif
 
-<<<<<<< HEAD
-    if (mLayerManager->GetBackendType() ==
-            mozilla::layers::LayersBackend::LAYERS_CLIENT ||
-        mLayerManager->GetBackendType() ==
-            mozilla::layers::LayersBackend::LAYERS_WR ||
-        (mozilla::layers::LayersBackend::LAYERS_BASIC ==
-             mLayerManager->GetBackendType() &&
-         mTabChild && mTabChild->IsLayersConnected().isSome())) {
-||||||| merged common ancestors
-    if (mLayerManager->GetBackendType() == mozilla::layers::LayersBackend::LAYERS_CLIENT ||
-        mLayerManager->GetBackendType() == mozilla::layers::LayersBackend::LAYERS_WR ||
-        (mozilla::layers::LayersBackend::LAYERS_BASIC == mLayerManager->GetBackendType() &&
-         mTabChild && mTabChild->IsLayersConnected().isSome())) {
-=======
     if (mLayerManager->GetBackendType() ==
             mozilla::layers::LayersBackend::LAYERS_CLIENT ||
         mLayerManager->GetBackendType() ==
@@ -1478,7 +1010,6 @@ nsresult PuppetWidget::Paint() {
         (mozilla::layers::LayersBackend::LAYERS_BASIC ==
              mLayerManager->GetBackendType() &&
          mBrowserChild && mBrowserChild->IsLayersConnected().isSome())) {
->>>>>>> upstream-releases
       // Do nothing, the compositor will handle drawing
       if (mBrowserChild) {
         mBrowserChild->NotifyPainted();
@@ -1558,29 +1089,6 @@ int32_t PuppetWidget::RoundsWidgetCoordinatesTo() { return mRounding; }
 
 void* PuppetWidget::GetNativeData(uint32_t aDataType) {
   switch (aDataType) {
-<<<<<<< HEAD
-    case NS_NATIVE_SHAREABLE_WINDOW: {
-      // NOTE: We can not have a tab child in some situations, such as when
-      // we're rendering to a fake widget for thumbnails.
-      if (!mTabChild) {
-        NS_WARNING("Need TabChild to get the nativeWindow from!");
-      }
-      mozilla::WindowsHandle nativeData = 0;
-      if (mTabChild) {
-        nativeData = mTabChild->WidgetNativeData();
-      }
-      return (void*)nativeData;
-||||||| merged common ancestors
-  case NS_NATIVE_SHAREABLE_WINDOW: {
-    // NOTE: We can not have a tab child in some situations, such as when we're
-    // rendering to a fake widget for thumbnails.
-    if (!mTabChild) {
-      NS_WARNING("Need TabChild to get the nativeWindow from!");
-    }
-    mozilla::WindowsHandle nativeData = 0;
-    if (mTabChild) {
-      nativeData = mTabChild->WidgetNativeData();
-=======
     case NS_NATIVE_SHAREABLE_WINDOW: {
       // NOTE: We can not have a tab child in some situations, such as when
       // we're rendering to a fake widget for thumbnails.
@@ -1592,7 +1100,6 @@ void* PuppetWidget::GetNativeData(uint32_t aDataType) {
         nativeData = mBrowserChild->WidgetNativeData();
       }
       return (void*)nativeData;
->>>>>>> upstream-releases
     }
     case NS_NATIVE_WINDOW:
     case NS_NATIVE_WIDGET:
@@ -1614,25 +1121,6 @@ void* PuppetWidget::GetNativeData(uint32_t aDataType) {
 #if defined(XP_WIN)
 void PuppetWidget::SetNativeData(uint32_t aDataType, uintptr_t aVal) {
   switch (aDataType) {
-<<<<<<< HEAD
-    case NS_NATIVE_CHILD_OF_SHAREABLE_WINDOW:
-      MOZ_ASSERT(mTabChild, "Need TabChild to send the message.");
-      if (mTabChild) {
-        mTabChild->SendSetNativeChildOfShareableWindow(aVal);
-      }
-      break;
-    default:
-      NS_WARNING("SetNativeData called with unsupported data type.");
-||||||| merged common ancestors
-  case NS_NATIVE_CHILD_OF_SHAREABLE_WINDOW:
-    MOZ_ASSERT(mTabChild, "Need TabChild to send the message.");
-    if (mTabChild) {
-      mTabChild->SendSetNativeChildOfShareableWindow(aVal);
-    }
-    break;
-  default:
-    NS_WARNING("SetNativeData called with unsupported data type.");
-=======
     case NS_NATIVE_CHILD_OF_SHAREABLE_WINDOW:
       MOZ_ASSERT(mBrowserChild, "Need BrowserChild to send the message.");
       if (mBrowserChild) {
@@ -1641,73 +1129,35 @@ void PuppetWidget::SetNativeData(uint32_t aDataType, uintptr_t aVal) {
       break;
     default:
       NS_WARNING("SetNativeData called with unsupported data type.");
->>>>>>> upstream-releases
   }
 }
 #endif
 
-<<<<<<< HEAD
-LayoutDeviceIntPoint PuppetWidget::GetChromeOffset() {
-  if (!GetOwningTabChild()) {
-||||||| merged common ancestors
-LayoutDeviceIntPoint
-PuppetWidget::GetChromeOffset()
-{
-  if (!GetOwningTabChild()) {
-=======
 LayoutDeviceIntPoint PuppetWidget::GetChromeOffset() {
   if (!GetOwningBrowserChild()) {
->>>>>>> upstream-releases
     NS_WARNING("PuppetWidget without Tab does not have chrome information.");
     return LayoutDeviceIntPoint();
   }
   return GetOwningBrowserChild()->GetChromeOffset();
 }
 
-<<<<<<< HEAD
-LayoutDeviceIntPoint PuppetWidget::GetWindowPosition() {
-  if (!GetOwningTabChild()) {
-||||||| merged common ancestors
-LayoutDeviceIntPoint
-PuppetWidget::GetWindowPosition()
-{
-  if (!GetOwningTabChild()) {
-=======
 LayoutDeviceIntPoint PuppetWidget::GetWindowPosition() {
   if (!GetOwningBrowserChild()) {
->>>>>>> upstream-releases
     return LayoutDeviceIntPoint();
   }
 
   int32_t winX, winY, winW, winH;
-<<<<<<< HEAD
-  NS_ENSURE_SUCCESS(
-      GetOwningTabChild()->GetDimensions(0, &winX, &winY, &winW, &winH),
-      LayoutDeviceIntPoint());
-  return LayoutDeviceIntPoint(winX, winY) +
-         GetOwningTabChild()->GetClientOffset();
-||||||| merged common ancestors
-  NS_ENSURE_SUCCESS(GetOwningTabChild()->GetDimensions(0, &winX, &winY, &winW, &winH), LayoutDeviceIntPoint());
-  return LayoutDeviceIntPoint(winX, winY) + GetOwningTabChild()->GetClientOffset();
-=======
   NS_ENSURE_SUCCESS(
       GetOwningBrowserChild()->GetDimensions(0, &winX, &winY, &winW, &winH),
       LayoutDeviceIntPoint());
   return LayoutDeviceIntPoint(winX, winY) +
          GetOwningBrowserChild()->GetClientOffset();
->>>>>>> upstream-releases
 }
 
 LayoutDeviceIntRect PuppetWidget::GetScreenBounds() {
   return LayoutDeviceIntRect(WidgetToScreenOffset(), mBounds.Size());
 }
 
-<<<<<<< HEAD
-uint32_t PuppetWidget::GetMaxTouchPoints() const {
-||||||| merged common ancestors
-uint32_t PuppetWidget::GetMaxTouchPoints() const
-{
-=======
 LayoutDeviceIntSize PuppetWidget::GetCompositionSize() {
   Maybe<LayoutDeviceIntRect> visibleRect =
       mBrowserChild ? mBrowserChild->GetVisibleRect() : Nothing();
@@ -1718,7 +1168,6 @@ LayoutDeviceIntSize PuppetWidget::GetCompositionSize() {
 }
 
 uint32_t PuppetWidget::GetMaxTouchPoints() const {
->>>>>>> upstream-releases
   uint32_t maxTouchPoints = 0;
   if (mBrowserChild) {
     mBrowserChild->GetMaxTouchPoints(&maxTouchPoints);
@@ -1726,20 +1175,9 @@ uint32_t PuppetWidget::GetMaxTouchPoints() const {
   return maxTouchPoints;
 }
 
-<<<<<<< HEAD
-void PuppetWidget::StartAsyncScrollbarDrag(
-    const AsyncDragMetrics& aDragMetrics) {
-  mTabChild->StartScrollbarDrag(aDragMetrics);
-||||||| merged common ancestors
-void
-PuppetWidget::StartAsyncScrollbarDrag(const AsyncDragMetrics& aDragMetrics)
-{
-  mTabChild->StartScrollbarDrag(aDragMetrics);
-=======
 void PuppetWidget::StartAsyncScrollbarDrag(
     const AsyncDragMetrics& aDragMetrics) {
   mBrowserChild->StartScrollbarDrag(aDragMetrics);
->>>>>>> upstream-releases
 }
 
 PuppetScreen::PuppetScreen(void* nativeScreen) {}
@@ -1816,39 +1254,17 @@ nsIWidgetListener* PuppetWidget::GetCurrentWidgetListener() {
   return mAttachedWidgetListener;
 }
 
-<<<<<<< HEAD
-void PuppetWidget::SetCandidateWindowForPlugin(
-    const CandidateWindowPosition& aPosition) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-void
-PuppetWidget::SetCandidateWindowForPlugin(
-                const CandidateWindowPosition& aPosition)
-{
-  if (!mTabChild) {
-=======
 void PuppetWidget::SetCandidateWindowForPlugin(
     const CandidateWindowPosition& aPosition) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
 
   mBrowserChild->SendSetCandidateWindowForPlugin(aPosition);
 }
 
-<<<<<<< HEAD
-void PuppetWidget::EnableIMEForPlugin(bool aEnable) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-void
-PuppetWidget::EnableIMEForPlugin(bool aEnable)
-{
-  if (!mTabChild) {
-=======
 void PuppetWidget::EnableIMEForPlugin(bool aEnable) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -1864,102 +1280,34 @@ void PuppetWidget::EnableIMEForPlugin(bool aEnable) {
   mBrowserChild->SendEnableIMEForPlugin(aEnable);
 }
 
-<<<<<<< HEAD
-void PuppetWidget::ZoomToRect(const uint32_t& aPresShellId,
-                              const ScrollableLayerGuid::ViewID& aViewId,
-                              const CSSRect& aRect, const uint32_t& aFlags) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-void
-PuppetWidget::ZoomToRect(const uint32_t& aPresShellId,
-                         const FrameMetrics::ViewID& aViewId,
-                         const CSSRect& aRect,
-                         const uint32_t& aFlags)
-{
-  if (!mTabChild) {
-=======
 void PuppetWidget::ZoomToRect(const uint32_t& aPresShellId,
                               const ScrollableLayerGuid::ViewID& aViewId,
                               const CSSRect& aRect, const uint32_t& aFlags) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
 
   mBrowserChild->ZoomToRect(aPresShellId, aViewId, aRect, aFlags);
 }
 
-<<<<<<< HEAD
-void PuppetWidget::LookUpDictionary(
-    const nsAString& aText, const nsTArray<mozilla::FontRange>& aFontRangeArray,
-    const bool aIsVertical, const LayoutDeviceIntPoint& aPoint) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-void
-PuppetWidget::LookUpDictionary(
-                const nsAString& aText,
-                const nsTArray<mozilla::FontRange>& aFontRangeArray,
-                const bool aIsVertical,
-                const LayoutDeviceIntPoint& aPoint)
-{
-  if (!mTabChild) {
-=======
 void PuppetWidget::LookUpDictionary(
     const nsAString& aText, const nsTArray<mozilla::FontRange>& aFontRangeArray,
     const bool aIsVertical, const LayoutDeviceIntPoint& aPoint) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return;
   }
 
-<<<<<<< HEAD
-  mTabChild->SendLookUpDictionary(nsString(aText), aFontRangeArray, aIsVertical,
-                                  aPoint);
-||||||| merged common ancestors
-  mTabChild->SendLookUpDictionary(nsString(aText), aFontRangeArray, aIsVertical, aPoint);
-=======
   mBrowserChild->SendLookUpDictionary(nsString(aText), aFontRangeArray,
                                       aIsVertical, aPoint);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool PuppetWidget::HasPendingInputEvent() {
-  if (!mTabChild) {
-||||||| merged common ancestors
-bool
-PuppetWidget::HasPendingInputEvent()
-{
-  if (!mTabChild) {
-=======
 bool PuppetWidget::HasPendingInputEvent() {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return false;
   }
 
   bool ret = false;
 
-<<<<<<< HEAD
-  mTabChild->GetIPCChannel()->PeekMessages(
-      [&ret](const IPC::Message& aMsg) -> bool {
-        if (nsContentUtils::IsMessageInputEvent(aMsg)) {
-          ret = true;
-          return false;  // Stop peeking.
-        }
-        return true;
-      });
-||||||| merged common ancestors
-  mTabChild->GetIPCChannel()->PeekMessages(
-    [&ret](const IPC::Message& aMsg) -> bool {
-      if (nsContentUtils::IsMessageInputEvent(aMsg)) {
-        ret = true;
-        return false; // Stop peeking.
-      }
-      return true;
-    }
-  );
-=======
   mBrowserChild->GetIPCChannel()->PeekMessages(
       [&ret](const IPC::Message& aMsg) -> bool {
         if (nsContentUtils::IsMessageInputEvent(aMsg)) {
@@ -1968,7 +1316,6 @@ bool PuppetWidget::HasPendingInputEvent() {
         }
         return true;
       });
->>>>>>> upstream-releases
 
   return ret;
 }
@@ -1985,23 +1332,10 @@ void PuppetWidget::HandledWindowedPluginKeyEvent(
   callback->HandledWindowedPluginKeyEvent(aKeyEventData, aIsConsumed);
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::OnWindowedPluginKeyEvent(
-    const NativeEventData& aKeyEventData,
-    nsIKeyEventInPluginCallback* aCallback) {
-  if (NS_WARN_IF(!mTabChild)) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::OnWindowedPluginKeyEvent(const NativeEventData& aKeyEventData,
-                                       nsIKeyEventInPluginCallback* aCallback)
-{
-  if (NS_WARN_IF(!mTabChild)) {
-=======
 nsresult PuppetWidget::OnWindowedPluginKeyEvent(
     const NativeEventData& aKeyEventData,
     nsIKeyEventInPluginCallback* aCallback) {
   if (NS_WARN_IF(!mBrowserChild)) {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_AVAILABLE;
   }
   if (NS_WARN_IF(!mBrowserChild->SendOnWindowedPluginKeyEvent(aKeyEventData))) {
@@ -2080,18 +1414,8 @@ PuppetWidget::WillDispatchKeyboardEvent(
   MOZ_ASSERT(aTextEventDispatcher == mTextEventDispatcher);
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::SetSystemFont(const nsCString& aFontName) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::SetSystemFont(const nsCString& aFontName)
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::SetSystemFont(const nsCString& aFontName) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -2099,36 +1423,16 @@ nsresult PuppetWidget::SetSystemFont(const nsCString& aFontName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::GetSystemFont(nsCString& aFontName) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::GetSystemFont(nsCString& aFontName)
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::GetSystemFont(nsCString& aFontName) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
   mBrowserChild->SendGetSystemFont(&aFontName);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::SetPrefersReducedMotionOverrideForTest(bool aValue) {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::SetPrefersReducedMotionOverrideForTest(bool aValue)
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::SetPrefersReducedMotionOverrideForTest(bool aValue) {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -2139,18 +1443,8 @@ nsresult PuppetWidget::SetPrefersReducedMotionOverrideForTest(bool aValue) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PuppetWidget::ResetPrefersReducedMotionOverrideForTest() {
-  if (!mTabChild) {
-||||||| merged common ancestors
-nsresult
-PuppetWidget::ResetPrefersReducedMotionOverrideForTest()
-{
-  if (!mTabChild) {
-=======
 nsresult PuppetWidget::ResetPrefersReducedMotionOverrideForTest() {
   if (!mBrowserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 

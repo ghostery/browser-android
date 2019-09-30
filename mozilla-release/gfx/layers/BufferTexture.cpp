@@ -151,31 +151,11 @@ BufferTextureData* BufferTextureData::CreateInternal(
   }
 }
 
-<<<<<<< HEAD
-BufferTextureData* BufferTextureData::CreateForYCbCr(
-    KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
-    gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
-    gfx::ColorDepth aColorDepth, YUVColorSpace aYUVColorSpace,
-    TextureFlags aTextureFlags) {
-||||||| merged common ancestors
-BufferTextureData*
-BufferTextureData::CreateForYCbCr(KnowsCompositor* aAllocator,
-                                  gfx::IntSize aYSize,
-                                  uint32_t aYStride,
-                                  gfx::IntSize aCbCrSize,
-                                  uint32_t aCbCrStride,
-                                  StereoMode aStereoMode,
-                                  gfx::ColorDepth aColorDepth,
-                                  YUVColorSpace aYUVColorSpace,
-                                  TextureFlags aTextureFlags)
-{
-=======
 BufferTextureData* BufferTextureData::CreateForYCbCr(
     KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
     gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
     gfx::ColorDepth aColorDepth, gfx::YUVColorSpace aYUVColorSpace,
     TextureFlags aTextureFlags) {
->>>>>>> upstream-releases
   uint32_t bufSize = ImageDataSerializer::ComputeYCbCrBufferSize(
       aYSize, aYStride, aCbCrSize, aCbCrStride);
   if (bufSize == 0) {
@@ -244,15 +224,7 @@ Maybe<gfx::IntSize> BufferTextureData::GetCbCrSize() const {
   return ImageDataSerializer::CbCrSizeFromBufferDescriptor(mDescriptor);
 }
 
-<<<<<<< HEAD
-Maybe<YUVColorSpace> BufferTextureData::GetYUVColorSpace() const {
-||||||| merged common ancestors
-Maybe<YUVColorSpace>
-BufferTextureData::GetYUVColorSpace() const
-{
-=======
 Maybe<gfx::YUVColorSpace> BufferTextureData::GetYUVColorSpace() const {
->>>>>>> upstream-releases
   return ImageDataSerializer::YUVColorSpaceFromBufferDescriptor(mDescriptor);
 }
 

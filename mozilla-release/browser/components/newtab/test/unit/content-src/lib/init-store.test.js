@@ -102,16 +102,8 @@ describe("initStore", () => {
 
       rehydrationMiddleware(store)(next)(requestAction);
 
-<<<<<<< HEAD
-      next.resetHistory();
-      rehydrationMiddleware(store)(next)({type: at.INIT});
-||||||| merged common ancestors
-      next.reset();
-      rehydrationMiddleware(store)(next)({type: at.INIT});
-=======
       next.resetHistory();
       rehydrationMiddleware(store)(next)({ type: at.INIT });
->>>>>>> upstream-releases
       assert.calledWith(next, requestAction);
     });
     it("should allow MERGE_STORE_ACTION to go through", () => {
@@ -140,16 +132,8 @@ describe("initStore", () => {
     });
     it("should allow actions from main to go through after MERGE_STORE_ACTION has been received", () => {
       const next = sinon.spy();
-<<<<<<< HEAD
-      rehydrationMiddleware(store)(next)({type: MERGE_STORE_ACTION});
-      next.resetHistory();
-||||||| merged common ancestors
-      rehydrationMiddleware(store)(next)({type: MERGE_STORE_ACTION});
-      next.reset();
-=======
       rehydrationMiddleware(store)(next)({ type: MERGE_STORE_ACTION });
       next.resetHistory();
->>>>>>> upstream-releases
 
       const action = ac.AlsoToOneContent({ type: "FOO" }, 123);
       rehydrationMiddleware(store)(next)(action);

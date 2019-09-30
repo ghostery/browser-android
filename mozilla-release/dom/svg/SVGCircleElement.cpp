@@ -24,22 +24,6 @@ JSObject* SVGCircleElement::WrapNode(JSContext* aCx,
   return SVGCircleElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthInfo SVGCircleElement::sLengthInfo[3] = {
-    {nsGkAtoms::cx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::X},
-    {nsGkAtoms::cy, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::Y},
-    {nsGkAtoms::r, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::XY}};
-||||||| merged common ancestors
-nsSVGElement::LengthInfo SVGCircleElement::sLengthInfo[3] =
-{
-  { nsGkAtoms::cx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
-  { nsGkAtoms::cy, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
-  { nsGkAtoms::r, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::XY }
-};
-=======
 SVGElement::LengthInfo SVGCircleElement::sLengthInfo[3] = {
     {nsGkAtoms::cx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::X},
@@ -47,21 +31,10 @@ SVGElement::LengthInfo SVGCircleElement::sLengthInfo[3] = {
      SVGContentUtils::Y},
     {nsGkAtoms::r, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::XY}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-SVGCircleElement::SVGCircleElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGCircleElementBase(std::move(aNodeInfo)) {}
-||||||| merged common ancestors
-SVGCircleElement::SVGCircleElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-  : SVGCircleElementBase(std::move(aNodeInfo))
-{
-}
-=======
 SVGCircleElement::SVGCircleElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGCircleElementBase(std::move(aNodeInfo)) {}
@@ -70,7 +43,6 @@ bool SVGCircleElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   return IsInLengthInfo(aAttribute, sLengthInfo) ||
          SVGCircleElementBase::IsAttributeMapped(aAttribute);
 }
->>>>>>> upstream-releases
 
 namespace SVGT = SVGGeometryProperty::Tags;
 
@@ -81,39 +53,15 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGCircleElement)
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGCircleElement::Cx() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGCircleElement::Cx()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGCircleElement::Cx() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_CX].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGCircleElement::Cy() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGCircleElement::Cy()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGCircleElement::Cy() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_CY].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGCircleElement::R() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGCircleElement::R()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGCircleElement::R() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_R].ToDOMAnimatedLength(this);
 }
 
@@ -124,32 +72,12 @@ already_AddRefed<DOMSVGAnimatedLength> SVGCircleElement::R() {
 bool SVGCircleElement::HasValidDimensions() const {
   float r;
 
-<<<<<<< HEAD
-/* virtual */ bool SVGCircleElement::HasValidDimensions() const {
-  return mLengthAttributes[ATTR_R].IsExplicitlySet() &&
-         mLengthAttributes[ATTR_R].GetAnimValInSpecifiedUnits() > 0;
-||||||| merged common ancestors
-/* virtual */ bool
-SVGCircleElement::HasValidDimensions() const
-{
-  return mLengthAttributes[ATTR_R].IsExplicitlySet() &&
-         mLengthAttributes[ATTR_R].GetAnimValInSpecifiedUnits() > 0;
-=======
   MOZ_ASSERT(GetPrimaryFrame());
   SVGGeometryProperty::ResolveAll<SVGT::R>(this, &r);
   return r > 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthAttributesInfo SVGCircleElement::GetLengthInfo() {
-||||||| merged common ancestors
-nsSVGElement::LengthAttributesInfo
-SVGCircleElement::GetLengthInfo()
-{
-=======
 SVGElement::LengthAttributesInfo SVGCircleElement::GetLengthInfo() {
->>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
@@ -211,13 +139,6 @@ already_AddRefed<Path> SVGCircleElement::BuildPath(PathBuilder* aBuilder) {
   return aBuilder->Finish();
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 bool SVGCircleElement::IsLengthChangedViaCSS(const ComputedStyle& aNewStyle,
                                              const ComputedStyle& aOldStyle) {
   auto *newSVGReset = aNewStyle.StyleSVGReset(),
@@ -245,4 +166,3 @@ nsCSSPropertyID SVGCircleElement::GetCSSPropertyIdForAttrEnum(
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

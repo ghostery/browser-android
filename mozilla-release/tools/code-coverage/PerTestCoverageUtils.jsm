@@ -17,17 +17,6 @@ const env = Cc["@mozilla.org/process/environment;1"].getService(
 const gcovPrefixPath = env.get("GCOV_PREFIX");
 // This is the directory where codecoverage.py is expecting to see the gcda files.
 const gcovResultsPath = env.get("GCOV_RESULTS_DIR");
-<<<<<<< HEAD
-// This is the directory where the JS engine is emitting the lcov files.
-const jsvmPrefixPath = env.get("JS_CODE_COVERAGE_OUTPUT_DIR");
-// This is the directory where codecoverage.py is expecting to see the lcov files.
-const jsvmResultsPath = env.get("JSVM_RESULTS_DIR");
-
-const gcovPrefixDir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-||||||| merged common ancestors
-
-const gcovPrefixDir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-=======
 // This is the directory where the JS engine is emitting the lcov files.
 const jsvmPrefixPath = env.get("JS_CODE_COVERAGE_OUTPUT_DIR");
 // This is the directory where codecoverage.py is expecting to see the lcov files.
@@ -36,7 +25,6 @@ const jsvmResultsPath = env.get("JSVM_RESULTS_DIR");
 const gcovPrefixDir = Cc["@mozilla.org/file/local;1"].createInstance(
   Ci.nsIFile
 );
->>>>>>> upstream-releases
 if (gcovPrefixPath) {
   gcovPrefixDir.initWithPath(gcovPrefixPath);
 }
@@ -46,19 +34,6 @@ if (gcovResultsPath) {
   gcovResultsDir.initWithPath(gcovResultsPath);
 }
 
-<<<<<<< HEAD
-const jsvmPrefixDir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-if (jsvmPrefixPath) {
-  jsvmPrefixDir.initWithPath(jsvmPrefixPath);
-}
-
-let jsvmResultsDir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-if (jsvmResultsPath) {
-  jsvmResultsDir.initWithPath(jsvmResultsPath);
-}
-
-||||||| merged common ancestors
-=======
 const jsvmPrefixDir = Cc["@mozilla.org/file/local;1"].createInstance(
   Ci.nsIFile
 );
@@ -71,7 +46,6 @@ if (jsvmResultsPath) {
   jsvmResultsDir.initWithPath(jsvmResultsPath);
 }
 
->>>>>>> upstream-releases
 function awaitPromise(promise) {
   let ret;
   let complete = false;

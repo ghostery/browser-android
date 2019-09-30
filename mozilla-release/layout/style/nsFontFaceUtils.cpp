@@ -18,35 +18,6 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-static bool ComputedStyleContainsFont(ComputedStyle* aComputedStyle,
-                                      nsPresContext* aPresContext,
-                                      const gfxUserFontSet* aUserFontSet,
-                                      const gfxUserFontEntry* aFont) {
-  // if the font is null, simply check to see whether fontlist includes
-  // downloadable fonts
-  if (!aFont) {
-    const mozilla::FontFamilyList& fontlist =
-        aComputedStyle->StyleFont()->mFont.fontlist;
-    return aUserFontSet->ContainsUserFontSetFonts(fontlist);
-  }
-
-||||||| merged common ancestors
-static bool
-ComputedStyleContainsFont(ComputedStyle* aComputedStyle,
-                          nsPresContext* aPresContext,
-                          const gfxUserFontSet* aUserFontSet,
-                          const gfxUserFontEntry* aFont)
-{
-  // if the font is null, simply check to see whether fontlist includes
-  // downloadable fonts
-  if (!aFont) {
-    const mozilla::FontFamilyList& fontlist =
-      aComputedStyle->StyleFont()->mFont.fontlist;
-    return aUserFontSet->ContainsUserFontSetFonts(fontlist);
-  }
-
-=======
 enum class FontUsageKind {
   // The frame did not use the given font.
   None = 0,
@@ -63,20 +34,10 @@ static FontUsageKind StyleFontUsage(ComputedStyle* aComputedStyle,
                                     nsPresContext* aPresContext,
                                     const gfxUserFontSet* aUserFontSet,
                                     const gfxUserFontEntry* aFont) {
->>>>>>> upstream-releases
   // first, check if the family name is in the fontlist
-<<<<<<< HEAD
-  if (!aComputedStyle->StyleFont()->mFont.fontlist.Contains(
-          aFont->FamilyName())) {
-    return false;
-||||||| merged common ancestors
-  if (!aComputedStyle->StyleFont()->mFont.fontlist.Contains(aFont->FamilyName())) {
-    return false;
-=======
   if (!aComputedStyle->StyleFont()->mFont.fontlist.Contains(
           aFont->FamilyName())) {
     return FontUsageKind::None;
->>>>>>> upstream-releases
   }
 
   // family name is in the fontlist, check to see if the font group
@@ -96,17 +57,9 @@ static FontUsageKind StyleFontUsage(ComputedStyle* aComputedStyle,
   return FontUsageKind::Frame;
 }
 
-<<<<<<< HEAD
-static bool FrameUsesFont(nsIFrame* aFrame, const gfxUserFontEntry* aFont) {
-||||||| merged common ancestors
-static bool
-FrameUsesFont(nsIFrame* aFrame, const gfxUserFontEntry* aFont)
-{
-=======
 static FontUsageKind FrameFontUsage(nsIFrame* aFrame,
                                     nsPresContext* aPresContext,
                                     const gfxUserFontEntry* aFont) {
->>>>>>> upstream-releases
   // check the style of the frame
   gfxUserFontSet* ufs = aPresContext->GetUserFontSet();
   FontUsageKind kind =
@@ -130,16 +83,8 @@ static FontUsageKind FrameFontUsage(nsIFrame* aFrame,
   return kind;
 }
 
-<<<<<<< HEAD
-static void ScheduleReflow(nsIPresShell* aShell, nsIFrame* aFrame) {
-||||||| merged common ancestors
-static void
-ScheduleReflow(nsIPresShell* aShell, nsIFrame* aFrame)
-{
-=======
 // TODO(emilio): Can we use the restyle-hint machinery instead of this?
 static void ScheduleReflow(PresShell* aPresShell, nsIFrame* aFrame) {
->>>>>>> upstream-releases
   nsIFrame* f = aFrame;
   if (f->IsFrameOfType(nsIFrame::eSVG) || nsSVGUtils::IsInSVGTextSubtree(f)) {
     // SVG frames (and the non-SVG descendants of an SVGTextFrame) need special
@@ -173,15 +118,6 @@ static void ScheduleReflow(PresShell* aPresShell, nsIFrame* aFrame) {
                                NS_FRAME_IS_DIRTY);
 }
 
-<<<<<<< HEAD
-/* static */ void nsFontFaceUtils::MarkDirtyForFontChange(
-    nsIFrame* aSubtreeRoot, const gfxUserFontEntry* aFont) {
-||||||| merged common ancestors
-/* static */ void
-nsFontFaceUtils::MarkDirtyForFontChange(nsIFrame* aSubtreeRoot,
-                                        const gfxUserFontEntry* aFont)
-{
-=======
 enum class ReflowAlreadyScheduled {
   No,
   Yes,
@@ -191,7 +127,6 @@ enum class ReflowAlreadyScheduled {
 void nsFontFaceUtils::MarkDirtyForFontChange(nsIFrame* aSubtreeRoot,
                                              const gfxUserFontEntry* aFont) {
   MOZ_ASSERT(aFont);
->>>>>>> upstream-releases
   AutoTArray<nsIFrame*, 4> subtrees;
   subtrees.AppendElement(aSubtreeRoot);
 

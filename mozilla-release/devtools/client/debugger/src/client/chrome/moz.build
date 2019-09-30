@@ -7,13 +7,7 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/client/firefox/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/client/chrome/moz.build
     'commands.js',
     'create.js',
     'events.js',

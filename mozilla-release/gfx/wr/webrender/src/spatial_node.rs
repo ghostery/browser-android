@@ -130,13 +130,8 @@ impl SpatialNode {
         frame_rect: &LayoutRect,
         content_size: &LayoutSize,
         scroll_sensitivity: ScrollSensitivity,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-        frame_kind: ScrollFrameKind,
-||||||| merged common ancestors
-=======
         frame_kind: ScrollFrameKind,
         external_scroll_offset: LayoutVector2D,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
     ) -> Self {
         let node_type = SpatialNodeType::ScrollFrame(ScrollFrameInfo::new(
                 *frame_rect,
@@ -146,13 +141,8 @@ impl SpatialNode {
                     (content_size.height - frame_rect.size.height).max(0.0)
                 ),
                 external_id,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-                frame_kind,
-||||||| merged common ancestors
-=======
                 frame_kind,
                 external_scroll_offset,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
             )
         );
 
@@ -239,29 +229,7 @@ impl SpatialNode {
         true
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
     pub fn mark_uninvertible(
-        &mut self,
-        state: &TransformUpdateState,
-    ) {
-        self.invertible = false;
-        self.coordinate_system_id = state.current_coordinate_system_id;
-        self.world_content_transform = LayoutToWorldFastTransform::identity();
-        self.world_viewport_transform = LayoutToWorldFastTransform::identity();
-    }
-
-    pub fn push_gpu_data(
-||||||| merged common ancestors
-    pub fn mark_uninvertible(&mut self) {
-        self.invertible = false;
-        self.world_content_transform = LayoutToWorldFastTransform::identity();
-        self.world_viewport_transform = LayoutToWorldFastTransform::identity();
-    }
-
-    pub fn push_gpu_data(
-=======
-    pub fn mark_uninvertible(
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
         &mut self,
         state: &TransformUpdateState,
     ) {
@@ -320,112 +288,6 @@ impl SpatialNode {
     ) {
         match self.node_type {
             SpatialNodeType::ReferenceFrame(ref mut info) => {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-                // Resolve the transform against any property bindings.
-                let source_transform = scene_properties.resolve_layout_transform(&info.source_transform);
-                // Do a change-basis operation on the perspective matrix using
-                // the scroll offset.
-                let scrolled_perspective = info.source_perspective
-                    .pre_translate(&state.parent_accumulated_scroll_offset)
-                    .post_translate(-state.parent_accumulated_scroll_offset);
-                let resolved_transform =
-                    LayoutFastTransform::with_vector(info.origin_in_parent_reference_frame)
-                    .pre_mul(&source_transform.into())
-                    .pre_mul(&scrolled_perspective);
-
-                // The transformation for this viewport in world coordinates is the transformation for
-                // our parent reference frame, plus any accumulated scrolling offsets from nodes
-                // between our reference frame and this node. Finally, we also include
-                // whatever local transformation this reference frame provides.
-                let relative_transform = resolved_transform
-                    .post_translate(state.parent_accumulated_scroll_offset)
-                    .to_transform()
-                    .with_destination::<LayoutPixel>();
-                self.world_viewport_transform =
-                    state.parent_reference_frame_transform.pre_mul(&relative_transform.into());
-                self.world_content_transform = self.world_viewport_transform;
-
-                info.invertible = self.world_viewport_transform.is_invertible();
-
-                if info.invertible {
-                    // Try to update our compatible coordinate system transform. If we cannot, start a new
-                    // incompatible coordinate system.
-                    match ScaleOffset::from_transform(&relative_transform) {
-                        Some(ref scale_offset) => {
-                            self.coordinate_system_relative_scale_offset =
-                                state.coordinate_system_relative_scale_offset.accumulate(scale_offset);
-                        }
-                        None => {
-                            // If we break 2D axis alignment or have a perspective component, we need to start a
-                            // new incompatible coordinate system with which we cannot share clips without masking.
-                            self.coordinate_system_relative_scale_offset = ScaleOffset::identity();
-
-                            let transform = state.coordinate_system_relative_scale_offset
-                                                 .to_transform()
-                                                 .pre_mul(&relative_transform);
-
-                            // Push that new coordinate system and record the new id.
-                            let coord_system = CoordinateSystem {
-                                transform,
-                                parent: Some(state.current_coordinate_system_id),
-                            };
-                            state.current_coordinate_system_id = CoordinateSystemId(coord_systems.len() as u32);
-                            coord_systems.push(coord_system);
-                        }
-||||||| merged common ancestors
-                // Resolve the transform against any property bindings.
-                let source_transform = scene_properties.resolve_layout_transform(&info.source_transform);
-                // Do a change-basis operation on the perspective matrix using
-                // the scroll offset.
-                let scrolled_perspective = info.source_perspective
-                    .pre_translate(&state.parent_accumulated_scroll_offset)
-                    .post_translate(-state.parent_accumulated_scroll_offset);
-                let resolved_transform =
-                    LayoutFastTransform::with_vector(info.origin_in_parent_reference_frame)
-                    .pre_mul(&source_transform.into())
-                    .pre_mul(&scrolled_perspective);
-
-                // The transformation for this viewport in world coordinates is the transformation for
-                // our parent reference frame, plus any accumulated scrolling offsets from nodes
-                // between our reference frame and this node. Finally, we also include
-                // whatever local transformation this reference frame provides.
-                let relative_transform = resolved_transform
-                    .post_translate(state.parent_accumulated_scroll_offset)
-                    .to_transform()
-                    .with_destination::<LayoutPixel>();
-                self.world_viewport_transform =
-                    state.parent_reference_frame_transform.pre_mul(&relative_transform.into());
-                self.world_content_transform = self.world_viewport_transform;
-
-                info.invertible = self.world_viewport_transform.is_invertible();
-                if !info.invertible {
-                    return;
-                }
-
-                // Try to update our compatible coordinate system transform. If we cannot, start a new
-                // incompatible coordinate system.
-                match ScaleOffset::from_transform(&relative_transform) {
-                    Some(ref scale_offset) => {
-                        self.coordinate_system_relative_scale_offset =
-                            state.coordinate_system_relative_scale_offset.accumulate(scale_offset);
-                    }
-                    None => {
-                        // If we break 2D axis alignment or have a perspective component, we need to start a
-                        // new incompatible coordinate system with which we cannot share clips without masking.
-                        self.coordinate_system_relative_scale_offset = ScaleOffset::identity();
-
-                        let transform = state.coordinate_system_relative_scale_offset
-                                             .to_transform()
-                                             .pre_mul(&relative_transform);
-
-                        // Push that new coordinate system and record the new id.
-                        let coord_system = CoordinateSystem {
-                            transform,
-                            parent: Some(state.current_coordinate_system_id),
-                        };
-                        state.current_coordinate_system_id = CoordinateSystemId(coord_systems.len() as u32);
-                        coord_systems.push(coord_system);
-=======
                 let mut cs_scale_offset = ScaleOffset::identity();
 
                 if info.invertible {
@@ -515,7 +377,6 @@ impl SpatialNode {
                         };
                         state.current_coordinate_system_id = CoordinateSystemId(coord_systems.len() as u32);
                         coord_systems.push(coord_system);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
                     }
                 }
 
@@ -680,18 +541,11 @@ impl SpatialNode {
                 // We don't translate the combined rect by the sticky offset, because sticky
                 // offsets actually adjust the node position itself, whereas scroll offsets
                 // only apply to contents inside the node.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-                state.parent_accumulated_scroll_offset += info.current_offset;
-||||||| merged common ancestors
-                state.parent_accumulated_scroll_offset =
-                    info.current_offset + state.parent_accumulated_scroll_offset;
-=======
                 state.parent_accumulated_scroll_offset += info.current_offset;
                 // We want nested sticky items to take into account the shift
                 // we applied as well.
                 state.nearest_scrolling_ancestor_offset += info.current_offset;
                 state.preserves_3d = false;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
             }
             SpatialNodeType::ScrollFrame(ref scrolling) => {
                 state.parent_accumulated_scroll_offset += scrolling.offset;
@@ -804,14 +658,6 @@ pub enum ScrollFrameKind {
     Explicit,
 }
 
-/// Defines whether we have an implicit scroll frame for a pipeline root,
-/// or an explicitly defined scroll frame from the display list.
-#[derive(Copy, Clone, Debug)]
-pub enum ScrollFrameKind {
-    PipelineRoot,
-    Explicit,
-}
-
 #[derive(Copy, Clone, Debug)]
 pub struct ScrollFrameInfo {
     /// The rectangle of the viewport of this scroll frame. This is important for
@@ -828,17 +674,6 @@ pub struct ScrollFrameInfo {
     /// which may change between frames.
     pub external_id: Option<ExternalScrollId>,
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-    /// Stores whether this is a scroll frame added implicitly by WR when adding
-    /// a pipeline (either the root or an iframe). We need to exclude these
-    /// when searching for scroll roots we care about for picture caching.
-    /// TODO(gw): I think we can actually completely remove the implicit
-    ///           scroll frame being added by WR, and rely on the embedder
-    ///           to define scroll frames. However, that involves API changes
-    ///           so we will use this as a temporary hack!
-    pub frame_kind: ScrollFrameKind,
-||||||| merged common ancestors
-=======
     /// Stores whether this is a scroll frame added implicitly by WR when adding
     /// a pipeline (either the root or an iframe). We need to exclude these
     /// when searching for scroll roots we care about for picture caching.
@@ -854,7 +689,6 @@ pub struct ScrollFrameInfo {
 
     /// The current offset of this scroll node.
     pub offset: LayoutVector2D,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
 }
 
 /// Manages scrolling offset.
@@ -864,13 +698,8 @@ impl ScrollFrameInfo {
         scroll_sensitivity: ScrollSensitivity,
         scrollable_size: LayoutSize,
         external_id: Option<ExternalScrollId>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-        frame_kind: ScrollFrameKind,
-||||||| merged common ancestors
-=======
         frame_kind: ScrollFrameKind,
         external_scroll_offset: LayoutVector2D,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
     ) -> ScrollFrameInfo {
         ScrollFrameInfo {
             viewport_rect,
@@ -878,13 +707,8 @@ impl ScrollFrameInfo {
             scroll_sensitivity,
             scrollable_size,
             external_id,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-            frame_kind,
-||||||| merged common ancestors
-=======
             frame_kind,
             external_scroll_offset,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
         }
     }
 
@@ -910,13 +734,8 @@ impl ScrollFrameInfo {
             scroll_sensitivity: self.scroll_sensitivity,
             scrollable_size: self.scrollable_size,
             external_id: self.external_id,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
-            frame_kind: self.frame_kind,
-||||||| merged common ancestors
-=======
             frame_kind: self.frame_kind,
             external_scroll_offset: self.external_scroll_offset,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/spatial_node.rs
         }
     }
 }

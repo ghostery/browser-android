@@ -82,16 +82,8 @@ class TabGroup final : public SchedulerGroup,
   // Returns null if the given key hasn't been seen yet.
   already_AddRefed<DocGroup> GetDocGroup(const nsACString& aKey);
 
-<<<<<<< HEAD
-  already_AddRefed<DocGroup> AddDocument(const nsACString& aKey,
-                                         nsIDocument* aDocument);
-||||||| merged common ancestors
-  already_AddRefed<DocGroup>
-  AddDocument(const nsACString& aKey, nsIDocument* aDocument);
-=======
   already_AddRefed<DocGroup> AddDocument(const nsACString& aKey,
                                          Document* aDocument);
->>>>>>> upstream-releases
 
   // Join the specified TabGroup, returning a reference to it. If aTabGroup is
   // nullptr, create a new tabgroup to join.
@@ -152,15 +144,6 @@ class TabGroup final : public SchedulerGroup,
   // can be throttled.
   static bool HasOnlyThrottableTabs();
 
-<<<<<<< HEAD
- private:
-  virtual AbstractThread* AbstractMainThreadForImpl(
-      TaskCategory aCategory) override;
-||||||| merged common ancestors
-private:
-  virtual AbstractThread*
-  AbstractMainThreadForImpl(TaskCategory aCategory) override;
-=======
   nsresult QueuePostMessageEvent(already_AddRefed<nsIRunnable>&& aRunnable);
 
   void FlushPostMessageEvents();
@@ -168,7 +151,6 @@ private:
  private:
   virtual AbstractThread* AbstractMainThreadForImpl(
       TaskCategory aCategory) override;
->>>>>>> upstream-releases
 
   TabGroup* AsTabGroup() override { return this; }
 

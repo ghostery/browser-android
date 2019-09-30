@@ -41,26 +41,6 @@ static Maybe<uint64_t> BlobSerial(nsIURI* aURI) {
   return Nothing();
 }
 
-<<<<<<< HEAD
-ImageCacheKey::ImageCacheKey(nsIURI* aURI, const OriginAttributes& aAttrs,
-                             nsIDocument* aDocument, nsresult& aRv)
-    : mURI(aURI),
-      mOriginAttributes(aAttrs),
-      mControlledDocument(GetSpecialCaseDocumentToken(aDocument, aURI)),
-      mHash(0),
-      mIsChrome(false) {
-||||||| merged common ancestors
-ImageCacheKey::ImageCacheKey(nsIURI* aURI,
-                             const OriginAttributes& aAttrs,
-                             nsIDocument* aDocument,
-                             nsresult& aRv)
-  : mURI(aURI)
-  , mOriginAttributes(aAttrs)
-  , mControlledDocument(GetSpecialCaseDocumentToken(aDocument, aURI))
-  , mHash(0)
-  , mIsChrome(false)
-{
-=======
 ImageCacheKey::ImageCacheKey(nsIURI* aURI, const OriginAttributes& aAttrs,
                              Document* aDocument)
     : mURI(aURI),
@@ -68,7 +48,6 @@ ImageCacheKey::ImageCacheKey(nsIURI* aURI, const OriginAttributes& aAttrs,
       mControlledDocument(GetSpecialCaseDocumentToken(aDocument, aURI)),
       mTopLevelBaseDomain(GetTopLevelBaseDomain(aDocument, aURI)),
       mIsChrome(false) {
->>>>>>> upstream-releases
   if (SchemeIs("blob")) {
     mBlobSerial = BlobSerial(mURI);
   } else if (SchemeIs("chrome")) {
@@ -77,24 +56,6 @@ ImageCacheKey::ImageCacheKey(nsIURI* aURI, const OriginAttributes& aAttrs,
 }
 
 ImageCacheKey::ImageCacheKey(const ImageCacheKey& aOther)
-<<<<<<< HEAD
-    : mURI(aOther.mURI),
-      mBlobSerial(aOther.mBlobSerial),
-      mBlobRef(aOther.mBlobRef),
-      mOriginAttributes(aOther.mOriginAttributes),
-      mControlledDocument(aOther.mControlledDocument),
-      mHash(aOther.mHash),
-      mIsChrome(aOther.mIsChrome) {}
-||||||| merged common ancestors
-  : mURI(aOther.mURI)
-  , mBlobSerial(aOther.mBlobSerial)
-  , mBlobRef(aOther.mBlobRef)
-  , mOriginAttributes(aOther.mOriginAttributes)
-  , mControlledDocument(aOther.mControlledDocument)
-  , mHash(aOther.mHash)
-  , mIsChrome(aOther.mIsChrome)
-{ }
-=======
     : mURI(aOther.mURI),
       mBlobSerial(aOther.mBlobSerial),
       mBlobRef(aOther.mBlobRef),
@@ -103,36 +64,8 @@ ImageCacheKey::ImageCacheKey(const ImageCacheKey& aOther)
       mTopLevelBaseDomain(aOther.mTopLevelBaseDomain),
       mHash(aOther.mHash),
       mIsChrome(aOther.mIsChrome) {}
->>>>>>> upstream-releases
 
 ImageCacheKey::ImageCacheKey(ImageCacheKey&& aOther)
-<<<<<<< HEAD
-    : mURI(std::move(aOther.mURI)),
-      mBlobSerial(std::move(aOther.mBlobSerial)),
-      mBlobRef(std::move(aOther.mBlobRef)),
-      mOriginAttributes(aOther.mOriginAttributes),
-      mControlledDocument(aOther.mControlledDocument),
-      mHash(aOther.mHash),
-      mIsChrome(aOther.mIsChrome) {}
-
-bool ImageCacheKey::operator==(const ImageCacheKey& aOther) const {
-  // Don't share the image cache between a controlled document and anything
-  // else.
-||||||| merged common ancestors
-  : mURI(std::move(aOther.mURI))
-  , mBlobSerial(std::move(aOther.mBlobSerial))
-  , mBlobRef(std::move(aOther.mBlobRef))
-  , mOriginAttributes(aOther.mOriginAttributes)
-  , mControlledDocument(aOther.mControlledDocument)
-  , mHash(aOther.mHash)
-  , mIsChrome(aOther.mIsChrome)
-{ }
-
-bool
-ImageCacheKey::operator==(const ImageCacheKey& aOther) const
-{
-  // Don't share the image cache between a controlled document and anything else.
-=======
     : mURI(std::move(aOther.mURI)),
       mBlobSerial(std::move(aOther.mBlobSerial)),
       mBlobRef(std::move(aOther.mBlobRef)),
@@ -145,7 +78,6 @@ ImageCacheKey::operator==(const ImageCacheKey& aOther) const
 bool ImageCacheKey::operator==(const ImageCacheKey& aOther) const {
   // Don't share the image cache between a controlled document and anything
   // else.
->>>>>>> upstream-releases
   if (mControlledDocument != aOther.mControlledDocument) {
     return false;
   }
@@ -177,13 +109,6 @@ bool ImageCacheKey::operator==(const ImageCacheKey& aOther) const {
   return NS_SUCCEEDED(rv) && equals;
 }
 
-<<<<<<< HEAD
-bool ImageCacheKey::SchemeIs(const char* aScheme) {
-||||||| merged common ancestors
-bool
-ImageCacheKey::SchemeIs(const char* aScheme)
-{
-=======
 void ImageCacheKey::EnsureBlobRef() const {
   MOZ_ASSERT(mBlobSerial);
   MOZ_ASSERT(mBlobRef.IsEmpty());
@@ -220,23 +145,13 @@ void ImageCacheKey::EnsureHash() const {
 }
 
 bool ImageCacheKey::SchemeIs(const char* aScheme) {
->>>>>>> upstream-releases
   bool matches = false;
   return NS_SUCCEEDED(mURI->SchemeIs(aScheme, &matches)) && matches;
 }
 
-<<<<<<< HEAD
-/* static */ void* ImageCacheKey::GetSpecialCaseDocumentToken(
-    nsIDocument* aDocument, nsIURI* aURI) {
-||||||| merged common ancestors
-/* static */ void*
-ImageCacheKey::GetSpecialCaseDocumentToken(nsIDocument* aDocument, nsIURI* aURI)
-{
-=======
 /* static */
 void* ImageCacheKey::GetSpecialCaseDocumentToken(Document* aDocument,
                                                  nsIURI* aURI) {
->>>>>>> upstream-releases
   // Cookie-averse documents can never have storage granted to them.  Since they
   // may not have inner windows, they would require special handling below, so
   // just bail out early here.
@@ -263,41 +178,17 @@ nsCString ImageCacheKey::GetTopLevelBaseDomain(Document* aDocument,
 
   // If the window is 3rd party resource, let's see if first-party storage
   // access is granted for this image.
-<<<<<<< HEAD
-  if (nsContentUtils::IsTrackingResourceWindow(aDocument->GetInnerWindow())) {
-    return nsContentUtils::StorageDisabledByAntiTracking(aDocument, aURI)
-               ? aDocument
-               : nullptr;
-||||||| merged common ancestors
-  if (nsContentUtils::IsTrackingResourceWindow(aDocument->GetInnerWindow())) {
-    return nsContentUtils::StorageDisabledByAntiTracking(aDocument, aURI) ?
-             aDocument : nullptr;
-=======
   if (nsContentUtils::IsThirdPartyTrackingResourceWindow(
           aDocument->GetInnerWindow())) {
     return StorageDisabledByAntiTracking(aDocument, aURI)
                ? aDocument->GetBaseDomain()
                : EmptyCString();
->>>>>>> upstream-releases
   }
 
   // Another scenario is if this image is a 3rd party resource loaded by a
   // first party context. In this case, we should check if the nsIChannel has
   // been marked as tracking resource, but we don't have the channel yet at
   // this point.  The best approach here is to be conservative: if we are sure
-<<<<<<< HEAD
-  // that the permission is granted, let's return a nullptr. Otherwise, let's
-  // make a unique image cache.
-  if (!AntiTrackingCommon::MaybeIsFirstPartyStorageAccessGrantedFor(
-          aDocument->GetInnerWindow(), aURI)) {
-    return aDocument;
-||||||| merged common ancestors
-  // that the permission is granted, let's return a nullptr. Otherwise, let's
-  // make a unique image cache.
-  if (!AntiTrackingCommon::MaybeIsFirstPartyStorageAccessGrantedFor(aDocument->GetInnerWindow(),
-                                                                    aURI)) {
-    return aDocument;
-=======
   // that the permission is granted, let's return 0. Otherwise, let's make a
   // unique image cache per the top-level document eTLD+1.
   if (!AntiTrackingCommon::MaybeIsFirstPartyStorageAccessGrantedFor(
@@ -310,7 +201,6 @@ nsCString ImageCacheKey::GetTopLevelBaseDomain(Document* aDocument,
     }
     return topInner->GetExtantDoc() ? topInner->GetExtantDoc()->GetBaseDomain()
                                     : EmptyCString();
->>>>>>> upstream-releases
   }
 
   return EmptyCString();

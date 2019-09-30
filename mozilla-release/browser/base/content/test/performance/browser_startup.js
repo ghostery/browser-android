@@ -187,19 +187,9 @@ add_task(async function() {
   }
 
   function printStack(scriptType, name) {
-<<<<<<< HEAD
-    if (scriptType == "modules")
-      info(Cu.getModuleImportStack(name));
-    else if (scriptType == "components")
-||||||| merged common ancestors
-    if (scriptType == "modules")
-      info(loader.getModuleImportStack(name));
-    else if (scriptType == "components")
-=======
     if (scriptType == "modules") {
       info(Cu.getModuleImportStack(name));
     } else if (scriptType == "components") {
->>>>>>> upstream-releases
       info(componentStacks.get(name));
     }
   }

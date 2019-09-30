@@ -31,17 +31,8 @@ void* nsFloatManager::sCachedFloatManagers[NS_FLOAT_MANAGER_CACHE_SIZE];
 /////////////////////////////////////////////////////////////////////////////
 // nsFloatManager
 
-<<<<<<< HEAD
-nsFloatManager::nsFloatManager(nsIPresShell* aPresShell, WritingMode aWM)
-    :
-||||||| merged common ancestors
-nsFloatManager::nsFloatManager(nsIPresShell* aPresShell,
-                               WritingMode aWM)
-  :
-=======
 nsFloatManager::nsFloatManager(PresShell* aPresShell, WritingMode aWM)
     :
->>>>>>> upstream-releases
 #ifdef DEBUG
       mWritingMode(aWM),
 #endif
@@ -253,21 +244,10 @@ nsFlowAreaRect nsFloatManager::GetFlowArea(
           ? lineLeft - mLineLeft
           : mLineLeft - lineRight + LogicalSize(aWM, aContainerSize).ISize(aWM);
 
-<<<<<<< HEAD
-  nsFlowAreaRectFlags flags = (haveFloats ? nsFlowAreaRectFlags::HAS_FLOATS
-                                          : nsFlowAreaRectFlags::NO_FLAGS) |
-                              (mayWiden ? nsFlowAreaRectFlags::MAY_WIDEN
-                                        : nsFlowAreaRectFlags::NO_FLAGS);
-||||||| merged common ancestors
-  nsFlowAreaRectFlags flags =
-    (haveFloats ? nsFlowAreaRectFlags::HAS_FLOATS : nsFlowAreaRectFlags::NO_FLAGS) |
-    (mayWiden ? nsFlowAreaRectFlags::MAY_WIDEN : nsFlowAreaRectFlags::NO_FLAGS);
-=======
   nsFlowAreaRectFlags flags =
       (haveFloats ? nsFlowAreaRectFlags::HasFloats
                   : nsFlowAreaRectFlags::NoFlags) |
       (mayWiden ? nsFlowAreaRectFlags::MayWiden : nsFlowAreaRectFlags::NoFlags);
->>>>>>> upstream-releases
 
   return nsFlowAreaRect(aWM, inlineStart, blockStart - mBlockStart,
                         lineRight - lineLeft, blockSize, flags);
@@ -1714,21 +1694,10 @@ void nsFloatManager::PolygonShapeInfo::Translate(nscoord aLineLeft,
   mBEnd += aBlockStart;
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsFloatManager::PolygonShapeInfo::XInterceptAtY(
-    const nscoord aY, const nsPoint& aP1, const nsPoint& aP2) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsFloatManager::PolygonShapeInfo::XInterceptAtY(const nscoord aY,
-                                                const nsPoint& aP1,
-                                                const nsPoint& aP2)
-{
-=======
 /* static */
 nscoord nsFloatManager::PolygonShapeInfo::XInterceptAtY(const nscoord aY,
                                                         const nsPoint& aP1,
                                                         const nsPoint& aP2) {
->>>>>>> upstream-releases
   // Solve for x in the linear equation: x = x1 + (y-y1) * (x2-x1) / (y2-y1),
   // where aP1 = (x1, y1) and aP2 = (x2, y2).
 
@@ -2465,24 +2434,10 @@ bool nsFloatManager::FloatInfo::MayNarrowInBlockDirection(
 /////////////////////////////////////////////////////////////////////////////
 // ShapeInfo
 
-<<<<<<< HEAD
-/* static */ LogicalRect nsFloatManager::ShapeInfo::ComputeShapeBoxRect(
-    const StyleShapeSource& aShapeOutside, nsIFrame* const aFrame,
-    const LogicalRect& aMarginRect, WritingMode aWM) {
-||||||| merged common ancestors
-/* static */ LogicalRect
-nsFloatManager::ShapeInfo::ComputeShapeBoxRect(
-  const StyleShapeSource& aShapeOutside,
-  nsIFrame* const aFrame,
-  const LogicalRect& aMarginRect,
-  WritingMode aWM)
-{
-=======
 /* static */
 LogicalRect nsFloatManager::ShapeInfo::ComputeShapeBoxRect(
     const StyleShapeSource& aShapeOutside, nsIFrame* const aFrame,
     const LogicalRect& aMarginRect, WritingMode aWM) {
->>>>>>> upstream-releases
   LogicalRect rect = aMarginRect;
 
   switch (aShapeOutside.GetReferenceBox()) {
@@ -2537,29 +2492,6 @@ nsFloatManager::ShapeInfo::CreateShapeBox(nsIFrame* const aFrame,
 }
 
 /* static */ UniquePtr<nsFloatManager::ShapeInfo>
-<<<<<<< HEAD
-nsFloatManager::ShapeInfo::CreateBasicShape(const StyleBasicShape& aBasicShape,
-                                            nscoord aShapeMargin,
-                                            nsIFrame* const aFrame,
-                                            const LogicalRect& aShapeBoxRect,
-                                            const LogicalRect& aMarginRect,
-                                            WritingMode aWM,
-                                            const nsSize& aContainerSize) {
-  switch (aBasicShape.GetShapeType()) {
-    case StyleBasicShapeType::Polygon:
-||||||| merged common ancestors
-nsFloatManager::ShapeInfo::CreateBasicShape(
-  const UniquePtr<StyleBasicShape>& aBasicShape,
-  nscoord aShapeMargin,
-  nsIFrame* const aFrame,
-  const LogicalRect& aShapeBoxRect,
-  const LogicalRect& aMarginRect,
-  WritingMode aWM,
-  const nsSize& aContainerSize)
-{
-  switch (aBasicShape->GetShapeType()) {
-    case StyleBasicShapeType::Polygon:
-=======
 nsFloatManager::ShapeInfo::CreateBasicShape(const StyleBasicShape& aBasicShape,
                                             nscoord aShapeMargin,
                                             nsIFrame* const aFrame,
@@ -2569,29 +2501,15 @@ nsFloatManager::ShapeInfo::CreateBasicShape(const StyleBasicShape& aBasicShape,
                                             const nsSize& aContainerSize) {
   switch (aBasicShape.tag) {
     case StyleBasicShape::Tag::Polygon:
->>>>>>> upstream-releases
       return CreatePolygon(aBasicShape, aShapeMargin, aFrame, aShapeBoxRect,
                            aMarginRect, aWM, aContainerSize);
     case StyleBasicShape::Tag::Circle:
     case StyleBasicShape::Tag::Ellipse:
       return CreateCircleOrEllipse(aBasicShape, aShapeMargin, aFrame,
-<<<<<<< HEAD
-                                   aShapeBoxRect, aWM, aContainerSize);
-    case StyleBasicShapeType::Inset:
-      return CreateInset(aBasicShape, aShapeMargin, aFrame, aShapeBoxRect, aWM,
-                         aContainerSize);
-||||||| merged common ancestors
-                                   aShapeBoxRect, aWM,
-                                   aContainerSize);
-    case StyleBasicShapeType::Inset:
-      return CreateInset(aBasicShape, aShapeMargin, aFrame, aShapeBoxRect,
-                         aWM, aContainerSize);
-=======
                                    aShapeBoxRect, aWM, aContainerSize);
     case StyleBasicShape::Tag::Inset:
       return CreateInset(aBasicShape, aShapeMargin, aFrame, aShapeBoxRect, aWM,
                          aContainerSize);
->>>>>>> upstream-releases
   }
   return nullptr;
 }
@@ -2677,41 +2595,18 @@ nsFloatManager::ShapeInfo::CreateCircleOrEllipse(
 
   // Compute the circle or ellipse radii.
   nsSize radii;
-<<<<<<< HEAD
-  StyleBasicShapeType type = aBasicShape.GetShapeType();
-  if (type == StyleBasicShapeType::Circle) {
-    nscoord radius = ShapeUtils::ComputeCircleRadius(
-        aBasicShape, physicalCenter, physicalShapeBoxRect);
-||||||| merged common ancestors
-  StyleBasicShapeType type = aBasicShape->GetShapeType();
-  if (type == StyleBasicShapeType::Circle) {
-    nscoord radius = ShapeUtils::ComputeCircleRadius(aBasicShape, physicalCenter,
-                                                     physicalShapeBoxRect);
-=======
   if (aBasicShape.IsCircle()) {
     nscoord radius = ShapeUtils::ComputeCircleRadius(
         aBasicShape, physicalCenter, physicalShapeBoxRect);
->>>>>>> upstream-releases
     // Circles can use the three argument, math constructor for
     // EllipseShapeInfo.
     radii = nsSize(radius, radius);
     return MakeUnique<EllipseShapeInfo>(logicalCenter, radii, aShapeMargin);
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT(type == StyleBasicShapeType::Ellipse);
-  nsSize physicalRadii = ShapeUtils::ComputeEllipseRadii(
-      aBasicShape, physicalCenter, physicalShapeBoxRect);
-||||||| merged common ancestors
-  MOZ_ASSERT(type == StyleBasicShapeType::Ellipse);
-  nsSize physicalRadii =
-    ShapeUtils::ComputeEllipseRadii(aBasicShape, physicalCenter,
-                                    physicalShapeBoxRect);
-=======
   MOZ_ASSERT(aBasicShape.IsEllipse());
   nsSize physicalRadii = ShapeUtils::ComputeEllipseRadii(
       aBasicShape, physicalCenter, physicalShapeBoxRect);
->>>>>>> upstream-releases
   LogicalSize logicalRadii(aWM, physicalRadii);
   radii = nsSize(logicalRadii.ISize(aWM), logicalRadii.BSize(aWM));
 
@@ -2849,28 +2744,12 @@ nsFloatManager::ShapeInfo::CreateImageShape(const nsStyleImage& aShapeImage,
                                     aContainerSize);
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsFloatManager::ShapeInfo::ComputeEllipseLineInterceptDiff(
-    const nscoord aShapeBoxBStart, const nscoord aShapeBoxBEnd,
-    const nscoord aBStartCornerRadiusL, const nscoord aBStartCornerRadiusB,
-    const nscoord aBEndCornerRadiusL, const nscoord aBEndCornerRadiusB,
-    const nscoord aBandBStart, const nscoord aBandBEnd) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsFloatManager::ShapeInfo::ComputeEllipseLineInterceptDiff(
-  const nscoord aShapeBoxBStart, const nscoord aShapeBoxBEnd,
-  const nscoord aBStartCornerRadiusL, const nscoord aBStartCornerRadiusB,
-  const nscoord aBEndCornerRadiusL, const nscoord aBEndCornerRadiusB,
-  const nscoord aBandBStart, const nscoord aBandBEnd)
-{
-=======
 /* static */
 nscoord nsFloatManager::ShapeInfo::ComputeEllipseLineInterceptDiff(
     const nscoord aShapeBoxBStart, const nscoord aShapeBoxBEnd,
     const nscoord aBStartCornerRadiusL, const nscoord aBStartCornerRadiusB,
     const nscoord aBEndCornerRadiusL, const nscoord aBEndCornerRadiusB,
     const nscoord aBandBStart, const nscoord aBandBEnd) {
->>>>>>> upstream-releases
   // An example for the band intersecting with the top right corner of an
   // ellipse with writing-mode horizontal-tb.
   //
@@ -2933,41 +2812,18 @@ nscoord nsFloatManager::ShapeInfo::ComputeEllipseLineInterceptDiff(
   return lineDiff;
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsFloatManager::ShapeInfo::XInterceptAtY(
-    const nscoord aY, const nscoord aRadiusX, const nscoord aRadiusY) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsFloatManager::ShapeInfo::XInterceptAtY(const nscoord aY,
-                                         const nscoord aRadiusX,
-                                         const nscoord aRadiusY)
-{
-=======
 /* static */
 nscoord nsFloatManager::ShapeInfo::XInterceptAtY(const nscoord aY,
                                                  const nscoord aRadiusX,
                                                  const nscoord aRadiusY) {
->>>>>>> upstream-releases
   // Solve for x in the ellipse equation (x/radiusX)^2 + (y/radiusY)^2 = 1.
   MOZ_ASSERT(aRadiusY > 0);
   return aRadiusX * std::sqrt(1 - (aY * aY) / double(aRadiusY * aRadiusY));
 }
 
-<<<<<<< HEAD
-/* static */ nsPoint nsFloatManager::ShapeInfo::ConvertToFloatLogical(
-    const nsPoint& aPoint, WritingMode aWM, const nsSize& aContainerSize) {
-||||||| merged common ancestors
-/* static */ nsPoint
-nsFloatManager::ShapeInfo::ConvertToFloatLogical(
-  const nsPoint& aPoint,
-  WritingMode aWM,
-  const nsSize& aContainerSize)
-{
-=======
 /* static */
 nsPoint nsFloatManager::ShapeInfo::ConvertToFloatLogical(
     const nsPoint& aPoint, WritingMode aWM, const nsSize& aContainerSize) {
->>>>>>> upstream-releases
   LogicalPoint logicalPoint(aWM, aPoint, aContainerSize);
   return nsPoint(logicalPoint.LineRelative(aWM, aContainerSize),
                  logicalPoint.B(aWM));
@@ -3019,20 +2875,9 @@ nsFloatManager::ShapeInfo::ConvertToFloatLogical(const nscoord aRadii[8],
   return logicalRadii;
 }
 
-<<<<<<< HEAD
-/* static */ size_t nsFloatManager::ShapeInfo::MinIntervalIndexContainingY(
-    const nsTArray<nsRect>& aIntervals, const nscoord aTargetY) {
-||||||| merged common ancestors
-/* static */ size_t
-nsFloatManager::ShapeInfo::MinIntervalIndexContainingY(
-  const nsTArray<nsRect>& aIntervals,
-  const nscoord aTargetY)
-{
-=======
 /* static */
 size_t nsFloatManager::ShapeInfo::MinIntervalIndexContainingY(
     const nsTArray<nsRect>& aIntervals, const nscoord aTargetY) {
->>>>>>> upstream-releases
   // Perform a binary search to find the minimum index of an interval
   // that contains aTargetY. If no such interval exists, return a value
   // equal to the number of intervals.
@@ -3054,24 +2899,11 @@ size_t nsFloatManager::ShapeInfo::MinIntervalIndexContainingY(
   return endIdx;
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsFloatManager::ShapeInfo::LineEdge(
-    const nsTArray<nsRect>& aIntervals, const nscoord aBStart,
-    const nscoord aBEnd, bool aIsLineLeft) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsFloatManager::ShapeInfo::LineEdge(const nsTArray<nsRect>& aIntervals,
-                                    const nscoord aBStart,
-                                    const nscoord aBEnd,
-                                    bool aIsLineLeft)
-{
-=======
 /* static */
 nscoord nsFloatManager::ShapeInfo::LineEdge(const nsTArray<nsRect>& aIntervals,
                                             const nscoord aBStart,
                                             const nscoord aBEnd,
                                             bool aIsLineLeft) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aBStart <= aBEnd,
              "The band's block start is greater than its block end?");
 

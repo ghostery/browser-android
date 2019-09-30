@@ -54,16 +54,8 @@ class nsTreeBodyFrame final : public nsLeafBoxFrame,
   typedef mozilla::layout::ScrollbarActivity ScrollbarActivity;
   typedef mozilla::image::ImgDrawResult ImgDrawResult;
 
-<<<<<<< HEAD
- public:
-  explicit nsTreeBodyFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-public:
-  explicit nsTreeBodyFrame(ComputedStyle* aStyle);
-=======
  public:
   explicit nsTreeBodyFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
->>>>>>> upstream-releases
   ~nsTreeBodyFrame();
 
   NS_DECL_QUERYFRAME
@@ -189,20 +181,8 @@ public:
   };
 
   ImgDrawResult PaintTreeBody(gfxContext& aRenderingContext,
-<<<<<<< HEAD
                               const nsRect& aDirtyRect, nsPoint aPt,
                               nsDisplayListBuilder* aBuilder);
-
-  nsITreeBoxObject* GetTreeBoxObject() const { return mTreeBoxObject; }
-||||||| merged common ancestors
-                           const nsRect& aDirtyRect, nsPoint aPt,
-                           nsDisplayListBuilder* aBuilder);
-
-  nsITreeBoxObject* GetTreeBoxObject() const { return mTreeBoxObject; }
-=======
-                              const nsRect& aDirtyRect, nsPoint aPt,
-                              nsDisplayListBuilder* aBuilder);
->>>>>>> upstream-releases
 
   // Get the base element, <tree>
   mozilla::dom::XULTreeElement* GetBaseElement();

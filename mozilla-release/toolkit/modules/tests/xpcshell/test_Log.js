@@ -10,11 +10,6 @@ registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
 var testFormatter = {
   format: function format(message) {
     return (

@@ -56,63 +56,23 @@ CompareCacheHashEntry::CompareCacheHashEntry() : key(nullptr), mCritInit() {
   }
 }
 
-<<<<<<< HEAD
-static bool CompareCacheMatchEntry(const PLDHashEntryHdr *hdr,
-                                   const void *key) {
-  const CompareCacheHashEntryPtr *entryPtr =
-      static_cast<const CompareCacheHashEntryPtr *>(hdr);
-||||||| merged common ancestors
-static bool
-CompareCacheMatchEntry(const PLDHashEntryHdr *hdr, const void *key)
-{
-  const CompareCacheHashEntryPtr *entryPtr = static_cast<const CompareCacheHashEntryPtr*>(hdr);
-=======
 static bool CompareCacheMatchEntry(const PLDHashEntryHdr* hdr,
                                    const void* key) {
   const CompareCacheHashEntryPtr* entryPtr =
       static_cast<const CompareCacheHashEntryPtr*>(hdr);
->>>>>>> upstream-releases
   return entryPtr->entry->key == key;
 }
 
-<<<<<<< HEAD
-static void CompareCacheInitEntry(PLDHashEntryHdr *hdr, const void *key) {
-||||||| merged common ancestors
-static void
-CompareCacheInitEntry(PLDHashEntryHdr *hdr, const void *key)
-{
-=======
 static void CompareCacheInitEntry(PLDHashEntryHdr* hdr, const void* key) {
->>>>>>> upstream-releases
   new (hdr) CompareCacheHashEntryPtr();
-<<<<<<< HEAD
-  CompareCacheHashEntryPtr *entryPtr =
-      static_cast<CompareCacheHashEntryPtr *>(hdr);
-  entryPtr->entry->key = (void *)key;
-||||||| merged common ancestors
-  CompareCacheHashEntryPtr *entryPtr = static_cast<CompareCacheHashEntryPtr*>(hdr);
-  entryPtr->entry->key = (void*)key;
-=======
   CompareCacheHashEntryPtr* entryPtr =
       static_cast<CompareCacheHashEntryPtr*>(hdr);
   entryPtr->entry->key = (void*)key;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void CompareCacheClearEntry(PLDHashTable *table, PLDHashEntryHdr *hdr) {
-  CompareCacheHashEntryPtr *entryPtr =
-      static_cast<CompareCacheHashEntryPtr *>(hdr);
-||||||| merged common ancestors
-static void
-CompareCacheClearEntry(PLDHashTable *table, PLDHashEntryHdr *hdr)
-{
-  CompareCacheHashEntryPtr *entryPtr = static_cast<CompareCacheHashEntryPtr*>(hdr);
-=======
 static void CompareCacheClearEntry(PLDHashTable* table, PLDHashEntryHdr* hdr) {
   CompareCacheHashEntryPtr* entryPtr =
       static_cast<CompareCacheHashEntryPtr*>(hdr);
->>>>>>> upstream-releases
   entryPtr->~CompareCacheHashEntryPtr();
 }
 
@@ -130,14 +90,7 @@ nsCertTreeDispInfo::nsCertTreeDispInfo()
       mOverrideBits(nsCertOverride::OverrideBits::None),
       mIsTemporary(true) {}
 
-<<<<<<< HEAD
-nsCertTreeDispInfo::nsCertTreeDispInfo(nsCertTreeDispInfo &other) {
-||||||| merged common ancestors
-nsCertTreeDispInfo::nsCertTreeDispInfo(nsCertTreeDispInfo &other)
-{
-=======
 nsCertTreeDispInfo::nsCertTreeDispInfo(nsCertTreeDispInfo& other) {
->>>>>>> upstream-releases
   mAddonInfo = other.mAddonInfo;
   mTypeOfEntry = other.mTypeOfEntry;
   mAsciiHost = other.mAsciiHost;
@@ -150,14 +103,7 @@ nsCertTreeDispInfo::nsCertTreeDispInfo(nsCertTreeDispInfo& other) {
 nsCertTreeDispInfo::~nsCertTreeDispInfo() {}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTreeDispInfo::GetCert(nsIX509Cert **_cert) {
-||||||| merged common ancestors
-nsCertTreeDispInfo::GetCert(nsIX509Cert **_cert)
-{
-=======
 nsCertTreeDispInfo::GetCert(nsIX509Cert** _cert) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(_cert);
   if (mCert) {
     // we may already have the cert for temporary overrides
@@ -175,14 +121,7 @@ nsCertTreeDispInfo::GetCert(nsIX509Cert** _cert) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTreeDispInfo::GetHostPort(nsAString &aHostPort) {
-||||||| merged common ancestors
-nsCertTreeDispInfo::GetHostPort(nsAString &aHostPort)
-{
-=======
 nsCertTreeDispInfo::GetHostPort(nsAString& aHostPort) {
->>>>>>> upstream-releases
   nsAutoCString hostPort;
   nsCertOverrideService::GetHostWithPort(mAsciiHost, mPort, hostPort);
   aHostPort = NS_ConvertUTF8toUTF16(hostPort);
@@ -202,13 +141,7 @@ nsCertTree::nsCertTree()
   nsCOMPtr<nsICertOverrideService> origCertOverride =
       do_GetService(kCertOverrideCID);
   mOriginalOverrideService =
-<<<<<<< HEAD
-      static_cast<nsCertOverrideService *>(origCertOverride.get());
-||||||| merged common ancestors
-    static_cast<nsCertOverrideService*>(origCertOverride.get());
-=======
       static_cast<nsCertOverrideService*>(origCertOverride.get());
->>>>>>> upstream-releases
   mCellText = nullptr;
 }
 
@@ -220,37 +153,14 @@ nsCertTree::~nsCertTree() { delete[] mTreeArray; }
 
 void nsCertTree::FreeCertArray() { mDispInfo.Clear(); }
 
-<<<<<<< HEAD
-CompareCacheHashEntry *nsCertTree::getCacheEntry(void *cache, void *aCert) {
-  PLDHashTable &aCompareCache = *static_cast<PLDHashTable *>(cache);
-  auto entryPtr = static_cast<CompareCacheHashEntryPtr *>(
-      aCompareCache.Add(aCert, fallible));
-||||||| merged common ancestors
-CompareCacheHashEntry*
-nsCertTree::getCacheEntry(void* cache, void* aCert)
-{
-  PLDHashTable& aCompareCache = *static_cast<PLDHashTable*>(cache);
-  auto entryPtr = static_cast<CompareCacheHashEntryPtr*>
-                             (aCompareCache.Add(aCert, fallible));
-=======
 CompareCacheHashEntry* nsCertTree::getCacheEntry(void* cache, void* aCert) {
   PLDHashTable& aCompareCache = *static_cast<PLDHashTable*>(cache);
   auto entryPtr = static_cast<CompareCacheHashEntryPtr*>(
       aCompareCache.Add(aCert, fallible));
->>>>>>> upstream-releases
   return entryPtr ? entryPtr->entry : nullptr;
 }
 
-<<<<<<< HEAD
-void nsCertTree::RemoveCacheEntry(void *key) { mCompareCache.Remove(key); }
-||||||| merged common ancestors
-void nsCertTree::RemoveCacheEntry(void *key)
-{
-  mCompareCache.Remove(key);
-}
-=======
 void nsCertTree::RemoveCacheEntry(void* key) { mCompareCache.Remove(key); }
->>>>>>> upstream-releases
 
 // CountOrganizations
 //
@@ -287,18 +197,8 @@ int32_t nsCertTree::CountOrganizations() {
 //
 // If the row at index is an organization thread, return the collection
 // associated with that thread.  Otherwise, return null.
-<<<<<<< HEAD
-treeArrayEl *nsCertTree::GetThreadDescAtIndex(int32_t index) {
-  int i, idx = 0;
-||||||| merged common ancestors
-treeArrayEl *
-nsCertTree::GetThreadDescAtIndex(int32_t index)
-{
-  int i, idx=0;
-=======
 treeArrayEl* nsCertTree::GetThreadDescAtIndex(int32_t index) {
   int i, idx = 0;
->>>>>>> upstream-releases
   if (index < 0) return nullptr;
   for (i = 0; i < mNumOrgs; i++) {
     if (index == idx) {
@@ -316,17 +216,8 @@ treeArrayEl* nsCertTree::GetThreadDescAtIndex(int32_t index) {
 //  GetCertAtIndex
 //
 //  If the row at index is a cert, return that cert.  Otherwise, return null.
-<<<<<<< HEAD
-already_AddRefed<nsIX509Cert> nsCertTree::GetCertAtIndex(
-    int32_t index, int32_t *outAbsoluteCertOffset) {
-||||||| merged common ancestors
-already_AddRefed<nsIX509Cert>
-nsCertTree::GetCertAtIndex(int32_t index, int32_t *outAbsoluteCertOffset)
-{
-=======
 already_AddRefed<nsIX509Cert> nsCertTree::GetCertAtIndex(
     int32_t index, int32_t* outAbsoluteCertOffset) {
->>>>>>> upstream-releases
   RefPtr<nsCertTreeDispInfo> certdi(
       GetDispInfoAtIndex(index, outAbsoluteCertOffset));
   if (!certdi) return nullptr;
@@ -341,18 +232,8 @@ already_AddRefed<nsIX509Cert> nsCertTree::GetCertAtIndex(
 }
 
 //  If the row at index is a cert, return that cert.  Otherwise, return null.
-<<<<<<< HEAD
-already_AddRefed<nsCertTreeDispInfo> nsCertTree::GetDispInfoAtIndex(
-    int32_t index, int32_t *outAbsoluteCertOffset) {
-||||||| merged common ancestors
-already_AddRefed<nsCertTreeDispInfo>
-nsCertTree::GetDispInfoAtIndex(int32_t index,
-                               int32_t *outAbsoluteCertOffset)
-{
-=======
 already_AddRefed<nsCertTreeDispInfo> nsCertTree::GetDispInfoAtIndex(
     int32_t index, int32_t* outAbsoluteCertOffset) {
->>>>>>> upstream-releases
   int i, idx = 0, cIndex = 0, nc;
   if (index < 0) return nullptr;
   // Loop over the threads
@@ -395,13 +276,7 @@ nsCertTree::nsCertCompareFunc nsCertTree::GetCompareFuncFromCertType(
 
 struct nsCertAndArrayAndPositionAndCounterAndTracker {
   RefPtr<nsCertAddonInfo> certai;
-<<<<<<< HEAD
-  nsTArray<RefPtr<nsCertTreeDispInfo> > *array;
-||||||| merged common ancestors
-  nsTArray< RefPtr<nsCertTreeDispInfo> > *array;
-=======
   nsTArray<RefPtr<nsCertTreeDispInfo> >* array;
->>>>>>> upstream-releases
   int position;
   int counter;
   nsTHashtable<nsCStringHashKey>* tracker;
@@ -414,26 +289,6 @@ struct nsCertAndArrayAndPositionAndCounterAndTracker {
 // track entries that have not yet been handled.
 // The created display-info references the cert, so make a note
 // of that by incrementing the cert usage counter.
-<<<<<<< HEAD
-static void MatchingCertOverridesCallback(const nsCertOverride &aSettings,
-                                          void *aUserData) {
-  nsCertAndArrayAndPositionAndCounterAndTracker *cap =
-      (nsCertAndArrayAndPositionAndCounterAndTracker *)aUserData;
-  if (!cap) return;
-
-  nsCertTreeDispInfo *certdi = new nsCertTreeDispInfo;
-||||||| merged common ancestors
-static void
-MatchingCertOverridesCallback(const nsCertOverride &aSettings,
-                              void *aUserData)
-{
-  nsCertAndArrayAndPositionAndCounterAndTracker *cap =
-    (nsCertAndArrayAndPositionAndCounterAndTracker*)aUserData;
-  if (!cap)
-    return;
-
-  nsCertTreeDispInfo *certdi = new nsCertTreeDispInfo;
-=======
 static void MatchingCertOverridesCallback(const nsCertOverride& aSettings,
                                           void* aUserData) {
   nsCertAndArrayAndPositionAndCounterAndTracker* cap =
@@ -441,7 +296,6 @@ static void MatchingCertOverridesCallback(const nsCertOverride& aSettings,
   if (!cap) return;
 
   nsCertTreeDispInfo* certdi = new nsCertTreeDispInfo;
->>>>>>> upstream-releases
   if (certdi) {
     if (cap->certai) cap->certai->mUsageCount++;
     certdi->mAddonInfo = cap->certai;
@@ -466,28 +320,11 @@ static void MatchingCertOverridesCallback(const nsCertOverride& aSettings,
 
 // Used to collect a list of the (unique) host:port keys
 // for all stored overrides.
-<<<<<<< HEAD
-static void CollectAllHostPortOverridesCallback(const nsCertOverride &aSettings,
-                                                void *aUserData) {
-  nsTHashtable<nsCStringHashKey> *collectorTable =
-      (nsTHashtable<nsCStringHashKey> *)aUserData;
-  if (!collectorTable) return;
-||||||| merged common ancestors
-static void
-CollectAllHostPortOverridesCallback(const nsCertOverride &aSettings,
-                                    void *aUserData)
-{
-  nsTHashtable<nsCStringHashKey> *collectorTable =
-    (nsTHashtable<nsCStringHashKey> *)aUserData;
-  if (!collectorTable)
-    return;
-=======
 static void CollectAllHostPortOverridesCallback(const nsCertOverride& aSettings,
                                                 void* aUserData) {
   nsTHashtable<nsCStringHashKey>* collectorTable =
       (nsTHashtable<nsCStringHashKey>*)aUserData;
   if (!collectorTable) return;
->>>>>>> upstream-releases
 
   nsAutoCString hostPort;
   nsCertOverrideService::GetHostWithPort(aSettings.mAsciiHost, aSettings.mPort,
@@ -495,17 +332,8 @@ static void CollectAllHostPortOverridesCallback(const nsCertOverride& aSettings,
   collectorTable->PutEntry(hostPort);
 }
 
-<<<<<<< HEAD
-struct nsArrayAndPositionAndCounterAndTracker {
-  nsTArray<RefPtr<nsCertTreeDispInfo> > *array;
-||||||| merged common ancestors
-struct nsArrayAndPositionAndCounterAndTracker
-{
-  nsTArray< RefPtr<nsCertTreeDispInfo> > *array;
-=======
 struct nsArrayAndPositionAndCounterAndTracker {
   nsTArray<RefPtr<nsCertTreeDispInfo> >* array;
->>>>>>> upstream-releases
   int position;
   int counter;
   nsTHashtable<nsCStringHashKey>* tracker;
@@ -513,28 +341,11 @@ struct nsArrayAndPositionAndCounterAndTracker {
 
 // Used when enumerating the stored host:port overrides where
 // no associated certificate was found in the NSS database.
-<<<<<<< HEAD
-static void AddRemaningHostPortOverridesCallback(
-    const nsCertOverride &aSettings, void *aUserData) {
-  nsArrayAndPositionAndCounterAndTracker *cap =
-      (nsArrayAndPositionAndCounterAndTracker *)aUserData;
-  if (!cap) return;
-||||||| merged common ancestors
-static void
-AddRemaningHostPortOverridesCallback(const nsCertOverride &aSettings,
-                                     void *aUserData)
-{
-  nsArrayAndPositionAndCounterAndTracker *cap =
-    (nsArrayAndPositionAndCounterAndTracker*)aUserData;
-  if (!cap)
-    return;
-=======
 static void AddRemaningHostPortOverridesCallback(
     const nsCertOverride& aSettings, void* aUserData) {
   nsArrayAndPositionAndCounterAndTracker* cap =
       (nsArrayAndPositionAndCounterAndTracker*)aUserData;
   if (!cap) return;
->>>>>>> upstream-releases
 
   nsAutoCString hostPort;
   nsCertOverrideService::GetHostWithPort(aSettings.mAsciiHost, aSettings.mPort,
@@ -559,24 +370,10 @@ static void AddRemaningHostPortOverridesCallback(
   }
 }
 
-<<<<<<< HEAD
-nsresult nsCertTree::GetCertsByTypeFromCertList(nsIX509CertList *aCertList,
-                                                uint32_t aWantedType,
-                                                nsCertCompareFunc aCertCmpFn,
-                                                void *aCertCmpFnArg) {
-||||||| merged common ancestors
-nsresult
-nsCertTree::GetCertsByTypeFromCertList(nsIX509CertList* aCertList,
-                                       uint32_t aWantedType,
-                                       nsCertCompareFunc  aCertCmpFn,
-                                       void *aCertCmpFnArg)
-{
-=======
 nsresult nsCertTree::GetCertsByTypeFromCertList(nsIX509CertList* aCertList,
                                                 uint32_t aWantedType,
                                                 nsCertCompareFunc aCertCmpFn,
                                                 void* aCertCmpFnArg) {
->>>>>>> upstream-releases
   MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("GetCertsByTypeFromCertList"));
   if (!aCertList) return NS_ERROR_FAILURE;
 
@@ -759,14 +556,7 @@ nsresult nsCertTree::GetCertsByTypeFromCertList(nsIX509CertList* aCertList,
 // Load all of the certificates in the DB for this type.  Sort them
 // by token, organization, then common name.
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::LoadCertsFromCache(nsIX509CertList *aCache, uint32_t aType) {
-||||||| merged common ancestors
-nsCertTree::LoadCertsFromCache(nsIX509CertList *aCache, uint32_t aType)
-{
-=======
 nsCertTree::LoadCertsFromCache(nsIX509CertList* aCache, uint32_t aType) {
->>>>>>> upstream-releases
   if (mTreeArray) {
     FreeCertArray();
     delete[] mTreeArray;
@@ -814,60 +604,13 @@ nsresult nsCertTree::UpdateUIContents() {
 
   mCellText = nsArrayBase::Create();
 
-<<<<<<< HEAD
-  if (count) {
-    uint32_t j = 0;
-    nsCOMPtr<nsIX509Cert> orgCert = nullptr;
-    nsCertAddonInfo *addonInfo = mDispInfo.ElementAt(j)->mAddonInfo;
-||||||| merged common ancestors
-if (count) {
-  uint32_t j = 0;
-  nsCOMPtr<nsIX509Cert> orgCert = nullptr;
-  nsCertAddonInfo *addonInfo = mDispInfo.ElementAt(j)->mAddonInfo;
-  if (addonInfo) {
-    orgCert = addonInfo->mCert;
-  }
-  for (int32_t i=0; i<mNumOrgs; i++) {
-    nsString &orgNameRef = mTreeArray[i].orgName;
-    if (!orgCert) {
-      GetPIPNSSBundleString("CertOrgUnknown", orgNameRef);
-    }
-    else {
-      orgCert->GetIssuerOrganization(orgNameRef);
-      if (orgNameRef.IsEmpty())
-        orgCert->GetCommonName(orgNameRef);
-    }
-    mTreeArray[i].open = true;
-    mTreeArray[i].certIndex = j;
-    mTreeArray[i].numChildren = 1;
-    if (++j >= count) break;
-    nsCOMPtr<nsIX509Cert> nextCert = nullptr;
-    nsCertAddonInfo *addonInfo = mDispInfo.SafeElementAt(j, nullptr)->mAddonInfo;
-=======
   if (count) {
     uint32_t j = 0;
     nsCOMPtr<nsIX509Cert> orgCert = nullptr;
     nsCertAddonInfo* addonInfo = mDispInfo.ElementAt(j)->mAddonInfo;
->>>>>>> upstream-releases
     if (addonInfo) {
       orgCert = addonInfo->mCert;
     }
-<<<<<<< HEAD
-    for (int32_t i = 0; i < mNumOrgs; i++) {
-      nsString &orgNameRef = mTreeArray[i].orgName;
-      if (!orgCert) {
-        GetPIPNSSBundleString("CertOrgUnknown", orgNameRef);
-      } else {
-        orgCert->GetIssuerOrganization(orgNameRef);
-        if (orgNameRef.IsEmpty()) orgCert->GetCommonName(orgNameRef);
-      }
-      mTreeArray[i].open = true;
-      mTreeArray[i].certIndex = j;
-      mTreeArray[i].numChildren = 1;
-||||||| merged common ancestors
-    while (0 == CmpBy(&mCompareCache, orgCert, nextCert, sort_IssuerOrg, sort_None, sort_None)) {
-      mTreeArray[i].numChildren++;
-=======
     for (int32_t i = 0; i < mNumOrgs; i++) {
       nsString& orgNameRef = mTreeArray[i].orgName;
       if (!orgCert) {
@@ -879,20 +622,10 @@ if (count) {
       mTreeArray[i].open = true;
       mTreeArray[i].certIndex = j;
       mTreeArray[i].numChildren = 1;
->>>>>>> upstream-releases
       if (++j >= count) break;
-<<<<<<< HEAD
-      nsCOMPtr<nsIX509Cert> nextCert = nullptr;
-      nsCertAddonInfo *addonInfo =
-          mDispInfo.SafeElementAt(j, nullptr)->mAddonInfo;
-||||||| merged common ancestors
-      nextCert = nullptr;
-      addonInfo = mDispInfo.SafeElementAt(j, nullptr)->mAddonInfo;
-=======
       nsCOMPtr<nsIX509Cert> nextCert = nullptr;
       nsCertAddonInfo* addonInfo =
           mDispInfo.SafeElementAt(j, nullptr)->mAddonInfo;
->>>>>>> upstream-releases
       if (addonInfo) {
         nextCert = addonInfo->mCert;
       }
@@ -951,16 +684,8 @@ nsCertTree::DeleteEntryObject(uint32_t index) {
         if (certdi->mAddonInfo) {
           cert = certdi->mAddonInfo->mCert;
         }
-<<<<<<< HEAD
-        nsCertAddonInfo *addonInfo =
-            certdi->mAddonInfo ? certdi->mAddonInfo.get() : nullptr;
-||||||| merged common ancestors
-        nsCertAddonInfo* addonInfo =
-          certdi->mAddonInfo ? certdi->mAddonInfo.get() : nullptr;
-=======
         nsCertAddonInfo* addonInfo =
             certdi->mAddonInfo ? certdi->mAddonInfo.get() : nullptr;
->>>>>>> upstream-releases
         if (certdi->mTypeOfEntry == nsCertTreeDispInfo::host_port_override) {
           mOverrideService->ClearValidityOverride(certdi->mAsciiHost,
                                                   certdi->mPort);
@@ -984,7 +709,7 @@ nsCertTree::DeleteEntryObject(uint32_t index) {
 
             if (nsscert) {
               CERTCertTrust trust;
-              memset((void *)&trust, 0, sizeof(trust));
+              memset((void*)&trust, 0, sizeof(trust));
 
               SECStatus srv =
                   CERT_DecodeTrustString(&trust, "");  // no override
@@ -1024,28 +749,14 @@ nsCertTree::DeleteEntryObject(uint32_t index) {
 /////////////////////////////////////////////////////////////////////////////
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetCert(uint32_t aIndex, nsIX509Cert **_cert) {
-||||||| merged common ancestors
-nsCertTree::GetCert(uint32_t aIndex, nsIX509Cert **_cert)
-{
-=======
 nsCertTree::GetCert(uint32_t aIndex, nsIX509Cert** _cert) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(_cert);
   *_cert = GetCertAtIndex(aIndex).take();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetTreeItem(uint32_t aIndex, nsICertTreeItem **_treeitem) {
-||||||| merged common ancestors
-nsCertTree::GetTreeItem(uint32_t aIndex, nsICertTreeItem **_treeitem)
-{
-=======
 nsCertTree::GetTreeItem(uint32_t aIndex, nsICertTreeItem** _treeitem) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(_treeitem);
 
   RefPtr<nsCertTreeDispInfo> certdi(GetDispInfoAtIndex(aIndex));
@@ -1057,18 +768,8 @@ nsCertTree::GetTreeItem(uint32_t aIndex, nsICertTreeItem** _treeitem) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetRowCount(int32_t *aRowCount) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-nsCertTree::GetRowCount(int32_t *aRowCount)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 nsCertTree::GetRowCount(int32_t* aRowCount) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
   uint32_t count = 0;
   for (int32_t i = 0; i < mNumOrgs; i++) {
     if (mTreeArray[i].open) {
@@ -1081,86 +782,35 @@ nsCertTree::GetRowCount(int32_t* aRowCount) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetSelection(nsITreeSelection **aSelection) {
-||||||| merged common ancestors
-nsCertTree::GetSelection(nsITreeSelection * *aSelection)
-{
-=======
 nsCertTree::GetSelection(nsITreeSelection** aSelection) {
->>>>>>> upstream-releases
   *aSelection = mSelection;
   NS_IF_ADDREF(*aSelection);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::SetSelection(nsITreeSelection *aSelection) {
-||||||| merged common ancestors
-nsCertTree::SetSelection(nsITreeSelection * aSelection)
-{
-=======
 nsCertTree::SetSelection(nsITreeSelection* aSelection) {
->>>>>>> upstream-releases
   mSelection = aSelection;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetRowProperties(int32_t index, nsAString &aProps) { return NS_OK; }
-||||||| merged common ancestors
-nsCertTree::GetRowProperties(int32_t index, nsAString& aProps)
-{
-  return NS_OK;
-}
-=======
 nsCertTree::GetRowProperties(int32_t index, nsAString& aProps) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetCellProperties(int32_t row, nsTreeColumn *col,
-                              nsAString &aProps) {
-||||||| merged common ancestors
-nsCertTree::GetCellProperties(int32_t row, nsTreeColumn* col,
-                              nsAString& aProps)
-{
-=======
 nsCertTree::GetCellProperties(int32_t row, nsTreeColumn* col,
                               nsAString& aProps) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetColumnProperties(nsTreeColumn *col, nsAString &aProps) {
-||||||| merged common ancestors
-nsCertTree::GetColumnProperties(nsTreeColumn* col, nsAString& aProps)
-{
-=======
 nsCertTree::GetColumnProperties(nsTreeColumn* col, nsAString& aProps) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::IsContainer(int32_t index, bool *_retval) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-||||||| merged common ancestors
-nsCertTree::IsContainer(int32_t index, bool *_retval)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-=======
 nsCertTree::IsContainer(int32_t index, bool* _retval) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
   treeArrayEl* el = GetThreadDescAtIndex(index);
->>>>>>> upstream-releases
   if (el) {
     *_retval = true;
   } else {
@@ -1170,21 +820,9 @@ nsCertTree::IsContainer(int32_t index, bool* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::IsContainerOpen(int32_t index, bool *_retval) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-||||||| merged common ancestors
-nsCertTree::IsContainerOpen(int32_t index, bool *_retval)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-=======
 nsCertTree::IsContainerOpen(int32_t index, bool* _retval) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
   treeArrayEl* el = GetThreadDescAtIndex(index);
->>>>>>> upstream-releases
   if (el && el->open) {
     *_retval = true;
   } else {
@@ -1194,44 +832,20 @@ nsCertTree::IsContainerOpen(int32_t index, bool* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::IsContainerEmpty(int32_t index, bool *_retval) {
-||||||| merged common ancestors
-nsCertTree::IsContainerEmpty(int32_t index, bool *_retval)
-{
-=======
 nsCertTree::IsContainerEmpty(int32_t index, bool* _retval) {
->>>>>>> upstream-releases
   *_retval = !mTreeArray;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::IsSeparator(int32_t index, bool *_retval) {
-||||||| merged common ancestors
-nsCertTree::IsSeparator(int32_t index, bool *_retval)
-{
-=======
 nsCertTree::IsSeparator(int32_t index, bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetParentIndex(int32_t rowIndex, int32_t *_retval) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-nsCertTree::GetParentIndex(int32_t rowIndex, int32_t *_retval)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 nsCertTree::GetParentIndex(int32_t rowIndex, int32_t* _retval) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
   int i, idx = 0;
   for (i = 0; i < mNumOrgs && idx < rowIndex; i++, idx++) {
     if (mTreeArray[i].open) {
@@ -1248,18 +862,8 @@ nsCertTree::GetParentIndex(int32_t rowIndex, int32_t* _retval) {
 
 NS_IMETHODIMP
 nsCertTree::HasNextSibling(int32_t rowIndex, int32_t afterIndex,
-<<<<<<< HEAD
-                           bool *_retval) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-                               bool *_retval)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-=======
                            bool* _retval) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
 
   int i, idx = 0;
   for (i = 0; i < mNumOrgs && idx <= rowIndex; i++, idx++) {
@@ -1276,21 +880,9 @@ nsCertTree::HasNextSibling(int32_t rowIndex, int32_t afterIndex,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetLevel(int32_t index, int32_t *_retval) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-||||||| merged common ancestors
-nsCertTree::GetLevel(int32_t index, int32_t *_retval)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-=======
 nsCertTree::GetLevel(int32_t index, int32_t* _retval) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
   treeArrayEl* el = GetThreadDescAtIndex(index);
->>>>>>> upstream-releases
   if (el) {
     *_retval = 0;
   } else {
@@ -1300,52 +892,25 @@ nsCertTree::GetLevel(int32_t index, int32_t* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetImageSrc(int32_t row, nsTreeColumn *col, nsAString &_retval) {
-||||||| merged common ancestors
-nsCertTree::GetImageSrc(int32_t row, nsTreeColumn* col,
-                        nsAString& _retval)
-{
-=======
 nsCertTree::GetImageSrc(int32_t row, nsTreeColumn* col, nsAString& _retval) {
->>>>>>> upstream-releases
   _retval.Truncate();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetCellValue(int32_t row, nsTreeColumn *col, nsAString &_retval) {
-||||||| merged common ancestors
-nsCertTree::GetCellValue(int32_t row, nsTreeColumn* col,
-                         nsAString& _retval)
-{
-=======
 nsCertTree::GetCellValue(int32_t row, nsTreeColumn* col, nsAString& _retval) {
->>>>>>> upstream-releases
   _retval.Truncate();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::GetCellText(int32_t row, nsTreeColumn *col, nsAString &_retval) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-nsCertTree::GetCellText(int32_t row, nsTreeColumn* col,
-                        nsAString& _retval)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 nsCertTree::GetCellText(int32_t row, nsTreeColumn* col, nsAString& _retval) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
 
   nsresult rv = NS_OK;
   _retval.Truncate();
 
-  const nsAString &colID = col->GetId();
+  const nsAString& colID = col->GetId();
 
   treeArrayEl* el = GetThreadDescAtIndex(row);
   if (el) {
@@ -1417,16 +982,8 @@ nsCertTree::GetCellText(int32_t row, nsTreeColumn* col, nsAString& _retval) {
       _retval = NS_LITERAL_STRING("*");
     }
   } else if (NS_LITERAL_STRING("lifetimecol").Equals(colID)) {
-<<<<<<< HEAD
-    const char *stringID = (certdi->mIsTemporary) ? "CertExceptionTemporary"
-                                                  : "CertExceptionPermanent";
-||||||| merged common ancestors
-    const char *stringID =
-      (certdi->mIsTemporary) ? "CertExceptionTemporary" : "CertExceptionPermanent";
-=======
     const char* stringID = (certdi->mIsTemporary) ? "CertExceptionTemporary"
                                                   : "CertExceptionPermanent";
->>>>>>> upstream-releases
     rv = GetPIPNSSBundleString(stringID, _retval);
   } else {
     return NS_ERROR_FAILURE;
@@ -1442,34 +999,15 @@ nsCertTree::GetCellText(int32_t row, nsTreeColumn* col, nsAString& _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::SetTree(nsITreeBoxObject *tree) {
-||||||| merged common ancestors
-nsCertTree::SetTree(nsITreeBoxObject *tree)
-{
-=======
 nsCertTree::SetTree(mozilla::dom::XULTreeElement* tree) {
->>>>>>> upstream-releases
   mTree = tree;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::ToggleOpenState(int32_t index) {
-  if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-||||||| merged common ancestors
-nsCertTree::ToggleOpenState(int32_t index)
-{
-  if (!mTreeArray)
-    return NS_ERROR_NOT_INITIALIZED;
-  treeArrayEl *el = GetThreadDescAtIndex(index);
-=======
 nsCertTree::ToggleOpenState(int32_t index) {
   if (!mTreeArray) return NS_ERROR_NOT_INITIALIZED;
   treeArrayEl* el = GetThreadDescAtIndex(index);
->>>>>>> upstream-releases
   if (el) {
     el->open = !el->open;
     int32_t newChildren = (el->open) ? el->numChildren : -el->numChildren;
@@ -1482,127 +1020,43 @@ nsCertTree::ToggleOpenState(int32_t index) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::CycleHeader(nsTreeColumn *col) { return NS_OK; }
-||||||| merged common ancestors
-nsCertTree::CycleHeader(nsTreeColumn* col)
-{
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCertTree::SelectionChangedXPCOM()
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 nsCertTree::CycleHeader(nsTreeColumn* col) { return NS_OK; }
 
 NS_IMETHODIMP
 nsCertTree::SelectionChangedXPCOM() { return NS_ERROR_NOT_IMPLEMENTED; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::SelectionChangedXPCOM() { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-nsCertTree::CycleCell(int32_t row, nsTreeColumn* col)
-{
-  return NS_OK;
-}
-=======
 nsCertTree::CycleCell(int32_t row, nsTreeColumn* col) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::CycleCell(int32_t row, nsTreeColumn *col) { return NS_OK; }
-
-NS_IMETHODIMP
-nsCertTree::IsEditable(int32_t row, nsTreeColumn *col, bool *_retval) {
-||||||| merged common ancestors
-nsCertTree::IsEditable(int32_t row, nsTreeColumn* col, bool *_retval)
-{
-  *_retval = false;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCertTree::IsSelectable(int32_t row, nsTreeColumn* col, bool *_retval)
-{
-=======
 nsCertTree::IsEditable(int32_t row, nsTreeColumn* col, bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::SetCellValue(int32_t row, nsTreeColumn *col,
-                         const nsAString &value) {
-||||||| merged common ancestors
-nsCertTree::SetCellValue(int32_t row, nsTreeColumn* col,
-                         const nsAString& value)
-{
-=======
 nsCertTree::SetCellValue(int32_t row, nsTreeColumn* col,
                          const nsAString& value) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::SetCellText(int32_t row, nsTreeColumn *col,
-                        const nsAString &value) {
-||||||| merged common ancestors
-nsCertTree::SetCellText(int32_t row, nsTreeColumn* col,
-                        const nsAString& value)
-{
-=======
 nsCertTree::SetCellText(int32_t row, nsTreeColumn* col,
                         const nsAString& value) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::PerformAction(const char16_t *action) { return NS_OK; }
-||||||| merged common ancestors
-nsCertTree::PerformAction(const char16_t *action)
-{
-  return NS_OK;
-}
-=======
 nsCertTree::PerformAction(const char16_t* action) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::PerformActionOnRow(const char16_t *action, int32_t row) {
-||||||| merged common ancestors
-nsCertTree::PerformActionOnRow(const char16_t *action, int32_t row)
-{
-=======
 nsCertTree::PerformActionOnRow(const char16_t* action, int32_t row) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertTree::PerformActionOnCell(const char16_t *action, int32_t row,
-                                nsTreeColumn *col) {
-||||||| merged common ancestors
-nsCertTree::PerformActionOnCell(const char16_t *action, int32_t row,
-                                nsTreeColumn* col)
-{
-=======
 nsCertTree::PerformActionOnCell(const char16_t* action, int32_t row,
                                 nsTreeColumn* col) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1618,16 +1072,8 @@ void nsCertTree::dumpMap() {
     MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
             ("NCHILD[%d]", mTreeArray[i].numChildren));
   }
-<<<<<<< HEAD
-  for (int i = 0; i < mNumRows; i++) {
-    treeArrayEl *el = GetThreadDescAtIndex(i);
-||||||| merged common ancestors
-  for (int i=0; i<mNumRows; i++) {
-    treeArrayEl *el = GetThreadDescAtIndex(i);
-=======
   for (int i = 0; i < mNumRows; i++) {
     treeArrayEl* el = GetThreadDescAtIndex(i);
->>>>>>> upstream-releases
     if (el) {
       nsAutoString td(el->orgName);
       MOZ_LOG(
@@ -1650,17 +1096,8 @@ void nsCertTree::dumpMap() {
 // CanDrop
 //
 NS_IMETHODIMP nsCertTree::CanDrop(int32_t index, int32_t orientation,
-<<<<<<< HEAD
-                                  mozilla::dom::DataTransfer *aDataTransfer,
-                                  bool *_retval) {
-||||||| merged common ancestors
-                                  mozilla::dom::DataTransfer* aDataTransfer,
-                                  bool *_retval)
-{
-=======
                                   mozilla::dom::DataTransfer* aDataTransfer,
                                   bool* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_retval);
   *_retval = false;
 
@@ -1671,14 +1108,7 @@ NS_IMETHODIMP nsCertTree::CanDrop(int32_t index, int32_t orientation,
 // Drop
 //
 NS_IMETHODIMP nsCertTree::Drop(int32_t row, int32_t orient,
-<<<<<<< HEAD
-                               mozilla::dom::DataTransfer *aDataTransfer) {
-||||||| merged common ancestors
-			                         mozilla::dom::DataTransfer* aDataTransfer)
-{
-=======
                                mozilla::dom::DataTransfer* aDataTransfer) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1687,38 +1117,20 @@ NS_IMETHODIMP nsCertTree::Drop(int32_t row, int32_t orient,
 //
 // ...
 //
-<<<<<<< HEAD
-NS_IMETHODIMP nsCertTree::IsSorted(bool *_retval) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsCertTree::IsSorted(bool *_retval)
-{
-=======
 NS_IMETHODIMP nsCertTree::IsSorted(bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
   return NS_OK;
 }
 
 #define RETURN_NOTHING
 
-<<<<<<< HEAD
-void nsCertTree::CmpInitCriterion(nsIX509Cert *cert,
-                                  CompareCacheHashEntry *entry,
-                                  sortCriterion crit, int32_t level) {
-||||||| merged common ancestors
-void
-nsCertTree::CmpInitCriterion(nsIX509Cert *cert, CompareCacheHashEntry *entry,
-                             sortCriterion crit, int32_t level)
-{
-=======
 void nsCertTree::CmpInitCriterion(nsIX509Cert* cert,
                                   CompareCacheHashEntry* entry,
                                   sortCriterion crit, int32_t level) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(cert && entry, RETURN_NOTHING);
 
   entry->mCritInit[level] = true;
-  nsString &str = entry->mCrit[level];
+  nsString& str = entry->mCrit[level];
 
   switch (crit) {
     case sort_IssuerOrg:
@@ -1763,21 +1175,9 @@ void nsCertTree::CmpInitCriterion(nsIX509Cert* cert,
   }
 }
 
-<<<<<<< HEAD
-int32_t nsCertTree::CmpByCrit(nsIX509Cert *a, CompareCacheHashEntry *ace,
-                              nsIX509Cert *b, CompareCacheHashEntry *bce,
-                              sortCriterion crit, int32_t level) {
-||||||| merged common ancestors
-int32_t
-nsCertTree::CmpByCrit(nsIX509Cert *a, CompareCacheHashEntry *ace,
-                      nsIX509Cert *b, CompareCacheHashEntry *bce,
-                      sortCriterion crit, int32_t level)
-{
-=======
 int32_t nsCertTree::CmpByCrit(nsIX509Cert* a, CompareCacheHashEntry* ace,
                               nsIX509Cert* b, CompareCacheHashEntry* bce,
                               sortCriterion crit, int32_t level) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(a && ace && b && bce, 0);
 
   if (!ace->mCritInit[level]) {
@@ -1788,8 +1188,8 @@ int32_t nsCertTree::CmpByCrit(nsIX509Cert* a, CompareCacheHashEntry* ace,
     CmpInitCriterion(b, bce, crit, level);
   }
 
-  nsString &str_a = ace->mCrit[level];
-  nsString &str_b = bce->mCrit[level];
+  nsString& str_a = ace->mCrit[level];
+  nsString& str_b = bce->mCrit[level];
 
   int32_t result;
   if (!str_a.IsVoid() && !str_b.IsVoid())
@@ -1802,20 +1202,9 @@ int32_t nsCertTree::CmpByCrit(nsIX509Cert* a, CompareCacheHashEntry* ace,
   return result;
 }
 
-<<<<<<< HEAD
-int32_t nsCertTree::CmpBy(void *cache, nsIX509Cert *a, nsIX509Cert *b,
-                          sortCriterion c0, sortCriterion c1,
-                          sortCriterion c2) {
-||||||| merged common ancestors
-int32_t
-nsCertTree::CmpBy(void *cache, nsIX509Cert *a, nsIX509Cert *b,
-                  sortCriterion c0, sortCriterion c1, sortCriterion c2)
-{
-=======
 int32_t nsCertTree::CmpBy(void* cache, nsIX509Cert* a, nsIX509Cert* b,
                           sortCriterion c0, sortCriterion c1,
                           sortCriterion c2) {
->>>>>>> upstream-releases
   // This will be called when comparing items for display sorting.
   // Some items might have no cert associated, so either a or b is null.
   // We want all those orphans show at the top of the list,
@@ -1850,57 +1239,24 @@ int32_t nsCertTree::CmpBy(void* cache, nsIX509Cert* a, nsIX509Cert* b,
   return cmp;
 }
 
-<<<<<<< HEAD
-int32_t nsCertTree::CmpCACert(void *cache, nsIX509Cert *a, nsIX509Cert *b) {
-||||||| merged common ancestors
-int32_t
-nsCertTree::CmpCACert(void *cache, nsIX509Cert *a, nsIX509Cert *b)
-{
-=======
 int32_t nsCertTree::CmpCACert(void* cache, nsIX509Cert* a, nsIX509Cert* b) {
->>>>>>> upstream-releases
   // XXX we assume issuer org is always criterion 1
   return CmpBy(cache, a, b, sort_IssuerOrg, sort_Org, sort_Token);
 }
 
-<<<<<<< HEAD
-int32_t nsCertTree::CmpWebSiteCert(void *cache, nsIX509Cert *a,
-                                   nsIX509Cert *b) {
-||||||| merged common ancestors
-int32_t
-nsCertTree::CmpWebSiteCert(void *cache, nsIX509Cert *a, nsIX509Cert *b)
-{
-=======
 int32_t nsCertTree::CmpWebSiteCert(void* cache, nsIX509Cert* a,
                                    nsIX509Cert* b) {
->>>>>>> upstream-releases
   // XXX we assume issuer org is always criterion 1
   return CmpBy(cache, a, b, sort_IssuerOrg, sort_CommonName, sort_None);
 }
 
-<<<<<<< HEAD
-int32_t nsCertTree::CmpUserCert(void *cache, nsIX509Cert *a, nsIX509Cert *b) {
-||||||| merged common ancestors
-int32_t
-nsCertTree::CmpUserCert(void *cache, nsIX509Cert *a, nsIX509Cert *b)
-{
-=======
 int32_t nsCertTree::CmpUserCert(void* cache, nsIX509Cert* a, nsIX509Cert* b) {
->>>>>>> upstream-releases
   // XXX we assume issuer org is always criterion 1
   return CmpBy(cache, a, b, sort_IssuerOrg, sort_Token,
                sort_IssuedDateDescending);
 }
 
-<<<<<<< HEAD
-int32_t nsCertTree::CmpEmailCert(void *cache, nsIX509Cert *a, nsIX509Cert *b) {
-||||||| merged common ancestors
-int32_t
-nsCertTree::CmpEmailCert(void *cache, nsIX509Cert *a, nsIX509Cert *b)
-{
-=======
 int32_t nsCertTree::CmpEmailCert(void* cache, nsIX509Cert* a, nsIX509Cert* b) {
->>>>>>> upstream-releases
   // XXX we assume issuer org is always criterion 1
   return CmpBy(cache, a, b, sort_IssuerOrg, sort_Email, sort_CommonName);
 }

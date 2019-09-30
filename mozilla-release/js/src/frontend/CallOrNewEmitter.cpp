@@ -38,18 +38,8 @@ CallOrNewEmitter::CallOrNewEmitter(BytecodeEmitter* bce, JSOp op,
   MOZ_ASSERT(isCall() || isNew() || isSuperCall());
 }
 
-<<<<<<< HEAD
-bool CallOrNewEmitter::emitNameCallee(JSAtom* name) {
-  MOZ_ASSERT(state_ == State::Start);
-||||||| merged common ancestors
-bool
-CallOrNewEmitter::emitNameCallee(JSAtom* name)
-{
-    MOZ_ASSERT(state_ == State::Start);
-=======
 bool CallOrNewEmitter::emitNameCallee(Handle<JSAtom*> name) {
   MOZ_ASSERT(state_ == State::Start);
->>>>>>> upstream-releases
 
   NameOpEmitter noe(
       bce_, name,
@@ -280,57 +270,11 @@ bool CallOrNewEmitter::emitEnd(uint32_t argc, const Maybe<uint32_t>& beginPos) {
         return false;
       }
     }
-<<<<<<< HEAD
-  }
-  if (!isSpread()) {
-    if (!bce_->emitCall(op_, argc, beginPos)) {
-      //            [stack] RVAL
-      return false;
-||||||| merged common ancestors
-    if (isNew() || isSuperCall()) {
-        if (isSuperCall()) {
-            if (!bce_->emit1(JSOP_NEWTARGET)) {       // CALLEE THIS ARG.. NEW.TARGET
-                return false;
-            }
-        } else {
-            // Repush the callee as new.target
-            uint32_t effectiveArgc = isSpread() ? 1 : argc;
-            if (!bce_->emitDupAt(effectiveArgc + 1)) {
-                return false;                         // CALLEE THIS ARR CALLEE
-            }
-        }
-=======
   }
   if (beginPos) {
     if (!bce_->updateSourceCoordNotes(*beginPos)) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  } else {
-    if (beginPos) {
-      if (!bce_->updateSourceCoordNotes(*beginPos)) {
-        return false;
-      }
-    }
-    if (!bce_->emit1(op_)) {
-      //            [stack] RVAL
-      return false;
-||||||| merged common ancestors
-    if (!isSpread()) {
-        if (!bce_->emitCall(op_, argc, beginPos)) {   // RVAL
-            return false;
-        }
-    } else {
-        if (beginPos) {
-            if (!bce_->updateSourceCoordNotes(*beginPos)) {
-                return false;
-            }
-        }
-        if (!bce_->emit1(op_)) {                      // RVAL
-            return false;
-        }
-=======
   }
   if (!bce_->markSimpleBreakpoint()) {
     return false;
@@ -344,16 +288,8 @@ bool CallOrNewEmitter::emitEnd(uint32_t argc, const Maybe<uint32_t>& beginPos) {
     if (!bce_->emit1(op_)) {
       //            [stack] RVAL
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
   }
-  bce_->checkTypeSet(op_);
-||||||| merged common ancestors
-    bce_->checkTypeSet(op_);
-=======
-  }
->>>>>>> upstream-releases
 
   if (isEval() && beginPos) {
     uint32_t lineNum = bce_->parser->errorReporter().lineAt(*beginPos);

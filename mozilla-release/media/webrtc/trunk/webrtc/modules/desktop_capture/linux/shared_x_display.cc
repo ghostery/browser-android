@@ -8,13 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/shared_x_display.cc
-#include "modules/desktop_capture/x11/shared_x_display.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/x11/shared_x_display.h"
-=======
 #include "modules/desktop_capture/linux/shared_x_display.h"
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/shared_x_display.cc
 
 #include <X11/Xlib.h>
 

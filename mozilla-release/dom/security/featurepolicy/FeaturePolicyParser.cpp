@@ -18,29 +18,6 @@ namespace dom {
 
 namespace {
 
-<<<<<<< HEAD
-void ReportToConsoleUnsupportedFeature(nsIDocument* aDocument,
-                                       const nsString& aFeatureName) {
-  const char16_t* params[] = {aFeatureName.get()};
-
-  nsContentUtils::ReportToConsole(
-      nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Feature Policy"),
-      aDocument, nsContentUtils::eSECURITY_PROPERTIES,
-      "FeaturePolicyUnsupportedFeatureName", params, ArrayLength(params));
-||||||| merged common ancestors
-void
-ReportToConsoleUnsupportedFeature(nsIDocument* aDocument,
-                                  const nsString& aFeatureName)
-{
-  const char16_t* params[] = { aFeatureName.get() };
-
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("Feature Policy"),
-                                  aDocument,
-                                  nsContentUtils::eSECURITY_PROPERTIES,
-                                  "FeaturePolicyUnsupportedFeatureName",
-                                  params, ArrayLength(params));
-=======
 void ReportToConsoleUnsupportedFeature(Document* aDocument,
                                        const nsString& aFeatureName) {
   AutoTArray<nsString, 1> params = {aFeatureName};
@@ -49,32 +26,8 @@ void ReportToConsoleUnsupportedFeature(Document* aDocument,
       nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Feature Policy"),
       aDocument, nsContentUtils::eSECURITY_PROPERTIES,
       "FeaturePolicyUnsupportedFeatureName", params);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ReportToConsoleInvalidEmptyAllowValue(nsIDocument* aDocument,
-                                           const nsString& aFeatureName) {
-  const char16_t* params[] = {aFeatureName.get()};
-
-  nsContentUtils::ReportToConsole(
-      nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Feature Policy"),
-      aDocument, nsContentUtils::eSECURITY_PROPERTIES,
-      "FeaturePolicyInvalidEmptyAllowValue", params, ArrayLength(params));
-||||||| merged common ancestors
-void
-ReportToConsoleInvalidEmptyAllowValue(nsIDocument* aDocument,
-                                      const nsString& aFeatureName)
-{
-  const char16_t* params[] = { aFeatureName.get() };
-
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("Feature Policy"),
-                                  aDocument,
-                                  nsContentUtils::eSECURITY_PROPERTIES,
-                                  "FeaturePolicyInvalidEmptyAllowValue",
-                                  params, ArrayLength(params));
-=======
 void ReportToConsoleInvalidEmptyAllowValue(Document* aDocument,
                                            const nsString& aFeatureName) {
   AutoTArray<nsString, 1> params = {aFeatureName};
@@ -83,32 +36,8 @@ void ReportToConsoleInvalidEmptyAllowValue(Document* aDocument,
       nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Feature Policy"),
       aDocument, nsContentUtils::eSECURITY_PROPERTIES,
       "FeaturePolicyInvalidEmptyAllowValue", params);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ReportToConsoleInvalidAllowValue(nsIDocument* aDocument,
-                                      const nsString& aValue) {
-  const char16_t* params[] = {aValue.get()};
-
-  nsContentUtils::ReportToConsole(
-      nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Feature Policy"),
-      aDocument, nsContentUtils::eSECURITY_PROPERTIES,
-      "FeaturePolicyInvalidAllowValue", params, ArrayLength(params));
-||||||| merged common ancestors
-void
-ReportToConsoleInvalidAllowValue(nsIDocument* aDocument,
-                                 const nsString& aValue)
-{
-  const char16_t* params[] = { aValue.get() };
-
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("Feature Policy"),
-                                  aDocument,
-                                  nsContentUtils::eSECURITY_PROPERTIES,
-                                  "FeaturePolicyInvalidAllowValue",
-                                  params, ArrayLength(params));
-=======
 void ReportToConsoleInvalidAllowValue(Document* aDocument,
                                       const nsString& aValue) {
   AutoTArray<nsString, 1> params = {aValue};
@@ -117,31 +46,16 @@ void ReportToConsoleInvalidAllowValue(Document* aDocument,
       nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Feature Policy"),
       aDocument, nsContentUtils::eSECURITY_PROPERTIES,
       "FeaturePolicyInvalidAllowValue", params);
->>>>>>> upstream-releases
 }
 
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ bool FeaturePolicyParser::ParseString(
-    const nsAString& aPolicy, nsIDocument* aDocument, nsIPrincipal* aSelfOrigin,
-    nsIPrincipal* aSrcOrigin, nsTArray<Feature>& aParsedFeatures) {
-||||||| merged common ancestors
-/* static */ bool
-FeaturePolicyParser::ParseString(const nsAString& aPolicy,
-                                 nsIDocument* aDocument,
-                                 nsIPrincipal* aSelfOrigin,
-                                 nsIPrincipal* aSrcOrigin,
-                                 nsTArray<Feature>& aParsedFeatures)
-{
-=======
 /* static */
 bool FeaturePolicyParser::ParseString(const nsAString& aPolicy,
                                       Document* aDocument,
                                       nsIPrincipal* aSelfOrigin,
                                       nsIPrincipal* aSrcOrigin,
                                       nsTArray<Feature>& aParsedFeatures) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSelfOrigin);
 
   nsTArray<nsTArray<nsString>> tokens;

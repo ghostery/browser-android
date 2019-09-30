@@ -11,56 +11,13 @@
 #include "SVGElement.h"
 #include "nsStubMutationObserver.h"
 
-<<<<<<< HEAD
-typedef nsSVGElement SVGTitleElementBase;
-
-nsresult NS_NewSVGTitleElement(
-    nsIContent **aResult, already_AddRefed<mozilla::dom::NodeInfo> &&aNodeInfo);
-||||||| merged common ancestors
-typedef nsSVGElement SVGTitleElementBase;
-
-nsresult NS_NewSVGTitleElement(nsIContent **aResult,
-                               already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-=======
 nsresult NS_NewSVGTitleElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
->>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class SVGTitleElement final : public SVGTitleElementBase,
-                              public nsStubMutationObserver {
- protected:
-  friend nsresult(::NS_NewSVGTitleElement(
-      nsIContent **aResult,
-      already_AddRefed<mozilla::dom::NodeInfo> &&aNodeInfo));
-  explicit SVGTitleElement(
-      already_AddRefed<mozilla::dom::NodeInfo> &&aNodeInfo);
-  ~SVGTitleElement();
-
-  virtual JSObject *WrapNode(JSContext *aCx,
-                             JS::Handle<JSObject *> aGivenProto) override;
-||||||| merged common ancestors
-class SVGTitleElement final : public SVGTitleElementBase,
-                              public nsStubMutationObserver
-{
-protected:
-  friend nsresult (::NS_NewSVGTitleElement(nsIContent **aResult,
-                                           already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGTitleElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGTitleElement();
-
-  virtual JSObject* WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
 typedef SVGElement SVGTitleElementBase;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
 class SVGTitleElement final : public SVGTitleElementBase,
                               public nsStubMutationObserver {
  protected:
@@ -75,7 +32,6 @@ class SVGTitleElement final : public SVGTitleElementBase,
                              JS::Handle<JSObject*> aGivenProto) override;
 
  public:
->>>>>>> upstream-releases
   // interfaces:
 
   NS_DECL_ISUPPORTS_INHERITED
@@ -86,7 +42,7 @@ class SVGTitleElement final : public SVGTitleElementBase,
   NS_DECL_NSIMUTATIONOBSERVER_CONTENTINSERTED
   NS_DECL_NSIMUTATIONOBSERVER_CONTENTREMOVED
 
-  virtual nsresult Clone(dom::NodeInfo *, nsINode **aResult) const override;
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
 

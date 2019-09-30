@@ -102,16 +102,8 @@ bool D3D11YCbCrImage::SetData(KnowsCompositor* aAllocator,
 
 IntSize D3D11YCbCrImage::GetSize() const { return mPictureRect.Size(); }
 
-<<<<<<< HEAD
-TextureClient* D3D11YCbCrImage::GetTextureClient(KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-TextureClient*
-D3D11YCbCrImage::GetTextureClient(KnowsCompositor* aForwarder)
-{
-=======
 TextureClient* D3D11YCbCrImage::GetTextureClient(
     KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
   return mTextureClient;
 }
 
@@ -279,17 +271,8 @@ already_AddRefed<SourceSurface> D3D11YCbCrImage::GetAsSourceSurface() {
   return surface.forget();
 }
 
-<<<<<<< HEAD
-class AutoCheckLockD3D11Texture {
- public:
-||||||| merged common ancestors
-class AutoCheckLockD3D11Texture
-{
-public:
-=======
 class AutoCheckLockD3D11Texture final {
  public:
->>>>>>> upstream-releases
   explicit AutoCheckLockD3D11Texture(ID3D11Texture2D* aTexture)
       : mIsLocked(false) {
     aTexture->QueryInterface((IDXGIKeyedMutex**)getter_AddRefs(mMutex));

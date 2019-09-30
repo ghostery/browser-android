@@ -783,15 +783,6 @@ var gTestDirsCommon = [
   {
     relPathDir: DIR_RESOURCES + "9/99/",
     dirRemoved: true,
-<<<<<<< HEAD
-  }, {
-    description: "Silences 'WARNING: Failed to resolve XUL App Dir.' in debug builds",
-    relPathDir: DIR_RESOURCES + "browser",
-    dirRemoved: false,
-  }];
-||||||| merged common ancestors
-  }];
-=======
   },
   {
     description:
@@ -800,7 +791,6 @@ var gTestDirsCommon = [
     dirRemoved: false,
   },
 ];
->>>>>>> upstream-releases
 
 // Directories for a complete successful update. This array can be used for a
 // complete failed update by calling setTestFilesAndDirsForFailure.
@@ -840,27 +830,14 @@ gTestDirsPartialSuccess = gTestDirsCommon.concat(gTestDirsPartialSuccess);
 
 /**
  * Helper function for setting up the test environment.
-<<<<<<< HEAD
- *
- * @param  aAppUpdateAutoEnabled
- *         See setAppUpdateAutoSync in shared.js for details.
-||||||| merged common ancestors
-=======
  *
  * @param  aAppUpdateAutoEnabled
  *         See setAppUpdateAutoSync in shared.js for details.
  * @param  aAllowBits
  *         If true, allow update downloads via the Windows BITS service.
  *         If false, this download mechanism will not be used.
->>>>>>> upstream-releases
  */
-<<<<<<< HEAD
-function setupTestCommon(aAppUpdateAutoEnabled = false) {
-||||||| merged common ancestors
-function setupTestCommon() {
-=======
 function setupTestCommon(aAppUpdateAutoEnabled = false, aAllowBits = false) {
->>>>>>> upstream-releases
   debugDump("start - general test setup");
 
   Assert.strictEqual(
@@ -983,15 +960,9 @@ function setupTestCommon(aAppUpdateAutoEnabled = false, aAllowBits = false) {
     }
   }
 
-<<<<<<< HEAD
-  setAppUpdateAutoSync(aAppUpdateAutoEnabled);
-
-||||||| merged common ancestors
-=======
   setAppUpdateAutoSync(aAppUpdateAutoEnabled);
   Services.prefs.setBoolPref(PREF_APP_UPDATE_BITS_ENABLED, aAllowBits);
 
->>>>>>> upstream-releases
   debugDump("finish - general test setup");
   return true;
 }
@@ -1609,17 +1580,6 @@ XPCOMUtils.defineLazyGetter(this, "gInstallDirPathHash", function test_gIDPH() {
     regKey.writeStringValue(appDir.path, gTestID);
     return gTestID;
   } catch (e) {
-<<<<<<< HEAD
-    logTestInfo("failed to create registry key. Registry Path: " + REG_PATH +
-                ", Key Name: " + appDir.path + ", Key Value: " + gTestID +
-                ", Exception " + e);
-    do_throw("Unable to write HKLM or HKCU TaskBarIDs registry key, key path: "
-             + REG_PATH);
-||||||| merged common ancestors
-    logTestInfo("failed to create registry key. Registry Path: " + REG_PATH +
-                ", Key Name: " + appDir.path + ", Key Value: " + gTestID +
-                ", Exception " + e);
-=======
     logTestInfo(
       "failed to create registry key. Registry Path: " +
         REG_PATH +
@@ -1634,7 +1594,6 @@ XPCOMUtils.defineLazyGetter(this, "gInstallDirPathHash", function test_gIDPH() {
       "Unable to write HKLM or HKCU TaskBarIDs registry key, key path: " +
         REG_PATH
     );
->>>>>>> upstream-releases
   }
   return null;
 });
@@ -1648,18 +1607,6 @@ XPCOMUtils.defineLazyGetter(this, "gLocalAppDataDir", function test_gLADD() {
   return getSpecialFolderDir(CSIDL_LOCAL_APPDATA);
 });
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyGetter(this, "gCommonAppDataDir", function test_gCDD() {
-  if (!IS_WIN) {
-    do_throw("Windows only function called by a different platform!");
-  }
-
-  const CSIDL_COMMON_APPDATA = 0x0023;
-  return getSpecialFolderDir(CSIDL_COMMON_APPDATA);
-});
-
-||||||| merged common ancestors
-=======
 XPCOMUtils.defineLazyGetter(this, "gCommonAppDataDir", function test_gCDD() {
   if (AppConstants.platform != "win") {
     do_throw("Windows only function called by a different platform!");
@@ -1669,7 +1616,6 @@ XPCOMUtils.defineLazyGetter(this, "gCommonAppDataDir", function test_gCDD() {
   return getSpecialFolderDir(CSIDL_COMMON_APPDATA);
 });
 
->>>>>>> upstream-releases
 XPCOMUtils.defineLazyGetter(this, "gProgFilesDir", function test_gPFD() {
   if (AppConstants.platform != "win") {
     do_throw("Windows only function called by a different platform!");
@@ -1689,19 +1635,9 @@ XPCOMUtils.defineLazyGetter(this, "gProgFilesDir", function test_gPFD() {
  * with the same name in nsXREDirProvider::GetUpdateRootDir performs. If true,
  * the old (pre-migration) update directory is returned.
  */
-<<<<<<< HEAD
-function getMockUpdRootD(aGetOldLocation = false) {
-  if (IS_WIN) {
-    return getMockUpdRootDWin(aGetOldLocation);
-||||||| merged common ancestors
-function getMockUpdRootD() {
-  if (IS_WIN) {
-    return getMockUpdRootDWin();
-=======
 function getMockUpdRootD(aGetOldLocation = false) {
   if (AppConstants.platform == "win") {
     return getMockUpdRootDWin(aGetOldLocation);
->>>>>>> upstream-releases
   }
 
   if (AppConstants.platform == "macosx") {
@@ -1719,55 +1655,17 @@ function getMockUpdRootD(aGetOldLocation = false) {
  *
  * @throws  If called from a platform other than Windows.
  */
-<<<<<<< HEAD
-function getMockUpdRootDWin(aGetOldLocation) {
-  if (!IS_WIN) {
-||||||| merged common ancestors
-function getMockUpdRootDWin() {
-  if (!IS_WIN) {
-=======
 function getMockUpdRootDWin(aGetOldLocation) {
   if (AppConstants.platform != "win") {
->>>>>>> upstream-releases
     do_throw("Windows only function called by a different platform!");
   }
 
   let relPathUpdates = "";
-<<<<<<< HEAD
-  let dataDirectory;
-  if (aGetOldLocation) {
-    dataDirectory = gLocalAppDataDir.clone();
-    if (MOZ_APP_VENDOR || MOZ_APP_BASENAME) {
-      relPathUpdates += (MOZ_APP_VENDOR ? MOZ_APP_VENDOR : MOZ_APP_BASENAME);
-||||||| merged common ancestors
-  if (gInstallDirPathHash && (MOZ_APP_VENDOR || MOZ_APP_BASENAME)) {
-    relPathUpdates += (MOZ_APP_VENDOR ? MOZ_APP_VENDOR : MOZ_APP_BASENAME) +
-                      "\\" + DIR_UPDATES + "\\" + gInstallDirPathHash;
-  }
-
-  if (!relPathUpdates && progFilesDir) {
-    if (appDirPath.length > progFilesDir.path.length) {
-      if (appDirPath.substr(0, progFilesDir.path.length) == progFilesDir.path) {
-        if (MOZ_APP_VENDOR && MOZ_APP_BASENAME) {
-          relPathUpdates += MOZ_APP_VENDOR + "\\" + MOZ_APP_BASENAME;
-        } else {
-          relPathUpdates += MOZ_APP_BASENAME;
-        }
-        relPathUpdates += appDirPath.substr(progFilesDir.path.length);
-      }
-    }
-  }
-
-  if (!relPathUpdates) {
-    if (MOZ_APP_VENDOR && MOZ_APP_BASENAME) {
-      relPathUpdates += MOZ_APP_VENDOR + "\\" + MOZ_APP_BASENAME;
-=======
   let dataDirectory;
   if (aGetOldLocation) {
     dataDirectory = gLocalAppDataDir.clone();
     if (MOZ_APP_VENDOR || MOZ_APP_BASENAME) {
       relPathUpdates += MOZ_APP_VENDOR ? MOZ_APP_VENDOR : MOZ_APP_BASENAME;
->>>>>>> upstream-releases
     } else {
       relPathUpdates += "Mozilla";
     }
@@ -1776,35 +1674,12 @@ function getMockUpdRootDWin(aGetOldLocation) {
     relPathUpdates += "Mozilla";
   }
 
-<<<<<<< HEAD
-  relPathUpdates += "\\" + DIR_UPDATES + "\\" + gInstallDirPathHash;
-  let updatesDir = Cc["@mozilla.org/file/local;1"].
-                   createInstance(Ci.nsIFile);
-  updatesDir.initWithPath(dataDirectory.path + "\\" + relPathUpdates);
-||||||| merged common ancestors
-  let updatesDir = Cc["@mozilla.org/file/local;1"].
-                   createInstance(Ci.nsIFile);
-  updatesDir.initWithPath(localAppDataDir.path + "\\" + relPathUpdates);
-=======
   relPathUpdates += "\\" + DIR_UPDATES + "\\" + gInstallDirPathHash;
   let updatesDir = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
   updatesDir.initWithPath(dataDirectory.path + "\\" + relPathUpdates);
->>>>>>> upstream-releases
   return updatesDir;
 }
 
-<<<<<<< HEAD
-function createWorldWritableAppUpdateDir() {
-  // This function is only necessary in Windows
-  if (IS_WIN) {
-    let installDir = Services.dirsvc.get(XRE_EXECUTABLE_FILE, Ci.nsIFile).parent;
-    let exitValue = runTestHelperSync(["create-update-dir", installDir.path]);
-    Assert.equal(exitValue, 0, "The helper process exit value should be 0");
-  }
-}
-
-||||||| merged common ancestors
-=======
 function createWorldWritableAppUpdateDir() {
   // This function is only necessary in Windows
   if (AppConstants.platform == "win") {
@@ -1815,7 +1690,6 @@ function createWorldWritableAppUpdateDir() {
   }
 }
 
->>>>>>> upstream-releases
 XPCOMUtils.defineLazyGetter(this, "gUpdatesRootDir", function test_gURD() {
   if (AppConstants.platform != "macosx") {
     do_throw("Mac OS X only function called by a different platform!");
@@ -2164,16 +2038,7 @@ function runUpdate(
     "binary transparency is not being processed for now"
   );
 
-<<<<<<< HEAD
-  Assert.ok(!updateHasBinaryTransparencyErrorResult(),
-            "binary transparency is not being processed for now");
-
-  if (IS_SERVICE_TEST && aCheckSvcLog) {
-||||||| merged common ancestors
-  if (IS_SERVICE_TEST && aCheckSvcLog) {
-=======
   if (gIsServiceTest && aCheckSvcLog) {
->>>>>>> upstream-releases
     let contents = readServiceLogFile();
     Assert.notEqual(
       contents,
@@ -3126,21 +2991,12 @@ async function waitForHelperExit() {
  * @param   aSetupActiveUpdate
  *          Whether to setup the active update.
  */
-<<<<<<< HEAD
-function setupUpdaterTest(aMarFile, aPostUpdateAsync,
-                          aPostUpdateExeRelPathPrefix = "",
-                          aSetupActiveUpdate = true) {
-||||||| merged common ancestors
-function setupUpdaterTest(aMarFile, aPostUpdateAsync,
-                          aPostUpdateExeRelPathPrefix = "") {
-=======
 async function setupUpdaterTest(
   aMarFile,
   aPostUpdateAsync,
   aPostUpdateExeRelPathPrefix = "",
   aSetupActiveUpdate = true
 ) {
->>>>>>> upstream-releases
   debugDump("start - updater test setup");
   let updatesPatchDir = getUpdateDirFile(DIR_PATCH);
   if (!updatesPatchDir.exists()) {
@@ -3372,15 +3228,6 @@ function replaceLogPaths(aLogContents) {
  *          Removes lines containing the distribution directory from the log
  *          file to compare the update log with.
  */
-<<<<<<< HEAD
-function checkUpdateLogContents(aCompareLogFile, aStaged = false,
-                                aReplace = false, aExcludeDistDir = false) {
-  if (IS_UNIX) {
-||||||| merged common ancestors
-function checkUpdateLogContents(aCompareLogFile, aStaged = false,
-                                aReplace = false, aExcludeDistDir = false) {
-  if (IS_UNIX && !IS_MACOSX) {
-=======
 function checkUpdateLogContents(
   aCompareLogFile,
   aStaged = false,
@@ -3388,7 +3235,6 @@ function checkUpdateLogContents(
   aExcludeDistDir = false
 ) {
   if (AppConstants.platform == "macosx" || AppConstants.platform == "linux") {
->>>>>>> upstream-releases
     // The order that files are returned when enumerating the file system on
     // Linux and Mac is not deterministic so skip checking the logs.
     return;
@@ -3428,20 +3274,12 @@ function checkUpdateLogContents(
   );
   updateLogContents = updateLogContents.replace(/WORKING DIRECTORY.*/g, "");
   // Skip lines that log failed attempts to open the callback executable.
-<<<<<<< HEAD
-  updateLogContents = updateLogContents.replace(/NS_main: callback app file .*/g, "");
-  // Remove carriage returns.
-  updateLogContents = updateLogContents.replace(/\r/g, "");
-||||||| merged common ancestors
-  updateLogContents = updateLogContents.replace(/NS_main: callback app file .*/g, "");
-=======
   updateLogContents = updateLogContents.replace(
     /NS_main: callback app file .*/g,
     ""
   );
   // Remove carriage returns.
   updateLogContents = updateLogContents.replace(/\r/g, "");
->>>>>>> upstream-releases
 
   if (AppConstants.platform == "win") {
     // The FindFile results when enumerating the filesystem on Windows is not
@@ -3456,27 +3294,6 @@ function checkUpdateLogContents(
 
   if (aReplace) {
     // Remove the lines which contain absolute paths
-<<<<<<< HEAD
-    updateLogContents = updateLogContents.replace(/^Begin moving.*$/mg, "");
-    updateLogContents = updateLogContents.replace(/^ensure_remove: failed to remove file: .*$/mg, "");
-    updateLogContents = updateLogContents.replace(/^ensure_remove_recursive: unable to remove directory: .*$/mg, "");
-    updateLogContents = updateLogContents.replace(/^Removing tmpDir failed, err: -1$/mg, "");
-    updateLogContents = updateLogContents.replace(/^remove_recursive_on_reboot: .*$/mg, "");
-    // Replace requests will retry renaming the installation directory 10 times
-    // when there are files still in use. The following will remove the
-    // additional entries from the log file when this happens so the log check
-    // passes.
-    let re = new RegExp("\n" + ERR_RENAME_FILE + "[^\n]*\n" +
-                        "PerformReplaceRequest: destDir rename[^\n]*\n" +
-                        "rename_file: proceeding to rename the directory\n", "g");
-    updateLogContents = updateLogContents.replace(re, "\n");
-||||||| merged common ancestors
-    updateLogContents = updateLogContents.replace(/^Begin moving.*$/mg, "");
-    updateLogContents = updateLogContents.replace(/^ensure_remove: failed to remove file: .*$/mg, "");
-    updateLogContents = updateLogContents.replace(/^ensure_remove_recursive: unable to remove directory: .*$/mg, "");
-    updateLogContents = updateLogContents.replace(/^Removing tmpDir failed, err: -1$/mg, "");
-    updateLogContents = updateLogContents.replace(/^remove_recursive_on_reboot: .*$/mg, "");
-=======
     updateLogContents = updateLogContents.replace(/^Begin moving.*$/gm, "");
     updateLogContents = updateLogContents.replace(
       /^ensure_remove: failed to remove file: .*$/gm,
@@ -3506,7 +3323,6 @@ function checkUpdateLogContents(
       "g"
     );
     updateLogContents = updateLogContents.replace(re, "");
->>>>>>> upstream-releases
   }
 
   // Replace error codes since they are different on each platform.
@@ -3576,17 +3392,6 @@ function checkUpdateLogContents(
     // incorrect line.
     for (let i = 0; i < aryLog.length; ++i) {
       if (aryLog[i] != aryCompare[i]) {
-<<<<<<< HEAD
-        logTestInfo("the first incorrect line is line #" + i + " and the " +
-                    "value is: " + aryLog[i]);
-        Assert.equal(aryLog[i], aryCompare[i],
-                     "the update log contents" + MSG_SHOULD_EQUAL);
-||||||| merged common ancestors
-        logTestInfo("the first incorrect line in the update log is: " +
-                    aryLog[i]);
-        Assert.equal(aryLog[i], aryCompare[i],
-                     "the update log contents" + MSG_SHOULD_EQUAL);
-=======
         logTestInfo(
           "the first incorrect line is line #" +
             i +
@@ -3599,7 +3404,6 @@ function checkUpdateLogContents(
           aryCompare[i],
           "the update log contents" + MSG_SHOULD_EQUAL
         );
->>>>>>> upstream-releases
       }
     }
     // This should never happen!
@@ -4295,21 +4099,11 @@ function stop_httpserver(aCallback) {
  */
 function createAppInfo(aID, aName, aVersion, aPlatformVersion) {
   const XULAPPINFO_CONTRACTID = "@mozilla.org/xre/app-info;1";
-<<<<<<< HEAD
-  const XULAPPINFO_CID = Components.ID("{c763b610-9d49-455a-bbd2-ede71682a1ac}");
-  let ifaces = [Ci.nsIXULAppInfo, Ci.nsIPlatformInfo, Ci.nsIXULRuntime];
-  if (IS_WIN) {
-||||||| merged common ancestors
-  const XULAPPINFO_CID = Components.ID("{c763b610-9d49-455a-bbd2-ede71682a1ac}");
-  let ifaces = [Ci.nsIXULAppInfo, Ci.nsIXULRuntime];
-  if (IS_WIN) {
-=======
   const XULAPPINFO_CID = Components.ID(
     "{c763b610-9d49-455a-bbd2-ede71682a1ac}"
   );
   let ifaces = [Ci.nsIXULAppInfo, Ci.nsIPlatformInfo, Ci.nsIXULRuntime];
   if (AppConstants.platform == "win") {
->>>>>>> upstream-releases
     ifaces.push(Ci.nsIWinAppHelper);
   }
   const XULAppInfo = {
@@ -4407,13 +4201,6 @@ function getProcessArgs(aExtraArgs) {
     );
     args = [launchScript.path];
   } else {
-<<<<<<< HEAD
-    args = ["/D", "/Q", "/C", appBinPath, "-no-remote", "-test-process-updates",
-            "-wait-for-browser"].concat(aExtraArgs).concat([PIPE_TO_NULL]);
-||||||| merged common ancestors
-    args = ["/D", "/Q", "/C", appBinPath, "-no-remote", "-test-process-updates"].
-           concat(aExtraArgs).concat([PIPE_TO_NULL]);
-=======
     args = [
       "/D",
       "/Q",
@@ -4428,7 +4215,6 @@ function getProcessArgs(aExtraArgs) {
     ]
       .concat(aExtraArgs)
       .concat([PIPE_TO_NULL]);
->>>>>>> upstream-releases
   }
   return args;
 }

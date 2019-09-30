@@ -18,19 +18,10 @@ namespace gmp {
 
 class GMPChild;
 
-<<<<<<< HEAD
-class GMPTimerChild : public PGMPTimerChild {
- public:
-||||||| merged common ancestors
-class GMPTimerChild : public PGMPTimerChild
-{
-public:
-=======
 class GMPTimerChild : public PGMPTimerChild {
   friend class PGMPTimerChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(GMPTimerChild)
 
   explicit GMPTimerChild(GMPChild* aPlugin);

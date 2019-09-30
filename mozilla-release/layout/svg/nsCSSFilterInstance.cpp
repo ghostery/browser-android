@@ -29,41 +29,6 @@ static float ClampFactor(float aFactor) {
   return aFactor;
 }
 
-<<<<<<< HEAD
-nsCSSFilterInstance::nsCSSFilterInstance(
-    const nsStyleFilter& aFilter, nscolor aShadowFallbackColor,
-    const nsIntRect& aTargetBoundsInFilterSpace,
-    const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform)
-    : mFilter(aFilter),
-      mShadowFallbackColor(aShadowFallbackColor),
-      mTargetBoundsInFilterSpace(aTargetBoundsInFilterSpace),
-      mFrameSpaceInCSSPxToFilterSpaceTransform(
-          aFrameSpaceInCSSPxToFilterSpaceTransform) {}
-
-nsresult nsCSSFilterInstance::BuildPrimitives(
-    nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
-    bool aInputIsTainted) {
-  FilterPrimitiveDescription descr =
-      CreatePrimitiveDescription(aPrimitiveDescrs, aInputIsTainted);
-||||||| merged common ancestors
-nsCSSFilterInstance::nsCSSFilterInstance(const nsStyleFilter& aFilter,
-                                         nscolor aShadowFallbackColor,
-                                         const nsIntRect& aTargetBoundsInFilterSpace,
-                                         const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform)
-  : mFilter(aFilter)
-  , mShadowFallbackColor(aShadowFallbackColor)
-  , mTargetBoundsInFilterSpace(aTargetBoundsInFilterSpace)
-  , mFrameSpaceInCSSPxToFilterSpaceTransform(aFrameSpaceInCSSPxToFilterSpaceTransform)
-{
-}
-
-nsresult
-nsCSSFilterInstance::BuildPrimitives(nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
-                                     bool aInputIsTainted)
-{
-  FilterPrimitiveDescription descr = CreatePrimitiveDescription(aPrimitiveDescrs,
-                                                                aInputIsTainted);
-=======
 nsCSSFilterInstance::nsCSSFilterInstance(
     const StyleFilter& aFilter, nscolor aShadowFallbackColor,
     const nsIntRect& aTargetBoundsInFilterSpace,
@@ -79,18 +44,9 @@ nsresult nsCSSFilterInstance::BuildPrimitives(
     bool aInputIsTainted) {
   FilterPrimitiveDescription descr =
       CreatePrimitiveDescription(aPrimitiveDescrs, aInputIsTainted);
->>>>>>> upstream-releases
   nsresult result;
-<<<<<<< HEAD
-  switch (mFilter.GetType()) {
-    case NS_STYLE_FILTER_BLUR:
-||||||| merged common ancestors
-  switch(mFilter.GetType()) {
-    case NS_STYLE_FILTER_BLUR:
-=======
   switch (mFilter.tag) {
     case StyleFilter::Tag::Blur:
->>>>>>> upstream-releases
       result = SetAttributesForBlur(descr);
       break;
     case StyleFilter::Tag::Brightness:
@@ -151,57 +107,20 @@ FilterPrimitiveDescription nsCSSFilterInstance::CreatePrimitiveDescription(
   return descr;
 }
 
-<<<<<<< HEAD
-nsresult nsCSSFilterInstance::SetAttributesForBlur(
-    FilterPrimitiveDescription& aDescr) {
-  const nsStyleCoord& radiusInFrameSpace = mFilter.GetFilterParameter();
-  if (radiusInFrameSpace.GetUnit() != eStyleUnit_Coord) {
-    MOZ_ASSERT_UNREACHABLE("unexpected unit");
-    return NS_ERROR_FAILURE;
-  }
-
-  Size radiusInFilterSpace =
-      BlurRadiusToFilterSpace(radiusInFrameSpace.GetCoordValue());
-||||||| merged common ancestors
-nsresult
-nsCSSFilterInstance::SetAttributesForBlur(FilterPrimitiveDescription& aDescr)
-{
-  const nsStyleCoord& radiusInFrameSpace = mFilter.GetFilterParameter();
-  if (radiusInFrameSpace.GetUnit() != eStyleUnit_Coord) {
-    MOZ_ASSERT_UNREACHABLE("unexpected unit");
-    return NS_ERROR_FAILURE;
-  }
-
-  Size radiusInFilterSpace = BlurRadiusToFilterSpace(radiusInFrameSpace.GetCoordValue());
-=======
 nsresult nsCSSFilterInstance::SetAttributesForBlur(
     FilterPrimitiveDescription& aDescr) {
   const Length& radiusInFrameSpace = mFilter.AsBlur();
   Size radiusInFilterSpace =
       BlurRadiusToFilterSpace(radiusInFrameSpace.ToAppUnits());
->>>>>>> upstream-releases
   GaussianBlurAttributes atts;
   atts.mStdDeviation = radiusInFilterSpace;
   aDescr.Attributes() = AsVariant(atts);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCSSFilterInstance::SetAttributesForBrightness(
-    FilterPrimitiveDescription& aDescr) {
-  const nsStyleCoord& styleValue = mFilter.GetFilterParameter();
-  float value = styleValue.GetFactorOrPercentValue();
-||||||| merged common ancestors
-nsresult
-nsCSSFilterInstance::SetAttributesForBrightness(FilterPrimitiveDescription& aDescr)
-{
-  const nsStyleCoord& styleValue = mFilter.GetFilterParameter();
-  float value = styleValue.GetFactorOrPercentValue();
-=======
 nsresult nsCSSFilterInstance::SetAttributesForBrightness(
     FilterPrimitiveDescription& aDescr) {
   float value = mFilter.AsBrightness();
->>>>>>> upstream-releases
   float intercept = 0.0f;
   ComponentTransferAttributes atts;
 
@@ -220,22 +139,9 @@ nsresult nsCSSFilterInstance::SetAttributesForBrightness(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCSSFilterInstance::SetAttributesForContrast(
-    FilterPrimitiveDescription& aDescr) {
-  const nsStyleCoord& styleValue = mFilter.GetFilterParameter();
-  float value = styleValue.GetFactorOrPercentValue();
-||||||| merged common ancestors
-nsresult
-nsCSSFilterInstance::SetAttributesForContrast(FilterPrimitiveDescription& aDescr)
-{
-  const nsStyleCoord& styleValue = mFilter.GetFilterParameter();
-  float value = styleValue.GetFactorOrPercentValue();
-=======
 nsresult nsCSSFilterInstance::SetAttributesForContrast(
     FilterPrimitiveDescription& aDescr) {
   float value = mFilter.AsContrast();
->>>>>>> upstream-releases
   float intercept = -(0.5 * value) + 0.5;
   ComponentTransferAttributes atts;
 
@@ -254,28 +160,9 @@ nsresult nsCSSFilterInstance::SetAttributesForContrast(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCSSFilterInstance::SetAttributesForDropShadow(
-    FilterPrimitiveDescription& aDescr) {
-  nsCSSShadowArray* shadows = mFilter.GetDropShadow();
-  if (!shadows || shadows->Length() != 1) {
-    MOZ_ASSERT_UNREACHABLE("Exactly one drop shadow should have been parsed.");
-    return NS_ERROR_FAILURE;
-  }
-||||||| merged common ancestors
-nsresult
-nsCSSFilterInstance::SetAttributesForDropShadow(FilterPrimitiveDescription& aDescr)
-{
-  nsCSSShadowArray* shadows = mFilter.GetDropShadow();
-  if (!shadows || shadows->Length() != 1) {
-    MOZ_ASSERT_UNREACHABLE("Exactly one drop shadow should have been parsed.");
-    return NS_ERROR_FAILURE;
-  }
-=======
 nsresult nsCSSFilterInstance::SetAttributesForDropShadow(
     FilterPrimitiveDescription& aDescr) {
   const auto& shadow = mFilter.AsDropShadow();
->>>>>>> upstream-releases
 
   DropShadowAttributes atts;
 
@@ -284,15 +171,8 @@ nsresult nsCSSFilterInstance::SetAttributesForDropShadow(
   atts.mStdDeviation = radiusInFilterSpace;
 
   // Set offset.
-<<<<<<< HEAD
-  IntPoint offsetInFilterSpace =
-      OffsetToFilterSpace(shadow->mXOffset, shadow->mYOffset);
-||||||| merged common ancestors
-  IntPoint offsetInFilterSpace = OffsetToFilterSpace(shadow->mXOffset, shadow->mYOffset);
-=======
   IntPoint offsetInFilterSpace = OffsetToFilterSpace(
       shadow.horizontal.ToAppUnits(), shadow.vertical.ToAppUnits());
->>>>>>> upstream-releases
   atts.mOffset = offsetInFilterSpace;
 
   // Set color. If unspecified, use the CSS color property.

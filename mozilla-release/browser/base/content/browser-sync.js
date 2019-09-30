@@ -68,16 +68,6 @@ var gSync = {
     return UIState.get().status == UIState.STATUS_SIGNED_IN;
   },
 
-<<<<<<< HEAD
-  get sendTabTargets() {
-    return Weave.Service.clientsEngine.fxaDevices
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .filter(d => !d.isCurrentDevice && (fxAccounts.commands.sendTab.isDeviceCompatible(d) || d.clientRecord));
-||||||| merged common ancestors
-  get remoteClients() {
-    return Weave.Service.clientsEngine.remoteClients
-           .sort((a, b) => a.name.localeCompare(b.name));
-=======
   get sendTabTargets() {
     return Weave.Service.clientsEngine.fxaDevices
       .sort((a, b) => a.name.localeCompare(b.name))
@@ -86,7 +76,6 @@ var gSync = {
           !d.isCurrentDevice &&
           (fxAccounts.commands.sendTab.isDeviceCompatible(d) || d.clientRecord)
       );
->>>>>>> upstream-releases
   },
 
   get offline() {
@@ -605,18 +594,6 @@ var gSync = {
     switchToTabHavingURI(url, true, { replaceQueryString: true });
   },
 
-<<<<<<< HEAD
-  async sendTabToDevice(url, targets, title) {
-||||||| merged common ancestors
-  async sendTabToDevice(url, clients, title) {
-    let devices;
-    try {
-      devices = await fxAccounts.getDeviceList();
-    } catch (e) {
-      console.error("Could not get the FxA device list", e);
-      devices = []; // We can still run in degraded mode.
-    }
-=======
   async openFxAEmailFirstPage(entryPoint) {
     const url = await FxAccounts.config.promiseEmailFirstURI(entryPoint);
     switchToTabHavingURI(url, true, { replaceQueryString: true });
@@ -646,7 +623,6 @@ var gSync = {
   },
 
   async sendTabToDevice(url, targets, title) {
->>>>>>> upstream-releases
     const fxaCommandsDevices = [];
     const oldSendTabClients = [];
     for (const target of targets) {
@@ -659,24 +635,6 @@ var gSync = {
       }
     }
     if (fxaCommandsDevices.length) {
-<<<<<<< HEAD
-      console.log(`Sending a tab to ${fxaCommandsDevices.map(d => d.name).join(", ")} using FxA commands.`);
-      const report = await fxAccounts.commands.sendTab.send(fxaCommandsDevices, {url, title});
-      for (let {device, error} of report.failed) {
-        console.error(`Failed to send a tab with FxA commands for ${device.name}.
-                       Falling back on the Sync back-end`, error);
-        if (!device.clientRecord) {
-          console.error(`Could not find associated Sync device for ${device.name}`);
-||||||| merged common ancestors
-      console.log(`Sending a tab to ${fxaCommandsDevices.map(d => d.name).join(", ")} using FxA commands.`);
-      const report = await fxAccounts.commands.sendTab.send(fxaCommandsDevices, {url, title});
-      for (let {device, error} of report.failed) {
-        console.error(`Failed to send a tab with FxA commands for ${device.name}.
-                       Falling back on the Sync back-end`, error);
-        const client = clients.find(c => c.fxaDeviceId == device.id);
-        if (!client) {
-          console.error(`Could not find associated Sync device for ${device.name}`);
-=======
       console.log(
         `Sending a tab to ${fxaCommandsDevices
           .map(d => d.name)
@@ -696,7 +654,6 @@ var gSync = {
           console.error(
             `Could not find associated Sync device for ${device.name}`
           );
->>>>>>> upstream-releases
           continue;
         }
         oldSendTabClients.push(device.clientRecord);
@@ -746,13 +703,6 @@ var gSync = {
     const fragment = document.createDocumentFragment();
 
     const state = UIState.get();
-<<<<<<< HEAD
-    if (state.status == UIState.STATUS_SIGNED_IN && this.sendTabTargets.length > 0) {
-      this._appendSendTabDeviceList(fragment, createDeviceNodeFn, url, title, multiselected);
-||||||| merged common ancestors
-    if (state.status == UIState.STATUS_SIGNED_IN && this.remoteClients.length > 0) {
-      this._appendSendTabDeviceList(fragment, createDeviceNodeFn, url, title, multiselected);
-=======
     if (
       state.status == UIState.STATUS_SIGNED_IN &&
       this.sendTabTargets.length > 0
@@ -764,7 +714,6 @@ var gSync = {
         title,
         multiselected
       );
->>>>>>> upstream-releases
     } else if (state.status == UIState.STATUS_SIGNED_IN) {
       this._appendSendTabSingleDevice(fragment, createDeviceNodeFn);
     } else if (
@@ -782,31 +731,6 @@ var gSync = {
   // TODO: once our transition from the old-send tab world is complete,
   // this list should be built using the FxA device list instead of the client
   // collection.
-<<<<<<< HEAD
-  _appendSendTabDeviceList(fragment, createDeviceNodeFn, url, title, multiselected) {
-    const targets = this.sendTabTargets;
-
-    let tabsToSend = multiselected ?
-      gBrowser.selectedTabs.map(t => {
-        return {
-          url: t.linkedBrowser.currentURI.spec,
-          title: t.linkedBrowser.contentTitle,
-        };
-      }) : [{url, title}];
-
-    const onSendAllCommand = (event) => {
-||||||| merged common ancestors
-  _appendSendTabDeviceList(fragment, createDeviceNodeFn, url, title, multiselected) {
-    let tabsToSend = multiselected ?
-      gBrowser.selectedTabs.map(t => {
-        return {
-          url: t.linkedBrowser.currentURI.spec,
-          title: t.linkedBrowser.contentTitle,
-        };
-      }) : [{url, title}];
-
-    const onSendAllCommand = (event) => {
-=======
   _appendSendTabDeviceList(
     fragment,
     createDeviceNodeFn,
@@ -826,40 +750,18 @@ var gSync = {
       : [{ url, title }];
 
     const onSendAllCommand = event => {
->>>>>>> upstream-releases
       for (let t of tabsToSend) {
         this.sendTabToDevice(t.url, targets, t.title);
       }
     };
-<<<<<<< HEAD
-    const onTargetDeviceCommand = (event) => {
-      const targetId = event.target.getAttribute("clientId");
-      const target = targets.find(t => t.id == targetId);
-||||||| merged common ancestors
-    const onTargetDeviceCommand = (event) => {
-      const clientId = event.target.getAttribute("clientId");
-      const client = this.remoteClients.find(c => c.id == clientId);
-=======
     const onTargetDeviceCommand = event => {
       const targetId = event.target.getAttribute("clientId");
       const target = targets.find(t => t.id == targetId);
->>>>>>> upstream-releases
       for (let t of tabsToSend) {
         this.sendTabToDevice(t.url, [target], t.title);
       }
     };
 
-<<<<<<< HEAD
-    function addTargetDevice(targetId, name, targetType, lastModified) {
-      const targetDevice = createDeviceNodeFn(targetId, name, targetType, lastModified);
-      targetDevice.addEventListener("command", targetId ? onTargetDeviceCommand :
-                                                          onSendAllCommand, true);
-||||||| merged common ancestors
-    function addTargetDevice(clientId, name, clientType, lastModified) {
-      const targetDevice = createDeviceNodeFn(clientId, name, clientType, lastModified);
-      targetDevice.addEventListener("command", clientId ? onTargetDeviceCommand :
-                                                          onSendAllCommand, true);
-=======
     function addTargetDevice(targetId, name, targetType, lastModified) {
       const targetDevice = createDeviceNodeFn(
         targetId,
@@ -872,7 +774,6 @@ var gSync = {
         targetId ? onTargetDeviceCommand : onSendAllCommand,
         true
       );
->>>>>>> upstream-releases
       targetDevice.classList.add("sync-menuitem", "sendtab-target");
       targetDevice.setAttribute("clientId", targetId);
       targetDevice.setAttribute("clientType", targetType);
@@ -880,23 +781,6 @@ var gSync = {
       fragment.appendChild(targetDevice);
     }
 
-<<<<<<< HEAD
-    for (let target of targets) {
-      let type, lastModified;
-      if (target.clientRecord) {
-        type = Weave.Service.clientsEngine.getClientType(target.clientRecord.id);
-        lastModified = new Date(target.clientRecord.serverLastModified * 1000);
-      } else {
-        type = target.type === "desktop" ? "desktop" : "phone"; // Normalizing the FxA types just in case.
-        lastModified = null;
-      }
-      addTargetDevice(target.id, target.name, type, lastModified);
-||||||| merged common ancestors
-    const clients = this.remoteClients;
-    for (let client of clients) {
-      const type = Weave.Service.clientsEngine.getClientType(client.id);
-      addTargetDevice(client.id, client.name, type, new Date(client.serverLastModified * 1000));
-=======
     for (let target of targets) {
       let type, lastModified;
       if (target.clientRecord) {
@@ -909,7 +793,6 @@ var gSync = {
         lastModified = null;
       }
       addTargetDevice(target.id, target.name, type, lastModified);
->>>>>>> upstream-releases
     }
 
     // "Send to All Devices" menu item
@@ -1299,16 +1182,10 @@ var gSync = {
 
   get relativeTimeFormat() {
     delete this.relativeTimeFormat;
-<<<<<<< HEAD
-    return this.relativeTimeFormat = new Services.intl.RelativeTimeFormat(undefined, {style: "long"});
-||||||| merged common ancestors
-    return this.relativeTimeFormat = new Services.intl.RelativeTimeFormat(undefined, {style: "short"});
-=======
     return (this.relativeTimeFormat = new Services.intl.RelativeTimeFormat(
       undefined,
       { style: "long" }
     ));
->>>>>>> upstream-releases
   },
 
   formatLastSyncDate(date) {

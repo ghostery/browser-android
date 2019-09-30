@@ -48,33 +48,15 @@ GridLine* GridLines::IndexedGetter(uint32_t aIndex, bool& aFound) {
   return mLines[aIndex];
 }
 
-<<<<<<< HEAD
-static void AddLineNameIfNotPresent(nsTArray<nsString>& aLineNames,
-                                    const nsString& aName) {
-||||||| merged common ancestors
-static void AddLineNameIfNotPresent(nsTArray<nsString>& aLineNames,
-                             const nsString& aName)
-{
-=======
 static void AddLineNameIfNotPresent(nsTArray<RefPtr<nsAtom>>& aLineNames,
                                     nsAtom* aName) {
->>>>>>> upstream-releases
   if (!aLineNames.Contains(aName)) {
     aLineNames.AppendElement(aName);
   }
 }
 
-<<<<<<< HEAD
-static void AddLineNamesIfNotPresent(nsTArray<nsString>& aLineNames,
-                                     const nsTArray<nsString>& aNames) {
-||||||| merged common ancestors
-static void AddLineNamesIfNotPresent(nsTArray<nsString>& aLineNames,
-                              const nsTArray<nsString>& aNames)
-{
-=======
 static void AddLineNamesIfNotPresent(nsTArray<RefPtr<nsAtom>>& aLineNames,
                                      const nsTArray<RefPtr<nsAtom>>& aNames) {
->>>>>>> upstream-releases
   for (const auto& name : aNames) {
     AddLineNameIfNotPresent(aLineNames, name);
   }
@@ -135,16 +117,8 @@ void GridLines::SetLineInfo(const ComputedGridTrackInfo* aTrackInfo,
       // problem. We do the work here since this is only run when
       // requested by devtools, and slowness here will not affect
       // normal browsing.
-<<<<<<< HEAD
-      const nsTArray<nsString>& possiblyDuplicateLineNames(
-          aLineInfo->mNames.SafeElementAt(i, nsTArray<nsString>()));
-||||||| merged common ancestors
-      const nsTArray<nsString>& possiblyDuplicateLineNames(
-        aLineInfo->mNames.SafeElementAt(i, nsTArray<nsString>()));
-=======
       const nsTArray<RefPtr<nsAtom>>& possiblyDuplicateLineNames(
           aLineInfo->mNames.SafeElementAt(i, nsTArray<RefPtr<nsAtom>>()));
->>>>>>> upstream-releases
 
       nsTArray<RefPtr<nsAtom>> lineNames;
       AddLineNamesIfNotPresent(lineNames, possiblyDuplicateLineNames);
@@ -315,29 +289,11 @@ void GridLines::SetLineInfo(const ComputedGridTrackInfo* aTrackInfo,
   }
 }
 
-<<<<<<< HEAD
-uint32_t GridLines::AppendRemovedAutoFits(
-    const ComputedGridTrackInfo* aTrackInfo,
-    const ComputedGridLineInfo* aLineInfo, nscoord aLastTrackEdge,
-    uint32_t& aRepeatIndex, uint32_t aNumRepeatTracks,
-    uint32_t aNumLeadingTracks, nsTArray<nsString>& aLineNames) {
-||||||| merged common ancestors
-uint32_t
-GridLines::AppendRemovedAutoFits(const ComputedGridTrackInfo* aTrackInfo,
-                                 const ComputedGridLineInfo* aLineInfo,
-                                 nscoord aLastTrackEdge,
-                                 uint32_t& aRepeatIndex,
-                                 uint32_t aNumRepeatTracks,
-                                 uint32_t aNumLeadingTracks,
-                                 nsTArray<nsString>& aLineNames)
-{
-=======
 uint32_t GridLines::AppendRemovedAutoFits(
     const ComputedGridTrackInfo* aTrackInfo,
     const ComputedGridLineInfo* aLineInfo, nscoord aLastTrackEdge,
     uint32_t& aRepeatIndex, uint32_t aNumRepeatTracks,
     uint32_t aNumLeadingTracks, nsTArray<RefPtr<nsAtom>>& aLineNames) {
->>>>>>> upstream-releases
   // Check to see if lineNames contains ALL of the before line names.
   bool alreadyHasBeforeLineNames = true;
   for (const auto& beforeName : aLineInfo->mNamesBefore) {

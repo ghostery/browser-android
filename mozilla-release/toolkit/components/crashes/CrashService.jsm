@@ -163,46 +163,6 @@ CrashService.prototype = Object.freeze({
 
   async addCrash(processType, crashType, id) {
     switch (processType) {
-<<<<<<< HEAD:mozilla-release/toolkit/components/crashes/CrashService.js
-    case Ci.nsICrashService.PROCESS_TYPE_MAIN:
-      processType = Services.crashmanager.PROCESS_TYPE_MAIN;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_CONTENT:
-      processType = Services.crashmanager.PROCESS_TYPE_CONTENT;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_PLUGIN:
-      processType = Services.crashmanager.PROCESS_TYPE_PLUGIN;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_GMPLUGIN:
-      processType = Services.crashmanager.PROCESS_TYPE_GMPLUGIN;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_GPU:
-      processType = Services.crashmanager.PROCESS_TYPE_GPU;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_RDD:
-      processType = Services.crashmanager.PROCESS_TYPE_RDD;
-      break;
-    default:
-      throw new Error("Unrecognized PROCESS_TYPE: " + processType);
-||||||| merged common ancestors
-    case Ci.nsICrashService.PROCESS_TYPE_MAIN:
-      processType = Services.crashmanager.PROCESS_TYPE_MAIN;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_CONTENT:
-      processType = Services.crashmanager.PROCESS_TYPE_CONTENT;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_PLUGIN:
-      processType = Services.crashmanager.PROCESS_TYPE_PLUGIN;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_GMPLUGIN:
-      processType = Services.crashmanager.PROCESS_TYPE_GMPLUGIN;
-      break;
-    case Ci.nsICrashService.PROCESS_TYPE_GPU:
-      processType = Services.crashmanager.PROCESS_TYPE_GPU;
-      break;
-    default:
-      throw new Error("Unrecognized PROCESS_TYPE: " + processType);
-=======
       case Ci.nsICrashService.PROCESS_TYPE_MAIN:
         processType = Services.crashmanager.PROCESS_TYPE_MAIN;
         break;
@@ -232,7 +192,6 @@ CrashService.prototype = Object.freeze({
         return;
       default:
         throw new Error("Unrecognized PROCESS_TYPE: " + processType);
->>>>>>> upstream-releases:mozilla-release/toolkit/components/crashes/CrashService.jsm
     }
 
     let allThreads = false;

@@ -56,26 +56,10 @@ bool nsXBLMouseEventHandler::EventMatched(Event* aEvent) {
 
 nsXBLKeyEventHandler::nsXBLKeyEventHandler(nsAtom* aEventType, uint8_t aPhase,
                                            uint8_t aType)
-<<<<<<< HEAD
-    : mEventType(aEventType),
-      mPhase(aPhase),
-      mType(aType),
-      mIsBoundToChrome(false),
-      mUsingContentXBLScope(false) {}
-||||||| merged common ancestors
-  : mEventType(aEventType),
-    mPhase(aPhase),
-    mType(aType),
-    mIsBoundToChrome(false),
-    mUsingContentXBLScope(false)
-{
-}
-=======
     : mEventType(aEventType),
       mPhase(aPhase),
       mType(aType),
       mIsBoundToChrome(false) {}
->>>>>>> upstream-releases
 
 nsXBLKeyEventHandler::~nsXBLKeyEventHandler() {}
 
@@ -92,17 +76,8 @@ bool nsXBLKeyEventHandler::ExecuteMatchedHandlers(
     nsXBLPrototypeHandler* handler = mProtoHandlers[i];
     bool hasAllowUntrustedAttr = handler->HasAllowUntrustedAttr();
     if ((event->IsTrusted() ||
-<<<<<<< HEAD
-         (hasAllowUntrustedAttr && handler->AllowUntrustedEvents()) ||
-         (!hasAllowUntrustedAttr && !mIsBoundToChrome &&
-          !mUsingContentXBLScope)) &&
-||||||| merged common ancestors
-        (hasAllowUntrustedAttr && handler->AllowUntrustedEvents()) ||
-        (!hasAllowUntrustedAttr && !mIsBoundToChrome && !mUsingContentXBLScope)) &&
-=======
          (hasAllowUntrustedAttr && handler->AllowUntrustedEvents()) ||
          (!hasAllowUntrustedAttr && !mIsBoundToChrome)) &&
->>>>>>> upstream-releases
         handler->KeyEventMatched(aKeyEvent, aCharCode, aIgnoreModifierState)) {
       handler->ExecuteHandler(target, aKeyEvent);
       executed = true;

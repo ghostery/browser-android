@@ -96,12 +96,6 @@ HTMLVideoElement::~HTMLVideoElement() {
   DecoderDoctorLogger::LogDestruction(this);
 }
 
-<<<<<<< HEAD
-nsresult HTMLVideoElement::GetVideoSize(nsIntSize* size) {
-||||||| merged common ancestors
-nsresult HTMLVideoElement::GetVideoSize(nsIntSize* size)
-{
-=======
 void HTMLVideoElement::UpdateMediaSize(const nsIntSize& aSize) {
   HTMLMediaElement::UpdateMediaSize(aSize);
   // If we have a clone target, we should update its size as well.
@@ -112,7 +106,6 @@ void HTMLVideoElement::UpdateMediaSize(const nsIntSize& aSize) {
 }
 
 nsresult HTMLVideoElement::GetVideoSize(nsIntSize* size) {
->>>>>>> upstream-releases
   if (!mMediaInfo.HasVideo()) {
     return NS_ERROR_FAILURE;
   }
@@ -139,32 +132,6 @@ nsresult HTMLVideoElement::GetVideoSize(nsIntSize* size) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool HTMLVideoElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
-                                      const nsAString& aValue,
-                                      nsIPrincipal* aMaybeScriptedPrincipal,
-                                      nsAttrValue& aResult) {
-  if (aAttribute == nsGkAtoms::width || aAttribute == nsGkAtoms::height) {
-    return aResult.ParseSpecialIntValue(aValue);
-  }
-
-  return HTMLMediaElement::ParseAttribute(aNamespaceID, aAttribute, aValue,
-                                          aMaybeScriptedPrincipal, aResult);
-||||||| merged common ancestors
-bool
-HTMLVideoElement::ParseAttribute(int32_t aNamespaceID,
-                                 nsAtom* aAttribute,
-                                 const nsAString& aValue,
-                                 nsIPrincipal* aMaybeScriptedPrincipal,
-                                 nsAttrValue& aResult)
-{
-   if (aAttribute == nsGkAtoms::width || aAttribute == nsGkAtoms::height) {
-     return aResult.ParseSpecialIntValue(aValue);
-   }
-
-   return HTMLMediaElement::ParseAttribute(aNamespaceID, aAttribute, aValue,
-                                           aMaybeScriptedPrincipal, aResult);
-=======
 void HTMLVideoElement::Invalidate(bool aImageSizeChanged,
                                   Maybe<nsIntSize>& aNewIntrinsicSize,
                                   bool aForceInvalidate) {
@@ -189,7 +156,6 @@ bool HTMLVideoElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
 
   return HTMLMediaElement::ParseAttribute(aNamespaceID, aAttribute, aValue,
                                           aMaybeScriptedPrincipal, aResult);
->>>>>>> upstream-releases
 }
 
 void HTMLVideoElement::MapAttributesIntoRule(
@@ -214,12 +180,6 @@ nsMapRuleToAttributesFunc HTMLVideoElement::GetAttributeMappingFunction()
   return &MapAttributesIntoRule;
 }
 
-<<<<<<< HEAD
-nsresult HTMLVideoElement::SetAcceptHeader(nsIHttpChannel* aChannel) {
-||||||| merged common ancestors
-nsresult HTMLVideoElement::SetAcceptHeader(nsIHttpChannel* aChannel)
-{
-=======
 void HTMLVideoElement::UnbindFromTree(bool aNullParent) {
   if (mVisualCloneSource) {
     mVisualCloneSource->EndCloningVisually();
@@ -231,7 +191,6 @@ void HTMLVideoElement::UnbindFromTree(bool aNullParent) {
 }
 
 nsresult HTMLVideoElement::SetAcceptHeader(nsIHttpChannel* aChannel) {
->>>>>>> upstream-releases
   nsAutoCString value(
       "video/webm,"
       "video/ogg,"
@@ -354,24 +313,10 @@ HTMLVideoElement::GetVideoPlaybackQuality() {
             TotalPlayTime(), VideoWidth(), VideoHeight());
         corruptedFrames = 0;
       } else {
-<<<<<<< HEAD
-        FrameStatisticsData stats =
-            mDecoder->GetFrameStatistics().GetFrameStatisticsData();
-        if (sizeof(totalFrames) >= sizeof(stats.mParsedFrames)) {
-          totalFrames = stats.mPresentedFrames + stats.mDroppedFrames;
-          droppedFrames = stats.mDroppedFrames;
-||||||| merged common ancestors
-        FrameStatisticsData stats =
-          mDecoder->GetFrameStatistics().GetFrameStatisticsData();
-        if (sizeof(totalFrames) >= sizeof(stats.mParsedFrames)) {
-          totalFrames = stats.mPresentedFrames + stats.mDroppedFrames;
-          droppedFrames = stats.mDroppedFrames;
-=======
         FrameStatistics* stats = &mDecoder->GetFrameStatistics();
         if (sizeof(totalFrames) >= sizeof(stats->GetParsedFrames())) {
           totalFrames = stats->GetTotalFrames();
           droppedFrames = stats->GetDroppedFrames();
->>>>>>> upstream-releases
         } else {
           uint64_t total = stats->GetTotalFrames();
           const auto maxNumber = std::numeric_limits<uint32_t>::max();
@@ -381,16 +326,8 @@ HTMLVideoElement::GetVideoPlaybackQuality() {
           } else {
             // Too big number(s) -> Resize everything to fit in 32 bits.
             double ratio = double(maxNumber) / double(total);
-<<<<<<< HEAD
-            totalFrames = maxNumber;  // === total * ratio
-            droppedFrames = uint32_t(double(stats.mDroppedFrames) * ratio);
-||||||| merged common ancestors
-            totalFrames = maxNumber; // === total * ratio
-            droppedFrames = uint32_t(double(stats.mDroppedFrames) * ratio);
-=======
             totalFrames = maxNumber;  // === total * ratio
             droppedFrames = uint32_t(double(stats->GetDroppedFrames()) * ratio);
->>>>>>> upstream-releases
           }
         }
         corruptedFrames = 0;
@@ -446,16 +383,6 @@ void HTMLVideoElement::ReleaseVideoWakeLockIfExists() {
   }
 }
 
-<<<<<<< HEAD
-void HTMLVideoElement::Init() {
-  Preferences::AddBoolVarCache(&sVideoStatsEnabled,
-                               "media.video_stats.enabled");
-||||||| merged common ancestors
-void
-HTMLVideoElement::Init()
-{
-  Preferences::AddBoolVarCache(&sVideoStatsEnabled, "media.video_stats.enabled");
-=======
 bool HTMLVideoElement::SetVisualCloneTarget(
     HTMLVideoElement* aVisualCloneTarget) {
   MOZ_DIAGNOSTIC_ASSERT(
@@ -487,39 +414,20 @@ bool HTMLVideoElement::SetVisualCloneSource(
     return true;
   }
   return false;
->>>>>>> upstream-releases
 }
 
 /* static */
-<<<<<<< HEAD
-bool HTMLVideoElement::IsVideoStatsEnabled() { return sVideoStatsEnabled; }
-||||||| merged common ancestors
-bool
-HTMLVideoElement::IsVideoStatsEnabled()
-{
-  return sVideoStatsEnabled;
-}
-=======
 void HTMLVideoElement::InitStatics() {
   Preferences::AddBoolVarCache(&sVideoStatsEnabled,
                                "media.video_stats.enabled");
   Preferences::AddBoolVarCache(&sCloneElementVisuallyTesting,
                                "media.cloneElementVisually.testing");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-double HTMLVideoElement::TotalPlayTime() const {
-||||||| merged common ancestors
-double
-HTMLVideoElement::TotalPlayTime() const
-{
-=======
 /* static */
 bool HTMLVideoElement::IsVideoStatsEnabled() { return sVideoStatsEnabled; }
 
 double HTMLVideoElement::TotalPlayTime() const {
->>>>>>> upstream-releases
   double total = 0.0;
 
   if (mPlayed) {
@@ -542,13 +450,6 @@ double HTMLVideoElement::TotalPlayTime() const {
   return total;
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 void HTMLVideoElement::CloneElementVisually(HTMLVideoElement& aTargetVideo,
                                             ErrorResult& rv) {
   MOZ_ASSERT(IsInComposedDoc(),
@@ -658,4 +559,3 @@ void HTMLVideoElement::TogglePictureInPicture(ErrorResult& error) {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -4,32 +4,6 @@
 
 // Verify that API functions fail if the Add-ons Manager isn't initialised.
 
-<<<<<<< HEAD
-const IGNORE = ["getPreferredIconURL", "escapeAddonURI",
-                "shouldAutoUpdate", "getStartupChanges",
-                "addTypeListener", "removeTypeListener",
-                "addAddonListener", "removeAddonListener",
-                "addInstallListener", "removeInstallListener",
-                "addManagerListener", "removeManagerListener",
-                "addExternalExtensionLoader",
-                "shutdown", "init",
-                "stateToString", "errorToString", "getUpgradeListener",
-                "addUpgradeListener", "removeUpgradeListener",
-                "getInstallSourceFromHost", "getInstallSourceFromPrincipal",
-               ];
-||||||| merged common ancestors
-const IGNORE = ["getPreferredIconURL", "escapeAddonURI",
-                "shouldAutoUpdate", "getStartupChanges",
-                "addTypeListener", "removeTypeListener",
-                "addAddonListener", "removeAddonListener",
-                "addInstallListener", "removeInstallListener",
-                "addManagerListener", "removeManagerListener",
-                "shutdown", "init",
-                "stateToString", "errorToString", "getUpgradeListener",
-                "addUpgradeListener", "removeUpgradeListener",
-                "getInstallSourceFromHost", "getInstallSourceFromPrincipal",
-               ];
-=======
 const IGNORE = [
   "getPreferredIconURL",
   "escapeAddonURI",
@@ -54,7 +28,6 @@ const IGNORE = [
   "getInstallSourceFromHost",
   "getInstallSourceFromPrincipal",
 ];
->>>>>>> upstream-releases
 
 const IGNORE_PRIVATE = [
   "AddonAuthor",

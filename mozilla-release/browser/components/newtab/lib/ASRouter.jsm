@@ -20,40 +20,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   PanelTestProvider: "resource://activity-stream/lib/PanelTestProvider.jsm",
   ToolbarBadgeHub: "resource://activity-stream/lib/ToolbarBadgeHub.jsm",
 });
-<<<<<<< HEAD
-const {ASRouterActions: ra, actionTypes: at, actionCreators: ac} = ChromeUtils.import("resource://activity-stream/common/Actions.jsm", {});
-const {CFRMessageProvider} = ChromeUtils.import("resource://activity-stream/lib/CFRMessageProvider.jsm", {});
-const {OnboardingMessageProvider} = ChromeUtils.import("resource://activity-stream/lib/OnboardingMessageProvider.jsm", {});
-const {SnippetsTestMessageProvider} = ChromeUtils.import("resource://activity-stream/lib/SnippetsTestMessageProvider.jsm", {});
-const {RemoteSettings} = ChromeUtils.import("resource://services-settings/remote-settings.js", {});
-const {CFRPageActions} = ChromeUtils.import("resource://activity-stream/lib/CFRPageActions.jsm", {});
-
-ChromeUtils.defineModuleGetter(this, "ASRouterPreferences",
-  "resource://activity-stream/lib/ASRouterPreferences.jsm");
-ChromeUtils.defineModuleGetter(this, "ASRouterTargeting",
-  "resource://activity-stream/lib/ASRouterTargeting.jsm");
-ChromeUtils.defineModuleGetter(this, "QueryCache",
-  "resource://activity-stream/lib/ASRouterTargeting.jsm");
-ChromeUtils.defineModuleGetter(this, "ASRouterTriggerListeners",
-  "resource://activity-stream/lib/ASRouterTriggerListeners.jsm");
-ChromeUtils.import("resource:///modules/AttributionCode.jsm");
-||||||| merged common ancestors
-const {ASRouterActions: ra, actionTypes: at, actionCreators: ac} = ChromeUtils.import("resource://activity-stream/common/Actions.jsm", {});
-const {CFRMessageProvider} = ChromeUtils.import("resource://activity-stream/lib/CFRMessageProvider.jsm", {});
-const {OnboardingMessageProvider} = ChromeUtils.import("resource://activity-stream/lib/OnboardingMessageProvider.jsm", {});
-const {SnippetsTestMessageProvider} = ChromeUtils.import("resource://activity-stream/lib/SnippetsTestMessageProvider.jsm", {});
-const {RemoteSettings} = ChromeUtils.import("resource://services-settings/remote-settings.js", {});
-const {CFRPageActions} = ChromeUtils.import("resource://activity-stream/lib/CFRPageActions.jsm", {});
-
-ChromeUtils.defineModuleGetter(this, "ASRouterPreferences",
-  "resource://activity-stream/lib/ASRouterPreferences.jsm");
-ChromeUtils.defineModuleGetter(this, "ASRouterTargeting",
-  "resource://activity-stream/lib/ASRouterTargeting.jsm");
-ChromeUtils.defineModuleGetter(this, "QueryCache",
-  "resource://activity-stream/lib/ASRouterTargeting.jsm");
-ChromeUtils.defineModuleGetter(this, "ASRouterTriggerListeners",
-  "resource://activity-stream/lib/ASRouterTriggerListeners.jsm");
-=======
 const {
   ASRouterActions: ra,
   actionTypes: at,
@@ -133,7 +99,6 @@ const TRAILHEAD_CONFIG = {
   EXPERIMENT_RATIOS_FOR_EXTENDED_TRIPLETS: [["control", 95], ["holdback", 5]],
   EXTENDED_TRIPLETS_EXPERIMENT_PREF: "trailhead.extendedTriplets.experiment",
 };
->>>>>>> upstream-releases
 
 const INCOMING_MESSAGE_NAME = "ASRouter:child-to-parent";
 const OUTGOING_MESSAGE_NAME = "ASRouter:parent-to-child";
@@ -155,11 +120,6 @@ const LOCAL_MESSAGE_PROVIDERS = {
 };
 const STARTPAGE_VERSION = "6";
 
-<<<<<<< HEAD
-const ADDONS_API_URL = "https://services.addons.mozilla.org/api/v3/addons/addon";
-
-||||||| merged common ancestors
-=======
 /**
  * chooseBranch<T> -  Choose an item from a list of "branches" pseudorandomly using a seed / ratio configuration
  * @param seed {string} A unique seed for the randomizer
@@ -173,7 +133,6 @@ async function chooseBranch(seed, branches) {
   return branches[await Sampling.ratioSample(seed, ratios)][0];
 }
 
->>>>>>> upstream-releases
 const MessageLoaderUtils = {
   STARTPAGE_VERSION,
   REMOTE_LOADER_CACHE_KEY: "RemoteLoaderCache",
@@ -426,10 +385,6 @@ const MessageLoaderUtils = {
       messages = messages.filter(
         message => !provider.exclude.includes(message.id)
       );
-    }
-    // Filter out messages we temporarily want to exclude
-    if (provider.exclude && provider.exclude.length) {
-      messages = messages.filter(message => !provider.exclude.includes(message.id));
     }
     const lastUpdated = Date.now();
     return {
@@ -871,27 +826,6 @@ class _ASRouter {
     }
   }
 
-<<<<<<< HEAD
-  /**
-   * Used by ASRouter Admin returns all ASRouterTargeting.Environment
-   * and ASRouter._getMessagesContext parameters and values
-   */
-  async getTargetingParameters(environment, localContext) {
-    const targetingParameters = {};
-    for (const param of Object.keys(environment)) {
-      targetingParameters[param] = await environment[param];
-    }
-    for (const param of Object.keys(localContext)) {
-      targetingParameters[param] = await localContext[param];
-    }
-
-    return targetingParameters;
-  }
-
-  async _updateAdminState(target) {
-||||||| merged common ancestors
-  _updateAdminState(target) {
-=======
   _loadLocalProviders() {
     // If we're in ASR debug mode add the local test providers
     if (ASRouterPreferences.devtoolsEnabled) {
@@ -920,25 +854,18 @@ class _ASRouter {
   }
 
   async _updateAdminState(target) {
->>>>>>> upstream-releases
     const channel = target || this.messageChannel;
     channel.sendAsyncMessage(OUTGOING_MESSAGE_NAME, {
       type: "ADMIN_SET_STATE",
       data: {
         ...this.state,
         providerPrefs: ASRouterPreferences.providers,
-<<<<<<< HEAD
-        userPrefs: ASRouterPreferences.getAllUserPreferences(),
-        targetingParameters: await this.getTargetingParameters(ASRouterTargeting.Environment, this._getMessagesContext()),
-||||||| merged common ancestors
-=======
         userPrefs: ASRouterPreferences.getAllUserPreferences(),
         targetingParameters: await this.getTargetingParameters(
           ASRouterTargeting.Environment,
           this._getMessagesContext()
         ),
         errors: this.errors,
->>>>>>> upstream-releases
       },
     });
   }
@@ -1227,18 +1154,6 @@ class _ASRouter {
       type: "ADMIN_SET_STATE",
       data: { ...this.state, evaluationStatus },
     });
-  }
-
-  async evaluateExpression(target, {expression, context}) {
-    const channel = target || this.messageChannel;
-    let evaluationStatus;
-    try {
-      evaluationStatus = {result: await ASRouterTargeting.isMatch(expression, context), success: true};
-    } catch (e) {
-      evaluationStatus = {result: e.message, success: false};
-    }
-
-    channel.sendAsyncMessage(OUTGOING_MESSAGE_NAME, {type: "ADMIN_SET_STATE", data: {...this.state, evaluationStatus}});
   }
 
   _orderBundle(bundle) {
@@ -1593,48 +1508,6 @@ class _ASRouter {
     return impressions;
   }
 
-<<<<<<< HEAD
-  async _fetchAddonInfo() {
-    let data = {};
-    const {content} = await AttributionCode.getAttrDataAsync();
-    if (!content) {
-      return data;
-    }
-    try {
-      const response = await fetch(`${ADDONS_API_URL}/${content}`);
-      if (response.status !== 204 && response.ok) {
-        const json = await response.json();
-        data.url = json.current_version.files[0].url;
-        data.iconURL = json.icon_url;
-      }
-    } catch (e) {
-      Cu.reportError("Failed to get the latest add-on version for Return to AMO");
-    }
-    return data;
-  }
-
-  async sendNextMessage(target, trigger) {
-    const msgs = this._getUnblockedMessages();
-    let message = null;
-    const previewMsgs = this.state.messages.filter(item => item.provider === "preview");
-    // Always send preview messages when available
-    if (previewMsgs.length) {
-      [message] = previewMsgs;
-    } else {
-      message = await this._findMessage(msgs, trigger);
-    }
-||||||| merged common ancestors
-  async sendNextMessage(target, trigger) {
-    const msgs = this._getUnblockedMessages();
-    let message = null;
-    const previewMsgs = this.state.messages.filter(item => item.provider === "preview");
-    // Always send preview messages when available
-    if (previewMsgs.length) {
-      [message] = previewMsgs;
-    } else {
-      message = await this._findMessage(msgs, trigger);
-    }
-=======
   handleMessageRequest({
     triggerId,
     triggerParam,
@@ -1652,44 +1525,7 @@ class _ASRouter {
       if (m.trigger && m.trigger.id !== triggerId) {
         return false;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // We need some addon info if we are showing return to amo overlay, so fetch
-    // that, and update the message accordingly
-    if (message && message.template === "return_to_amo_overlay") {
-      const {url, iconURL} = await this._fetchAddonInfo();
-
-      // If we failed to get this info, we do not want to show this message
-      if (!url || !iconURL) {
-        return;
-      }
-      message.content.addon_icon = iconURL;
-      message.content.primary_button.action.data.url = url;
-    }
-
-    if (previewMsgs.length) {
-      // We don't want to cache preview messages, remove them after we selected the message to show
-      await this.setState(state => ({
-        lastMessageId: message.id,
-        messages: state.messages.filter(m => m.id !== message.id),
-      }));
-    } else {
-      await this.setState({lastMessageId: message ? message.id : null});
-    }
-    await this._sendMessageToTarget(message, target, trigger);
-||||||| merged common ancestors
-    if (previewMsgs.length) {
-      // We don't want to cache preview messages, remove them after we selected the message to show
-      await this.setState(state => ({
-        lastMessageId: message.id,
-        messages: state.messages.filter(m => m.id !== message.id),
-      }));
-    } else {
-      await this.setState({lastMessageId: message ? message.id : null});
-    }
-    await this._sendMessageToTarget(message, target, trigger);
-=======
       return true;
     });
 
@@ -1701,7 +1537,6 @@ class _ASRouter {
         context: triggerContext,
       }
     );
->>>>>>> upstream-releases
   }
 
   async setMessageById(id, target, force = true, action = {}) {
@@ -1917,58 +1752,13 @@ class _ASRouter {
     await this.loadMessagesFromAllProviders();
   }
 
-<<<<<<< HEAD
-  /**
-   * forceAttribution - this function should only be called from within about:newtab#asrouter.
-   * It forces the browser attribution to be set to something specified in asrouter admin
-   * tools, and reloads the providers in order to get messages that are dependant on this
-   * attribution data (see Return to AMO flow in bug 1475354 for example). Note - only works with OSX
-   * @param {data} Object an object containing the attribtion data that came from asrouter admin page
-   */
-  async forceAttribution(data) {
-    // Extract the parameters from data that will make up the referrer url
-    const {source, campaign, content} = data;
-    let appPath = Services.dirsvc.get("GreD", Ci.nsIFile).parent.parent.path;
-    let attributionSvc = Cc["@mozilla.org/mac-attribution;1"]
-                            .getService(Ci.nsIMacAttributionService);
-
-    let referrer = `https://www.mozilla.org/anything/?utm_campaign=${campaign}&utm_source=${source}&utm_content=${encodeURIComponent(content)}`;
-
-    // This sets the Attribution to be the referrer
-    attributionSvc.setReferrerUrl(appPath, referrer, true);
-    let env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
-    env.set("XPCSHELL_TEST_PROFILE_DIR", "testing");
-
-    // Clear and refresh Attribution, and then fetch the messages again to update
-    AttributionCode._clearCache();
-    AttributionCode.getAttrDataAsync();
-    this._updateMessageProviders();
-    await this.loadMessagesFromAllProviders();
-  }
-
-  async handleUserAction({data: action, target}) {
-||||||| merged common ancestors
-  async handleUserAction({data: action, target}) {
-=======
   async handleUserAction({ data: action, target }) {
->>>>>>> upstream-releases
     switch (action.type) {
       case ra.OPEN_PRIVATE_BROWSER_WINDOW:
         // Forcefully open about:privatebrowsing
         target.browser.ownerGlobal.OpenBrowserWindow({ private: true });
         break;
       case ra.OPEN_URL:
-<<<<<<< HEAD
-        target.browser.ownerGlobal.openLinkIn(action.data.args, action.data.where || "current", {
-          private: false,
-          triggeringPrincipal: Services.scriptSecurityManager.createNullPrincipal({}),
-        });
-||||||| merged common ancestors
-        target.browser.ownerGlobal.openLinkIn(action.data.args, "tabshifted", {
-          private: false,
-          triggeringPrincipal: Services.scriptSecurityManager.createNullPrincipal({}),
-        });
-=======
         target.browser.ownerGlobal.openLinkIn(
           action.data.args,
           action.data.where || "current",
@@ -1980,7 +1770,6 @@ class _ASRouter {
             csp: null,
           }
         );
->>>>>>> upstream-releases
         break;
       case ra.OPEN_ABOUT_PAGE:
         target.browser.ownerGlobal.openTrustedLinkIn(
@@ -2141,9 +1930,6 @@ class _ASRouter {
           data: { id: action.data.id },
         });
         break;
-      case "DISMISS_BUNDLE":
-        this.messageChannel.sendAsyncMessage(OUTGOING_MESSAGE_NAME, {type: "CLEAR_BUNDLE"});
-        break;
       case "BLOCK_BUNDLE":
         await this.blockMessageById(action.data.bundle.map(b => b.id));
         this.messageChannel.sendAsyncMessage(OUTGOING_MESSAGE_NAME, {
@@ -2206,17 +1992,6 @@ class _ASRouter {
       case "RESET_PROVIDER_PREF":
         ASRouterPreferences.resetProviderPref();
         break;
-<<<<<<< HEAD
-      case "SET_PROVIDER_USER_PREF":
-        ASRouterPreferences.setUserPreference(action.data.id, action.data.value);
-        break;
-      case "EVALUATE_JEXL_EXPRESSION":
-        this.evaluateExpression(target, action.data);
-        break;
-      case "FORCE_ATTRIBUTION":
-        this.forceAttribution(action.data);
-||||||| merged common ancestors
-=======
       case "SET_PROVIDER_USER_PREF":
         ASRouterPreferences.setUserPreference(
           action.data.id,
@@ -2232,7 +2007,6 @@ class _ASRouter {
       default:
         Cu.reportError("Unknown message received");
         break;
->>>>>>> upstream-releases
     }
   }
 }

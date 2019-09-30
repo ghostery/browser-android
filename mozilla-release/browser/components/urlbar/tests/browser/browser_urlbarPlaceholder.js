@@ -10,19 +10,7 @@
 
 const TEST_ENGINE_BASENAME = "searchSuggestionEngine.xml";
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarPlaceholder.js
-const originalEngine = Services.search.defaultEngine;
-const expectedString = gBrowserBundle.formatStringFromName("urlbar.placeholder",
-  [originalEngine.name], 1);
-var extraEngine;
-||||||| merged common ancestors
-const originalEngine = Services.search.currentEngine;
-const expectedString = gBrowserBundle.formatStringFromName("urlbar.placeholder",
-  [originalEngine.name], 1);
-var extraEngine;
-=======
 var originalEngine, extraEngine, expectedString;
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarPlaceholder.js
 var tabs = [];
 
 add_task(async function setup() {
@@ -44,16 +32,8 @@ add_task(async function setup() {
   );
   BrowserTestUtils.removeTab(urlTab);
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarPlaceholder.js
-  registerCleanupFunction(() => {
-    Services.search.defaultEngine = originalEngine;
-||||||| merged common ancestors
-  registerCleanupFunction(() => {
-    Services.search.currentEngine = originalEngine;
-=======
   registerCleanupFunction(async () => {
     await Services.search.setDefault(originalEngine);
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarPlaceholder.js
     for (let tab of tabs) {
       BrowserTestUtils.removeTab(tab);
     }
@@ -63,26 +43,9 @@ add_task(async function setup() {
 add_task(async function test_change_default_engine_updates_placeholder() {
   tabs.push(await BrowserTestUtils.openNewForegroundTab(gBrowser));
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarPlaceholder.js
-  Services.search.defaultEngine = extraEngine;
-||||||| merged common ancestors
-  Services.search.currentEngine = extraEngine;
-=======
   await Services.search.setDefault(extraEngine);
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarPlaceholder.js
 
   await TestUtils.waitForCondition(
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarPlaceholder.js
-    () => gURLBar.getAttribute("placeholder") == gURLBar.getAttribute("defaultPlaceholder"),
-    "The placeholder should match the default placeholder for non-built-in engines.");
-
-  Services.search.defaultEngine = originalEngine;
-||||||| merged common ancestors
-    () => gURLBar.getAttribute("placeholder") == gURLBar.getAttribute("defaultPlaceholder"),
-    "The placeholder should match the default placeholder for non-built-in engines.");
-
-  Services.search.currentEngine = originalEngine;
-=======
     () =>
       gURLBar.getAttribute("placeholder") ==
       gURLBar.getAttribute("defaultPlaceholder"),
@@ -94,7 +57,6 @@ add_task(async function test_change_default_engine_updates_placeholder() {
   );
 
   await Services.search.setDefault(originalEngine);
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarPlaceholder.js
 
   await TestUtils.waitForCondition(
     () => gURLBar.getAttribute("placeholder") == expectedString,

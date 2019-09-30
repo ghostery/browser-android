@@ -78,26 +78,6 @@ nsresult SourceBufferResource::ReadFromCache(char* aBuffer, int64_t aOffset,
   return bytesRead == aCount ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-uint32_t SourceBufferResource::EvictData(uint64_t aPlaybackOffset,
-                                         int64_t aThreshold, ErrorResult& aRv) {
-  MOZ_ASSERT(OnThread());
-  SBR_DEBUG("EvictData(aPlaybackOffset=%" PRIu64
-            ","
-            "aThreshold=%" PRId64 ")",
-            aPlaybackOffset, aThreshold);
-  uint32_t result = mInputBuffer.Evict(aPlaybackOffset, aThreshold, aRv);
-||||||| merged common ancestors
-uint32_t
-SourceBufferResource::EvictData(uint64_t aPlaybackOffset,
-                                int64_t aThreshold,
-                                ErrorResult& aRv)
-{
-  MOZ_ASSERT(OnTaskQueue());
-  SBR_DEBUG("EvictData(aPlaybackOffset=%" PRIu64 ","
-            "aThreshold=%" PRId64 ")", aPlaybackOffset, aThreshold);
-  uint32_t result = mInputBuffer.Evict(aPlaybackOffset, aThreshold, aRv);
-=======
 uint32_t SourceBufferResource::EvictData(uint64_t aPlaybackOffset,
                                          int64_t aThreshold) {
   MOZ_ASSERT(OnThread());
@@ -106,22 +86,11 @@ uint32_t SourceBufferResource::EvictData(uint64_t aPlaybackOffset,
             "aThreshold=%" PRId64 ")",
             aPlaybackOffset, aThreshold);
   uint32_t result = mInputBuffer.Evict(aPlaybackOffset, aThreshold);
->>>>>>> upstream-releases
   return result;
 }
 
-<<<<<<< HEAD
-void SourceBufferResource::EvictBefore(uint64_t aOffset, ErrorResult& aRv) {
-  MOZ_ASSERT(OnThread());
-||||||| merged common ancestors
-void
-SourceBufferResource::EvictBefore(uint64_t aOffset, ErrorResult& aRv)
-{
-  MOZ_ASSERT(OnTaskQueue());
-=======
 void SourceBufferResource::EvictBefore(uint64_t aOffset) {
   MOZ_ASSERT(OnThread());
->>>>>>> upstream-releases
   SBR_DEBUG("EvictBefore(aOffset=%" PRIu64 ")", aOffset);
 
   mInputBuffer.EvictBefore(aOffset);
@@ -133,19 +102,6 @@ uint32_t SourceBufferResource::EvictAll() {
   return mInputBuffer.EvictAll();
 }
 
-<<<<<<< HEAD
-void SourceBufferResource::AppendData(MediaByteBuffer* aData) {
-  MOZ_ASSERT(OnThread());
-  SBR_DEBUG("AppendData(aData=%p, aLength=%zu)", aData->Elements(),
-            aData->Length());
-||||||| merged common ancestors
-void
-SourceBufferResource::AppendData(MediaByteBuffer* aData)
-{
-  MOZ_ASSERT(OnTaskQueue());
-  SBR_DEBUG("AppendData(aData=%p, aLength=%zu)",
-            aData->Elements(), aData->Length());
-=======
 void SourceBufferResource::AppendData(MediaByteBuffer* aData) {
   AppendData(MediaSpan(aData));
 }
@@ -154,7 +110,6 @@ void SourceBufferResource::AppendData(const MediaSpan& aData) {
   MOZ_ASSERT(OnThread());
   SBR_DEBUG("AppendData(aData=%p, aLength=%zu)", aData.Elements(),
             aData.Length());
->>>>>>> upstream-releases
   mInputBuffer.AppendItem(aData);
   mEnded = false;
 }

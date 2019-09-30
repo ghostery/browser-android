@@ -164,50 +164,8 @@ already_AddRefed<MediaRawData> SampleIterator::GetNext() {
     }
   }
 
-<<<<<<< HEAD
-  if (!s->mCencRange.IsEmpty()) {
-    MoofParser* parser = mIndex->mMoofParser.get();
-
-    if (!parser || !parser->mSinf.IsValid()) {
-      return nullptr;
-    }
-
-    uint8_t ivSize = parser->mSinf.mDefaultIVSize;
-
-    // The size comes from an 8 bit field
-    AutoTArray<uint8_t, 256> cenc;
-    cenc.SetLength(s->mCencRange.Length());
-    if (!mIndex->mSource->ReadAt(s->mCencRange.mStart, cenc.Elements(),
-                                 cenc.Length(), &bytesRead) ||
-        bytesRead != cenc.Length()) {
-      return nullptr;
-    }
-    BufferReader reader(cenc);
-    writer->mCrypto.mValid = true;
-||||||| merged common ancestors
-  if (!s->mCencRange.IsEmpty()) {
-    MoofParser* parser = mIndex->mMoofParser.get();
-
-    if (!parser || !parser->mSinf.IsValid()) {
-      return nullptr;
-    }
-
-    uint8_t ivSize = parser->mSinf.mDefaultIVSize;
-
-    // The size comes from an 8 bit field
-    AutoTArray<uint8_t, 256> cenc;
-    cenc.SetLength(s->mCencRange.Length());
-    if (!mIndex->mSource->ReadAt(s->mCencRange.mStart, cenc.Elements(), cenc.Length(),
-                                 &bytesRead) || bytesRead != cenc.Length()) {
-      return nullptr;
-    }
-    BufferReader reader(cenc);
-    writer->mCrypto.mValid = true;
-    writer->mCrypto.mIVSize = ivSize;
-=======
   if (sampleDescriptionEntry->mIsEncryptedEntry) {
     writer->mCrypto.mCryptoScheme = cryptoScheme;
->>>>>>> upstream-releases
 
     MOZ_ASSERT(writer->mCrypto.mKeyId.IsEmpty(),
                "Sample should not already have a key ID");
@@ -218,10 +176,6 @@ already_AddRefed<MediaRawData> SampleIterator::GetNext() {
       // Use sample group information if present, this supersedes track level
       // information.
       writer->mCrypto.mKeyId.AppendElements(sampleInfo->mKeyId);
-<<<<<<< HEAD
-      ivSize = sampleInfo->mIVSize;
-||||||| merged common ancestors
-=======
       writer->mCrypto.mIVSize = sampleInfo->mIVSize;
       writer->mCrypto.mCryptByteBlock = sampleInfo->mCryptByteBlock;
       writer->mCrypto.mSkipByteBlock = sampleInfo->mSkipByteBlock;
@@ -236,16 +190,8 @@ already_AddRefed<MediaRawData> SampleIterator::GetNext() {
       writer->mCrypto.mSkipByteBlock = moofParser->mSinf.mDefaultSkipByteBlock;
       writer->mCrypto.mConstantIV.AppendElements(
           moofParser->mSinf.mDefaultConstantIV);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    writer->mCrypto.mIVSize = ivSize;
-
-    if (!reader.ReadArray(writer->mCrypto.mIV, ivSize)) {
-||||||| merged common ancestors
-    if (!reader.ReadArray(writer->mCrypto.mIV, ivSize)) {
-=======
     if ((writer->mCrypto.mIVSize == 0 &&
          writer->mCrypto.mConstantIV.IsEmpty()) ||
         (writer->mCrypto.mIVSize != 0 && s->mCencRange.IsEmpty())) {
@@ -254,7 +200,6 @@ already_AddRefed<MediaRawData> SampleIterator::GetNext() {
       // zero, we should have an IV for this sample, which we need to look up
       // in mCencRange (which must then be non empty). If neither of these are
       // true we have bad crypto data, so bail.
->>>>>>> upstream-releases
       return nullptr;
     }
     // Parse auxiliary information if present
@@ -303,12 +248,6 @@ already_AddRefed<MediaRawData> SampleIterator::GetNext() {
   return sample.forget();
 }
 
-<<<<<<< HEAD
-CencSampleEncryptionInfoEntry* SampleIterator::GetSampleEncryptionEntry() {
-||||||| merged common ancestors
-CencSampleEncryptionInfoEntry* SampleIterator::GetSampleEncryptionEntry()
-{
-=======
 SampleDescriptionEntry* SampleIterator::GetSampleDescriptionEntry() {
   nsTArray<Moof>& moofs = mIndex->mMoofParser->Moofs();
   Moof& currentMoof = moofs[mCurrentMoof];
@@ -326,7 +265,6 @@ SampleDescriptionEntry* SampleIterator::GetSampleDescriptionEntry() {
 }
 
 CencSampleEncryptionInfoEntry* SampleIterator::GetSampleEncryptionEntry() {
->>>>>>> upstream-releases
   nsTArray<Moof>& moofs = mIndex->mMoofParser->Moofs();
   Moof* currentMoof = &moofs[mCurrentMoof];
   SampleToGroupEntry* sampleToGroupEntry = nullptr;
@@ -620,21 +558,11 @@ TimeIntervals Index::ConvertByteRangesToTimeRanges(
         }
       }
       if (end > start) {
-<<<<<<< HEAD
-        timeRanges += TimeInterval(
-            TimeUnit::FromMicroseconds(mDataOffset[start].mTime.start),
-            TimeUnit::FromMicroseconds(mDataOffset[end - 1].mTime.end));
-||||||| merged common ancestors
-        timeRanges +=
-          TimeInterval(TimeUnit::FromMicroseconds(mDataOffset[start].mTime.start),
-                       TimeUnit::FromMicroseconds(mDataOffset[end-1].mTime.end));
-=======
         for (uint32_t i = start; i < end; i++) {
           timeRanges += TimeInterval(
               TimeUnit::FromMicroseconds(mDataOffset[i].mTime.start),
               TimeUnit::FromMicroseconds(mDataOffset[i].mTime.end));
         }
->>>>>>> upstream-releases
       }
       if (end < mDataOffset.Length()) {
         // Find samples in partial block contained in the byte range.

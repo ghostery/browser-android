@@ -151,7 +151,6 @@ final class RemoteMediaDrmBridge implements GeckoMediaDrm {
         assertTrue(false);
         return null;
     }
-<<<<<<< HEAD
 
     @Override
     public synchronized void setServerCertificate(final byte[] cert) {
@@ -163,19 +162,3 @@ final class RemoteMediaDrmBridge implements GeckoMediaDrm {
         }
     }
 }
-
-||||||| merged common ancestors
-}
-=======
-
-    @Override
-    public synchronized void setServerCertificate(final byte[] cert) {
-        try {
-            mRemote.setServerCertificate(cert);
-        } catch (Exception e) {
-            Log.e(LOGTAG, "Got exception while setting server certificate.", e);
-            throw new RuntimeException(e);
-        }
-    }
-}
->>>>>>> upstream-releases

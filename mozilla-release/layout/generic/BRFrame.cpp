@@ -30,71 +30,6 @@ class BRFrame final : public nsFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(BRFrame)
 
-<<<<<<< HEAD
-  friend nsIFrame* ::NS_NewBRFrame(nsIPresShell* aPresShell,
-                                   ComputedStyle* aStyle);
-
-  ContentOffsets CalcContentOffsetsFromFramePoint(
-      const nsPoint& aPoint) override;
-
-  virtual FrameSearchResult PeekOffsetNoAmount(bool aForward,
-                                               int32_t* aOffset) override;
-  virtual FrameSearchResult PeekOffsetCharacter(
-      bool aForward, int32_t* aOffset,
-      PeekOffsetCharacterOptions aOptions =
-          PeekOffsetCharacterOptions()) override;
-  virtual FrameSearchResult PeekOffsetWord(bool aForward,
-                                           bool aWordSelectEatSpace,
-                                           bool aIsKeyboardSelect,
-                                           int32_t* aOffset,
-                                           PeekWordState* aState) override;
-
-  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
-                      const ReflowInput& aReflowInput,
-                      nsReflowStatus& aStatus) override;
-  virtual void AddInlineMinISize(gfxContext* aRenderingContext,
-                                 InlineMinISizeData* aData) override;
-  virtual void AddInlinePrefISize(gfxContext* aRenderingContext,
-                                  InlinePrefISizeData* aData) override;
-  virtual nscoord GetMinISize(gfxContext* aRenderingContext) override;
-  virtual nscoord GetPrefISize(gfxContext* aRenderingContext) override;
-  virtual nscoord GetLogicalBaseline(
-      mozilla::WritingMode aWritingMode) const override;
-
-  virtual bool IsFrameOfType(uint32_t aFlags) const override {
-    return nsFrame::IsFrameOfType(
-        aFlags & ~(nsIFrame::eReplaced | nsIFrame::eLineParticipant));
-||||||| merged common ancestors
-  friend nsIFrame* ::NS_NewBRFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-
-  ContentOffsets CalcContentOffsetsFromFramePoint(const nsPoint& aPoint) override;
-
-  virtual FrameSearchResult PeekOffsetNoAmount(bool aForward, int32_t* aOffset) override;
-  virtual FrameSearchResult
-  PeekOffsetCharacter(bool aForward, int32_t* aOffset,
-                      PeekOffsetCharacterOptions aOptions =
-                        PeekOffsetCharacterOptions()) override;
-  virtual FrameSearchResult PeekOffsetWord(bool aForward, bool aWordSelectEatSpace,
-                              bool aIsKeyboardSelect, int32_t* aOffset,
-                              PeekWordState* aState) override;
-
-  virtual void Reflow(nsPresContext* aPresContext,
-                          ReflowOutput& aDesiredSize,
-                          const ReflowInput& aReflowInput,
-                          nsReflowStatus& aStatus) override;
-  virtual void AddInlineMinISize(gfxContext *aRenderingContext,
-                                 InlineMinISizeData *aData) override;
-  virtual void AddInlinePrefISize(gfxContext *aRenderingContext,
-                                  InlinePrefISizeData *aData) override;
-  virtual nscoord GetMinISize(gfxContext *aRenderingContext) override;
-  virtual nscoord GetPrefISize(gfxContext *aRenderingContext) override;
-  virtual nscoord GetLogicalBaseline(mozilla::WritingMode aWritingMode) const override;
-
-  virtual bool IsFrameOfType(uint32_t aFlags) const override
-  {
-    return nsFrame::IsFrameOfType(aFlags & ~(nsIFrame::eReplaced |
-                                             nsIFrame::eLineParticipant));
-=======
   friend nsIFrame* ::NS_NewBRFrame(mozilla::PresShell* aPresShell,
                                    ComputedStyle* aStyle);
 
@@ -126,29 +61,16 @@ class BRFrame final : public nsFrame {
   virtual bool IsFrameOfType(uint32_t aFlags) const override {
     return nsFrame::IsFrameOfType(
         aFlags & ~(nsIFrame::eReplaced | nsIFrame::eLineParticipant));
->>>>>>> upstream-releases
   }
 
 #ifdef ACCESSIBILITY
   virtual mozilla::a11y::AccType AccessibleType() override;
 #endif
 
-<<<<<<< HEAD
- protected:
-  explicit BRFrame(ComputedStyle* aStyle)
-      : nsFrame(aStyle, kClassID), mAscent(NS_INTRINSIC_WIDTH_UNKNOWN) {}
-||||||| merged common ancestors
-protected:
-  explicit BRFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, kClassID)
-    , mAscent(NS_INTRINSIC_WIDTH_UNKNOWN)
-  {}
-=======
  protected:
   explicit BRFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsFrame(aStyle, aPresContext, kClassID),
         mAscent(NS_INTRINSIC_ISIZE_UNKNOWN) {}
->>>>>>> upstream-releases
 
   virtual ~BRFrame();
 
@@ -157,18 +79,8 @@ protected:
 
 }  // namespace mozilla
 
-<<<<<<< HEAD
-nsIFrame* NS_NewBRFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) BRFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewBRFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) BRFrame(aStyle);
-=======
 nsIFrame* NS_NewBRFrame(mozilla::PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) BRFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(BRFrame)
@@ -255,37 +167,17 @@ void BRFrame::Reflow(nsPresContext* aPresContext, ReflowOutput& aMetrics,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aMetrics);
 }
 
-<<<<<<< HEAD
-/* virtual */ void BRFrame::AddInlineMinISize(
-    gfxContext* aRenderingContext, nsIFrame::InlineMinISizeData* aData) {
-||||||| merged common ancestors
-/* virtual */ void
-BRFrame::AddInlineMinISize(gfxContext *aRenderingContext,
-                           nsIFrame::InlineMinISizeData *aData)
-{
-=======
 /* virtual */
 void BRFrame::AddInlineMinISize(gfxContext* aRenderingContext,
                                 nsIFrame::InlineMinISizeData* aData) {
->>>>>>> upstream-releases
   if (!GetParent()->Style()->ShouldSuppressLineBreak()) {
     aData->ForceBreak();
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void BRFrame::AddInlinePrefISize(
-    gfxContext* aRenderingContext, nsIFrame::InlinePrefISizeData* aData) {
-||||||| merged common ancestors
-/* virtual */ void
-BRFrame::AddInlinePrefISize(gfxContext *aRenderingContext,
-                            nsIFrame::InlinePrefISizeData *aData)
-{
-=======
 /* virtual */
 void BRFrame::AddInlinePrefISize(gfxContext* aRenderingContext,
                                  nsIFrame::InlinePrefISizeData* aData) {
->>>>>>> upstream-releases
   if (!GetParent()->Style()->ShouldSuppressLineBreak()) {
     // Match the 1 appunit width assigned in the Reflow method above
     aData->mCurrentLine += 1;
@@ -293,31 +185,15 @@ void BRFrame::AddInlinePrefISize(gfxContext* aRenderingContext,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord BRFrame::GetMinISize(gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-BRFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord BRFrame::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result = 0;
   DISPLAY_MIN_INLINE_SIZE(this, result);
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord BRFrame::GetPrefISize(gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-BRFrame::GetPrefISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord BRFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result = 0;
   DISPLAY_PREF_INLINE_SIZE(this, result);
   return result;
@@ -361,25 +237,10 @@ nsIFrame::FrameSearchResult BRFrame::PeekOffsetCharacter(
   return CONTINUE;
 }
 
-<<<<<<< HEAD
-nsIFrame::FrameSearchResult BRFrame::PeekOffsetWord(bool aForward,
-                                                    bool aWordSelectEatSpace,
-                                                    bool aIsKeyboardSelect,
-                                                    int32_t* aOffset,
-                                                    PeekWordState* aState) {
-  NS_ASSERTION(aOffset && *aOffset <= 1, "aOffset out of range");
-||||||| merged common ancestors
-nsIFrame::FrameSearchResult
-BRFrame::PeekOffsetWord(bool aForward, bool aWordSelectEatSpace, bool aIsKeyboardSelect,
-                        int32_t* aOffset, PeekWordState* aState)
-{
-  NS_ASSERTION (aOffset && *aOffset <= 1, "aOffset out of range");
-=======
 nsIFrame::FrameSearchResult BRFrame::PeekOffsetWord(
     bool aForward, bool aWordSelectEatSpace, bool aIsKeyboardSelect,
     int32_t* aOffset, PeekWordState* aState, bool aTrimSpaces) {
   NS_ASSERTION(aOffset && *aOffset <= 1, "aOffset out of range");
->>>>>>> upstream-releases
   // Keep going. The actual line jumping will stop us.
   return CONTINUE;
 }

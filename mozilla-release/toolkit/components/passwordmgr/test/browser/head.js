@@ -171,21 +171,11 @@ function clickDoorhangerButton(aPopup, aButtonIndex) {
   } else if (aButtonIndex == "secondaryButton") {
     ok(true, "Triggering secondary action");
     notification.secondaryButton.doCommand();
-<<<<<<< HEAD
-  } else if (aButtonIndex <= aPopup.secondaryActions.length) {
-    ok(true, "Triggering secondary action " + aButtonIndex);
-    notification.children[aButtonIndex - 1].doCommand();
-||||||| merged common ancestors
-  } else if (aButtonIndex <= aPopup.secondaryActions.length) {
-    ok(true, "Triggering secondary action " + aButtonIndex);
-    notification.childNodes[aButtonIndex - 1].doCommand();
-=======
   } else {
     ok(true, "Triggering menuitem # " + aButtonIndex);
     notification.menupopup
       .querySelectorAll("menuitem")
       [aButtonIndex].doCommand();
->>>>>>> upstream-releases
   }
 }
 

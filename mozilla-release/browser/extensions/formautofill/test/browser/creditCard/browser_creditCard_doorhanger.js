@@ -55,20 +55,11 @@ add_task(async function test_submit_creditCard_saved() {
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
     async function(browser) {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-      let promiseShown = BrowserTestUtils.waitForEvent(PopupNotifications.panel,
-                                                       "popupshown");
-      let onChanged = TestUtils.topicObserved("formautofill-storage-changed");
-||||||| merged common ancestors
-      let promiseShown = BrowserTestUtils.waitForEvent(PopupNotifications.panel,
-                                                       "popupshown");
-=======
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
         "popupshown"
       );
       let onChanged = TestUtils.topicObserved("formautofill-storage-changed");
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
       await ContentTask.spawn(browser, null, async function() {
         let form = content.document.getElementById("form");
         let name = form.querySelector("#cc-name");
@@ -105,14 +96,6 @@ add_task(async function test_submit_creditCard_saved() {
 });
 
 add_task(async function test_submit_untouched_creditCard_form() {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(OSKeyStoreTestUtils.canTestOSKeyStoreLogin(), "Cannot test OS key store login on official builds.");
-    return;
-  }
-
-||||||| merged common ancestors
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(
       OSKeyStoreTestUtils.canTestOSKeyStoreLogin(),
@@ -121,22 +104,12 @@ add_task(async function test_submit_untouched_creditCard_form() {
     return;
   }
 
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
   await SpecialPowers.pushPrefEnv({
     set: [[CREDITCARDS_USED_STATUS_PREF, 0]],
   });
   await saveCreditCard(TEST_CREDIT_CARD_1);
   let creditCards = await getCreditCards();
   is(creditCards.length, 1, "1 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-
-  let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
-  let onUsed = TestUtils.topicObserved("formautofill-storage-changed",
-                                       (subject, data) => data == "notifyUsed");
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
 
   let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
   let onUsed = TestUtils.topicObserved(
@@ -145,7 +118,6 @@ add_task(async function test_submit_untouched_creditCard_form() {
   );
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
       await openPopupOn(browser, "form #cc-name");
       await BrowserTestUtils.synthesizeKey("VK_DOWN", {}, browser);
@@ -184,14 +156,6 @@ add_task(async function test_submit_changed_subset_creditCard_form() {
   await saveCreditCard(TEST_CREDIT_CARD_1);
   let creditCards = await getCreditCards();
   is(creditCards.length, 1, "1 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-
-  let onUsed = TestUtils.topicObserved("formautofill-storage-changed",
-                                       (subject, data) => data == "notifyUsed");
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
 
   let onUsed = TestUtils.topicObserved(
     "formautofill-storage-changed",
@@ -199,7 +163,6 @@ add_task(async function test_submit_changed_subset_creditCard_form() {
   );
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
@@ -526,20 +489,12 @@ add_task(async function test_submit_manual_mergeable_creditCard_form() {
   await saveCreditCard(TEST_CREDIT_CARD_3);
   let creditCards = await getCreditCards();
   is(creditCards.length, 1, "1 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  let onUsed = TestUtils.topicObserved("formautofill-storage-changed",
-                                       (subject, data) => data == "notifyUsed");
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
   let onUsed = TestUtils.topicObserved(
     "formautofill-storage-changed",
     (subject, data) => data == "notifyUsed"
   );
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
@@ -578,14 +533,6 @@ add_task(async function test_submit_manual_mergeable_creditCard_form() {
 });
 
 add_task(async function test_update_autofill_form_name() {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(OSKeyStoreTestUtils.canTestOSKeyStoreLogin(), "Cannot test OS key store login on official builds.");
-    return;
-  }
-
-||||||| merged common ancestors
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(
       OSKeyStoreTestUtils.canTestOSKeyStoreLogin(),
@@ -594,21 +541,12 @@ add_task(async function test_update_autofill_form_name() {
     return;
   }
 
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
   await SpecialPowers.pushPrefEnv({
     set: [[CREDITCARDS_USED_STATUS_PREF, 0]],
   });
   await saveCreditCard(TEST_CREDIT_CARD_1);
   let creditCards = await getCreditCards();
   is(creditCards.length, 1, "1 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
-  let onUsed = TestUtils.topicObserved("formautofill-storage-changed",
-                                       (subject, data) => data == "notifyUsed");
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
   let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
   let onUsed = TestUtils.topicObserved(
     "formautofill-storage-changed",
@@ -616,7 +554,6 @@ add_task(async function test_update_autofill_form_name() {
   );
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
@@ -664,14 +601,6 @@ add_task(async function test_update_autofill_form_name() {
 });
 
 add_task(async function test_update_autofill_form_exp_date() {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(OSKeyStoreTestUtils.canTestOSKeyStoreLogin(), "Cannot test OS key store login on official builds.");
-    return;
-  }
-
-||||||| merged common ancestors
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(
       OSKeyStoreTestUtils.canTestOSKeyStoreLogin(),
@@ -680,21 +609,12 @@ add_task(async function test_update_autofill_form_exp_date() {
     return;
   }
 
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
   await SpecialPowers.pushPrefEnv({
     set: [[CREDITCARDS_USED_STATUS_PREF, 0]],
   });
   await saveCreditCard(TEST_CREDIT_CARD_1);
   let creditCards = await getCreditCards();
   is(creditCards.length, 1, "1 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
-  let onUsed = TestUtils.topicObserved("formautofill-storage-changed",
-                                       (subject, data) => data == "notifyUsed");
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
   let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
   let onUsed = TestUtils.topicObserved(
     "formautofill-storage-changed",
@@ -702,7 +622,6 @@ add_task(async function test_update_autofill_form_exp_date() {
   );
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
@@ -751,14 +670,6 @@ add_task(async function test_update_autofill_form_exp_date() {
 });
 
 add_task(async function test_create_new_autofill_form() {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(OSKeyStoreTestUtils.canTestOSKeyStoreLogin(), "Cannot test OS key store login on official builds.");
-    return;
-  }
-
-||||||| merged common ancestors
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(
       OSKeyStoreTestUtils.canTestOSKeyStoreLogin(),
@@ -767,38 +678,21 @@ add_task(async function test_create_new_autofill_form() {
     return;
   }
 
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
   await SpecialPowers.pushPrefEnv({
     set: [[CREDITCARDS_USED_STATUS_PREF, 0]],
   });
   await saveCreditCard(TEST_CREDIT_CARD_1);
   let creditCards = await getCreditCards();
   is(creditCards.length, 1, "1 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
   let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-      let promiseShown = BrowserTestUtils.waitForEvent(PopupNotifications.panel,
-                                                       "popupshown");
-      let onChanged = TestUtils.topicObserved("formautofill-storage-changed");
-||||||| merged common ancestors
-      let promiseShown = BrowserTestUtils.waitForEvent(PopupNotifications.panel,
-                                                       "popupshown");
-=======
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
         "popupshown"
       );
       let onChanged = TestUtils.topicObserved("formautofill-storage-changed");
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
       await openPopupOn(browser, "form #cc-name");
       await BrowserTestUtils.synthesizeKey("VK_DOWN", {}, browser);
       await BrowserTestUtils.synthesizeKey("VK_RETURN", {}, browser);
@@ -842,14 +736,6 @@ add_task(async function test_create_new_autofill_form() {
 });
 
 add_task(async function test_update_duplicate_autofill_form() {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(OSKeyStoreTestUtils.canTestOSKeyStoreLogin(), "Cannot test OS key store login on official builds.");
-    return;
-  }
-
-||||||| merged common ancestors
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(
       OSKeyStoreTestUtils.canTestOSKeyStoreLogin(),
@@ -858,7 +744,6 @@ add_task(async function test_update_duplicate_autofill_form() {
     return;
   }
 
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
   await SpecialPowers.pushPrefEnv({
     set: [[CREDITCARDS_USED_STATUS_PREF, 0]],
   });
@@ -870,14 +755,6 @@ add_task(async function test_update_duplicate_autofill_form() {
   });
   let creditCards = await getCreditCards();
   is(creditCards.length, 2, "2 credit card in storage");
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-  let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
-  let onUsed = TestUtils.topicObserved("formautofill-storage-changed",
-                                       (subject, data) => data == "notifyUsed");
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: CREDITCARD_FORM_URL},
-=======
   let osKeyStoreLoginShown = OSKeyStoreTestUtils.waitForOSKeyStoreLogin(true);
   let onUsed = TestUtils.topicObserved(
     "formautofill-storage-changed",
@@ -885,7 +762,6 @@ add_task(async function test_update_duplicate_autofill_form() {
   );
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
     async function(browser) {
       await openPopupOn(browser, "form #cc-number");
       await BrowserTestUtils.synthesizeKey("VK_DOWN", {}, browser);
@@ -929,20 +805,11 @@ add_task(async function test_submit_creditCard_with_invalid_network() {
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: CREDITCARD_FORM_URL },
     async function(browser) {
-<<<<<<< HEAD:mozilla-release/browser/extensions/formautofill/test/browser/browser_creditCard_doorhanger.js
-      let promiseShown = BrowserTestUtils.waitForEvent(PopupNotifications.panel,
-                                                       "popupshown");
-      let onChanged = TestUtils.topicObserved("formautofill-storage-changed");
-||||||| merged common ancestors
-      let promiseShown = BrowserTestUtils.waitForEvent(PopupNotifications.panel,
-                                                       "popupshown");
-=======
       let promiseShown = BrowserTestUtils.waitForEvent(
         PopupNotifications.panel,
         "popupshown"
       );
       let onChanged = TestUtils.topicObserved("formautofill-storage-changed");
->>>>>>> upstream-releases:mozilla-release/browser/extensions/formautofill/test/browser/creditCard/browser_creditCard_doorhanger.js
       await ContentTask.spawn(browser, null, async function() {
         let form = content.document.getElementById("form");
         let name = form.querySelector("#cc-name");

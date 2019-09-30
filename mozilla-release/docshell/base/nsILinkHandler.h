@@ -54,18 +54,9 @@ class nsILinkHandler : public nsISupports {
                          const nsAString& aFileName,
                          nsIInputStream* aPostDataStream,
                          nsIInputStream* aHeadersDataStream,
-<<<<<<< HEAD
-                         bool aIsUserTriggered, bool aIsTrusted,
-                         nsIPrincipal* aTriggeringPrincipal) = 0;
-||||||| merged common ancestors
-                         bool aIsUserTriggered,
-                         bool aIsTrusted,
-                         nsIPrincipal* aTriggeringPrincipal) = 0;
-=======
                          bool aIsUserTriggered, bool aIsTrusted,
                          nsIPrincipal* aTriggeringPrincipal,
                          nsIContentSecurityPolicy* aCsp) = 0;
->>>>>>> upstream-releases
 
   /**
    * Process a click on a link.
@@ -92,27 +83,6 @@ class nsILinkHandler : public nsISupports {
    *        aCsp was not passed explicitly we fall back to using
    *        aContent's document's CSP if that document holds any.
    */
-<<<<<<< HEAD
-  NS_IMETHOD OnLinkClickSync(
-      nsIContent* aContent, nsIURI* aURI, const nsAString& aTargetSpec,
-      const nsAString& aFileName, nsIInputStream* aPostDataStream = 0,
-      nsIInputStream* aHeadersDataStream = 0, bool aNoOpenerImplied = false,
-      nsIDocShell** aDocShell = 0, nsIRequest** aRequest = 0,
-      bool aIsUserTriggered = false,
-      nsIPrincipal* aTriggeringPrincipal = nullptr) = 0;
-||||||| merged common ancestors
-  NS_IMETHOD OnLinkClickSync(nsIContent* aContent,
-                             nsIURI* aURI,
-                             const char16_t* aTargetSpec,
-                             const nsAString& aFileName,
-                             nsIInputStream* aPostDataStream = 0,
-                             nsIInputStream* aHeadersDataStream = 0,
-                             bool aNoOpenerImplied = false,
-                             nsIDocShell** aDocShell = 0,
-                             nsIRequest** aRequest = 0,
-                             bool aIsUserTriggered = false,
-                             nsIPrincipal* aTriggeringPrincipal = nullptr) = 0;
-=======
   NS_IMETHOD OnLinkClickSync(
       nsIContent* aContent, nsIURI* aURI, const nsAString& aTargetSpec,
       const nsAString& aFileName, nsIInputStream* aPostDataStream = 0,
@@ -121,7 +91,6 @@ class nsILinkHandler : public nsISupports {
       bool aIsUserTriggered = false,
       nsIPrincipal* aTriggeringPrincipal = nullptr,
       nsIContentSecurityPolicy* aCsp = nullptr) = 0;
->>>>>>> upstream-releases
 
   /**
    * Process a mouse-over a link.

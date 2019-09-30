@@ -62,39 +62,18 @@ class ThrottledEventQueue::Inner final : public nsISupports {
   // The runnable which is dispatched to the underlying base target.  Since
   // we only execute one event at a time we just re-use a single instance
   // of this class while there are events left in the queue.
-<<<<<<< HEAD
-  class Executor final : public Runnable {
-||||||| merged common ancestors
-  class Executor final : public Runnable
-  {
-=======
   class Executor final : public Runnable, public nsIRunnablePriority {
->>>>>>> upstream-releases
     // The Inner whose runnables we execute. mInner->mExecutor points
     // to this executor, forming a reference loop.
     RefPtr<Inner> mInner;
 
-<<<<<<< HEAD
-   public:
-||||||| merged common ancestors
-  public:
-=======
     ~Executor() = default;
 
    public:
->>>>>>> upstream-releases
     explicit Executor(Inner* aInner)
-<<<<<<< HEAD
-        : Runnable("ThrottledEventQueue::Inner::Executor"), mInner(aInner) {}
-||||||| merged common ancestors
-      : Runnable("ThrottledEventQueue::Inner::Executor")
-      , mInner(aInner)
-    { }
-=======
         : Runnable("ThrottledEventQueue::Inner::Executor"), mInner(aInner) {}
 
     NS_DECL_ISUPPORTS_INHERITED
->>>>>>> upstream-releases
 
     NS_IMETHODIMP
     Run() override {
@@ -103,14 +82,6 @@ class ThrottledEventQueue::Inner final : public nsISupports {
     }
 
     NS_IMETHODIMP
-<<<<<<< HEAD
-    GetName(nsACString& aName) override { return mInner->CurrentName(aName); }
-||||||| merged common ancestors
-    GetName(nsACString& aName) override
-    {
-      return mInner->CurrentName(aName);
-    }
-=======
     GetPriority(uint32_t* aPriority) override {
       *aPriority = mInner->mPriority;
       return NS_OK;
@@ -119,7 +90,6 @@ class ThrottledEventQueue::Inner final : public nsISupports {
 #ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
     NS_IMETHODIMP
     GetName(nsACString& aName) override { return mInner->CurrentName(aName); }
->>>>>>> upstream-releases
 #endif
   };
 
@@ -143,24 +113,6 @@ class ThrottledEventQueue::Inner final : public nsISupports {
   // Used from any thread; protected by mMutex.
   nsCOMPtr<nsIRunnable> mExecutor;
 
-<<<<<<< HEAD
-  // True if this queue is currently paused.
-  // Used from any thread; protected by mMutex.
-  bool mIsPaused;
-
-  explicit Inner(nsISerialEventTarget* aBaseTarget)
-      : mMutex("ThrottledEventQueue"),
-        mIdleCondVar(mMutex, "ThrottledEventQueue:Idle"),
-        mBaseTarget(aBaseTarget),
-        mIsPaused(false) {}
-||||||| merged common ancestors
-  explicit Inner(nsISerialEventTarget* aBaseTarget)
-    : mMutex("ThrottledEventQueue")
-    , mIdleCondVar(mMutex, "ThrottledEventQueue:Idle")
-    , mBaseTarget(aBaseTarget)
-  {
-  }
-=======
   const char* mName;
 
   const uint32_t mPriority;
@@ -179,7 +131,6 @@ class ThrottledEventQueue::Inner final : public nsISupports {
         mIsPaused(false) {
     MOZ_ASSERT(mName, "Must pass a valid name!");
   }
->>>>>>> upstream-releases
 
   ~Inner() {
 #ifdef DEBUG
@@ -228,16 +179,6 @@ class ThrottledEventQueue::Inner final : public nsISupports {
 
     {
       MutexAutoLock lock(mMutex);
-<<<<<<< HEAD
-
-      // We only check the name of an executor runnable when we know there is
-      // something in the queue, so this should never fail.
-||||||| merged common ancestors
-
-      // We only check the name of an executor runnable when we know there is something
-      // in the queue, so this should never fail.
-=======
->>>>>>> upstream-releases
       event = mEventQueue.PeekEvent(lock);
       // It is possible that mEventQueue wasn't empty when the executor
       // was added to the queue, but someone processed events from mEventQueue
@@ -311,19 +252,9 @@ class ThrottledEventQueue::Inner final : public nsISupports {
     Unused << event->Run();
   }
 
-<<<<<<< HEAD
- public:
-  static already_AddRefed<Inner> Create(nsISerialEventTarget* aBaseTarget) {
-||||||| merged common ancestors
-public:
-  static already_AddRefed<Inner>
-  Create(nsISerialEventTarget* aBaseTarget)
-  {
-=======
  public:
   static already_AddRefed<Inner> Create(nsISerialEventTarget* aBaseTarget,
                                         const char* aName, uint32_t aPriority) {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
     MOZ_ASSERT(ClearOnShutdown_Internal::sCurrentShutdownPhase ==
                ShutdownPhase::NotInShutdown);
@@ -343,20 +274,12 @@ public:
     return mEventQueue.Count(lock);
   }
 
-<<<<<<< HEAD
-  void AwaitIdle() const {
-||||||| merged common ancestors
-  void
-  AwaitIdle() const
-  {
-=======
   already_AddRefed<nsIRunnable> GetEvent() {
     MutexAutoLock lock(mMutex);
     return mEventQueue.GetEvent(nullptr, lock);
   }
 
   void AwaitIdle() const {
->>>>>>> upstream-releases
     // Any thread, except the main thread or our base target.  Blocking the
     // main thread is forbidden.  Blocking the base target is guaranteed to
     // produce a deadlock.
@@ -437,18 +360,10 @@ public:
 
 NS_IMPL_ISUPPORTS(ThrottledEventQueue::Inner, nsISupports);
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(ThrottledEventQueue, ThrottledEventQueue, nsIEventTarget,
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(ThrottledEventQueue,
-                  ThrottledEventQueue,
-                  nsIEventTarget,
-=======
 NS_IMPL_ISUPPORTS_INHERITED(ThrottledEventQueue::Inner::Executor, Runnable,
                             nsIRunnablePriority)
 
 NS_IMPL_ISUPPORTS(ThrottledEventQueue, ThrottledEventQueue, nsIEventTarget,
->>>>>>> upstream-releases
                   nsISerialEventTarget);
 
 ThrottledEventQueue::ThrottledEventQueue(already_AddRefed<Inner> aInner)
@@ -456,17 +371,8 @@ ThrottledEventQueue::ThrottledEventQueue(already_AddRefed<Inner> aInner)
   MOZ_ASSERT(mInner);
 }
 
-<<<<<<< HEAD
-already_AddRefed<ThrottledEventQueue> ThrottledEventQueue::Create(
-    nsISerialEventTarget* aBaseTarget) {
-||||||| merged common ancestors
-already_AddRefed<ThrottledEventQueue>
-ThrottledEventQueue::Create(nsISerialEventTarget* aBaseTarget)
-{
-=======
 already_AddRefed<ThrottledEventQueue> ThrottledEventQueue::Create(
     nsISerialEventTarget* aBaseTarget, const char* aName, uint32_t aPriority) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aBaseTarget);
 
@@ -478,22 +384,12 @@ already_AddRefed<ThrottledEventQueue> ThrottledEventQueue::Create(
 
 bool ThrottledEventQueue::IsEmpty() const { return mInner->IsEmpty(); }
 
-<<<<<<< HEAD
-uint32_t ThrottledEventQueue::Length() const { return mInner->Length(); }
-||||||| merged common ancestors
-uint32_t
-ThrottledEventQueue::Length() const
-{
-  return mInner->Length();
-}
-=======
 uint32_t ThrottledEventQueue::Length() const { return mInner->Length(); }
 
 // Get the next runnable from the queue
 already_AddRefed<nsIRunnable> ThrottledEventQueue::GetEvent() {
   return mInner->GetEvent();
 }
->>>>>>> upstream-releases
 
 void ThrottledEventQueue::AwaitIdle() const { return mInner->AwaitIdle(); }
 

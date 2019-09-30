@@ -76,30 +76,17 @@ class CompositorManagerChild : public PCompositorManagerChild {
 
   void ProcessingError(Result aCode, const char* aReason) override;
 
-<<<<<<< HEAD
-  PCompositorBridgeChild* AllocPCompositorBridgeChild(
-      const CompositorBridgeOptions& aOptions) override;
-||||||| merged common ancestors
-  PCompositorBridgeChild* AllocPCompositorBridgeChild(const CompositorBridgeOptions& aOptions) override;
-=======
   PCompositorBridgeChild* AllocPCompositorBridgeChild(
       const CompositorBridgeOptions& aOptions);
->>>>>>> upstream-releases
 
   bool DeallocPCompositorBridgeChild(PCompositorBridgeChild* aActor);
 
   bool ShouldContinueFromReplyTimeout() override;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   mozilla::ipc::IPCResult RecvNotifyWebRenderError(
       const WebRenderError&& aError);
 
  private:
->>>>>>> upstream-releases
   static StaticRefPtr<CompositorManagerChild> sInstance;
 
   CompositorManagerChild(CompositorManagerParent* aParent,
@@ -108,15 +95,7 @@ private:
   CompositorManagerChild(Endpoint<PCompositorManagerChild>&& aEndpoint,
                          uint64_t aProcessToken, uint32_t aNamespace);
 
-<<<<<<< HEAD
-  ~CompositorManagerChild() override {}
-||||||| merged common ancestors
-  ~CompositorManagerChild() override
-  {
-  }
-=======
   virtual ~CompositorManagerChild() = default;
->>>>>>> upstream-releases
 
   void ActorDealloc() override;
 

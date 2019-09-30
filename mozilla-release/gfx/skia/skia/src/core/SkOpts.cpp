@@ -41,14 +41,7 @@
 #include "SkBlitMask_opts.h"
 #include "SkBlitRow_opts.h"
 #include "SkChecksum_opts.h"
-<<<<<<< HEAD
-#include "SkMorphologyImageFilter_opts.h"
 #include "SkRasterPipeline_opts.h"
-||||||| merged common ancestors
-#include "SkMorphologyImageFilter_opts.h"
-=======
-#include "SkRasterPipeline_opts.h"
->>>>>>> upstream-releases
 #include "SkSwizzler_opts.h"
 #include "SkUtils_opts.h"
 #include "SkXfermode_opts.h"

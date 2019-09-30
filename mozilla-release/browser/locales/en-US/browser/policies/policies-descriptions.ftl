@@ -142,12 +142,6 @@ policy-SearchSuggestEnabled = Enable or disable search suggestions.
 # For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
 policy-SecurityDevices = Install PKCS #11 modules.
 
-<<<<<<< HEAD
-# “format” refers to the format used for the value of this policy.
-||||||| merged common ancestors
-# “format” refers to the format used for the value of this policy. See also:
-# https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
-=======
 policy-SSLVersionMax = Set the maximum SSL version.
 
 policy-SSLVersionMin = Set the minimum SSL version.
@@ -155,5 +149,4 @@ policy-SSLVersionMin = Set the minimum SSL version.
 policy-SupportMenu = Add a custom support menu item to the help menu.
 
 # “format” refers to the format used for the value of this policy.
->>>>>>> upstream-releases
 policy-WebsiteFilter = Block websites from being visited. See documentation for more details on the format.

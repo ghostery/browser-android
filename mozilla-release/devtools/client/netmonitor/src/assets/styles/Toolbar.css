@@ -6,47 +6,6 @@
 
 .devtools-toolbar {
   display: flex;
-<<<<<<< HEAD
-  line-height: 23px;
-}
-
-.devtools-toolbar-container {
-  height: auto;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.devtools-toolbar-group {
-  display: flex;
-  flex: 0 0 auto;
-  flex-wrap: nowrap;
-||||||| merged common ancestors
-  line-height: 23px;
-}
-
-/* This should be global style for all panels at some point */
-.monitor-panel .devtools-button {
-  background-color: transparent;
-}
-
-/* This should be global style for all panels at some point */
-.theme-light .monitor-panel .devtools-button.checked {
-  color: var(--grey-90);
-  background-color: var(--grey-90-a10);
-}
-
-.devtools-toolbar-container {
-  height: auto;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.devtools-toolbar-group {
-  display: flex;
-  flex: 0 0 auto;
-  flex-wrap: nowrap;
-=======
->>>>>>> upstream-releases
   align-items: center;
 }
 

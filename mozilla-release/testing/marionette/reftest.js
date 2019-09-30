@@ -4,24 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-ChromeUtils.import("chrome://marionette/content/assert.js");
-ChromeUtils.import("chrome://marionette/content/capture.js");
-const {InvalidArgumentError} = ChromeUtils.import("chrome://marionette/content/error.js", {});
-const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-ChromeUtils.import("chrome://marionette/content/assert.js");
-ChromeUtils.import("chrome://marionette/content/capture.js");
-const {InvalidArgumentError} = ChromeUtils.import("chrome://marionette/content/error.js", {});
-const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
-=======
 const { Preferences } = ChromeUtils.import(
   "resource://gre/modules/Preferences.jsm"
 );
@@ -38,7 +20,6 @@ const { InvalidArgumentError } = ChromeUtils.import(
   "chrome://marionette/content/error.js"
 );
 const { Log } = ChromeUtils.import("chrome://marionette/content/log.js");
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGetter(this, "logger", Log.get);
 
@@ -109,15 +90,9 @@ reftest.Runner = class {
     );
   }
 
-<<<<<<< HEAD
-  async ensureWindow(timeout) {
-||||||| merged common ancestors
-  async ensureWindow() {
-=======
   async ensureWindow(timeout, width, height) {
     logger.debug(`ensuring we have a window ${width}x${height}`);
 
->>>>>>> upstream-releases
     if (this.reftestWin && !this.reftestWin.closed) {
       let browserRect = this.reftestWin.gBrowser.getBoundingClientRect();
       if (browserRect.width === width && browserRect.height === height) {
@@ -144,45 +119,16 @@ reftest.Runner = class {
       reftestWin = await this.openWindow(width, height);
     }
 
-<<<<<<< HEAD
-    let reftestWin;
-    if (Services.appinfo.OS == "Android") {
-      logger.debug("Using current window");
-      reftestWin = this.parentWindow;
-      await this.driver.listener.get({
-        commandID: this.driver.listener.activeMessageId,
-        pageTimeout: timeout,
-        url: "about:blank",
-        loadEventExpected: false});
-||||||| merged common ancestors
-    let reftestWin = await this.openWindow();
-=======
     this.setupWindow(reftestWin, width, height);
-    this.windowUtils = reftestWin.windowUtils;
-    this.reftestWin = reftestWin;
->>>>>>> upstream-releases
-
-    } else {
-      logger.debug("Using separate window");
-      reftestWin = await this.openWindow();
-    }
-
-<<<<<<< HEAD
-    this.setupWindow(reftestWin);
     this.windowUtils = reftestWin.windowUtils;
     this.reftestWin = reftestWin;
 
     let found = this.driver.findWindow([reftestWin], () => true);
     await this.driver.setWindowHandle(found, true);
 
-||||||| merged common ancestors
-    this.windowUtils = reftestWin.windowUtils;
-    this.reftestWin = reftestWin;
-=======
     let browserRect = reftestWin.gBrowser.getBoundingClientRect();
     logger.debug(`new: ${browserRect.width}x${browserRect.height}`);
 
->>>>>>> upstream-releases
     return reftestWin;
   }
 
@@ -202,37 +148,6 @@ reftest.Runner = class {
     return reftestWin;
   }
 
-<<<<<<< HEAD
-  setupWindow(reftestWin) {
-    let browser;
-    if (Services.appinfo.OS === "Android") {
-      browser = reftestWin.document.getElementsByTagName("browser")[0];
-      browser.setAttribute("remote", "false");
-    } else {
-      browser = reftestWin.document.createElementNS(XUL_NS, "xul:browser");
-      browser.permanentKey = {};
-      browser.setAttribute("id", "browser");
-      browser.setAttribute("anonid", "initialBrowser");
-      browser.setAttribute("type", "content");
-      browser.setAttribute("primary", "true");
-      if (this.remote) {
-        browser.setAttribute("remote", "true");
-        browser.setAttribute("remoteType", "web");
-      } else {
-        browser.setAttribute("remote", "false");
-      }
-||||||| merged common ancestors
-    let browser = reftestWin.document.createElementNS(XUL_NS, "xul:browser");
-    browser.permanentKey = {};
-    browser.setAttribute("id", "browser");
-    browser.setAttribute("anonid", "initialBrowser");
-    browser.setAttribute("type", "content");
-    browser.setAttribute("primary", "true");
-
-    if (this.remote) {
-      browser.setAttribute("remote", "true");
-      browser.setAttribute("remoteType", "web");
-=======
   setupWindow(reftestWin, width, height) {
     let browser;
     if (Services.appinfo.OS === "Android") {
@@ -251,7 +166,6 @@ reftest.Runner = class {
       } else {
         browser.setAttribute("remote", "false");
       }
->>>>>>> upstream-releases
     }
     // Make sure the browser element is exactly the right size, no matter
     // what size our window is
@@ -370,16 +284,8 @@ max-width: ${width}px; max-height: ${height}px`;
     return result;
   }
 
-<<<<<<< HEAD
-  async runTest(testUrl, references, expected, timeout) {
-    let win = await this.ensureWindow(timeout);
-||||||| merged common ancestors
-  async runTest(testUrl, references, expected, timeout) {
-    let win = await this.ensureWindow();
-=======
   async runTest(testUrl, references, expected, timeout, width, height) {
     let win = await this.ensureWindow(timeout, width, height);
->>>>>>> upstream-releases
 
     function toBase64(screenshot) {
       let dataURL = screenshot.canvas.toDataURL();
@@ -410,11 +316,6 @@ max-width: ${width}px; max-height: ${height}px`;
       let comparison;
       try {
         comparison = await this.compareUrls(
-<<<<<<< HEAD
-            win, lhsUrl, rhsUrl, relation, timeout, extras);
-||||||| merged common ancestors
-            win, lhsUrl, rhsUrl, relation, timeout);
-=======
           win,
           lhsUrl,
           rhsUrl,
@@ -422,7 +323,6 @@ max-width: ${width}px; max-height: ${height}px`;
           timeout,
           extras
         );
->>>>>>> upstream-releases
       } catch (e) {
         comparison = { lhs: null, rhs: null, passed: false, error: e };
       }
@@ -514,76 +414,40 @@ max-width: ${width}px; max-height: ${height}px`;
     let maxDifferences = {};
 
     try {
-<<<<<<< HEAD
-      pixelsDifferent = this.windowUtils.compareCanvases(
-          lhs.canvas, rhs.canvas, maxDifferences);
-||||||| merged common ancestors
-      differences = this.windowUtils.compareCanvases(
-          lhs.canvas, rhs.canvas, maxDifferences);
-=======
       pixelsDifferent = this.windowUtils.compareCanvases(
         lhs.canvas,
         rhs.canvas,
         maxDifferences
       );
->>>>>>> upstream-releases
     } catch (e) {
       passed = false;
       error = e;
     }
 
     if (error === null) {
-<<<<<<< HEAD
-      passed = this.isAcceptableDifference(
-          maxDifferences.value, pixelsDifferent, extras.fuzzy);
-||||||| merged common ancestors
-=======
       passed = this.isAcceptableDifference(
         maxDifferences.value,
         pixelsDifferent,
         extras.fuzzy
       );
->>>>>>> upstream-releases
       switch (relation) {
         case "==":
           if (!passed) {
-<<<<<<< HEAD
-            logger.info(`Found ${pixelsDifferent} pixels different, ` +
-                        `maximum difference per channel ${maxDifferences.value}`);
-||||||| merged common ancestors
-            logger.info(`Found ${differences} pixels different, ` +
-                        `maximum difference per channel ${maxDifferences.value}`);
-=======
             logger.info(
               `Found ${pixelsDifferent} pixels different, ` +
                 `maximum difference per channel ${maxDifferences.value}`
             );
->>>>>>> upstream-releases
           }
           break;
         case "!=":
           passed = !passed;
           break;
         default:
-<<<<<<< HEAD
-          throw new InvalidArgumentError("Reftest operator should be '==' or '!='");
-
-
-||||||| merged common ancestors
-          throw new InvalidArgumentError("Reftest operator should be '==' or '!='");
-=======
           throw new InvalidArgumentError(
             "Reftest operator should be '==' or '!='"
           );
->>>>>>> upstream-releases
       }
     }
-<<<<<<< HEAD
-    return {lhs, rhs, passed, error};
-||||||| merged common ancestors
-
-    return {lhs, rhs, passed, error};
-=======
     return { lhs, rhs, passed, error };
   }
 
@@ -605,29 +469,6 @@ max-width: ${width}px; max-height: ${height}px`;
         (pixelsDifferent >= allowedPixels[0] ||
           pixelsDifferent <= allowedPixels[1]))
     );
-  }
-
-  ensureFocus(win) {
-    const focusManager = Services.focus;
-    if (focusManager.activeWindow != win) {
-      focusManager.activeWindow = win;
-    }
-    this.driver.curBrowser.contentBrowser.focus();
->>>>>>> upstream-releases
-  }
-
-  isAcceptableDifference(maxDifference, pixelsDifferent, allowed) {
-    if (!allowed) {
-      logger.info(`No differences allowed`);
-      return pixelsDifferent === 0;
-    }
-    let [allowedDiff, allowedPixels] = allowed;
-    logger.info(`Allowed ${allowedPixels.join("-")} pixels different, ` +
-                `maximum difference per channel ${allowedDiff.join("-")}`);
-    return ((maxDifference >= allowedDiff[0] &&
-             maxDifference <= allowedDiff[1]) &&
-            (pixelsDifferent >= allowedPixels[0] ||
-             pixelsDifferent <= allowedPixels[1]));
   }
 
   ensureFocus(win) {
@@ -671,14 +512,6 @@ max-width: ${width}px; max-height: ${height}px`;
       reuseCanvas = !cache;
 
       let ctxInterface = win.CanvasRenderingContext2D;
-<<<<<<< HEAD
-      let flags = ctxInterface.DRAWWINDOW_DRAW_CARET |
-          ctxInterface.DRAWWINDOW_DRAW_VIEW;
-||||||| merged common ancestors
-      let flags = ctxInterface.DRAWWINDOW_DRAW_CARET |
-          ctxInterface.DRAWWINDOW_USE_WIDGET_LAYERS |
-          ctxInterface.DRAWWINDOW_DRAW_VIEW;
-=======
       let flags =
         ctxInterface.DRAWWINDOW_DRAW_CARET |
         ctxInterface.DRAWWINDOW_DRAW_VIEW |
@@ -701,23 +534,8 @@ win.innerHeight: ${win.innerHeight}
 browserRect.height: ${browserRect.height}`);
         throw new Error("Window has incorrect dimensions");
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (0 <= browserRect.left &&
-          0 <= browserRect.top &&
-          win.innerWidth >= browserRect.width &&
-          win.innerHeight >= browserRect.height) {
-        logger.debug("Using DRAWWINDOW_USE_WIDGET_LAYERS");
-        flags |= ctxInterface.DRAWWINDOW_USE_WIDGET_LAYERS;
-      } else {
-        logger.debug("Not using DRAWWINDOW_USE_WIDGET_LAYERS");
-      }
-
-||||||| merged common ancestors
-=======
       url = new URL(url).href; // normalize the URL
->>>>>>> upstream-releases
       logger.debug(`Starting load of ${url}`);
       let navigateOpts = {
         commandId: this.driver.listener.activeMessageId,

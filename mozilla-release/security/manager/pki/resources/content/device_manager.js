@@ -3,85 +3,29 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-<<<<<<< HEAD
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
-
-const nsIPKCS11Slot = Ci.nsIPKCS11Slot;
-const nsIPKCS11Module = Ci.nsIPKCS11Module;
-const nsPKCS11ModuleDB = "@mozilla.org/security/pkcs11moduledb;1";
-const nsIPKCS11ModuleDB = Ci.nsIPKCS11ModuleDB;
-const nsIPK11Token = Ci.nsIPK11Token;
-const nsPK11TokenDB = "@mozilla.org/security/pk11tokendb;1";
-const nsIPK11TokenDB = Ci.nsIPK11TokenDB;
-const nsIDialogParamBlock = Ci.nsIDialogParamBlock;
-const nsDialogParamBlock = "@mozilla.org/embedcomp/dialogparam;1";
-
-||||||| merged common ancestors
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
-
-const nsIPKCS11Slot = Ci.nsIPKCS11Slot;
-const nsIPKCS11Module = Ci.nsIPKCS11Module;
-const nsPKCS11ModuleDB = "@mozilla.org/security/pkcs11moduledb;1";
-const nsIPKCS11ModuleDB = Ci.nsIPKCS11ModuleDB;
-const nsIPK11Token = Ci.nsIPK11Token;
-const nsPK11TokenDB = "@mozilla.org/security/pk11tokendb;1";
-const nsIPK11TokenDB = Ci.nsIPK11TokenDB;
-const nsIDialogParamBlock = Ci.nsIDialogParamBlock;
-const nsDialogParamBlock = "@mozilla.org/embedcomp/dialogparam;1";
-
-var bundle;
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
 
->>>>>>> upstream-releases
 var secmoddb;
 var skip_enable_buttons = false;
 
 /* Do the initial load of all PKCS# modules and list them. */
 function LoadModules() {
-<<<<<<< HEAD
-  secmoddb = Cc[nsPKCS11ModuleDB].getService(nsIPKCS11ModuleDB);
-||||||| merged common ancestors
-  bundle = document.getElementById("pippki_bundle");
-  secmoddb = Cc[nsPKCS11ModuleDB].getService(nsIPKCS11ModuleDB);
-=======
   secmoddb = Cc["@mozilla.org/security/pkcs11moduledb;1"].getService(
     Ci.nsIPKCS11ModuleDB
   );
->>>>>>> upstream-releases
   RefreshDeviceList();
 }
 
-<<<<<<< HEAD
-async function doPrompt(l10n_id) {
-  let [msg] = await document.l10n.formatValues([{id: l10n_id}]);
-||||||| merged common ancestors
-function getNSSString(name) {
-  return document.getElementById("pipnss_bundle").getString(name);
-}
-
-function doPrompt(msg) {
-=======
 async function doPrompt(l10n_id) {
   let [msg] = await document.l10n.formatValues([{ id: l10n_id }]);
->>>>>>> upstream-releases
   Services.prompt.alert(window, null, msg);
 }
 
-<<<<<<< HEAD
-async function doConfirm(l10n_id) {
-  let [msg] = await document.l10n.formatValues([{id: l10n_id}]);
-||||||| merged common ancestors
-function doConfirm(msg) {
-=======
 async function doConfirm(l10n_id) {
   let [msg] = await document.l10n.formatValues([{ id: l10n_id }]);
->>>>>>> upstream-releases
   return Services.prompt.confirm(window, null, msg);
 }
 
@@ -248,65 +192,6 @@ function showSlotInfo() {
   var present = true;
   ClearInfoList();
   switch (selected_slot.status) {
-<<<<<<< HEAD
-   case nsIPKCS11Slot.SLOT_DISABLED:
-     AddInfoRow("devinfo-status", {l10nID: "devinfo-status-disabled"}, "tok_status");
-     present = false;
-     break;
-   case nsIPKCS11Slot.SLOT_NOT_PRESENT:
-     AddInfoRow("devinfo-status", {l10nID: "devinfo-status-not-present"}, "tok_status");
-     present = false;
-     break;
-   case nsIPKCS11Slot.SLOT_UNINITIALIZED:
-     AddInfoRow("devinfo-status", {l10nID: "devinfo-status-uninitialized"}, "tok_status");
-     break;
-   case nsIPKCS11Slot.SLOT_NOT_LOGGED_IN:
-     AddInfoRow("devinfo-status", {l10nID: "devinfo-status-not-logged-in"}, "tok_status");
-     break;
-   case nsIPKCS11Slot.SLOT_LOGGED_IN:
-     AddInfoRow("devinfo-status", {l10nID: "devinfo-status-logged-in"}, "tok_status");
-     break;
-   case nsIPKCS11Slot.SLOT_READY:
-     AddInfoRow("devinfo-status", {l10nID: "devinfo-status-ready"}, "tok_status");
-     break;
-   default:
-     return;
-||||||| merged common ancestors
-   case nsIPKCS11Slot.SLOT_DISABLED:
-     AddInfoRow(bundle.getString("devinfo_status"),
-                bundle.getString("devinfo_stat_disabled"),
-                "tok_status");
-     present = false;
-     break;
-   case nsIPKCS11Slot.SLOT_NOT_PRESENT:
-     AddInfoRow(bundle.getString("devinfo_status"),
-                bundle.getString("devinfo_stat_notpresent"),
-                "tok_status");
-     present = false;
-     break;
-   case nsIPKCS11Slot.SLOT_UNINITIALIZED:
-     AddInfoRow(bundle.getString("devinfo_status"),
-                bundle.getString("devinfo_stat_uninitialized"),
-                "tok_status");
-     break;
-   case nsIPKCS11Slot.SLOT_NOT_LOGGED_IN:
-     AddInfoRow(bundle.getString("devinfo_status"),
-                bundle.getString("devinfo_stat_notloggedin"),
-                "tok_status");
-     break;
-   case nsIPKCS11Slot.SLOT_LOGGED_IN:
-     AddInfoRow(bundle.getString("devinfo_status"),
-                bundle.getString("devinfo_stat_loggedin"),
-                "tok_status");
-     break;
-   case nsIPKCS11Slot.SLOT_READY:
-     AddInfoRow(bundle.getString("devinfo_status"),
-                bundle.getString("devinfo_stat_ready"),
-                "tok_status");
-     break;
-   default:
-     return;
-=======
     case Ci.nsIPKCS11Slot.SLOT_DISABLED:
       AddInfoRow(
         "devinfo-status",
@@ -353,23 +238,7 @@ function showSlotInfo() {
       break;
     default:
       return;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  AddInfoRow("devinfo-desc", {label: selected_slot.desc}, "slot_desc");
-  AddInfoRow("devinfo-man-id", {label: selected_slot.manID}, "slot_manID");
-  AddInfoRow("devinfo-hwversion", {label: selected_slot.HWVersion}, "slot_hwv");
-  AddInfoRow("devinfo-fwversion", {label: selected_slot.FWVersion}, "slot_fwv");
-||||||| merged common ancestors
-  AddInfoRow(bundle.getString("devinfo_desc"),
-             selected_slot.desc, "slot_desc");
-  AddInfoRow(bundle.getString("devinfo_manID"),
-             selected_slot.manID, "slot_manID");
-  AddInfoRow(bundle.getString("devinfo_hwversion"),
-             selected_slot.HWVersion, "slot_hwv");
-  AddInfoRow(bundle.getString("devinfo_fwversion"),
-             selected_slot.FWVersion, "slot_fwv");
-=======
   AddInfoRow("devinfo-desc", { label: selected_slot.desc }, "slot_desc");
   AddInfoRow("devinfo-man-id", { label: selected_slot.manID }, "slot_manID");
   AddInfoRow(
@@ -382,7 +251,6 @@ function showSlotInfo() {
     { label: selected_slot.FWVersion },
     "slot_fwv"
   );
->>>>>>> upstream-releases
   if (present) {
     showTokenInfo();
   }
@@ -390,22 +258,12 @@ function showSlotInfo() {
 
 function showModuleInfo() {
   ClearInfoList();
-<<<<<<< HEAD
-  AddInfoRow("devinfo-modname", {label: selected_module.name}, "module_name");
-  AddInfoRow("devinfo-modpath", {label: selected_module.libName}, "module_path");
-||||||| merged common ancestors
-  AddInfoRow(bundle.getString("devinfo_modname"),
-             selected_module.name, "module_name");
-  AddInfoRow(bundle.getString("devinfo_modpath"),
-             selected_module.libName, "module_path");
-=======
   AddInfoRow("devinfo-modname", { label: selected_module.name }, "module_name");
   AddInfoRow(
     "devinfo-modpath",
     { label: selected_module.libName },
     "module_path"
   );
->>>>>>> upstream-releases
 }
 
 // add a row to the info list, as [col1 col2] (ex.: ["status" "logged in"])
@@ -475,15 +333,7 @@ function doLoad() {
 
 async function deleteSelected() {
   getSelectedItem();
-<<<<<<< HEAD
-  if (selected_module &&
-      (await doConfirm("del-module-warning"))) {
-||||||| merged common ancestors
-  if (selected_module &&
-      doConfirm(getNSSString("DelModuleWarning"))) {
-=======
   if (selected_module && (await doConfirm("del-module-warning"))) {
->>>>>>> upstream-releases
     try {
       secmoddb.deleteModule(selected_module.name);
     } catch (e) {
@@ -525,24 +375,6 @@ function changePassword() {
 
 function showTokenInfo() {
   var selected_token = selected_slot.getToken();
-<<<<<<< HEAD
-  AddInfoRow("devinfo-label", {label: selected_token.tokenName}, "tok_label");
-  AddInfoRow("devinfo-man-id", {label: selected_token.tokenManID}, "tok_manID");
-  AddInfoRow("devinfo-serialnum", {label: selected_token.tokenSerialNumber}, "tok_sNum");
-  AddInfoRow("devinfo-hwversion", {label: selected_token.tokenHWVersion}, "tok_hwv");
-  AddInfoRow("devinfo-fwversion", {label: selected_token.tokenFWVersion}, "tok_fwv");
-||||||| merged common ancestors
-  AddInfoRow(bundle.getString("devinfo_label"),
-             selected_token.tokenName, "tok_label");
-  AddInfoRow(bundle.getString("devinfo_manID"),
-             selected_token.tokenManID, "tok_manID");
-  AddInfoRow(bundle.getString("devinfo_serialnum"),
-             selected_token.tokenSerialNumber, "tok_sNum");
-  AddInfoRow(bundle.getString("devinfo_hwversion"),
-             selected_token.tokenHWVersion, "tok_hwv");
-  AddInfoRow(bundle.getString("devinfo_fwversion"),
-             selected_token.tokenFWVersion, "tok_fwv");
-=======
   AddInfoRow("devinfo-label", { label: selected_token.tokenName }, "tok_label");
   AddInfoRow(
     "devinfo-man-id",
@@ -564,7 +396,6 @@ function showTokenInfo() {
     { label: selected_token.tokenFWVersion },
     "tok_fwv"
   );
->>>>>>> upstream-releases
 }
 
 function toggleFIPS() {

@@ -11,49 +11,6 @@
     "browser_searchSuggestionEngine searchSuggestionEngine.xml";
   var gController;
 
-<<<<<<< HEAD
-const TEST_MSG = "ContentSearchUIControllerTest";
-const ENGINE_NAME = "browser_searchSuggestionEngine searchSuggestionEngine.xml";
-var gController;
-
-addMessageListener(TEST_MSG, msg => {
-  messageHandlers[msg.data.type](msg.data.data);
-});
-
-var messageHandlers = {
-
-  init() {
-    Services.search.defaultEngine = Services.search.getEngineByName(ENGINE_NAME);
-    let input = content.document.querySelector("input");
-    gController =
-      new content.ContentSearchUIController(input, input.parentNode, "test", "test");
-    content.addEventListener("ContentSearchService", function listener(aEvent) {
-      if (aEvent.detail.type == "State" &&
-          gController.defaultEngine.name == ENGINE_NAME) {
-        content.removeEventListener("ContentSearchService", listener);
-        ack("init");
-||||||| merged common ancestors
-const TEST_MSG = "ContentSearchUIControllerTest";
-const ENGINE_NAME = "browser_searchSuggestionEngine searchSuggestionEngine.xml";
-var gController;
-
-addMessageListener(TEST_MSG, msg => {
-  messageHandlers[msg.data.type](msg.data.data);
-});
-
-var messageHandlers = {
-
-  init() {
-    Services.search.currentEngine = Services.search.getEngineByName(ENGINE_NAME);
-    let input = content.document.querySelector("input");
-    gController =
-      new content.ContentSearchUIController(input, input.parentNode, "test", "test");
-    content.addEventListener("ContentSearchService", function listener(aEvent) {
-      if (aEvent.detail.type == "State" &&
-          gController.defaultEngine.name == ENGINE_NAME) {
-        content.removeEventListener("ContentSearchService", listener);
-        ack("init");
-=======
   addMessageListener(TEST_MSG, msg => {
     messageHandlers[msg.data.type](msg.data.data);
   });
@@ -221,7 +178,6 @@ var messageHandlers = {
       if (gController.input.getAttribute("aria-expanded") == "true") {
         observer.disconnect();
         cb();
->>>>>>> upstream-releases
       }
     });
     observer.observe(gController.input, {

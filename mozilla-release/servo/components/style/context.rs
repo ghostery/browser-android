@@ -4,11 +4,6 @@
 
 //! The context within which style is calculated.
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-#[cfg(feature = "servo")]
-use animation::Animation;
-=======
 #[cfg(feature = "servo")]
 use crate::animation::Animation;
 use crate::bloom::StyleBloom;
@@ -33,40 +28,9 @@ use crate::thread_state::{self, ThreadState};
 use crate::timer::Timer;
 use crate::traversal::DomTraversal;
 use crate::traversal_flags::TraversalFlags;
->>>>>>> upstream-releases
 use app_units::Au;
 #[cfg(feature = "servo")]
-<<<<<<< HEAD
-use crate::animation::Animation;
-use crate::bloom::StyleBloom;
-use crate::data::{EagerPseudoStyles, ElementData};
-#[cfg(feature = "servo")]
-use crate::dom::OpaqueNode;
-use crate::dom::{SendElement, TElement};
-use crate::font_metrics::FontMetricsProvider;
-#[cfg(feature = "gecko")]
-use crate::gecko_bindings::structs;
-use crate::parallel::{STACK_SAFETY_MARGIN_KB, STYLE_THREAD_STACK_SIZE_KB};
-use crate::properties::ComputedValues;
-#[cfg(feature = "servo")]
-use crate::properties::PropertyId;
-use crate::rule_cache::RuleCache;
-use crate::rule_tree::StrongRuleNode;
-use crate::selector_parser::{SnapshotMap, EAGER_PSEUDO_COUNT};
-use crate::shared_lock::StylesheetGuards;
-use crate::sharing::StyleSharingCache;
-use crate::stylist::Stylist;
-use crate::thread_state::{self, ThreadState};
-use crate::timer::Timer;
-use crate::traversal::DomTraversal;
-use crate::traversal_flags::TraversalFlags;
-#[cfg(feature = "servo")]
 use crossbeam_channel::Sender;
-||||||| merged common ancestors
-use dom::OpaqueNode;
-=======
-use crossbeam_channel::Sender;
->>>>>>> upstream-releases
 use euclid::Size2D;
 use euclid::TypedScale;
 use fxhash::FxHashMap;

@@ -41,56 +41,11 @@ async function run_all_tests() {
     .processType;
   if (procType != Ci.nsIXULRuntime.PROCESS_TYPE_DEFAULT) {
     return;
-<<<<<<< HEAD
-
-  let attrs_inBrowser = { appId:1, inIsolatedMozBrowser:true };
-  let attrs_notInBrowser = { appId:1 };
-
-  Services.clearData.deleteDataFromOriginAttributesPattern(attrs_inBrowser);
-
-  for (let test of secondTests) {
-    handlers_called = 0;
-    await test_channel(...test);
-||||||| merged common ancestors
-
-  let attrs_inBrowser = JSON.stringify({ appId:1, inIsolatedMozBrowser:true });
-  let attrs_notInBrowser = JSON.stringify({ appId:1 });
-
-  Services.obs.notifyObservers(null, "clear-origin-attributes-data", attrs_inBrowser);
-
-  for (let test of secondTests) {
-    handlers_called = 0;
-    await test_channel(...test);
-=======
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  Services.clearData.deleteDataFromOriginAttributesPattern(attrs_notInBrowser);
-  Services.clearData.deleteDataFromOriginAttributesPattern(attrs_inBrowser);
-
-  for (let test of thirdTests) {
-    handlers_called = 0;
-    await test_channel(...test);
-  }
-
-  Services.clearData.deleteDataFromOriginAttributesPattern({ userContextId: 1 });
-||||||| merged common ancestors
-  Services.obs.notifyObservers(null, "clear-origin-attributes-data", attrs_notInBrowser);
-  Services.obs.notifyObservers(null, "clear-origin-attributes-data", attrs_inBrowser);
-
-  for (let test of thirdTests) {
-    handlers_called = 0;
-    await test_channel(...test);
-  }
-
-  let attrs_userContextId = JSON.stringify({ userContextId: 1 });
-  Services.obs.notifyObservers(null, "clear-origin-attributes-data", attrs_userContextId);
-=======
   Services.clearData.deleteDataFromOriginAttributesPattern({
     userContextId: 1,
   });
->>>>>>> upstream-releases
 
   for (let test of secondTests) {
     handlers_called = 0;

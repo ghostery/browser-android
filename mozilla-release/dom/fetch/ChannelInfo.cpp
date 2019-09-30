@@ -18,15 +18,7 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-void ChannelInfo::InitFromDocument(nsIDocument* aDoc) {
-||||||| merged common ancestors
-void
-ChannelInfo::InitFromDocument(nsIDocument* aDoc)
-{
-=======
 void ChannelInfo::InitFromDocument(Document* aDoc) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!mInited, "Cannot initialize the object twice");
 

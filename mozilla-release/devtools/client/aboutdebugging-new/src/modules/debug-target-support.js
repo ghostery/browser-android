@@ -6,75 +6,16 @@
 
 const { DEBUG_TARGET_PANE, PREFERENCES, RUNTIMES } = require("../constants");
 
-<<<<<<< HEAD
-const ALL_DEBUG_TARGETS = [
-  DEBUG_TARGETS.EXTENSION,
-  DEBUG_TARGETS.TAB,
-  DEBUG_TARGETS.WORKER,
-];
-
-const SUPPORTED_TARGET_BY_RUNTIME = {
-  [RUNTIMES.THIS_FIREFOX]: ALL_DEBUG_TARGETS,
-  [RUNTIMES.USB]: [
-    DEBUG_TARGETS.EXTENSION,
-    DEBUG_TARGETS.TAB,
-  ],
-  [RUNTIMES.NETWORK]: [
-    DEBUG_TARGETS.EXTENSION,
-    DEBUG_TARGETS.TAB,
-  ],
-};
-||||||| merged common ancestors
-function isSupportedDebugTarget(runtimeType, debugTargetType) {
-  if (runtimeType === RUNTIMES.THIS_FIREFOX) {
-    return true;
-  }
-=======
 const Services = require("Services");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-function isSupportedDebugTarget(runtimeType, debugTargetType) {
-  return SUPPORTED_TARGET_BY_RUNTIME[runtimeType].includes(debugTargetType);
-||||||| merged common ancestors
-  return debugTargetType === DEBUG_TARGETS.TAB;
-=======
 // Process target debugging is disabled by default.
 function isProcessDebuggingSupported() {
   return Services.prefs.getBoolPref(
     PREFERENCES.PROCESS_DEBUGGING_ENABLED,
     false
   );
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const ALL_DEBUG_TARGET_PANES = [
-  DEBUG_TARGET_PANE.INSTALLED_EXTENSION,
-  DEBUG_TARGET_PANE.OTHER_WORKER,
-  DEBUG_TARGET_PANE.SERVICE_WORKER,
-  DEBUG_TARGET_PANE.SHARED_WORKER,
-  DEBUG_TARGET_PANE.TAB,
-  DEBUG_TARGET_PANE.TEMPORARY_EXTENSION,
-];
-
-const SUPPORTED_TARGET_PANE_BY_RUNTIME = {
-  [RUNTIMES.THIS_FIREFOX]: ALL_DEBUG_TARGET_PANES,
-  [RUNTIMES.USB]: [
-    DEBUG_TARGET_PANE.INSTALLED_EXTENSION,
-    DEBUG_TARGET_PANE.TAB,
-  ],
-  [RUNTIMES.NETWORK]: [
-    DEBUG_TARGET_PANE.INSTALLED_EXTENSION,
-    DEBUG_TARGET_PANE.TAB,
-  ],
-};
-||||||| merged common ancestors
-function isSupportedDebugTargetPane(runtimeType, debugTargetPaneKey) {
-  if (runtimeType === RUNTIMES.THIS_FIREFOX) {
-    return true;
-  }
-=======
 // Process target debugging is disabled by default.
 function isLocalTabDebuggingSupported() {
   return Services.prefs.getBoolPref(
@@ -102,18 +43,7 @@ const ALL_DEBUG_TARGET_PANES = [
     ? [DEBUG_TARGET_PANE.TEMPORARY_EXTENSION]
     : []),
 ];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/**
- * A debug target pane is more specialized than a debug target. For instance EXTENSION is
- * a DEBUG_TARGET but INSTALLED_EXTENSION and TEMPORARY_EXTENSION are DEBUG_TARGET_PANES.
- */
-function isSupportedDebugTargetPane(runtimeType, debugTargetPaneKey) {
-  return SUPPORTED_TARGET_PANE_BY_RUNTIME[runtimeType].includes(debugTargetPaneKey);
-||||||| merged common ancestors
-  return debugTargetPaneKey === DEBUG_TARGET_PANE.TAB;
-=======
 // All debug target panes except temporary extensions
 const REMOTE_DEBUG_TARGET_PANES = ALL_DEBUG_TARGET_PANES.filter(
   p => p !== DEBUG_TARGET_PANE.TEMPORARY_EXTENSION
@@ -141,6 +71,5 @@ function isSupportedDebugTargetPane(runtimeType, debugTargetPaneKey) {
   return SUPPORTED_TARGET_PANE_BY_RUNTIME[runtimeType].includes(
     debugTargetPaneKey
   );
->>>>>>> upstream-releases
 }
 exports.isSupportedDebugTargetPane = isSupportedDebugTargetPane;

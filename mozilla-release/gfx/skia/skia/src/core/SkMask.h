@@ -8,14 +8,8 @@
 #ifndef SkMask_DEFINED
 #define SkMask_DEFINED
 
-<<<<<<< HEAD
-#include "SkColorPriv.h"
-#include "SkMacros.h"
-||||||| merged common ancestors
-=======
 #include "SkColorData.h"
 #include "SkMacros.h"
->>>>>>> upstream-releases
 #include "SkRect.h"
 #include "SkTemplates.h"
 

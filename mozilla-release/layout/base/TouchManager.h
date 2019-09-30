@@ -48,18 +48,8 @@ class TouchManager {
   static nsIFrame* SuppressInvalidPointsAndGetTargetedFrame(
       WidgetTouchEvent* aEvent);
 
-<<<<<<< HEAD
-  bool PreHandleEvent(mozilla::WidgetEvent* aEvent, nsEventStatus* aStatus,
-                      bool& aTouchIsNew, bool& aIsHandlingUserInput,
-||||||| merged common ancestors
-  bool PreHandleEvent(mozilla::WidgetEvent* aEvent,
-                      nsEventStatus* aStatus,
-                      bool& aTouchIsNew,
-                      bool& aIsHandlingUserInput,
-=======
   bool PreHandleEvent(mozilla::WidgetEvent* aEvent, nsEventStatus* aStatus,
                       bool& aTouchIsNew,
->>>>>>> upstream-releases
                       nsCOMPtr<nsIContent>& aCurrentEventContent);
 
   static already_AddRefed<nsIContent> GetAnyCapturedTouchTarget();
@@ -74,16 +64,8 @@ class TouchManager {
                               dom::Document* aLimitToDocument = nullptr);
   static void AppendToTouchList(WidgetTouchEvent::TouchArray* aTouchList);
 
-<<<<<<< HEAD
-  RefPtr<PresShell> mPresShell;
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-  RefPtr<PresShell>   mPresShell;
-  nsCOMPtr<nsIDocument> mDocument;
-=======
   RefPtr<PresShell> mPresShell;
   RefPtr<dom::Document> mDocument;
->>>>>>> upstream-releases
 
   struct TouchInfo {
     RefPtr<mozilla::dom::Touch> mTouch;

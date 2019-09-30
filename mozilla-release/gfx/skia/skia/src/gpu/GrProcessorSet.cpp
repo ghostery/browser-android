@@ -160,24 +160,10 @@ bool GrProcessorSet::operator==(const GrProcessorSet& that) const {
     return thisXP.isEqual(thatXP);
 }
 
-<<<<<<< HEAD
-GrProcessorSet::Analysis GrProcessorSet::finalize(const GrProcessorAnalysisColor& colorInput,
-                                                  const GrProcessorAnalysisCoverage coverageInput,
-                                                  const GrAppliedClip* clip, bool isMixedSamples,
-                                                  const GrCaps& caps, GrColor* overrideInputColor) {
-||||||| merged common ancestors
-GrProcessorSet::Analysis GrProcessorSet::finalize(const GrProcessorAnalysisColor& colorInput,
-                                                  const GrProcessorAnalysisCoverage coverageInput,
-                                                  const GrAppliedClip* clip, bool isMixedSamples,
-                                                  const GrCaps& caps,
-                                                  GrPixelConfigIsClamped dstIsClamped,
-                                                  GrColor* overrideInputColor) {
-=======
 GrProcessorSet::Analysis GrProcessorSet::finalize(
         const GrProcessorAnalysisColor& colorInput, const GrProcessorAnalysisCoverage coverageInput,
         const GrAppliedClip* clip, const GrUserStencilSettings* userStencil, GrFSAAType fsaaType,
         const GrCaps& caps, SkPMColor4f* overrideInputColor) {
->>>>>>> upstream-releases
     SkASSERT(!this->isFinalized());
     SkASSERT(!fFragmentProcessorOffset);
 
@@ -253,13 +239,7 @@ GrProcessorSet::Analysis GrProcessorSet::finalize(
     bool hasMixedSampledCoverage = (GrFSAAType::kMixedSamples == fsaaType)
             && !userStencil->testAlwaysPasses((clip) ? clip->hasStencilClip() : false);
     auto xp = GrXPFactory::MakeXferProcessor(this->xpFactory(), colorAnalysis.outputColor(),
-<<<<<<< HEAD
-                                             outputCoverage, isMixedSamples, caps);
-||||||| merged common ancestors
-                                             outputCoverage, isMixedSamples, caps, dstIsClamped);
-=======
                                              outputCoverage, hasMixedSampledCoverage, caps);
->>>>>>> upstream-releases
     fXP.fProcessor = xp.release();
 
     fFlags |= kFinalized_Flag;

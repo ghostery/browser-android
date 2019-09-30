@@ -23,18 +23,9 @@ class nsITableCellLayout {
  public:
   NS_DECL_QUERYFRAME_TARGET(nsITableCellLayout)
 
-<<<<<<< HEAD
-  /** return the mapped cell's row and column indexes (starting at 0 for each)
-   */
-  NS_IMETHOD GetCellIndexes(int32_t &aRowIndex, int32_t &aColIndex) = 0;
-||||||| merged common ancestors
-  /** return the mapped cell's row and column indexes (starting at 0 for each) */
-  NS_IMETHOD GetCellIndexes(int32_t &aRowIndex, int32_t &aColIndex)=0;
-=======
   /** return the mapped cell's row and column indexes (starting at 0 for each)
    */
   NS_IMETHOD GetCellIndexes(int32_t& aRowIndex, int32_t& aColIndex) = 0;
->>>>>>> upstream-releases
 };
 
 #endif

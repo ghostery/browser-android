@@ -155,14 +155,9 @@ const UPDATE_PROPS = [
   "formDataSections",
   "stacktrace",
   "isThirdPartyTrackingResource",
-<<<<<<< HEAD
-  "referrerPolicy",
-||||||| merged common ancestors
-=======
   "referrerPolicy",
   "blockedReason",
   "channelId",
->>>>>>> upstream-releases
 ];
 
 const PANELS = {
@@ -201,18 +196,10 @@ const HEADERS = [
     canFilter: true,
   },
   {
-<<<<<<< HEAD
-      name: "domain",
-      canFilter: true,
-  },
-  {
-||||||| merged common ancestors
-=======
     name: "domain",
     canFilter: true,
   },
   {
->>>>>>> upstream-releases
     name: "file",
     canFilter: false,
   },
@@ -225,18 +212,10 @@ const HEADERS = [
     canFilter: true,
   },
   {
-<<<<<<< HEAD
-||||||| merged common ancestors
-    name: "domain",
-    canFilter: true,
-  },
-  {
-=======
     name: "scheme",
     canFilter: true,
   },
   {
->>>>>>> upstream-releases
     name: "remoteip",
     canFilter: true,
     filterKey: "remote-ip",

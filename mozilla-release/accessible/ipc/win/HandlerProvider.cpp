@@ -377,19 +377,12 @@ bool HandlerProvider::IsTargetInterfaceCacheable() {
 
 HRESULT
 HandlerProvider::WriteHandlerPayload(NotNull<mscom::IInterceptor*> aInterceptor,
-<<<<<<< HEAD
-                                     NotNull<IStream*> aStream) {
-||||||| merged common ancestors
-                                     NotNull<IStream*> aStream)
-{
-=======
                                      NotNull<IStream*> aStream) {
   if (!IsTargetInterfaceCacheable()) {
     // No handler, so no payload for this instance.
     return E_NOTIMPL;
   }
 
->>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
 
   if (!mSerializer || !(*mSerializer)) {

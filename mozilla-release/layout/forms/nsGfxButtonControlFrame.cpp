@@ -14,35 +14,14 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsGfxButtonControlFrame::nsGfxButtonControlFrame(ComputedStyle* aStyle)
-    : nsHTMLButtonControlFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-nsGfxButtonControlFrame::nsGfxButtonControlFrame(ComputedStyle* aStyle)
-  : nsHTMLButtonControlFrame(aStyle, kClassID)
-{
-}
-=======
 nsGfxButtonControlFrame::nsGfxButtonControlFrame(ComputedStyle* aStyle,
                                                  nsPresContext* aPresContext)
     : nsHTMLButtonControlFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsContainerFrame* NS_NewGfxButtonControlFrame(nsIPresShell* aPresShell,
-                                              ComputedStyle* aStyle) {
-  return new (aPresShell) nsGfxButtonControlFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewGfxButtonControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsGfxButtonControlFrame(aStyle);
-=======
 nsContainerFrame* NS_NewGfxButtonControlFrame(PresShell* aPresShell,
                                               ComputedStyle* aStyle) {
   return new (aPresShell)
       nsGfxButtonControlFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsGfxButtonControlFrame)

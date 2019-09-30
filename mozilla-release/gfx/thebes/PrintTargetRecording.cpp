@@ -16,18 +16,9 @@ PrintTargetRecording::PrintTargetRecording(cairo_surface_t* aCairoSurface,
                                            const IntSize& aSize)
     : PrintTarget(aCairoSurface, aSize) {}
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PrintTargetRecording>
-PrintTargetRecording::CreateOrNull(const IntSize& aSize) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PrintTargetRecording>
-PrintTargetRecording::CreateOrNull(const IntSize& aSize)
-{
-=======
 /* static */
 already_AddRefed<PrintTargetRecording> PrintTargetRecording::CreateOrNull(
     const IntSize& aSize) {
->>>>>>> upstream-releases
   if (!Factory::CheckSurfaceSize(aSize)) {
     return nullptr;
   }

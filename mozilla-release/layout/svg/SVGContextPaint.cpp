@@ -22,16 +22,8 @@ namespace mozilla {
 
 using image::imgDrawingParams;
 
-<<<<<<< HEAD
-/* static */ bool SVGContextPaint::IsAllowedForImageFromURI(nsIURI* aURI) {
-||||||| merged common ancestors
-/* static */ bool
-SVGContextPaint::IsAllowedForImageFromURI(nsIURI* aURI)
-{
-=======
 /* static */
 bool SVGContextPaint::IsAllowedForImageFromURI(nsIURI* aURI) {
->>>>>>> upstream-releases
   static bool sEnabledForContent = false;
   static bool sEnabledForContentCached = false;
 
@@ -80,18 +72,8 @@ bool SVGContextPaint::IsAllowedForImageFromURI(nsIURI* aURI) {
       BasePrincipal::CreateCodebasePrincipal(aURI, OriginAttributes());
   nsString addonId;
   if (NS_SUCCEEDED(principal->GetAddonId(addonId))) {
-<<<<<<< HEAD
-    if (StringEndsWith(addonId, NS_LITERAL_STRING("@mozilla.org")) ||
-        StringEndsWith(addonId, NS_LITERAL_STRING("@mozilla.com")) ||
-        StringBeginsWith(addonId, NS_LITERAL_STRING("@testpilot-"))) {
-||||||| merged common ancestors
-    if (StringEndsWith(addonId, NS_LITERAL_STRING("@mozilla.org"))
-        || StringEndsWith(addonId, NS_LITERAL_STRING("@mozilla.com"))
-        || StringBeginsWith(addonId, NS_LITERAL_STRING("@testpilot-"))) {
-=======
     if (StringEndsWith(addonId, NS_LITERAL_STRING("@mozilla.org")) ||
         StringEndsWith(addonId, NS_LITERAL_STRING("@mozilla.com"))) {
->>>>>>> upstream-releases
       return true;
     }
   }
@@ -106,32 +88,6 @@ bool SVGContextPaint::IsAllowedForImageFromURI(nsIURI* aURI) {
  * @param aTargetPaint where to store the current pattern information
  * @param aFillOrStroke member pointer to the paint we are setting up
  */
-<<<<<<< HEAD
-static void SetupInheritablePaint(const DrawTarget* aDrawTarget,
-                                  const gfxMatrix& aContextMatrix,
-                                  nsIFrame* aFrame, float& aOpacity,
-                                  SVGContextPaint* aOuterContextPaint,
-                                  SVGContextPaintImpl::Paint& aTargetPaint,
-                                  nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
-                                  imgDrawingParams& aImgParams) {
-  const nsStyleSVG* style = aFrame->StyleSVG();
-  nsSVGPaintServerFrame* ps =
-      SVGObserverUtils::GetAndObservePaintServer(aFrame, aFillOrStroke);
-||||||| merged common ancestors
-static void
-SetupInheritablePaint(const DrawTarget* aDrawTarget,
-                      const gfxMatrix& aContextMatrix,
-                      nsIFrame* aFrame,
-                      float& aOpacity,
-                      SVGContextPaint* aOuterContextPaint,
-                      SVGContextPaintImpl::Paint& aTargetPaint,
-                      nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
-                      imgDrawingParams& aImgParams)
-{
-  const nsStyleSVG *style = aFrame->StyleSVG();
-  nsSVGPaintServerFrame *ps =
-    SVGObserverUtils::GetAndObservePaintServer(aFrame, aFillOrStroke);
-=======
 static void SetupInheritablePaint(const DrawTarget* aDrawTarget,
                                   const gfxMatrix& aContextMatrix,
                                   nsIFrame* aFrame, float& aOpacity,
@@ -142,7 +98,6 @@ static void SetupInheritablePaint(const DrawTarget* aDrawTarget,
   const nsStyleSVG* style = aFrame->StyleSVG();
   nsSVGPaintServerFrame* ps =
       SVGObserverUtils::GetAndObservePaintServer(aFrame, aFillOrStroke);
->>>>>>> upstream-releases
 
   if (ps) {
     RefPtr<gfxPattern> pattern =
@@ -157,32 +112,6 @@ static void SetupInheritablePaint(const DrawTarget* aDrawTarget,
 
   if (aOuterContextPaint) {
     RefPtr<gfxPattern> pattern;
-<<<<<<< HEAD
-    switch ((style->*aFillOrStroke).Type()) {
-      case eStyleSVGPaintType_ContextFill:
-        pattern = aOuterContextPaint->GetFillPattern(
-            aDrawTarget, aOpacity, aContextMatrix, aImgParams);
-        break;
-      case eStyleSVGPaintType_ContextStroke:
-        pattern = aOuterContextPaint->GetStrokePattern(
-            aDrawTarget, aOpacity, aContextMatrix, aImgParams);
-        break;
-      default:;
-||||||| merged common ancestors
-    switch ((style->*aFillOrStroke).Type()) {
-    case eStyleSVGPaintType_ContextFill:
-      pattern =
-        aOuterContextPaint->GetFillPattern(aDrawTarget, aOpacity,
-                                           aContextMatrix, aImgParams);
-      break;
-    case eStyleSVGPaintType_ContextStroke:
-       pattern =
-         aOuterContextPaint->GetStrokePattern(aDrawTarget, aOpacity,
-                                              aContextMatrix, aImgParams);
-      break;
-    default:
-      ;
-=======
     auto tag = SVGContextPaintImpl::Paint::Tag::None;
     switch ((style->*aFillOrStroke).kind.tag) {
       case StyleSVGPaintKind::Tag::ContextFill:
@@ -196,29 +125,15 @@ static void SetupInheritablePaint(const DrawTarget* aDrawTarget,
             aDrawTarget, aOpacity, aContextMatrix, aImgParams);
         break;
       default:;
->>>>>>> upstream-releases
     }
     if (pattern) {
-<<<<<<< HEAD
-      aTargetPaint.SetContextPaint(aOuterContextPaint,
-                                   (style->*aFillOrStroke).Type());
-||||||| merged common ancestors
-      aTargetPaint.SetContextPaint(aOuterContextPaint, (style->*aFillOrStroke).Type());
-=======
       aTargetPaint.SetContextPaint(aOuterContextPaint, tag);
->>>>>>> upstream-releases
       return;
     }
   }
 
   nscolor color =
-<<<<<<< HEAD
-      nsSVGUtils::GetFallbackOrPaintColor(aFrame->Style(), aFillOrStroke);
-||||||| merged common ancestors
-    nsSVGUtils::GetFallbackOrPaintColor(aFrame->Style(), aFillOrStroke);
-=======
       nsSVGUtils::GetFallbackOrPaintColor(*aFrame->Style(), aFillOrStroke);
->>>>>>> upstream-releases
   aTargetPaint.SetColor(color);
 }
 
@@ -277,21 +192,8 @@ void SVGContextPaint::InitStrokeGeometry(gfxContext* aContext,
   mDashOffset /= devUnitsPerSVGUnit;
 }
 
-<<<<<<< HEAD
-/* static */ SVGContextPaint* SVGContextPaint::GetContextPaint(
-    nsIContent* aContent) {
-  nsIDocument* ownerDoc = aContent->OwnerDoc();
-
-||||||| merged common ancestors
-/* static */ SVGContextPaint*
-SVGContextPaint::GetContextPaint(nsIContent* aContent)
-{
-  nsIDocument* ownerDoc = aContent->OwnerDoc();
-
-=======
 SVGContextPaint* SVGContextPaint::GetContextPaint(nsIContent* aContent) {
   dom::Document* ownerDoc = aContent->OwnerDoc();
->>>>>>> upstream-releases
   if (!ownerDoc->IsSVGDocument()) {
     return nullptr;
   }
@@ -327,25 +229,10 @@ already_AddRefed<gfxPattern> SVGContextPaintImpl::GetStrokePattern(
                                  aCTM, aImgParams);
 }
 
-<<<<<<< HEAD
-already_AddRefed<gfxPattern> SVGContextPaintImpl::Paint::GetPattern(
-    const DrawTarget* aDrawTarget, float aOpacity,
-    nsStyleSVGPaint nsStyleSVG::*aFillOrStroke, const gfxMatrix& aCTM,
-    imgDrawingParams& aImgParams) {
-||||||| merged common ancestors
-already_AddRefed<gfxPattern>
-SVGContextPaintImpl::Paint::GetPattern(const DrawTarget* aDrawTarget,
-                                       float aOpacity,
-                                       nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
-                                       const gfxMatrix& aCTM,
-                                       imgDrawingParams& aImgParams)
-{
-=======
 already_AddRefed<gfxPattern> SVGContextPaintImpl::Paint::GetPattern(
     const DrawTarget* aDrawTarget, float aOpacity,
     StyleSVGPaint nsStyleSVG::*aFillOrStroke, const gfxMatrix& aCTM,
     imgDrawingParams& aImgParams) {
->>>>>>> upstream-releases
   RefPtr<gfxPattern> pattern;
   if (mPatternCache.Get(aOpacity, getter_AddRefs(pattern))) {
     // Set the pattern matrix just in case it was messed with by a previous
@@ -356,47 +243,6 @@ already_AddRefed<gfxPattern> SVGContextPaintImpl::Paint::GetPattern(
   }
 
   switch (mPaintType) {
-<<<<<<< HEAD
-    case eStyleSVGPaintType_None:
-      pattern = new gfxPattern(Color());
-      mPatternMatrix = gfxMatrix();
-      break;
-    case eStyleSVGPaintType_Color: {
-      Color color = Color::FromABGR(mPaintDefinition.mColor);
-      color.a *= aOpacity;
-      pattern = new gfxPattern(color);
-      mPatternMatrix = gfxMatrix();
-      break;
-||||||| merged common ancestors
-  case eStyleSVGPaintType_None:
-    pattern = new gfxPattern(Color());
-    mPatternMatrix = gfxMatrix();
-    break;
-  case eStyleSVGPaintType_Color: {
-    Color color = Color::FromABGR(mPaintDefinition.mColor);
-    color.a *= aOpacity;
-    pattern = new gfxPattern(color);
-    mPatternMatrix = gfxMatrix();
-    break;
-  }
-  case eStyleSVGPaintType_Server:
-    pattern =
-      mPaintDefinition.mPaintServerFrame->GetPaintServerPattern(mFrame,
-                                                                aDrawTarget,
-                                                                mContextMatrix,
-                                                                aFillOrStroke,
-                                                                aOpacity,
-                                                                aImgParams);
-    {
-      // m maps original-user-space to pattern space
-      gfxMatrix m = pattern->GetMatrix();
-      gfxMatrix deviceToOriginalUserSpace = mContextMatrix;
-      if (!deviceToOriginalUserSpace.Invert()) {
-        return nullptr;
-      }
-      // mPatternMatrix maps device space to pattern space via original user space
-      mPatternMatrix = deviceToOriginalUserSpace * m;
-=======
     case Tag::None:
       pattern = new gfxPattern(Color());
       mPatternMatrix = gfxMatrix();
@@ -407,64 +253,7 @@ already_AddRefed<gfxPattern> SVGContextPaintImpl::Paint::GetPattern(
       pattern = new gfxPattern(color);
       mPatternMatrix = gfxMatrix();
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    case eStyleSVGPaintType_Server:
-      pattern = mPaintDefinition.mPaintServerFrame->GetPaintServerPattern(
-          mFrame, aDrawTarget, mContextMatrix, aFillOrStroke, aOpacity,
-          aImgParams);
-      {
-        // m maps original-user-space to pattern space
-        gfxMatrix m = pattern->GetMatrix();
-        gfxMatrix deviceToOriginalUserSpace = mContextMatrix;
-        if (!deviceToOriginalUserSpace.Invert()) {
-          return nullptr;
-        }
-        // mPatternMatrix maps device space to pattern space via original user
-        // space
-        mPatternMatrix = deviceToOriginalUserSpace * m;
-      }
-      pattern->SetMatrix(aCTM * mPatternMatrix);
-      break;
-    case eStyleSVGPaintType_ContextFill:
-      pattern = mPaintDefinition.mContextPaint->GetFillPattern(
-          aDrawTarget, aOpacity, aCTM, aImgParams);
-      // Don't cache this. mContextPaint will have cached it anyway. If we
-      // cache it, we'll have to compute mPatternMatrix, which is annoying.
-      return pattern.forget();
-    case eStyleSVGPaintType_ContextStroke:
-      pattern = mPaintDefinition.mContextPaint->GetStrokePattern(
-          aDrawTarget, aOpacity, aCTM, aImgParams);
-      // Don't cache this. mContextPaint will have cached it anyway. If we
-      // cache it, we'll have to compute mPatternMatrix, which is annoying.
-      return pattern.forget();
-    default:
-      MOZ_ASSERT(false, "invalid paint type");
-      return nullptr;
-||||||| merged common ancestors
-    pattern->SetMatrix(aCTM * mPatternMatrix);
-    break;
-  case eStyleSVGPaintType_ContextFill:
-    pattern =
-      mPaintDefinition.mContextPaint->GetFillPattern(aDrawTarget,
-                                                     aOpacity, aCTM,
-                                                     aImgParams);
-    // Don't cache this. mContextPaint will have cached it anyway. If we
-    // cache it, we'll have to compute mPatternMatrix, which is annoying.
-    return pattern.forget();
-  case eStyleSVGPaintType_ContextStroke:
-    pattern =
-      mPaintDefinition.mContextPaint->GetStrokePattern(aDrawTarget,
-                                                       aOpacity, aCTM,
-                                                       aImgParams);
-    // Don't cache this. mContextPaint will have cached it anyway. If we
-    // cache it, we'll have to compute mPatternMatrix, which is annoying.
-    return pattern.forget();
-  default:
-    MOZ_ASSERT(false, "invalid paint type");
-    return nullptr;
-=======
     case Tag::PaintServer:
       pattern = mPaintDefinition.mPaintServerFrame->GetPaintServerPattern(
           mFrame, aDrawTarget, mContextMatrix, aFillOrStroke, aOpacity,
@@ -497,7 +286,6 @@ already_AddRefed<gfxPattern> SVGContextPaintImpl::Paint::GetPattern(
     default:
       MOZ_ASSERT(false, "invalid paint type");
       return nullptr;
->>>>>>> upstream-releases
   }
 
   mPatternCache.Put(aOpacity, pattern);

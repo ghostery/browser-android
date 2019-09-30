@@ -14,31 +14,12 @@ function promiseNotification(aBrowser, value, expected, input) {
     let notificationBox = aBrowser.getNotificationBox(aBrowser.selectedBrowser);
     if (expected) {
       info("Waiting for " + value + " notification");
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarSearchSingleWordNotification.js
-      resolve(BrowserTestUtils.waitForNotificationInNotificationBox(
-        notificationBox, value));
-||||||| merged common ancestors
-      let checkForNotification = function() {
-        if (notificationBox.getNotificationWithValue(value)) {
-          info("Saw the notification");
-          notificationObserver.disconnect();
-          notificationObserver = null;
-          resolve();
-        }
-      };
-      if (notificationObserver) {
-        notificationObserver.disconnect();
-      }
-      notificationObserver = new MutationObserver(checkForNotification);
-      notificationObserver.observe(notificationBox, {childList: true});
-=======
       resolve(
         BrowserTestUtils.waitForNotificationInNotificationBox(
           notificationBox,
           value
         )
       );
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarSearchSingleWordNotification.js
     } else {
       setTimeout(() => {
         is(
@@ -197,15 +178,6 @@ function get_test_function_for_localhost_with_hostname(hostName, isPrivate) {
     });
 
     let notificationBox = browser.getNotificationBox(tab.linkedBrowser);
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarSearchSingleWordNotification.js
-    let notification = notificationBox.getNotificationWithValue("keyword-uri-fixup");
-    let docLoadPromise = waitForDocLoadAndStopIt("http://" + hostName + "/", tab.linkedBrowser);
-    notification.querySelector("button").click();
-||||||| merged common ancestors
-    let notification = notificationBox.getNotificationWithValue("keyword-uri-fixup");
-    let docLoadPromise = waitForDocLoadAndStopIt("http://" + hostName + "/", tab.linkedBrowser);
-    notification.querySelector(".notification-button-default").click();
-=======
     let notification = notificationBox.getNotificationWithValue(
       "keyword-uri-fixup"
     );
@@ -214,7 +186,6 @@ function get_test_function_for_localhost_with_hostname(hostName, isPrivate) {
       tab.linkedBrowser
     );
     notification.querySelector("button").click();
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarSearchSingleWordNotification.js
 
     // check pref value
     let prefValue = Services.prefs.getBoolPref(pref);

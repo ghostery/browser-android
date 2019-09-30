@@ -273,19 +273,9 @@ already_AddRefed<Response> TypeUtils::ToResponse(const CacheResponse& aIn) {
   MOZ_DIAGNOSTIC_ASSERT(!result.Failed());
 
   ir->InitChannelInfo(aIn.channelInfo());
-<<<<<<< HEAD
-  if (aIn.principalInfo().type() ==
-      mozilla::ipc::OptionalPrincipalInfo::TPrincipalInfo) {
-    UniquePtr<mozilla::ipc::PrincipalInfo> info(new mozilla::ipc::PrincipalInfo(
-        aIn.principalInfo().get_PrincipalInfo()));
-||||||| merged common ancestors
-  if (aIn.principalInfo().type() == mozilla::ipc::OptionalPrincipalInfo::TPrincipalInfo) {
-    UniquePtr<mozilla::ipc::PrincipalInfo> info(new mozilla::ipc::PrincipalInfo(aIn.principalInfo().get_PrincipalInfo()));
-=======
   if (aIn.principalInfo().isSome()) {
     UniquePtr<mozilla::ipc::PrincipalInfo> info(
         new mozilla::ipc::PrincipalInfo(aIn.principalInfo().ref()));
->>>>>>> upstream-releases
     ir->SetPrincipalInfo(std::move(info));
   }
 
@@ -484,25 +474,10 @@ already_AddRefed<InternalRequest> TypeUtils::ToInternalRequest(
   return request->GetInternalRequest();
 }
 
-<<<<<<< HEAD
-void TypeUtils::SerializeCacheStream(
-    nsIInputStream* aStream, CacheReadStreamOrVoid* aStreamOut,
-    nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList, ErrorResult& aRv) {
-  *aStreamOut = void_t();
-||||||| merged common ancestors
-void
-TypeUtils::SerializeCacheStream(nsIInputStream* aStream,
-                                CacheReadStreamOrVoid* aStreamOut,
-                                nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
-                                ErrorResult& aRv)
-{
-  *aStreamOut = void_t();
-=======
 void TypeUtils::SerializeCacheStream(
     nsIInputStream* aStream, Maybe<CacheReadStream>* aStreamOut,
     nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList, ErrorResult& aRv) {
   *aStreamOut = Nothing();
->>>>>>> upstream-releases
   if (!aStream) {
     return;
   }

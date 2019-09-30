@@ -1003,11 +1003,6 @@ function runTest() { // eslint-disable-line complexity
         ok(event instanceof InputEvent,
            testNum + " input event should be dispatched with InputEvent interface");
         ok(event.bubbles, testNum + " input event should bubble");
-<<<<<<< HEAD
-        ok(!event.cancelable, testNum + " input event shouldn't be cancelable");
-||||||| merged common ancestors
-        ok(event.cancelable, testNum + " input event should be cancelable");
-=======
         ok(!event.cancelable, testNum + " input event shouldn't be cancelable");
         is(event.inputType, "insertReplacementText",
            testNum + ' inputType should be "insertReplacementText"');
@@ -1015,7 +1010,6 @@ function runTest() { // eslint-disable-line complexity
            testNum + ' data should be "value1"');
         is(event.dataTransfer, null,
            testNum + " dataTransfer should be null");
->>>>>>> upstream-releases
       }, {once: true});
 
       synthesizeKey("KEY_ArrowDown");

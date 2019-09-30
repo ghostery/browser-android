@@ -100,86 +100,9 @@ MediaStreamPlayback.prototype = {
   /**
    * Verifies that media is playing.
    */
-<<<<<<< HEAD
-  verifyPlaying : function() {
-||||||| merged common ancestors
-  verifyPlaying : function() {
-    var lastStreamTime = this.mediaStream.currentTime;
-=======
   verifyPlaying: function() {
->>>>>>> upstream-releases
     var lastElementTime = this.mediaElement.currentTime;
 
-<<<<<<< HEAD
-    var mediaTimeProgressed = listenUntil(this.mediaElement, 'timeupdate',
-        () => this.mediaElement.currentTime > lastElementTime);
-
-    return timeout(Promise.all([this.canPlayThroughFired, mediaTimeProgressed]),
-                   VERIFYPLAYING_TIMEOUT_LENGTH, "verifyPlaying timed out")
-      .then(() => {
-        is(this.mediaElement.paused, false,
-           "Media element should be playing");
-        is(this.mediaElement.duration, Number.POSITIVE_INFINITY,
-           "Duration should be infinity");
-
-        // When the media element is playing with a real-time stream, we
-        // constantly switch between having data to play vs. queuing up data,
-        // so we can only check that the ready state is one of those two values
-        ok(this.mediaElement.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA ||
-           this.mediaElement.readyState === HTMLMediaElement.HAVE_CURRENT_DATA,
-           "Ready state shall be HAVE_ENOUGH_DATA or HAVE_CURRENT_DATA");
-
-        is(this.mediaElement.seekable.length, 0,
-           "Seekable length shall be zero");
-        is(this.mediaElement.buffered.length, 0,
-           "Buffered length shall be zero");
-
-        is(this.mediaElement.seeking, false,
-           "MediaElement is not seekable with MediaStream");
-        ok(isNaN(this.mediaElement.startOffsetTime),
-           "Start offset time shall not be a number");
-        is(this.mediaElement.loop, false, "Loop shall be false");
-        is(this.mediaElement.preload, "", "Preload should not exist");
-        is(this.mediaElement.src, "", "No src should be defined");
-        is(this.mediaElement.currentSrc, "",
-           "Current src should still be an empty string");
-      });
-||||||| merged common ancestors
-    var mediaTimeProgressed = listenUntil(this.mediaElement, 'timeupdate',
-        () => this.mediaStream.currentTime > lastStreamTime &&
-              this.mediaElement.currentTime > lastElementTime);
-
-    return timeout(Promise.all([this.canPlayThroughFired, mediaTimeProgressed]),
-                   VERIFYPLAYING_TIMEOUT_LENGTH, "verifyPlaying timed out")
-      .then(() => {
-        is(this.mediaElement.paused, false,
-           "Media element should be playing");
-        is(this.mediaElement.duration, Number.POSITIVE_INFINITY,
-           "Duration should be infinity");
-
-        // When the media element is playing with a real-time stream, we
-        // constantly switch between having data to play vs. queuing up data,
-        // so we can only check that the ready state is one of those two values
-        ok(this.mediaElement.readyState === HTMLMediaElement.HAVE_ENOUGH_DATA ||
-           this.mediaElement.readyState === HTMLMediaElement.HAVE_CURRENT_DATA,
-           "Ready state shall be HAVE_ENOUGH_DATA or HAVE_CURRENT_DATA");
-
-        is(this.mediaElement.seekable.length, 0,
-           "Seekable length shall be zero");
-        is(this.mediaElement.buffered.length, 0,
-           "Buffered length shall be zero");
-
-        is(this.mediaElement.seeking, false,
-           "MediaElement is not seekable with MediaStream");
-        ok(isNaN(this.mediaElement.startOffsetTime),
-           "Start offset time shall not be a number");
-        is(this.mediaElement.loop, false, "Loop shall be false");
-        is(this.mediaElement.preload, "", "Preload should not exist");
-        is(this.mediaElement.src, "", "No src should be defined");
-        is(this.mediaElement.currentSrc, "",
-           "Current src should still be an empty string");
-      });
-=======
     var mediaTimeProgressed = listenUntil(
       this.mediaElement,
       "timeupdate",
@@ -233,7 +156,6 @@ MediaStreamPlayback.prototype = {
         "Current src should still be an empty string"
       );
     });
->>>>>>> upstream-releases
   },
 
   /**

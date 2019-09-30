@@ -9,33 +9,6 @@
  *
  * @return {Promise} promise that resolves when iframe is loaded.
  */
-<<<<<<< HEAD
-function createIframe(aSrcDoc) {
-  return new Promise(function (aResolve, aReject) {
-    let iframe = document.createElement("iframe");
-    iframe.onload = function () { aResolve(iframe.contentDocument); }
-    iframe.onerror = function () { aReject('Failed to load iframe'); }
-    if (aSrcDoc) {
-      iframe.srcdoc = aSrcDoc;
-    }
-    document.body.appendChild(iframe);
-||||||| merged common ancestors
-function setShadowDOMPrefAndCreateIframe(aSrcDoc) {
-  return new Promise(function (aResolve, aReject) {
-    SpecialPowers.pushPrefEnv({
-      set: [
-        ["dom.webcomponents.shadowdom.enabled", true]
-      ]
-    }, () => {
-      let iframe = document.createElement("iframe");
-      iframe.onload = function () { aResolve(iframe.contentDocument); }
-      iframe.onerror = function () { aReject('Failed to load iframe'); }
-      if (aSrcDoc) {
-        iframe.srcdoc = aSrcDoc;
-      }
-      document.body.appendChild(iframe);
-    });
-=======
 function createIframe(aSrcDoc) {
   return new Promise(function(aResolve, aReject) {
     let iframe = document.createElement("iframe");
@@ -49,6 +22,5 @@ function createIframe(aSrcDoc) {
       iframe.srcdoc = aSrcDoc;
     }
     document.body.appendChild(iframe);
->>>>>>> upstream-releases
   });
 }

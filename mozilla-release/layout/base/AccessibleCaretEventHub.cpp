@@ -81,19 +81,8 @@ class AccessibleCaretEventHub::NoActionState
   }
 
   MOZ_CAN_RUN_SCRIPT
-<<<<<<< HEAD
-  void OnSelectionChanged(AccessibleCaretEventHub* aContext, nsIDocument* aDoc,
-                          dom::Selection* aSel, int16_t aReason) override {
-||||||| merged common ancestors
-  void OnSelectionChanged(AccessibleCaretEventHub* aContext,
-                          nsIDocument* aDoc,
-                          dom::Selection* aSel,
-                          int16_t aReason) override
-  {
-=======
   void OnSelectionChanged(AccessibleCaretEventHub* aContext, Document* aDoc,
                           dom::Selection* aSel, int16_t aReason) override {
->>>>>>> upstream-releases
     aContext->mManager->OnSelectionChanged(aDoc, aSel, aReason);
   }
 
@@ -221,19 +210,8 @@ class AccessibleCaretEventHub::PressNoCaretState
   }
 
   MOZ_CAN_RUN_SCRIPT
-<<<<<<< HEAD
-  void OnSelectionChanged(AccessibleCaretEventHub* aContext, nsIDocument* aDoc,
-                          dom::Selection* aSel, int16_t aReason) override {
-||||||| merged common ancestors
-  void OnSelectionChanged(AccessibleCaretEventHub* aContext,
-                          nsIDocument* aDoc,
-                          dom::Selection* aSel,
-                          int16_t aReason) override
-  {
-=======
   void OnSelectionChanged(AccessibleCaretEventHub* aContext, Document* aDoc,
                           dom::Selection* aSel, int16_t aReason) override {
->>>>>>> upstream-releases
     aContext->mManager->OnSelectionChanged(aDoc, aSel, aReason);
   }
 
@@ -343,18 +321,8 @@ MOZ_IMPL_STATE_CLASS_GETTER(PressNoCaretState)
 MOZ_IMPL_STATE_CLASS_GETTER(ScrollState)
 MOZ_IMPL_STATE_CLASS_GETTER(LongTapState)
 
-<<<<<<< HEAD
-AccessibleCaretEventHub::AccessibleCaretEventHub(nsIPresShell* aPresShell)
-    : mPresShell(aPresShell) {}
-||||||| merged common ancestors
-AccessibleCaretEventHub::AccessibleCaretEventHub(nsIPresShell* aPresShell)
-  : mPresShell(aPresShell)
-{
-}
-=======
 AccessibleCaretEventHub::AccessibleCaretEventHub(PresShell* aPresShell)
     : mPresShell(aPresShell) {}
->>>>>>> upstream-releases
 
 void AccessibleCaretEventHub::Init() {
   if (mInitialized && mManager) {
@@ -609,19 +577,9 @@ void AccessibleCaretEventHub::CancelLongTapInjector() {
   mLongTapInjectorTimer->Cancel();
 }
 
-<<<<<<< HEAD
-/* static */ void AccessibleCaretEventHub::FireLongTap(
-    nsITimer* aTimer, void* aAccessibleCaretEventHub) {
-||||||| merged common ancestors
-/* static */ void
-AccessibleCaretEventHub::FireLongTap(nsITimer* aTimer,
-                                     void* aAccessibleCaretEventHub)
-{
-=======
 /* static */
 void AccessibleCaretEventHub::FireLongTap(nsITimer* aTimer,
                                           void* aAccessibleCaretEventHub) {
->>>>>>> upstream-releases
   RefPtr<AccessibleCaretEventHub> self =
       static_cast<AccessibleCaretEventHub*>(aAccessibleCaretEventHub);
   self->mState->OnLongTap(self, self->mPressPoint);
@@ -688,21 +646,9 @@ void AccessibleCaretEventHub::ScrollPositionChanged() {
   mState->OnScrollPositionChanged(this);
 }
 
-<<<<<<< HEAD
-void AccessibleCaretEventHub::OnSelectionChange(nsIDocument* aDoc,
-                                                dom::Selection* aSel,
-                                                int16_t aReason) {
-||||||| merged common ancestors
-void
-AccessibleCaretEventHub::OnSelectionChange(nsIDocument* aDoc,
-                                           dom::Selection* aSel,
-                                           int16_t aReason)
-{
-=======
 void AccessibleCaretEventHub::OnSelectionChange(Document* aDoc,
                                                 dom::Selection* aSel,
                                                 int16_t aReason) {
->>>>>>> upstream-releases
   if (!mInitialized) {
     return;
   }

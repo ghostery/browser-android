@@ -36,52 +36,12 @@
 using namespace mozilla;
 using namespace mozilla::gfx;
 
-<<<<<<< HEAD
-static gfxFloat ConvertGradientValueToPixels(const nsStyleCoord& aCoord,
-                                             gfxFloat aFillLength,
-                                             int32_t aAppUnitsPerPixel) {
-  switch (aCoord.GetUnit()) {
-    case eStyleUnit_Percent:
-      return aCoord.GetPercentValue() * aFillLength;
-    case eStyleUnit_Coord:
-      return NSAppUnitsToFloatPixels(aCoord.GetCoordValue(), aAppUnitsPerPixel);
-    case eStyleUnit_Calc: {
-      const nsStyleCoord::Calc* calc = aCoord.GetCalcValue();
-      return calc->mPercent * aFillLength +
-             NSAppUnitsToFloatPixels(calc->mLength, aAppUnitsPerPixel);
-    }
-    default:
-      NS_WARNING("Unexpected coord unit");
-      return 0;
-  }
-||||||| merged common ancestors
-static gfxFloat
-ConvertGradientValueToPixels(const nsStyleCoord& aCoord,
-                             gfxFloat aFillLength,
-                             int32_t aAppUnitsPerPixel)
-{
-  switch (aCoord.GetUnit()) {
-    case eStyleUnit_Percent:
-      return aCoord.GetPercentValue() * aFillLength;
-    case eStyleUnit_Coord:
-      return NSAppUnitsToFloatPixels(aCoord.GetCoordValue(), aAppUnitsPerPixel);
-    case eStyleUnit_Calc: {
-      const nsStyleCoord::Calc* calc = aCoord.GetCalcValue();
-      return calc->mPercent * aFillLength +
-             NSAppUnitsToFloatPixels(calc->mLength, aAppUnitsPerPixel);
-    }
-    default:
-      NS_WARNING("Unexpected coord unit");
-      return 0;
-  }
-=======
 static gfxPoint ResolvePosition(const Position& aPos, const nsSize& aSize,
                                 int32_t aAppUnitsPerPixel) {
   nscoord h = aPos.horizontal.Resolve(aSize.width);
   nscoord v = aPos.vertical.Resolve(aSize.height);
   return gfxPoint(NSAppUnitsToFloatPixels(h, aAppUnitsPerPixel),
                   NSAppUnitsToFloatPixels(v, aAppUnitsPerPixel));
->>>>>>> upstream-releases
 }
 
 // Given a box with size aBoxSize and origin (0,0), and an angle aAngle,
@@ -102,31 +62,6 @@ static gfxPoint ComputeGradientLineEndFromAngle(const gfxPoint& aStart,
 }
 
 // Compute the start and end points of the gradient line for a linear gradient.
-<<<<<<< HEAD
-static void ComputeLinearGradientLine(nsPresContext* aPresContext,
-                                      nsStyleGradient* aGradient,
-                                      const gfxSize& aBoxSize,
-                                      gfxPoint* aLineStart,
-                                      gfxPoint* aLineEnd) {
-  if (aGradient->mBgPosX.GetUnit() == eStyleUnit_None) {
-    double angle;
-    if (aGradient->mAngle.IsAngleValue()) {
-      angle = aGradient->mAngle.GetAngleValueInRadians();
-      if (!aGradient->mLegacySyntax) {
-||||||| merged common ancestors
-static void
-ComputeLinearGradientLine(nsPresContext* aPresContext,
-                          nsStyleGradient* aGradient,
-                          const gfxSize& aBoxSize,
-                          gfxPoint* aLineStart,
-                          gfxPoint* aLineEnd)
-{
-  if (aGradient->mBgPosX.GetUnit() == eStyleUnit_None) {
-    double angle;
-    if (aGradient->mAngle.IsAngleValue()) {
-      angle = aGradient->mAngle.GetAngleValueInRadians();
-      if (!aGradient->mLegacySyntax) {
-=======
 static Tuple<gfxPoint, gfxPoint> ComputeLinearGradientLine(
     nsPresContext* aPresContext, const StyleGradient& aGradient,
     const gfxSize& aBoxSize) {
@@ -142,74 +77,12 @@ static Tuple<gfxPoint, gfxPoint> ComputeLinearGradientLine(
     case StyleLineDirection::Tag::Angle: {
       double angle = direction.AsAngle().ToRadians();
       if (isModern) {
->>>>>>> upstream-releases
         angle = M_PI_2 - angle;
       }
-<<<<<<< HEAD
-    } else {
-      angle = -M_PI_2;  // defaults to vertical gradient starting from top
-||||||| merged common ancestors
-    } else {
-      angle = -M_PI_2; // defaults to vertical gradient starting from top
-=======
       gfxPoint end = ComputeGradientLineEndFromAngle(center, angle, aBoxSize);
       gfxPoint start = gfxPoint(aBoxSize.width, aBoxSize.height) - end;
       return MakeTuple(start, end);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    gfxPoint center(aBoxSize.width / 2, aBoxSize.height / 2);
-    *aLineEnd = ComputeGradientLineEndFromAngle(center, angle, aBoxSize);
-    *aLineStart = gfxPoint(aBoxSize.width, aBoxSize.height) - *aLineEnd;
-  } else if (!aGradient->mLegacySyntax) {
-    float xSign = aGradient->mBgPosX.GetPercentValue() * 2 - 1;
-    float ySign = 1 - aGradient->mBgPosY.GetPercentValue() * 2;
-    double angle = atan2(ySign * aBoxSize.width, xSign * aBoxSize.height);
-    gfxPoint center(aBoxSize.width / 2, aBoxSize.height / 2);
-    *aLineEnd = ComputeGradientLineEndFromAngle(center, angle, aBoxSize);
-    *aLineStart = gfxPoint(aBoxSize.width, aBoxSize.height) - *aLineEnd;
-  } else {
-    int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
-    *aLineStart =
-        gfxPoint(ConvertGradientValueToPixels(aGradient->mBgPosX,
-                                              aBoxSize.width, appUnitsPerPixel),
-                 ConvertGradientValueToPixels(
-                     aGradient->mBgPosY, aBoxSize.height, appUnitsPerPixel));
-    if (aGradient->mAngle.IsAngleValue()) {
-      MOZ_ASSERT(aGradient->mLegacySyntax);
-      double angle = aGradient->mAngle.GetAngleValueInRadians();
-      *aLineEnd = ComputeGradientLineEndFromAngle(*aLineStart, angle, aBoxSize);
-    } else {
-      // No angle, the line end is just the reflection of the start point
-      // through the center of the box
-      *aLineEnd = gfxPoint(aBoxSize.width, aBoxSize.height) - *aLineStart;
-||||||| merged common ancestors
-    gfxPoint center(aBoxSize.width / 2, aBoxSize.height / 2);
-    *aLineEnd = ComputeGradientLineEndFromAngle(center, angle, aBoxSize);
-    *aLineStart = gfxPoint(aBoxSize.width, aBoxSize.height) - *aLineEnd;
-  } else if (!aGradient->mLegacySyntax) {
-    float xSign = aGradient->mBgPosX.GetPercentValue() * 2 - 1;
-    float ySign = 1 - aGradient->mBgPosY.GetPercentValue() * 2;
-    double angle = atan2(ySign * aBoxSize.width, xSign * aBoxSize.height);
-    gfxPoint center(aBoxSize.width / 2, aBoxSize.height / 2);
-    *aLineEnd = ComputeGradientLineEndFromAngle(center, angle, aBoxSize);
-    *aLineStart = gfxPoint(aBoxSize.width, aBoxSize.height) - *aLineEnd;
-  } else {
-    int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
-    *aLineStart =
-      gfxPoint(ConvertGradientValueToPixels(
-                 aGradient->mBgPosX, aBoxSize.width, appUnitsPerPixel),
-               ConvertGradientValueToPixels(
-                 aGradient->mBgPosY, aBoxSize.height, appUnitsPerPixel));
-    if (aGradient->mAngle.IsAngleValue()) {
-      MOZ_ASSERT(aGradient->mLegacySyntax);
-      double angle = aGradient->mAngle.GetAngleValueInRadians();
-      *aLineEnd = ComputeGradientLineEndFromAngle(*aLineStart, angle, aBoxSize);
-    } else {
-      // No angle, the line end is just the reflection of the start point
-      // through the center of the box
-      *aLineEnd = gfxPoint(aBoxSize.width, aBoxSize.height) - *aLineStart;
-=======
     case StyleLineDirection::Tag::Vertical: {
       gfxPoint start(center.x, 0);
       gfxPoint end(center.x, aBoxSize.height);
@@ -246,7 +119,6 @@ static Tuple<gfxPoint, gfxPoint> ComputeLinearGradientLine(
       gfxPoint start(startX, startY);
       gfxPoint end = gfxPoint(aBoxSize.width, aBoxSize.height) - start;
       return MakeTuple(start, end);
->>>>>>> upstream-releases
     }
     default:
       break;
@@ -281,45 +153,6 @@ static RadialGradientRadii ComputeRadialGradientRadii(const EndingShape& aShape,
 // Compute the start and end points of the gradient line for a radial gradient.
 // Also returns the horizontal and vertical radii defining the circle or
 // ellipse to use.
-<<<<<<< HEAD
-static void ComputeRadialGradientLine(nsPresContext* aPresContext,
-                                      nsStyleGradient* aGradient,
-                                      const gfxSize& aBoxSize,
-                                      gfxPoint* aLineStart, gfxPoint* aLineEnd,
-                                      double* aRadiusX, double* aRadiusY) {
-  if (aGradient->mBgPosX.GetUnit() == eStyleUnit_None) {
-    // Default line start point is the center of the box
-    *aLineStart = gfxPoint(aBoxSize.width / 2, aBoxSize.height / 2);
-  } else {
-    int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
-    *aLineStart =
-        gfxPoint(ConvertGradientValueToPixels(aGradient->mBgPosX,
-                                              aBoxSize.width, appUnitsPerPixel),
-                 ConvertGradientValueToPixels(
-                     aGradient->mBgPosY, aBoxSize.height, appUnitsPerPixel));
-  }
-||||||| merged common ancestors
-static void
-ComputeRadialGradientLine(nsPresContext* aPresContext,
-                          nsStyleGradient* aGradient,
-                          const gfxSize& aBoxSize,
-                          gfxPoint* aLineStart,
-                          gfxPoint* aLineEnd,
-                          double* aRadiusX,
-                          double* aRadiusY)
-{
-  if (aGradient->mBgPosX.GetUnit() == eStyleUnit_None) {
-    // Default line start point is the center of the box
-    *aLineStart = gfxPoint(aBoxSize.width / 2, aBoxSize.height / 2);
-  } else {
-    int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
-    *aLineStart =
-      gfxPoint(ConvertGradientValueToPixels(
-                 aGradient->mBgPosX, aBoxSize.width, appUnitsPerPixel),
-               ConvertGradientValueToPixels(
-                 aGradient->mBgPosY, aBoxSize.height, appUnitsPerPixel));
-  }
-=======
 static Tuple<gfxPoint, gfxPoint, double, double> ComputeRadialGradientLine(
     nsPresContext* aPresContext, const StyleGradient& aGradient,
     const gfxSize& aBoxSize, const nsSize& aBoxSizeInAppUnits) {
@@ -329,7 +162,6 @@ static Tuple<gfxPoint, gfxPoint, double, double> ComputeRadialGradientLine(
   int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
   gfxPoint start =
       ResolvePosition(position, aBoxSizeInAppUnits, appUnitsPerPixel);
->>>>>>> upstream-releases
 
   // Compute gradient shape: the x and y radii of an ellipse.
   double radiusX, radiusY;
@@ -385,46 +217,6 @@ static Tuple<gfxPoint, gfxPoint, double, double> ComputeRadialGradientLine(
         MOZ_ASSERT_UNREACHABLE("Unknown shape extent keyword?");
         radiusX = radiusY = 0;
     }
-<<<<<<< HEAD
-    case NS_STYLE_GRADIENT_SIZE_EXPLICIT_SIZE: {
-      int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
-      radiusX = ConvertGradientValueToPixels(aGradient->mRadiusX,
-                                             aBoxSize.width, appUnitsPerPixel);
-      radiusY = ConvertGradientValueToPixels(aGradient->mRadiusY,
-                                             aBoxSize.height, appUnitsPerPixel);
-      break;
-    }
-    default:
-      radiusX = radiusY = 0;
-      MOZ_ASSERT(false, "unknown radial gradient sizing method");
-  }
-  *aRadiusX = radiusX;
-  *aRadiusY = radiusY;
-
-  double angle;
-  if (aGradient->mAngle.IsAngleValue()) {
-    angle = aGradient->mAngle.GetAngleValueInRadians();
-||||||| merged common ancestors
-    case NS_STYLE_GRADIENT_SIZE_EXPLICIT_SIZE: {
-      int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
-      radiusX = ConvertGradientValueToPixels(
-        aGradient->mRadiusX, aBoxSize.width, appUnitsPerPixel);
-      radiusY = ConvertGradientValueToPixels(
-        aGradient->mRadiusY, aBoxSize.height, appUnitsPerPixel);
-      break;
-    }
-    default:
-      radiusX = radiusY = 0;
-      MOZ_ASSERT(false, "unknown radial gradient sizing method");
-  }
-  *aRadiusX = radiusX;
-  *aRadiusY = radiusY;
-
-  double angle;
-  if (aGradient->mAngle.IsAngleValue()) {
-    angle = aGradient->mAngle.GetAngleValueInRadians();
-=======
->>>>>>> upstream-releases
   } else {
     auto pair = radii.as<Pair<nscoord, nscoord>>();
     int32_t appUnitsPerPixel = aPresContext->AppUnitsPerDevPixel();
@@ -434,16 +226,8 @@ static Tuple<gfxPoint, gfxPoint, double, double> ComputeRadialGradientLine(
 
   // The gradient line end point is where the gradient line intersects
   // the ellipse.
-<<<<<<< HEAD
-  *aLineEnd =
-      *aLineStart + gfxPoint(radiusX * cos(-angle), radiusY * sin(-angle));
-||||||| merged common ancestors
-  *aLineEnd =
-    *aLineStart + gfxPoint(radiusX * cos(-angle), radiusY * sin(-angle));
-=======
   gfxPoint end = start + gfxPoint(radiusX, 0);
   return MakeTuple(start, end, radiusX, radiusY);
->>>>>>> upstream-releases
 }
 
 static float Interpolate(float aF1, float aF2, float aFrac) {
@@ -751,19 +535,6 @@ static void ClampColorStops(nsTArray<ColorStop>& aStops) {
 
 namespace mozilla {
 
-<<<<<<< HEAD
-static Maybe<double> GetSpecifiedGradientPosition(const nsStyleCoord& aCoord,
-                                                  int32_t aAppUnitsPerPixel,
-                                                  gfxFloat aLineLength) {
-  auto GetCoord = [&](nscoord aCoord) -> double {
-||||||| merged common ancestors
-static Maybe<double>
-GetSpecifiedGradientPosition(const nsStyleCoord& aCoord,
-                             int32_t aAppUnitsPerPixel,
-                             gfxFloat aLineLength)
-{
-  auto GetCoord = [&](nscoord aCoord) -> double {
-=======
 static Color GetSpecifiedColor(const StyleGradientItem& aItem,
                                const ComputedStyle& aStyle) {
   if (aItem.IsInterpolationHint()) {
@@ -779,7 +550,6 @@ static Maybe<double> GetSpecifiedGradientPosition(
     const StyleGradientItem& aItem, int32_t aAppUnitsPerPixel,
     gfxFloat aLineLength) {
   auto GetCoord = [&](CSSCoord aCoord) -> double {
->>>>>>> upstream-releases
     if (aLineLength < 1e-6) {
       return 0.0;
     }
@@ -803,27 +573,11 @@ static Maybe<double> GetSpecifiedGradientPosition(
   return Some(pos.Percentage() + GetCoord(pos.LengthInCSSPixels()));
 }
 
-<<<<<<< HEAD
-static nsTArray<ColorStop> ComputeColorStops(ComputedStyle* aComputedStyle,
-                                             const nsStyleGradient& aGradient,
-                                             int32_t aAppUnitsPerPixel,
-                                             gfxFloat aLineLength) {
-  MOZ_ASSERT(aGradient.mStops.Length() >= 2,
-||||||| merged common ancestors
-static nsTArray<ColorStop>
-ComputeColorStops(ComputedStyle* aComputedStyle,
-                  const nsStyleGradient& aGradient,
-                  int32_t aAppUnitsPerPixel,
-                  gfxFloat aLineLength)
-{
-  MOZ_ASSERT(aGradient.mStops.Length() >= 2,
-=======
 static nsTArray<ColorStop> ComputeColorStops(ComputedStyle* aComputedStyle,
                                              const StyleGradient& aGradient,
                                              int32_t aAppUnitsPerPixel,
                                              gfxFloat aLineLength) {
   MOZ_ASSERT(aGradient.items.Length() >= 2,
->>>>>>> upstream-releases
              "The parser should reject gradients with less than two stops");
 
   nsTArray<ColorStop> stops(aGradient.items.Length());
@@ -836,16 +590,8 @@ static nsTArray<ColorStop> ComputeColorStops(ComputedStyle* aComputedStyle,
     const StyleGradientItem& stop = span[i];
     double position;
 
-<<<<<<< HEAD
-    Maybe<double> specifiedPosition = GetSpecifiedGradientPosition(
-        stop.mLocation, aAppUnitsPerPixel, aLineLength);
-||||||| merged common ancestors
-    Maybe<double> specifiedPosition = GetSpecifiedGradientPosition(
-      stop.mLocation, aAppUnitsPerPixel, aLineLength);
-=======
     Maybe<double> specifiedPosition =
         GetSpecifiedGradientPosition(stop, aAppUnitsPerPixel, aLineLength);
->>>>>>> upstream-releases
 
     if (specifiedPosition) {
       position = *specifiedPosition;
@@ -863,57 +609,25 @@ static nsTArray<ColorStop> ComputeColorStops(ComputedStyle* aComputedStyle,
       if (firstUnsetPosition.isNothing()) {
         firstUnsetPosition.emplace(i);
       }
-<<<<<<< HEAD
-      auto stopColor = stop.mColor.CalcColor(aComputedStyle);
-      stops.AppendElement(
-          ColorStop(0, stop.mIsInterpolationHint, Color::FromABGR(stopColor)));
-||||||| merged common ancestors
-      auto stopColor = stop.mColor.CalcColor(aComputedStyle);
-      stops.AppendElement(
-        ColorStop(0, stop.mIsInterpolationHint, Color::FromABGR(stopColor)));
-=======
       MOZ_ASSERT(!stop.IsInterpolationHint(),
                  "Interpolation hints always specify position");
       auto color = GetSpecifiedColor(stop, *aComputedStyle);
       stops.AppendElement(ColorStop(0, false, color));
->>>>>>> upstream-releases
       continue;
     }
 
     if (i > 0) {
       // Prevent decreasing stop positions by advancing this position
       // to the previous stop position, if necessary
-<<<<<<< HEAD
-      double previousPosition = firstUnsetPosition > 0
-                                    ? stops[firstUnsetPosition - 1].mPosition
-                                    : stops[i - 1].mPosition;
-||||||| merged common ancestors
-      double previousPosition = firstUnsetPosition > 0
-                                  ? stops[firstUnsetPosition - 1].mPosition
-                                  : stops[i - 1].mPosition;
-=======
       double previousPosition = firstUnsetPosition
                                     ? stops[*firstUnsetPosition - 1].mPosition
                                     : stops[i - 1].mPosition;
->>>>>>> upstream-releases
       position = std::max(position, previousPosition);
     }
-<<<<<<< HEAD
-    auto stopColor = stop.mColor.CalcColor(aComputedStyle);
-    stops.AppendElement(ColorStop(position, stop.mIsInterpolationHint,
-                                  Color::FromABGR(stopColor)));
-    if (firstUnsetPosition > 0) {
-||||||| merged common ancestors
-    auto stopColor = stop.mColor.CalcColor(aComputedStyle);
-    stops.AppendElement(ColorStop(
-      position, stop.mIsInterpolationHint, Color::FromABGR(stopColor)));
-    if (firstUnsetPosition > 0) {
-=======
     auto stopColor = GetSpecifiedColor(stop, *aComputedStyle);
     stops.AppendElement(
         ColorStop(position, stop.IsInterpolationHint(), stopColor));
     if (firstUnsetPosition) {
->>>>>>> upstream-releases
       // Interpolate positions for all stops that didn't have a specified
       // position
       double p = stops[*firstUnsetPosition - 1].mPosition;
@@ -929,22 +643,9 @@ static nsTArray<ColorStop> ComputeColorStops(ComputedStyle* aComputedStyle,
   return stops;
 }
 
-<<<<<<< HEAD
-nsCSSGradientRenderer nsCSSGradientRenderer::Create(
-    nsPresContext* aPresContext, ComputedStyle* aComputedStyle,
-    nsStyleGradient* aGradient, const nsSize& aIntrinsicSize) {
-||||||| merged common ancestors
-nsCSSGradientRenderer
-nsCSSGradientRenderer::Create(nsPresContext* aPresContext,
-                              ComputedStyle* aComputedStyle,
-                              nsStyleGradient* aGradient,
-                              const nsSize& aIntrinsicSize)
-{
-=======
 nsCSSGradientRenderer nsCSSGradientRenderer::Create(
     nsPresContext* aPresContext, ComputedStyle* aComputedStyle,
     const StyleGradient& aGradient, const nsSize& aIntrinsicSize) {
->>>>>>> upstream-releases
   nscoord appUnitsPerDevPixel = aPresContext->AppUnitsPerDevPixel();
   gfxSize srcSize =
       gfxSize(gfxFloat(aIntrinsicSize.width) / appUnitsPerDevPixel,
@@ -953,38 +654,13 @@ nsCSSGradientRenderer nsCSSGradientRenderer::Create(
   // Compute "gradient line" start and end relative to the intrinsic size of
   // the gradient.
   gfxPoint lineStart, lineEnd;
-<<<<<<< HEAD
-  double radiusX = 0, radiusY = 0;  // for radial gradients only
-  if (aGradient->mShape == NS_STYLE_GRADIENT_SHAPE_LINEAR) {
-    ComputeLinearGradientLine(aPresContext, aGradient, srcSize, &lineStart,
-                              &lineEnd);
-||||||| merged common ancestors
-  double radiusX = 0, radiusY = 0; // for radial gradients only
-  if (aGradient->mShape == NS_STYLE_GRADIENT_SHAPE_LINEAR) {
-    ComputeLinearGradientLine(
-      aPresContext, aGradient, srcSize, &lineStart, &lineEnd);
-=======
   double radiusX = 0, radiusY = 0;  // for radial gradients only
   if (aGradient.kind.IsLinear()) {
     Tie(lineStart, lineEnd) =
         ComputeLinearGradientLine(aPresContext, aGradient, srcSize);
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    ComputeRadialGradientLine(aPresContext, aGradient, srcSize, &lineStart,
-                              &lineEnd, &radiusX, &radiusY);
-||||||| merged common ancestors
-    ComputeRadialGradientLine(aPresContext,
-                              aGradient,
-                              srcSize,
-                              &lineStart,
-                              &lineEnd,
-                              &radiusX,
-                              &radiusY);
-=======
     Tie(lineStart, lineEnd, radiusX, radiusY) = ComputeRadialGradientLine(
         aPresContext, aGradient, srcSize, aIntrinsicSize);
->>>>>>> upstream-releases
   }
   // Avoid sending Infs or Nans to downwind draw targets.
   if (!lineStart.IsFinite() || !lineEnd.IsFinite()) {
@@ -995,13 +671,7 @@ nsCSSGradientRenderer nsCSSGradientRenderer::Create(
 
   // Build color stop array and compute stop positions
   nsTArray<ColorStop> stops = ComputeColorStops(
-<<<<<<< HEAD
-      aComputedStyle, *aGradient, appUnitsPerDevPixel, lineLength);
-||||||| merged common ancestors
-    aComputedStyle, *aGradient, appUnitsPerDevPixel, lineLength);
-=======
       aComputedStyle, aGradient, appUnitsPerDevPixel, lineLength);
->>>>>>> upstream-releases
 
   ResolveMidpoints(stops);
 
@@ -1037,22 +707,10 @@ void nsCSSGradientRenderer::Paint(gfxContext& aContext, const nsRect& aDest,
   // between tiles, we can optimise away most of the work by converting to a
   // repeating linear gradient and filling the whole destination rect at once.
   bool forceRepeatToCoverTiles =
-<<<<<<< HEAD
-      mGradient->mShape == NS_STYLE_GRADIENT_SHAPE_LINEAR &&
-      (mLineStart.x == mLineEnd.x) != (mLineStart.y == mLineEnd.y) &&
-      aRepeatSize.width == aDest.width && aRepeatSize.height == aDest.height &&
-      !mGradient->mRepeating && !aSrc.IsEmpty() && !cellContainsFill;
-||||||| merged common ancestors
-    mGradient->mShape == NS_STYLE_GRADIENT_SHAPE_LINEAR &&
-    (mLineStart.x == mLineEnd.x) != (mLineStart.y == mLineEnd.y) &&
-    aRepeatSize.width == aDest.width && aRepeatSize.height == aDest.height &&
-    !mGradient->mRepeating && !aSrc.IsEmpty() && !cellContainsFill;
-=======
       mGradient->kind.IsLinear() &&
       (mLineStart.x == mLineEnd.x) != (mLineStart.y == mLineEnd.y) &&
       aRepeatSize.width == aDest.width && aRepeatSize.height == aDest.height &&
       !mGradient->repeating && !aSrc.IsEmpty() && !cellContainsFill;
->>>>>>> upstream-releases
 
   gfxMatrix matrix;
   if (forceRepeatToCoverTiles) {
@@ -1364,22 +1022,9 @@ void nsCSSGradientRenderer::Paint(gfxContext& aContext, const nsRect& aDest,
       gfxRect dirtyFillRect = fillRect.Intersect(dirtyAreaToFill);
       gfxRect fillRectRelativeToTile = dirtyFillRect - tileRect.TopLeft();
       Color edgeColor;
-<<<<<<< HEAD
-      if (mGradient->mShape == NS_STYLE_GRADIENT_SHAPE_LINEAR && !isRepeat &&
-          RectIsBeyondLinearGradientEdge(fillRectRelativeToTile, matrix, mStops,
-                                         gradientStart, gradientEnd,
-||||||| merged common ancestors
-      if (mGradient->mShape == NS_STYLE_GRADIENT_SHAPE_LINEAR && !isRepeat &&
-          RectIsBeyondLinearGradientEdge(fillRectRelativeToTile,
-                                         matrix,
-                                         mStops,
-                                         gradientStart,
-                                         gradientEnd,
-=======
       if (mGradient->kind.IsLinear() && !isRepeat &&
           RectIsBeyondLinearGradientEdge(fillRectRelativeToTile, matrix, mStops,
                                          gradientStart, gradientEnd,
->>>>>>> upstream-releases
                                          &edgeColor)) {
         edgeColor.a *= aOpacity;
         aContext.SetColor(edgeColor);
@@ -1477,32 +1122,11 @@ bool nsCSSGradientRenderer::TryPaintTilesWithExtendMode(
   return true;
 }
 
-<<<<<<< HEAD
-void nsCSSGradientRenderer::BuildWebRenderParameters(
-    float aOpacity, wr::ExtendMode& aMode, nsTArray<wr::GradientStop>& aStops,
-    LayoutDevicePoint& aLineStart, LayoutDevicePoint& aLineEnd,
-    LayoutDeviceSize& aGradientRadius) {
-  aMode =
-      mGradient->mRepeating ? wr::ExtendMode::Repeat : wr::ExtendMode::Clamp;
-||||||| merged common ancestors
-void
-nsCSSGradientRenderer::BuildWebRenderParameters(
-  float aOpacity,
-  wr::ExtendMode& aMode,
-  nsTArray<wr::GradientStop>& aStops,
-  LayoutDevicePoint& aLineStart,
-  LayoutDevicePoint& aLineEnd,
-  LayoutDeviceSize& aGradientRadius)
-{
-  aMode =
-    mGradient->mRepeating ? wr::ExtendMode::Repeat : wr::ExtendMode::Clamp;
-=======
 void nsCSSGradientRenderer::BuildWebRenderParameters(
     float aOpacity, wr::ExtendMode& aMode, nsTArray<wr::GradientStop>& aStops,
     LayoutDevicePoint& aLineStart, LayoutDevicePoint& aLineEnd,
     LayoutDeviceSize& aGradientRadius) {
   aMode = mGradient->repeating ? wr::ExtendMode::Repeat : wr::ExtendMode::Clamp;
->>>>>>> upstream-releases
 
   aStops.SetLength(mStops.Length());
   for (uint32_t i = 0; i < mStops.Length(); i++) {

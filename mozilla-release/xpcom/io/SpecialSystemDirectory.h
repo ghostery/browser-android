@@ -34,16 +34,8 @@ enum SystemDirectories {
 #if defined(MOZ_THUNDERBIRD) || defined(MOZ_SUITE)
   Win_Documents = 228,
 #endif
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX)
-  Win_LocalAppdataLow = 232,
-||||||| merged common ancestors
-#if defined(MOZ_CONTENT_SANDBOX)
-  Win_LocalAppdataLow       =   232,
-=======
 #if defined(MOZ_SANDBOX)
   Win_LocalAppdataLow = 232,
->>>>>>> upstream-releases
 #endif
 
   Unix_HomeDirectory = 303,

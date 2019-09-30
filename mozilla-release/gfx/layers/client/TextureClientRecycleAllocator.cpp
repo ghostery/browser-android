@@ -14,27 +14,12 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-// Used to keep TextureClient's reference count stable as not to disrupt
-// recycling.
-class TextureClientHolder {
-  ~TextureClientHolder() {}
-
- public:
-||||||| merged common ancestors
-// Used to keep TextureClient's reference count stable as not to disrupt recycling.
-class TextureClientHolder
-{
-  ~TextureClientHolder() {}
-public:
-=======
 // Used to keep TextureClient's reference count stable as not to disrupt
 // recycling.
 class TextureClientHolder final {
   ~TextureClientHolder() = default;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(TextureClientHolder)
 
   explicit TextureClientHolder(TextureClient* aClient)
@@ -53,40 +38,6 @@ class TextureClientHolder final {
   bool mWillRecycle;
 };
 
-<<<<<<< HEAD
-class DefaultTextureClientAllocationHelper
-    : public ITextureClientAllocationHelper {
- public:
-  DefaultTextureClientAllocationHelper(
-      TextureClientRecycleAllocator* aAllocator, gfx::SurfaceFormat aFormat,
-      gfx::IntSize aSize, BackendSelector aSelector, TextureFlags aTextureFlags,
-      TextureAllocationFlags aAllocationFlags)
-      : ITextureClientAllocationHelper(aFormat, aSize, aSelector, aTextureFlags,
-                                       aAllocationFlags),
-        mAllocator(aAllocator) {}
-
-  bool IsCompatible(TextureClient* aTextureClient) override {
-||||||| merged common ancestors
-class DefaultTextureClientAllocationHelper : public ITextureClientAllocationHelper
-{
-public:
-  DefaultTextureClientAllocationHelper(TextureClientRecycleAllocator* aAllocator,
-                                       gfx::SurfaceFormat aFormat,
-                                       gfx::IntSize aSize,
-                                       BackendSelector aSelector,
-                                       TextureFlags aTextureFlags,
-                                       TextureAllocationFlags aAllocationFlags)
-    : ITextureClientAllocationHelper(aFormat,
-                                     aSize,
-                                     aSelector,
-                                     aTextureFlags,
-                                     aAllocationFlags)
-    , mAllocator(aAllocator)
-  {}
-
-  bool IsCompatible(TextureClient* aTextureClient) override
-  {
-=======
 class MOZ_RAII DefaultTextureClientAllocationHelper
     : public ITextureClientAllocationHelper {
  public:
@@ -99,7 +50,6 @@ class MOZ_RAII DefaultTextureClientAllocationHelper
         mAllocator(aAllocator) {}
 
   bool IsCompatible(TextureClient* aTextureClient) override {
->>>>>>> upstream-releases
     if (aTextureClient->GetFormat() != mFormat ||
         aTextureClient->GetSize() != mSize) {
       return false;

@@ -21,33 +21,6 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-DocumentOrShadowRoot::DocumentOrShadowRoot(
-    mozilla::dom::ShadowRoot& aShadowRoot)
-    : mAsNode(aShadowRoot), mKind(Kind::ShadowRoot) {}
-
-DocumentOrShadowRoot::DocumentOrShadowRoot(nsIDocument& aDoc)
-    : mAsNode(aDoc), mKind(Kind::Document) {}
-
-void DocumentOrShadowRoot::AddSizeOfOwnedSheetArrayExcludingThis(
-    nsWindowSizes& aSizes, const nsTArray<RefPtr<StyleSheet>>& aSheets) const {
-||||||| merged common ancestors
-DocumentOrShadowRoot::DocumentOrShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot)
-  : mAsNode(aShadowRoot)
-  , mKind(Kind::ShadowRoot)
-{}
-
-DocumentOrShadowRoot::DocumentOrShadowRoot(nsIDocument& aDoc)
-  : mAsNode(aDoc)
-  , mKind(Kind::Document)
-{}
-
-void
-DocumentOrShadowRoot::AddSizeOfOwnedSheetArrayExcludingThis(
-  nsWindowSizes& aSizes,
-  const nsTArray<RefPtr<StyleSheet>>& aSheets) const
-{
-=======
 DocumentOrShadowRoot::DocumentOrShadowRoot(
     mozilla::dom::ShadowRoot& aShadowRoot)
     : mAsNode(aShadowRoot), mKind(Kind::ShadowRoot) {}
@@ -57,7 +30,6 @@ DocumentOrShadowRoot::DocumentOrShadowRoot(Document& aDoc)
 
 void DocumentOrShadowRoot::AddSizeOfOwnedSheetArrayExcludingThis(
     nsWindowSizes& aSizes, const nsTArray<RefPtr<StyleSheet>>& aSheets) const {
->>>>>>> upstream-releases
   size_t n = 0;
   n += aSheets.ShallowSizeOfExcludingThis(aSizes.mState.mMallocSizeOf);
   for (StyleSheet* sheet : aSheets) {
@@ -223,15 +195,6 @@ Element* DocumentOrShadowRoot::GetFullscreenElement() {
   return nullptr;
 }
 
-<<<<<<< HEAD
-Element* DocumentOrShadowRoot::ElementFromPoint(float aX, float aY) {
-  return ElementFromPointHelper(aX, aY, false, true);
-||||||| merged common ancestors
-Element*
-DocumentOrShadowRoot::ElementFromPoint(float aX, float aY)
-{
-  return ElementFromPointHelper(aX, aY, false, true);
-=======
 namespace {
 
 using FrameForPointOption = nsLayoutUtils::FrameForPointOption;
@@ -254,77 +217,13 @@ NodeOrElement* CastTo(nsIContent* aContent);
 template <>
 Element* CastTo<Element>(nsIContent* aContent) {
   return aContent->AsElement();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void DocumentOrShadowRoot::ElementsFromPoint(
-    float aX, float aY, nsTArray<RefPtr<Element>>& aElements) {
-  ElementsFromPointHelper(aX, aY, nsIDocument::FLUSH_LAYOUT, aElements);
-}
-
-Element* DocumentOrShadowRoot::ElementFromPointHelper(
-    float aX, float aY, bool aIgnoreRootScrollFrame, bool aFlushLayout) {
-  AutoTArray<RefPtr<Element>, 1> elementArray;
-  ElementsFromPointHelper(
-      aX, aY,
-      ((aIgnoreRootScrollFrame ? nsIDocument::IGNORE_ROOT_SCROLL_FRAME : 0) |
-       (aFlushLayout ? nsIDocument::FLUSH_LAYOUT : 0) |
-       nsIDocument::IS_ELEMENT_FROM_POINT),
-      elementArray);
-  if (elementArray.IsEmpty()) {
-    return nullptr;
-  }
-  return elementArray[0];
-||||||| merged common ancestors
-void
-DocumentOrShadowRoot::ElementsFromPoint(float aX, float aY,
-                                        nsTArray<RefPtr<Element>>& aElements)
-{
-  ElementsFromPointHelper(aX, aY, nsIDocument::FLUSH_LAYOUT, aElements);
-}
-
-Element*
-DocumentOrShadowRoot::ElementFromPointHelper(float aX, float aY,
-                                             bool aIgnoreRootScrollFrame,
-                                             bool aFlushLayout)
-{
-  AutoTArray<RefPtr<Element>, 1> elementArray;
-  ElementsFromPointHelper(aX, aY,
-                          ((aIgnoreRootScrollFrame ? nsIDocument::IGNORE_ROOT_SCROLL_FRAME : 0) |
-                           (aFlushLayout ? nsIDocument::FLUSH_LAYOUT : 0) |
-                           nsIDocument::IS_ELEMENT_FROM_POINT),
-                          elementArray);
-  if (elementArray.IsEmpty()) {
-    return nullptr;
-  }
-  return elementArray[0];
-=======
 template <>
 nsINode* CastTo<nsINode>(nsIContent* aContent) {
   return aContent;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void DocumentOrShadowRoot::ElementsFromPointHelper(
-    float aX, float aY, uint32_t aFlags,
-    nsTArray<RefPtr<mozilla::dom::Element>>& aElements) {
-  // As per the the spec, we return null if either coord is negative
-  if (!(aFlags & nsIDocument::IGNORE_ROOT_SCROLL_FRAME) && (aX < 0 || aY < 0)) {
-    return;
-  }
-||||||| merged common ancestors
-void
-DocumentOrShadowRoot::ElementsFromPointHelper(float aX, float aY,
-                                              uint32_t aFlags,
-                                              nsTArray<RefPtr<mozilla::dom::Element>>& aElements)
-{
-  // As per the the spec, we return null if either coord is negative
-  if (!(aFlags & nsIDocument::IGNORE_ROOT_SCROLL_FRAME) && (aX < 0 || aY < 0)) {
-    return;
-  }
-=======
 template <typename NodeOrElement>
 static void QueryNodesFromRect(DocumentOrShadowRoot& aRoot, const nsRect& aRect,
                                EnumSet<FrameForPointOption> aOptions,
@@ -334,7 +233,6 @@ static void QueryNodesFromRect(DocumentOrShadowRoot& aRoot, const nsRect& aRect,
   static_assert(std::is_same<nsINode, NodeOrElement>::value ||
                     std::is_same<Element, NodeOrElement>::value,
                 "Should returning nodes or elements");
->>>>>>> upstream-releases
 
   constexpr bool returningElements =
       std::is_same<Element, NodeOrElement>::value;
@@ -358,39 +256,8 @@ static void QueryNodesFromRect(DocumentOrShadowRoot& aRoot, const nsRect& aRect,
     return;  // return null to premature XUL callers as a reminder to wait
   }
 
-<<<<<<< HEAD
-  nsTArray<nsIFrame*> outFrames;
-  // Emulate what GetFrameAtPoint does, since we want all the frames under our
-  // point.
-  nsLayoutUtils::GetFramesForArea(
-      rootFrame, nsRect(pt, nsSize(1, 1)), outFrames,
-      nsLayoutUtils::IGNORE_PAINT_SUPPRESSION |
-          nsLayoutUtils::IGNORE_CROSS_DOC |
-          ((aFlags & nsIDocument::IGNORE_ROOT_SCROLL_FRAME)
-               ? nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME
-               : 0));
-
-  // Dunno when this would ever happen, as we should at least have a root frame
-  // under us?
-  if (outFrames.IsEmpty()) {
-    return;
-  }
-||||||| merged common ancestors
-  nsTArray<nsIFrame*> outFrames;
-  // Emulate what GetFrameAtPoint does, since we want all the frames under our
-  // point.
-  nsLayoutUtils::GetFramesForArea(rootFrame, nsRect(pt, nsSize(1, 1)), outFrames,
-    nsLayoutUtils::IGNORE_PAINT_SUPPRESSION | nsLayoutUtils::IGNORE_CROSS_DOC |
-    ((aFlags & nsIDocument::IGNORE_ROOT_SCROLL_FRAME) ? nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME : 0));
-
-  // Dunno when this would ever happen, as we should at least have a root frame under us?
-  if (outFrames.IsEmpty()) {
-    return;
-  }
-=======
   aOptions += FrameForPointOption::IgnorePaintSuppression;
   aOptions += FrameForPointOption::IgnoreCrossDoc;
->>>>>>> upstream-releases
 
   AutoTArray<nsIFrame*, 8> frames;
   nsLayoutUtils::GetFramesForArea(rootFrame, aRect, frames, aOptions);
@@ -433,18 +300,6 @@ static void QueryNodesFromRect(DocumentOrShadowRoot& aRoot, const nsRect& aRect,
   }
 }
 
-<<<<<<< HEAD
-Element* DocumentOrShadowRoot::AddIDTargetObserver(nsAtom* aID,
-                                                   IDTargetObserver aObserver,
-                                                   void* aData,
-                                                   bool aForImage) {
-||||||| merged common ancestors
-Element*
-DocumentOrShadowRoot::AddIDTargetObserver(nsAtom* aID,
-                                          IDTargetObserver aObserver,
-                                          void* aData, bool aForImage)
-{
-=======
 template <typename NodeOrElement>
 static void QueryNodesFromPoint(DocumentOrShadowRoot& aRoot, float aX, float aY,
                                 EnumSet<FrameForPointOption> aOptions,
@@ -537,7 +392,6 @@ Element* DocumentOrShadowRoot::AddIDTargetObserver(nsAtom* aID,
                                                    IDTargetObserver aObserver,
                                                    void* aData,
                                                    bool aForImage) {
->>>>>>> upstream-releases
   nsDependentAtomString id(aID);
 
   if (!CheckGetElementByIdArg(id)) {
@@ -735,15 +589,6 @@ nsRadioGroupStruct* DocumentOrShadowRoot::GetOrCreateRadioGroup(
       []() { return new nsRadioGroupStruct(); });
 }
 
-<<<<<<< HEAD
-void DocumentOrShadowRoot::Traverse(DocumentOrShadowRoot* tmp,
-                                    nsCycleCollectionTraversalCallback& cb) {
-||||||| merged common ancestors
-void
-DocumentOrShadowRoot::Traverse(DocumentOrShadowRoot* tmp,
-                               nsCycleCollectionTraversalCallback &cb)
-{
-=======
 void DocumentOrShadowRoot::Traverse(DocumentOrShadowRoot* tmp,
                                     nsCycleCollectionTraversalCallback& cb) {
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mStyleSheets)
@@ -766,7 +611,6 @@ void DocumentOrShadowRoot::Traverse(DocumentOrShadowRoot* tmp,
   for (auto iter = tmp->mIdentifierMap.ConstIter(); !iter.Done(); iter.Next()) {
     iter.Get()->Traverse(&cb);
   }
->>>>>>> upstream-releases
   for (auto iter = tmp->mRadioGroups.Iter(); !iter.Done(); iter.Next()) {
     nsRadioGroupStruct* radioGroup = iter.UserData();
     NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(
@@ -782,17 +626,9 @@ void DocumentOrShadowRoot::Traverse(DocumentOrShadowRoot* tmp,
   }
 }
 
-<<<<<<< HEAD
-void DocumentOrShadowRoot::Unlink(DocumentOrShadowRoot* tmp) {
-||||||| merged common ancestors
-void
-DocumentOrShadowRoot::Unlink(DocumentOrShadowRoot* tmp)
-{
-=======
 void DocumentOrShadowRoot::Unlink(DocumentOrShadowRoot* tmp) {
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mDOMStyleSheets)
   tmp->mIdentifierMap.Clear();
->>>>>>> upstream-releases
   tmp->mRadioGroups.Clear();
 }
 

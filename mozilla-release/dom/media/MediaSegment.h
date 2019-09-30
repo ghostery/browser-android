@@ -367,55 +367,7 @@ class MediaSegmentBase : public MediaSegment {
     uint32_t mIndex;
   };
 
-<<<<<<< HEAD
-  Chunk* FindChunkContaining(StreamTime aOffset, StreamTime* aStart = nullptr) {
-    if (aOffset < 0) {
-      return nullptr;
-    }
-    StreamTime offset = 0;
-    for (uint32_t i = 0; i < mChunks.Length(); ++i) {
-      Chunk& c = mChunks[i];
-      StreamTime nextOffset = offset + c.GetDuration();
-      if (aOffset < nextOffset) {
-        if (aStart) {
-          *aStart = offset;
-        }
-        return &c;
-      }
-      offset = nextOffset;
-    }
-    return nullptr;
-  }
-
   void RemoveLeading(StreamTime aDuration) { RemoveLeading(aDuration, 0); }
-||||||| merged common ancestors
-  Chunk* FindChunkContaining(StreamTime aOffset, StreamTime* aStart = nullptr)
-  {
-    if (aOffset < 0) {
-      return nullptr;
-    }
-    StreamTime offset = 0;
-    for (uint32_t i = 0; i < mChunks.Length(); ++i) {
-      Chunk& c = mChunks[i];
-      StreamTime nextOffset = offset + c.GetDuration();
-      if (aOffset < nextOffset) {
-        if (aStart) {
-          *aStart = offset;
-        }
-        return &c;
-      }
-      offset = nextOffset;
-    }
-    return nullptr;
-  }
-
-  void RemoveLeading(StreamTime aDuration)
-  {
-    RemoveLeading(aDuration, 0);
-  }
-=======
-  void RemoveLeading(StreamTime aDuration) { RemoveLeading(aDuration, 0); }
->>>>>>> upstream-releases
 
   size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const override {
     size_t amount = mChunks.ShallowSizeOfExcludingThis(aMallocSizeOf);

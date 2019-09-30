@@ -669,13 +669,7 @@
         return err;
 
     var kVersionSizes = [
-<<<<<<< HEAD
-      {version: 0, numBytes: 72}
-||||||| merged common ancestors
-      {version: 0, numBytes: 64}
-=======
       {version: 0, numBytes: 80}
->>>>>>> upstream-releases
     ];
     err = messageValidator.validateStructVersion(offset, kVersionSizes);
     if (err !== validator.validationError.NONE)
@@ -725,34 +719,16 @@
         return err;
 
 
-    // validate UsbDeviceInfo.webusbLandingPage
-    err = messageValidator.validateStructPointer(offset + codec.kStructHeaderSize + 48, url$.Url, true);
-    if (err !== validator.validationError.NONE)
-        return err;
-
-
 
     // validate UsbDeviceInfo.configurations
-<<<<<<< HEAD
-    err = messageValidator.validateArrayPointer(offset + codec.kStructHeaderSize + 56, 8, new codec.PointerTo(UsbConfigurationInfo), false, [0], 0);
-||||||| merged common ancestors
-    err = messageValidator.validateArrayPointer(offset + codec.kStructHeaderSize + 48, 8, new codec.PointerTo(UsbConfigurationInfo), false, [0], 0);
-=======
     err = messageValidator.validateArrayPointer(offset + codec.kStructHeaderSize + 64, 8, new codec.PointerTo(UsbConfigurationInfo), false, [0], 0);
->>>>>>> upstream-releases
     if (err !== validator.validationError.NONE)
         return err;
 
     return validator.validationError.NONE;
   };
 
-<<<<<<< HEAD
-  UsbDeviceInfo.encodedSize = codec.kStructHeaderSize + 64;
-||||||| merged common ancestors
-  UsbDeviceInfo.encodedSize = codec.kStructHeaderSize + 56;
-=======
   UsbDeviceInfo.encodedSize = codec.kStructHeaderSize + 72;
->>>>>>> upstream-releases
 
   UsbDeviceInfo.decode = function(decoder) {
     var packed;

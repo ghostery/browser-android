@@ -1257,22 +1257,6 @@ supplementalData:table(nofallback){
                 }
                 235{
                     start:intvector{
-<<<<<<< HEAD
-                        1989,
-                        1,
-                        8,
-                    }
-                }
-                236{
-                    named{"false"}
-                    start:intvector{
-                        2019,
-                        5,
-                        1,
-||||||| merged common ancestors
-                        139,
-                        -1074621440,
-=======
                         1989,
                         1,
                         8,
@@ -1283,7 +1267,6 @@ supplementalData:table(nofallback){
                         2019,
                         5,
                         1,
->>>>>>> upstream-releases
                     }
                 }
                 24{
@@ -2121,13 +2104,7 @@ supplementalData:table(nofallback){
             "islamic-tbla",
         }
     }
-<<<<<<< HEAD
-    cldrVersion{"34"}
-||||||| merged common ancestors
-    cldrVersion{"33.1"}
-=======
     cldrVersion{"35.1"}
->>>>>>> upstream-releases
     codeMappings{
         {
             "AA",
@@ -5230,16 +5207,8 @@ supplementalData:table(nofallback){
                 "ctz",
                 "cu",
                 "cua~c",
-<<<<<<< HEAD
-                "cug~m",
-                "cuo~y",
-||||||| merged common ancestors
-                "cug~m",
-                "cuo~x",
-=======
                 "cug~l",
                 "cuo~y",
->>>>>>> upstream-releases
                 "cv",
                 "cvg",
                 "cvn",
@@ -6273,18 +6242,9 @@ supplementalData:table(nofallback){
                 "nlc",
                 "nle",
                 "nlg",
-<<<<<<< HEAD
-                "nli~o",
-                "nlq~r",
-||||||| merged common ancestors
-                "nli~l",
-                "nln~o",
-                "nlq~r",
-=======
                 "nli~m",
                 "nlo",
                 "nlq",
->>>>>>> upstream-releases
                 "nlu~z",
                 "nma~z",
                 "nn",
@@ -7574,21 +7534,7 @@ supplementalData:table(nofallback){
                 "UN",
             }
             private_use{
-<<<<<<< HEAD
-                "AA",
-                "QM~N",
-                "QP~T",
-                "QV~Z",
                 "XC~J",
-||||||| merged common ancestors
-                "AA",
-                "QM~N",
-                "QP~T",
-                "QV~Z",
-                "XA~J",
-=======
-                "XC~J",
->>>>>>> upstream-releases
                 "XL~Z",
             }
             regular{
@@ -7713,10 +7659,6 @@ supplementalData:table(nofallback){
                 "ZM",
                 "ZW",
             }
-<<<<<<< HEAD
-            special{"XA~B"}
-||||||| merged common ancestors
-=======
             reserved{
                 "AA",
                 "QM~N",
@@ -7724,22 +7666,12 @@ supplementalData:table(nofallback){
                 "QV~Z",
             }
             special{"XA~B"}
->>>>>>> upstream-releases
             unknown{"ZZ"}
         }
         script{
             deprecated{"Qaai"}
             private_use{
-<<<<<<< HEAD
-                "Qaaa~f",
-                "Qaah",
-                "Qaaj~z",
-||||||| merged common ancestors
-                "Qaaa~h",
-                "Qaaj~z",
-=======
                 "Qaaq~z",
->>>>>>> upstream-releases
                 "Qaba~x",
             }
             regular{
@@ -7903,14 +7835,9 @@ supplementalData:table(nofallback){
                 "Qaaj~p",
             }
             special{
-<<<<<<< HEAD
-                "Qaag",
-||||||| merged common ancestors
-=======
                 "Qaag",
                 "Zanb",
                 "Zinh",
->>>>>>> upstream-releases
                 "Zmth",
                 "Zsye",
                 "Zsym",
@@ -10837,44 +10764,19 @@ supplementalData:table(nofallback){
                 "ua77",
                 "ug101~9",
                 "ug110~9",
-<<<<<<< HEAD
-                "ug120~5",
-||||||| merged common ancestors
-                "ug120~4",
-=======
                 "ug120~6",
->>>>>>> upstream-releases
                 "ug201~9",
                 "ug210~9",
                 "ug220~9",
-<<<<<<< HEAD
-                "ug230~4",
-||||||| merged common ancestors
-                "ug230~2",
-=======
                 "ug230~6",
->>>>>>> upstream-releases
                 "ug301~9",
                 "ug310~9",
                 "ug320~9",
-<<<<<<< HEAD
-                "ug330~2",
-||||||| merged common ancestors
-                "ug330",
-=======
                 "ug330~4",
->>>>>>> upstream-releases
                 "ug401~9",
                 "ug410~9",
-<<<<<<< HEAD
-                "ug420~9",
-                "ug430~1",
-||||||| merged common ancestors
-                "ug420~6",
-=======
                 "ug420~9",
                 "ug430~2",
->>>>>>> upstream-releases
                 "ugc",
                 "uge",
                 "ugn",
@@ -11493,16 +11395,7 @@ supplementalData:table(nofallback){
                 "alalc97",
                 "aluku",
                 "ao1990",
-<<<<<<< HEAD
                 "aranes",
-                "arevela",
-                "arevmda",
-||||||| merged common ancestors
-                "arevela",
-                "arevmda",
-=======
-                "aranes",
->>>>>>> upstream-releases
                 "asante",
                 "auvern",
                 "baku1926",
@@ -19505,12 +19398,7 @@ supplementalData:table(nofallback){
             "wo_Arab",
             "yo_Arab",
             "yue_Hans",
-<<<<<<< HEAD
-            "ff_Adlm",
-||||||| merged common ancestors
-=======
             "zh_Hant",
->>>>>>> upstream-releases
         }
         zh_Hant_HK{"zh_Hant_MO"}
     }
@@ -24928,2561 +24816,6 @@ supplementalData:table(nofallback){
             "mwnb",
             "mwru",
         }
-<<<<<<< HEAD
-        mws{
-            "mwba",
-            "mwbl",
-            "mwck",
-            "mwcr",
-            "mwmg",
-            "mwmh",
-            "mwmu",
-            "mwmw",
-            "mwne",
-            "mwns",
-            "mwph",
-            "mwth",
-            "mwzo",
-        }
-        np1{
-            "npba",
-            "npja",
-            "npna",
-        }
-        np2{
-            "npbh",
-            "npka",
-            "npra",
-        }
-        np3{
-            "npdh",
-            "npga",
-            "nplu",
-        }
-        np4{
-            "npko",
-            "npme",
-            "npsa",
-        }
-        np5{
-            "npma",
-            "npse",
-        }
-        ph01{
-            "philn",
-            "phils",
-            "phlun",
-            "phpan",
-        }
-        ph02{
-            "phbtn",
-            "phcag",
-            "phisa",
-            "phnuv",
-            "phqui",
-        }
-        ph03{
-            "phaur",
-            "phban",
-            "phbul",
-            "phnue",
-            "phpam",
-            "phtar",
-            "phzmb",
-        }
-        ph05{
-            "phalb",
-            "phcan",
-            "phcas",
-            "phcat",
-            "phmas",
-            "phsor",
-        }
-        ph06{
-            "phakl",
-            "phant",
-            "phcap",
-            "phgui",
-            "phili",
-            "phnec",
-        }
-        ph07{
-            "phboh",
-            "phceb",
-            "phner",
-            "phsig",
-        }
-        ph08{
-            "phbil",
-            "pheas",
-            "phley",
-            "phnsa",
-            "phsle",
-            "phwsa",
-        }
-        ph09{
-            "phbas",
-            "phzan",
-            "phzas",
-            "phzsi",
-        }
-        ph10{
-            "phbuk",
-            "phcam",
-            "phmsc",
-            "phmsr",
-        }
-        ph11{
-            "phcom",
-            "phdao",
-            "phdas",
-            "phdav",
-            "phdvo",
-            "phsar",
-            "phsco",
-        }
-        ph12{
-            "phlan",
-            "phnco",
-            "phsuk",
-        }
-        ph13{
-            "phagn",
-            "phags",
-            "phdin",
-            "phsun",
-            "phsur",
-        }
-        ph14{
-            "phlas",
-            "phmag",
-            "phslu",
-            "phtaw",
-        }
-        ph15{
-            "phabr",
-            "phapa",
-            "phben",
-            "phifu",
-            "phkal",
-            "phmou",
-        }
-        ph40{
-            "phbtg",
-            "phcav",
-            "phlag",
-            "phque",
-            "phriz",
-        }
-        ph41{
-            "phmad",
-            "phmdc",
-            "phmdr",
-            "phplw",
-            "phrom",
-        }
-        rskm{
-            "rs25",
-            "rs26",
-            "rs27",
-            "rs28",
-            "rs29",
-        }
-        rsvo{
-            "rs01",
-            "rs02",
-            "rs03",
-            "rs04",
-            "rs05",
-            "rs06",
-            "rs07",
-        }
-        ugc{
-            "ug101",
-            "ug102",
-            "ug103",
-            "ug104",
-            "ug105",
-            "ug106",
-            "ug107",
-            "ug108",
-            "ug109",
-            "ug110",
-            "ug111",
-            "ug112",
-            "ug113",
-            "ug114",
-            "ug115",
-            "ug116",
-            "ug117",
-            "ug118",
-            "ug119",
-            "ug120",
-            "ug121",
-            "ug122",
-            "ug123",
-            "ug124",
-            "ug125",
-        }
-        uge{
-            "ug201",
-            "ug202",
-            "ug203",
-            "ug204",
-            "ug205",
-            "ug206",
-            "ug207",
-            "ug208",
-            "ug209",
-            "ug210",
-            "ug211",
-            "ug212",
-            "ug213",
-            "ug214",
-            "ug215",
-            "ug216",
-            "ug217",
-            "ug218",
-            "ug219",
-            "ug220",
-            "ug221",
-            "ug222",
-            "ug223",
-            "ug224",
-            "ug225",
-            "ug226",
-            "ug227",
-            "ug228",
-            "ug229",
-            "ug230",
-            "ug231",
-            "ug232",
-            "ug233",
-            "ug234",
-        }
-        ugn{
-            "ug301",
-            "ug302",
-            "ug303",
-            "ug304",
-            "ug305",
-            "ug306",
-            "ug307",
-            "ug308",
-            "ug309",
-            "ug310",
-            "ug311",
-            "ug312",
-            "ug313",
-            "ug314",
-            "ug315",
-            "ug316",
-            "ug317",
-            "ug318",
-            "ug319",
-            "ug320",
-            "ug321",
-            "ug322",
-            "ug323",
-            "ug324",
-            "ug325",
-            "ug326",
-            "ug327",
-            "ug328",
-            "ug329",
-            "ug330",
-            "ug331",
-            "ug332",
-        }
-        ugw{
-            "ug401",
-            "ug402",
-            "ug403",
-            "ug404",
-            "ug405",
-            "ug406",
-            "ug407",
-            "ug408",
-            "ug409",
-            "ug410",
-            "ug411",
-            "ug412",
-            "ug413",
-            "ug414",
-            "ug415",
-            "ug416",
-            "ug417",
-            "ug418",
-            "ug419",
-            "ug420",
-            "ug421",
-            "ug422",
-            "ug423",
-            "ug424",
-            "ug425",
-            "ug426",
-            "ug427",
-            "ug428",
-            "ug429",
-            "ug430",
-            "ug431",
-        }
-    }
-    territoryContainment{
-        001{
-            "019",
-            "002",
-            "150",
-            "142",
-            "009",
-        }
-        002{
-            "015",
-            "011",
-            "017",
-            "014",
-            "018",
-        }
-        005{
-            "AR",
-            "BO",
-            "BR",
-            "BV",
-            "CL",
-            "CO",
-            "EC",
-            "FK",
-            "GF",
-            "GS",
-            "GY",
-            "PE",
-            "PY",
-            "SR",
-            "UY",
-            "VE",
-        }
-        009{
-            "053",
-            "054",
-            "057",
-            "061",
-            "QO",
-        }
-        011{
-            "BF",
-            "BJ",
-            "CI",
-            "CV",
-            "GH",
-            "GM",
-            "GN",
-            "GW",
-            "LR",
-            "ML",
-            "MR",
-            "NE",
-            "NG",
-            "SH",
-            "SL",
-            "SN",
-            "TG",
-        }
-        013{
-            "BZ",
-            "CR",
-            "GT",
-            "HN",
-            "MX",
-            "NI",
-            "PA",
-            "SV",
-        }
-        014{
-            "BI",
-            "DJ",
-            "ER",
-            "ET",
-            "IO",
-            "KE",
-            "KM",
-            "MG",
-            "MU",
-            "MW",
-            "MZ",
-            "RE",
-            "RW",
-            "SC",
-            "SO",
-            "SS",
-            "TF",
-            "TZ",
-            "UG",
-            "YT",
-            "ZM",
-            "ZW",
-        }
-        015{
-            "DZ",
-            "EG",
-            "EH",
-            "LY",
-            "MA",
-            "SD",
-            "TN",
-            "EA",
-            "IC",
-        }
-        017{
-            "AO",
-            "CD",
-            "CF",
-            "CG",
-            "CM",
-            "GA",
-            "GQ",
-            "ST",
-            "TD",
-        }
-        018{
-            "BW",
-            "LS",
-            "NA",
-            "SZ",
-            "ZA",
-        }
-        019{
-            "021",
-            "013",
-            "029",
-            "005",
-        }
-        021{
-            "BM",
-            "CA",
-            "GL",
-            "PM",
-            "US",
-        }
-        029{
-            "AG",
-            "AI",
-            "AW",
-            "BB",
-            "BL",
-            "BQ",
-            "BS",
-            "CU",
-            "CW",
-            "DM",
-            "DO",
-            "GD",
-            "GP",
-            "HT",
-            "JM",
-            "KN",
-            "KY",
-            "LC",
-            "MF",
-            "MQ",
-            "MS",
-            "PR",
-            "SX",
-            "TC",
-            "TT",
-            "VC",
-            "VG",
-            "VI",
-        }
-        030{
-            "CN",
-            "HK",
-            "JP",
-            "KP",
-            "KR",
-            "MN",
-            "MO",
-            "TW",
-        }
-        034{
-            "AF",
-            "BD",
-            "BT",
-            "IN",
-            "IR",
-            "LK",
-            "MV",
-            "NP",
-            "PK",
-        }
-        035{
-            "BN",
-            "ID",
-            "KH",
-            "LA",
-            "MM",
-            "MY",
-            "PH",
-            "SG",
-            "TH",
-            "TL",
-            "VN",
-        }
-        039{
-            "AD",
-            "AL",
-            "BA",
-            "ES",
-            "GI",
-            "GR",
-            "HR",
-            "IT",
-            "ME",
-            "MK",
-            "MT",
-            "RS",
-            "PT",
-            "SI",
-            "SM",
-            "VA",
-            "XK",
-        }
-        053{
-            "AU",
-            "CC",
-            "CX",
-            "HM",
-            "NF",
-            "NZ",
-        }
-        054{
-            "FJ",
-            "NC",
-            "PG",
-            "SB",
-            "VU",
-        }
-        057{
-            "FM",
-            "GU",
-            "KI",
-            "MH",
-            "MP",
-            "NR",
-            "PW",
-            "UM",
-        }
-        061{
-            "AS",
-            "CK",
-            "NU",
-            "PF",
-            "PN",
-            "TK",
-            "TO",
-            "TV",
-            "WF",
-            "WS",
-        }
-        142{
-            "145",
-            "143",
-            "030",
-            "034",
-            "035",
-        }
-        143{
-            "TM",
-            "TJ",
-            "KG",
-            "KZ",
-            "UZ",
-        }
-        145{
-            "AE",
-            "AM",
-            "AZ",
-            "BH",
-            "CY",
-            "GE",
-            "IL",
-            "IQ",
-            "JO",
-            "KW",
-            "LB",
-            "OM",
-            "PS",
-            "QA",
-            "SA",
-            "SY",
-            "TR",
-            "YE",
-        }
-        150{
-            "154",
-            "155",
-            "151",
-            "039",
-        }
-        151{
-            "BG",
-            "BY",
-            "CZ",
-            "HU",
-            "MD",
-            "PL",
-            "RO",
-            "RU",
-            "SK",
-            "UA",
-        }
-        154{
-            "GG",
-            "IM",
-            "JE",
-            "AX",
-            "DK",
-            "EE",
-            "FI",
-            "FO",
-            "GB",
-            "IE",
-            "IS",
-            "LT",
-            "LV",
-            "NO",
-            "SE",
-            "SJ",
-||||||| merged common ancestors
-        mws{
-            "mwba",
-            "mwbl",
-            "mwck",
-            "mwcr",
-            "mwmg",
-            "mwmh",
-            "mwmu",
-            "mwmw",
-            "mwne",
-            "mwns",
-            "mwph",
-            "mwth",
-            "mwzo",
-        }
-        np1{
-            "npba",
-            "npja",
-            "npna",
-        }
-        np2{
-            "npbh",
-            "npka",
-            "npra",
-        }
-        np3{
-            "npdh",
-            "npga",
-            "nplu",
-        }
-        np4{
-            "npko",
-            "npme",
-            "npsa",
-        }
-        np5{
-            "npma",
-            "npse",
-        }
-        ph01{
-            "philn",
-            "phils",
-            "phlun",
-            "phpan",
-        }
-        ph02{
-            "phbtn",
-            "phcag",
-            "phisa",
-            "phnuv",
-            "phqui",
-        }
-        ph03{
-            "phaur",
-            "phban",
-            "phbul",
-            "phnue",
-            "phpam",
-            "phtar",
-            "phzmb",
-        }
-        ph05{
-            "phalb",
-            "phcan",
-            "phcas",
-            "phcat",
-            "phmas",
-            "phsor",
-        }
-        ph06{
-            "phakl",
-            "phant",
-            "phcap",
-            "phgui",
-            "phili",
-            "phnec",
-        }
-        ph07{
-            "phboh",
-            "phceb",
-            "phner",
-            "phsig",
-        }
-        ph08{
-            "phbil",
-            "pheas",
-            "phley",
-            "phnsa",
-            "phsle",
-            "phwsa",
-        }
-        ph09{
-            "phbas",
-            "phzan",
-            "phzas",
-            "phzsi",
-        }
-        ph10{
-            "phbuk",
-            "phcam",
-            "phmsc",
-            "phmsr",
-        }
-        ph11{
-            "phcom",
-            "phdao",
-            "phdas",
-            "phdav",
-            "phdvo",
-            "phsar",
-            "phsco",
-        }
-        ph12{
-            "phlan",
-            "phnco",
-            "phsuk",
-        }
-        ph13{
-            "phagn",
-            "phags",
-            "phdin",
-            "phsun",
-            "phsur",
-        }
-        ph14{
-            "phlas",
-            "phmag",
-            "phslu",
-            "phtaw",
-        }
-        ph15{
-            "phabr",
-            "phapa",
-            "phben",
-            "phifu",
-            "phkal",
-            "phmou",
-        }
-        ph40{
-            "phbtg",
-            "phcav",
-            "phlag",
-            "phque",
-            "phriz",
-        }
-        ph41{
-            "phmad",
-            "phmdc",
-            "phmdr",
-            "phplw",
-            "phrom",
-        }
-        rskm{
-            "rs25",
-            "rs26",
-            "rs27",
-            "rs28",
-            "rs29",
-        }
-        rsvo{
-            "rs01",
-            "rs02",
-            "rs03",
-            "rs04",
-            "rs05",
-            "rs06",
-            "rs07",
-        }
-        ugc{
-            "ug101",
-            "ug102",
-            "ug103",
-            "ug104",
-            "ug105",
-            "ug106",
-            "ug107",
-            "ug108",
-            "ug109",
-            "ug110",
-            "ug111",
-            "ug112",
-            "ug113",
-            "ug114",
-            "ug115",
-            "ug116",
-            "ug117",
-            "ug118",
-            "ug119",
-            "ug120",
-            "ug121",
-            "ug122",
-            "ug123",
-            "ug124",
-            "ug125",
-        }
-        uge{
-            "ug201",
-            "ug202",
-            "ug203",
-            "ug204",
-            "ug205",
-            "ug206",
-            "ug207",
-            "ug208",
-            "ug209",
-            "ug210",
-            "ug211",
-            "ug212",
-            "ug213",
-            "ug214",
-            "ug215",
-            "ug216",
-            "ug217",
-            "ug218",
-            "ug219",
-            "ug220",
-            "ug221",
-            "ug222",
-            "ug223",
-            "ug224",
-            "ug225",
-            "ug226",
-            "ug227",
-            "ug228",
-            "ug229",
-            "ug230",
-            "ug231",
-            "ug232",
-            "ug233",
-            "ug234",
-        }
-        ugn{
-            "ug301",
-            "ug302",
-            "ug303",
-            "ug304",
-            "ug305",
-            "ug306",
-            "ug307",
-            "ug308",
-            "ug309",
-            "ug310",
-            "ug311",
-            "ug312",
-            "ug313",
-            "ug314",
-            "ug315",
-            "ug316",
-            "ug317",
-            "ug318",
-            "ug319",
-            "ug320",
-            "ug321",
-            "ug322",
-            "ug323",
-            "ug324",
-            "ug325",
-            "ug326",
-            "ug327",
-            "ug328",
-            "ug329",
-            "ug330",
-            "ug331",
-            "ug332",
-        }
-        ugw{
-            "ug401",
-            "ug402",
-            "ug403",
-            "ug404",
-            "ug405",
-            "ug406",
-            "ug407",
-            "ug408",
-            "ug409",
-            "ug410",
-            "ug411",
-            "ug412",
-            "ug413",
-            "ug414",
-            "ug415",
-            "ug416",
-            "ug417",
-            "ug418",
-            "ug419",
-            "ug420",
-            "ug421",
-            "ug422",
-            "ug423",
-            "ug424",
-            "ug425",
-            "ug426",
-            "ug427",
-            "ug428",
-            "ug429",
-            "ug430",
-            "ug431",
-        }
-    }
-    telephoneCodeData{
-        001{
-            {
-                code{"388"}
-            }
-            {
-                code{"800"}
-            }
-            {
-                code{"808"}
-            }
-            {
-                code{"870"}
-            }
-            {
-                code{"871"}
-            }
-            {
-                code{"872"}
-            }
-            {
-                code{"873"}
-            }
-            {
-                code{"874"}
-            }
-            {
-                code{"878"}
-            }
-            {
-                code{"881"}
-            }
-            {
-                code{"882"}
-            }
-            {
-                code{"883"}
-            }
-            {
-                code{"888"}
-            }
-            {
-                code{"979"}
-            }
-            {
-                code{"991"}
-            }
-        }
-        AC{
-            {
-                code{"247"}
-            }
-        }
-        AD{
-            {
-                code{"376"}
-            }
-        }
-        AE{
-            {
-                code{"971"}
-            }
-        }
-        AF{
-            {
-                code{"93"}
-            }
-        }
-        AG{
-            {
-                code{"1"}
-            }
-        }
-        AI{
-            {
-                code{"1"}
-            }
-        }
-        AL{
-            {
-                code{"355"}
-            }
-        }
-        AM{
-            {
-                code{"374"}
-            }
-        }
-        AO{
-            {
-                code{"244"}
-            }
-        }
-        AQ{
-            {
-                code{"672"}
-            }
-        }
-        AR{
-            {
-                code{"54"}
-            }
-        }
-        AS{
-            {
-                code{"1"}
-            }
-        }
-        AT{
-            {
-                code{"43"}
-            }
-        }
-        AU{
-            {
-                code{"61"}
-            }
-        }
-        AW{
-            {
-                code{"297"}
-            }
-        }
-        AX{
-            {
-                code{"358"}
-            }
-        }
-        AZ{
-            {
-                code{"994"}
-            }
-        }
-        BA{
-            {
-                code{"387"}
-            }
-        }
-        BB{
-            {
-                code{"1"}
-            }
-        }
-        BD{
-            {
-                code{"880"}
-            }
-        }
-        BE{
-            {
-                code{"32"}
-            }
-        }
-        BF{
-            {
-                code{"226"}
-            }
-        }
-        BG{
-            {
-                code{"359"}
-            }
-        }
-        BH{
-            {
-                code{"973"}
-            }
-        }
-        BI{
-            {
-                code{"257"}
-            }
-        }
-        BJ{
-            {
-                code{"229"}
-            }
-        }
-        BL{
-            {
-                code{"590"}
-            }
-        }
-        BM{
-            {
-                code{"1"}
-            }
-        }
-        BN{
-            {
-                code{"673"}
-            }
-        }
-        BO{
-            {
-                code{"591"}
-            }
-        }
-        BQ{
-            {
-                code{"599"}
-            }
-        }
-        BR{
-            {
-                code{"55"}
-            }
-        }
-        BS{
-            {
-                code{"1"}
-            }
-        }
-        BT{
-            {
-                code{"975"}
-            }
-        }
-        BW{
-            {
-                code{"267"}
-            }
-        }
-        BY{
-            {
-                code{"375"}
-            }
-        }
-        BZ{
-            {
-                code{"501"}
-            }
-        }
-        CA{
-            {
-                code{"1"}
-            }
-        }
-        CC{
-            {
-                code{"61"}
-            }
-        }
-        CD{
-            {
-                code{"243"}
-            }
-        }
-        CF{
-            {
-                code{"236"}
-            }
-        }
-        CG{
-            {
-                code{"242"}
-            }
-        }
-        CH{
-            {
-                code{"41"}
-            }
-        }
-        CI{
-            {
-                code{"225"}
-            }
-        }
-        CK{
-            {
-                code{"682"}
-            }
-        }
-        CL{
-            {
-                code{"56"}
-            }
-        }
-        CM{
-            {
-                code{"237"}
-            }
-        }
-        CN{
-            {
-                code{"86"}
-            }
-        }
-        CO{
-            {
-                code{"57"}
-            }
-        }
-        CR{
-            {
-                code{"506"}
-            }
-        }
-        CU{
-            {
-                code{"53"}
-            }
-        }
-        CV{
-            {
-                code{"238"}
-            }
-        }
-        CW{
-            {
-                code{"599"}
-            }
-        }
-        CX{
-            {
-                code{"61"}
-            }
-        }
-        CY{
-            {
-                code{"357"}
-            }
-        }
-        CZ{
-            {
-                code{"420"}
-            }
-        }
-        DE{
-            {
-                code{"49"}
-            }
-        }
-        DJ{
-            {
-                code{"253"}
-            }
-        }
-        DK{
-            {
-                code{"45"}
-            }
-        }
-        DM{
-            {
-                code{"1"}
-            }
-        }
-        DO{
-            {
-                code{"1"}
-            }
-        }
-        DZ{
-            {
-                code{"213"}
-            }
-        }
-        EC{
-            {
-                code{"593"}
-            }
-        }
-        EE{
-            {
-                code{"372"}
-            }
-        }
-        EG{
-            {
-                code{"20"}
-            }
-        }
-        EH{
-            {
-                code{"212"}
-            }
-        }
-        ER{
-            {
-                code{"291"}
-            }
-        }
-        ES{
-            {
-                code{"34"}
-            }
-        }
-        ET{
-            {
-                code{"251"}
-            }
-        }
-        FI{
-            {
-                code{"358"}
-            }
-        }
-        FJ{
-            {
-                code{"679"}
-            }
-        }
-        FK{
-            {
-                code{"500"}
-            }
-        }
-        FM{
-            {
-                code{"691"}
-            }
-        }
-        FO{
-            {
-                code{"298"}
-            }
-        }
-        FR{
-            {
-                code{"33"}
-            }
-        }
-        GA{
-            {
-                code{"241"}
-            }
-        }
-        GB{
-            {
-                code{"44"}
-            }
-        }
-        GD{
-            {
-                code{"1"}
-            }
-        }
-        GE{
-            {
-                code{"995"}
-            }
-        }
-        GF{
-            {
-                code{"594"}
-            }
-        }
-        GG{
-            {
-                code{"44"}
-            }
-        }
-        GH{
-            {
-                code{"233"}
-            }
-        }
-        GI{
-            {
-                code{"350"}
-            }
-        }
-        GL{
-            {
-                code{"299"}
-            }
-        }
-        GM{
-            {
-                code{"220"}
-            }
-        }
-        GN{
-            {
-                code{"224"}
-            }
-        }
-        GP{
-            {
-                code{"590"}
-            }
-        }
-        GQ{
-            {
-                code{"240"}
-            }
-        }
-        GR{
-            {
-                code{"30"}
-            }
-        }
-        GS{
-            {
-                code{"500"}
-            }
-        }
-        GT{
-            {
-                code{"502"}
-            }
-        }
-        GU{
-            {
-                code{"1"}
-            }
-        }
-        GW{
-            {
-                code{"245"}
-            }
-        }
-        GY{
-            {
-                code{"592"}
-            }
-        }
-        HK{
-            {
-                code{"852"}
-            }
-        }
-        HN{
-            {
-                code{"504"}
-            }
-        }
-        HR{
-            {
-                code{"385"}
-            }
-        }
-        HT{
-            {
-                code{"509"}
-            }
-        }
-        HU{
-            {
-                code{"36"}
-            }
-        }
-        ID{
-            {
-                code{"62"}
-            }
-        }
-        IE{
-            {
-                code{"353"}
-            }
-        }
-        IL{
-            {
-                code{"972"}
-            }
-        }
-        IM{
-            {
-                code{"44"}
-            }
-        }
-        IN{
-            {
-                code{"91"}
-            }
-        }
-        IO{
-            {
-                code{"246"}
-            }
-        }
-        IQ{
-            {
-                code{"964"}
-            }
-        }
-        IR{
-            {
-                code{"98"}
-            }
-        }
-        IS{
-            {
-                code{"354"}
-            }
-        }
-        IT{
-            {
-                code{"39"}
-            }
-        }
-        JE{
-            {
-                code{"44"}
-            }
-        }
-        JM{
-            {
-                code{"1"}
-            }
-        }
-        JO{
-            {
-                code{"962"}
-            }
-        }
-        JP{
-            {
-                code{"81"}
-            }
-        }
-        KE{
-            {
-                code{"254"}
-            }
-        }
-        KG{
-            {
-                code{"996"}
-            }
-        }
-        KH{
-            {
-                code{"855"}
-            }
-        }
-        KI{
-            {
-                code{"686"}
-            }
-        }
-        KM{
-            {
-                code{"269"}
-            }
-        }
-        KN{
-            {
-                code{"1"}
-            }
-        }
-        KP{
-            {
-                code{"850"}
-            }
-        }
-        KR{
-            {
-                code{"82"}
-            }
-        }
-        KW{
-            {
-                code{"965"}
-            }
-        }
-        KY{
-            {
-                code{"1"}
-            }
-        }
-        KZ{
-            {
-                code{"7"}
-            }
-        }
-        LA{
-            {
-                code{"856"}
-            }
-        }
-        LB{
-            {
-                code{"961"}
-            }
-        }
-        LC{
-            {
-                code{"1"}
-            }
-        }
-        LI{
-            {
-                code{"423"}
-            }
-        }
-        LK{
-            {
-                code{"94"}
-            }
-        }
-        LR{
-            {
-                code{"231"}
-            }
-        }
-        LS{
-            {
-                code{"266"}
-            }
-        }
-        LT{
-            {
-                code{"370"}
-            }
-        }
-        LU{
-            {
-                code{"352"}
-            }
-        }
-        LV{
-            {
-                code{"371"}
-            }
-        }
-        LY{
-            {
-                code{"218"}
-            }
-        }
-        MA{
-            {
-                code{"212"}
-            }
-        }
-        MC{
-            {
-                code{"377"}
-            }
-        }
-        MD{
-            {
-                code{"373"}
-            }
-        }
-        ME{
-            {
-                code{"382"}
-            }
-        }
-        MF{
-            {
-                code{"590"}
-            }
-        }
-        MG{
-            {
-                code{"261"}
-            }
-        }
-        MH{
-            {
-                code{"692"}
-            }
-        }
-        MK{
-            {
-                code{"389"}
-            }
-        }
-        ML{
-            {
-                code{"223"}
-            }
-        }
-        MM{
-            {
-                code{"95"}
-            }
-        }
-        MN{
-            {
-                code{"976"}
-            }
-        }
-        MO{
-            {
-                code{"853"}
-            }
-        }
-        MP{
-            {
-                code{"1"}
-            }
-        }
-        MQ{
-            {
-                code{"596"}
-            }
-        }
-        MR{
-            {
-                code{"222"}
-            }
-        }
-        MS{
-            {
-                code{"1"}
-            }
-        }
-        MT{
-            {
-                code{"356"}
-            }
-        }
-        MU{
-            {
-                code{"230"}
-            }
-        }
-        MV{
-            {
-                code{"960"}
-            }
-        }
-        MW{
-            {
-                code{"265"}
-            }
-        }
-        MX{
-            {
-                code{"52"}
-            }
-        }
-        MY{
-            {
-                code{"60"}
-            }
-        }
-        MZ{
-            {
-                code{"258"}
-            }
-        }
-        NA{
-            {
-                code{"264"}
-            }
-        }
-        NC{
-            {
-                code{"687"}
-            }
-        }
-        NE{
-            {
-                code{"227"}
-            }
-        }
-        NF{
-            {
-                code{"672"}
-            }
-        }
-        NG{
-            {
-                code{"234"}
-            }
-        }
-        NI{
-            {
-                code{"505"}
-            }
-        }
-        NL{
-            {
-                code{"31"}
-            }
-        }
-        NO{
-            {
-                code{"47"}
-            }
-        }
-        NP{
-            {
-                code{"977"}
-            }
-        }
-        NR{
-            {
-                code{"674"}
-            }
-        }
-        NU{
-            {
-                code{"683"}
-            }
-        }
-        NZ{
-            {
-                code{"64"}
-            }
-        }
-        OM{
-            {
-                code{"968"}
-            }
-        }
-        PA{
-            {
-                code{"507"}
-            }
-        }
-        PE{
-            {
-                code{"51"}
-            }
-        }
-        PF{
-            {
-                code{"689"}
-            }
-        }
-        PG{
-            {
-                code{"675"}
-            }
-        }
-        PH{
-            {
-                code{"63"}
-            }
-        }
-        PK{
-            {
-                code{"92"}
-            }
-        }
-        PL{
-            {
-                code{"48"}
-            }
-        }
-        PM{
-            {
-                code{"508"}
-            }
-        }
-        PN{
-            {
-                code{"870"}
-            }
-        }
-        PR{
-            {
-                code{"1"}
-            }
-        }
-        PS{
-            {
-                code%limitedAvailability{"970"}
-            }
-            {
-                code{"972"}
-            }
-        }
-        PT{
-            {
-                code{"351"}
-            }
-        }
-        PW{
-            {
-                code{"680"}
-            }
-        }
-        PY{
-            {
-                code{"595"}
-            }
-        }
-        QA{
-            {
-                code{"974"}
-            }
-        }
-        RE{
-            {
-                code{"262"}
-            }
-        }
-        RO{
-            {
-                code{"40"}
-            }
-        }
-        RS{
-            {
-                code{"381"}
-            }
-        }
-        RU{
-            {
-                code{"7"}
-            }
-        }
-        RW{
-            {
-                code{"250"}
-            }
-        }
-        SA{
-            {
-                code{"966"}
-            }
-        }
-        SB{
-            {
-                code{"677"}
-            }
-        }
-        SC{
-            {
-                code{"248"}
-            }
-        }
-        SD{
-            {
-                code{"249"}
-            }
-        }
-        SE{
-            {
-                code{"46"}
-            }
-        }
-        SG{
-            {
-                code{"65"}
-            }
-        }
-        SH{
-            {
-                code{"290"}
-            }
-        }
-        SI{
-            {
-                code{"386"}
-            }
-        }
-        SJ{
-            {
-                code{"47"}
-            }
-        }
-        SK{
-            {
-                code{"421"}
-            }
-        }
-        SL{
-            {
-                code{"232"}
-            }
-        }
-        SM{
-            {
-                code{"378"}
-            }
-        }
-        SN{
-            {
-                code{"221"}
-            }
-        }
-        SO{
-            {
-                code{"252"}
-            }
-        }
-        SR{
-            {
-                code{"597"}
-            }
-        }
-        SS{
-            {
-                code{"211"}
-            }
-        }
-        ST{
-            {
-                code{"239"}
-            }
-        }
-        SV{
-            {
-                code{"503"}
-            }
-        }
-        SX{
-            {
-                code{"1"}
-            }
-        }
-        SY{
-            {
-                code{"963"}
-            }
-        }
-        SZ{
-            {
-                code{"268"}
-            }
-        }
-        TC{
-            {
-                code{"1"}
-            }
-        }
-        TD{
-            {
-                code{"235"}
-            }
-        }
-        TF{
-            {
-                code{"262"}
-            }
-        }
-        TG{
-            {
-                code{"228"}
-            }
-        }
-        TH{
-            {
-                code{"66"}
-            }
-        }
-        TJ{
-            {
-                code{"992"}
-            }
-        }
-        TK{
-            {
-                code{"690"}
-            }
-        }
-        TL{
-            {
-                code{"670"}
-            }
-        }
-        TM{
-            {
-                code{"993"}
-            }
-        }
-        TN{
-            {
-                code{"216"}
-            }
-        }
-        TO{
-            {
-                code{"676"}
-            }
-        }
-        TR{
-            {
-                code{"90"}
-            }
-        }
-        TT{
-            {
-                code{"1"}
-            }
-        }
-        TV{
-            {
-                code{"688"}
-            }
-        }
-        TW{
-            {
-                code{"886"}
-            }
-        }
-        TZ{
-            {
-                code{"255"}
-            }
-        }
-        UA{
-            {
-                code{"380"}
-            }
-        }
-        UG{
-            {
-                code{"256"}
-            }
-        }
-        UM{
-            {
-                code{"1"}
-            }
-        }
-        US{
-            {
-                code{"1"}
-            }
-        }
-        UY{
-            {
-                code{"598"}
-            }
-        }
-        UZ{
-            {
-                code{"998"}
-            }
-        }
-        VA{
-            {
-                code{"39"}
-            }
-        }
-        VC{
-            {
-                code{"1"}
-            }
-        }
-        VE{
-            {
-                code{"58"}
-            }
-        }
-        VG{
-            {
-                code{"1"}
-            }
-        }
-        VI{
-            {
-                code{"1"}
-            }
-        }
-        VN{
-            {
-                code{"84"}
-            }
-        }
-        VU{
-            {
-                code{"678"}
-            }
-        }
-        WF{
-            {
-                code{"681"}
-            }
-        }
-        WS{
-            {
-                code{"685"}
-            }
-        }
-        XK{
-            {
-                code{"377"}
-            }
-            {
-                code{"381"}
-            }
-            {
-                code{"383"}
-            }
-            {
-                code{"386"}
-            }
-        }
-        YE{
-            {
-                code{"967"}
-            }
-        }
-        YT{
-            {
-                code{"262"}
-            }
-        }
-        ZA{
-            {
-                code{"27"}
-            }
-        }
-        ZM{
-            {
-                code{"260"}
-            }
-        }
-        ZW{
-            {
-                code{"263"}
-            }
-        }
-    }
-    territoryContainment{
-        001{
-            "019",
-            "002",
-            "150",
-            "142",
-            "009",
-        }
-        002{
-            "015",
-            "011",
-            "017",
-            "014",
-            "018",
-        }
-        005{
-            "AR",
-            "BO",
-            "BR",
-            "BV",
-            "CL",
-            "CO",
-            "EC",
-            "FK",
-            "GF",
-            "GS",
-            "GY",
-            "PE",
-            "PY",
-            "SR",
-            "UY",
-            "VE",
-        }
-        009{
-            "053",
-            "054",
-            "057",
-            "061",
-            "QO",
-        }
-        011{
-            "BF",
-            "BJ",
-            "CI",
-            "CV",
-            "GH",
-            "GM",
-            "GN",
-            "GW",
-            "LR",
-            "ML",
-            "MR",
-            "NE",
-            "NG",
-            "SH",
-            "SL",
-            "SN",
-            "TG",
-        }
-        013{
-            "BZ",
-            "CR",
-            "GT",
-            "HN",
-            "MX",
-            "NI",
-            "PA",
-            "SV",
-        }
-        014{
-            "BI",
-            "DJ",
-            "ER",
-            "ET",
-            "IO",
-            "KE",
-            "KM",
-            "MG",
-            "MU",
-            "MW",
-            "MZ",
-            "RE",
-            "RW",
-            "SC",
-            "SO",
-            "SS",
-            "TZ",
-            "UG",
-            "YT",
-            "ZM",
-            "ZW",
-        }
-        015{
-            "DZ",
-            "EG",
-            "EH",
-            "LY",
-            "MA",
-            "SD",
-            "TN",
-            "EA",
-            "IC",
-        }
-        017{
-            "AO",
-            "CD",
-            "CF",
-            "CG",
-            "CM",
-            "GA",
-            "GQ",
-            "ST",
-            "TD",
-        }
-        018{
-            "BW",
-            "LS",
-            "NA",
-            "SZ",
-            "ZA",
-        }
-        019{
-            "021",
-            "013",
-            "029",
-            "005",
-        }
-        021{
-            "BM",
-            "CA",
-            "GL",
-            "PM",
-            "US",
-        }
-        029{
-            "AG",
-            "AI",
-            "AW",
-            "BB",
-            "BL",
-            "BQ",
-            "BS",
-            "CU",
-            "CW",
-            "DM",
-            "DO",
-            "GD",
-            "GP",
-            "HT",
-            "JM",
-            "KN",
-            "KY",
-            "LC",
-            "MF",
-            "MQ",
-            "MS",
-            "PR",
-            "SX",
-            "TC",
-            "TT",
-            "VC",
-            "VG",
-            "VI",
-        }
-        030{
-            "CN",
-            "HK",
-            "JP",
-            "KP",
-            "KR",
-            "MN",
-            "MO",
-            "TW",
-        }
-        034{
-            "AF",
-            "BD",
-            "BT",
-            "IN",
-            "IR",
-            "LK",
-            "MV",
-            "NP",
-            "PK",
-        }
-        035{
-            "BN",
-            "ID",
-            "KH",
-            "LA",
-            "MM",
-            "MY",
-            "PH",
-            "SG",
-            "TH",
-            "TL",
-            "VN",
-        }
-        039{
-            "AD",
-            "AL",
-            "BA",
-            "ES",
-            "GI",
-            "GR",
-            "HR",
-            "IT",
-            "ME",
-            "MK",
-            "MT",
-            "RS",
-            "PT",
-            "SI",
-            "SM",
-            "VA",
-            "XK",
-        }
-        053{
-            "AU",
-            "CC",
-            "CX",
-            "HM",
-            "NF",
-            "NZ",
-        }
-        054{
-            "FJ",
-            "NC",
-            "PG",
-            "SB",
-            "VU",
-        }
-        057{
-            "FM",
-            "GU",
-            "KI",
-            "MH",
-            "MP",
-            "NR",
-            "PW",
-            "UM",
-        }
-        061{
-            "AS",
-            "CK",
-            "NU",
-            "PF",
-            "PN",
-            "TK",
-            "TO",
-            "TV",
-            "WF",
-            "WS",
-        }
-        142{
-            "145",
-            "143",
-            "030",
-            "034",
-            "035",
-        }
-        143{
-            "TM",
-            "TJ",
-            "KG",
-            "KZ",
-            "UZ",
-        }
-        145{
-            "AE",
-            "AM",
-            "AZ",
-            "BH",
-            "CY",
-            "GE",
-            "IL",
-            "IQ",
-            "JO",
-            "KW",
-            "LB",
-            "OM",
-            "PS",
-            "QA",
-            "SA",
-            "SY",
-            "TF",
-            "TR",
-            "YE",
-        }
-        150{
-            "154",
-            "155",
-            "151",
-            "039",
-        }
-        151{
-            "BG",
-            "BY",
-            "CZ",
-            "HU",
-            "MD",
-            "PL",
-            "RO",
-            "RU",
-            "SK",
-            "UA",
-        }
-        154{
-            "GG",
-            "IM",
-            "JE",
-            "AX",
-            "DK",
-            "EE",
-            "FI",
-            "FO",
-            "GB",
-            "IE",
-            "IS",
-            "LT",
-            "LV",
-            "NO",
-            "SE",
-            "SJ",
-=======
         mws{
             "mwba",
             "mwbl",
@@ -28112,7 +25445,6 @@ supplementalData:table(nofallback){
             "NO",
             "SE",
             "SJ",
->>>>>>> upstream-releases
         }
         155{
             "AT",
@@ -28437,13 +25769,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49990000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                57422900,
-||||||| merged common ancestors
-                57418000,
-=======
                 57422300,
->>>>>>> upstream-releases
                 49990000,
                 52940000,
             }
@@ -28486,13 +25812,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48290000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61686800,
-||||||| merged common ancestors
-                61691900,
-=======
                 61696000,
->>>>>>> upstream-releases
                 49900000,
                 56970132,
             }
@@ -28524,13 +25844,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49430000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60695500,
-||||||| merged common ancestors
-                60695100,
-=======
                 60694500,
->>>>>>> upstream-releases
                 49281000,
                 57349408,
             }
@@ -28555,13 +25869,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48170000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59239300,
-||||||| merged common ancestors
-                59239000,
-=======
                 59239800,
->>>>>>> upstream-releases
                 49990000,
                 54958820,
             }
@@ -28589,13 +25897,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60359700,
-||||||| merged common ancestors
-                60358700,
-=======
                 60360100,
->>>>>>> upstream-releases
                 49968000,
                 56305722,
             }
@@ -28612,13 +25914,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48330000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60282800,
-||||||| merged common ancestors
-                60272100,
-=======
                 60283400,
->>>>>>> upstream-releases
                 49996000,
                 56303822,
             }
@@ -28636,13 +25932,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49670000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61190300,
-||||||| merged common ancestors
-                61192000,
-=======
                 61193600,
->>>>>>> upstream-releases
                 49704000,
                 57303559,
             }
@@ -28652,13 +25942,7 @@ supplementalData:table(nofallback){
         }
         AQ{
             territoryF:intvector{
-<<<<<<< HEAD
-                57178100,
-||||||| merged common ancestors
-                57177800,
-=======
                 57177600,
->>>>>>> upstream-releases
                 49990000,
                 52300000,
             }
@@ -28681,13 +25965,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46470000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61920200,
-||||||| merged common ancestors
-                61911500,
-=======
                 61922100,
->>>>>>> upstream-releases
                 49979000,
                 57446942,
             }
@@ -28737,13 +26015,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47370000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61439600,
-||||||| merged common ancestors
-                61434100,
-=======
                 61441000,
->>>>>>> upstream-releases
                 49980000,
                 56879337,
             }
@@ -28757,13 +26029,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48190000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62124600,
-||||||| merged common ancestors
-                62123500,
-=======
                 62124800,
->>>>>>> upstream-releases
                 49990000,
                 57234701,
             }
@@ -28816,13 +26082,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47240000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61171800,
-||||||| merged common ancestors
-                61166800,
-=======
                 61172200,
->>>>>>> upstream-releases
                 49998000,
                 57100465,
             }
@@ -28863,13 +26123,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60446200,
-||||||| merged common ancestors
-                60438500,
-=======
                 60448300,
->>>>>>> upstream-releases
                 49980000,
                 56384989,
             }
@@ -28880,13 +26134,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59524400,
-||||||| merged common ancestors
-                59491900,
-=======
                 59521800,
->>>>>>> upstream-releases
                 49997000,
                 55293131,
             }
@@ -28923,13 +26171,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61687100,
-||||||| merged common ancestors
-                61686500,
-=======
                 61690300,
->>>>>>> upstream-releases
                 49577000,
                 58159453,
             }
@@ -28951,13 +26193,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49550000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61528500,
-||||||| merged common ancestors
-                61526400,
-=======
                 61529200,
->>>>>>> upstream-releases
                 49990000,
                 57115708,
             }
@@ -28987,13 +26223,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49400000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60357800,
-||||||| merged common ancestors
-                60356800,
-=======
                 60358500,
->>>>>>> upstream-releases
                 49287000,
                 57197427,
             }
@@ -29013,13 +26243,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49230000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61153100,
-||||||| merged common ancestors
-                61152400,
-=======
                 61153500,
->>>>>>> upstream-releases
                 49984000,
                 56705750,
             }
@@ -29036,13 +26260,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48330000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60704400,
-||||||| merged common ancestors
-                60697700,
-=======
                 60711700,
->>>>>>> upstream-releases
                 49946000,
                 56144266,
             }
@@ -29064,13 +26282,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46540000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59799000,
-||||||| merged common ancestors
-                59798500,
-=======
                 59800700,
->>>>>>> upstream-releases
                 49672000,
                 57118445,
             }
@@ -29084,13 +26296,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49350000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60253300,
-||||||| merged common ancestors
-                60252900,
-=======
                 60253900,
->>>>>>> upstream-releases
                 49424000,
                 57113405,
             }
@@ -29133,13 +26339,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60335400,
-||||||| merged common ancestors
-                60329100,
-=======
                 60338700,
->>>>>>> upstream-releases
                 49954000,
                 55450565,
             }
@@ -29167,13 +26367,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49320000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60835500,
-||||||| merged common ancestors
-                60835000,
-=======
                 60837200,
->>>>>>> upstream-releases
                 49912000,
                 57113063,
             }
@@ -29187,16 +26381,8 @@ supplementalData:table(nofallback){
                 populationShareF:int{49810000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58418000,
-                49960000,
-||||||| merged common ancestors
-                58418000,
-                49990000,
-=======
                 58416400,
                 49960000,
->>>>>>> upstream-releases
                 54200000,
             }
         }
@@ -29230,13 +26416,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49910000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62324000,
-||||||| merged common ancestors
-                62321900,
-=======
                 62324800,
->>>>>>> upstream-releases
                 49904000,
                 58208847,
             }
@@ -29253,13 +26433,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60116000,
-||||||| merged common ancestors
-                59933900,
-=======
                 60120600,
->>>>>>> upstream-releases
                 49956000,
                 55332634,
             }
@@ -29279,13 +26453,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49170000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59703000,
-||||||| merged common ancestors
-                59701100,
-=======
                 59720500,
->>>>>>> upstream-releases
                 49528000,
                 55766397,
             }
@@ -29295,13 +26463,7 @@ supplementalData:table(nofallback){
         }
         BV{
             territoryF:intvector{
-<<<<<<< HEAD
-                54449900,
-||||||| merged common ancestors
-                54444700,
-=======
                 54449300,
->>>>>>> upstream-releases
                 49990000,
                 50100000,
             }
@@ -29318,13 +26480,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49810000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60388600,
-||||||| merged common ancestors
-                60395500,
-=======
                 60390100,
->>>>>>> upstream-releases
                 49851000,
                 56224910,
             }
@@ -29343,13 +26499,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49120000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61178900,
-||||||| merged common ancestors
-                61175900,
-=======
                 61179400,
->>>>>>> upstream-releases
                 49996000,
                 56952754,
             }
@@ -29363,13 +26513,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49280000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59321100,
-||||||| merged common ancestors
-                59323000,
-=======
                 59321800,
->>>>>>> upstream-releases
                 49769000,
                 55385854,
             }
@@ -29453,13 +26597,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{45350000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62176900,
-||||||| merged common ancestors
-                62176400,
-=======
                 62177400,
->>>>>>> upstream-releases
                 49990000,
                 57358817,
             }
@@ -29476,13 +26614,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49830000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                57319600,
-||||||| merged common ancestors
-                57316800,
-=======
                 57316900,
->>>>>>> upstream-releases
                 49990000,
                 52596000,
             }
@@ -29518,13 +26650,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60684500,
-||||||| merged common ancestors
-                60679900,
-=======
                 60686000,
->>>>>>> upstream-releases
                 49668000,
                 57852810,
             }
@@ -29542,13 +26668,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49490000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59337300,
-||||||| merged common ancestors
-                59339500,
-=======
                 59339000,
->>>>>>> upstream-releases
                 49566000,
                 56574506,
             }
@@ -29562,13 +26682,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48240000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60288800,
-||||||| merged common ancestors
-                60291600,
-=======
                 60293900,
->>>>>>> upstream-releases
                 49838000,
                 56506202,
             }
@@ -29609,13 +26723,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47290000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61517200,
-||||||| merged common ancestors
-                61516700,
-=======
                 61523100,
->>>>>>> upstream-releases
                 49990000,
                 56829281,
             }
@@ -29648,13 +26756,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60969200,
-||||||| merged common ancestors
-                60962700,
-=======
                 60971600,
->>>>>>> upstream-releases
                 49569000,
                 57262606,
             }
@@ -29682,7 +26784,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49980000}
             }
             territoryF:intvector{
-                61451100,
+                61452100,
                 49986000,
                 57179253,
             }
@@ -29779,13 +26881,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48140000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60888600,
-||||||| merged common ancestors
-                60815500,
-=======
                 60895400,
->>>>>>> upstream-releases
                 49713000,
                 57256410,
             }
@@ -29857,13 +26953,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46190000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                63231600,
-||||||| merged common ancestors
-                63231200,
-=======
                 63232100,
->>>>>>> upstream-releases
                 49951000,
                 59138469,
             }
@@ -29901,26 +26991,14 @@ supplementalData:table(nofallback){
                 populationShareF:int{47270000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61714000,
-||||||| merged common ancestors
-                61712500,
-=======
                 61711600,
->>>>>>> upstream-releases
                 49936000,
                 57481690,
             }
         }
         CP{
             territoryF:intvector{
-<<<<<<< HEAD
-                54422600,
-||||||| merged common ancestors
-                54421100,
-=======
                 54424000,
->>>>>>> upstream-releases
                 49990000,
                 50100000,
             }
@@ -29934,13 +27012,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49950000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60838500,
-||||||| merged common ancestors
-                60852000,
-=======
                 60839400,
->>>>>>> upstream-releases
                 49963000,
                 56498714,
             }
@@ -29965,13 +27037,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49760000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59373500,
-||||||| merged common ancestors
-                59373400,
-=======
                 59377700,
->>>>>>> upstream-releases
                 49849000,
                 55568373,
             }
@@ -29990,16 +27056,8 @@ supplementalData:table(nofallback){
             }
             territoryF:intvector{
                 59312800,
-<<<<<<< HEAD
-                49960000,
-                55149648,
-||||||| merged common ancestors
-                49990000,
-                55149648,
-=======
                 49960000,
                 55150241,
->>>>>>> upstream-releases
             }
         }
         CX{
@@ -30008,7 +27066,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49630000}
             }
             territoryF:intvector{
-                58118300,
+                58117200,
                 49990000,
                 53220500,
             }
@@ -30031,13 +27089,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47220000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60315900,
-||||||| merged common ancestors
-                60311900,
-=======
                 60317800,
->>>>>>> upstream-releases
                 49987000,
                 56123709,
             }
@@ -30064,13 +27116,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49160000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61375700,
-||||||| merged common ancestors
-                61372600,
-=======
                 61375900,
->>>>>>> upstream-releases
                 49990000,
                 57106863,
             }
@@ -30153,13 +27199,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62417100,
-||||||| merged common ancestors
-                62415000,
-=======
                 62419900,
->>>>>>> upstream-releases
                 49990000,
                 57804577,
             }
@@ -30176,13 +27216,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49990000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                57225000,
-||||||| merged common ancestors
-                57222300,
-=======
                 57224600,
->>>>>>> upstream-releases
                 49990000,
                 52500000,
             }
@@ -30203,7 +27237,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49410000}
             }
             territoryF:intvector{
-                59363200,
+                59364000,
                 49679000,
                 55884017,
             }
@@ -30234,13 +27268,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49130000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61286800,
-||||||| merged common ancestors
-                61285500,
-=======
                 61287800,
->>>>>>> upstream-releases
                 49990000,
                 56580950,
             }
@@ -30251,13 +27279,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49940000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58785000,
-||||||| merged common ancestors
-                58851000,
-=======
                 58783000,
->>>>>>> upstream-releases
                 49940000,
                 54740270,
             }
@@ -30271,13 +27293,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49780000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61172400,
-||||||| merged common ancestors
-                61172600,
-=======
                 61173000,
->>>>>>> upstream-releases
                 49901000,
                 57102988,
             }
@@ -30302,13 +27318,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48780000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61632900,
-||||||| merged common ancestors
-                61629300,
-=======
                 61630000,
->>>>>>> upstream-releases
                 49726000,
                 57416575,
             }
@@ -30319,13 +27329,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49980000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59543500,
-||||||| merged common ancestors
-                59542000,
-=======
                 59540600,
->>>>>>> upstream-releases
                 49977000,
                 55150000,
             }
@@ -30343,13 +27347,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48570000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61192600,
-||||||| merged common ancestors
-                61188500,
-=======
                 61193000,
->>>>>>> upstream-releases
                 49916000,
                 57164985,
             }
@@ -30369,13 +27367,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49560000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60415600,
-||||||| merged common ancestors
-                60412000,
-=======
                 60416500,
->>>>>>> upstream-releases
                 49998000,
                 56124429,
             }
@@ -30398,13 +27390,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49350000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62120100,
-||||||| merged common ancestors
-                62119900,
-=======
                 62120400,
->>>>>>> upstream-releases
                 49739000,
                 57994133,
             }
@@ -30440,13 +27426,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48360000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59938200,
-||||||| merged common ancestors
-                59963100,
-=======
                 59940200,
->>>>>>> upstream-releases
                 49689000,
                 56597065,
             }
@@ -30486,13 +27466,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48700000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62177400,
-||||||| merged common ancestors
-                62176900,
-=======
                 62177800,
->>>>>>> upstream-releases
                 49977000,
                 57493311,
             }
@@ -30518,13 +27492,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48600000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61200200,
-||||||| merged common ancestors
-                61195800,
-=======
                 61200600,
->>>>>>> upstream-releases
                 49390000,
                 58108386,
             }
@@ -30569,13 +27537,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49440000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61244000,
-||||||| merged common ancestors
-                61242400,
-=======
                 61244900,
->>>>>>> upstream-releases
                 50100000,
                 56553736,
             }
@@ -30600,13 +27562,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47270000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59865200,
-||||||| merged common ancestors
-                59864700,
-=======
                 59862900,
->>>>>>> upstream-releases
                 49937000,
                 55926276,
             }
@@ -30714,13 +27670,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48130000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62283600,
-||||||| merged common ancestors
-                62282600,
-=======
                 62285600,
->>>>>>> upstream-releases
                 49990000,
                 57673644,
             }
@@ -30734,13 +27684,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60367300,
-||||||| merged common ancestors
-                60367500,
-=======
                 60366600,
->>>>>>> upstream-releases
                 49890000,
                 56211904,
             }
@@ -30798,13 +27742,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62291400,
-||||||| merged common ancestors
-                62288000,
-=======
                 62292500,
->>>>>>> upstream-releases
                 49990000,
                 57651052,
             }
@@ -30821,13 +27759,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49960000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59160600,
-||||||| merged common ancestors
-                59159000,
-=======
                 59163400,
->>>>>>> upstream-releases
                 49960000,
                 55112207,
             }
@@ -30855,13 +27787,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60397000,
-||||||| merged common ancestors
-                60393200,
-=======
                 60398500,
->>>>>>> upstream-releases
                 49997000,
                 56492609,
             }
@@ -30939,13 +27865,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46140000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61133700,
-||||||| merged common ancestors
-                61130200,
-=======
                 61134000,
->>>>>>> upstream-releases
                 49715000,
                 57281025,
             }
@@ -30993,13 +27913,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49290000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59360200,
-||||||| merged common ancestors
-                59358200,
-=======
                 59555600,
->>>>>>> upstream-releases
                 49511000,
                 56209273,
             }
@@ -31028,13 +27942,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49110000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60264700,
-||||||| merged common ancestors
-                60264500,
-=======
                 60279700,
->>>>>>> upstream-releases
                 49410000,
                 57118554,
             }
@@ -31070,13 +27978,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{44100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60303500,
-||||||| merged common ancestors
-                60293800,
-=======
                 60315200,
->>>>>>> upstream-releases
                 49942000,
                 55797457,
             }
@@ -31108,13 +28010,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46930000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61298700,
-||||||| merged common ancestors
-                61299500,
-=======
                 61299300,
->>>>>>> upstream-releases
                 49973000,
                 57107615,
             }
@@ -31127,13 +28023,7 @@ supplementalData:table(nofallback){
         }
         GS{
             territoryF:intvector{
-<<<<<<< HEAD
-                55899800,
-||||||| merged common ancestors
-                55889300,
-=======
                 55898500,
->>>>>>> upstream-releases
                 49990000,
                 51200000,
             }
@@ -31152,13 +28042,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48700000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61137800,
-||||||| merged common ancestors
-                61138300,
-=======
                 61138100,
->>>>>>> upstream-releases
                 49759000,
                 57165813,
             }
@@ -31193,13 +28077,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59313700,
-||||||| merged common ancestors
-                59307100,
-=======
                 59317100,
->>>>>>> upstream-releases
                 49553000,
                 56183325,
             }
@@ -31210,13 +28088,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59628700,
-||||||| merged common ancestors
-                59636700,
-=======
                 59630100,
->>>>>>> upstream-releases
                 49918000,
                 55740685,
             }
@@ -31227,13 +28099,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49510000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61454900,
-||||||| merged common ancestors
-                61453000,
-=======
                 61455900,
->>>>>>> upstream-releases
                 49935000,
                 56721334,
             }
@@ -31250,13 +28116,7 @@ supplementalData:table(nofallback){
         }
         HM{
             territoryF:intvector{
-<<<<<<< HEAD
-                54536300,
-||||||| merged common ancestors
-                54531600,
-=======
                 54531700,
->>>>>>> upstream-releases
                 49990000,
                 50100000,
             }
@@ -31274,13 +28134,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49780000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60462000,
-||||||| merged common ancestors
-                60456800,
-=======
                 60463000,
->>>>>>> upstream-releases
                 49851000,
                 56918277,
             }
@@ -31298,13 +28152,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48160000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61101300,
-||||||| merged common ancestors
-                61100200,
-=======
                 61102100,
->>>>>>> upstream-releases
                 49989000,
                 56427048,
             }
@@ -31320,13 +28168,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49810000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60199300,
-||||||| merged common ancestors
-                60198800,
-=======
                 60199700,
->>>>>>> upstream-releases
                 49487000,
                 57107884,
             }
@@ -31358,13 +28200,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46510000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61289000,
-||||||| merged common ancestors
-                61283600,
-=======
                 61289600,
->>>>>>> upstream-releases
                 49990000,
                 56982570,
             }
@@ -31375,13 +28211,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49980000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60760400,
-||||||| merged common ancestors
-                60758300,
-=======
                 60756400,
->>>>>>> upstream-releases
                 49977000,
                 56209859,
             }
@@ -31500,13 +28330,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49220000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61357200,
-||||||| merged common ancestors
-                61344800,
-=======
                 61353300,
->>>>>>> upstream-releases
                 49990000,
                 56506805,
             }
@@ -31545,13 +28369,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49110000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61316500,
-||||||| merged common ancestors
-                61315600,
-=======
                 61317100,
->>>>>>> upstream-releases
                 49971000,
                 56842490,
             }
@@ -31817,13 +28635,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48720000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62945900,
-||||||| merged common ancestors
-                62944700,
-=======
                 62947400,
->>>>>>> upstream-releases
                 49628000,
                 59129683,
             }
@@ -31858,13 +28670,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58157500,
-||||||| merged common ancestors
-                58155600,
-=======
                 58157200,
->>>>>>> upstream-releases
                 49990000,
                 53350000,
             }
@@ -31895,13 +28701,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61658800,
-||||||| merged common ancestors
-                61660700,
-=======
                 61649300,
->>>>>>> upstream-releases
                 49785000,
                 57401942,
             }
@@ -31972,13 +28772,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48370000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62164500,
-||||||| merged common ancestors
-                62163100,
-=======
                 62164000,
->>>>>>> upstream-releases
                 49850000,
                 57830247,
             }
@@ -31995,13 +28789,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60176200,
-||||||| merged common ancestors
-                60177300,
-=======
                 60181800,
->>>>>>> upstream-releases
                 49990000,
                 55343518,
             }
@@ -32067,13 +28855,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47170000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62231100,
-||||||| merged common ancestors
-                62230700,
-=======
                 62231700,
->>>>>>> upstream-releases
                 49990000,
                 57622467,
             }
@@ -32115,13 +28897,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49450000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60891000,
-||||||| merged common ancestors
-                60890500,
-=======
                 60890000,
->>>>>>> upstream-releases
                 49959000,
                 57104584,
             }
@@ -32139,13 +28915,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62542900,
-||||||| merged common ancestors
-                62540500,
-=======
                 62544300,
->>>>>>> upstream-releases
                 49990000,
                 58126168,
             }
@@ -32219,13 +28989,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47740000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61163100,
-||||||| merged common ancestors
-                61163400,
-=======
                 61163700,
->>>>>>> upstream-releases
                 49874000,
                 57483975,
             }
@@ -32240,13 +29004,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49360000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60229700,
-||||||| merged common ancestors
-                60226400,
-=======
                 60231500,
->>>>>>> upstream-releases
                 49992000,
                 56584930,
             }
@@ -32263,7 +29021,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49890000}
             }
             territoryF:intvector{
-                60642500,
+                60642100,
                 49739000,
                 57164495,
             }
@@ -32278,13 +29036,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49600000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58226000,
-||||||| merged common ancestors
-                58224000,
-=======
                 58227000,
->>>>>>> upstream-releases
                 49900000,
                 55109367,
             }
@@ -32299,13 +29051,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49560000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59131300,
-||||||| merged common ancestors
-                59132300,
-=======
                 59131900,
->>>>>>> upstream-releases
                 49755000,
                 55821164,
             }
@@ -32346,13 +29092,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62202900,
-||||||| merged common ancestors
-                62202700,
-=======
                 62203500,
->>>>>>> upstream-releases
                 49979000,
                 57514181,
             }
@@ -32363,13 +29103,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61291500,
-||||||| merged common ancestors
-                61302500,
-=======
                 61289700,
->>>>>>> upstream-releases
                 49939000,
                 56291647,
             }
@@ -32401,13 +29135,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49720000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61477600,
-||||||| merged common ancestors
-                61474300,
-=======
                 61478600,
->>>>>>> upstream-releases
                 49997000,
                 57187445,
             }
@@ -32450,13 +29178,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48170000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60876800,
-||||||| merged common ancestors
-                60878900,
-=======
                 60882500,
->>>>>>> upstream-releases
                 49896000,
                 56610008,
             }
@@ -32467,13 +29189,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59253600,
-||||||| merged common ancestors
-                59238400,
-=======
                 59254200,
->>>>>>> upstream-releases
                 49901000,
                 55165510,
             }
@@ -32510,13 +29226,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49150000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61274700,
-||||||| merged common ancestors
-                61278200,
-=======
                 61275800,
->>>>>>> upstream-releases
                 49912000,
                 57225766,
             }
@@ -32539,13 +29249,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47480000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59609900,
-||||||| merged common ancestors
-                59390600,
-=======
                 59611200,
->>>>>>> upstream-releases
                 49608000,
                 56480977,
             }
@@ -32569,13 +29273,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49980000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59695500,
-||||||| merged common ancestors
-                59744800,
-=======
                 59665600,
->>>>>>> upstream-releases
                 49896000,
                 56196246,
             }
@@ -32604,13 +29302,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{0}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60912400,
-||||||| merged common ancestors
-                60906300,
-=======
                 60914700,
->>>>>>> upstream-releases
                 49997000,
                 56279328,
             }
@@ -32636,13 +29328,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49160000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60627300,
-||||||| merged common ancestors
-                60643900,
-=======
                 60621100,
->>>>>>> upstream-releases
                 50100000,
                 55605764,
             }
@@ -32662,13 +29348,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49380000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60539100,
-||||||| merged common ancestors
-                60534700,
-=======
                 60540200,
->>>>>>> upstream-releases
                 49998000,
                 56192356,
             }
@@ -32679,13 +29359,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49740000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60644000,
-||||||| merged common ancestors
-                60631400,
-=======
                 60619700,
->>>>>>> upstream-releases
                 49895000,
                 56675451,
             }
@@ -32762,13 +29436,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48300000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60200800,
-||||||| merged common ancestors
-                60200700,
-=======
                 60237200,
->>>>>>> upstream-releases
                 49990000,
                 56343772,
             }
@@ -32788,13 +29456,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60110500,
-||||||| merged common ancestors
-                60108600,
-=======
                 60110800,
->>>>>>> upstream-releases
                 49985000,
                 55614249,
             }
@@ -32824,13 +29486,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60397300,
-||||||| merged common ancestors
-                60398100,
-=======
                 60398500,
->>>>>>> upstream-releases
                 49645000,
                 57256836,
             }
@@ -32860,13 +29516,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49250000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60309600,
-||||||| merged common ancestors
-                60315500,
-=======
                 60310300,
->>>>>>> upstream-releases
                 49974000,
                 56211895,
             }
@@ -32916,13 +29566,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48590000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60410000,
-||||||| merged common ancestors
-                60409800,
-=======
                 60412200,
->>>>>>> upstream-releases
                 49334000,
                 57184299,
             }
@@ -32948,13 +29592,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48640000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61328700,
-||||||| merged common ancestors
-                61330900,
-=======
                 61329800,
->>>>>>> upstream-releases
                 49927000,
                 57556225,
             }
@@ -32971,13 +29609,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47130000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60397000,
-||||||| merged common ancestors
-                60384000,
-=======
                 60397300,
->>>>>>> upstream-releases
                 49974000,
                 56310343,
             }
@@ -32997,13 +29629,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60717800,
-||||||| merged common ancestors
-                60735800,
-=======
                 60718200,
->>>>>>> upstream-releases
                 49956000,
                 55606340,
             }
@@ -33055,13 +29681,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49170000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60172500,
-||||||| merged common ancestors
-                60173700,
-=======
                 60172800,
->>>>>>> upstream-releases
                 49586000,
                 56384043,
             }
@@ -33096,13 +29716,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60193100,
-||||||| merged common ancestors
-                60185300,
-=======
                 60192600,
->>>>>>> upstream-releases
                 49924000,
                 55449043,
             }
@@ -33126,13 +29740,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48250000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60274600,
-||||||| merged common ancestors
-                60274400,
-=======
                 60282700,
->>>>>>> upstream-releases
                 49888000,
                 56136428,
             }
@@ -33146,13 +29754,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49940000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59688700,
-||||||| merged common ancestors
-                59689600,
-=======
                 59690100,
->>>>>>> upstream-releases
                 49984000,
                 55392473,
             }
@@ -33167,13 +29769,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49630000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60223700,
-||||||| merged common ancestors
-                60224700,
-=======
                 60224200,
->>>>>>> upstream-releases
                 49748000,
                 57198426,
             }
@@ -33211,13 +29807,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{44700000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62245800,
-||||||| merged common ancestors
-                62240600,
-=======
                 62246300,
->>>>>>> upstream-releases
                 49935000,
                 58125959,
             }
@@ -33255,13 +29845,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48420000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61930800,
-||||||| merged common ancestors
-                61926100,
-=======
                 61933300,
->>>>>>> upstream-releases
                 49931000,
                 57318097,
             }
@@ -33299,13 +29883,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46340000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60367300,
-||||||| merged common ancestors
-                60373900,
-=======
                 60370900,
->>>>>>> upstream-releases
                 49561000,
                 57272338,
             }
@@ -33346,13 +29924,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49210000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60265100,
-||||||| merged common ancestors
-                60270200,
-=======
                 60266000,
->>>>>>> upstream-releases
                 49888000,
                 56253322,
             }
@@ -33395,13 +29967,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49410000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60218400,
-||||||| merged common ancestors
-                60216200,
-=======
                 60218600,
->>>>>>> upstream-releases
                 49287000,
                 57198662,
             }
@@ -33418,13 +29984,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49960000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58118500,
-||||||| merged common ancestors
-                58117500,
-=======
                 57929500,
->>>>>>> upstream-releases
                 49990000,
                 53174800,
             }
@@ -33481,13 +30041,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49210000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62111900,
-||||||| merged common ancestors
-                62111800,
-=======
                 62112100,
->>>>>>> upstream-releases
                 49613000,
                 58203453,
             }
@@ -33506,13 +30060,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49780000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60363800,
-||||||| merged common ancestors
-                60362200,
-=======
                 60364000,
->>>>>>> upstream-releases
                 49780000,
                 56608521,
             }
@@ -33555,13 +30103,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48120000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61916100,
-||||||| merged common ancestors
-                61915200,
-=======
                 61924400,
->>>>>>> upstream-releases
                 49990000,
                 57171512,
             }
@@ -33586,13 +30128,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47290000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61380000,
-||||||| merged common ancestors
-                61375900,
-=======
                 61381200,
->>>>>>> upstream-releases
                 50100000,
                 56537219,
             }
@@ -33667,13 +30203,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47120000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60785900,
-||||||| merged common ancestors
-                60785500,
-=======
                 60791900,
->>>>>>> upstream-releases
                 49574000,
                 57297176,
             }
@@ -33736,13 +30266,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48280000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61188600,
-||||||| merged common ancestors
-                61185700,
-=======
                 61189000,
->>>>>>> upstream-releases
                 49990000,
                 56454563,
             }
@@ -33759,13 +30283,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47940000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61186600,
-||||||| merged common ancestors
-                61187900,
-=======
                 61190100,
->>>>>>> upstream-releases
                 49869000,
                 56349412,
             }
@@ -33779,13 +30297,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49690000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61103900,
-||||||| merged common ancestors
-                60994300,
-=======
                 61104100,
->>>>>>> upstream-releases
                 49941000,
                 56380064,
             }
@@ -33806,13 +30318,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49150000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61424400,
-||||||| merged common ancestors
-                61424600,
-=======
                 61430300,
->>>>>>> upstream-releases
                 49896000,
                 57313312,
             }
@@ -33846,13 +30352,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60303300,
-||||||| merged common ancestors
-                60308400,
-=======
                 60301900,
->>>>>>> upstream-releases
                 49624000,
                 56702733,
             }
@@ -33926,13 +30426,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{45940000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61875600,
-||||||| merged common ancestors
-                61874500,
-=======
                 61877200,
->>>>>>> upstream-releases
                 49954000,
                 58105893,
             }
@@ -34016,13 +30510,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48910000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62105700,
-||||||| merged common ancestors
-                62105600,
-=======
                 62106100,
->>>>>>> upstream-releases
                 49549000,
                 58207863,
             }
@@ -34067,13 +30555,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48130000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62112100,
-||||||| merged common ancestors
-                62111100,
-=======
                 62112600,
->>>>>>> upstream-releases
                 49997000,
                 57384207,
             }
@@ -34101,13 +30583,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49850000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                56242900,
-||||||| merged common ancestors
-                56240100,
-=======
                 56242600,
->>>>>>> upstream-releases
                 49990000,
                 51540000,
             }
@@ -34122,13 +30598,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49870000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61121000,
-||||||| merged common ancestors
-                61127300,
-=======
                 61130000,
->>>>>>> upstream-releases
                 49903000,
                 56329463,
             }
@@ -34162,13 +30632,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49960000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61313400,
-||||||| merged common ancestors
-                61311300,
-=======
                 61314100,
->>>>>>> upstream-releases
                 49954000,
                 57103555,
             }
@@ -34183,13 +30647,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49740000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58291000,
-||||||| merged common ancestors
-                58301000,
-=======
                 58264000,
->>>>>>> upstream-releases
                 49920000,
                 54215160,
             }
@@ -34207,13 +30665,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49800000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60683300,
-||||||| merged common ancestors
-                60680500,
-=======
                 60889100,
->>>>>>> upstream-releases
                 49939000,
                 56702576,
             }
@@ -34230,13 +30682,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47280000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61340600,
-||||||| merged common ancestors
-                61341700,
-=======
                 61339500,
->>>>>>> upstream-releases
                 49963000,
                 56236357,
             }
@@ -34291,13 +30737,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47120000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61481500,
-||||||| merged common ancestors
-                61474000,
-=======
                 61483400,
->>>>>>> upstream-releases
                 49977000,
                 57214571,
             }
@@ -34335,13 +30775,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61105500,
-||||||| merged common ancestors
-                61106600,
-=======
                 61105700,
->>>>>>> upstream-releases
                 49980000,
                 56707811,
             }
@@ -34463,13 +30897,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{45350000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62400800,
-||||||| merged common ancestors
-                62400000,
-=======
                 62401600,
->>>>>>> upstream-releases
                 49997000,
                 58142123,
             }
@@ -34506,13 +30934,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49770000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60246300,
-||||||| merged common ancestors
-                60246100,
-=======
                 60246800,
->>>>>>> upstream-releases
                 49711000,
                 57121874,
             }
@@ -34523,13 +30945,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62177400,
-||||||| merged common ancestors
-                62178900,
-=======
                 62177500,
->>>>>>> upstream-releases
                 49872000,
                 57330911,
             }
@@ -34543,13 +30959,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48150000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59132400,
-||||||| merged common ancestors
-                59131700,
-=======
                 59133000,
->>>>>>> upstream-releases
                 49841000,
                 55660121,
             }
@@ -34567,13 +30977,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49600000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59271800,
-||||||| merged common ancestors
-                59271200,
-=======
                 59275000,
->>>>>>> upstream-releases
                 49918000,
                 54946330,
             }
@@ -34603,13 +31007,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47990000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61187000,
-||||||| merged common ancestors
-                61186800,
-=======
                 61177400,
->>>>>>> upstream-releases
                 49719000,
                 57431208,
             }
@@ -34649,13 +31047,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49950000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61520900,
-||||||| merged common ancestors
-                61521700,
-=======
                 61518000,
->>>>>>> upstream-releases
                 49990000,
                 57100410,
             }
@@ -34683,13 +31075,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48210000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61527000,
-||||||| merged common ancestors
-                61513700,
-=======
                 61528100,
->>>>>>> upstream-releases
                 49959000,
                 56599599,
             }
@@ -34730,13 +31116,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49870000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60710800,
-||||||| merged common ancestors
-                60703600,
-=======
                 60712300,
->>>>>>> upstream-releases
                 49997000,
                 56210213,
             }
@@ -34750,13 +31130,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49460000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58190500,
-||||||| merged common ancestors
-                58188400,
-=======
                 58183300,
->>>>>>> upstream-releases
                 50100000,
                 53258300,
             }
@@ -34782,13 +31156,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61179400,
-||||||| merged common ancestors
-                61178700,
-=======
                 61179700,
->>>>>>> upstream-releases
                 49996000,
                 56544504,
             }
@@ -34818,13 +31186,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49260000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60115000,
-||||||| merged common ancestors
-                60117500,
-=======
                 60115500,
->>>>>>> upstream-releases
                 49433000,
                 56631221,
             }
@@ -34838,13 +31200,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49890000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59205200,
-||||||| merged common ancestors
-                59208300,
-=======
                 59206400,
->>>>>>> upstream-releases
                 49960000,
                 54337790,
             }
@@ -34906,13 +31262,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49110000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60432400,
-||||||| merged common ancestors
-                60430700,
-=======
                 60548000,
->>>>>>> upstream-releases
                 49497000,
                 57150209,
             }
@@ -34943,13 +31293,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48200000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60186600,
-||||||| merged common ancestors
-                60174700,
-=======
                 60204400,
->>>>>>> upstream-releases
                 49378000,
                 57112590,
             }
@@ -34964,13 +31308,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49680000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59850800,
-||||||| merged common ancestors
-                59792800,
-=======
                 59868800,
->>>>>>> upstream-releases
                 49947000,
                 55597927,
             }
@@ -34990,13 +31328,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48560000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60187400,
-||||||| merged common ancestors
-                60197500,
-=======
                 60200100,
->>>>>>> upstream-releases
                 49270000,
                 57102046,
             }
@@ -35007,13 +31339,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49850000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58676000,
-||||||| merged common ancestors
-                58682000,
-=======
                 58686000,
->>>>>>> upstream-releases
                 49695000,
                 55204454,
             }
@@ -35024,13 +31350,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49890000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60569900,
-||||||| merged common ancestors
-                60569000,
-=======
                 60511700,
->>>>>>> upstream-releases
                 49845000,
                 56618727,
             }
@@ -35107,13 +31427,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49990000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                57123700,
-||||||| merged common ancestors
-                57122300,
-=======
                 57123500,
->>>>>>> upstream-releases
                 49990000,
                 52275000,
             }
@@ -35139,13 +31453,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49260000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60285600,
-||||||| merged common ancestors
-                60296400,
-=======
                 60286200,
->>>>>>> upstream-releases
                 49354000,
                 57158331,
             }
@@ -35156,13 +31464,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                56591700,
-||||||| merged common ancestors
-                56589600,
-=======
                 56593500,
->>>>>>> upstream-releases
                 49990000,
                 52140000,
             }
@@ -35180,13 +31482,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48130000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60129400,
-||||||| merged common ancestors
-                60124300,
-=======
                 60129700,
->>>>>>> upstream-releases
                 49604000,
                 56817645,
             }
@@ -35227,13 +31523,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62123400,
-||||||| merged common ancestors
-                62122900,
-=======
                 62123600,
->>>>>>> upstream-releases
                 49935000,
                 57686159,
             }
@@ -35261,13 +31551,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49120000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60283800,
-||||||| merged common ancestors
-                60276700,
-=======
                 60284300,
->>>>>>> upstream-releases
                 49997000,
                 56860488,
             }
@@ -35299,13 +31583,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49590000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59675300,
-||||||| merged common ancestors
-                59621100,
-=======
                 59742600,
->>>>>>> upstream-releases
                 49583000,
                 56132193,
             }
@@ -35347,13 +31625,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49740000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61135400,
-||||||| merged common ancestors
-                61135900,
-=======
                 61137700,
->>>>>>> upstream-releases
                 49791000,
                 57115162,
             }
@@ -35433,13 +31705,7 @@ supplementalData:table(nofallback){
                 writingShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                62217300,
-||||||| merged common ancestors
-                62213300,
-=======
                 62218600,
->>>>>>> upstream-releases
                 49941000,
                 57812572,
             }
@@ -35466,13 +31732,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47340000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60430100,
-||||||| merged common ancestors
-                60427800,
-=======
                 60428500,
->>>>>>> upstream-releases
                 49988000,
                 56121553,
             }
@@ -35494,13 +31754,7 @@ supplementalData:table(nofallback){
         }
         TW{
             territoryF:intvector{
-<<<<<<< HEAD
-                62118500,
-||||||| merged common ancestors
-                62117500,
-=======
                 62118900,
->>>>>>> upstream-releases
                 49961000,
                 57235460,
             }
@@ -35563,13 +31817,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61162200,
-||||||| merged common ancestors
-                61162800,
-=======
                 61162500,
->>>>>>> upstream-releases
                 49678000,
                 57554513,
             }
@@ -35607,13 +31855,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48120000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61368800,
-||||||| merged common ancestors
-                61366400,
-=======
                 61369600,
->>>>>>> upstream-releases
                 49997000,
                 57439523,
             }
@@ -35665,13 +31907,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48390000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60886700,
-||||||| merged common ancestors
-                60886100,
-=======
                 60891900,
->>>>>>> upstream-releases
                 49732000,
                 57408537,
             }
@@ -35688,13 +31924,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                57187600,
-||||||| merged common ancestors
-                57187300,
-=======
                 57187100,
->>>>>>> upstream-releases
                 49990000,
                 52316000,
             }
@@ -35763,13 +31993,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{47240000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                63193900,
-||||||| merged common ancestors
-                63193600,
-=======
                 63194900,
->>>>>>> upstream-releases
                 49990000,
                 58329256,
             }
@@ -35789,13 +32013,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49880000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60781500,
-||||||| merged common ancestors
-                60784100,
-=======
                 60781600,
->>>>>>> upstream-releases
                 49981000,
                 56336930,
             }
@@ -35808,13 +32026,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49140000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61222600,
-||||||| merged common ancestors
-                61221700,
-=======
                 61223000,
->>>>>>> upstream-releases
                 49994000,
                 57300237,
             }
@@ -35839,13 +32051,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49820000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                57371900,
-||||||| merged common ancestors
-                57371300,
-=======
                 57372200,
->>>>>>> upstream-releases
                 50100000,
                 53100000,
             }
@@ -35856,13 +32062,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49960000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59126600,
-||||||| merged common ancestors
-                59128100,
-=======
                 59126500,
->>>>>>> upstream-releases
                 49960000,
                 55101844,
             }
@@ -35873,13 +32073,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49820000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61380700,
-||||||| merged common ancestors
-                61389400,
-=======
                 61381600,
->>>>>>> upstream-releases
                 49955000,
                 57316892,
             }
@@ -35912,13 +32106,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{46890000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61647400,
-||||||| merged common ancestors
-                61643900,
-=======
                 61648700,
->>>>>>> upstream-releases
                 49934000,
                 57970403,
             }
@@ -35944,13 +32132,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                58770000,
-||||||| merged common ancestors
-                58787000,
-=======
                 58772000,
->>>>>>> upstream-releases
                 49832000,
                 55288037,
             }
@@ -35982,13 +32164,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{50100000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                59113400,
-||||||| merged common ancestors
-                59113000,
-=======
                 59113700,
->>>>>>> upstream-releases
                 49988000,
                 55201316,
             }
@@ -36010,13 +32186,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48500000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60196300,
-||||||| merged common ancestors
-                60193800,
-=======
                 60196000,
->>>>>>> upstream-releases
                 49919000,
                 56190759,
             }
@@ -36030,13 +32200,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{48900000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60386000,
-||||||| merged common ancestors
-                60689500,
-=======
                 60736300,
->>>>>>> upstream-releases
                 49653000,
                 57286672,
             }
@@ -36101,13 +32265,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{45180000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                61765600,
-||||||| merged common ancestors
-                61757300,
-=======
                 61767200,
->>>>>>> upstream-releases
                 49930000,
                 57553802,
             }
@@ -36152,13 +32310,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49150000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60688900,
-||||||| merged common ancestors
-                60689000,
-=======
                 60689300,
->>>>>>> upstream-releases
                 49614000,
                 57164451,
             }
@@ -36189,13 +32341,7 @@ supplementalData:table(nofallback){
                 populationShareF:int{49810000}
             }
             territoryF:intvector{
-<<<<<<< HEAD
-                60339600,
-||||||| merged common ancestors
-                60338700,
-=======
                 60342700,
->>>>>>> upstream-releases
                 49836000,
                 57140304,
             }

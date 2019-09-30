@@ -60,18 +60,11 @@ class ClientChannelHelper final : public nsIInterfaceRequestor,
       return rv;
     }
 
-<<<<<<< HEAD
-    UniquePtr<ClientSource> reservedClient =
-        oldLoadInfo->TakeReservedClientSource();
-||||||| merged common ancestors
-    UniquePtr<ClientSource> reservedClient = oldLoadInfo->TakeReservedClientSource();
-=======
     nsCOMPtr<nsILoadInfo> oldLoadInfo = aOldChannel->LoadInfo();
     nsCOMPtr<nsILoadInfo> newLoadInfo = aNewChannel->LoadInfo();
 
     UniquePtr<ClientSource> reservedClient =
         oldLoadInfo->TakeReservedClientSource();
->>>>>>> upstream-releases
 
     // If its a same-origin redirect we just move our reserved client to the
     // new channel.

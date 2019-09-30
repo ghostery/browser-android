@@ -28,14 +28,6 @@ namespace mozilla {
 namespace css {
 
 // Enum defining how error should be handled.
-<<<<<<< HEAD
-enum FailureAction { eCrash = 0, eLogToConsole };
-||||||| merged common ancestors
-enum FailureAction {
-  eCrash = 0,
-  eLogToConsole
-};
-=======
 enum FailureAction { eCrash = 0, eLogToConsole };
 
 }  // namespace css
@@ -50,68 +42,18 @@ struct nsLayoutStylesheetCacheShm final {
  private:
   ~nsLayoutStylesheetCacheShm() = default;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-}  // namespace css
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 class nsLayoutStylesheetCache final : public nsIObserver,
                                       public nsIMemoryReporter {
  public:
   using Shm = nsLayoutStylesheetCacheShm;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsLayoutStylesheetCache final : public nsIObserver,
-                                      public nsIMemoryReporter {
-||||||| merged common ancestors
-class nsLayoutStylesheetCache final
- : public nsIObserver
- , public nsIMemoryReporter
-{
-=======
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_DECL_NSIOBSERVER
   NS_DECL_NSIMEMORYREPORTER
 
   static nsLayoutStylesheetCache* Singleton();
 
-<<<<<<< HEAD
-#define STYLE_SHEET(identifier_, url_, lazy_) \
-  mozilla::StyleSheet* identifier_##Sheet();
-#include "mozilla/UserAgentStyleSheetList.h"
-#undef STYLE_SHEET
-
-  mozilla::StyleSheet* UserContentSheet();
-  mozilla::StyleSheet* UserChromeSheet();
-  mozilla::StyleSheet* ChromePreferenceSheet(nsPresContext* aPresContext);
-  mozilla::StyleSheet* ContentPreferenceSheet(nsPresContext* aPresContext);
-||||||| merged common ancestors
-  mozilla::StyleSheet* ScrollbarsSheet();
-  mozilla::StyleSheet* FormsSheet();
-  mozilla::StyleSheet* UserContentSheet();
-  mozilla::StyleSheet* UserChromeSheet();
-  mozilla::StyleSheet* UASheet();
-  mozilla::StyleSheet* HTMLSheet();
-  mozilla::StyleSheet* MinimalXULSheet();
-  mozilla::StyleSheet* XULSheet();
-  mozilla::StyleSheet* XULComponentsSheet();
-  mozilla::StyleSheet* QuirkSheet();
-  mozilla::StyleSheet* SVGSheet();
-  mozilla::StyleSheet* MathMLSheet();
-  mozilla::StyleSheet* CounterStylesSheet();
-  mozilla::StyleSheet* NoScriptSheet();
-  mozilla::StyleSheet* NoFramesSheet();
-  mozilla::StyleSheet* ChromePreferenceSheet(nsPresContext* aPresContext);
-  mozilla::StyleSheet* ContentPreferenceSheet(nsPresContext* aPresContext);
-  mozilla::StyleSheet* ContentEditableSheet();
-  mozilla::StyleSheet* DesignModeSheet();
-=======
 #define STYLE_SHEET(identifier_, url_, shared_) \
   mozilla::NotNull<mozilla::StyleSheet*> identifier_##Sheet();
 #include "mozilla/UserAgentStyleSheetList.h"
@@ -121,7 +63,6 @@ class nsLayoutStylesheetCache final
   mozilla::StyleSheet* GetUserChromeSheet();
   mozilla::StyleSheet* ChromePreferenceSheet();
   mozilla::StyleSheet* ContentPreferenceSheet();
->>>>>>> upstream-releases
 
   static void InvalidatePreferenceSheets();
 
@@ -131,11 +72,6 @@ class nsLayoutStylesheetCache final
 
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // Set the shared memory segment to load the shared UA sheets from.
   // Called early on in a content process' life from
   // ContentChild::InitSharedUASheets, before the nsLayoutStylesheetCache
@@ -171,7 +107,6 @@ private:
     uint8_t mBuffer[1];
   };
 
->>>>>>> upstream-releases
   nsLayoutStylesheetCache();
   ~nsLayoutStylesheetCache();
 
@@ -209,12 +144,6 @@ private:
   RefPtr<mozilla::StyleSheet> mContentPreferenceSheet;
   RefPtr<mozilla::StyleSheet> mUserChromeSheet;
   RefPtr<mozilla::StyleSheet> mUserContentSheet;
-<<<<<<< HEAD
-  RefPtr<mozilla::StyleSheet> mXULSheet;
-||||||| merged common ancestors
-  RefPtr<mozilla::StyleSheet> mXULSheet;
-  RefPtr<mozilla::StyleSheet> mXULComponentsSheet;
-=======
 
   // Shared memory segment storing shared style sheets.
   RefPtr<Shm> mSharedMemory;
@@ -226,7 +155,6 @@ private:
   // The shared memory to use once the nsLayoutStylesheetCache instance is
   // created.
   static mozilla::StaticRefPtr<Shm> sSharedMemory;
->>>>>>> upstream-releases
 };
 
 #endif

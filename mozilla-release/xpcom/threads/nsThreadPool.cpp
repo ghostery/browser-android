@@ -44,26 +44,6 @@ NS_IMPL_QUERY_INTERFACE_CI(nsThreadPool, nsIThreadPool, nsIEventTarget,
 NS_IMPL_CI_INTERFACE_GETTER(nsThreadPool, nsIThreadPool, nsIEventTarget)
 
 nsThreadPool::nsThreadPool()
-<<<<<<< HEAD
-    : mMutex("[nsThreadPool.mMutex]"),
-      mEventsAvailable(mMutex, "[nsThreadPool.mEventsAvailable]"),
-      mThreadLimit(DEFAULT_THREAD_LIMIT),
-      mIdleThreadLimit(DEFAULT_IDLE_THREAD_LIMIT),
-      mIdleThreadTimeout(DEFAULT_IDLE_THREAD_TIMEOUT),
-      mIdleCount(0),
-      mStackSize(nsIThreadManager::DEFAULT_STACK_SIZE),
-      mShutdown(false) {
-||||||| merged common ancestors
-  : mMutex("[nsThreadPool.mMutex]")
-  , mEventsAvailable(mMutex, "[nsThreadPool.mEventsAvailable]")
-  , mThreadLimit(DEFAULT_THREAD_LIMIT)
-  , mIdleThreadLimit(DEFAULT_IDLE_THREAD_LIMIT)
-  , mIdleThreadTimeout(DEFAULT_IDLE_THREAD_TIMEOUT)
-  , mIdleCount(0)
-  , mStackSize(nsIThreadManager::DEFAULT_STACK_SIZE)
-  , mShutdown(false)
-{
-=======
     : mMutex("[nsThreadPool.mMutex]"),
       mEventsAvailable(mMutex, "[nsThreadPool.mEventsAvailable]"),
       mThreadLimit(DEFAULT_THREAD_LIMIT),
@@ -73,7 +53,6 @@ nsThreadPool::nsThreadPool()
       mStackSize(nsIThreadManager::DEFAULT_STACK_SIZE),
       mShutdown(false),
       mRegressiveMaxIdleTime(false) {
->>>>>>> upstream-releases
   LOG(("THRD-P(%p) constructor!!!\n", this));
 }
 
@@ -206,17 +185,10 @@ nsThreadPool::Run() {
       event = mEvents.GetEvent(nullptr, lock);
       if (!event) {
         TimeStamp now = TimeStamp::Now();
-<<<<<<< HEAD
-        TimeDuration timeout =
-            TimeDuration::FromMilliseconds(mIdleThreadTimeout);
-||||||| merged common ancestors
-        TimeDuration timeout = TimeDuration::FromMilliseconds(mIdleThreadTimeout);
-=======
         uint32_t idleTimeoutDivider =
             (mIdleCount && mRegressiveMaxIdleTime) ? mIdleCount : 1;
         TimeDuration timeout = TimeDuration::FromMilliseconds(
             static_cast<double>(mIdleThreadTimeout) / idleTimeoutDivider);
->>>>>>> upstream-releases
 
         // If we are shutting down, then don't keep any idle threads
         if (mShutdown) {
@@ -538,12 +510,6 @@ nsThreadPool::SetIdleThreadTimeout(uint32_t aValue) {
 
   // Do we need to notify any idle threads that their sleep time has shortened?
   if (mIdleThreadTimeout < oldTimeout && mIdleCount > 0) {
-<<<<<<< HEAD
-    mEventsAvailable
-        .NotifyAll();  // wake up threads so they observe this change
-||||||| merged common ancestors
-    mEventsAvailable.NotifyAll();  // wake up threads so they observe this change
-=======
     mEventsAvailable
         .NotifyAll();  // wake up threads so they observe this change
   }
@@ -566,7 +532,6 @@ nsThreadPool::SetIdleThreadTimeoutRegressive(bool aValue) {
   if (mRegressiveMaxIdleTime > oldRegressive && mIdleCount > 1) {
     mEventsAvailable
         .NotifyAll();  // wake up threads so they observe this change
->>>>>>> upstream-releases
   }
   return NS_OK;
 }

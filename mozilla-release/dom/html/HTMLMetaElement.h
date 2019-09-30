@@ -61,16 +61,8 @@ class HTMLMetaElement final : public nsGenericHTMLElement {
  protected:
   virtual ~HTMLMetaElement();
 
-<<<<<<< HEAD
- private:
-  void SetMetaReferrer(nsIDocument* aDocument);
-||||||| merged common ancestors
-private:
-  void SetMetaReferrer(nsIDocument* aDocument);
-=======
  private:
   void SetMetaReferrer(Document* aDocument);
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

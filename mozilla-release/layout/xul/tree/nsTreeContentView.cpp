@@ -15,7 +15,6 @@
 #include "nsTreeColumns.h"
 #include "mozilla/ErrorResult.h"
 #include "mozilla/dom/Element.h"
-#include "mozilla/dom/TreeBoxObject.h"
 #include "mozilla/dom/TreeContentViewBinding.h"
 #include "nsServiceManagerUtils.h"
 #include "mozilla/dom/Document.h"
@@ -80,24 +79,8 @@ class Row {
 // If we go away first, we'll get rid of ourselves from the
 // document's observer list.
 
-<<<<<<< HEAD
-nsTreeContentView::nsTreeContentView(void)
-    : mBoxObject(nullptr),
-      mSelection(nullptr),
-      mRoot(nullptr),
-      mDocument(nullptr) {}
-||||||| merged common ancestors
-nsTreeContentView::nsTreeContentView(void) :
-  mBoxObject(nullptr),
-  mSelection(nullptr),
-  mRoot(nullptr),
-  mDocument(nullptr)
-{
-}
-=======
 nsTreeContentView::nsTreeContentView(void)
     : mTree(nullptr), mSelection(nullptr), mDocument(nullptr) {}
->>>>>>> upstream-releases
 
 nsTreeContentView::~nsTreeContentView(void) {
   // Remove ourselves from mDocument's observers.
@@ -111,19 +94,8 @@ nsresult NS_NewTreeContentView(nsITreeView** aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(nsTreeContentView, mBoxObject, mSelection,
-                                      mRoot, mBody)
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(nsTreeContentView,
-                                      mBoxObject,
-                                      mSelection,
-                                      mRoot,
-                                      mBody)
-=======
 NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(nsTreeContentView, mTree, mSelection,
                                       mBody)
->>>>>>> upstream-releases
 
 NS_IMPL_CYCLE_COLLECTING_ADDREF(nsTreeContentView)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(nsTreeContentView)
@@ -141,17 +113,7 @@ JSObject* nsTreeContentView::WrapObject(JSContext* aCx,
   return TreeContentView_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsISupports* nsTreeContentView::GetParentObject() { return mBoxObject; }
-||||||| merged common ancestors
-nsISupports*
-nsTreeContentView::GetParentObject()
-{
-  return mBoxObject;
-}
-=======
 nsISupports* nsTreeContentView::GetParentObject() { return mTree; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 nsTreeContentView::GetRowCount(int32_t* aRowCount) {
@@ -538,66 +500,17 @@ nsTreeContentView::GetCellText(int32_t aRow, nsTreeColumn* aCol,
   return rv.StealNSResult();
 }
 
-<<<<<<< HEAD
-void nsTreeContentView::SetTree(TreeBoxObject* aTree, ErrorResult& aError) {
-||||||| merged common ancestors
-void
-nsTreeContentView::SetTree(TreeBoxObject* aTree, ErrorResult& aError)
-{
-=======
 void nsTreeContentView::SetTree(XULTreeElement* aTree, ErrorResult& aError) {
->>>>>>> upstream-releases
   aError = SetTree(aTree);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsTreeContentView::SetTree(nsITreeBoxObject* aTree) {
-||||||| merged common ancestors
-nsTreeContentView::SetTree(nsITreeBoxObject* aTree)
-{
-=======
 nsTreeContentView::SetTree(XULTreeElement* aTree) {
->>>>>>> upstream-releases
   ClearRows();
 
   mTree = aTree;
 
   if (aTree) {
-<<<<<<< HEAD
-    // Get our root element
-    nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mBoxObject);
-    if (!boxObject) {
-      mBoxObject = nullptr;
-      return NS_ERROR_INVALID_ARG;
-    }
-
-    {  // Scope for element
-      RefPtr<dom::Element> element;
-      boxObject->GetElement(getter_AddRefs(element));
-
-      mRoot = element.forget();
-      NS_ENSURE_STATE(mRoot);
-    }
-
-||||||| merged common ancestors
-    // Get our root element
-    nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mBoxObject);
-    if (!boxObject) {
-      mBoxObject = nullptr;
-      return NS_ERROR_INVALID_ARG;
-    }
-
-    { // Scope for element
-      RefPtr<dom::Element> element;
-      boxObject->GetElement(getter_AddRefs(element));
-
-      mRoot = element.forget();
-      NS_ENSURE_STATE(mRoot);
-    }
-
-=======
->>>>>>> upstream-releases
     // Add ourselves to document's observers.
     Document* document = mTree->GetComposedDoc();
     if (document) {
@@ -641,21 +554,9 @@ nsTreeContentView::ToggleOpenState(int32_t aIndex) {
   return rv.StealNSResult();
 }
 
-<<<<<<< HEAD
-void nsTreeContentView::CycleHeader(nsTreeColumn& aColumn,
-                                    ErrorResult& aError) {
-  if (!mRoot) return;
-||||||| merged common ancestors
-void
-nsTreeContentView::CycleHeader(nsTreeColumn& aColumn, ErrorResult& aError)
-{
-  if (!mRoot)
-    return;
-=======
 void nsTreeContentView::CycleHeader(nsTreeColumn& aColumn,
                                     ErrorResult& aError) {
   if (!mTree) return;
->>>>>>> upstream-releases
 
   RefPtr<Element> column = aColumn.Element();
   nsAutoString sort;
@@ -862,18 +763,8 @@ void nsTreeContentView::AttributeChanged(dom::Element* aElement,
     if (hidden && index >= 0) {
       // Hide this row along with its children.
       int32_t count = RemoveRow(index);
-<<<<<<< HEAD
-      if (mBoxObject) mBoxObject->RowCountChanged(index, -count);
-    } else if (!hidden && index < 0) {
-||||||| merged common ancestors
-      if (mBoxObject)
-        mBoxObject->RowCountChanged(index, -count);
-    }
-    else if (!hidden && index < 0) {
-=======
       if (mTree) mTree->RowCountChanged(index, -count);
     } else if (!hidden && index < 0) {
->>>>>>> upstream-releases
       // Show this row along with its children.
       nsCOMPtr<nsIContent> parent = aElement->GetParent();
       if (parent) {
@@ -903,25 +794,10 @@ void nsTreeContentView::AttributeChanged(dom::Element* aElement,
             aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::container,
                                   nsGkAtoms::_true, eCaseMatters);
         row->SetContainer(isContainer);
-<<<<<<< HEAD
-        if (mBoxObject) mBoxObject->InvalidateRow(index);
-      } else if (aAttribute == nsGkAtoms::open) {
-        bool isOpen = aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::open,
-                                            nsGkAtoms::_true, eCaseMatters);
-||||||| merged common ancestors
-        if (mBoxObject)
-          mBoxObject->InvalidateRow(index);
-      }
-      else if (aAttribute == nsGkAtoms::open) {
-        bool isOpen =
-          aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::open,
-                                nsGkAtoms::_true, eCaseMatters);
-=======
         if (mTree) mTree->InvalidateRow(index);
       } else if (aAttribute == nsGkAtoms::open) {
         bool isOpen = aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::open,
                                             nsGkAtoms::_true, eCaseMatters);
->>>>>>> upstream-releases
         bool wasOpen = row->IsOpen();
         if (!isOpen && wasOpen)
           CloseContainer(index);
@@ -932,14 +808,7 @@ void nsTreeContentView::AttributeChanged(dom::Element* aElement,
             aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::empty,
                                   nsGkAtoms::_true, eCaseMatters);
         row->SetEmpty(isEmpty);
-<<<<<<< HEAD
-        if (mBoxObject) mBoxObject->InvalidateRow(index);
-||||||| merged common ancestors
-        if (mBoxObject)
-          mBoxObject->InvalidateRow(index);
-=======
         if (mTree) mTree->InvalidateRow(index);
->>>>>>> upstream-releases
       }
     }
   } else if (aElement->IsXULElement(nsGkAtoms::treeseparator)) {
@@ -1018,24 +887,10 @@ void nsTreeContentView::ContentInserted(nsIContent* aChild) {
     if (index >= 0) {
       Row* row = mRows[index].get();
       row->SetEmpty(false);
-<<<<<<< HEAD
-      if (mBoxObject) mBoxObject->InvalidateRow(index);
-||||||| merged common ancestors
-      if (mBoxObject)
-        mBoxObject->InvalidateRow(index);
-=======
       if (mTree) mTree->InvalidateRow(index);
->>>>>>> upstream-releases
       if (row->IsContainer() && row->IsOpen()) {
         int32_t count = EnsureSubtree(index);
-<<<<<<< HEAD
-        if (mBoxObject) mBoxObject->RowCountChanged(index + 1, count);
-||||||| merged common ancestors
-        if (mBoxObject)
-          mBoxObject->RowCountChanged(index + 1, count);
-=======
         if (mTree) mTree->RowCountChanged(index + 1, count);
->>>>>>> upstream-releases
       }
     }
   } else if (aChild->IsAnyOfXULElements(nsGkAtoms::treeitem,
@@ -1043,29 +898,12 @@ void nsTreeContentView::ContentInserted(nsIContent* aChild) {
     InsertRowFor(container, aChild);
   } else if (aChild->IsXULElement(nsGkAtoms::treerow)) {
     int32_t index = FindContent(container);
-<<<<<<< HEAD
-    if (index >= 0 && mBoxObject) mBoxObject->InvalidateRow(index);
-  } else if (aChild->IsXULElement(nsGkAtoms::treecell)) {
-||||||| merged common ancestors
-    if (index >= 0 && mBoxObject)
-      mBoxObject->InvalidateRow(index);
-  }
-  else if (aChild->IsXULElement(nsGkAtoms::treecell)) {
-=======
     if (index >= 0 && mTree) mTree->InvalidateRow(index);
   } else if (aChild->IsXULElement(nsGkAtoms::treecell)) {
->>>>>>> upstream-releases
     nsCOMPtr<nsIContent> parent = container->GetParent();
     if (parent) {
       int32_t index = FindContent(parent);
-<<<<<<< HEAD
-      if (index >= 0 && mBoxObject) mBoxObject->InvalidateRow(index);
-||||||| merged common ancestors
-      if (index >= 0 && mBoxObject)
-        mBoxObject->InvalidateRow(index);
-=======
       if (index >= 0 && mTree) mTree->InvalidateRow(index);
->>>>>>> upstream-releases
     }
   }
 }
@@ -1116,40 +954,16 @@ void nsTreeContentView::ContentRemoved(nsIContent* aChild,
     int32_t index = FindContent(aChild);
     if (index >= 0) {
       int32_t count = RemoveRow(index);
-<<<<<<< HEAD
-      if (mBoxObject) mBoxObject->RowCountChanged(index, -count);
-||||||| merged common ancestors
-      if (mBoxObject)
-        mBoxObject->RowCountChanged(index, -count);
-=======
       if (mTree) mTree->RowCountChanged(index, -count);
->>>>>>> upstream-releases
     }
   } else if (aChild->IsXULElement(nsGkAtoms::treerow)) {
     int32_t index = FindContent(container);
-<<<<<<< HEAD
-    if (index >= 0 && mBoxObject) mBoxObject->InvalidateRow(index);
-  } else if (aChild->IsXULElement(nsGkAtoms::treecell)) {
-||||||| merged common ancestors
-    if (index >= 0 && mBoxObject)
-      mBoxObject->InvalidateRow(index);
-  }
-  else if (aChild->IsXULElement(nsGkAtoms::treecell)) {
-=======
     if (index >= 0 && mTree) mTree->InvalidateRow(index);
   } else if (aChild->IsXULElement(nsGkAtoms::treecell)) {
->>>>>>> upstream-releases
     nsCOMPtr<nsIContent> parent = container->GetParent();
     if (parent) {
       int32_t index = FindContent(parent);
-<<<<<<< HEAD
-      if (index >= 0 && mBoxObject) mBoxObject->InvalidateRow(index);
-||||||| merged common ancestors
-      if (index >= 0 && mBoxObject)
-        mBoxObject->InvalidateRow(index);
-=======
       if (index >= 0 && mTree) mTree->InvalidateRow(index);
->>>>>>> upstream-releases
     }
   }
 }

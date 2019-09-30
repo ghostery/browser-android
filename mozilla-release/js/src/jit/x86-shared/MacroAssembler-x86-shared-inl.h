@@ -28,22 +28,12 @@ void MacroAssembler::move8SignExtend(Register src, Register dest) {
   movsbl(src, dest);
 }
 
-<<<<<<< HEAD
-void MacroAssembler::move16SignExtend(Register src, Register dest) {
-  movswl(src, dest);
-||||||| merged common ancestors
-void
-MacroAssembler::move16SignExtend(Register src, Register dest)
-{
-    movswl(src, dest);
-=======
 void MacroAssembler::move16SignExtend(Register src, Register dest) {
   movswl(src, dest);
 }
 
 void MacroAssembler::loadAbiReturnAddress(Register dest) {
   loadPtr(Address(getStackPointer(), 0), dest);
->>>>>>> upstream-releases
 }
 
 // ===============================================================
@@ -317,47 +307,6 @@ void MacroAssembler::rotateRight(Register count, Register input,
 // ===============================================================
 // Shift instructions
 
-<<<<<<< HEAD
-void MacroAssembler::lshift32(Register shift, Register srcDest) {
-  MOZ_ASSERT(shift == ecx);
-  shll_cl(srcDest);
-}
-
-inline void FlexibleShift32(MacroAssembler& masm, Register shift, Register dest,
-                            bool left, bool arithmetic = false) {
-  if (shift != ecx) {
-    if (dest != ecx) {
-      masm.push(ecx);
-    }
-    masm.mov(shift, ecx);
-  }
-
-  if (left) {
-    masm.lshift32(ecx, dest);
-  } else {
-    if (arithmetic) {
-      masm.rshift32Arithmetic(ecx, dest);
-||||||| merged common ancestors
-void
-MacroAssembler::lshift32(Register shift, Register srcDest)
-{
-    MOZ_ASSERT(shift == ecx);
-    shll_cl(srcDest);
-}
-
-inline void
-FlexibleShift32(MacroAssembler& masm, Register shift, Register dest, bool left, bool arithmetic = false)
-{
-    if (shift != ecx) {
-        if (dest != ecx) {
-            masm.push(ecx);
-        }
-        masm.mov(shift, ecx);
-    }
-
-    if (left) {
-        masm.lshift32(ecx, dest);
-=======
 void MacroAssembler::lshift32(Register shift, Register srcDest) {
   MOZ_ASSERT(shift == ecx);
   shll_cl(srcDest);
@@ -406,31 +355,11 @@ inline void FlexibleShift32(MacroAssembler& masm, Register shift,
   } else {
     if (arithmetic) {
       masm.rshift32Arithmetic(ecx, internalSrcDest);
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      masm.rshift32(ecx, dest);
-||||||| merged common ancestors
-        if (arithmetic) {
-            masm.rshift32Arithmetic(ecx, dest);
-        } else {
-            masm.rshift32(ecx, dest);
-        }
-=======
       masm.rshift32(ecx, internalSrcDest);
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  if (shift != ecx && dest != ecx) {
-    masm.pop(ecx);
-  }
-||||||| merged common ancestors
-    if (shift != ecx && dest != ecx) {
-        masm.pop(ecx);
-    }
-=======
   // [MOVE]
   if (internalSrcDest != srcDest) {
     masm.mov(internalSrcDest, srcDest);
@@ -438,7 +367,6 @@ inline void FlexibleShift32(MacroAssembler& masm, Register shift,
 
   // [POP]
   masm.PopRegsInMask(preserve);
->>>>>>> upstream-releases
 }
 
 void MacroAssembler::flexibleLshift32(Register shift, Register srcDest) {
@@ -904,18 +832,6 @@ void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
 }
 
 template <typename T>
-<<<<<<< HEAD
-void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
-                                          Label* label) {
-  cond = testSymbol(cond, t);
-  j(cond, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t, Label* label)
-{
-    cond = testSymbol(cond, t);
-    j(cond, label);
-=======
 void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
                                           Label* label) {
   cond = testSymbol(cond, t);
@@ -925,19 +841,8 @@ void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
 void MacroAssembler::branchTestBigInt(Condition cond, Register tag,
                                       Label* label) {
   branchTestBigIntImpl(cond, tag, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNull(Condition cond, Register tag,
-                                    Label* label) {
-  branchTestNullImpl(cond, tag, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNull(Condition cond, Register tag, Label* label)
-{
-    branchTestNullImpl(cond, tag, label);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, const BaseIndex& address,
                                       Label* label) {
   branchTestBigIntImpl(cond, address, label);
@@ -953,53 +858,20 @@ void MacroAssembler::branchTestBigIntImpl(Condition cond, const T& t,
                                           Label* label) {
   cond = testBigInt(cond, t);
   j(cond, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNull(Condition cond, const Address& address,
-                                    Label* label) {
-  branchTestNullImpl(cond, address, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNull(Condition cond, const Address& address, Label* label)
-{
-    branchTestNullImpl(cond, address, label);
-=======
 void MacroAssembler::branchTestBigIntTruthy(bool truthy,
                                             const ValueOperand& value,
                                             Label* label) {
   Condition cond = testBigIntTruthy(truthy, value);
   j(cond, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
-                                    Label* label) {
-  branchTestNullImpl(cond, address, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address, Label* label)
-{
-    branchTestNullImpl(cond, address, label);
-=======
 void MacroAssembler::branchTestNull(Condition cond, Register tag,
                                     Label* label) {
   branchTestNullImpl(cond, tag, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
-                                    Label* label) {
-  branchTestNullImpl(cond, value, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestNullImpl(cond, value, label);
-=======
 void MacroAssembler::branchTestNull(Condition cond, const Address& address,
                                     Label* label) {
   branchTestNullImpl(cond, address, label);
@@ -1013,7 +885,6 @@ void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
 void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
                                     Label* label) {
   branchTestNullImpl(cond, value, label);
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1125,187 +996,13 @@ void MacroAssembler::cmp32Move32(Condition cond, Register lhs,
   cmovCCl(cond, src, dest);
 }
 
-<<<<<<< HEAD
-void MacroAssembler::spectreZeroRegister(Condition cond, Register scratch,
-                                         Register dest) {
-  // Note: use movl instead of move32/xorl to ensure flags are not clobbered.
-  movl(Imm32(0), scratch);
-  spectreMovePtr(cond, scratch, dest);
-||||||| merged common ancestors
-void
-MacroAssembler::spectreZeroRegister(Condition cond, Register scratch, Register dest)
-{
-    // Note: use movl instead of move32/xorl to ensure flags are not clobbered.
-    movl(Imm32(0), scratch);
-    spectreMovePtr(cond, scratch, dest);
-=======
 void MacroAssembler::cmp32Load32(Condition cond, Register lhs,
                                  const Address& rhs, const Address& src,
                                  Register dest) {
   cmp32(lhs, Operand(rhs));
   cmovCCl(cond, Operand(src), dest);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// ========================================================================
-// Memory access primitives.
-void MacroAssembler::storeUncanonicalizedDouble(FloatRegister src,
-                                                const Address& dest) {
-  vmovsd(src, dest);
-}
-void MacroAssembler::storeUncanonicalizedDouble(FloatRegister src,
-                                                const BaseIndex& dest) {
-  vmovsd(src, dest);
-}
-void MacroAssembler::storeUncanonicalizedDouble(FloatRegister src,
-                                                const Operand& dest) {
-  switch (dest.kind()) {
-    case Operand::MEM_REG_DISP:
-      storeUncanonicalizedDouble(src, dest.toAddress());
-      break;
-    case Operand::MEM_SCALE:
-      storeUncanonicalizedDouble(src, dest.toBaseIndex());
-      break;
-    default:
-      MOZ_CRASH("unexpected operand kind");
-  }
-}
-
-template void MacroAssembler::storeDouble(FloatRegister src,
-                                          const Operand& dest);
-
-void MacroAssembler::storeUncanonicalizedFloat32(FloatRegister src,
-                                                 const Address& dest) {
-  vmovss(src, dest);
-}
-void MacroAssembler::storeUncanonicalizedFloat32(FloatRegister src,
-                                                 const BaseIndex& dest) {
-  vmovss(src, dest);
-}
-void MacroAssembler::storeUncanonicalizedFloat32(FloatRegister src,
-                                                 const Operand& dest) {
-  switch (dest.kind()) {
-    case Operand::MEM_REG_DISP:
-      storeUncanonicalizedFloat32(src, dest.toAddress());
-      break;
-    case Operand::MEM_SCALE:
-      storeUncanonicalizedFloat32(src, dest.toBaseIndex());
-      break;
-    default:
-      MOZ_CRASH("unexpected operand kind");
-  }
-}
-
-template void MacroAssembler::storeFloat32(FloatRegister src,
-                                           const Operand& dest);
-
-void MacroAssembler::storeFloat32x3(FloatRegister src, const Address& dest) {
-  Address destZ(dest);
-  destZ.offset += 2 * sizeof(int32_t);
-  storeDouble(src, dest);
-  ScratchSimd128Scope scratch(*this);
-  vmovhlps(src, scratch, scratch);
-  storeFloat32(scratch, destZ);
-}
-void MacroAssembler::storeFloat32x3(FloatRegister src, const BaseIndex& dest) {
-  BaseIndex destZ(dest);
-  destZ.offset += 2 * sizeof(int32_t);
-  storeDouble(src, dest);
-  ScratchSimd128Scope scratch(*this);
-  vmovhlps(src, scratch, scratch);
-  storeFloat32(scratch, destZ);
-}
-
-void MacroAssembler::memoryBarrier(MemoryBarrierBits barrier) {
-  if (barrier & MembarStoreLoad) {
-    storeLoadFence();
-  }
-||||||| merged common ancestors
-// ========================================================================
-// Memory access primitives.
-void
-MacroAssembler::storeUncanonicalizedDouble(FloatRegister src, const Address& dest)
-{
-    vmovsd(src, dest);
-}
-void
-MacroAssembler::storeUncanonicalizedDouble(FloatRegister src, const BaseIndex& dest)
-{
-    vmovsd(src, dest);
-}
-void
-MacroAssembler::storeUncanonicalizedDouble(FloatRegister src, const Operand& dest)
-{
-    switch (dest.kind()) {
-      case Operand::MEM_REG_DISP:
-        storeUncanonicalizedDouble(src, dest.toAddress());
-        break;
-      case Operand::MEM_SCALE:
-        storeUncanonicalizedDouble(src, dest.toBaseIndex());
-        break;
-      default:
-        MOZ_CRASH("unexpected operand kind");
-    }
-}
-
-template void MacroAssembler::storeDouble(FloatRegister src, const Operand& dest);
-
-void
-MacroAssembler::storeUncanonicalizedFloat32(FloatRegister src, const Address& dest)
-{
-    vmovss(src, dest);
-}
-void
-MacroAssembler::storeUncanonicalizedFloat32(FloatRegister src, const BaseIndex& dest)
-{
-    vmovss(src, dest);
-}
-void
-MacroAssembler::storeUncanonicalizedFloat32(FloatRegister src, const Operand& dest)
-{
-    switch (dest.kind()) {
-      case Operand::MEM_REG_DISP:
-        storeUncanonicalizedFloat32(src, dest.toAddress());
-        break;
-      case Operand::MEM_SCALE:
-        storeUncanonicalizedFloat32(src, dest.toBaseIndex());
-        break;
-      default:
-        MOZ_CRASH("unexpected operand kind");
-    }
-}
-
-template void MacroAssembler::storeFloat32(FloatRegister src, const Operand& dest);
-
-void
-MacroAssembler::storeFloat32x3(FloatRegister src, const Address& dest)
-{
-    Address destZ(dest);
-    destZ.offset += 2 * sizeof(int32_t);
-    storeDouble(src, dest);
-    ScratchSimd128Scope scratch(*this);
-    vmovhlps(src, scratch, scratch);
-    storeFloat32(scratch, destZ);
-}
-void
-MacroAssembler::storeFloat32x3(FloatRegister src, const BaseIndex& dest)
-{
-    BaseIndex destZ(dest);
-    destZ.offset += 2 * sizeof(int32_t);
-    storeDouble(src, dest);
-    ScratchSimd128Scope scratch(*this);
-    vmovhlps(src, scratch, scratch);
-    storeFloat32(scratch, destZ);
-}
-
-void
-MacroAssembler::memoryBarrier(MemoryBarrierBits barrier)
-{
-    if (barrier & MembarStoreLoad) {
-        storeLoadFence();
-    }
-=======
 void MacroAssembler::cmp32Load32(Condition cond, Register lhs, Register rhs,
                                  const Address& src, Register dest) {
   cmp32(lhs, rhs);
@@ -1392,7 +1089,6 @@ void MacroAssembler::memoryBarrier(MemoryBarrierBits barrier) {
   if (barrier & MembarStoreLoad) {
     storeLoadFence();
   }
->>>>>>> upstream-releases
 }
 
 // ========================================================================
@@ -1402,61 +1098,6 @@ void MacroAssembler::truncateFloat32ToInt64(Address src, Address dest,
                                             Register temp) {
   if (Assembler::HasSSE3()) {
     fld32(Operand(src));
-<<<<<<< HEAD
-    fisttp(Operand(dest));
-    return;
-  }
-
-  if (src.base == esp) {
-    src.offset += 2 * sizeof(int32_t);
-  }
-  if (dest.base == esp) {
-    dest.offset += 2 * sizeof(int32_t);
-  }
-
-  reserveStack(2 * sizeof(int32_t));
-
-  // Set conversion to truncation.
-  fnstcw(Operand(esp, 0));
-  load32(Operand(esp, 0), temp);
-  andl(Imm32(~0xFF00), temp);
-  orl(Imm32(0xCFF), temp);
-  store32(temp, Address(esp, sizeof(int32_t)));
-  fldcw(Operand(esp, sizeof(int32_t)));
-
-  // Load double on fp stack, convert and load regular stack.
-  fld32(Operand(src));
-  fistp(Operand(dest));
-
-  // Reset the conversion flag.
-  fldcw(Operand(esp, 0));
-
-  freeStack(2 * sizeof(int32_t));
-}
-void MacroAssembler::truncateDoubleToInt64(Address src, Address dest,
-                                           Register temp) {
-  if (Assembler::HasSSE3()) {
-    fld(Operand(src));
-    fisttp(Operand(dest));
-    return;
-  }
-||||||| merged common ancestors
-    fistp(Operand(dest));
-
-    // Reset the conversion flag.
-    fldcw(Operand(esp, 0));
-
-    freeStack(2 * sizeof(int32_t));
-}
-void
-MacroAssembler::truncateDoubleToInt64(Address src, Address dest, Register temp)
-{
-    if (Assembler::HasSSE3()) {
-        fld(Operand(src));
-        fisttp(Operand(dest));
-        return;
-    }
-=======
     fisttp(Operand(dest));
     return;
   }
@@ -1501,31 +1142,9 @@ void MacroAssembler::truncateDoubleToInt64(Address src, Address dest,
   if (dest.base == esp) {
     dest.offset += 2 * sizeof(int32_t);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (src.base == esp) {
-    src.offset += 2 * sizeof(int32_t);
-  }
-  if (dest.base == esp) {
-    dest.offset += 2 * sizeof(int32_t);
-  }
-||||||| merged common ancestors
-    if (src.base == esp) {
-        src.offset += 2*sizeof(int32_t);
-    }
-    if (dest.base == esp) {
-        dest.offset += 2*sizeof(int32_t);
-    }
-=======
   reserveStack(2 * sizeof(int32_t));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  reserveStack(2 * sizeof(int32_t));
-||||||| merged common ancestors
-    reserveStack(2*sizeof(int32_t));
-=======
   // Set conversion to truncation.
   fnstcw(Operand(esp, 0));
   load32(Operand(esp, 0), temp);
@@ -1533,48 +1152,13 @@ void MacroAssembler::truncateDoubleToInt64(Address src, Address dest,
   orl(Imm32(0xCFF), temp);
   store32(temp, Address(esp, 1 * sizeof(int32_t)));
   fldcw(Operand(esp, 1 * sizeof(int32_t)));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Set conversion to truncation.
-  fnstcw(Operand(esp, 0));
-  load32(Operand(esp, 0), temp);
-  andl(Imm32(~0xFF00), temp);
-  orl(Imm32(0xCFF), temp);
-  store32(temp, Address(esp, 1 * sizeof(int32_t)));
-  fldcw(Operand(esp, 1 * sizeof(int32_t)));
-||||||| merged common ancestors
-    // Set conversion to truncation.
-    fnstcw(Operand(esp, 0));
-    load32(Operand(esp, 0), temp);
-    andl(Imm32(~0xFF00), temp);
-    orl(Imm32(0xCFF), temp);
-    store32(temp, Address(esp, 1*sizeof(int32_t)));
-    fldcw(Operand(esp, 1*sizeof(int32_t)));
-=======
-  // Load double on fp stack, convert and load regular stack.
-  fld(Operand(src));
-  fistp(Operand(dest));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Load double on fp stack, convert and load regular stack.
   fld(Operand(src));
   fistp(Operand(dest));
 
   // Reset the conversion flag.
   fldcw(Operand(esp, 0));
-||||||| merged common ancestors
-    // Load double on fp stack, convert and load regular stack.
-    fld(Operand(src));
-    fistp(Operand(dest));
-
-    // Reset the conversion flag.
-    fldcw(Operand(esp, 0));
-=======
-  // Reset the conversion flag.
-  fldcw(Operand(esp, 0));
->>>>>>> upstream-releases
 
   freeStack(2 * sizeof(int32_t));
 }

@@ -105,18 +105,8 @@ template <typename AsyncInterface>
 class WaitableAsyncCall : public ForgettableAsyncCall<AsyncInterface> {
  public:
   explicit WaitableAsyncCall(ICallFactory* aCallFactory)
-<<<<<<< HEAD
-      : ForgettableAsyncCall(aCallFactory),
-        mEvent(::CreateEventW(nullptr, FALSE, FALSE, nullptr)) {}
-||||||| merged common ancestors
-    : ForgettableAsyncCall(aCallFactory)
-    , mEvent(::CreateEventW(nullptr, FALSE, FALSE, nullptr))
-  {
-  }
-=======
       : ForgettableAsyncCall<AsyncInterface>(aCallFactory),
         mEvent(::CreateEventW(nullptr, FALSE, FALSE, nullptr)) {}
->>>>>>> upstream-releases
 
   STDMETHODIMP Wait(DWORD aFlags, DWORD aTimeoutMilliseconds) override {
     const DWORD waitStart =
@@ -241,24 +231,12 @@ class WaitableInvoker {
  * avoiding deadlock.
  */
 template <typename SyncInterface, typename AsyncInterface,
-<<<<<<< HEAD
-          template <typename Iface> class WaitPolicy =
-              detail::FireAndForgetInvoker>
-class MOZ_RAII AsyncInvoker final : public WaitPolicy<AsyncInterface> {
- public:
-||||||| merged common ancestors
-          template <typename Iface> class WaitPolicy = detail::FireAndForgetInvoker>
-class MOZ_RAII AsyncInvoker final : public WaitPolicy<AsyncInterface>
-{
-public:
-=======
           template <typename Iface> class WaitPolicy =
               detail::FireAndForgetInvoker>
 class MOZ_RAII AsyncInvoker final : public WaitPolicy<AsyncInterface> {
   using Base = WaitPolicy<AsyncInterface>;
 
  public:
->>>>>>> upstream-releases
   typedef SyncInterface SyncInterfaceT;
   typedef AsyncInterface AsyncInterfaceT;
 
@@ -352,23 +330,10 @@ using WaitableAsyncInvoker =
 #define WAITABLE_ASYNC_INVOKER_FOR(SyncIface) \
   mozilla::mscom::WaitableAsyncInvoker<SyncIface, Async##SyncIface>
 
-<<<<<<< HEAD
-#define ASYNC_INVOKE(InvokerObj, SyncMethodName, ...)                 \
-  InvokerObj.Invoke(                                                  \
-      &decltype(InvokerObj)::SyncInterfaceT::SyncMethodName,          \
-      &decltype(InvokerObj)::AsyncInterfaceT::Begin_##SyncMethodName, \
-      __VA_ARGS__)
-||||||| merged common ancestors
-#define ASYNC_INVOKE(InvokerObj, SyncMethodName, ...) \
-  InvokerObj.Invoke(&decltype(InvokerObj)::SyncInterfaceT::SyncMethodName, \
-                    &decltype(InvokerObj)::AsyncInterfaceT::Begin_##SyncMethodName, \
-                    __VA_ARGS__)
-=======
 #define ASYNC_INVOKE(InvokerObj, SyncMethodName, ...)                 \
   InvokerObj.Invoke(                                                  \
       &decltype(InvokerObj)::SyncInterfaceT::SyncMethodName,          \
       &decltype(InvokerObj)::AsyncInterfaceT::Begin_##SyncMethodName, \
       ##__VA_ARGS__)
->>>>>>> upstream-releases
 
 #endif  // mozilla_mscom_AsyncInvoker_h

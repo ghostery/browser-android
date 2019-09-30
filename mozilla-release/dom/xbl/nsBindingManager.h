@@ -63,24 +63,10 @@ class nsBindingManager final : public nsStubMutationObserver {
    *        destructor.
    */
 
-<<<<<<< HEAD
-  enum DestructorHandling { eRunDtor, eDoNotRunDtor };
-  void RemovedFromDocument(nsIContent* aContent, nsIDocument* aOldDocument,
-                           DestructorHandling aDestructorHandling) {
-||||||| merged common ancestors
- enum DestructorHandling {
-   eRunDtor,
-   eDoNotRunDtor
- };
-  void RemovedFromDocument(nsIContent* aContent, nsIDocument* aOldDocument,
-                           DestructorHandling aDestructorHandling)
-  {
-=======
   enum DestructorHandling { eRunDtor, eDoNotRunDtor };
   void RemovedFromDocument(nsIContent* aContent,
                            mozilla::dom::Document* aOldDocument,
                            DestructorHandling aDestructorHandling) {
->>>>>>> upstream-releases
     if (aContent->HasFlag(NODE_MAY_BE_IN_BINDING_MNGR)) {
       RemovedFromDocumentInternal(aContent, aOldDocument, aDestructorHandling);
     }
@@ -125,30 +111,10 @@ class nsBindingManager final : public nsStubMutationObserver {
   nsIStreamListener* GetLoadingDocListener(nsIURI* aURL);
   void RemoveLoadingDocListener(nsIURI* aURL);
 
-<<<<<<< HEAD
-  void FlushSkinBindings();
-
-  nsresult GetBindingImplementation(nsIContent* aContent, REFNSIID aIID,
-                                    void** aResult);
-
-  void AppendAllSheets(nsTArray<mozilla::StyleSheet*>& aArray);
-
-  void Traverse(nsIContent* aContent, nsCycleCollectionTraversalCallback& cb);
-||||||| merged common ancestors
-  void FlushSkinBindings();
-
-  nsresult GetBindingImplementation(nsIContent* aContent, REFNSIID aIID, void** aResult);
-
-
-  void AppendAllSheets(nsTArray<mozilla::StyleSheet*>& aArray);
-
-  void Traverse(nsIContent *aContent, nsCycleCollectionTraversalCallback &cb);
-=======
   nsresult GetBindingImplementation(nsIContent* aContent, REFNSIID aIID,
                                     void** aResult);
 
   void Traverse(nsIContent* aContent, nsCycleCollectionTraversalCallback& cb);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTION_CLASS(nsBindingManager)
 
@@ -177,29 +143,7 @@ class nsBindingManager final : public nsStubMutationObserver {
 
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
-<<<<<<< HEAD
-  // Enumerate each bound content's bindings (including its base bindings)
-  // in mBoundContentSet. Return false from the callback to stop enumeration.
-  using BoundContentProtoBindingCallback =
-      std::function<bool(nsXBLPrototypeBinding*)>;
-
-  bool EnumerateBoundContentProtoBindings(
-      const BoundContentProtoBindingCallback&) const;
-
  protected:
-||||||| merged common ancestors
-  // Enumerate each bound content's bindings (including its base bindings)
-  // in mBoundContentSet. Return false from the callback to stop enumeration.
-  using BoundContentProtoBindingCallback =
-    std::function<bool (nsXBLPrototypeBinding*)>;
-
-  bool EnumerateBoundContentProtoBindings(
-      const BoundContentProtoBindingCallback&) const;
-
-protected:
-=======
- protected:
->>>>>>> upstream-releases
   nsIXPConnectWrappedJS* GetWrappedJS(nsIContent* aContent);
   nsresult SetWrappedJS(nsIContent* aContent, nsIXPConnectWrappedJS* aResult);
 

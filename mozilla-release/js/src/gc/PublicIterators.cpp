@@ -28,37 +28,6 @@ static void IterateRealmsArenasCellsUnbarriered(
       realm = r;
       (*realmCallback)(cx, data, realm);
     }
-<<<<<<< HEAD
-  }
-
-  for (auto thingKind : AllAllocKinds()) {
-    JS::TraceKind traceKind = MapAllocToTraceKind(thingKind);
-    size_t thingSize = Arena::thingSize(thingKind);
-
-    for (ArenaIter aiter(zone, thingKind); !aiter.done(); aiter.next()) {
-      Arena* arena = aiter.get();
-      (*arenaCallback)(cx->runtime(), data, arena, traceKind, thingSize);
-      for (ArenaCellIterUnbarriered iter(arena); !iter.done(); iter.next()) {
-        (*cellCallback)(cx->runtime(), data, iter.getCell(), traceKind,
-                        thingSize);
-      }
-||||||| merged common ancestors
-}
-
-void
-js::IterateHeapUnbarriered(JSContext* cx, void* data,
-                           IterateZoneCallback zoneCallback,
-                           JS::IterateRealmCallback realmCallback,
-                           IterateArenaCallback arenaCallback,
-                           IterateCellCallback cellCallback)
-{
-    AutoPrepareForTracing prep(cx);
-
-    for (ZonesIter zone(cx->runtime(), WithAtoms); !zone.done(); zone.next()) {
-        (*zoneCallback)(cx->runtime(), data, zone);
-        IterateRealmsArenasCellsUnbarriered(cx, zone, data,
-                                            realmCallback, arenaCallback, cellCallback);
-=======
   }
 
   for (auto thingKind : AllAllocKinds()) {
@@ -72,7 +41,6 @@ js::IterateHeapUnbarriered(JSContext* cx, void* data,
         (*cellCallback)(cx->runtime(), data, iter.getCell(), traceKind,
                         thingSize);
       }
->>>>>>> upstream-releases
     }
   }
 }
@@ -114,37 +82,6 @@ void js::IterateChunks(JSContext* cx, void* data,
   }
 }
 
-<<<<<<< HEAD
-static void TraverseInnerLazyScriptsForLazyScript(
-    JSContext* cx, void* data, LazyScript* enclosingLazyScript,
-    IterateLazyScriptCallback lazyScriptCallback,
-    const JS::AutoRequireNoGC& nogc) {
-  GCPtrFunction* innerFunctions = enclosingLazyScript->innerFunctions();
-  for (size_t i = 0, len = enclosingLazyScript->numInnerFunctions(); i < len;
-       i++) {
-    JSFunction* fun = innerFunctions[i];
-
-    // LazyScript::CreateForXDR temporarily initializes innerFunctions with
-    // its own function, but it should be overwritten with correct
-    // inner functions before getting inserted into parent's innerFunctions.
-    MOZ_ASSERT(fun != enclosingLazyScript->functionNonDelazifying());
-
-    if (!fun->isInterpretedLazy()) {
-      return;
-||||||| merged common ancestors
-static inline void
-DoScriptCallback(JSContext* cx,  void* data, LazyScript* lazyScript,
-                 IterateLazyScriptCallback lazyScriptCallback,
-                 const JS::AutoRequireNoGC& nogc)
-{
-    // We call the callback only for the LazyScript that:
-    //   (a) its enclosing script has ever been fully compiled and
-    //       itself is delazifyable (handled in this function)
-    //   (b) it is contained in the (a)'s inner function tree
-    //       (handled in TraverseInnerLazyScriptsForLazyScript)
-    if (!lazyScript->enclosingScriptHasEverBeenCompiled()) {
-        return;
-=======
 static void TraverseInnerLazyScriptsForLazyScript(
     JSContext* cx, void* data, LazyScript* enclosingLazyScript,
     IterateLazyScriptCallback lazyScriptCallback,
@@ -157,7 +94,6 @@ static void TraverseInnerLazyScriptsForLazyScript(
 
     if (!fun->isInterpretedLazy()) {
       return;
->>>>>>> upstream-releases
     }
 
     LazyScript* lazyScript = fun->lazyScript();
@@ -206,44 +142,6 @@ static inline void DoScriptCallback(JSContext* cx, void* data, JSScript* script,
 }
 
 template <typename T, typename Callback>
-<<<<<<< HEAD
-static void IterateScriptsImpl(JSContext* cx, Realm* realm, void* data,
-                               Callback scriptCallback) {
-  MOZ_ASSERT(!cx->suppressGC);
-  AutoEmptyNursery empty(cx);
-  AutoPrepareForTracing prep(cx);
-  JS::AutoSuppressGCAnalysis nogc;
-
-  if (realm) {
-    Zone* zone = realm->zone();
-    for (auto script = zone->cellIter<T>(empty); !script.done();
-         script.next()) {
-      if (script->realm() == realm) {
-        DoScriptCallback(cx, data, script, scriptCallback, nogc);
-      }
-||||||| merged common ancestors
-static void
-IterateScriptsImpl(JSContext* cx, Realm* realm, void* data, Callback scriptCallback)
-{
-    MOZ_ASSERT(!cx->suppressGC);
-    AutoEmptyNursery empty(cx);
-    AutoPrepareForTracing prep(cx);
-    JS::AutoSuppressGCAnalysis nogc;
-
-    if (realm) {
-        Zone* zone = realm->zone();
-        for (auto script = zone->cellIter<T>(empty); !script.done(); script.next()) {
-            if (script->realm() == realm) {
-                DoScriptCallback(cx, data, script, scriptCallback, nogc);
-            }
-        }
-    } else {
-        for (ZonesIter zone(cx->runtime(), SkipAtoms); !zone.done(); zone.next()) {
-            for (auto script = zone->cellIter<T>(empty); !script.done(); script.next()) {
-                DoScriptCallback(cx, data, script, scriptCallback, nogc);
-            }
-        }
-=======
 static void IterateScriptsImpl(JSContext* cx, Realm* realm, void* data,
                                Callback scriptCallback) {
   MOZ_ASSERT(!cx->suppressGC);
@@ -259,19 +157,7 @@ static void IterateScriptsImpl(JSContext* cx, Realm* realm, void* data,
         continue;
       }
       DoScriptCallback(cx, data, script, scriptCallback, nogc);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  } else {
-    for (ZonesIter zone(cx->runtime(), SkipAtoms); !zone.done(); zone.next()) {
-      for (auto script = zone->cellIter<T>(empty); !script.done();
-           script.next()) {
-        DoScriptCallback(cx, data, script, scriptCallback, nogc);
-      }
-    }
-  }
-||||||| merged common ancestors
-=======
   } else {
     for (ZonesIter zone(cx->runtime(), SkipAtoms); !zone.done(); zone.next()) {
       for (auto iter = zone->cellIter<T>(empty); !iter.done(); iter.next()) {
@@ -280,7 +166,6 @@ static void IterateScriptsImpl(JSContext* cx, Realm* realm, void* data,
       }
     }
   }
->>>>>>> upstream-releases
 }
 
 void js::IterateScripts(JSContext* cx, Realm* realm, void* data,
@@ -324,106 +209,38 @@ JS_PUBLIC_API void JS_IterateCompartments(
     JSIterateCompartmentCallback compartmentCallback) {
   AutoTraceSession session(cx->runtime());
 
-<<<<<<< HEAD
-  for (CompartmentsIter c(cx->runtime()); !c.done(); c.next()) {
-    (*compartmentCallback)(cx, data, c);
-  }
-||||||| merged common ancestors
-    for (CompartmentsIter c(cx->runtime()); !c.done(); c.next()) {
-        (*compartmentCallback)(cx, data, c);
-    }
-=======
   for (CompartmentsIter c(cx->runtime()); !c.done(); c.next()) {
     if ((*compartmentCallback)(cx, data, c) ==
         JS::CompartmentIterResult::Stop) {
       break;
     }
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JS_PUBLIC_API void JS::IterateRealms(JSContext* cx, void* data,
-                                     JS::IterateRealmCallback realmCallback) {
-  AutoTraceSession session(cx->runtime());
-||||||| merged common ancestors
-JS_PUBLIC_API(void)
-JS::IterateRealms(JSContext* cx, void* data, JS::IterateRealmCallback realmCallback)
-{
-    AutoTraceSession session(cx->runtime());
-=======
 JS_PUBLIC_API void JS_IterateCompartmentsInZone(
     JSContext* cx, JS::Zone* zone, void* data,
     JSIterateCompartmentCallback compartmentCallback) {
   AutoTraceSession session(cx->runtime());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Rooted<Realm*> realm(cx);
-  for (RealmsIter r(cx->runtime()); !r.done(); r.next()) {
-    realm = r;
-    (*realmCallback)(cx, data, realm);
-  }
-||||||| merged common ancestors
-    Rooted<Realm*> realm(cx);
-    for (RealmsIter r(cx->runtime()); !r.done(); r.next()) {
-        realm = r;
-        (*realmCallback)(cx, data, realm);
-    }
-=======
   for (CompartmentsInZoneIter c(zone); !c.done(); c.next()) {
     if ((*compartmentCallback)(cx, data, c) ==
         JS::CompartmentIterResult::Stop) {
       break;
     }
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JS_PUBLIC_API void JS::IterateRealmsWithPrincipals(
-    JSContext* cx, JSPrincipals* principals, void* data,
-    JS::IterateRealmCallback realmCallback) {
-  MOZ_ASSERT(principals);
-||||||| merged common ancestors
-JS_PUBLIC_API(void)
-JS::IterateRealmsWithPrincipals(JSContext* cx, JSPrincipals* principals, void* data,
-                                JS::IterateRealmCallback realmCallback)
-{
-    MOZ_ASSERT(principals);
-=======
 JS_PUBLIC_API void JS::IterateRealms(JSContext* cx, void* data,
                                      JS::IterateRealmCallback realmCallback) {
   AutoTraceSession session(cx->runtime());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  AutoTraceSession session(cx->runtime());
-||||||| merged common ancestors
-    AutoTraceSession session(cx->runtime());
-=======
   Rooted<Realm*> realm(cx);
   for (RealmsIter r(cx->runtime()); !r.done(); r.next()) {
     realm = r;
     (*realmCallback)(cx, data, realm);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Rooted<Realm*> realm(cx);
-  for (RealmsIter r(cx->runtime()); !r.done(); r.next()) {
-    if (r->principals() != principals) {
-      continue;
-||||||| merged common ancestors
-    Rooted<Realm*> realm(cx);
-    for (RealmsIter r(cx->runtime()); !r.done(); r.next()) {
-        if (r->principals() != principals) {
-            continue;
-        }
-        realm = r;
-        (*realmCallback)(cx, data, realm);
-=======
 JS_PUBLIC_API void JS::IterateRealmsWithPrincipals(
     JSContext* cx, JSPrincipals* principals, void* data,
     JS::IterateRealmCallback realmCallback) {
@@ -435,7 +252,6 @@ JS_PUBLIC_API void JS::IterateRealmsWithPrincipals(
   for (RealmsIter r(cx->runtime()); !r.done(); r.next()) {
     if (r->principals() != principals) {
       continue;
->>>>>>> upstream-releases
     }
     realm = r;
     (*realmCallback)(cx, data, realm);

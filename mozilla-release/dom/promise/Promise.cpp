@@ -242,21 +242,9 @@ void PromiseNativeThenHandlerBase::ResolvedCallback(
   }
 }
 
-<<<<<<< HEAD
-void PromiseNativeThenHandlerBase::RejectedCallback(
-    JSContext* aCx, JS::Handle<JS::Value> aValue) {
-  mPromise->MaybeReject(aCx, aValue);
-||||||| merged common ancestors
-void
-PromiseNativeThenHandlerBase::RejectedCallback(JSContext* aCx,
-                                               JS::Handle<JS::Value> aValue)
-{
-  mPromise->MaybeReject(aCx, aValue);
-=======
 void PromiseNativeThenHandlerBase::RejectedCallback(
     JSContext* aCx, JS::Handle<JS::Value> aValue) {
   mPromise->MaybeReject(aValue);
->>>>>>> upstream-releases
 }
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(PromiseNativeThenHandlerBase)
@@ -329,18 +317,9 @@ void Promise::MaybeReject(JSContext* aCx, JS::Handle<JS::Value> aValue) {
 
 enum class NativeHandlerTask : int32_t { Resolve, Reject };
 
-<<<<<<< HEAD
-static bool NativeHandlerCallback(JSContext* aCx, unsigned aArgc,
-                                  JS::Value* aVp) {
-||||||| merged common ancestors
-static bool
-NativeHandlerCallback(JSContext* aCx, unsigned aArgc, JS::Value* aVp)
-{
-=======
 MOZ_CAN_RUN_SCRIPT
 static bool NativeHandlerCallback(JSContext* aCx, unsigned aArgc,
                                   JS::Value* aVp) {
->>>>>>> upstream-releases
   JS::CallArgs args = CallArgsFromVp(aArgc, aVp);
 
   JS::Value v =
@@ -402,42 +381,18 @@ class PromiseNativeHandlerShim final : public PromiseNativeHandler {
     MOZ_ASSERT(mInner);
   }
 
-<<<<<<< HEAD
-  void ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override {
-    mInner->ResolvedCallback(aCx, aValue);
-    mInner = nullptr;
-||||||| merged common ancestors
-  void
-  ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override
-  {
-    mInner->ResolvedCallback(aCx, aValue);
-    mInner = nullptr;
-=======
   MOZ_CAN_RUN_SCRIPT
   void ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override {
     RefPtr<PromiseNativeHandler> inner = mInner.forget();
     inner->ResolvedCallback(aCx, aValue);
     MOZ_ASSERT(!mInner);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  void RejectedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override {
-    mInner->RejectedCallback(aCx, aValue);
-    mInner = nullptr;
-||||||| merged common ancestors
-  void
-  RejectedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override
-  {
-    mInner->RejectedCallback(aCx, aValue);
-    mInner = nullptr;
-=======
   MOZ_CAN_RUN_SCRIPT
   void RejectedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override {
     RefPtr<PromiseNativeHandler> inner = mInner.forget();
     inner->RejectedCallback(aCx, aValue);
     MOZ_ASSERT(!mInner);
->>>>>>> upstream-releases
   }
 
   bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
@@ -521,28 +476,12 @@ void Promise::HandleException(JSContext* aCx) {
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<Promise> Promise::CreateFromExisting(
-    nsIGlobalObject* aGlobal, JS::Handle<JSObject*> aPromiseObj,
-    PropagateUserInteraction aPropagateUserInteraction) {
-  MOZ_ASSERT(js::GetObjectCompartment(aGlobal->GetGlobalJSObject()) ==
-             js::GetObjectCompartment(aPromiseObj));
-||||||| merged common ancestors
-already_AddRefed<Promise>
-Promise::CreateFromExisting(nsIGlobalObject* aGlobal,
-                            JS::Handle<JSObject*> aPromiseObj,
-                            PropagateUserInteraction aPropagateUserInteraction)
-{
-  MOZ_ASSERT(js::GetObjectCompartment(aGlobal->GetGlobalJSObject()) ==
-             js::GetObjectCompartment(aPromiseObj));
-=======
 already_AddRefed<Promise> Promise::CreateFromExisting(
     nsIGlobalObject* aGlobal, JS::Handle<JSObject*> aPromiseObj,
     PropagateUserInteraction aPropagateUserInteraction) {
   MOZ_ASSERT(
       js::GetObjectCompartment(aGlobal->GetGlobalJSObjectPreserveColor()) ==
       js::GetObjectCompartment(aPromiseObj));
->>>>>>> upstream-releases
   RefPtr<Promise> p = new Promise(aGlobal);
   p->mPromiseObj = aPromiseObj;
   if (aPropagateUserInteraction == ePropagateUserInteraction &&
@@ -608,15 +547,6 @@ void Promise::ReportRejectedPromise(JSContext* aCx, JS::HandleObject aPromise) {
   }
 }
 
-<<<<<<< HEAD
-JSObject* Promise::GlobalJSObject() const {
-  return mGlobal->GetGlobalJSObject();
-||||||| merged common ancestors
-JSObject*
-Promise::GlobalJSObject() const
-{
-  return mGlobal->GetGlobalJSObject();
-=======
 void Promise::MaybeResolveWithClone(JSContext* aCx,
                                     JS::Handle<JS::Value> aValue) {
   JS::Rooted<JSObject*> sourceScope(aCx, JS::CurrentGlobalOrNull(aCx));
@@ -631,18 +561,8 @@ void Promise::MaybeResolveWithClone(JSContext* aCx,
     return;
   }
   MaybeResolve(aCx, value);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JS::Compartment* Promise::Compartment() const {
-  return js::GetObjectCompartment(GlobalJSObject());
-||||||| merged common ancestors
-JS::Compartment*
-Promise::Compartment() const
-{
-  return js::GetObjectCompartment(GlobalJSObject());
-=======
 void Promise::MaybeRejectWithClone(JSContext* aCx,
                                    JS::Handle<JS::Value> aValue) {
   JS::Rooted<JSObject*> sourceScope(aCx, JS::CurrentGlobalOrNull(aCx));
@@ -657,7 +577,6 @@ void Promise::MaybeRejectWithClone(JSContext* aCx,
     return;
   }
   MaybeReject(aCx, value);
->>>>>>> upstream-releases
 }
 
 // A WorkerRunnable to resolve/reject the Promise on the worker thread.

@@ -34,25 +34,11 @@ using namespace mozilla::a11y;
 struct MaiAtkHyperlink {
   AtkHyperlink parent;
 
-<<<<<<< HEAD
-  /*
-   * The MaiHyperlink whose properties and features are exported via this
-   * hyperlink instance.
-   */
-  MaiHyperlink *maiHyperlink;
-||||||| merged common ancestors
-    /*
-     * The MaiHyperlink whose properties and features are exported via this
-     * hyperlink instance.
-     */
-    MaiHyperlink *maiHyperlink;
-=======
   /*
    * The MaiHyperlink whose properties and features are exported via this
    * hyperlink instance.
    */
   MaiHyperlink* maiHyperlink;
->>>>>>> upstream-releases
 };
 
 struct MaiAtkHyperlinkClass {
@@ -77,31 +63,12 @@ G_END_DECLS
 
 static gpointer parent_class = nullptr;
 
-<<<<<<< HEAD
-static MaiHyperlink *GetMaiHyperlink(AtkHyperlink *aHyperlink) {
-  NS_ENSURE_TRUE(MAI_IS_ATK_HYPERLINK(aHyperlink), nullptr);
-  MaiHyperlink *maiHyperlink = MAI_ATK_HYPERLINK(aHyperlink)->maiHyperlink;
-  NS_ENSURE_TRUE(maiHyperlink != nullptr, nullptr);
-  NS_ENSURE_TRUE(maiHyperlink->GetAtkHyperlink() == aHyperlink, nullptr);
-  return maiHyperlink;
-||||||| merged common ancestors
-static MaiHyperlink*
-GetMaiHyperlink(AtkHyperlink *aHyperlink)
-{
-    NS_ENSURE_TRUE(MAI_IS_ATK_HYPERLINK(aHyperlink), nullptr);
-    MaiHyperlink * maiHyperlink =
-        MAI_ATK_HYPERLINK(aHyperlink)->maiHyperlink;
-    NS_ENSURE_TRUE(maiHyperlink != nullptr, nullptr);
-    NS_ENSURE_TRUE(maiHyperlink->GetAtkHyperlink() == aHyperlink, nullptr);
-    return maiHyperlink;
-=======
 static MaiHyperlink* GetMaiHyperlink(AtkHyperlink* aHyperlink) {
   NS_ENSURE_TRUE(MAI_IS_ATK_HYPERLINK(aHyperlink), nullptr);
   MaiHyperlink* maiHyperlink = MAI_ATK_HYPERLINK(aHyperlink)->maiHyperlink;
   NS_ENSURE_TRUE(maiHyperlink != nullptr, nullptr);
   NS_ENSURE_TRUE(maiHyperlink->GetAtkHyperlink() == aHyperlink, nullptr);
   return maiHyperlink;
->>>>>>> upstream-releases
 }
 
 GType mai_atk_hyperlink_get_type(void) {
@@ -127,29 +94,6 @@ GType mai_atk_hyperlink_get_type(void) {
   return type;
 }
 
-<<<<<<< HEAD
-MaiHyperlink::MaiHyperlink(AccessibleOrProxy aHyperLink)
-    : mHyperlink(aHyperLink), mMaiAtkHyperlink(nullptr) {
-  mMaiAtkHyperlink = reinterpret_cast<AtkHyperlink *>(
-      g_object_new(mai_atk_hyperlink_get_type(), nullptr));
-  NS_ASSERTION(mMaiAtkHyperlink, "OUT OF MEMORY");
-  if (!mMaiAtkHyperlink) return;
-
-  MAI_ATK_HYPERLINK(mMaiAtkHyperlink)->maiHyperlink = this;
-||||||| merged common ancestors
-MaiHyperlink::MaiHyperlink(AccessibleOrProxy aHyperLink) :
-    mHyperlink(aHyperLink),
-    mMaiAtkHyperlink(nullptr)
-{
-    mMaiAtkHyperlink =
-        reinterpret_cast<AtkHyperlink *>
-                        (g_object_new(mai_atk_hyperlink_get_type(), nullptr));
-    NS_ASSERTION(mMaiAtkHyperlink, "OUT OF MEMORY");
-    if (!mMaiAtkHyperlink)
-      return;
-
-    MAI_ATK_HYPERLINK(mMaiAtkHyperlink)->maiHyperlink = this;
-=======
 MaiHyperlink::MaiHyperlink(AccessibleOrProxy aHyperLink)
     : mHyperlink(aHyperLink), mMaiAtkHyperlink(nullptr) {
   mMaiAtkHyperlink = reinterpret_cast<AtkHyperlink*>(
@@ -158,7 +102,6 @@ MaiHyperlink::MaiHyperlink(AccessibleOrProxy aHyperLink)
   if (!mMaiAtkHyperlink) return;
 
   MAI_ATK_HYPERLINK(mMaiAtkHyperlink)->maiHyperlink = this;
->>>>>>> upstream-releases
 }
 
 MaiHyperlink::~MaiHyperlink() {
@@ -170,18 +113,8 @@ MaiHyperlink::~MaiHyperlink() {
 
 /* static functions for ATK callbacks */
 
-<<<<<<< HEAD
-void classInitCB(AtkHyperlinkClass *aClass) {
-  GObjectClass *gobject_class = G_OBJECT_CLASS(aClass);
-||||||| merged common ancestors
-void
-classInitCB(AtkHyperlinkClass *aClass)
-{
-    GObjectClass *gobject_class = G_OBJECT_CLASS(aClass);
-=======
 void classInitCB(AtkHyperlinkClass* aClass) {
   GObjectClass* gobject_class = G_OBJECT_CLASS(aClass);
->>>>>>> upstream-releases
 
   parent_class = g_type_class_peek_parent(aClass);
 
@@ -195,58 +128,24 @@ void classInitCB(AtkHyperlinkClass* aClass) {
   gobject_class->finalize = finalizeCB;
 }
 
-<<<<<<< HEAD
-void finalizeCB(GObject *aObj) {
-  NS_ASSERTION(MAI_IS_ATK_HYPERLINK(aObj), "Invalid MaiAtkHyperlink");
-  if (!MAI_IS_ATK_HYPERLINK(aObj)) return;
-||||||| merged common ancestors
-void
-finalizeCB(GObject *aObj)
-{
-    NS_ASSERTION(MAI_IS_ATK_HYPERLINK(aObj), "Invalid MaiAtkHyperlink");
-    if (!MAI_IS_ATK_HYPERLINK(aObj))
-        return;
-=======
 void finalizeCB(GObject* aObj) {
   NS_ASSERTION(MAI_IS_ATK_HYPERLINK(aObj), "Invalid MaiAtkHyperlink");
   if (!MAI_IS_ATK_HYPERLINK(aObj)) return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MaiAtkHyperlink *maiAtkHyperlink = MAI_ATK_HYPERLINK(aObj);
-  maiAtkHyperlink->maiHyperlink = nullptr;
-||||||| merged common ancestors
-    MaiAtkHyperlink *maiAtkHyperlink = MAI_ATK_HYPERLINK(aObj);
-    maiAtkHyperlink->maiHyperlink = nullptr;
-=======
   MaiAtkHyperlink* maiAtkHyperlink = MAI_ATK_HYPERLINK(aObj);
   maiAtkHyperlink->maiHyperlink = nullptr;
->>>>>>> upstream-releases
 
   /* call parent finalize function */
   if (G_OBJECT_CLASS(parent_class)->finalize)
     G_OBJECT_CLASS(parent_class)->finalize(aObj);
 }
 
-<<<<<<< HEAD
-gchar *getUriCB(AtkHyperlink *aLink, gint aLinkIndex) {
-  MaiHyperlink *maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink) return nullptr;
-||||||| merged common ancestors
-gchar *
-getUriCB(AtkHyperlink *aLink, gint aLinkIndex)
-{
-  MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink)
-    return nullptr;
-=======
 gchar* getUriCB(AtkHyperlink* aLink, gint aLinkIndex) {
   MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
   if (!maiLink) return nullptr;
->>>>>>> upstream-releases
 
   nsAutoCString cautoStr;
-  if (Accessible *hyperlink = maiLink->GetAccHyperlink()) {
+  if (Accessible* hyperlink = maiLink->GetAccHyperlink()) {
     nsCOMPtr<nsIURI> uri = hyperlink->AnchorURIAt(aLinkIndex);
     if (!uri) return nullptr;
 
@@ -263,51 +162,28 @@ gchar* getUriCB(AtkHyperlink* aLink, gint aLinkIndex) {
   return g_strdup(cautoStr.get());
 }
 
-<<<<<<< HEAD
-AtkObject *getObjectCB(AtkHyperlink *aLink, gint aLinkIndex) {
-  MaiHyperlink *maiLink = GetMaiHyperlink(aLink);
-||||||| merged common ancestors
-AtkObject *
-getObjectCB(AtkHyperlink *aLink, gint aLinkIndex)
-{
-  MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
-=======
 AtkObject* getObjectCB(AtkHyperlink* aLink, gint aLinkIndex) {
   MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
->>>>>>> upstream-releases
   if (!maiLink) {
     return nullptr;
   }
 
-  if (Accessible *hyperlink = maiLink->GetAccHyperlink()) {
-    Accessible *anchor = hyperlink->AnchorAt(aLinkIndex);
+  if (Accessible* hyperlink = maiLink->GetAccHyperlink()) {
+    Accessible* anchor = hyperlink->AnchorAt(aLinkIndex);
     NS_ENSURE_TRUE(anchor, nullptr);
 
     return AccessibleWrap::GetAtkObject(anchor);
   }
 
-  ProxyAccessible *anchor = maiLink->Proxy()->AnchorAt(aLinkIndex);
+  ProxyAccessible* anchor = maiLink->Proxy()->AnchorAt(aLinkIndex);
   return anchor ? GetWrapperFor(anchor) : nullptr;
 }
 
-<<<<<<< HEAD
-gint getEndIndexCB(AtkHyperlink *aLink) {
-  MaiHyperlink *maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink) return false;
-||||||| merged common ancestors
-gint
-getEndIndexCB(AtkHyperlink *aLink)
-{
-  MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink)
-    return false;
-=======
 gint getEndIndexCB(AtkHyperlink* aLink) {
   MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
   if (!maiLink) return false;
->>>>>>> upstream-releases
 
-  if (Accessible *hyperlink = maiLink->GetAccHyperlink())
+  if (Accessible* hyperlink = maiLink->GetAccHyperlink())
     return static_cast<gint>(hyperlink->EndOffset());
 
   bool valid = false;
@@ -315,24 +191,11 @@ gint getEndIndexCB(AtkHyperlink* aLink) {
   return valid ? static_cast<gint>(endIdx) : -1;
 }
 
-<<<<<<< HEAD
-gint getStartIndexCB(AtkHyperlink *aLink) {
-  MaiHyperlink *maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink) return -1;
-||||||| merged common ancestors
-gint
-getStartIndexCB(AtkHyperlink *aLink)
-{
-  MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink)
-    return -1;
-=======
 gint getStartIndexCB(AtkHyperlink* aLink) {
   MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
   if (!maiLink) return -1;
->>>>>>> upstream-releases
 
-  if (Accessible *hyperlink = maiLink->GetAccHyperlink())
+  if (Accessible* hyperlink = maiLink->GetAccHyperlink())
     return static_cast<gint>(hyperlink->StartOffset());
 
   bool valid = false;
@@ -340,47 +203,21 @@ gint getStartIndexCB(AtkHyperlink* aLink) {
   return valid ? static_cast<gint>(startIdx) : -1;
 }
 
-<<<<<<< HEAD
-gboolean isValidCB(AtkHyperlink *aLink) {
-  MaiHyperlink *maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink) return false;
-||||||| merged common ancestors
-gboolean
-isValidCB(AtkHyperlink *aLink)
-{
-  MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink)
-    return false;
-=======
 gboolean isValidCB(AtkHyperlink* aLink) {
   MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
   if (!maiLink) return false;
->>>>>>> upstream-releases
 
-  if (Accessible *hyperlink = maiLink->GetAccHyperlink())
+  if (Accessible* hyperlink = maiLink->GetAccHyperlink())
     return static_cast<gboolean>(hyperlink->IsLinkValid());
 
   return static_cast<gboolean>(maiLink->Proxy()->IsLinkValid());
 }
 
-<<<<<<< HEAD
-gint getAnchorCountCB(AtkHyperlink *aLink) {
-  MaiHyperlink *maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink) return -1;
-||||||| merged common ancestors
-gint
-getAnchorCountCB(AtkHyperlink *aLink)
-{
-  MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
-  if (!maiLink)
-    return -1;
-=======
 gint getAnchorCountCB(AtkHyperlink* aLink) {
   MaiHyperlink* maiLink = GetMaiHyperlink(aLink);
   if (!maiLink) return -1;
->>>>>>> upstream-releases
 
-  if (Accessible *hyperlink = maiLink->GetAccHyperlink())
+  if (Accessible* hyperlink = maiLink->GetAccHyperlink())
     return static_cast<gint>(hyperlink->AnchorCount());
 
   bool valid = false;

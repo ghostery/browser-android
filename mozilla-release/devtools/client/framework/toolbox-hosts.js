@@ -57,16 +57,9 @@ BottomHost.prototype = {
 
     const gBrowser = this.hostTab.ownerDocument.defaultView.gBrowser;
     const ownerDocument = gBrowser.ownerDocument;
-<<<<<<< HEAD
-    this._browserContainer =
-      gBrowser.getBrowserContainer(this.hostTab.linkedBrowser);
-||||||| merged common ancestors
-    this._nbox = gBrowser.getNotificationBox(this.hostTab.linkedBrowser);
-=======
     this._browserContainer = gBrowser.getBrowserContainer(
       this.hostTab.linkedBrowser
     );
->>>>>>> upstream-releases
 
     this._splitter = ownerDocument.createXULElement("splitter");
     this._splitter.setAttribute("class", "devtools-horizontal-splitter");
@@ -82,20 +75,8 @@ BottomHost.prototype = {
       this._browserContainer.clientHeight - MIN_PAGE_SIZE
     );
 
-<<<<<<< HEAD
     this._browserContainer.appendChild(this._splitter);
     this._browserContainer.appendChild(this.frame);
-
-    this.frame.tooltip = "aHTMLTooltip";
-||||||| merged common ancestors
-    this._nbox.appendChild(this._splitter);
-    this._nbox.appendChild(this.frame);
-
-    this.frame.tooltip = "aHTMLTooltip";
-=======
-    this._browserContainer.appendChild(this._splitter);
-    this._browserContainer.appendChild(this.frame);
->>>>>>> upstream-releases
 
     // we have to load something so we can switch documents if we have to
     this.frame.setAttribute("src", "about:blank");
@@ -164,18 +145,10 @@ class SidebarHost {
     await gDevToolsBrowser.loadBrowserStyleSheet(this.hostTab.ownerGlobal);
     const gBrowser = this.hostTab.ownerDocument.defaultView.gBrowser;
     const ownerDocument = gBrowser.ownerDocument;
-<<<<<<< HEAD
-    this._browserContainer = gBrowser.getBrowserContainer(this.hostTab.linkedBrowser);
-    this._browserPanel = gBrowser.getPanel(this.hostTab.linkedBrowser);
-||||||| merged common ancestors
-    this._browser = gBrowser.getBrowserContainer(this.hostTab.linkedBrowser);
-    this._sidebar = gBrowser.getSidebarContainer(this.hostTab.linkedBrowser);
-=======
     this._browserContainer = gBrowser.getBrowserContainer(
       this.hostTab.linkedBrowser
     );
     this._browserPanel = gBrowser.getPanel(this.hostTab.linkedBrowser);
->>>>>>> upstream-releases
 
     this._splitter = ownerDocument.createXULElement("splitter");
     this._splitter.setAttribute("class", "devtools-side-splitter");
@@ -194,21 +167,9 @@ class SidebarHost {
     const topDoc = topWindow.document.documentElement;
     const isLTR = topWindow.getComputedStyle(topDoc).direction === "ltr";
 
-<<<<<<< HEAD
-    if (isLTR && this.type == "right" ||
-        !isLTR && this.type == "left") {
-      this._browserPanel.appendChild(this._splitter);
-      this._browserPanel.appendChild(this.frame);
-||||||| merged common ancestors
-    if (isLTR && this.type == "right" ||
-        !isLTR && this.type == "left") {
-      this._sidebar.appendChild(this._splitter);
-      this._sidebar.appendChild(this.frame);
-=======
     if ((isLTR && this.type == "right") || (!isLTR && this.type == "left")) {
       this._browserPanel.appendChild(this._splitter);
       this._browserPanel.appendChild(this.frame);
->>>>>>> upstream-releases
     } else {
       this._browserPanel.insertBefore(this.frame, this._browserContainer);
       this._browserPanel.insertBefore(this._splitter, this._browserContainer);

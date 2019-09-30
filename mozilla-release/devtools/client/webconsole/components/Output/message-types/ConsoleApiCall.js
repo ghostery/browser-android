@@ -162,13 +162,8 @@ function ConsoleApiCall(props) {
     timeStamp,
     timestampsVisible,
     parameters,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/ConsoleApiCall.js
-    maybeScrollToBottom,
-||||||| merged common ancestors
-=======
     message,
     maybeScrollToBottom,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/ConsoleApiCall.js
   });
 }
 
@@ -188,34 +183,6 @@ function formatReps(options = {}) {
   return (
     parameters
       // Get all the grips.
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/ConsoleApiCall.js
-      .map((grip, key) => GripMessageBody({
-        dispatch,
-        messageId,
-        grip,
-        key,
-        userProvidedStyle: userProvidedStyles ? userProvidedStyles[key] : null,
-        serviceContainer,
-        useQuotes: false,
-        loadedObjectProperties,
-        loadedObjectEntries,
-        type,
-        maybeScrollToBottom,
-      }))
-||||||| merged common ancestors
-      .map((grip, key) => GripMessageBody({
-        dispatch,
-        messageId,
-        grip,
-        key,
-        userProvidedStyle: userProvidedStyles ? userProvidedStyles[key] : null,
-        serviceContainer,
-        useQuotes: false,
-        loadedObjectProperties,
-        loadedObjectEntries,
-        type,
-      }))
-=======
       .map((grip, key) =>
         GripMessageBody({
           dispatch,
@@ -233,7 +200,6 @@ function formatReps(options = {}) {
           maybeScrollToBottom,
         })
       )
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/ConsoleApiCall.js
       // Interleave spaces.
       .reduce((arr, v, i) => {
         // We need to interleave a space if we are not on the last element AND

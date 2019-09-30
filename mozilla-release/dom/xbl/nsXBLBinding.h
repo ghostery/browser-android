@@ -25,18 +25,8 @@ namespace mozilla {
 namespace dom {
 class Document;
 class XBLChildrenElement;
-<<<<<<< HEAD
-
 }  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 class nsAnonymousContentList;
 
@@ -125,18 +115,9 @@ class nsXBLBinding final {
   void AttributeChanged(nsAtom* aAttribute, int32_t aNameSpaceID,
                         bool aRemoveFlag, bool aNotify);
 
-<<<<<<< HEAD
-  void ChangeDocument(nsIDocument* aOldDocument, nsIDocument* aNewDocument);
-
-||||||| merged common ancestors
-  void ChangeDocument(nsIDocument* aOldDocument, nsIDocument* aNewDocument);
-
-
-=======
   void ChangeDocument(mozilla::dom::Document* aOldDocument,
                       mozilla::dom::Document* aNewDocument);
 
->>>>>>> upstream-releases
   const RawServoAuthorStyles* GetServoStyles() const;
 
   static nsresult DoInitJSClass(JSContext* cx, JS::Handle<JSObject*> obj,

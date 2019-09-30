@@ -270,12 +270,6 @@ nsresult nsINIParser::DeleteSection(const char* aSection) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsINIParser::WriteToFile(nsIFile* aFile) {
-||||||| merged common ancestors
-nsresult
-nsINIParser::WriteToFile(nsIFile *aFile) {
-=======
 nsresult nsINIParser::RenameSection(const char* aSection,
                                     const char* aNewName) {
   if (!IsValidSection(aSection) || !IsValidSection(aNewName)) {
@@ -297,7 +291,6 @@ nsresult nsINIParser::RenameSection(const char* aSection,
 }
 
 nsresult nsINIParser::WriteToFile(nsIFile* aFile) {
->>>>>>> upstream-releases
   nsCString buffer;
 
   for (auto iter = mSections.Iter(); !iter.Done(); iter.Next()) {

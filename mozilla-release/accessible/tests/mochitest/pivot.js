@@ -115,15 +115,6 @@ function VCChangedChecker(
     var nameMatches = position && position.name == aIdOrNameOrAcc;
     var accMatches = position == aIdOrNameOrAcc;
 
-<<<<<<< HEAD
-    SimpleTest.ok(idMatches || nameMatches || accMatches,
-                  "id or name matches - expecting " +
-                  prettyName(aIdOrNameOrAcc) + ", got '" + prettyName(position));
-||||||| merged common ancestors
-    SimpleTest.ok(idMatches || nameMatches || accMatches, "id or name matches",
-                  "expecting " + prettyName(aIdOrNameOrAcc) + ", got '" +
-                  prettyName(position));
-=======
     SimpleTest.ok(
       idMatches || nameMatches || accMatches,
       "id or name matches - expecting " +
@@ -131,7 +122,6 @@ function VCChangedChecker(
         ", got '" +
         prettyName(position)
     );
->>>>>>> upstream-releases
 
     SimpleTest.is(
       aEvent.isFromUserInput,

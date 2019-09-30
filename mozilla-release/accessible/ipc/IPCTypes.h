@@ -36,35 +36,15 @@ typedef uint32_t role;
 #if defined(XP_WIN) && defined(ACCESSIBILITY)
 
 // So that we don't include a bunch of other Windows junk.
-<<<<<<< HEAD
-#if !defined(COM_NO_WINDOWS_H)
-#define COM_NO_WINDOWS_H
-#endif  // !defined(COM_NO_WINDOWS_H)
-||||||| merged common ancestors
-#if !defined(COM_NO_WINDOWS_H)
-#define COM_NO_WINDOWS_H
-#endif // !defined(COM_NO_WINDOWS_H)
-=======
 #  if !defined(COM_NO_WINDOWS_H)
 #    define COM_NO_WINDOWS_H
 #  endif  // !defined(COM_NO_WINDOWS_H)
->>>>>>> upstream-releases
 
 // COM headers pull in MSXML which conflicts with our own XMLDocument class.
 // This define excludes those conflicting definitions.
-<<<<<<< HEAD
-#if !defined(__XMLDocument_FWD_DEFINED__)
-#define __XMLDocument_FWD_DEFINED__
-#endif  // !defined(__XMLDocument_FWD_DEFINED__)
-||||||| merged common ancestors
-#if !defined(__XMLDocument_FWD_DEFINED__)
-#define __XMLDocument_FWD_DEFINED__
-#endif // !defined(__XMLDocument_FWD_DEFINED__)
-=======
 #  if !defined(__XMLDocument_FWD_DEFINED__)
 #    define __XMLDocument_FWD_DEFINED__
 #  endif  // !defined(__XMLDocument_FWD_DEFINED__)
->>>>>>> upstream-releases
 
 #  include <combaseapi.h>
 
@@ -72,19 +52,9 @@ typedef uint32_t role;
 
 // This define in rpcndr.h messes up our code, so we must undefine it after
 // COMPtrTypes.h has been included.
-<<<<<<< HEAD
-#if defined(small)
-#undef small
-#endif  // defined(small)
-||||||| merged common ancestors
-#if defined(small)
-#undef small
-#endif // defined(small)
-=======
 #  if defined(small)
 #    undef small
 #  endif  // defined(small)
->>>>>>> upstream-releases
 
 #else
 

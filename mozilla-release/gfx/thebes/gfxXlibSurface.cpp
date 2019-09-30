@@ -328,22 +328,11 @@ DisplayTable* DisplayTable::sDisplayTable;
 // differ from the visual passed in.  Colormaps are tied to a visual, so
 // should only be used with their visual.
 
-<<<<<<< HEAD
-/* static */ bool DisplayTable::GetColormapAndVisual(
-    Screen* aScreen, XRenderPictFormat* aFormat, Visual* aVisual,
-    Colormap* aColormap, Visual** aVisualForColormap)
-||||||| merged common ancestors
-/* static */ bool
-DisplayTable::GetColormapAndVisual(Screen* aScreen, XRenderPictFormat* aFormat,
-                                   Visual* aVisual, Colormap* aColormap,
-                                   Visual** aVisualForColormap)
-=======
 /* static */
 bool DisplayTable::GetColormapAndVisual(Screen* aScreen,
                                         XRenderPictFormat* aFormat,
                                         Visual* aVisual, Colormap* aColormap,
                                         Visual** aVisualForColormap)
->>>>>>> upstream-releases
 
 {
   Display* display = DisplayOfScreen(aScreen);
@@ -355,7 +344,6 @@ bool DisplayTable::GetColormapAndVisual(Screen* aScreen,
     *aColormap = DefaultColormapOfScreen(aScreen);
     *aVisualForColormap = defaultVisual;
     return true;
-<<<<<<< HEAD
   }
 
   // Only supporting TrueColor non-default visuals
@@ -409,114 +397,9 @@ bool DisplayTable::GetColormapAndVisual(Screen* aScreen,
   *aColormap = colormap;
   *aVisualForColormap = aVisual;
   return true;
-}
-
-/* static */ int DisplayTable::DisplayClosing(Display* display,
-                                              XExtCodes* codes) {
-  // No need to free the colormaps explicitly as they will be released when
-  // the connection is closed.
-  sDisplayTable->mDisplays.RemoveElement(display, FindDisplay());
-  if (sDisplayTable->mDisplays.Length() == 0) {
-    delete sDisplayTable;
-    sDisplayTable = nullptr;
-  }
-  return 0;
-||||||| merged common ancestors
-}
-
-/* static */ int
-DisplayTable::DisplayClosing(Display *display, XExtCodes* codes)
-{
-    // No need to free the colormaps explicitly as they will be released when
-    // the connection is closed.
-    sDisplayTable->mDisplays.RemoveElement(display, FindDisplay());
-    if (sDisplayTable->mDisplays.Length() == 0) {
-        delete sDisplayTable;
-        sDisplayTable = nullptr;
-    }
-    return 0;
-=======
-  }
-
-  // Only supporting TrueColor non-default visuals
-  if (!aVisual || aVisual->c_class != TrueColor) return false;
-
-  if (!sDisplayTable) {
-    sDisplayTable = new DisplayTable();
-  }
-
-  nsTArray<DisplayInfo>* displays = &sDisplayTable->mDisplays;
-  size_t d = displays->IndexOf(display, 0, FindDisplay());
-
-  if (d == displays->NoIndex) {
-    d = displays->Length();
-    // Register for notification of display closing, when this info
-    // becomes invalid.
-    XExtCodes* codes = XAddExtension(display);
-    if (!codes) return false;
-
-    XESetCloseDisplay(display, codes->extension, DisplayClosing);
-    // Add a new DisplayInfo.
-    displays->AppendElement(display);
-  }
-
-  nsTArray<ColormapEntry>* entries = &displays->ElementAt(d).mColormapEntries;
-
-  // Only a small number of formats are expected to be used, so just do a
-  // simple linear search.
-  for (uint32_t i = 0; i < entries->Length(); ++i) {
-    const ColormapEntry& entry = entries->ElementAt(i);
-    // Only the format and screen need to match.  (The visual may differ.)
-    // If there is no format (e.g. no RENDER extension) then just compare
-    // the visual.
-    if ((aFormat && entry.mFormat == aFormat && entry.mScreen == aScreen) ||
-        aVisual == entry.mVisual) {
-      *aColormap = entry.mColormap;
-      *aVisualForColormap = entry.mVisual;
-      return true;
-    }
-  }
-
-  // No existing entry.  Create a colormap and add an entry.
-  Colormap colormap =
-      XCreateColormap(display, RootWindowOfScreen(aScreen), aVisual, AllocNone);
-  ColormapEntry* newEntry = entries->AppendElement();
-  newEntry->mFormat = aFormat;
-  newEntry->mScreen = aScreen;
-  newEntry->mVisual = aVisual;
-  newEntry->mColormap = colormap;
-
-  *aColormap = colormap;
-  *aVisualForColormap = aVisual;
-  return true;
->>>>>>> upstream-releases
 }
 
 /* static */
-<<<<<<< HEAD
-bool gfxXlibSurface::GetColormapAndVisual(cairo_surface_t* aXlibSurface,
-                                          Colormap* aColormap,
-                                          Visual** aVisual) {
-  XRenderPictFormat* format =
-      cairo_xlib_surface_get_xrender_format(aXlibSurface);
-  Screen* screen = cairo_xlib_surface_get_screen(aXlibSurface);
-  Visual* visual = cairo_xlib_surface_get_visual(aXlibSurface);
-
-  return DisplayTable::GetColormapAndVisual(screen, format, visual, aColormap,
-                                            aVisual);
-||||||| merged common ancestors
-bool
-gfxXlibSurface::GetColormapAndVisual(cairo_surface_t* aXlibSurface,
-                                     Colormap* aColormap, Visual** aVisual)
-{
-    XRenderPictFormat* format =
-        cairo_xlib_surface_get_xrender_format(aXlibSurface);
-    Screen* screen = cairo_xlib_surface_get_screen(aXlibSurface);
-    Visual* visual = cairo_xlib_surface_get_visual(aXlibSurface);
-
-    return DisplayTable::GetColormapAndVisual(screen, format, visual,
-                                              aColormap, aVisual);
-=======
 int DisplayTable::DisplayClosing(Display* display, XExtCodes* codes) {
   // No need to free the colormaps explicitly as they will be released when
   // the connection is closed.
@@ -539,7 +422,6 @@ bool gfxXlibSurface::GetColormapAndVisual(cairo_surface_t* aXlibSurface,
 
   return DisplayTable::GetColormapAndVisual(screen, format, visual, aColormap,
                                             aVisual);
->>>>>>> upstream-releases
 }
 
 bool gfxXlibSurface::GetColormapAndVisual(Colormap* aColormap,

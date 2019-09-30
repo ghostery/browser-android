@@ -450,20 +450,9 @@ class nsBidiPresUtils {
    * Position ruby frames. Called from RepositionFrame.
    */
   static nscoord RepositionRubyFrame(
-<<<<<<< HEAD
-      nsIFrame* aFrame, const nsContinuationStates* aContinuationStates,
-      const mozilla::WritingMode aContainerWM,
-      const mozilla::LogicalMargin& aBorderPadding);
-||||||| merged common ancestors
-    nsIFrame* aFrame,
-    const nsContinuationStates* aContinuationStates,
-    const mozilla::WritingMode aContainerWM,
-    const mozilla::LogicalMargin& aBorderPadding);
-=======
       nsIFrame* aFrame, nsContinuationStates* aContinuationStates,
       const mozilla::WritingMode aContainerWM,
       const mozilla::LogicalMargin& aBorderPadding);
->>>>>>> upstream-releases
 
   /*
    * Position aFrame and its descendants to their visual places. Also if aFrame
@@ -482,28 +471,12 @@ class nsBidiPresUtils {
    *                             nsFrameContinuationState
    * @return                     The isize aFrame takes, including margins.
    */
-<<<<<<< HEAD
-  static nscoord RepositionFrame(
-      nsIFrame* aFrame, bool aIsEvenLevel, nscoord aStartOrEnd,
-      const nsContinuationStates* aContinuationStates,
-      mozilla::WritingMode aContainerWM, bool aContainerReverseOrder,
-      const nsSize& aContainerSize);
-||||||| merged common ancestors
-  static nscoord RepositionFrame(nsIFrame* aFrame,
-                                 bool aIsEvenLevel,
-                                 nscoord aStartOrEnd,
-                                 const nsContinuationStates* aContinuationStates,
-                                 mozilla::WritingMode aContainerWM,
-                                 bool aContainerReverseOrder,
-                                 const nsSize& aContainerSize);
-=======
   static nscoord RepositionFrame(nsIFrame* aFrame, bool aIsEvenLevel,
                                  nscoord aStartOrEnd,
                                  nsContinuationStates* aContinuationStates,
                                  mozilla::WritingMode aContainerWM,
                                  bool aContainerReverseOrder,
                                  const nsSize& aContainerSize);
->>>>>>> upstream-releases
 
   /*
    * Initialize the continuation state(nsFrameContinuationState) to
@@ -541,23 +514,10 @@ class nsBidiPresUtils {
    * @param[out] aIsLast               TRUE means aFrame is last frame
    *                                    or continuation
    */
-<<<<<<< HEAD
-  static void IsFirstOrLast(nsIFrame* aFrame,
-                            const nsContinuationStates* aContinuationStates,
-                            bool aSpanInLineOrder /* in */,
-                            bool& aIsFirst /* out */, bool& aIsLast /* out */);
-||||||| merged common ancestors
-   static void IsFirstOrLast(nsIFrame* aFrame,
-                             const nsContinuationStates* aContinuationStates,
-                             bool aSpanInLineOrder /* in */,
-                             bool& aIsFirst /* out */,
-                             bool& aIsLast /* out */);
-=======
   static void IsFirstOrLast(nsIFrame* aFrame,
                             nsContinuationStates* aContinuationStates,
                             bool aSpanInLineOrder /* in */,
                             bool& aIsFirst /* out */, bool& aIsLast /* out */);
->>>>>>> upstream-releases
 
   /**
    *  Adjust frame positions following their visual order

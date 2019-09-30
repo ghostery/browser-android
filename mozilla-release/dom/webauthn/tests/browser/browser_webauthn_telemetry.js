@@ -10,34 +10,10 @@ ChromeUtils.defineModuleGetter(
   "resource://testing-common/TelemetryTestUtils.jsm"
 );
 
-<<<<<<< HEAD
-// Return the scalars from the parent-process.
-function getParentProcessScalars(aKeyed = false, aClear = false) {
-  const scalars = aKeyed ?
-    Services.telemetry.getSnapshotForKeyedScalars("main", aClear)["parent"] :
-    Services.telemetry.getSnapshotForScalars("main", aClear)["parent"];
-  return scalars || {};
-}
-||||||| merged common ancestors
-// Return the scalars from the parent-process.
-function getParentProcessScalars(aChannel, aKeyed = false, aClear = false) {
-  const scalars = aKeyed ?
-    Services.telemetry.snapshotKeyedScalars(aChannel, aClear)["parent"] :
-    Services.telemetry.snapshotScalars(aChannel, aClear)["parent"];
-  return scalars || {};
-}
-=======
 const TEST_URL = "https://example.com/";
->>>>>>> upstream-releases
 
 function getTelemetryForScalar(aName) {
-<<<<<<< HEAD
-  let scalars = getParentProcessScalars(true);
-||||||| merged common ancestors
-  let scalars = getParentProcessScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTOUT, true);
-=======
   let scalars = TelemetryTestUtils.getProcessScalars("parent", true);
->>>>>>> upstream-releases
   return scalars[aName] || 0;
 }
 
@@ -52,19 +28,10 @@ function validateHistogramEntryCount(aHistogramName, aExpectedCount) {
   let hist = Services.telemetry.getHistogramById(aHistogramName);
   let resultIndexes = hist.snapshot();
 
-<<<<<<< HEAD
-  let entriesSeen = Object.values(resultIndexes.values).reduce((a,b) => a + b, 0);
-||||||| merged common ancestors
-  let entriesSeen = 0;
-  for (let i = 0; i < resultIndexes.counts.length; i++) {
-    entriesSeen += resultIndexes.counts[i];
-  }
-=======
   let entriesSeen = Object.values(resultIndexes.values).reduce(
     (a, b) => a + b,
     0
   );
->>>>>>> upstream-releases
 
   is(
     entriesSeen,

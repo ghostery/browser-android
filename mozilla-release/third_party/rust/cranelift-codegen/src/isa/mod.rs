@@ -46,36 +46,6 @@
 //! The configured target ISA trait object is a `Box<TargetIsa>` which can be used for multiple
 //! concurrent function compilations.
 
-<<<<<<< HEAD
-pub use isa::call_conv::CallConv;
-pub use isa::constraints::{BranchRange, ConstraintKind, OperandConstraint, RecipeConstraints};
-pub use isa::encoding::{base_size, EncInfo, Encoding};
-pub use isa::registers::{regs_overlap, RegClass, RegClassIndex, RegInfo, RegUnit};
-pub use isa::stack::{StackBase, StackBaseMask, StackRef};
-
-use binemit;
-use flowgraph;
-use ir;
-use isa::enc_tables::Encodings;
-use regalloc;
-use result::CodegenResult;
-use settings;
-use settings::SetResult;
-||||||| merged common ancestors
-pub use isa::constraints::{BranchRange, ConstraintKind, OperandConstraint, RecipeConstraints};
-pub use isa::encoding::{EncInfo, Encoding};
-pub use isa::registers::{regs_overlap, RegClass, RegClassIndex, RegInfo, RegUnit};
-pub use isa::stack::{StackBase, StackBaseMask, StackRef};
-
-use binemit;
-use flowgraph;
-use ir;
-use isa::enc_tables::Encodings;
-use regalloc;
-use result::CodegenResult;
-use settings;
-use settings::{CallConv, SetResult};
-=======
 pub use crate::isa::call_conv::CallConv;
 pub use crate::isa::constraints::{
     BranchRange, ConstraintKind, OperandConstraint, RecipeConstraints,
@@ -95,19 +65,8 @@ use crate::settings::SetResult;
 use crate::timing;
 use core::fmt;
 use failure_derive::Fail;
->>>>>>> upstream-releases
 use std::boxed::Box;
-<<<<<<< HEAD
-use std::fmt;
 use target_lexicon::{Architecture, PointerWidth, Triple};
-use timing;
-||||||| merged common ancestors
-use std::fmt;
-use target_lexicon::{Architecture, Triple};
-use timing;
-=======
-use target_lexicon::{Architecture, PointerWidth, Triple};
->>>>>>> upstream-releases
 
 #[cfg(feature = "riscv")]
 mod riscv;
@@ -238,34 +197,6 @@ impl TargetFrontendConfig {
     }
 }
 
-/// This struct provides information that a frontend may need to know about a target to
-/// produce Cranelift IR for the target.
-#[derive(Clone, Copy)]
-pub struct TargetFrontendConfig {
-    /// The default calling convention of the target.
-    pub default_call_conv: CallConv,
-
-    /// The pointer width of the target.
-    pub pointer_width: PointerWidth,
-}
-
-impl TargetFrontendConfig {
-    /// Get the pointer type of this target.
-    pub fn pointer_type(self) -> ir::Type {
-        ir::Type::int(u16::from(self.pointer_bits())).unwrap()
-    }
-
-    /// Get the width of pointers on this target, in units of bits.
-    pub fn pointer_bits(self) -> u8 {
-        self.pointer_width.bits()
-    }
-
-    /// Get the width of pointers on this target, in units of bytes.
-    pub fn pointer_bytes(self) -> u8 {
-        self.pointer_width.bytes()
-    }
-}
-
 /// Methods that are specialized to a target ISA. Implies a Display trait that shows the
 /// shared flags, as well as any isa-specific flags.
 pub trait TargetIsa: fmt::Display + Sync {
@@ -278,20 +209,11 @@ pub trait TargetIsa: fmt::Display + Sync {
     /// Get the ISA-independent flags that were used to make this trait object.
     fn flags(&self) -> &settings::Flags;
 
-<<<<<<< HEAD
-    /// Get the default calling convention of this target.
-    fn default_call_conv(&self) -> CallConv {
-        CallConv::default_for_triple(self.triple())
-    }
-
-||||||| merged common ancestors
-=======
     /// Get the default calling convention of this target.
     fn default_call_conv(&self) -> CallConv {
         CallConv::triple_default(self.triple())
     }
 
->>>>>>> upstream-releases
     /// Get the pointer type of this ISA.
     fn pointer_type(&self) -> ir::Type {
         ir::Type::int(u16::from(self.pointer_bits())).unwrap()

@@ -61,14 +61,7 @@ nsParentalControlsService::~nsParentalControlsService() {
 //------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::GetParentalControlsEnabled(bool *aResult) {
-||||||| merged common ancestors
-nsParentalControlsService::GetParentalControlsEnabled(bool *aResult)
-{
-=======
 nsParentalControlsService::GetParentalControlsEnabled(bool* aResult) {
->>>>>>> upstream-releases
   *aResult = false;
 
   if (mEnabled) *aResult = true;
@@ -77,14 +70,7 @@ nsParentalControlsService::GetParentalControlsEnabled(bool* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::GetBlockFileDownloadsEnabled(bool *aResult) {
-||||||| merged common ancestors
-nsParentalControlsService::GetBlockFileDownloadsEnabled(bool *aResult)
-{
-=======
 nsParentalControlsService::GetBlockFileDownloadsEnabled(bool* aResult) {
->>>>>>> upstream-releases
   *aResult = false;
 
   if (!mEnabled) return NS_ERROR_NOT_AVAILABLE;
@@ -100,14 +86,7 @@ nsParentalControlsService::GetBlockFileDownloadsEnabled(bool* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::GetLoggingEnabled(bool *aResult) {
-||||||| merged common ancestors
-nsParentalControlsService::GetLoggingEnabled(bool *aResult)
-{
-=======
 nsParentalControlsService::GetLoggingEnabled(bool* aResult) {
->>>>>>> upstream-releases
   *aResult = false;
 
   if (!mEnabled) return NS_ERROR_NOT_AVAILABLE;
@@ -125,20 +104,9 @@ nsParentalControlsService::GetLoggingEnabled(bool* aResult) {
 
 // Post a log event to the system
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::Log(int16_t aEntryType, bool blocked,
-                               nsIURI *aSource, nsIFile *aTarget) {
-  if (!mEnabled) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsParentalControlsService::Log(int16_t aEntryType, bool blocked, nsIURI *aSource, nsIFile *aTarget)
-{
-  if (!mEnabled)
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsParentalControlsService::Log(int16_t aEntryType, bool blocked,
                                nsIURI* aSource, nsIFile* aTarget) {
   if (!mEnabled) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   NS_ENSURE_ARG_POINTER(aSource);
 
@@ -170,16 +138,8 @@ nsParentalControlsService::Log(int16_t aEntryType, bool blocked,
 
 // Override a single URI
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::RequestURIOverride(
-    nsIURI *aTarget, nsIInterfaceRequestor *aWindowContext, bool *_retval) {
-||||||| merged common ancestors
-nsParentalControlsService::RequestURIOverride(nsIURI *aTarget, nsIInterfaceRequestor *aWindowContext, bool *_retval)
-{
-=======
 nsParentalControlsService::RequestURIOverride(
     nsIURI* aTarget, nsIInterfaceRequestor* aWindowContext, bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
 
   if (!mEnabled) return NS_ERROR_NOT_AVAILABLE;
@@ -209,16 +169,8 @@ nsParentalControlsService::RequestURIOverride(
 
 // Override a web page
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::RequestURIOverrides(
-    nsIArray *aTargets, nsIInterfaceRequestor *aWindowContext, bool *_retval) {
-||||||| merged common ancestors
-nsParentalControlsService::RequestURIOverrides(nsIArray *aTargets, nsIInterfaceRequestor *aWindowContext, bool *_retval)
-{
-=======
 nsParentalControlsService::RequestURIOverrides(
     nsIArray* aTargets, nsIInterfaceRequestor* aWindowContext, bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
 
   if (!mEnabled) return NS_ERROR_NOT_AVAILABLE;
@@ -273,27 +225,12 @@ nsParentalControlsService::RequestURIOverrides(
   RefPtr<IWPCWebSettings> wpcws;
   if (SUCCEEDED(mPC->GetWebSettings(nullptr, getter_AddRefs(wpcws)))) {
     wpcws->RequestURLOverride(hWnd, NS_ConvertUTF8toUTF16(rootSpec).get(),
-<<<<<<< HEAD
-                              uriIdx, (LPCWSTR *)arrUrls.get(), &ret);
-    *_retval = ret;
-||||||| merged common ancestors
-                             uriIdx, (LPCWSTR*)arrUrls.get(), &ret);
-   *_retval = ret;
-=======
                               uriIdx, (LPCWSTR*)arrUrls.get(), &ret);
     *_retval = ret;
->>>>>>> upstream-releases
   }
 
   // Free up the allocated strings in our array
-<<<<<<< HEAD
-  for (idx = 0; idx < uriIdx; idx++) free((void *)arrUrls[idx]);
-||||||| merged common ancestors
-  for (idx = 0; idx < uriIdx; idx++)
-    free((void*)arrUrls[idx]);
-=======
   for (idx = 0; idx < uriIdx; idx++) free((void*)arrUrls[idx]);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -301,17 +238,8 @@ nsParentalControlsService::RequestURIOverrides(
 //------------------------------------------------------------------------
 
 // Sends a file download event to the Vista Event Log
-<<<<<<< HEAD
-void nsParentalControlsService::LogFileDownload(bool blocked, nsIURI *aSource,
-                                                nsIFile *aTarget) {
-||||||| merged common ancestors
-void
-nsParentalControlsService::LogFileDownload(bool blocked, nsIURI *aSource, nsIFile *aTarget)
-{
-=======
 void nsParentalControlsService::LogFileDownload(bool blocked, nsIURI* aSource,
                                                 nsIFile* aTarget) {
->>>>>>> upstream-releases
   nsAutoCString curi;
 
   // Note, EventDataDescCreate is a macro defined in the headers, not a function
@@ -332,30 +260,6 @@ void nsParentalControlsService::LogFileDownload(bool blocked, nsIURI* aSource,
   EVENT_DATA_DESCRIPTOR eventData[WPC_ARGS_FILEDOWNLOADEVENT_CARGS];
   DWORD dwBlocked = blocked;
 
-<<<<<<< HEAD
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_URL],
-                      (const void *)uri.get(),
-                      ((ULONG)uri.Length() + 1) * sizeof(WCHAR));
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_APPNAME],
-                      (const void *)appName.get(),
-                      ((ULONG)appName.Length() + 1) * sizeof(WCHAR));
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_VERSION],
-                      (const void *)fill, sizeof(fill));
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_BLOCKED],
-                      (const void *)&dwBlocked, sizeof(dwBlocked));
-
-  nsCOMPtr<nsILocalFileWin> local(do_QueryInterface(aTarget));  // May be null
-||||||| merged common ancestors
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_URL], (const void*)uri.get(),
-                      ((ULONG)uri.Length()+1)*sizeof(WCHAR));
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_APPNAME], (const void*)appName.get(),
-                      ((ULONG)appName.Length()+1)*sizeof(WCHAR));
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_VERSION], (const void*)fill, sizeof(fill));
-  EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_BLOCKED], (const void*)&dwBlocked,
-                      sizeof(dwBlocked));
-
-  nsCOMPtr<nsILocalFileWin> local(do_QueryInterface(aTarget)); // May be null
-=======
   EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_URL],
                       (const void*)uri.get(),
                       ((ULONG)uri.Length() + 1) * sizeof(WCHAR));
@@ -368,31 +272,15 @@ void nsParentalControlsService::LogFileDownload(bool blocked, nsIURI* aSource,
                       (const void*)&dwBlocked, sizeof(dwBlocked));
 
   nsCOMPtr<nsILocalFileWin> local(do_QueryInterface(aTarget));  // May be null
->>>>>>> upstream-releases
   if (local) {
     nsAutoString path;
     local->GetCanonicalPath(path);
-<<<<<<< HEAD
-    EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_PATH],
-                        (const void *)path.get(),
-                        ((ULONG)path.Length() + 1) * sizeof(WCHAR));
-  } else {
-    EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_PATH],
-                        (const void *)fill, sizeof(fill));
-||||||| merged common ancestors
-    EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_PATH], (const void*)path.get(),
-                        ((ULONG)path.Length()+1)*sizeof(WCHAR));
-  }
-  else {
-    EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_PATH], (const void*)fill, sizeof(fill));
-=======
     EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_PATH],
                         (const void*)path.get(),
                         ((ULONG)path.Length() + 1) * sizeof(WCHAR));
   } else {
     EventDataDescCreate(&eventData[WPC_ARGS_FILEDOWNLOADEVENT_PATH],
                         (const void*)fill, sizeof(fill));
->>>>>>> upstream-releases
   }
 
   EventWrite(mProvider, &WPCEVENT_WEB_FILEDOWNLOAD, ARRAYSIZE(eventData),
@@ -400,17 +288,7 @@ void nsParentalControlsService::LogFileDownload(bool blocked, nsIURI* aSource,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParentalControlsService::IsAllowed(int16_t aAction, nsIURI *aUri,
-                                     bool *_retval) {
-||||||| merged common ancestors
-nsParentalControlsService::IsAllowed(int16_t aAction,
-                                     nsIURI *aUri,
-                                     bool *_retval)
-{
-=======
 nsParentalControlsService::IsAllowed(int16_t aAction, nsIURI* aUri,
                                      bool* _retval) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }

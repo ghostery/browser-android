@@ -42,15 +42,9 @@ class SamplesWaitingForKey {
 
   void Flush();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   void BreakCycles();
 
  protected:
->>>>>>> upstream-releases
   ~SamplesWaitingForKey();
 
  private:

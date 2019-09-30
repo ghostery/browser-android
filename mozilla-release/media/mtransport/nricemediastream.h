@@ -193,16 +193,8 @@ class NrIceMediaStream {
   // the candidate belongs to.
   const std::string& GetId() const { return id_; }
 
-<<<<<<< HEAD
-  sigslot::signal2<NrIceMediaStream*, const std::string&>
-      SignalCandidate;  // A new ICE candidate:
-||||||| merged common ancestors
-  sigslot::signal2<NrIceMediaStream *, const std::string& >
-  SignalCandidate;  // A new ICE candidate:
-=======
   sigslot::signal3<NrIceMediaStream*, const std::string&, const std::string&>
       SignalCandidate;  // A new ICE candidate:
->>>>>>> upstream-releases
 
   sigslot::signal1<NrIceMediaStream*> SignalReady;   // Candidate pair ready.
   sigslot::signal1<NrIceMediaStream*> SignalFailed;  // Candidate pair failed.
@@ -216,17 +208,9 @@ class NrIceMediaStream {
 
   DISALLOW_COPY_ASSIGN(NrIceMediaStream);
 
-<<<<<<< HEAD
-  void CloseStream(nr_ice_media_stream** stream);
-  void DeferredCloseOldStream(const nr_ice_media_stream* old);
-||||||| merged common ancestors
-  void CloseStream(nr_ice_media_stream **stream);
-  void DeferredCloseOldStream(const nr_ice_media_stream *old);
-=======
   void CloseStream(nr_ice_media_stream** stream);
   void DeferredCloseOldStream(const nr_ice_media_stream* old);
   nr_ice_media_stream* GetStreamForRemoteUfrag(const std::string& ufrag);
->>>>>>> upstream-releases
 
   State state_;
   nr_ice_ctx* ctx_;

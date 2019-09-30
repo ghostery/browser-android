@@ -4,18 +4,6 @@
 
 //! Generic types for url properties.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use cssparser::Parser;
-use style_traits::ParseError;
-
-||||||| merged common ancestors
-use cssparser::Parser;
-use parser::{Parse, ParserContext};
-use style_traits::ParseError;
-
-=======
->>>>>>> upstream-releases
 /// An image url or none, used for example in list-style-image
 ///
 /// cbindgen:derive-tagged-enum-copy-constructor=true

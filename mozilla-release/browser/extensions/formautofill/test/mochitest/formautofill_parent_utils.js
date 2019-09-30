@@ -4,22 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://formautofill/FormAutofillUtils.jsm");
-ChromeUtils.import("resource://testing-common/OSKeyStoreTestUtils.jsm");
-
-let {formAutofillStorage} = ChromeUtils.import("resource://formautofill/FormAutofillStorage.jsm", {});
-
-const {ADDRESSES_COLLECTION_NAME, CREDITCARDS_COLLECTION_NAME} = FormAutofillUtils;
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://formautofill/FormAutofillUtils.jsm");
-
-let {formAutofillStorage} = ChromeUtils.import("resource://formautofill/FormAutofillStorage.jsm", {});
-
-const {ADDRESSES_COLLECTION_NAME, CREDITCARDS_COLLECTION_NAME} = FormAutofillUtils;
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { FormAutofill } = ChromeUtils.import(
   "resource://formautofill/FormAutofill.jsm"
@@ -41,7 +25,6 @@ const {
 } = FormAutofillUtils;
 
 let destroyed = false;
->>>>>>> upstream-releases
 
 var ParentUtils = {
   async _getRecords(collectionName) {
@@ -193,10 +176,6 @@ var ParentUtils = {
     OSKeyStoreTestUtils.setup();
   },
 
-  setup() {
-    OSKeyStoreTestUtils.setup();
-  },
-
   async cleanup() {
     await this.cleanUpAddresses();
     await this.cleanUpCreditCards();
@@ -322,34 +301,7 @@ addMessageListener("setup", async () => {
   ParentUtils.setup();
 });
 
-<<<<<<< HEAD
-addMessageListener("FormAutofillTest:CanTestOSKeyStoreLogin", (msg) => {
-  sendAsyncMessage("FormAutofillTest:CanTestOSKeyStoreLoginResult",
-    {canTest: OSKeyStoreTestUtils.canTestOSKeyStoreLogin()});
-});
-
-addMessageListener("FormAutofillTest:OSKeyStoreLogin", async (msg) => {
-  await OSKeyStoreTestUtils.waitForOSKeyStoreLogin(msg.login);
-  sendAsyncMessage("FormAutofillTest:OSKeyStoreLoggedIn");
-});
-
-addMessageListener("setup", async () => {
-  ParentUtils.setup();
-  sendAsyncMessage("setup-finished", {});
-});
-
-addMessageListener("cleanup", async () => {
-  await ParentUtils.cleanup();
-
-  sendAsyncMessage("cleanup-finished", {});
-||||||| merged common ancestors
-addMessageListener("cleanup", () => {
-  ParentUtils.cleanup().then(() => {
-    sendAsyncMessage("cleanup-finished", {});
-  });
-=======
 addMessageListener("cleanup", async () => {
   destroyed = true;
   await ParentUtils.cleanup();
->>>>>>> upstream-releases
 });

@@ -19,21 +19,10 @@
 using namespace mozilla;
 
 class nsImageControlFrame final : public nsImageFrame,
-<<<<<<< HEAD
-                                  public nsIFormControlFrame {
- public:
-  explicit nsImageControlFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-                                  public nsIFormControlFrame
-{
-public:
-  explicit nsImageControlFrame(ComputedStyle* aStyle);
-=======
                                   public nsIFormControlFrame {
  public:
   explicit nsImageControlFrame(ComputedStyle* aStyle,
                                nsPresContext* aPresContext);
->>>>>>> upstream-releases
   ~nsImageControlFrame();
 
   virtual void DestroyFrom(nsIFrame* aDestructRoot,
@@ -62,35 +51,17 @@ public:
   }
 #endif
 
-<<<<<<< HEAD
-  virtual nsresult GetCursor(const nsPoint& aPoint,
-                             nsIFrame::Cursor& aCursor) override;
-||||||| merged common ancestors
-  virtual nsresult GetCursor(const nsPoint&    aPoint,
-                             nsIFrame::Cursor& aCursor) override;
-=======
   Maybe<Cursor> GetCursor(const nsPoint&) override;
 
->>>>>>> upstream-releases
   // nsIFormContromFrame
   virtual void SetFocus(bool aOn, bool aRepaint) override;
   virtual nsresult SetFormProperty(nsAtom* aName,
                                    const nsAString& aValue) override;
 };
 
-<<<<<<< HEAD
-nsImageControlFrame::nsImageControlFrame(ComputedStyle* aStyle)
-    : nsImageFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-nsImageControlFrame::nsImageControlFrame(ComputedStyle* aStyle)
-  : nsImageFrame(aStyle, kClassID)
-{
-}
-=======
 nsImageControlFrame::nsImageControlFrame(ComputedStyle* aStyle,
                                          nsPresContext* aPresContext)
     : nsImageFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
 nsImageControlFrame::~nsImageControlFrame() {}
 
@@ -102,21 +73,10 @@ void nsImageControlFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsImageFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-nsIFrame* NS_NewImageControlFrame(nsIPresShell* aPresShell,
-                                  ComputedStyle* aStyle) {
-  return new (aPresShell) nsImageControlFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewImageControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsImageControlFrame(aStyle);
-=======
 nsIFrame* NS_NewImageControlFrame(PresShell* aPresShell,
                                   ComputedStyle* aStyle) {
   return new (aPresShell)
       nsImageControlFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsImageControlFrame)
@@ -192,30 +152,7 @@ nsresult nsImageControlFrame::HandleEvent(nsPresContext* aPresContext,
   return nsImageFrame::HandleEvent(aPresContext, aEvent, aEventStatus);
 }
 
-<<<<<<< HEAD
 void nsImageControlFrame::SetFocus(bool aOn, bool aRepaint) {}
-
-nsresult nsImageControlFrame::GetCursor(const nsPoint& aPoint,
-                                        nsIFrame::Cursor& aCursor) {
-  // Use style defined cursor if one is provided, otherwise when
-  // the cursor style is "auto" we use the pointer cursor.
-  FillCursorInformationFromStyle(StyleUI(), aCursor);
-||||||| merged common ancestors
-void
-nsImageControlFrame::SetFocus(bool aOn, bool aRepaint)
-{
-}
-
-nsresult
-nsImageControlFrame::GetCursor(const nsPoint&    aPoint,
-                               nsIFrame::Cursor& aCursor)
-{
-  // Use style defined cursor if one is provided, otherwise when
-  // the cursor style is "auto" we use the pointer cursor.
-  FillCursorInformationFromStyle(StyleUI(), aCursor);
-=======
-void nsImageControlFrame::SetFocus(bool aOn, bool aRepaint) {}
->>>>>>> upstream-releases
 
 Maybe<nsIFrame::Cursor> nsImageControlFrame::GetCursor(const nsPoint&) {
   StyleCursorKind kind = StyleUI()->mCursor;

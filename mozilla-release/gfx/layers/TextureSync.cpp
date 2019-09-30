@@ -16,37 +16,15 @@
 #include "mozilla/StaticPtr.h"
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#define LOG_ERROR(str, args...)                                  \
-  PR_BEGIN_MACRO                                                 \
-  mozilla::SmprintfPointer msg = mozilla::Smprintf(str, ##args); \
-  NS_WARNING(msg.get());                                         \
-  PR_END_MACRO
-||||||| merged common ancestors
-#define LOG_ERROR(str, args...)                                   \
-  PR_BEGIN_MACRO                                                  \
-  mozilla::SmprintfPointer msg = mozilla::Smprintf(str, ## args); \
-  NS_WARNING(msg.get());                                          \
-  PR_END_MACRO
-=======
 #  define LOG_ERROR(str, args...)                                  \
     PR_BEGIN_MACRO                                                 \
     mozilla::SmprintfPointer msg = mozilla::Smprintf(str, ##args); \
     NS_WARNING(msg.get());                                         \
     PR_END_MACRO
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define LOG_ERROR(str, args...) \
-  do { /* nothing */            \
-  } while (0)
-||||||| merged common ancestors
-#define LOG_ERROR(str, args...) do { /* nothing */ } while(0)
-=======
 #  define LOG_ERROR(str, args...) \
     do { /* nothing */            \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -75,15 +53,7 @@ struct WaitForTexturesRequest {
   pid_t pid;
 };
 
-<<<<<<< HEAD
-std::unordered_set<uint64_t>* GetLockedTextureIdsForProcess(pid_t pid) {
-||||||| merged common ancestors
-std::unordered_set<uint64_t>*
-GetLockedTextureIdsForProcess(pid_t pid)
-{
-=======
 static std::unordered_set<uint64_t>* GetLockedTextureIdsForProcess(pid_t pid) {
->>>>>>> upstream-releases
   gTextureLockMonitor.AssertCurrentThreadOwns();
 
   if (gProcessTextureIds.find(pid) == gProcessTextureIds.end()) {
@@ -93,17 +63,8 @@ static std::unordered_set<uint64_t>* GetLockedTextureIdsForProcess(pid_t pid) {
   return &gProcessTextureIds.at(pid);
 }
 
-<<<<<<< HEAD
-bool WaitForTextureIdsToUnlock(pid_t pid,
-                               const Span<const uint64_t>& textureIds) {
-||||||| merged common ancestors
-bool
-WaitForTextureIdsToUnlock(pid_t pid, const Span<const uint64_t>& textureIds)
-{
-=======
 static bool WaitForTextureIdsToUnlock(pid_t pid,
                                       const Span<const uint64_t>& textureIds) {
->>>>>>> upstream-releases
   {
     StaticMonitorAutoLock lock(gTextureLockMonitor);
     std::unordered_set<uint64_t>* freedTextureIds =
@@ -138,15 +99,7 @@ static bool WaitForTextureIdsToUnlock(pid_t pid,
   }
 }
 
-<<<<<<< HEAD
-void CheckTexturesForUnlock() {
-||||||| merged common ancestors
-void
-CheckTexturesForUnlock()
-{
-=======
 static void CheckTexturesForUnlock() {
->>>>>>> upstream-releases
   if (gTextureSourceProviders) {
     for (auto it = gTextureSourceProviders->begin();
          it != gTextureSourceProviders->end(); ++it) {

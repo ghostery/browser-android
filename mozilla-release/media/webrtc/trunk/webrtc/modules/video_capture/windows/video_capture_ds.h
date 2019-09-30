@@ -11,17 +11,9 @@
 #ifndef MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_VIDEO_CAPTURE_DS_H_
 #define MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_VIDEO_CAPTURE_DS_H_
 
-<<<<<<< HEAD
-#include "modules/video_capture/video_capture_impl.h"
-#include "modules/video_capture/windows/device_info_ds.h"
-||||||| merged common ancestors
-#include "webrtc/modules/video_capture/video_capture_impl.h"
-#include "webrtc/modules/video_capture/windows/device_info_ds.h"
-=======
 #include "rtc_base/scoped_ref_ptr.h"
 #include "modules/video_capture/video_capture_impl.h"
 #include "modules/video_capture/windows/device_info_ds.h"
->>>>>>> upstream-releases
 
 #define CAPTURE_FILTER_NAME L"VideoCaptureFilter"
 #define SINK_FILTER_NAME L"SinkFilter"
@@ -79,10 +71,4 @@ class VideoCaptureDS : public VideoCaptureImpl {
 };
 }  // namespace videocapturemodule
 }  // namespace webrtc
-<<<<<<< HEAD
-#endif // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_VIDEO_CAPTURE_DS_H_
-||||||| merged common ancestors
-#endif // WEBRTC_MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_VIDEO_CAPTURE_DS_H_
-=======
 #endif  // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_VIDEO_CAPTURE_DS_H_
->>>>>>> upstream-releases

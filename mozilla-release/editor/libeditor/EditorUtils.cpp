@@ -28,69 +28,23 @@ using namespace dom;
  * some helper classes for iterating the dom tree
  *****************************************************************************/
 
-<<<<<<< HEAD
-DOMIterator::DOMIterator(
-    nsINode& aNode MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL) {
-||||||| merged common ancestors
-DOMIterator::DOMIterator(nsINode& aNode MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
-{
-=======
 DOMIterator::DOMIterator(nsINode& aNode MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
     : mIter(&mPostOrderIter) {
->>>>>>> upstream-releases
   MOZ_GUARD_OBJECT_NOTIFIER_INIT;
   DebugOnly<nsresult> rv = mIter->Init(&aNode);
   MOZ_ASSERT(NS_SUCCEEDED(rv));
 }
 
-<<<<<<< HEAD
-nsresult DOMIterator::Init(nsRange& aRange) {
-  mIter = NS_NewContentIterator();
-  return mIter->Init(&aRange);
-}
-||||||| merged common ancestors
-nsresult
-DOMIterator::Init(nsRange& aRange)
-{
-  mIter = NS_NewContentIterator();
-  return mIter->Init(&aRange);
-}
-=======
 nsresult DOMIterator::Init(nsRange& aRange) { return mIter->Init(&aRange); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-DOMIterator::DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL) {
-||||||| merged common ancestors
-DOMIterator::DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
-{
-=======
 DOMIterator::DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
     : mIter(&mPostOrderIter) {
->>>>>>> upstream-releases
   MOZ_GUARD_OBJECT_NOTIFIER_INIT;
 }
 
-<<<<<<< HEAD
-DOMIterator::~DOMIterator() {}
-
 void DOMIterator::AppendList(
     const BoolDomIterFunctor& functor,
     nsTArray<OwningNonNull<nsINode>>& arrayOfNodes) const {
-||||||| merged common ancestors
-DOMIterator::~DOMIterator()
-{
-}
-
-void
-DOMIterator::AppendList(const BoolDomIterFunctor& functor,
-                        nsTArray<OwningNonNull<nsINode>>& arrayOfNodes) const
-{
-=======
-void DOMIterator::AppendList(
-    const BoolDomIterFunctor& functor,
-    nsTArray<OwningNonNull<nsINode>>& arrayOfNodes) const {
->>>>>>> upstream-releases
   // Iterate through dom and build list
   for (; !mIter->IsDone(); mIter->Next()) {
     nsCOMPtr<nsINode> node = mIter->GetCurrentNode();
@@ -102,45 +56,15 @@ void DOMIterator::AppendList(
 }
 
 DOMSubtreeIterator::DOMSubtreeIterator(
-<<<<<<< HEAD
-    MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
-    : DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT) {}
-||||||| merged common ancestors
-                      MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
-  : DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT)
-{
-}
-=======
     MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
     : DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT) {
   mIter = &mSubtreeIter;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 nsresult DOMSubtreeIterator::Init(nsRange& aRange) {
-  mIter = NS_NewContentSubtreeIterator();
-||||||| merged common ancestors
-nsresult
-DOMSubtreeIterator::Init(nsRange& aRange)
-{
-  mIter = NS_NewContentSubtreeIterator();
-=======
-nsresult DOMSubtreeIterator::Init(nsRange& aRange) {
->>>>>>> upstream-releases
   return mIter->Init(&aRange);
 }
 
-<<<<<<< HEAD
-DOMSubtreeIterator::~DOMSubtreeIterator() {}
-
-||||||| merged common ancestors
-DOMSubtreeIterator::~DOMSubtreeIterator()
-{
-}
-
-=======
->>>>>>> upstream-releases
 /******************************************************************************
  * some general purpose editor utils
  *****************************************************************************/

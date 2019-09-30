@@ -10,17 +10,9 @@
 #include "ContentHost.h"  // for ContentHostDoubleBuffered, etc
 #include "Effects.h"      // for EffectMask, Effect, etc
 #include "gfxUtils.h"
-<<<<<<< HEAD
-#include "ImageHost.h"         // for ImageHostBuffered, etc
-#include "TiledContentHost.h"  // for TiledContentHost
-||||||| merged common ancestors
-#include "ImageHost.h"                  // for ImageHostBuffered, etc
-#include "TiledContentHost.h"           // for TiledContentHost
-=======
 #include "ImageHost.h"  // for ImageHostBuffered, etc
 #include "Layers.h"
 #include "TiledContentHost.h"  // for TiledContentHost
->>>>>>> upstream-releases
 #include "mozilla/gfx/gfxVars.h"
 #include "mozilla/layers/LayersSurfaces.h"  // for SurfaceDescriptor
 #include "mozilla/layers/TextureHost.h"     // for TextureHost, etc
@@ -113,18 +105,9 @@ void CompositableHost::RemoveMaskEffect() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<CompositableHost> CompositableHost::Create(
-    const TextureInfo& aTextureInfo, bool aUseWebRender) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<CompositableHost>
-CompositableHost::Create(const TextureInfo& aTextureInfo, bool aUseWebRender)
-{
-=======
 /* static */
 already_AddRefed<CompositableHost> CompositableHost::Create(
     const TextureInfo& aTextureInfo, bool aUseWebRender) {
->>>>>>> upstream-releases
   RefPtr<CompositableHost> result;
   switch (aTextureInfo.mCompositableType) {
     case CompositableType::IMAGE_BRIDGE:

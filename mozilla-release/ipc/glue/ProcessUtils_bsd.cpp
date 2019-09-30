@@ -15,14 +15,7 @@
 namespace mozilla {
 namespace ipc {
 
-<<<<<<< HEAD
-void SetThisProcessName(const char *aName) {
-||||||| merged common ancestors
-void SetThisProcessName(const char *aName)
-{
-=======
 void SetThisProcessName(const char* aName) {
->>>>>>> upstream-releases
 #if defined(OS_NETBSD)
   pthread_setname_np(pthread_self(), "%s", (void*)aName);
 #else

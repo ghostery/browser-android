@@ -23,13 +23,8 @@ var UrlClassifierTestUtils = {
     let annotationURL1 = "tracking.example.org/"; // only for annotations
     let annotationURL2 = "itisatracker.org/";
     let annotationURL3 = "trackertest.org/";
-<<<<<<< HEAD
-    let annotationURL4 = "another-tracking.example.net/";
-||||||| merged common ancestors
-=======
     let annotationURL4 = "another-tracking.example.net/";
     let annotationURL5 = "tlsresumptiontest.example.org/";
->>>>>>> upstream-releases
     let annotationWhitelistedURL = "itisatrap.org/?resource=example.org";
     let trackingURL1 = "tracking.example.com/"; // only for TP
     let trackingURL2 = "itisatracker.org/";
@@ -37,25 +32,6 @@ var UrlClassifierTestUtils = {
     let whitelistedURL = "itisatrap.org/?resource=itisatracker.org";
 
     let annotationUpdate =
-<<<<<<< HEAD
-          "n:1000\ni:" + ANNOTATION_TABLE_NAME + "\nad:4\n" +
-          "a:1:32:" + annotationURL1.length + "\n" +
-          annotationURL1 + "\n" +
-          "a:2:32:" + annotationURL2.length + "\n" +
-          annotationURL2 + "\n" +
-          "a:3:32:" + annotationURL3.length + "\n" +
-          annotationURL3 + "\n" +
-          "a:4:32:" + annotationURL4.length + "\n" +
-          annotationURL4 + "\n";
-||||||| merged common ancestors
-          "n:1000\ni:" + ANNOTATION_TABLE_NAME + "\nad:3\n" +
-          "a:1:32:" + annotationURL1.length + "\n" +
-          annotationURL1 + "\n" +
-          "a:2:32:" + annotationURL2.length + "\n" +
-          annotationURL2 + "\n" +
-          "a:3:32:" + annotationURL3.length + "\n" +
-          annotationURL3 + "\n";
-=======
       "n:1000\ni:" +
       ANNOTATION_TABLE_NAME +
       "\nad:4\n" +
@@ -84,7 +60,6 @@ var UrlClassifierTestUtils = {
       "\n" +
       annotationURL5 +
       "\n";
->>>>>>> upstream-releases
     let annotationWhitelistUpdate =
       "n:1000\ni:" +
       ANNOTATION_WHITELIST_TABLE_NAME +

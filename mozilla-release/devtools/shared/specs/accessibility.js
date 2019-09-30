@@ -115,15 +115,6 @@ const accessibleSpec = generateActorSpec({
         relations: RetVal("array:accessibleRelation"),
       },
     },
-<<<<<<< HEAD
-    snapshot: {
-      request: {},
-      response: {
-        snapshot: RetVal("json"),
-      },
-    },
-||||||| merged common ancestors
-=======
     hydrate: {
       request: {},
       response: {
@@ -136,7 +127,6 @@ const accessibleSpec = generateActorSpec({
         snapshot: RetVal("json"),
       },
     },
->>>>>>> upstream-releases
   },
 });
 

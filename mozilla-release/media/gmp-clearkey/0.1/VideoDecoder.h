@@ -27,20 +27,9 @@
 #include "content_decryption_module.h"
 #include "WMFH264Decoder.h"
 
-<<<<<<< HEAD
-class VideoDecoder : public RefCounted {
- public:
-  explicit VideoDecoder(cdm::Host_9* aHost);
-||||||| merged common ancestors
-class VideoDecoder : public RefCounted
-{
-public:
-  explicit VideoDecoder(cdm::Host_9 *aHost);
-=======
 class VideoDecoder : public RefCounted {
  public:
   explicit VideoDecoder(cdm::Host_10* aHost);
->>>>>>> upstream-releases
 
   cdm::Status InitDecode(const cdm::VideoDecoderConfig_2& aConfig);
 

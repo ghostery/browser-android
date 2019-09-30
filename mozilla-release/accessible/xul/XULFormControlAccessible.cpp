@@ -76,14 +76,7 @@ uint64_t XULButtonAccessible::NativeState() const {
   uint64_t state = Accessible::NativeState();
 
   // Buttons can be checked -- they simply appear pressed in rather than checked
-<<<<<<< HEAD
-  nsCOMPtr<nsIDOMXULButtonElement> xulButtonElement(
-      do_QueryInterface(mContent));
-||||||| merged common ancestors
-  nsCOMPtr<nsIDOMXULButtonElement> xulButtonElement(do_QueryInterface(mContent));
-=======
   nsCOMPtr<nsIDOMXULButtonElement> xulButtonElement = Elm()->AsXULButton();
->>>>>>> upstream-releases
   if (xulButtonElement) {
     nsAutoString type;
     xulButtonElement->GetType(type);
@@ -164,13 +157,7 @@ bool XULDropmarkerAccessible::DropmarkerOpen(bool aToggleOpen) const {
 
   while (parent) {
     nsCOMPtr<nsIDOMXULButtonElement> parentButtonElement =
-<<<<<<< HEAD
-        do_QueryInterface(parent);
-||||||| merged common ancestors
-      do_QueryInterface(parent);
-=======
         parent->AsElement()->AsXULButton();
->>>>>>> upstream-releases
     if (parentButtonElement) {
       parentButtonElement->GetOpen(&isOpen);
       if (aToggleOpen) parentButtonElement->SetOpen(!isOpen);
@@ -178,13 +165,7 @@ bool XULDropmarkerAccessible::DropmarkerOpen(bool aToggleOpen) const {
     }
 
     nsCOMPtr<nsIDOMXULMenuListElement> parentMenuListElement =
-<<<<<<< HEAD
-        do_QueryInterface(parent);
-||||||| merged common ancestors
-      do_QueryInterface(parent);
-=======
         parent->AsElement()->AsXULMenuList();
->>>>>>> upstream-releases
     if (parentMenuListElement) {
       parentMenuListElement->GetOpen(&isOpen);
       if (aToggleOpen) parentMenuListElement->SetOpen(!isOpen);
@@ -266,13 +247,7 @@ uint64_t XULRadioButtonAccessible::NativeState() const {
   state |= states::CHECKABLE;
 
   nsCOMPtr<nsIDOMXULSelectControlItemElement> radioButton =
-<<<<<<< HEAD
-      do_QueryInterface(mContent);
-||||||| merged common ancestors
-    do_QueryInterface(mContent);
-=======
       Elm()->AsXULSelectControlItem();
->>>>>>> upstream-releases
   if (radioButton) {
     bool selected = false;  // Radio buttons can be selected
     radioButton->GetSelected(&selected);
@@ -330,16 +305,6 @@ bool XULRadioGroupAccessible::IsActiveWidget() const {
   return FocusMgr()->HasDOMFocus(mContent);
 }
 
-<<<<<<< HEAD
-bool XULRadioGroupAccessible::AreItemsOperable() const { return true; }
-||||||| merged common ancestors
-bool
-XULRadioGroupAccessible::AreItemsOperable() const
-{
-  return true;
-}
-
-=======
 bool XULRadioGroupAccessible::AreItemsOperable() const { return true; }
 
 Accessible* XULRadioGroupAccessible::CurrentItem() const {
@@ -376,7 +341,6 @@ void XULRadioGroupAccessible::SetCurrentItem(const Accessible* aItem) {
     group->SetFocusedItem(itemElm);
   }
 }
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 // XULStatusBarAccessible

@@ -8,13 +8,8 @@
 #ifndef GrSurfaceProxy_DEFINED
 #define GrSurfaceProxy_DEFINED
 
-<<<<<<< HEAD
-#include "../private/SkNoncopyable.h"
-||||||| merged common ancestors
-=======
 #include "../private/SkNoncopyable.h"
 #include "GrBackendSurface.h"
->>>>>>> upstream-releases
 #include "GrGpuResource.h"
 #include "GrSurface.h"
 
@@ -65,28 +60,6 @@ public:
     }
 #endif
 
-<<<<<<< HEAD
-    void release() {
-        // The proxy itself may still have multiple refs. It can be owned by an SkImage and multiple
-        // SkDeferredDisplayLists at the same time if we are using DDLs.
-        SkASSERT(0 == fPendingReads);
-        SkASSERT(0 == fPendingWrites);
-
-        SkASSERT(fRefCnt == fTarget->fRefCnt);
-        SkASSERT(!fTarget->internalHasPendingIO());
-        // In the current hybrid world, the proxy and backing surface are ref/unreffed in
-        // synchrony. In this instance we're deInstantiating the proxy so, regardless of the
-        // number of refs on the backing surface, we're going to remove it. If/when the proxy
-        // is re-instantiated all the refs on the proxy (presumably due to multiple uses in ops)
-        // will be transfered to the new surface.
-        for (int refs = fTarget->fRefCnt; refs; --refs) {
-            fTarget->unref();
-        }
-        fTarget = nullptr;
-    }
-
-||||||| merged common ancestors
-=======
     void release() {
         // The proxy itself may still have multiple refs. It can be owned by an SkImage and multiple
         // SkDeferredDisplayLists at the same time if we are using DDLs.
@@ -105,7 +78,6 @@ public:
         fTarget = nullptr;
     }
 
->>>>>>> upstream-releases
     void validate() const {
 #ifdef SK_DEBUG
         SkASSERT(fRefCnt >= 0);
@@ -234,18 +206,8 @@ private:
 class GrSurfaceProxy : public GrIORefProxy {
 public:
     enum class LazyInstantiationType {
-<<<<<<< HEAD
-        kSingleUse,         // Instantiation callback is allowed to be called only once
-        kMultipleUse,       // Instantiation callback can be called multiple times.
-        kUninstantiate,     // Instantiation callback can be called multiple times,
-                            // but we will uninstantiate the proxy after every flush
-||||||| merged common ancestors
-        kSingleUse,    // Instantiation callback is allowed to be called only once
-        kMultipleUse,  // Instantiation callback can be called multiple times.
-=======
         kSingleUse,      // Instantiation callback is allowed to be called only once.
         kMultipleUse,    // Instantiation callback can be called multiple times.
->>>>>>> upstream-releases
     };
 
     enum class LazyState {
@@ -360,17 +322,6 @@ public:
 
     virtual bool instantiate(GrResourceProvider* resourceProvider) = 0;
 
-<<<<<<< HEAD
-    void deInstantiate();
-||||||| merged common ancestors
-    /**
-     * Helper that gets the width and height of the surface as a bounding rectangle.
-     */
-    SkRect getBoundsRect() const {
-        SkASSERT(LazyState::kFully != this->lazyInstantiationState());
-        return SkRect::MakeIWH(this->width(), this->height());
-    }
-=======
     void deinstantiate();
 
     /**
@@ -378,7 +329,6 @@ public:
      * instantiate other proxies do not need to be considered by GrResourceAllocator.
      */
     bool canSkipResourceAllocator() const;
->>>>>>> upstream-releases
 
     /**
      * @return the texture proxy associated with the surface proxy, may be NULL.
@@ -454,17 +404,9 @@ public:
                                       SkBackingFit, SkBudgeted);
 
     // Test-only entry point - should decrease in use as proxies propagate
-<<<<<<< HEAD
-    static sk_sp<GrSurfaceContext> TestCopy(GrContext* context, const GrSurfaceDesc& dstDesc,
-                                            GrSurfaceOrigin, GrSurfaceProxy* srcProxy);
-||||||| merged common ancestors
-    static sk_sp<GrSurfaceContext> TestCopy(GrContext* context, const GrSurfaceDesc& dstDesc,
-                                            GrSurfaceProxy* srcProxy);
-=======
     static sk_sp<GrSurfaceContext> TestCopy(GrRecordingContext* context,
                                             const GrSurfaceDesc& dstDesc,
                                             GrSurfaceOrigin, GrSurfaceProxy* srcProxy);
->>>>>>> upstream-releases
 
     bool isWrapped_ForTesting() const;
 
@@ -478,52 +420,23 @@ public:
 
 protected:
     // Deferred version
-<<<<<<< HEAD
-    GrSurfaceProxy(const GrSurfaceDesc& desc, GrSurfaceOrigin origin, SkBackingFit fit,
-                   SkBudgeted budgeted, GrInternalSurfaceFlags surfaceFlags)
-            : GrSurfaceProxy(nullptr, LazyInstantiationType::kSingleUse, desc, origin, fit,
-                             budgeted, surfaceFlags) {
-||||||| merged common ancestors
-    GrSurfaceProxy(const GrSurfaceDesc& desc, SkBackingFit fit, SkBudgeted budgeted, uint32_t flags)
-            : GrSurfaceProxy(nullptr, LazyInstantiationType::kSingleUse,
-                             desc, fit, budgeted, flags) {
-=======
     GrSurfaceProxy(const GrBackendFormat& format, const GrSurfaceDesc& desc,
                    GrSurfaceOrigin origin, SkBackingFit fit,
                    SkBudgeted budgeted, GrInternalSurfaceFlags surfaceFlags)
             : GrSurfaceProxy(nullptr, LazyInstantiationType::kSingleUse, format, desc, origin, fit,
                              budgeted, surfaceFlags) {
->>>>>>> upstream-releases
         // Note: this ctor pulls a new uniqueID from the same pool at the GrGpuResources
     }
 
     using LazyInstantiateCallback = std::function<sk_sp<GrSurface>(GrResourceProvider*)>;
 
     // Lazy-callback version
-<<<<<<< HEAD
-    GrSurfaceProxy(LazyInstantiateCallback&&, LazyInstantiationType,
-                   const GrSurfaceDesc&, GrSurfaceOrigin, SkBackingFit,
-                   SkBudgeted, GrInternalSurfaceFlags);
-||||||| merged common ancestors
-    GrSurfaceProxy(LazyInstantiateCallback&& callback, LazyInstantiationType lazyType,
-                   const GrSurfaceDesc& desc, SkBackingFit fit, SkBudgeted budgeted,
-                   uint32_t flags);
-=======
     GrSurfaceProxy(LazyInstantiateCallback&&, LazyInstantiationType,
                    const GrBackendFormat& format, const GrSurfaceDesc&, GrSurfaceOrigin,
                    SkBackingFit, SkBudgeted, GrInternalSurfaceFlags);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Wrapped version
-    GrSurfaceProxy(sk_sp<GrSurface>, GrSurfaceOrigin, SkBackingFit);
-||||||| merged common ancestors
-    // Wrapped version
-    GrSurfaceProxy(sk_sp<GrSurface> surface, GrSurfaceOrigin origin, SkBackingFit fit);
-=======
     // Wrapped version.
     GrSurfaceProxy(sk_sp<GrSurface>, GrSurfaceOrigin, SkBackingFit);
->>>>>>> upstream-releases
 
     virtual ~GrSurfaceProxy();
 
@@ -562,36 +475,6 @@ protected:
     GrInternalSurfaceFlags fSurfaceFlags;
 
 private:
-<<<<<<< HEAD
-    // For wrapped resources, 'fConfig', 'fWidth', 'fHeight', and 'fOrigin; will always be filled in
-    // from the wrapped resource.
-    GrPixelConfig          fConfig;
-    int                    fWidth;
-    int                    fHeight;
-    GrSurfaceOrigin        fOrigin;
-    SkBackingFit           fFit;      // always kApprox for lazy-callback resources
-                                      // always kExact for wrapped resources
-    mutable SkBudgeted     fBudgeted; // always kYes for lazy-callback resources
-                                      // set from the backing resource for wrapped resources
-                                      // mutable bc of SkSurface/SkImage wishy-washiness
-
-    const UniqueID         fUniqueID; // set from the backing resource for wrapped resources
-||||||| merged common ancestors
-    // For wrapped resources, 'fConfig', 'fWidth', 'fHeight', and 'fOrigin; will always be filled in
-    // from the wrapped resource.
-    GrPixelConfig        fConfig;
-    int                  fWidth;
-    int                  fHeight;
-    GrSurfaceOrigin      fOrigin;
-    SkBackingFit         fFit;      // always kApprox for lazy-callback resources
-                                    // always kExact for wrapped resources
-    mutable SkBudgeted   fBudgeted; // always kYes for lazy-callback resources
-                                    // set from the backing resource for wrapped resources
-                                    // mutable bc of SkSurface/SkImage wishy-washiness
-    const uint32_t       fFlags;
-
-    const UniqueID       fUniqueID; // set from the backing resource for wrapped resources
-=======
     // For wrapped resources, 'fFormat', 'fConfig', 'fWidth', 'fHeight', and 'fOrigin; will always
     // be filled in from the wrapped resource.
     GrBackendFormat        fFormat;
@@ -606,7 +489,6 @@ private:
                                       // mutable bc of SkSurface/SkImage wishy-washiness
 
     const UniqueID         fUniqueID; // set from the backing resource for wrapped resources
->>>>>>> upstream-releases
 
     LazyInstantiateCallback fLazyInstantiateCallback;
     // If this is set to kSingleuse, then after one call to fLazyInstantiateCallback we will cleanup

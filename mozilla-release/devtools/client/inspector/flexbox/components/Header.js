@@ -123,33 +123,6 @@ class Header extends PureComponent {
               setSelectedNode(nodeFront);
             },
           })
-<<<<<<< HEAD
-          :
-          null,
-        dom.div(
-          {
-            className: "flex-header-content" +
-                       (flexItemShown ? " flex-item-shown" : ""),
-          },
-          this.renderFlexContainer(),
-          this.renderFlexItemSelector()
-        ),
-        this.renderFlexboxHighlighterToggle()
-      )
-||||||| merged common ancestors
-          :
-          null,
-        dom.div(
-          {
-            className: "flex-header-content" +
-                       (flexItemShown ? " flex-item-shown" : "")
-          },
-          this.renderFlexContainer(),
-          this.renderFlexItemSelector()
-        ),
-        this.renderFlexboxHighlighterToggle()
-      )
-=======
         : null,
       dom.div(
         {
@@ -160,7 +133,6 @@ class Header extends PureComponent {
         this.renderFlexItemSelector()
       ),
       this.renderFlexboxHighlighterToggle()
->>>>>>> upstream-releases
     );
   }
 }

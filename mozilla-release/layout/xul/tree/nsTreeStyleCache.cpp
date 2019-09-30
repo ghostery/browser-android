@@ -71,20 +71,6 @@ ComputedStyle* nsTreeStyleCache::GetComputedStyle(
   }
   if (!result) {
     // We missed the cache. Resolve this pseudo-style.
-<<<<<<< HEAD
-    RefPtr<ComputedStyle> newResult =
-        aPresContext->StyleSet()->ResolveXULTreePseudoStyle(
-            aContent->AsElement(), aPseudoElement, aStyle, aInputWord);
-
-    // Put the ComputedStyle in our table, transferring the owning reference to
-    // the table.
-||||||| merged common ancestors
-    RefPtr<ComputedStyle> newResult = aPresContext->StyleSet()->
-        ResolveXULTreePseudoStyle(aContent->AsElement(),
-                                  aPseudoElement, aStyle, aInputWord);
-
-    // Put the ComputedStyle in our table, transferring the owning reference to the table.
-=======
     RefPtr<ComputedStyle> newResult =
         aPresContext->StyleSet()->ResolveXULTreePseudoStyle(
             aContent->AsElement(), aPseudoElement, aStyle, aInputWord);
@@ -105,7 +91,6 @@ ComputedStyle* nsTreeStyleCache::GetComputedStyle(
 
     // Put the ComputedStyle in our table, transferring the owning reference to
     // the table.
->>>>>>> upstream-releases
     if (!mCache) {
       mCache = new ComputedStyleCache();
     }

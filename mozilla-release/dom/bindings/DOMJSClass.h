@@ -15,14 +15,8 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/Likely.h"
 
-<<<<<<< HEAD
-#include "mozilla/dom/PrototypeList.h"  // auto-generated
-||||||| merged common ancestors
-#include "mozilla/dom/PrototypeList.h" // auto-generated
-=======
 #include "mozilla/dom/PrototypeList.h"  // auto-generated
 #include "mozilla/dom/WebIDLPrefs.h"    // auto-generated
->>>>>>> upstream-releases
 
 #include "mozilla/dom/JSSlots.h"
 
@@ -81,22 +75,10 @@ typedef bool (*ResolveOwnProperty)(
     JSContext* cx, JS::Handle<JSObject*> wrapper, JS::Handle<JSObject*> obj,
     JS::Handle<jsid> id, JS::MutableHandle<JS::PropertyDescriptor> desc);
 
-<<<<<<< HEAD
-typedef bool (*EnumerateOwnProperties)(JSContext* cx,
-                                       JS::Handle<JSObject*> wrapper,
-                                       JS::Handle<JSObject*> obj,
-                                       JS::AutoIdVector& props);
-||||||| merged common ancestors
-typedef bool
-(* EnumerateOwnProperties)(JSContext* cx, JS::Handle<JSObject*> wrapper,
-                           JS::Handle<JSObject*> obj,
-                           JS::AutoIdVector& props);
-=======
 typedef bool (*EnumerateOwnProperties)(JSContext* cx,
                                        JS::Handle<JSObject*> wrapper,
                                        JS::Handle<JSObject*> obj,
                                        JS::MutableHandleVector<jsid> props);
->>>>>>> upstream-releases
 
 typedef bool (*DeleteNamedProperty)(JSContext* cx,
                                     JS::Handle<JSObject*> wrapper,

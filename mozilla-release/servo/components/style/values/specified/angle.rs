@@ -4,21 +4,12 @@
 
 //! Specified angles.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::angle::Angle as ComputedAngle;
-use crate::values::computed::{Context, ToComputedValue};
-use crate::values::specified::calc::CalcNode;
-use crate::values::CSSFloat;
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::computed::angle::Angle as ComputedAngle;
 use crate::values::computed::{Context, ToComputedValue};
 use crate::values::specified::calc::CalcNode;
 use crate::values::CSSFloat;
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::{Parser, Token};
 use std::f32::consts::PI;
 use std::fmt::{self, Write};

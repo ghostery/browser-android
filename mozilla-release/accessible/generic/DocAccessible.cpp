@@ -70,45 +70,6 @@ static const uint32_t kRelationAttrsLen = ArrayLength(kRelationAttrs);
 ////////////////////////////////////////////////////////////////////////////////
 // Constructor/desctructor
 
-<<<<<<< HEAD
-DocAccessible::DocAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell)
-    :  // XXX don't pass a document to the Accessible constructor so that we
-       // don't set mDoc until our vtable is fully setup.  If we set mDoc before
-       // setting up the vtable we will call Accessible::AddRef() but not the
-       // overrides of it for subclasses.  It is important to call those
-       // overrides to avoid confusing leak checking machinary.
-      HyperTextAccessibleWrap(nullptr, nullptr),
-      // XXX aaronl should we use an algorithm for the initial cache size?
-      mAccessibleCache(kDefaultCacheLength),
-      mNodeToAccessibleMap(kDefaultCacheLength),
-      mDocumentNode(aDocument),
-      mScrollPositionChangedTicks(0),
-      mLoadState(eTreeConstructionPending),
-      mDocFlags(0),
-      mLoadEventType(0),
-      mARIAAttrOldValue{nullptr},
-      mVirtualCursor(nullptr),
-      mPresShell(aPresShell),
-      mIPCDoc(nullptr) {
-||||||| merged common ancestors
-DocAccessible::
-  DocAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell) :
-    // XXX don't pass a document to the Accessible constructor so that we don't
-    // set mDoc until our vtable is fully setup.  If we set mDoc before setting
-    // up the vtable we will call Accessible::AddRef() but not the overrides of
-    // it for subclasses.  It is important to call those overrides to avoid
-    // confusing leak checking machinary.
-  HyperTextAccessibleWrap(nullptr, nullptr),
-  // XXX aaronl should we use an algorithm for the initial cache size?
-  mAccessibleCache(kDefaultCacheLength),
-  mNodeToAccessibleMap(kDefaultCacheLength),
-  mDocumentNode(aDocument),
-  mScrollPositionChangedTicks(0),
-  mLoadState(eTreeConstructionPending), mDocFlags(0), mLoadEventType(0),
-  mARIAAttrOldValue{nullptr}, mVirtualCursor(nullptr),
-  mPresShell(aPresShell), mIPCDoc(nullptr)
-{
-=======
 DocAccessible::DocAccessible(dom::Document* aDocument,
                              PresShell* aPresShell)
     :  // XXX don't pass a document to the Accessible constructor so that we
@@ -129,7 +90,6 @@ DocAccessible::DocAccessible(dom::Document* aDocument,
       mVirtualCursor(nullptr),
       mPresShell(aPresShell),
       mIPCDoc(nullptr) {
->>>>>>> upstream-releases
   mGenericTypes |= eDocument;
   mStateFlags |= eNotNodeMapEntry;
   mDoc = this;
@@ -334,14 +294,7 @@ void DocAccessible::TakeFocus() const {
   // Focus the document.
   nsFocusManager* fm = nsFocusManager::GetFocusManager();
   RefPtr<dom::Element> newFocus;
-<<<<<<< HEAD
-  AutoHandlingUserInputStatePusher inputStatePusher(true, nullptr,
-                                                    mDocumentNode);
-||||||| merged common ancestors
-  AutoHandlingUserInputStatePusher inputStatePusher(true, nullptr, mDocumentNode);
-=======
   AutoHandlingUserInputStatePusher inputStatePusher(true);
->>>>>>> upstream-releases
   fm->MoveFocus(mDocumentNode->GetWindow(), nullptr,
                 nsFocusManager::MOVEFOCUS_ROOT, 0, getter_AddRefs(newFocus));
 }
@@ -425,18 +378,8 @@ void DocAccessible::Init() {
   AddEventListeners();
 }
 
-<<<<<<< HEAD
-void DocAccessible::Shutdown() {
-  if (!mPresShell)  // already shutdown
-||||||| merged common ancestors
-void
-DocAccessible::Shutdown()
-{
-  if (!mPresShell) // already shutdown
-=======
 void DocAccessible::Shutdown() {
   if (!mPresShell) {  // already shutdown
->>>>>>> upstream-releases
     return;
   }
 
@@ -513,16 +456,9 @@ void DocAccessible::Shutdown() {
 
 nsIFrame* DocAccessible::GetFrame() const {
   nsIFrame* root = nullptr;
-<<<<<<< HEAD
-  if (mPresShell) root = mPresShell->GetRootFrame();
-||||||| merged common ancestors
-  if (mPresShell)
-    root = mPresShell->GetRootFrame();
-=======
   if (mPresShell) {
     root = mPresShell->GetRootFrame();
   }
->>>>>>> upstream-releases
 
   return root;
 }
@@ -531,32 +467,15 @@ nsIFrame* DocAccessible::GetFrame() const {
 nsRect DocAccessible::RelativeBounds(nsIFrame** aRelativeFrame) const {
   *aRelativeFrame = GetFrame();
 
-<<<<<<< HEAD
-  nsIDocument* document = mDocumentNode;
-  nsIDocument* parentDoc = nullptr;
-||||||| merged common ancestors
-  nsIDocument *document = mDocumentNode;
-  nsIDocument *parentDoc = nullptr;
-=======
   dom::Document* document = mDocumentNode;
   dom::Document* parentDoc = nullptr;
->>>>>>> upstream-releases
 
   nsRect bounds;
   while (document) {
-<<<<<<< HEAD
-    nsIPresShell* presShell = document->GetShell();
-    if (!presShell) return nsRect();
-||||||| merged common ancestors
-    nsIPresShell *presShell = document->GetShell();
-    if (!presShell)
-      return nsRect();
-=======
     PresShell* presShell = document->GetPresShell();
     if (!presShell) {
       return nsRect();
     }
->>>>>>> upstream-releases
 
     nsRect scrollPort;
     nsIScrollableFrame* sf = presShell->GetRootScrollFrameAsScrollable();
@@ -620,14 +539,7 @@ nsresult DocAccessible::RemoveEventListeners() {
 
     if (docShell) {
       if (docShell->ItemType() == nsIDocShellTreeItem::typeContent) {
-<<<<<<< HEAD
-        nsCOMPtr<nsICommandManager> commandManager =
-            docShell->GetCommandManager();
-||||||| merged common ancestors
-        nsCOMPtr<nsICommandManager> commandManager = docShell->GetCommandManager();
-=======
         RefPtr<nsCommandManager> commandManager = docShell->GetCommandManager();
->>>>>>> upstream-releases
         if (commandManager) {
           commandManager->RemoveCommandObserver(this, "obs_documentCreated");
         }
@@ -734,24 +646,9 @@ DocAccessible::OnPivotChanged(nsIAccessiblePivot* aPivot,
 NS_IMPL_NSIDOCUMENTOBSERVER_CORE_STUB(DocAccessible)
 NS_IMPL_NSIDOCUMENTOBSERVER_LOAD_STUB(DocAccessible)
 
-<<<<<<< HEAD
-void DocAccessible::AttributeWillChange(dom::Element* aElement,
-                                        int32_t aNameSpaceID,
-                                        nsAtom* aAttribute, int32_t aModType,
-                                        const nsAttrValue* aNewValue) {
-||||||| merged common ancestors
-void
-DocAccessible::AttributeWillChange(dom::Element* aElement,
-                                   int32_t aNameSpaceID,
-                                   nsAtom* aAttribute,
-                                   int32_t aModType,
-                                   const nsAttrValue* aNewValue)
-{
-=======
 void DocAccessible::AttributeWillChange(dom::Element* aElement,
                                         int32_t aNameSpaceID,
                                         nsAtom* aAttribute, int32_t aModType) {
->>>>>>> upstream-releases
   Accessible* accessible = GetAccessible(aElement);
   if (!accessible) {
     if (aElement != mContent) return;
@@ -1129,21 +1026,9 @@ void DocAccessible::ARIAActiveDescendantChanged(Accessible* aAccessible) {
 
 void DocAccessible::ContentAppended(nsIContent* aFirstNewContent) {}
 
-<<<<<<< HEAD
-void DocAccessible::ContentStateChanged(nsIDocument* aDocument,
-                                        nsIContent* aContent,
-                                        EventStates aStateMask) {
-||||||| merged common ancestors
-void
-DocAccessible::ContentStateChanged(nsIDocument* aDocument,
-                                   nsIContent* aContent,
-                                   EventStates aStateMask)
-{
-=======
 void DocAccessible::ContentStateChanged(dom::Document* aDocument,
                                         nsIContent* aContent,
                                         EventStates aStateMask) {
->>>>>>> upstream-releases
   Accessible* accessible = GetAccessible(aContent);
   if (!accessible) return;
 
@@ -1179,66 +1064,16 @@ void DocAccessible::ContentStateChanged(dom::Document* aDocument,
   }
 }
 
-<<<<<<< HEAD
-void DocAccessible::DocumentStatesChanged(nsIDocument* aDocument,
-                                          EventStates aStateMask) {}
-||||||| merged common ancestors
-void
-DocAccessible::DocumentStatesChanged(nsIDocument* aDocument,
-                                     EventStates aStateMask)
-{
-}
-=======
 void DocAccessible::CharacterDataWillChange(nsIContent* aContent,
                                             const CharacterDataChangeInfo&) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void DocAccessible::CharacterDataWillChange(nsIContent* aContent,
-                                            const CharacterDataChangeInfo&) {}
-||||||| merged common ancestors
-void
-DocAccessible::CharacterDataWillChange(nsIContent* aContent,
-                                       const CharacterDataChangeInfo&)
-{
-}
-=======
 void DocAccessible::CharacterDataChanged(nsIContent* aContent,
                                          const CharacterDataChangeInfo&) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void DocAccessible::CharacterDataChanged(nsIContent* aContent,
-                                         const CharacterDataChangeInfo&) {}
-||||||| merged common ancestors
-void
-DocAccessible::CharacterDataChanged(nsIContent* aContent,
-                                    const CharacterDataChangeInfo&)
-{
-}
-=======
-void DocAccessible::ContentInserted(nsIContent* aChild) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 void DocAccessible::ContentInserted(nsIContent* aChild) {}
 
 void DocAccessible::ContentRemoved(nsIContent* aChildNode,
                                    nsIContent* aPreviousSiblingNode) {
-||||||| merged common ancestors
-void
-DocAccessible::ContentInserted(nsIContent* aChild)
-{
-}
-
-void
-DocAccessible::ContentRemoved(nsIContent* aChildNode,
-                              nsIContent* aPreviousSiblingNode)
-{
-=======
-void DocAccessible::ContentRemoved(nsIContent* aChildNode,
-                                   nsIContent* aPreviousSiblingNode) {
->>>>>>> upstream-releases
 #ifdef A11Y_LOG
   if (logging::IsEnabled(logging::eTree)) {
     logging::MsgBegin("TREE", "DOM content removed; doc: %p", this);
@@ -1270,21 +1105,10 @@ nsresult DocAccessible::HandleAccEvent(AccEvent* aEvent) {
 ////////////////////////////////////////////////////////////////////////////////
 // Public members
 
-<<<<<<< HEAD
-void* DocAccessible::GetNativeWindow() const {
-  if (!mPresShell) return nullptr;
-||||||| merged common ancestors
-void*
-DocAccessible::GetNativeWindow() const
-{
-  if (!mPresShell)
-    return nullptr;
-=======
 void* DocAccessible::GetNativeWindow() const {
   if (!mPresShell) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   nsViewManager* vm = mPresShell->GetViewManager();
   if (!vm) return nullptr;
@@ -1310,33 +1134,12 @@ Accessible* DocAccessible::GetAccessibleByUniqueIDInSubtree(void* aUniqueID) {
   return nullptr;
 }
 
-<<<<<<< HEAD
-Accessible* DocAccessible::GetAccessibleOrContainer(nsINode* aNode,
-                                                    int aARIAHiddenFlag) const {
-  if (!aNode || !aNode->GetComposedDoc()) return nullptr;
-||||||| merged common ancestors
-Accessible*
-DocAccessible::GetAccessibleOrContainer(nsINode* aNode,
-                                        int aARIAHiddenFlag) const
-{
-  if (!aNode || !aNode->GetComposedDoc())
-    return nullptr;
-=======
 Accessible* DocAccessible::GetAccessibleOrContainer(
     nsINode* aNode, bool aNoContainerIfPruned) const {
   if (!aNode || !aNode->GetComposedDoc()) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (nsINode* currNode = aNode; currNode;
-       currNode = currNode->GetFlattenedTreeParentNode()) {
-||||||| merged common ancestors
-  for (nsINode* currNode = aNode; currNode;
-       currNode = currNode->GetFlattenedTreeParentNode()) {
-
-=======
   nsINode* currNode = nullptr;
   if (aNode->IsShadowRoot()) {
     // This can happen, for example, when called within
@@ -1355,7 +1158,6 @@ Accessible* DocAccessible::GetAccessibleOrContainer(
 
   MOZ_ASSERT(currNode);
   for (; currNode; currNode = currNode->GetFlattenedTreeParentNode()) {
->>>>>>> upstream-releases
     // No container if is inside of aria-hidden subtree.
     if (aNoContainerIfPruned && currNode->IsElement() &&
         aria::HasDefinedARIAHidden(currNode->AsElement())) {
@@ -1881,15 +1683,7 @@ bool InsertIterator::Next() {
     // what means there's no container. Ignore the insertion too.
     nsIContent* prevNode = mNodes->SafeElementAt(mNodesIdx - 1);
     nsIContent* node = mNodes->ElementAt(mNodesIdx++);
-<<<<<<< HEAD
-    Accessible* container = Document()->AccessibleOrTrueContainer(
-        node, DocAccessible::eNoContainerIfARIAHidden);
-||||||| merged common ancestors
-    Accessible* container = Document()->
-      AccessibleOrTrueContainer(node, DocAccessible::eNoContainerIfARIAHidden);
-=======
     Accessible* container = Document()->AccessibleOrTrueContainer(node, true);
->>>>>>> upstream-releases
     if (container != Context()) {
       continue;
     }
@@ -2357,18 +2151,9 @@ bool DocAccessible::MoveChild(Accessible* aChild, Accessible* aNewParent,
 
   // If the child cannot be re-inserted into the tree, then make sure to remove
   // it from its present parent and then shutdown it.
-<<<<<<< HEAD
-  bool hasInsertionPoint =
-      (aIdxInParent != -1) ||
-      (aIdxInParent <= static_cast<int32_t>(aNewParent->ChildCount()));
-||||||| merged common ancestors
-  bool hasInsertionPoint = (aIdxInParent != -1) ||
-    (aIdxInParent <= static_cast<int32_t>(aNewParent->ChildCount()));
-=======
   bool hasInsertionPoint =
       (aIdxInParent >= 0) &&
       (aIdxInParent <= static_cast<int32_t>(aNewParent->mChildren.Length()));
->>>>>>> upstream-releases
 
   TreeMutation rmut(curParent);
   rmut.BeforeRemoval(aChild, hasInsertionPoint && TreeMutation::kNoShutdown);
@@ -2512,20 +2297,12 @@ bool DocAccessible::IsLoadEventTarget() const {
   return (treeItem->ItemType() == nsIDocShellTreeItem::typeContent);
 }
 
-<<<<<<< HEAD
-void DocAccessible::DispatchScrollingEvent(uint32_t aEventType) {
-||||||| merged common ancestors
-void
-DocAccessible::DispatchScrollingEvent(uint32_t aEventType)
-{
-=======
 void DocAccessible::SetIPCDoc(DocAccessibleChild* aIPCDoc) {
   MOZ_ASSERT(!mIPCDoc || !aIPCDoc, "Clobbering an attached IPCDoc!");
   mIPCDoc = aIPCDoc;
 }
 
 void DocAccessible::DispatchScrollingEvent(uint32_t aEventType) {
->>>>>>> upstream-releases
   nsIScrollableFrame* sf = mPresShell->GetRootScrollFrameAsScrollable();
   if (!sf) {
     return;

@@ -15,31 +15,6 @@
 //!    be compatible. Otherwise, the value must be copied into a new register for some of the
 //!    operands.
 
-<<<<<<< HEAD
-use cursor::{Cursor, EncCursor};
-use dominator_tree::DominatorTree;
-use ir::{ArgumentLoc, Ebb, Function, Inst, InstBuilder, SigRef, Value, ValueLoc};
-use isa::registers::{RegClass, RegClassIndex, RegClassMask, RegUnit};
-use isa::{ConstraintKind, EncInfo, RecipeConstraints, RegInfo, TargetIsa};
-use regalloc::affinity::Affinity;
-use regalloc::live_value_tracker::{LiveValue, LiveValueTracker};
-use regalloc::liveness::Liveness;
-use regalloc::pressure::Pressure;
-use regalloc::virtregs::VirtRegs;
-use std::fmt;
-||||||| merged common ancestors
-use cursor::{Cursor, EncCursor};
-use dominator_tree::DominatorTree;
-use ir::{Ebb, Function, Inst, InstBuilder, SigRef, Value, ValueLoc};
-use isa::registers::{RegClassIndex, RegClassMask};
-use isa::{ConstraintKind, EncInfo, RecipeConstraints, RegInfo, TargetIsa};
-use regalloc::affinity::Affinity;
-use regalloc::live_value_tracker::{LiveValue, LiveValueTracker};
-use regalloc::liveness::Liveness;
-use regalloc::pressure::Pressure;
-use regalloc::virtregs::VirtRegs;
-use std::fmt;
-=======
 use crate::cursor::{Cursor, EncCursor};
 use crate::dominator_tree::DominatorTree;
 use crate::ir::{ArgumentLoc, Ebb, Function, Inst, InstBuilder, SigRef, Value, ValueLoc};
@@ -54,17 +29,7 @@ use crate::timing;
 use crate::topo_order::TopoOrder;
 use core::fmt;
 use log::debug;
->>>>>>> upstream-releases
 use std::vec::Vec;
-
-/// Return a top-level register class which contains `unit`.
-fn toprc_containing_regunit(unit: RegUnit, reginfo: &RegInfo) -> RegClass {
-    let bank = reginfo.bank_containing_regunit(unit).unwrap();
-    reginfo.classes[bank.first_toprc..(bank.first_toprc + bank.num_toprcs)]
-        .iter()
-        .find(|&rc| rc.contains(unit))
-        .expect("reg unit should be in a toprc")
-}
 
 /// Return a top-level register class which contains `unit`.
 fn toprc_containing_regunit(unit: RegUnit, reginfo: &RegInfo) -> RegClass {
@@ -541,7 +506,8 @@ impl<'a> Context<'a> {
                     }
                 }
                 None
-            }).min_by(|&a, &b| {
+            })
+            .min_by(|&a, &b| {
                 // Find the minimum candidate according to the RPO of their defs.
                 self.domtree.rpo_cmp(
                     self.cur.func.dfg.value_def(a),

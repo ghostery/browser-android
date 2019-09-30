@@ -42,27 +42,9 @@ struct WaitForDataRejectValue {
 
 struct SeekRejectValue {
   MOZ_IMPLICIT SeekRejectValue(const MediaResult& aError)
-<<<<<<< HEAD
-      : mType(MediaData::NULL_DATA), mError(aError) {}
-||||||| merged common ancestors
-    : mType(MediaData::NULL_DATA)
-    , mError(aError)
-  {
-  }
-=======
       : mType(MediaData::Type::NULL_DATA), mError(aError) {}
->>>>>>> upstream-releases
   MOZ_IMPLICIT SeekRejectValue(nsresult aResult)
-<<<<<<< HEAD
-      : mType(MediaData::NULL_DATA), mError(aResult) {}
-||||||| merged common ancestors
-    : mType(MediaData::NULL_DATA)
-    , mError(aResult)
-  {
-  }
-=======
       : mType(MediaData::Type::NULL_DATA), mError(aResult) {}
->>>>>>> upstream-releases
   SeekRejectValue(MediaData::Type aType, const MediaResult& aError)
       : mType(aType), mError(aError) {}
   MediaData::Type mType;
@@ -561,22 +543,8 @@ class MediaFormatReader final
     // Return the current TrackInfo updated as per the decoder output.
     // Typically for audio, the number of channels and/or sampling rate can vary
     // between what was found in the metadata and what the decoder returned.
-<<<<<<< HEAD
-    const TrackInfo* GetWorkingInfo() const { return mWorkingInfo.get(); }
-    bool IsEncrypted() const { return GetCurrentInfo()->mCrypto.mValid; }
-||||||| merged common ancestors
-    const TrackInfo* GetWorkingInfo() const
-    {
-      return mWorkingInfo.get();
-    }
-    bool IsEncrypted() const
-    {
-      return GetCurrentInfo()->mCrypto.mValid;
-    }
-=======
     const TrackInfo* GetWorkingInfo() const { return mWorkingInfo.get(); }
     bool IsEncrypted() const { return GetCurrentInfo()->mCrypto.IsEncrypted(); }
->>>>>>> upstream-releases
 
     // Used by the MDSM for logging purposes.
     Atomic<size_t> mSizeOfQueue;

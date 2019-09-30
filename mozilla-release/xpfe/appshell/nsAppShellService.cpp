@@ -94,13 +94,6 @@ nsAppShellService::SetScreenId(uint32_t aScreenId) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsAppShellService::EnsurePrivateHiddenWindow() {
-||||||| merged common ancestors
-void
-nsAppShellService::EnsurePrivateHiddenWindow()
-{
-=======
 void nsAppShellService::EnsureHiddenWindow() {
   if (!mHiddenWindow) {
     (void)CreateHiddenWindowHelper(/* aIsPrivate = */ false);
@@ -108,19 +101,11 @@ void nsAppShellService::EnsureHiddenWindow() {
 }
 
 void nsAppShellService::EnsurePrivateHiddenWindow() {
->>>>>>> upstream-releases
   if (!mHiddenPrivateWindow) {
     (void)CreateHiddenWindowHelper(/* aIsPrivate = */ true);
   }
 }
 
-<<<<<<< HEAD
-nsresult nsAppShellService::CreateHiddenWindowHelper(bool aIsPrivate) {
-||||||| merged common ancestors
-nsresult
-nsAppShellService::CreateHiddenWindowHelper(bool aIsPrivate)
-{
-=======
 nsresult nsAppShellService::CreateHiddenWindowHelper(bool aIsPrivate) {
   if (!XRE_IsParentProcess()) {
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -138,7 +123,6 @@ nsresult nsAppShellService::CreateHiddenWindowHelper(bool aIsPrivate) {
     return NS_ERROR_FAILURE;
   }
 
->>>>>>> upstream-releases
   nsresult rv;
   int32_t initialHeight = 100, initialWidth = 100;
 
@@ -211,26 +195,10 @@ nsAppShellService::DestroyHiddenWindow() {
  * Create a new top level window and display the given URL within it...
  */
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAppShellService::CreateTopLevelWindow(
-    nsIXULWindow* aParent, nsIURI* aUrl, uint32_t aChromeMask,
-    int32_t aInitialWidth, int32_t aInitialHeight, nsITabParent* aOpeningTab,
-    mozIDOMWindowProxy* aOpenerWindow, nsIXULWindow** aResult)
-||||||| merged common ancestors
-nsAppShellService::CreateTopLevelWindow(nsIXULWindow *aParent,
-                                        nsIURI *aUrl,
-                                        uint32_t aChromeMask,
-                                        int32_t aInitialWidth,
-                                        int32_t aInitialHeight,
-                                        nsITabParent *aOpeningTab,
-                                        mozIDOMWindowProxy *aOpenerWindow,
-                                        nsIXULWindow **aResult)
-=======
 nsAppShellService::CreateTopLevelWindow(
     nsIXULWindow* aParent, nsIURI* aUrl, uint32_t aChromeMask,
     int32_t aInitialWidth, int32_t aInitialHeight, nsIRemoteTab* aOpeningTab,
     mozIDOMWindowProxy* aOpenerWindow, nsIXULWindow** aResult)
->>>>>>> upstream-releases
 
 {
   nsresult rv;
@@ -517,27 +485,6 @@ nsAppShellService::CreateWindowlessBrowser(bool aIsChrome,
       widget->Create(nullptr, 0, LayoutDeviceIntRect(0, 0, 0, 0), nullptr);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  /* Next, we create an instance of nsWebBrowser. Instances of this class have
-   * an associated doc shell, which is what we're interested in.
-   */
-  nsCOMPtr<nsIWebBrowser> browser =
-      nsWebBrowser::Create(stub, widget, OriginAttributes(), nullptr,
-                           aIsChrome ? nsIDocShellTreeItem::typeChromeWrapper
-                                     : nsIDocShellTreeItem::typeContentWrapper);
-
-  if (NS_WARN_IF(!browser)) {
-    NS_ERROR("Couldn't create instance of nsWebBrowser!");
-    return NS_ERROR_FAILURE;
-  }
-
-  // Make sure the container window owns the the nsWebBrowser instance.
-  stub->SetBrowser(browser);
-
-  nsISupports* isstub = NS_ISUPPORTS_CAST(nsIWebBrowserChrome2*, stub);
-||||||| merged common ancestors
-  nsISupports *isstub = NS_ISUPPORTS_CAST(nsIWebBrowserChrome2*, stub);
-=======
   // Create a BrowsingContext for our windowless browser.
   RefPtr<BrowsingContext> browsingContext =
       BrowsingContext::Create(nullptr, nullptr, EmptyString(),
@@ -560,7 +507,6 @@ nsAppShellService::CreateWindowlessBrowser(bool aIsChrome,
   stub->SetBrowser(browser);
 
   nsISupports* isstub = NS_ISUPPORTS_CAST(nsIWebBrowserChrome2*, stub);
->>>>>>> upstream-releases
   RefPtr<nsIWindowlessBrowser> result = new WindowlessBrowser(browser, isstub);
   nsCOMPtr<nsIDocShell> docshell = do_GetInterface(result);
   docshell->SetInvisible(true);
@@ -638,31 +584,11 @@ static bool CheckForFullscreenWindow() {
 /*
  * Just do the window-making part of CreateTopLevelWindow
  */
-<<<<<<< HEAD
-nsresult nsAppShellService::JustCreateTopWindow(
-    nsIXULWindow* aParent, nsIURI* aUrl, uint32_t aChromeMask,
-    int32_t aInitialWidth, int32_t aInitialHeight, bool aIsHiddenWindow,
-    nsITabParent* aOpeningTab, mozIDOMWindowProxy* aOpenerWindow,
-    nsWebShellWindow** aResult) {
-||||||| merged common ancestors
-nsresult
-nsAppShellService::JustCreateTopWindow(nsIXULWindow *aParent,
-                                       nsIURI *aUrl,
-                                       uint32_t aChromeMask,
-                                       int32_t aInitialWidth,
-                                       int32_t aInitialHeight,
-                                       bool aIsHiddenWindow,
-                                       nsITabParent *aOpeningTab,
-                                       mozIDOMWindowProxy *aOpenerWindow,
-                                       nsWebShellWindow **aResult)
-{
-=======
 nsresult nsAppShellService::JustCreateTopWindow(
     nsIXULWindow* aParent, nsIURI* aUrl, uint32_t aChromeMask,
     int32_t aInitialWidth, int32_t aInitialHeight, bool aIsHiddenWindow,
     nsIRemoteTab* aOpeningTab, mozIDOMWindowProxy* aOpenerWindow,
     nsWebShellWindow** aResult) {
->>>>>>> upstream-releases
   *aResult = nullptr;
   NS_ENSURE_STATE(!mXPCOMWillShutDown);
 
@@ -837,18 +763,11 @@ nsAppShellService::GetHiddenWindow(nsIXULWindow** aWindow) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAppShellService::GetHiddenDOMWindow(mozIDOMWindowProxy** aWindow) {
-||||||| merged common ancestors
-nsAppShellService::GetHiddenDOMWindow(mozIDOMWindowProxy **aWindow)
-{
-=======
 nsAppShellService::GetHiddenDOMWindow(mozIDOMWindowProxy** aWindow) {
   NS_ENSURE_ARG_POINTER(aWindow);
 
   EnsureHiddenWindow();
 
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIDocShell> docShell;
   NS_ENSURE_TRUE(mHiddenWindow, NS_ERROR_FAILURE);
@@ -874,16 +793,9 @@ nsAppShellService::GetHiddenPrivateWindow(nsIXULWindow** aWindow) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAppShellService::GetHiddenPrivateDOMWindow(mozIDOMWindowProxy** aWindow) {
-||||||| merged common ancestors
-nsAppShellService::GetHiddenPrivateDOMWindow(mozIDOMWindowProxy **aWindow)
-{
-=======
 nsAppShellService::GetHiddenPrivateDOMWindow(mozIDOMWindowProxy** aWindow) {
   NS_ENSURE_ARG_POINTER(aWindow);
 
->>>>>>> upstream-releases
   EnsurePrivateHiddenWindow();
 
   nsresult rv;
@@ -900,12 +812,6 @@ nsAppShellService::GetHiddenPrivateDOMWindow(mozIDOMWindowProxy** aWindow) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAppShellService::GetHasHiddenPrivateWindow(bool* aHasPrivateWindow) {
-||||||| merged common ancestors
-nsAppShellService::GetHasHiddenPrivateWindow(bool* aHasPrivateWindow)
-{
-=======
 nsAppShellService::GetHasHiddenWindow(bool* aHasHiddenWindow) {
   NS_ENSURE_ARG_POINTER(aHasHiddenWindow);
 
@@ -915,7 +821,6 @@ nsAppShellService::GetHasHiddenWindow(bool* aHasHiddenWindow) {
 
 NS_IMETHODIMP
 nsAppShellService::GetHasHiddenPrivateWindow(bool* aHasPrivateWindow) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aHasPrivateWindow);
 
   *aHasPrivateWindow = !!mHiddenPrivateWindow;

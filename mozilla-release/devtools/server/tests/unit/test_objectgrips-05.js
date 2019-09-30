@@ -8,76 +8,6 @@
  * grip.
  */
 
-<<<<<<< HEAD
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  return new Promise(resolve => {
-    threadClient.addOneTimeListener("paused", function(event, packet) {
-      const obj1 = packet.frame.arguments[0];
-      Assert.ok(obj1.frozen);
-
-      const obj1Client = threadClient.pauseGrip(obj1);
-      Assert.ok(obj1Client.isFrozen);
-
-      const obj2 = packet.frame.arguments[1];
-      Assert.ok(!obj2.frozen);
-
-      const obj2Client = threadClient.pauseGrip(obj2);
-      Assert.ok(!obj2Client.isFrozen);
-
-      threadClient.resume(resolve);
-||||||| merged common ancestors
-var gDebuggee;
-var gClient;
-var gThreadClient;
-var gCallback;
-
-function run_test() {
-  run_test_with_server(DebuggerServer, function() {
-    run_test_with_server(WorkerDebuggerServer, do_test_finished);
-  });
-  do_test_pending();
-}
-
-function run_test_with_server(server, callback) {
-  gCallback = callback;
-  initTestDebuggerServer(server);
-  gDebuggee = addTestGlobal("test-grips", server);
-  gDebuggee.eval(function stopMe(arg1, arg2) {
-    debugger;
-  }.toString());
-
-  gClient = new DebuggerClient(server.connectPipe());
-  gClient.connect().then(function() {
-    attachTestTabAndResume(gClient, "test-grips",
-                           function(response, targetFront, threadClient) {
-                             gThreadClient = threadClient;
-                             test_object_grip();
-                           });
-  });
-}
-
-function test_object_grip() {
-  gThreadClient.addOneTimeListener("paused", function(event, packet) {
-    const obj1 = packet.frame.arguments[0];
-    Assert.ok(obj1.frozen);
-
-    const obj1Client = gThreadClient.pauseGrip(obj1);
-    Assert.ok(obj1Client.isFrozen);
-
-    const obj2 = packet.frame.arguments[1];
-    Assert.ok(!obj2.frozen);
-
-    const obj2Client = gThreadClient.pauseGrip(obj2);
-    Assert.ok(!obj2Client.isFrozen);
-
-    gThreadClient.resume(_ => {
-      gClient.close().then(gCallback);
-=======
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
@@ -118,34 +48,6 @@ add_task(
           "())"
       );
       /* eslint-enable no-undef */
->>>>>>> upstream-releases
     });
-<<<<<<< HEAD
-
-    debuggee.eval(function stopMe(arg1) {
-      debugger;
-    }.toString());
-    /* eslint-disable no-undef */
-    debuggee.eval("(" + function() {
-      const obj1 = {};
-      Object.freeze(obj1);
-      stopMe(obj1, {});
-    } + "())");
-    /* eslint-enable no-undef */
-  });
-}));
-||||||| merged common ancestors
-  });
-
-  /* eslint-disable no-undef */
-  gDebuggee.eval("(" + function() {
-    const obj1 = {};
-    Object.freeze(obj1);
-    stopMe(obj1, {});
-  } + "())");
-  /* eslint-enable no-undef */
-}
-=======
   })
 );
->>>>>>> upstream-releases

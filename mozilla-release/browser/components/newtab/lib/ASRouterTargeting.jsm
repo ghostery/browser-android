@@ -1,44 +1,3 @@
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/components-utils/FilterExpressions.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ASRouterPreferences",
-  "resource://activity-stream/lib/ASRouterPreferences.jsm");
-ChromeUtils.defineModuleGetter(this, "AddonManager",
-  "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "NewTabUtils",
-  "resource://gre/modules/NewTabUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "ProfileAge",
-  "resource://gre/modules/ProfileAge.jsm");
-ChromeUtils.defineModuleGetter(this, "ShellService",
-  "resource:///modules/ShellService.jsm");
-ChromeUtils.defineModuleGetter(this, "TelemetryEnvironment",
-  "resource://gre/modules/TelemetryEnvironment.jsm");
-ChromeUtils.defineModuleGetter(this, "AppConstants",
-  "resource://gre/modules/AppConstants.jsm");
-ChromeUtils.defineModuleGetter(this, "AttributionCode",
-  "resource:///modules/AttributionCode.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/components-utils/FilterExpressions.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ASRouterPreferences",
-  "resource://activity-stream/lib/ASRouterPreferences.jsm");
-ChromeUtils.defineModuleGetter(this, "AddonManager",
-  "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "NewTabUtils",
-  "resource://gre/modules/NewTabUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "ProfileAge",
-  "resource://gre/modules/ProfileAge.jsm");
-ChromeUtils.defineModuleGetter(this, "ShellService",
-  "resource:///modules/ShellService.jsm");
-ChromeUtils.defineModuleGetter(this, "TelemetryEnvironment",
-  "resource://gre/modules/TelemetryEnvironment.jsm");
-ChromeUtils.defineModuleGetter(this, "AppConstants",
-  "resource://gre/modules/AppConstants.jsm");
-ChromeUtils.defineModuleGetter(this, "NewTabUtils",
-  "resource://gre/modules/NewTabUtils.jsm");
-=======
 const { FilterExpressions } = ChromeUtils.import(
   "resource://gre/modules/components-utils/FilterExpressions.jsm"
 );
@@ -93,7 +52,6 @@ XPCOMUtils.defineLazyServiceGetter(
   "@mozilla.org/updates/update-manager;1",
   "nsIUpdateManager"
 );
->>>>>>> upstream-releases
 
 const FXA_USERNAME_PREF = "services.sync.username";
 const FXA_ENABLED_PREF = "identity.fxaccounts.enabled";
@@ -144,18 +102,10 @@ function CachedTargetingGetter(
   };
 }
 
-<<<<<<< HEAD
-function CheckBrowserNeedsUpdate(updateInterval = FRECENT_SITES_UPDATE_INTERVAL) {
-  const UpdateChecker = Cc["@mozilla.org/updates/update-checker;1"];
-||||||| merged common ancestors
-function CheckBrowserNeedsUpdate(updateInterval = FRECENT_SITES_UPDATE_INTERVAL) {
-  const UpdateChecker = Cc["@mozilla.org/updates/update-checker;1"].createInstance(Ci.nsIUpdateChecker);
-=======
 function CheckBrowserNeedsUpdate(
   updateInterval = FRECENT_SITES_UPDATE_INTERVAL
 ) {
   const UpdateChecker = Cc["@mozilla.org/updates/update-checker;1"];
->>>>>>> upstream-releases
   const checker = {
     _lastUpdated: 0,
     _value: null,
@@ -183,20 +133,11 @@ function CheckBrowserNeedsUpdate(
           QueryInterface: ChromeUtils.generateQI(["nsIUpdateCheckListener"]),
         };
 
-<<<<<<< HEAD
-        if (UpdateChecker && (now - this._lastUpdated >= updateInterval)) {
-          const checkerInstance = UpdateChecker.createInstance(Ci.nsIUpdateChecker);
-          checkerInstance.checkForUpdates(updateServiceListener, true);
-||||||| merged common ancestors
-        if (now - this._lastUpdated >= updateInterval) {
-          UpdateChecker.checkForUpdates(updateServiceListener, true);
-=======
         if (UpdateChecker && now - this._lastUpdated >= updateInterval) {
           const checkerInstance = UpdateChecker.createInstance(
             Ci.nsIUpdateChecker
           );
           checkerInstance.checkForUpdates(updateServiceListener, true);
->>>>>>> upstream-releases
           this._lastUpdated = now;
         } else {
           resolve(this._value);
@@ -296,24 +237,6 @@ function sortMessagesByPriority(messages) {
       return -1;
     }
     if (a.priority < b.priority) {
-      return 1;
-    }
-
-    return 0;
-  });
-}
-
-/**
- * Messages with targeting should get evaluated first, this way we can have
- * fallback messages (no targeting at all) that will show up if nothing else
- * matched
- */
-function sortMessagesByTargeting(messages) {
-  return messages.sort((a, b) => {
-    if (a.targeting && !b.targeting) {
-      return -1;
-    }
-    if (!a.targeting && b.targeting) {
       return 1;
     }
 
@@ -434,19 +357,6 @@ const TargetingGetters = {
     );
   },
   get pinnedSites() {
-<<<<<<< HEAD
-    return NewTabUtils.pinnedLinks.links.map(site => (site ? {
-      url: site.url,
-      host: (new URL(site.url)).hostname,
-      searchTopSite: site.searchTopSite,
-    } : {}));
-||||||| merged common ancestors
-    return NewTabUtils.pinnedLinks.links.map(site => ({
-      url: site.url,
-      host: (new URL(site.url)).hostname,
-      searchTopSite: site.searchTopSite,
-    }));
-=======
     return NewTabUtils.pinnedLinks.links.map(site =>
       site
         ? {
@@ -456,7 +366,6 @@ const TargetingGetters = {
           }
         : {}
     );
->>>>>>> upstream-releases
   },
   get providerCohorts() {
     return ASRouterPreferences.providers.reduce((prev, current) => {
@@ -614,21 +523,12 @@ this.ASRouterTargeting = {
    * @param {obj|null} context A FilterExpression context. Defaults to TargetingGetters above.
    * @returns {obj} an AS router message
    */
-<<<<<<< HEAD
-  async findMatchingMessage({messages, trigger, context, onError}) {
-    const weightSortedMessages = sortMessagesByWeightedRank([...messages]);
-    const sortedMessages = sortMessagesByTargeting(weightSortedMessages);
-||||||| merged common ancestors
-  async findMatchingMessage({messages, trigger, context, onError}) {
-    const sortedMessages = sortMessagesByWeightedRank([...messages]);
-=======
   async findMatchingMessage({ messages, trigger, context, onError }) {
     const weightSortedMessages = sortMessagesByWeightedRank([...messages]);
     let sortedMessages = sortMessagesByTargeting(weightSortedMessages);
     sortedMessages = sortMessagesByPriority(sortedMessages);
     const triggerContext = trigger ? trigger.context : {};
     const combinedContext = this.combineContexts(context, triggerContext);
->>>>>>> upstream-releases
 
     for (const candidate of sortedMessages) {
       if (

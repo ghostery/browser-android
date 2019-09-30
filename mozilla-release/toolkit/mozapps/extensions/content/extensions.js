@@ -7,67 +7,6 @@
 /* import-globals-from ../../../content/contentAreaUtils.js */
 /* import-globals-from aboutaddonsCommon.js */
 /* globals ProcessingInstruction */
-<<<<<<< HEAD
-/* exported UPDATES_RELEASENOTES_TRANSFORMFILE, XMLURI_PARSE_ERROR, loadView, gBrowser */
-
-ChromeUtils.import("resource://gre/modules/DeferredTask.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-ChromeUtils.import("resource://gre/modules/addons/AddonRepository.jsm");
-ChromeUtils.import("resource://gre/modules/addons/AddonSettings.jsm");
-
-ChromeUtils.defineModuleGetter(this, "E10SUtils", "resource://gre/modules/E10SUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "Extension",
-                               "resource://gre/modules/Extension.jsm");
-ChromeUtils.defineModuleGetter(this, "ExtensionParent",
-                               "resource://gre/modules/ExtensionParent.jsm");
-ChromeUtils.defineModuleGetter(this, "PluralForm",
-                               "resource://gre/modules/PluralForm.jsm");
-ChromeUtils.defineModuleGetter(this, "Preferences",
-                               "resource://gre/modules/Preferences.jsm");
-ChromeUtils.defineModuleGetter(this, "ClientID",
-                               "resource://gre/modules/ClientID.jsm");
-
-XPCOMUtils.defineLazyPreferenceGetter(this, "WEBEXT_PERMISSION_PROMPTS",
-                                      "extensions.webextPermissionPrompts", false);
-XPCOMUtils.defineLazyPreferenceGetter(this, "XPINSTALL_ENABLED",
-                                      "xpinstall.enabled", true);
-
-XPCOMUtils.defineLazyPreferenceGetter(this, "SUPPORT_URL", "app.support.baseURL",
-                                      "", null, val => Services.urlFormatter.formatURL(val));
-||||||| merged common ancestors
-/* exported UPDATES_RELEASENOTES_TRANSFORMFILE, XMLURI_PARSE_ERROR, loadView, gBrowser */
-
-ChromeUtils.import("resource://gre/modules/DeferredTask.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-ChromeUtils.import("resource://gre/modules/addons/AddonRepository.jsm");
-ChromeUtils.import("resource://gre/modules/addons/AddonSettings.jsm");
-
-ChromeUtils.defineModuleGetter(this, "E10SUtils", "resource://gre/modules/E10SUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "Extension",
-                               "resource://gre/modules/Extension.jsm");
-ChromeUtils.defineModuleGetter(this, "ExtensionParent",
-                               "resource://gre/modules/ExtensionParent.jsm");
-ChromeUtils.defineModuleGetter(this, "Preferences",
-                               "resource://gre/modules/Preferences.jsm");
-
-
-ChromeUtils.defineModuleGetter(this, "PluralForm",
-                               "resource://gre/modules/PluralForm.jsm");
-ChromeUtils.defineModuleGetter(this, "Preferences",
-                               "resource://gre/modules/Preferences.jsm");
-
-XPCOMUtils.defineLazyPreferenceGetter(this, "WEBEXT_PERMISSION_PROMPTS",
-                                      "extensions.webextPermissionPrompts", false);
-XPCOMUtils.defineLazyPreferenceGetter(this, "XPINSTALL_ENABLED",
-                                      "xpinstall.enabled", true);
-
-XPCOMUtils.defineLazyPreferenceGetter(this, "SUPPORT_URL", "app.support.baseURL",
-                                      "", null, val => Services.urlFormatter.formatURL(val));
-=======
 /* exported gBrowser, loadView */
 
 const { DeferredTask } = ChromeUtils.import(
@@ -158,7 +97,6 @@ XPCOMUtils.defineLazyPreferenceGetter(
   "useNewAboutDebugging",
   "devtools.aboutdebugging.new-enabled"
 );
->>>>>>> upstream-releases
 
 const PREF_DISCOVERURL = "extensions.webservice.discoverURL";
 const PREF_DISCOVER_ENABLED = "extensions.getAddons.showPane";
@@ -522,46 +460,6 @@ function setSearchLabel(type) {
   }
 }
 
-<<<<<<< HEAD
-/**
- * Obtain the main DOMWindow for the current context.
- */
-function getMainWindow() {
-  return window.docShell.rootTreeItem.domWindow;
-}
-
-function getBrowserElement() {
-  return window.docShell.chromeEventHandler;
-}
-
-||||||| merged common ancestors
-function setThemeScreenshot(addon, node) {
-  let screenshot = node.querySelector(".theme-screenshot")
-    || document.getAnonymousElementByAttribute(node, "anonid", "theme-screenshot");
-  // There's a test that doesn't have this for some reason, but it's doing weird things.
-  if (!screenshot)
-    return;
-  if (addon.type == "theme" && addon.screenshots && addon.screenshots.length > 0) {
-    screenshot.setAttribute("src", addon.screenshots[0].url);
-    screenshot.hidden = false;
-  } else {
-    screenshot.hidden = true;
-  }
-}
-
-/**
- * Obtain the main DOMWindow for the current context.
- */
-function getMainWindow() {
-  return window.docShell.rootTreeItem.domWindow;
-}
-
-function getBrowserElement() {
-  return window.docShell.chromeEventHandler;
-}
-
-=======
->>>>>>> upstream-releases
 /**
  * A wrapper around the HTML5 session history service that allows the browser
  * back/forward controls to work within the manager
@@ -1975,15 +1873,6 @@ function sortElements(aElements, aSortBy, aAscending) {
     return aHas ? -1 : 1;
   }
 
-  // Prioritize themes that have screenshots.
-  function hasPreview(aHasStr, bHasStr) {
-    let aHas = aHasStr == "true";
-    let bHas = bHasStr == "true";
-    if (aHas == bHas)
-      return 0;
-    return aHas ? -1 : 1;
-  }
-
   function getValue(aObj, aKey) {
     if (!aObj) {
       return null;
@@ -2042,15 +1931,9 @@ function sortElements(aElements, aSortBy, aAscending) {
       aSortFuncs[i] = dateCompare;
     } else if (NUMERIC_FIELDS.includes(sortBy)) {
       aSortFuncs[i] = numberCompare;
-<<<<<<< HEAD
-    else if (sortBy == "hasPreview")
-      aSortFuncs[i] = hasPreview;
-||||||| merged common ancestors
-=======
     } else if (sortBy == "hasPreview") {
       aSortFuncs[i] = hasPreview;
     }
->>>>>>> upstream-releases
   }
 
   aElements.sort(function(a, b) {
@@ -2485,23 +2368,6 @@ var gDiscoverView = {
     return stream;
   },
 
-  get clientIdDiscoveryEnabled() {
-    // These prefs match Discovery.jsm for enabling clientId cookies.
-    return Services.prefs.getBoolPref("datareporting.healthreport.uploadEnabled", false) &&
-           Services.prefs.getBoolPref("browser.discovery.enabled", false);
-  },
-
-  async getClientHeader() {
-    if (!this.clientIdDiscoveryEnabled) {
-      return undefined;
-    }
-    let clientId = await ClientID.getClientIdHash();
-
-    let stream = Cc["@mozilla.org/io/string-input-stream;1"].createInstance(Ci.nsISupportsCString);
-    stream.data = `Moz-Client-Id: ${clientId}\r\n`;
-    return stream;
-  },
-
   async initialize() {
     this.enabled = isDiscoverEnabled();
     if (!this.enabled) {
@@ -2525,13 +2391,7 @@ var gDiscoverView = {
     url = url.replace("%COMPATIBILITY_MODE%", compatMode);
     url = Services.urlFormatter.formatURL(url);
 
-<<<<<<< HEAD
-    let setURL = async (aURL) => {
-||||||| merged common ancestors
-    let setURL = (aURL) => {
-=======
     let setURL = async aURL => {
->>>>>>> upstream-releases
       try {
         this.homepageURL = Services.io.newURI(aURL);
       } catch (e) {
@@ -2540,22 +2400,6 @@ var gDiscoverView = {
         return;
       }
 
-<<<<<<< HEAD
-      this._browser.addProgressListener(this);
-
-      if (this.loaded) {
-        this._loadURL(this.homepageURL.spec, false, notifyInitialized,
-                      Services.scriptSecurityManager.getSystemPrincipal(),
-                      await this.getClientHeader());
-      } else {
-||||||| merged common ancestors
-      this._browser.addProgressListener(this);
-
-      if (this.loaded)
-        this._loadURL(this.homepageURL.spec, false, notifyInitialized,
-                      Services.scriptSecurityManager.getSystemPrincipal());
-      else
-=======
       this._browser.addProgressListener(
         this,
         Ci.nsIWebProgress.NOTIFY_STATE_ALL |
@@ -2572,7 +2416,6 @@ var gDiscoverView = {
           await this.getClientHeader()
         );
       } else {
->>>>>>> upstream-releases
         notifyInitialized();
       }
     };
@@ -2646,16 +2489,6 @@ var gDiscoverView = {
       return;
     }
 
-<<<<<<< HEAD
-    this._loadURL(this.homepageURL.spec, aIsRefresh,
-                  gViewController.notifyViewChanged.bind(gViewController),
-                  Services.scriptSecurityManager.getSystemPrincipal(),
-                  await this.getClientHeader());
-||||||| merged common ancestors
-    this._loadURL(this.homepageURL.spec, aIsRefresh,
-                  gViewController.notifyViewChanged.bind(gViewController),
-                  Services.scriptSecurityManager.getSystemPrincipal());
-=======
     this._loadURL(
       this.homepageURL.spec,
       aIsRefresh,
@@ -2663,7 +2496,6 @@ var gDiscoverView = {
       Services.scriptSecurityManager.getSystemPrincipal(),
       await this.getClientHeader()
     );
->>>>>>> upstream-releases
   },
 
   canRefresh() {
@@ -2705,16 +2537,9 @@ var gDiscoverView = {
 
     this._browser.loadURI(aURL, {
       flags,
-<<<<<<< HEAD
-      triggeringPrincipal: aPrincipal || Services.scriptSecurityManager.createNullPrincipal({}),
-      headers,
-||||||| merged common ancestors
-      triggeringPrincipal: aPrincipal || Services.scriptSecurityManager.createNullPrincipal({}),
-=======
       triggeringPrincipal:
         aPrincipal || Services.scriptSecurityManager.createNullPrincipal({}),
       headers,
->>>>>>> upstream-releases
     });
   },
 
@@ -3273,13 +3098,8 @@ var gDetailView = {
 
   initialize() {
     this.node = document.getElementById("detail-view");
-<<<<<<< HEAD
-    this.headingImage = this.node.querySelector(".card-heading-image");
-||||||| merged common ancestors
-=======
     this.node.addEventListener("click", this.recordClickTelemetry);
     this.headingImage = this.node.querySelector(".card-heading-image");
->>>>>>> upstream-releases
 
     this._autoUpdate = document.getElementById("detail-autoUpdate");
     this._autoUpdate.addEventListener(
@@ -3365,19 +3185,6 @@ var gDetailView = {
     }
 
     setSearchLabel(aAddon.type);
-<<<<<<< HEAD
-
-    // Set the preview image for themes, if available.
-    this.headingImage.src = "";
-    if (aAddon.type == "theme") {
-      let previewURL = aAddon.screenshots && aAddon.screenshots[0] && aAddon.screenshots[0].url;
-      if (previewURL) {
-        this.headingImage.src = previewURL;
-      }
-    }
-||||||| merged common ancestors
-    setThemeScreenshot(aAddon, this.node);
-=======
 
     // Set the preview image for themes, if available.
     this.headingImage.src = "";
@@ -3390,7 +3197,6 @@ var gDetailView = {
         this.headingImage.src = previewURL;
       }
     }
->>>>>>> upstream-releases
 
     AddonManager.addManagerListener(this);
     this.clearLoading();
@@ -4018,21 +3824,11 @@ var gDetailView = {
       let policy = ExtensionParent.WebExtensionPolicy.getByID(this._addon.id);
       browser.sameProcessAsFrameLoader = policy.extension.groupFrameLoader;
     }
-<<<<<<< HEAD
-||||||| merged common ancestors
-    let remote = !E10SUtils.canLoadURIInProcess(optionsURL, Services.appinfo.PROCESS_TYPE_DEFAULT);
-=======
 
     let remoteSubframes = window.docShell.QueryInterface(Ci.nsILoadContext)
       .useRemoteSubframes;
->>>>>>> upstream-releases
 
     let readyPromise;
-<<<<<<< HEAD
-    if (E10SUtils.canLoadURIInRemoteType(optionsURL, E10SUtils.EXTENSION_REMOTE_TYPE)) {
-||||||| merged common ancestors
-    if (remote) {
-=======
     if (
       E10SUtils.canLoadURIInRemoteType(
         optionsURL,
@@ -4040,7 +3836,6 @@ var gDetailView = {
         E10SUtils.EXTENSION_REMOTE_TYPE
       )
     ) {
->>>>>>> upstream-releases
       browser.setAttribute("remote", "true");
       browser.setAttribute("remoteType", E10SUtils.EXTENSION_REMOTE_TYPE);
       readyPromise = promiseEvent("XULFrameLoaderCreated", browser);

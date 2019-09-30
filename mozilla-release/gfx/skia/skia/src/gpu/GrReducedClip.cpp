@@ -9,29 +9,13 @@
 #include "GrAppliedClip.h"
 #include "GrClip.h"
 #include "GrColor.h"
-<<<<<<< HEAD
-#include "GrContextPriv.h"
-||||||| merged common ancestors
-#include "GrContextPriv.h"
-#include "GrRenderTargetContext.h"
-#include "GrRenderTargetContextPriv.h"
-=======
->>>>>>> upstream-releases
 #include "GrDrawingManager.h"
 #include "GrFixedClip.h"
 #include "GrPathRenderer.h"
-<<<<<<< HEAD
-#include "GrRenderTargetContext.h"
-#include "GrRenderTargetContextPriv.h"
-#include "GrShape.h"
-||||||| merged common ancestors
-#include "GrStencilSettings.h"
-=======
 #include "GrRecordingContextPriv.h"
 #include "GrRenderTargetContext.h"
 #include "GrRenderTargetContextPriv.h"
 #include "GrShape.h"
->>>>>>> upstream-releases
 #include "GrStencilClip.h"
 #include "GrStencilSettings.h"
 #include "GrStyle.h"
@@ -868,13 +852,7 @@ bool GrReducedClip::drawStencilClipMask(GrRecordingContext* context,
 
             GrShape shape(clipPath, GrStyle::SimpleFill());
             GrPathRenderer::CanDrawPathArgs canDrawArgs;
-<<<<<<< HEAD
-            canDrawArgs.fCaps = context->contextPriv().caps();
-||||||| merged common ancestors
-            canDrawArgs.fCaps = context->caps();
-=======
             canDrawArgs.fCaps = context->priv().caps();
->>>>>>> upstream-releases
             canDrawArgs.fClipConservativeBounds = &stencilClip.fixedClip().scissorRect();
             canDrawArgs.fViewMatrix = &SkMatrix::I();
             canDrawArgs.fShape = &shape;

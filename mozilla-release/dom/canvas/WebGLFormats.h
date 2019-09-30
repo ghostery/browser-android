@@ -312,112 +312,32 @@ GLenum ComponentType(const FormatInfo* format);
 struct FormatUsageInfo {
   const FormatInfo* const format;
 
-<<<<<<< HEAD
- private:
-  bool isRenderable;
-||||||| merged common ancestors
-    std::map<PackingInfo, DriverUnpackInfo> validUnpacks;
-    const DriverUnpackInfo* idealUnpack;
-=======
  private:
   bool isRenderable = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  bool isFilterable;
-||||||| merged common ancestors
-    const GLint* textureSwizzleRGBA;
-=======
  public:
   bool isFilterable = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  std::map<PackingInfo, DriverUnpackInfo> validUnpacks;
-  const DriverUnpackInfo* idealUnpack;
-||||||| merged common ancestors
-    bool maxSamplesKnown;
-    uint32_t maxSamples;
-=======
   std::map<PackingInfo, DriverUnpackInfo> validUnpacks;
   const DriverUnpackInfo* idealUnpack = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const GLint* textureSwizzleRGBA;
-||||||| merged common ancestors
-    static const GLint kLuminanceSwizzleRGBA[4];
-    static const GLint kAlphaSwizzleRGBA[4];
-    static const GLint kLumAlphaSwizzleRGBA[4];
-=======
   const GLint* textureSwizzleRGBA = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool maxSamplesKnown;
-  uint32_t maxSamples;
-||||||| merged common ancestors
-    explicit FormatUsageInfo(const FormatInfo* _format)
-        : format(_format)
-        , isRenderable(false)
-        , isFilterable(false)
-        , idealUnpack(nullptr)
-        , textureSwizzleRGBA(nullptr)
-        , maxSamplesKnown(false)
-        , maxSamples(0)
-    { }
-=======
  private:
   mutable bool maxSamplesKnown = false;
   mutable uint32_t maxSamples = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static const GLint kLuminanceSwizzleRGBA[4];
-  static const GLint kAlphaSwizzleRGBA[4];
-  static const GLint kLumAlphaSwizzleRGBA[4];
-||||||| merged common ancestors
-    bool IsRenderable() const { return isRenderable; }
-    void SetRenderable();
-=======
  public:
   static const GLint kLuminanceSwizzleRGBA[4];
   static const GLint kAlphaSwizzleRGBA[4];
   static const GLint kLumAlphaSwizzleRGBA[4];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  explicit FormatUsageInfo(const FormatInfo* _format)
-      : format(_format),
-        isRenderable(false),
-        isFilterable(false),
-        idealUnpack(nullptr),
-        textureSwizzleRGBA(nullptr),
-        maxSamplesKnown(false),
-        maxSamples(0) {}
-||||||| merged common ancestors
-    bool IsUnpackValid(const PackingInfo& key,
-                       const DriverUnpackInfo** const out_value) const;
-=======
   explicit FormatUsageInfo(const FormatInfo* const _format) : format(_format) {
     if (format->IsColorFormat() && format->baseType != TextureBaseType::Float) {
       maxSamplesKnown = true;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool IsRenderable() const { return isRenderable; }
-  void SetRenderable();
-
-  bool IsUnpackValid(const PackingInfo& key,
-                     const DriverUnpackInfo** const out_value) const;
-
-  void ResolveMaxSamples(gl::GLContext* gl);
-||||||| merged common ancestors
-    void ResolveMaxSamples(gl::GLContext* gl);
-=======
   bool IsRenderable() const { return isRenderable; }
   void SetRenderable();
 
@@ -434,7 +354,6 @@ struct FormatUsageInfo {
     }
     return maxSamples;
   }
->>>>>>> upstream-releases
 };
 
 class FormatUsageAuthority {
@@ -465,22 +384,11 @@ class FormatUsageAuthority {
   bool IsInternalFormatEnumValid(GLenum internalFormat) const;
   bool AreUnpackEnumsValid(GLenum unpackFormat, GLenum unpackType) const;
 
-<<<<<<< HEAD
-  void AllowRBFormat(GLenum sizedFormat, const FormatUsageInfo* usage);
-  void AllowSizedTexFormat(GLenum sizedFormat, const FormatUsageInfo* usage);
-  void AllowUnsizedTexFormat(const PackingInfo& pi,
-                             const FormatUsageInfo* usage);
-||||||| merged common ancestors
-    void AllowRBFormat(GLenum sizedFormat, const FormatUsageInfo* usage);
-    void AllowSizedTexFormat(GLenum sizedFormat, const FormatUsageInfo* usage);
-    void AllowUnsizedTexFormat(const PackingInfo& pi, const FormatUsageInfo* usage);
-=======
   void AllowRBFormat(GLenum sizedFormat, const FormatUsageInfo* usage,
                      bool expectRenderable = true);
   void AllowSizedTexFormat(GLenum sizedFormat, const FormatUsageInfo* usage);
   void AllowUnsizedTexFormat(const PackingInfo& pi,
                              const FormatUsageInfo* usage);
->>>>>>> upstream-releases
 
   const FormatUsageInfo* GetRBUsage(GLenum sizedFormat) const;
   const FormatUsageInfo* GetSizedTexUsage(GLenum sizedFormat) const;

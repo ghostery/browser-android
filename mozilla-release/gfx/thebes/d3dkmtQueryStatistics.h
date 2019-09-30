@@ -153,11 +153,5 @@ typedef struct _D3DKMTQS {
 } D3DKMTQS;
 
 extern "C" {
-<<<<<<< HEAD
-typedef __checkReturn NTSTATUS(APIENTRY *PFND3DKMTQS)(const D3DKMTQS *);
-||||||| merged common ancestors
-typedef __checkReturn NTSTATUS (APIENTRY *PFND3DKMTQS)(const D3DKMTQS *);
-=======
 typedef __checkReturn NTSTATUS(APIENTRY* PFND3DKMTQS)(const D3DKMTQS*);
->>>>>>> upstream-releases
 }

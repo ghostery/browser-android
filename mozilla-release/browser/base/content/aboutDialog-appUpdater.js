@@ -93,12 +93,6 @@ function appUpdater(options = {}) {
     return;
   }
 
-<<<<<<< HEAD
-  // We might need this value later, so start loading it from the disk now.
-  this.promiseAutoUpdateSetting = UpdateUtils.getAppUpdateAutoEnabled();
-
-||||||| merged common ancestors
-=======
   if (this.isStaging) {
     this.waitForUpdateToStage();
     // selectPanel("applying"); is called from waitForUpdateToStage().
@@ -108,7 +102,6 @@ function appUpdater(options = {}) {
   // We might need this value later, so start loading it from the disk now.
   this.promiseAutoUpdateSetting = UpdateUtils.getAppUpdateAutoEnabled();
 
->>>>>>> upstream-releases
   // That leaves the options
   // "Check for updates, but let me choose whether to install them", and
   // "Automatically install updates".
@@ -198,32 +191,10 @@ appUpdater.prototype = {
   },
 
   // true when updating in background is enabled.
-<<<<<<< HEAD
-  get backgroundUpdateEnabled() {
-    return !this.updateDisabledByPolicy &&
-           gAppUpdater.aus.canStageUpdates;
-  },
-
-||||||| merged common ancestors
-  get backgroundUpdateEnabled() {
-    return !this.updateDisabledByPolicy &&
-           gAppUpdater.aus.canStageUpdates;
-  },
-
-  // true when updating is automatic.
-  get updateAuto() {
-    try {
-      return Services.prefs.getBoolPref("app.update.auto");
-    } catch (e) { }
-    return true; // Firefox default is true
-  },
-
-=======
   get updateStagingEnabled() {
     return !this.updateDisabledByPolicy && this.aus.canStageUpdates;
   },
 
->>>>>>> upstream-releases
   /**
    * Sets the panel of the updateDeck.
    *
@@ -353,23 +324,6 @@ appUpdater.prototype = {
         return;
       }
 
-<<<<<<< HEAD
-      if (!gAppUpdater.promiseAutoUpdateSetting) {
-        gAppUpdater.promiseAutoUpdateSetting = UpdateUtils.getAppUpdateAutoEnabled();
-      }
-      gAppUpdater.promiseAutoUpdateSetting.then(updateAuto => {
-        if (updateAuto) { // automatically download and install
-          gAppUpdater.startDownload();
-        } else { // ask
-          gAppUpdater.selectPanel("downloadAndInstall");
-        }
-      });
-||||||| merged common ancestors
-      if (gAppUpdater.updateAuto) // automatically download and install
-        gAppUpdater.startDownload();
-      else // ask
-        gAppUpdater.selectPanel("downloadAndInstall");
-=======
       if (!gAppUpdater.promiseAutoUpdateSetting) {
         gAppUpdater.promiseAutoUpdateSetting = UpdateUtils.getAppUpdateAutoEnabled();
       }
@@ -382,7 +336,6 @@ appUpdater.prototype = {
           gAppUpdater.selectPanel("downloadAndInstall");
         }
       });
->>>>>>> upstream-releases
     },
 
     /**

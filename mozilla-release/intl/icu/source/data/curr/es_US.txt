@@ -48,25 +48,15 @@ es_US{
         VEF{"Bs"}
     }
     CurrencyPlurals{
-<<<<<<< HEAD
-        KGS{
-            one{"som"}
-        }
-||||||| merged common ancestors
-        KGS{
-            one{"som"}
-        }
         MWK{
             one{"kwacha malauí"}
         }
-=======
-        MWK{
-            one{"kwacha malauí"}
-        }
->>>>>>> upstream-releases
         MYR{
             one{"ringit"}
             other{"ringits"}
+        }
+        RON{
+            one{"leu rumano"}
         }
         STN{
             one{"dobra santotomense"}
@@ -89,11 +79,5 @@ es_US{
             other{"francos CFA de África Occidental"}
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
 }

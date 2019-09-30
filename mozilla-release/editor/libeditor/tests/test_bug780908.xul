@@ -83,18 +83,11 @@ adapted from test_bug607584.xul by Kent James <kent@caspia.com>
       {
       },
   
-<<<<<<< HEAD
-    onSecurityChange : function(aWebProgress, aRequest, aState)
-||||||| merged common ancestors
-    onSecurityChange : function(aWebProgress, aRequest, aOldState, aState,
-                                aContentBlockingLogJSON)
-=======
     onSecurityChange : function(aWebProgress, aRequest, aState)
       {
       },
   
     onContentBlockingEvent : function(aWebProgress, aRequest, aEvent)
->>>>>>> upstream-releases
       {
       },
   

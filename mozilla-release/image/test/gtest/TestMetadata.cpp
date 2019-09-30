@@ -53,15 +53,8 @@ static void CheckMetadata(const ImageTestCase& aTestCase,
   RefPtr<Decoder> decoder =
       DecoderFactory::CreateAnonymousMetadataDecoder(decoderType, sourceBuffer);
   ASSERT_TRUE(decoder != nullptr);
-<<<<<<< HEAD
-  RefPtr<IDecodingTask> task =
-    new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ false);
-||||||| merged common ancestors
-  RefPtr<IDecodingTask> task = new AnonymousDecodingTask(WrapNotNull(decoder));
-=======
   RefPtr<IDecodingTask> task =
       new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ false);
->>>>>>> upstream-releases
 
   if (aBMPWithinICO == BMPWithinICO::YES) {
     static_cast<nsBMPDecoder*>(decoder.get())->SetIsWithinICO();
@@ -112,14 +105,8 @@ static void CheckMetadata(const ImageTestCase& aTestCase,
       decoderType, sourceBuffer, Nothing(), DecoderFlags::FIRST_FRAME_ONLY,
       DefaultSurfaceFlags());
   ASSERT_TRUE(decoder != nullptr);
-<<<<<<< HEAD
-  task = new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ false);
-||||||| merged common ancestors
-  task = new AnonymousDecodingTask(WrapNotNull(decoder));
-=======
   task =
       new AnonymousDecodingTask(WrapNotNull(decoder), /* aResumable */ false);
->>>>>>> upstream-releases
 
   if (aBMPWithinICO == BMPWithinICO::YES) {
     static_cast<nsBMPDecoder*>(decoder.get())->SetIsWithinICO();

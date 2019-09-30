@@ -31,46 +31,21 @@ class MacIOSurfaceTextureHostOGL : public TextureHost {
   // MacIOSurfaceTextureSourceOGL doesn't own any GL texture
   void DeallocateDeviceData() override {}
 
-<<<<<<< HEAD
-  virtual void SetTextureSourceProvider(
-      TextureSourceProvider* aProvider) override;
-||||||| merged common ancestors
-  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
-=======
   void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
->>>>>>> upstream-releases
 
   bool Lock() override;
 
   gfx::SurfaceFormat GetFormat() const override;
   gfx::SurfaceFormat GetReadFormat() const override;
 
-<<<<<<< HEAD
-  virtual bool BindTextureSource(
-      CompositableTextureSourceRef& aTexture) override {
-||||||| merged common ancestors
-  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override
-  {
-=======
   bool BindTextureSource(CompositableTextureSourceRef& aTexture) override {
->>>>>>> upstream-releases
     aTexture = mTextureSource;
     return !!aTexture;
   }
 
-<<<<<<< HEAD
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
-    RefPtr<gfx::SourceSurface> surf =
-        CreateSourceSurfaceFromMacIOSurface(GetMacIOSurface());
-||||||| merged common ancestors
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override
-  {
-    RefPtr<gfx::SourceSurface> surf = CreateSourceSurfaceFromMacIOSurface(GetMacIOSurface());
-=======
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
     RefPtr<gfx::SourceSurface> surf =
         CreateSourceSurfaceFromMacIOSurface(GetMacIOSurface());
->>>>>>> upstream-releases
     return surf->GetDataSurface();
   }
 
@@ -82,31 +57,16 @@ class MacIOSurfaceTextureHostOGL : public TextureHost {
   const char* Name() override { return "MacIOSurfaceTextureHostOGL"; }
 #endif
 
-<<<<<<< HEAD
-  virtual MacIOSurfaceTextureHostOGL* AsMacIOSurfaceTextureHost() override {
-    return this;
-  }
-||||||| merged common ancestors
-  virtual MacIOSurfaceTextureHostOGL* AsMacIOSurfaceTextureHost() override { return this; }
-=======
   MacIOSurfaceTextureHostOGL* AsMacIOSurfaceTextureHost() override {
     return this;
   }
 
   MacIOSurface* GetMacIOSurface() override { return mSurface; }
->>>>>>> upstream-releases
 
   void CreateRenderTexture(
       const wr::ExternalImageId& aExternalImageId) override;
 
-<<<<<<< HEAD
-  virtual void CreateRenderTexture(
-      const wr::ExternalImageId& aExternalImageId) override;
-||||||| merged common ancestors
-  virtual void CreateRenderTexture(const wr::ExternalImageId& aExternalImageId) override;
-=======
   uint32_t NumSubTextures() override;
->>>>>>> upstream-releases
 
   void PushResourceUpdates(wr::TransactionBuilder& aResources,
                            ResourceUpdateOp aOp,

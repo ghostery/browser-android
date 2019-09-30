@@ -113,40 +113,16 @@ void OverrideDefaultLocaleIfNeeded();
 void MozExpectedExit();
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-void UseParentConsole();
-||||||| merged common ancestors
-void
-UseParentConsole();
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BOOL WinLaunchChild(const wchar_t* exePath, int argc, char** argv,
-                    HANDLE userToken = nullptr, HANDLE* hProcess = nullptr);
-||||||| merged common ancestors
-BOOL
-WinLaunchChild(const wchar_t *exePath, int argc,
-               char **argv, HANDLE userToken = nullptr,
-               HANDLE *hProcess = nullptr);
-=======
 BOOL WinLaunchChild(const wchar_t* exePath, int argc, char** argv,
                     HANDLE userToken = nullptr, HANDLE* hProcess = nullptr);
 
 #  define PREF_WIN_REGISTER_APPLICATION_RESTART \
     "toolkit.winRegisterApplicationRestart"
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define PREF_WIN_REGISTER_APPLICATION_RESTART \
-  "toolkit.winRegisterApplicationRestart"
-||||||| merged common ancestors
-#define PREF_WIN_REGISTER_APPLICATION_RESTART "toolkit.winRegisterApplicationRestart"
-=======
 #  if defined(MOZ_LAUNCHER_PROCESS)
 #    define PREF_WIN_LAUNCHER_PROCESS_ENABLED "browser.launcherProcess.enabled"
 #  endif  // defined(MOZ_LAUNCHER_PROCESS)
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -173,14 +149,8 @@ void MOZ_EXPORT __sanitizer_set_report_path(const char* path);
 void setASanReporterPath(nsIFile* aDir);
 #endif
 
-<<<<<<< HEAD
-already_AddRefed<nsIFile> GetFileFromEnv(const char* name);
-||||||| merged common ancestors
-already_AddRefed<nsIFile> GetFileFromEnv(const char *name);
-=======
 #ifdef MOZ_WAYLAND
 bool IsWaylandDisabled();
->>>>>>> upstream-releases
 #endif
 
 #endif  // nsAppRunner_h__

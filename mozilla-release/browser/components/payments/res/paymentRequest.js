@@ -273,13 +273,6 @@ var paymentRequest = {
     }
     let appliedModifier = modifiers.find(modifier => {
       // take the first matching modifier
-<<<<<<< HEAD
-      // TODO (bug 1429198): match on supportedNetworks
-      return m.supportedMethods == "basic-card";
-||||||| merged common ancestors
-      // TODO (bug 1429198): match on supportedTypes and supportedNetworks
-      return m.supportedMethods == "basic-card";
-=======
       if (
         modifier.supportedMethods &&
         modifier.supportedMethods != selectedMethod.methodName
@@ -292,7 +285,6 @@ var paymentRequest = {
         supportedNetworks.length == 0 ||
         supportedNetworks.includes(selectedMethod["cc-type"])
       );
->>>>>>> upstream-releases
     });
     return appliedModifier || null;
   },

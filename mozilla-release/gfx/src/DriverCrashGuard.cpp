@@ -24,19 +24,7 @@ namespace gfx {
 
 static const size_t NUM_CRASH_GUARD_TYPES = size_t(CrashGuardType::NUM_TYPES);
 static const char* sCrashGuardNames[] = {
-<<<<<<< HEAD
-    "d3d11layers",
-    "d3d9video",
-    "glcontext",
-    "d3d11video",
-||||||| merged common ancestors
-  "d3d11layers",
-  "d3d9video",
-  "glcontext",
-  "d3d11video",
-=======
     "d3d11layers", "d3d9video", "glcontext", "d3d11video", "wmfvpxvideo",
->>>>>>> upstream-releases
 };
 static_assert(MOZ_ARRAY_LENGTH(sCrashGuardNames) == NUM_CRASH_GUARD_TYPES,
               "CrashGuardType updated without a name string");
@@ -69,15 +57,7 @@ void DriverCrashGuard::InitializeIfNeeded() {
   Initialize();
 }
 
-<<<<<<< HEAD
-static inline bool AreCrashGuardsEnabled() {
-||||||| merged common ancestors
-static inline bool
-AreCrashGuardsEnabled()
-{
-=======
 static inline bool AreCrashGuardsEnabled(CrashGuardType aType) {
->>>>>>> upstream-releases
   // Crash guard isn't supported in the GPU process since the entire
   // process is basically a crash guard.
   if (XRE_IsGPUProcess()) {
@@ -98,18 +78,8 @@ static inline bool AreCrashGuardsEnabled(CrashGuardType aType) {
   return !gfxEnv::DisableCrashGuard();
 }
 
-<<<<<<< HEAD
-void DriverCrashGuard::Initialize() {
-  if (!AreCrashGuardsEnabled()) {
-||||||| merged common ancestors
-void
-DriverCrashGuard::Initialize()
-{
-  if (!AreCrashGuardsEnabled()) {
-=======
 void DriverCrashGuard::Initialize() {
   if (!AreCrashGuardsEnabled(mType)) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -249,17 +219,7 @@ void DriverCrashGuard::ActivateGuard() {
   }
 }
 
-<<<<<<< HEAD
 void DriverCrashGuard::NotifyCrashed() {
-  CheckOrRefreshEnvironment();
-||||||| merged common ancestors
-void
-DriverCrashGuard::NotifyCrashed()
-{
-  CheckOrRefreshEnvironment();
-=======
-void DriverCrashGuard::NotifyCrashed() {
->>>>>>> upstream-releases
   SetStatus(DriverInitStatus::Crashed);
   FlushPreferences();
   LogCrashRecovery();
@@ -303,19 +263,10 @@ bool DriverCrashGuard::CheckOrRefreshEnvironment() {
   }
 
   // Always update the full environment, even if the base info didn't change.
-<<<<<<< HEAD
-  return UpdateEnvironment() || sBaseInfoChanged ||
-         GetStatus() == DriverInitStatus::Unknown;
-||||||| merged common ancestors
-  return UpdateEnvironment() ||
-         sBaseInfoChanged ||
-         GetStatus() == DriverInitStatus::Unknown;
-=======
   bool result = UpdateEnvironment() || sBaseInfoChanged[type] ||
                 GetStatus() == DriverInitStatus::Unknown;
   sBaseInfoChanged[type] = false;
   return result;
->>>>>>> upstream-releases
 }
 
 bool DriverCrashGuard::UpdateBaseEnvironment() {
@@ -400,29 +351,8 @@ void DriverCrashGuard::FlushPreferences() {
   }
 }
 
-<<<<<<< HEAD
 void DriverCrashGuard::ForEachActiveCrashGuard(
     const CrashGuardCallback& aCallback) {
-  if (!AreCrashGuardsEnabled()) {
-    // Even if guards look active (via prefs), they can be ignored if globally
-    // disabled.
-    return;
-  }
-
-||||||| merged common ancestors
-void
-DriverCrashGuard::ForEachActiveCrashGuard(const CrashGuardCallback& aCallback)
-{
-  if (!AreCrashGuardsEnabled()) {
-    // Even if guards look active (via prefs), they can be ignored if globally
-    // disabled.
-    return;
-  }
-
-=======
-void DriverCrashGuard::ForEachActiveCrashGuard(
-    const CrashGuardCallback& aCallback) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < NUM_CRASH_GUARD_TYPES; i++) {
     CrashGuardType type = static_cast<CrashGuardType>(i);
 
@@ -476,18 +406,9 @@ bool D3D11LayersCrashGuard::UpdateEnvironment() {
   bool changed = false;
   // Feature status.
 #if defined(XP_WIN)
-<<<<<<< HEAD
-  bool d2dEnabled = gfxPrefs::Direct2DForceEnabled() ||
-                    (!gfxPrefs::Direct2DDisabled() &&
-                     FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT2D));
-||||||| merged common ancestors
-  bool d2dEnabled = gfxPrefs::Direct2DForceEnabled() ||
-                    (!gfxPrefs::Direct2DDisabled() && FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT2D));
-=======
   bool d2dEnabled = StaticPrefs::gfx_direct2d_force_enabled() ||
                     (!StaticPrefs::gfx_direct2d_disabled() &&
                      FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT2D));
->>>>>>> upstream-releases
   changed |= CheckAndUpdateBoolPref("feature-d2d", d2dEnabled);
 
   bool d3d11Enabled = gfxConfig::IsEnabled(Feature::D3D11_COMPOSITING);
@@ -529,27 +450,7 @@ void D3D11LayersCrashGuard::RecordTelemetry(TelemetryState aState) {
 }
 
 D3D9VideoCrashGuard::D3D9VideoCrashGuard(dom::ContentParent* aContentParent)
-<<<<<<< HEAD
     : DriverCrashGuard(CrashGuardType::D3D9Video, aContentParent) {}
-
-bool D3D9VideoCrashGuard::UpdateEnvironment() {
-  // We don't care about any extra preferences here.
-  return false;
-}
-||||||| merged common ancestors
- : DriverCrashGuard(CrashGuardType::D3D9Video, aContentParent)
-{
-}
-
-bool
-D3D9VideoCrashGuard::UpdateEnvironment()
-{
-  // We don't care about any extra preferences here.
-  return false;
-}
-=======
-    : DriverCrashGuard(CrashGuardType::D3D9Video, aContentParent) {}
->>>>>>> upstream-releases
 
 void D3D9VideoCrashGuard::LogCrashRecovery() {
   gfxCriticalNote << "DXVA2D3D9 just crashed; hardware video will be disabled.";
@@ -561,27 +462,7 @@ void D3D9VideoCrashGuard::LogFeatureDisabled() {
 }
 
 D3D11VideoCrashGuard::D3D11VideoCrashGuard(dom::ContentParent* aContentParent)
-<<<<<<< HEAD
     : DriverCrashGuard(CrashGuardType::D3D11Video, aContentParent) {}
-
-bool D3D11VideoCrashGuard::UpdateEnvironment() {
-  // We don't care about any extra preferences here.
-  return false;
-}
-||||||| merged common ancestors
- : DriverCrashGuard(CrashGuardType::D3D11Video, aContentParent)
-{
-}
-
-bool
-D3D11VideoCrashGuard::UpdateEnvironment()
-{
-  // We don't care about any extra preferences here.
-  return false;
-}
-=======
-    : DriverCrashGuard(CrashGuardType::D3D11Video, aContentParent) {}
->>>>>>> upstream-releases
 
 void D3D11VideoCrashGuard::LogCrashRecovery() {
   gfxCriticalNote
@@ -632,21 +513,6 @@ bool GLContextCrashGuard::UpdateEnvironment() {
   changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle-try-d3d11",
                                     StaticPrefs::webgl_angle_try_d3d11());
   changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle-force-warp",
-<<<<<<< HEAD
-                                    gfxPrefs::WebGLANGLEForceWARP());
-  changed |= CheckAndUpdateBoolPref(
-      "gfx.driver-init.webgl-angle",
-      FeatureEnabled(nsIGfxInfo::FEATURE_WEBGL_ANGLE, false));
-  changed |= CheckAndUpdateBoolPref(
-      "gfx.driver-init.direct3d11-angle",
-      FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT3D_11_ANGLE, false));
-||||||| merged common ancestors
-                                    gfxPrefs::WebGLANGLEForceWARP());
-  changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle",
-                                    FeatureEnabled(nsIGfxInfo::FEATURE_WEBGL_ANGLE, false));
-  changed |= CheckAndUpdateBoolPref("gfx.driver-init.direct3d11-angle",
-                                    FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT3D_11_ANGLE, false));
-=======
                                     StaticPrefs::webgl_angle_force_warp());
   changed |= CheckAndUpdateBoolPref(
       "gfx.driver-init.webgl-angle",
@@ -654,7 +520,6 @@ bool GLContextCrashGuard::UpdateEnvironment() {
   changed |= CheckAndUpdateBoolPref(
       "gfx.driver-init.direct3d11-angle",
       FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT3D_11_ANGLE, false));
->>>>>>> upstream-releases
 #endif
 
   return changed;
@@ -668,13 +533,6 @@ void GLContextCrashGuard::LogFeatureDisabled() {
   gfxCriticalNote << "GLContext remains enabled despite a previous crash.";
 }
 
-<<<<<<< HEAD
-}  // namespace gfx
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
 WMFVPXVideoCrashGuard::WMFVPXVideoCrashGuard(dom::ContentParent* aContentParent)
     : DriverCrashGuard(CrashGuardType::WMFVPXVideo, aContentParent) {}
 
@@ -690,4 +548,3 @@ void WMFVPXVideoCrashGuard::LogFeatureDisabled() {
 
 }  // namespace gfx
 }  // namespace mozilla
->>>>>>> upstream-releases

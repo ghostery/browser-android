@@ -3,44 +3,6 @@ Services.prefs.setBoolPref(PREF_EM_CHECK_UPDATE_SECURITY, false);
 gUseRealCertChecks = true;
 
 const DATA = "data/signing_checks/";
-<<<<<<< HEAD
-const ID = "test@somewhere.com";
-
-let testserver = createHttpServer({hosts: ["example.com"]});
-
-AddonTestUtils.registerJSON(testserver, "/update.json", {
-  addons: {
-    [ID]: {
-      version: "2.0",
-      applications: {
-        gecko: {
-          strict_min_version: "4",
-          strict_max_version: "6",
-        },
-      },
-    },
-  },
-||||||| merged common ancestors
-const ID = "test@tests.mozilla.org";
-
-ChromeUtils.import("resource://testing-common/httpd.js");
-var gServer = new HttpServer();
-gServer.start();
-
-gServer.registerPathHandler("/update.rdf", function(request, response) {
-  let updateData = {};
-  updateData[ID] = [{
-    version: "2.0",
-    targetApplications: [{
-      id: "xpcshell@tests.mozilla.org",
-      minVersion: "4",
-      maxVersion: "6",
-    }],
-  }];
-
-  response.setStatusLine(request.httpVersion, 200, "OK");
-  response.write(createUpdateRDF(updateData));
-=======
 const ID = "test@somewhere.com";
 
 let testserver = createHttpServer({ hosts: ["example.com"] });
@@ -57,21 +19,12 @@ AddonTestUtils.registerJSON(testserver, "/update.json", {
       },
     },
   },
->>>>>>> upstream-releases
 });
 
-<<<<<<< HEAD
-Services.prefs.setCharPref("extensions.update.background.url",
-                           "http://example.com/update.json");
-||||||| merged common ancestors
-const SERVER = "127.0.0.1:" + gServer.identity.primaryPort;
-Services.prefs.setCharPref("extensions.update.background.url", "http://" + SERVER + "/update.rdf");
-=======
 Services.prefs.setCharPref(
   "extensions.update.background.url",
   "http://example.com/update.json"
 );
->>>>>>> upstream-releases
 
 function verifySignatures() {
   return new Promise(resolve => {

@@ -35,45 +35,6 @@ using namespace mozilla;
 using namespace mozilla::dom;
 
 nsStyleLinkElement::SheetInfo::SheetInfo(
-<<<<<<< HEAD
-    const nsIDocument& aDocument, nsIContent* aContent,
-    already_AddRefed<nsIURI> aURI,
-    already_AddRefed<nsIPrincipal> aTriggeringPrincipal,
-    mozilla::net::ReferrerPolicy aReferrerPolicy, mozilla::CORSMode aCORSMode,
-    const nsAString& aTitle, const nsAString& aMedia,
-    HasAlternateRel aHasAlternateRel, IsInline aIsInline)
-    : mContent(aContent),
-      mURI(aURI),
-      mTriggeringPrincipal(aTriggeringPrincipal),
-      mReferrerPolicy(aReferrerPolicy),
-      mCORSMode(aCORSMode),
-      mTitle(aTitle),
-      mMedia(aMedia),
-      mHasAlternateRel(aHasAlternateRel == HasAlternateRel::Yes),
-      mIsInline(aIsInline == IsInline::Yes) {
-||||||| merged common ancestors
-  const nsIDocument& aDocument,
-  nsIContent* aContent,
-  already_AddRefed<nsIURI> aURI,
-  already_AddRefed<nsIPrincipal> aTriggeringPrincipal,
-  mozilla::net::ReferrerPolicy aReferrerPolicy,
-  mozilla::CORSMode aCORSMode,
-  const nsAString& aTitle,
-  const nsAString& aMedia,
-  HasAlternateRel aHasAlternateRel,
-  IsInline aIsInline
-)
-  : mContent(aContent)
-  , mURI(aURI)
-  , mTriggeringPrincipal(aTriggeringPrincipal)
-  , mReferrerPolicy(aReferrerPolicy)
-  , mCORSMode(aCORSMode)
-  , mTitle(aTitle)
-  , mMedia(aMedia)
-  , mHasAlternateRel(aHasAlternateRel == HasAlternateRel::Yes)
-  , mIsInline(aIsInline == IsInline::Yes)
-{
-=======
     const Document& aDocument, nsIContent* aContent,
     already_AddRefed<nsIURI> aURI,
     already_AddRefed<nsIPrincipal> aTriggeringPrincipal,
@@ -91,7 +52,6 @@ nsStyleLinkElement::SheetInfo::SheetInfo(
       mHasAlternateRel(aHasAlternateRel == HasAlternateRel::Yes),
       mIsInline(aIsInline == IsInline::Yes),
       mIsExplicitlyEnabled(aIsExplicitlyEnabled) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mIsInline || aContent);
   MOZ_ASSERT_IF(aContent, aContent->OwnerDoc() == &aDocument);
 
@@ -186,81 +146,28 @@ void nsStyleLinkElement::GetCharset(nsAString& aCharset) {
   aCharset.Truncate();
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsStyleLinkElement::OverrideBaseURI(nsIURI* aNewBaseURI) {
-  MOZ_ASSERT_UNREACHABLE(
-      "Base URI can't be overriden in this implementation "
-      "of nsIStyleSheetLinkingElement.");
-||||||| merged common ancestors
-/* virtual */ void
-nsStyleLinkElement::OverrideBaseURI(nsIURI* aNewBaseURI)
-{
-  MOZ_ASSERT_UNREACHABLE("Base URI can't be overriden in this implementation "
-                         "of nsIStyleSheetLinkingElement.");
-=======
 /* virtual */
 void nsStyleLinkElement::OverrideBaseURI(nsIURI* aNewBaseURI) {
   MOZ_ASSERT_UNREACHABLE(
       "Base URI can't be overriden in this implementation "
       "of nsIStyleSheetLinkingElement.");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsStyleLinkElement::SetLineNumber(uint32_t aLineNumber) {
-||||||| merged common ancestors
-/* virtual */ void
-nsStyleLinkElement::SetLineNumber(uint32_t aLineNumber)
-{
-=======
 /* virtual */
 void nsStyleLinkElement::SetLineNumber(uint32_t aLineNumber) {
->>>>>>> upstream-releases
   mLineNumber = aLineNumber;
 }
 
-<<<<<<< HEAD
-/* virtual */ uint32_t nsStyleLinkElement::GetLineNumber() {
-  return mLineNumber;
-}
-||||||| merged common ancestors
-/* virtual */ uint32_t
-nsStyleLinkElement::GetLineNumber()
-{
-  return mLineNumber;
-}
-=======
 /* virtual */
 uint32_t nsStyleLinkElement::GetLineNumber() { return mLineNumber; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* virtual */ void nsStyleLinkElement::SetColumnNumber(uint32_t aColumnNumber) {
-||||||| merged common ancestors
-/* virtual */ void
-nsStyleLinkElement::SetColumnNumber(uint32_t aColumnNumber)
-{
-=======
 /* virtual */
 void nsStyleLinkElement::SetColumnNumber(uint32_t aColumnNumber) {
->>>>>>> upstream-releases
   mColumnNumber = aColumnNumber;
 }
 
-<<<<<<< HEAD
-/* virtual */ uint32_t nsStyleLinkElement::GetColumnNumber() {
-  return mColumnNumber;
-}
-||||||| merged common ancestors
-/* virtual */ uint32_t
-nsStyleLinkElement::GetColumnNumber()
-{
-  return mColumnNumber;
-}
-=======
 /* virtual */
 uint32_t nsStyleLinkElement::GetColumnNumber() { return mColumnNumber; }
->>>>>>> upstream-releases
 
 static uint32_t ToLinkMask(const nsAString& aLink) {
   // Keep this in sync with sRelValues in HTMLLinkElement.cpp
@@ -422,23 +329,9 @@ nsStyleLinkElement::DoUpdateStyleSheet(Document* aOldDocument,
                "<link> is not 'inline', and needs different CSP checks");
     MOZ_ASSERT(thisContent->IsElement());
     nsresult rv = NS_OK;
-<<<<<<< HEAD
-    if (!nsStyleUtil::CSPAllowsInlineStyle(
-            thisContent->AsElement(), thisContent->NodePrincipal(),
-            info->mTriggeringPrincipal, doc->GetDocumentURI(), mLineNumber,
-            mColumnNumber, text, &rv)) {
-||||||| merged common ancestors
-    if (!nsStyleUtil::CSPAllowsInlineStyle(thisContent->AsElement(),
-                                           thisContent->NodePrincipal(),
-                                           info->mTriggeringPrincipal,
-                                           doc->GetDocumentURI(),
-                                           mLineNumber, mColumnNumber, text,
-                                           &rv)) {
-=======
     if (!nsStyleUtil::CSPAllowsInlineStyle(
             thisContent->AsElement(), doc, info->mTriggeringPrincipal,
             mLineNumber, mColumnNumber, text, &rv)) {
->>>>>>> upstream-releases
       if (NS_FAILED(rv)) {
         return Err(rv);
       }

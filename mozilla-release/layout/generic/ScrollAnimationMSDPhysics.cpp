@@ -9,31 +9,6 @@
 using namespace mozilla;
 
 ScrollAnimationMSDPhysics::ScrollAnimationMSDPhysics(const nsPoint& aStartPos)
-<<<<<<< HEAD
-    : mStartPos(aStartPos),
-      mModelX(0, 0, 0, gfxPrefs::SmoothScrollMSDPhysicsRegularSpringConstant(),
-              1),
-      mModelY(0, 0, 0, gfxPrefs::SmoothScrollMSDPhysicsRegularSpringConstant(),
-              1),
-      mIsFirstIteration(true) {}
-
-void ScrollAnimationMSDPhysics::Update(const TimeStamp& aTime,
-                                       const nsPoint& aDestination,
-                                       const nsSize& aCurrentVelocity) {
-||||||| merged common ancestors
- : mStartPos(aStartPos)
- , mModelX(0, 0, 0, gfxPrefs::SmoothScrollMSDPhysicsRegularSpringConstant(), 1)
- , mModelY(0, 0, 0, gfxPrefs::SmoothScrollMSDPhysicsRegularSpringConstant(), 1)
- , mIsFirstIteration(true)
-{
-}
-
-void
-ScrollAnimationMSDPhysics::Update(const TimeStamp& aTime,
-                                  const nsPoint& aDestination,
-                                  const nsSize& aCurrentVelocity)
-{
-=======
     : mStartPos(aStartPos),
       mModelX(
           0, 0, 0,
@@ -48,7 +23,6 @@ ScrollAnimationMSDPhysics::Update(const TimeStamp& aTime,
 void ScrollAnimationMSDPhysics::Update(const TimeStamp& aTime,
                                        const nsPoint& aDestination,
                                        const nsSize& aCurrentVelocity) {
->>>>>>> upstream-releases
   double springConstant = ComputeSpringConstant(aTime);
 
   // mLastSimulatedTime is the most recent time that this animation has been
@@ -105,21 +79,12 @@ double ScrollAnimationMSDPhysics::ComputeSpringConstant(
   }
 
   if (previousDelta &&
-<<<<<<< HEAD
-      deltaMS >= gfxPrefs::SmoothScrollMSDPhysicsSlowdownMinDeltaMS() &&
-      deltaMS >= previousDelta.ToMilliseconds() *
-                     gfxPrefs::SmoothScrollMSDPhysicsSlowdownMinDeltaRatio()) {
-||||||| merged common ancestors
-      deltaMS >= gfxPrefs::SmoothScrollMSDPhysicsSlowdownMinDeltaMS() &&
-      deltaMS >= previousDelta.ToMilliseconds() * gfxPrefs::SmoothScrollMSDPhysicsSlowdownMinDeltaRatio()) {
-=======
       deltaMS >=
           StaticPrefs::general_smoothScroll_msdPhysics_slowdownMinDeltaMS() &&
       deltaMS >=
           previousDelta.ToMilliseconds() *
               StaticPrefs::
                   general_smoothScroll_msdPhysics_slowdownMinDeltaRatio()) {
->>>>>>> upstream-releases
     // The rate of events has slowed (the time delta between events has
     // increased) enough that we think that the current scroll motion is coming
     // to a stop. Use a stiffer spring in order to reach the destination more

@@ -51,14 +51,8 @@ class imgRequestProxy : public imgIRequest,
  protected:
   virtual ~imgRequestProxy();
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
  public:
   typedef mozilla::dom::Document Document;
->>>>>>> upstream-releases
   typedef mozilla::image::Image Image;
   typedef mozilla::image::ProgressTracker ProgressTracker;
 
@@ -73,18 +67,8 @@ public:
 
   // Callers to Init or ChangeOwner are required to call NotifyListener after
   // (although not immediately after) doing so.
-<<<<<<< HEAD
-  nsresult Init(imgRequest* aOwner, nsILoadGroup* aLoadGroup,
-                nsIDocument* aLoadingDocument, nsIURI* aURI,
-||||||| merged common ancestors
-  nsresult Init(imgRequest* aOwner,
-                nsILoadGroup* aLoadGroup,
-                nsIDocument* aLoadingDocument,
-                nsIURI* aURI,
-=======
   nsresult Init(imgRequest* aOwner, nsILoadGroup* aLoadGroup,
                 Document* aLoadingDocument, nsIURI* aURI,
->>>>>>> upstream-releases
                 imgINotificationObserver* aObserver);
 
   nsresult ChangeOwner(imgRequest* aNewOwner);  // this will change mOwner.
@@ -138,26 +122,10 @@ public:
   void ClearAnimationConsumers();
 
   nsresult SyncClone(imgINotificationObserver* aObserver,
-<<<<<<< HEAD
-                     nsIDocument* aLoadingDocument, imgRequestProxy** aClone);
-||||||| merged common ancestors
-                     nsIDocument* aLoadingDocument,
-                     imgRequestProxy** aClone);
-=======
                      Document* aLoadingDocument, imgRequestProxy** aClone);
->>>>>>> upstream-releases
   nsresult Clone(imgINotificationObserver* aObserver,
-<<<<<<< HEAD
-                 nsIDocument* aLoadingDocument, imgRequestProxy** aClone);
-  nsresult GetStaticRequest(nsIDocument* aLoadingDocument,
-||||||| merged common ancestors
-                 nsIDocument* aLoadingDocument,
-                 imgRequestProxy** aClone);
-  nsresult GetStaticRequest(nsIDocument* aLoadingDocument,
-=======
                  Document* aLoadingDocument, imgRequestProxy** aClone);
   nsresult GetStaticRequest(Document* aLoadingDocument,
->>>>>>> upstream-releases
                             imgRequestProxy** aReturn);
 
  protected:
@@ -213,14 +181,7 @@ public:
   imgCacheValidator* GetValidator() const;
 
   nsresult PerformClone(imgINotificationObserver* aObserver,
-<<<<<<< HEAD
-                        nsIDocument* aLoadingDocument, bool aSyncNotify,
-||||||| merged common ancestors
-                        nsIDocument* aLoadingDocument,
-                        bool aSyncNotify,
-=======
                         Document* aLoadingDocument, bool aSyncNotify,
->>>>>>> upstream-releases
                         imgRequestProxy** aClone);
 
   virtual imgRequestProxy* NewClonedProxy();
@@ -274,35 +235,17 @@ public:
 
 // Used for static image proxies for which no requests are available, so
 // certain behaviours must be overridden to compensate.
-<<<<<<< HEAD
-class imgRequestProxyStatic : public imgRequestProxy {
- public:
-  imgRequestProxyStatic(Image* aImage, nsIPrincipal* aPrincipal);
-||||||| merged common ancestors
-class imgRequestProxyStatic : public imgRequestProxy
-{
-
-public:
-  imgRequestProxyStatic(Image* aImage, nsIPrincipal* aPrincipal);
-=======
 class imgRequestProxyStatic : public imgRequestProxy {
  public:
   imgRequestProxyStatic(Image* aImage, nsIPrincipal* aPrincipal,
                         bool hadCrossOriginRedirects);
->>>>>>> upstream-releases
 
   NS_IMETHOD GetImagePrincipal(nsIPrincipal** aPrincipal) override;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   NS_IMETHOD GetHadCrossOriginRedirects(
       bool* aHadCrossOriginRedirects) override;
 
  protected:
->>>>>>> upstream-releases
   imgRequestProxy* NewClonedProxy() override;
 
   // Our principal. We have to cache it, rather than accessing the underlying

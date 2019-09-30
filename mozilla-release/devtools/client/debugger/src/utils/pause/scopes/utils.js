@@ -18,15 +18,7 @@ export function getFramePopVariables(why: Why, path: string): NamedValue[] {
       vars.push({
         name: "<exception>",
         path: `${path}/<exception>`,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/scopes/utils.js
-        contents: { value: frameFinished.throw }
-||||||| merged common ancestors
-        contents: {
-          value: frameFinished.throw
-        }
-=======
         contents: { value: frameFinished.throw },
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/scopes/utils.js
       });
     }
 
@@ -39,15 +31,7 @@ export function getFramePopVariables(why: Why, path: string): NamedValue[] {
         vars.push({
           name: "<return>",
           path: `${path}/<return>`,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/scopes/utils.js
-          contents: { value: returned }
-||||||| merged common ancestors
-          contents: {
-            value: returned
-          }
-=======
           contents: { value: returned },
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/scopes/utils.js
         });
       }
     }
@@ -64,14 +48,6 @@ export function getThisVariable(this_: any, path: string): ?NamedValue {
   return {
     name: "<this>",
     path: `${path}/<this>`,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/scopes/utils.js
-    contents: { value: this_ }
-||||||| merged common ancestors
-    contents: {
-      value: this_
-    }
-=======
     contents: { value: this_ },
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/scopes/utils.js
   };
 }

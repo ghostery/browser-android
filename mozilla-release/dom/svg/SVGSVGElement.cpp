@@ -38,39 +38,13 @@ namespace dom {
 using namespace SVGPreserveAspectRatio_Binding;
 using namespace SVGSVGElement_Binding;
 
-<<<<<<< HEAD
-nsSVGEnumMapping SVGSVGElement::sZoomAndPanMap[] = {
-    {nsGkAtoms::disable, SVG_ZOOMANDPAN_DISABLE},
-    {nsGkAtoms::magnify, SVG_ZOOMANDPAN_MAGNIFY},
-    {nullptr, 0}};
-||||||| merged common ancestors
-nsSVGEnumMapping SVGSVGElement::sZoomAndPanMap[] = {
-  {nsGkAtoms::disable, SVG_ZOOMANDPAN_DISABLE},
-  {nsGkAtoms::magnify, SVG_ZOOMANDPAN_MAGNIFY},
-  {nullptr, 0}
-};
-=======
 SVGEnumMapping SVGSVGElement::sZoomAndPanMap[] = {
     {nsGkAtoms::disable, SVG_ZOOMANDPAN_DISABLE},
     {nsGkAtoms::magnify, SVG_ZOOMANDPAN_MAGNIFY},
     {nullptr, 0}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsSVGElement::EnumInfo SVGSVGElement::sEnumInfo[1] = {
-    {nsGkAtoms::zoomAndPan, sZoomAndPanMap, SVG_ZOOMANDPAN_MAGNIFY}};
-||||||| merged common ancestors
-nsSVGElement::EnumInfo SVGSVGElement::sEnumInfo[1] =
-{
-  { nsGkAtoms::zoomAndPan,
-    sZoomAndPanMap,
-    SVG_ZOOMANDPAN_MAGNIFY
-  }
-};
-=======
 SVGElement::EnumInfo SVGSVGElement::sEnumInfo[1] = {
     {nsGkAtoms::zoomAndPan, sZoomAndPanMap, SVG_ZOOMANDPAN_MAGNIFY}};
->>>>>>> upstream-releases
 
 NS_IMPL_CYCLE_COLLECTION_INHERITED(DOMSVGTranslatePoint, nsISVGPoint, mElement)
 
@@ -147,7 +121,6 @@ SVGView::SVGView() {
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
 SVGSVGElement::SVGSVGElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     FromParser aFromParser)
@@ -160,40 +133,6 @@ SVGSVGElement::SVGSVGElement(
                                   aFromParser == FROM_PARSER_FRAGMENT ||
                                   aFromParser == FROM_PARSER_XSLT),
       mImageNeedsTransformInvalidation(false) {}
-
-SVGSVGElement::~SVGSVGElement() {}
-||||||| merged common ancestors
-SVGSVGElement::SVGSVGElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                             FromParser aFromParser)
-  : SVGSVGElementBase(std::move(aNodeInfo)),
-    mCurrentTranslate(0.0f, 0.0f),
-    mCurrentScale(1.0f),
-    mPreviousTranslate(0.0f, 0.0f),
-    mPreviousScale(1.0f),
-    mStartAnimationOnBindToTree(aFromParser == NOT_FROM_PARSER ||
-                                aFromParser == FROM_PARSER_FRAGMENT ||
-                                aFromParser == FROM_PARSER_XSLT),
-    mImageNeedsTransformInvalidation(false)
-{
-}
-
-SVGSVGElement::~SVGSVGElement()
-{
-}
-=======
-SVGSVGElement::SVGSVGElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-    FromParser aFromParser)
-    : SVGSVGElementBase(std::move(aNodeInfo)),
-      mCurrentTranslate(0.0f, 0.0f),
-      mCurrentScale(1.0f),
-      mPreviousTranslate(0.0f, 0.0f),
-      mPreviousScale(1.0f),
-      mStartAnimationOnBindToTree(aFromParser == NOT_FROM_PARSER ||
-                                  aFromParser == FROM_PARSER_FRAGMENT ||
-                                  aFromParser == FROM_PARSER_XSLT),
-      mImageNeedsTransformInvalidation(false) {}
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -203,51 +142,19 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT_AND_PARSER(SVGSVGElement)
 //----------------------------------------------------------------------
 // nsIDOMSVGSVGElement methods:
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGSVGElement::X() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGSVGElement::X()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGSVGElement::X() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_X].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGSVGElement::Y() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGSVGElement::Y()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGSVGElement::Y() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_Y].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGSVGElement::Width() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGSVGElement::Width()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGSVGElement::Width() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_WIDTH].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGSVGElement::Height() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGSVGElement::Height()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGSVGElement::Height() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_HEIGHT].ToDOMAnimatedLength(this);
 }
 
@@ -301,35 +208,13 @@ void SVGSVGElement::UnpauseAnimations() {
   // else we're not the outermost <svg> or not bound to a tree, so silently fail
 }
 
-<<<<<<< HEAD
-bool SVGSVGElement::AnimationsPaused() {
-  nsSMILTimeContainer* root = GetTimedDocumentRoot();
-  return root && root->IsPausedByType(nsSMILTimeContainer::PAUSE_SCRIPT);
-||||||| merged common ancestors
-bool
-SVGSVGElement::AnimationsPaused()
-{
-  nsSMILTimeContainer* root = GetTimedDocumentRoot();
-  return root && root->IsPausedByType(nsSMILTimeContainer::PAUSE_SCRIPT);
-=======
 bool SVGSVGElement::AnimationsPaused() {
   SMILTimeContainer* root = GetTimedDocumentRoot();
   return root && root->IsPausedByType(SMILTimeContainer::PAUSE_SCRIPT);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-float SVGSVGElement::GetCurrentTime() {
-  nsSMILTimeContainer* root = GetTimedDocumentRoot();
-||||||| merged common ancestors
-float
-SVGSVGElement::GetCurrentTime()
-{
-  nsSMILTimeContainer* root = GetTimedDocumentRoot();
-=======
 float SVGSVGElement::GetCurrentTimeAsFloat() {
   SMILTimeContainer* root = GetTimedDocumentRoot();
->>>>>>> upstream-releases
   if (root) {
     double fCurrentTimeMs = double(root->GetCurrentTimeAsSMILTime());
     return (float)(fCurrentTimeMs / PR_MSEC_PER_SEC);
@@ -365,136 +250,37 @@ void SVGSVGElement::DeselectAll() {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMSVGNumber> SVGSVGElement::CreateSVGNumber() {
-  RefPtr<DOMSVGNumber> number = new DOMSVGNumber(ToSupports(this));
-  return number.forget();
-||||||| merged common ancestors
-already_AddRefed<DOMSVGNumber>
-SVGSVGElement::CreateSVGNumber()
-{
-  RefPtr<DOMSVGNumber> number = new DOMSVGNumber(ToSupports(this));
-  return number.forget();
-=======
 already_AddRefed<DOMSVGNumber> SVGSVGElement::CreateSVGNumber() {
   return do_AddRef(new DOMSVGNumber(this));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMSVGLength> SVGSVGElement::CreateSVGLength() {
-  nsCOMPtr<DOMSVGLength> length = new DOMSVGLength();
-  return length.forget();
-||||||| merged common ancestors
-already_AddRefed<DOMSVGLength>
-SVGSVGElement::CreateSVGLength()
-{
-  nsCOMPtr<DOMSVGLength> length = new DOMSVGLength();
-  return length.forget();
-=======
 already_AddRefed<DOMSVGLength> SVGSVGElement::CreateSVGLength() {
   return do_AddRef(new DOMSVGLength());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAngle> SVGSVGElement::CreateSVGAngle() {
-  nsSVGAngle* angle = new nsSVGAngle();
-  angle->Init();
-  RefPtr<SVGAngle> svgangle = new SVGAngle(angle, this, SVGAngle::CreatedValue);
-  return svgangle.forget();
-||||||| merged common ancestors
-already_AddRefed<SVGAngle>
-SVGSVGElement::CreateSVGAngle()
-{
-  nsSVGAngle* angle = new nsSVGAngle();
-  angle->Init();
-  RefPtr<SVGAngle> svgangle = new SVGAngle(angle, this, SVGAngle::CreatedValue);
-  return svgangle.forget();
-=======
 already_AddRefed<DOMSVGAngle> SVGSVGElement::CreateSVGAngle() {
   return do_AddRef(new DOMSVGAngle(this));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsISVGPoint> SVGSVGElement::CreateSVGPoint() {
-  nsCOMPtr<nsISVGPoint> point = new DOMSVGPoint(0, 0);
-  return point.forget();
-||||||| merged common ancestors
-already_AddRefed<nsISVGPoint>
-SVGSVGElement::CreateSVGPoint()
-{
-  nsCOMPtr<nsISVGPoint> point = new DOMSVGPoint(0, 0);
-  return point.forget();
-=======
 already_AddRefed<nsISVGPoint> SVGSVGElement::CreateSVGPoint() {
   return do_AddRef(new DOMSVGPoint(0, 0));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGMatrix> SVGSVGElement::CreateSVGMatrix() {
-  RefPtr<SVGMatrix> matrix = new SVGMatrix();
-  return matrix.forget();
-||||||| merged common ancestors
-already_AddRefed<SVGMatrix>
-SVGSVGElement::CreateSVGMatrix()
-{
-  RefPtr<SVGMatrix> matrix = new SVGMatrix();
-  return matrix.forget();
-=======
 already_AddRefed<SVGMatrix> SVGSVGElement::CreateSVGMatrix() {
   return do_AddRef(new SVGMatrix());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGIRect> SVGSVGElement::CreateSVGRect() {
-  return NS_NewSVGRect(this);
-||||||| merged common ancestors
-already_AddRefed<SVGIRect>
-SVGSVGElement::CreateSVGRect()
-{
-  return NS_NewSVGRect(this);
-=======
 already_AddRefed<SVGRect> SVGSVGElement::CreateSVGRect() {
   return do_AddRef(new SVGRect(this));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> SVGSVGElement::CreateSVGTransform() {
-  RefPtr<SVGTransform> transform = new SVGTransform();
-  return transform.forget();
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-SVGSVGElement::CreateSVGTransform()
-{
-  RefPtr<SVGTransform> transform = new SVGTransform();
-  return transform.forget();
-=======
 already_AddRefed<DOMSVGTransform> SVGSVGElement::CreateSVGTransform() {
   return do_AddRef(new DOMSVGTransform());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> SVGSVGElement::CreateSVGTransformFromMatrix(
-    SVGMatrix& matrix) {
-  RefPtr<SVGTransform> transform = new SVGTransform(matrix.GetMatrix());
-  return transform.forget();
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-SVGSVGElement::CreateSVGTransformFromMatrix(SVGMatrix& matrix)
-{
-  RefPtr<SVGTransform> transform = new SVGTransform(matrix.GetMatrix());
-  return transform.forget();
-=======
 already_AddRefed<DOMSVGTransform> SVGSVGElement::CreateSVGTransformFromMatrix(
     SVGMatrix& matrix) {
   return do_AddRef(new DOMSVGTransform(matrix.GetMatrix()));
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -565,15 +351,7 @@ void SVGSVGElement::SetZoomAndPan(uint16_t aZoomAndPan, ErrorResult& rv) {
 }
 
 //----------------------------------------------------------------------
-<<<<<<< HEAD
-nsSMILTimeContainer* SVGSVGElement::GetTimedDocumentRoot() {
-||||||| merged common ancestors
-nsSMILTimeContainer*
-SVGSVGElement::GetTimedDocumentRoot()
-{
-=======
 SMILTimeContainer* SVGSVGElement::GetTimedDocumentRoot() {
->>>>>>> upstream-releases
   if (mTimedDocumentRoot) {
     return mTimedDocumentRoot;
   }
@@ -588,28 +366,6 @@ SMILTimeContainer* SVGSVGElement::GetTimedDocumentRoot() {
   return nullptr;
 }
 //----------------------------------------------------------------------
-<<<<<<< HEAD
-// nsSVGElement
-nsresult SVGSVGElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                   nsIContent* aBindingParent) {
-  nsSMILAnimationController* smilController = nullptr;
-
-  if (aDocument) {
-    smilController = aDocument->GetAnimationController();
-    if (smilController) {
-||||||| merged common ancestors
-// nsSVGElement
-nsresult
-SVGSVGElement::BindToTree(nsIDocument* aDocument,
-                          nsIContent* aParent,
-                          nsIContent* aBindingParent)
-{
-  nsSMILAnimationController* smilController = nullptr;
-
-  if (aDocument) {
-    smilController = aDocument->GetAnimationController();
-    if (smilController) {
-=======
 // SVGElement
 nsresult SVGSVGElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   SMILAnimationController* smilController = nullptr;
@@ -617,7 +373,6 @@ nsresult SVGSVGElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   // FIXME(emilio, bug 1555948): Should probably use composed doc.
   if (Document* doc = aContext.GetUncomposedDoc()) {
     if ((smilController = doc->GetAnimationController())) {
->>>>>>> upstream-releases
       // SMIL is enabled in this document
       if (WillBeOutermostSVG(aParent, aContext.GetBindingParent())) {
         // We'll be the outermost <svg> element.  We'll need a time container.
@@ -634,18 +389,8 @@ nsresult SVGSVGElement::BindToTree(BindContext& aContext, nsINode& aParent) {
     }
   }
 
-<<<<<<< HEAD
-  nsresult rv =
-      SVGGraphicsElement::BindToTree(aDocument, aParent, aBindingParent);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  nsresult rv = SVGGraphicsElement::BindToTree(aDocument, aParent,
-                                              aBindingParent);
-  NS_ENSURE_SUCCESS(rv,rv);
-=======
   nsresult rv = SVGGraphicsElement::BindToTree(aContext, aParent);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   if (mTimedDocumentRoot && smilController) {
     rv = mTimedDocumentRoot->SetParent(smilController);
@@ -658,15 +403,7 @@ nsresult SVGSVGElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return rv;
 }
 
-<<<<<<< HEAD
-void SVGSVGElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-SVGSVGElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void SVGSVGElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   if (mTimedDocumentRoot) {
     mTimedDocumentRoot->SetParent(nullptr);
   }
@@ -674,17 +411,8 @@ void SVGSVGElement::UnbindFromTree(bool aNullParent) {
   SVGGraphicsElement::UnbindFromTree(aNullParent);
 }
 
-<<<<<<< HEAD
-nsSVGAnimatedTransformList* SVGSVGElement::GetAnimatedTransformList(
-    uint32_t aFlags) {
-||||||| merged common ancestors
-nsSVGAnimatedTransformList*
-SVGSVGElement::GetAnimatedTransformList(uint32_t aFlags)
-{
-=======
 SVGAnimatedTransformList* SVGSVGElement::GetAnimatedTransformList(
     uint32_t aFlags) {
->>>>>>> upstream-releases
   if (!(aFlags & DO_ALLOCATE) && mSVGView && mSVGView->mTransforms) {
     return mSVGView->mTransforms;
   }
@@ -756,21 +484,9 @@ void SVGSVGElement::FlushImageTransformInvalidation() {
 //----------------------------------------------------------------------
 // implementation helpers
 
-<<<<<<< HEAD
-bool SVGSVGElement::WillBeOutermostSVG(nsIContent* aParent,
-                                       nsIContent* aBindingParent) const {
-  nsIContent* parent = aBindingParent ? aBindingParent : aParent;
-||||||| merged common ancestors
-bool
-SVGSVGElement::WillBeOutermostSVG(nsIContent* aParent,
-                                  nsIContent* aBindingParent) const
-{
-  nsIContent* parent = aBindingParent ? aBindingParent : aParent;
-=======
 bool SVGSVGElement::WillBeOutermostSVG(nsINode& aParent,
                                        Element* aBindingParent) const {
   nsINode* parent = aBindingParent ? aBindingParent : &aParent;
->>>>>>> upstream-releases
 
   while (parent && parent->IsSVGElement()) {
     if (parent->IsSVGElement(nsGkAtoms::foreignObject)) {
@@ -795,35 +511,12 @@ void SVGSVGElement::InvalidateTransformNotifyFrame() {
   }
 }
 
-<<<<<<< HEAD
-nsSVGElement::EnumAttributesInfo SVGSVGElement::GetEnumInfo() {
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
-||||||| merged common ancestors
-nsSVGElement::EnumAttributesInfo
-SVGSVGElement::GetEnumInfo()
-{
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
-                            ArrayLength(sEnumInfo));
-=======
 SVGElement::EnumAttributesInfo SVGSVGElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 void SVGSVGElement::SetImageOverridePreserveAspectRatio(
     const SVGPreserveAspectRatio& aPAR) {
-#ifdef DEBUG
-||||||| merged common ancestors
-void
-SVGSVGElement::
-  SetImageOverridePreserveAspectRatio(const SVGPreserveAspectRatio& aPAR)
-{
-#ifdef DEBUG
-=======
-void SVGSVGElement::SetImageOverridePreserveAspectRatio(
-    const SVGPreserveAspectRatio& aPAR) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OwnerDoc()->IsBeingUsedAsImage(),
              "should only override preserveAspectRatio in images");
 
@@ -835,16 +528,8 @@ void SVGSVGElement::SetImageOverridePreserveAspectRatio(
     mImageNeedsTransformInvalidation = true;
   }
 
-<<<<<<< HEAD
-  if (!hasViewBoxRect) {
-    return;  // preserveAspectRatio irrelevant (only matters if we have viewBox)
-||||||| merged common ancestors
-  if (!hasViewBoxRect) {
-    return; // preserveAspectRatio irrelevant (only matters if we have viewBox)
-=======
   if (!hasViewBox) {
     return;  // preserveAspectRatio irrelevant (only matters if we have viewBox)
->>>>>>> upstream-releases
   }
 
   if (SetPreserveAspectRatioProperty(aPAR)) {
@@ -852,17 +537,7 @@ void SVGSVGElement::SetImageOverridePreserveAspectRatio(
   }
 }
 
-<<<<<<< HEAD
 void SVGSVGElement::ClearImageOverridePreserveAspectRatio() {
-#ifdef DEBUG
-||||||| merged common ancestors
-void
-SVGSVGElement::ClearImageOverridePreserveAspectRatio()
-{
-#ifdef DEBUG
-=======
-void SVGSVGElement::ClearImageOverridePreserveAspectRatio() {
->>>>>>> upstream-releases
   MOZ_ASSERT(OwnerDoc()->IsBeingUsedAsImage(),
              "should only override image preserveAspectRatio in images");
 
@@ -911,21 +586,9 @@ bool SVGSVGElement::ClearPreserveAspectRatioProperty() {
   return didHaveProperty;
 }
 
-<<<<<<< HEAD
-SVGPreserveAspectRatio SVGSVGElement::GetPreserveAspectRatioWithOverride()
-    const {
-  nsIDocument* doc = GetUncomposedDoc();
-||||||| merged common ancestors
-
-SVGPreserveAspectRatio
-SVGSVGElement::GetPreserveAspectRatioWithOverride() const
-{
-  nsIDocument* doc = GetUncomposedDoc();
-=======
 SVGPreserveAspectRatio SVGSVGElement::GetPreserveAspectRatioWithOverride()
     const {
   Document* doc = GetUncomposedDoc();
->>>>>>> upstream-releases
   if (doc && doc->IsBeingUsedAsImage()) {
     const SVGPreserveAspectRatio* pAROverridePtr =
         GetPreserveAspectRatioProperty();
@@ -936,21 +599,10 @@ SVGPreserveAspectRatio SVGSVGElement::GetPreserveAspectRatioWithOverride()
 
   SVGViewElement* viewElement = GetCurrentViewElement();
 
-<<<<<<< HEAD
-  // This check is equivalent to "!HasViewBoxRect() &&
-  // ShouldSynthesizeViewBox()". We're just holding onto the viewElement that
-  // HasViewBoxRect() would look up, so that we don't have to look it up again
-  // later.
-||||||| merged common ancestors
-  // This check is equivalent to "!HasViewBoxRect() && ShouldSynthesizeViewBox()".
-  // We're just holding onto the viewElement that HasViewBoxRect() would look up,
-  // so that we don't have to look it up again later.
-=======
   // This check is equivalent to "!HasViewBox() &&
   // ShouldSynthesizeViewBox()". We're just holding onto the viewElement that
   // HasViewBox() would look up, so that we don't have to look it up again
   // later.
->>>>>>> upstream-releases
   if (!((viewElement && viewElement->mViewBox.HasRect()) ||
         (mSVGView && mSVGView->mViewBox.HasRect()) || mViewBox.HasRect()) &&
       ShouldSynthesizeViewBox()) {
@@ -970,16 +622,8 @@ SVGPreserveAspectRatio SVGSVGElement::GetPreserveAspectRatioWithOverride()
 
 SVGViewElement* SVGSVGElement::GetCurrentViewElement() const {
   if (mCurrentViewID) {
-<<<<<<< HEAD
-    // XXXsmaug It is unclear how this should work in case we're in Shadow DOM.
-    nsIDocument* doc = GetUncomposedDoc();
-||||||| merged common ancestors
-    //XXXsmaug It is unclear how this should work in case we're in Shadow DOM.
-    nsIDocument* doc = GetUncomposedDoc();
-=======
     // XXXsmaug It is unclear how this should work in case we're in Shadow DOM.
     Document* doc = GetUncomposedDoc();
->>>>>>> upstream-releases
     if (doc) {
       Element* element = doc->GetElementById(*mCurrentViewID);
       if (element && element->IsSVGElement(nsGkAtoms::view)) {
@@ -990,15 +634,7 @@ SVGViewElement* SVGSVGElement::GetCurrentViewElement() const {
   return nullptr;
 }
 
-<<<<<<< HEAD
-const nsSVGViewBox& SVGSVGElement::GetViewBoxInternal() const {
-||||||| merged common ancestors
-const nsSVGViewBox&
-SVGSVGElement::GetViewBoxInternal() const
-{
-=======
 const SVGAnimatedViewBox& SVGSVGElement::GetViewBoxInternal() const {
->>>>>>> upstream-releases
   SVGViewElement* viewElement = GetCurrentViewElement();
 
   if (viewElement && viewElement->mViewBox.HasRect()) {
@@ -1011,21 +647,9 @@ const SVGAnimatedViewBox& SVGSVGElement::GetViewBoxInternal() const {
   return mViewBox;
 }
 
-<<<<<<< HEAD
-nsSVGAnimatedTransformList* SVGSVGElement::GetTransformInternal() const {
-  return (mSVGView && mSVGView->mTransforms) ? mSVGView->mTransforms
-                                             : mTransforms;
-||||||| merged common ancestors
-nsSVGAnimatedTransformList*
-SVGSVGElement::GetTransformInternal() const
-{
-  return (mSVGView && mSVGView->mTransforms)
-         ? mSVGView->mTransforms: mTransforms;
-=======
 SVGAnimatedTransformList* SVGSVGElement::GetTransformInternal() const {
   return (mSVGView && mSVGView->mTransforms) ? mSVGView->mTransforms
                                              : mTransforms;
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

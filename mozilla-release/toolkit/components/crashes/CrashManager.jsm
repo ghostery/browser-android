@@ -181,12 +181,6 @@ this.CrashManager.prototype = Object.freeze({
   // A crash in the GPU process.
   PROCESS_TYPE_GPU: "gpu",
 
-<<<<<<< HEAD
-  // A crash in the RDD process.
-  PROCESS_TYPE_RDD: "rdd",
-
-||||||| merged common ancestors
-=======
   // A crash in the VR process.
   PROCESS_TYPE_VR: "vr",
 
@@ -196,7 +190,6 @@ this.CrashManager.prototype = Object.freeze({
   // A crash in the socket process.
   PROCESS_TYPE_SOCKET: "socket",
 
->>>>>>> upstream-releases
   // A real crash.
   CRASH_TYPE_CRASH: "crash",
 
@@ -485,14 +478,6 @@ this.CrashManager.prototype = Object.freeze({
       }
 
       // Send a telemetry ping for each non-main process crash
-<<<<<<< HEAD
-      if (processType === this.PROCESS_TYPE_CONTENT ||
-          processType === this.PROCESS_TYPE_GPU ||
-          processType === this.PROCESS_TYPE_RDD) {
-||||||| merged common ancestors
-      if (processType === this.PROCESS_TYPE_CONTENT ||
-          processType === this.PROCESS_TYPE_GPU) {
-=======
       if (
         processType === this.PROCESS_TYPE_CONTENT ||
         processType === this.PROCESS_TYPE_GPU ||
@@ -500,7 +485,6 @@ this.CrashManager.prototype = Object.freeze({
         processType === this.PROCESS_TYPE_RDD ||
         processType === this.PROCESS_TYPE_SOCKET
       ) {
->>>>>>> upstream-releases
         this._sendCrashPing(id, processType, date, metadata);
       }
     })();

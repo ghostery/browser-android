@@ -16,13 +16,6 @@ class nsIController;
 class nsINode;
 class nsIRemoteTab;
 
-<<<<<<< HEAD
-namespace mozilla {
-namespace dom {
-class TabParent;
-}  // namespace dom
-}  // namespace mozilla
-
 #define NS_IWINDOWROOT_IID                           \
   {                                                  \
     0xb8724c49, 0xc398, 0x4f9b, {                    \
@@ -32,31 +25,6 @@ class TabParent;
 
 class nsPIWindowRoot : public mozilla::dom::EventTarget {
  public:
-||||||| merged common ancestors
-namespace mozilla {
-namespace dom {
-class TabParent;
-} // namespace dom
-} // namespace mozilla
-
-#define NS_IWINDOWROOT_IID \
-{ 0xb8724c49, 0xc398, 0x4f9b, \
-  { 0x82, 0x59, 0x87, 0x27, 0xa6, 0x47, 0xdd, 0x0f } }
-
-class nsPIWindowRoot : public mozilla::dom::EventTarget
-{
-public:
-=======
-#define NS_IWINDOWROOT_IID                           \
-  {                                                  \
-    0xb8724c49, 0xc398, 0x4f9b, {                    \
-      0x82, 0x59, 0x87, 0x27, 0xa6, 0x47, 0xdd, 0x0f \
-    }                                                \
-  }
-
-class nsPIWindowRoot : public mozilla::dom::EventTarget {
- public:
->>>>>>> upstream-releases
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IWINDOWROOT_IID)
 
   virtual nsPIDOMWindowOuter* GetWindow() = 0;

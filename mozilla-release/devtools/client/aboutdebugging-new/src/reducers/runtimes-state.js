@@ -12,22 +12,11 @@ const {
   CONNECT_RUNTIME_SUCCESS,
   DISCONNECT_RUNTIME_SUCCESS,
   RUNTIMES,
-<<<<<<< HEAD
-  UNWATCH_RUNTIME_SUCCESS,
-  UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS,
-  USB_RUNTIMES_UPDATED,
-  WATCH_RUNTIME_SUCCESS,
-||||||| merged common ancestors
-  UNWATCH_RUNTIME_SUCCESS,
-  USB_RUNTIMES_UPDATED,
-  WATCH_RUNTIME_SUCCESS,
-=======
   UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS,
   UPDATE_RUNTIME_MULTIE10S_SUCCESS,
   REMOTE_RUNTIMES_UPDATED,
   SELECTED_RUNTIME_ID_UPDATED,
   THIS_FIREFOX_RUNTIME_CREATED,
->>>>>>> upstream-releases
 } = require("../constants");
 
 const { findRuntimeById } = require("../modules/runtimes-state-helper");
@@ -35,9 +24,6 @@ const { findRuntimeById } = require("../modules/runtimes-state-helper");
 const {
   remoteClientManager,
 } = require("devtools/client/shared/remote-debugging/remote-client-manager");
-
-const { remoteClientManager } =
-  require("devtools/client/shared/remote-debugging/remote-client-manager");
 
 // Map between known runtime types and nodes in the runtimes state.
 const TYPE_TO_RUNTIMES_KEY = {
@@ -116,14 +102,6 @@ function runtimesReducer(state = RuntimesState(), action) {
     }
 
     case CONNECT_RUNTIME_SUCCESS: {
-<<<<<<< HEAD
-      const { id, runtimeDetails, type } = action.runtime;
-      remoteClientManager.setClient(id, type, runtimeDetails.clientWrapper.client);
-      return _updateRuntimeById(id, { runtimeDetails }, state);
-||||||| merged common ancestors
-      const { id, connection } = action.runtime;
-      return _updateRuntimeById(id, { connection }, state);
-=======
       const { id, runtimeDetails, type } = action.runtime;
 
       // Update the remoteClientManager with the connected runtime.
@@ -150,7 +128,6 @@ function runtimesReducer(state = RuntimesState(), action) {
         isConnectionTimeout: false,
       };
       return _updateRuntimeById(id, updatedState, state);
->>>>>>> upstream-releases
     }
 
     case DISCONNECT_RUNTIME_SUCCESS: {
@@ -184,53 +161,11 @@ function runtimesReducer(state = RuntimesState(), action) {
       return _updateRuntimeById(runtimeId, { runtimeDetails }, state);
     }
 
-<<<<<<< HEAD
-    case UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS: {
-      const { connectionPromptEnabled } = action;
-      const { id: runtimeId } = action.runtime;
-      const runtime = findRuntimeById(runtimeId, state);
-      const runtimeDetails =
-        Object.assign({}, runtime.runtimeDetails, { connectionPromptEnabled });
-      return _updateRuntimeById(runtimeId, { runtimeDetails }, state);
-    }
-
-    case USB_RUNTIMES_UPDATED: {
-      const { runtimes } = action;
-      const usbRuntimes = runtimes.map(runtime => {
-        const existingRuntime = findRuntimeById(runtime.id, state);
-        const existingRuntimeDetails = existingRuntime ?
-          existingRuntime.runtimeDetails : null;
-
-        return {
-          id: runtime.id,
-          extra: {
-            connectionParameters: { socketPath: runtime._socketPath },
-            deviceName: runtime.deviceName,
-          },
-          name: runtime.shortName,
-          runtimeDetails: existingRuntimeDetails,
-          type: RUNTIMES.USB,
-        };
-||||||| merged common ancestors
-    case USB_RUNTIMES_UPDATED: {
-      const { runtimes } = action;
-      const usbRuntimes = runtimes.map(runtime => {
-        return {
-          id: runtime.id,
-          extra: {
-            connectionParameters: { socketPath: runtime._socketPath },
-            deviceName: runtime.deviceName,
-          },
-          name: runtime.shortName,
-          type: RUNTIMES.USB,
-        };
-=======
     case REMOTE_RUNTIMES_UPDATED: {
       const { runtimes, runtimeType } = action;
       const key = TYPE_TO_RUNTIMES_KEY[runtimeType];
       return Object.assign({}, state, {
         [key]: runtimes,
->>>>>>> upstream-releases
       });
     }
 

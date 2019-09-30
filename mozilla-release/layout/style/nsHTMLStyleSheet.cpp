@@ -36,67 +36,27 @@ struct MappedAttrTableEntry : public PLDHashEntryHdr {
   nsMappedAttributes* mAttributes;
 };
 
-<<<<<<< HEAD
-static PLDHashNumber MappedAttrTable_HashKey(const void *key) {
-  nsMappedAttributes *attributes =
-      static_cast<nsMappedAttributes *>(const_cast<void *>(key));
-||||||| merged common ancestors
-static PLDHashNumber
-MappedAttrTable_HashKey(const void *key)
-{
-  nsMappedAttributes *attributes =
-    static_cast<nsMappedAttributes*>(const_cast<void*>(key));
-=======
 static PLDHashNumber MappedAttrTable_HashKey(const void* key) {
   nsMappedAttributes* attributes =
       static_cast<nsMappedAttributes*>(const_cast<void*>(key));
->>>>>>> upstream-releases
 
   return attributes->HashValue();
 }
 
-<<<<<<< HEAD
-static void MappedAttrTable_ClearEntry(PLDHashTable *table,
-                                       PLDHashEntryHdr *hdr) {
-  MappedAttrTableEntry *entry = static_cast<MappedAttrTableEntry *>(hdr);
-||||||| merged common ancestors
-static void
-MappedAttrTable_ClearEntry(PLDHashTable *table, PLDHashEntryHdr *hdr)
-{
-  MappedAttrTableEntry *entry = static_cast<MappedAttrTableEntry*>(hdr);
-=======
 static void MappedAttrTable_ClearEntry(PLDHashTable* table,
                                        PLDHashEntryHdr* hdr) {
   MappedAttrTableEntry* entry = static_cast<MappedAttrTableEntry*>(hdr);
->>>>>>> upstream-releases
 
   entry->mAttributes->DropStyleSheetReference();
   memset(entry, 0, sizeof(MappedAttrTableEntry));
 }
 
-<<<<<<< HEAD
-static bool MappedAttrTable_MatchEntry(const PLDHashEntryHdr *hdr,
-                                       const void *key) {
-  nsMappedAttributes *attributes =
-      static_cast<nsMappedAttributes *>(const_cast<void *>(key));
-  const MappedAttrTableEntry *entry =
-      static_cast<const MappedAttrTableEntry *>(hdr);
-||||||| merged common ancestors
-static bool
-MappedAttrTable_MatchEntry(const PLDHashEntryHdr *hdr, const void *key)
-{
-  nsMappedAttributes *attributes =
-    static_cast<nsMappedAttributes*>(const_cast<void*>(key));
-  const MappedAttrTableEntry *entry =
-    static_cast<const MappedAttrTableEntry*>(hdr);
-=======
 static bool MappedAttrTable_MatchEntry(const PLDHashEntryHdr* hdr,
                                        const void* key) {
   nsMappedAttributes* attributes =
       static_cast<nsMappedAttributes*>(const_cast<void*>(key));
   const MappedAttrTableEntry* entry =
       static_cast<const MappedAttrTableEntry*>(hdr);
->>>>>>> upstream-releases
 
   return attributes->Equals(entry->mAttributes);
 }
@@ -109,39 +69,15 @@ static const PLDHashTableOps MappedAttrTable_Ops = {
 
 // -----------------------------------------------------------
 
-<<<<<<< HEAD
-nsHTMLStyleSheet::nsHTMLStyleSheet(nsIDocument *aDocument)
-    : mDocument(aDocument),
-      mMappedAttrTable(&MappedAttrTable_Ops, sizeof(MappedAttrTableEntry)),
-      mMappedAttrsDirty(false) {
-||||||| merged common ancestors
-nsHTMLStyleSheet::nsHTMLStyleSheet(nsIDocument* aDocument)
-  : mDocument(aDocument)
-  , mMappedAttrTable(&MappedAttrTable_Ops, sizeof(MappedAttrTableEntry))
-  , mMappedAttrsDirty(false)
-{
-=======
 nsHTMLStyleSheet::nsHTMLStyleSheet(Document* aDocument)
     : mDocument(aDocument),
       mMappedAttrTable(&MappedAttrTable_Ops, sizeof(MappedAttrTableEntry)),
       mMappedAttrsDirty(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
 }
 
-<<<<<<< HEAD
-void nsHTMLStyleSheet::SetOwningDocument(nsIDocument *aDocument) {
-  mDocument = aDocument;  // not refcounted
-||||||| merged common ancestors
-
-void
-nsHTMLStyleSheet::SetOwningDocument(nsIDocument* aDocument)
-{
-  mDocument = aDocument; // not refcounted
-=======
 void nsHTMLStyleSheet::SetOwningDocument(Document* aDocument) {
   mDocument = aDocument;  // not refcounted
->>>>>>> upstream-releases
 }
 
 void nsHTMLStyleSheet::Reset() {
@@ -153,52 +89,21 @@ void nsHTMLStyleSheet::Reset() {
   mMappedAttrsDirty = false;
 }
 
-<<<<<<< HEAD
-nsresult nsHTMLStyleSheet::ImplLinkColorSetter(
-    RefPtr<RawServoDeclarationBlock> &aDecl, nscolor aColor) {
-  if (!mDocument || !mDocument->GetShell()) {
-||||||| merged common ancestors
-nsresult
-nsHTMLStyleSheet::ImplLinkColorSetter(
-    RefPtr<RawServoDeclarationBlock>& aDecl,
-    nscolor aColor)
-{
-  if (!mDocument || !mDocument->GetShell()) {
-=======
 nsresult nsHTMLStyleSheet::ImplLinkColorSetter(
     RefPtr<RawServoDeclarationBlock>& aDecl, nscolor aColor) {
   if (!mDocument || !mDocument->GetPresShell()) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  RestyleManager *restyle = mDocument->GetPresContext()->RestyleManager();
-
-||||||| merged common ancestors
-  RestyleManager* restyle = mDocument->GetPresContext()->RestyleManager();
-
-=======
->>>>>>> upstream-releases
   MOZ_ASSERT(!ServoStyleSet::IsInServoTraversal());
   aDecl = Servo_DeclarationBlock_CreateEmpty().Consume();
   Servo_DeclarationBlock_SetColorValue(aDecl.get(), eCSSProperty_color, aColor);
 
   // Now make sure we restyle any links that might need it.  This
   // shouldn't happen often, so just rebuilding everything is ok.
-<<<<<<< HEAD
-  Element *root = mDocument->GetRootElement();
-  if (root) {
-    restyle->PostRestyleEvent(root, eRestyle_Subtree, nsChangeHint(0));
-||||||| merged common ancestors
-  Element* root = mDocument->GetRootElement();
-  if (root) {
-    restyle->PostRestyleEvent(root, eRestyle_Subtree, nsChangeHint(0));
-=======
   if (Element* root = mDocument->GetRootElement()) {
     RestyleManager* rm = mDocument->GetPresContext()->RestyleManager();
     rm->PostRestyleEvent(root, RestyleHint::RestyleSubtree(), nsChangeHint(0));
->>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -215,32 +120,12 @@ nsresult nsHTMLStyleSheet::SetVisitedLinkColor(nscolor aColor) {
   return ImplLinkColorSetter(mServoVisitedLinkDecl, aColor);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsMappedAttributes> nsHTMLStyleSheet::UniqueMappedAttributes(
-    nsMappedAttributes *aMapped) {
-||||||| merged common ancestors
-already_AddRefed<nsMappedAttributes>
-nsHTMLStyleSheet::UniqueMappedAttributes(nsMappedAttributes* aMapped)
-{
-=======
 already_AddRefed<nsMappedAttributes> nsHTMLStyleSheet::UniqueMappedAttributes(
     nsMappedAttributes* aMapped) {
->>>>>>> upstream-releases
   mMappedAttrsDirty = true;
-<<<<<<< HEAD
-  auto entry = static_cast<MappedAttrTableEntry *>(
-      mMappedAttrTable.Add(aMapped, fallible));
-  if (!entry) return nullptr;
-||||||| merged common ancestors
-  auto entry = static_cast<MappedAttrTableEntry*>
-                          (mMappedAttrTable.Add(aMapped, fallible));
-  if (!entry)
-    return nullptr;
-=======
   auto entry = static_cast<MappedAttrTableEntry*>(
       mMappedAttrTable.Add(aMapped, fallible));
   if (!entry) return nullptr;
->>>>>>> upstream-releases
   if (!entry->mAttributes) {
     // We added a new entry to the hashtable, so we have a new unique set.
     entry->mAttributes = aMapped;
@@ -249,15 +134,7 @@ already_AddRefed<nsMappedAttributes> nsHTMLStyleSheet::UniqueMappedAttributes(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-void nsHTMLStyleSheet::DropMappedAttributes(nsMappedAttributes *aMapped) {
-||||||| merged common ancestors
-void
-nsHTMLStyleSheet::DropMappedAttributes(nsMappedAttributes* aMapped)
-{
-=======
 void nsHTMLStyleSheet::DropMappedAttributes(nsMappedAttributes* aMapped) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE_VOID(aMapped);
 #ifdef DEBUG
   uint32_t entryCount = mMappedAttrTable.EntryCount() - 1;
@@ -270,8 +147,7 @@ void nsHTMLStyleSheet::DropMappedAttributes(nsMappedAttributes* aMapped) {
 
 void nsHTMLStyleSheet::CalculateMappedServoDeclarations() {
   for (auto iter = mMappedAttrTable.Iter(); !iter.Done(); iter.Next()) {
-    MappedAttrTableEntry *attr =
-        static_cast<MappedAttrTableEntry *>(iter.Get());
+    MappedAttrTableEntry* attr = static_cast<MappedAttrTableEntry*>(iter.Get());
     if (attr->mAttributes->GetServoStyle()) {
       // Only handle cases which haven't been filled in already
       continue;
@@ -286,7 +162,7 @@ size_t nsHTMLStyleSheet::DOMSizeOfIncludingThis(
 
   n += mMappedAttrTable.ShallowSizeOfExcludingThis(aMallocSizeOf);
   for (auto iter = mMappedAttrTable.ConstIter(); !iter.Done(); iter.Next()) {
-    auto entry = static_cast<MappedAttrTableEntry *>(iter.Get());
+    auto entry = static_cast<MappedAttrTableEntry*>(iter.Get());
     n += entry->mAttributes->SizeOfIncludingThis(aMallocSizeOf);
   }
 

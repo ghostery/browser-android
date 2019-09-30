@@ -14,59 +14,23 @@ namespace layers {
 
 class RenderRootStateManager;
 
-<<<<<<< HEAD
-class WebRenderCanvasRenderer : public ShareableCanvasRenderer {
- public:
-  explicit WebRenderCanvasRenderer(WebRenderLayerManager* aManager)
-      : mManager(aManager) {}
-||||||| merged common ancestors
-class WebRenderCanvasRenderer : public ShareableCanvasRenderer
-{
-public:
-  explicit WebRenderCanvasRenderer(WebRenderLayerManager* aManager)
-    : mManager(aManager)
-  { }
-=======
 class WebRenderCanvasRenderer : public ShareableCanvasRenderer {
  public:
   explicit WebRenderCanvasRenderer(RenderRootStateManager* aManager)
       : mManager(aManager) {}
->>>>>>> upstream-releases
 
   void Initialize(const CanvasInitializeData& aData) override;
 
   CompositableForwarder* GetForwarder() override;
 
-<<<<<<< HEAD
- protected:
-  WebRenderLayerManager* mManager;
-||||||| merged common ancestors
-protected:
-  WebRenderLayerManager* mManager;
-=======
  protected:
   RenderRootStateManager* mManager;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-class WebRenderCanvasRendererAsync : public WebRenderCanvasRenderer {
- public:
-  explicit WebRenderCanvasRendererAsync(WebRenderLayerManager* aManager)
-      : WebRenderCanvasRenderer(aManager) {}
-||||||| merged common ancestors
-class WebRenderCanvasRendererAsync : public WebRenderCanvasRenderer
-{
-public:
-  explicit WebRenderCanvasRendererAsync(WebRenderLayerManager* aManager)
-    : WebRenderCanvasRenderer(aManager)
-  { }
-=======
 class WebRenderCanvasRendererAsync : public WebRenderCanvasRenderer {
  public:
   explicit WebRenderCanvasRendererAsync(RenderRootStateManager* aManager)
       : WebRenderCanvasRenderer(aManager) {}
->>>>>>> upstream-releases
   virtual ~WebRenderCanvasRendererAsync();
 
   WebRenderCanvasRendererAsync* AsWebRenderCanvasRendererAsync() override {

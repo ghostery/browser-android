@@ -64,10 +64,4 @@ class IPCBlobInputStreamStorage final : public nsIObserver {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_ipc_IPCBlobInputStreamStorage_h
-||||||| merged common ancestors
-#endif // mozilla_dom_ipc_IPCBlobInputStreamStorage_h
-=======
 #endif  // mozilla_dom_IPCBlobInputStreamStorage_h
->>>>>>> upstream-releases

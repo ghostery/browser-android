@@ -20,15 +20,7 @@ sr_Latn{
         default{"latn"}
         latn{
             miscPatterns{
-<<<<<<< HEAD
-                approximately{"~{0}"}
                 atLeast{"≥{0}"}
-                atMost{"≤{0}"}
-||||||| merged common ancestors
-                atLeast{"⩾{0}"}
-=======
-                atLeast{"≥{0}"}
->>>>>>> upstream-releases
                 range{"{0}–{1}"}
             }
             patterns{
@@ -251,13 +243,7 @@ sr_Latn{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             eras{
@@ -1352,12 +1338,7 @@ sr_Latn{
                     "Taišo",
                     "Šova",
                     "Haisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiva",
->>>>>>> upstream-releases
                 }
             }
         }

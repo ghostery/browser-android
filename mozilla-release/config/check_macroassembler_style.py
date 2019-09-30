@@ -160,16 +160,11 @@ def get_macroassembler_definitions(filename):
             if not style_section:
                 continue
 
-<<<<<<< HEAD
-            # Remove comments from the processed line.
-||||||| merged common ancestors
-=======
             # Ignore preprocessor directives.
             if line.startswith('#'):
                 continue
 
             # Remove comments from the processed line.
->>>>>>> upstream-releases
             line = re.sub(r'//.*', '', line)
 
             # Locate and count curly braces.

@@ -276,27 +276,12 @@ class CSPValidator final : public nsCSPSrcVisitor {
 
   // Formatters
 
-<<<<<<< HEAD
-  template <typename... T>
-  inline void FormatError(const char* aName, const T... aParams) {
-    const char16_t* params[] = {mDirective.get(), aParams.get()...};
-    FormatErrorParams(aName, params, MOZ_ARRAY_LENGTH(params));
-  };
-||||||| merged common ancestors
-    template <typename... T>
-    inline void FormatError(const char* aName, const T ...aParams)
-    {
-      const char16_t* params[] = { mDirective.get(), aParams.get()... };
-      FormatErrorParams(aName, params, MOZ_ARRAY_LENGTH(params));
-    };
-=======
   template <typename... T>
   inline void FormatError(const char* aName, const T... aParams) {
     AutoTArray<nsString, sizeof...(aParams) + 1> params = {mDirective,
                                                            aParams...};
     FormatErrorParams(aName, params);
   };
->>>>>>> upstream-releases
 
  private:
   // Validators
@@ -350,44 +335,14 @@ class CSPValidator final : public nsCSPSrcVisitor {
     return stringBundle.forget();
   };
 
-<<<<<<< HEAD
-  void FormatErrorParams(const char* aName, const char16_t** aParams,
-                         int32_t aLength) {
-    nsresult rv = NS_ERROR_FAILURE;
-||||||| merged common ancestors
-    void FormatErrorParams(const char* aName, const char16_t** aParams, int32_t aLength)
-    {
-      nsresult rv = NS_ERROR_FAILURE;
-=======
   void FormatErrorParams(const char* aName, const nsTArray<nsString>& aParams) {
     nsresult rv = NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIStringBundle> stringBundle = GetStringBundle();
-
-    if (stringBundle) {
-      rv = stringBundle->FormatStringFromName(aName, aParams, aLength, mError);
-    }
-||||||| merged common ancestors
-      nsCOMPtr<nsIStringBundle> stringBundle = GetStringBundle();
-
-      if (stringBundle) {
-        rv =
-          stringBundle->FormatStringFromName(aName, aParams, aLength, mError);
-      }
-
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        mError.AssignLiteral("An unexpected error occurred");
-      }
-    };
-=======
     nsCOMPtr<nsIStringBundle> stringBundle = GetStringBundle();
 
     if (stringBundle) {
       rv = stringBundle->FormatStringFromName(aName, aParams, mError);
     }
->>>>>>> upstream-releases
 
     if (NS_WARN_IF(NS_FAILED(rv))) {
       mError.AssignLiteral("An unexpected error occurred");
@@ -448,13 +403,6 @@ AddonContentPolicy::ValidateAddonCSP(const nsAString& aPolicyString,
   rv =
       csp->SetRequestContextWithPrincipal(principal, selfURI, EmptyString(), 0);
   NS_ENSURE_SUCCESS(rv, rv);
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
->>>>>>> upstream-releases
   csp->AppendPolicy(aPolicyString, false, false);
 
   const nsCSPPolicy* policy = csp->GetPolicy(0);

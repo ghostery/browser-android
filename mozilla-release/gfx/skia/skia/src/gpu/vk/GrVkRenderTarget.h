@@ -34,18 +34,11 @@ struct GrVkImageInfo;
 class GrVkRenderTarget: public GrRenderTarget, public virtual GrVkImage {
 public:
     static sk_sp<GrVkRenderTarget> MakeWrappedRenderTarget(GrVkGpu*, const GrSurfaceDesc&,
-<<<<<<< HEAD
-                                                           const GrVkImageInfo&,
-                                                           sk_sp<GrVkImageLayout>);
-||||||| merged common ancestors
-                                                           const GrVkImageInfo*);
-=======
                                                            const GrVkImageInfo&,
                                                            sk_sp<GrVkImageLayout>);
 
     static sk_sp<GrVkRenderTarget> MakeSecondaryCBRenderTarget(GrVkGpu*, const GrSurfaceDesc&,
                                                                const GrVkDrawableInfo& vkInfo);
->>>>>>> upstream-releases
 
     ~GrVkRenderTarget() override;
 
@@ -154,16 +147,6 @@ private:
     GrVkRenderTarget(GrVkGpu* gpu,
                      const GrSurfaceDesc& desc,
                      const GrVkImageInfo& info,
-<<<<<<< HEAD
-                     sk_sp<GrVkImageLayout> layout,
-                     const GrVkImageView* colorAttachmentView);
-||||||| merged common ancestors
-                     const GrVkImageView* colorAttachmentView,
-                     GrBackendObjectOwnership);
-
-    static GrVkRenderTarget* Create(GrVkGpu*, SkBudgeted, const GrSurfaceDesc&,
-                                    const GrVkImageInfo&, GrBackendObjectOwnership);
-=======
                      sk_sp<GrVkImageLayout> layout,
                      const GrVkImageView* colorAttachmentView);
 
@@ -174,7 +157,6 @@ private:
                      sk_sp<GrVkImageLayout> layout,
                      const GrVkRenderPass* renderPass,
                      GrVkSecondaryCommandBuffer* secondaryCommandBuffer);
->>>>>>> upstream-releases
 
     bool completeStencilAttachment() override;
 

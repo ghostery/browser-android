@@ -17,47 +17,6 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1022869
     // Initialize our cookie.
     document.cookie = "a=b";
 
-<<<<<<< HEAD
-    // Set a cookie in example.org so we can test that we can't read it in
-    // third-party cases.
-    f.contentWindow.location =
-        "http://example.org/tests/dom/tests/mochitest/bugs/file_prime_cookie.html";
-    waitForLoad().then(function() {
-        // Cookies are set up, disallow third-party cookies and start the test.
-        SpecialPowers.pushPrefEnv({ set: [
-            ["network.cookie.cookieBehavior", 1],
-          ]}, () => { continueTest(); });
-    }).catch((e) => { ok(false, `Got exception: ${e}`) });
-  }
-
-  function waitForLoad() {
-    return new Promise((resolve) => {
-      window.addEventListener("message", function(msg) {
-        info(`got message ${msg.data}`);
-        resolve(msg.data);
-      }, {once: true});
-||||||| merged common ancestors
-    // Set a cookie in example.org so we can test that we can't read it in
-    // third-party cases.
-    f.contentWindow.location =
-        "http://example.org/tests/dom/tests/mochitest/bugs/file_prime_cookie.html";
-    waitForLoad().then(function() {
-        // Cookies are set up, disallow third-party cookies and start the test.
-        SpecialPowers.pushPrefEnv({ set: [
-            ["browser.contentblocking.enabled", true],
-            ["browser.contentblocking.ui.enabled", true],
-            ["network.cookie.cookieBehavior", 1],
-          ]}, () => { continueTest(); });
-    }).catch((e) => { ok(false, `Got exception: ${e}`) });
-  }
-
-  function waitForLoad() {
-    return new Promise((resolve) => {
-      window.addEventListener("message", function(msg) {
-        info(`got message ${msg.data}`);
-        resolve(msg.data);
-      }, {once: true});
-=======
     SpecialPowers.pushPrefEnv({ set: [["network.cookie.cookieBehavior", 1]] }).then(_ => {
       let w = window.open("window_bug1171215.html");
       onmessage = e => {
@@ -79,7 +38,6 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1022869
 
         ok(false, "Unknown message");
       };
->>>>>>> upstream-releases
     });
   }
   </script>

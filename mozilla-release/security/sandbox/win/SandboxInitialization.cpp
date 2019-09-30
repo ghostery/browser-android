@@ -88,13 +88,6 @@ static bool EnableHandleCloseMonitoring() {
   return true;
 }
 
-<<<<<<< HEAD
-static bool ShouldDisableHandleVerifier() {
-||||||| merged common ancestors
-static bool
-ShouldDisableHandleVerifier()
-{
-=======
 /**
  * There is a bug in COM that causes its initialization to fail when user32.dll
  * is loaded but Win32k lockdown is enabled. COM uses ApiSetQueryApiSetPresence
@@ -115,7 +108,6 @@ static void EnableApiQueryInterception() {
 }
 
 static bool ShouldDisableHandleVerifier() {
->>>>>>> upstream-releases
 #if defined(_X86_) && (defined(EARLY_BETA_OR_EARLIER) || defined(DEBUG))
   // Chromium only has the verifier enabled for 32-bit and our close monitoring
   // hooks cause debug assertions for 64-bit anyway.

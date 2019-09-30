@@ -1739,11 +1739,5 @@ vi{
     CurrencyUnitPatterns{
         other{"{0} {1}"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
 }

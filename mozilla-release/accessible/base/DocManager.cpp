@@ -22,14 +22,8 @@
 
 #include "mozilla/Components.h"
 #include "mozilla/EventListenerManager.h"
-<<<<<<< HEAD
-#include "mozilla/dom/Event.h"  // for Event
-||||||| merged common ancestors
-#include "mozilla/dom/Event.h" // for Event
-=======
 #include "mozilla/PresShell.h"
 #include "mozilla/dom/Event.h"  // for Event
->>>>>>> upstream-releases
 #include "nsContentUtils.h"
 #include "nsDocShellLoadTypes.h"
 #include "nsIChannel.h"
@@ -59,19 +53,8 @@ DocManager::DocManager() : mDocAccessibleCache(2), mXPCDocumentCache(0) {}
 ////////////////////////////////////////////////////////////////////////////////
 // DocManager public
 
-<<<<<<< HEAD
-DocAccessible* DocManager::GetDocAccessible(nsIDocument* aDocument) {
-  if (!aDocument) return nullptr;
-||||||| merged common ancestors
-DocAccessible*
-DocManager::GetDocAccessible(nsIDocument* aDocument)
-{
-  if (!aDocument)
-    return nullptr;
-=======
 DocAccessible* DocManager::GetDocAccessible(Document* aDocument) {
   if (!aDocument) return nullptr;
->>>>>>> upstream-releases
 
   DocAccessible* docAcc = GetExistingDocAccessible(aDocument);
   if (docAcc) return docAcc;
@@ -107,18 +90,8 @@ void DocManager::RemoveFromXPCDocumentCache(DocAccessible* aDocument) {
   }
 }
 
-<<<<<<< HEAD
-void DocManager::NotifyOfDocumentShutdown(DocAccessible* aDocument,
-                                          nsIDocument* aDOMDocument) {
-||||||| merged common ancestors
-void
-DocManager::NotifyOfDocumentShutdown(DocAccessible* aDocument,
-                                     nsIDocument* aDOMDocument)
-{
-=======
 void DocManager::NotifyOfDocumentShutdown(DocAccessible* aDocument,
                                           Document* aDOMDocument) {
->>>>>>> upstream-releases
   // We need to remove listeners in both cases, when document is being shutdown
   // or when accessibility service is being shut down as well.
   RemoveListeners(aDOMDocument);
@@ -198,20 +171,8 @@ bool DocManager::IsProcessingRefreshDriverNotification() const {
 ////////////////////////////////////////////////////////////////////////////////
 // DocManager protected
 
-<<<<<<< HEAD
-bool DocManager::Init() {
-  nsCOMPtr<nsIWebProgress> progress =
-      do_GetService(NS_DOCUMENTLOADER_SERVICE_CONTRACTID);
-||||||| merged common ancestors
-bool
-DocManager::Init()
-{
-  nsCOMPtr<nsIWebProgress> progress =
-    do_GetService(NS_DOCUMENTLOADER_SERVICE_CONTRACTID);
-=======
 bool DocManager::Init() {
   nsCOMPtr<nsIWebProgress> progress = components::DocLoader::Service();
->>>>>>> upstream-releases
 
   if (!progress) return false;
 
@@ -221,20 +182,8 @@ bool DocManager::Init() {
   return true;
 }
 
-<<<<<<< HEAD
-void DocManager::Shutdown() {
-  nsCOMPtr<nsIWebProgress> progress =
-      do_GetService(NS_DOCUMENTLOADER_SERVICE_CONTRACTID);
-||||||| merged common ancestors
-void
-DocManager::Shutdown()
-{
-  nsCOMPtr<nsIWebProgress> progress =
-    do_GetService(NS_DOCUMENTLOADER_SERVICE_CONTRACTID);
-=======
 void DocManager::Shutdown() {
   nsCOMPtr<nsIWebProgress> progress = components::DocLoader::Service();
->>>>>>> upstream-releases
 
   if (progress)
     progress->RemoveProgressListener(
@@ -332,12 +281,6 @@ NS_IMETHODIMP
 DocManager::OnProgressChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
                              int32_t aCurSelfProgress, int32_t aMaxSelfProgress,
                              int32_t aCurTotalProgress,
-<<<<<<< HEAD
-                             int32_t aMaxTotalProgress) {
-||||||| merged common ancestors
-                             int32_t aMaxTotalProgress)
-{
-=======
                              int32_t aMaxTotalProgress) {
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
@@ -346,60 +289,27 @@ DocManager::OnProgressChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
 NS_IMETHODIMP
 DocManager::OnLocationChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
                              nsIURI* aLocation, uint32_t aFlags) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DocManager::OnLocationChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
-                             nsIURI* aLocation, uint32_t aFlags) {
-||||||| merged common ancestors
-DocManager::OnLocationChange(nsIWebProgress* aWebProgress,
-                             nsIRequest* aRequest, nsIURI* aLocation,
-                             uint32_t aFlags)
-{
-=======
 DocManager::OnStatusChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
                            nsresult aStatus, const char16_t* aMessage) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DocManager::OnStatusChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
-                           nsresult aStatus, const char16_t* aMessage) {
-||||||| merged common ancestors
-DocManager::OnStatusChange(nsIWebProgress* aWebProgress,
-                           nsIRequest* aRequest, nsresult aStatus,
-                           const char16_t* aMessage)
-{
-=======
 DocManager::OnSecurityChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
                              uint32_t aState) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DocManager::OnSecurityChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
-                             uint32_t aState) {
-||||||| merged common ancestors
-DocManager::OnSecurityChange(nsIWebProgress* aWebProgress,
-                             nsIRequest* aRequest,
-                             uint32_t aOldState,
-                             uint32_t aState,
-                             const nsAString& aContentBlockingLogJSON)
-{
-=======
 DocManager::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
                                    nsIRequest* aRequest, uint32_t aEvent) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
@@ -457,18 +367,8 @@ DocManager::HandleEvent(Event* aEvent) {
 ////////////////////////////////////////////////////////////////////////////////
 // DocManager private
 
-<<<<<<< HEAD
-void DocManager::HandleDOMDocumentLoad(nsIDocument* aDocument,
-                                       uint32_t aLoadEventType) {
-||||||| merged common ancestors
-void
-DocManager::HandleDOMDocumentLoad(nsIDocument* aDocument,
-                                  uint32_t aLoadEventType)
-{
-=======
 void DocManager::HandleDOMDocumentLoad(Document* aDocument,
                                        uint32_t aLoadEventType) {
->>>>>>> upstream-releases
   // Document accessible can be created before we were notified the DOM document
   // was loaded completely. However if it's not created yet then create it.
   DocAccessible* docAcc = GetExistingDocAccessible(aDocument);
@@ -480,18 +380,8 @@ void DocManager::HandleDOMDocumentLoad(Document* aDocument,
   docAcc->NotifyOfLoad(aLoadEventType);
 }
 
-<<<<<<< HEAD
-void DocManager::AddListeners(nsIDocument* aDocument,
-                              bool aAddDOMContentLoadedListener) {
-||||||| merged common ancestors
-void
-DocManager::AddListeners(nsIDocument* aDocument,
-                         bool aAddDOMContentLoadedListener)
-{
-=======
 void DocManager::AddListeners(Document* aDocument,
                               bool aAddDOMContentLoadedListener) {
->>>>>>> upstream-releases
   nsPIDOMWindowOuter* window = aDocument->GetWindow();
   EventTarget* target = window->GetChromeEventHandler();
   EventListenerManager* elm = target->GetOrCreateListenerManager();
@@ -513,15 +403,7 @@ void DocManager::AddListeners(Document* aDocument,
   }
 }
 
-<<<<<<< HEAD
-void DocManager::RemoveListeners(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-DocManager::RemoveListeners(nsIDocument* aDocument)
-{
-=======
 void DocManager::RemoveListeners(Document* aDocument) {
->>>>>>> upstream-releases
   nsPIDOMWindowOuter* window = aDocument->GetWindow();
   if (!window) return;
 
@@ -536,15 +418,7 @@ void DocManager::RemoveListeners(Document* aDocument) {
                                  TrustedEventsAtCapture());
 }
 
-<<<<<<< HEAD
-DocAccessible* DocManager::CreateDocOrRootAccessible(nsIDocument* aDocument) {
-||||||| merged common ancestors
-DocAccessible*
-DocManager::CreateDocOrRootAccessible(nsIDocument* aDocument)
-{
-=======
 DocAccessible* DocManager::CreateDocOrRootAccessible(Document* aDocument) {
->>>>>>> upstream-releases
   // Ignore hidden documents, resource documents, static clone
   // (printing) documents and documents without a docshell.
   if (!aDocument->IsVisibleConsideringAncestors() ||
@@ -564,19 +438,10 @@ DocAccessible* DocManager::CreateDocOrRootAccessible(Document* aDocument) {
   }
 
   // Ignore documents without presshell and not having root frame.
-<<<<<<< HEAD
-  nsIPresShell* presShell = aDocument->GetShell();
-  if (!presShell || presShell->IsDestroying()) return nullptr;
-||||||| merged common ancestors
-  nsIPresShell* presShell = aDocument->GetShell();
-  if (!presShell || presShell->IsDestroying())
-    return nullptr;
-=======
   PresShell* presShell = aDocument->GetPresShell();
   if (!presShell || presShell->IsDestroying()) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   bool isRootDoc = nsCoreUtils::IsRootDocument(aDocument);
 

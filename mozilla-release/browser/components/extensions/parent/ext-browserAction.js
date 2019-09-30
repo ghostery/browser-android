@@ -92,21 +92,6 @@ this.browserAction = class extends ExtensionAPI {
     browserActionMap.set(extension, this);
 
     this.defaults.icon = await StartupCache.get(
-<<<<<<< HEAD
-      extension, ["browserAction", "default_icon"],
-      () => IconDetails.normalize({
-        path: options.default_icon || extension.manifest.icons,
-        iconType: "browserAction",
-        themeIcons: options.theme_icons,
-      }, extension));
-||||||| merged common ancestors
-      extension, ["browserAction", "default_icon"],
-      () => IconDetails.normalize({
-        path: options.default_icon,
-        iconType: "browserAction",
-        themeIcons: options.theme_icons,
-      }, extension));
-=======
       extension,
       ["browserAction", "default_icon"],
       () =>
@@ -119,7 +104,6 @@ this.browserAction = class extends ExtensionAPI {
           extension
         )
     );
->>>>>>> upstream-releases
 
     this.iconData.set(
       this.defaults.icon,

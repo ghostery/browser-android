@@ -30,30 +30,11 @@ class GPUVideoTextureHost : public TextureHost {
 
   gfx::SurfaceFormat GetFormat() const override;
 
-<<<<<<< HEAD
-  virtual bool BindTextureSource(
-      CompositableTextureSourceRef& aTexture) override;
-  virtual bool AcquireTextureSource(
-      CompositableTextureSourceRef& aTexture) override;
-||||||| merged common ancestors
-  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
-  virtual bool AcquireTextureSource(CompositableTextureSourceRef& aTexture) override;
-=======
   bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
   bool AcquireTextureSource(CompositableTextureSourceRef& aTexture) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
-    return nullptr;  // XXX - implement this (for MOZ_DUMP_PAINTING)
-||||||| merged common ancestors
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override
-  {
-    return nullptr; // XXX - implement this (for MOZ_DUMP_PAINTING)
-=======
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override {
     return nullptr;  // XXX - implement this (for MOZ_DUMP_PAINTING)
->>>>>>> upstream-releases
   }
 
   gfx::YUVColorSpace GetYUVColorSpace() const override;
@@ -66,15 +47,8 @@ class GPUVideoTextureHost : public TextureHost {
 
   bool HasIntermediateBuffer() const override;
 
-<<<<<<< HEAD
-  virtual void CreateRenderTexture(
-      const wr::ExternalImageId& aExternalImageId) override;
-||||||| merged common ancestors
-  virtual void CreateRenderTexture(const wr::ExternalImageId& aExternalImageId) override;
-=======
   void CreateRenderTexture(
       const wr::ExternalImageId& aExternalImageId) override;
->>>>>>> upstream-releases
 
   uint32_t NumSubTextures() override;
 
@@ -90,19 +64,11 @@ class GPUVideoTextureHost : public TextureHost {
 
   bool SupportsWrNativeTexture() override;
 
-<<<<<<< HEAD
- protected:
-  GPUVideoTextureHost(TextureFlags aFlags, TextureHost* aWrappedTextureHost);
-||||||| merged common ancestors
-protected:
-  GPUVideoTextureHost(TextureFlags aFlags, TextureHost* aWrappedTextureHost);
-=======
  protected:
   GPUVideoTextureHost(TextureFlags aFlags,
                       const SurfaceDescriptorGPUVideo& aDescriptor);
 
   TextureHost* EnsureWrappedTextureHost();
->>>>>>> upstream-releases
 
   RefPtr<TextureHost> mWrappedTextureHost;
   SurfaceDescriptorGPUVideo mDescriptor;

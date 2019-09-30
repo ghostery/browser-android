@@ -211,13 +211,7 @@ mk{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.27"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{

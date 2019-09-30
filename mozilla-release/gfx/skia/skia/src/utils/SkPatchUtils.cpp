@@ -12,14 +12,7 @@
 #include "SkColorSpacePriv.h"
 #include "SkConvertPixels.h"
 #include "SkGeometry.h"
-<<<<<<< HEAD
-#include "SkPM4f.h"
 #include "SkTo.h"
-||||||| merged common ancestors
-#include "SkPM4f.h"
-=======
-#include "SkTo.h"
->>>>>>> upstream-releases
 
 namespace {
     enum CubicCtrlPts {

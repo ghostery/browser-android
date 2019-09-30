@@ -88,33 +88,13 @@ class WinCompositorWidget : public CompositorWidget,
   // Ensure that a transparent surface exists, then return it.
   RefPtr<gfxASurface> EnsureTransparentSurface();
 
-<<<<<<< HEAD
-  HDC GetTransparentDC() const override { return mMemoryDC; }
-  HWND GetHwnd() const { return mCompositorWnd ? mCompositorWnd : mWnd; }
-||||||| merged common ancestors
-  HDC GetTransparentDC() const override {
-    return mMemoryDC;
-  }
-  HWND GetHwnd() const {
-    return mCompositorWnd ? mCompositorWnd : mWnd;
-  }
-=======
   HDC GetTransparentDC() const override { return mMemoryDC; }
   HWND GetHwnd() const {
     return mCompositorWnds.mCompositorWnd ? mCompositorWnds.mCompositorWnd
                                           : mWnd;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  HWND GetCompositorHwnd() const { return mCompositorWnd; }
-||||||| merged common ancestors
-  HWND GetCompositorHwnd() const {
-    return mCompositorWnd;
-  }
-=======
   HWND GetCompositorHwnd() const { return mCompositorWnds.mCompositorWnd; }
->>>>>>> upstream-releases
 
   void EnsureCompositorWindow();
   void DestroyCompositorWindow();

@@ -87,16 +87,8 @@ public:
                        const SkIPoint& dstPoint,
                        bool canDiscardOutsideDstRect) override;
 
-<<<<<<< HEAD
-    GrGpuRTCommandBuffer* getCommandBuffer(
-                                    GrRenderTarget*, GrSurfaceOrigin,
-||||||| merged common ancestors
-    GrGpuRTCommandBuffer* createCommandBuffer(
-                                    GrRenderTarget*, GrSurfaceOrigin,
-=======
     GrGpuRTCommandBuffer* getCommandBuffer(
                                     GrRenderTarget*, GrSurfaceOrigin, const SkRect& bounds,
->>>>>>> upstream-releases
                                     const GrGpuRTCommandBuffer::LoadAndStoreInfo&,
                                     const GrGpuRTCommandBuffer::StencilLoadAndStoreInfo&) override;
 
@@ -140,47 +132,19 @@ private:
     sk_sp<GrTexture> onCreateTexture(const GrSurfaceDesc& desc, SkBudgeted budgeted,
                                      const GrMipLevel texels[], int mipLevelCount) override;
 
-<<<<<<< HEAD
-    sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership) override;
-||||||| merged common ancestors
-    sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership) override {
-        return nullptr;
-    }
-=======
     sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership, GrWrapCacheable,
                                           GrIOType) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    sk_sp<GrTexture> onWrapRenderableBackendTexture(const GrBackendTexture&,
-                                                    int sampleCnt,
-                                                    GrWrapOwnership) override;
-||||||| merged common ancestors
-    sk_sp<GrTexture> onWrapRenderableBackendTexture(const GrBackendTexture&,
-                                                    int sampleCnt,
-                                                    GrWrapOwnership) override {
-        return nullptr;
-    }
-=======
     sk_sp<GrTexture> onWrapRenderableBackendTexture(const GrBackendTexture&, int sampleCnt,
                                                     GrWrapOwnership, GrWrapCacheable) override;
->>>>>>> upstream-releases
 
     sk_sp<GrRenderTarget> onWrapBackendRenderTarget(const GrBackendRenderTarget&) override;
 
     sk_sp<GrRenderTarget> onWrapBackendTextureAsRenderTarget(const GrBackendTexture&,
                                                              int sampleCnt) override;
 
-<<<<<<< HEAD
-    GrBuffer* onCreateBuffer(size_t, GrBufferType, GrAccessPattern, const void*) override;
-||||||| merged common ancestors
-    GrBuffer* onCreateBuffer(size_t, GrBufferType, GrAccessPattern, const void*) override {
-        return nullptr;
-    }
-=======
     sk_sp<GrGpuBuffer> onCreateBuffer(size_t, GrGpuBufferType, GrAccessPattern,
                                       const void*) override;
->>>>>>> upstream-releases
 
     bool onReadPixels(GrSurface* surface, int left, int top, int width, int height, GrColorType,
                       void* buffer, size_t rowBytes) override;
@@ -199,17 +163,6 @@ private:
 
     void onResolveRenderTarget(GrRenderTarget* target) override { return; }
 
-<<<<<<< HEAD
-    void onFinishFlush(bool insertedSemaphores) override {
-        this->submitCommandBuffer(kSkip_SyncQueue);
-    }
-
-    // Function that uploads data onto textures with private storage mode (GPU access only).
-    bool uploadToTexture(GrMtlTexture* tex, int left, int top, int width, int height,
-                         GrColorType dataColorType, const GrMipLevel texels[], int mipLevels);
-||||||| merged common ancestors
-    void onFinishFlush(bool insertedSemaphores) override {}
-=======
     void onFinishFlush(GrSurfaceProxy*, SkSurface::BackendSurfaceAccess access,
                        SkSurface::FlushFlags flags, bool insertedSemaphores) override {
         if (flags & SkSurface::kSyncCpu_FlushFlag) {
@@ -222,7 +175,6 @@ private:
     // Function that uploads data onto textures with private storage mode (GPU access only).
     bool uploadToTexture(GrMtlTexture* tex, int left, int top, int width, int height,
                          GrColorType dataColorType, const GrMipLevel texels[], int mipLevels);
->>>>>>> upstream-releases
 
     GrStencilAttachment* createStencilAttachmentForRenderTarget(const GrRenderTarget*,
                                                                 int width,

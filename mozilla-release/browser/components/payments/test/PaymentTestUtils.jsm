@@ -505,13 +505,8 @@ var PaymentTestUtils = {
         postalCode: "Only allowed to ship to postalCodes that start with 0",
         recipient: "Can only ship to names that start with J",
         region: "Can only ship to regions that start with M",
-<<<<<<< HEAD
-        regionCode: "Regions must be 1 to 3 characters in length (sometimes ;) )",
-||||||| merged common ancestors
-=======
         regionCode:
           "Regions must be 1 to 3 characters in length (sometimes ;) )",
->>>>>>> upstream-releases
       },
     },
   },

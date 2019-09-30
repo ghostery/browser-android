@@ -193,19 +193,6 @@ html|img#editBookmarkPanelFavicon[src] {
 
 .editBookmarkPanelBottomButton {
   flex: 1;
-<<<<<<< HEAD
-  margin: 0;
-  padding: .8em 0;
-  border-top: 1px solid var(--panel-separator-color);
-||||||| merged common ancestors
-  -moz-appearance: none;
-  margin: 0;
-  padding: .8em 0;
-  color: inherit;
-  background-color: var(--arrowpanel-dimmed);
-  border-top: 1px solid var(--panel-separator-color);
-=======
->>>>>>> upstream-releases
 }
 
 .editBookmarkPanelBottomButton:not(:last-child) {

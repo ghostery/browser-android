@@ -19,20 +19,8 @@
 #include "mozilla/Unused.h"
 
 #include "gfxVR.h"
-<<<<<<< HEAD
-#include "gfxVRExternal.h"
-||||||| merged common ancestors
-#include "gfxVRExternal.h"
-#if defined(XP_WIN)
-#include "gfxVROculus.h"
-#endif
-#if defined(XP_WIN) || defined(XP_MACOSX) || (defined(XP_LINUX) && !defined(MOZ_WIDGET_ANDROID))
-#include "gfxVROpenVR.h"
-#endif
-=======
 #include "gfxVRMutex.h"
 #include <cstring>
->>>>>>> upstream-releases
 
 #include "ipc/VRLayerParent.h"
 #if !defined(MOZ_WIDGET_ANDROID)
@@ -104,43 +92,6 @@ const double kVRMaxFrameSubmitDuration = 4000.0f;  // milliseconds
 
 static StaticRefPtr<VRManager> sVRManagerSingleton;
 
-<<<<<<< HEAD
-/**
- * When VR content is active, we run the tasks at 1ms
- * intervals, enabling multiple events to be processed
- * per frame, such as haptic feedback pulses.
- */
-const uint32_t kVRActiveTaskInterval = 1;  // milliseconds
-
-/**
- * When VR content is inactive, we run the tasks at 100ms
- * intervals, enabling VR display enumeration and
- * presentation startup to be relatively responsive
- * while not consuming unnecessary resources.
- */
-const uint32_t kVRIdleTaskInterval = 100;  // milliseconds
-
-/*static*/ void VRManager::ManagerInit() {
-||||||| merged common ancestors
- /**
-  * When VR content is active, we run the tasks at 1ms
-  * intervals, enabling multiple events to be processed
-  * per frame, such as haptic feedback pulses.
-  */
-const uint32_t kVRActiveTaskInterval = 1; // milliseconds
-
- /**
-  * When VR content is inactive, we run the tasks at 100ms
-  * intervals, enabling VR display enumeration and
-  * presentation startup to be relatively responsive
-  * while not consuming unnecessary resources.
-  */
-const uint32_t kVRIdleTaskInterval = 100; // milliseconds
-
-/*static*/ void
-VRManager::ManagerInit()
-{
-=======
 /* static */
 VRManager* VRManager::Get() {
   MOZ_ASSERT(sVRManagerSingleton != nullptr);
@@ -155,7 +106,6 @@ uint32_t VRManager::AllocateDisplayID() { return ++sDisplayBase; }
 
 /*static*/
 void VRManager::ManagerInit() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // Enable gamepad extensions while VR is enabled.
@@ -171,23 +121,6 @@ void VRManager::ManagerInit() {
 }
 
 VRManager::VRManager()
-<<<<<<< HEAD
-    : mInitialized(false),
-      mAccumulator100ms(0.0f),
-      mVRDisplaysRequested(false),
-      mVRDisplaysRequestedNonFocus(false),
-      mVRControllersRequested(false),
-      mVRServiceStarted(false),
-      mTaskInterval(0) {
-||||||| merged common ancestors
-  : mInitialized(false)
-  , mAccumulator100ms(0.0f)
-  , mVRDisplaysRequested(false)
-  , mVRControllersRequested(false)
-  , mVRServiceStarted(false)
-  , mTaskInterval(0)
-{
-=======
     : mState(VRManagerState::Disabled),
       mAccumulator100ms(0.0f),
       mVRDisplaysRequested(false),
@@ -212,32 +145,10 @@ VRManager::VRManager()
       mLastUpdateDisplayInfo{},
       mBrowserState{},
       mLastSensorState{} {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRManager);
   MOZ_ASSERT(sVRManagerSingleton == nullptr);
   MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-  RefPtr<VRSystemManager> mgr;
-
-||||||| merged common ancestors
-  RefPtr<VRSystemManager> mgr;
-
-  /**
-   * We must add the VRDisplayManager's to mManagers in a careful order to
-   * ensure that we don't detect the same VRDisplay from multiple API's.
-   *
-   * Oculus comes first, as it will only enumerate Oculus HMD's and is the
-   * native interface for Oculus HMD's.
-   *
-   * OpenvR comes second, as it is the native interface for HTC Vive
-   * which is the most common HMD at this time.
-   *
-   * OSVR will be used if Oculus SDK and OpenVR don't detect any HMDS,
-   * to support everyone else.
-   */
-
-=======
 #if !defined(MOZ_WIDGET_ANDROID)
   // XRE_IsGPUProcess() is helping us to check some platforms like
   // Win 7 try which are not using GPU process but VR process is enabled.
@@ -278,7 +189,6 @@ void VRManager::OpenShmem() {
     MOZ_ASSERT(GetLastError() == 0 || GetLastError() == ERROR_ALREADY_EXISTS);
   }
 #endif  // XP_WIN
->>>>>>> upstream-releases
 #if !defined(MOZ_WIDGET_ANDROID)
   // The VR Service accesses all hardware from a separate process
   // and replaces the other VRManager when enabled.
@@ -292,21 +202,12 @@ void VRManager::OpenShmem() {
     mServiceHost->CreateService(mExternalShmem);
     return;
   }
-<<<<<<< HEAD
-  if (mVRService) {
-    mExternalManager =
-        VRSystemManagerExternal::Create(mVRService->GetAPIShmem());
-||||||| merged common ancestors
-  if (mVRService) {
-    mExternalManager = VRSystemManagerExternal::Create(mVRService->GetAPIShmem());
-=======
 #endif
 
 #if defined(XP_MACOSX)
   if (mShmemFD == 0) {
     mShmemFD =
         shm_open(kShmemName, O_RDWR, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH);
->>>>>>> upstream-releases
   }
   if (mShmemFD <= 0) {
     mShmemFD = 0;
@@ -322,37 +223,6 @@ void VRManager::OpenShmem() {
     return;
   }
 
-<<<<<<< HEAD
-  // Enable gamepad extensions while VR is enabled.
-  // Preference only can be set at the Parent process.
-  if (XRE_IsParentProcess() && gfxPrefs::VREnabled()) {
-    Preferences::SetBool("dom.gamepad.extensions.enabled", true);
-||||||| merged common ancestors
-#if defined(XP_WIN)
-  if (!mVRService) {
-    // The Oculus runtime is supported only on Windows
-    mgr = VRSystemManagerOculus::Create();
-    if (mgr) {
-      mManagers.AppendElement(mgr);
-    }
-  }
-#endif
-
-#if defined(XP_WIN) || defined(XP_MACOSX) || (defined(XP_LINUX) && !defined(MOZ_WIDGET_ANDROID))
-  if (!mVRService) {
-    // OpenVR is cross platform compatible
-    mgr = VRSystemManagerOpenVR::Create();
-    if (mgr) {
-      mManagers.AppendElement(mgr);
-    }
-  } // !mVRService
-#endif
-
-  // Enable gamepad extensions while VR is enabled.
-  // Preference only can be set at the Parent process.
-  if (XRE_IsParentProcess() && gfxPrefs::VREnabled()) {
-    Preferences::SetBool("dom.gamepad.extensions.enabled", true);
-=======
   mExternalShmem = (VRExternalShmem*)mmap(NULL, length, PROT_READ | PROT_WRITE,
                                           MAP_SHARED, mShmemFD, 0);
   if (mExternalShmem == MAP_FAILED) {
@@ -373,7 +243,6 @@ void VRManager::OpenShmem() {
       CloseShmem();
       return;
     }
->>>>>>> upstream-releases
   }
   LARGE_INTEGER length;
   length.QuadPart = sizeof(VRExternalShmem);
@@ -382,41 +251,10 @@ void VRManager::OpenShmem() {
       FILE_MAP_ALL_ACCESS,  // read/write permission
       0, 0, length.QuadPart);
 
-<<<<<<< HEAD
-VRManager::~VRManager() {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(!mInitialized);
-  MOZ_COUNT_DTOR(VRManager);
-}
-
-void VRManager::Destroy() {
-  StopTasks();
-  mVRDisplays.Clear();
-  mVRControllers.Clear();
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->Destroy();
-||||||| merged common ancestors
-VRManager::~VRManager()
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(!mInitialized);
-  MOZ_COUNT_DTOR(VRManager);
-}
-
-void
-VRManager::Destroy()
-{
-  StopTasks();
-  mVRDisplays.Clear();
-  mVRControllers.Clear();
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->Destroy();
-=======
   if (mExternalShmem == NULL) {
     // TODO - Implement logging (Bug 1558912)
     CloseShmem();
     return;
->>>>>>> upstream-releases
   }
 #elif defined(MOZ_WIDGET_ANDROID)
   mExternalShmem =
@@ -445,25 +283,7 @@ VRManager::Destroy()
 #endif
 }
 
-<<<<<<< HEAD
-void VRManager::Shutdown() {
-  mVRDisplays.Clear();
-  mVRControllers.Clear();
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->Shutdown();
-  }
-||||||| merged common ancestors
-void
-VRManager::Shutdown()
-{
-  mVRDisplays.Clear();
-  mVRControllers.Clear();
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->Shutdown();
-  }
-=======
 void VRManager::CloseShmem() {
->>>>>>> upstream-releases
 #if !defined(MOZ_WIDGET_ANDROID)
   if (!mVRProcessEnabled) {
     if (mExternalShmem) {
@@ -472,23 +292,6 @@ void VRManager::CloseShmem() {
     }
     return;
   }
-<<<<<<< HEAD
-  if (gfxPrefs::VRProcessEnabled() && VRGPUChild::IsCreated()) {
-    RefPtr<Runnable> task =
-        NS_NewRunnableFunction("VRGPUChild::SendStopVRService", []() -> void {
-          VRGPUChild* vrGPUChild = VRGPUChild::Get();
-          vrGPUChild->SendStopVRService();
-        });
-||||||| merged common ancestors
-  if (gfxPrefs::VRProcessEnabled() &&
-      VRGPUChild::IsCreated()) {
-    RefPtr<Runnable> task = NS_NewRunnableFunction(
-      "VRGPUChild::SendStopVRService",
-      [] () -> void {
-        VRGPUChild* vrGPUChild = VRGPUChild::Get();
-        vrGPUChild->SendStopVRService();
-    });
-=======
 #endif
 #if defined(XP_MACOSX)
   if (mExternalShmem) {
@@ -512,7 +315,6 @@ void VRManager::CloseShmem() {
   mExternalShmem = NULL;
 #endif
 }
->>>>>>> upstream-releases
 
 VRManager::~VRManager() {
   MOZ_ASSERT(NS_IsMainThread());
@@ -530,16 +332,6 @@ VRManager::~VRManager() {
   MOZ_COUNT_DTOR(VRManager);
 }
 
-<<<<<<< HEAD
-void VRManager::Init() { mInitialized = true; }
-||||||| merged common ancestors
-void
-VRManager::Init()
-{
-  StartTasks();
-  mInitialized = true;
-}
-=======
 void VRManager::AddLayer(VRLayerParent* aLayer) {
   mLayers.AppendElement(aLayer);
   mDisplayInfo.mPresentingGroups |= aLayer->GetGroup();
@@ -550,17 +342,7 @@ void VRManager::AddLayer(VRLayerParent* aLayer) {
   // Ensure that the content process receives the change immediately
   RefreshVRDisplays();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ VRManager* VRManager::Get() {
-  MOZ_ASSERT(sVRManagerSingleton != nullptr);
-||||||| merged common ancestors
-/* static */VRManager*
-VRManager::Get()
-{
-  MOZ_ASSERT(sVRManagerSingleton != nullptr);
-=======
 void VRManager::RemoveLayer(VRLayerParent* aLayer) {
   mLayers.RemoveElement(aLayer);
   if (mLayers.Length() == 0) {
@@ -570,27 +352,12 @@ void VRManager::RemoveLayer(VRLayerParent* aLayer) {
   for (auto layer : mLayers) {
     mDisplayInfo.mPresentingGroups |= layer->GetGroup();
   }
->>>>>>> upstream-releases
 
   // Ensure that the content process receives the change immediately
   RefreshVRDisplays();
 }
 
-<<<<<<< HEAD
 void VRManager::AddVRManagerParent(VRManagerParent* aVRManagerParent) {
-  if (mVRManagerParents.IsEmpty()) {
-    Init();
-  }
-||||||| merged common ancestors
-void
-VRManager::AddVRManagerParent(VRManagerParent* aVRManagerParent)
-{
-  if (mVRManagerParents.IsEmpty()) {
-    Init();
-  }
-=======
-void VRManager::AddVRManagerParent(VRManagerParent* aVRManagerParent) {
->>>>>>> upstream-releases
   mVRManagerParents.PutEntry(aVRManagerParent);
 }
 
@@ -627,17 +394,6 @@ void VRManager::UpdateRequestedDevices() {
  * If we don't have a 2d display attached to the system, we can call this
  * at the VR display's native refresh rate.
  **/
-<<<<<<< HEAD
-void VRManager::NotifyVsync(const TimeStamp& aVsyncTimestamp) {
-  for (const auto& manager : mManagers) {
-    manager->NotifyVSync();
-||||||| merged common ancestors
-void
-VRManager::NotifyVsync(const TimeStamp& aVsyncTimestamp)
-{
-  for (const auto& manager : mManagers) {
-    manager->NotifyVSync();
-=======
 void VRManager::NotifyVsync(const TimeStamp& aVsyncTimestamp) {
   if (mState != VRManagerState::Active) {
     return;
@@ -648,7 +404,6 @@ void VRManager::NotifyVsync(const TimeStamp& aVsyncTimestamp) {
    */
   if (mDisplayInfo.mPresentingGroups == 0) {
     StartFrame();
->>>>>>> upstream-releases
   }
 }
 
@@ -671,16 +426,8 @@ void VRManager::StopTasks() {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void VRManager::TaskTimerCallback(nsITimer* aTimer, void* aClosure) {
-||||||| merged common ancestors
-/*static*/ void
-VRManager::TaskTimerCallback(nsITimer* aTimer, void* aClosure)
-{
-=======
 /*static*/
 void VRManager::TaskTimerCallback(nsITimer* aTimer, void* aClosure) {
->>>>>>> upstream-releases
   /**
    * It is safe to use the pointer passed in aClosure to reference the
    * VRManager object as the timer is canceled in VRManager::Destroy.
@@ -745,18 +492,8 @@ uint32_t VRManager::GetOptimalTaskInterval() {
    * has already been activated, we schedule tasks more
    * frequently.
    */
-<<<<<<< HEAD
-  bool wantGranularTasks = mVRDisplaysRequested || mVRControllersRequested ||
-                           mVRDisplays.Count() || mVRControllers.Count();
-||||||| merged common ancestors
-  bool wantGranularTasks = mVRDisplaysRequested ||
-                           mVRControllersRequested ||
-                           mVRDisplays.Count() ||
-                           mVRControllers.Count();
-=======
   bool wantGranularTasks = mVRDisplaysRequested || mVRControllersRequested ||
                            mDisplayInfo.mDisplayID != 0;
->>>>>>> upstream-releases
   if (wantGranularTasks) {
     return kVRActiveTaskInterval;
   }
@@ -771,33 +508,7 @@ uint32_t VRManager::GetOptimalTaskInterval() {
  * called once per VSync if it wasn't
  * called within the last 1ms.
  */
-<<<<<<< HEAD
-void VRManager::Run1msTasks(double aDeltaTime) {
-  for (const auto& manager : mManagers) {
-    manager->Run1msTasks(aDeltaTime);
-  }
-
-  for (auto iter = mVRDisplays.Iter(); !iter.Done(); iter.Next()) {
-    gfx::VRDisplayHost* display = iter.UserData();
-    display->Run1msTasks(aDeltaTime);
-  }
-}
-||||||| merged common ancestors
-void
-VRManager::Run1msTasks(double aDeltaTime)
-{
-  for (const auto& manager : mManagers) {
-    manager->Run1msTasks(aDeltaTime);
-  }
-
-  for (auto iter = mVRDisplays.Iter(); !iter.Done(); iter.Next()) {
-    gfx::VRDisplayHost* display = iter.UserData();
-    display->Run1msTasks(aDeltaTime);
-  }
-}
-=======
 void VRManager::Run1msTasks(double aDeltaTime) { UpdateHaptics(aDeltaTime); }
->>>>>>> upstream-releases
 
 /**
  * Run10msTasks() is guaranteed not to be
@@ -858,27 +569,11 @@ void VRManager::CheckForInactiveTimeout() {
   }
 }
 
-<<<<<<< HEAD
-void VRManager::NotifyVRVsync(const uint32_t& aDisplayID) {
-  for (const auto& manager : mManagers) {
-    if (manager->GetIsPresenting()) {
-      manager->HandleInput();
-    }
-||||||| merged common ancestors
-void
-VRManager::NotifyVRVsync(const uint32_t& aDisplayID)
-{
-  for (const auto& manager: mManagers) {
-    if (manager->GetIsPresenting()) {
-      manager->HandleInput();
-    }
-=======
 void VRManager::CheckForShutdown() {
   // Check for remote end shutdown
   if (mState != VRManagerState::Disabled && mState != VRManagerState::Idle &&
       mDisplayInfo.mDisplayState.shutdown) {
     Shutdown();
->>>>>>> upstream-releases
   }
 }
 
@@ -903,36 +598,9 @@ void VRManager::CheckForPuppetCompletion() {
 }
 #endif  // !defined(MOZ_WIDGET_ANDROID)
 
-<<<<<<< HEAD
-void VRManager::EnumerateVRDisplays() {
-  StartTasks();
-  /**
-   * Throttle the rate of enumeration to the interval set in
-   * VRDisplayEnumerateInterval
-   */
-  if (!mLastDisplayEnumerationTime.IsNull()) {
-    TimeDuration duration = TimeStamp::Now() - mLastDisplayEnumerationTime;
-    if (duration.ToMilliseconds() < gfxPrefs::VRDisplayEnumerateInterval()) {
-      return;
-    }
-||||||| merged common ancestors
-void
-VRManager::EnumerateVRDisplays()
-{
-  /**
-   * Throttle the rate of enumeration to the interval set in
-   * VRDisplayEnumerateInterval
-   */
-  if (!mLastDisplayEnumerationTime.IsNull()) {
-    TimeDuration duration = TimeStamp::Now() - mLastDisplayEnumerationTime;
-    if (duration.ToMilliseconds() < gfxPrefs::VRDisplayEnumerateInterval()) {
-      return;
-    }
-=======
 void VRManager::StartFrame() {
   if (mState != VRManagerState::Active) {
     return;
->>>>>>> upstream-releases
   }
   AUTO_PROFILER_TRACING("VR", "GetSensorState", OTHER);
 
@@ -960,59 +628,6 @@ void VRManager::StartFrame() {
   mFrameStarted = true;
   mLastStartedFrame = mDisplayInfo.mFrameId;
 
-<<<<<<< HEAD
-  /**
-   * We must start the VR Service thread
-   * and VR Process before enumeration.
-   * We don't want to start this until we will
-   * actualy enumerate, to avoid continuously
-   * re-launching the thread/process when
-   * no hardware is found or a VR software update
-   * is in progress
-   */
-#if !defined(MOZ_WIDGET_ANDROID)
-  // Tell VR process to start VR service.
-  if (gfxPrefs::VRProcessEnabled() && !mVRServiceStarted) {
-    RefPtr<Runnable> task =
-        NS_NewRunnableFunction("VRGPUChild::SendStartVRService", []() -> void {
-          VRGPUChild* vrGPUChild = VRGPUChild::Get();
-          vrGPUChild->SendStartVRService();
-        });
-
-    NS_DispatchToMainThread(task.forget());
-    mVRServiceStarted = true;
-  } else if (!gfxPrefs::VRProcessEnabled()) {
-    if (mVRService) {
-      mVRService->Start();
-      mVRServiceStarted = true;
-||||||| merged common ancestors
-  /**
-   * We must start the VR Service thread
-   * and VR Process before enumeration.
-   * We don't want to start this until we will
-   * actualy enumerate, to avoid continuously
-   * re-launching the thread/process when
-   * no hardware is found or a VR software update
-   * is in progress
-   */
-#if !defined(MOZ_WIDGET_ANDROID)
-    // Tell VR process to start VR service.
-    if (gfxPrefs::VRProcessEnabled() && !mVRServiceStarted) {
-      RefPtr<Runnable> task = NS_NewRunnableFunction(
-        "VRGPUChild::SendStartVRService",
-        [] () -> void {
-          VRGPUChild* vrGPUChild = VRGPUChild::Get();
-          vrGPUChild->SendStartVRService();
-      });
-
-      NS_DispatchToMainThread(task.forget());
-      mVRServiceStarted = true;
-    } else if (!gfxPrefs::VRProcessEnabled()){
-      if (mVRService) {
-        mVRService->Start();
-        mVRServiceStarted = true;
-      }
-=======
   DispatchVRDisplayInfoUpdate();
 }
 
@@ -1037,15 +652,7 @@ void VRManager::EnumerateVRDisplays() {
           StaticPrefs::dom_vr_display_enumerate_interval()) {
         return;
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-#endif
-||||||| merged common ancestors
-#endif
-=======
->>>>>>> upstream-releases
 
     if (!mEarliestRestartTime.IsNull() &&
         mEarliestRestartTime > TimeStamp::Now()) {
@@ -1105,17 +712,9 @@ void VRManager::EnumerateVRDisplays() {
   }  // if (mState == VRManagerState::Enumeration)
 }
 
-<<<<<<< HEAD
-void VRManager::RefreshVRDisplays(bool aMustDispatch) {
-||||||| merged common ancestors
-void
-VRManager::RefreshVRDisplays(bool aMustDispatch)
-{
-=======
 void VRManager::RefreshVRDisplays(bool aMustDispatch) {
   uint32_t previousDisplayID = mDisplayInfo.GetDisplayID();
 
->>>>>>> upstream-releases
   /**
    * If we aren't viewing WebVR content, don't enumerate
    * new hardware, as it will cause some devices to power on
@@ -1131,30 +730,8 @@ void VRManager::RefreshVRDisplays(bool aMustDispatch) {
   }
   bool changed = false;
 
-<<<<<<< HEAD
-  /**
-   * VRSystemManager::GetHMDs will not activate new hardware
-   * or result in interruption of other VR activities.
-   * We can call it even when suppressing enumeration to get
-   * the already-enumerated displays.
-   */
-  nsTArray<RefPtr<gfx::VRDisplayHost>> displays;
-  for (const auto& manager : mManagers) {
-    manager->GetHMDs(displays);
-||||||| merged common ancestors
-  /**
-   * VRSystemManager::GetHMDs will not activate new hardware
-   * or result in interruption of other VR activities.
-   * We can call it even when suppressing enumeration to get
-   * the already-enumerated displays.
-   */
-  nsTArray<RefPtr<gfx::VRDisplayHost> > displays;
-  for (const auto& manager: mManagers) {
-    manager->GetHMDs(displays);
-=======
   if (previousDisplayID != mDisplayInfo.GetDisplayID()) {
     changed = true;
->>>>>>> upstream-releases
   }
 
   if (mState == VRManagerState::Active &&
@@ -1168,21 +745,6 @@ void VRManager::RefreshVRDisplays(bool aMustDispatch) {
   }
 }
 
-<<<<<<< HEAD
-  for (const auto& display : displays) {
-    if (!GetDisplay(display->GetDisplayInfo().GetDisplayID())) {
-      // This is a new display
-      displaySetChanged = true;
-      break;
-    }
-||||||| merged common ancestors
-  for (const auto& display: displays) {
-    if (!GetDisplay(display->GetDisplayInfo().GetDisplayID())) {
-      // This is a new display
-      displaySetChanged = true;
-      break;
-    }
-=======
 void VRManager::DispatchVRDisplayInfoUpdate() {
   // This could be simplified further by only supporting one display
   nsTArray<VRDisplayInfo> displayUpdates;
@@ -1202,7 +764,6 @@ void VRManager::StopAllHaptics() {
   }
   PushState();
 }
->>>>>>> upstream-releases
 
 void VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
                               double aIntensity, double aDuration,
@@ -1235,21 +796,6 @@ void VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
       bestSlotIndex = i;
     }
   }
-<<<<<<< HEAD
-
-  // Rebuild the HashMap if there are additions or removals
-  if (displaySetChanged) {
-    mVRDisplays.Clear();
-    for (const auto& display : displays) {
-      mVRDisplays.Put(display->GetDisplayInfo().GetDisplayID(), display);
-||||||| merged common ancestors
-
-  // Rebuild the HashMap if there are additions or removals
-  if (displaySetChanged) {
-    mVRDisplays.Clear();
-    for (const auto& display: displays) {
-      mVRDisplays.Put(display->GetDisplayInfo().GetDisplayID(), display);
-=======
   // Override the last pulse on the same actuator if present.
   for (size_t i = 0; i < mozilla::ArrayLength(mBrowserState.hapticState); i++) {
     const VRHapticState& state = mBrowserState.hapticState[i];
@@ -1261,7 +807,6 @@ void VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
         state.hapticIndex == aHapticIndex) {
       // Found pulse on same actuator -- let's override it.
       bestSlotIndex = i;
->>>>>>> upstream-releases
     }
   }
   ClearHapticSlot(bestSlotIndex);
@@ -1310,21 +855,9 @@ void VRManager::StopVibrateHaptic(uint32_t aControllerIdx) {
   PushState();
 }
 
-<<<<<<< HEAD
-void VRManager::DispatchVRDisplayInfoUpdate() {
-  nsTArray<VRDisplayInfo> update;
-  GetVRDisplayInfo(update);
-||||||| merged common ancestors
-void
-VRManager::DispatchVRDisplayInfoUpdate()
-{
-  nsTArray<VRDisplayInfo> update;
-  GetVRDisplayInfo(update);
-=======
 void VRManager::NotifyVibrateHapticCompleted(const VRManagerPromise& aPromise) {
   aPromise.mParent->SendReplyGamepadVibrateHaptic(aPromise.mPromiseID);
 }
->>>>>>> upstream-releases
 
 void VRManager::StartVRNavigation(const uint32_t& aDisplayID) {
   if (mState != VRManagerState::Active) {
@@ -1347,30 +880,6 @@ void VRManager::StartVRNavigation(const uint32_t& aDisplayID) {
   PushState();
 }
 
-<<<<<<< HEAD
-/**
- * Get any VR displays that have already been enumerated without
- * activating any new devices.
- */
-void VRManager::GetVRDisplayInfo(nsTArray<VRDisplayInfo>& aDisplayInfo) {
-  aDisplayInfo.Clear();
-  for (auto iter = mVRDisplays.Iter(); !iter.Done(); iter.Next()) {
-    gfx::VRDisplayHost* display = iter.UserData();
-    aDisplayInfo.AppendElement(VRDisplayInfo(display->GetDisplayInfo()));
-||||||| merged common ancestors
-
-/**
- * Get any VR displays that have already been enumerated without
- * activating any new devices.
- */
-void
-VRManager::GetVRDisplayInfo(nsTArray<VRDisplayInfo>& aDisplayInfo)
-{
-  aDisplayInfo.Clear();
-  for (auto iter = mVRDisplays.Iter(); !iter.Done(); iter.Next()) {
-    gfx::VRDisplayHost* display = iter.UserData();
-    aDisplayInfo.AppendElement(VRDisplayInfo(display->GetDisplayInfo()));
-=======
 void VRManager::StopVRNavigation(const uint32_t& aDisplayID,
                                  const TimeDuration& aTimeout) {
   if (mState != VRManagerState::Active) {
@@ -1399,26 +908,12 @@ bool VRManager::RunPuppet(const InfallibleTArray<uint64_t>& aBuffer,
   if (mManagerParentRunningPuppet != nullptr) {
     // Only one parent may run a puppet at a time
     return false;
->>>>>>> upstream-releases
   }
   mManagerParentRunningPuppet = aManagerParent;
   mServiceHost->PuppetSubmit(aBuffer);
   return true;
 }
 
-<<<<<<< HEAD
-RefPtr<gfx::VRDisplayHost> VRManager::GetDisplay(const uint32_t& aDisplayID) {
-  RefPtr<gfx::VRDisplayHost> display;
-  if (mVRDisplays.Get(aDisplayID, getter_AddRefs(display))) {
-    return display;
-||||||| merged common ancestors
-RefPtr<gfx::VRDisplayHost>
-VRManager::GetDisplay(const uint32_t& aDisplayID)
-{
-  RefPtr<gfx::VRDisplayHost> display;
-  if (mVRDisplays.Get(aDisplayID, getter_AddRefs(display))) {
-    return display;
-=======
 void VRManager::ResetPuppet(VRManagerParent* aManagerParent) {
   mManagerParentsWaitingForPuppetReset.PutEntry(aManagerParent);
   if (mManagerParentRunningPuppet != nullptr) {
@@ -1442,7 +937,6 @@ void VRManager::PullState(
     const std::function<bool()>& aWaitCondition /* = nullptr */) {
   if (!mExternalShmem) {
     return;
->>>>>>> upstream-releases
   }
   bool done = false;
   while (!done) {
@@ -1477,26 +971,11 @@ void VRManager::PullState(
 }
 #else
 
-<<<<<<< HEAD
-RefPtr<gfx::VRControllerHost> VRManager::GetController(
-    const uint32_t& aControllerID) {
-  RefPtr<gfx::VRControllerHost> controller;
-  if (mVRControllers.Get(aControllerID, getter_AddRefs(controller))) {
-    return controller;
-||||||| merged common ancestors
-RefPtr<gfx::VRControllerHost>
-VRManager::GetController(const uint32_t& aControllerID)
-{
-  RefPtr<gfx::VRControllerHost> controller;
-  if (mVRControllers.Get(aControllerID, getter_AddRefs(controller))) {
-    return controller;
-=======
 void VRManager::PullState(
     const std::function<bool()>& aWaitCondition /* = nullptr */) {
   MOZ_ASSERT(mExternalShmem);
   if (!mExternalShmem) {
     return;
->>>>>>> upstream-releases
   }
   while (true) {
     {  // Scope for WaitForMutex
@@ -1540,27 +1019,9 @@ void VRManager::PullState(
 }
 #endif    // defined(MOZ_WIDGET_ANDROID)
 
-<<<<<<< HEAD
-void VRManager::GetVRControllerInfo(
-    nsTArray<VRControllerInfo>& aControllerInfo) {
-  aControllerInfo.Clear();
-  for (auto iter = mVRControllers.Iter(); !iter.Done(); iter.Next()) {
-    gfx::VRControllerHost* controller = iter.UserData();
-    aControllerInfo.AppendElement(
-        VRControllerInfo(controller->GetControllerInfo()));
-||||||| merged common ancestors
-void
-VRManager::GetVRControllerInfo(nsTArray<VRControllerInfo>& aControllerInfo)
-{
-  aControllerInfo.Clear();
-  for (auto iter = mVRControllers.Iter(); !iter.Done(); iter.Next()) {
-    gfx::VRControllerHost* controller = iter.UserData();
-    aControllerInfo.AppendElement(VRControllerInfo(controller->GetControllerInfo()));
-=======
 void VRManager::PushState(bool aNotifyCond) {
   if (!mExternalShmem) {
     return;
->>>>>>> upstream-releases
   }
 #if defined(MOZ_WIDGET_ANDROID)
   if (pthread_mutex_lock((pthread_mutex_t*)&(mExternalShmem->geckoMutex)) ==
@@ -1587,15 +1048,6 @@ void VRManager::PushState(bool aNotifyCond) {
 #endif    // defined(MOZ_WIDGET_ANDROID)
 }
 
-<<<<<<< HEAD
-void VRManager::RefreshVRControllers() {
-  ScanForControllers();
-||||||| merged common ancestors
-void
-VRManager::RefreshVRControllers()
-{
-  ScanForControllers();
-=======
 void VRManager::Destroy() {
   if (mState == VRManagerState::Disabled) {
     return;
@@ -1604,22 +1056,12 @@ void VRManager::Destroy() {
   StopTasks();
   mState = VRManagerState::Disabled;
 }
->>>>>>> upstream-releases
 
 void VRManager::Shutdown() {
   if (mState == VRManagerState::Disabled || mState == VRManagerState::Idle) {
     return;
   }
 
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < mManagers.Length() && controllers.Length() == 0;
-       ++i) {
-    mManagers[i]->GetControllers(controllers);
-||||||| merged common ancestors
-  for (uint32_t i = 0; i < mManagers.Length()
-      && controllers.Length() == 0; ++i) {
-    mManagers[i]->GetControllers(controllers);
-=======
   if (mDisplayInfo.mDisplayState.shutdown) {
     // Shutdown was requested by VR Service, so we must throttle
     // as requested by the VR Service
@@ -1627,7 +1069,6 @@ void VRManager::Shutdown() {
     mEarliestRestartTime =
         now + TimeDuration::FromMilliseconds(
                   (double)mDisplayInfo.mDisplayState.minRestartInterval);
->>>>>>> upstream-releases
   }
 
   StopAllHaptics();
@@ -1642,19 +1083,6 @@ void VRManager::Shutdown() {
     DispatchVRDisplayInfoUpdate();
   }
 
-<<<<<<< HEAD
-  for (const auto& controller : controllers) {
-    if (!GetController(controller->GetControllerInfo().GetControllerID())) {
-      // This is a new controller
-      controllerInfoChanged = true;
-      break;
-||||||| merged common ancestors
-  for (const auto& controller: controllers) {
-    if (!GetController(controller->GetControllerInfo().GetControllerID())) {
-      // This is a new controller
-      controllerInfoChanged = true;
-      break;
-=======
 #if !defined(MOZ_WIDGET_ANDROID)
   mServiceHost->StopService();
 #endif
@@ -1709,52 +1137,14 @@ void VRManager::CheckWatchDog() {
     if (duration.ToMilliseconds() >
         StaticPrefs::dom_vr_display_rafMaxDuration()) {
       bShouldStartFrame = true;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  if (controllerInfoChanged) {
-    mVRControllers.Clear();
-    for (const auto& controller : controllers) {
-      mVRControllers.Put(controller->GetControllerInfo().GetControllerID(),
-                         controller);
-    }
-||||||| merged common ancestors
-  if (controllerInfoChanged) {
-    mVRControllers.Clear();
-    for (const auto& controller: controllers) {
-      mVRControllers.Put(controller->GetControllerInfo().GetControllerID(),
-                         controller);
-    }
-=======
   if (bShouldStartFrame) {
     StartFrame();
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void VRManager::ScanForControllers() {
-  // We don't have to do this every frame, so check if we
-  // have enumerated recently
-  if (!mLastControllerEnumerationTime.IsNull()) {
-    TimeDuration duration = TimeStamp::Now() - mLastControllerEnumerationTime;
-    if (duration.ToMilliseconds() < gfxPrefs::VRControllerEnumerateInterval()) {
-      return;
-    }
-||||||| merged common ancestors
-void
-VRManager::ScanForControllers()
-{
-  // We don't have to do this every frame, so check if we
-  // have enumerated recently
-  if (!mLastControllerEnumerationTime.IsNull()) {
-    TimeDuration duration = TimeStamp::Now() - mLastControllerEnumerationTime;
-    if (duration.ToMilliseconds() < gfxPrefs::VRControllerEnumerateInterval()) {
-      return;
-    }
-=======
 void VRManager::ExpireNavigationTransition() {
   if (mState != VRManagerState::Active) {
     return;
@@ -1762,7 +1152,6 @@ void VRManager::ExpireNavigationTransition() {
   if (!mVRNavigationTransitionEnd.IsNull() &&
       TimeStamp::Now() > mVRNavigationTransitionEnd) {
     mBrowserState.navigationTransitionActive = false;
->>>>>>> upstream-releases
   }
 }
 
@@ -1807,21 +1196,9 @@ void VRManager::ShutdownSubmitThread() {
   }
 }
 
-<<<<<<< HEAD
-void VRManager::RemoveControllers() {
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->RemoveControllers();
-||||||| merged common ancestors
-void
-VRManager::RemoveControllers()
-{
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->RemoveControllers();
-=======
 void VRManager::StartPresentation() {
   if (mState != VRManagerState::Active) {
     return;
->>>>>>> upstream-releases
   }
   if (mBrowserState.presentationActive) {
     return;
@@ -1844,23 +1221,11 @@ void VRManager::StartPresentation() {
   mLastStartedFrame = 0;
 }
 
-<<<<<<< HEAD
-void VRManager::CreateVRTestSystem() {
-  if (mPuppetManager) {
-    mPuppetManager->ClearTestDisplays();
-||||||| merged common ancestors
-void
-VRManager::CreateVRTestSystem()
-{
-  if (mPuppetManager) {
-    mPuppetManager->ClearTestDisplays();
-=======
 void VRManager::StopPresentation() {
   if (mState != VRManagerState::Active) {
     return;
   }
   if (!mBrowserState.presentationActive) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -1902,57 +1267,20 @@ void VRManager::StopPresentation() {
   }
 }
 
-<<<<<<< HEAD
-VRSystemManagerPuppet* VRManager::GetPuppetManager() {
-  MOZ_ASSERT(mPuppetManager);
-  return mPuppetManager;
-||||||| merged common ancestors
-VRSystemManagerPuppet*
-VRManager::GetPuppetManager()
-{
-  MOZ_ASSERT(mPuppetManager);
-  return mPuppetManager;
-=======
 bool VRManager::IsPresenting() {
   if (mExternalShmem) {
     return mDisplayInfo.mPresentingGroups != 0;
   }
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-VRSystemManagerExternal* VRManager::GetExternalManager() {
-  MOZ_ASSERT(mExternalManager);
-  return mExternalManager;
-||||||| merged common ancestors
-VRSystemManagerExternal*
-VRManager::GetExternalManager()
-{
-  MOZ_ASSERT(mExternalManager);
-  return mExternalManager;
-=======
 void VRManager::SetGroupMask(uint32_t aGroupMask) {
   if (mState != VRManagerState::Active) {
     return;
   }
   mDisplayInfo.mGroupMask = aGroupMask;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <class T>
-void VRManager::NotifyGamepadChange(uint32_t aIndex, const T& aInfo) {
-  dom::GamepadChangeEventBody body(aInfo);
-  dom::GamepadChangeEvent e(aIndex, dom::GamepadServiceType::VR, body);
-||||||| merged common ancestors
-template<class T>
-void
-VRManager::NotifyGamepadChange(uint32_t aIndex, const T& aInfo)
-{
-  dom::GamepadChangeEventBody body(aInfo);
-  dom::GamepadChangeEvent e(aIndex, dom::GamepadServiceType::VR, body);
-=======
 void VRManager::SubmitFrame(VRLayerParent* aLayer,
                             const layers::SurfaceDescriptor& aTexture,
                             uint64_t aFrameId, const gfx::Rect& aLeftEyeRect,
@@ -1965,23 +1293,12 @@ void VRManager::SubmitFrame(VRLayerParent* aLayer,
     // Suppress layers hidden by the group mask
     return;
   }
->>>>>>> upstream-releases
 
   // Ensure that we only accept the first SubmitFrame call per RAF cycle.
   if (!mFrameStarted || aFrameId != mDisplayInfo.mFrameId) {
     return;
   }
 
-<<<<<<< HEAD
-void VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
-                              double aIntensity, double aDuration,
-                              const VRManagerPromise& aPromise)
-||||||| merged common ancestors
-void
-VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
-                         double aIntensity, double aDuration,
-                         const VRManagerPromise& aPromise)
-=======
   /**
    * Do not queue more submit frames until the last submitted frame is
    * already processed and the new WebGL texture is ready.
@@ -1992,19 +1309,7 @@ VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
     mLastStartedFrame = 0;
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-{
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->VibrateHaptic(aControllerIdx, aHapticIndex, aIntensity,
-                                aDuration, aPromise);
-||||||| merged common ancestors
-{
-  for (uint32_t i = 0; i < mManagers.Length(); ++i) {
-    mManagers[i]->VibrateHaptic(aControllerIdx, aHapticIndex,
-                                aIntensity, aDuration, aPromise);
-=======
   mLastSubmittedFrameId = aFrameId;
 
   mFrameStarted = false;
@@ -2027,21 +1332,9 @@ VRManager::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
 #else
     CompositorThreadHolder::Loop()->PostTask(task.forget());
 #endif  // defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void VRManager::StopVibrateHaptic(uint32_t aControllerIdx) {
-  for (const auto& manager : mManagers) {
-    manager->StopVibrateHaptic(aControllerIdx);
-||||||| merged common ancestors
-void
-VRManager::StopVibrateHaptic(uint32_t aControllerIdx)
-{
-  for (const auto& manager: mManagers) {
-    manager->StopVibrateHaptic(aControllerIdx);
-=======
 bool VRManager::SubmitFrame(const layers::SurfaceDescriptor& aTexture,
                             uint64_t aFrameId, const gfx::Rect& aLeftEyeRect,
                             const gfx::Rect& aRightEyeRect) {
@@ -2102,39 +1395,13 @@ bool VRManager::SubmitFrame(const layers::SurfaceDescriptor& aTexture,
       MOZ_ASSERT(false);
       return false;
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-void VRManager::NotifyVibrateHapticCompleted(const VRManagerPromise& aPromise) {
-  aPromise.mParent->SendReplyGamepadVibrateHaptic(aPromise.mPromiseID);
-}
-||||||| merged common ancestors
-void
-VRManager::NotifyVibrateHapticCompleted(const VRManagerPromise& aPromise)
-{
-  aPromise.mParent->SendReplyGamepadVibrateHaptic(aPromise.mPromiseID);
-}
-=======
   layer.frameId = aFrameId;
   layer.inputFrameId =
       mDisplayInfo.mLastSensorState[mDisplayInfo.mFrameId % kVRMaxLatencyFrames]
           .inputFrameID;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void VRManager::DispatchSubmitFrameResult(
-    uint32_t aDisplayID, const VRSubmitFrameResultInfo& aResult) {
-  for (auto iter = mVRManagerParents.Iter(); !iter.Done(); iter.Next()) {
-    Unused << iter.Get()->GetKey()->SendDispatchSubmitFrameResult(aDisplayID,
-                                                                  aResult);
-||||||| merged common ancestors
-void
-VRManager::DispatchSubmitFrameResult(uint32_t aDisplayID, const VRSubmitFrameResultInfo& aResult)
-{
-  for (auto iter = mVRManagerParents.Iter(); !iter.Done(); iter.Next()) {
-    Unused << iter.Get()->GetKey()->SendDispatchSubmitFrameResult(aDisplayID, aResult);
-=======
   layer.leftEyeRect.x = aLeftEyeRect.x;
   layer.leftEyeRect.y = aLeftEyeRect.y;
   layer.leftEyeRect.width = aLeftEyeRect.width;
@@ -2157,7 +1424,6 @@ VRManager::DispatchSubmitFrameResult(uint32_t aDisplayID, const VRSubmitFrameRes
     // External implementation wants to supress frames, service has shut
     // down or hardware has been disconnected.
     return false;
->>>>>>> upstream-releases
   }
 
   return mDisplayInfo.mDisplayState.lastSubmittedFrameSuccessful;
@@ -2167,19 +1433,6 @@ VRManager::DispatchSubmitFrameResult(uint32_t aDisplayID, const VRSubmitFrameRes
 #endif
 }
 
-<<<<<<< HEAD
-void VRManager::StartVRNavigation(const uint32_t& aDisplayID) {
-  RefPtr<VRDisplayHost> display = GetDisplay(aDisplayID);
-  if (display) {
-    display->StartVRNavigation();
-||||||| merged common ancestors
-void
-VRManager::StartVRNavigation(const uint32_t& aDisplayID)
-{
-  RefPtr<VRDisplayHost> display = GetDisplay(aDisplayID);
-  if (display) {
-    display->StartVRNavigation();
-=======
 void VRManager::SubmitFrameInternal(const layers::SurfaceDescriptor& aTexture,
                                     uint64_t aFrameId,
                                     const gfx::Rect& aLeftEyeRect,
@@ -2197,7 +1450,6 @@ void VRManager::SubmitFrameInternal(const layers::SurfaceDescriptor& aTexture,
       return;
     }
     mCurrentSubmitTask = nullptr;
->>>>>>> upstream-releases
   }
 
 #if defined(XP_WIN) || defined(XP_MACOSX) || defined(MOZ_WIDGET_ANDROID)
@@ -2219,26 +1471,11 @@ void VRManager::SubmitFrameInternal(const layers::SurfaceDescriptor& aTexture,
 #endif
 }
 
-<<<<<<< HEAD
-void VRManager::StopVRNavigation(const uint32_t& aDisplayID,
-                                 const TimeDuration& aTimeout) {
-  RefPtr<VRDisplayHost> display = GetDisplay(aDisplayID);
-  if (display) {
-    display->StopVRNavigation(aTimeout);
-||||||| merged common ancestors
-void
-VRManager::StopVRNavigation(const uint32_t& aDisplayID, const TimeDuration& aTimeout)
-{
-  RefPtr<VRDisplayHost> display = GetDisplay(aDisplayID);
-  if (display) {
-    display->StopVRNavigation(aTimeout);
-=======
 void VRManager::CancelCurrentSubmitTask() {
   MonitorAutoLock lock(mCurrentSubmitTaskMonitor);
   if (mCurrentSubmitTask) {
     mCurrentSubmitTask->Cancel();
     mCurrentSubmitTask = nullptr;
->>>>>>> upstream-releases
   }
 }
 

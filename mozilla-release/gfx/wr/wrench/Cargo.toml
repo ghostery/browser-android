@@ -14,15 +14,7 @@ env_logger = { version = "0.5", optional = true }
 euclid = "0.19"
 gleam = "0.6.2"
 glutin = "0.17"
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/Cargo.toml
-app_units = "0.7"
-image = "0.20"
-||||||| merged common ancestors
-app_units = "0.7"
-image = "0.19"
-=======
 image = "0.21"
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/Cargo.toml
 clap = { version = "2", features = ["yaml"] }
 lazy_static = "1"
 log = "0.4"
@@ -32,16 +24,8 @@ ron = "0.1.5"
 time = "0.1"
 crossbeam = "0.2"
 osmesa-sys = { version = "0.1.2", optional = true }
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/Cargo.toml
-osmesa-src = { git = "https://github.com/servo/osmesa-src", optional = true }
-webrender = {path = "../webrender", features=["capture","replay","debugger","png","profiler"]}
-||||||| merged common ancestors
-osmesa-src = { git = "https://github.com/jrmuizel/osmesa-src", optional = true, branch = "serialize" }
-webrender = {path = "../webrender", features=["capture","replay","debugger","png","profiler"]}
-=======
 osmesa-src = { git = "https://github.com/servo/osmesa-src", optional = true }
 webrender = {path = "../webrender", features=["capture","replay","debugger","png","profiler","no_static_freetype"]}
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/Cargo.toml
 webrender_api = {path = "../webrender_api", features=["serialize","deserialize"]}
 winit = "0.16"
 serde = {version = "1.0", features = ["derive"] }
@@ -57,13 +41,7 @@ headless = [ "osmesa-sys", "osmesa-src" ]
 pathfinder = [ "webrender/pathfinder" ]
 
 [target.'cfg(target_os = "windows")'.dependencies]
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/Cargo.toml
-dwrote = "0.6.2"
-||||||| merged common ancestors
-dwrote = "0.5.2"
-=======
 dwrote = "0.9"
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/Cargo.toml
 mozangle = {version = "0.1.5", features = ["egl"]}
 
 [target.'cfg(all(unix, not(target_os = "android")))'.dependencies]

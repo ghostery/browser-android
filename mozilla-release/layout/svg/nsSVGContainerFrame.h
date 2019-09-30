@@ -38,35 +38,14 @@ class PresShell;
  * Do *not* blindly cast to SVG element types in this class's methods (see the
  * warning comment for nsSVGDisplayContainerFrame below).
  */
-<<<<<<< HEAD
-class nsSVGContainerFrame : public nsContainerFrame {
-  friend nsIFrame* NS_NewSVGContainerFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-class nsSVGContainerFrame : public nsContainerFrame
-{
-  friend nsIFrame* NS_NewSVGContainerFrame(nsIPresShell* aPresShell,
-=======
 class nsSVGContainerFrame : public nsContainerFrame {
   friend nsIFrame* NS_NewSVGContainerFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                            ComputedStyle* aStyle);
-<<<<<<< HEAD
-
- protected:
-  nsSVGContainerFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsContainerFrame(aStyle, aID) {
-||||||| merged common ancestors
-protected:
-  nsSVGContainerFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsContainerFrame(aStyle, aID)
-  {
-=======
 
  protected:
   nsSVGContainerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                       ClassID aID)
       : nsContainerFrame(aStyle, aPresContext, aID) {
->>>>>>> upstream-releases
     AddStateBits(NS_FRAME_SVG_LAYOUT);
   }
 
@@ -129,28 +108,12 @@ protected:
  * SVG namespace. Do *not* blindly cast to SVG element types.
  */
 class nsSVGDisplayContainerFrame : public nsSVGContainerFrame,
-<<<<<<< HEAD
-                                   public nsSVGDisplayableFrame {
- protected:
-  nsSVGDisplayContainerFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
-      : nsSVGContainerFrame(aStyle, aID) {
-    AddStateBits(NS_FRAME_MAY_BE_TRANSFORMED);
-||||||| merged common ancestors
-                                   public nsSVGDisplayableFrame
-{
-protected:
-  nsSVGDisplayContainerFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
-    : nsSVGContainerFrame(aStyle, aID)
-  {
-     AddStateBits(NS_FRAME_MAY_BE_TRANSFORMED);
-=======
                                    public nsSVGDisplayableFrame {
  protected:
   nsSVGDisplayContainerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                              nsIFrame::ClassID aID)
       : nsSVGContainerFrame(aStyle, aPresContext, aID) {
     AddStateBits(NS_FRAME_MAY_BE_TRANSFORMED);
->>>>>>> upstream-releases
   }
 
  public:

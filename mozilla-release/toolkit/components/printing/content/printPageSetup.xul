@@ -30,16 +30,8 @@
     <tabpanels flex="1">
       <vbox>
         <groupbox>
-<<<<<<< HEAD
-          <caption><label value="&formatGroup.label;"/></caption>
-          <vbox class="groupbox-body">
-||||||| merged common ancestors
-          <caption label="&formatGroup.label;"/>
-          <vbox>
-=======
           <caption><label data-l10n-id="format-group-label"/></caption>
           <vbox class="groupbox-body">
->>>>>>> upstream-releases
             <hbox align="center">
               <label control="orientation" data-l10n-id="orientation-label"/>
               <radiogroup id="orientation" oncommand="setOrientation()">
@@ -67,39 +59,16 @@
           </vbox>
         </groupbox>
         <groupbox>
-<<<<<<< HEAD
-          <caption><label value="&optionsGroup.label;"/></caption>
-||||||| merged common ancestors
-          <caption label="&optionsGroup.label;"/>
-=======
           <caption><label data-l10n-id="options-group-label"/></caption>
->>>>>>> upstream-releases
           <checkbox id="printBG"
-<<<<<<< HEAD
-                    class="groupbox-body"
-                    label="&printBG.label;"
-                    accesskey="&printBG.accesskey;"/>
-||||||| merged common ancestors
-                    label="&printBG.label;"
-                    accesskey="&printBG.accesskey;"/>
-=======
                     class="groupbox-body"
                     data-l10n-id="print-bg"/>
->>>>>>> upstream-releases
         </groupbox>
       </vbox>
       <vbox>
         <groupbox>
-<<<<<<< HEAD
-          <caption><label id="marginGroup" value="&marginGroup.label;"/></caption>
-          <vbox class="groupbox-body">
-||||||| merged common ancestors
-          <caption id="marginGroup" label="&marginGroup.label;"/>
-          <vbox>
-=======
           <caption><label id="marginGroup" data-l10n-id="margin-group-label"/></caption>
           <vbox class="groupbox-body">
->>>>>>> upstream-releases
             <hbox align="center">
               <spacer flex="1"/>
               <label control="topInput"
@@ -155,16 +124,8 @@
           </vbox>
         </groupbox>
         <groupbox>
-<<<<<<< HEAD
-          <caption><label value="&headerFooter.label;"/></caption>
-          <grid class="groupbox-body">
-||||||| merged common ancestors
-          <caption id="headersAndFooters" label="&headerFooter.label;"/>
-          <grid>
-=======
           <caption><label data-l10n-id="header-footer-label"/></caption>
           <grid class="groupbox-body">
->>>>>>> upstream-releases
             <columns>
               <column/>
               <column/>

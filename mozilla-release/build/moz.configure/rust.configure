@@ -137,20 +137,12 @@ def rust_compiler(rustc_info, cargo_info, build_project):
         You can install rust by running './mach bootstrap'
         or by directly running the installer from https://rustup.rs/
         '''))
-<<<<<<< HEAD
-    rustc_min_version = Version('1.30.0')
-    cargo_min_version = rustc_min_version
-||||||| merged common ancestors
-    rustc_min_version = Version('1.29.0')
-    cargo_min_version = rustc_min_version
-=======
     if build_project == 'tools/crashreporter':
         rustc_min_version = Version('1.22.0')
         cargo_min_version = Version('0.23.0')
     else:
         rustc_min_version = Version('1.35.0')
         cargo_min_version = rustc_min_version
->>>>>>> upstream-releases
 
     version = rustc_info.version
     if version < rustc_min_version:
@@ -375,143 +367,7 @@ def rust_tests(enable_rust_tests, rustdoc):
 
 set_config('MOZ_RUST_TESTS', rust_tests)
 
-<<<<<<< HEAD
-# cbindgen is needed by the style system build.
-cbindgen = check_prog('CBINDGEN', add_rustup_path('cbindgen'), paths=toolchain_search_path,
-                      when=depends(build_project)
-                      (lambda build_project: build_project != 'js'))
 
-
-@depends_if(cbindgen)
-@checking('cbindgen version')
-@imports(_from='textwrap', _import='dedent')
-def cbindgen_version(cbindgen):
-    cbindgen_min_version = Version('0.6.7')
-
-    # cbindgen x.y.z
-    version = Version(check_cmd_output(cbindgen, '--version').strip().split(" ")[1])
-
-    if version < cbindgen_min_version:
-        die(dedent('''\
-        cbindgen version {} is too old. At least version {} is required.
-
-        Please update using 'cargo install cbindgen --force' or running
-        './mach bootstrap', after removing the existing executable located at
-        {}.
-        '''.format(version, cbindgen_min_version, cbindgen)))
-
-    return version
-
-||||||| merged common ancestors
-# cbindgen is needed by the style system build.
-cbindgen = check_prog('CBINDGEN', add_rustup_path('cbindgen'), paths=toolchain_search_path,
-                      when=depends(build_project)
-                      (lambda build_project: build_project != 'js'))
-
-
-@depends_if(cbindgen)
-@checking('cbindgen version')
-@imports(_from='textwrap', _import='dedent')
-def cbindgen_version(cbindgen):
-    cbindgen_min_version = Version('0.6.4')
-
-    # cbindgen x.y.z
-    version = Version(check_cmd_output(cbindgen, '--version').strip().split(" ")[1])
-
-    if version < cbindgen_min_version:
-        die(dedent('''\
-        cbindgen version {} is too old. At least version {} is required.
-
-        Please update using 'cargo install cbindgen --force' or running
-        './mach bootstrap', after removing the existing executable located at
-        {}.
-        '''.format(version, cbindgen_min_version, cbindgen)))
-
-    return version
-
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-# Bindgen can use rustfmt to format Rust file, but it's not required.
-js_option(env='RUSTFMT', nargs=1, help='Path to the rustfmt program')
-
-rustfmt = check_prog('RUSTFMT', add_rustup_path('rustfmt'),
-                     input='RUSTFMT', allow_missing=True)
-
-js_option(env='WIN64_LINK', nargs=1, help='Path to link.exe that targets win64')
-js_option(env='WIN64_LIB', nargs=1, help='Paths to libraries for the win64 linker')
-
-set_config('WIN64_LINK', depends('WIN64_LINK')(lambda x: x))
-set_config('WIN64_LIB', depends('WIN64_LIB')(lambda x: x))
-
-
-@depends(target, rustc_info, c_compiler, 'WIN64_LINK', 'WIN64_LIB')
-def win64_cargo_linker(target, rustc_info, compiler_info, link, lib):
-    # When we're building a 32-bit Windows build with a 64-bit rustc, we
-    # need to configure the linker it will use for host binaries (build scripts)
-    # specially because the compiler configuration we use for the build is for
-    # MSVC targeting 32-bit binaries.
-    if target.kernel == 'WINNT' and \
-       target.cpu in ('x86', 'aarch64') and \
-       compiler_info.type in ('msvc', 'clang-cl') and \
-       rustc_info.host == 'x86_64-pc-windows-msvc' and link and lib:
-        return True
-
-
-set_config('WIN64_CARGO_LINKER', win64_cargo_linker)
-
-
-@depends(win64_cargo_linker, check_build_environment)
-@imports(_from='textwrap', _import='dedent')
-def win64_cargo_linker_config(linker, env):
-    if linker:
-        return dedent('''\
-        [target.x86_64-pc-windows-msvc]
-        linker = "{objdir}/build/win64/cargo-linker.bat"
-        '''.format(objdir=env.topobjdir))
-    # We want an empty string here so we don't leave the @ variable in the config file.
-    return ''
-||||||| merged common ancestors
-# Bindgen can use rustfmt to format Rust file, but it's not required.
-js_option(env='RUSTFMT', nargs=1, help='Path to the rustfmt program')
-
-rustfmt = check_prog('RUSTFMT', add_rustup_path('rustfmt'),
-                     input='RUSTFMT', allow_missing=True)
-
-js_option(env='WIN64_LINK', nargs=1, help='Path to link.exe that targets win64')
-js_option(env='WIN64_LIB', nargs=1, help='Paths to libraries for the win64 linker')
-
-set_config('WIN64_LINK', depends('WIN64_LINK')(lambda x: x))
-set_config('WIN64_LIB', depends('WIN64_LIB')(lambda x: x))
-
-
-@depends(target, rustc_info, c_compiler, 'WIN64_LINK', 'WIN64_LIB')
-def win64_cargo_linker(target, rustc_info, compiler_info, link, lib):
-    # When we're building a 32-bit Windows build with a 64-bit rustc, we
-    # need to configure the linker it will use for host binaries (build scripts)
-    # specially because the compiler configuration we use for the build is for
-    # MSVC targeting 32-bit binaries.
-    if target.kernel == 'WINNT' and target.cpu == 'x86' and \
-       compiler_info.type in ('msvc', 'clang-cl') and \
-       rustc_info.host == 'x86_64-pc-windows-msvc' and link and lib:
-        return True
-
-
-set_config('WIN64_CARGO_LINKER', win64_cargo_linker)
-
-
-@depends(win64_cargo_linker, check_build_environment)
-@imports(_from='textwrap', _import='dedent')
-def win64_cargo_linker_config(linker, env):
-    if linker:
-        return dedent('''\
-        [target.x86_64-pc-windows-msvc]
-        linker = "{objdir}/build/win64/cargo-linker.bat"
-        '''.format(objdir=env.topobjdir))
-    # We want an empty string here so we don't leave the @ variable in the config file.
-    return ''
-=======
 @depends(target, c_compiler, rustc)
 @imports('os')
 def rustc_natvis_ldflags(target, compiler_info, rustc):
@@ -523,7 +379,6 @@ def rustc_natvis_ldflags(target, compiler_info, rustc):
             if f.endswith('.natvis'):
                 ldflags.append('-NATVIS:' + normsep(os.path.join(etc, f)))
         return ldflags
->>>>>>> upstream-releases
 
 
 set_config('RUSTC_NATVIS_LDFLAGS', rustc_natvis_ldflags)

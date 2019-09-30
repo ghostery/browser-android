@@ -30,17 +30,11 @@ class CompositorWidgetParent final : public PCompositorWidgetParent,
   void ObserveVsync(VsyncObserver* aObserver) override;
   RefPtr<VsyncObserver> GetVsyncObserver() const override;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // PlatformCompositorWidgetDelegate Overrides
   void UpdateCompositorWnd(const HWND aCompositorWnd,
                            const HWND aParentWnd) override;
 
  private:
->>>>>>> upstream-releases
   RefPtr<VsyncObserver> mVsyncObserver;
 };
 

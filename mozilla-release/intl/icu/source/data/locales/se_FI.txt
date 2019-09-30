@@ -62,13 +62,7 @@ se_FI{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.83"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -202,19 +196,9 @@ se_FI{
                 MEd{"E d.M"}
                 MMMEd{"E d MMM"}
                 MMMMW{
-<<<<<<< HEAD
-                    one{"MMMM':a vahkku' W"}
-                    other{"MMMM':a vahkku' W"}
-                    two{"MMMM':a vahkku' W"}
-||||||| merged common ancestors
-                    one{"MMMM:a 'vahkku' W"}
-                    other{"MMM:a 'vahkku' W"}
-                    two{"MMMM:a 'vahkku' W"}
-=======
                     one{"MMMM:'a' 'vahkku' W"}
                     other{"MMMM:'a' 'vahkku' W"}
                     two{"MMMM:'a' 'vahkku' W"}
->>>>>>> upstream-releases
                 }
                 MMMMd{"d MMMM"}
                 MMMd{"d MMM"}

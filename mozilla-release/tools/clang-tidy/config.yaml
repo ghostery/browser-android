@@ -207,15 +207,9 @@ clang_checkers:
   - name: readability-else-after-return
     reliability: high
   - name: readability-implicit-bool-conversion
-<<<<<<< HEAD
-    # On automation the config flags act strange. Please see Bug 1500241.
-    publish: !!bool no
-||||||| merged common ancestors
-=======
     reliability: low
     # On automation the config flags act strange. Please see Bug 1500241.
     publish: !!bool no
->>>>>>> upstream-releases
     config:
       - key: AllowIntegerConditions
         # The check will allow conditional integer conversions.

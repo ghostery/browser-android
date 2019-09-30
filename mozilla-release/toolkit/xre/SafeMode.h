@@ -13,19 +13,9 @@
 #include "mozilla/Maybe.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include "mozilla/PolicyChecks.h"
-#include <windows.h>
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#include "mozilla/PolicyChecks.h"
-#include <windows.h>
-#endif // defined(XP_WIN)
-=======
 #  include "mozilla/PolicyChecks.h"
 #  include <windows.h>
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
 // Undo X11/X.h's definition of None
 #undef None
@@ -41,23 +31,10 @@ enum class SafeModeFlag : uint32_t {
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(SafeModeFlag)
 
 template <typename CharT>
-<<<<<<< HEAD
-inline Maybe<bool> IsSafeModeRequested(
-    int& aArgc, CharT* aArgv[],
-    const SafeModeFlag aFlags = SafeModeFlag::Unset) {
-  CheckArgFlag checkArgFlags = CheckArgFlag::CheckOSInt;
-||||||| merged common ancestors
-inline Maybe<bool>
-IsSafeModeRequested(int& aArgc, CharT* aArgv[],
-                    const SafeModeFlag aFlags = SafeModeFlag::Unset)
-{
-  CheckArgFlag checkArgFlags = CheckArgFlag::CheckOSInt;
-=======
 inline Maybe<bool> IsSafeModeRequested(
     int& aArgc, CharT* aArgv[],
     const SafeModeFlag aFlags = SafeModeFlag::Unset) {
   CheckArgFlag checkArgFlags = CheckArgFlag::None;
->>>>>>> upstream-releases
   if (aFlags & SafeModeFlag::Unset) {
     checkArgFlags |= CheckArgFlag::RemoveArg;
   }

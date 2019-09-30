@@ -374,75 +374,6 @@ for int_ty in [types.i8, types.i16]:
         )
     )
 
-<<<<<<< HEAD
-for int_ty in [types.i8, types.i16]:
-    for op in [ushr_imm, ishl_imm]:
-        widen.legalize(
-            a << op.bind(int_ty)(b, c),
-            Rtl(
-                x << uextend.i32(b),
-                z << op.i32(x, c),
-                a << ireduce.bind(int_ty)(z)
-            ))
-
-    widen.legalize(
-        a << ishl.bind(int_ty)(b, c),
-        Rtl(
-            x << uextend.i32(b),
-            z << ishl.i32(x, c),
-            a << ireduce.bind(int_ty)(z)
-        ))
-
-    widen.legalize(
-        a << ushr.bind(int_ty)(b, c),
-        Rtl(
-            x << uextend.i32(b),
-            z << ushr.i32(x, c),
-            a << ireduce.bind(int_ty)(z)
-        ))
-
-    widen.legalize(
-        a << sshr.bind(int_ty)(b, c),
-        Rtl(
-            x << sextend.i32(b),
-            z << sshr.i32(x, c),
-            a << ireduce.bind(int_ty)(z)
-        ))
-
-    for w_cc in [
-        intcc.eq, intcc.ne, intcc.ugt, intcc.ult, intcc.uge, intcc.ule
-    ]:
-        widen.legalize(
-            a << insts.icmp_imm.bind(int_ty)(w_cc, b, c),
-            Rtl(
-                x << uextend.i32(b),
-                a << insts.icmp_imm(w_cc, x, c)
-            ))
-        widen.legalize(
-            a << insts.icmp.bind(int_ty)(w_cc, b, c),
-            Rtl(
-                x << uextend.i32(b),
-                y << uextend.i32(c),
-                a << insts.icmp.i32(w_cc, x, y)
-            ))
-    for w_cc in [intcc.sgt, intcc.slt, intcc.sge, intcc.sle]:
-        widen.legalize(
-            a << insts.icmp_imm.bind(int_ty)(w_cc, b, c),
-            Rtl(
-                x << sextend.i32(b),
-                a << insts.icmp_imm(w_cc, x, c)
-            ))
-        widen.legalize(
-            a << insts.icmp.bind(int_ty)(w_cc, b, c),
-            Rtl(
-                x << sextend.i32(b),
-                y << sextend.i32(c),
-                a << insts.icmp(w_cc, x, y)
-            )
-        )
-
-||||||| merged common ancestors
-=======
 for int_ty in [types.i8, types.i16]:
     for op in [ishl, ishl_imm, ushr, ushr_imm]:
         widen.legalize(
@@ -494,7 +425,6 @@ for int_ty in [types.i8, types.i16]:
             )
         )
 
->>>>>>> upstream-releases
 # Expand integer operations with carry for RISC architectures that don't have
 # the flags.
 expand.legalize(
@@ -631,118 +561,6 @@ expand.legalize(
             a << bxor(x, y)
         ))
 
-<<<<<<< HEAD
-# Expand bitrev
-# Adapted from Stack Overflow.
-# https://stackoverflow.com/questions/746171/most-efficient-algorithm-for-bit-reversal-from-msb-lsb-to-lsb-msb-in-c
-widen.legalize(
-        a << bitrev.i8(x),
-        Rtl(
-            a1 << band_imm(x, imm64(0xaa)),
-            a2 << ushr_imm(a1, imm64(1)),
-            a3 << band_imm(x, imm64(0x55)),
-            a4 << ishl_imm(a3, imm64(1)),
-            b << bor(a2, a4),
-            b1 << band_imm(b, imm64(0xcc)),
-            b2 << ushr_imm(b1, imm64(2)),
-            b3 << band_imm(b, imm64(0x33)),
-            b4 << ushr_imm(b3, imm64(2)),
-            c << bor(b2, b4),
-            c1 << band_imm(c, imm64(0xf0)),
-            c2 << ushr_imm(c1, imm64(4)),
-            c3 << band_imm(c, imm64(0x0f)),
-            c4 << ishl_imm(c3, imm64(4)),
-            a << bor(c2, c4),
-        ))
-
-widen.legalize(
-        a << bitrev.i16(x),
-        Rtl(
-            a1 << band_imm(x, imm64(0xaaaa)),
-            a2 << ushr_imm(a1, imm64(1)),
-            a3 << band_imm(x, imm64(0x5555)),
-            a4 << ishl_imm(a3, imm64(1)),
-            b << bor(a2, a4),
-            b1 << band_imm(b, imm64(0xcccc)),
-            b2 << ushr_imm(b1, imm64(2)),
-            b3 << band_imm(b, imm64(0x3333)),
-            b4 << ushr_imm(b3, imm64(2)),
-            c << bor(b2, b4),
-            c1 << band_imm(c, imm64(0xf0f0)),
-            c2 << ushr_imm(c1, imm64(4)),
-            c3 << band_imm(c, imm64(0x0f0f)),
-            c4 << ishl_imm(c3, imm64(4)),
-            d << bor(c2, c4),
-            d1 << band_imm(d, imm64(0xff00)),
-            d2 << ushr_imm(d1, imm64(8)),
-            d3 << band_imm(d, imm64(0x00ff)),
-            d4 << ishl_imm(d3, imm64(8)),
-            a << bor(d2, d4),
-        ))
-
-expand.legalize(
-        a << bitrev.i32(x),
-        Rtl(
-            a1 << band_imm(x, imm64(0xaaaaaaaa)),
-            a2 << ushr_imm(a1, imm64(1)),
-            a3 << band_imm(x, imm64(0x55555555)),
-            a4 << ishl_imm(a3, imm64(1)),
-            b << bor(a2, a4),
-            b1 << band_imm(b, imm64(0xcccccccc)),
-            b2 << ushr_imm(b1, imm64(2)),
-            b3 << band_imm(b, imm64(0x33333333)),
-            b4 << ushr_imm(b3, imm64(2)),
-            c << bor(b2, b4),
-            c1 << band_imm(c, imm64(0xf0f0f0f0)),
-            c2 << ushr_imm(c1, imm64(4)),
-            c3 << band_imm(c, imm64(0x0f0f0f0f)),
-            c4 << ishl_imm(c3, imm64(4)),
-            d << bor(c2, c4),
-            d1 << band_imm(d, imm64(0xff00ff00)),
-            d2 << ushr_imm(d1, imm64(8)),
-            d3 << band_imm(d, imm64(0x00ff00ff)),
-            d4 << ishl_imm(d3, imm64(8)),
-            e << bor(d2, d4),
-            e1 << ushr_imm(e, imm64(16)),
-            e2 << ishl_imm(e, imm64(16)),
-            a << bor(e1, e2),
-        ))
-
-expand.legalize(
-        a << bitrev.i64(x),
-        Rtl(
-            a1 << band_imm(x, imm64(0xaaaaaaaaaaaaaaaa)),
-            a2 << ushr_imm(a1, imm64(1)),
-            a3 << band_imm(x, imm64(0x5555555555555555)),
-            a4 << ishl_imm(a3, imm64(1)),
-            b << bor(a2, a4),
-            b1 << band_imm(b, imm64(0xcccccccccccccccc)),
-            b2 << ushr_imm(b1, imm64(2)),
-            b3 << band_imm(b, imm64(0x3333333333333333)),
-            b4 << ushr_imm(b3, imm64(2)),
-            c << bor(b2, b4),
-            c1 << band_imm(c, imm64(0xf0f0f0f0f0f0f0f0)),
-            c2 << ushr_imm(c1, imm64(4)),
-            c3 << band_imm(c, imm64(0x0f0f0f0f0f0f0f0f)),
-            c4 << ishl_imm(c3, imm64(4)),
-            d << bor(c2, c4),
-            d1 << band_imm(d, imm64(0xff00ff00ff00ff00)),
-            d2 << ushr_imm(d1, imm64(8)),
-            d3 << band_imm(d, imm64(0x00ff00ff00ff00ff)),
-            d4 << ishl_imm(d3, imm64(8)),
-            e << bor(d2, d4),
-            e1 << band_imm(e, imm64(0xffff0000ffff0000)),
-            e2 << ushr_imm(e1, imm64(16)),
-            e3 << band_imm(e, imm64(0x0000ffff0000ffff)),
-            e4 << ishl_imm(e3, imm64(16)),
-            f << bor(e2, e4),
-            f1 << ushr_imm(f, imm64(32)),
-            f2 << ishl_imm(f, imm64(32)),
-            a << bor(f1, f2),
-        ))
-
-||||||| merged common ancestors
-=======
 # Expand bitrev
 # Adapted from Stack Overflow.
 # https://stackoverflow.com/questions/746171/most-efficient-algorithm-for-bit-reversal-from-msb-lsb-to-lsb-msb-in-c
@@ -852,7 +670,6 @@ expand.legalize(
             a << bor(f1, f2),
         ))
 
->>>>>>> upstream-releases
 # Floating-point sign manipulations.
 for ty,             minus_zero in [
         (types.f32, f32const(ieee32.bits(0x80000000))),

@@ -44,20 +44,9 @@ using namespace mozilla::net;
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-static nsresult WriteToFile(nsIFile *lf, const char *data, uint32_t len,
-                            int32_t flags) {
-  PRFileDesc *fd;
-||||||| merged common ancestors
-static nsresult
-WriteToFile(nsIFile *lf, const char *data, uint32_t len, int32_t flags)
-{
-  PRFileDesc *fd;
-=======
 static nsresult WriteToFile(nsIFile* lf, const char* data, uint32_t len,
                             int32_t flags) {
   PRFileDesc* fd;
->>>>>>> upstream-releases
   int32_t mode = 0600;
   nsresult rv;
   rv = lf->OpenNSPRFileDesc(flags, mode, &fd);
@@ -70,34 +59,15 @@ static nsresult WriteToFile(nsIFile* lf, const char* data, uint32_t len,
   return rv;
 }
 
-<<<<<<< HEAD
-static nsresult AppendToFile(nsIFile *lf, const char *data, uint32_t len) {
-||||||| merged common ancestors
-static nsresult
-AppendToFile(nsIFile *lf, const char *data, uint32_t len)
-{
-=======
 static nsresult AppendToFile(nsIFile* lf, const char* data, uint32_t len) {
->>>>>>> upstream-releases
   int32_t flags = PR_WRONLY | PR_CREATE_FILE | PR_APPEND;
   return WriteToFile(lf, data, len, flags);
 }
 
 // maxSize may be -1 if unknown
-<<<<<<< HEAD
-static void MakeRangeSpec(const int64_t &size, const int64_t &maxSize,
-                          int32_t chunkSize, bool fetchRemaining,
-                          nsCString &rangeSpec) {
-||||||| merged common ancestors
-static void
-MakeRangeSpec(const int64_t &size, const int64_t &maxSize, int32_t chunkSize,
-              bool fetchRemaining, nsCString &rangeSpec)
-{
-=======
 static void MakeRangeSpec(const int64_t& size, const int64_t& maxSize,
                           int32_t chunkSize, bool fetchRemaining,
                           nsCString& rangeSpec) {
->>>>>>> upstream-releases
   rangeSpec.AssignLiteral("bytes=");
   rangeSpec.AppendInt(int64_t(size));
   rangeSpec.Append('-');
@@ -142,53 +112,6 @@ class nsIncrementalDownload final : public nsIIncrementalDownload,
   nsresult StartTimer(int32_t interval);
   nsresult ProcessTimeout();
   nsresult ReadCurrentSize();
-<<<<<<< HEAD
-  nsresult ClearRequestHeader(nsIHttpChannel *channel);
-
-  nsCOMPtr<nsIRequestObserver> mObserver;
-  nsCOMPtr<nsISupports> mObserverContext;
-  nsCOMPtr<nsIProgressEventSink> mProgressSink;
-  nsCOMPtr<nsIURI> mURI;
-  nsCOMPtr<nsIURI> mFinalURI;
-  nsCOMPtr<nsIFile> mDest;
-  nsCOMPtr<nsIChannel> mChannel;
-  nsCOMPtr<nsITimer> mTimer;
-  mozilla::UniquePtr<char[]> mChunk;
-  int32_t mChunkLen;
-  int32_t mChunkSize;
-  int32_t mInterval;
-  int64_t mTotalSize;
-  int64_t mCurrentSize;
-  uint32_t mLoadFlags;
-  int32_t mNonPartialCount;
-  nsresult mStatus;
-  bool mIsPending;
-  bool mDidOnStartRequest;
-  PRTime mLastProgressUpdate;
-||||||| merged common ancestors
-  nsresult ClearRequestHeader(nsIHttpChannel *channel);
-
-  nsCOMPtr<nsIRequestObserver>             mObserver;
-  nsCOMPtr<nsISupports>                    mObserverContext;
-  nsCOMPtr<nsIProgressEventSink>           mProgressSink;
-  nsCOMPtr<nsIURI>                         mURI;
-  nsCOMPtr<nsIURI>                         mFinalURI;
-  nsCOMPtr<nsIFile>                        mDest;
-  nsCOMPtr<nsIChannel>                     mChannel;
-  nsCOMPtr<nsITimer>                       mTimer;
-  mozilla::UniquePtr<char[]>               mChunk;
-  int32_t                                  mChunkLen;
-  int32_t                                  mChunkSize;
-  int32_t                                  mInterval;
-  int64_t                                  mTotalSize;
-  int64_t                                  mCurrentSize;
-  uint32_t                                 mLoadFlags;
-  int32_t                                  mNonPartialCount;
-  nsresult                                 mStatus;
-  bool                                     mIsPending;
-  bool                                     mDidOnStartRequest;
-  PRTime                                   mLastProgressUpdate;
-=======
   nsresult ClearRequestHeader(nsIHttpChannel* channel);
 
   nsCOMPtr<nsIRequestObserver> mObserver;
@@ -211,7 +134,6 @@ class nsIncrementalDownload final : public nsIIncrementalDownload,
   bool mIsPending;
   bool mDidOnStartRequest;
   PRTime mLastProgressUpdate;
->>>>>>> upstream-releases
   nsCOMPtr<nsIAsyncVerifyRedirectCallback> mRedirectCallback;
   nsCOMPtr<nsIChannel> mNewRedirectChannel;
   nsCString mPartialValidator;
@@ -298,20 +220,10 @@ nsresult nsIncrementalDownload::ProcessTimeout() {
                               nsContentUtils::GetSystemPrincipal(),
                               nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
                               nsIContentPolicy::TYPE_OTHER,
-<<<<<<< HEAD
-                              nullptr,  // PerformanceStorage
-                              nullptr,  // loadGroup
-                              this,     // aCallbacks
-||||||| merged common ancestors
-                              nullptr,   // PerformanceStorage
-                              nullptr,   // loadGroup
-                              this,      // aCallbacks
-=======
                               nullptr,  // nsICookieSettings
                               nullptr,  // PerformanceStorage
                               nullptr,  // loadGroup
                               this,     // aCallbacks
->>>>>>> upstream-releases
                               mLoadFlags);
 
   if (NS_FAILED(rv)) return rv;
@@ -362,17 +274,8 @@ nsresult nsIncrementalDownload::ProcessTimeout() {
     }
   }
 
-<<<<<<< HEAD
-  rv = channel->AsyncOpen2(this);
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-  rv = channel->AsyncOpen2(this);
-  if (NS_FAILED(rv))
-    return rv;
-=======
   rv = channel->AsyncOpen(this);
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   // Wait to assign mChannel when we know we are going to succeed.  This is
   // important because we don't want to introduce a reference cycle between
@@ -385,13 +288,7 @@ nsresult nsIncrementalDownload::ProcessTimeout() {
 // Reads the current file size and validates it.
 nsresult nsIncrementalDownload::ReadCurrentSize() {
   int64_t size;
-<<<<<<< HEAD
-  nsresult rv = mDest->GetFileSize((int64_t *)&size);
-||||||| merged common ancestors
-  nsresult rv = mDest->GetFileSize((int64_t *) &size);
-=======
   nsresult rv = mDest->GetFileSize((int64_t*)&size);
->>>>>>> upstream-releases
   if (rv == NS_ERROR_FILE_NOT_FOUND ||
       rv == NS_ERROR_FILE_TARGET_DOES_NOT_EXIST) {
     mCurrentSize = 0;
@@ -413,41 +310,20 @@ NS_IMPL_ISUPPORTS(nsIncrementalDownload, nsIIncrementalDownload, nsIRequest,
 // nsIRequest
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetName(nsACString &name) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetName(nsACString &name)
-{
-=======
 nsIncrementalDownload::GetName(nsACString& name) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mURI, NS_ERROR_NOT_INITIALIZED);
 
   return mURI->GetSpec(name);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::IsPending(bool *isPending) {
-||||||| merged common ancestors
-nsIncrementalDownload::IsPending(bool *isPending)
-{
-=======
 nsIncrementalDownload::IsPending(bool* isPending) {
->>>>>>> upstream-releases
   *isPending = mIsPending;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetStatus(nsresult *status) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetStatus(nsresult *status)
-{
-=======
 nsIncrementalDownload::GetStatus(nsresult* status) {
->>>>>>> upstream-releases
   *status = mStatus;
   return NS_OK;
 }
@@ -484,14 +360,7 @@ NS_IMETHODIMP
 nsIncrementalDownload::Resume() { return NS_ERROR_NOT_IMPLEMENTED; }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetLoadFlags(nsLoadFlags *loadFlags) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetLoadFlags(nsLoadFlags *loadFlags)
-{
-=======
 nsIncrementalDownload::GetLoadFlags(nsLoadFlags* loadFlags) {
->>>>>>> upstream-releases
   *loadFlags = mLoadFlags;
   return NS_OK;
 }
@@ -503,43 +372,20 @@ nsIncrementalDownload::SetLoadFlags(nsLoadFlags loadFlags) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetLoadGroup(nsILoadGroup **loadGroup) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetLoadGroup(nsILoadGroup **loadGroup)
-{
-=======
 nsIncrementalDownload::GetLoadGroup(nsILoadGroup** loadGroup) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::SetLoadGroup(nsILoadGroup *loadGroup) {
-||||||| merged common ancestors
-nsIncrementalDownload::SetLoadGroup(nsILoadGroup *loadGroup)
-{
-=======
 nsIncrementalDownload::SetLoadGroup(nsILoadGroup* loadGroup) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 // nsIIncrementalDownload
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::Init(nsIURI *uri, nsIFile *dest, int32_t chunkSize,
-                            int32_t interval) {
-||||||| merged common ancestors
-nsIncrementalDownload::Init(nsIURI *uri, nsIFile *dest,
-                            int32_t chunkSize, int32_t interval)
-{
-=======
 nsIncrementalDownload::Init(nsIURI* uri, nsIFile* dest, int32_t chunkSize,
                             int32_t interval) {
->>>>>>> upstream-releases
   // Keep it simple: only allow initialization once
   NS_ENSURE_FALSE(mURI, NS_ERROR_ALREADY_INITIALIZED);
 
@@ -555,46 +401,21 @@ nsIncrementalDownload::Init(nsIURI* uri, nsIFile* dest, int32_t chunkSize,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetURI(nsIURI **result) {
-  NS_IF_ADDREF(*result = mURI);
-||||||| merged common ancestors
-nsIncrementalDownload::GetURI(nsIURI **result)
-{
-  NS_IF_ADDREF(*result = mURI);
-=======
 nsIncrementalDownload::GetURI(nsIURI** result) {
   nsCOMPtr<nsIURI> uri = mURI;
   uri.forget(result);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetFinalURI(nsIURI **result) {
-  NS_IF_ADDREF(*result = mFinalURI);
-||||||| merged common ancestors
-nsIncrementalDownload::GetFinalURI(nsIURI **result)
-{
-  NS_IF_ADDREF(*result = mFinalURI);
-=======
 nsIncrementalDownload::GetFinalURI(nsIURI** result) {
   nsCOMPtr<nsIURI> uri = mFinalURI;
   uri.forget(result);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetDestination(nsIFile **result) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetDestination(nsIFile **result)
-{
-=======
 nsIncrementalDownload::GetDestination(nsIFile** result) {
->>>>>>> upstream-releases
   if (!mDest) {
     *result = nullptr;
     return NS_OK;
@@ -606,43 +427,20 @@ nsIncrementalDownload::GetDestination(nsIFile** result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetTotalSize(int64_t *result) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetTotalSize(int64_t *result)
-{
-=======
 nsIncrementalDownload::GetTotalSize(int64_t* result) {
->>>>>>> upstream-releases
   *result = mTotalSize;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetCurrentSize(int64_t *result) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetCurrentSize(int64_t *result)
-{
-=======
 nsIncrementalDownload::GetCurrentSize(int64_t* result) {
->>>>>>> upstream-releases
   *result = mCurrentSize;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::Start(nsIRequestObserver *observer,
-                             nsISupports *context) {
-||||||| merged common ancestors
-nsIncrementalDownload::Start(nsIRequestObserver *observer,
-                             nsISupports *context)
-{
-=======
 nsIncrementalDownload::Start(nsIRequestObserver* observer,
                              nsISupports* context) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(observer);
   NS_ENSURE_FALSE(mIsPending, NS_ERROR_IN_PROGRESS);
 
@@ -670,16 +468,7 @@ nsIncrementalDownload::Start(nsIRequestObserver* observer,
 // nsIRequestObserver
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::OnStartRequest(nsIRequest *request,
-                                      nsISupports *context) {
-||||||| merged common ancestors
-nsIncrementalDownload::OnStartRequest(nsIRequest *request,
-                                      nsISupports *context)
-{
-=======
 nsIncrementalDownload::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIHttpChannel> http = do_QueryInterface(request, &rv);
@@ -744,20 +533,9 @@ nsIncrementalDownload::OnStartRequest(nsIRequest* request) {
       // first look for the starting point of the content-range
       // to make sure it is what we expect
       if (p != -1) {
-<<<<<<< HEAD
-        char *endptr = nullptr;
-        const char *s = buf.get() + p + 6;
-        while (*s && *s == ' ') s++;
-||||||| merged common ancestors
-        char *endptr = nullptr;
-        const char *s = buf.get() + p + 6;
-        while (*s && *s == ' ')
-          s++;
-=======
         char* endptr = nullptr;
         const char* s = buf.get() + p + 6;
         while (*s && *s == ' ') s++;
->>>>>>> upstream-releases
         startByte = strtol(s, &endptr, 10);
 
         if (*s && endptr && (endptr != s) && (mCurrentSize == startByte)) {
@@ -771,15 +549,8 @@ nsIncrementalDownload::OnStartRequest(nsIRequest* request) {
             int32_t slash = buf.FindChar('/');
             int64_t rangeSize = 0;
             if (slash != kNotFound &&
-<<<<<<< HEAD
-                (PR_sscanf(buf.get() + slash + 1, "%lld",
-                           (int64_t *)&rangeSize) == 1) &&
-||||||| merged common ancestors
-                (PR_sscanf(buf.get() + slash + 1, "%lld", (int64_t *) &rangeSize) == 1) &&
-=======
                 (PR_sscanf(buf.get() + slash + 1, "%lld",
                            (int64_t*)&rangeSize) == 1) &&
->>>>>>> upstream-releases
                 rangeSize == mTotalSize) {
               confirmedOK = true;
             }
@@ -832,13 +603,7 @@ nsIncrementalDownload::OnStartRequest(nsIRequest* request) {
         NS_WARNING("server returned invalid Content-Range header!");
         return NS_ERROR_UNEXPECTED;
       }
-<<<<<<< HEAD
-      if (PR_sscanf(buf.get() + slash + 1, "%lld", (int64_t *)&mTotalSize) != 1)
-||||||| merged common ancestors
-      if (PR_sscanf(buf.get() + slash + 1, "%lld", (int64_t *) &mTotalSize) != 1)
-=======
       if (PR_sscanf(buf.get() + slash + 1, "%lld", (int64_t*)&mTotalSize) != 1)
->>>>>>> upstream-releases
         return NS_ERROR_UNEXPECTED;
     } else {
       rv = http->GetContentLength(&mTotalSize);
@@ -875,17 +640,7 @@ nsIncrementalDownload::OnStartRequest(nsIRequest* request) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::OnStopRequest(nsIRequest *request, nsISupports *context,
-                                     nsresult status) {
-||||||| merged common ancestors
-nsIncrementalDownload::OnStopRequest(nsIRequest *request,
-                                     nsISupports *context,
-                                     nsresult status)
-{
-=======
 nsIncrementalDownload::OnStopRequest(nsIRequest* request, nsresult status) {
->>>>>>> upstream-releases
   // Not a real error; just a trick to kill off the channel without our
   // listener having to care.
   if (status == NS_ERROR_DOWNLOAD_NOT_PARTIAL) return NS_OK;
@@ -917,23 +672,9 @@ nsIncrementalDownload::OnStopRequest(nsIRequest* request, nsresult status) {
 // nsIStreamListener
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::OnDataAvailable(nsIRequest *request,
-                                       nsISupports *context,
-                                       nsIInputStream *input, uint64_t offset,
-                                       uint32_t count) {
-||||||| merged common ancestors
-nsIncrementalDownload::OnDataAvailable(nsIRequest *request,
-                                       nsISupports *context,
-                                       nsIInputStream *input,
-                                       uint64_t offset,
-                                       uint32_t count)
-{
-=======
 nsIncrementalDownload::OnDataAvailable(nsIRequest* request,
                                        nsIInputStream* input, uint64_t offset,
                                        uint32_t count) {
->>>>>>> upstream-releases
   while (count) {
     uint32_t space = mChunkSize - mChunkLen;
     uint32_t n, len = std::min(space, count);
@@ -960,17 +701,8 @@ nsIncrementalDownload::OnDataAvailable(nsIRequest* request,
 // nsIObserver
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::Observe(nsISupports *subject, const char *topic,
-                               const char16_t *data) {
-||||||| merged common ancestors
-nsIncrementalDownload::Observe(nsISupports *subject, const char *topic,
-                               const char16_t *data)
-{
-=======
 nsIncrementalDownload::Observe(nsISupports* subject, const char* topic,
                                const char16_t* data) {
->>>>>>> upstream-releases
   if (strcmp(topic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0) {
     Cancel(NS_ERROR_ABORT);
 
@@ -989,14 +721,7 @@ nsIncrementalDownload::Observe(nsISupports* subject, const char* topic,
 // nsIInterfaceRequestor
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::GetInterface(const nsIID &iid, void **result) {
-||||||| merged common ancestors
-nsIncrementalDownload::GetInterface(const nsIID &iid, void **result)
-{
-=======
 nsIncrementalDownload::GetInterface(const nsIID& iid, void** result) {
->>>>>>> upstream-releases
   if (iid.Equals(NS_GET_IID(nsIChannelEventSink))) {
     NS_ADDREF_THIS();
     *result = static_cast<nsIChannelEventSink*>(this);
@@ -1009,15 +734,7 @@ nsIncrementalDownload::GetInterface(const nsIID& iid, void** result) {
   return NS_ERROR_NO_INTERFACE;
 }
 
-<<<<<<< HEAD
-nsresult nsIncrementalDownload::ClearRequestHeader(nsIHttpChannel *channel) {
-||||||| merged common ancestors
-nsresult
-nsIncrementalDownload::ClearRequestHeader(nsIHttpChannel *channel)
-{
-=======
 nsresult nsIncrementalDownload::ClearRequestHeader(nsIHttpChannel* channel) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(channel);
 
   // We don't support encodings -- they make the Content-Length not equal
@@ -1029,21 +746,9 @@ nsresult nsIncrementalDownload::ClearRequestHeader(nsIHttpChannel* channel) {
 // nsIChannelEventSink
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIncrementalDownload::AsyncOnChannelRedirect(
-    nsIChannel *oldChannel, nsIChannel *newChannel, uint32_t flags,
-    nsIAsyncVerifyRedirectCallback *cb) {
-||||||| merged common ancestors
-nsIncrementalDownload::AsyncOnChannelRedirect(nsIChannel *oldChannel,
-                                              nsIChannel *newChannel,
-                                              uint32_t flags,
-                                              nsIAsyncVerifyRedirectCallback *cb)
-{
-=======
 nsIncrementalDownload::AsyncOnChannelRedirect(
     nsIChannel* oldChannel, nsIChannel* newChannel, uint32_t flags,
     nsIAsyncVerifyRedirectCallback* cb) {
->>>>>>> upstream-releases
   // In response to a redirect, we need to propagate the Range header.  See bug
   // 311595.  Any failure code returned from this function aborts the redirect.
 
@@ -1119,28 +824,9 @@ nsIncrementalDownload::OnRedirectVerifyCallback(nsresult result) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-extern nsresult net_NewIncrementalDownload(nsISupports *outer, const nsIID &iid,
-                                           void **result) {
-  if (outer) return NS_ERROR_NO_AGGREGATION;
-
-  nsIncrementalDownload *d = new nsIncrementalDownload();
-  if (!d) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-extern nsresult
-net_NewIncrementalDownload(nsISupports *outer, const nsIID &iid, void **result)
-{
-  if (outer)
-    return NS_ERROR_NO_AGGREGATION;
-
-  nsIncrementalDownload *d = new nsIncrementalDownload();
-  if (!d)
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
 extern nsresult net_NewIncrementalDownload(nsISupports* outer, const nsIID& iid,
                                            void** result) {
   if (outer) return NS_ERROR_NO_AGGREGATION;
->>>>>>> upstream-releases
 
   RefPtr<nsIncrementalDownload> d = new nsIncrementalDownload();
   return d->QueryInterface(iid, result);

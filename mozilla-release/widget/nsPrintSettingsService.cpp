@@ -310,28 +310,6 @@ static void WriteDebugStr(const char* aArg1, const char* aArg2,
   printf("%s %s = %s \n", aArg1, aArg2, ToNewUTF8String(str));
 }
 const char* kWriteStr = "Write Pref:";
-<<<<<<< HEAD
-const char* kReadStr = "Read Pref:";
-#define DUMP_STR(_a1, _a2, _a3) \
-  WriteDebugStr((_a1), GetPrefName((_a2), aPrefName), (_a3));
-#define DUMP_BOOL(_a1, _a2, _a3)                                \
-  printf("%s %s = %s \n", (_a1), GetPrefName((_a2), aPrefName), \
-         (_a3) ? "T" : "F");
-#define DUMP_INT(_a1, _a2, _a3) \
-  printf("%s %s = %d \n", (_a1), GetPrefName((_a2), aPrefName), (_a3));
-#define DUMP_DBL(_a1, _a2, _a3) \
-  printf("%s %s = %10.5f \n", (_a1), GetPrefName((_a2), aPrefName), (_a3));
-||||||| merged common ancestors
-const char* kReadStr  = "Read Pref:";
-#define DUMP_STR(_a1, _a2, _a3)  WriteDebugStr((_a1), GetPrefName((_a2), \
-aPrefName), (_a3));
-#define DUMP_BOOL(_a1, _a2, _a3) printf("%s %s = %s \n", (_a1), \
-GetPrefName((_a2), aPrefName), (_a3)?"T":"F");
-#define DUMP_INT(_a1, _a2, _a3)  printf("%s %s = %d \n", (_a1), \
-GetPrefName((_a2), aPrefName), (_a3));
-#define DUMP_DBL(_a1, _a2, _a3)  printf("%s %s = %10.5f \n", (_a1), \
-GetPrefName((_a2), aPrefName), (_a3));
-=======
 const char* kReadStr = "Read Pref:";
 #  define DUMP_STR(_a1, _a2, _a3) \
     WriteDebugStr((_a1), GetPrefName((_a2), aPrefName), (_a3));
@@ -342,7 +320,6 @@ const char* kReadStr = "Read Pref:";
     printf("%s %s = %d \n", (_a1), GetPrefName((_a2), aPrefName), (_a3));
 #  define DUMP_DBL(_a1, _a2, _a3) \
     printf("%s %s = %10.5f \n", (_a1), GetPrefName((_a2), aPrefName), (_a3));
->>>>>>> upstream-releases
 #else
 #  define DUMP_STR(_a1, _a2, _a3)
 #  define DUMP_BOOL(_a1, _a2, _a3)

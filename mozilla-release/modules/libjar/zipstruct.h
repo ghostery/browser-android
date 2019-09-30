@@ -101,13 +101,7 @@ typedef struct ZipEnd_ {
 #define UNSUPPORTED 0xFF
 /* non-standard extension */
 #ifdef NIGHTLY_BUILD
-<<<<<<< HEAD
-#define MOZ_JAR_BROTLI 0x81
-||||||| merged common ancestors
-#define MOZ_JAR_BROTLI    0x81
-=======
 #  define MOZ_JAR_BROTLI 0x81
->>>>>>> upstream-releases
 #endif
 
 #endif /* _zipstruct_h */

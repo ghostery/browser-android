@@ -24,13 +24,6 @@ add_task(async function() {
 function checkResults() {
   // For help generating these tests use generateTelemetryTests("DEVTOOLS_WEBCONSOLE_")
   // here.
-<<<<<<< HEAD
-  checkTelemetry("DEVTOOLS_WEBCONSOLE_OPENED_COUNT", "", {0: 2, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_WEBCONSOLE_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-||||||| merged common ancestors
-  checkTelemetry("DEVTOOLS_WEBCONSOLE_OPENED_COUNT", "", [2, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_WEBCONSOLE_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-=======
   checkTelemetry(
     "DEVTOOLS_WEBCONSOLE_OPENED_COUNT",
     "",
@@ -43,5 +36,4 @@ function checkResults() {
     null,
     "hasentries"
   );
->>>>>>> upstream-releases
 }

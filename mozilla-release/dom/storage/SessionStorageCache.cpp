@@ -9,15 +9,7 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-SessionStorageCache::SessionStorageCache() : mSessionDataSetActive(false) {}
-||||||| merged common ancestors
-SessionStorageCache::SessionStorageCache()
-  : mSessionDataSetActive(false)
-{}
-=======
 SessionStorageCache::SessionStorageCache() = default;
->>>>>>> upstream-releases
 
 SessionStorageCache::DataSet* SessionStorageCache::Set(
     DataSetType aDataSetType) {

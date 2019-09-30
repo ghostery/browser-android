@@ -48,18 +48,8 @@ bool nsPIDOMWindowInner::IsHandlingResizeEvent() const {
   return mIsHandlingResizeEvent;
 }
 
-<<<<<<< HEAD
-bool nsPIDOMWindowInner::IsCurrentInnerWindow() const {
-  return mOuterWindow && mOuterWindow->GetCurrentInnerWindow() == AsInner();
-||||||| merged common ancestors
-bool
-nsPIDOMWindowInner::IsCurrentInnerWindow() const
-{
-  return mOuterWindow && mOuterWindow->GetCurrentInnerWindow() == AsInner();
-=======
 bool nsPIDOMWindowInner::IsCurrentInnerWindow() const {
   return mOuterWindow && mOuterWindow->GetCurrentInnerWindow() == this;
->>>>>>> upstream-releases
 }
 
 bool nsPIDOMWindowInner::HasActiveDocument() {
@@ -78,13 +68,6 @@ nsIDocShell* nsPIDOMWindowInner::GetDocShell() const {
   return mOuterWindow ? mOuterWindow->GetDocShell() : nullptr;
 }
 
-<<<<<<< HEAD
-mozilla::dom::Element* nsPIDOMWindowOuter::GetFocusedElement() const {
-||||||| merged common ancestors
-mozilla::dom::Element*
-nsPIDOMWindowOuter::GetFocusedElement() const
-{
-=======
 mozilla::dom::BrowsingContext* nsPIDOMWindowOuter::GetBrowsingContext() const {
   return mBrowsingContext;
 }
@@ -94,7 +77,6 @@ mozilla::dom::BrowsingContext* nsPIDOMWindowInner::GetBrowsingContext() const {
 }
 
 mozilla::dom::Element* nsPIDOMWindowOuter::GetFocusedElement() const {
->>>>>>> upstream-releases
   return mInnerWindow ? mInnerWindow->GetFocusedElement() : nullptr;
 }
 

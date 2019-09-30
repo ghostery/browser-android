@@ -10,19 +10,6 @@
  * liability, trademark and document use rules apply.
  */
 
-<<<<<<< HEAD:mozilla-release/dom/webidl/DOMError.webidl
-[Constructor(DOMString name, optional DOMString message = ""),
- Exposed=(Window,Worker)]
-interface DOMError {
-  [Constant, UseCounter]
-  readonly attribute DOMString name;
-||||||| merged common ancestors
-[Constructor(DOMString name, optional DOMString message = ""),
- Exposed=(Window,Worker,System)]
-interface DOMError {
-  [Constant, UseCounter]
-  readonly attribute DOMString name;
-=======
 dictionary MediaStreamTrackAudioSourceOptions {
     required MediaStreamTrack mediaStreamTrack;
 };
@@ -30,7 +17,6 @@ dictionary MediaStreamTrackAudioSourceOptions {
 [Pref="dom.webaudio.enabled",
  Constructor(AudioContext context, MediaStreamTrackAudioSourceOptions options)]
 interface MediaStreamTrackAudioSourceNode : AudioNode {
->>>>>>> upstream-releases:mozilla-release/dom/webidl/MediaStreamTrackAudioSourceNode.webidl
 
 };
 

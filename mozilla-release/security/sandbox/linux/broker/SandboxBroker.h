@@ -110,17 +110,10 @@ class SandboxBroker final : private SandboxBrokerCommon,
     int Lookup(const char* aPath) const {
       return Lookup(nsDependentCString(aPath));
     }
-<<<<<<< HEAD
-
-   private:
-||||||| merged common ancestors
-  private:
-=======
 
     bool IsEmpty() const { return mMap.Count() == 0; }
 
    private:
->>>>>>> upstream-releases
     // ValidatePath checks |path| and returns true if these conditions are met
     // * Greater than 0 length
     // * Is an absolute path

@@ -17,41 +17,18 @@ const ALLOWED_TAGS = {
  * Transform an object (tag name: {url}) into (tag name: anchor) where the url
  * is used as href, in order to render links inside a Fluent.Localized component.
  */
-<<<<<<< HEAD
-export function convertLinks(links, sendClick, doNotAutoBlock, openNewWindow = false) {
-||||||| merged common ancestors
-export function convertLinks(links, sendClick, doNotAutoBlock) {
-=======
 export function convertLinks(
   links,
   sendClick,
   doNotAutoBlock,
   openNewWindow = false
 ) {
->>>>>>> upstream-releases
   if (links) {
     return Object.keys(links).reduce((acc, linkTag) => {
       const { action } = links[linkTag];
       // Setting the value to false will not include the attribute in the anchor
       const url = action ? false : safeURI(links[linkTag].url);
 
-<<<<<<< HEAD
-      acc[linkTag] = (<a href={url}
-        target={openNewWindow ? "_blank" : ""}
-        data-metric={links[linkTag].metric}
-        data-action={action}
-        data-args={links[linkTag].args}
-        data-do_not_autoblock={doNotAutoBlock}
-        onClick={sendClick} />);
-||||||| merged common ancestors
-      acc[linkTag] = (<a href={url}
-        target={doNotAutoBlock ? "_blank" : ""}
-        data-metric={links[linkTag].metric}
-        data-action={action}
-        data-args={links[linkTag].args}
-        data-do_not_autoblock={doNotAutoBlock}
-        onClick={sendClick} />);
-=======
       acc[linkTag] = (
         // eslint was getting a false positive caused by the dynamic injection
         // of content.
@@ -66,7 +43,6 @@ export function convertLinks(
           onClick={sendClick}
         />
       );
->>>>>>> upstream-releases
       return acc;
     }, {});
   }
@@ -86,11 +62,6 @@ export function RichText(props) {
     );
   }
   return (
-<<<<<<< HEAD
-    <Localized id={props.localization_id} {...ALLOWED_TAGS} {...props.customElements} {...convertLinks(props.links, props.sendClick, props.doNotAutoBlock, props.openNewWindow)}>
-||||||| merged common ancestors
-    <Localized id={props.localization_id} {...ALLOWED_TAGS} {...props.customElements} {...convertLinks(props.links, props.sendClick, props.doNotAutoBlock)}>
-=======
     <Localized
       id={props.localization_id}
       {...ALLOWED_TAGS}
@@ -102,7 +73,6 @@ export function RichText(props) {
         props.openNewWindow
       )}
     >
->>>>>>> upstream-releases
       <span>{props.text}</span>
     </Localized>
   );

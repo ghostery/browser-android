@@ -32,36 +32,15 @@ class SMILTimeValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
 }  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
 //----------------------------------------------------------------------
 // SMILTimedElement
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-class nsSMILTimedElement {
- public:
-  nsSMILTimedElement();
-  ~nsSMILTimedElement();
-||||||| merged common ancestors
-class nsSMILTimedElement
-{
-public:
-  nsSMILTimedElement();
-  ~nsSMILTimedElement();
-=======
 class SMILTimedElement {
  public:
   SMILTimedElement();
   ~SMILTimedElement();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   typedef mozilla::dom::Element Element;
 
@@ -127,16 +106,7 @@ class SMILTimedElement {
    *
    * @return the simple duration in milliseconds or INDEFINITE.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILTimeValue GetSimpleDuration() const { return mSimpleDur; }
-||||||| merged common ancestors
-  nsSMILTimeValue GetSimpleDuration() const
-  {
-    return mSimpleDur;
-  }
-=======
   SMILTimeValue GetSimpleDuration() const { return mSimpleDur; }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   /**
    * Methods for supporting hyperlinking
@@ -186,17 +156,8 @@ class SMILTimedElement {
    *                        instance time or false if it represents an end
    *                        instance time.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  void UpdateInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                          nsSMILTimeValue& aUpdatedTime, bool aIsBegin);
-||||||| merged common ancestors
-  void UpdateInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                          nsSMILTimeValue& aUpdatedTime,
-                          bool aIsBegin);
-=======
   void UpdateInstanceTime(SMILInstanceTime* aInstanceTime,
                           SMILTimeValue& aUpdatedTime, bool aIsBegin);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   /**
    * Removes an instance time object from this element's list of instance times.
@@ -387,45 +348,19 @@ class SMILTimedElement {
 
  protected:
   // Typedefs
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  typedef nsTArray<mozilla::UniquePtr<nsSMILTimeValueSpec>> TimeValueSpecList;
-  typedef nsTArray<RefPtr<nsSMILInstanceTime>> InstanceTimeList;
-  typedef nsTArray<mozilla::UniquePtr<nsSMILInterval>> IntervalList;
-  typedef nsPtrHashKey<nsSMILTimeValueSpec> TimeValueSpecPtrKey;
-||||||| merged common ancestors
-  typedef nsTArray<mozilla::UniquePtr<nsSMILTimeValueSpec>> TimeValueSpecList;
-  typedef nsTArray<RefPtr<nsSMILInstanceTime> >   InstanceTimeList;
-  typedef nsTArray<mozilla::UniquePtr<nsSMILInterval>> IntervalList;
-  typedef nsPtrHashKey<nsSMILTimeValueSpec> TimeValueSpecPtrKey;
-=======
   typedef nsTArray<UniquePtr<SMILTimeValueSpec>> TimeValueSpecList;
   typedef nsTArray<RefPtr<SMILInstanceTime>> InstanceTimeList;
   typedef nsTArray<UniquePtr<SMILInterval>> IntervalList;
   typedef nsPtrHashKey<SMILTimeValueSpec> TimeValueSpecPtrKey;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
   typedef nsTHashtable<TimeValueSpecPtrKey> TimeValueSpecHashSet;
 
   // Helper classes
   class InstanceTimeComparator {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-   public:
-    bool Equals(const nsSMILInstanceTime* aElem1,
-                const nsSMILInstanceTime* aElem2) const;
-    bool LessThan(const nsSMILInstanceTime* aElem1,
-                  const nsSMILInstanceTime* aElem2) const;
-||||||| merged common ancestors
-    public:
-      bool Equals(const nsSMILInstanceTime* aElem1,
-                    const nsSMILInstanceTime* aElem2) const;
-      bool LessThan(const nsSMILInstanceTime* aElem1,
-                      const nsSMILInstanceTime* aElem2) const;
-=======
    public:
     bool Equals(const SMILInstanceTime* aElem1,
                 const SMILInstanceTime* aElem2) const;
     bool LessThan(const SMILInstanceTime* aElem1,
                   const SMILInstanceTime* aElem2) const;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
   };
 
   // Templated helper functions
@@ -436,70 +371,6 @@ class SMILTimedElement {
   // Implementation helpers
   //
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsresult SetBeginSpec(const nsAString& aBeginSpec, Element& aContextElement,
-                        RemovalTestFunction aRemove);
-  nsresult SetEndSpec(const nsAString& aEndSpec, Element& aContextElement,
-                      RemovalTestFunction aRemove);
-  nsresult SetSimpleDuration(const nsAString& aDurSpec);
-  nsresult SetMin(const nsAString& aMinSpec);
-  nsresult SetMax(const nsAString& aMaxSpec);
-  nsresult SetRestart(const nsAString& aRestartSpec);
-  nsresult SetRepeatCount(const nsAString& aRepeatCountSpec);
-  nsresult SetRepeatDur(const nsAString& aRepeatDurSpec);
-  nsresult SetFillMode(const nsAString& aFillModeSpec);
-
-  void UnsetBeginSpec(RemovalTestFunction aRemove);
-  void UnsetEndSpec(RemovalTestFunction aRemove);
-  void UnsetSimpleDuration();
-  void UnsetMin();
-  void UnsetMax();
-  void UnsetRestart();
-  void UnsetRepeatCount();
-  void UnsetRepeatDur();
-  void UnsetFillMode();
-
-  nsresult SetBeginOrEndSpec(const nsAString& aSpec, Element& aContextElement,
-                             bool aIsBegin, RemovalTestFunction aRemove);
-  void ClearSpecs(TimeValueSpecList& aSpecs, InstanceTimeList& aInstances,
-                  RemovalTestFunction aRemove);
-  void ClearIntervals();
-  void DoSampleAt(nsSMILTime aContainerTime, bool aEndOnly);
-||||||| merged common ancestors
-  nsresult          SetBeginSpec(const nsAString& aBeginSpec,
-                                 Element& aContextElement,
-                                 RemovalTestFunction aRemove);
-  nsresult          SetEndSpec(const nsAString& aEndSpec,
-                               Element& aContextElement,
-                               RemovalTestFunction aRemove);
-  nsresult          SetSimpleDuration(const nsAString& aDurSpec);
-  nsresult          SetMin(const nsAString& aMinSpec);
-  nsresult          SetMax(const nsAString& aMaxSpec);
-  nsresult          SetRestart(const nsAString& aRestartSpec);
-  nsresult          SetRepeatCount(const nsAString& aRepeatCountSpec);
-  nsresult          SetRepeatDur(const nsAString& aRepeatDurSpec);
-  nsresult          SetFillMode(const nsAString& aFillModeSpec);
-
-  void              UnsetBeginSpec(RemovalTestFunction aRemove);
-  void              UnsetEndSpec(RemovalTestFunction aRemove);
-  void              UnsetSimpleDuration();
-  void              UnsetMin();
-  void              UnsetMax();
-  void              UnsetRestart();
-  void              UnsetRepeatCount();
-  void              UnsetRepeatDur();
-  void              UnsetFillMode();
-
-  nsresult          SetBeginOrEndSpec(const nsAString& aSpec,
-                                      Element& aContextElement,
-                                      bool aIsBegin,
-                                      RemovalTestFunction aRemove);
-  void              ClearSpecs(TimeValueSpecList& aSpecs,
-                               InstanceTimeList& aInstances,
-                               RemovalTestFunction aRemove);
-  void              ClearIntervals();
-  void              DoSampleAt(nsSMILTime aContainerTime, bool aEndOnly);
-=======
   nsresult SetBeginSpec(const nsAString& aBeginSpec, Element& aContextElement,
                         RemovalTestFunction aRemove);
   nsresult SetEndSpec(const nsAString& aEndSpec, Element& aContextElement,
@@ -528,7 +399,6 @@ class SMILTimedElement {
                   RemovalTestFunction aRemove);
   void ClearIntervals();
   void DoSampleAt(SMILTime aContainerTime, bool aEndOnly);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   /**
    * Helper function to check for an early end and, if necessary, update the
@@ -624,59 +494,6 @@ class SMILTimedElement {
    *                        returned).
    * @return  true if a suitable interval was found, false otherwise.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  bool GetNextInterval(const nsSMILInterval* aPrevInterval,
-                       const nsSMILInterval* aReplacedInterval,
-                       const nsSMILInstanceTime* aFixedBeginTime,
-                       nsSMILInterval& aResult) const;
-  nsSMILInstanceTime* GetNextGreater(const InstanceTimeList& aList,
-                                     const nsSMILTimeValue& aBase,
-                                     int32_t& aPosition) const;
-  nsSMILInstanceTime* GetNextGreaterOrEqual(const InstanceTimeList& aList,
-                                            const nsSMILTimeValue& aBase,
-                                            int32_t& aPosition) const;
-  nsSMILTimeValue CalcActiveEnd(const nsSMILTimeValue& aBegin,
-                                const nsSMILTimeValue& aEnd) const;
-  nsSMILTimeValue GetRepeatDuration() const;
-  nsSMILTimeValue ApplyMinAndMax(const nsSMILTimeValue& aDuration) const;
-  nsSMILTime ActiveTimeToSimpleTime(nsSMILTime aActiveTime,
-                                    uint32_t& aRepeatIteration);
-  nsSMILInstanceTime* CheckForEarlyEnd(
-      const nsSMILTimeValue& aContainerTime) const;
-  void UpdateCurrentInterval(bool aForceChangeNotice = false);
-  void SampleSimpleTime(nsSMILTime aActiveTime);
-  void SampleFillValue();
-  nsresult AddInstanceTimeFromCurrentTime(nsSMILTime aCurrentTime,
-                                          double aOffsetSeconds, bool aIsBegin);
-  void RegisterMilestone();
-  bool GetNextMilestone(nsSMILMilestone& aNextMilestone) const;
-||||||| merged common ancestors
-  bool              GetNextInterval(const nsSMILInterval* aPrevInterval,
-                                    const nsSMILInterval* aReplacedInterval,
-                                    const nsSMILInstanceTime* aFixedBeginTime,
-                                    nsSMILInterval& aResult) const;
-  nsSMILInstanceTime* GetNextGreater(const InstanceTimeList& aList,
-                                     const nsSMILTimeValue& aBase,
-                                     int32_t& aPosition) const;
-  nsSMILInstanceTime* GetNextGreaterOrEqual(const InstanceTimeList& aList,
-                                            const nsSMILTimeValue& aBase,
-                                            int32_t& aPosition) const;
-  nsSMILTimeValue   CalcActiveEnd(const nsSMILTimeValue& aBegin,
-                                  const nsSMILTimeValue& aEnd) const;
-  nsSMILTimeValue   GetRepeatDuration() const;
-  nsSMILTimeValue   ApplyMinAndMax(const nsSMILTimeValue& aDuration) const;
-  nsSMILTime        ActiveTimeToSimpleTime(nsSMILTime aActiveTime,
-                                           uint32_t& aRepeatIteration);
-  nsSMILInstanceTime* CheckForEarlyEnd(
-                        const nsSMILTimeValue& aContainerTime) const;
-  void              UpdateCurrentInterval(bool aForceChangeNotice = false);
-  void              SampleSimpleTime(nsSMILTime aActiveTime);
-  void              SampleFillValue();
-  nsresult          AddInstanceTimeFromCurrentTime(nsSMILTime aCurrentTime,
-                        double aOffsetSeconds, bool aIsBegin);
-  void              RegisterMilestone();
-  bool              GetNextMilestone(nsSMILMilestone& aNextMilestone) const;
-=======
   bool GetNextInterval(const SMILInterval* aPrevInterval,
                        const SMILInterval* aReplacedInterval,
                        const SMILInstanceTime* aFixedBeginTime,
@@ -701,7 +518,6 @@ class SMILTimedElement {
                                           double aOffsetSeconds, bool aIsBegin);
   void RegisterMilestone();
   bool GetNextMilestone(SMILMilestone& aNextMilestone) const;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   // Notification methods. Note that these notifications can result in nested
   // calls to this same object. Therefore,
@@ -709,34 +525,6 @@ class SMILTimedElement {
   //      a consistent state to receive callbacks, and
   // (ii) after calling these methods we must assume that the state of the
   //      element may have changed.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  void NotifyNewInterval();
-  void NotifyChangedInterval(nsSMILInterval* aInterval,
-                             bool aBeginObjectChanged, bool aEndObjectChanged);
-
-  void FireTimeEventAsync(mozilla::EventMessage aMsg, int32_t aDetail);
-  const nsSMILInstanceTime* GetEffectiveBeginInstance() const;
-  const nsSMILInterval* GetPreviousInterval() const;
-  bool HasPlayed() const { return !mOldIntervals.IsEmpty(); }
-  bool HasClientInFillRange() const;
-  bool EndHasEventConditions() const;
-  bool AreEndTimesDependentOn(const nsSMILInstanceTime* aBase) const;
-||||||| merged common ancestors
-  void              NotifyNewInterval();
-  void              NotifyChangedInterval(nsSMILInterval* aInterval,
-                                          bool aBeginObjectChanged,
-                                          bool aEndObjectChanged);
-
-  void              FireTimeEventAsync(mozilla::EventMessage aMsg,
-                                       int32_t aDetail);
-  const nsSMILInstanceTime* GetEffectiveBeginInstance() const;
-  const nsSMILInterval* GetPreviousInterval() const;
-  bool              HasPlayed() const { return !mOldIntervals.IsEmpty(); }
-  bool              HasClientInFillRange() const;
-  bool              EndHasEventConditions() const;
-  bool              AreEndTimesDependentOn(
-                      const nsSMILInstanceTime* aBase) const;
-=======
   void NotifyNewInterval();
   void NotifyChangedInterval(SMILInterval* aInterval, bool aBeginObjectChanged,
                              bool aEndObjectChanged);
@@ -748,7 +536,6 @@ class SMILTimedElement {
   bool HasClientInFillRange() const;
   bool EndHasEventConditions() const;
   bool AreEndTimesDependentOn(const SMILInstanceTime* aBase) const;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   // Reset the current interval by first passing ownership to a temporary
   // variable so that if Unlink() results in us receiving a callback,
@@ -769,96 +556,30 @@ class SMILTimedElement {
   TimeValueSpecList mBeginSpecs;                         // [strong]
   TimeValueSpecList mEndSpecs;                           // [strong]
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILTimeValue mSimpleDur;
-||||||| merged common ancestors
-  nsSMILTimeValue                 mSimpleDur;
-=======
   SMILTimeValue mSimpleDur;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILRepeatCount mRepeatCount;
-  nsSMILTimeValue mRepeatDur;
-||||||| merged common ancestors
-  nsSMILRepeatCount               mRepeatCount;
-  nsSMILTimeValue                 mRepeatDur;
-=======
   SMILRepeatCount mRepeatCount;
   SMILTimeValue mRepeatDur;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILTimeValue mMin;
-  nsSMILTimeValue mMax;
-||||||| merged common ancestors
-  nsSMILTimeValue                 mMin;
-  nsSMILTimeValue                 mMax;
-=======
   SMILTimeValue mMin;
   SMILTimeValue mMax;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  enum nsSMILFillMode : uint8_t { FILL_REMOVE, FILL_FREEZE };
-  nsSMILFillMode mFillMode;
-||||||| merged common ancestors
-  enum nsSMILFillMode : uint8_t
-  {
-    FILL_REMOVE,
-    FILL_FREEZE
-  };
-  nsSMILFillMode                  mFillMode;
-=======
   enum SMILFillMode : uint8_t { FILL_REMOVE, FILL_FREEZE };
   SMILFillMode mFillMode;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
   static const nsAttrValue::EnumTable sFillModeTable[];
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  enum nsSMILRestartMode : uint8_t {
-||||||| merged common ancestors
-  enum nsSMILRestartMode : uint8_t
-  {
-=======
   enum SMILRestartMode : uint8_t {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
     RESTART_ALWAYS,
     RESTART_WHENNOTACTIVE,
     RESTART_NEVER
   };
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILRestartMode mRestartMode;
-||||||| merged common ancestors
-  nsSMILRestartMode               mRestartMode;
-=======
   SMILRestartMode mRestartMode;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
   static const nsAttrValue::EnumTable sRestartModeTable[];
 
   InstanceTimeList mBeginInstances;
   InstanceTimeList mEndInstances;
   uint32_t mInstanceSerialIndex;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILAnimationFunction* mClient;
-  mozilla::UniquePtr<nsSMILInterval> mCurrentInterval;
-  IntervalList mOldIntervals;
-  uint32_t mCurrentRepeatIteration;
-  nsSMILMilestone mPrevRegisteredMilestone;
-  static const nsSMILMilestone sMaxMilestone;
-  static const uint8_t sMaxNumIntervals;
-  static const uint8_t sMaxNumInstanceTimes;
-||||||| merged common ancestors
-  nsSMILAnimationFunction*        mClient;
-  mozilla::UniquePtr<nsSMILInterval> mCurrentInterval;
-  IntervalList                    mOldIntervals;
-  uint32_t                        mCurrentRepeatIteration;
-  nsSMILMilestone                 mPrevRegisteredMilestone;
-  static const nsSMILMilestone    sMaxMilestone;
-  static const uint8_t            sMaxNumIntervals;
-  static const uint8_t            sMaxNumInstanceTimes;
-=======
   SMILAnimationFunction* mClient;
   UniquePtr<SMILInterval> mCurrentInterval;
   IntervalList mOldIntervals;
@@ -867,7 +588,6 @@ class SMILTimedElement {
   static const SMILMilestone sMaxMilestone;
   static const uint8_t sMaxNumIntervals;
   static const uint8_t sMaxNumInstanceTimes;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   // Set of dependent time value specs to be notified when establishing a new
   // current interval. Change notifications and delete notifications are handled
@@ -881,48 +601,22 @@ class SMILTimedElement {
    * The state of the element in its life-cycle. These states are based on the
    * element life-cycle described in SMILANIM 3.6.8
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  enum nsSMILElementState {
-||||||| merged common ancestors
-  enum nsSMILElementState
-  {
-=======
   enum SMILElementState {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
     STATE_STARTUP,
     STATE_WAITING,
     STATE_ACTIVE,
     STATE_POSTACTIVE
   };
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILElementState mElementState;
-||||||| merged common ancestors
-  nsSMILElementState              mElementState;
-=======
   SMILElementState mElementState;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  enum nsSMILSeekState {
-||||||| merged common ancestors
-  enum nsSMILSeekState
-  {
-=======
   enum SMILSeekState {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
     SEEK_NOT_SEEKING,
     SEEK_FORWARD_FROM_ACTIVE,
     SEEK_FORWARD_FROM_INACTIVE,
     SEEK_BACKWARD_FROM_ACTIVE,
     SEEK_BACKWARD_FROM_INACTIVE
   };
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-  nsSMILSeekState mSeekState;
-||||||| merged common ancestors
-  nsSMILSeekState                 mSeekState;
-=======
   SMILSeekState mSeekState;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
 
   // Used to batch updates to the timing model
   class AutoIntervalUpdateBatcher;
@@ -940,43 +634,16 @@ class SMILTimedElement {
   static const uint8_t sMaxUpdateIntervalRecursionDepth;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-inline void ImplCycleCollectionUnlink(nsSMILTimedElement& aField) {
-||||||| merged common ancestors
-inline void
-ImplCycleCollectionUnlink(nsSMILTimedElement& aField)
-{
-=======
 inline void ImplCycleCollectionUnlink(SMILTimedElement& aField) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
   aField.Unlink();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-inline void ImplCycleCollectionTraverse(
-    nsCycleCollectionTraversalCallback& aCallback, nsSMILTimedElement& aField,
-    const char* aName, uint32_t aFlags = 0) {
-||||||| merged common ancestors
-inline void
-ImplCycleCollectionTraverse(nsCycleCollectionTraversalCallback& aCallback,
-                            nsSMILTimedElement& aField,
-                            const char* aName,
-                            uint32_t aFlags = 0)
-{
-=======
 inline void ImplCycleCollectionTraverse(
     nsCycleCollectionTraversalCallback& aCallback, SMILTimedElement& aField,
     const char* aName, uint32_t aFlags = 0) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h
   aField.Traverse(&aCallback);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.h
-#endif  // NS_SMILTIMEDELEMENT_H_
-||||||| merged common ancestors
-#endif // NS_SMILTIMEDELEMENT_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILTimedElement_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.h

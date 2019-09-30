@@ -18,44 +18,14 @@ using namespace mozilla::gl;
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-/*static*/ void ShadowLayerForwarder::PlatformSyncBeforeUpdate() {}
-||||||| merged common ancestors
-/*static*/ void
-ShadowLayerForwarder::PlatformSyncBeforeUpdate()
-{
-}
-=======
 /*static*/
 void ShadowLayerForwarder::PlatformSyncBeforeUpdate() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ void LayerManagerComposite::PlatformSyncBeforeReplyUpdate() {}
-||||||| merged common ancestors
-/*static*/ void
-LayerManagerComposite::PlatformSyncBeforeReplyUpdate()
-{
-}
-=======
 /*static*/
 void LayerManagerComposite::PlatformSyncBeforeReplyUpdate() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ bool LayerManagerComposite::SupportsDirectTexturing() {
-  return false;
-}
-||||||| merged common ancestors
-/*static*/ bool
-LayerManagerComposite::SupportsDirectTexturing()
-{
-  return false;
-}
-=======
 /*static*/
 bool LayerManagerComposite::SupportsDirectTexturing() { return false; }
->>>>>>> upstream-releases
 
 }  // namespace layers
 }  // namespace mozilla

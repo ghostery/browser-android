@@ -253,26 +253,11 @@ bool DOMProxyHandler::delete_(JSContext* cx, JS::Handle<JSObject*> proxy,
   return result.succeed();
 }
 
-<<<<<<< HEAD
-bool BaseDOMProxyHandler::ownPropertyKeys(JSContext* cx,
-                                          JS::Handle<JSObject*> proxy,
-                                          JS::AutoIdVector& props) const {
-  return ownPropNames(cx, proxy,
-                      JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS, props);
-||||||| merged common ancestors
-bool
-BaseDOMProxyHandler::ownPropertyKeys(JSContext* cx,
-                                     JS::Handle<JSObject*> proxy,
-                                     JS::AutoIdVector& props) const
-{
-  return ownPropNames(cx, proxy, JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS, props);
-=======
 bool BaseDOMProxyHandler::ownPropertyKeys(
     JSContext* cx, JS::Handle<JSObject*> proxy,
     JS::MutableHandleVector<jsid> props) const {
   return ownPropNames(cx, proxy,
                       JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS, props);
->>>>>>> upstream-releases
 }
 
 bool BaseDOMProxyHandler::getPrototypeIfOrdinary(
@@ -283,20 +268,9 @@ bool BaseDOMProxyHandler::getPrototypeIfOrdinary(
   return true;
 }
 
-<<<<<<< HEAD
-bool BaseDOMProxyHandler::getOwnEnumerablePropertyKeys(
-    JSContext* cx, JS::Handle<JSObject*> proxy, JS::AutoIdVector& props) const {
-||||||| merged common ancestors
-bool
-BaseDOMProxyHandler::getOwnEnumerablePropertyKeys(JSContext* cx,
-                                                  JS::Handle<JSObject*> proxy,
-                                                  JS::AutoIdVector& props) const
-{
-=======
 bool BaseDOMProxyHandler::getOwnEnumerablePropertyKeys(
     JSContext* cx, JS::Handle<JSObject*> proxy,
     JS::MutableHandleVector<jsid> props) const {
->>>>>>> upstream-releases
   return ownPropNames(cx, proxy, JSITER_OWNONLY, props);
 }
 

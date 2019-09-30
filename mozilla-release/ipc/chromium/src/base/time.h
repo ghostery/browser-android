@@ -193,21 +193,6 @@ class Time {
   static Time FromDoubleT(double dt);
   double ToDoubleT() const;
 
-<<<<<<< HEAD
-#if defined(OS_WIN)
-  static Time FromFileTime(FILETIME ft);
-  FILETIME ToFileTime() const;
-#endif
-
-||||||| merged common ancestors
-
-#if defined(OS_WIN)
-  static Time FromFileTime(FILETIME ft);
-  FILETIME ToFileTime() const;
-#endif
-
-=======
->>>>>>> upstream-releases
   // Converts an exploded structure representing either the local time or UTC
   // into a Time class.
   static Time FromUTCExploded(const Exploded& exploded) {

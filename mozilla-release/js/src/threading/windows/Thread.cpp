@@ -132,17 +132,8 @@ void js::ThisThread::SetName(const char* name) {
   static const DWORD THREAD_NAME_EXCEPTION = 0x406D1388;
   static const DWORD THREAD_NAME_INFO_TYPE = 0x1000;
 
-<<<<<<< HEAD
-#pragma pack(push, 8)
-  struct THREADNAME_INFO {
-||||||| merged common ancestors
-#pragma pack(push, 8)
-  struct THREADNAME_INFO
-  {
-=======
 #  pragma pack(push, 8)
   struct THREADNAME_INFO {
->>>>>>> upstream-releases
     DWORD dwType;
     LPCSTR szName;
     DWORD dwThreadID;

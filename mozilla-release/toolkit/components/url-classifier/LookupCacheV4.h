@@ -21,24 +21,8 @@ class LookupCacheV4 final : public LookupCache {
                          nsCOMPtr<nsIFile>& aStoreFile)
       : LookupCache(aTableName, aProvider, aStoreFile) {}
 
-<<<<<<< HEAD
-  virtual nsresult Init() override;
   virtual nsresult Has(const Completion& aCompletion, bool* aHas,
                        uint32_t* aMatchLength, bool* aConfirmed) override;
-
-  virtual bool IsEmpty() const override;
-||||||| merged common ancestors
-  virtual nsresult Init() override;
-  virtual nsresult Has(const Completion& aCompletion,
-                       bool* aHas,
-                       uint32_t* aMatchLength,
-                       bool* aConfirmed) override;
-
-  virtual bool IsEmpty() const override;
-=======
-  virtual nsresult Has(const Completion& aCompletion, bool* aHas,
-                       uint32_t* aMatchLength, bool* aConfirmed) override;
->>>>>>> upstream-releases
 
   nsresult Build(PrefixStringMap& aPrefixMap);
 
@@ -62,23 +46,9 @@ class LookupCacheV4 final : public LookupCache {
   static const uint32_t VLPSET_MAGIC;
   static const uint32_t VLPSET_VERSION;
 
-<<<<<<< HEAD
- protected:
-  virtual nsresult ClearPrefixes() override;
-  virtual nsresult StoreToFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual nsresult LoadFromFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual size_t SizeOfPrefixSet() const override;
-||||||| merged common ancestors
-protected:
-  virtual nsresult ClearPrefixes() override;
-  virtual nsresult StoreToFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual nsresult LoadFromFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual size_t SizeOfPrefixSet() const override;
-=======
  protected:
   virtual nsCString GetPrefixSetSuffix() const override;
   nsCString GetMetadataSuffix() const;
->>>>>>> upstream-releases
 
  private:
   ~LookupCacheV4() {}

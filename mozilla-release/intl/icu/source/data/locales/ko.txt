@@ -191,13 +191,7 @@ ko{
         }
         minimumGroupingDigits{"1"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             availableFormats{
@@ -2010,12 +2004,7 @@ ko{
                     "다이쇼",
                     "쇼와",
                     "헤이세이",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "레이와",
->>>>>>> upstream-releases
                 }
             }
         }

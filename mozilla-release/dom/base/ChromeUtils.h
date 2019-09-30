@@ -70,74 +70,6 @@ class ChromeUtils {
                               JS::MutableHandle<JSObject*> aRetval,
                               ErrorResult& aRv);
 
-<<<<<<< HEAD
-  static void OriginAttributesToSuffix(
-      GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
-      nsCString& aSuffix);
-
-  static bool OriginAttributesMatchPattern(
-      dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
-      const dom::OriginAttributesPatternDictionary& aPattern);
-
-  static void CreateOriginAttributesFromOrigin(
-      dom::GlobalObject& aGlobal, const nsAString& aOrigin,
-      dom::OriginAttributesDictionary& aAttrs, ErrorResult& aRv);
-
-  static void FillNonDefaultOriginAttributes(
-      dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
-      dom::OriginAttributesDictionary& aNewAttrs);
-
-  static bool IsOriginAttributesEqual(
-      dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aA,
-      const dom::OriginAttributesDictionary& aB);
-
-  static bool IsOriginAttributesEqual(
-      const dom::OriginAttributesDictionary& aA,
-      const dom::OriginAttributesDictionary& aB);
-
-  static bool IsOriginAttributesEqualIgnoringFPD(
-      const dom::OriginAttributesDictionary& aA,
-      const dom::OriginAttributesDictionary& aB) {
-    return aA.mAppId == aB.mAppId &&
-           aA.mInIsolatedMozBrowser == aB.mInIsolatedMozBrowser &&
-||||||| merged common ancestors
-  static void
-  OriginAttributesToSuffix(GlobalObject& aGlobal,
-                           const dom::OriginAttributesDictionary& aAttrs,
-                           nsCString& aSuffix);
-
-  static bool
-  OriginAttributesMatchPattern(dom::GlobalObject& aGlobal,
-                               const dom::OriginAttributesDictionary& aAttrs,
-                               const dom::OriginAttributesPatternDictionary& aPattern);
-
-  static void
-  CreateOriginAttributesFromOrigin(dom::GlobalObject& aGlobal,
-                                   const nsAString& aOrigin,
-                                   dom::OriginAttributesDictionary& aAttrs,
-                                   ErrorResult& aRv);
-
-  static void
-  FillNonDefaultOriginAttributes(dom::GlobalObject& aGlobal,
-                                 const dom::OriginAttributesDictionary& aAttrs,
-                                 dom::OriginAttributesDictionary& aNewAttrs);
-
-  static bool
-  IsOriginAttributesEqual(dom::GlobalObject& aGlobal,
-                          const dom::OriginAttributesDictionary& aA,
-                          const dom::OriginAttributesDictionary& aB);
-
-  static bool
-  IsOriginAttributesEqual(const dom::OriginAttributesDictionary& aA,
-                          const dom::OriginAttributesDictionary& aB);
-
-  static bool
-  IsOriginAttributesEqualIgnoringFPD(const dom::OriginAttributesDictionary& aA,
-                                     const dom::OriginAttributesDictionary& aB)
-  {
-    return aA.mAppId == aB.mAppId &&
-           aA.mInIsolatedMozBrowser == aB.mInIsolatedMozBrowser &&
-=======
   static void ReleaseAssert(GlobalObject& aGlobal, bool aCondition,
                             const nsAString& aMessage);
 
@@ -169,60 +101,11 @@ class ChromeUtils {
       const dom::OriginAttributesDictionary& aA,
       const dom::OriginAttributesDictionary& aB) {
     return aA.mInIsolatedMozBrowser == aB.mInIsolatedMozBrowser &&
->>>>>>> upstream-releases
            aA.mUserContextId == aB.mUserContextId &&
            aA.mPrivateBrowsingId == aB.mPrivateBrowsingId;
   }
 
   // Implemented in js/xpconnect/loader/ChromeScriptLoader.cpp
-<<<<<<< HEAD
-  static already_AddRefed<Promise> CompileScript(
-      GlobalObject& aGlobal, const nsAString& aUrl,
-      const dom::CompileScriptOptionsDictionary& aOptions, ErrorResult& aRv);
-
-  static MozQueryInterface* GenerateQI(
-      const GlobalObject& global, const Sequence<OwningStringOrIID>& interfaces,
-      ErrorResult& aRv);
-
-  static void WaiveXrays(GlobalObject& aGlobal, JS::HandleValue aVal,
-                         JS::MutableHandleValue aRetval, ErrorResult& aRv);
-
-  static void UnwaiveXrays(GlobalObject& aGlobal, JS::HandleValue aVal,
-                           JS::MutableHandleValue aRetval, ErrorResult& aRv);
-
-  static void GetClassName(GlobalObject& aGlobal, JS::HandleObject aObj,
-                           bool aUnwrap, nsAString& aRetval);
-
-  static void ShallowClone(GlobalObject& aGlobal, JS::HandleObject aObj,
-||||||| merged common ancestors
-  static already_AddRefed<Promise>
-  CompileScript(GlobalObject& aGlobal,
-                const nsAString& aUrl,
-                const dom::CompileScriptOptionsDictionary& aOptions,
-                ErrorResult& aRv);
-
-  static MozQueryInterface*
-  GenerateQI(const GlobalObject& global, const Sequence<OwningStringOrIID>& interfaces,
-             ErrorResult& aRv);
-
-  static void WaiveXrays(GlobalObject& aGlobal,
-                         JS::HandleValue aVal,
-                         JS::MutableHandleValue aRetval,
-                         ErrorResult& aRv);
-
-  static void UnwaiveXrays(GlobalObject& aGlobal,
-                           JS::HandleValue aVal,
-                           JS::MutableHandleValue aRetval,
-                           ErrorResult& aRv);
-
-  static void GetClassName(GlobalObject& aGlobal,
-                           JS::HandleObject aObj,
-                           bool aUnwrap,
-                           nsAString& aRetval);
-
-  static void ShallowClone(GlobalObject& aGlobal,
-                           JS::HandleObject aObj,
-=======
   static already_AddRefed<Promise> CompileScript(
       GlobalObject& aGlobal, const nsAString& aUrl,
       const dom::CompileScriptOptionsDictionary& aOptions, ErrorResult& aRv);
@@ -241,7 +124,6 @@ class ChromeUtils {
                            bool aUnwrap, nsAString& aRetval);
 
   static void ShallowClone(GlobalObject& aGlobal, JS::HandleObject aObj,
->>>>>>> upstream-releases
                            JS::HandleObject aTarget,
                            JS::MutableHandleObject aRetval, ErrorResult& aRv);
 
@@ -255,14 +137,6 @@ class ChromeUtils {
 
   static void ClearRecentJSDevError(GlobalObject& aGlobal);
 
-<<<<<<< HEAD
-  static already_AddRefed<Promise> RequestPerformanceMetrics(
-      GlobalObject& aGlobal, ErrorResult& aRv);
-||||||| merged common ancestors
-  static already_AddRefed<Promise>
-  RequestPerformanceMetrics(GlobalObject& aGlobal,
-                            ErrorResult& aRv);
-=======
   static already_AddRefed<Promise> RequestPerformanceMetrics(
       GlobalObject& aGlobal, ErrorResult& aRv);
 
@@ -270,19 +144,11 @@ class ChromeUtils {
 
   static already_AddRefed<Promise> CollectPerfStats(GlobalObject& aGlobal,
                                                     ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void Import(const GlobalObject& aGlobal, const nsAString& aResourceURI,
-||||||| merged common ancestors
-  static void Import(const GlobalObject& aGlobal,
-                     const nsAString& aResourceURI,
-=======
   static already_AddRefed<Promise> RequestProcInfo(GlobalObject& aGlobal,
                                                    ErrorResult& aRv);
 
   static void Import(const GlobalObject& aGlobal, const nsAString& aResourceURI,
->>>>>>> upstream-releases
                      const Optional<JS::Handle<JSObject*>>& aTargetObj,
                      JS::MutableHandle<JSObject*> aRetval, ErrorResult& aRv);
 
@@ -304,15 +170,6 @@ class ChromeUtils {
   static already_AddRefed<Promise> RequestIOActivity(GlobalObject& aGlobal,
                                                      ErrorResult& aRv);
 
-<<<<<<< HEAD
-  static already_AddRefed<BrowsingContext> GetBrowsingContext(
-      GlobalObject& aGlobal, uint64_t id);
-||||||| merged common ancestors
-  static void
-  CreateError(const GlobalObject& global, const nsAString& message,
-              JS::Handle<JSObject*> stack,
-              JS::MutableHandle<JSObject*> aRetVal, ErrorResult& aRv);
-=======
   static bool HasReportingHeaderForOrigin(GlobalObject& global,
                                           const nsAString& aOrigin,
                                           ErrorResult& aRv);
@@ -329,32 +186,12 @@ class ChromeUtils {
                                   const nsAString& aName,
                                   const WindowActorOptions& aOptions,
                                   ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void GetRootBrowsingContexts(
-      GlobalObject& aGlobal,
-      nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts);
-||||||| merged common ancestors
-  static already_AddRefed<Promise>
-  RequestIOActivity(GlobalObject& aGlobal, ErrorResult& aRv);
-=======
   static void UnregisterWindowActor(const GlobalObject& aGlobal,
                                     const nsAString& aName);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool HasReportingHeaderForOrigin(GlobalObject& global,
-                                          const nsAString& aOrigin,
-                                          ErrorResult& aRv);
-||||||| merged common ancestors
-  static void
-  GetRootBrowsingContexts(GlobalObject& aGlobal,
-                          nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts);
-=======
   static bool IsClassifierBlockingErrorCode(GlobalObject& aGlobal,
                                             uint32_t aError);
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

@@ -15,9 +15,6 @@
 using namespace js;
 using namespace js::jit;
 
-<<<<<<< HEAD
-using JS::DoubleNaNValue;
-
 static void EnsureOperandNotFloat32(TempAllocator& alloc, MInstruction* def,
                                     unsigned op) {
   MDefinition* in = def->getOperand(op);
@@ -26,30 +23,6 @@ static void EnsureOperandNotFloat32(TempAllocator& alloc, MInstruction* def,
     def->block()->insertBefore(def, replace);
     if (def->isRecoveredOnBailout()) {
       replace->setRecoveredOnBailout();
-||||||| merged common ancestors
-using JS::DoubleNaNValue;
-
-static void
-EnsureOperandNotFloat32(TempAllocator& alloc, MInstruction* def, unsigned op)
-{
-    MDefinition* in = def->getOperand(op);
-    if (in->type() == MIRType::Float32) {
-        MToDouble* replace = MToDouble::New(alloc, in);
-        def->block()->insertBefore(def, replace);
-        if (def->isRecoveredOnBailout()) {
-            replace->setRecoveredOnBailout();
-        }
-        def->replaceOperand(op, replace);
-=======
-static void EnsureOperandNotFloat32(TempAllocator& alloc, MInstruction* def,
-                                    unsigned op) {
-  MDefinition* in = def->getOperand(op);
-  if (in->type() == MIRType::Float32) {
-    MToDouble* replace = MToDouble::New(alloc, in);
-    def->block()->insertBefore(def, replace);
-    if (def->isRecoveredOnBailout()) {
-      replace->setRecoveredOnBailout();
->>>>>>> upstream-releases
     }
     def->replaceOperand(op, replace);
   }
@@ -104,7 +77,6 @@ bool ArithPolicy::adjustInputs(TempAllocator& alloc, MInstruction* ins) const {
       continue;
     }
 
-<<<<<<< HEAD
     MInstruction* replace;
 
     if (ins->type() == MIRType::Double) {
@@ -114,34 +86,6 @@ bool ArithPolicy::adjustInputs(TempAllocator& alloc, MInstruction* ins) const {
     } else {
       replace = MToNumberInt32::New(alloc, in);
     }
-||||||| merged common ancestors
-    return true;
-}
-
-bool
-AllDoublePolicy::staticAdjustInputs(TempAllocator& alloc, MInstruction* ins)
-{
-    for (size_t i = 0, e = ins->numOperands(); i < e; i++) {
-        MDefinition* in = ins->getOperand(i);
-        if (in->type() == MIRType::Double) {
-            continue;
-        }
-
-        if (!alloc.ensureBallast()) {
-            return false;
-        }
-        MInstruction* replace = MToDouble::New(alloc, in);
-=======
-    MInstruction* replace;
-
-    if (ins->type() == MIRType::Double) {
-      replace = MToDouble::New(alloc, in);
-    } else if (ins->type() == MIRType::Float32) {
-      replace = MToFloat32::New(alloc, in);
-    } else {
-      replace = MToNumberInt32::New(alloc, in);
-    }
->>>>>>> upstream-releases
 
     ins->block()->insertBefore(ins, replace);
     ins->replaceOperand(i, replace);
@@ -253,7 +197,6 @@ bool ComparePolicy::adjustInputs(TempAllocator& alloc,
     MOZ_ASSERT(def->getOperand(0)->type() != MIRType::String);
     MOZ_ASSERT(def->getOperand(1)->type() == MIRType::String);
     return true;
-<<<<<<< HEAD
   }
 
   if (compare->compareType() == MCompare::Compare_Undefined ||
@@ -286,67 +229,6 @@ bool ComparePolicy::adjustInputs(TempAllocator& alloc,
                        MCompare::Compare_DoubleMaybeCoerceRHS &&
                    i == 1) {
           convert = MToFPInstruction::NonNullNonStringPrimitives;
-||||||| merged common ancestors
-}
-
-bool
-SameValuePolicy::adjustInputs(TempAllocator& alloc, MInstruction* def) const
-{
-    MOZ_ASSERT(def->isSameValue());
-    MSameValue* sameValue = def->toSameValue();
-    MIRType lhsType = sameValue->lhs()->type();
-    MIRType rhsType = sameValue->rhs()->type();
-
-    // If both operands are numbers, convert them to doubles.
-    if (IsNumberType(lhsType) && IsNumberType(rhsType)) {
-        return AllDoublePolicy::staticAdjustInputs(alloc, def);
-    }
-
-    // SameValue(Anything, Double) is specialized, so convert the rhs if it's
-    // not already a double.
-    if (lhsType == MIRType::Value && IsNumberType(rhsType)) {
-        if (rhsType != MIRType::Double) {
-            MInstruction* replace = MToDouble::New(alloc, sameValue->rhs());
-            def->block()->insertBefore(def, replace);
-            def->replaceOperand(1, replace);
-
-            if (!replace->typePolicy()->adjustInputs(alloc, replace)) {
-                return false;
-            }
-=======
-  }
-
-  if (compare->compareType() == MCompare::Compare_Undefined ||
-      compare->compareType() == MCompare::Compare_Null) {
-    // Nothing to do for undefined and null, lowering handles all types.
-    return true;
-  }
-
-  // Convert all inputs to the right input type
-  MIRType type = compare->inputType();
-  MOZ_ASSERT(type == MIRType::Int32 || type == MIRType::Double ||
-             type == MIRType::Float32 || type == MIRType::Object ||
-             type == MIRType::String || type == MIRType::Symbol);
-  for (size_t i = 0; i < 2; i++) {
-    MDefinition* in = def->getOperand(i);
-    if (in->type() == type) {
-      continue;
-    }
-
-    MInstruction* replace;
-
-    switch (type) {
-      case MIRType::Double: {
-        MToFPInstruction::ConversionKind convert =
-            MToFPInstruction::NumbersOnly;
-        if (compare->compareType() == MCompare::Compare_DoubleMaybeCoerceLHS &&
-            i == 0) {
-          convert = MToFPInstruction::NonNullNonStringPrimitives;
-        } else if (compare->compareType() ==
-                       MCompare::Compare_DoubleMaybeCoerceRHS &&
-                   i == 1) {
-          convert = MToFPInstruction::NonNullNonStringPrimitives;
->>>>>>> upstream-releases
         }
         replace = MToDouble::New(alloc, in, convert);
         break;
@@ -439,24 +321,6 @@ bool TypeBarrierPolicy::adjustInputs(TempAllocator& alloc,
   MIRType inputType = ins->getOperand(0)->type();
   MIRType outputType = ins->type();
 
-<<<<<<< HEAD
-  // Input and output type are already in accordance.
-  if (inputType == outputType) {
-    return true;
-  }
-
-  // Output is a value, currently box the input.
-  if (outputType == MIRType::Value) {
-    // XXX: Possible optimization: decrease resultTypeSet to only include
-    // the inputType. This will remove the need for boxing.
-    MOZ_ASSERT(inputType != MIRType::Value);
-    ins->replaceOperand(0, BoxAt(alloc, ins, ins->getOperand(0)));
-||||||| merged common ancestors
-      default:
-        ins->replaceOperand(0, BoxAt(alloc, ins, op));
-        break;
-    }
-=======
   // Input and output type are already in accordance.
   if (inputType == outputType) {
     return true;
@@ -469,25 +333,6 @@ bool TypeBarrierPolicy::adjustInputs(TempAllocator& alloc,
     MOZ_ASSERT(inputType != MIRType::Value);
     ins->replaceOperand(0, BoxAt(alloc, ins, ins->getOperand(0)));
     return true;
-  }
-
-  // Box input if needed.
-  if (inputType != MIRType::Value) {
-    MOZ_ASSERT(ins->alwaysBails());
-    ins->replaceOperand(0, BoxAt(alloc, ins, ins->getOperand(0)));
-  }
-
-  // We can't unbox a value to null/undefined/lazyargs. So keep output
-  // also a value.
-  // Note: Using setResultType shouldn't be done in TypePolicies,
-  //       Here it is fine, since the type barrier has no uses.
-  if (IsNullOrUndefined(outputType) ||
-      outputType == MIRType::MagicOptimizedArguments) {
-    MOZ_ASSERT(!ins->hasDefUses());
-    ins->setResultType(MIRType::Value);
->>>>>>> upstream-releases
-    return true;
-<<<<<<< HEAD
   }
 
   // Box input if needed.
@@ -527,73 +372,8 @@ bool TypeBarrierPolicy::adjustInputs(TempAllocator& alloc,
   ins->block()->flagOperandsOfPrunedBranches(replace);
 
   return true;
-||||||| merged common ancestors
-=======
-  }
-
-  // Unbox / propagate the right type.
-  MUnbox::Mode mode = MUnbox::TypeBarrier;
-  MInstruction* replace =
-      MUnbox::New(alloc, ins->getOperand(0), ins->type(), mode);
-  if (!ins->isMovable()) {
-    replace->setNotMovable();
-  }
-
-  ins->block()->insertBefore(ins, replace);
-  ins->replaceOperand(0, replace);
-  if (!replace->typePolicy()->adjustInputs(alloc, replace)) {
-    return false;
-  }
-
-  // The TypeBarrier is equivalent to removing branches with unexpected
-  // types.  The unexpected types would have changed Range Analysis
-  // predictions.  As such, we need to prevent destructive optimizations.
-  ins->block()->flagOperandsOfPrunedBranches(replace);
-
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool TestPolicy::adjustInputs(TempAllocator& alloc, MInstruction* ins) const {
-  MDefinition* op = ins->getOperand(0);
-  switch (op->type()) {
-    case MIRType::Value:
-    case MIRType::Null:
-    case MIRType::Undefined:
-    case MIRType::Boolean:
-    case MIRType::Int32:
-    case MIRType::Double:
-    case MIRType::Float32:
-    case MIRType::Symbol:
-    case MIRType::Object:
-      break;
-
-    case MIRType::String: {
-      MStringLength* length = MStringLength::New(alloc, op);
-      ins->block()->insertBefore(ins, length);
-      ins->replaceOperand(0, length);
-      break;
-    }
-
-    default:
-      ins->replaceOperand(0, BoxAt(alloc, ins, op));
-      break;
-  }
-  return true;
-}
-||||||| merged common ancestors
-bool
-BitwisePolicy::adjustInputs(TempAllocator& alloc, MInstruction* ins) const
-{
-    MIRType specialization = ins->typePolicySpecialization();
-    if (specialization == MIRType::None) {
-        return BoxInputsPolicy::staticAdjustInputs(alloc, ins);
-    }
-
-    MOZ_ASSERT(ins->type() == MIRType::Value || ins->type() == specialization);
-    MOZ_ASSERT(specialization == MIRType::Int32 || specialization == MIRType::Double);
-=======
 bool TestPolicy::adjustInputs(TempAllocator& alloc, MInstruction* ins) const {
   MDefinition* op = ins->getOperand(0);
   switch (op->type()) {
@@ -628,29 +408,7 @@ bool BitwisePolicy::adjustInputs(TempAllocator& alloc,
   if (specialization == MIRType::None) {
     return BoxInputsPolicy::staticAdjustInputs(alloc, ins);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BitwisePolicy::adjustInputs(TempAllocator& alloc,
-                                 MInstruction* ins) const {
-  MIRType specialization = ins->typePolicySpecialization();
-  if (specialization == MIRType::None) {
-    return BoxInputsPolicy::staticAdjustInputs(alloc, ins);
-  }
-||||||| merged common ancestors
-    // This policy works for both unary and binary bitwise operations.
-    for (size_t i = 0, e = ins->numOperands(); i < e; i++) {
-        MDefinition* in = ins->getOperand(i);
-        if (in->type() == MIRType::Int32) {
-            continue;
-        }
-=======
-  MOZ_ASSERT(ins->type() == MIRType::Value || ins->type() == specialization);
-  MOZ_ASSERT(specialization == MIRType::Int32 ||
-             specialization == MIRType::Double);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   MOZ_ASSERT(ins->type() == MIRType::Value || ins->type() == specialization);
   MOZ_ASSERT(specialization == MIRType::Int32 ||
              specialization == MIRType::Double);
@@ -660,21 +418,6 @@ bool BitwisePolicy::adjustInputs(TempAllocator& alloc,
     MDefinition* in = ins->getOperand(i);
     if (in->type() == MIRType::Int32) {
       continue;
-||||||| merged common ancestors
-        MInstruction* replace = MTruncateToInt32::New(alloc, in);
-        ins->block()->insertBefore(ins, replace);
-        ins->replaceOperand(i, replace);
-
-        if (!replace->typePolicy()->adjustInputs(alloc, replace)) {
-            return false;
-        }
-=======
-  // This policy works for both unary and binary bitwise operations.
-  for (size_t i = 0, e = ins->numOperands(); i < e; i++) {
-    MDefinition* in = ins->getOperand(i);
-    if (in->type() == MIRType::Int32) {
-      continue;
->>>>>>> upstream-releases
     }
 
     MInstruction* replace = MTruncateToInt32::New(alloc, in);
@@ -855,29 +598,12 @@ template bool TruncateToInt32Policy<3>::staticAdjustInputs(TempAllocator& alloc,
                                                            MInstruction* def);
 
 template <unsigned Op>
-<<<<<<< HEAD
-bool DoublePolicy<Op>::staticAdjustInputs(TempAllocator& alloc,
-                                          MInstruction* def) {
-  MDefinition* in = def->getOperand(Op);
-  if (in->type() == MIRType::Double || in->type() == MIRType::SinCosDouble) {
-    return true;
-  }
-||||||| merged common ancestors
-bool
-DoublePolicy<Op>::staticAdjustInputs(TempAllocator& alloc, MInstruction* def)
-{
-    MDefinition* in = def->getOperand(Op);
-    if (in->type() == MIRType::Double || in->type() == MIRType::SinCosDouble) {
-        return true;
-    }
-=======
 bool DoublePolicy<Op>::staticAdjustInputs(TempAllocator& alloc,
                                           MInstruction* def) {
   MDefinition* in = def->getOperand(Op);
   if (in->type() == MIRType::Double) {
     return true;
   }
->>>>>>> upstream-releases
 
   MToDouble* replace = MToDouble::New(alloc, in);
   def->block()->insertBefore(def, replace);
@@ -1032,61 +758,6 @@ bool ToDoublePolicy::staticAdjustInputs(TempAllocator& alloc,
       // No need for boxing, when we will convert.
       if (conversion == MToFPInstruction::NonStringPrimitives) {
         return true;
-<<<<<<< HEAD
-      }
-      break;
-    case MIRType::Undefined:
-    case MIRType::Boolean:
-      // No need for boxing, when we will convert.
-      if (conversion == MToFPInstruction::NonStringPrimitives) {
-        return true;
-      }
-      if (conversion == MToFPInstruction::NonNullNonStringPrimitives) {
-        return true;
-      }
-      break;
-    case MIRType::Object:
-    case MIRType::String:
-    case MIRType::Symbol:
-      // Objects might be effectful. Symbols give TypeError.
-      break;
-    default:
-      break;
-  }
-
-  in = BoxAt(alloc, ins, in);
-  ins->replaceOperand(0, in);
-  return true;
-||||||| merged common ancestors
-      case MIRType::Null:
-        // No need for boxing, when we will convert.
-        if (conversion == MToFPInstruction::NonStringPrimitives) {
-            return true;
-        }
-        break;
-      case MIRType::Undefined:
-      case MIRType::Boolean:
-        // No need for boxing, when we will convert.
-        if (conversion == MToFPInstruction::NonStringPrimitives) {
-            return true;
-        }
-        if (conversion == MToFPInstruction::NonNullNonStringPrimitives) {
-            return true;
-        }
-        break;
-      case MIRType::Object:
-      case MIRType::String:
-      case MIRType::Symbol:
-        // Objects might be effectful. Symbols give TypeError.
-        break;
-      default:
-        break;
-    }
-
-    in = BoxAt(alloc, ins, in);
-    ins->replaceOperand(0, in);
-    return true;
-=======
       }
       break;
     case MIRType::Undefined:
@@ -1112,7 +783,6 @@ bool ToDoublePolicy::staticAdjustInputs(TempAllocator& alloc,
   in = BoxAt(alloc, ins, in);
   ins->replaceOperand(0, in);
   return true;
->>>>>>> upstream-releases
 }
 
 bool ToInt32Policy::staticAdjustInputs(TempAllocator& alloc,
@@ -1136,71 +806,6 @@ bool ToInt32Policy::staticAdjustInputs(TempAllocator& alloc,
       // No need for boxing when truncating.
       if (ins->isTruncateToInt32()) {
         return true;
-<<<<<<< HEAD
-      }
-      break;
-    case MIRType::Null:
-      // No need for boxing, when we will convert.
-      if (conversion == IntConversionInputKind::Any) {
-        return true;
-      }
-      break;
-    case MIRType::Boolean:
-      // No need for boxing, when we will convert.
-      if (conversion == IntConversionInputKind::Any) {
-        return true;
-      }
-      if (conversion == IntConversionInputKind::NumbersOrBoolsOnly) {
-        return true;
-      }
-      break;
-    case MIRType::Object:
-    case MIRType::String:
-    case MIRType::Symbol:
-      // Objects might be effectful. Symbols give TypeError.
-      break;
-    default:
-      break;
-  }
-
-  in = BoxAt(alloc, ins, in);
-  ins->replaceOperand(0, in);
-  return true;
-||||||| merged common ancestors
-      case MIRType::Undefined:
-        // No need for boxing when truncating.
-        if (ins->isTruncateToInt32()) {
-            return true;
-        }
-        break;
-      case MIRType::Null:
-        // No need for boxing, when we will convert.
-        if (conversion == IntConversionInputKind::Any) {
-            return true;
-        }
-        break;
-      case MIRType::Boolean:
-        // No need for boxing, when we will convert.
-        if (conversion == IntConversionInputKind::Any) {
-            return true;
-        }
-        if (conversion == IntConversionInputKind::NumbersOrBoolsOnly) {
-            return true;
-        }
-        break;
-      case MIRType::Object:
-      case MIRType::String:
-      case MIRType::Symbol:
-        // Objects might be effectful. Symbols give TypeError.
-        break;
-      default:
-        break;
-    }
-
-    in = BoxAt(alloc, ins, in);
-    ins->replaceOperand(0, in);
-    return true;
-=======
       }
       break;
     case MIRType::Null:
@@ -1231,33 +836,18 @@ bool ToInt32Policy::staticAdjustInputs(TempAllocator& alloc,
   in = BoxAt(alloc, ins, in);
   ins->replaceOperand(0, in);
   return true;
->>>>>>> upstream-releases
 }
 
 bool ToStringPolicy::staticAdjustInputs(TempAllocator& alloc,
                                         MInstruction* ins) {
   MOZ_ASSERT(ins->isToString());
 
-<<<<<<< HEAD
-  MIRType type = ins->getOperand(0)->type();
-  if (type == MIRType::Object || type == MIRType::Symbol) {
-    ins->replaceOperand(0, BoxAt(alloc, ins, ins->getOperand(0)));
-    return true;
-  }
-||||||| merged common ancestors
-    MIRType type = ins->getOperand(0)->type();
-    if (type == MIRType::Object || type == MIRType::Symbol) {
-        ins->replaceOperand(0, BoxAt(alloc, ins, ins->getOperand(0)));
-        return true;
-    }
-=======
   MIRType type = ins->getOperand(0)->type();
   if (type == MIRType::Object || type == MIRType::Symbol ||
       type == MIRType::BigInt) {
     ins->replaceOperand(0, BoxAt(alloc, ins, ins->getOperand(0)));
     return true;
   }
->>>>>>> upstream-releases
 
   // TODO remove the following line once 966957 has landed
   EnsureOperandNotFloat32(alloc, ins, 0);
@@ -1345,80 +935,6 @@ bool InstanceOfPolicy::adjustInputs(TempAllocator& alloc,
   return true;
 }
 
-<<<<<<< HEAD
-bool StoreUnboxedScalarPolicy::adjustValueInput(TempAllocator& alloc,
-                                                MInstruction* ins,
-                                                Scalar::Type writeType,
-                                                MDefinition* value,
-                                                int valueOperand) {
-  MDefinition* curValue = value;
-  // First, ensure the value is int32, boolean, double or Value.
-  // The conversion is based on TypedArrayObjectTemplate::setElementTail.
-  switch (value->type()) {
-    case MIRType::Int32:
-    case MIRType::Double:
-    case MIRType::Float32:
-    case MIRType::Boolean:
-    case MIRType::Value:
-      break;
-    case MIRType::Null:
-      value->setImplicitlyUsedUnchecked();
-      value = MConstant::New(alloc, Int32Value(0));
-      ins->block()->insertBefore(ins, value->toInstruction());
-      break;
-    case MIRType::Undefined:
-      value->setImplicitlyUsedUnchecked();
-      value = MConstant::New(alloc, DoubleNaNValue());
-      ins->block()->insertBefore(ins, value->toInstruction());
-      break;
-    case MIRType::Object:
-    case MIRType::String:
-    case MIRType::Symbol:
-      value = BoxAt(alloc, ins, value);
-      break;
-    default:
-      MOZ_CRASH("Unexpected type");
-  }
-
-  if (value != curValue) {
-    ins->replaceOperand(valueOperand, value);
-    curValue = value;
-  }
-
-  MOZ_ASSERT(
-      value->type() == MIRType::Int32 || value->type() == MIRType::Boolean ||
-      value->type() == MIRType::Double || value->type() == MIRType::Float32 ||
-      value->type() == MIRType::Value);
-
-  switch (writeType) {
-    case Scalar::Int8:
-    case Scalar::Uint8:
-    case Scalar::Int16:
-    case Scalar::Uint16:
-    case Scalar::Int32:
-    case Scalar::Uint32:
-      if (value->type() != MIRType::Int32) {
-        value = MTruncateToInt32::New(alloc, value);
-||||||| merged common ancestors
-bool
-StoreUnboxedScalarPolicy::adjustValueInput(TempAllocator& alloc, MInstruction* ins,
-                                           Scalar::Type writeType, MDefinition* value,
-                                           int valueOperand)
-{
-    MDefinition* curValue = value;
-    // First, ensure the value is int32, boolean, double or Value.
-    // The conversion is based on TypedArrayObjectTemplate::setElementTail.
-    switch (value->type()) {
-      case MIRType::Int32:
-      case MIRType::Double:
-      case MIRType::Float32:
-      case MIRType::Boolean:
-      case MIRType::Value:
-        break;
-      case MIRType::Null:
-        value->setImplicitlyUsedUnchecked();
-        value = MConstant::New(alloc, Int32Value(0));
-=======
 bool StoreUnboxedScalarPolicy::adjustValueInput(TempAllocator& alloc,
                                                 MInstruction* ins,
                                                 Scalar::Type writeType,
@@ -1473,7 +989,6 @@ bool StoreUnboxedScalarPolicy::adjustValueInput(TempAllocator& alloc,
     case Scalar::Uint32:
       if (value->type() != MIRType::Int32) {
         value = MTruncateToInt32::New(alloc, value);
->>>>>>> upstream-releases
         ins->block()->insertBefore(ins, value->toInstruction());
       }
       break;
@@ -1700,174 +1215,6 @@ bool FilterTypeSetPolicy::adjustInputs(TempAllocator& alloc,
 }
 
 // Lists of all TypePolicy specializations which are used by MIR Instructions.
-<<<<<<< HEAD
-#define TYPE_POLICY_LIST(_)         \
-  _(ArithPolicy)                    \
-  _(BitwisePolicy)                  \
-  _(BoxInputsPolicy)                \
-  _(CallPolicy)                     \
-  _(CallSetElementPolicy)           \
-  _(ClampPolicy)                    \
-  _(ComparePolicy)                  \
-  _(FilterTypeSetPolicy)            \
-  _(InstanceOfPolicy)               \
-  _(PowPolicy)                      \
-  _(SameValuePolicy)                \
-  _(SignPolicy)                     \
-  _(StoreTypedArrayHolePolicy)      \
-  _(StoreUnboxedScalarPolicy)       \
-  _(StoreUnboxedObjectOrNullPolicy) \
-  _(StoreUnboxedStringPolicy)       \
-  _(TestPolicy)                     \
-  _(AllDoublePolicy)                \
-  _(ToDoublePolicy)                 \
-  _(ToInt32Policy)                  \
-  _(ToStringPolicy)                 \
-  _(TypeBarrierPolicy)
-
-#define TEMPLATE_TYPE_POLICY_LIST(_)                                          \
-  _(BoxExceptPolicy<0, MIRType::Object>)                                      \
-  _(BoxPolicy<0>)                                                             \
-  _(ConvertToInt32Policy<0>)                                                  \
-  _(ConvertToStringPolicy<0>)                                                 \
-  _(ConvertToStringPolicy<2>)                                                 \
-  _(DoublePolicy<0>)                                                          \
-  _(FloatingPointPolicy<0>)                                                   \
-  _(UnboxedInt32Policy<0>)                                                    \
-  _(UnboxedInt32Policy<1>)                                                    \
-  _(MixPolicy<ObjectPolicy<0>, StringPolicy<1>, BoxPolicy<2>>)                \
-  _(MixPolicy<ObjectPolicy<0>, BoxPolicy<1>, BoxPolicy<2>>)                   \
-  _(MixPolicy<ObjectPolicy<0>, BoxPolicy<1>, ObjectPolicy<2>>)                \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, BoxPolicy<2>>)          \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, UnboxedInt32Policy<2>>) \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>,                         \
-              TruncateToInt32Policy<2>>)                                      \
-  _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>, BoxPolicy<2>>)                \
-  _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>, UnboxedInt32Policy<2>>)       \
-  _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>, ObjectPolicy<2>>)             \
-  _(MixPolicy<StringPolicy<0>, UnboxedInt32Policy<1>, UnboxedInt32Policy<2>>) \
-  _(MixPolicy<StringPolicy<0>, ObjectPolicy<1>, StringPolicy<2>>)             \
-  _(MixPolicy<StringPolicy<0>, StringPolicy<1>, StringPolicy<2>>)             \
-  _(MixPolicy<ObjectPolicy<0>, StringPolicy<1>, UnboxedInt32Policy<2>>)       \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, UnboxedInt32Policy<2>,  \
-              UnboxedInt32Policy<3>>)                                         \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>,                         \
-              TruncateToInt32Policy<2>, TruncateToInt32Policy<3>>)            \
-  _(MixPolicy<ObjectPolicy<0>, CacheIdPolicy<1>, NoFloatPolicy<2>>)           \
-  _(MixPolicy<ObjectPolicy<0>, BoxExceptPolicy<1, MIRType::Object>,           \
-              CacheIdPolicy<2>>)                                              \
-  _(MixPolicy<BoxPolicy<0>, ObjectPolicy<1>>)                                 \
-  _(MixPolicy<ConvertToStringPolicy<0>, ConvertToStringPolicy<1>>)            \
-  _(MixPolicy<ConvertToStringPolicy<0>, ObjectPolicy<1>>)                     \
-  _(MixPolicy<DoublePolicy<0>, DoublePolicy<1>>)                              \
-  _(MixPolicy<UnboxedInt32Policy<0>, UnboxedInt32Policy<1>>)                  \
-  _(MixPolicy<ObjectPolicy<0>, BoxPolicy<1>>)                                 \
-  _(MixPolicy<BoxExceptPolicy<0, MIRType::Object>, CacheIdPolicy<1>>)         \
-  _(MixPolicy<CacheIdPolicy<0>, ObjectPolicy<1>>)                             \
-  _(MixPolicy<ObjectPolicy<0>, ConvertToStringPolicy<1>>)                     \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>>)                        \
-  _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<2>>)                        \
-  _(MixPolicy<ObjectPolicy<0>, NoFloatPolicy<1>>)                             \
-  _(MixPolicy<ObjectPolicy<0>, NoFloatPolicy<2>>)                             \
-  _(MixPolicy<ObjectPolicy<0>, NoFloatPolicy<3>>)                             \
-  _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>>)                              \
-  _(MixPolicy<ObjectPolicy<0>, StringPolicy<1>>)                              \
-  _(MixPolicy<ObjectPolicy<0>, ConvertToStringPolicy<2>>)                     \
-  _(MixPolicy<ObjectPolicy<1>, ConvertToStringPolicy<0>>)                     \
-  _(MixPolicy<StringPolicy<0>, UnboxedInt32Policy<1>>)                        \
-  _(MixPolicy<StringPolicy<0>, StringPolicy<1>>)                              \
-  _(MixPolicy<BoxPolicy<0>, BoxPolicy<1>>)                                    \
-  _(NoFloatPolicy<0>)                                                         \
-  _(NoFloatPolicyAfter<0>)                                                    \
-  _(NoFloatPolicyAfter<1>)                                                    \
-  _(NoFloatPolicyAfter<2>)                                                    \
-  _(ObjectPolicy<0>)                                                          \
-  _(ObjectPolicy<1>)                                                          \
-  _(ObjectPolicy<3>)                                                          \
-  _(StringPolicy<0>)
-||||||| merged common ancestors
-#define TYPE_POLICY_LIST(_)                     \
-    _(ArithPolicy)                              \
-    _(BitwisePolicy)                            \
-    _(BoxInputsPolicy)                          \
-    _(CallPolicy)                               \
-    _(CallSetElementPolicy)                     \
-    _(ClampPolicy)                              \
-    _(ComparePolicy)                            \
-    _(FilterTypeSetPolicy)                      \
-    _(InstanceOfPolicy)                         \
-    _(PowPolicy)                                \
-    _(SameValuePolicy)                          \
-    _(SignPolicy)                               \
-    _(StoreTypedArrayHolePolicy)                \
-    _(StoreUnboxedScalarPolicy)                 \
-    _(StoreUnboxedObjectOrNullPolicy)           \
-    _(StoreUnboxedStringPolicy)                 \
-    _(TestPolicy)                               \
-    _(AllDoublePolicy)                          \
-    _(ToDoublePolicy)                           \
-    _(ToInt32Policy)                            \
-    _(ToStringPolicy)                           \
-    _(TypeBarrierPolicy)
-
-#define TEMPLATE_TYPE_POLICY_LIST(_)                                                                          \
-    _(BoxExceptPolicy<0, MIRType::Object>)                                                                    \
-    _(BoxPolicy<0>)                                                                                           \
-    _(ConvertToInt32Policy<0>)                                                                                \
-    _(ConvertToStringPolicy<0>)                                                                               \
-    _(ConvertToStringPolicy<2>)                                                                               \
-    _(DoublePolicy<0>)                                                                                        \
-    _(FloatingPointPolicy<0>)                                                                                 \
-    _(UnboxedInt32Policy<0>)                                                                                  \
-    _(UnboxedInt32Policy<1>)                                                                                  \
-    _(MixPolicy<ObjectPolicy<0>, StringPolicy<1>, BoxPolicy<2> >)                                             \
-    _(MixPolicy<ObjectPolicy<0>, BoxPolicy<1>, BoxPolicy<2> >)                                                \
-    _(MixPolicy<ObjectPolicy<0>, BoxPolicy<1>, ObjectPolicy<2> >)                                             \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, BoxPolicy<2> >)                                       \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, UnboxedInt32Policy<2> >)                              \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, TruncateToInt32Policy<2> >)                           \
-    _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>, BoxPolicy<2> >)                                             \
-    _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>, UnboxedInt32Policy<2> >)                                    \
-    _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1>, ObjectPolicy<2> >)                                          \
-    _(MixPolicy<StringPolicy<0>, UnboxedInt32Policy<1>, UnboxedInt32Policy<2>>)                               \
-    _(MixPolicy<StringPolicy<0>, ObjectPolicy<1>, StringPolicy<2> >)                                          \
-    _(MixPolicy<StringPolicy<0>, StringPolicy<1>, StringPolicy<2> >)                                          \
-    _(MixPolicy<ObjectPolicy<0>, StringPolicy<1>, UnboxedInt32Policy<2>>)                                     \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, UnboxedInt32Policy<2>, UnboxedInt32Policy<3>>)        \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1>, TruncateToInt32Policy<2>, TruncateToInt32Policy<3> >) \
-    _(MixPolicy<ObjectPolicy<0>, CacheIdPolicy<1>, NoFloatPolicy<2>>)                                         \
-    _(MixPolicy<ObjectPolicy<0>, BoxExceptPolicy<1, MIRType::Object>, CacheIdPolicy<2>>)                      \
-    _(MixPolicy<BoxPolicy<0>, ObjectPolicy<1> >)                                                              \
-    _(MixPolicy<ConvertToStringPolicy<0>, ConvertToStringPolicy<1> >)                                         \
-    _(MixPolicy<ConvertToStringPolicy<0>, ObjectPolicy<1> >)                                                  \
-    _(MixPolicy<DoublePolicy<0>, DoublePolicy<1> >)                                                           \
-    _(MixPolicy<UnboxedInt32Policy<0>, UnboxedInt32Policy<1> >)                                               \
-    _(MixPolicy<ObjectPolicy<0>, BoxPolicy<1> >)                                                              \
-    _(MixPolicy<BoxExceptPolicy<0, MIRType::Object>, CacheIdPolicy<1>>)                                       \
-    _(MixPolicy<CacheIdPolicy<0>, ObjectPolicy<1> >)                                                          \
-    _(MixPolicy<ObjectPolicy<0>, ConvertToStringPolicy<1> >)                                                  \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<1> >)                                                     \
-    _(MixPolicy<ObjectPolicy<0>, UnboxedInt32Policy<2> >)                                                     \
-    _(MixPolicy<ObjectPolicy<0>, NoFloatPolicy<1> >)                                                          \
-    _(MixPolicy<ObjectPolicy<0>, NoFloatPolicy<2> >)                                                          \
-    _(MixPolicy<ObjectPolicy<0>, NoFloatPolicy<3> >)                                                          \
-    _(MixPolicy<ObjectPolicy<0>, ObjectPolicy<1> >)                                                           \
-    _(MixPolicy<ObjectPolicy<0>, StringPolicy<1> >)                                                           \
-    _(MixPolicy<ObjectPolicy<0>, ConvertToStringPolicy<2> >)                                                  \
-    _(MixPolicy<ObjectPolicy<1>, ConvertToStringPolicy<0> >)                                                  \
-    _(MixPolicy<StringPolicy<0>, UnboxedInt32Policy<1> >)                                                     \
-    _(MixPolicy<StringPolicy<0>, StringPolicy<1> >)                                                           \
-    _(MixPolicy<BoxPolicy<0>, BoxPolicy<1> >)                                                                 \
-    _(NoFloatPolicy<0>)                                                                                       \
-    _(NoFloatPolicyAfter<0>)                                                                                  \
-    _(NoFloatPolicyAfter<1>)                                                                                  \
-    _(NoFloatPolicyAfter<2>)                                                                                  \
-    _(ObjectPolicy<0>)                                                                                        \
-    _(ObjectPolicy<1>)                                                                                        \
-    _(ObjectPolicy<3>)                                                                                        \
-    _(StringPolicy<0>)
-
-=======
 #define TYPE_POLICY_LIST(_)         \
   _(AllDoublePolicy)                \
   _(ArithPolicy)                    \
@@ -1952,7 +1299,6 @@ bool FilterTypeSetPolicy::adjustInputs(TempAllocator& alloc,
   _(ObjectPolicy<1>)                                                          \
   _(ObjectPolicy<3>)                                                          \
   _(StringPolicy<0>)
->>>>>>> upstream-releases
 
 namespace js {
 namespace jit {

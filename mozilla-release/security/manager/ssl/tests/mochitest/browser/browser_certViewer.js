@@ -16,47 +16,26 @@ var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
 add_task(async function testCAandTitle() {
   let cert = await readCertificate("ca.pem", "CTu,CTu,CTu");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkUsages(win, [{id: "verify-ssl-ca"}]);
-||||||| merged common ancestors
-  checkUsages(win, ["SSL Certificate Authority"]);
-=======
   checkUsages(win, [{ id: "verify-ssl-ca", args: null }]);
->>>>>>> upstream-releases
   checkDetailsPane(win, ["ca"]);
 
   // There's no real need to test the title for every cert, so we just test it
   // once here.
-<<<<<<< HEAD
-  Assert.deepEqual(win.document.l10n.getAttributes(win.document.documentElement),
-                {args: { certName: "ca"}, id: "cert-viewer-title"},
-               "Actual and expected title should match");
-||||||| merged common ancestors
-  Assert.equal(win.document.title, "Certificate Viewer: \u201Cca\u201D",
-               "Actual and expected title should match");
-=======
   Assert.deepEqual(
     win.document.l10n.getAttributes(win.document.documentElement),
     { args: { certName: "ca" }, id: "cert-viewer-title" },
     "Actual and expected title should match"
   );
->>>>>>> upstream-releases
   await BrowserTestUtils.closeWindow(win);
 });
 
 add_task(async function testSSLEndEntity() {
   let cert = await readCertificate("ssl-ee.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkUsages(win, [{id: "verify-ssl-server"}, {id: "verify-ssl-client"}]);
-||||||| merged common ancestors
-  checkUsages(win, ["SSL Server Certificate", "SSL Client Certificate"]);
-=======
   checkUsages(win, [
     { id: "verify-ssl-server", args: null },
     { id: "verify-ssl-client", args: null },
   ]);
->>>>>>> upstream-releases
   checkDetailsPane(win, ["ca", "ssl-ee"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -64,16 +43,10 @@ add_task(async function testSSLEndEntity() {
 add_task(async function testEmailEndEntity() {
   let cert = await readCertificate("email-ee.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkUsages(win, [{id: "verify-email-recip"}, {id: "verify-email-signer"}]);
-||||||| merged common ancestors
-  checkUsages(win, ["Email Recipient Certificate", "Email Signer Certificate"]);
-=======
   checkUsages(win, [
     { id: "verify-email-recip", args: null },
     { id: "verify-email-signer", args: null },
   ]);
->>>>>>> upstream-releases
   checkDetailsPane(win, ["ca", "email-ee"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -81,13 +54,7 @@ add_task(async function testEmailEndEntity() {
 add_task(async function testCodeSignEndEntity() {
   let cert = await readCertificate("code-ee.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkError(win, {id: "cert-not-verified-unknown"});
-||||||| merged common ancestors
-  checkError(win, "Could not verify this certificate for unknown reasons.");
-=======
   checkError(win, { id: "cert-not-verified-unknown", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(win, ["code-ee"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -95,13 +62,7 @@ add_task(async function testCodeSignEndEntity() {
 add_task(async function testExpired() {
   let cert = await readCertificate("expired-ca.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkError(win, {id: "cert-not-verified-cert-expired"});
-||||||| merged common ancestors
-  checkError(win, "Could not verify this certificate because it has expired.");
-=======
   checkError(win, { id: "cert-not-verified-cert-expired", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(win, ["expired-ca"]);
   await BrowserTestUtils.closeWindow(win);
 
@@ -109,15 +70,7 @@ add_task(async function testExpired() {
   // same task.
   let eeCert = await readCertificate("ee-from-expired-ca.pem", ",,");
   let eeWin = await displayCertificate(eeCert);
-<<<<<<< HEAD
-  checkError(eeWin, {id: "cert-not-verified-ca-invalid"});
-||||||| merged common ancestors
-  checkError(eeWin,
-             "Could not verify this certificate because the CA certificate " +
-             "is invalid.");
-=======
   checkError(eeWin, { id: "cert-not-verified-ca-invalid", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(eeWin, ["ee-from-expired-ca"]);
   await BrowserTestUtils.closeWindow(eeWin);
 });
@@ -125,15 +78,7 @@ add_task(async function testExpired() {
 add_task(async function testUnknownIssuer() {
   let cert = await readCertificate("unknown-issuer.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkError(win, {id: "cert-not-verified-issuer-unknown"});
-||||||| merged common ancestors
-  checkError(win,
-             "Could not verify this certificate because the issuer is " +
-             "unknown.");
-=======
   checkError(win, { id: "cert-not-verified-issuer-unknown", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(win, ["unknown-issuer"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -141,16 +86,7 @@ add_task(async function testUnknownIssuer() {
 add_task(async function testInsecureAlgo() {
   let cert = await readCertificate("md5-ee.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkError(win, {id: "cert-not-verified_algorithm-disabled"});
-||||||| merged common ancestors
-  checkError(win,
-             "Could not verify this certificate because it was signed using " +
-             "a signature algorithm that was disabled because that algorithm " +
-             "is not secure.");
-=======
   checkError(win, { id: "cert-not-verified_algorithm-disabled", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(win, ["md5-ee"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -158,14 +94,7 @@ add_task(async function testInsecureAlgo() {
 add_task(async function testUntrusted() {
   let cert = await readCertificate("untrusted-ca.pem", "p,p,p");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkError(win, {id: "cert-not-verified-cert-not-trusted"});
-||||||| merged common ancestors
-  checkError(win,
-             "Could not verify this certificate because it is not trusted.");
-=======
   checkError(win, { id: "cert-not-verified-cert-not-trusted", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(win, ["untrusted-ca"]);
   await BrowserTestUtils.closeWindow(win);
 
@@ -173,15 +102,7 @@ add_task(async function testUntrusted() {
   // same task.
   let eeCert = await readCertificate("ee-from-untrusted-ca.pem", ",,");
   let eeWin = await displayCertificate(eeCert);
-<<<<<<< HEAD
-  checkError(eeWin, {id: "cert-not-verified-issuer-not-trusted"});
-||||||| merged common ancestors
-  checkError(eeWin,
-             "Could not verify this certificate because the issuer is not " +
-             "trusted.");
-=======
   checkError(eeWin, { id: "cert-not-verified-issuer-not-trusted", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(eeWin, ["ee-from-untrusted-ca"]);
   await BrowserTestUtils.closeWindow(eeWin);
 });
@@ -224,18 +145,11 @@ add_task(async function testRevoked() {
   // As of bug 1312827, OneCRL only applies to TLS web server certificates, so
   // this certificate will actually verify successfully for every end-entity
   // usage except TLS web server.
-<<<<<<< HEAD
-  checkUsages(win, [{id: "verify-email-recip"}, {id: "verify-email-signer"}, {id: "verify-ssl-client"}]);
-||||||| merged common ancestors
-  checkUsages(win, ["Email Recipient Certificate", "Email Signer Certificate",
-                    "SSL Client Certificate"]);
-=======
   checkUsages(win, [
     { id: "verify-email-recip", args: null },
     { id: "verify-email-signer", args: null },
     { id: "verify-ssl-client", args: null },
   ]);
->>>>>>> upstream-releases
   checkDetailsPane(win, ["ca", "revoked"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -247,13 +161,7 @@ add_task(async function testInvalid() {
   // message in this case.
   let cert = await readCertificate("invalid.pem", ",,");
   let win = await displayCertificate(cert);
-<<<<<<< HEAD
-  checkError(win, {id: "cert-not-verified-unknown"});
-||||||| merged common ancestors
-  checkError(win, "Could not verify this certificate for unknown reasons.");
-=======
   checkError(win, { id: "cert-not-verified-unknown", args: null });
->>>>>>> upstream-releases
   checkDetailsPane(win, ["invalid"]);
   await BrowserTestUtils.closeWindow(win);
 });
@@ -310,21 +218,11 @@ function getUsages(win) {
   let determinedUsages = [];
   let verifyInfoBox = win.document.getElementById("verify_info_box");
   Array.from(verifyInfoBox.children).forEach(child => {
-<<<<<<< HEAD
-    if (child.getAttribute("hidden") != "true" &&
-        child.getAttribute("id") != "verified") {
-      determinedUsages.push(win.document.l10n.getAttributes(child));
-||||||| merged common ancestors
-    if (child.getAttribute("hidden") != "true" &&
-        child.getAttribute("id") != "verified") {
-      determinedUsages.push(child.getAttribute("value"));
-=======
     if (
       child.getAttribute("hidden") != "true" &&
       child.getAttribute("id") != "verified"
     ) {
       determinedUsages.push(win.document.l10n.getAttributes(child));
->>>>>>> upstream-releases
     }
   });
   return determinedUsages.sort(compareL10Ids);
@@ -357,40 +255,13 @@ function getError(win) {
  * @param {Object[]} usagesL10nIds
  *        An array of object with l10n ids of expected usage descriptions.
  */
-<<<<<<< HEAD
-function checkUsages(win, usagesL10nIds) {
-  Assert.deepEqual(getError(win),
-               { id: "cert-verified" },
-               "should have successful verification message");
-||||||| merged common ancestors
-function checkUsages(win, usages) {
-  Assert.equal(getError(win),
-               "This certificate has been verified for the following uses:",
-               "should have successful verification message");
-=======
 function checkUsages(win, usagesL10nIds) {
   Assert.deepEqual(
     getError(win),
     { id: "cert-verified", args: null },
     "should have successful verification message"
   );
->>>>>>> upstream-releases
   let determinedUsages = getUsages(win);
-<<<<<<< HEAD
-  usagesL10nIds.sort(compareL10Ids);
-  Assert.deepEqual(determinedUsages.length, usagesL10nIds.length,
-               "number of usages as determined by cert viewer should be equal");
-  while (usagesL10nIds.length > 0) {
-    Assert.deepEqual(determinedUsages.pop(), usagesL10nIds.pop(),
-                 "usages as determined by cert viewer should be equal");
-||||||| merged common ancestors
-  usages.sort();
-  Assert.equal(determinedUsages.length, usages.length,
-               "number of usages as determined by cert viewer should be equal");
-  while (usages.length > 0) {
-    Assert.equal(determinedUsages.pop(), usages.pop(),
-                 "usages as determined by cert viewer should be equal");
-=======
   usagesL10nIds.sort(compareL10Ids);
   Assert.deepEqual(
     determinedUsages.length,
@@ -403,7 +274,6 @@ function checkUsages(win, usagesL10nIds) {
       usagesL10nIds.pop(),
       "usages as determined by cert viewer should be equal"
     );
->>>>>>> upstream-releases
   }
 }
 
@@ -418,17 +288,6 @@ function checkUsages(win, usagesL10nIds) {
  */
 function checkError(win, errorL10nId) {
   let determinedUsages = getUsages(win);
-<<<<<<< HEAD
-  Assert.equal(determinedUsages.length, 0,
-               "should not have any successful usages in error case");
-  Assert.deepEqual(getError(win), errorL10nId,
-               "determined error should be the same as expected error");
-||||||| merged common ancestors
-  Assert.equal(determinedUsages.length, 0,
-               "should not have any successful usages in error case");
-  Assert.equal(getError(win), error,
-               "determined error should be the same as expected error");
-=======
   Assert.equal(
     determinedUsages.length,
     0,
@@ -439,7 +298,6 @@ function checkError(win, errorL10nId) {
     errorL10nId,
     "determined error should be the same as expected error"
   );
->>>>>>> upstream-releases
 }
 
 /**
@@ -486,22 +344,3 @@ function compareL10Ids(ida, idb) {
   }
   return 0;
 }
-
-/**
- * Given two objects with l10n id, compare them by l10n id for sorting.
- *
- * @param {Objects} ida,idb
- *        The objects with l10n id.
- * @param {integer}
- *        An integer representing true of false.
- */
-
-function compareL10Ids(ida, idb) {
-  if (ida.id < idb.id) {
-    return -1;
-  } else if (ida.id > idb.id) {
-    return 1;
-  }
-  return 0;
-}
-

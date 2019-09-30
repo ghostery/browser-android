@@ -26,16 +26,8 @@
 #include "nsXULAppAPI.h"
 
 #ifdef MOZ_X11
-<<<<<<< HEAD
-#include "nsX11ErrorHandler.h"
-#include "mozilla/X11Util.h"
-||||||| merged common ancestors
-# include "nsX11ErrorHandler.h"
-# include "mozilla/X11Util.h"
-=======
 #  include "nsX11ErrorHandler.h"
 #  include "mozilla/X11Util.h"
->>>>>>> upstream-releases
 #endif
 
 #include "mozilla/ipc/CrashReporterClient.h"
@@ -74,16 +66,8 @@ using namespace mozilla::plugins;
 using namespace mozilla::widget;
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-const wchar_t* kFlashFullscreenClass = L"ShockwaveFlashFullScreen";
-#if defined(MOZ_SANDBOX)
-||||||| merged common ancestors
-const wchar_t * kFlashFullscreenClass = L"ShockwaveFlashFullScreen";
-#if defined(MOZ_SANDBOX)
-=======
 const wchar_t* kFlashFullscreenClass = L"ShockwaveFlashFullScreen";
 #  if defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 std::wstring sRoamingPath;
 #  endif
 #endif
@@ -224,17 +208,8 @@ void PluginModuleChild::EnableFlashSandbox(int aLevel,
 #endif
 
 #if defined(OS_WIN) && defined(MOZ_SANDBOX)
-<<<<<<< HEAD
-/* static */ void PluginModuleChild::SetFlashRoamingPath(
-    const std::wstring& aRoamingPath) {
-||||||| merged common ancestors
-/* static */ void
-PluginModuleChild::SetFlashRoamingPath(const std::wstring& aRoamingPath)
-{
-=======
 /* static */
 void PluginModuleChild::SetFlashRoamingPath(const std::wstring& aRoamingPath) {
->>>>>>> upstream-releases
   MOZ_ASSERT(sRoamingPath.empty());
   sRoamingPath = aRoamingPath;
 }
@@ -332,39 +307,11 @@ bool PluginModuleChild::InitForChrome(const std::string& aPluginFilename,
   NS_ENSURE_TRUE(mInitializeFunc, false);
 #else
 
-#error Please copy the initialization code from nsNPAPIPlugin.cpp
+#  error Please copy the initialization code from nsNPAPIPlugin.cpp
 
 #endif
 
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
-<<<<<<< HEAD
-  if (mFlashSandboxLevel > 0) {
-    MacSandboxInfo flashSandboxInfo;
-    flashSandboxInfo.type = MacSandboxType_Plugin;
-    flashSandboxInfo.pluginInfo.type = MacSandboxPluginType_Flash;
-    flashSandboxInfo.pluginInfo.pluginBinaryPath = aPluginFilename;
-    flashSandboxInfo.level = mFlashSandboxLevel;
-    flashSandboxInfo.shouldLog = mEnableFlashSandboxLogging;
-
-    std::string sbError;
-    if (!mozilla::StartMacSandbox(flashSandboxInfo, sbError)) {
-      fprintf(stderr, "Failed to start sandbox:\n%s\n", sbError.c_str());
-      return false;
-||||||| merged common ancestors
-    if (mFlashSandboxLevel > 0) {
-      MacSandboxInfo flashSandboxInfo;
-      flashSandboxInfo.type = MacSandboxType_Plugin;
-      flashSandboxInfo.pluginInfo.type = MacSandboxPluginType_Flash;
-      flashSandboxInfo.pluginInfo.pluginBinaryPath = aPluginFilename;
-      flashSandboxInfo.level = mFlashSandboxLevel;
-      flashSandboxInfo.shouldLog = mEnableFlashSandboxLogging;
-
-      std::string sbError;
-      if (!mozilla::StartMacSandbox(flashSandboxInfo, sbError)) {
-          fprintf(stderr, "Failed to start sandbox:\n%s\n", sbError.c_str());
-          return false;
-      }
-=======
   if (mFlashSandboxLevel > 0) {
     MacSandboxInfo flashSandboxInfo;
     flashSandboxInfo.type = MacSandboxType_Flash;
@@ -376,7 +323,6 @@ bool PluginModuleChild::InitForChrome(const std::string& aPluginFilename,
     if (!mozilla::StartMacSandbox(flashSandboxInfo, sbError)) {
       fprintf(stderr, "Failed to start sandbox:\n%s\n", sbError.c_str());
       return false;
->>>>>>> upstream-releases
     }
   }
 #endif
@@ -473,92 +419,6 @@ static gboolean gtk_plug_scroll_event(GtkWidget* widget,
       return FALSE;  // unknown GdkScrollDirection
   }
 
-<<<<<<< HEAD
-  memset(&xevent, 0, sizeof(xevent));
-  xevent.xbutton.type = ButtonPress;
-  xevent.xbutton.window = gdk_x11_window_get_xid(socket_window);
-  xevent.xbutton.root =
-      gdk_x11_window_get_xid(gdk_screen_get_root_window(screen));
-  xevent.xbutton.subwindow = gdk_x11_window_get_xid(plug_window);
-  xevent.xbutton.time = gdk_event->time;
-  xevent.xbutton.x = x;
-  xevent.xbutton.y = y;
-  xevent.xbutton.x_root = gdk_event->x_root;
-  xevent.xbutton.y_root = gdk_event->y_root;
-  xevent.xbutton.state = gdk_event->state;
-  xevent.xbutton.button = button;
-  xevent.xbutton.same_screen = True;
-
-  gdk_error_trap_push();
-
-  XSendEvent(dpy, xevent.xbutton.window, True, ButtonPressMask, &xevent);
-
-  xevent.xbutton.type = ButtonRelease;
-  xevent.xbutton.state |= button_mask;
-  XSendEvent(dpy, xevent.xbutton.window, True, ButtonReleaseMask, &xevent);
-
-  gdk_display_sync(gdk_screen_get_display(screen));
-  gdk_error_trap_pop();
-
-  return TRUE;  // event handled
-}
-
-static void wrap_gtk_plug_embedded(GtkPlug* plug) {
-  GdkWindow* socket_window = gtk_plug_get_socket_window(plug);
-  if (socket_window) {
-    if (gtk_check_version(2, 18, 7) != nullptr  // older
-        && g_object_get_data(G_OBJECT(socket_window),
-                             "moz-existed-before-set-window")) {
-      // Add missing reference for
-      // https://bugzilla.gnome.org/show_bug.cgi?id=607061
-      g_object_ref(socket_window);
-||||||| merged common ancestors
-    memset(&xevent, 0, sizeof(xevent));
-    xevent.xbutton.type = ButtonPress;
-    xevent.xbutton.window = gdk_x11_window_get_xid(socket_window);
-    xevent.xbutton.root = gdk_x11_window_get_xid(gdk_screen_get_root_window(screen));
-    xevent.xbutton.subwindow = gdk_x11_window_get_xid(plug_window);
-    xevent.xbutton.time = gdk_event->time;
-    xevent.xbutton.x = x;
-    xevent.xbutton.y = y;
-    xevent.xbutton.x_root = gdk_event->x_root;
-    xevent.xbutton.y_root = gdk_event->y_root;
-    xevent.xbutton.state = gdk_event->state;
-    xevent.xbutton.button = button;
-    xevent.xbutton.same_screen = True;
-
-    gdk_error_trap_push();
-
-    XSendEvent(dpy, xevent.xbutton.window,
-               True, ButtonPressMask, &xevent);
-
-    xevent.xbutton.type = ButtonRelease;
-    xevent.xbutton.state |= button_mask;
-    XSendEvent(dpy, xevent.xbutton.window,
-               True, ButtonReleaseMask, &xevent);
-
-    gdk_display_sync(gdk_screen_get_display(screen));
-    gdk_error_trap_pop();
-
-    return TRUE; // event handled
-}
-
-static void
-wrap_gtk_plug_embedded(GtkPlug* plug) {
-    GdkWindow* socket_window = gtk_plug_get_socket_window(plug);
-    if (socket_window) {
-        if (gtk_check_version(2,18,7) != nullptr // older
-            && g_object_get_data(G_OBJECT(socket_window),
-                                 "moz-existed-before-set-window")) {
-            // Add missing reference for
-            // https://bugzilla.gnome.org/show_bug.cgi?id=607061
-            g_object_ref(socket_window);
-        }
-
-        // Ensure the window exists to make this GtkPlug behave like an
-        // in-process GtkPlug for Flash Player.  (Bugs 561308 and 539138).
-        gtk_widget_realize(GTK_WIDGET(plug));
-=======
   memset(&xevent, 0, sizeof(xevent));
   xevent.xbutton.type = ButtonPress;
   xevent.xbutton.window = gdk_x11_window_get_xid(socket_window);
@@ -597,7 +457,6 @@ static void wrap_gtk_plug_embedded(GtkPlug* plug) {
       // Add missing reference for
       // https://bugzilla.gnome.org/show_bug.cgi?id=607061
       g_object_ref(socket_window);
->>>>>>> upstream-releases
     }
 
     // Ensure the window exists to make this GtkPlug behave like an
@@ -654,35 +513,6 @@ gboolean PluginModuleChild::ProcessBrowserEvents(gpointer data) {
   return TRUE;
 }
 
-<<<<<<< HEAD
-void PluginModuleChild::EnteredCxxStack() {
-  MOZ_ASSERT(0 == mNestedLoopTimerId, "previous timer not descheduled");
-
-  mNestedLoopTimerId = g_timeout_add_full(
-      kNestedLoopDetectorPriority, kNestedLoopDetectorIntervalMs,
-      PluginModuleChild::DetectNestedEventLoop, this, nullptr);
-
-#ifdef DEBUG
-  mTopLoopDepth = g_main_depth();
-#endif
-||||||| merged common ancestors
-void
-PluginModuleChild::EnteredCxxStack()
-{
-    MOZ_ASSERT(0 == mNestedLoopTimerId,
-               "previous timer not descheduled");
-
-    mNestedLoopTimerId =
-        g_timeout_add_full(kNestedLoopDetectorPriority,
-                           kNestedLoopDetectorIntervalMs,
-                           PluginModuleChild::DetectNestedEventLoop,
-                           this,
-                           nullptr);
-
-#ifdef DEBUG
-    mTopLoopDepth = g_main_depth();
-#endif
-=======
 void PluginModuleChild::EnteredCxxStack() {
   MOZ_ASSERT(0 == mNestedLoopTimerId, "previous timer not descheduled");
 
@@ -693,7 +523,6 @@ void PluginModuleChild::EnteredCxxStack() {
 #  ifdef DEBUG
   mTopLoopDepth = g_main_depth();
 #  endif
->>>>>>> upstream-releases
 }
 
 void PluginModuleChild::ExitedCxxStack() {
@@ -1149,21 +978,11 @@ NPError _geturlnotify(NPP aNPP, const char* aRelativeURL, const char* aTarget,
   nsCString url = NullableString(aRelativeURL);
   auto* sn = new StreamNotifyChild(url);
 
-<<<<<<< HEAD
-  NPError err;
-  InstCast(aNPP)->CallPStreamNotifyConstructor(sn, url, NullableString(aTarget),
-                                               false, nsCString(), false, &err);
-||||||| merged common ancestors
-    NPError err;
-    InstCast(aNPP)->CallPStreamNotifyConstructor(
-        sn, url, NullableString(aTarget), false, nsCString(), false, &err);
-=======
   NPError err;
   if (!InstCast(aNPP)->CallPStreamNotifyConstructor(
           sn, url, NullableString(aTarget), false, nsCString(), false, &err)) {
     return NPERR_GENERIC_ERROR;
   }
->>>>>>> upstream-releases
 
   if (NPERR_NO_ERROR == err) {
     // If NPN_PostURLNotify fails, the parent will immediately send us
@@ -1264,22 +1083,12 @@ NPError _posturlnotify(NPP aNPP, const char* aRelativeURL, const char* aTarget,
   nsCString url = NullableString(aRelativeURL);
   auto* sn = new StreamNotifyChild(url);
 
-<<<<<<< HEAD
-  NPError err;
-  InstCast(aNPP)->CallPStreamNotifyConstructor(
-      sn, url, NullableString(aTarget), true, nsCString(aBuffer, aLength),
-      aIsFile, &err);
-||||||| merged common ancestors
-    return err;
-}
-=======
   NPError err;
   if (!InstCast(aNPP)->CallPStreamNotifyConstructor(
           sn, url, NullableString(aTarget), true, nsCString(aBuffer, aLength),
           aIsFile, &err)) {
     return NPERR_GENERIC_ERROR;
   }
->>>>>>> upstream-releases
 
   if (NPERR_NO_ERROR == err) {
     // If NPN_PostURLNotify fails, the parent will immediately send us
@@ -1726,7 +1535,7 @@ mozilla::ipc::IPCResult PluginModuleChild::AnswerNP_GetEntryPoints(
   *_retval = mGetEntryPointsFunc(&mFunctions);
   return IPC_OK();
 #else
-#error Please implement me for your platform
+#  error Please implement me for your platform
 #endif
 }
 
@@ -1748,17 +1557,6 @@ NPError PluginModuleChild::DoNP_Initialize(const PluginSettings& aSettings) {
 #endif
 
 #ifdef MOZ_X11
-<<<<<<< HEAD
-  // Send the parent our X socket to act as a proxy reference for our X
-  // resources.
-  int xSocketFd = ConnectionNumber(DefaultXDisplay());
-  SendBackUpXResources(FileDescriptor(xSocketFd));
-||||||| merged common ancestors
-    // Send the parent our X socket to act as a proxy reference for our X
-    // resources.
-    int xSocketFd = ConnectionNumber(DefaultXDisplay());
-    SendBackUpXResources(FileDescriptor(xSocketFd));
-=======
 #  ifdef MOZ_WIDGET_GTK
   if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
     // We don't support NPAPI plugins on Wayland.
@@ -1769,7 +1567,6 @@ NPError PluginModuleChild::DoNP_Initialize(const PluginSettings& aSettings) {
   // resources.
   int xSocketFd = ConnectionNumber(DefaultXDisplay());
   SendBackUpXResources(FileDescriptor(xSocketFd));
->>>>>>> upstream-releases
 #endif
 
   NPError result;
@@ -1778,7 +1575,7 @@ NPError PluginModuleChild::DoNP_Initialize(const PluginSettings& aSettings) {
 #elif defined(OS_WIN) || defined(OS_MACOSX)
   result = mInitializeFunc(&sBrowserFuncs);
 #else
-#error Please implement me for your platform
+#  error Please implement me for your platform
 #endif
 
   return result;
@@ -1883,22 +1680,12 @@ NPObject* PluginModuleChild::NPN_CreateObject(NPP aNPP, NPClass* aClass) {
   return newObject;
 }
 
-<<<<<<< HEAD
-NPObject* PluginModuleChild::NPN_RetainObject(NPObject* aNPObj) {
-  AssertPluginThread();
-||||||| merged common ancestors
-NPObject*
-PluginModuleChild::NPN_RetainObject(NPObject* aNPObj)
-{
-    AssertPluginThread();
-=======
 NPObject* PluginModuleChild::NPN_RetainObject(NPObject* aNPObj) {
   AssertPluginThread();
 
   if (NS_WARN_IF(!aNPObj)) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
 #ifdef NS_BUILD_REFCNT_LOGGING
   int32_t refCnt =
@@ -1997,7 +1784,6 @@ bool PluginModuleChild::NPN_IdentifierIsString(NPIdentifier aIdentifier) {
   return stack.IsString();
 }
 
-<<<<<<< HEAD
 NPIdentifier PluginModuleChild::NPN_GetIntIdentifier(int32_t aIntId) {
   PLUGIN_LOG_DEBUG_FUNCTION;
   AssertPluginThread();
@@ -2006,34 +1792,6 @@ NPIdentifier PluginModuleChild::NPN_GetIntIdentifier(int32_t aIntId) {
   PluginScriptableObjectChild::StackIdentifier stackID(ident);
   stackID.MakePermanent();
   return stackID.ToNPIdentifier();
-||||||| merged common ancestors
-int32_t
-PluginModuleChild::NPN_IntFromIdentifier(NPIdentifier aIdentifier)
-{
-    PLUGIN_LOG_DEBUG_FUNCTION;
-
-    PluginScriptableObjectChild::StackIdentifier stackID(aIdentifier);
-    if (!stackID.IsString()) {
-        return stackID.GetInt();
-    }
-    return INT32_MIN;
-}
-
-#ifdef OS_WIN
-void
-PluginModuleChild::EnteredCall()
-{
-    mIncallPumpingStack.AppendElement();
-=======
-NPIdentifier PluginModuleChild::NPN_GetIntIdentifier(int32_t aIntId) {
-  PLUGIN_LOG_DEBUG_FUNCTION;
-  AssertPluginThread();
-
-  PluginIdentifier ident(aIntId);
-  PluginScriptableObjectChild::StackIdentifier stackID(ident);
-  stackID.MakePermanent();
-  return stackID.ToNPIdentifier();
->>>>>>> upstream-releases
 }
 
 NPUTF8* PluginModuleChild::NPN_UTF8FromIdentifier(NPIdentifier aIdentifier) {

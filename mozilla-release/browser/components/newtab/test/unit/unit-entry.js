@@ -181,16 +181,9 @@ const TEST_GLOBAL = {
     File: function() {}, // NB: This is a function/constructor
   },
   Services: {
-<<<<<<< HEAD
-    dirsvc: {
-      get: () => ({parent: {parent: {path: "appPath"}}}),
-    },
-||||||| merged common ancestors
-=======
     dirsvc: {
       get: () => ({ parent: { parent: { path: "appPath" } } }),
     },
->>>>>>> upstream-releases
     locale: {
       get appLocaleAsLangTag() {
         return "en-US";
@@ -266,17 +259,6 @@ const TEST_GLOBAL = {
       }),
     },
     search: {
-<<<<<<< HEAD
-      init(cb) { cb(); },
-      getVisibleEngines: () => [{identifier: "google"}, {identifier: "bing"}],
-      defaultEngine: {identifier: "google", searchForm: "https://www.google.com/search?q=&ie=utf-8&oe=utf-8&client=firefox-b"},
-      currentEngine: {identifier: "google", searchForm: "https://www.google.com/search?q=&ie=utf-8&oe=utf-8&client=firefox-b"},
-||||||| merged common ancestors
-      init(cb) { cb(); },
-      getVisibleEngines: () => [{identifier: "google"}, {identifier: "bing"}],
-      defaultEngine: {identifier: "google"},
-      currentEngine: {identifier: "google", searchForm: "https://www.google.com/search?q=&ie=utf-8&oe=utf-8&client=firefox-b"},
-=======
       init() {
         return Promise.resolve();
       },
@@ -295,7 +277,6 @@ const TEST_GLOBAL = {
         searchForm:
           "https://www.google.com/search?q=&ie=utf-8&oe=utf-8&client=firefox-b",
       },
->>>>>>> upstream-releases
     },
     scriptSecurityManager: {
       createNullPrincipal() {},
@@ -344,20 +325,6 @@ const TEST_GLOBAL = {
       on() {},
     };
   },
-<<<<<<< HEAD
-  Localization: class {
-    async formatMessages(stringsIds) {
-      return Promise.resolve(stringsIds.map(({id, args}) => ({value: {string_id: id, args}})));
-    }
-  },
-  FxAccountsConfig: {
-    promiseEmailFirstURI(id) {
-      return Promise.resolve(id);
-    },
-  },
-||||||| merged common ancestors
-  Localization: class {},
-=======
   Localization: class {
     async formatMessages(stringsIds) {
       return Promise.resolve(
@@ -378,7 +345,6 @@ const TEST_GLOBAL = {
       return Promise.resolve(0);
     },
   },
->>>>>>> upstream-releases
 };
 overrider.set(TEST_GLOBAL);
 

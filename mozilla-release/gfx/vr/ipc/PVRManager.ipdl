@@ -51,17 +51,11 @@ parent:
   async StopVibrateHaptic(uint32_t aControllerIdx);
   async StartVRNavigation(uint32_t aDeviceID);
   async StopVRNavigation(uint32_t aDeviceID, TimeDuration aDuration);
-<<<<<<< HEAD
-  async StartActivity();
-  async StopActivity();
-||||||| merged common ancestors
-=======
   async StartActivity();
   async StopActivity();
 
   async RunPuppet(uint64_t[] buffer);
   async ResetPuppet();
->>>>>>> upstream-releases
 
 child:
   // Notify children of updated VR display enumeration and details.  This will

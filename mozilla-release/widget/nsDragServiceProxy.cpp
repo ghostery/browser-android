@@ -16,65 +16,13 @@
 using mozilla::CSSIntRegion;
 using mozilla::LayoutDeviceIntRect;
 using mozilla::Maybe;
-<<<<<<< HEAD
-using mozilla::dom::OptionalShmem;
-using mozilla::dom::TabChild;
-using mozilla::gfx::DataSourceSurface;
-using mozilla::gfx::SourceSurface;
-using mozilla::gfx::SurfaceFormat;
-using mozilla::ipc::Shmem;
-||||||| merged common ancestors
-=======
 using mozilla::dom::BrowserChild;
 using mozilla::gfx::DataSourceSurface;
 using mozilla::gfx::SourceSurface;
 using mozilla::gfx::SurfaceFormat;
 using mozilla::ipc::Shmem;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 nsDragServiceProxy::nsDragServiceProxy() {}
-
-nsDragServiceProxy::~nsDragServiceProxy() {}
-
-static void GetPrincipalURIFromNode(nsCOMPtr<nsINode>& sourceNode,
-                                    nsCString& aPrincipalURISpec) {
-  if (!sourceNode) {
-    return;
-  }
-
-  nsCOMPtr<nsIPrincipal> principal = sourceNode->NodePrincipal();
-  nsCOMPtr<nsIURI> principalURI;
-  nsresult rv = principal->GetURI(getter_AddRefs(principalURI));
-  if (NS_FAILED(rv) || !principalURI) {
-    return;
-  }
-||||||| merged common ancestors
-nsDragServiceProxy::nsDragServiceProxy()
-{
-}
-
-nsDragServiceProxy::~nsDragServiceProxy()
-{
-}
-
-static void
-GetPrincipalURIFromNode(nsCOMPtr<nsINode>& sourceNode,
-                        nsCString& aPrincipalURISpec)
-{
-  if (!sourceNode) {
-    return;
-  }
-
-  nsCOMPtr<nsIPrincipal> principal = sourceNode->NodePrincipal();
-  nsCOMPtr<nsIURI> principalURI;
-  nsresult rv = principal->GetURI(getter_AddRefs(principalURI));
-  if (NS_FAILED(rv) || !principalURI) {
-    return;
-  }
-=======
-nsDragServiceProxy::nsDragServiceProxy() {}
->>>>>>> upstream-releases
 
 nsDragServiceProxy::~nsDragServiceProxy() {}
 
@@ -118,39 +66,18 @@ nsresult nsDragServiceProxy::InvokeDragSessionImpl(
           return NS_ERROR_FAILURE;
         }
 
-<<<<<<< HEAD
-        mozilla::Unused << child->SendInvokeDragSession(
-            dataTransfers, aActionType, surfaceData, stride,
-            dataSurface->GetFormat(), dragRect, principalURISpec);
-||||||| merged common ancestors
-        mozilla::Unused <<
-          child->SendInvokeDragSession(dataTransfers, aActionType, surfaceData,
-                                       stride, dataSurface->GetFormat(),
-                                       dragRect, principalURISpec);
-=======
         mozilla::Unused << child->SendInvokeDragSession(
             dataTransfers, aActionType, Some(std::move(surfaceData)), stride,
             dataSurface->GetFormat(), dragRect, IPC::Principal(principal));
->>>>>>> upstream-releases
         StartDragSession();
         return NS_OK;
       }
     }
   }
 
-<<<<<<< HEAD
-  mozilla::Unused << child->SendInvokeDragSession(
-      dataTransfers, aActionType, mozilla::void_t(), 0,
-      static_cast<SurfaceFormat>(0), dragRect, principalURISpec);
-||||||| merged common ancestors
-  mozilla::Unused << child->SendInvokeDragSession(dataTransfers, aActionType,
-                                                  mozilla::void_t(), 0, static_cast<gfx::SurfaceFormat>(0), dragRect,
-                                                  principalURISpec);
-=======
   mozilla::Unused << child->SendInvokeDragSession(
       dataTransfers, aActionType, Nothing(), 0, static_cast<SurfaceFormat>(0),
       dragRect, IPC::Principal(principal));
->>>>>>> upstream-releases
   StartDragSession();
   return NS_OK;
 }

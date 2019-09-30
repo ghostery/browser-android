@@ -42,16 +42,6 @@ AntiTracking.runTest(
   null, // no extra prefs
   true, // run the window.open() test
   true, // run the user interaction test
-<<<<<<< HEAD
-  0, // don't expect blocking notifications
-  false); // run in normal windows
-
-||||||| merged common ancestors
-  false, // don't expect blocking notifications
-  false); // run in normal windows
-
-=======
   0, // don't expect blocking notifications
   false
 ); // run in normal windows
->>>>>>> upstream-releases

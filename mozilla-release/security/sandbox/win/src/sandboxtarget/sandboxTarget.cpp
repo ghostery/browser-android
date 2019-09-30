@@ -12,16 +12,8 @@ namespace mozilla {
 
 // We need to define this function out of line so that clang-cl doesn't inline
 // it.
-<<<<<<< HEAD
-/* static */ SandboxTarget* SandboxTarget::Instance() {
-||||||| merged common ancestors
-/* static */ SandboxTarget*
-SandboxTarget::Instance()
-{
-=======
 /* static */
 SandboxTarget* SandboxTarget::Instance() {
->>>>>>> upstream-releases
   static SandboxTarget sb;
   return &sb;
 }
@@ -33,21 +25,6 @@ void SandboxTarget::StartSandbox() {
   }
 }
 
-<<<<<<< HEAD
-bool SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
-                                          DWORD aTargetProcessId,
-                                          HANDLE* aTargetHandle,
-                                          DWORD aDesiredAccess,
-                                          DWORD aOptions) {
-||||||| merged common ancestors
-bool
-SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
-                                     DWORD aTargetProcessId,
-                                     HANDLE* aTargetHandle,
-                                     DWORD aDesiredAccess,
-                                     DWORD aOptions)
-{
-=======
 void SandboxTarget::NotifyStartObservers() {
   for (auto&& obs : mStartObservers) {
     if (!obs) {
@@ -65,7 +42,6 @@ bool SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
                                           HANDLE* aTargetHandle,
                                           DWORD aDesiredAccess,
                                           DWORD aOptions) {
->>>>>>> upstream-releases
   if (!mTargetServices) {
     return false;
   }

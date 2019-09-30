@@ -109,16 +109,8 @@ bool MainThreadIOLoggerImpl::Init() {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void MainThreadIOLoggerImpl::sIOThreadFunc(void* aArg) {
-||||||| merged common ancestors
-/* static */ void
-MainThreadIOLoggerImpl::sIOThreadFunc(void* aArg)
-{
-=======
 /* static */
 void MainThreadIOLoggerImpl::sIOThreadFunc(void* aArg) {
->>>>>>> upstream-releases
   AUTO_PROFILER_REGISTER_THREAD("MainThreadIOLogger");
 
   NS_SetCurrentThreadName("MainThreadIOLogger");

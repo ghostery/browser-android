@@ -490,12 +490,6 @@ const ExpectComparisonTo = {
     pseudo
   ) {
     // Check input
-<<<<<<< HEAD
-    // FIXME: Auto generate this array.
-    const omtaProperties = [ "transform", "opacity", "background-color" ];
-||||||| merged common ancestors
-    const omtaProperties = [ "transform", "opacity" ];
-=======
     // FIXME: Auto generate this array.
     const omtaProperties = [
       "transform",
@@ -505,40 +499,10 @@ const ExpectComparisonTo = {
       "opacity",
       "background-color",
     ];
->>>>>>> upstream-releases
     if (!omtaProperties.includes(property)) {
       ok(false, property + " is not an OMTA property");
       return;
     }
-<<<<<<< HEAD
-    var normalize;
-    var compare;
-    var normalizedToString = JSON.stringify;
-    switch (property) {
-      case "transform":
-        normalize = convertTo3dMatrix;
-        compare = matricesRoughlyEqual;
-        normalizedToString = convert3dMatrixToString;
-        break;
-      case "opacity":
-        normalize = parseFloat;
-        compare = function(a, b, error) { return Math.abs(a - b) <= error; };
-        break;
-      default:
-        normalize = function(value) { return value; };
-        compare = function(a, b, error) { return a == b; };
-        break;
-    }
-||||||| merged common ancestors
-    var isTransform = property == "transform";
-    var normalize = isTransform ? convertTo3dMatrix : parseFloat;
-    var compare = isTransform ?
-                  matricesRoughlyEqual :
-                  function(a, b, error) { return Math.abs(a - b) <= error; };
-    var normalizedToString = isTransform ?
-                             convert3dMatrixToString :
-                             JSON.stringify;
-=======
     var normalize;
     var compare;
     var normalizedToString = JSON.stringify;
@@ -572,7 +536,6 @@ const ExpectComparisonTo = {
           ? originalNormalize(value.compositorValue)
           : originalNormalize(value);
     }
->>>>>>> upstream-releases
 
     // Get actual values
     var compositorStr = SpecialPowers.DOMWindowUtils.getOMTAStyle(

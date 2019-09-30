@@ -795,23 +795,12 @@ function dateTimeFormatFormatToBind(date) {
 // to store the original name in `_SetCanonicalName`.
 function $Intl_DateTimeFormat_format_get() {
     // Steps 1-3.
-<<<<<<< HEAD
-    var thisArg = UnwrapDateTimeFormat(this);
-    var dtf = thisArg;
-    if (!IsObject(dtf) || (dtf = GuardToDateTimeFormat(dtf)) === null) {
-        return callFunction(CallDateTimeFormatMethodIfWrapped, thisArg,
-                            "Intl_DateTimeFormat_format_get");
-    }
-||||||| merged common ancestors
-    var dtf = UnwrapDateTimeFormat(this, "format");
-=======
     var thisArg = UnwrapDateTimeFormat(this);
     var dtf = thisArg;
     if (!IsObject(dtf) || (dtf = GuardToDateTimeFormat(dtf)) === null) {
         return callFunction(CallDateTimeFormatMethodIfWrapped, thisArg,
                             "$Intl_DateTimeFormat_format_get");
     }
->>>>>>> upstream-releases
 
     var internals = getDateTimeFormatInternals(dtf);
 
@@ -971,18 +960,9 @@ function resolveICUPattern(pattern, result) {
             // components of DateTimeFormat. See
             // http://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
             switch (c) {
-<<<<<<< HEAD
-            case "E":
-                weekday = value;
-||||||| merged common ancestors
-            case "h":
-                _DefineDataProperty(result, "hourCycle", "h12");
-                _DefineDataProperty(result, "hour12", true);
-=======
             case "E":
             case "c":
                 weekday = value;
->>>>>>> upstream-releases
                 break;
             case "G":
                 era = value;

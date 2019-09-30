@@ -35,67 +35,25 @@ public:
 
     ~GrAHardwareBufferImageGenerator() override;
 
-<<<<<<< HEAD
-    typedef void* DeleteImageCtx;
-    typedef void (*DeleteImageProc)(DeleteImageCtx);
-
     static void DeleteGLTexture(void* ctx);
 
-#ifdef SK_VULKAN
-    static void DeleteVkImage(void* ctx);
-#endif
-
-||||||| merged common ancestors
-=======
-    static void DeleteGLTexture(void* ctx);
-
->>>>>>> upstream-releases
 protected:
 
     bool onIsValid(GrContext*) const override;
 
     TexGenType onCanGenerateTexture() const override { return TexGenType::kCheap; }
-<<<<<<< HEAD
-    sk_sp<GrTextureProxy> onGenerateTexture(GrContext*, const SkImageInfo&, const SkIPoint&,
-                                            bool willNeedMipMaps) override;
-||||||| merged common ancestors
-    sk_sp<GrTextureProxy> onGenerateTexture(GrContext*, const SkImageInfo&, const SkIPoint&,
-                                            SkTransferFunctionBehavior,
-                                            bool willNeedMipMaps) override;
-#endif
-=======
     sk_sp<GrTextureProxy> onGenerateTexture(GrRecordingContext*, const SkImageInfo&,
                                             const SkIPoint&, bool willNeedMipMaps) override;
->>>>>>> upstream-releases
 
 private:
-<<<<<<< HEAD
-    GrAHardwareBufferImageGenerator(const SkImageInfo&, AHardwareBuffer*, SkAlphaType,
-                                    bool isProtectedContent, uint32_t bufferFormat,
-                                    GrSurfaceOrigin surfaceOrigin);
-    sk_sp<GrTextureProxy> makeProxy(GrContext* context);
-||||||| merged common ancestors
-    GrAHardwareBufferImageGenerator(const SkImageInfo&, AHardwareBuffer*, SkAlphaType);
-    sk_sp<GrTextureProxy> makeProxy(GrContext* context);
-    void clear();
-=======
     GrAHardwareBufferImageGenerator(const SkImageInfo&, AHardwareBuffer*, SkAlphaType,
                                     bool isProtectedContent, uint32_t bufferFormat,
                                     GrSurfaceOrigin surfaceOrigin);
     sk_sp<GrTextureProxy> makeProxy(GrRecordingContext* context);
 
     void releaseTextureRef();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    void releaseTextureRef();
 
     static void ReleaseRefHelper_TextureReleaseProc(void* ctx);
-||||||| merged common ancestors
-    static void deleteImageTexture(void* ctx);
-=======
-    static void ReleaseRefHelper_TextureReleaseProc(void* ctx);
->>>>>>> upstream-releases
 
     AHardwareBuffer* fHardwareBuffer;
     uint32_t         fBufferFormat;

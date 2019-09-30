@@ -5,36 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "ClientLayerManager.h"
-<<<<<<< HEAD
-#include "GeckoProfiler.h"       // for AUTO_PROFILER_LABEL
-#include "gfxEnv.h"              // for gfxEnv
-#include "gfxPrefs.h"            // for gfxPrefs::LayersTile...
-#include "mozilla/Assertions.h"  // for MOZ_ASSERT, etc
-||||||| merged common ancestors
-#include "GeckoProfiler.h"              // for AUTO_PROFILER_LABEL
-#include "gfxEnv.h"                     // for gfxEnv
-#include "gfxPrefs.h"                   // for gfxPrefs::LayersTile...
-#include "mozilla/Assertions.h"         // for MOZ_ASSERT, etc
-=======
 #include "GeckoProfiler.h"       // for AUTO_PROFILER_LABEL
 #include "gfxEnv.h"              // for gfxEnv
 #include "mozilla/Assertions.h"  // for MOZ_ASSERT, etc
->>>>>>> upstream-releases
 #include "mozilla/Hal.h"
-<<<<<<< HEAD
-#include "mozilla/dom/TabChild.h"      // for TabChild
-#include "mozilla/dom/TabGroup.h"      // for TabGroup
-#include "mozilla/hal_sandbox/PHal.h"  // for ScreenConfiguration
-||||||| merged common ancestors
-#include "mozilla/dom/TabChild.h"       // for TabChild
-#include "mozilla/dom/TabGroup.h"       // for TabGroup
-#include "mozilla/hal_sandbox/PHal.h"   // for ScreenConfiguration
-=======
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/dom/BrowserChild.h"  // for BrowserChild
 #include "mozilla/dom/TabGroup.h"      // for TabGroup
 #include "mozilla/hal_sandbox/PHal.h"  // for ScreenConfiguration
->>>>>>> upstream-releases
 #include "mozilla/layers/CompositableClient.h"
 #include "mozilla/layers/CompositorBridgeChild.h"  // for CompositorBridgeChild
 #include "mozilla/layers/FrameUniformityData.h"
@@ -44,14 +22,8 @@
 #include "mozilla/layers/LayerTransactionChild.h"
 #include "mozilla/layers/PersistentBufferProvider.h"
 #include "mozilla/layers/SyncObject.h"
-<<<<<<< HEAD
-#include "ClientReadbackLayer.h"  // for ClientReadbackLayer
-||||||| merged common ancestors
-#include "ClientReadbackLayer.h"        // for ClientReadbackLayer
-=======
 #include "mozilla/PerfStats.h"
 #include "ClientReadbackLayer.h"  // for ClientReadbackLayer
->>>>>>> upstream-releases
 #include "nsAString.h"
 #include "nsDisplayList.h"
 #include "nsIWidgetListener.h"
@@ -474,18 +446,8 @@ CompositorBridgeChild* ClientLayerManager::GetCompositorBridgeChild() {
   return GetRemoteRenderer();
 }
 
-<<<<<<< HEAD
-void ClientLayerManager::FlushAsyncPaints() {
-  AUTO_PROFILER_LABEL("ClientLayerManager::FlushAsyncPaints", GRAPHICS);
-||||||| merged common ancestors
-void
-ClientLayerManager::FlushAsyncPaints()
-{
-  AUTO_PROFILER_LABEL("ClientLayerManager::FlushAsyncPaints", GRAPHICS);
-=======
 void ClientLayerManager::FlushAsyncPaints() {
   AUTO_PROFILER_LABEL_CATEGORY_PAIR(GRAPHICS_FlushingAsyncPaints);
->>>>>>> upstream-releases
 
   CompositorBridgeChild* cbc = GetCompositorBridgeChild();
   if (cbc) {
@@ -583,20 +545,9 @@ float ClientLayerManager::RequestProperty(const nsAString& aProperty) {
   return -1;
 }
 
-<<<<<<< HEAD
-void ClientLayerManager::StartNewRepaintRequest(
-    SequenceNumber aSequenceNumber) {
-  if (gfxPrefs::APZTestLoggingEnabled()) {
-||||||| merged common ancestors
-void
-ClientLayerManager::StartNewRepaintRequest(SequenceNumber aSequenceNumber)
-{
-  if (gfxPrefs::APZTestLoggingEnabled()) {
-=======
 void ClientLayerManager::StartNewRepaintRequest(
     SequenceNumber aSequenceNumber) {
   if (StaticPrefs::apz_test_logging_enabled()) {
->>>>>>> upstream-releases
     mApzTestData.StartNewRepaintRequest(aSequenceNumber);
   }
 }
@@ -665,15 +616,8 @@ void ClientLayerManager::MakeSnapshotIfRequired() {
 void ClientLayerManager::FlushRendering() {
   if (mWidget) {
     if (CompositorBridgeChild* remoteRenderer = mWidget->GetRemoteRenderer()) {
-<<<<<<< HEAD
-      if (mWidget->SynchronouslyRepaintOnResize() ||
-          gfxPrefs::LayersForceSynchronousResize()) {
-||||||| merged common ancestors
-      if (mWidget->SynchronouslyRepaintOnResize() || gfxPrefs::LayersForceSynchronousResize()) {
-=======
       if (mWidget->SynchronouslyRepaintOnResize() ||
           StaticPrefs::layers_force_synchronous_resize()) {
->>>>>>> upstream-releases
         remoteRenderer->SendFlushRendering();
       } else {
         remoteRenderer->SendFlushRenderingAsync();
@@ -719,18 +663,8 @@ void ClientLayerManager::StopFrameTimeRecording(
   }
 }
 
-<<<<<<< HEAD
-void ClientLayerManager::ForwardTransaction(bool aScheduleComposite) {
-  AUTO_PROFILER_TRACING("Paint", "ForwardTransaction");
-||||||| merged common ancestors
-void
-ClientLayerManager::ForwardTransaction(bool aScheduleComposite)
-{
-  AUTO_PROFILER_TRACING("Paint", "ForwardTransaction");
-=======
 void ClientLayerManager::ForwardTransaction(bool aScheduleComposite) {
   AUTO_PROFILER_TRACING("Paint", "ForwardTransaction", GRAPHICS);
->>>>>>> upstream-releases
   TimeStamp start = TimeStamp::Now();
 
   GetCompositorBridgeChild()->EndCanvasTransaction();
@@ -773,24 +707,12 @@ void ClientLayerManager::ForwardTransaction(bool aScheduleComposite) {
   // forward this transaction's changeset to our LayerManagerComposite
   bool sent = false;
   bool ok = mForwarder->EndTransaction(
-<<<<<<< HEAD
-      mRegionToClear, mLatestTransactionId, aScheduleComposite,
-      mPaintSequenceNumber, mIsRepeatTransaction,
-      mTransactionIdAllocator->GetVsyncId(), refreshStart, mTransactionStart,
-      mURL, &sent);
-||||||| merged common ancestors
-    mRegionToClear, mLatestTransactionId, aScheduleComposite,
-    mPaintSequenceNumber, mIsRepeatTransaction,
-    refreshStart, mTransactionStart,
-    &sent);
-=======
       mRegionToClear, mLatestTransactionId, aScheduleComposite,
       mPaintSequenceNumber, mIsRepeatTransaction,
       mTransactionIdAllocator->GetVsyncId(),
       mTransactionIdAllocator->GetVsyncStart(), refreshStart, mTransactionStart,
       mContainsSVG, mURL, &sent, mPayload);
 
->>>>>>> upstream-releases
   if (ok) {
     if (sent) {
       // Our payload has now been dispatched.
@@ -941,24 +863,6 @@ already_AddRefed<PersistentBufferProvider>
 ClientLayerManager::CreatePersistentBufferProvider(const gfx::IntSize& aSize,
                                                    gfx::SurfaceFormat aFormat) {
   // Don't use a shared buffer provider if compositing is considered "not cheap"
-<<<<<<< HEAD
-  // because the canvas will most likely be flattened into a thebes layer
-  // instead of being sent to the compositor, in which case rendering into
-  // shared memory is wasteful.
-  if (IsCompositingCheap() &&
-      gfxPrefs::PersistentBufferProviderSharedEnabled()) {
-    RefPtr<PersistentBufferProvider> provider =
-        PersistentBufferProviderShared::Create(aSize, aFormat,
-                                               AsShadowForwarder());
-||||||| merged common ancestors
-  // because the canvas will most likely be flattened into a thebes layer instead
-  // of being sent to the compositor, in which case rendering into shared memory
-  // is wasteful.
-  if (IsCompositingCheap() &&
-      gfxPrefs::PersistentBufferProviderSharedEnabled()) {
-    RefPtr<PersistentBufferProvider> provider
-      = PersistentBufferProviderShared::Create(aSize, aFormat, AsShadowForwarder());
-=======
   // because the canvas will most likely be flattened into a thebes layer
   // instead of being sent to the compositor, in which case rendering into
   // shared memory is wasteful.
@@ -966,7 +870,6 @@ ClientLayerManager::CreatePersistentBufferProvider(const gfx::IntSize& aSize,
     RefPtr<PersistentBufferProvider> provider =
         PersistentBufferProviderShared::Create(aSize, aFormat,
                                                AsShadowForwarder());
->>>>>>> upstream-releases
     if (provider) {
       return provider.forget();
     }

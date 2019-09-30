@@ -5,13 +5,7 @@ ru{
     collations{
         standard{
             Sequence{"[reorder Cyrl]"}
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

@@ -20,57 +20,26 @@ static const dom::EffectTiming& GetTimingProperties(
     const OptionsType& aOptions);
 
 template <>
-<<<<<<< HEAD
-/* static */ const dom::EffectTiming& GetTimingProperties(
-    const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions) {
-||||||| merged common ancestors
-/* static */ const dom::EffectTiming&
-GetTimingProperties(
-  const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions)
-{
-=======
 /* static */
 const dom::EffectTiming& GetTimingProperties(
     const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOptions.IsKeyframeEffectOptions());
   return aOptions.GetAsKeyframeEffectOptions();
 }
 
 template <>
-<<<<<<< HEAD
-/* static */ const dom::EffectTiming& GetTimingProperties(
-    const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions) {
-||||||| merged common ancestors
-/* static */ const dom::EffectTiming&
-GetTimingProperties(
-  const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions)
-{
-=======
 /* static */
 const dom::EffectTiming& GetTimingProperties(
     const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOptions.IsKeyframeAnimationOptions());
   return aOptions.GetAsKeyframeAnimationOptions();
 }
 
 template <class OptionsType>
-<<<<<<< HEAD
-/* static */ TimingParams TimingParams::FromOptionsType(
-    const OptionsType& aOptions, nsIDocument* aDocument, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ TimingParams
-TimingParams::FromOptionsType(const OptionsType& aOptions,
-                              nsIDocument* aDocument,
-                              ErrorResult& aRv)
-{
-=======
 /* static */
 TimingParams TimingParams::FromOptionsType(const OptionsType& aOptions,
                                            dom::Document* aDocument,
                                            ErrorResult& aRv) {
->>>>>>> upstream-releases
   TimingParams result;
 
   if (aOptions.IsUnrestrictedDouble()) {
@@ -91,62 +60,24 @@ TimingParams TimingParams::FromOptionsType(const OptionsType& aOptions,
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ TimingParams TimingParams::FromOptionsUnion(
-    const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions,
-    nsIDocument* aDocument, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ TimingParams
-TimingParams::FromOptionsUnion(
-  const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions,
-  nsIDocument* aDocument,
-  ErrorResult& aRv)
-{
-=======
 /* static */
 TimingParams TimingParams::FromOptionsUnion(
     const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions,
     dom::Document* aDocument, ErrorResult& aRv) {
->>>>>>> upstream-releases
   return FromOptionsType(aOptions, aDocument, aRv);
 }
 
-<<<<<<< HEAD
-/* static */ TimingParams TimingParams::FromOptionsUnion(
-    const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions,
-    nsIDocument* aDocument, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ TimingParams
-TimingParams::FromOptionsUnion(
-  const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions,
-  nsIDocument* aDocument,
-  ErrorResult& aRv)
-{
-=======
 /* static */
 TimingParams TimingParams::FromOptionsUnion(
     const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions,
     dom::Document* aDocument, ErrorResult& aRv) {
->>>>>>> upstream-releases
   return FromOptionsType(aOptions, aDocument, aRv);
 }
 
-<<<<<<< HEAD
-/* static */ TimingParams TimingParams::FromEffectTiming(
-    const dom::EffectTiming& aEffectTiming, nsIDocument* aDocument,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ TimingParams
-TimingParams::FromEffectTiming(const dom::EffectTiming& aEffectTiming,
-                               nsIDocument* aDocument,
-                               ErrorResult& aRv)
-{
-=======
 /* static */
 TimingParams TimingParams::FromEffectTiming(
     const dom::EffectTiming& aEffectTiming, dom::Document* aDocument,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   TimingParams result;
 
   Maybe<StickyTimeDuration> duration =
@@ -182,24 +113,10 @@ TimingParams TimingParams::FromEffectTiming(
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ TimingParams TimingParams::MergeOptionalEffectTiming(
-    const TimingParams& aSource, const dom::OptionalEffectTiming& aEffectTiming,
-    nsIDocument* aDocument, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ TimingParams
-TimingParams::MergeOptionalEffectTiming(
-  const TimingParams& aSource,
-  const dom::OptionalEffectTiming& aEffectTiming,
-  nsIDocument* aDocument,
-  ErrorResult& aRv)
-{
-=======
 /* static */
 TimingParams TimingParams::MergeOptionalEffectTiming(
     const TimingParams& aSource, const dom::OptionalEffectTiming& aEffectTiming,
     dom::Document* aDocument, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!aRv.Failed(), "Initially return value should be ok");
 
   TimingParams result = aSource;
@@ -273,20 +190,9 @@ TimingParams TimingParams::MergeOptionalEffectTiming(
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ Maybe<ComputedTimingFunction> TimingParams::ParseEasing(
-    const nsAString& aEasing, nsIDocument* aDocument, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ Maybe<ComputedTimingFunction>
-TimingParams::ParseEasing(const nsAString& aEasing,
-                          nsIDocument* aDocument,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 Maybe<ComputedTimingFunction> TimingParams::ParseEasing(
     const nsAString& aEasing, dom::Document* aDocument, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
 
   nsTimingFunction timingFunction;

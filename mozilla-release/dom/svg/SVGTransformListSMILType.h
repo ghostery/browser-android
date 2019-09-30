@@ -77,57 +77,17 @@ class SVGTransformSMILData;
 // we have seen above can contain 0..n elements) whilst the end-value comes from
 // the <animateTransform> and so can only hold 1 transform.
 //
-<<<<<<< HEAD
-class SVGTransformListSMILType : public nsISMILType {
- public:
-  // Singleton for nsSMILValue objects to hold onto.
-  static SVGTransformListSMILType* Singleton() {
-||||||| merged common ancestors
-class SVGTransformListSMILType : public nsISMILType
-{
-public:
-  // Singleton for nsSMILValue objects to hold onto.
-  static SVGTransformListSMILType*
-  Singleton()
-  {
-=======
 class SVGTransformListSMILType : public SMILType {
  public:
   // Singleton for SMILValue objects to hold onto.
   static SVGTransformListSMILType* Singleton() {
->>>>>>> upstream-releases
     static SVGTransformListSMILType sSingleton;
     return &sSingleton;
   }
 
-<<<<<<< HEAD
- protected:
-  // nsISMILType Methods
-||||||| merged common ancestors
-protected:
-  // nsISMILType Methods
-=======
  protected:
   // SMILType Methods
->>>>>>> upstream-releases
   // -------------------
-<<<<<<< HEAD
-  virtual void Init(nsSMILValue& aValue) const override;
-  virtual void Destroy(nsSMILValue& aValue) const override;
-  virtual nsresult Assign(nsSMILValue& aDest,
-                          const nsSMILValue& aSrc) const override;
-  virtual bool IsEqual(const nsSMILValue& aLeft,
-                       const nsSMILValue& aRight) const override;
-  virtual nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-||||||| merged common ancestors
-  virtual void     Init(nsSMILValue& aValue) const override;
-  virtual void     Destroy(nsSMILValue& aValue) const override;
-  virtual nsresult Assign(nsSMILValue& aDest, const nsSMILValue& aSrc) const override;
-  virtual bool     IsEqual(const nsSMILValue& aLeft,
-                           const nsSMILValue& aRight) const override;
-  virtual nsresult Add(nsSMILValue& aDest,
-                       const nsSMILValue& aValueToAdd,
-=======
   virtual void Init(SMILValue& aValue) const override;
   virtual void Destroy(SMILValue& aValue) const override;
   virtual nsresult Assign(SMILValue& aDest,
@@ -135,26 +95,14 @@ protected:
   virtual bool IsEqual(const SMILValue& aLeft,
                        const SMILValue& aRight) const override;
   virtual nsresult Add(SMILValue& aDest, const SMILValue& aValueToAdd,
->>>>>>> upstream-releases
                        uint32_t aCount) const override;
   virtual nsresult SandwichAdd(SMILValue& aDest,
                                const SMILValue& aValueToAdd) const override;
   virtual nsresult ComputeDistance(const SMILValue& aFrom, const SMILValue& aTo,
                                    double& aDistance) const override;
-<<<<<<< HEAD
-  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal, double aUnitDistance,
-                               nsSMILValue& aResult) const override;
-||||||| merged common ancestors
-  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal,
-                               double aUnitDistance,
-                               nsSMILValue& aResult) const override;
-=======
   virtual nsresult Interpolate(const SMILValue& aStartVal,
                                const SMILValue& aEndVal, double aUnitDistance,
                                SMILValue& aResult) const override;
->>>>>>> upstream-releases
 
  public:
   // Transform array accessors
@@ -162,26 +110,11 @@ protected:
   static nsresult AppendTransform(const SVGTransformSMILData& aTransform,
                                   SMILValue& aValue);
   static bool AppendTransforms(const SVGTransformList& aList,
-<<<<<<< HEAD
-                               nsSMILValue& aValue);
-  static bool GetTransforms(const nsSMILValue& aValue,
-                            FallibleTArray<nsSVGTransform>& aTransforms);
-
- private:
-||||||| merged common ancestors
-                                 nsSMILValue& aValue);
-  static bool GetTransforms(const nsSMILValue& aValue,
-                              FallibleTArray<nsSVGTransform>& aTransforms);
-
-
-private:
-=======
                                SMILValue& aValue);
   static bool GetTransforms(const SMILValue& aValue,
                             FallibleTArray<SVGTransform>& aTransforms);
 
  private:
->>>>>>> upstream-releases
   // Private constructor: prevent instances beyond my singleton.
   constexpr SVGTransformListSMILType() = default;
 };

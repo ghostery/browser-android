@@ -795,23 +795,11 @@ var gHistorySwipeAnimation = {
    * Adds the boxes that contain the arrows used during the swipe animation.
    */
   _addBoxes: function HSA__addBoxes() {
-<<<<<<< HEAD
-    let browserStack = gBrowser.getPanel().querySelector(".browserStack");
-    this._container = this._createElement("historySwipeAnimationContainer",
-                                          "stack");
-||||||| merged common ancestors
-    let browserStack =
-      document.getAnonymousElementByAttribute(gBrowser.getNotificationBox(),
-                                              "class", "browserStack");
-    this._container = this._createElement("historySwipeAnimationContainer",
-                                          "stack");
-=======
     let browserStack = gBrowser.getPanel().querySelector(".browserStack");
     this._container = this._createElement(
       "historySwipeAnimationContainer",
       "stack"
     );
->>>>>>> upstream-releases
     browserStack.appendChild(this._container);
 
     this._prevBox = this._createElement(

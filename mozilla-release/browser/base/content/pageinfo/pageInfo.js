@@ -125,52 +125,6 @@ pageInfoTreeView.prototype = {
     this.sortcol = treecol.index;
   },
 
-<<<<<<< HEAD
-  getRowProperties(row) { return ""; },
-  getCellProperties(row, column) { return ""; },
-  getColumnProperties(column) { return ""; },
-  isContainer(index) { return false; },
-  isContainerOpen(index) { return false; },
-  isSeparator(index) { return false; },
-  isSorted() { return this.sortcol > -1; },
-  canDrop(index, orientation) { return false; },
-  drop(row, orientation) { return false; },
-  getParentIndex(index) { return 0; },
-  hasNextSibling(index, after) { return false; },
-  getLevel(index) { return 0; },
-  getImageSrc(row, column) { },
-  getCellValue(row, column) { },
-  toggleOpenState(index) { },
-  cycleHeader(col) { },
-  selectionChanged() { },
-  cycleCell(row, column) { },
-  isEditable(row, column) { return false; },
-  performAction(action) { },
-  performActionOnCell(action, row, column) { },
-||||||| merged common ancestors
-  getRowProperties(row) { return ""; },
-  getCellProperties(row, column) { return ""; },
-  getColumnProperties(column) { return ""; },
-  isContainer(index) { return false; },
-  isContainerOpen(index) { return false; },
-  isSeparator(index) { return false; },
-  isSorted() { return this.sortcol > -1; },
-  canDrop(index, orientation) { return false; },
-  drop(row, orientation) { return false; },
-  getParentIndex(index) { return 0; },
-  hasNextSibling(index, after) { return false; },
-  getLevel(index) { return 0; },
-  getImageSrc(row, column) { },
-  getCellValue(row, column) { },
-  toggleOpenState(index) { },
-  cycleHeader(col) { },
-  selectionChanged() { },
-  cycleCell(row, column) { },
-  isEditable(row, column) { return false; },
-  isSelectable(row, column) { return false; },
-  performAction(action) { },
-  performActionOnCell(action, row, column) { },
-=======
   getRowProperties(row) {
     return "";
   },
@@ -218,7 +172,6 @@ pageInfoTreeView.prototype = {
   },
   performAction(action) {},
   performActionOnCell(action, row, column) {},
->>>>>>> upstream-releases
 };
 
 // mmm, yummy. global variables.

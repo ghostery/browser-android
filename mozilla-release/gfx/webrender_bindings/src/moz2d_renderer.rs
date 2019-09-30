@@ -7,14 +7,8 @@
 //! registering fonts found in the blob (see `prepare_request`).
 
 use webrender::api::*;
-<<<<<<< HEAD
-use bindings::{ByteSlice, MutByteSlice, wr_moz2d_render_cb, ArcVecU8, gecko_profiler_start_marker, gecko_profiler_end_marker};
-||||||| merged common ancestors
-use bindings::{ByteSlice, MutByteSlice, wr_moz2d_render_cb, ArcVecU8};
-=======
 use webrender::api::units::{BlobDirtyRect, BlobToDeviceTranslation};
 use bindings::{ByteSlice, MutByteSlice, wr_moz2d_render_cb, ArcVecU8, gecko_profiler_start_marker, gecko_profiler_end_marker};
->>>>>>> upstream-releases
 use rayon::ThreadPool;
 use rayon::prelude::*;
 
@@ -525,21 +519,12 @@ fn rasterize_blob(job: Job) -> (BlobImageRequest, BlobImageResult) {
 
     let mut output = vec![0u8; buf_size];
 
-<<<<<<< HEAD
-    let dirty_rect = match job.dirty_rect {
-        DirtyRect::Partial(rect) => Some(rect),
-        DirtyRect::All => None,
-    };
-
-||||||| merged common ancestors
-=======
     let dirty_rect = match job.dirty_rect {
         DirtyRect::Partial(rect) => Some(rect),
         DirtyRect::All => None,
     };
     assert!(descriptor.rect.size.width > 0 && descriptor.rect.size.height  > 0);
 
->>>>>>> upstream-releases
     let result = unsafe {
         if wr_moz2d_render_cb(
             ByteSlice::new(&job.commands[..]),

@@ -180,37 +180,7 @@ class CountBase {
   Node::Id smallestNodeIdCounted_;
 };
 
-<<<<<<< HEAD
-class RootedCount : JS::CustomAutoRooter {
-  CountBasePtr count;
-
-  void trace(JSTracer* trc) override { count->trace(trc); }
-
- public:
-  RootedCount(JSContext* cx, CountBasePtr&& count)
-      : CustomAutoRooter(cx), count(std::move(count)) {}
-  CountBase* operator->() const { return count.get(); }
-  explicit operator bool() const { return count.get(); }
-  operator CountBasePtr&() { return count; }
-};
-||||||| merged common ancestors
-class RootedCount : JS::CustomAutoRooter {
-    CountBasePtr count;
-
-    void trace(JSTracer* trc) override { count->trace(trc); }
-
-  public:
-    RootedCount(JSContext* cx, CountBasePtr&& count)
-        : CustomAutoRooter(cx),
-          count(std::move(count))
-          { }
-    CountBase* operator->() const { return count.get(); }
-    explicit operator bool() const { return count.get(); }
-    operator CountBasePtr&() { return count; }
-};
-=======
 using RootedCount = JS::Rooted<CountBasePtr>;
->>>>>>> upstream-releases
 
 // Common data for a census traversal, shared across all CountType nodes.
 struct Census {
@@ -226,31 +196,6 @@ struct Census {
 // A BreadthFirst handler type that conducts a census, using a CountBase to
 // categorize and count each node.
 class CensusHandler {
-<<<<<<< HEAD
-  Census& census;
-  CountBasePtr& rootCount;
-  mozilla::MallocSizeOf mallocSizeOf;
-
- public:
-  CensusHandler(Census& census, CountBasePtr& rootCount,
-                mozilla::MallocSizeOf mallocSizeOf)
-      : census(census), rootCount(rootCount), mallocSizeOf(mallocSizeOf) {}
-||||||| merged common ancestors
-    Census& census;
-    CountBasePtr& rootCount;
-    mozilla::MallocSizeOf mallocSizeOf;
-
-  public:
-    CensusHandler(Census& census, CountBasePtr& rootCount, mozilla::MallocSizeOf mallocSizeOf)
-      : census(census),
-        rootCount(rootCount),
-        mallocSizeOf(mallocSizeOf)
-    { }
-
-    MOZ_MUST_USE bool report(JSContext* cx, MutableHandleValue report) {
-        return rootCount->report(cx, report);
-    }
-=======
   Census& census;
   JS::Handle<CountBasePtr> rootCount;
   mozilla::MallocSizeOf mallocSizeOf;
@@ -259,7 +204,6 @@ class CensusHandler {
   CensusHandler(Census& census, JS::Handle<CountBasePtr> rootCount,
                 mozilla::MallocSizeOf mallocSizeOf)
       : census(census), rootCount(rootCount), mallocSizeOf(mallocSizeOf) {}
->>>>>>> upstream-releases
 
   MOZ_MUST_USE bool report(JSContext* cx, MutableHandleValue report) {
     return rootCount->report(cx, report);

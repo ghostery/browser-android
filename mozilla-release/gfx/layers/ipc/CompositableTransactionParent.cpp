@@ -133,19 +133,9 @@ bool CompositableParentManager::ReceiveCompositableUpdate(
           // because the recycling logic depends on it.
           MOZ_ASSERT(texture->NumCompositableRefs() > 0);
         }
-<<<<<<< HEAD
-        if (texturedDesc.textureOnWhite().type() ==
-            MaybeTexture::TPTextureParent) {
-          texture = TextureHost::AsTextureHost(
-              texturedDesc.textureOnWhite().get_PTextureParent());
-||||||| merged common ancestors
-        if (texturedDesc.textureOnWhite().type() == MaybeTexture::TPTextureParent) {
-          texture = TextureHost::AsTextureHost(texturedDesc.textureOnWhite().get_PTextureParent());
-=======
         if (texturedDesc.textureOnWhiteParent().isSome()) {
           texture = TextureHost::AsTextureHost(
               texturedDesc.textureOnWhiteParent().ref());
->>>>>>> upstream-releases
           if (texture) {
             texture->SetLastFwdTransactionId(mFwdTransactionId);
             // Make sure that each texture was handled by the compositable
@@ -240,7 +230,9 @@ bool CompositableParentManager::ReceiveCompositableUpdate(
       }
       break;
     }
-    default: { MOZ_ASSERT(false, "bad type"); }
+    default: {
+      MOZ_ASSERT(false, "bad type");
+    }
   }
 
   return true;
@@ -257,7 +249,9 @@ void CompositableParentManager::DestroyActor(const OpDestroy& aOp) {
       ReleaseCompositable(aOp.get_CompositableHandle());
       break;
     }
-    default: { MOZ_ASSERT(false, "unsupported type"); }
+    default: {
+      MOZ_ASSERT(false, "unsupported type");
+    }
   }
 }
 
@@ -283,17 +277,8 @@ RefPtr<CompositableHost> CompositableParentManager::AddCompositable(
   return host;
 }
 
-<<<<<<< HEAD
-RefPtr<CompositableHost> CompositableParentManager::FindCompositable(
-    const CompositableHandle& aHandle) {
-||||||| merged common ancestors
-RefPtr<CompositableHost>
-CompositableParentManager::FindCompositable(const CompositableHandle& aHandle)
-{
-=======
 RefPtr<CompositableHost> CompositableParentManager::FindCompositable(
     const CompositableHandle& aHandle, bool aAllowDisablingWebRender) {
->>>>>>> upstream-releases
   auto iter = mCompositables.find(aHandle.Value());
   if (iter == mCompositables.end()) {
     return nullptr;

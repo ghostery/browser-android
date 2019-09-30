@@ -22,13 +22,7 @@ class SVGStringList {
 
  public:
   SVGStringList() : mIsSet(false), mIsCommaSeparated(false) {}
-<<<<<<< HEAD
-  ~SVGStringList() {}
-||||||| merged common ancestors
-  ~SVGStringList(){}
-=======
   ~SVGStringList() = default;
->>>>>>> upstream-releases
 
   void SetIsCommaSeparated(bool aIsCommaSeparated) {
     mIsCommaSeparated = aIsCommaSeparated;

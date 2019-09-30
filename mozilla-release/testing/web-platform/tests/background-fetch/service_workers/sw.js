@@ -12,26 +12,6 @@ async function getFetchResult(record) {
   };
 }
 
-<<<<<<< HEAD
-function handleBackgroundFetchEvent(event) {
-  let matchFunction = null;
-  switch (event.registration.id) {
-    case 'matchexistingrequest':
-      matchFunction = event.registration.match.bind(
-          event.registration, '/background-fetch/resources/feature-name.txt');
-      break;
-    case 'matchmissingrequest':
-      matchFunction = event.registration.match.bind(
-          event.registration, '/background-fetch/resources/missing.txt');
-      break;
-    default:
-      matchFunction = event.registration.matchAll.bind(event.registration);
-      break;
-  }
-
-||||||| merged common ancestors
-function handleBackgroundFetchUpdateEvent(event) {
-=======
 function handleBackgroundFetchEvent(event) {
   let matchFunction = null;
 
@@ -56,7 +36,6 @@ function handleBackgroundFetchEvent(event) {
       break;
   }
 
->>>>>>> upstream-releases
   event.waitUntil(
     matchFunction()
       // Format `match(All)?` function results.
@@ -67,15 +46,8 @@ function handleBackgroundFetchEvent(event) {
       })
       // Extract responses.
       .then(records =>
-<<<<<<< HEAD
-            Promise.all(records.map(record => getFetchResult(record))))
-      // Clone registration and send message.
-||||||| merged common ancestors
-            Promise.all(records.map(record => getFetchResult(record))))
-=======
         Promise.all(records.map(record => getFetchResult(record))))
       // Clone registration and send message.
->>>>>>> upstream-releases
       .then(results => {
         const registrationCopy = cloneRegistration(event.registration);
         sendMessageToDocument(

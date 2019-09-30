@@ -79,15 +79,7 @@ class UserProperties {
 
   clear() {
     this.map.clear();
-<<<<<<< HEAD
-  },
-};
-||||||| merged common ancestors
-  }
-};
-=======
   }
 }
->>>>>>> upstream-releases
 
 module.exports = UserProperties;

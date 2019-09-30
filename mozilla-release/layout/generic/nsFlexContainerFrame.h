@@ -17,14 +17,8 @@ namespace mozilla {
 template <class T>
 class LinkedList;
 class LogicalPoint;
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 class PresShell;
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 nsContainerFrame* NS_NewFlexContainerFrame(mozilla::PresShell* aPresShell,
                                            mozilla::ComputedStyle* aStyle);
@@ -138,19 +132,9 @@ class nsFlexContainerFrame final : public nsContainerFrame {
   nscoord GetLogicalBaseline(mozilla::WritingMode aWM) const override;
 
   bool GetVerticalAlignBaseline(mozilla::WritingMode aWM,
-<<<<<<< HEAD
-                                nscoord* aBaseline) const override {
-    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst,
-                                     aBaseline);
-||||||| merged common ancestors
-                                nscoord* aBaseline) const override
-  {
-    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst, aBaseline);
-=======
                                 nscoord* aBaseline) const override {
     return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::First,
                                      aBaseline);
->>>>>>> upstream-releases
   }
 
   bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
@@ -159,18 +143,9 @@ class nsFlexContainerFrame final : public nsContainerFrame {
     if (HasAnyStateBits(NS_STATE_FLEX_SYNTHESIZE_BASELINE)) {
       return false;
     }
-<<<<<<< HEAD
-    *aBaseline = aBaselineGroup == BaselineSharingGroup::eFirst
-                     ? mBaselineFromLastReflow
-                     : mLastBaselineFromLastReflow;
-||||||| merged common ancestors
-    *aBaseline = aBaselineGroup == BaselineSharingGroup::eFirst ?
-                   mBaselineFromLastReflow : mLastBaselineFromLastReflow;
-=======
     *aBaseline = aBaselineGroup == BaselineSharingGroup::First
                      ? mBaselineFromLastReflow
                      : mLastBaselineFromLastReflow;
->>>>>>> upstream-releases
     return true;
   }
 
@@ -265,22 +240,6 @@ class nsFlexContainerFrame final : public nsContainerFrame {
 
  protected:
   // Protected constructor & destructor
-<<<<<<< HEAD
-  explicit nsFlexContainerFrame(ComputedStyle* aStyle)
-      : nsContainerFrame(aStyle, kClassID),
-        mCachedMinISize(NS_INTRINSIC_WIDTH_UNKNOWN),
-        mCachedPrefISize(NS_INTRINSIC_WIDTH_UNKNOWN),
-        mBaselineFromLastReflow(NS_INTRINSIC_WIDTH_UNKNOWN),
-        mLastBaselineFromLastReflow(NS_INTRINSIC_WIDTH_UNKNOWN) {}
-||||||| merged common ancestors
-  explicit nsFlexContainerFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID)
-    , mCachedMinISize(NS_INTRINSIC_WIDTH_UNKNOWN)
-    , mCachedPrefISize(NS_INTRINSIC_WIDTH_UNKNOWN)
-    , mBaselineFromLastReflow(NS_INTRINSIC_WIDTH_UNKNOWN)
-    , mLastBaselineFromLastReflow(NS_INTRINSIC_WIDTH_UNKNOWN)
-  {}
-=======
   explicit nsFlexContainerFrame(ComputedStyle* aStyle,
                                 nsPresContext* aPresContext)
       : nsContainerFrame(aStyle, aPresContext, kClassID),
@@ -288,7 +247,6 @@ class nsFlexContainerFrame final : public nsContainerFrame {
         mCachedPrefISize(NS_INTRINSIC_ISIZE_UNKNOWN),
         mBaselineFromLastReflow(NS_INTRINSIC_ISIZE_UNKNOWN),
         mLastBaselineFromLastReflow(NS_INTRINSIC_ISIZE_UNKNOWN) {}
->>>>>>> upstream-releases
 
   virtual ~nsFlexContainerFrame();
 
@@ -312,15 +270,8 @@ class nsFlexContainerFrame final : public nsContainerFrame {
                     nscoord aAvailableBSizeForContent,
                     nsTArray<StrutInfo>& aStruts,
                     const FlexboxAxisTracker& aAxisTracker,
-<<<<<<< HEAD
-                    nscoord aMainGapSize, nscoord aCrossGapSize);
-||||||| merged common ancestors
-                    nscoord aMainGapSize,
-                    nscoord aCrossGapSize);
-=======
                     nscoord aMainGapSize, nscoord aCrossGapSize,
                     bool aHasLineClampEllipsis);
->>>>>>> upstream-releases
 
   /**
    * Checks whether our child-frame list "mFrames" is sorted, using the given
@@ -350,22 +301,10 @@ class nsFlexContainerFrame final : public nsContainerFrame {
    * returned FlexItem will be ready to participate in the "Resolve the
    * Flexible Lengths" step of the Flex Layout Algorithm.)
    */
-<<<<<<< HEAD
-  mozilla::UniquePtr<FlexItem> GenerateFlexItemForChild(
-      nsPresContext* aPresContext, nsIFrame* aChildFrame,
-      const ReflowInput& aParentReflowInput,
-      const FlexboxAxisTracker& aAxisTracker);
-||||||| merged common ancestors
-  mozilla::UniquePtr<FlexItem> GenerateFlexItemForChild(nsPresContext* aPresContext,
-                                     nsIFrame* aChildFrame,
-                                     const ReflowInput& aParentReflowInput,
-                                     const FlexboxAxisTracker& aAxisTracker);
-=======
   mozilla::UniquePtr<FlexItem> GenerateFlexItemForChild(
       nsPresContext* aPresContext, nsIFrame* aChildFrame,
       const ReflowInput& aParentReflowInput,
       const FlexboxAxisTracker& aAxisTracker, bool aHasLineClampEllipsis);
->>>>>>> upstream-releases
 
   /**
    * This method gets a cached measuring reflow for a flex item, or does it and

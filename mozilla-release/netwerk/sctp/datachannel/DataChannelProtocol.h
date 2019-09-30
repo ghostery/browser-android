@@ -10,31 +10,15 @@
 #if defined(__GNUC__)
 #  define SCTP_PACKED __attribute__((packed))
 #elif defined(_MSC_VER)
-<<<<<<< HEAD
-#pragma pack(push, 1)
-#define SCTP_PACKED
-||||||| merged common ancestors
-#pragma pack (push, 1)
-#define SCTP_PACKED
-=======
 #  pragma pack(push, 1)
 #  define SCTP_PACKED
->>>>>>> upstream-releases
 #else
 #  error "Unsupported compiler"
 #endif
 
 #define WEBRTC_DATACHANNEL_STREAMS_DEFAULT 256
 // Do not change this value!
-<<<<<<< HEAD
-#define WEBRTC_DATACHANNEL_STREAMS_OLDER_FIREFOX 256
 #define WEBRTC_DATACHANNEL_PORT_DEFAULT 5000
-||||||| merged common ancestors
-#define WEBRTC_DATACHANNEL_STREAMS_OLDER_FIREFOX           256
-#define WEBRTC_DATACHANNEL_PORT_DEFAULT                    5000
-=======
-#define WEBRTC_DATACHANNEL_PORT_DEFAULT 5000
->>>>>>> upstream-releases
 // TODO: Bug 1381146, change once we resolve the nsCString limitation
 #define WEBRTC_DATACHANNEL_MAX_MESSAGE_SIZE_LOCAL 1073741823
 #define WEBRTC_DATACHANNEL_MAX_MESSAGE_SIZE_REMOTE_DEFAULT 65536
@@ -52,25 +36,9 @@
 
 #define DATA_CHANNEL_MAX_BINARY_FRAGMENT 0x4000
 
-<<<<<<< HEAD
-#define DATA_CHANNEL_FLAGS_READY 0x00000001
-#define DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED 0x00000002
-#define DATA_CHANNEL_FLAGS_FINISH_OPEN 0x00000004
-#define DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED 0x00000008
-#define DATA_CHANNEL_FLAGS_WAITING_ACK 0x00000010
-#define DATA_CHANNEL_FLAGS_CLOSING_TOO_LARGE 0x00000020
-||||||| merged common ancestors
-#define DATA_CHANNEL_FLAGS_READY                0x00000001
-#define DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED 0x00000002
-#define DATA_CHANNEL_FLAGS_FINISH_OPEN          0x00000004
-#define DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED  0x00000008
-#define DATA_CHANNEL_FLAGS_WAITING_ACK          0x00000010
-#define DATA_CHANNEL_FLAGS_CLOSING_TOO_LARGE    0x00000020
-=======
 #define DATA_CHANNEL_FLAGS_FINISH_OPEN 0x00000004
 #define DATA_CHANNEL_FLAGS_WAITING_ACK 0x00000010
 #define DATA_CHANNEL_FLAGS_CLOSING_TOO_LARGE 0x00000020
->>>>>>> upstream-releases
 
 #define DATA_CHANNEL_BUFFER_MESSAGE_FLAGS_TOO_LARGE 0x01
 #define DATA_CHANNEL_BUFFER_MESSAGE_FLAGS_BUFFERED 0x02
@@ -112,16 +80,8 @@ struct rtcweb_datachannel_ack {
 #define ERR_DATA_CHANNEL_NONE_AVAILABLE 2
 
 #if defined(_MSC_VER)
-<<<<<<< HEAD
-#pragma pack(pop)
-#undef SCTP_PACKED
-||||||| merged common ancestors
-#pragma pack (pop)
-#undef SCTP_PACKED
-=======
 #  pragma pack(pop)
 #  undef SCTP_PACKED
->>>>>>> upstream-releases
 #endif
 
 #endif

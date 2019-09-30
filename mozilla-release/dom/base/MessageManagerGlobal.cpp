@@ -19,18 +19,8 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-void MessageManagerGlobal::Dump(const nsAString& aStr) {
-  if (!DOMPrefs::DumpEnabled()) {
-||||||| merged common ancestors
-void
-MessageManagerGlobal::Dump(const nsAString& aStr)
-{
-  if (!DOMPrefs::DumpEnabled()) {
-=======
 void MessageManagerGlobal::Dump(const nsAString& aStr) {
   if (!nsJSUtils::DumpEnabled()) {
->>>>>>> upstream-releases
     return;
   }
 

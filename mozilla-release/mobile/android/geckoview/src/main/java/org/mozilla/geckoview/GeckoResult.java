@@ -507,15 +507,8 @@ public class GeckoResult<T> {
      * @param value The value used to complete the result.
      * @throws IllegalStateException If the result is already completed.
      */
-<<<<<<< HEAD
-    @WrapForJNI
-    public synchronized void complete(final T value) {
-||||||| merged common ancestors
-    public synchronized void complete(final T value) {
-=======
     @WrapForJNI
     public synchronized void complete(final @Nullable T value) {
->>>>>>> upstream-releases
         if (mComplete) {
             throw new IllegalStateException("result is already complete");
         }

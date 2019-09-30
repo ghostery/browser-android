@@ -39,24 +39,6 @@ class GeckoSystemStateListener final
         break;
       }
 
-<<<<<<< HEAD
-      if (nsCOMPtr<nsPIDOMWindowOuter> window = do_QueryInterface(elements)) {
-        if (window->Closed()) {
-          continue;
-        }
-        if (nsIDocument* doc = window->GetExtantDoc()) {
-          if (nsIPresShell* presShell = doc->GetShell()) {
-            presShell->ThemeChanged();
-||||||| merged common ancestors
-        if (nsCOMPtr<nsPIDOMWindowOuter> window = do_QueryInterface(elements)) {
-          if (window->Closed()) {
-            continue;
-          }
-          if (nsIDocument* doc = window->GetExtantDoc()) {
-            if (nsIPresShell* presShell = doc->GetShell()) {
-              presShell->ThemeChanged();
-            }
-=======
       if (nsCOMPtr<nsPIDOMWindowOuter> window = do_QueryInterface(elements)) {
         if (window->Closed()) {
           continue;
@@ -64,7 +46,6 @@ class GeckoSystemStateListener final
         if (dom::Document* doc = window->GetExtantDoc()) {
           if (PresShell* presShell = doc->GetPresShell()) {
             presShell->ThemeChanged();
->>>>>>> upstream-releases
           }
         }
       }

@@ -9,10 +9,6 @@
   display: flex;
 }
 
-.datetimebox {
-  display: flex;
-}
-
 .datetime-input-box-wrapper {
   display: inline-flex;
   flex: 1;

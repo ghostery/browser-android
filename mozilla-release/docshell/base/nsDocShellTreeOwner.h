@@ -131,17 +131,11 @@ class ChromeTooltipListener final : public nsIDOMEventListener {
   NS_IMETHOD AddChromeListeners();
   NS_IMETHOD RemoveChromeListeners();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   NS_IMETHOD HideTooltip();
 
   bool WebProgressShowedTooltip(nsIWebProgress* aWebProgress);
 
  private:
->>>>>>> upstream-releases
   // various delays for tooltips
   enum {
     kTooltipAutoHideTime = 5000,    // ms

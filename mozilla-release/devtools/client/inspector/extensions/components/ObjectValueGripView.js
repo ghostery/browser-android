@@ -46,21 +46,6 @@ class ObjectValueGripView extends PureComponent {
       // TODO: we disable focus since it's not currently working well in ObjectInspector.
       // Let's remove the property below when problem are fixed in OI.
       disabledFocus: true,
-<<<<<<< HEAD
-      roots: [{
-        path: objectValueGrip && objectValueGrip.actor || JSON.stringify(objectValueGrip),
-        contents: {
-          value: objectValueGrip,
-        },
-      }],
-||||||| merged common ancestors
-      roots: [{
-        path: objectValueGrip && objectValueGrip.actor || JSON.stringify(objectValueGrip),
-        contents: {
-          value: objectValueGrip,
-        }
-      }],
-=======
       roots: [
         {
           path:
@@ -71,7 +56,6 @@ class ObjectValueGripView extends PureComponent {
           },
         },
       ],
->>>>>>> upstream-releases
       createObjectClient: serviceContainer.createObjectClient,
       releaseActor: serviceContainer.releaseActor,
       // TODO: evaluate if there should also be a serviceContainer.openLink.

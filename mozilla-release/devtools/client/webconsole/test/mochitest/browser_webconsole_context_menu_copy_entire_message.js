@@ -14,19 +14,6 @@ httpServer.registerPathHandler(`/`, function(request, response) {
     <script type="text/javascript" src="test.js"></script>`);
 });
 
-<<<<<<< HEAD
-// RegExp that validates copied text for log lines.
-const LOG_FORMAT_WITH_TIMESTAMP = /^[\d:.]+ .+ (\d+ )?.+:\d+$/;
-const LOG_FORMAT_WITHOUT_TIMESTAMP = /^.+ (\d+ )?.+:\d+$/;
-// RegExp that validates copied text for stacktrace lines.
-const TRACE_FORMAT = /^\t.+ .+:\d+$/;
-||||||| merged common ancestors
-// RegExp that validates copied text for log lines.
-const LOG_FORMAT_WITH_TIMESTAMP = /^[\d:.]+ .+ (\d+ )?.+:\d+$/;
-const LOG_FORMAT_WITHOUT_TIMESTAMP = /^.+ (\d+ )?.+:\d+$/;
-// RegExp that validates copied text for stacktrace lines.
-const TRACE_FORMAT = /^\t.+ .+:\d+:\d+$/;
-=======
 httpServer.registerPathHandler("/test.js", function(request, response) {
   response.setHeader("Content-Type", "application/javascript");
   response.write(`
@@ -42,7 +29,6 @@ httpServer.registerPathHandler("/test.js", function(request, response) {
     z.bar = "baz";
   `);
 });
->>>>>>> upstream-releases
 
 const TEST_URI = `http://localhost:${httpServer.identity.primaryPort}/`;
 
@@ -196,35 +182,11 @@ async function testMessagesCopy(hud, timestamp) {
   message = await waitFor(() => findMessage(hud, "repeated 2"));
   clipboardText = await copyMessageContent(hud, message);
   ok(true, "Clipboard text was found and saved");
-<<<<<<< HEAD
-  lines = clipboardText.split("\n");
-  is(lines[0], `Error: "error object"`, "Error object first line has expected text");
-  ok(lines[1].startsWith(`\twrapper data:text/html`),
-    "Error stacktrace first line starts with expected value:\n" + lines[1]);
-  ok(lines[2].startsWith(`\tlogStuff data:text/html`),
-    "Error stacktrace second line starts with expected value:\n" + lines[2]);
-
-  observer.destroy();
-  Services.prefs.clearUserPref(PREF_MESSAGE_TIMESTAMP);
-});
-||||||| merged common ancestors
-  lines = clipboardText.split("\n");
-  is(lines[0], `Error: "error object"`, "Error object first line has expected text");
-  ok(lines[1].startsWith(`\twrapper data:text/html`),
-    "Error stacktrace first line starts with expected value");
-  ok(lines[2].startsWith(`\tlogStuff data:text/html`),
-    "Error stacktrace second line starts with expected value");
-
-  observer.destroy();
-  Services.prefs.clearUserPref(PREF_MESSAGE_TIMESTAMP);
-});
-=======
 }
 
 function getTimestampText(messageEl) {
   return getSelectionTextFromElement(messageEl.querySelector(".timestamp"));
 }
->>>>>>> upstream-releases
 
 /**
  * Simple helper method to open the context menu on a given message, and click on the copy

@@ -295,12 +295,6 @@ load 1475003.html
 load 1479681.html
 load 1488817.html
 load 1490012.html
-<<<<<<< HEAD
-load 1502893.html
-load 1509989.html
-load 1514086.html
-||||||| merged common ancestors
-=======
 load 1502893.html
 load 1509989.html
 load 1514086.html
@@ -313,4 +307,3 @@ load 1545177.html
 skip-if(geckoview&&webrender) load 1546255.html # Bug 1563020 for GV+WR
 pref(layout.css.resizeobserver.enabled,true) load 1552911.html
 load 1562361.html
->>>>>>> upstream-releases

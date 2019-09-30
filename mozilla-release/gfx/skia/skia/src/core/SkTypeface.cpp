@@ -44,19 +44,10 @@ public:
 protected:
     SkEmptyTypeface() : SkTypeface(SkFontStyle(), true) { }
 
-<<<<<<< HEAD
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override { return nullptr; }
-    sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override {
-        return sk_ref_sp(this);
-    }
-||||||| merged common ancestors
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override { return nullptr; }
-=======
     std::unique_ptr<SkStreamAsset> onOpenStream(int* ttcIndex) const override { return nullptr; }
     sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override {
         return sk_ref_sp(this);
     }
->>>>>>> upstream-releases
     SkScalerContext* onCreateScalerContext(const SkScalerContextEffects&,
                                            const SkDescriptor*) const override {
         return nullptr;
@@ -153,24 +144,9 @@ sk_sp<SkTypeface> SkTypeface::MakeFromName(const char name[],
             (fontStyle.weight() == SkFontStyle::kBold_Weight ? SkTypeface::kBold :
                                                                SkTypeface::kNormal))));
     }
-<<<<<<< HEAD
-    return SkFontMgr::RefDefault()->legacyMakeTypeface(name, fontStyle);
-||||||| merged common ancestors
-    sk_sp<SkFontMgr> fm(SkFontMgr::RefDefault());
-    return fm->legacyMakeTypeface(name, fontStyle);
-=======
     return SkFontMgr::RefDefault()->legacyMakeTypeface(name, fontStyle);
 }
 
-sk_sp<SkTypeface> SkTypeface::MakeFromStream(std::unique_ptr<SkStreamAsset> stream, int index) {
-    if (!stream) {
-        return nullptr;
-    }
-    return SkFontMgr::RefDefault()->makeFromStream(std::move(stream), index);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 sk_sp<SkTypeface> SkTypeface::MakeFromStream(std::unique_ptr<SkStreamAsset> stream, int index) {
     if (!stream) {
         return nullptr;
@@ -183,17 +159,6 @@ sk_sp<SkTypeface> SkTypeface::MakeFromData(sk_sp<SkData> data, int index) {
         return nullptr;
     }
     return SkFontMgr::RefDefault()->makeFromData(std::move(data), index);
-||||||| merged common ancestors
-sk_sp<SkTypeface> SkTypeface::MakeFromStream(SkStreamAsset* stream, int index) {
-    sk_sp<SkFontMgr> fm(SkFontMgr::RefDefault());
-    return fm->makeFromStream(std::unique_ptr<SkStreamAsset>(stream), index);
-=======
-sk_sp<SkTypeface> SkTypeface::MakeFromData(sk_sp<SkData> data, int index) {
-    if (!data) {
-        return nullptr;
-    }
-    return SkFontMgr::RefDefault()->makeFromData(std::move(data), index);
->>>>>>> upstream-releases
 }
 
 sk_sp<SkTypeface> SkTypeface::MakeFromFontData(std::unique_ptr<SkFontData> data) {

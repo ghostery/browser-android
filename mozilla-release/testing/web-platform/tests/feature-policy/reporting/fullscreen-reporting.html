@@ -17,21 +17,10 @@ var check_report_format = (reports, observer) => {
   let report = reports[0];
   assert_equals(report.type, "feature-policy-violation");
   assert_equals(report.url, document.location.href);
-<<<<<<< HEAD
   assert_equals(report.body.featureId, "fullscreen");
-  assert_equals(report.body.disposition, "enforce");
-||||||| merged common ancestors
-  assert_equals(report.body.feature, "fullscreen");
-=======
-  assert_equals(report.body.featureId, "fullscreen");
->>>>>>> upstream-releases
   assert_equals(report.body.sourceFile, document.location.href);
   assert_equals(typeof report.body.lineNumber, "number");
   assert_equals(typeof report.body.columnNumber, "number");
-<<<<<<< HEAD
-  assert_equals(report.body.disposition, "enforce");
-||||||| merged common ancestors
-=======
   assert_equals(report.body.disposition, "enforce");
 };
 
@@ -39,24 +28,15 @@ var check_second_observer = (reports, observer) => {
   let report = reports[0];
   assert_equals(report.type, "feature-policy-violation");
   assert_equals(report.body.featureId, "fullscreen");
->>>>>>> upstream-releases
 };
 
 async_test(t => {
-<<<<<<< HEAD
-  new ReportingObserver(t.step_func_done(check_report_format),
-                        {types: ['feature-policy-violation']}).observe();
-||||||| merged common ancestors
-  new ReportingObserver(t.step_func_done(check_report_format),
-                        {types: ['feature-policy']}).observe();
-=======
   observer1 = new ReportingObserver(t.step_func(check_report_format),
                                     {types: ['feature-policy-violation']});
   observer1.observe();
   observer2 = new ReportingObserver(t.step_func_done(check_second_observer),
                                     {types: ['feature-policy-violation']});
   observer2.observe();
->>>>>>> upstream-releases
   document.getElementById('fs').requestFullscreen().then(t.unreached_func(
     "Fullscreen should not be allowed in this document.")).catch(()=>{});
 }, "Fullscreen Report Format");

@@ -28,54 +28,6 @@ class NativeFontResourceDWrite final : public NativeFontResource {
    * @param aNeedsCairo whether the ScaledFont created needs a cairo scaled font
    * @return Referenced NativeFontResourceDWrite or nullptr if invalid.
    */
-<<<<<<< HEAD
-  static already_AddRefed<NativeFontResourceDWrite> Create(uint8_t *aFontData,
-                                                           uint32_t aDataLength,
-                                                           bool aNeedsCairo);
-
-  already_AddRefed<UnscaledFont> CreateUnscaledFont(
-      uint32_t aIndex, const uint8_t *aInstanceData,
-      uint32_t aInstanceDataLength) final;
-
- private:
-  NativeFontResourceDWrite(
-      IDWriteFactory *aFactory, already_AddRefed<IDWriteFontFile> aFontFile,
-      already_AddRefed<IDWriteFontFileStream> aFontFileStream,
-      DWRITE_FONT_FACE_TYPE aFaceType, uint32_t aNumberOfFaces,
-      bool aNeedsCairo)
-      : mFactory(aFactory),
-        mFontFile(aFontFile),
-        mFontFileStream(aFontFileStream),
-        mFaceType(aFaceType),
-        mNumberOfFaces(aNumberOfFaces),
-        mNeedsCairo(aNeedsCairo) {}
-
-  IDWriteFactory *mFactory;
-||||||| merged common ancestors
-  static already_AddRefed<NativeFontResourceDWrite>
-    Create(uint8_t *aFontData, uint32_t aDataLength, bool aNeedsCairo);
-
-  already_AddRefed<UnscaledFont>
-    CreateUnscaledFont(uint32_t aIndex,
-                       const uint8_t* aInstanceData,
-                       uint32_t aInstanceDataLength) final;
-
-private:
-  NativeFontResourceDWrite(IDWriteFactory *aFactory,
-                           already_AddRefed<IDWriteFontFile> aFontFile,
-                           already_AddRefed<IDWriteFontFileStream> aFontFileStream,
-                           DWRITE_FONT_FACE_TYPE aFaceType,
-                           uint32_t aNumberOfFaces, bool aNeedsCairo)
-    : mFactory(aFactory)
-    , mFontFile(aFontFile)
-    , mFontFileStream(aFontFileStream)
-    , mFaceType(aFaceType)
-    , mNumberOfFaces(aNumberOfFaces)
-    , mNeedsCairo(aNeedsCairo)
-  {}
-
-  IDWriteFactory *mFactory;
-=======
   static already_AddRefed<NativeFontResourceDWrite> Create(uint8_t* aFontData,
                                                            uint32_t aDataLength,
                                                            bool aNeedsCairo);
@@ -98,7 +50,6 @@ private:
         mNeedsCairo(aNeedsCairo) {}
 
   IDWriteFactory* mFactory;
->>>>>>> upstream-releases
   RefPtr<IDWriteFontFile> mFontFile;
   RefPtr<IDWriteFontFileStream> mFontFileStream;
   DWRITE_FONT_FACE_TYPE mFaceType;

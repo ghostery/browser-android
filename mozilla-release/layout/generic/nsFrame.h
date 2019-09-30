@@ -21,14 +21,8 @@
 
 namespace mozilla {
 enum class TableSelection : uint32_t;
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 class PresShell;
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 /**
  * nsFrame logging constants. We redefine the nspr
@@ -48,36 +42,14 @@ class PresShell;
   (int(((mozilla::LogModule*)_lm)->Level()) & (_bit))
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#define NS_FRAME_LOG(_bit, _args)                          \
-  PR_BEGIN_MACRO                                           \
-  if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule, _bit)) { \
-    printf_stderr _args;                                   \
-  }                                                        \
-  PR_END_MACRO
-||||||| merged common ancestors
-#define NS_FRAME_LOG(_bit,_args)                                \
-  PR_BEGIN_MACRO                                                \
-    if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule,_bit)) {  \
-      printf_stderr _args; \
-    }                                                           \
-  PR_END_MACRO
-=======
 #  define NS_FRAME_LOG(_bit, _args)                          \
     PR_BEGIN_MACRO                                           \
     if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule, _bit)) { \
       printf_stderr _args;                                   \
     }                                                        \
     PR_END_MACRO
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define NS_FRAME_LOG(_bit, _args)
-||||||| merged common ancestors
-#define NS_FRAME_LOG(_bit,_args)
-=======
 #  define NS_FRAME_LOG(_bit, _args)
->>>>>>> upstream-releases
 #endif
 
 // XXX Need to rework this so that logging is free when it's off
@@ -87,51 +59,19 @@ class PresShell;
 #  define NS_FRAME_TRACE_OUT(_method) Trace(_method, false)
 
 // XXX remove me
-<<<<<<< HEAD
-#define NS_FRAME_TRACE_MSG(_bit, _args)                    \
-  PR_BEGIN_MACRO                                           \
-  if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule, _bit)) { \
-    TraceMsg _args;                                        \
-  }                                                        \
-  PR_END_MACRO
-||||||| merged common ancestors
-#define NS_FRAME_TRACE_MSG(_bit,_args)                          \
-  PR_BEGIN_MACRO                                                \
-    if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule,_bit)) {  \
-      TraceMsg _args;                                           \
-    }                                                           \
-  PR_END_MACRO
-=======
 #  define NS_FRAME_TRACE_MSG(_bit, _args)                    \
     PR_BEGIN_MACRO                                           \
     if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule, _bit)) { \
       TraceMsg _args;                                        \
     }                                                        \
     PR_END_MACRO
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NS_FRAME_TRACE(_bit, _args)                        \
-  PR_BEGIN_MACRO                                           \
-  if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule, _bit)) { \
-    TraceMsg _args;                                        \
-  }                                                        \
-  PR_END_MACRO
-||||||| merged common ancestors
-#define NS_FRAME_TRACE(_bit,_args)                              \
-  PR_BEGIN_MACRO                                                \
-    if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule,_bit)) {  \
-      TraceMsg _args;                                           \
-    }                                                           \
-  PR_END_MACRO
-=======
 #  define NS_FRAME_TRACE(_bit, _args)                        \
     PR_BEGIN_MACRO                                           \
     if (NS_FRAME_LOG_TEST(nsFrame::sFrameLogModule, _bit)) { \
       TraceMsg _args;                                        \
     }                                                        \
     PR_END_MACRO
->>>>>>> upstream-releases
 
 #  define NS_FRAME_TRACE_REFLOW_IN(_method) Trace(_method, true)
 
@@ -139,28 +79,12 @@ class PresShell;
     Trace(_method, false, _status)
 
 #else
-<<<<<<< HEAD
-#define NS_FRAME_TRACE(_bits, _args)
-#define NS_FRAME_TRACE_IN(_method)
-#define NS_FRAME_TRACE_OUT(_method)
-#define NS_FRAME_TRACE_MSG(_bits, _args)
-#define NS_FRAME_TRACE_REFLOW_IN(_method)
-#define NS_FRAME_TRACE_REFLOW_OUT(_method, _status)
-||||||| merged common ancestors
-#define NS_FRAME_TRACE(_bits,_args)
-#define NS_FRAME_TRACE_IN(_method)
-#define NS_FRAME_TRACE_OUT(_method)
-#define NS_FRAME_TRACE_MSG(_bits,_args)
-#define NS_FRAME_TRACE_REFLOW_IN(_method)
-#define NS_FRAME_TRACE_REFLOW_OUT(_method, _status)
-=======
 #  define NS_FRAME_TRACE(_bits, _args)
 #  define NS_FRAME_TRACE_IN(_method)
 #  define NS_FRAME_TRACE_OUT(_method)
 #  define NS_FRAME_TRACE_MSG(_bits, _args)
 #  define NS_FRAME_TRACE_REFLOW_IN(_method)
 #  define NS_FRAME_TRACE_REFLOW_OUT(_method, _status)
->>>>>>> upstream-releases
 #endif
 
 // Frame allocation boilerplate macros. Every subclass of nsFrame must
@@ -172,45 +96,18 @@ class PresShell;
 // with potentially catastrophic consequences (not enough memory is
 // allocated for a frame object).
 
-<<<<<<< HEAD
-#define NS_DECL_FRAMEARENA_HELPERS(class)                                      \
-  NS_DECL_QUERYFRAME_TARGET(class)                                             \
-  static constexpr nsIFrame::ClassID kClassID = nsIFrame::ClassID::class##_id; \
-  void* operator new(size_t, nsIPresShell*) MOZ_MUST_OVERRIDE;                 \
-  nsQueryFrame::FrameIID GetFrameId() override MOZ_MUST_OVERRIDE {             \
-    return nsQueryFrame::class##_id;                                           \
-||||||| merged common ancestors
-#define NS_DECL_FRAMEARENA_HELPERS(class)                           \
-  NS_DECL_QUERYFRAME_TARGET(class)                                  \
-  static constexpr nsIFrame::ClassID kClassID = nsIFrame::ClassID::class##_id;  \
-  void* operator new(size_t, nsIPresShell*) MOZ_MUST_OVERRIDE;      \
-  nsQueryFrame::FrameIID GetFrameId() override MOZ_MUST_OVERRIDE {  \
-    return nsQueryFrame::class##_id;                                \
-=======
 #define NS_DECL_FRAMEARENA_HELPERS(class)                                      \
   NS_DECL_QUERYFRAME_TARGET(class)                                             \
   static constexpr nsIFrame::ClassID kClassID = nsIFrame::ClassID::class##_id; \
   void* operator new(size_t, mozilla::PresShell*) MOZ_MUST_OVERRIDE;           \
   nsQueryFrame::FrameIID GetFrameId() const override MOZ_MUST_OVERRIDE {       \
     return nsQueryFrame::class##_id;                                           \
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-#define NS_IMPL_FRAMEARENA_HELPERS(class)                       \
-  void* class ::operator new(size_t sz, nsIPresShell* aShell) { \
-    return aShell->AllocateFrame(nsQueryFrame::class##_id, sz); \
-  }
-||||||| merged common ancestors
-#define NS_IMPL_FRAMEARENA_HELPERS(class)                         \
-  void* class::operator new(size_t sz, nsIPresShell* aShell)      \
-  { return aShell->AllocateFrame(nsQueryFrame::class##_id, sz); } \
-=======
 #define NS_IMPL_FRAMEARENA_HELPERS(class)                             \
   void* class ::operator new(size_t sz, mozilla::PresShell* aShell) { \
     return aShell->AllocateFrame(nsQueryFrame::class##_id, sz);       \
   }
->>>>>>> upstream-releases
 
 #define NS_DECL_ABSTRACT_FRAME(class)                                         \
   void* operator new(size_t, mozilla::PresShell*) MOZ_MUST_OVERRIDE = delete; \
@@ -281,13 +178,6 @@ class nsFrame : public nsBox {
                        nsEventStatus* aEventStatus) override;
   nsresult GetContentForEvent(mozilla::WidgetEvent* aEvent,
                               nsIContent** aContent) override;
-<<<<<<< HEAD
-  nsresult GetCursor(const nsPoint& aPoint, nsIFrame::Cursor& aCursor) override;
-||||||| merged common ancestors
-  nsresult GetCursor(const nsPoint&    aPoint,
-                     nsIFrame::Cursor& aCursor) override;
-=======
->>>>>>> upstream-releases
 
   nsresult GetPointFromOffset(int32_t inOffset, nsPoint* outPoint) override;
   nsresult GetCharacterRectsInRange(int32_t aInOffset, int32_t aLength,
@@ -325,18 +215,9 @@ class nsFrame : public nsBox {
       PeekOffsetCharacterOptions aOptions =
           PeekOffsetCharacterOptions()) override;
   FrameSearchResult PeekOffsetWord(bool aForward, bool aWordSelectEatSpace,
-<<<<<<< HEAD
-                                   bool aIsKeyboardSelect, int32_t* aOffset,
-                                   PeekWordState* aState) override;
-||||||| merged common ancestors
-                                   bool aIsKeyboardSelect,
-                                   int32_t* aOffset,
-                                   PeekWordState *aState) override;
-=======
                                    bool aIsKeyboardSelect, int32_t* aOffset,
                                    PeekWordState* aState,
                                    bool aTrimSpaces) override;
->>>>>>> upstream-releases
   /**
    * Check whether we should break at a boundary between punctuation and
    * non-punctuation. Only call it at a punctuation boundary
@@ -393,27 +274,6 @@ class nsFrame : public nsBox {
   IntrinsicISizeOffsetData IntrinsicISizeOffsets(
       nscoord aPercentageBasis = NS_UNCONSTRAINEDSIZE) override;
   mozilla::IntrinsicSize GetIntrinsicSize() override;
-<<<<<<< HEAD
-  nsSize GetIntrinsicRatio() override;
-
-  mozilla::LogicalSize ComputeSize(
-      gfxContext* aRenderingContext, mozilla::WritingMode aWM,
-      const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
-      const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
-      const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
-||||||| merged common ancestors
-  nsSize GetIntrinsicRatio() override;
-
-  mozilla::LogicalSize
-  ComputeSize(gfxContext*                 aRenderingContext,
-              mozilla::WritingMode        aWM,
-              const mozilla::LogicalSize& aCBSize,
-              nscoord                     aAvailableISize,
-              const mozilla::LogicalSize& aMargin,
-              const mozilla::LogicalSize& aBorder,
-              const mozilla::LogicalSize& aPadding,
-              ComputeSizeFlags            aFlags) override;
-=======
   mozilla::AspectRatio GetIntrinsicRatio() override;
 
   mozilla::LogicalSize ComputeSize(
@@ -421,32 +281,11 @@ class nsFrame : public nsBox {
       const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
       const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
       const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
->>>>>>> upstream-releases
 
   /**
    * Calculate the used values for 'width' and 'height' for a replaced element.
    *   http://www.w3.org/TR/CSS21/visudet.html#min-max-widths
    */
-<<<<<<< HEAD
-  mozilla::LogicalSize ComputeSizeWithIntrinsicDimensions(
-      gfxContext* aRenderingContext, mozilla::WritingMode aWM,
-      const mozilla::IntrinsicSize& aIntrinsicSize, nsSize aIntrinsicRatio,
-      const mozilla::LogicalSize& aCBSize, const mozilla::LogicalSize& aMargin,
-      const mozilla::LogicalSize& aBorder, const mozilla::LogicalSize& aPadding,
-      ComputeSizeFlags aFlags);
-||||||| merged common ancestors
-  mozilla::LogicalSize
-  ComputeSizeWithIntrinsicDimensions(
-              gfxContext*                   aRenderingContext,
-              mozilla::WritingMode          aWM,
-              const mozilla::IntrinsicSize& aIntrinsicSize,
-              nsSize                        aIntrinsicRatio,
-              const mozilla::LogicalSize&   aCBSize,
-              const mozilla::LogicalSize&   aMargin,
-              const mozilla::LogicalSize&   aBorder,
-              const mozilla::LogicalSize&   aPadding,
-              ComputeSizeFlags              aFlags);
-=======
   mozilla::LogicalSize ComputeSizeWithIntrinsicDimensions(
       gfxContext* aRenderingContext, mozilla::WritingMode aWM,
       const mozilla::IntrinsicSize& aIntrinsicSize,
@@ -454,7 +293,6 @@ class nsFrame : public nsBox {
       const mozilla::LogicalSize& aCBSize, const mozilla::LogicalSize& aMargin,
       const mozilla::LogicalSize& aBorder, const mozilla::LogicalSize& aPadding,
       ComputeSizeFlags aFlags);
->>>>>>> upstream-releases
 
   // Compute tight bounds assuming this frame honours its border, background
   // and outline, its children's tight bounds, and nothing else.
@@ -727,32 +565,14 @@ class nsFrame : public nsBox {
    *                           Must not be null.
    * @param aChildPseudo the child's pseudo type, if any.
    */
-<<<<<<< HEAD
-  static nsIFrame* CorrectStyleParentFrame(nsIFrame* aProspectiveParent,
-                                           nsAtom* aChildPseudo);
-||||||| merged common ancestors
-  static nsIFrame*
-  CorrectStyleParentFrame(nsIFrame* aProspectiveParent, nsAtom* aChildPseudo);
-=======
   static nsIFrame* CorrectStyleParentFrame(
       nsIFrame* aProspectiveParent, mozilla::PseudoStyleType aChildPseudo);
->>>>>>> upstream-releases
 
  protected:
   // Protected constructor and destructor
-<<<<<<< HEAD
-  nsFrame(ComputedStyle* aStyle, ClassID aID);
-  explicit nsFrame(ComputedStyle* aStyle)
-      : nsFrame(aStyle, ClassID::nsFrame_id) {}
-||||||| merged common ancestors
-  nsFrame(ComputedStyle* aStyle, ClassID aID);
-  explicit nsFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, ClassID::nsFrame_id) {}
-=======
   nsFrame(ComputedStyle* aStyle, nsPresContext* aPresContext, ClassID aID);
   explicit nsFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsFrame(aStyle, aPresContext, ClassID::nsFrame_id) {}
->>>>>>> upstream-releases
   virtual ~nsFrame();
 
   /**
@@ -934,220 +754,6 @@ class nsFrame : public nsBox {
 // Start Display Reflow Debugging
 #ifdef DEBUG
 
-<<<<<<< HEAD
-struct DR_cookie {
-  DR_cookie(nsPresContext* aPresContext, nsIFrame* aFrame,
-            const mozilla::ReflowInput& aReflowInput,
-            mozilla::ReflowOutput& aMetrics, nsReflowStatus& aStatus);
-  ~DR_cookie();
-  void Change() const;
-
-  nsPresContext* mPresContext;
-  nsIFrame* mFrame;
-  const mozilla::ReflowInput& mReflowInput;
-  mozilla::ReflowOutput& mMetrics;
-  nsReflowStatus& mStatus;
-  void* mValue;
-};
-
-struct DR_layout_cookie {
-  explicit DR_layout_cookie(nsIFrame* aFrame);
-  ~DR_layout_cookie();
-
-  nsIFrame* mFrame;
-  void* mValue;
-};
-
-struct DR_intrinsic_inline_size_cookie {
-  DR_intrinsic_inline_size_cookie(nsIFrame* aFrame, const char* aType,
-                                  nscoord& aResult);
-  ~DR_intrinsic_inline_size_cookie();
-
-  nsIFrame* mFrame;
-  const char* mType;
-  nscoord& mResult;
-  void* mValue;
-};
-
-struct DR_intrinsic_size_cookie {
-  DR_intrinsic_size_cookie(nsIFrame* aFrame, const char* aType,
-                           nsSize& aResult);
-  ~DR_intrinsic_size_cookie();
-
-  nsIFrame* mFrame;
-  const char* mType;
-  nsSize& mResult;
-  void* mValue;
-};
-
-struct DR_init_constraints_cookie {
-  DR_init_constraints_cookie(nsIFrame* aFrame, mozilla::ReflowInput* aState,
-                             nscoord aCBWidth, nscoord aCBHeight,
-                             const nsMargin* aBorder, const nsMargin* aPadding);
-  ~DR_init_constraints_cookie();
-
-  nsIFrame* mFrame;
-  mozilla::ReflowInput* mState;
-  void* mValue;
-};
-
-struct DR_init_offsets_cookie {
-  DR_init_offsets_cookie(nsIFrame* aFrame,
-                         mozilla::SizeComputationInput* aState,
-                         nscoord aPercentBasis,
-                         mozilla::WritingMode aCBWritingMode,
-                         const nsMargin* aBorder, const nsMargin* aPadding);
-  ~DR_init_offsets_cookie();
-
-  nsIFrame* mFrame;
-  mozilla::SizeComputationInput* mState;
-  void* mValue;
-};
-
-struct DR_init_type_cookie {
-  DR_init_type_cookie(nsIFrame* aFrame, mozilla::ReflowInput* aState);
-  ~DR_init_type_cookie();
-
-  nsIFrame* mFrame;
-  mozilla::ReflowInput* mState;
-  void* mValue;
-};
-
-#define DISPLAY_REFLOW(dr_pres_context, dr_frame, dr_rf_state, dr_rf_metrics, \
-                       dr_rf_status)                                          \
-  DR_cookie dr_cookie(dr_pres_context, dr_frame, dr_rf_state, dr_rf_metrics,  \
-                      dr_rf_status);
-#define DISPLAY_REFLOW_CHANGE() dr_cookie.Change();
-#define DISPLAY_LAYOUT(dr_frame) DR_layout_cookie dr_cookie(dr_frame);
-#define DISPLAY_MIN_INLINE_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_inline_size_cookie dr_cookie(dr_frame, "Min", dr_result)
-#define DISPLAY_PREF_INLINE_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_inline_size_cookie dr_cookie(dr_frame, "Pref", dr_result)
-#define DISPLAY_PREF_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_size_cookie dr_cookie(dr_frame, "Pref", dr_result)
-#define DISPLAY_MIN_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_size_cookie dr_cookie(dr_frame, "Min", dr_result)
-#define DISPLAY_MAX_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_size_cookie dr_cookie(dr_frame, "Max", dr_result)
-#define DISPLAY_INIT_CONSTRAINTS(dr_frame, dr_state, dr_cbw, dr_cbh, dr_bdr, \
-                                 dr_pad)                                     \
-  DR_init_constraints_cookie dr_cookie(dr_frame, dr_state, dr_cbw, dr_cbh,   \
-                                       dr_bdr, dr_pad)
-#define DISPLAY_INIT_OFFSETS(dr_frame, dr_state, dr_pb, dr_cbwm, dr_bdr,       \
-                             dr_pad)                                           \
-  DR_init_offsets_cookie dr_cookie(dr_frame, dr_state, dr_pb, dr_cbwm, dr_bdr, \
-                                   dr_pad)
-#define DISPLAY_INIT_TYPE(dr_frame, dr_result) \
-  DR_init_type_cookie dr_cookie(dr_frame, dr_result)
-||||||| merged common ancestors
-  struct DR_cookie {
-    DR_cookie(nsPresContext*          aPresContext,
-              nsIFrame*                aFrame,
-              const mozilla::ReflowInput& aReflowInput,
-              mozilla::ReflowOutput&     aMetrics,
-              nsReflowStatus&          aStatus);
-    ~DR_cookie();
-    void Change() const;
-
-    nsPresContext*          mPresContext;
-    nsIFrame*                mFrame;
-    const mozilla::ReflowInput& mReflowInput;
-    mozilla::ReflowOutput&     mMetrics;
-    nsReflowStatus&          mStatus;
-    void*                    mValue;
-  };
-
-  struct DR_layout_cookie {
-    explicit DR_layout_cookie(nsIFrame* aFrame);
-    ~DR_layout_cookie();
-
-    nsIFrame* mFrame;
-    void* mValue;
-  };
-
-  struct DR_intrinsic_inline_size_cookie {
-    DR_intrinsic_inline_size_cookie(nsIFrame* aFrame, const char* aType,
-                              nscoord& aResult);
-    ~DR_intrinsic_inline_size_cookie();
-
-    nsIFrame* mFrame;
-    const char* mType;
-    nscoord& mResult;
-    void* mValue;
-  };
-
-  struct DR_intrinsic_size_cookie {
-    DR_intrinsic_size_cookie(nsIFrame* aFrame, const char* aType,
-                             nsSize& aResult);
-    ~DR_intrinsic_size_cookie();
-
-    nsIFrame* mFrame;
-    const char* mType;
-    nsSize& mResult;
-    void* mValue;
-  };
-
-  struct DR_init_constraints_cookie {
-    DR_init_constraints_cookie(nsIFrame* aFrame, mozilla::ReflowInput* aState,
-                               nscoord aCBWidth, nscoord aCBHeight,
-                               const nsMargin* aBorder,
-                               const nsMargin* aPadding);
-    ~DR_init_constraints_cookie();
-
-    nsIFrame* mFrame;
-    mozilla::ReflowInput* mState;
-    void* mValue;
-  };
-
-  struct DR_init_offsets_cookie {
-    DR_init_offsets_cookie(nsIFrame* aFrame, mozilla::SizeComputationInput* aState,
-                           nscoord aPercentBasis,
-                           mozilla::WritingMode aCBWritingMode,
-                           const nsMargin* aBorder,
-                           const nsMargin* aPadding);
-    ~DR_init_offsets_cookie();
-
-    nsIFrame* mFrame;
-    mozilla::SizeComputationInput* mState;
-    void* mValue;
-  };
-
-  struct DR_init_type_cookie {
-    DR_init_type_cookie(nsIFrame* aFrame, mozilla::ReflowInput* aState);
-    ~DR_init_type_cookie();
-
-    nsIFrame* mFrame;
-    mozilla::ReflowInput* mState;
-    void* mValue;
-  };
-
-#define DISPLAY_REFLOW(dr_pres_context, dr_frame, dr_rf_state, dr_rf_metrics, dr_rf_status) \
-  DR_cookie dr_cookie(dr_pres_context, dr_frame, dr_rf_state, dr_rf_metrics, dr_rf_status);
-#define DISPLAY_REFLOW_CHANGE() \
-  dr_cookie.Change();
-#define DISPLAY_LAYOUT(dr_frame) \
-  DR_layout_cookie dr_cookie(dr_frame);
-#define DISPLAY_MIN_INLINE_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_inline_size_cookie dr_cookie(dr_frame, "Min", dr_result)
-#define DISPLAY_PREF_INLINE_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_inline_size_cookie dr_cookie(dr_frame, "Pref", dr_result)
-#define DISPLAY_PREF_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_size_cookie dr_cookie(dr_frame, "Pref", dr_result)
-#define DISPLAY_MIN_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_size_cookie dr_cookie(dr_frame, "Min", dr_result)
-#define DISPLAY_MAX_SIZE(dr_frame, dr_result) \
-  DR_intrinsic_size_cookie dr_cookie(dr_frame, "Max", dr_result)
-#define DISPLAY_INIT_CONSTRAINTS(dr_frame, dr_state, dr_cbw, dr_cbh,       \
-                                 dr_bdr, dr_pad)                           \
-  DR_init_constraints_cookie dr_cookie(dr_frame, dr_state, dr_cbw, dr_cbh, \
-                                       dr_bdr, dr_pad)
-#define DISPLAY_INIT_OFFSETS(dr_frame, dr_state, dr_pb, dr_cbwm, dr_bdr,      \
-                             dr_pad)                                          \
-  DR_init_offsets_cookie dr_cookie(dr_frame, dr_state, dr_pb, dr_cbwm,        \
-                             dr_bdr, dr_pad)
-#define DISPLAY_INIT_TYPE(dr_frame, dr_result) \
-  DR_init_type_cookie dr_cookie(dr_frame, dr_result)
-=======
 struct DR_cookie {
   DR_cookie(nsPresContext* aPresContext, nsIFrame* aFrame,
             const mozilla::ReflowInput& aReflowInput,
@@ -1252,45 +858,9 @@ struct DR_init_type_cookie {
                                      dr_bdr, dr_pad)
 #  define DISPLAY_INIT_TYPE(dr_frame, dr_result) \
     DR_init_type_cookie dr_cookie(dr_frame, dr_result)
->>>>>>> upstream-releases
 
 #else
 
-<<<<<<< HEAD
-#define DISPLAY_REFLOW(dr_pres_context, dr_frame, dr_rf_state, dr_rf_metrics, \
-                       dr_rf_status)
-#define DISPLAY_REFLOW_CHANGE()
-#define DISPLAY_LAYOUT(dr_frame) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_MIN_INLINE_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_PREF_INLINE_SIZE(dr_frame, dr_result) \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_PREF_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_MIN_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_MAX_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_INIT_CONSTRAINTS(dr_frame, dr_state, dr_cbw, dr_cbh, dr_bdr, \
-                                 dr_pad)                                     \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_INIT_OFFSETS(dr_frame, dr_state, dr_pb, dr_cbwm, dr_bdr, \
-                             dr_pad)                                     \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_INIT_TYPE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-||||||| merged common ancestors
-#define DISPLAY_REFLOW(dr_pres_context, dr_frame, dr_rf_state, dr_rf_metrics, dr_rf_status)
-#define DISPLAY_REFLOW_CHANGE()
-#define DISPLAY_LAYOUT(dr_frame) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_MIN_INLINE_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_PREF_INLINE_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_PREF_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_MIN_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_MAX_SIZE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_INIT_CONSTRAINTS(dr_frame, dr_state, dr_cbw, dr_cbh,       \
-                                 dr_bdr, dr_pad)                           \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_INIT_OFFSETS(dr_frame, dr_state, dr_pb, dr_cbwm, dr_bdr,      \
-                             dr_pad)                                          \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define DISPLAY_INIT_TYPE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
-=======
 #  define DISPLAY_REFLOW(dr_pres_context, dr_frame, dr_rf_state, \
                          dr_rf_metrics, dr_rf_status)
 #  define DISPLAY_REFLOW_CHANGE()
@@ -1309,7 +879,6 @@ struct DR_init_type_cookie {
                                dr_pad)                                     \
     PR_BEGIN_MACRO PR_END_MACRO
 #  define DISPLAY_INIT_TYPE(dr_frame, dr_result) PR_BEGIN_MACRO PR_END_MACRO
->>>>>>> upstream-releases
 
 #endif
 // End Display Reflow Debugging

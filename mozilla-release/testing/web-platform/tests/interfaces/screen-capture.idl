@@ -3,13 +3,6 @@
 // (https://github.com/tidoust/reffy-reports)
 // Source: Screen Capture (https://w3c.github.io/mediacapture-screen-share/)
 
-<<<<<<< HEAD
-partial interface MediaDevices {
-    Promise<MediaStream> getDisplayMedia(optional MediaStreamConstraints constraints);
-||||||| merged common ancestors
-partial interface Navigator {
-    Promise<MediaStream> getDisplayMedia(optional MediaStreamConstraints constraints);
-=======
 partial interface MediaDevices {
     Promise<MediaStream> getDisplayMedia(optional DisplayMediaStreamConstraints constraints);
 };
@@ -17,7 +10,6 @@ partial interface MediaDevices {
 dictionary DisplayMediaStreamConstraints {
     (boolean or MediaTrackConstraints) video = true;
     (boolean or MediaTrackConstraints) audio = false;
->>>>>>> upstream-releases
 };
 
 partial dictionary MediaTrackSupportedConstraints {

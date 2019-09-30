@@ -63,16 +63,8 @@ MOZ_ALWAYS_INLINE __m128i _mm_not_si128(__m128i arg) {
  * stack variables. This inlines properly on MSVC 2010. It does -not- inline
  * with just the inline directive.
  */
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE __m128i avg_sse2_8x2(__m128i *a, __m128i *b, __m128i *c,
-                                       __m128i *d) {
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE __m128i avg_sse2_8x2(__m128i *a, __m128i *b, __m128i *c, __m128i *d)
-{
-=======
 MOZ_ALWAYS_INLINE __m128i avg_sse2_8x2(__m128i* a, __m128i* b, __m128i* c,
                                        __m128i* d) {
->>>>>>> upstream-releases
 #define shuf1 _MM_SHUFFLE(2, 0, 2, 0)
 #define shuf2 _MM_SHUFFLE(3, 1, 3, 1)
 
@@ -145,49 +137,21 @@ MOZ_ALWAYS_INLINE uint32_t Avg2(uint32_t a, uint32_t b) {
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-void ImageHalfScaler::HalfImage2D_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                                       const IntSize &aSourceSize,
-                                       uint8_t *aDest, uint32_t aDestStride) {
-||||||| merged common ancestors
-void
-ImageHalfScaler::HalfImage2D_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                                  const IntSize &aSourceSize, uint8_t *aDest,
-                                  uint32_t aDestStride)
-{
-=======
 void ImageHalfScaler::HalfImage2D_SSE2(uint8_t* aSource, int32_t aSourceStride,
                                        const IntSize& aSourceSize,
                                        uint8_t* aDest, uint32_t aDestStride) {
->>>>>>> upstream-releases
   const int Bpp = 4;
 
   for (int y = 0; y < aSourceSize.height; y += 2) {
-<<<<<<< HEAD
-    __m128i *storage = (__m128i *)(aDest + (y / 2) * aDestStride);
-||||||| merged common ancestors
-    __m128i *storage = (__m128i*)(aDest + (y / 2) * aDestStride);
-=======
     __m128i* storage = (__m128i*)(aDest + (y / 2) * aDestStride);
->>>>>>> upstream-releases
     int x = 0;
     // Run a loop depending on alignment.
     if (!(uintptr_t(aSource + (y * aSourceStride)) % 16) &&
         !(uintptr_t(aSource + ((y + 1) * aSourceStride)) % 16)) {
       for (; x < (aSourceSize.width - 7); x += 8) {
-<<<<<<< HEAD
-        __m128i *upperRow =
-            (__m128i *)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow =
-            (__m128i *)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-||||||| merged common ancestors
-        __m128i *upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow = (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-=======
         __m128i* upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
         __m128i* lowerRow =
             (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
->>>>>>> upstream-releases
 
         __m128i a = _mm_load_si128(upperRow);
         __m128i b = _mm_load_si128(upperRow + 1);
@@ -198,19 +162,9 @@ void ImageHalfScaler::HalfImage2D_SSE2(uint8_t* aSource, int32_t aSourceStride,
       }
     } else if (!(uintptr_t(aSource + (y * aSourceStride)) % 16)) {
       for (; x < (aSourceSize.width - 7); x += 8) {
-<<<<<<< HEAD
-        __m128i *upperRow =
-            (__m128i *)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow =
-            (__m128i *)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-||||||| merged common ancestors
-        __m128i *upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow = (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-=======
         __m128i* upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
         __m128i* lowerRow =
             (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
->>>>>>> upstream-releases
 
         __m128i a = _mm_load_si128(upperRow);
         __m128i b = _mm_load_si128(upperRow + 1);
@@ -221,42 +175,22 @@ void ImageHalfScaler::HalfImage2D_SSE2(uint8_t* aSource, int32_t aSourceStride,
       }
     } else if (!(uintptr_t(aSource + ((y + 1) * aSourceStride)) % 16)) {
       for (; x < (aSourceSize.width - 7); x += 8) {
-<<<<<<< HEAD
-        __m128i *upperRow =
-            (__m128i *)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow =
-            (__m128i *)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-||||||| merged common ancestors
-        __m128i *upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow = (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-=======
         __m128i* upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
         __m128i* lowerRow =
             (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
->>>>>>> upstream-releases
 
-        __m128i a = loadUnaligned128((__m128i *)upperRow);
-        __m128i b = loadUnaligned128((__m128i *)upperRow + 1);
-        __m128i c = _mm_load_si128((__m128i *)lowerRow);
-        __m128i d = _mm_load_si128((__m128i *)lowerRow + 1);
+        __m128i a = loadUnaligned128((__m128i*)upperRow);
+        __m128i b = loadUnaligned128((__m128i*)upperRow + 1);
+        __m128i c = _mm_load_si128((__m128i*)lowerRow);
+        __m128i d = _mm_load_si128((__m128i*)lowerRow + 1);
 
         *storage++ = avg_sse2_8x2(&a, &b, &c, &d);
       }
     } else {
       for (; x < (aSourceSize.width - 7); x += 8) {
-<<<<<<< HEAD
-        __m128i *upperRow =
-            (__m128i *)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow =
-            (__m128i *)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-||||||| merged common ancestors
-        __m128i *upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
-        __m128i *lowerRow = (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
-=======
         __m128i* upperRow = (__m128i*)(aSource + (y * aSourceStride + x * Bpp));
         __m128i* lowerRow =
             (__m128i*)(aSource + ((y + 1) * aSourceStride + x * Bpp));
->>>>>>> upstream-releases
 
         __m128i a = loadUnaligned128(upperRow);
         __m128i b = loadUnaligned128(upperRow + 1);
@@ -267,13 +201,7 @@ void ImageHalfScaler::HalfImage2D_SSE2(uint8_t* aSource, int32_t aSourceStride,
       }
     }
 
-<<<<<<< HEAD
-    uint32_t *unalignedStorage = (uint32_t *)storage;
-||||||| merged common ancestors
-    uint32_t *unalignedStorage = (uint32_t*)storage;
-=======
     uint32_t* unalignedStorage = (uint32_t*)storage;
->>>>>>> upstream-releases
     // Take care of the final pixels, we know there's an even number of pixels
     // in the source rectangle. We use a 2x2 'simd' implementation for this.
     //
@@ -287,49 +215,20 @@ void ImageHalfScaler::HalfImage2D_SSE2(uint8_t* aSource, int32_t aSourceStride,
       uint8_t* upperRow = aSource + (y * aSourceStride + x * Bpp);
       uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * Bpp);
 
-<<<<<<< HEAD
-      *unalignedStorage++ =
-          Avg2x2(*(uint32_t *)upperRow, *((uint32_t *)upperRow + 1),
-                 *(uint32_t *)lowerRow, *((uint32_t *)lowerRow + 1));
-||||||| merged common ancestors
-      *unalignedStorage++ = Avg2x2(*(uint32_t*)upperRow, *((uint32_t*)upperRow + 1),
-                                   *(uint32_t*)lowerRow, *((uint32_t*)lowerRow + 1));
-=======
       *unalignedStorage++ =
           Avg2x2(*(uint32_t*)upperRow, *((uint32_t*)upperRow + 1),
                  *(uint32_t*)lowerRow, *((uint32_t*)lowerRow + 1));
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t *aSource,
-                                             int32_t aSourceStride,
-                                             const IntSize &aSourceSize,
-                                             uint8_t *aDest,
-                                             uint32_t aDestStride) {
-||||||| merged common ancestors
-void
-ImageHalfScaler::HalfImageVertical_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                                        const IntSize &aSourceSize, uint8_t *aDest,
-                                        uint32_t aDestStride)
-{
-=======
 void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t* aSource,
                                              int32_t aSourceStride,
                                              const IntSize& aSourceSize,
                                              uint8_t* aDest,
                                              uint32_t aDestStride) {
->>>>>>> upstream-releases
   for (int y = 0; y < aSourceSize.height; y += 2) {
-<<<<<<< HEAD
-    __m128i *storage = (__m128i *)(aDest + (y / 2) * aDestStride);
-||||||| merged common ancestors
-    __m128i *storage = (__m128i*)(aDest + (y / 2) * aDestStride);
-=======
     __m128i* storage = (__m128i*)(aDest + (y / 2) * aDestStride);
->>>>>>> upstream-releases
     int x = 0;
     // Run a loop depending on alignment.
     if (!(uintptr_t(aSource + (y * aSourceStride)) % 16) &&
@@ -338,8 +237,8 @@ void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t* aSource,
         uint8_t* upperRow = aSource + (y * aSourceStride + x * 4);
         uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
 
-        __m128i a = _mm_load_si128((__m128i *)upperRow);
-        __m128i b = _mm_load_si128((__m128i *)lowerRow);
+        __m128i a = _mm_load_si128((__m128i*)upperRow);
+        __m128i b = _mm_load_si128((__m128i*)lowerRow);
 
         *storage++ = avg_sse2_4x2_4x1(a, b);
       }
@@ -349,8 +248,8 @@ void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t* aSource,
         uint8_t* upperRow = aSource + (y * aSourceStride + x * 4);
         uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
 
-        __m128i a = _mm_load_si128((__m128i *)upperRow);
-        __m128i b = loadUnaligned128((__m128i *)lowerRow);
+        __m128i a = _mm_load_si128((__m128i*)upperRow);
+        __m128i b = loadUnaligned128((__m128i*)lowerRow);
 
         *storage++ = avg_sse2_4x2_4x1(a, b);
       }
@@ -359,8 +258,8 @@ void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t* aSource,
         uint8_t* upperRow = aSource + (y * aSourceStride + x * 4);
         uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
 
-        __m128i a = loadUnaligned128((__m128i *)upperRow);
-        __m128i b = _mm_load_si128((__m128i *)lowerRow);
+        __m128i a = loadUnaligned128((__m128i*)upperRow);
+        __m128i b = _mm_load_si128((__m128i*)lowerRow);
 
         *storage++ = avg_sse2_4x2_4x1(a, b);
       }
@@ -369,20 +268,14 @@ void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t* aSource,
         uint8_t* upperRow = aSource + (y * aSourceStride + x * 4);
         uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
 
-        __m128i a = loadUnaligned128((__m128i *)upperRow);
-        __m128i b = loadUnaligned128((__m128i *)lowerRow);
+        __m128i a = loadUnaligned128((__m128i*)upperRow);
+        __m128i b = loadUnaligned128((__m128i*)lowerRow);
 
         *storage++ = avg_sse2_4x2_4x1(a, b);
       }
     }
 
-<<<<<<< HEAD
-    uint32_t *unalignedStorage = (uint32_t *)storage;
-||||||| merged common ancestors
-    uint32_t *unalignedStorage = (uint32_t*)storage;
-=======
     uint32_t* unalignedStorage = (uint32_t*)storage;
->>>>>>> upstream-releases
     // Take care of the final pixels, we know there's an even number of pixels
     // in the source rectangle.
     //
@@ -391,43 +284,23 @@ void ImageHalfScaler::HalfImageVertical_SSE2(uint8_t* aSource,
       uint8_t* upperRow = aSource + (y * aSourceStride + x * 4);
       uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
 
-      *unalignedStorage++ = Avg2(*(uint32_t *)upperRow, *(uint32_t *)lowerRow);
+      *unalignedStorage++ = Avg2(*(uint32_t*)upperRow, *(uint32_t*)lowerRow);
     }
   }
 }
 
-<<<<<<< HEAD
-void ImageHalfScaler::HalfImageHorizontal_SSE2(uint8_t *aSource,
-                                               int32_t aSourceStride,
-                                               const IntSize &aSourceSize,
-                                               uint8_t *aDest,
-                                               uint32_t aDestStride) {
-||||||| merged common ancestors
-void
-ImageHalfScaler::HalfImageHorizontal_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                                          const IntSize &aSourceSize, uint8_t *aDest,
-                                          uint32_t aDestStride)
-{
-=======
 void ImageHalfScaler::HalfImageHorizontal_SSE2(uint8_t* aSource,
                                                int32_t aSourceStride,
                                                const IntSize& aSourceSize,
                                                uint8_t* aDest,
                                                uint32_t aDestStride) {
->>>>>>> upstream-releases
   for (int y = 0; y < aSourceSize.height; y++) {
-<<<<<<< HEAD
-    __m128i *storage = (__m128i *)(aDest + (y * aDestStride));
-||||||| merged common ancestors
-    __m128i *storage = (__m128i*)(aDest + (y * aDestStride));
-=======
     __m128i* storage = (__m128i*)(aDest + (y * aDestStride));
->>>>>>> upstream-releases
     int x = 0;
     // Run a loop depending on alignment.
     if (!(uintptr_t(aSource + (y * aSourceStride)) % 16)) {
       for (; x < (aSourceSize.width - 7); x += 8) {
-        __m128i *pixels = (__m128i *)(aSource + (y * aSourceStride + x * 4));
+        __m128i* pixels = (__m128i*)(aSource + (y * aSourceStride + x * 4));
 
         __m128i a = _mm_load_si128(pixels);
         __m128i b = _mm_load_si128(pixels + 1);
@@ -436,7 +309,7 @@ void ImageHalfScaler::HalfImageHorizontal_SSE2(uint8_t* aSource,
       }
     } else {
       for (; x < (aSourceSize.width - 7); x += 8) {
-        __m128i *pixels = (__m128i *)(aSource + (y * aSourceStride + x * 4));
+        __m128i* pixels = (__m128i*)(aSource + (y * aSourceStride + x * 4));
 
         __m128i a = loadUnaligned128(pixels);
         __m128i b = loadUnaligned128(pixels + 1);
@@ -445,25 +318,13 @@ void ImageHalfScaler::HalfImageHorizontal_SSE2(uint8_t* aSource,
       }
     }
 
-<<<<<<< HEAD
-    uint32_t *unalignedStorage = (uint32_t *)storage;
-||||||| merged common ancestors
-    uint32_t *unalignedStorage = (uint32_t*)storage;
-=======
     uint32_t* unalignedStorage = (uint32_t*)storage;
->>>>>>> upstream-releases
     // Take care of the final pixels, we know there's an even number of pixels
     // in the source rectangle.
     //
     // Similar overflow considerations are valid as in the previous function.
     for (; x < aSourceSize.width; x += 2) {
-<<<<<<< HEAD
-      uint32_t *pixels = (uint32_t *)(aSource + (y * aSourceStride + x * 4));
-||||||| merged common ancestors
-      uint32_t *pixels = (uint32_t*)(aSource + (y * aSourceStride + x * 4));
-=======
       uint32_t* pixels = (uint32_t*)(aSource + (y * aSourceStride + x * 4));
->>>>>>> upstream-releases
 
       *unalignedStorage++ = Avg2(*pixels, *(pixels + 1));
     }

@@ -236,15 +236,7 @@ bool MLGSwapChainD3D11::Initialize(CompositorWidget* aWidget) {
   RefPtr<IDXGIFactory2> dxgiFactory2;
   if (gfxVars::UseDoubleBufferingWithCompositor() &&
       SUCCEEDED(dxgiFactory->QueryInterface(dxgiFactory2.StartAssignment())) &&
-<<<<<<< HEAD
-      dxgiFactory2 && IsWin10OrLater()) {
-||||||| merged common ancestors
-      dxgiFactory2 &&
-      IsWin10OrLater())
-  {
-=======
       dxgiFactory2 && XRE_IsGPUProcess()) {
->>>>>>> upstream-releases
     // DXGI_SCALING_NONE is not available on Windows 7 with the Platform Update:
     // This looks awful for things like the awesome bar and browser window
     // resizing, so we don't use a flip buffer chain here. (Note when using
@@ -387,17 +379,9 @@ void MLGSwapChainD3D11::UpdateBackBufferContents(ID3D11Texture2D* aBack) {
   MOZ_ASSERT(!mBackBufferInvalid.IsEmpty());
 }
 
-<<<<<<< HEAD
-bool MLGSwapChainD3D11::ResizeBuffers(const IntSize& aSize) {
-||||||| merged common ancestors
-bool
-MLGSwapChainD3D11::ResizeBuffers(const IntSize& aSize)
-{
-=======
 bool MLGSwapChainD3D11::ResizeBuffers(const IntSize& aSize) {
   mWidget->AsWindows()->UpdateCompositorWndSizeIfNecessary();
 
->>>>>>> upstream-releases
   // We have to clear all references to the old backbuffer before resizing.
   mRT = nullptr;
 
@@ -648,26 +632,12 @@ MLGTextureD3D11::MLGTextureD3D11(ID3D11Texture2D* aTexture)
   mSize.height = desc.Height;
 }
 
-<<<<<<< HEAD
-/* static */ RefPtr<MLGTextureD3D11> MLGTextureD3D11::Create(
-    ID3D11Device* aDevice, const gfx::IntSize& aSize,
-    gfx::SurfaceFormat aFormat, MLGUsage aUsage, MLGTextureFlags aFlags) {
-||||||| merged common ancestors
-/* static */ RefPtr<MLGTextureD3D11>
-MLGTextureD3D11::Create(ID3D11Device* aDevice,
-                        const gfx::IntSize& aSize,
-                        gfx::SurfaceFormat aFormat,
-                        MLGUsage aUsage,
-                        MLGTextureFlags aFlags)
-{
-=======
 /* static */
 RefPtr<MLGTextureD3D11> MLGTextureD3D11::Create(ID3D11Device* aDevice,
                                                 const gfx::IntSize& aSize,
                                                 gfx::SurfaceFormat aFormat,
                                                 MLGUsage aUsage,
                                                 MLGTextureFlags aFlags) {
->>>>>>> upstream-releases
   D3D11_TEXTURE2D_DESC desc;
   ::ZeroMemory(&desc, sizeof(desc));
   desc.Width = aSize.width;

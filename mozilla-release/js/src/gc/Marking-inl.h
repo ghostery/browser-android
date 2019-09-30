@@ -23,38 +23,6 @@ namespace gc {
 // An abstraction to re-wrap any kind of typed pointer back to the tagged
 // pointer it came from with |TaggedPtr<TargetType>::wrap(sourcePtr)|.
 template <typename T>
-<<<<<<< HEAD
-struct MightBeForwarded {
-  static_assert(mozilla::IsBaseOf<Cell, T>::value, "T must derive from Cell");
-  static_assert(!mozilla::IsSame<Cell, T>::value &&
-                    !mozilla::IsSame<TenuredCell, T>::value,
-                "T must not be Cell or TenuredCell");
-
-  static const bool value = mozilla::IsBaseOf<JSObject, T>::value ||
-                            mozilla::IsBaseOf<Shape, T>::value ||
-                            mozilla::IsBaseOf<BaseShape, T>::value ||
-                            mozilla::IsBaseOf<JSString, T>::value ||
-                            mozilla::IsBaseOf<JSScript, T>::value ||
-                            mozilla::IsBaseOf<js::LazyScript, T>::value ||
-                            mozilla::IsBaseOf<js::Scope, T>::value ||
-                            mozilla::IsBaseOf<js::RegExpShared, T>::value;
-||||||| merged common ancestors
-struct MightBeForwarded
-{
-    static_assert(mozilla::IsBaseOf<Cell, T>::value,
-                  "T must derive from Cell");
-    static_assert(!mozilla::IsSame<Cell, T>::value && !mozilla::IsSame<TenuredCell, T>::value,
-                  "T must not be Cell or TenuredCell");
-
-    static const bool value = mozilla::IsBaseOf<JSObject, T>::value ||
-                              mozilla::IsBaseOf<Shape, T>::value ||
-                              mozilla::IsBaseOf<BaseShape, T>::value ||
-                              mozilla::IsBaseOf<JSString, T>::value ||
-                              mozilla::IsBaseOf<JSScript, T>::value ||
-                              mozilla::IsBaseOf<js::LazyScript, T>::value ||
-                              mozilla::IsBaseOf<js::Scope, T>::value ||
-                              mozilla::IsBaseOf<js::RegExpShared, T>::value;
-=======
 struct TaggedPtr {};
 
 template <>
@@ -69,32 +37,8 @@ struct TaggedPtr<JS::Value> {
                   "Type must be a GC thing derived from js::gc::Cell");
     return JS::PrivateGCThingValue(priv);
   }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-template <typename T>
-inline bool IsForwarded(const T* t) {
-  if (!MightBeForwarded<T>::value) {
-    MOZ_ASSERT(!t->isForwarded());
-    return false;
-  }
-
-  return t->isForwarded();
-}
-||||||| merged common ancestors
-template <typename T>
-inline bool
-IsForwarded(const T* t)
-{
-    if (!MightBeForwarded<T>::value) {
-        MOZ_ASSERT(!t->isForwarded());
-        return false;
-    }
-
-    return t->isForwarded();
-}
-=======
 template <>
 struct TaggedPtr<jsid> {
   static jsid wrap(JSString* str) {
@@ -102,35 +46,12 @@ struct TaggedPtr<jsid> {
   }
   static jsid wrap(JS::Symbol* sym) { return SYMBOL_TO_JSID(sym); }
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-struct IsForwardedFunctor : public BoolDefaultAdaptor<Value, false> {
-  template <typename T>
-  bool operator()(const T* t) {
-    return IsForwarded(t);
-  }
-||||||| merged common ancestors
-struct IsForwardedFunctor : public BoolDefaultAdaptor<Value, false> {
-    template <typename T> bool operator()(const T* t) { return IsForwarded(t); }
-=======
 template <>
 struct TaggedPtr<TaggedProto> {
   static TaggedProto wrap(JSObject* obj) { return TaggedProto(obj); }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-inline bool IsForwarded(const JS::Value& value) {
-  return DispatchTyped(IsForwardedFunctor(), value);
-}
-||||||| merged common ancestors
-inline bool
-IsForwarded(const JS::Value& value)
-{
-    return DispatchTyped(IsForwardedFunctor(), value);
-}
-=======
 template <typename T>
 struct MightBeForwarded {
   static_assert(mozilla::IsBaseOf<Cell, T>::value, "T must derive from Cell");
@@ -148,22 +69,8 @@ struct MightBeForwarded {
                             mozilla::IsBaseOf<js::Scope, T>::value ||
                             mozilla::IsBaseOf<js::RegExpShared, T>::value;
 };
->>>>>>> upstream-releases
 
 template <typename T>
-<<<<<<< HEAD
-inline T* Forwarded(const T* t) {
-  const RelocationOverlay* overlay = RelocationOverlay::fromCell(t);
-  MOZ_ASSERT(overlay->isForwarded());
-  return reinterpret_cast<T*>(overlay->forwardingAddress());
-||||||| merged common ancestors
-inline T*
-Forwarded(const T* t)
-{
-    const RelocationOverlay* overlay = RelocationOverlay::fromCell(t);
-    MOZ_ASSERT(overlay->isForwarded());
-    return reinterpret_cast<T*>(overlay->forwardingAddress());
-=======
 inline bool IsForwarded(const T* t) {
   if (!MightBeForwarded<T>::value) {
     MOZ_ASSERT(!t->isForwarded());
@@ -171,23 +78,8 @@ inline bool IsForwarded(const T* t) {
   }
 
   return t->isForwarded();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-struct ForwardedFunctor : public IdentityDefaultAdaptor<Value> {
-  template <typename T>
-  inline Value operator()(const T* t) {
-    return js::gc::RewrapTaggedPointer<Value, T>::wrap(Forwarded(t));
-  }
-};
-||||||| merged common ancestors
-struct ForwardedFunctor : public IdentityDefaultAdaptor<Value> {
-    template <typename T> inline Value operator()(const T* t) {
-        return js::gc::RewrapTaggedPointer<Value, T>::wrap(Forwarded(t));
-    }
-};
-=======
 inline bool IsForwarded(const JS::Value& value) {
   auto isForwarded = [](auto t) { return IsForwarded(t); };
   return MapGCThingTyped(value, isForwarded).valueOr(false);
@@ -199,21 +91,10 @@ inline T* Forwarded(const T* t) {
   MOZ_ASSERT(overlay->isForwarded());
   return reinterpret_cast<T*>(overlay->forwardingAddress());
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline Value Forwarded(const JS::Value& value) {
-  return DispatchTyped(ForwardedFunctor(), value);
-||||||| merged common ancestors
-inline Value
-Forwarded(const JS::Value& value)
-{
-    return DispatchTyped(ForwardedFunctor(), value);
-=======
 inline Value Forwarded(const JS::Value& value) {
   auto forward = [](auto t) { return TaggedPtr<Value>::wrap(Forwarded(t)); };
   return MapGCThingTyped(value, forward).valueOr(value);
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -224,31 +105,6 @@ inline T MaybeForwarded(T t) {
   return t;
 }
 
-<<<<<<< HEAD
-inline void RelocationOverlay::forwardTo(Cell* cell) {
-  MOZ_ASSERT(!isForwarded());
-
-  // Preserve old flags because nursery may check them before checking
-  // if this is a forwarded Cell.
-  //
-  // This is pretty terrible and we should find a better way to implement
-  // Cell::getTrackKind() that doesn't rely on this behavior.
-  uintptr_t gcFlags = dataWithTag_ & Cell::RESERVED_MASK;
-  dataWithTag_ = uintptr_t(cell) | gcFlags | Cell::FORWARD_BIT;
-||||||| merged common ancestors
-inline void
-RelocationOverlay::forwardTo(Cell* cell)
-{
-    MOZ_ASSERT(!isForwarded());
-
-    // Preserve old flags because nursery may check them before checking
-    // if this is a forwarded Cell.
-    //
-    // This is pretty terrible and we should find a better way to implement
-    // Cell::getTrackKind() that doesn't rely on this behavior.
-    uintptr_t gcFlags = dataWithTag_ & Cell::RESERVED_MASK;
-    dataWithTag_ = uintptr_t(cell) | gcFlags | Cell::FORWARD_BIT;
-=======
 inline void RelocationOverlay::forwardTo(Cell* cell) {
   MOZ_ASSERT(!isForwarded());
 
@@ -269,7 +125,6 @@ inline bool IsAboutToBeFinalizedDuringMinorSweep(Cell** cellp) {
   }
 
   return !Nursery::getForwardedPointer(cellp);
->>>>>>> upstream-releases
 }
 
 #ifdef JSGC_HASH_TABLE_CHECKS
@@ -287,43 +142,12 @@ inline void CheckGCThingAfterMovingGC(T* t) {
 }
 
 template <typename T>
-<<<<<<< HEAD
-inline void CheckGCThingAfterMovingGC(const ReadBarriered<T*>& t) {
-  CheckGCThingAfterMovingGC(t.unbarrieredGet());
-||||||| merged common ancestors
-inline void
-CheckGCThingAfterMovingGC(const ReadBarriered<T*>& t)
-{
-    CheckGCThingAfterMovingGC(t.unbarrieredGet());
-=======
 inline void CheckGCThingAfterMovingGC(const WeakHeapPtr<T*>& t) {
   CheckGCThingAfterMovingGC(t.unbarrieredGet());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-struct CheckValueAfterMovingGCFunctor : public VoidDefaultAdaptor<Value> {
-  template <typename T>
-  void operator()(T* t) {
-    CheckGCThingAfterMovingGC(t);
-  }
-};
-
-inline void CheckValueAfterMovingGC(const JS::Value& value) {
-  DispatchTyped(CheckValueAfterMovingGCFunctor(), value);
-||||||| merged common ancestors
-struct CheckValueAfterMovingGCFunctor : public VoidDefaultAdaptor<Value> {
-    template <typename T> void operator()(T* t) { CheckGCThingAfterMovingGC(t); }
-};
-
-inline void
-CheckValueAfterMovingGC(const JS::Value& value)
-{
-    DispatchTyped(CheckValueAfterMovingGCFunctor(), value);
-=======
 inline void CheckValueAfterMovingGC(const JS::Value& value) {
   ApplyGCThingTyped(value, [](auto t) { CheckGCThingAfterMovingGC(t); });
->>>>>>> upstream-releases
 }
 
 #endif  // JSGC_HASH_TABLE_CHECKS

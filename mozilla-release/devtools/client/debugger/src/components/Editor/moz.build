@@ -8,13 +8,7 @@ DIRS += [
     'Preview',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/Editor/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/Editor/moz.build
     'Breakpoint.js',
     'Breakpoints.js',
     'ColumnBreakpoint.js',

@@ -477,34 +477,8 @@ impl<T, U> Polygon<T, U> where
             .zip(self.points.iter())
             .zip(cuts.iter_mut())
         {
-<<<<<<< HEAD
-            // intersecting line segment [a, b] with `line`
-            // a + (b-a) * t = r + k * d
-            // (a, d) + t * (b-a, d) - (r, d) = k
-            // a + t * (b-a) = r + t * (b-a, d) * d + (a-r, d) * d
-            // t * ((b-a) - (b-a, d)*d) = (r-a) - (r-a, d) * d
-            let pr = line.origin - a - line.dir * line.dir.dot(line.origin - a);
-            let pb = b - a - line.dir * line.dir.dot(b - a);
-            let denom = pb.dot(pb);
-            if !denom.approx_eq(&T::zero()) {
-                let t = pr.dot(pb) / denom;
-                if t > T::approx_epsilon() && t < T::one() - T::approx_epsilon() {
-||||||| merged common ancestors
-            // intersecting line segment [a, b] with `line`
-            // a + (b-a) * t = r + k * d
-            // (a, d) + t * (b-a, d) - (r, d) = k
-            // a + t * (b-a) = r + t * (b-a, d) * d + (a-r, d) * d
-            // t * ((b-a) - (b-a, d)*d) = (r-a) - (r-a, d) * d
-            let pr = line.origin - a - line.dir * line.dir.dot(line.origin - a);
-            let pb = b - a - line.dir * line.dir.dot(b - a);
-            let denom = pb.dot(pb);
-            if !denom.approx_eq(&T::zero()) {
-                let t = pr.dot(pb) / denom;
-                if t > T::zero() && t < T::one() {
-=======
             if let Some(t) = line.intersect_edge(a .. b) {
                 if t >= T::zero() && t < T::one() {
->>>>>>> upstream-releases
                     *cut = Some(a + (b - a) * t);
                 }
             }

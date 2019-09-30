@@ -77,30 +77,4 @@ public class WindowUtils {
             return tempWidth;
         }
     }
-
-    /* Cliqz Start */
-    /**
-     * Derived from WindowUtils.getLargestDimension(Context context)
-     */
-    public static int getHeight(final Context context) {
-        final Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
-        if (Build.VERSION.SDK_INT >= 17) {
-            final DisplayMetrics realMetrics = new DisplayMetrics();
-            display.getRealMetrics(realMetrics);
-            return realMetrics.heightPixels;
-        } else {
-            int tempHeight;
-            try {
-                final Method getRawH = Display.class.getMethod("getRawHeight");
-                tempHeight = (Integer) getRawH.invoke(display);
-            } catch (Exception e) {
-                tempHeight = display.getHeight();
-                Log.w(LOGTAG, "Couldn't use reflection to get the real display metrics.");
-            }
-            return tempHeight;
-        }
-    }
-    /* Cliqz End */
-
 }

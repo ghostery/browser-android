@@ -18,17 +18,8 @@
 #  include <string.h>
 #endif
 #if defined(__FreeBSD__) || defined(__DragonFly__) || \
-<<<<<<< HEAD
-    defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#include <sys/sysctl.h>
-||||||| merged common ancestors
-    defined(__FreeBSD_kernel__) || defined(__NetBSD__) || \
-    defined(__OpenBSD__)
-#include <sys/sysctl.h>
-=======
     defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #  include <sys/sysctl.h>
->>>>>>> upstream-releases
 #endif
 #if defined(__OpenBSD__)
 #  include <sys/stat.h>
@@ -157,21 +148,12 @@ class BinaryPath {
   }
 
 #elif defined(XP_LINUX) || defined(XP_SOLARIS)
-<<<<<<< HEAD
-  static nsresult Get(char aResult[MAXPATHLEN]) {
-#if defined(XP_SOLARIS)
-||||||| merged common ancestors
-  static nsresult Get(char aResult[MAXPATHLEN])
-  {
-#  if defined(XP_SOLARIS)
-=======
   static nsresult Get(char aResult[MAXPATHLEN]) {
 #  if defined(XP_SOLARIS)
->>>>>>> upstream-releases
     const char path[] = "/proc/self/path/a.out";
-#else
+#  else
     const char path[] = "/proc/self/exe";
-#endif
+#  endif
 
     ssize_t len = readlink(path, aResult, MAXPATHLEN - 1);
     if (len < 0) {
@@ -292,20 +274,9 @@ class BinaryPath {
     if (NS_FAILED(rv)) {
       return rv;
     }
-<<<<<<< HEAD
-#ifdef XP_WIN
-    rv = NS_NewLocalFile(nsDependentString(exePath), true, getter_AddRefs(lf));
-#else
-||||||| merged common ancestors
-#ifdef XP_WIN
-    rv = NS_NewLocalFile(nsDependentString(exePath), true,
-                         getter_AddRefs(lf));
-#else
-=======
 #  ifdef XP_WIN
     rv = NS_NewLocalFile(nsDependentString(exePath), true, getter_AddRefs(lf));
 #  else
->>>>>>> upstream-releases
     rv = NS_NewNativeLocalFile(nsDependentCString(exePath), true,
                                getter_AddRefs(lf));
 #  endif

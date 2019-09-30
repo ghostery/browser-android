@@ -40,25 +40,9 @@ class FlexItemSelector extends PureComponent {
   }
 
   onShowFlexItemMenu(event) {
-<<<<<<< HEAD
-    event.stopPropagation();
-
-    const {
-      flexItem,
-      flexItems,
-      setSelectedNode,
-    } = this.props;
-||||||| merged common ancestors
-    const {
-      flexItem,
-      flexItems,
-      setSelectedNode,
-    } = this.props;
-=======
     event.stopPropagation();
 
     const { flexItem, flexItems, setSelectedNode } = this.props;
->>>>>>> upstream-releases
     const menuItems = [];
 
     for (const item of flexItems) {

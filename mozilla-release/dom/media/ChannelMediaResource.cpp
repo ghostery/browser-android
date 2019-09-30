@@ -54,58 +54,22 @@ NS_IMPL_ISUPPORTS(ChannelMediaResource::Listener, nsIRequestObserver,
                   nsIStreamListener, nsIChannelEventSink, nsIInterfaceRequestor,
                   nsIThreadRetargetableStreamListener)
 
-<<<<<<< HEAD
-nsresult ChannelMediaResource::Listener::OnStartRequest(nsIRequest* aRequest,
-                                                        nsISupports* aContext) {
-||||||| merged common ancestors
-nsresult
-ChannelMediaResource::Listener::OnStartRequest(nsIRequest* aRequest,
-                                               nsISupports* aContext)
-{
-=======
 nsresult ChannelMediaResource::Listener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!mResource) return NS_OK;
   return mResource->OnStartRequest(aRequest, mOffset);
 }
 
-<<<<<<< HEAD
-nsresult ChannelMediaResource::Listener::OnStopRequest(nsIRequest* aRequest,
-                                                       nsISupports* aContext,
-                                                       nsresult aStatus) {
-||||||| merged common ancestors
-nsresult
-ChannelMediaResource::Listener::OnStopRequest(nsIRequest* aRequest,
-                                              nsISupports* aContext,
-                                              nsresult aStatus)
-{
-=======
 nsresult ChannelMediaResource::Listener::OnStopRequest(nsIRequest* aRequest,
                                                        nsresult aStatus) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!mResource) return NS_OK;
   return mResource->OnStopRequest(aRequest, aStatus);
 }
 
-<<<<<<< HEAD
-nsresult ChannelMediaResource::Listener::OnDataAvailable(
-    nsIRequest* aRequest, nsISupports* aContext, nsIInputStream* aStream,
-    uint64_t aOffset, uint32_t aCount) {
-||||||| merged common ancestors
-nsresult
-ChannelMediaResource::Listener::OnDataAvailable(nsIRequest* aRequest,
-                                                nsISupports* aContext,
-                                                nsIInputStream* aStream,
-                                                uint64_t aOffset,
-                                                uint32_t aCount)
-{
-=======
 nsresult ChannelMediaResource::Listener::OnDataAvailable(
     nsIRequest* aRequest, nsIInputStream* aStream, uint64_t aOffset,
     uint32_t aCount) {
->>>>>>> upstream-releases
   // This might happen off the main thread.
   RefPtr<ChannelMediaResource> res;
   {
@@ -641,19 +605,12 @@ already_AddRefed<nsIPrincipal> ChannelMediaResource::GetCurrentPrincipal() {
   return do_AddRef(mSharedInfo->mPrincipal);
 }
 
-<<<<<<< HEAD
-bool ChannelMediaResource::CanClone() {
-||||||| merged common ancestors
-bool ChannelMediaResource::CanClone()
-{
-=======
 bool ChannelMediaResource::HadCrossOriginRedirects() {
   MOZ_ASSERT(NS_IsMainThread());
   return mSharedInfo->mHadCrossOriginRedirects;
 }
 
 bool ChannelMediaResource::CanClone() {
->>>>>>> upstream-releases
   return !mClosed && mCacheStream.IsAvailableForSharing();
 }
 
@@ -769,19 +726,8 @@ void ChannelMediaResource::Resume() {
 nsresult ChannelMediaResource::RecreateChannel() {
   MOZ_DIAGNOSTIC_ASSERT(!mClosed);
 
-<<<<<<< HEAD
-  nsLoadFlags loadFlags = nsICachingChannel::LOAD_BYPASS_LOCAL_CACHE_IF_BUSY |
-                          nsIChannel::LOAD_CLASSIFY_URI |
-                          (mLoadInBackground ? nsIRequest::LOAD_BACKGROUND : 0);
-||||||| merged common ancestors
-  nsLoadFlags loadFlags =
-    nsICachingChannel::LOAD_BYPASS_LOCAL_CACHE_IF_BUSY |
-    nsIChannel::LOAD_CLASSIFY_URI |
-    (mLoadInBackground ? nsIRequest::LOAD_BACKGROUND : 0);
-=======
   nsLoadFlags loadFlags = nsICachingChannel::LOAD_BYPASS_LOCAL_CACHE_IF_BUSY |
                           (mLoadInBackground ? nsIRequest::LOAD_BACKGROUND : 0);
->>>>>>> upstream-releases
 
   MediaDecoderOwner* owner = mCallback->GetMediaOwner();
   MOZ_DIAGNOSTIC_ASSERT(owner);
@@ -822,25 +768,10 @@ nsresult ChannelMediaResource::RecreateChannel() {
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (setAttrs) {
-<<<<<<< HEAD
-    nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
-    if (loadInfo) {
-      // The function simply returns NS_OK, so we ignore the return value.
-      Unused << loadInfo->SetOriginAttributes(
-          triggeringPrincipal->OriginAttributesRef());
-    }
-||||||| merged common ancestors
-    nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
-    if (loadInfo) {
-      // The function simply returns NS_OK, so we ignore the return value.
-      Unused << loadInfo->SetOriginAttributes(triggeringPrincipal->OriginAttributesRef());
-   }
-=======
     nsCOMPtr<nsILoadInfo> loadInfo = mChannel->LoadInfo();
     // The function simply returns NS_OK, so we ignore the return value.
     Unused << loadInfo->SetOriginAttributes(
         triggeringPrincipal->OriginAttributesRef());
->>>>>>> upstream-releases
   }
 
   nsCOMPtr<nsIClassOfService> cos(do_QueryInterface(mChannel));
@@ -1000,20 +931,8 @@ double ChannelMediaResource::GetDownloadRate(bool* aIsReliable) {
 
 int64_t ChannelMediaResource::GetLength() { return mCacheStream.GetLength(); }
 
-<<<<<<< HEAD
-nsCString ChannelMediaResource::GetDebugInfo() {
-  return NS_LITERAL_CSTRING("ChannelMediaResource: ") +
-         mCacheStream.GetDebugInfo();
-||||||| merged common ancestors
-nsCString
-ChannelMediaResource::GetDebugInfo()
-{
-  return NS_LITERAL_CSTRING("ChannelMediaResource: ") +
-         mCacheStream.GetDebugInfo();
-=======
 void ChannelMediaResource::GetDebugInfo(dom::MediaResourceDebugInfo& aInfo) {
   mCacheStream.GetDebugInfo(aInfo.mCacheStream);
->>>>>>> upstream-releases
 }
 
 // ChannelSuspendAgent

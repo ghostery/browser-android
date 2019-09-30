@@ -4,16 +4,8 @@
 
 //! Generic types for CSS values related to backgrounds.
 
-<<<<<<< HEAD
-use crate::values::IsAuto;
-use std::fmt::{self, Write};
-use style_traits::{CssWriter, ToCss};
-
-||||||| merged common ancestors
-=======
 use crate::values::generics::length::{GenericLengthPercentageOrAuto, LengthPercentageOrAuto};
 
->>>>>>> upstream-releases
 /// A generic value for the `background-size` property.
 #[derive(
     Animate,
@@ -27,14 +19,9 @@ use crate::values::generics::length::{GenericLengthPercentageOrAuto, LengthPerce
     ToAnimatedValue,
     ToAnimatedZero,
     ToComputedValue,
-<<<<<<< HEAD
-||||||| merged common ancestors
-    ToCss,
-=======
     ToCss,
     ToResolvedValue,
     ToShmem,
->>>>>>> upstream-releases
 )]
 #[repr(C, u8)]
 pub enum GenericBackgroundSize<LengthPercent> {
@@ -53,35 +40,6 @@ pub enum GenericBackgroundSize<LengthPercent> {
     #[animation(error)]
     Contain,
 }
-<<<<<<< HEAD
-
-impl<LengthOrPercentageOrAuto> ToCss for BackgroundSize<LengthOrPercentageOrAuto>
-where
-    LengthOrPercentageOrAuto: ToCss + IsAuto,
-{
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: Write,
-    {
-        match self {
-            BackgroundSize::Explicit { width, height } => {
-                width.to_css(dest)?;
-                // NOTE(emilio): We should probably simplify all these in case
-                // `width == `height`, but all other browsers agree on only
-                // special-casing `auto`.
-                if !width.is_auto() || !height.is_auto() {
-                    dest.write_str(" ")?;
-                    height.to_css(dest)?;
-                }
-                Ok(())
-            },
-            BackgroundSize::Cover => dest.write_str("cover"),
-            BackgroundSize::Contain => dest.write_str("contain"),
-        }
-    }
-}
-||||||| merged common ancestors
-=======
 
 pub use self::GenericBackgroundSize as BackgroundSize;
 
@@ -94,4 +52,3 @@ impl<LengthPercentage> BackgroundSize<LengthPercentage> {
         }
     }
 }
->>>>>>> upstream-releases

@@ -28,43 +28,8 @@
 
 class JSLinearString;
 
-<<<<<<< HEAD
-/*
- * Shorthands for ASCII (7-bit) decimal and hex conversion.
- * Manually inline isdigit and isxdigit for performance; MSVC doesn't do this
- * for us.
- */
-#define JS7_ISA2F(c) \
-  ((((((unsigned)(c)) - 'a') <= 5) || (((unsigned)(c)) - 'A') <= 5))
-#define JS7_UNDEC(c) ((c) - '0')
-#define JS7_ISOCT(c) ((((unsigned)(c)) - '0') <= 7)
-#define JS7_UNOCT(c) (JS7_UNDEC(c))
-#define JS7_ISHEX(c) ((c) < 128 && (mozilla::IsAsciiDigit(c) || JS7_ISA2F(c)))
-#define JS7_UNHEX(c) \
-  (unsigned)(mozilla::IsAsciiDigit(c) ? (c) - '0' : 10 + tolower(c) - 'a')
-
 static MOZ_ALWAYS_INLINE size_t js_strlen(const char16_t* s) {
   return std::char_traits<char16_t>::length(s);
-||||||| merged common ancestors
-/*
- * Shorthands for ASCII (7-bit) decimal and hex conversion.
- * Manually inline isdigit and isxdigit for performance; MSVC doesn't do this for us.
- */
-#define JS7_ISA2F(c)    ((((((unsigned)(c)) - 'a') <= 5) || (((unsigned)(c)) - 'A') <= 5))
-#define JS7_UNDEC(c)    ((c) - '0')
-#define JS7_ISOCT(c)    ((((unsigned)(c)) - '0') <= 7)
-#define JS7_UNOCT(c)    (JS7_UNDEC(c))
-#define JS7_ISHEX(c)    ((c) < 128 && (mozilla::IsAsciiDigit(c) || JS7_ISA2F(c)))
-#define JS7_UNHEX(c)    (unsigned)(mozilla::IsAsciiDigit(c) ? (c) - '0' : 10 + tolower(c) - 'a')
-
-static MOZ_ALWAYS_INLINE size_t
-js_strlen(const char16_t* s)
-{
-    return std::char_traits<char16_t>::length(s);
-=======
-static MOZ_ALWAYS_INLINE size_t js_strlen(const char16_t* s) {
-  return std::char_traits<char16_t>::length(s);
->>>>>>> upstream-releases
 }
 
 template <typename CharT>
@@ -123,12 +88,6 @@ static inline const CharT* SkipSpace(const CharT* s, const CharT* end) {
   return s;
 }
 
-<<<<<<< HEAD
-extern UniqueChars DuplicateString(JSContext* cx, const char* s);
-||||||| merged common ancestors
-extern UniqueChars
-DuplicateString(JSContext* cx, const char* s);
-=======
 extern UniqueChars DuplicateStringToArena(arena_id_t destArenaId, JSContext* cx,
                                           const char* s);
 
@@ -153,7 +112,6 @@ extern UniqueTwoByteChars DuplicateStringToArena(arena_id_t destArenaId,
                                                  const char16_t* s, size_t n);
 
 extern UniqueChars DuplicateString(JSContext* cx, const char* s);
->>>>>>> upstream-releases
 
 extern UniqueTwoByteChars DuplicateString(JSContext* cx, const char16_t* s);
 
@@ -269,15 +227,6 @@ inline bool FileEscapedString(FILE* fp, const char* chars, size_t length,
   return res;
 }
 
-<<<<<<< HEAD
-JSString* EncodeURI(JSContext* cx, const char* chars, size_t length);
-
-// Return true if input string contains a given flag in a comma separated list.
-bool ContainsFlag(const char* str, const char* flag);
-||||||| merged common ancestors
-JSString*
-EncodeURI(JSContext* cx, const char* chars, size_t length);
-=======
 JSString* EncodeURI(JSContext* cx, const char* chars, size_t length);
 
 // Return true if input string contains a given flag in a comma separated list.
@@ -299,7 +248,6 @@ extern size_t CountCodePoints(const mozilla::Utf8Unit* begin,
 extern size_t CountCodePoints(const char16_t* begin, const char16_t* end);
 
 }  // namespace unicode
->>>>>>> upstream-releases
 
 }  // namespace js
 

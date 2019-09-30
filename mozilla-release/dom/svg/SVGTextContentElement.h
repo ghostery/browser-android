@@ -48,29 +48,12 @@ class SVGTextContentElement : public SVGTextContentElementBase {
   MOZ_CAN_RUN_SCRIPT
   already_AddRefed<SVGRect> GetExtentOfChar(uint32_t charnum, ErrorResult& rv);
   MOZ_CAN_RUN_SCRIPT float GetRotationOfChar(uint32_t charnum, ErrorResult& rv);
-<<<<<<< HEAD
-  MOZ_CAN_RUN_SCRIPT int32_t GetCharNumAtPosition(nsISVGPoint& point);
-
- protected:
-  explicit SVGTextContentElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-      : SVGTextContentElementBase(std::move(aNodeInfo)) {}
-||||||| merged common ancestors
-  MOZ_CAN_RUN_SCRIPT int32_t GetCharNumAtPosition(nsISVGPoint& point);
-
-protected:
-
-  explicit SVGTextContentElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGTextContentElementBase(std::move(aNodeInfo))
-  {}
-=======
   MOZ_CAN_RUN_SCRIPT int32_t GetCharNumAtPosition(const DOMPointInit& aPoint);
 
  protected:
   explicit SVGTextContentElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
       : SVGTextContentElementBase(std::move(aNodeInfo)) {}
->>>>>>> upstream-releases
 
   MOZ_CAN_RUN_SCRIPT SVGTextFrame* GetSVGTextFrame();
   MOZ_CAN_RUN_SCRIPT SVGTextFrame* GetSVGTextFrameForNonLayoutDependentQuery();

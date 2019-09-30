@@ -196,25 +196,10 @@ void LocalStorageManager::DropCache(LocalStorageCache* aCache) {
   table->RemoveEntry(aCache->OriginNoSuffix());
 }
 
-<<<<<<< HEAD
-nsresult LocalStorageManager::GetStorageInternal(
-    CreateMode aCreateMode, mozIDOMWindow* aWindow, nsIPrincipal* aPrincipal,
-    const nsAString& aDocumentURI, bool aPrivate, Storage** aRetval) {
-||||||| merged common ancestors
-nsresult
-LocalStorageManager::GetStorageInternal(CreateMode aCreateMode,
-                                        mozIDOMWindow* aWindow,
-                                        nsIPrincipal* aPrincipal,
-                                        const nsAString& aDocumentURI,
-                                        bool aPrivate,
-                                        Storage** aRetval)
-{
-=======
 nsresult LocalStorageManager::GetStorageInternal(
     CreateMode aCreateMode, mozIDOMWindow* aWindow, nsIPrincipal* aPrincipal,
     nsIPrincipal* aStoragePrincipal, const nsAString& aDocumentURI,
     bool aPrivate, Storage** aRetval) {
->>>>>>> upstream-releases
   nsAutoCString originAttrSuffix;
   nsAutoCString originKey;
 
@@ -288,17 +273,9 @@ nsresult LocalStorageManager::GetStorageInternal(
   if (aRetval) {
     nsCOMPtr<nsPIDOMWindowInner> inner = nsPIDOMWindowInner::From(aWindow);
 
-<<<<<<< HEAD
-    RefPtr<Storage> storage = new LocalStorage(inner, this, cache, aDocumentURI,
-                                               aPrincipal, aPrivate);
-||||||| merged common ancestors
-    RefPtr<Storage> storage = new LocalStorage(
-      inner, this, cache, aDocumentURI, aPrincipal, aPrivate);
-=======
     RefPtr<Storage> storage =
         new LocalStorage(inner, this, cache, aDocumentURI, aPrincipal,
                          aStoragePrincipal, aPrivate);
->>>>>>> upstream-releases
     storage.forget(aRetval);
   }
 
@@ -307,15 +284,8 @@ nsresult LocalStorageManager::GetStorageInternal(
 
 NS_IMETHODIMP
 LocalStorageManager::PrecacheStorage(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD
-                                     Storage** aRetval) {
-||||||| merged common ancestors
-                                     Storage** aRetval)
-{
-=======
                                      nsIPrincipal* aStoragePrincipal,
                                      Storage** aRetval) {
->>>>>>> upstream-releases
   return GetStorageInternal(CreateMode::CreateIfShouldPreload, nullptr,
                             aPrincipal, aStoragePrincipal, EmptyString(), false,
                             aRetval);
@@ -324,38 +294,18 @@ LocalStorageManager::PrecacheStorage(nsIPrincipal* aPrincipal,
 NS_IMETHODIMP
 LocalStorageManager::CreateStorage(mozIDOMWindow* aWindow,
                                    nsIPrincipal* aPrincipal,
-<<<<<<< HEAD
-                                   const nsAString& aDocumentURI, bool aPrivate,
-                                   Storage** aRetval) {
-||||||| merged common ancestors
-                                   const nsAString& aDocumentURI,
-                                   bool aPrivate,
-                                   Storage** aRetval)
-{
-=======
                                    nsIPrincipal* aStoragePrincipal,
                                    const nsAString& aDocumentURI, bool aPrivate,
                                    Storage** aRetval) {
->>>>>>> upstream-releases
   return GetStorageInternal(CreateMode::CreateAlways, aWindow, aPrincipal,
                             aStoragePrincipal, aDocumentURI, aPrivate, aRetval);
 }
 
 NS_IMETHODIMP
 LocalStorageManager::GetStorage(mozIDOMWindow* aWindow,
-<<<<<<< HEAD
-                                nsIPrincipal* aPrincipal, bool aPrivate,
-                                Storage** aRetval) {
-||||||| merged common ancestors
-                                nsIPrincipal* aPrincipal,
-                                bool aPrivate,
-                                Storage** aRetval)
-{
-=======
                                 nsIPrincipal* aPrincipal,
                                 nsIPrincipal* aStoragePrincipal, bool aPrivate,
                                 Storage** aRetval) {
->>>>>>> upstream-releases
   return GetStorageInternal(CreateMode::UseIfExistsNeverCreate, aWindow,
                             aPrincipal, aStoragePrincipal, EmptyString(),
                             aPrivate, aRetval);
@@ -368,25 +318,6 @@ LocalStorageManager::CloneStorage(Storage* aStorage) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-LocalStorageManager::CheckStorage(nsIPrincipal* aPrincipal, Storage* aStorage,
-                                  bool* aRetval) {
-  if (!aStorage || aStorage->Type() != Storage::eLocalStorage) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  RefPtr<LocalStorage> storage = static_cast<LocalStorage*>(aStorage);
-||||||| merged common ancestors
-LocalStorageManager::CheckStorage(nsIPrincipal* aPrincipal,
-                                  Storage* aStorage,
-                                  bool* aRetval)
-{
-  if (!aStorage || aStorage->Type() != Storage::eLocalStorage) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  RefPtr<LocalStorage> storage = static_cast<LocalStorage*>(aStorage);
-=======
 LocalStorageManager::CheckStorage(nsIPrincipal* aPrincipal, Storage* aStorage,
                                   bool* aRetval) {
   MOZ_ASSERT(NS_IsMainThread());
@@ -397,38 +328,7 @@ LocalStorageManager::CheckStorage(nsIPrincipal* aPrincipal, Storage* aStorage,
   // Only used by sessionStorage.
   return NS_ERROR_NOT_IMPLEMENTED;
 }
->>>>>>> upstream-releases
 
-NS_IMETHODIMP
-LocalStorageManager::GetNextGenLocalStorageEnabled(bool* aResult) {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aResult);
-
-  *aResult = NextGenLocalStorageEnabled();
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-LocalStorageManager::Preload(nsIPrincipal* aPrincipal, JSContext* aContext,
-                             nsISupports** _retval) {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aPrincipal);
-  MOZ_ASSERT(_retval);
-
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-NS_IMETHODIMP
-LocalStorageManager::IsPreloaded(nsIPrincipal* aPrincipal, JSContext* aContext,
-                                 nsISupports** _retval) {
-  MOZ_ASSERT(NS_IsMainThread());
-  MOZ_ASSERT(aPrincipal);
-  MOZ_ASSERT(_retval);
-
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-<<<<<<< HEAD
 NS_IMETHODIMP
 LocalStorageManager::GetNextGenLocalStorageEnabled(bool* aResult) {
   MOZ_ASSERT(NS_IsMainThread());
@@ -461,17 +361,6 @@ LocalStorageManager::IsPreloaded(nsIPrincipal* aPrincipal, JSContext* aContext,
 void LocalStorageManager::ClearCaches(uint32_t aUnloadFlags,
                                       const OriginAttributesPattern& aPattern,
                                       const nsACString& aOriginScope) {
-||||||| merged common ancestors
-void
-LocalStorageManager::ClearCaches(uint32_t aUnloadFlags,
-                                 const OriginAttributesPattern& aPattern,
-                                 const nsACString& aOriginScope)
-{
-=======
-void LocalStorageManager::ClearCaches(uint32_t aUnloadFlags,
-                                      const OriginAttributesPattern& aPattern,
-                                      const nsACString& aOriginScope) {
->>>>>>> upstream-releases
   for (auto iter1 = mCaches.Iter(); !iter1.Done(); iter1.Next()) {
     OriginAttributes oa;
     DebugOnly<bool> rv = oa.PopulateFromSuffix(iter1.Key());

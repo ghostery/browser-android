@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright © Cliqz 2019 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:gecko="http://schemas.android.com/apk/res-auto">
-    <item gecko:light_theme="true" gecko:state_private="true" android:drawable="@color/light_theme_ghost_tab_color"/>
-    <item gecko:light_theme="true" android:drawable="@android:color/white"/>
-    <item android:drawable="@android:color/black" />
-</selector>

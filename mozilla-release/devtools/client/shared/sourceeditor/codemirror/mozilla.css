@@ -170,18 +170,6 @@
 
 .CodeMirror-foldgutter-open,
 .CodeMirror-foldgutter-folded {
-<<<<<<< HEAD:mozilla-release/devtools/client/sourceeditor/codemirror/mozilla.css
-  height: 14px;
-  background-image: url("chrome://devtools/skin/images/arrow.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  -moz-context-properties: fill;
-  fill: var(--theme-content-color3);
-  /* make the icons smaller than regular twistys (10->8px) */
-  background-size: 8px;
-||||||| merged common ancestors
-  color: #555;
-=======
   height: 14px;
   background-image: url("chrome://devtools/skin/images/arrow.svg");
   background-position: center;
@@ -190,7 +178,6 @@
   fill: var(--theme-icon-dimmed-color);
   /* make the icons smaller than regular twistys (10->8px) */
   background-size: 8px;
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/sourceeditor/codemirror/mozilla.css
   cursor: pointer;
 }
 

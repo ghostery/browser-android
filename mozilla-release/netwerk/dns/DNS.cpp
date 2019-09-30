@@ -19,16 +19,8 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-const char *inet_ntop_internal(int af, const void *src, char *dst,
-                               socklen_t size) {
-||||||| merged common ancestors
-const char *inet_ntop_internal(int af, const void *src, char *dst, socklen_t size)
-{
-=======
 const char* inet_ntop_internal(int af, const void* src, char* dst,
                                socklen_t size) {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   if (af == AF_INET) {
     struct sockaddr_in s;
@@ -59,14 +51,7 @@ const char* inet_ntop_internal(int af, const void* src, char* dst,
 
 // Copies the contents of a PRNetAddr to a NetAddr.
 // Does not do a ptr safety check!
-<<<<<<< HEAD
-void PRNetAddrToNetAddr(const PRNetAddr *prAddr, NetAddr *addr) {
-||||||| merged common ancestors
-void PRNetAddrToNetAddr(const PRNetAddr *prAddr, NetAddr *addr)
-{
-=======
 void PRNetAddrToNetAddr(const PRNetAddr* prAddr, NetAddr* addr) {
->>>>>>> upstream-releases
   if (prAddr->raw.family == PR_AF_INET) {
     addr->inet.family = AF_INET;
     addr->inet.port = prAddr->inet.port;
@@ -88,14 +73,7 @@ void PRNetAddrToNetAddr(const PRNetAddr* prAddr, NetAddr* addr) {
 
 // Copies the contents of a NetAddr to a PRNetAddr.
 // Does not do a ptr safety check!
-<<<<<<< HEAD
-void NetAddrToPRNetAddr(const NetAddr *addr, PRNetAddr *prAddr) {
-||||||| merged common ancestors
-void NetAddrToPRNetAddr(const NetAddr *addr, PRNetAddr *prAddr)
-{
-=======
 void NetAddrToPRNetAddr(const NetAddr* addr, PRNetAddr* prAddr) {
->>>>>>> upstream-releases
   if (addr->raw.family == AF_INET) {
     prAddr->inet.family = PR_AF_INET;
     prAddr->inet.port = addr->inet.port;
@@ -120,14 +98,7 @@ void NetAddrToPRNetAddr(const NetAddr* addr, PRNetAddr* prAddr) {
 #endif
 }
 
-<<<<<<< HEAD
-bool NetAddrToString(const NetAddr *addr, char *buf, uint32_t bufSize) {
-||||||| merged common ancestors
-bool NetAddrToString(const NetAddr *addr, char *buf, uint32_t bufSize)
-{
-=======
 bool NetAddrToString(const NetAddr* addr, char* buf, uint32_t bufSize) {
->>>>>>> upstream-releases
   if (addr->raw.family == AF_INET) {
     if (bufSize < INET_ADDRSTRLEN) {
       return false;
@@ -167,14 +138,7 @@ bool NetAddrToString(const NetAddr* addr, char* buf, uint32_t bufSize) {
   return false;
 }
 
-<<<<<<< HEAD
-bool IsLoopBackAddress(const NetAddr *addr) {
-||||||| merged common ancestors
-bool IsLoopBackAddress(const NetAddr *addr)
-{
-=======
 bool IsLoopBackAddress(const NetAddr* addr) {
->>>>>>> upstream-releases
   if (addr->raw.family == AF_INET) {
     return (addr->inet.ip == htonl(INADDR_LOOPBACK));
   }
@@ -191,14 +155,7 @@ bool IsLoopBackAddress(const NetAddr* addr) {
   return false;
 }
 
-<<<<<<< HEAD
-bool IsIPAddrAny(const NetAddr *addr) {
-||||||| merged common ancestors
-bool IsIPAddrAny(const NetAddr *addr)
-{
-=======
 bool IsIPAddrAny(const NetAddr* addr) {
->>>>>>> upstream-releases
   if (addr->raw.family == AF_INET) {
     if (addr->inet.ip == htonl(INADDR_ANY)) {
       return true;
@@ -215,28 +172,14 @@ bool IsIPAddrAny(const NetAddr* addr) {
   return false;
 }
 
-<<<<<<< HEAD
-bool IsIPAddrV4Mapped(const NetAddr *addr) {
-||||||| merged common ancestors
-bool IsIPAddrV4Mapped(const NetAddr *addr)
-{
-=======
 bool IsIPAddrV4Mapped(const NetAddr* addr) {
->>>>>>> upstream-releases
   if (addr->raw.family == AF_INET6) {
     return IPv6ADDR_IS_V4MAPPED(&addr->inet6.ip);
   }
   return false;
 }
 
-<<<<<<< HEAD
-bool IsIPAddrLocal(const NetAddr *addr) {
-||||||| merged common ancestors
-bool IsIPAddrLocal(const NetAddr *addr)
-{
-=======
 bool IsIPAddrLocal(const NetAddr* addr) {
->>>>>>> upstream-releases
   MOZ_ASSERT(addr);
 
   // IPv4 RFC1918 and Link Local Addresses.
@@ -261,15 +204,7 @@ bool IsIPAddrLocal(const NetAddr* addr) {
   return false;
 }
 
-<<<<<<< HEAD
-nsresult GetPort(const NetAddr *aAddr, uint16_t *aResult) {
-||||||| merged common ancestors
-nsresult
-GetPort(const NetAddr *aAddr, uint16_t *aResult)
-{
-=======
 nsresult GetPort(const NetAddr* aAddr, uint16_t* aResult) {
->>>>>>> upstream-releases
   uint16_t port;
   if (aAddr->raw.family == PR_AF_INET) {
     port = aAddr->inet.port;
@@ -283,15 +218,7 @@ nsresult GetPort(const NetAddr* aAddr, uint16_t* aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool NetAddr::operator==(const NetAddr &other) const {
-||||||| merged common ancestors
-bool
-NetAddr::operator == (const NetAddr& other) const
-{
-=======
 bool NetAddr::operator==(const NetAddr& other) const {
->>>>>>> upstream-releases
   if (this->raw.family != other.raw.family) {
     return false;
   }
@@ -315,21 +242,6 @@ bool NetAddr::operator==(const NetAddr& other) const {
   return false;
 }
 
-<<<<<<< HEAD
-bool NetAddr::operator<(const NetAddr &other) const {
-  if (this->raw.family != other.raw.family) {
-    return this->raw.family < other.raw.family;
-  }
-  if (this->raw.family == AF_INET) {
-    if (this->inet.ip == other.inet.ip) {
-      return this->inet.port < other.inet.port;
-||||||| merged common ancestors
-bool
-NetAddr::operator < (const NetAddr& other) const
-{
-    if (this->raw.family != other.raw.family) {
-        return this->raw.family < other.raw.family;
-=======
 bool NetAddr::operator<(const NetAddr& other) const {
   if (this->raw.family != other.raw.family) {
     return this->raw.family < other.raw.family;
@@ -337,7 +249,6 @@ bool NetAddr::operator<(const NetAddr& other) const {
   if (this->raw.family == AF_INET) {
     if (this->inet.ip == other.inet.ip) {
       return this->inet.port < other.inet.port;
->>>>>>> upstream-releases
     }
     return this->inet.ip < other.inet.ip;
   }
@@ -355,59 +266,20 @@ bool NetAddr::operator<(const NetAddr& other) const {
   return false;
 }
 
-<<<<<<< HEAD
-NetAddrElement::NetAddrElement(const PRNetAddr *prNetAddr) {
-||||||| merged common ancestors
-NetAddrElement::NetAddrElement(const PRNetAddr *prNetAddr)
-{
-=======
 NetAddrElement::NetAddrElement(const PRNetAddr* prNetAddr) {
->>>>>>> upstream-releases
   this->mAddress.raw.family = 0;
   this->mAddress.inet = {};
   PRNetAddrToNetAddr(prNetAddr, &mAddress);
 }
 
-<<<<<<< HEAD
-NetAddrElement::NetAddrElement(const NetAddrElement &netAddr) {
-||||||| merged common ancestors
-NetAddrElement::NetAddrElement(const NetAddrElement& netAddr)
-{
-=======
 NetAddrElement::NetAddrElement(const NetAddrElement& netAddr) {
->>>>>>> upstream-releases
   mAddress = netAddr.mAddress;
 }
 
 NetAddrElement::~NetAddrElement() = default;
 
-<<<<<<< HEAD
-AddrInfo::AddrInfo(const nsACString &host, const PRAddrInfo *prAddrInfo,
-||||||| merged common ancestors
-AddrInfo::AddrInfo(const nsACString& host, const PRAddrInfo *prAddrInfo,
-=======
 AddrInfo::AddrInfo(const nsACString& host, const PRAddrInfo* prAddrInfo,
->>>>>>> upstream-releases
                    bool disableIPv4, bool filterNameCollision,
-<<<<<<< HEAD
-                   const nsACString &cname)
-    : mHostName(host),
-      mCanonicalName(cname),
-      ttl(NO_TTL_DATA),
-      mFromTRR(false) {
-  MOZ_ASSERT(prAddrInfo,
-             "Cannot construct AddrInfo with a null prAddrInfo pointer!");
-  const uint32_t nameCollisionAddr = htonl(0x7f003535);  // 127.0.53.53
-||||||| merged common ancestors
-                   const nsACString& cname)
-  : mHostName(host)
-  , mCanonicalName(cname)
-  , ttl(NO_TTL_DATA)
-  , mFromTRR(false)
-{
-  MOZ_ASSERT(prAddrInfo, "Cannot construct AddrInfo with a null prAddrInfo pointer!");
-  const uint32_t nameCollisionAddr = htonl(0x7f003535); // 127.0.53.53
-=======
                    const nsACString& cname)
     : mHostName(host),
       mCanonicalName(cname),
@@ -416,7 +288,6 @@ AddrInfo::AddrInfo(const nsACString& host, const PRAddrInfo* prAddrInfo,
   MOZ_ASSERT(prAddrInfo,
              "Cannot construct AddrInfo with a null prAddrInfo pointer!");
   const uint32_t nameCollisionAddr = htonl(0x7f003535);  // 127.0.53.53
->>>>>>> upstream-releases
 
   PRNetAddr tmpAddr;
   void* iter = nullptr;
@@ -426,75 +297,27 @@ AddrInfo::AddrInfo(const nsACString& host, const PRAddrInfo* prAddrInfo,
                  (!filterNameCollision || tmpAddr.raw.family != PR_AF_INET ||
                   (tmpAddr.inet.ip != nameCollisionAddr));
     if (addIt) {
-<<<<<<< HEAD
-      auto *addrElement = new NetAddrElement(&tmpAddr);
-      mAddresses.insertBack(addrElement);
-||||||| merged common ancestors
-        auto *addrElement = new NetAddrElement(&tmpAddr);
-        mAddresses.insertBack(addrElement);
-=======
       auto* addrElement = new NetAddrElement(&tmpAddr);
       mAddresses.insertBack(addrElement);
->>>>>>> upstream-releases
     }
   } while (iter);
 }
 
-<<<<<<< HEAD
-AddrInfo::AddrInfo(const nsACString &host, const nsACString &cname,
-                   unsigned int aTRR)
-    : mHostName(host),
-      mCanonicalName(cname),
-      ttl(NO_TTL_DATA),
-      mFromTRR(aTRR) {}
-||||||| merged common ancestors
-AddrInfo::AddrInfo(const nsACString& host, const nsACString& cname, unsigned int aTRR)
-  : mHostName(host)
-  , mCanonicalName(cname)
-  , ttl(NO_TTL_DATA)
-  , mFromTRR(aTRR)
-{
-}
-=======
 AddrInfo::AddrInfo(const nsACString& host, const nsACString& cname,
                    unsigned int aTRR)
     : mHostName(host),
       mCanonicalName(cname),
       ttl(NO_TTL_DATA),
       mFromTRR(aTRR) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-AddrInfo::AddrInfo(const nsACString &host, unsigned int aTRR)
-    : mHostName(host),
-      mCanonicalName(EmptyCString()),
-      ttl(NO_TTL_DATA),
-      mFromTRR(aTRR) {}
-||||||| merged common ancestors
-AddrInfo::AddrInfo(const nsACString& host, unsigned int aTRR)
-  : mHostName(host)
-  , mCanonicalName(EmptyCString())
-  , ttl(NO_TTL_DATA)
-  , mFromTRR(aTRR)
-{
-}
-=======
 AddrInfo::AddrInfo(const nsACString& host, unsigned int aTRR)
     : mHostName(host),
       mCanonicalName(EmptyCString()),
       ttl(NO_TTL_DATA),
       mFromTRR(aTRR) {}
->>>>>>> upstream-releases
 
 // deep copy constructor
-<<<<<<< HEAD
-AddrInfo::AddrInfo(const AddrInfo *src) {
-||||||| merged common ancestors
-AddrInfo::AddrInfo(const AddrInfo *src)
-{
-=======
 AddrInfo::AddrInfo(const AddrInfo* src) {
->>>>>>> upstream-releases
   mHostName = src->mHostName;
   mCanonicalName = src->mCanonicalName;
   ttl = src->ttl;
@@ -506,34 +329,9 @@ AddrInfo::AddrInfo(const AddrInfo* src) {
   }
 }
 
-<<<<<<< HEAD
-AddrInfo::~AddrInfo() {
-  NetAddrElement *addrElement;
-  while ((addrElement = mAddresses.popLast())) {
-    delete addrElement;
-  }
-}
-||||||| merged common ancestors
-AddrInfo::~AddrInfo()
-{
-  NetAddrElement *addrElement;
-  while ((addrElement = mAddresses.popLast())) {
-    delete addrElement;
-  }
-}
-=======
 AddrInfo::~AddrInfo() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void AddrInfo::AddAddress(NetAddrElement *address) {
-||||||| merged common ancestors
-void
-AddrInfo::AddAddress(NetAddrElement *address)
-{
-=======
 void AddrInfo::AddAddress(NetAddrElement* address) {
->>>>>>> upstream-releases
   MOZ_ASSERT(address, "Cannot add the address to an uninitialized list");
 
   mAddresses.insertBack(address);

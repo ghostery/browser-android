@@ -293,57 +293,6 @@ nsresult nsAppShell::Init() {
   mAutoreleasePools = ::CFArrayCreateMutable(nullptr, 0, nullptr);
   NS_ENSURE_STATE(mAutoreleasePools);
 
-<<<<<<< HEAD
-  if (XRE_GetProcessType() != GeckoProcessType_RDD) {
-    // Get the path of the nib file, which lives in the GRE location
-    nsCOMPtr<nsIFile> nibFile;
-    nsresult rv = NS_GetSpecialDirectory(NS_GRE_DIR, getter_AddRefs(nibFile));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nibFile->AppendNative(NS_LITERAL_CSTRING("res"));
-    nibFile->AppendNative(NS_LITERAL_CSTRING("MainMenu.nib"));
-
-    nsAutoCString nibPath;
-    rv = nibFile->GetNativePath(nibPath);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    // This call initializes NSApplication unless:
-    // 1) we're using xre -- NSApp's already been initialized by
-    //    MacApplicationDelegate.mm's EnsureUseCocoaDockAPI().
-    // 2) an embedding app that uses NSApplicationMain() is running -- NSApp's
-    //    already been initialized and its main run loop is already running.
-    [NSBundle loadNibFile:
-                       [NSString stringWithUTF8String:(const char*)nibPath.get()]
-        externalNameTable:
-             [NSDictionary dictionaryWithObject:[GeckoNSApplication sharedApplication]
-                                         forKey:@"NSOwner"]
-                 withZone:NSDefaultMallocZone()];
-  }
-||||||| merged common ancestors
-  // Get the path of the nib file, which lives in the GRE location
-  nsCOMPtr<nsIFile> nibFile;
-  nsresult rv = NS_GetSpecialDirectory(NS_GRE_DIR, getter_AddRefs(nibFile));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nibFile->AppendNative(NS_LITERAL_CSTRING("res"));
-  nibFile->AppendNative(NS_LITERAL_CSTRING("MainMenu.nib"));
-
-  nsAutoCString nibPath;
-  rv = nibFile->GetNativePath(nibPath);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // This call initializes NSApplication unless:
-  // 1) we're using xre -- NSApp's already been initialized by
-  //    MacApplicationDelegate.mm's EnsureUseCocoaDockAPI().
-  // 2) an embedding app that uses NSApplicationMain() is running -- NSApp's
-  //    already been initialized and its main run loop is already running.
-  [NSBundle loadNibFile:
-                     [NSString stringWithUTF8String:(const char*)nibPath.get()]
-      externalNameTable:
-           [NSDictionary dictionaryWithObject:[GeckoNSApplication sharedApplication]
-                                       forKey:@"NSOwner"]
-               withZone:NSDefaultMallocZone()];
-=======
   bool isNSApplicationProcessType = (XRE_GetProcessType() != GeckoProcessType_RDD) &&
                                     (XRE_GetProcessType() != GeckoProcessType_Socket);
 
@@ -370,7 +319,6 @@ nsresult nsAppShell::Init() {
                                                       forKey:@"NSOwner"]
                  withZone:NSDefaultMallocZone()];
   }
->>>>>>> upstream-releases
 
   mDelegate = [[AppShellDelegate alloc] initWithAppShell:this];
   NS_ENSURE_STATE(mDelegate);

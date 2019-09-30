@@ -86,33 +86,12 @@ bool StyleSheet::HasRules() const {
   return Servo_StyleSheet_HasRules(Inner().mContents);
 }
 
-<<<<<<< HEAD
-nsIDocument* StyleSheet::GetAssociatedDocument() const {
-  return mDocumentOrShadowRoot ? mDocumentOrShadowRoot->AsNode().OwnerDoc()
-                               : nullptr;
-||||||| merged common ancestors
-nsIDocument*
-StyleSheet::GetAssociatedDocument() const
-{
-  return mDocumentOrShadowRoot
-    ? mDocumentOrShadowRoot->AsNode().OwnerDoc()
-    : nullptr;
-=======
 Document* StyleSheet::GetAssociatedDocument() const {
   return mDocumentOrShadowRoot ? mDocumentOrShadowRoot->AsNode().OwnerDoc()
                                : nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsIDocument* StyleSheet::GetComposedDoc() const {
-||||||| merged common ancestors
-nsIDocument*
-StyleSheet::GetComposedDoc() const
-{
-=======
 Document* StyleSheet::GetComposedDoc() const {
->>>>>>> upstream-releases
   return mDocumentOrShadowRoot
              ? mDocumentOrShadowRoot->AsNode().GetComposedDoc()
              : nullptr;
@@ -221,47 +200,19 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
 NS_IMPL_CYCLE_COLLECTION_TRACE_WRAPPERCACHE(StyleSheet)
 
-<<<<<<< HEAD
-mozilla::dom::CSSStyleSheetParsingMode StyleSheet::ParsingModeDOM() {
-#define CHECK(X, Y)                                 \
-  static_assert(                                    \
-      static_cast<int>(X) == static_cast<int>(Y),   \
-      "mozilla::dom::CSSStyleSheetParsingMode and " \
-      "mozilla::css::SheetParsingMode should have identical values");
-||||||| merged common ancestors
-mozilla::dom::CSSStyleSheetParsingMode
-StyleSheet::ParsingModeDOM()
-{
-#define CHECK(X, Y) \
-  static_assert(static_cast<int>(X) == static_cast<int>(Y),             \
-                "mozilla::dom::CSSStyleSheetParsingMode and mozilla::css::SheetParsingMode should have identical values");
-=======
 mozilla::dom::CSSStyleSheetParsingMode StyleSheet::ParsingModeDOM() {
 #define CHECK_MODE(X, Y)                            \
   static_assert(                                    \
       static_cast<int>(X) == static_cast<int>(Y),   \
       "mozilla::dom::CSSStyleSheetParsingMode and " \
       "mozilla::css::SheetParsingMode should have identical values");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CHECK(mozilla::dom::CSSStyleSheetParsingMode::Agent,
-        css::eAgentSheetFeatures);
-  CHECK(mozilla::dom::CSSStyleSheetParsingMode::User, css::eUserSheetFeatures);
-  CHECK(mozilla::dom::CSSStyleSheetParsingMode::Author,
-        css::eAuthorSheetFeatures);
-||||||| merged common ancestors
-  CHECK(mozilla::dom::CSSStyleSheetParsingMode::Agent, css::eAgentSheetFeatures);
-  CHECK(mozilla::dom::CSSStyleSheetParsingMode::User, css::eUserSheetFeatures);
-  CHECK(mozilla::dom::CSSStyleSheetParsingMode::Author, css::eAuthorSheetFeatures);
-=======
   CHECK_MODE(mozilla::dom::CSSStyleSheetParsingMode::Agent,
              css::eAgentSheetFeatures);
   CHECK_MODE(mozilla::dom::CSSStyleSheetParsingMode::User,
              css::eUserSheetFeatures);
   CHECK_MODE(mozilla::dom::CSSStyleSheetParsingMode::Author,
              css::eAuthorSheetFeatures);
->>>>>>> upstream-releases
 
 #undef CHECK_MODE
 
@@ -291,19 +242,11 @@ void StyleSheet::ApplicableStateChanged(bool aApplicable) {
   }
 }
 
-<<<<<<< HEAD
-void StyleSheet::SetDisabled(bool aDisabled) {
-||||||| merged common ancestors
-void
-StyleSheet::SetDisabled(bool aDisabled)
-{
-=======
 void StyleSheet::SetDisabled(bool aDisabled) {
   if (IsReadOnly()) {
     return;
   }
 
->>>>>>> upstream-releases
   if (aDisabled == Disabled()) {
     return;
   }
@@ -319,25 +262,9 @@ void StyleSheet::SetDisabled(bool aDisabled) {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<URLExtraData> StyleSheet::CreateURLExtraData() const {
-  RefPtr<URLExtraData> data = new URLExtraData(
-      GetBaseURI(), GetSheetURI(), Principal(), GetReferrerPolicy());
-  return data.forget();
-||||||| merged common ancestors
-already_AddRefed<URLExtraData>
-StyleSheet::CreateURLExtraData() const
-{
-  RefPtr<URLExtraData> data = new URLExtraData(GetBaseURI(),
-                                               GetSheetURI(),
-                                               Principal(),
-                                               GetReferrerPolicy());
-  return data.forget();
-=======
 void StyleSheet::SetURLExtraData() {
   Inner().mURLData = new URLExtraData(GetBaseURI(), GetSheetURI(), Principal(),
                                       GetReferrerPolicy());
->>>>>>> upstream-releases
 }
 
 StyleSheetInfo::StyleSheetInfo(CORSMode aCORSMode,
@@ -362,39 +289,6 @@ StyleSheetInfo::StyleSheetInfo(CORSMode aCORSMode,
 }
 
 StyleSheetInfo::StyleSheetInfo(StyleSheetInfo& aCopy, StyleSheet* aPrimarySheet)
-<<<<<<< HEAD
-    : mSheetURI(aCopy.mSheetURI),
-      mOriginalSheetURI(aCopy.mOriginalSheetURI),
-      mBaseURI(aCopy.mBaseURI),
-      mPrincipal(aCopy.mPrincipal),
-      mCORSMode(aCopy.mCORSMode),
-      mReferrerPolicy(aCopy.mReferrerPolicy),
-      mIntegrity(aCopy.mIntegrity),
-      mFirstChild()  // We don't rebuild the child because we're making a copy
-                     // without children.
-      ,
-      mSourceMapURL(aCopy.mSourceMapURL),
-      mSourceMapURLFromComment(aCopy.mSourceMapURLFromComment),
-      mSourceURL(aCopy.mSourceURL),
-      mContents(Servo_StyleSheet_Clone(aCopy.mContents.get(), aPrimarySheet)
-                    .Consume()),
-      mURLData(aCopy.mURLData)
-||||||| merged common ancestors
-  : mSheetURI(aCopy.mSheetURI)
-  , mOriginalSheetURI(aCopy.mOriginalSheetURI)
-  , mBaseURI(aCopy.mBaseURI)
-  , mPrincipal(aCopy.mPrincipal)
-  , mCORSMode(aCopy.mCORSMode)
-  , mReferrerPolicy(aCopy.mReferrerPolicy)
-  , mIntegrity(aCopy.mIntegrity)
-  , mFirstChild()  // We don't rebuild the child because we're making a copy
-                   // without children.
-  , mSourceMapURL(aCopy.mSourceMapURL)
-  , mSourceMapURLFromComment(aCopy.mSourceMapURLFromComment)
-  , mSourceURL(aCopy.mSourceURL)
-  , mContents(Servo_StyleSheet_Clone(aCopy.mContents.get(), aPrimarySheet).Consume())
-  , mURLData(aCopy.mURLData)
-=======
     : mSheetURI(aCopy.mSheetURI),
       mOriginalSheetURI(aCopy.mOriginalSheetURI),
       mBaseURI(aCopy.mBaseURI),
@@ -414,7 +308,6 @@ StyleSheetInfo::StyleSheetInfo(StyleSheetInfo& aCopy, StyleSheet* aPrimarySheet)
       // be shared), so continue to keep it alive.
       mSharedMemory(aCopy.mSharedMemory),
       mURLData(aCopy.mURLData)
->>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mPrincipalSet(aCopy.mPrincipalSet)
@@ -426,21 +319,12 @@ StyleSheetInfo::StyleSheetInfo(StyleSheetInfo& aCopy, StyleSheet* aPrimarySheet)
   MOZ_COUNT_CTOR(StyleSheetInfo);
 }
 
-<<<<<<< HEAD
-StyleSheetInfo::~StyleSheetInfo() { MOZ_COUNT_DTOR(StyleSheetInfo); }
-||||||| merged common ancestors
-StyleSheetInfo::~StyleSheetInfo()
-{
-  MOZ_COUNT_DTOR(StyleSheetInfo);
-}
-=======
 StyleSheetInfo::~StyleSheetInfo() {
   MOZ_COUNT_DTOR(StyleSheetInfo);
 
   // Drop the sheet contents before the shared memory.
   mContents = nullptr;
 }
->>>>>>> upstream-releases
 
 StyleSheetInfo* StyleSheetInfo::CloneFor(StyleSheet* aPrimarySheet) {
   return new StyleSheetInfo(*this, aPrimarySheet);
@@ -451,16 +335,6 @@ MOZ_DEFINE_MALLOC_ENCLOSING_SIZE_OF(ServoStyleSheetMallocEnclosingSizeOf)
 
 size_t StyleSheetInfo::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
   size_t n = aMallocSizeOf(this);
-<<<<<<< HEAD
-  n += Servo_StyleSheet_SizeOfIncludingThis(
-      ServoStyleSheetMallocSizeOf, ServoStyleSheetMallocEnclosingSizeOf,
-      mContents);
-||||||| merged common ancestors
-  n += Servo_StyleSheet_SizeOfIncludingThis(
-      ServoStyleSheetMallocSizeOf,
-      ServoStyleSheetMallocEnclosingSizeOf,
-      mContents);
-=======
 
   // If this sheet came from shared memory, then it will be counted by
   // nsLayoutStylesheetCache in the parent process.
@@ -470,7 +344,6 @@ size_t StyleSheetInfo::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
         mContents);
   }
 
->>>>>>> upstream-releases
   return n;
 }
 
@@ -537,69 +410,28 @@ void StyleSheet::GetTitle(nsAString& aTitle) {
   }
 }
 
-<<<<<<< HEAD
-void StyleSheet::WillDirty() {
-||||||| merged common ancestors
-void
-StyleSheet::WillDirty()
-{
-=======
 void StyleSheet::WillDirty() {
   MOZ_ASSERT(!IsReadOnly());
 
->>>>>>> upstream-releases
   if (IsComplete()) {
     EnsureUniqueInner();
   }
 }
 
-<<<<<<< HEAD
-void StyleSheet::AddStyleSet(ServoStyleSet* aStyleSet) {
-  NS_ASSERTION(!mStyleSets.Contains(aStyleSet), "style set already registered");
-||||||| merged common ancestors
-void
-StyleSheet::AddStyleSet(ServoStyleSet* aStyleSet)
-{
-  NS_ASSERTION(!mStyleSets.Contains(aStyleSet),
-               "style set already registered");
-=======
 void StyleSheet::AddStyleSet(ServoStyleSet* aStyleSet) {
   MOZ_DIAGNOSTIC_ASSERT(!mStyleSets.Contains(aStyleSet),
                         "style set already registered");
->>>>>>> upstream-releases
   mStyleSets.AppendElement(aStyleSet);
 }
 
-<<<<<<< HEAD
-void StyleSheet::DropStyleSet(ServoStyleSet* aStyleSet) {
-  DebugOnly<bool> found = mStyleSets.RemoveElement(aStyleSet);
-  NS_ASSERTION(found, "didn't find style set");
-||||||| merged common ancestors
-void
-StyleSheet::DropStyleSet(ServoStyleSet* aStyleSet)
-{
-  DebugOnly<bool> found = mStyleSets.RemoveElement(aStyleSet);
-  NS_ASSERTION(found, "didn't find style set");
-=======
 void StyleSheet::DropStyleSet(ServoStyleSet* aStyleSet) {
   bool found = mStyleSets.RemoveElement(aStyleSet);
   MOZ_DIAGNOSTIC_ASSERT(found, "didn't find style set");
 #ifndef MOZ_DIAGNOSTIC_ASSERT_ENABLED
   Unused << found;
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void StyleSheet::EnsureUniqueInner() {
-  MOZ_ASSERT(mInner->mSheets.Length() != 0, "unexpected number of outers");
-||||||| merged common ancestors
-void
-StyleSheet::EnsureUniqueInner()
-{
-  MOZ_ASSERT(mInner->mSheets.Length() != 0,
-             "unexpected number of outers");
-=======
 #define NOTIFY(function_, args_)                           \
   do {                                                     \
     StyleSheet* current = this;                            \
@@ -622,7 +454,6 @@ void StyleSheet::EnsureUniqueInner() {
     return;
   }
 
->>>>>>> upstream-releases
   mState |= State::ForcedUniqueInner;
 
   if (HasUniqueInner()) {
@@ -689,58 +520,23 @@ void StyleSheet::SetSourceURL(const nsAString& aSourceURL) {
 
 css::Rule* StyleSheet::GetDOMOwnerRule() const { return mOwnerRule; }
 
-<<<<<<< HEAD
-uint32_t StyleSheet::InsertRule(const nsAString& aRule, uint32_t aIndex,
-                                nsIPrincipal& aSubjectPrincipal,
-                                ErrorResult& aRv) {
-  if (!AreRulesAvailable(aSubjectPrincipal, aRv)) {
-||||||| merged common ancestors
-uint32_t
-StyleSheet::InsertRule(const nsAString& aRule, uint32_t aIndex,
-                       nsIPrincipal& aSubjectPrincipal,
-                       ErrorResult& aRv)
-{
-  if (!AreRulesAvailable(aSubjectPrincipal, aRv)) {
-=======
 uint32_t StyleSheet::InsertRule(const nsAString& aRule, uint32_t aIndex,
                                 nsIPrincipal& aSubjectPrincipal,
                                 ErrorResult& aRv) {
   if (IsReadOnly() || !AreRulesAvailable(aSubjectPrincipal, aRv)) {
->>>>>>> upstream-releases
     return 0;
   }
   return InsertRuleInternal(aRule, aIndex, aRv);
 }
 
-<<<<<<< HEAD
-void StyleSheet::DeleteRule(uint32_t aIndex, nsIPrincipal& aSubjectPrincipal,
-                            ErrorResult& aRv) {
-  if (!AreRulesAvailable(aSubjectPrincipal, aRv)) {
-||||||| merged common ancestors
-void
-StyleSheet::DeleteRule(uint32_t aIndex,
-                       nsIPrincipal& aSubjectPrincipal,
-                       ErrorResult& aRv)
-{
-  if (!AreRulesAvailable(aSubjectPrincipal, aRv)) {
-=======
 void StyleSheet::DeleteRule(uint32_t aIndex, nsIPrincipal& aSubjectPrincipal,
                             ErrorResult& aRv) {
   if (IsReadOnly() || !AreRulesAvailable(aSubjectPrincipal, aRv)) {
->>>>>>> upstream-releases
     return;
   }
   return DeleteRuleInternal(aIndex, aRv);
 }
 
-<<<<<<< HEAD
-nsresult StyleSheet::DeleteRuleFromGroup(css::GroupRule* aGroup,
-                                         uint32_t aIndex) {
-||||||| merged common ancestors
-nsresult
-StyleSheet::DeleteRuleFromGroup(css::GroupRule* aGroup, uint32_t aIndex)
-{
-=======
 int32_t StyleSheet::AddRule(const nsAString& aSelector, const nsAString& aBlock,
                             const Optional<uint32_t>& aIndex,
                             nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {
@@ -767,7 +563,6 @@ int32_t StyleSheet::AddRule(const nsAString& aSelector, const nsAString& aBlock,
 
 nsresult StyleSheet::DeleteRuleFromGroup(css::GroupRule* aGroup,
                                          uint32_t aIndex) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aGroup);
   NS_ASSERTION(IsComplete(), "No deleting from an incomplete sheet!");
   RefPtr<css::Rule> rule = aGroup->GetStyleRuleAt(aIndex);
@@ -801,42 +596,7 @@ dom::ShadowRoot* StyleSheet::GetContainingShadow() const {
   return mOwningNode->AsContent()->GetContainingShadow();
 }
 
-<<<<<<< HEAD
-#define NOTIFY(function_, args_)                           \
-  do {                                                     \
-    StyleSheet* current = this;                            \
-    do {                                                   \
-      for (ServoStyleSet * handle : current->mStyleSets) { \
-        handle->function_ args_;                           \
-      }                                                    \
-      if (auto* shadow = current->GetContainingShadow()) { \
-        shadow->function_ args_;                           \
-      }                                                    \
-      current = current->mParent;                          \
-    } while (current);                                     \
-  } while (0)
-
 void StyleSheet::RuleAdded(css::Rule& aRule) {
-||||||| merged common ancestors
-#define NOTIFY(function_, args_) do {                     \
-  StyleSheet* current = this;                             \
-  do {                                                    \
-    for (ServoStyleSet* handle : current->mStyleSets) {   \
-      handle->function_ args_;                            \
-    }                                                     \
-    if (auto* shadow = current->GetContainingShadow()) {  \
-      shadow->function_ args_;                            \
-    }                                                     \
-    current = current->mParent;                           \
-  } while (current);                                      \
-} while (0)
-
-void
-StyleSheet::RuleAdded(css::Rule& aRule)
-{
-=======
-void StyleSheet::RuleAdded(css::Rule& aRule) {
->>>>>>> upstream-releases
   mState |= State::ModifiedRules;
   NOTIFY(RuleAdded, (*this, aRule));
 
@@ -1110,16 +870,8 @@ JSObject* StyleSheet::WrapObject(JSContext* aCx,
   return dom::CSSStyleSheet_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ bool StyleSheet::RuleHasPendingChildSheet(css::Rule* aRule) {
-||||||| merged common ancestors
-/* static */ bool
-StyleSheet::RuleHasPendingChildSheet(css::Rule* aRule)
-{
-=======
 /* static */
 bool StyleSheet::RuleHasPendingChildSheet(css::Rule* aRule) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRule->Type() == dom::CSSRule_Binding::IMPORT_RULE);
   auto rule = static_cast<dom::CSSImportRule*>(aRule);
   if (StyleSheet* childSheet = rule->GetStyleSheet()) {
@@ -1206,13 +958,7 @@ RefPtr<StyleSheetParsePromise> StyleSheet::ParseSheet(
   MOZ_ASSERT(aLoadData);
   MOZ_ASSERT(mParsePromise.IsEmpty());
   RefPtr<StyleSheetParsePromise> p = mParsePromise.Ensure(__func__);
-<<<<<<< HEAD
-  Inner().mURLData = CreateURLExtraData();  // RefPtr
-||||||| merged common ancestors
-  Inner().mURLData = CreateURLExtraData(); // RefPtr
-=======
   SetURLExtraData();
->>>>>>> upstream-releases
 
   const StyleUseCounters* useCounters =
       aLoader->GetDocument() ? aLoader->GetDocument()->GetStyleUseCounters()
@@ -1252,40 +998,6 @@ void StyleSheet::ParseSheetSync(
     css::SheetLoadData* aLoadData, uint32_t aLineNumber,
     css::LoaderReusableStyleSheets* aReusableSheets) {
   nsCompatibility compatMode =
-<<<<<<< HEAD
-      aLoader ? aLoader->GetCompatibilityMode() : eCompatibility_FullStandards;
-
-  const StyleUseCounters* useCounters =
-      aLoader && aLoader->GetDocument()
-          ? aLoader->GetDocument()->GetStyleUseCounters()
-          : nullptr;
-
-  Inner().mURLData = CreateURLExtraData();  // RefPtr
-  Inner().mContents =
-      Servo_StyleSheet_FromUTF8Bytes(
-          aLoader, this, aLoadData, &aBytes, mParsingMode, Inner().mURLData,
-          aLineNumber, compatMode, aReusableSheets, useCounters)
-          .Consume();
-||||||| merged common ancestors
-    aLoader ? aLoader->GetCompatibilityMode() : eCompatibility_FullStandards;
-
-  const StyleUseCounters* useCounters = aLoader && aLoader->GetDocument()
-    ? aLoader->GetDocument()->GetStyleUseCounters()
-    : nullptr;
-
-  Inner().mURLData = CreateURLExtraData(); // RefPtr
-  Inner().mContents = Servo_StyleSheet_FromUTF8Bytes(aLoader,
-                                                     this,
-                                                     aLoadData,
-                                                     &aBytes,
-                                                     mParsingMode,
-                                                     Inner().mURLData,
-                                                     aLineNumber,
-                                                     compatMode,
-                                                     aReusableSheets,
-                                                     useCounters)
-                         .Consume();
-=======
       aLoader ? aLoader->GetCompatibilityMode() : eCompatibility_FullStandards;
 
   const StyleUseCounters* useCounters =
@@ -1299,7 +1011,6 @@ void StyleSheet::ParseSheetSync(
           aLoader, this, aLoadData, &aBytes, mParsingMode, Inner().mURLData,
           aLineNumber, compatMode, aReusableSheets, useCounters)
           .Consume();
->>>>>>> upstream-releases
 
   FinishParse();
 }
@@ -1458,21 +1169,10 @@ ServoCSSRuleList* StyleSheet::GetCssRulesInternal() {
   return mRuleList;
 }
 
-<<<<<<< HEAD
-uint32_t StyleSheet::InsertRuleInternal(const nsAString& aRule, uint32_t aIndex,
-                                        ErrorResult& aRv) {
-||||||| merged common ancestors
-uint32_t
-StyleSheet::InsertRuleInternal(const nsAString& aRule,
-                               uint32_t aIndex,
-                               ErrorResult& aRv)
-{
-=======
 uint32_t StyleSheet::InsertRuleInternal(const nsAString& aRule, uint32_t aIndex,
                                         ErrorResult& aRv) {
   MOZ_ASSERT(!IsReadOnly());
 
->>>>>>> upstream-releases
   // Ensure mRuleList is constructed.
   GetCssRulesInternal();
 
@@ -1492,17 +1192,9 @@ uint32_t StyleSheet::InsertRuleInternal(const nsAString& aRule, uint32_t aIndex,
   return aIndex;
 }
 
-<<<<<<< HEAD
-void StyleSheet::DeleteRuleInternal(uint32_t aIndex, ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-StyleSheet::DeleteRuleInternal(uint32_t aIndex, ErrorResult& aRv)
-{
-=======
 void StyleSheet::DeleteRuleInternal(uint32_t aIndex, ErrorResult& aRv) {
   MOZ_ASSERT(!IsReadOnly());
 
->>>>>>> upstream-releases
   // Ensure mRuleList is constructed.
   GetCssRulesInternal();
   if (aIndex >= mRuleList->Length()) {
@@ -1522,39 +1214,16 @@ void StyleSheet::DeleteRuleInternal(uint32_t aIndex, ErrorResult& aRv) {
   }
 }
 
-<<<<<<< HEAD
-nsresult StyleSheet::InsertRuleIntoGroupInternal(const nsAString& aRule,
-                                                 css::GroupRule* aGroup,
-                                                 uint32_t aIndex) {
-||||||| merged common ancestors
-nsresult
-StyleSheet::InsertRuleIntoGroupInternal(const nsAString& aRule,
-                                             css::GroupRule* aGroup,
-                                             uint32_t aIndex)
-{
-=======
 nsresult StyleSheet::InsertRuleIntoGroupInternal(const nsAString& aRule,
                                                  css::GroupRule* aGroup,
                                                  uint32_t aIndex) {
   MOZ_ASSERT(!IsReadOnly());
 
->>>>>>> upstream-releases
   auto rules = static_cast<ServoCSSRuleList*>(aGroup->CssRules());
   MOZ_ASSERT(rules->GetParentRule() == aGroup);
   return rules->InsertRule(aRule, aIndex);
 }
 
-<<<<<<< HEAD
-OriginFlags StyleSheet::GetOrigin() {
-  return static_cast<OriginFlags>(
-      Servo_StyleSheet_GetOrigin(Inner().mContents));
-||||||| merged common ancestors
-OriginFlags
-StyleSheet::GetOrigin()
-{
-  return static_cast<OriginFlags>(
-    Servo_StyleSheet_GetOrigin(Inner().mContents));
-=======
 StyleOrigin StyleSheet::GetOrigin() const {
   return Servo_StyleSheet_GetOrigin(Inner().mContents);
 }
@@ -1592,7 +1261,6 @@ const ServoCssRules* StyleSheet::ToShared(
 
 bool StyleSheet::IsReadOnly() const {
   return IsComplete() && GetOrigin() == StyleOrigin::UserAgent;
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

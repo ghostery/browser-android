@@ -5,24 +5,8 @@
 from __future__ import absolute_import
 import argparse
 import isa
-<<<<<<< HEAD
-import gen_instr
-import gen_settings
-||||||| merged common ancestors
-import gen_types
-import gen_instr
-import gen_settings
-=======
->>>>>>> upstream-releases
 import gen_build_deps
 import gen_encoding
-<<<<<<< HEAD
-import gen_legalizer
-||||||| merged common ancestors
-import gen_legalizer
-import gen_registers
-=======
->>>>>>> upstream-releases
 import gen_binemit
 
 try:
@@ -58,23 +42,7 @@ def main():
     isas = isa.all_isas()
     number_all_instructions(isas)
 
-<<<<<<< HEAD
-    gen_instr.generate(isas, out_dir)
-    gen_settings.generate(isas, out_dir)
-||||||| merged common ancestors
-    gen_types.generate(out_dir)
-    gen_instr.generate(isas, out_dir)
-    gen_settings.generate(isas, out_dir)
-=======
->>>>>>> upstream-releases
     gen_encoding.generate(isas, out_dir)
-<<<<<<< HEAD
-    gen_legalizer.generate(isas, out_dir)
-||||||| merged common ancestors
-    gen_legalizer.generate(isas, out_dir)
-    gen_registers.generate(isas, out_dir)
-=======
->>>>>>> upstream-releases
     gen_binemit.generate(isas, out_dir)
     gen_build_deps.generate()
 

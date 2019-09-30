@@ -59,16 +59,10 @@ const SUMMARY_METHOD = L10N.getStr("netmonitor.summary.method");
 const SUMMARY_URL = L10N.getStr("netmonitor.summary.url");
 const SUMMARY_STATUS = L10N.getStr("netmonitor.summary.status");
 const SUMMARY_VERSION = L10N.getStr("netmonitor.summary.version");
-<<<<<<< HEAD
-const SUMMARY_STATUS_LEARN_MORE = L10N.getStr("netmonitor.summary.learnMore");
-const SUMMARY_REFERRER_POLICY = L10N.getStr("netmonitor.summary.referrerPolicy");
-||||||| merged common ancestors
-=======
 const SUMMARY_STATUS_LEARN_MORE = L10N.getStr("netmonitor.summary.learnMore");
 const SUMMARY_REFERRER_POLICY = L10N.getStr(
   "netmonitor.summary.referrerPolicy"
 );
->>>>>>> upstream-releases
 
 /**
  * Headers panel component
@@ -383,13 +377,8 @@ class HeadersPanel extends Component {
         status,
         statusText,
         urlDetails,
-<<<<<<< HEAD
-        referrerPolicy,
-||||||| merged common ancestors
-=======
         referrerPolicy,
         isThirdPartyTrackingResource,
->>>>>>> upstream-releases
       },
     } = this.props;
     const item = { fromCache, fromServiceWorker, status, statusText };
@@ -439,58 +428,6 @@ class HeadersPanel extends Component {
         div(
           {
             className: "tabpanel-summary-label headers-summary-label",
-<<<<<<< HEAD
-          }, SUMMARY_STATUS),
-          StatusCode({ item }),
-          input({
-            className: "tabpanel-summary-value textbox-input devtools-monospace"
-              + " status-text",
-            readOnly: true,
-            value: `${statusText}`,
-            size: `${inputWidth}`,
-          }),
-          statusCodeDocURL ? MDNLink({
-            url: statusCodeDocURL,
-            title: SUMMARY_STATUS_LEARN_MORE,
-          }) : span({
-            className: "headers-summary learn-more-link",
-          }),
-          button({
-            className: "devtools-button edit-and-resend-button",
-            onClick: cloneSelectedRequest,
-          }, EDIT_AND_RESEND),
-          button({
-            "aria-pressed": this.state.rawHeadersOpened,
-            className: toggleRawHeadersClassList.join(" "),
-            onClick: this.toggleRawHeaders,
-          }, RAW_HEADERS),
-        )
-||||||| merged common ancestors
-          }, SUMMARY_STATUS),
-          StatusCode({ item }),
-          input({
-            className: "tabpanel-summary-value textbox-input devtools-monospace"
-              + " status-text",
-            readOnly: true,
-            value: `${statusText}`,
-            size: `${inputWidth}`,
-          }),
-          statusCodeDocURL ? MDNLink({
-            url: statusCodeDocURL,
-          }) : span({
-            className: "headers-summary learn-more-link",
-          }),
-          button({
-            className: "devtools-button edit-and-resend-button",
-            onClick: cloneSelectedRequest,
-          }, EDIT_AND_RESEND),
-          button({
-            "aria-pressed": this.state.rawHeadersOpened,
-            className: toggleRawHeadersClassList.join(" "),
-            onClick: this.toggleRawHeaders,
-          }, RAW_HEADERS),
-        )
-=======
           },
           SUMMARY_STATUS
         ),
@@ -511,73 +448,9 @@ class HeadersPanel extends Component {
           : span({
               className: "headers-summary learn-more-link",
             })
->>>>>>> upstream-releases
       );
     }
 
-<<<<<<< HEAD
-    const summaryVersion = httpVersion ?
-      this.renderSummary(SUMMARY_VERSION, httpVersion) : null;
-
-    const summaryReferrerPolicy = referrerPolicy ?
-      this.renderSummary(SUMMARY_REFERRER_POLICY, referrerPolicy) : null;
-
-    // display Status-Line above other response headers
-    const statusLine = `${httpVersion} ${status} ${statusText}\n`;
-
-    let summaryRawHeaders;
-    if (this.state.rawHeadersOpened) {
-      summaryRawHeaders = (
-        div({ className: "tabpanel-summary-container headers-summary" },
-          div({ className: "raw-headers-container" },
-            div({ className: "raw-headers" },
-              div({ className: "tabpanel-summary-label" }, RAW_HEADERS_REQUEST),
-              textarea({
-                className: "raw-request-headers-textarea",
-                value: writeHeaderText(requestHeaders.headers),
-                readOnly: true,
-              }),
-            ),
-            div({ className: "raw-headers" },
-              div({ className: "tabpanel-summary-label" }, RAW_HEADERS_RESPONSE),
-              textarea({
-                className: "raw-response-headers-textarea",
-                value: statusLine + writeHeaderText(responseHeaders.headers),
-                readOnly: true,
-              }),
-            ),
-          )
-        )
-||||||| merged common ancestors
-    const summaryVersion = httpVersion ?
-      this.renderSummary(SUMMARY_VERSION, httpVersion) : null;
-    // display Status-Line above other response headers
-    const statusLine = `${httpVersion} ${status} ${statusText}\n`;
-
-    let summaryRawHeaders;
-    if (this.state.rawHeadersOpened) {
-      summaryRawHeaders = (
-        div({ className: "tabpanel-summary-container headers-summary" },
-          div({ className: "raw-headers-container" },
-            div({ className: "raw-headers" },
-              div({ className: "tabpanel-summary-label" }, RAW_HEADERS_REQUEST),
-              textarea({
-                className: "raw-request-headers-textarea",
-                value: writeHeaderText(requestHeaders.headers),
-                readOnly: true,
-              }),
-            ),
-            div({ className: "raw-headers" },
-              div({ className: "tabpanel-summary-label" }, RAW_HEADERS_RESPONSE),
-              textarea({
-                className: "raw-response-headers-textarea",
-                value: statusLine + writeHeaderText(responseHeaders.headers),
-                readOnly: true,
-              }),
-            ),
-          )
-        )
-=======
     let trackingProtectionStatus;
 
     if (isThirdPartyTrackingResource) {
@@ -600,50 +473,9 @@ class HeadersPanel extends Component {
           : span({
               className: "headers-summary learn-more-link",
             })
->>>>>>> upstream-releases
       );
     }
 
-<<<<<<< HEAD
-    return (
-      div({ className: "panel-container" },
-        div({ className: "headers-overview" },
-          summaryUrl,
-          summaryMethod,
-          summaryAddress,
-          summaryStatus,
-          summaryVersion,
-          summaryReferrerPolicy,
-          summaryRawHeaders,
-        ),
-        PropertiesView({
-          object,
-          provider: HeadersProvider,
-          filterPlaceHolder: HEADERS_FILTER_TEXT,
-          sectionNames: Object.keys(object),
-          renderValue: this.renderValue,
-          openLink,
-        }),
-||||||| merged common ancestors
-    return (
-      div({ className: "panel-container" },
-        div({ className: "headers-overview" },
-          summaryUrl,
-          summaryMethod,
-          summaryAddress,
-          summaryStatus,
-          summaryVersion,
-          summaryRawHeaders,
-        ),
-        PropertiesView({
-          object,
-          provider: HeadersProvider,
-          filterPlaceHolder: HEADERS_FILTER_TEXT,
-          sectionNames: Object.keys(object),
-          renderValue: this.renderValue,
-          openLink,
-        }),
-=======
     const summaryVersion = httpVersion
       ? this.renderSummary(SUMMARY_VERSION, httpVersion)
       : null;
@@ -673,7 +505,6 @@ class HeadersPanel extends Component {
           onClick: cloneSelectedRequest,
         },
         EDIT_AND_RESEND
->>>>>>> upstream-releases
       )
     );
 

@@ -21,15 +21,8 @@ class VideoFrame {
  public:
   typedef mozilla::layers::Image Image;
 
-<<<<<<< HEAD
-  VideoFrame(already_AddRefed<Image>& aImage,
-             const gfx::IntSize& aIntrinsicSize);
-||||||| merged common ancestors
-  VideoFrame(already_AddRefed<Image>& aImage, const gfx::IntSize& aIntrinsicSize);
-=======
   VideoFrame(already_AddRefed<Image> aImage,
              const gfx::IntSize& aIntrinsicSize);
->>>>>>> upstream-releases
   VideoFrame();
   ~VideoFrame();
 
@@ -115,24 +108,11 @@ class VideoSegment : public MediaSegmentBase<VideoSegment, VideoChunk> {
 
   ~VideoSegment();
 
-<<<<<<< HEAD
-  void AppendFrame(already_AddRefed<Image>&& aImage, StreamTime aDuration,
-||||||| merged common ancestors
   void AppendFrame(already_AddRefed<Image>&& aImage,
-                   StreamTime aDuration,
-=======
-  void AppendFrame(already_AddRefed<Image>&& aImage,
->>>>>>> upstream-releases
                    const IntSize& aIntrinsicSize,
                    const PrincipalHandle& aPrincipalHandle,
                    bool aForceBlack = false,
                    TimeStamp aTimeStamp = TimeStamp::Now());
-<<<<<<< HEAD
-  const VideoFrame* GetLastFrame(StreamTime* aStart = nullptr) {
-||||||| merged common ancestors
-  const VideoFrame* GetLastFrame(StreamTime* aStart = nullptr)
-  {
-=======
   void ExtendLastFrameBy(StreamTime aDuration) {
     if (aDuration <= 0) {
       return;
@@ -145,7 +125,6 @@ class VideoSegment : public MediaSegmentBase<VideoSegment, VideoChunk> {
     mDuration += aDuration;
   }
   const VideoFrame* GetLastFrame(StreamTime* aStart = nullptr) {
->>>>>>> upstream-releases
     VideoChunk* c = GetLastChunk();
     if (!c) {
       return nullptr;

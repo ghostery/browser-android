@@ -26,21 +26,10 @@ using namespace mozilla::dom;
 
 nsDOMCSSDeclaration::~nsDOMCSSDeclaration() = default;
 
-<<<<<<< HEAD
-/* virtual */ JSObject* nsDOMCSSDeclaration::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-  return dom::CSS2Properties_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-/* virtual */ JSObject*
-nsDOMCSSDeclaration::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return dom::CSS2Properties_Binding::Wrap(aCx, this, aGivenProto);
-=======
 /* virtual */
 JSObject* nsDOMCSSDeclaration::WrapObject(JSContext* aCx,
                                           JS::Handle<JSObject*> aGivenProto) {
   return CSS2Properties_Binding::Wrap(aCx, this, aGivenProto);
->>>>>>> upstream-releases
 }
 
 NS_IMPL_QUERY_INTERFACE(nsDOMCSSDeclaration, nsICSSDeclaration)
@@ -58,17 +47,6 @@ nsresult nsDOMCSSDeclaration::GetPropertyValue(const nsCSSPropertyID aPropID,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsDOMCSSDeclaration::SetPropertyValue(
-    const nsCSSPropertyID aPropID, const nsAString& aValue,
-    nsIPrincipal* aSubjectPrincipal) {
-||||||| merged common ancestors
-nsresult
-nsDOMCSSDeclaration::SetPropertyValue(const nsCSSPropertyID aPropID,
-                                      const nsAString& aValue,
-                                      nsIPrincipal* aSubjectPrincipal)
-{
-=======
 nsresult nsDOMCSSDeclaration::SetPropertyValue(
     const nsCSSPropertyID aPropID, const nsAString& aValue,
     nsIPrincipal* aSubjectPrincipal) {
@@ -76,7 +54,6 @@ nsresult nsDOMCSSDeclaration::SetPropertyValue(
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   switch (aPropID) {
     case eCSSProperty_background_position:
     case eCSSProperty_background_position_x:
@@ -122,17 +99,6 @@ void nsDOMCSSDeclaration::GetCssText(nsAString& aCssText) {
   }
 }
 
-<<<<<<< HEAD
-void nsDOMCSSDeclaration::SetCssText(const nsAString& aCssText,
-                                     nsIPrincipal* aSubjectPrincipal,
-                                     ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-nsDOMCSSDeclaration::SetCssText(const nsAString& aCssText,
-                                nsIPrincipal* aSubjectPrincipal,
-                                ErrorResult& aRv)
-{
-=======
 void nsDOMCSSDeclaration::SetCssText(const nsAString& aCssText,
                                      nsIPrincipal* aSubjectPrincipal,
                                      ErrorResult& aRv) {
@@ -140,7 +106,6 @@ void nsDOMCSSDeclaration::SetCssText(const nsAString& aCssText,
     return;
   }
 
->>>>>>> upstream-releases
   // We don't need to *do* anything with the old declaration, but we need
   // to ensure that it exists, or else SetCSSDeclaration may crash.
   RefPtr<DeclarationBlock> created;
@@ -221,18 +186,11 @@ NS_IMETHODIMP
 nsDOMCSSDeclaration::SetProperty(const nsAString& aPropertyName,
                                  const nsAString& aValue,
                                  const nsAString& aPriority,
-<<<<<<< HEAD
-                                 nsIPrincipal* aSubjectPrincipal) {
-||||||| merged common ancestors
-                                 nsIPrincipal* aSubjectPrincipal)
-{
-=======
                                  nsIPrincipal* aSubjectPrincipal) {
   if (IsReadOnly()) {
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   if (aValue.IsEmpty()) {
     // If the new value of the property is an empty string we remove the
     // property.
@@ -265,18 +223,11 @@ nsDOMCSSDeclaration::SetProperty(const nsAString& aPropertyName,
 
 NS_IMETHODIMP
 nsDOMCSSDeclaration::RemoveProperty(const nsAString& aPropertyName,
-<<<<<<< HEAD
-                                    nsAString& aReturn) {
-||||||| merged common ancestors
-                                    nsAString& aReturn)
-{
-=======
                                     nsAString& aReturn) {
   if (IsReadOnly()) {
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   nsresult rv = GetPropertyValue(aPropertyName, aReturn);
   NS_ENSURE_SUCCESS(rv, rv);
   return RemovePropertyInternal(aPropertyName);
@@ -339,18 +290,6 @@ nsresult nsDOMCSSDeclaration::ModifyDeclaration(
   return SetCSSDeclaration(decl, aClosureData);
 }
 
-<<<<<<< HEAD
-nsresult nsDOMCSSDeclaration::ParsePropertyValue(
-    const nsCSSPropertyID aPropID, const nsAString& aPropValue,
-    bool aIsImportant, nsIPrincipal* aSubjectPrincipal) {
-||||||| merged common ancestors
-nsresult
-nsDOMCSSDeclaration::ParsePropertyValue(const nsCSSPropertyID aPropID,
-                                        const nsAString& aPropValue,
-                                        bool aIsImportant,
-                                        nsIPrincipal* aSubjectPrincipal)
-{
-=======
 nsresult nsDOMCSSDeclaration::ParsePropertyValue(
     const nsCSSPropertyID aPropID, const nsAString& aPropValue,
     bool aIsImportant, nsIPrincipal* aSubjectPrincipal) {
@@ -360,7 +299,6 @@ nsresult nsDOMCSSDeclaration::ParsePropertyValue(
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   DeclarationBlockMutationClosure closure = {};
   MutationClosureData closureData;
   GetPropertyChangeClosure(&closure, &closureData);
@@ -401,17 +339,11 @@ nsresult nsDOMCSSDeclaration::ParseCustomPropertyValue(
 
 nsresult nsDOMCSSDeclaration::RemovePropertyInternal(nsCSSPropertyID aPropID) {
   DeclarationBlock* olddecl =
-<<<<<<< HEAD
-      GetOrCreateCSSDeclaration(eOperation_RemoveProperty, nullptr);
-||||||| merged common ancestors
-    GetOrCreateCSSDeclaration(eOperation_RemoveProperty, nullptr);
-=======
       GetOrCreateCSSDeclaration(eOperation_RemoveProperty, nullptr);
   if (IsReadOnly()) {
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   if (!olddecl) {
     return NS_OK;  // no decl, so nothing to remove
   }
@@ -434,21 +366,12 @@ nsresult nsDOMCSSDeclaration::RemovePropertyInternal(nsCSSPropertyID aPropID) {
   return SetCSSDeclaration(decl, &closureData);
 }
 
-<<<<<<< HEAD
-nsresult nsDOMCSSDeclaration::RemovePropertyInternal(
-    const nsAString& aPropertyName) {
-||||||| merged common ancestors
-nsresult
-nsDOMCSSDeclaration::RemovePropertyInternal(const nsAString& aPropertyName)
-{
-=======
 nsresult nsDOMCSSDeclaration::RemovePropertyInternal(
     const nsAString& aPropertyName) {
   if (IsReadOnly()) {
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   DeclarationBlock* olddecl =
       GetOrCreateCSSDeclaration(eOperation_RemoveProperty, nullptr);
   if (!olddecl) {

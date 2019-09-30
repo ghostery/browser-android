@@ -44,18 +44,11 @@ class nsEffectiveTLDService final : public nsIEffectiveTLDService,
   // The DAFSA provides a compact encoding of the rather large eTLD list.
   mozilla::Dafsa mGraph;
 
-<<<<<<< HEAD
-  struct TLDCacheEntry {
-||||||| merged common ancestors
-  struct TLDCacheEntry
-  {
-=======
   // Note that the cache entries here can record entries that were cached
   // successfully or unsuccessfully.  mResult must be checked before using an
   // entry.  If it's a success error code, the cache entry is valid and can be
   // used.
   struct TLDCacheEntry {
->>>>>>> upstream-releases
     nsCString mHost;
     nsCString mBaseDomain;
     nsresult mResult;

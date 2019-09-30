@@ -516,54 +516,6 @@ class ContrastRatio extends AuditReport {
       nodeType: "span",
       parent: root,
       attributes: {
-<<<<<<< HEAD
-        "class": "contrast-ratio-label",
-        "id": "contrast-ratio-label",
-      },
-      prefix: this.prefix,
-    });
-
-    createNode(this.win, {
-      nodeType: "span",
-      parent: root,
-      attributes: {
-        "class": "contrast-ratio-error",
-        "id": "contrast-ratio-error",
-      },
-      prefix: this.prefix,
-      text: L10N.getStr("accessibility.contrast.ratio.error"),
-    });
-
-    createNode(this.win, {
-      nodeType: "span",
-      parent: root,
-      attributes: {
-        "class": "contrast-ratio",
-        "id": "contrast-ratio-min",
-      },
-      prefix: this.prefix,
-    });
-
-    createNode(this.win, {
-      nodeType: "span",
-      parent: root,
-      attributes: {
-        "class": "contrast-ratio-separator",
-        "id": "contrast-ratio-separator",
-      },
-      prefix: this.prefix,
-    });
-
-    createNode(this.win, {
-      nodeType: "span",
-      parent: root,
-      attributes: {
-        "class": "contrast-ratio",
-        "id": "contrast-ratio-max",
-||||||| merged common ancestors
-        "class": "contrast-ratio",
-        "id": "contrast-ratio",
-=======
         class: "contrast-ratio-label",
         id: "contrast-ratio-label",
       },
@@ -607,26 +559,11 @@ class ContrastRatio extends AuditReport {
       attributes: {
         class: "contrast-ratio",
         id: "contrast-ratio-max",
->>>>>>> upstream-releases
       },
       prefix: this.prefix,
     });
   }
 
-<<<<<<< HEAD
-  _fillAndStyleContrastValue(el, { value, isLargeText, color, backgroundColor }) {
-    value = value.toFixed(2);
-    const style = getContrastRatioScoreStyle(value, isLargeText);
-    this.setTextContent(el, value);
-    el.classList.add(style);
-    el.setAttribute("style",
-      `--accessibility-highlighter-contrast-ratio-color: rgba(${color});` +
-      `--accessibility-highlighter-contrast-ratio-bg: rgba(${backgroundColor});`);
-    el.removeAttribute("hidden");
-  }
-
-||||||| merged common ancestors
-=======
   _fillAndStyleContrastValue(el, { value, className, color, backgroundColor }) {
     value = value.toFixed(2);
     this.setTextContent(el, value);
@@ -639,7 +576,6 @@ class ContrastRatio extends AuditReport {
     el.removeAttribute("hidden");
   }
 
->>>>>>> upstream-releases
   /**
    * Update contrast ratio score infobar markup.
    * @param  {Object}
@@ -648,24 +584,6 @@ class ContrastRatio extends AuditReport {
    *         True if the contrast ratio markup was updated correctly and infobar audit
    *         block should be visible.
    */
-<<<<<<< HEAD
-  update({ contrastRatio }) {
-    const els = {};
-    for (const key of ["label", "min", "max", "error", "separator"]) {
-      const el = els[key] = this.getElement(`contrast-ratio-${key}`);
-      if (["min", "max"].includes(key)) {
-        ["fail", "AA", "AAA"].forEach(className => el.classList.remove(className));
-        this.setTextContent(el, "");
-      }
-
-      el.setAttribute("hidden", true);
-      el.removeAttribute("style");
-    }
-||||||| merged common ancestors
-  update({ contrastRatio }) {
-    const el = this.getElement("contrast-ratio");
-    ["fail", "AA", "AAA"].forEach(style => el.classList.remove(style));
-=======
   update(audit) {
     const els = {};
     for (const key of ["label", "min", "max", "error", "separator"]) {
@@ -676,7 +594,6 @@ class ContrastRatio extends AuditReport {
         );
         this.setTextContent(el, "");
       }
->>>>>>> upstream-releases
 
       el.setAttribute("hidden", true);
       el.removeAttribute("style");
@@ -691,35 +608,6 @@ class ContrastRatio extends AuditReport {
       return false;
     }
 
-<<<<<<< HEAD
-    const { isLargeText, error } = contrastRatio;
-    this.setTextContent(els.label,
-      L10N.getStr(`accessibility.contrast.ratio.label${isLargeText ? ".large" : ""}`));
-    els.label.removeAttribute("hidden");
-    if (error) {
-      els.error.removeAttribute("hidden");
-      return true;
-    }
-
-    if (contrastRatio.value) {
-      const { value, color, backgroundColor } = contrastRatio;
-      this._fillAndStyleContrastValue(els.min,
-        { value, isLargeText, color, backgroundColor });
-      return true;
-    }
-
-    const { min, max, color, backgroundColorMin, backgroundColorMax } = contrastRatio;
-    this._fillAndStyleContrastValue(els.min,
-      { value: min, isLargeText, color, backgroundColor: backgroundColorMin });
-    els.separator.removeAttribute("hidden");
-    this._fillAndStyleContrastValue(els.max,
-      { value: max, isLargeText, color, backgroundColor: backgroundColorMax });
-
-||||||| merged common ancestors
-    el.classList.add(getContrastRatioScoreStyle(contrastRatio));
-    this.setTextContent(el,
-      L10N.getFormatStr("accessibility.contrast.ratio", contrastRatio.ratio.toFixed(2)));
-=======
     const { isLargeText, error } = contrastRatio;
     this.setTextContent(
       els.label,
@@ -846,7 +734,6 @@ class TextLabel extends AuditReport {
     el.classList.add(score);
     el.removeAttribute("hidden");
 
->>>>>>> upstream-releases
     return true;
   }
 }
@@ -906,56 +793,6 @@ function getBounds(win, { x, y, w, h, zoom }) {
   return { left, right, top, bottom, width, height };
 }
 
-<<<<<<< HEAD
-/**
- * Get contrast ratio score styling to be applied on the element that renders the contrast
- * ratio.
- * @param  {Number} ratio
- *         Value of the contrast ratio for a given accessible object.
- * @param  {Boolean} isLargeText
- *         True if the accessible object contains large text.
- * @return {String}
- *         CSS class that represents the appropriate contrast ratio score styling.
- */
-function getContrastRatioScoreStyle(ratio, isLargeText) {
-  const levels = isLargeText ? { AA: 3, AAA: 4.5 } : { AA: 4.5, AAA: 7 };
-
-  let style = "fail";
-  if (ratio >= levels.AAA) {
-    style = "AAA";
-  } else if (ratio >= levels.AA) {
-    style = "AA";
-  }
-
-  return style;
-}
-
-||||||| merged common ancestors
-/**
- * Get contrast ratio score styling to be applied on the element that renders the contrast
- * ratio.
- * @param  {Number} options.ratio
- *         Value of the contrast ratio for a given accessible object.
- * @param  {Boolean} options.largeText
- *         True if the accessible object contains large text.
- * @return {String}
- *         CSS class that represents the appropriate contrast ratio score styling.
- */
-function getContrastRatioScoreStyle({ ratio, largeText }) {
-  const levels = largeText ? { AA: 3, AAA: 4.5 } : { AA: 4.5, AAA: 7 };
-
-  let style = "fail";
-  if (ratio >= levels.AAA) {
-    style = "AAA";
-  } else if (ratio >= levels.AA) {
-    style = "AA";
-  }
-
-  return style;
-}
-
-=======
->>>>>>> upstream-releases
 exports.MAX_STRING_LENGTH = MAX_STRING_LENGTH;
 exports.getBounds = getBounds;
 exports.Infobar = Infobar;

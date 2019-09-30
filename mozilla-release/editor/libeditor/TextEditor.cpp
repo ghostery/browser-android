@@ -65,26 +65,6 @@ namespace mozilla {
 
 using namespace dom;
 
-<<<<<<< HEAD
-template already_AddRefed<Element> TextEditor::InsertBrElementWithTransaction(
-    const EditorDOMPoint& aPointToInsert, EDirection aSelect);
-template already_AddRefed<Element> TextEditor::InsertBrElementWithTransaction(
-    const EditorRawDOMPoint& aPointToInsert, EDirection aSelect);
-
-||||||| merged common ancestors
-template already_AddRefed<Element>
-TextEditor::InsertBrElementWithTransaction(
-              Selection& aSelection,
-              const EditorDOMPoint& aPointToInsert,
-              EDirection aSelect);
-template already_AddRefed<Element>
-TextEditor::InsertBrElementWithTransaction(
-              Selection& aSelection,
-              const EditorRawDOMPoint& aPointToInsert,
-              EDirection aSelect);
-
-=======
->>>>>>> upstream-releases
 TextEditor::TextEditor()
     : mWrapColumn(0),
       mMaxTextLength(-1),
@@ -136,24 +116,9 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(TextEditor)
   NS_INTERFACE_MAP_ENTRY(nsIPlaintextEditor)
 NS_INTERFACE_MAP_END_INHERITING(EditorBase)
 
-<<<<<<< HEAD
-nsresult TextEditor::Init(nsIDocument& aDoc, Element* aRoot,
-                          nsISelectionController* aSelCon, uint32_t aFlags,
-                          const nsAString& aInitialValue) {
-||||||| merged common ancestors
-
-nsresult
-TextEditor::Init(nsIDocument& aDoc,
-                 Element* aRoot,
-                 nsISelectionController* aSelCon,
-                 uint32_t aFlags,
-                 const nsAString& aInitialValue)
-{
-=======
 nsresult TextEditor::Init(Document& aDoc, Element* aRoot,
                           nsISelectionController* aSelCon, uint32_t aFlags,
                           const nsAString& aInitialValue) {
->>>>>>> upstream-releases
   if (mRules) {
     mRules->DetachEditor();
   }
@@ -274,13 +239,7 @@ TextEditor::SetDocumentCharacterSet(const nsACString& characterSet) {
 
   // Create a new meta charset tag
   RefPtr<Element> metaElement =
-<<<<<<< HEAD
-      CreateNodeWithTransaction(*nsGkAtoms::meta, atStartOfHeadNode);
-||||||| merged common ancestors
-    CreateNodeWithTransaction(*nsGkAtoms::meta, atStartOfHeadNode);
-=======
       CreateNodeWithTransaction(*nsGkAtoms::meta, EditorDOMPoint(headNode, 0));
->>>>>>> upstream-releases
   if (NS_WARN_IF(!metaElement)) {
     return NS_OK;
   }
@@ -300,18 +259,8 @@ TextEditor::SetDocumentCharacterSet(const nsACString& characterSet) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool TextEditor::UpdateMetaCharset(nsIDocument& aDocument,
-                                   const nsACString& aCharacterSet) {
-||||||| merged common ancestors
-bool
-TextEditor::UpdateMetaCharset(nsIDocument& aDocument,
-                              const nsACString& aCharacterSet)
-{
-=======
 bool TextEditor::UpdateMetaCharset(Document& aDocument,
                                    const nsACString& aCharacterSet) {
->>>>>>> upstream-releases
   // get a list of META tags
   RefPtr<nsContentList> metaList =
       aDocument.GetElementsByTagName(NS_LITERAL_STRING("meta"));
@@ -452,20 +401,6 @@ nsresult TextEditor::HandleKeyPressEvent(WidgetKeyboardEvent* aKeyboardEvent) {
   return OnInputText(str);
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::OnInputText(const nsAString& aStringToInsert) {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eInsertText);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this, *nsGkAtoms::TypingTxnName);
-||||||| merged common ancestors
-nsresult
-TextEditor::OnInputText(const nsAString& aStringToInsert)
-{
-  AutoPlaceholderBatch batch(this, nsGkAtoms::TypingTxnName);
-=======
 nsresult TextEditor::OnInputText(const nsAString& aStringToInsert) {
   AutoEditActionDataSetter editActionData(*this, EditAction::eInsertText);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -475,7 +410,6 @@ nsresult TextEditor::OnInputText(const nsAString& aStringToInsert) {
   editActionData.SetData(aStringToInsert);
 
   AutoPlaceholderBatch treatAsOneTransaction(*this, *nsGkAtoms::TypingTxnName);
->>>>>>> upstream-releases
   nsresult rv = InsertTextAsSubAction(aStringToInsert);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
@@ -483,24 +417,6 @@ nsresult TextEditor::OnInputText(const nsAString& aStringToInsert) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::InsertLineBreakAsAction() {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eInsertLineBreak);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  // XXX This may be called by execCommand() with "insertParagraph".
-  //     In such case, naming the transaction "TypingTxnName" is odd.
-  AutoPlaceholderBatch treatAsOneTransaction(*this, *nsGkAtoms::TypingTxnName);
-  nsresult rv = InsertLineBreakAsSubAction();
-||||||| merged common ancestors
-nsresult
-TextEditor::OnInputParagraphSeparator()
-{
-  AutoPlaceholderBatch batch(this, nsGkAtoms::TypingTxnName);
-  nsresult rv = InsertParagraphSeparatorAsAction();
-=======
 nsresult TextEditor::InsertLineBreakAsAction(nsIPrincipal* aPrincipal) {
   AutoEditActionDataSetter editActionData(*this, EditAction::eInsertLineBreak,
                                           aPrincipal);
@@ -512,34 +428,16 @@ nsresult TextEditor::InsertLineBreakAsAction(nsIPrincipal* aPrincipal) {
   //     In such case, naming the transaction "TypingTxnName" is odd.
   AutoPlaceholderBatch treatAsOneTransaction(*this, *nsGkAtoms::TypingTxnName);
   nsresult rv = InsertLineBreakAsSubAction();
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-already_AddRefed<Element> TextEditor::InsertBrElementWithTransaction(
-    const EditorDOMPointBase<PT, CT>& aPointToInsert,
-    EDirection aSelect /* = eNone */) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-||||||| merged common ancestors
-template<typename PT, typename CT>
-already_AddRefed<Element>
-TextEditor::InsertBrElementWithTransaction(
-              Selection& aSelection,
-              const EditorDOMPointBase<PT, CT>& aPointToInsert,
-              EDirection aSelect /* = eNone */)
-{
-=======
 already_AddRefed<Element> TextEditor::InsertBrElementWithTransaction(
     const EditorDOMPoint& aPointToInsert, EDirection aSelect /* = eNone */) {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aPointToInsert.IsSet())) {
     return nullptr;
   }
@@ -693,13 +591,7 @@ nsresult TextEditor::ExtendSelectionForDelete(nsIEditor::EDirection* aAction) {
 
         if (insertionPoint.IsInTextNode()) {
           const nsTextFragment* data =
-<<<<<<< HEAD
-              insertionPoint.GetContainerAsText()->GetText();
-||||||| merged common ancestors
-            insertionPoint.GetContainerAsText()->GetText();
-=======
               &insertionPoint.GetContainerAsText()->TextFragment();
->>>>>>> upstream-releases
           uint32_t offset = insertionPoint.Offset();
           if ((offset > 1 && NS_IS_LOW_SURROGATE(data->CharAt(offset - 1)) &&
                NS_IS_HIGH_SURROGATE(data->CharAt(offset - 2))) ||
@@ -745,19 +637,9 @@ TextEditor::DeleteSelection(EDirection aAction, EStripWrappers aStripWrappers) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::DeleteSelectionAsAction(EDirection aDirection,
-                                             EStripWrappers aStripWrappers) {
-||||||| merged common ancestors
-nsresult
-TextEditor::DeleteSelectionAsAction(EDirection aDirection,
-                                    EStripWrappers aStripWrappers)
-{
-=======
 nsresult TextEditor::DeleteSelectionAsAction(EDirection aDirection,
                                              EStripWrappers aStripWrappers,
                                              nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStripWrappers == eStrip || aStripWrappers == eNoStrip);
   // Showing this assertion is fine if this method is called by outside via
   // mutation event listener or something.  Otherwise, this is called by
@@ -788,27 +670,9 @@ nsresult TextEditor::DeleteSelectionAsAction(EDirection aDirection,
       editAction = EditAction::eDeleteToEndOfSoftLine;
       break;
   }
-<<<<<<< HEAD
-
-  AutoEditActionDataSetter editActionData(*this, editAction);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-||||||| merged common ancestors
-  return NS_OK;
-}
-
-nsresult
-TextEditor::DeleteSelectionAsSubAction(EDirection aDirection,
-                                       EStripWrappers aStripWrappers)
-{
-  MOZ_ASSERT(aStripWrappers == eStrip || aStripWrappers == eNoStrip);
-  MOZ_ASSERT(mPlaceholderBatch);
-
-  if (!mRules) {
-=======
 
   AutoEditActionDataSetter editActionData(*this, editAction, aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_INITIALIZED;
   }
 
@@ -839,55 +703,6 @@ TextEditor::DeleteSelectionAsSubAction(EDirection aDirection,
     }
   }
 
-<<<<<<< HEAD
-  // If Selection is still NOT collapsed, it does not important removing
-  // range of the operation since we'll remove the selected content.  However,
-  // information of direction (backward or forward) may be important for
-  // web apps.  E.g., web apps may want to mark selected range as "deleted"
-  // and move caret before or after the range.  Therefore, we should forget
-  // only the range information but keep range information.  See discussion
-  // of the spec issue for the detail:
-  // https://github.com/w3c/input-events/issues/82
-  if (!SelectionRefPtr()->IsCollapsed()) {
-    switch (editAction) {
-      case EditAction::eDeleteWordBackward:
-      case EditAction::eDeleteToBeginningOfSoftLine:
-        editActionData.UpdateEditAction(EditAction::eDeleteBackward);
-        break;
-      case EditAction::eDeleteWordForward:
-      case EditAction::eDeleteToEndOfSoftLine:
-        editActionData.UpdateEditAction(EditAction::eDeleteForward);
-        break;
-      default:
-        break;
-    }
-  }
-
-  // delete placeholder txns merge.
-  AutoPlaceholderBatch treatAsOneTransaction(*this, *nsGkAtoms::DeleteTxnName);
-  nsresult rv = DeleteSelectionAsSubAction(aDirection, aStripWrappers);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-}
-
-nsresult TextEditor::DeleteSelectionAsSubAction(EDirection aDirection,
-                                                EStripWrappers aStripWrappers) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-  MOZ_ASSERT(mPlaceholderBatch);
-
-  MOZ_ASSERT(aStripWrappers == eStrip || aStripWrappers == eNoStrip);
-
-  if (!mRules) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  // Protect the edit rules object from dying
-  RefPtr<TextEditRules> rules(mRules);
-
-||||||| merged common ancestors
-=======
   // If Selection is still NOT collapsed, it does not important removing
   // range of the operation since we'll remove the selected content.  However,
   // information of direction (backward or forward) may be important for
@@ -934,7 +749,6 @@ nsresult TextEditor::DeleteSelectionAsSubAction(EDirection aDirection,
   // Protect the edit rules object from dying
   RefPtr<TextEditRules> rules(mRules);
 
->>>>>>> upstream-releases
   AutoTopLevelEditSubActionNotifier maybeTopLevelEditSubAction(
       *this, EditSubAction::eDeleteSelectedContent, aDirection);
   EditSubActionInfo subActionInfo(EditSubAction::eDeleteSelectedContent);
@@ -1050,18 +864,7 @@ already_AddRefed<Element> TextEditor::DeleteSelectionAndCreateElement(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  EditorRawDOMPoint pointToInsert(SelectionRefPtr()->AnchorRef());
-||||||| merged common ancestors
-  RefPtr<Selection> selection = GetSelection();
-  if (NS_WARN_IF(!selection)) {
-    return nullptr;
-  }
-
-  EditorRawDOMPoint pointToInsert(selection->AnchorRef());
-=======
   EditorDOMPoint pointToInsert(SelectionRefPtr()->AnchorRef());
->>>>>>> upstream-releases
   if (!pointToInsert.IsSet()) {
     return nullptr;
   }
@@ -1164,16 +967,8 @@ TextEditor::InsertText(const nsAString& aStringToInsert) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::InsertTextAsAction(const nsAString& aStringToInsert) {
-||||||| merged common ancestors
-nsresult
-TextEditor::InsertTextAsAction(const nsAString& aStringToInsert)
-{
-=======
 nsresult TextEditor::InsertTextAsAction(const nsAString& aStringToInsert,
                                         nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   // Showing this assertion is fine if this method is called by outside via
   // mutation event listener or something.  Otherwise, this is called by
   // wrong method.
@@ -1182,16 +977,6 @@ nsresult TextEditor::InsertTextAsAction(const nsAString& aStringToInsert,
                "operation "
                "unless mutation event listener nests some operations");
 
-<<<<<<< HEAD
-  AutoEditActionDataSetter editActionData(*this, EditAction::eInsertText);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this);
-||||||| merged common ancestors
-  AutoPlaceholderBatch batch(this, nullptr);
-=======
   AutoEditActionDataSetter editActionData(*this, EditAction::eInsertText,
                                           aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -1203,7 +988,6 @@ nsresult TextEditor::InsertTextAsAction(const nsAString& aStringToInsert,
   editActionData.SetData(aStringToInsert);
 
   AutoPlaceholderBatch treatAsOneTransaction(*this);
->>>>>>> upstream-releases
   nsresult rv = InsertTextAsSubAction(aStringToInsert);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
@@ -1258,28 +1042,6 @@ nsresult TextEditor::InsertTextAsSubAction(const nsAString& aStringToInsert) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TextEditor::InsertLineBreak() {
-  if (NS_WARN_IF(IsSingleLineEditor())) {
-    return NS_ERROR_FAILURE;
-  }
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eInsertLineBreak);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this);
-  nsresult rv = InsertLineBreakAsSubAction();
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-TextEditor::InsertLineBreak()
-{
-  return InsertParagraphSeparatorAsAction();
-=======
 TextEditor::InsertLineBreak() {
   if (NS_WARN_IF(IsSingleLineEditor())) {
     return NS_ERROR_FAILURE;
@@ -1296,7 +1058,6 @@ TextEditor::InsertLineBreak() {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult TextEditor::InsertLineBreakAsSubAction() {
@@ -1310,26 +1071,9 @@ nsresult TextEditor::InsertLineBreakAsSubAction() {
   RefPtr<TextEditRules> rules(mRules);
 
   AutoTopLevelEditSubActionNotifier maybeTopLevelEditSubAction(
-<<<<<<< HEAD
       *this, EditSubAction::eInsertLineBreak, nsIEditor::eNext);
 
   EditSubActionInfo subActionInfo(EditSubAction::eInsertLineBreak);
-||||||| merged common ancestors
-                                      *this,
-                                      EditSubAction::eInsertParagraphSeparator,
-                                      nsIEditor::eNext);
-
-  RefPtr<Selection> selection = GetSelection();
-  if (NS_WARN_IF(!selection)) {
-    return NS_ERROR_FAILURE;
-  }
-
-  EditSubActionInfo subActionInfo(EditSubAction::eInsertParagraphSeparator);
-=======
-      *this, EditSubAction::eInsertLineBreak, nsIEditor::eNext);
-
-  EditSubActionInfo subActionInfo(EditSubAction::eInsertLineBreak);
->>>>>>> upstream-releases
   subActionInfo.maxLength = mMaxTextLength;
   bool cancel, handled;
   nsresult rv = rules->WillDoAction(subActionInfo, &cancel, &handled);
@@ -1347,28 +1091,10 @@ nsresult TextEditor::InsertLineBreakAsSubAction() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::SetText(const nsAString& aString) {
-||||||| merged common ancestors
-nsresult
-TextEditor::SetText(const nsAString& aString)
-{
-=======
 nsresult TextEditor::SetTextAsAction(const nsAString& aString,
                                      nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aString.FindChar(static_cast<char16_t>('\r')) == kNotFound);
 
-<<<<<<< HEAD
-  AutoEditActionDataSetter editActionData(*this, EditAction::eSetText);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this);
-||||||| merged common ancestors
-  AutoPlaceholderBatch batch(this, nullptr);
-=======
   AutoEditActionDataSetter editActionData(*this, EditAction::eSetText,
                                           aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -1376,7 +1102,6 @@ nsresult TextEditor::SetTextAsAction(const nsAString& aString,
   }
 
   AutoPlaceholderBatch treatAsOneTransaction(*this);
->>>>>>> upstream-releases
   nsresult rv = SetTextAsSubAction(aString);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
@@ -1384,22 +1109,6 @@ nsresult TextEditor::SetTextAsAction(const nsAString& aString,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::ReplaceTextAsAction(
-    const nsAString& aString, nsRange* aReplaceRange /* = nullptr */) {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eReplaceText);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this);
-||||||| merged common ancestors
-nsresult
-TextEditor::ReplaceTextAsAction(const nsAString& aString,
-                                nsRange* aReplaceRange /* = nullptr */)
-{
-  AutoPlaceholderBatch batch(this, nullptr);
-=======
 nsresult TextEditor::ReplaceTextAsAction(const nsAString& aString,
                                          nsRange* aReplaceRange,
                                          nsIPrincipal* aPrincipal) {
@@ -1415,7 +1124,6 @@ nsresult TextEditor::ReplaceTextAsAction(const nsAString& aString,
   }
 
   AutoPlaceholderBatch treatAsOneTransaction(*this);
->>>>>>> upstream-releases
 
   // This should emulates inserting text for better undo/redo behavior.
   AutoTopLevelEditSubActionNotifier maybeTopLevelEditSubAction(
@@ -1445,14 +1153,8 @@ nsresult TextEditor::ReplaceTextAsAction(const nsAString& aString,
     return rv;
   }
   ErrorResult error;
-<<<<<<< HEAD
-  SelectionRefPtr()->AddRange(*aReplaceRange, error);
-||||||| merged common ancestors
-  selection->AddRange(*aReplaceRange, error);
-=======
   SelectionRefPtr()->AddRangeAndSelectFramesAndNotifyListeners(*aReplaceRange,
                                                                error);
->>>>>>> upstream-releases
   if (NS_WARN_IF(error.Failed())) {
     return error.StealNSResult();
   }
@@ -1495,57 +1197,27 @@ nsresult TextEditor::SetTextAsSubAction(const nsAString& aString) {
     // Note that do not notify selectionchange caused by selecting all text
     // because it's preparation of our delete implementation so web apps
     // shouldn't receive such selectionchange before the first mutation.
-<<<<<<< HEAD
-    AutoUpdateViewBatch preventSelectionChangeEvent(*this);
-||||||| merged common ancestors
-    AutoUpdateViewBatch preventSelectionChangeEvent(this);
-=======
     AutoUpdateViewBatch preventSelectionChangeEvent(*this);
 
     Element* rootElement = GetRoot();
     if (NS_WARN_IF(!rootElement)) {
       return NS_ERROR_FAILURE;
     }
->>>>>>> upstream-releases
 
     // We want to select trailing BR node to remove all nodes to replace all,
     // but TextEditor::SelectEntireDocument doesn't select that BR node.
     if (rules->DocumentIsEmpty()) {
-<<<<<<< HEAD
-      // if it's empty, don't select entire doc - that would select
-      // the bogus node
-      Element* rootElement = GetRoot();
-      if (NS_WARN_IF(!rootElement)) {
-        return NS_ERROR_FAILURE;
-      }
-      rv = SelectionRefPtr()->Collapse(rootElement, 0);
-||||||| merged common ancestors
-      // if it's empty, don't select entire doc - that would select
-      // the bogus node
-      Element* rootElement = GetRoot();
-      if (NS_WARN_IF(!rootElement)) {
-        return NS_ERROR_FAILURE;
-      }
-      rv = selection->Collapse(rootElement, 0);
-=======
       rv = SelectionRefPtr()->Collapse(rootElement, 0);
       NS_WARNING_ASSERTION(
           NS_SUCCEEDED(rv),
           "Failed to move caret to start of the editor root element");
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      rv = EditorBase::SelectEntireDocument();
-||||||| merged common ancestors
-      rv = EditorBase::SelectEntireDocument(selection);
-=======
       ErrorResult error;
       SelectionRefPtr()->SelectAllChildren(*rootElement, error);
       NS_WARNING_ASSERTION(
           !error.Failed(),
           "Failed to select all children of the editor root element");
       rv = error.StealNSResult();
->>>>>>> upstream-releases
     }
     if (NS_SUCCEEDED(rv)) {
       rv = ReplaceSelectionAsSubAction(aString);
@@ -1623,7 +1295,6 @@ nsresult TextEditor::OnCompositionChange(
   MOZ_ASSERT(aCompositionChangeEvent.mMessage == eCompositionChange,
              "The event should be eCompositionChange");
 
-<<<<<<< HEAD
   if (NS_WARN_IF(!mComposition)) {
     return NS_ERROR_FAILURE;
   }
@@ -1634,49 +1305,6 @@ nsresult TextEditor::OnCompositionChange(
     return NS_ERROR_NOT_INITIALIZED;
   }
 
-  if (!EnsureComposition(aCompositionChangeEvent)) {
-    return NS_OK;
-||||||| merged common ancestors
-  if (!EnsureComposition(aCompsitionChangeEvent)) {
-    return NS_OK;
-=======
-  if (NS_WARN_IF(!mComposition)) {
-    return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  // If:
-  // - new composition string is not empty,
-  // - there is no composition string in the DOM tree,
-  // - and there is non-collapsed Selection,
-  // the selected content will be removed by this composition.
-  if (aCompositionChangeEvent.mData.IsEmpty() &&
-      mComposition->String().IsEmpty() && !SelectionRefPtr()->IsCollapsed()) {
-    editActionData.UpdateEditAction(EditAction::eDeleteByComposition);
-  }
-
-  nsIPresShell* presShell = GetPresShell();
-  if (NS_WARN_IF(!presShell)) {
-||||||| merged common ancestors
-  nsIPresShell* presShell = GetPresShell();
-  if (NS_WARN_IF(!presShell)) {
-=======
-  AutoEditActionDataSetter editActionData(*this,
-                                          EditAction::eUpdateComposition);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
->>>>>>> upstream-releases
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-<<<<<<< HEAD
-||||||| merged common ancestors
-  RefPtr<Selection> selection = GetSelection();
-  if (NS_WARN_IF(!selection)) {
-    return NS_ERROR_FAILURE;
-  }
-
-=======
   // If:
   // - new composition string is not empty,
   // - there is no composition string in the DOM tree,
@@ -1706,7 +1334,6 @@ nsresult TextEditor::OnCompositionChange(
     return NS_ERROR_NOT_INITIALIZED;
   }
 
->>>>>>> upstream-releases
   // NOTE: TextComposition should receive selection change notification before
   //       CompositionChangeEventHandlingMarker notifies TextComposition of the
   //       end of handling compositionchange event because TextComposition may
@@ -1735,16 +1362,8 @@ nsresult TextEditor::OnCompositionChange(
     NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
                          "Failed to insert new composition string");
 
-<<<<<<< HEAD
-    if (caretP) {
-      caretP->SetSelection(SelectionRefPtr());
-||||||| merged common ancestors
-    if (caretP) {
-      caretP->SetSelection(selection);
-=======
     if (caret) {
       caret->SetSelection(SelectionRefPtr());
->>>>>>> upstream-releases
     }
   }
 
@@ -1769,17 +1388,6 @@ void TextEditor::OnCompositionEnd(
     return;
   }
 
-<<<<<<< HEAD
-  EditAction editAction = aCompositionEndEvent.mData.IsEmpty()
-                              ? EditAction::eCancelComposition
-                              : EditAction::eCommitComposition;
-  AutoEditActionDataSetter editActionData(*this, editAction);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return;
-  }
-
-||||||| merged common ancestors
-=======
   EditAction editAction = aCompositionEndEvent.mData.IsEmpty()
                               ? EditAction::eCancelComposition
                               : EditAction::eCommitComposition;
@@ -1798,7 +1406,6 @@ void TextEditor::OnCompositionEnd(
     editActionData.SetData(aCompositionEndEvent.mData);
   }
 
->>>>>>> upstream-releases
   // commit the IME transaction..we can get at it via the transaction mgr.
   // Note that this means IME won't work without an undo stack!
   if (mTransactionManager) {
@@ -1987,28 +1594,8 @@ TextEditor::SetWrapWidth(int32_t aWrapColumn) {
     styleValue.AppendLiteral("white-space: pre;");
   }
 
-<<<<<<< HEAD
   return rootElement->SetAttr(kNameSpaceID_None, nsGkAtoms::style, styleValue,
                               true);
-}
-
-NS_IMETHODIMP
-TextEditor::SetWrapColumn(int32_t aWrapColumn) {
-  mWrapColumn = aWrapColumn;
-  return NS_OK;
-||||||| merged common ancestors
-  return rootElement->SetAttr(kNameSpaceID_None, nsGkAtoms::style, styleValue, true);
-}
-
-NS_IMETHODIMP
-TextEditor::SetWrapColumn(int32_t aWrapColumn)
-{
-  mWrapColumn = aWrapColumn;
-  return NS_OK;
-=======
-  return rootElement->SetAttr(kNameSpaceID_None, nsGkAtoms::style, styleValue,
-                              true);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2026,16 +1613,7 @@ TextEditor::SetNewlineHandling(int32_t aNewlineHandling) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TextEditor::Undo(uint32_t aCount) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-TextEditor::Undo(uint32_t aCount)
-{
-=======
 nsresult TextEditor::UndoAsAction(uint32_t aCount, nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   // If we don't have transaction in the undo stack, we shouldn't notify
   // anybody of trying to undo since it's not useful notification but we
   // need to pay some runtime cost.
@@ -2051,20 +1629,11 @@ nsresult TextEditor::UndoAsAction(uint32_t aCount, nsIPrincipal* aPrincipal) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  AutoEditActionDataSetter editActionData(*this, EditAction::eUndo);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-||||||| merged common ancestors
-=======
   AutoEditActionDataSetter editActionData(*this, EditAction::eUndo, aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
->>>>>>> upstream-releases
   // Protect the edit rules object from dying.
   RefPtr<TextEditRules> rules(mRules);
 
@@ -2105,16 +1674,7 @@ nsresult TextEditor::UndoAsAction(uint32_t aCount, nsIPrincipal* aPrincipal) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TextEditor::Redo(uint32_t aCount) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-TextEditor::Redo(uint32_t aCount)
-{
-=======
 nsresult TextEditor::RedoAsAction(uint32_t aCount, nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   // If we don't have transaction in the redo stack, we shouldn't notify
   // anybody of trying to redo since it's not useful notification but we
   // need to pay some runtime cost.
@@ -2130,20 +1690,11 @@ nsresult TextEditor::RedoAsAction(uint32_t aCount, nsIPrincipal* aPrincipal) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  AutoEditActionDataSetter editActionData(*this, EditAction::eRedo);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-||||||| merged common ancestors
-=======
   AutoEditActionDataSetter editActionData(*this, EditAction::eRedo, aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
->>>>>>> upstream-releases
   // Protect the edit rules object from dying.
   RefPtr<TextEditRules> rules(mRules);
 
@@ -2184,22 +1735,9 @@ nsresult TextEditor::RedoAsAction(uint32_t aCount, nsIPrincipal* aPrincipal) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool TextEditor::CanCutOrCopy(PasswordFieldAllowed aPasswordFieldAllowed) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-||||||| merged common ancestors
-bool
-TextEditor::CanCutOrCopy(PasswordFieldAllowed aPasswordFieldAllowed)
-{
-  RefPtr<Selection> selection = GetSelection();
-  if (!selection) {
-    return false;
-  }
-=======
 bool TextEditor::CanCutOrCopy(
     PasswordFieldAllowed aPasswordFieldAllowed) const {
   MOZ_ASSERT(IsEditActionDataAvailable());
->>>>>>> upstream-releases
 
   if (aPasswordFieldAllowed == ePasswordFieldNotAllowed && IsPasswordEditor()) {
     return false;
@@ -2217,34 +1755,14 @@ bool TextEditor::FireClipboardEvent(EventMessage aEventMessage,
     CommitComposition();
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  if (NS_WARN_IF(!presShell)) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  NS_ENSURE_TRUE(presShell, false);
-
-  RefPtr<Selection> selection = GetSelection();
-  if (!selection) {
-=======
   RefPtr<PresShell> presShell = GetPresShell();
   if (NS_WARN_IF(!presShell)) {
->>>>>>> upstream-releases
     return false;
   }
 
-<<<<<<< HEAD
-  if (!nsCopySupport::FireClipboardEvent(aEventMessage, aSelectionType,
-                                         presShell, SelectionRefPtr(),
-                                         aActionTaken)) {
-||||||| merged common ancestors
-  if (!nsCopySupport::FireClipboardEvent(aEventMessage, aSelectionType,
-                                         presShell, selection, aActionTaken)) {
-=======
   if (!nsCopySupport::FireClipboardEvent(
           aEventMessage, aSelectionType, presShell,
           MOZ_KnownLive(SelectionRefPtr()), aActionTaken)) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -2253,26 +1771,12 @@ bool TextEditor::FireClipboardEvent(EventMessage aEventMessage,
   return !mDidPreDestroy;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TextEditor::Cut() {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eCut);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-TextEditor::Cut()
-{
-=======
 nsresult TextEditor::CutAsAction(nsIPrincipal* aPrincipal) {
   AutoEditActionDataSetter editActionData(*this, EditAction::eCut, aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
->>>>>>> upstream-releases
   bool actionTaken = false;
   if (FireClipboardEvent(eCut, nsIClipboard::kGlobalClipboard, &actionTaken)) {
     // XXX This transaction name is referred by PlaceholderTransaction::Merge()
@@ -2285,34 +1789,6 @@ nsresult TextEditor::CutAsAction(nsIPrincipal* aPrincipal) {
       actionTaken ? NS_OK : NS_ERROR_EDITOR_ACTION_CANCELED);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TextEditor::CanCut(bool* aCanCut) {
-  if (NS_WARN_IF(!aCanCut)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  // Cut is always enabled in HTML documents
-  nsCOMPtr<nsIDocument> doc = GetDocument();
-  *aCanCut = (doc && doc->IsHTMLOrXHTML()) ||
-             (IsModifiable() && CanCutOrCopy(ePasswordFieldNotAllowed));
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP
-TextEditor::CanCut(bool* aCanCut)
-{
-  NS_ENSURE_ARG_POINTER(aCanCut);
-  // Cut is always enabled in HTML documents
-  nsCOMPtr<nsIDocument> doc = GetDocument();
-  *aCanCut = (doc && doc->IsHTMLOrXHTML()) ||
-    (IsModifiable() && CanCutOrCopy(ePasswordFieldNotAllowed));
-  return NS_OK;
-=======
 bool TextEditor::CanCut() const {
   AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2328,7 +1804,6 @@ bool TextEditor::CanCut() const {
   }
 
   return IsModifiable() && CanCutOrCopy(ePasswordFieldNotAllowed);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2345,34 +1820,6 @@ TextEditor::Copy() {
       actionTaken ? NS_OK : NS_ERROR_EDITOR_ACTION_CANCELED);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TextEditor::CanCopy(bool* aCanCopy) {
-  if (NS_WARN_IF(!aCanCopy)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  // Copy is always enabled in HTML documents
-  nsCOMPtr<nsIDocument> doc = GetDocument();
-  *aCanCopy =
-      (doc && doc->IsHTMLOrXHTML()) || CanCutOrCopy(ePasswordFieldNotAllowed);
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP
-TextEditor::CanCopy(bool* aCanCopy)
-{
-  NS_ENSURE_ARG_POINTER(aCanCopy);
-  // Copy is always enabled in HTML documents
-  nsCOMPtr<nsIDocument> doc = GetDocument();
-  *aCanCopy = (doc && doc->IsHTMLOrXHTML()) ||
-    CanCutOrCopy(ePasswordFieldNotAllowed);
-  return NS_OK;
-=======
 bool TextEditor::CanCopy() const {
   AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2388,31 +1835,8 @@ bool TextEditor::CanCopy() const {
   }
 
   return CanCutOrCopy(ePasswordFieldNotAllowed);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TextEditor::CanDelete(bool* aCanDelete) {
-  if (NS_WARN_IF(!aCanDelete)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  *aCanDelete = IsModifiable() && CanCutOrCopy(ePasswordFieldAllowed);
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP
-TextEditor::CanDelete(bool* aCanDelete)
-{
-  NS_ENSURE_ARG_POINTER(aCanDelete);
-  *aCanDelete = IsModifiable() && CanCutOrCopy(ePasswordFieldAllowed);
-  return NS_OK;
-=======
 bool TextEditor::CanDelete() const {
   AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2420,7 +1844,6 @@ bool TextEditor::CanDelete() const {
   }
 
   return IsModifiable() && CanCutOrCopy(ePasswordFieldAllowed);
->>>>>>> upstream-releases
 }
 
 already_AddRefed<nsIDocumentEncoder> TextEditor::GetAndInitDocEncoder(
@@ -2492,21 +1915,6 @@ already_AddRefed<nsIDocumentEncoder> TextEditor::GetAndInitDocEncoder(
 NS_IMETHODIMP
 TextEditor::OutputToString(const nsAString& aFormatType,
                            uint32_t aDocumentEncoderFlags,
-<<<<<<< HEAD
-                           nsAString& aOutputString) {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  return ComputeValueInternal(aFormatType, aDocumentEncoderFlags,
-                              aOutputString);
-||||||| merged common ancestors
-                           nsAString& aOutputString)
-{
-  return ComputeValueInternal(aFormatType, aDocumentEncoderFlags,
-                              aOutputString);
-=======
                            nsAString& aOutputString) {
   AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2521,7 +1929,6 @@ TextEditor::OutputToString(const nsAString& aFormatType,
     return rv;
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult TextEditor::ComputeValueInternal(const nsAString& aFormatType,
@@ -2567,37 +1974,18 @@ nsresult TextEditor::ComputeValueInternal(const nsAString& aFormatType,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextEditor::PasteAsQuotationAsAction(int32_t aClipboardType,
-                                              bool aDispatchPasteEvent) {
-||||||| merged common ancestors
-nsresult
-TextEditor::PasteAsQuotationAsAction(int32_t aClipboardType,
-                                     bool aDispatchPasteEvent)
-{
-=======
 nsresult TextEditor::PasteAsQuotationAsAction(int32_t aClipboardType,
                                               bool aDispatchPasteEvent,
                                               nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aClipboardType == nsIClipboard::kGlobalClipboard ||
              aClipboardType == nsIClipboard::kSelectionClipboard);
 
-<<<<<<< HEAD
-  AutoEditActionDataSetter editActionData(*this, EditAction::ePaste);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-||||||| merged common ancestors
-=======
   AutoEditActionDataSetter editActionData(*this, EditAction::ePasteAsQuotation,
                                           aPrincipal);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
->>>>>>> upstream-releases
   // Get Clipboard Service
   nsresult rv;
   nsCOMPtr<nsIClipboard> clipboard =
@@ -2626,20 +2014,9 @@ nsresult TextEditor::PasteAsQuotationAsAction(int32_t aClipboardType,
   // If it can't support a "text" output of the data the call will fail
   nsCOMPtr<nsISupports> genericDataObj;
   nsAutoCString flav;
-<<<<<<< HEAD
-  rv = trans->GetAnyTransferData(flav, getter_AddRefs(genericDataObj));
-  if (NS_FAILED(rv)) {
-    return rv;
-||||||| merged common ancestors
-  rv = trans->GetAnyTransferData(flav, getter_AddRefs(genericDataObj),
-                                 &len);
-  if (NS_FAILED(rv)) {
-    return rv;
-=======
   rv = trans->GetAnyTransferData(flav, getter_AddRefs(genericDataObj));
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
->>>>>>> upstream-releases
   }
 
   if (!flav.EqualsLiteral(kUnicodeMime) &&
@@ -2649,21 +2026,6 @@ nsresult TextEditor::PasteAsQuotationAsAction(int32_t aClipboardType,
 
   if (nsCOMPtr<nsISupportsString> text = do_QueryInterface(genericDataObj)) {
     nsAutoString stuffToPaste;
-<<<<<<< HEAD
-    text->GetData(stuffToPaste);
-    if (!stuffToPaste.IsEmpty()) {
-      AutoPlaceholderBatch treatAsOneTransaction(*this);
-      rv = InsertWithQuotationsAsSubAction(stuffToPaste);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
-||||||| merged common ancestors
-    textDataObj->GetData ( stuffToPaste );
-    AutoPlaceholderBatch beginBatching(this);
-    rv = InsertWithQuotationsAsSubAction(stuffToPaste);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-=======
     text->GetData(stuffToPaste);
     editActionData.SetData(stuffToPaste);
     if (!stuffToPaste.IsEmpty()) {
@@ -2672,7 +2034,6 @@ nsresult TextEditor::PasteAsQuotationAsAction(int32_t aClipboardType,
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return EditorBase::ToGenericNSResult(rv);
       }
->>>>>>> upstream-releases
     }
   }
   return NS_OK;
@@ -2789,58 +2150,17 @@ nsresult TextEditor::SelectEntireDocument() {
   // If we're empty, don't select all children because that would select the
   // bogus node.
   if (rules->DocumentIsEmpty()) {
-<<<<<<< HEAD
-    // get root node
-    Element* rootElement = GetRoot();
-    if (NS_WARN_IF(!rootElement)) {
-      return NS_ERROR_FAILURE;
-    }
-
-    // if it's empty don't select entire doc - that would select the bogus node
-    return SelectionRefPtr()->Collapse(rootElement, 0);
-||||||| merged common ancestors
-    // get root node
-    Element* rootElement = GetRoot();
-    if (NS_WARN_IF(!rootElement)) {
-      return NS_ERROR_FAILURE;
-    }
-
-    // if it's empty don't select entire doc - that would select the bogus node
-    return aSelection->Collapse(rootElement, 0);
-=======
     nsresult rv = SelectionRefPtr()->Collapse(rootElement, 0);
     NS_WARNING_ASSERTION(
         NS_SUCCEEDED(rv),
         "Failed to move caret to start of the editor root element");
     return rv;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  SelectionBatcher selectionBatcher(SelectionRefPtr());
-  nsresult rv = EditorBase::SelectEntireDocument();
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-||||||| merged common ancestors
-  SelectionBatcher selectionBatcher(aSelection);
-  nsresult rv = EditorBase::SelectEntireDocument(aSelection);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-=======
->>>>>>> upstream-releases
   // Don't select the trailing BR node if we have one
   nsCOMPtr<nsIContent> childNode;
-<<<<<<< HEAD
-  rv = EditorBase::GetEndChildNode(*SelectionRefPtr(),
-                                   getter_AddRefs(childNode));
-||||||| merged common ancestors
-  rv = GetEndChildNode(aSelection, getter_AddRefs(childNode));
-=======
   nsresult rv = EditorBase::GetEndChildNode(*SelectionRefPtr(),
                                             getter_AddRefs(childNode));
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -2849,17 +2169,6 @@ nsresult TextEditor::SelectEntireDocument() {
   }
 
   if (childNode && TextEditUtils::IsMozBR(childNode)) {
-<<<<<<< HEAD
-    int32_t parentOffset;
-    nsINode* parentNode = GetNodeLocation(childNode, &parentOffset);
-
-    return SelectionRefPtr()->Extend(parentNode, parentOffset);
-||||||| merged common ancestors
-    int32_t parentOffset;
-    nsINode* parentNode = GetNodeLocation(childNode, &parentOffset);
-
-    return aSelection->Extend(parentNode, parentOffset);
-=======
     ErrorResult error;
     MOZ_KnownLive(SelectionRefPtr())
         ->SetStartAndEndInLimiter(RawRangeBoundary(rootElement, 0),
@@ -2868,25 +2177,8 @@ nsresult TextEditor::SelectEntireDocument() {
                          "Failed to select all children of the editor root "
                          "element except the moz-<br> element");
     return error.StealNSResult();
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return NS_OK;
-}
-
-EventTarget* TextEditor::GetDOMEventTarget() { return mEventTarget; }
-||||||| merged common ancestors
-  return NS_OK;
-}
-
-EventTarget*
-TextEditor::GetDOMEventTarget()
-{
-  return mEventTarget;
-}
-
-=======
   ErrorResult error;
   SelectionRefPtr()->SelectAllChildren(*rootElement, error);
   NS_WARNING_ASSERTION(
@@ -2896,7 +2188,6 @@ TextEditor::GetDOMEventTarget()
 }
 
 EventTarget* TextEditor::GetDOMEventTarget() { return mEventTarget; }
->>>>>>> upstream-releases
 
 nsresult TextEditor::SetAttributeOrEquivalent(Element* aElement,
                                               nsAtom* aAttribute,
@@ -2905,17 +2196,6 @@ nsresult TextEditor::SetAttributeOrEquivalent(Element* aElement,
   if (NS_WARN_IF(!aElement) || NS_WARN_IF(!aAttribute)) {
     return NS_ERROR_INVALID_ARG;
   }
-<<<<<<< HEAD
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eSetAttribute);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  return SetAttributeWithTransaction(*aElement, *aAttribute, aValue);
-||||||| merged common ancestors
-  return SetAttributeWithTransaction(*aElement, *aAttribute, aValue);
-=======
 
   AutoEditActionDataSetter editActionData(*this, EditAction::eSetAttribute);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2927,7 +2207,6 @@ nsresult TextEditor::SetAttributeOrEquivalent(Element* aElement,
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult TextEditor::RemoveAttributeOrEquivalent(Element* aElement,
@@ -2936,17 +2215,6 @@ nsresult TextEditor::RemoveAttributeOrEquivalent(Element* aElement,
   if (NS_WARN_IF(!aElement) || NS_WARN_IF(!aAttribute)) {
     return NS_ERROR_INVALID_ARG;
   }
-<<<<<<< HEAD
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eRemoveAttribute);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  return RemoveAttributeWithTransaction(*aElement, *aAttribute);
-||||||| merged common ancestors
-  return RemoveAttributeWithTransaction(*aElement, *aAttribute);
-=======
 
   AutoEditActionDataSetter editActionData(*this, EditAction::eRemoveAttribute);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2977,32 +2245,6 @@ nsresult TextEditor::HideLastPasswordInput() {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-nsresult TextEditor::HideLastPasswordInput() {
-  // This method should be called only by TextEditRules::Notify().
-  MOZ_ASSERT(mRules);
-  MOZ_ASSERT(IsPasswordEditor());
-  MOZ_ASSERT(!IsEditActionDataAvailable());
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eHidePassword);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  RefPtr<TextEditRules> rules(mRules);
-  nsresult rv = rules->HideLastPasswordInput();
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
 }
 
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

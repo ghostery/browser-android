@@ -22,18 +22,6 @@ class nsICategoryManager;
 class nsIMemoryReporter;
 class nsISimpleEnumerator;
 
-<<<<<<< HEAD
-#define NS_STYLESHEETSERVICE_CID                     \
-  {                                                  \
-    0x3b55e72e, 0xab7e, 0x431b, {                    \
-      0x89, 0xc0, 0x3b, 0x06, 0xa8, 0xb1, 0x40, 0x16 \
-    }                                                \
-  }
-||||||| merged common ancestors
-#define NS_STYLESHEETSERVICE_CID \
-{ 0x3b55e72e, 0xab7e, 0x431b, \
-  { 0x89, 0xc0, 0x3b, 0x06, 0xa8, 0xb1, 0x40, 0x16 } }
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
@@ -44,7 +32,6 @@ class PresShell;
       0x89, 0xc0, 0x3b, 0x06, 0xa8, 0xb1, 0x40, 0x16 \
     }                                                \
   }
->>>>>>> upstream-releases
 
 #define NS_STYLESHEETSERVICE_CONTRACTID \
   "@mozilla.org/content/style-sheet-service;1"

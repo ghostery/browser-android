@@ -39,29 +39,6 @@ function run_test() {
     `${MDN_URL}Web/HTTP/Status/200${GTM_PARAMS_WC}`
   );
   info("Checking for unsupported status code");
-<<<<<<< HEAD
-  equal(getHTTPStatusCodeURL("999", "webconsole"),
-    `${MDN_URL}Web/HTTP/Status${GTM_PARAMS_WC}`);
-
-  equal(getNetMonitorTimingsURL(),
-    `${MDN_URL}Tools/Network_Monitor/request_details${GTM_PARAMS_NM}#Timings`);
-
-  equal(getPerformanceAnalysisURL(),
-    `${MDN_URL}Tools/Network_Monitor/Performance_analysis${GTM_PARAMS_NM}`);
-
-  equal(getFilterBoxURL(),
-    `${MDN_URL}Tools/Network_Monitor/request_list` +
-    `${GTM_PARAMS_NM}#Filtering_by_properties`);
-||||||| merged common ancestors
-  equal(getHTTPStatusCodeURL("999", "webconsole"),
-    `${MDN_URL}Web/HTTP/Status${GTM_PARAMS_WC}`);
-
-  equal(getNetMonitorTimingsURL(),
-    `${MDN_URL}Tools/Network_Monitor${GTM_PARAMS_NM}#Timings`);
-
-  equal(getPerformanceAnalysisURL(),
-    `${MDN_URL}Tools/Network_Monitor${GTM_PARAMS_NM}#Performance_analysis`);
-=======
   equal(
     getHTTPStatusCodeURL("999", "webconsole"),
     `${MDN_URL}Web/HTTP/Status${GTM_PARAMS_WC}`
@@ -82,5 +59,4 @@ function run_test() {
     `${MDN_URL}Tools/Network_Monitor/request_list` +
       `${GTM_PARAMS_NM}#Filtering_by_properties`
   );
->>>>>>> upstream-releases
 }

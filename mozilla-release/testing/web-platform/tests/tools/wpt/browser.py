@@ -106,49 +106,6 @@ class Firefox(Browser):
     def install(self, dest=None, channel="nightly"):
         """Install Firefox."""
 
-<<<<<<< HEAD
-        branch = {
-            "nightly": "mozilla-central",
-            "beta": "mozilla-beta",
-            "stable": "mozilla-stable"
-        }
-        scraper = {
-            "nightly": "daily",
-            "beta": "release",
-            "stable": "release"
-        }
-        version = {
-            "stable": "latest",
-            "beta": "latest-beta",
-            "nightly": "latest"
-        }
-
-        if channel not in branch:
-            raise ValueError("Unrecognised release channel: %s" % channel)
-||||||| merged common ancestors
-        branch = {
-            "nightly": "mozilla-central",
-            "beta": "mozilla-beta",
-            "stable": "mozilla-stable"
-        }
-        scraper = {
-            "nightly": "daily",
-            "beta": "release",
-            "stable": "release"
-        }
-        version = {
-            "stable": "latest",
-            "beta": "latest-beta",
-            "nightly": "latest"
-        }
-        application_name = {
-            "stable": "Firefox.app",
-            "beta": "Firefox.app",
-            "nightly": "Firefox Nightly.app"
-        }
-        if channel not in branch:
-            raise ValueError("Unrecognised release channel: %s" % channel)
-=======
         import mozinstall
 
         product = {
@@ -156,7 +113,6 @@ class Firefox(Browser):
             "beta": "firefox-beta-latest-ssl",
             "stable": "firefox-latest-ssl"
         }
->>>>>>> upstream-releases
 
         os_builds = {
             ("linux", "x86"): "linux",
@@ -167,25 +123,11 @@ class Firefox(Browser):
         }
         os_key = (self.platform, uname[4])
 
-<<<<<<< HEAD
-        if self.platform is None:
-            raise ValueError("Unable to construct a valid Firefox package name for current platform")
-||||||| merged common ancestors
-        platform = {
-            "Linux": "linux",
-            "Windows": "win",
-            "Darwin": "mac"
-        }.get(uname[0])
-
-        if platform is None:
-            raise ValueError("Unable to construct a valid Firefox package name for current platform")
-=======
         if channel not in product:
             raise ValueError("Unrecognised release channel: %s" % channel)
 
         if os_key not in os_builds:
             raise ValueError("Unsupported platform: %s %s" % os_key)
->>>>>>> upstream-releases
 
         if dest is None:
             # os.getcwd() doesn't include the venv path
@@ -247,15 +189,6 @@ class Firefox(Browser):
             binary = find_executable("firefox", os.path.join(path, "firefox"))
         elif self.platform == "win":
             import mozinstall
-<<<<<<< HEAD
-            binary = mozinstall.get_binary(path, "firefox")
-        elif self.platform == "macos":
-            binary = find_executable("firefox", os.path.join(path, self.application_name.get(channel, "Firefox Nightly.app"),
-||||||| merged common ancestors
-            binary = mozinstall.get_binary(path, "firefox")
-        elif platform == "mac":
-            binary = find_executable("firefox", os.path.join(path, application_name,
-=======
             try:
                 binary = mozinstall.get_binary(path, "firefox")
             except mozinstall.InvalidBinary:
@@ -263,7 +196,6 @@ class Firefox(Browser):
                 pass
         elif self.platform == "macos":
             binary = find_executable("firefox", os.path.join(path, self.application_name.get(channel, "Firefox Nightly.app"),
->>>>>>> upstream-releases
                                                              "Contents", "MacOS"))
 
         return binary
@@ -275,11 +207,6 @@ class Firefox(Browser):
         path = os.path.join(venv_path, "browsers", channel)
         binary = self.find_binary_path(path, channel)
 
-<<<<<<< HEAD
-        if not binary and self.platform == "macos":
-||||||| merged common ancestors
-        if not binary and uname[0] == "Darwin":
-=======
         if not binary and self.platform == "win":
             winpaths = [os.path.expandvars("$SYSTEMDRIVE\\Program Files\\Mozilla Firefox"),
                         os.path.expandvars("$SYSTEMDRIVE\\Program Files (x86)\\Mozilla Firefox")]
@@ -289,7 +216,6 @@ class Firefox(Browser):
                     break
 
         if not binary and self.platform == "macos":
->>>>>>> upstream-releases
             macpaths = ["/Applications/Firefox Nightly.app/Contents/MacOS",
                         os.path.expanduser("~/Applications/Firefox Nightly.app/Contents/MacOS"),
                         "/Applications/Firefox Developer Edition.app/Contents/MacOS",
@@ -379,13 +305,7 @@ class Firefox(Browser):
 
             url = self.get_profile_bundle_url(version, channel)
 
-<<<<<<< HEAD
-            logger.info("Installing test prefs from %s" % url)
-||||||| merged common ancestors
-            print("Installing test prefs from %s" % url)
-=======
             self.logger.info("Installing test prefs from %s" % url)
->>>>>>> upstream-releases
             try:
                 extract_dir = tempfile.mkdtemp()
                 unzip(get(url).raw, dest=extract_dir)
@@ -397,13 +317,7 @@ class Firefox(Browser):
             finally:
                 shutil.rmtree(extract_dir)
         else:
-<<<<<<< HEAD
-            logger.info("Using cached test prefs from %s" % dest)
-||||||| merged common ancestors
-            print("Using cached test prefs from %s" % dest)
-=======
             self.logger.info("Using cached test prefs from %s" % dest)
->>>>>>> upstream-releases
 
         return dest
 
@@ -624,23 +538,7 @@ class Chrome(Browser):
             shutil.rmtree(chromedriver_dir)
         return find_executable("chromedriver", dest)
 
-<<<<<<< HEAD
-        path = find_executable("chromedriver", dest)
-        st = os.stat(path)
-        os.chmod(path, st.st_mode | stat.S_IEXEC)
-        return path
-
     def version(self, binary=None, webdriver_binary=None):
-||||||| merged common ancestors
-        path = find_executable("chromedriver", dest)
-        st = os.stat(path)
-        os.chmod(path, st.st_mode | stat.S_IEXEC)
-        return path
-
-    def version(self, binary=None):
-=======
-    def version(self, binary=None, webdriver_binary=None):
->>>>>>> upstream-releases
         binary = binary or self.binary
         if uname[0] == "Windows":
             return _get_fileversion(binary, self.logger)
@@ -753,13 +651,6 @@ class Opera(Browser):
         except subprocess.CalledProcessError:
             self.logger.warning("Failed to call %s" % binary)
             return None
-<<<<<<< HEAD
-        m = re.search(r"[0-9\.]+( [a-z]+)?$", output.strip())
-        if m:
-            return m.group(0)
-||||||| merged common ancestors
-        return re.search(r"[0-9\.]+( [a-z]+)?$", output.strip()).group(0)
-=======
         m = re.search(r"[0-9\.]+( [a-z]+)?$", output.strip())
         if m:
             return m.group(0)
@@ -811,7 +702,6 @@ class EdgeChromium(Browser):
 
         if dest is None:
             dest = os.pwd
->>>>>>> upstream-releases
 
         platform = "x64" if uname[4] == "x86_64" else "x86"
         url = "https://az813057.vo.msecnd.net/webdriver/msedgedriver_%s/msedgedriver.exe" % platform
@@ -862,13 +752,6 @@ class Edge(Browser):
     def install_webdriver(self, dest=None, channel=None, browser_binary=None):
         raise NotImplementedError
 
-<<<<<<< HEAD
-    def version(self, binary=None, webdriver_binary=None):
-        return None
-||||||| merged common ancestors
-    def version(self, binary):
-        return None
-=======
     def version(self, binary=None, webdriver_binary=None):
         command = "(Get-AppxPackage Microsoft.MicrosoftEdge).Version"
         try:
@@ -876,7 +759,6 @@ class Edge(Browser):
         except (subprocess.CalledProcessError, OSError):
             self.logger.warning("Failed to call %s in PowerShell" % command)
             return None
->>>>>>> upstream-releases
 
 
 class EdgeWebDriver(Edge):
@@ -929,37 +811,6 @@ class Safari(Browser):
     def install_webdriver(self, dest=None, channel=None, browser_binary=None):
         raise NotImplementedError
 
-<<<<<<< HEAD
-    def version(self, binary=None, webdriver_binary=None):
-        if webdriver_binary is None:
-            logger.warn("Cannot find Safari version without safaridriver")
-            return None
-        # Use `safaridriver --version` to get the version. Example output:
-        # "Included with Safari 12.1 (14607.1.11)"
-        # "Included with Safari Technology Preview (Release 67, 13607.1.9.0.1)"
-        # The `--version` flag was added in STP 67, so allow the call to fail.
-        try:
-            version_string = call(webdriver_binary, "--version").strip()
-        except subprocess.CalledProcessError:
-            logger.warn("Failed to call %s --version", webdriver_binary)
-            return None
-        m = re.match(r"Included with Safari (.*)", version_string)
-        if not m:
-            logger.warn("Failed to extract version from: s%", version_string)
-            return None
-        return m.group(1)
-
-
-class SafariWebDriver(Safari):
-    product = "safari_webdriver"
-||||||| merged common ancestors
-    def version(self, binary):
-        return None
-
-
-class SafariWebDriver(Safari):
-    product = "safari_webdriver"
-=======
     def version(self, binary=None, webdriver_binary=None):
         if webdriver_binary is None:
             self.logger.warning("Cannot find Safari version without safaridriver")
@@ -978,7 +829,6 @@ class SafariWebDriver(Safari):
             self.logger.warning("Failed to extract version from: %s" % version_string)
             return None
         return m.group(1)
->>>>>>> upstream-releases
 
 
 class Servo(Browser):
@@ -1107,11 +957,6 @@ class Epiphany(Browser):
     def install_webdriver(self, dest=None, channel=None, browser_binary=None):
         raise NotImplementedError
 
-<<<<<<< HEAD
-    def version(self, binary=None, webdriver_binary=None):
-||||||| merged common ancestors
-    def version(self, binary):
-=======
     def version(self, binary=None, webdriver_binary=None):
         if binary is None:
             return None
@@ -1120,5 +965,4 @@ class Epiphany(Browser):
             # Stable release output looks like: "Web 3.30.2"
             # Tech Preview output looks like "Web 3.31.3-88-g97db4f40f"
             return output.split()[1]
->>>>>>> upstream-releases
         return None

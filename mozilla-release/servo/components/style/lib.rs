@@ -32,22 +32,8 @@ extern crate atomic_refcell;
 extern crate bitflags;
 #[allow(unused_extern_crates)]
 extern crate byteorder;
-<<<<<<< HEAD
-#[cfg(feature = "gecko")]
-#[macro_use]
-#[no_link]
-extern crate cfg_if;
 #[cfg(feature = "servo")]
 extern crate crossbeam_channel;
-||||||| merged common ancestors
-#[cfg(feature = "gecko")]
-#[macro_use]
-#[no_link]
-extern crate cfg_if;
-=======
-#[cfg(feature = "servo")]
-extern crate crossbeam_channel;
->>>>>>> upstream-releases
 #[macro_use]
 extern crate cssparser;
 #[macro_use]
@@ -197,13 +183,6 @@ pub use crate::gecko_string_cache::Namespace;
 pub use html5ever::LocalName;
 #[cfg(feature = "servo")]
 pub use html5ever::Namespace;
-<<<<<<< HEAD
-#[cfg(feature = "servo")]
-pub use html5ever::Prefix;
-#[cfg(feature = "servo")]
-pub use servo_atoms::Atom;
-||||||| merged common ancestors
-=======
 #[cfg(feature = "servo")]
 pub use html5ever::Prefix;
 #[cfg(feature = "servo")]
@@ -212,7 +191,6 @@ pub use servo_atoms::Atom;
 pub use style_traits::arc_slice::ArcSlice;
 pub use style_traits::owned_slice::OwnedSlice;
 pub use style_traits::owned_str::OwnedStr;
->>>>>>> upstream-releases
 
 /// The CSS properties supported by the style system.
 /// Generated from the properties.mako.rs template by build.rs

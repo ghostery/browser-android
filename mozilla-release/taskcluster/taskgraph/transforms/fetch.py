@@ -12,6 +12,7 @@ from mozbuild.shellutil import quote as shell_quote
 import os
 
 from voluptuous import (
+    Any,
     Optional,
     Required,
 )
@@ -45,17 +46,9 @@ FETCH_SCHEMA = Schema({
     # Description of the task.
     Required('description'): basestring,
 
-<<<<<<< HEAD
-    Required('fetch'): {
-        'type': 'static-url',
-||||||| merged common ancestors
-    Required('fetch'): Any({
-        'type': 'static-url',
-=======
     Required('fetch'): Any(
         {
             'type': 'static-url',
->>>>>>> upstream-releases
 
             # The URL to download.
             Required('url'): basestring,
@@ -88,35 +81,9 @@ FETCH_SCHEMA = Schema({
 
             Required('script'): basestring,
 
-<<<<<<< HEAD
-        # IMPORTANT: when adding anything that changes the behavior of the task,
-        # it is important to update the digest data used to compute cache hits.
-    },
-})
-||||||| merged common ancestors
-        # IMPORTANT: when adding anything that changes the behavior of the task,
-        # it is important to update the digest data used to compute cache hits.
-    }),
-})
-=======
             # Platform type for chromium build
             Required('platform'): basestring,
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-transforms = TransformSequence()
-transforms.add_validate(FETCH_SCHEMA)
-||||||| merged common ancestors
-
-@transforms.add
-def validate(config, jobs):
-    for job in jobs:
-        validate_schema(
-            FETCH_SCHEMA, job,
-            'In fetch task {!r}:'.format(job.get('name', 'unknown')))
-
-        yield job
-=======
             # Chromium revision to obtain
             Optional('revision'): basestring,
 
@@ -128,7 +95,6 @@ def validate(config, jobs):
 
 transforms = TransformSequence()
 transforms.add_validate(FETCH_SCHEMA)
->>>>>>> upstream-releases
 
 
 @transforms.add

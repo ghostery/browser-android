@@ -76,18 +76,10 @@ async function testProbe(aProbe) {
   // Now we should have a hang in our histogram.
   let snapshot = histogram.snapshot();
   BrowserTestUtils.removeTab(hangTab);
-<<<<<<< HEAD
-  ok(sum(Object.values(snapshot.values)) > 0,
-   `Spinner probe should now have a value in some bucket`);
-||||||| merged common ancestors
-  ok(sum(snapshot.counts) > 0,
-   `Spinner probe should now have a value in some bucket`);
-=======
   ok(
     sum(Object.values(snapshot.values)) > 0,
     `Spinner probe should now have a value in some bucket`
   );
->>>>>>> upstream-releases
 }
 
 add_task(async function setup() {

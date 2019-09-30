@@ -24,23 +24,6 @@
  * Generic ELF macros for the target system
  */
 #ifdef __LP64__
-<<<<<<< HEAD
-#define Elf_(type) Elf64_##type
-#define ELFCLASS ELFCLASS64
-#define ELF_R_TYPE ELF64_R_TYPE
-#define ELF_R_SYM ELF64_R_SYM
-#ifndef ELF_ST_BIND
-#define ELF_ST_BIND ELF64_ST_BIND
-#endif
-||||||| merged common ancestors
-#define Elf_(type) Elf64_ ## type
-#define ELFCLASS ELFCLASS64
-#define ELF_R_TYPE ELF64_R_TYPE
-#define ELF_R_SYM ELF64_R_SYM
-#ifndef ELF_ST_BIND
-#define ELF_ST_BIND ELF64_ST_BIND
-#endif
-=======
 #  define Elf_(type) Elf64_##type
 #  define ELFCLASS ELFCLASS64
 #  define ELF_R_TYPE ELF64_R_TYPE
@@ -48,25 +31,7 @@
 #  ifndef ELF_ST_BIND
 #    define ELF_ST_BIND ELF64_ST_BIND
 #  endif
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define Elf_(type) Elf32_##type
-#define ELFCLASS ELFCLASS32
-#define ELF_R_TYPE ELF32_R_TYPE
-#define ELF_R_SYM ELF32_R_SYM
-#ifndef ELF_ST_BIND
-#define ELF_ST_BIND ELF32_ST_BIND
-#endif
-||||||| merged common ancestors
-#define Elf_(type) Elf32_ ## type
-#define ELFCLASS ELFCLASS32
-#define ELF_R_TYPE ELF32_R_TYPE
-#define ELF_R_SYM ELF32_R_SYM
-#ifndef ELF_ST_BIND
-#define ELF_ST_BIND ELF32_ST_BIND
-#endif
-=======
 #  define Elf_(type) Elf32_##type
 #  define ELFCLASS ELFCLASS32
 #  define ELF_R_TYPE ELF32_R_TYPE
@@ -74,7 +39,6 @@
 #  ifndef ELF_ST_BIND
 #    define ELF_ST_BIND ELF32_ST_BIND
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #ifndef __BYTE_ORDER
@@ -100,25 +64,6 @@
 #  define ELFMACHINE EM_386
 
 // Doing this way probably doesn't scale to other architectures
-<<<<<<< HEAD
-#define R_ABS R_386_32
-#define R_GLOB_DAT R_386_GLOB_DAT
-#define R_JMP_SLOT R_386_JMP_SLOT
-#define R_RELATIVE R_386_RELATIVE
-#define RELOC(n) DT_REL##n
-#define UNSUPPORTED_RELOC(n) DT_RELA##n
-#define STR_RELOC(n) "DT_REL" #n
-#define Reloc Rel
-||||||| merged common ancestors
-#define R_ABS R_386_32
-#define R_GLOB_DAT R_386_GLOB_DAT
-#define R_JMP_SLOT R_386_JMP_SLOT
-#define R_RELATIVE R_386_RELATIVE
-#define RELOC(n) DT_REL ## n
-#define UNSUPPORTED_RELOC(n) DT_RELA ## n
-#define STR_RELOC(n) "DT_REL" # n
-#define Reloc Rel
-=======
 #  define R_ABS R_386_32
 #  define R_GLOB_DAT R_386_GLOB_DAT
 #  define R_JMP_SLOT R_386_JMP_SLOT
@@ -127,30 +72,10 @@
 #  define UNSUPPORTED_RELOC(n) DT_RELA##n
 #  define STR_RELOC(n) "DT_REL" #  n
 #  define Reloc Rel
->>>>>>> upstream-releases
 
 #elif defined(__x86_64__)
 #  define ELFMACHINE EM_X86_64
 
-<<<<<<< HEAD
-#define R_ABS R_X86_64_64
-#define R_GLOB_DAT R_X86_64_GLOB_DAT
-#define R_JMP_SLOT R_X86_64_JUMP_SLOT
-#define R_RELATIVE R_X86_64_RELATIVE
-#define RELOC(n) DT_RELA##n
-#define UNSUPPORTED_RELOC(n) DT_REL##n
-#define STR_RELOC(n) "DT_RELA" #n
-#define Reloc Rela
-||||||| merged common ancestors
-#define R_ABS R_X86_64_64
-#define R_GLOB_DAT R_X86_64_GLOB_DAT
-#define R_JMP_SLOT R_X86_64_JUMP_SLOT
-#define R_RELATIVE R_X86_64_RELATIVE
-#define RELOC(n) DT_RELA ## n
-#define UNSUPPORTED_RELOC(n) DT_REL ## n
-#define STR_RELOC(n) "DT_RELA" # n
-#define Reloc Rela
-=======
 #  define R_ABS R_X86_64_64
 #  define R_GLOB_DAT R_X86_64_GLOB_DAT
 #  define R_JMP_SLOT R_X86_64_JUMP_SLOT
@@ -159,58 +84,8 @@
 #  define UNSUPPORTED_RELOC(n) DT_REL##n
 #  define STR_RELOC(n) "DT_RELA" #  n
 #  define Reloc Rela
->>>>>>> upstream-releases
 
 #elif defined(__arm__)
-<<<<<<< HEAD
-#define ELFMACHINE EM_ARM
-
-#ifndef R_ARM_ABS32
-#define R_ARM_ABS32 2
-#endif
-#ifndef R_ARM_GLOB_DAT
-#define R_ARM_GLOB_DAT 21
-#endif
-#ifndef R_ARM_JUMP_SLOT
-#define R_ARM_JUMP_SLOT 22
-#endif
-#ifndef R_ARM_RELATIVE
-#define R_ARM_RELATIVE 23
-#endif
-
-#define R_ABS R_ARM_ABS32
-#define R_GLOB_DAT R_ARM_GLOB_DAT
-#define R_JMP_SLOT R_ARM_JUMP_SLOT
-#define R_RELATIVE R_ARM_RELATIVE
-#define RELOC(n) DT_REL##n
-#define UNSUPPORTED_RELOC(n) DT_RELA##n
-#define STR_RELOC(n) "DT_REL" #n
-#define Reloc Rel
-||||||| merged common ancestors
-#define ELFMACHINE EM_ARM
-
-#ifndef R_ARM_ABS32
-#define R_ARM_ABS32 2
-#endif
-#ifndef R_ARM_GLOB_DAT
-#define R_ARM_GLOB_DAT 21
-#endif
-#ifndef R_ARM_JUMP_SLOT
-#define R_ARM_JUMP_SLOT 22
-#endif
-#ifndef R_ARM_RELATIVE
-#define R_ARM_RELATIVE 23
-#endif
-
-#define R_ABS R_ARM_ABS32
-#define R_GLOB_DAT R_ARM_GLOB_DAT
-#define R_JMP_SLOT R_ARM_JUMP_SLOT
-#define R_RELATIVE R_ARM_RELATIVE
-#define RELOC(n) DT_REL ## n
-#define UNSUPPORTED_RELOC(n) DT_RELA ## n
-#define STR_RELOC(n) "DT_REL" # n
-#define Reloc Rel
-=======
 #  define ELFMACHINE EM_ARM
 
 #  ifndef R_ARM_ABS32
@@ -234,30 +109,10 @@
 #  define UNSUPPORTED_RELOC(n) DT_RELA##n
 #  define STR_RELOC(n) "DT_REL" #  n
 #  define Reloc Rel
->>>>>>> upstream-releases
 
 #elif defined(__aarch64__)
 #  define ELFMACHINE EM_AARCH64
 
-<<<<<<< HEAD
-#define R_ABS R_AARCH64_ABS64
-#define R_GLOB_DAT R_AARCH64_GLOB_DAT
-#define R_JMP_SLOT R_AARCH64_JUMP_SLOT
-#define R_RELATIVE R_AARCH64_RELATIVE
-#define RELOC(n) DT_RELA##n
-#define UNSUPPORTED_RELOC(n) DT_REL##n
-#define STR_RELOC(n) "DT_RELA" #n
-#define Reloc Rela
-||||||| merged common ancestors
-#define R_ABS R_AARCH64_ABS64
-#define R_GLOB_DAT R_AARCH64_GLOB_DAT
-#define R_JMP_SLOT R_AARCH64_JUMP_SLOT
-#define R_RELATIVE R_AARCH64_RELATIVE
-#define RELOC(n) DT_RELA ## n
-#define UNSUPPORTED_RELOC(n) DT_REL ## n
-#define STR_RELOC(n) "DT_RELA" # n
-#define Reloc Rela
-=======
 #  define R_ABS R_AARCH64_ABS64
 #  define R_GLOB_DAT R_AARCH64_GLOB_DAT
 #  define R_JMP_SLOT R_AARCH64_JUMP_SLOT
@@ -266,7 +121,6 @@
 #  define UNSUPPORTED_RELOC(n) DT_REL##n
 #  define STR_RELOC(n) "DT_RELA" #  n
 #  define Reloc Rela
->>>>>>> upstream-releases
 
 #else
 #  error Unknown ELF machine type
@@ -356,14 +210,7 @@ class Strtab : public UnsizedArray<const char> {
   /**
    * Returns the string at the given index in the table
    */
-<<<<<<< HEAD
-  const char *GetStringAt(off_t index) const {
-||||||| merged common ancestors
-  const char *GetStringAt(off_t index) const
-  {
-=======
   const char* GetStringAt(off_t index) const {
->>>>>>> upstream-releases
     return &UnsizedArray<const char>::operator[](index);
   }
 };
@@ -376,20 +223,9 @@ struct Rel : public Elf_(Rel) {
    * Returns the addend for the relocation, which is the value stored
    * at r_offset.
    */
-<<<<<<< HEAD
-  Addr GetAddend(void *base) const {
-    return *(reinterpret_cast<const Addr *>(
-        reinterpret_cast<const char *>(base) + r_offset));
-||||||| merged common ancestors
-  Addr GetAddend(void *base) const
-  {
-    return *(reinterpret_cast<const Addr *>(
-                   reinterpret_cast<const char *>(base) + r_offset));
-=======
   Addr GetAddend(void* base) const {
     return *(reinterpret_cast<const Addr*>(reinterpret_cast<const char*>(base) +
                                            r_offset));
->>>>>>> upstream-releases
   }
 };
 
@@ -400,16 +236,7 @@ struct Rela : public Elf_(Rela) {
   /**
    * Returns the addend for the relocation.
    */
-<<<<<<< HEAD
-  Addr GetAddend(void *base) const { return r_addend; }
-||||||| merged common ancestors
-  Addr GetAddend(void *base) const
-  {
-    return r_addend;
-  }
-=======
   Addr GetAddend(void* base) const { return r_addend; }
->>>>>>> upstream-releases
 };
 
 } /* namespace Elf */

@@ -53,27 +53,10 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(HTMLEmbedElement,
   nsObjectLoadingContent::Traverse(tmp, cb);
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(
-    HTMLEmbedElement, nsGenericHTMLElement, nsIRequestObserver,
-    nsIStreamListener, nsIFrameLoaderOwner, nsIObjectLoadingContent,
-    imgINotificationObserver, nsIImageLoadingContent, nsIChannelEventSink)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLEmbedElement,
-                                             nsGenericHTMLElement,
-                                             nsIRequestObserver,
-                                             nsIStreamListener,
-                                             nsIFrameLoaderOwner,
-                                             nsIObjectLoadingContent,
-                                             imgINotificationObserver,
-                                             nsIImageLoadingContent,
-                                             nsIChannelEventSink)
-=======
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(
     HTMLEmbedElement, nsGenericHTMLElement, nsIRequestObserver,
     nsIStreamListener, nsFrameLoaderOwner, nsIObjectLoadingContent,
     imgINotificationObserver, nsIImageLoadingContent, nsIChannelEventSink)
->>>>>>> upstream-releases
 
 NS_IMPL_ELEMENT_CLONE(HTMLEmbedElement)
 
@@ -91,57 +74,13 @@ void HTMLEmbedElement::AsyncEventRunning(AsyncEventDispatcher* aEvent) {
   nsImageLoadingContent::AsyncEventRunning(aEvent);
 }
 
-<<<<<<< HEAD
-nsresult HTMLEmbedElement::BindToTree(nsIDocument* aDocument,
-                                      nsIContent* aParent,
-                                      nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLEmbedElement::BindToTree(nsIDocument *aDocument,
-                             nsIContent *aParent,
-                             nsIContent *aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLEmbedElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  rv = nsObjectLoadingContent::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  rv = nsObjectLoadingContent::BindToTree(aDocument, aParent,
-                                          aBindingParent);
-=======
   rv = nsObjectLoadingContent::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  // Don't kick off load from being bound to a plugin document - the plugin
-  // document will call nsObjectLoadingContent::InitializeFromChannel() for the
-  // initial load.
-  nsCOMPtr<nsIPluginDocument> pluginDoc = do_QueryInterface(aDocument);
-
-  if (!pluginDoc) {
-    void (HTMLEmbedElement::*start)() = &HTMLEmbedElement::StartObjectLoad;
-    nsContentUtils::AddScriptRunner(
-        NewRunnableMethod("dom::HTMLEmbedElement::BindToTree", this, start));
-||||||| merged common ancestors
-  // Don't kick off load from being bound to a plugin document - the plugin
-  // document will call nsObjectLoadingContent::InitializeFromChannel() for the
-  // initial load.
-  nsCOMPtr<nsIPluginDocument> pluginDoc = do_QueryInterface(aDocument);
-
-  if (!pluginDoc) {
-    void (HTMLEmbedElement::*start)() = &HTMLEmbedElement::StartObjectLoad;
-    nsContentUtils::AddScriptRunner(NewRunnableMethod(
-                                      "dom::HTMLEmbedElement::BindToTree", this, start));
-=======
   if (IsInComposedDoc()) {
     // Don't kick off load from being bound to a plugin document - the plugin
     // document will call nsObjectLoadingContent::InitializeFromChannel() for
@@ -153,22 +92,12 @@ nsresult HTMLEmbedElement::BindToTree(BindContext& aContext, nsINode& aParent) {
       nsContentUtils::AddScriptRunner(
           NewRunnableMethod("dom::HTMLEmbedElement::BindToTree", this, start));
     }
->>>>>>> upstream-releases
   }
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLEmbedElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLEmbedElement::UnbindFromTree(bool aDeep,
-                                 bool aNullParent)
-{
-=======
 void HTMLEmbedElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
 #ifdef XP_MACOSX
   // When a page is reloaded (when an Document's content is removed), the
   // focused element isn't necessarily sent an eBlur event. See
@@ -268,20 +197,8 @@ bool HTMLEmbedElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                               aMaybeScriptedPrincipal, aResult);
 }
 
-<<<<<<< HEAD
 static void MapAttributesIntoRuleBase(const nsMappedAttributes* aAttributes,
                                       MappedDeclarations& aDecls) {
-  nsGenericHTMLElement::MapImageBorderAttributeInto(aAttributes, aDecls);
-||||||| merged common ancestors
-static void
-MapAttributesIntoRuleBase(const nsMappedAttributes *aAttributes,
-                          MappedDeclarations& aDecls)
-{
-  nsGenericHTMLElement::MapImageBorderAttributeInto(aAttributes, aDecls);
-=======
-static void MapAttributesIntoRuleBase(const nsMappedAttributes* aAttributes,
-                                      MappedDeclarations& aDecls) {
->>>>>>> upstream-releases
   nsGenericHTMLElement::MapImageMarginAttributeInto(aAttributes, aDecls);
   nsGenericHTMLElement::MapImageSizeAttributesInto(aAttributes, aDecls);
   nsGenericHTMLElement::MapImageAlignAttributeInto(aAttributes, aDecls);

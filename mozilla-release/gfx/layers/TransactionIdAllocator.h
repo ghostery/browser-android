@@ -16,16 +16,8 @@ namespace mozilla {
 namespace layers {
 
 class TransactionIdAllocator {
-<<<<<<< HEAD
- protected:
-  virtual ~TransactionIdAllocator() {}
-||||||| merged common ancestors
-protected:
-  virtual ~TransactionIdAllocator() {}
-=======
  protected:
   virtual ~TransactionIdAllocator() = default;
->>>>>>> upstream-releases
 
  public:
   NS_INLINE_DECL_REFCOUNTING(TransactionIdAllocator)
@@ -90,18 +82,10 @@ protected:
    */
   virtual mozilla::TimeStamp GetTransactionStart() = 0;
 
-<<<<<<< HEAD
-  virtual VsyncId GetVsyncId() = 0;
-};
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
   virtual VsyncId GetVsyncId() = 0;
 
   virtual mozilla::TimeStamp GetVsyncStart() = 0;
 };
->>>>>>> upstream-releases
 
 }  // namespace layers
 }  // namespace mozilla

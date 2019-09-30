@@ -45,23 +45,6 @@ namespace mozilla {
 
 using namespace dom;
 
-<<<<<<< HEAD
-nsresult HTMLEditor::SetSelectionToAbsoluteOrStatic(bool aEnabled) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-  AutoEditActionDataSetter editActionData(
-      *this, EditAction::eSetPositionToAbsoluteOrStatic);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this);
-||||||| merged common ancestors
-nsresult
-HTMLEditor::SetSelectionToAbsoluteOrStatic(bool aEnabled)
-{
-  AutoPlaceholderBatch beginBatching(this);
-=======
 nsresult HTMLEditor::SetSelectionToAbsoluteOrStaticAsAction(
     bool aEnabled, nsIPrincipal* aPrincipal) {
   MOZ_ASSERT(IsEditActionDataAvailable());
@@ -73,7 +56,6 @@ nsresult HTMLEditor::SetSelectionToAbsoluteOrStaticAsAction(
   }
 
   AutoPlaceholderBatch treatAsOneTransaction(*this);
->>>>>>> upstream-releases
   AutoTopLevelEditSubActionNotifier maybeTopLevelEditSubAction(
       *this,
       aEnabled ? EditSubAction::eSetPositionToAbsolute
@@ -94,21 +76,11 @@ nsresult HTMLEditor::SetSelectionToAbsoluteOrStaticAsAction(
     return EditorBase::ToGenericNSResult(rv);
   }
 
-<<<<<<< HEAD
-  rv = rules->DidDoAction(subActionInfo, rv);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-  return rules->DidDoAction(selection, subActionInfo, rv);
-=======
   rv = rules->DidDoAction(subActionInfo, rv);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 already_AddRefed<Element>
@@ -172,23 +144,6 @@ void HTMLEditor::SetZIndex(Element& aElement, int32_t aZindex) {
   mCSSEditUtils->SetCSSProperty(aElement, *nsGkAtoms::z_index, zIndexStr);
 }
 
-<<<<<<< HEAD
-nsresult HTMLEditor::AddZIndex(int32_t aChange) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-  AutoEditActionDataSetter editActionData(
-      *this, EditAction::eIncreaseOrDecreaseZIndex);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  AutoPlaceholderBatch treatAsOneTransaction(*this);
-||||||| merged common ancestors
-nsresult
-HTMLEditor::AddZIndex(int32_t aChange)
-{
-  AutoPlaceholderBatch beginBatching(this);
-=======
 nsresult HTMLEditor::AddZIndexAsAction(int32_t aChange,
                                        nsIPrincipal* aPrincipal) {
   MOZ_ASSERT(IsEditActionDataAvailable());
@@ -200,7 +155,6 @@ nsresult HTMLEditor::AddZIndexAsAction(int32_t aChange,
   }
 
   AutoPlaceholderBatch treatAsOneTransaction(*this);
->>>>>>> upstream-releases
   AutoTopLevelEditSubActionNotifier maybeTopLevelEditSubAction(
       *this,
       aChange < 0 ? EditSubAction::eDecreaseZIndex
@@ -219,21 +173,11 @@ nsresult HTMLEditor::AddZIndexAsAction(int32_t aChange,
     return EditorBase::ToGenericNSResult(rv);
   }
 
-<<<<<<< HEAD
-  rv = rules->DidDoAction(subActionInfo, rv);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-  return rules->DidDoAction(selection, subActionInfo, rv);
-=======
   rv = rules->DidDoAction(subActionInfo, rv);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 int32_t HTMLEditor::GetZIndex(Element& aElement) {
@@ -336,18 +280,9 @@ nsresult HTMLEditor::RefreshGrabberInternal() {
     return rv;
   }
 
-<<<<<<< HEAD
-  SetAnonymousElementPosition(mPositionedObjectX + 12, mPositionedObjectY - 14,
-                              mGrabber);
-||||||| merged common ancestors
-  SetAnonymousElementPosition(mPositionedObjectX + 12,
-                              mPositionedObjectY - 14,
-                              mGrabber);
-=======
   RefPtr<Element> grabber = mGrabber.get();
   SetAnonymousElementPosition(mPositionedObjectX + 12, mPositionedObjectY - 14,
                               grabber);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -433,17 +368,6 @@ nsresult HTMLEditor::StartMoving() {
       NS_WARN_IF(!mAbsolutelyPositionedObject)) {
     return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
-  nsresult rv =
-      SetShadowPosition(*mPositioningShadow, *mAbsolutelyPositionedObject,
-                        mPositionedObjectX, mPositionedObjectY);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  nsresult rv = SetShadowPosition(*mPositioningShadow,
-                                  *mAbsolutelyPositionedObject,
-                                  mPositionedObjectX, mPositionedObjectY);
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
   RefPtr<Element> positioningShadow = mPositioningShadow.get();
   RefPtr<Element> absolutelyPositionedObject = mAbsolutelyPositionedObject;
   nsresult rv =
@@ -452,7 +376,6 @@ nsresult HTMLEditor::StartMoving() {
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
 
   // make the shadow appear
   mPositioningShadow->UnsetAttr(kNameSpaceID_None, nsGkAtoms::_class, true);
@@ -510,17 +433,7 @@ nsresult HTMLEditor::EndMoving() {
 
   mGrabberClicked = false;
   mIsMoving = false;
-<<<<<<< HEAD
-  nsresult rv = RefereshEditingUI();
-||||||| merged common ancestors
-  RefPtr<Selection> selection = GetSelection();
-  if (!selection) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-  nsresult rv = RefereshEditingUI(*selection);
-=======
   nsresult rv = RefreshEditingUI();
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -615,14 +528,7 @@ nsresult HTMLEditor::SetPositionToAbsolute(Element& aElement) {
   nsINode* parentNode = aElement.GetParentNode();
   if (parentNode->GetChildCount() == 1) {
     RefPtr<Element> newBrElement =
-<<<<<<< HEAD
-        InsertBrElementWithTransaction(EditorRawDOMPoint(parentNode, 0));
-||||||| merged common ancestors
-      InsertBrElementWithTransaction(*selection,
-                                     EditorRawDOMPoint(parentNode, 0));
-=======
         InsertBrElementWithTransaction(EditorDOMPoint(parentNode, 0));
->>>>>>> upstream-releases
     if (NS_WARN_IF(!newBrElement)) {
       return NS_ERROR_FAILURE;
     }

@@ -37,20 +37,12 @@ add_task(async function() {
     template: "http://s.example.com/search2",
   });
   let engine = Services.search.getEngineByName("MozSearch2");
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/tests/unifiedcomplete/test_search_engine_current.js
-  notEqual(Services.search.defaultEngine, engine, "New engine shouldn't be the current engine yet");
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  notEqual(Services.search.currentEngine, engine, "New engine shouldn't be the current engine yet");
-  Services.search.currentEngine = engine;
-=======
   notEqual(
     Services.search.defaultEngine,
     engine,
     "New engine shouldn't be the current engine yet"
   );
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/tests/unifiedcomplete/test_search_engine_default.js
   await check_autocomplete({
     search: "mozilla",
     searchParam: "enable-actions",

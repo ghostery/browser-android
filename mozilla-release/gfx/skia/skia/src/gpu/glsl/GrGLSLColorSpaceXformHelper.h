@@ -44,29 +44,14 @@ public:
     }
 
     void setData(const GrGLSLProgramDataManager& pdman, const GrColorSpaceXform* colorSpaceXform) {
-<<<<<<< HEAD
-        if (this->applySrcTF()) {
-            pdman.set1fv(fSrcTFVar, kNumTransferFnCoeffs, &colorSpaceXform->fSteps.srcTF.fG);
-        }
-||||||| merged common ancestors
-=======
         if (this->applySrcTF()) {
             pdman.set1fv(fSrcTFVar, kNumTransferFnCoeffs, &colorSpaceXform->fSteps.srcTF.g);
         }
->>>>>>> upstream-releases
         if (this->applyGamutXform()) {
             pdman.setMatrix3f(fGamutXformVar, colorSpaceXform->fSteps.src_to_dst_matrix);
         }
-<<<<<<< HEAD
-        if (this->applyDstTF()) {
-            pdman.set1fv(fDstTFVar, kNumTransferFnCoeffs, &colorSpaceXform->fSteps.dstTFInv.fG);
-||||||| merged common ancestors
-        if (this->applyTransferFn()) {
-            pdman.set1fv(fTransferFnVar, kNumTransferFnCoeffs, colorSpaceXform->transferFnCoeffs());
-=======
         if (this->applyDstTF()) {
             pdman.set1fv(fDstTFVar, kNumTransferFnCoeffs, &colorSpaceXform->fSteps.dstTFInv.g);
->>>>>>> upstream-releases
         }
     }
 

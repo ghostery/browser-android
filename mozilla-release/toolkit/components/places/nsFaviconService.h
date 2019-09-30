@@ -27,15 +27,7 @@
 
 // The target dimension in pixels for favicons we store, in reverse order.
 // When adding/removing sizes from here, make sure to update the vector size.
-<<<<<<< HEAD
-static uint16_t sFaviconSizes[7] = {192, 144, 96, 64, 48, 32, 16};
-||||||| merged common ancestors
-static uint16_t sFaviconSizes[7] = {
-  192, 144, 96, 64, 48, 32, 16
-};
-=======
 extern const uint16_t gFaviconSizes[7];
->>>>>>> upstream-releases
 
 // forward class definitions
 class mozIStorageStatementCallback;

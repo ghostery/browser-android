@@ -1,22 +1,8 @@
 "use strict";
 
-<<<<<<< HEAD
-const BASE = "http://mochi.test:8888/browser/browser/components/extensions/test/browser/";
-
-||||||| merged common ancestors
-const BASE = "http://mochi.test:8888/browser/browser/components/extensions/test/browser/";
-
-function waitForTransition(element, propertyName) {
-  return BrowserTestUtils.waitForEvent(element, "transitionend", false, event => {
-    return event.target == element && event.propertyName == propertyName;
-  });
-}
-
-=======
 const BASE =
   "http://mochi.test:8888/browser/browser/components/extensions/test/browser/";
 
->>>>>>> upstream-releases
 add_task(async function test_management_install() {
   await SpecialPowers.pushPrefEnv({
     set: [["xpinstall.signatures.required", false]],

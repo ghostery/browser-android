@@ -107,21 +107,8 @@ static MOZ_FORMAT_PRINTF(1, 2) void Output(const char* fmt, ...) {
   vsnprintf_s(msg, _countof(msg), _TRUNCATE, fmt, ap);
 
   wchar_t wide_msg[2048];
-<<<<<<< HEAD
-  MultiByteToWideChar(CP_UTF8, 0, msg, -1, wide_msg, _countof(wide_msg));
-#if MOZ_WINCONSOLE
-||||||| merged common ancestors
-  MultiByteToWideChar(CP_UTF8,
-                      0,
-                      msg,
-                      -1,
-                      wide_msg,
-                      _countof(wide_msg));
-#if MOZ_WINCONSOLE
-=======
   MultiByteToWideChar(CP_UTF8, 0, msg, -1, wide_msg, _countof(wide_msg));
 #  if MOZ_WINCONSOLE
->>>>>>> upstream-releases
   fwprintf_s(stderr, wide_msg);
 #  else
   // Linking user32 at load-time interferes with the DLL blocklist (bug 932100).
@@ -209,15 +196,7 @@ static int do_main(int argc, char* argv[], char* envp[]) {
   sandbox::BrokerServices* brokerServices =
       sandboxing::GetInitializedBrokerServices();
   sandboxing::PermissionsService* permissionsService =
-<<<<<<< HEAD
       sandboxing::GetPermissionsService();
-#if defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-    sandboxing::GetPermissionsService();
-#if defined(MOZ_CONTENT_SANDBOX)
-=======
-      sandboxing::GetPermissionsService();
->>>>>>> upstream-releases
   if (!brokerServices) {
     Output("Couldn't initialize the broker services.\n");
     return 255;
@@ -234,15 +213,7 @@ static int do_main(int argc, char* argv[], char* envp[]) {
   return gBootstrap->XRE_main(argc, argv, config);
 }
 
-<<<<<<< HEAD
-static nsresult InitXPCOMGlue() {
-||||||| merged common ancestors
-static nsresult
-InitXPCOMGlue()
-{
-=======
 static nsresult InitXPCOMGlue(LibLoadingStrategy aLibLoadingStrategy) {
->>>>>>> upstream-releases
   UniqueFreePtr<char> exePath = BinaryPath::Get();
   if (!exePath) {
     Output("Couldn't find the application directory.\n");

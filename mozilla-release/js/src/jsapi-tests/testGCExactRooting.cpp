@@ -137,62 +137,6 @@ END_TEST(testGCPersistentRootedTraceableCannotOutliveRuntime)
 
 using MyHashMap = js::GCHashMap<js::Shape*, JSObject*>;
 
-<<<<<<< HEAD
-BEGIN_TEST(testGCRootedHashMap) {
-  JS::Rooted<MyHashMap> map(cx, MyHashMap(cx, 15));
-
-  for (size_t i = 0; i < 10; ++i) {
-    RootedObject obj(cx, JS_NewObject(cx, nullptr));
-    RootedValue val(cx, UndefinedValue());
-    // Construct a unique property name to ensure that the object creates a
-    // new shape.
-    char buffer[2];
-    buffer[0] = 'a' + i;
-    buffer[1] = '\0';
-    CHECK(JS_SetProperty(cx, obj, buffer, val));
-    CHECK(map.putNew(obj->as<NativeObject>().lastProperty(), obj));
-  }
-
-  JS_GC(cx);
-  JS_GC(cx);
-
-  for (auto r = map.all(); !r.empty(); r.popFront()) {
-    RootedObject obj(cx, r.front().value());
-    CHECK(obj->as<NativeObject>().lastProperty() == r.front().key());
-  }
-
-  return true;
-}
-END_TEST(testGCRootedHashMap)
-||||||| merged common ancestors
-BEGIN_TEST(testGCRootedHashMap)
-{
-    JS::Rooted<MyHashMap> map(cx, MyHashMap(cx, 15));
-
-    for (size_t i = 0; i < 10; ++i) {
-        RootedObject obj(cx, JS_NewObject(cx, nullptr));
-        RootedValue val(cx, UndefinedValue());
-        // Construct a unique property name to ensure that the object creates a
-        // new shape.
-        char buffer[2];
-        buffer[0] = 'a' + i;
-        buffer[1] = '\0';
-        CHECK(JS_SetProperty(cx, obj, buffer, val));
-        CHECK(map.putNew(obj->as<NativeObject>().lastProperty(), obj));
-    }
-
-    JS_GC(cx);
-    JS_GC(cx);
-
-    for (auto r = map.all(); !r.empty(); r.popFront()) {
-        RootedObject obj(cx, r.front().value());
-        CHECK(obj->as<NativeObject>().lastProperty() == r.front().key());
-    }
-
-    return true;
-}
-END_TEST(testGCRootedHashMap)
-=======
 BEGIN_TEST(testGCRootedHashMap) {
   JS::Rooted<MyHashMap> map(cx, MyHashMap(cx, 15));
 
@@ -254,39 +198,7 @@ BEGIN_TEST(testSafelyUnrootedGCHashMap) {
 
   JS_GC(cx);
   CHECK(map.putNew(12, 13));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool FillMyHashMap(JSContext* cx, MutableHandle<MyHashMap> map) {
-  for (size_t i = 0; i < 10; ++i) {
-    RootedObject obj(cx, JS_NewObject(cx, nullptr));
-    RootedValue val(cx, UndefinedValue());
-    // Construct a unique property name to ensure that the object creates a
-    // new shape.
-    char buffer[2];
-    buffer[0] = 'a' + i;
-    buffer[1] = '\0';
-    if (!JS_SetProperty(cx, obj, buffer, val)) {
-      return false;
-||||||| merged common ancestors
-static bool
-FillMyHashMap(JSContext* cx, MutableHandle<MyHashMap> map)
-{
-    for (size_t i = 0; i < 10; ++i) {
-        RootedObject obj(cx, JS_NewObject(cx, nullptr));
-        RootedValue val(cx, UndefinedValue());
-        // Construct a unique property name to ensure that the object creates a
-        // new shape.
-        char buffer[2];
-        buffer[0] = 'a' + i;
-        buffer[1] = '\0';
-        if (!JS_SetProperty(cx, obj, buffer, val)) {
-            return false;
-        }
-        if (!map.putNew(obj->as<NativeObject>().lastProperty(), obj)) {
-            return false;
-        }
-=======
   return true;
 }
 END_TEST(testSafelyUnrootedGCHashMap)
@@ -305,20 +217,9 @@ static bool FillMyHashMap(JSContext* cx, MutableHandle<MyHashMap> map) {
     }
     if (!map.putNew(obj->as<NativeObject>().lastProperty(), obj)) {
       return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (!map.putNew(obj->as<NativeObject>().lastProperty(), obj)) {
-      return false;
     }
   }
   return true;
-||||||| merged common ancestors
-    return true;
-=======
-  }
-  return true;
->>>>>>> upstream-releases
 }
 
 static bool CheckMyHashMap(JSContext* cx, Handle<MyHashMap> map) {
@@ -347,91 +248,6 @@ END_TEST(testGCHandleHashMap)
 
 using ShapeVec = GCVector<Shape*>;
 
-<<<<<<< HEAD
-BEGIN_TEST(testGCRootedVector) {
-  JS::Rooted<ShapeVec> shapes(cx, ShapeVec(cx));
-
-  for (size_t i = 0; i < 10; ++i) {
-    RootedObject obj(cx, JS_NewObject(cx, nullptr));
-    RootedValue val(cx, UndefinedValue());
-    // Construct a unique property name to ensure that the object creates a
-    // new shape.
-    char buffer[2];
-    buffer[0] = 'a' + i;
-    buffer[1] = '\0';
-    CHECK(JS_SetProperty(cx, obj, buffer, val));
-    CHECK(shapes.append(obj->as<NativeObject>().lastProperty()));
-  }
-
-  JS_GC(cx);
-  JS_GC(cx);
-
-  for (size_t i = 0; i < 10; ++i) {
-    // Check the shape to ensure it did not get collected.
-    char buffer[2];
-    buffer[0] = 'a' + i;
-    buffer[1] = '\0';
-    bool match;
-    CHECK(JS_StringEqualsAscii(cx, JSID_TO_STRING(shapes[i]->propid()), buffer,
-                               &match));
-    CHECK(match);
-  }
-
-  // Ensure iterator enumeration works through the rooted.
-  for (auto shape : shapes) {
-    CHECK(shape);
-  }
-
-  CHECK(receiveConstRefToShapeVector(shapes));
-
-  // Ensure rooted converts to handles.
-  CHECK(receiveHandleToShapeVector(shapes));
-  CHECK(receiveMutableHandleToShapeVector(&shapes));
-
-  return true;
-||||||| merged common ancestors
-BEGIN_TEST(testGCRootedVector)
-{
-    JS::Rooted<ShapeVec> shapes(cx, ShapeVec(cx));
-
-    for (size_t i = 0; i < 10; ++i) {
-        RootedObject obj(cx, JS_NewObject(cx, nullptr));
-        RootedValue val(cx, UndefinedValue());
-        // Construct a unique property name to ensure that the object creates a
-        // new shape.
-        char buffer[2];
-        buffer[0] = 'a' + i;
-        buffer[1] = '\0';
-        CHECK(JS_SetProperty(cx, obj, buffer, val));
-        CHECK(shapes.append(obj->as<NativeObject>().lastProperty()));
-    }
-
-    JS_GC(cx);
-    JS_GC(cx);
-
-    for (size_t i = 0; i < 10; ++i) {
-        // Check the shape to ensure it did not get collected.
-        char buffer[2];
-        buffer[0] = 'a' + i;
-        buffer[1] = '\0';
-        bool match;
-        CHECK(JS_StringEqualsAscii(cx, JSID_TO_STRING(shapes[i]->propid()), buffer, &match));
-        CHECK(match);
-    }
-
-    // Ensure iterator enumeration works through the rooted.
-    for (auto shape : shapes) {
-        CHECK(shape);
-    }
-
-    CHECK(receiveConstRefToShapeVector(shapes));
-
-    // Ensure rooted converts to handles.
-    CHECK(receiveHandleToShapeVector(shapes));
-    CHECK(receiveMutableHandleToShapeVector(&shapes));
-
-    return true;
-=======
 BEGIN_TEST(testGCRootedVector) {
   JS::Rooted<ShapeVec> shapes(cx);
 
@@ -473,7 +289,6 @@ BEGIN_TEST(testGCRootedVector) {
   CHECK(receiveMutableHandleToShapeVector(&shapes));
 
   return true;
->>>>>>> upstream-releases
 }
 
 bool receiveConstRefToShapeVector(const JS::Rooted<GCVector<Shape*>>& rooted) {
@@ -543,7 +358,6 @@ END_TEST(testTraceableFifo)
 
 using ShapeVec = GCVector<Shape*>;
 
-<<<<<<< HEAD
 static bool FillVector(JSContext* cx, MutableHandle<ShapeVec> shapes) {
   for (size_t i = 0; i < 10; ++i) {
     RootedObject obj(cx, JS_NewObject(cx, nullptr));
@@ -558,47 +372,8 @@ static bool FillVector(JSContext* cx, MutableHandle<ShapeVec> shapes) {
     }
     if (!shapes.append(obj->as<NativeObject>().lastProperty())) {
       return false;
-||||||| merged common ancestors
-static bool
-FillVector(JSContext* cx, MutableHandle<ShapeVec> shapes)
-{
-    for (size_t i = 0; i < 10; ++i) {
-        RootedObject obj(cx, JS_NewObject(cx, nullptr));
-        RootedValue val(cx, UndefinedValue());
-        // Construct a unique property name to ensure that the object creates a
-        // new shape.
-        char buffer[2];
-        buffer[0] = 'a' + i;
-        buffer[1] = '\0';
-        if (!JS_SetProperty(cx, obj, buffer, val)) {
-            return false;
-        }
-        if (!shapes.append(obj->as<NativeObject>().lastProperty())) {
-            return false;
-        }
-=======
-static bool FillVector(JSContext* cx, MutableHandle<ShapeVec> shapes) {
-  for (size_t i = 0; i < 10; ++i) {
-    RootedObject obj(cx, JS_NewObject(cx, nullptr));
-    RootedValue val(cx, UndefinedValue());
-    // Construct a unique property name to ensure that the object creates a
-    // new shape.
-    char buffer[2];
-    buffer[0] = 'a' + i;
-    buffer[1] = '\0';
-    if (!JS_SetProperty(cx, obj, buffer, val)) {
-      return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
-    if (!shapes.append(obj->as<NativeObject>().lastProperty())) {
-      return false;
     }
   }
->>>>>>> upstream-releases
 
   // Ensure iterator enumeration works through the mutable handle.
   for (auto shape : shapes) {

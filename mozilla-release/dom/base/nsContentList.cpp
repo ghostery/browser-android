@@ -902,16 +902,8 @@ void nsContentList::AssertInSync() {
       break;
     }
 
-<<<<<<< HEAD
-    nsIContent* cur =
-        mDeep ? iter->GetCurrentNode() : mRootNode->GetChildAt(index++);
-||||||| merged common ancestors
-    nsIContent *cur = mDeep ? iter->GetCurrentNode() :
-                              mRootNode->GetChildAt(index++);
-=======
     nsIContent* cur =
         mDeep ? preOrderIter.GetCurrentNode() : mRootNode->GetChildAt(index++);
->>>>>>> upstream-releases
     if (!cur) {
       break;
     }

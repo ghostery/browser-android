@@ -24,42 +24,6 @@ namespace gfx {
  * non-virtual!
  */
 class PrintTargetThebes final : public PrintTarget {
-<<<<<<< HEAD
- public:
-  static already_AddRefed<PrintTargetThebes> CreateOrNull(
-      gfxASurface* aSurface);
-
-  virtual nsresult BeginPrinting(const nsAString& aTitle,
-                                 const nsAString& aPrintToFileName,
-                                 int32_t aStartPage, int32_t aEndPage) override;
-  virtual nsresult EndPrinting() override;
-  virtual nsresult AbortPrinting() override;
-  virtual nsresult BeginPage() override;
-  virtual nsresult EndPage() override;
-  virtual void Finish() override;
-
-  virtual already_AddRefed<DrawTarget> MakeDrawTarget(
-      const IntSize& aSize, DrawEventRecorder* aRecorder = nullptr) override;
-||||||| merged common ancestors
-public:
-
-  static already_AddRefed<PrintTargetThebes>
-  CreateOrNull(gfxASurface* aSurface);
-
-  virtual nsresult BeginPrinting(const nsAString& aTitle,
-                                 const nsAString& aPrintToFileName,
-                                 int32_t aStartPage,
-                                 int32_t aEndPage) override;
-  virtual nsresult EndPrinting() override;
-  virtual nsresult AbortPrinting() override;
-  virtual nsresult BeginPage() override;
-  virtual nsresult EndPage() override;
-  virtual void Finish() override;
-
-  virtual already_AddRefed<DrawTarget>
-  MakeDrawTarget(const IntSize& aSize,
-                 DrawEventRecorder* aRecorder = nullptr) override;
-=======
  public:
   static already_AddRefed<PrintTargetThebes> CreateOrNull(
       gfxASurface* aSurface);
@@ -75,7 +39,6 @@ public:
 
   already_AddRefed<DrawTarget> MakeDrawTarget(
       const IntSize& aSize, DrawEventRecorder* aRecorder = nullptr) override;
->>>>>>> upstream-releases
 
   already_AddRefed<DrawTarget> GetReferenceDrawTarget() final;
 

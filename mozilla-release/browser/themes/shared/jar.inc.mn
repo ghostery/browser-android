@@ -32,14 +32,9 @@
   skin/classic/browser/controlcenter/cryptominers-disabled.svg (../shared/controlcenter/cryptominers-disabled.svg)
   skin/classic/browser/controlcenter/mcb-disabled.svg          (../shared/controlcenter/mcb-disabled.svg)
   skin/classic/browser/controlcenter/extension.svg             (../shared/controlcenter/extension.svg)
-<<<<<<< HEAD
-  skin/classic/browser/controlcenter/info.svg                  (../shared/controlcenter/info.svg)
-||||||| merged common ancestors
-=======
   skin/classic/browser/controlcenter/fingerprinters.svg        (../shared/controlcenter/fingerprinters.svg)
   skin/classic/browser/controlcenter/fingerprinters-disabled.svg (../shared/controlcenter/fingerprinters-disabled.svg)
   skin/classic/browser/controlcenter/info.svg                  (../shared/controlcenter/info.svg)
->>>>>>> upstream-releases
   skin/classic/browser/controlcenter/permissions.svg           (../shared/controlcenter/permissions.svg)
   skin/classic/browser/controlcenter/trackers.svg              (../shared/controlcenter/trackers.svg)
   skin/classic/browser/controlcenter/trackers-disabled.svg     (../shared/controlcenter/trackers-disabled.svg)
@@ -270,10 +265,3 @@
   skin/classic/browser/privatebrowsing/aboutPrivateBrowsing.css (../shared/privatebrowsing/aboutPrivateBrowsing.css)
   skin/classic/browser/privatebrowsing/favicon.svg             (../shared/privatebrowsing/favicon.svg)
   skin/classic/browser/privatebrowsing/private-browsing.svg    (../shared/privatebrowsing/private-browsing.svg)
-<<<<<<< HEAD
-  skin/classic/browser/privatebrowsing/tracking-protection.svg (../shared/privatebrowsing/tracking-protection.svg)
-||||||| merged common ancestors
-  skin/classic/browser/privatebrowsing/tracking-protection-off.svg (../shared/privatebrowsing/tracking-protection-off.svg)
-  skin/classic/browser/privatebrowsing/tracking-protection.svg (../shared/privatebrowsing/tracking-protection.svg)
-=======
->>>>>>> upstream-releases

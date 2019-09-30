@@ -2089,63 +2089,17 @@ PeerConnectionWrapper.prototype = {
    * @param {object} stats
    *        The stats to check from this PeerConnectionWrapper
    */
-<<<<<<< HEAD
-  checkStats : function(stats, twoMachines) {
-    // Allow for clock drift observed on Windows 7. (Bug 979649)
-    const isWin7 = navigator.userAgent.includes("Windows NT 6.1");
-    const clockDriftAllowanceMs = isWin7 ? 1000 : 250;
-
-    // Use spec way of enumerating stats
-||||||| merged common ancestors
-  checkStats : function(stats, twoMachines) {
-    // Use spec way of enumerating stats
-=======
   checkStats: function(stats, twoMachines) {
     // Allow for clock drift observed on Windows 7. (Bug 979649)
     const isWin7 = navigator.userAgent.includes("Windows NT 6.1");
     const clockDriftAllowanceMs = isWin7 ? 1000 : 250;
     const isRemote = ({ type }) =>
       ["remote-outbound-rtp", "remote-inbound-rtp"].includes(type);
->>>>>>> upstream-releases
     var counters = {};
     for (let [key, res] of stats) {
       info("Checking stats for " + key + " : " + res);
       // validate stats
       ok(res.id == key, "Coherent stats id");
-<<<<<<< HEAD
-      // Bug 1430255: WebRTC uses a different timebase than JS ATM
-      // so there can be differences between timestamp and Date.now().
-      const nowish = Date.now() + clockDriftAllowanceMs;
-      const minimum = this.whenCreated - clockDriftAllowanceMs;
-      const type = res.isRemote ? "rtcp" : "rtp";
-      if (!twoMachines) {
-        ok(res.timestamp >= minimum,
-           `Valid ${type} timestamp ${res.timestamp} >= ${minimum} (
-              ${res.timestamp - minimum} ms)`);
-        ok(res.timestamp <= nowish,
-           `Valid ${type} timestamp ${res.timestamp} <= ${nowish} (
-              ${res.timestamp - nowish} ms)`);
-||||||| merged common ancestors
-      var nowish = Date.now();
-      var minimum = this.whenCreated;
-      if (false) { // Bug 1325430 - timestamps aren't working properly in update 49
-      // if (!twoMachines) {
-        // Bug 1225729: On android, sometimes the first RTCP of the first
-        // test run gets this value, likely because no RTP has been sent yet.
-        if (res.timestamp != 2085978496000) {
-          ok(res.timestamp >= minimum,
-             "Valid " + (res.isRemote? "rtcp" : "rtp") + " timestamp " +
-                 res.timestamp + " >= " + minimum + " (" +
-                 (res.timestamp - minimum) + " ms)");
-          ok(res.timestamp <= nowish,
-             "Valid " + (res.isRemote? "rtcp" : "rtp") + " timestamp " +
-                 res.timestamp + " <= " + nowish + " (" +
-                 (res.timestamp - nowish) + " ms)");
-        } else {
-          info("Bug 1225729: Uninitialized timestamp (" + res.timestamp +
-                "), should be >=" + minimum + " and <= " + nowish);
-        }
-=======
       // Bug 1430255: WebRTC uses a different timebase than JS ATM
       // so there can be differences between timestamp and Date.now().
       const nowish = Date.now() + clockDriftAllowanceMs;
@@ -2162,7 +2116,6 @@ PeerConnectionWrapper.prototype = {
           `Valid ${type} timestamp ${res.timestamp} <= ${nowish} (
               ${res.timestamp - nowish} ms)`
         );
->>>>>>> upstream-releases
       }
       if (isRemote(res)) {
         continue;
@@ -2186,81 +2139,6 @@ PeerConnectionWrapper.prototype = {
               ok(parseInt(res.ssrc) < Math.pow(2, 32), "SSRC is within limits");
             }
 
-<<<<<<< HEAD
-          if (res.type == "outbound-rtp") {
-            ok(res.packetsSent !== undefined, "Rtp packetsSent");
-            // We assume minimum payload to be 1 byte (guess from RFC 3550)
-            ok(res.bytesSent >= res.packetsSent, "Rtp bytesSent");
-          } else {
-            ok(res.packetsReceived !== undefined, "Rtp packetsReceived");
-            ok(res.bytesReceived >= res.packetsReceived, "Rtp bytesReceived");
-          }
-          if (res.remoteId) {
-            var rem = stats.get(res.remoteId);
-            ok(rem.isRemote, "Remote is rtcp");
-            ok(rem.remoteId == res.id, "Remote backlink match");
-            if(res.type == "outbound-rtp") {
-              ok(rem.type == "inbound-rtp", "Rtcp is inbound");
-              ok(rem.packetsReceived !== undefined, "Rtcp packetsReceived");
-              ok(rem.packetsLost !== undefined, "Rtcp packetsLost");
-              ok(rem.bytesReceived >= rem.packetsReceived, "Rtcp bytesReceived");
-              if (!this.disableRtpCountChecking) {
-                // no guarantee which one is newer!
-                // Note: this must change when we add a timestamp field to remote RTCP reports
-                // and make rem.timestamp be the reception time
-                if (res.timestamp >= rem.timestamp) {
-                  ok(rem.packetsReceived <= res.packetsSent, "No more than sent packets");
-                } else {
-                  info("REVERSED timestamps: rec:" +
-                    rem.packetsReceived + " time:" + rem.timestamp + " sent:" + res.packetsSent + " time:" + res.timestamp);
-                }
-                // Else we may have received more than outdated Rtcp packetsSent
-                ok(rem.bytesReceived <= res.bytesSent, "No more than sent bytes");
-              }
-              ok(rem.jitter !== undefined, "Rtcp jitter");
-              if (rem.roundTripTime) {
-                ok(rem.roundTripTime > 0,
-                   "Rtcp rtt " + rem.roundTripTime + " >= 0");
-                ok(rem.roundTripTime < 60000,
-                   "Rtcp rtt " + rem.roundTripTime + " < 1 min");
-||||||| merged common ancestors
-          if (res.type == "outbound-rtp") {
-            ok(res.packetsSent !== undefined, "Rtp packetsSent");
-            // We assume minimum payload to be 1 byte (guess from RFC 3550)
-            ok(res.bytesSent >= res.packetsSent, "Rtp bytesSent");
-          } else {
-            ok(res.packetsReceived !== undefined, "Rtp packetsReceived");
-            ok(res.bytesReceived >= res.packetsReceived, "Rtp bytesReceived");
-          }
-          if (res.remoteId) {
-            var rem = stats.get(res.remoteId);
-            ok(rem.isRemote, "Remote is rtcp");
-            ok(rem.remoteId == res.id, "Remote backlink match");
-            if(res.type == "outbound-rtp") {
-              ok(rem.type == "inbound-rtp", "Rtcp is inbound");
-              ok(rem.packetsReceived !== undefined, "Rtcp packetsReceived");
-              ok(rem.packetsLost !== undefined, "Rtcp packetsLost");
-              ok(rem.bytesReceived >= rem.packetsReceived, "Rtcp bytesReceived");
-	       if (false) { // Bug 1325430 if (!this.disableRtpCountChecking) {
-	       // no guarantee which one is newer!
-	       // Note: this must change when we add a timestamp field to remote RTCP reports
-	       // and make rem.timestamp be the reception time
-		if (res.timestamp >= rem.timestamp) {
-                 ok(rem.packetsReceived <= res.packetsSent, "No more than sent packets");
-		 } else {
-                  info("REVERSED timestamps: rec:" +
-		     rem.packetsReceived + " time:" + rem.timestamp + " sent:" + res.packetsSent + " time:" + res.timestamp);
-		 }
-		// Else we may have received more than outdated Rtcp packetsSent
-                ok(rem.bytesReceived <= res.bytesSent, "No more than sent bytes");
-              }
-              ok(rem.jitter !== undefined, "Rtcp jitter");
-              if (rem.roundTripTime) {
-                ok(rem.roundTripTime > 0,
-                   "Rtcp rtt " + rem.roundTripTime + " >= 0");
-                ok(rem.roundTripTime < 60000,
-                   "Rtcp rtt " + rem.roundTripTime + " < 1 min");
-=======
             if (res.type == "outbound-rtp") {
               ok(res.packetsSent !== undefined, "Rtp packetsSent");
               // We assume minimum payload to be 1 byte (guess from RFC 3550)
@@ -2309,7 +2187,6 @@ PeerConnectionWrapper.prototype = {
                 ok(rem.packetsSent !== undefined, "Rtcp packetsSent");
                 // We may have received more than outdated Rtcp packetsSent
                 ok(rem.bytesSent >= rem.packetsSent, "Rtcp bytesSent");
->>>>>>> upstream-releases
               }
               ok(rem.ssrc == res.ssrc, "Remote ssrc match");
             } else {
@@ -2403,27 +2280,11 @@ PeerConnectionWrapper.prototype = {
     );
     expectedLocalCandidateType = expectedLocalCandidateType || "host";
     var candidateType = lCand.candidateType;
-<<<<<<< HEAD
-    if ((lCand.relayProtocol === "tcp") && (candidateType === "relay")) {
-      candidateType = "relay-tcp";
-||||||| merged common ancestors
-    if ((lCand.mozLocalTransport === "tcp") && (candidateType === "relayed")) {
-      candidateType = "relayed-tcp";
-=======
     if (lCand.relayProtocol === "tcp" && candidateType === "relay") {
       candidateType = "relay-tcp";
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if ((expectedLocalCandidateType === "srflx") &&
-        (candidateType === "prflx")) {
-||||||| merged common ancestors
-    if ((expectedLocalCandidateType === "serverreflexive") &&
-        (candidateType === "peerreflexive")) {
-=======
     if (expectedLocalCandidateType === "srflx" && candidateType === "prflx") {
->>>>>>> upstream-releases
       // Be forgiving of prflx when expecting srflx, since that can happen due
       // to timing.
       candidateType = "srflx";

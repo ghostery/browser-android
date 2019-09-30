@@ -1,35 +1,5 @@
 promise_test(() => fetch("../cors/resources/not-cors-safelisted.json").then(res => res.json().then(runTests)), "Loading data…");
 
-<<<<<<< HEAD
-const longValue = "s".repeat(127);
-
-[
-  {
-    "headers": ["accept", "accept-language", "content-language"],
-    "values": [longValue, "", longValue]
-  },
-  {
-    "headers": ["content-type"],
-    "values": ["text/plain;" + "s".repeat(116), "text/plain"]
-  }
-].forEach(testItem => {
-  testItem.headers.forEach(header => {
-    test(() => {
-      const noCorsHeaders = new Request("about:blank", { mode: "no-cors" }).headers;
-      testItem.values.forEach((value) => {
-        noCorsHeaders.append(header, value);
-        assert_equals(noCorsHeaders.get(header), testItem.values[0]);
-      });
-      noCorsHeaders.set(header, values.join(", "));
-      assert_equals(noCorsHeaders.get(header), testItem.values[0]);
-      noCorsHeaders.delete(header);
-      assert_false(noCorsHeaders.has(header));
-    }, "\"no-cors\" Headers object cannot have " + header + " set to " + testItem.values.join(", "));
-  });
-});
-
-||||||| merged common ancestors
-=======
 const longValue = "s".repeat(127);
 
 [
@@ -61,7 +31,6 @@ const longValue = "s".repeat(127);
   });
 });
 
->>>>>>> upstream-releases
 function runTests(testArray) {
   testArray = testArray.concat([
     ["dpr", "2"],

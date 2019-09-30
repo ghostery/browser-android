@@ -50,14 +50,7 @@ class CommonAnimationManager {
    * ::before, ::after and ::marker.
    */
   void StopAnimationsForElement(dom::Element* aElement,
-<<<<<<< HEAD
-                                CSSPseudoElementType aPseudoType) {
-||||||| merged common ancestors
-                                CSSPseudoElementType aPseudoType)
-  {
-=======
                                 PseudoStyleType aPseudoType) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aElement);
     AnimationCollection<AnimationType>* collection =
         AnimationCollection<AnimationType>::GetAnimationCollection(aElement,
@@ -110,18 +103,8 @@ class OwningElementRef final {
   explicit OwningElementRef(const NonOwningAnimationTarget& aTarget)
       : mTarget(aTarget) {}
 
-<<<<<<< HEAD
-  OwningElementRef(dom::Element& aElement, CSSPseudoElementType aPseudoType)
-      : mTarget(&aElement, aPseudoType) {}
-||||||| merged common ancestors
-  OwningElementRef(dom::Element& aElement,
-                   CSSPseudoElementType aPseudoType)
-    : mTarget(&aElement, aPseudoType)
-  { }
-=======
   OwningElementRef(dom::Element& aElement, PseudoStyleType aPseudoType)
       : mTarget(&aElement, aPseudoType) {}
->>>>>>> upstream-releases
 
   bool Equals(const OwningElementRef& aOther) const {
     return mTarget == aOther.mTarget;
@@ -138,15 +121,6 @@ class OwningElementRef final {
                                               &aChildIndex, &aOtherChildIndex);
     }
 
-<<<<<<< HEAD
-    return mTarget.mPseudoType == CSSPseudoElementType::NotPseudo ||
-           (mTarget.mPseudoType == CSSPseudoElementType::before &&
-            aOther.mTarget.mPseudoType == CSSPseudoElementType::after);
-||||||| merged common ancestors
-    return mTarget.mPseudoType == CSSPseudoElementType::NotPseudo ||
-          (mTarget.mPseudoType == CSSPseudoElementType::before &&
-           aOther.mTarget.mPseudoType == CSSPseudoElementType::after);
-=======
     return mTarget.mPseudoType == PseudoStyleType::NotPseudo ||
            (mTarget.mPseudoType == PseudoStyleType::before &&
             aOther.mTarget.mPseudoType == PseudoStyleType::after) ||
@@ -154,21 +128,11 @@ class OwningElementRef final {
             aOther.mTarget.mPseudoType == PseudoStyleType::before) ||
            (mTarget.mPseudoType == PseudoStyleType::marker &&
             aOther.mTarget.mPseudoType == PseudoStyleType::after);
->>>>>>> upstream-releases
   }
 
   bool IsSet() const { return !!mTarget.mElement; }
 
-<<<<<<< HEAD
-  void GetElement(dom::Element*& aElement,
-                  CSSPseudoElementType& aPseudoType) const {
-||||||| merged common ancestors
-  void GetElement(dom::Element*& aElement,
-                  CSSPseudoElementType& aPseudoType) const
-  {
-=======
   void GetElement(dom::Element*& aElement, PseudoStyleType& aPseudoType) const {
->>>>>>> upstream-releases
     aElement = mTarget.mElement;
     aPseudoType = mTarget.mPseudoType;
   }

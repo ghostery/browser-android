@@ -52,13 +52,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
 
 const TAB_HIDE_CONFIRMED_TYPE = "tabHideNotification";
 
-<<<<<<< HEAD
 const TAB_ID_NONE = -1;
-
-||||||| merged common ancestors
-=======
-const TAB_ID_NONE = -1;
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGetter(this, "tabHidePopup", () => {
   return new ExtensionControlledPopup({
@@ -883,22 +877,6 @@ this.tabs = class extends ExtensionAPI {
             }
             tabTracker.setOpener(nativeTab, opener);
           }
-<<<<<<< HEAD
-          if (updateProperties.successorTabId !== null) {
-            let successor = null;
-            if (updateProperties.successorTabId !== TAB_ID_NONE) {
-              successor = tabTracker.getTab(updateProperties.successorTabId, null);
-              if (!successor) {
-                throw new ExtensionError("Invalid successorTabId");
-              }
-              if (successor.ownerDocument !== nativeTab.ownerDocument) {
-                throw new ExtensionError("Successor tab must be in the same window as the tab being updated");
-              }
-            }
-            tabbrowser.setSuccessor(nativeTab, successor);
-          }
-||||||| merged common ancestors
-=======
           if (updateProperties.successorTabId !== null) {
             let successor = null;
             if (updateProperties.successorTabId !== TAB_ID_NONE) {
@@ -918,7 +896,6 @@ this.tabs = class extends ExtensionAPI {
             }
             tabbrowser.setSuccessor(nativeTab, successor);
           }
->>>>>>> upstream-releases
 
           return tabManager.convert(nativeTab);
         },
@@ -1447,16 +1424,6 @@ this.tabs = class extends ExtensionAPI {
                 }
 
                 let printProgressListener = {
-<<<<<<< HEAD
-                  onLocationChange(webProgress, request, location, flags) { },
-                  onProgressChange(webProgress, request, curSelfProgress, maxSelfProgress, curTotalProgress, maxTotalProgress) { },
-                  onSecurityChange(webProgress, request, state) { },
-||||||| merged common ancestors
-                  onLocationChange(webProgress, request, location, flags) { },
-                  onProgressChange(webProgress, request, curSelfProgress, maxSelfProgress, curTotalProgress, maxTotalProgress) { },
-                  onSecurityChange(webProgress, request, oldState, state,
-                                   contentBlockingLogJSON) { },
-=======
                   onLocationChange(webProgress, request, location, flags) {},
                   onProgressChange(
                     webProgress,
@@ -1468,7 +1435,6 @@ this.tabs = class extends ExtensionAPI {
                   ) {},
                   onSecurityChange(webProgress, request, state) {},
                   onContentBlockingEvent(webProgress, request, event) {},
->>>>>>> upstream-releases
                   onStateChange(webProgress, request, flags, status) {
                     if (
                       flags & Ci.nsIWebProgressListener.STATE_STOP &&
@@ -1578,57 +1544,6 @@ this.tabs = class extends ExtensionAPI {
                 lastSuccessor,
                 firstTab
               );
-            }
-            referenceWindow.gBrowser.setSuccessor(previousTab, lastSuccessor);
-          }
-        },
-
-        moveInSuccession(tabIds, tabId, options) {
-          const {insert, append} = options || {};
-          const tabIdSet = new Set(tabIds);
-          if (tabIdSet.size !== tabIds.length) {
-            throw new ExtensionError("IDs must not occur more than once in tabIds");
-          }
-          if ((append || insert) && tabIdSet.has(tabId)) {
-            throw new ExtensionError("Value of tabId must not occur in tabIds if append or insert is true");
-          }
-
-          const referenceTab = tabTracker.getTab(tabId, null);
-          let referenceWindow = referenceTab && referenceTab.ownerGlobal;
-          let previousTab, lastSuccessor;
-          if (append) {
-            previousTab = referenceTab;
-            lastSuccessor = (insert && referenceTab && referenceTab.successor) || null;
-          } else {
-            lastSuccessor = referenceTab;
-          }
-
-          let firstTab;
-          for (const tabId of tabIds) {
-            const tab = tabTracker.getTab(tabId, null);
-            if (tab === null) {
-              continue;
-            }
-            if (referenceWindow === null) {
-              referenceWindow = tab.ownerGlobal;
-            } else if (tab.ownerGlobal !== referenceWindow) {
-              continue;
-            }
-            referenceWindow.gBrowser.replaceInSuccession(tab, tab.successor);
-            if (append && tab === lastSuccessor) {
-              lastSuccessor = tab.successor;
-            }
-            if (previousTab) {
-              referenceWindow.gBrowser.setSuccessor(previousTab, tab);
-            } else {
-              firstTab = tab;
-            }
-            previousTab = tab;
-          }
-
-          if (previousTab) {
-            if (!append && insert && lastSuccessor !== null) {
-              referenceWindow.gBrowser.replaceInSuccession(lastSuccessor, firstTab);
             }
             referenceWindow.gBrowser.setSuccessor(previousTab, lastSuccessor);
           }

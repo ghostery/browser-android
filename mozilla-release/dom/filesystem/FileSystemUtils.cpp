@@ -15,19 +15,9 @@ bool TokenizerIgnoreNothing(char16_t /* aChar */) { return false; }
 
 }  // anonymous namespace
 
-<<<<<<< HEAD
-/* static */ bool FileSystemUtils::IsDescendantPath(
-    const nsAString& aPath, const nsAString& aDescendantPath) {
-||||||| merged common ancestors
-/* static */ bool
-FileSystemUtils::IsDescendantPath(const nsAString& aPath,
-                                  const nsAString& aDescendantPath)
-{
-=======
 /* static */
 bool FileSystemUtils::IsDescendantPath(const nsAString& aPath,
                                        const nsAString& aDescendantPath) {
->>>>>>> upstream-releases
   // Check the sub-directory path to see if it has the parent path as prefix.
   if (!aDescendantPath.Equals(aPath) &&
       !StringBeginsWith(aDescendantPath, aPath)) {
@@ -37,19 +27,9 @@ bool FileSystemUtils::IsDescendantPath(const nsAString& aPath,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool FileSystemUtils::IsValidRelativeDOMPath(
-    const nsAString& aPath, nsTArray<nsString>& aParts) {
-||||||| merged common ancestors
-/* static */ bool
-FileSystemUtils::IsValidRelativeDOMPath(const nsAString& aPath,
-                                        nsTArray<nsString>& aParts)
-{
-=======
 /* static */
 bool FileSystemUtils::IsValidRelativeDOMPath(const nsAString& aPath,
                                              nsTArray<nsString>& aParts) {
->>>>>>> upstream-releases
   // We don't allow empty relative path to access the root.
   if (aPath.IsEmpty()) {
     return false;
@@ -84,19 +64,9 @@ bool FileSystemUtils::IsValidRelativeDOMPath(const nsAString& aPath,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult FileSystemUtils::DispatchRunnable(
-    nsIGlobalObject* aGlobal, already_AddRefed<nsIRunnable>&& aRunnable) {
-||||||| merged common ancestors
-/* static */ nsresult
-FileSystemUtils::DispatchRunnable(nsIGlobalObject* aGlobal,
-                                  already_AddRefed<nsIRunnable>&& aRunnable)
-{
-=======
 /* static */
 nsresult FileSystemUtils::DispatchRunnable(
     nsIGlobalObject* aGlobal, already_AddRefed<nsIRunnable>&& aRunnable) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIRunnable> runnable = aRunnable;
 
   nsCOMPtr<nsIEventTarget> target;

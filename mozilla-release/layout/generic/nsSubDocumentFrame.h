@@ -18,20 +18,8 @@
 #include "Units.h"
 
 namespace mozilla {
-<<<<<<< HEAD
-namespace layout {
-class RenderFrame;
-}
-}  // namespace mozilla
-||||||| merged common ancestors
-namespace layout {
-class RenderFrameParent;
-}
-}
-=======
 class PresShell;
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 /******************************************************************************
  * nsSubDocumentFrame
@@ -68,48 +56,6 @@ class nsSubDocumentFrame final : public nsAtomicContainerFrame,
   nscoord GetPrefISize(gfxContext* aRenderingContext) override;
 
   mozilla::IntrinsicSize GetIntrinsicSize() override;
-<<<<<<< HEAD
-  nsSize GetIntrinsicRatio() override;
-
-  mozilla::LogicalSize ComputeAutoSize(
-      gfxContext* aRenderingContext, mozilla::WritingMode aWritingMode,
-      const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
-      const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
-      const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
-
-  mozilla::LogicalSize ComputeSize(
-      gfxContext* aRenderingContext, mozilla::WritingMode aWritingMode,
-      const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
-      const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
-      const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
-
-  void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
-||||||| merged common ancestors
-  nsSize  GetIntrinsicRatio() override;
-
-  mozilla::LogicalSize
-  ComputeAutoSize(gfxContext*                 aRenderingContext,
-                  mozilla::WritingMode        aWritingMode,
-                  const mozilla::LogicalSize& aCBSize,
-                  nscoord                     aAvailableISize,
-                  const mozilla::LogicalSize& aMargin,
-                  const mozilla::LogicalSize& aBorder,
-                  const mozilla::LogicalSize& aPadding,
-                  ComputeSizeFlags            aFlags) override;
-
-  mozilla::LogicalSize
-  ComputeSize(gfxContext*                 aRenderingContext,
-              mozilla::WritingMode        aWritingMode,
-              const mozilla::LogicalSize& aCBSize,
-              nscoord                     aAvailableISize,
-              const mozilla::LogicalSize& aMargin,
-              const mozilla::LogicalSize& aBorder,
-              const mozilla::LogicalSize& aPadding,
-              ComputeSizeFlags            aFlags) override;
-
-  void Reflow(nsPresContext*     aPresContext,
-              ReflowOutput&      aDesiredSize,
-=======
   mozilla::AspectRatio GetIntrinsicRatio() override;
 
   mozilla::LogicalSize ComputeAutoSize(
@@ -125,7 +71,6 @@ class nsSubDocumentFrame final : public nsAtomicContainerFrame,
       const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
 
   void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
->>>>>>> upstream-releases
               const ReflowInput& aReflowInput,
               nsReflowStatus& aStatus) override;
 
@@ -152,45 +97,14 @@ class nsSubDocumentFrame final : public nsAtomicContainerFrame,
   void EndSwapDocShells(nsIFrame* aOther);
   nsView* EnsureInnerView();
   nsIFrame* GetSubdocumentRootFrame();
-<<<<<<< HEAD
-  enum { IGNORE_PAINT_SUPPRESSION = 0x1 };
-  nsIPresShell* GetSubdocumentPresShellForPainting(uint32_t aFlags);
-||||||| merged common ancestors
-  enum {
-    IGNORE_PAINT_SUPPRESSION = 0x1
-  };
-  nsIPresShell* GetSubdocumentPresShellForPainting(uint32_t aFlags);
-=======
   enum { IGNORE_PAINT_SUPPRESSION = 0x1 };
   mozilla::PresShell* GetSubdocumentPresShellForPainting(uint32_t aFlags);
->>>>>>> upstream-releases
   mozilla::ScreenIntSize GetSubdocumentSize();
 
   // nsIReflowCallback
   bool ReflowFinished() override;
   void ReflowCallbackCanceled() override;
 
-<<<<<<< HEAD
-  bool ShouldClampScrollPosition() {
-    nsFrameLoader* frameLoader = FrameLoader();
-    return !frameLoader || frameLoader->ShouldClampScrollPosition();
-  }
-
-||||||| merged common ancestors
-  bool ShouldClipSubdocument()
-  {
-    nsFrameLoader* frameLoader = FrameLoader();
-    return !frameLoader || frameLoader->ShouldClipSubdocument();
-  }
-
-  bool ShouldClampScrollPosition()
-  {
-    nsFrameLoader* frameLoader = FrameLoader();
-    return !frameLoader || frameLoader->ShouldClampScrollPosition();
-  }
-
-=======
->>>>>>> upstream-releases
   /**
    * Return true if pointer event hit-testing should be allowed to target
    * content in the subdocument.
@@ -203,11 +117,6 @@ class nsSubDocumentFrame final : public nsAtomicContainerFrame,
     }
   }
 
-<<<<<<< HEAD
-  mozilla::layout::RenderFrame* GetRenderFrame() const;
-||||||| merged common ancestors
-  mozilla::layout::RenderFrameParent* GetRenderFrameParent() const;
-=======
   nsFrameLoader* FrameLoader() const;
   void ResetFrameLoader();
 
@@ -215,7 +124,6 @@ class nsSubDocumentFrame final : public nsAtomicContainerFrame,
       bool aIsUnderHiddenEmbedderElement);
 
   void ClearDisplayItems();
->>>>>>> upstream-releases
 
  protected:
   friend class AsyncFrameInit;

@@ -38,13 +38,6 @@ ContentPermissionPrompt.prototype = {
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsIContentPermissionPrompt]),
 
-<<<<<<< HEAD
-  handleExistingPermission: function handleExistingPermission(request, type, isApp, callback) {
-    let result = Services.perms.testExactPermissionFromPrincipal(request.principal, type);
-||||||| merged common ancestors
-  handleExistingPermission: function handleExistingPermission(request, type, denyUnknown, callback) {
-    let result = Services.perms.testExactPermissionFromPrincipal(request.principal, type);
-=======
   handleExistingPermission: function handleExistingPermission(
     request,
     type,
@@ -54,7 +47,6 @@ ContentPermissionPrompt.prototype = {
       request.principal,
       type
     );
->>>>>>> upstream-releases
     if (result == Ci.nsIPermissionManager.ALLOW_ACTION) {
       callback(/* allow */ true);
       return true;
@@ -65,20 +57,6 @@ ContentPermissionPrompt.prototype = {
       return true;
     }
 
-<<<<<<< HEAD
-    if (isApp && result == Ci.nsIPermissionManager.UNKNOWN_ACTION) {
-      callback(/* allow */ false);
-      return true;
-    }
-
-||||||| merged common ancestors
-    if (denyUnknown && result == Ci.nsIPermissionManager.UNKNOWN_ACTION) {
-      callback(/* allow */ false);
-      return true;
-    }
-
-=======
->>>>>>> upstream-releases
     return false;
   },
 
@@ -129,19 +107,8 @@ ContentPermissionPrompt.prototype = {
     );
 
     // Returns true if the request was handled
-<<<<<<< HEAD
-    if (this.handleExistingPermission(request, perm.type, isApp, callback)) {
-       return;
-||||||| merged common ancestors
-    let access = (perm.access && perm.access !== "unused") ?
-                 (perm.type + "-" + perm.access) : perm.type;
-    if (this.handleExistingPermission(request, access,
-          /* denyUnknown */ isApp || !PROMPT_FOR_UNKNOWN.includes(perm.type), callback)) {
-       return;
-=======
     if (this.handleExistingPermission(request, perm.type, callback)) {
       return;
->>>>>>> upstream-releases
     }
 
     if (
@@ -156,26 +123,10 @@ ContentPermissionPrompt.prototype = {
       return;
     }
 
-<<<<<<< HEAD
-    let buttons = [{
-      label: browserBundle.GetStringFromName(entityName + ".dontAllow"),
-      callback: function(aChecked) {
-        // If the user checked "Don't ask again" or this is a desktopNotification, make a permanent exception
-        if (aChecked || entityName == "desktopNotification2")
-          Services.perms.addFromPrincipal(request.principal, perm.type, Ci.nsIPermissionManager.DENY_ACTION);
-||||||| merged common ancestors
-    let buttons = [{
-      label: browserBundle.GetStringFromName(entityName + ".dontAllow"),
-      callback: function(aChecked) {
-        // If the user checked "Don't ask again" or this is a desktopNotification, make a permanent exception
-        if (aChecked || entityName == "desktopNotification2")
-          Services.perms.addFromPrincipal(request.principal, access, Ci.nsIPermissionManager.DENY_ACTION);
-=======
     let browserBundle = Services.strings.createBundle(
       "chrome://browser/locale/browser.properties"
     );
     let entityName = kEntities[perm.type];
->>>>>>> upstream-releases
 
     let buttons = [
       {
@@ -193,35 +144,6 @@ ContentPermissionPrompt.prototype = {
           callback(/* allow */ false);
         },
       },
-<<<<<<< HEAD
-    },
-    {
-      label: browserBundle.GetStringFromName(entityName + ".allow"),
-      callback: function(aChecked) {
-        // If the user checked "Don't ask again" or this is a desktopNotification, make a permanent exception
-        if (aChecked || entityName == "desktopNotification2") {
-          Services.perms.addFromPrincipal(request.principal, perm.type, Ci.nsIPermissionManager.ALLOW_ACTION);
-        } else if (isApp) {
-          // Otherwise allow the permission for the current session if the request comes from an app
-          Services.perms.addFromPrincipal(request.principal, perm.type, Ci.nsIPermissionManager.ALLOW_ACTION, Ci.nsIPermissionManager.EXPIRE_SESSION);
-        }
-
-        callback(/* allow */ true);
-||||||| merged common ancestors
-    },
-    {
-      label: browserBundle.GetStringFromName(entityName + ".allow"),
-      callback: function(aChecked) {
-        // If the user checked "Don't ask again" or this is a desktopNotification, make a permanent exception
-        if (aChecked || entityName == "desktopNotification2") {
-          Services.perms.addFromPrincipal(request.principal, access, Ci.nsIPermissionManager.ALLOW_ACTION);
-        } else if (isApp) {
-          // Otherwise allow the permission for the current session if the request comes from an app
-          Services.perms.addFromPrincipal(request.principal, access, Ci.nsIPermissionManager.ALLOW_ACTION, Ci.nsIPermissionManager.EXPIRE_SESSION);
-        }
-
-        callback(/* allow */ true);
-=======
       {
         label: browserBundle.GetStringFromName(entityName + ".allow"),
         callback: function(aChecked) {
@@ -250,7 +172,6 @@ ContentPermissionPrompt.prototype = {
           callback(/* allow */ true);
         },
         positive: true,
->>>>>>> upstream-releases
       },
     ];
 

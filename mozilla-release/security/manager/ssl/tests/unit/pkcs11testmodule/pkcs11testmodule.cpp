@@ -16,21 +16,9 @@
 #include <string.h>
 
 #if defined(WIN32)
-<<<<<<< HEAD
-#include <windows.h>  // for Sleep
-||||||| merged common ancestors
-#  include <windows.h> // for Sleep
-=======
 #  include <windows.h>  // for Sleep
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#include <unistd.h>  // for usleep
-||||||| merged common ancestors
-#  include <unistd.h> // for usleep
-=======
 #  include <unistd.h>  // for usleep
->>>>>>> upstream-releases
 #endif
 
 #include "pkcs11.h"

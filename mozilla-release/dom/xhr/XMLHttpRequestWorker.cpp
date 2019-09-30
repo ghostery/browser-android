@@ -44,16 +44,8 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ void XMLHttpRequestWorker::StateData::trace(JSTracer* aTrc) {
-||||||| merged common ancestors
-/* static */ void
-XMLHttpRequestWorker::StateData::trace(JSTracer *aTrc)
-{
-=======
 /* static */
 void XMLHttpRequestWorker::StateData::trace(JSTracer* aTrc) {
->>>>>>> upstream-releases
   JS::TraceEdge(aTrc, &mResponse, "XMLHttpRequestWorker::StateData::mResponse");
 }
 
@@ -591,25 +583,9 @@ class SetResponseTypeRunnable final : public WorkerThreadProxySyncRunnable {
  private:
   ~SetResponseTypeRunnable() {}
 
-<<<<<<< HEAD
-  virtual void RunOnMainThread(ErrorResult& aRv) override {
-    mProxy->mXHR->SetResponseType(mResponseType, aRv);
-    if (!aRv.Failed()) {
-      mResponseType = mProxy->mXHR->ResponseType();
-    }
-||||||| merged common ancestors
-  virtual void
-  RunOnMainThread(ErrorResult& aRv) override
-  {
-    mProxy->mXHR->SetResponseType(mResponseType, aRv);
-    if (!aRv.Failed()) {
-      mResponseType = mProxy->mXHR->ResponseType();
-    }
-=======
   virtual void RunOnMainThread(ErrorResult& aRv) override {
     mProxy->mXHR->SetResponseTypeRaw(mResponseType);
     mResponseType = mProxy->mXHR->ResponseType();
->>>>>>> upstream-releases
   }
 };
 
@@ -691,42 +667,14 @@ class OpenRunnable final : public WorkerThreadProxySyncRunnable {
   XMLHttpRequestResponseType mResponseType;
   const nsString mMimeTypeOverride;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   // Remember the worker thread's stack when the XHR was opened, so that it can
   // be passed on to the net monitor.
   UniquePtr<SerializedStackHolder> mOriginStack;
 
  public:
->>>>>>> upstream-releases
   OpenRunnable(WorkerPrivate* aWorkerPrivate, Proxy* aProxy,
                const nsACString& aMethod, const nsAString& aURL,
                const Optional<nsAString>& aUser,
-<<<<<<< HEAD
-               const Optional<nsAString>& aPassword, bool aBackgroundRequest,
-               bool aWithCredentials, uint32_t aTimeout,
-               XMLHttpRequestResponseType aResponseType)
-      : WorkerThreadProxySyncRunnable(aWorkerPrivate, aProxy),
-        mMethod(aMethod),
-        mURL(aURL),
-        mBackgroundRequest(aBackgroundRequest),
-        mWithCredentials(aWithCredentials),
-        mTimeout(aTimeout),
-        mResponseType(aResponseType) {
-||||||| merged common ancestors
-               const Optional<nsAString>& aPassword,
-               bool aBackgroundRequest, bool aWithCredentials,
-               uint32_t aTimeout, XMLHttpRequestResponseType aResponseType)
-  : WorkerThreadProxySyncRunnable(aWorkerPrivate, aProxy),
-    mMethod(aMethod),
-    mURL(aURL), mBackgroundRequest(aBackgroundRequest),
-    mWithCredentials(aWithCredentials), mTimeout(aTimeout),
-    mResponseType(aResponseType)
-  {
-=======
                const Optional<nsAString>& aPassword, bool aBackgroundRequest,
                bool aWithCredentials, uint32_t aTimeout,
                XMLHttpRequestResponseType aResponseType,
@@ -741,7 +689,6 @@ public:
         mResponseType(aResponseType),
         mMimeTypeOverride(aMimeTypeOverride),
         mOriginStack(std::move(aOriginStack)) {
->>>>>>> upstream-releases
     if (aUser.WasPassed()) {
       mUserStr = aUser.Value();
       mUser = &mUserStr;
@@ -840,15 +787,8 @@ bool Proxy::Init() {
   mXHR = new XMLHttpRequestMainThread();
   mXHR->Construct(mWorkerPrivate->GetPrincipal(),
                   ownerWindow ? ownerWindow->AsGlobal() : nullptr,
-<<<<<<< HEAD
-                  mWorkerPrivate->GetBaseURI(), mWorkerPrivate->GetLoadGroup(),
-||||||| merged common ancestors
-                  mWorkerPrivate->GetBaseURI(),
-                  mWorkerPrivate->GetLoadGroup(),
-=======
                   mWorkerPrivate->CookieSettings(), true,
                   mWorkerPrivate->GetBaseURI(), mWorkerPrivate->GetLoadGroup(),
->>>>>>> upstream-releases
                   mWorkerPrivate->GetPerformanceStorage(),
                   mWorkerPrivate->CSPEventListener());
 
@@ -1105,19 +1045,9 @@ bool EventRunnable::PreDispatch(WorkerPrivate* /* unused */) {
       } else {
         bool doClone = true;
         JS::Rooted<JS::Value> transferable(cx);
-<<<<<<< HEAD
-        JS::Rooted<JSObject*> obj(
-            cx, response.isObject() ? &response.toObject() : nullptr);
-        if (obj && JS_IsArrayBufferObject(obj)) {
-||||||| merged common ancestors
-        JS::Rooted<JSObject*> obj(cx, response.isObject() ?
-                                  &response.toObject() : nullptr);
-        if (obj && JS_IsArrayBufferObject(obj)) {
-=======
         JS::Rooted<JSObject*> obj(
             cx, response.isObject() ? &response.toObject() : nullptr);
         if (obj && JS::IsArrayBufferObject(obj)) {
->>>>>>> upstream-releases
           // Use cached response if the arraybuffer has been transfered.
           if (mProxy->mArrayBufferResponseWasTransferred) {
             MOZ_ASSERT(JS::IsDetachedArrayBufferObject(obj));
@@ -1506,26 +1436,6 @@ void SendRunnable::RunOnMainThread(ErrorResult& aRv) {
 }
 
 XMLHttpRequestWorker::XMLHttpRequestWorker(WorkerPrivate* aWorkerPrivate)
-<<<<<<< HEAD
-    : mWorkerPrivate(aWorkerPrivate),
-      mResponseType(XMLHttpRequestResponseType::_empty),
-      mTimeout(0),
-      mBackgroundRequest(false),
-      mWithCredentials(false),
-      mCanceled(false),
-      mMozAnon(false),
-      mMozSystem(false) {
-||||||| merged common ancestors
-  : mWorkerPrivate(aWorkerPrivate)
-  , mResponseType(XMLHttpRequestResponseType::_empty)
-  , mTimeout(0)
-  , mBackgroundRequest(false)
-  , mWithCredentials(false)
-  , mCanceled(false)
-  , mMozAnon(false)
-  , mMozSystem(false)
-{
-=======
     : mWorkerPrivate(aWorkerPrivate),
       mResponseType(XMLHttpRequestResponseType::_empty),
       mTimeout(0),
@@ -1535,7 +1445,6 @@ XMLHttpRequestWorker::XMLHttpRequestWorker(WorkerPrivate* aWorkerPrivate)
       mMozAnon(false),
       mMozSystem(false),
       mMimeTypeOverride(VoidString()) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
 
   mozilla::HoldJSObjects(this);
@@ -1576,22 +1485,10 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN_INHERITED(XMLHttpRequestWorker,
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mStateData.mResponse)
 NS_IMPL_CYCLE_COLLECTION_TRACE_END
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<XMLHttpRequest> XMLHttpRequestWorker::Construct(
-    const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<XMLHttpRequest>
-XMLHttpRequestWorker::Construct(const GlobalObject& aGlobal,
-                                const MozXMLHttpRequestParameters& aParams,
-                                ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<XMLHttpRequest> XMLHttpRequestWorker::Construct(
     const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
   WorkerPrivate* workerPrivate = GetWorkerPrivateFromContext(cx);
   MOZ_ASSERT(workerPrivate);
@@ -1882,31 +1779,13 @@ void XMLHttpRequestWorker::Open(const nsACString& aMethod,
       aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
       return;
     }
-<<<<<<< HEAD
-    mProxy = new Proxy(this, clientInfo.ref(), mWorkerPrivate->GetController(),
-                       mMozAnon, mMozSystem);
-||||||| merged common ancestors
-    mProxy = new Proxy(this, clientInfo.ref(),
-                       mWorkerPrivate->GetController(), mMozAnon, mMozSystem);
-=======
     mProxy = new Proxy(this, clientInfo.ref(), mWorkerPrivate->GetController(),
                        mMozAnon, mMozSystem);
     alsoOverrideMimeType = true;
->>>>>>> upstream-releases
   }
 
   mProxy->mOuterEventStreamId++;
 
-<<<<<<< HEAD
-  RefPtr<OpenRunnable> runnable = new OpenRunnable(
-      mWorkerPrivate, mProxy, aMethod, aUrl, aUser, aPassword,
-      mBackgroundRequest, mWithCredentials, mTimeout, mResponseType);
-||||||| merged common ancestors
-  RefPtr<OpenRunnable> runnable =
-    new OpenRunnable(mWorkerPrivate, mProxy, aMethod, aUrl, aUser, aPassword,
-                     mBackgroundRequest, mWithCredentials,
-                     mTimeout, mResponseType);
-=======
   UniquePtr<SerializedStackHolder> stack;
   if (mWorkerPrivate->IsWatchedByDevtools()) {
     if (JSContext* cx = nsContentUtils::GetCurrentJSContext()) {
@@ -1919,7 +1798,6 @@ void XMLHttpRequestWorker::Open(const nsACString& aMethod,
       mBackgroundRequest, mWithCredentials, mTimeout, mResponseType,
       alsoOverrideMimeType ? mMimeTypeOverride : VoidString(),
       std::move(stack));
->>>>>>> upstream-releases
 
   ++mProxy->mOpenCount;
   runnable->Dispatch(Canceling, aRv);
@@ -2278,41 +2156,13 @@ void XMLHttpRequestWorker::OverrideMimeType(const nsAString& aMimeType,
     return;
   }
 
-<<<<<<< HEAD
-  // We're supposed to throw if the state is not OPENED or HEADERS_RECEIVED. We
-  // can detect OPENED really easily but we can't detect HEADERS_RECEIVED in a
-  // non-racy way until the XHR state machine actually runs on this thread
-  // (bug 671047). For now we're going to let this work only if the Send()
-  // method has not been called, unless the send has been aborted.
-  if (!mProxy || (SendInProgress() &&
-                  (mProxy->mSeenLoadStart || mStateData.mReadyState > 1))) {
-||||||| merged common ancestors
-  // We're supposed to throw if the state is not OPENED or HEADERS_RECEIVED. We
-  // can detect OPENED really easily but we can't detect HEADERS_RECEIVED in a
-  // non-racy way until the XHR state machine actually runs on this thread
-  // (bug 671047). For now we're going to let this work only if the Send()
-  // method has not been called, unless the send has been aborted.
-  if (!mProxy || (SendInProgress() &&
-                  (mProxy->mSeenLoadStart ||
-                   mStateData.mReadyState > 1))) {
-=======
   // We're supposed to throw if the state is LOADING or DONE.
   if (mStateData.mReadyState == XMLHttpRequest_Binding::LOADING ||
       mStateData.mReadyState == XMLHttpRequest_Binding::DONE) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<OverrideMimeTypeRunnable> runnable =
-      new OverrideMimeTypeRunnable(mWorkerPrivate, mProxy, aMimeType);
-  runnable->Dispatch(Canceling, aRv);
-||||||| merged common ancestors
-  RefPtr<OverrideMimeTypeRunnable> runnable =
-    new OverrideMimeTypeRunnable(mWorkerPrivate, mProxy, aMimeType);
-  runnable->Dispatch(Canceling, aRv);
-=======
   mMimeTypeOverride = aMimeType;
 
   if (mProxy) {
@@ -2320,7 +2170,6 @@ void XMLHttpRequestWorker::OverrideMimeType(const nsAString& aMimeType,
         new OverrideMimeTypeRunnable(mWorkerPrivate, mProxy, aMimeType);
     runnable->Dispatch(Canceling, aRv);
   }
->>>>>>> upstream-releases
 }
 
 void XMLHttpRequestWorker::SetResponseType(
@@ -2340,20 +2189,9 @@ void XMLHttpRequestWorker::SetResponseType(
     return;
   }
 
-<<<<<<< HEAD
-  if (SendInProgress() &&
-      (mProxy->mSeenLoadStart || mStateData.mReadyState > 1)) {
-    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
-||||||| merged common ancestors
-  if (SendInProgress() &&
-      (mProxy->mSeenLoadStart ||
-       mStateData.mReadyState > 1)) {
-    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
-=======
   if (mStateData.mReadyState == XMLHttpRequest_Binding::LOADING ||
       mStateData.mReadyState == XMLHttpRequest_Binding::DONE) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_XHR_MUST_NOT_BE_LOADING_OR_DONE);
->>>>>>> upstream-releases
     return;
   }
 

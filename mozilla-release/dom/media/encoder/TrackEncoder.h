@@ -189,26 +189,11 @@ class TrackEncoder {
 class AudioTrackEncoder : public TrackEncoder {
  public:
   explicit AudioTrackEncoder(TrackRate aTrackRate)
-<<<<<<< HEAD
-      : TrackEncoder(aTrackRate),
-        mChannels(0),
-        mSamplingRate(0),
-        mAudioBitrate(0),
-        mDirectConnected(false) {}
-||||||| merged common ancestors
-    : TrackEncoder(aTrackRate)
-    , mChannels(0)
-    , mSamplingRate(0)
-    , mAudioBitrate(0)
-    , mDirectConnected(false)
-  {}
-=======
       : TrackEncoder(aTrackRate),
         mChannels(0),
         mSamplingRate(0),
         mNotInitDuration(0),
         mAudioBitrate(0) {}
->>>>>>> upstream-releases
 
   /**
    * Suspends encoding from now, i.e., all future audio data received through
@@ -301,50 +286,7 @@ class AudioTrackEncoder : public TrackEncoder {
    */
   void NotifyEndOfStream() override;
 
-<<<<<<< HEAD
-  void SetStartOffset(StreamTime aStartOffset) override;
-
-  /**
-   * Dispatched from MediaStreamGraph when it has run an iteration where the
-   * input track of the track this TrackEncoder is associated with didn't have
-   * any data.
-   *
-   * Since we sometimes use a direct listener for AudioSegments we miss periods
-   * of time for which the source didn't have any data. This ensures that the
-   * latest frame gets displayed while we wait for more data to be pushed.
-   */
-  void AdvanceBlockedInput(StreamTime aDuration) override;
-
-  /**
-   * Dispatched from MediaStreamGraph when it has run an iteration so we can
-   * hand more data to the encoder.
-   */
-  void AdvanceCurrentTime(StreamTime aDuration) override;
-
  protected:
-||||||| merged common ancestors
-  void SetStartOffset(StreamTime aStartOffset) override;
-
-  /**
-   * Dispatched from MediaStreamGraph when it has run an iteration where the
-   * input track of the track this TrackEncoder is associated with didn't have
-   * any data.
-   *
-   * Since we sometimes use a direct listener for AudioSegments we miss periods
-   * of time for which the source didn't have any data. This ensures that the
-   * latest frame gets displayed while we wait for more data to be pushed.
-   */
-  void AdvanceBlockedInput(StreamTime aDuration) override;
-
-  /**
-   * Dispatched from MediaStreamGraph when it has run an iteration so we can
-   * hand more data to the encoder.
-   */
-  void AdvanceCurrentTime(StreamTime aDuration) override;
-protected:
-=======
- protected:
->>>>>>> upstream-releases
   /**
    * Number of samples per channel in a pcm buffer. This is also the value of
    * frame size required by audio encoder, and listeners will be notified when
@@ -388,23 +330,11 @@ enum class FrameDroppingMode {
   DISALLOW,  // Must not drop any frames, even if it means we will OOM
 };
 
-<<<<<<< HEAD
-class VideoTrackEncoder : public TrackEncoder {
- public:
-  explicit VideoTrackEncoder(TrackRate aTrackRate,
-                             FrameDroppingMode aFrameDroppingMode);
-||||||| merged common ancestors
-class VideoTrackEncoder : public TrackEncoder
-{
-public:
-  explicit VideoTrackEncoder(TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
-=======
 class VideoTrackEncoder : public TrackEncoder {
  public:
   explicit VideoTrackEncoder(RefPtr<DriftCompensator> aDriftCompensator,
                              TrackRate aTrackRate,
                              FrameDroppingMode aFrameDroppingMode);
->>>>>>> upstream-releases
 
   /**
    * Suspends encoding from aTime, i.e., all video frame with a timestamp

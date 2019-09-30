@@ -17,26 +17,9 @@ namespace dom {
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
 SVGPolyElement::SVGPolyElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGPolyElementBase(std::move(aNodeInfo)) {}
-
-SVGPolyElement::~SVGPolyElement() {}
-||||||| merged common ancestors
-SVGPolyElement::SVGPolyElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-  : SVGPolyElementBase(std::move(aNodeInfo))
-{
-}
-
-SVGPolyElement::~SVGPolyElement()
-{
-}
-=======
-SVGPolyElement::SVGPolyElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGPolyElementBase(std::move(aNodeInfo)) {}
->>>>>>> upstream-releases
 
 already_AddRefed<DOMSVGPointList> SVGPolyElement::Points() {
   void* key = mPoints.GetBaseValKey();
@@ -66,53 +49,20 @@ SVGPolyElement::IsAttributeMapped(const nsAtom* name) const {
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-/* virtual */ bool SVGPolyElement::HasValidDimensions() const {
-||||||| merged common ancestors
-/* virtual */ bool
-SVGPolyElement::HasValidDimensions() const
-{
-=======
 /* virtual */
 bool SVGPolyElement::HasValidDimensions() const {
->>>>>>> upstream-releases
   return !mPoints.GetAnimValue().IsEmpty();
 }
 
 //----------------------------------------------------------------------
 // SVGGeometryElement methods
 
-<<<<<<< HEAD
-bool SVGPolyElement::AttributeDefinesGeometry(const nsAtom* aName) {
-  if (aName == nsGkAtoms::points) return true;
-
-  return false;
-||||||| merged common ancestors
-bool
-SVGPolyElement::AttributeDefinesGeometry(const nsAtom *aName)
-{
-  if (aName == nsGkAtoms::points)
-    return true;
-
-  return false;
-=======
 bool SVGPolyElement::AttributeDefinesGeometry(const nsAtom* aName) {
   return aName == nsGkAtoms::points;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void SVGPolyElement::GetMarkPoints(nsTArray<nsSVGMark>* aMarks) {
-  const SVGPointList& points = mPoints.GetAnimValue();
-||||||| merged common ancestors
-void
-SVGPolyElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks)
-{
-  const SVGPointList &points = mPoints.GetAnimValue();
-=======
 void SVGPolyElement::GetMarkPoints(nsTArray<SVGMark>* aMarks) {
   const SVGPointList& points = mPoints.GetAnimValue();
->>>>>>> upstream-releases
 
   if (!points.Length()) return;
 
@@ -123,13 +73,7 @@ void SVGPolyElement::GetMarkPoints(nsTArray<SVGMark>* aMarks) {
   for (uint32_t i = 1; i < points.Length(); ++i) {
     float x = points[i].mX;
     float y = points[i].mY;
-<<<<<<< HEAD
-    float angle = atan2(y - py, x - px);
-||||||| merged common ancestors
-    float angle = atan2(y-py, x-px);
-=======
     float angle = std::atan2(y - py, x - px);
->>>>>>> upstream-releases
 
     // Vertex marker.
     if (i == 1) {
@@ -183,10 +127,5 @@ bool SVGPolyElement::GetGeometryBounds(Rect* aBounds,
   }
   return true;
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

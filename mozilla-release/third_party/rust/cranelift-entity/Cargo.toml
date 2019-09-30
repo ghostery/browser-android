@@ -1,12 +1,4 @@
 [package]
-<<<<<<< HEAD
-name = "cranelift-entity"
-version = "0.25.0"
-||||||| merged common ancestors
-name = "cranelift-entity"
-version = "0.20.1"
-=======
->>>>>>> upstream-releases
 authors = ["The Cranelift Project Developers"]
 name = "cranelift-entity"
 version = "0.32.0"

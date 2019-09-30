@@ -24,18 +24,10 @@ using namespace mozilla::dom;
 
 namespace {
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-const uint32_t MSEC_PER_SEC = 1000;
-const uint32_t MSEC_PER_MIN = 1000 * 60;
-||||||| merged common ancestors
-const uint32_t MSEC_PER_SEC  = 1000;
-const uint32_t MSEC_PER_MIN  = 1000 * 60;
-=======
 using namespace mozilla;
 
 const uint32_t MSEC_PER_SEC = 1000;
 const uint32_t MSEC_PER_MIN = 1000 * 60;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
 const uint32_t MSEC_PER_HOUR = 1000 * 60 * 60;
 
 #define ACCESSKEY_PREFIX_LC NS_LITERAL_STRING("accesskey(")  // SMIL2+
@@ -134,21 +126,9 @@ inline bool ParseClockMetric(RangedPtr<const char16_t>& aIter,
 /**
  * See http://www.w3.org/TR/SVG/animate.html#ClockValueSyntax
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool ParseClockValue(RangedPtr<const char16_t>& aIter,
-                     const RangedPtr<const char16_t>& aEnd,
-                     nsSMILTimeValue* aResult) {
-||||||| merged common ancestors
-bool
-ParseClockValue(RangedPtr<const char16_t>& aIter,
-                const RangedPtr<const char16_t>& aEnd,
-                nsSMILTimeValue* aResult)
-{
-=======
 bool ParseClockValue(RangedPtr<const char16_t>& aIter,
                      const RangedPtr<const char16_t>& aEnd,
                      SMILTimeValue* aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   if (aIter == aEnd) {
     return false;
   }
@@ -206,17 +186,8 @@ bool ParseClockValue(RangedPtr<const char16_t>& aIter,
                                                iter, aEnd, fraction))) {
         return false;
       }
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-      aResult->SetMillis(nsSMILTime(hours) * MSEC_PER_HOUR +
-                         minutes * MSEC_PER_MIN + seconds * MSEC_PER_SEC +
-||||||| merged common ancestors
-      aResult->SetMillis(nsSMILTime(hours) * MSEC_PER_HOUR +
-                         minutes * MSEC_PER_MIN +
-                         seconds * MSEC_PER_SEC +
-=======
       aResult->SetMillis(SMILTime(hours) * MSEC_PER_HOUR +
                          minutes * MSEC_PER_MIN + seconds * MSEC_PER_SEC +
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
                          NS_round(fraction * MSEC_PER_SEC));
       aIter = iter;
       return true;
@@ -240,21 +211,9 @@ bool ParseClockValue(RangedPtr<const char16_t>& aIter,
   return false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool ParseOffsetValue(RangedPtr<const char16_t>& aIter,
-                      const RangedPtr<const char16_t>& aEnd,
-                      nsSMILTimeValue* aResult) {
-||||||| merged common ancestors
-bool
-ParseOffsetValue(RangedPtr<const char16_t>& aIter,
-                 const RangedPtr<const char16_t>& aEnd,
-                 nsSMILTimeValue* aResult)
-{
-=======
 bool ParseOffsetValue(RangedPtr<const char16_t>& aIter,
                       const RangedPtr<const char16_t>& aEnd,
                       SMILTimeValue* aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   RangedPtr<const char16_t> iter(aIter);
 
   int32_t sign;
@@ -269,37 +228,16 @@ bool ParseOffsetValue(RangedPtr<const char16_t>& aIter,
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool ParseOffsetValue(const nsAString& aSpec, nsSMILTimeValue* aResult) {
-||||||| merged common ancestors
-bool
-ParseOffsetValue(const nsAString& aSpec,
-                 nsSMILTimeValue* aResult)
-{
-=======
 bool ParseOffsetValue(const nsAString& aSpec, SMILTimeValue* aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   RangedPtr<const char16_t> iter(SVGContentUtils::GetStartRangedPtr(aSpec));
   const RangedPtr<const char16_t> end(SVGContentUtils::GetEndRangedPtr(aSpec));
 
   return ParseOffsetValue(iter, end, aResult) && iter == end;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool ParseOptionalOffset(RangedPtr<const char16_t>& aIter,
-                         const RangedPtr<const char16_t>& aEnd,
-                         nsSMILTimeValue* aResult) {
-||||||| merged common ancestors
-bool
-ParseOptionalOffset(RangedPtr<const char16_t>& aIter,
-                    const RangedPtr<const char16_t>& aEnd,
-                    nsSMILTimeValue* aResult)
-{
-=======
 bool ParseOptionalOffset(RangedPtr<const char16_t>& aIter,
                          const RangedPtr<const char16_t>& aEnd,
                          SMILTimeValue* aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   if (aIter == aEnd) {
     aResult->SetMillis(0L);
     return true;
@@ -368,21 +306,9 @@ already_AddRefed<nsAtom> ConvertTokenToAtom(const nsAString& aToken,
   return ConvertUnescapedTokenToAtom(token);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool ParseElementBaseTimeValueSpec(const nsAString& aSpec,
-                                   nsSMILTimeValueSpecParams& aResult) {
-  nsSMILTimeValueSpecParams result;
-||||||| merged common ancestors
-bool
-ParseElementBaseTimeValueSpec(const nsAString& aSpec,
-                              nsSMILTimeValueSpecParams& aResult)
-{
-  nsSMILTimeValueSpecParams result;
-=======
 bool ParseElementBaseTimeValueSpec(const nsAString& aSpec,
                                    SMILTimeValueSpecParams& aResult) {
   SMILTimeValueSpecParams result;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
 
   //
   // The spec will probably look something like one of these
@@ -470,30 +396,15 @@ bool ParseElementBaseTimeValueSpec(const nsAString& aSpec,
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-}  // namespace
-||||||| merged common ancestors
-} // namespace
-=======
 }  // namespace
 
 namespace mozilla {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
 
 //------------------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-const nsDependentSubstring nsSMILParserUtils::TrimWhitespace(
-    const nsAString& aString) {
-||||||| merged common ancestors
-const nsDependentSubstring
-nsSMILParserUtils::TrimWhitespace(const nsAString& aString)
-{
-=======
 const nsDependentSubstring SMILParserUtils::TrimWhitespace(
     const nsAString& aString) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   nsAString::const_iterator start, end;
 
   aString.BeginReading(start);
@@ -519,18 +430,8 @@ const nsDependentSubstring SMILParserUtils::TrimWhitespace(
   return Substring(start, end);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseKeySplines(
-    const nsAString& aSpec, FallibleTArray<nsSMILKeySpline>& aKeySplines) {
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseKeySplines(const nsAString& aSpec,
-                                   FallibleTArray<nsSMILKeySpline>& aKeySplines)
-{
-=======
 bool SMILParserUtils::ParseKeySplines(
     const nsAString& aSpec, FallibleTArray<SMILKeySpline>& aKeySplines) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace>
       controlPointTokenizer(aSpec, ';');
   while (controlPointTokenizer.hasMoreTokens()) {
@@ -539,38 +440,17 @@ bool SMILParserUtils::ParseKeySplines(
                   nsCharSeparatedTokenizer::SEPARATOR_OPTIONAL);
 
     double values[4];
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-    for (int i = 0; i < 4; i++) {
-||||||| merged common ancestors
-    for (int i = 0 ; i < 4; i++) {
-=======
     for (auto& value : values) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
       if (!tokenizer.hasMoreTokens() ||
           !SVGContentUtils::ParseNumber(tokenizer.nextToken(), value) ||
           value > 1.0 || value < 0.0) {
         return false;
       }
     }
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-    if (tokenizer.hasMoreTokens() || tokenizer.separatorAfterCurrentToken() ||
-        !aKeySplines.AppendElement(
-            nsSMILKeySpline(values[0], values[1], values[2], values[3]),
-            fallible)) {
-||||||| merged common ancestors
-    if (tokenizer.hasMoreTokens() ||
-        tokenizer.separatorAfterCurrentToken() ||
-        !aKeySplines.AppendElement(nsSMILKeySpline(values[0],
-                                                   values[1],
-                                                   values[2],
-                                                   values[3]),
-                                   fallible)) {
-=======
     if (tokenizer.hasMoreTokens() || tokenizer.separatorAfterCurrentToken() ||
         !aKeySplines.AppendElement(
             SMILKeySpline(values[0], values[1], values[2], values[3]),
             fallible)) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
       return false;
     }
   }
@@ -578,27 +458,11 @@ bool SMILParserUtils::ParseKeySplines(
   return !aKeySplines.IsEmpty();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseSemicolonDelimitedProgressList(
-    const nsAString& aSpec, bool aNonDecreasing,
-    FallibleTArray<double>& aArray) {
-  nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
-      aSpec, ';');
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseSemicolonDelimitedProgressList(const nsAString& aSpec,
-                                                       bool aNonDecreasing,
-                                                       FallibleTArray<double>& aArray)
-{
-  nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace>
-    tokenizer(aSpec, ';');
-=======
 bool SMILParserUtils::ParseSemicolonDelimitedProgressList(
     const nsAString& aSpec, bool aNonDecreasing,
     FallibleTArray<double>& aArray) {
   nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
       aSpec, ';');
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
 
   double previousValue = -1.0;
 
@@ -623,39 +487,10 @@ bool SMILParserUtils::ParseSemicolonDelimitedProgressList(
 }
 
 // Helper class for ParseValues
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-class MOZ_STACK_CLASS SMILValueParser
-    : public nsSMILParserUtils::GenericValueParser {
- public:
-||||||| merged common ancestors
-class MOZ_STACK_CLASS SMILValueParser :
-  public nsSMILParserUtils::GenericValueParser
-{
-public:
-=======
 class MOZ_STACK_CLASS SMILValueParser
     : public SMILParserUtils::GenericValueParser {
  public:
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   SMILValueParser(const SVGAnimationElement* aSrcElement,
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-                  const nsISMILAttr* aSMILAttr,
-                  FallibleTArray<nsSMILValue>* aValuesArray,
-                  bool* aPreventCachingOfSandwich)
-      : mSrcElement(aSrcElement),
-        mSMILAttr(aSMILAttr),
-        mValuesArray(aValuesArray),
-        mPreventCachingOfSandwich(aPreventCachingOfSandwich) {}
-||||||| merged common ancestors
-                  const nsISMILAttr* aSMILAttr,
-                  FallibleTArray<nsSMILValue>* aValuesArray,
-                  bool* aPreventCachingOfSandwich) :
-    mSrcElement(aSrcElement),
-    mSMILAttr(aSMILAttr),
-    mValuesArray(aValuesArray),
-    mPreventCachingOfSandwich(aPreventCachingOfSandwich)
-  {}
-=======
                   const SMILAttr* aSMILAttr,
                   FallibleTArray<SMILValue>* aValuesArray,
                   bool* aPreventCachingOfSandwich)
@@ -663,7 +498,6 @@ class MOZ_STACK_CLASS SMILValueParser
         mSMILAttr(aSMILAttr),
         mValuesArray(aValuesArray),
         mPreventCachingOfSandwich(aPreventCachingOfSandwich) {}
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
 
   virtual bool Parse(const nsAString& aValueStr) override {
     SMILValue newValue;
@@ -688,27 +522,11 @@ class MOZ_STACK_CLASS SMILValueParser
   bool* mPreventCachingOfSandwich;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseValues(const nsAString& aSpec,
-                                    const SVGAnimationElement* aSrcElement,
-                                    const nsISMILAttr& aAttribute,
-                                    FallibleTArray<nsSMILValue>& aValuesArray,
-                                    bool& aPreventCachingOfSandwich) {
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseValues(const nsAString& aSpec,
-                               const SVGAnimationElement* aSrcElement,
-                               const nsISMILAttr& aAttribute,
-                               FallibleTArray<nsSMILValue>& aValuesArray,
-                               bool& aPreventCachingOfSandwich)
-{
-=======
 bool SMILParserUtils::ParseValues(const nsAString& aSpec,
                                   const SVGAnimationElement* aSrcElement,
                                   const SMILAttr& aAttribute,
                                   FallibleTArray<SMILValue>& aValuesArray,
                                   bool& aPreventCachingOfSandwich) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   // Assume all results can be cached, until we find one that can't.
   aPreventCachingOfSandwich = false;
   SMILValueParser valueParser(aSrcElement, &aAttribute, &aValuesArray,
@@ -716,27 +534,11 @@ bool SMILParserUtils::ParseValues(const nsAString& aSpec,
   return ParseValuesGeneric(aSpec, valueParser);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseValuesGeneric(const nsAString& aSpec,
-                                           GenericValueParser& aParser) {
-  nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
-      aSpec, ';');
-  if (!tokenizer.hasMoreTokens()) {  // Empty list
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseValuesGeneric(const nsAString& aSpec,
-                                      GenericValueParser& aParser)
-{
-  nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace>
-    tokenizer(aSpec, ';');
-  if (!tokenizer.hasMoreTokens()) { // Empty list
-=======
 bool SMILParserUtils::ParseValuesGeneric(const nsAString& aSpec,
                                          GenericValueParser& aParser) {
   nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
       aSpec, ';');
   if (!tokenizer.hasMoreTokens()) {  // Empty list
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
     return false;
   }
 
@@ -749,22 +551,9 @@ bool SMILParserUtils::ParseValuesGeneric(const nsAString& aSpec,
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseRepeatCount(const nsAString& aSpec,
-                                         nsSMILRepeatCount& aResult) {
-  const nsAString& spec = nsSMILParserUtils::TrimWhitespace(aSpec);
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseRepeatCount(const nsAString& aSpec,
-                                    nsSMILRepeatCount& aResult)
-{
-  const nsAString& spec =
-    nsSMILParserUtils::TrimWhitespace(aSpec);
-=======
 bool SMILParserUtils::ParseRepeatCount(const nsAString& aSpec,
                                        SMILRepeatCount& aResult) {
   const nsAString& spec = SMILParserUtils::TrimWhitespace(aSpec);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
 
   if (spec.EqualsLiteral("indefinite")) {
     aResult.SetIndefinite();
@@ -779,31 +568,13 @@ bool SMILParserUtils::ParseRepeatCount(const nsAString& aSpec,
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseTimeValueSpecParams(
-    const nsAString& aSpec, nsSMILTimeValueSpecParams& aResult) {
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseTimeValueSpecParams(const nsAString& aSpec,
-                                            nsSMILTimeValueSpecParams& aResult)
-{
-=======
 bool SMILParserUtils::ParseTimeValueSpecParams(
     const nsAString& aSpec, SMILTimeValueSpecParams& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   const nsAString& spec = TrimWhitespace(aSpec);
 
   if (spec.EqualsLiteral("indefinite")) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-    aResult.mType = nsSMILTimeValueSpecParams::INDEFINITE;
-    return true;
-||||||| merged common ancestors
-     aResult.mType = nsSMILTimeValueSpecParams::INDEFINITE;
-     return true;
-=======
     aResult.mType = SMILTimeValueSpecParams::INDEFINITE;
     return true;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   }
 
   // offset type
@@ -827,33 +598,15 @@ bool SMILParserUtils::ParseTimeValueSpecParams(
   return ParseElementBaseTimeValueSpec(spec, aResult);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-bool nsSMILParserUtils::ParseClockValue(const nsAString& aSpec,
-                                        nsSMILTimeValue* aResult) {
-||||||| merged common ancestors
-bool
-nsSMILParserUtils::ParseClockValue(const nsAString& aSpec,
-                                   nsSMILTimeValue* aResult)
-{
-=======
 bool SMILParserUtils::ParseClockValue(const nsAString& aSpec,
                                       SMILTimeValue* aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   RangedPtr<const char16_t> iter(SVGContentUtils::GetStartRangedPtr(aSpec));
   RangedPtr<const char16_t> end(SVGContentUtils::GetEndRangedPtr(aSpec));
 
   return ::ParseClockValue(iter, end, aResult) && iter == end;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILParserUtils.cpp
-int32_t nsSMILParserUtils::CheckForNegativeNumber(const nsAString& aStr) {
-||||||| merged common ancestors
-int32_t
-nsSMILParserUtils::CheckForNegativeNumber(const nsAString& aStr)
-{
-=======
 int32_t SMILParserUtils::CheckForNegativeNumber(const nsAString& aStr) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILParserUtils.cpp
   int32_t absValLocation = -1;
 
   RangedPtr<const char16_t> start(SVGContentUtils::GetStartRangedPtr(aStr));

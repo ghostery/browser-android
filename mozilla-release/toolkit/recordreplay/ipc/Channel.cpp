@@ -53,40 +53,12 @@ void OpenChannel(base::ProcessId aMiddlemanPid, uint32_t aChannelId,
 
 }  // namespace parent
 
-<<<<<<< HEAD
-struct HelloMessage {
-||||||| merged common ancestors
-struct HelloMessage
-{
-=======
 static void InitializeSimulatedDelayState();
 
 struct HelloMessage {
->>>>>>> upstream-releases
   int32_t mMagic;
 };
 
-<<<<<<< HEAD
-Channel::Channel(size_t aId, bool aMiddlemanRecording,
-                 const MessageHandler& aHandler)
-    : mId(aId),
-      mHandler(aHandler),
-      mInitialized(false),
-      mConnectionFd(0),
-      mFd(0),
-      mMessageBuffer(nullptr),
-      mMessageBytes(0) {
-||||||| merged common ancestors
-Channel::Channel(size_t aId, bool aMiddlemanRecording, const MessageHandler& aHandler)
-  : mId(aId)
-  , mHandler(aHandler)
-  , mInitialized(false)
-  , mConnectionFd(0)
-  , mFd(0)
-  , mMessageBuffer(nullptr)
-  , mMessageBytes(0)
-{
-=======
 Channel::Channel(size_t aId, bool aMiddlemanRecording,
                  const MessageHandler& aHandler)
     : mId(aId),
@@ -97,7 +69,6 @@ Channel::Channel(size_t aId, bool aMiddlemanRecording,
       mMessageBuffer(nullptr),
       mMessageBytes(0),
       mSimulateDelays(false) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
 
   if (IsRecordingOrReplaying()) {
@@ -142,19 +113,9 @@ Channel::Channel(size_t aId, bool aMiddlemanRecording,
   Thread::SpawnNonRecordedThread(ThreadMain, this);
 }
 
-<<<<<<< HEAD
-/* static */ void Channel::ThreadMain(void* aChannelArg) {
-  Channel* channel = (Channel*)aChannelArg;
-||||||| merged common ancestors
-/* static */ void
-Channel::ThreadMain(void* aChannelArg)
-{
-  Channel* channel = (Channel*) aChannelArg;
-=======
 /* static */
 void Channel::ThreadMain(void* aChannelArg) {
   Channel* channel = (Channel*)aChannelArg;
->>>>>>> upstream-releases
 
   static const int32_t MagicValue = 0x914522b9;
 
@@ -210,13 +171,6 @@ static size_t LoadEnvValue(const char* aEnv) {
   return 0;
 }
 
-<<<<<<< HEAD
-void Channel::SendMessage(const Message& aMsg) {
-||||||| merged common ancestors
-void
-Channel::SendMessage(const Message& aMsg)
-{
-=======
 static void InitializeSimulatedDelayState() {
   // In preparation for shifting computing resources into the cloud when
   // debugging a recorded execution (see bug 1547081), we need to be able to
@@ -255,7 +209,6 @@ static bool MessageSubjectToSimulatedDelay(MessageType aType) {
 }
 
 void Channel::SendMessage(Message&& aMsg) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread() ||
                      aMsg.mType == MessageType::BeginFatalError ||
                      aMsg.mType == MessageType::FatalError ||
@@ -271,11 +224,6 @@ void Channel::SendMessage(Message&& aMsg) {
 
   PrintMessage("SendMsg", aMsg);
 
-<<<<<<< HEAD
-  const char* ptr = (const char*)&aMsg;
-||||||| merged common ancestors
-  const char* ptr = (const char*) &aMsg;
-=======
   if (gSimulatedLatency && gSimulatedBandwidth && mSimulateDelays &&
       MessageSubjectToSimulatedDelay(aMsg.mType)) {
     AutoEnsurePassThroughThreadEvents pt;
@@ -299,7 +247,6 @@ void Channel::SendMessage(Message&& aMsg) {
   }
 
   const char* ptr = (const char*)&aMsg;
->>>>>>> upstream-releases
   size_t nbytes = aMsg.mSize;
   while (nbytes) {
     int rv = HANDLE_EINTR(send(mFd, ptr, nbytes, 0));
@@ -315,15 +262,7 @@ void Channel::SendMessage(Message&& aMsg) {
   }
 }
 
-<<<<<<< HEAD
-Message* Channel::WaitForMessage() {
-||||||| merged common ancestors
-Message*
-Channel::WaitForMessage()
-{
-=======
 Message::UniquePtr Channel::WaitForMessage() {
->>>>>>> upstream-releases
   if (!mMessageBuffer) {
     mMessageBuffer = (MessageBuffer*)AllocateMemory(sizeof(MessageBuffer),
                                                     MemoryKind::Generic);
@@ -395,128 +334,12 @@ void Channel::PrintMessage(const char* aPrefix, const Message& aMsg) {
   AutoEnsurePassThroughThreadEvents pt;
   nsCString data;
   switch (aMsg.mType) {
-<<<<<<< HEAD
-    case MessageType::HitCheckpoint: {
-      const HitCheckpointMessage& nmsg = (const HitCheckpointMessage&)aMsg;
-      data.AppendPrintf("Id %d Endpoint %d Duration %.2f ms",
-                        (int)nmsg.mCheckpointId, nmsg.mRecordingEndpoint,
-                        nmsg.mDurationMicroseconds / 1000.0);
-      break;
-||||||| merged common ancestors
-  case MessageType::HitCheckpoint: {
-    const HitCheckpointMessage& nmsg = (const HitCheckpointMessage&) aMsg;
-    data.AppendPrintf("Id %d Endpoint %d Duration %.2f ms",
-                      (int) nmsg.mCheckpointId, nmsg.mRecordingEndpoint,
-                      nmsg.mDurationMicroseconds / 1000.0);
-    break;
-  }
-  case MessageType::HitBreakpoint: {
-    const HitBreakpointMessage& nmsg = (const HitBreakpointMessage&) aMsg;
-    data.AppendPrintf("Endpoint %d", nmsg.mRecordingEndpoint);
-    for (size_t i = 0; i < nmsg.NumBreakpoints(); i++) {
-      data.AppendPrintf(" Id %d", nmsg.Breakpoints()[i]);
-=======
     case MessageType::ManifestStart: {
       const ManifestStartMessage& nmsg = (const ManifestStartMessage&)aMsg;
       data = NS_ConvertUTF16toUTF8(
           nsDependentSubstring(nmsg.Buffer(), nmsg.BufferSize()));
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    case MessageType::HitBreakpoint: {
-      const HitBreakpointMessage& nmsg = (const HitBreakpointMessage&)aMsg;
-      data.AppendPrintf("Endpoint %d", nmsg.mRecordingEndpoint);
-      break;
-    }
-    case MessageType::Resume: {
-      const ResumeMessage& nmsg = (const ResumeMessage&)aMsg;
-      data.AppendPrintf("Forward %d", nmsg.mForward);
-      break;
-    }
-    case MessageType::RestoreCheckpoint: {
-      const RestoreCheckpointMessage& nmsg =
-          (const RestoreCheckpointMessage&)aMsg;
-      data.AppendPrintf("Id %d", (int)nmsg.mCheckpoint);
-      break;
-    }
-    case MessageType::AddBreakpoint: {
-      const AddBreakpointMessage& nmsg = (const AddBreakpointMessage&)aMsg;
-      data.AppendPrintf(
-          "Kind %s, Script %d, Offset %d, Frame %d",
-          nmsg.mPosition.KindString(), (int)nmsg.mPosition.mScript,
-          (int)nmsg.mPosition.mOffset, (int)nmsg.mPosition.mFrameIndex);
-      break;
-    }
-    case MessageType::DebuggerRequest: {
-      const DebuggerRequestMessage& nmsg = (const DebuggerRequestMessage&)aMsg;
-      data = NS_ConvertUTF16toUTF8(
-          nsDependentString(nmsg.Buffer(), nmsg.BufferSize()));
-      break;
-    }
-    case MessageType::DebuggerResponse: {
-      const DebuggerResponseMessage& nmsg =
-          (const DebuggerResponseMessage&)aMsg;
-      data = NS_ConvertUTF16toUTF8(
-          nsDependentString(nmsg.Buffer(), nmsg.BufferSize()));
-      break;
-    }
-    case MessageType::SetIsActive: {
-      const SetIsActiveMessage& nmsg = (const SetIsActiveMessage&)aMsg;
-      data.AppendPrintf("%d", nmsg.mActive);
-      break;
-    }
-    case MessageType::SetSaveCheckpoint: {
-      const SetSaveCheckpointMessage& nmsg =
-          (const SetSaveCheckpointMessage&)aMsg;
-      data.AppendPrintf("Id %d, Save %d", (int)nmsg.mCheckpoint, nmsg.mSave);
-      break;
-    }
-    default:
-      break;
-||||||| merged common ancestors
-    break;
-  }
-  case MessageType::Resume: {
-    const ResumeMessage& nmsg = (const ResumeMessage&) aMsg;
-    data.AppendPrintf("Forward %d", nmsg.mForward);
-    break;
-  }
-  case MessageType::RestoreCheckpoint: {
-    const RestoreCheckpointMessage& nmsg = (const RestoreCheckpointMessage&) aMsg;
-    data.AppendPrintf("Id %d", (int) nmsg.mCheckpoint);
-    break;
-  }
-  case MessageType::SetBreakpoint: {
-    const SetBreakpointMessage& nmsg = (const SetBreakpointMessage&) aMsg;
-    data.AppendPrintf("Id %d, Kind %s, Script %d, Offset %d, Frame %d",
-                      (int) nmsg.mId, nmsg.mPosition.KindString(), (int) nmsg.mPosition.mScript,
-                      (int) nmsg.mPosition.mOffset, (int) nmsg.mPosition.mFrameIndex);
-    break;
-  }
-  case MessageType::DebuggerRequest: {
-    const DebuggerRequestMessage& nmsg = (const DebuggerRequestMessage&) aMsg;
-    data = NS_ConvertUTF16toUTF8(nsDependentString(nmsg.Buffer(), nmsg.BufferSize()));
-    break;
-  }
-  case MessageType::DebuggerResponse: {
-    const DebuggerResponseMessage& nmsg = (const DebuggerResponseMessage&) aMsg;
-    data = NS_ConvertUTF16toUTF8(nsDependentString(nmsg.Buffer(), nmsg.BufferSize()));
-    break;
-  }
-  case MessageType::SetIsActive: {
-    const SetIsActiveMessage& nmsg = (const SetIsActiveMessage&) aMsg;
-    data.AppendPrintf("%d", nmsg.mActive);
-    break;
-  }
-  case MessageType::SetSaveCheckpoint: {
-    const SetSaveCheckpointMessage& nmsg = (const SetSaveCheckpointMessage&) aMsg;
-    data.AppendPrintf("Id %d, Save %d", (int) nmsg.mCheckpoint, nmsg.mSave);
-    break;
-  }
-  default:
-    break;
-=======
     case MessageType::ManifestFinished: {
       const ManifestFinishedMessage& nmsg =
           (const ManifestFinishedMessage&)aMsg;
@@ -526,7 +349,6 @@ void Channel::PrintMessage(const char* aPrefix, const Message& aMsg) {
     }
     default:
       break;
->>>>>>> upstream-releases
   }
   const char* kind =
       IsMiddleman() ? "Middleman" : (IsRecording() ? "Recording" : "Replaying");

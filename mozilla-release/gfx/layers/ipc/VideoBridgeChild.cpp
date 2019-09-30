@@ -14,60 +14,22 @@ namespace layers {
 StaticRefPtr<VideoBridgeChild> sVideoBridgeToParentProcess;
 StaticRefPtr<VideoBridgeChild> sVideoBridgeToGPUProcess;
 
-<<<<<<< HEAD
-/* static */ void VideoBridgeChild::Startup() {
-  sVideoBridgeChildSingleton = new VideoBridgeChild();
-  RefPtr<VideoBridgeParent> parent = new VideoBridgeParent();
-||||||| merged common ancestors
-/* static */ void
-VideoBridgeChild::Startup()
-{
-  sVideoBridgeChildSingleton = new VideoBridgeChild();
-  RefPtr<VideoBridgeParent> parent = new VideoBridgeParent();
-=======
 /* static */
 void VideoBridgeChild::StartupForGPUProcess() {
   ipc::Endpoint<PVideoBridgeParent> parentPipe;
   ipc::Endpoint<PVideoBridgeChild> childPipe;
->>>>>>> upstream-releases
 
   PVideoBridge::CreateEndpoints(base::GetCurrentProcId(),
                                 base::GetCurrentProcId(), &parentPipe,
                                 &childPipe);
 
-<<<<<<< HEAD
-  sVideoBridgeChildSingleton->Open(parent->GetIPCChannel(), loop,
-                                   ipc::ChildSide);
-  sVideoBridgeChildSingleton->mIPDLSelfRef = sVideoBridgeChildSingleton;
-  parent->SetOtherProcessId(base::GetCurrentProcId());
-||||||| merged common ancestors
-  sVideoBridgeChildSingleton->Open(parent->GetIPCChannel(),
-                                   loop,
-                                   ipc::ChildSide);
-  sVideoBridgeChildSingleton->mIPDLSelfRef = sVideoBridgeChildSingleton;
-  parent->SetOtherProcessId(base::GetCurrentProcId());
-=======
   VideoBridgeChild::OpenToGPUProcess(std::move(childPipe));
 
   CompositorThreadHolder::Loop()->PostTask(
       NewRunnableFunction("gfx::VideoBridgeParent::Open",
                           &VideoBridgeParent::Open, std::move(parentPipe)));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void VideoBridgeChild::Shutdown() {
-  if (sVideoBridgeChildSingleton) {
-    sVideoBridgeChildSingleton->Close();
-    sVideoBridgeChildSingleton = nullptr;
-||||||| merged common ancestors
-/* static */ void
-VideoBridgeChild::Shutdown()
-{
-  if (sVideoBridgeChildSingleton) {
-    sVideoBridgeChildSingleton->Close();
-    sVideoBridgeChildSingleton = nullptr;
-=======
 void VideoBridgeChild::OpenToParentProcess(
     Endpoint<PVideoBridgeChild>&& aEndpoint) {
   sVideoBridgeToParentProcess = new VideoBridgeChild();
@@ -75,20 +37,9 @@ void VideoBridgeChild::OpenToParentProcess(
   if (!aEndpoint.Bind(sVideoBridgeToParentProcess)) {
     // We can't recover from this.
     MOZ_CRASH("Failed to bind RemoteDecoderManagerParent to endpoint");
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-VideoBridgeChild::VideoBridgeChild()
-    : mMessageLoop(MessageLoop::current()), mCanSend(true) {}
-||||||| merged common ancestors
-VideoBridgeChild::VideoBridgeChild()
-  : mMessageLoop(MessageLoop::current())
-  , mCanSend(true)
-{
-}
-=======
 void VideoBridgeChild::OpenToGPUProcess(
     Endpoint<PVideoBridgeChild>&& aEndpoint) {
   sVideoBridgeToGPUProcess = new VideoBridgeChild();
@@ -98,15 +49,7 @@ void VideoBridgeChild::OpenToGPUProcess(
     MOZ_CRASH("Failed to bind RemoteDecoderManagerParent to endpoint");
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-VideoBridgeChild::~VideoBridgeChild() {}
-||||||| merged common ancestors
-VideoBridgeChild::~VideoBridgeChild()
-{
-}
-=======
 /* static */
 void VideoBridgeChild::Shutdown() {
   if (sVideoBridgeToParentProcess) {
@@ -118,17 +61,7 @@ void VideoBridgeChild::Shutdown() {
     sVideoBridgeToGPUProcess = nullptr;
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-VideoBridgeChild* VideoBridgeChild::GetSingleton() {
-  return sVideoBridgeChildSingleton;
-||||||| merged common ancestors
-VideoBridgeChild*
-VideoBridgeChild::GetSingleton()
-{
-  return sVideoBridgeChildSingleton;
-=======
 VideoBridgeChild::VideoBridgeChild()
     : mIPDLSelfRef(this),
       mMessageLoop(MessageLoop::current()),
@@ -138,20 +71,8 @@ VideoBridgeChild::~VideoBridgeChild() {}
 
 VideoBridgeChild* VideoBridgeChild::GetSingletonToParentProcess() {
   return sVideoBridgeToParentProcess;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool VideoBridgeChild::AllocUnsafeShmem(
-    size_t aSize, ipc::SharedMemory::SharedMemoryType aType,
-    ipc::Shmem* aShmem) {
-||||||| merged common ancestors
-bool
-VideoBridgeChild::AllocUnsafeShmem(size_t aSize,
-                                   ipc::SharedMemory::SharedMemoryType aType,
-                                   ipc::Shmem* aShmem)
-{
-=======
 VideoBridgeChild* VideoBridgeChild::GetSingletonToGPUProcess() {
   return sVideoBridgeToGPUProcess;
 }
@@ -159,7 +80,6 @@ VideoBridgeChild* VideoBridgeChild::GetSingletonToGPUProcess() {
 bool VideoBridgeChild::AllocUnsafeShmem(
     size_t aSize, ipc::SharedMemory::SharedMemoryType aType,
     ipc::Shmem* aShmem) {
->>>>>>> upstream-releases
   return PVideoBridgeChild::AllocUnsafeShmem(aSize, aType, aShmem);
 }
 
@@ -191,17 +111,7 @@ void VideoBridgeChild::ActorDestroy(ActorDestroyReason aWhy) {
   mCanSend = false;
 }
 
-<<<<<<< HEAD
-void VideoBridgeChild::DeallocPVideoBridgeChild() { mIPDLSelfRef = nullptr; }
-||||||| merged common ancestors
-void
-VideoBridgeChild::DeallocPVideoBridgeChild()
-{
-  mIPDLSelfRef = nullptr;
-}
-=======
 void VideoBridgeChild::ActorDealloc() { mIPDLSelfRef = nullptr; }
->>>>>>> upstream-releases
 
 PTextureChild* VideoBridgeChild::CreateTexture(
     const SurfaceDescriptor& aSharedData, const ReadLockDescriptor& aReadLock,

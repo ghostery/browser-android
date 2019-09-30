@@ -1,11 +1,6 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 yo{
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Version{"2.1.48.17"}
     zoneStrings{
         "Africa:Lagos"{
@@ -68,5 +63,4 @@ yo{
         regionFormatDaylight{"{0} Àkókò ojúmọmọ"}
         regionFormatStandard{"{0} Ìlànà Àkókò"}
     }
->>>>>>> upstream-releases
 }

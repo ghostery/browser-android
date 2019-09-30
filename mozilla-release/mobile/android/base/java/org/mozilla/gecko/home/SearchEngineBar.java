@@ -33,11 +33,6 @@ public class SearchEngineBar extends RecyclerView
     private static final float ICON_CONTAINER_MIN_WIDTH_DP = 72;
     private static final float LABEL_CONTAINER_WIDTH_DP = 48;
 
-    /* Cliqz Start */
-    private boolean isPrivate = false;
-    private boolean isLightTheme = false;
-    /* Cliqz End */
-
     public interface OnSearchBarClickListener {
         void onSearchBarClickListener(SearchEngine searchEngine);
     }
@@ -150,21 +145,4 @@ public class SearchEngineBar extends RecyclerView
     public SearchEngineAdapter getAdapter() {
         return mAdapter;
     }
-
-    /* Cliqz Start */
-    public void setPrivateMode(boolean isPrivate) {
-        if (this.isPrivate != isPrivate) {
-            this.isPrivate = isPrivate;
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-
-    public void isLightTheme(boolean isLightTheme) {
-        if (this.isLightTheme != isLightTheme) {
-            this.isLightTheme = isLightTheme;
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-    /* Cliqz End */
 }

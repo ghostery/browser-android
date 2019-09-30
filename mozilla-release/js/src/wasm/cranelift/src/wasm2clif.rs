@@ -28,26 +28,12 @@ use cranelift_codegen::ir::InstBuilder;
 use cranelift_codegen::isa::{CallConv, TargetFrontendConfig, TargetIsa};
 use cranelift_codegen::packed_option::PackedOption;
 use cranelift_wasm::{
-<<<<<<< HEAD
-    FuncEnvironment, FuncIndex, GlobalIndex, GlobalVariable, MemoryIndex, ReturnMode,
-    SignatureIndex, TableIndex, WasmResult,
-||||||| merged common ancestors
-    self, FuncIndex, GlobalIndex, MemoryIndex, SignatureIndex, TableIndex, WasmResult,
-=======
     FuncEnvironment, FuncIndex, GlobalIndex, GlobalVariable, MemoryIndex, ReturnMode,
     SignatureIndex, TableIndex, WasmError, WasmResult,
->>>>>>> upstream-releases
 };
-<<<<<<< HEAD
-use std::collections::HashMap;
-||||||| merged common ancestors
-use std::collections::HashMap;
-use target_lexicon::Triple;
-=======
 
 use crate::bindings;
 use crate::compile::{symbolic_function_name, wasm_function_name};
->>>>>>> upstream-releases
 
 /// Get the integer type used for representing pointers on this platform.
 fn native_pointer_type() -> ir::Type {
@@ -73,14 +59,6 @@ fn offset32(offset: usize) -> ir::immediates::Offset32 {
     (offset as i32).into()
 }
 
-<<<<<<< HEAD
-/// Convert a usize offset into a `Imm64` for an iadd_imm.
-fn imm64(offset: usize) -> ir::immediates::Imm64 {
-    (offset as i64).into()
-}
-
-||||||| merged common ancestors
-=======
 /// Convert a usize offset into a `Imm64` for an iadd_imm.
 fn imm64(offset: usize) -> ir::immediates::Imm64 {
     (offset as i64).into()
@@ -91,7 +69,6 @@ fn uimm64(offset: usize) -> ir::immediates::Uimm64 {
     (offset as u64).into()
 }
 
->>>>>>> upstream-releases
 /// Initialize a `Signature` from a wasm signature.
 fn init_sig_from_wsig(sig: &mut ir::Signature, wsig: bindings::FuncTypeWithId) -> WasmResult<()> {
     sig.clear(CallConv::Baldrdash);
@@ -328,47 +305,23 @@ impl<'a, 'b, 'c> TransEnv<'a, 'b, 'c> {
             let vmctx = self.get_vmctx_gv(&mut pos.func);
             self.cx_addr = pos
                 .func
-<<<<<<< HEAD
-                .create_global_value(ir::GlobalValueData::IAddImm {
-                    base: vmctx,
-                    offset: imm64(self.static_env.cxTlsOffset),
-                    global_type: native_pointer_type(),
-                }).into();
-||||||| merged common ancestors
-                .create_global_value(ir::GlobalValueData::VMContext {
-                    offset: offset32(self.static_env.cxTlsOffset),
-                }).into();
-=======
                 .create_global_value(ir::GlobalValueData::IAddImm {
                     base: vmctx,
                     offset: imm64(self.static_env.cxTlsOffset),
                     global_type: native_pointer_type(),
                 })
                 .into();
->>>>>>> upstream-releases
         }
         if self.realm_addr.is_none() {
             let vmctx = self.get_vmctx_gv(&mut pos.func);
             self.realm_addr = pos
                 .func
-<<<<<<< HEAD
-                .create_global_value(ir::GlobalValueData::IAddImm {
-                    base: vmctx,
-                    offset: imm64(self.static_env.realmTlsOffset),
-                    global_type: native_pointer_type(),
-                }).into();
-||||||| merged common ancestors
-                .create_global_value(ir::GlobalValueData::VMContext {
-                    offset: offset32(self.static_env.realmTlsOffset),
-                }).into();
-=======
                 .create_global_value(ir::GlobalValueData::IAddImm {
                     base: vmctx,
                     offset: imm64(self.static_env.realmTlsOffset),
                     global_type: native_pointer_type(),
                 })
                 .into();
->>>>>>> upstream-releases
         }
 
         let ptr = native_pointer_type();
@@ -438,21 +391,11 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
         native_pointer_type()
     }
 
-<<<<<<< HEAD
-    fn make_global(&mut self, func: &mut ir::Function, index: GlobalIndex) -> GlobalVariable {
-||||||| merged common ancestors
-    fn make_global(
-        &mut self,
-        func: &mut ir::Function,
-        index: GlobalIndex,
-    ) -> cranelift_wasm::GlobalVariable {
-=======
     fn make_global(
         &mut self,
         func: &mut ir::Function,
         index: GlobalIndex,
     ) -> WasmResult<GlobalVariable> {
->>>>>>> upstream-releases
         let global = self.env.global(index);
         if global.is_constant() {
             // Constant globals have a known value at compile time. We insert an instruction to
@@ -460,11 +403,6 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
             let mut pos = FuncCursor::new(func);
             pos.next_ebb().expect("empty function");
             pos.next_inst();
-<<<<<<< HEAD
-            GlobalVariable::Const(global.emit_constant(&mut pos))
-||||||| merged common ancestors
-            cranelift_wasm::GlobalVariable::Const(global.emit_constant(&mut pos))
-=======
             return Ok(GlobalVariable::Const(global.emit_constant(&mut pos)?));
         }
 
@@ -484,65 +422,10 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
                 readonly: true,
             });
             (gv, 0.into())
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-            // This is a global variable. Here we don't care if it is mutable or not.
-            let offset = global.tls_offset();
-            let mut gv = self.get_vmctx_gv(func);
-
-            // Some globals are represented as a pointer to the actual data, in which case we
-            // must do an extra dereference to get to them.
-            if global.is_indirect() {
-                gv = func.create_global_value(ir::GlobalValueData::Load {
-                    base: gv,
-                    offset: offset32(offset),
-                    global_type: native_pointer_type(),
-                    readonly: false,
-                });
-            } else {
-                gv = func.create_global_value(ir::GlobalValueData::IAddImm {
-                    base: gv,
-                    offset: imm64(offset),
-                    global_type: native_pointer_type(),
-                });
-            }
-||||||| merged common ancestors
-            // This is a global variable. Here we don't care if it is mutable or not.
-            let offset = offset32(global.tls_offset());
-            let mut gv = func.create_global_value(ir::GlobalValueData::VMContext { offset });
-
-            // Some globals are represented as a pointer to the actual data, in which case we
-            // must do an extra dereference to get to them.
-            if global.is_indirect() {
-                gv = func.create_global_value(ir::GlobalValueData::Deref {
-                    base: gv,
-                    offset: offset32(0),
-                    memory_type: native_pointer_type(),
-                });
-            }
-=======
             (vmctx_gv, offset32(offset))
         };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-            // Create a Cranelift global variable. We don't need to remember the reference, the
-            // function translator does that for us.
-            GlobalVariable::Memory {
-                gv,
-                ty: global.value_type().into(),
-            }
-        }
-||||||| merged common ancestors
-            // Create a Cranelift global variable. We don't need to remember the reference, the
-            // function translator does that for us.
-            cranelift_wasm::GlobalVariable::Memory {
-                gv,
-                ty: global.value_type().into(),
-            }
-        }
-=======
         let mem_ty = global.value_type()?;
 
         Ok(GlobalVariable::Memory {
@@ -550,23 +433,14 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
             ty: mem_ty,
             offset,
         })
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    fn make_heap(&mut self, func: &mut ir::Function, index: MemoryIndex) -> ir::Heap {
-        assert_eq!(index.index(), 0, "Only one WebAssembly memory supported");
-||||||| merged common ancestors
-    fn make_heap(&mut self, func: &mut ir::Function, index: MemoryIndex) -> ir::Heap {
-        assert_eq!(index, 0, "Only one WebAssembly memory supported");
-=======
     fn make_heap(&mut self, func: &mut ir::Function, index: MemoryIndex) -> WasmResult<ir::Heap> {
         // Currently, Baldrdash doesn't support multiple memories.
         if index.index() != 0 {
             return Err(WasmError::Unsupported("only one wasm memory supported"));
         }
 
->>>>>>> upstream-releases
         // Get the address of the `TlsData::memoryBase` field.
         let base_addr = self.get_vmctx_gv(func);
         // Get the `TlsData::memoryBase` field. We assume this is never modified during execution
@@ -577,16 +451,8 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
             global_type: native_pointer_type(),
             readonly: true,
         });
-<<<<<<< HEAD
-        let min_size = ir::immediates::Imm64::new(self.env.min_memory_length());
-        let guard_size = imm64(self.static_env.memoryGuardSize);
-||||||| merged common ancestors
-        let min_size = ir::immediates::Imm64::new(self.env.min_memory_length());
-        let guard_size = ir::immediates::Imm64::new(self.static_env.memoryGuardSize as i64);
-=======
         let min_size = ir::immediates::Uimm64::new(self.env.min_memory_length() as u64);
         let guard_size = uimm64(self.static_env.memoryGuardSize);
->>>>>>> upstream-releases
 
         let bound = self.static_env.staticMemoryBound;
         let style = if bound > 0 {
@@ -690,19 +556,10 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
     ) -> WasmResult<ir::Inst> {
         let wsig = self.env.signature(sig_index);
 
-<<<<<<< HEAD
-        // Currently, WebAssembly doesn't support multiple tables. That may change.
-        assert_eq!(table_index.index(), 0);
-||||||| merged common ancestors
-        // TODO: When compiling asm.js, the table index in inferred from the signature index.
-        // Currently, WebAssembly doesn't support multiple tables. That may change.
-        assert_eq!(table_index, 0);
-=======
         // Currently, Baldrdash doesn't support multiple tables.
         if table_index.index() != 0 {
             return Err(WasmError::Unsupported("only one wasm table supported"));
         }
->>>>>>> upstream-releases
         let wtable = self.get_table(pos.func, table_index);
 
         // Follows `MacroAssembler::wasmCallIndirect`:
@@ -858,14 +715,7 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
         _heap: ir::Heap,
         val: ir::Value,
     ) -> WasmResult<ir::Value> {
-<<<<<<< HEAD
-        // We emit a call to `uint32_t growMemory_i32(Instance* instance, uint32_t delta)` via a
-||||||| merged common ancestors
-        use cranelift_codegen::ir::types::I32;
-        // We emit a call to `uint32_t growMemory_i32(Instance* instance, uint32_t delta)` via a
-=======
         // We emit a call to `uint32_t memoryGrow_i32(Instance* instance, uint32_t delta)` via a
->>>>>>> upstream-releases
         // stub.
         let (fnref, sigref) =
             self.symbolic_funcref(pos.func, bindings::SymbolicAddress::MemoryGrow, || {
@@ -902,14 +752,7 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
         _index: MemoryIndex,
         _heap: ir::Heap,
     ) -> WasmResult<ir::Value> {
-<<<<<<< HEAD
-        // We emit a call to `uint32_t currentMemory_i32(Instance* instance)` via a stub.
-||||||| merged common ancestors
-        use cranelift_codegen::ir::types::I32;
-        // We emit a call to `uint32_t currentMemory_i32(Instance* instance)` via a stub.
-=======
         // We emit a call to `uint32_t memorySize_i32(Instance* instance)` via a stub.
->>>>>>> upstream-releases
         let (fnref, sigref) =
             self.symbolic_funcref(pos.func, bindings::SymbolicAddress::MemorySize, || {
                 let mut sig = ir::Signature::new(CallConv::Baldrdash);
@@ -945,12 +788,6 @@ impl<'a, 'b, 'c> FuncEnvironment for TransEnv<'a, 'b, 'c> {
         // instruction at the end of the function.
         ReturnMode::FallthroughReturn
     }
-
-    fn return_mode(&self) -> ReturnMode {
-        // Since we're using SM's epilogue insertion code, we can only handle a single return
-        // instruction at the end of the function.
-        ReturnMode::FallthroughReturn
-    }
 }
 
 /// Information about a function table.
@@ -965,17 +802,11 @@ struct TableInfo {
 
 impl TableInfo {
     /// Create a TableInfo and its global variable in `func`.
-<<<<<<< HEAD
-    pub fn new(wtab: bd::TableDesc, func: &mut ir::Function, vmctx: ir::GlobalValue) -> TableInfo {
-||||||| merged common ancestors
-    pub fn new(wtab: bd::TableDesc, func: &mut ir::Function) -> TableInfo {
-=======
     pub fn new(
         wtab: bindings::TableDesc,
         func: &mut ir::Function,
         vmctx: ir::GlobalValue,
     ) -> TableInfo {
->>>>>>> upstream-releases
         // Create the global variable.
         let offset = wtab.tls_offset();
         assert!(offset < i32::max_value() as usize);

@@ -16,34 +16,6 @@ namespace gfx {
 /**
  * PDF printing target.
  */
-<<<<<<< HEAD
-class PrintTargetPDF final : public PrintTarget {
- public:
-  static already_AddRefed<PrintTargetPDF> CreateOrNull(
-      nsIOutputStream* aStream, const IntSize& aSizeInPoints);
-
-  virtual nsresult EndPage() override;
-  virtual void Finish() override;
-
- private:
-  PrintTargetPDF(cairo_surface_t* aCairoSurface, const IntSize& aSize,
-                 nsIOutputStream* aStream);
-||||||| merged common ancestors
-class PrintTargetPDF final : public PrintTarget
-{
-public:
-  static already_AddRefed<PrintTargetPDF>
-  CreateOrNull(nsIOutputStream *aStream,
-               const IntSize& aSizeInPoints);
-
-  virtual nsresult EndPage() override;
-  virtual void Finish() override;
-
-private:
-  PrintTargetPDF(cairo_surface_t* aCairoSurface,
-                 const IntSize& aSize,
-                 nsIOutputStream *aStream);
-=======
 class PrintTargetPDF final : public PrintTarget {
  public:
   static already_AddRefed<PrintTargetPDF> CreateOrNull(
@@ -55,7 +27,6 @@ class PrintTargetPDF final : public PrintTarget {
  private:
   PrintTargetPDF(cairo_surface_t* aCairoSurface, const IntSize& aSize,
                  nsIOutputStream* aStream);
->>>>>>> upstream-releases
   virtual ~PrintTargetPDF();
 
   nsCOMPtr<nsIOutputStream> mStream;

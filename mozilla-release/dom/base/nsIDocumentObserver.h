@@ -70,140 +70,13 @@ class nsIDocumentObserver : public nsIMutationObserver {
    * @param aDocument The document being observed
    * @param aContent the piece of content that changed
    */
-<<<<<<< HEAD
-  virtual void ContentStateChanged(nsIDocument* aDocument, nsIContent* aContent,
-||||||| merged common ancestors
-  virtual void ContentStateChanged(nsIDocument* aDocument,
-                                   nsIContent* aContent,
-=======
   virtual void ContentStateChanged(mozilla::dom::Document*,
                                    nsIContent* aContent,
->>>>>>> upstream-releases
                                    mozilla::EventStates aStateMask) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIDocumentObserver, NS_IDOCUMENT_OBSERVER_IID)
 
-<<<<<<< HEAD
-#define NS_DECL_NSIDOCUMENTOBSERVER_BEGINUPDATE \
-  virtual void BeginUpdate(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_ENDUPDATE \
-  virtual void EndUpdate(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_BEGINLOAD \
-  virtual void BeginLoad(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_ENDLOAD \
-  virtual void EndLoad(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_CONTENTSTATECHANGED    \
-  virtual void ContentStateChanged(nsIDocument* aDocument, \
-                                   nsIContent* aContent,   \
-                                   mozilla::EventStates aStateMask) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_DOCUMENTSTATESCHANGED \
-  virtual void DocumentStatesChanged(                     \
-      nsIDocument* aDocument, mozilla::EventStates aStateMask) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER                 \
-  NS_DECL_NSIDOCUMENTOBSERVER_BEGINUPDATE           \
-  NS_DECL_NSIDOCUMENTOBSERVER_ENDUPDATE             \
-  NS_DECL_NSIDOCUMENTOBSERVER_BEGINLOAD             \
-  NS_DECL_NSIDOCUMENTOBSERVER_ENDLOAD               \
-  NS_DECL_NSIDOCUMENTOBSERVER_CONTENTSTATECHANGED   \
-  NS_DECL_NSIDOCUMENTOBSERVER_DOCUMENTSTATESCHANGED \
-  NS_DECL_NSIMUTATIONOBSERVER
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_CORE_STUB(_class) \
-  void _class::BeginUpdate(nsIDocument* aDocument) {} \
-  void _class::EndUpdate(nsIDocument* aDocument) {}   \
-  NS_IMPL_NSIMUTATIONOBSERVER_CORE_STUB(_class)
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_LOAD_STUB(_class) \
-  void _class::BeginLoad(nsIDocument* aDocument) {}   \
-  void _class::EndLoad(nsIDocument* aDocument) {}
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_STATE_STUB(_class)                 \
-  void _class::ContentStateChanged(nsIDocument* aDocument,             \
-                                   nsIContent* aContent,               \
-                                   mozilla::EventStates aStateMask) {} \
-                                                                       \
-  void _class::DocumentStatesChanged(nsIDocument* aDocument,           \
-                                     mozilla::EventStates aStateMask) {}
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_CONTENT(_class) \
-  NS_IMPL_NSIMUTATIONOBSERVER_CONTENT(_class)
-||||||| merged common ancestors
-#define NS_DECL_NSIDOCUMENTOBSERVER_BEGINUPDATE                              \
-    virtual void BeginUpdate(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_ENDUPDATE                                \
-    virtual void EndUpdate(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_BEGINLOAD                                \
-    virtual void BeginLoad(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_ENDLOAD                                  \
-    virtual void EndLoad(nsIDocument* aDocument) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_CONTENTSTATECHANGED                      \
-    virtual void ContentStateChanged(nsIDocument* aDocument,                 \
-                                     nsIContent* aContent,                   \
-                                     mozilla::EventStates aStateMask) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER_DOCUMENTSTATESCHANGED                    \
-    virtual void DocumentStatesChanged(nsIDocument* aDocument,               \
-                                       mozilla::EventStates aStateMask) override;
-
-#define NS_DECL_NSIDOCUMENTOBSERVER                                          \
-    NS_DECL_NSIDOCUMENTOBSERVER_BEGINUPDATE                                  \
-    NS_DECL_NSIDOCUMENTOBSERVER_ENDUPDATE                                    \
-    NS_DECL_NSIDOCUMENTOBSERVER_BEGINLOAD                                    \
-    NS_DECL_NSIDOCUMENTOBSERVER_ENDLOAD                                      \
-    NS_DECL_NSIDOCUMENTOBSERVER_CONTENTSTATECHANGED                          \
-    NS_DECL_NSIDOCUMENTOBSERVER_DOCUMENTSTATESCHANGED                        \
-    NS_DECL_NSIMUTATIONOBSERVER
-
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_CORE_STUB(_class)                     \
-void                                                                      \
-_class::BeginUpdate(nsIDocument* aDocument)                               \
-{                                                                         \
-}                                                                         \
-void                                                                      \
-_class::EndUpdate(nsIDocument* aDocument)                                 \
-{                                                                         \
-}                                                                         \
-NS_IMPL_NSIMUTATIONOBSERVER_CORE_STUB(_class)
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_LOAD_STUB(_class)                     \
-void                                                                      \
-_class::BeginLoad(nsIDocument* aDocument)                                 \
-{                                                                         \
-}                                                                         \
-void                                                                      \
-_class::EndLoad(nsIDocument* aDocument)                                   \
-{                                                                         \
-}
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_STATE_STUB(_class)                    \
-void                                                                      \
-_class::ContentStateChanged(nsIDocument* aDocument,                       \
-                            nsIContent* aContent,                         \
-                            mozilla::EventStates aStateMask)              \
-{                                                                         \
-}                                                                         \
-                                                                          \
-void                                                                      \
-_class::DocumentStatesChanged(nsIDocument* aDocument,                     \
-                              mozilla::EventStates aStateMask)            \
-{                                                                         \
-}
-
-#define NS_IMPL_NSIDOCUMENTOBSERVER_CONTENT(_class)                       \
-NS_IMPL_NSIMUTATIONOBSERVER_CONTENT(_class)
-=======
 #define NS_DECL_NSIDOCUMENTOBSERVER_BEGINUPDATE \
   virtual void BeginUpdate(mozilla::dom::Document*) override;
 
@@ -245,6 +118,5 @@ NS_IMPL_NSIMUTATIONOBSERVER_CONTENT(_class)
 
 #define NS_IMPL_NSIDOCUMENTOBSERVER_CONTENT(_class) \
   NS_IMPL_NSIMUTATIONOBSERVER_CONTENT(_class)
->>>>>>> upstream-releases
 
 #endif /* nsIDocumentObserver_h___ */

@@ -41,39 +41,6 @@ void PureVirtualCall() {
 }
 
 extern "C" {
-<<<<<<< HEAD
-#if XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-// Implementation in win64unwindInfoTests.asm
-uint64_t x64CrashCFITest_NO_MANS_LAND(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_Launcher(uint64_t returnpfn, void* testProc);
-uint64_t x64CrashCFITest_UnknownOpcode(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_PUSH_NONVOL(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_ALLOC_SMALL(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_ALLOC_LARGE(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_SAVE_NONVOL(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_SAVE_NONVOL_FAR(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_SAVE_XMM128(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_SAVE_XMM128_FAR(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_EPILOG(uint64_t returnpfn, void*);
-uint64_t x64CrashCFITest_EOF(uint64_t returnpfn, void*);
-#endif  // XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-||||||| merged common ancestors
-#if XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-  // Implementation in win64unwindInfoTests.asm
-  uint64_t x64CrashCFITest_NO_MANS_LAND(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_Launcher(uint64_t returnpfn, void* testProc);
-  uint64_t x64CrashCFITest_UnknownOpcode(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_PUSH_NONVOL(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_ALLOC_SMALL(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_ALLOC_LARGE(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_SAVE_NONVOL(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_SAVE_NONVOL_FAR(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_SAVE_XMM128(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_SAVE_XMM128_FAR(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_EPILOG(uint64_t returnpfn, void*);
-  uint64_t x64CrashCFITest_EOF(uint64_t returnpfn, void*);
-#endif // XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-=======
 #if XP_WIN && HAVE_64BIT_BUILD && defined(_M_X64) && !defined(__MINGW32__)
 // Implementation in win64unwindInfoTests.asm
 uint64_t x64CrashCFITest_NO_MANS_LAND(uint64_t returnpfn, void*);
@@ -89,7 +56,6 @@ uint64_t x64CrashCFITest_SAVE_XMM128_FAR(uint64_t returnpfn, void*);
 uint64_t x64CrashCFITest_EPILOG(uint64_t returnpfn, void*);
 uint64_t x64CrashCFITest_EOF(uint64_t returnpfn, void*);
 #endif  // XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
->>>>>>> upstream-releases
 }
 
 // Keep these in sync with CrashTestUtils.jsm!
@@ -154,119 +120,12 @@ void MOZ_NEVER_INLINE ReserveStack() {
 
 extern "C" NS_EXPORT void Crash(int16_t how) {
   switch (how) {
-<<<<<<< HEAD
     case CRASH_INVALID_POINTER_DEREF: {
       volatile int* foo = (int*)0x42;
       *foo = 0;
       // not reached
       break;
     }
-    case CRASH_PURE_VIRTUAL_CALL: {
-      PureVirtualCall();
-      // not reached
-      break;
-    }
-    case CRASH_OOM: {
-      mozilla::Unused << moz_xmalloc((size_t)-1);
-      mozilla::Unused << moz_xmalloc((size_t)-1);
-      mozilla::Unused << moz_xmalloc((size_t)-1);
-      break;
-    }
-    case CRASH_MOZ_CRASH: {
-      MOZ_CRASH();
-      break;
-    }
-    case CRASH_ABORT: {
-      abort();
-      break;
-    }
-    case CRASH_UNCAUGHT_EXCEPTION: {
-      ThrowException();
-      break;
-    }
-#if XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-    case CRASH_X64CFI_UNKNOWN_OPCODE:
-    case CRASH_X64CFI_PUSH_NONVOL:
-    case CRASH_X64CFI_ALLOC_SMALL:
-    case CRASH_X64CFI_ALLOC_LARGE:
-    case CRASH_X64CFI_SAVE_NONVOL:
-    case CRASH_X64CFI_SAVE_NONVOL_FAR:
-    case CRASH_X64CFI_SAVE_XMM128:
-    case CRASH_X64CFI_SAVE_XMM128_FAR:
-    case CRASH_X64CFI_EPILOG: {
-      auto m = GetWin64CFITestMap();
-      if (m.find(how) == m.end()) {
-        break;
-      }
-      auto pfnTest = m[how];
-      auto pfnLauncher = m[CRASH_X64CFI_LAUNCHER];
-      ReserveStack();
-      pfnLauncher(0, reinterpret_cast<void*>(pfnTest));
-||||||| merged common ancestors
-  case CRASH_INVALID_POINTER_DEREF: {
-    volatile int* foo = (int*)0x42;
-    *foo = 0;
-    // not reached
-    break;
-  }
-  case CRASH_PURE_VIRTUAL_CALL: {
-    PureVirtualCall();
-    // not reached
-    break;
-  }
-  case CRASH_OOM: {
-    mozilla::Unused << moz_xmalloc((size_t) -1);
-    mozilla::Unused << moz_xmalloc((size_t) -1);
-    mozilla::Unused << moz_xmalloc((size_t) -1);
-    break;
-  }
-  case CRASH_MOZ_CRASH: {
-    MOZ_CRASH();
-    break;
-  }
-  case CRASH_ABORT: {
-    abort();
-    break;
-  }
-  case CRASH_UNCAUGHT_EXCEPTION: {
-    ThrowException();
-    break;
-  }
-#if XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-  case CRASH_X64CFI_UNKNOWN_OPCODE:
-  case CRASH_X64CFI_PUSH_NONVOL:
-  case CRASH_X64CFI_ALLOC_SMALL:
-  case CRASH_X64CFI_ALLOC_LARGE:
-  case CRASH_X64CFI_SAVE_NONVOL:
-  case CRASH_X64CFI_SAVE_NONVOL_FAR:
-  case CRASH_X64CFI_SAVE_XMM128:
-  case CRASH_X64CFI_SAVE_XMM128_FAR:
-  case CRASH_X64CFI_EPILOG: {
-    auto m = GetWin64CFITestMap();
-    if (m.find(how) == m.end()) {
-=======
-    case CRASH_INVALID_POINTER_DEREF: {
-      volatile int* foo = (int*)0x42;
-      *foo = 0;
-      // not reached
->>>>>>> upstream-releases
-      break;
-    }
-<<<<<<< HEAD
-#endif  // XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-    default:
-      break;
-||||||| merged common ancestors
-    auto pfnTest = m[how];
-    auto pfnLauncher = m[CRASH_X64CFI_LAUNCHER];
-    ReserveStack();
-    pfnLauncher(0, reinterpret_cast<void*>(pfnTest));
-    break;
-  }
-#endif // XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-  default:
-    break;
-=======
     case CRASH_PURE_VIRTUAL_CALL: {
       PureVirtualCall();
       // not reached
@@ -313,7 +172,6 @@ extern "C" NS_EXPORT void Crash(int16_t how) {
 #endif  // XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
     default:
       break;
->>>>>>> upstream-releases
   }
 }
 
@@ -330,17 +188,8 @@ extern "C" NS_EXPORT uint64_t SaveAppMemory() {
   return (int64_t)testData;
 }
 
-<<<<<<< HEAD
-#ifdef XP_WIN32
-static LONG WINAPI HandleException(EXCEPTION_POINTERS* exinfo) {
-||||||| merged common ancestors
-#ifdef XP_WIN32
-static LONG WINAPI HandleException(EXCEPTION_POINTERS* exinfo)
-{
-=======
 #ifdef XP_WIN
 static LONG WINAPI HandleException(EXCEPTION_POINTERS* exinfo) {
->>>>>>> upstream-releases
   TerminateProcess(GetCurrentProcess(), 0);
   return 0;
 }
@@ -350,17 +199,8 @@ extern "C" NS_EXPORT void TryOverrideExceptionHandler() {
 }
 #endif
 
-<<<<<<< HEAD
-extern "C" NS_EXPORT uint32_t GetWin64CFITestFnAddrOffset(int16_t fnid) {
-#if XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-||||||| merged common ancestors
-extern "C" NS_EXPORT uint32_t
-GetWin64CFITestFnAddrOffset(int16_t fnid) {
-#if XP_WIN && HAVE_64BIT_BUILD && !defined(__MINGW32__)
-=======
 extern "C" NS_EXPORT uint32_t GetWin64CFITestFnAddrOffset(int16_t fnid) {
 #if XP_WIN && HAVE_64BIT_BUILD && defined(_M_X64) && !defined(__MINGW32__)
->>>>>>> upstream-releases
   // fnid uses the same constants as Crash().
   // Returns the RVA of the requested function.
   // Returns 0 on failure.

@@ -12,21 +12,12 @@
 
 extern "C" {
 
-<<<<<<< HEAD
-nsresult rust_prepare_accept_languages(const nsACString* i_accept_languages,
-                                       nsACString* o_accept_languages);
-||||||| merged common ancestors
-nsresult
-rust_prepare_accept_languages(const nsACString* i_accept_languages,
-                              nsACString* o_accept_languages);
-=======
 nsresult rust_prepare_accept_languages(const nsACString* i_accept_languages,
                                        nsACString* o_accept_languages);
 
 bool rust_net_is_valid_ipv4_addr(const nsACString& aAddr);
 
 bool rust_net_is_valid_ipv6_addr(const nsACString& aAddr);
->>>>>>> upstream-releases
 }
 
 #endif  // RUST_NS_NET_HELPER

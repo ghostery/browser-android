@@ -269,17 +269,10 @@ void nsUDPSocket::OnMsgAttach() {
   mCondition = TryAttach();
 
   // if we hit an error while trying to attach then bail...
-<<<<<<< HEAD
-  if (NS_FAILED(mCondition)) {
-||||||| merged common ancestors
-  if (NS_FAILED(mCondition))
-  {
-=======
   if (NS_FAILED(mCondition)) {
     UDPSOCKET_LOG(("nsUDPSocket::OnMsgAttach: TryAttach FAILED err=0x%" PRIx32
                    " [this=%p]\n",
                    static_cast<uint32_t>(mCondition), this));
->>>>>>> upstream-releases
     NS_ASSERTION(!mAttached, "should not be attached already");
     OnSocketDetached(mFD);
   }
@@ -392,17 +385,9 @@ UDPMessageProxy::GetOutputStream(nsIOutputStream** aOutputStream) {
 // nsUDPSocket::nsASocketHandler
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-void nsUDPSocket::OnSocketReady(PRFileDesc* fd, int16_t outFlags) {
-||||||| merged common ancestors
-void
-nsUDPSocket::OnSocketReady(PRFileDesc *fd, int16_t outFlags)
-{
-=======
 void nsUDPSocket::OnSocketReady(PRFileDesc* fd, int16_t outFlags) {
   UDPSOCKET_LOG(
       ("nsUDPSocket::OnSocketReady: flags=%d [this=%p]\n", outFlags, this));
->>>>>>> upstream-releases
   NS_ASSERTION(NS_SUCCEEDED(mCondition), "oops");
   NS_ASSERTION(mFD == fd, "wrong file descriptor");
   NS_ASSERTION(outFlags != -1, "unexpected timeout condition reached");
@@ -418,12 +403,6 @@ void nsUDPSocket::OnSocketReady(PRFileDesc* fd, int16_t outFlags) {
   // Bug 1252755 - use 9216 bytes to allign with nICEr and transportlayer to
   // support the maximum size of jumbo frames
   char buff[9216];
-<<<<<<< HEAD
-  count = PR_RecvFrom(mFD, buff, sizeof(buff), 0, &prClientAddr,
-                      PR_INTERVAL_NO_WAIT);
-||||||| merged common ancestors
-  count = PR_RecvFrom(mFD, buff, sizeof(buff), 0, &prClientAddr, PR_INTERVAL_NO_WAIT);
-=======
   count = PR_RecvFrom(mFD, buff, sizeof(buff), 0, &prClientAddr,
                       PR_INTERVAL_NO_WAIT);
   if (count < 0) {
@@ -431,7 +410,6 @@ void nsUDPSocket::OnSocketReady(PRFileDesc* fd, int16_t outFlags) {
         ("nsUDPSocket::OnSocketReady: PR_RecvFrom failed [this=%p]\n", this));
     return;
   }
->>>>>>> upstream-releases
   mByteReadCount += count;
 
   FallibleTArray<uint8_t> data;
@@ -470,16 +448,8 @@ void nsUDPSocket::OnSocketReady(PRFileDesc* fd, int16_t outFlags) {
   mListener->OnPacketReceived(this, message);
 }
 
-<<<<<<< HEAD
-void nsUDPSocket::OnSocketDetached(PRFileDesc* fd) {
-||||||| merged common ancestors
-void
-nsUDPSocket::OnSocketDetached(PRFileDesc *fd)
-{
-=======
 void nsUDPSocket::OnSocketDetached(PRFileDesc* fd) {
   UDPSOCKET_LOG(("nsUDPSocket::OnSocketDetached [this=%p]\n", this));
->>>>>>> upstream-releases
   // force a failure condition if none set; maybe the STS is shutting down :-/
   if (NS_SUCCEEDED(mCondition)) mCondition = NS_ERROR_ABORT;
 
@@ -1089,14 +1059,7 @@ class SendRequestRunnable : public Runnable {
 NS_IMETHODIMP
 SendRequestRunnable::Run() {
   uint32_t count;
-<<<<<<< HEAD
-  mSocket->SendWithAddress(&mAddr, mData.Elements(), mData.Length(), &count);
-||||||| merged common ancestors
-  mSocket->SendWithAddress(&mAddr, mData.Elements(),
-                           mData.Length(), &count);
-=======
   mSocket->SendWithAddress(&mAddr, mData, &count);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1122,30 +1085,9 @@ nsUDPSocket::AsyncListen(nsIUDPSocketListener* aListener) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsUDPSocket::Send(const nsACString& aHost, uint16_t aPort, const uint8_t* aData,
-                  uint32_t aDataLength, uint32_t* _retval) {
-||||||| merged common ancestors
-nsUDPSocket::Send(const nsACString &aHost, uint16_t aPort,
-                  const uint8_t *aData, uint32_t aDataLength,
-                  uint32_t *_retval)
-{
-=======
 nsUDPSocket::Send(const nsACString& aHost, uint16_t aPort,
                   const nsTArray<uint8_t>& aData, uint32_t* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_retval);
-<<<<<<< HEAD
-  if (!((aData && aDataLength > 0) || (!aData && !aDataLength))) {
-    return NS_ERROR_INVALID_ARG;
-  }
-||||||| merged common ancestors
-  if (!((aData && aDataLength > 0) ||
-        (!aData && !aDataLength))) {
-    return NS_ERROR_INVALID_ARG;
-  }
-=======
->>>>>>> upstream-releases
 
   *_retval = 0;
 
@@ -1165,17 +1107,8 @@ nsUDPSocket::Send(const nsACString& aHost, uint16_t aPort,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsUDPSocket::SendWithAddr(nsINetAddr* aAddr, const uint8_t* aData,
-                          uint32_t aDataLength, uint32_t* _retval) {
-||||||| merged common ancestors
-nsUDPSocket::SendWithAddr(nsINetAddr *aAddr, const uint8_t *aData,
-                          uint32_t aDataLength, uint32_t *_retval)
-{
-=======
 nsUDPSocket::SendWithAddr(nsINetAddr* aAddr, const nsTArray<uint8_t>& aData,
                           uint32_t* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aAddr);
   NS_ENSURE_ARG_POINTER(_retval);
 
@@ -1185,18 +1118,9 @@ nsUDPSocket::SendWithAddr(nsINetAddr* aAddr, const nsTArray<uint8_t>& aData,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsUDPSocket::SendWithAddress(const NetAddr* aAddr, const uint8_t* aData,
-                             uint32_t aDataLength, uint32_t* _retval) {
-||||||| merged common ancestors
-nsUDPSocket::SendWithAddress(const NetAddr *aAddr, const uint8_t *aData,
-                             uint32_t aDataLength, uint32_t *_retval)
-{
-=======
 nsUDPSocket::SendWithAddress(const NetAddr* aAddr,
                              const nsTArray<uint8_t>& aData,
                              uint32_t* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aAddr);
   NS_ENSURE_ARG_POINTER(_retval);
 
@@ -1214,17 +1138,9 @@ nsUDPSocket::SendWithAddress(const NetAddr* aAddr,
       // socket is not initialized or has been closed
       return NS_ERROR_FAILURE;
     }
-<<<<<<< HEAD
-    int32_t count = PR_SendTo(mFD, aData, sizeof(uint8_t) * aDataLength, 0,
-                              &prAddr, PR_INTERVAL_NO_WAIT);
-||||||| merged common ancestors
-    int32_t count = PR_SendTo(mFD, aData, sizeof(uint8_t) *aDataLength,
-                              0, &prAddr, PR_INTERVAL_NO_WAIT);
-=======
     int32_t count =
         PR_SendTo(mFD, aData.Elements(), sizeof(uint8_t) * aData.Length(), 0,
                   &prAddr, PR_INTERVAL_NO_WAIT);
->>>>>>> upstream-releases
     if (count < 0) {
       PRErrorCode code = PR_GetError();
       return ErrorAccordingToNSPR(code);

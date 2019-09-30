@@ -202,30 +202,7 @@ const ActorRegistry = {
       constructor: "CssPropertiesActor",
       type: { target: true },
     });
-<<<<<<< HEAD
-    this.registerModule("devtools/server/actors/csscoverage", {
-      prefix: "cssUsage",
-      constructor: "CSSUsageActor",
-      type: { target: true },
-    });
-    if ("nsIProfiler" in Ci &&
-        !Services.prefs.getBoolPref("devtools.performance.new-panel-enabled", false)) {
-||||||| merged common ancestors
-    this.registerModule("devtools/server/actors/csscoverage", {
-      prefix: "cssUsage",
-      constructor: "CSSUsageActor",
-      type: { target: true },
-    });
-    this.registerModule("devtools/server/actors/timeline", {
-      prefix: "timeline",
-      constructor: "TimelineActor",
-      type: { target: true },
-    });
-    if ("nsIProfiler" in Ci &&
-        !Services.prefs.getBoolPref("devtools.performance.new-panel-enabled", false)) {
-=======
     if ("nsIProfiler" in Ci) {
->>>>>>> upstream-releases
       this.registerModule("devtools/server/actors/performance", {
         prefix: "performance",
         constructor: "PerformanceActor",
@@ -247,21 +224,6 @@ const ActorRegistry = {
       constructor: "EmulationActor",
       type: { target: true },
     });
-<<<<<<< HEAD
-    this.registerModule("devtools/server/actors/addon/webextension-inspected-window", {
-      prefix: "webExtensionInspectedWindow",
-      constructor: "WebExtensionInspectedWindowActor",
-      type: { target: true },
-    });
-    this.registerModule("devtools/server/actors/accessibility/accessibility", {
-||||||| merged common ancestors
-    this.registerModule("devtools/server/actors/addon/webextension-inspected-window", {
-      prefix: "webExtensionInspectedWindow",
-      constructor: "WebExtensionInspectedWindowActor",
-      type: { target: true },
-    });
-    this.registerModule("devtools/server/actors/accessibility", {
-=======
     this.registerModule(
       "devtools/server/actors/addon/webextension-inspected-window",
       {
@@ -271,7 +233,6 @@ const ActorRegistry = {
       }
     );
     this.registerModule("devtools/server/actors/accessibility/accessibility", {
->>>>>>> upstream-releases
       prefix: "accessibility",
       constructor: "AccessibilityActor",
       type: { target: true },
@@ -281,14 +242,6 @@ const ActorRegistry = {
       constructor: "ScreenshotActor",
       type: { target: true },
     });
-<<<<<<< HEAD
-    this.registerModule("devtools/server/actors/changes", {
-      prefix: "changes",
-      constructor: "ChangesActor",
-      type: { target: true },
-    });
-||||||| merged common ancestors
-=======
     this.registerModule("devtools/server/actors/changes", {
       prefix: "changes",
       constructor: "ChangesActor",
@@ -302,7 +255,6 @@ const ActorRegistry = {
         type: { target: true },
       }
     );
->>>>>>> upstream-releases
   },
 
   /**

@@ -201,16 +201,10 @@ class NumberFormat;
  *       <td><code>DateFormat.createDateInstance(kFull, getLocale(), status)</code>
  *    <tr>
  *       <td><i>argStyleText</i>
-<<<<<<< HEAD
- *       <td><code>new SimpleDateFormat(argStyleText, getLocale(), status)</code>
-||||||| merged common ancestors
- *       <td><code>new SimpleDateFormat(argStyleText, getLocale(), status)
-=======
  *       <td><code>new SimpleDateFormat(argStyleText, getLocale(), status)</code>
  *    <tr>
  *       <td><i>argSkeletonText</i>
  *       <td><code>DateFormat::createInstanceForSkeleton(argSkeletonText, getLocale(), status)</code>
->>>>>>> upstream-releases
  *    <tr>
  *       <td rowspan=6><code>time</code>
  *       <td><i>(none)</i>

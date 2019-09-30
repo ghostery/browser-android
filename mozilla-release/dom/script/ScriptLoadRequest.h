@@ -94,19 +94,10 @@ class ScriptLoadRequest
     Element()->ScriptEvaluated(aResult, Element(), mIsInline);
   }
 
-<<<<<<< HEAD
-  bool IsPreload() { return Element() == nullptr; }
-||||||| merged common ancestors
-  bool IsPreload()
-  {
-    return Element() == nullptr;
-  }
-=======
   bool IsPreload() const {
     MOZ_ASSERT_IF(mFetchOptions->mIsPreload, !Element());
     return mFetchOptions->mIsPreload;
   }
->>>>>>> upstream-releases
 
   virtual void Cancel();
 
@@ -180,12 +171,6 @@ class ScriptLoadRequest
   // the JS allocator.
   using BinASTSourceBuffer = Vector<uint8_t>;
 
-<<<<<<< HEAD
-  const ScriptTextBuffer& ScriptText() const {
-||||||| merged common ancestors
-  const ScriptTextBuffer& ScriptText() const
-  {
-=======
   bool IsUTF16Text() const {
     return mScriptData->is<ScriptTextBuffer<char16_t>>();
   }
@@ -195,31 +180,16 @@ class ScriptLoadRequest
 
   template <typename Unit>
   const ScriptTextBuffer<Unit>& ScriptText() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsTextSource());
     return mScriptData->as<ScriptTextBuffer<Unit>>();
   }
-<<<<<<< HEAD
-  ScriptTextBuffer& ScriptText() {
-||||||| merged common ancestors
-  ScriptTextBuffer& ScriptText()
-  {
-=======
   template <typename Unit>
   ScriptTextBuffer<Unit>& ScriptText() {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsTextSource());
     return mScriptData->as<ScriptTextBuffer<Unit>>();
   }
-<<<<<<< HEAD
-  const BinASTSourceBuffer& ScriptBinASTData() const {
-||||||| merged common ancestors
-  const BinASTSourceBuffer& ScriptBinASTData() const
-  {
-=======
 
   const BinASTSourceBuffer& ScriptBinASTData() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsBinASTSource());
     return mScriptData->as<BinASTSourceBuffer>();
   }
@@ -228,15 +198,6 @@ class ScriptLoadRequest
     return mScriptData->as<BinASTSourceBuffer>();
   }
 
-<<<<<<< HEAD
-  enum class ScriptMode : uint8_t { eBlocking, eDeferred, eAsync };
-||||||| merged common ancestors
-  enum class ScriptMode : uint8_t {
-    eBlocking,
-    eDeferred,
-    eAsync
-  };
-=======
   size_t ScriptTextLength() const {
     MOZ_ASSERT(IsTextSource());
     return IsUTF16Text() ? ScriptText<char16_t>().length()
@@ -250,7 +211,6 @@ class ScriptLoadRequest
   }
 
   enum class ScriptMode : uint8_t { eBlocking, eDeferred, eAsync };
->>>>>>> upstream-releases
 
   void SetScriptMode(bool aDeferAttr, bool aAsyncAttr);
 
@@ -274,14 +234,6 @@ class ScriptLoadRequest
     return mFetchOptions->mTriggeringPrincipal;
   }
 
-<<<<<<< HEAD
-  void SetElement(nsIScriptElement* aElement) {
-    // Called when a preload request is later used for an actual request.
-||||||| merged common ancestors
-  void SetElement(nsIScriptElement* aElement)
-  {
-    // Called when a preload request is later used for an actual request.
-=======
   // Make this request a preload (speculative) request.
   void SetIsPreloadRequest() {
     MOZ_ASSERT(!Element());
@@ -291,7 +243,6 @@ class ScriptLoadRequest
 
   // Make a preload request into an actual load request for the given element.
   void SetIsLoadRequest(nsIScriptElement* aElement) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aElement);
     MOZ_ASSERT(!Element());
     MOZ_ASSERT(IsPreload());
@@ -319,43 +270,6 @@ class ScriptLoadRequest
   using super::getNext;
   using super::isInList;
 
-<<<<<<< HEAD
-  const ScriptKind
-      mKind;  // Whether this is a classic script or a module script.
-  ScriptMode mScriptMode;  // Whether this is a blocking, defer or async script.
-  Progress mProgress;      // Are we still waiting for a load to complete?
-  DataType mDataType;      // Does this contain Source or Bytecode?
-  bool mScriptFromHead;    // Synchronous head script block loading of other non
-                           // js/css content.
-  bool mIsInline;          // Is the script inline or loaded?
-  bool mHasSourceMapURL;   // Does the HTTP header have a source map url?
-  bool mInDeferList;       // True if we live in mDeferRequests.
-  bool mInAsyncList;       // True if we live in mLoadingAsyncRequests or
-                           // mLoadedAsyncRequests.
-  bool mIsNonAsyncScriptInserted;  // True if we live in
-                                   // mNonAsyncExternalScriptInsertedRequests
-  bool mIsXSLT;                    // True if we live in mXSLTRequests.
-  bool mIsCanceled;                // True if we have been explicitly canceled.
-  bool
-      mWasCompiledOMT;  // True if the script has been compiled off main thread.
-  bool mIsTracking;  // True if the script comes from a source on our tracking
-                     // protection list.
-||||||| merged common ancestors
-  const ScriptKind mKind; // Whether this is a classic script or a module script.
-  ScriptMode mScriptMode; // Whether this is a blocking, defer or async script.
-  Progress mProgress;     // Are we still waiting for a load to complete?
-  DataType mDataType;     // Does this contain Source or Bytecode?
-  bool mScriptFromHead;   // Synchronous head script block loading of other non js/css content.
-  bool mIsInline;         // Is the script inline or loaded?
-  bool mHasSourceMapURL;  // Does the HTTP header have a source map url?
-  bool mInDeferList;      // True if we live in mDeferRequests.
-  bool mInAsyncList;      // True if we live in mLoadingAsyncRequests or mLoadedAsyncRequests.
-  bool mIsNonAsyncScriptInserted; // True if we live in mNonAsyncExternalScriptInsertedRequests
-  bool mIsXSLT;           // True if we live in mXSLTRequests.
-  bool mIsCanceled;       // True if we have been explicitly canceled.
-  bool mWasCompiledOMT;   // True if the script has been compiled off main thread.
-  bool mIsTracking;       // True if the script comes from a source on our tracking protection list.
-=======
   const ScriptKind mKind;  // Whether this is a classic script or a module
                            // script.
   ScriptMode mScriptMode;  // Whether this is a blocking, defer or async script.
@@ -376,7 +290,6 @@ class ScriptLoadRequest
                          // thread.
   bool mIsTracking;      // True if the script comes from a source on our
                          // tracking protection list.
->>>>>>> upstream-releases
 
   RefPtr<ScriptFetchOptions> mFetchOptions;
 

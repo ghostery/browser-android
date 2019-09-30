@@ -10,16 +10,8 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-<<<<<<< HEAD
-[Constructor(optional DOMString label = "utf-8", optional TextDecoderOptions options),
- Exposed=(Window,Worker)]
-||||||| merged common ancestors
-[Constructor(optional DOMString label = "utf-8", optional TextDecoderOptions options),
- Exposed=(Window,Worker,System)]
-=======
 [Constructor(optional DOMString label = "utf-8", optional TextDecoderOptions options = {}),
  Exposed=(Window,Worker)]
->>>>>>> upstream-releases
 interface TextDecoder {
   [Constant]
   readonly attribute DOMString encoding;

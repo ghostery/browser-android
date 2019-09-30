@@ -88,13 +88,8 @@
 //!    - Path
 //!    - PathBuf
 //!    - Range\<T\>
-<<<<<<< HEAD
-//!    - RangeInclusive\<T\>
-||||||| merged common ancestors
-=======
 //!    - RangeInclusive\<T\>
 //!    - Bound\<T\>
->>>>>>> upstream-releases
 //!    - num::NonZero*
 //!    - `!` *(unstable)*
 //!  - **Net types**:

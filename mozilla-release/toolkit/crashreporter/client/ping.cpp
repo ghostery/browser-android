@@ -250,18 +250,8 @@ string GenerateSubmissionUrl(const string& aUrl, const string& aId,
 // Write out the ping into the specified file.
 //
 // Returns true if the ping was written out successfully, false otherwise.
-<<<<<<< HEAD
-static bool WritePing(const string& aPath, const string& aPing) {
-  ofstream* f = UIOpenWrite(aPath.c_str());
-||||||| merged common ancestors
-static bool
-WritePing(const string& aPath, const string& aPing)
-{
-  ofstream* f = UIOpenWrite(aPath.c_str());
-=======
 static bool WritePing(const string& aPath, const string& aPing) {
   ofstream* f = UIOpenWrite(aPath, ios::trunc);
->>>>>>> upstream-releases
   bool success = false;
 
   if (f->is_open()) {

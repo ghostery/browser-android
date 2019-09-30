@@ -196,14 +196,8 @@ static mozglueresult loadGeckoLibs() {
   getrusage(RUSAGE_THREAD, &usage1_thread);
   getrusage(RUSAGE_SELF, &usage1);
 
-<<<<<<< HEAD
-  gBootstrap = GetBootstrap(getUnpackedLibraryName("libxul.so").get());
-||||||| merged common ancestors
-  gBootstrap = GetBootstrap(getAPKLibraryName(apkName, "libxul.so").get());
-=======
   gBootstrap = GetBootstrap(getUnpackedLibraryName("libxul.so").get(),
                             LibLoadingStrategy::ReadAhead);
->>>>>>> upstream-releases
   if (!gBootstrap) {
     __android_log_print(ANDROID_LOG_ERROR, "GeckoLibLoad",
                         "Couldn't get a handle to libxul!");

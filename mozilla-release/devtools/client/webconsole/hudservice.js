@@ -173,15 +173,7 @@ HUDService.prototype = {
 
       const client = new DebuggerClient(DebuggerServer.connectPipe());
       await client.connect();
-<<<<<<< HEAD
-      const front = await client.mainRoot.getMainProcess();
-      return { activeTab: front, client, chrome: true };
-||||||| merged common ancestors
-      const response = await client.mainRoot.getProcess(0);
-      return { form: response.form, client, chrome: true };
-=======
       return client.mainRoot.getMainProcess();
->>>>>>> upstream-releases
     }
 
     async function openWindow(t) {

@@ -75,7 +75,6 @@ static nsresult MacErrorMapper(OSErr inErr);
 
 using namespace mozilla;
 
-<<<<<<< HEAD
 #define ENSURE_STAT_CACHE()                            \
   do {                                                 \
     if (!FillStatCache()) return NSRESULT_FOR_ERRNO(); \
@@ -87,33 +86,6 @@ using namespace mozilla;
     if (!FilePreferences::IsAllowedPath(mPath))           \
       return NS_ERROR_FILE_ACCESS_DENIED;                 \
   } while (0)
-||||||| merged common ancestors
-#define ENSURE_STAT_CACHE()                     \
-    do {                                        \
-        if (!FillStatCache())                   \
-             return NSRESULT_FOR_ERRNO();       \
-    } while(0)
-
-#define CHECK_mPath()                           \
-    do {                                        \
-        if (mPath.IsEmpty())                    \
-            return NS_ERROR_NOT_INITIALIZED;    \
-        if (!FilePreferences::IsAllowedPath(mPath)) \
-            return NS_ERROR_FILE_ACCESS_DENIED; \
-    } while(0)
-=======
-#define ENSURE_STAT_CACHE()                            \
-  do {                                                 \
-    if (!FillStatCache()) return NSRESULT_FOR_ERRNO(); \
-  } while (0)
-
-#define CHECK_mPath()                                     \
-  do {                                                    \
-    if (mPath.IsEmpty()) return NS_ERROR_NOT_INITIALIZED; \
-    if (!FilePreferences::IsAllowedPath(mPath))           \
-      return NS_ERROR_FILE_ACCESS_DENIED;                 \
-  } while (0)
->>>>>>> upstream-releases
 
 /* directory enumerator */
 class nsDirEnumeratorUnix final : public nsSimpleEnumerator,
@@ -258,26 +230,9 @@ nsLocalFile::nsLocalFile(const nsACString& aFilePath) : mCachedStat() {
 nsLocalFile::nsLocalFile(const nsLocalFile& aOther) : mPath(aOther.mPath) {}
 
 #ifdef MOZ_WIDGET_COCOA
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsLocalFile, nsILocalFileMac, nsIFile, nsIHashable)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(nsLocalFile,
-                  nsILocalFileMac,
-                  nsIFile,
-                  nsIHashable)
-=======
 NS_IMPL_ISUPPORTS(nsLocalFile, nsILocalFileMac, nsIFile)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsLocalFile, nsIFile, nsIHashable)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(nsLocalFile,
-                  nsIFile,
-                  nsIHashable)
-=======
 NS_IMPL_ISUPPORTS(nsLocalFile, nsIFile)
->>>>>>> upstream-releases
 #endif
 
 nsresult nsLocalFile::nsLocalFileConstructor(nsISupports* aOuter,
@@ -1390,20 +1345,9 @@ nsLocalFile::GetDiskSpaceAvailable(int64_t* aDiskSpaceAvailable) {
 
   *aDiskSpaceAvailable = (int64_t)fs_buf.F_BSIZE * fs_buf.f_bavail;
 
-<<<<<<< HEAD
-#ifdef DEBUG_DISK_SPACE
-  printf("DiskSpaceAvailable: %lu bytes\n", *aDiskSpaceAvailable);
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG_DISK_SPACE
-  printf("DiskSpaceAvailable: %lu bytes\n",
-         *aDiskSpaceAvailable);
-#endif
-=======
 #  ifdef DEBUG_DISK_SPACE
   printf("DiskSpaceAvailable: %lu bytes\n", *aDiskSpaceAvailable);
 #  endif
->>>>>>> upstream-releases
 
 #  if defined(USE_LINUX_QUOTACTL)
 
@@ -1419,19 +1363,9 @@ nsLocalFile::GetDiskSpaceAvailable(int64_t* aDiskSpaceAvailable) {
   }
 
   struct dqblk dq;
-<<<<<<< HEAD
-  if (!quotactl(QCMD(Q_GETQUOTA, USRQUOTA), deviceName.get(), getuid(),
-                (caddr_t)&dq)
-#ifdef QIF_BLIMITS
-||||||| merged common ancestors
-  if (!quotactl(QCMD(Q_GETQUOTA, USRQUOTA), deviceName.get(),
-                getuid(), (caddr_t)&dq)
-#ifdef QIF_BLIMITS
-=======
   if (!quotactl(QCMD(Q_GETQUOTA, USRQUOTA), deviceName.get(), getuid(),
                 (caddr_t)&dq)
 #    ifdef QIF_BLIMITS
->>>>>>> upstream-releases
       && dq.dqb_valid & QIF_BLIMITS
 #    endif
       && dq.dqb_bhardlimit) {
@@ -1457,23 +1391,11 @@ nsLocalFile::GetDiskSpaceAvailable(int64_t* aDiskSpaceAvailable) {
    * Until we figure out how to do that, lets be honest and say that this
    * command isn't implemented properly for these platforms yet.
    */
-<<<<<<< HEAD
-#ifdef DEBUG
-  printf(
-      "ERROR: GetDiskSpaceAvailable: Not implemented for plaforms without "
-      "statfs.\n");
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-  printf("ERROR: GetDiskSpaceAvailable: Not implemented for plaforms without statfs.\n");
-#endif
-=======
 #  ifdef DEBUG
   printf(
       "ERROR: GetDiskSpaceAvailable: Not implemented for plaforms without "
       "statfs.\n");
 #  endif
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 
 #endif /* STATFS */
@@ -2182,57 +2104,8 @@ nsresult nsLocalFile::GetTarget(nsAString& aResult) {
   GET_UCS(GetNativeTarget, aResult);
 }
 
-<<<<<<< HEAD
-// nsIHashable
-
-NS_IMETHODIMP
-nsLocalFile::Equals(nsIHashable* aOther, bool* aResult) {
-  nsCOMPtr<nsIFile> otherFile(do_QueryInterface(aOther));
-  if (!otherFile) {
-    *aResult = false;
-    return NS_OK;
-  }
-
-  return Equals(otherFile, aResult);
-}
-
-NS_IMETHODIMP
-nsLocalFile::GetHashCode(uint32_t* aResult) {
-  *aResult = HashString(mPath);
-  return NS_OK;
-}
-
 nsresult NS_NewLocalFile(const nsAString& aPath, bool aFollowLinks,
                          nsIFile** aResult) {
-||||||| merged common ancestors
-// nsIHashable
-
-NS_IMETHODIMP
-nsLocalFile::Equals(nsIHashable* aOther, bool* aResult)
-{
-  nsCOMPtr<nsIFile> otherFile(do_QueryInterface(aOther));
-  if (!otherFile) {
-    *aResult = false;
-    return NS_OK;
-  }
-
-  return Equals(otherFile, aResult);
-}
-
-NS_IMETHODIMP
-nsLocalFile::GetHashCode(uint32_t* aResult)
-{
-  *aResult = HashString(mPath);
-  return NS_OK;
-}
-
-nsresult
-NS_NewLocalFile(const nsAString& aPath, bool aFollowLinks, nsIFile** aResult)
-{
-=======
-nsresult NS_NewLocalFile(const nsAString& aPath, bool aFollowLinks,
-                         nsIFile** aResult) {
->>>>>>> upstream-releases
   nsAutoCString buf;
   nsresult rv = NS_CopyUnicodeToNative(aPath, buf);
   if (NS_FAILED(rv)) {

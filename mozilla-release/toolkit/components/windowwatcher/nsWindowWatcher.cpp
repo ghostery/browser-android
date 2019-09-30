@@ -292,52 +292,12 @@ nsWindowWatcher::OpenWindow(mozIDOMWindowProxy* aParent, const char* aUrl,
                             /* navigate = */ true, argv,
                             /* aIsPopupSpam = */ false,
                             /* aForceNoOpener = */ false,
-<<<<<<< HEAD
-                            /* aLoadState = */ nullptr, aResult);
-||||||| merged common ancestors
-                            /* aLoadInfo = */ nullptr,
-                            aResult);
-=======
                             /* aForceNoReferrer = */ false,
                             /* aLoadState = */ nullptr, aResult);
->>>>>>> upstream-releases
 }
 
 struct SizeSpec {
   SizeSpec()
-<<<<<<< HEAD
-      : mLeft(0),
-        mTop(0),
-        mOuterWidth(0),
-        mOuterHeight(0),
-        mInnerWidth(0),
-        mInnerHeight(0),
-        mLeftSpecified(false),
-        mTopSpecified(false),
-        mOuterWidthSpecified(false),
-        mOuterHeightSpecified(false),
-        mInnerWidthSpecified(false),
-        mInnerHeightSpecified(false),
-        mUseDefaultWidth(false),
-        mUseDefaultHeight(false) {}
-||||||| merged common ancestors
-    : mLeft(0)
-    , mTop(0)
-    , mOuterWidth(0)
-    , mOuterHeight(0)
-    , mInnerWidth(0)
-    , mInnerHeight(0)
-    , mLeftSpecified(false)
-    , mTopSpecified(false)
-    , mOuterWidthSpecified(false)
-    , mOuterHeightSpecified(false)
-    , mInnerWidthSpecified(false)
-    , mInnerHeightSpecified(false)
-    , mUseDefaultWidth(false)
-    , mUseDefaultHeight(false)
-  {
-  }
-=======
       : mLeft(0),
         mTop(0),
         mOuterWidth(0),
@@ -353,7 +313,6 @@ struct SizeSpec {
         mLockAspectRatio(false),
         mUseDefaultWidth(false),
         mUseDefaultHeight(false) {}
->>>>>>> upstream-releases
 
   int32_t mLeft;
   int32_t mTop;
@@ -384,29 +343,6 @@ struct SizeSpec {
 };
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsWindowWatcher::OpenWindow2(mozIDOMWindowProxy* aParent, const char* aUrl,
-                             const char* aName, const char* aFeatures,
-                             bool aCalledFromScript, bool aDialog,
-                             bool aNavigate, nsISupports* aArguments,
-                             bool aIsPopupSpam, bool aForceNoOpener,
-                             nsDocShellLoadState* aLoadState,
-                             mozIDOMWindowProxy** aResult) {
-||||||| merged common ancestors
-nsWindowWatcher::OpenWindow2(mozIDOMWindowProxy* aParent,
-                             const char* aUrl,
-                             const char* aName,
-                             const char* aFeatures,
-                             bool aCalledFromScript,
-                             bool aDialog,
-                             bool aNavigate,
-                             nsISupports* aArguments,
-                             bool aIsPopupSpam,
-                             bool aForceNoOpener,
-                             nsDocShellLoadInfo* aLoadInfo,
-                             mozIDOMWindowProxy** aResult)
-{
-=======
 nsWindowWatcher::OpenWindow2(mozIDOMWindowProxy* aParent, const char* aUrl,
                              const char* aName, const char* aFeatures,
                              bool aCalledFromScript, bool aDialog,
@@ -415,7 +351,6 @@ nsWindowWatcher::OpenWindow2(mozIDOMWindowProxy* aParent, const char* aUrl,
                              bool aForceNoReferrer,
                              nsDocShellLoadState* aLoadState,
                              mozIDOMWindowProxy** aResult) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIArray> argv = ConvertArgsToArray(aArguments);
 
   uint32_t argc = 0;
@@ -431,21 +366,10 @@ nsWindowWatcher::OpenWindow2(mozIDOMWindowProxy* aParent, const char* aUrl,
     dialog = argc > 0;
   }
 
-<<<<<<< HEAD
-  return OpenWindowInternal(aParent, aUrl, aName, aFeatures, aCalledFromScript,
-                            dialog, aNavigate, argv, aIsPopupSpam,
-                            aForceNoOpener, aLoadState, aResult);
-||||||| merged common ancestors
-  return OpenWindowInternal(aParent, aUrl, aName, aFeatures,
-                            aCalledFromScript, dialog,
-                            aNavigate, argv, aIsPopupSpam,
-                            aForceNoOpener, aLoadInfo, aResult);
-=======
   return OpenWindowInternal(aParent, aUrl, aName, aFeatures, aCalledFromScript,
                             dialog, aNavigate, argv, aIsPopupSpam,
                             aForceNoOpener, aForceNoReferrer, aLoadState,
                             aResult);
->>>>>>> upstream-releases
 }
 
 // This static function checks if the aDocShell uses an UserContextId equal to
@@ -474,58 +398,20 @@ static bool CheckUserContextCompatibility(nsIDocShell* aDocShell) {
 
   return subjectPrincipal->GetUserContextId() == userContextId;
 }
-<<<<<<< HEAD
-
-nsresult nsWindowWatcher::CreateChromeWindow(const nsACString& aFeatures,
-                                             nsIWebBrowserChrome* aParentChrome,
-                                             uint32_t aChromeFlags,
-                                             nsITabParent* aOpeningTabParent,
-                                             mozIDOMWindowProxy* aOpener,
-                                             uint64_t aNextTabParentId,
-                                             nsIWebBrowserChrome** aResult) {
-  nsCOMPtr<nsIWindowCreator2> windowCreator2(do_QueryInterface(mWindowCreator));
-  if (NS_WARN_IF(!windowCreator2)) {
-||||||| merged common ancestors
-
-nsresult
-nsWindowWatcher::CreateChromeWindow(const nsACString& aFeatures,
-                                    nsIWebBrowserChrome* aParentChrome,
-                                    uint32_t aChromeFlags,
-                                    nsITabParent* aOpeningTabParent,
-                                    mozIDOMWindowProxy* aOpener,
-                                    uint64_t aNextTabParentId,
-                                    nsIWebBrowserChrome** aResult)
-{
-  nsCOMPtr<nsIWindowCreator2> windowCreator2(do_QueryInterface(mWindowCreator));
-  if (NS_WARN_IF(!windowCreator2)) {
-=======
 nsresult nsWindowWatcher::CreateChromeWindow(
     const nsACString& aFeatures, nsIWebBrowserChrome* aParentChrome,
     uint32_t aChromeFlags, nsIRemoteTab* aOpeningBrowserParent,
     mozIDOMWindowProxy* aOpener, uint64_t aNextRemoteTabId,
     nsIWebBrowserChrome** aResult) {
   if (NS_WARN_IF(!mWindowCreator)) {
->>>>>>> upstream-releases
     return NS_ERROR_UNEXPECTED;
   }
 
   bool cancel = false;
   nsCOMPtr<nsIWebBrowserChrome> newWindowChrome;
-<<<<<<< HEAD
-  nsresult rv = windowCreator2->CreateChromeWindow2(
-      aParentChrome, aChromeFlags, aOpeningTabParent, aOpener, aNextTabParentId,
-      &cancel, getter_AddRefs(newWindowChrome));
-||||||| merged common ancestors
-  nsresult rv =
-    windowCreator2->CreateChromeWindow2(aParentChrome, aChromeFlags,
-                                        aOpeningTabParent, aOpener,
-                                        aNextTabParentId, &cancel,
-                                        getter_AddRefs(newWindowChrome));
-=======
   nsresult rv = mWindowCreator->CreateChromeWindow(
       aParentChrome, aChromeFlags, aOpeningBrowserParent, aOpener,
       aNextRemoteTabId, &cancel, getter_AddRefs(newWindowChrome));
->>>>>>> upstream-releases
 
   if (NS_SUCCEEDED(rv) && cancel) {
     newWindowChrome = nullptr;
@@ -565,26 +451,10 @@ void nsWindowWatcher::MaybeDisablePersistence(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsWindowWatcher::OpenWindowWithTabParent(
-    nsITabParent* aOpeningTabParent, const nsACString& aFeatures,
-    bool aCalledFromJS, float aOpenerFullZoom, uint64_t aNextTabParentId,
-    bool aForceNoOpener, nsITabParent** aResult) {
-||||||| merged common ancestors
-nsWindowWatcher::OpenWindowWithTabParent(nsITabParent* aOpeningTabParent,
-                                         const nsACString& aFeatures,
-                                         bool aCalledFromJS,
-                                         float aOpenerFullZoom,
-                                         uint64_t aNextTabParentId,
-                                         bool aForceNoOpener,
-                                         nsITabParent** aResult)
-{
-=======
 nsWindowWatcher::OpenWindowWithRemoteTab(
     nsIRemoteTab* aRemoteTab, const nsACString& aFeatures, bool aCalledFromJS,
     float aOpenerFullZoom, uint64_t aNextRemoteTabId, bool aForceNoOpener,
     nsIRemoteTab** aResult) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(mWindowCreator);
 
@@ -654,17 +524,8 @@ nsWindowWatcher::OpenWindowWithRemoteTab(
   nsCOMPtr<nsIWebBrowserChrome> newWindowChrome;
 
   CreateChromeWindow(aFeatures, parentChrome, chromeFlags,
-<<<<<<< HEAD
-                     aForceNoOpener ? nullptr : aOpeningTabParent, nullptr,
-                     aNextTabParentId, getter_AddRefs(newWindowChrome));
-||||||| merged common ancestors
-                     aForceNoOpener ? nullptr : aOpeningTabParent, nullptr,
-                     aNextTabParentId,
-                     getter_AddRefs(newWindowChrome));
-=======
                      aForceNoOpener ? nullptr : aRemoteTab, nullptr,
                      aNextRemoteTabId, getter_AddRefs(newWindowChrome));
->>>>>>> upstream-releases
 
   if (NS_WARN_IF(!newWindowChrome)) {
     return NS_ERROR_UNEXPECTED;
@@ -711,28 +572,6 @@ nsWindowWatcher::OpenWindowWithRemoteTab(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsWindowWatcher::OpenWindowInternal(
-    mozIDOMWindowProxy* aParent, const char* aUrl, const char* aName,
-    const char* aFeatures, bool aCalledFromJS, bool aDialog, bool aNavigate,
-    nsIArray* aArgv, bool aIsPopupSpam, bool aForceNoOpener,
-    nsDocShellLoadState* aLoadState, mozIDOMWindowProxy** aResult) {
-||||||| merged common ancestors
-nsresult
-nsWindowWatcher::OpenWindowInternal(mozIDOMWindowProxy* aParent,
-                                    const char* aUrl,
-                                    const char* aName,
-                                    const char* aFeatures,
-                                    bool aCalledFromJS,
-                                    bool aDialog,
-                                    bool aNavigate,
-                                    nsIArray* aArgv,
-                                    bool aIsPopupSpam,
-                                    bool aForceNoOpener,
-                                    nsDocShellLoadInfo* aLoadInfo,
-                                    mozIDOMWindowProxy** aResult)
-{
-=======
 nsresult nsWindowWatcher::OpenWindowInternal(
     mozIDOMWindowProxy* aParent, const char* aUrl, const char* aName,
     const char* aFeatures, bool aCalledFromJS, bool aDialog, bool aNavigate,
@@ -741,7 +580,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     mozIDOMWindowProxy** aResult) {
   MOZ_ASSERT_IF(aForceNoReferrer, aForceNoOpener);
 
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   bool isNewToplevelWindow = false;
   bool windowIsNew = false;
@@ -921,25 +759,11 @@ nsresult nsWindowWatcher::OpenWindowInternal(
 
       if (provider) {
         nsCOMPtr<mozIDOMWindowProxy> newWindow;
-<<<<<<< HEAD
-        rv = provider->ProvideWindow(
-            aParent, chromeFlags, aCalledFromJS, sizeSpec.PositionSpecified(),
-            sizeSpec.SizeSpecified(), uriToLoad, name, features, aForceNoOpener,
-            aLoadState, &windowIsNew, getter_AddRefs(newWindow));
-||||||| merged common ancestors
-        rv = provider->ProvideWindow(aParent, chromeFlags, aCalledFromJS,
-                                     sizeSpec.PositionSpecified(),
-                                     sizeSpec.SizeSpecified(),
-                                     uriToLoad, name, features, aForceNoOpener,
-                                     aLoadInfo, &windowIsNew,
-                                     getter_AddRefs(newWindow));
-=======
         rv = provider->ProvideWindow(
             aParent, chromeFlags, aCalledFromJS, sizeSpec.PositionSpecified(),
             sizeSpec.SizeSpecified(), uriToLoad, name, features, aForceNoOpener,
             aForceNoReferrer, aLoadState, &windowIsNew,
             getter_AddRefs(newWindow));
->>>>>>> upstream-releases
 
         if (NS_SUCCEEDED(rv)) {
           GetWindowTreeItem(newWindow, getter_AddRefs(newDocShellItem));
@@ -1044,36 +868,9 @@ nsresult nsWindowWatcher::OpenWindowInternal(
          completely honest: we clear that indicator if the opener is chrome, so
          that the downstream consumer can treat the indicator to mean simply
          that the new window is subject to popup control. */
-<<<<<<< HEAD
-      nsCOMPtr<nsIWindowCreator2> windowCreator2(
-          do_QueryInterface(mWindowCreator));
-      if (windowCreator2) {
-        mozIDOMWindowProxy* openerWindow = aForceNoOpener ? nullptr : aParent;
-        rv = CreateChromeWindow(features, parentChrome, chromeFlags, nullptr,
-                                openerWindow, 0, getter_AddRefs(newChrome));
-
-      } else {
-        rv = mWindowCreator->CreateChromeWindow(parentChrome, chromeFlags,
-                                                getter_AddRefs(newChrome));
-      }
-||||||| merged common ancestors
-      nsCOMPtr<nsIWindowCreator2> windowCreator2(
-        do_QueryInterface(mWindowCreator));
-      if (windowCreator2) {
-        mozIDOMWindowProxy* openerWindow = aForceNoOpener ? nullptr : aParent;
-        rv = CreateChromeWindow(features, parentChrome, chromeFlags,
-                                nullptr, openerWindow, 0,
-                                getter_AddRefs(newChrome));
-
-      } else {
-        rv = mWindowCreator->CreateChromeWindow(parentChrome, chromeFlags,
-                                                getter_AddRefs(newChrome));
-      }
-=======
       mozIDOMWindowProxy* openerWindow = aForceNoOpener ? nullptr : aParent;
       rv = CreateChromeWindow(features, parentChrome, chromeFlags, nullptr,
                               openerWindow, 0, getter_AddRefs(newChrome));
->>>>>>> upstream-releases
 
       if (parentTopInnerWindow) {
         parentTopInnerWindow->Resume();
@@ -1168,25 +965,11 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   // Note: The check for the current JSContext isn't necessarily sensical.
   // It's just designed to preserve old semantics during a mass-conversion
   // patch.
-<<<<<<< HEAD
-  // Bug 1498605 verify usages of systemPrincipal here
-||||||| merged common ancestors
-=======
   // Bug 1498605 verify usages of systemPrincipal here
   JSContext* cx = nsContentUtils::GetCurrentJSContext();
->>>>>>> upstream-releases
   nsCOMPtr<nsIPrincipal> subjectPrincipal =
-<<<<<<< HEAD
-      nsContentUtils::GetCurrentJSContext()
-          ? nsContentUtils::SubjectPrincipal()
-          : nsContentUtils::GetSystemPrincipal();
-||||||| merged common ancestors
-    nsContentUtils::GetCurrentJSContext() ? nsContentUtils::SubjectPrincipal() :
-                                            nullptr;
-=======
       cx ? nsContentUtils::SubjectPrincipal()
          : nsContentUtils::GetSystemPrincipal();
->>>>>>> upstream-releases
 
   bool isPrivateBrowsingWindow = false;
 
@@ -1260,15 +1043,9 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   // We rely on CalculateChromeFlags to decide whether remote (out-of-process)
   // tabs should be used.
   bool isRemoteWindow =
-<<<<<<< HEAD
-      !!(chromeFlags & nsIWebBrowserChrome::CHROME_REMOTE_WINDOW);
-||||||| merged common ancestors
-    !!(chromeFlags & nsIWebBrowserChrome::CHROME_REMOTE_WINDOW);
-=======
       !!(chromeFlags & nsIWebBrowserChrome::CHROME_REMOTE_WINDOW);
   bool isFissionWindow =
       !!(chromeFlags & nsIWebBrowserChrome::CHROME_FISSION_WINDOW);
->>>>>>> upstream-releases
 
   if (isNewToplevelWindow) {
     nsCOMPtr<nsIDocShellTreeItem> childRoot;
@@ -1288,15 +1065,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     }
   }
 
-<<<<<<< HEAD
-  RefPtr<nsDocShellLoadState> loadState = aLoadState;
-  if (uriToLoad && aNavigate && !loadState) {
-    loadState = new nsDocShellLoadState();
-||||||| merged common ancestors
-  RefPtr<nsDocShellLoadInfo> loadInfo = aLoadInfo;
-  if (uriToLoad && aNavigate && !loadInfo) {
-    loadInfo = new nsDocShellLoadInfo();
-=======
   RefPtr<nsDocShellLoadState> loadState = aLoadState;
   if (uriToLoad && loadState) {
     // If a URI was passed to this function, open that, not what was passed in
@@ -1304,7 +1072,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     loadState->SetURI(uriToLoad);
   } else if (uriToLoad && aNavigate && !loadState) {
     loadState = new nsDocShellLoadState(uriToLoad);
->>>>>>> upstream-releases
 
     if (subjectPrincipal) {
       loadState->SetTriggeringPrincipal(subjectPrincipal);
@@ -1331,17 +1098,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
         loadState->SetReferrerInfo(referrerInfo);
       }
     }
-<<<<<<< HEAD
-    if (doc) {
-      // Set the referrer
-      loadState->SetReferrer(doc->GetDocumentURI());
-      loadState->SetReferrerPolicy(doc->GetReferrerPolicy());
-||||||| merged common ancestors
-    if (doc) {
-      // Set the referrer
-      loadInfo->SetReferrer(doc->GetDocumentURI());
-      loadInfo->SetReferrerPolicy(doc->GetReferrerPolicy());
-=======
   }
 
   if (loadState && cx) {
@@ -1349,7 +1105,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     if (win) {
       nsCOMPtr<nsIContentSecurityPolicy> csp = win->GetCsp();
       loadState->SetCsp(csp);
->>>>>>> upstream-releases
     }
   }
 
@@ -1396,8 +1151,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   }
 
   if (uriToLoad && aNavigate) {
-<<<<<<< HEAD
-    loadState->SetURI(uriToLoad);
     loadState->SetLoadFlags(
         windowIsNew
             ? static_cast<uint32_t>(nsIWebNavigation::LOAD_FLAGS_FIRST_LOAD)
@@ -1405,23 +1158,6 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     loadState->SetFirstParty(true);
     // Should this pay attention to errors returned by LoadURI?
     newDocShell->LoadURI(loadState);
-||||||| merged common ancestors
-    newDocShell->LoadURI(
-      uriToLoad,
-      loadInfo,
-      windowIsNew ?
-        static_cast<uint32_t>(nsIWebNavigation::LOAD_FLAGS_FIRST_LOAD) :
-        static_cast<uint32_t>(nsIWebNavigation::LOAD_FLAGS_NONE),
-      true);
-=======
-    loadState->SetLoadFlags(
-        windowIsNew
-            ? static_cast<uint32_t>(nsIWebNavigation::LOAD_FLAGS_FIRST_LOAD)
-            : static_cast<uint32_t>(nsIWebNavigation::LOAD_FLAGS_NONE));
-    loadState->SetFirstParty(true);
-    // Should this pay attention to errors returned by LoadURI?
-    newDocShell->LoadURI(loadState);
->>>>>>> upstream-releases
   }
 
   // Copy the current session storage for the current domain. Don't perform the
@@ -1434,24 +1170,11 @@ nsresult nsWindowWatcher::OpenWindowInternal(
 
     if (parentStorageManager && newStorageManager) {
       RefPtr<Storage> storage;
-<<<<<<< HEAD
-      nsCOMPtr<nsPIDOMWindowInner> pInnerWin =
-          parentWindow->GetCurrentInnerWindow();
-      parentStorageManager->GetStorage(pInnerWin, subjectPrincipal,
-                                       isPrivateBrowsingWindow,
-                                       getter_AddRefs(storage));
-||||||| merged common ancestors
-      nsCOMPtr<nsPIDOMWindowInner> pInnerWin = parentWindow->GetCurrentInnerWindow();
-      parentStorageManager->GetStorage(pInnerWin, subjectPrincipal,
-                                       isPrivateBrowsingWindow,
-                                       getter_AddRefs(storage));
-=======
       nsCOMPtr<nsPIDOMWindowInner> pInnerWin =
           parentWindow->GetCurrentInnerWindow();
       parentStorageManager->GetStorage(
           pInnerWin, subjectPrincipal, subjectPrincipal,
           isPrivateBrowsingWindow, getter_AddRefs(storage));
->>>>>>> upstream-releases
       if (storage) {
         newStorageManager->CloneStorage(storage);
       }
@@ -1481,15 +1204,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     // Make sure we maintain the state on an outer window, because
     // that's where it lives; inner windows assert if you try to
     // maintain the state on them.
-<<<<<<< HEAD
-    nsAutoWindowStateHelper windowStateHelper(
-        parentWindow ? parentWindow->GetOuterWindow() : nullptr);
-||||||| merged common ancestors
-    nsAutoWindowStateHelper windowStateHelper(
-      parentWindow ? parentWindow->GetOuterWindow() : nullptr);
-=======
     nsAutoWindowStateHelper windowStateHelper(parentWindow);
->>>>>>> upstream-releases
 
     if (!windowStateHelper.DefaultEnabled()) {
       // Default to cancel not opening the modal window.
@@ -2044,14 +1759,6 @@ uint32_t nsWindowWatcher::CalculateChromeFlagsForParent(
     chromeFlags |= nsIWebBrowserChrome::CHROME_REMOTE_WINDOW;
   }
 
-<<<<<<< HEAD
-  chromeFlags |= WinHasOption(aFeatures, "popup", 0, &presenceFlag)
-                     ? nsIWebBrowserChrome::CHROME_WINDOW_POPUP
-                     : 0;
-||||||| merged common ancestors
-  chromeFlags |= WinHasOption(aFeatures, "popup", 0, &presenceFlag) ?
-    nsIWebBrowserChrome::CHROME_WINDOW_POPUP : 0;
-=======
   // Determine whether the window should have remote subframes
   bool fission = Preferences::GetBool("fission.autostart");
 
@@ -2068,7 +1775,6 @@ uint32_t nsWindowWatcher::CalculateChromeFlagsForParent(
   chromeFlags |= WinHasOption(aFeatures, "popup", 0, &presenceFlag)
                      ? nsIWebBrowserChrome::CHROME_WINDOW_POPUP
                      : 0;
->>>>>>> upstream-releases
 
   /* OK.
      Normal browser windows, in spite of a stated pattern of turning off
@@ -2102,42 +1808,6 @@ uint32_t nsWindowWatcher::CalculateChromeFlagsForParent(
     chromeFlags |= nsIWebBrowserChrome::CHROME_WINDOW_RAISED;
   }
 
-<<<<<<< HEAD
-  chromeFlags |= WinHasOption(aFeatures, "suppressanimation", 0, nullptr)
-                     ? nsIWebBrowserChrome::CHROME_SUPPRESS_ANIMATION
-                     : 0;
-
-  chromeFlags |= WinHasOption(aFeatures, "chrome", 0, nullptr)
-                     ? nsIWebBrowserChrome::CHROME_OPENAS_CHROME
-                     : 0;
-  chromeFlags |= WinHasOption(aFeatures, "extrachrome", 0, nullptr)
-                     ? nsIWebBrowserChrome::CHROME_EXTRA
-                     : 0;
-  chromeFlags |= WinHasOption(aFeatures, "centerscreen", 0, nullptr)
-                     ? nsIWebBrowserChrome::CHROME_CENTER_SCREEN
-                     : 0;
-  chromeFlags |= WinHasOption(aFeatures, "dependent", 0, nullptr)
-                     ? nsIWebBrowserChrome::CHROME_DEPENDENT
-                     : 0;
-  chromeFlags |= WinHasOption(aFeatures, "modal", 0, nullptr)
-                     ? (nsIWebBrowserChrome::CHROME_MODAL |
-                        nsIWebBrowserChrome::CHROME_DEPENDENT)
-                     : 0;
-||||||| merged common ancestors
-  chromeFlags |= WinHasOption(aFeatures, "suppressanimation", 0, nullptr) ?
-    nsIWebBrowserChrome::CHROME_SUPPRESS_ANIMATION : 0;
-
-  chromeFlags |= WinHasOption(aFeatures, "chrome", 0, nullptr) ?
-    nsIWebBrowserChrome::CHROME_OPENAS_CHROME : 0;
-  chromeFlags |= WinHasOption(aFeatures, "extrachrome", 0, nullptr) ?
-    nsIWebBrowserChrome::CHROME_EXTRA : 0;
-  chromeFlags |= WinHasOption(aFeatures, "centerscreen", 0, nullptr) ?
-    nsIWebBrowserChrome::CHROME_CENTER_SCREEN : 0;
-  chromeFlags |= WinHasOption(aFeatures, "dependent", 0, nullptr) ?
-    nsIWebBrowserChrome::CHROME_DEPENDENT : 0;
-  chromeFlags |= WinHasOption(aFeatures, "modal", 0, nullptr) ?
-    (nsIWebBrowserChrome::CHROME_MODAL | nsIWebBrowserChrome::CHROME_DEPENDENT) : 0;
-=======
   chromeFlags |= WinHasOption(aFeatures, "suppressanimation", 0, nullptr)
                      ? nsIWebBrowserChrome::CHROME_SUPPRESS_ANIMATION
                      : 0;
@@ -2160,7 +1830,6 @@ uint32_t nsWindowWatcher::CalculateChromeFlagsForParent(
                      ? (nsIWebBrowserChrome::CHROME_MODAL |
                         nsIWebBrowserChrome::CHROME_DEPENDENT)
                      : 0;
->>>>>>> upstream-releases
 
   /* On mobile we want to ignore the dialog window feature, since the mobile UI
      does not provide any affordance for dialog windows. This does not interfere

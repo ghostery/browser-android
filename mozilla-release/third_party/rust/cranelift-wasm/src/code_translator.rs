@@ -35,24 +35,6 @@ use cranelift_codegen::ir::types::*;
 use cranelift_codegen::ir::{self, InstBuilder, JumpTableData, MemFlags, ValueLabel};
 use cranelift_codegen::packed_option::ReservedValue;
 use cranelift_frontend::{FunctionBuilder, Variable};
-<<<<<<< HEAD
-use environ::{FuncEnvironment, GlobalVariable, ReturnMode, WasmError, WasmResult};
-use state::{ControlStackFrame, TranslationState};
-use std::collections::{hash_map, HashMap};
-use std::vec::Vec;
-use std::{i32, u32};
-use translation_utils::{f32_translation, f64_translation, num_return_values, type_to_type};
-use translation_utils::{FuncIndex, MemoryIndex, SignatureIndex, TableIndex};
-||||||| merged common ancestors
-use environ::{FuncEnvironment, GlobalVariable, WasmError, WasmResult};
-use state::{ControlStackFrame, TranslationState};
-use std::collections::{hash_map, HashMap};
-use std::vec::Vec;
-use std::{i32, u32};
-use translation_utils::{f32_translation, f64_translation, num_return_values, type_to_type};
-use translation_utils::{FuncIndex, MemoryIndex, SignatureIndex, TableIndex};
-=======
->>>>>>> upstream-releases
 use wasmparser::{MemoryImmediate, Operator};
 
 // Clippy warns about "flags: _" but its important to document that the flags field is ignored
@@ -401,21 +383,9 @@ pub fn translate_operator<FE: FuncEnvironment + ?Sized>(
             let callee = state.pop1();
             let call = environ.translate_call_indirect(
                 builder.cursor(),
-<<<<<<< HEAD
-                TableIndex::new(table_index as usize),
-||||||| merged common ancestors
-                table_index as TableIndex,
-=======
                 TableIndex::from_u32(table_index),
->>>>>>> upstream-releases
                 table,
-<<<<<<< HEAD
-                SignatureIndex::new(index as usize),
-||||||| merged common ancestors
-                index as SignatureIndex,
-=======
                 SignatureIndex::from_u32(index),
->>>>>>> upstream-releases
                 sigref,
                 callee,
                 state.peekn(num_args),
@@ -436,30 +406,14 @@ pub fn translate_operator<FE: FuncEnvironment + ?Sized>(
         Operator::MemoryGrow { reserved } => {
             // The WebAssembly MVP only supports one linear memory, but we expect the reserved
             // argument to be a memory index.
-<<<<<<< HEAD
-            let heap_index = MemoryIndex::new(reserved as usize);
-            let heap = state.get_heap(builder.func, reserved, environ);
-||||||| merged common ancestors
-            let heap_index = reserved as MemoryIndex;
-            let heap = state.get_heap(builder.func, reserved, environ);
-=======
             let heap_index = MemoryIndex::from_u32(reserved);
             let heap = state.get_heap(builder.func, reserved, environ)?;
->>>>>>> upstream-releases
             let val = state.pop1();
             state.push1(environ.translate_memory_grow(builder.cursor(), heap_index, heap, val)?)
         }
         Operator::MemorySize { reserved } => {
-<<<<<<< HEAD
-            let heap_index = MemoryIndex::new(reserved as usize);
-            let heap = state.get_heap(builder.func, reserved, environ);
-||||||| merged common ancestors
-            let heap_index = reserved as MemoryIndex;
-            let heap = state.get_heap(builder.func, reserved, environ);
-=======
             let heap_index = MemoryIndex::from_u32(reserved);
             let heap = state.get_heap(builder.func, reserved, environ)?;
->>>>>>> upstream-releases
             state.push1(environ.translate_memory_size(builder.cursor(), heap_index, heap)?);
         }
         /******************************* Load instructions ***********************************
@@ -938,12 +892,6 @@ pub fn translate_operator<FE: FuncEnvironment + ?Sized>(
         | Operator::I64AtomicRmw32UCmpxchg { .. } => {
             return Err(WasmError::Unsupported("proposed thread operators"));
         }
-<<<<<<< HEAD
-        Operator::RefNull | Operator::RefIsNull { .. } => {
-            return Err(WasmError::Unsupported("proposed reference-type operators"));
-        }
-||||||| merged common ancestors
-=======
         Operator::RefNull | Operator::RefIsNull { .. } => {
             return Err(WasmError::Unsupported("proposed reference-type operators"));
         }
@@ -1104,7 +1052,6 @@ pub fn translate_operator<FE: FuncEnvironment + ?Sized>(
         | Operator::V8x16Shuffle2Imm { .. } => {
             return Err(WasmError::Unsupported("proposed SIMD operators"));
         }
->>>>>>> upstream-releases
     };
     Ok(())
 }

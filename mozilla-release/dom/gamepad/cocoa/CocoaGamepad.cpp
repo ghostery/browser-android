@@ -301,27 +301,12 @@ void DarwinGamepadService::DeviceAdded(IOHIDDeviceRef device) {
                      kCFStringEncodingASCII);
   char buffer[256];
   sprintf(buffer, "%x-%x-%s", vendorId, productId, product_name);
-<<<<<<< HEAD
-  uint32_t index = service->AddGamepad(
-      buffer, mozilla::dom::GamepadMappingType::_empty,
-      mozilla::dom::GamepadHand::_empty, (int)mGamepads[slot].numButtons(),
-      (int)mGamepads[slot].numAxes(),
-      0);  // TODO: Bug 680289, implement gamepad haptics for cocoa
-||||||| merged common ancestors
-  uint32_t index = service->AddGamepad(buffer,
-                                       mozilla::dom::GamepadMappingType::_empty,
-                                       mozilla::dom::GamepadHand::_empty,
-                                       (int)mGamepads[slot].numButtons(),
-                                       (int)mGamepads[slot].numAxes(),
-                                       0); // TODO: Bug 680289, implement gamepad haptics for cocoa
-=======
   uint32_t index = service->AddGamepad(
       buffer, mozilla::dom::GamepadMappingType::_empty,
       mozilla::dom::GamepadHand::_empty, (int)mGamepads[slot].numButtons(),
       (int)mGamepads[slot].numAxes(), 0, 0,
       0);  // TODO: Bug 680289, implement gamepad haptics for cocoa.
   // TODO: Bug 1523355, implement gamepad lighindicator and touch for cocoa.
->>>>>>> upstream-releases
   mGamepads[slot].mSuperIndex = index;
 }
 
@@ -614,13 +599,6 @@ void StopGamepadMonitoring() {
   gService->Shutdown();
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 void SetGamepadLightIndicatorColor(uint32_t aControllerIdx,
                                    uint32_t aLightColorIndex, uint8_t aRed,
                                    uint8_t aGreen, uint8_t aBlue) {
@@ -630,4 +608,3 @@ void SetGamepadLightIndicatorColor(uint32_t aControllerIdx,
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

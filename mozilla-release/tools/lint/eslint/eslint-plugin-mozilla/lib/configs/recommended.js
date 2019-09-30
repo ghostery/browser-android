@@ -8,68 +8,17 @@
  * https://eslint.org/docs/rules/
  */
 module.exports = {
-<<<<<<< HEAD
-  "env": {
-    "browser": true,
-    "es6": true,
-    "mozilla/privileged": true,
-||||||| merged common ancestors
-  "env": {
-    "browser": true,
-    "es6": true,
-=======
   env: {
     browser: true,
     es6: true,
     "mozilla/privileged": true,
->>>>>>> upstream-releases
   },
 
   extends: ["eslint:recommended", "plugin:prettier/recommended"],
 
-<<<<<<< HEAD
-  "globals": {
-    "Cc": false,
-||||||| merged common ancestors
-  "globals": {
-    "AddonManagerPermissions": false,
-    "BroadcastChannel": false,
-    "CSSAnimation": false,
-    "CSSPrimitiveValue": false,
-    "CSSValueList": false,
-    "Cc": false,
-    "CheckerboardReportService": false,
-=======
   globals: {
     Cc: false,
->>>>>>> upstream-releases
     // Specific to Firefox (Chrome code only).
-<<<<<<< HEAD
-    "ChromeUtils": false,
-    "Ci": false,
-    "Components": false,
-    "Cr": false,
-    "Cu": false,
-    "Debugger": false,
-    "InstallTrigger": false,
-||||||| merged common ancestors
-    "ChromeUtils": false,
-    "ChromeWorker": false,
-    "Ci": false,
-    "Components": false,
-    "Cr": false,
-    "Cu": false,
-    "DOMRequest": false,
-    "Debugger": false,
-    "DedicatedWorkerGlobalScope": false,
-    "DominatorTree": false,
-    "HeapSnapshot": false,
-    "IDBFileRequest": false,
-    "IDBLocaleAwareKeyRange": false,
-    "IDBMutableFile": false,
-    "ImageDocument": false,
-    "InstallTrigger": false,
-=======
     ChromeUtils: false,
     Ci: false,
     Components: false,
@@ -77,54 +26,8 @@ module.exports = {
     Cu: false,
     Debugger: false,
     InstallTrigger: false,
->>>>>>> upstream-releases
     // Specific to Firefox
     // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/InternalError
-<<<<<<< HEAD
-    "InternalError": true,
-    "Intl": false,
-    "SharedArrayBuffer": false,
-    "StopIteration": false,
-    "dump": true,
-    // Override the "browser" env definition of "location" to allow writing as it
-    // is a writeable property.
-    // See https://bugzilla.mozilla.org/show_bug.cgi?id=1509270#c1 for more information.
-    "location": true,
-    "openDialog": false,
-    "saveStack": false,
-    "sizeToContent": false,
-||||||| merged common ancestors
-    "InternalError": true,
-    "KeyEvent": false,
-    "MatchGlob": false,
-    "MatchPattern": false,
-    "MatchPatternSet": false,
-    "MenuBoxObject": false,
-    // Specific to Firefox (Chrome code only).
-    "PlacesBookmarkAddition": false,
-    "PlacesEvent": false,
-    "PlacesObservers": false,
-    "PlacesWeakCallbackWrapper": false,
-    "PrioEncoder": false,
-    // Specific to Firefox (Chrome code only).
-    "SharedArrayBuffer": false,
-    "SimpleGestureEvent": false,
-    // Note: StopIteration will likely be removed as part of removing legacy
-    // generators, see bug 968038.
-    "StopIteration": false,
-    "StructuredCloneHolder": false,
-    "WebAssembly": false,
-    "WebExtensionContentScript": false,
-    "WebExtensionPolicy": false,
-    "WebrtcGlobalInformation": false,
-    // Non-standard, specific to Firefox.
-    "XULElement": false,
-    "console": true,
-    "dump": true,
-    "openDialog": false,
-    "saveStack": false,
-    "sizeToContent": false,
-=======
     InternalError: true,
     Intl: false,
     SharedArrayBuffer: false,
@@ -137,40 +40,11 @@ module.exports = {
     openDialog: false,
     saveStack: false,
     sizeToContent: false,
->>>>>>> upstream-releases
     // Specific to Firefox
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/uneval
     uneval: false,
   },
 
-<<<<<<< HEAD
-  "overrides": [{
-    // Turn off use-services for xml files. XBL bindings are going away, and
-    // working out the valid globals for those is difficult.
-    "files": "**/*.xml",
-    "rules": {
-      "mozilla/use-services": "off",
-    },
-  }, {
-    // We don't have the general browser environment for jsm files, but we do
-    // have our own special environments for them.
-    "env": {
-      "browser": false,
-      "mozilla/jsm": true,
-||||||| merged common ancestors
-  "overrides": [{
-    // Turn off use-services for xml files. XBL bindings are going away, and
-    // working out the valid globals for those is difficult.
-    "files": "**/*.xml",
-    "rules": {
-      "mozilla/use-services": "off",
-    },
-  }, {
-    // Turn off browser env for all *.jsm files, and turn on the jsm environment.
-    "env": {
-      "browser": false,
-      "mozilla/jsm": true,
-=======
   overrides: [
     {
       // Turn off use-services for xml files. XBL bindings are going away, and
@@ -179,27 +53,7 @@ module.exports = {
       rules: {
         "mozilla/use-services": "off",
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-    "files": "**/*.jsm",
-    "rules": {
-      "mozilla/mark-exported-symbols-as-used": "error",
-      // JSM modules are far easier to check for no-unused-vars on a global scope,
-      // than our content files. Hence we turn that on here.
-      "no-unused-vars": ["error", {
-        "args": "none",
-        "vars": "all",
-      }],
-||||||| merged common ancestors
-    "files": "**/*.jsm",
-    "rules": {
-      "mozilla/mark-exported-symbols-as-used": "error",
-      "no-unused-vars": ["error", {
-        "args": "none",
-        "vars": "all",
-      }],
-=======
     {
       // We don't have the general browser environment for jsm files, but we do
       // have our own special environments for them.
@@ -220,7 +74,6 @@ module.exports = {
           },
         ],
       },
->>>>>>> upstream-releases
     },
   ],
 

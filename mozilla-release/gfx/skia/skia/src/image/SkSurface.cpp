@@ -5,30 +5,13 @@
  * found in the LICENSE file.
  */
 
-<<<<<<< HEAD
-#include "SkAtomics.h"
-||||||| merged common ancestors
-#include "SkAtomics.h"
-#include "SkSurface_Base.h"
-#include "SkImagePriv.h"
-=======
 #include "GrBackendSurface.h"
->>>>>>> upstream-releases
 #include "SkCanvas.h"
 #include "SkFontLCDConfig.h"
-<<<<<<< HEAD
-#include "SkImagePriv.h"
-#include "SkSurface_Base.h"
-
-#include "GrBackendSurface.h"
-
-||||||| merged common ancestors
-=======
 #include "SkImagePriv.h"
 #include "SkSurface_Base.h"
 #include <atomic>
 
->>>>>>> upstream-releases
 static SkPixelGeometry compute_default_geometry() {
     SkFontLCDConfig::LCDOrder order = SkFontLCDConfig::GetSubpixelOrder();
     if (SkFontLCDConfig::kNONE_LCDOrder == order) {
@@ -323,48 +306,14 @@ sk_sp<SkSurface> SkSurface::MakeRenderTarget(GrContext*, SkBudgeted, const SkIma
     return nullptr;
 }
 
-<<<<<<< HEAD
-sk_sp<SkSurface> SkSurface::MakeRenderTarget(GrContext*, const SkSurfaceCharacterization&,
-                                             SkBudgeted) {
-||||||| merged common ancestors
-sk_sp<SkSurface> SkSurface::MakeFromBackendTexture(GrContext*, const GrBackendTexture&,
-                                                   GrSurfaceOrigin origin, int sampleCnt,
-                                                   sk_sp<SkColorSpace>, const SkSurfaceProps*) {
-=======
 sk_sp<SkSurface> SkSurface::MakeRenderTarget(GrRecordingContext*, const SkSurfaceCharacterization&,
                                              SkBudgeted) {
->>>>>>> upstream-releases
     return nullptr;
 }
 
 sk_sp<SkSurface> SkSurface::MakeFromBackendTexture(GrContext*, const GrBackendTexture&,
                                                    GrSurfaceOrigin origin, int sampleCnt,
                                                    SkColorType, sk_sp<SkColorSpace>,
-<<<<<<< HEAD
-                                                   const SkSurfaceProps*) {
-    return nullptr;
-}
-
-sk_sp<SkSurface> SkSurface::MakeFromBackendRenderTarget(GrContext*,
-                                                        const GrBackendRenderTarget&,
-                                                        GrSurfaceOrigin origin,
-||||||| merged common ancestors
-                                                   const SkSurfaceProps*) {
-    return nullptr;
-}
-
-sk_sp<SkSurface> SkSurface::MakeFromBackendRenderTarget(GrContext*,
-                                                        const GrBackendRenderTarget&,
-                                                        GrSurfaceOrigin origin,
-                                                        sk_sp<SkColorSpace>,
-                                                        const SkSurfaceProps*) {
-    return nullptr;
-}
-
-sk_sp<SkSurface> SkSurface::MakeFromBackendRenderTarget(GrContext*,
-                                                        const GrBackendRenderTarget&,
-                                                        GrSurfaceOrigin origin,
-=======
                                                    const SkSurfaceProps*,
                                                    TextureReleaseProc, ReleaseContext) {
     return nullptr;
@@ -373,37 +322,8 @@ sk_sp<SkSurface> SkSurface::MakeFromBackendRenderTarget(GrContext*,
 sk_sp<SkSurface> SkSurface::MakeFromBackendRenderTarget(GrContext*,
                                                         const GrBackendRenderTarget&,
                                                         GrSurfaceOrigin origin,
->>>>>>> upstream-releases
                                                         SkColorType,
                                                         sk_sp<SkColorSpace>,
-<<<<<<< HEAD
-                                                        const SkSurfaceProps*) {
-    return nullptr;
-}
-
-sk_sp<SkSurface> SkSurface::MakeFromBackendTextureAsRenderTarget(GrContext*,
-                                                                 const GrBackendTexture&,
-                                                                 GrSurfaceOrigin origin,
-                                                                 int sampleCnt,
-||||||| merged common ancestors
-                                                        const SkSurfaceProps*) {
-    return nullptr;
-}
-
-sk_sp<SkSurface> SkSurface::MakeFromBackendTextureAsRenderTarget(GrContext*,
-                                                                 const GrBackendTexture&,
-                                                                 GrSurfaceOrigin origin,
-                                                                 int sampleCnt,
-                                                                 sk_sp<SkColorSpace>,
-                                                                 const SkSurfaceProps*) {
-    return nullptr;
-}
-
-sk_sp<SkSurface> SkSurface::MakeFromBackendTextureAsRenderTarget(GrContext*,
-                                                                 const GrBackendTexture&,
-                                                                 GrSurfaceOrigin origin,
-                                                                 int sampleCnt,
-=======
                                                         const SkSurfaceProps*,
                                                         RenderTargetReleaseProc, ReleaseContext) {
     return nullptr;
@@ -413,7 +333,6 @@ sk_sp<SkSurface> SkSurface::MakeFromBackendTextureAsRenderTarget(GrContext*,
                                                                  const GrBackendTexture&,
                                                                  GrSurfaceOrigin origin,
                                                                  int sampleCnt,
->>>>>>> upstream-releases
                                                                  SkColorType,
                                                                  sk_sp<SkColorSpace>,
                                                                  const SkSurfaceProps*) {

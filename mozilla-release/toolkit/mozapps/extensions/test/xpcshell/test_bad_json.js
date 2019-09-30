@@ -9,18 +9,6 @@ add_task(async function() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
   await promiseStartupManager();
-<<<<<<< HEAD
-
-  const ID = "addon@tests.mozilla.org";
-  await promiseInstallWebExtension({
-    manifest: {
-      version: "2.0",
-      applications: {gecko: {id: ID}},
-    },
-  });
-
-||||||| merged common ancestors
-=======
 
   const ID = "addon@tests.mozilla.org";
   await promiseInstallWebExtension({
@@ -30,7 +18,6 @@ add_task(async function() {
     },
   });
 
->>>>>>> upstream-releases
   await promiseShutdownManager();
 
   // First startup/shutdown finished

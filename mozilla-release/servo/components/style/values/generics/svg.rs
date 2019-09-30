@@ -4,26 +4,9 @@
 
 //! Generic types for CSS values in SVG
 
-<<<<<<< HEAD
 use crate::parser::{Parse, ParserContext};
-use crate::values::{Either, None_};
-||||||| merged common ancestors
-=======
-use crate::parser::{Parse, ParserContext};
->>>>>>> upstream-releases
 use cssparser::Parser;
-<<<<<<< HEAD
-use style_traits::{ParseError, StyleParseErrorKind};
-||||||| merged common ancestors
-use parser::{Parse, ParserContext};
-use style_traits::{ParseError, StyleParseErrorKind};
-use values::{Either, None_};
-use values::computed::NumberOrPercentage;
-use values::computed::length::LengthOrPercentage;
-use values::distance::{ComputeSquaredDistance, SquaredDistance};
-=======
 use style_traits::ParseError;
->>>>>>> upstream-releases
 
 /// The fallback of an SVG paint server value.
 /// cbindgen:derive-tagged-enum-copy-constructor=true
@@ -120,81 +103,6 @@ impl<C, U> Default for SVGPaint<C, U> {
     ToResolvedValue,
     ToShmem,
 )]
-<<<<<<< HEAD
-pub enum SvgLengthOrPercentageOrNumber<LengthOrPercentage, Number> {
-    /// <length> | <percentage>
-    LengthOrPercentage(LengthOrPercentage),
-    /// <number>
-    Number(Number),
-}
-
-/// Parsing the SvgLengthOrPercentageOrNumber. At first, we need to parse number
-/// since prevent converting to the length.
-impl<LengthOrPercentageType: Parse, NumberType: Parse> Parse
-    for SvgLengthOrPercentageOrNumber<LengthOrPercentageType, NumberType>
-{
-||||||| merged common ancestors
-pub enum SvgLengthOrPercentageOrNumber<LengthOrPercentage, Number> {
-    /// <length> | <percentage>
-    LengthOrPercentage(LengthOrPercentage),
-    /// <number>
-    Number(Number),
-}
-
-impl<L, N> ComputeSquaredDistance for SvgLengthOrPercentageOrNumber<L, N>
-where
-    L: ComputeSquaredDistance + Copy + Into<NumberOrPercentage>,
-    N: ComputeSquaredDistance + Copy + Into<NumberOrPercentage>,
-{
-    #[inline]
-    fn compute_squared_distance(&self, other: &Self) -> Result<SquaredDistance, ()> {
-        match (self, other) {
-            (
-                &SvgLengthOrPercentageOrNumber::LengthOrPercentage(ref from),
-                &SvgLengthOrPercentageOrNumber::LengthOrPercentage(ref to),
-            ) => from.compute_squared_distance(to),
-            (
-                &SvgLengthOrPercentageOrNumber::Number(ref from),
-                &SvgLengthOrPercentageOrNumber::Number(ref to),
-            ) => from.compute_squared_distance(to),
-            (
-                &SvgLengthOrPercentageOrNumber::LengthOrPercentage(from),
-                &SvgLengthOrPercentageOrNumber::Number(to),
-            ) => from.into().compute_squared_distance(&to.into()),
-            (
-                &SvgLengthOrPercentageOrNumber::Number(from),
-                &SvgLengthOrPercentageOrNumber::LengthOrPercentage(to),
-            ) => from.into().compute_squared_distance(&to.into()),
-        }
-    }
-}
-
-impl<LengthOrPercentageType, NumberType>
-    SvgLengthOrPercentageOrNumber<LengthOrPercentageType, NumberType>
-where
-    LengthOrPercentage: From<LengthOrPercentageType>,
-    LengthOrPercentageType: Copy,
-{
-    /// return true if this struct has calc value.
-    pub fn has_calc(&self) -> bool {
-        match self {
-            &SvgLengthOrPercentageOrNumber::LengthOrPercentage(lop) => {
-                match LengthOrPercentage::from(lop) {
-                    LengthOrPercentage::Calc(_) => true,
-                    _ => false,
-                }
-            },
-            _ => false,
-        }
-    }
-}
-
-/// Parsing the SvgLengthOrPercentageOrNumber. At first, we need to parse number
-/// since prevent converting to the length.
-impl<LengthOrPercentageType: Parse, NumberType: Parse> Parse
-    for SvgLengthOrPercentageOrNumber<LengthOrPercentageType, NumberType>
-{
-=======
 #[repr(C, u8)]
 pub enum GenericSVGPaintKind<C, U> {
     /// `none`
@@ -214,28 +122,10 @@ pub enum GenericSVGPaintKind<C, U> {
 pub use self::GenericSVGPaintKind as SVGPaintKind;
 
 impl<C: Parse, U: Parse> Parse for SVGPaint<C, U> {
->>>>>>> upstream-releases
     fn parse<'i, 't>(
         context: &ParserContext,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self, ParseError<'i>> {
-<<<<<<< HEAD
-        if let Ok(num) = input.try(|i| NumberType::parse(context, i)) {
-            return Ok(SvgLengthOrPercentageOrNumber::Number(num));
-        }
-
-        let lop = LengthOrPercentageType::parse(context, input)?;
-        Ok(SvgLengthOrPercentageOrNumber::LengthOrPercentage(lop))
-||||||| merged common ancestors
-        if let Ok(num) = input.try(|i| NumberType::parse(context, i)) {
-            return Ok(SvgLengthOrPercentageOrNumber::Number(num));
-        }
-
-        if let Ok(lop) = input.try(|i| LengthOrPercentageType::parse(context, i)) {
-            return Ok(SvgLengthOrPercentageOrNumber::LengthOrPercentage(lop));
-        }
-        Err(input.new_custom_error(StyleParseErrorKind::UnspecifiedError))
-=======
         let kind = SVGPaintKind::parse(context, input)?;
         if matches!(kind, SVGPaintKind::None | SVGPaintKind::Color(..)) {
             return Ok(SVGPaint {
@@ -247,7 +137,6 @@ impl<C: Parse, U: Parse> Parse for SVGPaint<C, U> {
             .try(|i| SVGPaintFallback::parse(context, i))
             .unwrap_or(SVGPaintFallback::Unset);
         Ok(SVGPaint { kind, fallback })
->>>>>>> upstream-releases
     }
 }
 

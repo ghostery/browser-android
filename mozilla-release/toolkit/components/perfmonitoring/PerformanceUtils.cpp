@@ -12,45 +12,17 @@
 #include "mozilla/dom/WorkerDebugger.h"
 #include "mozilla/dom/WorkerDebuggerManager.h"
 
-<<<<<<< HEAD
-#include "MediaDecoder.h"
-#include "XPCJSMemoryReporter.h"
-#include "jsfriendapi.h"
-#include "js/MemoryMetrics.h"
-#include "nsWindowMemoryReporter.h"
-#include "nsDOMWindowList.h"
-
-||||||| merged common ancestors
-=======
 #include "MediaDecoder.h"
 #include "XPCJSMemoryReporter.h"
 #include "jsfriendapi.h"
 #include "js/MemoryMetrics.h"
 #include "nsWindowMemoryReporter.h"
 
->>>>>>> upstream-releases
 using namespace mozilla;
 using namespace mozilla::dom;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-nsTArray<RefPtr<PerformanceInfoPromise>> CollectPerformanceInfo() {
-  nsTArray<RefPtr<PerformanceInfoPromise>> promises;
-
-  // collecting ReportPerformanceInfo from all WorkerDebugger instances
-  RefPtr<mozilla::dom::WorkerDebuggerManager> wdm =
-      WorkerDebuggerManager::GetOrCreate();
-  if (NS_WARN_IF(!wdm)) {
-    return promises;
-  }
-||||||| merged common ancestors
-void
-CollectPerformanceInfo(nsTArray<PerformanceInfo>& aMetrics)
-{
-   // collecting ReportPerformanceInfo from all DocGroup instances
-   LinkedList<TabGroup>* tabGroups = TabGroup::GetTabGroupList();
-=======
 nsTArray<RefPtr<PerformanceInfoPromise>> CollectPerformanceInfo() {
   nsTArray<RefPtr<PerformanceInfoPromise>> promises;
 
@@ -65,25 +37,7 @@ nsTArray<RefPtr<PerformanceInfoPromise>> CollectPerformanceInfo() {
     const RefPtr<WorkerDebugger> debugger = wdm->GetDebuggerAt(i);
     promises.AppendElement(debugger->ReportPerformanceInfo());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < wdm->GetDebuggersLength(); i++) {
-    const RefPtr<WorkerDebugger> debugger = wdm->GetDebuggerAt(i);
-    promises.AppendElement(debugger->ReportPerformanceInfo());
-  }
-
-  // collecting ReportPerformanceInfo from all DocGroup instances
-  LinkedList<TabGroup>* tabGroups = TabGroup::GetTabGroupList();
-
-  // if GetTabGroupList() returns null, we don't have any tab group
-  if (tabGroups) {
-    for (TabGroup* tabGroup = tabGroups->getFirst(); tabGroup;
-||||||| merged common ancestors
-   // if GetTabGroupList() returns null, we don't have any tab group
-   if (tabGroups) {
-     for (TabGroup* tabGroup = tabGroups->getFirst(); tabGroup;
-=======
   // collecting ReportPerformanceInfo from all DocGroup instances
   LinkedList<TabGroup>* tabGroups = TabGroup::GetTabGroupList();
 
@@ -93,19 +47,10 @@ nsTArray<RefPtr<PerformanceInfoPromise>> CollectPerformanceInfo() {
     // and use them outside the iterator, to avoid a read-write conflict.
     nsTArray<RefPtr<DocGroup>> docGroups;
     for (TabGroup* tabGroup = tabGroups->getFirst(); tabGroup;
->>>>>>> upstream-releases
          tabGroup =
              static_cast<LinkedListElement<TabGroup>*>(tabGroup)->getNext()) {
       for (auto iter = tabGroup->Iter(); !iter.Done(); iter.Next()) {
-<<<<<<< HEAD
-        DocGroup* docGroup = iter.Get()->mDocGroup;
-        promises.AppendElement(docGroup->ReportPerformanceInfo());
-||||||| merged common ancestors
-        DocGroup* docGroup = iter.Get()->mDocGroup;
-        aMetrics.AppendElement(docGroup->ReportPerformanceInfo());
-=======
         docGroups.AppendElement(iter.Get()->mDocGroup);
->>>>>>> upstream-releases
       }
     }
     for (DocGroup* docGroup : docGroups) {
@@ -115,48 +60,12 @@ nsTArray<RefPtr<PerformanceInfoPromise>> CollectPerformanceInfo() {
   return promises;
 }
 
-<<<<<<< HEAD
-nsresult GetTabSizes(nsGlobalWindowOuter* aWindow, nsTabSizes* aSizes) {
-  // Measure the window.
-  SizeOfState state(moz_malloc_size_of);
-  nsWindowSizes windowSizes(state);
-  aWindow->AddSizeOfIncludingThis(windowSizes);
-
-  // Measure the inner window, if there is one.
-  nsGlobalWindowInner* inner = aWindow->GetCurrentInnerWindowInternal();
-  if (inner != nullptr) {
-    inner->AddSizeOfIncludingThis(windowSizes);
-||||||| merged common ancestors
-  // collecting ReportPerformanceInfo from all WorkerDebugger instances
-  RefPtr<mozilla::dom::WorkerDebuggerManager> wdm = WorkerDebuggerManager::GetOrCreate();
-  if (NS_WARN_IF(!wdm)) {
-    return;
-=======
 void AddWindowTabSizes(nsGlobalWindowOuter* aWindow, nsTabSizes* aSizes) {
   Document* document = aWindow->GetDocument();
   if (document && document->GetCachedSizes(aSizes)) {
     // We got a cached version
     return;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-
-  windowSizes.addToTabSizes(aSizes);
-  nsDOMWindowList* frames = aWindow->GetFrames();
-  uint32_t length = frames->GetLength();
-
-  // Measure this window's descendents.
-  for (uint32_t i = 0; i < length; i++) {
-    nsCOMPtr<nsPIDOMWindowOuter> child = frames->IndexedGetter(i);
-    NS_ENSURE_STATE(child);
-    nsGlobalWindowOuter* childWin = nsGlobalWindowOuter::Cast(child);
-    nsresult rv = GetTabSizes(childWin, aSizes);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  for (uint32_t i = 0; i < wdm->GetDebuggersLength(); i++) {
-    WorkerDebugger* debugger = wdm->GetDebuggerAt(i);
-    aMetrics.AppendElement(debugger->ReportPerformanceInfo());
-=======
   // We measure the sizes on a fresh nsTabSizes instance
   // because we want to cache the value and aSizes might
   // already have some values from other windows.
@@ -170,44 +79,7 @@ void AddWindowTabSizes(nsGlobalWindowOuter* aWindow, nsTabSizes* aSizes) {
   nsGlobalWindowInner* inner = aWindow->GetCurrentInnerWindowInternal();
   if (inner != nullptr) {
     inner->AddSizeOfIncludingThis(windowSizes);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  return NS_OK;
-}
-
-RefPtr<MemoryPromise> CollectMemoryInfo(
-    const nsCOMPtr<nsPIDOMWindowOuter>& aWindow,
-    const RefPtr<AbstractThread>& aEventTarget) {
-  // Getting Dom sizes. -- XXX should we reimplement GetTabSizes to async here ?
-  nsGlobalWindowOuter* window = nsGlobalWindowOuter::Cast(aWindow);
-  nsTabSizes sizes;
-  nsresult rv = GetTabSizes(window, &sizes);
-  if (NS_FAILED(rv)) {
-    return MemoryPromise::CreateAndReject(rv, __func__);
-  }
-
-  // Getting GC Heap Usage
-  JSObject* obj = window->GetGlobalJSObject();
-  uint64_t GCHeapUsage = 0;
-  if (obj != nullptr) {
-    GCHeapUsage = js::GetGCHeapUsageForObjectZone(obj);
-  }
-
-  // Getting Media sizes.
-  return GetMediaMemorySizes()->Then(
-      aEventTarget, __func__,
-      [GCHeapUsage, sizes](const MediaMemoryInfo& media) {
-        return MemoryPromise::CreateAndResolve(
-            PerformanceMemoryInfo(media, sizes.mDom, sizes.mStyle, sizes.mOther,
-                                  GCHeapUsage),
-            __func__);
-      },
-      [](const nsresult rv) {
-        return MemoryPromise::CreateAndReject(rv, __func__);
-      });
-||||||| merged common ancestors
-=======
   windowSizes.addToTabSizes(&sizes);
   if (document) {
     document->SetCachedSizes(&sizes);
@@ -265,7 +137,6 @@ RefPtr<MemoryPromise> CollectMemoryInfo(
       [](const nsresult rv) {
         return MemoryPromise::CreateAndReject(rv, __func__);
       });
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

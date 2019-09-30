@@ -17,17 +17,9 @@ function compareBinaryData(arr1, arr2) {
   Assert.equal(arr1.length, arr2.length);
   for (let i = 0; i < arr1.length; i++) {
     if (arr1[i] != arr2[i]) {
-<<<<<<< HEAD
-      throw "Data differs at index " + i +
-            ", arr1: " + arr1[i] + ", arr2: " + arr2[i];
-||||||| merged common ancestors
-      throw "Data differs at index " + i + 
-            ", arr1: " + arr1[i] + ", arr2: " + arr2[i];
-=======
       throw new Error(
         `Data differs at index ${i}, arr1: ${arr1[i]}, arr2: ${arr2[i]}`
       );
->>>>>>> upstream-releases
     }
   }
 }

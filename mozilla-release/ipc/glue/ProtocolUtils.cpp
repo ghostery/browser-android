@@ -266,17 +266,7 @@ void FatalError(const char* aMsg, bool aIsParent) {
   }
 }
 
-<<<<<<< HEAD
-void LogicError(const char* aMsg) { MOZ_CRASH_UNSAFE_OOL(aMsg); }
-||||||| merged common ancestors
-void
-LogicError(const char* aMsg)
-{
-  MOZ_CRASH_UNSAFE_OOL(aMsg);
-}
-=======
 void LogicError(const char* aMsg) { MOZ_CRASH_UNSAFE(aMsg); }
->>>>>>> upstream-releases
 
 void ActorIdReadError(const char* aActorDescription) {
 #ifndef FUZZING
@@ -312,95 +302,8 @@ void SentinelReadError(const char* aClassName) {
   MOZ_CRASH_UNSAFE_PRINTF("incorrect sentinel when reading %s", aClassName);
 }
 
-<<<<<<< HEAD
-bool StateTransition(bool aIsDelete, LivenessState* aNext) {
-  switch (*aNext) {
-    case LivenessState::Null:
-      if (aIsDelete) {
-        *aNext = LivenessState::Dead;
-      }
-      break;
-    case LivenessState::Dead:
-      return false;
-    default:
-      return false;
-  }
-  return true;
-}
-
-bool ReEntrantDeleteStateTransition(bool aIsDelete, bool aIsDeleteReply,
-                                    ReEntrantDeleteLivenessState* aNext) {
-  switch (*aNext) {
-    case ReEntrantDeleteLivenessState::Null:
-      if (aIsDelete) {
-        *aNext = ReEntrantDeleteLivenessState::Dying;
-      }
-      break;
-    case ReEntrantDeleteLivenessState::Dead:
-      return false;
-    case ReEntrantDeleteLivenessState::Dying:
-      if (aIsDeleteReply) {
-        *aNext = ReEntrantDeleteLivenessState::Dead;
-      }
-      break;
-    default:
-      return false;
-  }
-  return true;
-}
-
 void TableToArray(const nsTHashtable<nsPtrHashKey<void>>& aTable,
                   nsTArray<void*>& aArray) {
-||||||| merged common ancestors
-bool
-StateTransition(bool aIsDelete, LivenessState* aNext)
-{
-  switch (*aNext) {
-    case LivenessState::Null:
-      if (aIsDelete) {
-        *aNext = LivenessState::Dead;
-      }
-      break;
-    case LivenessState::Dead:
-      return false;
-    default:
-      return false;
-  }
-  return true;
-}
-
-bool
-ReEntrantDeleteStateTransition(bool aIsDelete,
-                               bool aIsDeleteReply,
-                               ReEntrantDeleteLivenessState* aNext)
-{
-  switch (*aNext) {
-    case ReEntrantDeleteLivenessState::Null:
-      if (aIsDelete) {
-        *aNext = ReEntrantDeleteLivenessState::Dying;
-      }
-      break;
-    case ReEntrantDeleteLivenessState::Dead:
-      return false;
-    case ReEntrantDeleteLivenessState::Dying:
-      if (aIsDeleteReply) {
-        *aNext = ReEntrantDeleteLivenessState::Dead;
-      }
-      break;
-    default:
-      return false;
-  }
-  return true;
-}
-
-void
-TableToArray(const nsTHashtable<nsPtrHashKey<void>>& aTable,
-             nsTArray<void*>& aArray)
-{
-=======
-void TableToArray(const nsTHashtable<nsPtrHashKey<void>>& aTable,
-                  nsTArray<void*>& aArray) {
->>>>>>> upstream-releases
   uint32_t i = 0;
   void** elements = aArray.AppendElements(aTable.Count());
   for (auto iter = aTable.ConstIter(); !iter.Done(); iter.Next()) {
@@ -409,73 +312,18 @@ void TableToArray(const nsTHashtable<nsPtrHashKey<void>>& aTable,
   }
 }
 
-<<<<<<< HEAD
-Maybe<IProtocol*> IProtocol::ReadActor(const IPC::Message* aMessage,
-                                       PickleIterator* aIter, bool aNullable,
-                                       const char* aActorDescription,
-                                       int32_t aProtocolTypeId) {
-  int32_t id;
-  if (!IPC::ReadParam(aMessage, aIter, &id)) {
-    ActorIdReadError(aActorDescription);
-    return Nothing();
-  }
-||||||| merged common ancestors
-Maybe<IProtocol*>
-IProtocol::ReadActor(const IPC::Message* aMessage, PickleIterator* aIter, bool aNullable,
-                     const char* aActorDescription, int32_t aProtocolTypeId)
-{
-    int32_t id;
-    if (!IPC::ReadParam(aMessage, aIter, &id)) {
-        ActorIdReadError(aActorDescription);
-        return Nothing();
-    }
-=======
 ActorLifecycleProxy::ActorLifecycleProxy(IProtocol* aActor) : mActor(aActor) {
   MOZ_ASSERT(mActor);
   MOZ_ASSERT(mActor->CanSend(),
              "Cannot create LifecycleProxy for non-connected actor!");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (id == 1 || (id == 0 && !aNullable)) {
-    BadActorIdError(aActorDescription);
-    return Nothing();
-  }
-
-  if (id == 0) {
-    return Some(static_cast<IProtocol*>(nullptr));
-  }
-||||||| merged common ancestors
-    if (id == 1 || (id == 0 && !aNullable)) {
-        BadActorIdError(aActorDescription);
-        return Nothing();
-    }
-
-    if (id == 0) {
-        return Some(static_cast<IProtocol*>(nullptr));
-    }
-=======
   // Take a reference to our manager's lifecycle proxy to try to hold it &
   // ensure it doesn't die before us.
   if (mActor->mManager) {
     mManager = mActor->mManager->mLifecycleProxy;
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  IProtocol* listener = this->Lookup(id);
-  if (!listener) {
-    ActorLookupError(aActorDescription);
-    return Nothing();
-  }
-||||||| merged common ancestors
-    IProtocol* listener = this->Lookup(id);
-    if (!listener) {
-        ActorLookupError(aActorDescription);
-        return Nothing();
-    }
-=======
 ActorLifecycleProxy::~ActorLifecycleProxy() {
   // When the LifecycleProxy's lifetime has come to an end, it means that the
   // actor should have its `Dealloc` method called on it. In a well-behaved
@@ -487,23 +335,7 @@ ActorLifecycleProxy::~ActorLifecycleProxy() {
   if (!mActor) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (listener->GetProtocolTypeId() != aProtocolTypeId) {
-    MismatchedActorTypeError(aActorDescription);
-    return Nothing();
-  }
-
-  return Some(listener);
-||||||| merged common ancestors
-    if (listener->GetProtocolTypeId() != aProtocolTypeId) {
-        MismatchedActorTypeError(aActorDescription);
-        return Nothing();
-    }
-
-    return Some(listener);
-=======
   // Clear our actor's state back to inactive, and then invoke ActorDealloc.
   MOZ_ASSERT(mActor->mLinkStatus == LinkStatus::Destroyed,
              "Deallocating non-destroyed actor!");
@@ -542,74 +374,24 @@ IProtocol::~IProtocol() {
     }
     mLifecycleProxy = nullptr;
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-int32_t IProtocol::ManagedState::Register(IProtocol* aRouted) {
-  return mProtocol->Manager()->Register(aRouted);
-||||||| merged common ancestors
-int32_t
-IProtocol::ManagedState::Register(IProtocol* aRouted)
-{
-  return mProtocol->Manager()->Register(aRouted);
-=======
 // The following methods either directly forward to the toplevel protocol, or
 // almost directly do.
 int32_t IProtocol::Register(IProtocol* aRouted) {
   return mToplevel->Register(aRouted);
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-
-int32_t IProtocol::ManagedState::RegisterID(IProtocol* aRouted, int32_t aId) {
-  return mProtocol->Manager()->RegisterID(aRouted, aId);
-||||||| merged common ancestors
-
-int32_t
-IProtocol::ManagedState::RegisterID(IProtocol* aRouted, int32_t aId)
-{
-  return mProtocol->Manager()->RegisterID(aRouted, aId);
-=======
 int32_t IProtocol::RegisterID(IProtocol* aRouted, int32_t aId) {
   return mToplevel->RegisterID(aRouted, aId);
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-
-IProtocol* IProtocol::ManagedState::Lookup(int32_t aId) {
-  return mProtocol->Manager()->Lookup(aId);
-||||||| merged common ancestors
-
-IProtocol*
-IProtocol::ManagedState::Lookup(int32_t aId)
-{
-  return mProtocol->Manager()->Lookup(aId);
-=======
 IProtocol* IProtocol::Lookup(int32_t aId) { return mToplevel->Lookup(aId); }
 void IProtocol::Unregister(int32_t aId) {
   if (aId == mId) {
     mId = kFreedActorId;
   }
   return mToplevel->Unregister(aId);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void IProtocol::ManagedState::Unregister(int32_t aId) {
-  if (mProtocol->mId == aId) {
-    mProtocol->mId = kFreedActorId;
-  }
-  mProtocol->Manager()->Unregister(aId);
-||||||| merged common ancestors
-void
-IProtocol::ManagedState::Unregister(int32_t aId)
-{
-  if (mProtocol->mId == aId) {
-    mProtocol->mId = kFreedActorId;
-  }
-  mProtocol->Manager()->Unregister(aId);
-=======
 Shmem::SharedMemory* IProtocol::CreateSharedMemory(
     size_t aSize, SharedMemory::SharedMemoryType aType, bool aUnsafe,
     int32_t* aId) {
@@ -623,94 +405,37 @@ bool IProtocol::IsTrackingSharedMemory(Shmem::SharedMemory* aSegment) {
 }
 bool IProtocol::DestroySharedMemory(Shmem& aShmem) {
   return mToplevel->DestroySharedMemory(aShmem);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-Shmem::SharedMemory* IProtocol::ManagedState::CreateSharedMemory(
-    size_t aSize, SharedMemory::SharedMemoryType aType, bool aUnsafe,
-    int32_t* aId) {
-  return mProtocol->Manager()->CreateSharedMemory(aSize, aType, aUnsafe, aId);
-||||||| merged common ancestors
-Shmem::SharedMemory*
-IProtocol::ManagedState::CreateSharedMemory(size_t aSize,
-                                            SharedMemory::SharedMemoryType aType,
-                                            bool aUnsafe,
-                                            int32_t* aId)
-{
-  return mProtocol->Manager()->CreateSharedMemory(aSize, aType, aUnsafe, aId);
-=======
 MessageChannel* IProtocol::GetIPCChannel() {
   return mToplevel->GetIPCChannel();
 }
 const MessageChannel* IProtocol::GetIPCChannel() const {
   return mToplevel->GetIPCChannel();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-Shmem::SharedMemory* IProtocol::ManagedState::LookupSharedMemory(int32_t aId) {
-  return mProtocol->Manager()->LookupSharedMemory(aId);
-||||||| merged common ancestors
-Shmem::SharedMemory*
-IProtocol::ManagedState::LookupSharedMemory(int32_t aId)
-{
-  return mProtocol->Manager()->LookupSharedMemory(aId);
-=======
 void IProtocol::SetEventTargetForActor(IProtocol* aActor,
                                        nsIEventTarget* aEventTarget) {
   // Make sure we have a manager for the internal method to access.
   aActor->SetManager(this);
   mToplevel->SetEventTargetForActorInternal(aActor, aEventTarget);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool IProtocol::ManagedState::IsTrackingSharedMemory(
-    Shmem::SharedMemory* aSegment) {
-  return mProtocol->Manager()->IsTrackingSharedMemory(aSegment);
-||||||| merged common ancestors
-bool
-IProtocol::ManagedState::IsTrackingSharedMemory(Shmem::SharedMemory* aSegment)
-{
-  return mProtocol->Manager()->IsTrackingSharedMemory(aSegment);
-=======
 void IProtocol::ReplaceEventTargetForActor(IProtocol* aActor,
                                            nsIEventTarget* aEventTarget) {
   MOZ_ASSERT(aActor->Manager());
   mToplevel->ReplaceEventTargetForActor(aActor, aEventTarget);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool IProtocol::ManagedState::DestroySharedMemory(Shmem& aShmem) {
-  return mProtocol->Manager()->DestroySharedMemory(aShmem);
-||||||| merged common ancestors
-bool
-IProtocol::ManagedState::DestroySharedMemory(Shmem& aShmem)
-{
-  return mProtocol->Manager()->DestroySharedMemory(aShmem);
-=======
 void IProtocol::SetEventTargetForRoute(int32_t aRoute,
                                        nsIEventTarget* aEventTarget) {
   mToplevel->SetEventTargetForRoute(aRoute, aEventTarget);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const MessageChannel* IProtocol::ManagedState::GetIPCChannel() const {
-  return mChannel;
-||||||| merged common ancestors
-const MessageChannel*
-IProtocol::ManagedState::GetIPCChannel() const
-{
-  return mChannel;
-=======
 nsIEventTarget* IProtocol::GetActorEventTarget() {
   // FIXME: It's a touch sketchy that we don't return a strong reference here.
   RefPtr<nsIEventTarget> target = GetActorEventTarget(this);
   return target;
->>>>>>> upstream-releases
 }
 already_AddRefed<nsIEventTarget> IProtocol::GetActorEventTarget(
     IProtocol* aActor) {
@@ -719,30 +444,11 @@ already_AddRefed<nsIEventTarget> IProtocol::GetActorEventTarget(
 
 ProcessId IProtocol::OtherPid() const { return mToplevel->OtherPid(); }
 
-<<<<<<< HEAD
-MessageChannel* IProtocol::ManagedState::GetIPCChannel() { return mChannel; }
-||||||| merged common ancestors
-MessageChannel*
-IProtocol::ManagedState::GetIPCChannel()
-{
-  return mChannel;
-}
-=======
 void IProtocol::SetId(int32_t aId) {
   MOZ_ASSERT(mId == aId || mLinkStatus == LinkStatus::Inactive);
   mId = aId;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-ProcessId IProtocol::OtherPid() const { return Manager()->OtherPid(); }
-||||||| merged common ancestors
-ProcessId
-IProtocol::OtherPid() const
-{
-  return Manager()->OtherPid();
-}
-=======
 Maybe<IProtocol*> IProtocol::ReadActor(const IPC::Message* aMessage,
                                        PickleIterator* aIter, bool aNullable,
                                        const char* aActorDescription,
@@ -775,7 +481,6 @@ Maybe<IProtocol*> IProtocol::ReadActor(const IPC::Message* aMessage,
 
   return Some(listener);
 }
->>>>>>> upstream-releases
 
 void IProtocol::FatalError(const char* const aErrorMsg) const {
   HandleFatalError(aErrorMsg);
@@ -854,100 +559,26 @@ void IProtocol::SetManagerAndRegister(IProtocol* aManager, int32_t aId) {
   aManager->RegisterID(this, aId);
 }
 
-<<<<<<< HEAD
-void IProtocol::SetEventTargetForActor(IProtocol* aActor,
-                                       nsIEventTarget* aEventTarget) {
-  // Make sure we have a manager for the internal method to access.
-  aActor->SetManager(this);
-  mState->SetEventTargetForActor(aActor, aEventTarget);
-}
-||||||| merged common ancestors
-void
-IProtocol::SetEventTargetForActor(IProtocol* aActor, nsIEventTarget* aEventTarget)
-{
-  // Make sure we have a manager for the internal method to access.
-  aActor->SetManager(this);
-  mState->SetEventTargetForActor(aActor, aEventTarget);
-}
-=======
 bool IProtocol::ChannelSend(IPC::Message* aMsg) {
   UniquePtr<IPC::Message> msg(aMsg);
   if (CanSend()) {
     return GetIPCChannel()->Send(msg.release());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void IProtocol::ReplaceEventTargetForActor(IProtocol* aActor,
-                                           nsIEventTarget* aEventTarget) {
-  // Ensure the actor has been registered.
-  MOZ_ASSERT(aActor->Manager());
-  mState->ReplaceEventTargetForActor(aActor, aEventTarget);
-||||||| merged common ancestors
-void
-IProtocol::ReplaceEventTargetForActor(IProtocol* aActor,
-                                      nsIEventTarget* aEventTarget)
-{
-  // Ensure the actor has been registered.
-  MOZ_ASSERT(aActor->Manager());
-  mState->ReplaceEventTargetForActor(aActor, aEventTarget);
-=======
   NS_WARNING("IPC message discarded: actor cannot send");
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsIEventTarget* IProtocol::GetActorEventTarget() {
-  return mState->GetActorEventTarget();
-}
-||||||| merged common ancestors
-nsIEventTarget*
-IProtocol::GetActorEventTarget()
-{
-  return mState->GetActorEventTarget();
-}
-=======
 bool IProtocol::ChannelSend(IPC::Message* aMsg, IPC::Message* aReply) {
   UniquePtr<IPC::Message> msg(aMsg);
   if (CanSend()) {
     return GetIPCChannel()->Send(msg.release(), aReply);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-already_AddRefed<nsIEventTarget> IProtocol::GetActorEventTarget(
-    IProtocol* aActor) {
-  return mState->GetActorEventTarget(aActor);
-||||||| merged common ancestors
-already_AddRefed<nsIEventTarget>
-IProtocol::GetActorEventTarget(IProtocol* aActor)
-{
-  return mState->GetActorEventTarget(aActor);
-=======
   NS_WARNING("IPC message discarded: actor cannot send");
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsIEventTarget* IProtocol::ManagedState::GetActorEventTarget() {
-  // We should only call this function when this actor has been registered and
-  // is not unregistered yet.
-  MOZ_RELEASE_ASSERT(mProtocol->mId != kNullActorId &&
-                     mProtocol->mId != kFreedActorId);
-  RefPtr<nsIEventTarget> target = GetActorEventTarget(mProtocol);
-  return target;
-||||||| merged common ancestors
-nsIEventTarget*
-IProtocol::ManagedState::GetActorEventTarget()
-{
-  // We should only call this function when this actor has been registered and
-  // is not unregistered yet.
-  MOZ_RELEASE_ASSERT(mProtocol->mId != kNullActorId && mProtocol->mId != kFreedActorId);
-  RefPtr<nsIEventTarget> target = GetActorEventTarget(mProtocol);
-  return target;
-=======
 bool IProtocol::ChannelCall(IPC::Message* aMsg, IPC::Message* aReply) {
   UniquePtr<IPC::Message> msg(aMsg);
   if (CanSend()) {
@@ -956,24 +587,8 @@ bool IProtocol::ChannelCall(IPC::Message* aMsg, IPC::Message* aReply) {
 
   NS_WARNING("IPC message discarded: actor cannot send");
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void IProtocol::ManagedState::SetEventTargetForActor(
-    IProtocol* aActor, nsIEventTarget* aEventTarget) {
-  // Go directly through the state so we don't try to redundantly (and
-  // wrongly) call SetManager() on aActor.
-  mProtocol->Manager()->mState->SetEventTargetForActor(aActor, aEventTarget);
-||||||| merged common ancestors
-void
-IProtocol::ManagedState::SetEventTargetForActor(IProtocol* aActor,
-                                                        nsIEventTarget* aEventTarget)
-{
-  // Go directly through the state so we don't try to redundantly (and
-  // wrongly) call SetManager() on aActor.
-  mProtocol->Manager()->mState->SetEventTargetForActor(aActor, aEventTarget);
-=======
 void IProtocol::ActorConnected() {
   if (mLinkStatus != LinkStatus::Inactive) {
     return;
@@ -984,20 +599,8 @@ void IProtocol::ActorConnected() {
   MOZ_ASSERT(!mLifecycleProxy, "double-connecting live actor");
   mLifecycleProxy = new ActorLifecycleProxy(this);
   NS_ADDREF(mLifecycleProxy);  // Reference freed in DestroySubtree();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void IProtocol::ManagedState::ReplaceEventTargetForActor(
-    IProtocol* aActor, nsIEventTarget* aEventTarget) {
-  mProtocol->Manager()->ReplaceEventTargetForActor(aActor, aEventTarget);
-||||||| merged common ancestors
-void
-IProtocol::ManagedState::ReplaceEventTargetForActor(IProtocol* aActor,
-                                                            nsIEventTarget* aEventTarget)
-{
-  mProtocol->Manager()->ReplaceEventTargetForActor(aActor, aEventTarget);
-=======
 void IProtocol::DoomSubtree() {
   MOZ_ASSERT(CanSend(), "dooming non-connected actor");
   MOZ_ASSERT(mLifecycleProxy, "dooming zombie actor");
@@ -1017,19 +620,8 @@ void IProtocol::DoomSubtree() {
   // sending messages is disabled.
   ActorDoom();
   mLinkStatus = LinkStatus::Doomed;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIEventTarget> IProtocol::ManagedState::GetActorEventTarget(
-    IProtocol* aActor) {
-  return mProtocol->Manager()->GetActorEventTarget(aActor);
-||||||| merged common ancestors
-already_AddRefed<nsIEventTarget>
-IProtocol::ManagedState::GetActorEventTarget(IProtocol* aActor)
-{
-  return mProtocol->Manager()->GetActorEventTarget(aActor);
-=======
 void IProtocol::DestroySubtree(ActorDestroyReason aWhy) {
   MOZ_ASSERT(CanRecv(), "destroying non-connected actor");
   MOZ_ASSERT(mLifecycleProxy, "destroying zombie actor");
@@ -1066,33 +658,10 @@ void IProtocol::DestroySubtree(ActorDestroyReason aWhy) {
   GetIPCChannel()->RejectPendingResponsesForActor(this);
   ActorDestroy(aWhy);
   mLinkStatus = LinkStatus::Destroyed;
->>>>>>> upstream-releases
 }
 
 IToplevelProtocol::IToplevelProtocol(const char* aName, ProtocolId aProtoId,
                                      Side aSide)
-<<<<<<< HEAD
-    : IProtocol(aSide, MakeUnique<ToplevelState>(aName, this, aSide)),
-      mProtocolId(aProtoId),
-      mOtherPid(mozilla::ipc::kInvalidProcessId),
-      mIsMainThreadProtocol(false) {}
-
-IToplevelProtocol::~IToplevelProtocol() {
-  mState = nullptr;
-||||||| merged common ancestors
-  : IProtocol(aSide, MakeUnique<ToplevelState>(aName, this, aSide))
-  , mMonitor("mozilla.ipc.IToplevelProtocol.mMonitor")
-  , mProtocolId(aProtoId)
-  , mOtherPid(mozilla::ipc::kInvalidProcessId)
-  , mOtherPidState(ProcessIdState::eUnstarted)
-  , mIsMainThreadProtocol(false)
-{
-}
-
-IToplevelProtocol::~IToplevelProtocol()
-{
-  mState = nullptr;
-=======
     : IProtocol(aProtoId, aSide),
       mOtherPid(mozilla::ipc::kInvalidProcessId),
       mLastLocalId(0),
@@ -1103,7 +672,6 @@ IToplevelProtocol::~IToplevelProtocol()
 }
 
 IToplevelProtocol::~IToplevelProtocol() {
->>>>>>> upstream-releases
   if (mTrans) {
     RefPtr<DeleteTask<Transport>> task =
         new DeleteTask<Transport>(mTrans.release());
@@ -1117,40 +685,7 @@ base::ProcessId IToplevelProtocol::OtherPid() const {
   return pid;
 }
 
-<<<<<<< HEAD
-base::ProcessId IToplevelProtocol::OtherPidMaybeInvalid() const {
-  return mOtherPid;
-}
-
 void IToplevelProtocol::SetOtherProcessId(base::ProcessId aOtherPid) {
-||||||| merged common ancestors
-base::ProcessId
-IToplevelProtocol::OtherPidMaybeInvalid() const
-{
-  MonitorAutoLock lock(mMonitor);
-
-  if (mOtherPidState == ProcessIdState::eUnstarted) {
-    // If you're asking for the pid of a process we haven't even tried to
-    // start, you get an invalid pid back immediately.
-    return kInvalidProcessId;
-  }
-
-  while (mOtherPidState < ProcessIdState::eReady) {
-    lock.Wait();
-  }
-  MOZ_RELEASE_ASSERT(mOtherPidState == ProcessIdState::eReady);
-
-  return mOtherPid;
-}
-
-void
-IToplevelProtocol::SetOtherProcessId(base::ProcessId aOtherPid,
-                                     ProcessIdState aState)
-{
-  MonitorAutoLock lock(mMonitor);
-=======
-void IToplevelProtocol::SetOtherProcessId(base::ProcessId aOtherPid) {
->>>>>>> upstream-releases
   // When recording an execution, all communication we do is forwarded from
   // the middleman to the parent process, so use its pid instead of the
   // middleman's pid.
@@ -1160,24 +695,6 @@ void IToplevelProtocol::SetOtherProcessId(base::ProcessId aOtherPid) {
   } else {
     mOtherPid = aOtherPid;
   }
-<<<<<<< HEAD
-}
-
-bool IToplevelProtocol::TakeMinidump(nsIFile** aDump, uint32_t* aSequence) {
-  MOZ_RELEASE_ASSERT(GetSide() == ParentSide);
-  return XRE_TakeMinidumpForChild(OtherPid(), aDump, aSequence);
-||||||| merged common ancestors
-  mOtherPidState = aState;
-  lock.NotifyAll();
-}
-
-bool
-IToplevelProtocol::TakeMinidump(nsIFile** aDump, uint32_t* aSequence)
-{
-  MOZ_RELEASE_ASSERT(GetSide() == ParentSide);
-  return XRE_TakeMinidumpForChild(OtherPid(), aDump, aSequence);
-=======
->>>>>>> upstream-releases
 }
 
 bool IToplevelProtocol::Open(mozilla::ipc::Transport* aTransport,
@@ -1223,30 +740,6 @@ bool IToplevelProtocol::IsOnCxxStack() const {
   return GetIPCChannel()->IsOnCxxStack();
 }
 
-<<<<<<< HEAD
-int32_t IToplevelProtocol::ToplevelState::NextId() {
-  // Genreate the next ID to use for a shared memory or protocol. Parent and
-  // Child sides of the protocol use different pools, and actors created in the
-  // middleman need to use a distinct pool as well.
-  int32_t tag = 0;
-  if (recordreplay::IsMiddleman()) {
-    tag |= 1 << 0;
-  }
-  if (mProtocol->GetSide() == ParentSide) {
-    tag |= 1 << 1;
-  }
-
-  // Compute the ID to use with the low two bits as our tag, and the remaining
-  // bits as a monotonic.
-  return (++mLastLocalId << 2) | tag;
-}
-
-int32_t IToplevelProtocol::ToplevelState::Register(IProtocol* aRouted) {
-||||||| merged common ancestors
-int32_t
-IToplevelProtocol::ToplevelState::Register(IProtocol* aRouted)
-{
-=======
 int32_t IToplevelProtocol::NextId() {
   // Genreate the next ID to use for a shared memory or protocol. Parent and
   // Child sides of the protocol use different pools, and actors created in the
@@ -1268,22 +761,11 @@ int32_t IToplevelProtocol::NextId() {
 }
 
 int32_t IToplevelProtocol::Register(IProtocol* aRouted) {
->>>>>>> upstream-releases
   if (aRouted->Id() != kNullActorId && aRouted->Id() != kFreedActorId) {
     // If there's already an ID, just return that.
     return aRouted->Id();
   }
-<<<<<<< HEAD
-  int32_t id = NextId();
-  mActorMap.AddWithID(aRouted, id);
-  aRouted->SetId(id);
-||||||| merged common ancestors
-  int32_t id = mProtocol->GetSide() == ParentSide ? ++mLastRouteId : --mLastRouteId;
-  mActorMap.AddWithID(aRouted, id);
-  aRouted->SetId(id);
-=======
   int32_t id = RegisterID(aRouted, NextId());
->>>>>>> upstream-releases
 
   // Inherit our event target from our manager.
   if (IProtocol* manager = aRouted->Manager()) {
@@ -1297,91 +779,27 @@ int32_t IToplevelProtocol::Register(IProtocol* aRouted) {
   return id;
 }
 
-<<<<<<< HEAD
-int32_t IToplevelProtocol::ToplevelState::RegisterID(IProtocol* aRouted,
-                                                     int32_t aId) {
-  mActorMap.AddWithID(aRouted, aId);
-||||||| merged common ancestors
-int32_t
-IToplevelProtocol::ToplevelState::RegisterID(IProtocol* aRouted,
-                                     int32_t aId)
-{
-  mActorMap.AddWithID(aRouted, aId);
-=======
 int32_t IToplevelProtocol::RegisterID(IProtocol* aRouted, int32_t aId) {
->>>>>>> upstream-releases
   aRouted->SetId(aId);
   aRouted->ActorConnected();
   mActorMap.AddWithID(aRouted, aId);
   return aId;
 }
 
-<<<<<<< HEAD
-IProtocol* IToplevelProtocol::ToplevelState::Lookup(int32_t aId) {
-||||||| merged common ancestors
-IProtocol*
-IToplevelProtocol::ToplevelState::Lookup(int32_t aId)
-{
-=======
 IProtocol* IToplevelProtocol::Lookup(int32_t aId) {
->>>>>>> upstream-releases
   return mActorMap.Lookup(aId);
 }
 
-<<<<<<< HEAD
-void IToplevelProtocol::ToplevelState::Unregister(int32_t aId) {
-||||||| merged common ancestors
-void
-IToplevelProtocol::ToplevelState::Unregister(int32_t aId)
-{
-=======
 void IToplevelProtocol::Unregister(int32_t aId) {
->>>>>>> upstream-releases
   mActorMap.Remove(aId);
 
   MutexAutoLock lock(mEventTargetMutex);
   mEventTargetMap.RemoveIfPresent(aId);
 }
 
-<<<<<<< HEAD
-IToplevelProtocol::ToplevelState::ToplevelState(const char* aName,
-                                                IToplevelProtocol* aProtocol,
-                                                Side aSide)
-    : ProtocolState(),
-      mProtocol(aProtocol),
-      mLastLocalId(0),
-      mEventTargetMutex("ProtocolEventTargetMutex"),
-      mChannel(aName, aProtocol) {}
-
-Shmem::SharedMemory* IToplevelProtocol::ToplevelState::CreateSharedMemory(
-    size_t aSize, Shmem::SharedMemory::SharedMemoryType aType, bool aUnsafe,
-    Shmem::id_t* aId) {
-  // XXX the mProtocol uses here should go away!
-||||||| merged common ancestors
-IToplevelProtocol::ToplevelState::ToplevelState(const char* aName,
-                                                IToplevelProtocol* aProtocol,
-                                                Side aSide)
-  : ProtocolState()
-  , mProtocol(aProtocol)
-  , mLastRouteId(aSide == ParentSide ? kFreedActorId : kNullActorId)
-  , mLastShmemId(aSide == ParentSide ? kFreedActorId : kNullActorId)
-  , mEventTargetMutex("ProtocolEventTargetMutex")
-  , mChannel(aName, aProtocol)
-{
-}
-
-Shmem::SharedMemory*
-IToplevelProtocol::ToplevelState::CreateSharedMemory(size_t aSize,
-                                                     Shmem::SharedMemory::SharedMemoryType aType,
-                                                     bool aUnsafe,
-                                                     Shmem::id_t* aId)
-{
-  // XXX the mProtocol uses here should go away!
-=======
 Shmem::SharedMemory* IToplevelProtocol::CreateSharedMemory(
     size_t aSize, Shmem::SharedMemory::SharedMemoryType aType, bool aUnsafe,
     Shmem::id_t* aId) {
->>>>>>> upstream-releases
   RefPtr<Shmem::SharedMemory> segment(
       Shmem::Alloc(Shmem::PrivateIPDLCaller(), aSize, aType, aUnsafe));
   if (!segment) {
@@ -1392,30 +810,12 @@ Shmem::SharedMemory* IToplevelProtocol::CreateSharedMemory(
 
   base::ProcessId pid =
 #ifdef ANDROID
-<<<<<<< HEAD
-      // We use OtherPidMaybeInvalid() because on Android this method is
-      // actually called on an unconnected protocol, but Android's shared memory
-      // implementation doesn't actually use the PID.
-      mProtocol->OtherPidMaybeInvalid();
-||||||| merged common ancestors
-    // We use OtherPidMaybeInvalid() because on Android this method is actually
-    // called on an unconnected protocol, but Android's shared memory
-    // implementation doesn't actually use the PID.
-    mProtocol->OtherPidMaybeInvalid();
-=======
       // We use OtherPidMaybeInvalid() because on Android this method is
       // actually called on an unconnected protocol, but Android's shared memory
       // implementation doesn't actually use the PID.
       OtherPidMaybeInvalid();
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-      mProtocol->OtherPid();
-||||||| merged common ancestors
-    mProtocol->OtherPid();
-=======
       OtherPid();
->>>>>>> upstream-releases
 #endif
 
   Message* descriptor =
@@ -1431,41 +831,15 @@ Shmem::SharedMemory* IToplevelProtocol::CreateSharedMemory(
   return rawSegment;
 }
 
-<<<<<<< HEAD
-Shmem::SharedMemory* IToplevelProtocol::ToplevelState::LookupSharedMemory(
-    Shmem::id_t aId) {
-||||||| merged common ancestors
-Shmem::SharedMemory*
-IToplevelProtocol::ToplevelState::LookupSharedMemory(Shmem::id_t aId)
-{
-=======
 Shmem::SharedMemory* IToplevelProtocol::LookupSharedMemory(Shmem::id_t aId) {
->>>>>>> upstream-releases
   return mShmemMap.Lookup(aId);
 }
 
-<<<<<<< HEAD
-bool IToplevelProtocol::ToplevelState::IsTrackingSharedMemory(
-    Shmem::SharedMemory* segment) {
-||||||| merged common ancestors
-bool
-IToplevelProtocol::ToplevelState::IsTrackingSharedMemory(Shmem::SharedMemory* segment)
-{
-=======
 bool IToplevelProtocol::IsTrackingSharedMemory(Shmem::SharedMemory* segment) {
->>>>>>> upstream-releases
   return mShmemMap.HasData(segment);
 }
 
-<<<<<<< HEAD
-bool IToplevelProtocol::ToplevelState::DestroySharedMemory(Shmem& shmem) {
-||||||| merged common ancestors
-bool
-IToplevelProtocol::ToplevelState::DestroySharedMemory(Shmem& shmem)
-{
-=======
 bool IToplevelProtocol::DestroySharedMemory(Shmem& shmem) {
->>>>>>> upstream-releases
   Shmem::id_t aId = shmem.Id(Shmem::PrivateIPDLCaller());
   Shmem::SharedMemory* segment = LookupSharedMemory(aId);
   if (!segment) {
@@ -1487,34 +861,15 @@ bool IToplevelProtocol::DestroySharedMemory(Shmem& shmem) {
   return descriptor && channel->Send(descriptor);
 }
 
-<<<<<<< HEAD
-void IToplevelProtocol::ToplevelState::DeallocShmems() {
-  for (IDMap<SharedMemory*>::const_iterator cit = mShmemMap.begin();
-       cit != mShmemMap.end(); ++cit) {
-||||||| merged common ancestors
-void
-IToplevelProtocol::ToplevelState::DeallocShmems()
-{
-  for (IDMap<SharedMemory*>::const_iterator cit = mShmemMap.begin(); cit != mShmemMap.end(); ++cit) {
-=======
 void IToplevelProtocol::DeallocShmems() {
   for (IDMap<SharedMemory*>::const_iterator cit = mShmemMap.begin();
        cit != mShmemMap.end(); ++cit) {
->>>>>>> upstream-releases
     Shmem::Dealloc(Shmem::PrivateIPDLCaller(), cit->second);
   }
   mShmemMap.Clear();
 }
 
-<<<<<<< HEAD
-bool IToplevelProtocol::ToplevelState::ShmemCreated(const Message& aMsg) {
-||||||| merged common ancestors
-bool
-IToplevelProtocol::ToplevelState::ShmemCreated(const Message& aMsg)
-{
-=======
 bool IToplevelProtocol::ShmemCreated(const Message& aMsg) {
->>>>>>> upstream-releases
   Shmem::id_t id;
   RefPtr<Shmem::SharedMemory> rawmem(
       Shmem::OpenExisting(Shmem::PrivateIPDLCaller(), aMsg, &id, true));
@@ -1525,15 +880,7 @@ bool IToplevelProtocol::ShmemCreated(const Message& aMsg) {
   return true;
 }
 
-<<<<<<< HEAD
-bool IToplevelProtocol::ToplevelState::ShmemDestroyed(const Message& aMsg) {
-||||||| merged common ancestors
-bool
-IToplevelProtocol::ToplevelState::ShmemDestroyed(const Message& aMsg)
-{
-=======
 bool IToplevelProtocol::ShmemDestroyed(const Message& aMsg) {
->>>>>>> upstream-releases
   Shmem::id_t id;
   PickleIterator iter = PickleIterator(aMsg);
   if (!IPC::ReadParam(&aMsg, &iter, &id)) {
@@ -1549,17 +896,8 @@ bool IToplevelProtocol::ShmemDestroyed(const Message& aMsg) {
   return true;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIEventTarget>
-IToplevelProtocol::ToplevelState::GetMessageEventTarget(const Message& aMsg) {
-||||||| merged common ancestors
-already_AddRefed<nsIEventTarget>
-IToplevelProtocol::ToplevelState::GetMessageEventTarget(const Message& aMsg)
-{
-=======
 already_AddRefed<nsIEventTarget> IToplevelProtocol::GetMessageEventTarget(
     const Message& aMsg) {
->>>>>>> upstream-releases
   int32_t route = aMsg.routing_id();
 
   Maybe<MutexAutoLock> lock;
@@ -1593,70 +931,33 @@ already_AddRefed<nsIEventTarget> IToplevelProtocol::GetMessageEventTarget(
   return target.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIEventTarget>
-IToplevelProtocol::ToplevelState::GetActorEventTarget(IProtocol* aActor) {
-  MOZ_RELEASE_ASSERT(aActor->Id() != kNullActorId &&
-                     aActor->Id() != kFreedActorId);
-||||||| merged common ancestors
-already_AddRefed<nsIEventTarget>
-IToplevelProtocol::ToplevelState::GetActorEventTarget(IProtocol* aActor)
-{
-  MOZ_RELEASE_ASSERT(aActor->Id() != kNullActorId && aActor->Id() != kFreedActorId);
-=======
 already_AddRefed<nsIEventTarget> IToplevelProtocol::GetActorEventTarget(
     IProtocol* aActor) {
   MOZ_RELEASE_ASSERT(aActor->Id() != kNullActorId &&
                      aActor->Id() != kFreedActorId);
->>>>>>> upstream-releases
 
   MutexAutoLock lock(mEventTargetMutex);
   nsCOMPtr<nsIEventTarget> target = mEventTargetMap.Lookup(aActor->Id());
   return target.forget();
 }
 
-<<<<<<< HEAD
-nsIEventTarget* IToplevelProtocol::ToplevelState::GetActorEventTarget() {
-||||||| merged common ancestors
-nsIEventTarget*
-IToplevelProtocol::ToplevelState::GetActorEventTarget()
-{
-=======
 nsIEventTarget* IToplevelProtocol::GetActorEventTarget() {
->>>>>>> upstream-releases
   // The EventTarget of a ToplevelProtocol shall never be set.
   return nullptr;
 }
 
-<<<<<<< HEAD
-void IToplevelProtocol::ToplevelState::SetEventTargetForActor(
-    IProtocol* aActor, nsIEventTarget* aEventTarget) {
-||||||| merged common ancestors
-void
-IToplevelProtocol::ToplevelState::SetEventTargetForActor(IProtocol* aActor,
-                                                 nsIEventTarget* aEventTarget)
-{
-=======
 void IToplevelProtocol::SetEventTargetForActorInternal(
     IProtocol* aActor, nsIEventTarget* aEventTarget) {
->>>>>>> upstream-releases
   // The EventTarget of a ToplevelProtocol shall never be set.
   MOZ_RELEASE_ASSERT(aActor != this);
 
   // We should only call this function on actors that haven't been used for IPC
   // code yet. Otherwise we'll be posting stuff to the wrong event target before
   // we're called.
-<<<<<<< HEAD
-  MOZ_RELEASE_ASSERT(aActor->Id() == kNullActorId ||
-                     aActor->Id() == kFreedActorId);
-||||||| merged common ancestors
-  MOZ_RELEASE_ASSERT(aActor->Id() == kNullActorId || aActor->Id() == kFreedActorId);
-=======
   MOZ_RELEASE_ASSERT(aActor->Id() == kNullActorId ||
                      aActor->Id() == kFreedActorId);
 
   MOZ_ASSERT(aActor->Manager() && aActor->ToplevelProtocol() == this);
->>>>>>> upstream-releases
 
   // Register the actor early. When it's registered again, it will keep the same
   // ID.
@@ -1677,19 +978,8 @@ void IToplevelProtocol::SetEventTargetForActorInternal(
   }
 }
 
-<<<<<<< HEAD
-void IToplevelProtocol::ToplevelState::ReplaceEventTargetForActor(
-    IProtocol* aActor, nsIEventTarget* aEventTarget) {
-||||||| merged common ancestors
-void
-IToplevelProtocol::ToplevelState::ReplaceEventTargetForActor(
-  IProtocol* aActor,
-  nsIEventTarget* aEventTarget)
-{
-=======
 void IToplevelProtocol::ReplaceEventTargetForActor(
     IProtocol* aActor, nsIEventTarget* aEventTarget) {
->>>>>>> upstream-releases
   // The EventTarget of a ToplevelProtocol shall never be set.
   MOZ_RELEASE_ASSERT(aActor != this);
 
@@ -1701,36 +991,14 @@ void IToplevelProtocol::ReplaceEventTargetForActor(
   mEventTargetMap.ReplaceWithID(aEventTarget, id);
 }
 
-<<<<<<< HEAD
-const MessageChannel* IToplevelProtocol::ToplevelState::GetIPCChannel() const {
-  return ProtocolState::mChannel ? ProtocolState::mChannel : &mChannel;
-}
-||||||| merged common ancestors
-const MessageChannel*
-IToplevelProtocol::ToplevelState::GetIPCChannel() const
-{
-  return ProtocolState::mChannel ? ProtocolState::mChannel : &mChannel;
-}
-=======
 void IToplevelProtocol::SetEventTargetForRoute(int32_t aRoute,
                                                nsIEventTarget* aEventTarget) {
   MOZ_RELEASE_ASSERT(aRoute != Id());
   MOZ_RELEASE_ASSERT(aRoute != kNullActorId && aRoute != kFreedActorId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MessageChannel* IToplevelProtocol::ToplevelState::GetIPCChannel() {
-  return ProtocolState::mChannel ? ProtocolState::mChannel : &mChannel;
-||||||| merged common ancestors
-MessageChannel*
-IToplevelProtocol::ToplevelState::GetIPCChannel()
-{
-  return ProtocolState::mChannel ? ProtocolState::mChannel : &mChannel;
-=======
   MutexAutoLock lock(mEventTargetMutex);
   MOZ_ASSERT(!mEventTargetMap.Lookup(aRoute));
   mEventTargetMap.AddWithID(aEventTarget, aRoute);
->>>>>>> upstream-releases
 }
 
 }  // namespace ipc

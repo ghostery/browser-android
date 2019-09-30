@@ -240,18 +240,8 @@ void ConvolverNodeEngine::ProcessBlock(AudioNodeStream* aStream,
         MOZ_ASSERT(mRemainingRightHistory <= 0);
         aStream->ScheduleCheckForInactive();
         RefPtr<PlayingRefChanged> refchanged =
-<<<<<<< HEAD
-            new PlayingRefChanged(aStream, PlayingRefChanged::RELEASE);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-||||||| merged common ancestors
-          new PlayingRefChanged(aStream, PlayingRefChanged::RELEASE);
-        aStream->Graph()->
-          DispatchToMainThreadAfterStreamStateUpdate(refchanged.forget());
-=======
             new PlayingRefChanged(aStream, PlayingRefChanged::RELEASE);
         aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
->>>>>>> upstream-releases
       }
       aOutput->SetNull(WEBAUDIO_BLOCK_SIZE);
       return;
@@ -259,18 +249,8 @@ void ConvolverNodeEngine::ProcessBlock(AudioNodeStream* aStream,
   } else {
     if (mRemainingLeftOutput <= 0) {
       RefPtr<PlayingRefChanged> refchanged =
-<<<<<<< HEAD
-          new PlayingRefChanged(aStream, PlayingRefChanged::ADDREF);
-      aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-          refchanged.forget());
-||||||| merged common ancestors
-        new PlayingRefChanged(aStream, PlayingRefChanged::ADDREF);
-      aStream->Graph()->
-        DispatchToMainThreadAfterStreamStateUpdate(refchanged.forget());
-=======
           new PlayingRefChanged(aStream, PlayingRefChanged::ADDREF);
       aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
->>>>>>> upstream-releases
     }
 
     // Use mVolume as a flag to detect whether AllocateReverbInput() gets
@@ -402,44 +382,6 @@ void ConvolverNodeEngine::ProcessBlock(AudioNodeStream* aStream,
 }
 
 ConvolverNode::ConvolverNode(AudioContext* aContext)
-<<<<<<< HEAD
-    : AudioNode(aContext, 2, ChannelCountMode::Clamped_max,
-                ChannelInterpretation::Speakers),
-      mNormalize(true) {
-  uint64_t windowID = aContext->GetParentObject()->WindowID();
-  ConvolverNodeEngine* engine =
-      new ConvolverNodeEngine(this, mNormalize, windowID);
-  mStream = AudioNodeStream::Create(
-      aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
-}
-
-/* static */ already_AddRefed<ConvolverNode> ConvolverNode::Create(
-    JSContext* aCx, AudioContext& aAudioContext,
-    const ConvolverOptions& aOptions, ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-||||||| merged common ancestors
-  : AudioNode(aContext,
-              2,
-              ChannelCountMode::Clamped_max,
-              ChannelInterpretation::Speakers)
-  , mNormalize(true)
-{
-  uint64_t windowID = aContext->GetParentObject()->WindowID();
-  ConvolverNodeEngine* engine = new ConvolverNodeEngine(this, mNormalize, windowID);
-  mStream = AudioNodeStream::Create(aContext, engine,
-                                    AudioNodeStream::NO_STREAM_FLAGS,
-                                    aContext->Graph());
-}
-
-/* static */ already_AddRefed<ConvolverNode>
-ConvolverNode::Create(JSContext* aCx, AudioContext& aAudioContext,
-                      const ConvolverOptions& aOptions,
-                      ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-=======
     : AudioNode(aContext, 2, ChannelCountMode::Clamped_max,
                 ChannelInterpretation::Speakers),
       mNormalize(true) {
@@ -450,7 +392,6 @@ ConvolverNode::Create(JSContext* aCx, AudioContext& aAudioContext,
     // This is used to send a message to the developer console, but the page is
     // being closed so it doesn't matter too much.
     windowID = 0;
->>>>>>> upstream-releases
   }
   ConvolverNodeEngine* engine =
       new ConvolverNodeEngine(this, mNormalize, windowID);

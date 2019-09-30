@@ -132,13 +132,6 @@ Box Box::FirstChild() const {
   return Box(mContext, mChildOffset, this);
 }
 
-<<<<<<< HEAD
-nsTArray<uint8_t> Box::Read() const {
-||||||| merged common ancestors
-nsTArray<uint8_t>
-Box::Read() const
-{
-=======
 nsTArray<uint8_t> Box::ReadCompleteBox() const {
   const size_t length = mRange.mEnd - mRange.mStart;
   nsTArray<uint8_t> out(length);
@@ -155,7 +148,6 @@ nsTArray<uint8_t> Box::ReadCompleteBox() const {
 }
 
 nsTArray<uint8_t> Box::Read() const {
->>>>>>> upstream-releases
   nsTArray<uint8_t> out;
   Unused << Read(&out, mRange);
   return out;
@@ -182,11 +174,6 @@ bool Box::Read(nsTArray<uint8_t>* aDest, const MediaByteRange& aRange) const {
   }
   return true;
 }
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-=======
 
 ByteSlice Box::ReadAsSlice() {
   if (!mContext) {
@@ -240,4 +227,3 @@ uint8_t* BumpAllocator::Allocate(size_t aNumBytes) {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

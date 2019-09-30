@@ -29,34 +29,18 @@ const CATEGORIES = ["popupShown", "clearAfterHover", "clearAfterMousedown"];
  */
 function assertOnlyOneTypeSet(snapshot, category) {
   let categoryIndex = CATEGORIES.indexOf(category);
-<<<<<<< HEAD
-  Assert.equal(snapshot.values[categoryIndex], 1,
-               `Should have seen the ${category} count increment.`);
-||||||| merged common ancestors
-  Assert.equal(snapshot.counts[categoryIndex], 1,
-               `Should have seen the ${category} count increment.`);
-=======
   Assert.equal(
     snapshot.values[categoryIndex],
     1,
     `Should have seen the ${category} count increment.`
   );
->>>>>>> upstream-releases
   // Use Array.prototype.reduce to sum up all of the
   // snapshot.count entries
-<<<<<<< HEAD
-  Assert.equal(Object.values(snapshot.values).reduce((a, b) => a + b, 0), 1,
-               "Should only be 1 collected value.");
-||||||| merged common ancestors
-  Assert.equal(snapshot.counts.reduce((a, b) => a + b), 1,
-               "Should only be 1 collected value.");
-=======
   Assert.equal(
     Object.values(snapshot.values).reduce((a, b) => a + b, 0),
     1,
     "Should only be 1 collected value."
   );
->>>>>>> upstream-releases
 }
 
 add_task(async function testBrowserActionTelemetryTiming() {

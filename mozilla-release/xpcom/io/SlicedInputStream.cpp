@@ -420,15 +420,6 @@ SlicedInputStream::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 
 // nsIIPCSerializableInputStream
 
-<<<<<<< HEAD
-void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
-                                  FileDescriptorArray& aFileDescriptors) {
-||||||| merged common ancestors
-void
-SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
-                             FileDescriptorArray& aFileDescriptors)
-{
-=======
 void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
                                   FileDescriptorArray& aFileDescriptors,
                                   bool aDelayedStart, uint32_t aMaxSize,
@@ -470,7 +461,6 @@ void SlicedInputStream::SerializeInternal(
     mozilla::ipc::InputStreamParams& aParams,
     FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
     uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mInputStream);
   MOZ_ASSERT(mWeakIPCSerializableInputStream);
 
@@ -516,28 +506,6 @@ bool SlicedInputStream::Deserialize(
   return true;
 }
 
-<<<<<<< HEAD
-mozilla::Maybe<uint64_t> SlicedInputStream::ExpectedSerializedLength() {
-  if (!mInputStream || !mWeakIPCSerializableInputStream) {
-    return mozilla::Nothing();
-  }
-
-  return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
-}
-
-||||||| merged common ancestors
-mozilla::Maybe<uint64_t>
-SlicedInputStream::ExpectedSerializedLength()
-{
-  if (!mInputStream || !mWeakIPCSerializableInputStream) {
-    return mozilla::Nothing();
-  }
-
-  return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
-}
-
-=======
->>>>>>> upstream-releases
 // nsISeekableStream
 
 NS_IMETHODIMP

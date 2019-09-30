@@ -87,59 +87,25 @@ add_task(async function() {
   EventUtils.synthesizeMouseAtCenter(tag, {}, inspector.panelWin);
 });
 
-<<<<<<< HEAD
-async function checkTextBox(textBox, toolbox) {
-  let textboxContextMenu = toolbox.doc.getElementById("toolbox-menu");
-  ok(!textboxContextMenu, "The menu is  closed");
-||||||| merged common ancestors
-async function checkTextBox(textBox, {textBoxContextMenuPopup}) {
-  is(textBoxContextMenuPopup.state, "closed", "The menu is closed");
-=======
 async function checkTextBox(textBox, toolbox) {
   let textboxContextMenu = toolbox.getTextBoxContextMenu();
   ok(!textboxContextMenu, "The menu is closed");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  info("Simulating context click on the textbox and expecting the menu to open");
-  const onContextMenu = toolbox.once("menu-open");
-  synthesizeContextMenuEvent(textBox);
-||||||| merged common ancestors
-  info("Simulating context click on the textbox and expecting the menu to open");
-  const onContextMenu = once(textBoxContextMenuPopup, "popupshown");
-  EventUtils.synthesizeMouse(textBox, 2, 2, {type: "contextmenu", button: 2},
-                             textBox.ownerDocument.defaultView);
-=======
   info(
     "Simulating context click on the textbox and expecting the menu to open"
   );
   const onContextMenu = toolbox.once("menu-open");
   synthesizeContextMenuEvent(textBox);
->>>>>>> upstream-releases
   await onContextMenu;
 
-<<<<<<< HEAD
-  textboxContextMenu = toolbox.doc.getElementById("toolbox-menu");
-  ok(textboxContextMenu, "The menu is now visible");
-||||||| merged common ancestors
-  is(textBoxContextMenuPopup.state, "open", "The menu is now visible");
-=======
   textboxContextMenu = toolbox.getTextBoxContextMenu();
   ok(textboxContextMenu, "The menu is now visible");
->>>>>>> upstream-releases
 
   info("Closing the menu");
   const onContextMenuHidden = toolbox.once("menu-close");
   EventUtils.sendKey("ESCAPE", toolbox.win);
   await onContextMenuHidden;
 
-<<<<<<< HEAD
-  textboxContextMenu = toolbox.doc.getElementById("toolbox-menu");
-  ok(!textboxContextMenu, "The menu is closed again");
-||||||| merged common ancestors
-  is(textBoxContextMenuPopup.state, "closed", "The menu is closed again");
-=======
   textboxContextMenu = toolbox.getTextBoxContextMenu();
   ok(!textboxContextMenu, "The menu is closed again");
->>>>>>> upstream-releases
 }

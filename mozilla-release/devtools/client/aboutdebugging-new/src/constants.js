@@ -60,16 +60,6 @@ const actionTypes = {
   UNWATCH_RUNTIME_FAILURE: "UNWATCH_RUNTIME_FAILURE",
   UNWATCH_RUNTIME_START: "UNWATCH_RUNTIME_START",
   UNWATCH_RUNTIME_SUCCESS: "UNWATCH_RUNTIME_SUCCESS",
-<<<<<<< HEAD
-  UPDATE_CONNECTION_PROMPT_SETTING_FAILURE: "UPDATE_CONNECTION_PROMPT_SETTING_FAILURE",
-  UPDATE_CONNECTION_PROMPT_SETTING_START: "UPDATE_CONNECTION_PROMPT_SETTING_START",
-  UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS: "UPDATE_CONNECTION_PROMPT_SETTING_SUCCESS",
-  USB_RUNTIMES_SCAN_START: "USB_RUNTIMES_SCAN_START",
-  USB_RUNTIMES_SCAN_SUCCESS: "USB_RUNTIMES_SCAN_SUCCESS",
-  USB_RUNTIMES_UPDATED: "USB_RUNTIMES_UPDATED",
-||||||| merged common ancestors
-  USB_RUNTIMES_UPDATED: "USB_RUNTIMES_UPDATED",
-=======
   UPDATE_CONNECTION_PROMPT_SETTING_FAILURE:
     "UPDATE_CONNECTION_PROMPT_SETTING_FAILURE",
   UPDATE_CONNECTION_PROMPT_SETTING_START:
@@ -81,7 +71,6 @@ const actionTypes = {
   UPDATE_RUNTIME_MULTIE10S_SUCCESS: "UPDATE_RUNTIME_MULTIE10S_SUCCESS",
   USB_RUNTIMES_SCAN_START: "USB_RUNTIMES_SCAN_START",
   USB_RUNTIMES_SCAN_SUCCESS: "USB_RUNTIMES_SCAN_SUCCESS",
->>>>>>> upstream-releases
   WATCH_RUNTIME_FAILURE: "WATCH_RUNTIME_FAILURE",
   WATCH_RUNTIME_START: "WATCH_RUNTIME_START",
   WATCH_RUNTIME_SUCCESS: "WATCH_RUNTIME_SUCCESS",
@@ -99,13 +88,6 @@ const DEBUG_TARGET_PANE = {
   TEMPORARY_EXTENSION: "temporaryExtension",
 };
 
-<<<<<<< HEAD
-const PAGE_TYPES = {
-  RUNTIME: "runtime",
-||||||| merged common ancestors
-const PAGES = {
-  THIS_FIREFOX: "this-firefox",
-=======
 const ICON_LABEL_LEVEL = {
   INFO: "info",
   OK: "ok",
@@ -119,26 +101,9 @@ const MESSAGE_LEVEL = {
 
 const PAGE_TYPES = {
   RUNTIME: "runtime",
->>>>>>> upstream-releases
   CONNECT: "connect",
 };
 
-<<<<<<< HEAD
-const PREFERENCES = {
-  // Temporary preference without any default value until network locations are enabled.
-  NETWORK_ENABLED: "devtools.aboutdebugging.network",
-  // Preference that drives the display of system addons in about:debugging.
-  SHOW_SYSTEM_ADDONS: "devtools.aboutdebugging.showSystemAddons",
-  // Temporary preference without any default value until wifi is enabled.
-  WIFI_ENABLED: "devtools.aboutdebugging.wifi",
-};
-
-const RUNTIME_PREFERENCE = {
-  CONNECTION_PROMPT: "devtools.debugger.prompt-connection",
-};
-
-||||||| merged common ancestors
-=======
 const PREFERENCES = {
   // Preference that drives the display of the "Tabs" category on This Firefox.
   LOCAL_TAB_DEBUGGING_ENABLED: "devtools.aboutdebugging.local-tab-debugging",
@@ -158,7 +123,6 @@ const RUNTIME_PREFERENCE = {
   SERVICE_WORKERS_ENABLED: "dom.serviceWorkers.enabled",
 };
 
->>>>>>> upstream-releases
 const RUNTIMES = {
   NETWORK: CONNECTION_TYPES.NETWORK,
   THIS_FIREFOX: CONNECTION_TYPES.THIS_FIREFOX,
@@ -183,29 +147,6 @@ const USB_STATES = {
 };
 
 // flatten constants
-<<<<<<< HEAD
-module.exports = Object.assign({}, {
-  DEBUG_TARGETS,
-  DEBUG_TARGET_PANE,
-  PAGE_TYPES,
-  PREFERENCES,
-  RUNTIME_PREFERENCE,
-  RUNTIMES,
-  SERVICE_WORKER_FETCH_STATES,
-  SERVICE_WORKER_STATUSES,
-  USB_STATES,
-}, actionTypes);
-||||||| merged common ancestors
-module.exports = Object.assign({}, {
-  DEBUG_TARGETS,
-  DEBUG_TARGET_PANE,
-  PAGES,
-  RUNTIMES,
-  SERVICE_WORKER_FETCH_STATES,
-  SERVICE_WORKER_STATUSES,
-  USB_STATES,
-}, actionTypes);
-=======
 module.exports = Object.assign(
   {},
   {
@@ -223,4 +164,3 @@ module.exports = Object.assign(
   },
   actionTypes
 );
->>>>>>> upstream-releases

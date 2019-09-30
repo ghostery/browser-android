@@ -21,29 +21,6 @@ namespace dom {
 
 typedef SVGGeometryElement SVGEllipseElementBase;
 
-<<<<<<< HEAD
-class SVGEllipseElement final : public SVGEllipseElementBase {
- protected:
-  explicit SVGEllipseElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  virtual JSObject* WrapNode(JSContext* cx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-  friend nsresult(::NS_NewSVGEllipseElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
- public:
-||||||| merged common ancestors
-class SVGEllipseElement final : public SVGEllipseElementBase
-{
-protected:
-  explicit SVGEllipseElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
-  friend nsresult (::NS_NewSVGEllipseElement(nsIContent **aResult,
-                                             already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
-public:
-=======
 class SVGEllipseElement final : public SVGEllipseElementBase {
  protected:
   explicit SVGEllipseElement(
@@ -57,7 +34,6 @@ class SVGEllipseElement final : public SVGEllipseElementBase {
  public:
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
->>>>>>> upstream-releases
   // nsSVGSVGElement methods:
   virtual bool HasValidDimensions() const override;
 
@@ -74,12 +50,6 @@ class SVGEllipseElement final : public SVGEllipseElementBase {
                                     const ComputedStyle& aOldStyle);
   static nsCSSPropertyID GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-
-=======
   // WebIDL
   already_AddRefed<DOMSVGAnimatedLength> Cx();
   already_AddRefed<DOMSVGAnimatedLength> Cy();
@@ -87,7 +57,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedLength> Ry();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { CX, CY, RX, RY };

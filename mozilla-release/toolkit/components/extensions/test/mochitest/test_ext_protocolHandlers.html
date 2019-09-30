@@ -124,13 +124,6 @@ add_task(async function test_protocolHandler() {
 
   let query = await extension.awaitMessage("test-query");
   is(query, "?val=ext%2Bfoo%3Atest", "test query ok");
-<<<<<<< HEAD
-
-  extension.sendMessage("close", id);
-  await extension.awaitMessage("closed");
-||||||| merged common ancestors
-  win.close();
-=======
 
   extension.sendMessage("close", id);
   await extension.awaitMessage("closed");
@@ -165,7 +158,6 @@ add_task(async function test_protocolHandler() {
   pb_extension.sendMessage("close", id);
   await pb_extension.awaitMessage("closed");
   await pb_extension.unload();
->>>>>>> upstream-releases
 
   // Shutdown the addon, then ensure the protocol was removed.
   await extension.unload();

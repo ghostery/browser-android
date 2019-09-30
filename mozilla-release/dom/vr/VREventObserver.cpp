@@ -92,72 +92,32 @@ void VREventObserver::NotifyAfterLoad() {
   }
 }
 
-<<<<<<< HEAD
-void VREventObserver::NotifyVRDisplayMounted(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-||||||| merged common ancestors
-void
-VREventObserver::NotifyVRDisplayMounted(uint32_t aDisplayID)
-{
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-=======
 void VREventObserver::NotifyVRDisplayMounted(uint32_t aDisplayID) {
   if (mWindow && mWindow->IsCurrentInnerWindow()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
     mWindow->DispatchVRDisplayActivate(aDisplayID,
                                        VRDisplayEventReason::Mounted);
   }
 }
 
-<<<<<<< HEAD
-void VREventObserver::NotifyVRDisplayNavigation(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-||||||| merged common ancestors
-void
-VREventObserver::NotifyVRDisplayNavigation(uint32_t aDisplayID)
-{
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-=======
 void VREventObserver::NotifyVRDisplayNavigation(uint32_t aDisplayID) {
   if (mWindow && mWindow->IsCurrentInnerWindow()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
     mWindow->DispatchVRDisplayActivate(aDisplayID,
                                        VRDisplayEventReason::Navigation);
   }
 }
 
-<<<<<<< HEAD
-void VREventObserver::NotifyVRDisplayRequested(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-||||||| merged common ancestors
-void
-VREventObserver::NotifyVRDisplayRequested(uint32_t aDisplayID)
-{
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-=======
 void VREventObserver::NotifyVRDisplayRequested(uint32_t aDisplayID) {
   if (mWindow && mWindow->IsCurrentInnerWindow()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
     mWindow->DispatchVRDisplayActivate(aDisplayID,
                                        VRDisplayEventReason::Requested);
   }
 }
 
-<<<<<<< HEAD
-void VREventObserver::NotifyVRDisplayUnmounted(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-||||||| merged common ancestors
-void
-VREventObserver::NotifyVRDisplayUnmounted(uint32_t aDisplayID)
-{
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-=======
 void VREventObserver::NotifyVRDisplayUnmounted(uint32_t aDisplayID) {
   if (mWindow && mWindow->IsCurrentInnerWindow()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
     mWindow->DispatchVRDisplayDeactivate(aDisplayID,
                                          VRDisplayEventReason::Unmounted);
@@ -176,18 +136,8 @@ void VREventObserver::NotifyVRDisplayConnect(uint32_t aDisplayID) {
   }
 }
 
-<<<<<<< HEAD
-void VREventObserver::NotifyVRDisplayDisconnect(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-||||||| merged common ancestors
-void
-VREventObserver::NotifyVRDisplayDisconnect(uint32_t aDisplayID)
-{
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-=======
 void VREventObserver::NotifyVRDisplayDisconnect(uint32_t aDisplayID) {
   if (mWindow && mWindow->IsCurrentInnerWindow()) {
->>>>>>> upstream-releases
     mWindow->NotifyActiveVRDisplaysChanged();
     MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
     mWindow->DispatchVRDisplayDisconnect(aDisplayID);
@@ -206,17 +156,8 @@ void VREventObserver::NotifyVRDisplayPresentChange(uint32_t aDisplayID) {
   }
 }
 
-<<<<<<< HEAD
-void VREventObserver::NotifyPresentationGenerationChanged(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-||||||| merged common ancestors
-void
-VREventObserver::NotifyPresentationGenerationChanged(uint32_t aDisplayID) {
-  if (mWindow && mWindow->AsInner()->IsCurrentInnerWindow()) {
-=======
 void VREventObserver::NotifyPresentationGenerationChanged(uint32_t aDisplayID) {
   if (mWindow && mWindow->IsCurrentInnerWindow()) {
->>>>>>> upstream-releases
     mWindow->NotifyPresentationGenerationChanged(aDisplayID);
     MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
   }

@@ -31,20 +31,9 @@ using namespace mozilla;
 //
 // Creates a new scrollbar frame and returns it
 //
-<<<<<<< HEAD
-nsIFrame* NS_NewScrollbarFrame(nsIPresShell* aPresShell,
-                               ComputedStyle* aStyle) {
-  return new (aPresShell) nsScrollbarFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewScrollbarFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsScrollbarFrame(aStyle);
-=======
 nsIFrame* NS_NewScrollbarFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell)
       nsScrollbarFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsScrollbarFrame)
@@ -293,32 +282,6 @@ int32_t nsScrollbarFrame::MoveToNewPosition() {
   return curpos;
 }
 
-<<<<<<< HEAD
-nsresult nsScrollbarFrame::CreateAnonymousContent(
-    nsTArray<ContentInfo>& aElements) {
-  // clang-format off
-
-  // <xul:scrollbarbutton sbattr="scrollbar-up-top" type="decrement" xbl:inherits="curpos,maxpos,disabled"/>
-  // <xul:scrollbarbutton sbattr="scrollbar-down-top" type="increment" xbl:inherits="curpos,maxpos,disabled"/>
-  // <xul:slider flex="1" xbl:inherits="disabled,curpos,maxpos,pageincrement,increment,orient">
-  //   <xul:thumb sbattr="scrollbar-thumb" xbl:inherits="orient,collapsed=disabled"
-  //              align="center" pack="center"/>
-  // </xul:slider>
-  // <xul:scrollbarbutton sbattr="scrollbar-up-bottom" type="decrement" xbl:inherits="curpos,maxpos,disabled"/>
-  // <xul:scrollbarbutton sbattr="scrollbar-down-bottom" type="increment" xbl:inherits="curpos,maxpos,disabled"/>
-||||||| merged common ancestors
-nsresult
-nsScrollbarFrame::CreateAnonymousContent(nsTArray<ContentInfo>& aElements)
-{
-  // <xul:scrollbarbutton sbattr="scrollbar-up-top" type="decrement" xbl:inherits="curpos,maxpos,disabled"/>
-  // <xul:scrollbarbutton sbattr="scrollbar-down-top" type="increment" xbl:inherits="curpos,maxpos,disabled"/>
-  // <xul:slider flex="1" xbl:inherits="disabled,curpos,maxpos,pageincrement,increment,orient">
-  //   <xul:thumb sbattr="scrollbar-thumb" xbl:inherits="orient,collapsed=disabled"
-  //              align="center" pack="center"/>
-  // </xul:slider>
-  // <xul:scrollbarbutton sbattr="scrollbar-up-bottom" type="decrement" xbl:inherits="curpos,maxpos,disabled"/>
-  // <xul:scrollbarbutton sbattr="scrollbar-down-bottom" type="increment" xbl:inherits="curpos,maxpos,disabled"/>
-=======
 static already_AddRefed<Element> MakeScrollbarButton(
     dom::NodeInfo* aNodeInfo, bool aVertical, bool aBottom, bool aDown,
     AnonymousContentKey& aKey) {
@@ -360,16 +323,9 @@ static already_AddRefed<Element> MakeScrollbarButton(
   e->SetAttr(kNameSpaceID_None, nsGkAtoms::type, kTypeValues[aDown], false);
   return e.forget();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // clang-format on
-
-||||||| merged common ancestors
-=======
 nsresult nsScrollbarFrame::CreateAnonymousContent(
     nsTArray<ContentInfo>& aElements) {
->>>>>>> upstream-releases
   nsNodeInfoManager* nodeInfoManager = mContent->NodeInfo()->NodeInfoManager();
 
   Element* el(GetContent()->AsElement());
@@ -396,67 +352,14 @@ nsresult nsScrollbarFrame::CreateAnonymousContent(
     aElements.AppendElement(ContentInfo(mUpTopButton, key));
   }
 
-<<<<<<< HEAD
-  NS_TrustedNewXULElement(
-      getter_AddRefs(mUpTopButton),
-      nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                   kNameSpaceID_XUL, nsINode::ELEMENT_NODE));
-  mUpTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                        NS_LITERAL_STRING("scrollbar-up-top"), false);
-  mUpTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                        NS_LITERAL_STRING("decrement"), false);
-
-  if (!aElements.AppendElement(mUpTopButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-  NS_TrustedNewXULElement(getter_AddRefs(mUpTopButton),
-    nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                 kNameSpaceID_XUL,
-                                 nsINode::ELEMENT_NODE)
-  );
-  mUpTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                        NS_LITERAL_STRING("scrollbar-up-top"), false);
-  mUpTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                        NS_LITERAL_STRING("decrement"), false);
-
-  if (!aElements.AppendElement(mUpTopButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
   {
     AnonymousContentKey key;
     mDownTopButton =
         MakeScrollbarButton(sbbNodeInfo, vertical, /* aBottom */ false,
                             /* aDown */ true, key);
     aElements.AppendElement(ContentInfo(mDownTopButton, key));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  NS_TrustedNewXULElement(
-      getter_AddRefs(mDownTopButton),
-      nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                   kNameSpaceID_XUL, nsINode::ELEMENT_NODE));
-  mDownTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                          NS_LITERAL_STRING("scrollbar-down-top"), false);
-  mDownTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                          NS_LITERAL_STRING("increment"), false);
-
-  if (!aElements.AppendElement(mDownTopButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-  NS_TrustedNewXULElement(getter_AddRefs(mDownTopButton),
-    nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                 kNameSpaceID_XUL,
-                                 nsINode::ELEMENT_NODE)
-  );
-  mDownTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                          NS_LITERAL_STRING("scrollbar-down-top"), false);
-  mDownTopButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                          NS_LITERAL_STRING("increment"), false);
-
-  if (!aElements.AppendElement(mDownTopButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
   {
     AnonymousContentKey key = AnonymousContentKey::Type_Slider;
     if (vertical) {
@@ -483,130 +386,24 @@ nsresult nsScrollbarFrame::CreateAnonymousContent(
     mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::pack,
                     NS_LITERAL_STRING("center"), false);
     mSlider->AppendChildTo(mThumb, false);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  NS_TrustedNewXULElement(
-      getter_AddRefs(mSlider),
-      nodeInfoManager->GetNodeInfo(nsGkAtoms::slider, nullptr, kNameSpaceID_XUL,
-                                   nsINode::ELEMENT_NODE));
-  mSlider->SetAttr(kNameSpaceID_None, nsGkAtoms::orient, orient, false);
-  mSlider->SetAttr(kNameSpaceID_None, nsGkAtoms::flex, NS_LITERAL_STRING("1"),
-                   false);
-
-  if (!aElements.AppendElement(mSlider)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-  NS_TrustedNewXULElement(getter_AddRefs(mSlider),
-    nodeInfoManager->GetNodeInfo(nsGkAtoms::slider, nullptr,
-                                 kNameSpaceID_XUL,
-                                 nsINode::ELEMENT_NODE)
-  );
-  mSlider->SetAttr(kNameSpaceID_None, nsGkAtoms::orient, orient, false);
-  mSlider->SetAttr(kNameSpaceID_None, nsGkAtoms::flex,
-                   NS_LITERAL_STRING("1"), false);
-
-  if (!aElements.AppendElement(mSlider)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
   {
     AnonymousContentKey key;
     mUpBottomButton =
         MakeScrollbarButton(sbbNodeInfo, vertical, /* aBottom */ true,
                             /* aDown */ false, key);
     aElements.AppendElement(ContentInfo(mUpBottomButton, key));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  NS_TrustedNewXULElement(
-      getter_AddRefs(mThumb),
-      nodeInfoManager->GetNodeInfo(nsGkAtoms::thumb, nullptr, kNameSpaceID_XUL,
-                                   nsINode::ELEMENT_NODE));
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                  NS_LITERAL_STRING("scrollbar-thumb"), false);
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::orient, orient, false);
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::align,
-                  NS_LITERAL_STRING("center"), false);
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::pack,
-                  NS_LITERAL_STRING("center"), false);
-  mSlider->AppendChildTo(mThumb, false);
-
-  NS_TrustedNewXULElement(
-      getter_AddRefs(mUpBottomButton),
-      nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                   kNameSpaceID_XUL, nsINode::ELEMENT_NODE));
-  mUpBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                           NS_LITERAL_STRING("decrement"), false);
-  mUpBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                           NS_LITERAL_STRING("scrollbar-up-bottom"), false);
-
-  if (!aElements.AppendElement(mUpBottomButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-  NS_TrustedNewXULElement(getter_AddRefs(mThumb),
-    nodeInfoManager->GetNodeInfo(nsGkAtoms::thumb, nullptr,
-                                 kNameSpaceID_XUL,
-                                 nsINode::ELEMENT_NODE)
-  );
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                  NS_LITERAL_STRING("scrollbar-thumb"), false);
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::orient, orient, false);
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::align,
-                  NS_LITERAL_STRING("center"), false);
-  mThumb->SetAttr(kNameSpaceID_None, nsGkAtoms::pack,
-                  NS_LITERAL_STRING("center"), false);
-  mSlider->AppendChildTo(mThumb, false);
-
-  NS_TrustedNewXULElement(getter_AddRefs(mUpBottomButton),
-    nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                 kNameSpaceID_XUL,
-                                 nsINode::ELEMENT_NODE)
-  );
-  mUpBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                           NS_LITERAL_STRING("decrement"), false);
-  mUpBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                           NS_LITERAL_STRING("scrollbar-up-bottom"), false);
-
-  if (!aElements.AppendElement(mUpBottomButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
   {
     AnonymousContentKey key;
     mDownBottomButton =
         MakeScrollbarButton(sbbNodeInfo, vertical, /* aBottom */ true,
                             /* aDown */ true, key);
     aElements.AppendElement(ContentInfo(mDownBottomButton, key));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  NS_TrustedNewXULElement(
-      getter_AddRefs(mDownBottomButton),
-      nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                   kNameSpaceID_XUL, nsINode::ELEMENT_NODE));
-  mDownBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                             NS_LITERAL_STRING("scrollbar-down-bottom"), false);
-  mDownBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                             NS_LITERAL_STRING("increment"), false);
-
-  if (!aElements.AppendElement(mDownBottomButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-  NS_TrustedNewXULElement(getter_AddRefs(mDownBottomButton),
-    nodeInfoManager->GetNodeInfo(nsGkAtoms::scrollbarbutton, nullptr,
-                                 kNameSpaceID_XUL,
-                                 nsINode::ELEMENT_NODE)
-  );
-  mDownBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::sbattr,
-                             NS_LITERAL_STRING("scrollbar-down-bottom"), false);
-  mDownBottomButton->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                             NS_LITERAL_STRING("increment"), false);
-
-  if (!aElements.AppendElement(mDownBottomButton)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
   // Don't cache styles if we are inside a <select> element, since we have
   // some UA style sheet rules that depend on the <select>'s attributes.
   if (GetContent()->GetParent() &&
@@ -614,7 +411,6 @@ nsresult nsScrollbarFrame::CreateAnonymousContent(
     for (auto& info : aElements) {
       info.mKey = AnonymousContentKey::None;
     }
->>>>>>> upstream-releases
   }
 
   UpdateChildrenAttributeValue(nsGkAtoms::curpos, false);

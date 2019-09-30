@@ -21,61 +21,15 @@ using namespace mozilla::dom;
 
 namespace mozilla {
 
-<<<<<<< HEAD:mozilla-release/layout/printing/nsPrintPreviewListener.cpp
-//
-// nsPrintPreviewListener ctor
-//
-nsPrintPreviewListener::nsPrintPreviewListener(EventTarget* aTarget)
-    : mEventTarget(aTarget) {
-  NS_ADDREF_THIS();
-}  // ctor
-
-nsPrintPreviewListener::~nsPrintPreviewListener() {}
-||||||| merged common ancestors
-
-//
-// nsPrintPreviewListener ctor
-//
-nsPrintPreviewListener::nsPrintPreviewListener(EventTarget* aTarget)
-  : mEventTarget(aTarget)
-{
-  NS_ADDREF_THIS();
-} // ctor
-
-nsPrintPreviewListener::~nsPrintPreviewListener()
-{
-}
-=======
 PrintPreviewUserEventSuppressor::PrintPreviewUserEventSuppressor(
     EventTarget* aTarget)
     : mEventTarget(aTarget) {
   AddListeners();
 }
->>>>>>> upstream-releases:mozilla-release/layout/printing/PrintPreviewUserEventSuppressor.cpp
 
-<<<<<<< HEAD:mozilla-release/layout/printing/nsPrintPreviewListener.cpp
-//-------------------------------------------------------
-//
-// AddListeners
-//
-// Subscribe to the events that will allow us to track various events.
-//
-nsresult nsPrintPreviewListener::AddListeners() {
-||||||| merged common ancestors
-//-------------------------------------------------------
-//
-// AddListeners
-//
-// Subscribe to the events that will allow us to track various events.
-//
-nsresult
-nsPrintPreviewListener::AddListeners()
-{
-=======
 NS_IMPL_ISUPPORTS(PrintPreviewUserEventSuppressor, nsIDOMEventListener)
 
 void PrintPreviewUserEventSuppressor::AddListeners() {
->>>>>>> upstream-releases:mozilla-release/layout/printing/PrintPreviewUserEventSuppressor.cpp
   if (mEventTarget) {
     mEventTarget->AddEventListener(NS_LITERAL_STRING("click"), this, true);
     mEventTarget->AddEventListener(NS_LITERAL_STRING("contextmenu"), this,
@@ -94,28 +48,7 @@ void PrintPreviewUserEventSuppressor::AddListeners() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/layout/printing/nsPrintPreviewListener.cpp
-//-------------------------------------------------------
-//
-// RemoveListeners
-//
-// Unsubscribe from all the various events that we were listening to.
-//
-nsresult nsPrintPreviewListener::RemoveListeners() {
-||||||| merged common ancestors
-
-//-------------------------------------------------------
-//
-// RemoveListeners
-//
-// Unsubscribe from all the various events that we were listening to.
-//
-nsresult
-nsPrintPreviewListener::RemoveListeners()
-{
-=======
 void PrintPreviewUserEventSuppressor::RemoveListeners() {
->>>>>>> upstream-releases:mozilla-release/layout/printing/PrintPreviewUserEventSuppressor.cpp
   if (mEventTarget) {
     mEventTarget->RemoveEventListener(NS_LITERAL_STRING("click"), this, true);
     mEventTarget->RemoveEventListener(NS_LITERAL_STRING("contextmenu"), this,
@@ -147,20 +80,9 @@ enum eEventAction {
   eEventAction_StopPropagation
 };
 
-<<<<<<< HEAD:mozilla-release/layout/printing/nsPrintPreviewListener.cpp
-static eEventAction GetActionForEvent(Event* aEvent) {
-  WidgetKeyboardEvent* keyEvent = aEvent->WidgetEventPtr()->AsKeyboardEvent();
-||||||| merged common ancestors
-static eEventAction
-GetActionForEvent(Event* aEvent)
-{
-  WidgetKeyboardEvent* keyEvent =
-    aEvent->WidgetEventPtr()->AsKeyboardEvent();
-=======
 // Helper function to let certain key events through
 static eEventAction GetActionForEvent(Event* aEvent) {
   WidgetKeyboardEvent* keyEvent = aEvent->WidgetEventPtr()->AsKeyboardEvent();
->>>>>>> upstream-releases:mozilla-release/layout/printing/PrintPreviewUserEventSuppressor.cpp
   if (!keyEvent) {
     return eEventAction_Suppress;
   }
@@ -204,20 +126,9 @@ static eEventAction GetActionForEvent(Event* aEvent) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/layout/printing/nsPrintPreviewListener.cpp
-nsPrintPreviewListener::HandleEvent(Event* aEvent) {
-  nsCOMPtr<nsIContent> content =
-      do_QueryInterface(aEvent ? aEvent->GetOriginalTarget() : nullptr);
-||||||| merged common ancestors
-nsPrintPreviewListener::HandleEvent(Event* aEvent)
-{
-  nsCOMPtr<nsIContent> content = do_QueryInterface(
-    aEvent ? aEvent->GetOriginalTarget() : nullptr);
-=======
 PrintPreviewUserEventSuppressor::HandleEvent(Event* aEvent) {
   nsCOMPtr<nsIContent> content =
       do_QueryInterface(aEvent ? aEvent->GetOriginalTarget() : nullptr);
->>>>>>> upstream-releases:mozilla-release/layout/printing/PrintPreviewUserEventSuppressor.cpp
   if (content && !content->IsXULElement()) {
     eEventAction action = GetActionForEvent(aEvent);
     switch (action) {
@@ -238,14 +149,7 @@ PrintPreviewUserEventSuppressor::HandleEvent(Event* aEvent) {
 
           nsIFocusManager* fm = nsFocusManager::GetFocusManager();
           if (fm && win) {
-<<<<<<< HEAD:mozilla-release/layout/printing/nsPrintPreviewListener.cpp
-            dom::Element* fromElement =
-                parentDoc->FindContentForSubDocument(doc);
-||||||| merged common ancestors
-            dom::Element* fromElement = parentDoc->FindContentForSubDocument(doc);
-=======
             Element* fromElement = parentDoc->FindContentForSubDocument(doc);
->>>>>>> upstream-releases:mozilla-release/layout/printing/PrintPreviewUserEventSuppressor.cpp
             bool forward = (action == eEventAction_Tab);
             RefPtr<Element> result;
             fm->MoveFocus(win, fromElement,

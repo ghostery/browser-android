@@ -23,30 +23,14 @@ AffixPatternProvider::~AffixPatternProvider() = default;
 MutablePatternModifier::MutablePatternModifier(bool isStrong)
         : fStrong(isStrong) {}
 
-<<<<<<< HEAD
-void MutablePatternModifier::setPatternInfo(const AffixPatternProvider* patternInfo) {
-    fPatternInfo = patternInfo;
-||||||| merged common ancestors
-void MutablePatternModifier::setPatternInfo(const AffixPatternProvider* patternInfo) {
-    this->patternInfo = patternInfo;
-=======
 void MutablePatternModifier::setPatternInfo(const AffixPatternProvider* patternInfo, Field field) {
     fPatternInfo = patternInfo;
     fField = field;
->>>>>>> upstream-releases
 }
 
 void MutablePatternModifier::setPatternAttributes(UNumberSignDisplay signDisplay, bool perMille) {
-<<<<<<< HEAD
-    fSignDisplay = signDisplay;
-    this->perMilleReplacesPercent = perMille;
-||||||| merged common ancestors
-    this->signDisplay = signDisplay;
-    this->perMilleReplacesPercent = perMille;
-=======
     fSignDisplay = signDisplay;
     fPerMilleReplacesPercent = perMille;
->>>>>>> upstream-releases
 }
 
 void MutablePatternModifier::setSymbols(const DecimalFormatSymbols* symbols,
@@ -178,20 +162,8 @@ void MutablePatternModifier::processQuantity(DecimalQuantity& fq, MicroProps& mi
     // This method needs to be const because it overrides a const method in the parent class.
     auto nonConstThis = const_cast<MutablePatternModifier*>(this);
     if (needsPlurals()) {
-<<<<<<< HEAD
-        // TODO: Fix this. Avoid the copy.
-        DecimalQuantity copy(fq);
-        micros.rounder.apply(copy, status);
-        nonConstThis->setNumberProperties(fq.signum(), utils::getStandardPlural(fRules, copy));
-||||||| merged common ancestors
-        // TODO: Fix this. Avoid the copy.
-        DecimalQuantity copy(fq);
-        micros.rounder.apply(copy, status);
-        nonConstThis->setNumberProperties(fq.signum(), utils::getStandardPlural(rules, copy));
-=======
         StandardPlural::Form pluralForm = utils::getPluralSafe(micros.rounder, fRules, fq, status);
         nonConstThis->setNumberProperties(fq.signum(), pluralForm);
->>>>>>> upstream-releases
     } else {
         nonConstThis->setNumberProperties(fq.signum(), StandardPlural::Form::COUNT);
     }
@@ -258,29 +230,6 @@ bool MutablePatternModifier::isStrong() const {
     return fStrong;
 }
 
-<<<<<<< HEAD
-bool MutablePatternModifier::containsField(UNumberFormatFields field) const {
-    (void)field;
-    // This method is not currently used.
-    U_ASSERT(false);
-    return false;
-}
-
-void MutablePatternModifier::getParameters(Parameters& output) const {
-    (void)output;
-    // This method is not currently used.
-    U_ASSERT(false);
-}
-
-bool MutablePatternModifier::semanticallyEquivalent(const Modifier& other) const {
-    (void)other;
-    // This method is not currently used.
-    U_ASSERT(false);
-    return false;
-}
-
-||||||| merged common ancestors
-=======
 bool MutablePatternModifier::containsField(UNumberFormatFields field) const {
     (void)field;
     // This method is not currently used.
@@ -299,7 +248,6 @@ bool MutablePatternModifier::semanticallyEquivalent(const Modifier& other) const
     UPRV_UNREACHABLE;
 }
 
->>>>>>> upstream-releases
 int32_t MutablePatternModifier::insertPrefix(NumberStringBuilder& sb, int position, UErrorCode& status) {
     prepareAffix(true);
     int32_t length = AffixUtils::unescape(currentAffix, sb, position, *this, fField, status);
@@ -315,13 +263,7 @@ int32_t MutablePatternModifier::insertSuffix(NumberStringBuilder& sb, int positi
 /** This method contains the heart of the logic for rendering LDML affix strings. */
 void MutablePatternModifier::prepareAffix(bool isPrefix) {
     PatternStringUtils::patternInfoToStringBuilder(
-<<<<<<< HEAD
-            *fPatternInfo, isPrefix, fSignum, fSignDisplay, fPlural, perMilleReplacesPercent, currentAffix);
-||||||| merged common ancestors
-            *patternInfo, isPrefix, signum, signDisplay, plural, perMilleReplacesPercent, currentAffix);
-=======
             *fPatternInfo, isPrefix, fSignum, fSignDisplay, fPlural, fPerMilleReplacesPercent, currentAffix);
->>>>>>> upstream-releases
 }
 
 UnicodeString MutablePatternModifier::getSymbol(AffixPatternType type) const {

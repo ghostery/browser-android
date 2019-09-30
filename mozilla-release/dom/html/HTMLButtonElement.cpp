@@ -51,24 +51,6 @@ static const nsAttrValue::EnumTable kButtonTypeTable[] = {
 static const nsAttrValue::EnumTable* kButtonDefaultType = &kButtonTypeTable[2];
 
 // Construction, destruction
-<<<<<<< HEAD
-HTMLButtonElement::HTMLButtonElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-    FromParser aFromParser)
-    : nsGenericHTMLFormElementWithState(std::move(aNodeInfo),
-                                        kButtonDefaultType->value),
-      mDisabledChanged(false),
-      mInInternalActivate(false),
-      mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)) {
-||||||| merged common ancestors
-HTMLButtonElement::HTMLButtonElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                                     FromParser aFromParser)
-  : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), kButtonDefaultType->value),
-    mDisabledChanged(false),
-    mInInternalActivate(false),
-    mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT))
-{
-=======
 HTMLButtonElement::HTMLButtonElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     FromParser aFromParser)
@@ -77,7 +59,6 @@ HTMLButtonElement::HTMLButtonElement(
       mDisabledChanged(false),
       mInInternalActivate(false),
       mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)) {
->>>>>>> upstream-releases
   // Set up our default state: enabled
   AddStatesSilently(NS_EVENT_STATE_ENABLED);
 }
@@ -188,21 +169,10 @@ void HTMLButtonElement::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
   // DOMActivate that was dispatched directly, this will be set, but if we're
   // a DOMActivate dispatched from click handling, it will not be set.
   WidgetMouseEvent* mouseEvent = aVisitor.mEvent->AsMouseEvent();
-<<<<<<< HEAD
-  bool outerActivateEvent = ((mouseEvent && mouseEvent->IsLeftClickEvent()) ||
-                             (aVisitor.mEvent->mMessage == eLegacyDOMActivate &&
-                              !mInInternalActivate));
-||||||| merged common ancestors
-  bool outerActivateEvent =
-    ((mouseEvent && mouseEvent->IsLeftClickEvent()) ||
-     (aVisitor.mEvent->mMessage == eLegacyDOMActivate &&
-      !mInInternalActivate));
-=======
   bool outerActivateEvent =
       ((mouseEvent && mouseEvent->IsLeftClickEvent()) ||
        (aVisitor.mEvent->mMessage == eLegacyDOMActivate &&
         !mInInternalActivate && aVisitor.mEvent->mOriginalTarget == this));
->>>>>>> upstream-releases
 
   if (outerActivateEvent) {
     aVisitor.mItemFlags |= NS_OUTER_ACTIVATE_EVENT;
@@ -287,18 +257,8 @@ nsresult HTMLButtonElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
         event.mOriginator = this;
         nsEventStatus status = nsEventStatus_eIgnore;
 
-<<<<<<< HEAD
-        nsCOMPtr<nsIPresShell> presShell =
-            aVisitor.mPresContext->GetPresShell();
-        // If |nsIPresShell::Destroy| has been called due to
-||||||| merged common ancestors
-        nsCOMPtr<nsIPresShell> presShell =
-          aVisitor.mPresContext->GetPresShell();
-        // If |nsIPresShell::Destroy| has been called due to
-=======
         RefPtr<PresShell> presShell = aVisitor.mPresContext->GetPresShell();
         // If |PresShell::Destroy| has been called due to
->>>>>>> upstream-releases
         // handling the event, the pres context will return
         // a null pres shell.  See bug 125624.
         //
@@ -327,25 +287,10 @@ nsresult HTMLButtonElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult HTMLButtonElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(
-      aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLButtonElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv =
-    nsGenericHTMLFormElementWithState::BindToTree(aDocument, aParent, aBindingParent);
-=======
 nsresult HTMLButtonElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv =
       nsGenericHTMLFormElementWithState::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Update our state; we may now be the default submit element
@@ -354,18 +299,8 @@ nsresult HTMLButtonElement::BindToTree(BindContext& aContext,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLButtonElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-HTMLButtonElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
-=======
 void HTMLButtonElement::UnbindFromTree(bool aNullParent) {
   nsGenericHTMLFormElementWithState::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 
   // Update our state; we may no longer be the default submit element
   UpdateState(false);

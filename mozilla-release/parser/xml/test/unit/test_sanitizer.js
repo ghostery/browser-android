@@ -9,12 +9,6 @@ if (AppConstants.platform != "android") {
 
 function run_test() {
   // vectors by the html5security project (https://code.google.com/p/html5security/ & Creative Commons 3.0 BY), see CC-BY-LICENSE for the full license
-<<<<<<< HEAD
-  load("results.js"); // gives us a `vectors' array
-  /* import-globals-from ./results.js */
-||||||| merged common ancestors
-  load("results.js");   // gives us a `vectors' array
-=======
   load("results.js"); // gives us a `vectors' array
   /* import-globals-from ./results.js */
 
@@ -27,17 +21,7 @@ function run_test() {
     // and so the app startup's service's `shuttingDown` bool is false, even though normally that
     // is set to true *before* profile-change-teardown notifications are fired.
     // To work around this, just force the history service to be created earlier:
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  var ParserUtils =  Cc["@mozilla.org/parserutils;1"].getService(Ci.nsIParserUtils);
-  var sanitizeFlags = ParserUtils.SanitizerCidEmbedsOnly | ParserUtils.SanitizerDropForms | ParserUtils.SanitizerDropNonCSSPresentation;
-  // flags according to
-||||||| merged common ancestors
-  var ParserUtils =  Cc["@mozilla.org/parserutils;1"].getService(Ci.nsIParserUtils);
-  var sanitizeFlags = ParserUtils.SanitizerCidEmbedsOnly|ParserUtils.SanitizerDropForms|ParserUtils.SanitizerDropNonCSSPresentation;
-  // flags according to 
-=======
     let { PlacesUtils } = ChromeUtils.import(
       "resource://gre/modules/PlacesUtils.jsm"
     );
@@ -55,7 +39,6 @@ function run_test() {
     ParserUtils.SanitizerDropForms |
     ParserUtils.SanitizerDropNonCSSPresentation;
   // flags according to
->>>>>>> upstream-releases
   // http://mxr.mozilla.org/comm-central/source/mailnews/mime/src/mimemoz2.cpp#2218
   // and default settings
 

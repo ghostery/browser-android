@@ -27,24 +27,6 @@ enum class SurfaceType : int8_t {
   CAIRO_IMAGE,            /* Data surface wrapping a cairo image surface */
   COREGRAPHICS_IMAGE,     /* Surface wrapping a CoreGraphics Image */
   COREGRAPHICS_CGCONTEXT, /* Surface wrapping a CG context */
-<<<<<<< HEAD
-  SKIA,                   /* Surface wrapping a Skia bitmap */
-  DUAL_DT,                /* Snapshot of a dual drawtarget */
-  D2D1_1_IMAGE,           /* A D2D 1.1 ID2D1Image SourceSurface */
-  RECORDING,              /* Surface used for recording */
-  TILED,                  /* Surface from a tiled DrawTarget */
-  DATA_SHARED,            /* Data surface using shared memory */
-  CAPTURE,                /* Data from a DrawTargetCapture */
-  DATA_RECYCLING_SHARED   /* Data surface using shared memory */
-||||||| merged common ancestors
-  SKIA, /* Surface wrapping a Skia bitmap */
-  DUAL_DT, /* Snapshot of a dual drawtarget */
-  D2D1_1_IMAGE, /* A D2D 1.1 ID2D1Image SourceSurface */
-  RECORDING, /* Surface used for recording */
-  TILED, /* Surface from a tiled DrawTarget */
-  DATA_SHARED, /* Data surface using shared memory */
-  CAPTURE /* Data from a DrawTargetCapture */
-=======
   SKIA,                   /* Surface wrapping a Skia bitmap */
   DUAL_DT,                /* Snapshot of a dual drawtarget */
   D2D1_1_IMAGE,           /* A D2D 1.1 ID2D1Image SourceSurface */
@@ -54,7 +36,6 @@ enum class SurfaceType : int8_t {
   CAPTURE,                /* Data from a DrawTargetCapture */
   DATA_RECYCLING_SHARED,  /* Data surface using shared memory */
   OFFSET,                 /* Offset */
->>>>>>> upstream-releases
 };
 
 enum class SurfaceFormat : int8_t {
@@ -111,13 +92,7 @@ enum class SurfaceFormat : int8_t {
   A8R8G8B8_UINT32 = A8R8G8B8,  // 0xAARRGGBB
   X8R8G8B8_UINT32 = X8R8G8B8   // 0x00RRGGBB
 #else
-<<<<<<< HEAD
-#error "bad endianness"
-||||||| merged common ancestors
-# error "bad endianness"
-=======
 #  error "bad endianness"
->>>>>>> upstream-releases
 #endif
 };
 

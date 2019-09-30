@@ -626,11 +626,6 @@ bool operator>=(const Maybe<T>& aLHS, const Maybe<T>& aRHS) {
   return !(aLHS < aRHS);
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 template <typename T>
 inline void ImplCycleCollectionTraverse(
     nsCycleCollectionTraversalCallback& aCallback, mozilla::Maybe<T>& aField,
@@ -648,6 +643,5 @@ inline void ImplCycleCollectionUnlink(mozilla::Maybe<T>& aField) {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* mozilla_Maybe_h */

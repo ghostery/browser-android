@@ -113,25 +113,10 @@ async function testNoPrompt(origUrl, id) {
 
 // Test that an update that adds new non-promptable permissions is just
 // applied without showing a notification dialog.
-<<<<<<< HEAD
-add_task(() => testNoPrompt(`${BASE}/browser_webext_update_perms1.xpi`,
-                            ID_PERMS));
-
-||||||| merged common ancestors
-add_task(() => testNoPrompt(`${BASE}/browser_webext_update_perms1.xpi`,
-                            ID_PERMS));
-
-// Test that an update from a legacy extension to a webextension
-// doesn't show a prompt even when the webextension uses
-// promptable required permissions.
-add_task(() => testNoPrompt(`${BASE}/browser_legacy.xpi`, ID_LEGACY));
-
-=======
 add_task(() =>
   testNoPrompt(`${BASE}/browser_webext_update_perms1.xpi`, ID_PERMS)
 );
 
->>>>>>> upstream-releases
 // Test that an update that narrows origin permissions is just applied without
 // showing a notification promt
 add_task(() =>

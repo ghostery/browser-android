@@ -10,19 +10,6 @@ skip script non262/String/normalize-generateddata-input.js # input data for othe
 slow script test262/built-ins/decodeURI/S15.1.3.1_A2.5_T1.js
 slow script test262/built-ins/decodeURIComponent/S15.1.3.2_A2.5_T1.js
 
-<<<<<<< HEAD
-# Fields are not fully implemented yet
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1499448
-skip script non262/fields/access.js
-skip script non262/fields/basic.js
-skip script non262/fields/error.js
-skip script non262/fields/field_types.js
-skip script non262/fields/literal.js
-skip script non262/fields/mixed_methods.js
-skip script non262/fields/quirks.js
-
-||||||| merged common ancestors
-=======
 # Windows10-aarch64 fails certain tests.
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1526003
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1526012
@@ -35,7 +22,6 @@ skip-if((xulRuntime.XPCOMABI.match(/aarch64/))&&(xulRuntime.OS=="WINNT")) script
 
 include test262/jstests.list
 
->>>>>>> upstream-releases
 
 #################################################################
 # Tests disabled due to intentional alternative implementations #
@@ -349,54 +335,6 @@ skip script test262/built-ins/Function/internals/Construct/derived-this-uninitia
 
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1317416
 skip script test262/built-ins/GeneratorFunction/proto-from-ctor-realm.js
-<<<<<<< HEAD
-skip script test262/built-ins/Map/proto-from-ctor-realm.js
-skip script test262/built-ins/Number/proto-from-ctor-realm.js
-skip script test262/built-ins/Object/proto-from-ctor.js
-skip script test262/built-ins/Promise/proto-from-ctor-realm.js
-skip script test262/built-ins/RegExp/proto-from-ctor-realm.js
-skip script test262/built-ins/Set/proto-from-ctor-realm.js
-skip script test262/built-ins/SharedArrayBuffer/proto-from-ctor-realm.js
-skip script test262/built-ins/String/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/buffer-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/buffer-arg/proto-from-ctor-realm-sab.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/length-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/no-args/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/object-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/typedarray-arg/other-ctor-buffer-ctor-custom-species-proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/typedarray-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors-bigint/typedarray-arg/same-ctor-buffer-ctor-species-custom-proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/buffer-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/buffer-arg/proto-from-ctor-realm-sab.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/length-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/no-args/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/object-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/typedarray-arg/other-ctor-buffer-ctor-custom-species-proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/typedarray-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/typedarray-arg/same-ctor-buffer-ctor-species-custom-proto-from-ctor-realm.js
-skip script test262/built-ins/WeakMap/proto-from-ctor-realm.js
-skip script test262/built-ins/WeakSet/proto-from-ctor-realm.js
-||||||| merged common ancestors
-skip script test262/built-ins/Map/proto-from-ctor-realm.js
-skip script test262/built-ins/Number/proto-from-ctor-realm.js
-skip script test262/built-ins/Object/proto-from-ctor.js
-skip script test262/built-ins/Promise/proto-from-ctor-realm.js
-skip script test262/built-ins/RegExp/proto-from-ctor-realm.js
-skip script test262/built-ins/Set/proto-from-ctor-realm.js
-skip script test262/built-ins/SharedArrayBuffer/proto-from-ctor-realm.js
-skip script test262/built-ins/String/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/buffer-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/buffer-arg/proto-from-ctor-realm-sab.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/length-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/no-args/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/object-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/typedarray-arg/other-ctor-buffer-ctor-custom-species-proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/typedarray-arg/proto-from-ctor-realm.js
-skip script test262/built-ins/TypedArrayConstructors/ctors/typedarray-arg/same-ctor-buffer-ctor-species-custom-proto-from-ctor-realm.js
-skip script test262/built-ins/WeakMap/proto-from-ctor-realm.js
-skip script test262/built-ins/WeakSet/proto-from-ctor-realm.js
-=======
->>>>>>> upstream-releases
 
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1317395
 skip script test262/built-ins/ArrayBuffer/prototype/byteLength/detached-buffer.js
@@ -456,100 +394,6 @@ skip script test262/intl402/Collator/prototype/compare/compare-function-name.js
 skip script test262/intl402/DateTimeFormat/prototype/format/format-function-name.js
 skip script test262/intl402/NumberFormat/prototype/format/format-function-name.js
 
-<<<<<<< HEAD
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1317373
-skip script test262/annexB/language/eval-code/direct/global-if-stmt-else-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-switch-dflt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-no-else-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-else-stmt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-else-decl-b-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-else-decl-a-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-block-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-switch-case-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-stmt-else-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-switch-dflt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-no-else-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-else-stmt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-else-decl-b-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-else-decl-a-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-block-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-switch-case-eval-global-existing-global-init.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1340307
-skip script test262/language/module-code/instn-resolve-empty-export.js
-skip script test262/language/module-code/instn-resolve-empty-import.js
-skip script test262/language/module-code/instn-resolve-err-reference.js
-skip script test262/language/module-code/instn-resolve-order-depth.js
-skip script test262/language/module-code/instn-resolve-order-src.js
-skip script test262/language/module-code/parse-err-reference.js
-skip script test262/language/expressions/postfix-increment/target-cover-yieldexpr.js
-skip script test262/language/expressions/postfix-increment/target-newtarget.js
-skip script test262/language/expressions/postfix-increment/target-cover-newtarget.js
-skip script test262/language/expressions/postfix-increment/non-simple.js
-skip script test262/language/expressions/postfix-decrement/target-cover-yieldexpr.js
-skip script test262/language/expressions/postfix-decrement/target-newtarget.js
-skip script test262/language/expressions/postfix-decrement/target-cover-newtarget.js
-skip script test262/language/expressions/postfix-decrement/non-simple.js
-skip script test262/language/expressions/prefix-increment/target-cover-yieldexpr.js
-skip script test262/language/expressions/prefix-increment/target-newtarget.js
-skip script test262/language/expressions/prefix-increment/target-cover-newtarget.js
-skip script test262/language/expressions/prefix-increment/non-simple.js
-skip script test262/language/expressions/prefix-decrement/target-cover-yieldexpr.js
-skip script test262/language/expressions/prefix-decrement/target-newtarget.js
-skip script test262/language/expressions/prefix-decrement/target-cover-newtarget.js
-skip script test262/language/expressions/prefix-decrement/non-simple.js
-skip script test262/language/asi/S7.9_A5.7_T1.js
-skip script test262/language/expressions/dynamic-import/syntax/invalid/invalid-asssignmenttargettype-reference-error-1-update-expression.js
-skip script test262/language/expressions/dynamic-import/syntax/invalid/invalid-asssignmenttargettype-reference-error-2-update-expression.js
-skip script test262/language/expressions/dynamic-import/syntax/invalid/invalid-asssignmenttargettype-reference-error-3-update-expression.js
-skip script test262/language/expressions/dynamic-import/syntax/invalid/invalid-asssignmenttargettype-reference-error-4-update-expression.js
-
-||||||| merged common ancestors
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1317373
-skip script test262/annexB/language/eval-code/direct/global-if-stmt-else-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-switch-dflt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-no-else-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-else-stmt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-else-decl-b-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-if-decl-else-decl-a-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-block-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/direct/global-switch-case-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-stmt-else-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-switch-dflt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-no-else-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-else-stmt-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-else-decl-b-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-if-decl-else-decl-a-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-block-decl-eval-global-existing-global-init.js
-skip script test262/annexB/language/eval-code/indirect/global-switch-case-eval-global-existing-global-init.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1340307
-skip script test262/language/module-code/instn-resolve-empty-export.js
-skip script test262/language/module-code/instn-resolve-empty-import.js
-skip script test262/language/module-code/instn-resolve-err-reference.js
-skip script test262/language/module-code/instn-resolve-order-depth.js
-skip script test262/language/module-code/instn-resolve-order-src.js
-skip script test262/language/module-code/parse-err-reference.js
-skip script test262/language/expressions/postfix-increment/target-cover-yieldexpr.js
-skip script test262/language/expressions/postfix-increment/target-newtarget.js
-skip script test262/language/expressions/postfix-increment/target-cover-newtarget.js
-skip script test262/language/expressions/postfix-increment/non-simple.js
-skip script test262/language/expressions/postfix-decrement/target-cover-yieldexpr.js
-skip script test262/language/expressions/postfix-decrement/target-newtarget.js
-skip script test262/language/expressions/postfix-decrement/target-cover-newtarget.js
-skip script test262/language/expressions/postfix-decrement/non-simple.js
-skip script test262/language/expressions/prefix-increment/target-cover-yieldexpr.js
-skip script test262/language/expressions/prefix-increment/target-newtarget.js
-skip script test262/language/expressions/prefix-increment/target-cover-newtarget.js
-skip script test262/language/expressions/prefix-increment/non-simple.js
-skip script test262/language/expressions/prefix-decrement/target-cover-yieldexpr.js
-skip script test262/language/expressions/prefix-decrement/target-newtarget.js
-skip script test262/language/expressions/prefix-decrement/target-cover-newtarget.js
-skip script test262/language/expressions/prefix-decrement/non-simple.js
-skip script test262/language/asi/S7.9_A5.7_T1.js
-
-=======
->>>>>>> upstream-releases
 # Dependent on evalInWorker, setSharedArrayBuffer, and
 # getSharedArrayBuffer, plus the test cases can't actually run in the
 # browser even if that were fixed, https://bugzil.la/1349863
@@ -568,20 +412,6 @@ skip-if(!xulRuntime.shell) script test262/built-ins/Atomics/wake/wake-in-order.j
 skip-if(!xulRuntime.shell) script test262/built-ins/Atomics/wake/wake-one.js
 skip-if(!xulRuntime.shell) script test262/built-ins/Atomics/wake/wake-all-on-loc.js
 
-<<<<<<< HEAD
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1346081
-skip script test262/intl402/NumberFormat/prototype/format/format-fraction-digits-precision.js
-skip script test262/intl402/NumberFormat/prototype/format/format-significant-digits-precision.js
-
-||||||| merged common ancestors
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1346081
-skip script test262/intl402/NumberFormat/prototype/format/format-fraction-digits.js
-skip script test262/intl402/NumberFormat/prototype/format/format-fraction-digits-precision.js
-skip script test262/intl402/NumberFormat/prototype/format/format-significant-digits.js
-skip script test262/intl402/NumberFormat/prototype/format/format-significant-digits-precision.js
-
-=======
->>>>>>> upstream-releases
 # Hoisted block-level function named "arguments" not initialized with undefined per B.3.3.1
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1339123
 skip script test262/annexB/language/function-code/block-decl-func-skip-arguments.js
@@ -601,75 +431,14 @@ skip script test262/language/statements/for-await-of/ticks-with-sync-iter-resolv
 
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1321616
 skip script test262/annexB/built-ins/Function/createdynfn-html-close-comment-params.js
-<<<<<<< HEAD
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1462741
-skip script test262/built-ins/Function/prototype/toString/well-known-intrinsic-object-functions.js
-||||||| merged common ancestors
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1334813
-skip script test262/built-ins/DataView/length.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1462741
-skip script test262/built-ins/Function/prototype/toString/well-known-intrinsic-object-functions.js
-=======
 skip script test262/annexB/built-ins/Function/createdynfn-no-line-terminator-html-close-comment-body.js
->>>>>>> upstream-releases
 
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1462745
 skip script test262/annexB/language/function-code/block-decl-nested-blocks-with-fun-decl.js
 
-<<<<<<< HEAD
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1406171
-skip script test262/built-ins/Reflect/ownKeys/return-on-corresponding-order-large-index.js
-
-||||||| merged common ancestors
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1406171
-skip script test262/built-ins/Reflect/ownKeys/return-on-corresponding-order-large-index.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1291407
-skip script test262/intl402/ListFormat/prototype/toStringTag/toString.js
-skip script test262/intl402/ListFormat/prototype/toStringTag/toStringTag.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1473228
-skip script test262/intl402/Segmenter/prototype/toStringTag/toString.js
-skip script test262/intl402/Segmenter/prototype/toStringTag/toStringTag.js
-
-=======
->>>>>>> upstream-releases
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1473229
 skip include test262/intl402/RelativeTimeFormat/prototype/formatToParts/jstests.list
 
-<<<<<<< HEAD
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1508684
-skip script test262/built-ins/RegExp/prototype/multiline/cross-realm.js
-skip script test262/built-ins/RegExp/prototype/global/cross-realm.js
-skip script test262/built-ins/RegExp/prototype/sticky/cross-realm.js
-skip script test262/built-ins/RegExp/prototype/ignoreCase/cross-realm.js
-skip script test262/built-ins/RegExp/prototype/unicode/cross-realm.js
-skip script test262/built-ins/RegExp/prototype/source/cross-realm.js
-||||||| merged common ancestors
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1483545
-skip script test262/intl402/RelativeTimeFormat/prototype/format/en-us-numeric-always.js
-skip script test262/intl402/RelativeTimeFormat/prototype/format/en-us-numeric-auto.js
-skip script test262/intl402/RelativeTimeFormat/prototype/format/en-us-style-short.js
-skip script test262/intl402/RelativeTimeFormat/prototype/format/pl-pl-style-long.js
-skip script test262/intl402/RelativeTimeFormat/prototype/format/pl-pl-style-narrow.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1473230
-skip script test262/intl402/RelativeTimeFormat/prototype/format/unit-plural.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1483547
-skip script test262/intl402/RelativeTimeFormat/prototype/format/pl-pl-style-short.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1483548
-skip script test262/intl402/RelativeTimeFormat/prototype/format/value-non-finite.js
-
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1499933
-skip script test262/intl402/DateTimeFormat/prototype/resolvedOptions/order.js
-skip script test262/intl402/PluralRules/prototype/resolvedOptions/order.js
-skip script test262/intl402/NumberFormat/prototype/resolvedOptions/order.js
-=======
 # Need to add "numberingSystem" to resolvedOptions() to address
 # https://github.com/tc39/test262/pull/2011 apparently -- bug 1521819.
 skip script test262/intl402/RelativeTimeFormat/prototype/resolvedOptions/order.js
@@ -730,10 +499,7 @@ skip script test262/built-ins/Promise/race/invoke-resolve-get-once-multiple-call
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1560355
 skip script test262/intl402/DateTimeFormat/numbering-system-calendar-options.js
 skip script test262/intl402/NumberFormat/numbering-system-options.js
->>>>>>> upstream-releases
 
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1508684
-skip script test262/language/expressions/import.meta/syntax/invalid-assignment-target-update-expr.js
 
 ###########################################################
 # Tests disabled due to issues in test262 importer script #

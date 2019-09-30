@@ -16,12 +16,6 @@ namespace dom {
 
 using mozilla::ipc::AssertIsOnBackgroundThread;
 
-<<<<<<< HEAD
-ServiceWorkerRegistrationProxy::~ServiceWorkerRegistrationProxy() {
-||||||| merged common ancestors
-ServiceWorkerRegistrationProxy::~ServiceWorkerRegistrationProxy()
-{
-=======
 class ServiceWorkerRegistrationProxy::DelayedUpdate final
     : public nsITimerCallback {
   RefPtr<ServiceWorkerRegistrationProxy> mProxy;
@@ -41,7 +35,6 @@ class ServiceWorkerRegistrationProxy::DelayedUpdate final
 };
 
 ServiceWorkerRegistrationProxy::~ServiceWorkerRegistrationProxy() {
->>>>>>> upstream-releases
   // Any thread
   MOZ_DIAGNOSTIC_ASSERT(!mActor);
   MOZ_DIAGNOSTIC_ASSERT(!mReg);
@@ -95,21 +88,12 @@ void ServiceWorkerRegistrationProxy::InitOnMainThread() {
 void ServiceWorkerRegistrationProxy::MaybeShutdownOnMainThread() {
   AssertIsOnMainThread();
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIRunnable> r = NewRunnableMethod(
-      __func__, this, &ServiceWorkerRegistrationProxy::MaybeShutdownOnBGThread);
-||||||| merged common ancestors
-  nsCOMPtr<nsIRunnable> r =
-    NewRunnableMethod(__func__, this,
-                      &ServiceWorkerRegistrationProxy::MaybeShutdownOnBGThread);
-=======
   if (mDelayedUpdate) {
     mDelayedUpdate->Reject();
     mDelayedUpdate = nullptr;
   }
   nsCOMPtr<nsIRunnable> r = NewRunnableMethod(
       __func__, this, &ServiceWorkerRegistrationProxy::MaybeShutdownOnBGThread);
->>>>>>> upstream-releases
 
   MOZ_ALWAYS_SUCCEEDS(mEventTarget->Dispatch(r.forget(), NS_DISPATCH_NORMAL));
 }
@@ -134,7 +118,6 @@ void ServiceWorkerRegistrationProxy::UpdateState(
   }
   mDescriptor = aDescriptor;
 
-<<<<<<< HEAD
   nsCOMPtr<nsIRunnable> r =
       NewRunnableMethod<ServiceWorkerRegistrationDescriptor>(
           __func__, this,
@@ -149,39 +132,11 @@ void ServiceWorkerRegistrationProxy::FireUpdateFound() {
   nsCOMPtr<nsIRunnable> r = NewRunnableMethod(
       __func__, this,
       &ServiceWorkerRegistrationProxy::FireUpdateFoundOnBGThread);
-||||||| merged common ancestors
-  nsCOMPtr<nsIRunnable> r = NewRunnableMethod<ServiceWorkerRegistrationDescriptor>(
-    __func__, this, &ServiceWorkerRegistrationProxy::UpdateStateOnBGThread,
-    aDescriptor);
-=======
-  nsCOMPtr<nsIRunnable> r =
-      NewRunnableMethod<ServiceWorkerRegistrationDescriptor>(
-          __func__, this,
-          &ServiceWorkerRegistrationProxy::UpdateStateOnBGThread, aDescriptor);
->>>>>>> upstream-releases
-
-  MOZ_ALWAYS_SUCCEEDS(mEventTarget->Dispatch(r.forget(), NS_DISPATCH_NORMAL));
-}
-
-<<<<<<< HEAD
-void ServiceWorkerRegistrationProxy::RegistrationRemoved() {
-||||||| merged common ancestors
-void
-ServiceWorkerRegistrationProxy::RegistrationRemoved()
-{
-=======
-void ServiceWorkerRegistrationProxy::FireUpdateFound() {
-  AssertIsOnMainThread();
-
-  nsCOMPtr<nsIRunnable> r = NewRunnableMethod(
-      __func__, this,
-      &ServiceWorkerRegistrationProxy::FireUpdateFoundOnBGThread);
 
   MOZ_ALWAYS_SUCCEEDS(mEventTarget->Dispatch(r.forget(), NS_DISPATCH_NORMAL));
 }
 
 void ServiceWorkerRegistrationProxy::RegistrationRemoved() {
->>>>>>> upstream-releases
   MaybeShutdownOnMainThread();
 }
 
@@ -289,11 +244,6 @@ class UpdateCallback final : public ServiceWorkerUpdateFinishCallback {
   }
 };
 
-<<<<<<< HEAD
-}  // anonymous namespace
-||||||| merged common ancestors
-} // anonymous namespace
-=======
 }  // anonymous namespace
 
 NS_IMPL_ISUPPORTS(ServiceWorkerRegistrationProxy::DelayedUpdate,
@@ -343,7 +293,6 @@ ServiceWorkerRegistrationProxy::DelayedUpdate::Notify(nsITimer* aTimer) {
   scopeExit.release();
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 RefPtr<ServiceWorkerRegistrationPromise>
 ServiceWorkerRegistrationProxy::Update() {
@@ -353,18 +302,6 @@ ServiceWorkerRegistrationProxy::Update() {
   RefPtr<ServiceWorkerRegistrationPromise::Private> promise =
       new ServiceWorkerRegistrationPromise::Private(__func__);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIRunnable> r =
-      NS_NewRunnableFunction(__func__, [self, promise]() mutable {
-        auto scopeExit = MakeScopeExit(
-            [&] { promise->Reject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__); });
-||||||| merged common ancestors
-  nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(__func__,
-    [self, promise] () mutable {
-      auto scopeExit = MakeScopeExit([&] {
-        promise->Reject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__);
-      });
-=======
   nsCOMPtr<nsIRunnable> r =
       NS_NewRunnableFunction(__func__, [self, promise]() mutable {
         auto scopeExit = MakeScopeExit(
@@ -390,34 +327,7 @@ ServiceWorkerRegistrationProxy::Update() {
         }
         scopeExit.release();
       });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        NS_ENSURE_TRUE_VOID(self->mReg);
-
-        RefPtr<ServiceWorkerManager> swm = ServiceWorkerManager::GetInstance();
-        NS_ENSURE_TRUE_VOID(swm);
-
-        RefPtr<UpdateCallback> cb = new UpdateCallback(std::move(promise));
-        swm->Update(self->mReg->Principal(), self->mReg->Scope(), cb);
-
-        scopeExit.release();
-      });
-
-||||||| merged common ancestors
-      NS_ENSURE_TRUE_VOID(self->mReg);
-
-      RefPtr<ServiceWorkerManager> swm = ServiceWorkerManager::GetInstance();
-      NS_ENSURE_TRUE_VOID(swm);
-
-      RefPtr<UpdateCallback> cb = new UpdateCallback(std::move(promise));
-      swm->Update(self->mReg->Principal(), self->mReg->Scope(), cb);
-
-      scopeExit.release();
-    });
-
-=======
->>>>>>> upstream-releases
   MOZ_ALWAYS_SUCCEEDS(SystemGroup::Dispatch(TaskCategory::Other, r.forget()));
 
   return promise;

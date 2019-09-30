@@ -14,16 +14,8 @@
 #include "archivereader.h"
 #include "updatererrors.h"
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include "nsAlgorithm.h"  // Needed by nsVersionComparator.cpp
-#include "updatehelper.h"
-||||||| merged common ancestors
-#include "nsAlgorithm.h" // Needed by nsVersionComparator.cpp
-#include "updatehelper.h"
-=======
 #  include "nsAlgorithm.h"  // Needed by nsVersionComparator.cpp
 #  include "updatehelper.h"
->>>>>>> upstream-releases
 #endif
 #define XZ_USE_CRC64
 #include "xz.h"
@@ -47,21 +39,9 @@
 #undef UPDATER_NO_STRING_GLUE_STL
 
 #if defined(XP_UNIX)
-<<<<<<< HEAD
-#include <sys/types.h>
-||||||| merged common ancestors
-# include <sys/types.h>
-=======
 #  include <sys/types.h>
->>>>>>> upstream-releases
 #elif defined(XP_WIN)
-<<<<<<< HEAD
-#include <io.h>
-||||||| merged common ancestors
-# include <io.h>
-=======
 #  include <io.h>
->>>>>>> upstream-releases
 #endif
 
 /**
@@ -71,27 +51,15 @@
  * @param  archive   The MAR file to verify the signature on.
  * @param  certData  The certificate data.
  * @return OK on success, CERT_VERIFY_ERROR on failure.
-<<<<<<< HEAD
- */
-template <uint32_t SIZE>
-int VerifyLoadedCert(MarFile *archive, const uint8_t (&certData)[SIZE]) {
-||||||| merged common ancestors
-*/
-template<uint32_t SIZE>
-int
-VerifyLoadedCert(MarFile *archive, const uint8_t (&certData)[SIZE])
-{
-=======
  */
 template <uint32_t SIZE>
 int VerifyLoadedCert(MarFile* archive, const uint8_t (&certData)[SIZE]) {
->>>>>>> upstream-releases
   (void)archive;
   (void)certData;
 
 #ifdef MOZ_VERIFY_MAR_SIGNATURE
   const uint32_t size = SIZE;
-  const uint8_t *const data = &certData[0];
+  const uint8_t* const data = &certData[0];
   if (mar_verify_signatures(archive, &data, &size, 1)) {
     return CERT_VERIFY_ERROR;
   }
@@ -154,18 +122,8 @@ int ArchiveReader::VerifySignature() {
  *                                           this updater is newer than the
  *                                           one in the MAR.
  */
-<<<<<<< HEAD
-int ArchiveReader::VerifyProductInformation(const char *MARChannelID,
-                                            const char *appVersion) {
-||||||| merged common ancestors
-int
-ArchiveReader::VerifyProductInformation(const char *MARChannelID,
-                                        const char *appVersion)
-{
-=======
 int ArchiveReader::VerifyProductInformation(const char* MARChannelID,
                                             const char* appVersion) {
->>>>>>> upstream-releases
   if (!mArchive) {
     return ARCHIVE_NOT_OPEN;
   }
@@ -218,40 +176,20 @@ int ArchiveReader::VerifyProductInformation(const char* MARChannelID,
   return rv;
 }
 
-<<<<<<< HEAD
-int ArchiveReader::Open(const NS_tchar *path) {
-  if (mArchive) Close();
-||||||| merged common ancestors
-int
-ArchiveReader::Open(const NS_tchar *path)
-{
-  if (mArchive)
-    Close();
-=======
 int ArchiveReader::Open(const NS_tchar* path) {
   if (mArchive) {
     Close();
   }
->>>>>>> upstream-releases
 
   if (!mInBuf) {
     mInBuf = (uint8_t*)malloc(mInBufSize);
     if (!mInBuf) {
       // Try again with a smaller buffer.
       mInBufSize = 1024;
-<<<<<<< HEAD
-      mInBuf = (uint8_t *)malloc(mInBufSize);
-      if (!mInBuf) return ARCHIVE_READER_MEM_ERROR;
-||||||| merged common ancestors
-      mInBuf = (uint8_t *)malloc(mInBufSize);
-      if (!mInBuf)
-        return ARCHIVE_READER_MEM_ERROR;
-=======
       mInBuf = (uint8_t*)malloc(mInBufSize);
       if (!mInBuf) {
         return ARCHIVE_READER_MEM_ERROR;
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -260,19 +198,10 @@ int ArchiveReader::Open(const NS_tchar* path) {
     if (!mOutBuf) {
       // Try again with a smaller buffer.
       mOutBufSize = 1024;
-<<<<<<< HEAD
-      mOutBuf = (uint8_t *)malloc(mOutBufSize);
-      if (!mOutBuf) return ARCHIVE_READER_MEM_ERROR;
-||||||| merged common ancestors
-      mOutBuf = (uint8_t *)malloc(mOutBufSize);
-      if (!mOutBuf)
-        return ARCHIVE_READER_MEM_ERROR;
-=======
       mOutBuf = (uint8_t*)malloc(mOutBufSize);
       if (!mOutBuf) {
         return ARCHIVE_READER_MEM_ERROR;
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -281,16 +210,9 @@ int ArchiveReader::Open(const NS_tchar* path) {
 #else
   mArchive = mar_open(path);
 #endif
-<<<<<<< HEAD
-  if (!mArchive) return READ_ERROR;
-||||||| merged common ancestors
-  if (!mArchive)
-    return READ_ERROR;
-=======
   if (!mArchive) {
     return READ_ERROR;
   }
->>>>>>> upstream-releases
 
   xz_crc32_init();
   xz_crc64_init();
@@ -315,52 +237,25 @@ void ArchiveReader::Close() {
   }
 }
 
-<<<<<<< HEAD
-int ArchiveReader::ExtractFile(const char *name, const NS_tchar *dest) {
-  const MarItem *item = mar_find_item(mArchive, name);
-  if (!item) return READ_ERROR;
-||||||| merged common ancestors
-int
-ArchiveReader::ExtractFile(const char *name, const NS_tchar *dest)
-{
-  const MarItem *item = mar_find_item(mArchive, name);
-  if (!item)
-    return READ_ERROR;
-=======
 int ArchiveReader::ExtractFile(const char* name, const NS_tchar* dest) {
   const MarItem* item = mar_find_item(mArchive, name);
   if (!item) {
     return READ_ERROR;
   }
->>>>>>> upstream-releases
 
 #ifdef XP_WIN
-  FILE *fp = _wfopen(dest, L"wb+");
+  FILE* fp = _wfopen(dest, L"wb+");
 #else
   int fd = creat(dest, item->flags);
-<<<<<<< HEAD
-  if (fd == -1) return WRITE_ERROR;
-||||||| merged common ancestors
-  if (fd == -1)
-    return WRITE_ERROR;
-=======
   if (fd == -1) {
     return WRITE_ERROR;
   }
->>>>>>> upstream-releases
 
   FILE* fp = fdopen(fd, "wb");
 #endif
-<<<<<<< HEAD
-  if (!fp) return WRITE_ERROR;
-||||||| merged common ancestors
-  if (!fp)
-    return WRITE_ERROR;
-=======
   if (!fp) {
     return WRITE_ERROR;
   }
->>>>>>> upstream-releases
 
   int rv = ExtractItemToStream(item, fp);
 
@@ -368,50 +263,23 @@ int ArchiveReader::ExtractFile(const char* name, const NS_tchar* dest) {
   return rv;
 }
 
-<<<<<<< HEAD
-int ArchiveReader::ExtractFileToStream(const char *name, FILE *fp) {
-  const MarItem *item = mar_find_item(mArchive, name);
-  if (!item) return READ_ERROR;
-||||||| merged common ancestors
-int
-ArchiveReader::ExtractFileToStream(const char *name, FILE *fp)
-{
-  const MarItem *item = mar_find_item(mArchive, name);
-  if (!item)
-    return READ_ERROR;
-=======
 int ArchiveReader::ExtractFileToStream(const char* name, FILE* fp) {
   const MarItem* item = mar_find_item(mArchive, name);
   if (!item) {
     return READ_ERROR;
   }
->>>>>>> upstream-releases
 
   return ExtractItemToStream(item, fp);
 }
 
-<<<<<<< HEAD
-int ArchiveReader::ExtractItemToStream(const MarItem *item, FILE *fp) {
-||||||| merged common ancestors
-int
-ArchiveReader::ExtractItemToStream(const MarItem *item, FILE *fp)
-{
-=======
 int ArchiveReader::ExtractItemToStream(const MarItem* item, FILE* fp) {
->>>>>>> upstream-releases
   /* decompress the data chunk by chunk */
 
   int offset, inlen, ret = OK;
   struct xz_buf strm = {0};
   enum xz_ret xz_rv = XZ_OK;
 
-<<<<<<< HEAD
-  struct xz_dec *dec = xz_dec_init(XZ_DYNALLOC, 64 * 1024 * 1024);
-||||||| merged common ancestors
-  struct xz_dec * dec = xz_dec_init(XZ_DYNALLOC, 64 * 1024 * 1024);
-=======
   struct xz_dec* dec = xz_dec_init(XZ_DYNALLOC, 64 * 1024 * 1024);
->>>>>>> upstream-releases
   if (!dec) {
     return UNEXPECTED_XZ_ERROR;
   }

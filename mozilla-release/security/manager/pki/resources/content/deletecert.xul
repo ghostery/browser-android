@@ -15,17 +15,9 @@
   onload="onLoad();"
   buttons="accept,cancel">
 
-<<<<<<< HEAD
-  <linkset>
-    <link rel="localization" href="security/certificates/certManager.ftl"/>
-  </linkset>
-||||||| merged common ancestors
-  <stringbundle id="pippki_bundle" src="chrome://pippki/locale/pippki.properties"/>
-=======
   <linkset>
     <html:link rel="localization" href="security/certificates/certManager.ftl"/>
   </linkset>
->>>>>>> upstream-releases
 
   <script src="pippki.js" />
   <script src="chrome://pippki/content/deletecert.js"/>

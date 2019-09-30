@@ -4,15 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
-
-XPCOMUtils.defineLazyGetter(this, "logger", Log.get);
-
-||||||| merged common ancestors
-=======
 const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
@@ -21,7 +12,6 @@ const { Log } = ChromeUtils.import("chrome://marionette/content/log.js");
 
 XPCOMUtils.defineLazyGetter(this, "logger", Log.get);
 
->>>>>>> upstream-releases
 this.EXPORTED_SYMBOLS = [
   "ContentEventObserverService",
   "WebElementEventTarget",
@@ -216,18 +206,9 @@ class ContentEventObserverService {
     }
   }
 
-<<<<<<< HEAD
-  handleEvent({type, target}) {
-    logger.trace(`Received DOM event ${type}`);
-    this.sendAsyncMessage("Marionette:DOM:OnEvent", {type}, {target});
-||||||| merged common ancestors
-  handleEvent({type, target}) {
-    this.sendAsyncMessage("Marionette:DOM:OnEvent", {type}, {target});
-=======
   handleEvent({ type, target }) {
     logger.trace(`Received DOM event ${type}`);
     this.sendAsyncMessage("Marionette:DOM:OnEvent", { type }, { target });
->>>>>>> upstream-releases
   }
 }
 this.ContentEventObserverService = ContentEventObserverService;

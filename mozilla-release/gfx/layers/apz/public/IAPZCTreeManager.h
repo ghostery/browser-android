@@ -9,19 +9,6 @@
 
 #include <stdint.h>  // for uint64_t, uint32_t
 
-<<<<<<< HEAD
-#include "mozilla/layers/LayersTypes.h"          // for TouchBehaviorFlags
-#include "mozilla/layers/ScrollableLayerGuid.h"  // for ScrollableLayerGuid, etc
-#include "nsTArrayForwardDeclare.h"  // for nsTArray, nsTArray_Impl, etc
-#include "nsISupportsImpl.h"         // for MOZ_COUNT_CTOR, etc
-#include "Units.h"                   // for CSSRect, etc
-||||||| merged common ancestors
-#include "FrameMetrics.h"               // for FrameMetrics, etc
-#include "mozilla/layers/LayersTypes.h" // for TouchBehaviorFlags
-#include "nsTArrayForwardDeclare.h"     // for nsTArray, nsTArray_Impl, etc
-#include "nsISupportsImpl.h"            // for MOZ_COUNT_CTOR, etc
-#include "Units.h"                      // for CSSRect, etc
-=======
 #include "mozilla/layers/APZTypes.h"
 #include "mozilla/layers/LayersTypes.h"          // for TouchBehaviorFlags
 #include "mozilla/layers/ScrollableLayerGuid.h"  // for ScrollableLayerGuid, etc
@@ -29,7 +16,6 @@
 #include "nsTArrayForwardDeclare.h"  // for nsTArray, nsTArray_Impl, etc
 #include "nsISupportsImpl.h"         // for MOZ_COUNT_CTOR, etc
 #include "Units.h"                   // for CSSRect, etc
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -70,20 +56,9 @@ class IAPZCTreeManager {
    * up. |aRect| must be given in CSS pixels, relative to the document.
    * |aFlags| is a combination of the ZoomToRectBehavior enum values.
    */
-<<<<<<< HEAD
-  virtual void ZoomToRect(const ScrollableLayerGuid& aGuid,
-                          const CSSRect& aRect,
-                          const uint32_t aFlags = DEFAULT_BEHAVIOR) = 0;
-||||||| merged common ancestors
-  virtual void ZoomToRect(
-      const ScrollableLayerGuid& aGuid,
-      const CSSRect& aRect,
-      const uint32_t aFlags = DEFAULT_BEHAVIOR) = 0;
-=======
   virtual void ZoomToRect(const SLGuidAndRenderRoot& aGuid,
                           const CSSRect& aRect,
                           const uint32_t aFlags = DEFAULT_BEHAVIOR) = 0;
->>>>>>> upstream-releases
 
   /**
    * If we have touch listeners, this should always be called when we know
@@ -106,17 +81,8 @@ class IAPZCTreeManager {
    * target, or the target is not a scrollable frame, the target's |mScrollId|
    * should be set to ScrollableLayerGuid::NULL_SCROLL_ID.
    */
-<<<<<<< HEAD
-  virtual void SetTargetAPZC(uint64_t aInputBlockId,
-                             const nsTArray<ScrollableLayerGuid>& aTargets) = 0;
-||||||| merged common ancestors
-  virtual void SetTargetAPZC(
-      uint64_t aInputBlockId,
-      const nsTArray<ScrollableLayerGuid>& aTargets) = 0;
-=======
   virtual void SetTargetAPZC(uint64_t aInputBlockId,
                              const nsTArray<SLGuidAndRenderRoot>& aTargets) = 0;
->>>>>>> upstream-releases
 
   /**
    * Updates any zoom constraints contained in the <meta name="viewport"> tag.
@@ -141,29 +107,11 @@ class IAPZCTreeManager {
   virtual void SetAllowedTouchBehavior(
       uint64_t aInputBlockId, const nsTArray<TouchBehaviorFlags>& aValues) = 0;
 
-<<<<<<< HEAD
-  virtual void StartScrollbarDrag(const ScrollableLayerGuid& aGuid,
-                                  const AsyncDragMetrics& aDragMetrics) = 0;
-||||||| merged common ancestors
-  virtual void StartScrollbarDrag(
-      const ScrollableLayerGuid& aGuid,
-      const AsyncDragMetrics& aDragMetrics) = 0;
-=======
   virtual void StartScrollbarDrag(const SLGuidAndRenderRoot& aGuid,
                                   const AsyncDragMetrics& aDragMetrics) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool StartAutoscroll(const ScrollableLayerGuid& aGuid,
-                               const ScreenPoint& aAnchorLocation) = 0;
-||||||| merged common ancestors
-  virtual bool StartAutoscroll(
-      const ScrollableLayerGuid& aGuid,
-      const ScreenPoint& aAnchorLocation) = 0;
-=======
   virtual bool StartAutoscroll(const SLGuidAndRenderRoot& aGuid,
                                const ScreenPoint& aAnchorLocation) = 0;
->>>>>>> upstream-releases
 
   virtual void StopAutoscroll(const SLGuidAndRenderRoot& aGuid) = 0;
 
@@ -187,13 +135,7 @@ class IAPZCTreeManager {
  protected:
   // Discourage destruction outside of decref
 
-<<<<<<< HEAD
-  virtual ~IAPZCTreeManager() {}
-||||||| merged common ancestors
-  virtual ~IAPZCTreeManager() { }
-=======
   virtual ~IAPZCTreeManager() = default;
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

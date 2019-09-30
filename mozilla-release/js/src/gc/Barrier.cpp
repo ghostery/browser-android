@@ -55,16 +55,7 @@ void HeapSlot::assertPreconditionForWriteBarrierPost(
             ->get() == target);
   }
 
-<<<<<<< HEAD
-  CheckTargetIsNotGray(obj);
-||||||| merged common ancestors
-bool
-CurrentThreadIsIonCompiling()
-{
-    return TlsContext.get()->ionCompiling;
-=======
   AssertTargetIsNotGray(obj);
->>>>>>> upstream-releases
 }
 
 bool CurrentThreadIsIonCompiling() { return TlsContext.get()->ionCompiling; }
@@ -73,130 +64,31 @@ bool CurrentThreadIsIonCompilingSafeForMinorGC() {
   return TlsContext.get()->ionCompilingSafeForMinorGC;
 }
 
-<<<<<<< HEAD
 bool CurrentThreadIsGCSweeping() { return TlsContext.get()->gcSweeping; }
 
 bool CurrentThreadIsTouchingGrayThings() {
   return TlsContext.get()->isTouchingGrayThings;
 }
-||||||| merged common ancestors
-bool CurrentThreadIsTouchingGrayThings()
-{
-    return TlsContext.get()->isTouchingGrayThings;
-}
-=======
-bool CurrentThreadIsGCSweeping() { return TlsContext.get()->gcSweeping; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 AutoTouchingGrayThings::AutoTouchingGrayThings() {
   TlsContext.get()->isTouchingGrayThings++;
-||||||| merged common ancestors
-AutoTouchingGrayThings::AutoTouchingGrayThings()
-{
-    TlsContext.get()->isTouchingGrayThings++;
-=======
-bool CurrentThreadIsTouchingGrayThings() {
-  return TlsContext.get()->isTouchingGrayThings;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 AutoTouchingGrayThings::~AutoTouchingGrayThings() {
   JSContext* cx = TlsContext.get();
   MOZ_ASSERT(cx->isTouchingGrayThings);
   cx->isTouchingGrayThings--;
-||||||| merged common ancestors
-AutoTouchingGrayThings::~AutoTouchingGrayThings()
-{
-    JSContext* cx = TlsContext.get();
-    MOZ_ASSERT(cx->isTouchingGrayThings);
-    cx->isTouchingGrayThings--;
-=======
-AutoTouchingGrayThings::AutoTouchingGrayThings() {
-  TlsContext.get()->isTouchingGrayThings++;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 #endif  // DEBUG
 
-template <typename S>
-template <typename T>
-void ReadBarrierFunctor<S>::operator()(T* t) {
-  InternalBarrierMethods<T*>::readBarrier(t);
-||||||| merged common ancestors
-#endif // DEBUG
-
-template <typename S>
-template <typename T>
-void
-ReadBarrierFunctor<S>::operator()(T* t)
-{
-    InternalBarrierMethods<T*>::readBarrier(t);
-=======
-AutoTouchingGrayThings::~AutoTouchingGrayThings() {
-  JSContext* cx = TlsContext.get();
-  MOZ_ASSERT(cx->isTouchingGrayThings);
-  cx->isTouchingGrayThings--;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-// All GC things may be held in a Value, either publicly or as a private GC
-// thing.
-#define JS_EXPAND_DEF(name, type, _) \
-  template void ReadBarrierFunctor<JS::Value>::operator()<type>(type*);
-JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-#undef JS_EXPAND_DEF
-||||||| merged common ancestors
-// All GC things may be held in a Value, either publicly or as a private GC
-// thing.
-#define JS_EXPAND_DEF(name, type, _) \
-template void ReadBarrierFunctor<JS::Value>::operator()<type>(type*);
-JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-#undef JS_EXPAND_DEF
-=======
-#endif  // DEBUG
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-template <typename S>
-template <typename T>
-void PreBarrierFunctor<S>::operator()(T* t) {
-  InternalBarrierMethods<T*>::preBarrier(t);
-||||||| merged common ancestors
-template <typename S>
-template <typename T>
-void
-PreBarrierFunctor<S>::operator()(T* t)
-{
-    InternalBarrierMethods<T*>::preBarrier(t);
-=======
 /* static */ void InternalBarrierMethods<Value>::readBarrier(const Value& v) {
   ApplyGCThingTyped(v, [](auto t) { t->readBarrier(t); });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// All GC things may be held in a Value, either publicly or as a private GC
-// thing.
-#define JS_EXPAND_DEF(name, type, _) \
-  template void PreBarrierFunctor<JS::Value>::operator()<type>(type*);
-JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-#undef JS_EXPAND_DEF
-||||||| merged common ancestors
-// All GC things may be held in a Value, either publicly or as a private GC
-// thing.
-#define JS_EXPAND_DEF(name, type, _) \
-template void PreBarrierFunctor<JS::Value>::operator()<type>(type*);
-JS_FOR_EACH_TRACEKIND(JS_EXPAND_DEF);
-#undef JS_EXPAND_DEF
-=======
 /* static */ void InternalBarrierMethods<Value>::preBarrier(const Value& v) {
   ApplyGCThingTyped(v, [](auto t) { t->writeBarrierPre(t); });
 }
->>>>>>> upstream-releases
 
 /* static */ void InternalBarrierMethods<jsid>::preBarrier(jsid id) {
   ApplyGCThingTyped(id, [](auto t) { t->writeBarrierPre(t); });
@@ -259,25 +151,6 @@ template <typename T>
   }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  // Incremental table sweeping means that existing table entries may no
-  // longer have unique IDs. We fail the match in that case and the entry is
-  // removed from the table later on.
-  if (!zone->hasUniqueId(k)) {
-    Key key = k;
-    MOZ_ASSERT(IsAboutToBeFinalizedUnbarriered(&key));
-  }
-  MOZ_ASSERT(zone->hasUniqueId(l));
-||||||| merged common ancestors
-    // Incremental table sweeping means that existing table entries may no
-    // longer have unique IDs. We fail the match in that case and the entry is
-    // removed from the table later on.
-    if (!zone->hasUniqueId(k)) {
-        Key key = k;
-        MOZ_ASSERT(IsAboutToBeFinalizedUnbarriered(&key));
-    }
-    MOZ_ASSERT(zone->hasUniqueId(l));
-=======
   // Incremental table sweeping means that existing table entries may no
   // longer have unique IDs. We fail the match in that case and the entry is
   // removed from the table later on.
@@ -299,22 +172,8 @@ template <typename T>
 
 #if !MOZ_IS_GCC
 template struct JS_PUBLIC_API MovableCellHasher<JSObject*>;
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-  uint64_t keyId;
-  if (!zone->maybeGetUniqueId(k, &keyId)) {
-    // Key is dead and cannot match lookup which must be live.
-    return false;
-  }
-||||||| merged common ancestors
-    uint64_t keyId;
-    if (!zone->maybeGetUniqueId(k, &keyId)) {
-        // Key is dead and cannot match lookup which must be live.
-        return false;
-    }
-=======
 template struct JS_PUBLIC_API MovableCellHasher<GlobalObject*>;
 template struct JS_PUBLIC_API MovableCellHasher<SavedFrame*>;
 template struct JS_PUBLIC_API MovableCellHasher<EnvironmentObject*>;
@@ -323,117 +182,32 @@ template struct JS_PUBLIC_API MovableCellHasher<JSScript*>;
 template struct JS_PUBLIC_API MovableCellHasher<LazyScript*>;
 
 }  // namespace js
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return keyId == zone->getUniqueIdInfallible(l);
-||||||| merged common ancestors
-    return keyId == zone->getUniqueIdInfallible(l);
-=======
 JS_PUBLIC_API void JS::HeapObjectWriteBarriers(JSObject** objp, JSObject* prev,
                                                JSObject* next) {
   MOZ_ASSERT(objp);
   js::InternalBarrierMethods<JSObject*>::preBarrier(prev);
   js::InternalBarrierMethods<JSObject*>::postBarrier(objp, prev, next);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif  // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-
-template struct JS_PUBLIC_API MovableCellHasher<JSObject*>;
-template struct JS_PUBLIC_API MovableCellHasher<GlobalObject*>;
-template struct JS_PUBLIC_API MovableCellHasher<SavedFrame*>;
-template struct JS_PUBLIC_API MovableCellHasher<EnvironmentObject*>;
-template struct JS_PUBLIC_API MovableCellHasher<WasmInstanceObject*>;
-template struct JS_PUBLIC_API MovableCellHasher<JSScript*>;
-template struct JS_PUBLIC_API MovableCellHasher<LazyScript*>;
-
-#ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
-#pragma GCC diagnostic pop
-#endif  // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-
-}  // namespace js
-
-JS_PUBLIC_API void JS::HeapObjectPostBarrier(JSObject** objp, JSObject* prev,
-                                             JSObject* next) {
-  MOZ_ASSERT(objp);
-  js::InternalBarrierMethods<JSObject*>::postBarrier(objp, prev, next);
-||||||| merged common ancestors
-#ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-
-template struct JS_PUBLIC_API(MovableCellHasher<JSObject*>);
-template struct JS_PUBLIC_API(MovableCellHasher<GlobalObject*>);
-template struct JS_PUBLIC_API(MovableCellHasher<SavedFrame*>);
-template struct JS_PUBLIC_API(MovableCellHasher<EnvironmentObject*>);
-template struct JS_PUBLIC_API(MovableCellHasher<WasmInstanceObject*>);
-template struct JS_PUBLIC_API(MovableCellHasher<JSScript*>);
-template struct JS_PUBLIC_API(MovableCellHasher<LazyScript*>);
-
-#ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
-#pragma GCC diagnostic pop
-#endif // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-
-} // namespace js
-
-JS_PUBLIC_API(void)
-JS::HeapObjectPostBarrier(JSObject** objp, JSObject* prev, JSObject* next)
-{
-    MOZ_ASSERT(objp);
-    js::InternalBarrierMethods<JSObject*>::postBarrier(objp, prev, next);
-=======
 JS_PUBLIC_API void JS::HeapStringWriteBarriers(JSString** strp, JSString* prev,
                                                JSString* next) {
   MOZ_ASSERT(strp);
   js::InternalBarrierMethods<JSString*>::preBarrier(prev);
   js::InternalBarrierMethods<JSString*>::postBarrier(strp, prev, next);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JS_PUBLIC_API void JS::HeapStringPostBarrier(JSString** strp, JSString* prev,
-                                             JSString* next) {
-  MOZ_ASSERT(strp);
-  js::InternalBarrierMethods<JSString*>::postBarrier(strp, prev, next);
-||||||| merged common ancestors
-JS_PUBLIC_API(void)
-JS::HeapStringPostBarrier(JSString** strp, JSString* prev, JSString* next)
-{
-    MOZ_ASSERT(strp);
-    js::InternalBarrierMethods<JSString*>::postBarrier(strp, prev, next);
-=======
 JS_PUBLIC_API void JS::HeapScriptWriteBarriers(JSScript** scriptp,
                                                JSScript* prev, JSScript* next) {
   MOZ_ASSERT(scriptp);
   js::InternalBarrierMethods<JSScript*>::preBarrier(prev);
   js::InternalBarrierMethods<JSScript*>::postBarrier(scriptp, prev, next);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JS_PUBLIC_API void JS::HeapValuePostBarrier(JS::Value* valuep,
-                                            const Value& prev,
-                                            const Value& next) {
-  MOZ_ASSERT(valuep);
-  js::InternalBarrierMethods<JS::Value>::postBarrier(valuep, prev, next);
-||||||| merged common ancestors
-JS_PUBLIC_API(void)
-JS::HeapValuePostBarrier(JS::Value* valuep, const Value& prev, const Value& next)
-{
-    MOZ_ASSERT(valuep);
-    js::InternalBarrierMethods<JS::Value>::postBarrier(valuep, prev, next);
-=======
 JS_PUBLIC_API void JS::HeapValueWriteBarriers(JS::Value* valuep,
                                               const Value& prev,
                                               const Value& next) {
   MOZ_ASSERT(valuep);
   js::InternalBarrierMethods<JS::Value>::preBarrier(prev);
   js::InternalBarrierMethods<JS::Value>::postBarrier(valuep, prev, next);
->>>>>>> upstream-releases
 }

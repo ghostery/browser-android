@@ -59,48 +59,6 @@ U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(JapaneseCalendar)
 
 static const int32_t kGregorianEpoch = 1970;    // used as the default value of EXTENDED_YEAR
-<<<<<<< HEAD
-static const char* TENTATIVE_ERA_VAR_NAME = "ICU_ENABLE_TENTATIVE_ERA";
-
-// Initialize global Japanese era data
-static void U_CALLCONV initializeEras(UErrorCode &status) {
-    // Although start date of next Japanese era is planned ahead, a name of
-    // new era might not be available. This implementation allows tester to
-    // check a new era without era names by settings below (in priority order).
-    // By default, such tentative era is disabled.
-
-    // 1. Environment variable ICU_ENABLE_TENTATIVE_ERA=true or false
-
-    UBool includeTentativeEra = FALSE;
-
-#if U_PLATFORM_HAS_WINUWP_API == 1
-    // UWP doesn't allow access to getenv(), but we can call GetEnvironmentVariableW to do the same thing.
-    UChar varName[26] = {};
-    u_charsToUChars(TENTATIVE_ERA_VAR_NAME, varName, static_cast<int32_t>(uprv_strlen(TENTATIVE_ERA_VAR_NAME)));
-    WCHAR varValue[5] = {};
-    DWORD ret = GetEnvironmentVariableW(reinterpret_cast<WCHAR*>(varName), varValue, UPRV_LENGTHOF(varValue));
-    if ((ret == 4) && (_wcsicmp(varValue, L"true") == 0)) {
-        includeTentativeEra = TRUE;
-    }
-#else
-    char *envVarVal = getenv(TENTATIVE_ERA_VAR_NAME);
-    if (envVarVal != NULL && uprv_stricmp(envVarVal, "true") == 0) {
-        includeTentativeEra = TRUE;
-    }
-#endif
-    gJapaneseEraRules = EraRules::createInstance("japanese", includeTentativeEra, status);
-    if (U_FAILURE(status)) {
-        return;
-    }
-    gCurrentEra = gJapaneseEraRules->getCurrentEraIndex();
-}
-
-static void init(UErrorCode &status) {
-    umtx_initOnce(gJapaneseEraRulesInitOnce, &initializeEras, status);
-    ucln_i18n_registerCleanup(UCLN_I18N_JAPANESE_CALENDAR, japanese_calendar_cleanup);
-}
-||||||| merged common ancestors
-=======
 static const char* TENTATIVE_ERA_VAR_NAME = "ICU_ENABLE_TENTATIVE_ERA";
 
 
@@ -147,7 +105,6 @@ static void init(UErrorCode &status) {
     umtx_initOnce(gJapaneseEraRulesInitOnce, &initializeEras, status);
     ucln_i18n_registerCleanup(UCLN_I18N_JAPANESE_CALENDAR, japanese_calendar_cleanup);
 }
->>>>>>> upstream-releases
 
 /* Some platforms don't like to export constants, like old Palm OS and some z/OS configurations. */
 uint32_t JapaneseCalendar::getCurrentEra() {
@@ -293,13 +250,7 @@ int32_t JapaneseCalendar::handleGetLimit(UCalendarDateFields field, ELimitType l
         if (limitType == UCAL_LIMIT_MINIMUM || limitType == UCAL_LIMIT_GREATEST_MINIMUM) {
             return 0;
         }
-<<<<<<< HEAD
-        return gCurrentEra;
-||||||| merged common ancestors
-        return kCurrentEra;
-=======
         return gJapaneseEraRules->getNumberOfEras() - 1; // max known era, not gCurrentEra
->>>>>>> upstream-releases
     case UCAL_YEAR:
         {
             switch (limitType) {
@@ -331,13 +282,7 @@ int32_t JapaneseCalendar::getActualMaximum(UCalendarDateFields field, UErrorCode
         if (U_FAILURE(status)) {
             return 0; // error case... any value
         }
-<<<<<<< HEAD
-        if (era == gCurrentEra) {
-||||||| merged common ancestors
-        if (era == kCurrentEra) {
-=======
         if (era == gJapaneseEraRules->getNumberOfEras() - 1) { // max known era, not gCurrentEra
->>>>>>> upstream-releases
             // TODO: Investigate what value should be used here - revisit after 4.0.
             return handleGetLimit(UCAL_YEAR, UCAL_LIMIT_MAXIMUM);
         } else {

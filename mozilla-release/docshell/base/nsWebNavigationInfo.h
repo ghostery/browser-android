@@ -13,27 +13,8 @@
 #include "nsStringFwd.h"
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-#define NS_WEBNAVIGATION_INFO_CID                    \
-  {                                                  \
-    0xf30bc0a2, 0x958b, 0x4287, {                    \
-      0xbf, 0x62, 0xce, 0x38, 0xba, 0x0c, 0x81, 0x1e \
-    }                                                \
-  }
-
 class nsWebNavigationInfo final : public nsIWebNavigationInfo {
  public:
-||||||| merged common ancestors
-#define NS_WEBNAVIGATION_INFO_CID \
- { 0xf30bc0a2, 0x958b, 0x4287,{0xbf, 0x62, 0xce, 0x38, 0xba, 0x0c, 0x81, 0x1e}}
-
-class nsWebNavigationInfo final : public nsIWebNavigationInfo
-{
-public:
-=======
-class nsWebNavigationInfo final : public nsIWebNavigationInfo {
- public:
->>>>>>> upstream-releases
   nsWebNavigationInfo() {}
 
   NS_DECL_ISUPPORTS

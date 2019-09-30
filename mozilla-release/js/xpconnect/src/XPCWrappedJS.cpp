@@ -36,25 +36,6 @@ using namespace mozilla;
 // reference to the wrapper (which can only happen for the root wrapper), it is
 // immediately Destroy()'d. Otherwise, it becomes subject to finalization.
 //
-<<<<<<< HEAD
-// When a wrapper is subject to finalization, the wrapper has a refcount of 1.
-// It is now owned exclusively by its JS object. Either a weak reference will be
-// turned into a strong ref which will bring its refcount up to 2 and change the
-// wrapper back to the rooting state, or it will stay alive until the JS object
-// dies. If the JS object dies, then when XPCJSContext::FinalizeCallback calls
-// FindDyingJSObjects it will find the wrapper and call Release() in it,
-// destroying the wrapper. Otherwise, the wrapper will stay alive, even if it no
-// longer has a weak reference to it.
-||||||| merged common ancestors
-// When a wrapper is subject to finalization, the wrapper has a refcount of 1. It is
-// now owned exclusively by its JS object. Either a weak reference will be turned into
-// a strong ref which will bring its refcount up to 2 and change the wrapper back to
-// the rooting state, or it will stay alive until the JS object dies. If the JS object
-// dies, then when XPCJSContext::FinalizeCallback calls FindDyingJSObjects
-// it will find the wrapper and call Release() in it, destroying the wrapper.
-// Otherwise, the wrapper will stay alive, even if it no longer has a weak reference
-// to it.
-=======
 // When a wrapper is subject to finalization, the wrapper has a refcount of 1.
 // It is now owned exclusively by its JS object. Either a weak reference will be
 // turned into a strong ref which will bring its refcount up to 2 and change the
@@ -64,7 +45,6 @@ using namespace mozilla;
 // engine's weak pointer zone or compartment callbacks) it will find the wrapper
 // and call Release() on it, destroying the wrapper. Otherwise, the wrapper will
 // stay alive, even if it no longer has a weak reference to it.
->>>>>>> upstream-releases
 //
 // When the wrapper is subject to finalization, it is kept alive by an implicit
 // reference from the JS object which is invisible to the cycle collector, so
@@ -114,77 +94,6 @@ bool nsXPCWrappedJS::CanSkip() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-NS_CYCLE_COLLECTION_CLASSNAME(nsXPCWrappedJS)::TraverseNative(
-    void* p, nsCycleCollectionTraversalCallback& cb) {
-  nsISupports* s = static_cast<nsISupports*>(p);
-  MOZ_ASSERT(CheckForRightISupports(s),
-             "not the nsISupports pointer we expect");
-  nsXPCWrappedJS* tmp = Downcast(s);
-
-  nsrefcnt refcnt = tmp->mRefCnt.get();
-  if (cb.WantDebugInfo()) {
-    char name[72];
-    if (tmp->GetClass()) {
-      SprintfLiteral(name, "nsXPCWrappedJS (%s)",
-                     tmp->GetClass()->GetInterfaceName());
-    } else {
-      SprintfLiteral(name, "nsXPCWrappedJS");
-    }
-    cb.DescribeRefCountedNode(refcnt, name);
-  } else {
-    NS_IMPL_CYCLE_COLLECTION_DESCRIBE(nsXPCWrappedJS, refcnt)
-  }
-
-  // A wrapper that is subject to finalization will only die when its JS object
-  // dies.
-  if (tmp->IsSubjectToFinalization()) {
-||||||| merged common ancestors
-NS_CYCLE_COLLECTION_CLASSNAME(nsXPCWrappedJS)::TraverseNative
-   (void* p, nsCycleCollectionTraversalCallback& cb)
-{
-    nsISupports* s = static_cast<nsISupports*>(p);
-    MOZ_ASSERT(CheckForRightISupports(s), "not the nsISupports pointer we expect");
-    nsXPCWrappedJS* tmp = Downcast(s);
-
-    nsrefcnt refcnt = tmp->mRefCnt.get();
-    if (cb.WantDebugInfo()) {
-        char name[72];
-        if (tmp->GetClass()) {
-            SprintfLiteral(name, "nsXPCWrappedJS (%s)", tmp->GetClass()->GetInterfaceName());
-        } else {
-            SprintfLiteral(name, "nsXPCWrappedJS");
-        }
-        cb.DescribeRefCountedNode(refcnt, name);
-    } else {
-        NS_IMPL_CYCLE_COLLECTION_DESCRIBE(nsXPCWrappedJS, refcnt)
-    }
-
-    // A wrapper that is subject to finalization will only die when its JS object dies.
-    if (tmp->IsSubjectToFinalization()) {
-        return NS_OK;
-    }
-
-    // Don't let the extra reference for nsSupportsWeakReference keep a wrapper that is
-    // not subject to finalization alive.
-    NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "self");
-    cb.NoteXPCOMChild(s);
-
-    if (tmp->IsValid()) {
-        MOZ_ASSERT(refcnt > 1);
-        NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "mJSObj");
-        cb.NoteJSChild(JS::GCCellPtr(tmp->GetJSObjectPreserveColor()));
-    }
-
-    if (tmp->IsRootWrapper()) {
-        NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "aggregated native");
-        cb.NoteXPCOMChild(tmp->GetAggregatedNativeObject());
-    } else {
-        NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "root");
-        cb.NoteXPCOMChild(ToSupports(tmp->GetRootWrapper()));
-    }
-
-=======
 NS_CYCLE_COLLECTION_CLASSNAME(nsXPCWrappedJS)::TraverseNative(
     void* p, nsCycleCollectionTraversalCallback& cb) {
   nsISupports* s = static_cast<nsISupports*>(p);
@@ -204,7 +113,6 @@ NS_CYCLE_COLLECTION_CLASSNAME(nsXPCWrappedJS)::TraverseNative(
   // A wrapper that is subject to finalization will only die when its JS object
   // dies.
   if (tmp->IsSubjectToFinalization()) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -269,13 +177,7 @@ nsXPCWrappedJS::AggregatedQueryInterface(REFNSIID aIID, void** aInstancePtr) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  return mClass->DelegatedQueryInterface(this, aIID, aInstancePtr);
-||||||| merged common ancestors
-    return mClass->DelegatedQueryInterface(this, aIID, aInstancePtr);
-=======
   return DelegatedQueryInterface(aIID, aInstancePtr);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -326,13 +228,7 @@ nsXPCWrappedJS::QueryInterface(REFNSIID aIID, void** aInstancePtr) {
 
   // else...
 
-<<<<<<< HEAD
-  return mClass->DelegatedQueryInterface(this, aIID, aInstancePtr);
-||||||| merged common ancestors
-    return mClass->DelegatedQueryInterface(this, aIID, aInstancePtr);
-=======
   return DelegatedQueryInterface(aIID, aInstancePtr);
->>>>>>> upstream-releases
 }
 
 // For a description of nsXPCWrappedJS lifetime and reference counting, see
@@ -348,22 +244,10 @@ MozExternalRefCountType nsXPCWrappedJS::AddRef(void) {
   nsrefcnt cnt = mRefCnt.incr(base);
   NS_LOG_ADDREF(this, cnt, "nsXPCWrappedJS", sizeof(*this));
 
-<<<<<<< HEAD
-  if (2 == cnt && IsValid()) {
-    GetJSObject();  // Unmark gray JSObject.
-    mClass->GetRuntime()->AddWrappedJSRoot(this);
-  }
-||||||| merged common ancestors
-    if (2 == cnt && IsValid()) {
-        GetJSObject(); // Unmark gray JSObject.
-        mClass->GetRuntime()->AddWrappedJSRoot(this);
-    }
-=======
   if (2 == cnt && IsValid()) {
     GetJSObject();  // Unmark gray JSObject.
     XPCJSRuntime::Get()->AddWrappedJSRoot(this);
   }
->>>>>>> upstream-releases
 
   return cnt;
 }
@@ -436,127 +320,6 @@ JSObject* nsXPCWrappedJS::GetJSObjectGlobal() {
 }
 
 // static
-<<<<<<< HEAD
-nsresult nsXPCWrappedJS::GetNewOrUsed(JSContext* cx, JS::HandleObject jsObj,
-                                      REFNSIID aIID,
-                                      nsXPCWrappedJS** wrapperResult) {
-  // Do a release-mode assert against accessing nsXPCWrappedJS off-main-thread.
-  MOZ_RELEASE_ASSERT(NS_IsMainThread(),
-                     "nsXPCWrappedJS::GetNewOrUsed called off main thread");
-
-  MOZ_RELEASE_ASSERT(js::GetContextCompartment(cx) ==
-                     js::GetObjectCompartment(jsObj));
-
-  RefPtr<nsXPCWrappedJSClass> clasp =
-      nsXPCWrappedJSClass::GetNewOrUsed(cx, aIID);
-  if (!clasp) {
-    return NS_ERROR_FAILURE;
-  }
-
-  JS::RootedObject rootJSObj(cx, clasp->GetRootJSObject(cx, jsObj));
-  if (!rootJSObj) {
-    return NS_ERROR_FAILURE;
-  }
-
-  xpc::CompartmentPrivate* rootComp = xpc::CompartmentPrivate::Get(rootJSObj);
-  MOZ_ASSERT(rootComp);
-
-  // Find any existing wrapper.
-  RefPtr<nsXPCWrappedJS> root = rootComp->GetWrappedJSMap()->Find(rootJSObj);
-  MOZ_ASSERT_IF(root, !nsXPConnect::GetRuntimeInstance()
-                           ->GetMultiCompartmentWrappedJSMap()
-                           ->Find(rootJSObj));
-  if (!root) {
-    root = nsXPConnect::GetRuntimeInstance()
-               ->GetMultiCompartmentWrappedJSMap()
-               ->Find(rootJSObj);
-  }
-
-  nsresult rv = NS_ERROR_FAILURE;
-  if (root) {
-    RefPtr<nsXPCWrappedJS> wrapper = root->FindOrFindInherited(aIID);
-    if (wrapper) {
-      wrapper.forget(wrapperResult);
-      return NS_OK;
-    }
-  } else if (rootJSObj != jsObj) {
-    // Make a new root wrapper, because there is no existing
-    // root wrapper, and the wrapper we are trying to make isn't
-    // a root.
-    RefPtr<nsXPCWrappedJSClass> rootClasp =
-        nsXPCWrappedJSClass::GetNewOrUsed(cx, NS_GET_IID(nsISupports));
-    if (!rootClasp) {
-      return NS_ERROR_FAILURE;
-    }
-
-    root = new nsXPCWrappedJS(cx, rootJSObj, rootClasp, nullptr, &rv);
-||||||| merged common ancestors
-nsresult
-nsXPCWrappedJS::GetNewOrUsed(JSContext* cx,
-                             JS::HandleObject jsObj,
-                             REFNSIID aIID,
-                             nsXPCWrappedJS** wrapperResult)
-{
-    // Do a release-mode assert against accessing nsXPCWrappedJS off-main-thread.
-    MOZ_RELEASE_ASSERT(NS_IsMainThread(),
-                       "nsXPCWrappedJS::GetNewOrUsed called off main thread");
-
-    MOZ_RELEASE_ASSERT(js::GetContextCompartment(cx) == js::GetObjectCompartment(jsObj));
-
-    bool allowNonScriptable = mozilla::jsipc::IsWrappedCPOW(jsObj);
-    RefPtr<nsXPCWrappedJSClass> clasp = nsXPCWrappedJSClass::GetNewOrUsed(cx, aIID,
-                                                                          allowNonScriptable);
-    if (!clasp) {
-        return NS_ERROR_FAILURE;
-    }
-
-    JS::RootedObject rootJSObj(cx, clasp->GetRootJSObject(cx, jsObj));
-    if (!rootJSObj) {
-        return NS_ERROR_FAILURE;
-    }
-
-    xpc::CompartmentPrivate* rootComp = xpc::CompartmentPrivate::Get(rootJSObj);
-    MOZ_ASSERT(rootComp);
-
-    // Find any existing wrapper.
-    RefPtr<nsXPCWrappedJS> root = rootComp->GetWrappedJSMap()->Find(rootJSObj);
-    MOZ_ASSERT_IF(root, !nsXPConnect::GetRuntimeInstance()->GetMultiCompartmentWrappedJSMap()->
-                        Find(rootJSObj));
-    if (!root) {
-        root = nsXPConnect::GetRuntimeInstance()->GetMultiCompartmentWrappedJSMap()->
-            Find(rootJSObj);
-    }
-
-    nsresult rv = NS_ERROR_FAILURE;
-    if (root) {
-        RefPtr<nsXPCWrappedJS> wrapper = root->FindOrFindInherited(aIID);
-        if (wrapper) {
-            wrapper.forget(wrapperResult);
-            return NS_OK;
-        }
-    } else if (rootJSObj != jsObj) {
-
-        // Make a new root wrapper, because there is no existing
-        // root wrapper, and the wrapper we are trying to make isn't
-        // a root.
-        RefPtr<nsXPCWrappedJSClass> rootClasp =
-            nsXPCWrappedJSClass::GetNewOrUsed(cx, NS_GET_IID(nsISupports));
-        if (!rootClasp) {
-            return NS_ERROR_FAILURE;
-        }
-
-        // Note: rootJSObj is never a CCW because GetRootJSObject unwraps. We
-        // also rely on this in nsXPCWrappedJS::UpdateObjectPointerAfterGC.
-        RootedObject global(cx, JS::GetNonCCWObjectGlobal(rootJSObj));
-        root = new nsXPCWrappedJS(cx, rootJSObj, global, rootClasp, nullptr, &rv);
-        if (NS_FAILED(rv)) {
-            return rv;
-        }
-    }
-
-    RootedObject global(cx, JS::CurrentGlobalOrNull(cx));
-    RefPtr<nsXPCWrappedJS> wrapper = new nsXPCWrappedJS(cx, jsObj, global, clasp, root, &rv);
-=======
 nsresult nsXPCWrappedJS::GetNewOrUsed(JSContext* cx, JS::HandleObject jsObj,
                                       REFNSIID aIID,
                                       nsXPCWrappedJS** wrapperResult) {
@@ -609,120 +372,9 @@ nsresult nsXPCWrappedJS::GetNewOrUsed(JSContext* cx, JS::HandleObject jsObj,
     }
 
     root = new nsXPCWrappedJS(cx, rootJSObj, rootInfo, nullptr, &rv);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }
-<<<<<<< HEAD
-  }
-
-  RefPtr<nsXPCWrappedJS> wrapper =
-      new nsXPCWrappedJS(cx, jsObj, clasp, root, &rv);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-  wrapper.forget(wrapperResult);
-  return NS_OK;
-}
-
-nsXPCWrappedJS::nsXPCWrappedJS(JSContext* cx, JSObject* aJSObj,
-                               nsXPCWrappedJSClass* aClass,
-                               nsXPCWrappedJS* root, nsresult* rv)
-    : mJSObj(aJSObj),
-      mClass(aClass),
-      mRoot(root ? root : this),
-      mNext(nullptr) {
-  *rv = InitStub(GetClass()->GetIID());
-  // Continue even in the failure case, so that our refcounting/Destroy
-  // behavior works correctly.
-
-  // There is an extra AddRef to support weak references to wrappers
-  // that are subject to finalization. See the top of the file for more
-  // details.
-  NS_ADDREF_THIS();
-
-  if (IsRootWrapper()) {
-    MOZ_ASSERT(!IsMultiCompartment(), "mNext is always nullptr here");
-    if (!xpc::CompartmentPrivate::Get(mJSObj)->GetWrappedJSMap()->Add(cx,
-                                                                      this)) {
-      *rv = NS_ERROR_OUT_OF_MEMORY;
-    }
-  } else {
-    NS_ADDREF(mRoot);
-    mNext = mRoot->mNext;
-    mRoot->mNext = this;
-
-    // We always start wrappers in the per-compartment table. If adding
-    // this wrapper to the chain causes it to cross compartments, we need
-    // to migrate the chain to the global table on the XPCJSContext.
-    if (mRoot->IsMultiCompartment()) {
-      xpc::CompartmentPrivate::Get(mRoot->mJSObj)
-          ->GetWrappedJSMap()
-          ->Remove(mRoot);
-      auto destMap =
-          nsXPConnect::GetRuntimeInstance()->GetMultiCompartmentWrappedJSMap();
-      if (!destMap->Add(cx, mRoot)) {
-        *rv = NS_ERROR_OUT_OF_MEMORY;
-      }
-    }
-  }
-||||||| merged common ancestors
-    wrapper.forget(wrapperResult);
-    return NS_OK;
-}
-
-nsXPCWrappedJS::nsXPCWrappedJS(JSContext* cx,
-                               JSObject* aJSObj,
-                               JSObject* aJSObjGlobal,
-                               nsXPCWrappedJSClass* aClass,
-                               nsXPCWrappedJS* root,
-                               nsresult* rv)
-    : mJSObj(aJSObj),
-      mJSObjGlobal(aJSObjGlobal),
-      mClass(aClass),
-      mRoot(root ? root : this),
-      mNext(nullptr)
-{
-    MOZ_ASSERT(JS_IsGlobalObject(aJSObjGlobal));
-    MOZ_RELEASE_ASSERT(js::GetObjectCompartment(aJSObj) ==
-                       js::GetObjectCompartment(aJSObjGlobal));
-
-    *rv = InitStub(GetClass()->GetIID());
-    // Continue even in the failure case, so that our refcounting/Destroy
-    // behavior works correctly.
-
-    // There is an extra AddRef to support weak references to wrappers
-    // that are subject to finalization. See the top of the file for more
-    // details.
-    NS_ADDREF_THIS();
-
-    if (IsRootWrapper()) {
-        MOZ_ASSERT(!IsMultiCompartment(), "mNext is always nullptr here");
-        if (!xpc::CompartmentPrivate::Get(mJSObj)->GetWrappedJSMap()->Add(cx, this)) {
-            *rv = NS_ERROR_OUT_OF_MEMORY;
-        }
-    } else {
-        NS_ADDREF(mRoot);
-        mNext = mRoot->mNext;
-        mRoot->mNext = this;
-
-        // We always start wrappers in the per-compartment table. If adding
-        // this wrapper to the chain causes it to cross compartments, we need
-        // to migrate the chain to the global table on the XPCJSContext.
-        if (mRoot->IsMultiCompartment()) {
-            xpc::CompartmentPrivate::Get(mRoot->mJSObj)->GetWrappedJSMap()->Remove(mRoot);
-            auto destMap = nsXPConnect::GetRuntimeInstance()->GetMultiCompartmentWrappedJSMap();
-            if (!destMap->Add(cx, mRoot)) {
-                *rv = NS_ERROR_OUT_OF_MEMORY;
-            }
-        }
-    }
-}
-
-nsXPCWrappedJS::~nsXPCWrappedJS()
-{
-    Destroy();
-=======
   }
 
   RefPtr<nsXPCWrappedJS> wrapper =
@@ -772,7 +424,6 @@ nsXPCWrappedJS::nsXPCWrappedJS(JSContext* cx, JSObject* aJSObj,
       }
     }
   }
->>>>>>> upstream-releases
 }
 
 nsXPCWrappedJS::~nsXPCWrappedJS() { Destroy(); }
@@ -803,27 +454,12 @@ void XPCJSRuntime::RemoveWrappedJS(nsXPCWrappedJS* wrapper) {
 }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-static void NotHasWrapperAssertionCallback(JSContext* cx, void* data,
-                                           JS::Compartment* comp) {
-  auto wrapper = static_cast<nsXPCWrappedJS*>(data);
-  auto xpcComp = xpc::CompartmentPrivate::Get(comp);
-  MOZ_ASSERT_IF(xpcComp, !xpcComp->GetWrappedJSMap()->HasWrapper(wrapper));
-||||||| merged common ancestors
-static void
-NotHasWrapperAssertionCallback(JSContext* cx, void* data, JS::Compartment* comp)
-{
-    auto wrapper = static_cast<nsXPCWrappedJS*>(data);
-    auto xpcComp = xpc::CompartmentPrivate::Get(comp);
-    MOZ_ASSERT_IF(xpcComp, !xpcComp->GetWrappedJSMap()->HasWrapper(wrapper));
-=======
 static JS::CompartmentIterResult NotHasWrapperAssertionCallback(
     JSContext* cx, void* data, JS::Compartment* comp) {
   auto wrapper = static_cast<nsXPCWrappedJS*>(data);
   auto xpcComp = xpc::CompartmentPrivate::Get(comp);
   MOZ_ASSERT_IF(xpcComp, !xpcComp->GetWrappedJSMap()->HasWrapper(wrapper));
   return JS::CompartmentIterResult::KeepGoing;
->>>>>>> upstream-releases
 }
 #endif
 
@@ -849,111 +485,6 @@ void nsXPCWrappedJS::Destroy() {
   Unlink();
 }
 
-<<<<<<< HEAD
-void nsXPCWrappedJS::Unlink() {
-  nsXPConnect::GetRuntimeInstance()->AssertInvalidWrappedJSNotInTable(this);
-
-  if (IsValid()) {
-    XPCJSRuntime* rt = nsXPConnect::GetRuntimeInstance();
-    if (rt) {
-      if (IsRootWrapper()) {
-        rt->RemoveWrappedJS(this);
-      }
-
-      if (mRefCnt > 1) {
-        RemoveFromRootSet();
-      }
-    }
-
-    mJSObj = nullptr;
-  }
-
-  if (IsRootWrapper()) {
-    ClearWeakReferences();
-  } else if (mRoot) {
-    // unlink this wrapper
-    nsXPCWrappedJS* cur = mRoot;
-    while (1) {
-      if (cur->mNext == this) {
-        cur->mNext = mNext;
-        break;
-      }
-      cur = cur->mNext;
-      MOZ_ASSERT(cur, "failed to find wrapper in its own chain");
-    }
-
-    // Note: unlinking this wrapper may have changed us from a multi-
-    // compartment wrapper chain to a single-compartment wrapper chain. We
-    // leave the wrapper in the multi-compartment table as it is likely to
-    // need to be multi-compartment again in the future and, moreover, we
-    // cannot get a JSContext here.
-
-    // let the root go
-    NS_RELEASE(mRoot);
-  }
-
-  mClass = nullptr;
-  if (mOuter) {
-    XPCJSRuntime* rt = nsXPConnect::GetRuntimeInstance();
-    if (rt->GCIsRunning()) {
-      DeferredFinalize(mOuter.forget().take());
-    } else {
-      mOuter = nullptr;
-||||||| merged common ancestors
-void
-nsXPCWrappedJS::Unlink()
-{
-    nsXPConnect::GetRuntimeInstance()->AssertInvalidWrappedJSNotInTable(this);
-
-    if (IsValid()) {
-        XPCJSRuntime* rt = nsXPConnect::GetRuntimeInstance();
-        if (rt) {
-            if (IsRootWrapper()) {
-                rt->RemoveWrappedJS(this);
-            }
-
-            if (mRefCnt > 1) {
-                RemoveFromRootSet();
-            }
-        }
-
-        mJSObj = nullptr;
-        mJSObjGlobal = nullptr;
-    }
-
-    if (IsRootWrapper()) {
-        ClearWeakReferences();
-    } else if (mRoot) {
-        // unlink this wrapper
-        nsXPCWrappedJS* cur = mRoot;
-        while (1) {
-            if (cur->mNext == this) {
-                cur->mNext = mNext;
-                break;
-            }
-            cur = cur->mNext;
-            MOZ_ASSERT(cur, "failed to find wrapper in its own chain");
-        }
-
-        // Note: unlinking this wrapper may have changed us from a multi-
-        // compartment wrapper chain to a single-compartment wrapper chain. We
-        // leave the wrapper in the multi-compartment table as it is likely to
-        // need to be multi-compartment again in the future and, moreover, we
-        // cannot get a JSContext here.
-
-        // let the root go
-        NS_RELEASE(mRoot);
-    }
-
-    mClass = nullptr;
-    if (mOuter) {
-        XPCJSRuntime* rt = nsXPConnect::GetRuntimeInstance();
-        if (rt->GCIsRunning()) {
-            DeferredFinalize(mOuter.forget().take());
-        } else {
-            mOuter = nullptr;
-        }
-=======
 void nsXPCWrappedJS::Unlink() {
   nsXPConnect::GetRuntimeInstance()->AssertInvalidWrappedJSNotInTable(this);
 
@@ -1002,7 +533,6 @@ void nsXPCWrappedJS::Unlink() {
       DeferredFinalize(mOuter.forget().take());
     } else {
       mOuter = nullptr;
->>>>>>> upstream-releases
     }
   }
 }
@@ -1035,90 +565,9 @@ nsXPCWrappedJS* nsXPCWrappedJS::Find(REFNSIID aIID) {
 }
 
 // check if asking for an interface that some wrapper in the chain inherits from
-<<<<<<< HEAD
 nsXPCWrappedJS* nsXPCWrappedJS::FindInherited(REFNSIID aIID) {
   MOZ_ASSERT(!aIID.Equals(NS_GET_IID(nsISupports)), "bad call sequence");
 
-  for (nsXPCWrappedJS* cur = mRoot; cur; cur = cur->mNext) {
-    if (cur->GetClass()->GetInterfaceInfo()->HasAncestor(aIID)) {
-      return cur;
-    }
-  }
-||||||| merged common ancestors
-nsXPCWrappedJS*
-nsXPCWrappedJS::FindInherited(REFNSIID aIID)
-{
-    MOZ_ASSERT(!aIID.Equals(NS_GET_IID(nsISupports)), "bad call sequence");
-
-    for (nsXPCWrappedJS* cur = mRoot; cur; cur = cur->mNext) {
-        bool found;
-        if (NS_SUCCEEDED(cur->GetClass()->GetInterfaceInfo()->
-                         HasAncestor(&aIID, &found)) && found)
-            return cur;
-    }
-=======
-nsXPCWrappedJS* nsXPCWrappedJS::FindInherited(REFNSIID aIID) {
-  MOZ_ASSERT(!aIID.Equals(NS_GET_IID(nsISupports)), "bad call sequence");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return nullptr;
-}
-
-NS_IMETHODIMP
-nsXPCWrappedJS::GetInterfaceInfo(const nsXPTInterfaceInfo** infoResult) {
-  MOZ_ASSERT(GetClass(), "wrapper without class");
-  MOZ_ASSERT(GetClass()->GetInterfaceInfo(), "wrapper class without interface");
-
-  // Since failing to get this info will crash some platforms(!), we keep
-  // mClass valid at shutdown time.
-
-  *infoResult = GetClass()->GetInterfaceInfo();
-  return *infoResult ? NS_OK : NS_ERROR_UNEXPECTED;
-}
-
-NS_IMETHODIMP
-nsXPCWrappedJS::CallMethod(uint16_t methodIndex, const nsXPTMethodInfo* info,
-                           nsXPTCMiniVariant* params) {
-  // Do a release-mode assert against accessing nsXPCWrappedJS off-main-thread.
-  MOZ_RELEASE_ASSERT(NS_IsMainThread(),
-                     "nsXPCWrappedJS::CallMethod called off main thread");
-
-  if (!IsValid()) {
-    return NS_ERROR_UNEXPECTED;
-  }
-  return GetClass()->CallMethod(this, methodIndex, info, params);
-||||||| merged common ancestors
-    return nullptr;
-}
-
-NS_IMETHODIMP
-nsXPCWrappedJS::GetInterfaceInfo(const nsXPTInterfaceInfo** infoResult)
-{
-    MOZ_ASSERT(GetClass(), "wrapper without class");
-    MOZ_ASSERT(GetClass()->GetInterfaceInfo(), "wrapper class without interface");
-
-    // Since failing to get this info will crash some platforms(!), we keep
-    // mClass valid at shutdown time.
-
-    *infoResult = GetClass()->GetInterfaceInfo();
-    return *infoResult ? NS_OK : NS_ERROR_UNEXPECTED;
-}
-
-NS_IMETHODIMP
-nsXPCWrappedJS::CallMethod(uint16_t methodIndex,
-                           const nsXPTMethodInfo* info,
-                           nsXPTCMiniVariant* params)
-{
-    // Do a release-mode assert against accessing nsXPCWrappedJS off-main-thread.
-    MOZ_RELEASE_ASSERT(NS_IsMainThread(),
-                       "nsXPCWrappedJS::CallMethod called off main thread");
-
-    if (!IsValid()) {
-        return NS_ERROR_UNEXPECTED;
-    }
-    return GetClass()->CallMethod(this, methodIndex, info, params);
-=======
   for (nsXPCWrappedJS* cur = mRoot; cur; cur = cur->mNext) {
     if (cur->mInfo->HasAncestor(aIID)) {
       return cur;
@@ -1126,7 +575,6 @@ nsXPCWrappedJS::CallMethod(uint16_t methodIndex,
   }
 
   return nullptr;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1137,58 +585,6 @@ nsXPCWrappedJS::GetInterfaceIID(nsIID** iid) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsXPCWrappedJS::SystemIsBeingShutDown() {
-  // XXX It turns out that it is better to leak here then to do any Releases
-  // and have them propagate into all sorts of mischief as the system is being
-  // shutdown. This was learned the hard way :(
-
-  // mJSObj == nullptr is used to indicate that the wrapper is no longer valid
-  // and that calls should fail without trying to use any of the
-  // xpconnect mechanisms. 'IsValid' is implemented by checking this pointer.
-
-  // NOTE: that mClass is retained so that GetInterfaceInfo can continue to
-  // work (and avoid crashing some platforms).
-
-  // Clear the contents of the pointer using unsafeGet() to avoid
-  // triggering post barriers in shutdown, as this will access the chunk
-  // containing mJSObj, which may have been freed at this point. This is safe
-  // if we are not currently running an incremental GC.
-  MOZ_ASSERT(!IsIncrementalGCInProgress(xpc_GetSafeJSContext()));
-  *mJSObj.unsafeGet() = nullptr;
-
-  // Notify other wrappers in the chain.
-  if (mNext) {
-    mNext->SystemIsBeingShutDown();
-  }
-||||||| merged common ancestors
-void
-nsXPCWrappedJS::SystemIsBeingShutDown()
-{
-    // XXX It turns out that it is better to leak here then to do any Releases
-    // and have them propagate into all sorts of mischief as the system is being
-    // shutdown. This was learned the hard way :(
-
-    // mJSObj == nullptr is used to indicate that the wrapper is no longer valid
-    // and that calls should fail without trying to use any of the
-    // xpconnect mechanisms. 'IsValid' is implemented by checking this pointer.
-
-    // NOTE: that mClass is retained so that GetInterfaceInfo can continue to
-    // work (and avoid crashing some platforms).
-
-    // Clear the contents of the pointer using unsafeGet() to avoid
-    // triggering post barriers in shutdown, as this will access the chunk
-    // containing mJSObj, which may have been freed at this point. This is safe
-    // if we are not currently running an incremental GC.
-    MOZ_ASSERT(!IsIncrementalGCInProgress(xpc_GetSafeJSContext()));
-    *mJSObj.unsafeGet() = nullptr;
-    *mJSObjGlobal.unsafeGet() = nullptr;
-
-    // Notify other wrappers in the chain.
-    if (mNext) {
-        mNext->SystemIsBeingShutDown();
-    }
-=======
 void nsXPCWrappedJS::SystemIsBeingShutDown() {
   // XXX It turns out that it is better to leak here then to do any Releases
   // and have them propagate into all sorts of mischief as the system is being
@@ -1209,48 +605,8 @@ void nsXPCWrappedJS::SystemIsBeingShutDown() {
   if (mNext) {
     mNext->SystemIsBeingShutDown();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-size_t nsXPCWrappedJS::SizeOfIncludingThis(
-    mozilla::MallocSizeOf mallocSizeOf) const {
-  // mJSObject is a JS pointer, so don't measure the object.
-  // mClass is not uniquely owned by this WrappedJS. Measure it in
-  // IID2WrappedJSClassMap. mRoot is not measured because it is either |this| or
-  // we have already measured it. mOuter is rare and probably not uniquely owned
-  // by this.
-  size_t n = mallocSizeOf(this);
-  n += nsAutoXPTCStub::SizeOfExcludingThis(mallocSizeOf);
-
-  // Wrappers form a linked list via the mNext field, so include them all
-  // in the measurement. Only root wrappers are stored in the map, so
-  // everything will be measured exactly once.
-  if (mNext) {
-    n += mNext->SizeOfIncludingThis(mallocSizeOf);
-  }
-
-  return n;
-||||||| merged common ancestors
-size_t
-nsXPCWrappedJS::SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const
-{
-    // mJSObject is a JS pointer, so don't measure the object.
-    // mClass is not uniquely owned by this WrappedJS. Measure it in IID2WrappedJSClassMap.
-    // mRoot is not measured because it is either |this| or we have already measured it.
-    // mOuter is rare and probably not uniquely owned by this.
-    size_t n = mallocSizeOf(this);
-    n += nsAutoXPTCStub::SizeOfExcludingThis(mallocSizeOf);
-
-    // Wrappers form a linked list via the mNext field, so include them all
-    // in the measurement. Only root wrappers are stored in the map, so
-    // everything will be measured exactly once.
-    if (mNext) {
-        n += mNext->SizeOfIncludingThis(mallocSizeOf);
-    }
-
-    return n;
-=======
 size_t nsXPCWrappedJS::SizeOfIncludingThis(
     mozilla::MallocSizeOf mallocSizeOf) const {
   // mJSObject is a JS pointer, so don't measure the object.  mInfo is
@@ -1268,143 +624,11 @@ size_t nsXPCWrappedJS::SizeOfIncludingThis(
   }
 
   return n;
->>>>>>> upstream-releases
 }
 
 /***************************************************************************/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXPCWrappedJS::GetEnumerator(nsISimpleEnumerator** aEnumerate) {
-  AutoJSContext cx;
-  XPCCallContext ccx(cx);
-  if (!ccx.IsValid()) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  RootedObject scope(cx, GetJSObjectGlobal());
-  return nsXPCWrappedJSClass::BuildPropertyEnumerator(ccx, GetJSObject(), scope,
-                                                      aEnumerate);
-}
-
-NS_IMETHODIMP
-nsXPCWrappedJS::GetProperty(const nsAString& name, nsIVariant** _retval) {
-  AutoJSContext cx;
-  XPCCallContext ccx(cx);
-  if (!ccx.IsValid()) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  RootedObject scope(cx, GetJSObjectGlobal());
-  return nsXPCWrappedJSClass::GetNamedPropertyAsVariant(ccx, GetJSObject(),
-                                                        scope, name, _retval);
-}
-
-/***************************************************************************/
-
-NS_IMETHODIMP
-nsXPCWrappedJS::DebugDump(int16_t depth) {
-#ifdef DEBUG
-  XPC_LOG_ALWAYS(
-      ("nsXPCWrappedJS @ %p with mRefCnt = %" PRIuPTR, this, mRefCnt.get()));
-  XPC_LOG_INDENT();
-
-  XPC_LOG_ALWAYS(("%s wrapper around JSObject @ %p",
-                  IsRootWrapper() ? "ROOT" : "non-root", mJSObj.get()));
-  const char* name = GetClass()->GetInterfaceInfo()->Name();
-  XPC_LOG_ALWAYS(("interface name is %s", name));
-  char* iid = GetClass()->GetIID().ToString();
-  XPC_LOG_ALWAYS(("IID number is %s", iid ? iid : "invalid"));
-  if (iid) {
-    free(iid);
-  }
-  XPC_LOG_ALWAYS(("nsXPCWrappedJSClass @ %p", mClass.get()));
-
-  if (!IsRootWrapper()) {
-    XPC_LOG_OUTDENT();
-  }
-  if (mNext) {
-    if (IsRootWrapper()) {
-      XPC_LOG_ALWAYS(("Additional wrappers for this object..."));
-      XPC_LOG_INDENT();
-    }
-    mNext->DebugDump(depth);
-    if (IsRootWrapper()) {
-      XPC_LOG_OUTDENT();
-    }
-  }
-  if (IsRootWrapper()) {
-    XPC_LOG_OUTDENT();
-  }
-||||||| merged common ancestors
-nsXPCWrappedJS::GetEnumerator(nsISimpleEnumerator * *aEnumerate)
-{
-    AutoJSContext cx;
-    XPCCallContext ccx(cx);
-    if (!ccx.IsValid()) {
-        return NS_ERROR_UNEXPECTED;
-    }
-
-    RootedObject scope(cx, GetJSObjectGlobal());
-    return nsXPCWrappedJSClass::BuildPropertyEnumerator(ccx, GetJSObject(), scope,
-                                                        aEnumerate);
-}
-
-NS_IMETHODIMP
-nsXPCWrappedJS::GetProperty(const nsAString & name, nsIVariant** _retval)
-{
-    AutoJSContext cx;
-    XPCCallContext ccx(cx);
-    if (!ccx.IsValid()) {
-        return NS_ERROR_UNEXPECTED;
-    }
-
-    RootedObject scope(cx, GetJSObjectGlobal());
-    return nsXPCWrappedJSClass::
-        GetNamedPropertyAsVariant(ccx, GetJSObject(), scope, name, _retval);
-}
-
-/***************************************************************************/
-
-NS_IMETHODIMP
-nsXPCWrappedJS::DebugDump(int16_t depth)
-{
-#ifdef DEBUG
-    XPC_LOG_ALWAYS(("nsXPCWrappedJS @ %p with mRefCnt = %" PRIuPTR, this, mRefCnt.get()));
-        XPC_LOG_INDENT();
-
-        XPC_LOG_ALWAYS(("%s wrapper around JSObject @ %p",              \
-                        IsRootWrapper() ? "ROOT":"non-root", mJSObj.get()));
-        char* name;
-        GetClass()->GetInterfaceInfo()->GetName(&name);
-        XPC_LOG_ALWAYS(("interface name is %s", name));
-        if (name) {
-            free(name);
-        }
-        char * iid = GetClass()->GetIID().ToString();
-        XPC_LOG_ALWAYS(("IID number is %s", iid ? iid : "invalid"));
-        if (iid) {
-            free(iid);
-        }
-        XPC_LOG_ALWAYS(("nsXPCWrappedJSClass @ %p", mClass.get()));
-
-        if (!IsRootWrapper()) {
-            XPC_LOG_OUTDENT();
-        }
-        if (mNext) {
-            if (IsRootWrapper()) {
-                XPC_LOG_ALWAYS(("Additional wrappers for this object..."));
-                XPC_LOG_INDENT();
-            }
-            mNext->DebugDump(depth);
-            if (IsRootWrapper()) {
-                XPC_LOG_OUTDENT();
-            }
-        }
-        if (IsRootWrapper()) {
-            XPC_LOG_OUTDENT();
-        }
-=======
 nsXPCWrappedJS::DebugDump(int16_t depth) {
 #ifdef DEBUG
   XPC_LOG_ALWAYS(
@@ -1438,7 +662,6 @@ nsXPCWrappedJS::DebugDump(int16_t depth) {
   if (IsRootWrapper()) {
     XPC_LOG_OUTDENT();
   }
->>>>>>> upstream-releases
 #endif
   return NS_OK;
 }

@@ -145,31 +145,11 @@ if $NEED_WINDOW_MANAGER; then
     # Disable the screen saver
     xset s off s reset
 
-<<<<<<< HEAD
     # This starts the gnome-keyring-daemon with an unlocked login keyring. libsecret uses this to
     # store secrets. Firefox uses libsecret to store a key that protects sensitive information like
     # credit card numbers.
     eval `dbus-launch --sh-syntax`
     eval `echo '' | /usr/bin/gnome-keyring-daemon -r -d --unlock --components=secrets`
-
-    if [ "${UBUNTU_1604}" ]; then
-        # start compiz for our window manager
-        compiz 2>&1 &
-        #TODO: how to determine if compiz starts correctly?
-    fi
-||||||| merged common ancestors
-    if [ "${UBUNTU_1604}" ]; then
-        # start compiz for our window manager
-        compiz 2>&1 &
-        #TODO: how to determine if compiz starts correctly?
-    fi
-=======
-    # This starts the gnome-keyring-daemon with an unlocked login keyring. libsecret uses this to
-    # store secrets. Firefox uses libsecret to store a key that protects sensitive information like
-    # credit card numbers.
-    eval `dbus-launch --sh-syntax`
-    eval `echo '' | /usr/bin/gnome-keyring-daemon -r -d --unlock --components=secrets`
->>>>>>> upstream-releases
 fi
 
 if $NEED_COMPIZ; then

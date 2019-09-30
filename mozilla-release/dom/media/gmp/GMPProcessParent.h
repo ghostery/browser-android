@@ -57,15 +57,9 @@ class GMPProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
   using mozilla::ipc::GeckoChildProcessHost::GetChannel;
   using mozilla::ipc::GeckoChildProcessHost::GetChildProcessHandle;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   ~GMPProcessParent();
 
->>>>>>> upstream-releases
   void DoDelete();
 
   std::string mGMPPath;

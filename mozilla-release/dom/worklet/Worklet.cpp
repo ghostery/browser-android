@@ -31,22 +31,6 @@ class ExecutionRunnable final : public Runnable {
  public:
   ExecutionRunnable(WorkletFetchHandler* aHandler, WorkletImpl* aWorkletImpl,
                     JS::UniqueTwoByteChars aScriptBuffer, size_t aScriptLength)
-<<<<<<< HEAD
-      : Runnable("Worklet::ExecutionRunnable"),
-        mHandler(aHandler),
-        mWorkletImpl(aWorkletImpl),
-        mScriptBuffer(std::move(aScriptBuffer)),
-        mScriptLength(aScriptLength),
-        mResult(NS_ERROR_FAILURE) {
-||||||| merged common ancestors
-    : Runnable("Worklet::ExecutionRunnable")
-    , mHandler(aHandler)
-    , mWorkletImpl(aWorkletImpl)
-    , mScriptBuffer(std::move(aScriptBuffer))
-    , mScriptLength(aScriptLength)
-    , mResult(NS_ERROR_FAILURE)
-  {
-=======
       : Runnable("Worklet::ExecutionRunnable"),
         mHandler(aHandler),
         mWorkletImpl(aWorkletImpl),
@@ -55,7 +39,6 @@ class ExecutionRunnable final : public Runnable {
         mParentRuntime(
             JS_GetParentRuntime(CycleCollectedJSContext::Get()->Context())),
         mResult(NS_ERROR_FAILURE) {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
     MOZ_ASSERT(mParentRuntime);
   }
@@ -238,29 +221,10 @@ class WorkletFetchHandler final : public PromiseNativeHandler,
     }
 
     // Moving the ownership of the buffer
-<<<<<<< HEAD
     nsCOMPtr<nsIRunnable> runnable = new ExecutionRunnable(
         this, mWorklet->mImpl, std::move(scriptTextBuf), scriptTextLength);
 
     if (NS_FAILED(mWorklet->mImpl->SendControlMessage(runnable.forget()))) {
-||||||| merged common ancestors
-    nsCOMPtr<nsIRunnable> runnable =
-      new ExecutionRunnable(this, mWorklet->mImpl, std::move(scriptTextBuf),
-                            scriptTextLength);
-
-    RefPtr<WorkletThread> thread = mWorklet->mImpl->GetOrCreateThread();
-    if (!thread) {
-      RejectPromises(NS_ERROR_FAILURE);
-      return NS_OK;
-    }
-
-    if (NS_FAILED(thread->DispatchRunnable(runnable.forget()))) {
-=======
-    nsCOMPtr<nsIRunnable> runnable = new ExecutionRunnable(
-        this, mWorklet->mImpl, std::move(scriptTextBuf), scriptTextLength);
-
-    if (NS_FAILED(mWorklet->mImpl->SendControlMessage(runnable.forget()))) {
->>>>>>> upstream-releases
       RejectPromises(NS_ERROR_FAILURE);
       return NS_OK;
     }
@@ -360,21 +324,12 @@ class WorkletFetchHandler final : public PromiseNativeHandler,
 NS_IMPL_ISUPPORTS(WorkletFetchHandler, nsIStreamLoaderObserver)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ExecutionRunnable::Run() {
-  if (WorkletThread::IsOnWorkletThread()) {
-||||||| merged common ancestors
-ExecutionRunnable::Run()
-{
-  if (WorkletThread::IsOnWorkletThread()) {
-=======
 ExecutionRunnable::Run() {
   // WorkletThread::IsOnWorkletThread() cannot be used here because it depends
   // on a WorkletJSContext having been created for this thread.  That does not
   // happen until the global scope is created the first time
   // RunOnWorkletThread() is called.
   if (!NS_IsMainThread()) {
->>>>>>> upstream-releases
     RunOnWorkletThread();
     return NS_DispatchToMainThread(this);
   }
@@ -383,37 +338,10 @@ ExecutionRunnable::Run() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void ExecutionRunnable::RunOnWorkletThread() {
-  WorkletThread::AssertIsOnWorkletThread();
-
-  AutoJSAPI jsapi;
-  jsapi.Init();
-
-  RefPtr<WorkletGlobalScope> globalScope =
-      mWorkletImpl->CreateGlobalScope(jsapi.cx());
-||||||| merged common ancestors
-void
-ExecutionRunnable::RunOnWorkletThread()
-{
-  WorkletThread::AssertIsOnWorkletThread();
-
-  WorkletThread* workletThread = WorkletThread::Get();
-  MOZ_ASSERT(workletThread);
-
-  JSContext* cx = workletThread->GetJSContext();
-
-  AutoJSAPI jsapi;
-  jsapi.Init();
-
-  RefPtr<WorkletGlobalScope> globalScope =
-    mWorkletImpl->CreateGlobalScope(jsapi.cx());
-=======
 void ExecutionRunnable::RunOnWorkletThread() {
   WorkletThread::EnsureCycleCollectedJSContext(mParentRuntime);
 
   WorkletGlobalScope* globalScope = mWorkletImpl->GetGlobalScope();
->>>>>>> upstream-releases
   MOZ_ASSERT(globalScope);
 
   AutoEntryScript aes(globalScope, "Worklet");
@@ -464,14 +392,8 @@ NS_IMPL_CYCLE_COLLECTION_CLASS(Worklet)
 
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(Worklet)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mWindow)
-<<<<<<< HEAD
-  tmp->mImpl->NotifyWorkletFinished();
-||||||| merged common ancestors
-  tmp->mImpl->TerminateThread();
-=======
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mOwnedObject)
   tmp->mImpl->NotifyWorkletFinished();
->>>>>>> upstream-releases
   NS_IMPL_CYCLE_COLLECTION_UNLINK_PRESERVED_WRAPPER
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
@@ -490,19 +412,9 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Worklet)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-Worklet::Worklet(nsPIDOMWindowInner* aWindow, RefPtr<WorkletImpl> aImpl)
-    : mWindow(aWindow), mImpl(std::move(aImpl)) {
-||||||| merged common ancestors
-Worklet::Worklet(nsPIDOMWindowInner* aWindow, RefPtr<WorkletImpl> aImpl)
-  : mWindow(aWindow)
-  , mImpl(std::move(aImpl))
-{
-=======
 Worklet::Worklet(nsPIDOMWindowInner* aWindow, RefPtr<WorkletImpl> aImpl,
                  nsISupports* aOwnedObject)
     : mWindow(aWindow), mOwnedObject(aOwnedObject), mImpl(std::move(aImpl)) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWindow);
   MOZ_ASSERT(mImpl);
   MOZ_ASSERT(NS_IsMainThread());

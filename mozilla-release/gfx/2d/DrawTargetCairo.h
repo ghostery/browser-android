@@ -18,30 +18,6 @@ namespace gfx {
 
 class SourceSurfaceCairo;
 
-<<<<<<< HEAD
-class GradientStopsCairo : public GradientStops {
- public:
-  MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GradientStopsCairo, override)
-
-  GradientStopsCairo(GradientStop *aStops, uint32_t aNumStops,
-                     ExtendMode aExtendMode)
-      : mExtendMode(aExtendMode) {
-    for (uint32_t i = 0; i < aNumStops; ++i) {
-      mStops.push_back(aStops[i]);
-||||||| merged common ancestors
-class GradientStopsCairo : public GradientStops
-{
-  public:
-    MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GradientStopsCairo, override)
-
-    GradientStopsCairo(GradientStop* aStops, uint32_t aNumStops,
-                       ExtendMode aExtendMode)
-     : mExtendMode(aExtendMode)
-    {
-      for (uint32_t i = 0; i < aNumStops; ++i) {
-        mStops.push_back(aStops[i]);
-      }
-=======
 class GradientStopsCairo : public GradientStops {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GradientStopsCairo, override)
@@ -51,28 +27,12 @@ class GradientStopsCairo : public GradientStops {
       : mExtendMode(aExtendMode) {
     for (uint32_t i = 0; i < aNumStops; ++i) {
       mStops.push_back(aStops[i]);
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  virtual ~GradientStopsCairo() {}
-||||||| merged common ancestors
-    virtual ~GradientStopsCairo() {}
-=======
   virtual ~GradientStopsCairo() = default;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const std::vector<GradientStop> &GetStops() const { return mStops; }
-||||||| merged common ancestors
-    const std::vector<GradientStop>& GetStops() const
-    {
-      return mStops;
-    }
-=======
   const std::vector<GradientStop>& GetStops() const { return mStops; }
->>>>>>> upstream-releases
 
   ExtendMode GetExtendMode() const { return mExtendMode; }
 
@@ -106,51 +66,12 @@ class DrawTargetCairo final : public DrawTarget {
 
   virtual void SetPermitSubpixelAA(bool aPermitSubpixelAA) override;
 
-<<<<<<< HEAD
-  virtual bool LockBits(uint8_t **aData, IntSize *aSize, int32_t *aStride,
-                        SurfaceFormat *aFormat,
-                        IntPoint *aOrigin = nullptr) override;
-  virtual void ReleaseBits(uint8_t *aData) override;
-||||||| merged common ancestors
-  virtual bool LockBits(uint8_t** aData, IntSize* aSize,
-                        int32_t* aStride, SurfaceFormat* aFormat,
-                        IntPoint* aOrigin = nullptr) override;
-  virtual void ReleaseBits(uint8_t* aData) override;
-=======
   virtual bool LockBits(uint8_t** aData, IntSize* aSize, int32_t* aStride,
                         SurfaceFormat* aFormat,
                         IntPoint* aOrigin = nullptr) override;
   virtual void ReleaseBits(uint8_t* aData) override;
->>>>>>> upstream-releases
 
   virtual void Flush() override;
-<<<<<<< HEAD
-  virtual void DrawSurface(
-      SourceSurface *aSurface, const Rect &aDest, const Rect &aSource,
-      const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
-      const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void DrawFilter(FilterNode *aNode, const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest, const Color &aColor,
-                                     const Point &aOffset, Float aSigma,
-||||||| merged common ancestors
-  virtual void DrawSurface(SourceSurface *aSurface,
-                           const Rect &aDest,
-                           const Rect &aSource,
-                           const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
-                           const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void DrawFilter(FilterNode *aNode,
-                          const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest,
-                                     const Color &aColor,
-                                     const Point &aOffset,
-                                     Float aSigma,
-=======
   virtual void DrawSurface(
       SourceSurface* aSurface, const Rect& aDest, const Rect& aSource,
       const DrawSurfaceOptions& aSurfOptions = DrawSurfaceOptions(),
@@ -161,85 +82,8 @@ class DrawTargetCairo final : public DrawTarget {
   virtual void DrawSurfaceWithShadow(SourceSurface* aSurface,
                                      const Point& aDest, const Color& aColor,
                                      const Point& aOffset, Float aSigma,
->>>>>>> upstream-releases
                                      CompositionOp aOperator) override;
 
-<<<<<<< HEAD
-  virtual void ClearRect(const Rect &aRect) override;
-
-  virtual void CopySurface(SourceSurface *aSurface, const IntRect &aSourceRect,
-                           const IntPoint &aDestination) override;
-  virtual void CopyRect(const IntRect &aSourceRect,
-                        const IntPoint &aDestination) override;
-
-  virtual void FillRect(const Rect &aRect, const Pattern &aPattern,
-                        const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeRect(const Rect &aRect, const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeLine(const Point &aStart, const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void Stroke(const Path *aPath, const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                      const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void Fill(const Path *aPath, const Pattern &aPattern,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions) override;
-  virtual void Mask(const Pattern &aSource, const Pattern &aMask,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void MaskSurface(
-      const Pattern &aSource, SourceSurface *aMask, Point aOffset,
-      const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void ClearRect(const Rect &aRect) override;
-
-  virtual void CopySurface(SourceSurface *aSurface,
-                           const IntRect &aSourceRect,
-                           const IntPoint &aDestination) override;
-  virtual void CopyRect(const IntRect &aSourceRect,
-                        const IntPoint &aDestination) override;
-
-  virtual void FillRect(const Rect &aRect,
-                        const Pattern &aPattern,
-                        const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeRect(const Rect &aRect,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeLine(const Point &aStart,
-                          const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void Stroke(const Path *aPath,
-                      const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                      const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void Fill(const Path *aPath,
-                    const Pattern &aPattern,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void FillGlyphs(ScaledFont *aFont,
-                          const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions) override;
-  virtual void Mask(const Pattern &aSource,
-                    const Pattern &aMask,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void MaskSurface(const Pattern &aSource,
-                           SourceSurface *aMask,
-                           Point aOffset,
-                           const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void ClearRect(const Rect& aRect) override;
 
   virtual void CopySurface(SourceSurface* aSurface, const IntRect& aSourceRect,
@@ -272,71 +116,19 @@ class DrawTargetCairo final : public DrawTarget {
   virtual void MaskSurface(
       const Pattern& aSource, SourceSurface* aMask, Point aOffset,
       const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
-  virtual bool Draw3DTransformedSurface(SourceSurface *aSurface,
-                                        const Matrix4x4 &aMatrix) override;
+  virtual bool Draw3DTransformedSurface(SourceSurface* aSurface,
+                                        const Matrix4x4& aMatrix) override;
 
   virtual void PushClip(const Path* aPath) override;
   virtual void PushClipRect(const Rect& aRect) override;
   virtual void PopClip() override;
-<<<<<<< HEAD
-  virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface *aMask,
-                         const Matrix &aMaskTransform,
-                         const IntRect &aBounds = IntRect(),
-||||||| merged common ancestors
-  virtual void PushLayer(bool aOpaque, Float aOpacity,
-                         SourceSurface* aMask,
-                         const Matrix& aMaskTransform,
-                         const IntRect& aBounds = IntRect(),
-=======
   virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface* aMask,
                          const Matrix& aMaskTransform,
                          const IntRect& aBounds = IntRect(),
->>>>>>> upstream-releases
                          bool aCopyBackground = false) override;
   virtual void PopLayer() override;
 
-<<<<<<< HEAD
-  virtual already_AddRefed<PathBuilder> CreatePathBuilder(
-      FillRule aFillRule = FillRule::FILL_WINDING) const override;
-
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
-      unsigned char *aData, const IntSize &aSize, int32_t aStride,
-      SurfaceFormat aFormat) const override;
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
-      SourceSurface *aSurface) const override;
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
-      const NativeSurface &aSurface) const override;
-  virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
-      const IntSize &aSize, SurfaceFormat aFormat) const override;
-  virtual already_AddRefed<DrawTarget> CreateShadowDrawTarget(
-      const IntSize &aSize, SurfaceFormat aFormat, float aSigma) const override;
-
-  virtual already_AddRefed<GradientStops> CreateGradientStops(
-      GradientStop *aStops, uint32_t aNumStops,
-      ExtendMode aExtendMode = ExtendMode::CLAMP) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<PathBuilder> CreatePathBuilder(FillRule aFillRule = FillRule::FILL_WINDING) const override;
-
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(unsigned char *aData,
-                                                            const IntSize &aSize,
-                                                            int32_t aStride,
-                                                            SurfaceFormat aFormat) const override;
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(SourceSurface *aSurface) const override;
-  virtual already_AddRefed<SourceSurface>
-    CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const override;
-  virtual already_AddRefed<DrawTarget>
-    CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const override;
-  virtual already_AddRefed<DrawTarget>
-    CreateShadowDrawTarget(const IntSize &aSize, SurfaceFormat aFormat,
-                           float aSigma) const override;
-
-  virtual already_AddRefed<GradientStops>
-    CreateGradientStops(GradientStop *aStops,
-                        uint32_t aNumStops,
-                        ExtendMode aExtendMode = ExtendMode::CLAMP) const override;
-=======
   virtual already_AddRefed<PathBuilder> CreatePathBuilder(
       FillRule aFillRule = FillRule::FILL_WINDING) const override;
 
@@ -357,109 +149,53 @@ class DrawTargetCairo final : public DrawTarget {
   virtual already_AddRefed<GradientStops> CreateGradientStops(
       GradientStop* aStops, uint32_t aNumStops,
       ExtendMode aExtendMode = ExtendMode::CLAMP) const override;
->>>>>>> upstream-releases
 
   virtual already_AddRefed<FilterNode> CreateFilter(FilterType aType) override;
 
-<<<<<<< HEAD
-  virtual void GetGlyphRasterizationMetrics(
-      ScaledFont *aScaledFont, const uint16_t *aGlyphIndices,
-      uint32_t aNumGlyphs, GlyphMetrics *aGlyphMetrics) override;
-||||||| merged common ancestors
-  virtual void GetGlyphRasterizationMetrics(ScaledFont *aScaledFont, const uint16_t* aGlyphIndices,
-                                            uint32_t aNumGlyphs, GlyphMetrics* aGlyphMetrics) override;
-=======
   virtual void GetGlyphRasterizationMetrics(
       ScaledFont* aScaledFont, const uint16_t* aGlyphIndices,
       uint32_t aNumGlyphs, GlyphMetrics* aGlyphMetrics) override;
->>>>>>> upstream-releases
 
   virtual void* GetNativeSurface(NativeSurfaceType aType) override;
 
-<<<<<<< HEAD
-  bool Init(cairo_surface_t *aSurface, const IntSize &aSize,
-            SurfaceFormat *aFormat = nullptr);
-  bool Init(const IntSize &aSize, SurfaceFormat aFormat);
-  bool Init(unsigned char *aData, const IntSize &aSize, int32_t aStride,
-            SurfaceFormat aFormat);
-||||||| merged common ancestors
-  bool Init(cairo_surface_t* aSurface, const IntSize& aSize, SurfaceFormat* aFormat = nullptr);
-  bool Init(const IntSize& aSize, SurfaceFormat aFormat);
-  bool Init(unsigned char* aData, const IntSize &aSize, int32_t aStride, SurfaceFormat aFormat);
-=======
   bool Init(cairo_surface_t* aSurface, const IntSize& aSize,
             SurfaceFormat* aFormat = nullptr);
   bool Init(const IntSize& aSize, SurfaceFormat aFormat);
   bool Init(unsigned char* aData, const IntSize& aSize, int32_t aStride,
             SurfaceFormat aFormat);
->>>>>>> upstream-releases
 
-  virtual void SetTransform(const Matrix &aTransform) override;
+  virtual void SetTransform(const Matrix& aTransform) override;
 
   virtual void DetachAllSnapshots() override { MarkSnapshotIndependent(); }
 
   // Call to set up aContext for drawing (with the current transform, etc).
   // Pass the path you're going to be using if you have one.
   // Implicitly calls WillChange(aPath).
-  void PrepareForDrawing(cairo_t *aContext, const Path *aPath = nullptr);
+  void PrepareForDrawing(cairo_t* aContext, const Path* aPath = nullptr);
 
   static cairo_surface_t* GetDummySurface();
 
   // Cairo hardcodes this as its maximum surface size.
-<<<<<<< HEAD
-  static size_t GetMaxSurfaceSize() { return 32767; }
-||||||| merged common ancestors
-  static size_t GetMaxSurfaceSize() {
-    return 32767;
-  }
-=======
   static size_t GetMaxSurfaceSize() { return 32766; }
->>>>>>> upstream-releases
 
  private:  // methods
   // Init cairo surface without doing a cairo_surface_reference() call.
-<<<<<<< HEAD
-  bool InitAlreadyReferenced(cairo_surface_t *aSurface, const IntSize &aSize,
-                             SurfaceFormat *aFormat = nullptr);
-||||||| merged common ancestors
-  bool InitAlreadyReferenced(cairo_surface_t* aSurface, const IntSize& aSize, SurfaceFormat* aFormat = nullptr);
-=======
   bool InitAlreadyReferenced(cairo_surface_t* aSurface, const IntSize& aSize,
                              SurfaceFormat* aFormat = nullptr);
->>>>>>> upstream-releases
   enum DrawPatternType { DRAW_FILL, DRAW_STROKE };
-<<<<<<< HEAD
-  void DrawPattern(const Pattern &aPattern, const StrokeOptions &aStrokeOptions,
-                   const DrawOptions &aOptions, DrawPatternType aDrawType,
-||||||| merged common ancestors
-  void DrawPattern(const Pattern& aPattern,
-                   const StrokeOptions& aStrokeOptions,
-                   const DrawOptions& aOptions,
-                   DrawPatternType aDrawType,
-=======
   void DrawPattern(const Pattern& aPattern, const StrokeOptions& aStrokeOptions,
                    const DrawOptions& aOptions, DrawPatternType aDrawType,
->>>>>>> upstream-releases
                    bool aPathBoundsClip = false);
 
-<<<<<<< HEAD
-  void CopySurfaceInternal(cairo_surface_t *aSurface, const IntRect &aSource,
-                           const IntPoint &aDest);
-||||||| merged common ancestors
-  void CopySurfaceInternal(cairo_surface_t* aSurface,
-                           const IntRect& aSource,
-                           const IntPoint& aDest);
-=======
   void CopySurfaceInternal(cairo_surface_t* aSurface, const IntRect& aSource,
                            const IntPoint& aDest);
->>>>>>> upstream-releases
 
   Rect GetUserSpaceClip() const;
 
   // Call before you make any changes to the backing surface with which this
   // context is associated. Pass the path you're going to be using if you have
   // one.
-  void WillChange(const Path *aPath = nullptr);
+  void WillChange(const Path* aPath = nullptr);
 
   // Call if there is any reason to disassociate the snapshot from this draw
   // target; for example, because we're going to be destroyed.
@@ -473,25 +209,15 @@ class DrawTargetCairo final : public DrawTarget {
   // font state.
   void SetFontOptions();
 
-<<<<<<< HEAD
- private:  // data
-  cairo_t *mContext;
-  cairo_surface_t *mSurface;
-||||||| merged common ancestors
-private: // data
-  cairo_t* mContext;
-  cairo_surface_t* mSurface;
-=======
  private:  // data
   cairo_t* mContext;
   cairo_surface_t* mSurface;
->>>>>>> upstream-releases
   IntSize mSize;
   bool mTransformSingular;
 
-  uint8_t *mLockedBits;
+  uint8_t* mLockedBits;
 
-  cairo_font_options_t *mFontOptions;
+  cairo_font_options_t* mFontOptions;
 
   struct PushedLayer {
     PushedLayer(Float aOpacity, bool aWasPermittingSubpixelAA)
@@ -499,7 +225,7 @@ private: // data
           mMaskPattern(nullptr),
           mWasPermittingSubpixelAA(aWasPermittingSubpixelAA) {}
     Float mOpacity;
-    cairo_pattern_t *mMaskPattern;
+    cairo_pattern_t* mMaskPattern;
     bool mWasPermittingSubpixelAA;
   };
   std::vector<PushedLayer> mPushedLayers;

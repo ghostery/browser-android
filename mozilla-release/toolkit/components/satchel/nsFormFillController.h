@@ -62,16 +62,8 @@ class nsFormFillController final : public nsIFormFillController,
 
   nsFormFillController();
 
-<<<<<<< HEAD
- protected:
-  virtual ~nsFormFillController();
-||||||| merged common ancestors
-protected:
-  virtual ~nsFormFillController();
-=======
  protected:
   MOZ_CAN_RUN_SCRIPT virtual ~nsFormFillController();
->>>>>>> upstream-releases
 
   void AddWindowListeners(nsPIDOMWindowOuter* aWindow);
   MOZ_CAN_RUN_SCRIPT void RemoveWindowListeners(nsPIDOMWindowOuter* aWindow);
@@ -79,13 +71,6 @@ protected:
   void AddKeyListener(nsINode* aInput);
   void RemoveKeyListener();
 
-<<<<<<< HEAD
-  void StartControllingInput(mozilla::dom::HTMLInputElement* aInput);
-  void StopControllingInput();
-||||||| merged common ancestors
-  void StartControllingInput(mozilla::dom::HTMLInputElement *aInput);
-  void StopControllingInput();
-=======
   MOZ_CAN_RUN_SCRIPT
   void StartControllingInput(mozilla::dom::HTMLInputElement* aInput);
   MOZ_CAN_RUN_SCRIPT void StopControllingInput();
@@ -95,7 +80,6 @@ protected:
   MOZ_CAN_RUN_SCRIPT
   nsresult HandleFocus(mozilla::dom::HTMLInputElement* aInput);
 
->>>>>>> upstream-releases
   /**
    * Checks that aElement is a type of element we want to fill, then calls
    * StartControllingInput on it.
@@ -106,18 +90,9 @@ protected:
   nsresult PerformInputListAutoComplete(const nsAString& aSearch,
                                         nsIAutoCompleteResult** aResult);
 
-<<<<<<< HEAD
-  void RevalidateDataList();
-  bool RowMatch(nsFormHistory* aHistory, uint32_t aIndex,
-                const nsAString& aInputName, const nsAString& aInputValue);
-||||||| merged common ancestors
-  void RevalidateDataList();
-  bool RowMatch(nsFormHistory *aHistory, uint32_t aIndex, const nsAString &aInputName, const nsAString &aInputValue);
-=======
   MOZ_CAN_RUN_SCRIPT void RevalidateDataList();
   bool RowMatch(nsFormHistory* aHistory, uint32_t aIndex,
                 const nsAString& aInputName, const nsAString& aInputValue);
->>>>>>> upstream-releases
 
   inline nsIDocShell* GetDocShellForInput(
       mozilla::dom::HTMLInputElement* aInput);

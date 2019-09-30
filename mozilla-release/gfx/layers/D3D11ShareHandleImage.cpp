@@ -25,32 +25,6 @@ using namespace gfx;
 
 D3D11ShareHandleImage::D3D11ShareHandleImage(const gfx::IntSize& aSize,
                                              const gfx::IntRect& aRect,
-<<<<<<< HEAD
-                                             const GUID& aSourceFormat)
-    : Image(nullptr, ImageFormat::D3D11_SHARE_HANDLE_TEXTURE),
-      mSize(aSize),
-      mPictureRect(aRect),
-      mSourceFormat(aSourceFormat)
-
-{}
-
-bool D3D11ShareHandleImage::AllocateTexture(D3D11RecycleAllocator* aAllocator,
-                                            ID3D11Device* aDevice) {
-||||||| merged common ancestors
-                                             const GUID& aSourceFormat)
-  : Image(nullptr, ImageFormat::D3D11_SHARE_HANDLE_TEXTURE)
-  , mSize(aSize)
-  , mPictureRect(aRect)
-  , mSourceFormat(aSourceFormat)
-
-{
-}
-
-bool
-D3D11ShareHandleImage::AllocateTexture(D3D11RecycleAllocator* aAllocator,
-                                       ID3D11Device* aDevice)
-{
-=======
                                              gfx::YUVColorSpace aColorSpace)
     : Image(nullptr, ImageFormat::D3D11_SHARE_HANDLE_TEXTURE),
       mSize(aSize),
@@ -59,63 +33,12 @@ D3D11ShareHandleImage::AllocateTexture(D3D11RecycleAllocator* aAllocator,
 
 bool D3D11ShareHandleImage::AllocateTexture(D3D11RecycleAllocator* aAllocator,
                                             ID3D11Device* aDevice) {
->>>>>>> upstream-releases
   if (aAllocator) {
-<<<<<<< HEAD
-    if (mSourceFormat == MFVideoFormat_NV12 &&
-        gfxPrefs::PDMWMFUseNV12Format() &&
-        gfx::DeviceManagerDx::Get()->CanUseNV12()) {
-      mTextureClient =
-          aAllocator->CreateOrRecycleClient(gfx::SurfaceFormat::NV12, mSize);
-    } else if (((mSourceFormat == MFVideoFormat_P010 &&
-                 gfx::DeviceManagerDx::Get()->CanUseP010()) ||
-                (mSourceFormat == MFVideoFormat_P016 &&
-                 gfx::DeviceManagerDx::Get()->CanUseP016())) &&
-               gfxPrefs::PDMWMFUseNV12Format()) {
-      mTextureClient = aAllocator->CreateOrRecycleClient(
-          mSourceFormat == MFVideoFormat_P010 ? gfx::SurfaceFormat::P010
-                                              : gfx::SurfaceFormat::P016,
-          mSize);
-    } else {
-      mTextureClient = aAllocator->CreateOrRecycleClient(
-          gfx::SurfaceFormat::B8G8R8A8, mSize);
-    }
-||||||| merged common ancestors
-    if (mSourceFormat == MFVideoFormat_NV12 &&
-        gfxPrefs::PDMWMFUseNV12Format() &&
-        gfx::DeviceManagerDx::Get()->CanUseNV12()) {
-      mTextureClient =
-        aAllocator->CreateOrRecycleClient(gfx::SurfaceFormat::NV12, mSize);
-    } else if (((mSourceFormat == MFVideoFormat_P010 &&
-                 gfx::DeviceManagerDx::Get()->CanUseP010()) ||
-                (mSourceFormat == MFVideoFormat_P016 &&
-                 gfx::DeviceManagerDx::Get()->CanUseP016())) &&
-               gfxPrefs::PDMWMFUseNV12Format()) {
-      mTextureClient = aAllocator->CreateOrRecycleClient(
-        mSourceFormat == MFVideoFormat_P010 ? gfx::SurfaceFormat::P010
-                                            : gfx::SurfaceFormat::P016,
-        mSize);
-    } else {
-      mTextureClient =
-        aAllocator->CreateOrRecycleClient(gfx::SurfaceFormat::B8G8R8A8, mSize);
-    }
-=======
     mTextureClient = aAllocator->CreateOrRecycleClient(mYUVColorSpace, mSize);
->>>>>>> upstream-releases
     if (mTextureClient) {
-<<<<<<< HEAD
-      mTexture =
-          static_cast<D3D11TextureData*>(mTextureClient->GetInternalData())
-              ->GetD3D11Texture();
-||||||| merged common ancestors
-      mTexture =
-        static_cast<D3D11TextureData*>(mTextureClient->GetInternalData())
-          ->GetD3D11Texture();
-=======
       D3D11TextureData* textureData = GetData();
       MOZ_DIAGNOSTIC_ASSERT(textureData, "Wrong TextureDataType");
       mTexture = textureData->GetD3D11Texture();
->>>>>>> upstream-releases
       return true;
     }
     return false;
@@ -134,17 +57,8 @@ bool D3D11ShareHandleImage::AllocateTexture(D3D11RecycleAllocator* aAllocator,
 
 gfx::IntSize D3D11ShareHandleImage::GetSize() const { return mSize; }
 
-<<<<<<< HEAD
-TextureClient* D3D11ShareHandleImage::GetTextureClient(
-    KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-TextureClient*
-D3D11ShareHandleImage::GetTextureClient(KnowsCompositor* aForwarder)
-{
-=======
 TextureClient* D3D11ShareHandleImage::GetTextureClient(
     KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
   return mTextureClient;
 }
 
@@ -177,15 +91,7 @@ D3D11ShareHandleImage::GetAsSourceSurface() {
 
     RefPtr<ID3D11Texture2D> outTexture;
 
-<<<<<<< HEAD
-    hr = manager->CopyToBGRATexture(texture, mSourceFormat,
-                                    getter_AddRefs(outTexture));
-||||||| merged common ancestors
-    hr = manager->CopyToBGRATexture(
-      texture, mSourceFormat, getter_AddRefs(outTexture));
-=======
     hr = manager->CopyToBGRATexture(texture, getter_AddRefs(outTexture));
->>>>>>> upstream-releases
 
     if (FAILED(hr)) {
       gfxWarning() << "Failed to copy to BGRA texture.";
@@ -264,15 +170,6 @@ D3D11ShareHandleImage::GetAsSourceSurface() {
   return surface.forget();
 }
 
-<<<<<<< HEAD
-ID3D11Texture2D* D3D11ShareHandleImage::GetTexture() const { return mTexture; }
-||||||| merged common ancestors
-ID3D11Texture2D*
-D3D11ShareHandleImage::GetTexture() const
-{
-  return mTexture;
-}
-=======
 ID3D11Texture2D* D3D11ShareHandleImage::GetTexture() const { return mTexture; }
 
 class MOZ_RAII D3D11TextureClientAllocationHelper
@@ -334,27 +231,7 @@ D3D11RecycleAllocator::D3D11RecycleAllocator(
                   gfx::DeviceManagerDx::Get()->CanUseP016()) {
   SetPreferredSurfaceFormat(aPreferredFormat);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-already_AddRefed<TextureClient> D3D11RecycleAllocator::Allocate(
-    gfx::SurfaceFormat aFormat, gfx::IntSize aSize, BackendSelector aSelector,
-    TextureFlags aTextureFlags, TextureAllocationFlags aAllocFlags) {
-  return CreateD3D11TextureClientWithDevice(
-      aSize, aFormat, aTextureFlags, aAllocFlags, mDevice,
-      mSurfaceAllocator->GetTextureForwarder());
-||||||| merged common ancestors
-already_AddRefed<TextureClient>
-D3D11RecycleAllocator::Allocate(gfx::SurfaceFormat aFormat,
-                                gfx::IntSize aSize,
-                                BackendSelector aSelector,
-                                TextureFlags aTextureFlags,
-                                TextureAllocationFlags aAllocFlags)
-{
-  return CreateD3D11TextureClientWithDevice(aSize, aFormat,
-                                            aTextureFlags, aAllocFlags,
-                                            mDevice, mSurfaceAllocator->GetTextureForwarder());
-=======
 void D3D11RecycleAllocator::SetPreferredSurfaceFormat(
     gfx::SurfaceFormat aPreferredFormat) {
   if ((aPreferredFormat == gfx::SurfaceFormat::NV12 && mCanUseNV12) ||
@@ -366,21 +243,10 @@ void D3D11RecycleAllocator::SetPreferredSurfaceFormat(
   // We can't handle the native source format, set it to BGRA which will
   // force the caller to convert it later.
   mUsableSurfaceFormat = gfx::SurfaceFormat::B8G8R8A8;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<TextureClient> D3D11RecycleAllocator::CreateOrRecycleClient(
-    gfx::SurfaceFormat aFormat, const gfx::IntSize& aSize) {
-||||||| merged common ancestors
-already_AddRefed<TextureClient>
-D3D11RecycleAllocator::CreateOrRecycleClient(gfx::SurfaceFormat aFormat,
-                                             const gfx::IntSize& aSize)
-{
-=======
 already_AddRefed<TextureClient> D3D11RecycleAllocator::CreateOrRecycleClient(
     gfx::YUVColorSpace aColorSpace, const gfx::IntSize& aSize) {
->>>>>>> upstream-releases
   // When CompositorDevice or ContentDevice is updated,
   // we could not reuse old D3D11Textures. It could cause video flickering.
   RefPtr<ID3D11Device> device = gfx::DeviceManagerDx::Get()->GetImageDevice();
@@ -390,41 +256,18 @@ already_AddRefed<TextureClient> D3D11RecycleAllocator::CreateOrRecycleClient(
   mImageDevice = device;
 
   TextureAllocationFlags allocFlags = TextureAllocationFlags::ALLOC_DEFAULT;
-<<<<<<< HEAD
-  if (gfxPrefs::PDMWMFUseSyncTexture() ||
-      mDevice == DeviceManagerDx::Get()->GetCompositorDevice()) {
-    // If our device is the compositor device, we don't need any synchronization
-    // in practice.
-||||||| merged common ancestors
-  if (gfxPrefs::PDMWMFUseSyncTexture() || mDevice == DeviceManagerDx::Get()->GetCompositorDevice()) {
-    // If our device is the compositor device, we don't need any synchronization in practice.
-=======
   if (StaticPrefs::media_wmf_use_sync_texture() ||
       mDevice == DeviceManagerDx::Get()->GetCompositorDevice()) {
     // If our device is the compositor device, we don't need any synchronization
     // in practice.
->>>>>>> upstream-releases
     allocFlags = TextureAllocationFlags::ALLOC_MANUAL_SYNCHRONIZATION;
   }
-<<<<<<< HEAD
-  RefPtr<TextureClient> textureClient =
-      CreateOrRecycle(aFormat, aSize, BackendSelector::Content,
-                      layers::TextureFlags::DEFAULT, allocFlags);
-||||||| merged common ancestors
-  RefPtr<TextureClient> textureClient =
-    CreateOrRecycle(aFormat,
-                    aSize,
-                    BackendSelector::Content,
-                    layers::TextureFlags::DEFAULT,
-                    allocFlags);
-=======
 
   D3D11TextureClientAllocationHelper helper(mUsableSurfaceFormat, aColorSpace,
                                             aSize, allocFlags, mDevice,
                                             layers::TextureFlags::DEFAULT);
 
   RefPtr<TextureClient> textureClient = CreateOrRecycle(helper);
->>>>>>> upstream-releases
   return textureClient.forget();
 }
 

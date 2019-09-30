@@ -4,10 +4,6 @@
 
 //! Gecko's media feature list and evaluator.
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use Atom;
-=======
 use crate::gecko_bindings::bindings;
 use crate::gecko_bindings::structs;
 use crate::media_queries::media_feature::{AllowsRanges, ParsingRequirements};
@@ -17,17 +13,7 @@ use crate::media_queries::{Device, MediaType};
 use crate::values::computed::CSSPixelLength;
 use crate::values::computed::Resolution;
 use crate::Atom;
->>>>>>> upstream-releases
 use app_units::Au;
-use crate::gecko_bindings::bindings;
-use crate::gecko_bindings::structs;
-use crate::media_queries::media_feature::{AllowsRanges, ParsingRequirements};
-use crate::media_queries::media_feature::{Evaluator, MediaFeatureDescription};
-use crate::media_queries::media_feature_expression::{AspectRatio, RangeOrOperator};
-use crate::media_queries::Device;
-use crate::values::computed::CSSPixelLength;
-use crate::values::computed::Resolution;
-use crate::Atom;
 use euclid::Size2D;
 
 fn viewport_size(device: &Device) -> Size2D<Au> {

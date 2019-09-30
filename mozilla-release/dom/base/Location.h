@@ -27,23 +27,11 @@ namespace dom {
 // Location: Script "location" object
 //*****************************************************************************
 
-<<<<<<< HEAD
-class Location final : public nsISupports, public nsWrapperCache {
- public:
-  Location(nsPIDOMWindowInner* aWindow, nsIDocShell* aDocShell);
-||||||| merged common ancestors
-class Location final : public nsISupports
-                     , public nsWrapperCache
-{
-public:
-  Location(nsPIDOMWindowInner* aWindow, nsIDocShell *aDocShell);
-=======
 class Location final : public nsISupports, public nsWrapperCache {
  public:
   typedef BrowsingContext::LocationProxy RemoteProxy;
 
   Location(nsPIDOMWindowInner* aWindow, nsIDocShell* aDocShell);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Location)

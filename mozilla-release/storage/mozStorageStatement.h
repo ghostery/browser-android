@@ -52,21 +52,9 @@ class Statement final : public mozIStorageStatement,
    * @param aSQLStatement
    *        The SQL statement to prepare that this object will represent.
    */
-<<<<<<< HEAD
-  nsresult initialize(Connection *aDBConnection, sqlite3 *aNativeConnection,
-                      const nsACString &aSQLStatement);
-
-||||||| merged common ancestors
-  nsresult initialize(Connection *aDBConnection,
-                      sqlite3* aNativeConnection,
-                      const nsACString &aSQLStatement);
-
-
-=======
   nsresult initialize(Connection* aDBConnection, sqlite3* aNativeConnection,
                       const nsACString& aSQLStatement);
 
->>>>>>> upstream-releases
   /**
    * Obtains the native statement pointer.
    */
@@ -80,63 +68,6 @@ class Statement final : public mozIStorageStatement,
     return mParamsArray.forget();
   }
 
-<<<<<<< HEAD
- private:
-  ~Statement();
-
-  sqlite3_stmt *mDBStatement;
-  uint32_t mParamCount;
-  uint32_t mResultColumnCount;
-  nsTArray<nsCString> mColumnNames;
-  bool mExecuting;
-
-  /**
-   * @return a pointer to the BindingParams object to use with our Bind*
-   *         method.
-   */
-  mozIStorageBindingParams *getParams();
-
-  /**
-   * Holds the array of parameters to bind to this statement when we execute
-   * it asynchronously.
-   */
-  RefPtr<BindingParamsArray> mParamsArray;
-
-  /**
-   * The following two members are only used with the JS helper.  They cache
-   * the row and params objects.
-   */
-  nsMainThreadPtrHandle<StatementParamsHolder> mStatementParamsHolder;
-  nsMainThreadPtrHandle<StatementRowHolder> mStatementRowHolder;
-||||||| merged common ancestors
-private:
-    ~Statement();
-
-    sqlite3_stmt *mDBStatement;
-    uint32_t mParamCount;
-    uint32_t mResultColumnCount;
-    nsTArray<nsCString> mColumnNames;
-    bool mExecuting;
-
-    /**
-     * @return a pointer to the BindingParams object to use with our Bind*
-     *         method.
-     */
-    mozIStorageBindingParams *getParams();
-
-    /**
-     * Holds the array of parameters to bind to this statement when we execute
-     * it asynchronously.
-     */
-    RefPtr<BindingParamsArray> mParamsArray;
-
-    /**
-     * The following two members are only used with the JS helper.  They cache
-     * the row and params objects.
-     */
-    nsMainThreadPtrHandle<StatementParamsHolder> mStatementParamsHolder;
-    nsMainThreadPtrHandle<StatementRowHolder> mStatementRowHolder;
-=======
  private:
   ~Statement();
 
@@ -164,7 +95,6 @@ private:
    */
   nsMainThreadPtrHandle<StatementParamsHolder> mStatementParamsHolder;
   nsMainThreadPtrHandle<StatementRowHolder> mStatementRowHolder;
->>>>>>> upstream-releases
 
   /**
    * Internal version of finalize that allows us to tell it if it is being
@@ -179,18 +109,8 @@ private:
   friend class StatementJSHelper;
 };
 
-<<<<<<< HEAD
-inline nsISupports *ToSupports(Statement *p) {
-  return NS_ISUPPORTS_CAST(mozIStorageStatement *, p);
-||||||| merged common ancestors
-inline nsISupports*
-ToSupports(Statement* p)
-{
-  return NS_ISUPPORTS_CAST(mozIStorageStatement*, p);
-=======
 inline nsISupports* ToSupports(Statement* p) {
   return NS_ISUPPORTS_CAST(mozIStorageStatement*, p);
->>>>>>> upstream-releases
 }
 
 }  // namespace storage

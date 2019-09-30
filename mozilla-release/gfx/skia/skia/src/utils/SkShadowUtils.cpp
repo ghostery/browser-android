@@ -12,13 +12,7 @@
 #include "SkColorData.h"
 #include "SkDevice.h"
 #include "SkDrawShadowInfo.h"
-<<<<<<< HEAD
-#include "SkFlattenablePriv.h"
 #include "SkMaskFilter.h"
-||||||| merged common ancestors
-=======
-#include "SkMaskFilter.h"
->>>>>>> upstream-releases
 #include "SkPath.h"
 #include "SkRandom.h"
 #include "SkRasterPipeline.h"
@@ -50,15 +44,6 @@ public:
             GrRecordingContext*, const GrColorSpaceInfo&) const override;
 #endif
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkGaussianColorFilter)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkGaussianColorFilter)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override {}
     void onAppendStages(SkRasterPipeline* pipeline, SkColorSpace* dstCS, SkArenaAlloc* alloc,

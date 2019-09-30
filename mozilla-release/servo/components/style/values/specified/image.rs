@@ -7,27 +7,6 @@
 //!
 //! [image]: https://drafts.csswg.org/css-images/#image-values
 
-<<<<<<< HEAD
-use crate::custom_properties::SpecifiedValue;
-use crate::parser::{Parse, ParserContext};
-#[cfg(feature = "gecko")]
-use crate::values::computed::{Context, Position as ComputedPosition, ToComputedValue};
-use crate::values::generics::image::PaintWorklet;
-use crate::values::generics::image::{self as generic, Circle, CompatMode, Ellipse, ShapeExtent};
-use crate::values::generics::position::Position as GenericPosition;
-use crate::values::specified::position::{LegacyPosition, Position, PositionComponent, Side, X, Y};
-use crate::values::specified::url::SpecifiedImageUrl;
-use crate::values::specified::{Angle, Color, Length, LengthOrPercentage};
-use crate::values::specified::{Number, NumberOrPercentage, Percentage};
-use crate::values::{Either, None_};
-use crate::Atom;
-use cssparser::{Delimiter, Parser, Token};
-||||||| merged common ancestors
-use Atom;
-use cssparser::{Parser, Token, Delimiter};
-use custom_properties::SpecifiedValue;
-use parser::{Parse, ParserContext};
-=======
 use crate::custom_properties::SpecifiedValue;
 use crate::parser::{Parse, ParserContext};
 use crate::stylesheets::CorsMode;
@@ -43,7 +22,6 @@ use crate::values::specified::{Angle, Color, Length, LengthPercentage};
 use crate::values::specified::{Number, NumberOrPercentage, Percentage};
 use crate::Atom;
 use cssparser::{Delimiter, Parser, Token};
->>>>>>> upstream-releases
 use selectors::parser::SelectorParseErrorKind;
 #[cfg(feature = "servo")]
 use servo_url::ServoUrl;
@@ -261,30 +239,6 @@ impl Parse for Gradient {
             },
         };
 
-<<<<<<< HEAD
-        #[cfg(feature = "gecko")]
-        {
-            use crate::gecko_bindings::structs;
-            if compat_mode == CompatMode::Moz &&
-                !unsafe { structs::StaticPrefs_sVarCache_layout_css_prefixes_gradients }
-            {
-                return Err(input.new_custom_error(StyleParseErrorKind::UnexpectedFunction(func)));
-            }
-        }
-
-||||||| merged common ancestors
-        #[cfg(feature = "gecko")]
-        {
-            use gecko_bindings::structs;
-            if compat_mode == CompatMode::Moz &&
-                !unsafe { structs::StaticPrefs_sVarCache_layout_css_prefixes_gradients }
-            {
-                return Err(input.new_custom_error(StyleParseErrorKind::UnexpectedFunction(func)));
-            }
-        }
-
-=======
->>>>>>> upstream-releases
         let (kind, items) = input.parse_nested_block(|i| {
             let shape = match shape {
                 Shape::Linear => GradientKind::parse_linear(context, i, &mut compat_mode)?,
@@ -618,75 +572,11 @@ impl generic::LineDirection for LineDirection {
     fn points_downwards(&self, compat_mode: GradientCompatMode) -> bool {
         match *self {
             LineDirection::Angle(ref angle) => angle.degrees() == 180.0,
-<<<<<<< HEAD
-            LineDirection::Vertical(Y::Bottom) if compat_mode == CompatMode::Modern => true,
-            LineDirection::Vertical(Y::Top) if compat_mode != CompatMode::Modern => true,
-            #[cfg(feature = "gecko")]
-            LineDirection::MozPosition(
-                Some(LegacyPosition {
-                    horizontal: ref x,
-                    vertical: ref y,
-                }),
-                None,
-            ) => {
-                use crate::values::computed::Percentage as ComputedPercentage;
-                use crate::values::specified::transform::OriginComponent;
-
-                // `50% 0%` is the default value for line direction.
-                // These percentage values can also be keywords.
-                let x = match *x {
-                    OriginComponent::Center => true,
-                    OriginComponent::Length(LengthOrPercentage::Percentage(
-                        ComputedPercentage(val),
-                    )) => val == 0.5,
-                    _ => false,
-                };
-                let y = match *y {
-                    OriginComponent::Side(Y::Top) => true,
-                    OriginComponent::Length(LengthOrPercentage::Percentage(
-                        ComputedPercentage(val),
-                    )) => val == 0.0,
-                    _ => false,
-                };
-                x && y
-||||||| merged common ancestors
-            LineDirection::Vertical(Y::Bottom) if compat_mode == CompatMode::Modern => true,
-            LineDirection::Vertical(Y::Top) if compat_mode != CompatMode::Modern => true,
-            #[cfg(feature = "gecko")]
-            LineDirection::MozPosition(
-                Some(LegacyPosition {
-                    horizontal: ref x,
-                    vertical: ref y,
-                }),
-                None,
-            ) => {
-                use values::computed::Percentage as ComputedPercentage;
-                use values::specified::transform::OriginComponent;
-
-                // `50% 0%` is the default value for line direction.
-                // These percentage values can also be keywords.
-                let x = match *x {
-                    OriginComponent::Center => true,
-                    OriginComponent::Length(LengthOrPercentage::Percentage(
-                        ComputedPercentage(val),
-                    )) => val == 0.5,
-                    _ => false,
-                };
-                let y = match *y {
-                    OriginComponent::Side(Y::Top) => true,
-                    OriginComponent::Length(LengthOrPercentage::Percentage(
-                        ComputedPercentage(val),
-                    )) => val == 0.0,
-                    _ => false,
-                };
-                x && y
-=======
             LineDirection::Vertical(VerticalPositionKeyword::Bottom) => {
                 compat_mode == GradientCompatMode::Modern
             },
             LineDirection::Vertical(VerticalPositionKeyword::Top) => {
                 compat_mode != GradientCompatMode::Modern
->>>>>>> upstream-releases
             },
             _ => false,
         }

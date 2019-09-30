@@ -203,20 +203,10 @@ RuleEditor.prototype = {
           this.ruleView._highlighters &&
           this.ruleView.highlighters.selectorHighlighterShown === selector;
         const selectorHighlighter = createChild(header, "span", {
-<<<<<<< HEAD
-          class: "ruleview-selectorhighlighter" +
-                 (isHighlighted ? " highlighted" : ""),
-          title: l10n("rule.selectorHighlighter.tooltip"),
-||||||| merged common ancestors
-          class: "ruleview-selectorhighlighter" +
-                 (isHighlighted ? " highlighted" : ""),
-          title: l10n("rule.selectorHighlighter.tooltip")
-=======
           class:
             "ruleview-selectorhighlighter" +
             (isHighlighted ? " highlighted" : ""),
           title: l10n("rule.selectorHighlighter.tooltip"),
->>>>>>> upstream-releases
         });
         selectorHighlighter.addEventListener("click", event => {
           this.ruleView.toggleSelectorHighlighter(
@@ -677,13 +667,7 @@ RuleEditor.prototype = {
     this.editor.input.blur();
 
     this.telemetry.recordEvent("edit_rule", "ruleview", null, {
-<<<<<<< HEAD
-      "session_id": this.toolbox.sessionId,
-||||||| merged common ancestors
-      "session_id": this.toolbox.sessionId
-=======
       session_id: this.toolbox.sessionId,
->>>>>>> upstream-releases
     });
   },
 

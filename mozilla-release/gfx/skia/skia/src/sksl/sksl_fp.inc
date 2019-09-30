@@ -24,12 +24,7 @@ layout(builtin=10011) half sk_Width;
 layout(builtin=10012) half sk_Height;
 
 half4 process(fragmentProcessor fp);
-<<<<<<< HEAD
-half4 process(fragmentProcessor fp, half4 input);
-||||||| merged common ancestors
-=======
 half4 process(fragmentProcessor fp, half4 input);
 half4 process(fragmentProcessor? fp);
 half4 process(fragmentProcessor? fp, half4 input);
->>>>>>> upstream-releases
 )

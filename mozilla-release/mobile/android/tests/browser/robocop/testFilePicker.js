@@ -5,15 +5,7 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/Services.jsm");
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 add_test(function filepicker_open() {
   let chromeWin = Services.wm.getMostRecentWindow("navigator:browser");

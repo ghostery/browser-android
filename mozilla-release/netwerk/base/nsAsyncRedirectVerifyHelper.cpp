@@ -58,52 +58,6 @@ nsAsyncRedirectVerifyHelper::~nsAsyncRedirectVerifyHelper() {
                "Did not receive all required callbacks!");
 }
 
-<<<<<<< HEAD
-nsresult nsAsyncRedirectVerifyHelper::Init(
-    nsIChannel* oldChan, nsIChannel* newChan, uint32_t flags,
-    nsIEventTarget* mainThreadEventTarget, bool synchronize) {
-  LOG(
-      ("nsAsyncRedirectVerifyHelper::Init() "
-       "oldChan=%p newChan=%p",
-       oldChan, newChan));
-  mOldChan = oldChan;
-  mNewChan = newChan;
-  mFlags = flags;
-  mCallbackEventTarget = NS_IsMainThread() && mainThreadEventTarget
-                             ? mainThreadEventTarget
-                             : GetCurrentThreadEventTarget();
-
-  if (!(flags & (nsIChannelEventSink::REDIRECT_INTERNAL |
-                 nsIChannelEventSink::REDIRECT_STS_UPGRADE))) {
-    nsCOMPtr<nsILoadInfo> loadInfo = oldChan->GetLoadInfo();
-    if (loadInfo && loadInfo->GetDontFollowRedirects()) {
-      ExplicitCallback(NS_BINDING_ABORTED);
-      return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsAsyncRedirectVerifyHelper::Init(nsIChannel* oldChan,
-                                  nsIChannel* newChan,
-                                  uint32_t flags,
-                                  nsIEventTarget* mainThreadEventTarget,
-                                  bool synchronize)
-{
-    LOG(("nsAsyncRedirectVerifyHelper::Init() "
-         "oldChan=%p newChan=%p", oldChan, newChan));
-    mOldChan           = oldChan;
-    mNewChan           = newChan;
-    mFlags             = flags;
-    mCallbackEventTarget = NS_IsMainThread() && mainThreadEventTarget
-      ? mainThreadEventTarget
-      : GetCurrentThreadEventTarget();
-
-    if (!(flags & (nsIChannelEventSink::REDIRECT_INTERNAL |
-                   nsIChannelEventSink::REDIRECT_STS_UPGRADE))) {
-      nsCOMPtr<nsILoadInfo> loadInfo = oldChan->GetLoadInfo();
-      if (loadInfo && loadInfo->GetDontFollowRedirects()) {
-        ExplicitCallback(NS_BINDING_ABORTED);
-        return NS_OK;
-      }
-=======
 nsresult nsAsyncRedirectVerifyHelper::Init(
     nsIChannel* oldChan, nsIChannel* newChan, uint32_t flags,
     nsIEventTarget* mainThreadEventTarget, bool synchronize) {
@@ -124,7 +78,6 @@ nsresult nsAsyncRedirectVerifyHelper::Init(
     if (loadInfo->GetDontFollowRedirects()) {
       ExplicitCallback(NS_BINDING_ABORTED);
       return NS_OK;
->>>>>>> upstream-releases
     }
   }
 

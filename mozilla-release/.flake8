@@ -60,14 +60,8 @@ exclude =
     dom/canvas/test/webgl-conf/checkout/closure-library/,
     editor/libeditor/tests/browserscope/,
     intl/icu/,
-<<<<<<< HEAD
-    ipc/chromium/src/third_party/,
-||||||| merged common ancestors
-    ipc/chromium/,
-=======
     ipc/chromium/src/third_party/,
     js/*.configure,
->>>>>>> upstream-releases
     gfx/angle/,
     gfx/harfbuzz,
     gfx/skia/,
@@ -81,12 +75,6 @@ exclude =
     testing/mochitest/pywebsocket,
     testing/mozharness/configs/test/test_malformed.py,
     tools/lint/test/files,
-<<<<<<< HEAD
-    build/build-infer/build-infer.py,
-    tools/infer/test/*.configure,    tools/infer/test/*.configure,
-||||||| merged common ancestors
-    build/build-infer/build-infer.py,
-=======
     tools/infer/test/*.configure,
     tools/crashreporter/*.configure,
     .ycm_extra_conf.py,
@@ -109,4 +97,3 @@ per-file-ignores =
     testing/firefox-ui/**/__init__.py: F401
     testing/marionette/**/__init__.py: F401
     testing/mozharness/configs/*: E124, E127, E128, E131, E231, E261, E265, E266, E501, W391
->>>>>>> upstream-releases

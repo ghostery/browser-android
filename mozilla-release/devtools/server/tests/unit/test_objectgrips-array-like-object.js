@@ -7,50 +7,11 @@
 // numeric keys, and if they have a length property, that it matches the number
 // of numeric keys. (See Bug 1371936)
 
-<<<<<<< HEAD
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-||||||| merged common ancestors
-async function run_test() {
-  do_test_pending();
-  await run_test_with_server(DebuggerServer);
-  await run_test_with_server(WorkerDebuggerServer);
-  do_test_finished();
-}
-
-async function run_test_with_server(server) {
-  initTestDebuggerServer(server);
-  const debuggee = addTestGlobal("test-grips", server);
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-=======
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Currying test function so we don't have to pass the debuggee and clients
-  const isArrayLike = object => test_object_grip_is_array_like(
-    debuggee, client, threadClient, object);
-||||||| merged common ancestors
-  const dbgClient = new DebuggerClient(server.connectPipe());
-  await dbgClient.connect();
-  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
-
-  // Currying test function so we don't have to pass the debuggee and clients
-  const isArrayLike = object => test_object_grip_is_array_like(
-    debuggee, dbgClient, threadClient, object);
-=======
 add_task(
   threadClientTest(async ({ threadClient, debuggee, client }) => {
     debuggee.eval(
@@ -62,7 +23,6 @@ add_task(
     // Currying test function so we don't have to pass the debuggee and clients
     const isArrayLike = object =>
       test_object_grip_is_array_like(debuggee, client, threadClient, object);
->>>>>>> upstream-releases
 
     equal(await isArrayLike({}), false, "An empty object is not ArrayLike");
     equal(
@@ -101,19 +61,6 @@ add_task(
       "Object with a wrongful `length` property is not ArrayLike"
     );
 
-<<<<<<< HEAD
-  equal(await isArrayLike({0: "zero"}), true);
-  equal(await isArrayLike({0: "zero", 1: "two"}), true);
-  equal(await isArrayLike({0: "zero", 1: "one", 2: "two", length: 3}), true);
-}));
-||||||| merged common ancestors
-  equal(await isArrayLike({0: "zero"}), true);
-  equal(await isArrayLike({0: "zero", 1: "two"}), true);
-  equal(await isArrayLike({0: "zero", 1: "one", 2: "two", length: 3}), true);
-
-  await dbgClient.close();
-}
-=======
     equal(await isArrayLike({ 0: "zero" }), true);
     equal(await isArrayLike({ 0: "zero", 1: "two" }), true);
     equal(
@@ -122,7 +69,6 @@ add_task(
     );
   })
 );
->>>>>>> upstream-releases
 
 async function test_object_grip_is_array_like(
   debuggee,

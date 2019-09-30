@@ -401,39 +401,6 @@ void GeckoMediaPluginServiceParent::InitializePlugins(
   RefPtr<GenericPromise> p = mInitPromise.Ensure(__func__);
   InvokeAsync(aAbstractGMPThread, this, __func__,
               &GeckoMediaPluginServiceParent::LoadFromEnvironment)
-<<<<<<< HEAD
-      ->Then(aAbstractGMPThread, __func__,
-             [self]() -> void {
-               MonitorAutoLock lock(self->mInitPromiseMonitor);
-               self->mLoadPluginsFromDiskComplete = true;
-               self->mInitPromise.Resolve(true, __func__);
-             },
-             [self]() -> void {
-               MonitorAutoLock lock(self->mInitPromiseMonitor);
-               self->mLoadPluginsFromDiskComplete = true;
-               self->mInitPromise.Reject(NS_ERROR_FAILURE, __func__);
-             });
-}
-
-void GeckoMediaPluginServiceParent::NotifySyncShutdownComplete() {
-||||||| merged common ancestors
-    ->Then(aAbstractGMPThread, __func__,
-      [self]() -> void {
-        MonitorAutoLock lock(self->mInitPromiseMonitor);
-        self->mLoadPluginsFromDiskComplete = true;
-        self->mInitPromise.Resolve(true, __func__);
-      },
-      [self]() -> void {
-        MonitorAutoLock lock(self->mInitPromiseMonitor);
-        self->mLoadPluginsFromDiskComplete = true;
-        self->mInitPromise.Reject(NS_ERROR_FAILURE, __func__);
-      });
-}
-
-void
-GeckoMediaPluginServiceParent::NotifySyncShutdownComplete()
-{
-=======
       ->Then(
           aAbstractGMPThread, __func__,
           [self]() -> void {
@@ -449,7 +416,6 @@ GeckoMediaPluginServiceParent::NotifySyncShutdownComplete()
 }
 
 void GeckoMediaPluginServiceParent::NotifySyncShutdownComplete() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   mWaitingForPluginsSyncShutdown = false;
 }
@@ -541,17 +507,6 @@ RefPtr<GenericPromise> GeckoMediaPluginServiceParent::LoadFromEnvironment() {
   }
 
   mScannedPluginOnDisk = true;
-<<<<<<< HEAD
-  return GenericPromise::All(thread, promises)
-      ->Then(thread, __func__,
-             []() { return GenericPromise::CreateAndResolve(true, __func__); },
-             []() {
-               return GenericPromise::CreateAndReject(NS_ERROR_FAILURE,
-                                                      __func__);
-             });
-||||||| merged common ancestors
-  return GenericPromise::All(thread, promises);
-=======
   return GenericPromise::All(thread, promises)
       ->Then(
           thread, __func__,
@@ -559,7 +514,6 @@ RefPtr<GenericPromise> GeckoMediaPluginServiceParent::LoadFromEnvironment() {
           []() {
             return GenericPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
           });
->>>>>>> upstream-releases
 }
 
 class NotifyObserversTask final : public mozilla::Runnable {
@@ -657,46 +611,6 @@ RefPtr<GenericPromise> GeckoMediaPluginServiceParent::AsyncAddPluginDirectory(
 
   nsString dir(aDirectory);
   RefPtr<GeckoMediaPluginServiceParent> self = this;
-<<<<<<< HEAD
-  return InvokeAsync(thread, this, __func__,
-                     &GeckoMediaPluginServiceParent::AddOnGMPThread, dir)
-      ->Then(mMainThread, __func__,
-             [dir, self](bool aVal) {
-               LOGD(
-                   ("GeckoMediaPluginServiceParent::AsyncAddPluginDirectory %s "
-                    "succeeded",
-                    NS_ConvertUTF16toUTF8(dir).get()));
-               MOZ_ASSERT(NS_IsMainThread());
-               self->UpdateContentProcessGMPCapabilities();
-               return GenericPromise::CreateAndResolve(aVal, __func__);
-             },
-             [dir](nsresult aResult) {
-               LOGD(
-                   ("GeckoMediaPluginServiceParent::AsyncAddPluginDirectory %s "
-                    "failed",
-                    NS_ConvertUTF16toUTF8(dir).get()));
-               return GenericPromise::CreateAndReject(aResult, __func__);
-             });
-||||||| merged common ancestors
-  return InvokeAsync(
-           thread, this, __func__,
-           &GeckoMediaPluginServiceParent::AddOnGMPThread, dir)
-    ->Then(
-      mMainThread,
-      __func__,
-      [dir, self](bool aVal) {
-        LOGD(("GeckoMediaPluginServiceParent::AsyncAddPluginDirectory %s succeeded",
-              NS_ConvertUTF16toUTF8(dir).get()));
-        MOZ_ASSERT(NS_IsMainThread());
-        self->UpdateContentProcessGMPCapabilities();
-        return GenericPromise::CreateAndResolve(aVal, __func__);
-      },
-      [dir](nsresult aResult) {
-        LOGD(("GeckoMediaPluginServiceParent::AsyncAddPluginDirectory %s failed",
-              NS_ConvertUTF16toUTF8(dir).get()));
-        return GenericPromise::CreateAndReject(aResult, __func__);
-      });
-=======
   return InvokeAsync(thread, this, __func__,
                      &GeckoMediaPluginServiceParent::AddOnGMPThread, dir)
       ->Then(
@@ -717,7 +631,6 @@ RefPtr<GenericPromise> GeckoMediaPluginServiceParent::AsyncAddPluginDirectory(
                  NS_ConvertUTF16toUTF8(dir).get()));
             return GenericPromise::CreateAndReject(aResult, __func__);
           });
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -857,18 +770,8 @@ already_AddRefed<GMPParent> GeckoMediaPluginServiceParent::SelectPluginForAPI(
   return nullptr;
 }
 
-<<<<<<< HEAD
-RefPtr<GMPParent> CreateGMPParent(AbstractThread* aMainThread) {
-#if defined(XP_LINUX) && defined(MOZ_GMP_SANDBOX)
-||||||| merged common ancestors
-RefPtr<GMPParent>
-CreateGMPParent(AbstractThread* aMainThread)
-{
-#if defined(XP_LINUX) && defined(MOZ_GMP_SANDBOX)
-=======
 RefPtr<GMPParent> CreateGMPParent(AbstractThread* aMainThread) {
 #if defined(XP_LINUX) && defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   if (!SandboxInfo::Get().CanSandboxMedia()) {
     if (!StaticPrefs::media_gmp_insecure_allow()) {
       NS_WARNING("Denying media plugin load due to lack of sandboxing.");
@@ -1398,36 +1301,6 @@ static void KillPlugins(const nsTArray<RefPtr<GMPParent>>& aPlugins,
   }
 }
 
-<<<<<<< HEAD
-static nsresult DeleteDir(nsIFile* aPath) {
-  bool exists = false;
-  nsresult rv = aPath->Exists(&exists);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  if (exists) {
-    return aPath->Remove(true);
-  }
-  return NS_OK;
-}
-
-||||||| merged common ancestors
-static nsresult
-DeleteDir(nsIFile* aPath)
-{
-  bool exists = false;
-  nsresult rv = aPath->Exists(&exists);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  if (exists) {
-    return aPath->Remove(true);
-  }
-  return NS_OK;
-}
-
-=======
->>>>>>> upstream-releases
 struct NodeFilter {
   explicit NodeFilter(const nsTArray<nsCString>& nodeIDs) : mNodeIDs(nodeIDs) {}
   bool operator()(GMPParent* aParent) {
@@ -1820,43 +1693,7 @@ mozilla::ipc::IPCResult GMPServiceParent::RecvGetGMPNodeId(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-class DeleteGMPServiceParent : public mozilla::Runnable {
- public:
-  explicit DeleteGMPServiceParent(GMPServiceParent* aToDelete)
-      : Runnable("gmp::DeleteGMPServiceParent"), mToDelete(aToDelete) {}
-
-  NS_IMETHOD Run() override { return NS_OK; }
-
- private:
-  nsAutoPtr<GMPServiceParent> mToDelete;
-};
-
 void GMPServiceParent::CloseTransport(Monitor* aSyncMonitor, bool* aCompleted) {
-||||||| merged common ancestors
-class DeleteGMPServiceParent : public mozilla::Runnable
-{
-public:
-  explicit DeleteGMPServiceParent(GMPServiceParent* aToDelete)
-    : Runnable("gmp::DeleteGMPServiceParent")
-    , mToDelete(aToDelete)
-  {
-  }
-
-  NS_IMETHOD Run() override
-  {
-    return NS_OK;
-  }
-
-private:
-  nsAutoPtr<GMPServiceParent> mToDelete;
-};
-
-void GMPServiceParent::CloseTransport(Monitor* aSyncMonitor, bool* aCompleted)
-{
-=======
-void GMPServiceParent::CloseTransport(Monitor* aSyncMonitor, bool* aCompleted) {
->>>>>>> upstream-releases
   MOZ_ASSERT(MessageLoop::current() == XRE_GetIOMessageLoop());
 
   MonitorAutoLock lock(*aSyncMonitor);

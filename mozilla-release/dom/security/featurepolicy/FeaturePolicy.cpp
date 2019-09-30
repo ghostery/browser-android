@@ -76,24 +76,10 @@ bool FeaturePolicy::HasDeclaredFeature(const nsAString& aFeatureName) const {
   return false;
 }
 
-<<<<<<< HEAD
-void FeaturePolicy::SetDeclaredPolicy(nsIDocument* aDocument,
-                                      const nsAString& aPolicyString,
-                                      nsIPrincipal* aSelfOrigin,
-                                      nsIPrincipal* aSrcOrigin) {
-||||||| merged common ancestors
-void
-FeaturePolicy::SetDeclaredPolicy(nsIDocument* aDocument,
-                                 const nsAString& aPolicyString,
-                                 nsIPrincipal* aSelfOrigin,
-                                 nsIPrincipal* aSrcOrigin)
-{
-=======
 void FeaturePolicy::SetDeclaredPolicy(Document* aDocument,
                                       const nsAString& aPolicyString,
                                       nsIPrincipal* aSelfOrigin,
                                       nsIPrincipal* aSrcOrigin) {
->>>>>>> upstream-releases
   ResetDeclaredPolicy();
 
   Unused << NS_WARN_IF(!FeaturePolicyParser::ParseString(

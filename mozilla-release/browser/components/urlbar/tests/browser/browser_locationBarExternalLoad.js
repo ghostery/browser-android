@@ -53,13 +53,6 @@ async function testURL(url, loadFunc, endFunc) {
   let browser = tab.linkedBrowser;
 
   let pagePrincipal = gBrowser.contentPrincipal;
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_locationBarExternalLoad.js
-  // We need to ensure that we set the pageshow event listener before running
-  // loadFunc, otherwise there's a chance that the content process will finish
-  // loading the page and fire pageshow before the event listener gets set.
-  let pageShowPromise = BrowserTestUtils.waitForContentEvent(browser, "pageshow");
-||||||| merged common ancestors
-=======
   // We need to ensure that we set the pageshow event listener before running
   // loadFunc, otherwise there's a chance that the content process will finish
   // loading the page and fire pageshow before the event listener gets set.
@@ -67,24 +60,12 @@ async function testURL(url, loadFunc, endFunc) {
     browser,
     "pageshow"
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_locationBarExternalLoad.js
   loadFunc(url);
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_locationBarExternalLoad.js
-  await pageShowPromise;
-
-  await ContentTask.spawn(browser, { isRemote: gMultiProcessBrowser },
-||||||| merged common ancestors
-
-  await BrowserTestUtils.waitForContentEvent(browser, "pageshow");
-
-  await ContentTask.spawn(browser, { isRemote: gMultiProcessBrowser },
-=======
   await pageShowPromise;
 
   await ContentTask.spawn(
     browser,
     { isRemote: gMultiProcessBrowser },
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_locationBarExternalLoad.js
     async function(arg) {
       Assert.equal(
         Services.focus.focusedElement,

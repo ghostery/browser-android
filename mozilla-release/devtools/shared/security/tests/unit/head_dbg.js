@@ -5,28 +5,14 @@
 
 /* exported defer, DebuggerClient, initTestDebuggerServer */
 
-<<<<<<< HEAD
-const { loader, require } =
-  ChromeUtils.import("resource://devtools/shared/Loader.jsm", {});
-||||||| merged common ancestors
-const { require } =
-  ChromeUtils.import("resource://devtools/shared/Loader.jsm", {});
-=======
 const { loader, require } = ChromeUtils.import(
   "resource://devtools/shared/Loader.jsm"
 );
->>>>>>> upstream-releases
 const defer = require("devtools/shared/defer");
 const Services = require("Services");
 const xpcInspector = require("xpcInspector");
 const { DebuggerServer } = require("devtools/server/main");
 const { DebuggerClient } = require("devtools/shared/client/debugger-client");
-<<<<<<< HEAD
-// We need to require lazily since will be crashed if we load SocketListener too early
-// in xpc shell test due to SocketListener loads PSM module.
-loader.lazyRequireGetter(this, "SocketListener", "devtools/shared/security/socket", true);
-||||||| merged common ancestors
-=======
 // We need to require lazily since will be crashed if we load SocketListener too early
 // in xpc shell test due to SocketListener loads PSM module.
 loader.lazyRequireGetter(
@@ -35,7 +21,6 @@ loader.lazyRequireGetter(
   "devtools/shared/security/socket",
   true
 );
->>>>>>> upstream-releases
 
 // We do not want to log packets by default, because in some tests,
 // we can be sending large amounts of data. The test harness has

@@ -13,12 +13,7 @@
 
 #include "SkAdvancedTypefaceMetrics.h"
 #include "SkFDot6.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "SkMutex.h"
-=======
 #include "SkFontMetrics.h"
->>>>>>> upstream-releases
 #include "SkPath.h"
 #include "SkScalerContext.h"
 #include "SkTypefaceCache.h"
@@ -113,18 +108,8 @@ protected:
     virtual bool generateAdvance(SkGlyph* glyph) override;
     virtual void generateMetrics(SkGlyph* glyph) override;
     virtual void generateImage(const SkGlyph& glyph) override;
-<<<<<<< HEAD
-    virtual bool generatePath(SkGlyphID glyphID, SkPath* path) override;
-    virtual void generateFontMetrics(SkPaint::FontMetrics* metrics) override;
-    virtual SkUnichar generateGlyphToChar(uint16_t glyph) override;
-||||||| merged common ancestors
-    virtual void generatePath(const SkGlyphID glyphID, SkPath* path) override;
-    virtual void generateFontMetrics(SkPaint::FontMetrics* metrics) override;
-    virtual SkUnichar generateGlyphToChar(uint16_t glyph) override;
-=======
     virtual bool generatePath(SkGlyphID glyphID, SkPath* path) override;
     virtual void generateFontMetrics(SkFontMetrics* metrics) override;
->>>>>>> upstream-releases
 
 private:
     bool computeShapeMatrix(const SkMatrix& m);
@@ -280,19 +265,6 @@ public:
 #endif
     }
 
-<<<<<<< HEAD
-private:
-||||||| merged common ancestors
-private:
-
-    void internal_dispose() const override
-    {
-        SkAutoMutexAcquire lock(gTypefaceMutex);
-        internal_dispose_restore_refcnt_to_1();
-        delete this;
-    }
-
-=======
     cairo_font_face_t* GetCairoFontFace() const { return fFontFace; }
 
     virtual bool hasColorGlyphs() const override
@@ -316,17 +288,8 @@ private:
     }
 
 private:
->>>>>>> upstream-releases
     ~SkCairoFTTypeface()
     {
-<<<<<<< HEAD
-        cairo_font_face_set_user_data(fFontFace, &kSkTypefaceKey, nullptr, nullptr);
-||||||| merged common ancestors
-        if (cairo_font_face_get_user_data(fFontFace, &kSkTypefaceKey) == this) {
-            cairo_font_face_set_user_data(fFontFace, &kSkTypefaceKey, nullptr, nullptr);
-        }
-=======
->>>>>>> upstream-releases
         cairo_font_face_destroy(fFontFace);
 #ifdef CAIRO_HAS_FC_FONT
         if (fPattern) {
@@ -350,27 +313,10 @@ SkTypeface* SkCreateTypefaceFromCairoFTFontWithFontconfig(cairo_scaled_font_t* s
     SkASSERT(cairo_font_face_status(fontFace) == CAIRO_STATUS_SUCCESS);
     SkASSERT(cairo_font_face_get_type(fontFace) == CAIRO_FONT_TYPE_FT);
 
-<<<<<<< HEAD
-    SkTypeface* typeface = reinterpret_cast<SkTypeface*>(cairo_font_face_get_user_data(fontFace, &kSkTypefaceKey));
-    if (typeface) {
-        typeface->ref();
-    } else {
-        typeface = new SkCairoFTTypeface(fontFace, pattern);
-        SkTypefaceCache::Add(typeface);
-||||||| merged common ancestors
-    SkAutoMutexAcquire lock(gTypefaceMutex);
-
-    SkTypeface* typeface = reinterpret_cast<SkTypeface*>(cairo_font_face_get_user_data(fontFace, &kSkTypefaceKey));
-    if (typeface && typeface->getRefCnt() > 0) {
-        typeface->ref();
-    } else {
-        typeface = new SkCairoFTTypeface(fontFace, pattern);
-=======
     sk_sp<SkTypeface> typeface = SkTypefaceCache::FindByProcAndRef(FindByCairoFontFace, fontFace);
     if (!typeface) {
         typeface = sk_make_sp<SkCairoFTTypeface>(fontFace, pattern, face);
         SkTypefaceCache::Add(typeface);
->>>>>>> upstream-releases
     }
 
     return typeface.release();

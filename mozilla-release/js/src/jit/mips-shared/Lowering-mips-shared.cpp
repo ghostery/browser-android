@@ -328,7 +328,6 @@ void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
   ptr = useRegisterAtStart(base);
 #endif
 
-<<<<<<< HEAD
   if (IsUnaligned(ins->access())) {
     if (ins->type() == MIRType::Int64) {
       auto* lir = new (alloc()) LWasmUnalignedLoadI64(ptr, temp());
@@ -348,160 +347,38 @@ void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
     define(lir, ins);
     return;
   }
-||||||| merged common ancestors
-    if (IsUnaligned(ins->access())) {
-        if (ins->type() == MIRType::Int64) {
-            auto* lir = new(alloc()) LWasmUnalignedLoadI64(ptr, temp());
-            if (ins->access().offset()) {
-                lir->setTemp(0, tempCopy(base, 0));
-            }
 
-            defineInt64(lir, ins);
-            return;
-        }
-
-        auto* lir = new(alloc()) LWasmUnalignedLoad(ptr, temp());
-        if (ins->access().offset()) {
-            lir->setTemp(0, tempCopy(base, 0));
-        }
-
-        define(lir, ins);
-        return;
-    }
-
-    if (ins->type() == MIRType::Int64) {
-=======
-  if (IsUnaligned(ins->access())) {
-    if (ins->type() == MIRType::Int64) {
-      auto* lir = new (alloc()) LWasmUnalignedLoadI64(ptr, temp());
-      if (ins->access().offset()) {
-        lir->setTemp(0, tempCopy(base, 0));
-      }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (ins->type() == MIRType::Int64) {
 #ifdef JS_CODEGEN_MIPS32
     if (ins->access().isAtomic()) {
       auto* lir = new (alloc()) LWasmAtomicLoadI64(ptr);
       defineInt64(lir, ins);
       return;
-||||||| merged common ancestors
-#ifdef JS_CODEGEN_MIPS32
-        if(ins->access().isAtomic()) {
-            auto* lir = new(alloc()) LWasmAtomicLoadI64(ptr);
-            defineInt64(lir, ins);
-            return;
-        }
-#endif
-        auto* lir = new(alloc()) LWasmLoadI64(ptr);
-        if (ins->access().offset()) {
-            lir->setTemp(0, tempCopy(base, 0));
-        }
-
-        defineInt64(lir, ins);
-        return;
-=======
-      defineInt64(lir, ins);
-      return;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
 #endif
     auto* lir = new (alloc()) LWasmLoadI64(ptr);
-||||||| merged common ancestors
-
-    auto* lir = new(alloc()) LWasmLoad(ptr);
-=======
-
-    auto* lir = new (alloc()) LWasmUnalignedLoad(ptr, temp());
->>>>>>> upstream-releases
     if (ins->access().offset()) {
       lir->setTemp(0, tempCopy(base, 0));
     }
 
-<<<<<<< HEAD
     defineInt64(lir, ins);
     return;
   }
-||||||| merged common ancestors
-    define(lir, ins);
-}
-=======
-    define(lir, ins);
-    return;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   auto* lir = new (alloc()) LWasmLoad(ptr);
   if (ins->access().offset()) {
     lir->setTemp(0, tempCopy(base, 0));
   }
-||||||| merged common ancestors
-void
-LIRGenerator::visitWasmStore(MWasmStore* ins)
-{
-    MDefinition* base = ins->base();
-    MOZ_ASSERT(base->type() == MIRType::Int32);
-=======
-  if (ins->type() == MIRType::Int64) {
-#ifdef JS_CODEGEN_MIPS32
-    if (ins->access().isAtomic()) {
-      auto* lir = new (alloc()) LWasmAtomicLoadI64(ptr);
-      defineInt64(lir, ins);
-      return;
-    }
-#endif
-    auto* lir = new (alloc()) LWasmLoadI64(ptr);
-    if (ins->access().offset()) {
-      lir->setTemp(0, tempCopy(base, 0));
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   define(lir, ins);
 }
-||||||| merged common ancestors
-    MDefinition* value = ins->value();
-=======
-    defineInt64(lir, ins);
-    return;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 void LIRGenerator::visitWasmStore(MWasmStore* ins) {
   MDefinition* base = ins->base();
   MOZ_ASSERT(base->type() == MIRType::Int32);
-||||||| merged common ancestors
-    if (IsUnaligned(ins->access())) {
-        LAllocation baseAlloc = useRegisterAtStart(base);
-        if (ins->access().type() == Scalar::Int64) {
-            LInt64Allocation valueAlloc = useInt64RegisterAtStart(value);
-            auto* lir = new(alloc()) LWasmUnalignedStoreI64(baseAlloc, valueAlloc, temp());
-            if (ins->access().offset()) {
-                lir->setTemp(0, tempCopy(base, 0));
-            }
-=======
-  auto* lir = new (alloc()) LWasmLoad(ptr);
-  if (ins->access().offset()) {
-    lir->setTemp(0, tempCopy(base, 0));
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   MDefinition* value = ins->value();
-||||||| merged common ancestors
-            add(lir, ins);
-            return;
-        }
-=======
-  define(lir, ins);
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (IsUnaligned(ins->access())) {
     LAllocation baseAlloc = useRegisterAtStart(base);
     if (ins->access().type() == Scalar::Int64) {
@@ -511,31 +388,11 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
       if (ins->access().offset()) {
         lir->setTemp(0, tempCopy(base, 0));
       }
-||||||| merged common ancestors
-        LAllocation valueAlloc = useRegisterAtStart(value);
-        auto* lir = new(alloc()) LWasmUnalignedStore(baseAlloc, valueAlloc, temp());
-        if (ins->access().offset()) {
-            lir->setTemp(0, tempCopy(base, 0));
-        }
-=======
-void LIRGenerator::visitWasmStore(MWasmStore* ins) {
-  MDefinition* base = ins->base();
-  MOZ_ASSERT(base->type() == MIRType::Int32);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
       add(lir, ins);
       return;
     }
-||||||| merged common ancestors
-        add(lir, ins);
-        return;
-    }
-=======
-  MDefinition* value = ins->value();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     LAllocation valueAlloc = useRegisterAtStart(value);
     auto* lir =
         new (alloc()) LWasmUnalignedStore(baseAlloc, valueAlloc, temp());
@@ -554,56 +411,12 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
           useRegister(base), useInt64Register(value), temp());
       add(lir, ins);
       return;
-||||||| merged common ancestors
-    if (ins->access().type() == Scalar::Int64) {
-
-#ifdef JS_CODEGEN_MIPS32
-        if(ins->access().isAtomic()) {
-            auto* lir = new(alloc()) LWasmAtomicStoreI64(useRegister(base), useInt64Register(value), temp());
-            add(lir, ins);
-            return;
-        }
-#endif
-
-        LAllocation baseAlloc = useRegisterAtStart(base);
-        LInt64Allocation valueAlloc = useInt64RegisterAtStart(value);
-        auto* lir = new(alloc()) LWasmStoreI64(baseAlloc, valueAlloc);
-        if (ins->access().offset()) {
-            lir->setTemp(0, tempCopy(base, 0));
-        }
-
-        add(lir, ins);
-        return;
-=======
-  if (IsUnaligned(ins->access())) {
-    LAllocation baseAlloc = useRegisterAtStart(base);
-    if (ins->access().type() == Scalar::Int64) {
-      LInt64Allocation valueAlloc = useInt64RegisterAtStart(value);
-      auto* lir =
-          new (alloc()) LWasmUnalignedStoreI64(baseAlloc, valueAlloc, temp());
-      if (ins->access().offset()) {
-        lir->setTemp(0, tempCopy(base, 0));
-      }
-
-      add(lir, ins);
-      return;
->>>>>>> upstream-releases
     }
 #endif
 
-<<<<<<< HEAD
     LAllocation baseAlloc = useRegisterAtStart(base);
     LInt64Allocation valueAlloc = useInt64RegisterAtStart(value);
     auto* lir = new (alloc()) LWasmStoreI64(baseAlloc, valueAlloc);
-||||||| merged common ancestors
-    LAllocation baseAlloc = useRegisterAtStart(base);
-    LAllocation valueAlloc = useRegisterAtStart(value);
-    auto* lir = new(alloc()) LWasmStore(baseAlloc, valueAlloc);
-=======
-    LAllocation valueAlloc = useRegisterAtStart(value);
-    auto* lir =
-        new (alloc()) LWasmUnalignedStore(baseAlloc, valueAlloc, temp());
->>>>>>> upstream-releases
     if (ins->access().offset()) {
       lir->setTemp(0, tempCopy(base, 0));
     }
@@ -612,78 +425,6 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
     return;
   }
 
-<<<<<<< HEAD
-  LAllocation baseAlloc = useRegisterAtStart(base);
-  LAllocation valueAlloc = useRegisterAtStart(value);
-  auto* lir = new (alloc()) LWasmStore(baseAlloc, valueAlloc);
-  if (ins->access().offset()) {
-    lir->setTemp(0, tempCopy(base, 0));
-  }
-||||||| merged common ancestors
-void
-LIRGenerator::visitWasmSelect(MWasmSelect* ins)
-{
-    if (ins->type() == MIRType::Int64) {
-        auto* lir = new(alloc()) LWasmSelectI64(useInt64RegisterAtStart(ins->trueExpr()),
-                                                useInt64(ins->falseExpr()),
-                                                useRegister(ins->condExpr()));
-=======
-  if (ins->access().type() == Scalar::Int64) {
-#ifdef JS_CODEGEN_MIPS32
-    if (ins->access().isAtomic()) {
-      auto* lir = new (alloc()) LWasmAtomicStoreI64(
-          useRegister(base), useInt64Register(value), temp());
-      add(lir, ins);
-      return;
-    }
-#endif
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  add(lir, ins);
-}
-
-void LIRGenerator::visitWasmSelect(MWasmSelect* ins) {
-  if (ins->type() == MIRType::Int64) {
-    auto* lir = new (alloc()) LWasmSelectI64(
-        useInt64RegisterAtStart(ins->trueExpr()), useInt64(ins->falseExpr()),
-        useRegister(ins->condExpr()));
-||||||| merged common ancestors
-        defineInt64ReuseInput(lir, ins, LWasmSelectI64::TrueExprIndex);
-        return;
-    }
-=======
-    LAllocation baseAlloc = useRegisterAtStart(base);
-    LInt64Allocation valueAlloc = useInt64RegisterAtStart(value);
-    auto* lir = new (alloc()) LWasmStoreI64(baseAlloc, valueAlloc);
-    if (ins->access().offset()) {
-      lir->setTemp(0, tempCopy(base, 0));
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    defineInt64ReuseInput(lir, ins, LWasmSelectI64::TrueExprIndex);
-    return;
-  }
-||||||| merged common ancestors
-    auto* lir = new(alloc()) LWasmSelect(useRegisterAtStart(ins->trueExpr()),
-                                         use(ins->falseExpr()),
-                                         useRegister(ins->condExpr()));
-=======
-    add(lir, ins);
-    return;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  auto* lir = new (alloc())
-      LWasmSelect(useRegisterAtStart(ins->trueExpr()), use(ins->falseExpr()),
-                  useRegister(ins->condExpr()));
-
-  defineReuseInput(lir, ins, LWasmSelect::TrueExprIndex);
-||||||| merged common ancestors
-    defineReuseInput(lir, ins, LWasmSelect::TrueExprIndex);
-=======
   LAllocation baseAlloc = useRegisterAtStart(base);
   LAllocation valueAlloc = useRegisterAtStart(value);
   auto* lir = new (alloc()) LWasmStore(baseAlloc, valueAlloc);
@@ -692,7 +433,6 @@ void LIRGenerator::visitWasmSelect(MWasmSelect* ins) {
   }
 
   add(lir, ins);
->>>>>>> upstream-releases
 }
 
 void LIRGeneratorMIPSShared::lowerUDiv(MDiv* div) {
@@ -729,29 +469,12 @@ void LIRGenerator::visitWasmUnsignedToDouble(MWasmUnsignedToDouble* ins) {
       new (alloc()) LWasmUint32ToDouble(useRegisterAtStart(ins->input()));
   define(lir, ins);
 }
-<<<<<<< HEAD
 
 void LIRGenerator::visitWasmUnsignedToFloat32(MWasmUnsignedToFloat32* ins) {
   MOZ_ASSERT(ins->input()->type() == MIRType::Int32);
   LWasmUint32ToFloat32* lir =
       new (alloc()) LWasmUint32ToFloat32(useRegisterAtStart(ins->input()));
   define(lir, ins);
-||||||| merged common ancestors
-
-void
-LIRGenerator::visitWasmUnsignedToFloat32(MWasmUnsignedToFloat32* ins)
-{
-    MOZ_ASSERT(ins->input()->type() == MIRType::Int32);
-    LWasmUint32ToFloat32* lir = new(alloc()) LWasmUint32ToFloat32(useRegisterAtStart(ins->input()));
-    define(lir, ins);
-=======
-
-void LIRGenerator::visitWasmUnsignedToFloat32(MWasmUnsignedToFloat32* ins) {
-  MOZ_ASSERT(ins->input()->type() == MIRType::Int32);
-  LWasmUint32ToFloat32* lir =
-      new (alloc()) LWasmUint32ToFloat32(useRegisterAtStart(ins->input()));
-  define(lir, ins);
->>>>>>> upstream-releases
 }
 
 void LIRGenerator::visitAsmJSLoadHeap(MAsmJSLoadHeap* ins) {
@@ -782,7 +505,6 @@ void LIRGenerator::visitAsmJSLoadHeap(MAsmJSLoadHeap* ins) {
 void LIRGenerator::visitAsmJSStoreHeap(MAsmJSStoreHeap* ins) {
   MOZ_ASSERT(ins->access().offset() == 0);
 
-<<<<<<< HEAD
   MDefinition* base = ins->base();
   MOZ_ASSERT(base->type() == MIRType::Int32);
   LAllocation baseAlloc;
@@ -803,34 +525,7 @@ void LIRGenerator::visitAsmJSStoreHeap(MAsmJSStoreHeap* ins) {
                                     limitAlloc),
       ins);
 }
-||||||| merged common ancestors
-void
-LIRGenerator::visitCompareExchangeTypedArrayElement(MCompareExchangeTypedArrayElement* ins)
-{
-    MOZ_ASSERT(ins->arrayType() != Scalar::Float32);
-    MOZ_ASSERT(ins->arrayType() != Scalar::Float64);
 
-    MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
-    MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
-=======
-  MDefinition* base = ins->base();
-  MOZ_ASSERT(base->type() == MIRType::Int32);
-  LAllocation baseAlloc;
-  LAllocation limitAlloc;
-  if (base->isConstant() && !ins->needsBoundsCheck()) {
-    MOZ_ASSERT(base->toConstant()->toInt32() >= 0);
-    baseAlloc = LAllocation(base->toConstant());
-  } else {
-    baseAlloc = useRegisterAtStart(base);
-    if (ins->needsBoundsCheck()) {
-      MDefinition* boundsCheckLimit = ins->boundsCheckLimit();
-      MOZ_ASSERT(boundsCheckLimit->type() == MIRType::Int32);
-      limitAlloc = useRegisterAtStart(boundsCheckLimit);
-    }
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 void LIRGenerator::visitSubstr(MSubstr* ins) {
   LSubstr* lir = new (alloc())
       LSubstr(useRegister(ins->string()), useRegister(ins->begin()),
@@ -838,132 +533,39 @@ void LIRGenerator::visitSubstr(MSubstr* ins) {
   define(lir, ins);
   assignSafepoint(lir, ins);
 }
-||||||| merged common ancestors
-    const LUse elements = useRegister(ins->elements());
-    const LAllocation index = useRegisterOrConstant(ins->index());
-=======
-  add(new (alloc()) LAsmJSStoreHeap(baseAlloc, useRegisterAtStart(ins->value()),
-                                    limitAlloc),
-      ins);
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 void LIRGenerator::visitCompareExchangeTypedArrayElement(
     MCompareExchangeTypedArrayElement* ins) {
   MOZ_ASSERT(ins->arrayType() != Scalar::Float32);
   MOZ_ASSERT(ins->arrayType() != Scalar::Float64);
-||||||| merged common ancestors
-    // If the target is a floating register then we need a temp at the
-    // CodeGenerator level for creating the result.
-=======
-void LIRGenerator::visitSubstr(MSubstr* ins) {
-  LSubstr* lir = new (alloc())
-      LSubstr(useRegister(ins->string()), useRegister(ins->begin()),
-              useRegister(ins->length()), temp(), temp(), tempByteOpRegister());
-  define(lir, ins);
-  assignSafepoint(lir, ins);
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
   MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
-||||||| merged common ancestors
-    const LAllocation newval = useRegister(ins->newval());
-    const LAllocation oldval = useRegister(ins->oldval());
-=======
-void LIRGenerator::visitCompareExchangeTypedArrayElement(
-    MCompareExchangeTypedArrayElement* ins) {
-  MOZ_ASSERT(ins->arrayType() != Scalar::Float32);
-  MOZ_ASSERT(ins->arrayType() != Scalar::Float64);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   const LUse elements = useRegister(ins->elements());
   const LAllocation index = useRegisterOrConstant(ins->index());
-||||||| merged common ancestors
-    LDefinition outTemp = LDefinition::BogusTemp();
-    LDefinition valueTemp = LDefinition::BogusTemp();
-    LDefinition offsetTemp = LDefinition::BogusTemp();
-    LDefinition maskTemp = LDefinition::BogusTemp();
-=======
-  MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
-  MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   // If the target is a floating register then we need a temp at the
   // CodeGenerator level for creating the result.
-||||||| merged common ancestors
-    if (ins->arrayType() == Scalar::Uint32 && IsFloatingPointType(ins->type())) {
-        outTemp = temp();
-    }
-=======
-  const LUse elements = useRegister(ins->elements());
-  const LAllocation index = useRegisterOrConstant(ins->index());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   const LAllocation newval = useRegister(ins->newval());
   const LAllocation oldval = useRegister(ins->oldval());
-||||||| merged common ancestors
-    if (Scalar::byteSize(ins->arrayType()) < 4) {
-        valueTemp = temp();
-        offsetTemp = temp();
-        maskTemp = temp();
-    }
-=======
-  // If the target is a floating register then we need a temp at the
-  // CodeGenerator level for creating the result.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   LDefinition outTemp = LDefinition::BogusTemp();
   LDefinition valueTemp = LDefinition::BogusTemp();
   LDefinition offsetTemp = LDefinition::BogusTemp();
   LDefinition maskTemp = LDefinition::BogusTemp();
-||||||| merged common ancestors
-    LCompareExchangeTypedArrayElement* lir =
-        new(alloc()) LCompareExchangeTypedArrayElement(elements, index, oldval, newval, outTemp,
-                                                      valueTemp, offsetTemp, maskTemp);
-=======
-  const LAllocation newval = useRegister(ins->newval());
-  const LAllocation oldval = useRegister(ins->oldval());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (ins->arrayType() == Scalar::Uint32 && IsFloatingPointType(ins->type())) {
     outTemp = temp();
   }
-||||||| merged common ancestors
-    define(lir, ins);
-}
-=======
-  LDefinition outTemp = LDefinition::BogusTemp();
-  LDefinition valueTemp = LDefinition::BogusTemp();
-  LDefinition offsetTemp = LDefinition::BogusTemp();
-  LDefinition maskTemp = LDefinition::BogusTemp();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (Scalar::byteSize(ins->arrayType()) < 4) {
     valueTemp = temp();
     offsetTemp = temp();
     maskTemp = temp();
   }
-||||||| merged common ancestors
-void
-LIRGenerator::visitAtomicExchangeTypedArrayElement(MAtomicExchangeTypedArrayElement* ins)
-{
-    MOZ_ASSERT(ins->arrayType() <= Scalar::Uint32);
-=======
-  if (ins->arrayType() == Scalar::Uint32 && IsFloatingPointType(ins->type())) {
-    outTemp = temp();
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   LCompareExchangeTypedArrayElement* lir = new (alloc())
       LCompareExchangeTypedArrayElement(elements, index, oldval, newval,
                                         outTemp, valueTemp, offsetTemp,
@@ -971,18 +573,7 @@ LIRGenerator::visitAtomicExchangeTypedArrayElement(MAtomicExchangeTypedArrayElem
 
   define(lir, ins);
 }
-||||||| merged common ancestors
-    MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
-    MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
-=======
-  if (Scalar::byteSize(ins->arrayType()) < 4) {
-    valueTemp = temp();
-    offsetTemp = temp();
-    maskTemp = temp();
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 void LIRGenerator::visitAtomicExchangeTypedArrayElement(
     MAtomicExchangeTypedArrayElement* ins) {
   MOZ_ASSERT(ins->arrayType() <= Scalar::Uint32);
@@ -995,113 +586,29 @@ void LIRGenerator::visitAtomicExchangeTypedArrayElement(
 
   // If the target is a floating register then we need a temp at the
   // CodeGenerator level for creating the result.
-||||||| merged common ancestors
-    const LUse elements = useRegister(ins->elements());
-    const LAllocation index = useRegisterOrConstant(ins->index());
-=======
-  LCompareExchangeTypedArrayElement* lir = new (alloc())
-      LCompareExchangeTypedArrayElement(elements, index, oldval, newval,
-                                        outTemp, valueTemp, offsetTemp,
-                                        maskTemp);
 
-  define(lir, ins);
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   const LAllocation value = useRegister(ins->value());
   LDefinition outTemp = LDefinition::BogusTemp();
   LDefinition valueTemp = LDefinition::BogusTemp();
   LDefinition offsetTemp = LDefinition::BogusTemp();
   LDefinition maskTemp = LDefinition::BogusTemp();
-||||||| merged common ancestors
-    // If the target is a floating register then we need a temp at the
-    // CodeGenerator level for creating the result.
-=======
-void LIRGenerator::visitAtomicExchangeTypedArrayElement(
-    MAtomicExchangeTypedArrayElement* ins) {
-  MOZ_ASSERT(ins->arrayType() <= Scalar::Uint32);
 
-  MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
-  MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
-
-  const LUse elements = useRegister(ins->elements());
-  const LAllocation index = useRegisterOrConstant(ins->index());
-
-  // If the target is a floating register then we need a temp at the
-  // CodeGenerator level for creating the result.
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (ins->arrayType() == Scalar::Uint32) {
     MOZ_ASSERT(ins->type() == MIRType::Double);
     outTemp = temp();
   }
-||||||| merged common ancestors
-    const LAllocation value = useRegister(ins->value());
-    LDefinition outTemp = LDefinition::BogusTemp();
-    LDefinition valueTemp = LDefinition::BogusTemp();
-    LDefinition offsetTemp = LDefinition::BogusTemp();
-    LDefinition maskTemp = LDefinition::BogusTemp();
-=======
-  const LAllocation value = useRegister(ins->value());
-  LDefinition outTemp = LDefinition::BogusTemp();
-  LDefinition valueTemp = LDefinition::BogusTemp();
-  LDefinition offsetTemp = LDefinition::BogusTemp();
-  LDefinition maskTemp = LDefinition::BogusTemp();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (Scalar::byteSize(ins->arrayType()) < 4) {
     valueTemp = temp();
     offsetTemp = temp();
     maskTemp = temp();
   }
-||||||| merged common ancestors
-    if (ins->arrayType() == Scalar::Uint32) {
-        MOZ_ASSERT(ins->type() == MIRType::Double);
-        outTemp = temp();
-    }
-=======
-  if (ins->arrayType() == Scalar::Uint32) {
-    MOZ_ASSERT(ins->type() == MIRType::Double);
-    outTemp = temp();
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  LAtomicExchangeTypedArrayElement* lir =
-      new (alloc()) LAtomicExchangeTypedArrayElement(
-          elements, index, value, outTemp, valueTemp, offsetTemp, maskTemp);
-||||||| merged common ancestors
-    if (Scalar::byteSize(ins->arrayType()) < 4) {
-        valueTemp = temp();
-        offsetTemp = temp();
-        maskTemp = temp();
-    }
-=======
-  if (Scalar::byteSize(ins->arrayType()) < 4) {
-    valueTemp = temp();
-    offsetTemp = temp();
-    maskTemp = temp();
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  define(lir, ins);
-||||||| merged common ancestors
-    LAtomicExchangeTypedArrayElement* lir =
-        new(alloc()) LAtomicExchangeTypedArrayElement(elements, index, value, outTemp,
-                                                      valueTemp, offsetTemp, maskTemp);
-
-    define(lir, ins);
-=======
   LAtomicExchangeTypedArrayElement* lir =
       new (alloc()) LAtomicExchangeTypedArrayElement(
           elements, index, value, outTemp, valueTemp, offsetTemp, maskTemp);
 
   define(lir, ins);
->>>>>>> upstream-releases
 }
 
 void LIRGenerator::visitWasmCompareExchangeHeap(MWasmCompareExchangeHeap* ins) {

@@ -38,29 +38,6 @@ namespace ipc {
 class FileDescriptor;
 }
 namespace loader {
-<<<<<<< HEAD
-class InputBuffer;
-class ScriptCacheChild;
-
-enum class ProcessType : uint8_t {
-  Uninitialized,
-  Parent,
-  Web,
-  Extension,
-  Privileged,
-};
-||||||| merged common ancestors
-    class InputBuffer;
-    class ScriptCacheChild;
-
-    enum class ProcessType : uint8_t {
-        Uninitialized,
-        Parent,
-        Web,
-        Extension,
-        Privileged,
-    };
-=======
 class InputBuffer;
 class ScriptCacheChild;
 
@@ -71,7 +48,6 @@ enum class ProcessType : uint8_t {
   Extension,
   PrivilegedAbout,
 };
->>>>>>> upstream-releases
 
 template <typename T>
 struct Matcher {
@@ -81,143 +57,6 @@ struct Matcher {
 
 using namespace mozilla::loader;
 
-<<<<<<< HEAD
-class ScriptPreloader : public nsIObserver,
-                        public nsIMemoryReporter,
-                        public nsIRunnable {
-  MOZ_DEFINE_MALLOC_SIZE_OF(MallocSizeOf)
-
-  friend class mozilla::loader::ScriptCacheChild;
-
- public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-  NS_DECL_NSIOBSERVER
-  NS_DECL_NSIMEMORYREPORTER
-  NS_DECL_NSIRUNNABLE
-
-  static ScriptPreloader& GetSingleton();
-  static ScriptPreloader& GetChildSingleton();
-
-  static ProcessType GetChildProcessType(const nsAString& remoteType);
-
-  // Retrieves the script with the given cache key from the script cache.
-  // Returns null if the script is not cached.
-  JSScript* GetCachedScript(JSContext* cx, const nsCString& name);
-
-  // Notes the execution of a script with the given URL and cache key.
-  // Depending on the stage of startup, the script may be serialized and
-  // stored to the startup script cache.
-  //
-  // If isRunOnce is true, this script is expected to run only once per
-  // process per browser session. A cached instance will not be kept alive
-  // for repeated execution.
-  void NoteScript(const nsCString& url, const nsCString& cachePath,
-                  JS::HandleScript script, bool isRunOnce = false);
-
-  void NoteScript(const nsCString& url, const nsCString& cachePath,
-                  ProcessType processType, nsTArray<uint8_t>&& xdrData,
-                  TimeStamp loadTime);
-
-  // Initializes the script cache from the startup script cache file.
-  Result<Ok, nsresult> InitCache(
-      const nsAString& = NS_LITERAL_STRING("scriptCache"));
-
-  Result<Ok, nsresult> InitCache(const Maybe<ipc::FileDescriptor>& cacheFile,
-                                 ScriptCacheChild* cacheChild);
-
-  bool Active() { return mCacheInitialized && !mStartupFinished; }
-
- private:
-  Result<Ok, nsresult> InitCacheInternal(JS::HandleObject scope = nullptr);
-
- public:
-  void Trace(JSTracer* trc);
-
-  static ProcessType CurrentProcessType() {
-    MOZ_ASSERT(sProcessType != ProcessType::Uninitialized);
-    return sProcessType;
-  }
-
-  static void InitContentChild(dom::ContentParent& parent);
-
- protected:
-  virtual ~ScriptPreloader() = default;
-
- private:
-  enum class ScriptStatus {
-    Restored,
-    Saved,
-  };
-
-  // Represents a cached JS script, either initially read from the script
-  // cache file, to be added to the next session's script cache file, or
-  // both.
-  //
-  // A script which was read from the cache file may be in any of the
-  // following states:
-  //
-  //  - Read from the cache, and being compiled off thread. In this case,
-  //    mReadyToExecute is false, and mToken is null.
-  //  - Off-thread compilation has finished, but the script has not yet been
-  //    executed. In this case, mReadyToExecute is true, and mToken has a
-  //    non-null value.
-  //  - Read from the cache, but too small or needed to immediately to be
-  //    compiled off-thread. In this case, mReadyToExecute is true, and both
-  //    mToken and mScript are null.
-  //  - Fully decoded, and ready to be added to the next session's cache
-  //    file. In this case, mReadyToExecute is true, and mScript is non-null.
-  //
-  // A script to be added to the next session's cache file always has a
-  // non-null mScript value. If it was read from the last session's cache
-  // file, it also has a non-empty mXDRRange range, which will be stored in
-  // the next session's cache file. If it was compiled in this session, its
-  // mXDRRange will initially be empty, and its mXDRData buffer will be
-  // populated just before it is written to the cache file.
-  class CachedScript : public LinkedListElement<CachedScript> {
-   public:
-    CachedScript(CachedScript&&) = delete;
-
-    CachedScript(ScriptPreloader& cache, const nsCString& url,
-                 const nsCString& cachePath, JSScript* script)
-        : mCache(cache),
-          mURL(url),
-          mCachePath(cachePath),
-          mScript(script),
-          mReadyToExecute(true),
-          mIsRunOnce(false) {}
-
-    inline CachedScript(ScriptPreloader& cache, InputBuffer& buf);
-
-    ~CachedScript() = default;
-
-    ScriptStatus Status() const {
-      return mProcessTypes.isEmpty() ? ScriptStatus::Restored
-                                     : ScriptStatus::Saved;
-    }
-||||||| merged common ancestors
-class ScriptPreloader : public nsIObserver
-                      , public nsIMemoryReporter
-                      , public nsIRunnable
-{
-    MOZ_DEFINE_MALLOC_SIZE_OF(MallocSizeOf)
-
-    friend class mozilla::loader::ScriptCacheChild;
-
-public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-    NS_DECL_NSIOBSERVER
-    NS_DECL_NSIMEMORYREPORTER
-    NS_DECL_NSIRUNNABLE
-
-    static ScriptPreloader& GetSingleton();
-    static ScriptPreloader& GetChildSingleton();
-
-    static ProcessType GetChildProcessType(const nsAString& remoteType);
-
-    // Retrieves the script with the given cache key from the script cache.
-    // Returns null if the script is not cached.
-    JSScript* GetCachedScript(JSContext* cx, const nsCString& name);
-=======
 class ScriptPreloader : public nsIObserver,
                         public nsIMemoryReporter,
                         public nsIRunnable,
@@ -333,7 +172,6 @@ class ScriptPreloader : public nsIObserver,
       return mProcessTypes.isEmpty() ? ScriptStatus::Restored
                                      : ScriptStatus::Saved;
     }
->>>>>>> upstream-releases
 
     // For use with nsTArray::Sort.
     //
@@ -452,160 +290,6 @@ class ScriptPreloader : public nsIObserver,
       return size;
     }
 
-<<<<<<< HEAD
-    ScriptPreloader& mCache;
-
-    // The URL from which this script was initially read and compiled.
-    nsCString mURL;
-    // A unique identifier for this script's filesystem location, used as a
-    // primary cache lookup value.
-    nsCString mCachePath;
-
-    // The offset of this script in the cache file, from the start of the XDR
-    // data block.
-    uint32_t mOffset = 0;
-    // The size of this script's encoded XDR data.
-    uint32_t mSize = 0;
-
-    TimeStamp mLoadTime{};
-
-    JS::Heap<JSScript*> mScript;
-
-    // True if this script is ready to be executed. This means that either the
-    // off-thread portion of an off-thread decode has finished, or the script
-    // is too small to be decoded off-thread, and may be immediately decoded
-    // whenever it is first executed.
-    bool mReadyToExecute = false;
-
-    // True if this script is expected to run once per process. If so, its
-    // JSScript instance will be dropped as soon as the script has
-    // executed and been encoded into the cache.
-    bool mIsRunOnce = false;
-
-    // The set of processes in which this script has been used.
-    EnumSet<ProcessType> mProcessTypes{};
-
-    // The set of processes which the script was loaded into during the
-    // last session, as read from the cache file.
-    EnumSet<ProcessType> mOriginalProcessTypes{};
-
-    // The read-only XDR data for this script, which was either read from an
-    // existing cache file, or generated by encoding a script which was
-    // compiled during this session.
-    Maybe<JS::TranscodeRange> mXDRRange;
-
-    // XDR data which was generated from a script compiled during this
-    // session, and will be written to the cache file.
-    MaybeOneOf<JS::TranscodeBuffer, nsTArray<uint8_t>> mXDRData;
-  } JS_HAZ_NON_GC_POINTER;
-
-  template <ScriptStatus status>
-  static Matcher<CachedScript*>* Match() {
-    static CachedScript::StatusMatcher matcher{status};
-    return &matcher;
-  }
-
-  // There's a significant setup cost for each off-thread decode operation,
-  // so scripts are decoded in chunks to minimize the overhead. There's a
-  // careful balancing act in choosing the size of chunks, to minimize the
-  // number of decode operations, while also minimizing the number of buffer
-  // underruns that require the main thread to wait for a script to finish
-  // decoding.
-  //
-  // For the first chunk, we don't have much time between the start of the
-  // decode operation and the time the first script is needed, so that chunk
-  // needs to be fairly small. After the first chunk is finished, we have
-  // some buffered scripts to fall back on, and a lot more breathing room,
-  // so the chunks can be a bit bigger, but still not too big.
-  static constexpr int OFF_THREAD_FIRST_CHUNK_SIZE = 128 * 1024;
-  static constexpr int OFF_THREAD_CHUNK_SIZE = 512 * 1024;
-
-  // Ideally, we want every chunk to be smaller than the chunk sizes
-  // specified above. However, if we have some number of small scripts
-  // followed by a huge script that would put us over the normal chunk size,
-  // we're better off processing them as a single chunk.
-  //
-  // In order to guarantee that the JS engine will process a chunk
-  // off-thread, it needs to be at least 100K (which is an implementation
-  // detail that can change at any time), so make sure that we always hit at
-  // least that size, with a bit of breathing room to be safe.
-  static constexpr int SMALL_SCRIPT_CHUNK_THRESHOLD = 128 * 1024;
-
-  // The maximum size of scripts to re-decode on the main thread if off-thread
-  // decoding hasn't finished yet. In practice, we don't hit this very often,
-  // but when we do, re-decoding some smaller scripts on the main thread gives
-  // the background decoding a chance to catch up without blocking the main
-  // thread for quite as long.
-  static constexpr int MAX_MAINTHREAD_DECODE_SIZE = 50 * 1024;
-
-  ScriptPreloader();
-
-  void ForceWriteCacheFile();
-  void Cleanup();
-
-  void FinishPendingParses(MonitorAutoLock& aMal);
-  void InvalidateCache();
-
-  // Opens the cache file for reading.
-  Result<Ok, nsresult> OpenCache();
-
-  // Writes a new cache file to disk. Must not be called on the main thread.
-  Result<Ok, nsresult> WriteCache();
-
-  // Prepares scripts for writing to the cache, serializing new scripts to
-  // XDR, and calculating their size-based offsets.
-  void PrepareCacheWrite();
-
-  void PrepareCacheWriteInternal();
-
-  void FinishContentStartup();
-
-  // Returns true if scripts added to the cache now will be encoded and
-  // written to the cache. If we've passed the startup script loading
-  // window, or this is a content process which hasn't been asked to return
-  // script bytecode, this will return false.
-  bool WillWriteScripts();
-
-  // Returns a file pointer for the cache file with the given name in the
-  // current profile.
-  Result<nsCOMPtr<nsIFile>, nsresult> GetCacheFile(const nsAString& suffix);
-
-  // Waits for the given cached script to finish compiling off-thread, or
-  // decodes it synchronously on the main thread, as appropriate.
-  JSScript* WaitForCachedScript(JSContext* cx, CachedScript* script);
-
-  void DecodeNextBatch(size_t chunkSize, JS::HandleObject scope = nullptr);
-
-  static void OffThreadDecodeCallback(JS::OffThreadToken* token, void* context);
-  void MaybeFinishOffThreadDecode();
-  void DoFinishOffThreadDecode();
-
-  size_t ShallowHeapSizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) {
-    return (mallocSizeOf(this) +
-            mScripts.ShallowSizeOfExcludingThis(mallocSizeOf) +
-            mallocSizeOf(mSaveThread.get()) + mallocSizeOf(mProfD.get()));
-  }
-
-  using ScriptHash = nsClassHashtable<nsCStringHashKey, CachedScript>;
-
-  template <ScriptStatus status>
-  static size_t SizeOfHashEntries(ScriptHash& scripts,
-                                  mozilla::MallocSizeOf mallocSizeOf) {
-    size_t size = 0;
-    for (auto elem : IterHash(scripts, Match<status>())) {
-      size += elem->HeapSizeOfIncludingThis(mallocSizeOf);
-||||||| merged common ancestors
-    using ScriptHash = nsClassHashtable<nsCStringHashKey, CachedScript>;
-
-    template<ScriptStatus status>
-    static size_t SizeOfHashEntries(ScriptHash& scripts, mozilla::MallocSizeOf mallocSizeOf)
-    {
-        size_t size = 0;
-        for (auto elem : IterHash(scripts, Match<status>())) {
-            size += elem->HeapSizeOfIncludingThis(mallocSizeOf);
-        }
-        return size;
-=======
     ScriptPreloader& mCache;
 
     // The URL from which this script was initially read and compiled.
@@ -752,7 +436,6 @@ class ScriptPreloader : public nsIObserver,
     size_t size = 0;
     for (auto elem : IterHash(scripts, Match<status>())) {
       size += elem->HeapSizeOfIncludingThis(mallocSizeOf);
->>>>>>> upstream-releases
     }
     return size;
   }
@@ -763,24 +446,10 @@ class ScriptPreloader : public nsIObserver,
   // scripts to the cache.
   bool mStartupFinished = false;
 
-<<<<<<< HEAD
   bool mCacheInitialized = false;
   bool mSaveComplete = false;
   bool mDataPrepared = false;
   bool mCacheInvalidated = false;
-  bool mBlockedOnSyncDispatch = false;
-||||||| merged common ancestors
-    bool mCacheInitialized = false;
-    bool mSaveComplete = false;
-    bool mDataPrepared = false;
-    bool mCacheInvalidated = false;
-    bool mBlockedOnSyncDispatch = false;
-=======
-  bool mCacheInitialized = false;
-  bool mSaveComplete = false;
-  bool mDataPrepared = false;
-  bool mCacheInvalidated = false;
->>>>>>> upstream-releases
 
   // The list of scripts that we read from the initial startup cache file,
   // but have yet to initiate a decode task for.

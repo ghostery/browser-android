@@ -63,17 +63,10 @@ class SVGFilterElement;
  *   "filter space point" = (10, 10) * 2
  *   "filter space point" = (20, 20)
  */
-<<<<<<< HEAD
-class nsSVGFilterInstance {
-||||||| merged common ancestors
-class nsSVGFilterInstance
-{
-=======
 class nsSVGFilterInstance {
   using StyleFilter = mozilla::StyleFilter;
   typedef mozilla::SVGAnimatedNumber SVGAnimatedNumber;
   typedef mozilla::SVGAnimatedNumberPair SVGAnimatedNumberPair;
->>>>>>> upstream-releases
   typedef mozilla::gfx::Point3D Point3D;
   typedef mozilla::gfx::IntRect IntRect;
   typedef mozilla::gfx::SourceSurface SourceSurface;
@@ -90,14 +83,7 @@ class nsSVGFilterInstance {
    * @param aTargetBBox The SVG bbox to use for the target frame, computed by
    *   the caller. The caller may decide to override the actual SVG bbox.
    */
-<<<<<<< HEAD
-  nsSVGFilterInstance(const nsStyleFilter& aFilter, nsIFrame* aTargetFrame,
-||||||| merged common ancestors
-  nsSVGFilterInstance(const nsStyleFilter& aFilter,
-                      nsIFrame* aTargetFrame,
-=======
   nsSVGFilterInstance(const StyleFilter& aFilter, nsIFrame* aTargetFrame,
->>>>>>> upstream-releases
                       nsIContent* aTargetContent,
                       const UserSpaceMetrics& aMetrics,
                       const gfxRect& aTargetBBox,
@@ -125,30 +111,13 @@ class nsSVGFilterInstance {
       nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
       nsTArray<RefPtr<SourceSurface>>& aInputImages, bool aInputIsTainted);
 
-<<<<<<< HEAD
-  float GetPrimitiveNumber(uint8_t aCtxType,
-                           const nsSVGNumber2* aNumber) const {
-||||||| merged common ancestors
-  float GetPrimitiveNumber(uint8_t aCtxType, const nsSVGNumber2 *aNumber) const
-  {
-=======
   float GetPrimitiveNumber(uint8_t aCtxType,
                            const SVGAnimatedNumber* aNumber) const {
->>>>>>> upstream-releases
     return GetPrimitiveNumber(aCtxType, aNumber->GetAnimValue());
   }
-<<<<<<< HEAD
-  float GetPrimitiveNumber(uint8_t aCtxType, const nsSVGNumberPair* aNumberPair,
-                           nsSVGNumberPair::PairIndex aIndex) const {
-||||||| merged common ancestors
-  float GetPrimitiveNumber(uint8_t aCtxType, const nsSVGNumberPair *aNumberPair,
-                           nsSVGNumberPair::PairIndex aIndex) const
-  {
-=======
   float GetPrimitiveNumber(uint8_t aCtxType,
                            const SVGAnimatedNumberPair* aNumberPair,
                            SVGAnimatedNumberPair::PairIndex aIndex) const {
->>>>>>> upstream-releases
     return GetPrimitiveNumber(aCtxType, aNumberPair->GetAnimValue(aIndex));
   }
 
@@ -173,21 +142,10 @@ class nsSVGFilterInstance {
   /**
    * Computes the filter primitive subregion for the given primitive.
    */
-<<<<<<< HEAD
-  IntRect ComputeFilterPrimitiveSubregion(
-      nsSVGFE* aFilterElement,
-      const nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
-      const nsTArray<int32_t>& aInputIndices);
-||||||| merged common ancestors
-  IntRect ComputeFilterPrimitiveSubregion(nsSVGFE* aFilterElement,
-                                          const nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
-                                          const nsTArray<int32_t>& aInputIndices);
-=======
   IntRect ComputeFilterPrimitiveSubregion(
       SVGFE* aFilterElement,
       const nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
       const nsTArray<int32_t>& aInputIndices);
->>>>>>> upstream-releases
 
   /**
    * Takes the input indices of a filter primitive and returns for each input
@@ -229,24 +187,11 @@ class nsSVGFilterInstance {
    * Then, the resulting aSourceIndices will contain the index of the
    * FilterPrimitiveDescription representing "another-primitive".
    */
-<<<<<<< HEAD
-  nsresult GetSourceIndices(
-      nsSVGFE* aPrimitiveElement,
-      nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
-      const nsDataHashtable<nsStringHashKey, int32_t>& aImageTable,
-      nsTArray<int32_t>& aSourceIndices);
-||||||| merged common ancestors
-  nsresult GetSourceIndices(nsSVGFE* aPrimitiveElement,
-                            nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
-                            const nsDataHashtable<nsStringHashKey, int32_t>& aImageTable,
-                            nsTArray<int32_t>& aSourceIndices);
-=======
   nsresult GetSourceIndices(
       SVGFE* aPrimitiveElement,
       nsTArray<FilterPrimitiveDescription>& aPrimitiveDescrs,
       const nsDataHashtable<nsStringHashKey, int32_t>& aImageTable,
       nsTArray<int32_t>& aSourceIndices);
->>>>>>> upstream-releases
 
   /**
    * Compute the filter region in user space, filter space, and filter

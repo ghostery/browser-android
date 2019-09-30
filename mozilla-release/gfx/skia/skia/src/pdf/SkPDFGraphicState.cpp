@@ -8,15 +8,8 @@
 #include "SkPDFGraphicState.h"
 
 #include "SkData.h"
-<<<<<<< HEAD
-#include "SkPDFCanon.h"
-||||||| merged common ancestors
-#include "SkPaint.h"
-#include "SkPDFCanon.h"
-=======
 #include "SkPDFDocument.h"
 #include "SkPDFDocumentPriv.h"
->>>>>>> upstream-releases
 #include "SkPDFFormXObject.h"
 #include "SkPDFUtils.h"
 #include "SkPaint.h"
@@ -110,17 +103,6 @@ SkPDFIndirectReference SkPDFGraphicState::GetGraphicStateForPaint(SkPDFDocument*
 static SkPDFIndirectReference make_invert_function(SkPDFDocument* doc) {
     // Acrobat crashes if we use a type 0 function, kpdf crashes if we use
     // a type 2 function, so we use a type 4 function.
-<<<<<<< HEAD
-    auto domainAndRange = SkPDFMakeArray(0, 1);
-
-||||||| merged common ancestors
-    auto domainAndRange = sk_make_sp<SkPDFArray>();
-    domainAndRange->reserve(2);
-    domainAndRange->appendInt(0);
-    domainAndRange->appendInt(1);
-
-=======
->>>>>>> upstream-releases
     static const char psInvert[] = "{1 exch sub}";
     // Do not copy the trailing '\0' into the SkData.
     auto invertFunction = SkData::MakeWithoutCopy(psInvert, strlen(psInvert));

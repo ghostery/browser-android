@@ -22,52 +22,6 @@ struct GrGlyph {
         kDistance_MaskStyle
     };
 
-<<<<<<< HEAD
-    typedef uint32_t PackedID;
-
-    GrDrawOpAtlas::AtlasID fID;
-    PackedID              fPackedID;
-    GrMaskFormat          fMaskFormat;
-    GrIRect16             fBounds;
-    SkIPoint16            fAtlasLocation;
-
-    void init(GrGlyph::PackedID packed, const SkIRect& bounds, GrMaskFormat format) {
-        fID = GrDrawOpAtlas::kInvalidAtlasID;
-        fPackedID = packed;
-        fBounds.set(bounds);
-        fMaskFormat = format;
-        fAtlasLocation.set(0, 0);
-    }
-
-    void reset() { }
-||||||| merged common ancestors
-    typedef uint32_t PackedID;
-
-    GrDrawOpAtlas::AtlasID fID;
-    SkPath*               fPath;
-    PackedID              fPackedID;
-    GrMaskFormat          fMaskFormat;
-    GrIRect16             fBounds;
-    SkIPoint16            fAtlasLocation;
-    bool                  fTooLargeForAtlas;
-
-    void init(GrGlyph::PackedID packed, const SkIRect& bounds, GrMaskFormat format) {
-        fID = GrDrawOpAtlas::kInvalidAtlasID;
-        fPath = nullptr;
-        fPackedID = packed;
-        fBounds.set(bounds);
-        fMaskFormat = format;
-        fAtlasLocation.set(0, 0);
-        fTooLargeForAtlas = GrDrawOpAtlas::GlyphTooLargeForAtlas(bounds.width(), bounds.height());
-    }
-
-    void reset() {
-        if (fPath) {
-            delete fPath;
-            fPath = nullptr;
-        }
-    }
-=======
     static GrMaskFormat FormatFromSkGlyph(const SkGlyph& glyph) {
         SkMask::Format format = static_cast<SkMask::Format>(glyph.fMaskFormat);
         switch (format) {
@@ -87,7 +41,6 @@ struct GrGlyph {
                 return kA8_GrMaskFormat;
         }
     }
->>>>>>> upstream-releases
 
     static GrIRect16 BoundsFromSkGlyph(const SkGlyph& glyph) {
         return GrIRect16::MakeXYWH(glyph.fLeft,

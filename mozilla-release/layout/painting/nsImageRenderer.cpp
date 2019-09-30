@@ -38,72 +38,14 @@ nsSize CSSSizeOrRatio::ComputeConcreteSize() const {
     return nsSize(mWidth, mHeight);
   }
   if (mHasWidth) {
-<<<<<<< HEAD
-    nscoord height = NSCoordSaturatingNonnegativeMultiply(
-        mWidth, double(mRatio.height) / mRatio.width);
-    return nsSize(mWidth, height);
-||||||| merged common ancestors
-    nscoord height = NSCoordSaturatingNonnegativeMultiply(
-      mWidth, double(mRatio.height) / mRatio.width);
-    return nsSize(mWidth, height);
-=======
     return nsSize(mWidth, mRatio.Inverted().ApplyTo(mWidth));
->>>>>>> upstream-releases
   }
 
   MOZ_ASSERT(mHasHeight);
-<<<<<<< HEAD
-  nscoord width = NSCoordSaturatingNonnegativeMultiply(
-      mHeight, double(mRatio.width) / mRatio.height);
-  return nsSize(width, mHeight);
-||||||| merged common ancestors
-  nscoord width = NSCoordSaturatingNonnegativeMultiply(
-    mHeight, double(mRatio.width) / mRatio.height);
-  return nsSize(width, mHeight);
-=======
   return nsSize(mRatio.ApplyTo(mHeight), mHeight);
->>>>>>> upstream-releases
 }
 
 nsImageRenderer::nsImageRenderer(nsIFrame* aForFrame,
-<<<<<<< HEAD
-                                 const nsStyleImage* aImage, uint32_t aFlags)
-    : mForFrame(aForFrame),
-      mImage(aImage),
-      mType(aImage->GetType()),
-      mImageContainer(nullptr),
-      mGradientData(nullptr),
-      mPaintServerFrame(nullptr),
-      mPrepareResult(ImgDrawResult::NOT_READY),
-      mSize(0, 0),
-      mFlags(aFlags),
-      mExtendMode(ExtendMode::CLAMP),
-      mMaskOp(NS_STYLE_MASK_MODE_MATCH_SOURCE) {}
-
-static bool ShouldTreatAsCompleteDueToSyncDecode(const nsStyleImage* aImage,
-                                                 uint32_t aFlags) {
-||||||| merged common ancestors
-                                 const nsStyleImage* aImage,
-                                 uint32_t aFlags)
-  : mForFrame(aForFrame)
-  , mImage(aImage)
-  , mType(aImage->GetType())
-  , mImageContainer(nullptr)
-  , mGradientData(nullptr)
-  , mPaintServerFrame(nullptr)
-  , mPrepareResult(ImgDrawResult::NOT_READY)
-  , mSize(0, 0)
-  , mFlags(aFlags)
-  , mExtendMode(ExtendMode::CLAMP)
-  , mMaskOp(NS_STYLE_MASK_MODE_MATCH_SOURCE)
-{
-}
-
-static bool
-ShouldTreatAsCompleteDueToSyncDecode(const nsStyleImage* aImage,
-                                     uint32_t aFlags)
-{
-=======
                                  const nsStyleImage* aImage, uint32_t aFlags)
     : mForFrame(aForFrame),
       mImage(aImage),
@@ -119,7 +61,6 @@ ShouldTreatAsCompleteDueToSyncDecode(const nsStyleImage* aImage,
 
 static bool ShouldTreatAsCompleteDueToSyncDecode(const nsStyleImage* aImage,
                                                  uint32_t aFlags) {
->>>>>>> upstream-releases
   if (!(aFlags & nsImageRenderer::FLAG_SYNC_DECODE_IMAGES)) {
     return false;
   }
@@ -155,21 +96,11 @@ static bool ShouldTreatAsCompleteDueToSyncDecode(const nsStyleImage* aImage,
   return true;
 }
 
-<<<<<<< HEAD
-bool nsImageRenderer::PrepareImage() {
-  if (mImage->IsEmpty()) {
-||||||| merged common ancestors
-bool
-nsImageRenderer::PrepareImage()
-{
-  if (mImage->IsEmpty()) {
-=======
 bool nsImageRenderer::PrepareImage() {
   if (mImage->IsEmpty() ||
       (mType == eStyleImageType_Image && !mImage->GetImageData())) {
     // mImage->GetImageData() could be null here if the nsStyleImage refused
     // to load a same-document URL.
->>>>>>> upstream-releases
     mPrepareResult = ImgDrawResult::BAD_IMAGE;
     return false;
   }
@@ -293,36 +224,12 @@ CSSSizeOrRatio nsImageRenderer::ComputeIntrinsicSize() {
 
       // If we know the aspect ratio and one of the dimensions,
       // we can compute the other missing width or height.
-<<<<<<< HEAD
-      if (!haveHeight && haveWidth && result.mRatio.width != 0) {
-        nscoord intrinsicHeight = NSCoordSaturatingNonnegativeMultiply(
-            imageIntSize.width,
-            float(result.mRatio.height) / float(result.mRatio.width));
-||||||| merged common ancestors
-      if (!haveHeight && haveWidth && result.mRatio.width != 0) {
-        nscoord intrinsicHeight = NSCoordSaturatingNonnegativeMultiply(
-          imageIntSize.width,
-          float(result.mRatio.height) / float(result.mRatio.width));
-=======
       if (!haveHeight && haveWidth && result.mRatio) {
         nscoord intrinsicHeight =
             result.mRatio.Inverted().ApplyTo(imageIntSize.width);
->>>>>>> upstream-releases
         result.SetHeight(nsPresContext::CSSPixelsToAppUnits(intrinsicHeight));
-<<<<<<< HEAD
-      } else if (haveHeight && !haveWidth && result.mRatio.height != 0) {
-        nscoord intrinsicWidth = NSCoordSaturatingNonnegativeMultiply(
-            imageIntSize.height,
-            float(result.mRatio.width) / float(result.mRatio.height));
-||||||| merged common ancestors
-      } else if (haveHeight && !haveWidth && result.mRatio.height != 0) {
-        nscoord intrinsicWidth = NSCoordSaturatingNonnegativeMultiply(
-          imageIntSize.height,
-          float(result.mRatio.width) / float(result.mRatio.height));
-=======
       } else if (haveHeight && !haveWidth && result.mRatio) {
         nscoord intrinsicWidth = result.mRatio.ApplyTo(imageIntSize.height);
->>>>>>> upstream-releases
         result.SetWidth(nsPresContext::CSSPixelsToAppUnits(intrinsicWidth));
       }
 
@@ -369,22 +276,10 @@ CSSSizeOrRatio nsImageRenderer::ComputeIntrinsicSize() {
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ nsSize nsImageRenderer::ComputeConcreteSize(
-    const CSSSizeOrRatio& aSpecifiedSize, const CSSSizeOrRatio& aIntrinsicSize,
-    const nsSize& aDefaultSize) {
-||||||| merged common ancestors
-/* static */ nsSize
-nsImageRenderer::ComputeConcreteSize(const CSSSizeOrRatio& aSpecifiedSize,
-                                     const CSSSizeOrRatio& aIntrinsicSize,
-                                     const nsSize& aDefaultSize)
-{
-=======
 /* static */
 nsSize nsImageRenderer::ComputeConcreteSize(
     const CSSSizeOrRatio& aSpecifiedSize, const CSSSizeOrRatio& aIntrinsicSize,
     const nsSize& aDefaultSize) {
->>>>>>> upstream-releases
   // The specified size is fully specified, just use that
   if (aSpecifiedSize.IsConcrete()) {
     return aSpecifiedSize.ComputeConcreteSize();
@@ -415,17 +310,7 @@ nsSize nsImageRenderer::ComputeConcreteSize(
   if (aSpecifiedSize.mHasWidth) {
     nscoord height;
     if (aIntrinsicSize.HasRatio()) {
-<<<<<<< HEAD
-      height = NSCoordSaturatingNonnegativeMultiply(
-          aSpecifiedSize.mWidth,
-          double(aIntrinsicSize.mRatio.height) / aIntrinsicSize.mRatio.width);
-||||||| merged common ancestors
-      height = NSCoordSaturatingNonnegativeMultiply(
-        aSpecifiedSize.mWidth,
-        double(aIntrinsicSize.mRatio.height) / aIntrinsicSize.mRatio.width);
-=======
       height = aIntrinsicSize.mRatio.Inverted().ApplyTo(aSpecifiedSize.mWidth);
->>>>>>> upstream-releases
     } else if (aIntrinsicSize.mHasHeight) {
       height = aIntrinsicSize.mHeight;
     } else {
@@ -437,17 +322,7 @@ nsSize nsImageRenderer::ComputeConcreteSize(
   MOZ_ASSERT(aSpecifiedSize.mHasHeight);
   nscoord width;
   if (aIntrinsicSize.HasRatio()) {
-<<<<<<< HEAD
-    width = NSCoordSaturatingNonnegativeMultiply(
-        aSpecifiedSize.mHeight,
-        double(aIntrinsicSize.mRatio.width) / aIntrinsicSize.mRatio.height);
-||||||| merged common ancestors
-    width = NSCoordSaturatingNonnegativeMultiply(
-      aSpecifiedSize.mHeight,
-      double(aIntrinsicSize.mRatio.width) / aIntrinsicSize.mRatio.height);
-=======
     width = aIntrinsicSize.mRatio.ApplyTo(aSpecifiedSize.mHeight);
->>>>>>> upstream-releases
   } else if (aIntrinsicSize.mHasWidth) {
     width = aIntrinsicSize.mWidth;
   } else {
@@ -456,25 +331,11 @@ nsSize nsImageRenderer::ComputeConcreteSize(
   return nsSize(width, aSpecifiedSize.mHeight);
 }
 
-<<<<<<< HEAD
-/* static */ nsSize nsImageRenderer::ComputeConstrainedSize(
-    const nsSize& aConstrainingSize, const nsSize& aIntrinsicRatio,
-    FitType aFitType) {
-  if (aIntrinsicRatio.width <= 0 && aIntrinsicRatio.height <= 0) {
-||||||| merged common ancestors
-/* static */ nsSize
-nsImageRenderer::ComputeConstrainedSize(const nsSize& aConstrainingSize,
-                                        const nsSize& aIntrinsicRatio,
-                                        FitType aFitType)
-{
-  if (aIntrinsicRatio.width <= 0 && aIntrinsicRatio.height <= 0) {
-=======
 /* static */
 nsSize nsImageRenderer::ComputeConstrainedSize(
     const nsSize& aConstrainingSize, const AspectRatio& aIntrinsicRatio,
     FitType aFitType) {
   if (!aIntrinsicRatio) {
->>>>>>> upstream-releases
     return aConstrainingSize;
   }
 
@@ -517,15 +378,7 @@ nsSize nsImageRenderer::ComputeConstrainedSize(
   nsSize size;
   if ((aFitType == CONTAIN) == (constraintWidth < hypotheticalWidth)) {
     size.width = aConstrainingSize.width;
-<<<<<<< HEAD
-    size.height =
-        NSCoordSaturatingNonnegativeMultiply(aIntrinsicRatio.height, scaleX);
-||||||| merged common ancestors
-    size.height =
-      NSCoordSaturatingNonnegativeMultiply(aIntrinsicRatio.height, scaleX);
-=======
     size.height = aIntrinsicRatio.Inverted().ApplyTo(aConstrainingSize.width);
->>>>>>> upstream-releases
     // If we're reducing the size by less than one css pixel, then just use the
     // constraining size.
     if (aFitType == CONTAIN &&
@@ -533,16 +386,8 @@ nsSize nsImageRenderer::ComputeConstrainedSize(
       size.height = aConstrainingSize.height;
     }
   } else {
-<<<<<<< HEAD
-    size.width =
-        NSCoordSaturatingNonnegativeMultiply(aIntrinsicRatio.width, scaleY);
-||||||| merged common ancestors
-    size.width =
-      NSCoordSaturatingNonnegativeMultiply(aIntrinsicRatio.width, scaleY);
-=======
     size.height = aConstrainingSize.height;
     size.width = aIntrinsicRatio.ApplyTo(aConstrainingSize.height);
->>>>>>> upstream-releases
     if (aFitType == CONTAIN &&
         aConstrainingSize.width - size.width < AppUnitsPerCSSPixel()) {
       size.width = aConstrainingSize.width;
@@ -644,41 +489,14 @@ ImgDrawResult nsImageRenderer::Draw(nsPresContext* aPresContext,
   switch (mType) {
     case eStyleImageType_Image: {
       result = nsLayoutUtils::DrawBackgroundImage(
-<<<<<<< HEAD
-          *ctx, mForFrame, aPresContext, mImageContainer, imageSize,
-          samplingFilter, aDest, aFill, aRepeatSize, aAnchor, aDirtyRect,
-          ConvertImageRendererToDrawFlags(mFlags), mExtendMode, aOpacity);
-||||||| merged common ancestors
-        *ctx,
-        mForFrame,
-        aPresContext,
-        mImageContainer,
-        imageSize,
-        samplingFilter,
-        aDest,
-        aFill,
-        aRepeatSize,
-        aAnchor,
-        aDirtyRect,
-        ConvertImageRendererToDrawFlags(mFlags),
-        mExtendMode,
-        aOpacity);
-=======
           *ctx, mForFrame, aPresContext, mImageContainer, samplingFilter, aDest,
           aFill, aRepeatSize, aAnchor, aDirtyRect,
           ConvertImageRendererToDrawFlags(mFlags), mExtendMode, aOpacity);
->>>>>>> upstream-releases
       break;
     }
     case eStyleImageType_Gradient: {
       nsCSSGradientRenderer renderer = nsCSSGradientRenderer::Create(
-<<<<<<< HEAD
-          aPresContext, mForFrame->Style(), mGradientData, mSize);
-||||||| merged common ancestors
-        aPresContext, mForFrame->Style(), mGradientData, mSize);
-=======
           aPresContext, mForFrame->Style(), *mGradientData, mSize);
->>>>>>> upstream-releases
 
       renderer.Paint(*ctx, aDest, aFill, aRepeatSize, aSrc, aDirtyRect,
                      aOpacity);
@@ -733,33 +551,6 @@ ImgDrawResult nsImageRenderer::Draw(nsPresContext* aPresContext,
   return result;
 }
 
-<<<<<<< HEAD
-ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItems(
-    nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
-    const nsRect& aDirtyRect, const nsRect& aDest, const nsRect& aFill,
-    const nsPoint& aAnchor, const nsSize& aRepeatSize, const CSSIntRect& aSrc,
-    float aOpacity) {
-||||||| merged common ancestors
-ImgDrawResult
-nsImageRenderer::BuildWebRenderDisplayItems(
-  nsPresContext* aPresContext,
-  mozilla::wr::DisplayListBuilder& aBuilder,
-  mozilla::wr::IpcResourceUpdateQueue& aResources,
-  const mozilla::layers::StackingContextHelper& aSc,
-  mozilla::layers::WebRenderLayerManager* aManager,
-  nsDisplayItem* aItem,
-  const nsRect& aDirtyRect,
-  const nsRect& aDest,
-  const nsRect& aFill,
-  const nsPoint& aAnchor,
-  const nsSize& aRepeatSize,
-  const CSSIntRect& aSrc,
-  float aOpacity)
-{
-=======
 ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItems(
     nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -768,7 +559,6 @@ ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItems(
     const nsRect& aDirtyRect, const nsRect& aDest, const nsRect& aFill,
     const nsPoint& aAnchor, const nsSize& aRepeatSize, const CSSIntRect& aSrc,
     float aOpacity) {
->>>>>>> upstream-releases
   if (!IsReady()) {
     MOZ_ASSERT_UNREACHABLE(
         "Ensure PrepareImage() has returned true before "
@@ -785,30 +575,11 @@ ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItems(
   switch (mType) {
     case eStyleImageType_Gradient: {
       nsCSSGradientRenderer renderer = nsCSSGradientRenderer::Create(
-<<<<<<< HEAD
-          aPresContext, mForFrame->Style(), mGradientData, mSize);
-
-      renderer.BuildWebRenderDisplayItems(aBuilder, aSc, aDest, aFill,
-                                          aRepeatSize, aSrc,
-                                          !aItem->BackfaceIsHidden(), aOpacity);
-||||||| merged common ancestors
-        aPresContext, mForFrame->Style(), mGradientData, mSize);
-
-      renderer.BuildWebRenderDisplayItems(aBuilder,
-                                          aSc,
-                                          aDest,
-                                          aFill,
-                                          aRepeatSize,
-                                          aSrc,
-                                          !aItem->BackfaceIsHidden(),
-                                          aOpacity);
-=======
           aPresContext, mForFrame->Style(), *mGradientData, mSize);
 
       renderer.BuildWebRenderDisplayItems(aBuilder, aSc, aDest, aFill,
                                           aRepeatSize, aSrc,
                                           !aItem->BackfaceIsHidden(), aOpacity);
->>>>>>> upstream-releases
       break;
     }
     case eStyleImageType_Image: {
@@ -830,34 +601,19 @@ ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItems(
       const int32_t appUnitsPerDevPixel =
           mForFrame->PresContext()->AppUnitsPerDevPixel();
       LayoutDeviceRect destRect =
-<<<<<<< HEAD
-          LayoutDeviceRect::FromAppUnits(aDest, appUnitsPerDevPixel);
-||||||| merged common ancestors
-        LayoutDeviceRect::FromAppUnits(aDest, appUnitsPerDevPixel);
-=======
           LayoutDeviceRect::FromAppUnits(aDest, appUnitsPerDevPixel);
       auto stretchSize = wr::ToLayoutSize(destRect.Size());
       destRect.Round();
 
->>>>>>> upstream-releases
       gfx::IntSize decodeSize =
           nsLayoutUtils::ComputeImageContainerDrawingParameters(
               mImageContainer, mForFrame, destRect, aSc, containerFlags,
               svgContext);
 
       RefPtr<layers::ImageContainer> container;
-<<<<<<< HEAD
-      drawResult = mImageContainer->GetImageContainerAtSize(
-          aManager, decodeSize, svgContext, containerFlags,
-          getter_AddRefs(container));
-||||||| merged common ancestors
-      drawResult = mImageContainer->GetImageContainerAtSize(aManager, decodeSize, svgContext,
-                                                            containerFlags, getter_AddRefs(container));
-=======
       drawResult = mImageContainer->GetImageContainerAtSize(
           aManager->LayerManager(), decodeSize, svgContext, containerFlags,
           getter_AddRefs(container));
->>>>>>> upstream-releases
       if (!container) {
         NS_WARNING("Failed to get image container");
         break;
@@ -990,31 +746,6 @@ ImgDrawResult nsImageRenderer::DrawLayer(
       aOpacity);
 }
 
-<<<<<<< HEAD
-ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItemsForLayer(
-    nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
-    const nsRect& aDest, const nsRect& aFill, const nsPoint& aAnchor,
-    const nsRect& aDirty, const nsSize& aRepeatSize, float aOpacity) {
-||||||| merged common ancestors
-ImgDrawResult
-nsImageRenderer::BuildWebRenderDisplayItemsForLayer(
-  nsPresContext* aPresContext,
-  mozilla::wr::DisplayListBuilder& aBuilder,
-  mozilla::wr::IpcResourceUpdateQueue& aResources,
-  const mozilla::layers::StackingContextHelper& aSc,
-  mozilla::layers::WebRenderLayerManager* aManager,
-  nsDisplayItem* aItem,
-  const nsRect& aDest,
-  const nsRect& aFill,
-  const nsPoint& aAnchor,
-  const nsRect& aDirty,
-  const nsSize& aRepeatSize,
-  float aOpacity)
-{
-=======
 ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItemsForLayer(
     nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -1022,7 +753,6 @@ ImgDrawResult nsImageRenderer::BuildWebRenderDisplayItemsForLayer(
     mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem,
     const nsRect& aDest, const nsRect& aFill, const nsPoint& aAnchor,
     const nsRect& aDirty, const nsSize& aRepeatSize, float aOpacity) {
->>>>>>> upstream-releases
   if (!IsReady()) {
     MOZ_ASSERT_UNREACHABLE(
         "Ensure PrepareImage() has returned true before "
@@ -1215,37 +945,11 @@ ImgDrawResult nsImageRenderer::DrawBorderImageComponent(
     nsSize repeatSize;
     nsRect fillRect(aFill);
     nsRect tile = ComputeTile(fillRect, aHFill, aVFill, aUnitSize, repeatSize);
-<<<<<<< HEAD
-    CSSIntSize imageSize(srcRect.width, srcRect.height);
-
-    ImgDrawResult result = nsLayoutUtils::DrawBackgroundImage(
-        aRenderingContext, mForFrame, aPresContext, subImage, imageSize,
-        samplingFilter, tile, fillRect, repeatSize, tile.TopLeft(), aDirtyRect,
-        drawFlags, ExtendMode::CLAMP, 1.0);
-||||||| merged common ancestors
-    CSSIntSize imageSize(srcRect.width, srcRect.height);
-
-    ImgDrawResult result = nsLayoutUtils::DrawBackgroundImage(aRenderingContext,
-                                                              mForFrame,
-                                                              aPresContext,
-                                                              subImage,
-                                                              imageSize,
-                                                              samplingFilter,
-                                                              tile,
-                                                              fillRect,
-                                                              repeatSize,
-                                                              tile.TopLeft(),
-                                                              aDirtyRect,
-                                                              drawFlags,
-                                                              ExtendMode::CLAMP,
-                                                              1.0);
-=======
 
     ImgDrawResult result = nsLayoutUtils::DrawBackgroundImage(
         aRenderingContext, mForFrame, aPresContext, subImage, samplingFilter,
         tile, fillRect, repeatSize, tile.TopLeft(), aDirtyRect, drawFlags,
         ExtendMode::CLAMP, 1.0);
->>>>>>> upstream-releases
 
     if (!mImage->IsComplete()) {
       result &= ImgDrawResult::SUCCESS_NOT_COMPLETE;
@@ -1308,13 +1012,7 @@ ImgDrawResult nsImageRenderer::DrawShapeImage(nsPresContext* aPresContext,
 
     case eStyleImageType_Gradient: {
       nsCSSGradientRenderer renderer = nsCSSGradientRenderer::Create(
-<<<<<<< HEAD
-          aPresContext, mForFrame->Style(), mGradientData, mSize);
-||||||| merged common ancestors
-        aPresContext, mForFrame->Style(), mGradientData, mSize);
-=======
           aPresContext, mForFrame->Style(), *mGradientData, mSize);
->>>>>>> upstream-releases
       nsRect dest(nsPoint(0, 0), mSize);
 
       renderer.Paint(aRenderingContext, dest, dest, mSize,
@@ -1371,19 +1069,3 @@ void nsImageRenderer::PurgeCacheForViewportChange(
     mImage->PurgeCacheForViewportChange(aSVGViewportSize, aHasIntrinsicRatio);
   }
 }
-<<<<<<< HEAD
-
-already_AddRefed<nsStyleGradient> nsImageRenderer::GetGradientData() {
-  RefPtr<nsStyleGradient> res = mGradientData;
-  return res.forget();
-}
-||||||| merged common ancestors
-
-already_AddRefed<nsStyleGradient>
-nsImageRenderer::GetGradientData()
-{
-  RefPtr<nsStyleGradient> res = mGradientData;
-  return res.forget();
-}
-=======
->>>>>>> upstream-releases

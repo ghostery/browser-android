@@ -101,7 +101,6 @@ void SafepointWriter::writeGcRegs(LSafepoint* safepoint) {
   WriteFloatRegisterMask(stream_, spilledFloat.bits());
 
 #ifdef JS_JITSPEW
-<<<<<<< HEAD
   if (JitSpewEnabled(JitSpew_Safepoints)) {
     for (GeneralRegisterForwardIterator iter(spilledGpr); iter.more(); ++iter) {
       const char* type = gc.has(*iter)
@@ -113,41 +112,8 @@ void SafepointWriter::writeGcRegs(LSafepoint* safepoint) {
     }
     for (FloatRegisterForwardIterator iter(spilledFloat); iter.more(); ++iter) {
       JitSpew(JitSpew_Safepoints, "    float reg: %s", (*iter).name());
-||||||| merged common ancestors
-    if (JitSpewEnabled(JitSpew_Safepoints)) {
-        for (GeneralRegisterForwardIterator iter(spilledGpr); iter.more(); ++iter) {
-            const char* type = gc.has(*iter)
-                               ? "gc"
-                               : slots.has(*iter)
-                                 ? "slots"
-                                 : valueRegs.has(*iter)
-                                   ? "value"
-                                   : "any";
-            JitSpew(JitSpew_Safepoints, "    %s reg: %s", type, (*iter).name());
-        }
-        for (FloatRegisterForwardIterator iter(spilledFloat); iter.more(); ++iter) {
-            JitSpew(JitSpew_Safepoints, "    float reg: %s", (*iter).name());
-        }
-=======
-  if (JitSpewEnabled(JitSpew_Safepoints)) {
-    for (GeneralRegisterForwardIterator iter(spilledGpr); iter.more(); ++iter) {
-      const char* type = gc.has(*iter)
-                             ? "gc"
-                             : slots.has(*iter)
-                                   ? "slots"
-                                   : valueRegs.has(*iter) ? "value" : "any";
-      JitSpew(JitSpew_Safepoints, "    %s reg: %s", type, (*iter).name());
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
-    for (FloatRegisterForwardIterator iter(spilledFloat); iter.more(); ++iter) {
-      JitSpew(JitSpew_Safepoints, "    float reg: %s", (*iter).name());
     }
   }
->>>>>>> upstream-releases
 #endif
 }
 
@@ -159,29 +125,6 @@ static void WriteBitset(const BitSet& set, CompactBufferWriter& stream) {
   }
 }
 
-<<<<<<< HEAD
-static void MapSlotsToBitset(BitSet& stackSet, BitSet& argumentSet,
-                             CompactBufferWriter& stream,
-                             const LSafepoint::SlotList& slots) {
-  stackSet.clear();
-  argumentSet.clear();
-||||||| merged common ancestors
-static void
-MapSlotsToBitset(BitSet& stackSet, BitSet& argumentSet,
-                 CompactBufferWriter& stream, const LSafepoint::SlotList& slots)
-{
-    stackSet.clear();
-    argumentSet.clear();
-
-    for (uint32_t i = 0; i < slots.length(); i++) {
-        // Slots are represented at a distance from |fp|. We divide by the
-        // pointer size, since we only care about pointer-sized/aligned slots
-        // here.
-        MOZ_ASSERT(slots[i].slot % sizeof(intptr_t) == 0);
-        size_t index = slots[i].slot / sizeof(intptr_t);
-        (slots[i].stack ? stackSet : argumentSet).insert(index);
-    }
-=======
 static void MapSlotsToBitset(BitSet& stackSet, BitSet& argumentSet,
                              CompactBufferWriter& stream,
                              const LSafepoint::SlotList& slots) {
@@ -196,27 +139,9 @@ static void MapSlotsToBitset(BitSet& stackSet, BitSet& argumentSet,
     size_t index = slots[i].slot / sizeof(intptr_t);
     (slots[i].stack ? stackSet : argumentSet).insert(index);
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < slots.length(); i++) {
-    // Slots are represented at a distance from |fp|. We divide by the
-    // pointer size, since we only care about pointer-sized/aligned slots
-    // here.
-    MOZ_ASSERT(slots[i].slot % sizeof(intptr_t) == 0);
-    size_t index = slots[i].slot / sizeof(intptr_t);
-    (slots[i].stack ? stackSet : argumentSet).insert(index);
-  }
 
   WriteBitset(stackSet, stream);
   WriteBitset(argumentSet, stream);
-||||||| merged common ancestors
-    WriteBitset(stackSet, stream);
-    WriteBitset(argumentSet, stream);
-=======
-  WriteBitset(stackSet, stream);
-  WriteBitset(argumentSet, stream);
->>>>>>> upstream-releases
 }
 
 void SafepointWriter::writeGcSlots(LSafepoint* safepoint) {
@@ -320,66 +245,6 @@ static inline NunboxPartKind AllocationToPartKind(const LAllocation& a) {
 // using the "inline" keyword, and miscompiles the function as well
 // when doing block reordering with branch prediction information.
 // See bug 799295 comment 71.
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE bool CanEncodeInfoInHeader(const LAllocation& a,
-                                                    uint32_t* out) {
-  if (a.isGeneralReg()) {
-    *out = a.toGeneralReg()->reg().code();
-    return true;
-  }
-
-  if (a.isStackSlot()) {
-    *out = a.toStackSlot()->slot();
-  } else {
-    *out = a.toArgument()->index();
-  }
-
-  return *out < MAX_INFO_VALUE;
-}
-
-void SafepointWriter::writeNunboxParts(LSafepoint* safepoint) {
-  LSafepoint::NunboxList& entries = safepoint->nunboxParts();
-
-#ifdef JS_JITSPEW
-  if (JitSpewEnabled(JitSpew_Safepoints)) {
-    for (uint32_t i = 0; i < entries.length(); i++) {
-      SafepointNunboxEntry& entry = entries[i];
-      if (entry.type.isUse() || entry.payload.isUse()) {
-        continue;
-      }
-      JitSpewHeader(JitSpew_Safepoints);
-      Fprinter& out = JitSpewPrinter();
-      out.printf("    nunbox (type in ");
-      DumpNunboxPart(entry.type);
-      out.printf(", payload in ");
-      DumpNunboxPart(entry.payload);
-      out.printf(")\n");
-    }
-  }
-#endif
-
-  // Safepoints are permitted to have partially filled in entries for nunboxes,
-  // provided that only the type is live and not the payload. Omit these from
-  // the written safepoint.
-
-  size_t pos = stream_.length();
-  stream_.writeUnsigned(entries.length());
-
-  size_t count = 0;
-  for (size_t i = 0; i < entries.length(); i++) {
-    SafepointNunboxEntry& entry = entries[i];
-
-    if (entry.payload.isUse()) {
-      // No allocation associated with the payload.
-      continue;
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE bool
-CanEncodeInfoInHeader(const LAllocation& a, uint32_t* out)
-{
-    if (a.isGeneralReg()) {
-        *out = a.toGeneralReg()->reg().code();
-        return true;
-=======
 static MOZ_ALWAYS_INLINE bool CanEncodeInfoInHeader(const LAllocation& a,
                                                     uint32_t* out) {
   if (a.isGeneralReg()) {
@@ -431,34 +296,8 @@ void SafepointWriter::writeNunboxParts(LSafepoint* safepoint) {
     if (entry.payload.isUse()) {
       // No allocation associated with the payload.
       continue;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (entry.type.isUse()) {
-      // No allocation associated with the type. Look for another
-      // safepoint entry with an allocation for the type.
-      entry.type = safepoint->findTypeAllocation(entry.typeVreg);
-      if (entry.type.isUse()) {
-        continue;
-      }
-    }
-
-    count++;
-
-    uint16_t header = 0;
-
-    header |= (AllocationToPartKind(entry.type) << TYPE_KIND_SHIFT);
-    header |= (AllocationToPartKind(entry.payload) << PAYLOAD_KIND_SHIFT);
-
-    uint32_t typeVal;
-    bool typeExtra = !CanEncodeInfoInHeader(entry.type, &typeVal);
-    if (!typeExtra) {
-      header |= (typeVal << TYPE_INFO_SHIFT);
-||||||| merged common ancestors
-    if (a.isStackSlot()) {
-        *out = a.toStackSlot()->slot();
-=======
     if (entry.type.isUse()) {
       // No allocation associated with the type. Look for another
       // safepoint entry with an allocation for the type.
@@ -487,22 +326,6 @@ void SafepointWriter::writeNunboxParts(LSafepoint* safepoint) {
     bool payloadExtra = !CanEncodeInfoInHeader(entry.payload, &payloadVal);
     if (!payloadExtra) {
       header |= (payloadVal << PAYLOAD_INFO_SHIFT);
->>>>>>> upstream-releases
-    } else {
-<<<<<<< HEAD
-      header |= (MAX_INFO_VALUE << TYPE_INFO_SHIFT);
-||||||| merged common ancestors
-        *out = a.toArgument()->index();
-=======
-      header |= (MAX_INFO_VALUE << PAYLOAD_INFO_SHIFT);
->>>>>>> upstream-releases
-    }
-
-<<<<<<< HEAD
-    uint32_t payloadVal;
-    bool payloadExtra = !CanEncodeInfoInHeader(entry.payload, &payloadVal);
-    if (!payloadExtra) {
-      header |= (payloadVal << PAYLOAD_INFO_SHIFT);
     } else {
       header |= (MAX_INFO_VALUE << PAYLOAD_INFO_SHIFT);
     }
@@ -510,35 +333,6 @@ void SafepointWriter::writeNunboxParts(LSafepoint* safepoint) {
     stream_.writeFixedUint16_t(header);
     if (typeExtra) {
       stream_.writeUnsigned(typeVal);
-||||||| merged common ancestors
-    return *out < MAX_INFO_VALUE;
-}
-
-void
-SafepointWriter::writeNunboxParts(LSafepoint* safepoint)
-{
-    LSafepoint::NunboxList& entries = safepoint->nunboxParts();
-
-# ifdef JS_JITSPEW
-    if (JitSpewEnabled(JitSpew_Safepoints)) {
-        for (uint32_t i = 0; i < entries.length(); i++) {
-            SafepointNunboxEntry& entry = entries[i];
-            if (entry.type.isUse() || entry.payload.isUse()) {
-                continue;
-            }
-            JitSpewHeader(JitSpew_Safepoints);
-            Fprinter& out = JitSpewPrinter();
-            out.printf("    nunbox (type in ");
-            DumpNunboxPart(entry.type);
-            out.printf(", payload in ");
-            DumpNunboxPart(entry.payload);
-            out.printf(")\n");
-        }
-=======
-    stream_.writeFixedUint16_t(header);
-    if (typeExtra) {
-      stream_.writeUnsigned(typeVal);
->>>>>>> upstream-releases
     }
     if (payloadExtra) {
       stream_.writeUnsigned(payloadVal);

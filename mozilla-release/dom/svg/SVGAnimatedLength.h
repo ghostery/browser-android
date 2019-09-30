@@ -88,18 +88,6 @@ class SVGAnimatedLength {
   typedef mozilla::dom::SVGViewportElement SVGViewportElement;
   typedef mozilla::dom::UserSpaceMetrics UserSpaceMetrics;
 
-<<<<<<< HEAD
-class SVGAnimatedLength final : public nsWrapperCache {
- public:
-  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(SVGAnimatedLength)
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(SVGAnimatedLength)
-||||||| merged common ancestors
-class SVGAnimatedLength final : public nsWrapperCache
-{
-public:
-  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(SVGAnimatedLength)
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(SVGAnimatedLength)
-=======
  public:
   void Init(uint8_t aCtxType = mozilla::SVGContentUtils::XY,
             uint8_t aAttrEnum = 0xff, float aValue = 0,
@@ -130,17 +118,7 @@ public:
   float GetBaseValue(SVGElement* aSVGElement) const {
     return mBaseVal * GetPixelsPerUnit(aSVGElement, mSpecifiedUnitType);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  SVGAnimatedLength(nsSVGLength2* aVal, nsSVGElement* aSVGElement)
-      : mVal(aVal), mSVGElement(aSVGElement) {}
-||||||| merged common ancestors
-  SVGAnimatedLength(nsSVGLength2* aVal, nsSVGElement *aSVGElement)
-    : mVal(aVal), mSVGElement(aSVGElement)
-  {
-  }
-=======
   float GetAnimValue(SVGElement* aSVGElement) const {
     return mAnimVal * GetPixelsPerUnit(aSVGElement, mSpecifiedUnitType);
   }
@@ -213,50 +191,19 @@ public:
   nsresult ConvertToSpecifiedUnits(uint16_t aUnitType, SVGElement* aSVGElement);
   already_AddRefed<DOMSVGLength> ToDOMBaseVal(SVGElement* aSVGElement);
   already_AddRefed<DOMSVGLength> ToDOMAnimVal(SVGElement* aSVGElement);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // WebIDL
-  nsSVGElement* GetParentObject() { return mSVGElement; }
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-  already_AddRefed<DOMSVGLength> BaseVal();
-  already_AddRefed<DOMSVGLength> AnimVal();
-||||||| merged common ancestors
-  // WebIDL
-  nsSVGElement* GetParentObject() { return mSVGElement; }
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-  already_AddRefed<DOMSVGLength> BaseVal();
-  already_AddRefed<DOMSVGLength> AnimVal();
-=======
  public:
   struct SMILLength : public SMILAttr {
    public:
     SMILLength(SVGAnimatedLength* aVal, SVGElement* aSVGElement)
         : mVal(aVal), mSVGElement(aSVGElement) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  ~SVGAnimatedLength();
-||||||| merged common ancestors
-protected:
-  ~SVGAnimatedLength();
-=======
     // These will stay alive because a SMILAttr only lives as long
     // as the Compositing step, and DOM elements don't get a chance to
     // die during that.
     SVGAnimatedLength* mVal;
     SVGElement* mSVGElement;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsSVGLength2* mVal;  // kept alive because it belongs to content
-  RefPtr<nsSVGElement> mSVGElement;
-||||||| merged common ancestors
-  nsSVGLength2* mVal; // kept alive because it belongs to content
-  RefPtr<nsSVGElement> mSVGElement;
-=======
     // SMILAttr methods
     virtual nsresult ValueFromString(
         const nsAString& aStr,
@@ -266,23 +213,8 @@ protected:
     virtual void ClearAnimValue() override;
     virtual nsresult SetAnimValue(const SMILValue& aValue) override;
   };
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_SVGAnimatedLength_h
-||||||| merged common ancestors
-#endif // mozilla_dom_SVGAnimatedLength_h
-=======
 #endif  //  mozilla_SVGAnimatedLength_h
->>>>>>> upstream-releases

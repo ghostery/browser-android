@@ -91,14 +91,6 @@ NS_INTERFACE_MAP_END
 
 NS_IMPL_CYCLE_COLLECTION(mozHunspell, mPersonalDictionary)
 
-<<<<<<< HEAD
-template <>
-mozilla::CountingAllocatorBase<HunspellAllocator>::AmountType
-    mozilla::CountingAllocatorBase<HunspellAllocator>::sAmount(0);
-||||||| merged common ancestors
-template<> mozilla::CountingAllocatorBase<HunspellAllocator>::AmountType
-mozilla::CountingAllocatorBase<HunspellAllocator>::sAmount(0);
-=======
 NS_IMPL_COMPONENT_FACTORY(mozHunspell) {
   auto hunspell = MakeRefPtr<mozHunspell>();
   if (NS_SUCCEEDED(hunspell->Init())) {
@@ -110,7 +102,6 @@ NS_IMPL_COMPONENT_FACTORY(mozHunspell) {
 template <>
 mozilla::CountingAllocatorBase<HunspellAllocator>::AmountType
     mozilla::CountingAllocatorBase<HunspellAllocator>::sAmount(0);
->>>>>>> upstream-releases
 
 mozHunspell::mozHunspell() : mHunspell(nullptr) {
 #ifdef DEBUG
@@ -221,31 +212,9 @@ NS_IMETHODIMP mozHunspell::SetPersonalDictionary(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP mozHunspell::GetDictionaryList(char16_t*** aDictionaries,
-                                             uint32_t* aCount) {
-  if (!aDictionaries || !aCount) return NS_ERROR_NULL_POINTER;
-
-  uint32_t count = 0;
-  char16_t** dicts =
-      (char16_t**)moz_xmalloc(sizeof(char16_t*) * mDictionaries.Count());
-
-||||||| merged common ancestors
-NS_IMETHODIMP mozHunspell::GetDictionaryList(char16_t ***aDictionaries,
-                                            uint32_t *aCount)
-{
-  if (!aDictionaries || !aCount)
-    return NS_ERROR_NULL_POINTER;
-
-  uint32_t count = 0;
-  char16_t** dicts =
-    (char16_t**) moz_xmalloc(sizeof(char16_t*) * mDictionaries.Count());
-
-=======
 NS_IMETHODIMP mozHunspell::GetDictionaryList(
     nsTArray<nsString>& aDictionaries) {
   MOZ_ASSERT(aDictionaries.IsEmpty());
->>>>>>> upstream-releases
   for (auto iter = mDictionaries.Iter(); !iter.Done(); iter.Next()) {
     aDictionaries.AppendElement(iter.Key());
   }
@@ -446,28 +415,7 @@ mozHunspell::Check(const nsAString& aWord, bool* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-mozHunspell::Suggest(const nsAString& aWord, char16_t*** aSuggestions,
-                     uint32_t* aSuggestionCount) {
-  if (NS_WARN_IF(!aSuggestions)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-  if (NS_WARN_IF(!aSuggestionCount)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-||||||| merged common ancestors
-mozHunspell::Suggest(const nsAString& aWord, char16_t*** aSuggestions,
-                     uint32_t* aSuggestionCount)
-{
-  if (NS_WARN_IF(!aSuggestions)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-  if (NS_WARN_IF(!aSuggestionCount)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-=======
 mozHunspell::Suggest(const nsAString& aWord, nsTArray<nsString>& aSuggestions) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mHunspell, NS_ERROR_FAILURE);
   MOZ_ASSERT(aSuggestions.IsEmpty());
 
@@ -476,105 +424,17 @@ mozHunspell::Suggest(const nsAString& aWord, nsTArray<nsString>& aSuggestions) {
   NS_ENSURE_SUCCESS(rv, rv);
 
   std::vector<std::string> suggestions = mHunspell->suggest(charsetWord);
-<<<<<<< HEAD
-  *aSuggestionCount = static_cast<uint32_t>(suggestions.size());
-
-  if (*aSuggestionCount) {
-    *aSuggestions =
-        (char16_t**)moz_xmalloc(*aSuggestionCount * sizeof(char16_t*));
-    uint32_t index = 0;
-    for (index = 0; index < *aSuggestionCount && NS_SUCCEEDED(rv); ++index) {
-      // If the IDL used an array of AString, we could use
-      // Encoding::DecodeWithoutBOMHandling() here.
-||||||| merged common ancestors
-  *aSuggestionCount = static_cast<uint32_t>(suggestions.size());
-
-  if (*aSuggestionCount) {
-    *aSuggestions  = (char16_t **)moz_xmalloc(*aSuggestionCount * sizeof(char16_t *));
-    uint32_t index = 0;
-    for (index = 0; index < *aSuggestionCount && NS_SUCCEEDED(rv); ++index) {
-      // If the IDL used an array of AString, we could use
-      // Encoding::DecodeWithoutBOMHandling() here.
-=======
 
   if (!suggestions.empty()) {
     aSuggestions.SetCapacity(suggestions.size());
     for (Span<const char> charSrc : suggestions) {
->>>>>>> upstream-releases
       // Convert the suggestion to utf16
       auto src = AsBytes(charSrc);
-<<<<<<< HEAD
-      CheckedInt<size_t> needed = mDecoder->MaxUTF16BufferLength(src.Length());
-      if (!needed.isValid()) {
-        rv = NS_ERROR_OUT_OF_MEMORY;
-        break;
-      }
-      size_t dstLen = needed.value();
-      needed += 1;
-      needed *= sizeof(char16_t);
-      if (!needed.isValid()) {
-        rv = NS_ERROR_OUT_OF_MEMORY;
-        break;
-      }
-      (*aSuggestions)[index] = (char16_t*)moz_xmalloc(needed.value());
-      auto dst = MakeSpan((*aSuggestions)[index], dstLen);
-      uint32_t result;
-      size_t read;
-      size_t written;
-      bool hadErrors;
-      Tie(result, read, written, hadErrors) =
-          mDecoder->DecodeToUTF16(src, dst, true);
-      MOZ_ASSERT(result == kInputEmpty);
-      MOZ_ASSERT(read == src.Length());
-      MOZ_ASSERT(written <= dstLen);
-      Unused << hadErrors;
-      (*aSuggestions)[index][written] = 0;
-||||||| merged common ancestors
-      CheckedInt<size_t> needed =
-        mDecoder->MaxUTF16BufferLength(src.Length());
-      if (!needed.isValid()) {
-        rv = NS_ERROR_OUT_OF_MEMORY;
-        break;
-      }
-      size_t dstLen = needed.value();
-      needed += 1;
-      needed *= sizeof(char16_t);
-      if (!needed.isValid()) {
-        rv = NS_ERROR_OUT_OF_MEMORY;
-        break;
-      }
-      (*aSuggestions)[index] = (char16_t*)moz_xmalloc(needed.value());
-      auto dst = MakeSpan((*aSuggestions)[index], dstLen);
-      uint32_t result;
-      size_t read;
-      size_t written;
-      bool hadErrors;
-      Tie(result, read, written, hadErrors) =
-        mDecoder->DecodeToUTF16(src, dst, true);
-      MOZ_ASSERT(result == kInputEmpty);
-      MOZ_ASSERT(read == src.Length());
-      MOZ_ASSERT(written <= dstLen);
-      Unused << hadErrors;
-      (*aSuggestions)[index][written] = 0;
-=======
       rv = mDecoder->Encoding()->DecodeWithoutBOMHandling(
           src, *aSuggestions.AppendElement());
       NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
       mDecoder->Encoding()->NewDecoderWithoutBOMHandlingInto(*mDecoder);
     }
-<<<<<<< HEAD
-
-    if (NS_FAILED(rv))
-      NS_FREE_XPCOM_ALLOCATED_POINTER_ARRAY(
-          index, *aSuggestions);  // free the char16_t strings up to the point
-                                  // at which the error occurred
-||||||| merged common ancestors
-
-    if (NS_FAILED(rv))
-      NS_FREE_XPCOM_ALLOCATED_POINTER_ARRAY(index, *aSuggestions); // free the char16_t strings up to the point at which the error occurred
-=======
->>>>>>> upstream-releases
   }
 
   return NS_OK;

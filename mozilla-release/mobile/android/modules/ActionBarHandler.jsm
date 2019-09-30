@@ -607,19 +607,10 @@ var ActionBarHandler = {
 
     SEARCH: {
       id: "search_action",
-<<<<<<< HEAD
-      /*Cliqz Start*/
-      label: () => Strings.browser.GetStringFromName("contextmenu.search"),
-      /*Cliqz End*/
-||||||| merged common ancestors
-      label: () => Strings.browser.formatStringFromName("contextmenu.search",
-        [Services.search.defaultEngine.name], 1),
-=======
       label: () =>
         Strings.browser.formatStringFromName("contextmenu.search", [
           Services.search.defaultEngine.name,
         ]),
->>>>>>> upstream-releases
       icon: "drawable://ab_search",
       order: 1,
       floatingOrder: 6,
@@ -636,26 +627,6 @@ var ActionBarHandler = {
           ActionBarHandler._getSelectedText()
         );
         ActionBarHandler._uninit();
-<<<<<<< HEAD
-        /*Cliqz Start*/
-        if (Services.prefs.getBoolPref('pref.search.quicksearch.enabled', true)) {
-          EventDispatcher.instance.dispatch("Search:Focus", {'query' : selectedText});
-||||||| merged common ancestors
-
-        // Set current tab as parent of new tab,
-        // and set new tab as private if the parent is.
-        let searchSubmission = Services.search.defaultEngine.getSubmission(selectedText);
-        let chrome = GeckoViewUtils.getChromeWindow(win);
-        if (chrome.BrowserApp && chrome.BrowserApp.selectedTab && chrome.BrowserApp.addTab) {
-          let parent = chrome.BrowserApp.selectedTab;
-          let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(parent.browser);
-          chrome.BrowserApp.addTab(searchSubmission.uri.spec,
-            { parentId: parent.id,
-              selected: true,
-              isPrivate: isPrivate,
-            }
-          );
-=======
 
         // Set current tab as parent of new tab,
         // and set new tab as private if the parent is.
@@ -675,38 +646,7 @@ var ActionBarHandler = {
             selected: true,
             isPrivate: isPrivate,
           });
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-          // Set current tab as parent of new tab,
-          // and set new tab as private if the parent is.
-          let searchSubmission = Services.search.defaultEngine.getSubmission(selectedText);
-          let chrome = GeckoViewUtils.getChromeWindow(win);
-          if (chrome.BrowserApp && chrome.BrowserApp.selectedTab && chrome.BrowserApp.addTab) {
-            let parent = chrome.BrowserApp.selectedTab;
-            let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(parent.browser);
-            chrome.BrowserApp.addTab(searchSubmission.uri.spec,
-              { parentId: parent.id,
-                selected: true,
-                isPrivate: isPrivate,
-              }
-            );
-          } else {
-            let bwin = chrome.QueryInterface(Ci.nsIDOMChromeWindow).browserDOMWindow;
-            if (bwin) {
-              bwin.openURI(searchSubmission.uri, win,
-                           Ci.nsIBrowserDOMWindow.OPEN_NEWTAB,
-                           Ci.nsIBrowserDOMWindow.OPEN_NEW,
-                           win.document.nodePrincipal);
-            }
-||||||| merged common ancestors
-          let bwin = chrome.QueryInterface(Ci.nsIDOMChromeWindow).browserDOMWindow;
-          if (bwin) {
-            bwin.openURI(searchSubmission.uri, win,
-                         Ci.nsIBrowserDOMWindow.OPEN_NEWTAB,
-                         Ci.nsIBrowserDOMWindow.OPEN_NEW,
-                         win.document.nodePrincipal);
-=======
           let bwin = chrome.QueryInterface(Ci.nsIDOMChromeWindow)
             .browserDOMWindow;
           if (bwin) {
@@ -717,10 +657,8 @@ var ActionBarHandler = {
               Ci.nsIBrowserDOMWindow.OPEN_NEW,
               win.document.nodePrincipal
             );
->>>>>>> upstream-releases
           }
         }
-        /*Cliqz End*/
 
         UITelemetry.addEvent("action.1", "actionbar", null, "search");
       },

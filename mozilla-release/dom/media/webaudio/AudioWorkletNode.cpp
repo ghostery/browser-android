@@ -16,42 +16,6 @@ namespace dom {
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED_0(AudioWorkletNode, AudioNode)
 
 AudioWorkletNode::AudioWorkletNode(AudioContext* aAudioContext,
-<<<<<<< HEAD
-                                   const nsAString& aName)
-    : AudioNode(aAudioContext, 2, ChannelCountMode::Max,
-                ChannelInterpretation::Speakers),
-      mNodeName(aName) {}
-
-/* static */ already_AddRefed<AudioWorkletNode> AudioWorkletNode::Constructor(
-    const GlobalObject& aGlobal, AudioContext& aAudioContext,
-    const nsAString& aName, const AudioWorkletNodeOptions& aOptions,
-    ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-||||||| merged common ancestors
-                                   const nsAString& aName)
-  : AudioNode(aAudioContext,
-              2,
-              ChannelCountMode::Max,
-              ChannelInterpretation::Speakers)
-  , mNodeName(aName)
-{
-}
-
-/* static */ already_AddRefed<AudioWorkletNode>
-AudioWorkletNode::Constructor(const GlobalObject& aGlobal,
-                              AudioContext& aAudioContext,
-                              const nsAString& aName,
-                              const AudioWorkletNodeOptions& aOptions,
-                              ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-=======
                                    const nsAString& aName,
                                    const AudioWorkletNodeOptions& aOptions)
     : AudioNode(aAudioContext, 2, ChannelCountMode::Max,
@@ -65,7 +29,6 @@ already_AddRefed<AudioWorkletNode> AudioWorkletNode::Constructor(
     const GlobalObject& aGlobal, AudioContext& aAudioContext,
     const nsAString& aName, const AudioWorkletNodeOptions& aOptions,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (aOptions.mNumberOfInputs == 0 && aOptions.mNumberOfOutputs == 0) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;

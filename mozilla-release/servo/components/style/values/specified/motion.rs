@@ -4,17 +4,11 @@
 
 //! Specified types for CSS values that are related to motion path.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::specified::SVGPathData;
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::computed::motion::OffsetRotate as ComputedOffsetRotate;
 use crate::values::computed::{Context, ToComputedValue};
 use crate::values::specified::{Angle, SVGPathData};
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::Parser;
 use style_traits::{ParseError, StyleParseErrorKind};
 

@@ -9,19 +9,8 @@
 
 #include "SkBitmap.h"
 #include "SkData.h"
-<<<<<<< HEAD
-#include "SkDeduper.h"
 #include "SkImagePriv.h"
 #include "SkPaintPriv.h"
-#include "SkPixelRef.h"
-||||||| merged common ancestors
-#include "SkDeduper.h"
-#include "SkPaint.h"
-#include "SkPixelRef.h"
-=======
-#include "SkImagePriv.h"
-#include "SkPaintPriv.h"
->>>>>>> upstream-releases
 #include "SkPtrRecorder.h"
 #include "SkStream.h"
 #include "SkTo.h"
@@ -38,30 +27,12 @@ SkBinaryWriteBuffer::SkBinaryWriteBuffer(void* storage, size_t storageSize)
     : fFactorySet(nullptr)
     , fTFSet(nullptr)
     , fWriter(storage, storageSize)
-<<<<<<< HEAD
-{}
-||||||| merged common ancestors
-    , fTFSet(nullptr) {
-}
-=======
 {}
 
-SkBinaryWriteBuffer::~SkBinaryWriteBuffer() {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 SkBinaryWriteBuffer::~SkBinaryWriteBuffer() {}
 
 bool SkBinaryWriteBuffer::usingInitialStorage() const {
     return fWriter.usingInitialStorage();
-||||||| merged common ancestors
-SkBinaryWriteBuffer::~SkBinaryWriteBuffer() {
-    SkSafeUnref(fFactorySet);
-    SkSafeUnref(fTFSet);
-=======
-bool SkBinaryWriteBuffer::usingInitialStorage() const {
-    return fWriter.usingInitialStorage();
->>>>>>> upstream-releases
 }
 
 void SkBinaryWriteBuffer::writeByteArray(const void* data, size_t size) {
@@ -170,26 +141,8 @@ bool SkBinaryWriteBuffer::writeToStream(SkWStream* stream) const {
  *  data [ encoded, with raw width/height ]
  */
 void SkBinaryWriteBuffer::writeImage(const SkImage* image) {
-<<<<<<< HEAD
-    if (fDeduper) {
-        this->write32(fDeduper->findOrDefineImage(const_cast<SkImage*>(image)));
-        return;
-    }
-
     const SkIRect bounds = SkImage_getSubset(image);
     this->writeIRect(bounds);
-||||||| merged common ancestors
-    if (fDeduper) {
-        this->write32(fDeduper->findOrDefineImage(const_cast<SkImage*>(image)));
-        return;
-    }
-
-    this->writeInt(image->width());
-    this->writeInt(image->height());
-=======
-    const SkIRect bounds = SkImage_getSubset(image);
-    this->writeIRect(bounds);
->>>>>>> upstream-releases
 
     sk_sp<SkData> data;
     if (fProcs.fImageProc) {
@@ -198,22 +151,6 @@ void SkBinaryWriteBuffer::writeImage(const SkImage* image) {
     if (!data) {
         data = image->encodeToData();
     }
-<<<<<<< HEAD
-
-    size_t size = data ? data->size() : 0;
-    if (!SkTFitsIn<int32_t>(size)) {
-        size = 0;   // too big to store
-    }
-    this->write32(SkToS32(size));   // writing 0 signals failure
-    if (size) {
-        this->writePad32(data->data(), size);
-    }
-}
-||||||| merged common ancestors
-    write_data(std::move(data), sign);
-}
-=======
->>>>>>> upstream-releases
 
     size_t size = data ? data->size() : 0;
     if (!SkTFitsIn<int32_t>(size)) {

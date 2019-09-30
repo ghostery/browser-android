@@ -4,10 +4,6 @@
 
 //! Computed values for font properties
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use Atom;
-=======
 #[cfg(feature = "gecko")]
 use crate::gecko_bindings::sugar::refptr::RefPtr;
 #[cfg(feature = "gecko")]
@@ -21,32 +17,10 @@ use crate::values::specified::font::{self as specified, MAX_FONT_WEIGHT, MIN_FON
 use crate::values::specified::length::{FontBaseSize, NoCalcLength};
 use crate::values::CSSFloat;
 use crate::Atom;
->>>>>>> upstream-releases
 use app_units::Au;
 use byteorder::{BigEndian, ByteOrder};
-#[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::gecko_bindings::sugar::refptr::RefPtr;
-#[cfg(feature = "gecko")]
-use crate::gecko_bindings::{bindings, structs};
-use crate::values::animated::{ToAnimatedValue, ToAnimatedZero};
-use crate::values::computed::{Angle, Context, Integer, NonNegativeLength, NonNegativePercentage};
-use crate::values::computed::{Number, Percentage, ToComputedValue};
-use crate::values::generics::font as generics;
-use crate::values::generics::font::{FeatureTagValue, FontSettings, VariationValue};
-use crate::values::specified::font::{self as specified, MAX_FONT_WEIGHT, MIN_FONT_WEIGHT};
-use crate::values::specified::length::{FontBaseSize, NoCalcLength};
-use crate::values::CSSFloat;
-use crate::Atom;
 use cssparser::{serialize_identifier, CssStringWriter, Parser};
 #[cfg(feature = "gecko")]
-||||||| merged common ancestors
-use gecko_bindings::{bindings, structs};
-#[cfg(feature = "gecko")]
-use gecko_bindings::sugar::refptr::RefPtr;
-#[cfg(feature = "gecko")]
-=======
->>>>>>> upstream-releases
 use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
 use std::fmt::{self, Write};
 use std::hash::{Hash, Hasher};
@@ -55,19 +29,8 @@ use std::mem::{self, ManuallyDrop};
 #[cfg(feature = "servo")]
 use std::slice;
 use style_traits::{CssWriter, ParseError, ToCss};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use values::CSSFloat;
-use values::animated::{ToAnimatedValue, ToAnimatedZero};
-use values::computed::{Angle, Context, Integer, NonNegativeLength, NonNegativePercentage};
-use values::computed::{Number, Percentage, ToComputedValue};
-use values::generics::font::{self as generics, FeatureTagValue, FontSettings, VariationValue};
-use values::specified::font::{self as specified, MIN_FONT_WEIGHT, MAX_FONT_WEIGHT};
-use values::specified::length::{FontBaseSize, NoCalcLength};
-=======
 #[cfg(feature = "gecko")]
 use to_shmem::{SharedMemoryBuilder, ToShmem};
->>>>>>> upstream-releases
 
 pub use crate::values::computed::Length as MozScriptMinSize;
 pub use crate::values::specified::font::{FontSynthesis, MozScriptSizeMultiplier};
@@ -414,75 +377,6 @@ impl SingleFontFamily {
         }))
     }
 
-<<<<<<< HEAD
-    #[cfg(feature = "gecko")]
-    /// Return the generic ID for a given generic font name
-    pub fn generic(name: &Atom) -> (structs::FontFamilyType, u8) {
-        use crate::gecko_bindings::structs::FontFamilyType;
-        if *name == atom!("serif") {
-            (FontFamilyType::eFamily_serif, structs::kGenericFont_serif)
-        } else if *name == atom!("sans-serif") {
-            (
-                FontFamilyType::eFamily_sans_serif,
-                structs::kGenericFont_sans_serif,
-            )
-        } else if *name == atom!("cursive") {
-            (
-                FontFamilyType::eFamily_cursive,
-                structs::kGenericFont_cursive,
-            )
-        } else if *name == atom!("fantasy") {
-            (
-                FontFamilyType::eFamily_fantasy,
-                structs::kGenericFont_fantasy,
-            )
-        } else if *name == atom!("monospace") {
-            (
-                FontFamilyType::eFamily_monospace,
-                structs::kGenericFont_monospace,
-            )
-        } else if *name == atom!("-moz-fixed") {
-            (
-                FontFamilyType::eFamily_moz_fixed,
-                structs::kGenericFont_moz_fixed,
-            )
-        } else {
-            panic!("Unknown generic {}", name);
-||||||| merged common ancestors
-    #[cfg(feature = "gecko")]
-    /// Return the generic ID for a given generic font name
-    pub fn generic(name: &Atom) -> (structs::FontFamilyType, u8) {
-        use gecko_bindings::structs::FontFamilyType;
-        if *name == atom!("serif") {
-            (FontFamilyType::eFamily_serif, structs::kGenericFont_serif)
-        } else if *name == atom!("sans-serif") {
-            (
-                FontFamilyType::eFamily_sans_serif,
-                structs::kGenericFont_sans_serif,
-            )
-        } else if *name == atom!("cursive") {
-            (
-                FontFamilyType::eFamily_cursive,
-                structs::kGenericFont_cursive,
-            )
-        } else if *name == atom!("fantasy") {
-            (
-                FontFamilyType::eFamily_fantasy,
-                structs::kGenericFont_fantasy,
-            )
-        } else if *name == atom!("monospace") {
-            (
-                FontFamilyType::eFamily_monospace,
-                structs::kGenericFont_monospace,
-            )
-        } else if *name == atom!("-moz-fixed") {
-            (
-                FontFamilyType::eFamily_moz_fixed,
-                structs::kGenericFont_moz_fixed,
-            )
-        } else {
-            panic!("Unknown generic {}", name);
-=======
     #[cfg(feature = "servo")]
     /// Get the corresponding font-family with Atom
     pub fn from_atom(input: Atom) -> SingleFontFamily {
@@ -502,7 +396,6 @@ impl SingleFontFamily {
             "fantasy" => return SingleFontFamily::Generic(GenericFontFamily::Fantasy),
             "monospace" => return SingleFontFamily::Generic(GenericFontFamily::Monospace),
             _ => {}
->>>>>>> upstream-releases
         }
 
         // We don't know if it's quoted or not. So we set it to
@@ -516,109 +409,9 @@ impl SingleFontFamily {
     #[cfg(feature = "gecko")]
     /// Get the corresponding font-family with family name
     fn from_font_family_name(family: &structs::FontFamilyName) -> SingleFontFamily {
-<<<<<<< HEAD
-        use crate::gecko_bindings::structs::FontFamilyType;
-
-        match family.mType {
-            FontFamilyType::eFamily_sans_serif => SingleFontFamily::Generic(atom!("sans-serif")),
-            FontFamilyType::eFamily_serif => SingleFontFamily::Generic(atom!("serif")),
-            FontFamilyType::eFamily_monospace => SingleFontFamily::Generic(atom!("monospace")),
-            FontFamilyType::eFamily_cursive => SingleFontFamily::Generic(atom!("cursive")),
-            FontFamilyType::eFamily_fantasy => SingleFontFamily::Generic(atom!("fantasy")),
-            FontFamilyType::eFamily_moz_fixed => SingleFontFamily::Generic(atom!("-moz-fixed")),
-            FontFamilyType::eFamily_named => {
-                let name = unsafe { Atom::from_raw(family.mName.mRawPtr) };
-                SingleFontFamily::FamilyName(FamilyName {
-                    name,
-                    syntax: FamilyNameSyntax::Identifiers,
-                })
-            },
-            FontFamilyType::eFamily_named_quoted => {
-                let name = unsafe { Atom::from_raw(family.mName.mRawPtr) };
-                SingleFontFamily::FamilyName(FamilyName {
-                    name,
-                    syntax: FamilyNameSyntax::Quoted,
-                })
-            },
-            _ => panic!("Found unexpected font FontFamilyType"),
-        }
-    }
-}
-
-impl ToCss for SingleFontFamily {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: fmt::Write,
-    {
-        match *self {
-            SingleFontFamily::FamilyName(ref name) => name.to_css(dest),
-
-            // All generic values accepted by the parser are known to not require escaping.
-            SingleFontFamily::Generic(ref name) => {
-                #[cfg(feature = "gecko")]
-                {
-                    // We should treat -moz-fixed as monospace
-                    if name == &atom!("-moz-fixed") {
-                        return dest.write_str("monospace");
-                    }
-                }
-
-                write!(dest, "{}", name)
-            },
-||||||| merged common ancestors
-        use gecko_bindings::structs::FontFamilyType;
-
-        match family.mType {
-            FontFamilyType::eFamily_sans_serif => SingleFontFamily::Generic(atom!("sans-serif")),
-            FontFamilyType::eFamily_serif => SingleFontFamily::Generic(atom!("serif")),
-            FontFamilyType::eFamily_monospace => SingleFontFamily::Generic(atom!("monospace")),
-            FontFamilyType::eFamily_cursive => SingleFontFamily::Generic(atom!("cursive")),
-            FontFamilyType::eFamily_fantasy => SingleFontFamily::Generic(atom!("fantasy")),
-            FontFamilyType::eFamily_moz_fixed => SingleFontFamily::Generic(atom!("-moz-fixed")),
-            FontFamilyType::eFamily_named => {
-                let name = unsafe { Atom::from_raw(family.mName.mRawPtr) };
-                SingleFontFamily::FamilyName(FamilyName {
-                    name,
-                    syntax: FamilyNameSyntax::Identifiers,
-                })
-            },
-            FontFamilyType::eFamily_named_quoted => {
-                let name = unsafe { Atom::from_raw(family.mName.mRawPtr) };
-                SingleFontFamily::FamilyName(FamilyName {
-                    name,
-                    syntax: FamilyNameSyntax::Quoted,
-                })
-            },
-            _ => panic!("Found unexpected font FontFamilyType"),
-        }
-    }
-}
-
-impl ToCss for SingleFontFamily {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: fmt::Write,
-    {
-        match *self {
-            SingleFontFamily::FamilyName(ref name) => name.to_css(dest),
-
-            // All generic values accepted by the parser are known to not require escaping.
-            SingleFontFamily::Generic(ref name) => {
-                #[cfg(feature = "gecko")]
-                {
-                    // We should treat -moz-fixed as monospace
-                    if name == &atom!("-moz-fixed") {
-                        return dest.write_str("monospace");
-                    }
-                }
-
-                write!(dest, "{}", name)
-            },
-=======
         if family.mName.mRawPtr.is_null() {
             debug_assert_ne!(family.mGeneric, GenericFontFamily::None);
             return SingleFontFamily::Generic(family.mGeneric);
->>>>>>> upstream-releases
         }
         let name = unsafe { Atom::from_raw(family.mName.mRawPtr) };
         SingleFontFamily::FamilyName(FamilyName {
@@ -644,39 +437,6 @@ pub enum FontFamilyList {
 }
 
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-impl Hash for FontFamilyList {
-    fn hash<H>(&self, state: &mut H)
-    where
-        H: Hasher,
-    {
-        use crate::string_cache::WeakAtom;
-
-        for name in self.0.mNames.iter() {
-            name.mType.hash(state);
-            if !name.mName.mRawPtr.is_null() {
-                unsafe {
-                    WeakAtom::new(name.mName.mRawPtr).hash(state);
-                }
-            }
-        }
-||||||| merged common ancestors
-impl Hash for FontFamilyList {
-    fn hash<H>(&self, state: &mut H)
-    where
-        H: Hasher,
-    {
-        use string_cache::WeakAtom;
-
-        for name in self.0.mNames.iter() {
-            name.mType.hash(state);
-            if !name.mName.mRawPtr.is_null() {
-                unsafe {
-                    WeakAtom::new(name.mName.mRawPtr).hash(state);
-                }
-            }
-        }
-=======
 impl ToShmem for FontFamilyList {
     fn to_shmem(&self, _builder: &mut SharedMemoryBuilder) -> ManuallyDrop<Self> {
         // In practice, the only SharedFontList objects we create from shared
@@ -691,7 +451,6 @@ impl ToShmem for FontFamilyList {
             },
             FontFamilyList::Generic(t) => FontFamilyList::Generic(t),
         })
->>>>>>> upstream-releases
     }
 }
 

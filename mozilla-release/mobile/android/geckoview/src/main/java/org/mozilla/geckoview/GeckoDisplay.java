@@ -6,14 +6,9 @@
 
 package org.mozilla.geckoview;
 
-<<<<<<< HEAD
-import android.support.annotation.UiThread;
-||||||| merged common ancestors
-=======
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
->>>>>>> upstream-releases
 import android.view.Surface;
 
 import org.mozilla.gecko.util.ThreadUtils;
@@ -39,13 +34,6 @@ public class GeckoDisplay {
      * the Surface is valid while resuming drawing.
      *
      * @param surface The new Surface.
-<<<<<<< HEAD
-     * @param width New width of the Surface. Can not be negative.
-     * @param height New height of the Surface. Can not be negative.
-||||||| merged common ancestors
-     * @param width New width of the Surface.
-     * @param height New height of the Surface.
-=======
      * @param width New width of the Surface. Can not be negative.
      * @param height New height of the Surface. Can not be negative.
      */
@@ -68,44 +56,7 @@ public class GeckoDisplay {
      * @param width New width of the Surface. Can not be negative.
      * @param height New height of the Surface. Can not be negative.
      * @throws IllegalArgumentException if left or top are negative.
->>>>>>> upstream-releases
      */
-<<<<<<< HEAD
-    @UiThread
-    public void surfaceChanged(Surface surface, int width, int height) {
-        surfaceChanged(surface, 0, 0, width, height);
-    }
-
-    /**
-     * Sets a surface for the compositor render a surface.
-     *
-     * Required call. The display's Surface has been created or changed. Must be
-     * called on the application main thread. GeckoSession may block this call to ensure
-     * the Surface is valid while resuming drawing. The origin of the content window
-     * (0, 0) is the top left corner of the screen.
-     *
-     * @param surface The new Surface.
-     * @param left The compositor origin offset in the X axis. Can not be negative.
-     * @param top The compositor origin offset in the Y axis. Can not be negative.
-     * @param width New width of the Surface. Can not be negative.
-     * @param height New height of the Surface. Can not be negative.
-     * @throws IllegalArgumentException if left or top are negative.
-     */
-    @UiThread
-    public void surfaceChanged(Surface surface, int left, int top, int width, int height) {
-        ThreadUtils.assertOnUiThread();
-
-        if ((left < 0) || (top < 0)) {
-            throw new IllegalArgumentException("Parameters can not be negative.");
-        }
-
-        if (session.getDisplay() == this) {
-            session.onSurfaceChanged(surface, left, top, width, height);
-||||||| merged common ancestors
-    public void surfaceChanged(Surface surface, int width, int height) {
-        if (session.getDisplay() == this) {
-            session.onSurfaceChanged(surface, width, height);
-=======
     @UiThread
     public void surfaceChanged(@NonNull final Surface surface, final int left, final int top,
                                final int width, final int height) {
@@ -117,7 +68,6 @@ public class GeckoDisplay {
 
         if (mSession.getDisplay() == this) {
             mSession.onSurfaceChanged(surface, left, top, width, height);
->>>>>>> upstream-releases
         }
     }
 
@@ -130,20 +80,10 @@ public class GeckoDisplay {
      */
     @UiThread
     public void surfaceDestroyed() {
-<<<<<<< HEAD
-        ThreadUtils.assertOnUiThread();
-
-        if (session.getDisplay() == this) {
-            session.onSurfaceDestroyed();
-||||||| merged common ancestors
-        if (session.getDisplay() == this) {
-            session.onSurfaceDestroyed();
-=======
         ThreadUtils.assertOnUiThread();
 
         if (mSession.getDisplay() == this) {
             mSession.onSurfaceDestroyed();
->>>>>>> upstream-releases
         }
     }
 
@@ -158,15 +98,6 @@ public class GeckoDisplay {
      */
     @UiThread
     public void screenOriginChanged(final int left, final int top) {
-<<<<<<< HEAD
-        ThreadUtils.assertOnUiThread();
-
-        if (session.getDisplay() == this) {
-            session.onScreenOriginChanged(left, top);
-||||||| merged common ancestors
-        if (session.getDisplay() == this) {
-            session.onScreenOriginChanged(left, top);
-=======
         ThreadUtils.assertOnUiThread();
 
         if (mSession.getDisplay() == this) {
@@ -189,7 +120,6 @@ public class GeckoDisplay {
 
         if (mSession != null) {
             mSession.setFixedBottomOffset(clippingHeight);
->>>>>>> upstream-releases
         }
     }
 
@@ -205,12 +135,6 @@ public class GeckoDisplay {
      */
     @UiThread
     public boolean shouldPinOnScreen() {
-<<<<<<< HEAD
-        ThreadUtils.assertOnUiThread();
-        return session.getDisplay() == this && session.shouldPinOnScreen();
-||||||| merged common ancestors
-        return session.getDisplay() == this && session.shouldPinOnScreen();
-=======
         ThreadUtils.assertOnUiThread();
         return mSession.getDisplay() == this && mSession.shouldPinOnScreen();
     }
@@ -240,6 +164,5 @@ public class GeckoDisplay {
         GeckoResult<Bitmap> result = new GeckoResult<>();
         mSession.mCompositor.requestScreenPixels(result);
         return result;
->>>>>>> upstream-releases
     }
 }

@@ -61,34 +61,15 @@ class nsTextControlFrame final : public nsContainerFrame,
                       nsReflowStatus& aStatus) override;
 
   bool GetVerticalAlignBaseline(mozilla::WritingMode aWM,
-<<<<<<< HEAD
-                                nscoord* aBaseline) const override {
-    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst,
-                                     aBaseline);
-||||||| merged common ancestors
-                                nscoord* aBaseline) const override
-  {
-    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst, aBaseline);
-=======
                                 nscoord* aBaseline) const override {
     return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::First,
                                      aBaseline);
->>>>>>> upstream-releases
   }
 
   bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
                                  BaselineSharingGroup aBaselineGroup,
-<<<<<<< HEAD
-                                 nscoord* aBaseline) const override {
-    if (!IsSingleLineTextControl()) {
-||||||| merged common ancestors
-                                 nscoord* aBaseline) const override
-  {
-    if (!IsSingleLineTextControl()) {
-=======
                                  nscoord* aBaseline) const override {
     if (StyleDisplay()->IsContainLayout() || !IsSingleLineTextControl()) {
->>>>>>> upstream-releases
       return false;
     }
     NS_ASSERTION(mFirstBaseline != NS_INTRINSIC_ISIZE_UNKNOWN,

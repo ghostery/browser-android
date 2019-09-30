@@ -91,22 +91,6 @@ def all_filesystem_paths(repo_root, subdir=None):
         expanded_path = subdir
     else:
         expanded_path = repo_root
-<<<<<<< HEAD
-    for dirpath, dirnames, filenames in path_filter(walk(expanded_path)):
-        for filename, _ in filenames:
-            path = os.path.join(dirpath, filename)
-            yield path
-
-||||||| merged common ancestors
-    for dirpath, dirnames, filenames in os.walk(expanded_path):
-        for filename in filenames:
-            path = os.path.relpath(os.path.join(dirpath, filename), repo_root)
-            if path_filter(path):
-                yield path
-        dirnames[:] = [item for item in dirnames if
-                       path_filter(os.path.relpath(os.path.join(dirpath, item) + "/",
-                                                   repo_root)+"/")]
-=======
     for dirpath, dirnames, filenames in path_filter(walk(expanded_path)):
         for filename, _ in filenames:
             path = os.path.join(dirpath, filename)
@@ -115,7 +99,6 @@ def all_filesystem_paths(repo_root, subdir=None):
             assert not os.path.isabs(path), path
             yield path
 
->>>>>>> upstream-releases
 
 def _all_files_equal(paths):
     # type: (Iterable[str]) -> bool

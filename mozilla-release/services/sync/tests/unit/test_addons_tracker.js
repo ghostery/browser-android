@@ -32,33 +32,9 @@ let tracker;
 const addon1ID = "addon1@tests.mozilla.org";
 
 const ADDONS = {
-<<<<<<< HEAD
-  test_addon1: {
-    manifest: {
-      applications: {gecko: {id: addon1ID}},
-||||||| merged common ancestors
-  test_bootstrap1_1: {
-    "install.rdf": {
-      id: "bootstrap1@tests.mozilla.org",
-      version: "1.0",
-      bootstrap: "true",
-      multiprocessCompatible: "true",
-      name: "Test Bootstrap 1",
-      description: "Test Description",
-
-      iconURL: "chrome://foo/skin/icon.png",
-      aboutURL: "chrome://foo/content/about.xul",
-      optionsURL: "chrome://foo/content/options.xul",
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "1",
-          maxVersion: "1"}],
-=======
   test_addon1: {
     manifest: {
       applications: { gecko: { id: addon1ID } },
->>>>>>> upstream-releases
     },
   },
 };

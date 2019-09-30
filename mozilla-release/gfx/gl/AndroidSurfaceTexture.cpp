@@ -35,15 +35,6 @@ void AndroidSurfaceTexture::GetTransformMatrix(
   env->ReleaseFloatArrayElements(jarray.Get(), array, 0);
 }
 
-<<<<<<< HEAD
-}  // namespace gl
-}  // namespace mozilla
-#endif  // MOZ_WIDGET_ANDROID
-||||||| merged common ancestors
-} // gl
-} // mozilla
-#endif // MOZ_WIDGET_ANDROID
-=======
 class SharedGL final {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(SharedGL);
@@ -193,4 +184,3 @@ void AndroidSurfaceTexture::Init() { GLBlitterSupport::Init(); }
 }  // namespace gl
 }  // namespace mozilla
 #endif  // MOZ_WIDGET_ANDROID
->>>>>>> upstream-releases

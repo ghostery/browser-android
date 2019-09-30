@@ -27,21 +27,7 @@ function assertEditorBreakpoint(dbg, line) {
 }
 
 add_task(async function() {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-breakpoints-reloading.js
   const dbg = await initDebugger("doc-scripts.html", "simple1.js");
-  const {
-    selectors: { getBreakpoints, getBreakpoint },
-    getState
-  } = dbg;
-||||||| merged common ancestors
-  const dbg = await initDebugger("doc-scripts.html");
-  const {
-    selectors: { getBreakpoints, getBreakpoint },
-    getState
-  } = dbg;
-=======
-  const dbg = await initDebugger("doc-scripts.html", "simple1.js");
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-breakpoints-reloading.js
   const source = findSource(dbg, "simple1.js");
 
   await selectSource(dbg, source.url);

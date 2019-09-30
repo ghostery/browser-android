@@ -63,17 +63,8 @@ class ScrollAnimationBezierPhysics final : public ScrollAnimationPhysics {
 
   // Initializes the timing function in such a way that the current velocity is
   // preserved.
-<<<<<<< HEAD
-  void InitTimingFunction(nsSMILKeySpline& aTimingFunction, nscoord aCurrentPos,
-                          nscoord aCurrentVelocity, nscoord aDestination);
-||||||| merged common ancestors
-  void InitTimingFunction(nsSMILKeySpline& aTimingFunction,
-                          nscoord aCurrentPos, nscoord aCurrentVelocity,
-                          nscoord aDestination);
-=======
   void InitTimingFunction(SMILKeySpline& aTimingFunction, nscoord aCurrentPos,
                           nscoord aCurrentVelocity, nscoord aDestination);
->>>>>>> upstream-releases
 
   // Initialize event history.
   void InitializeHistory(const TimeStamp& aTime);

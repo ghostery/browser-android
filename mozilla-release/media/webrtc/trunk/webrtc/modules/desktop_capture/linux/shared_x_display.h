@@ -8,16 +8,8 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/shared_x_display.h
-#ifndef MODULES_DESKTOP_CAPTURE_X11_SHARED_X_DISPLAY_H_
-#define MODULES_DESKTOP_CAPTURE_X11_SHARED_X_DISPLAY_H_
-||||||| merged common ancestors
-#ifndef WEBRTC_MODULES_DESKTOP_CAPTURE_X11_SHARED_X_DISPLAY_H_
-#define WEBRTC_MODULES_DESKTOP_CAPTURE_X11_SHARED_X_DISPLAY_H_
-=======
 #ifndef MODULES_DESKTOP_CAPTURE_LINUX_SHARED_X_DISPLAY_H_
 #define MODULES_DESKTOP_CAPTURE_LINUX_SHARED_X_DISPLAY_H_
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/shared_x_display.h
 
 #include <map>
 #include <vector>
@@ -86,10 +78,4 @@ class SharedXDisplay : public rtc::RefCountedBase {
 
 }  // namespace webrtc
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/shared_x_display.h
-#endif  // MODULES_DESKTOP_CAPTURE_X11_SHARED_X_DISPLAY_H_
-||||||| merged common ancestors
-#endif  // WEBRTC_MODULES_DESKTOP_CAPTURE_X11_SHARED_X_DISPLAY_H_
-=======
 #endif  // MODULES_DESKTOP_CAPTURE_LINUX_SHARED_X_DISPLAY_H_
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/shared_x_display.h

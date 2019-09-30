@@ -28,10 +28,6 @@ class GrSingleOwner;
 struct GrGpuResourceFreedMessage {
     GrGpuResource* fResource;
     uint32_t fOwningUniqueID;
-    bool shouldSend(uint32_t inboxID) const {
-        // The inbox's ID is the unique ID of the owning GrContext.
-        return inboxID == fOwningUniqueID;
-    }
 };
 
 static inline bool SkShouldPostMessageToBus(

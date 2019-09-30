@@ -127,16 +127,9 @@ class QuotaRequestChild final : public PQuotaRequestChild {
 
   void HandleResponse();
 
-<<<<<<< HEAD
-  void HandleResponse(bool aResponse);
-||||||| merged common ancestors
-  void
-  HandleResponse(bool aResponse);
-=======
   void HandleResponse(bool aResponse);
 
   void HandleResponse(const nsTArray<nsCString>& aResponse);
->>>>>>> upstream-releases
 
   // IPDL methods are only called by IPDL.
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;

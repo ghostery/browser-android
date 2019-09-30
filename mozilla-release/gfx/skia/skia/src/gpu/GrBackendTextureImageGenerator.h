@@ -40,18 +40,8 @@ protected:
     bool onIsValid(GrContext*) const override { return true; }
 
     TexGenType onCanGenerateTexture() const override { return TexGenType::kCheap; }
-<<<<<<< HEAD
-    sk_sp<GrTextureProxy> onGenerateTexture(GrContext*, const SkImageInfo&, const SkIPoint&,
-                                            bool willNeedMipMaps) override;
-||||||| merged common ancestors
-    sk_sp<GrTextureProxy> onGenerateTexture(GrContext*, const SkImageInfo&, const SkIPoint&,
-                                            SkTransferFunctionBehavior,
-                                            bool willNeedMipMaps) override;
-#endif
-=======
     sk_sp<GrTextureProxy> onGenerateTexture(GrRecordingContext*, const SkImageInfo&,
                                             const SkIPoint&, bool willNeedMipMaps) override;
->>>>>>> upstream-releases
 
 private:
     GrBackendTextureImageGenerator(const SkImageInfo& info, GrTexture*, GrSurfaceOrigin,

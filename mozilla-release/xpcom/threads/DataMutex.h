@@ -34,23 +34,6 @@ namespace mozilla {
 //    x.AppendElement(1u);
 //    assert(x[0], 1u);
 //
-<<<<<<< HEAD:mozilla-release/dom/media/eme/DataMutex.h
-template <typename T>
-class DataMutex {
- private:
-  class MOZ_STACK_CLASS AutoLock {
-   public:
-    T* operator->() const { return &ref(); }
-||||||| merged common ancestors
-template<typename T>
-class DataMutex
-{
-private:
-  class MOZ_STACK_CLASS AutoLock
-  {
-  public:
-    T* operator->() const { return &ref(); }
-=======
 template <typename T>
 class DataMutex {
  private:
@@ -58,7 +41,6 @@ class DataMutex {
    public:
     T* operator->() const& { return &ref(); }
     T* operator->() const&& = delete;
->>>>>>> upstream-releases:mozilla-release/xpcom/threads/DataMutex.h
 
     T& operator*() const& { return ref(); }
     T& operator*() const&& = delete;
@@ -70,14 +52,7 @@ class DataMutex {
     // Like RefPtr, don't allow implicit conversion of temporary to raw pointer.
     operator T*() const&& = delete;
 
-<<<<<<< HEAD:mozilla-release/dom/media/eme/DataMutex.h
-    T& ref() const {
-||||||| merged common ancestors
-    T& ref() const
-    {
-=======
     T& ref() const& {
->>>>>>> upstream-releases:mozilla-release/xpcom/threads/DataMutex.h
       MOZ_ASSERT(mOwner);
       return mOwner->mValue;
     }
@@ -110,18 +85,8 @@ class DataMutex {
  public:
   explicit DataMutex(const char* aName) : mMutex(aName) {}
 
-<<<<<<< HEAD:mozilla-release/dom/media/eme/DataMutex.h
-  DataMutex(T&& aValue, const char* aName) : mMutex(aName), mValue(aValue) {}
-||||||| merged common ancestors
-  DataMutex(T&& aValue, const char* aName)
-    : mMutex(aName)
-    , mValue(aValue)
-  {
-  }
-=======
   DataMutex(T&& aValue, const char* aName)
       : mMutex(aName), mValue(std::move(aValue)) {}
->>>>>>> upstream-releases:mozilla-release/xpcom/threads/DataMutex.h
 
   AutoLock Lock() { return AutoLock(this); }
 

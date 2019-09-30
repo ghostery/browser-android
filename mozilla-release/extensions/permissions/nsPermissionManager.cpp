@@ -9,13 +9,6 @@
 #include "mozilla/DebugOnly.h"
 
 #include "mozilla/dom/ContentParent.h"
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-#include "mozilla/BasePrincipal.h"
-||||||| merged common ancestors
-#include "mozilla/dom/ContentChild.h"
-#include "mozilla/BasePrincipal.h"
-=======
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 #include "mozilla/ContentPrincipal.h"
 #include "mozilla/Pair.h"
 #include "mozilla/Services.h"
@@ -55,17 +48,11 @@
 #include "mozilla/ClearOnShutdown.h"
 #include "nsEffectiveTLDService.h"
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-static nsPermissionManager* gPermissionManager = nullptr;
-||||||| merged common ancestors
-static nsPermissionManager *gPermissionManager = nullptr;
-=======
 static mozilla::StaticRefPtr<nsPermissionManager> gPermissionManager;
 
 // Initially, |false|. Set to |true| once shutdown has started, to avoid
 // reopening the database.
 static bool gIsShuttingDown = false;
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
 using namespace mozilla;
 using namespace mozilla::dom;
@@ -113,80 +100,6 @@ static int32_t sPreloadPermissionCount = 0;
 //
 // Permissions which are in this list are considered to have a "" permission
 // key, even if their principal would not normally have that key.
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-static const char* kPreloadPermissions[] = {
-    // NOTE: These permissions are the different nsContentBlocker permissions
-    // for allowing or denying certain content types from being loaded. Every
-    // permission listed in the `kTypeString` array in nsContentBlocker.cpp
-    // should appear in this list.
-    "other", "script", "image", "stylesheet", "object", "document",
-    "subdocument", "refresh", "xbl", "ping", "xmlhttprequest",
-    "objectsubrequest", "dtd", "font", "media", "websocket", "csp_report",
-    "xslt", "beacon", "fetch", "image", "manifest", "speculative",
-
-    // This permission is preloaded to support properly blocking service worker
-    // interception when a user has disabled storage for a specific site.  Once
-    // service worker interception moves to the parent process this should be
-    // removed.  See bug 1428130.
-    "cookie", "trackingprotection", "trackingprotection-pb",
-
-    USER_INTERACTION_PERM};
-
-// A list of permissions that can have a fallback default permission
-// set under the permissions.default.* pref.
-static const char* kPermissionsWithDefaults[] = {
-    "camera", "microphone", "geo", "desktop-notification", "shortcuts"};
-||||||| merged common ancestors
-static const char* kPreloadPermissions[] = {
-  // NOTE: These permissions are the different nsContentBlocker permissions for
-  // allowing or denying certain content types from being loaded. Every
-  // permission listed in the `kTypeString` array in nsContentBlocker.cpp should
-  // appear in this list.
-  "other",
-  "script",
-  "image",
-  "stylesheet",
-  "object",
-  "document",
-  "subdocument",
-  "refresh",
-  "xbl",
-  "ping",
-  "xmlhttprequest",
-  "objectsubrequest",
-  "dtd",
-  "font",
-  "media",
-  "websocket",
-  "csp_report",
-  "xslt",
-  "beacon",
-  "fetch",
-  "image",
-  "manifest",
-  "speculative",
-
-  // This permission is preloaded to support properly blocking service worker
-  // interception when a user has disabled storage for a specific site.  Once
-  // service worker interception moves to the parent process this should be
-  // removed.  See bug 1428130.
-  "cookie",
-  "trackingprotection",
-  "trackingprotection-pb",
-
-  USER_INTERACTION_PERM
-};
-
-// A list of permissions that can have a fallback default permission
-// set under the permissions.default.* pref.
-static const char* kPermissionsWithDefaults[] = {
-  "camera",
-  "microphone",
-  "geo",
-  "desktop-notification",
-  "shortcuts"
-};
-=======
 static const nsLiteralCString kPreloadPermissions[] = {
     // NOTE: These permissions are the different nsContentBlocker permissions
     // for allowing or denying certain content types from being loaded. Every
@@ -213,43 +126,13 @@ static const nsLiteralCString kPreloadPermissions[] = {
     NS_LITERAL_CSTRING("trackingprotection-pb"),
 
     USER_INTERACTION_PERM};
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
 // NOTE: nullptr can be passed as aType - if it is this function will return
 // "false" unconditionally.
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-bool HasDefaultPref(const char* aType) {
-  if (aType) {
-    for (const char* perm : kPermissionsWithDefaults) {
-      if (!strcmp(aType, perm)) {
-||||||| merged common ancestors
-bool
-HasDefaultPref(const char* aType)
-{
-  if (aType) {
-    for (const char* perm : kPermissionsWithDefaults) {
-      if (!strcmp(aType, perm)) {
-=======
 bool IsPreloadPermission(const nsACString& aType) {
   if (!aType.IsEmpty()) {
     for (const auto& perm : kPreloadPermissions) {
       if (perm.Equals(aType)) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-// NOTE: nullptr can be passed as aType - if it is this function will return
-// "false" unconditionally.
-bool IsPreloadPermission(const char* aType) {
-  if (aType) {
-    for (uint32_t i = 0; i < mozilla::ArrayLength(kPreloadPermissions); ++i) {
-      if (!strcmp(aType, kPreloadPermissions[i])) {
         return true;
       }
     }
@@ -259,29 +142,6 @@ bool IsPreloadPermission(const char* aType) {
 }
 
 nsresult GetOriginFromPrincipal(nsIPrincipal* aPrincipal, nsACString& aOrigin) {
-||||||| merged common ancestors
-// NOTE: nullptr can be passed as aType - if it is this function will return
-// "false" unconditionally.
-bool
-IsPreloadPermission(const char* aType)
-{
-  if (aType) {
-    for (uint32_t i = 0; i < mozilla::ArrayLength(kPreloadPermissions); ++i) {
-      if (!strcmp(aType, kPreloadPermissions[i])) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-nsresult
-GetOriginFromPrincipal(nsIPrincipal* aPrincipal, nsACString& aOrigin)
-{
-=======
-nsresult GetOriginFromPrincipal(nsIPrincipal* aPrincipal, nsACString& aOrigin) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   nsresult rv = aPrincipal->GetOriginNoSuffix(aOrigin);
   // The principal may belong to the about:blank content viewer, so this can be
   // expected to fail.
@@ -337,26 +197,11 @@ nsresult GetPrincipalFromOrigin(const nsACString& aOrigin,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsresult GetPrincipal(nsIURI* aURI, uint32_t aAppId,
-                      bool aIsInIsolatedMozBrowserElement,
-                      nsIPrincipal** aPrincipal) {
-  mozilla::OriginAttributes attrs(aAppId, aIsInIsolatedMozBrowserElement);
-  nsCOMPtr<nsIPrincipal> principal =
-      mozilla::BasePrincipal::CreateCodebasePrincipal(aURI, attrs);
-||||||| merged common ancestors
-nsresult
-GetPrincipal(nsIURI* aURI, uint32_t aAppId, bool aIsInIsolatedMozBrowserElement, nsIPrincipal** aPrincipal)
-{
-  mozilla::OriginAttributes attrs(aAppId, aIsInIsolatedMozBrowserElement);
-  nsCOMPtr<nsIPrincipal> principal = mozilla::BasePrincipal::CreateCodebasePrincipal(aURI, attrs);
-=======
 nsresult GetPrincipal(nsIURI* aURI, bool aIsInIsolatedMozBrowserElement,
                       nsIPrincipal** aPrincipal) {
   mozilla::OriginAttributes attrs(aIsInIsolatedMozBrowserElement);
   nsCOMPtr<nsIPrincipal> principal =
       mozilla::BasePrincipal::CreateCodebasePrincipal(aURI, attrs);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   NS_ENSURE_TRUE(principal, NS_ERROR_FAILURE);
 
   principal.forget(aPrincipal);
@@ -373,29 +218,7 @@ nsresult GetPrincipal(nsIURI* aURI, nsIPrincipal** aPrincipal) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
 nsCString GetNextSubDomainForHost(const nsACString& aHost) {
-  nsCOMPtr<nsIEffectiveTLDService> tldService =
-      do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID);
-  if (!tldService) {
-    NS_ERROR("Should have a tld service!");
-    return EmptyCString();
-  }
-
-||||||| merged common ancestors
-nsCString
-GetNextSubDomainForHost(const nsACString& aHost)
-{
-  nsCOMPtr<nsIEffectiveTLDService> tldService =
-    do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID);
-  if (!tldService) {
-    NS_ERROR("Should have a tld service!");
-    return EmptyCString();
-  }
-
-=======
-nsCString GetNextSubDomainForHost(const nsACString& aHost) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   nsCString subDomain;
   nsresult rv =
       nsEffectiveTLDService::GetInstance()->GetNextSubDomain(aHost, subDomain);
@@ -462,50 +285,6 @@ already_AddRefed<nsIPrincipal> GetNextSubDomainPrincipal(
   return principal.forget();
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-class ClearOriginDataObserver final : public nsIObserver {
-  ~ClearOriginDataObserver() {}
-
- public:
-  NS_DECL_ISUPPORTS
-
-  // nsIObserver implementation.
-  NS_IMETHOD
-  Observe(nsISupports* aSubject, const char* aTopic,
-          const char16_t* aData) override {
-    MOZ_ASSERT(!nsCRT::strcmp(aTopic, "clear-origin-attributes-data"));
-
-    nsCOMPtr<nsIPermissionManager> permManager =
-        do_GetService("@mozilla.org/permissionmanager;1");
-    return permManager->RemovePermissionsWithAttributes(
-        nsDependentString(aData));
-  }
-};
-
-NS_IMPL_ISUPPORTS(ClearOriginDataObserver, nsIObserver)
-
-||||||| merged common ancestors
-class ClearOriginDataObserver final : public nsIObserver {
-  ~ClearOriginDataObserver() {}
-
-public:
-  NS_DECL_ISUPPORTS
-
-  // nsIObserver implementation.
-  NS_IMETHOD
-  Observe(nsISupports* aSubject, const char* aTopic, const char16_t* aData) override
-  {
-    MOZ_ASSERT(!nsCRT::strcmp(aTopic, "clear-origin-attributes-data"));
-
-    nsCOMPtr<nsIPermissionManager> permManager = do_GetService("@mozilla.org/permissionmanager;1");
-    return permManager->RemovePermissionsWithAttributes(nsDependentString(aData));
-  }
-};
-
-NS_IMPL_ISUPPORTS(ClearOriginDataObserver, nsIObserver)
-
-=======
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 class MOZ_STACK_CLASS UpgradeHostToOriginHelper {
  public:
   virtual nsresult Insert(const nsACString& aOrigin, const nsCString& aType,
@@ -679,26 +458,10 @@ class MOZ_STACK_CLASS UpgradeIPHostToOriginDB final
   int64_t* mID;
 };
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsresult UpgradeHostToOriginAndInsert(
-    const nsACString& aHost, const nsCString& aType, uint32_t aPermission,
-    uint32_t aExpireType, int64_t aExpireTime, int64_t aModificationTime,
-    uint32_t aAppId, bool aIsInIsolatedMozBrowserElement,
-    UpgradeHostToOriginHelper* aHelper) {
-||||||| merged common ancestors
-
-nsresult
-UpgradeHostToOriginAndInsert(const nsACString& aHost, const nsCString& aType,
-                             uint32_t aPermission, uint32_t aExpireType, int64_t aExpireTime,
-                             int64_t aModificationTime, uint32_t aAppId, bool aIsInIsolatedMozBrowserElement,
-                             UpgradeHostToOriginHelper* aHelper)
-{
-=======
 nsresult UpgradeHostToOriginAndInsert(
     const nsACString& aHost, const nsCString& aType, uint32_t aPermission,
     uint32_t aExpireType, int64_t aExpireTime, int64_t aModificationTime,
     bool aIsInIsolatedMozBrowserElement, UpgradeHostToOriginHelper* aHelper) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   if (aHost.EqualsLiteral("<file>")) {
     // We no longer support the magic host <file>
     NS_WARNING(
@@ -723,15 +486,8 @@ nsresult UpgradeHostToOriginAndInsert(
     }
 
     nsCOMPtr<nsIPrincipal> principal;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement,
-                      getter_AddRefs(principal));
-||||||| merged common ancestors
-    rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement, getter_AddRefs(principal));
-=======
     rv = GetPrincipal(uri, aIsInIsolatedMozBrowserElement,
                       getter_AddRefs(principal));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsAutoCString origin;
@@ -759,41 +515,13 @@ nsresult UpgradeHostToOriginAndInsert(
 
     // Get the eTLD+1 of the domain
     nsAutoCString eTLD1;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    nsCOMPtr<nsIEffectiveTLDService> tldService =
-        do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID);
-    MOZ_ASSERT(tldService);  // We should always have a tldService
-    if (tldService) {
-      rv = tldService->GetBaseDomainFromHost(aHost, 0, eTLD1);
-    }
-||||||| merged common ancestors
-    nsCOMPtr<nsIEffectiveTLDService> tldService =
-      do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID);
-    MOZ_ASSERT(tldService); // We should always have a tldService
-    if (tldService) {
-      rv = tldService->GetBaseDomainFromHost(aHost, 0, eTLD1);
-    }
-=======
     rv = nsEffectiveTLDService::GetInstance()->GetBaseDomainFromHost(aHost, 0,
                                                                      eTLD1);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    if (!tldService || NS_FAILED(rv)) {
-      // If the lookup on the tldService for the base domain for the host
-      // failed, that means that we just want to directly use the host as the
-      // host name for the lookup.
-||||||| merged common ancestors
-    if (!tldService || NS_FAILED(rv)) {
-      // If the lookup on the tldService for the base domain for the host failed,
-      // that means that we just want to directly use the host as the host name
-      // for the lookup.
-=======
     if (NS_FAILED(rv)) {
       // If the lookup on the tldService for the base domain for the host
       // failed, that means that we just want to directly use the host as the
       // host name for the lookup.
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       eTLD1 = aHost;
     }
 
@@ -873,15 +601,8 @@ nsresult UpgradeHostToOriginAndInsert(
 
       // We now have a URI which we can make a nsIPrincipal out of
       nsCOMPtr<nsIPrincipal> principal;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement,
-                        getter_AddRefs(principal));
-||||||| merged common ancestors
-      rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement, getter_AddRefs(principal));
-=======
       rv = GetPrincipal(uri, aIsInIsolatedMozBrowserElement,
                         getter_AddRefs(principal));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       if (NS_WARN_IF(NS_FAILED(rv))) continue;
 
       nsAutoCString origin;
@@ -928,15 +649,8 @@ nsresult UpgradeHostToOriginAndInsert(
                    NS_LITERAL_CSTRING("http://") + hostSegment);
     NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement,
-                      getter_AddRefs(principal));
-||||||| merged common ancestors
-    rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement, getter_AddRefs(principal));
-=======
     rv = GetPrincipal(uri, aIsInIsolatedMozBrowserElement,
                       getter_AddRefs(principal));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     NS_ENSURE_SUCCESS(rv, rv);
 
     rv = GetOriginFromPrincipal(principal, origin);
@@ -950,15 +664,8 @@ nsresult UpgradeHostToOriginAndInsert(
                    NS_LITERAL_CSTRING("https://") + hostSegment);
     NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement,
-                      getter_AddRefs(principal));
-||||||| merged common ancestors
-    rv = GetPrincipal(uri, aAppId, aIsInIsolatedMozBrowserElement, getter_AddRefs(principal));
-=======
     rv = GetPrincipal(uri, aIsInIsolatedMozBrowserElement,
                       getter_AddRefs(principal));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     NS_ENSURE_SUCCESS(rv, rv);
 
     rv = GetOriginFromPrincipal(principal, origin);
@@ -980,11 +687,6 @@ static bool IsExpandedPrincipal(nsIPrincipal* aPrincipal) {
 // expiration.
 static bool IsPersistentExpire(uint32_t aExpire) {
   return aExpire != nsIPermissionManager::EXPIRE_SESSION &&
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-         aExpire != nsIPermissionManager::EXPIRE_POLICY;
-||||||| merged common ancestors
-    aExpire != nsIPermissionManager::EXPIRE_POLICY;
-=======
          aExpire != nsIPermissionManager::EXPIRE_POLICY;
 }
 
@@ -1040,7 +742,6 @@ static void UpdateAutoplayTelemetry(const nsACString& aType,
     AccumulateCategorical(
         mozilla::Telemetry::LABELS_AUTOPLAY_SITES_SETTING_CHANGE::RemoveAllow);
   }
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 }  // namespace
@@ -1173,26 +874,10 @@ NS_IMETHODIMP DeleteFromMozHostListener::HandleCompletion(uint16_t aReason) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-/* static */ void nsPermissionManager::ClearOriginDataObserverInit() {
-  nsCOMPtr<nsIObserverService> observerService =
-      mozilla::services::GetObserverService();
-  observerService->AddObserver(new ClearOriginDataObserver(),
-                               "clear-origin-attributes-data",
-                               /* ownsWeak= */ false);
-||||||| merged common ancestors
-/* static */ void
-nsPermissionManager::ClearOriginDataObserverInit()
-{
-  nsCOMPtr<nsIObserverService> observerService =
-    mozilla::services::GetObserverService();
-  observerService->AddObserver(new ClearOriginDataObserver(), "clear-origin-attributes-data", /* ownsWeak= */ false);
-=======
 /* static */
 void nsPermissionManager::Startup() {
   nsCOMPtr<nsIPermissionManager> permManager =
       do_GetService("@mozilla.org/permissionmanager;1");
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1213,17 +898,7 @@ NS_IMPL_ISUPPORTS(nsPermissionManager, nsIPermissionManager, nsIObserver,
                   nsISupportsWeakReference)
 
 nsPermissionManager::nsPermissionManager()
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    : mMemoryOnlyDB(false), mLargestID(0), mIsShuttingDown(false) {}
-||||||| merged common ancestors
- : mMemoryOnlyDB(false)
- , mLargestID(0)
- , mIsShuttingDown(false)
-{
-}
-=======
     : mMemoryOnlyDB(false), mLargestID(0) {}
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
 nsPermissionManager::~nsPermissionManager() {
   // NOTE: Make sure to reject each of the promises in mPermissionKeyPromiseMap
@@ -1270,13 +945,6 @@ nsPermissionManager::GetXPCOMSingleton() {
   return nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsresult nsPermissionManager::Init() {
-||||||| merged common ancestors
-nsresult
-nsPermissionManager::Init()
-{
-=======
 // static
 nsPermissionManager* nsPermissionManager::GetInstance() {
   if (!gPermissionManager) {
@@ -1288,7 +956,6 @@ nsPermissionManager* nsPermissionManager::GetInstance() {
 }
 
 nsresult nsPermissionManager::Init() {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   // If the 'permissions.memory_only' pref is set to true, then don't write any
   // permission settings to disk, but keep them in a memory-only database.
   mMemoryOnlyDB =
@@ -1348,18 +1015,11 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
   nsresult rv = NS_GetSpecialDirectory(NS_APP_PERMISSION_PARENT_DIR,
                                        getter_AddRefs(permissionsFile));
   if (NS_FAILED(rv)) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    rv = NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR,
-                                getter_AddRefs(permissionsFile));
-||||||| merged common ancestors
-    rv = NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR, getter_AddRefs(permissionsFile));
-=======
     rv = NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR,
                                 getter_AddRefs(permissionsFile));
     if (NS_FAILED(rv)) {
       return NS_ERROR_UNEXPECTED;
     }
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   }
 
   rv = permissionsFile->AppendNative(NS_LITERAL_CSTRING(PERMISSIONS_FILE_NAME));
@@ -1637,24 +1297,11 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
           NS_ENSURE_SUCCESS(rv, rv);
 
           nsCOMPtr<mozIStorageStatement> stmt;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-          rv = mDBConn->CreateStatement(
-              NS_LITERAL_CSTRING(
-                  "SELECT host, type, permission, expireType, expireTime, "
-                  "modificationTime, appId, isInBrowserElement FROM moz_hosts"),
-              getter_AddRefs(stmt));
-||||||| merged common ancestors
-          rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
-            "SELECT host, type, permission, expireType, expireTime, "
-            "modificationTime, appId, isInBrowserElement FROM moz_hosts"),
-             getter_AddRefs(stmt));
-=======
           rv = mDBConn->CreateStatement(
               NS_LITERAL_CSTRING(
                   "SELECT host, type, permission, expireType, expireTime, "
                   "modificationTime, isInBrowserElement FROM moz_hosts"),
               getter_AddRefs(stmt));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
           NS_ENSURE_SUCCESS(rv, rv);
 
           int64_t id = 0;
@@ -1687,21 +1334,9 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
             // Perform the meat of the migration by deferring to the
             // UpgradeHostToOriginAndInsert function.
             UpgradeHostToOriginDBMigration upHelper(mDBConn, &id);
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-            rv = UpgradeHostToOriginAndInsert(
-                host, type, permission, expireType, expireTime,
-                modificationTime, appId, isInBrowserElement, &upHelper);
-||||||| merged common ancestors
-            rv = UpgradeHostToOriginAndInsert(host, type, permission,
-                                              expireType, expireTime,
-                                              modificationTime, appId,
-                                              isInBrowserElement,
-                                              &upHelper);
-=======
             rv = UpgradeHostToOriginAndInsert(
                 host, type, permission, expireType, expireTime,
                 modificationTime, isInBrowserElement, &upHelper);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
             if (NS_FAILED(rv)) {
               NS_WARNING(
                   "Unexpected failure when upgrading migrating permission "
@@ -1834,37 +1469,12 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
         // Only perform this migration if the original schema version was 7, and
         // the moz_hosts table is a backup.
         if (dbSchemaVersion == 7 && hostsIsBackupExists) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-          nsCOMPtr<nsIEffectiveTLDService> tldService =
-              do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID);
-          MOZ_ASSERT(tldService);  // We should always have a tldService
-
-||||||| merged common ancestors
-          nsCOMPtr<nsIEffectiveTLDService> tldService =
-            do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID);
-          MOZ_ASSERT(tldService); // We should always have a tldService
-
-=======
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
           nsCOMPtr<mozIStorageStatement> stmt;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-          rv = mDBConn->CreateStatement(
-              NS_LITERAL_CSTRING(
-                  "SELECT host, type, permission, expireType, expireTime, "
-                  "modificationTime, appId, isInBrowserElement FROM moz_hosts"),
-              getter_AddRefs(stmt));
-||||||| merged common ancestors
-          rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
-            "SELECT host, type, permission, expireType, expireTime, "
-            "modificationTime, appId, isInBrowserElement FROM moz_hosts"),
-             getter_AddRefs(stmt));
-=======
           rv = mDBConn->CreateStatement(
               NS_LITERAL_CSTRING(
                   "SELECT host, type, permission, expireType, expireTime, "
                   "modificationTime, isInBrowserElement FROM moz_hosts"),
               getter_AddRefs(stmt));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
           NS_ENSURE_SUCCESS(rv, rv);
 
           nsCOMPtr<mozIStorageStatement> idStmt;
@@ -1913,21 +1523,9 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
             // Perform the meat of the migration by deferring to the
             // UpgradeHostToOriginAndInsert function.
             UpgradeIPHostToOriginDB upHelper(mDBConn, &id);
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-            rv = UpgradeHostToOriginAndInsert(
-                host, type, permission, expireType, expireTime,
-                modificationTime, appId, isInBrowserElement, &upHelper);
-||||||| merged common ancestors
-            rv = UpgradeHostToOriginAndInsert(host, type, permission,
-                                              expireType, expireTime,
-                                              modificationTime, appId,
-                                              isInBrowserElement,
-                                              &upHelper);
-=======
             rv = UpgradeHostToOriginAndInsert(
                 host, type, permission, expireType, expireTime,
                 modificationTime, isInBrowserElement, &upHelper);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
             if (NS_FAILED(rv)) {
               NS_WARNING(
                   "Unexpected failure when upgrading migrating permission "
@@ -1974,15 +1572,6 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
         // fall through to the next upgrade
         MOZ_FALLTHROUGH;
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      // current version.
-      case HOSTS_SCHEMA_VERSION:
-        break;
-||||||| merged common ancestors
-    // current version.
-    case HOSTS_SCHEMA_VERSION:
-      break;
-=======
       case 9: {
         rv = mDBConn->SetSchemaVersion(HOSTS_SCHEMA_VERSION);
         NS_ENSURE_SUCCESS(rv, rv);
@@ -1990,26 +1579,7 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
 
         // fall through to the next upgrade
         MOZ_FALLTHROUGH;
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      // downgrading.
-      // if columns have been added to the table, we can still use the ones we
-      // understand safely. if columns have been deleted or altered, just
-      // blow away the table and start from scratch! if you change the way
-      // a column is interpreted, make sure you also change its name so this
-      // check will catch it.
-      default: {
-||||||| merged common ancestors
-    // downgrading.
-    // if columns have been added to the table, we can still use the ones we
-    // understand safely. if columns have been deleted or altered, just
-    // blow away the table and start from scratch! if you change the way
-    // a column is interpreted, make sure you also change its name so this
-    // check will catch it.
-    default:
-      {
-=======
       // current version.
       case HOSTS_SCHEMA_VERSION:
         break;
@@ -2021,7 +1591,6 @@ nsresult nsPermissionManager::InitDB(bool aRemoveFile) {
       // a column is interpreted, make sure you also change its name so this
       // check will catch it.
       default: {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
         // check if all the expected columns exist
         nsCOMPtr<mozIStorageStatement> stmt;
         rv = mDBConn->CreateStatement(
@@ -2094,33 +1663,6 @@ nsresult nsPermissionManager::CreateTable() {
 
   // We also create a legacy V4 table, for backwards compatability,
   // and to ensure that downgrades don't trigger a schema version change.
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  return mDBConn->ExecuteSimpleSQL(
-      NS_LITERAL_CSTRING("CREATE TABLE moz_hosts ("
-                         " id INTEGER PRIMARY KEY"
-                         ",host TEXT"
-                         ",type TEXT"
-                         ",permission INTEGER"
-                         ",expireType INTEGER"
-                         ",expireTime INTEGER"
-                         ",modificationTime INTEGER"
-                         ",appId INTEGER"
-                         ",isInBrowserElement INTEGER"
-                         ")"));
-||||||| merged common ancestors
-  return mDBConn->ExecuteSimpleSQL(NS_LITERAL_CSTRING(
-    "CREATE TABLE moz_hosts ("
-      " id INTEGER PRIMARY KEY"
-      ",host TEXT"
-      ",type TEXT"
-      ",permission INTEGER"
-      ",expireType INTEGER"
-      ",expireTime INTEGER"
-      ",modificationTime INTEGER"
-      ",appId INTEGER"
-      ",isInBrowserElement INTEGER"
-    ")"));
-=======
   return mDBConn->ExecuteSimpleSQL(
       NS_LITERAL_CSTRING("CREATE TABLE moz_hosts ("
                          " id INTEGER PRIMARY KEY"
@@ -2132,25 +1674,12 @@ nsresult nsPermissionManager::CreateTable() {
                          ",modificationTime INTEGER"
                          ",isInBrowserElement INTEGER"
                          ")"));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::Add(nsIURI* aURI, const char* aType, uint32_t aPermission,
-                         uint32_t aExpireType, int64_t aExpireTime) {
-||||||| merged common ancestors
-nsPermissionManager::Add(nsIURI     *aURI,
-                         const char *aType,
-                         uint32_t    aPermission,
-                         uint32_t    aExpireType,
-                         int64_t     aExpireTime)
-{
-=======
 nsPermissionManager::Add(nsIURI* aURI, const nsACString& aType,
                          uint32_t aPermission, uint32_t aExpireType,
                          int64_t aExpireTime) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   NS_ENSURE_ARG_POINTER(aURI);
 
   nsCOMPtr<nsIPrincipal> principal;
@@ -2163,20 +1692,10 @@ nsPermissionManager::Add(nsIURI* aURI, const nsACString& aType,
 
 NS_IMETHODIMP
 nsPermissionManager::AddFromPrincipal(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                      const char* aType, uint32_t aPermission,
-                                      uint32_t aExpireType,
-                                      int64_t aExpireTime) {
-||||||| merged common ancestors
-                                      const char* aType, uint32_t aPermission,
-                                      uint32_t aExpireType, int64_t aExpireTime)
-{
-=======
                                       const nsACString& aType,
                                       uint32_t aPermission,
                                       uint32_t aExpireType,
                                       int64_t aExpireTime) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   ENSURE_NOT_CHILD_PROCESS;
   NS_ENSURE_ARG_POINTER(aPrincipal);
   NS_ENSURE_TRUE(aExpireType == nsIPermissionManager::EXPIRE_NEVER ||
@@ -2214,35 +1733,6 @@ nsPermissionManager::AddFromPrincipal(nsIPrincipal* aPrincipal,
   // A modificationTime of zero will cause AddInternal to use now().
   int64_t modificationTime = 0;
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  return AddInternal(aPrincipal, nsDependentCString(aType), aPermission, 0,
-                     aExpireType, aExpireTime, modificationTime, eNotify,
-                     eWriteToDB);
-}
-
-nsresult nsPermissionManager::AddInternal(
-    nsIPrincipal* aPrincipal, const nsCString& aType, uint32_t aPermission,
-    int64_t aID, uint32_t aExpireType, int64_t aExpireTime,
-    int64_t aModificationTime, NotifyOperationType aNotifyOperation,
-    DBOperationType aDBOperation, const bool aIgnoreSessionPermissions) {
-||||||| merged common ancestors
-  return AddInternal(aPrincipal, nsDependentCString(aType), aPermission, 0,
-                     aExpireType, aExpireTime, modificationTime, eNotify, eWriteToDB);
-}
-
-nsresult
-nsPermissionManager::AddInternal(nsIPrincipal* aPrincipal,
-                                 const nsCString& aType,
-                                 uint32_t              aPermission,
-                                 int64_t               aID,
-                                 uint32_t              aExpireType,
-                                 int64_t               aExpireTime,
-                                 int64_t               aModificationTime,
-                                 NotifyOperationType   aNotifyOperation,
-                                 DBOperationType       aDBOperation,
-                                 const bool            aIgnoreSessionPermissions)
-{
-=======
   return AddInternal(aPrincipal, aType, aPermission, 0, aExpireType,
                      aExpireTime, modificationTime, eNotify, eWriteToDB);
 }
@@ -2252,7 +1742,6 @@ nsresult nsPermissionManager::AddInternal(
     int64_t aID, uint32_t aExpireType, int64_t aExpireTime,
     int64_t aModificationTime, NotifyOperationType aNotifyOperation,
     DBOperationType aDBOperation, const bool aIgnoreSessionPermissions) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   nsAutoCString origin;
   nsresult rv = GetOriginFromPrincipal(aPrincipal, origin);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -2350,16 +1839,9 @@ nsresult nsPermissionManager::AddInternal(
       return NS_OK;
     }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    case eOperationAdding: {
-||||||| merged common ancestors
-  case eOperationAdding:
-    {
-=======
     case eOperationAdding: {
       UpdateAutoplayTelemetry(aType, nsIPermissionManager::UNKNOWN_ACTION,
                               aPermission, aExpireType);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       if (aDBOperation == eWriteToDB) {
         // we'll be writing to the database - generate a known unique id
         id = ++mLargestID;
@@ -2384,22 +1866,9 @@ nsresult nsPermissionManager::AddInternal(
       }
 
       if (aNotifyOperation == eNotify) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-        NotifyObserversWithPermission(aPrincipal, mTypeArray[typeIndex],
-                                      aPermission, aExpireType, aExpireTime,
-                                      u"added");
-||||||| merged common ancestors
-        NotifyObserversWithPermission(aPrincipal,
-                                      mTypeArray[typeIndex],
-                                      aPermission,
-                                      aExpireType,
-                                      aExpireTime,
-                                      u"added");
-=======
         NotifyObserversWithPermission(aPrincipal, mTypeArray[typeIndex],
                                       aPermission, aExpireType, aExpireTime,
                                       aModificationTime, u"added");
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       }
 
       break;
@@ -2434,24 +1903,10 @@ nsresult nsPermissionManager::AddInternal(
                  nsIPermissionManager::EXPIRE_NEVER, 0, 0);
 
       if (aNotifyOperation == eNotify) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-        NotifyObserversWithPermission(
-            aPrincipal, mTypeArray[typeIndex], oldPermissionEntry.mPermission,
-            oldPermissionEntry.mExpireType, oldPermissionEntry.mExpireTime,
-            u"deleted");
-||||||| merged common ancestors
-        NotifyObserversWithPermission(aPrincipal,
-                                      mTypeArray[typeIndex],
-                                      oldPermissionEntry.mPermission,
-                                      oldPermissionEntry.mExpireType,
-                                      oldPermissionEntry.mExpireTime,
-                                      u"deleted");
-=======
         NotifyObserversWithPermission(
             aPrincipal, mTypeArray[typeIndex], oldPermissionEntry.mPermission,
             oldPermissionEntry.mExpireType, oldPermissionEntry.mExpireTime,
             oldPermissionEntry.mModificationTime, u"deleted");
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       }
 
       // If there are no more permissions stored for that entry, clear it.
@@ -2506,22 +1961,9 @@ nsresult nsPermissionManager::AddInternal(
                  aPermission, aExpireType, aExpireTime, aModificationTime);
 
       if (aNotifyOperation == eNotify) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-        NotifyObserversWithPermission(aPrincipal, mTypeArray[typeIndex],
-                                      aPermission, aExpireType, aExpireTime,
-                                      u"changed");
-||||||| merged common ancestors
-        NotifyObserversWithPermission(aPrincipal,
-                                      mTypeArray[typeIndex],
-                                      aPermission,
-                                      aExpireType,
-                                      aExpireTime,
-                                      u"changed");
-=======
         NotifyObserversWithPermission(aPrincipal, mTypeArray[typeIndex],
                                       aPermission, aExpireType, aExpireTime,
                                       aModificationTime, u"changed");
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       }
 
       break;
@@ -2568,22 +2010,9 @@ nsresult nsPermissionManager::AddInternal(
       }
 
       if (aNotifyOperation == eNotify) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-        NotifyObserversWithPermission(aPrincipal, mTypeArray[typeIndex],
-                                      aPermission, aExpireType, aExpireTime,
-                                      u"changed");
-||||||| merged common ancestors
-        NotifyObserversWithPermission(aPrincipal,
-                                      mTypeArray[typeIndex],
-                                      aPermission,
-                                      aExpireType,
-                                      aExpireTime,
-                                      u"changed");
-=======
         NotifyObserversWithPermission(aPrincipal, mTypeArray[typeIndex],
                                       aPermission, aExpireType, aExpireTime,
                                       aModificationTime, u"changed");
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       }
 
     } break;
@@ -2593,15 +2022,7 @@ nsresult nsPermissionManager::AddInternal(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::Remove(nsIURI* aURI, const char* aType) {
-||||||| merged common ancestors
-nsPermissionManager::Remove(nsIURI*     aURI,
-                            const char* aType)
-{
-=======
 nsPermissionManager::Remove(nsIURI* aURI, const nsACString& aType) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   NS_ENSURE_ARG_POINTER(aURI);
 
   nsCOMPtr<nsIPrincipal> principal;
@@ -2613,14 +2034,7 @@ nsPermissionManager::Remove(nsIURI* aURI, const nsACString& aType) {
 
 NS_IMETHODIMP
 nsPermissionManager::RemoveFromPrincipal(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                         const char* aType) {
-||||||| merged common ancestors
-                                         const char* aType)
-{
-=======
                                          const nsACString& aType) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   ENSURE_NOT_CHILD_PROCESS;
   NS_ENSURE_ARG_POINTER(aPrincipal);
 
@@ -2635,23 +2049,8 @@ nsPermissionManager::RemoveFromPrincipal(nsIPrincipal* aPrincipal,
   }
 
   // AddInternal() handles removal, just let it do the work
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  return AddInternal(aPrincipal, nsDependentCString(aType),
-                     nsIPermissionManager::UNKNOWN_ACTION, 0,
-                     nsIPermissionManager::EXPIRE_NEVER, 0, 0, eNotify,
-||||||| merged common ancestors
-  return AddInternal(aPrincipal,
-                     nsDependentCString(aType),
-                     nsIPermissionManager::UNKNOWN_ACTION,
-                     0,
-                     nsIPermissionManager::EXPIRE_NEVER,
-                     0,
-                     0,
-                     eNotify,
-=======
   return AddInternal(aPrincipal, aType, nsIPermissionManager::UNKNOWN_ACTION, 0,
                      nsIPermissionManager::EXPIRE_NEVER, 0, 0, eNotify,
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
                      eWriteToDB);
 }
 
@@ -2685,21 +2084,9 @@ nsPermissionManager::RemoveAllSince(int64_t aSince) {
   return RemoveAllModifiedSince(aSince);
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-template <class T>
-nsresult nsPermissionManager::RemovePermissionEntries(T aCondition) {
-  AutoTArray<Pair<nsCOMPtr<nsIPrincipal>, nsCString>, 10> array;
-||||||| merged common ancestors
-template<class T>
-nsresult
-nsPermissionManager::RemovePermissionEntries(T aCondition)
-{
-  AutoTArray<Pair<nsCOMPtr<nsIPrincipal>, nsCString>, 10> array;
-=======
 template <class T>
 nsresult nsPermissionManager::RemovePermissionEntries(T aCondition) {
   Vector<Pair<nsCOMPtr<nsIPrincipal>, nsCString>, 10> array;
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   for (auto iter = mPermissionTable.Iter(); !iter.Done(); iter.Next()) {
     PermissionHashKey* entry = iter.Get();
     for (const auto& permEntry : entry->GetPermissions()) {
@@ -2714,41 +2101,17 @@ nsresult nsPermissionManager::RemovePermissionEntries(T aCondition) {
         continue;
       }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      array.AppendElement(
-          MakePair(principal, mTypeArray.ElementAt(permEntry.mType)));
-||||||| merged common ancestors
-      array.AppendElement(MakePair(principal,
-                                   mTypeArray.ElementAt(permEntry.mType)));
-=======
       if (!array.emplaceBack(principal, mTypeArray[permEntry.mType])) {
         continue;
       }
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     }
   }
 
   for (auto& i : array) {
     // AddInternal handles removal, so let it do the work...
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-    AddInternal(array[i].first(), array[i].second(),
-                nsIPermissionManager::UNKNOWN_ACTION, 0,
-                nsIPermissionManager::EXPIRE_NEVER, 0, 0,
-                nsPermissionManager::eNotify, nsPermissionManager::eWriteToDB);
-||||||| merged common ancestors
-    AddInternal(
-      array[i].first(),
-      array[i].second(),
-      nsIPermissionManager::UNKNOWN_ACTION,
-      0,
-      nsIPermissionManager::EXPIRE_NEVER, 0, 0,
-      nsPermissionManager::eNotify,
-      nsPermissionManager::eWriteToDB);
-=======
     AddInternal(i.first(), i.second(), nsIPermissionManager::UNKNOWN_ACTION, 0,
                 nsIPermissionManager::EXPIRE_NEVER, 0, 0,
                 nsPermissionManager::eNotify, nsPermissionManager::eWriteToDB);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   }
   // now re-import any defaults as they may now be required if we just deleted
   // an override.
@@ -2757,14 +2120,7 @@ nsresult nsPermissionManager::RemovePermissionEntries(T aCondition) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::RemoveByType(const char* aType) {
-||||||| merged common ancestors
-nsPermissionManager::RemoveByType(const char* aType)
-{
-=======
 nsPermissionManager::RemoveByType(const nsACString& aType) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   ENSURE_NOT_CHILD_PROCESS;
 
   int32_t typeIndex = GetTypeIndex(aType, false);
@@ -2780,13 +2136,6 @@ nsPermissionManager::RemoveByType(const nsACString& aType) {
       });
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-void nsPermissionManager::CloseDB(bool aRebuildOnSuccess) {
-||||||| merged common ancestors
-void
-nsPermissionManager::CloseDB(bool aRebuildOnSuccess)
-{
-=======
 NS_IMETHODIMP
 nsPermissionManager::RemoveByTypeSince(const nsACString& aType,
                                        int64_t aModificationTime) {
@@ -2807,7 +2156,6 @@ nsPermissionManager::RemoveByTypeSince(const nsACString& aType,
 }
 
 void nsPermissionManager::CloseDB(bool aRebuildOnSuccess) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   // Null the statements, this will finalize them.
   mStmtInsert = nullptr;
   mStmtDelete = nullptr;
@@ -2876,57 +2224,24 @@ nsresult nsPermissionManager::RemoveAllInternal(bool aNotifyObservers) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::TestExactPermission(nsIURI* aURI, const char* aType,
-                                         uint32_t* aPermission) {
-  return CommonTestPermission(aURI, aType, aPermission, true, true);
-||||||| merged common ancestors
-nsPermissionManager::TestExactPermission(nsIURI     *aURI,
-                                         const char *aType,
-                                         uint32_t   *aPermission)
-{
-  return CommonTestPermission(aURI, aType, aPermission, true, true);
-=======
 nsPermissionManager::TestExactPermission(nsIURI* aURI, const nsACString& aType,
                                          uint32_t* aPermission) {
   return CommonTestPermission(aURI, -1, aType, aPermission,
                               nsIPermissionManager::UNKNOWN_ACTION, false, true,
                               true);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 NS_IMETHODIMP
 nsPermissionManager::TestExactPermissionFromPrincipal(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                                      const char* aType,
-                                                      uint32_t* aPermission) {
-  return CommonTestPermission(aPrincipal, aType, aPermission, true, true);
-||||||| merged common ancestors
-                                                      const char* aType,
-                                                      uint32_t* aPermission)
-{
-  return CommonTestPermission(aPrincipal, aType, aPermission, true, true);
-=======
                                                       const nsACString& aType,
                                                       uint32_t* aPermission) {
   return CommonTestPermission(aPrincipal, -1, aType, aPermission,
                               nsIPermissionManager::UNKNOWN_ACTION, false, true,
                               true);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 NS_IMETHODIMP
 nsPermissionManager::TestExactPermanentPermission(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                                  const char* aType,
-                                                  uint32_t* aPermission) {
-  return CommonTestPermission(aPrincipal, aType, aPermission, true, false);
-||||||| merged common ancestors
-                                                  const char* aType,
-                                                  uint32_t* aPermission)
-{
-  return CommonTestPermission(aPrincipal, aType, aPermission, true, false);
-=======
                                                   const nsACString& aType,
                                                   uint32_t* aPermission) {
   return CommonTestPermission(aPrincipal, -1, aType, aPermission,
@@ -2940,21 +2255,9 @@ nsPermissionManager::TestPermission(nsIURI* aURI, const nsACString& aType,
   return CommonTestPermission(aURI, -1, aType, aPermission,
                               nsIPermissionManager::UNKNOWN_ACTION, false,
                               false, true);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::TestPermission(nsIURI* aURI, const char* aType,
-                                    uint32_t* aPermission) {
-  return CommonTestPermission(aURI, aType, aPermission, false, true);
-||||||| merged common ancestors
-nsPermissionManager::TestPermission(nsIURI     *aURI,
-                                    const char *aType,
-                                    uint32_t   *aPermission)
-{
-  return CommonTestPermission(aURI, aType, aPermission, false, true);
-=======
 nsPermissionManager::TestPermissionOriginNoSuffix(
     const nsACString& aOriginNoSuffix, const nsACString& aType,
     uint32_t* aPermission) {
@@ -2970,22 +2273,12 @@ nsPermissionManager::TestPermissionOriginNoSuffix(
   return CommonTestPermissionInternal(nullptr, nullptr, aOriginNoSuffix,
                                       preparationResult.as<int32_t>(), aType,
                                       aPermission, false, true);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 NS_IMETHODIMP
 nsPermissionManager::TestPermissionFromWindow(mozIDOMWindow* aWindow,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                              const char* aType,
-                                              uint32_t* aPermission) {
-||||||| merged common ancestors
-                                              const char* aType,
-                                              uint32_t* aPermission)
-{
-=======
                                               const nsACString& aType,
                                               uint32_t* aPermission) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   NS_ENSURE_ARG(aWindow);
   nsCOMPtr<nsPIDOMWindowInner> window = nsPIDOMWindowInner::From(aWindow);
 
@@ -2999,34 +2292,16 @@ nsPermissionManager::TestPermissionFromWindow(mozIDOMWindow* aWindow,
 
 NS_IMETHODIMP
 nsPermissionManager::TestPermissionFromPrincipal(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                                 const char* aType,
-                                                 uint32_t* aPermission) {
-  return CommonTestPermission(aPrincipal, aType, aPermission, false, true);
-||||||| merged common ancestors
-                                                 const char* aType,
-                                                 uint32_t* aPermission)
-{
-  return CommonTestPermission(aPrincipal, aType, aPermission, false, true);
-=======
                                                  const nsACString& aType,
                                                  uint32_t* aPermission) {
   return CommonTestPermission(aPrincipal, -1, aType, aPermission,
                               nsIPermissionManager::UNKNOWN_ACTION, false,
                               false, true);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::GetPermissionObjectForURI(nsIURI* aURI, const char* aType,
-||||||| merged common ancestors
-nsPermissionManager::GetPermissionObjectForURI(nsIURI* aURI,
-                                               const char* aType,
-=======
 nsPermissionManager::GetPermissionObjectForURI(nsIURI* aURI,
                                                const nsACString& aType,
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
                                                bool aExactHostMatch,
                                                nsIPermission** aResult) {
   nsCOMPtr<nsIPrincipal> principal;
@@ -3080,21 +2355,9 @@ nsPermissionManager::GetPermissionObject(nsIPrincipal* aPrincipal,
   NS_ENSURE_SUCCESS(rv, rv);
 
   PermissionEntry& perm = entry->GetPermissions()[idx];
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  nsCOMPtr<nsIPermission> r = nsPermission::Create(
-      principal, mTypeArray.ElementAt(perm.mType), perm.mPermission,
-      perm.mExpireType, perm.mExpireTime);
-||||||| merged common ancestors
-  nsCOMPtr<nsIPermission> r = nsPermission::Create(principal,
-                                                   mTypeArray.ElementAt(perm.mType),
-                                                   perm.mPermission,
-                                                   perm.mExpireType,
-                                                   perm.mExpireTime);
-=======
   nsCOMPtr<nsIPermission> r = nsPermission::Create(
       principal, mTypeArray[perm.mType], perm.mPermission, perm.mExpireType,
       perm.mExpireTime, perm.mModificationTime);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   if (NS_WARN_IF(!r)) {
     return NS_ERROR_FAILURE;
   }
@@ -3102,110 +2365,6 @@ nsPermissionManager::GetPermissionObject(nsIPrincipal* aPrincipal,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsresult nsPermissionManager::CommonTestPermissionInternal(
-    nsIPrincipal* aPrincipal, nsIURI* aURI, const char* aType,
-    uint32_t* aPermission, bool aExactHostMatch, bool aIncludingSession) {
-  MOZ_ASSERT(aPrincipal || aURI);
-  MOZ_ASSERT_IF(aPrincipal, !aURI);
-  NS_ENSURE_ARG_POINTER(aPrincipal || aURI);
-  NS_ENSURE_ARG_POINTER(aType);
-
-  if (aPrincipal && nsContentUtils::IsSystemPrincipal(aPrincipal)) {
-    *aPermission = nsIPermissionManager::ALLOW_ACTION;
-    return NS_OK;
-  }
-
-  // Set the default.
-  *aPermission = nsIPermissionManager::UNKNOWN_ACTION;
-
-  // For some permissions, query the default from a pref. We want to avoid
-  // doing this for all permissions so that permissions can opt into having
-  // the pref lookup overhead on each call.
-  if (HasDefaultPref(aType)) {
-    int32_t defaultPermission = nsIPermissionManager::UNKNOWN_ACTION;
-    nsresult rv = mDefaultPrefBranch->GetIntPref(aType, &defaultPermission);
-    if (NS_SUCCEEDED(rv)) {
-      *aPermission = defaultPermission;
-    }
-  }
-
-  // For expanded principals, we want to iterate over the allowlist and see
-  // if the permission is granted for any of them.
-  auto* basePrin = BasePrincipal::Cast(aPrincipal);
-  if (basePrin && basePrin->Is<ExpandedPrincipal>()) {
-    auto ep = basePrin->As<ExpandedPrincipal>();
-    for (auto& prin : ep->AllowList()) {
-      uint32_t perm;
-      nsresult rv = CommonTestPermission(prin, aType, &perm, aExactHostMatch,
-                                         aIncludingSession);
-      NS_ENSURE_SUCCESS(rv, rv);
-      if (perm == nsIPermissionManager::ALLOW_ACTION) {
-        *aPermission = perm;
-        return NS_OK;
-      } else if (perm == nsIPermissionManager::PROMPT_ACTION) {
-        // Store it, but keep going to see if we can do better.
-        *aPermission = perm;
-      }
-    }
-
-    return NS_OK;
-  }
-||||||| merged common ancestors
-nsresult
-nsPermissionManager::CommonTestPermissionInternal(nsIPrincipal* aPrincipal,
-                                                  nsIURI      * aURI,
-                                                  const char  * aType,
-                                                  uint32_t    * aPermission,
-                                                  bool          aExactHostMatch,
-                                                  bool          aIncludingSession)
-{
-  MOZ_ASSERT(aPrincipal || aURI);
-  MOZ_ASSERT_IF(aPrincipal, !aURI);
-  NS_ENSURE_ARG_POINTER(aPrincipal || aURI);
-  NS_ENSURE_ARG_POINTER(aType);
-
-  if (aPrincipal && nsContentUtils::IsSystemPrincipal(aPrincipal)) {
-    *aPermission = nsIPermissionManager::ALLOW_ACTION;
-    return NS_OK;
-  }
-
-  // Set the default.
-  *aPermission = nsIPermissionManager::UNKNOWN_ACTION;
-
-  // For some permissions, query the default from a pref. We want to avoid
-  // doing this for all permissions so that permissions can opt into having
-  // the pref lookup overhead on each call.
-  if (HasDefaultPref(aType)) {
-    int32_t defaultPermission = nsIPermissionManager::UNKNOWN_ACTION;
-    nsresult rv = mDefaultPrefBranch->GetIntPref(aType, &defaultPermission);
-    if (NS_SUCCEEDED(rv)) {
-      *aPermission = defaultPermission;
-    }
-  }
-
-  // For expanded principals, we want to iterate over the whitelist and see
-  // if the permission is granted for any of them.
-  auto* basePrin = BasePrincipal::Cast(aPrincipal);
-  if (basePrin && basePrin->Is<ExpandedPrincipal>()) {
-    auto ep = basePrin->As<ExpandedPrincipal>();
-    for (auto& prin : ep->WhiteList()) {
-      uint32_t perm;
-      nsresult rv = CommonTestPermission(prin, aType, &perm,
-                                         aExactHostMatch, aIncludingSession);
-      NS_ENSURE_SUCCESS(rv, rv);
-      if (perm == nsIPermissionManager::ALLOW_ACTION) {
-        *aPermission = perm;
-        return NS_OK;
-      } else if (perm == nsIPermissionManager::PROMPT_ACTION) {
-        // Store it, but keep going to see if we can do better.
-        *aPermission = perm;
-      }
-    }
-
-    return NS_OK;
-  }
-=======
 nsresult nsPermissionManager::CommonTestPermissionInternal(
     nsIPrincipal* aPrincipal, nsIURI* aURI, const nsACString& aOriginNoSuffix,
     int32_t aTypeIndex, const nsACString& aType, uint32_t* aPermission,
@@ -3214,57 +2373,23 @@ nsresult nsPermissionManager::CommonTestPermissionInternal(
   MOZ_ASSERT_IF(aPrincipal, !aURI && aOriginNoSuffix.IsEmpty());
   MOZ_ASSERT_IF(aURI, !aPrincipal && aOriginNoSuffix.IsEmpty());
   NS_ENSURE_ARG_POINTER(aPrincipal || aURI || !aOriginNoSuffix.IsEmpty());
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
 #ifdef DEBUG
   {
     nsCOMPtr<nsIPrincipal> prin = aPrincipal;
     if (!prin) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      prin = mozilla::BasePrincipal::CreateCodebasePrincipal(
-          aURI, OriginAttributes());
-||||||| merged common ancestors
-      prin = mozilla::BasePrincipal::CreateCodebasePrincipal(aURI, OriginAttributes());
-=======
       if (aURI) {
         prin = mozilla::BasePrincipal::CreateCodebasePrincipal(
             aURI, OriginAttributes());
       } else if (!aOriginNoSuffix.IsEmpty()) {
         prin = mozilla::BasePrincipal::CreateCodebasePrincipal(aOriginNoSuffix);
       }
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     }
     MOZ_ASSERT(prin);
     MOZ_ASSERT(PermissionAvailable(prin, aType));
   }
 #endif
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  int32_t typeIndex = GetTypeIndex(aType, false);
-  // If type == -1, the type isn't known,
-  // so just return NS_OK
-  if (typeIndex == -1) return NS_OK;
-
-  PermissionHashKey* entry =
-      aPrincipal ? GetPermissionHashKey(aPrincipal, typeIndex, aExactHostMatch)
-                 : GetPermissionHashKey(aURI, typeIndex, aExactHostMatch);
-  if (!entry || (!aIncludingSession &&
-                 entry->GetPermission(typeIndex).mNonSessionExpireType ==
-                     nsIPermissionManager::EXPIRE_SESSION)) {
-||||||| merged common ancestors
-  int32_t typeIndex = GetTypeIndex(aType, false);
-  // If type == -1, the type isn't known,
-  // so just return NS_OK
-  if (typeIndex == -1) return NS_OK;
-
-  PermissionHashKey* entry = aPrincipal ?
-    GetPermissionHashKey(aPrincipal, typeIndex, aExactHostMatch) :
-    GetPermissionHashKey(aURI, typeIndex, aExactHostMatch);
-  if (!entry ||
-      (!aIncludingSession &&
-       entry->GetPermission(typeIndex).mNonSessionExpireType ==
-         nsIPermissionManager::EXPIRE_SESSION)) {
-=======
   PermissionHashKey* entry =
       aPrincipal ? GetPermissionHashKey(aPrincipal, aTypeIndex, aExactHostMatch)
                  : GetPermissionHashKey(aURI, aOriginNoSuffix, aTypeIndex,
@@ -3272,59 +2397,26 @@ nsresult nsPermissionManager::CommonTestPermissionInternal(
   if (!entry || (!aIncludingSession &&
                  entry->GetPermission(aTypeIndex).mNonSessionExpireType ==
                      nsIPermissionManager::EXPIRE_SESSION)) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     return NS_OK;
   }
 
   *aPermission = aIncludingSession
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                     ? entry->GetPermission(typeIndex).mPermission
-                     : entry->GetPermission(typeIndex).mNonSessionPermission;
-||||||| merged common ancestors
-                   ? entry->GetPermission(typeIndex).mPermission
-                   : entry->GetPermission(typeIndex).mNonSessionPermission;
-=======
                      ? entry->GetPermission(aTypeIndex).mPermission
                      : entry->GetPermission(aTypeIndex).mNonSessionPermission;
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-// Returns PermissionHashKey for a given { host, appId, isInBrowserElement }
-// tuple. This is not simply using PermissionKey because we will walk-up domains
-// in case of |host| contains sub-domains. Returns null if nothing found. Also
-// accepts host on the format "<foo>". This will perform an exact match lookup
-// as the string doesn't contain any dots.
-||||||| merged common ancestors
-// Returns PermissionHashKey for a given { host, appId, isInBrowserElement } tuple.
-// This is not simply using PermissionKey because we will walk-up domains in
-// case of |host| contains sub-domains.
-// Returns null if nothing found.
-// Also accepts host on the format "<foo>". This will perform an exact match
-// lookup as the string doesn't contain any dots.
-=======
 // Returns PermissionHashKey for a given { host, isInBrowserElement }
 // tuple. This is not simply using PermissionKey because we will walk-up domains
 // in case of |host| contains sub-domains. Returns null if nothing found. Also
 // accepts host on the format "<foo>". This will perform an exact match lookup
 // as the string doesn't contain any dots.
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 nsPermissionManager::PermissionHashKey*
 nsPermissionManager::GetPermissionHashKey(nsIPrincipal* aPrincipal,
                                           uint32_t aType,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                          bool aExactHostMatch) {
-  MOZ_ASSERT(PermissionAvailable(aPrincipal, mTypeArray[aType].get()));
-||||||| merged common ancestors
-                                          bool aExactHostMatch)
-{
-  MOZ_ASSERT(PermissionAvailable(aPrincipal, mTypeArray[aType].get()));
-=======
                                           bool aExactHostMatch) {
   MOZ_ASSERT(PermissionAvailable(aPrincipal, mTypeArray[aType]));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 
   nsresult rv;
   RefPtr<PermissionKey> key =
@@ -3368,36 +2460,12 @@ nsPermissionManager::GetPermissionHashKey(nsIPrincipal* aPrincipal,
   return nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-// Returns PermissionHashKey for a given { host, appId, isInBrowserElement }
-// tuple. This is not simply using PermissionKey because we will walk-up domains
-// in case of |host| contains sub-domains. Returns null if nothing found. Also
-// accepts host on the format "<foo>". This will perform an exact match lookup
-// as the string doesn't contain any dots.
-||||||| merged common ancestors
-// Returns PermissionHashKey for a given { host, appId, isInBrowserElement } tuple.
-// This is not simply using PermissionKey because we will walk-up domains in
-// case of |host| contains sub-domains.
-// Returns null if nothing found.
-// Also accepts host on the format "<foo>". This will perform an exact match
-// lookup as the string doesn't contain any dots.
-=======
 // Returns PermissionHashKey for a given { host, isInBrowserElement }
 // tuple. This is not simply using PermissionKey because we will walk-up domains
 // in case of |host| contains sub-domains. Returns null if nothing found. Also
 // accepts host on the format "<foo>". This will perform an exact match lookup
 // as the string doesn't contain any dots.
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 nsPermissionManager::PermissionHashKey*
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsPermissionManager::GetPermissionHashKey(nsIURI* aURI, uint32_t aType,
-                                          bool aExactHostMatch) {
-||||||| merged common ancestors
-nsPermissionManager::GetPermissionHashKey(nsIURI* aURI,
-                                          uint32_t aType,
-                                          bool aExactHostMatch)
-{
-=======
 nsPermissionManager::GetPermissionHashKey(nsIURI* aURI,
                                           const nsACString& aOriginNoSuffix,
                                           uint32_t aType,
@@ -3405,7 +2473,6 @@ nsPermissionManager::GetPermissionHashKey(nsIURI* aURI,
   MOZ_ASSERT(aURI || !aOriginNoSuffix.IsEmpty());
   MOZ_ASSERT_IF(aURI, aOriginNoSuffix.IsEmpty());
 
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 #ifdef DEBUG
   {
     nsCOMPtr<nsIPrincipal> principal;
@@ -3422,16 +2489,9 @@ nsPermissionManager::GetPermissionHashKey(nsIURI* aURI,
 #endif
 
   nsresult rv;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  RefPtr<PermissionKey> key = PermissionKey::CreateFromURI(aURI, rv);
-||||||| merged common ancestors
-  RefPtr<PermissionKey> key =
-    PermissionKey::CreateFromURI(aURI, rv);
-=======
   RefPtr<PermissionKey> key =
       aURI ? PermissionKey::CreateFromURI(aURI, rv)
            : PermissionKey::CreateFromOriginNoSuffix(aOriginNoSuffix);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   if (!key) {
     return nullptr;
   }
@@ -3528,20 +2588,11 @@ NS_IMETHODIMP nsPermissionManager::GetAllWithTypePrefix(
         continue;
       }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      if (!aPrefix.IsEmpty() &&
-          !StringBeginsWith(mTypeArray.ElementAt(permEntry.mType), aPrefix)) {
-        continue;
-      }
-
-||||||| merged common ancestors
-=======
       if (!aPrefix.IsEmpty() &&
           !StringBeginsWith(mTypeArray[permEntry.mType], aPrefix)) {
         continue;
       }
 
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       nsCOMPtr<nsIPrincipal> principal;
       nsresult rv = GetPrincipalFromOrigin(entry->GetKey()->mOrigin,
                                            getter_AddRefs(principal));
@@ -3549,23 +2600,10 @@ NS_IMETHODIMP nsPermissionManager::GetAllWithTypePrefix(
         continue;
       }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      RefPtr<nsIPermission> permission = nsPermission::Create(
-          principal, mTypeArray.ElementAt(permEntry.mType),
-          permEntry.mPermission, permEntry.mExpireType, permEntry.mExpireTime);
-||||||| merged common ancestors
-      nsCOMPtr<nsIPermission> permission =
-        nsPermission::Create(principal,
-                             mTypeArray.ElementAt(permEntry.mType),
-                             permEntry.mPermission,
-                             permEntry.mExpireType,
-                             permEntry.mExpireTime);
-=======
       RefPtr<nsIPermission> permission = nsPermission::Create(
           principal, mTypeArray[permEntry.mType], permEntry.mPermission,
           permEntry.mExpireType, permEntry.mExpireTime,
           permEntry.mModificationTime);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       if (NS_WARN_IF(!permission)) {
         continue;
       }
@@ -3609,23 +2647,10 @@ nsPermissionManager::GetAllForPrincipal(nsIPrincipal* aPrincipal,
         continue;
       }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      nsCOMPtr<nsIPermission> permission = nsPermission::Create(
-          aPrincipal, mTypeArray.ElementAt(permEntry.mType),
-          permEntry.mPermission, permEntry.mExpireType, permEntry.mExpireTime);
-||||||| merged common ancestors
-      nsCOMPtr<nsIPermission> permission =
-        nsPermission::Create(aPrincipal,
-                             mTypeArray.ElementAt(permEntry.mType),
-                             permEntry.mPermission,
-                             permEntry.mExpireType,
-                             permEntry.mExpireTime);
-=======
       nsCOMPtr<nsIPermission> permission = nsPermission::Create(
           aPrincipal, mTypeArray[permEntry.mType], permEntry.mPermission,
           permEntry.mExpireType, permEntry.mExpireTime,
           permEntry.mModificationTime);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       if (NS_WARN_IF(!permission)) {
         continue;
       }
@@ -3690,20 +2715,9 @@ nsPermissionManager::RemovePermissionsWithAttributes(
   return RemovePermissionsWithAttributes(pattern);
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-nsresult nsPermissionManager::RemovePermissionsWithAttributes(
-    mozilla::OriginAttributesPattern& aPattern) {
-  AutoTArray<Pair<nsCOMPtr<nsIPrincipal>, nsCString>, 10> permissions;
-||||||| merged common ancestors
-nsresult
-nsPermissionManager::RemovePermissionsWithAttributes(mozilla::OriginAttributesPattern& aPattern)
-{
-  AutoTArray<Pair<nsCOMPtr<nsIPrincipal>, nsCString>, 10> permissions;
-=======
 nsresult nsPermissionManager::RemovePermissionsWithAttributes(
     mozilla::OriginAttributesPattern& aPattern) {
   Vector<Pair<nsCOMPtr<nsIPrincipal>, nsCString>, 10> permissions;
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   for (auto iter = mPermissionTable.Iter(); !iter.Done(); iter.Next()) {
     PermissionHashKey* entry = iter.Get();
 
@@ -3719,43 +2733,16 @@ nsresult nsPermissionManager::RemovePermissionsWithAttributes(
     }
 
     for (const auto& permEntry : entry->GetPermissions()) {
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      permissions.AppendElement(
-          MakePair(principal, mTypeArray.ElementAt(permEntry.mType)));
-||||||| merged common ancestors
-      permissions.AppendElement(MakePair(principal,
-                                         mTypeArray.ElementAt(permEntry.mType)));
-=======
       if (!permissions.emplaceBack(principal, mTypeArray[permEntry.mType])) {
         continue;
       }
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
     }
   }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  for (size_t i = 0; i < permissions.Length(); ++i) {
-    AddInternal(permissions[i].first(), permissions[i].second(),
-                nsIPermissionManager::UNKNOWN_ACTION, 0,
-                nsIPermissionManager::EXPIRE_NEVER, 0, 0,
-                nsPermissionManager::eNotify, nsPermissionManager::eWriteToDB);
-||||||| merged common ancestors
-  for (size_t i = 0; i < permissions.Length(); ++i) {
-    AddInternal(permissions[i].first(),
-                permissions[i].second(),
-                nsIPermissionManager::UNKNOWN_ACTION,
-                0,
-                nsIPermissionManager::EXPIRE_NEVER,
-                0,
-                0,
-                nsPermissionManager::eNotify,
-                nsPermissionManager::eWriteToDB);
-=======
   for (auto& i : permissions) {
     AddInternal(i.first(), i.second(), nsIPermissionManager::UNKNOWN_ACTION, 0,
                 nsIPermissionManager::EXPIRE_NEVER, 0, 0,
                 nsPermissionManager::eNotify, nsPermissionManager::eWriteToDB);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   }
 
   return NS_OK;
@@ -3773,77 +2760,8 @@ nsresult nsPermissionManager::RemoveAllFromMemory() {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-// Returns -1 on failure
-int32_t nsPermissionManager::GetTypeIndex(const char* aType, bool aAdd) {
-  for (uint32_t i = 0; i < mTypeArray.Length(); ++i)
-    if (mTypeArray[i].Equals(aType)) return i;
-
-  if (!aAdd) {
-    // Not found, but that is ok - we were just looking.
-    return -1;
-  }
-
-  // This type was not registered before.
-  // append it to the array, without copy-constructing the string
-  nsCString* elem = mTypeArray.AppendElement();
-  if (!elem) return -1;
-
-  elem->Assign(aType);
-  return mTypeArray.Length() - 1;
-}
-
-||||||| merged common ancestors
-// Returns -1 on failure
-int32_t
-nsPermissionManager::GetTypeIndex(const char *aType,
-                                  bool        aAdd)
-{
-  for (uint32_t i = 0; i < mTypeArray.Length(); ++i)
-    if (mTypeArray[i].Equals(aType))
-      return i;
-
-  if (!aAdd) {
-    // Not found, but that is ok - we were just looking.
-    return -1;
-  }
-
-  // This type was not registered before.
-  // append it to the array, without copy-constructing the string
-  nsCString *elem = mTypeArray.AppendElement();
-  if (!elem)
-    return -1;
-
-  elem->Assign(aType);
-  return mTypeArray.Length() - 1;
-}
-
-=======
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 // wrapper function for mangling (host,type,perm,expireType,expireTime)
 // set into an nsIPermission.
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-void nsPermissionManager::NotifyObserversWithPermission(
-    nsIPrincipal* aPrincipal, const nsCString& aType, uint32_t aPermission,
-    uint32_t aExpireType, int64_t aExpireTime, const char16_t* aData) {
-  nsCOMPtr<nsIPermission> permission = nsPermission::Create(
-      aPrincipal, aType, aPermission, aExpireType, aExpireTime);
-  if (permission) NotifyObservers(permission, aData);
-||||||| merged common ancestors
-void
-nsPermissionManager::NotifyObserversWithPermission(nsIPrincipal*     aPrincipal,
-                                                   const nsCString  &aType,
-                                                   uint32_t          aPermission,
-                                                   uint32_t          aExpireType,
-                                                   int64_t           aExpireTime,
-                                                   const char16_t  *aData)
-{
-  nsCOMPtr<nsIPermission> permission =
-    nsPermission::Create(aPrincipal, aType, aPermission,
-                         aExpireType, aExpireTime);
-  if (permission)
-    NotifyObservers(permission, aData);
-=======
 void nsPermissionManager::NotifyObserversWithPermission(
     nsIPrincipal* aPrincipal, const nsACString& aType, uint32_t aPermission,
     uint32_t aExpireType, int64_t aExpireTime, int64_t aModificationTime,
@@ -3852,7 +2770,6 @@ void nsPermissionManager::NotifyObserversWithPermission(
       nsPermission::Create(aPrincipal, aType, aPermission, aExpireType,
                            aExpireTime, aModificationTime);
   if (permission) NotifyObservers(permission, aData);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
 }
 
 // notify observers that the permission list changed. there are four possible
@@ -4078,22 +2995,10 @@ nsresult nsPermissionManager::_DoImport(nsIInputStream* inputStream,
       int64_t modificationTime = 0;
 
       UpgradeHostToOriginHostfileImport upHelper(this, operation, id);
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      error = UpgradeHostToOriginAndInsert(
-          lineArray[3], lineArray[1], permission,
-          nsIPermissionManager::EXPIRE_NEVER, 0, modificationTime,
-          nsIScriptSecurityManager::NO_APP_ID, false, &upHelper);
-||||||| merged common ancestors
-      error = UpgradeHostToOriginAndInsert(lineArray[3], lineArray[1], permission,
-                                           nsIPermissionManager::EXPIRE_NEVER, 0,
-                                           modificationTime, nsIScriptSecurityManager::NO_APP_ID,
-                                           false, &upHelper);
-=======
       error =
           UpgradeHostToOriginAndInsert(lineArray[3], lineArray[1], permission,
                                        nsIPermissionManager::EXPIRE_NEVER, 0,
                                        modificationTime, false, &upHelper);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       if (NS_FAILED(error)) {
         NS_WARNING("There was a problem importing a host permission");
       }
@@ -4203,22 +3108,10 @@ void nsPermissionManager::UpdateDB(
 
 NS_IMETHODIMP
 nsPermissionManager::UpdateExpireTime(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-                                      const char* aType, bool aExactHostMatch,
-                                      uint64_t aSessionExpireTime,
-                                      uint64_t aPersistentExpireTime) {
-||||||| merged common ancestors
-                                     const char* aType,
-                                     bool aExactHostMatch,
-                                     uint64_t aSessionExpireTime,
-                                     uint64_t aPersistentExpireTime)
-{
-=======
                                       const nsACString& aType,
                                       bool aExactHostMatch,
                                       uint64_t aSessionExpireTime,
                                       uint64_t aPersistentExpireTime) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   NS_ENSURE_ARG_POINTER(aPrincipal);
 
   uint64_t nowms = PR_Now() / 1000;
@@ -4291,23 +3184,6 @@ nsPermissionManager::GetPermissionsWithKey(const nsACString& aPermissionKey,
         continue;
       }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-      bool isPreload = IsPreloadPermission(mTypeArray[permEntry.mType].get());
-      if ((isPreload && aPermissionKey.IsEmpty()) ||
-          (!isPreload && aPermissionKey == permissionKey)) {
-        aPerms.AppendElement(IPC::Permission(
-            entry->GetKey()->mOrigin, mTypeArray.ElementAt(permEntry.mType),
-            permEntry.mPermission, permEntry.mExpireType,
-            permEntry.mExpireTime));
-||||||| merged common ancestors
-      bool isPreload = IsPreloadPermission(mTypeArray[permEntry.mType].get());
-      if ((isPreload && aPermissionKey.IsEmpty()) || (!isPreload && aPermissionKey == permissionKey)) {
-        aPerms.AppendElement(IPC::Permission(entry->GetKey()->mOrigin,
-                                             mTypeArray.ElementAt(permEntry.mType),
-                                             permEntry.mPermission,
-                                             permEntry.mExpireType,
-                                             permEntry.mExpireTime));
-=======
       bool isPreload = IsPreloadPermission(mTypeArray[permEntry.mType]);
       if ((isPreload && aPermissionKey.IsEmpty()) ||
           (!isPreload && aPermissionKey == permissionKey)) {
@@ -4315,7 +3191,6 @@ nsPermissionManager::GetPermissionsWithKey(const nsACString& aPermissionKey,
             IPC::Permission(entry->GetKey()->mOrigin,
                             mTypeArray[permEntry.mType], permEntry.mPermission,
                             permEntry.mExpireType, permEntry.mExpireTime));
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
       }
     }
   }
@@ -4373,18 +3248,9 @@ nsPermissionManager::SetPermissionsWithKey(const nsACString& aPermissionKey,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-/* static */ void nsPermissionManager::GetKeyForOrigin(
-    const nsACString& aOrigin, nsACString& aKey) {
-||||||| merged common ancestors
-/* static */ void
-nsPermissionManager::GetKeyForOrigin(const nsACString& aOrigin, nsACString& aKey)
-{
-=======
 /* static */
 void nsPermissionManager::GetKeyForOrigin(const nsACString& aOrigin,
                                           nsACString& aKey) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   aKey.Truncate();
 
   // We only key origins for http, https, and ftp URIs. All origins begin with
@@ -4437,18 +3303,9 @@ void nsPermissionManager::GetKeyForOrigin(const nsACString& aOrigin,
   aKey.Append(suffix);
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-/* static */ void nsPermissionManager::GetKeyForPrincipal(
-    nsIPrincipal* aPrincipal, nsACString& aKey) {
-||||||| merged common ancestors
-/* static */ void
-nsPermissionManager::GetKeyForPrincipal(nsIPrincipal* aPrincipal, nsACString& aKey)
-{
-=======
 /* static */
 void nsPermissionManager::GetKeyForPrincipal(nsIPrincipal* aPrincipal,
                                              nsACString& aKey) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   nsAutoCString origin;
   nsresult rv = aPrincipal->GetOrigin(origin);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -4458,19 +3315,10 @@ void nsPermissionManager::GetKeyForPrincipal(nsIPrincipal* aPrincipal,
   GetKeyForOrigin(origin, aKey);
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-/* static */ void nsPermissionManager::GetKeyForPermission(
-    nsIPrincipal* aPrincipal, const char* aType, nsACString& aKey) {
-||||||| merged common ancestors
-/* static */ void
-nsPermissionManager::GetKeyForPermission(nsIPrincipal* aPrincipal, const char* aType, nsACString& aKey)
-{
-=======
 /* static */
 void nsPermissionManager::GetKeyForPermission(nsIPrincipal* aPrincipal,
                                               const nsACString& aType,
                                               nsACString& aKey) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   // Preload permissions have the "" key.
   if (IsPreloadPermission(aType)) {
     aKey.Truncate();
@@ -4480,18 +3328,9 @@ void nsPermissionManager::GetKeyForPermission(nsIPrincipal* aPrincipal,
   GetKeyForPrincipal(aPrincipal, aKey);
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-/* static */ nsTArray<nsCString> nsPermissionManager::GetAllKeysForPrincipal(
-    nsIPrincipal* aPrincipal) {
-||||||| merged common ancestors
-/* static */ nsTArray<nsCString>
-nsPermissionManager::GetAllKeysForPrincipal(nsIPrincipal* aPrincipal)
-{
-=======
 /* static */
 nsTArray<nsCString> nsPermissionManager::GetAllKeysForPrincipal(
     nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   MOZ_ASSERT(aPrincipal);
 
   nsTArray<nsCString> keys;
@@ -4523,17 +3362,8 @@ nsPermissionManager::BroadcastPermissionsForPrincipalToAllContentProcesses(
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-bool nsPermissionManager::PermissionAvailable(nsIPrincipal* aPrincipal,
-                                              const char* aType) {
-||||||| merged common ancestors
-bool
-nsPermissionManager::PermissionAvailable(nsIPrincipal* aPrincipal, const char* aType)
-{
-=======
 bool nsPermissionManager::PermissionAvailable(nsIPrincipal* aPrincipal,
                                               const nsACString& aType) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   if (XRE_IsContentProcess()) {
     nsAutoCString permissionKey;
     // NOTE: GetKeyForPermission accepts a null aType.
@@ -4595,22 +3425,6 @@ nsPermissionManager::WhenPermissionsAvailable(nsIPrincipal* aPrincipal,
   auto* thread = SystemGroup::AbstractMainThreadFor(TaskCategory::Other);
 
   RefPtr<nsIRunnable> runnable = aRunnable;
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermissionManager.cpp
-  GenericPromise::All(thread, promises)
-      ->Then(thread, __func__, [runnable]() { runnable->Run(); },
-             []() {
-               NS_WARNING(
-                   "nsPermissionManager permission promise rejected. We're "
-                   "probably shutting down.");
-             });
-||||||| merged common ancestors
-  GenericPromise::All(thread, promises)->Then(
-    thread, __func__,
-    [runnable] () { runnable->Run(); },
-    [] () {
-      NS_WARNING("nsPermissionManager permission promise rejected. We're probably shutting down.");
-    });
-=======
   GenericPromise::All(thread, promises)
       ->Then(
           thread, __func__, [runnable]() { runnable->Run(); },
@@ -4619,7 +3433,6 @@ nsPermissionManager::WhenPermissionsAvailable(nsIPrincipal* aPrincipal,
                 "nsPermissionManager permission promise rejected. We're "
                 "probably shutting down.");
           });
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermissionManager.cpp
   return NS_OK;
 }
 

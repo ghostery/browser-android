@@ -29,24 +29,12 @@ static NotNull<const Encoding*> SearchEncodingProp(
     const EncodingProp (&aProperties)[N], const nsACString& aKey) {
   const nsCString& flat = PromiseFlatCString(aKey);
   size_t index;
-<<<<<<< HEAD
-  if (!BinarySearchIf(aProperties, 0, ArrayLength(aProperties),
-                      [&flat](const EncodingProp& aProperty) {
-                        return flat.Compare(aProperty.mKey);
-                      },
-                      &index)) {
-||||||| merged common ancestors
-  if (!BinarySearchIf(aProperties, 0, ArrayLength(aProperties),
-                      [&flat](const EncodingProp& aProperty)
-                      { return flat.Compare(aProperty.mKey); }, &index)) {
-=======
   if (!BinarySearchIf(
           aProperties, 0, ArrayLength(aProperties),
           [&flat](const EncodingProp& aProperty) {
             return flat.Compare(aProperty.mKey);
           },
           &index)) {
->>>>>>> upstream-releases
     return WINDOWS_1252_ENCODING;
   }
   return aProperties[index].mValue;

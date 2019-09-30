@@ -26,37 +26,6 @@ struct nsLookAndFeelFloatPref {
   float floatVar;
 };
 
-<<<<<<< HEAD
-#define CACHE_BLOCK(x) ((x) >> 5)
-#define CACHE_BIT(x) (1 << ((x)&31))
-
-#define COLOR_CACHE_SIZE (CACHE_BLOCK(LookAndFeel::eColorID_LAST_COLOR) + 1)
-#define IS_COLOR_CACHED(x) \
-  (CACHE_BIT(x) & nsXPLookAndFeel::sCachedColorBits[CACHE_BLOCK(x)])
-#define CLEAR_COLOR_CACHE(x)               \
-  nsXPLookAndFeel::sCachedColors[(x)] = 0; \
-  nsXPLookAndFeel::sCachedColorBits[CACHE_BLOCK(x)] &= ~(CACHE_BIT(x));
-#define CACHE_COLOR(x, y)                  \
-  nsXPLookAndFeel::sCachedColors[(x)] = y; \
-  nsXPLookAndFeel::sCachedColorBits[CACHE_BLOCK(x)] |= CACHE_BIT(x);
-
-class nsXPLookAndFeel : public mozilla::LookAndFeel {
- public:
-||||||| merged common ancestors
-#define CACHE_BLOCK(x)     ((x) >> 5)
-#define CACHE_BIT(x)       (1 << ((x) & 31))
-
-#define COLOR_CACHE_SIZE   (CACHE_BLOCK(LookAndFeel::eColorID_LAST_COLOR) + 1)
-#define IS_COLOR_CACHED(x) (CACHE_BIT(x) & nsXPLookAndFeel::sCachedColorBits[CACHE_BLOCK(x)])
-#define CLEAR_COLOR_CACHE(x) nsXPLookAndFeel::sCachedColors[(x)] =0; \
-              nsXPLookAndFeel::sCachedColorBits[CACHE_BLOCK(x)] &= ~(CACHE_BIT(x));
-#define CACHE_COLOR(x, y)  nsXPLookAndFeel::sCachedColors[(x)] = y; \
-              nsXPLookAndFeel::sCachedColorBits[CACHE_BLOCK(x)] |= CACHE_BIT(x);
-
-class nsXPLookAndFeel: public mozilla::LookAndFeel
-{
-public:
-=======
 #define CACHE_BLOCK(x) (uint32_t(x) >> 5)
 #define CACHE_BIT(x) (1 << (uint32_t(x) & 31))
 
@@ -72,7 +41,6 @@ public:
 
 class nsXPLookAndFeel : public mozilla::LookAndFeel {
  public:
->>>>>>> upstream-releases
   virtual ~nsXPLookAndFeel();
 
   static nsXPLookAndFeel* GetInstance();
@@ -93,17 +61,8 @@ class nsXPLookAndFeel : public mozilla::LookAndFeel {
 
   // This one is different: there are no override prefs (fixme?), so
   // there is no XP implementation, only per-system impls.
-<<<<<<< HEAD
-  virtual bool GetFontImpl(FontID aID, nsString& aName, gfxFontStyle& aStyle,
-                           float aDevPixPerCSSPixel) = 0;
-||||||| merged common ancestors
-  virtual bool GetFontImpl(FontID aID, nsString& aName,
-                           gfxFontStyle& aStyle,
-                           float aDevPixPerCSSPixel) = 0;
-=======
   virtual bool GetFontImpl(FontID aID, nsString& aName,
                            gfxFontStyle& aStyle) = 0;
->>>>>>> upstream-releases
 
   virtual void RefreshImpl();
 
@@ -122,11 +81,6 @@ class nsXPLookAndFeel : public mozilla::LookAndFeel {
 
   virtual void NativeInit() = 0;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   void SetPrefersReducedMotionOverrideForTest(bool aValue) {
     sIsInPrefersReducedMotionForTest = true;
     sPrefersReducedMotionForTest = aValue;
@@ -137,7 +91,6 @@ protected:
   }
 
  protected:
->>>>>>> upstream-releases
   nsXPLookAndFeel();
 
   static void IntPrefChanged(nsLookAndFeelIntPref* data);

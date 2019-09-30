@@ -66,21 +66,10 @@ class CellData {
    */
   uint32_t GetRowSpanOffset() const;
 
-<<<<<<< HEAD
-  /** set the distance from the current entry to the corresponding origin of the
-   * rowspan
-   * @param    the distance in the column to the originating cell
-   */
-||||||| merged common ancestors
-  /** set the distance from the current entry to the corresponding origin of the rowspan
-    * @param    the distance in the column to the originating cell
-    */
-=======
   /** set the distance from the current entry to the corresponding origin of
    * the rowspan
    * @param    the distance in the column to the originating cell
    */
->>>>>>> upstream-releases
   void SetRowSpanOffset(uint32_t aSpan);
 
   /** is the entry spanned by colspan
@@ -88,21 +77,10 @@ class CellData {
    */
   bool IsColSpan() const;
 
-<<<<<<< HEAD
-  /** get the distance from the current entry to the corresponding origin of the
-   * colspan
-   * @return    containing the distance in the row to the originating cell
-   */
-||||||| merged common ancestors
-  /** get the distance from the current entry to the corresponding origin of the colspan
-    * @return    containing the distance in the row to the originating cell
-    */
-=======
   /** get the distance from the current entry to the corresponding origin of
    *  the colspan
    * @return    containing the distance in the row to the originating cell
    */
->>>>>>> upstream-releases
   uint32_t GetColSpanOffset() const;
 
   /** set the distance from the current entry to the corresponding origin of the
@@ -117,18 +95,9 @@ class CellData {
   bool IsOverlap() const;
 
   /** mark the current entry as spanned by a row- and a colspan
-<<<<<<< HEAD
-   * @param aOverlap    if true mark the entry as covered by a row- and a
-   * colspan
-   */
-||||||| merged common ancestors
-    * @param aOverlap    if true mark the entry as covered by a row- and a colspan
-    */
-=======
    * @param aOverlap    if true mark the entry as covered by a row- and
    *                    a colspan
    */
->>>>>>> upstream-releases
   void SetOverlap(bool aOverlap);
 
   /** get the table cell frame for this entry

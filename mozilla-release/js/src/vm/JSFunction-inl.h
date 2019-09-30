@@ -43,103 +43,6 @@ inline bool CanReuseFunctionForClone(JSContext* cx, HandleFunction fun) {
     if (script->hasBeenCloned()) {
       return false;
     }
-<<<<<<< HEAD
-    script->setHasBeenCloned();
-  }
-  return true;
-}
-
-inline JSFunction* CloneFunctionObjectIfNotSingleton(
-    JSContext* cx, HandleFunction fun, HandleObject parent,
-    HandleObject proto = nullptr, NewObjectKind newKind = GenericObject) {
-  /*
-   * For attempts to clone functions at a function definition opcode,
-   * try to avoid the the clone if the function has singleton type. This
-   * was called pessimistically, and we need to preserve the type's
-   * property that if it is singleton there is only a single object
-   * with its type in existence.
-   *
-   * For functions inner to run once lambda, it may be possible that
-   * the lambda runs multiple times and we repeatedly clone it. In these
-   * cases, fall through to CloneFunctionObject, which will deep clone
-   * the function's script.
-   */
-  if (CanReuseFunctionForClone(cx, fun)) {
-    ObjectOpResult succeeded;
-    if (proto && !SetPrototype(cx, fun, proto, succeeded)) {
-      return nullptr;
-    }
-    MOZ_ASSERT(!proto || succeeded);
-    fun->setEnvironment(parent);
-    return fun;
-  }
-
-  // These intermediate variables are needed to avoid link errors on some
-  // platforms.  Sigh.
-  gc::AllocKind finalizeKind = gc::AllocKind::FUNCTION;
-  gc::AllocKind extendedFinalizeKind = gc::AllocKind::FUNCTION_EXTENDED;
-  gc::AllocKind kind = fun->isExtended() ? extendedFinalizeKind : finalizeKind;
-
-  if (CanReuseScriptForClone(cx->realm(), fun, parent)) {
-    return CloneFunctionReuseScript(cx, fun, parent, kind, newKind, proto);
-  }
-
-  RootedScript script(cx, JSFunction::getOrCreateScript(cx, fun));
-  if (!script) {
-    return nullptr;
-  }
-  RootedScope enclosingScope(cx, script->enclosingScope());
-  return CloneFunctionAndScript(cx, fun, parent, enclosingScope, kind, proto);
-||||||| merged common ancestors
-    return true;
-}
-
-inline JSFunction*
-CloneFunctionObjectIfNotSingleton(JSContext* cx, HandleFunction fun, HandleObject parent,
-                                  HandleObject proto = nullptr,
-                                  NewObjectKind newKind = GenericObject)
-{
-    /*
-     * For attempts to clone functions at a function definition opcode,
-     * try to avoid the the clone if the function has singleton type. This
-     * was called pessimistically, and we need to preserve the type's
-     * property that if it is singleton there is only a single object
-     * with its type in existence.
-     *
-     * For functions inner to run once lambda, it may be possible that
-     * the lambda runs multiple times and we repeatedly clone it. In these
-     * cases, fall through to CloneFunctionObject, which will deep clone
-     * the function's script.
-     */
-    if (CanReuseFunctionForClone(cx, fun)) {
-        ObjectOpResult succeeded;
-        if (proto && !SetPrototype(cx, fun, proto, succeeded)) {
-            return nullptr;
-        }
-        MOZ_ASSERT(!proto || succeeded);
-        fun->setEnvironment(parent);
-        return fun;
-    }
-
-    // These intermediate variables are needed to avoid link errors on some
-    // platforms.  Sigh.
-    gc::AllocKind finalizeKind = gc::AllocKind::FUNCTION;
-    gc::AllocKind extendedFinalizeKind = gc::AllocKind::FUNCTION_EXTENDED;
-    gc::AllocKind kind = fun->isExtended()
-                         ? extendedFinalizeKind
-                         : finalizeKind;
-
-    if (CanReuseScriptForClone(cx->realm(), fun, parent)) {
-        return CloneFunctionReuseScript(cx, fun, parent, kind, newKind, proto);
-    }
-
-    RootedScript script(cx, JSFunction::getOrCreateScript(cx, fun));
-    if (!script) {
-        return nullptr;
-    }
-    RootedScope enclosingScope(cx, script->enclosingScope());
-    return CloneFunctionAndScript(cx, fun, parent, enclosingScope, kind, proto);
-=======
     script->setHasBeenCloned();
     if (LazyScript* lazy = script->maybeLazyScript()) {
       lazy->setHasBeenCloned();
@@ -191,7 +94,6 @@ inline JSFunction* CloneFunctionObjectIfNotSingleton(
   Rooted<ScriptSourceObject*> sourceObject(cx, script->sourceObject());
   return CloneFunctionAndScript(cx, fun, parent, enclosingScope, sourceObject,
                                 kind, proto);
->>>>>>> upstream-releases
 }
 
 } /* namespace js */
@@ -211,23 +113,10 @@ inline JSFunction* CloneFunctionObjectIfNotSingleton(
   MOZ_ASSERT(dynamicSlotsCount(shape->numFixedSlots(), shape->slotSpan(),
                                clasp) == NumDynamicSlots);
 
-<<<<<<< HEAD
-  JSObject* obj =
-      js::Allocate<JSObject>(cx, kind, NumDynamicSlots, heap, clasp);
-  if (!obj) {
-    return cx->alreadyReportedOOM();
-  }
-||||||| merged common ancestors
-    JSObject* obj = js::Allocate<JSObject>(cx, kind, NumDynamicSlots, heap, clasp);
-    if (!obj) {
-        return cx->alreadyReportedOOM();
-    }
-=======
   JSObject* obj = js::AllocateObject(cx, kind, NumDynamicSlots, heap, clasp);
   if (!obj) {
     return cx->alreadyReportedOOM();
   }
->>>>>>> upstream-releases
 
   NativeObject* nobj = static_cast<NativeObject*>(obj);
   nobj->initGroup(group);
@@ -249,25 +138,10 @@ inline JSFunction* CloneFunctionObjectIfNotSingleton(
   // Safe: we're initializing for the very first time.
   fun->atom_.unsafeSet(nullptr);
 
-<<<<<<< HEAD
-  if (kind == js::gc::AllocKind::FUNCTION_EXTENDED) {
-    fun->setFlags(JSFunction::EXTENDED);
-    for (js::GCPtrValue& extendedSlot : fun->toExtended()->extendedSlots) {
-      extendedSlot.unsafeSet(JS::DoubleValue(+0.0));
-||||||| merged common ancestors
-    if (kind == js::gc::AllocKind::FUNCTION_EXTENDED) {
-        fun->setFlags(JSFunction::EXTENDED);
-        for (js::GCPtrValue& extendedSlot : fun->toExtended()->extendedSlots) {
-            extendedSlot.unsafeSet(JS::DoubleValue(+0.0));
-        }
-    } else {
-        fun->setFlags(0);
-=======
   if (kind == js::gc::AllocKind::FUNCTION_EXTENDED) {
     fun->setFlags(JSFunction::EXTENDED);
     for (js::GCPtrValue& extendedSlot : fun->toExtended()->extendedSlots) {
       extendedSlot.unsafeSet(JS::UndefinedValue());
->>>>>>> upstream-releases
     }
   } else {
     fun->setFlags(0);

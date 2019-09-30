@@ -111,44 +111,13 @@ nsClipboardProxy::EmptyClipboard(int32_t aWhichClipboard) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboardProxy::HasDataMatchingFlavors(const char** aFlavorList,
-                                         uint32_t aLength,
-                                         int32_t aWhichClipboard,
-                                         bool* aHasType) {
-||||||| merged common ancestors
-nsClipboardProxy::HasDataMatchingFlavors(const char **aFlavorList,
-                                         uint32_t aLength, int32_t aWhichClipboard,
-                                         bool *aHasType)
-{
-=======
 nsClipboardProxy::HasDataMatchingFlavors(const nsTArray<nsCString>& aFlavorList,
                                          int32_t aWhichClipboard,
                                          bool* aHasType) {
->>>>>>> upstream-releases
   *aHasType = false;
 
-<<<<<<< HEAD
-  nsTArray<nsCString> types;
-  nsCString* t = types.AppendElements(aLength);
-  for (uint32_t j = 0; j < aLength; ++j) {
-    t[j].Rebind(aFlavorList[j], nsCharTraits<char>::length(aFlavorList[j]));
-  }
-
-  ContentChild::GetSingleton()->SendClipboardHasType(types, aWhichClipboard,
-                                                     aHasType);
-||||||| merged common ancestors
-  nsTArray<nsCString> types;
-  nsCString* t = types.AppendElements(aLength);
-  for (uint32_t j = 0; j < aLength; ++j) {
-    t[j].Rebind(aFlavorList[j], nsCharTraits<char>::length(aFlavorList[j]));
-  }
-
-  ContentChild::GetSingleton()->SendClipboardHasType(types, aWhichClipboard, aHasType);
-=======
   ContentChild::GetSingleton()->SendClipboardHasType(aFlavorList,
                                                      aWhichClipboard, aHasType);
->>>>>>> upstream-releases
 
   return NS_OK;
 }

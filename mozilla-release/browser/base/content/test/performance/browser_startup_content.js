@@ -47,14 +47,7 @@ const whitelist = {
     "resource:///actors/BrowserTabChild.jsm",
     "resource:///modules/ContentMetaHandler.jsm",
     "resource:///actors/LinkHandlerChild.jsm",
-<<<<<<< HEAD
-    "resource:///actors/PageStyleChild.jsm",
     "resource:///actors/SearchTelemetryChild.jsm",
-||||||| merged common ancestors
-    "resource:///actors/PageStyleChild.jsm",
-=======
-    "resource:///actors/SearchTelemetryChild.jsm",
->>>>>>> upstream-releases
     "resource://gre/modules/ActorChild.jsm",
     "resource://gre/modules/ActorManagerChild.jsm",
     "resource://gre/modules/E10SUtils.jsm",
@@ -101,10 +94,6 @@ const intermittently_loaded_whitelist = {
   modules: new Set([
     "resource://gre/modules/nsAsyncShutdown.jsm",
     "resource://gre/modules/sessionstore/Utils.jsm",
-<<<<<<< HEAD
-||||||| merged common ancestors
-    "resource://gre/modules/TelemetryStopwatch.jsm",
-=======
 
     // Webcompat about:config front-end. This is presently nightly-only and
     // part of a system add-on which may not load early enough for the test.
@@ -115,7 +104,6 @@ const intermittently_loaded_whitelist = {
     // Webcompat about:config front-end. This is presently nightly-only and
     // part of a system add-on which may not load early enough for the test.
     "resource://webcompat/aboutPageProcessScript.js",
->>>>>>> upstream-releases
   ]),
 };
 
@@ -139,28 +127,6 @@ add_task(async function() {
   let promise = BrowserTestUtils.waitForMessage(mm, "Test:LoadedScripts");
 
   // Load a custom frame script to avoid using ContentTask which loads Task.jsm
-<<<<<<< HEAD
-  mm.loadFrameScript("data:text/javascript,(" + function() {
-    /* eslint-env mozilla/frame-script */
-    const Cm = Components.manager;
-    Cm.QueryInterface(Ci.nsIServiceManager);
-    ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-    let collectStacks = AppConstants.NIGHTLY_BUILD || AppConstants.DEBUG;
-    let components = {};
-    for (let component of Cu.loadedComponents) {
-      /* Keep only the file name for components, as the path is an absolute file
-||||||| merged common ancestors
-  mm.loadFrameScript("data:text/javascript,(" + function() {
-    /* eslint-env mozilla/frame-script */
-    const Cm = Components.manager;
-    Cm.QueryInterface(Ci.nsIServiceManager);
-    ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-    let collectStacks = AppConstants.NIGHTLY_BUILD || AppConstants.DEBUG;
-    let loader = Cc["@mozilla.org/moz/jsloader;1"].getService(Ci.xpcIJSModuleLoader);
-    let components = {};
-    for (let component of loader.loadedComponents()) {
-      /* Keep only the file name for components, as the path is an absolute file
-=======
   mm.loadFrameScript(
     "data:text/javascript,(" +
       function() {
@@ -174,39 +140,10 @@ add_task(async function() {
         let components = {};
         for (let component of Cu.loadedComponents) {
           /* Keep only the file name for components, as the path is an absolute file
->>>>>>> upstream-releases
          URL rather than a resource:// URL like for modules. */
-<<<<<<< HEAD
-      components[component.replace(/.*\//, "")] =
-        collectStacks ? Cu.getComponentLoadStack(component) : "";
-    }
-    let modules = {};
-    for (let module of Cu.loadedModules) {
-      modules[module] = collectStacks ? Cu.getModuleImportStack(module) : "";
-    }
-    let services = {};
-    for (let contractID of Object.keys(Cc)) {
-      try {
-        if (Cm.isServiceInstantiatedByContractID(contractID, Ci.nsISupports)) {
-          services[contractID] = "";
-||||||| merged common ancestors
-      components[component.replace(/.*\//, "")] =
-        collectStacks ? loader.getComponentLoadStack(component) : "";
-    }
-    let modules = {};
-    for (let module of loader.loadedModules()) {
-      modules[module] = collectStacks ? loader.getModuleImportStack(module) : "";
-    }
-    let services = {};
-    for (let contractID of Object.keys(Cc)) {
-      try {
-        if (Cm.isServiceInstantiatedByContractID(contractID, Ci.nsISupports)) {
-          services[contractID] = "";
-=======
           components[component.replace(/.*\//, "")] = collectStacks
             ? Cu.getComponentLoadStack(component)
             : "";
->>>>>>> upstream-releases
         }
         let modules = {};
         for (let module of Cu.loadedModules) {

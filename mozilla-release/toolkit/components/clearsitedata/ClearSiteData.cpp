@@ -51,24 +51,6 @@ class ClearSiteData::PendingCleanupHolder final : public nsIClearDataCallback {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  // This method must be called after any Start() call.
-  void BrowsingContextsReloadNeeded(const nsACString& aOrigin) {
-    mContextsReloadOrigin = aOrigin;
-    MaybeBrowsingContextsReload();
-  }
-
-||||||| merged common ancestors
-  // This method must be called after any Start() call.
-  void
-  BrowsingContextsReloadNeeded(const nsACString& aOrigin)
-  {
-    mContextsReloadOrigin = aOrigin;
-    MaybeBrowsingContextsReload();
-  }
-
-=======
->>>>>>> upstream-releases
   // nsIClearDataCallback interface
 
   NS_IMETHOD
@@ -89,44 +71,6 @@ class ClearSiteData::PendingCleanupHolder final : public nsIClearDataCallback {
     }
   }
 
-<<<<<<< HEAD
-  void MaybeBrowsingContextsReload() {
-    if (mPendingOp || mContextsReloadOrigin.IsEmpty()) {
-      return;
-    }
-
-    nsCOMPtr<nsIObserverService> obs = services::GetObserverService();
-    if (NS_WARN_IF(!obs)) {
-      return;
-    }
-
-    NS_ConvertUTF8toUTF16 origin(mContextsReloadOrigin);
-    nsresult rv = obs->NotifyObservers(nullptr, "clear-site-data-reload-needed",
-                                       origin.get());
-    Unused << NS_WARN_IF(NS_FAILED(rv));
-  }
-
-||||||| merged common ancestors
-  void
-  MaybeBrowsingContextsReload()
-  {
-    if (mPendingOp || mContextsReloadOrigin.IsEmpty()) {
-      return;
-    }
-
-    nsCOMPtr<nsIObserverService> obs = services::GetObserverService();
-    if (NS_WARN_IF(!obs)) {
-      return;
-    }
-
-    NS_ConvertUTF8toUTF16 origin(mContextsReloadOrigin);
-    nsresult rv = obs->NotifyObservers(nullptr, "clear-site-data-reload-needed",
-                                       origin.get());
-    Unused << NS_WARN_IF(NS_FAILED(rv));
-  }
-
-=======
->>>>>>> upstream-releases
   nsCOMPtr<nsIHttpChannel> mChannel;
   bool mPendingOp;
 };
@@ -139,16 +83,8 @@ NS_INTERFACE_MAP_END
 NS_IMPL_ADDREF(ClearSiteData::PendingCleanupHolder)
 NS_IMPL_RELEASE(ClearSiteData::PendingCleanupHolder)
 
-<<<<<<< HEAD
-/* static */ void ClearSiteData::Initialize() {
-||||||| merged common ancestors
-/* static */ void
-ClearSiteData::Initialize()
-{
-=======
 /* static */
 void ClearSiteData::Initialize() {
->>>>>>> upstream-releases
   MOZ_ASSERT(!gClearSiteData);
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -168,16 +104,8 @@ void ClearSiteData::Initialize() {
   gClearSiteData = service;
 }
 
-<<<<<<< HEAD
-/* static */ void ClearSiteData::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-ClearSiteData::Shutdown()
-{
-=======
 /* static */
 void ClearSiteData::Shutdown() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!gClearSiteData) {
@@ -218,17 +146,9 @@ ClearSiteData::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void ClearSiteData::ClearDataFromChannel(nsIHttpChannel* aChannel) {
-||||||| merged common ancestors
-void
-ClearSiteData::ClearDataFromChannel(nsIHttpChannel* aChannel)
-{
-=======
 void ClearSiteData::ClearDataFromChannel(nsIHttpChannel* aChannel) {
   MOZ_ASSERT(aChannel);
 
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIURI> uri;
 
@@ -404,7 +324,6 @@ void ClearSiteData::LogToConsoleInternal(
 
 void ClearSiteData::TypeToString(Type aType, nsAString& aStr) const {
   switch (aType) {
-<<<<<<< HEAD
     case eCache:
       aStr.AssignLiteral("cache");
       break;
@@ -416,74 +335,9 @@ void ClearSiteData::TypeToString(Type aType, nsAString& aStr) const {
     case eStorage:
       aStr.AssignLiteral("storage");
       break;
-||||||| merged common ancestors
-  case eCache:
-    aStr.AssignLiteral("cache");
-    break;
 
-  case eCookies:
-    aStr.AssignLiteral("cookies");
-    break;
-
-  case eStorage:
-    aStr.AssignLiteral("storage");
-    break;
-=======
-    case eCache:
-      aStr.AssignLiteral("cache");
-      break;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    case eExecutionContexts:
-      aStr.AssignLiteral("executionContexts");
-      break;
-||||||| merged common ancestors
-  case eExecutionContexts:
-    aStr.AssignLiteral("executionContexts");
-    break;
-=======
-    case eCookies:
-      aStr.AssignLiteral("cookies");
-      break;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     default:
       MOZ_CRASH("Unknown type.");
-  }
-}
-||||||| merged common ancestors
-  default:
-    MOZ_CRASH("Unknown type.");
-  }
-}
-=======
-    case eStorage:
-      aStr.AssignLiteral("storage");
-      break;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void ClearSiteData::BrowsingContextsReload(PendingCleanupHolder* aHolder,
-                                           nsIPrincipal* aPrincipal) const {
-  nsAutoCString origin;
-  nsresult rv = aPrincipal->GetOrigin(origin);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return;
-||||||| merged common ancestors
-void
-ClearSiteData::BrowsingContextsReload(PendingCleanupHolder* aHolder,
-                                      nsIPrincipal* aPrincipal) const
-{
-  nsAutoCString origin;
-  nsresult rv = aPrincipal->GetOrigin(origin);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return;
-=======
-    default:
-      MOZ_CRASH("Unknown type.");
->>>>>>> upstream-releases
   }
 }
 

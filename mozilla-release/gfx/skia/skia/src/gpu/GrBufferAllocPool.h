@@ -8,16 +8,10 @@
 #ifndef GrBufferAllocPool_DEFINED
 #define GrBufferAllocPool_DEFINED
 
-<<<<<<< HEAD
-#include "GrTypesPriv.h"
-#include "SkNoncopyable.h"
-||||||| merged common ancestors
-=======
 #include "GrCpuBuffer.h"
 #include "GrNonAtomicRef.h"
 #include "GrTypesPriv.h"
 #include "SkNoncopyable.h"
->>>>>>> upstream-releases
 #include "SkTArray.h"
 #include "SkTDArray.h"
 #include "SkTypes.h"

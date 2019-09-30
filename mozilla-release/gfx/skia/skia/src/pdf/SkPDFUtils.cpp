@@ -44,43 +44,14 @@ const char* SkPDFUtils::BlendModeName(SkBlendMode mode) {
     }
 }
 
-<<<<<<< HEAD
-sk_sp<SkPDFArray> SkPDFUtils::RectToArray(const SkRect& r) {
-    return SkPDFMakeArray(r.left(), r.top(), r.right(), r.bottom());
-||||||| merged common ancestors
-    auto result = sk_make_sp<SkPDFArray>();
-    result->reserve(6);
-    for (size_t i = 0; i < SK_ARRAY_COUNT(values); i++) {
-        result->appendScalar(values[i]);
-    }
-    return result;
-=======
 std::unique_ptr<SkPDFArray> SkPDFUtils::RectToArray(const SkRect& r) {
     return SkPDFMakeArray(r.left(), r.top(), r.right(), r.bottom());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-sk_sp<SkPDFArray> SkPDFUtils::MatrixToArray(const SkMatrix& matrix) {
-    SkScalar a[6];
-    if (!matrix.asAffine(a)) {
-        SkMatrix::SetAffineIdentity(a);
-||||||| merged common ancestors
-// static
-void SkPDFUtils::AppendTransform(const SkMatrix& matrix, SkWStream* content) {
-    SkScalar values[6];
-    if (!matrix.asAffine(values)) {
-        SkMatrix::SetAffineIdentity(values);
-    }
-    for (size_t i = 0; i < SK_ARRAY_COUNT(values); i++) {
-        SkPDFUtils::AppendScalar(values[i], content);
-        content->writeText(" ");
-=======
 std::unique_ptr<SkPDFArray> SkPDFUtils::MatrixToArray(const SkMatrix& matrix) {
     SkScalar a[6];
     if (!matrix.asAffine(a)) {
         SkMatrix::SetAffineIdentity(a);
->>>>>>> upstream-releases
     }
     return SkPDFMakeArray(a[0], a[1], a[2], a[3], a[4], a[5]);
 }

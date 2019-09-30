@@ -67,17 +67,6 @@ add_task(async function() {
 });
 
 async function chooseWithInspectElementContextMenu(selector, tab) {
-<<<<<<< HEAD
-  await BrowserTestUtils.synthesizeMouseAtCenter(selector, {
-    type: "contextmenu",
-    button: 2,
-  }, tab.linkedBrowser);
-||||||| merged common ancestors
-  await BrowserTestUtils.synthesizeMouseAtCenter(selector, {
-    type: "contextmenu",
-    button: 2
-  }, tab.linkedBrowser);
-=======
   await BrowserTestUtils.synthesizeMouseAtCenter(
     selector,
     {
@@ -86,7 +75,6 @@ async function chooseWithInspectElementContextMenu(selector, tab) {
     },
     tab.linkedBrowser
   );
->>>>>>> upstream-releases
 
   await EventUtils.sendString("Q");
 }

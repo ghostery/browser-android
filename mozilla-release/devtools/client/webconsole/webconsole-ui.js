@@ -70,20 +70,7 @@ class WebConsoleUI {
   async init() {
     this._initUI();
     await this._initConnection();
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/webconsole-frame.js
-    await this.consoleOutput.init();
-    // Toggle the timestamp on preference change
-    Services.prefs.addObserver(PREF_MESSAGE_TIMESTAMP, this._onToolboxPrefChanged);
-    this._onToolboxPrefChanged();
-||||||| merged common ancestors
-    await this.consoleOutput.init();
-
-    // Toggle the timestamp on preference change
-    Services.prefs.addObserver(PREF_MESSAGE_TIMESTAMP, this._onToolboxPrefChanged);
-    this._onToolboxPrefChanged();
-=======
     await this.wrapper.init();
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/webconsole-ui.js
 
     const id = WebConsoleUtils.supportsString(this.hudId);
     if (Services.obs) {

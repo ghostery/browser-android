@@ -10,13 +10,7 @@ using namespace js;
 using namespace js::jit;
 
 #if defined(_WIN32)
-<<<<<<< HEAD
-#pragma pack(push, 1)
-||||||| merged common ancestors
-# pragma pack(push, 1)
-=======
 #  pragma pack(push, 1)
->>>>>>> upstream-releases
 #endif
 
 namespace js {
@@ -43,13 +37,7 @@ class BailoutStack {
 }  // namespace js
 
 #if defined(_WIN32)
-<<<<<<< HEAD
-#pragma pack(pop)
-||||||| merged common ancestors
-# pragma pack(pop)
-=======
 #  pragma pack(pop)
->>>>>>> upstream-releases
 #endif
 
 BailoutFrameInfo::BailoutFrameInfo(const JitActivationIterator& activations,

@@ -11,37 +11,6 @@
 #include "mozilla/HTMLEditor.h"   // for HTMLEditor
 #include "mozilla/dom/Element.h"  // for Element
 #include "mozilla/dom/Selection.h"
-<<<<<<< HEAD
-#include "mozilla/intl/LocaleService.h"    // for retrieving app locale
-#include "mozilla/mozalloc.h"              // for operator delete, etc
-#include "mozilla/mozSpellChecker.h"       // for mozSpellChecker
-#include "mozilla/Preferences.h"           // for Preferences
-#include "mozilla/TextServicesDocument.h"  // for TextServicesDocument
-#include "nsAString.h"                     // for nsAString::IsEmpty, etc
-#include "nsComponentManagerUtils.h"       // for do_CreateInstance
-#include "nsDebug.h"                       // for NS_ENSURE_TRUE, etc
-#include "nsDependentSubstring.h"          // for Substring
-#include "nsError.h"                       // for NS_ERROR_NOT_INITIALIZED, etc
-#include "nsIContent.h"                    // for nsIContent
-#include "nsIContentPrefService2.h"        // for nsIContentPrefService2, etc
-#include "nsIDocument.h"                   // for nsIDocument
-#include "nsIEditor.h"                     // for nsIEditor
-||||||| merged common ancestors
-#include "mozilla/intl/LocaleService.h" // for retrieving app locale
-#include "mozilla/mozalloc.h"           // for operator delete, etc
-#include "mozilla/mozSpellChecker.h"    // for mozSpellChecker
-#include "mozilla/Preferences.h"        // for Preferences
-#include "mozilla/TextServicesDocument.h" // for TextServicesDocument
-#include "nsAString.h"                  // for nsAString::IsEmpty, etc
-#include "nsComponentManagerUtils.h"    // for do_CreateInstance
-#include "nsDebug.h"                    // for NS_ENSURE_TRUE, etc
-#include "nsDependentSubstring.h"       // for Substring
-#include "nsError.h"                    // for NS_ERROR_NOT_INITIALIZED, etc
-#include "nsIContent.h"                 // for nsIContent
-#include "nsIContentPrefService2.h"     // for nsIContentPrefService2, etc
-#include "nsIDocument.h"                // for nsIDocument
-#include "nsIEditor.h"                  // for nsIEditor
-=======
 #include "mozilla/dom/StaticRange.h"
 #include "mozilla/intl/LocaleService.h"    // for retrieving app locale
 #include "mozilla/mozalloc.h"              // for operator delete, etc
@@ -57,7 +26,6 @@
 #include "nsIContentPrefService2.h"        // for nsIContentPrefService2, etc
 #include "mozilla/dom/Document.h"          // for Document
 #include "nsIEditor.h"                     // for nsIEditor
->>>>>>> upstream-releases
 #include "nsILoadContext.h"
 #include "nsISupportsBase.h"   // for nsISupports
 #include "nsISupportsUtils.h"  // for NS_ADDREF
@@ -114,18 +82,8 @@ static nsIURI* GetDocumentURI(EditorBase* aEditor) {
   return doc->GetDocumentURI();
 }
 
-<<<<<<< HEAD
-static nsILoadContext* GetLoadContext(nsIEditor* aEditor) {
-  nsIDocument* doc = aEditor->AsEditorBase()->GetDocument();
-||||||| merged common ancestors
-static nsILoadContext*
-GetLoadContext(nsIEditor* aEditor)
-{
-  nsIDocument* doc = aEditor->AsEditorBase()->GetDocument();
-=======
 static nsILoadContext* GetLoadContext(nsIEditor* aEditor) {
   Document* doc = aEditor->AsEditorBase()->GetDocument();
->>>>>>> upstream-releases
   if (NS_WARN_IF(!doc)) {
     return nullptr;
   }
@@ -230,17 +188,9 @@ DictionaryFetcher::Fetch(nsIEditor* aEditor) {
   NS_ENSURE_ARG_POINTER(aEditor);
 
   nsCOMPtr<nsIRunnable> runnable =
-<<<<<<< HEAD
-      new ContentPrefInitializerRunnable(aEditor, this);
-  NS_IdleDispatchToCurrentThread(runnable.forget(), 1000);
-||||||| merged common ancestors
-     new ContentPrefInitializerRunnable(aEditor, this);
-  NS_IdleDispatchToCurrentThread(runnable.forget(), 1000);
-=======
       new ContentPrefInitializerRunnable(aEditor, this);
   NS_DispatchToCurrentThreadQueue(runnable.forget(), 1000,
                                   EventQueuePriority::Idle);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -491,34 +441,14 @@ EditorSpellCheck::CheckCurrentWord(const nsAString& aSuggestedWord,
                                   &mSuggestedWordList);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-EditorSpellCheck::CheckCurrentWordNoSuggest(const nsAString& aSuggestedWord,
-                                            bool* aIsMisspelled) {
-  NS_ENSURE_TRUE(mSpellChecker, NS_ERROR_NOT_INITIALIZED);
-||||||| merged common ancestors
-NS_IMETHODIMP
-EditorSpellCheck::CheckCurrentWordNoSuggest(const nsAString& aSuggestedWord,
-                                            bool* aIsMisspelled)
-{
-  NS_ENSURE_TRUE(mSpellChecker, NS_ERROR_NOT_INITIALIZED);
-=======
 RefPtr<CheckWordPromise> EditorSpellCheck::CheckCurrentWordsNoSuggest(
     const nsTArray<nsString>& aSuggestedWords) {
   if (NS_WARN_IF(!mSpellChecker)) {
     return CheckWordPromise::CreateAndReject(NS_ERROR_NOT_INITIALIZED,
                                              __func__);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return mSpellChecker->CheckWord(aSuggestedWord, aIsMisspelled, nullptr);
-||||||| merged common ancestors
-  return mSpellChecker->CheckWord(aSuggestedWord,
-                                  aIsMisspelled, nullptr);
-=======
   return mSpellChecker->CheckWords(aSuggestedWords);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -527,15 +457,8 @@ EditorSpellCheck::ReplaceWord(const nsAString& aMisspelledWord,
                               bool aAllOccurrences) {
   NS_ENSURE_TRUE(mSpellChecker, NS_ERROR_NOT_INITIALIZED);
 
-<<<<<<< HEAD
-  return mSpellChecker->Replace(aMisspelledWord, aReplaceWord, aAllOccurrences);
-||||||| merged common ancestors
-  return mSpellChecker->Replace(aMisspelledWord,
-                                aReplaceWord, aAllOccurrences);
-=======
   RefPtr<mozSpellChecker> spellChecker(mSpellChecker);
   return spellChecker->Replace(aMisspelledWord, aReplaceWord, aAllOccurrences);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -584,95 +507,10 @@ EditorSpellCheck::RemoveWordFromDictionary(const nsAString& aWord) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorSpellCheck::GetDictionaryList(char16_t*** aDictionaryList,
-                                    uint32_t* aCount) {
-||||||| merged common ancestors
-EditorSpellCheck::GetDictionaryList(char16_t*** aDictionaryList,
-                                    uint32_t* aCount)
-{
-=======
 EditorSpellCheck::GetDictionaryList(nsTArray<nsString>& aList) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mSpellChecker, NS_ERROR_NOT_INITIALIZED);
 
-<<<<<<< HEAD
-  NS_ENSURE_TRUE(aDictionaryList && aCount, NS_ERROR_NULL_POINTER);
-
-  *aDictionaryList = 0;
-  *aCount = 0;
-
-  nsTArray<nsString> dictList;
-
-  nsresult rv = mSpellChecker->GetDictionaryList(&dictList);
-
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  char16_t** tmpPtr = 0;
-
-  if (dictList.IsEmpty()) {
-    // If there are no dictionaries, return an array containing
-    // one element and a count of one.
-
-    tmpPtr = (char16_t**)moz_xmalloc(sizeof(char16_t*));
-
-    *tmpPtr = 0;
-    *aDictionaryList = tmpPtr;
-    *aCount = 0;
-
-    return NS_OK;
-  }
-
-  tmpPtr = (char16_t**)moz_xmalloc(sizeof(char16_t*) * dictList.Length());
-
-  *aDictionaryList = tmpPtr;
-  *aCount = dictList.Length();
-
-  for (uint32_t i = 0; i < *aCount; i++) {
-    tmpPtr[i] = ToNewUnicode(dictList[i]);
-  }
-
-  return rv;
-||||||| merged common ancestors
-  NS_ENSURE_TRUE(aDictionaryList && aCount, NS_ERROR_NULL_POINTER);
-
-  *aDictionaryList = 0;
-  *aCount          = 0;
-
-  nsTArray<nsString> dictList;
-
-  nsresult rv = mSpellChecker->GetDictionaryList(&dictList);
-
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  char16_t **tmpPtr = 0;
-
-  if (dictList.IsEmpty()) {
-    // If there are no dictionaries, return an array containing
-    // one element and a count of one.
-
-    tmpPtr = (char16_t **)moz_xmalloc(sizeof(char16_t *));
-
-    *tmpPtr          = 0;
-    *aDictionaryList = tmpPtr;
-    *aCount          = 0;
-
-    return NS_OK;
-  }
-
-  tmpPtr = (char16_t **)moz_xmalloc(sizeof(char16_t *) * dictList.Length());
-
-  *aDictionaryList = tmpPtr;
-  *aCount          = dictList.Length();
-
-  for (uint32_t i = 0; i < *aCount; i++) {
-    tmpPtr[i] = ToNewUnicode(dictList[i]);
-  }
-
-  return rv;
-=======
   return mSpellChecker->GetDictionaryList(&aList);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -937,76 +775,14 @@ nsresult EditorSpellCheck::DictionaryFetched(DictionaryFetcher* aFetcher) {
 
       RefPtr<EditorSpellCheck> self = this;
       RefPtr<DictionaryFetcher> fetcher = aFetcher;
-<<<<<<< HEAD
-      mSpellChecker->SetCurrentDictionaryFromList(tryDictList)
-          ->Then(GetMainThreadSerialEventTarget(), __func__,
-                 [self, fetcher]() {
-||||||| merged common ancestors
-      mSpellChecker->SetCurrentDictionaryFromList(tryDictList)->Then(
-        GetMainThreadSerialEventTarget(),
-        __func__,
-        [self, fetcher]() {
-=======
       mSpellChecker->SetCurrentDictionaryFromList(tryDictList)
           ->Then(
               GetMainThreadSerialEventTarget(), __func__,
               [self, fetcher]() {
->>>>>>> upstream-releases
 #ifdef DEBUG_DICT
-<<<<<<< HEAD
-                   printf("***** Assigned from content preferences |%s|\n",
-                          NS_ConvertUTF16toUTF8(dictName).get());
-||||||| merged common ancestors
-          printf("***** Assigned from content preferences |%s|\n",
-                 NS_ConvertUTF16toUTF8(dictName).get());
-=======
                 printf("***** Assigned from content preferences |%s|\n",
                        NS_ConvertUTF16toUTF8(dictName).get());
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-                   // We take an early exit here, so let's not forget to clear
-                   // the word list.
-                   self->DeleteSuggestedWordList();
-
-                   self->EndUpdateDictionary();
-                   if (fetcher->mCallback) {
-                     fetcher->mCallback->EditorSpellCheckDone();
-                   }
-                 },
-                 [self, fetcher](nsresult aError) {
-                   if (aError == NS_ERROR_ABORT) {
-                     return;
-                   }
-                   // May be dictionary was uninstalled ?
-                   // Clear the content preference and continue.
-                   ClearCurrentDictionary(self->mEditor);
-
-                   // Priority 2 or later will handled by the following
-                   self->SetFallbackDictionary(fetcher);
-                 });
-||||||| merged common ancestors
-          // We take an early exit here, so let's not forget to clear the word
-          // list.
-          self->DeleteSuggestedWordList();
-
-          self->EndUpdateDictionary();
-          if (fetcher->mCallback) {
-            fetcher->mCallback->EditorSpellCheckDone();
-          }
-        },
-        [self, fetcher](nsresult aError) {
-          if (aError == NS_ERROR_ABORT) {
-            return;
-          }
-          // May be dictionary was uninstalled ?
-          // Clear the content preference and continue.
-          ClearCurrentDictionary(self->mEditor);
-
-          // Priority 2 or later will handled by the following
-          self->SetFallbackDictionary(fetcher);
-        });
-=======
                 // We take an early exit here, so let's not forget to clear
                 // the word list.
                 self->DeleteSuggestedWordList();
@@ -1027,7 +803,6 @@ nsresult EditorSpellCheck::DictionaryFetched(DictionaryFetcher* aFetcher) {
                 // Priority 2 or later will handled by the following
                 self->SetFallbackDictionary(fetcher);
               });
->>>>>>> upstream-releases
       return NS_OK;
     }
   }

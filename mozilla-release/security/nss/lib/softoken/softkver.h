@@ -17,24 +17,10 @@
  * The format of the version string should be
  *     "<major version>.<minor version>[.<patch level>[.<build number>]][ <ECC>][ <Beta>]"
  */
-<<<<<<< HEAD
-#define SOFTOKEN_VERSION "3.41" SOFTOKEN_ECC_STRING
-||||||| merged common ancestors
-#define SOFTOKEN_VERSION "3.40.1" SOFTOKEN_ECC_STRING
-=======
 #define SOFTOKEN_VERSION "3.45" SOFTOKEN_ECC_STRING
->>>>>>> upstream-releases
 #define SOFTOKEN_VMAJOR 3
-<<<<<<< HEAD
-#define SOFTOKEN_VMINOR 41
-#define SOFTOKEN_VPATCH 0
-||||||| merged common ancestors
-#define SOFTOKEN_VMINOR 40
-#define SOFTOKEN_VPATCH 1
-=======
 #define SOFTOKEN_VMINOR 45
 #define SOFTOKEN_VPATCH 0
->>>>>>> upstream-releases
 #define SOFTOKEN_VBUILD 0
 #define SOFTOKEN_BETA PR_FALSE
 

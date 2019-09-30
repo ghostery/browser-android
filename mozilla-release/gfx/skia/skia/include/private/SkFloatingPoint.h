@@ -12,17 +12,10 @@
 #include "SkTypes.h"
 #include "SkSafe_math.h"
 #include <float.h>
-<<<<<<< HEAD
-#include <math.h>
-#include <cstring>
-
-||||||| merged common ancestors
-=======
 #include <math.h>
 #include <cstring>
 #include <limits>
 
->>>>>>> upstream-releases
 
 #if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE1
     #include <xmmintrin.h>
@@ -151,16 +144,6 @@ static inline float sk_double_to_float(double x) {
     return static_cast<float>(x);
 }
 
-<<<<<<< HEAD
-#define SK_FloatNaN                 NAN
-#define SK_FloatInfinity            (+INFINITY)
-#define SK_FloatNegativeInfinity    (-INFINITY)
-||||||| merged common ancestors
-static const uint32_t kIEEENotANumber = 0x7fffffff;
-#define SK_FloatNaN                 (*SkTCast<const float*>(&kIEEENotANumber))
-#define SK_FloatInfinity            (+(float)INFINITY)
-#define SK_FloatNegativeInfinity    (-(float)INFINITY)
-=======
 #define SK_FloatNaN                 std::numeric_limits<float>::quiet_NaN()
 #define SK_FloatInfinity            (+std::numeric_limits<float>::infinity())
 #define SK_FloatNegativeInfinity    (-std::numeric_limits<float>::infinity())
@@ -168,7 +151,6 @@ static const uint32_t kIEEENotANumber = 0x7fffffff;
 // Returns false if any of the floats are outside of [0...1]
 // Returns true if count is 0
 bool sk_floats_are_unit(const float array[], size_t count);
->>>>>>> upstream-releases
 
 static inline float sk_float_rsqrt_portable(float x) {
     // Get initial estimate.
@@ -229,16 +211,6 @@ static inline float sk_ieee_float_divide(float numer, float denom) {
     return numer / denom;
 }
 
-<<<<<<< HEAD
-#ifdef __clang__
-__attribute__((no_sanitize("float-divide-by-zero")))
-#endif
-static inline double sk_ieee_double_divide(double numer, double denom) {
-    return numer / denom;
-}
-
-||||||| merged common ancestors
-=======
 #ifdef __clang__
 __attribute__((no_sanitize("float-divide-by-zero")))
 #endif
@@ -254,5 +226,4 @@ static inline float sk_ieee_double_divide_TODO_IS_DIVIDE_BY_ZERO_SAFE_HERE(doubl
     return sk_ieee_double_divide(n,d);
 }
 
->>>>>>> upstream-releases
 #endif

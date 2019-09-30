@@ -283,32 +283,6 @@ class DocAccessibleChild : public DocAccessibleChildBase {
     SerializedChildDocConstructor(DocAccessibleChild* aIPCDoc,
                                   DocAccessibleChild* aParentIPCDoc,
                                   uint64_t aUniqueID, uint32_t aMsaaID)
-<<<<<<< HEAD
-        : DeferredEvent(aParentIPCDoc),
-          mIPCDoc(aIPCDoc),
-          mUniqueID(aUniqueID),
-          mMsaaID(aMsaaID) {}
-
-    void Dispatch(DocAccessibleChild* aParentIPCDoc) override {
-      auto tabChild = static_cast<dom::TabChild*>(aParentIPCDoc->Manager());
-      MOZ_ASSERT(tabChild);
-      Unused << tabChild->SendPDocAccessibleConstructor(
-          mIPCDoc, aParentIPCDoc, mUniqueID, mMsaaID, IAccessibleHolder());
-||||||| merged common ancestors
-      : DeferredEvent(aParentIPCDoc)
-      , mIPCDoc(aIPCDoc)
-      , mUniqueID(aUniqueID)
-      , mMsaaID(aMsaaID)
-    {}
-
-    void Dispatch(DocAccessibleChild* aParentIPCDoc) override
-    {
-      auto tabChild = static_cast<dom::TabChild*>(aParentIPCDoc->Manager());
-      MOZ_ASSERT(tabChild);
-      Unused << tabChild->SendPDocAccessibleConstructor(mIPCDoc, aParentIPCDoc,
-                                                        mUniqueID, mMsaaID,
-                                                        IAccessibleHolder());
-=======
         : DeferredEvent(aParentIPCDoc),
           mIPCDoc(aIPCDoc),
           mUniqueID(aUniqueID),
@@ -320,7 +294,6 @@ class DocAccessibleChild : public DocAccessibleChildBase {
       MOZ_ASSERT(browserChild);
       Unused << browserChild->SendPDocAccessibleConstructor(
           mIPCDoc, aParentIPCDoc, mUniqueID, mMsaaID, IAccessibleHolder());
->>>>>>> upstream-releases
       mIPCDoc->SetConstructedInParentProcess();
     }
 

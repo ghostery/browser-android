@@ -306,114 +306,6 @@ class DXInterop2Device : public RefCounted<DXInterop2Device> {
 ////////////////////////////////////////////////////////////////////////////////
 // Shared Surface
 
-<<<<<<< HEAD
-/*static*/ UniquePtr<SharedSurface_D3D11Interop>
-SharedSurface_D3D11Interop::Create(DXInterop2Device* interop, GLContext* gl,
-                                   const gfx::IntSize& size, bool hasAlpha) {
-  const auto& d3d = interop->mD3D;
-
-  // Create a texture in case we need to readback.
-  DXGI_FORMAT format =
-      hasAlpha ? DXGI_FORMAT_B8G8R8A8_UNORM : DXGI_FORMAT_B8G8R8X8_UNORM;
-  CD3D11_TEXTURE2D_DESC desc(format, size.width, size.height, 1, 1);
-  desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
-
-  RefPtr<ID3D11Texture2D> texD3D;
-  auto hr = d3d->CreateTexture2D(&desc, nullptr, getter_AddRefs(texD3D));
-  if (FAILED(hr)) {
-    NS_WARNING("Failed to create texture for CanvasLayer!");
-    return nullptr;
-  }
-
-  RefPtr<IDXGIResource> texDXGI;
-  hr = texD3D->QueryInterface(__uuidof(IDXGIResource), getter_AddRefs(texDXGI));
-  if (FAILED(hr)) {
-    NS_WARNING("Failed to open texture for sharing!");
-    return nullptr;
-  }
-
-  HANDLE dxgiHandle;
-  texDXGI->GetSharedHandle(&dxgiHandle);
-
-  ////
-
-  if (!gl->MakeCurrent()) {
-    NS_WARNING("MakeCurrent failed.");
-    return nullptr;
-  }
-
-  GLuint interopRB = 0;
-  gl->fGenRenderbuffers(1, &interopRB);
-  const auto lockHandle =
-      interop->RegisterObject(texD3D, interopRB, LOCAL_GL_RENDERBUFFER,
-                              LOCAL_WGL_ACCESS_WRITE_DISCARD_NV);
-  if (!lockHandle) {
-    NS_WARNING("Failed to register D3D object with WGL.");
-    gl->fDeleteRenderbuffers(1, &interopRB);
-    return nullptr;
-  }
-
-  ////
-
-  GLuint prodTex = 0;
-  GLuint interopFB = 0;
-  {
-    GLint samples = 0;
-||||||| merged common ancestors
-/*static*/ UniquePtr<SharedSurface_D3D11Interop>
-SharedSurface_D3D11Interop::Create(DXInterop2Device* interop,
-                                   GLContext* gl,
-                                   const gfx::IntSize& size,
-                                   bool hasAlpha)
-{
-    const auto& d3d = interop->mD3D;
-
-    // Create a texture in case we need to readback.
-    DXGI_FORMAT format = hasAlpha ? DXGI_FORMAT_B8G8R8A8_UNORM
-                                  : DXGI_FORMAT_B8G8R8X8_UNORM;
-    CD3D11_TEXTURE2D_DESC desc(format, size.width, size.height, 1, 1);
-    desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
-
-    RefPtr<ID3D11Texture2D> texD3D;
-    auto hr = d3d->CreateTexture2D(&desc, nullptr, getter_AddRefs(texD3D));
-    if (FAILED(hr)) {
-        NS_WARNING("Failed to create texture for CanvasLayer!");
-        return nullptr;
-    }
-
-    RefPtr<IDXGIResource> texDXGI;
-    hr = texD3D->QueryInterface(__uuidof(IDXGIResource), getter_AddRefs(texDXGI));
-    if (FAILED(hr)) {
-        NS_WARNING("Failed to open texture for sharing!");
-        return nullptr;
-    }
-
-    HANDLE dxgiHandle;
-    texDXGI->GetSharedHandle(&dxgiHandle);
-
-    ////
-
-    if (!gl->MakeCurrent()) {
-        NS_WARNING("MakeCurrent failed.");
-        return nullptr;
-    }
-
-    GLuint interopRB = 0;
-    gl->fGenRenderbuffers(1, &interopRB);
-    const auto lockHandle = interop->RegisterObject(texD3D, interopRB,
-                                                    LOCAL_GL_RENDERBUFFER,
-                                                    LOCAL_WGL_ACCESS_WRITE_DISCARD_NV);
-    if (!lockHandle) {
-        NS_WARNING("Failed to register D3D object with WGL.");
-        gl->fDeleteRenderbuffers(1, &interopRB);
-        return nullptr;
-    }
-
-    ////
-
-    GLuint prodTex = 0;
-    GLuint interopFB = 0;
-=======
 /*static*/
 UniquePtr<SharedSurface_D3D11Interop> SharedSurface_D3D11Interop::Create(
     DXInterop2Device* interop, GLContext* gl, const gfx::IntSize& size,
@@ -467,7 +359,6 @@ UniquePtr<SharedSurface_D3D11Interop> SharedSurface_D3D11Interop::Create(
   GLuint interopFB = 0;
   {
     GLint samples = 0;
->>>>>>> upstream-releases
     {
       const ScopedBindRenderbuffer bindRB(gl, interopRB);
       gl->fGetRenderbufferParameteriv(LOCAL_GL_RENDERBUFFER,
@@ -508,53 +399,6 @@ UniquePtr<SharedSurface_D3D11Interop> SharedSurface_D3D11Interop::Create(
   return ret;
 }
 
-<<<<<<< HEAD
-SharedSurface_D3D11Interop::SharedSurface_D3D11Interop(
-    GLContext* gl, const gfx::IntSize& size, bool hasAlpha, GLuint prodTex,
-    GLuint interopFB, GLuint interopRB, DXInterop2Device* interop,
-    HANDLE lockHandle, ID3D11Texture2D* texD3D, HANDLE dxgiHandle)
-    : SharedSurface(
-          SharedSurfaceType::DXGLInterop2,
-          prodTex ? AttachmentType::GLTexture : AttachmentType::GLRenderbuffer,
-          gl, size, hasAlpha, true),
-      mProdTex(prodTex),
-      mInteropFB(interopFB),
-      mInteropRB(interopRB),
-      mInterop(interop),
-      mLockHandle(lockHandle),
-      mTexD3D(texD3D),
-      mDXGIHandle(dxgiHandle),
-      mNeedsFinish(gfxPrefs::WebGLDXGLNeedsFinish()),
-      mLockedForGL(false) {
-  MOZ_ASSERT(bool(mProdTex) == bool(mInteropFB));
-||||||| merged common ancestors
-SharedSurface_D3D11Interop::SharedSurface_D3D11Interop(GLContext* gl,
-                                                       const gfx::IntSize& size,
-                                                       bool hasAlpha, GLuint prodTex,
-                                                       GLuint interopFB, GLuint interopRB,
-                                                       DXInterop2Device* interop,
-                                                       HANDLE lockHandle,
-                                                       ID3D11Texture2D* texD3D,
-                                                       HANDLE dxgiHandle)
-    : SharedSurface(SharedSurfaceType::DXGLInterop2,
-                    prodTex ? AttachmentType::GLTexture
-                            : AttachmentType::GLRenderbuffer,
-                    gl,
-                    size,
-                    hasAlpha,
-                    true)
-    , mProdTex(prodTex)
-    , mInteropFB(interopFB)
-    , mInteropRB(interopRB)
-    , mInterop(interop)
-    , mLockHandle(lockHandle)
-    , mTexD3D(texD3D)
-    , mDXGIHandle(dxgiHandle)
-    , mNeedsFinish(gfxPrefs::WebGLDXGLNeedsFinish())
-    , mLockedForGL(false)
-{
-    MOZ_ASSERT(bool(mProdTex) == bool(mInteropFB));
-=======
 SharedSurface_D3D11Interop::SharedSurface_D3D11Interop(
     GLContext* gl, const gfx::IntSize& size, bool hasAlpha, GLuint prodTex,
     GLuint interopFB, GLuint interopRB, DXInterop2Device* interop,
@@ -573,7 +417,6 @@ SharedSurface_D3D11Interop::SharedSurface_D3D11Interop(
       mNeedsFinish(StaticPrefs::webgl_dxgl_needs_finish()),
       mLockedForGL(false) {
   MOZ_ASSERT(bool(mProdTex) == bool(mInteropFB));
->>>>>>> upstream-releases
 }
 
 SharedSurface_D3D11Interop::~SharedSurface_D3D11Interop() {
@@ -618,24 +461,6 @@ void SharedSurface_D3D11Interop::ProducerReleaseImpl() {
   mLockedForGL = false;
 }
 
-<<<<<<< HEAD
-bool SharedSurface_D3D11Interop::ToSurfaceDescriptor(
-    layers::SurfaceDescriptor* const out_descriptor) {
-  const auto format =
-      (mHasAlpha ? gfx::SurfaceFormat::B8G8R8A8 : gfx::SurfaceFormat::B8G8R8X8);
-  *out_descriptor =
-      layers::SurfaceDescriptorD3D10(WindowsHandle(mDXGIHandle), format, mSize);
-  return true;
-||||||| merged common ancestors
-bool
-SharedSurface_D3D11Interop::ToSurfaceDescriptor(layers::SurfaceDescriptor* const out_descriptor)
-{
-    const auto format = (mHasAlpha ? gfx::SurfaceFormat::B8G8R8A8
-                                   : gfx::SurfaceFormat::B8G8R8X8);
-    *out_descriptor = layers::SurfaceDescriptorD3D10(WindowsHandle(mDXGIHandle), format,
-                                                     mSize);
-    return true;
-=======
 bool SharedSurface_D3D11Interop::ToSurfaceDescriptor(
     layers::SurfaceDescriptor* const out_descriptor) {
   const auto format =
@@ -643,49 +468,11 @@ bool SharedSurface_D3D11Interop::ToSurfaceDescriptor(
   *out_descriptor = layers::SurfaceDescriptorD3D10(
       WindowsHandle(mDXGIHandle), format, mSize, gfx::YUVColorSpace::UNKNOWN);
   return true;
->>>>>>> upstream-releases
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Factory
 
-<<<<<<< HEAD
-/*static*/ UniquePtr<SurfaceFactory_D3D11Interop>
-SurfaceFactory_D3D11Interop::Create(GLContext* gl, const SurfaceCaps& caps,
-                                    layers::LayersIPCChannel* allocator,
-                                    const layers::TextureFlags& flags) {
-  WGLLibrary* wgl = &sWGLLib;
-  if (!wgl || !wgl->HasDXInterop2()) return nullptr;
-
-  const RefPtr<DXInterop2Device> interop = DXInterop2Device::Open(wgl, gl);
-  if (!interop) {
-    NS_WARNING("Failed to open D3D device for use by WGL.");
-    return nullptr;
-  }
-
-  typedef SurfaceFactory_D3D11Interop ptrT;
-  UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, interop));
-  return ret;
-||||||| merged common ancestors
-/*static*/ UniquePtr<SurfaceFactory_D3D11Interop>
-SurfaceFactory_D3D11Interop::Create(GLContext* gl, const SurfaceCaps& caps,
-                                    layers::LayersIPCChannel* allocator,
-                                    const layers::TextureFlags& flags)
-{
-    WGLLibrary* wgl = &sWGLLib;
-    if (!wgl || !wgl->HasDXInterop2())
-        return nullptr;
-
-    const RefPtr<DXInterop2Device> interop = DXInterop2Device::Open(wgl, gl);
-    if (!interop) {
-        NS_WARNING("Failed to open D3D device for use by WGL.");
-        return nullptr;
-    }
-
-    typedef SurfaceFactory_D3D11Interop ptrT;
-    UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, interop));
-    return ret;
-=======
 /*static*/
 UniquePtr<SurfaceFactory_D3D11Interop> SurfaceFactory_D3D11Interop::Create(
     GLContext* gl, const SurfaceCaps& caps, layers::LayersIPCChannel* allocator,
@@ -702,7 +489,6 @@ UniquePtr<SurfaceFactory_D3D11Interop> SurfaceFactory_D3D11Interop::Create(
   typedef SurfaceFactory_D3D11Interop ptrT;
   UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, interop));
   return ret;
->>>>>>> upstream-releases
 }
 
 SurfaceFactory_D3D11Interop::SurfaceFactory_D3D11Interop(

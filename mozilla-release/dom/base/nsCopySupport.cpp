@@ -82,53 +82,6 @@ static nsresult AppendImagePromise(nsITransferable* aTransferable,
                                    nsIImageLoadingContent* aImageElement);
 #endif
 
-<<<<<<< HEAD
-// Helper used for HTMLCopy and GetTransferableForSelection since both routines
-// share common code.
-static nsresult SelectionCopyHelper(Selection* aSel, nsIDocument* aDoc,
-                                    bool doPutOnClipboard, int16_t aClipboardID,
-                                    uint32_t aFlags,
-                                    nsITransferable** aTransferable) {
-  // Clear the output parameter for the transferable, if provided.
-  if (aTransferable) {
-    *aTransferable = nullptr;
-  }
-
-  nsresult rv;
-
-  nsCOMPtr<nsIDocumentEncoder> docEncoder;
-  docEncoder = do_createHTMLCopyEncoder();
-
-  // note that we assign text/unicode as mime type, but in fact
-  // nsHTMLCopyEncoder ignore it and use text/html or text/plain depending where
-  // the selection is. if it is a selection into input/textarea element or in a
-  // html content with pre-wrap style : text/plain. Otherwise text/html. see
-  // nsHTMLCopyEncoder::SetSelection
-||||||| merged common ancestors
-// Helper used for HTMLCopy and GetTransferableForSelection since both routines
-// share common code.
-static nsresult
-SelectionCopyHelper(Selection *aSel, nsIDocument *aDoc,
-                    bool doPutOnClipboard, int16_t aClipboardID,
-                    uint32_t aFlags, nsITransferable ** aTransferable)
-{
-  // Clear the output parameter for the transferable, if provided.
-  if (aTransferable) {
-    *aTransferable = nullptr;
-  }
-
-  nsresult rv;
-
-  nsCOMPtr<nsIDocumentEncoder> docEncoder;
-  docEncoder = do_CreateInstance(NS_HTMLCOPY_ENCODER_CONTRACTID);
-  NS_ENSURE_TRUE(docEncoder, NS_ERROR_FAILURE);
-
-  // note that we assign text/unicode as mime type, but in fact nsHTMLCopyEncoder
-  // ignore it and use text/html or text/plain depending where the selection
-  // is. if it is a selection into input/textarea element or in a html content
-  // with pre-wrap style : text/plain. Otherwise text/html.
-  // see nsHTMLCopyEncoder::SetSelection
-=======
 static nsresult EncodeForTextUnicode(nsIDocumentEncoder& aEncoder,
                                      Document& aDocument, Selection* aSelection,
                                      uint32_t aAdditionalEncoderFlags,
@@ -139,25 +92,14 @@ static nsresult EncodeForTextUnicode(nsIDocumentEncoder& aEncoder,
   // the selection is. if it is a selection into input/textarea element or in a
   // html content with pre-wrap style : text/plain. Otherwise text/html. see
   // nsHTMLCopyEncoder::SetSelection
->>>>>>> upstream-releases
   nsAutoString mimeType;
   mimeType.AssignLiteral(kUnicodeMime);
 
   // Do the first and potentially trial encoding as preformatted and raw.
-<<<<<<< HEAD
-  uint32_t flags = aFlags | nsIDocumentEncoder::OutputPreformatted |
-                   nsIDocumentEncoder::OutputRaw |
-                   nsIDocumentEncoder::OutputForPlainTextClipboardCopy;
-||||||| merged common ancestors
-  uint32_t flags = aFlags | nsIDocumentEncoder::OutputPreformatted
-                          | nsIDocumentEncoder::OutputRaw
-                          | nsIDocumentEncoder::OutputForPlainTextClipboardCopy;
-=======
   uint32_t flags = aAdditionalEncoderFlags |
                    nsIDocumentEncoder::OutputPreformatted |
                    nsIDocumentEncoder::OutputRaw |
                    nsIDocumentEncoder::OutputForPlainTextClipboardCopy;
->>>>>>> upstream-releases
 
   nsresult rv = aEncoder.Init(&aDocument, mimeType, flags);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -196,22 +138,6 @@ static nsresult EncodeForTextUnicode(nsIDocumentEncoder& aEncoder,
     aSerializationResult.Assign(buf);
   } else {
     // Redo the encoding, but this time use pretty printing.
-<<<<<<< HEAD
-    flags = nsIDocumentEncoder::OutputSelectionOnly |
-            nsIDocumentEncoder::OutputAbsoluteLinks |
-            nsIDocumentEncoder::SkipInvisibleContent |
-            nsIDocumentEncoder::OutputDropInvisibleBreak |
-            (aFlags & (nsIDocumentEncoder::OutputNoScriptContent |
-                       nsIDocumentEncoder::OutputRubyAnnotation));
-||||||| merged common ancestors
-    flags =
-      nsIDocumentEncoder::OutputSelectionOnly |
-      nsIDocumentEncoder::OutputAbsoluteLinks |
-      nsIDocumentEncoder::SkipInvisibleContent |
-      nsIDocumentEncoder::OutputDropInvisibleBreak |
-      (aFlags & (nsIDocumentEncoder::OutputNoScriptContent |
-                 nsIDocumentEncoder::OutputRubyAnnotation));
-=======
     flags =
         nsIDocumentEncoder::OutputSelectionOnly |
         nsIDocumentEncoder::OutputAbsoluteLinks |
@@ -219,7 +145,6 @@ static nsresult EncodeForTextUnicode(nsIDocumentEncoder& aEncoder,
         nsIDocumentEncoder::OutputDropInvisibleBreak |
         (aAdditionalEncoderFlags & (nsIDocumentEncoder::OutputNoScriptContent |
                                     nsIDocumentEncoder::OutputRubyAnnotation));
->>>>>>> upstream-releases
 
     mimeType.AssignLiteral(kTextMime);
     rv = aEncoder.Init(&aDocument, mimeType, flags);
@@ -232,36 +157,8 @@ static nsresult EncodeForTextUnicode(nsIDocumentEncoder& aEncoder,
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
-<<<<<<< HEAD
-  // Second, prepare the text/html flavor.
-  nsAutoString textHTMLBuf;
-  nsAutoString htmlParentsBuf;
-  nsAutoString htmlInfoBuf;
-  if (encodedTextHTML) {
-    // Redo the encoding, but this time use the passed-in flags.
-    // Don't allow wrapping of CJK strings.
-    mimeType.AssignLiteral(kHTMLMime);
-    rv = docEncoder->Init(
-        aDoc, mimeType,
-        aFlags | nsIDocumentEncoder::OutputDisallowLineBreaking);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  // Second, prepare the text/html flavor.
-  nsAutoString textHTMLBuf;
-  nsAutoString htmlParentsBuf;
-  nsAutoString htmlInfoBuf;
-  if (encodedTextHTML) {
-    // Redo the encoding, but this time use the passed-in flags.
-    // Don't allow wrapping of CJK strings.
-    mimeType.AssignLiteral(kHTMLMime);
-    rv = docEncoder->Init(aDoc, mimeType,
-                          aFlags |
-                          nsIDocumentEncoder::OutputDisallowLineBreaking);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   return rv;
 }
->>>>>>> upstream-releases
 
 static nsresult EncodeAsTextHTMLWithContext(
     nsIDocumentEncoder& aEncoder, Document& aDocument, Selection* aSelection,
@@ -337,63 +234,10 @@ static nsresult EncodeDocumentWithContext(
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
-<<<<<<< HEAD
-  // Get the Clipboard
-  nsCOMPtr<nsIClipboard> clipboard;
-  if (doPutOnClipboard) {
-    clipboard = do_GetService(kCClipboardCID, &rv);
-    if (NS_FAILED(rv)) return rv;
-  }
-
-  if ((doPutOnClipboard && clipboard) || aTransferable != nullptr) {
-    // Create a transferable for putting data on the Clipboard
-    nsCOMPtr<nsITransferable> trans = do_CreateInstance(kCTransferableCID);
-    if (trans) {
-      trans->Init(aDoc->GetLoadContext());
-      if (encodedTextHTML) {
-        // Set up a format converter so that clipboard flavor queries work.
-        // This converter isn't really used for conversions.
-        nsCOMPtr<nsIFormatConverter> htmlConverter =
-            do_CreateInstance(kHTMLConverterCID);
-        trans->SetConverter(htmlConverter);
-
-        if (!textHTMLBuf.IsEmpty()) {
-          // Add the html DataFlavor to the transferable
-          rv = AppendString(trans, textHTMLBuf, kHTMLMime);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-||||||| merged common ancestors
-  // Get the Clipboard
-  nsCOMPtr<nsIClipboard> clipboard;
-  if (doPutOnClipboard) {
-    clipboard = do_GetService(kCClipboardCID, &rv);
-    if (NS_FAILED(rv))
-      return rv;
-  }
-
-  if ((doPutOnClipboard && clipboard) || aTransferable != nullptr) {
-    // Create a transferable for putting data on the Clipboard
-    nsCOMPtr<nsITransferable> trans = do_CreateInstance(kCTransferableCID);
-    if (trans) {
-      trans->Init(aDoc->GetLoadContext());
-      if (encodedTextHTML) {
-        // Set up a format converter so that clipboard flavor queries work.
-        // This converter isn't really used for conversions.
-        nsCOMPtr<nsIFormatConverter> htmlConverter =
-          do_CreateInstance(kHTMLConverterCID);
-        trans->SetConverter(htmlConverter);
-
-        if (!textHTMLBuf.IsEmpty()) {
-          // Add the html DataFlavor to the transferable
-          rv = AppendString(trans, textHTMLBuf, kHTMLMime);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-=======
   aEncodedDocumentWithContext = {
       unicodeEncodingIsTextHTML, std::move(serializationForTextUnicode),
       std::move(serializationForTextHTML), std::move(htmlContextBuffer),
       std::move(htmlInfoBuffer)};
->>>>>>> upstream-releases
 
   return rv;
 }
@@ -403,26 +247,6 @@ static nsresult CreateTransferable(
     Document& aDocument, nsCOMPtr<nsITransferable>& aTransferable) {
   nsresult rv = NS_OK;
 
-<<<<<<< HEAD
-        if (!textPlainBuf.IsEmpty()) {
-          // unicode text
-          // Add the unicode DataFlavor to the transferable
-          // If we didn't have this, then nsDataObj::GetData matches
-          // text/unicode against the kURLMime flavour which is not desirable
-          // (eg. when pasting into Notepad)
-          rv = AppendString(trans, textPlainBuf, kUnicodeMime);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-||||||| merged common ancestors
-        if (!textPlainBuf.IsEmpty()) {
-          // unicode text
-          // Add the unicode DataFlavor to the transferable
-          // If we didn't have this, then nsDataObj::GetData matches text/unicode against
-          // the kURLMime flavour which is not desirable (eg. when pasting into Notepad)
-          rv = AppendString(trans, textPlainBuf, kUnicodeMime);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-=======
   aTransferable = do_CreateInstance(kCTransferableCID);
   NS_ENSURE_TRUE(aTransferable, NS_ERROR_NULL_POINTER);
 
@@ -441,72 +265,13 @@ static nsresult CreateTransferable(
                         kHTMLMime);
       NS_ENSURE_SUCCESS(rv, rv);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        // Try and get source URI of the items that are being dragged
-        nsIURI* uri = aDoc->GetDocumentURI();
-        if (uri) {
-          nsAutoCString spec;
-          nsresult rv = uri->GetSpec(spec);
-          NS_ENSURE_SUCCESS(rv, rv);
-          if (!spec.IsEmpty()) {
-            nsAutoString shortcut;
-            AppendUTF8toUTF16(spec, shortcut);
-
-            // Add the URL DataFlavor to the transferable. Don't use kURLMime,
-            // as it will cause an unnecessary UniformResourceLocator to be
-            // added which confuses some apps eg. Outlook 2000 - (See Bug
-            // 315370). Don't use kURLDataMime, as it will cause a bogus 'url '
-            // flavor to show up on the Mac clipboard, confusing other apps,
-            // like Terminal (see bug 336012).
-            rv = AppendString(trans, shortcut, kURLPrivateMime);
-            NS_ENSURE_SUCCESS(rv, rv);
-          }
-        }
-      } else {
-        if (!textPlainBuf.IsEmpty()) {
-          // Add the unicode DataFlavor to the transferable
-          rv = AppendString(trans, textPlainBuf, kUnicodeMime);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-      }
-||||||| merged common ancestors
-        // Try and get source URI of the items that are being dragged
-        nsIURI *uri = aDoc->GetDocumentURI();
-        if (uri) {
-          nsAutoCString spec;
-          nsresult rv = uri->GetSpec(spec);
-          NS_ENSURE_SUCCESS(rv, rv);
-          if (!spec.IsEmpty()) {
-            nsAutoString shortcut;
-            AppendUTF8toUTF16(spec, shortcut);
-
-            // Add the URL DataFlavor to the transferable. Don't use kURLMime, as it will
-            // cause an unnecessary UniformResourceLocator to be added which confuses
-            // some apps eg. Outlook 2000 - (See Bug 315370). Don't use
-            // kURLDataMime, as it will cause a bogus 'url ' flavor to
-            // show up on the Mac clipboard, confusing other apps, like
-            // Terminal (see bug 336012).
-            rv = AppendString(trans, shortcut, kURLPrivateMime);
-            NS_ENSURE_SUCCESS(rv, rv);
-          }
-        }
-      } else {
-        if (!textPlainBuf.IsEmpty()) {
-          // Add the unicode DataFlavor to the transferable
-          rv = AppendString(trans, textPlainBuf, kUnicodeMime);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-      }
-=======
     // Add the htmlcontext DataFlavor to the transferable. Even if the context
     // buffer is empty, this flavor should be attached to the transferable.
     rv = AppendString(aTransferable,
                       aEncodedDocumentWithContext.mHTMLContextBuffer,
                       kHTMLContext);
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
     if (!aEncodedDocumentWithContext.mHTMLInfoBuffer.IsEmpty()) {
       // Add the htmlinfo DataFlavor to the transferable
@@ -580,25 +345,12 @@ static nsresult PutToClipboard(
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsCopySupport::HTMLCopy(Selection* aSel, nsIDocument* aDoc,
-                                 int16_t aClipboardID,
-                                 bool aWithRubyAnnotation) {
-  uint32_t flags = nsIDocumentEncoder::SkipInvisibleContent;
-||||||| merged common ancestors
-nsresult
-nsCopySupport::HTMLCopy(Selection* aSel, nsIDocument* aDoc,
-                        int16_t aClipboardID, bool aWithRubyAnnotation)
-{
-  uint32_t flags = nsIDocumentEncoder::SkipInvisibleContent;
-=======
 nsresult nsCopySupport::EncodeDocumentWithContextAndPutToClipboard(
     Selection* aSel, Document* aDoc, int16_t aClipboardID,
     bool aWithRubyAnnotation) {
   NS_ENSURE_TRUE(aDoc, NS_ERROR_NULL_POINTER);
 
   uint32_t additionalFlags = nsIDocumentEncoder::SkipInvisibleContent;
->>>>>>> upstream-releases
   if (aWithRubyAnnotation) {
     additionalFlags |= nsIDocumentEncoder::OutputRubyAnnotation;
   }
@@ -621,22 +373,6 @@ nsresult nsCopySupport::ClearSelectionCache() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsCopySupport::GetTransferableForSelection(
-    Selection* aSel, nsIDocument* aDoc, nsITransferable** aTransferable) {
-  return SelectionCopyHelper(aSel, aDoc, false, 0,
-                             nsIDocumentEncoder::SkipInvisibleContent,
-                             aTransferable);
-||||||| merged common ancestors
-nsresult
-nsCopySupport::GetTransferableForSelection(Selection* aSel,
-                                           nsIDocument* aDoc,
-                                           nsITransferable** aTransferable)
-{
-  return SelectionCopyHelper(aSel, aDoc, false, 0,
-                             nsIDocumentEncoder::SkipInvisibleContent,
-                             aTransferable);
-=======
 /**
  * @param aAdditionalEncoderFlags flags of `nsIDocumentEncoder`.
  * @param aTransferable Needs to be not `nullptr`.
@@ -661,19 +397,8 @@ static nsresult EncodeDocumentWithContextAndCreateTransferable(
 
   transferable.swap(*aTransferable);
   return rv;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsCopySupport::GetTransferableForNode(
-    nsINode* aNode, nsIDocument* aDoc, nsITransferable** aTransferable) {
-||||||| merged common ancestors
-nsresult
-nsCopySupport::GetTransferableForNode(nsINode* aNode,
-                                      nsIDocument* aDoc,
-                                      nsITransferable** aTransferable)
-{
-=======
 nsresult nsCopySupport::GetTransferableForSelection(
     Selection* aSel, Document* aDoc, nsITransferable** aTransferable) {
   NS_ENSURE_TRUE(aDoc, NS_ERROR_NULL_POINTER);
@@ -690,7 +415,6 @@ nsresult nsCopySupport::GetTransferableForNode(
   NS_ENSURE_TRUE(aDoc, NS_ERROR_NULL_POINTER);
   NS_ENSURE_TRUE(aTransferable, NS_ERROR_NULL_POINTER);
 
->>>>>>> upstream-releases
   // Make a temporary selection with aNode in a single range.
   // XXX We should try to get rid of the Selection object here.
   // XXX bug 1245883
@@ -706,45 +430,16 @@ nsresult nsCopySupport::GetTransferableForNode(
     return result.StealNSResult();
   }
   // It's not the primary selection - so don't skip invisible content.
-<<<<<<< HEAD
-  uint32_t flags = 0;
-  return SelectionCopyHelper(selection, aDoc, false, 0, flags, aTransferable);
-||||||| merged common ancestors
-  uint32_t flags = 0;
-  return SelectionCopyHelper(selection, aDoc, false, 0, flags,
-                             aTransferable);
-=======
   uint32_t additionalFlags = 0;
   return EncodeDocumentWithContextAndCreateTransferable(
       *aDoc, selection, additionalFlags, aTransferable);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsCopySupport::GetContents(const nsACString& aMimeType,
-                                    uint32_t aFlags, Selection* aSel,
-                                    nsIDocument* aDoc, nsAString& outdata) {
-  nsCOMPtr<nsIDocumentEncoder> docEncoder =
-      do_createDocumentEncoder(PromiseFlatCString(aMimeType).get());
-||||||| merged common ancestors
-nsresult
-nsCopySupport::GetContents(const nsACString& aMimeType, uint32_t aFlags, Selection *aSel, nsIDocument *aDoc, nsAString& outdata)
-{
-  nsresult rv = NS_OK;
-
-  nsCOMPtr<nsIDocumentEncoder> docEncoder;
-
-  nsAutoCString encoderContractID(NS_DOC_ENCODER_CONTRACTID_BASE);
-  encoderContractID.Append(aMimeType);
-
-  docEncoder = do_CreateInstance(encoderContractID.get());
-=======
 nsresult nsCopySupport::GetContents(const nsACString& aMimeType,
                                     uint32_t aFlags, Selection* aSel,
                                     Document* aDoc, nsAString& outdata) {
   nsCOMPtr<nsIDocumentEncoder> docEncoder =
       do_createDocumentEncoder(PromiseFlatCString(aMimeType).get());
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(docEncoder, NS_ERROR_FAILURE);
 
   uint32_t flags = aFlags | nsIDocumentEncoder::SkipInvisibleContent;
@@ -866,18 +561,6 @@ static nsresult AppendDOMNode(nsITransferable* aTransferable,
   // Note that XHTML is not counted as HTML here, because we can't copy it
   // properly (all the copy code for non-plaintext assumes using HTML
   // serializers and parsers is OK, and those mess up XHTML).
-<<<<<<< HEAD
-  DebugOnly<nsCOMPtr<nsIHTMLDocument>> htmlDoc =
-      nsCOMPtr<nsIHTMLDocument>(do_QueryInterface(document, &rv));
-  NS_ENSURE_SUCCESS(rv, NS_OK);
-
-||||||| merged common ancestors
-  DebugOnly<nsCOMPtr<nsIHTMLDocument>> htmlDoc =
-    nsCOMPtr<nsIHTMLDocument>(do_QueryInterface(document, &rv));
-  NS_ENSURE_SUCCESS(rv, NS_OK);
-
-=======
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(document->IsHTMLDocument(), NS_OK);
 
   // init encoder with document and node
@@ -1009,32 +692,14 @@ static nsresult AppendImagePromise(nsITransferable* aTransferable,
 }
 #endif  // XP_WIN
 
-<<<<<<< HEAD
-nsIContent* nsCopySupport::GetSelectionForCopy(nsIDocument* aDocument,
-                                               Selection** aSelection) {
-||||||| merged common ancestors
-nsIContent*
-nsCopySupport::GetSelectionForCopy(nsIDocument* aDocument, Selection** aSelection)
-{
-=======
 nsIContent* nsCopySupport::GetSelectionForCopy(Document* aDocument,
                                                Selection** aSelection) {
->>>>>>> upstream-releases
   *aSelection = nullptr;
 
-<<<<<<< HEAD
-  nsIPresShell* presShell = aDocument->GetShell();
-  if (!presShell) return nullptr;
-||||||| merged common ancestors
-  nsIPresShell* presShell = aDocument->GetShell();
-  if (!presShell)
-    return nullptr;
-=======
   PresShell* presShell = aDocument->GetPresShell();
   if (!presShell) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIContent> focusedContent;
   nsCOMPtr<nsISelectionController> selectionController =
@@ -1050,19 +715,8 @@ nsIContent* nsCopySupport::GetSelectionForCopy(Document* aDocument,
   return focusedContent;
 }
 
-<<<<<<< HEAD
-bool nsCopySupport::CanCopy(nsIDocument* aDocument) {
-  if (!aDocument) return false;
-||||||| merged common ancestors
-bool
-nsCopySupport::CanCopy(nsIDocument* aDocument)
-{
-  if (!aDocument)
-    return false;
-=======
 bool nsCopySupport::CanCopy(Document* aDocument) {
   if (!aDocument) return false;
->>>>>>> upstream-releases
 
   RefPtr<Selection> sel;
   GetSelectionForCopy(aDocument, getter_AddRefs(sel));
@@ -1105,27 +759,11 @@ static Element* GetElementOrNearestFlattenedTreeParentElement(nsINode* aNode) {
   return nullptr;
 }
 
-<<<<<<< HEAD
-bool nsCopySupport::FireClipboardEvent(EventMessage aEventMessage,
-                                       int32_t aClipboardType,
-                                       nsIPresShell* aPresShell,
-                                       Selection* aSelection,
-                                       bool* aActionTaken) {
-||||||| merged common ancestors
-bool
-nsCopySupport::FireClipboardEvent(EventMessage aEventMessage,
-                                  int32_t aClipboardType,
-                                  nsIPresShell* aPresShell,
-                                  Selection* aSelection,
-                                  bool* aActionTaken)
-{
-=======
 bool nsCopySupport::FireClipboardEvent(EventMessage aEventMessage,
                                        int32_t aClipboardType,
                                        PresShell* aPresShell,
                                        Selection* aSelection,
                                        bool* aActionTaken) {
->>>>>>> upstream-releases
   if (aActionTaken) {
     *aActionTaken = false;
   }
@@ -1139,31 +777,13 @@ bool nsCopySupport::FireClipboardEvent(EventMessage aEventMessage,
                    originalEventMessage == ePaste,
                "Invalid clipboard event type");
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPresShell> presShell = aPresShell;
-  if (!presShell) return false;
-||||||| merged common ancestors
-  nsCOMPtr<nsIPresShell> presShell = aPresShell;
-  if (!presShell)
-    return false;
-=======
   RefPtr<PresShell> presShell = aPresShell;
   if (!presShell) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> doc = presShell->GetDocument();
-  if (!doc) return false;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument> doc = presShell->GetDocument();
-  if (!doc)
-    return false;
-=======
   nsCOMPtr<Document> doc = presShell->GetDocument();
   if (!doc) return false;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsPIDOMWindowOuter> piWindow = doc->GetWindow();
   if (!piWindow) return false;
@@ -1208,14 +828,7 @@ bool nsCopySupport::FireClipboardEvent(EventMessage aEventMessage,
   // next, fire the cut, copy or paste event
   bool doDefault = true;
   RefPtr<DataTransfer> clipboardData;
-<<<<<<< HEAD
-  if (chromeShell ||
-      Preferences::GetBool("dom.event.clipboardevents.enabled", true)) {
-||||||| merged common ancestors
-  if (chromeShell || Preferences::GetBool("dom.event.clipboardevents.enabled", true)) {
-=======
   if (chromeShell || StaticPrefs::dom_event_clipboardevents_enabled()) {
->>>>>>> upstream-releases
     clipboardData =
         new DataTransfer(doc->GetScopeObject(), aEventMessage,
                          originalEventMessage == ePaste, aClipboardType);
@@ -1260,16 +873,9 @@ bool nsCopySupport::FireClipboardEvent(EventMessage aEventMessage,
   // Update the presentation in case the event handler modified the selection,
   // see bug 602231.
   presShell->FlushPendingNotifications(FlushType::Frames);
-<<<<<<< HEAD
-  if (presShell->IsDestroying()) return false;
-||||||| merged common ancestors
-  if (presShell->IsDestroying())
-    return false;
-=======
   if (presShell->IsDestroying()) {
     return false;
   }
->>>>>>> upstream-releases
 
   // if the event was not cancelled, do the default copy. If the event was
   // cancelled, use the data added to the data transfer and copy that instead.

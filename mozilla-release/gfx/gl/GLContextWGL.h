@@ -13,92 +13,6 @@
 namespace mozilla {
 namespace gl {
 
-<<<<<<< HEAD
-class GLContextWGL final : public GLContext {
- public:
-  MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GLContextWGL, override)
-  // From Window: (possibly for offscreen!)
-  GLContextWGL(CreateContextFlags flags, const SurfaceCaps& caps,
-               bool isOffscreen, HDC aDC, HGLRC aContext,
-               HWND aWindow = nullptr);
-
-  // From PBuffer
-  GLContextWGL(CreateContextFlags flags, const SurfaceCaps& caps,
-               bool isOffscreen, HANDLE aPbuffer, HDC aDC, HGLRC aContext,
-               int aPixelFormat);
-
-  ~GLContextWGL();
-
-  virtual GLContextType GetContextType() const override {
-    return GLContextType::WGL;
-  }
-
-  bool Init() override;
-  virtual bool MakeCurrentImpl() const override;
-  virtual bool IsCurrentImpl() const override;
-  virtual bool IsDoubleBuffered() const override { return mIsDoubleBuffered; }
-  virtual bool SwapBuffers() override;
-  virtual bool SetupLookupFunction() override;
-  virtual void GetWSIInfo(nsCString* const out) const override;
-  HGLRC Context() { return mContext; }
-
- protected:
-  friend class GLContextProviderWGL;
-
-  HDC mDC;
-  HGLRC mContext;
-  HWND mWnd;
-  HANDLE mPBuffer;
-  int mPixelFormat;
-
- public:
-  bool mIsDoubleBuffered = false;
-||||||| merged common ancestors
-class GLContextWGL final : public GLContext
-{
-public:
-    MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GLContextWGL, override)
-    // From Window: (possibly for offscreen!)
-    GLContextWGL(CreateContextFlags flags,
-                 const SurfaceCaps& caps,
-                 bool isOffscreen,
-                 HDC aDC,
-                 HGLRC aContext,
-                 HWND aWindow = nullptr);
-
-    // From PBuffer
-    GLContextWGL(CreateContextFlags flags,
-                 const SurfaceCaps& caps,
-                 bool isOffscreen,
-                 HANDLE aPbuffer,
-                 HDC aDC,
-                 HGLRC aContext,
-                 int aPixelFormat);
-
-    ~GLContextWGL();
-
-    virtual GLContextType GetContextType() const override { return GLContextType::WGL; }
-
-    bool Init() override;
-    virtual bool MakeCurrentImpl() const override;
-    virtual bool IsCurrentImpl() const override;
-    virtual bool IsDoubleBuffered() const override { return mIsDoubleBuffered; }
-    virtual bool SwapBuffers() override;
-    virtual bool SetupLookupFunction() override;
-    virtual void GetWSIInfo(nsCString* const out) const override;
-    HGLRC Context() { return mContext; }
-
-protected:
-    friend class GLContextProviderWGL;
-
-    HDC mDC;
-    HGLRC mContext;
-    HWND mWnd;
-    HANDLE mPBuffer;
-    int mPixelFormat;
-public:
-    bool mIsDoubleBuffered = false;
-=======
 class GLContextWGL final : public GLContext {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GLContextWGL, override)
@@ -141,7 +55,6 @@ class GLContextWGL final : public GLContext {
 
  public:
   bool mIsDoubleBuffered = false;
->>>>>>> upstream-releases
 };
 
 }  // namespace gl

@@ -29,35 +29,12 @@ add_task(async function test() {
   const tabFront = tabs.filter(a => a.url == TAB1_URL).pop();
   ok(tabFront, "Should have an actor for the tab");
 
-<<<<<<< HEAD
-  let [response, targetFront] = await client.attachTarget(tabGrip);
-  is(response.type, "tabAttached", "Should have attached");
-||||||| merged common ancestors
-  let [response, targetFront] = await client.attachTarget(tabGrip.actor);
-  is(response.type, "tabAttached", "Should have attached");
-=======
   await tabFront.attach();
->>>>>>> upstream-releases
 
   const previousActorID = tabFront.actorID;
   let response = await tabFront.detach();
   is(response.type, "detached", "Should have detached");
 
-<<<<<<< HEAD
-  const newGrip = tabs.filter(a => a.url == TAB1_URL).pop();
-  is(newGrip.actor, tabGrip.actor, "Should have the same actor for the same tab");
-
-  [response, targetFront] = await client.attachTarget(tabGrip);
-  is(response.type, "tabAttached", "Should have attached");
-  response = await targetFront.detach();
-||||||| merged common ancestors
-  const newGrip = tabs.filter(a => a.url == TAB1_URL).pop();
-  is(newGrip.actor, tabGrip.actor, "Should have the same actor for the same tab");
-
-  [response, targetFront] = await client.attachTarget(tabGrip.actor);
-  is(response.type, "tabAttached", "Should have attached");
-  response = await targetFront.detach();
-=======
   tabs = await client.mainRoot.listTabs();
   const newFront = tabs.find(a => a.url == TAB1_URL);
   is(
@@ -69,7 +46,6 @@ add_task(async function test() {
 
   await newFront.attach();
   response = await newFront.detach();
->>>>>>> upstream-releases
   is(response.type, "detached", "Should have detached");
 
   await removeTab(tab);

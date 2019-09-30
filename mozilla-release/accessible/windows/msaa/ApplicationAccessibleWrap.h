@@ -27,17 +27,11 @@ class ApplicationAccessibleWrap : public ApplicationAccessible,
   virtual already_AddRefed<nsIPersistentProperties> NativeAttributes() override;
 
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleApplication
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_appName(
-<<<<<<< HEAD
-      /* [retval][out] */ BSTR *name);
-||||||| merged common ancestors
-            /* [retval][out] */ BSTR *name);
-=======
       /* [retval][out] */ BSTR* name);
->>>>>>> upstream-releases
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_appVersion(
       /* [retval][out] */ BSTR* version);
@@ -46,14 +40,7 @@ class ApplicationAccessibleWrap : public ApplicationAccessible,
       /* [retval][out] */ BSTR* name);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_toolkitVersion(
-<<<<<<< HEAD
-      /* [retval][out] */ BSTR *version);
-||||||| merged common ancestors
-          /* [retval][out] */ BSTR *version);
-
-=======
       /* [retval][out] */ BSTR* version);
->>>>>>> upstream-releases
 };
 
 }  // namespace a11y

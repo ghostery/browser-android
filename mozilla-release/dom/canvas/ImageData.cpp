@@ -106,13 +106,6 @@ bool ImageData::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
   return ImageData_Binding::Wrap(aCx, this, aGivenProto, aReflector);
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 // static
 already_AddRefed<ImageData> ImageData::ReadStructuredClone(
     JSContext* aCx, nsIGlobalObject* aGlobal,
@@ -144,4 +137,3 @@ bool ImageData::WriteStructuredClone(JSContext* aCx,
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

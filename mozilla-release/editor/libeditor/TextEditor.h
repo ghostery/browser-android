@@ -63,19 +63,6 @@ class TextEditor : public EditorBase, public nsIPlaintextEditor {
   MOZ_CAN_RUN_SCRIPT
   NS_IMETHOD SetDocumentCharacterSet(const nsACString& characterSet) override;
 
-<<<<<<< HEAD
-  // If there are some good name to create non-virtual Undo()/Redo() methods,
-  // we should create them and those methods should just run them.
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  NS_IMETHOD Undo(uint32_t aCount) final;
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  NS_IMETHOD Redo(uint32_t aCount) final;
-||||||| merged common ancestors
-  // If there are some good name to create non-virtual Undo()/Redo() methods,
-  // we should create them and those methods should just run them.
-  NS_IMETHOD Undo(uint32_t aCount) final;
-  NS_IMETHOD Redo(uint32_t aCount) final;
-=======
   /**
    * Do "undo" or "redo".
    *
@@ -98,7 +85,6 @@ class TextEditor : public EditorBase, public nsIPlaintextEditor {
    *                            When nullptr, this checks it automatically.
    */
   MOZ_CAN_RUN_SCRIPT nsresult CutAsAction(nsIPrincipal* aPrincipal = nullptr);
->>>>>>> upstream-releases
 
   bool CanCut() const;
   NS_IMETHOD Copy() override;
@@ -173,16 +159,9 @@ class TextEditor : public EditorBase, public nsIPlaintextEditor {
    *                            JS.  If set to nullptr, will be treated as
    *                            called by system.
    */
-<<<<<<< HEAD
-  nsresult PasteAsAction(int32_t aClipboardType, bool aDispatchPasteEvent);
-||||||| merged common ancestors
-  nsresult PasteAsAction(int32_t aClipboardType,
-                         bool aDispatchPasteEvent);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult PasteAsAction(int32_t aClipboardType,
                                             bool aDispatchPasteEvent,
                                             nsIPrincipal* aPrincipal = nullptr);
->>>>>>> upstream-releases
 
   /**
    * InsertTextAsAction() inserts aStringToInsert at selection.
@@ -267,29 +246,15 @@ class TextEditor : public EditorBase, public nsIPlaintextEditor {
                       nsIPrincipal* aPrincipal = nullptr);
 
   /**
-<<<<<<< HEAD
-   * InsertLineBreakAsAction() is called when user inputs a line break with
-   * Enter or something.
-||||||| merged common ancestors
-   * OnInputParagraphSeparator() is called when user tries to separate current
-   * paragraph with Enter key press or something.
-=======
    * InsertLineBreakAsAction() is called when user inputs a line break with
    * Enter or something.
    *
    * @param aPrincipal          Set subject principal if it may be called by
    *                            JS.  If set to nullptr, will be treated as
    *                            called by system.
->>>>>>> upstream-releases
    */
-<<<<<<< HEAD
-  virtual nsresult InsertLineBreakAsAction();
-||||||| merged common ancestors
-  nsresult OnInputParagraphSeparator();
-=======
   MOZ_CAN_RUN_SCRIPT virtual nsresult InsertLineBreakAsAction(
       nsIPrincipal* aPrincipal = nullptr);
->>>>>>> upstream-releases
 
   /**
    * OnCompositionStart() is called when editor receives eCompositionStart
@@ -330,20 +295,6 @@ class TextEditor : public EditorBase, public nsIPlaintextEditor {
    * @param aCharset                Encoding of the document.
    */
   nsresult ComputeTextValue(uint32_t aDocumentEncoderFlags,
-<<<<<<< HEAD
-                            nsAString& aOutputString) const {
-    AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
-    if (NS_WARN_IF(!editActionData.CanHandle())) {
-      return NS_ERROR_NOT_INITIALIZED;
-    }
-    return ComputeValueInternal(NS_LITERAL_STRING("text/plain"),
-                                aDocumentEncoderFlags, aOutputString);
-||||||| merged common ancestors
-                            nsAString& aOutputString) const
-  {
-    return ComputeValueInternal(NS_LITERAL_STRING("text/plain"),
-                                aDocumentEncoderFlags, aOutputString);
-=======
                             nsAString& aOutputString) const {
     AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
     if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -355,14 +306,8 @@ class TextEditor : public EditorBase, public nsIPlaintextEditor {
       return EditorBase::ToGenericNSResult(rv);
     }
     return NS_OK;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
- protected:  // May be called by friends.
-||||||| merged common ancestors
-protected: // May be called by friends.
-=======
   /**
    * Similar to the setter for wrapWidth, but just sets the editor
    * internal state without actually changing the content being edited
@@ -372,7 +317,6 @@ protected: // May be called by friends.
   void SetWrapColumn(int32_t aWrapColumn) { mWrapColumn = aWrapColumn; }
 
  protected:  // May be called by friends.
->>>>>>> upstream-releases
   /****************************************************************************
    * Some classes like TextEditRules, HTMLEditRules, WSRunObject which are
    * part of handling edit actions are allowed to call the following protected
@@ -385,18 +329,9 @@ protected: // May be called by friends.
   // Overrides of EditorBase
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult RemoveAttributeOrEquivalent(
-<<<<<<< HEAD
-      Element* aElement, nsAtom* aAttribute,
-      bool aSuppressTransaction) override;
-||||||| merged common ancestors
-                     Element* aElement,
-                     nsAtom* aAttribute,
-                     bool aSuppressTransaction) override;
-=======
       Element* aElement, nsAtom* aAttribute,
       bool aSuppressTransaction) override;
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   virtual nsresult SetAttributeOrEquivalent(Element* aElement,
                                             nsAtom* aAttribute,
                                             const nsAString& aValue,
@@ -433,18 +368,9 @@ protected: // May be called by friends.
    * @param aStripWrappers      Whether the parent blocks should be removed
    *                            when they become empty.
    */
-<<<<<<< HEAD
-  virtual nsresult DeleteSelectionWithTransaction(
-      EDirection aAction, EStripWrappers aStripWrappers);
-||||||| merged common ancestors
-  virtual nsresult
-  DeleteSelectionWithTransaction(EDirection aAction,
-                                 EStripWrappers aStripWrappers);
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult DeleteSelectionWithTransaction(
       EDirection aAction, EStripWrappers aStripWrappers);
->>>>>>> upstream-releases
 
   /**
    * Replace existed string with aString.  Caller must guarantee that there
@@ -477,22 +403,8 @@ protected: // May be called by friends.
    * @return                    The new <br> node.  If failed to create new
    *                            <br> node, returns nullptr.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  already_AddRefed<Element> InsertBrElementWithTransaction(
-      const EditorDOMPointBase<PT, CT>& aPointToInsert,
-      EDirection aSelect = eNone);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  already_AddRefed<Element>
-  InsertBrElementWithTransaction(
-    Selection& aSelection,
-    const EditorDOMPointBase<PT, CT>& aPointToInsert,
-    EDirection aSelect = eNone);
-=======
   MOZ_CAN_RUN_SCRIPT already_AddRefed<Element> InsertBrElementWithTransaction(
       const EditorDOMPoint& aPointToInsert, EDirection aSelect = eNone);
->>>>>>> upstream-releases
 
   /**
    * Extends the selection for given deletion operation
@@ -512,22 +424,10 @@ protected: // May be called by friends.
   static void GetDefaultEditorPrefs(int32_t& aNewLineHandling,
                                     int32_t& aCaretStyle);
 
-<<<<<<< HEAD
- protected:  // Called by helper classes.
-  virtual void OnStartToHandleTopLevelEditSubAction(
-      EditSubAction aEditSubAction, nsIEditor::EDirection aDirection) override;
-||||||| merged common ancestors
-protected: // Called by helper classes.
-
-  virtual void
-  OnStartToHandleTopLevelEditSubAction(
-    EditSubAction aEditSubAction, nsIEditor::EDirection aDirection) override;
-=======
  protected:  // Called by helper classes.
   virtual void OnStartToHandleTopLevelEditSubAction(
       EditSubAction aEditSubAction, nsIEditor::EDirection aDirection) override;
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   virtual void OnEndHandlingTopLevelEditSubAction() override;
 
   void BeginEditorInit();
@@ -542,14 +442,8 @@ protected: // Called by helper classes.
   /**
    * Make the given selection span the entire document.
    */
-<<<<<<< HEAD
-  virtual nsresult SelectEntireDocument() override;
-||||||| merged common ancestors
-  virtual nsresult SelectEntireDocument(Selection* aSelection) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult SelectEntireDocument() override;
->>>>>>> upstream-releases
 
   /**
    * OnInputText() is called when user inputs text with keyboard or something.
@@ -593,35 +487,6 @@ protected: // Called by helper classes.
                         const EditorDOMPoint& aPointToInsert,
                         bool aDoDeleteSelection);
 
-<<<<<<< HEAD
-  /**
-   * InsertFromDataTransfer() inserts the data in aDataTransfer at aIndex.
-   * This is intended to handle "drop" event.
-   *
-   * @param aDataTransfer       Dropped data transfer.
-   * @param aIndex              Index of the data which should be inserted.
-   * @param aSourceDoc          The document which the source comes from.
-   * @param aDroppedAt          The dropped position.
-   * @param aDoDeleteSelection  true if this should delete selected content.
-   *                            false otherwise.
-   */
-  MOZ_CAN_RUN_SCRIPT
-  virtual nsresult InsertFromDataTransfer(dom::DataTransfer* aDataTransfer,
-                                          int32_t aIndex,
-                                          nsIDocument* aSourceDoc,
-                                          const EditorDOMPoint& aDroppedAt,
-                                          bool aDoDeleteSelection);
-
-||||||| merged common ancestors
-  virtual nsresult InsertFromDataTransfer(dom::DataTransfer* aDataTransfer,
-                                          int32_t aIndex,
-                                          nsIDocument* aSourceDoc,
-                                          nsINode* aDestinationNode,
-                                          int32_t aDestOffset,
-                                          bool aDoDeleteSelection) override;
-
-=======
->>>>>>> upstream-releases
   /**
    * InsertWithQuotationsAsSubAction() inserts aQuotedText with appending ">"
    * to start of every line.
@@ -700,24 +565,9 @@ protected: // Called by helper classes.
   nsresult SharedOutputString(uint32_t aFlags, bool* aIsCollapsed,
                               nsAString& aResult);
 
-<<<<<<< HEAD
-  enum PasswordFieldAllowed { ePasswordFieldAllowed, ePasswordFieldNotAllowed };
-  bool CanCutOrCopy(PasswordFieldAllowed aPasswordFieldAllowed);
-  bool FireClipboardEvent(EventMessage aEventMessage, int32_t aSelectionType,
-||||||| merged common ancestors
-  enum PasswordFieldAllowed
-  {
-    ePasswordFieldAllowed,
-    ePasswordFieldNotAllowed
-  };
-  bool CanCutOrCopy(PasswordFieldAllowed aPasswordFieldAllowed);
-  bool FireClipboardEvent(EventMessage aEventMessage,
-                          int32_t aSelectionType,
-=======
   enum PasswordFieldAllowed { ePasswordFieldAllowed, ePasswordFieldNotAllowed };
   bool CanCutOrCopy(PasswordFieldAllowed aPasswordFieldAllowed) const;
   bool FireClipboardEvent(EventMessage aEventMessage, int32_t aSelectionType,
->>>>>>> upstream-releases
                           bool* aActionTaken = nullptr);
 
   MOZ_CAN_RUN_SCRIPT bool UpdateMetaCharset(Document& aDocument,

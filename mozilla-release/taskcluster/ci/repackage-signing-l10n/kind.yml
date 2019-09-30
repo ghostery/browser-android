@@ -14,30 +14,6 @@ kind-dependencies:
     - repackage-l10n
 
 only-for-build-platforms:
-<<<<<<< HEAD
-   - win32-nightly/opt
-   - win32-devedition-nightly/opt
-   - win32/opt
-   - win64-nightly/opt
-   - win64-devedition-nightly/opt
-   - win64/opt
-   - win64-asan-reporter-nightly/opt
-||||||| merged common ancestors
-   - linux-nightly/opt
-   - linux-devedition-nightly/opt
-   - linux64-nightly/opt
-   - linux64-devedition-nightly/opt
-   - linux64-asan-reporter-nightly/opt
-   - macosx64-nightly/opt
-   - macosx64-devedition-nightly/opt
-   - win32-nightly/opt
-   - win32-devedition-nightly/opt
-   - win32/opt
-   - win64-nightly/opt
-   - win64-devedition-nightly/opt
-   - win64/opt
-   - win64-asan-reporter-nightly/opt
-=======
     - win32-shippable/opt
     - win32-nightly/opt
     - win32-devedition-nightly/opt
@@ -50,4 +26,3 @@ only-for-build-platforms:
     - win64-aarch64-nightly/opt
     - win64-aarch64-devedition-nightly/opt
     - win64-asan-reporter-nightly/opt
->>>>>>> upstream-releases

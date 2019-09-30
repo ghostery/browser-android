@@ -7,15 +7,9 @@ const PREF_DISABLE_FX_SCREENSHOTS = "extensions.screenshots.disabled";
 
 async function checkScreenshots(shouldBeEnabled) {
   return BrowserTestUtils.waitForCondition(() => {
-<<<<<<< HEAD
-    return !!PageActions.actionForID("screenshots_mozilla_org") == shouldBeEnabled;
-||||||| merged common ancestors
-    return !!PageActions.actionForID("screenshots") == shouldBeEnabled;
-=======
     return (
       !!PageActions.actionForID("screenshots_mozilla_org") == shouldBeEnabled
     );
->>>>>>> upstream-releases
   }, "Expecting screenshots to be " + shouldBeEnabled);
 }
 

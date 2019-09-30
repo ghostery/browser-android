@@ -4,20 +4,6 @@
 
 //! Specified types for SVG properties.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::generics::svg as generic;
-use crate::values::specified::color::Color;
-use crate::values::specified::url::SpecifiedUrl;
-use crate::values::specified::LengthOrPercentage;
-use crate::values::specified::{NonNegativeLengthOrPercentage, NonNegativeNumber};
-use crate::values::specified::{Number, Opacity};
-use crate::values::CustomIdent;
-use cssparser::Parser;
-||||||| merged common ancestors
-use cssparser::Parser;
-use parser::{Parse, ParserContext};
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::generics::svg as generic;
 use crate::values::specified::color::Color;
@@ -27,7 +13,6 @@ use crate::values::specified::LengthPercentage;
 use crate::values::specified::{NonNegativeLengthPercentage, Opacity};
 use crate::values::CustomIdent;
 use cssparser::{Parser, Token};
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CommaWithSpace, CssWriter, ParseError, Separator};
 use style_traits::{StyleParseErrorKind, ToCss};
@@ -35,66 +20,8 @@ use style_traits::{StyleParseErrorKind, ToCss};
 /// Specified SVG Paint value
 pub type SVGPaint = generic::GenericSVGPaint<Color, SpecifiedUrl>;
 
-<<<<<<< HEAD
-/// Specified SVG Paint Kind value
-pub type SVGPaintKind = generic::SVGPaintKind<Color, SpecifiedUrl>;
-
-#[cfg(feature = "gecko")]
-fn is_context_value_enabled() -> bool {
-    // The prefs can only be mutated on the main thread, so it is safe
-    // to read whenever we are on the main thread or the main thread is
-    // blocked.
-    use crate::gecko_bindings::structs::mozilla;
-    unsafe { mozilla::StaticPrefs_sVarCache_gfx_font_rendering_opentype_svg_enabled }
-}
-#[cfg(not(feature = "gecko"))]
-fn is_context_value_enabled() -> bool {
-    false
-}
-
-fn parse_context_value<'i, 't, T>(
-    input: &mut Parser<'i, 't>,
-    value: T,
-) -> Result<T, ParseError<'i>> {
-    if !is_context_value_enabled() {
-        return Err(input.new_custom_error(StyleParseErrorKind::UnspecifiedError));
-    }
-
-    input.expect_ident_matching("context-value")?;
-    Ok(value)
-}
-||||||| merged common ancestors
-/// Specified SVG Paint Kind value
-pub type SVGPaintKind = generic::SVGPaintKind<Color, SpecifiedUrl>;
-
-#[cfg(feature = "gecko")]
-fn is_context_value_enabled() -> bool {
-    // The prefs can only be mutated on the main thread, so it is safe
-    // to read whenever we are on the main thread or the main thread is
-    // blocked.
-    use gecko_bindings::structs::mozilla;
-    unsafe { mozilla::StaticPrefs_sVarCache_gfx_font_rendering_opentype_svg_enabled }
-}
-#[cfg(not(feature = "gecko"))]
-fn is_context_value_enabled() -> bool {
-    false
-}
-
-fn parse_context_value<'i, 't, T>(
-    input: &mut Parser<'i, 't>,
-    value: T,
-) -> Result<T, ParseError<'i>> {
-    if !is_context_value_enabled() {
-        return Err(input.new_custom_error(StyleParseErrorKind::UnspecifiedError));
-    }
-
-    input.expect_ident_matching("context-value")?;
-    Ok(value)
-}
-=======
 /// <length> | <percentage> | <number> | context-value
 pub type SVGLength = generic::SVGLength<LengthPercentage>;
->>>>>>> upstream-releases
 
 /// A non-negative version of SVGLength.
 pub type SVGWidth = generic::SVGLength<NonNegativeLengthPercentage>;

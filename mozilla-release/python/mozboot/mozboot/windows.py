@@ -99,18 +99,11 @@ class WindowsBootstrapper(BaseBootstrapper):
     def install_mobile_android_artifact_mode_packages(self):
         raise NotImplementedError('We do not support building Android on Windows. Sorry!')
 
-<<<<<<< HEAD
-    def ensure_clang_static_analysis_package(self, checkout_root):
-        self.install_toolchain_static_analysis(checkout_root)
-
-||||||| merged common ancestors
-=======
     def ensure_clang_static_analysis_package(self, state_dir, checkout_root):
         from mozboot import static_analysis
         self.install_toolchain_static_analysis(
             state_dir, checkout_root, static_analysis.WINDOWS_CLANG_TIDY)
 
->>>>>>> upstream-releases
     def ensure_stylo_packages(self, state_dir, checkout_root):
         # On-device artifact builds are supported; on-device desktop builds are not.
         if is_aarch64_host():

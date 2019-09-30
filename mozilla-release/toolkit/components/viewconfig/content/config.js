@@ -145,16 +145,9 @@ var view = {
   },
   selectionChanged() {},
   cycleCell(row, col) {},
-<<<<<<< HEAD
-  isEditable(row, col) { return false; },
-||||||| merged common ancestors
-  isEditable(row, col) { return false; },
-  isSelectable(row, col) { return false; },
-=======
   isEditable(row, col) {
     return false;
   },
->>>>>>> upstream-releases
   setCellValue(row, col, value) {},
   setCellText(row, col, value) {},
   performAction(action) {},

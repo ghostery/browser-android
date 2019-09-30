@@ -22,23 +22,10 @@ class SMILTimeValue;
 //
 // Common base class for a time base that can be paused, resumed, and sampled.
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-class nsSMILTimeContainer {
- public:
-  nsSMILTimeContainer();
-  virtual ~nsSMILTimeContainer();
-||||||| merged common ancestors
-class nsSMILTimeContainer
-{
-public:
-  nsSMILTimeContainer();
-  virtual ~nsSMILTimeContainer();
-=======
 class SMILTimeContainer {
  public:
   SMILTimeContainer();
   virtual ~SMILTimeContainer();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h
 
   /*
    * Pause request types.
@@ -214,16 +201,8 @@ class SMILTimeContainer {
    *                              appended.
    * @return true if one or more elements match, false otherwise.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-  bool PopMilestoneElementsAtMilestone(const nsSMILMilestone& aMilestone,
-                                       AnimElemArray& aMatchedElements);
-||||||| merged common ancestors
-  bool PopMilestoneElementsAtMilestone(const nsSMILMilestone& aMilestone,
-                                         AnimElemArray& aMatchedElements);
-=======
   bool PopMilestoneElementsAtMilestone(const SMILMilestone& aMilestone,
                                        AnimElemArray& aMatchedElements);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h
 
   // Cycle-collection support
   void Traverse(nsCycleCollectionTraversalCallback* aCallback);
@@ -244,27 +223,14 @@ class SMILTimeContainer {
   /*
    * Adds a child time container.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-  virtual nsresult AddChild(nsSMILTimeContainer& aChild) {
-||||||| merged common ancestors
-  virtual nsresult AddChild(nsSMILTimeContainer& aChild)
-  {
-=======
   virtual nsresult AddChild(SMILTimeContainer& aChild) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h
     return NS_ERROR_FAILURE;
   }
 
   /*
    * Removes a child time container.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-  virtual void RemoveChild(nsSMILTimeContainer& aChild) {}
-||||||| merged common ancestors
-  virtual void RemoveChild(nsSMILTimeContainer& aChild) { }
-=======
   virtual void RemoveChild(SMILTimeContainer& aChild) {}
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h
 
   /*
    * Implementation helper to update the current time.
@@ -308,17 +274,8 @@ class SMILTimeContainer {
   // A bitfield of the pause state for all pause requests
   uint32_t mPauseState;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-  struct MilestoneEntry {
-    MilestoneEntry(const nsSMILMilestone& aMilestone,
-||||||| merged common ancestors
-  struct MilestoneEntry
-  {
-    MilestoneEntry(const nsSMILMilestone& aMilestone,
-=======
   struct MilestoneEntry {
     MilestoneEntry(const SMILMilestone& aMilestone,
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h
                    mozilla::dom::SVGAnimationElement& aElement)
         : mMilestone(aMilestone), mTimebase(&aElement) {}
 
@@ -326,13 +283,7 @@ class SMILTimeContainer {
       return mMilestone < aOther.mMilestone;
     }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-    nsSMILMilestone mMilestone;  // In container time.
-||||||| merged common ancestors
-    nsSMILMilestone mMilestone; // In container time.
-=======
     SMILMilestone mMilestone;  // In container time.
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h
     RefPtr<mozilla::dom::SVGAnimationElement> mTimebase;
   };
 
@@ -344,12 +295,6 @@ class SMILTimeContainer {
   nsTPriorityQueue<MilestoneEntry> mMilestoneEntries;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.h
-#endif  // NS_SMILTIMECONTAINER_H_
-||||||| merged common ancestors
-#endif // NS_SMILTIMECONTAINER_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILTimeContainer_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.h

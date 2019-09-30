@@ -23,12 +23,7 @@
   </tabbox>
 
   <script type="application/javascript"><![CDATA[
-<<<<<<< HEAD
-    ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
-||||||| merged common ancestors
-=======
     const {BrowserTestUtils} = ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
->>>>>>> upstream-releases
 
     SimpleTest.waitForExplicitFinish();
 

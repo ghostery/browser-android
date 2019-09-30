@@ -266,73 +266,8 @@ bool js::math_floor(JSContext* cx, unsigned argc, Value* vp) {
   if (args.length() == 0) {
     args.rval().setNaN();
     return true;
-<<<<<<< HEAD
   }
 
-  return math_floor_handle(cx, args[0], args.rval());
-}
-||||||| merged common ancestors
-}
-
-bool
-js::math_imul(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    return math_imul_handle(cx, args.get(0), args.get(1), args.rval());
-}
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool js::math_imul_handle(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                          MutableHandleValue res) {
-  int32_t a = 0, b = 0;
-  if (!lhs.isUndefined() && !ToInt32(cx, lhs, &a)) {
-    return false;
-  }
-  if (!rhs.isUndefined() && !ToInt32(cx, rhs, &b)) {
-    return false;
-  }
-
-  res.setInt32(WrappingMultiply(a, b));
-  return true;
-||||||| merged common ancestors
-// Implements Math.fround (20.2.2.16) up to step 3
-bool
-js::RoundFloat32(JSContext* cx, HandleValue v, float* out)
-{
-    double d;
-    bool success = ToNumber(cx, v, &d);
-    *out = static_cast<float>(d);
-    return success;
-}
-
-bool
-js::RoundFloat32(JSContext* cx, HandleValue arg, MutableHandleValue res)
-{
-    float f;
-    if (!RoundFloat32(cx, arg, &f)) {
-        return false;
-    }
-
-    res.setDouble(static_cast<double>(f));
-    return true;
-}
-
-bool
-js::math_fround(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    if (args.length() == 0) {
-        args.rval().setNaN();
-        return true;
-    }
-
-    return RoundFloat32(cx, args[0], args.rval());
-=======
   return math_floor_handle(cx, args[0], args.rval());
 }
 
@@ -348,13 +283,11 @@ bool js::math_imul_handle(JSContext* cx, HandleValue lhs, HandleValue rhs,
 
   res.setInt32(WrappingMultiply(a, b));
   return true;
->>>>>>> upstream-releases
 }
 
 bool js::math_imul(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
-<<<<<<< HEAD
   return math_imul_handle(cx, args.get(0), args.get(1), args.rval());
 }
 
@@ -364,35 +297,6 @@ bool js::RoundFloat32(JSContext* cx, HandleValue v, float* out) {
   bool success = ToNumber(cx, v, &d);
   *out = static_cast<float>(d);
   return success;
-||||||| merged common ancestors
-double
-js::math_log_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-    return fdlibm::log(x);
-}
-
-bool
-js::math_log_handle(JSContext* cx, HandleValue val, MutableHandleValue res)
-{
-    return math_function<math_log_impl>(cx, val, res);
-}
-
-bool
-js::math_log(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_log_impl>(cx, argc, vp);
-=======
-  return math_imul_handle(cx, args.get(0), args.get(1), args.rval());
-}
-
-// Implements Math.fround (20.2.2.16) up to step 3
-bool js::RoundFloat32(JSContext* cx, HandleValue v, float* out) {
-  double d;
-  bool success = ToNumber(cx, v, &d);
-  *out = static_cast<float>(d);
-  return success;
->>>>>>> upstream-releases
 }
 
 bool js::RoundFloat32(JSContext* cx, HandleValue arg, MutableHandleValue res) {
@@ -430,7 +334,6 @@ bool js::math_log(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_log_impl>(cx, argc, vp);
 }
 
-<<<<<<< HEAD
 double js::math_max_impl(double x, double y) {
   AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
 
@@ -439,57 +342,6 @@ double js::math_max_impl(double x, double y) {
     return x;
   }
   return y;
-||||||| merged common ancestors
-double
-js::ecmaPow(double x, double y)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-
-    /*
-     * Use powi if the exponent is an integer-valued double. We don't have to
-     * check for NaN since a comparison with NaN is always false.
-     */
-    int32_t yi;
-    if (NumberEqualsInt32(y, &yi)) {
-        return powi(x, yi);
-    }
-
-    /*
-     * Because C99 and ECMA specify different behavior for pow(),
-     * we need to wrap the libm call to make it ECMA compliant.
-     */
-    if (!IsFinite(y) && (x == 1.0 || x == -1.0)) {
-        return GenericNaN();
-    }
-
-    /* pow(x, +-0) is always 1, even for x = NaN (MSVC gets this wrong). */
-    if (y == 0) {
-        return 1;
-    }
-
-    /*
-     * Special case for square roots. Note that pow(x, 0.5) != sqrt(x)
-     * when x = -0.0, so we have to guard for this.
-     */
-    if (IsFinite(x) && x != 0.0) {
-        if (y == 0.5) {
-            return sqrt(x);
-        }
-        if (y == -0.5) {
-            return 1.0 / sqrt(x);
-        }
-    }
-    return pow(x, y);
-=======
-double js::math_max_impl(double x, double y) {
-  AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-
-  // Math.max(num, NaN) => NaN, Math.max(-0, +0) => +0
-  if (x > y || IsNaN(x) || (x == y && IsNegative(y))) {
-    return x;
-  }
-  return y;
->>>>>>> upstream-releases
 }
 
 bool js::math_max(JSContext* cx, unsigned argc, Value* vp) {
@@ -763,449 +615,124 @@ bool js::math_sin(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_sin_impl>(cx, argc, vp);
 }
 
-<<<<<<< HEAD
-void js::math_sincos_impl(double x, double* sin, double* cos) {
-  AutoUnsafeCallWithABI unsafe;
-#if defined(HAVE_SINCOS)
-  sincos(x, sin, cos);
-#elif defined(HAVE___SINCOS)
-  __sincos(x, sin, cos);
-#else
-  *sin = js::math_sin_impl(x);
-  *cos = js::math_cos_impl(x);
-#endif
-||||||| merged common ancestors
-void
-js::math_sincos_impl(double x, double *sin, double *cos)
-{
-    AutoUnsafeCallWithABI unsafe;
-#if defined(HAVE_SINCOS)
-    sincos(x, sin, cos);
-#elif defined(HAVE___SINCOS)
-    __sincos(x, sin, cos);
-#else
-    *sin = js::math_sin_impl(x);
-    *cos = js::math_cos_impl(x);
-#endif
-=======
 double js::math_sqrt_impl(double x) {
   AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
   return sqrt(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_sqrt_impl(double x) {
-  AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-  return sqrt(x);
-||||||| merged common ancestors
-double
-js::math_sqrt_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-    return sqrt(x);
-=======
 bool js::math_sqrt_handle(JSContext* cx, HandleValue number,
                           MutableHandleValue result) {
   return math_function<math_sqrt_impl>(cx, number, result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_sqrt_handle(JSContext* cx, HandleValue number,
-                          MutableHandleValue result) {
-  return math_function<math_sqrt_impl>(cx, number, result);
-||||||| merged common ancestors
-bool
-js::math_sqrt_handle(JSContext* cx, HandleValue number, MutableHandleValue result)
-{
-    return math_function<math_sqrt_impl>(cx, number, result);
-=======
 bool js::math_sqrt(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_sqrt_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_sqrt(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_sqrt_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_sqrt(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_sqrt_impl>(cx, argc, vp);
-=======
 double js::math_tan_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return tan(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_tan_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return tan(x);
-||||||| merged common ancestors
-double
-js::math_tan_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return tan(x);
-=======
 bool js::math_tan(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_tan_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_tan(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_tan_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_tan(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_tan_impl>(cx, argc, vp);
-=======
 double js::math_log10_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::log10(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_log10_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::log10(x);
-||||||| merged common ancestors
-double
-js::math_log10_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::log10(x);
-=======
 bool js::math_log10(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_log10_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_log10(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_log10_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_log10(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_log10_impl>(cx, argc, vp);
-=======
 double js::math_log2_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::log2(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_log2_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::log2(x);
-||||||| merged common ancestors
-double
-js::math_log2_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::log2(x);
-=======
 bool js::math_log2(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_log2_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_log2(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_log2_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_log2(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_log2_impl>(cx, argc, vp);
-=======
 double js::math_log1p_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::log1p(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_log1p_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::log1p(x);
-||||||| merged common ancestors
-double
-js::math_log1p_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::log1p(x);
-=======
 bool js::math_log1p(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_log1p_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_log1p(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_log1p_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_log1p(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_log1p_impl>(cx, argc, vp);
-=======
 double js::math_expm1_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::expm1(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_expm1_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::expm1(x);
-||||||| merged common ancestors
-double
-js::math_expm1_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::expm1(x);
-=======
 bool js::math_expm1(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_expm1_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_expm1(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_expm1_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_expm1(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_expm1_impl>(cx, argc, vp);
-=======
 double js::math_cosh_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::cosh(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_cosh_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::cosh(x);
-||||||| merged common ancestors
-double
-js::math_cosh_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::cosh(x);
-=======
 bool js::math_cosh(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_cosh_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_cosh(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_cosh_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_cosh(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_cosh_impl>(cx, argc, vp);
-=======
 double js::math_sinh_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::sinh(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_sinh_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::sinh(x);
-||||||| merged common ancestors
-double
-js::math_sinh_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::sinh(x);
-=======
 bool js::math_sinh(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_sinh_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_sinh(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_sinh_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_sinh(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_sinh_impl>(cx, argc, vp);
-=======
 double js::math_tanh_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::tanh(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_tanh_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::tanh(x);
-||||||| merged common ancestors
-
-double
-js::math_tanh_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::tanh(x);
-=======
 bool js::math_tanh(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_tanh_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_tanh(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_tanh_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_tanh(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_tanh_impl>(cx, argc, vp);
-=======
 double js::math_acosh_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::acosh(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_acosh_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::acosh(x);
-||||||| merged common ancestors
-double
-js::math_acosh_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::acosh(x);
-=======
 bool js::math_acosh(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_acosh_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_acosh(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_acosh_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_acosh(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_acosh_impl>(cx, argc, vp);
-=======
 double js::math_asinh_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::asinh(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_asinh_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::asinh(x);
-||||||| merged common ancestors
-double
-js::math_asinh_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::asinh(x);
-=======
 bool js::math_asinh(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_asinh_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_asinh(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_asinh_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_asinh(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_asinh_impl>(cx, argc, vp);
-=======
 double js::math_atanh_impl(double x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::atanh(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::math_atanh_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::atanh(x);
-||||||| merged common ancestors
-double
-js::math_atanh_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::atanh(x);
-=======
 bool js::math_atanh(JSContext* cx, unsigned argc, Value* vp) {
   return math_function<math_atanh_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::math_atanh(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_atanh_impl>(cx, argc, vp);
-||||||| merged common ancestors
-bool
-js::math_atanh(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_atanh_impl>(cx, argc, vp);
-=======
 double js::ecmaHypot(double x, double y) {
   AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
   return fdlibm::hypot(x, y);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-double js::ecmaHypot(double x, double y) {
-  AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-  return fdlibm::hypot(x, y);
-||||||| merged common ancestors
-double
-js::ecmaHypot(double x, double y)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-    return fdlibm::hypot(x, y);
-=======
-static inline void hypot_step(double& scale, double& sumsq, double x) {
-  double xabs = mozilla::Abs(x);
-  if (scale < xabs) {
-    sumsq = 1 + sumsq * (scale / xabs) * (scale / xabs);
-    scale = xabs;
-  } else if (scale != 0) {
-    sumsq += (xabs / scale) * (xabs / scale);
-  }
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 static inline void hypot_step(double& scale, double& sumsq, double x) {
   double xabs = mozilla::Abs(x);
   if (scale < xabs) {
@@ -1215,134 +742,29 @@ static inline void hypot_step(double& scale, double& sumsq, double x) {
     sumsq += (xabs / scale) * (xabs / scale);
   }
 }
-||||||| merged common ancestors
-static inline
-void
-hypot_step(double& scale, double& sumsq, double x)
-{
-    double xabs = mozilla::Abs(x);
-    if (scale < xabs) {
-        sumsq = 1 + sumsq * (scale / xabs) * (scale / xabs);
-        scale = xabs;
-    } else if (scale != 0) {
-        sumsq += (xabs / scale) * (xabs / scale);
-    }
-}
-=======
-double js::hypot4(double x, double y, double z, double w) {
-  AutoUnsafeCallWithABI unsafe;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 double js::hypot4(double x, double y, double z, double w) {
   AutoUnsafeCallWithABI unsafe;
-||||||| merged common ancestors
-double
-js::hypot4(double x, double y, double z, double w)
-{
-    AutoUnsafeCallWithABI unsafe;
-=======
+
   // Check for infinities or NaNs so that we can return immediately.
   if (mozilla::IsInfinite(x) || mozilla::IsInfinite(y) ||
       mozilla::IsInfinite(z) || mozilla::IsInfinite(w)) {
     return mozilla::PositiveInfinity<double>();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Check for infinities or NaNs so that we can return immediately.
-  if (mozilla::IsInfinite(x) || mozilla::IsInfinite(y) ||
-      mozilla::IsInfinite(z) || mozilla::IsInfinite(w)) {
-    return mozilla::PositiveInfinity<double>();
-  }
-||||||| merged common ancestors
-    // Check for infinities or NaNs so that we can return immediately.
-    if (mozilla::IsInfinite(x) || mozilla::IsInfinite(y) || mozilla::IsInfinite(z) ||
-        mozilla::IsInfinite(w))
-    {
-        return mozilla::PositiveInfinity<double>();
-    }
-=======
   if (mozilla::IsNaN(x) || mozilla::IsNaN(y) || mozilla::IsNaN(z) ||
       mozilla::IsNaN(w)) {
     return GenericNaN();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mozilla::IsNaN(x) || mozilla::IsNaN(y) || mozilla::IsNaN(z) ||
-      mozilla::IsNaN(w)) {
-    return GenericNaN();
-  }
-||||||| merged common ancestors
-    if (mozilla::IsNaN(x) || mozilla::IsNaN(y) || mozilla::IsNaN(z) || mozilla::IsNaN(w)) {
-        return GenericNaN();
-    }
-=======
   double scale = 0;
   double sumsq = 1;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  double scale = 0;
-  double sumsq = 1;
-||||||| merged common ancestors
-    double scale = 0;
-    double sumsq = 1;
-=======
   hypot_step(scale, sumsq, x);
   hypot_step(scale, sumsq, y);
   hypot_step(scale, sumsq, z);
   hypot_step(scale, sumsq, w);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  hypot_step(scale, sumsq, x);
-  hypot_step(scale, sumsq, y);
-  hypot_step(scale, sumsq, z);
-  hypot_step(scale, sumsq, w);
-||||||| merged common ancestors
-    hypot_step(scale, sumsq, x);
-    hypot_step(scale, sumsq, y);
-    hypot_step(scale, sumsq, z);
-    hypot_step(scale, sumsq, w);
-
-    return scale * sqrt(sumsq);
-}
-
-double
-js::hypot3(double x, double y, double z)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return hypot4(x, y, z, 0.0);
-}
-
-bool
-js::math_hypot(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    return math_hypot_handle(cx, args, args.rval());
-}
-
-bool
-js::math_hypot_handle(JSContext* cx, HandleValueArray args, MutableHandleValue res)
-{
-    // IonMonkey calls the ecmaHypot function directly if two arguments are
-    // given. Do that here as well to get the same results.
-    if (args.length() == 2) {
-        double x, y;
-        if (!ToNumber(cx, args[0], &x)) {
-            return false;
-        }
-        if (!ToNumber(cx, args[1], &y)) {
-            return false;
-        }
-
-        double result = ecmaHypot(x, y);
-        res.setDouble(result);
-        return true;
-    }
-=======
   return scale * sqrt(sumsq);
 }
 
@@ -1368,18 +790,7 @@ bool js::math_hypot_handle(JSContext* cx, HandleValueArray args,
     if (!ToNumber(cx, args[1], &y)) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return scale * sqrt(sumsq);
-}
-||||||| merged common ancestors
-    bool isInfinite = false;
-    bool isNaN = false;
-
-    double scale = 0;
-    double sumsq = 1;
-=======
     double result = ecmaHypot(x, y);
     res.setDouble(result);
     return true;
@@ -1387,78 +798,22 @@ bool js::math_hypot_handle(JSContext* cx, HandleValueArray args,
 
   bool isInfinite = false;
   bool isNaN = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-double js::hypot3(double x, double y, double z) {
-  AutoUnsafeCallWithABI unsafe;
-  return hypot4(x, y, z, 0.0);
-}
-||||||| merged common ancestors
-    for (unsigned i = 0; i < args.length(); i++) {
-        double x;
-        if (!ToNumber(cx, args[i], &x)) {
-            return false;
-        }
-=======
   double scale = 0;
   double sumsq = 1;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool js::math_hypot(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  return math_hypot_handle(cx, args, args.rval());
-}
-||||||| merged common ancestors
-        isInfinite |= mozilla::IsInfinite(x);
-        isNaN |= mozilla::IsNaN(x);
-        if (isInfinite || isNaN) {
-            continue;
-        }
-=======
   for (unsigned i = 0; i < args.length(); i++) {
     double x;
     if (!ToNumber(cx, args[i], &x)) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool js::math_hypot_handle(JSContext* cx, HandleValueArray args,
-                           MutableHandleValue res) {
-  // IonMonkey calls the ecmaHypot function directly if two arguments are
-  // given. Do that here as well to get the same results.
-  if (args.length() == 2) {
-    double x, y;
-    if (!ToNumber(cx, args[0], &x)) {
-      return false;
-    }
-    if (!ToNumber(cx, args[1], &y)) {
-      return false;
-||||||| merged common ancestors
-        hypot_step(scale, sumsq, x);
-=======
     isInfinite |= mozilla::IsInfinite(x);
     isNaN |= mozilla::IsNaN(x);
     if (isInfinite || isNaN) {
       continue;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    double result = ecmaHypot(x, y);
-    res.setDouble(result);
-    return true;
-  }
-||||||| merged common ancestors
-    double result = isInfinite ? PositiveInfinity<double>() :
-                    isNaN ? GenericNaN() :
-                    scale * sqrt(sumsq);
-    res.setDouble(result);
-    return true;
-}
-=======
     hypot_step(scale, sumsq, x);
   }
 
@@ -1467,84 +822,23 @@ bool js::math_hypot_handle(JSContext* cx, HandleValueArray args,
   res.setDouble(result);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool isInfinite = false;
-  bool isNaN = false;
-||||||| merged common ancestors
-double
-js::math_trunc_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-    return fdlibm::trunc(x);
-}
-=======
 double js::math_trunc_impl(double x) {
   AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
   return fdlibm::trunc(x);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  double scale = 0;
-  double sumsq = 1;
-||||||| merged common ancestors
-float
-js::math_truncf_impl(float x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::truncf(x);
-}
-=======
 float js::math_truncf_impl(float x) {
   AutoUnsafeCallWithABI unsafe;
   return fdlibm::truncf(x);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (unsigned i = 0; i < args.length(); i++) {
-    double x;
-    if (!ToNumber(cx, args[i], &x)) {
-      return false;
-    }
-||||||| merged common ancestors
-bool
-js::math_trunc_handle(JSContext* cx, HandleValue v, MutableHandleValue r)
-{
-    double x;
-    if (!ToNumber(cx, v, &x)) {
-        return false;
-    }
-=======
 bool js::math_trunc_handle(JSContext* cx, HandleValue v, MutableHandleValue r) {
   double x;
   if (!ToNumber(cx, v, &x)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    isInfinite |= mozilla::IsInfinite(x);
-    isNaN |= mozilla::IsNaN(x);
-    if (isInfinite || isNaN) {
-      continue;
-    }
-||||||| merged common ancestors
-    r.setNumber(math_trunc_impl(x));
-    return true;
-}
-
-bool
-js::math_trunc(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    if (args.length() == 0) {
-        args.rval().setNaN();
-        return true;
-    }
-=======
   r.setNumber(math_trunc_impl(x));
   return true;
 }
@@ -1555,130 +849,10 @@ bool js::math_trunc(JSContext* cx, unsigned argc, Value* vp) {
     args.rval().setNaN();
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    hypot_step(scale, sumsq, x);
-  }
-||||||| merged common ancestors
-    return math_trunc_handle(cx, args[0], args.rval());
-}
-=======
   return math_trunc_handle(cx, args[0], args.rval());
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  double result = isInfinite ? PositiveInfinity<double>()
-                             : isNaN ? GenericNaN() : scale * sqrt(sumsq);
-  res.setDouble(result);
-  return true;
-}
-||||||| merged common ancestors
-double
-js::math_sign_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-=======
-double js::math_sign_impl(double x) {
-  AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-double js::math_trunc_impl(double x) {
-  AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-  return fdlibm::trunc(x);
-}
-||||||| merged common ancestors
-    if (mozilla::IsNaN(x)) {
-        return GenericNaN();
-    }
-=======
-  if (mozilla::IsNaN(x)) {
-    return GenericNaN();
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-float js::math_truncf_impl(float x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::truncf(x);
-||||||| merged common ancestors
-    return x == 0 ? x : x < 0 ? -1 : 1;
-=======
-  return x == 0 ? x : x < 0 ? -1 : 1;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool js::math_trunc_handle(JSContext* cx, HandleValue v, MutableHandleValue r) {
-  double x;
-  if (!ToNumber(cx, v, &x)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-js::math_sign_handle(JSContext* cx, HandleValue v, MutableHandleValue r)
-{
-    double x;
-    if (!ToNumber(cx, v, &x)) {
-        return false;
-    }
-=======
-bool js::math_sign_handle(JSContext* cx, HandleValue v, MutableHandleValue r) {
-  double x;
-  if (!ToNumber(cx, v, &x)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  r.setNumber(math_trunc_impl(x));
-  return true;
-||||||| merged common ancestors
-    r.setNumber(math_sign_impl(x));
-    return true;
-=======
-  r.setNumber(math_sign_impl(x));
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool js::math_trunc(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  if (args.length() == 0) {
-    args.rval().setNaN();
-    return true;
-  }
-||||||| merged common ancestors
-bool
-js::math_sign(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    if (args.length() == 0) {
-        args.rval().setNaN();
-        return true;
-    }
-=======
-bool js::math_sign(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  if (args.length() == 0) {
-    args.rval().setNaN();
-    return true;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return math_trunc_handle(cx, args[0], args.rval());
-||||||| merged common ancestors
-    return math_sign_handle(cx, args[0], args.rval());
-=======
-  return math_sign_handle(cx, args[0], args.rval());
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 double js::math_sign_impl(double x) {
   AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
 
@@ -1687,20 +861,8 @@ double js::math_sign_impl(double x) {
   }
 
   return x == 0 ? x : x < 0 ? -1 : 1;
-||||||| merged common ancestors
-double
-js::math_cbrt_impl(double x)
-{
-    AutoUnsafeCallWithABI unsafe;
-    return fdlibm::cbrt(x);
-=======
-double js::math_cbrt_impl(double x) {
-  AutoUnsafeCallWithABI unsafe;
-  return fdlibm::cbrt(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 bool js::math_sign_handle(JSContext* cx, HandleValue v, MutableHandleValue r) {
   double x;
   if (!ToNumber(cx, v, &x)) {
@@ -1709,41 +871,15 @@ bool js::math_sign_handle(JSContext* cx, HandleValue v, MutableHandleValue r) {
 
   r.setNumber(math_sign_impl(x));
   return true;
-||||||| merged common ancestors
-bool
-js::math_cbrt(JSContext* cx, unsigned argc, Value* vp)
-{
-    return math_function<math_cbrt_impl>(cx, argc, vp);
-=======
-bool js::math_cbrt(JSContext* cx, unsigned argc, Value* vp) {
-  return math_function<math_cbrt_impl>(cx, argc, vp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 bool js::math_sign(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   if (args.length() == 0) {
     args.rval().setNaN();
     return true;
   }
-||||||| merged common ancestors
-static bool
-math_toSource(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    args.rval().setString(cx->names().Math);
-    return true;
-}
-=======
-static bool math_toSource(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  args.rval().setString(cx->names().Math);
-  return true;
-}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   return math_sign_handle(cx, args[0], args.rval());
 }
 
@@ -1828,143 +964,4 @@ JSObject* js::InitMathClass(JSContext* cx, Handle<GlobalObject*> global) {
   global->setConstructor(JSProto_Math, ObjectValue(*Math));
 
   return Math;
-||||||| merged common ancestors
-static const JSFunctionSpec math_static_methods[] = {
-    // clang-format off
-    JS_FN(js_toSource_str,  math_toSource,        0, 0),
-    JS_INLINABLE_FN("abs",    math_abs,             1, 0, MathAbs),
-    JS_INLINABLE_FN("acos",   math_acos,            1, 0, MathACos),
-    JS_INLINABLE_FN("asin",   math_asin,            1, 0, MathASin),
-    JS_INLINABLE_FN("atan",   math_atan,            1, 0, MathATan),
-    JS_INLINABLE_FN("atan2",  math_atan2,           2, 0, MathATan2),
-    JS_INLINABLE_FN("ceil",   math_ceil,            1, 0, MathCeil),
-    JS_INLINABLE_FN("clz32",  math_clz32,           1, 0, MathClz32),
-    JS_INLINABLE_FN("cos",    math_cos,             1, 0, MathCos),
-    JS_INLINABLE_FN("exp",    math_exp,             1, 0, MathExp),
-    JS_INLINABLE_FN("floor",  math_floor,           1, 0, MathFloor),
-    JS_INLINABLE_FN("imul",   math_imul,            2, 0, MathImul),
-    JS_INLINABLE_FN("fround", math_fround,          1, 0, MathFRound),
-    JS_INLINABLE_FN("log",    math_log,             1, 0, MathLog),
-    JS_INLINABLE_FN("max",    math_max,             2, 0, MathMax),
-    JS_INLINABLE_FN("min",    math_min,             2, 0, MathMin),
-    JS_INLINABLE_FN("pow",    math_pow,             2, 0, MathPow),
-    JS_INLINABLE_FN("random", math_random,          0, 0, MathRandom),
-    JS_INLINABLE_FN("round",  math_round,           1, 0, MathRound),
-    JS_INLINABLE_FN("sin",    math_sin,             1, 0, MathSin),
-    JS_INLINABLE_FN("sqrt",   math_sqrt,            1, 0, MathSqrt),
-    JS_INLINABLE_FN("tan",    math_tan,             1, 0, MathTan),
-    JS_INLINABLE_FN("log10",  math_log10,           1, 0, MathLog10),
-    JS_INLINABLE_FN("log2",   math_log2,            1, 0, MathLog2),
-    JS_INLINABLE_FN("log1p",  math_log1p,           1, 0, MathLog1P),
-    JS_INLINABLE_FN("expm1",  math_expm1,           1, 0, MathExpM1),
-    JS_INLINABLE_FN("cosh",   math_cosh,            1, 0, MathCosH),
-    JS_INLINABLE_FN("sinh",   math_sinh,            1, 0, MathSinH),
-    JS_INLINABLE_FN("tanh",   math_tanh,            1, 0, MathTanH),
-    JS_INLINABLE_FN("acosh",  math_acosh,           1, 0, MathACosH),
-    JS_INLINABLE_FN("asinh",  math_asinh,           1, 0, MathASinH),
-    JS_INLINABLE_FN("atanh",  math_atanh,           1, 0, MathATanH),
-    JS_INLINABLE_FN("hypot",  math_hypot,           2, 0, MathHypot),
-    JS_INLINABLE_FN("trunc",  math_trunc,           1, 0, MathTrunc),
-    JS_INLINABLE_FN("sign",   math_sign,            1, 0, MathSign),
-    JS_INLINABLE_FN("cbrt",   math_cbrt,            1, 0, MathCbrt),
-    JS_FS_END
-    // clang-format on
-};
-
-JSObject*
-js::InitMathClass(JSContext* cx, Handle<GlobalObject*> global)
-{
-    RootedObject proto(cx, GlobalObject::getOrCreateObjectPrototype(cx, global));
-    if (!proto) {
-        return nullptr;
-    }
-    RootedObject Math(cx, NewObjectWithGivenProto(cx, &MathClass, proto, SingletonObject));
-    if (!Math) {
-        return nullptr;
-    }
-
-    if (!JS_DefineProperty(cx, global, js_Math_str, Math, JSPROP_RESOLVING)) {
-        return nullptr;
-    }
-    if (!JS_DefineFunctions(cx, Math, math_static_methods)) {
-        return nullptr;
-    }
-    if (!JS_DefineConstDoubles(cx, Math, math_constants)) {
-        return nullptr;
-    }
-    if (!DefineToStringTag(cx, Math, cx->names().Math)) {
-        return nullptr;
-    }
-
-    global->setConstructor(JSProto_Math, ObjectValue(*Math));
-
-    return Math;
-=======
-static const JSFunctionSpec math_static_methods[] = {
-    JS_FN(js_toSource_str, math_toSource, 0, 0),
-    JS_INLINABLE_FN("abs", math_abs, 1, 0, MathAbs),
-    JS_INLINABLE_FN("acos", math_acos, 1, 0, MathACos),
-    JS_INLINABLE_FN("asin", math_asin, 1, 0, MathASin),
-    JS_INLINABLE_FN("atan", math_atan, 1, 0, MathATan),
-    JS_INLINABLE_FN("atan2", math_atan2, 2, 0, MathATan2),
-    JS_INLINABLE_FN("ceil", math_ceil, 1, 0, MathCeil),
-    JS_INLINABLE_FN("clz32", math_clz32, 1, 0, MathClz32),
-    JS_INLINABLE_FN("cos", math_cos, 1, 0, MathCos),
-    JS_INLINABLE_FN("exp", math_exp, 1, 0, MathExp),
-    JS_INLINABLE_FN("floor", math_floor, 1, 0, MathFloor),
-    JS_INLINABLE_FN("imul", math_imul, 2, 0, MathImul),
-    JS_INLINABLE_FN("fround", math_fround, 1, 0, MathFRound),
-    JS_INLINABLE_FN("log", math_log, 1, 0, MathLog),
-    JS_INLINABLE_FN("max", math_max, 2, 0, MathMax),
-    JS_INLINABLE_FN("min", math_min, 2, 0, MathMin),
-    JS_INLINABLE_FN("pow", math_pow, 2, 0, MathPow),
-    JS_INLINABLE_FN("random", math_random, 0, 0, MathRandom),
-    JS_INLINABLE_FN("round", math_round, 1, 0, MathRound),
-    JS_INLINABLE_FN("sin", math_sin, 1, 0, MathSin),
-    JS_INLINABLE_FN("sqrt", math_sqrt, 1, 0, MathSqrt),
-    JS_INLINABLE_FN("tan", math_tan, 1, 0, MathTan),
-    JS_INLINABLE_FN("log10", math_log10, 1, 0, MathLog10),
-    JS_INLINABLE_FN("log2", math_log2, 1, 0, MathLog2),
-    JS_INLINABLE_FN("log1p", math_log1p, 1, 0, MathLog1P),
-    JS_INLINABLE_FN("expm1", math_expm1, 1, 0, MathExpM1),
-    JS_INLINABLE_FN("cosh", math_cosh, 1, 0, MathCosH),
-    JS_INLINABLE_FN("sinh", math_sinh, 1, 0, MathSinH),
-    JS_INLINABLE_FN("tanh", math_tanh, 1, 0, MathTanH),
-    JS_INLINABLE_FN("acosh", math_acosh, 1, 0, MathACosH),
-    JS_INLINABLE_FN("asinh", math_asinh, 1, 0, MathASinH),
-    JS_INLINABLE_FN("atanh", math_atanh, 1, 0, MathATanH),
-    JS_INLINABLE_FN("hypot", math_hypot, 2, 0, MathHypot),
-    JS_INLINABLE_FN("trunc", math_trunc, 1, 0, MathTrunc),
-    JS_INLINABLE_FN("sign", math_sign, 1, 0, MathSign),
-    JS_INLINABLE_FN("cbrt", math_cbrt, 1, 0, MathCbrt),
-    JS_FS_END};
-
-JSObject* js::InitMathClass(JSContext* cx, Handle<GlobalObject*> global) {
-  RootedObject proto(cx, GlobalObject::getOrCreateObjectPrototype(cx, global));
-  if (!proto) {
-    return nullptr;
-  }
-  RootedObject Math(
-      cx, NewObjectWithGivenProto(cx, &MathClass, proto, SingletonObject));
-  if (!Math) {
-    return nullptr;
-  }
-
-  if (!JS_DefineProperty(cx, global, js_Math_str, Math, JSPROP_RESOLVING)) {
-    return nullptr;
-  }
-  if (!JS_DefineFunctions(cx, Math, math_static_methods)) {
-    return nullptr;
-  }
-  if (!JS_DefineConstDoubles(cx, Math, math_constants)) {
-    return nullptr;
-  }
-  if (!DefineToStringTag(cx, Math, cx->names().Math)) {
-    return nullptr;
-  }
-
-  global->setConstructor(JSProto_Math, ObjectValue(*Math));
-
-  return Math;
->>>>>>> upstream-releases
 }

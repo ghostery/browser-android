@@ -26,17 +26,8 @@
 
 // This class is used to suspend a request across a function scope.
 class ScopedRequestSuspender {
-<<<<<<< HEAD
- public:
-  explicit ScopedRequestSuspender(nsIRequest *request) : mRequest(request) {
-||||||| merged common ancestors
-public:
-  explicit ScopedRequestSuspender(nsIRequest *request)
-    : mRequest(request) {
-=======
  public:
   explicit ScopedRequestSuspender(nsIRequest* request) : mRequest(request) {
->>>>>>> upstream-releases
     if (mRequest && NS_FAILED(mRequest->Suspend())) {
       NS_WARNING("Couldn't suspend pump");
       mRequest = nullptr;
@@ -45,18 +36,9 @@ public:
   ~ScopedRequestSuspender() {
     if (mRequest) mRequest->Resume();
   }
-<<<<<<< HEAD
-
- private:
-  nsIRequest *mRequest;
-||||||| merged common ancestors
-private:
-  nsIRequest *mRequest;
-=======
 
  private:
   nsIRequest* mRequest;
->>>>>>> upstream-releases
 };
 
 // Used to suspend data events from mRequest within a function scope.  This is
@@ -89,18 +71,8 @@ nsBaseChannel::~nsBaseChannel() {
                                     mLoadInfo.forget());
 }
 
-<<<<<<< HEAD
-nsresult nsBaseChannel::Redirect(nsIChannel *newChannel, uint32_t redirectFlags,
-                                 bool openNewChannel) {
-||||||| merged common ancestors
-nsresult
-nsBaseChannel::Redirect(nsIChannel *newChannel, uint32_t redirectFlags,
-                        bool openNewChannel)
-{
-=======
 nsresult nsBaseChannel::Redirect(nsIChannel* newChannel, uint32_t redirectFlags,
                                  bool openNewChannel) {
->>>>>>> upstream-releases
   SUSPEND_PUMP_FOR_SCOPE();
 
   // Transfer properties
@@ -111,34 +83,6 @@ nsresult nsBaseChannel::Redirect(nsIChannel* newChannel, uint32_t redirectFlags,
 
   // make a copy of the loadinfo, append to the redirectchain
   // and set it on the new channel
-<<<<<<< HEAD
-  if (mLoadInfo) {
-    nsSecurityFlags secFlags = mLoadInfo->GetSecurityFlags() &
-                               ~nsILoadInfo::SEC_FORCE_INHERIT_PRINCIPAL;
-    nsCOMPtr<nsILoadInfo> newLoadInfo =
-        static_cast<mozilla::net::LoadInfo *>(mLoadInfo.get())
-            ->CloneWithNewSecFlags(secFlags);
-
-    nsCOMPtr<nsIPrincipal> uriPrincipal;
-    nsIScriptSecurityManager *sm = nsContentUtils::GetSecurityManager();
-    sm->GetChannelURIPrincipal(this, getter_AddRefs(uriPrincipal));
-    bool isInternalRedirect =
-        (redirectFlags & (nsIChannelEventSink::REDIRECT_INTERNAL |
-                          nsIChannelEventSink::REDIRECT_STS_UPGRADE));
-||||||| merged common ancestors
-  if (mLoadInfo) {
-    nsSecurityFlags secFlags = mLoadInfo->GetSecurityFlags() &
-                               ~nsILoadInfo::SEC_FORCE_INHERIT_PRINCIPAL;
-    nsCOMPtr<nsILoadInfo> newLoadInfo =
-      static_cast<mozilla::net::LoadInfo*>(mLoadInfo.get())->CloneWithNewSecFlags(secFlags);
-
-    nsCOMPtr<nsIPrincipal> uriPrincipal;
-    nsIScriptSecurityManager *sm = nsContentUtils::GetSecurityManager();
-    sm->GetChannelURIPrincipal(this, getter_AddRefs(uriPrincipal));
-    bool isInternalRedirect =
-      (redirectFlags & (nsIChannelEventSink::REDIRECT_INTERNAL |
-                        nsIChannelEventSink::REDIRECT_STS_UPGRADE));
-=======
   nsSecurityFlags secFlags =
       mLoadInfo->GetSecurityFlags() & ~nsILoadInfo::SEC_FORCE_INHERIT_PRINCIPAL;
   nsCOMPtr<nsILoadInfo> newLoadInfo =
@@ -151,71 +95,13 @@ nsresult nsBaseChannel::Redirect(nsIChannel* newChannel, uint32_t redirectFlags,
   bool isInternalRedirect =
       (redirectFlags & (nsIChannelEventSink::REDIRECT_INTERNAL |
                         nsIChannelEventSink::REDIRECT_STS_UPGRADE));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // nsBaseChannel hst no thing to do with HttpBaseChannel, we would not care
-    // about referrer and remote address in this case
-    nsCOMPtr<nsIRedirectHistoryEntry> entry =
-        new nsRedirectHistoryEntry(uriPrincipal, nullptr, EmptyCString());
-||||||| merged common ancestors
-    // nsBaseChannel hst no thing to do with HttpBaseChannel, we would not care
-    // about referrer and remote address in this case
-    nsCOMPtr<nsIRedirectHistoryEntry> entry =
-      new nsRedirectHistoryEntry(uriPrincipal, nullptr, EmptyCString());
-=======
   // nsBaseChannel hst no thing to do with HttpBaseChannel, we would not care
   // about referrer and remote address in this case
   nsCOMPtr<nsIRedirectHistoryEntry> entry =
       new nsRedirectHistoryEntry(uriPrincipal, nullptr, EmptyCString());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    newLoadInfo->AppendRedirectHistoryEntry(entry, isInternalRedirect);
-
-    // Ensure the channel's loadInfo's result principal URI so that it's
-    // either non-null or updated to the redirect target URI.
-    // We must do this because in case the loadInfo's result principal URI
-    // is null, it would be taken from OriginalURI of the channel.  But we
-    // overwrite it with the whole redirect chain first URI before opening
-    // the target channel, hence the information would be lost.
-    // If the protocol handler that created the channel wants to use
-    // the originalURI of the channel as the principal URI, it has left
-    // the result principal URI on the load info null.
-    nsCOMPtr<nsIURI> resultPrincipalURI;
-
-    nsCOMPtr<nsILoadInfo> existingLoadInfo = newChannel->GetLoadInfo();
-    if (existingLoadInfo) {
-      existingLoadInfo->GetResultPrincipalURI(
-          getter_AddRefs(resultPrincipalURI));
-    }
-    if (!resultPrincipalURI) {
-      newChannel->GetOriginalURI(getter_AddRefs(resultPrincipalURI));
-    }
-||||||| merged common ancestors
-    newLoadInfo->AppendRedirectHistoryEntry(entry, isInternalRedirect);
-
-    // Ensure the channel's loadInfo's result principal URI so that it's
-    // either non-null or updated to the redirect target URI.
-    // We must do this because in case the loadInfo's result principal URI
-    // is null, it would be taken from OriginalURI of the channel.  But we
-    // overwrite it with the whole redirect chain first URI before opening
-    // the target channel, hence the information would be lost.
-    // If the protocol handler that created the channel wants to use
-    // the originalURI of the channel as the principal URI, it has left
-    // the result principal URI on the load info null.
-    nsCOMPtr<nsIURI> resultPrincipalURI;
-
-    nsCOMPtr<nsILoadInfo> existingLoadInfo = newChannel->GetLoadInfo();
-    if (existingLoadInfo) {
-      existingLoadInfo->GetResultPrincipalURI(getter_AddRefs(resultPrincipalURI));
-    }
-    if (!resultPrincipalURI) {
-      newChannel->GetOriginalURI(getter_AddRefs(resultPrincipalURI));
-    }
-=======
   newLoadInfo->AppendRedirectHistoryEntry(entry, isInternalRedirect);
->>>>>>> upstream-releases
 
   // Ensure the channel's loadInfo's result principal URI so that it's
   // either non-null or updated to the redirect target URI.
@@ -228,27 +114,12 @@ nsresult nsBaseChannel::Redirect(nsIChannel* newChannel, uint32_t redirectFlags,
   // the result principal URI on the load info null.
   nsCOMPtr<nsIURI> resultPrincipalURI;
 
-<<<<<<< HEAD
-    newChannel->SetLoadInfo(newLoadInfo);
-  } else {
-    // the newChannel was created with a dummy loadInfo, we should clear
-    // it in case the original channel does not have a loadInfo
-    newChannel->SetLoadInfo(nullptr);
-||||||| merged common ancestors
-    newChannel->SetLoadInfo(newLoadInfo);
-  }
-  else {
-    // the newChannel was created with a dummy loadInfo, we should clear
-    // it in case the original channel does not have a loadInfo
-    newChannel->SetLoadInfo(nullptr);
-=======
   nsCOMPtr<nsILoadInfo> existingLoadInfo = newChannel->LoadInfo();
   if (existingLoadInfo) {
     existingLoadInfo->GetResultPrincipalURI(getter_AddRefs(resultPrincipalURI));
   }
   if (!resultPrincipalURI) {
     newChannel->GetOriginalURI(getter_AddRefs(resultPrincipalURI));
->>>>>>> upstream-releases
   }
 
   newLoadInfo->SetResultPrincipalURI(resultPrincipalURI);
@@ -301,24 +172,7 @@ nsresult nsBaseChannel::ContinueRedirect() {
 
   if (mOpenRedirectChannel) {
     nsresult rv = NS_OK;
-<<<<<<< HEAD
-    if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-      MOZ_ASSERT(!mListenerContext, "mListenerContext should be null!");
-      rv = mRedirectChannel->AsyncOpen2(mListener);
-    } else {
-      rv = mRedirectChannel->AsyncOpen(mListener, mListenerContext);
-    }
-||||||| merged common ancestors
-    if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-      MOZ_ASSERT(!mListenerContext, "mListenerContext should be null!");
-      rv = mRedirectChannel->AsyncOpen2(mListener);
-    }
-    else {
-      rv = mRedirectChannel->AsyncOpen(mListener, mListenerContext);
-    }
-=======
     rv = mRedirectChannel->AsyncOpen(mListener);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -336,24 +190,10 @@ bool nsBaseChannel::HasContentTypeHint() const {
   return !mContentType.EqualsLiteral(UNKNOWN_CONTENT_TYPE);
 }
 
-<<<<<<< HEAD
-nsresult nsBaseChannel::PushStreamConverter(const char *fromType,
-                                            const char *toType,
-                                            bool invalidatesContentLength,
-                                            nsIStreamListener **result) {
-||||||| merged common ancestors
-nsresult
-nsBaseChannel::PushStreamConverter(const char *fromType,
-                                   const char *toType,
-                                   bool invalidatesContentLength,
-                                   nsIStreamListener **result)
-{
-=======
 nsresult nsBaseChannel::PushStreamConverter(const char* fromType,
                                             const char* toType,
                                             bool invalidatesContentLength,
                                             nsIStreamListener** result) {
->>>>>>> upstream-releases
   NS_ASSERTION(mListener, "no listener");
 
   nsresult rv;
@@ -452,15 +292,7 @@ nsresult nsBaseChannel::BeginPumpingData() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsBaseChannel::HandleAsyncRedirect(nsIChannel *newChannel) {
-||||||| merged common ancestors
-void
-nsBaseChannel::HandleAsyncRedirect(nsIChannel* newChannel)
-{
-=======
 void nsBaseChannel::HandleAsyncRedirect(nsIChannel* newChannel) {
->>>>>>> upstream-releases
   NS_ASSERTION(!mPumpingData, "Shouldn't have gotten here");
 
   nsresult rv = mStatus;
@@ -526,14 +358,7 @@ NS_IMPL_ISUPPORTS_INHERITED(nsBaseChannel, nsHashPropertyBag, nsIRequest,
 // nsBaseChannel::nsIRequest
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetName(nsACString &result) {
-||||||| merged common ancestors
-nsBaseChannel::GetName(nsACString &result)
-{
-=======
 nsBaseChannel::GetName(nsACString& result) {
->>>>>>> upstream-releases
   if (!mURI) {
     result.Truncate();
     return NS_OK;
@@ -542,27 +367,13 @@ nsBaseChannel::GetName(nsACString& result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::IsPending(bool *result) {
-||||||| merged common ancestors
-nsBaseChannel::IsPending(bool *result)
-{
-=======
 nsBaseChannel::IsPending(bool* result) {
->>>>>>> upstream-releases
   *result = Pending();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetStatus(nsresult *status) {
-||||||| merged common ancestors
-nsBaseChannel::GetStatus(nsresult *status)
-{
-=======
 nsBaseChannel::GetStatus(nsresult* status) {
->>>>>>> upstream-releases
   if (mRequest && NS_SUCCEEDED(mStatus)) {
     mRequest->GetStatus(status);
   } else {
@@ -598,14 +409,7 @@ nsBaseChannel::Resume() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetLoadFlags(nsLoadFlags *aLoadFlags) {
-||||||| merged common ancestors
-nsBaseChannel::GetLoadFlags(nsLoadFlags *aLoadFlags)
-{
-=======
 nsBaseChannel::GetLoadFlags(nsLoadFlags* aLoadFlags) {
->>>>>>> upstream-releases
   *aLoadFlags = mLoadFlags;
   return NS_OK;
 }
@@ -617,27 +421,13 @@ nsBaseChannel::SetLoadFlags(nsLoadFlags aLoadFlags) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetLoadGroup(nsILoadGroup **aLoadGroup) {
-||||||| merged common ancestors
-nsBaseChannel::GetLoadGroup(nsILoadGroup **aLoadGroup)
-{
-=======
 nsBaseChannel::GetLoadGroup(nsILoadGroup** aLoadGroup) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aLoadGroup = mLoadGroup);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetLoadGroup(nsILoadGroup *aLoadGroup) {
-||||||| merged common ancestors
-nsBaseChannel::SetLoadGroup(nsILoadGroup *aLoadGroup)
-{
-=======
 nsBaseChannel::SetLoadGroup(nsILoadGroup* aLoadGroup) {
->>>>>>> upstream-releases
   if (!CanSetLoadGroup(aLoadGroup)) {
     return NS_ERROR_FAILURE;
   }
@@ -652,82 +442,40 @@ nsBaseChannel::SetLoadGroup(nsILoadGroup* aLoadGroup) {
 // nsBaseChannel::nsIChannel
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetOriginalURI(nsIURI **aURI) {
-||||||| merged common ancestors
-nsBaseChannel::GetOriginalURI(nsIURI **aURI)
-{
-=======
 nsBaseChannel::GetOriginalURI(nsIURI** aURI) {
->>>>>>> upstream-releases
   *aURI = OriginalURI();
   NS_ADDREF(*aURI);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetOriginalURI(nsIURI *aURI) {
-||||||| merged common ancestors
-nsBaseChannel::SetOriginalURI(nsIURI *aURI)
-{
-=======
 nsBaseChannel::SetOriginalURI(nsIURI* aURI) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aURI);
   mOriginalURI = aURI;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetURI(nsIURI **aURI) {
-||||||| merged common ancestors
-nsBaseChannel::GetURI(nsIURI **aURI)
-{
-=======
 nsBaseChannel::GetURI(nsIURI** aURI) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aURI = mURI);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetOwner(nsISupports **aOwner) {
-||||||| merged common ancestors
-nsBaseChannel::GetOwner(nsISupports **aOwner)
-{
-=======
 nsBaseChannel::GetOwner(nsISupports** aOwner) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aOwner = mOwner);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetOwner(nsISupports *aOwner) {
-||||||| merged common ancestors
-nsBaseChannel::SetOwner(nsISupports *aOwner)
-{
-=======
 nsBaseChannel::SetOwner(nsISupports* aOwner) {
->>>>>>> upstream-releases
   mOwner = aOwner;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetLoadInfo(nsILoadInfo *aLoadInfo) {
-||||||| merged common ancestors
-nsBaseChannel::SetLoadInfo(nsILoadInfo* aLoadInfo)
-{
-=======
 nsBaseChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
   MOZ_RELEASE_ASSERT(aLoadInfo, "loadinfo can't be null");
->>>>>>> upstream-releases
   mLoadInfo = aLoadInfo;
 
   // Need to update |mNeckoTarget| when load info has changed.
@@ -736,52 +484,24 @@ nsBaseChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetLoadInfo(nsILoadInfo **aLoadInfo) {
-||||||| merged common ancestors
-nsBaseChannel::GetLoadInfo(nsILoadInfo** aLoadInfo)
-{
-=======
 nsBaseChannel::GetLoadInfo(nsILoadInfo** aLoadInfo) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aLoadInfo = mLoadInfo);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetIsDocument(bool *aIsDocument) {
-||||||| merged common ancestors
-nsBaseChannel::GetIsDocument(bool *aIsDocument)
-{
-=======
 nsBaseChannel::GetIsDocument(bool* aIsDocument) {
->>>>>>> upstream-releases
   return NS_GetIsDocumentChannel(this, aIsDocument);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetNotificationCallbacks(nsIInterfaceRequestor **aCallbacks) {
-||||||| merged common ancestors
-nsBaseChannel::GetNotificationCallbacks(nsIInterfaceRequestor **aCallbacks)
-{
-=======
 nsBaseChannel::GetNotificationCallbacks(nsIInterfaceRequestor** aCallbacks) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aCallbacks = mCallbacks);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks) {
-||||||| merged common ancestors
-nsBaseChannel::SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks)
-{
-=======
 nsBaseChannel::SetNotificationCallbacks(nsIInterfaceRequestor* aCallbacks) {
->>>>>>> upstream-releases
   if (!CanSetCallbacks(aCallbacks)) {
     return NS_ERROR_FAILURE;
   }
@@ -793,40 +513,19 @@ nsBaseChannel::SetNotificationCallbacks(nsIInterfaceRequestor* aCallbacks) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetSecurityInfo(nsISupports **aSecurityInfo) {
-||||||| merged common ancestors
-nsBaseChannel::GetSecurityInfo(nsISupports **aSecurityInfo)
-{
-=======
 nsBaseChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aSecurityInfo = mSecurityInfo);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetContentType(nsACString &aContentType) {
-||||||| merged common ancestors
-nsBaseChannel::GetContentType(nsACString &aContentType)
-{
-=======
 nsBaseChannel::GetContentType(nsACString& aContentType) {
->>>>>>> upstream-releases
   aContentType = mContentType;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetContentType(const nsACString &aContentType) {
-||||||| merged common ancestors
-nsBaseChannel::SetContentType(const nsACString &aContentType)
-{
-=======
 nsBaseChannel::SetContentType(const nsACString& aContentType) {
->>>>>>> upstream-releases
   // mContentCharset is unchanged if not parsed
   bool dummy;
   net_ParseContentType(aContentType, mContentType, mContentCharset, &dummy);
@@ -834,40 +533,19 @@ nsBaseChannel::SetContentType(const nsACString& aContentType) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetContentCharset(nsACString &aContentCharset) {
-||||||| merged common ancestors
-nsBaseChannel::GetContentCharset(nsACString &aContentCharset)
-{
-=======
 nsBaseChannel::GetContentCharset(nsACString& aContentCharset) {
->>>>>>> upstream-releases
   aContentCharset = mContentCharset;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetContentCharset(const nsACString &aContentCharset) {
-||||||| merged common ancestors
-nsBaseChannel::SetContentCharset(const nsACString &aContentCharset)
-{
-=======
 nsBaseChannel::SetContentCharset(const nsACString& aContentCharset) {
->>>>>>> upstream-releases
   mContentCharset = aContentCharset;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetContentDisposition(uint32_t *aContentDisposition) {
-||||||| merged common ancestors
-nsBaseChannel::GetContentDisposition(uint32_t *aContentDisposition)
-{
-=======
 nsBaseChannel::GetContentDisposition(uint32_t* aContentDisposition) {
->>>>>>> upstream-releases
   // preserve old behavior, fail unless explicitly set.
   if (mContentDispositionHint == UINT32_MAX) {
     return NS_ERROR_NOT_AVAILABLE;
@@ -884,16 +562,8 @@ nsBaseChannel::SetContentDisposition(uint32_t aContentDisposition) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetContentDispositionFilename(
-    nsAString &aContentDispositionFilename) {
-||||||| merged common ancestors
-nsBaseChannel::GetContentDispositionFilename(nsAString &aContentDispositionFilename)
-{
-=======
 nsBaseChannel::GetContentDispositionFilename(
     nsAString& aContentDispositionFilename) {
->>>>>>> upstream-releases
   if (!mContentDispositionFilename) {
     return NS_ERROR_NOT_AVAILABLE;
   }
@@ -903,43 +573,20 @@ nsBaseChannel::GetContentDispositionFilename(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::SetContentDispositionFilename(
-    const nsAString &aContentDispositionFilename) {
-||||||| merged common ancestors
-nsBaseChannel::SetContentDispositionFilename(const nsAString &aContentDispositionFilename)
-{
-=======
 nsBaseChannel::SetContentDispositionFilename(
     const nsAString& aContentDispositionFilename) {
->>>>>>> upstream-releases
   mContentDispositionFilename = new nsString(aContentDispositionFilename);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetContentDispositionHeader(
-    nsACString &aContentDispositionHeader) {
-||||||| merged common ancestors
-nsBaseChannel::GetContentDispositionHeader(nsACString &aContentDispositionHeader)
-{
-=======
 nsBaseChannel::GetContentDispositionHeader(
     nsACString& aContentDispositionHeader) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetContentLength(int64_t *aContentLength) {
-||||||| merged common ancestors
-nsBaseChannel::GetContentLength(int64_t *aContentLength)
-{
-=======
 nsBaseChannel::GetContentLength(int64_t* aContentLength) {
->>>>>>> upstream-releases
   *aContentLength = mContentLength;
   return NS_OK;
 }
@@ -951,19 +598,12 @@ nsBaseChannel::SetContentLength(int64_t aContentLength) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::Open(nsIInputStream **result) {
-||||||| merged common ancestors
-nsBaseChannel::Open(nsIInputStream **result)
-{
-=======
 nsBaseChannel::Open(nsIInputStream** aStream) {
   nsCOMPtr<nsIStreamListener> listener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   NS_ENSURE_SUCCESS(rv, rv);
 
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mURI, NS_ERROR_NOT_INITIALIZED);
   NS_ENSURE_TRUE(!mPumpingData, NS_ERROR_IN_PROGRESS);
   NS_ENSURE_TRUE(!mWasOpened, NS_ERROR_IN_PROGRESS);
@@ -972,20 +612,9 @@ nsBaseChannel::Open(nsIInputStream** aStream) {
   rv = OpenContentStream(false, aStream, getter_AddRefs(chan));
   NS_ASSERTION(!chan || !*aStream, "Got both a channel and a stream?");
   if (NS_SUCCEEDED(rv) && chan) {
-<<<<<<< HEAD
-    rv = Redirect(chan, nsIChannelEventSink::REDIRECT_INTERNAL, false);
-    if (NS_FAILED(rv)) return rv;
-    rv = chan->Open(result);
-||||||| merged common ancestors
-      rv = Redirect(chan, nsIChannelEventSink::REDIRECT_INTERNAL, false);
-      if (NS_FAILED(rv))
-          return rv;
-      rv = chan->Open(result);
-=======
     rv = Redirect(chan, nsIChannelEventSink::REDIRECT_INTERNAL, false);
     if (NS_FAILED(rv)) return rv;
     rv = chan->Open(aStream);
->>>>>>> upstream-releases
   } else if (rv == NS_ERROR_NOT_IMPLEMENTED)
     return NS_ImplementChannelOpen(this, aStream);
 
@@ -998,48 +627,9 @@ nsBaseChannel::Open(nsIInputStream** aStream) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::Open2(nsIInputStream **aStream) {
-  nsCOMPtr<nsIStreamListener> listener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return Open(aStream);
-}
-||||||| merged common ancestors
-nsBaseChannel::Open2(nsIInputStream** aStream)
-{
-  nsCOMPtr<nsIStreamListener> listener;
-  nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return Open(aStream);
-}
-=======
 nsBaseChannel::AsyncOpen(nsIStreamListener* aListener) {
   nsCOMPtr<nsIStreamListener> listener = aListener;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsBaseChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctxt) {
-  MOZ_ASSERT(
-      !mLoadInfo || mLoadInfo->GetSecurityMode() == 0 ||
-          mLoadInfo->GetInitialSecurityCheckDone() ||
-          (mLoadInfo->GetSecurityMode() ==
-               nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
-           nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
-      "security flags in loadInfo but asyncOpen2() not called");
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsBaseChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctxt)
-{
-  MOZ_ASSERT(!mLoadInfo ||
-             mLoadInfo->GetSecurityMode() == 0 ||
-             mLoadInfo->GetInitialSecurityCheckDone() ||
-             (mLoadInfo->GetSecurityMode() == nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
-              nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
-             "security flags in loadInfo but asyncOpen2() not called");
-=======
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   if (NS_FAILED(rv)) {
@@ -1054,7 +644,6 @@ nsBaseChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctxt)
                nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
            nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
       "security flags in loadInfo but doContentSecurityCheck() not called");
->>>>>>> upstream-releases
 
   NS_ENSURE_TRUE(mURI, NS_ERROR_NOT_INITIALIZED);
   NS_ENSURE_TRUE(!mPumpingData, NS_ERROR_IN_PROGRESS);
@@ -1109,49 +698,12 @@ nsBaseChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctxt)
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsBaseChannel::AsyncOpen2(nsIStreamListener *aListener) {
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  if (NS_FAILED(rv)) {
-    mCallbacks = nullptr;
-    return rv;
-  }
-  return AsyncOpen(listener, nullptr);
-}
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsBaseChannel::AsyncOpen2(nsIStreamListener *aListener)
-{
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  if (NS_FAILED(rv)) {
-    mCallbacks = nullptr;
-    return rv;
-  }
-  return AsyncOpen(listener, nullptr);
-}
-
-=======
->>>>>>> upstream-releases
 //-----------------------------------------------------------------------------
 // nsBaseChannel::nsITransportEventSink
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::OnTransportStatus(nsITransport *transport, nsresult status,
-                                 int64_t progress, int64_t progressMax) {
-||||||| merged common ancestors
-nsBaseChannel::OnTransportStatus(nsITransport *transport, nsresult status,
-                                 int64_t progress, int64_t progressMax)
-{
-=======
 nsBaseChannel::OnTransportStatus(nsITransport* transport, nsresult status,
                                  int64_t progress, int64_t progressMax) {
->>>>>>> upstream-releases
   // In some cases, we may wish to suppress transport-layer status events.
 
   if (!mPumpingData || NS_FAILED(mStatus)) {
@@ -1190,14 +742,7 @@ nsBaseChannel::OnTransportStatus(nsITransport* transport, nsresult status,
 // nsBaseChannel::nsIInterfaceRequestor
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetInterface(const nsIID &iid, void **result) {
-||||||| merged common ancestors
-nsBaseChannel::GetInterface(const nsIID &iid, void **result)
-{
-=======
 nsBaseChannel::GetInterface(const nsIID& iid, void** result) {
->>>>>>> upstream-releases
   NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup, iid, result);
   return *result ? NS_OK : NS_ERROR_NO_INTERFACE;
 }
@@ -1205,20 +750,9 @@ nsBaseChannel::GetInterface(const nsIID& iid, void** result) {
 //-----------------------------------------------------------------------------
 // nsBaseChannel::nsIRequestObserver
 
-<<<<<<< HEAD
-static void CallTypeSniffers(void *aClosure, const uint8_t *aData,
-                             uint32_t aCount) {
-  nsIChannel *chan = static_cast<nsIChannel *>(aClosure);
-||||||| merged common ancestors
-static void
-CallTypeSniffers(void *aClosure, const uint8_t *aData, uint32_t aCount)
-{
-  nsIChannel *chan = static_cast<nsIChannel*>(aClosure);
-=======
 static void CallTypeSniffers(void* aClosure, const uint8_t* aData,
                              uint32_t aCount) {
   nsIChannel* chan = static_cast<nsIChannel*>(aClosure);
->>>>>>> upstream-releases
 
   nsAutoCString newType;
   NS_SniffContent(NS_CONTENT_SNIFFER_CATEGORY, chan, aData, aCount, newType);
@@ -1227,20 +761,9 @@ static void CallTypeSniffers(void* aClosure, const uint8_t* aData,
   }
 }
 
-<<<<<<< HEAD
-static void CallUnknownTypeSniffer(void *aClosure, const uint8_t *aData,
-                                   uint32_t aCount) {
-  nsIChannel *chan = static_cast<nsIChannel *>(aClosure);
-||||||| merged common ancestors
-static void
-CallUnknownTypeSniffer(void *aClosure, const uint8_t *aData, uint32_t aCount)
-{
-  nsIChannel *chan = static_cast<nsIChannel*>(aClosure);
-=======
 static void CallUnknownTypeSniffer(void* aClosure, const uint8_t* aData,
                                    uint32_t aCount) {
   nsIChannel* chan = static_cast<nsIChannel*>(aClosure);
->>>>>>> upstream-releases
 
   RefPtr<nsUnknownDecoder> sniffer = new nsUnknownDecoder();
 
@@ -1250,14 +773,7 @@ static void CallUnknownTypeSniffer(void* aClosure, const uint8_t* aData,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
-||||||| merged common ancestors
-nsBaseChannel::OnStartRequest(nsIRequest *request, nsISupports *ctxt)
-{
-=======
 nsBaseChannel::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   MOZ_ASSERT_IF(mRequest, request == mRequest);
 
   if (mPump) {
@@ -1266,41 +782,23 @@ nsBaseChannel::OnStartRequest(nsIRequest* request) {
     // keep going as-is.
     if (NS_SUCCEEDED(mStatus) &&
         mContentType.EqualsLiteral(UNKNOWN_CONTENT_TYPE)) {
-      mPump->PeekStream(CallUnknownTypeSniffer,
-                        static_cast<nsIChannel *>(this));
+      mPump->PeekStream(CallUnknownTypeSniffer, static_cast<nsIChannel*>(this));
     }
 
     // Now, the general type sniffers. Skip this if we have none.
     if (mLoadFlags & LOAD_CALL_CONTENT_SNIFFERS)
-      mPump->PeekStream(CallTypeSniffers, static_cast<nsIChannel *>(this));
+      mPump->PeekStream(CallTypeSniffers, static_cast<nsIChannel*>(this));
   }
 
   SUSPEND_PUMP_FOR_SCOPE();
 
-<<<<<<< HEAD
-  if (mListener)  // null in case of redirect
-    return mListener->OnStartRequest(this, mListenerContext);
-||||||| merged common ancestors
-  if (mListener) // null in case of redirect
-      return mListener->OnStartRequest(this, mListenerContext);
-=======
   if (mListener)  // null in case of redirect
     return mListener->OnStartRequest(this);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
-                             nsresult status) {
-||||||| merged common ancestors
-nsBaseChannel::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
-                             nsresult status)
-{
-=======
 nsBaseChannel::OnStopRequest(nsIRequest* request, nsresult status) {
->>>>>>> upstream-releases
   // If both mStatus and status are failure codes, we keep mStatus as-is since
   // that is consistent with our GetStatus and Cancel methods.
   if (NS_SUCCEEDED(mStatus)) mStatus = status;
@@ -1310,16 +808,8 @@ nsBaseChannel::OnStopRequest(nsIRequest* request, nsresult status) {
   mRequest = nullptr;
   mPumpingData = false;
 
-<<<<<<< HEAD
-  if (mListener)  // null in case of redirect
-    mListener->OnStopRequest(this, mListenerContext, mStatus);
-||||||| merged common ancestors
-  if (mListener) // null in case of redirect
-      mListener->OnStopRequest(this, mListenerContext, mStatus);
-=======
   if (mListener)  // null in case of redirect
     mListener->OnStopRequest(this, mStatus);
->>>>>>> upstream-releases
   ChannelDone();
 
   // No need to suspend pump in this scope since we will not be receiving
@@ -1338,30 +828,11 @@ nsBaseChannel::OnStopRequest(nsIRequest* request, nsresult status) {
 // nsBaseChannel::nsIStreamListener
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::OnDataAvailable(nsIRequest *request, nsISupports *ctxt,
-                               nsIInputStream *stream, uint64_t offset,
-                               uint32_t count) {
-||||||| merged common ancestors
-nsBaseChannel::OnDataAvailable(nsIRequest *request, nsISupports *ctxt,
-                               nsIInputStream *stream, uint64_t offset,
-                               uint32_t count)
-{
-=======
 nsBaseChannel::OnDataAvailable(nsIRequest* request, nsIInputStream* stream,
                                uint64_t offset, uint32_t count) {
->>>>>>> upstream-releases
   SUSPEND_PUMP_FOR_SCOPE();
 
-<<<<<<< HEAD
-  nsresult rv =
-      mListener->OnDataAvailable(this, mListenerContext, stream, offset, count);
-||||||| merged common ancestors
-  nsresult rv = mListener->OnDataAvailable(this, mListenerContext, stream,
-                                           offset, count);
-=======
   nsresult rv = mListener->OnDataAvailable(this, stream, offset, count);
->>>>>>> upstream-releases
   if (mSynthProgressEvents && NS_SUCCEEDED(rv)) {
     int64_t prog = offset + count;
     if (NS_IsMainThread()) {
@@ -1371,19 +842,9 @@ nsBaseChannel::OnDataAvailable(nsIRequest* request, nsIInputStream* stream,
         RefPtr<nsBaseChannel> mChannel;
         int64_t mProgress;
         int64_t mContentLength;
-<<<<<<< HEAD
-
-       public:
-        OnTransportStatusAsyncEvent(nsBaseChannel *aChannel, int64_t aProgress,
-||||||| merged common ancestors
-      public:
-        OnTransportStatusAsyncEvent(nsBaseChannel* aChannel,
-                                    int64_t aProgress,
-=======
 
        public:
         OnTransportStatusAsyncEvent(nsBaseChannel* aChannel, int64_t aProgress,
->>>>>>> upstream-releases
                                     int64_t aContentLength)
             : mozilla::Runnable("OnTransportStatusAsyncEvent"),
               mChannel(aChannel),
@@ -1420,14 +881,7 @@ nsBaseChannel::OnRedirectVerifyCallback(nsresult result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::RetargetDeliveryTo(nsIEventTarget *aEventTarget) {
-||||||| merged common ancestors
-nsBaseChannel::RetargetDeliveryTo(nsIEventTarget* aEventTarget)
-{
-=======
 nsBaseChannel::RetargetDeliveryTo(nsIEventTarget* aEventTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   NS_ENSURE_TRUE(mRequest, NS_ERROR_NOT_INITIALIZED);
@@ -1443,14 +897,7 @@ nsBaseChannel::RetargetDeliveryTo(nsIEventTarget* aEventTarget) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseChannel::GetDeliveryTarget(nsIEventTarget **aEventTarget) {
-||||||| merged common ancestors
-nsBaseChannel::GetDeliveryTarget(nsIEventTarget** aEventTarget)
-{
-=======
 nsBaseChannel::GetDeliveryTarget(nsIEventTarget** aEventTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   NS_ENSURE_TRUE(mRequest, NS_ERROR_NOT_INITIALIZED);

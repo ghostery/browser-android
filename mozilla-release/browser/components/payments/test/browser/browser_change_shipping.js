@@ -17,27 +17,6 @@ async function setup() {
 }
 
 add_task(async function test_change_shipping() {
-<<<<<<< HEAD
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(false, "Cannot test OS key store login on official builds.");
-    return;
-  }
-  await setup();
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: BLANK_PAGE_URL,
-  }, async browser => {
-    let {win, frame} =
-      await setupPaymentDialog(browser, {
-||||||| merged common ancestors
-  await setup();
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: BLANK_PAGE_URL,
-  }, async browser => {
-    let {win, frame} =
-      await setupPaymentDialog(browser, {
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(false, "Cannot test OS key store login on official builds.");
     return;
@@ -50,7 +29,6 @@ add_task(async function test_change_shipping() {
     },
     async browser => {
       let { win, frame } = await setupPaymentDialog(browser, {
->>>>>>> upstream-releases
         methodData: [PTU.MethodData.basicCard],
         details: Object.assign(
           {},
@@ -59,213 +37,6 @@ add_task(async function test_change_shipping() {
         ),
         options: PTU.Options.requestShippingOption,
         merchantTaskFn: PTU.ContentTasks.createAndShowRequest,
-<<<<<<< HEAD
-      }
-    );
-
-    let shippingOptions =
-      await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.getShippingOptions);
-    is(shippingOptions.selectedOptionCurrency, "USD", "Shipping options should be in USD");
-    is(shippingOptions.optionCount, 2, "there should be two shipping options");
-    is(shippingOptions.selectedOptionID, "2", "default selected should be '2'");
-
-    await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.selectShippingOptionById, "1");
-
-    shippingOptions =
-      await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.getShippingOptions);
-    is(shippingOptions.optionCount, 2, "there should be two shipping options");
-    is(shippingOptions.selectedOptionID, "1", "selected should be '1'");
-
-    let paymentDetails = Object.assign({},
-                                       PTU.Details.twoShippingOptionsEUR,
-                                       PTU.Details.total1pt75EUR,
-                                       PTU.Details.twoDisplayItemsEUR,
-                                       PTU.Details.additionalDisplayItemsEUR);
-    await ContentTask.spawn(browser, {
-      eventName: "shippingaddresschange",
-      details: paymentDetails,
-    }, PTU.ContentTasks.updateWith);
-    info("added shipping change handler to change to EUR");
-
-    await selectPaymentDialogShippingAddressByCountry(frame, "DE");
-    info("changed shipping address to DE country");
-
-    await ContentTask.spawn(browser, {
-      eventName: "shippingaddresschange",
-    }, PTU.ContentTasks.awaitPaymentRequestEventPromise);
-    info("got shippingaddresschange event");
-
-    // verify update of shippingOptions
-    shippingOptions =
-      await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.getShippingOptions);
-    is(shippingOptions.selectedOptionCurrency, "EUR",
-       "Shipping options should be in EUR after the shippingaddresschange");
-    is(shippingOptions.selectedOptionID, "1", "id:1 should still be selected");
-    is(shippingOptions.selectedOptionValue, "1.01",
-       "amount should be '1.01' after the shippingaddresschange");
-
-    await spawnPaymentDialogTask(frame, async function() {
-      let {
-        PaymentTestUtils: PTU,
-      } = ChromeUtils.import("resource://testing-common/PaymentTestUtils.jsm", {});
-      // verify update of total
-      // Note: The update includes a modifier, and modifiers must include a total
-      // so the expected total is that one
-      is(content.document.querySelector("#total > currency-amount").textContent,
-         "\u20AC2.50 EUR",
-         "Check updated total currency amount");
-
-      let btn = content.document.querySelector("#view-all");
-      btn.click();
-      await PTU.DialogContentUtils.waitForState(content, (state) => {
-        return state.orderDetailsShowing;
-      }, "Order details show be showing now");
-
-      let container = content.document.querySelector("order-details");
-      let items = [...container.querySelectorAll(".main-list payment-details-item")]
-                  .map(item => Cu.waiveXrays(item));
-
-      // verify the updated displayItems
-      is(items.length, 2, "2 display items");
-      is(items[0].amountCurrency, "EUR", "First display item is in Euros");
-      is(items[1].amountCurrency, "EUR", "2nd display item is in Euros");
-      is(items[0].amountValue, "0.85", "First display item has 0.85 value");
-      is(items[1].amountValue, "1.70", "2nd display item has 1.70 value");
-
-      // verify the updated modifiers
-      items = [...container.querySelectorAll(".footer-items-list payment-details-item")]
-              .map(item => Cu.waiveXrays(item));
-      is(items.length, 1, "1 additional display item");
-      is(items[0].amountCurrency, "EUR", "First display item is in Euros");
-      is(items[0].amountValue, "1.00", "First display item has 1.00 value");
-      btn.click();
-    });
-
-    await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.setSecurityCode, {
-      securityCode: "123",
-    });
-
-    info("clicking pay");
-    await loginAndCompletePayment(frame);
-
-    // Add a handler to complete the payment above.
-    info("acknowledging the completion from the merchant page");
-    let result = await ContentTask.spawn(browser, {}, PTU.ContentTasks.addCompletionHandler);
-    is(result.response.methodName, "basic-card", "Check methodName");
-
-    let {shippingAddress} = result.response;
-    let expectedAddress = PTU.Addresses.TimBL2;
-    checkPaymentAddressMatchesStorageAddress(shippingAddress, expectedAddress, "Shipping address");
-
-    let {methodDetails} = result;
-    checkPaymentMethodDetailsMatchesCard(methodDetails, PTU.BasicCards.JohnDoe, "Payment method");
-
-    await BrowserTestUtils.waitForCondition(() => win.closed, "dialog should be closed");
-  });
-||||||| merged common ancestors
-      }
-    );
-
-    let shippingOptions =
-      await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.getShippingOptions);
-    is(shippingOptions.selectedOptionCurrency, "USD", "Shipping options should be in USD");
-    is(shippingOptions.optionCount, 2, "there should be two shipping options");
-    is(shippingOptions.selectedOptionID, "2", "default selected should be '2'");
-
-    await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.selectShippingOptionById, "1");
-
-    shippingOptions =
-      await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.getShippingOptions);
-    is(shippingOptions.optionCount, 2, "there should be two shipping options");
-    is(shippingOptions.selectedOptionID, "1", "selected should be '1'");
-
-    let paymentDetails = Object.assign({},
-                                       PTU.Details.twoShippingOptionsEUR,
-                                       PTU.Details.total1pt75EUR,
-                                       PTU.Details.twoDisplayItemsEUR,
-                                       PTU.Details.additionalDisplayItemsEUR);
-    await ContentTask.spawn(browser, {
-      eventName: "shippingaddresschange",
-      details: paymentDetails,
-    }, PTU.ContentTasks.updateWith);
-    info("added shipping change handler to change to EUR");
-
-    await selectPaymentDialogShippingAddressByCountry(frame, "DE");
-    info("changed shipping address to DE country");
-
-    await ContentTask.spawn(browser, {
-      eventName: "shippingaddresschange",
-    }, PTU.ContentTasks.awaitPaymentRequestEventPromise);
-    info("got shippingaddresschange event");
-
-    // verify update of shippingOptions
-    shippingOptions =
-      await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.getShippingOptions);
-    is(shippingOptions.selectedOptionCurrency, "EUR",
-       "Shipping options should be in EUR after the shippingaddresschange");
-    is(shippingOptions.selectedOptionID, "1", "id:1 should still be selected");
-    is(shippingOptions.selectedOptionValue, "1.01",
-       "amount should be '1.01' after the shippingaddresschange");
-
-    await spawnPaymentDialogTask(frame, async function() {
-      let {
-        PaymentTestUtils: PTU,
-      } = ChromeUtils.import("resource://testing-common/PaymentTestUtils.jsm", {});
-      // verify update of total
-      // Note: The update includes a modifier, and modifiers must include a total
-      // so the expected total is that one
-      is(content.document.querySelector("#total > currency-amount").textContent,
-         "\u20AC2.50 EUR",
-         "Check updated total currency amount");
-
-      let btn = content.document.querySelector("#view-all");
-      btn.click();
-      await PTU.DialogContentUtils.waitForState(content, (state) => {
-        return state.orderDetailsShowing;
-      }, "Order details show be showing now");
-
-      let container = content.document.querySelector("order-details");
-      let items = [...container.querySelectorAll(".main-list payment-details-item")]
-                  .map(item => Cu.waiveXrays(item));
-
-      // verify the updated displayItems
-      is(items.length, 2, "2 display items");
-      is(items[0].amountCurrency, "EUR", "First display item is in Euros");
-      is(items[1].amountCurrency, "EUR", "2nd display item is in Euros");
-      is(items[0].amountValue, "0.85", "First display item has 0.85 value");
-      is(items[1].amountValue, "1.70", "2nd display item has 1.70 value");
-
-      // verify the updated modifiers
-      items = [...container.querySelectorAll(".footer-items-list payment-details-item")]
-              .map(item => Cu.waiveXrays(item));
-      is(items.length, 1, "1 additional display item");
-      is(items[0].amountCurrency, "EUR", "First display item is in Euros");
-      is(items[0].amountValue, "1.00", "First display item has 1.00 value");
-      btn.click();
-    });
-
-    await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.setSecurityCode, {
-      securityCode: "123",
-    });
-
-    info("clicking pay");
-    spawnPaymentDialogTask(frame, PTU.DialogContentTasks.completePayment);
-
-    // Add a handler to complete the payment above.
-    info("acknowledging the completion from the merchant page");
-    let result = await ContentTask.spawn(browser, {}, PTU.ContentTasks.addCompletionHandler);
-    is(result.response.methodName, "basic-card", "Check methodName");
-
-    let {shippingAddress} = result.response;
-    let expectedAddress = PTU.Addresses.TimBL2;
-    checkPaymentAddressMatchesStorageAddress(shippingAddress, expectedAddress, "Shipping address");
-
-    let {methodDetails} = result;
-    checkPaymentMethodDetailsMatchesCard(methodDetails, PTU.BasicCards.JohnDoe, "Payment method");
-
-    await BrowserTestUtils.waitForCondition(() => win.closed, "dialog should be closed");
-  });
-=======
       });
 
       await spawnPaymentDialogTask(
@@ -458,7 +229,6 @@ add_task(async function test_change_shipping() {
       );
     }
   );
->>>>>>> upstream-releases
   await cleanupFormAutofillStorage();
 });
 
@@ -673,27 +443,6 @@ add_task(async function test_default_shippingOptions_allSelected() {
 });
 
 add_task(async function test_no_shippingchange_without_shipping() {
-<<<<<<< HEAD
-  if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
-    todo(false, "Cannot test OS key store login on official builds.");
-    return;
-  }
-  await setup();
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: BLANK_PAGE_URL,
-  }, async browser => {
-    let {win, frame} =
-      await setupPaymentDialog(browser, {
-||||||| merged common ancestors
-  await setup();
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: BLANK_PAGE_URL,
-  }, async browser => {
-    let {win, frame} =
-      await setupPaymentDialog(browser, {
-=======
   if (!OSKeyStoreTestUtils.canTestOSKeyStoreLogin()) {
     todo(false, "Cannot test OS key store login on official builds.");
     return;
@@ -706,7 +455,6 @@ add_task(async function test_no_shippingchange_without_shipping() {
     },
     async browser => {
       let { win, frame } = await setupPaymentDialog(browser, {
->>>>>>> upstream-releases
         methodData: [PTU.MethodData.basicCard],
         details: Object.assign(
           {},
@@ -714,67 +462,6 @@ add_task(async function test_no_shippingchange_without_shipping() {
           PTU.Details.total2USD
         ),
         merchantTaskFn: PTU.ContentTasks.createAndShowRequest,
-<<<<<<< HEAD
-      }
-    );
-
-    ContentTask.spawn(browser, {
-      eventName: "shippingaddresschange",
-    }, PTU.ContentTasks.ensureNoPaymentRequestEvent);
-    info("added shipping change handler");
-
-    await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.setSecurityCode, {
-      securityCode: "456",
-    });
-
-    info("clicking pay");
-    await loginAndCompletePayment(frame);
-
-    // Add a handler to complete the payment above.
-    info("acknowledging the completion from the merchant page");
-    let result = await ContentTask.spawn(browser, {}, PTU.ContentTasks.addCompletionHandler);
-    is(result.response.methodName, "basic-card", "Check methodName");
-
-    let actualShippingAddress = result.response.shippingAddress;
-    ok(actualShippingAddress === null,
-       "Check that shipping address is null with requestShipping:false");
-
-    let {methodDetails} = result;
-    checkPaymentMethodDetailsMatchesCard(methodDetails, PTU.BasicCards.JohnDoe, "Payment method");
-
-    await BrowserTestUtils.waitForCondition(() => win.closed, "dialog should be closed");
-  });
-||||||| merged common ancestors
-      }
-    );
-
-    ContentTask.spawn(browser, {
-      eventName: "shippingaddresschange",
-    }, PTU.ContentTasks.ensureNoPaymentRequestEvent);
-    info("added shipping change handler");
-
-    await spawnPaymentDialogTask(frame, PTU.DialogContentTasks.setSecurityCode, {
-      securityCode: "456",
-    });
-
-    info("clicking pay");
-    spawnPaymentDialogTask(frame, PTU.DialogContentTasks.completePayment);
-
-    // Add a handler to complete the payment above.
-    info("acknowledging the completion from the merchant page");
-    let result = await ContentTask.spawn(browser, {}, PTU.ContentTasks.addCompletionHandler);
-    is(result.response.methodName, "basic-card", "Check methodName");
-
-    let actualShippingAddress = result.response.shippingAddress;
-    ok(actualShippingAddress === null,
-       "Check that shipping address is null with requestShipping:false");
-
-    let {methodDetails} = result;
-    checkPaymentMethodDetailsMatchesCard(methodDetails, PTU.BasicCards.JohnDoe, "Payment method");
-
-    await BrowserTestUtils.waitForCondition(() => win.closed, "dialog should be closed");
-  });
-=======
       });
 
       await spawnPaymentDialogTask(
@@ -839,7 +526,6 @@ add_task(async function test_no_shippingchange_without_shipping() {
       );
     }
   );
->>>>>>> upstream-releases
   await cleanupFormAutofillStorage();
 });
 

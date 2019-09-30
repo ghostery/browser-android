@@ -183,38 +183,6 @@ class MediaDecoderStateMachine
   // Returns the state machine task queue.
   TaskQueue* OwnerThread() const { return mTaskQueue; }
 
-<<<<<<< HEAD
-  RefPtr<MediaDecoder::DebugInfoPromise> RequestDebugInfo();
-
-  void SetOutputStreamPrincipal(const nsCOMPtr<nsIPrincipal>& aPrincipal);
-  void SetOutputStreamCORSMode(CORSMode aCORSMode);
-  // If an OutputStreamManager does not exist, one will be created and tracks
-  // matching aLoadedInfo will be created ahead of being created by the
-  // DecodedStream sink.
-  void EnsureOutputStreamManager(MediaStreamGraph* aGraph,
-                                 const Maybe<MediaInfo>& aLoadedInfo);
-  // Add an output stream to the output stream manager. The manager must have
-  // been created through EnsureOutputStreamManager() before this.
-  void AddOutputStream(DOMMediaStream* aStream);
-  // Remove an output stream added with AddOutputStream. If the last output
-  // stream was removed, we will also tear down the OutputStreamManager.
-  void RemoveOutputStream(DOMMediaStream* aStream);
-  // Set the TrackID to be used as the initial id by the next DecodedStream
-  // sink.
-  void SetNextOutputStreamTrackID(TrackID aNextTrackID);
-  // Get the next TrackID to be allocated by DecodedStream,
-  // or the last set TrackID if there is no DecodedStream sink.
-  TrackID GetNextOutputStreamTrackID();
-||||||| merged common ancestors
-  RefPtr<MediaDecoder::DebugInfoPromise> RequestDebugInfo();
-
-  void AddOutputStream(ProcessedMediaStream* aStream,
-                       TrackID aNextAvailableTrackID,
-                       bool aFinishWhenEnded);
-  // Remove an output stream added with AddOutputStream.
-  void RemoveOutputStream(MediaStream* aStream);
-  TrackID NextAvailableTrackIDFor(MediaStream* aOutputStream) const;
-=======
   RefPtr<GenericPromise> RequestDebugInfo(
       dom::MediaDecoderStateMachineDebugInfo& aInfo);
 
@@ -237,7 +205,6 @@ class MediaDecoderStateMachine
   // Get the next TrackID to be allocated by DecodedStream,
   // or the last set TrackID if there is no DecodedStream sink.
   TrackID GetNextOutputStreamTrackID();
->>>>>>> upstream-releases
 
   // Seeks to the decoder to aTarget asynchronously.
   RefPtr<MediaDecoder::SeekPromise> InvokeSeek(const SeekTarget& aTarget);
@@ -323,16 +290,10 @@ class MediaDecoderStateMachine
 
   RefPtr<GenericPromise> InvokeSetSink(RefPtr<AudioDeviceInfo> aSink);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   void SetSecondaryVideoContainer(
       const RefPtr<VideoFrameContainer>& aSecondary);
 
  private:
->>>>>>> upstream-releases
   class StateObject;
   class DecodeMetadataState;
   class DormantState;
@@ -485,17 +446,9 @@ private:
   MediaSink* CreateAudioSink();
 
   // Always create mediasink which contains an AudioSink or StreamSink inside.
-<<<<<<< HEAD
-  // A manager must be passed in if aAudioCaptured is true.
-  already_AddRefed<media::MediaSink> CreateMediaSink(
-      bool aAudioCaptured, OutputStreamManager* aManager = nullptr);
-||||||| merged common ancestors
-  already_AddRefed<media::MediaSink> CreateMediaSink(bool aAudioCaptured);
-=======
   // A manager must be passed in if aAudioCaptured is true.
   already_AddRefed<MediaSink> CreateMediaSink(
       bool aAudioCaptured, OutputStreamManager* aManager = nullptr);
->>>>>>> upstream-releases
 
   // Stops the media sink and shut it down.
   // The decoder monitor must be held with exactly one lock count.

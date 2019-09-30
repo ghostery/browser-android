@@ -65,45 +65,6 @@ U_NAMESPACE_BEGIN
  *   Low Level Atomic Operations, ICU wrappers for.
  *
  ****************************************************************************/
-<<<<<<< HEAD
-#if defined (U_USER_ATOMICS_H)
-#include U_MUTEX_XSTR(U_USER_ATOMICS_H)
-
-#elif U_HAVE_STD_ATOMICS
-
-//  C++11 atomics are available.
-
-#include <atomic>
-
-// Export an explicit template instantiation of std::atomic<int32_t>. 
-// When building DLLs for Windows this is required as it is used as a data member of the exported SharedObject class.
-// See digitlst.h, pluralaffix.h, datefmt.h, and others for similar examples.
-#if U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN && !defined(U_IN_DOXYGEN)
-  #if defined(__clang__)
-  // Suppress the warning that the explicit instantiation after explicit specialization has no effect.
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Winstantiation-after-specialization"
-  #endif
-template struct U_COMMON_API std::atomic<int32_t>;
-  #if defined(__clang__)
-  #pragma clang diagnostic pop
-  #endif
-#endif
-
-U_NAMESPACE_BEGIN
-||||||| merged common ancestors
-#if defined (U_USER_ATOMICS_H)
-#include U_MUTEX_XSTR(U_USER_ATOMICS_H)
-
-#elif U_HAVE_STD_ATOMICS
-
-//  C++11 atomics are available.
-
-#include <atomic>
-
-U_NAMESPACE_BEGIN
-=======
->>>>>>> upstream-releases
 
 typedef std::atomic<int32_t> u_atomic_int32_t;
 #define ATOMIC_INT32_T_INITIALIZER(val) ATOMIC_VAR_INIT(val)
@@ -123,276 +84,6 @@ inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
 inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
     return var->fetch_sub(1) - 1;
 }
-<<<<<<< HEAD
-U_NAMESPACE_END
-
-#elif U_PLATFORM_HAS_WIN32_API
-
-// MSVC compiler. Reads and writes of volatile variables have
-//                acquire and release memory semantics, respectively.
-//                This is a Microsoft extension, not standard C++ behavior.
-//
-//   Update:      can't use this because of MinGW, built with gcc.
-//                Original plan was to use gcc atomics for MinGW, but they
-//                aren't supported, so we fold MinGW into this path.
-
-#ifndef WIN32_LEAN_AND_MEAN
-# define WIN32_LEAN_AND_MEAN
-#endif
-# define VC_EXTRALEAN
-# define NOUSER
-# define NOSERVICE
-# define NOIME
-# define NOMCX
-# ifndef NOMINMAX
-# define NOMINMAX
-# endif
-# include <windows.h>
-
-U_NAMESPACE_BEGIN
-typedef volatile LONG u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    return InterlockedCompareExchange(&var, 0, 0);
-}
-
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-    InterlockedExchange(&var, val);
-}
-
-
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return InterlockedIncrement(var);
-}
-
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return InterlockedDecrement(var);
-}
-U_NAMESPACE_END
-
-
-#elif U_HAVE_CLANG_ATOMICS
-/*
- *  Clang __c11 atomic built-ins
- */
-
-U_NAMESPACE_BEGIN
-typedef _Atomic(int32_t) u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-     return __c11_atomic_load(&var, __ATOMIC_ACQUIRE);
-}
-
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-   return __c11_atomic_store(&var, val, __ATOMIC_RELEASE);
-}
-
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return __c11_atomic_fetch_add(var, 1, __ATOMIC_SEQ_CST) + 1;
-}
-
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return __c11_atomic_fetch_sub(var, 1, __ATOMIC_SEQ_CST) - 1;
-}
-U_NAMESPACE_END
-
-
-#elif U_HAVE_GCC_ATOMICS
-/*
- * gcc atomic ops. These are available on several other compilers as well.
- */
-
-U_NAMESPACE_BEGIN
-typedef int32_t u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    int32_t val = var;
-    __sync_synchronize();
-    return val;
-}
-
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-    __sync_synchronize();
-    var = val;
-}
-
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *p)  {
-   return __sync_add_and_fetch(p, 1);
-}
-
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *p)  {
-   return __sync_sub_and_fetch(p, 1);
-}
-U_NAMESPACE_END
-
-#else
-
-/*
- * Unknown Platform. Use out-of-line functions, which in turn use mutexes.
- *                   Slow but correct.
- */
-
-#define U_NO_PLATFORM_ATOMICS
-
-U_NAMESPACE_BEGIN
-typedef int32_t u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-U_COMMON_API int32_t U_EXPORT2 
-umtx_loadAcquire(u_atomic_int32_t &var);
-
-U_COMMON_API void U_EXPORT2 
-umtx_storeRelease(u_atomic_int32_t &var, int32_t val);
-
-U_COMMON_API int32_t U_EXPORT2 
-umtx_atomic_inc(u_atomic_int32_t *p);
-
-U_COMMON_API int32_t U_EXPORT2 
-umtx_atomic_dec(u_atomic_int32_t *p);
-
-U_NAMESPACE_END
-
-#endif  /* Low Level Atomic Ops Platform Chain */
-
-||||||| merged common ancestors
-U_NAMESPACE_END
-
-#elif U_PLATFORM_HAS_WIN32_API
-
-// MSVC compiler. Reads and writes of volatile variables have
-//                acquire and release memory semantics, respectively.
-//                This is a Microsoft extension, not standard C++ behavior.
-//
-//   Update:      can't use this because of MinGW, built with gcc.
-//                Original plan was to use gcc atomics for MinGW, but they
-//                aren't supported, so we fold MinGW into this path.
-
-#ifndef WIN32_LEAN_AND_MEAN
-# define WIN32_LEAN_AND_MEAN
-#endif
-# define VC_EXTRALEAN
-# define NOUSER
-# define NOSERVICE
-# define NOIME
-# define NOMCX
-# ifndef NOMINMAX
-# define NOMINMAX
-# endif
-# include <windows.h>
-
-U_NAMESPACE_BEGIN
-typedef volatile LONG u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    return InterlockedCompareExchange(&var, 0, 0);
-}
-
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-    InterlockedExchange(&var, val);
-}
-
-
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return InterlockedIncrement(var);
-}
-
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return InterlockedDecrement(var);
-}
-U_NAMESPACE_END
-
-
-#elif U_HAVE_CLANG_ATOMICS
-/*
- *  Clang __c11 atomic built-ins
- */
-
-U_NAMESPACE_BEGIN
-typedef _Atomic(int32_t) u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-     return __c11_atomic_load(&var, __ATOMIC_ACQUIRE);
-}
-
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-   return __c11_atomic_store(&var, val, __ATOMIC_RELEASE);
-}
-
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return __c11_atomic_fetch_add(var, 1, __ATOMIC_SEQ_CST) + 1;
-}
-
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return __c11_atomic_fetch_sub(var, 1, __ATOMIC_SEQ_CST) - 1;
-}
-U_NAMESPACE_END
-
-
-#elif U_HAVE_GCC_ATOMICS
-/*
- * gcc atomic ops. These are available on several other compilers as well.
- */
-
-U_NAMESPACE_BEGIN
-typedef int32_t u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    int32_t val = var;
-    __sync_synchronize();
-    return val;
-}
-
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
-    __sync_synchronize();
-    var = val;
-}
-
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *p)  {
-   return __sync_add_and_fetch(p, 1);
-}
-
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *p)  {
-   return __sync_sub_and_fetch(p, 1);
-}
-U_NAMESPACE_END
-
-#else
-
-/*
- * Unknown Platform. Use out-of-line functions, which in turn use mutexes.
- *                   Slow but correct.
- */
-
-#define U_NO_PLATFORM_ATOMICS
-
-U_NAMESPACE_BEGIN
-typedef int32_t u_atomic_int32_t;
-#define ATOMIC_INT32_T_INITIALIZER(val) val
-
-U_COMMON_API int32_t U_EXPORT2 
-umtx_loadAcquire(u_atomic_int32_t &var);
-
-U_COMMON_API void U_EXPORT2 
-umtx_storeRelease(u_atomic_int32_t &var, int32_t val);
-
-U_COMMON_API int32_t U_EXPORT2 
-umtx_atomic_inc(u_atomic_int32_t *p);
-
-U_COMMON_API int32_t U_EXPORT2 
-umtx_atomic_dec(u_atomic_int32_t *p);
-
-U_NAMESPACE_END
-
-#endif  /* Low Level Atomic Ops Platfrom Chain */
-
-=======
->>>>>>> upstream-releases
 
 
 /*************************************************************************************************
@@ -498,21 +189,11 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UE
  *
  *************************************************************************************************/
 
-<<<<<<< HEAD
-#if defined(U_USER_MUTEX_H)
-// #include "U_USER_MUTEX_H"
-#include U_MUTEX_XSTR(U_USER_MUTEX_H)
-||||||| merged common ancestors
-#if defined(U_USER_MUTEX_H)
-// #inlcude "U_USER_MUTEX_H"
-#include U_MUTEX_XSTR(U_USER_MUTEX_H)
-=======
 struct UMutex : public icu::UMemory {
     UMutex() = default;
     ~UMutex() = default;
     UMutex(const UMutex &other) = delete;
     UMutex &operator =(const UMutex &other) = delete;
->>>>>>> upstream-releases
 
     std::mutex   fMutex = {};    // Note: struct - pubic members - because most access is from
     //                           //       plain C style functions (umtx_lock(), etc.)
@@ -531,45 +212,6 @@ struct UConditionVar : public icu::UMemory {
 #define U_MUTEX_INITIALIZER {}
 #define U_CONDITION_INITIALIZER {}
 
-<<<<<<< HEAD
-/*
- *  Unknown platform type.
- *      This is an error condition. ICU requires mutexes.
- */
-
-#error Unknown Platform.
-
-#endif
-
-
-
-/**************************************************************************************
- *
- *  Mutex Implementation function declarations.
- *     Declarations are platform neutral.
- *     Implementations, in umutex.cpp, are platform specific.
- *
- ************************************************************************************/
-||||||| merged common ancestors
-/*
- *  Unknow platform type.
- *      This is an error condition. ICU requires mutexes.
- */
-
-#error Unknown Platform.
-
-#endif
-
-
-
-/**************************************************************************************
- *
- *  Mutex Implementation function declaratations.
- *     Declarations are platform neutral.
- *     Implementations, in umutex.cpp, are platform specific.
- *
- ************************************************************************************/
-=======
 // Implementation notes for UConditionVar:
 //
 // Use an out-of-line constructor to reduce problems with the ICU dependency checker.
@@ -581,7 +223,6 @@ struct UConditionVar : public icu::UMemory {
 // Do not export (U_COMMON_API) the entire class, but only the constructor
 // and destructor, to avoid Windows build problems with attempting to export the
 // std::condition_variable_any.
->>>>>>> upstream-releases
 
 /* Lock a mutex.
  * @param mutex The given mutex to be locked.  Pass NULL to specify

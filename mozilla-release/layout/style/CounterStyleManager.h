@@ -133,18 +133,10 @@ class AnonymousCounterStyle final : public CounterStyle {
 class CounterStylePtr {
  public:
   CounterStylePtr() : mRaw(0) {}
-<<<<<<< HEAD
-  CounterStylePtr(const CounterStylePtr& aOther) : mRaw(aOther.mRaw) {
-||||||| merged common ancestors
-  CounterStylePtr(const CounterStylePtr& aOther)
-    : mRaw(aOther.mRaw)
-  {
-=======
   CounterStylePtr(const CounterStylePtr& aOther) : mRaw(aOther.mRaw) {
     if (!mRaw) {
       return;
     }
->>>>>>> upstream-releases
     switch (GetType()) {
       case eAnonymousCounterStyle:
         AsAnonymous()->AddRef();
@@ -181,38 +173,17 @@ class CounterStylePtr {
     Reset();
     return *this;
   }
-<<<<<<< HEAD
-  CounterStylePtr& operator=(already_AddRefed<nsAtom> aAtom) {
-||||||| merged common ancestors
-  CounterStylePtr& operator=(already_AddRefed<nsAtom> aAtom)
-  {
-=======
   CounterStylePtr& operator=(nsStaticAtom* aStaticAtom) {
->>>>>>> upstream-releases
     Reset();
     mRaw = reinterpret_cast<uintptr_t>(aStaticAtom) | eAtom;
     return *this;
   }
-<<<<<<< HEAD
-  CounterStylePtr& operator=(AnonymousCounterStyle* aCounterStyle) {
-||||||| merged common ancestors
-  CounterStylePtr& operator=(AnonymousCounterStyle* aCounterStyle)
-  {
-=======
   CounterStylePtr& operator=(already_AddRefed<nsAtom> aAtom) {
->>>>>>> upstream-releases
     Reset();
     mRaw = reinterpret_cast<uintptr_t>(aAtom.take()) | eAtom;
     return *this;
   }
-<<<<<<< HEAD
-  CounterStylePtr& operator=(CounterStyle* aCounterStyle) {
-||||||| merged common ancestors
-  CounterStylePtr& operator=(CounterStyle* aCounterStyle)
-  {
-=======
   CounterStylePtr& operator=(AnonymousCounterStyle* aCounterStyle) {
->>>>>>> upstream-releases
     Reset();
     if (aCounterStyle) {
       CounterStyle* raw = do_AddRef(aCounterStyle).take();
@@ -221,37 +192,8 @@ class CounterStylePtr {
     return *this;
   }
 
-<<<<<<< HEAD
-  operator CounterStyle*() const& { return Get(); }
-  operator CounterStyle*() const&& = delete;
-  CounterStyle* operator->() const { return Get(); }
-||||||| merged common ancestors
-  operator CounterStyle*() const & { return Get(); }
-  operator CounterStyle*() const && = delete;
-  CounterStyle* operator->() const { return Get(); }
-=======
->>>>>>> upstream-releases
   explicit operator bool() const { return !!mRaw; }
   bool operator!() const { return !mRaw; }
-<<<<<<< HEAD
-  bool operator==(const CounterStylePtr& aOther) const {
-    return mRaw == aOther.mRaw;
-  }
-  bool operator!=(const CounterStylePtr& aOther) const {
-    return mRaw != aOther.mRaw;
-  }
-
-  bool IsResolved() const { return !IsUnresolved(); }
-  inline void Resolve(CounterStyleManager* aManager);
-||||||| merged common ancestors
-  bool operator==(const CounterStylePtr& aOther) const
-    { return mRaw == aOther.mRaw; }
-  bool operator!=(const CounterStylePtr& aOther) const
-    { return mRaw != aOther.mRaw; }
-
-  bool IsResolved() const { return !IsUnresolved(); }
-  inline void Resolve(CounterStyleManager* aManager);
-=======
   bool operator==(const CounterStylePtr& aOther) const {
     // FIXME(emilio): For atoms this is all right, but for symbols doesn't this
     // cause us to compare as unequal all the time, even if the specified
@@ -261,19 +203,9 @@ class CounterStylePtr {
   bool operator!=(const CounterStylePtr& aOther) const {
     return mRaw != aOther.mRaw;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsAtom* AsAtom() const {
-    MOZ_ASSERT(IsUnresolved());
-||||||| merged common ancestors
-  nsAtom* AsAtom() const
-  {
-    MOZ_ASSERT(IsUnresolved());
-=======
   nsAtom* AsAtom() const {
     MOZ_ASSERT(IsAtom());
->>>>>>> upstream-releases
     return reinterpret_cast<nsAtom*>(mRaw & ~eMask);
   }
   AnonymousCounterStyle* AsAnonymous() const {
@@ -282,46 +214,10 @@ class CounterStylePtr {
         reinterpret_cast<CounterStyle*>(mRaw & ~eMask));
   }
 
-<<<<<<< HEAD
- private:
-  CounterStyle* Get() const {
-    MOZ_ASSERT(IsResolved());
-    return reinterpret_cast<CounterStyle*>(mRaw & ~eMask);
-  }
-  template <typename T>
-  void AssertPointerAligned(T* aPointer) {
-    // This can be checked at compile time via
-    // > static_assert(alignof(CounterStyle) >= 4);
-    // > static_assert(alignof(nsAtom) >= 4);
-    // but MSVC2015 doesn't support using alignof on an abstract class.
-    // Once we move to MSVC2017, we can replace this runtime check with
-    // the compile time check above.
-    MOZ_ASSERT(!(reinterpret_cast<uintptr_t>(aPointer) & eMask));
-  }
-||||||| merged common ancestors
-private:
-  CounterStyle* Get() const
-  {
-    MOZ_ASSERT(IsResolved());
-    return reinterpret_cast<CounterStyle*>(mRaw & ~eMask);
-  }
-  template<typename T>
-  void AssertPointerAligned(T* aPointer)
-  {
-    // This can be checked at compile time via
-    // > static_assert(alignof(CounterStyle) >= 4);
-    // > static_assert(alignof(nsAtom) >= 4);
-    // but MSVC2015 doesn't support using alignof on an abstract class.
-    // Once we move to MSVC2017, we can replace this runtime check with
-    // the compile time check above.
-    MOZ_ASSERT(!(reinterpret_cast<uintptr_t>(aPointer) & eMask));
-  }
-=======
   bool IsAtom() const { return GetType() == eAtom; }
   bool IsAnonymous() const { return GetType() == eAnonymousCounterStyle; }
 
   bool IsNone() const { return IsAtom() && AsAtom() == nsGkAtoms::none; }
->>>>>>> upstream-releases
 
  private:
   enum Type : uintptr_t {
@@ -337,17 +233,10 @@ private:
 
   Type GetType() const { return static_cast<Type>(mRaw & eMask); }
 
-<<<<<<< HEAD
-  void Reset() {
-||||||| merged common ancestors
-  void Reset()
-  {
-=======
   void Reset() {
     if (!mRaw) {
       return;
     }
->>>>>>> upstream-releases
     switch (GetType()) {
       case eAnonymousCounterStyle:
         AsAnonymous()->Release();
@@ -433,26 +322,6 @@ class CounterStyleManager final {
   nsTArray<CounterStyle*> mRetiredStyles;
 };
 
-<<<<<<< HEAD
-void CounterStylePtr::Resolve(CounterStyleManager* aManager) {
-  if (IsUnresolved()) {
-    *this = aManager->BuildCounterStyle(AsAtom());
-  }
-}
-
 }  // namespace mozilla
-||||||| merged common ancestors
-void
-CounterStylePtr::Resolve(CounterStyleManager* aManager)
-{
-  if (IsUnresolved()) {
-    *this = aManager->BuildCounterStyle(AsAtom());
-  }
-}
-
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* !defined(mozilla_CounterStyleManager_h_) */

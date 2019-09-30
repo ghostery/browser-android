@@ -78,20 +78,9 @@ already_AddRefed<InternalRequest> Request::GetInternalRequest() {
 }
 
 namespace {
-<<<<<<< HEAD
-already_AddRefed<nsIURI> ParseURLFromDocument(nsIDocument* aDocument,
-                                              const nsAString& aInput,
-                                              ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<nsIURI>
-ParseURLFromDocument(nsIDocument* aDocument, const nsAString& aInput,
-                     ErrorResult& aRv)
-{
-=======
 already_AddRefed<nsIURI> ParseURLFromDocument(Document* aDocument,
                                               const nsAString& aInput,
                                               ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -103,21 +92,9 @@ already_AddRefed<nsIURI> ParseURLFromDocument(Document* aDocument,
   }
   return resolvedURI.forget();
 }
-<<<<<<< HEAD
-void GetRequestURLFromDocument(nsIDocument* aDocument, const nsAString& aInput,
-                               nsAString& aRequestURL, nsACString& aURLfragment,
-                               ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-GetRequestURLFromDocument(nsIDocument* aDocument, const nsAString& aInput,
-                          nsAString& aRequestURL, nsACString& aURLfragment,
-                          ErrorResult& aRv)
-{
-=======
 void GetRequestURLFromDocument(Document* aDocument, const nsAString& aInput,
                                nsAString& aRequestURL, nsACString& aURLfragment,
                                ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> resolvedURI = ParseURLFromDocument(aDocument, aInput, aRv);
   if (aRv.Failed()) {
     return;
@@ -270,24 +247,11 @@ class ReferrerSameOriginChecker final : public WorkerMainThreadRunnable {
 
 }  // namespace
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<Request> Request::Constructor(
-    const GlobalObject& aGlobal, const RequestOrUSVString& aInput,
-    const RequestInit& aInit, ErrorResult& aRv) {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<Request>
-Request::Constructor(const GlobalObject& aGlobal,
-                     const RequestOrUSVString& aInput,
-                     const RequestInit& aInit,
-                     ErrorResult& aRv)
-{
-=======
 /*static*/
 already_AddRefed<Request> Request::Constructor(const GlobalObject& aGlobal,
                                                const RequestOrUSVString& aInput,
                                                const RequestInit& aInit,
                                                ErrorResult& aRv) {
->>>>>>> upstream-releases
   bool hasCopiedBody = false;
   RefPtr<InternalRequest> request;
 
@@ -358,20 +322,11 @@ already_AddRefed<Request> Request::Constructor(const GlobalObject& aGlobal,
                                        ? aInit.mCredentials.Value()
                                        : fallbackCredentials;
 
-<<<<<<< HEAD
-  if (mode == RequestMode::Navigate ||
-      (aInit.IsAnyMemberPresent() &&
-       request->Mode() == RequestMode::Navigate)) {
-||||||| merged common ancestors
-  if (mode == RequestMode::Navigate ||
-      (aInit.IsAnyMemberPresent() && request->Mode() == RequestMode::Navigate)) {
-=======
   if (mode == RequestMode::Navigate) {
     aRv.ThrowTypeError<MSG_INVALID_REQUEST_MODE>(NS_LITERAL_STRING("navigate"));
     return nullptr;
   }
   if (aInit.IsAnyMemberPresent() && request->Mode() == RequestMode::Navigate) {
->>>>>>> upstream-releases
     mode = RequestMode::Same_origin;
   }
 

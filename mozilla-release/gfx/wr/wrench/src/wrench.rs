@@ -459,22 +459,6 @@ impl Wrench {
         self.font_key_from_bytes(font, index as u32)
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/wrench.rs
-    #[cfg(target_os = "android")]
-    pub fn font_key_from_properties(
-        &mut self,
-        family: &str,
-        _weight: u32,
-        _style: u32,
-        _stretch: u32,
-    ) -> FontKey {
-        unimplemented!()
-    }
-
-    #[cfg(all(unix, not(target_os = "android")))]
-||||||| merged common ancestors
-    #[cfg(unix)]
-=======
     #[cfg(target_os = "android")]
     pub fn font_key_from_properties(
         &mut self,
@@ -487,7 +471,6 @@ impl Wrench {
     }
 
     #[cfg(all(unix, not(target_os = "android")))]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/wrench.rs
     pub fn font_key_from_name(&mut self, font_name: &str) -> FontKey {
         let property = system_fonts::FontPropertyBuilder::new()
             .family(font_name)

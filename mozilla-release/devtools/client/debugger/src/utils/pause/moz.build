@@ -9,13 +9,7 @@ DIRS += [
     'scopes',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/moz.build
     'index.js',
     'why.js',
 )

@@ -23,13 +23,6 @@ mod stylesheet;
 pub mod supports_rule;
 pub mod viewport_rule;
 
-<<<<<<< HEAD
-use crate::parser::ParserContext;
-use crate::shared_lock::{DeepCloneParams, DeepCloneWithLock, Locked};
-use crate::shared_lock::{SharedRwLock, SharedRwLockReadGuard, ToCssWithGuard};
-use crate::str::CssStringWriter;
-||||||| merged common ancestors
-=======
 #[cfg(feature = "gecko")]
 use crate::gecko_bindings::sugar::refptr::RefCounted;
 #[cfg(feature = "gecko")]
@@ -38,19 +31,13 @@ use crate::parser::ParserContext;
 use crate::shared_lock::{DeepCloneParams, DeepCloneWithLock, Locked};
 use crate::shared_lock::{SharedRwLock, SharedRwLockReadGuard, ToCssWithGuard};
 use crate::str::CssStringWriter;
->>>>>>> upstream-releases
 use cssparser::{parse_one_rule, Parser, ParserInput};
 #[cfg(feature = "gecko")]
 use malloc_size_of::{MallocSizeOfOps, MallocUnconditionalShallowSizeOf};
 use servo_arc::Arc;
 use std::fmt;
-<<<<<<< HEAD
-||||||| merged common ancestors
-use str::CssStringWriter;
-=======
 #[cfg(feature = "gecko")]
 use std::mem::{self, ManuallyDrop};
->>>>>>> upstream-releases
 use style_traits::ParsingMode;
 #[cfg(feature = "gecko")]
 use to_shmem::{SharedMemoryBuilder, ToShmem};
@@ -109,17 +96,6 @@ pub struct UrlExtraData(usize);
 pub type UrlExtraData = ::servo_url::ServoUrl;
 
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-#[derive(Clone, PartialEq)]
-pub struct UrlExtraData(
-    pub crate::gecko_bindings::sugar::refptr::RefPtr<crate::gecko_bindings::structs::URLExtraData>,
-);
-||||||| merged common ancestors
-#[derive(Clone, PartialEq)]
-pub struct UrlExtraData(
-    pub ::gecko_bindings::sugar::refptr::RefPtr<::gecko_bindings::structs::URLExtraData>,
-);
-=======
 impl Clone for UrlExtraData {
     fn clone(&self) -> UrlExtraData {
         UrlExtraData::new(self.ptr())
@@ -157,7 +133,6 @@ impl ToShmem for UrlExtraData {
         }
     }
 }
->>>>>>> upstream-releases
 
 #[cfg(feature = "gecko")]
 impl UrlExtraData {
@@ -182,13 +157,6 @@ impl UrlExtraData {
     ///
     /// This method doesn't touch refcount.
     #[inline]
-<<<<<<< HEAD
-    pub unsafe fn from_ptr_ref(ptr: &*mut crate::gecko_bindings::structs::URLExtraData) -> &Self {
-        ::std::mem::transmute(ptr)
-||||||| merged common ancestors
-    pub unsafe fn from_ptr_ref(ptr: &*mut ::gecko_bindings::structs::URLExtraData) -> &Self {
-        ::std::mem::transmute(ptr)
-=======
     pub unsafe fn from_ptr_ref(ptr: &*mut structs::URLExtraData) -> &Self {
         mem::transmute(ptr)
     }
@@ -207,21 +175,12 @@ impl UrlExtraData {
 
     fn as_ref(&self) -> &structs::URLExtraData {
         unsafe { &*(self.ptr() as *const structs::URLExtraData) }
->>>>>>> upstream-releases
     }
 }
 
 #[cfg(feature = "gecko")]
 impl fmt::Debug for UrlExtraData {
     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-<<<<<<< HEAD
-        use crate::gecko_bindings::{bindings, structs};
-
-||||||| merged common ancestors
-        use gecko_bindings::{structs, bindings};
-
-=======
->>>>>>> upstream-releases
         struct DebugURI(*mut structs::nsIURI);
         impl fmt::Debug for DebugURI {
             fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -243,18 +202,9 @@ impl fmt::Debug for UrlExtraData {
             )
             .field(
                 "referrer",
-<<<<<<< HEAD
-                &DebugURI(self.0.mReferrer.raw::<structs::nsIURI>()),
-            )
-            .finish()
-||||||| merged common ancestors
-                &DebugURI(self.0.mReferrer.raw::<structs::nsIURI>()),
-            ).finish()
-=======
                 &DebugURI(self.as_ref().mReferrer.raw::<structs::nsIURI>()),
             )
             .finish()
->>>>>>> upstream-releases
     }
 }
 

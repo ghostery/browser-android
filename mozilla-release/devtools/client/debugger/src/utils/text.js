@@ -28,34 +28,15 @@ const isMacOS = appinfo.OS === "Darwin";
  */
 export function formatKeyShortcut(shortcut: string): string {
   if (isMacOS) {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/text.js
-    return shortcut
-      .replace(/Shift\+/g, "\u21E7 ")
-      .replace(/Command\+|Cmd\+/g, "\u2318 ")
-      .replace(/CommandOrControl\+|CmdOrCtrl\+/g, "\u2318 ")
-      .replace(/Alt\+/g, "\u2325 ");
-||||||| merged common ancestors
-    return shortcut.replace(/Shift\+/g, "\u21E7 ").replace(/Command\+|Cmd\+/g, "\u2318 ").replace(/CommandOrControl\+|CmdOrCtrl\+/g, "\u2318 ").replace(/Alt\+/g, "\u2325 ");
-=======
     return shortcut
       .replace(/Shift\+/g, "\u21E7")
       .replace(/Command\+|Cmd\+/g, "\u2318")
       .replace(/CommandOrControl\+|CmdOrCtrl\+/g, "\u2318")
       .replace(/Alt\+/g, "\u2325");
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/text.js
   }
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/text.js
-  return shortcut
-    .replace(/CommandOrControl\+|CmdOrCtrl\+/g, `${L10N.getStr("ctrl")} `)
-    .replace(/Shift\+/g, "Shift ");
-||||||| merged common ancestors
-
-  return shortcut.replace(/CommandOrControl\+|CmdOrCtrl\+/g, `${L10N.getStr("ctrl")} `).replace(/Shift\+/g, "Shift ");
-=======
   return shortcut
     .replace(/CommandOrControl\+|CmdOrCtrl\+/g, `${L10N.getStr("ctrl")}+`)
     .replace(/Shift\+/g, "Shift+");
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/text.js
 }
 
 /**

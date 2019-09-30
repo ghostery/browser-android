@@ -10,22 +10,8 @@
 
 // Don't include this file in any .h files because it pulls in some X headers.
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_server_pixel_buffer.h
-#ifndef MODULES_DESKTOP_CAPTURE_X11_X_SERVER_PIXEL_BUFFER_H_
-#define MODULES_DESKTOP_CAPTURE_X11_X_SERVER_PIXEL_BUFFER_H_
-
-#include "modules/desktop_capture/desktop_geometry.h"
-#include "rtc_base/constructormagic.h"
-||||||| merged common ancestors
-#ifndef WEBRTC_MODULES_DESKTOP_CAPTURE_X11_X_SERVER_PIXEL_BUFFER_H_
-#define WEBRTC_MODULES_DESKTOP_CAPTURE_X11_X_SERVER_PIXEL_BUFFER_H_
-
-#include "webrtc/base/constructormagic.h"
-#include "webrtc/modules/desktop_capture/desktop_geometry.h"
-=======
 #ifndef MODULES_DESKTOP_CAPTURE_LINUX_X_SERVER_PIXEL_BUFFER_H_
 #define MODULES_DESKTOP_CAPTURE_LINUX_X_SERVER_PIXEL_BUFFER_H_
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_server_pixel_buffer.h
 
 #include <X11/Xutil.h>
 #include <X11/extensions/XShm.h>
@@ -95,10 +81,4 @@ class XServerPixelBuffer {
 
 }  // namespace webrtc
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_server_pixel_buffer.h
-#endif  // MODULES_DESKTOP_CAPTURE_X11_X_SERVER_PIXEL_BUFFER_H_
-||||||| merged common ancestors
-#endif  // WEBRTC_MODULES_DESKTOP_CAPTURE_X11_X_SERVER_PIXEL_BUFFER_H_
-=======
 #endif  // MODULES_DESKTOP_CAPTURE_LINUX_X_SERVER_PIXEL_BUFFER_H_
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_server_pixel_buffer.h

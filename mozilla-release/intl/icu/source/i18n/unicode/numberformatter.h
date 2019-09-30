@@ -150,19 +150,6 @@ class MultiplierFormatHandler;
 class CurrencySymbols;
 class GeneratorHelpers;
 class DecNum;
-<<<<<<< HEAD
-class NumberRangeFormatterImpl;
-struct RangeMacroProps;
-
-/**
- * Used for NumberRangeFormatter and implemented in numrange_fluent.cpp.
- * Declared here so it can be friended.
- *
- * @internal
- */
-void touchRangeLocales(impl::RangeMacroProps& macros);
-||||||| merged common ancestors
-=======
 class NumberRangeFormatterImpl;
 struct RangeMacroProps;
 struct UFormattedNumberImpl;
@@ -174,7 +161,6 @@ struct UFormattedNumberImpl;
  * @internal
  */
 void touchRangeLocales(impl::RangeMacroProps& macros);
->>>>>>> upstream-releases
 
 } // namespace impl
 
@@ -460,46 +446,6 @@ class U_I18N_API ScientificNotation : public Notation {
  */
 typedef Precision SignificantDigitsPrecision;
 
-<<<<<<< HEAD
-// Typedefs for ICU 60/61 compatibility.
-// These will be removed in ICU 64.
-// See http://bugs.icu-project.org/trac/ticket/13746
-
-/**
- * This will be removed in ICU 64.  See ICU-13746.
- * @deprecated ICU 63
- */
-typedef Precision Rounder;
-
-/**
- * This will be removed in ICU 64.  See ICU-13746.
- * @deprecated ICU 63
- */
-typedef FractionPrecision FractionRounder;
-
-/**
- * This will be removed in ICU 64.  See ICU-13746.
- * @deprecated ICU 63
- */
-typedef IncrementPrecision IncrementRounder;
-
-/**
- * This will be removed in ICU 64.  See ICU-13746.
- * @deprecated ICU 63
- */
-typedef CurrencyPrecision CurrencyRounder;
-
-||||||| merged common ancestors
-// Typedefs for ICU 60/61 compatibility.
-// These will be removed in ICU 64.
-// See http://bugs.icu-project.org/trac/ticket/13746
-typedef Precision Rounder;
-typedef FractionPrecision FractionRounder;
-typedef IncrementPrecision IncrementRounder;
-typedef CurrencyPrecision CurrencyRounder;
-
-=======
->>>>>>> upstream-releases
 /**
  * A class that defines the rounding precision to be used when formatting numbers in NumberFormatter.
  *
@@ -740,13 +686,8 @@ class U_I18N_API Precision : public UMemory {
         } fracSig;
         /** @internal */
         struct IncrementSettings {
-<<<<<<< HEAD
-            /** @internal */
-||||||| merged common ancestors
-=======
             // For RND_INCREMENT, RND_INCREMENT_ONE, and RND_INCREMENT_FIVE
             /** @internal */
->>>>>>> upstream-releases
             double fIncrement;
             /** @internal */
             impl::digits_t fMinFrac;
@@ -2504,13 +2445,7 @@ class U_I18N_API FormattedNumber : public UMemory, public FormattedValue {
      *
      * @draft ICU 62
      */
-<<<<<<< HEAD
-    Appendable &appendTo(Appendable &appendable, UErrorCode& status) const;
-||||||| merged common ancestors
-    Appendable &appendTo(Appendable &appendable, UErrorCode& status);
-=======
     UnicodeString toString(UErrorCode& status) const U_OVERRIDE;
->>>>>>> upstream-releases
 
     // Copydoc: this method is new in ICU 64
     /** @copydoc FormattedValue::toTempString() */
@@ -2531,21 +2466,11 @@ class U_I18N_API FormattedNumber : public UMemory, public FormattedValue {
     UBool nextPosition(ConstrainedFieldPosition& cfpos, UErrorCode& status) const U_OVERRIDE;
 
     /**
-<<<<<<< HEAD
-     * Determines the start (inclusive) and end (exclusive) indices of the next occurrence of the given
-     * <em>field</em> in the output string. This allows you to determine the locations of, for example,
-     * the integer part, fraction part, or symbols.
-||||||| merged common ancestors
-     * Determines the start and end indices of the next occurrence of the given <em>field</em> in the
-     * output string. This allows you to determine the locations of, for example, the integer part,
-     * fraction part, or symbols.
-=======
      * Determines the start (inclusive) and end (exclusive) indices of the next occurrence of the given
      * <em>field</em> in the output string. This allows you to determine the locations of, for example,
      * the integer part, fraction part, or symbols.
      *
      * This is a simpler but less powerful alternative to {@link #nextPosition}.
->>>>>>> upstream-releases
      *
      * If a field occurs just once, calling this method will find that occurrence and return it. If a
      * field occurs multiple times, this method may be called repeatedly with the following pattern:
@@ -2606,73 +2531,7 @@ class U_I18N_API FormattedNumber : public UMemory, public FormattedValue {
      */
     void getAllFieldPositionsImpl(FieldPositionIteratorHandler& fpih, UErrorCode& status) const;
 
-<<<<<<< HEAD
 #endif  /* U_HIDE_INTERNAL_API */
-
-    /**
-     * Copying not supported; use move constructor instead.
-     */
-    FormattedNumber(const FormattedNumber&) = delete;
-
-    /**
-     * Copying not supported; use move assignment instead.
-     */
-    FormattedNumber& operator=(const FormattedNumber&) = delete;
-
-    /**
-     * Move constructor:
-     * Leaves the source FormattedNumber in an undefined state.
-     * @draft ICU 62
-     */
-    FormattedNumber(FormattedNumber&& src) U_NOEXCEPT;
-
-    /**
-     * Move assignment:
-     * Leaves the source FormattedNumber in an undefined state.
-     * @draft ICU 62
-     */
-    FormattedNumber& operator=(FormattedNumber&& src) U_NOEXCEPT;
-
-    /**
-     * Destruct an instance of FormattedNumber, cleaning up any memory it might own.
-     * @draft ICU 60
-     */
-    ~FormattedNumber();
-||||||| merged common ancestors
-#endif
-
-    /**
-     * Copying not supported; use move constructor instead.
-     */
-    FormattedNumber(const FormattedNumber&) = delete;
-
-    /**
-     * Copying not supported; use move assignment instead.
-     */
-    FormattedNumber& operator=(const FormattedNumber&) = delete;
-
-    /**
-     * Move constructor:
-     * Leaves the source FormattedNumber in an undefined state.
-     * @draft ICU 62
-     */
-    FormattedNumber(FormattedNumber&& src) U_NOEXCEPT;
-
-    /**
-     * Move assignment:
-     * Leaves the source FormattedNumber in an undefined state.
-     * @draft ICU 62
-     */
-    FormattedNumber& operator=(FormattedNumber&& src) U_NOEXCEPT;
-
-    /**
-     * Destruct an instance of FormattedNumber, cleaning up any memory it might own.
-     * @draft ICU 60
-     */
-    ~FormattedNumber();
-=======
-#endif  /* U_HIDE_INTERNAL_API */
->>>>>>> upstream-releases
 
   private:
     // Can't use LocalPointer because UFormattedNumberData is forward-declared

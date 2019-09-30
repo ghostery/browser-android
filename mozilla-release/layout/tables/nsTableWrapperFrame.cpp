@@ -28,14 +28,6 @@ using namespace mozilla::layout;
 
 #define NO_SIDE 100
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsTableWrapperFrame::GetLogicalBaseline(
-    WritingMode aWritingMode) const {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsTableWrapperFrame::GetLogicalBaseline(WritingMode aWritingMode) const
-{
-=======
 /* virtual */
 nscoord nsTableWrapperFrame::GetLogicalBaseline(
     WritingMode aWritingMode) const {
@@ -45,7 +37,6 @@ nscoord nsTableWrapperFrame::GetLogicalBaseline(
     return nsContainerFrame::GetLogicalBaseline(aWritingMode);
   }
 
->>>>>>> upstream-releases
   nsIFrame* kid = mFrames.FirstChild();
   if (!kid) {
     MOZ_ASSERT_UNREACHABLE("no inner table");
@@ -56,20 +47,10 @@ nscoord nsTableWrapperFrame::GetLogicalBaseline(
          kid->BStart(aWritingMode, mRect.Size());
 }
 
-<<<<<<< HEAD
-nsTableWrapperFrame::nsTableWrapperFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsContainerFrame(aStyle, aID) {}
-||||||| merged common ancestors
-nsTableWrapperFrame::nsTableWrapperFrame(ComputedStyle* aStyle, ClassID aID)
-  : nsContainerFrame(aStyle, aID)
-{
-}
-=======
 nsTableWrapperFrame::nsTableWrapperFrame(ComputedStyle* aStyle,
                                          nsPresContext* aPresContext,
                                          ClassID aID)
     : nsContainerFrame(aStyle, aPresContext, aID) {}
->>>>>>> upstream-releases
 
 nsTableWrapperFrame::~nsTableWrapperFrame() {}
 
@@ -293,16 +274,8 @@ void nsTableWrapperFrame::GetChildMargin(nsPresContext* aPresContext,
   // XXX We really shouldn't construct a reflow input to do this.
   WritingMode wm = aOuterRI.GetWritingMode();
   LogicalSize availSize(wm, aAvailISize, aOuterRI.AvailableSize(wm).BSize(wm));
-<<<<<<< HEAD
-  ReflowInput childRI(aPresContext, aOuterRI, aChildFrame, availSize, nullptr,
-                      ReflowInput::CALLER_WILL_INIT);
-||||||| merged common ancestors
-  ReflowInput childRI(aPresContext, aOuterRI, aChildFrame, availSize,
-                            nullptr, ReflowInput::CALLER_WILL_INIT);
-=======
   ReflowInput childRI(aPresContext, aOuterRI, aChildFrame, availSize, Nothing(),
                       ReflowInput::CALLER_WILL_INIT);
->>>>>>> upstream-releases
   InitChildReflowInput(*aPresContext, aOuterRI, childRI);
 
   aMargin = childRI.ComputedLogicalMargin();
@@ -325,23 +298,10 @@ static nsSize GetContainingBlockSize(const ReflowInput& aOuterRI) {
   return size;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsTableWrapperFrame::GetMinISize(
-    gfxContext* aRenderingContext) {
-  nscoord iSize = nsLayoutUtils::IntrinsicForContainer(
-      aRenderingContext, InnerTableFrame(), nsLayoutUtils::MIN_ISIZE);
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsTableWrapperFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-  nscoord iSize = nsLayoutUtils::IntrinsicForContainer(aRenderingContext,
-                    InnerTableFrame(), nsLayoutUtils::MIN_ISIZE);
-=======
 /* virtual */
 nscoord nsTableWrapperFrame::GetMinISize(gfxContext* aRenderingContext) {
   nscoord iSize = nsLayoutUtils::IntrinsicForContainer(
       aRenderingContext, InnerTableFrame(), nsLayoutUtils::MIN_ISIZE);
->>>>>>> upstream-releases
   DISPLAY_MIN_INLINE_SIZE(this, iSize);
   if (mCaptionFrames.NotEmpty()) {
     nscoord capISize = nsLayoutUtils::IntrinsicForContainer(
@@ -358,17 +318,8 @@ nscoord nsTableWrapperFrame::GetMinISize(gfxContext* aRenderingContext) {
   return iSize;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsTableWrapperFrame::GetPrefISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsTableWrapperFrame::GetPrefISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsTableWrapperFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord maxISize;
   DISPLAY_PREF_INLINE_SIZE(this, maxISize);
 
@@ -515,28 +466,9 @@ uint8_t nsTableWrapperFrame::GetCaptionSide() {
   }
 }
 
-<<<<<<< HEAD
-uint8_t nsTableWrapperFrame::GetCaptionVerticalAlign() {
-  const nsStyleCoord& va =
-      mCaptionFrames.FirstChild()->StyleDisplay()->mVerticalAlign;
-
-  return (va.GetUnit() == eStyleUnit_Enumerated) ? va.GetIntValue()
-                                                 : NS_STYLE_VERTICAL_ALIGN_TOP;
-||||||| merged common ancestors
-uint8_t
-nsTableWrapperFrame::GetCaptionVerticalAlign()
-{
-  const nsStyleCoord& va =
-    mCaptionFrames.FirstChild()->StyleDisplay()->mVerticalAlign;
-
-  return (va.GetUnit() == eStyleUnit_Enumerated)
-           ? va.GetIntValue()
-           : NS_STYLE_VERTICAL_ALIGN_TOP;
-=======
 StyleVerticalAlignKeyword nsTableWrapperFrame::GetCaptionVerticalAlign() const {
   const auto& va = mCaptionFrames.FirstChild()->StyleDisplay()->mVerticalAlign;
   return va.IsKeyword() ? va.AsKeyword() : StyleVerticalAlignKeyword::Top;
->>>>>>> upstream-releases
 }
 
 void nsTableWrapperFrame::SetDesiredSize(uint8_t aCaptionSide,
@@ -659,39 +591,15 @@ nsresult nsTableWrapperFrame::GetCaptionOrigin(
     case NS_STYLE_CAPTION_SIDE_LEFT:
       aOrigin.B(aWM) = aInnerMargin.BStart(aWM);
       switch (GetCaptionVerticalAlign()) {
-<<<<<<< HEAD
-        case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
-          aOrigin.B(aWM) = std::max(
-              0, aInnerMargin.BStart(aWM) +
-                     ((aInnerSize.BSize(aWM) - aCaptionSize.BSize(aWM)) / 2));
-||||||| merged common ancestors
-        case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
-          aOrigin.B(aWM) = std::max(0, aInnerMargin.BStart(aWM) +
-                                       ((aInnerSize.BSize(aWM) -
-                                         aCaptionSize.BSize(aWM)) / 2));
-=======
         case StyleVerticalAlignKeyword::Middle:
           aOrigin.B(aWM) = std::max(
               0, aInnerMargin.BStart(aWM) +
                      ((aInnerSize.BSize(aWM) - aCaptionSize.BSize(aWM)) / 2));
->>>>>>> upstream-releases
           break;
-<<<<<<< HEAD
-        case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
-          aOrigin.B(aWM) =
-              std::max(0, aInnerMargin.BStart(aWM) + aInnerSize.BSize(aWM) -
-                              aCaptionSize.BSize(aWM));
-||||||| merged common ancestors
-        case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
-          aOrigin.B(aWM) = std::max(0, aInnerMargin.BStart(aWM) +
-                                       aInnerSize.BSize(aWM) -
-                                       aCaptionSize.BSize(aWM));
-=======
         case StyleVerticalAlignKeyword::Bottom:
           aOrigin.B(aWM) =
               std::max(0, aInnerMargin.BStart(aWM) + aInnerSize.BSize(aWM) -
                               aCaptionSize.BSize(aWM));
->>>>>>> upstream-releases
           break;
         default:
           break;
@@ -829,16 +737,8 @@ void nsTableWrapperFrame::OuterBeginReflowChild(nsPresContext* aPresContext,
   LogicalSize availSize(wm, aAvailISize, availBSize);
   // create and init the child reflow input, using passed-in Maybe<>,
   // so that caller can use it after we return.
-<<<<<<< HEAD
-  aChildRI.emplace(aPresContext, aOuterRI, aChildFrame, availSize, nullptr,
-                   ReflowInput::CALLER_WILL_INIT);
-||||||| merged common ancestors
-  aChildRI.emplace(aPresContext, aOuterRI, aChildFrame, availSize,
-                  nullptr, ReflowInput::CALLER_WILL_INIT);
-=======
   aChildRI.emplace(aPresContext, aOuterRI, aChildFrame, availSize, Nothing(),
                    ReflowInput::CALLER_WILL_INIT);
->>>>>>> upstream-releases
   InitChildReflowInput(*aPresContext, aOuterRI, *aChildRI);
 
   // see if we need to reset top-of-page due to a caption
@@ -1110,22 +1010,10 @@ nsIContent* nsTableWrapperFrame::GetCellAt(uint32_t aRowIdx,
   return cell->GetContent();
 }
 
-<<<<<<< HEAD
-nsTableWrapperFrame* NS_NewTableWrapperFrame(nsIPresShell* aPresShell,
-                                             ComputedStyle* aStyle) {
-  return new (aPresShell) nsTableWrapperFrame(aStyle);
-||||||| merged common ancestors
-
-nsTableWrapperFrame*
-NS_NewTableWrapperFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsTableWrapperFrame(aStyle);
-=======
 nsTableWrapperFrame* NS_NewTableWrapperFrame(PresShell* aPresShell,
                                              ComputedStyle* aStyle) {
   return new (aPresShell)
       nsTableWrapperFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTableWrapperFrame)

@@ -66,108 +66,6 @@ nsresult txMozillaTextOutput::endDocument(nsresult aResult) {
   nsresult rv = mTextParent->AppendChildTo(text, true);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  // This should really be handled by nsIDocument::EndLoad
-  if (mObserver) {
-    MOZ_ASSERT(
-        mDocument->GetReadyStateEnum() == nsIDocument::READYSTATE_LOADING,
-        "Bad readyState");
-  } else {
-    MOZ_ASSERT(
-        mDocument->GetReadyStateEnum() == nsIDocument::READYSTATE_INTERACTIVE,
-        "Bad readyState");
-  }
-  mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
-||||||| merged common ancestors
-    // This should really be handled by nsIDocument::EndLoad
-    if (mObserver) {
-        MOZ_ASSERT(mDocument->GetReadyStateEnum() ==
-                   nsIDocument::READYSTATE_LOADING, "Bad readyState");
-    } else {
-        MOZ_ASSERT(mDocument->GetReadyStateEnum() ==
-                   nsIDocument::READYSTATE_INTERACTIVE, "Bad readyState");
-    }
-    mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
-
-    if (NS_SUCCEEDED(aResult)) {
-        nsCOMPtr<nsITransformObserver> observer = do_QueryReferent(mObserver);
-        if (observer) {
-            observer->OnTransformDone(aResult, mDocument);
-        }
-    }
-
-    return NS_OK;
-}
-
-nsresult
-txMozillaTextOutput::endElement()
-{
-    return NS_OK;
-}
-
-nsresult
-txMozillaTextOutput::processingInstruction(const nsString& aTarget,
-                                           const nsString& aData)
-{
-    return NS_OK;
-}
-
-nsresult
-txMozillaTextOutput::startDocument()
-{
-    return NS_OK;
-}
-
-nsresult
-txMozillaTextOutput::createResultDocument(nsIDocument* aSourceDocument,
-                                          bool aLoadedAsData)
-{
-    /*
-     * Create an XHTML document to hold the text.
-     *
-     * <html>
-     *   <head />
-     *   <body>
-     *     <pre id="transformiixResult"> * The text comes here * </pre>
-     *   <body>
-     * </html>
-     *
-     * Except if we are transforming into a non-displayed document we create
-     * the following DOM
-     *
-     * <transformiix:result> * The text comes here * </transformiix:result>
-     */
-
-    // Create the document
-    nsresult rv = NS_NewXMLDocument(getter_AddRefs(mDocument),
-                                    aLoadedAsData);
-    NS_ENSURE_SUCCESS(rv, rv);
-    // This should really be handled by nsIDocument::BeginLoad
-    MOZ_ASSERT(mDocument->GetReadyStateEnum() ==
-               nsIDocument::READYSTATE_UNINITIALIZED, "Bad readyState");
-    mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_LOADING);
-    bool hasHadScriptObject = false;
-    nsIScriptGlobalObject* sgo =
-      aSourceDocument->GetScriptHandlingObject(hasHadScriptObject);
-    NS_ENSURE_STATE(sgo || !hasHadScriptObject);
-
-    NS_ASSERTION(mDocument, "Need document");
-
-    // Reset and set up document
-    URIUtils::ResetWithSource(mDocument, aSourceDocument);
-    // Only do this after resetting the document to ensure we have the
-    // correct principal.
-    mDocument->SetScriptHandlingObject(sgo);
-
-    // Set the charset
-    if (!mOutputFormat.mEncoding.IsEmpty()) {
-        const Encoding* encoding = Encoding::ForLabel(mOutputFormat.mEncoding);
-        if (encoding) {
-            mDocument->SetDocumentCharacterSetSource(kCharsetFromOtherComponent);
-            mDocument->SetDocumentCharacterSet(WrapNotNull(encoding));
-        }
-    }
-=======
   // This should really be handled by Document::EndLoad
   if (mObserver) {
     MOZ_ASSERT(mDocument->GetReadyStateEnum() == Document::READYSTATE_LOADING,
@@ -178,77 +76,12 @@ txMozillaTextOutput::createResultDocument(nsIDocument* aSourceDocument,
         "Bad readyState");
   }
   mDocument->SetReadyStateInternal(Document::READYSTATE_INTERACTIVE);
->>>>>>> upstream-releases
 
   if (NS_SUCCEEDED(aResult)) {
     nsCOMPtr<nsITransformObserver> observer = do_QueryReferent(mObserver);
     if (observer) {
       observer->OnTransformDone(aResult, mDocument);
     }
-<<<<<<< HEAD
-  }
-
-  return NS_OK;
-}
-
-nsresult txMozillaTextOutput::endElement() { return NS_OK; }
-
-nsresult txMozillaTextOutput::processingInstruction(const nsString& aTarget,
-                                                    const nsString& aData) {
-  return NS_OK;
-}
-
-nsresult txMozillaTextOutput::startDocument() { return NS_OK; }
-
-nsresult txMozillaTextOutput::createResultDocument(nsIDocument* aSourceDocument,
-                                                   bool aLoadedAsData) {
-  /*
-   * Create an XHTML document to hold the text.
-   *
-   * <html>
-   *   <head />
-   *   <body>
-   *     <pre id="transformiixResult"> * The text comes here * </pre>
-   *   <body>
-   * </html>
-   *
-   * Except if we are transforming into a non-displayed document we create
-   * the following DOM
-   *
-   * <transformiix:result> * The text comes here * </transformiix:result>
-   */
-
-  // Create the document
-  nsresult rv = NS_NewXMLDocument(getter_AddRefs(mDocument), aLoadedAsData);
-  NS_ENSURE_SUCCESS(rv, rv);
-  // This should really be handled by nsIDocument::BeginLoad
-  MOZ_ASSERT(
-      mDocument->GetReadyStateEnum() == nsIDocument::READYSTATE_UNINITIALIZED,
-      "Bad readyState");
-  mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_LOADING);
-  bool hasHadScriptObject = false;
-  nsIScriptGlobalObject* sgo =
-      aSourceDocument->GetScriptHandlingObject(hasHadScriptObject);
-  NS_ENSURE_STATE(sgo || !hasHadScriptObject);
-
-  NS_ASSERTION(mDocument, "Need document");
-
-  // Reset and set up document
-  URIUtils::ResetWithSource(mDocument, aSourceDocument);
-  // Only do this after resetting the document to ensure we have the
-  // correct principal.
-  mDocument->SetScriptHandlingObject(sgo);
-
-  // Set the charset
-  if (!mOutputFormat.mEncoding.IsEmpty()) {
-    const Encoding* encoding = Encoding::ForLabel(mOutputFormat.mEncoding);
-    if (encoding) {
-      mDocument->SetDocumentCharacterSetSource(kCharsetFromOtherComponent);
-      mDocument->SetDocumentCharacterSet(WrapNotNull(encoding));
-    }
-  }
-||||||| merged common ancestors
-=======
   }
 
   return NS_OK;
@@ -310,7 +143,6 @@ nsresult txMozillaTextOutput::createResultDocument(Document* aSourceDocument,
       mDocument->SetDocumentCharacterSet(WrapNotNull(encoding));
     }
   }
->>>>>>> upstream-releases
 
   // Notify the contentsink that the document is created
   nsCOMPtr<nsITransformObserver> observer = do_QueryReferent(mObserver);
@@ -386,17 +218,8 @@ nsresult txMozillaTextOutput::startElement(nsAtom* aPrefix,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void txMozillaTextOutput::getOutputDocument(nsIDocument** aDocument) {
-  NS_IF_ADDREF(*aDocument = mDocument);
-||||||| merged common ancestors
-void txMozillaTextOutput::getOutputDocument(nsIDocument** aDocument)
-{
-    NS_IF_ADDREF(*aDocument = mDocument);
-=======
 void txMozillaTextOutput::getOutputDocument(Document** aDocument) {
   NS_IF_ADDREF(*aDocument = mDocument);
->>>>>>> upstream-releases
 }
 
 nsresult txMozillaTextOutput::createXHTMLElement(nsAtom* aName,

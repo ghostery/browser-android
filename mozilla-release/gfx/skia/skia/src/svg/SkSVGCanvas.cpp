@@ -14,15 +14,7 @@ std::unique_ptr<SkCanvas> SkSVGCanvas::Make(const SkRect& bounds, SkWStream* wri
     // TODO: pass full bounds to the device
     SkISize size = bounds.roundOut().size();
 
-<<<<<<< HEAD
-    return skstd::make_unique<SkCanvas>(device);
-}
-||||||| merged common ancestors
-    return skstd::make_unique<SkCanvas>(device.get());
-}
-=======
     auto svgDevice = SkSVGDevice::Make(size, skstd::make_unique<SkXMLStreamWriter>(writer));
->>>>>>> upstream-releases
 
     return svgDevice ? skstd::make_unique<SkCanvas>(svgDevice)
                      : nullptr;

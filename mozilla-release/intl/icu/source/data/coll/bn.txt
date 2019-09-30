@@ -9,13 +9,7 @@ bn{
                 "[reorder Beng Deva Guru Gujr Orya Taml Telu Knda Mlym Sinh]"
                 "&ঔ<ং<ঃ<ঁ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         traditional{
             Sequence{
@@ -635,13 +629,7 @@ bn{
                 "&যৌ<<<য়ৌ"
                 "&য্<<<য়্"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

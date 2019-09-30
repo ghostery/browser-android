@@ -207,23 +207,10 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-constexpr GrPrimitiveProcessor::Attribute GrDistanceFieldA8TextGeoProc::kInColor;
-
 GrDistanceFieldA8TextGeoProc::GrDistanceFieldA8TextGeoProc(const GrShaderCaps& caps,
                                                            const sk_sp<GrTextureProxy>* proxies,
                                                            int numProxies,
                                                            const GrSamplerState& params,
-||||||| merged common ancestors
-GrDistanceFieldA8TextGeoProc::GrDistanceFieldA8TextGeoProc(
-        const sk_sp<GrTextureProxy> proxies[kMaxTextures],
-        const GrSamplerState& params,
-=======
-GrDistanceFieldA8TextGeoProc::GrDistanceFieldA8TextGeoProc(const GrShaderCaps& caps,
-                                                           const sk_sp<GrTextureProxy>* proxies,
-                                                           int numProxies,
-                                                           const GrSamplerState& params,
->>>>>>> upstream-releases
 #ifdef SK_GAMMA_APPLY_TO_A8
                                                            float distanceAdjust,
 #endif
@@ -244,22 +231,6 @@ GrDistanceFieldA8TextGeoProc::GrDistanceFieldA8TextGeoProc(const GrShaderCaps& c
     } else {
         fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
     }
-<<<<<<< HEAD
-    fInTextureCoords = {"inTextureCoords", kUShort2_GrVertexAttribType,
-                        caps.integerSupport() ? kUShort2_GrSLType : kFloat2_GrSLType};
-    this->setVertexAttributeCnt(3);
-
-    if (numProxies) {
-        fAtlasSize = proxies[0]->isize();
-||||||| merged common ancestors
-    fInColor = &this->addVertexAttrib("inColor", kUByte4_norm_GrVertexAttribType);
-    fInTextureCoords = &this->addVertexAttrib("inTextureCoords", kUShort2_GrVertexAttribType);
-    for (int i = 0; i < kMaxTextures; ++i) {
-        if (proxies[i]) {
-            fTextureSamplers[i].reset(std::move(proxies[i]), params);
-            this->addTextureSampler(&fTextureSamplers[i]);
-        }
-=======
     fInColor = {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType };
     fInTextureCoords = {"inTextureCoords", kUShort2_GrVertexAttribType,
                         caps.integerSupport() ? kUShort2_GrSLType : kFloat2_GrSLType};
@@ -267,7 +238,6 @@ GrDistanceFieldA8TextGeoProc::GrDistanceFieldA8TextGeoProc(const GrShaderCaps& c
 
     if (numProxies) {
         fAtlasSize = proxies[0]->isize();
->>>>>>> upstream-releases
     }
     for (int i = 0; i < numProxies; ++i) {
         SkASSERT(proxies[i]);
@@ -540,23 +510,6 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-constexpr GrPrimitiveProcessor::Attribute GrDistanceFieldPathGeoProc::kInPosition;
-constexpr GrPrimitiveProcessor::Attribute GrDistanceFieldPathGeoProc::kInColor;
-
-GrDistanceFieldPathGeoProc::GrDistanceFieldPathGeoProc(const GrShaderCaps& caps,
-                                                       const SkMatrix& matrix,
-                                                       const sk_sp<GrTextureProxy>* proxies,
-                                                       int numProxies,
-                                                       const GrSamplerState& params,
-                                                       uint32_t flags)
-||||||| merged common ancestors
-GrDistanceFieldPathGeoProc::GrDistanceFieldPathGeoProc(
-                                                 const SkMatrix& matrix,
-                                                 const sk_sp<GrTextureProxy> proxies[kMaxTextures],
-                                                 const GrSamplerState& params,
-                                                 uint32_t flags)
-=======
 
 GrDistanceFieldPathGeoProc::GrDistanceFieldPathGeoProc(const GrShaderCaps& caps,
                                                        const SkMatrix& matrix,
@@ -565,30 +518,11 @@ GrDistanceFieldPathGeoProc::GrDistanceFieldPathGeoProc(const GrShaderCaps& caps,
                                                        int numProxies,
                                                        const GrSamplerState& params,
                                                        uint32_t flags)
->>>>>>> upstream-releases
         : INHERITED(kGrDistanceFieldPathGeoProc_ClassID)
         , fMatrix(matrix)
         , fFlags(flags & kNonLCD_DistanceFieldEffectMask) {
     SkASSERT(numProxies <= kMaxTextures);
     SkASSERT(!(flags & ~kNonLCD_DistanceFieldEffectMask));
-<<<<<<< HEAD
-
-    fInTextureCoords = {"inTextureCoords", kUShort2_GrVertexAttribType,
-                        caps.integerSupport() ? kUShort2_GrSLType : kFloat2_GrSLType};
-    this->setVertexAttributeCnt(3);
-
-    if (numProxies) {
-        fAtlasSize = proxies[0]->isize();
-||||||| merged common ancestors
-    fInPosition = &this->addVertexAttrib("inPosition", kFloat2_GrVertexAttribType);
-    fInColor = &this->addVertexAttrib("inColor", kUByte4_norm_GrVertexAttribType);
-    fInTextureCoords = &this->addVertexAttrib("inTextureCoords", kUShort2_GrVertexAttribType);
-    for (int i = 0; i < kMaxTextures; ++i) {
-        if (proxies[i]) {
-            fTextureSamplers[i].reset(std::move(proxies[i]), params);
-            this->addTextureSampler(&fTextureSamplers[i]);
-        }
-=======
 
     fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
     fInColor = MakeColorAttribute("inColor", wideColor);
@@ -604,20 +538,8 @@ GrDistanceFieldPathGeoProc::GrDistanceFieldPathGeoProc(const GrShaderCaps& caps,
         SkASSERT(proxies[i]);
         SkASSERT(proxies[i]->isize() == fAtlasSize);
         fTextureSamplers[i].reset(proxies[i]->textureType(), proxies[i]->config(), params);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-
-    for (int i = 0; i < numProxies; ++i) {
-        SkASSERT(proxies[i]);
-        SkASSERT(proxies[i]->isize() == fAtlasSize);
-        fTextureSamplers[i].reset(proxies[i]->textureType(), proxies[i]->config(), params);
     }
     this->setTextureSamplerCnt(numProxies);
-||||||| merged common ancestors
-=======
-    this->setTextureSamplerCnt(numProxies);
->>>>>>> upstream-releases
 }
 
 void GrDistanceFieldPathGeoProc::addNewProxies(const sk_sp<GrTextureProxy>* proxies,
@@ -650,10 +572,6 @@ GrDistanceFieldPathGeoProc::createGLSLInstance(const GrShaderCaps&) const {
     return new GrGLDistanceFieldPathGeoProc();
 }
 
-const GrPrimitiveProcessor::Attribute& GrDistanceFieldPathGeoProc::onVertexAttribute(int i) const {
-    return IthAttribute(i, kInPosition, kInColor, fInTextureCoords);
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 
 GR_DEFINE_GEOMETRY_PROCESSOR_TEST(GrDistanceFieldPathGeoProc);
@@ -681,19 +599,10 @@ sk_sp<GrGeometryProcessor> GrDistanceFieldPathGeoProc::TestCreate(GrProcessorTes
         flags |= d->fRandom->nextBool() ? kScaleOnly_DistanceFieldEffectFlag : 0;
     }
 
-<<<<<<< HEAD
-    return GrDistanceFieldPathGeoProc::Make(*d->caps()->shaderCaps(),
-                                            GrTest::TestMatrix(d->fRandom),
-                                            proxies, 1,
-||||||| merged common ancestors
-    return GrDistanceFieldPathGeoProc::Make(GrTest::TestMatrix(d->fRandom),
-                                            proxies,
-=======
     return GrDistanceFieldPathGeoProc::Make(*d->caps()->shaderCaps(),
                                             GrTest::TestMatrix(d->fRandom),
                                             d->fRandom->nextBool(),
                                             proxies, 1,
->>>>>>> upstream-releases
                                             samplerState,
                                             flags);
 }
@@ -919,9 +828,6 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-
-constexpr GrPrimitiveProcessor::Attribute GrDistanceFieldLCDTextGeoProc::kInColor;
 
 GrDistanceFieldLCDTextGeoProc::GrDistanceFieldLCDTextGeoProc(const GrShaderCaps& caps,
                                                              const sk_sp<GrTextureProxy>* proxies,
@@ -930,23 +836,6 @@ GrDistanceFieldLCDTextGeoProc::GrDistanceFieldLCDTextGeoProc(const GrShaderCaps&
                                                              DistanceAdjust distanceAdjust,
                                                              uint32_t flags,
                                                              const SkMatrix& localMatrix)
-||||||| merged common ancestors
-GrDistanceFieldLCDTextGeoProc::GrDistanceFieldLCDTextGeoProc(
-                                                 const sk_sp<GrTextureProxy> proxies[kMaxTextures],
-                                                 const GrSamplerState& params,
-                                                 DistanceAdjust distanceAdjust,
-                                                 uint32_t flags,
-                                                 const SkMatrix& localMatrix)
-=======
-
-GrDistanceFieldLCDTextGeoProc::GrDistanceFieldLCDTextGeoProc(const GrShaderCaps& caps,
-                                                             const sk_sp<GrTextureProxy>* proxies,
-                                                             int numProxies,
-                                                             const GrSamplerState& params,
-                                                             DistanceAdjust distanceAdjust,
-                                                             uint32_t flags,
-                                                             const SkMatrix& localMatrix)
->>>>>>> upstream-releases
         : INHERITED(kGrDistanceFieldLCDTextGeoProc_ClassID)
         , fLocalMatrix(localMatrix)
         , fDistanceAdjust(distanceAdjust)
@@ -959,22 +848,6 @@ GrDistanceFieldLCDTextGeoProc::GrDistanceFieldLCDTextGeoProc(const GrShaderCaps&
     } else {
         fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
     }
-<<<<<<< HEAD
-    fInTextureCoords = {"inTextureCoords", kUShort2_GrVertexAttribType,
-                        caps.integerSupport() ? kUShort2_GrSLType : kFloat2_GrSLType};
-    this->setVertexAttributeCnt(3);
-
-    if (numProxies) {
-        fAtlasSize = proxies[0]->isize();
-||||||| merged common ancestors
-    fInColor = &this->addVertexAttrib("inColor", kUByte4_norm_GrVertexAttribType);
-    fInTextureCoords = &this->addVertexAttrib("inTextureCoords", kUShort2_GrVertexAttribType);
-    for (int i = 0; i < kMaxTextures; ++i) {
-        if (proxies[i]) {
-            fTextureSamplers[i].reset(std::move(proxies[i]), params);
-            this->addTextureSampler(&fTextureSamplers[i]);
-        }
-=======
     fInColor = {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType};
     fInTextureCoords = {"inTextureCoords", kUShort2_GrVertexAttribType,
                         caps.integerSupport() ? kUShort2_GrSLType : kFloat2_GrSLType};
@@ -988,20 +861,8 @@ GrDistanceFieldLCDTextGeoProc::GrDistanceFieldLCDTextGeoProc(const GrShaderCaps&
         SkASSERT(proxies[i]);
         SkASSERT(proxies[i]->isize() == fAtlasSize);
         fTextureSamplers[i].reset(proxies[i]->textureType(), proxies[i]->config(), params);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-
-    for (int i = 0; i < numProxies; ++i) {
-        SkASSERT(proxies[i]);
-        SkASSERT(proxies[i]->isize() == fAtlasSize);
-        fTextureSamplers[i].reset(proxies[i]->textureType(), proxies[i]->config(), params);
     }
     this->setTextureSamplerCnt(numProxies);
-||||||| merged common ancestors
-=======
-    this->setTextureSamplerCnt(numProxies);
->>>>>>> upstream-releases
 }
 
 void GrDistanceFieldLCDTextGeoProc::addNewProxies(const sk_sp<GrTextureProxy>* proxies,
@@ -1031,11 +892,6 @@ void GrDistanceFieldLCDTextGeoProc::getGLSLProcessorKey(const GrShaderCaps& caps
 
 GrGLSLPrimitiveProcessor* GrDistanceFieldLCDTextGeoProc::createGLSLInstance(const GrShaderCaps&) const {
     return new GrGLDistanceFieldLCDTextGeoProc();
-}
-
-const GrPrimitiveProcessor::Attribute& GrDistanceFieldLCDTextGeoProc::onVertexAttribute(
-        int i) const {
-    return IthAttribute(i, fInPosition, kInColor, fInTextureCoords);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

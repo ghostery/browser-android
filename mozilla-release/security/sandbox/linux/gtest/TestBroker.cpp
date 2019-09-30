@@ -36,13 +36,6 @@ class SandboxBrokerTest : public ::testing::Test {
   static const int MAY_CREATE = SandboxBroker::MAY_CREATE;
   static const auto AddAlways = SandboxBroker::Policy::AddAlways;
 
-<<<<<<< HEAD
-class SandboxBrokerTest : public ::testing::Test {
-||||||| merged common ancestors
-class SandboxBrokerTest : public ::testing::Test
-{
-=======
->>>>>>> upstream-releases
   UniquePtr<SandboxBroker> mServer;
   UniquePtr<SandboxBrokerClient> mClient;
 
@@ -446,18 +439,9 @@ void SandboxBrokerTest::MultiThreadStatWorker() {
     ASSERT_EQ(realNullDev, nullStat.st_rdev)
         << "Loop " << i << "/" << kNumLoops;
     ASSERT_EQ(realZeroDev, zeroStat.st_rdev)
-<<<<<<< HEAD
-        << "Loop " << i << "/" << kNumLoops;
-    ASSERT_TRUE(S_ISLNK(selfStat.st_mode)) << "Loop " << i << "/" << kNumLoops;
-||||||| merged common ancestors
-      << "Loop " << i << "/" << kNumLoops;
-    ASSERT_TRUE(S_ISLNK(selfStat.st_mode))
-      << "Loop " << i << "/" << kNumLoops;
-=======
         << "Loop " << i << "/" << kNumLoops;
     ASSERT_TRUE(S_ISLNK(selfStat.st_mode))
     << "Loop " << i << "/" << kNumLoops;
->>>>>>> upstream-releases
     ASSERT_EQ(realSelfInode, selfStat.st_ino)
         << "Loop " << i << "/" << kNumLoops;
   }

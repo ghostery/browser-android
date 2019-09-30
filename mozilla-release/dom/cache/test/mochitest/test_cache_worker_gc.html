@@ -30,25 +30,6 @@ function gc() {
 }
 
 SimpleTest.waitForExplicitFinish();
-<<<<<<< HEAD
-
-async function test() {
-  let w = await startWorker();
-  let weakWorker = SpecialPowers.Cu.getWeakReference(w);
-  ok(weakWorker, 'worker supports weak reference');
-  w = null;
-  await gc();
-  await gc();
-  ok(!weakWorker.get(), 'worker weak reference should be garbage collected');
-||||||| merged common ancestors
-startWorker().then(w => {
-  weakWorker = SpecialPowers.Cu.getWeakReference(w);
-  ok(weakWorker, 'worker supports weak reference');
-}).then(_ => {
-  return gc();
-}).then(_ => {
-  ok(!weakWorker.get(), 'worker weak reference should be garbage collected');
-=======
 
 async function test() {
   let w = await startWorker();
@@ -58,7 +39,6 @@ async function test() {
   await gc();
   await gc();
   ok(!weakWorker.get(), "worker weak reference should be garbage collected");
->>>>>>> upstream-releases
   SimpleTest.finish();
 }
 

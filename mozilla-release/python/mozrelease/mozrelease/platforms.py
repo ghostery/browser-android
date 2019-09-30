@@ -46,7 +46,6 @@ def ftp2updatePlatforms(platform):
     return update_platform_map[platform]
 
 
-
 def ftp2shippedLocales(platform):
     return sl_platform_map.get(platform, platform)
 

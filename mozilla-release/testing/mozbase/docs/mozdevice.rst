@@ -94,37 +94,6 @@ Process management methods
 
 Application management methods
 ++++++++++++++++++++++++++++++
-<<<<<<< HEAD
-.. automethod:: ADBAndroid.install_app
-.. automethod:: ADBAndroid.is_app_installed
-.. automethod:: ADBAndroid.launch_application
-.. automethod:: ADBAndroid.launch_fennec
-.. automethod:: ADBAndroid.launch_geckoview_example
-.. automethod:: ADBAndroid.stop_application
-.. automethod:: ADBAndroid.uninstall_app
-.. automethod:: ADBAndroid.update_app
-
-||||||| merged common ancestors
-.. automethod:: ADBAndroid.install_app
-.. automethod:: ADBAndroid.is_app_installed
-.. automethod:: ADBAndroid.launch_application
-.. automethod:: ADBAndroid.launch_fennec
-.. automethod:: ADBAndroid.launch_geckoview_example
-.. automethod:: ADBAndroid.stop_application
-.. automethod:: ADBAndroid.uninstall_app
-.. automethod:: ADBAndroid.update_app
-
-ADBB2G
-``````
-.. autoclass:: ADBB2G
-
-Informational methods
-+++++++++++++++++++++
-.. automethod:: ADBB2G.get_battery_percentage
-.. automethod:: ADBB2G.get_info
-.. automethod:: ADBB2G.get_memory_total
-
-=======
 .. automethod:: ADBDevice.install_app
 .. automethod:: ADBDevice.is_app_installed
 .. automethod:: ADBDevice.launch_application
@@ -134,7 +103,6 @@ Informational methods
 .. automethod:: ADBDevice.uninstall_app
 .. automethod:: ADBDevice.update_app
 
->>>>>>> upstream-releases
 ADBProcess
 ``````````
 .. autoclass:: mozdevice.ADBProcess

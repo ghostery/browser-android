@@ -24,16 +24,7 @@ GrRenderTarget::GrRenderTarget(GrGpu* gpu, const GrSurfaceDesc& desc,
         , fSampleCnt(desc.fSampleCnt)
         , fStencilAttachment(stencil) {
     SkASSERT(desc.fFlags & kRenderTarget_GrSurfaceFlag);
-<<<<<<< HEAD
     SkASSERT(!this->hasMixedSamples() || fSampleCnt > 1);
-    SkASSERT(!this->supportsWindowRects() || gpu->caps()->maxWindowRectangles() > 0);
-||||||| merged common ancestors
-    SkASSERT(!(fFlags & GrRenderTargetFlags::kMixedSampled) || fSampleCnt > 1);
-    SkASSERT(!(fFlags & GrRenderTargetFlags::kWindowRectsSupport) ||
-             gpu->caps()->maxWindowRectangles() > 0);
-=======
-    SkASSERT(!this->hasMixedSamples() || fSampleCnt > 1);
->>>>>>> upstream-releases
     fResolveRect = SkRectPriv::MakeILargestInverted();
 }
 

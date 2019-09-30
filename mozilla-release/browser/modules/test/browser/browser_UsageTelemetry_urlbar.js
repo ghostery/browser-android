@@ -25,32 +25,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
     "resource:///modules/BrowserUsageTelemetry.jsm",
 });
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "SearchTelemetry",
-                              "resource:///modules/SearchTelemetry.jsm");
-
-function checkHistogramResults(resultIndexes, expected, histogram) {
-  for (let [i, val] of Object.entries(resultIndexes.values)) {
-    if (i == expected) {
-      Assert.equal(val, 1,
-        `expected counts should match for ${histogram} index ${i}`);
-    } else {
-      Assert.equal(!!val, false,
-        `unexpected counts should be zero for ${histogram} index ${i}`);
-    }
-  }
-||||||| merged common ancestors
-function checkHistogramResults(resultIndexes, expected, histogram) {
-  for (let i = 0; i < resultIndexes.counts.length; i++) {
-    if (i == expected) {
-      Assert.equal(resultIndexes.counts[i], 1,
-        `expected counts should match for ${histogram} index ${i}`);
-    } else {
-      Assert.equal(resultIndexes.counts[i], 0,
-        `unexpected counts should be zero for ${histogram} index ${i}`);
-    }
-  }
-=======
 function searchInAwesomebar(value, win = window) {
   return UrlbarTestUtils.promiseAutocompleteResultPopup({
     window: win,
@@ -58,7 +32,6 @@ function searchInAwesomebar(value, win = window) {
     value,
     fireInputEvent: true,
   });
->>>>>>> upstream-releases
 }
 
 /**
@@ -99,49 +72,17 @@ async function clickURLBarSuggestion(resultTitle, button = 1) {
  * for this test.
  */
 async function withNewSearchEngine(taskFn) {
-<<<<<<< HEAD
-  const url = getRootDirectory(gTestPath) + "usageTelemetrySearchSuggestions.xml";
-  let suggestionEngine = await new Promise((resolve, reject) => {
-    Services.search.addEngine(url, "", false, {
-      onSuccess(engine) { resolve(engine); },
-      onError() { reject(); },
-    });
-  });
-
-  let previousEngine = Services.search.defaultEngine;
-  Services.search.defaultEngine = suggestionEngine;
-||||||| merged common ancestors
-  const url = getRootDirectory(gTestPath) + "usageTelemetrySearchSuggestions.xml";
-  let suggestionEngine = await new Promise((resolve, reject) => {
-    Services.search.addEngine(url, "", false, {
-      onSuccess(engine) { resolve(engine); },
-      onError() { reject(); },
-    });
-  });
-
-  let previousEngine = Services.search.currentEngine;
-  Services.search.currentEngine = suggestionEngine;
-=======
   const url =
     getRootDirectory(gTestPath) + "usageTelemetrySearchSuggestions.xml";
   let suggestionEngine = await Services.search.addEngine(url, "", false);
   let previousEngine = await Services.search.getDefault();
   await Services.search.setDefault(suggestionEngine);
->>>>>>> upstream-releases
 
   try {
     await taskFn(suggestionEngine);
   } finally {
-<<<<<<< HEAD
-    Services.search.defaultEngine = previousEngine;
-    Services.search.removeEngine(suggestionEngine);
-||||||| merged common ancestors
-    Services.search.currentEngine = previousEngine;
-    Services.search.removeEngine(suggestionEngine);
-=======
     await Services.search.setDefault(previousEngine);
     await Services.search.removeEngine(suggestionEngine);
->>>>>>> upstream-releases
   }
 }
 
@@ -155,16 +96,8 @@ add_task(async function setup() {
 
   // Make it the default search engine.
   let engine = Services.search.getEngineByName("MozSearch");
-<<<<<<< HEAD
-  let originalEngine = Services.search.defaultEngine;
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  let originalEngine = Services.search.currentEngine;
-  Services.search.currentEngine = engine;
-=======
   let originalEngine = await Services.search.getDefault();
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 
   // Give it some mock internal aliases.
   engine.wrappedJSObject.__internalAliases = ["@mozaliasfoo", "@mozaliasbar"];
@@ -204,16 +137,8 @@ add_task(async function setup() {
   // Make sure to restore the engine once we're done.
   registerCleanupFunction(async function() {
     Services.telemetry.canRecordExtended = oldCanRecord;
-<<<<<<< HEAD
-    Services.search.defaultEngine = originalEngine;
-    Services.search.removeEngine(engine);
-||||||| merged common ancestors
-    Services.search.currentEngine = originalEngine;
-    Services.search.removeEngine(engine);
-=======
     await Services.search.setDefault(originalEngine);
     await Services.search.removeEngine(engine);
->>>>>>> upstream-releases
     Services.prefs.setBoolPref(SUGGEST_URLBAR_PREF, suggestionsEnabled);
     Services.prefs.clearUserPref(ONEOFF_URLBAR_PREF);
     await PlacesUtils.history.clear();
@@ -301,17 +226,9 @@ add_task(async function test_simpleQuery() {
     1
   );
 
-<<<<<<< HEAD
-  let resultIndexByType = resultIndexByTypeHist.snapshot().searchengine;
-  checkHistogramResults(resultIndexByType,
-||||||| merged common ancestors
-  let resultIndexByType = resultIndexByTypeHist.snapshot("searchengine");
-  checkHistogramResults(resultIndexByType,
-=======
   TelemetryTestUtils.assertKeyedHistogramValue(
     resultIndexByTypeHist,
     "searchengine",
->>>>>>> upstream-releases
     0,
     1
   );
@@ -405,17 +322,9 @@ add_task(async function test_searchAlias() {
     1
   );
 
-<<<<<<< HEAD
-  let resultIndexByType = resultIndexByTypeHist.snapshot().searchengine;
-  checkHistogramResults(resultIndexByType,
-||||||| merged common ancestors
-  let resultIndexByType = resultIndexByTypeHist.snapshot("searchengine");
-  checkHistogramResults(resultIndexByType,
-=======
   TelemetryTestUtils.assertKeyedHistogramValue(
     resultIndexByTypeHist,
     "searchengine",
->>>>>>> upstream-releases
     0,
     1
   );
@@ -561,17 +470,9 @@ add_task(async function test_oneOff_enter() {
     1
   );
 
-<<<<<<< HEAD
-  let resultIndexByType = resultIndexByTypeHist.snapshot().searchengine;
-  checkHistogramResults(resultIndexByType,
-||||||| merged common ancestors
-  let resultIndexByType = resultIndexByTypeHist.snapshot("searchengine");
-  checkHistogramResults(resultIndexByType,
-=======
   TelemetryTestUtils.assertKeyedHistogramValue(
     resultIndexByTypeHist,
     "searchengine",
->>>>>>> upstream-releases
     0,
     1
   );
@@ -734,17 +635,9 @@ add_task(async function test_suggestion_click() {
       1
     );
 
-<<<<<<< HEAD
-    let resultIndexByType = resultIndexByTypeHist.snapshot().searchsuggestion;
-    checkHistogramResults(resultIndexByType,
-||||||| merged common ancestors
-    let resultIndexByType = resultIndexByTypeHist.snapshot("searchsuggestion");
-    checkHistogramResults(resultIndexByType,
-=======
     TelemetryTestUtils.assertKeyedHistogramValue(
       resultIndexByTypeHist,
       "searchsuggestion",
->>>>>>> upstream-releases
       3,
       1
     );
@@ -892,35 +785,6 @@ add_task(async function test_suggestion_rightclick() {
 });
 
 add_task(async function test_privateWindow() {
-<<<<<<< HEAD
-  // Mock the search telemetry search provider info so that its
-  // recordSearchURLTelemetry() function adds the in-content SEARCH_COUNTS
-  // telemetry for our test engine.
-  SearchTelemetry.overrideSearchTelemetryForTests({
-    "example": {
-      "regexp": "^http://example\\.com/",
-      "queryParam": "q",
-    },
-  });
-
-  let search_hist = getAndClearKeyedHistogram("SEARCH_COUNTS");
-||||||| merged common ancestors
-  // Mock the search service's search provider info so that its
-  // recordSearchURLTelemetry() function adds the in-content SEARCH_COUNTS
-  // telemetry for our test engine.
-  Services.search.QueryInterface(Ci.nsIObserver).observe(
-    null,
-    "test:setSearchProviderInfo",
-    JSON.stringify({
-      "example": {
-        "regexp": "^http://example\\.com/",
-        "queryParam": "q",
-      },
-    })
-  );
-
-  let search_hist = getAndClearKeyedHistogram("SEARCH_COUNTS");
-=======
   // Override the search telemetry search provider info to
   // count in-content SEARCH_COUNTs telemetry for our test engine.
   SearchTelemetry.overrideSearchTelemetryForTests({
@@ -929,19 +793,11 @@ add_task(async function test_privateWindow() {
       queryParam: "q",
     },
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  let engine = Services.search.getEngineByName("MozSearch");
-  let expectedURL = engine.getSubmission("query").uri.spec;
-
-=======
   let search_hist = TelemetryTestUtils.getAndClearKeyedHistogram(
     "SEARCH_COUNTS"
   );
 
->>>>>>> upstream-releases
   // First, do a bunch of searches in a private window.
   let win = await BrowserTestUtils.openNewBrowserWindow({ private: true });
 

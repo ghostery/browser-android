@@ -46,18 +46,9 @@ class SharedMemoryBasic final
 
   virtual SharedMemoryType Type() const override { return TYPE_BASIC; }
 
-<<<<<<< HEAD
-  static Handle NULLHandle() { return Handle(); }
-||||||| merged common ancestors
-  static Handle NULLHandle()
-  {
-    return Handle();
-  }
-=======
   static Handle NULLHandle() { return Handle(); }
 
   static void* FindFreeAddressSpace(size_t aSize);
->>>>>>> upstream-releases
 
   virtual bool IsHandleValid(const Handle& aHandle) const override {
     return aHandle.fd >= 0;

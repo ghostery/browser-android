@@ -34,15 +34,8 @@ static const char* kObservedNSPrefs[] = {kPrefMathMLDisabled, kPrefSVGDisabled,
                                          nullptr};
 StaticRefPtr<nsNameSpaceManager> nsNameSpaceManager::sInstance;
 
-<<<<<<< HEAD
-/* static */ nsNameSpaceManager* nsNameSpaceManager::GetInstance() {
-||||||| merged common ancestors
-/* static */ nsNameSpaceManager*
-nsNameSpaceManager::GetInstance() {
-=======
 /* static */
 nsNameSpaceManager* nsNameSpaceManager::GetInstance() {
->>>>>>> upstream-releases
   if (!sInstance) {
     sInstance = new nsNameSpaceManager();
     if (sInstance->Init()) {

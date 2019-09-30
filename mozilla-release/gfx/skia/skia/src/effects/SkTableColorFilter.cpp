@@ -91,16 +91,6 @@ public:
             GrRecordingContext*, const GrColorSpaceInfo&) const override;
 #endif
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkTable_ColorFilter)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkTable_ColorFilter)
-
-=======
->>>>>>> upstream-releases
     enum {
         kA_Flag = 1 << 0,
         kR_Flag = 1 << 1,
@@ -294,13 +284,8 @@ sk_sp<SkColorFilter> SkTable_ColorFilter::onMakeComposed(sk_sp<SkColorFilter> in
 
 #include "GrColorSpaceInfo.h"
 #include "GrFragmentProcessor.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "GrTextureStripAtlas.h"
-=======
 #include "GrRecordingContext.h"
 #include "GrRecordingContextPriv.h"
->>>>>>> upstream-releases
 #include "SkGr.h"
 #include "glsl/GrGLSLFragmentProcessor.h"
 #include "glsl/GrGLSLFragmentShaderBuilder.h"
@@ -414,14 +399,8 @@ std::unique_ptr<GrFragmentProcessor> ColorTableEffect::Make(GrRecordingContext* 
         return nullptr;
     }
 
-<<<<<<< HEAD
-    sk_sp<GrTextureProxy> proxy = GrMakeCachedImageProxy(context->contextPriv().proxyProvider(),
-                                                         std::move(srcImage));
-||||||| merged common ancestors
-=======
     sk_sp<GrTextureProxy> proxy = GrMakeCachedImageProxy(context->priv().proxyProvider(),
                                                          std::move(srcImage));
->>>>>>> upstream-releases
     if (!proxy) {
         return nullptr;
     }

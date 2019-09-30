@@ -12,24 +12,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-<<<<<<< HEAD
-bool ssse3_scale_data(uint32_t *src, int src_width, int src_height,
-                      int src_stride, uint32_t *dest, int dest_width,
-                      int dest_height, int dest_rowstride, int x, int y,
-                      int width, int height);
-||||||| merged common ancestors
-bool ssse3_scale_data(uint32_t *src, int src_width, int src_height,
-                int src_stride,
-                uint32_t *dest, int dest_width, int dest_height,
-                int dest_rowstride,
-                int x, int y,
-                int width, int height);
-=======
 bool ssse3_scale_data(uint32_t* src, int src_width, int src_height,
                       int src_stride, uint32_t* dest, int dest_width,
                       int dest_height, int dest_rowstride, int x, int y,
                       int width, int height);
->>>>>>> upstream-releases
 #ifdef __cplusplus
 }
 #endif

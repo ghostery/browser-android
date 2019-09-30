@@ -25,65 +25,21 @@ p {
   line-height: 1.5em;
 }
 
-<<<<<<< HEAD
-.list-row {
-  display: grid;
-  column-gap: 2em;
-  grid-template-columns: repeat(auto-fill, minmax(10em, 16em));
-  margin-inline-start: 3em;
-||||||| merged common ancestors
-.list-row {
-  overflow: auto;
-=======
 .logo-and-wordmark {
   align-items: center;
   display: flex;
   justify-content: center;
   margin-bottom: 50px;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.list-row li {
-  margin-bottom: 0;
-  padding: .25em 0;
-  line-height: 1.5;
-||||||| merged common ancestors
-.list-row > ul > li {
-  float: inline-start;
-  width: 16em;
-  line-height: 2em;
-  margin-inline-start: 1em;
-  margin-bottom: 0;
-=======
 .logo {
   background: url("chrome://branding/content/icon128.png") no-repeat center center;
   background-size: 97px;
   display: inline-block;
   height: 97px;
   width: 97px;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.title {
-  background-image: url("chrome://browser/skin/privatebrowsing/private-browsing.svg");
-  background-position: left center;
-  background-size: 2em;
-  line-height: 1.4;
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
-  margin-inline-start: calc(-2em - 10px);
-  padding-inline-start: calc(2em + 10px);
-||||||| merged common ancestors
-.title {
-  background-image: url("chrome://browser/skin/privatebrowsing/private-browsing.svg");
-  background-position: left center;
-  background-size: 2em;
-  line-height: 2em;
-  margin-inline-start: calc(-2em - 10px);
-  padding-inline-start: calc(2em + 10px);
-=======
 .wordmark {
   background: url("resource://activity-stream/data/content/assets/firefox-wordmark.svg") no-repeat center center;
   background-size: 175px;
@@ -93,7 +49,6 @@ p {
   height: 97px;
   margin-inline-start: 15px;
   width: 175px;
->>>>>>> upstream-releases
 }
 
 .search-inner-wrapper {
@@ -123,38 +78,9 @@ p {
   width: 100%;
 }
 
-<<<<<<< HEAD
-.about-subheader {
-  --icon-size: 1.5em;
-  display: flex;
-  align-items: center;
-  font-size: 1.5em;
-  font-weight: lighter;
-  background-image: url("chrome://browser/skin/privatebrowsing/tracking-protection.svg");
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: var(--icon-size);
-  line-height: 1.5em;
-  margin-inline-start: calc((var(--icon-size) + 10px) * -1);
-  padding-inline-start: calc(var(--icon-size) + 10px);
-||||||| merged common ancestors
-.about-subheader {
-  display: flex;
-  align-items: center;
-  font-size: 1.5em;
-  font-weight: lighter;
-  background-image: url("chrome://browser/skin/privatebrowsing/tracking-protection.svg");
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 1.5em;
-  line-height: 1.5em;
-  margin-inline-start: calc(-1.5em - 10px);
-  padding-inline-start: calc(1.5em + 10px);
-=======
 .search-handoff-button.focused {
   border: solid 1px #0060df;
   box-shadow: 0 0 0 1px #0060df, 0 0 0 4px rgba(0, 96, 223, 0.3);
->>>>>>> upstream-releases
 }
 
 .search-handoff-button.hidden {
@@ -162,47 +88,16 @@ p {
   visibility: hidden;
 }
 
-<<<<<<< HEAD
-@media (max-width: 970px) {
-  .about-subheader {
-    --icon-size: 1em;
-    margin-inline-start: 0;
-  }
-||||||| merged common ancestors
-.about-subheader.tp-off {
-  background-image: url("chrome://browser/skin/privatebrowsing/tracking-protection-off.svg");
-=======
 .search-handoff-button:dir(rtl),
 .search-handoff-button:active:dir(rtl),
 .search-handoff-button:enabled:hover:active:dir(rtl) {
   background-position-x: right 12px;
->>>>>>> upstream-releases
 }
 
 .search-inner-wrapper .search-handoff-button:hover {
   background-color: #fff;
 }
 
-<<<<<<< HEAD
-a.button {
-  padding: 3px 20px;
-  background-color: #8000d7;
-  border: 1px solid #6000a1;
-  text-decoration: none;
-  display: inline-block;
-||||||| merged common ancestors
-#cbTitle,
-#tpTitle {
-  margin-inline-end: 12px;
-}
-
-a.button {
-  padding: 3px 20px;
-  background-color: #8000d7;
-  border: 1px solid #6000a1;
-  text-decoration: none;
-  display: inline-block;
-=======
 .search-handoff-button.focused .fake-caret {
   display: block;
 }
@@ -210,73 +105,8 @@ a.button {
 .fake-editable:focus {
   outline: none;
   caret-color: transparent;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-a.button:hover:active {
-  color: inherit;
-  background-color: #6000a1;
-||||||| merged common ancestors
-/**
- * We want to hide the checkbox in lieu of the toggle-btn
- * "slider toggle". We need to make the toggle keyboard
- * focusable, however, which is not possible if it's
- * display:none. We work around this by making the toggle
- * invisible but still present in the display list, allowing
- * it to receive keyboard events. When it is focused by keyboard,
- * we use the -moz-focusring selector on the invisible checkbox
- * to show a focus ring around the slider toggle.
- */
-.toggle-input {
-  opacity: 0;
-  width: 0;
-  pointer-events: none;
-  position: absolute;
-}
-
-.toggle + .toggle-btn {
-  box-sizing: border-box;
-  cursor: pointer;
-  min-width: 48px;
-  height: 27px;
-  border-radius: 13px;
-  background-color: var(--color-grey);
-  border: 1px solid #202340;
-}
-
-.toggle + .toggle-btn::after {
-  position: relative;
-  display: block;
-  content: "";
-  width: 25px;
-  height: 100%;
-  left: 0;
-  border-radius: 50%;
-  background: white;
-  transition: left .2s ease;
-}
-
-.toggle + .toggle-btn:dir(rtl)::after {
-  left: auto;
-  right: 0;
-  transition-property: right;
-}
-
-.toggle:checked + .toggle-btn {
-  background: #16da00;
-  border-color: #0CA700;
-}
-
-.toggle:checked + .toggle-btn::after {
-  inset-inline-start: 21px;
-}
-
-.toggle:-moz-focusring + .toggle-btn {
-  outline: 2px solid rgba(0, 149, 221, 0.5);
-  outline-offset: 1px;
-  -moz-outline-radius: 2px;
-=======
 .fake-editable {
   border: 0;
   height: 100%;
@@ -340,5 +170,4 @@ a.button:hover:active {
 .info p {
   font-size: 15px;
   line-height: 25px;
->>>>>>> upstream-releases
 }

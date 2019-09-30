@@ -39,15 +39,8 @@ class HTMLLinkElement final : public nsGenericHTMLElement,
 
   // EventTarget
   void GetEventTargetParent(EventChainPreVisitor& aVisitor) override;
-<<<<<<< HEAD
-  virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
-||||||| merged common ancestors
-  virtual nsresult PostHandleEvent(
-                     EventChainPostVisitor& aVisitor) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
->>>>>>> upstream-releases
 
   // nsINode
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
@@ -161,43 +154,20 @@ class HTMLLinkElement final : public nsGenericHTMLElement,
     return AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin));
   }
 
-<<<<<<< HEAD
-  void NodeInfoChanged(nsIDocument* aOldDoc) final {
-||||||| merged common ancestors
-  void NodeInfoChanged(nsIDocument* aOldDoc) final
-  {
-=======
   void NodeInfoChanged(Document* aOldDoc) final {
->>>>>>> upstream-releases
     ClearHasPendingLinkUpdate();
     nsGenericHTMLElement::NodeInfoChanged(aOldDoc);
   }
 
   static bool CheckPreloadAttrs(const nsAttrValue& aAs, const nsAString& aType,
-<<<<<<< HEAD
-                                const nsAString& aMedia,
-                                nsIDocument* aDocument);
-
- protected:
-||||||| merged common ancestors
-                                const nsAString& aMedia, nsIDocument* aDocument);
-protected:
-=======
                                 const nsAString& aMedia, Document* aDocument);
 
  protected:
->>>>>>> upstream-releases
   virtual ~HTMLLinkElement();
 
   // nsStyleLinkElement
   Maybe<SheetInfo> GetStyleSheetInfo() final;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
->>>>>>> upstream-releases
   RefPtr<nsDOMTokenList> mRelList;
 
   // The "explicitly enabled" flag. This flag is set whenever the `disabled`

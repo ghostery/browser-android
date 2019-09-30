@@ -176,22 +176,6 @@ class Schema(voluptuous.Schema):
     Operates identically to voluptuous.Schema, but applying some taskgraph-specific checks
     in the process.
     """
-<<<<<<< HEAD
-    def __init__(self, *args, **kwargs):
-        super(Schema, self).__init__(*args, **kwargs)
-        check_schema(self)
-
-    def extend(self, *args, **kwargs):
-        schema = super(Schema, self).extend(*args, **kwargs)
-        check_schema(schema)
-        # We want twice extend schema to be checked too.
-        schema.__class__ = Schema
-        return schema
-||||||| merged common ancestors
-    schema = voluptuous.Schema(*args, **kwargs)
-    check_schema(schema)
-    return schema
-=======
     def __init__(self, *args, **kwargs):
         super(Schema, self).__init__(*args, **kwargs)
         check_schema(self)
@@ -205,7 +189,6 @@ class Schema(voluptuous.Schema):
 
     def __getitem__(self, item):
         return self.schema[item]
->>>>>>> upstream-releases
 
 
 OptimizationSchema = voluptuous.Any(

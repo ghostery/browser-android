@@ -27,18 +27,8 @@ az{
                 range{"{0}–{1}"}
             }
             patterns{
-<<<<<<< HEAD
                 accountingFormat{"#,##0.00 ¤"}
                 currencyFormat{"#,##0.00 ¤"}
-                decimalFormat{"#,##0.###"}
-||||||| merged common ancestors
-                accountingFormat{"¤ #,##0.00"}
-                currencyFormat{"¤ #,##0.00"}
-                decimalFormat{"#,##0.###"}
-=======
-                accountingFormat{"#,##0.00 ¤"}
-                currencyFormat{"#,##0.00 ¤"}
->>>>>>> upstream-releases
                 percentFormat{"#,##0%"}
                 scientificFormat{"#E0"}
             }
@@ -223,13 +213,7 @@ az{
         }
         minimumGroupingDigits{"1"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.53"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -291,23 +275,6 @@ az{
                 yyyyQQQQ{"G y QQQQ"}
             }
             intervalFormats{
-<<<<<<< HEAD
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-||||||| merged common ancestors
-=======
                 Bh{
                     B{"h B – h B"}
                     h{"h–h B"}
@@ -369,7 +336,6 @@ az{
                 Hv{
                     H{"HH–HH v"}
                 }
->>>>>>> upstream-releases
                 M{
                     M{"MM–MM"}
                 }

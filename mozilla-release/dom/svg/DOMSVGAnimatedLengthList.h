@@ -124,21 +124,9 @@ class DOMSVGAnimatedLengthList final : public nsWrapperCache {
    * for the SVGAnimatedLengthList will naturally result in a new
    * DOMSVGAnimatedLengthList being returned.
    */
-<<<<<<< HEAD
-  static already_AddRefed<DOMSVGAnimatedLengthList> GetDOMWrapper(
-      SVGAnimatedLengthList* aList, nsSVGElement* aElement, uint8_t aAttrEnum,
-      uint8_t aAxis);
-||||||| merged common ancestors
-  static already_AddRefed<DOMSVGAnimatedLengthList>
-    GetDOMWrapper(SVGAnimatedLengthList *aList,
-                  nsSVGElement *aElement,
-                  uint8_t aAttrEnum,
-                  uint8_t aAxis);
-=======
   static already_AddRefed<DOMSVGAnimatedLengthList> GetDOMWrapper(
       SVGAnimatedLengthList* aList, dom::SVGElement* aElement,
       uint8_t aAttrEnum, uint8_t aAxis);
->>>>>>> upstream-releases
 
   /**
    * This method returns the DOMSVGAnimatedLengthList wrapper for an internal
@@ -170,18 +158,9 @@ class DOMSVGAnimatedLengthList final : public nsWrapperCache {
   bool IsAnimating() const;
 
   // WebIDL
-<<<<<<< HEAD
-  nsSVGElement* GetParentObject() const { return mElement; }
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  nsSVGElement* GetParentObject() const { return mElement; }
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   dom::SVGElement* GetParentObject() const { return mElement; }
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
->>>>>>> upstream-releases
   // These aren't weak refs because mBaseVal and mAnimVal are weak
   already_AddRefed<DOMSVGLengthList> BaseVal();
   already_AddRefed<DOMSVGLengthList> AnimVal();
@@ -191,24 +170,6 @@ class DOMSVGAnimatedLengthList final : public nsWrapperCache {
    * Only our static GetDOMWrapper() factory method may create objects of our
    * type.
    */
-<<<<<<< HEAD
-  DOMSVGAnimatedLengthList(nsSVGElement* aElement, uint8_t aAttrEnum,
-                           uint8_t aAxis)
-      : mBaseVal(nullptr),
-        mAnimVal(nullptr),
-        mElement(aElement),
-        mAttrEnum(aAttrEnum),
-        mAxis(aAxis) {}
-||||||| merged common ancestors
-  DOMSVGAnimatedLengthList(nsSVGElement *aElement, uint8_t aAttrEnum, uint8_t aAxis)
-    : mBaseVal(nullptr)
-    , mAnimVal(nullptr)
-    , mElement(aElement)
-    , mAttrEnum(aAttrEnum)
-    , mAxis(aAxis)
-  {
-  }
-=======
   DOMSVGAnimatedLengthList(dom::SVGElement* aElement, uint8_t aAttrEnum,
                            uint8_t aAxis)
       : mBaseVal(nullptr),
@@ -216,7 +177,6 @@ class DOMSVGAnimatedLengthList final : public nsWrapperCache {
         mElement(aElement),
         mAttrEnum(aAttrEnum),
         mAxis(aAxis) {}
->>>>>>> upstream-releases
 
   ~DOMSVGAnimatedLengthList();
 
@@ -238,13 +198,7 @@ class DOMSVGAnimatedLengthList final : public nsWrapperCache {
   uint8_t mAxis;
 };
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // MOZILLA_DOMSVGANIMATEDLENGTHLIST_H__

@@ -37,14 +37,8 @@ async function startTest() {
   video1.pause();
   await new Promise(r => video1.onpause = r);
 
-<<<<<<< HEAD
-    video1.onloadeddata = () => video1.pause();
-||||||| merged common ancestors
-    video1.onplaying = () => video1.pause();
-=======
   const v1PausedImageData = getVideoImagePixelData(video1);
   const v2PausedImageData = getVideoImagePixelData(video2);
->>>>>>> upstream-releases
 
   while (getVideoImagePixelData(video2) == v2PausedImageData) {
     info("video2 has not progressed. Waiting.");

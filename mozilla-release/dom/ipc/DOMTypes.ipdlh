@@ -26,19 +26,11 @@ using CSSSize from "Units.h";
 using mozilla::LayoutDeviceIntPoint from "Units.h";
 using hal::ScreenOrientation from "mozilla/HalScreenConfiguration.h";
 using mozilla::gfx::SurfaceFormat from "mozilla/gfx/Types.h";
-<<<<<<< HEAD
-using refcounted class nsIPrincipal from "mozilla/dom/PermissionMessageUtils.h";
-using mozilla::dom::BrowsingContextId from "mozilla/dom/ipc/IdType.h";
-
-||||||| merged common ancestors
-
-=======
 using refcounted class nsIPrincipal from "mozilla/dom/PermissionMessageUtils.h";
 using refcounted class mozilla::dom::BrowsingContext from "mozilla/dom/BrowsingContext.h";
 using refcounted class nsIURI from "mozilla/ipc/URIUtils.h";
 using refcounted class nsIContentSecurityPolicy from "mozilla/dom/CSPMessageUtils.h";
 using refcounted class nsIReferrerInfo from "mozilla/dom/ReferrerInfoUtils.h";
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -195,17 +187,6 @@ struct PerformanceInfo
   CategoryDispatch[] items;
 };
 
-<<<<<<< HEAD
-struct WindowGlobalInit
-{
-  nsIPrincipal principal;
-  BrowsingContextId browsingContextId;
-  uint64_t innerWindowId;
-  uint64_t outerWindowId;
-};
-
-||||||| merged common ancestors
-=======
 
 struct WindowGlobalInit
 {
@@ -256,6 +237,5 @@ struct DocShellLoadStateInit
   // nsIChannel pendingRedirectedChannel; // sent through other mechanism
 };
 
->>>>>>> upstream-releases
 } // namespace dom
 } // namespace mozilla

@@ -73,42 +73,6 @@ static const JSPropertySpec relativeTimeFormat_properties[] = {
  * RelativeTimeFormat constructor.
  * Spec: ECMAScript 402 API, RelativeTimeFormat, 1.1
  */
-<<<<<<< HEAD
-static bool RelativeTimeFormat(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  // Step 1.
-  if (!ThrowIfNotConstructing(cx, args, "Intl.RelativeTimeFormat")) {
-    return false;
-  }
-
-  // Step 2 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
-  RootedObject proto(cx);
-  if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-    return false;
-  }
-
-  if (!proto) {
-    proto =
-        GlobalObject::getOrCreateRelativeTimeFormatPrototype(cx, cx->global());
-||||||| merged common ancestors
-static bool
-RelativeTimeFormat(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    // Step 1.
-    if (!ThrowIfNotConstructing(cx, args, "Intl.RelativeTimeFormat")) {
-        return false;
-    }
-
-    // Step 2 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
-    RootedObject proto(cx);
-    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-        return false;
-    }
-
-=======
 static bool RelativeTimeFormat(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -126,7 +90,6 @@ static bool RelativeTimeFormat(JSContext* cx, unsigned argc, Value* vp) {
   if (!proto) {
     proto =
         GlobalObject::getOrCreateRelativeTimeFormatPrototype(cx, cx->global());
->>>>>>> upstream-releases
     if (!proto) {
       return false;
     }

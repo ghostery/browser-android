@@ -122,30 +122,12 @@ void GetCurrentScreenConfiguration(ScreenConfiguration* aScreenConfiguration) {
                                orientation, angle, colorDepth, pixelDepth);
 }
 
-<<<<<<< HEAD
-bool LockScreenOrientation(const ScreenOrientation& aOrientation) {
-||||||| merged common ancestors
-bool
-LockScreenOrientation(const ScreenOrientation& aOrientation)
-{
-=======
 bool LockScreenOrientation(const hal::ScreenOrientation& aOrientation) {
->>>>>>> upstream-releases
   // Force the default orientation to be portrait-primary.
-<<<<<<< HEAD
-  ScreenOrientation orientation = aOrientation == eScreenOrientation_Default
-                                      ? eScreenOrientation_PortraitPrimary
-                                      : aOrientation;
-||||||| merged common ancestors
-  ScreenOrientation orientation =
-    aOrientation == eScreenOrientation_Default ? eScreenOrientation_PortraitPrimary
-                                               : aOrientation;
-=======
   hal::ScreenOrientation orientation =
       aOrientation == eScreenOrientation_Default
           ? eScreenOrientation_PortraitPrimary
           : aOrientation;
->>>>>>> upstream-releases
 
   switch (orientation) {
     // The Android backend only supports these orientations.

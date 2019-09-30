@@ -853,15 +853,6 @@ describe("<TopSiteForm>", () => {
   let sandbox;
 
   function setup(props = {}) {
-<<<<<<< HEAD
-    sandbox = sinon.createSandbox();
-    const customProps = Object.assign({}, {onClose: sandbox.spy(), dispatch: sandbox.spy()}, props);
-    wrapper = mountWithIntl(<TopSiteForm {...customProps} />);
-||||||| merged common ancestors
-    sandbox = sinon.sandbox.create();
-    const customProps = Object.assign({}, {onClose: sandbox.spy(), dispatch: sandbox.spy()}, props);
-    wrapper = mountWithIntl(<TopSiteForm {...customProps} />);
-=======
     sandbox = sinon.createSandbox();
     const customProps = Object.assign(
       {},
@@ -869,7 +860,6 @@ describe("<TopSiteForm>", () => {
       props
     );
     wrapper = mount(<TopSiteForm {...customProps} />);
->>>>>>> upstream-releases
   }
 
   describe("validateForm", () => {
@@ -1455,19 +1445,9 @@ describe("<TopSiteList>", () => {
     const index = 7;
     const link = { url: "https://foo.com", customScreenshotURL: "foo" };
     const title = "foo";
-<<<<<<< HEAD
-    instance.onDragEvent({type: "dragstart"}, index, link, title);
-    dispatch.resetHistory();
-    instance.onDragEvent({type: "drop"}, 3);
-||||||| merged common ancestors
-    instance.onDragEvent({type: "dragstart"}, index, link, title);
-    dispatch.reset();
-    instance.onDragEvent({type: "drop"}, 3);
-=======
     instance.onDragEvent({ type: "dragstart" }, index, link, title);
     dispatch.resetHistory();
     instance.onDragEvent({ type: "drop" }, 3);
->>>>>>> upstream-releases
     assert.calledTwice(dispatch);
     assert.calledWith(dispatch, {
       data: {

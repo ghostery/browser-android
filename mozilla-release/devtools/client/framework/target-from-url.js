@@ -6,15 +6,9 @@
 
 const { DebuggerServer } = require("devtools/server/main");
 const { DebuggerClient } = require("devtools/shared/client/debugger-client");
-<<<<<<< HEAD
-const { remoteClientManager } =
-  require("devtools/client/shared/remote-debugging/remote-client-manager");
-||||||| merged common ancestors
-=======
 const {
   remoteClientManager,
 } = require("devtools/client/shared/remote-debugging/remote-client-manager");
->>>>>>> upstream-releases
 
 /**
  * Construct a Target for a given URL object having various query parameters:
@@ -48,16 +42,6 @@ const {
 exports.targetFromURL = async function targetFromURL(url) {
   const client = await clientFromURL(url);
   const params = url.searchParams;
-<<<<<<< HEAD
-
-  // Clients retrieved from the remote-client-manager are already connected.
-  if (!params.get("remoteId")) {
-    // Connect any other client.
-    await client.connect();
-  }
-
-||||||| merged common ancestors
-=======
 
   // Clients retrieved from the remote-client-manager are already connected.
   const isCachedClient = params.get("remoteId");
@@ -67,7 +51,6 @@ exports.targetFromURL = async function targetFromURL(url) {
   }
 
   const id = params.get("id");
->>>>>>> upstream-releases
   const type = params.get("type");
   const chrome = params.has("chrome");
 
@@ -88,13 +71,7 @@ async function _targetFromURL(client, id, type, chrome) {
     throw new Error("targetFromURL, missing type parameter");
   }
 
-<<<<<<< HEAD
-  let form, front;
-||||||| merged common ancestors
-  let form;
-=======
   let front;
->>>>>>> upstream-releases
   if (type === "tab") {
     // Fetch target for a remote tab
     id = parseInt(id, 10);
@@ -106,18 +83,10 @@ async function _targetFromURL(client, id, type, chrome) {
     try {
       front = await client.mainRoot.getTab({ outerWindowID: id });
     } catch (ex) {
-<<<<<<< HEAD
-      if (ex.startsWith("Protocol error (noTab)")) {
-        throw new Error(`targetFromURL, tab with outerWindowID '${id}' doesn't exist`);
-||||||| merged common ancestors
-      if (ex.error == "noTab") {
-        throw new Error(`targetFromURL, tab with outerWindowID '${id}' doesn't exist`);
-=======
       if (ex.startsWith("Protocol error (noTab)")) {
         throw new Error(
           `targetFromURL, tab with outerWindowID '${id}' doesn't exist`
         );
->>>>>>> upstream-releases
       }
       throw ex;
     }
@@ -145,16 +114,7 @@ async function _targetFromURL(client, id, type, chrome) {
       if (isNaN(id)) {
         id = 0;
       }
-<<<<<<< HEAD
       front = await client.mainRoot.getProcess(id);
-      chrome = true;
-||||||| merged common ancestors
-      const response = await client.mainRoot.getProcess(id);
-      form = response.form;
-      chrome = true;
-=======
-      front = await client.mainRoot.getProcess(id);
->>>>>>> upstream-releases
     } catch (ex) {
       if (ex.error == "noProcess") {
         throw new Error(`targetFromURL, process with id '${id}' doesn't exist`);
@@ -182,13 +142,6 @@ async function _targetFromURL(client, id, type, chrome) {
     throw new Error(`targetFromURL, unsupported type '${type}' parameter`);
   }
 
-<<<<<<< HEAD
-  return TargetFactory.forRemoteTab({ client, form, activeTab: front, chrome });
-};
-||||||| merged common ancestors
-  return TargetFactory.forRemoteTab({ client, form, chrome });
-};
-=======
   // Allows to spawn a chrome enabled target for any context
   // (handy to debug chrome stuff in a content process)
   if (chrome) {
@@ -197,7 +150,6 @@ async function _targetFromURL(client, id, type, chrome) {
 
   return front;
 }
->>>>>>> upstream-releases
 
 /**
  * Create a DebuggerClient for a given URL object having various query parameters:
@@ -217,16 +169,6 @@ async function _targetFromURL(client, id, type, chrome) {
  */
 async function clientFromURL(url) {
   const params = url.searchParams;
-<<<<<<< HEAD
-
-  // If a remote id was provided we should already have a connected client available.
-  const remoteId = params.get("remoteId");
-  if (remoteId) {
-    return remoteClientManager.getClientByRemoteId(remoteId);
-  }
-
-||||||| merged common ancestors
-=======
 
   // If a remote id was provided we should already have a connected client available.
   const remoteId = params.get("remoteId");
@@ -238,7 +180,6 @@ async function clientFromURL(url) {
     return client;
   }
 
->>>>>>> upstream-releases
   const host = params.get("host");
   const port = params.get("port");
   const webSocket = !!params.get("ws");

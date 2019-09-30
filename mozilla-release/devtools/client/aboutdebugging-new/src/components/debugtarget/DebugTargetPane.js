@@ -98,36 +98,6 @@ class DebugTargetPane extends PureComponent {
       {
         className: "qa-debug-target-pane",
       },
-<<<<<<< HEAD
-      dom.a(
-        {
-          className: "undecorated-link debug-target-pane__title " +
-            "js-debug-target-pane-title",
-          onClick: e => this.toggleCollapsibility(),
-        },
-        dom.h2(
-          { className: "main-subheading" },
-          dom.img(
-            {
-              className: "main-subheading__icon debug-target-pane__icon" +
-                         (isCollapsed ? " debug-target-pane__icon--collapsed" : ""),
-              src: "chrome://devtools/skin/images/aboutdebugging-collapse-icon.svg",
-            }
-          ),
-          name + (isCollapsed ? ` (${ targets.length })` : ""),
-||||||| merged common ancestors
-      dom.h2(
-        {},
-        dom.a(
-          {
-            className: "debug-target-pane__title js-debug-target-pane-title" +
-                       (isCollapsed ? " debug-target-pane__title--collapsed" : ""),
-            href: "#",
-            onClick: e => this.toggleCollapsibility(),
-          },
-          name,
-          isCollapsed ? dom.span({}, `(${ targets.length })`) : null,
-=======
       dom.a(
         {
           className:
@@ -149,7 +119,6 @@ class DebugTargetPane extends PureComponent {
               (isCollapsed ? " debug-target-pane__icon--collapsed" : ""),
             src: "chrome://devtools/skin/images/arrow-e.svg",
           })
->>>>>>> upstream-releases
         )
       ),
       dom.div(

@@ -2,13 +2,7 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 es_MX{
     %%Parent{"es_419"}
-<<<<<<< HEAD
-    Version{"2.1.44.5"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.96"}
->>>>>>> upstream-releases
     zoneStrings{
         "Africa:Accra"{
             ec{"Acra"}
@@ -61,14 +55,6 @@ es_MX{
         "Etc:UTC"{
             ls{"Tiempo Universal Coordinado"}
         }
-<<<<<<< HEAD
-||||||| merged common ancestors
-        "meta:America_Mountain"{
-            ld{"hora de verano de las Montañas Rocosas"}
-            lg{"hora de las Montañas Rocosas"}
-            ls{"hora estándar de las Montañas Rocosas"}
-        }
-=======
         "Europe:Kirov"{
             ec{"Kirov"}
         }
@@ -78,7 +64,6 @@ es_MX{
         "Pacific:Wake"{
             ec{"Wake"}
         }
->>>>>>> upstream-releases
         "meta:Apia"{
             ld{"hora de verano de Apia"}
             lg{"hora de Apia"}

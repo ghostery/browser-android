@@ -82,39 +82,9 @@
     const states = [];
     pc1.addEventListener('signalingstatechange', () => states.push(pc1.signalingState));
 
-<<<<<<< HEAD
-    return generateDataChannelOffer(pc)
-    .then(offer => pc.setRemoteDescription(offer))
-    .then(() => pc.createAnswer())
-    .then(answer =>
-      pc.setLocalDescription(answer)
-      .then(() => generateVideoReceiveOnlyOffer(pc))
-      .then(offer =>
-        pc.setLocalDescription(offer)
-        .then(() => {
-          assert_equals(pc.signalingState, 'have-local-offer');
-          assert_session_desc_similar(pc.localDescription, offer);
-          assert_session_desc_similar(pc.currentLocalDescription, answer);
-          assert_session_desc_similar(pc.pendingLocalDescription, offer);
-||||||| merged common ancestors
-    return generateOffer({ pc, data: true })
-    .then(offer => pc.setRemoteDescription(offer))
-    .then(() => pc.createAnswer())
-    .then(answer =>
-      pc.setLocalDescription(answer)
-      .then(() => pc.createOffer({ offerToReceiveVideo: true }))
-      .then(offer =>
-        pc.setLocalDescription(offer)
-        .then(() => {
-          assert_equals(pc.signalingState, 'have-local-offer');
-          assert_session_desc_similar(pc.localDescription, offer);
-          assert_session_desc_similar(pc.currentLocalDescription, answer);
-          assert_session_desc_similar(pc.pendingLocalDescription, offer);
-=======
     assert_equals(pc1.localDescription, null);
     assert_equals(pc1.currentLocalDescription, null);
     assert_equals(pc1.pendingLocalDescription, null);
->>>>>>> upstream-releases
 
     pc1.createDataChannel('test');
     const offer = await pc1.createOffer();

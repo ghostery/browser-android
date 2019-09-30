@@ -101,15 +101,8 @@ public:
         SkASSERT(bitmapMayBeMutable || fBitmap.isImmutable());
     }
 
-<<<<<<< HEAD
-    sk_sp<SkImage> onMakeColorSpace(sk_sp<SkColorSpace>) const override;
-||||||| merged common ancestors
-    sk_sp<SkImage> onMakeColorSpace(sk_sp<SkColorSpace>, SkColorType,
-                                    SkTransferFunctionBehavior) const override;
-=======
     sk_sp<SkImage> onMakeColorTypeAndColorSpace(GrRecordingContext*,
                                                 SkColorType, sk_sp<SkColorSpace>) const override;
->>>>>>> upstream-releases
 
     bool onIsValid(GrContext* context) const override { return true; }
     void notifyAddedToRasterCache() const override {
@@ -190,13 +183,7 @@ sk_sp<GrTextureProxy> SkImage_Raster::asTextureProxyRef(GrRecordingContext* cont
     if (tex) {
         GrTextureAdjuster adjuster(context, fPinnedProxy, fBitmap.alphaType(), fPinnedUniqueID,
                                    fBitmap.colorSpace());
-<<<<<<< HEAD
-        return adjuster.refTextureProxyForParams(params, dstColorSpace, texColorSpace, scaleAdjust);
-||||||| merged common ancestors
-        return adjuster.refTextureProxySafeForParams(params, scaleAdjust);
-=======
         return adjuster.refTextureProxyForParams(params, scaleAdjust);
->>>>>>> upstream-releases
     }
 
     return GrRefCachedBitmapTextureProxy(context, fBitmap, params, scaleAdjust);
@@ -353,57 +340,16 @@ bool SkImage_Raster::onAsLegacyBitmap(SkBitmap* bitmap) const {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-sk_sp<SkImage> SkImage_Raster::onMakeColorSpace(sk_sp<SkColorSpace> target) const {
-||||||| merged common ancestors
-sk_sp<SkImage> SkImage_Raster::onMakeColorSpace(sk_sp<SkColorSpace> target,
-                                                SkColorType targetColorType,
-                                                SkTransferFunctionBehavior premulBehavior) const {
-=======
 sk_sp<SkImage> SkImage_Raster::onMakeColorTypeAndColorSpace(GrRecordingContext*,
                                                             SkColorType targetCT,
                                                             sk_sp<SkColorSpace> targetCS) const {
->>>>>>> upstream-releases
     SkPixmap src;
     SkAssertResult(fBitmap.peekPixels(&src));
 
-<<<<<<< HEAD
-    // Treat nullptr srcs as sRGB.
-    if (!src.colorSpace()) {
-        if (target->isSRGB()) {
-            return sk_ref_sp(const_cast<SkImage*>((SkImage*)this));
-        }
-
-        src.setColorSpace(SkColorSpace::MakeSRGB());
-    }
-
-    SkImageInfo dstInfo = fBitmap.info().makeColorSpace(target);
-#if defined(SK_LEGACY_MAKE_COLOR_SPACE_IMPL)
-    dstInfo = dstInfo.makeColorType(kN32_SkColorType);
-#endif
-||||||| merged common ancestors
-    // Treat nullptr srcs as sRGB.
-    if (!src.colorSpace()) {
-        if (target->isSRGB()) {
-            return sk_ref_sp(const_cast<SkImage*>((SkImage*)this));
-        }
-
-        src.setColorSpace(SkColorSpace::MakeSRGB());
-    }
-
-    SkImageInfo dstInfo = fBitmap.info().makeColorType(targetColorType).makeColorSpace(target);
-=======
->>>>>>> upstream-releases
     SkBitmap dst;
     dst.allocPixels(fBitmap.info().makeColorType(targetCT).makeColorSpace(targetCS));
 
-<<<<<<< HEAD
-    SkAssertResult(dst.writePixels(src, 0, 0));
-||||||| merged common ancestors
-    SkAssertResult(dst.writePixels(src, 0, 0, premulBehavior));
-=======
     SkAssertResult(dst.writePixels(src));
->>>>>>> upstream-releases
     dst.setImmutable();
     return SkImage::MakeFromBitmap(dst);
 }

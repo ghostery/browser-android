@@ -208,13 +208,7 @@ et{
         minimumGroupingDigits{"2"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.42"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             eras{
@@ -1934,41 +1928,6 @@ et{
         US{"USA mõõdustik"}
         metric{"meetermõõdustik"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -1997,5 +1956,4 @@ et{
             }
         }
     }
->>>>>>> upstream-releases
 }

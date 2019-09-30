@@ -563,14 +563,8 @@ MarkupView.prototype = {
    *         requests queued up
    */
   _showBoxModel: function(nodeFront) {
-<<<<<<< HEAD
-    return this.toolbox.highlighter.highlight(nodeFront)
-||||||| merged common ancestors
-    return this.toolbox.highlighterUtils.highlightNodeFront(nodeFront)
-=======
     return this.toolbox.highlighter
       .highlight(nodeFront)
->>>>>>> upstream-releases
       .catch(this._handleRejectionIfNotDestroyed);
   },
 
@@ -584,14 +578,8 @@ MarkupView.prototype = {
    *         requests queued up
    */
   _hideBoxModel: function(forceHide) {
-<<<<<<< HEAD
-    return this.toolbox.highlighter.unhighlight(forceHide)
-||||||| merged common ancestors
-    return this.toolbox.highlighterUtils.unhighlight(forceHide)
-=======
     return this.toolbox.highlighter
       .unhighlight(forceHide)
->>>>>>> upstream-releases
       .catch(this._handleRejectionIfNotDestroyed);
   },
 
@@ -1868,19 +1856,9 @@ MarkupView.prototype = {
 
         const end = this.telemetry.msSystemNow();
         this.telemetry.recordEvent("edit_html", "inspector", null, {
-<<<<<<< HEAD
-          "made_changes": commit,
-          "time_open": end - start,
-          "session_id": this.toolbox.sessionId,
-||||||| merged common ancestors
-          "made_changes": commit,
-          "time_open": end - start,
-          "session_id": this.toolbox.sessionId
-=======
           made_changes: commit,
           time_open: end - start,
           session_id: this.toolbox.sessionId,
->>>>>>> upstream-releases
         });
       });
 
@@ -2400,16 +2378,8 @@ MarkupView.prototype = {
       return null;
     }
 
-<<<<<<< HEAD
-    return {parent, nextSibling};
-  },
-||||||| merged common ancestors
-    return {parent, nextSibling};
-  }
-=======
     return { parent, nextSibling };
   },
->>>>>>> upstream-releases
 };
 
 /**

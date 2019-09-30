@@ -24,27 +24,6 @@ add_task(async function() {
   searchField.focus();
   await onFocus;
 
-<<<<<<< HEAD
-  let onContextMenuOpen = toolbox.once("menu-open");
-  synthesizeContextMenuEvent(searchField);
-  await onContextMenuOpen;
-
-  let searchContextMenu = toolbox.doc.getElementById("toolbox-menu");
-  ok(searchContextMenu,
-    "The search filter context menu is loaded in the rule view");
-
-  let cmdUndo = searchContextMenu.querySelector("#editmenu-undo");
-  let cmdDelete = searchContextMenu.querySelector("#editmenu-delete");
-  let cmdSelectAll = searchContextMenu.querySelector("#editmenu-selectAll");
-  let cmdCut = searchContextMenu.querySelector("#editmenu-cut");
-  let cmdCopy = searchContextMenu.querySelector("#editmenu-copy");
-  let cmdPaste = searchContextMenu.querySelector("#editmenu-paste");
-||||||| merged common ancestors
-  const onContextMenuPopup = once(searchContextMenu, "popupshowing");
-  EventUtils.synthesizeMouse(searchField, 2, 2,
-    {type: "contextmenu", button: 2}, win);
-  await onContextMenuPopup;
-=======
   let onContextMenuOpen = toolbox.once("menu-open");
   synthesizeContextMenuEvent(searchField);
   await onContextMenuOpen;
@@ -61,7 +40,6 @@ add_task(async function() {
   let cmdCut = searchContextMenu.querySelector("#editmenu-cut");
   let cmdCopy = searchContextMenu.querySelector("#editmenu-copy");
   let cmdPaste = searchContextMenu.querySelector("#editmenu-paste");
->>>>>>> upstream-releases
 
   is(cmdUndo.getAttribute("disabled"), "true", "cmdUndo is disabled");
   is(cmdDelete.getAttribute("disabled"), "true", "cmdDelete is disabled");
@@ -82,19 +60,6 @@ add_task(async function() {
   info("Copy text in search field using the context menu");
   searchField.setUserInput(TEST_INPUT);
   searchField.select();
-<<<<<<< HEAD
-
-  onContextMenuOpen = toolbox.once("menu-open");
-  synthesizeContextMenuEvent(searchField);
-  await onContextMenuOpen;
-
-  searchContextMenu = toolbox.doc.getElementById("toolbox-menu");
-  cmdCopy = searchContextMenu.querySelector("#editmenu-copy");
-||||||| merged common ancestors
-  EventUtils.synthesizeMouse(searchField, 2, 2,
-    {type: "contextmenu", button: 2}, win);
-  await onContextMenuPopup;
-=======
 
   onContextMenuOpen = toolbox.once("menu-open");
   synthesizeContextMenuEvent(searchField);
@@ -102,7 +67,6 @@ add_task(async function() {
 
   searchContextMenu = toolbox.getTextBoxContextMenu();
   cmdCopy = searchContextMenu.querySelector("#editmenu-copy");
->>>>>>> upstream-releases
   await waitForClipboardPromise(() => cmdCopy.click(), TEST_INPUT);
 
   onContextMenuClose = toolbox.once("menu-close");
@@ -110,24 +74,6 @@ add_task(async function() {
   await onContextMenuClose;
 
   info("Reopen context menu and check command properties");
-<<<<<<< HEAD
-
-  onContextMenuOpen = toolbox.once("menu-open");
-  synthesizeContextMenuEvent(searchField);
-  await onContextMenuOpen;
-
-  searchContextMenu = toolbox.doc.getElementById("toolbox-menu");
-  cmdUndo = searchContextMenu.querySelector("#editmenu-undo");
-  cmdDelete = searchContextMenu.querySelector("#editmenu-delete");
-  cmdSelectAll = searchContextMenu.querySelector("#editmenu-selectAll");
-  cmdCut = searchContextMenu.querySelector("#editmenu-cut");
-  cmdCopy = searchContextMenu.querySelector("#editmenu-copy");
-  cmdPaste = searchContextMenu.querySelector("#editmenu-paste");
-||||||| merged common ancestors
-  EventUtils.synthesizeMouse(searchField, 2, 2,
-    {type: "contextmenu", button: 2}, win);
-  await onContextMenuPopup;
-=======
 
   onContextMenuOpen = toolbox.once("menu-open");
   synthesizeContextMenuEvent(searchField);
@@ -140,7 +86,6 @@ add_task(async function() {
   cmdCut = searchContextMenu.querySelector("#editmenu-cut");
   cmdCopy = searchContextMenu.querySelector("#editmenu-copy");
   cmdPaste = searchContextMenu.querySelector("#editmenu-paste");
->>>>>>> upstream-releases
 
   is(cmdUndo.getAttribute("disabled"), "", "cmdUndo is enabled");
   is(cmdDelete.getAttribute("disabled"), "", "cmdDelete is enabled");

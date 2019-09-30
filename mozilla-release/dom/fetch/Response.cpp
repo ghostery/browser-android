@@ -79,17 +79,8 @@ Response::Response(nsIGlobalObject* aGlobal,
 
 Response::~Response() { mozilla::DropJSObjects(this); }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Response> Response::Error(
-    const GlobalObject& aGlobal) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Response>
-Response::Error(const GlobalObject& aGlobal)
-{
-=======
 /* static */
 already_AddRefed<Response> Response::Error(const GlobalObject& aGlobal) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<InternalResponse> error =
       InternalResponse::NetworkError(NS_ERROR_FAILURE);
@@ -97,38 +88,18 @@ already_AddRefed<Response> Response::Error(const GlobalObject& aGlobal) {
   return r.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Response> Response::Redirect(
-    const GlobalObject& aGlobal, const nsAString& aUrl, uint16_t aStatus,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Response>
-Response::Redirect(const GlobalObject& aGlobal, const nsAString& aUrl,
-                   uint16_t aStatus, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Response> Response::Redirect(const GlobalObject& aGlobal,
                                               const nsAString& aUrl,
                                               uint16_t aStatus,
                                               ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsAutoString parsedURL;
 
   if (NS_IsMainThread()) {
     nsCOMPtr<nsIURI> baseURI;
-<<<<<<< HEAD
-    nsCOMPtr<nsPIDOMWindowInner> inner(
-        do_QueryInterface(aGlobal.GetAsSupports()));
-    nsIDocument* doc = inner ? inner->GetExtantDoc() : nullptr;
-||||||| merged common ancestors
-    nsCOMPtr<nsPIDOMWindowInner> inner(do_QueryInterface(aGlobal.GetAsSupports()));
-    nsIDocument* doc = inner ? inner->GetExtantDoc() : nullptr;
-=======
     nsCOMPtr<nsPIDOMWindowInner> inner(
         do_QueryInterface(aGlobal.GetAsSupports()));
     Document* doc = inner ? inner->GetExtantDoc() : nullptr;
->>>>>>> upstream-releases
     if (doc) {
       baseURI = doc->GetBaseURI();
     }
@@ -189,24 +160,11 @@ already_AddRefed<Response> Response::Redirect(const GlobalObject& aGlobal,
   return r.forget();
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<Response> Response::Constructor(
-    const GlobalObject& aGlobal,
-    const Optional<Nullable<fetch::ResponseBodyInit>>& aBody,
-    const ResponseInit& aInit, ErrorResult& aRv) {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<Response>
-Response::Constructor(const GlobalObject& aGlobal,
-                      const Optional<Nullable<fetch::ResponseBodyInit>>& aBody,
-                      const ResponseInit& aInit, ErrorResult& aRv)
-{
-=======
 /*static*/
 already_AddRefed<Response> Response::Constructor(
     const GlobalObject& aGlobal,
     const Optional<Nullable<fetch::ResponseBodyInit>>& aBody,
     const ResponseInit& aInit, ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
 
   if (NS_WARN_IF(!global)) {
@@ -235,15 +193,9 @@ already_AddRefed<Response> Response::Constructor(
   }
 
   RefPtr<InternalResponse> internalResponse =
-<<<<<<< HEAD
-      new InternalResponse(aInit.mStatus, aInit.mStatusText);
-||||||| merged common ancestors
-    new InternalResponse(aInit.mStatus, aInit.mStatusText);
-=======
       new InternalResponse(aInit.mStatus, aInit.mStatusText);
 
   UniquePtr<mozilla::ipc::PrincipalInfo> principalInfo;
->>>>>>> upstream-releases
 
   // Grab a valid channel info from the global so this response is 'valid' for
   // interception.

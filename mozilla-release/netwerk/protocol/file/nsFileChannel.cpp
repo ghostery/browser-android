@@ -38,27 +38,6 @@ using namespace mozilla::net;
 //-----------------------------------------------------------------------------
 
 class nsFileCopyEvent : public Runnable {
-<<<<<<< HEAD
- public:
-  nsFileCopyEvent(nsIOutputStream *dest, nsIInputStream *source, int64_t len)
-      : mozilla::Runnable("nsFileCopyEvent"),
-        mDest(dest),
-        mSource(source),
-        mLen(len),
-        mStatus(NS_OK),
-        mInterruptStatus(NS_OK) {}
-||||||| merged common ancestors
-public:
-  nsFileCopyEvent(nsIOutputStream* dest, nsIInputStream* source, int64_t len)
-    : mozilla::Runnable("nsFileCopyEvent")
-    , mDest(dest)
-    , mSource(source)
-    , mLen(len)
-    , mStatus(NS_OK)
-    , mInterruptStatus(NS_OK)
-  {
-  }
-=======
  public:
   nsFileCopyEvent(nsIOutputStream* dest, nsIInputStream* source, int64_t len)
       : mozilla::Runnable("nsFileCopyEvent"),
@@ -67,7 +46,6 @@ public:
         mLen(len),
         mStatus(NS_OK),
         mInterruptStatus(NS_OK) {}
->>>>>>> upstream-releases
 
   // Read the current status of the file copy operation.
   nsresult Status() { return mStatus; }
@@ -77,17 +55,8 @@ public:
 
   // Call this method to perform the file copy on a background thread.  The
   // callback is dispatched when the file copy completes.
-<<<<<<< HEAD
-  nsresult Dispatch(nsIRunnable *callback, nsITransportEventSink *sink,
-                    nsIEventTarget *target);
-||||||| merged common ancestors
-  nsresult Dispatch(nsIRunnable *callback,
-                    nsITransportEventSink *sink,
-                    nsIEventTarget *target);
-=======
   nsresult Dispatch(nsIRunnable* callback, nsITransportEventSink* sink,
                     nsIEventTarget* target);
->>>>>>> upstream-releases
 
   // Call this method to interrupt a file copy operation that is occuring on
   // a background thread.  The status parameter passed to this function must
@@ -163,21 +132,9 @@ void nsFileCopyEvent::DoCopy() {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsFileCopyEvent::Dispatch(nsIRunnable *callback,
-                                   nsITransportEventSink *sink,
-                                   nsIEventTarget *target) {
-||||||| merged common ancestors
-nsresult
-nsFileCopyEvent::Dispatch(nsIRunnable *callback,
-                          nsITransportEventSink *sink,
-                          nsIEventTarget *target)
-{
-=======
 nsresult nsFileCopyEvent::Dispatch(nsIRunnable* callback,
                                    nsITransportEventSink* sink,
                                    nsIEventTarget* target) {
->>>>>>> upstream-releases
   // Use the supplied event target for all asynchronous operations.
 
   mCallback = callback;
@@ -207,50 +164,19 @@ class nsFileUploadContentStream : public nsBaseContentStream {
   NS_INLINE_DECL_REFCOUNTING_INHERITED(nsFileUploadContentStream,
                                        nsBaseContentStream)
 
-<<<<<<< HEAD
-  nsFileUploadContentStream(bool nonBlocking, nsIOutputStream *dest,
-                            nsIInputStream *source, int64_t len,
-                            nsITransportEventSink *sink)
-      : nsBaseContentStream(nonBlocking),
-        mCopyEvent(new nsFileCopyEvent(dest, source, len)),
-        mSink(sink) {}
-||||||| merged common ancestors
-  nsFileUploadContentStream(bool nonBlocking,
-                            nsIOutputStream *dest,
-                            nsIInputStream *source,
-                            int64_t len,
-                            nsITransportEventSink *sink)
-    : nsBaseContentStream(nonBlocking)
-    , mCopyEvent(new nsFileCopyEvent(dest, source, len))
-    , mSink(sink) {
-  }
-=======
   nsFileUploadContentStream(bool nonBlocking, nsIOutputStream* dest,
                             nsIInputStream* source, int64_t len,
                             nsITransportEventSink* sink)
       : nsBaseContentStream(nonBlocking),
         mCopyEvent(new nsFileCopyEvent(dest, source, len)),
         mSink(sink) {}
->>>>>>> upstream-releases
 
   bool IsInitialized() { return mCopyEvent != nullptr; }
 
-<<<<<<< HEAD
-  NS_IMETHOD ReadSegments(nsWriteSegmentFun fun, void *closure, uint32_t count,
-                          uint32_t *result) override;
-  NS_IMETHOD AsyncWait(nsIInputStreamCallback *callback, uint32_t flags,
-                       uint32_t count, nsIEventTarget *target) override;
-||||||| merged common ancestors
-  NS_IMETHOD ReadSegments(nsWriteSegmentFun fun, void *closure,
-                          uint32_t count, uint32_t *result) override;
-  NS_IMETHOD AsyncWait(nsIInputStreamCallback *callback, uint32_t flags,
-                       uint32_t count, nsIEventTarget *target) override;
-=======
   NS_IMETHOD ReadSegments(nsWriteSegmentFun fun, void* closure, uint32_t count,
                           uint32_t* result) override;
   NS_IMETHOD AsyncWait(nsIInputStreamCallback* callback, uint32_t flags,
                        uint32_t count, nsIEventTarget* target) override;
->>>>>>> upstream-releases
 
  private:
   virtual ~nsFileUploadContentStream() = default;
@@ -262,17 +188,8 @@ class nsFileUploadContentStream : public nsBaseContentStream {
 };
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFileUploadContentStream::ReadSegments(nsWriteSegmentFun fun, void *closure,
-                                        uint32_t count, uint32_t *result) {
-||||||| merged common ancestors
-nsFileUploadContentStream::ReadSegments(nsWriteSegmentFun fun, void *closure,
-                                        uint32_t count, uint32_t *result)
-{
-=======
 nsFileUploadContentStream::ReadSegments(nsWriteSegmentFun fun, void* closure,
                                         uint32_t count, uint32_t* result) {
->>>>>>> upstream-releases
   *result = 0;  // nothing is ever actually read from this stream
 
   if (IsClosed()) return NS_OK;
@@ -294,14 +211,7 @@ nsFileUploadContentStream::ReadSegments(nsWriteSegmentFun fun, void* closure,
 NS_IMETHODIMP
 nsFileUploadContentStream::AsyncWait(nsIInputStreamCallback* callback,
                                      uint32_t flags, uint32_t count,
-<<<<<<< HEAD
-                                     nsIEventTarget *target) {
-||||||| merged common ancestors
-                                     nsIEventTarget *target)
-{
-=======
                                      nsIEventTarget* target) {
->>>>>>> upstream-releases
   nsresult rv = nsBaseContentStream::AsyncWait(callback, flags, count, target);
   if (NS_FAILED(rv) || IsClosed()) return rv;
 
@@ -324,17 +234,7 @@ void nsFileUploadContentStream::OnCopyComplete() {
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsFileChannel::nsFileChannel(nsIURI *uri) : mUploadLength(0), mFileURI(uri) {}
-||||||| merged common ancestors
-nsFileChannel::nsFileChannel(nsIURI *uri)
-  : mUploadLength(0)
-  , mFileURI(uri)
-{
-}
-=======
 nsFileChannel::nsFileChannel(nsIURI* uri) : mUploadLength(0), mFileURI(uri) {}
->>>>>>> upstream-releases
 
 nsresult nsFileChannel::Init() {
   NS_ENSURE_STATE(mLoadInfo);
@@ -389,24 +289,10 @@ nsresult nsFileChannel::Init() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsFileChannel::MakeFileInputStream(nsIFile *file,
-                                            nsCOMPtr<nsIInputStream> &stream,
-                                            nsCString &contentType,
-                                            bool async) {
-||||||| merged common ancestors
-nsresult
-nsFileChannel::MakeFileInputStream(nsIFile *file,
-                                   nsCOMPtr<nsIInputStream> &stream,
-                                   nsCString &contentType,
-                                   bool async)
-{
-=======
 nsresult nsFileChannel::MakeFileInputStream(nsIFile* file,
                                             nsCOMPtr<nsIInputStream>& stream,
                                             nsCString& contentType,
                                             bool async) {
->>>>>>> upstream-releases
   // we accept that this might result in a disk hit to stat the file
   bool isDir;
   nsresult rv = file->IsDirectory(&isDir);
@@ -441,18 +327,8 @@ nsresult nsFileChannel::MakeFileInputStream(nsIFile* file,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsFileChannel::OpenContentStream(bool async, nsIInputStream **result,
-                                          nsIChannel **channel) {
-||||||| merged common ancestors
-nsresult
-nsFileChannel::OpenContentStream(bool async, nsIInputStream **result,
-                                 nsIChannel** channel)
-{
-=======
 nsresult nsFileChannel::OpenContentStream(bool async, nsIInputStream** result,
                                           nsIChannel** channel) {
->>>>>>> upstream-releases
   // NOTE: the resulting file is a clone, so it is safe to pass it to the
   //       file input stream which will be read on a background thread.
   nsCOMPtr<nsIFile> file;
@@ -523,37 +399,13 @@ nsresult nsFileChannel::OpenContentStream(bool async, nsIInputStream** result,
     if (!async && mContentLength < 0) {
       rv = FixupContentLength(false);
       if (NS_FAILED(rv)) {
-<<<<<<< HEAD
-        if (async && (NS_ERROR_FILE_NOT_FOUND == rv ||
-                      NS_ERROR_FILE_TARGET_DOES_NOT_EXIST == rv)) {
-          size = 0;
-        } else {
-          return rv;
-        }
-||||||| merged common ancestors
-        if (async &&
-            (NS_ERROR_FILE_NOT_FOUND == rv ||
-             NS_ERROR_FILE_TARGET_DOES_NOT_EXIST == rv)) {
-          size = 0;
-        } else {
-          return rv;
-        }
-=======
         return rv;
->>>>>>> upstream-releases
       }
     }
-<<<<<<< HEAD
-    if (!contentType.IsEmpty()) SetContentType(contentType);
-||||||| merged common ancestors
-    if (!contentType.IsEmpty())
-      SetContentType(contentType);
-=======
 
     if (!contentType.IsEmpty()) {
       SetContentType(contentType);
     }
->>>>>>> upstream-releases
   }
 
   *result = nullptr;
@@ -624,20 +476,9 @@ NS_IMPL_ISUPPORTS_INHERITED(nsFileChannel, nsBaseChannel, nsIUploadChannel,
 // nsFileChannel::nsIFileChannel
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFileChannel::GetFile(nsIFile **file) {
-  nsCOMPtr<nsIFileURL> fileURL = do_QueryInterface(URI());
-  NS_ENSURE_STATE(fileURL);
-||||||| merged common ancestors
-nsFileChannel::GetFile(nsIFile **file)
-{
-    nsCOMPtr<nsIFileURL> fileURL = do_QueryInterface(URI());
-    NS_ENSURE_STATE(fileURL);
-=======
 nsFileChannel::GetFile(nsIFile** file) {
   nsCOMPtr<nsIFileURL> fileURL = do_QueryInterface(URI());
   NS_ENSURE_STATE(fileURL);
->>>>>>> upstream-releases
 
   // This returns a cloned nsIFile
   return fileURL->GetFile(file);
@@ -647,20 +488,9 @@ nsFileChannel::GetFile(nsIFile** file) {
 // nsFileChannel::nsIUploadChannel
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFileChannel::SetUploadStream(nsIInputStream *stream,
-                               const nsACString &contentType,
-                               int64_t contentLength) {
-||||||| merged common ancestors
-nsFileChannel::SetUploadStream(nsIInputStream *stream,
-                               const nsACString &contentType,
-                               int64_t contentLength)
-{
-=======
 nsFileChannel::SetUploadStream(nsIInputStream* stream,
                                const nsACString& contentType,
                                int64_t contentLength) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(!Pending(), NS_ERROR_IN_PROGRESS);
 
   if ((mUploadStream = stream)) {
@@ -681,18 +511,7 @@ nsFileChannel::SetUploadStream(nsIInputStream* stream,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFileChannel::GetUploadStream(nsIInputStream **result) {
-  NS_IF_ADDREF(*result = mUploadStream);
-  return NS_OK;
-||||||| merged common ancestors
-nsFileChannel::GetUploadStream(nsIInputStream **result)
-{
-    NS_IF_ADDREF(*result = mUploadStream);
-    return NS_OK;
-=======
 nsFileChannel::GetUploadStream(nsIInputStream** result) {
   NS_IF_ADDREF(*result = mUploadStream);
   return NS_OK;
->>>>>>> upstream-releases
 }

@@ -5,16 +5,8 @@
 //! Generic values for UI properties.
 
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use style_traits::cursor::CursorKind;
-use style_traits::{CssWriter, ToCss};
-||||||| merged common ancestors
-use style_traits::{CssWriter, ToCss};
-use style_traits::cursor::CursorKind;
-=======
 use style_traits::{CssWriter, ToCss};
 use values::specified::ui::CursorKind;
->>>>>>> upstream-releases
 
 /// A generic value for the `cursor` property.
 ///
@@ -97,27 +89,6 @@ impl<ImageUrl: ToCss, Number: ToCss> ToCss for CursorImage<ImageUrl, Number> {
 /// A generic value for `scrollbar-color` property.
 ///
 /// https://drafts.csswg.org/css-scrollbars-1/#scrollbar-color
-<<<<<<< HEAD
-#[derive(
-    Animate,
-    Clone,
-    ComputeSquaredDistance,
-    Copy,
-    Debug,
-    MallocSizeOf,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToAnimatedValue,
-    ToAnimatedZero,
-    ToComputedValue,
-    ToCss,
-)]
-pub enum ScrollbarColor<Color> {
-||||||| merged common ancestors
-#[derive(Animate, Clone, ComputeSquaredDistance, Copy, Debug, MallocSizeOf, PartialEq,
-         SpecifiedValueInfo, ToAnimatedValue, ToAnimatedZero, ToComputedValue, ToCss)]
-pub enum ScrollbarColor<Color> {
-=======
 #[derive(
     Animate,
     Clone,
@@ -136,7 +107,6 @@ pub enum ScrollbarColor<Color> {
 )]
 #[repr(C, u8)]
 pub enum GenericScrollbarColor<Color> {
->>>>>>> upstream-releases
     /// `auto`
     Auto,
     /// `<color>{2}`

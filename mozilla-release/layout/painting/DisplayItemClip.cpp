@@ -438,21 +438,10 @@ bool DisplayItemClip::ComputeRegionInClips(const DisplayItemClip* aOldClip,
   return true;
 }
 
-<<<<<<< HEAD
-void DisplayItemClip::MoveBy(const nsPoint& aPoint) {
-  if (!mHaveClipRect) return;
-||||||| merged common ancestors
-void
-DisplayItemClip::MoveBy(const nsPoint& aPoint)
-{
-  if (!mHaveClipRect)
-    return;
-=======
 void DisplayItemClip::MoveBy(const nsPoint& aPoint) {
   if (!mHaveClipRect) {
     return;
   }
->>>>>>> upstream-releases
   mClipRect += aPoint;
   for (uint32_t i = 0; i < mRoundedClipRects.Length(); ++i) {
     mRoundedClipRects[i].mRect += aPoint;
@@ -489,47 +478,12 @@ nsCString DisplayItemClip::ToString() const {
   return std::move(str);
 }
 
-<<<<<<< HEAD
-void DisplayItemClip::ToComplexClipRegions(
-    int32_t aAppUnitsPerDevPixel, const layers::StackingContextHelper& aSc,
-    nsTArray<wr::ComplexClipRegion>& aOutArray) const {
-  for (const auto& clipRect : mRoundedClipRects) {
-    aOutArray.AppendElement(wr::ToComplexClipRegion(
-        clipRect.mRect, clipRect.mRadii, aAppUnitsPerDevPixel));
-||||||| merged common ancestors
-void
-DisplayItemClip::ToComplexClipRegions(
-  int32_t aAppUnitsPerDevPixel,
-  const layers::StackingContextHelper& aSc,
-  nsTArray<wr::ComplexClipRegion>& aOutArray) const
-{
-  for (uint32_t i = 0; i < mRoundedClipRects.Length(); i++) {
-    wr::ComplexClipRegion* region = aOutArray.AppendElement();
-    region->rect = wr::ToRoundedLayoutRect(LayoutDeviceRect::FromAppUnits(
-      mRoundedClipRects[i].mRect, aAppUnitsPerDevPixel));
-    const nscoord* radii = mRoundedClipRects[i].mRadii;
-    region->radii = wr::ToBorderRadius(
-      LayoutDeviceSize::FromAppUnits(
-        nsSize(radii[eCornerTopLeftX], radii[eCornerTopLeftY]),
-        aAppUnitsPerDevPixel),
-      LayoutDeviceSize::FromAppUnits(
-        nsSize(radii[eCornerTopRightX], radii[eCornerTopRightY]),
-        aAppUnitsPerDevPixel),
-      LayoutDeviceSize::FromAppUnits(
-        nsSize(radii[eCornerBottomLeftX], radii[eCornerBottomLeftY]),
-        aAppUnitsPerDevPixel),
-      LayoutDeviceSize::FromAppUnits(
-        nsSize(radii[eCornerBottomRightX], radii[eCornerBottomRightY]),
-        aAppUnitsPerDevPixel));
-    region->mode = wr::ClipMode::Clip;
-=======
 void DisplayItemClip::ToComplexClipRegions(
     int32_t aAppUnitsPerDevPixel,
     nsTArray<wr::ComplexClipRegion>& aOutArray) const {
   for (const auto& clipRect : mRoundedClipRects) {
     aOutArray.AppendElement(wr::ToComplexClipRegion(
         clipRect.mRect, clipRect.mRadii, aAppUnitsPerDevPixel));
->>>>>>> upstream-releases
   }
 }
 

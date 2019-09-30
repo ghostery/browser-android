@@ -60,73 +60,24 @@ HRESULT MFShutdown();
 
 HRESULT MFCreateMediaType(IMFMediaType** aOutMFType);
 
-<<<<<<< HEAD
-HRESULT MFGetStrideForBitmapInfoHeader(DWORD aFormat, DWORD aWidth,
-                                       LONG *aOutStride);
-||||||| merged common ancestors
-HRESULT MFGetStrideForBitmapInfoHeader(DWORD aFormat,
-                                       DWORD aWidth,
-                                       LONG *aOutStride);
-=======
 HRESULT MFGetStrideForBitmapInfoHeader(DWORD aFormat, DWORD aWidth,
                                        LONG* aOutStride);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-HRESULT MFGetService(IUnknown *punkObject, REFGUID guidService, REFIID riid,
-                     LPVOID *ppvObject);
-||||||| merged common ancestors
-HRESULT MFGetService(IUnknown *punkObject,
-                     REFGUID guidService,
-                     REFIID riid,
-                     LPVOID *ppvObject);
-=======
 HRESULT MFGetService(IUnknown* punkObject, REFGUID guidService, REFIID riid,
                      LPVOID* ppvObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-HRESULT DXVA2CreateDirect3DDeviceManager9(
-    UINT *pResetToken, IDirect3DDeviceManager9 **ppDXVAManager);
-||||||| merged common ancestors
-HRESULT DXVA2CreateDirect3DDeviceManager9(UINT *pResetToken,
-                                          IDirect3DDeviceManager9 **ppDXVAManager);
-=======
 HRESULT DXVA2CreateDirect3DDeviceManager9(
     UINT* pResetToken, IDirect3DDeviceManager9** ppDXVAManager);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-HRESULT MFCreateDXGIDeviceManager(UINT *pResetToken,
-                                  IMFDXGIDeviceManager **ppDXVAManager);
-||||||| merged common ancestors
-
-HRESULT MFCreateDXGIDeviceManager(UINT *pResetToken, IMFDXGIDeviceManager **ppDXVAManager);
-=======
 HRESULT MFCreateDXGIDeviceManager(UINT* pResetToken,
                                   IMFDXGIDeviceManager** ppDXVAManager);
 
 HRESULT MFCreateSample(IMFSample** ppIMFSample);
->>>>>>> upstream-releases
 
 HRESULT MFCreateAlignedMemoryBuffer(DWORD cbMaxLength, DWORD fAlignmentFlags,
                                     IMFMediaBuffer** ppBuffer);
 
-<<<<<<< HEAD
-HRESULT MFCreateAlignedMemoryBuffer(DWORD cbMaxLength, DWORD fAlignmentFlags,
-                                    IMFMediaBuffer **ppBuffer);
-
-HRESULT MFCreateDXGISurfaceBuffer(REFIID riid, IUnknown *punkSurface,
-||||||| merged common ancestors
-HRESULT MFCreateAlignedMemoryBuffer(DWORD cbMaxLength,
-                                    DWORD fAlignmentFlags,
-                                    IMFMediaBuffer **ppBuffer);
-
-HRESULT MFCreateDXGISurfaceBuffer(REFIID riid,
-                                  IUnknown *punkSurface,
-=======
 HRESULT MFCreateDXGISurfaceBuffer(REFIID riid, IUnknown* punkSurface,
->>>>>>> upstream-releases
                                   UINT uSubresourceIndex,
                                   BOOL fButtomUpWhenLinear,
                                   IMFMediaBuffer** ppBuffer);

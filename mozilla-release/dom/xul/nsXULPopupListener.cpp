@@ -180,21 +180,9 @@ nsresult nsXULPopupListener::HandleEvent(Event* aEvent) {
 }
 
 #ifndef NS_CONTEXT_MENU_IS_MOUSEUP
-<<<<<<< HEAD
-nsresult nsXULPopupListener::FireFocusOnTargetContent(
-    nsIContent* aTargetContent, bool aIsTouch) {
-  nsCOMPtr<nsIDocument> doc = aTargetContent->OwnerDoc();
-||||||| merged common ancestors
-nsresult
-nsXULPopupListener::FireFocusOnTargetContent(nsIContent* aTargetContent,
-                                             bool aIsTouch)
-{
-  nsCOMPtr<nsIDocument> doc = aTargetContent->OwnerDoc();
-=======
 nsresult nsXULPopupListener::FireFocusOnTargetContent(
     nsIContent* aTargetContent, bool aIsTouch) {
   nsCOMPtr<Document> doc = aTargetContent->OwnerDoc();
->>>>>>> upstream-releases
 
   // strong reference to keep this from going away between events
   // XXXbz between what events?  We don't use this local at all!

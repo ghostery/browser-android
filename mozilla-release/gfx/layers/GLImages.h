@@ -32,17 +32,8 @@ class GLImage : public Image {
 class SurfaceTextureImage : public GLImage {
  public:
   SurfaceTextureImage(AndroidSurfaceTextureHandle aHandle,
-<<<<<<< HEAD
-                      const gfx::IntSize& aSize, bool aContinuous,
-                      gl::OriginPos aOriginPos);
-||||||| merged common ancestors
-                      const gfx::IntSize& aSize,
-                      bool aContinuous,
-                      gl::OriginPos aOriginPos);
-=======
                       const gfx::IntSize& aSize, bool aContinuous,
                       gl::OriginPos aOriginPos, bool aHasAlpha = true);
->>>>>>> upstream-releases
 
   gfx::IntSize GetSize() const override { return mSize; }
   AndroidSurfaceTextureHandle GetHandle() const { return mHandle; }

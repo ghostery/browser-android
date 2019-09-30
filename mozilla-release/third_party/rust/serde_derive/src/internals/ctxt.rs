@@ -11,17 +11,9 @@ use syn;
 /// References can be shared since this type uses run-time exclusive mut checking.
 #[derive(Default)]
 pub struct Ctxt {
-<<<<<<< HEAD
-    // The contents will be set to `None` during checking. This is so that checking can be
-    // enforced.
-    errors: RefCell<Option<Vec<String>>>,
-||||||| merged common ancestors
-    errors: RefCell<Option<Vec<String>>>,
-=======
     // The contents will be set to `None` during checking. This is so that checking can be
     // enforced.
     errors: RefCell<Option<Vec<syn::Error>>>,
->>>>>>> upstream-releases
 }
 
 impl Ctxt {
@@ -34,17 +26,10 @@ impl Ctxt {
         }
     }
 
-<<<<<<< HEAD
-    /// Add an error to the context object.
-    pub fn error<T: Display>(&self, msg: T) {
-||||||| merged common ancestors
-    pub fn error<T: Display>(&self, msg: T) {
-=======
     /// Add an error to the context object with a tokenenizable object.
     ///
     /// The object is used for spanning in error messages.
     pub fn error_spanned_by<A: ToTokens, T: Display>(&self, obj: A, msg: T) {
->>>>>>> upstream-releases
         self.errors
             .borrow_mut()
             .as_mut()
@@ -53,18 +38,9 @@ impl Ctxt {
             .push(syn::Error::new_spanned(obj.into_token_stream(), msg));
     }
 
-<<<<<<< HEAD
-    /// Consume this object, producing a formatted error string if there are errors.
-    pub fn check(self) -> Result<(), String> {
-        let mut errors = self.errors.borrow_mut().take().unwrap();
-||||||| merged common ancestors
-    pub fn check(self) -> Result<(), String> {
-        let mut errors = self.errors.borrow_mut().take().unwrap();
-=======
     /// Consume this object, producing a formatted error string if there are errors.
     pub fn check(self) -> Result<(), Vec<syn::Error>> {
         let errors = self.errors.borrow_mut().take().unwrap();
->>>>>>> upstream-releases
         match errors.len() {
             0 => Ok(()),
             _ => Err(errors),

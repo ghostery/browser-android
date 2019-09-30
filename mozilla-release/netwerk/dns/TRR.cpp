@@ -45,14 +45,7 @@ NS_IMPL_ISUPPORTS(TRR, nsIHttpPushListener, nsIInterfaceRequestor,
 const uint8_t kDNS_CLASS_IN = 1;
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRR::Notify(nsITimer *aTimer) {
-||||||| merged common ancestors
-TRR::Notify(nsITimer *aTimer)
-{
-=======
 TRR::Notify(nsITimer* aTimer) {
->>>>>>> upstream-releases
   if (aTimer == mTimeout) {
     mTimeout = nullptr;
     Cancel();
@@ -65,15 +58,7 @@ TRR::Notify(nsITimer* aTimer) {
 
 // convert a given host request to a DOH 'body'
 //
-<<<<<<< HEAD
-nsresult TRR::DohEncode(nsCString &aBody, bool aDisableECS) {
-||||||| merged common ancestors
-nsresult
-TRR::DohEncode(nsCString &aBody, bool aDisableECS)
-{
-=======
 nsresult TRR::DohEncode(nsCString& aBody, bool aDisableECS) {
->>>>>>> upstream-releases
   aBody.Truncate();
   // Header
   aBody += '\0';
@@ -223,15 +208,8 @@ nsresult TRR::SendHTTPRequest() {
 
     /* For GET requests, the outgoing packet needs to be Base64url-encoded and
        then appended to the end of the URI. */
-<<<<<<< HEAD
-    rv = Base64URLEncode(tmp.Length(),
-                         reinterpret_cast<const unsigned char *>(tmp.get()),
-||||||| merged common ancestors
-    rv = Base64URLEncode(tmp.Length(), reinterpret_cast<const unsigned char *>(tmp.get()),
-=======
     rv = Base64URLEncode(tmp.Length(),
                          reinterpret_cast<const unsigned char*>(tmp.get()),
->>>>>>> upstream-releases
                          Base64URLEncodePaddingPolicy::Omit, body);
     NS_ENSURE_SUCCESS(rv, rv);
 
@@ -254,28 +232,6 @@ nsresult TRR::SendHTTPRequest() {
     return rv;
   }
 
-<<<<<<< HEAD
-  rv = NS_NewChannel(
-      getter_AddRefs(mChannel), dnsURI, nsContentUtils::GetSystemPrincipal(),
-      nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-      nsIContentPolicy::TYPE_OTHER,
-      nullptr,  // PerformanceStorage
-      nullptr,  // aLoadGroup
-      this,
-      nsIRequest::LOAD_ANONYMOUS | (mPB ? nsIRequest::INHIBIT_CACHING : 0),
-      ios);
-||||||| merged common ancestors
-  rv = NS_NewChannel(getter_AddRefs(mChannel),
-                     dnsURI,
-                     nsContentUtils::GetSystemPrincipal(),
-                     nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                     nsIContentPolicy::TYPE_OTHER,
-                     nullptr,   // PerformanceStorage
-                     nullptr, // aLoadGroup
-                     this,
-                     nsIRequest::LOAD_ANONYMOUS |
-                     (mPB ? nsIRequest::INHIBIT_CACHING: 0), ios);
-=======
   rv = NS_NewChannel(
       getter_AddRefs(mChannel), dnsURI, nsContentUtils::GetSystemPrincipal(),
       nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
@@ -287,7 +243,6 @@ nsresult TRR::SendHTTPRequest() {
       nsIRequest::LOAD_ANONYMOUS | (mPB ? nsIRequest::INHIBIT_CACHING : 0) |
           nsIChannel::LOAD_BYPASS_URL_CLASSIFIER,
       ios);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     LOG(("TRR:SendHTTPRequest: NewChannel failed!\n"));
     return rv;
@@ -354,19 +309,9 @@ nsresult TRR::SendHTTPRequest() {
           NS_LITERAL_CSTRING("application/dns-message")))) {
     LOG(("TRR::SendHTTPRequest: couldn't set content-type!\n"));
   }
-<<<<<<< HEAD
-  if (NS_SUCCEEDED(httpChannel->AsyncOpen2(this))) {
-    NS_NewTimerWithCallback(getter_AddRefs(mTimeout), this,
-                            gTRRService->GetRequestTimeout(),
-||||||| merged common ancestors
-  if (NS_SUCCEEDED(httpChannel->AsyncOpen2(this))) {
-    NS_NewTimerWithCallback(getter_AddRefs(mTimeout),
-                            this, gTRRService->GetRequestTimeout(),
-=======
   if (NS_SUCCEEDED(httpChannel->AsyncOpen(this))) {
     NS_NewTimerWithCallback(getter_AddRefs(mTimeout), this,
                             gTRRService->GetRequestTimeout(),
->>>>>>> upstream-releases
                             nsITimer::TYPE_ONE_SHOT);
     return NS_OK;
   }
@@ -375,14 +320,7 @@ nsresult TRR::SendHTTPRequest() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRR::GetInterface(const nsIID &iid, void **result) {
-||||||| merged common ancestors
-TRR::GetInterface(const nsIID &iid, void **result)
-{
-=======
 TRR::GetInterface(const nsIID& iid, void** result) {
->>>>>>> upstream-releases
   if (!iid.Equals(NS_GET_IID(nsIHttpPushListener))) {
     return NS_ERROR_NO_INTERFACE;
   }
@@ -392,17 +330,8 @@ TRR::GetInterface(const nsIID& iid, void** result) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TRR::DohDecodeQuery(const nsCString &query, nsCString &host,
-                             enum TrrType &type) {
-||||||| merged common ancestors
-nsresult
-TRR::DohDecodeQuery(const nsCString &query, nsCString &host, enum TrrType &type)
-{
-=======
 nsresult TRR::DohDecodeQuery(const nsCString& query, nsCString& host,
                              enum TrrType& type) {
->>>>>>> upstream-releases
   FallibleTArray<uint8_t> binary;
   bool found_dns = false;
   LOG(("TRR::DohDecodeQuery %s!\n", query.get()));
@@ -411,7 +340,7 @@ nsresult TRR::DohDecodeQuery(const nsCString& query, nsCString& host,
   nsCCharSeparatedTokenizer tokenizer(query, '&');
   nsAutoCString data;
   while (tokenizer.hasMoreTokens()) {
-    const nsACString &token = tokenizer.nextToken();
+    const nsACString& token = tokenizer.nextToken();
     nsDependentCSubstring dns = Substring(token, 0, 4);
     nsAutoCString check(dns);
     if (check.Equals("dns=")) {
@@ -471,12 +400,6 @@ nsresult TRR::DohDecodeQuery(const nsCString& query, nsCString& host,
   uint16_t i16 = 0;
   i16 += binary[index] << 8;
   i16 += binary[index + 1];
-<<<<<<< HEAD
-  index += 4;  // skip question's type, class
-||||||| merged common ancestors
-  index += 4; // skip question's type, class
-=======
->>>>>>> upstream-releases
   type = (enum TrrType)i16;
 
   LOG(("TRR::DohDecodeQuery type %d\n", (int)type));
@@ -484,15 +407,7 @@ nsresult TRR::DohDecodeQuery(const nsCString& query, nsCString& host,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TRR::ReceivePush(nsIHttpChannel *pushed, nsHostRecord *pushedRec) {
-||||||| merged common ancestors
-nsresult
-TRR::ReceivePush(nsIHttpChannel *pushed, nsHostRecord *pushedRec)
-{
-=======
 nsresult TRR::ReceivePush(nsIHttpChannel* pushed, nsHostRecord* pushedRec) {
->>>>>>> upstream-releases
   if (!mHostResolver) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -547,14 +462,7 @@ nsresult TRR::ReceivePush(nsIHttpChannel* pushed, nsHostRecord* pushedRec) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRR::OnPush(nsIHttpChannel *associated, nsIHttpChannel *pushed) {
-||||||| merged common ancestors
-TRR::OnPush(nsIHttpChannel *associated, nsIHttpChannel *pushed)
-{
-=======
 TRR::OnPush(nsIHttpChannel* associated, nsIHttpChannel* pushed) {
->>>>>>> upstream-releases
   LOG(("TRR::OnPush entry\n"));
   MOZ_ASSERT(associated == mChannel);
   if (!mRec) {
@@ -566,56 +474,22 @@ TRR::OnPush(nsIHttpChannel* associated, nsIHttpChannel* pushed) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRR::OnStartRequest(nsIRequest *aRequest, nsISupports *aContext) {
-||||||| merged common ancestors
-TRR::OnStartRequest(nsIRequest *aRequest,
-                    nsISupports *aContext)
-{
-=======
 TRR::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   LOG(("TRR::OnStartRequest %p %s %d\n", this, mHost.get(), mType));
   mStartTime = TimeStamp::Now();
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static uint16_t get16bit(unsigned char *aData, int index) {
-||||||| merged common ancestors
-static uint16_t get16bit(unsigned char *aData, int index)
-{
-=======
 static uint16_t get16bit(unsigned char* aData, int index) {
->>>>>>> upstream-releases
   return ((aData[index] << 8) | aData[index + 1]);
 }
 
-<<<<<<< HEAD
-static uint32_t get32bit(unsigned char *aData, int index) {
-  return (aData[index] << 24) | (aData[index + 1] << 16) |
-         (aData[index + 2] << 8) | aData[index + 3];
-||||||| merged common ancestors
-static uint32_t get32bit(unsigned char *aData, int index)
-{
-  return (aData[index] << 24) | (aData[index+1] << 16) |
-    (aData[index+2] << 8) | aData[index+3];
-=======
 static uint32_t get32bit(unsigned char* aData, int index) {
   return (aData[index] << 24) | (aData[index + 1] << 16) |
          (aData[index + 2] << 8) | aData[index + 3];
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult TRR::PassQName(unsigned int &index) {
-||||||| merged common ancestors
-nsresult
-TRR::PassQName(unsigned int &index)
-{
-=======
 nsresult TRR::PassQName(unsigned int& index) {
->>>>>>> upstream-releases
   uint8_t length;
   do {
     if (mBodySize < (index + 1)) {
@@ -648,15 +522,7 @@ nsresult TRR::PassQName(unsigned int& index) {
 // GetQname: retrieves the qname (stores in 'aQname') and stores the index
 // after qname was parsed into the 'aIndex'.
 
-<<<<<<< HEAD
-nsresult TRR::GetQname(nsAutoCString &aQname, unsigned int &aIndex) {
-||||||| merged common ancestors
-nsresult
-TRR::GetQname(nsAutoCString &aQname, unsigned int &aIndex)
-{
-=======
 nsresult TRR::GetQname(nsAutoCString& aQname, unsigned int& aIndex) {
->>>>>>> upstream-releases
   uint8_t clength = 0;
   unsigned int cindex = aIndex;
   unsigned int loop = 128;    // a valid DNS name can never loop this much
@@ -694,16 +560,8 @@ nsresult TRR::GetQname(nsAutoCString& aQname, unsigned int& aIndex) {
       if ((cindex + clength) > mBodySize) {
         return NS_ERROR_ILLEGAL_VALUE;
       }
-<<<<<<< HEAD
-      aQname.Append((const char *)(&mResponse[cindex]), clength);
-      cindex += clength;  // skip label
-||||||| merged common ancestors
-      aQname.Append((const char *)(&mResponse[cindex]), clength);
-      cindex += clength; // skip label
-=======
       aQname.Append((const char*)(&mResponse[cindex]), clength);
       cindex += clength;  // skip label
->>>>>>> upstream-releases
     }
   } while (clength && --loop);
 
@@ -722,15 +580,7 @@ nsresult TRR::GetQname(nsAutoCString& aQname, unsigned int& aIndex) {
 //
 // DohDecode() collects the TTL and the IP addresses in the response
 //
-<<<<<<< HEAD
-nsresult TRR::DohDecode(nsCString &aHost) {
-||||||| merged common ancestors
-nsresult
-TRR::DohDecode(nsCString &aHost)
-{
-=======
 nsresult TRR::DohDecode(nsCString& aHost) {
->>>>>>> upstream-releases
   // The response has a 12 byte header followed by the question (returned)
   // and then the answer. The answer section itself contains the name, type
   // and class again and THEN the record data.
@@ -902,48 +752,6 @@ nsresult TRR::DohDecode(nsCString& aHost) {
           } else {
             LOG(("TRR::DohDecode CNAME - ignoring another entry\n"));
           }
-<<<<<<< HEAD
-          break;
-        case TRRTYPE_TXT: {
-          // TXT record RRDATA sections are a series of character-strings
-          // each character string is a length byte followed by that many data
-          // bytes
-          nsAutoCString txt;
-          unsigned int txtIndex = index;
-          uint16_t available = RDLENGTH;
-
-          while (available > 0) {
-            uint8_t characterStringLen = mResponse[txtIndex++];
-            available--;
-            if (characterStringLen > available) {
-              LOG(("TRR::DohDecode MALFORMED TXT RECORD\n"));
-              break;
-            }
-            txt.Append((const char *)(&mResponse[txtIndex]),
-                       characterStringLen);
-            txtIndex += characterStringLen;
-            available -= characterStringLen;
-||||||| merged common ancestors
-        }
-        else {
-          LOG(("TRR::DohDecode CNAME - ignoring another entry\n"));
-        }
-        break;
-      case TRRTYPE_TXT:
-      {
-        // TXT record RRDATA sections are a series of character-strings
-        // each character string is a length byte followed by that many data bytes
-        nsAutoCString txt;
-        unsigned int txtIndex = index;
-        uint16_t available = RDLENGTH;
-
-        while (available > 0) {
-          uint8_t characterStringLen = mResponse[txtIndex++];
-          available--;
-          if (characterStringLen > available) {
-            LOG(("TRR::DohDecode MALFORMED TXT RECORD\n"));
-            break;
-=======
           break;
         case TRRTYPE_TXT: {
           // TXT record RRDATA sections are a series of character-strings
@@ -963,7 +771,6 @@ nsresult TRR::DohDecode(nsCString& aHost) {
             txt.Append((const char*)(&mResponse[txtIndex]), characterStringLen);
             txtIndex += characterStringLen;
             available -= characterStringLen;
->>>>>>> upstream-releases
           }
 
           mTxt.AppendElement(txt);
@@ -1071,7 +878,7 @@ nsresult TRR::ReturnData() {
     RefPtr<AddrInfo> ai(new AddrInfo(mHost, mType));
     DOHaddr* item;
     uint32_t ttl = AddrInfo::NO_TTL_DATA;
-    while ((item = static_cast<DOHaddr *>(mDNS.mAddresses.popFirst()))) {
+    while ((item = static_cast<DOHaddr*>(mDNS.mAddresses.popFirst()))) {
       PRNetAddr prAddr;
       NetAddrToPRNetAddr(&item->mNet, &prAddr);
       auto* addrElement = new NetAddrElement(&prAddr);
@@ -1087,14 +894,7 @@ nsresult TRR::ReturnData() {
     if (!mHostResolver) {
       return NS_ERROR_FAILURE;
     }
-<<<<<<< HEAD
-    (void)mHostResolver->CompleteLookup(mRec, NS_OK, ai.forget(), mPB,
-                                        mOriginSuffix);
-||||||| merged common ancestors
-    (void)mHostResolver->CompleteLookup(mRec, NS_OK, ai.forget(), mPB);
-=======
     (void)mHostResolver->CompleteLookup(mRec, NS_OK, ai, mPB, mOriginSuffix);
->>>>>>> upstream-releases
     mHostResolver = nullptr;
     mRec = nullptr;
   } else {
@@ -1165,17 +965,7 @@ nsresult TRR::On200Response() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRR::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext,
-                   nsresult aStatusCode) {
-||||||| merged common ancestors
-TRR::OnStopRequest(nsIRequest *aRequest,
-                   nsISupports *aContext,
-                   nsresult aStatusCode)
-{
-=======
 TRR::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
->>>>>>> upstream-releases
   // The dtor will be run after the function returns
   LOG(("TRR:OnStopRequest %p %s %d failed=%d code=%X\n", this, mHost.get(),
        mType, mFailed, (unsigned int)aStatusCode));
@@ -1223,27 +1013,10 @@ TRR::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRR::OnDataAvailable(nsIRequest *aRequest, nsISupports *aContext,
-                     nsIInputStream *aInputStream, uint64_t aOffset,
-                     const uint32_t aCount) {
-  LOG(("TRR:OnDataAvailable %p %s %d failed=%d aCount=%u\n", this, mHost.get(),
-       mType, mFailed, (unsigned int)aCount));
-||||||| merged common ancestors
-TRR::OnDataAvailable(nsIRequest *aRequest,
-                     nsISupports *aContext,
-                     nsIInputStream *aInputStream,
-                     uint64_t aOffset,
-                     const uint32_t aCount)
-{
-  LOG(("TRR:OnDataAvailable %p %s %d failed=%d aCount=%u\n",
-       this, mHost.get(), mType, mFailed, (unsigned int)aCount));
-=======
 TRR::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInputStream,
                      uint64_t aOffset, const uint32_t aCount) {
   LOG(("TRR:OnDataAvailable %p %s %d failed=%d aCount=%u\n", this, mHost.get(),
        mType, mFailed, (unsigned int)aCount));
->>>>>>> upstream-releases
   // receive DNS response into the local buffer
   if (mFailed) {
     return NS_ERROR_FAILURE;
@@ -1256,15 +1029,8 @@ TRR::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInputStream,
   }
 
   uint32_t count;
-<<<<<<< HEAD
-  nsresult rv =
-      aInputStream->Read((char *)mResponse + mBodySize, aCount, &count);
-||||||| merged common ancestors
-  nsresult rv = aInputStream->Read((char *)mResponse + mBodySize, aCount, &count);
-=======
   nsresult rv =
       aInputStream->Read((char*)mResponse + mBodySize, aCount, &count);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     LOG(("TRR::OnDataAvailable:%d fail\n", __LINE__));
     mFailed = true;
@@ -1275,18 +1041,8 @@ TRR::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInputStream,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult DOHresp::Add(uint32_t TTL, unsigned char *dns, int index, uint16_t len,
-                      bool aLocalAllowed) {
-||||||| merged common ancestors
-nsresult
-DOHresp::Add(uint32_t TTL, unsigned char *dns, int index, uint16_t len,
-             bool aLocalAllowed)
-{
-=======
 nsresult DOHresp::Add(uint32_t TTL, unsigned char* dns, int index, uint16_t len,
                       bool aLocalAllowed) {
->>>>>>> upstream-releases
   nsAutoPtr<DOHaddr> doh(new DOHaddr);
   NetAddr* addr = &doh->mNet;
   if (4 == len) {
@@ -1321,23 +1077,9 @@ nsresult DOHresp::Add(uint32_t TTL, unsigned char* dns, int index, uint16_t len,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-class ProxyCancel : public Runnable {
- public:
-  explicit ProxyCancel(TRR *aTRR) : Runnable("proxyTrrCancel"), mTRR(aTRR) {}
-||||||| merged common ancestors
-class ProxyCancel : public Runnable
-{
-public:
-  explicit ProxyCancel(TRR *aTRR)
-    : Runnable("proxyTrrCancel")
-    , mTRR(aTRR)
-  { }
-=======
 class ProxyCancel : public Runnable {
  public:
   explicit ProxyCancel(TRR* aTRR) : Runnable("proxyTrrCancel"), mTRR(aTRR) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     mTRR->Cancel();

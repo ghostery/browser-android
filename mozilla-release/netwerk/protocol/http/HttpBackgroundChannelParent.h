@@ -67,19 +67,8 @@ class HttpBackgroundChannelParent final : public PHttpBackgroundChannelParent {
   // channel.
   bool OnNotifyChannelClassifierProtectionDisabled(uint32_t aAcceptedReason);
 
-<<<<<<< HEAD
   // To send NotifyCookieAllowed message over background channel.
   bool OnNotifyCookieAllowed();
-
-  // To send NotifyTrackingCookieBlocked message over background channel.
-  bool OnNotifyTrackingCookieBlocked(uint32_t aRejectedReason);
-||||||| merged common ancestors
-  // To send NotifyTrackingCookieBlocked message over background channel.
-  bool OnNotifyTrackingCookieBlocked(uint32_t aRejectedReason);
-=======
-  // To send NotifyCookieAllowed message over background channel.
-  bool OnNotifyCookieAllowed();
->>>>>>> upstream-releases
 
   // To send NotifyCookieBlocked message over background channel.
   bool OnNotifyCookieBlocked(uint32_t aRejectedReason);
@@ -96,17 +85,11 @@ class HttpBackgroundChannelParent final : public PHttpBackgroundChannelParent {
                                   const nsACString& aProvider,
                                   const nsACString& aFullHash);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // To send SetClassifierMatchedTrackingInfo message over background channel.
   bool OnSetClassifierMatchedTrackingInfo(const nsACString& aLists,
                                           const nsACString& aFullHashes);
 
  protected:
->>>>>>> upstream-releases
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
  private:

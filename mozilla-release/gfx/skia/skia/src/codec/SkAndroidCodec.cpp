@@ -171,31 +171,6 @@ sk_sp<SkColorSpace> SkAndroidCodec::computeOutputColorSpace(SkColorType outputCo
                 return prefColorSpace;
             }
 
-<<<<<<< HEAD
-            const skcms_ICCProfile* encodedProfile = fCodec->getEncodedInfo().profile();
-            if (encodedProfile) {
-                if (auto encodedSpace = SkColorSpace::Make(*encodedProfile)) {
-                    // Leave the pixels in the encoded color space.  Color space conversion
-                    // will be handled after decode time.
-                    return encodedSpace;
-                }
-
-                if (is_wide_gamut(*encodedProfile)) {
-                    return SkColorSpace::MakeRGB(SkColorSpace::kSRGB_RenderTargetGamma,
-                                                 SkColorSpace::kDCIP3_D65_Gamut);
-                }
-||||||| merged common ancestors
-            SkColorSpace* encodedSpace = fCodec->getInfo().colorSpace();
-            if (encodedSpace->isNumericalTransferFn(&fn)) {
-                // Leave the pixels in the encoded color space.  Color space conversion
-                // will be handled after decode time.
-                return sk_ref_sp(encodedSpace);
-            }
-
-            if (is_wide_gamut(encodedSpace)) {
-                return SkColorSpace::MakeRGB(SkColorSpace::kSRGB_RenderTargetGamma,
-                                             SkColorSpace::kDCIP3_D65_Gamut);
-=======
             const skcms_ICCProfile* encodedProfile = fCodec->getEncodedInfo().profile();
             if (encodedProfile) {
                 if (auto encodedSpace = SkColorSpace::Make(*encodedProfile)) {
@@ -207,7 +182,6 @@ sk_sp<SkColorSpace> SkAndroidCodec::computeOutputColorSpace(SkColorType outputCo
                 if (is_wide_gamut(*encodedProfile)) {
                     return SkColorSpace::MakeRGB(SkNamedTransferFn::kSRGB, SkNamedGamut::kDCIP3);
                 }
->>>>>>> upstream-releases
             }
 
             return SkColorSpace::MakeSRGB();

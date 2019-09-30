@@ -178,20 +178,10 @@ sk_sp<SkSpecialSurface> SkSpecialSurface::MakeRenderTarget(GrRecordingContext* c
         return nullptr;
     }
 
-<<<<<<< HEAD
-    sk_sp<GrRenderTargetContext> renderTargetContext(
-        context->contextPriv().makeDeferredRenderTargetContext(
-                SkBackingFit::kApprox, width, height, config, std::move(colorSpace), 1,
-                GrMipMapped::kNo, kBottomLeft_GrSurfaceOrigin, props));
-||||||| merged common ancestors
-    sk_sp<GrRenderTargetContext> renderTargetContext(context->makeDeferredRenderTargetContext(
-        SkBackingFit::kApprox, width, height, config, std::move(colorSpace)));
-=======
     sk_sp<GrRenderTargetContext> renderTargetContext(
         context->priv().makeDeferredRenderTargetContext(
                 format, SkBackingFit::kApprox, width, height, config, std::move(colorSpace), 1,
                 GrMipMapped::kNo, kBottomLeft_GrSurfaceOrigin, props));
->>>>>>> upstream-releases
     if (!renderTargetContext) {
         return nullptr;
     }

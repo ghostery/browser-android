@@ -296,21 +296,6 @@ function checkSmartFrameString({ el, location, functionName, tooltip }) {
   }
 }
 
-function checkSmartFrameString({ el, location, functionName, tooltip }) {
-  const $ = selector => el.querySelector(selector);
-
-  const $func = $(".title");
-  const $location = $(".location");
-
-  is($location.textContent, location, "Correct filename");
-  is(el.getAttribute("title"), tooltip, "Correct tooltip");
-  if (functionName != null) {
-    is($func.textContent, functionName, "Correct function name");
-  } else {
-    ok(!$func, "Should not have an element for `functionName`");
-  }
-}
-
 function renderComponent(component, props) {
   const el = React.createElement(component, props, {});
   // By default, renderIntoDocument() won't work for stateless components, but
@@ -349,19 +334,6 @@ async function createComponentTest(factory, props) {
     $: s => container.querySelector(s),
   };
 }
-<<<<<<< HEAD
-
-async function waitFor(condition = () => true, delay = 50) {
-  do {
-    const res = condition();
-    if (res) {
-      return res;
-    }
-    await new Promise(resolve => setTimeout(resolve, delay));
-  } while (true);
-}
-||||||| merged common ancestors
-=======
 
 async function waitFor(condition = () => true, delay = 50) {
   do {
@@ -402,4 +374,3 @@ function matchSnapshot(name, el) {
     name
   );
 }
->>>>>>> upstream-releases

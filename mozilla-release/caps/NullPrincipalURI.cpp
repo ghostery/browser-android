@@ -27,40 +27,8 @@ NullPrincipalURI::NullPrincipalURI(const NullPrincipalURI& aOther) {
   mPath.Assign(aOther.mPath);
 }
 
-<<<<<<< HEAD
-nsresult NullPrincipalURI::Init() {
-  // FIXME: bug 327161 -- make sure the uuid generator is reseeding-resistant.
-  nsCOMPtr<nsIUUIDGenerator> uuidgen = services::GetUUIDGenerator();
-  NS_ENSURE_TRUE(uuidgen, NS_ERROR_NOT_AVAILABLE);
-
-  nsID id;
-  nsresult rv = uuidgen->GenerateUUIDInPlace(&id);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  mPath.SetLength(NSID_LENGTH - 1);  // -1 because NSID_LENGTH counts the '\0'
-  id.ToProvidedString(
-      *reinterpret_cast<char(*)[NSID_LENGTH]>(mPath.BeginWriting()));
-
-||||||| merged common ancestors
-nsresult
-NullPrincipalURI::Init()
-{
-  // FIXME: bug 327161 -- make sure the uuid generator is reseeding-resistant.
-  nsCOMPtr<nsIUUIDGenerator> uuidgen = services::GetUUIDGenerator();
-  NS_ENSURE_TRUE(uuidgen, NS_ERROR_NOT_AVAILABLE);
-
-  nsID id;
-  nsresult rv = uuidgen->GenerateUUIDInPlace(&id);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  mPath.SetLength(NSID_LENGTH - 1); // -1 because NSID_LENGTH counts the '\0'
-  id.ToProvidedString(
-    *reinterpret_cast<char(*)[NSID_LENGTH]>(mPath.BeginWriting()));
-
-=======
 nsresult NullPrincipalURI::Init() {
   GkRustUtils::GenerateUUID(mPath);
->>>>>>> upstream-releases
   MOZ_ASSERT(mPath.Length() == NSID_LENGTH - 1);
   MOZ_ASSERT(strlen(mPath.get()) == NSID_LENGTH - 1);
 
@@ -322,21 +290,7 @@ NullPrincipalURI::GetDisplayPrePath(nsACString& aPrePath) {
   return GetPrePath(aPrePath);
 }
 
-<<<<<<< HEAD
-////////////////////////////////////////////////////////////////////////////////
-//// nsIIPCSerializableURI
-
 void NullPrincipalURI::Serialize(mozilla::ipc::URIParams& aParams) {
-||||||| merged common ancestors
-////////////////////////////////////////////////////////////////////////////////
-//// nsIIPCSerializableURI
-
-void
-NullPrincipalURI::Serialize(mozilla::ipc::URIParams& aParams)
-{
-=======
-void NullPrincipalURI::Serialize(mozilla::ipc::URIParams& aParams) {
->>>>>>> upstream-releases
   aParams = mozilla::ipc::NullPrincipalURIParams();
 }
 

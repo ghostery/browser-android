@@ -191,12 +191,6 @@ nsresult Classifier::CreateStoreDirectory() {
     bool storeIsDir;
     rv = mRootStoreDirectory->IsDirectory(&storeIsDir);
     NS_ENSURE_SUCCESS(rv, rv);
-<<<<<<< HEAD
-    if (!storeIsDir) return NS_ERROR_FILE_DESTINATION_NOT_DIR;
-||||||| merged common ancestors
-    if (!storeIsDir)
-      return NS_ERROR_FILE_DESTINATION_NOT_DIR;
-=======
     if (!storeIsDir) return NS_ERROR_FILE_DESTINATION_NOT_DIR;
   }
 
@@ -256,7 +250,6 @@ nsresult Classifier::ClearLegacyFiles() {
       fnFindAndRemove(mRootStoreDirectory,
                       table + NS_LITERAL_CSTRING(".vlpset"));
     }
->>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -473,38 +466,6 @@ void Classifier::TableRequest(nsACString& aResult) {
   mIsTableRequestResultOutdated = false;
 }
 
-<<<<<<< HEAD
-nsresult Classifier::Check(const nsACString& aSpec, const nsACString& aTables,
-                           LookupResultArray& aResults) {
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_CL_CHECK_TIME> timer;
-
-  // Get the set of fragments based on the url. This is necessary because we
-  // only look up at most 5 URLs per aSpec, even if aSpec has more than 5
-  // components.
-  nsTArray<nsCString> fragments;
-  nsresult rv = LookupCache::GetLookupFragments(aSpec, &fragments);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsTArray<nsCString> activeTables;
-  SplitTables(aTables, activeTables);
-||||||| merged common ancestors
-nsresult
-Classifier::Check(const nsACString& aSpec,
-                  const nsACString& aTables,
-                  LookupResultArray& aResults)
-{
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_CL_CHECK_TIME> timer;
-
-  // Get the set of fragments based on the url. This is necessary because we
-  // only look up at most 5 URLs per aSpec, even if aSpec has more than 5
-  // components.
-  nsTArray<nsCString> fragments;
-  nsresult rv = LookupCache::GetLookupFragments(aSpec, &fragments);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsTArray<nsCString> activeTables;
-  SplitTables(aTables, activeTables);
-=======
 nsresult Classifier::CheckURIFragments(
     const nsTArray<nsCString>& aSpecFragments, const nsACString& aTable,
     LookupResultArray& aResults) {
@@ -512,7 +473,6 @@ nsresult Classifier::CheckURIFragments(
   MOZ_ASSERT(aSpecFragments.Length() != 0);
   MOZ_ASSERT(aSpecFragments.Length() <=
              (MAX_HOST_COMPONENTS * (MAX_PATH_COMPONENTS + 2)));
->>>>>>> upstream-releases
 
   if (LOG_ENABLED()) {
     uint32_t urlIdx = 0;
@@ -538,17 +498,8 @@ nsresult Classifier::CheckURIFragments(
     bool has, confirmed;
     uint32_t matchLength;
 
-<<<<<<< HEAD
-        LOG(("Found a result in %s: %s", cache->TableName().get(),
-             confirmed ? "confirmed." : "Not confirmed."));
-||||||| merged common ancestors
-        LOG(("Found a result in %s: %s",
-             cache->TableName().get(),
-             confirmed ? "confirmed." : "Not confirmed."));
-=======
     nsresult rv = cache->Has(lookupHash, &has, &matchLength, &confirmed);
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
     if (has) {
       RefPtr<LookupResult> result = new LookupResult;
@@ -841,18 +792,10 @@ nsresult Classifier::ApplyUpdatesBackground(TableUpdateArray& aUpdates,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
   nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!urlUtil)) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   nsCString provider;
   // Assume all TableUpdate objects should have the same provider.
@@ -1006,16 +949,8 @@ nsresult Classifier::RegenActiveTables() {
     mActiveTablesCache.AppendElement(table);
   }
 
-<<<<<<< HEAD
-      const ChunkSet& adds = store.AddChunks();
-      const ChunkSet& subs = store.SubChunks();
-||||||| merged common ancestors
-      const ChunkSet &adds = store.AddChunks();
-      const ChunkSet &subs = store.SubChunks();
-=======
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 nsresult Classifier::AddMozEntries(nsTArray<nsCString>& aTables) {
   nsTArray<nsLiteralCString> tables = {
@@ -1308,23 +1243,11 @@ bool Classifier::CheckValidUpdate(TableUpdateArray& aUpdates,
   return true;
 }
 
-<<<<<<< HEAD
-nsCString Classifier::GetProvider(const nsACString& aTableName) {
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-nsCString
-Classifier::GetProvider(const nsACString& aTableName)
-{
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
 nsCString Classifier::GetProvider(const nsACString& aTableName) {
   nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!urlUtil)) {
     return EmptyCString();
   }
->>>>>>> upstream-releases
 
   nsCString provider;
   nsresult rv = urlUtil->GetProvider(aTableName, provider);

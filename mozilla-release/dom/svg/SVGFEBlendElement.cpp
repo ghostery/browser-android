@@ -20,69 +20,6 @@ JSObject* SVGFEBlendElement::WrapNode(JSContext* aCx,
   return SVGFEBlendElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGEnumMapping SVGFEBlendElement::sModeMap[] = {
-    {nsGkAtoms::normal, SVG_FEBLEND_MODE_NORMAL},
-    {nsGkAtoms::multiply, SVG_FEBLEND_MODE_MULTIPLY},
-    {nsGkAtoms::screen, SVG_FEBLEND_MODE_SCREEN},
-    {nsGkAtoms::darken, SVG_FEBLEND_MODE_DARKEN},
-    {nsGkAtoms::lighten, SVG_FEBLEND_MODE_LIGHTEN},
-    {nsGkAtoms::overlay, SVG_FEBLEND_MODE_OVERLAY},
-    {nsGkAtoms::colorDodge, SVG_FEBLEND_MODE_COLOR_DODGE},
-    {nsGkAtoms::colorBurn, SVG_FEBLEND_MODE_COLOR_BURN},
-    {nsGkAtoms::hardLight, SVG_FEBLEND_MODE_HARD_LIGHT},
-    {nsGkAtoms::softLight, SVG_FEBLEND_MODE_SOFT_LIGHT},
-    {nsGkAtoms::difference, SVG_FEBLEND_MODE_DIFFERENCE},
-    {nsGkAtoms::exclusion, SVG_FEBLEND_MODE_EXCLUSION},
-    {nsGkAtoms::hue, SVG_FEBLEND_MODE_HUE},
-    {nsGkAtoms::saturation, SVG_FEBLEND_MODE_SATURATION},
-    {nsGkAtoms::color, SVG_FEBLEND_MODE_COLOR},
-    {nsGkAtoms::luminosity, SVG_FEBLEND_MODE_LUMINOSITY},
-    {nullptr, 0}};
-
-nsSVGElement::EnumInfo SVGFEBlendElement::sEnumInfo[1] = {
-    {nsGkAtoms::mode, sModeMap, SVG_FEBLEND_MODE_NORMAL}};
-
-nsSVGElement::StringInfo SVGFEBlendElement::sStringInfo[3] = {
-    {nsGkAtoms::result, kNameSpaceID_None, true},
-    {nsGkAtoms::in, kNameSpaceID_None, true},
-    {nsGkAtoms::in2, kNameSpaceID_None, true}};
-||||||| merged common ancestors
-nsSVGEnumMapping SVGFEBlendElement::sModeMap[] = {
-  {nsGkAtoms::normal, SVG_FEBLEND_MODE_NORMAL},
-  {nsGkAtoms::multiply, SVG_FEBLEND_MODE_MULTIPLY},
-  {nsGkAtoms::screen, SVG_FEBLEND_MODE_SCREEN},
-  {nsGkAtoms::darken, SVG_FEBLEND_MODE_DARKEN},
-  {nsGkAtoms::lighten, SVG_FEBLEND_MODE_LIGHTEN},
-  {nsGkAtoms::overlay, SVG_FEBLEND_MODE_OVERLAY},
-  {nsGkAtoms::colorDodge, SVG_FEBLEND_MODE_COLOR_DODGE},
-  {nsGkAtoms::colorBurn, SVG_FEBLEND_MODE_COLOR_BURN},
-  {nsGkAtoms::hardLight, SVG_FEBLEND_MODE_HARD_LIGHT},
-  {nsGkAtoms::softLight, SVG_FEBLEND_MODE_SOFT_LIGHT},
-  {nsGkAtoms::difference, SVG_FEBLEND_MODE_DIFFERENCE},
-  {nsGkAtoms::exclusion, SVG_FEBLEND_MODE_EXCLUSION},
-  {nsGkAtoms::hue, SVG_FEBLEND_MODE_HUE},
-  {nsGkAtoms::saturation, SVG_FEBLEND_MODE_SATURATION},
-  {nsGkAtoms::color, SVG_FEBLEND_MODE_COLOR},
-  {nsGkAtoms::luminosity, SVG_FEBLEND_MODE_LUMINOSITY},
-  {nullptr, 0}
-};
-
-nsSVGElement::EnumInfo SVGFEBlendElement::sEnumInfo[1] =
-{
-  { nsGkAtoms::mode,
-    sModeMap,
-    SVG_FEBLEND_MODE_NORMAL
-  }
-};
-
-nsSVGElement::StringInfo SVGFEBlendElement::sStringInfo[3] =
-{
-  { nsGkAtoms::result, kNameSpaceID_None, true },
-  { nsGkAtoms::in, kNameSpaceID_None, true },
-  { nsGkAtoms::in2, kNameSpaceID_None, true }
-};
-=======
 SVGEnumMapping SVGFEBlendElement::sModeMap[] = {
     {nsGkAtoms::normal, SVG_FEBLEND_MODE_NORMAL},
     {nsGkAtoms::multiply, SVG_FEBLEND_MODE_MULTIPLY},
@@ -109,7 +46,6 @@ SVGElement::StringInfo SVGFEBlendElement::sStringInfo[3] = {
     {nsGkAtoms::result, kNameSpaceID_None, true},
     {nsGkAtoms::in, kNameSpaceID_None, true},
     {nsGkAtoms::in2, kNameSpaceID_None, true}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -119,39 +55,15 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEBlendElement)
 //----------------------------------------------------------------------
 // nsIDOMSVGFEBlendElement methods
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGFEBlendElement::In1() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGFEBlendElement::In1()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGFEBlendElement::In1() {
->>>>>>> upstream-releases
   return mStringAttributes[IN1].ToDOMAnimatedString(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGFEBlendElement::In2() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGFEBlendElement::In2()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGFEBlendElement::In2() {
->>>>>>> upstream-releases
   return mStringAttributes[IN2].ToDOMAnimatedString(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedEnumeration> SVGFEBlendElement::Mode() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedEnumeration>
-SVGFEBlendElement::Mode()
-{
-=======
 already_AddRefed<DOMSVGAnimatedEnumeration> SVGFEBlendElement::Mode() {
->>>>>>> upstream-releases
   return mEnumAttributes[MODE].ToDOMAnimatedEnum(this);
 }
 
@@ -174,51 +86,19 @@ bool SVGFEBlendElement::AttributeAffectsRendering(int32_t aNameSpaceID,
            aAttribute == nsGkAtoms::mode));
 }
 
-<<<<<<< HEAD
-void SVGFEBlendElement::GetSourceImageNames(
-    nsTArray<nsSVGStringInfo>& aSources) {
-  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN1], this));
-  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN2], this));
-||||||| merged common ancestors
-void
-SVGFEBlendElement::GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources)
-{
-  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN1], this));
-  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN2], this));
-=======
 void SVGFEBlendElement::GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) {
   aSources.AppendElement(SVGStringInfo(&mStringAttributes[IN1], this));
   aSources.AppendElement(SVGStringInfo(&mStringAttributes[IN2], this));
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::EnumAttributesInfo SVGFEBlendElement::GetEnumInfo() {
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
-||||||| merged common ancestors
-nsSVGElement::EnumAttributesInfo
-SVGFEBlendElement::GetEnumInfo()
-{
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
-                            ArrayLength(sEnumInfo));
-=======
 SVGElement::EnumAttributesInfo SVGFEBlendElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGFEBlendElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGFEBlendElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGFEBlendElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

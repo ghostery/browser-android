@@ -81,94 +81,9 @@ var Utils = Object.freeze({
     if (!data.hasOwnProperty("children")) {
       return;
     }
-<<<<<<< HEAD
-    return null;
-  },
-
-  /**
-   * A function that will recursively call |cb| to collect data for all
-   * non-dynamic frames in the current frame/docShell tree.
-   *
-   * @param {mozIDOMWindowProxy} frame A DOM window or content frame for which
-   *                                   data will be collected.
-   * @param {...function} dataCollectors One or more data collection functions
-   *                                     that will be called once for each non-
-   *                                     dynamic frame in the given frame tree,
-   *                                     and which should return the data they
-   *                                     wish to save for that respective frame.
-   * @return {object[]} An array with one entry per dataCollector, containing
-   *                    the collected data as a nested data structure according
-   *                    to the layout of the frame tree, or null if no data was
-   *                    returned by the respective dataCollector.
-   */
-  mapFrameTree(frame, ...dataCollectors) {
-    // Collect data for the current frame.
-    let objs = dataCollectors.map(function(dataCollector) {
-      let obj = dataCollector(frame.document);
-        if (!obj || typeof(obj) == "object") {
-          return obj || {};
-        }
-        // Currently, we return string type when collecting scroll position.
-        // Will switched to webidl and return objects in the future.
-        if (typeof(obj) == "string") {
-          return {scroll: obj};
-        }
-        return obj;
-    });
-    let children = dataCollectors.map(() => []);
-||||||| merged common ancestors
-    return null;
-  },
-
-  /**
-   * A function that will recursively call |cb| to collect data for all
-   * non-dynamic frames in the current frame/docShell tree.
-   *
-   * @param {mozIDOMWindowProxy} frame A DOM window or content frame for which
-   *                                   data will be collected.
-   * @param {...function} dataCollectors One or more data collection functions
-   *                                     that will be called once for each non-
-   *                                     dynamic frame in the given frame tree,
-   *                                     and which should return the data they
-   *                                     wish to save for that respective frame.
-   * @return {object[]} An array with one entry per dataCollector, containing
-   *                    the collected data as a nested data structure according
-   *                    to the layout of the frame tree, or null if no data was
-   *                    returned by the respective dataCollector.
-   */
-  mapFrameTree(frame, ...dataCollectors) {
-    // Collect data for the current frame.
-    let objs = dataCollectors.map((dataCollector) => dataCollector(frame) || {});
-    let children = dataCollectors.map(() => []);
-=======
->>>>>>> upstream-releases
 
     // Recurse into child frames.
     SessionStoreUtils.forEachNonDynamicChildFrame(frame, (subframe, index) => {
-      if (data.children[index]) {
-        this.restoreFrameTreeData(subframe, data.children[index], cb);
-      }
-    });
-  },
-
-  /**
-   * Restores frame tree |data|, starting at the given root |frame|. As the
-   * function recurses into descendant frames it will call cb(frame, data) for
-   * each frame it encounters, starting with the given root.
-   */
-  restoreFrameTreeData(frame, data, cb) {
-    // Restore data for the root frame.
-    // The callback can abort by returning false.
-    if (cb(frame, data) === false) {
-      return;
-    }
-
-    if (!data.hasOwnProperty("children")) {
-      return;
-    }
-
-    // Recurse into child frames.
-    ssu.forEachNonDynamicChildFrame(frame, (subframe, index) => {
       if (data.children[index]) {
         this.restoreFrameTreeData(subframe, data.children[index], cb);
       }

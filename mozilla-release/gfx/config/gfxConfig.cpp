@@ -19,253 +19,102 @@ static UniquePtr<gfxConfig> sConfig;
   return sConfig->GetState(aFeature);
 }
 
-<<<<<<< HEAD
-/* static */ bool gfxConfig::IsEnabled(Feature aFeature) {
-||||||| merged common ancestors
-/* static */ bool
-gfxConfig::IsEnabled(Feature aFeature)
-{
-=======
 /* static */
 bool gfxConfig::IsEnabled(Feature aFeature) {
->>>>>>> upstream-releases
   const FeatureState& state = sConfig->GetState(aFeature);
   return state.IsEnabled();
 }
 
-<<<<<<< HEAD
-/* static */ bool gfxConfig::IsDisabledByDefault(Feature aFeature) {
-||||||| merged common ancestors
-/* static */ bool
-gfxConfig::IsDisabledByDefault(Feature aFeature)
-{
-=======
 /* static */
 bool gfxConfig::IsDisabledByDefault(Feature aFeature) {
->>>>>>> upstream-releases
   const FeatureState& state = sConfig->GetState(aFeature);
   return state.DisabledByDefault();
 }
 
-<<<<<<< HEAD
-/* static */ bool gfxConfig::IsForcedOnByUser(Feature aFeature) {
-||||||| merged common ancestors
-/* static */ bool
-gfxConfig::IsForcedOnByUser(Feature aFeature)
-{
-=======
 /* static */
 bool gfxConfig::IsForcedOnByUser(Feature aFeature) {
->>>>>>> upstream-releases
   const FeatureState& state = sConfig->GetState(aFeature);
   return state.IsForcedOnByUser();
 }
 
-<<<<<<< HEAD
-/* static */ FeatureStatus gfxConfig::GetValue(Feature aFeature) {
-||||||| merged common ancestors
-/* static */ FeatureStatus
-gfxConfig::GetValue(Feature aFeature)
-{
-=======
 /* static */
 FeatureStatus gfxConfig::GetValue(Feature aFeature) {
->>>>>>> upstream-releases
   const FeatureState& state = sConfig->GetState(aFeature);
   return state.GetValue();
 }
 
-<<<<<<< HEAD
-/* static */ bool gfxConfig::SetDefault(Feature aFeature, bool aEnable,
-                                        FeatureStatus aDisableStatus,
-                                        const char* aDisableMessage) {
-||||||| merged common ancestors
-/* static */ bool
-gfxConfig::SetDefault(Feature aFeature,
-                      bool aEnable,
-                      FeatureStatus aDisableStatus,
-                      const char* aDisableMessage)
-{
-=======
 /* static */
 bool gfxConfig::SetDefault(Feature aFeature, bool aEnable,
                            FeatureStatus aDisableStatus,
                            const char* aDisableMessage) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   return state.SetDefault(aEnable, aDisableStatus, aDisableMessage);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::DisableByDefault(Feature aFeature,
-                                              FeatureStatus aDisableStatus,
-                                              const char* aDisableMessage,
-                                              const nsACString& aFailureId) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::DisableByDefault(Feature aFeature,
-                            FeatureStatus aDisableStatus,
-                            const char* aDisableMessage,
-                            const nsACString& aFailureId)
-{
-=======
 /* static */
 void gfxConfig::DisableByDefault(Feature aFeature, FeatureStatus aDisableStatus,
                                  const char* aDisableMessage,
                                  const nsACString& aFailureId) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.DisableByDefault(aDisableStatus, aDisableMessage, aFailureId);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::EnableByDefault(Feature aFeature) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::EnableByDefault(Feature aFeature)
-{
-=======
 /* static */
 void gfxConfig::EnableByDefault(Feature aFeature) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.EnableByDefault();
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::SetDefaultFromPref(Feature aFeature,
-                                                const char* aPrefName,
-                                                bool aIsEnablePref,
-                                                bool aDefaultValue) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::SetDefaultFromPref(Feature aFeature,
-                              const char* aPrefName,
-                              bool aIsEnablePref,
-                              bool aDefaultValue)
-{
-=======
 /* static */
 void gfxConfig::SetDefaultFromPref(Feature aFeature, const char* aPrefName,
                                    bool aIsEnablePref, bool aDefaultValue) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   return state.SetDefaultFromPref(aPrefName, aIsEnablePref, aDefaultValue);
 }
 
-<<<<<<< HEAD
-/* static */ bool gfxConfig::InitOrUpdate(Feature aFeature, bool aEnable,
-                                          FeatureStatus aDisableStatus,
-                                          const char* aDisableMessage) {
-||||||| merged common ancestors
-/* static */ bool
-gfxConfig::InitOrUpdate(Feature aFeature,
-                        bool aEnable,
-                        FeatureStatus aDisableStatus,
-                        const char* aDisableMessage)
-{
-=======
 /* static */
 bool gfxConfig::InitOrUpdate(Feature aFeature, bool aEnable,
                              FeatureStatus aDisableStatus,
                              const char* aDisableMessage) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   return state.InitOrUpdate(aEnable, aDisableStatus, aDisableMessage);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::SetFailed(Feature aFeature, FeatureStatus aStatus,
-                                       const char* aMessage,
-                                       const nsACString& aFailureId) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::SetFailed(Feature aFeature, FeatureStatus aStatus, const char* aMessage,
-                     const nsACString& aFailureId)
-{
-=======
 /* static */
 void gfxConfig::SetFailed(Feature aFeature, FeatureStatus aStatus,
                           const char* aMessage, const nsACString& aFailureId) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.SetFailed(aStatus, aMessage, aFailureId);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::Disable(Feature aFeature, FeatureStatus aStatus,
-                                     const char* aMessage,
-                                     const nsACString& aFailureId) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::Disable(Feature aFeature, FeatureStatus aStatus, const char* aMessage,
-                   const nsACString& aFailureId)
-{
-=======
 /* static */
 void gfxConfig::Disable(Feature aFeature, FeatureStatus aStatus,
                         const char* aMessage, const nsACString& aFailureId) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.Disable(aStatus, aMessage, aFailureId);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::UserEnable(Feature aFeature,
-                                        const char* aMessage) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::UserEnable(Feature aFeature, const char* aMessage)
-{
-=======
 /* static */
 void gfxConfig::UserEnable(Feature aFeature, const char* aMessage) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.UserEnable(aMessage);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::UserForceEnable(Feature aFeature,
-                                             const char* aMessage) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::UserForceEnable(Feature aFeature, const char* aMessage)
-{
-=======
 /* static */
 void gfxConfig::UserForceEnable(Feature aFeature, const char* aMessage) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.UserForceEnable(aMessage);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::UserDisable(Feature aFeature, const char* aMessage,
-                                         const nsACString& aFailureId) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::UserDisable(Feature aFeature, const char* aMessage, const nsACString& aFailureId)
-{
-=======
 /* static */
 void gfxConfig::UserDisable(Feature aFeature, const char* aMessage,
                             const nsACString& aFailureId) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.UserDisable(aMessage, aFailureId);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::Reenable(Feature aFeature, Fallback aFallback) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::Reenable(Feature aFeature, Fallback aFallback)
-{
-=======
 /* static */
 void gfxConfig::Reenable(Feature aFeature, Fallback aFallback) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   MOZ_ASSERT(IsFeatureStatusFailure(state.GetValue()));
 
@@ -274,30 +123,14 @@ void gfxConfig::Reenable(Feature aFeature, Fallback aFallback) {
   state.SetRuntime(FeatureStatus::Available, nullptr);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::Reset(Feature aFeature) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::Reset(Feature aFeature)
-{
-=======
 /* static */
 void gfxConfig::Reset(Feature aFeature) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
   state.Reset();
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::Inherit(Feature aFeature, FeatureStatus aStatus) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::Inherit(Feature aFeature, FeatureStatus aStatus)
-{
-=======
 /* static */
 void gfxConfig::Inherit(Feature aFeature, FeatureStatus aStatus) {
->>>>>>> upstream-releases
   FeatureState& state = sConfig->GetState(aFeature);
 
   state.Reset();
@@ -319,30 +152,13 @@ void gfxConfig::Inherit(Feature aFeature, FeatureStatus aStatus) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool gfxConfig::UseFallback(Fallback aFallback) {
-||||||| merged common ancestors
-/* static */ bool
-gfxConfig::UseFallback(Fallback aFallback)
-{
-=======
 /* static */
 bool gfxConfig::UseFallback(Fallback aFallback) {
->>>>>>> upstream-releases
   return sConfig->UseFallbackImpl(aFallback);
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::EnableFallback(Fallback aFallback,
-                                            const char* aMessage) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::EnableFallback(Fallback aFallback, const char* aMessage)
-{
-=======
 /* static */
 void gfxConfig::EnableFallback(Fallback aFallback, const char* aMessage) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     nsCString message(aMessage);
     NS_DispatchToMainThread(
@@ -388,17 +204,8 @@ static const FeatureInfo sFeatureInfo[] = {
 #undef FOR_EACH_FEATURE
         {nullptr, nullptr}};
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::ForEachFeature(
-    const FeatureIterCallback& aCallback) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::ForEachFeature(const FeatureIterCallback& aCallback)
-{
-=======
 /* static */
 void gfxConfig::ForEachFeature(const FeatureIterCallback& aCallback) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < kNumFeatures; i++) {
     FeatureState& state = GetFeature(static_cast<Feature>(i));
     if (!state.IsInitialized()) {
@@ -415,17 +222,8 @@ static const char* sFallbackNames[] = {
 #undef FOR_EACH_FALLBACK
         nullptr};
 
-<<<<<<< HEAD
-/* static  */ void gfxConfig::ForEachFallback(
-    const FallbackIterCallback& aCallback) {
-||||||| merged common ancestors
-/* static  */ void
-gfxConfig::ForEachFallback(const FallbackIterCallback& aCallback)
-{
-=======
 /* static  */
 void gfxConfig::ForEachFallback(const FallbackIterCallback& aCallback) {
->>>>>>> upstream-releases
   sConfig->ForEachFallbackImpl(aCallback);
 }
 
@@ -441,69 +239,23 @@ void gfxConfig::ForEachFallbackImpl(const FallbackIterCallback& aCallback) {
   return state.GetFailureId();
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::ImportChange(Feature aFeature,
-                                          const FeatureChange& aChange) {
-  if (aChange.type() == FeatureChange::Tnull_t) {
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::ImportChange(Feature aFeature, const FeatureChange& aChange)
-{
-  if (aChange.type() == FeatureChange::Tnull_t) {
-=======
 /* static */
 void gfxConfig::ImportChange(Feature aFeature,
                              const Maybe<FeatureFailure>& aChange) {
   if (aChange.isNothing()) {
->>>>>>> upstream-releases
     return;
   }
 
-<<<<<<< HEAD
-  const FeatureFailure& failure = aChange.get_FeatureFailure();
-  gfxConfig::SetFailed(aFeature, failure.status(), failure.message().get(),
-                       failure.failureId());
-||||||| merged common ancestors
-  const FeatureFailure& failure = aChange.get_FeatureFailure();
-  gfxConfig::SetFailed(
-    aFeature,
-    failure.status(),
-    failure.message().get(),
-    failure.failureId());
-=======
   const FeatureFailure& failure = aChange.ref();
   gfxConfig::SetFailed(aFeature, failure.status(), failure.message().get(),
                        failure.failureId());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::Init() {
-  sConfig = mozilla::MakeUnique<gfxConfig>();
-}
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::Init()
-{
-  sConfig = mozilla::MakeUnique<gfxConfig>();
-}
-=======
 /* static */
 void gfxConfig::Init() { sConfig = mozilla::MakeUnique<gfxConfig>(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void gfxConfig::Shutdown() { sConfig = nullptr; }
-||||||| merged common ancestors
-/* static */ void
-gfxConfig::Shutdown()
-{
-  sConfig = nullptr;
-}
-=======
 /* static */
 void gfxConfig::Shutdown() { sConfig = nullptr; }
->>>>>>> upstream-releases
 
 }  // namespace gfx
 }  // namespace mozilla

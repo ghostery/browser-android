@@ -20,27 +20,11 @@ class nsLocalHandlerApp : public nsILocalHandlerApp {
 
   nsLocalHandlerApp() {}
 
-<<<<<<< HEAD
-  nsLocalHandlerApp(const char16_t *aName, nsIFile *aExecutable)
-      : mName(aName), mExecutable(aExecutable) {}
-||||||| merged common ancestors
-  nsLocalHandlerApp(const char16_t *aName, nsIFile *aExecutable) 
-    : mName(aName), mExecutable(aExecutable) { }
-=======
   nsLocalHandlerApp(const char16_t* aName, nsIFile* aExecutable)
       : mName(aName), mExecutable(aExecutable) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsLocalHandlerApp(const nsAString &aName, nsIFile *aExecutable)
-      : mName(aName), mExecutable(aExecutable) {}
-||||||| merged common ancestors
-  nsLocalHandlerApp(const nsAString & aName, nsIFile *aExecutable) 
-    : mName(aName), mExecutable(aExecutable) { }
-=======
   nsLocalHandlerApp(const nsAString& aName, nsIFile* aExecutable)
       : mName(aName), mExecutable(aExecutable) {}
->>>>>>> upstream-releases
 
  protected:
   virtual ~nsLocalHandlerApp() {}
@@ -64,27 +48,11 @@ class nsLocalHandlerApp : public nsILocalHandlerApp {
 // any platforms that need a platform-specific class instead of just
 // using nsLocalHandlerApp need to add an include and a typedef here.
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-#ifndef NSLOCALHANDLERAPPMAC_H_
-#include "mac/nsLocalHandlerAppMac.h"
-||||||| merged common ancestors
-# ifndef NSLOCALHANDLERAPPMAC_H_  
-# include "mac/nsLocalHandlerAppMac.h"
-=======
 #  ifndef NSLOCALHANDLERAPPMAC_H_
 #    include "mac/nsLocalHandlerAppMac.h"
->>>>>>> upstream-releases
 typedef nsLocalHandlerAppMac PlatformLocalHandlerApp_t;
-<<<<<<< HEAD
-#endif
-#else
-||||||| merged common ancestors
-# endif
-#else 
-=======
 #  endif
 #else
->>>>>>> upstream-releases
 typedef nsLocalHandlerApp PlatformLocalHandlerApp_t;
 #endif
 

@@ -7,34 +7,16 @@
 #include "EffectSet.h"
 #include "mozilla/dom/Element.h"  // For Element
 #include "mozilla/RestyleManager.h"
-<<<<<<< HEAD
-#include "nsCSSPseudoElements.h"         // For CSSPseudoElementType
-#include "nsCycleCollectionNoteChild.h"  // For CycleCollectionNoteChild
-||||||| merged common ancestors
-#include "nsCSSPseudoElements.h" // For CSSPseudoElementType
-#include "nsCycleCollectionNoteChild.h" // For CycleCollectionNoteChild
-=======
 #include "nsCSSPseudoElements.h"         // For PseudoStyleType
 #include "nsCycleCollectionNoteChild.h"  // For CycleCollectionNoteChild
->>>>>>> upstream-releases
 #include "nsPresContext.h"
 #include "nsLayoutUtils.h"
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ void EffectSet::PropertyDtor(void* aObject, nsAtom* aPropertyName,
-                                          void* aPropertyValue, void* aData) {
-||||||| merged common ancestors
-/* static */ void
-EffectSet::PropertyDtor(void* aObject, nsAtom* aPropertyName,
-                        void* aPropertyValue, void* aData)
-{
-=======
 /* static */
 void EffectSet::PropertyDtor(void* aObject, nsAtom* aPropertyName,
                              void* aPropertyValue, void* aData) {
->>>>>>> upstream-releases
   EffectSet* effectSet = static_cast<EffectSet*>(aPropertyValue);
 
 #ifdef DEBUG
@@ -52,19 +34,9 @@ void EffectSet::Traverse(nsCycleCollectionTraversalCallback& aCallback) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ EffectSet* EffectSet::GetEffectSet(
-    const dom::Element* aElement, CSSPseudoElementType aPseudoType) {
-||||||| merged common ancestors
-/* static */ EffectSet*
-EffectSet::GetEffectSet(const dom::Element* aElement,
-                        CSSPseudoElementType aPseudoType)
-{
-=======
 /* static */
 EffectSet* EffectSet::GetEffectSet(const dom::Element* aElement,
                                    PseudoStyleType aPseudoType) {
->>>>>>> upstream-releases
   if (!aElement->MayHaveAnimations()) {
     return nullptr;
   }
@@ -73,43 +45,9 @@ EffectSet* EffectSet::GetEffectSet(const dom::Element* aElement,
   return static_cast<EffectSet*>(aElement->GetProperty(propName));
 }
 
-<<<<<<< HEAD
-/* static */ EffectSet* EffectSet::GetEffectSet(const nsIFrame* aFrame) {
-  Maybe<NonOwningAnimationTarget> target =
-      EffectCompositor::GetAnimationElementAndPseudoForFrame(aFrame);
-
-  if (!target) {
-    return nullptr;
-  }
-
-  return GetEffectSet(target->mElement, target->mPseudoType);
-}
-
-/* static */ EffectSet* EffectSet::GetOrCreateEffectSet(
-    dom::Element* aElement, CSSPseudoElementType aPseudoType) {
-||||||| merged common ancestors
-/* static */ EffectSet*
-EffectSet::GetEffectSet(const nsIFrame* aFrame)
-{
-  Maybe<NonOwningAnimationTarget> target =
-    EffectCompositor::GetAnimationElementAndPseudoForFrame(aFrame);
-
-  if (!target) {
-    return nullptr;
-  }
-
-  return GetEffectSet(target->mElement, target->mPseudoType);
-}
-
-/* static */ EffectSet*
-EffectSet::GetOrCreateEffectSet(dom::Element* aElement,
-                                CSSPseudoElementType aPseudoType)
-{
-=======
 /* static */
 EffectSet* EffectSet::GetOrCreateEffectSet(dom::Element* aElement,
                                            PseudoStyleType aPseudoType) {
->>>>>>> upstream-releases
   EffectSet* effectSet = GetEffectSet(aElement, aPseudoType);
   if (effectSet) {
     return effectSet;
@@ -133,15 +71,6 @@ EffectSet* EffectSet::GetOrCreateEffectSet(dom::Element* aElement,
   return effectSet;
 }
 
-<<<<<<< HEAD
-/* static */ void EffectSet::DestroyEffectSet(
-    dom::Element* aElement, CSSPseudoElementType aPseudoType) {
-||||||| merged common ancestors
-/* static */ void
-EffectSet::DestroyEffectSet(dom::Element* aElement,
-                            CSSPseudoElementType aPseudoType)
-{
-=======
 /* static */
 EffectSet* EffectSet::GetEffectSetForFrame(
     const nsIFrame* aFrame, const nsCSSPropertyIDSet& aProperties) {
@@ -197,7 +126,6 @@ EffectSet* EffectSet::GetEffectSetForStyleFrame(const nsIFrame* aStyleFrame) {
 /* static */
 void EffectSet::DestroyEffectSet(dom::Element* aElement,
                                  PseudoStyleType aPseudoType) {
->>>>>>> upstream-releases
   nsAtom* propName = GetEffectSetPropertyAtom(aPseudoType);
   EffectSet* effectSet =
       static_cast<EffectSet*>(aElement->GetProperty(propName));
@@ -217,47 +145,19 @@ void EffectSet::UpdateAnimationGeneration(nsPresContext* aPresContext) {
       aPresContext->RestyleManager()->GetAnimationGeneration();
 }
 
-<<<<<<< HEAD
-/* static */ nsAtom** EffectSet::GetEffectSetPropertyAtoms() {
-  static nsAtom* effectSetPropertyAtoms[] = {
-||||||| merged common ancestors
-/* static */ nsAtom**
-EffectSet::GetEffectSetPropertyAtoms()
-{
-  static nsAtom* effectSetPropertyAtoms[] =
-    {
-=======
 /* static */
 nsAtom** EffectSet::GetEffectSetPropertyAtoms() {
   static nsAtom* effectSetPropertyAtoms[] = {
->>>>>>> upstream-releases
       nsGkAtoms::animationEffectsProperty,
       nsGkAtoms::animationEffectsForBeforeProperty,
-<<<<<<< HEAD
-      nsGkAtoms::animationEffectsForAfterProperty, nullptr};
-||||||| merged common ancestors
-      nsGkAtoms::animationEffectsForAfterProperty,
-      nullptr
-    };
-=======
       nsGkAtoms::animationEffectsForAfterProperty,
       nsGkAtoms::animationEffectsForMarkerProperty, nullptr};
->>>>>>> upstream-releases
 
   return effectSetPropertyAtoms;
 }
 
-<<<<<<< HEAD
-/* static */ nsAtom* EffectSet::GetEffectSetPropertyAtom(
-    CSSPseudoElementType aPseudoType) {
-||||||| merged common ancestors
-/* static */ nsAtom*
-EffectSet::GetEffectSetPropertyAtom(CSSPseudoElementType aPseudoType)
-{
-=======
 /* static */
 nsAtom* EffectSet::GetEffectSetPropertyAtom(PseudoStyleType aPseudoType) {
->>>>>>> upstream-releases
   switch (aPseudoType) {
     case PseudoStyleType::NotPseudo:
       return nsGkAtoms::animationEffectsProperty;
@@ -272,18 +172,9 @@ nsAtom* EffectSet::GetEffectSetPropertyAtom(PseudoStyleType aPseudoType) {
       return nsGkAtoms::animationEffectsForMarkerProperty;
 
     default:
-<<<<<<< HEAD
-      MOZ_ASSERT_UNREACHABLE(
-          "Should not try to get animation effects for "
-          "a pseudo other that :before or :after");
-||||||| merged common ancestors
-      MOZ_ASSERT_UNREACHABLE("Should not try to get animation effects for "
-                             "a pseudo other that :before or :after");
-=======
       MOZ_ASSERT_UNREACHABLE(
           "Should not try to get animation effects for "
           "a pseudo other that :before, :after or ::marker");
->>>>>>> upstream-releases
       return nullptr;
   }
 }

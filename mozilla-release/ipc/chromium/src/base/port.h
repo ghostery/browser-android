@@ -45,23 +45,6 @@ namespace base {
 
 // The C standard says that va_copy is a "macro", not a function.  Trying to
 // use va_list as ref args to a function, as above, breaks some machines.
-<<<<<<< HEAD
-#if defined(COMPILER_GCC)
-#define base_va_copy(_a, _b) ::va_copy(_a, _b)
-#elif defined(COMPILER_MSVC)
-#define base_va_copy(_a, _b) (_a = _b)
-#else
-#error No va_copy for your compiler
-#endif
-||||||| merged common ancestors
-#  if defined(COMPILER_GCC)
-#    define base_va_copy(_a, _b) ::va_copy(_a, _b)
-#  elif defined(COMPILER_MSVC)
-#    define base_va_copy(_a, _b) (_a = _b)
-#  else
-#    error No va_copy for your compiler
-#  endif
-=======
 #if defined(COMPILER_GCC)
 #  define base_va_copy(_a, _b) ::va_copy(_a, _b)
 #elif defined(COMPILER_MSVC)
@@ -69,7 +52,6 @@ namespace base {
 #else
 #  error No va_copy for your compiler
 #endif
->>>>>>> upstream-releases
 
 }  // namespace base
 

@@ -288,33 +288,6 @@ function run_test() {
 
 function check_ocsp_stapling_telemetry() {
   let histogram = Services.telemetry
-<<<<<<< HEAD
-                    .getHistogramById("SSL_OCSP_STAPLING")
-                    .snapshot();
-  equal(histogram.values[0] || 0, 0,
-        "Should have 0 connections for unused histogram bucket 0");
-  equal(histogram.values[1] || 0, 0,
-        "Actual and expected connections with a good response should match");
-  equal(histogram.values[2] || 0, 0,
-        "Actual and expected connections with no stapled response should match");
-  equal(histogram.values[3], 22,
-        "Actual and expected connections with an expired response should match");
-  equal(histogram.values[4], 2,
-        "Actual and expected connections with bad responses should match");
-||||||| merged common ancestors
-                    .getHistogramById("SSL_OCSP_STAPLING")
-                    .snapshot();
-  equal(histogram.counts[0], 0,
-        "Should have 0 connections for unused histogram bucket 0");
-  equal(histogram.counts[1], 0,
-        "Actual and expected connections with a good response should match");
-  equal(histogram.counts[2], 0,
-        "Actual and expected connections with no stapled response should match");
-  equal(histogram.counts[3], 22,
-        "Actual and expected connections with an expired response should match");
-  equal(histogram.counts[4], 2,
-        "Actual and expected connections with bad responses should match");
-=======
     .getHistogramById("SSL_OCSP_STAPLING")
     .snapshot();
   equal(
@@ -342,6 +315,5 @@ function check_ocsp_stapling_telemetry() {
     2,
     "Actual and expected connections with bad responses should match"
   );
->>>>>>> upstream-releases
   run_next_test();
 }

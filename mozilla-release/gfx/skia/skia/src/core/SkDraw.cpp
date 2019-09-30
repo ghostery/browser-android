@@ -79,61 +79,7 @@ void SkDraw::drawPaint(const SkPaint& paint) const {
     SkIRect    devRect;
     devRect.set(0, 0, fDst.width(), fDst.height());
 
-<<<<<<< HEAD
-    if (fRC->isBW()) {
-        /*  If we don't have a shader (i.e. we're just a solid color) we may
-            be faster to operate directly on the device bitmap, rather than invoking
-            a blitter. Esp. true for xfermodes, which require a colorshader to be
-            present, which is just redundant work. Since we're drawing everywhere
-            in the clip, we don't have to worry about antialiasing.
-        */
-        uint32_t procData = 0;  // to avoid the warning
-        BitmapXferProc proc = ChooseBitmapXferProc(fDst, paint, &procData);
-        if (proc) {
-            if (D_Dst_BitmapXferProc == proc) { // nothing to do
-                return;
-            }
-
-            SkRegion::Iterator iter(fRC->bwRgn());
-            while (!iter.done()) {
-                CallBitmapXferProc(fDst, iter.rect(), proc, procData);
-                iter.next();
-            }
-            return;
-        }
-    }
-
-    // normal case: use a blitter
     SkAutoBlitterChoose blitter(*this, nullptr, paint);
-||||||| merged common ancestors
-    if (fRC->isBW()) {
-        /*  If we don't have a shader (i.e. we're just a solid color) we may
-            be faster to operate directly on the device bitmap, rather than invoking
-            a blitter. Esp. true for xfermodes, which require a colorshader to be
-            present, which is just redundant work. Since we're drawing everywhere
-            in the clip, we don't have to worry about antialiasing.
-        */
-        uint32_t procData = 0;  // to avoid the warning
-        BitmapXferProc proc = ChooseBitmapXferProc(fDst, paint, &procData);
-        if (proc) {
-            if (D_Dst_BitmapXferProc == proc) { // nothing to do
-                return;
-            }
-
-            SkRegion::Iterator iter(fRC->bwRgn());
-            while (!iter.done()) {
-                CallBitmapXferProc(fDst, iter.rect(), proc, procData);
-                iter.next();
-            }
-            return;
-        }
-    }
-
-    // normal case: use a blitter
-    SkAutoBlitterChoose blitter(fDst, *fMatrix, paint);
-=======
-    SkAutoBlitterChoose blitter(*this, nullptr, paint);
->>>>>>> upstream-releases
     SkScan::FillIRect(devRect, *fRC, blitter.get());
 }
 

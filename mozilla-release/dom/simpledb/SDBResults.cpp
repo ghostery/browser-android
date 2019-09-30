@@ -16,32 +16,7 @@ SDBResult::SDBResult(const nsACString& aData) : mData(aData) {}
 NS_IMPL_ISUPPORTS(SDBResult, nsISDBResult)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SDBResult::GetAsArray(uint32_t* aDataLen, uint8_t** aData) {
-  MOZ_ASSERT(aDataLen);
-  MOZ_ASSERT(aData);
-
-  if (mData.IsEmpty()) {
-    *aDataLen = 0;
-    *aData = nullptr;
-    return NS_OK;
-  }
-
-||||||| merged common ancestors
-SDBResult::GetAsArray(uint32_t* aDataLen, uint8_t** aData)
-{
-  MOZ_ASSERT(aDataLen);
-  MOZ_ASSERT(aData);
-
-  if (mData.IsEmpty()) {
-    *aDataLen = 0;
-    *aData = nullptr;
-    return NS_OK;
-  }
-
-=======
 SDBResult::GetAsArray(nsTArray<uint8_t>& aData) {
->>>>>>> upstream-releases
   uint32_t length = mData.Length();
   aData.SetLength(length);
 

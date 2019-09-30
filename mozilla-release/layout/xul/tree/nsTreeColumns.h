@@ -26,19 +26,9 @@ namespace mozilla {
 class ErrorResult;
 namespace dom {
 class Element;
-<<<<<<< HEAD
-class TreeBoxObject;
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-class TreeBoxObject;
-} // namespace dom
-} // namespace mozilla
-=======
 class XULTreeElement;
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #define NS_TREECOLUMN_IMPL_CID                       \
   { /* 02cd1963-4b5d-4a6c-9223-814d3ade93a3 */       \

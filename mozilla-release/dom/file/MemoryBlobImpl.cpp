@@ -34,23 +34,10 @@ nsresult MemoryBlobImpl::DataOwnerAdapter::Create(DataOwner* aDataOwner,
 
   nsCOMPtr<nsIInputStream> stream;
 
-<<<<<<< HEAD
-  rv = NS_NewByteInputStream(
-      getter_AddRefs(stream),
-      static_cast<const char*>(aDataOwner->mData) + aStart, (int32_t)aLength,
-      NS_ASSIGNMENT_DEPEND);
-||||||| merged common ancestors
-  rv = NS_NewByteInputStream(getter_AddRefs(stream),
-                             static_cast<const char*>(aDataOwner->mData) +
-                             aStart,
-                             (int32_t)aLength,
-                             NS_ASSIGNMENT_DEPEND);
-=======
   rv = NS_NewByteInputStream(
       getter_AddRefs(stream),
       MakeSpan(static_cast<const char*>(aDataOwner->mData) + aStart, aLength),
       NS_ASSIGNMENT_DEPEND);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   NS_ADDREF(*_retval =
@@ -78,28 +65,14 @@ void MemoryBlobImpl::CreateInputStream(nsIInputStream** aStream,
                                                  aStream);
 }
 
-<<<<<<< HEAD
-/* static */ StaticMutex MemoryBlobImpl::DataOwner::sDataOwnerMutex;
-||||||| merged common ancestors
-/* static */ StaticMutex
-MemoryBlobImpl::DataOwner::sDataOwnerMutex;
-=======
 /* static */
 StaticMutex MemoryBlobImpl::DataOwner::sDataOwnerMutex;
->>>>>>> upstream-releases
 
 /* static */ StaticAutoPtr<LinkedList<MemoryBlobImpl::DataOwner>>
     MemoryBlobImpl::DataOwner::sDataOwners;
 
-<<<<<<< HEAD
-/* static */ bool MemoryBlobImpl::DataOwner::sMemoryReporterRegistered = false;
-||||||| merged common ancestors
-/* static */ bool
-MemoryBlobImpl::DataOwner::sMemoryReporterRegistered = false;
-=======
 /* static */
 bool MemoryBlobImpl::DataOwner::sMemoryReporterRegistered = false;
->>>>>>> upstream-releases
 
 MOZ_DEFINE_MALLOC_SIZE_OF(MemoryFileDataOwnerMallocSizeOf)
 
@@ -183,16 +156,8 @@ class MemoryBlobImplDataOwnerMemoryReporter final : public nsIMemoryReporter {
 
 NS_IMPL_ISUPPORTS(MemoryBlobImplDataOwnerMemoryReporter, nsIMemoryReporter)
 
-<<<<<<< HEAD
-/* static */ void MemoryBlobImpl::DataOwner::EnsureMemoryReporterRegistered() {
-||||||| merged common ancestors
-/* static */ void
-MemoryBlobImpl::DataOwner::EnsureMemoryReporterRegistered()
-{
-=======
 /* static */
 void MemoryBlobImpl::DataOwner::EnsureMemoryReporterRegistered() {
->>>>>>> upstream-releases
   sDataOwnerMutex.AssertCurrentThreadOwns();
   if (sMemoryReporterRegistered) {
     return;

@@ -4,13 +4,8 @@ use syn;
 use ast::{Data, Fields, Style};
 use codegen;
 use options::{DefaultExpression, InputField, InputVariant, ParseAttribute, ParseData};
-<<<<<<< HEAD
-use {Error, FromMeta, Result};
-||||||| merged common ancestors
-=======
 use util::Flag;
 use {Error, FromMeta, Result};
->>>>>>> upstream-releases
 
 /// A struct or enum which should have `FromMeta` or `FromDeriveInput` implementations
 /// generated.

@@ -57,15 +57,6 @@ add_task(async function() {
   // Always remember to clean up
   OfflineAppCacheHelper.clear();
   await new Promise(resolve => {
-<<<<<<< HEAD
-    let principal = Services.scriptSecurityManager
-                            .createCodebasePrincipalFromOrigin(TEST_QUOTA_USAGE_ORIGIN);
-    let request = Services.qms.clearStoragesForPrincipal(principal, null, null, true);
-||||||| merged common ancestors
-    let principal = Services.scriptSecurityManager
-                            .createCodebasePrincipalFromOrigin(TEST_QUOTA_USAGE_ORIGIN);
-    let request = Services.qms.clearStoragesForPrincipal(principal, null, true);
-=======
     let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(
       TEST_QUOTA_USAGE_ORIGIN
     );
@@ -75,7 +66,6 @@ add_task(async function() {
       null,
       true
     );
->>>>>>> upstream-releases
     request.callback = resolve;
   });
 

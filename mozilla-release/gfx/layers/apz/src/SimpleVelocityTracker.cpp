@@ -6,19 +6,9 @@
 
 #include "SimpleVelocityTracker.h"
 
-<<<<<<< HEAD
-#include "gfxPrefs.h"
-#include "mozilla/ComputedTimingFunction.h"  // for ComputedTimingFunction
-#include "mozilla/StaticPtr.h"               // for StaticAutoPtr
-||||||| merged common ancestors
-#include "gfxPrefs.h"
-#include "mozilla/ComputedTimingFunction.h" // for ComputedTimingFunction
-#include "mozilla/StaticPtr.h"              // for StaticAutoPtr
-=======
 #include "mozilla/ComputedTimingFunction.h"  // for ComputedTimingFunction
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/StaticPtr.h"  // for StaticAutoPtr
->>>>>>> upstream-releases
 
 #define SVT_LOG(...)
 // #define SVT_LOG(...) printf_stderr("SimpleVelocityTracker: " __VA_ARGS__)
@@ -45,20 +35,8 @@ void SimpleVelocityTracker::StartTracking(ParentLayerCoord aPos,
   mVelocitySamplePos = aPos;
 }
 
-<<<<<<< HEAD
-Maybe<float> SimpleVelocityTracker::AddPosition(ParentLayerCoord aPos,
-                                                uint32_t aTimestampMs,
-                                                bool aIsAxisLocked) {
-||||||| merged common ancestors
-Maybe<float>
-SimpleVelocityTracker::AddPosition(ParentLayerCoord aPos,
-                                   uint32_t aTimestampMs,
-                                   bool aIsAxisLocked)
-{
-=======
 Maybe<float> SimpleVelocityTracker::AddPosition(ParentLayerCoord aPos,
                                                 uint32_t aTimestampMs) {
->>>>>>> upstream-releases
   if (aTimestampMs <= mVelocitySampleTimeMs + MIN_VELOCITY_SAMPLE_TIME_MS) {
     // See also the comment on MIN_VELOCITY_SAMPLE_TIME_MS.
     // We still update mPos so that the positioning is correct (and we don't run
@@ -72,17 +50,8 @@ Maybe<float> SimpleVelocityTracker::AddPosition(ParentLayerCoord aPos,
     return Nothing();
   }
 
-<<<<<<< HEAD
-  float newVelocity = aIsAxisLocked
-                          ? 0.0f
-                          : (float)(mVelocitySamplePos - aPos) /
-                                (float)(aTimestampMs - mVelocitySampleTimeMs);
-||||||| merged common ancestors
-  float newVelocity = aIsAxisLocked ? 0.0f : (float)(mVelocitySamplePos - aPos) / (float)(aTimestampMs - mVelocitySampleTimeMs);
-=======
   float newVelocity = (float)(mVelocitySamplePos - aPos) /
                       (float)(aTimestampMs - mVelocitySampleTimeMs);
->>>>>>> upstream-releases
 
   newVelocity = ApplyFlingCurveToVelocity(newVelocity);
 
@@ -149,21 +118,11 @@ float SimpleVelocityTracker::ApplyFlingCurveToVelocity(float aVelocity) const {
         mAxis->ToLocalVelocity(StaticPrefs::apz_max_velocity_inches_per_ms());
     newVelocity = std::min(newVelocity, maxVelocity);
 
-<<<<<<< HEAD
-    if (gfxPrefs::APZCurveThreshold() > 0.0f &&
-        gfxPrefs::APZCurveThreshold() < gfxPrefs::APZMaxVelocity()) {
-      float curveThreshold =
-          mAxis->ToLocalVelocity(gfxPrefs::APZCurveThreshold());
-||||||| merged common ancestors
-    if (gfxPrefs::APZCurveThreshold() > 0.0f && gfxPrefs::APZCurveThreshold() < gfxPrefs::APZMaxVelocity()) {
-      float curveThreshold = mAxis->ToLocalVelocity(gfxPrefs::APZCurveThreshold());
-=======
     if (StaticPrefs::apz_fling_curve_threshold_inches_per_ms() > 0.0f &&
         StaticPrefs::apz_fling_curve_threshold_inches_per_ms() <
             StaticPrefs::apz_max_velocity_inches_per_ms()) {
       float curveThreshold = mAxis->ToLocalVelocity(
           StaticPrefs::apz_fling_curve_threshold_inches_per_ms());
->>>>>>> upstream-releases
       if (newVelocity > curveThreshold) {
         // here, 0 < curveThreshold < newVelocity <= maxVelocity, so we apply
         // the curve

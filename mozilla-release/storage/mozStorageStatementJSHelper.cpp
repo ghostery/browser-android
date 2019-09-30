@@ -27,16 +27,7 @@ namespace storage {
 ////////////////////////////////////////////////////////////////////////////////
 //// Global Functions
 
-<<<<<<< HEAD
-static bool stepFunc(JSContext *aCtx, uint32_t argc, JS::Value *_vp) {
-||||||| merged common ancestors
-static
-bool
-stepFunc(JSContext *aCtx, uint32_t argc, JS::Value *_vp)
-{
-=======
 static bool stepFunc(JSContext* aCtx, uint32_t argc, JS::Value* _vp) {
->>>>>>> upstream-releases
   JS::CallArgs args = CallArgsFromVp(argc, _vp);
 
   nsCOMPtr<nsIXPConnect> xpc(nsIXPConnect::XPConnect());
@@ -64,17 +55,8 @@ static bool stepFunc(JSContext* aCtx, uint32_t argc, JS::Value* _vp) {
   }
 #endif
 
-<<<<<<< HEAD
-  Statement *stmt = static_cast<Statement *>(
-      static_cast<mozIStorageStatement *>(wrapper->Native()));
-||||||| merged common ancestors
-  Statement *stmt = static_cast<Statement *>(
-    static_cast<mozIStorageStatement *>(wrapper->Native())
-  );
-=======
   Statement* stmt = static_cast<Statement*>(
       static_cast<mozIStorageStatement*>(wrapper->Native()));
->>>>>>> upstream-releases
 
   bool hasMore = false;
   rv = stmt->ExecuteStep(&hasMore);
@@ -97,20 +79,8 @@ static bool stepFunc(JSContext* aCtx, uint32_t argc, JS::Value* _vp) {
 ////////////////////////////////////////////////////////////////////////////////
 //// StatementJSHelper
 
-<<<<<<< HEAD
-nsresult StatementJSHelper::getRow(Statement *aStatement, JSContext *aCtx,
-                                   JSObject *aScopeObj, JS::Value *_row) {
-||||||| merged common ancestors
-nsresult
-StatementJSHelper::getRow(Statement *aStatement,
-                          JSContext *aCtx,
-                          JSObject *aScopeObj,
-                          JS::Value *_row)
-{
-=======
 nsresult StatementJSHelper::getRow(Statement* aStatement, JSContext* aCtx,
                                    JSObject* aScopeObj, JS::Value* _row) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
 #ifdef DEBUG
@@ -143,7 +113,7 @@ nsresult StatementJSHelper::getRow(Statement* aStatement, JSContext* aCtx,
   }
 
   RefPtr<StatementRow> row(aStatement->mStatementRowHolder->Get());
-  JSObject *obj = row->WrapObject(aCtx, nullptr);
+  JSObject* obj = row->WrapObject(aCtx, nullptr);
   if (!obj) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -152,20 +122,8 @@ nsresult StatementJSHelper::getRow(Statement* aStatement, JSContext* aCtx,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult StatementJSHelper::getParams(Statement *aStatement, JSContext *aCtx,
-                                      JSObject *aScopeObj, JS::Value *_params) {
-||||||| merged common ancestors
-nsresult
-StatementJSHelper::getParams(Statement *aStatement,
-                             JSContext *aCtx,
-                             JSObject *aScopeObj,
-                             JS::Value *_params)
-{
-=======
 nsresult StatementJSHelper::getParams(Statement* aStatement, JSContext* aCtx,
                                       JSObject* aScopeObj, JS::Value* _params) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
 #ifdef DEBUG
@@ -199,7 +157,7 @@ nsresult StatementJSHelper::getParams(Statement* aStatement, JSContext* aCtx,
   }
 
   RefPtr<StatementParams> params(aStatement->mStatementParamsHolder->Get());
-  JSObject *obj = params->WrapObject(aCtx, nullptr);
+  JSObject* obj = params->WrapObject(aCtx, nullptr);
   if (!obj) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -229,27 +187,12 @@ NS_INTERFACE_MAP_END
 #include "xpc_map_end.h"
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-StatementJSHelper::Resolve(nsIXPConnectWrappedNative *aWrapper, JSContext *aCtx,
-                           JSObject *aScopeObj, jsid aId, bool *aResolvedp,
-                           bool *_retval) {
-  if (!JSID_IS_STRING(aId)) return NS_OK;
-||||||| merged common ancestors
-StatementJSHelper::Resolve(nsIXPConnectWrappedNative *aWrapper,
-                           JSContext *aCtx, JSObject *aScopeObj,
-                           jsid aId, bool *aResolvedp,
-                           bool *_retval)
-{
-  if (!JSID_IS_STRING(aId))
-    return NS_OK;
-=======
 StatementJSHelper::Resolve(nsIXPConnectWrappedNative* aWrapper, JSContext* aCtx,
                            JSObject* aScopeObj, jsid aId, bool* aResolvedp,
                            bool* _retval) {
   if (!JSID_IS_STRING(aId)) return NS_OK;
->>>>>>> upstream-releases
 
-  JS::Rooted<JSObject *> scope(aCtx, aScopeObj);
+  JS::Rooted<JSObject*> scope(aCtx, aScopeObj);
   JS::Rooted<jsid> id(aCtx, aId);
 
 #ifdef DEBUG
@@ -260,19 +203,10 @@ StatementJSHelper::Resolve(nsIXPConnectWrappedNative* aWrapper, JSContext* aCtx,
   }
 #endif
 
-<<<<<<< HEAD
-  Statement *stmt = static_cast<Statement *>(
-      static_cast<mozIStorageStatement *>(aWrapper->Native()));
-||||||| merged common ancestors
-  Statement *stmt = static_cast<Statement *>(
-    static_cast<mozIStorageStatement *>(aWrapper->Native())
-  );
-=======
   Statement* stmt = static_cast<Statement*>(
       static_cast<mozIStorageStatement*>(aWrapper->Native()));
->>>>>>> upstream-releases
 
-  JSFlatString *str = JSID_TO_FLAT_STRING(id);
+  JSFlatString* str = JSID_TO_FLAT_STRING(id);
   if (::JS_FlatStringEqualsAscii(str, "step")) {
     *_retval = ::JS_DefineFunction(aCtx, scope, "step", stepFunc, 0,
                                    JSPROP_RESOLVING) != nullptr;

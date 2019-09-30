@@ -16,40 +16,6 @@ var promise = require("promise");
 var defer = require("devtools/shared/defer");
 var DevToolsUtils = require("devtools/shared/DevToolsUtils");
 var { dumpn, dumpv } = DevToolsUtils;
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "WebSocketServer",
-  "devtools/server/socket/websocket-server");
-loader.lazyRequireGetter(this, "DebuggerTransport",
-  "devtools/shared/transport/transport", true);
-loader.lazyRequireGetter(this, "WebSocketDebuggerTransport",
-  "devtools/shared/transport/websocket-transport");
-loader.lazyRequireGetter(this, "discovery",
-  "devtools/shared/discovery/discovery");
-loader.lazyRequireGetter(this, "cert",
-  "devtools/shared/security/cert");
-loader.lazyRequireGetter(this, "Authenticators",
-  "devtools/shared/security/auth", true);
-loader.lazyRequireGetter(this, "AuthenticationResult",
-  "devtools/shared/security/auth", true);
-loader.lazyRequireGetter(this, "EventEmitter", "devtools/shared/event-emitter");
-||||||| merged common ancestors
-loader.lazyRequireGetter(this, "WebSocketServer",
-  "devtools/server/socket/websocket-server");
-loader.lazyRequireGetter(this, "DebuggerTransport",
-  "devtools/shared/transport/transport", true);
-loader.lazyRequireGetter(this, "WebSocketDebuggerTransport",
-  "devtools/shared/transport/websocket-transport");
-loader.lazyRequireGetter(this, "DebuggerServer",
-  "devtools/server/main", true);
-loader.lazyRequireGetter(this, "discovery",
-  "devtools/shared/discovery/discovery");
-loader.lazyRequireGetter(this, "cert",
-  "devtools/shared/security/cert");
-loader.lazyRequireGetter(this, "Authenticators",
-  "devtools/shared/security/auth", true);
-loader.lazyRequireGetter(this, "AuthenticationResult",
-  "devtools/shared/security/auth", true);
-=======
 loader.lazyRequireGetter(
   this,
   "WebSocketServer",
@@ -85,7 +51,6 @@ loader.lazyRequireGetter(
   true
 );
 loader.lazyRequireGetter(this, "EventEmitter", "devtools/shared/event-emitter");
->>>>>>> upstream-releases
 
 DevToolsUtils.defineLazyGetter(this, "nsFile", () => {
   return CC("@mozilla.org/file/local;1", "nsIFile", "initWithPath");
@@ -466,24 +431,6 @@ function _storeCertOverride(s, host, port) {
  *            Whether to use WebSocket protocol. Defaults is false.
  *        }
  */
-<<<<<<< HEAD
-function SocketListener(debuggerServer, socketOptions) {
-  this._debuggerServer = debuggerServer;
-
-  // Set socket options with default value
-  this._socketOptions = {
-    authenticator: socketOptions.authenticator || new (Authenticators.get().Server)(),
-    discoverable: !!socketOptions.discoverable,
-    encryption: !!socketOptions.encryption,
-    portOrPath: socketOptions.portOrPath || null,
-    webSocket: !!socketOptions.webSocket,
-  };
-
-  EventEmitter.decorate(this);
-}
-||||||| merged common ancestors
-function SocketListener() {}
-=======
 function SocketListener(debuggerServer, socketOptions) {
   this._debuggerServer = debuggerServer;
 
@@ -499,7 +446,6 @@ function SocketListener(debuggerServer, socketOptions) {
 
   EventEmitter.decorate(this);
 }
->>>>>>> upstream-releases
 
 SocketListener.prototype = {
   get authenticator() {
@@ -681,18 +627,6 @@ SocketListener.prototype = {
 
   // nsIServerSocketListener implementation
 
-<<<<<<< HEAD
-  onSocketAccepted:
-  DevToolsUtils.makeInfallible(function(socket, socketTransport) {
-    const connection = new ServerSocketConnection(this, socketTransport);
-    connection.once("allowed", this.onAllowedConnection.bind(this));
-  }, "SocketListener.onSocketAccepted"),
-||||||| merged common ancestors
-  onSocketAccepted:
-  DevToolsUtils.makeInfallible(function(socket, socketTransport) {
-    new ServerSocketConnection(this, socketTransport);
-  }, "SocketListener.onSocketAccepted"),
-=======
   onSocketAccepted: DevToolsUtils.makeInfallible(function(
     socket,
     socketTransport
@@ -701,7 +635,6 @@ SocketListener.prototype = {
     connection.once("allowed", this.onAllowedConnection.bind(this));
   },
   "SocketListener.onSocketAccepted"),
->>>>>>> upstream-releases
 
   onStopListening: function(socket, status) {
     dumpn("onStopListening, status: " + status);
@@ -948,21 +881,7 @@ ServerSocketConnection.prototype = {
     this._transport = null;
     this._clientCert = null;
   },
-<<<<<<< HEAD
-
 };
 
-||||||| merged common ancestors
-
-};
-
-DebuggerSocket.createListener = function() {
-  return new SocketListener();
-};
-
-=======
-};
-
->>>>>>> upstream-releases
 exports.DebuggerSocket = DebuggerSocket;
 exports.SocketListener = SocketListener;

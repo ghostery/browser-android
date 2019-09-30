@@ -22,111 +22,6 @@ const TOOLBOX_L10N = new LocalizationHelper(
 // - isLinkCopyItemVisible: is the copy-link item expected to be displayed
 // - linkFollowItemLabel: the expected label of the follow-link item
 // - linkCopyItemLabel: the expected label of the copy-link item
-<<<<<<< HEAD
-const TEST_DATA = [{
-  selector: "link",
-  attributeName: "href",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: true,
-  linkFollowItemLabel: TOOLBOX_L10N.getStr(
-    "toolbox.viewCssSourceInStyleEditor.label"),
-  linkCopyItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.copyUrlToClipboard.label"),
-}, {
-  selector: "link[rel=icon]",
-  attributeName: "href",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: true,
-  linkFollowItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.openUrlInNewTab.label"),
-  linkCopyItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.copyUrlToClipboard.label"),
-}, {
-  selector: "link",
-  attributeName: "rel",
-  popupNodeSelector: ".attr-value",
-  isLinkFollowItemVisible: false,
-  isLinkCopyItemVisible: false,
-}, {
-  selector: "output",
-  attributeName: "for",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: false,
-  linkFollowItemLabel: INSPECTOR_L10N.getFormatStr(
-    "inspector.menu.selectElement.label", "name"),
-}, {
-  selector: "script",
-  attributeName: "src",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: true,
-  linkFollowItemLabel: TOOLBOX_L10N.getStr(
-    "toolbox.viewJsSourceInDebugger.label"),
-  linkCopyItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.copyUrlToClipboard.label"),
-}, {
-  selector: "p[for]",
-  attributeName: "for",
-  popupNodeSelector: ".attr-value",
-  isLinkFollowItemVisible: false,
-  isLinkCopyItemVisible: false,
-}];
-||||||| merged common ancestors
-const TEST_DATA = [{
-  selector: "link",
-  attributeName: "href",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: true,
-  linkFollowItemLabel: TOOLBOX_L10N.getStr(
-    "toolbox.viewCssSourceInStyleEditor.label"),
-  linkCopyItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.copyUrlToClipboard.label")
-}, {
-  selector: "link[rel=icon]",
-  attributeName: "href",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: true,
-  linkFollowItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.openUrlInNewTab.label"),
-  linkCopyItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.copyUrlToClipboard.label")
-}, {
-  selector: "link",
-  attributeName: "rel",
-  popupNodeSelector: ".attr-value",
-  isLinkFollowItemVisible: false,
-  isLinkCopyItemVisible: false
-}, {
-  selector: "output",
-  attributeName: "for",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: false,
-  linkFollowItemLabel: INSPECTOR_L10N.getFormatStr(
-    "inspector.menu.selectElement.label", "name")
-}, {
-  selector: "script",
-  attributeName: "src",
-  popupNodeSelector: ".link",
-  isLinkFollowItemVisible: true,
-  isLinkCopyItemVisible: true,
-  linkFollowItemLabel: TOOLBOX_L10N.getStr(
-    "toolbox.viewJsSourceInDebugger.label"),
-  linkCopyItemLabel: INSPECTOR_L10N.getStr(
-    "inspector.menu.copyUrlToClipboard.label")
-}, {
-  selector: "p[for]",
-  attributeName: "for",
-  popupNodeSelector: ".attr-value",
-  isLinkFollowItemVisible: false,
-  isLinkCopyItemVisible: false
-}];
-=======
 const TEST_DATA = [
   {
     selector: "link",
@@ -193,7 +88,6 @@ const TEST_DATA = [
     isLinkCopyItemVisible: false,
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URL);

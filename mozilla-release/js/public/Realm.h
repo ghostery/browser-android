@@ -106,54 +106,16 @@ extern JS_PUBLIC_API bool InitRealmStandardClasses(JSContext* cx);
  * on the JSContext's current Realm.
  */
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* GetRealmObjectPrototype(JSContext* cx);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(JSObject*)
-GetRealmObjectPrototype(JSContext* cx);
-
-extern JS_PUBLIC_API(JSObject*)
-GetRealmFunctionPrototype(JSContext* cx);
-
-extern JS_PUBLIC_API(JSObject*)
-GetRealmArrayPrototype(JSContext* cx);
-=======
 extern JS_PUBLIC_API JSObject* GetRealmObjectPrototype(JSContext* cx);
 
 extern JS_PUBLIC_API JSObject* GetRealmFunctionPrototype(JSContext* cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* GetRealmFunctionPrototype(JSContext* cx);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(JSObject*)
-GetRealmErrorPrototype(JSContext* cx);
-=======
 extern JS_PUBLIC_API JSObject* GetRealmArrayPrototype(JSContext* cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* GetRealmArrayPrototype(JSContext* cx);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(JSObject*)
-GetRealmIteratorPrototype(JSContext* cx);
-=======
 extern JS_PUBLIC_API JSObject* GetRealmErrorPrototype(JSContext* cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* GetRealmErrorPrototype(JSContext* cx);
-||||||| merged common ancestors
-} // namespace JS
-=======
 extern JS_PUBLIC_API JSObject* GetRealmIteratorPrototype(JSContext* cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* GetRealmIteratorPrototype(JSContext* cx);
-||||||| merged common ancestors
-#endif // js_Realm_h
-=======
 // Implements https://tc39.github.io/ecma262/#sec-getfunctionrealm
 // 7.3.22 GetFunctionRealm ( obj )
 //
@@ -163,7 +125,6 @@ extern JS_PUBLIC_API JSObject* GetRealmIteratorPrototype(JSContext* cx);
 // proxy is encountered.
 extern JS_PUBLIC_API Realm* GetFunctionRealm(JSContext* cx,
                                              HandleObject objArg);
->>>>>>> upstream-releases
 
 }  // namespace JS
 

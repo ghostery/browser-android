@@ -26,27 +26,11 @@ namespace layers {
 // the GPU process.
 class GPUVideoImage final : public Image {
   friend class gl::GLBlitHelper;
-<<<<<<< HEAD
-
- public:
-  GPUVideoImage(dom::VideoDecoderManagerChild* aManager,
-                const SurfaceDescriptorGPUVideo& aSD, const gfx::IntSize& aSize)
-      : Image(nullptr, ImageFormat::GPU_VIDEO), mSize(aSize) {
-||||||| merged common ancestors
-public:
-  GPUVideoImage(dom::VideoDecoderManagerChild* aManager,
-                const SurfaceDescriptorGPUVideo& aSD,
-                const gfx::IntSize& aSize)
-    : Image(nullptr, ImageFormat::GPU_VIDEO)
-    , mSize(aSize)
-  {
-=======
 
  public:
   GPUVideoImage(RemoteDecoderManagerChild* aManager,
                 const SurfaceDescriptorGPUVideo& aSD, const gfx::IntSize& aSize)
       : Image(nullptr, ImageFormat::GPU_VIDEO), mSize(aSize) {
->>>>>>> upstream-releases
     // Create the TextureClient immediately since the GPUVideoTextureData
     // is responsible for deallocating the SurfaceDescriptor.
     //
@@ -84,19 +68,9 @@ public:
     return data->GetAsSourceSurface();
   }
 
-<<<<<<< HEAD
-  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override {
-    MOZ_ASSERT(aForwarder == ImageBridgeChild::GetSingleton(),
-               "Must only use GPUVideo on ImageBridge");
-||||||| merged common ancestors
-  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override
-  {
-    MOZ_ASSERT(aForwarder == ImageBridgeChild::GetSingleton(), "Must only use GPUVideo on ImageBridge");
-=======
   TextureClient* GetTextureClient(KnowsCompositor* aKnowsCompositor) override {
     MOZ_ASSERT(aKnowsCompositor == ImageBridgeChild::GetSingleton(),
                "Must only use GPUVideo on ImageBridge");
->>>>>>> upstream-releases
     return mTextureClient;
   }
 

@@ -4,22 +4,6 @@
 
 //! Per-node data used in style calculation.
 
-<<<<<<< HEAD
-use crate::context::{SharedStyleContext, StackLimitChecker};
-use crate::dom::TElement;
-use crate::invalidation::element::invalidator::InvalidationResult;
-use crate::invalidation::element::restyle_hints::RestyleHint;
-use crate::properties::ComputedValues;
-use crate::rule_tree::StrongRuleNode;
-use crate::selector_parser::{PseudoElement, RestyleDamage, EAGER_PSEUDO_COUNT};
-use crate::shared_lock::StylesheetGuards;
-use crate::style_resolver::{PrimaryStyle, ResolvedElementStyles, ResolvedStyle};
-||||||| merged common ancestors
-use context::{SharedStyleContext, StackLimitChecker};
-use dom::TElement;
-use invalidation::element::invalidator::InvalidationResult;
-use invalidation::element::restyle_hints::RestyleHint;
-=======
 use crate::context::{SharedStyleContext, StackLimitChecker};
 use crate::dom::TElement;
 use crate::invalidation::element::invalidator::InvalidationResult;
@@ -27,7 +11,6 @@ use crate::invalidation::element::restyle_hints::RestyleHint;
 use crate::properties::ComputedValues;
 use crate::selector_parser::{PseudoElement, RestyleDamage, EAGER_PSEUDO_COUNT};
 use crate::style_resolver::{PrimaryStyle, ResolvedElementStyles, ResolvedStyle};
->>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
 use malloc_size_of::MallocSizeOfOps;
 use selectors::NthIndexCache;

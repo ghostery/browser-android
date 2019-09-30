@@ -19,13 +19,7 @@
 #include "jit/JitRealm.h"
 #include "jit/MIR.h"
 #ifdef JS_ION_PERF
-<<<<<<< HEAD
-#include "jit/PerfSpewer.h"
-||||||| merged common ancestors
-# include "jit/PerfSpewer.h"
-=======
 #  include "jit/PerfSpewer.h"
->>>>>>> upstream-releases
 #endif
 #include "jit/RegisterSets.h"
 #include "vm/JSContext.h"

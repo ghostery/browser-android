@@ -21,51 +21,17 @@ namespace dom {
 
 using namespace SVGTextContentElement_Binding;
 
-<<<<<<< HEAD
-nsSVGEnumMapping SVGTextContentElement::sLengthAdjustMap[] = {
-    {nsGkAtoms::spacing, LENGTHADJUST_SPACING},
-    {nsGkAtoms::spacingAndGlyphs, LENGTHADJUST_SPACINGANDGLYPHS},
-    {nullptr, 0}};
-||||||| merged common ancestors
-nsSVGEnumMapping SVGTextContentElement::sLengthAdjustMap[] = {
-  { nsGkAtoms::spacing, LENGTHADJUST_SPACING },
-  { nsGkAtoms::spacingAndGlyphs, LENGTHADJUST_SPACINGANDGLYPHS },
-  { nullptr, 0 }
-};
-=======
 SVGEnumMapping SVGTextContentElement::sLengthAdjustMap[] = {
     {nsGkAtoms::spacing, LENGTHADJUST_SPACING},
     {nsGkAtoms::spacingAndGlyphs, LENGTHADJUST_SPACINGANDGLYPHS},
     {nullptr, 0}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsSVGElement::EnumInfo SVGTextContentElement::sEnumInfo[1] = {
-    {nsGkAtoms::lengthAdjust, sLengthAdjustMap, LENGTHADJUST_SPACING}};
-||||||| merged common ancestors
-nsSVGElement::EnumInfo SVGTextContentElement::sEnumInfo[1] =
-{
-  { nsGkAtoms::lengthAdjust, sLengthAdjustMap, LENGTHADJUST_SPACING }
-};
-=======
 SVGElement::EnumInfo SVGTextContentElement::sEnumInfo[1] = {
     {nsGkAtoms::lengthAdjust, sLengthAdjustMap, LENGTHADJUST_SPACING}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsSVGElement::LengthInfo SVGTextContentElement::sLengthInfo[1] = {
-    {nsGkAtoms::textLength, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::XY}};
-||||||| merged common ancestors
-nsSVGElement::LengthInfo SVGTextContentElement::sLengthInfo[1] =
-{
-  { nsGkAtoms::textLength, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::XY }
-};
-=======
 SVGElement::LengthInfo SVGTextContentElement::sLengthInfo[1] = {
     {nsGkAtoms::textLength, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::XY}};
->>>>>>> upstream-releases
 
 SVGTextFrame* SVGTextContentElement::GetSVGTextFrame() {
   nsIFrame* frame = GetPrimaryFrame(FlushType::Layout);
@@ -82,28 +48,12 @@ SVGTextContentElement::GetSVGTextFrameForNonLayoutDependentQuery() {
   return static_cast<SVGTextFrame*>(textFrame);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGTextContentElement::TextLength() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGTextContentElement::TextLength()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGTextContentElement::TextLength() {
->>>>>>> upstream-releases
   return LengthAttributes()[TEXTLENGTH].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedEnumeration> SVGTextContentElement::LengthAdjust() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedEnumeration>
-SVGTextContentElement::LengthAdjust()
-{
-=======
 already_AddRefed<DOMSVGAnimatedEnumeration>
 SVGTextContentElement::LengthAdjust() {
->>>>>>> upstream-releases
   return EnumAttributes()[LENGTHADJUST].ToDOMAnimatedEnum(this);
 }
 
@@ -213,17 +163,8 @@ already_AddRefed<nsISVGPoint> SVGTextContentElement::GetEndPositionOfChar(
   return point.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGIRect> SVGTextContentElement::GetExtentOfChar(
-    uint32_t charnum, ErrorResult& rv) {
-||||||| merged common ancestors
-already_AddRefed<SVGIRect>
-SVGTextContentElement::GetExtentOfChar(uint32_t charnum, ErrorResult& rv)
-{
-=======
 already_AddRefed<SVGRect> SVGTextContentElement::GetExtentOfChar(
     uint32_t charnum, ErrorResult& rv) {
->>>>>>> upstream-releases
   SVGTextFrame* textFrame = GetSVGTextFrame();
 
   if (!textFrame) {
@@ -250,16 +191,8 @@ float SVGTextContentElement::GetRotationOfChar(uint32_t charnum,
   return rotation;
 }
 
-<<<<<<< HEAD
-int32_t SVGTextContentElement::GetCharNumAtPosition(nsISVGPoint& aPoint) {
-||||||| merged common ancestors
-int32_t
-SVGTextContentElement::GetCharNumAtPosition(nsISVGPoint& aPoint)
-{
-=======
 int32_t SVGTextContentElement::GetCharNumAtPosition(
     const DOMPointInit& aPoint) {
->>>>>>> upstream-releases
   SVGTextFrame* textFrame = GetSVGTextFrame();
   return textFrame ? textFrame->GetCharNumAtPosition(this, aPoint) : -1;
 }

@@ -72,19 +72,9 @@ SkColor4f SkColorFilter::filterColor4f(const SkColor4f& c, SkColorSpace* colorSp
     SkSTArenaAlloc<128> alloc;
     SkRasterPipeline    pipeline(&alloc);
 
-<<<<<<< HEAD
-    pipeline.append_constant_color(&alloc, src.vec());
-    this->onAppendStages(&pipeline, colorSpace, &alloc, c.fA == 1);
-    SkJumper_MemoryCtx dstPtr = { &dst, 0 };
-||||||| merged common ancestors
-    pipeline.append_constant_color(&alloc, src);
-    this->onAppendStages(&pipeline, nullptr, &alloc, c.fA == 1);
-    SkJumper_MemoryCtx dstPtr = { &dst, 0 };
-=======
     pipeline.append_constant_color(&alloc, src.vec());
     this->onAppendStages(&pipeline, colorSpace, &alloc, c.fA == 1);
     SkRasterPipeline_MemoryCtx dstPtr = { &dst, 0 };
->>>>>>> upstream-releases
     pipeline.append(SkRasterPipeline::store_f32, &dstPtr);
     pipeline.run(0,0, 1,1);
 
@@ -237,16 +227,6 @@ public:
     }
 #endif
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSRGBGammaColorFilter)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSRGBGammaColorFilter)
-
-=======
->>>>>>> upstream-releases
     void onAppendStages(SkRasterPipeline* p, SkColorSpace*, SkArenaAlloc* alloc,
                         bool shaderIsOpaque) const override {
         if (!shaderIsOpaque) {
@@ -282,26 +262,9 @@ sk_sp<SkFlattenable> SkSRGBGammaColorFilter::CreateProc(SkReadBuffer& buffer) {
     if (!buffer.validate(dir <= 1)) {
         return nullptr;
     }
-<<<<<<< HEAD
     return sk_sp<SkFlattenable>(new SkSRGBGammaColorFilter(static_cast<Direction>(dir)));
 }
 
-||||||| merged common ancestors
-    buffer.validate(false);
-    return nullptr;
-}
-
-#ifndef SK_IGNORE_TO_STRING
-void SkSRGBGammaColorFilter::toString(SkString* str) const {
-    str->append("srgbgamma");
-}
-#endif
-
-=======
-    return sk_sp<SkFlattenable>(new SkSRGBGammaColorFilter(static_cast<Direction>(dir)));
-}
-
->>>>>>> upstream-releases
 template <SkSRGBGammaColorFilter::Direction dir>
 sk_sp<SkColorFilter> MakeSRGBGammaCF() {
     static SkColorFilter* gSingleton = new SkSRGBGammaColorFilter(dir);

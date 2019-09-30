@@ -39,41 +39,6 @@ namespace net {
 
 NS_IMPL_ISUPPORTS(CacheFileMetadata, CacheFileIOListener)
 
-<<<<<<< HEAD
-CacheFileMetadata::CacheFileMetadata(CacheFileHandle *aHandle,
-                                     const nsACString &aKey)
-    : CacheMemoryConsumer(NORMAL),
-      mHandle(aHandle),
-      mHashArray(nullptr),
-      mHashArraySize(0),
-      mHashCount(0),
-      mOffset(-1),
-      mBuf(nullptr),
-      mBufSize(0),
-      mWriteBuf(nullptr),
-      mElementsSize(0),
-      mIsDirty(false),
-      mAnonymous(false),
-      mAllocExactSize(false),
-      mFirstRead(true) {
-||||||| merged common ancestors
-CacheFileMetadata::CacheFileMetadata(CacheFileHandle *aHandle, const nsACString &aKey)
-  : CacheMemoryConsumer(NORMAL)
-  , mHandle(aHandle)
-  , mHashArray(nullptr)
-  , mHashArraySize(0)
-  , mHashCount(0)
-  , mOffset(-1)
-  , mBuf(nullptr)
-  , mBufSize(0)
-  , mWriteBuf(nullptr)
-  , mElementsSize(0)
-  , mIsDirty(false)
-  , mAnonymous(false)
-  , mAllocExactSize(false)
-  , mFirstRead(true)
-{
-=======
 CacheFileMetadata::CacheFileMetadata(CacheFileHandle* aHandle,
                                      const nsACString& aKey)
     : CacheMemoryConsumer(NORMAL),
@@ -90,7 +55,6 @@ CacheFileMetadata::CacheFileMetadata(CacheFileHandle* aHandle,
       mAnonymous(false),
       mAllocExactSize(false),
       mFirstRead(true) {
->>>>>>> upstream-releases
   LOG(("CacheFileMetadata::CacheFileMetadata() [this=%p, handle=%p, key=%s]",
        this, aHandle, PromiseFlatCString(aKey).get()));
 
@@ -104,45 +68,6 @@ CacheFileMetadata::CacheFileMetadata(CacheFileHandle* aHandle,
   MOZ_ASSERT(NS_SUCCEEDED(rv));
 }
 
-<<<<<<< HEAD
-CacheFileMetadata::CacheFileMetadata(bool aMemoryOnly, bool aPinned,
-                                     const nsACString &aKey)
-    : CacheMemoryConsumer(aMemoryOnly ? MEMORY_ONLY : NORMAL),
-      mHandle(nullptr),
-      mHashArray(nullptr),
-      mHashArraySize(0),
-      mHashCount(0),
-      mOffset(0),
-      mBuf(nullptr),
-      mBufSize(0),
-      mWriteBuf(nullptr),
-      mElementsSize(0),
-      mIsDirty(true),
-      mAnonymous(false),
-      mAllocExactSize(false),
-      mFirstRead(true) {
-  LOG(("CacheFileMetadata::CacheFileMetadata() [this=%p, key=%s]", this,
-       PromiseFlatCString(aKey).get()));
-||||||| merged common ancestors
-CacheFileMetadata::CacheFileMetadata(bool aMemoryOnly, bool aPinned, const nsACString &aKey)
-  : CacheMemoryConsumer(aMemoryOnly ? MEMORY_ONLY : NORMAL)
-  , mHandle(nullptr)
-  , mHashArray(nullptr)
-  , mHashArraySize(0)
-  , mHashCount(0)
-  , mOffset(0)
-  , mBuf(nullptr)
-  , mBufSize(0)
-  , mWriteBuf(nullptr)
-  , mElementsSize(0)
-  , mIsDirty(true)
-  , mAnonymous(false)
-  , mAllocExactSize(false)
-  , mFirstRead(true)
-{
-  LOG(("CacheFileMetadata::CacheFileMetadata() [this=%p, key=%s]",
-       this, PromiseFlatCString(aKey).get()));
-=======
 CacheFileMetadata::CacheFileMetadata(bool aMemoryOnly, bool aPinned,
                                      const nsACString& aKey)
     : CacheMemoryConsumer(aMemoryOnly ? MEMORY_ONLY : NORMAL),
@@ -161,7 +86,6 @@ CacheFileMetadata::CacheFileMetadata(bool aMemoryOnly, bool aPinned,
       mFirstRead(true) {
   LOG(("CacheFileMetadata::CacheFileMetadata() [this=%p, key=%s]", this,
        PromiseFlatCString(aKey).get()));
->>>>>>> upstream-releases
 
   memset(&mMetaHdr, 0, sizeof(CacheFileMetadataHeader));
   mMetaHdr.mVersion = kCacheEntryVersion;
@@ -215,15 +139,7 @@ CacheFileMetadata::~CacheFileMetadata() {
   }
 }
 
-<<<<<<< HEAD
-void CacheFileMetadata::SetHandle(CacheFileHandle *aHandle) {
-||||||| merged common ancestors
-void
-CacheFileMetadata::SetHandle(CacheFileHandle *aHandle)
-{
-=======
 void CacheFileMetadata::SetHandle(CacheFileHandle* aHandle) {
->>>>>>> upstream-releases
   LOG(("CacheFileMetadata::SetHandle() [this=%p, handle=%p]", this, aHandle));
 
   MOZ_ASSERT(!mHandle);
@@ -231,33 +147,14 @@ void CacheFileMetadata::SetHandle(CacheFileHandle* aHandle) {
   mHandle = aHandle;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetKey(nsACString &_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetKey(nsACString &_retval)
-{
-=======
 nsresult CacheFileMetadata::GetKey(nsACString& _retval) {
->>>>>>> upstream-releases
   _retval = mKey;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::ReadMetadata(CacheFileMetadataListener *aListener) {
-  LOG(("CacheFileMetadata::ReadMetadata() [this=%p, listener=%p]", this,
-       aListener));
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::ReadMetadata(CacheFileMetadataListener *aListener)
-{
-  LOG(("CacheFileMetadata::ReadMetadata() [this=%p, listener=%p]", this, aListener));
-=======
 nsresult CacheFileMetadata::ReadMetadata(CacheFileMetadataListener* aListener) {
   LOG(("CacheFileMetadata::ReadMetadata() [this=%p, listener=%p]", this,
        aListener));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!mListener);
   MOZ_ASSERT(!mHashArray);
@@ -344,18 +241,8 @@ uint32_t CacheFileMetadata::CalcMetadataSize(uint32_t aElementsSize,
          sizeof(uint32_t);                           // offset
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::WriteMetadata(
-    uint32_t aOffset, CacheFileMetadataListener *aListener) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::WriteMetadata(uint32_t aOffset,
-                                 CacheFileMetadataListener *aListener)
-{
-=======
 nsresult CacheFileMetadata::WriteMetadata(
     uint32_t aOffset, CacheFileMetadataListener* aListener) {
->>>>>>> upstream-releases
   LOG(("CacheFileMetadata::WriteMetadata() [this=%p, offset=%d, listener=%p]",
        this, aOffset, aListener));
 
@@ -366,16 +253,8 @@ nsresult CacheFileMetadata::WriteMetadata(
 
   mIsDirty = false;
 
-<<<<<<< HEAD
-  mWriteBuf =
-      static_cast<char *>(malloc(CalcMetadataSize(mElementsSize, mHashCount)));
-||||||| merged common ancestors
-  mWriteBuf = static_cast<char *>(malloc(CalcMetadataSize(mElementsSize,
-                                                          mHashCount)));
-=======
   mWriteBuf =
       static_cast<char*>(malloc(CalcMetadataSize(mElementsSize, mHashCount)));
->>>>>>> upstream-releases
   if (!mWriteBuf) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
@@ -404,13 +283,7 @@ nsresult CacheFileMetadata::WriteMetadata(
   NetworkEndian::writeUint32(p, aOffset);
   p += sizeof(uint32_t);
 
-<<<<<<< HEAD
-  char *writeBuffer = mWriteBuf;
-||||||| merged common ancestors
-  char * writeBuffer = mWriteBuf;
-=======
   char* writeBuffer = mWriteBuf;
->>>>>>> upstream-releases
   if (aListener) {
     mListener = aListener;
   } else {
@@ -440,15 +313,7 @@ nsresult CacheFileMetadata::WriteMetadata(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::SyncReadMetadata(nsIFile *aFile) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::SyncReadMetadata(nsIFile *aFile)
-{
-=======
 nsresult CacheFileMetadata::SyncReadMetadata(nsIFile* aFile) {
->>>>>>> upstream-releases
   LOG(("CacheFileMetadata::SyncReadMetadata() [this=%p]", this));
 
   MOZ_ASSERT(!mListener);
@@ -516,21 +381,9 @@ nsresult CacheFileMetadata::SyncReadMetadata(nsIFile* aFile) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-const char *CacheFileMetadata::GetElement(const char *aKey) {
-  const char *data = mBuf;
-  const char *limit = mBuf + mElementsSize;
-||||||| merged common ancestors
-const char *
-CacheFileMetadata::GetElement(const char *aKey)
-{
-  const char *data = mBuf;
-  const char *limit = mBuf + mElementsSize;
-=======
 const char* CacheFileMetadata::GetElement(const char* aKey) {
   const char* data = mBuf;
   const char* limit = mBuf + mElementsSize;
->>>>>>> upstream-releases
 
   while (data != limit) {
     size_t maxLen = limit - data;
@@ -563,21 +416,9 @@ const char* CacheFileMetadata::GetElement(const char* aKey) {
   return nullptr;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::SetElement(const char *aKey, const char *aValue) {
-  LOG(("CacheFileMetadata::SetElement() [this=%p, key=%s, value=%p]", this,
-       aKey, aValue));
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::SetElement(const char *aKey, const char *aValue)
-{
-  LOG(("CacheFileMetadata::SetElement() [this=%p, key=%s, value=%p]",
-       this, aKey, aValue));
-=======
 nsresult CacheFileMetadata::SetElement(const char* aKey, const char* aValue) {
   LOG(("CacheFileMetadata::SetElement() [this=%p, key=%s, value=%p]", this,
        aKey, aValue));
->>>>>>> upstream-releases
 
   MarkDirty();
 
@@ -637,21 +478,9 @@ nsresult CacheFileMetadata::SetElement(const char* aKey, const char* aValue) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::Visit(nsICacheEntryMetaDataVisitor *aVisitor) {
-  const char *data = mBuf;
-  const char *limit = mBuf + mElementsSize;
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::Visit(nsICacheEntryMetaDataVisitor *aVisitor)
-{
-  const char *data = mBuf;
-  const char *limit = mBuf + mElementsSize;
-=======
 nsresult CacheFileMetadata::Visit(nsICacheEntryMetaDataVisitor* aVisitor) {
   const char* data = mBuf;
   const char* limit = mBuf + mElementsSize;
->>>>>>> upstream-releases
 
   while (data < limit) {
     // Point to the value part
@@ -693,16 +522,8 @@ nsresult CacheFileMetadata::SetHash(uint32_t aIndex,
       } else {
         mHashArraySize *= 2;
       }
-<<<<<<< HEAD
-      mHashArray = static_cast<CacheHash::Hash16_t *>(
-          moz_xrealloc(mHashArray, mHashArraySize));
-||||||| merged common ancestors
-      mHashArray = static_cast<CacheHash::Hash16_t *>(
-                     moz_xrealloc(mHashArray, mHashArraySize));
-=======
       mHashArray = static_cast<CacheHash::Hash16_t*>(
           moz_xrealloc(mHashArray, mHashArraySize));
->>>>>>> upstream-releases
     }
 
     mHashCount++;
@@ -742,15 +563,7 @@ nsresult CacheFileMetadata::RemoveFlags(uint32_t aFlags) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetFlags(uint32_t *_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetFlags(uint32_t *_retval)
-{
-=======
 nsresult CacheFileMetadata::GetFlags(uint32_t* _retval) {
->>>>>>> upstream-releases
   *_retval = mMetaHdr.mFlags;
   return NS_OK;
 }
@@ -764,15 +577,7 @@ nsresult CacheFileMetadata::SetExpirationTime(uint32_t aExpirationTime) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetExpirationTime(uint32_t *_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetExpirationTime(uint32_t *_retval)
-{
-=======
 nsresult CacheFileMetadata::GetExpirationTime(uint32_t* _retval) {
->>>>>>> upstream-releases
   *_retval = mMetaHdr.mExpirationTime;
   return NS_OK;
 }
@@ -786,54 +591,22 @@ nsresult CacheFileMetadata::SetFrecency(uint32_t aFrecency) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetFrecency(uint32_t *_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetFrecency(uint32_t *_retval)
-{
-=======
 nsresult CacheFileMetadata::GetFrecency(uint32_t* _retval) {
->>>>>>> upstream-releases
   *_retval = mMetaHdr.mFrecency;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetLastModified(uint32_t *_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetLastModified(uint32_t *_retval)
-{
-=======
 nsresult CacheFileMetadata::GetLastModified(uint32_t* _retval) {
->>>>>>> upstream-releases
   *_retval = mMetaHdr.mLastModified;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetLastFetched(uint32_t *_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetLastFetched(uint32_t *_retval)
-{
-=======
 nsresult CacheFileMetadata::GetLastFetched(uint32_t* _retval) {
->>>>>>> upstream-releases
   *_retval = mMetaHdr.mLastFetched;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::GetFetchCount(uint32_t *_retval) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::GetFetchCount(uint32_t *_retval)
-{
-=======
 nsresult CacheFileMetadata::GetFetchCount(uint32_t* _retval) {
->>>>>>> upstream-releases
   *_retval = mMetaHdr.mFetchCount;
   return NS_OK;
 }
@@ -853,40 +626,17 @@ void CacheFileMetadata::MarkDirty(bool aUpdateLastModified) {
   }
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::OnFileOpened(CacheFileHandle *aHandle,
-                                         nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::OnFileOpened(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileMetadata::OnFileOpened(CacheFileHandle* aHandle,
                                          nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileMetadata::OnFileOpened should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::OnDataWritten(CacheFileHandle *aHandle,
-                                          const char *aBuf, nsresult aResult) {
-  LOG(
-      ("CacheFileMetadata::OnDataWritten() [this=%p, handle=%p, "
-       "result=0x%08" PRIx32 "]",
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
-                                 nsresult aResult)
-{
-  LOG(("CacheFileMetadata::OnDataWritten() [this=%p, handle=%p, result=0x%08" PRIx32 "]",
-=======
 nsresult CacheFileMetadata::OnDataWritten(CacheFileHandle* aHandle,
                                           const char* aBuf, nsresult aResult) {
   LOG(
       ("CacheFileMetadata::OnDataWritten() [this=%p, handle=%p, "
        "result=0x%08" PRIx32 "]",
->>>>>>> upstream-releases
        this, aHandle, static_cast<uint32_t>(aResult)));
 
   MOZ_ASSERT(mListener);
@@ -905,28 +655,12 @@ nsresult CacheFileMetadata::OnDataWritten(CacheFileHandle* aHandle,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                                       nsresult aResult) {
-  LOG((
-      "CacheFileMetadata::OnDataRead() [this=%p, handle=%p, result=0x%08" PRIx32
-      "]",
-      this, aHandle, static_cast<uint32_t>(aResult)));
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                              nsresult aResult)
-{
-  LOG(("CacheFileMetadata::OnDataRead() [this=%p, handle=%p, result=0x%08" PRIx32 "]",
-       this, aHandle, static_cast<uint32_t>(aResult)));
-=======
 nsresult CacheFileMetadata::OnDataRead(CacheFileHandle* aHandle, char* aBuf,
                                        nsresult aResult) {
   LOG((
       "CacheFileMetadata::OnDataRead() [this=%p, handle=%p, result=0x%08" PRIx32
       "]",
       this, aHandle, static_cast<uint32_t>(aResult)));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(mListener);
 
@@ -948,17 +682,7 @@ nsresult CacheFileMetadata::OnDataRead(CacheFileHandle* aHandle, char* aBuf,
 
   if (mFirstRead) {
     Telemetry::AccumulateTimeDelta(
-<<<<<<< HEAD
         Telemetry::NETWORK_CACHE_METADATA_FIRST_READ_TIME_MS, mReadStart);
-    Telemetry::Accumulate(Telemetry::NETWORK_CACHE_METADATA_FIRST_READ_SIZE,
-                          mBufSize);
-||||||| merged common ancestors
-      Telemetry::NETWORK_CACHE_METADATA_FIRST_READ_TIME_MS, mReadStart);
-    Telemetry::Accumulate(
-      Telemetry::NETWORK_CACHE_METADATA_FIRST_READ_SIZE, mBufSize);
-=======
-        Telemetry::NETWORK_CACHE_METADATA_FIRST_READ_TIME_MS, mReadStart);
->>>>>>> upstream-releases
   } else {
     Telemetry::AccumulateTimeDelta(
         Telemetry::NETWORK_CACHE_METADATA_SECOND_READ_TIME_MS, mReadStart);
@@ -1080,47 +804,20 @@ nsresult CacheFileMetadata::OnDataRead(CacheFileHandle* aHandle, char* aBuf,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::OnFileDoomed(CacheFileHandle *aHandle,
-                                         nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileMetadata::OnFileDoomed(CacheFileHandle* aHandle,
                                          nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileMetadata::OnFileDoomed should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::OnEOFSet(CacheFileHandle *aHandle,
-                                     nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::OnEOFSet(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileMetadata::OnEOFSet(CacheFileHandle* aHandle,
                                      nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileMetadata::OnEOFSet should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::OnFileRenamed(CacheFileHandle *aHandle,
-                                          nsresult aResult) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult)
-{
-=======
 nsresult CacheFileMetadata::OnFileRenamed(CacheFileHandle* aHandle,
                                           nsresult aResult) {
->>>>>>> upstream-releases
   MOZ_CRASH("CacheFileMetadata::OnFileRenamed should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
@@ -1280,15 +977,7 @@ nsresult CacheFileMetadata::ParseMetadata(uint32_t aMetaOffset,
   mHashArraySize = hashesLen;
   mHashCount = hashCount;
   if (mHashArraySize) {
-<<<<<<< HEAD
-    mHashArray =
-        static_cast<CacheHash::Hash16_t *>(moz_xmalloc(mHashArraySize));
-||||||| merged common ancestors
-    mHashArray = static_cast<CacheHash::Hash16_t *>(
-                   moz_xmalloc(mHashArraySize));
-=======
     mHashArray = static_cast<CacheHash::Hash16_t*>(moz_xmalloc(mHashArraySize));
->>>>>>> upstream-releases
     memcpy(mHashArray, mBuf + hashesOffset, mHashArraySize);
   }
 
@@ -1303,15 +992,7 @@ nsresult CacheFileMetadata::ParseMetadata(uint32_t aMetaOffset,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::CheckElements(const char *aBuf, uint32_t aSize) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::CheckElements(const char *aBuf, uint32_t aSize)
-{
-=======
 nsresult CacheFileMetadata::CheckElements(const char* aBuf, uint32_t aSize) {
->>>>>>> upstream-releases
   if (aSize) {
     // Check if the metadata ends with a zero byte.
     if (aBuf[aSize - 1] != 0) {
@@ -1378,15 +1059,7 @@ nsresult CacheFileMetadata::EnsureBuffer(uint32_t aSize) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult CacheFileMetadata::ParseKey(const nsACString &aKey) {
-||||||| merged common ancestors
-nsresult
-CacheFileMetadata::ParseKey(const nsACString &aKey)
-{
-=======
 nsresult CacheFileMetadata::ParseKey(const nsACString& aKey) {
->>>>>>> upstream-releases
   nsCOMPtr<nsILoadContextInfo> info = CacheFileUtils::ParseKey(aKey);
   NS_ENSURE_TRUE(info, NS_ERROR_FAILURE);
 

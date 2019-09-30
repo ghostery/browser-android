@@ -8,14 +8,9 @@ DIRS += [
     'Frames',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/SecondaryPanes/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/SecondaryPanes/moz.build
     'CommandBar.js',
+    'EventListeners.js',
     'Expressions.js',
     'index.js',
     'Scopes.js',
@@ -23,10 +18,6 @@ CompiledModules(
     'WhyPaused.js',
     'Worker.js',
     'Workers.js',
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/SecondaryPanes/moz.build
-    'XHRBreakpoints.js',
-||||||| merged common ancestors
-=======
     'XHRBreakpoints.js',
 )
 
@@ -39,5 +30,4 @@ DevToolsModules(
     'WhyPaused.css',
     'Workers.css',
     'XHRBreakpoints.css',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/SecondaryPanes/moz.build
 )

@@ -3,19 +3,11 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ---
 job-defaults:
-<<<<<<< HEAD
-    serviceworker-e10s:
-        by-test-platform:
-            linux64/debug: both
-            default: false
-||||||| merged common ancestors
-=======
     suite: xpcshell
     variants:
         by-test-platform:
             linux64/debug: ['fission', 'serviceworker']
             default: ['fission']
->>>>>>> upstream-releases
     mozharness:
         script:
             by-test-platform:
@@ -23,16 +15,7 @@ job-defaults:
                 default: desktop_unittest.py
         config:
             by-test-platform:
-<<<<<<< HEAD
-                android-em.*:
-||||||| merged common ancestors
-                android-em-4.2-x86/opt:
-                    - android/android_common.py
-                    - android/androidx86.py
-                android-em.*:
-=======
                 android-em-4.*:
->>>>>>> upstream-releases
                     - android/android_common.py
                     - android/androidarm_4_3.py
                 android-em-7.*:
@@ -62,17 +45,8 @@ xpcshell:
             default: built-projects
     chunks:
         by-test-platform:
-<<<<<<< HEAD
-            linux32/debug: 12
-            linux64/debug: 10
-||||||| merged common ancestors
-            linux32/debug: 12
-            linux64/debug: 10
-            android-em-4.2-x86/opt: 6
-=======
             .*-ccov/debug: 6
             android-em-4.*: 8
->>>>>>> upstream-releases
             android-em-4.3-arm7-api-16/debug: 12
             android-em-7.*: 3
             macosx.*(?!-ccov)...../.*: 2

@@ -20,15 +20,7 @@ typedef FallibleTArray<SVGTransformSMILData> TransformArray;
 //----------------------------------------------------------------------
 // nsISMILType implementation
 
-<<<<<<< HEAD
-void SVGTransformListSMILType::Init(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGTransformListSMILType::Init(nsSMILValue &aValue) const
-{
-=======
 void SVGTransformListSMILType::Init(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.IsNull(), "Unexpected value type");
 
   TransformArray* transforms = new TransformArray(1);
@@ -36,15 +28,7 @@ void SVGTransformListSMILType::Init(SMILValue& aValue) const {
   aValue.mType = this;
 }
 
-<<<<<<< HEAD
-void SVGTransformListSMILType::Destroy(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGTransformListSMILType::Destroy(nsSMILValue& aValue) const
-{
-=======
 void SVGTransformListSMILType::Destroy(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == this, "Unexpected SMIL value type");
   TransformArray* params = static_cast<TransformArray*>(aValue.mU.mPtr);
   delete params;
@@ -52,18 +36,8 @@ void SVGTransformListSMILType::Destroy(SMILValue& aValue) const {
   aValue.mType = SMILNullType::Singleton();
 }
 
-<<<<<<< HEAD
-nsresult SVGTransformListSMILType::Assign(nsSMILValue& aDest,
-                                          const nsSMILValue& aSrc) const {
-||||||| merged common ancestors
-nsresult
-SVGTransformListSMILType::Assign(nsSMILValue& aDest,
-                               const nsSMILValue& aSrc) const
-{
-=======
 nsresult SVGTransformListSMILType::Assign(SMILValue& aDest,
                                           const SMILValue& aSrc) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == aSrc.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL value");
 
@@ -77,18 +51,8 @@ nsresult SVGTransformListSMILType::Assign(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool SVGTransformListSMILType::IsEqual(const nsSMILValue& aLeft,
-                                       const nsSMILValue& aRight) const {
-||||||| merged common ancestors
-bool
-SVGTransformListSMILType::IsEqual(const nsSMILValue& aLeft,
-                                  const nsSMILValue& aRight) const
-{
-=======
 bool SVGTransformListSMILType::IsEqual(const SMILValue& aLeft,
                                        const SMILValue& aRight) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLeft.mType == aRight.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aLeft.mType == this, "Unexpected SMIL type");
 
@@ -114,21 +78,9 @@ bool SVGTransformListSMILType::IsEqual(const SMILValue& aLeft,
   return true;
 }
 
-<<<<<<< HEAD
-nsresult SVGTransformListSMILType::Add(nsSMILValue& aDest,
-                                       const nsSMILValue& aValueToAdd,
-                                       uint32_t aCount) const {
-||||||| merged common ancestors
-nsresult
-SVGTransformListSMILType::Add(nsSMILValue& aDest,
-                              const nsSMILValue& aValueToAdd,
-                              uint32_t aCount) const
-{
-=======
 nsresult SVGTransformListSMILType::Add(SMILValue& aDest,
                                        const SMILValue& aValueToAdd,
                                        uint32_t aCount) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aDest.mType == aValueToAdd.mType, "Incompatible SMIL types");
 
@@ -176,18 +128,8 @@ nsresult SVGTransformListSMILType::Add(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGTransformListSMILType::SandwichAdd(
-    nsSMILValue& aDest, const nsSMILValue& aValueToAdd) const {
-||||||| merged common ancestors
-nsresult
-SVGTransformListSMILType::SandwichAdd(nsSMILValue& aDest,
-                                      const nsSMILValue& aValueToAdd) const
-{
-=======
 nsresult SVGTransformListSMILType::SandwichAdd(
     SMILValue& aDest, const SMILValue& aValueToAdd) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aDest.mType == aValueToAdd.mType, "Incompatible SMIL types");
 
@@ -220,21 +162,9 @@ nsresult SVGTransformListSMILType::SandwichAdd(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGTransformListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                                   const nsSMILValue& aTo,
-                                                   double& aDistance) const {
-||||||| merged common ancestors
-nsresult
-SVGTransformListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                          const nsSMILValue& aTo,
-                                          double& aDistance) const
-{
-=======
 nsresult SVGTransformListSMILType::ComputeDistance(const SMILValue& aFrom,
                                                    const SMILValue& aTo,
                                                    double& aDistance) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrom.mType == aTo.mType,
              "Can't compute difference between different SMIL types");
   MOZ_ASSERT(aFrom.mType == this, "Unexpected SMIL type");
@@ -274,27 +204,11 @@ nsresult SVGTransformListSMILType::ComputeDistance(const SMILValue& aFrom,
 
     case SVG_TRANSFORM_ROTATE:
     case SVG_TRANSFORM_SKEWX:
-<<<<<<< HEAD
-    case SVG_TRANSFORM_SKEWY: {
-      const float& a = fromTransform.mParams[0];
-      const float& b = toTransform.mParams[0];
-      aDistance = fabs(a - b);
-    } break;
-||||||| merged common ancestors
-    case SVG_TRANSFORM_SKEWY:
-      {
-        const float& a = fromTransform.mParams[0];
-        const float& b = toTransform.mParams[0];
-        aDistance = fabs(a-b);
-      }
-      break;
-=======
     case SVG_TRANSFORM_SKEWY: {
       const float& a = fromTransform.mParams[0];
       const float& b = toTransform.mParams[0];
       aDistance = std::fabs(a - b);
     } break;
->>>>>>> upstream-releases
 
     default:
       NS_ERROR("Got bad transform types for calculating distances");
@@ -305,24 +219,10 @@ nsresult SVGTransformListSMILType::ComputeDistance(const SMILValue& aFrom,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGTransformListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                               const nsSMILValue& aEndVal,
-                                               double aUnitDistance,
-                                               nsSMILValue& aResult) const {
-||||||| merged common ancestors
-nsresult
-SVGTransformListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                      const nsSMILValue& aEndVal,
-                                      double aUnitDistance,
-                                      nsSMILValue& aResult) const
-{
-=======
 nsresult SVGTransformListSMILType::Interpolate(const SMILValue& aStartVal,
                                                const SMILValue& aEndVal,
                                                double aUnitDistance,
                                                SMILValue& aResult) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartVal.mType == aEndVal.mType,
              "Can't interpolate between different SMIL types");
   MOZ_ASSERT(aStartVal.mType == this, "Unexpected type for interpolation");
@@ -390,19 +290,8 @@ nsresult SVGTransformListSMILType::Interpolate(const SMILValue& aStartVal,
 // Transform array accessors
 
 // static
-<<<<<<< HEAD
-nsresult SVGTransformListSMILType::AppendTransform(
-    const SVGTransformSMILData& aTransform, nsSMILValue& aValue) {
-||||||| merged common ancestors
-nsresult
-SVGTransformListSMILType::AppendTransform(
-  const SVGTransformSMILData& aTransform,
-  nsSMILValue& aValue)
-{
-=======
 nsresult SVGTransformListSMILType::AppendTransform(
     const SVGTransformSMILData& aTransform, SMILValue& aValue) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == Singleton(), "Unexpected SMIL value type");
 
   TransformArray& transforms = *static_cast<TransformArray*>(aValue.mU.mPtr);
@@ -412,18 +301,8 @@ nsresult SVGTransformListSMILType::AppendTransform(
 }
 
 // static
-<<<<<<< HEAD
-bool SVGTransformListSMILType::AppendTransforms(const SVGTransformList& aList,
-                                                nsSMILValue& aValue) {
-||||||| merged common ancestors
-bool
-SVGTransformListSMILType::AppendTransforms(const SVGTransformList& aList,
-                                           nsSMILValue& aValue)
-{
-=======
 bool SVGTransformListSMILType::AppendTransforms(const SVGTransformList& aList,
                                                 SMILValue& aValue) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == Singleton(), "Unexpected SMIL value type");
 
   TransformArray& transforms = *static_cast<TransformArray*>(aValue.mU.mPtr);
@@ -441,18 +320,8 @@ bool SVGTransformListSMILType::AppendTransforms(const SVGTransformList& aList,
 }
 
 // static
-<<<<<<< HEAD
-bool SVGTransformListSMILType::GetTransforms(
-    const nsSMILValue& aValue, FallibleTArray<nsSVGTransform>& aTransforms) {
-||||||| merged common ancestors
-bool
-SVGTransformListSMILType::GetTransforms(const nsSMILValue& aValue,
-                                        FallibleTArray<nsSVGTransform>& aTransforms)
-{
-=======
 bool SVGTransformListSMILType::GetTransforms(
     const SMILValue& aValue, FallibleTArray<SVGTransform>& aTransforms) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == Singleton(), "Unexpected SMIL value type");
 
   const TransformArray& smilTransforms =

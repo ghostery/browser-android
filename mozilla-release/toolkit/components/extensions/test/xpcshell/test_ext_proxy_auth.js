@@ -1,19 +1,11 @@
 "use strict";
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyServiceGetter(this, "authManager",
-                                   "@mozilla.org/network/http-auth-manager;1",
-                                   "nsIHttpAuthManager");
-||||||| merged common ancestors
-Cu.importGlobalProperties(["XMLHttpRequest"]);
-=======
 XPCOMUtils.defineLazyServiceGetter(
   this,
   "authManager",
   "@mozilla.org/network/http-auth-manager;1",
   "nsIHttpAuthManager"
 );
->>>>>>> upstream-releases
 
 const proxy = createHttpServer();
 
@@ -126,19 +118,11 @@ add_task(async function test_webRequest_auth_proxy() {
   await handlingExt.startup();
   await handlingExt.awaitMessage("pac-ready");
 
-<<<<<<< HEAD
-  authManager.clearAll();
-
-  let contentPage = await ExtensionTestUtils.loadContentPage(`http://mozilla.org/`);
-||||||| merged common ancestors
-  let contentPage = await ExtensionTestUtils.loadContentPage(`http://mozilla.org/`);
-=======
   authManager.clearAll();
 
   let contentPage = await ExtensionTestUtils.loadContentPage(
     `http://mozilla.org/`
   );
->>>>>>> upstream-releases
 
   await handlingExt.awaitMessage("done");
   await contentPage.close();
@@ -181,22 +165,12 @@ add_task(async function test_webRequest_auth_proxy_system() {
       let xhr = new XMLHttpRequest();
       xhr.mozBackgroundRequest = true;
       xhr.open("GET", url);
-<<<<<<< HEAD
-      xhr.onload = () => { resolve(xhr.responseText); };
-      xhr.onerror = () => { reject(xhr.status); };
-||||||| merged common ancestors
-      xhr.onload = () => { resolve(xhr.responseText); };
-      xhr.onerror = () => { reject(xhr.status); };
-      // use a different contextId to avoid auth cache.
-      xhr.setOriginAttributes({userContextId: 1});
-=======
       xhr.onload = () => {
         resolve(xhr.responseText);
       };
       xhr.onerror = () => {
         reject(xhr.status);
       };
->>>>>>> upstream-releases
       xhr.send();
     });
   }

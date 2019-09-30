@@ -1403,11 +1403,5 @@ kk{
         one{"{0} {1}"}
         other{"{0} {1}"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
 }

@@ -37,73 +37,14 @@ using namespace js;
 
 using JS::AutoStableStringChars;
 
-<<<<<<< HEAD
-Compartment::Compartment(Zone* zone)
-    : zone_(zone),
-      runtime_(zone->runtimeFromAnyThread()),
-      crossCompartmentWrappers(0) {}
-||||||| merged common ancestors
-Compartment::Compartment(Zone* zone)
-  : zone_(zone),
-    runtime_(zone->runtimeFromAnyThread()),
-    crossCompartmentWrappers(0)
-{}
-=======
 Compartment::Compartment(Zone* zone, bool invisibleToDebugger)
     : zone_(zone),
       runtime_(zone->runtimeFromAnyThread()),
       invisibleToDebugger_(invisibleToDebugger),
       crossCompartmentWrappers(0) {}
->>>>>>> upstream-releases
 
 #ifdef JSGC_HASH_TABLE_CHECKS
 
-<<<<<<< HEAD
-namespace {
-struct CheckGCThingAfterMovingGCFunctor {
-  template <class T>
-  void operator()(T* t) {
-    CheckGCThingAfterMovingGC(*t);
-  }
-};
-}  // namespace
-
-void Compartment::checkWrapperMapAfterMovingGC() {
-  /*
-   * Assert that the postbarriers have worked and that nothing is left in
-   * wrapperMap that points into the nursery, and that the hash table entries
-   * are discoverable.
-   */
-  for (WrapperMap::Enum e(crossCompartmentWrappers); !e.empty(); e.popFront()) {
-    e.front().mutableKey().applyToWrapped(CheckGCThingAfterMovingGCFunctor());
-    e.front().mutableKey().applyToDebugger(CheckGCThingAfterMovingGCFunctor());
-
-    WrapperMap::Ptr ptr = crossCompartmentWrappers.lookup(e.front().key());
-    MOZ_RELEASE_ASSERT(ptr.found() && &*ptr == &e.front());
-  }
-||||||| merged common ancestors
-namespace {
-struct CheckGCThingAfterMovingGCFunctor {
-    template <class T> void operator()(T* t) { CheckGCThingAfterMovingGC(*t); }
-};
-} // namespace (anonymous)
-
-void
-Compartment::checkWrapperMapAfterMovingGC()
-{
-    /*
-     * Assert that the postbarriers have worked and that nothing is left in
-     * wrapperMap that points into the nursery, and that the hash table entries
-     * are discoverable.
-     */
-    for (WrapperMap::Enum e(crossCompartmentWrappers); !e.empty(); e.popFront()) {
-        e.front().mutableKey().applyToWrapped(CheckGCThingAfterMovingGCFunctor());
-        e.front().mutableKey().applyToDebugger(CheckGCThingAfterMovingGCFunctor());
-
-        WrapperMap::Ptr ptr = crossCompartmentWrappers.lookup(e.front().key());
-        MOZ_RELEASE_ASSERT(ptr.found() && &*ptr == &e.front());
-    }
-=======
 void Compartment::checkWrapperMapAfterMovingGC() {
   /*
    * Assert that the postbarriers have worked and that nothing is left in
@@ -118,7 +59,6 @@ void Compartment::checkWrapperMapAfterMovingGC() {
     WrapperMap::Ptr ptr = crossCompartmentWrappers.lookup(e.front().key());
     MOZ_RELEASE_ASSERT(ptr.found() && &*ptr == &e.front());
   }
->>>>>>> upstream-releases
 }
 
 #endif  // JSGC_HASH_TABLE_CHECKS
@@ -164,19 +104,6 @@ static JSString* CopyStringPure(JSContext* cx, JSString* str) {
       return nullptr;
     }
 
-<<<<<<< HEAD
-    return chars.isLatin1() ? NewStringCopyN<CanGC>(
-                                  cx, chars.latin1Range().begin().get(), len)
-                            : NewStringCopyNDontDeflate<CanGC>(
-                                  cx, chars.twoByteRange().begin().get(), len);
-  }
-
-  if (str->hasLatin1Chars()) {
-    UniquePtr<Latin1Char[], JS::FreePolicy> copiedChars =
-        str->asRope().copyLatin1CharsZ(cx);
-||||||| merged common ancestors
-    UniqueTwoByteChars copiedChars = str->asRope().copyTwoByteCharsZ(cx);
-=======
     return chars.isLatin1() ? NewStringCopyN<CanGC>(
                                   cx, chars.latin1Range().begin().get(), len)
                             : NewStringCopyNDontDeflate<CanGC>(
@@ -186,7 +113,6 @@ static JSString* CopyStringPure(JSContext* cx, JSString* str) {
   if (str->hasLatin1Chars()) {
     UniquePtr<Latin1Char[], JS::FreePolicy> copiedChars =
         str->asRope().copyLatin1CharsZ(cx, js::StringBufferArena);
->>>>>>> upstream-releases
     if (!copiedChars) {
       return nullptr;
     }
@@ -194,24 +120,11 @@ static JSString* CopyStringPure(JSContext* cx, JSString* str) {
     return NewString<CanGC>(cx, std::move(copiedChars), len);
   }
 
-<<<<<<< HEAD
-  UniqueTwoByteChars copiedChars = str->asRope().copyTwoByteCharsZ(cx);
-  if (!copiedChars) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    /* If the string is already in this compartment, we are done. */
-    JSString* str = strp;
-    if (str->zoneFromAnyThread() == zone()) {
-        return true;
-    }
-=======
   UniqueTwoByteChars copiedChars =
       str->asRope().copyTwoByteCharsZ(cx, js::StringBufferArena);
   if (!copiedChars) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   return NewStringDontDeflate<CanGC>(cx, std::move(copiedChars), len);
 }
@@ -255,34 +168,10 @@ bool Compartment::wrap(JSContext* cx, MutableHandleString strp) {
   return true;
 }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
 bool Compartment::wrap(JSContext* cx, MutableHandleBigInt bi) {
   MOZ_ASSERT(cx->compartment() == this);
 
   if (bi->zone() == cx->zone()) {
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-bool
-Compartment::wrap(JSContext* cx, MutableHandleBigInt bi)
-{
-    MOZ_ASSERT(cx->compartment() == this);
-
-    if (bi->zone() == cx->zone()) {
-        return true;
-    }
-
-    BigInt* copy = BigInt::copy(cx, bi);
-    if (!copy) {
-        return false;
-    }
-    bi.set(copy);
-=======
-bool Compartment::wrap(JSContext* cx, MutableHandleBigInt bi) {
-  MOZ_ASSERT(cx->compartment() == this);
-
-  if (bi->zone() == cx->zone()) {
->>>>>>> upstream-releases
     return true;
   }
 
@@ -293,8 +182,6 @@ bool Compartment::wrap(JSContext* cx, MutableHandleBigInt bi) {
   bi.set(copy);
   return true;
 }
-<<<<<<< HEAD
-#endif
 
 bool Compartment::getNonWrapperObjectForCurrentCompartment(
     JSContext* cx, MutableHandleObject obj) {
@@ -324,132 +211,8 @@ bool Compartment::getNonWrapperObjectForCurrentCompartment(
   RootedObject objectPassedToWrap(cx, obj);
   obj.set(UncheckedUnwrap(obj, /* stopAtWindowProxy = */ true));
   if (obj->compartment() == this) {
-||||||| merged common ancestors
-#endif
-
-bool
-Compartment::getNonWrapperObjectForCurrentCompartment(JSContext* cx, MutableHandleObject obj)
-{
-    // Ensure that we have entered a realm.
-    MOZ_ASSERT(cx->global());
-
-    // If we have a cross-compartment wrapper, make sure that the cx isn't
-    // associated with the self-hosting zone. We don't want to create
-    // wrappers for objects in other runtimes, which may be the case for the
-    // self-hosting zone.
-    MOZ_ASSERT(!cx->runtime()->isSelfHostingZone(cx->zone()));
-    MOZ_ASSERT(!cx->runtime()->isSelfHostingZone(obj->zone()));
-
-    // The object is already in the right compartment. Normally same-
-    // compartment returns the object itself, however, windows are always
-    // wrapped by a proxy, so we have to check for that case here manually.
-    if (obj->compartment() == this) {
-        obj.set(ToWindowProxyIfWindow(obj));
-        return true;
-    }
-
-    // Note that if the object is same-compartment, but has been wrapped into a
-    // different compartment, we need to unwrap it and return the bare same-
-    // compartment object. Note again that windows are always wrapped by a
-    // WindowProxy even when same-compartment so take care not to strip this
-    // particular wrapper.
-    RootedObject objectPassedToWrap(cx, obj);
-    obj.set(UncheckedUnwrap(obj, /* stopAtWindowProxy = */ true));
-    if (obj->compartment() == this) {
-        MOZ_ASSERT(!IsWindow(obj));
-        return true;
-    }
-
-    // Invoke the prewrap callback. The prewrap callback is responsible for
-    // doing similar reification as above, but can account for any additional
-    // embedder requirements.
-    //
-    // We're a bit worried about infinite recursion here, so we do a check -
-    // see bug 809295.
-    auto preWrap = cx->runtime()->wrapObjectCallbacks->preWrap;
-    if (!CheckSystemRecursionLimit(cx)) {
-        return false;
-    }
-    if (preWrap) {
-        preWrap(cx, cx->global(), obj, objectPassedToWrap, obj);
-        if (!obj) {
-            return false;
-        }
-    }
-=======
-
-bool Compartment::getNonWrapperObjectForCurrentCompartment(
-    JSContext* cx, MutableHandleObject obj) {
-  // Ensure that we have entered a realm.
-  MOZ_ASSERT(cx->global());
-
-  // If we have a cross-compartment wrapper, make sure that the cx isn't
-  // associated with the self-hosting zone. We don't want to create
-  // wrappers for objects in other runtimes, which may be the case for the
-  // self-hosting zone.
-  MOZ_ASSERT(!cx->runtime()->isSelfHostingZone(cx->zone()));
-  MOZ_ASSERT(!cx->runtime()->isSelfHostingZone(obj->zone()));
-
-  // The object is already in the right compartment. Normally same-
-  // compartment returns the object itself, however, windows are always
-  // wrapped by a proxy, so we have to check for that case here manually.
-  if (obj->compartment() == this) {
-    obj.set(ToWindowProxyIfWindow(obj));
-    return true;
-  }
-
-  // Note that if the object is same-compartment, but has been wrapped into a
-  // different compartment, we need to unwrap it and return the bare same-
-  // compartment object. Note again that windows are always wrapped by a
-  // WindowProxy even when same-compartment so take care not to strip this
-  // particular wrapper.
-  RootedObject objectPassedToWrap(cx, obj);
-  obj.set(UncheckedUnwrap(obj, /* stopAtWindowProxy = */ true));
-  if (obj->compartment() == this) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!IsWindow(obj));
     return true;
-<<<<<<< HEAD
-  }
-
-  // Invoke the prewrap callback. The prewrap callback is responsible for
-  // doing similar reification as above, but can account for any additional
-  // embedder requirements.
-  //
-  // We're a bit worried about infinite recursion here, so we do a check -
-  // see bug 809295.
-  auto preWrap = cx->runtime()->wrapObjectCallbacks->preWrap;
-  if (!CheckSystemRecursionLimit(cx)) {
-    return false;
-  }
-  if (preWrap) {
-    preWrap(cx, cx->global(), obj, objectPassedToWrap, obj);
-    if (!obj) {
-      return false;
-||||||| merged common ancestors
-}
-
-bool
-Compartment::getOrCreateWrapper(JSContext* cx, HandleObject existing, MutableHandleObject obj)
-{
-    // If we already have a wrapper for this value, use it.
-    RootedValue key(cx, ObjectValue(*obj));
-    if (WrapperMap::Ptr p = crossCompartmentWrappers.lookup(CrossCompartmentKey(key))) {
-        obj.set(&p->value().get().toObject());
-        MOZ_ASSERT(obj->is<CrossCompartmentWrapperObject>());
-        return true;
-    }
-
-    // Ensure that the wrappee is exposed in case we are creating a new wrapper
-    // for a gray object.
-    ExposeObjectToActiveJS(obj);
-
-    // Create a new wrapper for the object.
-    auto wrap = cx->runtime()->wrapObjectCallbacks->wrap;
-    RootedObject wrapper(cx, wrap(cx, existing, obj));
-    if (!wrapper) {
-        return false;
-=======
   }
 
   // Disallow creating new wrappers if we nuked the object's realm or the
@@ -472,31 +235,8 @@ Compartment::getOrCreateWrapper(JSContext* cx, HandleObject existing, MutableHan
     if (JS_IsDeadWrapper(obj)) {
       obj.set(NewDeadProxyObject(cx, obj));
       return !!obj;
->>>>>>> upstream-releases
     }
-  }
-  MOZ_ASSERT(!IsWindow(obj));
 
-<<<<<<< HEAD
-  return true;
-}
-||||||| merged common ancestors
-    // We maintain the invariant that the key in the cross-compartment wrapper
-    // map is always directly wrapped by the value.
-    MOZ_ASSERT(Wrapper::wrappedObject(wrapper) == &key.get().toObject());
-
-    if (!putWrapper(cx, CrossCompartmentKey(key), ObjectValue(*wrapper))) {
-        // Enforce the invariant that all cross-compartment wrapper object are
-        // in the map by nuking the wrapper if we couldn't add it.
-        // Unfortunately it's possible for the wrapper to still be marked if we
-        // took this path, for example if the object metadata callback stashes a
-        // reference to it.
-        if (wrapper->is<CrossCompartmentWrapperObject>()) {
-            NukeCrossCompartmentWrapper(cx, wrapper);
-        }
-        return false;
-    }
-=======
     MOZ_ASSERT(IsWindowProxy(obj));
 
     // We crossed a compartment boundary there, so may now have a gray object.
@@ -528,20 +268,7 @@ Compartment::getOrCreateWrapper(JSContext* cx, HandleObject existing, MutableHan
     }
   }
   MOZ_ASSERT(!IsWindow(obj));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool Compartment::getOrCreateWrapper(JSContext* cx, HandleObject existing,
-                                     MutableHandleObject obj) {
-  // If we already have a wrapper for this value, use it.
-  RootedValue key(cx, ObjectValue(*obj));
-  if (WrapperMap::Ptr p =
-          crossCompartmentWrappers.lookup(CrossCompartmentKey(key))) {
-    obj.set(&p->value().get().toObject());
-    MOZ_ASSERT(obj->is<CrossCompartmentWrapperObject>());
-||||||| merged common ancestors
-    obj.set(wrapper);
-=======
   return true;
 }
 
@@ -553,7 +280,6 @@ bool Compartment::getOrCreateWrapper(JSContext* cx, HandleObject existing,
           crossCompartmentWrappers.lookup(CrossCompartmentKey(key))) {
     obj.set(&p->value().get().toObject());
     MOZ_ASSERT(obj->is<CrossCompartmentWrapperObject>());
->>>>>>> upstream-releases
     return true;
   }
 
@@ -597,19 +323,9 @@ bool Compartment::wrap(JSContext* cx, MutableHandleObject obj) {
 
   AutoDisableProxyCheck adpc;
 
-<<<<<<< HEAD
-  // Anything we're wrapping has already escaped into script, so must have
-  // been unmarked-gray at some point in the past.
-  MOZ_ASSERT(JS::ObjectIsNotGray(obj));
-||||||| merged common ancestors
-    // Anything we're wrapping has already escaped into script, so must have
-    // been unmarked-gray at some point in the past.
-    MOZ_ASSERT(JS::ObjectIsNotGray(obj));
-=======
   // Anything we're wrapping has already escaped into script, so must have
   // been unmarked-gray at some point in the past.
   JS::AssertObjectIsNotGray(obj);
->>>>>>> upstream-releases
 
   // The passed object may already be wrapped, or may fit a number of special
   // cases that we need to check for and manually correct.
@@ -713,31 +429,6 @@ void Compartment::traceOutgoingCrossCompartmentWrappers(JSTracer* trc) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void Compartment::traceIncomingCrossCompartmentEdgesForZoneGC(
-    JSTracer* trc) {
-  gcstats::AutoPhase ap(trc->runtime()->gc.stats(),
-                        gcstats::PhaseKind::MARK_CCWS);
-  MOZ_ASSERT(JS::RuntimeHeapIsMajorCollecting());
-  for (CompartmentsIter c(trc->runtime()); !c.done(); c.next()) {
-    if (!c->zone()->isCollecting()) {
-      c->traceOutgoingCrossCompartmentWrappers(trc);
-    }
-  }
-  Debugger::traceIncomingCrossCompartmentEdges(trc);
-||||||| merged common ancestors
-/* static */ void
-Compartment::traceIncomingCrossCompartmentEdgesForZoneGC(JSTracer* trc)
-{
-    gcstats::AutoPhase ap(trc->runtime()->gc.stats(), gcstats::PhaseKind::MARK_CCWS);
-    MOZ_ASSERT(JS::RuntimeHeapIsMajorCollecting());
-    for (CompartmentsIter c(trc->runtime()); !c.done(); c.next()) {
-        if (!c->zone()->isCollecting()) {
-            c->traceOutgoingCrossCompartmentWrappers(trc);
-        }
-    }
-    Debugger::traceIncomingCrossCompartmentEdges(trc);
-=======
 /* static */
 void Compartment::traceIncomingCrossCompartmentEdgesForZoneGC(JSTracer* trc) {
   gcstats::AutoPhase ap(trc->runtime()->gc.stats(),
@@ -749,7 +440,6 @@ void Compartment::traceIncomingCrossCompartmentEdgesForZoneGC(JSTracer* trc) {
     }
   }
   Debugger::traceIncomingCrossCompartmentEdges(trc);
->>>>>>> upstream-releases
 }
 
 void Compartment::sweepAfterMinorGC(JSTracer* trc) {
@@ -769,100 +459,18 @@ void Compartment::sweepCrossCompartmentWrappers() {
   crossCompartmentWrappers.sweep();
 }
 
-<<<<<<< HEAD
-namespace {
-struct TraceRootFunctor {
-  JSTracer* trc;
-  const char* name;
-  TraceRootFunctor(JSTracer* trc, const char* name) : trc(trc), name(name) {}
-  template <class T>
-  void operator()(T* t) {
-    return TraceRoot(trc, t, name);
-  }
-};
-struct NeedsSweepUnbarrieredFunctor {
-  template <class T>
-  bool operator()(T* t) const {
-    return IsAboutToBeFinalizedUnbarriered(t);
-  }
-};
-}  // namespace
-
-void CrossCompartmentKey::trace(JSTracer* trc) {
-  applyToWrapped(TraceRootFunctor(trc, "CrossCompartmentKey::wrapped"));
-  applyToDebugger(TraceRootFunctor(trc, "CrossCompartmentKey::debugger"));
-||||||| merged common ancestors
-namespace {
-struct TraceRootFunctor {
-    JSTracer* trc;
-    const char* name;
-    TraceRootFunctor(JSTracer* trc, const char* name) : trc(trc), name(name) {}
-    template <class T> void operator()(T* t) { return TraceRoot(trc, t, name); }
-};
-struct NeedsSweepUnbarrieredFunctor {
-    template <class T> bool operator()(T* t) const { return IsAboutToBeFinalizedUnbarriered(t); }
-};
-} // namespace (anonymous)
-
-void
-CrossCompartmentKey::trace(JSTracer* trc)
-{
-    applyToWrapped(TraceRootFunctor(trc, "CrossCompartmentKey::wrapped"));
-    applyToDebugger(TraceRootFunctor(trc, "CrossCompartmentKey::debugger"));
-=======
 void CrossCompartmentKey::trace(JSTracer* trc) {
   applyToWrapped(
       [trc](auto tp) { TraceRoot(trc, tp, "CrossCompartmentKey::wrapped"); });
   applyToDebugger(
       [trc](auto tp) { TraceRoot(trc, tp, "CrossCompartmentKey::debugger"); });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool CrossCompartmentKey::needsSweep() {
-  return applyToWrapped(NeedsSweepUnbarrieredFunctor()) ||
-         applyToDebugger(NeedsSweepUnbarrieredFunctor());
-||||||| merged common ancestors
-bool
-CrossCompartmentKey::needsSweep()
-{
-    return applyToWrapped(NeedsSweepUnbarrieredFunctor()) ||
-           applyToDebugger(NeedsSweepUnbarrieredFunctor());
-=======
 bool CrossCompartmentKey::needsSweep() {
   auto needsSweep = [](auto tp) { return IsAboutToBeFinalizedUnbarriered(tp); };
   return applyToWrapped(needsSweep) || applyToDebugger(needsSweep);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void Compartment::fixupCrossCompartmentWrappersAfterMovingGC(
-    JSTracer* trc) {
-  MOZ_ASSERT(trc->runtime()->gc.isHeapCompacting());
-
-  for (CompartmentsIter comp(trc->runtime()); !comp.done(); comp.next()) {
-    // Sweep the wrapper map to update keys (wrapped values) in other
-    // compartments that may have been moved.
-    comp->sweepCrossCompartmentWrappers();
-    // Trace the wrappers in the map to update their cross-compartment edges
-    // to wrapped values in other compartments that may have been moved.
-    comp->traceOutgoingCrossCompartmentWrappers(trc);
-  }
-||||||| merged common ancestors
-/* static */ void
-Compartment::fixupCrossCompartmentWrappersAfterMovingGC(JSTracer* trc)
-{
-    MOZ_ASSERT(trc->runtime()->gc.isHeapCompacting());
-
-    for (CompartmentsIter comp(trc->runtime()); !comp.done(); comp.next()) {
-        // Sweep the wrapper map to update keys (wrapped values) in other
-        // compartments that may have been moved.
-        comp->sweepCrossCompartmentWrappers();
-        // Trace the wrappers in the map to update their cross-compartment edges
-        // to wrapped values in other compartments that may have been moved.
-        comp->traceOutgoingCrossCompartmentWrappers(trc);
-    }
-=======
 /* static */
 void Compartment::fixupCrossCompartmentWrappersAfterMovingGC(JSTracer* trc) {
   MOZ_ASSERT(trc->runtime()->gc.isHeapCompacting());
@@ -875,18 +483,8 @@ void Compartment::fixupCrossCompartmentWrappersAfterMovingGC(JSTracer* trc) {
     // to wrapped values in other compartments that may have been moved.
     comp->traceOutgoingCrossCompartmentWrappers(trc);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Compartment::fixupAfterMovingGC() {
-  MOZ_ASSERT(zone()->isGCCompacting());
-||||||| merged common ancestors
-void
-Compartment::fixupAfterMovingGC()
-{
-    MOZ_ASSERT(zone()->isGCCompacting());
-=======
 void Compartment::fixupAfterMovingGC() {
   MOZ_ASSERT(zone()->isGCCompacting());
 
@@ -898,17 +496,7 @@ void Compartment::fixupAfterMovingGC() {
   // compartment that may have been moved.
   sweepCrossCompartmentWrappers();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (RealmsInCompartmentIter r(this); !r.done(); r.next()) {
-    r->fixupAfterMovingGC();
-  }
-||||||| merged common ancestors
-    for (RealmsInCompartmentIter r(this); !r.done(); r.next()) {
-        r->fixupAfterMovingGC();
-    }
-=======
 void Compartment::addSizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf,
                                          size_t* compartmentObjects,
                                          size_t* crossCompartmentWrappersTables,
@@ -933,48 +521,11 @@ GlobalObject& Compartment::firstGlobal() const {
   }
   MOZ_CRASH("If all our globals are dead, why is someone expecting a global?");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Sweep the wrapper map to update values (wrapper objects) in this
-  // compartment that may have been moved.
-  sweepCrossCompartmentWrappers();
-||||||| merged common ancestors
-    // Sweep the wrapper map to update values (wrapper objects) in this
-    // compartment that may have been moved.
-    sweepCrossCompartmentWrappers();
-=======
 JS_FRIEND_API JSObject* js::GetFirstGlobalInCompartment(JS::Compartment* comp) {
   return &comp->firstGlobal();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void Compartment::addSizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf,
-                                         size_t* compartmentObjects,
-                                         size_t* crossCompartmentWrappersTables,
-                                         size_t* compartmentsPrivateData) {
-  *compartmentObjects += mallocSizeOf(this);
-  *crossCompartmentWrappersTables +=
-      crossCompartmentWrappers.sizeOfExcludingThis(mallocSizeOf);
-
-  if (auto callback = runtime_->sizeOfIncludingThisCompartmentCallback) {
-    *compartmentsPrivateData += callback(mallocSizeOf, this);
-  }
-||||||| merged common ancestors
-void
-Compartment::addSizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf,
-                                    size_t* compartmentObjects,
-                                    size_t* crossCompartmentWrappersTables,
-                                    size_t* compartmentsPrivateData)
-{
-    *compartmentObjects += mallocSizeOf(this);
-    *crossCompartmentWrappersTables += crossCompartmentWrappers.sizeOfExcludingThis(mallocSizeOf);
-
-    if (auto callback = runtime_->sizeOfIncludingThisCompartmentCallback) {
-        *compartmentsPrivateData += callback(mallocSizeOf, this);
-    }
-=======
 JS_FRIEND_API bool js::CompartmentHasLiveGlobal(JS::Compartment* comp) {
   MOZ_ASSERT(comp);
   for (Realm* r : comp->realms()) {
@@ -983,5 +534,4 @@ JS_FRIEND_API bool js::CompartmentHasLiveGlobal(JS::Compartment* comp) {
     }
   }
   return false;
->>>>>>> upstream-releases
 }

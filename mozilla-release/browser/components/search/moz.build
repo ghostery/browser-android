@@ -4,7 +4,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-<<<<<<< HEAD
 EXTRA_JS_MODULES += [
     'SearchTelemetry.jsm',
 ]
@@ -12,29 +11,6 @@ EXTRA_JS_MODULES += [
 BROWSER_CHROME_MANIFESTS += [
     'test/browser/browser.ini',
     'test/browser/google_codes/browser.ini',
-||||||| merged common ancestors
-BROWSER_CHROME_MANIFESTS += [
-    'test/browser.ini',
-    'test/google_codes/browser.ini',
-=======
-EXTRA_JS_MODULES += [
-    'SearchTelemetry.jsm',
->>>>>>> upstream-releases
-]
-
-<<<<<<< HEAD
-XPCSHELL_TESTS_MANIFESTS += ['test/unit/xpcshell.ini']
-
-TESTING_JS_MODULES += [
-    'test/browser/SearchTestUtils.jsm',
-||||||| merged common ancestors
-TESTING_JS_MODULES += [
-    'test/SearchTestUtils.jsm',
-=======
-BROWSER_CHROME_MANIFESTS += [
-    'test/browser/browser.ini',
-    'test/browser/google_codes/browser.ini',
->>>>>>> upstream-releases
 ]
 
 MARIONETTE_LAYOUT_MANIFESTS += ['test/marionette/manifest.ini']

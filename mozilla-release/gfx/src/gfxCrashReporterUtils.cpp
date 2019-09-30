@@ -36,18 +36,9 @@ class ObserverToDestroyFeaturesAlreadyReported final : public nsIObserver {
   NS_DECL_NSIOBSERVER
 
   ObserverToDestroyFeaturesAlreadyReported() {}
-<<<<<<< HEAD
-
- private:
-  virtual ~ObserverToDestroyFeaturesAlreadyReported() {}
-||||||| merged common ancestors
-private:
-  virtual ~ObserverToDestroyFeaturesAlreadyReported() {}
-=======
 
  private:
   virtual ~ObserverToDestroyFeaturesAlreadyReported() = default;
->>>>>>> upstream-releases
 };
 
 NS_IMPL_ISUPPORTS(ObserverToDestroyFeaturesAlreadyReported, nsIObserver)

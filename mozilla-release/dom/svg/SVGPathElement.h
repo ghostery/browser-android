@@ -47,13 +47,7 @@ class SVGPathElement final : public SVGPathElementBase {
   // SVGGeometryElement methods:
   virtual bool AttributeDefinesGeometry(const nsAtom* aName) override;
   virtual bool IsMarkable() override;
-<<<<<<< HEAD
-  virtual void GetMarkPoints(nsTArray<nsSVGMark>* aMarks) override;
-||||||| merged common ancestors
-  virtual void GetMarkPoints(nsTArray<nsSVGMark> *aMarks) override;
-=======
   virtual void GetMarkPoints(nsTArray<SVGMark>* aMarks) override;
->>>>>>> upstream-releases
   virtual already_AddRefed<Path> BuildPath(PathBuilder* aBuilder) override;
 
   /**

@@ -217,16 +217,8 @@ already_AddRefed<DOMSVGPathSegList> SVGPathElement::AnimatedPathSegList() {
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-/* virtual */ bool SVGPathElement::HasValidDimensions() const {
-||||||| merged common ancestors
-/* virtual */ bool
-SVGPathElement::HasValidDimensions() const
-{
-=======
 /* virtual */
 bool SVGPathElement::HasValidDimensions() const {
->>>>>>> upstream-releases
   return !mD.GetAnimValue().IsEmpty();
 }
 
@@ -254,15 +246,7 @@ bool SVGPathElement::AttributeDefinesGeometry(const nsAtom* aName) {
 
 bool SVGPathElement::IsMarkable() { return true; }
 
-<<<<<<< HEAD
-void SVGPathElement::GetMarkPoints(nsTArray<nsSVGMark>* aMarks) {
-||||||| merged common ancestors
-void
-SVGPathElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks)
-{
-=======
 void SVGPathElement::GetMarkPoints(nsTArray<SVGMark>* aMarks) {
->>>>>>> upstream-releases
   mD.GetAnimValue().GetMarkerPositioningData(aMarks);
 }
 
@@ -277,35 +261,15 @@ already_AddRefed<Path> SVGPathElement::BuildPath(PathBuilder* aBuilder) {
   uint8_t strokeLineCap = NS_STYLE_STROKE_LINECAP_BUTT;
   Float strokeWidth = 0;
 
-<<<<<<< HEAD
-  RefPtr<ComputedStyle> computedStyle =
-      nsComputedDOMStyle::GetComputedStyleNoFlush(this, nullptr);
-  if (computedStyle) {
-    const nsStyleSVG* style = computedStyle->StyleSVG();
-||||||| merged common ancestors
-  RefPtr<ComputedStyle> computedStyle =
-    nsComputedDOMStyle::GetComputedStyleNoFlush(this, nullptr);
-  if (computedStyle) {
-    const nsStyleSVG* style = computedStyle->StyleSVG();
-=======
   SVGGeometryProperty::DoForComputedStyle(this, [&](const ComputedStyle* s) {
     const nsStyleSVG* style = s->StyleSVG();
->>>>>>> upstream-releases
     // Note: the path that we return may be used for hit-testing, and SVG
     // exposes hit-testing of strokes that are not actually painted. For that
     // reason we do not check for eStyleSVGPaintType_None or check the stroke
     // opacity here.
     if (style->mStrokeLinecap != NS_STYLE_STROKE_LINECAP_BUTT) {
       strokeLineCap = style->mStrokeLinecap;
-<<<<<<< HEAD
-      strokeWidth =
-          SVGContentUtils::GetStrokeWidth(this, computedStyle, nullptr);
-||||||| merged common ancestors
-      strokeWidth =
-        SVGContentUtils::GetStrokeWidth(this, computedStyle, nullptr);
-=======
       strokeWidth = SVGContentUtils::GetStrokeWidth(this, s, nullptr);
->>>>>>> upstream-releases
     }
   });
 

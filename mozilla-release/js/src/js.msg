@@ -81,16 +81,6 @@ MSG_DEF(JSMSG_BUILTIN_CTOR_NO_NEW,     1, JSEXN_TYPEERR, "calling a builtin {0} 
 MSG_DEF(JSMSG_EMPTY_ARRAY_REDUCE,      0, JSEXN_TYPEERR, "reduce of empty array with no initial value")
 MSG_DEF(JSMSG_UNEXPECTED_TYPE,         2, JSEXN_TYPEERR, "{0} is {1}")
 MSG_DEF(JSMSG_MISSING_FUN_ARG,         2, JSEXN_TYPEERR, "missing argument {0} when calling function {1}")
-<<<<<<< HEAD
-MSG_DEF(JSMSG_NOT_NONNULL_OBJECT,      1, JSEXN_TYPEERR, "{0} is not a non-null object")
-MSG_DEF(JSMSG_NOT_NONNULL_OBJECT_NAME, 2, JSEXN_TYPEERR, "{0} must be an object, got {1}")
-MSG_DEF(JSMSG_NOT_NONNULL_OBJECT_ARG,  3, JSEXN_TYPEERR, "{0} argument of {1} must be an object, got {2}")
-MSG_DEF(JSMSG_WRONG_TYPE_ARG,          4, JSEXN_TYPEERR, "argument {0} to {1} must be an object of type {2}, got {3}")
-||||||| merged common ancestors
-MSG_DEF(JSMSG_NOT_NONNULL_OBJECT,      1, JSEXN_TYPEERR, "{0} is not a non-null object")
-MSG_DEF(JSMSG_NOT_NONNULL_OBJECT_NAME, 2, JSEXN_TYPEERR, "{0} must be an object, got {1}")
-MSG_DEF(JSMSG_NOT_NONNULL_OBJECT_ARG,  3, JSEXN_TYPEERR, "{0} argument of {1} must be an object, got {2}")
-=======
 MSG_DEF(JSMSG_OBJECT_REQUIRED,         1, JSEXN_TYPEERR, "{0} is not a non-null object")
 MSG_DEF(JSMSG_OBJECT_REQUIRED_ARG,     3, JSEXN_TYPEERR, "{0} argument of {1} must be an object, got {2}")
 MSG_DEF(JSMSG_OBJECT_REQUIRED_WEAKMAP_KEY, 1, JSEXN_TYPEERR, "WeakMap key must be an object, got {0}")
@@ -98,7 +88,6 @@ MSG_DEF(JSMSG_OBJECT_REQUIRED_WEAKSET_VAL, 1, JSEXN_TYPEERR, "WeakSet value must
 MSG_DEF(JSMSG_OBJECT_REQUIRED_PROP_DESC,   1, JSEXN_TYPEERR, "Property descriptor must be an object, got {0}")
 MSG_DEF(JSMSG_OBJECT_REQUIRED_RET_OWNKEYS, 1, JSEXN_TYPEERR, "ownKeys trap must be an object, got {0}")
 MSG_DEF(JSMSG_WRONG_TYPE_ARG,          4, JSEXN_TYPEERR, "argument {0} to {1} must be an object of type {2}, got {3}")
->>>>>>> upstream-releases
 MSG_DEF(JSMSG_SET_NON_OBJECT_RECEIVER, 2, JSEXN_TYPEERR, "can't assign to property {1} on {0}: not an object")
 MSG_DEF(JSMSG_INVALID_DESCRIPTOR,      0, JSEXN_TYPEERR, "property descriptors must not specify a value or be writable when a getter or setter has been specified")
 MSG_DEF(JSMSG_OBJECT_NOT_EXTENSIBLE,   1, JSEXN_TYPEERR, "{0}: Object is not extensible")
@@ -369,14 +358,8 @@ MSG_DEF(JSMSG_COMPUTED_NAME_IN_PATTERN,0, JSEXN_SYNTAXERR, "computed property na
 MSG_DEF(JSMSG_DEFAULT_IN_PATTERN,      0, JSEXN_SYNTAXERR, "destructuring defaults aren't supported in this destructuring declaration")
 MSG_DEF(JSMSG_BAD_NEWTARGET,           0, JSEXN_SYNTAXERR, "new.target only allowed within functions")
 MSG_DEF(JSMSG_ESCAPED_KEYWORD,         0, JSEXN_SYNTAXERR, "keywords must be written literally, without embedded escapes")
-<<<<<<< HEAD
-MSG_DEF(JSMSG_MISSING_SEMI_FIELD,      0, JSEXN_SYNTAXERR, "missing ; after field definition")
-MSG_DEF(JSMSG_FIELDS_NOT_SUPPORTED,    0, JSEXN_SYNTAXERR, "fields are not currently supported")
-||||||| merged common ancestors
-=======
 MSG_DEF(JSMSG_FIELDS_NOT_SUPPORTED,    0, JSEXN_SYNTAXERR, "fields are not currently supported")
 MSG_DEF(JSMSG_PRIVATE_FIELDS_NOT_SUPPORTED, 0, JSEXN_SYNTAXERR, "private fields are not currently supported")
->>>>>>> upstream-releases
 
 // UTF-8 source text encoding errors
 MSG_DEF(JSMSG_BAD_LEADING_UTF8_UNIT,   1, JSEXN_SYNTAXERR, "{0} byte doesn't begin a valid UTF-8 code point")
@@ -428,15 +411,8 @@ MSG_DEF(JSMSG_WASM_BAD_BUF_ARG,        0, JSEXN_TYPEERR,     "first argument mus
 MSG_DEF(JSMSG_WASM_BAD_MOD_ARG,        0, JSEXN_TYPEERR,     "first argument must be a WebAssembly.Module")
 MSG_DEF(JSMSG_WASM_BAD_BUF_MOD_ARG,    0, JSEXN_TYPEERR,     "first argument must be a WebAssembly.Module, ArrayBuffer or typed array object")
 MSG_DEF(JSMSG_WASM_BAD_DESC_ARG,       1, JSEXN_TYPEERR,     "first argument must be a {0} descriptor")
-<<<<<<< HEAD
-MSG_DEF(JSMSG_WASM_BAD_ELEMENT,        0, JSEXN_TYPEERR,     "\"element\" property of table descriptor must be \"anyfunc\"")
-MSG_DEF(JSMSG_WASM_BAD_ELEMENT_GENERALIZED, 0, JSEXN_TYPEERR, "\"element\" property of table descriptor must be \"anyfunc\" or \"anyref\"")
-||||||| merged common ancestors
-MSG_DEF(JSMSG_WASM_BAD_ELEMENT,        0, JSEXN_TYPEERR,     "\"element\" property of table descriptor must be \"anyfunc\"")
-=======
 MSG_DEF(JSMSG_WASM_BAD_ELEMENT,        0, JSEXN_TYPEERR,     "\"element\" property of table descriptor must be \"funcref\"")
 MSG_DEF(JSMSG_WASM_BAD_ELEMENT_GENERALIZED, 0, JSEXN_TYPEERR, "\"element\" property of table descriptor must be \"funcref\" or \"anyref\"")
->>>>>>> upstream-releases
 MSG_DEF(JSMSG_WASM_BAD_IMPORT_ARG,     0, JSEXN_TYPEERR,     "second argument must be an object")
 MSG_DEF(JSMSG_WASM_BAD_IMPORT_FIELD,   1, JSEXN_TYPEERR,     "import object field '{0}' is not an Object")
 MSG_DEF(JSMSG_WASM_BAD_FUNCREF_VALUE,  0, JSEXN_TYPEERR,     "can only pass WebAssembly exported functions to funcref")
@@ -651,15 +627,9 @@ MSG_DEF(JSMSG_AMBIGUOUS_IMPORT,          0, JSEXN_SYNTAXERR, "ambiguous import")
 MSG_DEF(JSMSG_MISSING_NAMESPACE_EXPORT,  0, JSEXN_SYNTAXERR, "export not found for namespace")
 MSG_DEF(JSMSG_MISSING_EXPORT,            1, JSEXN_SYNTAXERR, "local binding for export '{0}' not found")
 MSG_DEF(JSMSG_BAD_MODULE_STATUS,         0, JSEXN_INTERNALERR, "module record has unexpected status")
-<<<<<<< HEAD
-MSG_DEF(JSMSG_NO_DYNAMIC_IMPORT,         0, JSEXN_SYNTAXERR, "dynamic module import is not implemented")
-MSG_DEF(JSMSG_IMPORT_SCRIPT_NOT_FOUND,   0, JSEXN_TYPEERR, "can't find referencing script for dynamic module import")
-||||||| merged common ancestors
-=======
 MSG_DEF(JSMSG_NO_DYNAMIC_IMPORT,         0, JSEXN_SYNTAXERR, "dynamic module import is not implemented")
 MSG_DEF(JSMSG_DYNAMIC_IMPORT_FAILED,     0, JSEXN_TYPEERR, "error loading dynamically imported module")
 MSG_DEF(JSMSG_BAD_MODULE_SPECIFIER,      1, JSEXN_TYPEERR, "error resolving module specifier '{0}'")
->>>>>>> upstream-releases
 
 // Promise
 MSG_DEF(JSMSG_CANNOT_RESOLVE_PROMISE_WITH_ITSELF,       0, JSEXN_TYPEERR, "A promise cannot be resolved with itself.")

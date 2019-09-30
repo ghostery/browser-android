@@ -19,15 +19,6 @@ class SynchronousTask;
 
 namespace widget {
 
-<<<<<<< HEAD
-class WinCompositorWindowThread final {
-  NS_INLINE_DECL_THREADSAFE_REFCOUNTING_WITH_MAIN_THREAD_DESTRUCTION(
-      WinCompositorWindowThread)
-||||||| merged common ancestors
-class WinCompositorWindowThread final
-{
-  NS_INLINE_DECL_THREADSAFE_REFCOUNTING_WITH_MAIN_THREAD_DESTRUCTION(WinCompositorWindowThread)
-=======
 struct WinCompositorWnds {
   HWND mCompositorWnd;
   HWND mInitialParentWnd;
@@ -38,7 +29,6 @@ struct WinCompositorWnds {
 class WinCompositorWindowThread final {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING_WITH_MAIN_THREAD_DESTRUCTION(
       WinCompositorWindowThread)
->>>>>>> upstream-releases
 
  public:
   /// Can be called from any thread.

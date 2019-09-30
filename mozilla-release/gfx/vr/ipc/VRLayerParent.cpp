@@ -43,20 +43,7 @@ mozilla::ipc::IPCResult VRLayerParent::RecvSubmitFrame(
     const gfx::Rect& aLeftEyeRect, const gfx::Rect& aRightEyeRect) {
   if (mVRDisplayID) {
     VRManager* vm = VRManager::Get();
-<<<<<<< HEAD
-    RefPtr<VRDisplayHost> display = vm->GetDisplay(mVRDisplayID);
-    if (display) {
-      display->SubmitFrame(this, aTexture, aFrameId, aLeftEyeRect,
-                           aRightEyeRect);
-    }
-||||||| merged common ancestors
-    RefPtr<VRDisplayHost> display = vm->GetDisplay(mVRDisplayID);
-    if (display) {
-      display->SubmitFrame(this, aTexture, aFrameId, aLeftEyeRect, aRightEyeRect);
-    }
-=======
     vm->SubmitFrame(this, aTexture, aFrameId, aLeftEyeRect, aRightEyeRect);
->>>>>>> upstream-releases
   }
 
   return IPC_OK();

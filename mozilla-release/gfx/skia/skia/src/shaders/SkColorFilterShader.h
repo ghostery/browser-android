@@ -21,15 +21,6 @@ public:
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorFilterShader)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorFilterShader)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
     sk_sp<SkShader> onMakeColorSpace(SkColorSpaceXformer* xformer) const override;

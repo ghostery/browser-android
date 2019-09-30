@@ -323,19 +323,9 @@ unsigned int GetDataset(const StaticMutexAutoLock& lock,
     return nsITelemetry::DATASET_PRERELEASE_CHANNELS;
   }
 
-<<<<<<< HEAD
-  return (*gDynamicEventInfo)[eventKey.id].recordOnRelease
-             ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT
-             : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN;
-||||||| merged common ancestors
-  return (*gDynamicEventInfo)[eventKey.id].recordOnRelease ?
-           nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT :
-           nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN;
-=======
   return (*gDynamicEventInfo)[eventKey.id].recordOnRelease
              ? nsITelemetry::DATASET_ALL_CHANNELS
              : nsITelemetry::DATASET_PRERELEASE_CHANNELS;
->>>>>>> upstream-releases
 }
 
 nsCString GetCategory(const StaticMutexAutoLock& lock,
@@ -949,16 +939,6 @@ nsresult TelemetryEvent::RecordEvent(const nsACString& aCategory,
   }
 }
 
-<<<<<<< HEAD
-static bool GetArrayPropertyValues(JSContext* cx, JS::HandleObject obj,
-                                   const char* property,
-                                   nsTArray<nsCString>* results) {
-||||||| merged common ancestors
-static bool
-GetArrayPropertyValues(JSContext* cx, JS::HandleObject obj, const char* property,
-                       nsTArray<nsCString>* results)
-{
-=======
 void TelemetryEvent::RecordEventNative(
     mozilla::Telemetry::EventID aId, const mozilla::Maybe<nsCString>& aValue,
     const mozilla::Maybe<ExtraArray>& aExtra) {
@@ -1019,7 +999,6 @@ void TelemetryEvent::RecordEventNative(
 static bool GetArrayPropertyValues(JSContext* cx, JS::HandleObject obj,
                                    const char* property,
                                    nsTArray<nsCString>* results) {
->>>>>>> upstream-releases
   JS::RootedValue value(cx);
   if (!JS_GetProperty(cx, obj, property, &value)) {
     JS_ReportErrorASCII(cx, R"(Missing required property "%s" for event)",
@@ -1363,21 +1342,12 @@ void TelemetryEvent::SetEventRecordingEnabled(const nsACString& category,
   StaticMutexAutoLock locker(gTelemetryEventsMutex);
 
   if (!gCategoryNames.Contains(category)) {
-<<<<<<< HEAD
-    LogToBrowserConsole(
-        nsIScriptError::warningFlag,
-        NS_LITERAL_STRING("Unkown category for SetEventRecordingEnabled."));
-||||||| merged common ancestors
-    LogToBrowserConsole(nsIScriptError::warningFlag,
-                        NS_LITERAL_STRING("Unkown category for SetEventRecordingEnabled."));
-=======
     LogToBrowserConsole(
         nsIScriptError::warningFlag,
         NS_ConvertUTF8toUTF16(
             NS_LITERAL_CSTRING(
                 "Unknown category for SetEventRecordingEnabled: ") +
             category));
->>>>>>> upstream-releases
     return;
   }
 

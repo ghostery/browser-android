@@ -7,23 +7,6 @@
 #ifndef mozilla_layers_GeckoContentController_h
 #define mozilla_layers_GeckoContentController_h
 
-<<<<<<< HEAD
-#include "InputData.h"                           // for PinchGestureInput
-#include "LayersTypes.h"                         // for ScrollDirection
-#include "Units.h"                               // for CSSPoint, CSSRect, etc
-#include "mozilla/Assertions.h"                  // for MOZ_ASSERT_HELPER2
-#include "mozilla/DefineEnum.h"                  // for MOZ_DEFINE_ENUM
-#include "mozilla/EventForwards.h"               // for Modifiers
-#include "mozilla/layers/RepaintRequest.h"       // for RepaintRequest
-#include "mozilla/layers/ScrollableLayerGuid.h"  // for ScrollableLayerGuid, etc
-||||||| merged common ancestors
-#include "FrameMetrics.h"               // for FrameMetrics, etc
-#include "InputData.h"                  // for PinchGestureInput
-#include "Units.h"                      // for CSSPoint, CSSRect, etc
-#include "mozilla/Assertions.h"         // for MOZ_ASSERT_HELPER2
-#include "mozilla/DefineEnum.h"         // for MOZ_DEFINE_ENUM
-#include "mozilla/EventForwards.h"      // for Modifiers
-=======
 #include "InputData.h"                           // for PinchGestureInput
 #include "LayersTypes.h"                         // for ScrollDirection
 #include "Units.h"                               // for CSSPoint, CSSRect, etc
@@ -34,7 +17,6 @@
 #include "mozilla/layers/MatrixMessage.h"        // for MatrixMessage
 #include "mozilla/layers/RepaintRequest.h"       // for RepaintRequest
 #include "mozilla/layers/ScrollableLayerGuid.h"  // for ScrollableLayerGuid, etc
->>>>>>> upstream-releases
 #include "nsISupportsImpl.h"
 
 namespace mozilla {
@@ -48,11 +30,6 @@ class GeckoContentController {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GeckoContentController)
 
   /**
-<<<<<<< HEAD
-   * Requests a paint of the given RepaintRequest |aRequest| from Gecko.
-||||||| merged common ancestors
-   * Requests a paint of the given FrameMetrics |aFrameMetrics| from Gecko.
-=======
    * Notifies the content side of the most recently computed transforms for
    * each layers subtree to the root. The nsTArray will contain one
    *  MatrixMessage for each layers id in the current APZ tree, along with the
@@ -63,7 +40,6 @@ class GeckoContentController {
 
   /**
    * Requests a paint of the given RepaintRequest |aRequest| from Gecko.
->>>>>>> upstream-releases
    * Implementations per-platform are responsible for actually handling this.
    *
    * This method must always be called on the repaint thread, which depends
@@ -101,19 +77,9 @@ class GeckoContentController {
    * Requests handling of a tap event. |aPoint| is in LD pixels, relative to the
    * current scroll offset.
    */
-<<<<<<< HEAD
-  virtual void HandleTap(TapType aType, const LayoutDevicePoint& aPoint,
-                         Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
-||||||| merged common ancestors
-  virtual void HandleTap(TapType aType,
-                         const LayoutDevicePoint& aPoint,
-                         Modifiers aModifiers,
-                         const ScrollableLayerGuid& aGuid,
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void HandleTap(TapType aType, const LayoutDevicePoint& aPoint,
                          Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
->>>>>>> upstream-releases
                          uint64_t aInputBlockId) = 0;
 
   /**
@@ -236,18 +202,12 @@ class GeckoContentController {
    */
   virtual void Destroy() {}
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Whether this is RemoteContentController.
    */
   virtual bool IsRemote() { return false; }
 
  protected:
->>>>>>> upstream-releases
   // Protected destructor, to discourage deletion outside of Release():
   virtual ~GeckoContentController() = default;
 };

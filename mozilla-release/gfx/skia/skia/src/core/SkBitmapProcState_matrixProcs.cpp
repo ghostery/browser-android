@@ -14,17 +14,9 @@
  */
 
 #include "SkBitmapProcState.h"
-#include "SkBitmapProcState_utils.h"
 #include "SkShader.h"
 #include "SkTo.h"
 #include "SkUtils.h"
-<<<<<<< HEAD
-#include "SkUtilsArm.h"
-||||||| merged common ancestors
-#include "SkUtilsArm.h"
-#include "SkBitmapProcState_utils.h"
-=======
->>>>>>> upstream-releases
 
 /*
  *  The decal_ functions require that

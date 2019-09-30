@@ -19,16 +19,10 @@ async function waitForBreakpoint(dbg, location) {
 }
 
 add_task(async function() {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-reloading.js
-  const dbg = await initDebugger("ember/quickstart/dist/", "ember-application/index.js");
-||||||| merged common ancestors
-  const dbg = await initDebugger("ember/quickstart/dist/");
-=======
   const dbg = await initDebugger(
     "ember/quickstart/dist/",
     "ember-application/index.js"
   );
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-reloading.js
 
   await selectSource(dbg, "ember-application/index.js");
 

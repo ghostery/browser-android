@@ -33,13 +33,7 @@ sn{
         }
         minimumGroupingDigits{"1"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Version{"2.1.48.4"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

@@ -19,16 +19,8 @@ var gUpdateHistory = {
     if (uc) {
       while (this._view.hasChildNodes()) {
         this._view.firstChild.remove();
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-      var bundle = document.getElementById("updateBundle");
-
-=======
       }
 
->>>>>>> upstream-releases
       for (var i = 0; i < uc; ++i) {
         var update = um.getUpdateAt(i);
 
@@ -77,26 +69,6 @@ var gUpdateHistory = {
 
         element.append(topLine, installedOnLabel, statusLabel);
         this._view.appendChild(element);
-<<<<<<< HEAD
-        element.setAttribute("data-l10n-attrs", "name");
-        document.l10n.setAttributes(element, "update-full-name", { name: update.name, buildID: update.buildID});
-        element.installDate = this._formatDate(update.installDate);
-        if (update.detailsURL)
-          element.detailsURL = update.detailsURL;
-        else
-          element.hideDetailsURL = true;
-        element.status = update.statusText;
-||||||| merged common ancestors
-        element.name = bundle.getFormattedString("updateFullName",
-          [update.name, update.buildID]);
-        element.installDate = this._formatDate(update.installDate);
-        if (update.detailsURL)
-          element.detailsURL = update.detailsURL;
-        else
-          element.hideDetailsURL = true;
-        element.status = update.statusText;
-=======
->>>>>>> upstream-releases
       }
     }
     var cancelbutton = document.documentElement.getButton("cancel");

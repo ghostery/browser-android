@@ -23,47 +23,20 @@ using namespace dom;
 InputData::~InputData() {}
 
 InputData::InputData(InputType aInputType)
-<<<<<<< HEAD
-    : mInputType(aInputType), mTime(0), mFocusSequenceNumber(0), modifiers(0) {}
-||||||| merged common ancestors
-  : mInputType(aInputType)
-  , mTime(0)
-  , mFocusSequenceNumber(0)
-  , modifiers(0)
-{
-}
-=======
     : mInputType(aInputType),
       mTime(0),
       mFocusSequenceNumber(0),
       mLayersId{0},
       modifiers(0) {}
->>>>>>> upstream-releases
 
 InputData::InputData(InputType aInputType, uint32_t aTime, TimeStamp aTimeStamp,
                      Modifiers aModifiers)
-<<<<<<< HEAD
-    : mInputType(aInputType),
-      mTime(aTime),
-      mTimeStamp(aTimeStamp),
-      mFocusSequenceNumber(0),
-      modifiers(aModifiers) {}
-||||||| merged common ancestors
-  : mInputType(aInputType)
-  , mTime(aTime)
-  , mTimeStamp(aTimeStamp)
-  , mFocusSequenceNumber(0)
-  , modifiers(aModifiers)
-{
-}
-=======
     : mInputType(aInputType),
       mTime(aTime),
       mTimeStamp(aTimeStamp),
       mFocusSequenceNumber(0),
       mLayersId{0},
       modifiers(aModifiers) {}
->>>>>>> upstream-releases
 
 SingleTouchData::SingleTouchData(int32_t aIdentifier,
                                  ScreenIntPoint aScreenPoint,
@@ -111,23 +84,11 @@ MultiTouchInput::MultiTouchInput()
       mHandledByAPZ(false) {}
 
 MultiTouchInput::MultiTouchInput(const MultiTouchInput& aOther)
-<<<<<<< HEAD
-    : InputData(MULTITOUCH_INPUT, aOther.mTime, aOther.mTimeStamp,
-                aOther.modifiers),
-      mType(aOther.mType),
-      mHandledByAPZ(aOther.mHandledByAPZ) {
-||||||| merged common ancestors
-  : InputData(MULTITOUCH_INPUT, aOther.mTime, aOther.mTimeStamp, aOther.modifiers)
-  , mType(aOther.mType)
-  , mHandledByAPZ(aOther.mHandledByAPZ)
-{
-=======
     : InputData(MULTITOUCH_INPUT, aOther.mTime, aOther.mTimeStamp,
                 aOther.modifiers),
       mType(aOther.mType),
       mScreenOffset(aOther.mScreenOffset),
       mHandledByAPZ(aOther.mHandledByAPZ) {
->>>>>>> upstream-releases
   mTouches.AppendElements(aOther.mTouches);
 }
 
@@ -181,88 +142,7 @@ MultiTouchInput::MultiTouchInput(const WidgetTouchEvent& aTouchEvent)
   }
 }
 
-<<<<<<< HEAD
-MultiTouchInput::MultiTouchInput(const WidgetMouseEvent& aMouseEvent)
-    : InputData(MULTITOUCH_INPUT, aMouseEvent.mTime, aMouseEvent.mTimeStamp,
-                aMouseEvent.mModifiers),
-      mHandledByAPZ(aMouseEvent.mFlags.mHandledByAPZ) {
-  MOZ_ASSERT(NS_IsMainThread(),
-             "Can only copy from WidgetMouseEvent on main thread");
-  switch (aMouseEvent.mMessage) {
-    case eMouseDown:
-      mType = MULTITOUCH_START;
-      break;
-    case eMouseMove:
-      mType = MULTITOUCH_MOVE;
-      break;
-    case eMouseUp:
-      mType = MULTITOUCH_END;
-      break;
-    // The mouse pointer has been interrupted in an implementation-specific
-    // manner, such as a synchronous event or action cancelling the touch, or a
-    // touch point leaving the document window and going into a non-document
-    // area capable of handling user interactions.
-    case eMouseExitFromWidget:
-      mType = MULTITOUCH_CANCEL;
-      break;
-    default:
-      NS_WARNING("Did not assign a type to a MultiTouchInput");
-      break;
-  }
-
-  mTouches.AppendElement(SingleTouchData(
-      0,
-      ViewAs<ScreenPixel>(
-          aMouseEvent.mRefPoint,
-          PixelCastJustification::LayoutDeviceIsScreenForUntransformedEvent),
-      ScreenSize(1, 1), 180.0f, 1.0f));
-}
-
 void MultiTouchInput::Translate(const ScreenPoint& aTranslation) {
-||||||| merged common ancestors
-MultiTouchInput::MultiTouchInput(const WidgetMouseEvent& aMouseEvent)
-  : InputData(MULTITOUCH_INPUT, aMouseEvent.mTime, aMouseEvent.mTimeStamp,
-              aMouseEvent.mModifiers)
-  , mHandledByAPZ(aMouseEvent.mFlags.mHandledByAPZ)
-{
-  MOZ_ASSERT(NS_IsMainThread(),
-             "Can only copy from WidgetMouseEvent on main thread");
-  switch (aMouseEvent.mMessage) {
-  case eMouseDown:
-    mType = MULTITOUCH_START;
-    break;
-  case eMouseMove:
-    mType = MULTITOUCH_MOVE;
-    break;
-  case eMouseUp:
-    mType = MULTITOUCH_END;
-    break;
-  // The mouse pointer has been interrupted in an implementation-specific
-  // manner, such as a synchronous event or action cancelling the touch, or a
-  // touch point leaving the document window and going into a non-document
-  // area capable of handling user interactions.
-  case eMouseExitFromWidget:
-    mType = MULTITOUCH_CANCEL;
-    break;
-  default:
-    NS_WARNING("Did not assign a type to a MultiTouchInput");
-    break;
-  }
-
-  mTouches.AppendElement(SingleTouchData(0,
-                                         ViewAs<ScreenPixel>(aMouseEvent.mRefPoint,
-                                                             PixelCastJustification::LayoutDeviceIsScreenForUntransformedEvent),
-                                         ScreenSize(1, 1),
-                                         180.0f,
-                                         1.0f));
-}
-
-void
-MultiTouchInput::Translate(const ScreenPoint& aTranslation)
-{
-=======
-void MultiTouchInput::Translate(const ScreenPoint& aTranslation) {
->>>>>>> upstream-releases
   const int32_t xTranslation = (int32_t)(aTranslation.x + 0.5f);
   const int32_t yTranslation = (int32_t)(aTranslation.y + 0.5f);
 
@@ -398,24 +278,6 @@ MouseInput::MouseInput(MouseType aType, ButtonType aButtonType,
       mHandledByAPZ(false) {}
 
 MouseInput::MouseInput(const WidgetMouseEventBase& aMouseEvent)
-<<<<<<< HEAD
-    : InputData(MOUSE_INPUT, aMouseEvent.mTime, aMouseEvent.mTimeStamp,
-                aMouseEvent.mModifiers),
-      mType(MOUSE_NONE),
-      mButtonType(NONE),
-      mInputSource(aMouseEvent.inputSource),
-      mButtons(aMouseEvent.buttons),
-      mHandledByAPZ(aMouseEvent.mFlags.mHandledByAPZ) {
-||||||| merged common ancestors
-  : InputData(MOUSE_INPUT, aMouseEvent.mTime, aMouseEvent.mTimeStamp,
-              aMouseEvent.mModifiers)
-  , mType(MOUSE_NONE)
-  , mButtonType(NONE)
-  , mInputSource(aMouseEvent.inputSource)
-  , mButtons(aMouseEvent.buttons)
-  , mHandledByAPZ(aMouseEvent.mFlags.mHandledByAPZ)
-{
-=======
     : InputData(MOUSE_INPUT, aMouseEvent.mTime, aMouseEvent.mTimeStamp,
                 aMouseEvent.mModifiers),
       mType(MOUSE_NONE),
@@ -423,7 +285,6 @@ MouseInput::MouseInput(const WidgetMouseEventBase& aMouseEvent)
       mInputSource(aMouseEvent.mInputSource),
       mButtons(aMouseEvent.mButtons),
       mHandledByAPZ(aMouseEvent.mFlags.mHandledByAPZ) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(),
              "Can only copy from WidgetTouchEvent on main thread");
 
@@ -567,31 +428,6 @@ WidgetMouseEvent MouseInput::ToWidgetMouseEvent(nsIWidget* aWidget) const {
 }
 
 PanGestureInput::PanGestureInput()
-<<<<<<< HEAD
-    : InputData(PANGESTURE_INPUT),
-      mType(PANGESTURE_MAYSTART),
-      mLineOrPageDeltaX(0),
-      mLineOrPageDeltaY(0),
-      mUserDeltaMultiplierX(1.0),
-      mUserDeltaMultiplierY(1.0),
-      mHandledByAPZ(false),
-      mFollowedByMomentum(false),
-      mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection(false),
-      mOverscrollBehaviorAllowsSwipe(false) {}
-||||||| merged common ancestors
-  : InputData(PANGESTURE_INPUT)
-  , mType(PANGESTURE_MAYSTART)
-  , mLineOrPageDeltaX(0)
-  , mLineOrPageDeltaY(0)
-  , mUserDeltaMultiplierX(1.0)
-  , mUserDeltaMultiplierY(1.0)
-  , mHandledByAPZ(false)
-  , mFollowedByMomentum(false)
-  , mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection(false)
-  , mOverscrollBehaviorAllowsSwipe(false)
-{
-}
-=======
     : InputData(PANGESTURE_INPUT),
       mType(PANGESTURE_MAYSTART),
       mLineOrPageDeltaX(0),
@@ -603,48 +439,12 @@ PanGestureInput::PanGestureInput()
       mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection(false),
       mOverscrollBehaviorAllowsSwipe(false),
       mSimulateMomentum(false) {}
->>>>>>> upstream-releases
 
 PanGestureInput::PanGestureInput(PanGestureType aType, uint32_t aTime,
                                  TimeStamp aTimeStamp,
                                  const ScreenPoint& aPanStartPoint,
                                  const ScreenPoint& aPanDisplacement,
                                  Modifiers aModifiers)
-<<<<<<< HEAD
-    : InputData(PANGESTURE_INPUT, aTime, aTimeStamp, aModifiers),
-      mType(aType),
-      mPanStartPoint(aPanStartPoint),
-      mPanDisplacement(aPanDisplacement),
-      mLineOrPageDeltaX(0),
-      mLineOrPageDeltaY(0),
-      mUserDeltaMultiplierX(1.0),
-      mUserDeltaMultiplierY(1.0),
-      mHandledByAPZ(false),
-      mFollowedByMomentum(false),
-      mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection(false),
-      mOverscrollBehaviorAllowsSwipe(false) {}
-
-bool PanGestureInput::IsMomentum() const {
-||||||| merged common ancestors
-  : InputData(PANGESTURE_INPUT, aTime, aTimeStamp, aModifiers)
-  , mType(aType)
-  , mPanStartPoint(aPanStartPoint)
-  , mPanDisplacement(aPanDisplacement)
-  , mLineOrPageDeltaX(0)
-  , mLineOrPageDeltaY(0)
-  , mUserDeltaMultiplierX(1.0)
-  , mUserDeltaMultiplierY(1.0)
-  , mHandledByAPZ(false)
-  , mFollowedByMomentum(false)
-  , mRequiresContentResponseIfCannotScrollHorizontallyInStartDirection(false)
-  , mOverscrollBehaviorAllowsSwipe(false)
-{
-}
-
-bool
-PanGestureInput::IsMomentum() const
-{
-=======
     : InputData(PANGESTURE_INPUT, aTime, aTimeStamp, aModifiers),
       mType(aType),
       mPanStartPoint(aPanStartPoint),
@@ -660,7 +460,6 @@ PanGestureInput::IsMomentum() const
       mSimulateMomentum(false) {}
 
 bool PanGestureInput::IsMomentum() const {
->>>>>>> upstream-releases
   switch (mType) {
     case PanGestureInput::PANGESTURE_MOMENTUMSTART:
     case PanGestureInput::PANGESTURE_MOMENTUMPAN:
@@ -679,18 +478,8 @@ WidgetWheelEvent PanGestureInput::ToWidgetWheelEvent(nsIWidget* aWidget) const {
   wheelEvent.mRefPoint = RoundedToInt(ViewAs<LayoutDevicePixel>(
       mPanStartPoint,
       PixelCastJustification::LayoutDeviceIsScreenForUntransformedEvent));
-<<<<<<< HEAD
-  wheelEvent.buttons = 0;
-  wheelEvent.mDeltaMode = WheelEvent_Binding::DOM_DELTA_PIXEL;
-  wheelEvent.mMayHaveMomentum = true;  // pan inputs may have momentum
-||||||| merged common ancestors
-  wheelEvent.buttons = 0;
-  wheelEvent.mDeltaMode = WheelEvent_Binding::DOM_DELTA_PIXEL;
-  wheelEvent.mMayHaveMomentum = true; // pan inputs may have momentum
-=======
   wheelEvent.mButtons = 0;
   wheelEvent.mMayHaveMomentum = true;  // pan inputs may have momentum
->>>>>>> upstream-releases
   wheelEvent.mIsMomentum = IsMomentum();
   wheelEvent.mLineOrPageDeltaX = mLineOrPageDeltaX;
   wheelEvent.mLineOrPageDeltaY = mLineOrPageDeltaY;
@@ -719,14 +508,6 @@ bool PanGestureInput::TransformToLocal(
     return false;
   }
   mLocalPanStartPoint = *panStartPoint;
-<<<<<<< HEAD
-
-  Maybe<ParentLayerPoint> panDisplacement =
-      UntransformVector(aTransform, mPanDisplacement, mPanStartPoint);
-||||||| merged common ancestors
-  
-  Maybe<ParentLayerPoint> panDisplacement = UntransformVector(aTransform, mPanDisplacement, mPanStartPoint);
-=======
 
   if (mDeltaType == PanGestureInput::PANDELTA_PAGE) {
     // Skip transforming the pan displacement because we want
@@ -738,7 +519,6 @@ bool PanGestureInput::TransformToLocal(
 
   Maybe<ParentLayerPoint> panDisplacement =
       UntransformVector(aTransform, mPanDisplacement, mPanStartPoint);
->>>>>>> upstream-releases
   if (!panDisplacement) {
     return false;
   }
@@ -757,73 +537,6 @@ ParentLayerPoint PanGestureInput::UserMultipliedLocalPanDisplacement() const {
 }
 
 PinchGestureInput::PinchGestureInput()
-<<<<<<< HEAD
-    : InputData(PINCHGESTURE_INPUT), mType(PINCHGESTURE_START) {}
-
-PinchGestureInput::PinchGestureInput(PinchGestureType aType, uint32_t aTime,
-                                     TimeStamp aTimeStamp,
-                                     const ScreenPoint& aFocusPoint,
-                                     ParentLayerCoord aCurrentSpan,
-                                     ParentLayerCoord aPreviousSpan,
-                                     Modifiers aModifiers)
-    : InputData(PINCHGESTURE_INPUT, aTime, aTimeStamp, aModifiers),
-      mType(aType),
-      mFocusPoint(aFocusPoint),
-      mCurrentSpan(aCurrentSpan),
-      mPreviousSpan(aPreviousSpan) {}
-
-PinchGestureInput::PinchGestureInput(PinchGestureType aType, uint32_t aTime,
-                                     TimeStamp aTimeStamp,
-                                     const ParentLayerPoint& aLocalFocusPoint,
-                                     ParentLayerCoord aCurrentSpan,
-                                     ParentLayerCoord aPreviousSpan,
-                                     Modifiers aModifiers)
-    : InputData(PINCHGESTURE_INPUT, aTime, aTimeStamp, aModifiers),
-      mType(aType),
-      mLocalFocusPoint(aLocalFocusPoint),
-      mCurrentSpan(aCurrentSpan),
-      mPreviousSpan(aPreviousSpan) {}
-
-bool PinchGestureInput::TransformToLocal(
-    const ScreenToParentLayerMatrix4x4& aTransform) {
-||||||| merged common ancestors
-  : InputData(PINCHGESTURE_INPUT)
-  , mType(PINCHGESTURE_START)
-{
-}
-
-PinchGestureInput::PinchGestureInput(PinchGestureType aType, uint32_t aTime,
-                                     TimeStamp aTimeStamp,
-                                     const ScreenPoint& aFocusPoint,
-                                     ParentLayerCoord aCurrentSpan,
-                                     ParentLayerCoord aPreviousSpan,
-                                     Modifiers aModifiers)
-  : InputData(PINCHGESTURE_INPUT, aTime, aTimeStamp, aModifiers)
-  , mType(aType)
-  , mFocusPoint(aFocusPoint)
-  , mCurrentSpan(aCurrentSpan)
-  , mPreviousSpan(aPreviousSpan)
-{
-}
-
-PinchGestureInput::PinchGestureInput(PinchGestureType aType, uint32_t aTime,
-                                     TimeStamp aTimeStamp,
-                                     const ParentLayerPoint& aLocalFocusPoint,
-                                     ParentLayerCoord aCurrentSpan,
-                                     ParentLayerCoord aPreviousSpan,
-                                     Modifiers aModifiers)
-  : InputData(PINCHGESTURE_INPUT, aTime, aTimeStamp, aModifiers)
-  , mType(aType)
-  , mLocalFocusPoint(aLocalFocusPoint)
-  , mCurrentSpan(aCurrentSpan)
-  , mPreviousSpan(aPreviousSpan)
-{
-}
-
-bool
-PinchGestureInput::TransformToLocal(const ScreenToParentLayerMatrix4x4& aTransform)
-{
-=======
     : InputData(PINCHGESTURE_INPUT), mType(PINCHGESTURE_START) {}
 
 PinchGestureInput::PinchGestureInput(
@@ -839,7 +552,6 @@ PinchGestureInput::PinchGestureInput(
 
 bool PinchGestureInput::TransformToLocal(
     const ScreenToParentLayerMatrix4x4& aTransform) {
->>>>>>> upstream-releases
   if (mFocusPoint == BothFingersLifted<ScreenPixel>()) {
     // Special value, no transform required.
     mLocalFocusPoint = BothFingersLifted();

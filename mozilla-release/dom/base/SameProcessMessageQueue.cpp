@@ -36,16 +36,8 @@ void SameProcessMessageQueue::Flush() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ SameProcessMessageQueue* SameProcessMessageQueue::Get() {
-||||||| merged common ancestors
-/* static */ SameProcessMessageQueue*
-SameProcessMessageQueue::Get()
-{
-=======
 /* static */
 SameProcessMessageQueue* SameProcessMessageQueue::Get() {
->>>>>>> upstream-releases
   if (!sSingleton) {
     sSingleton = new SameProcessMessageQueue();
   }

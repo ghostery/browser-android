@@ -38,84 +38,26 @@
 #  elif defined(NS_JAPANESE_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
 // KEY_MAP_WIN_JPN() defines the mapping which is valid only with Japanese
 // keyboard layout.
-<<<<<<< HEAD
-#undef KEY_MAP_WIN_JPN
-#define KEY_MAP_WIN_JPN(aCPPKeyName, aNativeKey)           \
-  NS_JAPANESE_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
-                                               KEY_NAME_INDEX_##aCPPKeyName)
-#elif defined(NS_KOREAN_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
-||||||| merged common ancestors
-#undef KEY_MAP_WIN_JPN
-#define KEY_MAP_WIN_JPN(aCPPKeyName, aNativeKey) \
-  NS_JAPANESE_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
-                                               KEY_NAME_INDEX_##aCPPKeyName)
-#elif defined(NS_KOREAN_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
-=======
 #    undef KEY_MAP_WIN_JPN
 #    define KEY_MAP_WIN_JPN(aCPPKeyName, aNativeKey) \
       NS_JAPANESE_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(  \
           aNativeKey, KEY_NAME_INDEX_##aCPPKeyName)
 #  elif defined(NS_KOREAN_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
->>>>>>> upstream-releases
 // KEY_MAP_WIN_KOR() defines the mapping which is valid only with Korean
 // keyboard layout.
-<<<<<<< HEAD
-#undef KEY_MAP_WIN_KOR
-#define KEY_MAP_WIN_KOR(aCPPKeyName, aNativeKey)         \
-  NS_KOREAN_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
-                                             KEY_NAME_INDEX_##aCPPKeyName)
-#elif defined(NS_OTHER_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
-||||||| merged common ancestors
-#undef KEY_MAP_WIN_KOR
-#define KEY_MAP_WIN_KOR(aCPPKeyName, aNativeKey) \
-  NS_KOREAN_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
-                                             KEY_NAME_INDEX_##aCPPKeyName)
-#elif defined(NS_OTHER_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
-=======
 #    undef KEY_MAP_WIN_KOR
 #    define KEY_MAP_WIN_KOR(aCPPKeyName, aNativeKey)         \
       NS_KOREAN_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
                                                  KEY_NAME_INDEX_##aCPPKeyName)
 #  elif defined(NS_OTHER_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX)
->>>>>>> upstream-releases
 // KEY_MAP_WIN_OTH() defines the mapping which is valid with neither
 // Japanese keyboard layout nor Korean keyboard layout.
-<<<<<<< HEAD
-#undef KEY_MAP_WIN_OTH
-#define KEY_MAP_WIN_OTH(aCPPKeyName, aNativeKey)        \
-  NS_OTHER_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
-                                            KEY_NAME_INDEX_##aCPPKeyName)
-#elif defined(NS_APPCOMMAND_TO_DOM_KEY_NAME_INDEX)
-||||||| merged common ancestors
-#undef KEY_MAP_WIN_OTH
-#define KEY_MAP_WIN_OTH(aCPPKeyName, aNativeKey) \
-  NS_OTHER_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
-                                            KEY_NAME_INDEX_##aCPPKeyName)
-#elif defined(NS_APPCOMMAND_TO_DOM_KEY_NAME_INDEX)
-=======
 #    undef KEY_MAP_WIN_OTH
 #    define KEY_MAP_WIN_OTH(aCPPKeyName, aNativeKey)        \
       NS_OTHER_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, \
                                                 KEY_NAME_INDEX_##aCPPKeyName)
 #  elif defined(NS_APPCOMMAND_TO_DOM_KEY_NAME_INDEX)
->>>>>>> upstream-releases
 // KEY_MAP_WIN_CMD() defines the mapping from APPCOMMAND_* of WM_APPCOMMAND.
-<<<<<<< HEAD
-#undef KEY_MAP_WIN_CMD
-#define KEY_MAP_WIN_CMD(aCPPKeyName, aAppCommand) \
-  NS_APPCOMMAND_TO_DOM_KEY_NAME_INDEX(aAppCommand, KEY_NAME_INDEX_##aCPPKeyName)
-#else
-#error Any NS_*_TO_DOM_KEY_NAME_INDEX() is not defined.
-#endif  // #if defined(NS_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX) ...
-||||||| merged common ancestors
-#undef KEY_MAP_WIN_CMD
-#define KEY_MAP_WIN_CMD(aCPPKeyName, aAppCommand) \
-  NS_APPCOMMAND_TO_DOM_KEY_NAME_INDEX(aAppCommand, \
-                                      KEY_NAME_INDEX_##aCPPKeyName)
-#else
-#error Any NS_*_TO_DOM_KEY_NAME_INDEX() is not defined.
-#endif // #if defined(NS_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX) ...
-=======
 #    undef KEY_MAP_WIN_CMD
 #    define KEY_MAP_WIN_CMD(aCPPKeyName, aAppCommand)  \
       NS_APPCOMMAND_TO_DOM_KEY_NAME_INDEX(aAppCommand, \
@@ -123,7 +65,6 @@
 #  else
 #    error Any NS_*_TO_DOM_KEY_NAME_INDEX() is not defined.
 #  endif  // #if defined(NS_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX) ...
->>>>>>> upstream-releases
 #elif defined(XP_MACOSX)
 #  undef KEY_MAP_COCOA
 #  define KEY_MAP_COCOA(aCPPKeyName, aNativeKey)    \

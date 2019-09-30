@@ -20,104 +20,6 @@
 namespace js {
 namespace jit {
 
-<<<<<<< HEAD
-class CacheIRSpewer {
-  Mutex outputLock;
-  Fprinter output;
-  mozilla::Maybe<JSONPrinter> json;
-  static CacheIRSpewer cacheIRspewer;
-
-  // Counter to record how many times Guard class is called. This is used to
-  // determine when to flush outputs based on the given interval value.
-  // For example, if |spewInterval_ = 2|, outputs will be flushed on
-  // guardCount_ values 0,2,4,6,...
-  uint32_t guardCount_;
-
-  // Interval at which to flush output files. This value can be set with the
-  // environment variable |CACHEIR_LOG_FLUSH|.
-  uint32_t spewInterval_;
-
-  CacheIRSpewer();
-  ~CacheIRSpewer();
-
-  bool enabled() { return json.isSome(); }
-
-  // These methods can only be called when enabled() is true.
-  Mutex& lock() {
-    MOZ_ASSERT(enabled());
-    return outputLock;
-  }
-
-  void beginCache(const IRGenerator& generator);
-  void valueProperty(const char* name, const Value& v);
-  void opcodeProperty(const char* name, const JSOp op);
-  void attached(const char* name);
-  void endCache();
-
- public:
-  static CacheIRSpewer& singleton() { return cacheIRspewer; }
-  bool init(const char* name);
-
-  class MOZ_RAII Guard {
-    CacheIRSpewer& sp_;
-    const IRGenerator& gen_;
-    const char* name_;
-
-   public:
-    Guard(const IRGenerator& gen, const char* name)
-        : sp_(CacheIRSpewer::singleton()), gen_(gen), name_(name) {
-      if (sp_.enabled()) {
-        sp_.lock().lock();
-        sp_.beginCache(gen_);
-      }
-    }
-
-    ~Guard() {
-      if (sp_.enabled()) {
-        if (name_ != nullptr) {
-          sp_.attached(name_);
-||||||| merged common ancestors
-class CacheIRSpewer
-{
-    Mutex outputLock;
-    Fprinter output;
-    mozilla::Maybe<JSONPrinter> json;
-    static CacheIRSpewer cacheIRspewer;
-
-    CacheIRSpewer();
-    ~CacheIRSpewer();
-
-    bool enabled() { return json.isSome(); }
-
-    // These methods can only be called when enabled() is true.
-    Mutex& lock() { MOZ_ASSERT(enabled()); return outputLock; }
-
-    void beginCache(const IRGenerator& generator);
-    void valueProperty(const char* name, const Value& v);
-    void opcodeProperty(const char* name, const JSOp op);
-    void attached(const char* name);
-    void endCache();
-
-  public:
-    static CacheIRSpewer& singleton() { return cacheIRspewer; }
-    bool init(const char* name);
-
-    class MOZ_RAII Guard {
-        CacheIRSpewer& sp_;
-        const IRGenerator& gen_;
-        const char* name_;
-
-      public:
-        Guard(const IRGenerator& gen, const char* name)
-          : sp_(CacheIRSpewer::singleton()),
-            gen_(gen),
-            name_(name)
-        {
-          if (sp_.enabled()) {
-            sp_.lock().lock();
-            sp_.beginCache(gen_);
-          }
-=======
 class CacheIRSpewer {
   Mutex outputLock_;
   Fprinter output_;
@@ -180,41 +82,10 @@ class CacheIRSpewer {
         if (gen_.writerRef().codeLength() > 0) {
           CacheIRReader reader(gen_.writerRef());
           sp_.cacheIRSequence(reader);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        sp_.endCache();
-        if (sp_.guardCount_++ % sp_.spewInterval_ == 0) {
-          sp_.output.flush();
-||||||| merged common ancestors
-
-        ~Guard() {
-          if (sp_.enabled()) {
-            if (name_ != nullptr) {
-              sp_.attached(name_);
-            }
-            sp_.endCache();
-            sp_.lock().unlock();
-          }
-=======
         if (name_ != nullptr) {
           sp_.attached(name_);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        sp_.lock().unlock();
-      }
-    }
-
-    void valueProperty(const char* name, const Value& v) const {
-      sp_.valueProperty(name, v);
-    }
-||||||| merged common ancestors
-
-        void valueProperty(const char* name, const Value& v) const {
-          sp_.valueProperty(name, v);
-        }
-=======
         sp_.endCache();
         if (sp_.guardCount_++ % sp_.spewInterval_ == 0) {
           sp_.output_.flush();
@@ -222,38 +93,17 @@ class CacheIRSpewer {
         sp_.lock().unlock();
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    void opcodeProperty(const char* name, const JSOp op) const {
-      sp_.opcodeProperty(name, op);
-    }
-||||||| merged common ancestors
-        void opcodeProperty(const char* name, const JSOp op) const {
-          sp_.opcodeProperty(name, op);
-        }
-=======
     void valueProperty(const char* name, const Value& v) const {
       sp_.valueProperty(name, v);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    explicit operator bool() const { return sp_.enabled(); }
-  };
-||||||| merged common ancestors
-        explicit operator bool() const {
-          return sp_.enabled();
-        }
-    };
-=======
     void opcodeProperty(const char* name, const JSOp op) const {
       sp_.opcodeProperty(name, op);
     }
 
     explicit operator bool() const { return sp_.enabled(); }
   };
->>>>>>> upstream-releases
 };
 
 }  // namespace jit

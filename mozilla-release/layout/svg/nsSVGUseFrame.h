@@ -10,41 +10,18 @@
 // Keep in (case-insensitive) order:
 #include "nsSVGGFrame.h"
 
-<<<<<<< HEAD
-class nsSVGUseFrame final : public nsSVGGFrame {
-  friend nsIFrame* NS_NewSVGUseFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-class nsSVGUseFrame final
-  : public nsSVGGFrame
-{
-  friend nsIFrame* NS_NewSVGUseFrame(nsIPresShell* aPresShell,
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsSVGUseFrame final : public nsSVGGFrame {
   friend nsIFrame* NS_NewSVGUseFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                      ComputedStyle* aStyle);
 
-<<<<<<< HEAD
- protected:
-  explicit nsSVGUseFrame(ComputedStyle* aStyle)
-      : nsSVGGFrame(aStyle, kClassID), mHasValidDimensions(true) {}
-||||||| merged common ancestors
-protected:
-  explicit nsSVGUseFrame(ComputedStyle* aStyle)
-    : nsSVGGFrame(aStyle, kClassID)
-    , mHasValidDimensions(true)
-  {
-  }
-=======
  protected:
   explicit nsSVGUseFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsSVGGFrame(aStyle, aPresContext, kClassID),
         mHasValidDimensions(true) {}
->>>>>>> upstream-releases
 
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsSVGUseFrame)

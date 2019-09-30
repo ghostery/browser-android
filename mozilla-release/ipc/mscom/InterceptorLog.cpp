@@ -110,17 +110,8 @@ Logger::Logger(const nsACString& aLeafBaseName)
     rv = NS_GetSpecialDirectory(NS_APP_CONTENT_PROCESS_TEMP_DIR,
                                 getter_AddRefs(logFileName));
 #else
-<<<<<<< HEAD
-    rv = NS_GetSpecialDirectory(NS_OS_TEMP_DIR, getter_AddRefs(logFileName));
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-    rv = NS_GetSpecialDirectory(NS_OS_TEMP_DIR,
-                                getter_AddRefs(logFileName));
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
     rv = NS_GetSpecialDirectory(NS_OS_TEMP_DIR, getter_AddRefs(logFileName));
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   } else {
     return;
   }
@@ -258,16 +249,8 @@ bool Logger::VariantToString(const VARIANT& aVariant, nsACString& aOut,
   }
 }
 
-<<<<<<< HEAD
-/* static */ double Logger::GetElapsedTime() {
-||||||| merged common ancestors
-/* static */ double
-Logger::GetElapsedTime()
-{
-=======
 /* static */
 double Logger::GetElapsedTime() {
->>>>>>> upstream-releases
   TimeStamp ts = TimeStamp::Now();
   TimeDuration duration = ts - TimeStamp::ProcessCreation();
   return duration.ToMicroseconds();
@@ -499,38 +482,17 @@ static bool MaybeCreateLog(const char* aEnvVarName) {
 namespace mozilla {
 namespace mscom {
 
-<<<<<<< HEAD
-/* static */ bool InterceptorLog::Init() {
-||||||| merged common ancestors
-/* static */ bool
-InterceptorLog::Init()
-{
-=======
 /* static */
 bool InterceptorLog::Init() {
->>>>>>> upstream-releases
   static const bool isEnabled = MaybeCreateLog("MOZ_MSCOM_LOG_BASENAME");
   return isEnabled;
 }
 
-<<<<<<< HEAD
-/* static */ void InterceptorLog::QI(HRESULT aResult, IUnknown* aTarget,
-                                     REFIID aIid, IUnknown* aInterface,
-                                     const TimeDuration* aOverheadDuration,
-                                     const TimeDuration* aGeckoDuration) {
-||||||| merged common ancestors
-/* static */ void
-InterceptorLog::QI(HRESULT aResult, IUnknown* aTarget, REFIID aIid,
-                   IUnknown* aInterface, const TimeDuration* aOverheadDuration,
-                   const TimeDuration* aGeckoDuration)
-{
-=======
 /* static */
 void InterceptorLog::QI(HRESULT aResult, IUnknown* aTarget, REFIID aIid,
                         IUnknown* aInterface,
                         const TimeDuration* aOverheadDuration,
                         const TimeDuration* aGeckoDuration) {
->>>>>>> upstream-releases
   if (!sLogger) {
     return;
   }
@@ -538,43 +500,20 @@ void InterceptorLog::QI(HRESULT aResult, IUnknown* aTarget, REFIID aIid,
                  aGeckoDuration);
 }
 
-<<<<<<< HEAD
-/* static */ void InterceptorLog::CaptureFrame(ICallFrame* aCallFrame,
-                                               IUnknown* aTargetInterface,
-                                               nsACString& aCapturedFrame) {
-||||||| merged common ancestors
-/* static */ void
-InterceptorLog::CaptureFrame(ICallFrame* aCallFrame, IUnknown* aTargetInterface,
-                             nsACString& aCapturedFrame)
-{
-=======
 /* static */
 void InterceptorLog::CaptureFrame(ICallFrame* aCallFrame,
                                   IUnknown* aTargetInterface,
                                   nsACString& aCapturedFrame) {
->>>>>>> upstream-releases
   if (!sLogger) {
     return;
   }
   sLogger->CaptureFrame(aCallFrame, aTargetInterface, aCapturedFrame);
 }
 
-<<<<<<< HEAD
-/* static */ void InterceptorLog::Event(const nsACString& aCapturedFrame,
-                                        const TimeDuration& aOverheadDuration,
-                                        const TimeDuration& aGeckoDuration) {
-||||||| merged common ancestors
-/* static */ void
-InterceptorLog::Event(const nsACString& aCapturedFrame,
-                      const TimeDuration& aOverheadDuration,
-                      const TimeDuration& aGeckoDuration)
-{
-=======
 /* static */
 void InterceptorLog::Event(const nsACString& aCapturedFrame,
                            const TimeDuration& aOverheadDuration,
                            const TimeDuration& aGeckoDuration) {
->>>>>>> upstream-releases
   if (!sLogger) {
     return;
   }

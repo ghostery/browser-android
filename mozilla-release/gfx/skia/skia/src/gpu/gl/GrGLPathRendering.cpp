@@ -112,29 +112,14 @@ void GrGLPathRendering::onStencilPath(const StencilPathArgs& args, const GrPath*
     }
 }
 
-<<<<<<< HEAD
-void GrGLPathRendering::onDrawPath(const GrPrimitiveProcessor& primProc,
-                                   const GrPipeline& pipeline,
-                                   const GrPipeline::FixedDynamicState& fixedDynamicState,
-||||||| merged common ancestors
-void GrGLPathRendering::onDrawPath(const GrPipeline& pipeline,
-                                   const GrPrimitiveProcessor& primProc,
-=======
 void GrGLPathRendering::onDrawPath(GrRenderTarget* renderTarget, GrSurfaceOrigin origin,
                                    const GrPrimitiveProcessor& primProc,
                                    const GrPipeline& pipeline,
                                    const GrPipeline::FixedDynamicState& fixedDynamicState,
->>>>>>> upstream-releases
                                    const GrStencilSettings& stencilPassSettings,
                                    const GrPath* path) {
-<<<<<<< HEAD
-    if (!this->gpu()->flushGLState(primProc, pipeline, &fixedDynamicState, nullptr, 1, false)) {
-||||||| merged common ancestors
-    if (!this->gpu()->flushGLState(pipeline, primProc, false)) {
-=======
     if (!this->gpu()->flushGLState(renderTarget, origin, primProc, pipeline,
                                    &fixedDynamicState, nullptr, 1, false)) {
->>>>>>> upstream-releases
         return;
     }
     const GrGLPath* glPath = static_cast<const GrGLPath*>(path);

@@ -12,20 +12,8 @@ function getScopeNodeValue(dbg, index) {
 }
 
 add_task(async function() {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-minified.js
-  await pushPref("devtools.debugger.features.map-scopes", true);
-
-  const dbg = await initDebugger("doc-minified2.html", "sum.js");
-||||||| merged common ancestors
-  await pushPref("devtools.debugger.features.map-scopes", true);
-
-  const dbg = await initDebugger("doc-minified2.html");
-
-  await waitForSources(dbg, "sum.js");
-=======
   const dbg = await initDebugger("doc-minified2.html", "sum.js");
   dbg.actions.toggleMapScopes();
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-minified.js
 
   await selectSource(dbg, "sum.js");
   await addBreakpoint(dbg, "sum.js", 2);

@@ -853,28 +853,6 @@ void SandboxBroker::ThreadMain(void) {
           } else {
             AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
           }
-<<<<<<< HEAD
-          break;
-
-        case SANDBOX_FILE_LINK:
-        case SANDBOX_FILE_SYMLINK:
-          if (permissive || AllowOperation(W_OK, perms)) {
-            if (DoLink(pathBuf, pathBuf2, req.mOp) == 0) {
-              resp.mError = 0;
-            } else {
-              resp.mError = -errno;
-            }
-||||||| merged common ancestors
-        } else {
-          AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
-        }
-        break;
-
-      case SANDBOX_FILE_RENAME:
-        if (permissive || AllowOperation(W_OK, perms)) {
-          if (rename(pathBuf, pathBuf2) == 0) {
-            resp.mError = 0;
-=======
           break;
 
         case SANDBOX_FILE_LINK:
@@ -885,31 +863,9 @@ void SandboxBroker::ThreadMain(void) {
             } else {
               resp.mError = -errno;
             }
->>>>>>> upstream-releases
           } else {
             AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
           }
-<<<<<<< HEAD
-          break;
-
-        case SANDBOX_FILE_RENAME:
-          if (permissive || AllowOperation(W_OK, perms)) {
-            if (rename(pathBuf, pathBuf2) == 0) {
-              resp.mError = 0;
-            } else {
-              resp.mError = -errno;
-            }
-||||||| merged common ancestors
-        } else {
-          AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
-        }
-        break;
-
-      case SANDBOX_FILE_MKDIR:
-        if (permissive || AllowOperation(W_OK | X_OK, perms)) {
-          if (mkdir(pathBuf, req.mFlags) == 0) {
-            resp.mError = 0;
-=======
           break;
 
         case SANDBOX_FILE_RENAME:
@@ -919,7 +875,6 @@ void SandboxBroker::ThreadMain(void) {
             } else {
               resp.mError = -errno;
             }
->>>>>>> upstream-releases
           } else {
             AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
           }
@@ -942,25 +897,6 @@ void SandboxBroker::ThreadMain(void) {
               AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
             }
           }
-<<<<<<< HEAD
-          break;
-
-        case SANDBOX_FILE_UNLINK:
-          if (permissive || AllowOperation(W_OK, perms)) {
-            if (unlink(pathBuf) == 0) {
-              resp.mError = 0;
-            } else {
-              resp.mError = -errno;
-            }
-||||||| merged common ancestors
-        }
-        break;
-
-      case SANDBOX_FILE_UNLINK:
-        if (permissive || AllowOperation(W_OK, perms)) {
-          if (unlink(pathBuf) == 0) {
-            resp.mError = 0;
-=======
           break;
 
         case SANDBOX_FILE_UNLINK:
@@ -970,7 +906,6 @@ void SandboxBroker::ThreadMain(void) {
             } else {
               resp.mError = -errno;
             }
->>>>>>> upstream-releases
           } else {
             AuditDenial(req.mOp, req.mFlags, perms, pathBuf);
           }

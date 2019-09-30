@@ -37,14 +37,8 @@ AntiTracking.runTest(
   [],
   true,
   true,
-<<<<<<< HEAD
-  0);
-||||||| merged common ancestors
-  false);
-=======
   0
 );
->>>>>>> upstream-releases
 
 AntiTracking.runTest(
   "sessionStorage and Storage Access API",

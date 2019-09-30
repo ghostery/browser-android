@@ -111,18 +111,10 @@ browser.getTabBrowser = function(window) {
     // Firefox
   } else if ("gBrowser" in window) {
     return window.gBrowser;
-<<<<<<< HEAD
-
-  // Thunderbird
-  } else if (window.document.getElementById("tabmail")) {
-    return window.document.getElementById("tabmail");
-||||||| merged common ancestors
-=======
 
     // Thunderbird
   } else if (window.document.getElementById("tabmail")) {
     return window.document.getElementById("tabmail");
->>>>>>> upstream-releases
   }
 
   return null;

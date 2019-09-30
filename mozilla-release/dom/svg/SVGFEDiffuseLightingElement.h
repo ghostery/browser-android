@@ -15,51 +15,6 @@ nsresult NS_NewSVGFEDiffuseLightingElement(
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-typedef nsSVGFELightingElement SVGFEDiffuseLightingElementBase;
-
-class SVGFEDiffuseLightingElement : public SVGFEDiffuseLightingElementBase {
-  friend nsresult(::NS_NewSVGFEDiffuseLightingElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
- protected:
-  explicit SVGFEDiffuseLightingElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-      : SVGFEDiffuseLightingElementBase(std::move(aNodeInfo)) {}
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-||||||| merged common ancestors
-typedef nsSVGFELightingElement SVGFEDiffuseLightingElementBase;
-
-class SVGFEDiffuseLightingElement : public SVGFEDiffuseLightingElementBase
-{
-  friend nsresult (::NS_NewSVGFEDiffuseLightingElement(nsIContent **aResult,
-                                                       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-protected:
-  explicit SVGFEDiffuseLightingElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGFEDiffuseLightingElementBase(std::move(aNodeInfo))
-  {
-  }
-  virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-=======
 typedef SVGFELightingElement SVGFEDiffuseLightingElementBase;
 
 class SVGFEDiffuseLightingElement : public SVGFEDiffuseLightingElementBase {
@@ -81,7 +36,6 @@ class SVGFEDiffuseLightingElement : public SVGFEDiffuseLightingElementBase {
       nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
   virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
                                          nsAtom* aAttribute) const override;
->>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 

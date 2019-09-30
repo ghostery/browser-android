@@ -69,14 +69,8 @@ class TabsPanel extends Component {
         );
         tab.icon = "data:image/png;base64," + base64Favicon;
       } else {
-<<<<<<< HEAD
-        tab.icon = "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
-||||||| merged common ancestors
-        tab.icon = "chrome://devtools/skin/images/globe.svg";
-=======
         tab.icon =
           "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
->>>>>>> upstream-releases
       }
     }
 

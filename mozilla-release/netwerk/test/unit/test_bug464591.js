@@ -14,17 +14,6 @@ let badURIs = [
   ["www.e%00xample.com%e2%88%95www.mozill%d0%b0.com%e2%81%84www.mozill%61.org"],
 ];
 
-<<<<<<< HEAD
- let prefIdnBlackList = {
-      name: "network.IDN.extra_blocked_chars",
-      minimumList: "\u2215\u0430\u2044",
-  };
-||||||| merged common ancestors
- let prefIdnBlackList = {
-      name: "network.IDN.blacklist_chars",
-      minimumList: "\u2215\u0430\u2044",
-  };
-=======
 let prefData = [
   {
     name: "network.enableIDN",
@@ -44,7 +33,6 @@ let prefIdnBlackList = {
   name: "network.IDN.extra_blocked_chars",
   minimumList: "\u2215\u0430\u2044",
 };
->>>>>>> upstream-releases
 
 function stringToURL(str) {
   return Cc["@mozilla.org/network/standard-url-mutator;1"]

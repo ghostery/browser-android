@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
-const { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm", {});
-const env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
-||||||| merged common ancestors
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
-const { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm", {});
-const env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
-let scope = {};
-Services.scriptloader.loadSubScript("resource://talos-powers/TalosParentProfiler.js", scope);
-const { TalosParentProfiler } = scope;
-=======
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
@@ -22,7 +8,6 @@ const { AddonManager } = ChromeUtils.import(
 const env = Cc["@mozilla.org/process/environment;1"].getService(
   Ci.nsIEnvironment
 );
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGetter(this, "require", function() {
   let { require } = ChromeUtils.import("resource://devtools/shared/Loader.jsm");
@@ -128,28 +113,6 @@ Damp.prototype = {
     }
   },
 
-<<<<<<< HEAD
-  async ensureTalosParentProfiler() {
-    // TalosParentProfiler is part of TalosPowers, which is a separate WebExtension
-    // that may or may not already have finished loading at this point (unlike most
-    // Pageloader tests, Damp doesn't wait for Pageloader to find TalosPowers before
-    // running). getTalosParentProfiler is used to wait for TalosPowers to be around
-    // before continuing.
-    async function getTalosParentProfiler() {
-      try {
-        ChromeUtils.import("resource://talos-powers/TalosParentProfiler.jsm");
-        return TalosParentProfiler;
-      } catch (err) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        return getTalosParentProfiler();
-      }
-    }
-
-    this.TalosParentProfiler = await getTalosParentProfiler();
-  },
-
-||||||| merged common ancestors
-=======
   async ensureTalosParentProfiler() {
     // TalosParentProfiler is part of TalosPowers, which is a separate WebExtension
     // that may or may not already have finished loading at this point (unlike most
@@ -191,7 +154,6 @@ Damp.prototype = {
     });
   },
 
->>>>>>> upstream-releases
   /**
    * Helper to tell when a test start and when it is finished.
    * It helps recording its duration, but also put markers for profiler.firefox.com
@@ -410,13 +372,6 @@ Damp.prototype = {
     }
     this._log("\n" + out);
 
-<<<<<<< HEAD
-    if (this.testDone) {
-      this.testDone({testResults, testNames});
-||||||| merged common ancestors
-    if (content && content.tpRecordTime) {
-      content.tpRecordTime(testResults.join(","), 0, testNames.join(","));
-=======
     if (DEBUG_SCREENSHOTS) {
       // When we are printing screenshots, we don't want to want to exit firefox
       // so that we have time to view them.
@@ -428,7 +383,6 @@ Damp.prototype = {
 
     if (this.testDone) {
       this.testDone({ testResults, testNames });
->>>>>>> upstream-releases
     } else {
       // alert(out);
     }
@@ -521,19 +475,11 @@ Damp.prototype = {
     await this.garbageCollect();
   },
 
-<<<<<<< HEAD
-  startTest(rootURI) {
-    let promise = new Promise(resolve => { this.testDone = resolve; });
-    this.rootURI = rootURI;
-||||||| merged common ancestors
-  startTest() {
-=======
   startTest(rootURI) {
     let promise = new Promise(resolve => {
       this.testDone = resolve;
     });
     this.rootURI = rootURI;
->>>>>>> upstream-releases
     try {
       dump("Initialize the head file with a reference to this DAMP instance\n");
       let head = require(rootURI.resolve("content/tests/head.js"));
@@ -546,20 +492,10 @@ Damp.prototype = {
       // Filter tests via `./mach --subtests filter` command line argument
       let filter = Services.prefs.getCharPref("talos.subtests", "");
 
-<<<<<<< HEAD
-      let DAMP_TESTS = require(rootURI.resolve("content/damp-tests.js"));
-      let tests = DAMP_TESTS.filter(test => !test.disabled)
-                            .filter(test => test.name.includes(filter));
-||||||| merged common ancestors
-      let DAMP_TESTS = require("chrome://damp/content/damp-tests.js");
-      let tests = DAMP_TESTS.filter(test => !test.disabled)
-                            .filter(test => test.name.includes(filter));
-=======
       let DAMP_TESTS = require(rootURI.resolve("content/damp-tests.js"));
       let tests = DAMP_TESTS.filter(test => !test.disabled).filter(test =>
         test.name.includes(filter)
       );
->>>>>>> upstream-releases
 
       if (tests.length === 0) {
         this.error(`Unable to find any test matching '${filter}'`);
@@ -579,20 +515,6 @@ Damp.prototype = {
         sequenceArray.push(test.path);
       }
 
-<<<<<<< HEAD
-     this.waitBeforeRunningTests().then(() => {
-        this.TalosParentProfiler.resume("DAMP - start");
-        this._doSequence(sequenceArray, this._doneInternal);
-      }).catch(e => {
-        this.exception(e);
-      });
-||||||| merged common ancestors
-     this.waitBeforeRunningTests().then(() => {
-        this._doSequence(sequenceArray, this._doneInternal);
-      }).catch(e => {
-        this.exception(e);
-      });
-=======
       this.waitBeforeRunningTests()
         .then(() => {
           this.TalosParentProfiler.resume("DAMP - start");
@@ -601,7 +523,6 @@ Damp.prototype = {
         .catch(e => {
           this.exception(e);
         });
->>>>>>> upstream-releases
     } catch (e) {
       this.exception(e);
     }

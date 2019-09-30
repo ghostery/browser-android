@@ -299,26 +299,12 @@ class gfxGDIFontList : public gfxPlatformFontList {
 
   gfxFontFamily* CreateFontFamily(const nsACString& aName) const override;
 
-<<<<<<< HEAD
-  bool FindAndAddFamilies(const nsACString& aFamily,
-                          nsTArray<FamilyAndGeneric>* aOutput,
-                          FindFamiliesFlags aFlags,
-                          gfxFontStyle* aStyle = nullptr,
-                          gfxFloat aDevToCssSize = 1.0) override;
-||||||| merged common ancestors
-    bool FindAndAddFamilies(const nsACString& aFamily,
-                            nsTArray<FamilyAndGeneric>* aOutput,
-                            FindFamiliesFlags aFlags,
-                            gfxFontStyle* aStyle = nullptr,
-                            gfxFloat aDevToCssSize = 1.0) override;
-=======
   bool FindAndAddFamilies(mozilla::StyleGenericFontFamily aGeneric,
                           const nsACString& aFamily,
                           nsTArray<FamilyAndGeneric>* aOutput,
                           FindFamiliesFlags aFlags,
                           gfxFontStyle* aStyle = nullptr,
                           gfxFloat aDevToCssSize = 1.0) override;
->>>>>>> upstream-releases
 
   virtual gfxFontEntry* LookupLocalFont(const nsACString& aFontName,
                                         WeightRange aWeightForEntry,
@@ -337,18 +323,8 @@ class gfxGDIFontList : public gfxPlatformFontList {
   virtual void AddSizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf,
                                       FontListSizes* aSizes) const;
 
-<<<<<<< HEAD
- protected:
-  virtual gfxFontFamily* GetDefaultFontForPlatform(
-      const gfxFontStyle* aStyle) override;
-||||||| merged common ancestors
-protected:
-    virtual gfxFontFamily*
-    GetDefaultFontForPlatform(const gfxFontStyle* aStyle) override;
-=======
  protected:
   FontFamily GetDefaultFontForPlatform(const gfxFontStyle* aStyle) override;
->>>>>>> upstream-releases
 
  private:
   friend class gfxWindowsPlatform;

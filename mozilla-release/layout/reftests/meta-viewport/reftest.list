@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-default-preferences pref(dom.meta-viewport.enabled,true) pref(apz.allow_zooming,true)
-
-# These tests assume that viewport width in reftest is 800px.
-== box-shadow.html initial-scale-0_5-ref.html
-== initial-scale-0.html initial-scale-0_5-ref.html
-== initial-scale-100.html initial-scale-0_5-ref.html
-== no-viewport.html initial-scale-0_5-ref.html
-== viewport-width.html initial-scale-0_5-ref.html
-== initial-scale-1.html no-zoom-ref.html
-== minimum-scale.html no-zoom-ref.html
-== clamped-by-default-minimum-scale.html initial-scale-0_25-ref.html
-||||||| merged common ancestors
-=======
 default-preferences pref(dom.meta-viewport.enabled,true) pref(apz.allow_zooming,true)
 
 # These tests assume that viewport width in reftest is 800px.
@@ -46,4 +32,3 @@ skip-if(winWidget||webrender) fails == dynamic-grow-width.html horizontal-overfl
 skip-if(winWidget||webrender) == dynamic-grow-width-and-height.html overflow-region-ref.html
 skip-if(winWidget||webrender) == not-able-to-scrollTo.html about:blank
 skip-if(winWidget||webrender) == min-scale-aspect-ratio.html about:blank
->>>>>>> upstream-releases

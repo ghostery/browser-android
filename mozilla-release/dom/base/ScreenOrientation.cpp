@@ -119,19 +119,9 @@ class ScreenOrientation::LockOrientationTask final : public nsIRunnable {
 
   LockOrientationTask(ScreenOrientation* aScreenOrientation, Promise* aPromise,
                       hal::ScreenOrientation aOrientationLock,
-<<<<<<< HEAD
-                      nsIDocument* aDocument, bool aIsFullscreen);
-
- protected:
-||||||| merged common ancestors
-                      nsIDocument* aDocument,
-                      bool aIsFullscreen);
-protected:
-=======
                       Document* aDocument, bool aIsFullscreen);
 
  protected:
->>>>>>> upstream-releases
   bool OrientationLockContains(OrientationType aOrientationType);
 
   RefPtr<ScreenOrientation> mScreenOrientation;
@@ -144,24 +134,6 @@ protected:
 NS_IMPL_ISUPPORTS(ScreenOrientation::LockOrientationTask, nsIRunnable)
 
 ScreenOrientation::LockOrientationTask::LockOrientationTask(
-<<<<<<< HEAD
-    ScreenOrientation* aScreenOrientation, Promise* aPromise,
-    hal::ScreenOrientation aOrientationLock, nsIDocument* aDocument,
-    bool aIsFullscreen)
-    : mScreenOrientation(aScreenOrientation),
-      mPromise(aPromise),
-      mOrientationLock(aOrientationLock),
-      mDocument(aDocument),
-      mIsFullscreen(aIsFullscreen) {
-||||||| merged common ancestors
-  ScreenOrientation* aScreenOrientation, Promise* aPromise,
-  hal::ScreenOrientation aOrientationLock,
-  nsIDocument* aDocument, bool aIsFullscreen)
-  : mScreenOrientation(aScreenOrientation), mPromise(aPromise),
-    mOrientationLock(aOrientationLock), mDocument(aDocument),
-    mIsFullscreen(aIsFullscreen)
-{
-=======
     ScreenOrientation* aScreenOrientation, Promise* aPromise,
     hal::ScreenOrientation aOrientationLock, Document* aDocument,
     bool aIsFullscreen)
@@ -170,7 +142,6 @@ ScreenOrientation::LockOrientationTask::LockOrientationTask(
       mOrientationLock(aOrientationLock),
       mDocument(aDocument),
       mIsFullscreen(aIsFullscreen) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aScreenOrientation);
   MOZ_ASSERT(aPromise);
   MOZ_ASSERT(aDocument);
@@ -497,15 +468,7 @@ ScreenOrientation::GetLockOrientationPermission(bool aCheckSandbox) const {
   return doc->Fullscreen() ? FULLSCREEN_LOCK_ALLOWED : LOCK_DENIED;
 }
 
-<<<<<<< HEAD
-nsIDocument* ScreenOrientation::GetResponsibleDocument() const {
-||||||| merged common ancestors
-nsIDocument*
-ScreenOrientation::GetResponsibleDocument() const
-{
-=======
 Document* ScreenOrientation::GetResponsibleDocument() const {
->>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowInner> owner = GetOwner();
   if (!owner) {
     return nullptr;
@@ -559,30 +522,7 @@ void ScreenOrientation::Notify(const hal::ScreenConfiguration& aConfiguration) {
   if (mType != doc->CurrentOrientationType()) {
     doc->SetCurrentOrientation(mType, mAngle);
 
-<<<<<<< HEAD
-    Promise* pendingPromise = doc->GetOrientationPendingPromise();
-    if (pendingPromise) {
-      pendingPromise->MaybeResolveWithUndefined();
-      doc->SetOrientationPendingPromise(nullptr);
-    }
-
-    nsCOMPtr<nsIRunnable> runnable =
-        NewRunnableMethod("dom::ScreenOrientation::DispatchChangeEvent", this,
-                          &ScreenOrientation::DispatchChangeEvent);
-||||||| merged common ancestors
-    Promise* pendingPromise = doc->GetOrientationPendingPromise();
-    if (pendingPromise) {
-      pendingPromise->MaybeResolveWithUndefined();
-      doc->SetOrientationPendingPromise(nullptr);
-    }
-
-    nsCOMPtr<nsIRunnable> runnable =
-      NewRunnableMethod("dom::ScreenOrientation::DispatchChangeEvent",
-                        this,
-                        &ScreenOrientation::DispatchChangeEvent);
-=======
     nsCOMPtr<nsIRunnable> runnable = DispatchChangeEventAndResolvePromise();
->>>>>>> upstream-releases
     rv = NS_DispatchToMainThread(runnable);
     NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "NS_DispatchToMainThread failed");
   }
@@ -598,17 +538,6 @@ void ScreenOrientation::UpdateActiveOrientationLock(
   }
 }
 
-<<<<<<< HEAD
-void ScreenOrientation::DispatchChangeEvent() {
-  DebugOnly<nsresult> rv = DispatchTrustedEvent(NS_LITERAL_STRING("change"));
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "DispatchTrustedEvent failed");
-||||||| merged common ancestors
-void
-ScreenOrientation::DispatchChangeEvent()
-{
-  DebugOnly<nsresult> rv = DispatchTrustedEvent(NS_LITERAL_STRING("change"));
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "DispatchTrustedEvent failed");
-=======
 nsCOMPtr<nsIRunnable>
 ScreenOrientation::DispatchChangeEventAndResolvePromise() {
   RefPtr<Document> doc = GetResponsibleDocument();
@@ -626,7 +555,6 @@ ScreenOrientation::DispatchChangeEventAndResolvePromise() {
           }
         }
       });
->>>>>>> upstream-releases
 }
 
 JSObject* ScreenOrientation::WrapObject(JSContext* aCx,
@@ -677,37 +605,10 @@ ScreenOrientation::VisibleEventListener::HandleEvent(Event* aEvent) {
   if (doc->CurrentOrientationType() !=
       orientation->DeviceType(CallerType::System)) {
     doc->SetCurrentOrientation(orientation->DeviceType(CallerType::System),
-<<<<<<< HEAD
                                orientation->DeviceAngle(CallerType::System));
-
-    Promise* pendingPromise = doc->GetOrientationPendingPromise();
-    if (pendingPromise) {
-      pendingPromise->MaybeResolveWithUndefined();
-      doc->SetOrientationPendingPromise(nullptr);
-    }
-||||||| merged common ancestors
-			       orientation->DeviceAngle(CallerType::System));
-
-    Promise* pendingPromise = doc->GetOrientationPendingPromise();
-    if (pendingPromise) {
-      pendingPromise->MaybeResolveWithUndefined();
-      doc->SetOrientationPendingPromise(nullptr);
-    }
-=======
-                               orientation->DeviceAngle(CallerType::System));
->>>>>>> upstream-releases
 
     nsCOMPtr<nsIRunnable> runnable =
-<<<<<<< HEAD
-        NewRunnableMethod("dom::ScreenOrientation::DispatchChangeEvent",
-                          orientation, &ScreenOrientation::DispatchChangeEvent);
-||||||| merged common ancestors
-      NewRunnableMethod("dom::ScreenOrientation::DispatchChangeEvent",
-                        orientation,
-                        &ScreenOrientation::DispatchChangeEvent);
-=======
         orientation->DispatchChangeEventAndResolvePromise();
->>>>>>> upstream-releases
     rv = NS_DispatchToMainThread(runnable);
     if (NS_WARN_IF(rv.Failed())) {
       return rv.StealNSResult();

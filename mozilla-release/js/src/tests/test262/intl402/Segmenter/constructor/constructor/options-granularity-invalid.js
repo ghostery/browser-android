@@ -1,46 +1,3 @@
-<<<<<<< HEAD
-// |reftest| skip-if(!Intl.hasOwnProperty('Segmenter')) -- Intl.Segmenter is not enabled unconditionally
-// Copyright 2018 Igalia, S.L. All rights reserved.
-// This code is governed by the BSD license found in the LICENSE file.
-
-/*---
-esid: sec-Intl.Segmenter
-description: Checks handling of invalid value for the style option to the Segmenter constructor.
-info: |
-    Intl.Segmenter ([ locales [ , options ]])
-
-    13. Let granularity be ? GetOption(options, "granularity", "string", « "grapheme", "word", "sentence", "line" », "grapheme").
-    14. Set segmenter.[[SegmenterGranularity]] to granularity.
-features: [Intl.Segmenter]
----*/
-
-const invalidOptions = [
-  null,
-  1,
-  "",
-  "Grapheme",
-  "GRAPHEME",
-  "grapheme\0",
-  "Word",
-  "WORD",
-  "word\0",
-  "Sentence",
-  "SENTENCE",
-  "sentence\0",
-  "Line",
-  "LINE",
-  "line\0",
-];
-
-for (const granularity of invalidOptions) {
-  assert.throws(RangeError, function() {
-    new Intl.Segmenter([], { granularity });
-  }, `${granularity} is an invalid style option value`);
-}
-
-reportCompare(0, 0);
-||||||| merged common ancestors
-=======
 // |reftest| skip -- Intl.Segmenter is not supported
 // Copyright 2018 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
@@ -82,4 +39,3 @@ for (const granularity of invalidOptions) {
 }
 
 reportCompare(0, 0);
->>>>>>> upstream-releases

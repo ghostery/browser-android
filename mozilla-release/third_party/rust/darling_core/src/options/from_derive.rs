@@ -2,19 +2,9 @@ use proc_macro2::TokenStream;
 use quote::ToTokens;
 use syn::{self, Ident};
 
-<<<<<<< HEAD
-use codegen;
-use options::{OuterFrom, ParseAttribute, ParseData, Shape};
-use {FromMeta, Result};
-||||||| merged common ancestors
-use {FromMetaItem, Result};
-use codegen;
-use options::{ParseAttribute, ParseData, OuterFrom, Shape};
-=======
 use codegen::FromDeriveInputImpl;
 use options::{OuterFrom, ParseAttribute, ParseData, Shape};
 use {FromMeta, Result};
->>>>>>> upstream-releases
 
 #[derive(Debug)]
 pub struct FdiOptions {
@@ -39,16 +29,9 @@ impl FdiOptions {
             generics: Default::default(),
             data: Default::default(),
             supports: Default::default(),
-<<<<<<< HEAD
-        }).parse_attributes(&di.attrs)?
-            .parse_body(&di.data)
-||||||| merged common ancestors
-        }).parse_attributes(&di.attrs)?.parse_body(&di.data)
-=======
         })
         .parse_attributes(&di.attrs)?
         .parse_body(&di.data)
->>>>>>> upstream-releases
     }
 }
 

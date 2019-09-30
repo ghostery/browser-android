@@ -543,19 +543,8 @@ TransportSecurityInfo::Read(nsIObjectInputStream* aStream) {
 #undef CHILD_DIAGNOSTIC_ASSERT
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TransportSecurityInfo::GetInterfaces(uint32_t* count, nsIID*** array) {
-  *count = 0;
-  *array = nullptr;
-||||||| merged common ancestors
-TransportSecurityInfo::GetInterfaces(uint32_t *count, nsIID * **array)
-{
-  *count = 0;
-  *array = nullptr;
-=======
 TransportSecurityInfo::GetInterfaces(nsTArray<nsIID>& array) {
   array.Clear();
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -599,16 +588,8 @@ TransportSecurityInfo::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
 
 // RememberCertErrorsTable
 
-<<<<<<< HEAD
-/*static*/ RememberCertErrorsTable* RememberCertErrorsTable::sInstance =
-    nullptr;
-||||||| merged common ancestors
-/*static*/ RememberCertErrorsTable*
-RememberCertErrorsTable::sInstance = nullptr;
-=======
 /*static*/
 RememberCertErrorsTable* RememberCertErrorsTable::sInstance = nullptr;
->>>>>>> upstream-releases
 
 RememberCertErrorsTable::RememberCertErrorsTable()
     : mErrorHosts(), mMutex("RememberCertErrorsTable::mMutex") {}

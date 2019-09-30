@@ -103,14 +103,7 @@ class nsTimerImpl {
 
     ~Callback() { clear(); }
 
-<<<<<<< HEAD
-    ~Callback() {
-||||||| merged common ancestors
-    ~Callback()
-    {
-=======
     void clear() {
->>>>>>> upstream-releases
       if (mType == Type::Interface) {
         NS_RELEASE(mCallback.i);
       } else if (mType == Type::Observer) {
@@ -223,17 +216,9 @@ class nsTimerImpl {
   static double sDeltaNum;
   RefPtr<nsITimer> mITimer;
   mozilla::Mutex mMutex;
-<<<<<<< HEAD
-  Callback mCallback;
-  Callback mCallbackDuringFire;
-||||||| merged common ancestors
-  Callback              mCallback;
-  Callback              mCallbackDuringFire;
-=======
   Callback mCallback;
   // Counter because in rare cases we can Fire reentrantly
   unsigned int mFiring;
->>>>>>> upstream-releases
 };
 
 class nsTimer final : public nsITimer {

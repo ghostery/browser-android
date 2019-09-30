@@ -22,18 +22,9 @@ class ImageContainer;
 class DXGIYCbCrTextureClient;
 class DXGIYCbCrTextureData;
 
-<<<<<<< HEAD
-class DXGIYCbCrTextureAllocationHelper : public ITextureClientAllocationHelper {
- public:
-||||||| merged common ancestors
-class DXGIYCbCrTextureAllocationHelper : public ITextureClientAllocationHelper
-{
-public:
-=======
 class MOZ_RAII DXGIYCbCrTextureAllocationHelper
     : public ITextureClientAllocationHelper {
  public:
->>>>>>> upstream-releases
   DXGIYCbCrTextureAllocationHelper(const PlanarYCbCrData& aData,
                                    TextureFlags aTextureFlags,
                                    ID3D11Device* aDevice);

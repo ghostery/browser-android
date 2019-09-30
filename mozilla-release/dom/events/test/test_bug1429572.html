@@ -15,15 +15,8 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1429572
 
   var win;
   function start() {
-<<<<<<< HEAD
-    SpecialPowers.pushPrefEnv({"set": [["dom.w3c_touch_events.enabled", 1]]},
-||||||| merged common ancestors
-    SpecialPowers.pushPrefEnv({"set": [["dom.webcomponents.shadowdom.enabled", true],
-                                       ["dom.w3c_touch_events.enabled", 1]]},
-=======
     SpecialPowers.pushPrefEnv({"set": [["dom.w3c_touch_events.enabled", 1],
                                        ["dom.w3c_touch_events.legacy_apis.enabled", true]]},
->>>>>>> upstream-releases
     function() {
       ok(true, "Starting the test.");
       win = window.open("window_bug1429572.html", "testwindow",

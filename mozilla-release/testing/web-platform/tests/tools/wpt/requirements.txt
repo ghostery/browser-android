@@ -1,7 +1,1 @@
-<<<<<<< HEAD
-requests==2.20.1
-||||||| merged common ancestors
-requests==2.19.1
-=======
 requests==2.22.0
->>>>>>> upstream-releases

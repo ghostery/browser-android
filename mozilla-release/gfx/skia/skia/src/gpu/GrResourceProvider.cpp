@@ -90,45 +90,6 @@ sk_sp<GrTexture> GrResourceProvider::createTexture(const GrSurfaceDesc& desc,
     }
 
     GrContext* context = fGpu->getContext();
-<<<<<<< HEAD
-    GrProxyProvider* proxyProvider = context->contextPriv().proxyProvider();
-
-    SkColorType colorType;
-    if (GrPixelConfigToColorType(desc.fConfig, &colorType)) {
-        sk_sp<GrTexture> tex = (SkBackingFit::kApprox == fit)
-                ? this->createApproxTexture(desc, flags)
-                : this->createTexture(desc, budgeted, flags);
-        if (!tex) {
-            return nullptr;
-||||||| merged common ancestors
-    GrProxyProvider* proxyProvider = context->contextPriv().proxyProvider();
-
-    SkImageInfo srcInfo;
-
-    if (make_info(desc.fWidth, desc.fHeight, desc.fConfig, &srcInfo)) {
-        // DDL TODO: remove this use of createInstantiatedProxy and convert it to a testing-only
-        // method.
-        sk_sp<GrTextureProxy> proxy = proxyProvider->createInstantiatedProxy(desc,
-                                                                             fit,
-                                                                             budgeted);
-        if (proxy) {
-            // We use an ephemeral surface context to do the write pixels. Here it isn't clear what
-            // color space to tag it with. That's ok because GrSurfaceContext::writePixels doesn't
-            // do any color space conversions. Though, that is likely to change. However, if the
-            // pixel config is sRGB then the passed color space here must have sRGB gamma or
-            // GrSurfaceContext creation fails.
-            sk_sp<SkColorSpace> colorSpace;
-            if (GrPixelConfigIsSRGB(desc.fConfig)) {
-                colorSpace = SkColorSpace::MakeSRGB();
-            }
-            sk_sp<GrSurfaceContext> sContext = context->contextPriv().makeWrappedSurfaceContext(
-                    std::move(proxy), std::move(colorSpace));
-            if (sContext) {
-                if (sContext->writePixels(srcInfo, mipLevel.fPixels, mipLevel.fRowBytes, 0, 0)) {
-                    return sk_ref_sp(sContext->asTextureProxy()->priv().peekTexture());
-                }
-            }
-=======
     GrProxyProvider* proxyProvider = context->priv().proxyProvider();
 
     SkColorType colorType;
@@ -138,30 +99,8 @@ sk_sp<GrTexture> GrResourceProvider::createTexture(const GrSurfaceDesc& desc,
                 : this->createTexture(desc, budgeted, flags);
         if (!tex) {
             return nullptr;
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        sk_sp<GrTextureProxy> proxy = proxyProvider->createWrapped(std::move(tex),
-                                                                   kTopLeft_GrSurfaceOrigin);
-        if (!proxy) {
-            return nullptr;
-        }
-        auto srcInfo = SkImageInfo::Make(desc.fWidth, desc.fHeight, colorType,
-                                         kUnknown_SkAlphaType);
-        sk_sp<GrSurfaceContext> sContext = context->contextPriv().makeWrappedSurfaceContext(
-                std::move(proxy));
-        if (!sContext) {
-            return nullptr;
-        }
-        SkAssertResult(sContext->writePixels(srcInfo, mipLevel.fPixels, mipLevel.fRowBytes, 0, 0));
-        return sk_ref_sp(sContext->asTextureProxy()->peekTexture());
-    } else {
-        return fGpu->createTexture(desc, budgeted, &mipLevel, 1);
-    }
-||||||| merged common ancestors
-    return fGpu->createTexture(desc, budgeted, &mipLevel, 1);
-=======
         sk_sp<GrTextureProxy> proxy = proxyProvider->createWrapped(std::move(tex),
                                                                    kTopLeft_GrSurfaceOrigin);
         if (!proxy) {
@@ -179,7 +118,6 @@ sk_sp<GrTexture> GrResourceProvider::createTexture(const GrSurfaceDesc& desc,
     } else {
         return fGpu->createTexture(desc, budgeted, &mipLevel, 1);
     }
->>>>>>> upstream-releases
 }
 
 sk_sp<GrTexture> GrResourceProvider::createTexture(const GrSurfaceDesc& desc, SkBudgeted budgeted,
@@ -328,31 +266,6 @@ sk_sp<GrGpuResource> GrResourceProvider::findResourceByUniqueKey(const GrUniqueK
                                : sk_sp<GrGpuResource>(fCache->findAndRefUniqueResource(key));
 }
 
-<<<<<<< HEAD
-sk_sp<const GrBuffer> GrResourceProvider::findOrMakeStaticBuffer(GrBufferType intendedType,
-                                                                 size_t size,
-                                                                 const void* data,
-                                                                 const GrUniqueKey& key) {
-    if (auto buffer = this->findByUniqueKey<GrBuffer>(key)) {
-        return std::move(buffer);
-    }
-    if (auto buffer = this->createBuffer(size, intendedType, kStatic_GrAccessPattern, Flags::kNone,
-                                         data)) {
-        // We shouldn't bin and/or cachestatic buffers.
-        SkASSERT(buffer->sizeInBytes() == size);
-||||||| merged common ancestors
-sk_sp<const GrBuffer> GrResourceProvider::findOrMakeStaticBuffer(GrBufferType intendedType,
-                                                                 size_t size,
-                                                                 const void* data,
-                                                                 const GrUniqueKey& key) {
-    if (auto buffer = this->findByUniqueKey<GrBuffer>(key)) {
-        return buffer;
-    }
-    if (auto buffer = this->createBuffer(size, intendedType, kStatic_GrAccessPattern, 0,
-                                         data)) {
-        // We shouldn't bin and/or cachestatic buffers.
-        SkASSERT(buffer->sizeInBytes() == size);
-=======
 sk_sp<const GrGpuBuffer> GrResourceProvider::findOrMakeStaticBuffer(GrGpuBufferType intendedType,
                                                                     size_t size,
                                                                     const void* data,
@@ -363,7 +276,6 @@ sk_sp<const GrGpuBuffer> GrResourceProvider::findOrMakeStaticBuffer(GrGpuBufferT
     if (auto buffer = this->createBuffer(size, intendedType, kStatic_GrAccessPattern, data)) {
         // We shouldn't bin and/or cache static buffers.
         SkASSERT(buffer->size() == size);
->>>>>>> upstream-releases
         SkASSERT(!buffer->resourcePriv().getScratchKey().isValid());
         SkASSERT(!buffer->resourcePriv().hasPendingIO_debugOnly());
         buffer->resourcePriv().setUniqueKey(key);
@@ -380,16 +292,8 @@ sk_sp<const GrGpuBuffer> GrResourceProvider::createPatternedIndexBuffer(const ui
     size_t bufferSize = patternSize * reps * sizeof(uint16_t);
 
     // This is typically used in GrMeshDrawOps, so we assume kNoPendingIO.
-<<<<<<< HEAD
-    sk_sp<GrBuffer> buffer(this->createBuffer(bufferSize, kIndex_GrBufferType,
-                                              kStatic_GrAccessPattern, Flags::kNoPendingIO));
-||||||| merged common ancestors
-    sk_sp<GrBuffer> buffer(this->createBuffer(bufferSize, kIndex_GrBufferType,
-                                              kStatic_GrAccessPattern, kNoPendingIO_Flag));
-=======
     sk_sp<GrGpuBuffer> buffer(
             this->createBuffer(bufferSize, GrGpuBufferType::kIndex, kStatic_GrAccessPattern));
->>>>>>> upstream-releases
     if (!buffer) {
         return nullptr;
     }
@@ -439,93 +343,24 @@ sk_sp<GrPath> GrResourceProvider::createPath(const SkPath& path, const GrStyle& 
     return this->gpu()->pathRendering()->createPath(path, style);
 }
 
-<<<<<<< HEAD
-GrBuffer* GrResourceProvider::createBuffer(size_t size, GrBufferType intendedType,
-                                           GrAccessPattern accessPattern, Flags flags,
-                                           const void* data) {
-||||||| merged common ancestors
-sk_sp<GrPathRange> GrResourceProvider::createPathRange(GrPathRange::PathGenerator* gen,
-                                                       const GrStyle& style) {
-    if (this->isAbandoned()) {
-        return nullptr;
-    }
-
-    SkASSERT(this->gpu()->pathRendering());
-    return this->gpu()->pathRendering()->createPathRange(gen, style);
-}
-
-sk_sp<GrPathRange> GrResourceProvider::createGlyphs(const SkTypeface* tf,
-                                                    const SkScalerContextEffects& effects,
-                                                    const SkDescriptor* desc,
-                                                    const GrStyle& style) {
-
-    SkASSERT(this->gpu()->pathRendering());
-    return this->gpu()->pathRendering()->createGlyphs(tf, effects, desc, style);
-}
-
-GrBuffer* GrResourceProvider::createBuffer(size_t size, GrBufferType intendedType,
-                                           GrAccessPattern accessPattern, uint32_t flags,
-                                           const void* data) {
-=======
 sk_sp<GrGpuBuffer> GrResourceProvider::createBuffer(size_t size, GrGpuBufferType intendedType,
                                                     GrAccessPattern accessPattern,
                                                     const void* data) {
->>>>>>> upstream-releases
     if (this->isAbandoned()) {
         return nullptr;
     }
     if (kDynamic_GrAccessPattern != accessPattern) {
         return this->gpu()->createBuffer(size, intendedType, accessPattern, data);
     }
-<<<<<<< HEAD
-    if (!(flags & Flags::kRequireGpuMemory) &&
-        this->gpu()->caps()->preferClientSideDynamicBuffers() &&
-        GrBufferTypeIsVertexOrIndex(intendedType) &&
-        kDynamic_GrAccessPattern == accessPattern) {
-        return GrBuffer::CreateCPUBacked(this->gpu(), size, intendedType, data);
-    }
-
-||||||| merged common ancestors
-    if (!(flags & kRequireGpuMemory_Flag) &&
-        this->gpu()->caps()->preferClientSideDynamicBuffers() &&
-        GrBufferTypeIsVertexOrIndex(intendedType) &&
-        kDynamic_GrAccessPattern == accessPattern) {
-        return GrBuffer::CreateCPUBacked(this->gpu(), size, intendedType, data);
-    }
-
-=======
->>>>>>> upstream-releases
     // bin by pow2 with a reasonable min
     static const size_t MIN_SIZE = 1 << 12;
     size_t allocSize = SkTMax(MIN_SIZE, GrNextSizePow2(size));
 
     GrScratchKey key;
-<<<<<<< HEAD
-    GrBuffer::ComputeScratchKeyForDynamicVBO(allocSize, intendedType, &key);
-    auto scratchFlags = GrResourceCache::ScratchFlags::kNone;
-    if (flags & Flags::kNoPendingIO) {
-        scratchFlags = GrResourceCache::ScratchFlags::kRequireNoPendingIO;
-    } else {
-        scratchFlags = GrResourceCache::ScratchFlags::kPreferNoPendingIO;
-    }
-    GrBuffer* buffer = static_cast<GrBuffer*>(
-        this->cache()->findAndRefScratchResource(key, allocSize, scratchFlags));
-||||||| merged common ancestors
-    GrBuffer::ComputeScratchKeyForDynamicVBO(allocSize, intendedType, &key);
-    uint32_t scratchFlags = 0;
-    if (flags & kNoPendingIO_Flag) {
-        scratchFlags = GrResourceCache::kRequireNoPendingIO_ScratchFlag;
-    } else {
-        scratchFlags = GrResourceCache::kPreferNoPendingIO_ScratchFlag;
-    }
-    GrBuffer* buffer = static_cast<GrBuffer*>(
-        this->cache()->findAndRefScratchResource(key, allocSize, scratchFlags));
-=======
     GrGpuBuffer::ComputeScratchKeyForDynamicVBO(allocSize, intendedType, &key);
     auto buffer =
             sk_sp<GrGpuBuffer>(static_cast<GrGpuBuffer*>(this->cache()->findAndRefScratchResource(
                     key, allocSize, GrResourceCache::ScratchFlags::kNone)));
->>>>>>> upstream-releases
     if (!buffer) {
         buffer = this->gpu()->createBuffer(allocSize, intendedType, kDynamic_GrAccessPattern);
         if (!buffer) {

@@ -34,16 +34,8 @@ def ftl_resource_to_json(code):
 
 
 def ftl_pattern_to_json(code):
-<<<<<<< HEAD
-    ps = FluentParserStream(ftl(code))
-    return fluent_parser.get_pattern(ps).to_json()
-||||||| merged common ancestors
-    ps = FTLParserStream(ftl(code))
-    return fluent_parser.get_pattern(ps).to_json()
-=======
     ps = FluentParserStream(ftl(code))
     return fluent_parser.maybe_get_pattern(ps).to_json()
->>>>>>> upstream-releases
 
 
 def to_json(merged_iter):

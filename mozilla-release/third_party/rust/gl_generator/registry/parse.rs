@@ -22,16 +22,8 @@ use xml::attribute::OwnedAttribute;
 use xml::reader::XmlEvent;
 use xml::EventReader as XmlEventReader;
 
-<<<<<<< HEAD
-use registry::{Binding, Cmd, Enum, GlxOpcode, Registry};
-use {Api, Fallbacks, Profile};
-||||||| merged common ancestors
-use {Fallbacks, Api, Profile};
-use registry::{Binding, Cmd, Enum, GlxOpcode, Registry};
-=======
 use registry::{Binding, Cmd, Enum, GlxOpcode, Group, Registry};
 use {Api, Fallbacks, Profile};
->>>>>>> upstream-releases
 
 pub fn from_xml<R: io::Read>(
     src: R,
@@ -324,18 +316,12 @@ trait Parse: Sized + Iterator<Item = ParseEvent> {
                 // add enum namespace
                 ParseEvent::Start(ref name, ref attributes) if name == "enums" => {
                     enums.extend(self.consume_enums(filter.api));
-<<<<<<< HEAD
-                },
-||||||| merged common ancestors
-                }
-=======
                     let enums_group = get_attribute(&attributes, "group");
                     let enums_type = get_attribute(&attributes, "type");
                     if let Some(group) = enums_group.and_then(|name| groups.get_mut(&name)) {
                         group.enums_type = enums_type;
                     }
                 },
->>>>>>> upstream-releases
 
                 // add command namespace
                 ParseEvent::Start(ref name, _) if name == "commands" => {
@@ -647,19 +633,9 @@ trait Parse: Sized + Iterator<Item = ParseEvent> {
         let mut glx = None;
         loop {
             match self.next().unwrap() {
-<<<<<<< HEAD
-                ParseEvent::Start(ref name, _) if name == "param" => {
-                    params.push(self.consume_binding("param"));
-                },
-||||||| merged common ancestors
-                ParseEvent::Start(ref name, _) if name == "param" => {
-                    params.push(self.consume_binding("param"));
-                }
-=======
                 ParseEvent::Start(ref name, ref attributes) if name == "param" => {
                     params.push(self.consume_binding("param", attributes));
                 },
->>>>>>> upstream-releases
                 ParseEvent::Start(ref name, ref attributes) if name == "alias" => {
                     alias = get_attribute(&attributes, "name");
                     alias = alias.map(|t| trim_cmd_prefix(&t, api).to_string());

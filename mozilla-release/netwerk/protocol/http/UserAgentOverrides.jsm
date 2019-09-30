@@ -30,15 +30,9 @@ var gUpdatedOverrides;
 var gOverrideForHostCache = new Map();
 var gInitialized = false;
 var gOverrideFunctions = [
-<<<<<<< HEAD
-  function(aHttpChannel) { return UserAgentOverrides.getOverrideForURI(aHttpChannel.URI); },
-||||||| merged common ancestors
-  function (aHttpChannel) { return UserAgentOverrides.getOverrideForURI(aHttpChannel.URI); }
-=======
   function(aHttpChannel) {
     return UserAgentOverrides.getOverrideForURI(aHttpChannel.URI);
   },
->>>>>>> upstream-releases
 ];
 var gBuiltUAs = new Map();
 
@@ -139,19 +133,11 @@ var UserAgentOverrides = {
 
     Services.prefs.removeObserver(PREF_OVERRIDES_ENABLED, buildOverrides);
 
-<<<<<<< HEAD
-    Services.obs.removeObserver(HTTP_on_useragent_request, "http-on-useragent-request");
-  },
-||||||| merged common ancestors
-    Services.obs.removeObserver(HTTP_on_useragent_request, "http-on-useragent-request");
-  }
-=======
     Services.obs.removeObserver(
       HTTP_on_useragent_request,
       "http-on-useragent-request"
     );
   },
->>>>>>> upstream-releases
 };
 
 function getUserAgentFromOverride(override) {

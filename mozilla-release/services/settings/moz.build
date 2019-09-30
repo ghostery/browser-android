@@ -18,13 +18,6 @@ EXTRA_COMPONENTS += [
 EXTRA_JS_MODULES['services-settings'] += [
     'Attachments.jsm',
     'remote-settings.js',
-<<<<<<< HEAD
-    'RemoteSettingsClient.jsm',
-    'RemoteSettingsWorker.js',
-    'RemoteSettingsWorker.jsm',
-    'Utils.jsm',
-||||||| merged common ancestors
-=======
     'RemoteSettingsClient.jsm',
     'RemoteSettingsComponents.jsm',
     'RemoteSettingsWorker.js',
@@ -34,7 +27,6 @@ EXTRA_JS_MODULES['services-settings'] += [
 
 XPCOM_MANIFESTS += [
     'components.conf',
->>>>>>> upstream-releases
 ]
 
 XPCSHELL_TESTS_MANIFESTS += ['test/unit/xpcshell.ini']

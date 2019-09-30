@@ -61,21 +61,11 @@
 
 #ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
 
-<<<<<<< HEAD
-#include <cutils/trace.h>
-class SkAndroidFrameworkTraceUtil {
-public:
-||||||| merged common ancestors
-#include <utils/Trace.h>
-struct SkAndroidFrameworkTraceUtil {
-
-=======
 #include <cutils/trace.h>
 #include <stdarg.h>
 
 class SkAndroidFrameworkTraceUtil {
 public:
->>>>>>> upstream-releases
     SkAndroidFrameworkTraceUtil(const char* name) {
         if (CC_UNLIKELY(gEnableAndroidTracing)) {
             ATRACE_BEGIN(name);
@@ -104,7 +94,6 @@ public:
         gEnableAndroidTracing = enableAndroidTracing;
     }
 
-<<<<<<< HEAD
     static bool getEnableTracing() {
         return gEnableAndroidTracing;
     }
@@ -112,29 +101,8 @@ public:
 private:
     static bool gEnableAndroidTracing;
 };
-||||||| merged common ancestors
-// If profiling Skia within the Android framework, setting this to 1 will route all Skia
-// tracing events to ATrace.
-#ifndef SK_TRACE_EVENTS_IN_FRAMEWORK
-#define SK_TRACE_EVENTS_IN_FRAMEWORK 0
-#endif
-=======
-    static bool getEnableTracing() {
-        return gEnableAndroidTracing;
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-#define ATRACE_ANDROID_FRAMEWORK(fmt, ...) SkAndroidFrameworkTraceUtil __trace(true, fmt, ##__VA_ARGS__)
-||||||| merged common ancestors
-#if SK_TRACE_EVENTS_IN_FRAMEWORK
-=======
-private:
-    static bool gEnableAndroidTracing;
-};
 
 #define ATRACE_ANDROID_FRAMEWORK(fmt, ...) SkAndroidFrameworkTraceUtil __trace(true, fmt, ##__VA_ARGS__)
->>>>>>> upstream-releases
 
 // Records a pair of begin and end events called "name" for the current scope, with 0, 1 or 2
 // associated arguments. In the framework, the arguments are ignored.

@@ -24,19 +24,6 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_END_INHERITED|\
 NS_QUERYFRAME_TAIL.*$"
 
 SortIncludes: false
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-
-BreakBeforeBraces: Custom
-BraceWrapping:
-  AfterEnum: true
-  AfterStruct: true
-  AfterFunction: true
-  AfterClass: true
-  SplitEmptyFunction: true
-
-=======
 IndentPPDirectives: AfterHash
 StatementMacros: [MARKUPMAP, ASSERT_TRUE, ASSERT_FALSE, TEST, CHECK]
 
@@ -47,4 +34,3 @@ StatementMacros: [MARKUPMAP, ASSERT_TRUE, ASSERT_FALSE, TEST, CHECK]
 # coding style
 DerivePointerAlignment: false
 PointerAlignment: Left
->>>>>>> upstream-releases

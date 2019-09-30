@@ -4,32 +4,6 @@
 
 //! Parsing of the stylesheet contents.
 
-<<<<<<< HEAD
-use crate::counter_style::{parse_counter_style_body, parse_counter_style_name_definition};
-use crate::error_reporting::ContextualParseError;
-use crate::font_face::parse_font_face_block;
-use crate::media_queries::MediaList;
-use crate::parser::{Parse, ParserContext};
-use crate::properties::parse_property_declaration_list;
-use crate::selector_parser::{SelectorImpl, SelectorParser};
-use crate::shared_lock::{Locked, SharedRwLock};
-use crate::str::starts_with_ignore_ascii_case;
-use crate::stylesheets::document_rule::DocumentCondition;
-use crate::stylesheets::font_feature_values_rule::parse_family_name_list;
-use crate::stylesheets::keyframes_rule::parse_keyframe_list;
-use crate::stylesheets::stylesheet::Namespaces;
-use crate::stylesheets::supports_rule::SupportsCondition;
-use crate::stylesheets::viewport_rule;
-use crate::stylesheets::{CssRule, CssRuleType, CssRules, RulesMutateError, StylesheetLoader};
-use crate::stylesheets::{DocumentRule, FontFeatureValuesRule, KeyframesRule, MediaRule};
-use crate::stylesheets::{NamespaceRule, PageRule, StyleRule, SupportsRule, ViewportRule};
-use crate::values::computed::font::FamilyName;
-use crate::values::{CssUrl, CustomIdent, KeyframesName};
-use crate::{Namespace, Prefix};
-||||||| merged common ancestors
-use {Namespace, Prefix};
-use counter_style::{parse_counter_style_body, parse_counter_style_name_definition};
-=======
 use crate::counter_style::{parse_counter_style_body, parse_counter_style_name_definition};
 use crate::error_reporting::ContextualParseError;
 use crate::font_face::parse_font_face_block;
@@ -51,7 +25,6 @@ use crate::stylesheets::{NamespaceRule, PageRule, StyleRule, SupportsRule, Viewp
 use crate::values::computed::font::FamilyName;
 use crate::values::{CssUrl, CustomIdent, KeyframesName};
 use crate::{Namespace, Prefix};
->>>>>>> upstream-releases
 use cssparser::{AtRuleParser, AtRuleType, Parser, QualifiedRuleParser, RuleListParser};
 use cssparser::{BasicParseError, BasicParseErrorKind, CowRcStr, SourceLocation};
 use selectors::SelectorList;

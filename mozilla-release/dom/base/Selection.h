@@ -92,14 +92,7 @@ class Selection final : public nsSupportsWeakReference,
    * MaybeNotifyAccessibleCaretEventHub() starts to notify
    * AccessibleCaretEventHub of selection change if aPresShell has it.
    */
-<<<<<<< HEAD
-  void MaybeNotifyAccessibleCaretEventHub(nsIPresShell* aPresShell) {
-||||||| merged common ancestors
-  void MaybeNotifyAccessibleCaretEventHub(nsIPresShell* aPresShell)
-  {
-=======
   void MaybeNotifyAccessibleCaretEventHub(PresShell* aPresShell) {
->>>>>>> upstream-releases
     if (!mAccessibleCaretEventHub && aPresShell) {
       mAccessibleCaretEventHub = aPresShell->GetAccessibleCaretEventHub();
     }
@@ -146,22 +139,10 @@ class Selection final : public nsSupportsWeakReference,
   nsIFrame* GetSelectionEndPointGeometry(SelectionRegion aRegion,
                                          nsRect* aRect);
 
-<<<<<<< HEAD
-  nsresult PostScrollSelectionIntoViewEvent(
-      SelectionRegion aRegion, int32_t aFlags,
-      nsIPresShell::ScrollAxis aVertical, nsIPresShell::ScrollAxis aHorizontal);
-||||||| merged common ancestors
-  nsresult      PostScrollSelectionIntoViewEvent(
-                                        SelectionRegion aRegion,
-                                        int32_t aFlags,
-                                        nsIPresShell::ScrollAxis aVertical,
-                                        nsIPresShell::ScrollAxis aHorizontal);
-=======
   nsresult PostScrollSelectionIntoViewEvent(SelectionRegion aRegion,
                                             int32_t aFlags,
                                             ScrollAxis aVertical,
                                             ScrollAxis aHorizontal);
->>>>>>> upstream-releases
   enum {
     SCROLL_SYNCHRONOUS = 1 << 1,
     SCROLL_FIRST_ANCESTOR_ONLY = 1 << 2,
@@ -175,24 +156,6 @@ class Selection final : public nsSupportsWeakReference,
   // Otherwise, if SCROLL_DO_FLUSH is also in aFlags, then this method will
   // flush layout and you MUST hold a strong ref on 'this' for the duration
   // of this call.  This might destroy arbitrary layout objects.
-<<<<<<< HEAD
-  nsresult ScrollIntoView(
-      SelectionRegion aRegion,
-      nsIPresShell::ScrollAxis aVertical = nsIPresShell::ScrollAxis(),
-      nsIPresShell::ScrollAxis aHorizontal = nsIPresShell::ScrollAxis(),
-      int32_t aFlags = 0);
-  nsresult SubtractRange(RangeData* aRange, nsRange* aSubtract,
-                         nsTArray<RangeData>* aOutput);
-||||||| merged common ancestors
-  nsresult      ScrollIntoView(SelectionRegion aRegion,
-                               nsIPresShell::ScrollAxis aVertical =
-                                 nsIPresShell::ScrollAxis(),
-                               nsIPresShell::ScrollAxis aHorizontal =
-                                 nsIPresShell::ScrollAxis(),
-                               int32_t aFlags = 0);
-  nsresult      SubtractRange(RangeData* aRange, nsRange* aSubtract,
-                              nsTArray<RangeData>* aOutput);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   nsresult ScrollIntoView(SelectionRegion aRegion,
                           ScrollAxis aVertical = ScrollAxis(),
@@ -202,28 +165,12 @@ class Selection final : public nsSupportsWeakReference,
                                 nsTArray<RangeData>* aOutput);
 
  private:
->>>>>>> upstream-releases
   /**
    * Adds aRange to this Selection.  If mUserInitiated is true,
    * then aRange is first scanned for -moz-user-select:none nodes and split up
    * into multiple ranges to exclude those before adding the resulting ranges
    * to this Selection.
    */
-<<<<<<< HEAD
-  nsresult AddItem(nsRange* aRange, int32_t* aOutIndex,
-                   bool aNoStartSelect = false);
-  nsresult RemoveItem(nsRange* aRange);
-  nsresult RemoveCollapsedRanges();
-  nsresult Clear(nsPresContext* aPresContext);
-  nsresult Collapse(nsINode* aContainer, int32_t aOffset) {
-||||||| merged common ancestors
-  nsresult      AddItem(nsRange* aRange, int32_t* aOutIndex, bool aNoStartSelect = false);
-  nsresult      RemoveItem(nsRange* aRange);
-  nsresult      RemoveCollapsedRanges();
-  nsresult      Clear(nsPresContext* aPresContext);
-  nsresult      Collapse(nsINode* aContainer, int32_t aOffset)
-  {
-=======
   nsresult AddRangesForSelectableNodes(nsRange* aRange, int32_t* aOutIndex,
                                        bool aNoStartSelect = false);
   nsresult RemoveRangeInternal(nsRange& aRange);
@@ -232,7 +179,6 @@ class Selection final : public nsSupportsWeakReference,
   nsresult RemoveCollapsedRanges();
   nsresult Clear(nsPresContext* aPresContext);
   nsresult Collapse(nsINode* aContainer, int32_t aOffset) {
->>>>>>> upstream-releases
     if (!aContainer) {
       return NS_ERROR_INVALID_ARG;
     }
@@ -271,20 +217,9 @@ class Selection final : public nsSupportsWeakReference,
 
   NS_IMETHOD Repaint(nsPresContext* aPresContext);
 
-<<<<<<< HEAD
-  // Note: StartAutoScrollTimer might destroy arbitrary frames etc.
-  nsresult StartAutoScrollTimer(nsIFrame* aFrame, const nsPoint& aPoint,
-                                uint32_t aDelay);
-||||||| merged common ancestors
-  // Note: StartAutoScrollTimer might destroy arbitrary frames etc.
-  nsresult     StartAutoScrollTimer(nsIFrame* aFrame,
-                                    const nsPoint& aPoint,
-                                    uint32_t aDelay);
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult StartAutoScrollTimer(nsIFrame* aFrame, const nsPoint& aPoint,
                                 uint32_t aDelay);
->>>>>>> upstream-releases
 
   nsresult StopAutoScrollTimer();
 
@@ -451,21 +386,10 @@ class Selection final : public nsSupportsWeakReference,
                             bool aAllowAdjacent,
                             nsTArray<RefPtr<nsRange>>& aReturn,
                             mozilla::ErrorResult& aRv);
-<<<<<<< HEAD
-
-  void ScrollIntoView(int16_t aRegion, bool aIsSynchronous, int16_t aVPercent,
-                      int16_t aHPercent, mozilla::ErrorResult& aRv);
-||||||| merged common ancestors
-
-  void ScrollIntoView(int16_t aRegion, bool aIsSynchronous,
-                      int16_t aVPercent, int16_t aHPercent,
-                      mozilla::ErrorResult& aRv);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   void ScrollIntoView(int16_t aRegion, bool aIsSynchronous,
                       WhereToScroll aVPercent, WhereToScroll aHPercent,
                       mozilla::ErrorResult& aRv);
->>>>>>> upstream-releases
 
   void SetColors(const nsAString& aForeColor, const nsAString& aBackColor,
                  const nsAString& aAltForeColor, const nsAString& aAltBackColor,
@@ -699,11 +623,6 @@ class Selection final : public nsSupportsWeakReference,
   nsresult GetCachedFrameOffset(nsIFrame* aFrame, int32_t inOffset,
                                 nsPoint& aPoint);
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   enum class InLimiter {
     // If eYes, the method may reset selection limiter and move focus if the
     // given range is out of the limiter.
@@ -724,7 +643,6 @@ public:
                                 ErrorResult& aRv);
 
  public:
->>>>>>> upstream-releases
   SelectionType GetType() const { return mSelectionType; }
   void SetType(SelectionType aSelectionType) {
     mSelectionType = aSelectionType;
@@ -755,19 +673,8 @@ public:
   class ScrollSelectionIntoViewEvent : public Runnable {
    public:
     NS_DECL_NSIRUNNABLE
-<<<<<<< HEAD
-    ScrollSelectionIntoViewEvent(Selection* aSelection, SelectionRegion aRegion,
-                                 nsIPresShell::ScrollAxis aVertical,
-                                 nsIPresShell::ScrollAxis aHorizontal,
-||||||| merged common ancestors
-    ScrollSelectionIntoViewEvent(Selection* aSelection,
-                                 SelectionRegion aRegion,
-                                 nsIPresShell::ScrollAxis aVertical,
-                                 nsIPresShell::ScrollAxis aHorizontal,
-=======
     ScrollSelectionIntoViewEvent(Selection* aSelection, SelectionRegion aRegion,
                                  ScrollAxis aVertical, ScrollAxis aHorizontal,
->>>>>>> upstream-releases
                                  int32_t aFlags)
         : Runnable("dom::Selection::ScrollSelectionIntoViewEvent"),
           mSelection(aSelection),
@@ -795,21 +702,9 @@ public:
    */
   void SetAnchorFocusRange(int32_t aIndex);
   void SelectFramesForContent(nsIContent* aContent, bool aSelected);
-<<<<<<< HEAD
-  nsresult SelectAllFramesForContent(nsIContentIterator* aInnerIter,
-                                     nsIContent* aContent, bool aSelected);
-  nsresult SelectFrames(nsPresContext* aPresContext, nsRange* aRange,
-||||||| merged common ancestors
-  nsresult SelectAllFramesForContent(nsIContentIterator* aInnerIter,
-                                     nsIContent *aContent,
-                                     bool aSelected);
-  nsresult SelectFrames(nsPresContext* aPresContext,
-                        nsRange* aRange,
-=======
   nsresult SelectAllFramesForContent(PostContentIterator& aPostOrderIter,
                                      nsIContent* aContent, bool aSelected);
   nsresult SelectFrames(nsPresContext* aPresContext, nsRange* aRange,
->>>>>>> upstream-releases
                         bool aSelect);
 
   /**
@@ -846,15 +741,8 @@ public:
                                  int32_t* aEndIndex);
   RangeData* FindRangeData(nsRange* aRange);
 
-<<<<<<< HEAD
-  void UserSelectRangesToAdd(nsRange* aItem,
-                             nsTArray<RefPtr<nsRange>>& rangesToAdd);
-||||||| merged common ancestors
-  void UserSelectRangesToAdd(nsRange* aItem, nsTArray<RefPtr<nsRange> >& rangesToAdd);
-=======
   static void UserSelectRangesToAdd(nsRange* aItem,
                                     nsTArray<RefPtr<nsRange>>& rangesToAdd);
->>>>>>> upstream-releases
 
   /**
    * Preserves the sorting of mRanges.
@@ -1032,19 +920,10 @@ inline RawSelectionType ToRawSelectionType(TextRangeType aTextRangeType) {
 
 inline SelectionTypeMask ToSelectionTypeMask(SelectionType aSelectionType) {
   MOZ_ASSERT(aSelectionType != SelectionType::eInvalid);
-<<<<<<< HEAD
-  return aSelectionType == SelectionType::eNone
-             ? 0
-             : (1 << (static_cast<uint8_t>(aSelectionType) - 1));
-||||||| merged common ancestors
-  return aSelectionType == SelectionType::eNone ? 0 :
-           (1 << (static_cast<uint8_t>(aSelectionType) - 1));
-=======
   return aSelectionType == SelectionType::eNone
              ? 0
              : static_cast<SelectionTypeMask>(
                    1 << (static_cast<uint8_t>(aSelectionType) - 1));
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

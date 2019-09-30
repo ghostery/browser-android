@@ -4,14 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-=======
 const { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -19,22 +11,7 @@ const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const {
-  error,
-  stack,
-  TimeoutError,
-} = ChromeUtils.import("chrome://marionette/content/error.js", {});
-const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
-||||||| merged common ancestors
-const {
-  error,
-  TimeoutError,
-} = ChromeUtils.import("chrome://marionette/content/error.js", {});
-const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
-=======
 const { error, stack, TimeoutError } = ChromeUtils.import(
   "chrome://marionette/content/error.js"
 );
@@ -42,18 +19,12 @@ const { truncate } = ChromeUtils.import(
   "chrome://marionette/content/format.js"
 );
 const { Log } = ChromeUtils.import("chrome://marionette/content/log.js");
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGetter(this, "log", Log.get);
 
 this.EXPORTED_SYMBOLS = [
-<<<<<<< HEAD
-  "DebounceCallback",
-||||||| merged common ancestors
-=======
   "executeSoon",
   "DebounceCallback",
->>>>>>> upstream-releases
   "IdlePromise",
   "MessageManagerDestroyedPromise",
   "PollPromise",
@@ -81,8 +52,6 @@ function executeSoon(func) {
 
   Services.tm.dispatchToMainThread(func);
 }
-
-const PROMISE_TIMEOUT = AppConstants.DEBUG ? 4500 : 1500;
 
 /**
  * @callback Condition
@@ -241,17 +210,10 @@ function PollPromise(func, { timeout = null, interval = 10 } = {}) {
  * @throws {RangeError}
  *     If `timeout` is not an unsigned integer.
  */
-<<<<<<< HEAD
-function TimedPromise(fn,
-    {timeout = PROMISE_TIMEOUT, throws = TimeoutError} = {}) {
-||||||| merged common ancestors
-function TimedPromise(fn, {timeout = 1500, throws = TimeoutError} = {}) {
-=======
 function TimedPromise(
   fn,
   { timeout = PROMISE_TIMEOUT, throws = TimeoutError } = {}
 ) {
->>>>>>> upstream-releases
   const timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
 
   if (typeof fn != "function") {
@@ -373,68 +335,6 @@ function IdlePromise(win) {
     });
   });
 }
-<<<<<<< HEAD
-
-/**
- * Wraps a callback function, that, as long as it continues to be
- * invoked, will not be triggered.  The given function will be
- * called after the timeout duration is reached, after no more
- * events fire.
- *
- * This class implements the {@link EventListener} interface,
- * which means it can be used interchangably with `addEventHandler`.
- *
- * Debouncing events can be useful when dealing with e.g. DOM events
- * that fire at a high rate.  It is generally advisable to avoid
- * computationally expensive operations such as DOM modifications
- * under these circumstances.
- *
- * One such high frequenecy event is `resize` that can fire multiple
- * times before the window reaches its final dimensions.  In order
- * to delay an operation until the window has completed resizing,
- * it is possible to use this technique to only invoke the callback
- * after the last event has fired::
- *
- *     let cb = new DebounceCallback(event => {
- *       // fires after the final resize event
- *       console.log("resize", event);
- *     });
- *     window.addEventListener("resize", cb);
- *
- * Note that it is not possible to use this synchronisation primitive
- * with `addEventListener(..., {once: true})`.
- *
- * @param {function(Event)} fn
- *     Callback function that is guaranteed to be invoked once only,
- *     after `timeout`.
- * @param {number=} [timeout = 250] timeout
- *     Time since last event firing, before `fn` will be invoked.
- */
-class DebounceCallback {
-  constructor(fn, {timeout = 250} = {}) {
-    if (typeof fn != "function" || typeof timeout != "number") {
-      throw new TypeError();
-    }
-    if (!Number.isInteger(timeout) || timeout < 0) {
-      throw new RangeError();
-    }
-
-    this.fn = fn;
-    this.timeout = timeout;
-    this.timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
-  }
-
-  handleEvent(ev) {
-    this.timer.cancel();
-    this.timer.initWithCallback(() => {
-      this.timer.cancel();
-      this.fn(ev);
-    }, this.timeout, TYPE_ONE_SHOT);
-  }
-}
-this.DebounceCallback = DebounceCallback;
-||||||| merged common ancestors
-=======
 
 /**
  * Wraps a callback function, that, as long as it continues to be
@@ -698,4 +598,3 @@ function waitForObserverTopic(topic, { checkFn = null } = {}) {
     }, topic);
   });
 }
->>>>>>> upstream-releases

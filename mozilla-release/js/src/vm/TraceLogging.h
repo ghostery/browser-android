@@ -189,79 +189,6 @@ class TraceLoggerEventPayload {
         dictionaryId_(dictionaryId),
         line_(mozilla::Nothing()),
         col_(mozilla::Nothing()),
-<<<<<<< HEAD
-        uses_(0) {}
-
-  ~TraceLoggerEventPayload() { MOZ_ASSERT(uses_ == 0); }
-
-  void setLine(uint32_t line) { line_ = mozilla::Some(line); }
-  void setColumn(uint32_t col) { col_ = mozilla::Some(col); }
-
-  mozilla::Maybe<uint32_t> line() { return line_; }
-  mozilla::Maybe<uint32_t> column() { return col_; }
-  uint32_t textId() { return textId_; }
-  uint32_t dictionaryId() { return dictionaryId_; }
-  void setDictionaryId(uint32_t dictId) { dictionaryId_ = dictId; }
-  uint32_t uses() { return uses_; }
-
-  // Payloads may have their use count change at any time, *except* the count
-  // can only go from zero to non-zero while the thread state lock is held.
-  // This should only happen under getOrCreateEventPayload below, and avoids
-  // races with purgeUnusedPayloads.
-  void use() {
-    MOZ_ASSERT_IF(!uses_, CurrentThreadOwnsTraceLoggerThreadStateLock());
-    uses_++;
-  }
-  void release() { uses_--; }
-  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-    return mallocSizeOf(this);
-  }
-||||||| merged common ancestors
-        uses_(0)
-    { }
-
-    ~TraceLoggerEventPayload() {
-        MOZ_ASSERT(uses_ == 0);
-    }
-
-    void setLine(uint32_t line) {
-        line_ = mozilla::Some(line);
-    }
-    void setColumn(uint32_t col) {
-        col_ = mozilla::Some(col);
-    }
-
-    mozilla::Maybe<uint32_t> line() {
-        return line_;
-    }
-    mozilla::Maybe<uint32_t> column() {
-        return col_;
-    }
-    uint32_t textId() {
-        return textId_;
-    }
-    uint32_t dictionaryId() {
-        return dictionaryId_;
-    }
-    uint32_t uses() {
-        return uses_;
-    }
-
-    // Payloads may have their use count change at any time, *except* the count
-    // can only go from zero to non-zero while the thread state lock is held.
-    // This should only happen under getOrCreateEventPayload below, and avoids
-    // races with purgeUnusedPayloads.
-    void use() {
-        MOZ_ASSERT_IF(!uses_, CurrentThreadOwnsTraceLoggerThreadStateLock());
-        uses_++;
-    }
-    void release() {
-        uses_--;
-    }
-    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-        return mallocSizeOf(this);
-    }
-=======
         uses_(0) {}
 
   ~TraceLoggerEventPayload() { MOZ_ASSERT(uses_ == 0); }
@@ -314,7 +241,6 @@ struct ScriptStats {
     JS::FreePolicy freePolicy;
     freePolicy(scriptName);
   }
->>>>>>> upstream-releases
 };
 
 typedef HashMap<char*, UniquePtr<ScriptStats>, mozilla::CStringHasher,
@@ -333,274 +259,23 @@ class TraceLoggerThread : public mozilla::LinkedListElement<TraceLoggerThread> {
   friend JS::TraceLoggerLineNoImpl;
   friend JS::TraceLoggerColNoImpl;
 
-<<<<<<< HEAD
- private:
-  uint32_t enabled_;
-  bool failed;
-||||||| merged common ancestors
-    UniquePtr<TraceLoggerGraph> graph;
-=======
  private:
   JSContext* cx_;
   uint32_t enabled_ = 0;
   bool failed_ = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  UniquePtr<TraceLoggerGraph> graph;
-||||||| merged common ancestors
-    ContinuousSpace<EventEntry> events;
-=======
   UniquePtr<TraceLoggerGraph> graph_;
   ContinuousSpace<EventEntry> events_;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ContinuousSpace<EventEntry> events;
-
-  // Every time the events get flushed, this count is increased by one.
-  // Together with events.lastEntryId(), this gives an unique id for every
-  // event.
-  uint32_t iteration_;
-||||||| merged common ancestors
-    // Every time the events get flushed, this count is increased by one.
-    // Together with events.lastEntryId(), this gives an unique id for every
-    // event.
-    uint32_t iteration_;
-=======
   // Every time the events get flushed, this count is increased by one.
   // Together with events.lastEntryId(), this gives an unique id for every
   // event.
   uint32_t iteration_ = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef DEBUG
-  typedef Vector<uint32_t, 1, js::SystemAllocPolicy> GraphStack;
-  GraphStack graphStack;
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-    typedef Vector<uint32_t, 1, js::SystemAllocPolicy > GraphStack;
-    GraphStack graphStack;
-#endif
-=======
 #  ifdef DEBUG
   EventVector graphStack_;
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  AutoTraceLog* top;
-
-  TraceLoggerThread()
-      : enabled_(0), failed(false), graph(), iteration_(0), top(nullptr) {}
-
-  bool init();
-  ~TraceLoggerThread();
-
-  bool init(uint32_t loggerId);
-  void initGraph();
-
-  void clear();
-
-  bool enable();
-  bool enable(JSContext* cx);
-  bool disable(bool force = false, const char* = "");
-  bool enabled() { return enabled_ > 0; }
-
-  void silentFail(const char* error);
-
-  size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
-  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
-
- private:
-  bool fail(JSContext* cx, const char* error);
-
- public:
-  // Given the previous iteration and size, return an array of events
-  // (there could be lost events). At the same time update the iteration and
-  // size and gives back how many events there are.
-  EventEntry* getEventsStartingAt(uint32_t* lastIteration, uint32_t* lastSize,
-                                  size_t* num) {
-    EventEntry* start;
-    if (iteration_ == *lastIteration) {
-      MOZ_ASSERT(*lastSize <= events.size());
-      *num = events.size() - *lastSize;
-      start = events.data() + *lastSize;
-    } else {
-      *num = events.size();
-      start = events.data();
-    }
-
-    getIterationAndSize(lastIteration, lastSize);
-    return start;
-  }
-
-  void getIterationAndSize(uint32_t* iteration, uint32_t* size) const {
-    *iteration = iteration_;
-    *size = events.size();
-  }
-
-  bool lostEvents(uint32_t lastIteration, uint32_t lastSize) {
-    // If still logging in the same iteration, there are no lost events.
-    if (lastIteration == iteration_) {
-      MOZ_ASSERT(lastSize <= events.size());
-      return false;
-    }
-
-    // If we are in the next consecutive iteration we are only sure we
-    // didn't lose any events when the lastSize equals the maximum size
-    // 'events' can get.
-    if (lastIteration == iteration_ - 1 && lastSize == events.maxSize()) {
-      return false;
-    }
-
-    return true;
-  }
-
- private:
-  const char* maybeEventText(uint32_t id);
-
- public:
-  const char* eventText(uint32_t id) {
-    const char* text = maybeEventText(id);
-    MOZ_ASSERT(text);
-    return text;
-  };
-
- public:
-  // Log an event (no start/stop, only the timestamp is recorded).
-  void logTimestamp(TraceLoggerTextId id);
-
-  // Record timestamps for start and stop of an event.
-  void startEvent(TraceLoggerTextId id);
-  void startEvent(const TraceLoggerEvent& event);
-  void stopEvent(TraceLoggerTextId id);
-  void stopEvent(const TraceLoggerEvent& event);
-
-  // These functions are actually private and shouldn't be used in normal
-  // code. They are made public so they can be used in assembly.
-  void logTimestamp(uint32_t id);
-  void startEvent(uint32_t id);
-  void stopEvent(uint32_t id);
-
- private:
-  void stopEvent();
-  void log(uint32_t id);
-
- public:
-  static unsigned offsetOfEnabled() {
-    return offsetof(TraceLoggerThread, enabled_);
-  }
-||||||| merged common ancestors
-  public:
-    AutoTraceLog* top;
-
-    TraceLoggerThread()
-      : enabled_(0),
-        failed(false),
-        graph(),
-        iteration_(0),
-        top(nullptr)
-    { }
-
-    bool init();
-    ~TraceLoggerThread();
-
-    bool init(uint32_t loggerId);
-    void initGraph();
-
-    void clear();
-
-    bool enable();
-    bool enable(JSContext* cx);
-    bool disable(bool force = false, const char* = "");
-    bool enabled() { return enabled_ > 0; }
-
-    void silentFail(const char* error);
-
-    size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
-    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
-
-  private:
-    bool fail(JSContext* cx, const char* error);
-
-  public:
-    // Given the previous iteration and size, return an array of events
-    // (there could be lost events). At the same time update the iteration and
-    // size and gives back how many events there are.
-    EventEntry* getEventsStartingAt(uint32_t* lastIteration, uint32_t* lastSize, size_t* num) {
-        EventEntry* start;
-        if (iteration_ == *lastIteration) {
-            MOZ_ASSERT(*lastSize <= events.size());
-            *num = events.size() - *lastSize;
-            start = events.data() + *lastSize;
-        } else {
-            *num = events.size();
-            start = events.data();
-        }
-
-        getIterationAndSize(lastIteration, lastSize);
-        return start;
-    }
-
-    void getIterationAndSize(uint32_t* iteration, uint32_t* size) const {
-        *iteration = iteration_;
-        *size = events.size();
-    }
-
-    bool lostEvents(uint32_t lastIteration, uint32_t lastSize) {
-        // If still logging in the same iteration, there are no lost events.
-        if (lastIteration == iteration_) {
-            MOZ_ASSERT(lastSize <= events.size());
-            return false;
-        }
-
-        // If we are in the next consecutive iteration we are only sure we
-        // didn't lose any events when the lastSize equals the maximum size
-        // 'events' can get.
-        if (lastIteration == iteration_ - 1 && lastSize == events.maxSize()) {
-            return false;
-        }
-
-        return true;
-    }
-
-  private:
-    const char* maybeEventText(uint32_t id);
-  public:
-    const char* eventText(uint32_t id) {
-        const char* text = maybeEventText(id);
-        MOZ_ASSERT(text);
-        return text;
-    };
-
-  public:
-    // Log an event (no start/stop, only the timestamp is recorded).
-    void logTimestamp(TraceLoggerTextId id);
-
-    // Record timestamps for start and stop of an event.
-    void startEvent(TraceLoggerTextId id);
-    void startEvent(const TraceLoggerEvent& event);
-    void stopEvent(TraceLoggerTextId id);
-    void stopEvent(const TraceLoggerEvent& event);
-
-    // These functions are actually private and shouldn't be used in normal
-    // code. They are made public so they can be used in assembly.
-    void logTimestamp(uint32_t id);
-    void startEvent(uint32_t id);
-    void stopEvent(uint32_t id);
-  private:
-    void stopEvent();
-    void log(uint32_t id);
-
-  public:
-    static unsigned offsetOfEnabled() {
-        return offsetof(TraceLoggerThread, enabled_);
-    }
-=======
   UniqueChars threadName_ = nullptr;
 
  public:
@@ -709,256 +384,12 @@ class TraceLoggerThread : public mozilla::LinkedListElement<TraceLoggerThread> {
   static unsigned offsetOfEnabled() {
     return offsetof(TraceLoggerThread, enabled_);
   }
->>>>>>> upstream-releases
 #endif
 };
 
 // Process wide trace logger state.
 class TraceLoggerThreadState {
 #ifdef JS_TRACE_LOGGING
-<<<<<<< HEAD
-  friend JS::TraceLoggerDictionaryImpl;
-#ifdef DEBUG
-  bool initialized;
-#endif
-
-  bool enabledTextIds[TraceLogger_Last];
-  bool mainThreadEnabled;
-  bool helperThreadEnabled;
-  bool graphEnabled;
-  bool graphFileEnabled;
-  bool spewErrors;
-  mozilla::LinkedList<TraceLoggerThread> threadLoggers;
-
-  // Any events that carry a payload are saved in this hash map.
-  // The key is the event textId, and the value is a pointer to
-  // the payload object.
-  typedef HashMap<uint32_t, TraceLoggerEventPayload*, DefaultHasher<uint32_t>,
-                  SystemAllocPolicy>
-      TextIdToPayloadMap;
-
-  // The dictionary vector is used to store all of the custom event strings
-  // that are referenced by the payload objects.
-  typedef mozilla::Vector<UniqueChars, 0, SystemAllocPolicy> DictionaryVector;
-
-  // All payload strings are hashed and saved as a key in the payloadDictionary
-  // hash table.  The values are indices to the dictionaryData vector where the
-  // actual string is stored.  The major benefit of having this hash map is for
-  // de-duplication of JS script filenames.
-  typedef HashMap<const char*, uint32_t, mozilla::CStringHasher,
-                  SystemAllocPolicy>
-      StringHashToDictionaryMap;
-
-  TextIdToPayloadMap textIdPayloads;
-  StringHashToDictionaryMap payloadDictionary;
-  DictionaryVector dictionaryData;
-
-  uint32_t nextTextId;
-  uint32_t nextDictionaryId;
-
- public:
-  mozilla::TimeStamp startTime;
-
-  double getTimeStampOffset(mozilla::TimeStamp time) {
-    mozilla::TimeDuration delta = time - startTime;
-    return delta.ToMicroseconds();
-  }
-
-  // Mutex to guard the data structures used to hold the payload data:
-  // textIdPayloads, payloadDictionary & dictionaryData.
-  Mutex lock;
-
-  TraceLoggerThreadState()
-      :
-#ifdef DEBUG
-        initialized(false),
-#endif
-        mainThreadEnabled(false),
-        helperThreadEnabled(false),
-        graphEnabled(false),
-        graphFileEnabled(false),
-        spewErrors(false),
-        nextTextId(TraceLogger_Last),
-        nextDictionaryId(0),
-        lock(js::mutexid::TraceLoggerThreadState) {
-  }
-
-  bool init();
-  ~TraceLoggerThreadState();
-
-  void enableDefaultLogging();
-  void enableIonLogging();
-  void enableFrontendLogging();
-
-  void clear();
-  bool remapDictionaryEntries(
-      mozilla::Vector<UniqueChars, 0, SystemAllocPolicy>* newDictionary,
-      uint32_t* newNextDictionaryId);
-
-  TraceLoggerThread* forCurrentThread(JSContext* cx);
-  void destroyLogger(TraceLoggerThread* logger);
-
-  bool isTextIdEnabled(uint32_t textId) {
-    if (textId < TraceLogger_Last) {
-      return enabledTextIds[textId];
-    }
-    return true;
-  }
-  void enableTextId(JSContext* cx, uint32_t textId);
-  void disableTextId(JSContext* cx, uint32_t textId);
-  void maybeSpewError(const char* text) {
-    if (spewErrors) {
-      fprintf(stderr, "%s\n", text);
-    }
-  }
-
-  const char* maybeEventText(uint32_t id);
-  const char* maybeEventText(TraceLoggerEventPayload* p);
-
-  void purgeUnusedPayloads();
-
-  // These functions map a unique input to a logger ID.
-  // This can be used to give start and stop events. Calls to these functions
-  // should be limited if possible, because of the overhead. Note: it is not
-  // allowed to use them in logTimestamp.
-  TraceLoggerEventPayload* getOrCreateEventPayload(const char* text);
-  TraceLoggerEventPayload* getOrCreateEventPayload(JSScript* script);
-  TraceLoggerEventPayload* getOrCreateEventPayload(const char* filename,
-                                                   uint32_t lineno,
-                                                   uint32_t colno);
-  TraceLoggerEventPayload* getPayload(uint32_t id);
-
-  size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
-  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) {
-    return mallocSizeOf(this) + sizeOfExcludingThis(mallocSizeOf);
-  }
-
-  bool isGraphFileEnabled() { return graphFileEnabled; }
-  bool isGraphEnabled() { return graphEnabled; }
-
-  void enableTextIdsForProfiler();
-  void disableTextIdsForProfiler();
-  void disableAllTextIds();
-||||||| merged common ancestors
-#ifdef DEBUG
-    bool initialized;
-#endif
-
-    bool enabledTextIds[TraceLogger_Last];
-    bool mainThreadEnabled;
-    bool helperThreadEnabled;
-    bool graphEnabled;
-    bool graphFileEnabled;
-    bool spewErrors;
-    mozilla::LinkedList<TraceLoggerThread> threadLoggers;
-
-    // Any events that carry a payload are saved in this hash map.
-    // The key is the event textId, and the value is a pointer to
-    // the payload object.
-    typedef HashMap<uint32_t,
-                    TraceLoggerEventPayload*,
-                    DefaultHasher<uint32_t>,
-                    SystemAllocPolicy> TextIdToPayloadMap;
-
-    // The dictionary vector is used to store all of the custom event strings
-    // that are referenced by the payload objects.
-    typedef mozilla::Vector<UniqueChars,
-                            0,
-                            SystemAllocPolicy> DictionaryVector;
-
-
-    // All payload strings are hashed and saved as a key in the payloadDictionary
-    // hash table.  The values are indices to the dictionaryData vector where the
-    // actual string is stored.  The major benefit of having this hash map is for
-    // de-duplication of JS script filenames.
-    typedef HashMap<const char*,
-                    uint32_t,
-                    mozilla::CStringHasher,
-                    SystemAllocPolicy> StringHashToDictionaryMap;
-
-    TextIdToPayloadMap textIdPayloads;
-    StringHashToDictionaryMap payloadDictionary;
-    DictionaryVector dictionaryData;
-
-    uint32_t nextTextId;
-    uint32_t nextDictionaryId;
-
-  public:
-    uint64_t startupTime;
-
-    // Mutex to guard the data structures used to hold the payload data:
-    // textIdPayloads, payloadDictionary & dictionaryData.
-    Mutex lock;
-
-    TraceLoggerThreadState()
-      :
-#ifdef DEBUG
-        initialized(false),
-#endif
-        mainThreadEnabled(false),
-        helperThreadEnabled(false),
-        graphEnabled(false),
-        graphFileEnabled(false),
-        spewErrors(false),
-        nextTextId(TraceLogger_Last),
-        nextDictionaryId(0),
-        startupTime(0),
-        lock(js::mutexid::TraceLoggerThreadState)
-    { }
-
-    bool init();
-    ~TraceLoggerThreadState();
-
-    void enableDefaultLogging();
-    void enableIonLogging();
-    void enableFrontendLogging();
-
-    void clear();
-
-    TraceLoggerThread* forCurrentThread(JSContext* cx);
-    void destroyLogger(TraceLoggerThread* logger);
-
-    bool isTextIdEnabled(uint32_t textId) {
-        if (textId < TraceLogger_Last) {
-            return enabledTextIds[textId];
-        }
-        return true;
-    }
-    void enableTextId(JSContext* cx, uint32_t textId);
-    void disableTextId(JSContext* cx, uint32_t textId);
-    void maybeSpewError(const char* text) {
-        if (spewErrors) {
-            fprintf(stderr, "%s\n", text);
-        }
-    }
-
-    const char* maybeEventText(uint32_t id);
-    const char* maybeEventText(TraceLoggerEventPayload *p);
-
-    void purgeUnusedPayloads();
-
-    // These functions map a unique input to a logger ID.
-    // This can be used to give start and stop events. Calls to these functions should be
-    // limited if possible, because of the overhead.
-    // Note: it is not allowed to use them in logTimestamp.
-    TraceLoggerEventPayload* getOrCreateEventPayload(const char* text);
-    TraceLoggerEventPayload* getOrCreateEventPayload(JSScript* script);
-    TraceLoggerEventPayload* getOrCreateEventPayload(const char* filename,
-                                                     uint32_t lineno, uint32_t colno);
-    TraceLoggerEventPayload* getPayload (uint32_t id);
-
-    size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
-    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) {
-        return mallocSizeOf(this) + sizeOfExcludingThis(mallocSizeOf);
-    }
-
-    bool isGraphFileEnabled()  { return graphFileEnabled; }
-    bool isGraphEnabled()      { return graphEnabled;  }
-
-    void enableTextIdsForProfiler();
-    void disableTextIdsForProfiler();
-    void disableAllTextIds();
-=======
   friend JS::TraceLoggerDictionaryImpl;
 #  ifdef DEBUG
   bool initialized = false;
@@ -1072,7 +503,6 @@ class TraceLoggerThreadState {
   void enableTextIdsForProfiler();
   void disableTextIdsForProfiler();
   void disableAllTextIds();
->>>>>>> upstream-releases
 #endif
 };
 
@@ -1219,28 +649,8 @@ class MOZ_RAII AutoTraceLog {
     if (logger) {
       logger->startEvent(event);
 
-<<<<<<< HEAD
-      prev = logger->top;
-      logger->top = this;
-||||||| merged common ancestors
-    AutoTraceLog(TraceLoggerThread* logger, TraceLoggerTextId id MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : logger(logger),
-        isEvent(false),
-        executed(false),
-        prev(nullptr)
-    {
-        MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-        payload.id = id;
-        if (logger) {
-            logger->startEvent(id);
-
-            prev = logger->top;
-            logger->top = this;
-        }
-=======
       prev = logger->top_;
       logger->top_ = this;
->>>>>>> upstream-releases
     }
   }
 
@@ -1252,48 +662,9 @@ class MOZ_RAII AutoTraceLog {
     if (logger) {
       logger->startEvent(id);
 
-<<<<<<< HEAD
-      prev = logger->top;
-      logger->top = this;
-||||||| merged common ancestors
-    ~AutoTraceLog()
-    {
-        if (logger) {
-            while (this != logger->top) {
-                logger->top->stop();
-            }
-            stop();
-        }
-=======
       prev = logger->top_;
       logger->top_ = this;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  ~AutoTraceLog() {
-    if (logger) {
-      while (this != logger->top) {
-        logger->top->stop();
-      }
-      stop();
-||||||| merged common ancestors
-  private:
-    void stop() {
-        if (!executed) {
-            executed = true;
-            if (isEvent) {
-                logger->stopEvent(*payload.event);
-            } else {
-                logger->stopEvent(payload.id);
-            }
-        }
-
-        if (logger->top == this) {
-            logger->top = prev;
-        }
-=======
   }
 
   ~AutoTraceLog() {
@@ -1302,7 +673,6 @@ class MOZ_RAII AutoTraceLog {
         logger->top_->stop();
       }
       stop();
->>>>>>> upstream-releases
     }
   }
 
@@ -1316,20 +686,9 @@ class MOZ_RAII AutoTraceLog {
         logger->stopEvent(payload.id);
       }
     }
-<<<<<<< HEAD
-
-    if (logger->top == this) {
-      logger->top = prev;
-||||||| merged common ancestors
-    AutoTraceLog(TraceLoggerThread* logger,
-                 const TraceLoggerEvent& event MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    {
-        MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-=======
 
     if (logger->top_ == this) {
       logger->top_ = prev;
->>>>>>> upstream-releases
     }
   }
 #else

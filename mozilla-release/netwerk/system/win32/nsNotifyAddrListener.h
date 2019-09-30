@@ -30,12 +30,6 @@ class nsNotifyAddrListener : public nsINetworkLinkService,
 
   nsNotifyAddrListener();
 
-<<<<<<< HEAD
-  nsresult Init(void);
-  void CheckLinkStatus(void);
-||||||| merged common ancestors
-    nsNotifyAddrListener();
-=======
   nsresult Init(void);
   void CheckLinkStatus(void);
 
@@ -47,146 +41,40 @@ class nsNotifyAddrListener : public nsINetworkLinkService,
         : Runnable("nsNotifyAddrListener::ChangeEvent"),
           mService(aService),
           mEventID(aEventID) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  class ChangeEvent : public mozilla::Runnable {
-   public:
-    NS_DECL_NSIRUNNABLE
-    ChangeEvent(nsINetworkLinkService *aService, const char *aEventID)
-        : Runnable("nsNotifyAddrListener::ChangeEvent"),
-          mService(aService),
-          mEventID(aEventID) {}
-||||||| merged common ancestors
-    nsresult Init(void);
-    void CheckLinkStatus(void);
-=======
    private:
     nsCOMPtr<nsINetworkLinkService> mService;
     const char* mEventID;
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-   private:
-    nsCOMPtr<nsINetworkLinkService> mService;
-    const char *mEventID;
-  };
-||||||| merged common ancestors
-protected:
-    class ChangeEvent : public mozilla::Runnable {
-    public:
-        NS_DECL_NSIRUNNABLE
-        ChangeEvent(nsINetworkLinkService *aService, const char *aEventID)
-            : Runnable("nsNotifyAddrListener::ChangeEvent")
-            , mService(aService)
-            , mEventID(aEventID)
-        {}
-    private:
-        nsCOMPtr<nsINetworkLinkService> mService;
-        const char *mEventID;
-    };
-=======
   bool mLinkUp;
   bool mStatusKnown;
   bool mCheckAttempted;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool mLinkUp;
-  bool mStatusKnown;
-  bool mCheckAttempted;
-||||||| merged common ancestors
-    bool mLinkUp;
-    bool mStatusKnown;
-    bool mCheckAttempted;
-=======
   nsresult Shutdown(void);
   nsresult SendEvent(const char* aEventID);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult Shutdown(void);
-  nsresult SendEvent(const char *aEventID);
-||||||| merged common ancestors
-    nsresult Shutdown(void);
-    nsresult SendEvent(const char *aEventID);
-=======
   DWORD CheckAdaptersAddresses(void);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  DWORD CheckAdaptersAddresses(void);
-||||||| merged common ancestors
-    DWORD CheckAdaptersAddresses(void);
-=======
   // Checks for an Internet Connection Sharing (ICS) gateway.
   bool CheckICSGateway(PIP_ADAPTER_ADDRESSES aAdapter);
   bool CheckICSStatus(PWCHAR aAdapterName);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Checks for an Internet Connection Sharing (ICS) gateway.
-  bool CheckICSGateway(PIP_ADAPTER_ADDRESSES aAdapter);
-  bool CheckICSStatus(PWCHAR aAdapterName);
-||||||| merged common ancestors
-    // Checks for an Internet Connection Sharing (ICS) gateway.
-    bool  CheckICSGateway(PIP_ADAPTER_ADDRESSES aAdapter);
-    bool  CheckICSStatus(PWCHAR aAdapterName);
-=======
   nsCOMPtr<nsIThread> mThread;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIThread> mThread;
-||||||| merged common ancestors
-    nsCOMPtr<nsIThread> mThread;
-=======
  private:
   // Returns the new timeout period for coalescing (or INFINITE)
   DWORD nextCoalesceWaitTime();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  // Returns the new timeout period for coalescing (or INFINITE)
-  DWORD nextCoalesceWaitTime();
-||||||| merged common ancestors
-private:
-    // Returns the new timeout period for coalescing (or INFINITE)
-    DWORD nextCoalesceWaitTime();
-=======
   // Called for every detected network change
   nsresult NetworkChanged();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Called for every detected network change
-  nsresult NetworkChanged();
-||||||| merged common ancestors
-    // Called for every detected network change
-    nsresult NetworkChanged();
-=======
   // Figure out the current network identification
   void calculateNetworkId(void);
   bool findMac(char* gateway);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Figure out the current network identification
-  void calculateNetworkId(void);
-  bool findMac(char *gateway);
-  nsCString mNetworkId;
-||||||| merged common ancestors
-    // Figure out the current network identification
-    void calculateNetworkId(void);
-    bool findMac(char *gateway);
-    nsCString mNetworkId;
-=======
   mozilla::Mutex mMutex;
   nsCString mNetworkId;
->>>>>>> upstream-releases
 
   HANDLE mCheckEvent;
 

@@ -71,13 +71,7 @@ using namespace mozilla;
 #endif
 
 #ifndef FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
-<<<<<<< HEAD
-#define FILE_ATTRIBUTE_NOT_CONTENT_INDEXED 0x00002000
-||||||| merged common ancestors
-#define FILE_ATTRIBUTE_NOT_CONTENT_INDEXED  0x00002000
-=======
 #  define FILE_ATTRIBUTE_NOT_CONTENT_INDEXED 0x00002000
->>>>>>> upstream-releases
 #endif
 
 #ifndef DRIVE_REMOTE
@@ -797,17 +791,7 @@ nsresult nsLocalFile::nsLocalFileConstructor(nsISupports* aOuter,
 // nsLocalFile::nsISupports
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsLocalFile, nsIFile, nsILocalFileWin, nsIHashable)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(nsLocalFile,
-                  nsIFile,
-                  nsILocalFileWin,
-                  nsIHashable)
-
-=======
 NS_IMPL_ISUPPORTS(nsLocalFile, nsIFile, nsILocalFileWin)
->>>>>>> upstream-releases
 
 //-----------------------------------------------------------------------------
 // nsLocalFile <private>
@@ -1068,17 +1052,8 @@ static void StripRundll32(nsString& aCommandString) {
 // to launch the associated application as it strips parameters and
 // rundll.exe from the string. Designed for retrieving display information
 // on a particular handler.
-<<<<<<< HEAD
-/* static */ bool nsLocalFile::CleanupCmdHandlerPath(
-    nsAString& aCommandHandler) {
-||||||| merged common ancestors
-/* static */ bool
-nsLocalFile::CleanupCmdHandlerPath(nsAString& aCommandHandler)
-{
-=======
 /* static */
 bool nsLocalFile::CleanupCmdHandlerPath(nsAString& aCommandHandler) {
->>>>>>> upstream-releases
   nsAutoString handlerCommand(aCommandHandler);
 
   // Straight command path:
@@ -1159,11 +1134,6 @@ nsLocalFile::OpenANSIFileDesc(const char* aMode, FILE** aResult) {
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-
-=======
 static nsresult do_create(nsIFile* aFile, const nsString& aPath,
                           uint32_t aAttributes) {
   PRFileDesc* file;
@@ -1191,7 +1161,6 @@ static nsresult do_mkdir(nsIFile*, const nsString& aPath, uint32_t) {
   return NS_OK;
 }
 
->>>>>>> upstream-releases
 NS_IMETHODIMP
 nsLocalFile::Create(uint32_t aType, uint32_t aAttributes) {
   if (aType != NORMAL_FILE_TYPE && aType != DIRECTORY_TYPE) {
@@ -1270,81 +1239,9 @@ nsLocalFile::Create(uint32_t aType, uint32_t aAttributes) {
     }
   }
 
-<<<<<<< HEAD
-  if (aType == NORMAL_FILE_TYPE) {
-    PRFileDesc* file;
-    rv = OpenFile(mResolvedPath,
-                  PR_RDONLY | PR_CREATE_FILE | PR_APPEND | PR_EXCL, aAttributes,
-                  false, &file);
-    if (file) {
-      PR_Close(file);
-    }
-
-    if (rv == NS_ERROR_FILE_ACCESS_DENIED) {
-      // need to return already-exists for directories (bug 452217)
-      bool isdir;
-      if (NS_SUCCEEDED(IsDirectory(&isdir)) && isdir) {
-        rv = NS_ERROR_FILE_ALREADY_EXISTS;
-      }
-    } else if (NS_ERROR_FILE_NOT_FOUND == rv &&
-               NS_ERROR_FILE_ACCESS_DENIED == directoryCreateError) {
-      // If a previous CreateDirectory failed due to access, return that.
-      return NS_ERROR_FILE_ACCESS_DENIED;
-    }
-    return rv;
-  }
-
-  if (aType == DIRECTORY_TYPE) {
-    if (!::CreateDirectoryW(mResolvedPath.get(), nullptr)) {
-      rv = ConvertWinError(GetLastError());
-      if (NS_ERROR_FILE_NOT_FOUND == rv &&
-          NS_ERROR_FILE_ACCESS_DENIED == directoryCreateError) {
-        // If a previous CreateDirectory failed due to access, return that.
-        return NS_ERROR_FILE_ACCESS_DENIED;
-      }
-      return rv;
-    }
-    return NS_OK;
-||||||| merged common ancestors
-  if (aType == NORMAL_FILE_TYPE) {
-    PRFileDesc* file;
-    rv = OpenFile(mResolvedPath,
-                  PR_RDONLY | PR_CREATE_FILE | PR_APPEND | PR_EXCL,
-                  aAttributes, false, &file);
-    if (file) {
-      PR_Close(file);
-    }
-
-    if (rv == NS_ERROR_FILE_ACCESS_DENIED) {
-      // need to return already-exists for directories (bug 452217)
-      bool isdir;
-      if (NS_SUCCEEDED(IsDirectory(&isdir)) && isdir) {
-        rv = NS_ERROR_FILE_ALREADY_EXISTS;
-      }
-    } else if (NS_ERROR_FILE_NOT_FOUND == rv &&
-               NS_ERROR_FILE_ACCESS_DENIED == directoryCreateError) {
-      // If a previous CreateDirectory failed due to access, return that.
-      return NS_ERROR_FILE_ACCESS_DENIED;
-    }
-    return rv;
-  }
-
-  if (aType == DIRECTORY_TYPE) {
-    if (!::CreateDirectoryW(mResolvedPath.get(), nullptr)) {
-      rv = ConvertWinError(GetLastError());
-      if (NS_ERROR_FILE_NOT_FOUND == rv &&
-          NS_ERROR_FILE_ACCESS_DENIED == directoryCreateError) {
-        // If a previous CreateDirectory failed due to access, return that.
-        return NS_ERROR_FILE_ACCESS_DENIED;
-      }
-      return rv;
-    }
-    return NS_OK;
-=======
   // If our last CreateDirectory failed due to access, return that.
   if (NS_ERROR_FILE_ACCESS_DENIED == directoryCreateError) {
     return directoryCreateError;
->>>>>>> upstream-releases
   }
 
   return createFunc(this, mResolvedPath, aAttributes);
@@ -1779,92 +1676,22 @@ nsresult nsLocalFile::CopySingleFile(nsIFile* aSourceFile, nsIFile* aDestParent,
     return rv;
   }
 
-<<<<<<< HEAD
-  // Pass the flag COPY_FILE_NO_BUFFERING to CopyFileEx as we may be copying
-  // to a SMBV2 remote drive. Without this parameter subsequent append mode
-  // file writes can cause the resultant file to become corrupt. We only need to
-  // do this if the major version of Windows is > 5(Only Windows Vista and above
-  // can support SMBV2).  With a 7200RPM hard drive:
-  // Copying a 1KB file with COPY_FILE_NO_BUFFERING takes about 30-60ms.
-  // Copying a 1KB file without COPY_FILE_NO_BUFFERING takes < 1ms.
-  // So we only use COPY_FILE_NO_BUFFERING when we have a remote drive.
-  int copyOK;
-  DWORD dwCopyFlags = COPY_FILE_ALLOW_DECRYPTED_DESTINATION;
-  bool path1Remote, path2Remote;
-  if (!IsRemoteFilePath(filePath.get(), path1Remote) ||
-      !IsRemoteFilePath(destPath.get(), path2Remote) || path1Remote ||
-      path2Remote) {
-    dwCopyFlags |= COPY_FILE_NO_BUFFERING;
-  }
-
-||||||| merged common ancestors
-  // Pass the flag COPY_FILE_NO_BUFFERING to CopyFileEx as we may be copying
-  // to a SMBV2 remote drive. Without this parameter subsequent append mode
-  // file writes can cause the resultant file to become corrupt. We only need to do
-  // this if the major version of Windows is > 5(Only Windows Vista and above
-  // can support SMBV2).  With a 7200RPM hard drive:
-  // Copying a 1KB file with COPY_FILE_NO_BUFFERING takes about 30-60ms.
-  // Copying a 1KB file without COPY_FILE_NO_BUFFERING takes < 1ms.
-  // So we only use COPY_FILE_NO_BUFFERING when we have a remote drive.
-  int copyOK;
-  DWORD dwCopyFlags = COPY_FILE_ALLOW_DECRYPTED_DESTINATION;
-  bool path1Remote, path2Remote;
-  if (!IsRemoteFilePath(filePath.get(), path1Remote) ||
-      !IsRemoteFilePath(destPath.get(), path2Remote) ||
-      path1Remote || path2Remote) {
-    dwCopyFlags |= COPY_FILE_NO_BUFFERING;
-  }
-
-=======
->>>>>>> upstream-releases
   if (FilePreferences::IsBlockedUNCPath(destPath)) {
     return NS_ERROR_FILE_ACCESS_DENIED;
   }
 
-<<<<<<< HEAD
-  if (!move) {
-    copyOK = ::CopyFileExW(filePath.get(), destPath.get(), nullptr, nullptr,
-                           nullptr, dwCopyFlags);
-  } else {
-||||||| merged common ancestors
-  if (!move) {
-    copyOK = ::CopyFileExW(filePath.get(), destPath.get(), nullptr,
-                           nullptr, nullptr, dwCopyFlags);
-  } else {
-=======
   int copyOK = 0;
   if (move) {
->>>>>>> upstream-releases
     copyOK = ::MoveFileExW(filePath.get(), destPath.get(),
                            MOVEFILE_REPLACE_EXISTING);
   }
 
-<<<<<<< HEAD
-    // Check if copying the source file to a different volume,
-    // as this could be an SMBV2 mapped drive.
-    if (!copyOK && GetLastError() == ERROR_NOT_SAME_DEVICE) {
-      if (aOptions & Rename) {
-        return NS_ERROR_FILE_ACCESS_DENIED;
-      }
-      copyOK = CopyFileExW(filePath.get(), destPath.get(), nullptr, nullptr,
-                           nullptr, dwCopyFlags);
-||||||| merged common ancestors
-    // Check if copying the source file to a different volume,
-    // as this could be an SMBV2 mapped drive.
-    if (!copyOK && GetLastError() == ERROR_NOT_SAME_DEVICE) {
-      if (aOptions & Rename) {
-        return NS_ERROR_FILE_ACCESS_DENIED;
-      }
-      copyOK = CopyFileExW(filePath.get(), destPath.get(), nullptr,
-                           nullptr, nullptr, dwCopyFlags);
-=======
   // If we either failed to move the file, or this is a copy, try copying:
   if (!copyOK && (!move || GetLastError() == ERROR_NOT_SAME_DEVICE)) {
     // Failed renames here should just return access denied.
     if (move && (aOptions & Rename)) {
       return NS_ERROR_FILE_ACCESS_DENIED;
     }
->>>>>>> upstream-releases
 
     // Pass the flag COPY_FILE_NO_BUFFERING to CopyFileEx as we may be copying
     // to a SMBV2 remote drive. Without this parameter subsequent append mode
@@ -1948,45 +1775,10 @@ nsresult nsLocalFile::CopyMove(nsIFile* aParentDir, const nsAString& aNewName,
     return NS_ERROR_FILE_DESTINATION_NOT_DIR;
   }
 
-<<<<<<< HEAD
-  // make sure it exists and is a directory.  Create it if not there.
-  bool exists = false;
-  rv = newParentDir->Exists(&exists);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  if (!exists) {
-    rv = newParentDir->Create(DIRECTORY_TYPE,
-                              0644);  // TODO, what permissions should we use
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-  } else {
-    bool isDir = false;
-    rv = newParentDir->IsDirectory(&isDir);
-||||||| merged common ancestors
-  // make sure it exists and is a directory.  Create it if not there.
-  bool exists = false;
-  rv = newParentDir->Exists(&exists);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  if (!exists) {
-    rv = newParentDir->Create(DIRECTORY_TYPE, 0644);  // TODO, what permissions should we use
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-  } else {
-    bool isDir = false;
-    rv = newParentDir->IsDirectory(&isDir);
-=======
   if (!targetInSameDirectory) {
     // make sure it exists and is a directory.  Create it if not there.
     bool exists = false;
     rv = newParentDir->Exists(&exists);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }
@@ -2248,19 +2040,12 @@ nsLocalFile::MoveTo(nsIFile* aNewParentDir, const nsAString& aNewName) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsLocalFile::RenameTo(nsIFile* aNewParentDir, const nsAString& aNewName) {
-||||||| merged common ancestors
-nsLocalFile::RenameTo(nsIFile* aNewParentDir, const nsAString& aNewName)
-{
-=======
 nsLocalFile::RenameTo(nsIFile* aNewParentDir, const nsAString& aNewName) {
   // If we're not provided with a new parent, we're renaming inside one and
   // the same directory and can safely skip checking if the destination
   // directory exists:
   bool targetInSameDirectory = !aNewParentDir;
 
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> targetParentDir = aNewParentDir;
   // check to see if this exists, otherwise return an error.
   // we will check this by resolving.  If the user wants us
@@ -2972,179 +2757,9 @@ nsLocalFile::IsExecutable(bool* aResult) {
       *p += (*p >= L'A' && *p <= L'Z') ? 'a' - 'A' : 0;
     }
 
-<<<<<<< HEAD
-    // Search for any of the set of executable extensions.
-    static const char* const executableExts[] = {
-        // clang-format off
-      "ad",
-      "ade",         // access project extension
-      "adp",
-      "air",         // Adobe AIR installer
-      "app",         // executable application
-      "application", // from bug 348763
-      "asp",
-      "bas",
-      "bat",
-      "chm",
-      "cmd",
-      "com",
-      "cpl",
-      "crt",
-      "exe",
-      "fxp",         // FoxPro compiled app
-      "hlp",
-      "hta",
-      "inf",
-      "ins",
-      "isp",
-      "jar",         // java application bundle
-      "js",
-      "jse",
-      "lnk",
-      "mad",         // Access Module Shortcut
-      "maf",         // Access
-      "mag",         // Access Diagram Shortcut
-      "mam",         // Access Macro Shortcut
-      "maq",         // Access Query Shortcut
-      "mar",         // Access Report Shortcut
-      "mas",         // Access Stored Procedure
-      "mat",         // Access Table Shortcut
-      "mau",         // Media Attachment Unit
-      "mav",         // Access View Shortcut
-      "maw",         // Access Data Access Page
-      "mda",         // Access Add-in, MDA Access 2 Workgroup
-      "mdb",
-      "mde",
-      "mdt",         // Access Add-in Data
-      "mdw",         // Access Workgroup Information
-      "mdz",         // Access Wizard Template
-      "msc",
-      "msh",         // Microsoft Shell
-      "mshxml",      // Microsoft Shell
-      "msi",
-      "msp",
-      "mst",
-      "ops",         // Office Profile Settings
-      "pcd",
-      "pif",
-      "plg",         // Developer Studio Build Log
-      "prf",         // windows system file
-      "prg",
-      "pst",
-      "reg",
-      "scf",         // Windows explorer command
-      "scr",
-      "sct",
-      "settingcontent-ms",
-      "shb",
-      "shs",
-      "url",
-      "vb",
-      "vbe",
-      "vbs",
-      "vsd",
-      "vsmacros",    // Visual Studio .NET Binary-based Macro Project
-      "vss",
-      "vst",
-      "vsw",
-      "ws",
-      "wsc",
-      "wsf",
-      "wsh"
-        // clang-format on
-    };
-    nsDependentSubstring ext = Substring(path, dotIdx + 1);
-    for (size_t i = 0; i < ArrayLength(executableExts); ++i) {
-      if (ext.EqualsASCII(executableExts[i])) {
-||||||| merged common ancestors
-    // Search for any of the set of executable extensions.
-    static const char* const executableExts[] = {
-      // clang-format off
-      "ad",
-      "ade",         // access project extension
-      "adp",
-      "air",         // Adobe AIR installer
-      "app",         // executable application
-      "application", // from bug 348763
-      "asp",
-      "bas",
-      "bat",
-      "chm",
-      "cmd",
-      "com",
-      "cpl",
-      "crt",
-      "exe",
-      "fxp",         // FoxPro compiled app
-      "hlp",
-      "hta",
-      "inf",
-      "ins",
-      "isp",
-      "jar",         // java application bundle
-      "js",
-      "jse",
-      "lnk",
-      "mad",         // Access Module Shortcut
-      "maf",         // Access
-      "mag",         // Access Diagram Shortcut
-      "mam",         // Access Macro Shortcut
-      "maq",         // Access Query Shortcut
-      "mar",         // Access Report Shortcut
-      "mas",         // Access Stored Procedure
-      "mat",         // Access Table Shortcut
-      "mau",         // Media Attachment Unit
-      "mav",         // Access View Shortcut
-      "maw",         // Access Data Access Page
-      "mda",         // Access Add-in, MDA Access 2 Workgroup
-      "mdb",
-      "mde",
-      "mdt",         // Access Add-in Data
-      "mdw",         // Access Workgroup Information
-      "mdz",         // Access Wizard Template
-      "msc",
-      "msh",         // Microsoft Shell
-      "mshxml",      // Microsoft Shell
-      "msi",
-      "msp",
-      "mst",
-      "ops",         // Office Profile Settings
-      "pcd",
-      "pif",
-      "plg",         // Developer Studio Build Log
-      "prf",         // windows system file
-      "prg",
-      "pst",
-      "reg",
-      "scf",         // Windows explorer command
-      "scr",
-      "sct",
-      "settingcontent-ms",
-      "shb",
-      "shs",
-      "url",
-      "vb",
-      "vbe",
-      "vbs",
-      "vsd",
-      "vsmacros",    // Visual Studio .NET Binary-based Macro Project
-      "vss",
-      "vst",
-      "vsw",
-      "ws",
-      "wsc",
-      "wsf",
-      "wsh"
-      // clang-format on
-    };
-    nsDependentSubstring ext = Substring(path, dotIdx + 1);
-    for (size_t i = 0; i < ArrayLength(executableExts); ++i) {
-      if (ext.EqualsASCII(executableExts[i])) {
-=======
     nsDependentSubstring ext = Substring(path, dotIdx);
     for (size_t i = 0; i < ArrayLength(sExecutableExts); ++i) {
       if (ext.EqualsASCII(sExecutableExts[i])) {
->>>>>>> upstream-releases
         // Found a match.  Set result and quit.
         *aResult = true;
         break;
@@ -3684,75 +3299,12 @@ void nsLocalFile::EnsureShortPath() {
   }
 }
 
-<<<<<<< HEAD
-// nsIHashable
-
-NS_IMETHODIMP
-nsLocalFile::Equals(nsIHashable* aOther, bool* aResult) {
-  nsCOMPtr<nsIFile> otherfile(do_QueryInterface(aOther));
-  if (!otherfile) {
-    *aResult = false;
-    return NS_OK;
-  }
-||||||| merged common ancestors
-// nsIHashable
-
-NS_IMETHODIMP
-nsLocalFile::Equals(nsIHashable* aOther, bool* aResult)
-{
-  nsCOMPtr<nsIFile> otherfile(do_QueryInterface(aOther));
-  if (!otherfile) {
-    *aResult = false;
-    return NS_OK;
-  }
-=======
-NS_IMPL_ISUPPORTS_INHERITED(nsDriveEnumerator, nsSimpleEnumerator,
-                            nsIDirectoryEnumerator)
->>>>>>> upstream-releases
-
-nsDriveEnumerator::nsDriveEnumerator() {}
-
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsLocalFile::GetHashCode(uint32_t* aResult) {
-  // In order for short and long path names to hash to the same value we
-  // always hash on the short pathname.
-  EnsureShortPath();
-
-  *aResult = HashString(mShortWorkingPath);
-  return NS_OK;
-}
-
 NS_IMPL_ISUPPORTS_INHERITED(nsDriveEnumerator, nsSimpleEnumerator,
                             nsIDirectoryEnumerator)
 
 nsDriveEnumerator::nsDriveEnumerator() {}
 
 nsDriveEnumerator::~nsDriveEnumerator() {}
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsLocalFile::GetHashCode(uint32_t* aResult)
-{
-  // In order for short and long path names to hash to the same value we
-  // always hash on the short pathname.
-  EnsureShortPath();
-
-  *aResult = HashString(mShortWorkingPath);
-  return NS_OK;
-}
-
-NS_IMPL_ISUPPORTS_INHERITED(nsDriveEnumerator, nsSimpleEnumerator, nsIDirectoryEnumerator)
-
-nsDriveEnumerator::nsDriveEnumerator()
-{
-}
-
-nsDriveEnumerator::~nsDriveEnumerator()
-{
-}
-=======
-nsDriveEnumerator::~nsDriveEnumerator() {}
->>>>>>> upstream-releases
 
 nsresult nsDriveEnumerator::Init() {
   /* If the length passed to GetLogicalDriveStrings is smaller

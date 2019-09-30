@@ -7,13 +7,7 @@
 #include "SVGMotionSMILAnimationFunction.h"
 
 #include "mozilla/dom/SVGAnimationElement.h"
-<<<<<<< HEAD
-#include "mozilla/dom/SVGPathElement.h"  // for nsSVGPathList
-||||||| merged common ancestors
-#include "mozilla/dom/SVGPathElement.h" // for nsSVGPathList
-=======
 #include "mozilla/dom/SVGPathElement.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/SVGMPathElement.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/SMILParserUtils.h"
@@ -86,16 +80,8 @@ bool SVGMotionSMILAnimationFunction::SetAttr(nsAtom* aAttribute,
     }
   } else {
     // Defer to superclass method
-<<<<<<< HEAD
-    return nsSMILAnimationFunction::SetAttr(aAttribute, aValue, aResult,
-                                            aParseResult);
-||||||| merged common ancestors
-    return nsSMILAnimationFunction::SetAttr(aAttribute, aValue,
-                                            aResult, aParseResult);
-=======
     return SMILAnimationFunction::SetAttr(aAttribute, aValue, aResult,
                                           aParseResult);
->>>>>>> upstream-releases
   }
 
   return true;
@@ -118,17 +104,8 @@ bool SVGMotionSMILAnimationFunction::UnsetAttr(nsAtom* aAttribute) {
   return true;
 }
 
-<<<<<<< HEAD
-nsSMILAnimationFunction::nsSMILCalcMode
-SVGMotionSMILAnimationFunction::GetCalcMode() const {
-||||||| merged common ancestors
-nsSMILAnimationFunction::nsSMILCalcMode
-SVGMotionSMILAnimationFunction::GetCalcMode() const
-{
-=======
 SMILAnimationFunction::SMILCalcMode
 SVGMotionSMILAnimationFunction::GetCalcMode() const {
->>>>>>> upstream-releases
   const nsAttrValue* value = GetAttr(nsGkAtoms::calcMode);
   if (!value) {
     return CALC_PACED;  // animateMotion defaults to calcMode="paced"
@@ -168,16 +145,8 @@ void SVGMotionSMILAnimationFunction::RebuildPathAndVerticesFromBasicAttrs(
     return;
   }
 
-<<<<<<< HEAD
-  SVGMotionSMILPathUtils::PathGenerator pathGenerator(
-      static_cast<const nsSVGElement*>(aContextElem));
-||||||| merged common ancestors
-  SVGMotionSMILPathUtils::PathGenerator
-    pathGenerator(static_cast<const nsSVGElement*>(aContextElem));
-=======
   SVGMotionSMILPathUtils::PathGenerator pathGenerator(
       static_cast<const SVGElement*>(aContextElem));
->>>>>>> upstream-releases
 
   bool success = false;
   if (HasAttr(nsGkAtoms::values)) {
@@ -303,23 +272,9 @@ void SVGMotionSMILAnimationFunction::RebuildPathAndVertices(
   mIsPathStale = false;
 }
 
-<<<<<<< HEAD
-bool SVGMotionSMILAnimationFunction::GenerateValuesForPathAndPoints(
-    Path* aPath, bool aIsKeyPoints, FallibleTArray<double>& aPointDistances,
-    nsSMILValueArray& aResult) {
-||||||| merged common ancestors
-bool
-SVGMotionSMILAnimationFunction::
-  GenerateValuesForPathAndPoints(Path* aPath,
-                                 bool aIsKeyPoints,
-                                 FallibleTArray<double>& aPointDistances,
-                                 nsSMILValueArray& aResult)
-{
-=======
 bool SVGMotionSMILAnimationFunction::GenerateValuesForPathAndPoints(
     Path* aPath, bool aIsKeyPoints, FallibleTArray<double>& aPointDistances,
     SMILValueArray& aResult) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aResult.IsEmpty(), "outparam is non-empty");
 
   // If we're using "keyPoints" as our list of input distances, then we need
@@ -337,18 +292,8 @@ bool SVGMotionSMILAnimationFunction::GenerateValuesForPathAndPoints(
   return true;
 }
 
-<<<<<<< HEAD
-nsresult SVGMotionSMILAnimationFunction::GetValues(const nsISMILAttr& aSMILAttr,
-                                                   nsSMILValueArray& aResult) {
-||||||| merged common ancestors
-nsresult
-SVGMotionSMILAnimationFunction::GetValues(const nsISMILAttr& aSMILAttr,
-                                          nsSMILValueArray& aResult)
-{
-=======
 nsresult SVGMotionSMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
                                                    SMILValueArray& aResult) {
->>>>>>> upstream-releases
   if (mIsPathStale) {
     RebuildPathAndVertices(aSMILAttr.GetTargetNode());
   }
@@ -387,17 +332,8 @@ bool SVGMotionSMILAnimationFunction::IsToAnimation() const {
   // attribute, because they'll override any 'to' attr we might have.
   // NOTE: We can't rely on mPathSourceType, because it might not have been
   // set to a useful value yet (or it might be stale).
-<<<<<<< HEAD
-  return !GetFirstMPathChild(mAnimationElement) && !HasAttr(nsGkAtoms::path) &&
-         nsSMILAnimationFunction::IsToAnimation();
-||||||| merged common ancestors
-  return !GetFirstMPathChild(mAnimationElement) &&
-    !HasAttr(nsGkAtoms::path) &&
-    nsSMILAnimationFunction::IsToAnimation();
-=======
   return !GetFirstMPathChild(mAnimationElement) && !HasAttr(nsGkAtoms::path) &&
          SMILAnimationFunction::IsToAnimation();
->>>>>>> upstream-releases
 }
 
 void SVGMotionSMILAnimationFunction::CheckKeyPoints() {
@@ -455,33 +391,17 @@ nsresult SVGMotionSMILAnimationFunction::SetRotate(const nsAString& aRotate,
     mRotateType = eRotateType_Explicit;
 
     uint16_t angleUnit;
-<<<<<<< HEAD
-    if (!nsSVGAngle::GetValueFromString(aRotate, mRotateAngle, &angleUnit)) {
-      mRotateAngle = 0.0f;  // set default rotate angle
-||||||| merged common ancestors
-    if (!nsSVGAngle::GetValueFromString(aRotate, mRotateAngle, &angleUnit)) {
-      mRotateAngle = 0.0f; // set default rotate angle
-=======
     if (!SVGAnimatedOrient::GetValueFromString(aRotate, mRotateAngle,
                                                &angleUnit)) {
       mRotateAngle = 0.0f;  // set default rotate angle
->>>>>>> upstream-releases
       // XXX report to console?
       return NS_ERROR_DOM_SYNTAX_ERR;
     }
 
     // Convert to radian units, if we're not already in radians.
     if (angleUnit != SVG_ANGLETYPE_RAD) {
-<<<<<<< HEAD
-      mRotateAngle *= nsSVGAngle::GetDegreesPerUnit(angleUnit) /
-                      nsSVGAngle::GetDegreesPerUnit(SVG_ANGLETYPE_RAD);
-||||||| merged common ancestors
-      mRotateAngle *= nsSVGAngle::GetDegreesPerUnit(angleUnit) /
-        nsSVGAngle::GetDegreesPerUnit(SVG_ANGLETYPE_RAD);
-=======
       mRotateAngle *= SVGAnimatedOrient::GetDegreesPerUnit(angleUnit) /
                       SVGAnimatedOrient::GetDegreesPerUnit(SVG_ANGLETYPE_RAD);
->>>>>>> upstream-releases
     }
   }
   return NS_OK;

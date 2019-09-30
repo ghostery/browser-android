@@ -840,36 +840,6 @@ marquee[direction="up"], marquee[direction="down"] {
   block-size: 200px;
 }
 
-<<<<<<< HEAD
-@supports not -moz-bool-pref("dom.ua_widget.enabled") {
-
-  marquee {
-    -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-horizontal');
-  }
-
-  marquee[direction="up"], marquee[direction="down"] {
-    -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-vertical');
-  }
-
-}
-
-/* PRINT ONLY rules follow */
-@media print {
-
-  marquee { -moz-binding: none; }
-
-}
-
-||||||| merged common ancestors
-/* PRINT ONLY rules follow */
-@media print {
-
-  marquee { -moz-binding: none; }
-
-}
-
-=======
->>>>>>> upstream-releases
 /* Ruby */
 
 ruby {

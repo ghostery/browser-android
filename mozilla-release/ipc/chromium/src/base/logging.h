@@ -84,35 +84,15 @@ const mozilla::EmptyLog& operator<<(const mozilla::EmptyLog& log, const T&) {
 }  // namespace mozilla
 
 #ifdef NO_CHROMIUM_LOGGING
-<<<<<<< HEAD
-#define CHROMIUM_LOG(info) std::stringstream()
-#define LOG_IF(info, condition) \
-  if (!(condition)) std::stringstream()
-||||||| merged common ancestors
-#define CHROMIUM_LOG(info) std::stringstream()
-#define LOG_IF(info, condition) if (!(condition)) std::stringstream()
-=======
 #  define CHROMIUM_LOG(info) std::stringstream()
 #  define LOG_IF(info, condition) \
     if (!(condition)) std::stringstream()
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define CHROMIUM_LOG(info) \
-  mozilla::LogWrapper(mozilla::LOG_##info, __FILE__, __LINE__)
-#define LOG_IF(info, condition) \
-  if (!(condition)) mozilla::LogWrapper(mozilla::LOG_##info, __FILE__, __LINE__)
-||||||| merged common ancestors
-#define CHROMIUM_LOG(info) mozilla::LogWrapper(mozilla::LOG_ ## info, __FILE__, __LINE__)
-#define LOG_IF(info, condition) \
-  if (!(condition)) mozilla::LogWrapper(mozilla::LOG_ ## info, __FILE__, __LINE__)
-=======
 #  define CHROMIUM_LOG(info) \
     mozilla::LogWrapper(mozilla::LOG_##info, __FILE__, __LINE__)
 #  define LOG_IF(info, condition) \
     if (!(condition))             \
     mozilla::LogWrapper(mozilla::LOG_##info, __FILE__, __LINE__)
->>>>>>> upstream-releases
 #endif
 
 #ifdef DEBUG
@@ -120,21 +100,10 @@ const mozilla::EmptyLog& operator<<(const mozilla::EmptyLog& log, const T&) {
 #  define DLOG_IF(info) LOG_IF(info)
 #  define DCHECK(condition) CHECK(condition)
 #else
-<<<<<<< HEAD
-#define DLOG(info) mozilla::EmptyLog()
-#define DLOG_IF(info, condition) mozilla::EmptyLog()
-#define DCHECK(condition) \
-  while (false && (condition)) mozilla::EmptyLog()
-||||||| merged common ancestors
-#define DLOG(info) mozilla::EmptyLog()
-#define DLOG_IF(info, condition) mozilla::EmptyLog()
-#define DCHECK(condition) while (false && (condition)) mozilla::EmptyLog()
-=======
 #  define DLOG(info) mozilla::EmptyLog()
 #  define DLOG_IF(info, condition) mozilla::EmptyLog()
 #  define DCHECK(condition) \
     while (false && (condition)) mozilla::EmptyLog()
->>>>>>> upstream-releases
 #endif
 
 #undef LOG_ASSERT

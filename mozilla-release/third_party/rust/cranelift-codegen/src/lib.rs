@@ -3,10 +3,7 @@
 #![deny(missing_docs, trivial_numeric_casts, unused_extern_crates)]
 #![warn(unused_import_braces)]
 #![cfg_attr(feature = "std", deny(unstable_features))]
-#![cfg_attr(
-    feature = "clippy",
-    plugin(clippy(conf_file = "../../clippy.toml"))
-)]
+#![cfg_attr(feature = "clippy", plugin(clippy(conf_file = "../../clippy.toml")))]
 #![cfg_attr(feature="cargo-clippy", allow(
 // Produces only a false positive:
                 clippy::while_let_loop,
@@ -33,19 +30,6 @@
 #![cfg_attr(
     feature = "cargo-clippy",
     warn(
-<<<<<<< HEAD
-        float_arithmetic,
-        mut_mut,
-        nonminimal_bool,
-        option_map_unwrap_or,
-        option_map_unwrap_or_else,
-        print_stdout,
-        unicode_not_nfc,
-        use_self
-||||||| merged common ancestors
-        float_arithmetic, mut_mut, nonminimal_bool, option_map_unwrap_or, option_map_unwrap_or_else,
-        print_stdout, unicode_not_nfc, use_self
-=======
         clippy::float_arithmetic,
         clippy::mut_mut,
         clippy::nonminimal_bool,
@@ -54,13 +38,10 @@
         clippy::print_stdout,
         clippy::unicode_not_nfc,
         clippy::use_self
->>>>>>> upstream-releases
     )
 )]
 #![no_std]
 #![cfg_attr(not(feature = "std"), feature(alloc))]
-// TODO: Remove this workaround once https://github.com/rust-lang/rust/issues/27747 is done.
-#![cfg_attr(not(feature = "std"), feature(slice_concat_ext))]
 
 #[cfg(not(feature = "std"))]
 #[macro_use]
@@ -125,31 +106,7 @@ mod topo_order;
 mod unreachable_code;
 mod value_label;
 
-<<<<<<< HEAD
-pub use result::{CodegenError, CodegenResult};
-
-/// This replaces `std` in builds with `core`.
-#[cfg(not(feature = "std"))]
-mod std {
-    pub use alloc::{boxed, slice, string, vec};
-    pub use core::*;
-    pub mod collections {
-        #[allow(unused_extern_crates)]
-        extern crate hashmap_core;
-||||||| merged common ancestors
-pub use result::{CodegenError, CodegenResult};
-
-/// This replaces `std` in builds with `core`.
-#[cfg(not(feature = "std"))]
-mod std {
-    pub use alloc::{boxed, string, vec};
-    pub use core::*;
-    pub mod collections {
-        #[allow(unused_extern_crates)]
-        extern crate hashmap_core;
-=======
 pub use crate::result::{CodegenError, CodegenResult};
->>>>>>> upstream-releases
 
 /// Version number of this crate.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

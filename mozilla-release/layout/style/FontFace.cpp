@@ -317,15 +317,6 @@ void FontFace::SetDisplay(const nsAString& aValue, ErrorResult& aRv) {
   }
 }
 
-<<<<<<< HEAD
-FontFaceLoadStatus FontFace::Status() { return mStatus; }
-||||||| merged common ancestors
-FontFaceLoadStatus
-FontFace::Status()
-{
-  return mStatus;
-}
-=======
 void FontFace::DescriptorUpdated() {
   // If we haven't yet initialized mUserFontEntry, no need to do anything here;
   // we'll respect the updated descriptor when the time comes to create it.
@@ -346,19 +337,10 @@ void FontFace::DescriptorUpdated() {
     set->MarkUserFontSetDirty();
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Promise* FontFace::Load(ErrorResult& aRv) {
-||||||| merged common ancestors
-Promise*
-FontFace::Load(ErrorResult& aRv)
-{
-=======
 FontFaceLoadStatus FontFace::Status() { return mStatus; }
 
 Promise* FontFace::Load(ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   mFontFaceSet->FlushUserFontSet();
@@ -505,21 +487,10 @@ already_AddRefed<URLExtraData> FontFace::GetURLExtraData() const {
   return url.forget();
 }
 
-<<<<<<< HEAD
-bool FontFace::SetDescriptor(nsCSSFontDesc aFontDesc, const nsAString& aValue,
-                             ErrorResult& aRv) {
-||||||| merged common ancestors
-bool
-FontFace::SetDescriptor(nsCSSFontDesc aFontDesc,
-                        const nsAString& aValue,
-                        ErrorResult& aRv)
-{
-=======
 // Boolean result indicates whether the value of the descriptor was actually
 // changed.
 bool FontFace::SetDescriptor(nsCSSFontDesc aFontDesc, const nsAString& aValue,
                              ErrorResult& aRv) {
->>>>>>> upstream-releases
   // FIXME We probably don't need to distinguish between this anymore
   // since we have common backend now.
   NS_ASSERTION(!HasRule(), "we don't handle rule backed FontFace objects yet");
@@ -566,25 +537,6 @@ bool FontFace::SetDescriptors(const nsAString& aFamily,
 
   // Parse all of the mDescriptors in aInitializer, which are the values
   // we got from the JS constructor.
-<<<<<<< HEAD
-  if (!SetDescriptor(eCSSFontDesc_Family, aFamily, rv) ||
-      !SetDescriptor(eCSSFontDesc_Style, aDescriptors.mStyle, rv) ||
-      !SetDescriptor(eCSSFontDesc_Weight, aDescriptors.mWeight, rv) ||
-      !SetDescriptor(eCSSFontDesc_Stretch, aDescriptors.mStretch, rv) ||
-      !SetDescriptor(eCSSFontDesc_UnicodeRange, aDescriptors.mUnicodeRange,
-                     rv) ||
-      !SetDescriptor(eCSSFontDesc_FontFeatureSettings,
-                     aDescriptors.mFeatureSettings, rv) ||
-||||||| merged common ancestors
-  if (!SetDescriptor(eCSSFontDesc_Family, aFamily, rv) ||
-      !SetDescriptor(eCSSFontDesc_Style, aDescriptors.mStyle, rv) ||
-      !SetDescriptor(eCSSFontDesc_Weight, aDescriptors.mWeight, rv) ||
-      !SetDescriptor(eCSSFontDesc_Stretch, aDescriptors.mStretch, rv) ||
-      !SetDescriptor(eCSSFontDesc_UnicodeRange,
-                     aDescriptors.mUnicodeRange, rv) ||
-      !SetDescriptor(eCSSFontDesc_FontFeatureSettings,
-                     aDescriptors.mFeatureSettings, rv) ||
-=======
   if (!setDesc(eCSSFontDesc_Family, aFamily) ||
       !setDesc(eCSSFontDesc_Style, aDescriptors.mStyle) ||
       !setDesc(eCSSFontDesc_Weight, aDescriptors.mWeight) ||
@@ -592,7 +544,6 @@ bool FontFace::SetDescriptors(const nsAString& aFamily,
       !setDesc(eCSSFontDesc_UnicodeRange, aDescriptors.mUnicodeRange) ||
       !setDesc(eCSSFontDesc_FontFeatureSettings,
                aDescriptors.mFeatureSettings) ||
->>>>>>> upstream-releases
       (StaticPrefs::layout_css_font_variations_enabled() &&
        !setDesc(eCSSFontDesc_FontVariationSettings,
                 aDescriptors.mVariationSettings)) ||
@@ -844,16 +795,8 @@ gfxCharacterMap* FontFace::GetUnicodeRangeAsCharacterMap() {
 
 // -- FontFace::Entry --------------------------------------------------------
 
-<<<<<<< HEAD
-/* virtual */ void FontFace::Entry::SetLoadState(UserFontLoadState aLoadState) {
-||||||| merged common ancestors
-/* virtual */ void
-FontFace::Entry::SetLoadState(UserFontLoadState aLoadState)
-{
-=======
 /* virtual */
 void FontFace::Entry::SetLoadState(UserFontLoadState aLoadState) {
->>>>>>> upstream-releases
   gfxUserFontEntry::SetLoadState(aLoadState);
 
   for (size_t i = 0; i < mFontFaces.Length(); i++) {
@@ -861,17 +804,8 @@ void FontFace::Entry::SetLoadState(UserFontLoadState aLoadState) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void FontFace::Entry::GetUserFontSets(
-    nsTArray<gfxUserFontSet*>& aResult) {
-||||||| merged common ancestors
-/* virtual */ void
-FontFace::Entry::GetUserFontSets(nsTArray<gfxUserFontSet*>& aResult)
-{
-=======
 /* virtual */
 void FontFace::Entry::GetUserFontSets(nsTArray<gfxUserFontSet*>& aResult) {
->>>>>>> upstream-releases
   aResult.Clear();
 
   for (FontFace* f : mFontFaces) {

@@ -36,14 +36,8 @@
 #include "mozilla/AnimationUtils.h"
 #include "mozilla/dom/DocumentInlines.h"
 #include "mozilla/dom/Element.h"
-<<<<<<< HEAD
-#include "mozilla/dom/Event.h"  // for Event
-||||||| merged common ancestors
-#include "mozilla/dom/Event.h" // for Event
-=======
 #include "mozilla/dom/Event.h"  // for Event
 #include "mozilla/dom/HTMLSlotElement.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/KeyboardEvent.h"
 #include "mozilla/dom/KeyboardEventBinding.h"
 #include "mozilla/dom/MouseEvent.h"
@@ -458,14 +452,7 @@ void nsXULPopupManager::AdjustPopupsOnWindowChange(
   }
 }
 
-<<<<<<< HEAD
-void nsXULPopupManager::AdjustPopupsOnWindowChange(nsIPresShell* aPresShell) {
-||||||| merged common ancestors
-void nsXULPopupManager::AdjustPopupsOnWindowChange(nsIPresShell* aPresShell)
-{
-=======
 void nsXULPopupManager::AdjustPopupsOnWindowChange(PresShell* aPresShell) {
->>>>>>> upstream-releases
   if (aPresShell->GetDocument()) {
     AdjustPopupsOnWindowChange(aPresShell->GetDocument()->GetWindow());
   }
@@ -553,26 +540,11 @@ void nsXULPopupManager::PopupResized(nsIFrame* aFrame,
 nsMenuPopupFrame* nsXULPopupManager::GetPopupFrameForContent(
     nsIContent* aContent, bool aShouldFlush) {
   if (aShouldFlush) {
-<<<<<<< HEAD
-    nsIDocument* document = aContent->GetUncomposedDoc();
-||||||| merged common ancestors
-    nsIDocument *document = aContent->GetUncomposedDoc();
-=======
     Document* document = aContent->GetUncomposedDoc();
->>>>>>> upstream-releases
     if (document) {
-<<<<<<< HEAD
-      nsCOMPtr<nsIPresShell> presShell = document->GetShell();
-      if (presShell) presShell->FlushPendingNotifications(FlushType::Layout);
-||||||| merged common ancestors
-      nsCOMPtr<nsIPresShell> presShell = document->GetShell();
-      if (presShell)
-        presShell->FlushPendingNotifications(FlushType::Layout);
-=======
       if (RefPtr<PresShell> presShell = document->GetPresShell()) {
         presShell->FlushPendingNotifications(FlushType::Layout);
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -814,31 +786,13 @@ static void CheckCaretDrawingState() {
     auto* piWindow = nsPIDOMWindowOuter::From(window);
     MOZ_ASSERT(piWindow);
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIDocument> focusedDoc = piWindow->GetDoc();
-    if (!focusedDoc) return;
-||||||| merged common ancestors
-    nsCOMPtr<nsIDocument> focusedDoc = piWindow->GetDoc();
-    if (!focusedDoc)
-      return;
-=======
     nsCOMPtr<Document> focusedDoc = piWindow->GetDoc();
     if (!focusedDoc) return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsIPresShell* presShell = focusedDoc->GetShell();
-    if (!presShell) return;
-||||||| merged common ancestors
-    nsIPresShell* presShell = focusedDoc->GetShell();
-    if (!presShell)
-      return;
-=======
     PresShell* presShell = focusedDoc->GetPresShell();
     if (!presShell) {
       return;
     }
->>>>>>> upstream-releases
 
     RefPtr<nsCaret> caret = presShell->GetCaret();
     if (!caret) return;
@@ -1015,27 +969,6 @@ void nsXULPopupManager::HidePopup(nsIContent* aPopup, bool aHideChain,
 
     // For menus, popupToHide is always the frontmost item in the list to hide.
     if (aAsynchronous) {
-<<<<<<< HEAD
-      nsCOMPtr<nsIRunnable> event = new nsXULPopupHidingEvent(
-          popupToHide, nextPopup, lastPopup, popupFrame->PopupType(),
-          deselectMenu, aIsCancel);
-      aPopup->OwnerDoc()->Dispatch(TaskCategory::Other, event.forget());
-    } else {
-      FirePopupHidingEvent(popupToHide, nextPopup, lastPopup,
-                           popupFrame->PresContext(), popupFrame->PopupType(),
-                           deselectMenu, aIsCancel);
-||||||| merged common ancestors
-      nsCOMPtr<nsIRunnable> event =
-        new nsXULPopupHidingEvent(popupToHide, nextPopup, lastPopup,
-                                  popupFrame->PopupType(), deselectMenu, aIsCancel);
-        aPopup->OwnerDoc()->Dispatch(TaskCategory::Other,
-                                     event.forget());
-    }
-    else {
-      FirePopupHidingEvent(popupToHide, nextPopup, lastPopup,
-                           popupFrame->PresContext(), popupFrame->PopupType(),
-                           deselectMenu, aIsCancel);
-=======
       nsCOMPtr<nsIRunnable> event = new nsXULPopupHidingEvent(
           popupToHide, nextPopup, lastPopup, popupFrame->PopupType(),
           deselectMenu, aIsCancel);
@@ -1044,7 +977,6 @@ void nsXULPopupManager::HidePopup(nsIContent* aPopup, bool aHideChain,
       RefPtr<nsPresContext> presContext = popupFrame->PresContext();
       FirePopupHidingEvent(popupToHide, nextPopup, lastPopup, presContext,
                            popupFrame->PopupType(), deselectMenu, aIsCancel);
->>>>>>> upstream-releases
     }
   }
 }
@@ -1163,19 +1095,9 @@ void nsXULPopupManager::HidePopupCallback(
       if (state == ePopupHiding) return;
       if (state != ePopupInvisible) popupFrame->SetPopupState(ePopupHiding);
 
-<<<<<<< HEAD
-      FirePopupHidingEvent(popupToHide, nextPopup, aLastPopup,
-                           popupFrame->PresContext(), foundMenu->PopupType(),
-                           aDeselectMenu, false);
-||||||| merged common ancestors
-      FirePopupHidingEvent(popupToHide, nextPopup, aLastPopup,
-                           popupFrame->PresContext(),
-                           foundMenu->PopupType(), aDeselectMenu, false);
-=======
       RefPtr<nsPresContext> presContext = popupFrame->PresContext();
       FirePopupHidingEvent(popupToHide, nextPopup, aLastPopup, presContext,
                            foundMenu->PopupType(), aDeselectMenu, false);
->>>>>>> upstream-releases
     }
   }
 }
@@ -1250,17 +1172,8 @@ void nsXULPopupManager::EnableRollup(nsIContent* aPopup, bool aShouldRollup) {
 #endif
 }
 
-<<<<<<< HEAD
-bool nsXULPopupManager::IsChildOfDocShell(nsIDocument* aDoc,
-                                          nsIDocShellTreeItem* aExpected) {
-||||||| merged common ancestors
-bool
-nsXULPopupManager::IsChildOfDocShell(nsIDocument* aDoc, nsIDocShellTreeItem* aExpected)
-{
-=======
 bool nsXULPopupManager::IsChildOfDocShell(Document* aDoc,
                                           nsIDocShellTreeItem* aExpected) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIDocShellTreeItem> docShellItem(aDoc->GetDocShell());
   while (docShellItem) {
     if (docShellItem == aExpected) return true;
@@ -1373,37 +1286,13 @@ void nsXULPopupManager::FirePopupShowingEvent(nsIContent* aPopup,
   nsCOMPtr<nsIContent> popup = aPopup;  // keep a strong reference to the popup
 
   nsMenuPopupFrame* popupFrame = do_QueryFrame(aPopup->GetPrimaryFrame());
-<<<<<<< HEAD
   if (!popupFrame) return;
-
-  nsPresContext* presContext = popupFrame->PresContext();
-  nsCOMPtr<nsIPresShell> presShell = presContext->PresShell();
-  nsPopupType popupType = popupFrame->PopupType();
-||||||| merged common ancestors
-  if (!popupFrame)
-    return;
-
-  nsPresContext *presContext = popupFrame->PresContext();
-  nsCOMPtr<nsIPresShell> presShell = presContext->PresShell();
-  nsPopupType popupType = popupFrame->PopupType();
-=======
-  if (!popupFrame) return;
->>>>>>> upstream-releases
 
   popupFrame->GenerateFrames();
 
   // get the frame again
-<<<<<<< HEAD
-  nsIFrame* frame = aPopup->GetPrimaryFrame();
-  if (!frame) return;
-||||||| merged common ancestors
-  nsIFrame* frame = aPopup->GetPrimaryFrame();
-  if (!frame)
-    return;
-=======
   popupFrame = do_QueryFrame(aPopup->GetPrimaryFrame());
   if (!popupFrame) return;
->>>>>>> upstream-releases
 
   nsPresContext* presContext = popupFrame->PresContext();
   RefPtr<PresShell> presShell = presContext->PresShell();
@@ -1502,27 +1391,6 @@ void nsXULPopupManager::FirePopupShowingEvent(nsIContent* aPopup,
   }
 }
 
-<<<<<<< HEAD
-void nsXULPopupManager::FirePopupHidingEvent(
-    nsIContent* aPopup, nsIContent* aNextPopup, nsIContent* aLastPopup,
-    nsPresContext* aPresContext, nsPopupType aPopupType, bool aDeselectMenu,
-    bool aIsCancel) {
-  nsCOMPtr<nsIPresShell> presShell = aPresContext->PresShell();
-  mozilla::Unused << presShell;  // This presShell may be keeping things alive
-                                 // on non GTK platforms
-||||||| merged common ancestors
-void
-nsXULPopupManager::FirePopupHidingEvent(nsIContent* aPopup,
-                                        nsIContent* aNextPopup,
-                                        nsIContent* aLastPopup,
-                                        nsPresContext *aPresContext,
-                                        nsPopupType aPopupType,
-                                        bool aDeselectMenu,
-                                        bool aIsCancel)
-{
-  nsCOMPtr<nsIPresShell> presShell = aPresContext->PresShell();
-  mozilla::Unused << presShell; // This presShell may be keeping things alive on non GTK platforms
-=======
 void nsXULPopupManager::FirePopupHidingEvent(
     nsIContent* aPopup, nsIContent* aNextPopup, nsIContent* aLastPopup,
     nsPresContext* aPresContext, nsPopupType aPopupType, bool aDeselectMenu,
@@ -1530,7 +1398,6 @@ void nsXULPopupManager::FirePopupHidingEvent(
   RefPtr<PresShell> presShell = aPresContext->PresShell();
   mozilla::Unused << presShell;  // This presShell may be keeping things alive
                                  // on non GTK platforms
->>>>>>> upstream-releases
 
   nsEventStatus status = nsEventStatus_eIgnore;
   WidgetMouseEvent event(true, eXULPopupHiding, nullptr,
@@ -1570,27 +1437,6 @@ void nsXULPopupManager::FirePopupHidingEvent(
       popupFrame->SetPopupState(ePopupShown);
     } else {
       // If the popup has an animate attribute and it is not set to false, check
-<<<<<<< HEAD
-      // if it has a closing transition and wait for it to finish. The
-      // transition may still occur either way, but the view will be hidden and
-      // you won't be able to see it. If there is a next popup, indicating that
-      // mutliple popups are rolling up, don't wait and hide the popup right
-      // away since the effect would likely be undesirable. Transitions are
-      // currently disabled on Linux due to rendering issues on certain
-      // configurations.
-#ifndef MOZ_WIDGET_GTK
-      if (!aNextPopup && aPopup->IsElement() &&
-||||||| merged common ancestors
-      // if it has a closing transition and wait for it to finish. The transition
-      // may still occur either way, but the view will be hidden and you won't be
-      // able to see it. If there is a next popup, indicating that mutliple popups
-      // are rolling up, don't wait and hide the popup right away since the effect
-      // would likely be undesirable. Transitions are currently disabled on Linux
-      // due to rendering issues on certain configurations.
-#ifndef MOZ_WIDGET_GTK
-      if (!aNextPopup &&
-          aPopup->IsElement() &&
-=======
       // if it has a closing transition and wait for it to finish. The
       // transition may still occur either way, but the view will be hidden and
       // you won't be able to see it. If there is a next popup, indicating that
@@ -1598,7 +1444,6 @@ void nsXULPopupManager::FirePopupHidingEvent(
       // away since the effect would likely be undesirable.
       if (StaticPrefs::xul_panel_animations_enabled() && !aNextPopup &&
           aPopup->IsElement() &&
->>>>>>> upstream-releases
           aPopup->AsElement()->HasAttr(kNameSpaceID_None, nsGkAtoms::animate)) {
         // If animate="false" then don't transition at all. If animate="cancel",
         // only show the transition if cancelling the popup or rolling up.
@@ -1615,19 +1460,10 @@ void nsXULPopupManager::FirePopupHidingEvent(
           popupFrame = do_QueryFrame(aPopup->GetPrimaryFrame());
           if (!popupFrame) return;
 
-<<<<<<< HEAD
-          if (nsLayoutUtils::HasCurrentTransitions(popupFrame)) {
-            RefPtr<TransitionEnder> ender =
-                new TransitionEnder(aPopup, aDeselectMenu);
-||||||| merged common ancestors
-          if (nsLayoutUtils::HasCurrentTransitions(popupFrame)) {
-            RefPtr<TransitionEnder> ender = new TransitionEnder(aPopup, aDeselectMenu);
-=======
           if (AnimationUtils::HasCurrentTransitions(
                   aPopup->AsElement(), PseudoStyleType::NotPseudo)) {
             RefPtr<TransitionEnder> ender =
                 new TransitionEnder(aPopup, aDeselectMenu);
->>>>>>> upstream-releases
             aPopup->AddSystemEventListener(NS_LITERAL_STRING("transitionend"),
                                            ender, false, false);
             return;
@@ -1705,21 +1541,9 @@ void nsXULPopupManager::GetVisiblePopups(nsTArray<nsIFrame*>& aPopups) {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsINode> nsXULPopupManager::GetLastTriggerNode(
-    nsIDocument* aDocument, bool aIsTooltip) {
-  if (!aDocument) return nullptr;
-||||||| merged common ancestors
-already_AddRefed<nsINode>
-nsXULPopupManager::GetLastTriggerNode(nsIDocument* aDocument, bool aIsTooltip)
-{
-  if (!aDocument)
-    return nullptr;
-=======
 already_AddRefed<nsINode> nsXULPopupManager::GetLastTriggerNode(
     Document* aDocument, bool aIsTooltip) {
   if (!aDocument) return nullptr;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsINode> node;
 
@@ -1728,20 +1552,10 @@ already_AddRefed<nsINode> nsXULPopupManager::GetLastTriggerNode(
   // the list of open popups.
   if (mOpeningPopup && mOpeningPopup->GetUncomposedDoc() == aDocument &&
       aIsTooltip == mOpeningPopup->IsXULElement(nsGkAtoms::tooltip)) {
-<<<<<<< HEAD
-    node = nsMenuPopupFrame::GetTriggerContent(
-        GetPopupFrameForContent(mOpeningPopup, false));
-  } else {
-||||||| merged common ancestors
-    node = nsMenuPopupFrame::GetTriggerContent(GetPopupFrameForContent(mOpeningPopup, false));
-  }
-  else {
-=======
     nsCOMPtr<nsIContent> openingPopup = mOpeningPopup;
     node = nsMenuPopupFrame::GetTriggerContent(
         GetPopupFrameForContent(openingPopup, false));
   } else {
->>>>>>> upstream-releases
     nsMenuChainItem* item = mPopups;
     while (item) {
       // look for a popup of the same type and document.
@@ -2422,16 +2236,6 @@ bool nsXULPopupManager::HandleKeyboardEventWithKeyCode(
   return true;
 }
 
-<<<<<<< HEAD
-nsContainerFrame* nsXULPopupManager::ImmediateParentFrame(
-    nsContainerFrame* aFrame) {
-  MOZ_ASSERT(aFrame && aFrame->GetContent());
-||||||| merged common ancestors
-nsContainerFrame*
-nsXULPopupManager::ImmediateParentFrame(nsContainerFrame* aFrame)
-{
-  MOZ_ASSERT(aFrame && aFrame->GetContent());
-=======
 // TODO(emilio): This should probably just walk the DOM instead and call
 // GetPrimaryFrame() on the items... Do we have anonymous / fallback menu items
 // that could be selectable?
@@ -2445,26 +2249,11 @@ static nsIContent* FindDefaultInsertionPoint(nsIContent* aParent) {
   return aParent->OwnerDoc()->BindingManager()->FindNestedSingleInsertionPoint(
       aParent, &multiple);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool multiple = false;  // Unused
-  nsIContent* insertionPoint =
-      aFrame->GetContent()
-          ->OwnerDoc()
-          ->BindingManager()
-          ->FindNestedSingleInsertionPoint(aFrame->GetContent(), &multiple);
-||||||| merged common ancestors
-  bool multiple = false; // Unused
-  nsIContent* insertionPoint =
-    aFrame->GetContent()->OwnerDoc()->BindingManager()->
-      FindNestedSingleInsertionPoint(aFrame->GetContent(), &multiple);
-=======
 nsContainerFrame* nsXULPopupManager::ImmediateParentFrame(
     nsContainerFrame* aFrame) {
   MOZ_ASSERT(aFrame && aFrame->GetContent());
   nsIContent* insertionPoint = FindDefaultInsertionPoint(aFrame->GetContent());
->>>>>>> upstream-releases
 
   nsCSSFrameConstructor* fc = aFrame->PresContext()->FrameConstructor();
   nsContainerFrame* insertionFrame =
@@ -2775,41 +2564,16 @@ nsXULPopupShowingEvent::Run() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXULPopupHidingEvent::Run() {
-  nsXULPopupManager* pm = nsXULPopupManager::GetInstance();
-
-  nsIDocument* document = mPopup->GetUncomposedDoc();
-||||||| merged common ancestors
-nsXULPopupHidingEvent::Run()
-{
-  nsXULPopupManager* pm = nsXULPopupManager::GetInstance();
-
-  nsIDocument *document = mPopup->GetUncomposedDoc();
-=======
 nsXULPopupHidingEvent::Run() {
   RefPtr<nsXULPopupManager> pm = nsXULPopupManager::GetInstance();
   Document* document = mPopup->GetUncomposedDoc();
->>>>>>> upstream-releases
   if (pm && document) {
-<<<<<<< HEAD
-    nsPresContext* context = document->GetPresContext();
-    if (context) {
-      pm->FirePopupHidingEvent(mPopup, mNextPopup, mLastPopup, context,
-                               mPopupType, mDeselectMenu, mIsRollup);
-||||||| merged common ancestors
-    nsPresContext* context = document->GetPresContext();
-    if (context) {
-      pm->FirePopupHidingEvent(mPopup, mNextPopup, mLastPopup,
-                               context, mPopupType, mDeselectMenu, mIsRollup);
-=======
     if (RefPtr<nsPresContext> presContext = document->GetPresContext()) {
       nsCOMPtr<nsIContent> popup = mPopup;
       nsCOMPtr<nsIContent> nextPopup = mNextPopup;
       nsCOMPtr<nsIContent> lastPopup = mLastPopup;
       pm->FirePopupHidingEvent(popup, nextPopup, lastPopup, presContext,
                                mPopupType, mDeselectMenu, mIsRollup);
->>>>>>> upstream-releases
     }
   }
   return NS_OK;
@@ -2906,21 +2670,10 @@ nsXULMenuCommandEvent::Run() {
     }
 
     nsPresContext* presContext = menuFrame->PresContext();
-<<<<<<< HEAD
-    nsCOMPtr<nsIPresShell> shell = presContext->PresShell();
-    RefPtr<nsViewManager> kungFuDeathGrip = shell->GetViewManager();
-    mozilla::Unused
-        << kungFuDeathGrip;  // Not referred to directly within this function
-||||||| merged common ancestors
-    nsCOMPtr<nsIPresShell> shell = presContext->PresShell();
-    RefPtr<nsViewManager> kungFuDeathGrip = shell->GetViewManager();
-    mozilla::Unused << kungFuDeathGrip; // Not referred to directly within this function
-=======
     RefPtr<PresShell> presShell = presContext->PresShell();
     RefPtr<nsViewManager> kungFuDeathGrip = presShell->GetViewManager();
     mozilla::Unused
         << kungFuDeathGrip;  // Not referred to directly within this function
->>>>>>> upstream-releases
 
     // Deselect ourselves.
     if (mCloseMenuMode != CloseMenuMode_None) menuFrame->SelectMenu(false);

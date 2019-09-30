@@ -19,19 +19,9 @@ class nsProfilerStartParams : public nsIProfilerStartParams {
   NS_DECL_NSIPROFILERSTARTPARAMS
 
   nsProfilerStartParams(uint32_t aEntries,
-<<<<<<< HEAD
-                        const mozilla::Maybe<double>& aDuration,
-                        double aInterval, uint32_t aFeatures,
-                        const nsTArray<nsCString>& aFilters);
-||||||| merged common ancestors
-                        double aInterval,
-                        uint32_t aFeatures,
-                        const nsTArray<nsCString>& aFilters);
-=======
                         const mozilla::Maybe<double>& aDuration,
                         double aInterval, uint32_t aFeatures,
                         nsTArray<nsCString>&& aFilters);
->>>>>>> upstream-releases
 
  private:
   virtual ~nsProfilerStartParams();

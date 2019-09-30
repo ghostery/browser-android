@@ -25,17 +25,8 @@ class ColorLayerComposite : public ColorLayer, public LayerComposite {
     mImplData = static_cast<LayerComposite*>(this);
   }
 
-<<<<<<< HEAD
- protected:
-  ~ColorLayerComposite() {
-||||||| merged common ancestors
-protected:
-  ~ColorLayerComposite()
-  {
-=======
  protected:
   virtual ~ColorLayerComposite() {
->>>>>>> upstream-releases
     MOZ_COUNT_DTOR(ColorLayerComposite);
     Destroy();
   }
@@ -44,14 +35,7 @@ protected:
   // LayerComposite Implementation
   Layer* GetLayer() override { return this; }
 
-<<<<<<< HEAD
-  virtual void SetLayerManager(HostLayerManager* aManager) override {
-||||||| merged common ancestors
-  virtual void SetLayerManager(HostLayerManager* aManager) override
-  {
-=======
   void SetLayerManager(HostLayerManager* aManager) override {
->>>>>>> upstream-releases
     LayerComposite::SetLayerManager(aManager);
     mManager = aManager;
   }
@@ -61,13 +45,7 @@ protected:
   void RenderLayer(const gfx::IntRect& aClipRect,
                    const Maybe<gfx::Polygon>& aGeometry) override;
 
-<<<<<<< HEAD
-  virtual void CleanupResources() override{};
-||||||| merged common ancestors
-  virtual void CleanupResources() override {};
-=======
   void CleanupResources() override{};
->>>>>>> upstream-releases
 
   void GenEffectChain(EffectChain& aEffect) override;
 

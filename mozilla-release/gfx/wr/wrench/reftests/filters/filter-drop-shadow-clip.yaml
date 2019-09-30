@@ -1,28 +1,3 @@
-<<<<<<< HEAD
----
-root:
-  items:
-    - type: clip
-      id: 2
-      bounds: [100, 100, 2000, 2000]
-      clip-rect: [100, 100, 2000, 2000]
-      items:
-        - type: stacking-context
-          bounds: [10, 10, 0, 0]
-          filters: drop-shadow([10, 10], 20, red)
-          clip-node: 2
-          items:
-          - type: clip
-            bounds: [0, 0, 256, 256]
-            complex:
-              - rect: [0, 0, 256, 256]
-                radius: 16
-            items:
-              - type: rect
-                bounds: 0 0 256 256
-                color: green
-||||||| merged common ancestors
-=======
 ---
 root:
   items:
@@ -48,4 +23,3 @@ root:
               bounds: 0 0 256 256
               color: green
               clip-and-scroll: [root-scroll-node, 5]
->>>>>>> upstream-releases

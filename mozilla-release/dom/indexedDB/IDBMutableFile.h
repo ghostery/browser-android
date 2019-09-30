@@ -103,25 +103,7 @@ class IDBMutableFile final : public DOMEventTargetHelper {
   void AbortFileHandles();
 
   // WebIDL
-<<<<<<< HEAD
-  nsPIDOMWindowInner* GetParentObject() const { return GetOwner(); }
-
   void GetName(nsString& aName) const { aName = mName; }
-||||||| merged common ancestors
-  nsPIDOMWindowInner*
-  GetParentObject() const
-  {
-    return GetOwner();
-  }
-
-  void
-  GetName(nsString& aName) const
-  {
-    aName = mName;
-  }
-=======
-  void GetName(nsString& aName) const { aName = mName; }
->>>>>>> upstream-releases
 
   void GetType(nsString& aType) const { aType = mType; }
 

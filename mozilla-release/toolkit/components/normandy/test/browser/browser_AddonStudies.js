@@ -50,43 +50,6 @@ decorate_task(
     ok(hasStudy, "has returns true for a study that exists in storage.");
 
     hasStudy = await AddonStudies.has("does-not-exist");
-<<<<<<< HEAD
-    ok(!hasStudy, "has returns false for a study that doesn't exist in storage.");
-  }
-);
-
-decorate_task(
-||||||| merged common ancestors
-    ok(!hasStudy, "has returns false for a study that doesn't exist in storage.");
-  }
-);
-
-decorate_task(
-  AddonStudies.withStudies(),
-  async function testCloseDatabase() {
-    await AddonStudies.close();
-    const openSpy = sinon.spy(IndexedDB, "open");
-    sinon.assert.notCalled(openSpy);
-
-    // Using studies at all should open the database, but only once.
-    await AddonStudies.has("foo");
-    await AddonStudies.get("foo");
-    sinon.assert.calledOnce(openSpy);
-
-    // close can be called multiple times
-    await AddonStudies.close();
-    await AddonStudies.close();
-
-    // After being closed, new operations cause the database to be opened again
-    await AddonStudies.has("test-study");
-    sinon.assert.calledTwice(openSpy);
-
-    openSpy.restore();
-  }
-);
-
-decorate_task(
-=======
     ok(
       !hasStudy,
       "has returns false for a study that doesn't exist in storage."
@@ -95,7 +58,6 @@ decorate_task(
 );
 
 decorate_task(
->>>>>>> upstream-releases
   AddonStudies.withStudies([
     addonStudyFactory({ slug: "test-study1" }),
     addonStudyFactory({ slug: "test-study2" }),

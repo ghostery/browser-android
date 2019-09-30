@@ -42,32 +42,13 @@ class SVGAElement final : public SVGAElementBase, public Link {
 
   // nsINode interface methods
   void GetEventTargetParent(EventChainPreVisitor& aVisitor) override;
-<<<<<<< HEAD
-  virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
-||||||| merged common ancestors
-  virtual nsresult PostHandleEvent(
-                     EventChainPostVisitor& aVisitor) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
->>>>>>> upstream-releases
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // nsIContent
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument *aDocument, nsIContent *aParent,
-                              nsIContent *aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent = true) override;
->>>>>>> upstream-releases
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
   virtual int32_t TabIndexDefault() override;
   bool IsFocusableInternal(int32_t* aTabIndex, bool aWithMouse) override;
@@ -93,17 +74,8 @@ class SVGAElement final : public SVGAElementBase, public Link {
   void SetPing(const nsAString& aPing, mozilla::ErrorResult& rv);
   void GetRel(nsAString& aRel);
   void SetRel(const nsAString& aRel, mozilla::ErrorResult& rv);
-<<<<<<< HEAD
-  void SetReferrerPolicy(const nsAString& aReferrerPolicy,
-                         mozilla::ErrorResult& rv);
-  void GetReferrerPolicy(nsAString& aReferrerPolicy);
-||||||| merged common ancestors
-  void SetReferrerPolicy(const nsAString& aReferrerPolicy, mozilla::ErrorResult& rv);
-  void GetReferrerPolicy(nsAString& aReferrerPolicy);
-=======
   void SetReferrerPolicy(const nsAString& aPolicy, mozilla::ErrorResult& rv);
   void GetReferrerPolicy(nsAString& aPolicy);
->>>>>>> upstream-releases
   nsDOMTokenList* RelList();
   void GetHreflang(nsAString& aHreflang);
   void SetHreflang(const nsAString& aHreflang, mozilla::ErrorResult& rv);
@@ -112,28 +84,13 @@ class SVGAElement final : public SVGAElementBase, public Link {
   void GetText(nsAString& aText, mozilla::ErrorResult& rv);
   void SetText(const nsAString& aText, mozilla::ErrorResult& rv);
 
-<<<<<<< HEAD
-  void NodeInfoChanged(nsIDocument* aOldDoc) final {
-||||||| merged common ancestors
-  void NodeInfoChanged(nsIDocument* aOldDoc) final
-  {
-=======
   void NodeInfoChanged(Document* aOldDoc) final {
->>>>>>> upstream-releases
     ClearHasPendingLinkUpdate();
     SVGAElementBase::NodeInfoChanged(aOldDoc);
   }
 
-<<<<<<< HEAD
- protected:
-  virtual ~SVGAElement();
-||||||| merged common ancestors
-protected:
-  virtual ~SVGAElement();
-=======
  protected:
   virtual ~SVGAElement() = default;
->>>>>>> upstream-releases
 
   virtual StringAttributesInfo GetStringInfo() override;
 

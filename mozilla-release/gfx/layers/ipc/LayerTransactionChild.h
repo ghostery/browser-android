@@ -45,20 +45,8 @@ class LayerTransactionChild : public PLayerTransactionChild {
 
  protected:
   explicit LayerTransactionChild(const LayersId& aId)
-<<<<<<< HEAD
-      : mForwarder(nullptr), mIPCOpen(false), mDestroyed(false), mId(aId) {}
-  ~LayerTransactionChild() {}
-||||||| merged common ancestors
-    : mForwarder(nullptr)
-    , mIPCOpen(false)
-    , mDestroyed(false)
-    , mId(aId)
-  {}
-  ~LayerTransactionChild() { }
-=======
       : mForwarder(nullptr), mIPCOpen(false), mDestroyed(false), mId(aId) {}
   virtual ~LayerTransactionChild() = default;
->>>>>>> upstream-releases
 
   void ActorDestroy(ActorDestroyReason why) override;
 

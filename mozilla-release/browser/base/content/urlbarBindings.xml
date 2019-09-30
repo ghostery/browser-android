@@ -337,7 +337,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
               this.popup.richlistbox.suppressMenuItemEvent = false;
               break;
           }
-<<<<<<< HEAD
 
           if (AppConstants.platform == "macosx") {
             switch (aEvent.key) {
@@ -349,37 +348,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
                   this.popup.richlistbox.suppressMenuItemEvent = false;
                 }
                 break;
-            }
-          }
-
-          if (!this.popup.disableKeyNavigation) {
-            if (!aNoDefer && this._shouldDeferKeyEvent(aEvent)) {
-              this._deferKeyEvent(aEvent, "onKeyPress");
-              return false;
-            }
-            if (this.popup.popupOpen && this.popup.handleKeyPress(aEvent)) {
-              return true;
-||||||| merged common ancestors
-          if (!this.popup.disableKeyNavigation) {
-            if (!aNoDefer && this._shouldDeferKeyEvent(aEvent)) {
-              this._deferKeyEvent(aEvent, "onKeyPress");
-              return false;
-            }
-            if (this.popup.popupOpen && this.popup.handleKeyPress(aEvent)) {
-              return true;
-=======
-
-          if (AppConstants.platform == "macosx") {
-            switch (aEvent.key) {
-              case "n":
-              case "p":
-                if (aEvent.ctrlKey) {
-                  // The user is explicitly making a selection, so the popup
-                  // should get accessibility focus.
-                  this.popup.richlistbox.suppressMenuItemEvent = false;
-                }
-                break;
->>>>>>> upstream-releases
             }
           }
 
@@ -1745,23 +1713,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
           }
         ]]></body>
       </method>
-<<<<<<< HEAD
-
-      <method name="typeRestrictToken">
-        <parameter name="char"/>
-        <body><![CDATA[
-          for (let c of [char, " "]) {
-            let code = c.charCodeAt(0);
-            gURLBar.inputField.dispatchEvent(new KeyboardEvent("keypress", {
-              keyCode: code,
-              charCode: code,
-              bubbles: true,
-            }));
-          }
-        ]]></body>
-      </method>
-||||||| merged common ancestors
-=======
 
       <method name="removeHiddenFocus">
         <body><![CDATA[
@@ -1775,7 +1726,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
           this.focus();
         ]]></body>
       </method>
->>>>>>> upstream-releases
     </implementation>
 
     <handlers>
@@ -2551,47 +2501,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
               );
             }
 
-<<<<<<< HEAD
-            // If this is the first time we get the result from the current
-            // search and we are not in the private context, we can speculatively
-            // connect to the intended site as a performance optimization.
-            if (!this.input.gotResultForCurrentQuery &&
-                this.input.speculativeConnectEnabled &&
-                !this.input.inPrivateContext &&
-                this.input.mController.matchCount > 0) {
-              let firstStyle = this.input.mController.getStyleAt(0);
-              if (firstStyle.includes("autofill")) {
-                let uri = this.input.mController.getFinalCompleteValueAt(0);
-                this.maybeSetupSpeculativeConnect(uri);
-              } else if (firstStyle.includes("searchengine") &&
-                         this.input.browserSearchSuggestEnabled &&
-                         this.input.urlbarSearchSuggestEnabled) {
-                // Preconnect to the current search engine only if the search
-                // suggestions are enabled.
-                let engine = Services.search.defaultEngine;
-                engine.speculativeConnect({window,
-                                           originAttributes: gBrowser.contentPrincipal.originAttributes});
-||||||| merged common ancestors
-            // If this is the first time we get the result from the current
-            // search and we are not in the private context, we can speculatively
-            // connect to the intended site as a performance optimization.
-            if (!this.input.gotResultForCurrentQuery &&
-                this.input.speculativeConnectEnabled &&
-                !this.input.inPrivateContext &&
-                this.input.mController.matchCount > 0) {
-              let firstStyle = this.input.mController.getStyleAt(0);
-              if (firstStyle.includes("autofill")) {
-                let uri = this.input.mController.getFinalCompleteValueAt(0);
-                this.maybeSetupSpeculativeConnect(uri);
-              } else if (firstStyle.includes("searchengine") &&
-                         this.input.browserSearchSuggestEnabled &&
-                         this.input.urlbarSearchSuggestEnabled) {
-                // Preconnect to the current search engine only if the search
-                // suggestions are enabled.
-                let engine = Services.search.currentEngine;
-                engine.speculativeConnect({window,
-                                           originAttributes: gBrowser.contentPrincipal.originAttributes});
-=======
             if (this.matchCount > 0) {
               // If this is the first time we get the result from the current
               // search and we are not in the private context, we can speculatively
@@ -2610,7 +2519,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
                   let engine = Services.search.defaultEngine;
                   UrlbarUtils.setupSpeculativeConnection(engine, window);
                 }
->>>>>>> upstream-releases
               }
 
               // When a result is present the footer should always be visible.

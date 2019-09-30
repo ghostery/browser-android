@@ -653,19 +653,6 @@ var pktUI = (function() {
       return;
     }
 
-<<<<<<< HEAD
-
-    // -- Helper Functions -- //
-
-    function getCurrentUrl() {
-        return gBrowser.currentURI.spec;
-||||||| merged common ancestors
-
-    // -- Helper Functions -- //
-
-    function getCurrentUrl() {
-        return getBrowser().currentURI.spec;
-=======
     // If the user is in permanent private browsing than this is not an issue,
     // since the current window will always share the same cookie jar as the other
     // windows.
@@ -678,34 +665,8 @@ var pktUI = (function() {
         csp: aCsp,
       });
       return;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    function getCurrentTitle() {
-        return gBrowser.contentTitle;
-    }
-
-    function getPanel() {
-        var frame = getPanelFrame();
-        var panel = frame;
-        while (panel && panel.localName != "panel") {
-            panel = panel.parentNode;
-        }
-        return panel;
-||||||| merged common ancestors
-    function getCurrentTitle() {
-        return getBrowser().contentTitle;
-    }
-
-    function getPanel() {
-        var frame = getPanelFrame();
-        var panel = frame;
-        while (panel && panel.localName != "panel") {
-            panel = panel.parentNode;
-        }
-        return panel;
-=======
     for (let win of Services.wm.getEnumerator("navigator:browser")) {
       if (!PrivateBrowsingUtils.isWindowPrivate(win)) {
         win.openWebLinkIn(url, "tab", {
@@ -714,7 +675,6 @@ var pktUI = (function() {
         });
         return;
       }
->>>>>>> upstream-releases
     }
 
     // If there were no non-private windows opened already.

@@ -231,11 +231,5 @@ kab{
             "Adular Azimbabwi",
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.47.82"}
->>>>>>> upstream-releases
 }

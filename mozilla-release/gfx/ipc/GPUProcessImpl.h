@@ -10,13 +10,7 @@
 #include "GPUParent.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include "mozilla/mscom/MainThreadRuntime.h"
-||||||| merged common ancestors
-# include "mozilla/mscom/MainThreadRuntime.h"
-=======
 #  include "mozilla/mscom/ProcessRuntime.h"
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {

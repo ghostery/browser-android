@@ -28,24 +28,10 @@
 using mozilla::MakeUnique;
 using mozilla::UniquePtr;
 
-<<<<<<< HEAD
-class CacheValidator {
- public:
-  CacheValidator(const char *aCachedLibPath, Zip *aZip, Zip::Stream *aStream)
-      : mCachedLibPath(aCachedLibPath) {
-||||||| merged common ancestors
-class CacheValidator
-{
-public:
-  CacheValidator(const char* aCachedLibPath, Zip* aZip, Zip::Stream* aStream)
-    : mCachedLibPath(aCachedLibPath)
-  {
-=======
 class CacheValidator {
  public:
   CacheValidator(const char* aCachedLibPath, Zip* aZip, Zip::Stream* aStream)
       : mCachedLibPath(aCachedLibPath) {
->>>>>>> upstream-releases
     static const char kChecksumSuffix[] = ".crc";
 
     mCachedChecksumPath =
@@ -95,19 +81,9 @@ class CacheValidator {
     const size_t size = sizeof(mChecksum);
     size_t written = 0;
     while (written < size) {
-<<<<<<< HEAD
-      ssize_t ret =
-          write(fd, reinterpret_cast<const uint8_t *>(&mChecksum) + written,
-                size - written);
-||||||| merged common ancestors
-      ssize_t ret = write(fd,
-                          reinterpret_cast<const uint8_t*>(&mChecksum) + written,
-                          size - written);
-=======
       ssize_t ret =
           write(fd, reinterpret_cast<const uint8_t*>(&mChecksum) + written,
                 size - written);
->>>>>>> upstream-releases
       if (ret >= 0) {
         written += ret;
       } else if (errno != EINTR) {
@@ -124,46 +100,20 @@ class CacheValidator {
   uint32_t mChecksum;
 };
 
-<<<<<<< HEAD
-Mappable *MappableFile::Create(const char *path) {
-||||||| merged common ancestors
-Mappable *
-MappableFile::Create(const char *path)
-{
-=======
 Mappable* MappableFile::Create(const char* path) {
->>>>>>> upstream-releases
   int fd = open(path, O_RDONLY);
   if (fd != -1) return new MappableFile(fd);
   return nullptr;
 }
 
-<<<<<<< HEAD
-MemoryRange MappableFile::mmap(const void *addr, size_t length, int prot,
-                               int flags, off_t offset) {
-||||||| merged common ancestors
-MemoryRange
-MappableFile::mmap(const void *addr, size_t length, int prot, int flags,
-                   off_t offset)
-{
-=======
 MemoryRange MappableFile::mmap(const void* addr, size_t length, int prot,
                                int flags, off_t offset) {
->>>>>>> upstream-releases
   MOZ_ASSERT(fd != -1);
   MOZ_ASSERT(!(flags & MAP_SHARED));
   flags |= MAP_PRIVATE;
 
-<<<<<<< HEAD
-  return MemoryRange::mmap(const_cast<void *>(addr), length, prot, flags, fd,
-                           offset);
-||||||| merged common ancestors
-  return MemoryRange::mmap(const_cast<void *>(addr), length, prot, flags,
-                           fd, offset);
-=======
   return MemoryRange::mmap(const_cast<void*>(addr), length, prot, flags, fd,
                            offset);
->>>>>>> upstream-releases
 }
 
 void MappableFile::finalize() {
@@ -176,17 +126,8 @@ size_t MappableFile::GetLength() const {
   return fstat(fd, &st) ? 0 : st.st_size;
 }
 
-<<<<<<< HEAD
-Mappable *MappableExtractFile::Create(const char *name, Zip *zip,
-                                      Zip::Stream *stream) {
-||||||| merged common ancestors
-Mappable *
-MappableExtractFile::Create(const char *name, Zip *zip, Zip::Stream *stream)
-{
-=======
 Mappable* MappableExtractFile::Create(const char* name, Zip* zip,
                                       Zip::Stream* stream) {
->>>>>>> upstream-releases
   MOZ_ASSERT(zip && stream);
 
   const char* cachePath = getenv("MOZ_LINKER_CACHE");
@@ -298,14 +239,7 @@ class _MappableBuffer : public MappedPtr {
    * Returns a _MappableBuffer instance with the given name and the given
    * length.
    */
-<<<<<<< HEAD
-  static _MappableBuffer *Create(const char *name, size_t length) {
-||||||| merged common ancestors
-  static _MappableBuffer *Create(const char *name, size_t length)
-  {
-=======
   static _MappableBuffer* Create(const char* name, size_t length) {
->>>>>>> upstream-releases
     AutoCloseFD fd;
 #ifdef ANDROID
     /* On Android, initialize an ashmem region with the given length */
@@ -314,28 +248,6 @@ class _MappableBuffer : public MappedPtr {
     char str[ASHMEM_NAME_LEN];
     strlcpy(str, name, sizeof(str));
     ioctl(fd, ASHMEM_SET_NAME, str);
-<<<<<<< HEAD
-    if (ioctl(fd, ASHMEM_SET_SIZE, length)) return nullptr;
-
-      /* The Gecko crash reporter is confused by adjacent memory mappings of
-       * the same file and chances are we're going to map from the same file
-       * descriptor right away. To avoid problems with the crash reporter,
-       * create an empty anonymous page before or after the ashmem mapping,
-       * depending on how mappings grow in the address space.
-       */
-#if defined(__arm__)
-||||||| merged common ancestors
-    if (ioctl(fd, ASHMEM_SET_SIZE, length))
-      return nullptr;
-
-    /* The Gecko crash reporter is confused by adjacent memory mappings of
-     * the same file and chances are we're going to map from the same file
-     * descriptor right away. To avoid problems with the crash reporter,
-     * create an empty anonymous page before or after the ashmem mapping,
-     * depending on how mappings grow in the address space.
-     */
-#if defined(__arm__)
-=======
     if (ioctl(fd, ASHMEM_SET_SIZE, length)) return nullptr;
 
       /* The Gecko crash reporter is confused by adjacent memory mappings of
@@ -345,23 +257,13 @@ class _MappableBuffer : public MappedPtr {
        * depending on how mappings grow in the address space.
        */
 #  if defined(__arm__)
->>>>>>> upstream-releases
     // Address increases on ARM.
     void* buf = ::mmap(nullptr, length + PAGE_SIZE, PROT_READ | PROT_WRITE,
                        MAP_SHARED, fd, 0);
     if (buf != MAP_FAILED) {
-<<<<<<< HEAD
-      ::mmap(AlignedEndPtr(reinterpret_cast<char *>(buf) + length, PAGE_SIZE),
-             PAGE_SIZE, PROT_NONE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1,
-             0);
-||||||| merged common ancestors
-      ::mmap(AlignedEndPtr(reinterpret_cast<char *>(buf) + length, PAGE_SIZE),
-             PAGE_SIZE, PROT_NONE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-=======
       ::mmap(AlignedEndPtr(reinterpret_cast<char*>(buf) + length, PAGE_SIZE),
              PAGE_SIZE, PROT_NONE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1,
              0);
->>>>>>> upstream-releases
       DEBUG_LOG("Decompression buffer of size 0x%" PRIxPTR
                 " in ashmem \"%s\", mapped @%p",
                 length, str, buf);
@@ -404,16 +306,8 @@ class _MappableBuffer : public MappedPtr {
     unlink(path);
     ftruncate(fd, length);
 
-<<<<<<< HEAD
-    void *buf =
-        ::mmap(nullptr, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-||||||| merged common ancestors
-    void *buf = ::mmap(nullptr, length, PROT_READ | PROT_WRITE,
-                       MAP_SHARED, fd, 0);
-=======
     void* buf =
         ::mmap(nullptr, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
->>>>>>> upstream-releases
     if (buf != MAP_FAILED) {
       DEBUG_LOG("Decompression buffer of size %ld in \"%s\", mapped @%p",
                 length, path, buf);
@@ -423,16 +317,8 @@ class _MappableBuffer : public MappedPtr {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  void *mmap(const void *addr, size_t length, int prot, int flags,
-             off_t offset) {
-||||||| merged common ancestors
-  void *mmap(const void *addr, size_t length, int prot, int flags, off_t offset)
-  {
-=======
   void* mmap(const void* addr, size_t length, int prot, int flags,
              off_t offset) {
->>>>>>> upstream-releases
     MOZ_ASSERT(fd != -1);
 #ifdef ANDROID
     /* Mapping ashmem MAP_PRIVATE is like mapping anonymous memory, even when
@@ -458,80 +344,31 @@ class _MappableBuffer : public MappedPtr {
   }
 #endif
 
-<<<<<<< HEAD
- private:
-  _MappableBuffer(int fd, void *buf, size_t length)
-      : MappedPtr(buf, length), fd(fd) {}
-||||||| merged common ancestors
-private:
-  _MappableBuffer(int fd, void *buf, size_t length)
-  : MappedPtr(buf, length), fd(fd) { }
-=======
  private:
   _MappableBuffer(int fd, void* buf, size_t length)
       : MappedPtr(buf, length), fd(fd) {}
->>>>>>> upstream-releases
 
   /* File descriptor for the temporary file or ashmem */
   AutoCloseFD fd;
 };
 
-<<<<<<< HEAD
-Mappable *MappableDeflate::Create(const char *name, Zip *zip,
-                                  Zip::Stream *stream) {
-||||||| merged common ancestors
-
-Mappable *
-MappableDeflate::Create(const char *name, Zip *zip, Zip::Stream *stream)
-{
-=======
 Mappable* MappableDeflate::Create(const char* name, Zip* zip,
                                   Zip::Stream* stream) {
->>>>>>> upstream-releases
   MOZ_ASSERT(stream->GetType() == Zip::Stream::DEFLATE);
-<<<<<<< HEAD
-  _MappableBuffer *buf =
-      _MappableBuffer::Create(name, stream->GetUncompressedSize());
-  if (buf) return new MappableDeflate(buf, zip, stream);
-||||||| merged common ancestors
-  _MappableBuffer *buf = _MappableBuffer::Create(name, stream->GetUncompressedSize());
-  if (buf)
-    return new MappableDeflate(buf, zip, stream);
-=======
   _MappableBuffer* buf =
       _MappableBuffer::Create(name, stream->GetUncompressedSize());
   if (buf) return new MappableDeflate(buf, zip, stream);
->>>>>>> upstream-releases
   return nullptr;
 }
 
-<<<<<<< HEAD
-MappableDeflate::MappableDeflate(_MappableBuffer *buf, Zip *zip,
-                                 Zip::Stream *stream)
-    : zip(zip), buffer(buf), zStream(stream->GetZStream(*buf)) {}
-||||||| merged common ancestors
-MappableDeflate::MappableDeflate(_MappableBuffer *buf, Zip *zip,
-                                 Zip::Stream *stream)
-: zip(zip), buffer(buf), zStream(stream->GetZStream(*buf)) { }
-=======
 MappableDeflate::MappableDeflate(_MappableBuffer* buf, Zip* zip,
                                  Zip::Stream* stream)
     : zip(zip), buffer(buf), zStream(stream->GetZStream(*buf)) {}
->>>>>>> upstream-releases
 
 MappableDeflate::~MappableDeflate() {}
 
-<<<<<<< HEAD
-MemoryRange MappableDeflate::mmap(const void *addr, size_t length, int prot,
-                                  int flags, off_t offset) {
-||||||| merged common ancestors
-MemoryRange
-MappableDeflate::mmap(const void *addr, size_t length, int prot, int flags, off_t offset)
-{
-=======
 MemoryRange MappableDeflate::mmap(const void* addr, size_t length, int prot,
                                   int flags, off_t offset) {
->>>>>>> upstream-releases
   MOZ_ASSERT(buffer);
   MOZ_ASSERT(!(flags & MAP_SHARED));
   flags |= MAP_PRIVATE;

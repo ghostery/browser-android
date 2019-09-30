@@ -28,21 +28,10 @@ SOURCES += [
 ]
 
 if CONFIG['MOZ_WEBRTC']:
-<<<<<<< HEAD
-    EXPORTS += [
-        'CubebDeviceEnumerator.h',
-        'MediaEngineRemoteVideoSource.h',
-        'MediaEngineWebRTC.h'
-    ]
-||||||| merged common ancestors
-    EXPORTS += ['MediaEngineRemoteVideoSource.h',
-                'MediaEngineWebRTC.h']
-=======
     EXPORTS += [
         'MediaEngineRemoteVideoSource.h',
         'MediaEngineWebRTC.h'
     ]
->>>>>>> upstream-releases
     EXPORTS.mozilla.dom += [ 'RTCIdentityProviderRegistrar.h' ]
     UNIFIED_SOURCES += [
         'MediaEngineRemoteVideoSource.cpp',
@@ -53,7 +42,6 @@ if CONFIG['MOZ_WEBRTC']:
     ]
     # MediaEngineWebRTC.cpp needs to be built separately.
     SOURCES += [
-        'CubebDeviceEnumerator.cpp',
         'MediaEngineWebRTC.cpp',
     ]
     LOCAL_INCLUDES += [

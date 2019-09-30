@@ -214,16 +214,7 @@ ClippedImage::GetIntrinsicSize(nsSize* aSize) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-ClippedImage::GetIntrinsicRatio(nsSize* aRatio) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-ClippedImage::GetIntrinsicRatio(nsSize* aRatio)
-{
-=======
 Maybe<AspectRatio> ClippedImage::GetIntrinsicRatio() {
->>>>>>> upstream-releases
   if (!ShouldClip()) {
     return InnerImage()->GetIntrinsicRatio();
   }

@@ -7,14 +7,8 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/utils/middleware/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
     'context.js',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/utils/middleware/moz.build
     'history.js',
     'log.js',
     'promise.js',

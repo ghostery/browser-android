@@ -140,12 +140,7 @@ ARCHIVE_FILES = {
             'manifests': [
                 'dom/media/test/marionette/manifest.ini',
                 'testing/marionette/harness/marionette_harness/tests/unit-tests.ini',
-<<<<<<< HEAD
-                'gfx/tests/marionette/manifest.ini',
-||||||| merged common ancestors
-=======
                 'gfx/tests/marionette/manifest.ini'
->>>>>>> upstream-releases
             ],
             # We also need the manifests and harness_unit tests
             'pattern': 'testing/marionette/harness/marionette_harness/tests/**',

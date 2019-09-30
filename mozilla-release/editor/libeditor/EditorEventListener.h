@@ -49,16 +49,8 @@ class EditorEventListener : public nsIDOMEventListener {
   NS_DECL_ISUPPORTS
 
   // nsIDOMEventListener
-<<<<<<< HEAD
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  NS_IMETHOD HandleEvent(dom::Event* aEvent) override;
-||||||| merged common ancestors
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  NS_IMETHOD HandleEvent(dom::Event *aEvent) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   NS_IMETHOD HandleEvent(dom::Event* aEvent) override;
->>>>>>> upstream-releases
 
   void SpellCheckIfNeeded();
 

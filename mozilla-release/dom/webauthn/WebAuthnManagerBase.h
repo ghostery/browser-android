@@ -30,61 +30,24 @@ class WebAuthnManagerBase : public nsIDOMEventListener {
 
   explicit WebAuthnManagerBase(nsPIDOMWindowInner* aParent);
 
-<<<<<<< HEAD
-  virtual void FinishMakeCredential(
-      const uint64_t& aTransactionId,
-      const WebAuthnMakeCredentialResult& aResult) = 0;
-||||||| merged common ancestors
-  virtual void
-  FinishMakeCredential(const uint64_t& aTransactionId,
-                       const WebAuthnMakeCredentialResult& aResult) = 0;
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void FinishMakeCredential(
       const uint64_t& aTransactionId,
       const WebAuthnMakeCredentialResult& aResult) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void FinishGetAssertion(
-      const uint64_t& aTransactionId,
-      const WebAuthnGetAssertionResult& aResult) = 0;
-||||||| merged common ancestors
-  virtual void
-  FinishGetAssertion(const uint64_t& aTransactionId,
-                     const WebAuthnGetAssertionResult& aResult) = 0;
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void FinishGetAssertion(
       const uint64_t& aTransactionId,
       const WebAuthnGetAssertionResult& aResult) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void RequestAborted(const uint64_t& aTransactionId,
-                              const nsresult& aError) = 0;
-||||||| merged common ancestors
-  virtual void
-  RequestAborted(const uint64_t& aTransactionId,
-                 const nsresult& aError) = 0;
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void RequestAborted(const uint64_t& aTransactionId,
                               const nsresult& aError) = 0;
->>>>>>> upstream-releases
 
   void ActorDestroyed();
 
-<<<<<<< HEAD
- protected:
-  ~WebAuthnManagerBase();
-||||||| merged common ancestors
-protected:
-  ~WebAuthnManagerBase();
-=======
  protected:
   MOZ_CAN_RUN_SCRIPT virtual ~WebAuthnManagerBase();
->>>>>>> upstream-releases
 
   // Needed by HandleEvent() to track visibilty changes.
   MOZ_CAN_RUN_SCRIPT virtual void HandleVisibilityChange() = 0;

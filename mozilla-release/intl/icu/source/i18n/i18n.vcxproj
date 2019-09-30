@@ -1,15 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<<<<<<< HEAD
-  <!-- The following import will include the 'default' configuration options for VS projects. -->
-  <Import Project="..\allinone\Build.Windows.ProjectConfiguration.props" />
-  <!-- The following import will include the library configuration options for VS projects. -->
-  <Import Project="..\allinone\Build.Windows.Library.ProjectConfiguration.props" />
-||||||| merged common ancestors
-  <!-- The following import will include the 'default' configuration options for VS projects. -->
-  <Import Project="..\allinone\Build.Windows.ProjectConfiguration.props" />
-=======
->>>>>>> upstream-releases
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0178B127-6269-407D-B112-93877BB62776}</ProjectGuid>
   </PropertyGroup>
@@ -105,13 +95,7 @@
       <ProgramDataBaseFileName>.\x86\Release/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin\icuin63.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin\icuin62.dll</OutputFile>
-=======
       <OutputFile>..\..\bin\icuin64.dll</OutputFile>
->>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib\icuin.pdb</ProgramDatabaseFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -133,13 +117,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin\icuin63d.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin\icuin62d.dll</OutputFile>
-=======
       <OutputFile>..\..\bin\icuin64d.dll</OutputFile>
->>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib\icuind.pdb</ProgramDatabaseFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -159,13 +137,7 @@
       <ProgramDataBaseFileName>.\x64\Release/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin64\icuin63.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin64\icuin62.dll</OutputFile>
-=======
       <OutputFile>..\..\bin64\icuin64.dll</OutputFile>
->>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib64\icuin.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib64\icuin.lib</ImportLibrary>
@@ -183,13 +155,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-<<<<<<< HEAD
-      <OutputFile>..\..\bin64\icuin63d.dll</OutputFile>
-||||||| merged common ancestors
-      <OutputFile>..\..\bin64\icuin62d.dll</OutputFile>
-=======
       <OutputFile>..\..\bin64\icuin64d.dll</OutputFile>
->>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib64\icuind.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib64\icuind.lib</ImportLibrary>
@@ -594,13 +560,8 @@
     <ClInclude Include="numparse_validators.h" />
     <ClInclude Include="numparse_types.h" />
     <ClInclude Include="numparse_utils.h" />
-<<<<<<< HEAD
-    <ClInclude Include="numrange_impl.h" />
-||||||| merged common ancestors
-=======
     <ClInclude Include="numrange_impl.h" />
     <ClInclude Include="formattedval_impl.h" />
->>>>>>> upstream-releases
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="i18n.rc" />

@@ -55,22 +55,10 @@ class Migrator(object):
         try:
             # Add the migration spec.
             migration.migrate(ctx)
-<<<<<<< HEAD
-        except MigrationError as e:
-            print('  Skipping migration {} for {}:\n    {}'.format(
-                migration.__name__, lang, e))
-            continue
-||||||| merged common ancestors
-        except MigrationError:
-            print('  Skipping migration {} for {}'.format(
-                migration.__name__, lang))
-            continue
-=======
         except MigrationError as e:
             print('  Skipping migration {} for {}:\n    {}'.format(
                 migration.__name__, self.language, e))
             return
->>>>>>> upstream-releases
 
         # Keep track of how many changesets we're committing.
         index = 0

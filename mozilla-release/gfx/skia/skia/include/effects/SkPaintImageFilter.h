@@ -27,15 +27,6 @@ public:
 
     bool affectsTransparentBlack() const override;
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkPaintImageFilter)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,
@@ -46,8 +37,6 @@ private:
     SK_FLATTENABLE_HOOKS(SkPaintImageFilter)
 
     SkPaintImageFilter(const SkPaint& paint, const CropRect* rect);
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
 
     SkPaint fPaint;
 

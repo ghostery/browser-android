@@ -10,7 +10,6 @@
 #include "SkCanvas.h"
 #include "SkColorData.h"
 #include "SkColorSpaceXformer.h"
-#include "SkFlattenablePriv.h"
 #include "SkImageFilterPriv.h"
 #include "SkReadBuffer.h"
 #include "SkSpecialImage.h"
@@ -37,15 +36,6 @@ public:
     SkXfermodeImageFilter_Base(SkBlendMode mode, sk_sp<SkImageFilter> inputs[2],
                                const CropRect* cropRect);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkXfermodeImageFilter_Base)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkXfermodeImageFilter_Base)
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
 protected:
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,
                                         SkIPoint* offset) const override;
@@ -288,22 +278,6 @@ sk_sp<SkSpecialImage> SkXfermodeImageFilter_Base::filterImageGPU(
     std::unique_ptr<GrFragmentProcessor> bgFP;
 
     if (backgroundProxy) {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
-        SkMatrix bgMatrix = SkMatrix::MakeTrans(-SkIntToScalar(backgroundOffset.fX),
-                                                -SkIntToScalar(backgroundOffset.fY));
-        bgFP = GrTextureDomainEffect::Make(std::move(backgroundProxy), bgMatrix,
-                                           GrTextureDomain::MakeTexelDomain(background->subset()),
-                                           GrTextureDomain::kDecal_Mode,
-                                           GrSamplerState::Filter::kNearest);
-||||||| merged common ancestors
-        SkMatrix bgMatrix = SkMatrix::MakeTrans(-SkIntToScalar(backgroundOffset.fX),
-                                                -SkIntToScalar(backgroundOffset.fY));
-        GrPixelConfig bgConfig = backgroundProxy->config();
-        bgFP = GrTextureDomainEffect::Make(std::move(backgroundProxy), bgMatrix,
-                                           GrTextureDomain::MakeTexelDomain(background->subset()),
-                                           GrTextureDomain::kDecal_Mode,
-                                           GrSamplerState::Filter::kNearest);
-=======
         SkIRect bgSubset = background->subset();
         SkMatrix bgMatrix = SkMatrix::MakeTrans(
                 SkIntToScalar(bgSubset.left() - backgroundOffset.fX),
@@ -312,7 +286,6 @@ sk_sp<SkSpecialImage> SkXfermodeImageFilter_Base::filterImageGPU(
                     std::move(backgroundProxy), bgMatrix,
                     GrTextureDomain::MakeTexelDomain(bgSubset, GrTextureDomain::kDecal_Mode),
                     GrTextureDomain::kDecal_Mode, GrSamplerState::Filter::kNearest);
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
         bgFP = GrColorSpaceXformEffect::Make(std::move(bgFP), background->getColorSpace(),
                                              background->alphaType(),
                                              outputProperties.colorSpace());
@@ -322,19 +295,10 @@ sk_sp<SkSpecialImage> SkXfermodeImageFilter_Base::filterImageGPU(
     }
 
     if (foregroundProxy) {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
-        SkMatrix fgMatrix = SkMatrix::MakeTrans(-SkIntToScalar(foregroundOffset.fX),
-                                                -SkIntToScalar(foregroundOffset.fY));
-||||||| merged common ancestors
-        SkMatrix fgMatrix = SkMatrix::MakeTrans(-SkIntToScalar(foregroundOffset.fX),
-                                                -SkIntToScalar(foregroundOffset.fY));
-        GrPixelConfig fgConfig = foregroundProxy->config();
-=======
         SkIRect fgSubset = foreground->subset();
         SkMatrix fgMatrix = SkMatrix::MakeTrans(
                 SkIntToScalar(fgSubset.left() - foregroundOffset.fX),
                 SkIntToScalar(fgSubset.top()  - foregroundOffset.fY));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
         auto foregroundFP = GrTextureDomainEffect::Make(
                 std::move(foregroundProxy), fgMatrix,
                 GrTextureDomain::MakeTexelDomain(fgSubset, GrTextureDomain::kDecal_Mode),
@@ -357,16 +321,6 @@ sk_sp<SkSpecialImage> SkXfermodeImageFilter_Base::filterImageGPU(
 
     paint.setPorterDuffXPFactory(SkBlendMode::kSrc);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
-    sk_sp<GrRenderTargetContext> renderTargetContext(
-        context->contextPriv().makeDeferredRenderTargetContext(
-                                    SkBackingFit::kApprox, bounds.width(), bounds.height(),
-                                    SkColorType2GrPixelConfig(outputProperties.colorType()),
-||||||| merged common ancestors
-    sk_sp<GrRenderTargetContext> renderTargetContext(context->makeDeferredRenderTargetContext(
-                                    SkBackingFit::kApprox, bounds.width(), bounds.height(),
-                                    GrRenderableConfigForColorSpace(outputProperties.colorSpace()),
-=======
     SkColorType colorType = outputProperties.colorType();
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(colorType);
@@ -375,7 +329,6 @@ sk_sp<SkSpecialImage> SkXfermodeImageFilter_Base::filterImageGPU(
         context->priv().makeDeferredRenderTargetContext(
                                     format, SkBackingFit::kApprox, bounds.width(), bounds.height(),
                                     SkColorType2GrPixelConfig(colorType),
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
                                     sk_ref_sp(outputProperties.colorSpace())));
     if (!renderTargetContext) {
         return nullptr;
@@ -402,43 +355,6 @@ std::unique_ptr<GrFragmentProcessor> SkXfermodeImageFilter_Base::makeFGFrag(
 #endif
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
-sk_sp<SkFlattenable> SkXfermodeImageFilter_Base::LegacyArithmeticCreateProc(SkReadBuffer& buffer) {
-    SK_IMAGEFILTER_UNFLATTEN_COMMON(common, 2);
-    // skip the unused mode (srcover) field
-    SkDEBUGCODE(unsigned mode =) unflatten_blendmode(buffer);
-    if (!buffer.isValid()) {
-        return nullptr;
-    }
-    SkASSERT(SkBlendMode::kSrcOver == (SkBlendMode)mode);
-    float k[4];
-    for (int i = 0; i < 4; ++i) {
-        k[i] = buffer.readScalar();
-    }
-    const bool enforcePMColor = buffer.readBool();
-    if (!buffer.isValid()) {
-        return nullptr;
-    }
-    return SkArithmeticImageFilter::Make(k[0], k[1], k[2], k[3], enforcePMColor, common.getInput(0),
-                                         common.getInput(1), &common.cropRect());
-||||||| merged common ancestors
-sk_sp<SkFlattenable> SkXfermodeImageFilter_Base::LegacyArithmeticCreateProc(SkReadBuffer& buffer) {
-    SK_IMAGEFILTER_UNFLATTEN_COMMON(common, 2);
-    // skip the unused mode (srcover) field
-    SkDEBUGCODE(unsigned mode =) unflatten_blendmode(buffer);
-    if (!buffer.isValid()) {
-        return nullptr;
-    }
-    SkASSERT(SkBlendMode::kSrcOver == (SkBlendMode)mode);
-    float k[4];
-    for (int i = 0; i < 4; ++i) {
-        k[i] = buffer.readScalar();
-    }
-    const bool enforcePMColor = buffer.readBool();
-    return SkArithmeticImageFilter::Make(k[0], k[1], k[2], k[3], enforcePMColor, common.getInput(0),
-                                         common.getInput(1), &common.cropRect());
-=======
 void SkXfermodeImageFilter::RegisterFlattenables() {
     SK_REGISTER_FLATTENABLE(SkXfermodeImageFilter_Base);
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkXfermodeImageFilter.cpp
 }

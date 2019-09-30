@@ -20,19 +20,6 @@
 #endif
 
 // Auxiliary method to convert file descriptors to ids
-<<<<<<< HEAD
-#if defined(XP_WIN32)
-#include <io.h>
-inline intptr_t FileDescriptorToHandle(int aFd) { return _get_osfhandle(aFd); }
-||||||| merged common ancestors
-#if defined(XP_WIN32)
-#include <io.h>
-inline intptr_t
-FileDescriptorToHandle(int aFd)
-{
-  return _get_osfhandle(aFd);
-}
-=======
 #if defined(XP_WIN)
 #  include <io.h>
 inline mozilla::Maybe<intptr_t> FileDescriptorToHandle(int aFd) {
@@ -43,24 +30,11 @@ inline mozilla::Maybe<intptr_t> FileDescriptorToHandle(int aFd) {
   }
   return mozilla::Some(handle);
 }
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-inline intptr_t FileDescriptorToHandle(int aFd) { return aFd; }
-#endif /* if not XP_WIN32 */
-||||||| merged common ancestors
-inline intptr_t
-FileDescriptorToHandle(int aFd)
-{
-  return aFd;
-}
-#endif /* if not XP_WIN32 */
-=======
 inline mozilla::Maybe<intptr_t> FileDescriptorToHandle(int aFd) {
   return mozilla::Some<intptr_t>(aFd);
 }
 #endif /* if not XP_WIN */
->>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -243,22 +217,12 @@ void MozillaRegisterDebugHandle(intptr_t aHandle) {
   DebugFileIDs.Add(aHandle);
 }
 
-<<<<<<< HEAD
-void MozillaRegisterDebugFD(int aFd) {
-  MozillaRegisterDebugHandle(FileDescriptorToHandle(aFd));
-||||||| merged common ancestors
-void
-MozillaRegisterDebugFD(int aFd)
-{
-  MozillaRegisterDebugHandle(FileDescriptorToHandle(aFd));
-=======
 void MozillaRegisterDebugFD(int aFd) {
   Maybe<intptr_t> handle = FileDescriptorToHandle(aFd);
   if (!handle.isSome()) {
     return;
   }
   MozillaRegisterDebugHandle(handle.value());
->>>>>>> upstream-releases
 }
 
 void MozillaRegisterDebugFILE(FILE* aFile) {
@@ -276,22 +240,12 @@ void MozillaUnRegisterDebugHandle(intptr_t aHandle) {
   DebugFileIDs.Remove(aHandle);
 }
 
-<<<<<<< HEAD
-void MozillaUnRegisterDebugFD(int aFd) {
-  MozillaUnRegisterDebugHandle(FileDescriptorToHandle(aFd));
-||||||| merged common ancestors
-void
-MozillaUnRegisterDebugFD(int aFd)
-{
-  MozillaUnRegisterDebugHandle(FileDescriptorToHandle(aFd));
-=======
 void MozillaUnRegisterDebugFD(int aFd) {
   Maybe<intptr_t> handle = FileDescriptorToHandle(aFd);
   if (!handle.isSome()) {
     return;
   }
   MozillaUnRegisterDebugHandle(handle.value());
->>>>>>> upstream-releases
 }
 
 void MozillaUnRegisterDebugFILE(FILE* aFile) {

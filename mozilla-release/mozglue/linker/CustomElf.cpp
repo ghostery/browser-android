@@ -22,34 +22,16 @@ using namespace Elf;
  * crash reporter */
 #ifdef ANDROID
 extern "C" {
-<<<<<<< HEAD
-void report_mapping(char *name, void *base, uint32_t len, uint32_t offset);
-void delete_mapping(const char *name);
-||||||| merged common ancestors
-  void report_mapping(char *name, void *base, uint32_t len, uint32_t offset);
-  void delete_mapping(const char *name);
-=======
 void report_mapping(char* name, void* base, uint32_t len, uint32_t offset);
 void delete_mapping(const char* name);
->>>>>>> upstream-releases
 }
 #else
 #  define report_mapping(...)
 #  define delete_mapping(...)
 #endif
 
-<<<<<<< HEAD
-const Ehdr *Ehdr::validate(const void *buf) {
-  if (!buf || buf == MAP_FAILED) return nullptr;
-||||||| merged common ancestors
-const Ehdr *Ehdr::validate(const void *buf)
-{
-  if (!buf || buf == MAP_FAILED)
-    return nullptr;
-=======
 const Ehdr* Ehdr::validate(const void* buf) {
   if (!buf || buf == MAP_FAILED) return nullptr;
->>>>>>> upstream-releases
 
   const Ehdr* ehdr = reinterpret_cast<const Ehdr*>(buf);
 
@@ -72,24 +54,6 @@ const Ehdr* Ehdr::validate(const void* buf) {
 
 namespace {
 
-<<<<<<< HEAD
-void debug_phdr(const char *type, const Phdr *phdr) {
-  DEBUG_LOG("%s @0x%08" PRIxPTR
-            " ("
-            "filesz: 0x%08" PRIxPTR
-            ", "
-            "memsz: 0x%08" PRIxPTR
-            ", "
-            "offset: 0x%08" PRIxPTR
-            ", "
-||||||| merged common ancestors
-void debug_phdr(const char *type, const Phdr *phdr)
-{
-  DEBUG_LOG("%s @0x%08" PRIxPTR " ("
-            "filesz: 0x%08" PRIxPTR ", "
-            "memsz: 0x%08" PRIxPTR ", "
-            "offset: 0x%08" PRIxPTR ", "
-=======
 void debug_phdr(const char* type, const Phdr* phdr) {
   DEBUG_LOG("%s @0x%08" PRIxPTR
             " ("
@@ -99,7 +63,6 @@ void debug_phdr(const char* type, const Phdr* phdr) {
             ", "
             "offset: 0x%08" PRIxPTR
             ", "
->>>>>>> upstream-releases
             "flags: %c%c%c)",
             type, uintptr_t(phdr->p_vaddr), uintptr_t(phdr->p_filesz),
             uintptr_t(phdr->p_memsz), uintptr_t(phdr->p_offset),
@@ -118,27 +81,6 @@ static int p_flags_to_mprot(Word flags) {
  * RAII wrapper for a mapping of the first page off a Mappable object.
  * This calls Mappable::munmap instead of system munmap.
  */
-<<<<<<< HEAD
-class Mappable1stPagePtr : public GenericMappedPtr<Mappable1stPagePtr> {
- public:
-  explicit Mappable1stPagePtr(Mappable *mappable)
-      : GenericMappedPtr<Mappable1stPagePtr>(
-            mappable->mmap(nullptr, PageSize(), PROT_READ, MAP_PRIVATE, 0)),
-        mappable(mappable) {}
-
- private:
-||||||| merged common ancestors
-class Mappable1stPagePtr: public GenericMappedPtr<Mappable1stPagePtr> {
-public:
-  explicit Mappable1stPagePtr(Mappable *mappable)
-  : GenericMappedPtr<Mappable1stPagePtr>(
-      mappable->mmap(nullptr, PageSize(), PROT_READ, MAP_PRIVATE, 0))
-  , mappable(mappable)
-  {
-  }
-
-private:
-=======
 class Mappable1stPagePtr : public GenericMappedPtr<Mappable1stPagePtr> {
  public:
   explicit Mappable1stPagePtr(Mappable* mappable)
@@ -147,33 +89,14 @@ class Mappable1stPagePtr : public GenericMappedPtr<Mappable1stPagePtr> {
         mappable(mappable) {}
 
  private:
->>>>>>> upstream-releases
   friend class GenericMappedPtr<Mappable1stPagePtr>;
-<<<<<<< HEAD
-  void munmap(void *buf, size_t length) { mappable->munmap(buf, length); }
-||||||| merged common ancestors
-  void munmap(void *buf, size_t length) {
-    mappable->munmap(buf, length);
-  }
-=======
   void munmap(void* buf, size_t length) { mappable->munmap(buf, length); }
->>>>>>> upstream-releases
 
   RefPtr<Mappable> mappable;
 };
 
-<<<<<<< HEAD
-already_AddRefed<LibHandle> CustomElf::Load(Mappable *mappable,
-                                            const char *path, int flags) {
-||||||| merged common ancestors
-
-already_AddRefed<LibHandle>
-CustomElf::Load(Mappable *mappable, const char *path, int flags)
-{
-=======
 already_AddRefed<LibHandle> CustomElf::Load(Mappable* mappable,
                                             const char* path, int flags) {
->>>>>>> upstream-releases
   DEBUG_LOG("CustomElf::Load(\"%s\", 0x%x) = ...", path, flags);
   if (!mappable) return nullptr;
   /* Keeping a RefPtr of the CustomElf is going to free the appropriate
@@ -183,45 +106,18 @@ already_AddRefed<LibHandle> CustomElf::Load(Mappable* mappable,
   Mappable1stPagePtr ehdr_raw(mappable);
   if (ehdr_raw == MAP_FAILED) return nullptr;
 
-<<<<<<< HEAD
-  const Ehdr *ehdr = Ehdr::validate(ehdr_raw);
-  if (!ehdr) return nullptr;
-||||||| merged common ancestors
-  const Ehdr *ehdr = Ehdr::validate(ehdr_raw);
-  if (!ehdr)
-    return nullptr;
-=======
   const Ehdr* ehdr = Ehdr::validate(ehdr_raw);
   if (!ehdr) return nullptr;
->>>>>>> upstream-releases
 
   /* Scan Elf Program Headers and gather some information about them */
-<<<<<<< HEAD
-  std::vector<const Phdr *> pt_loads;
-  Addr min_vaddr = (Addr)-1;  // We want to find the lowest and biggest
-||||||| merged common ancestors
-  std::vector<const Phdr *> pt_loads;
-  Addr min_vaddr = (Addr) -1; // We want to find the lowest and biggest
-=======
   std::vector<const Phdr*> pt_loads;
   Addr min_vaddr = (Addr)-1;  // We want to find the lowest and biggest
->>>>>>> upstream-releases
   Addr max_vaddr = 0;         // virtual address used by this Elf.
   const Phdr* dyn = nullptr;
 
-<<<<<<< HEAD
-  const Phdr *first_phdr = reinterpret_cast<const Phdr *>(
-      reinterpret_cast<const char *>(ehdr) + ehdr->e_phoff);
-  const Phdr *end_phdr = &first_phdr[ehdr->e_phnum];
-||||||| merged common ancestors
-  const Phdr *first_phdr = reinterpret_cast<const Phdr *>(
-                           reinterpret_cast<const char *>(ehdr) + ehdr->e_phoff);
-  const Phdr *end_phdr = &first_phdr[ehdr->e_phnum];
-=======
   const Phdr* first_phdr = reinterpret_cast<const Phdr*>(
       reinterpret_cast<const char*>(ehdr) + ehdr->e_phoff);
   const Phdr* end_phdr = &first_phdr[ehdr->e_phnum];
->>>>>>> upstream-releases
 #ifdef __ARM_EABI__
   const Phdr* arm_exidx_phdr = nullptr;
 #endif
@@ -352,20 +248,9 @@ already_AddRefed<LibHandle> CustomElf::Load(Mappable* mappable,
   return elf.forget();
 }
 
-<<<<<<< HEAD
-CustomElf::~CustomElf() {
-  DEBUG_LOG("CustomElf::~CustomElf(%p [\"%s\"])",
-            reinterpret_cast<void *>(this), GetPath());
-||||||| merged common ancestors
-CustomElf::~CustomElf()
-{
-  DEBUG_LOG("CustomElf::~CustomElf(%p [\"%s\"])",
-            reinterpret_cast<void *>(this), GetPath());
-=======
 CustomElf::~CustomElf() {
   DEBUG_LOG("CustomElf::~CustomElf(%p [\"%s\"])", reinterpret_cast<void*>(this),
             GetPath());
->>>>>>> upstream-releases
   CallFini();
   /* Normally, __cxa_finalize is called by the .fini function. However,
    * Android NDK before r6b doesn't do that. Our wrapped cxa_finalize only
@@ -375,15 +260,7 @@ CustomElf::~CustomElf() {
   delete_mapping(GetName());
 }
 
-<<<<<<< HEAD
-void *CustomElf::GetSymbolPtrInDeps(const char *symbol) const {
-||||||| merged common ancestors
-void *
-CustomElf::GetSymbolPtrInDeps(const char *symbol) const
-{
-=======
 void* CustomElf::GetSymbolPtrInDeps(const char* symbol) const {
->>>>>>> upstream-releases
   /* Resolve dlopen and related functions to point to ours */
   if (symbol[0] == 'd' && symbol[1] == 'l') {
     if (strcmp(symbol + 2, "open") == 0) return FunctionPtr(__wrap_dlopen);
@@ -423,20 +300,9 @@ void* CustomElf::GetSymbolPtrInDeps(const char* symbol) const {
   if (ElfLoader::Singleton.self_elf) {
     /* We consider the library containing this code a permanent LD_PRELOAD,
      * so, check if the symbol exists here first. */
-<<<<<<< HEAD
-    sym = static_cast<BaseElf *>(ElfLoader::Singleton.self_elf.get())
-              ->GetSymbolPtr(symbol, hash);
-    if (sym) return sym;
-||||||| merged common ancestors
-    sym = static_cast<BaseElf *>(
-      ElfLoader::Singleton.self_elf.get())->GetSymbolPtr(symbol, hash);
-    if (sym)
-      return sym;
-=======
     sym = static_cast<BaseElf*>(ElfLoader::Singleton.self_elf.get())
               ->GetSymbolPtr(symbol, hash);
     if (sym) return sym;
->>>>>>> upstream-releases
   }
 
   /* Then search the symbol in our dependencies. Since we already searched in
@@ -450,17 +316,8 @@ void* CustomElf::GetSymbolPtrInDeps(const char* symbol) const {
        it < dependencies.end(); ++it) {
     /* Skip if it's the library containing this code, since we've already
      * looked at it above. */
-<<<<<<< HEAD
-    if (*it == ElfLoader::Singleton.self_elf) continue;
-    if (BaseElf *be = (*it)->AsBaseElf()) {
-||||||| merged common ancestors
-    if (*it == ElfLoader::Singleton.self_elf)
-      continue;
-    if (BaseElf *be = (*it)->AsBaseElf()) {
-=======
     if (*it == ElfLoader::Singleton.self_elf) continue;
     if (BaseElf* be = (*it)->AsBaseElf()) {
->>>>>>> upstream-releases
       sym = be->GetSymbolPtr(symbol, hash);
     } else {
       sym = (*it)->GetSymbolPtr(symbol);
@@ -470,15 +327,7 @@ void* CustomElf::GetSymbolPtrInDeps(const char* symbol) const {
   return nullptr;
 }
 
-<<<<<<< HEAD
-bool CustomElf::LoadSegment(const Phdr *pt_load) const {
-||||||| merged common ancestors
-bool
-CustomElf::LoadSegment(const Phdr *pt_load) const
-{
-=======
 bool CustomElf::LoadSegment(const Phdr* pt_load) const {
->>>>>>> upstream-releases
   if (pt_load->p_type != PT_LOAD) {
     DEBUG_LOG("%s: Elf::LoadSegment only takes PT_LOAD program headers",
               GetPath());
@@ -549,28 +398,13 @@ bool CustomElf::LoadSegment(const Phdr* pt_load) const {
 
 namespace {
 
-<<<<<<< HEAD
-void debug_dyn(const char *type, const Dyn *dyn) {
-||||||| merged common ancestors
-void debug_dyn(const char *type, const Dyn *dyn)
-{
-=======
 void debug_dyn(const char* type, const Dyn* dyn) {
->>>>>>> upstream-releases
   DEBUG_LOG("%s 0x%08" PRIxPTR, type, uintptr_t(dyn->d_un.d_val));
 }
 
 } /* anonymous namespace */
 
-<<<<<<< HEAD
-bool CustomElf::InitDyn(const Phdr *pt_dyn) {
-||||||| merged common ancestors
-bool
-CustomElf::InitDyn(const Phdr *pt_dyn)
-{
-=======
 bool CustomElf::InitDyn(const Phdr* pt_dyn) {
->>>>>>> upstream-releases
   /* Scan PT_DYNAMIC segment and gather some information */
   const Dyn* first_dyn = GetPtr<Dyn>(pt_dyn->p_vaddr);
   const Dyn* end_dyn = GetPtr<Dyn>(pt_dyn->p_vaddr + pt_dyn->p_filesz);
@@ -582,25 +416,6 @@ bool CustomElf::InitDyn(const Phdr* pt_dyn) {
         debug_dyn("DT_NEEDED", dyn);
         dt_needed.push_back(dyn->d_un.d_val);
         break;
-<<<<<<< HEAD
-      case DT_HASH: {
-        debug_dyn("DT_HASH", dyn);
-        const Word *hash_table_header = GetPtr<Word>(dyn->d_un.d_ptr);
-        symnum = hash_table_header[1];
-        buckets.Init(&hash_table_header[2], hash_table_header[0]);
-        chains.Init(&*buckets.end());
-      } break;
-||||||| merged common ancestors
-      case DT_HASH:
-        {
-          debug_dyn("DT_HASH", dyn);
-          const Word *hash_table_header = GetPtr<Word>(dyn->d_un.d_ptr);
-          symnum = hash_table_header[1];
-          buckets.Init(&hash_table_header[2], hash_table_header[0]);
-          chains.Init(&*buckets.end());
-        }
-        break;
-=======
       case DT_HASH: {
         debug_dyn("DT_HASH", dyn);
         const Word* hash_table_header = GetPtr<Word>(dyn->d_un.d_ptr);
@@ -608,7 +423,6 @@ bool CustomElf::InitDyn(const Phdr* pt_dyn) {
         buckets.Init(&hash_table_header[2], hash_table_header[0]);
         chains.Init(&*buckets.end());
       } break;
->>>>>>> upstream-releases
       case DT_STRTAB:
         debug_dyn("DT_STRTAB", dyn);
         strtab.Init(GetPtr(dyn->d_un.d_ptr));
@@ -764,24 +578,10 @@ bool CustomElf::InitDyn(const Phdr* pt_dyn) {
   return true;
 }
 
-<<<<<<< HEAD
-bool CustomElf::Relocate() {
-  DEBUG_LOG("Relocate %s @%p", GetPath(), static_cast<void *>(base));
-  uint32_t symtab_index = (uint32_t)-1;
-  void *symptr = nullptr;
-||||||| merged common ancestors
-bool
-CustomElf::Relocate()
-{
-  DEBUG_LOG("Relocate %s @%p", GetPath(), static_cast<void *>(base));
-  uint32_t symtab_index = (uint32_t) -1;
-  void *symptr = nullptr;
-=======
 bool CustomElf::Relocate() {
   DEBUG_LOG("Relocate %s @%p", GetPath(), static_cast<void*>(base));
   uint32_t symtab_index = (uint32_t)-1;
   void* symptr = nullptr;
->>>>>>> upstream-releases
   for (Array<Reloc>::iterator rel = relocations.begin();
        rel < relocations.end(); ++rel) {
     /* Location of the relocation */
@@ -789,13 +589,7 @@ bool CustomElf::Relocate() {
 
     /* R_*_RELATIVE relocations apply directly at the given location */
     if (ELF_R_TYPE(rel->r_info) == R_RELATIVE) {
-<<<<<<< HEAD
-      *(void **)ptr = GetPtr(rel->GetAddend(base));
-||||||| merged common ancestors
-      *(void **) ptr = GetPtr(rel->GetAddend(base));
-=======
       *(void**)ptr = GetPtr(rel->GetAddend(base));
->>>>>>> upstream-releases
       continue;
     }
     /* Other relocation types need a symbol resolution */
@@ -817,33 +611,6 @@ bool CustomElf::Relocate() {
 
     /* Apply relocation */
     switch (ELF_R_TYPE(rel->r_info)) {
-<<<<<<< HEAD
-      case R_GLOB_DAT:
-        /* R_*_GLOB_DAT relocations simply use the symbol value */
-        *(void **)ptr = symptr;
-        break;
-      case R_ABS:
-        /* R_*_ABS* relocations add the relocation added to the symbol value */
-        *(const char **)ptr = (const char *)symptr + rel->GetAddend(base);
-        break;
-      default:
-        ERROR("%s: Unsupported relocation type: 0x%" PRIxPTR, GetPath(),
-              uintptr_t(ELF_R_TYPE(rel->r_info)));
-        return false;
-||||||| merged common ancestors
-    case R_GLOB_DAT:
-      /* R_*_GLOB_DAT relocations simply use the symbol value */
-      *(void **) ptr = symptr;
-      break;
-    case R_ABS:
-      /* R_*_ABS* relocations add the relocation added to the symbol value */
-      *(const char **) ptr = (const char *)symptr + rel->GetAddend(base);
-      break;
-    default:
-      ERROR("%s: Unsupported relocation type: 0x%" PRIxPTR,
-          GetPath(), uintptr_t(ELF_R_TYPE(rel->r_info)));
-      return false;
-=======
       case R_GLOB_DAT:
         /* R_*_GLOB_DAT relocations simply use the symbol value */
         *(void**)ptr = symptr;
@@ -856,7 +623,6 @@ bool CustomElf::Relocate() {
         ERROR("%s: Unsupported relocation type: 0x%" PRIxPTR, GetPath(),
               uintptr_t(ELF_R_TYPE(rel->r_info)));
         return false;
->>>>>>> upstream-releases
     }
   }
   return true;
@@ -896,13 +662,7 @@ bool CustomElf::RelocateJumps() {
       }
     }
     /* Apply relocation */
-<<<<<<< HEAD
-    *(void **)ptr = symptr;
-||||||| merged common ancestors
-    *(void **) ptr = symptr;
-=======
     *(void**)ptr = symptr;
->>>>>>> upstream-releases
   }
   return true;
 }
@@ -910,76 +670,27 @@ bool CustomElf::RelocateJumps() {
 bool CustomElf::CallInit() {
   if (init) CallFunction(init);
 
-<<<<<<< HEAD
-  for (Array<void *>::iterator it = init_array.begin(); it < init_array.end();
-       ++it) {
-||||||| merged common ancestors
-  for (Array<void *>::iterator it = init_array.begin();
-       it < init_array.end(); ++it) {
-=======
   for (Array<void*>::iterator it = init_array.begin(); it < init_array.end();
        ++it) {
->>>>>>> upstream-releases
     /* Android x86 NDK wrongly puts 0xffffffff in INIT_ARRAY */
-<<<<<<< HEAD
-    if (*it && *it != reinterpret_cast<void *>(-1)) CallFunction(*it);
-||||||| merged common ancestors
-    if (*it && *it != reinterpret_cast<void *>(-1))
-      CallFunction(*it);
-=======
     if (*it && *it != reinterpret_cast<void*>(-1)) CallFunction(*it);
->>>>>>> upstream-releases
   }
   initialized = true;
   return true;
 }
 
-<<<<<<< HEAD
-void CustomElf::CallFini() {
-  if (!initialized) return;
-  for (Array<void *>::reverse_iterator it = fini_array.rbegin();
-||||||| merged common ancestors
-void
-CustomElf::CallFini()
-{
-  if (!initialized)
-    return;
-  for (Array<void *>::reverse_iterator it = fini_array.rbegin();
-=======
 void CustomElf::CallFini() {
   if (!initialized) return;
   for (Array<void*>::reverse_iterator it = fini_array.rbegin();
->>>>>>> upstream-releases
        it < fini_array.rend(); ++it) {
     /* Android x86 NDK wrongly puts 0xffffffff in FINI_ARRAY */
-<<<<<<< HEAD
-    if (*it && *it != reinterpret_cast<void *>(-1)) CallFunction(*it);
-||||||| merged common ancestors
-    if (*it && *it != reinterpret_cast<void *>(-1))
-      CallFunction(*it);
-=======
     if (*it && *it != reinterpret_cast<void*>(-1)) CallFunction(*it);
->>>>>>> upstream-releases
   }
   if (fini) CallFunction(fini);
 }
 
-<<<<<<< HEAD
-Mappable *CustomElf::GetMappable() const {
-  if (!mappable) return nullptr;
-  if (mappable->GetKind() == Mappable::MAPPABLE_EXTRACT_FILE) return mappable;
-||||||| merged common ancestors
-Mappable *
-CustomElf::GetMappable() const
-{
-  if (!mappable)
-    return nullptr;
-  if (mappable->GetKind() == Mappable::MAPPABLE_EXTRACT_FILE)
-    return mappable;
-=======
 Mappable* CustomElf::GetMappable() const {
   if (!mappable) return nullptr;
   if (mappable->GetKind() == Mappable::MAPPABLE_EXTRACT_FILE) return mappable;
->>>>>>> upstream-releases
   return ElfLoader::GetMappableFromPath(GetPath());
 }

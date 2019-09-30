@@ -7,7 +7,7 @@ tg{
         default{"latn"}
         latn{
             miscPatterns{
-                atLeast{"≥{0}"}
+                atLeast{"⩾{0}"}
                 range{"{0}–{1}"}
             }
             patterns{
@@ -33,13 +33,7 @@ tg{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.71"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

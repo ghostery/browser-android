@@ -1,11 +1,6 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 ig{
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.69"}
-=======
     Version{"2.1.48.45"}
     zoneStrings{
         "Etc:UTC"{
@@ -65,5 +60,4 @@ ig{
         regionFormatDaylight{"Oge Ihe {0}"}
         regionFormatStandard{"Oge Izugbe {0}"}
     }
->>>>>>> upstream-releases
 }

@@ -46,12 +46,12 @@
 #include "nsWindow.h"
 
 #ifdef MOZ_X11
-#ifdef CAIRO_HAS_XLIB_SURFACE
-#include "cairo-xlib.h"
-#endif
-#ifdef CAIRO_HAS_XLIB_XRENDER_SURFACE
-#include "cairo-xlib-xrender.h"
-#endif
+#  ifdef CAIRO_HAS_XLIB_SURFACE
+#    include "cairo-xlib.h"
+#  endif
+#  ifdef CAIRO_HAS_XLIB_XRENDER_SURFACE
+#    include "cairo-xlib-xrender.h"
+#  endif
 #endif
 
 #include <algorithm>
@@ -130,38 +130,14 @@ nsNativeThemeGTK::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsNativeThemeGTK::RefreshWidgetWindow(nsIFrame* aFrame) {
-  nsIPresShell* shell = GetPresShell(aFrame);
-  if (!shell) return;
-||||||| merged common ancestors
-void
-nsNativeThemeGTK::RefreshWidgetWindow(nsIFrame* aFrame)
-{
-  nsIPresShell *shell = GetPresShell(aFrame);
-  if (!shell)
-    return;
-=======
 void nsNativeThemeGTK::RefreshWidgetWindow(nsIFrame* aFrame) {
   MOZ_ASSERT(aFrame);
   MOZ_ASSERT(aFrame->PresShell());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsViewManager* vm = shell->GetViewManager();
-  if (!vm) return;
-
-||||||| merged common ancestors
-  nsViewManager* vm = shell->GetViewManager();
-  if (!vm)
-    return;
-
-=======
   nsViewManager* vm = aFrame->PresShell()->GetViewManager();
   if (!vm) {
     return;
   }
->>>>>>> upstream-releases
   vm->InvalidateAllViews();
 }
 
@@ -211,17 +187,8 @@ static void SetWidgetStateSafe(uint8_t* aSafeVector,
   aSafeVector[key >> 3] |= (1 << (key & 7));
 }
 
-<<<<<<< HEAD
-/* static */ GtkTextDirection nsNativeThemeGTK::GetTextDirection(
-    nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ GtkTextDirection
-nsNativeThemeGTK::GetTextDirection(nsIFrame* aFrame)
-{
-=======
 /* static */
 GtkTextDirection nsNativeThemeGTK::GetTextDirection(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   // IsFrameRTL() treats vertical-rl modes as right-to-left (in addition to
   // horizontal text with direction=RTL), rather than just considering the
   // text direction.  GtkTextDirection does not have distinct values for
@@ -231,7 +198,6 @@ GtkTextDirection nsNativeThemeGTK::GetTextDirection(nsIFrame* aFrame) {
 }
 
 // Returns positive for negative margins (otherwise 0).
-<<<<<<< HEAD
 gint nsNativeThemeGTK::GetTabMarginPixels(nsIFrame* aFrame) {
   nscoord margin = IsBottomTab(aFrame) ? aFrame->GetUsedMargin().top
                                        : aFrame->GetUsedMargin().bottom;
@@ -239,26 +205,6 @@ gint nsNativeThemeGTK::GetTabMarginPixels(nsIFrame* aFrame) {
   return std::min<gint>(
       MOZ_GTK_TAB_MARGIN_MASK,
       std::max(0, aFrame->PresContext()->AppUnitsToDevPixels(-margin)));
-||||||| merged common ancestors
-gint
-nsNativeThemeGTK::GetTabMarginPixels(nsIFrame* aFrame)
-{
-  nscoord margin =
-    IsBottomTab(aFrame) ? aFrame->GetUsedMargin().top
-    : aFrame->GetUsedMargin().bottom;
-
-  return std::min<gint>(MOZ_GTK_TAB_MARGIN_MASK,
-                std::max(0,
-                       aFrame->PresContext()->AppUnitsToDevPixels(-margin)));
-=======
-gint nsNativeThemeGTK::GetTabMarginPixels(nsIFrame* aFrame) {
-  nscoord margin = IsBottomTab(aFrame) ? aFrame->GetUsedMargin().top
-                                       : aFrame->GetUsedMargin().bottom;
-
-  return std::min<gint>(
-      MOZ_GTK_TAB_MARGIN_MASK,
-      std::max(0, aFrame->PresContext()->AppUnitsToDevPixels(-margin)));
->>>>>>> upstream-releases
 }
 
 static bool ShouldScrollbarButtonBeDisabled(int32_t aCurpos, int32_t aMaxpos,
@@ -849,19 +795,9 @@ bool nsNativeThemeGTK::GetGtkWidgetAndState(StyleAppearance aAppearance,
 }
 
 class SystemCairoClipper : public ClipExporter {
-<<<<<<< HEAD
- public:
-  explicit SystemCairoClipper(cairo_t* aContext) : mContext(aContext) {}
-||||||| merged common ancestors
-public:
-  explicit SystemCairoClipper(cairo_t* aContext) : mContext(aContext)
-  {
-  }
-=======
  public:
   explicit SystemCairoClipper(cairo_t* aContext, gint aScaleFactor = 1)
       : mContext(aContext), mScaleFactor(aScaleFactor) {}
->>>>>>> upstream-releases
 
   void BeginClip(const Matrix& aTransform) override {
     cairo_matrix_t mat;
@@ -871,53 +807,22 @@ public:
     cairo_new_path(mContext);
   }
 
-<<<<<<< HEAD
-  void MoveTo(const Point& aPoint) override {
-    cairo_move_to(mContext, aPoint.x, aPoint.y);
-||||||| merged common ancestors
-  void
-  MoveTo(const Point &aPoint) override
-  {
-    cairo_move_to(mContext, aPoint.x, aPoint.y);
-=======
   void MoveTo(const Point& aPoint) override {
     cairo_move_to(mContext, aPoint.x / mScaleFactor, aPoint.y / mScaleFactor);
     mBeginPoint = aPoint;
->>>>>>> upstream-releases
     mCurrentPoint = aPoint;
   }
 
-<<<<<<< HEAD
-  void LineTo(const Point& aPoint) override {
-    cairo_line_to(mContext, aPoint.x, aPoint.y);
-||||||| merged common ancestors
-  void
-  LineTo(const Point &aPoint) override
-  {
-    cairo_line_to(mContext, aPoint.x, aPoint.y);
-=======
   void LineTo(const Point& aPoint) override {
     cairo_line_to(mContext, aPoint.x / mScaleFactor, aPoint.y / mScaleFactor);
->>>>>>> upstream-releases
     mCurrentPoint = aPoint;
   }
 
-<<<<<<< HEAD
-  void BezierTo(const Point& aCP1, const Point& aCP2,
-                const Point& aCP3) override {
-    cairo_curve_to(mContext, aCP1.x, aCP1.y, aCP2.x, aCP2.y, aCP3.x, aCP3.y);
-||||||| merged common ancestors
-  void
-  BezierTo(const Point &aCP1, const Point &aCP2, const Point &aCP3) override
-  {
-    cairo_curve_to(mContext, aCP1.x, aCP1.y, aCP2.x, aCP2.y, aCP3.x, aCP3.y);
-=======
   void BezierTo(const Point& aCP1, const Point& aCP2,
                 const Point& aCP3) override {
     cairo_curve_to(mContext, aCP1.x / mScaleFactor, aCP1.y / mScaleFactor,
                    aCP2.x / mScaleFactor, aCP2.y / mScaleFactor,
                    aCP3.x / mScaleFactor, aCP3.y / mScaleFactor);
->>>>>>> upstream-releases
     mCurrentPoint = aCP3;
   }
 
@@ -938,62 +843,18 @@ public:
                 aAntiClockwise);
   }
 
-<<<<<<< HEAD
-  void Close() override { cairo_close_path(mContext); }
-||||||| merged common ancestors
-  void
-  Close() override
-  {
-    cairo_close_path(mContext);
-  }
-=======
   void Close() override {
     cairo_close_path(mContext);
     mCurrentPoint = mBeginPoint;
   }
->>>>>>> upstream-releases
 
   void EndClip() override { cairo_clip(mContext); }
 
-<<<<<<< HEAD
-  Point CurrentPoint() const override { return mCurrentPoint; }
-
  private:
-||||||| merged common ancestors
-  Point
-  CurrentPoint() const override
-  {
-    return mCurrentPoint;
-  }
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   cairo_t* mContext;
   gint mScaleFactor;
 };
 
-<<<<<<< HEAD
-static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
-                               GtkWidgetState aState,
-                               WidgetNodeType aGTKWidgetType, gint aFlags,
-                               GtkTextDirection aDirection, gint aScaleFactor,
-                               bool aSnapped, const Point& aDrawOrigin,
-                               const nsIntSize& aDrawSize,
-                               GdkRectangle& aGDKRect,
-                               nsITheme::Transparency aTransparency) {
-  Point drawOffset;
-||||||| merged common ancestors
-static void
-DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
-                   GtkWidgetState aState, WidgetNodeType aGTKWidgetType,
-                   gint aFlags, GtkTextDirection aDirection, gint aScaleFactor,
-                   bool aSnapped, const Point& aDrawOrigin, const nsIntSize& aDrawSize,
-                   GdkRectangle& aGDKRect, nsITheme::Transparency aTransparency)
-{
-  Point drawOffset;
-=======
 static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
                                GtkWidgetState aState,
                                WidgetNodeType aGTKWidgetType, gint aFlags,
@@ -1012,7 +873,6 @@ static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
 
   Point drawOffsetScaled;
   Point drawOffsetOriginal;
->>>>>>> upstream-releases
   Matrix transform;
   if (!aSnapped) {
     // If we are not snapped, we depend on the DT for translation.
@@ -1028,16 +888,9 @@ static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
     transform = Matrix::Translation(drawOffsetScaled);
   }
 
-<<<<<<< HEAD
-  if (aScaleFactor != 1) transform.PreScale(aScaleFactor, aScaleFactor);
-||||||| merged common ancestors
-  if (aScaleFactor != 1)
-    transform.PreScale(aScaleFactor, aScaleFactor);
-=======
   if (!useHiDPIWidgets && aScaleFactor != 1) {
     transform.PreScale(aScaleFactor, aScaleFactor);
   }
->>>>>>> upstream-releases
 
   cairo_matrix_t mat;
   GfxMatrixToCairoMatrix(transform, mat);
@@ -1045,96 +898,9 @@ static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
   nsIntSize clipSize((aDrawSize.width + aScaleFactor - 1) / aScaleFactor,
                      (aDrawSize.height + aScaleFactor - 1) / aScaleFactor);
 
-<<<<<<< HEAD
-#ifndef MOZ_TREE_CAIRO
-  // Directly use the Cairo draw target to render the widget if using system
-  // Cairo everywhere.
-  BorrowedCairoContext borrowCairo(aDrawTarget);
-  if (borrowCairo.mCairo) {
-    cairo_set_matrix(borrowCairo.mCairo, &mat);
-
-    cairo_new_path(borrowCairo.mCairo);
-    cairo_rectangle(borrowCairo.mCairo, 0, 0, clipSize.width, clipSize.height);
-    cairo_clip(borrowCairo.mCairo);
-
-    moz_gtk_widget_paint(aGTKWidgetType, borrowCairo.mCairo, &aGDKRect, &aState,
-                         aFlags, aDirection);
-
-    borrowCairo.Finish();
-    return;
-  }
-#endif
-
   // A direct Cairo draw target is not available, so we need to create a
   // temporary one.
-||||||| merged common ancestors
-#ifndef MOZ_TREE_CAIRO
-  // Directly use the Cairo draw target to render the widget if using system Cairo everywhere.
-  BorrowedCairoContext borrowCairo(aDrawTarget);
-  if (borrowCairo.mCairo) {
-    cairo_set_matrix(borrowCairo.mCairo, &mat);
-
-    cairo_new_path(borrowCairo.mCairo);
-    cairo_rectangle(borrowCairo.mCairo, 0, 0, clipSize.width, clipSize.height);
-    cairo_clip(borrowCairo.mCairo);
-
-    moz_gtk_widget_paint(aGTKWidgetType, borrowCairo.mCairo, &aGDKRect, &aState, aFlags, aDirection);
-
-    borrowCairo.Finish();
-    return;
-  }
-#endif
-
-  // A direct Cairo draw target is not available, so we need to create a temporary one.
-=======
-  // A direct Cairo draw target is not available, so we need to create a
-  // temporary one.
->>>>>>> upstream-releases
 #if defined(MOZ_X11) && defined(CAIRO_HAS_XLIB_SURFACE)
-<<<<<<< HEAD
-  // If using a Cairo xlib surface, then try to reuse it.
-  BorrowedXlibDrawable borrow(aDrawTarget);
-  if (borrow.GetDrawable()) {
-    nsIntSize size = borrow.GetSize();
-    cairo_surface_t* surf = nullptr;
-    // Check if the surface is using XRender.
-#ifdef CAIRO_HAS_XLIB_XRENDER_SURFACE
-    if (borrow.GetXRenderFormat()) {
-      surf = cairo_xlib_surface_create_with_xrender_format(
-          borrow.GetDisplay(), borrow.GetDrawable(), borrow.GetScreen(),
-          borrow.GetXRenderFormat(), size.width, size.height);
-    } else {
-#else
-    if (!borrow.GetXRenderFormat()) {
-#endif
-      surf = cairo_xlib_surface_create(borrow.GetDisplay(),
-                                       borrow.GetDrawable(), borrow.GetVisual(),
-                                       size.width, size.height);
-    }
-    if (!NS_WARN_IF(!surf)) {
-      Point offset = borrow.GetOffset();
-      if (offset != Point()) {
-        cairo_surface_set_device_offset(surf, offset.x, offset.y);
-||||||| merged common ancestors
-  // If using a Cairo xlib surface, then try to reuse it.
-  BorrowedXlibDrawable borrow(aDrawTarget);
-  if (borrow.GetDrawable()) {
-    nsIntSize size = borrow.GetSize();
-    cairo_surface_t* surf = nullptr;
-    // Check if the surface is using XRender.
-#ifdef CAIRO_HAS_XLIB_XRENDER_SURFACE
-    if (borrow.GetXRenderFormat()) {
-      surf = cairo_xlib_surface_create_with_xrender_format(
-          borrow.GetDisplay(), borrow.GetDrawable(), borrow.GetScreen(),
-          borrow.GetXRenderFormat(), size.width, size.height);
-    } else {
-#else
-      if (! borrow.GetXRenderFormat()) {
-#endif
-        surf = cairo_xlib_surface_create(
-            borrow.GetDisplay(), borrow.GetDrawable(), borrow.GetVisual(),
-            size.width, size.height);
-=======
   if (isX11Display) {
     // If using a Cairo xlib surface, then try to reuse it.
     BorrowedXlibDrawable borrow(aDrawTarget);
@@ -1154,41 +920,34 @@ static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
         surf = cairo_xlib_surface_create(
             borrow.GetDisplay(), borrow.GetDrawable(), borrow.GetVisual(),
             size.width, size.height);
->>>>>>> upstream-releases
       }
-      cairo_t* cr = cairo_create(surf);
-      if (!NS_WARN_IF(!cr)) {
-        RefPtr<SystemCairoClipper> clipper = new SystemCairoClipper(cr);
-        aContext->ExportClip(*clipper);
+      if (!NS_WARN_IF(!surf)) {
+        Point offset = borrow.GetOffset();
+        if (offset != Point()) {
+          cairo_surface_set_device_offset(surf, offset.x, offset.y);
+        }
+        cairo_t* cr = cairo_create(surf);
+        if (!NS_WARN_IF(!cr)) {
+          RefPtr<SystemCairoClipper> clipper = new SystemCairoClipper(cr);
+          aContext->ExportClip(*clipper);
 
-        cairo_set_matrix(cr, &mat);
+          cairo_set_matrix(cr, &mat);
 
-        cairo_new_path(cr);
-        cairo_rectangle(cr, 0, 0, clipSize.width, clipSize.height);
-        cairo_clip(cr);
+          cairo_new_path(cr);
+          cairo_rectangle(cr, 0, 0, clipSize.width, clipSize.height);
+          cairo_clip(cr);
 
-<<<<<<< HEAD
-        moz_gtk_widget_paint(aGTKWidgetType, cr, &aGDKRect, &aState, aFlags,
-                             aDirection);
-||||||| merged common ancestors
-          moz_gtk_widget_paint(aGTKWidgetType, cr, &aGDKRect, &aState, aFlags, aDirection);
-=======
           moz_gtk_widget_paint(aGTKWidgetType, cr, &aGDKRect, &aState, aFlags,
                                aDirection);
->>>>>>> upstream-releases
 
-        cairo_destroy(cr);
+          cairo_destroy(cr);
+        }
+        cairo_surface_destroy(surf);
       }
-      cairo_surface_destroy(surf);
+      borrow.Finish();
+      return;
     }
-<<<<<<< HEAD
-    borrow.Finish();
-    return;
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 #endif
 
   // Check if the widget requires complex masking that must be composited.
@@ -1265,23 +1024,6 @@ static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
       dataSurface->Unmap();
 
       if (cr) {
-<<<<<<< HEAD
-        // The widget either needs to be masked or has transparency, so use the
-        // slower drawing path.
-        aDrawTarget->DrawSurface(
-            dataSurface,
-            Rect(aSnapped
-                     ? drawOffset - aDrawTarget->GetTransform().GetTranslation()
-                     : drawOffset,
-                 Size(aDrawSize)),
-            Rect(0, 0, aDrawSize.width, aDrawSize.height));
-||||||| merged common ancestors
-        // The widget either needs to be masked or has transparency, so use the slower drawing path.
-        aDrawTarget->DrawSurface(dataSurface,
-                                 Rect(aSnapped ? drawOffset - aDrawTarget->GetTransform().GetTranslation() : drawOffset,
-                                      Size(aDrawSize)),
-                                 Rect(0, 0, aDrawSize.width, aDrawSize.height));
-=======
         // The widget either needs to be masked or has transparency, so use the
         // slower drawing path.
         aDrawTarget->DrawSurface(
@@ -1291,7 +1033,6 @@ static void DrawThemeWithCairo(gfxContext* aContext, DrawTarget* aDrawTarget,
                           : drawOffsetOriginal,
                  Size(aDrawSize)),
             Rect(0, 0, aDrawSize.width, aDrawSize.height));
->>>>>>> upstream-releases
         cairo_destroy(cr);
       }
 
@@ -1309,7 +1050,6 @@ bool nsNativeThemeGTK::GetExtraSizeForWidget(nsIFrame* aFrame,
   // Allow an extra one pixel above and below the thumb for certain
   // GTK2 themes (Ximian Industrial, Bluecurve, Misty, at least);
   // We modify the frame's overflow area.  See bug 297508.
-<<<<<<< HEAD
   switch (aAppearance) {
     case StyleAppearance::ScrollbarthumbVertical:
       aExtra->top = aExtra->bottom = 1;
@@ -1319,28 +1059,6 @@ bool nsNativeThemeGTK::GetExtraSizeForWidget(nsIFrame* aFrame,
       break;
 
     case StyleAppearance::Button: {
-||||||| merged common ancestors
-  switch (aWidgetType) {
-  case StyleAppearance::ScrollbarthumbVertical:
-    aExtra->top = aExtra->bottom = 1;
-    break;
-  case StyleAppearance::ScrollbarthumbHorizontal:
-    aExtra->left = aExtra->right = 1;
-    break;
-
-  case StyleAppearance::Button :
-    {
-=======
-  switch (aAppearance) {
-    case StyleAppearance::ScrollbarthumbVertical:
-      aExtra->top = aExtra->bottom = 1;
-      break;
-    case StyleAppearance::ScrollbarthumbHorizontal:
-      aExtra->left = aExtra->right = 1;
-      break;
-
-    case StyleAppearance::Button: {
->>>>>>> upstream-releases
       if (IsDefaultButton(aFrame)) {
         // Some themes draw a default indicator outside the widget,
         // include that in overflow
@@ -1388,32 +1106,12 @@ bool nsNativeThemeGTK::GetExtraSizeForWidget(nsIFrame* aFrame,
   return true;
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeGTK::IsWidgetVisible(StyleAppearance aAppearance)
-{
-  switch (aAppearance) {
-  case StyleAppearance::MozWindowButtonBox:
-    return false;
-  default:
-    break;
-||||||| merged common ancestors
-bool
-nsNativeThemeGTK::IsWidgetVisible(WidgetType aWidgetType)
-{
-  switch (aWidgetType) {
-  case StyleAppearance::MozWindowButtonBox:
-    return false;
-  default:
-    break;
-=======
 bool nsNativeThemeGTK::IsWidgetVisible(StyleAppearance aAppearance) {
   switch (aAppearance) {
     case StyleAppearance::MozWindowButtonBox:
       return false;
     default:
       break;
->>>>>>> upstream-releases
   }
   return true;
 }
@@ -1538,58 +1236,13 @@ nsNativeThemeGTK::DrawWidgetBackground(gfxContext* aContext, nsIFrame* aFrame,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool nsNativeThemeGTK::CreateWebRenderCommandsForWidget(
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager, nsIFrame* aFrame,
-    StyleAppearance aAppearance, const nsRect& aRect) {
-||||||| merged common ancestors
-bool
-nsNativeThemeGTK::CreateWebRenderCommandsForWidget(mozilla::wr::DisplayListBuilder& aBuilder,
-                                                   mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                                   const mozilla::layers::StackingContextHelper& aSc,
-                                                   mozilla::layers::WebRenderLayerManager* aManager,
-                                                   nsIFrame* aFrame,
-                                                   StyleAppearance aWidgetType,
-                                                   const nsRect& aRect)
-{
-=======
 bool nsNativeThemeGTK::CreateWebRenderCommandsForWidget(
     mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
     const mozilla::layers::StackingContextHelper& aSc,
     mozilla::layers::RenderRootStateManager* aManager, nsIFrame* aFrame,
     StyleAppearance aAppearance, const nsRect& aRect) {
->>>>>>> upstream-releases
   nsPresContext* presContext = aFrame->PresContext();
-<<<<<<< HEAD
-  wr::LayoutRect bounds =
-      wr::ToRoundedLayoutRect(LayoutDeviceRect::FromAppUnits(
-          aRect, presContext->AppUnitsPerDevPixel()));
-
-  switch (aAppearance) {
-    case StyleAppearance::Window:
-    case StyleAppearance::Dialog:
-      aBuilder.PushRect(
-          bounds, bounds, true,
-          wr::ToColorF(Color::FromABGR(LookAndFeel::GetColor(
-              LookAndFeel::eColorID_WindowBackground, NS_RGBA(0, 0, 0, 0)))));
-      return true;
-||||||| merged common ancestors
-  wr::LayoutRect bounds = wr::ToRoundedLayoutRect(
-    LayoutDeviceRect::FromAppUnits(aRect, presContext->AppUnitsPerDevPixel()));
-
-  switch (aWidgetType) {
-  case StyleAppearance::Window:
-  case StyleAppearance::Dialog:
-    aBuilder.PushRect(bounds, bounds, true,
-                      wr::ToColorF(Color::FromABGR(
-                        LookAndFeel::GetColor(LookAndFeel::eColorID_WindowBackground,
-                                              NS_RGBA(0, 0, 0, 0)))));
-    return true;
-=======
   wr::LayoutRect bounds =
       wr::ToRoundedLayoutRect(LayoutDeviceRect::FromAppUnits(
           aRect, presContext->AppUnitsPerDevPixel()));
@@ -1602,7 +1255,6 @@ bool nsNativeThemeGTK::CreateWebRenderCommandsForWidget(
           wr::ToColorF(Color::FromABGR(LookAndFeel::GetColor(
               LookAndFeel::ColorID::WindowBackground, NS_RGBA(0, 0, 0, 0)))));
       return true;
->>>>>>> upstream-releases
 
     default:
       return false;
@@ -1705,40 +1357,6 @@ LayoutDeviceIntMargin nsNativeThemeGTK::GetWidgetBorder(
                                 &flags)) {
         return result;
       }
-<<<<<<< HEAD
-      moz_gtk_get_tab_border(&result.left, &result.top, &result.right,
-                             &result.bottom, direction, (GtkTabFlags)flags,
-                             gtkWidgetType);
-    } break;
-    case StyleAppearance::Menuitem:
-    case StyleAppearance::Checkmenuitem:
-    case StyleAppearance::Radiomenuitem:
-      // For regular menuitems, we will be using GetWidgetPadding instead of
-      // GetWidgetBorder to pad up the widget's internals; other menuitems
-      // will need to fall through and use the default case as before.
-      if (IsRegularMenuItem(aFrame)) break;
-      MOZ_FALLTHROUGH;
-    default: { GetCachedWidgetBorder(aFrame, aAppearance, direction, &result); }
-||||||| merged common ancestors
-      moz_gtk_get_tab_border(&result.left, &result.top,
-                             &result.right, &result.bottom, direction,
-                             (GtkTabFlags)flags, gtkWidgetType);
-    }
-    break;
-  case StyleAppearance::Menuitem:
-  case StyleAppearance::Checkmenuitem:
-  case StyleAppearance::Radiomenuitem:
-    // For regular menuitems, we will be using GetWidgetPadding instead of
-    // GetWidgetBorder to pad up the widget's internals; other menuitems
-    // will need to fall through and use the default case as before.
-    if (IsRegularMenuItem(aFrame))
-      break;
-    MOZ_FALLTHROUGH;
-  default:
-    {
-      GetCachedWidgetBorder(aFrame, aWidgetType, direction, &result);
-    }
-=======
       moz_gtk_get_tab_border(&result.left, &result.top, &result.right,
                              &result.bottom, direction, (GtkTabFlags)flags,
                              gtkWidgetType);
@@ -1754,7 +1372,6 @@ LayoutDeviceIntMargin nsNativeThemeGTK::GetWidgetBorder(
     default: {
       GetCachedWidgetBorder(aFrame, aAppearance, direction, &result);
     }
->>>>>>> upstream-releases
   }
 
   gint scale = GetMonitorScaleFactor(aFrame);
@@ -1955,53 +1572,10 @@ nsNativeThemeGTK::GetMinimumWidgetSize(nsPresContext* aPresContext,
                                        &thumb_length, &thumb_height);
         aResult->width = thumb_length;
         aResult->height = thumb_height;
-<<<<<<< HEAD
       }
 
       *aIsOverridable = false;
     } break;
-||||||| merged common ancestors
-
-        *aIsOverridable = false;
-      }
-      break;
-    case StyleAppearance::Range:
-      {
-        gint scale_width, scale_height;
-
-        moz_gtk_get_scale_metrics(IsRangeHorizontal(aFrame) ?
-            GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL,
-            &scale_width, &scale_height);
-        aResult->width = scale_width;
-        aResult->height = scale_height;
-
-        *aIsOverridable = true;
-      }
-      break;
-    case StyleAppearance::ScalethumbHorizontal:
-    case StyleAppearance::ScalethumbVertical:
-      {
-        gint thumb_length, thumb_height;
-
-        if (aWidgetType == StyleAppearance::ScalethumbVertical) {
-          moz_gtk_get_scalethumb_metrics(GTK_ORIENTATION_VERTICAL, &thumb_length, &thumb_height);
-          aResult->width = thumb_height;
-          aResult->height = thumb_length;
-        } else {
-          moz_gtk_get_scalethumb_metrics(GTK_ORIENTATION_HORIZONTAL, &thumb_length, &thumb_height);
-          aResult->width = thumb_length;
-          aResult->height = thumb_height;
-        }
-
-        *aIsOverridable = false;
-      }
-      break;
-=======
-      }
-
-      *aIsOverridable = false;
-    } break;
->>>>>>> upstream-releases
     case StyleAppearance::TabScrollArrowBack:
     case StyleAppearance::TabScrollArrowForward: {
       moz_gtk_get_tab_scroll_arrow_size(&aResult->width, &aResult->height);
@@ -2020,27 +1594,12 @@ nsNativeThemeGTK::GetMinimumWidgetSize(nsPresContext* aPresContext,
       aResult->height = separator_height;
 
       *aIsOverridable = false;
-<<<<<<< HEAD
-    } break;
-    case StyleAppearance::Checkbox:
-    case StyleAppearance::Radio: {
-      const ToggleGTKMetrics* metrics =
-          GetToggleMetrics(aAppearance == StyleAppearance::Radio);
-||||||| merged common ancestors
-    }
-    break;
-  case StyleAppearance::Checkbox:
-  case StyleAppearance::Radio:
-    {
-      const ToggleGTKMetrics* metrics = GetToggleMetrics(aWidgetType == StyleAppearance::Radio);
-=======
     } break;
     case StyleAppearance::Checkbox:
     case StyleAppearance::Radio: {
       const ToggleGTKMetrics* metrics = GetToggleMetrics(
           aAppearance == StyleAppearance::Radio ? MOZ_GTK_RADIOBUTTON
                                                 : MOZ_GTK_CHECKBUTTON);
->>>>>>> upstream-releases
       aResult->width = metrics->minSizeWithBorder.width;
       aResult->height = metrics->minSizeWithBorder.height;
     } break;
@@ -2362,70 +1921,8 @@ nsNativeThemeGTK::ThemeSupportsWidget(nsPresContext* aPresContext,
 #ifdef MOZ_WIDGET_GTK
     case StyleAppearance::MozGtkInfoBar:
 #endif
-<<<<<<< HEAD
       return !IsWidgetStyled(aPresContext, aFrame, aAppearance);
 
-    case StyleAppearance::MozWindowButtonBox:
-    case StyleAppearance::MozWindowButtonClose:
-    case StyleAppearance::MozWindowButtonMinimize:
-    case StyleAppearance::MozWindowButtonMaximize:
-    case StyleAppearance::MozWindowButtonRestore:
-    case StyleAppearance::MozWindowTitlebar:
-    case StyleAppearance::MozWindowTitlebarMaximized:
-      // GtkHeaderBar is available on GTK 3.10+, which is used for styling
-      // title bars and title buttons.
-      return gtk_check_version(3, 10, 0) == nullptr &&
-             !IsWidgetStyled(aPresContext, aFrame, aAppearance);
-||||||| merged common ancestors
-    return !IsWidgetStyled(aPresContext, aFrame, aWidgetType);
-
-  case StyleAppearance::MozWindowButtonBox:
-  case StyleAppearance::MozWindowButtonClose:
-  case StyleAppearance::MozWindowButtonMinimize:
-  case StyleAppearance::MozWindowButtonMaximize:
-  case StyleAppearance::MozWindowButtonRestore:
-  case StyleAppearance::MozWindowTitlebar:
-  case StyleAppearance::MozWindowTitlebarMaximized:
-    // GtkHeaderBar is available on GTK 3.10+, which is used for styling
-    // title bars and title buttons.
-    return gtk_check_version(3, 10, 0) == nullptr &&
-           !IsWidgetStyled(aPresContext, aFrame, aWidgetType);
-
-  case StyleAppearance::MenulistButton:
-  case StyleAppearance::MozMenulistButton:
-    if (aFrame && aFrame->GetWritingMode().IsVertical()) {
-      return false;
-    }
-    // "Native" dropdown buttons cause padding and margin problems, but only
-    // in HTML so allow them in XUL.
-    return (!aFrame || IsFrameContentNodeInNamespace(aFrame, kNameSpaceID_XUL)) &&
-           !IsWidgetStyled(aPresContext, aFrame, aWidgetType);
-=======
-      return !IsWidgetStyled(aPresContext, aFrame, aAppearance);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    case StyleAppearance::MenulistButton:
-    case StyleAppearance::MozMenulistButton:
-      if (aFrame && aFrame->GetWritingMode().IsVertical()) {
-        return false;
-      }
-      // "Native" dropdown buttons cause padding and margin problems, but only
-      // in HTML so allow them in XUL.
-      return (!aFrame ||
-              IsFrameContentNodeInNamespace(aFrame, kNameSpaceID_XUL)) &&
-             !IsWidgetStyled(aPresContext, aFrame, aAppearance);
-
-    case StyleAppearance::FocusOutline:
-      return true;
-    default:
-      break;
-||||||| merged common ancestors
-  case StyleAppearance::FocusOutline:
-    return true;
-  default:
-    break;
-=======
     case StyleAppearance::MozWindowButtonBox:
     case StyleAppearance::MozWindowButtonClose:
     case StyleAppearance::MozWindowButtonMinimize:
@@ -2453,7 +1950,6 @@ nsNativeThemeGTK::ThemeSupportsWidget(nsPresContext* aPresContext,
       return true;
     default:
       break;
->>>>>>> upstream-releases
   }
 
   return false;

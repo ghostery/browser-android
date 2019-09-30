@@ -35,19 +35,9 @@ RecursiveMutex::RecursiveMutex(
   DWORD flags = CRITICAL_SECTION_NO_DEBUG_INFO;
 #  else
   DWORD flags = 0;
-<<<<<<< HEAD
-#endif
-  BOOL r =
-      InitializeCriticalSectionEx(NativeHandle(mMutex), sLockSpinCount, flags);
-||||||| merged common ancestors
-#endif
-  BOOL r = InitializeCriticalSectionEx(NativeHandle(mMutex),
-                                       sLockSpinCount, flags);
-=======
 #  endif
   BOOL r =
       InitializeCriticalSectionEx(NativeHandle(mMutex), sLockSpinCount, flags);
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(r);
 #else
   pthread_mutexattr_t attr;

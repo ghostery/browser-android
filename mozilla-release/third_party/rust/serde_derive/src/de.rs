@@ -29,19 +29,6 @@ pub fn expand_derive_deserialize(input: &syn::DeriveInput) -> Result<TokenStream
     let ident = &cont.ident;
     let params = Parameters::new(&cont);
     let (de_impl_generics, _, ty_generics, where_clause) = split_with_de_lifetime(&params);
-<<<<<<< HEAD
-    let suffix = ident.to_string().trim_left_matches("r#").to_owned();
-    let dummy_const = Ident::new(
-        &format!("_IMPL_DESERIALIZE_FOR_{}", suffix),
-        Span::call_site(),
-    );
-||||||| merged common ancestors
-    let dummy_const = Ident::new(
-        &format!("_IMPL_DESERIALIZE_FOR_{}", ident),
-        Span::call_site(),
-    );
-=======
->>>>>>> upstream-releases
     let body = Stmts(deserialize_body(&cont, &params));
     let delife = params.borrowed.de_lifetime();
 
@@ -77,34 +64,7 @@ pub fn expand_derive_deserialize(input: &syn::DeriveInput) -> Result<TokenStream
         }
     };
 
-<<<<<<< HEAD
-    let try_replacement = try::replacement();
-    let generated = quote! {
-        #[allow(non_upper_case_globals, unused_attributes, unused_qualifications)]
-        const #dummy_const: () = {
-            #[allow(unknown_lints)]
-            #[cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
-            #[allow(rust_2018_idioms)]
-            extern crate serde as _serde;
-            #try_replacement
-            #impl_block
-        };
-    };
-    Ok(generated)
-||||||| merged common ancestors
-    let try_replacement = try::replacement();
-    let generated = quote! {
-        #[allow(non_upper_case_globals, unused_attributes, unused_qualifications)]
-        const #dummy_const: () = {
-            extern crate serde as _serde;
-            #try_replacement
-            #impl_block
-        };
-    };
-    Ok(generated)
-=======
     Ok(dummy::wrap_in_const("DESERIALIZE", ident, impl_block))
->>>>>>> upstream-releases
 }
 
 fn precondition(cx: &Ctxt, cont: &Container) {
@@ -1605,54 +1565,7 @@ fn deserialize_internally_tagged_enum(
     cattrs: &attr::Container,
     tag: &str,
 ) -> Fragment {
-<<<<<<< HEAD
-    let variant_names_idents: Vec<_> = variants
-        .iter()
-        .enumerate()
-        .filter(|&(_, variant)| !variant.attrs.skip_deserializing())
-        .map(|(i, variant)| (variant.attrs.name().deserialize_name(), field_i(i)))
-        .collect();
-
-    let other_idx = variants
-        .iter()
-        .position(|ref variant| variant.attrs.other());
-
-    let variants_stmt = {
-        let variant_names = variant_names_idents.iter().map(|&(ref name, _)| name);
-        quote! {
-            const VARIANTS: &'static [&'static str] = &[ #(#variant_names),* ];
-        }
-    };
-
-    let variant_visitor = Stmts(deserialize_generated_identifier(
-        &variant_names_idents,
-        cattrs,
-        true,
-        other_idx,
-    ));
-||||||| merged common ancestors
-    let variant_names_idents: Vec<_> = variants
-        .iter()
-        .enumerate()
-        .filter(|&(_, variant)| !variant.attrs.skip_deserializing())
-        .map(|(i, variant)| (variant.attrs.name().deserialize_name(), field_i(i)))
-        .collect();
-
-    let variants_stmt = {
-        let variant_names = variant_names_idents.iter().map(|&(ref name, _)| name);
-        quote! {
-            const VARIANTS: &'static [&'static str] = &[ #(#variant_names),* ];
-        }
-    };
-
-    let variant_visitor = Stmts(deserialize_generated_identifier(
-        &variant_names_idents,
-        cattrs,
-        true,
-    ));
-=======
     let (variants_stmt, variant_visitor) = prepare_enum_variant_enum(variants, cattrs);
->>>>>>> upstream-releases
 
     // Match arms to extract a variant from a string
     let variant_arms = variants
@@ -1703,54 +1616,7 @@ fn deserialize_adjacently_tagged_enum(
         split_with_de_lifetime(params);
     let delife = params.borrowed.de_lifetime();
 
-<<<<<<< HEAD
-    let variant_names_idents: Vec<_> = variants
-        .iter()
-        .enumerate()
-        .filter(|&(_, variant)| !variant.attrs.skip_deserializing())
-        .map(|(i, variant)| (variant.attrs.name().deserialize_name(), field_i(i)))
-        .collect();
-
-    let other_idx = variants
-        .iter()
-        .position(|ref variant| variant.attrs.other());
-
-    let variants_stmt = {
-        let variant_names = variant_names_idents.iter().map(|&(ref name, _)| name);
-        quote! {
-            const VARIANTS: &'static [&'static str] = &[ #(#variant_names),* ];
-        }
-    };
-
-    let variant_visitor = Stmts(deserialize_generated_identifier(
-        &variant_names_idents,
-        cattrs,
-        true,
-        other_idx,
-    ));
-||||||| merged common ancestors
-    let variant_names_idents: Vec<_> = variants
-        .iter()
-        .enumerate()
-        .filter(|&(_, variant)| !variant.attrs.skip_deserializing())
-        .map(|(i, variant)| (variant.attrs.name().deserialize_name(), field_i(i)))
-        .collect();
-
-    let variants_stmt = {
-        let variant_names = variant_names_idents.iter().map(|&(ref name, _)| name);
-        quote! {
-            const VARIANTS: &'static [&'static str] = &[ #(#variant_names),* ];
-        }
-    };
-
-    let variant_visitor = Stmts(deserialize_generated_identifier(
-        &variant_names_idents,
-        cattrs,
-        true,
-    ));
-=======
     let (variants_stmt, variant_visitor) = prepare_enum_variant_enum(variants, cattrs);
->>>>>>> upstream-releases
 
     let variant_arms: &Vec<_> = &variants
         .iter()
@@ -1769,7 +1635,8 @@ fn deserialize_adjacently_tagged_enum(
             quote! {
                 __Field::#variant_index => #block
             }
-        }).collect();
+        })
+        .collect();
 
     let expecting = format!("adjacently tagged enum {}", params.type_name());
     let type_name = cattrs.name().deserialize_name();
@@ -2431,7 +2298,8 @@ fn deserialize_custom_identifier(
                 variant.ident.clone(),
                 variant.attrs.aliases(),
             )
-        }).collect();
+        })
+        .collect();
 
     let names = names_idents.iter().map(|&(ref name, _, _)| name);
 

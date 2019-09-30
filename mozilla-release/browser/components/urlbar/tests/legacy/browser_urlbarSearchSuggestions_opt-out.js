@@ -13,20 +13,10 @@ const NO_RESULTS_TIMEOUT_MS = 500;
 
 add_task(async function prepare() {
   let engine = await SearchTestUtils.promiseNewSearchEngine(
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarSearchSuggestions_opt-out.js
-    getRootDirectory(gTestPath) + TEST_ENGINE_BASENAME);
-  let oldCurrentEngine = Services.search.defaultEngine;
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-    getRootDirectory(gTestPath) + TEST_ENGINE_BASENAME);
-  let oldCurrentEngine = Services.search.currentEngine;
-  Services.search.currentEngine = engine;
-=======
     getRootDirectory(gTestPath) + TEST_ENGINE_BASENAME
   );
   let oldDefaultEngine = await Services.search.getDefault();
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/legacy/browser_urlbarSearchSuggestions_opt-out.js
   let suggestionsEnabled = Services.prefs.getBoolPref(SUGGEST_URLBAR_PREF);
   let defaults = Services.prefs.getDefaultBranch("browser.urlbar.");
   let searchSuggestionsDefault = defaults.getBoolPref("suggest.searches");
@@ -37,13 +27,7 @@ add_task(async function prepare() {
   Services.prefs.setBoolPref(ONEOFF_PREF, true);
   registerCleanupFunction(async function() {
     defaults.setBoolPref("suggest.searches", searchSuggestionsDefault);
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarSearchSuggestions_opt-out.js
-    Services.search.defaultEngine = oldCurrentEngine;
-||||||| merged common ancestors
-    Services.search.currentEngine = oldCurrentEngine;
-=======
     await Services.search.setDefault(oldDefaultEngine);
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/legacy/browser_urlbarSearchSuggestions_opt-out.js
     Services.prefs.clearUserPref(SUGGEST_ALL_PREF);
     Services.prefs.setBoolPref(SUGGEST_URLBAR_PREF, suggestionsEnabled);
     Services.prefs.setBoolPref(CHOICE_PREF, suggestionsChoice);

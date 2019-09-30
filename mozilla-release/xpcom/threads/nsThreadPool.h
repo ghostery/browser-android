@@ -45,20 +45,10 @@ class nsThreadPool final : public nsIThreadPool, public nsIRunnable {
   uint32_t mIdleCount;
   uint32_t mStackSize;
   nsCOMPtr<nsIThreadPoolListener> mListener;
-<<<<<<< HEAD
-  bool mShutdown;
-  nsCString mName;
-  nsThreadPoolNaming mThreadNaming;
-||||||| merged common ancestors
-  bool                  mShutdown;
-  nsCString             mName;
-  nsThreadPoolNaming    mThreadNaming;
-=======
   bool mShutdown;
   bool mRegressiveMaxIdleTime;
   nsCString mName;
   nsThreadPoolNaming mThreadNaming;
->>>>>>> upstream-releases
 };
 
 #define NS_THREADPOOL_CID                            \

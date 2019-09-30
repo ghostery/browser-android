@@ -37,18 +37,9 @@ var f, d;
 
 function tick() {
   runNumber++;
-<<<<<<< HEAD
-  var f = document.getElementsByTagName("iframe")[0];
-  var d = f.contentDocument;
-  var text;
-||||||| merged common ancestors
-  var f = document.getElementsByTagName("iframe")[0];
-  var d = f.contentDocument;
-=======
   f = document.getElementsByTagName("iframe")[0];
   d = f.contentDocument;
   var text;
->>>>>>> upstream-releases
 
   if (runNumber == 1) {
     frames[1].setTimeout(`
@@ -72,23 +63,9 @@ function tick() {
   }
 
   if (runNumber == 3) {
-<<<<<<< HEAD
-    text = textChildren(d.body);
-    is(text, "XYZ", "Wrong text after reload.");
-||||||| merged common ancestors
-    var text = textChildren(d.body);
-    is(text, "XYZ", "Wrong text after reload.");
-=======
     text = textChildren(d.body);
     is(text, "ABC", "Wrong text after reload.");
->>>>>>> upstream-releases
     SimpleTest.finish();
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-    return;
-=======
->>>>>>> upstream-releases
   }
 }
 

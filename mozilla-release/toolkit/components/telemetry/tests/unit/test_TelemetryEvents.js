@@ -84,27 +84,6 @@ function checkEventSummary(summaries, clearScalars) {
 }
 
 function checkRegistrationFailure(failureType) {
-<<<<<<< HEAD
-  let snapshot = Telemetry.getSnapshotForHistograms("main", true);
-  Assert.ok("parent" in snapshot,
-            "There should be at least one parent histogram when checking for registration failures.");
-  Assert.ok("TELEMETRY_EVENT_REGISTRATION_ERROR" in snapshot.parent,
-            "TELEMETRY_EVENT_REGISTRATION_ERROR should exist when checking for registration failures.");
-  let values = snapshot.parent.TELEMETRY_EVENT_REGISTRATION_ERROR.values;
-  Assert.ok(!!values,
-            "TELEMETRY_EVENT_REGISTRATION_ERROR's values should exist when checking for registration failures.");
-  Assert.equal(values[failureType], 1, `Event registration ought to have failed due to type ${failureType}`);
-||||||| merged common ancestors
-  let snapshot = Telemetry.snapshotHistograms(OPTIN, true);
-  Assert.ok("parent" in snapshot,
-            "There should be at least one parent histogram when checking for registration failures.");
-  Assert.ok("TELEMETRY_EVENT_REGISTRATION_ERROR" in snapshot.parent,
-            "TELEMETRY_EVENT_REGISTRATION_ERROR should exist when checking for registration failures.");
-  let counts = snapshot.parent.TELEMETRY_EVENT_REGISTRATION_ERROR.counts;
-  Assert.ok(!!counts,
-            "TELEMETRY_EVENT_REGISTRATION_ERROR's counts should exist when checking for registration failures.");
-  Assert.equal(counts[failureType], 1, `Event registration ought to have failed due to type ${failureType}`);
-=======
   let snapshot = Telemetry.getSnapshotForHistograms("main", true);
   Assert.ok(
     "parent" in snapshot,
@@ -124,31 +103,9 @@ function checkRegistrationFailure(failureType) {
     1,
     `Event registration ought to have failed due to type ${failureType}`
   );
->>>>>>> upstream-releases
 }
 
 function checkRecordingFailure(failureType) {
-<<<<<<< HEAD
-  let snapshot = Telemetry.getSnapshotForHistograms("main", true);
-  Assert.ok("parent" in snapshot,
-            "There should be at least one parent histogram when checking for recording failures.");
-  Assert.ok("TELEMETRY_EVENT_RECORDING_ERROR" in snapshot.parent,
-            "TELEMETRY_EVENT_RECORDING_ERROR should exist when checking for recording failures.");
-  let values = snapshot.parent.TELEMETRY_EVENT_RECORDING_ERROR.values;
-  Assert.ok(!!values,
-            "TELEMETRY_EVENT_RECORDING_ERROR's values should exist when checking for recording failures.");
-  Assert.equal(values[failureType], 1, `Event recording ought to have failed due to type ${failureType}`);
-||||||| merged common ancestors
-  let snapshot = Telemetry.snapshotHistograms(OPTIN, true);
-  Assert.ok("parent" in snapshot,
-            "There should be at least one parent histogram when checking for recording failures.");
-  Assert.ok("TELEMETRY_EVENT_RECORDING_ERROR" in snapshot.parent,
-            "TELEMETRY_EVENT_RECORDING_ERROR should exist when checking for recording failures.");
-  let counts = snapshot.parent.TELEMETRY_EVENT_RECORDING_ERROR.counts;
-  Assert.ok(!!counts,
-            "TELEMETRY_EVENT_RECORDING_ERROR's counts should exist when checking for recording failures.");
-  Assert.equal(counts[failureType], 1, `Event recording ought to have failed due to type ${failureType}`);
-=======
   let snapshot = Telemetry.getSnapshotForHistograms("main", true);
   Assert.ok(
     "parent" in snapshot,
@@ -168,7 +125,6 @@ function checkRecordingFailure(failureType) {
     1,
     `Event recording ought to have failed due to type ${failureType}`
   );
->>>>>>> upstream-releases
 }
 
 add_task(async function test_event_summary_limit() {
@@ -194,21 +150,6 @@ add_task(async function test_event_summary_limit() {
     Telemetry.recordEvent("telemetry.test.dynamic", "testMethod", object);
   }
 
-<<<<<<< HEAD
-  let snapshot = Telemetry.snapshotEvents(OPTIN, true);
-  Assert.equal(snapshot.dynamic.length, limit + 1, "Should have recorded all events");
-  let scalarSnapshot = Telemetry.getSnapshotForKeyedScalars("main", true);
-  Assert.equal(Object.keys(scalarSnapshot.dynamic["telemetry.dynamic_event_counts"]).length,
-               limit, "Should not have recorded more than `limit` events");
-
-||||||| merged common ancestors
-  let snapshot = Telemetry.snapshotEvents(OPTIN, true);
-  Assert.equal(snapshot.dynamic.length, limit + 1, "Should have recorded all events");
-  let scalarSnapshot = Telemetry.snapshotKeyedScalars(OPTOUT, true);
-  Assert.equal(Object.keys(scalarSnapshot.dynamic["telemetry.dynamic_event_counts"]).length,
-               limit, "Should not have recorded more than `limit` events");
-
-=======
   TelemetryTestUtils.assertNumberOfEvents(
     limit + 1,
     {},
@@ -221,7 +162,6 @@ add_task(async function test_event_summary_limit() {
     limit,
     "Should not have recorded more than `limit` events"
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_recording_state() {
@@ -792,23 +732,6 @@ add_task(async function test_dynamicEventRegistrationValidation() {
   Telemetry.clearEvents();
 
   // Test registration of invalid categories.
-<<<<<<< HEAD
-  Telemetry.getSnapshotForHistograms("main", true); // Clear histograms before we begin.
-  Assert.throws(() => Telemetry.registerEvents("telemetry+test+dynamic", {
-      "test1": {
-        methods: ["test1"],
-        objects: ["object1"],
-      },
-    }),
-||||||| merged common ancestors
-  Telemetry.snapshotHistograms(OPTIN, true); // Clear histograms before we begin.
-  Assert.throws(() => Telemetry.registerEvents("telemetry+test+dynamic", {
-      "test1": {
-        methods: ["test1"],
-        objects: ["object1"],
-      },
-    }),
-=======
   Telemetry.getSnapshotForHistograms("main", true); // Clear histograms before we begin.
   Assert.throws(
     () =>
@@ -818,7 +741,6 @@ add_task(async function test_dynamicEventRegistrationValidation() {
           objects: ["object1"],
         },
       }),
->>>>>>> upstream-releases
     /Category parameter should match the identifier pattern\./,
     "Should throw when registering category names with invalid characters."
   );

@@ -23,24 +23,10 @@ struct Ipsum {
 
 #[test]
 fn expand_many() {
-<<<<<<< HEAD
-    let di = syn::parse_str(
-        r#"
-||||||| merged common ancestors
-    let di = syn::parse_str(r#"
-=======
     let di = parse_quote! {
->>>>>>> upstream-releases
         #[hello(ipsum(dolor = "Hello", dolor = "World"))]
         pub struct Baz;
-<<<<<<< HEAD
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    "#).unwrap();
-=======
     };
->>>>>>> upstream-releases
 
     let lorem: Lorem = Lorem::from_derive_input(&di).unwrap();
     assert_eq!(

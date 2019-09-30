@@ -428,17 +428,9 @@ var ProcessHangMonitor = {
    * Show the notification for a hang.
    */
   showNotification(win, report) {
-<<<<<<< HEAD
-    let notification =
-        win.gHighPriorityNotificationBox.getNotificationWithValue("process-hang");
-||||||| merged common ancestors
-    let nb = win.document.getElementById("high-priority-global-notificationbox");
-    let notification = nb.getNotificationWithValue("process-hang");
-=======
     let notification = win.gHighPriorityNotificationBox.getNotificationWithValue(
       "process-hang"
     );
->>>>>>> upstream-releases
     if (notification) {
       return;
     }
@@ -515,15 +507,6 @@ var ProcessHangMonitor = {
       });
     }
 
-<<<<<<< HEAD
-    win.gHighPriorityNotificationBox.appendNotification(message, "process-hang",
-      "chrome://browser/content/aboutRobots-icon.png",
-      win.gHighPriorityNotificationBox.PRIORITY_WARNING_HIGH, buttons);
-||||||| merged common ancestors
-    nb.appendNotification(message, "process-hang",
-                          "chrome://browser/content/aboutRobots-icon.png",
-                          nb.PRIORITY_WARNING_HIGH, buttons);
-=======
     win.gHighPriorityNotificationBox.appendNotification(
       message,
       "process-hang",
@@ -531,24 +514,15 @@ var ProcessHangMonitor = {
       win.gHighPriorityNotificationBox.PRIORITY_WARNING_HIGH,
       buttons
     );
->>>>>>> upstream-releases
   },
 
   /**
    * Ensure that no hang notifications are visible in |win|.
    */
   hideNotification(win) {
-<<<<<<< HEAD
-    let notification =
-        win.gHighPriorityNotificationBox.getNotificationWithValue("process-hang");
-||||||| merged common ancestors
-    let nb = win.document.getElementById("high-priority-global-notificationbox");
-    let notification = nb.getNotificationWithValue("process-hang");
-=======
     let notification = win.gHighPriorityNotificationBox.getNotificationWithValue(
       "process-hang"
     );
->>>>>>> upstream-releases
     if (notification) {
       win.gHighPriorityNotificationBox.removeNotification(notification);
     }

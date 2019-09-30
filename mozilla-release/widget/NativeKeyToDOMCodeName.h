@@ -27,51 +27,21 @@
 #if defined(XP_WIN)
 #  undef CODE_MAP_WIN
 // aNativeKey is scan code
-<<<<<<< HEAD
-#define CODE_MAP_WIN(aCPPCodeName, aNativeKey)     \
-  NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
-                                       CODE_NAME_INDEX_##aCPPCodeName)
-||||||| merged common ancestors
-#define CODE_MAP_WIN(aCPPCodeName, aNativeKey) \
-  NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
-                                       CODE_NAME_INDEX_##aCPPCodeName)
-=======
 #  define CODE_MAP_WIN(aCPPCodeName, aNativeKey)     \
     NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
                                          CODE_NAME_INDEX_##aCPPCodeName)
->>>>>>> upstream-releases
 #elif defined(XP_MACOSX)
 #  undef CODE_MAP_MAC
 // aNativeKey is key code starting with kVK_.
-<<<<<<< HEAD
-#define CODE_MAP_MAC(aCPPCodeName, aNativeKey)     \
-  NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
-                                       CODE_NAME_INDEX_##aCPPCodeName)
-||||||| merged common ancestors
-#define CODE_MAP_MAC(aCPPCodeName, aNativeKey) \
-  NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
-                                       CODE_NAME_INDEX_##aCPPCodeName)
-=======
 #  define CODE_MAP_MAC(aCPPCodeName, aNativeKey)     \
     NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
                                          CODE_NAME_INDEX_##aCPPCodeName)
->>>>>>> upstream-releases
 #elif defined(MOZ_WIDGET_GTK)
 #  undef CODE_MAP_X11
 // aNativeKey is hardware_keycode of GDKEvent or nativeScanCode of QKeyEvent.
-<<<<<<< HEAD
-#define CODE_MAP_X11(aCPPCodeName, aNativeKey)     \
-  NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
-                                       CODE_NAME_INDEX_##aCPPCodeName)
-||||||| merged common ancestors
-#define CODE_MAP_X11(aCPPCodeName, aNativeKey) \
-  NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
-                                       CODE_NAME_INDEX_##aCPPCodeName)
-=======
 #  define CODE_MAP_X11(aCPPCodeName, aNativeKey)     \
     NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, \
                                          CODE_NAME_INDEX_##aCPPCodeName)
->>>>>>> upstream-releases
 #elif defined(ANDROID)
 #  undef CODE_MAP_ANDROID
 // aNativeKey is scan code

@@ -27,37 +27,6 @@ const TEST_DATA_DOUBLE = [
   ["l", "styl", 4, 4, false],
   ["e", "style", 5, 5, false],
   ["=", "style=", 6, 6, false],
-<<<<<<< HEAD
-  ["\"", "style=\"", 7, 7, false],
-  ["c", "style=\"color", 8, 12, true],
-  ["VK_RIGHT", "style=\"color", 12, 12, false],
-  [":", "style=\"color:aliceblue", 13, 22, true],
-  ["b", "style=\"color:beige", 14, 18, true],
-  ["VK_RIGHT", "style=\"color:beige", 18, 18, false],
-  ["\"", "style=\"color:beige\"", 19, 19, false],
-  [" ", "style=\"color:beige\" ", 20, 20, false],
-  ["d", "style=\"color:beige\" d", 21, 21, false],
-  ["a", "style=\"color:beige\" da", 22, 22, false],
-  ["t", "style=\"color:beige\" dat", 23, 23, false],
-  ["a", "style=\"color:beige\" data", 24, 24, false],
-  ["VK_RETURN", "style=\"color:beige\"",
-   -1, -1, false],
-||||||| merged common ancestors
-  ["\"", "style=\"", 7, 7, false],
-  ["c", "style=\"color", 8, 12, true],
-  ["VK_RIGHT", "style=\"color", 12, 12, false],
-  [":", "style=\"color:aliceblue", 13, 22, true],
-  ["b", "style=\"color:beige", 14, 18, true],
-  ["VK_RIGHT", "style=\"color:beige", 18, 18, false],
-  ["\"", "style=\"color:beige\"", 19, 19, false],
-  [" ", "style=\"color:beige\" ", 20, 20, false],
-  ["d", "style=\"color:beige\" d", 21, 21, false],
-  ["a", "style=\"color:beige\" da", 22, 22, false],
-  ["t", "style=\"color:beige\" dat", 23, 23, false],
-  ["a", "style=\"color:beige\" data", 24, 24, false],
-  ["VK_RETURN", "style=\"color:beige\"",
-   -1, -1, false]
-=======
   ['"', 'style="', 7, 7, false],
   ["c", 'style="color', 8, 12, true],
   ["VK_RIGHT", 'style="color', 12, 12, false],
@@ -71,7 +40,6 @@ const TEST_DATA_DOUBLE = [
   ["t", 'style="color:beige" dat', 23, 23, false],
   ["a", 'style="color:beige" data', 24, 24, false],
   ["VK_RETURN", 'style="color:beige"', -1, -1, false],
->>>>>>> upstream-releases
 ];
 
 // Check that single quote attribute is also supported
@@ -94,15 +62,7 @@ const TEST_DATA_SINGLE = [
   ["a", "style='color:beige' da", 22, 22, false],
   ["t", "style='color:beige' dat", 23, 23, false],
   ["a", "style='color:beige' data", 24, 24, false],
-<<<<<<< HEAD
-  ["VK_RETURN", "style=\"color:beige\"",
-   -1, -1, false],
-||||||| merged common ancestors
-  ["VK_RETURN", "style=\"color:beige\"",
-   -1, -1, false]
-=======
   ["VK_RETURN", 'style="color:beige"', -1, -1, false],
->>>>>>> upstream-releases
 ];
 
 // Check that autocompletion is still enabled after using url('1)

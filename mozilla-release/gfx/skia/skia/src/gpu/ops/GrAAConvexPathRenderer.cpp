@@ -6,13 +6,6 @@
  */
 
 #include "GrAAConvexPathRenderer.h"
-<<<<<<< HEAD
-#include "GrAAConvexTessellator.h"
-||||||| merged common ancestors
-
-#include "GrAAConvexTessellator.h"
-=======
->>>>>>> upstream-releases
 #include "GrCaps.h"
 #include "GrDrawOpTest.h"
 #include "GrGeometryProcessor.h"
@@ -556,39 +549,21 @@ public:
 
             GrGLSLVarying v(kHalf4_GrSLType);
             varyingHandler->addVarying("QuadEdge", &v);
-<<<<<<< HEAD
-            vertBuilder->codeAppendf("%s = %s;", v.vsOut(), qe.kInQuadEdge.name());
-||||||| merged common ancestors
-            vertBuilder->codeAppendf("%s = %s;", v.vsOut(), qe.fInQuadEdge->fName);
-=======
             vertBuilder->codeAppendf("%s = %s;", v.vsOut(), qe.fInQuadEdge.name());
->>>>>>> upstream-releases
 
             // Setup pass through color
-            varyingHandler->addPassThroughAttribute(qe.kInColor, args.fOutputColor);
+            varyingHandler->addPassThroughAttribute(qe.fInColor, args.fOutputColor);
 
             GrGLSLFPFragmentBuilder* fragBuilder = args.fFragBuilder;
 
             // Setup position
-<<<<<<< HEAD
-            this->writeOutputPosition(vertBuilder, gpArgs, qe.kInPosition.name());
-||||||| merged common ancestors
-            this->writeOutputPosition(vertBuilder, gpArgs, qe.fInPosition->fName);
-=======
             this->writeOutputPosition(vertBuilder, gpArgs, qe.fInPosition.name());
->>>>>>> upstream-releases
 
             // emit transforms
             this->emitTransforms(vertBuilder,
                                  varyingHandler,
                                  uniformHandler,
-<<<<<<< HEAD
-                                 qe.kInPosition.asShaderVar(),
-||||||| merged common ancestors
-                                 qe.fInPosition->asShaderVar(),
-=======
                                  qe.fInPosition.asShaderVar(),
->>>>>>> upstream-releases
                                  qe.fLocalMatrix,
                                  args.fFPCoordTransformHandler);
 
@@ -644,54 +619,23 @@ private:
             : INHERITED(kQuadEdgeEffect_ClassID)
             , fLocalMatrix(localMatrix)
             , fUsesLocalCoords(usesLocalCoords) {
-<<<<<<< HEAD
-        this->setVertexAttributeCnt(3);
-||||||| merged common ancestors
-        fInPosition = &this->addVertexAttrib("inPosition", kFloat2_GrVertexAttribType);
-        fInColor = &this->addVertexAttrib("inColor", kUByte4_norm_GrVertexAttribType);
-        fInQuadEdge = &this->addVertexAttrib("inQuadEdge", kHalf4_GrVertexAttribType);
-=======
         fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
         fInColor = MakeColorAttribute("inColor", wideColor);
         fInQuadEdge = {"inQuadEdge", kFloat4_GrVertexAttribType, kHalf4_GrSLType};
         this->setVertexAttributes(&fInPosition, 3);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    const Attribute& onVertexAttribute(int i) const override {
-        return IthAttribute(i, kInPosition, kInColor, kInQuadEdge);
-    }
-    static constexpr Attribute kInPosition =
-            {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
-    static constexpr Attribute kInColor =
-            {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType};
-    static constexpr Attribute kInQuadEdge =
-            {"inQuadEdge", kFloat4_GrVertexAttribType, kHalf4_GrSLType};
-    SkMatrix fLocalMatrix;
-    bool fUsesLocalCoords;
-||||||| merged common ancestors
-    const Attribute* fInPosition;
-    const Attribute* fInQuadEdge;
-    const Attribute* fInColor;
-    SkMatrix         fLocalMatrix;
-    bool             fUsesLocalCoords;
-=======
     Attribute fInPosition;
     Attribute fInColor;
     Attribute fInQuadEdge;
 
     SkMatrix fLocalMatrix;
     bool fUsesLocalCoords;
->>>>>>> upstream-releases
 
     GR_DECLARE_GEOMETRY_PROCESSOR_TEST
 
     typedef GrGeometryProcessor INHERITED;
 };
-constexpr GrPrimitiveProcessor::Attribute QuadEdgeEffect::kInPosition;
-constexpr GrPrimitiveProcessor::Attribute QuadEdgeEffect::kInColor;
-constexpr GrPrimitiveProcessor::Attribute QuadEdgeEffect::kInQuadEdge;
 
 GR_DEFINE_GEOMETRY_PROCESSOR_TEST(QuadEdgeEffect);
 
@@ -717,114 +661,6 @@ GrAAConvexPathRenderer::onCanDrawPath(const CanDrawPathArgs& args) const {
     return CanDrawPath::kNo;
 }
 
-<<<<<<< HEAD
-// extract the result vertices and indices from the GrAAConvexTessellator
-static void extract_lines_only_verts(const GrAAConvexTessellator& tess,
-                                     void* vertices,
-                                     size_t vertexStride,
-                                     GrColor color,
-                                     uint16_t* idxs,
-                                     bool tweakAlphaForCoverage) {
-    intptr_t verts = reinterpret_cast<intptr_t>(vertices);
-
-    for (int i = 0; i < tess.numPts(); ++i) {
-        *((SkPoint*)((intptr_t)verts + i * vertexStride)) = tess.point(i);
-    }
-
-    // Make 'verts' point to the colors
-    verts += sizeof(SkPoint);
-    for (int i = 0; i < tess.numPts(); ++i) {
-        if (tweakAlphaForCoverage) {
-            SkASSERT(SkScalarRoundToInt(255.0f * tess.coverage(i)) <= 255);
-            unsigned scale = SkScalarRoundToInt(255.0f * tess.coverage(i));
-            GrColor scaledColor = (0xff == scale) ? color : SkAlphaMulQ(color, scale);
-            *reinterpret_cast<GrColor*>(verts + i * vertexStride) = scaledColor;
-        } else {
-            *reinterpret_cast<GrColor*>(verts + i * vertexStride) = color;
-            *reinterpret_cast<float*>(verts + i * vertexStride + sizeof(GrColor)) =
-                    tess.coverage(i);
-        }
-    }
-
-    for (int i = 0; i < tess.numIndices(); ++i) {
-        idxs[i] = tess.index(i);
-    }
-}
-
-static sk_sp<GrGeometryProcessor> make_lines_only_gp(const GrShaderCaps* shaderCaps,
-                                                     bool tweakAlphaForCoverage,
-                                                     const SkMatrix& viewMatrix,
-                                                     bool usesLocalCoords) {
-    using namespace GrDefaultGeoProcFactory;
-
-    Coverage::Type coverageType;
-    if (tweakAlphaForCoverage) {
-        coverageType = Coverage::kSolid_Type;
-    } else {
-        coverageType = Coverage::kAttribute_Type;
-    }
-    LocalCoords::Type localCoordsType =
-            usesLocalCoords ? LocalCoords::kUsePosition_Type : LocalCoords::kUnused_Type;
-    return MakeForDeviceSpace(shaderCaps,
-                              Color::kPremulGrColorAttribute_Type,
-                              coverageType,
-                              localCoordsType,
-                              viewMatrix);
-}
-
-||||||| merged common ancestors
-// extract the result vertices and indices from the GrAAConvexTessellator
-static void extract_lines_only_verts(const GrAAConvexTessellator& tess,
-                                     void* vertices,
-                                     size_t vertexStride,
-                                     GrColor color,
-                                     uint16_t* idxs,
-                                     bool tweakAlphaForCoverage) {
-    intptr_t verts = reinterpret_cast<intptr_t>(vertices);
-
-    for (int i = 0; i < tess.numPts(); ++i) {
-        *((SkPoint*)((intptr_t)verts + i * vertexStride)) = tess.point(i);
-    }
-
-    // Make 'verts' point to the colors
-    verts += sizeof(SkPoint);
-    for (int i = 0; i < tess.numPts(); ++i) {
-        if (tweakAlphaForCoverage) {
-            SkASSERT(SkScalarRoundToInt(255.0f * tess.coverage(i)) <= 255);
-            unsigned scale = SkScalarRoundToInt(255.0f * tess.coverage(i));
-            GrColor scaledColor = (0xff == scale) ? color : SkAlphaMulQ(color, scale);
-            *reinterpret_cast<GrColor*>(verts + i * vertexStride) = scaledColor;
-        } else {
-            *reinterpret_cast<GrColor*>(verts + i * vertexStride) = color;
-            *reinterpret_cast<float*>(verts + i * vertexStride + sizeof(GrColor)) =
-                    tess.coverage(i);
-        }
-    }
-
-    for (int i = 0; i < tess.numIndices(); ++i) {
-        idxs[i] = tess.index(i);
-    }
-}
-
-static sk_sp<GrGeometryProcessor> make_lines_only_gp(bool tweakAlphaForCoverage,
-                                                     const SkMatrix& viewMatrix,
-                                                     bool usesLocalCoords) {
-    using namespace GrDefaultGeoProcFactory;
-
-    Coverage::Type coverageType;
-    if (tweakAlphaForCoverage) {
-        coverageType = Coverage::kSolid_Type;
-    } else {
-        coverageType = Coverage::kAttribute_Type;
-    }
-    LocalCoords::Type localCoordsType =
-            usesLocalCoords ? LocalCoords::kUsePosition_Type : LocalCoords::kUnused_Type;
-    return MakeForDeviceSpace(Color::kPremulGrColorAttribute_Type, coverageType, localCoordsType,
-                              viewMatrix);
-}
-
-=======
->>>>>>> upstream-releases
 namespace {
 
 class AAConvexPathOp final : public GrMeshDrawOp {
@@ -834,17 +670,9 @@ private:
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-                                          const SkMatrix& viewMatrix,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint, const SkMatrix& viewMatrix,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
                                           const SkMatrix& viewMatrix,
->>>>>>> upstream-releases
                                           const SkPath& path,
                                           const GrUserStencilSettings* stencilSettings) {
         return Helper::FactoryHelper<AAConvexPathOp>(context, std::move(paint), viewMatrix, path,
@@ -878,167 +706,15 @@ public:
 
     FixedFunctionFlags fixedFunctionFlags() const override { return fHelper.fixedFunctionFlags(); }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fPaths.back().fColor);
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped,
-                                            GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fPaths.back().fColor);
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
         return fHelper.finalizeProcessors(
                 caps, clip, fsaaType, GrProcessorAnalysisCoverage::kSingleChannel,
                 &fPaths.back().fColor);
->>>>>>> upstream-releases
     }
 
 private:
-<<<<<<< HEAD
-    void prepareLinesOnlyDraws(Target* target) {
-        // Setup GrGeometryProcessor
-        sk_sp<GrGeometryProcessor> gp(make_lines_only_gp(target->caps().shaderCaps(),
-                                                         fHelper.compatibleWithAlphaAsCoverage(),
-                                                         fPaths.back().fViewMatrix,
-                                                         fHelper.usesLocalCoords()));
-        if (!gp) {
-            SkDebugf("Could not create GrGeometryProcessor\n");
-            return;
-        }
-
-        size_t vertexStride = fHelper.compatibleWithAlphaAsCoverage()
-                                      ? sizeof(GrDefaultGeoProcFactory::PositionColorAttr)
-                                      : sizeof(GrDefaultGeoProcFactory::PositionColorCoverageAttr);
-        SkASSERT(vertexStride == gp->debugOnly_vertexStride());
-
-        GrAAConvexTessellator tess;
-
-        int instanceCount = fPaths.count();
-        auto pipe = fHelper.makePipeline(target);
-        for (int i = 0; i < instanceCount; i++) {
-            tess.rewind();
-
-            const PathData& args = fPaths[i];
-
-            if (!tess.tessellate(args.fViewMatrix, args.fPath)) {
-                continue;
-            }
-
-            const GrBuffer* vertexBuffer;
-            int firstVertex;
-
-            void* verts = target->makeVertexSpace(vertexStride, tess.numPts(), &vertexBuffer,
-                                                  &firstVertex);
-            if (!verts) {
-                SkDebugf("Could not allocate vertices\n");
-                return;
-            }
-
-            const GrBuffer* indexBuffer;
-            int firstIndex;
-
-            uint16_t* idxs = target->makeIndexSpace(tess.numIndices(), &indexBuffer, &firstIndex);
-            if (!idxs) {
-                SkDebugf("Could not allocate indices\n");
-                return;
-            }
-
-            extract_lines_only_verts(tess, verts, vertexStride, args.fColor, idxs,
-                                     fHelper.compatibleWithAlphaAsCoverage());
-
-            GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
-            mesh->setIndexed(indexBuffer, tess.numIndices(), firstIndex, 0, tess.numPts() - 1,
-                             GrPrimitiveRestart::kNo);
-            mesh->setVertexData(vertexBuffer, firstVertex);
-            target->draw(gp, pipe.fPipeline, pipe.fFixedDynamicState, mesh);
-        }
-    }
-
-||||||| merged common ancestors
-    void prepareLinesOnlyDraws(Target* target) {
-        // Setup GrGeometryProcessor
-        sk_sp<GrGeometryProcessor> gp(make_lines_only_gp(fHelper.compatibleWithAlphaAsCoverage(),
-                                                         fPaths.back().fViewMatrix,
-                                                         fHelper.usesLocalCoords()));
-        if (!gp) {
-            SkDebugf("Could not create GrGeometryProcessor\n");
-            return;
-        }
-
-        size_t vertexStride = gp->getVertexStride();
-
-        SkASSERT(fHelper.compatibleWithAlphaAsCoverage()
-                         ? vertexStride == sizeof(GrDefaultGeoProcFactory::PositionColorAttr)
-                         : vertexStride ==
-                                   sizeof(GrDefaultGeoProcFactory::PositionColorCoverageAttr));
-
-        GrAAConvexTessellator tess;
-
-        int instanceCount = fPaths.count();
-        const GrPipeline* pipeline = fHelper.makePipeline(target);
-        for (int i = 0; i < instanceCount; i++) {
-            tess.rewind();
-
-            const PathData& args = fPaths[i];
-
-            if (!tess.tessellate(args.fViewMatrix, args.fPath)) {
-                continue;
-            }
-
-            const GrBuffer* vertexBuffer;
-            int firstVertex;
-
-            void* verts = target->makeVertexSpace(vertexStride, tess.numPts(), &vertexBuffer,
-                                                  &firstVertex);
-            if (!verts) {
-                SkDebugf("Could not allocate vertices\n");
-                return;
-            }
-
-            const GrBuffer* indexBuffer;
-            int firstIndex;
-
-            uint16_t* idxs = target->makeIndexSpace(tess.numIndices(), &indexBuffer, &firstIndex);
-            if (!idxs) {
-                SkDebugf("Could not allocate indices\n");
-                return;
-            }
-
-            extract_lines_only_verts(tess, verts, vertexStride, args.fColor, idxs,
-                                     fHelper.compatibleWithAlphaAsCoverage());
-
-            GrMesh mesh(GrPrimitiveType::kTriangles);
-            mesh.setIndexed(indexBuffer, tess.numIndices(), firstIndex, 0, tess.numPts() - 1);
-            mesh.setVertexData(vertexBuffer, firstVertex);
-            target->draw(gp.get(), pipeline, mesh);
-        }
-    }
-
-=======
->>>>>>> upstream-releases
     void onPrepareDraws(Target* target) override {
-<<<<<<< HEAD
-#ifndef SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS
-        if (fLinesOnly) {
-            this->prepareLinesOnlyDraws(target);
-            return;
-        }
-#endif
-        auto pipe = fHelper.makePipeline(target);
-||||||| merged common ancestors
-#ifndef SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS
-        if (fLinesOnly) {
-            this->prepareLinesOnlyDraws(target);
-            return;
-        }
-#endif
-        const GrPipeline* pipeline = fHelper.makePipeline(target);
-=======
->>>>>>> upstream-releases
         int instanceCount = fPaths.count();
 
         SkMatrix invert;
@@ -1088,18 +764,8 @@ private:
             sk_sp<const GrBuffer> vertexBuffer;
             int firstVertex;
 
-<<<<<<< HEAD
-            SkASSERT(sizeof(QuadVertex) == quadProcessor->debugOnly_vertexStride());
-            QuadVertex* verts = reinterpret_cast<QuadVertex*>(target->makeVertexSpace(
-                    sizeof(QuadVertex), vertexCount, &vertexBuffer, &firstVertex));
-||||||| merged common ancestors
-            size_t vertexStride = quadProcessor->getVertexStride();
-            QuadVertex* verts = reinterpret_cast<QuadVertex*>(target->makeVertexSpace(
-                vertexStride, vertexCount, &vertexBuffer, &firstVertex));
-=======
             GrVertexWriter verts{target->makeVertexSpace(kVertexStride, vertexCount,
                                                          &vertexBuffer, &firstVertex)};
->>>>>>> upstream-releases
 
             if (!verts.fPtr) {
                 SkDebugf("Could not allocate vertices\n");
@@ -1116,21 +782,10 @@ private:
             }
 
             SkSTArray<kPreallocDrawCnt, Draw, true> draws;
-<<<<<<< HEAD
-            create_vertices(segments, fanPt, args.fColor, &draws, verts, idxs);
-
-            GrMesh* meshes = target->allocMeshes(draws.count());
-||||||| merged common ancestors
-            create_vertices(segments, fanPt, args.fColor, &draws, verts, idxs);
-
-            GrMesh mesh(GrPrimitiveType::kTriangles);
-
-=======
             GrVertexColor color(args.fColor, fWideColor);
             create_vertices(segments, fanPt, color, &draws, verts, idxs, kVertexStride);
 
             GrMesh* meshes = target->allocMeshes(draws.count());
->>>>>>> upstream-releases
             for (int j = 0; j < draws.count(); ++j) {
                 const Draw& draw = draws[j];
                 meshes[j].setPrimitiveType(GrPrimitiveType::kTriangles);
@@ -1140,61 +795,27 @@ private:
                 firstIndex += draw.fIndexCnt;
                 firstVertex += draw.fVertexCnt;
             }
-<<<<<<< HEAD
-            target->draw(quadProcessor, pipe.fPipeline, pipe.fFixedDynamicState, nullptr, meshes,
-                         draws.count());
-||||||| merged common ancestors
-=======
             target->recordDraw(quadProcessor, meshes, draws.count());
->>>>>>> upstream-releases
         }
     }
 
-<<<<<<< HEAD
-    CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
-||||||| merged common ancestors
-    bool onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
-=======
     void onExecute(GrOpFlushState* flushState, const SkRect& chainBounds) override {
         fHelper.executeDrawsAndUploads(this, flushState, chainBounds);
     }
 
     CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
->>>>>>> upstream-releases
         AAConvexPathOp* that = t->cast<AAConvexPathOp>();
         if (!fHelper.isCompatible(that->fHelper, caps, this->bounds(), that->bounds())) {
             return CombineResult::kCannotCombine;
         }
         if (fHelper.usesLocalCoords() &&
             !fPaths[0].fViewMatrix.cheapEqualTo(that->fPaths[0].fViewMatrix)) {
-<<<<<<< HEAD
             return CombineResult::kCannotCombine;
-        }
-
-        if (fLinesOnly != that->fLinesOnly) {
-            return CombineResult::kCannotCombine;
-||||||| merged common ancestors
-            return false;
-        }
-
-        if (fLinesOnly != that->fLinesOnly) {
-            return false;
-=======
-            return CombineResult::kCannotCombine;
->>>>>>> upstream-releases
         }
 
         fPaths.push_back_n(that->fPaths.count(), that->fPaths.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
-        return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
         fWideColor |= that->fWideColor;
         return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     struct PathData {

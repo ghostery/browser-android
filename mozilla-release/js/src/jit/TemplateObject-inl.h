@@ -14,7 +14,6 @@
 namespace js {
 namespace jit {
 
-<<<<<<< HEAD
 inline gc::AllocKind TemplateObject::getAllocKind() const {
   return obj_->asTenured().getAllocKind();
 }
@@ -23,245 +22,56 @@ inline bool TemplateObject::isNative() const { return obj_->isNative(); }
 
 inline bool TemplateObject::isArrayObject() const {
   return obj_->is<ArrayObject>();
-||||||| merged common ancestors
-inline gc::AllocKind
-TemplateObject::getAllocKind() const
-{
-    return obj_->asTenured().getAllocKind();
 }
 
-inline bool
-TemplateObject::isNative() const
-{
-    return obj_->isNative();
-}
-
-inline bool
-TemplateObject::isArrayObject() const
-{
-    return obj_->is<ArrayObject>();
-=======
-inline gc::AllocKind TemplateObject::getAllocKind() const {
-  return obj_->asTenured().getAllocKind();
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 inline bool TemplateObject::isArgumentsObject() const {
   return obj_->is<ArgumentsObject>();
 }
-||||||| merged common ancestors
-inline bool
-TemplateObject::isArgumentsObject() const
-{
-    return obj_->is<ArgumentsObject>();
-}
-=======
-inline bool TemplateObject::isNative() const { return obj_->isNative(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 inline bool TemplateObject::isTypedArrayObject() const {
   return obj_->is<TypedArrayObject>();
-||||||| merged common ancestors
-inline bool
-TemplateObject::isTypedArrayObject() const
-{
-    return obj_->is<TypedArrayObject>();
-=======
-inline bool TemplateObject::isArrayObject() const {
-  return obj_->is<ArrayObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 inline bool TemplateObject::isRegExpObject() const {
   return obj_->is<RegExpObject>();
-||||||| merged common ancestors
-inline bool
-TemplateObject::isRegExpObject() const
-{
-    return obj_->is<RegExpObject>();
-=======
-inline bool TemplateObject::isArgumentsObject() const {
-  return obj_->is<ArgumentsObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 inline bool TemplateObject::isInlineTypedObject() const {
   return obj_->is<InlineTypedObject>();
-||||||| merged common ancestors
-inline bool
-TemplateObject::isInlineTypedObject() const
-{
-    return obj_->is<InlineTypedObject>();
-=======
-inline bool TemplateObject::isTypedArrayObject() const {
-  return obj_->is<TypedArrayObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline bool TemplateObject::isUnboxedPlainObject() const {
-  return obj_->is<UnboxedPlainObject>();
-||||||| merged common ancestors
-inline bool
-TemplateObject::isUnboxedPlainObject() const
-{
-    return obj_->is<UnboxedPlainObject>();
-=======
-inline bool TemplateObject::isRegExpObject() const {
-  return obj_->is<RegExpObject>();
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 inline bool TemplateObject::isCallObject() const {
   return obj_->is<CallObject>();
-||||||| merged common ancestors
-inline bool
-TemplateObject::isCallObject() const
-{
-    return obj_->is<CallObject>();
-=======
-inline bool TemplateObject::isInlineTypedObject() const {
-  return obj_->is<InlineTypedObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 inline bool TemplateObject::isPlainObject() const {
   return obj_->is<PlainObject>();
-||||||| merged common ancestors
-inline bool
-TemplateObject::isPlainObject() const
-{
-    return obj_->is<PlainObject>();
-=======
-inline bool TemplateObject::isCallObject() const {
-  return obj_->is<CallObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 inline gc::Cell* TemplateObject::group() const {
   MOZ_ASSERT(!obj_->hasLazyGroup());
   return obj_->group();
-||||||| merged common ancestors
-inline gc::Cell*
-TemplateObject::group() const
-{
-    MOZ_ASSERT(!obj_->hasLazyGroup());
-    return obj_->group();
-=======
-inline bool TemplateObject::isPlainObject() const {
-  return obj_->is<PlainObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline gc::Cell* TemplateObject::maybeShape() const {
-  if (obj_->is<ShapedObject>()) {
-    Shape* shape = obj_->maybeShape();
-    MOZ_ASSERT(!shape->inDictionary());
-    return shape;
-  }
-  return nullptr;
-||||||| merged common ancestors
-inline gc::Cell*
-TemplateObject::maybeShape() const
-{
-    if (obj_->is<ShapedObject>()) {
-        Shape* shape = obj_->maybeShape();
-        MOZ_ASSERT(!shape->inDictionary());
-        return shape;
-    }
-    return nullptr;
-=======
-inline gc::Cell* TemplateObject::group() const {
-  MOZ_ASSERT(!obj_->hasLazyGroup());
-  return obj_->group();
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-inline uint32_t TemplateObject::getInlineTypedObjectSize() const {
-  return obj_->as<InlineTypedObject>().size();
-||||||| merged common ancestors
-inline uint32_t
-TemplateObject::getInlineTypedObjectSize() const
-{
-    return obj_->as<InlineTypedObject>().size();
-=======
 inline gc::Cell* TemplateObject::shape() const {
   Shape* shape = obj_->shape();
   MOZ_ASSERT(!shape->inDictionary());
   return shape;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline uint8_t* TemplateObject::getInlineTypedObjectMem(
-    const JS::AutoRequireNoGC& nogc) const {
-  return obj_->as<InlineTypedObject>().inlineTypedMem(nogc);
-||||||| merged common ancestors
-inline uint8_t*
-TemplateObject::getInlineTypedObjectMem(const JS::AutoRequireNoGC& nogc) const
-{
-    return obj_->as<InlineTypedObject>().inlineTypedMem(nogc);
-=======
 inline uint32_t TemplateObject::getInlineTypedObjectSize() const {
   return obj_->as<InlineTypedObject>().size();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline const UnboxedLayout& TemplateObject::unboxedObjectLayout() const {
-  return obj_->as<UnboxedPlainObject>().layoutDontCheckGeneration();
-||||||| merged common ancestors
-inline const UnboxedLayout&
-TemplateObject::unboxedObjectLayout() const
-{
-    return obj_->as<UnboxedPlainObject>().layoutDontCheckGeneration();
-=======
 inline uint8_t* TemplateObject::getInlineTypedObjectMem(
     const JS::AutoRequireNoGC& nogc) const {
   return obj_->as<InlineTypedObject>().inlineTypedMem(nogc);
->>>>>>> upstream-releases
 }
-
-<<<<<<< HEAD
-#ifdef DEBUG
-inline bool TemplateObject::unboxedObjectHasExpando() const {
-  return obj_->as<UnboxedPlainObject>().maybeExpando();
-}
-#endif
 
 inline const NativeTemplateObject& TemplateObject::asNativeTemplateObject()
     const {
   MOZ_ASSERT(isNative());
   return *static_cast<const NativeTemplateObject*>(this);
-||||||| merged common ancestors
-#ifdef DEBUG
-inline bool
-TemplateObject::unboxedObjectHasExpando() const
-{
-    return obj_->as<UnboxedPlainObject>().maybeExpando();
-}
-#endif
-
-inline const NativeTemplateObject&
-TemplateObject::asNativeTemplateObject() const
-{
-    MOZ_ASSERT(isNative());
-    return *static_cast<const NativeTemplateObject*>(this);
-=======
-inline const NativeTemplateObject& TemplateObject::asNativeTemplateObject()
-    const {
-  MOZ_ASSERT(isNative());
-  return *static_cast<const NativeTemplateObject*>(this);
->>>>>>> upstream-releases
 }
 
 inline bool NativeTemplateObject::hasDynamicSlots() const {

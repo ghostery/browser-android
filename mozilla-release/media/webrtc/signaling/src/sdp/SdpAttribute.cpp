@@ -1127,18 +1127,9 @@ void SdpSimulcastAttribute::Versions::Serialize(std::ostream& os) const {
   }
 }
 
-<<<<<<< HEAD
-bool SdpSimulcastAttribute::Versions::Parse(std::istream& is,
-                                            std::string* error) {
-||||||| merged common ancestors
-bool
-SdpSimulcastAttribute::Versions::Parse(std::istream& is, std::string* error)
-{
-=======
 bool SdpSimulcastAttribute::Versions::Parse(std::istream& is,
                                             std::string* error) {
   int startPos = is.tellg();
->>>>>>> upstream-releases
   std::string rawType = ParseKey(is, error);
   if (rawType.empty()) {
     // New simulcast format does not have pt= or rid=, it is always rid

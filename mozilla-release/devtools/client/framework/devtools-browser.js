@@ -418,25 +418,7 @@ var gDevToolsBrowser = (exports.gDevToolsBrowser = {
     const client = new DebuggerClient(transport);
 
     await client.connect();
-<<<<<<< HEAD
-    const front = await client.mainRoot.getProcess(processId);
-    const options = {
-      activeTab: front,
-      client,
-      chrome: true,
-    };
-    const target = await TargetFactory.forRemoteTab(options);
-||||||| merged common ancestors
-    const response = await client.mainRoot.getProcess(processId);
-    const options = {
-      form: response.form,
-      client: client,
-      chrome: true,
-    };
-    const target = await TargetFactory.forRemoteTab(options);
-=======
     const target = await client.mainRoot.getProcess(processId);
->>>>>>> upstream-releases
     // Ensure closing the connection in order to cleanup
     // the debugger client and also the server created in the
     // content process
@@ -467,21 +449,6 @@ var gDevToolsBrowser = (exports.gDevToolsBrowser = {
     }
     if (processId) {
       return this._getContentProcessTarget(processId)
-<<<<<<< HEAD
-          .then(target => {
-            // Display a new toolbox in a new window
-            return gDevTools.showToolbox(target, null, Toolbox.HostType.WINDOW);
-          })
-          .catch(e => {
-            console.error("Exception while opening the browser content toolbox:",
-              e);
-          });
-||||||| merged common ancestors
-          .then(target => {
-            // Display a new toolbox in a new window
-            return gDevTools.showToolbox(target, null, Toolbox.HostType.WINDOW);
-          });
-=======
         .then(target => {
           // Display a new toolbox in a new window
           return gDevTools.showToolbox(target, null, Toolbox.HostType.WINDOW);
@@ -492,7 +459,6 @@ var gDevToolsBrowser = (exports.gDevToolsBrowser = {
             e
           );
         });
->>>>>>> upstream-releases
     }
 
     const msg = L10N.getStr("toolbox.noContentProcessForTab.message");
@@ -504,40 +470,10 @@ var gDevToolsBrowser = (exports.gDevToolsBrowser = {
    * Open a window-hosted toolbox to debug the worker associated to the provided
    * worker actor.
    *
-<<<<<<< HEAD
    * @param  {WorkerTargetFront} workerTargetFront
    *         worker actor front to debug
    * @param  {String} toolId (optional)
    *        The id of the default tool to show
-   */
-  async openWorkerToolbox(workerTargetFront, toolId) {
-    const workerTarget = TargetFactory.forWorker(workerTargetFront);
-    const toolbox = await gDevTools.showToolbox(workerTarget, toolId, Toolbox.HostType.WINDOW);
-    toolbox.once("destroy", () => workerTargetFront.detach());
-  },
-
-  /**
-   * Install WebIDE widget
-||||||| merged common ancestors
-   * @param  {DebuggerClient} client
-   * @param  {Object} workerTargetActor
-   *         worker actor form to debug
-   */
-  async openWorkerToolbox(client, workerTargetActor) {
-    const [, workerTargetFront] = await client.attachWorker(workerTargetActor);
-    const workerTarget = TargetFactory.forWorker(workerTargetFront);
-    const toolbox = await gDevTools.showToolbox(workerTarget, null, Toolbox.HostType.WINDOW);
-    toolbox.once("destroy", () => workerTargetFront.detach());
-  },
-
-  /**
-   * Install WebIDE widget
-=======
-   * @param  {WorkerTargetFront} workerTargetFront
-   *         worker actor front to debug
-   * @param  {String} toolId (optional)
-   *        The id of the default tool to show
->>>>>>> upstream-releases
    */
   async openWorkerToolbox(workerTarget, toolId) {
     await gDevTools.showToolbox(workerTarget, toolId, Toolbox.HostType.WINDOW);

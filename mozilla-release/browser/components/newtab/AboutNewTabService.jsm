@@ -108,24 +108,10 @@ AboutNewTabService.prototype = {
   observe(subject, topic, data) {
     switch (topic) {
       case "nsPref:changed":
-<<<<<<< HEAD:mozilla-release/browser/components/newtab/aboutNewTabService.js
-        if (data === PREF_SEPARATE_PRIVILEGED_CONTENT_PROCESS) {
-          this._privilegedContentProcess = Services.prefs.getBoolPref(PREF_SEPARATE_PRIVILEGED_CONTENT_PROCESS);
-          this.updatePrerenderedPath();
-          this.notifyChange();
-        } else if (data === PREF_ACTIVITY_STREAM_PRERENDER_ENABLED) {
-          this._activityStreamPrerender = Services.prefs.getBoolPref(PREF_ACTIVITY_STREAM_PRERENDER_ENABLED);
-||||||| merged common ancestors
-        if (data === PREF_SEPARATE_PRIVILEGED_CONTENT_PROCESS) {
-          this._privilegedContentProcess = Services.prefs.getBoolPref(PREF_SEPARATE_PRIVILEGED_CONTENT_PROCESS);
-        } else if (data === PREF_ACTIVITY_STREAM_PRERENDER_ENABLED) {
-          this._activityStreamPrerender = Services.prefs.getBoolPref(PREF_ACTIVITY_STREAM_PRERENDER_ENABLED);
-=======
         if (data === PREF_SEPARATE_PRIVILEGEDABOUT_CONTENT_PROCESS) {
           this._privilegedAboutContentProcess = Services.prefs.getBoolPref(
             PREF_SEPARATE_PRIVILEGEDABOUT_CONTENT_PROCESS
           );
->>>>>>> upstream-releases:mozilla-release/browser/components/newtab/AboutNewTabService.jsm
           this.notifyChange();
         } else if (!IS_RELEASE_OR_BETA && data === PREF_ACTIVITY_STREAM_DEBUG) {
           this._activityStreamDebug = Services.prefs.getBoolPref(
@@ -238,29 +224,6 @@ AboutNewTabService.prototype = {
     return true;
   },
 
-<<<<<<< HEAD:mozilla-release/browser/components/newtab/aboutNewTabService.js
-  /**
-   * Figure out what path under prerendered to use based on current state.
-   */
-  updatePrerenderedPath() {
-    // Debug files are specially packaged in a non-localized directory, but with
-    // dynamic script loading, localized debug is supported.
-    this._activityStreamPath = `${this._activityStreamDebug &&
-      !this._privilegedContentProcess ? "static" : this.activityStreamLocale}/`;
-  },
-
-||||||| merged common ancestors
-  /**
-   * Figure out what path under prerendered to use based on current state.
-   */
-  updatePrerenderedPath() {
-    // Debug files are specially packaged in a non-localized directory
-    this._activityStreamPath = `${this._activityStreamDebug ? "static" :
-      this.activityStreamLocale}/`;
-  },
-
-=======
->>>>>>> upstream-releases:mozilla-release/browser/components/newtab/AboutNewTabService.jsm
   /*
    * Returns the default URL.
    *
@@ -275,22 +238,11 @@ AboutNewTabService.prototype = {
     return [
       "resource://activity-stream/prerendered/",
       "activity-stream",
-<<<<<<< HEAD:mozilla-release/browser/components/newtab/aboutNewTabService.js
-      this._activityStreamPrerender ? "-prerendered" : "",
-      // Debug version loads dev scripts but noscripts separately loads scripts
-      this._activityStreamDebug && !this._privilegedContentProcess ? "-debug" : "",
-      this._privilegedContentProcess ? "-noscripts" : "",
-||||||| merged common ancestors
-      this._activityStreamPrerender ? "-prerendered" : "",
-      this._activityStreamDebug ? "-debug" : "",
-      this._privilegedContentProcess ? "-noscripts" : "",
-=======
       // Debug version loads dev scripts but noscripts separately loads scripts
       this._activityStreamDebug && !this._privilegedAboutContentProcess
         ? "-debug"
         : "",
       this._privilegedAboutContentProcess ? "-noscripts" : "",
->>>>>>> upstream-releases:mozilla-release/browser/components/newtab/AboutNewTabService.jsm
       ".html",
     ].join("");
   },

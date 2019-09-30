@@ -86,13 +86,7 @@ const SEARCH_FILTERS = [
 ];
 
 function getShortURLForCurrentSearch() {
-<<<<<<< HEAD
-  const url = shortURL({url: Services.search.defaultEngine.searchForm});
-||||||| merged common ancestors
-  const url = shortURL({url: Services.search.currentEngine.searchForm});
-=======
   const url = shortURL({ url: Services.search.defaultEngine.searchForm });
->>>>>>> upstream-releases
   return url;
 }
 

@@ -25,35 +25,14 @@ class X11TextureSourceOGL : public TextureSourceOGL, public X11TextureSource {
 
   X11TextureSourceOGL* AsSourceOGL() override { return this; }
 
-<<<<<<< HEAD
-  virtual bool IsValid() const override { return !!gl(); };
-||||||| merged common ancestors
-  virtual bool IsValid() const override { return !!gl(); } ;
-=======
   bool IsValid() const override { return !!gl(); };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void BindTexture(GLenum aTextureUnit,
-                           gfx::SamplingFilter aSamplingFilter) override;
-||||||| merged common ancestors
-  virtual void BindTexture(GLenum aTextureUnit, gfx::SamplingFilter aSamplingFilter) override;
-=======
   void BindTexture(GLenum aTextureUnit,
                    gfx::SamplingFilter aSamplingFilter) override;
->>>>>>> upstream-releases
 
   gfx::IntSize GetSize() const override;
 
-<<<<<<< HEAD
-  virtual GLenum GetTextureTarget() const override {
-    return LOCAL_GL_TEXTURE_2D;
-  }
-||||||| merged common ancestors
-  virtual GLenum GetTextureTarget() const override { return LOCAL_GL_TEXTURE_2D; }
-=======
   GLenum GetTextureTarget() const override { return LOCAL_GL_TEXTURE_2D; }
->>>>>>> upstream-releases
 
   gfx::SurfaceFormat GetFormat() const override;
 
@@ -61,14 +40,7 @@ class X11TextureSourceOGL : public TextureSourceOGL, public X11TextureSource {
 
   void DeallocateDeviceData() override;
 
-<<<<<<< HEAD
-  virtual void SetTextureSourceProvider(
-      TextureSourceProvider* aProvider) override;
-||||||| merged common ancestors
-  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
-=======
   void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
->>>>>>> upstream-releases
 
   void Updated() override { mUpdated = true; }
 

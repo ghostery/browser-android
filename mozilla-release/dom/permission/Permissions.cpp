@@ -88,18 +88,9 @@ already_AddRefed<Promise> Permissions::Query(JSContext* aCx,
   return promise.forget();
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Permissions::RemovePermission(
-    nsIPrincipal* aPrincipal, const char* aPermissionType) {
-||||||| merged common ancestors
-/* static */ nsresult
-Permissions::RemovePermission(nsIPrincipal* aPrincipal, const char* aPermissionType)
-{
-=======
 /* static */
 nsresult Permissions::RemovePermission(nsIPrincipal* aPrincipal,
                                        const nsACString& aPermissionType) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   nsCOMPtr<nsIPermissionManager> permMgr = services::GetPermissionManager();
@@ -153,14 +144,7 @@ already_AddRefed<Promise> Permissions::Revoke(JSContext* aCx,
     // to the parent; `ContentParent::RecvRemovePermission` will call
     // `RemovePermission`.
     ContentChild::GetSingleton()->SendRemovePermission(
-<<<<<<< HEAD
-        IPC::Principal(document->NodePrincipal()),
-        nsDependentCString(permissionType), &rv);
-||||||| merged common ancestors
-      IPC::Principal(document->NodePrincipal()), nsDependentCString(permissionType), &rv);
-=======
         IPC::Principal(document->NodePrincipal()), permissionType, &rv);
->>>>>>> upstream-releases
   }
 
   if (NS_WARN_IF(NS_FAILED(rv))) {

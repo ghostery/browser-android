@@ -571,15 +571,6 @@ function reloadOnTouchChange(enabled) {
   const pref = RELOAD_CONDITION_PREF_PREFIX + "touchSimulation";
   Services.prefs.setBoolPref(pref, enabled);
 }
-<<<<<<< HEAD
-
-function rotateViewport(ui) {
-  const { document } = ui.toolWindow;
-  const rotateButton = document.getElementById("rotate-button");
-  rotateButton.click();
-}
-||||||| merged common ancestors
-=======
 
 function rotateViewport(ui) {
   const { document } = ui.toolWindow;
@@ -625,4 +616,3 @@ async function testViewportZoomWidthAndHeight(message, ui, zoom, width, height) 
     }
   }
 }
->>>>>>> upstream-releases

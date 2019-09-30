@@ -240,30 +240,11 @@ class nsGenericHTMLElement : public nsGenericHTMLElementBase {
 
  public:
   // Implementation for nsIContent
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-
-  virtual bool IsFocusableInternal(int32_t* aTabIndex,
-                                   bool aWithMouse) override {
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument,
-                              nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
-
-  virtual bool IsFocusableInternal(int32_t *aTabIndex, bool aWithMouse) override
-  {
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent = true) override;
 
   virtual bool IsFocusableInternal(int32_t* aTabIndex,
                                    bool aWithMouse) override {
->>>>>>> upstream-releases
     bool isFocusable = false;
     IsHTMLFocusable(aWithMouse, &isFocusable, aTabIndex);
     return isFocusable;
@@ -637,14 +618,7 @@ class nsGenericHTMLElement : public nsGenericHTMLElementBase {
 
   virtual bool IsInteractiveHTMLContent(bool aIgnoreTabindex) const override;
 
-<<<<<<< HEAD
-  static bool TouchEventsEnabled(JSContext* /* unused */,
-                                 JSObject* /* unused */);
-||||||| merged common ancestors
-  static bool TouchEventsEnabled(JSContext* /* unused */, JSObject* /* unused */);
-=======
   static bool LegacyTouchAPIEnabled(JSContext* aCx, JSObject* aObj);
->>>>>>> upstream-releases
 
   static inline bool CanHaveName(nsAtom* aTag) {
     return aTag == nsGkAtoms::img || aTag == nsGkAtoms::form ||
@@ -956,19 +930,8 @@ class nsGenericHTMLFormElement : public nsGenericHTMLElement,
 
   // nsIFormControl
   virtual mozilla::dom::HTMLFieldSetElement* GetFieldSet() override;
-<<<<<<< HEAD
-  virtual mozilla::dom::Element* GetFormElement() override;
-  mozilla::dom::HTMLFormElement* GetForm() const { return mForm; }
-||||||| merged common ancestors
-  virtual mozilla::dom::Element* GetFormElement() override;
-  mozilla::dom::HTMLFormElement* GetForm() const
-  {
-    return mForm;
-  }
-=======
   virtual mozilla::dom::HTMLFormElement* GetFormElement() override;
   mozilla::dom::HTMLFormElement* GetForm() const { return mForm; }
->>>>>>> upstream-releases
   virtual void SetForm(mozilla::dom::HTMLFormElement* aForm) override;
   virtual void ClearForm(bool aRemoveFromForm, bool aUnbindOrDelete) override;
 
@@ -1117,24 +1080,11 @@ class nsGenericHTMLFormElement : public nsGenericHTMLElement,
   mozilla::dom::HTMLFieldSetElement* mFieldSet;
 };
 
-<<<<<<< HEAD
-class nsGenericHTMLFormElementWithState : public nsGenericHTMLFormElement {
- public:
-  nsGenericHTMLFormElementWithState(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo, uint8_t aType);
-||||||| merged common ancestors
-class nsGenericHTMLFormElementWithState : public nsGenericHTMLFormElement
-{
-public:
-  nsGenericHTMLFormElementWithState(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                                    uint8_t aType);
-=======
 class nsGenericHTMLFormElementWithState : public nsGenericHTMLFormElement {
  public:
   nsGenericHTMLFormElementWithState(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
       mozilla::dom::FromParser aFromParser, uint8_t aType);
->>>>>>> upstream-releases
 
   /**
    * Get the presentation state for a piece of content, or create it if it does
@@ -1170,24 +1120,6 @@ class nsGenericHTMLFormElementWithState : public nsGenericHTMLFormElement {
    */
   bool RestoreFormControlState();
 
-<<<<<<< HEAD
-  /**
-   * Called when we have been cloned and adopted, and the information of the
-   * node has been changed.
-   */
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override;
-
- protected:
-||||||| merged common ancestors
-  /**
-   * Called when we have been cloned and adopted, and the information of the
-   * node has been changed.
-   */
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override;
-
-protected:
-=======
->>>>>>> upstream-releases
   /* Generates the state key for saving the form state in the session if not
      computed already. The result is stored in mStateKey. */
   void GenerateStateKey();

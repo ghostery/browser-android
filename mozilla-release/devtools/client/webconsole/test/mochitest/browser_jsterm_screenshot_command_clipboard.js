@@ -213,19 +213,6 @@ async function getImageSizeFromClipboard() {
       Ci.nsIBinaryInputStream
     );
     binaryStream.setInputStream(image);
-<<<<<<< HEAD
-    const available = binaryStream.available();
-    const buffer = new ArrayBuffer(available);
-    is(binaryStream.readArrayBuffer(available, buffer), available,
-       "Read expected amount of data");
-    url = URL.createObjectURL(new Blob([buffer], {type: flavor}));
-||||||| merged common ancestors
-    const rawData = binaryStream.readBytes(binaryStream.available());
-    const charCodes = Array.from(rawData, c => c.charCodeAt(0) & 0xff);
-    let encodedData = String.fromCharCode(...charCodes);
-    encodedData = btoa(encodedData);
-    dataURI = dataURI + encodedData;
-=======
     const available = binaryStream.available();
     const buffer = new ArrayBuffer(available);
     is(
@@ -234,7 +221,6 @@ async function getImageSizeFromClipboard() {
       "Read expected amount of data"
     );
     url = URL.createObjectURL(new Blob([buffer], { type: flavor }));
->>>>>>> upstream-releases
   } else {
     throw new Error("Unable to read image data");
   }

@@ -107,59 +107,6 @@ jfieldID AndroidBridge::GetFieldID(JNIEnv* env, jclass jClass,
 }
 
 jfieldID AndroidBridge::GetStaticFieldID(JNIEnv* env, jclass jClass,
-<<<<<<< HEAD
-                                         const char* fieldName,
-                                         const char* fieldType) {
-  jfieldID fieldID = env->GetStaticFieldID(jClass, fieldName, fieldType);
-  if (!fieldID) {
-    ALOG(
-        ">>> FATAL JNI ERROR! GetStaticFieldID(fieldName=\"%s\", "
-        "fieldType=\"%s\") failed. Did ProGuard optimize away something it "
-        "shouldn't have?",
-        fieldName, fieldType);
-    env->ExceptionDescribe();
-    MOZ_CRASH();
-  }
-  return fieldID;
-||||||| merged common ancestors
-                           const char* fieldName, const char* fieldType)
-{
-    jfieldID fieldID = env->GetStaticFieldID(jClass, fieldName, fieldType);
-    if (!fieldID) {
-        ALOG(">>> FATAL JNI ERROR! GetStaticFieldID(fieldName=\"%s\", "
-             "fieldType=\"%s\") failed. Did ProGuard optimize away something it shouldn't have?",
-             fieldName, fieldType);
-        env->ExceptionDescribe();
-        MOZ_CRASH();
-    }
-    return fieldID;
-}
-
-void
-AndroidBridge::ConstructBridge()
-{
-    /* NSS hack -- bionic doesn't handle recursive unloads correctly,
-     * because library finalizer functions are called with the dynamic
-     * linker lock still held.  This results in a deadlock when trying
-     * to call dlclose() while we're already inside dlclose().
-     * Conveniently, NSS has an env var that can prevent it from unloading.
-     */
-    putenv(const_cast<char*>("NSS_DISABLE_UNLOAD=1"));
-
-    MOZ_ASSERT(!sBridge);
-    sBridge = new AndroidBridge();
-}
-
-void
-AndroidBridge::DeconstructBridge()
-{
-    if (sBridge) {
-        delete sBridge;
-        // AndroidBridge destruction requires sBridge to still be valid,
-        // so we set sBridge to nullptr after deleting it.
-        sBridge = nullptr;
-    }
-=======
                                          const char* fieldName,
                                          const char* fieldType) {
   jfieldID fieldID = env->GetStaticFieldID(jClass, fieldName, fieldType);
@@ -236,71 +183,6 @@ AndroidBridge::AndroidBridge() {
   jInputStream = inputStream.getGlobalRef();
   jClose = inputStream.getMethod("close", "()V");
   jAvailable = inputStream.getMethod("available", "()I");
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-void AndroidBridge::ConstructBridge() {
-  /* NSS hack -- bionic doesn't handle recursive unloads correctly,
-   * because library finalizer functions are called with the dynamic
-   * linker lock still held.  This results in a deadlock when trying
-   * to call dlclose() while we're already inside dlclose().
-   * Conveniently, NSS has an env var that can prevent it from unloading.
-   */
-  putenv(const_cast<char*>("NSS_DISABLE_UNLOAD=1"));
-
-  MOZ_ASSERT(!sBridge);
-  sBridge = new AndroidBridge();
-}
-
-void AndroidBridge::DeconstructBridge() {
-  if (sBridge) {
-    delete sBridge;
-    // AndroidBridge destruction requires sBridge to still be valid,
-    // so we set sBridge to nullptr after deleting it.
-    sBridge = nullptr;
-  }
-}
-
-AndroidBridge::~AndroidBridge() {}
-
-AndroidBridge::AndroidBridge() {
-  ALOG_BRIDGE("AndroidBridge::Init");
-
-  JNIEnv* const jEnv = jni::GetGeckoThreadEnv();
-  AutoLocalJNIFrame jniFrame(jEnv);
-
-  mMessageQueue = java::GeckoThread::MsgQueue();
-  auto msgQueueClass = jni::Class::LocalRef::Adopt(
-      jEnv, jEnv->GetObjectClass(mMessageQueue.Get()));
-  // mMessageQueueNext must not be null
-  mMessageQueueNext =
-      GetMethodID(jEnv, msgQueueClass.Get(), "next", "()Landroid/os/Message;");
-  // mMessageQueueMessages may be null (e.g. due to proguard optimization)
-  mMessageQueueMessages = jEnv->GetFieldID(msgQueueClass.Get(), "mMessages",
-                                           "Landroid/os/Message;");
-
-  AutoJNIClass string(jEnv, "java/lang/String");
-  jStringClass = string.getGlobalRef();
-
-  mAPIVersion = jni::GetAPIVersion();
-
-  AutoJNIClass channels(jEnv, "java/nio/channels/Channels");
-  jChannels = channels.getGlobalRef();
-  jChannelCreate = channels.getStaticMethod(
-      "newChannel",
-      "(Ljava/io/InputStream;)Ljava/nio/channels/ReadableByteChannel;");
-
-  AutoJNIClass readableByteChannel(jEnv,
-                                   "java/nio/channels/ReadableByteChannel");
-  jReadableByteChannel = readableByteChannel.getGlobalRef();
-  jByteBufferRead =
-      readableByteChannel.getMethod("read", "(Ljava/nio/ByteBuffer;)I");
-
-  AutoJNIClass inputStream(jEnv, "java/io/InputStream");
-  jInputStream = inputStream.getGlobalRef();
-  jClose = inputStream.getMethod("close", "()V");
-  jAvailable = inputStream.getMethod("available", "()I");
 }
 
 static void getHandlersFromStringArray(
@@ -316,94 +198,6 @@ static void getHandlersFromStringArray(
       out.SetIsVoid(true);
     } else {
       out.Assign(jni::String::Ref::From(obj)->ToString());
-||||||| merged common ancestors
-AndroidBridge::~AndroidBridge()
-{
-}
-
-AndroidBridge::AndroidBridge()
-{
-    ALOG_BRIDGE("AndroidBridge::Init");
-
-    JNIEnv* const jEnv = jni::GetGeckoThreadEnv();
-    AutoLocalJNIFrame jniFrame(jEnv);
-
-    mMessageQueue = java::GeckoThread::MsgQueue();
-    auto msgQueueClass = jni::Class::LocalRef::Adopt(
-            jEnv, jEnv->GetObjectClass(mMessageQueue.Get()));
-    // mMessageQueueNext must not be null
-    mMessageQueueNext = GetMethodID(
-            jEnv, msgQueueClass.Get(), "next", "()Landroid/os/Message;");
-    // mMessageQueueMessages may be null (e.g. due to proguard optimization)
-    mMessageQueueMessages = jEnv->GetFieldID(
-            msgQueueClass.Get(), "mMessages", "Landroid/os/Message;");
-
-    AutoJNIClass string(jEnv, "java/lang/String");
-    jStringClass = string.getGlobalRef();
-
-    mAPIVersion = jni::GetAPIVersion();
-
-    AutoJNIClass channels(jEnv, "java/nio/channels/Channels");
-    jChannels = channels.getGlobalRef();
-    jChannelCreate = channels.getStaticMethod("newChannel", "(Ljava/io/InputStream;)Ljava/nio/channels/ReadableByteChannel;");
-
-    AutoJNIClass readableByteChannel(jEnv, "java/nio/channels/ReadableByteChannel");
-    jReadableByteChannel = readableByteChannel.getGlobalRef();
-    jByteBufferRead = readableByteChannel.getMethod("read", "(Ljava/nio/ByteBuffer;)I");
-
-    AutoJNIClass inputStream(jEnv, "java/io/InputStream");
-    jInputStream = inputStream.getGlobalRef();
-    jClose = inputStream.getMethod("close", "()V");
-    jAvailable = inputStream.getMethod("available", "()I");
-}
-
-static void
-getHandlersFromStringArray(JNIEnv *aJNIEnv, jni::ObjectArray::Param aArr, size_t aLen,
-                           nsIMutableArray *aHandlersArray,
-                           nsIHandlerApp **aDefaultApp,
-                           const nsAString& aAction = EmptyString(),
-                           const nsACString& aMimeType = EmptyCString())
-{
-    nsString empty = EmptyString();
-
-    auto getNormalizedString = [] (jni::Object::Param obj) -> nsString {
-        nsString out;
-        if (!obj) {
-            out.SetIsVoid(true);
-        } else {
-            out.Assign(jni::String::Ref::From(obj)->ToString());
-        }
-        return out;
-    };
-
-    for (size_t i = 0; i < aLen; i += 4) {
-        nsString name(getNormalizedString(aArr->GetElement(i)));
-        nsString isDefault(getNormalizedString(aArr->GetElement(i + 1)));
-        nsString packageName(getNormalizedString(aArr->GetElement(i + 2)));
-        nsString className(getNormalizedString(aArr->GetElement(i + 3)));
-
-        nsIHandlerApp* app = nsOSHelperAppService::
-            CreateAndroidHandlerApp(name, className, packageName,
-                                    className, aMimeType, aAction);
-
-        aHandlersArray->AppendElement(app);
-        if (aDefaultApp && isDefault.Length() > 0)
-            *aDefaultApp = app;
-=======
-static void getHandlersFromStringArray(
-    JNIEnv* aJNIEnv, jni::ObjectArray::Param aArr, size_t aLen,
-    nsIMutableArray* aHandlersArray, nsIHandlerApp** aDefaultApp,
-    const nsAString& aAction = EmptyString(),
-    const nsACString& aMimeType = EmptyCString()) {
-  nsString empty = EmptyString();
-
-  auto getNormalizedString = [](jni::Object::Param obj) -> nsString {
-    nsString out;
-    if (!obj) {
-      out.SetIsVoid(true);
-    } else {
-      out.Assign(jni::String::Ref::From(obj)->ToString());
->>>>>>> upstream-releases
     }
     return out;
   };
@@ -482,7 +276,6 @@ void AndroidBridge::GetMimeTypeFromExtensions(const nsACString& aFileExt,
 
   auto jstrType = GeckoAppShell::GetMimeTypeFromExtensions(aFileExt);
 
-<<<<<<< HEAD
   if (jstrType) {
     aMimeType = jstrType->ToCString();
   }
@@ -497,66 +290,6 @@ void AndroidBridge::GetExtensionFromMimeType(const nsACString& aMimeType,
   if (jstrExt) {
     aFileExt = jstrExt->ToCString();
   }
-||||||| merged common ancestors
-    if (jstrType) {
-        aMimeType = jstrType->ToCString();
-    }
-}
-
-void
-AndroidBridge::GetExtensionFromMimeType(const nsACString& aMimeType, nsACString& aFileExt)
-{
-    ALOG_BRIDGE("AndroidBridge::GetExtensionFromMimeType");
-
-    auto jstrExt = GeckoAppShell::GetExtensionFromMimeType(aMimeType);
-
-    if (jstrExt) {
-        aFileExt = jstrExt->ToCString();
-    }
-=======
-  if (jstrType) {
-    aMimeType = jstrType->ToCString();
-  }
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool AndroidBridge::GetClipboardText(nsAString& aText) {
-  ALOG_BRIDGE("AndroidBridge::GetClipboardText");
-||||||| merged common ancestors
-bool
-AndroidBridge::GetClipboardText(nsAString& aText)
-{
-    ALOG_BRIDGE("AndroidBridge::GetClipboardText");
-=======
-void AndroidBridge::GetExtensionFromMimeType(const nsACString& aMimeType,
-                                             nsACString& aFileExt) {
-  ALOG_BRIDGE("AndroidBridge::GetExtensionFromMimeType");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  auto text = Clipboard::GetText(GeckoAppShell::GetApplicationContext());
-||||||| merged common ancestors
-    auto text = Clipboard::GetText(GeckoAppShell::GetApplicationContext());
-=======
-  auto jstrExt = GeckoAppShell::GetExtensionFromMimeType(aMimeType);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (text) {
-    aText = text->ToString();
-  }
-  return !!text;
-||||||| merged common ancestors
-    if (text) {
-        aText = text->ToString();
-    }
-    return !!text;
-=======
-  if (jstrExt) {
-    aFileExt = jstrExt->ToCString();
-  }
->>>>>>> upstream-releases
 }
 
 int AndroidBridge::GetScreenDepth() {
@@ -625,20 +358,6 @@ void AndroidBridge::Vibrate(const nsTArray<uint32_t>& aPattern) {
                          -1 /* don't repeat */);
 }
 
-<<<<<<< HEAD
-void AndroidBridge::GetSystemColors(AndroidSystemColors* aColors) {
-  NS_ASSERTION(aColors != nullptr,
-               "AndroidBridge::GetSystemColors: aColors is null!");
-  if (!aColors) return;
-||||||| merged common ancestors
-void
-AndroidBridge::GetSystemColors(AndroidSystemColors *aColors)
-{
-
-    NS_ASSERTION(aColors != nullptr, "AndroidBridge::GetSystemColors: aColors is null!");
-    if (!aColors)
-        return;
-=======
 void AndroidBridge::GetSystemColors(AndroidSystemColors* aColors) {
   NS_ASSERTION(aColors != nullptr,
                "AndroidBridge::GetSystemColors: aColors is null!");
@@ -646,48 +365,14 @@ void AndroidBridge::GetSystemColors(AndroidSystemColors* aColors) {
 
   auto arr = GeckoAppShell::GetSystemColors();
   if (!arr) return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto arr = GeckoAppShell::GetSystemColors();
-  if (!arr) return;
-||||||| merged common ancestors
-    auto arr = GeckoAppShell::GetSystemColors();
-    if (!arr)
-        return;
-=======
   JNIEnv* const env = arr.Env();
   uint32_t len = static_cast<uint32_t>(env->GetArrayLength(arr.Get()));
   jint* elements = env->GetIntArrayElements(arr.Get(), 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JNIEnv* const env = arr.Env();
-  uint32_t len = static_cast<uint32_t>(env->GetArrayLength(arr.Get()));
-  jint* elements = env->GetIntArrayElements(arr.Get(), 0);
-||||||| merged common ancestors
-    JNIEnv* const env = arr.Env();
-    uint32_t len = static_cast<uint32_t>(env->GetArrayLength(arr.Get()));
-    jint *elements = env->GetIntArrayElements(arr.Get(), 0);
-=======
   uint32_t colorsCount = sizeof(AndroidSystemColors) / sizeof(nscolor);
   if (len < colorsCount) colorsCount = len;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t colorsCount = sizeof(AndroidSystemColors) / sizeof(nscolor);
-  if (len < colorsCount) colorsCount = len;
-||||||| merged common ancestors
-    uint32_t colorsCount = sizeof(AndroidSystemColors) / sizeof(nscolor);
-    if (len < colorsCount)
-        colorsCount = len;
-=======
-  // Convert Android colors to nscolor by switching R and B in the ARGB 32 bit
-  // value
-  nscolor* colors = (nscolor*)aColors;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Convert Android colors to nscolor by switching R and B in the ARGB 32 bit
   // value
   nscolor* colors = (nscolor*)aColors;
@@ -698,24 +383,6 @@ void AndroidBridge::GetSystemColors(AndroidSystemColors* aColors) {
     uint8_t b = (androidColor & 0x000000ff);
     colors[i] = (androidColor & 0xff00ff00) | (b << 16) | r;
   }
-||||||| merged common ancestors
-    // Convert Android colors to nscolor by switching R and B in the ARGB 32 bit value
-    nscolor *colors = (nscolor*)aColors;
-
-    for (uint32_t i = 0; i < colorsCount; i++) {
-        uint32_t androidColor = static_cast<uint32_t>(elements[i]);
-        uint8_t r = (androidColor & 0x00ff0000) >> 16;
-        uint8_t b = (androidColor & 0x000000ff);
-        colors[i] = (androidColor & 0xff00ff00) | (b << 16) | r;
-    }
-=======
-  for (uint32_t i = 0; i < colorsCount; i++) {
-    uint32_t androidColor = static_cast<uint32_t>(elements[i]);
-    uint8_t r = (androidColor & 0x00ff0000) >> 16;
-    uint8_t b = (androidColor & 0x000000ff);
-    colors[i] = (androidColor & 0xff00ff00) | (b << 16) | r;
-  }
->>>>>>> upstream-releases
 
   env->ReleaseIntArrayElements(arr.Get(), elements, 0);
 }
@@ -824,7 +491,6 @@ class TracerRunnable : public Runnable {
     return NS_OK;
   }
 
-<<<<<<< HEAD
   bool Fire() {
     if (!mTracerLock || !mTracerCondVar) return false;
     MutexAutoLock lock(*mTracerLock);
@@ -854,96 +520,16 @@ bool InitWidgetTracing() {
 }
 
 void CleanUpWidgetTracing() { sTracerRunnable = nullptr; }
-||||||| merged common ancestors
-    void SignalTracerThread()
-    {
-        if (sTracerRunnable)
-            return sTracerRunnable->Signal();
-    }
-=======
-  bool Fire() {
-    if (!mTracerLock || !mTracerCondVar) return false;
-    MutexAutoLock lock(*mTracerLock);
-    mHasRun = false;
-    mMainThread->Dispatch(this, NS_DISPATCH_NORMAL);
-    while (!mHasRun) mTracerCondVar->Wait();
-    return true;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool FireAndWaitForTracerEvent() {
-  if (sTracerRunnable) return sTracerRunnable->Fire();
-  return false;
-||||||| merged common ancestors
-=======
-  void Signal() {
-    MutexAutoLock lock(*mTracerLock);
-    mHasRun = true;
-    mTracerCondVar->Notify();
-  }
-
- private:
-  Mutex* mTracerLock;
-  CondVar* mTracerCondVar;
-  bool mHasRun;
-  nsCOMPtr<nsIThread> mMainThread;
-};
-StaticRefPtr<TracerRunnable> sTracerRunnable;
-
-bool InitWidgetTracing() {
-  if (!sTracerRunnable) sTracerRunnable = new TracerRunnable();
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-void SignalTracerThread() {
-  if (sTracerRunnable) return sTracerRunnable->Signal();
-}
-||||||| merged common ancestors
-=======
-void CleanUpWidgetTracing() { sTracerRunnable = nullptr; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-void
-AndroidBridge::GetCurrentBatteryInformation(hal::BatteryInformation* aBatteryInfo)
-{
-    ALOG_BRIDGE("AndroidBridge::GetCurrentBatteryInformation");
-=======
 bool FireAndWaitForTracerEvent() {
   if (sTracerRunnable) return sTracerRunnable->Fire();
   return false;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void AndroidBridge::GetCurrentBatteryInformation(
-    hal::BatteryInformation* aBatteryInfo) {
-  ALOG_BRIDGE("AndroidBridge::GetCurrentBatteryInformation");
-||||||| merged common ancestors
-    // To prevent calling too many methods through JNI, the Java method returns
-    // an array of double even if we actually want a double and a boolean.
-    auto arr = GeckoAppShell::GetCurrentBatteryInformation();
-=======
 void SignalTracerThread() {
   if (sTracerRunnable) return sTracerRunnable->Signal();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // To prevent calling too many methods through JNI, the Java method returns
-  // an array of double even if we actually want a double and a boolean.
-  auto arr = GeckoAppShell::GetCurrentBatteryInformation();
-||||||| merged common ancestors
-    JNIEnv* const env = arr.Env();
-    if (!arr || env->GetArrayLength(arr.Get()) != 3) {
-        return;
-    }
-=======
 }  // namespace mozilla
 
 void AndroidBridge::GetCurrentBatteryInformation(
@@ -953,7 +539,6 @@ void AndroidBridge::GetCurrentBatteryInformation(
   // To prevent calling too many methods through JNI, the Java method returns
   // an array of double even if we actually want a double and a boolean.
   auto arr = GeckoAppShell::GetCurrentBatteryInformation();
->>>>>>> upstream-releases
 
   JNIEnv* const env = arr.Env();
   if (!arr || env->GetArrayLength(arr.Get()) != 3) {
@@ -1078,31 +663,10 @@ void nsAndroidBridge::RemoveObservers() {
   }
 }
 
-<<<<<<< HEAD
 uint32_t AndroidBridge::GetScreenOrientation() {
   ALOG_BRIDGE("AndroidBridge::GetScreenOrientation");
 
   int16_t orientation = GeckoAppShell::GetScreenOrientation();
-||||||| merged common ancestors
-uint32_t
-AndroidBridge::GetScreenOrientation()
-{
-    ALOG_BRIDGE("AndroidBridge::GetScreenOrientation");
-
-    int16_t orientation = GeckoAppShell::GetScreenOrientation();
-=======
-uint32_t AndroidBridge::GetScreenOrientation() {
-  ALOG_BRIDGE("AndroidBridge::GetScreenOrientation");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!orientation) return hal::eScreenOrientation_None;
-||||||| merged common ancestors
-    if (!orientation)
-        return hal::eScreenOrientation_None;
-=======
-  int16_t orientation = GeckoAppShell::GetScreenOrientation();
->>>>>>> upstream-releases
 
   return static_cast<hal::ScreenOrientation>(orientation);
 }

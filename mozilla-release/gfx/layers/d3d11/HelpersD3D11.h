@@ -31,13 +31,6 @@ static inline bool WaitForGPUQuery(ID3D11Device* aDevice,
   return true;
 }
 
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace gfx
-=======
 static inline bool WaitForFrameGPUQuery(ID3D11Device* aDevice,
                                         ID3D11DeviceContext* aContext,
                                         ID3D11Query* aQuery, BOOL* aOut) {
@@ -59,6 +52,5 @@ static inline bool WaitForFrameGPUQuery(ID3D11Device* aDevice,
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_gfx_layers_d3d11_HelpersD3D11_h

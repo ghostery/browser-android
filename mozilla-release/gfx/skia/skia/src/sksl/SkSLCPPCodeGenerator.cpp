@@ -158,18 +158,8 @@ static String default_value(const Type& type) {
 }
 
 static String default_value(const Variable& var) {
-<<<<<<< HEAD
-    if (var.fModifiers.fLayout.fCType == SkSL::Layout::CType::kGrColor4f) {
-        return "GrColor4f::kIllegalConstructor";
-    } else if (var.fModifiers.fLayout.fCType == SkSL::Layout::CType::kSkPMColor4f) {
-        return "{SK_FloatNaN, SK_FloatNaN, SK_FloatNaN, SK_FloatNaN}";
-||||||| merged common ancestors
-    if (var.fModifiers.fLayout.fCType == "GrColor4f") {
-        return "GrColor4f::kIllegalConstructor";
-=======
     if (var.fModifiers.fLayout.fCType == SkSL::Layout::CType::kSkPMColor4f) {
         return "{SK_FloatNaN, SK_FloatNaN, SK_FloatNaN, SK_FloatNaN}";
->>>>>>> upstream-releases
     }
     return default_value(var.fType);
 }
@@ -204,52 +194,6 @@ void CPPCodeGenerator::writeRuntimeValue(const Type& type, const Layout& layout,
         fFormatArgs.push_back(cppCode + ".fY");
     } else if (type == *fContext.fFloat4_Type || type == *fContext.fHalf4_Type) {
         this->write(type.name() + "(%f, %f, %f, %f)");
-<<<<<<< HEAD
-        switch (layout.fCType) {
-            case Layout::CType::kSkPMColor:
-                fFormatArgs.push_back("SkGetPackedR32(" + cppCode + ") / 255.0");
-                fFormatArgs.push_back("SkGetPackedG32(" + cppCode + ") / 255.0");
-                fFormatArgs.push_back("SkGetPackedB32(" + cppCode + ") / 255.0");
-                fFormatArgs.push_back("SkGetPackedA32(" + cppCode + ") / 255.0");
-                break;
-            case Layout::CType::kGrColor4f:
-                fFormatArgs.push_back(cppCode + ".fRGBA[0]");
-                fFormatArgs.push_back(cppCode + ".fRGBA[1]");
-                fFormatArgs.push_back(cppCode + ".fRGBA[2]");
-                fFormatArgs.push_back(cppCode + ".fRGBA[3]");
-                break;
-            case Layout::CType::kSkPMColor4f:
-                fFormatArgs.push_back(cppCode + ".fR");
-                fFormatArgs.push_back(cppCode + ".fG");
-                fFormatArgs.push_back(cppCode + ".fB");
-                fFormatArgs.push_back(cppCode + ".fA");
-                break;
-            case Layout::CType::kSkRect: // fall through
-            case Layout::CType::kDefault:
-                fFormatArgs.push_back(cppCode + ".left()");
-                fFormatArgs.push_back(cppCode + ".top()");
-                fFormatArgs.push_back(cppCode + ".right()");
-                fFormatArgs.push_back(cppCode + ".bottom()");
-                break;
-            default:
-                SkASSERT(false);
-||||||| merged common ancestors
-        if (layout.fCType == "SkPMColor") {
-            fFormatArgs.push_back("SkGetPackedR32(" + cppCode + ") / 255.0");
-            fFormatArgs.push_back("SkGetPackedG32(" + cppCode + ") / 255.0");
-            fFormatArgs.push_back("SkGetPackedB32(" + cppCode + ") / 255.0");
-            fFormatArgs.push_back("SkGetPackedA32(" + cppCode + ") / 255.0");
-        } else if (layout.fCType == "GrColor4f") {
-            fFormatArgs.push_back(cppCode + ".fRGBA[0]");
-            fFormatArgs.push_back(cppCode + ".fRGBA[1]");
-            fFormatArgs.push_back(cppCode + ".fRGBA[2]");
-            fFormatArgs.push_back(cppCode + ".fRGBA[3]");
-        } else {
-            fFormatArgs.push_back(cppCode + ".left()");
-            fFormatArgs.push_back(cppCode + ".top()");
-            fFormatArgs.push_back(cppCode + ".right()");
-            fFormatArgs.push_back(cppCode + ".bottom()");
-=======
         switch (layout.fCType) {
             case Layout::CType::kSkPMColor:
                 fFormatArgs.push_back("SkGetPackedR32(" + cppCode + ") / 255.0");
@@ -272,7 +216,6 @@ void CPPCodeGenerator::writeRuntimeValue(const Type& type, const Layout& layout,
                 break;
             default:
                 SkASSERT(false);
->>>>>>> upstream-releases
         }
     } else if (type.kind() == Type::kEnum_Kind) {
         this->write("%d");
@@ -406,61 +349,6 @@ void CPPCodeGenerator::writeSwitchStatement(const SwitchStatement& s) {
     INHERITED::writeSwitchStatement(s);
 }
 
-<<<<<<< HEAD
-void CPPCodeGenerator::writeFieldAccess(const FieldAccess& access) {
-    if (access.fBase->fType.name() == "fragmentProcessor") {
-        // Special field access on fragment processors are converted into function calls on
-        // GrFragmentProcessor's getters.
-        if (access.fBase->fKind != Expression::kVariableReference_Kind) {
-            fErrors.error(access.fBase->fOffset, "fragmentProcessor must be a reference\n");
-            return;
-        }
-
-        const Type::Field& field = fContext.fFragmentProcessor_Type->fields()[access.fFieldIndex];
-        int index = getChildFPIndex((const VariableReference&) *access.fBase);
-        String cppAccess = String::printf("_outer.childProcessor(%s).%s()",
-                                          to_string(index).c_str(), String(field.fName).c_str());
-
-        if (fCPPMode) {
-            this->write(cppAccess.c_str());
-        } else {
-            writeRuntimeValue(*field.fType, Layout(), cppAccess);
-        }
-        return;
-    }
-    INHERITED::writeFieldAccess(access);
-}
-
-int CPPCodeGenerator::getChildFPIndex(const VariableReference& reference) const {
-    int index = 0;
-    bool found = false;
-    for (const auto& p : fProgram) {
-        if (ProgramElement::kVar_Kind == p.fKind) {
-            const VarDeclarations& decls = (const VarDeclarations&) p;
-            for (const auto& raw : decls.fVars) {
-                const VarDeclaration& decl = (VarDeclaration&) *raw;
-                if (decl.fVar == &reference.fVariable) {
-                    found = true;
-                } else if (decl.fVar->fType == *fContext.fFragmentProcessor_Type) {
-                    ++index;
-||||||| merged common ancestors
-void CPPCodeGenerator::writeFunctionCall(const FunctionCall& c) {
-    if (c.fFunction.fBuiltin && c.fFunction.fName == "process") {
-        ASSERT(c.fArguments.size() == 1);
-        ASSERT(Expression::kVariableReference_Kind == c.fArguments[0]->fKind);
-        int index = 0;
-        bool found = false;
-        for (const auto& p : fProgram.fElements) {
-            if (ProgramElement::kVar_Kind == p->fKind) {
-                const VarDeclarations* decls = (const VarDeclarations*) p.get();
-                for (const auto& raw : decls->fVars) {
-                    VarDeclaration& decl = (VarDeclaration&) *raw;
-                    if (decl.fVar == &((VariableReference&) *c.fArguments[0]).fVariable) {
-                        found = true;
-                    } else if (decl.fVar->fType == *fContext.fFragmentProcessor_Type) {
-                        ++index;
-                    }
-=======
 void CPPCodeGenerator::writeFieldAccess(const FieldAccess& access) {
     if (access.fBase->fType.name() == "fragmentProcessor") {
         // Special field access on fragment processors are converted into function calls on
@@ -498,62 +386,9 @@ int CPPCodeGenerator::getChildFPIndex(const Variable& var) const {
                     found = true;
                 } else if (decl.fVar->fType.nonnullable() == *fContext.fFragmentProcessor_Type) {
                     ++index;
->>>>>>> upstream-releases
                 }
             }
         }
-<<<<<<< HEAD
-        if (found) {
-            break;
-        }
-    }
-    SkASSERT(found);
-    return index;
-}
-
-void CPPCodeGenerator::writeFunctionCall(const FunctionCall& c) {
-    if (c.fFunction.fBuiltin && c.fFunction.fName == "process") {
-        // Sanity checks that are detected by function definition in sksl_fp.inc
-        SkASSERT(c.fArguments.size() == 1 || c.fArguments.size() == 2);
-        SkASSERT("fragmentProcessor" == c.fArguments[0]->fType.name());
-
-        // Actually fail during compilation if arguments with valid types are
-        // provided that are not variable references, since process() is a
-        // special function that impacts code emission.
-        if (c.fArguments[0]->fKind != Expression::kVariableReference_Kind) {
-            fErrors.error(c.fArguments[0]->fOffset,
-                    "process()'s fragmentProcessor argument must be a variable reference\n");
-            return;
-        }
-        if (c.fArguments.size() > 1) {
-            // Second argument must also be a half4 expression
-            SkASSERT("half4" == c.fArguments[1]->fType.name());
-        }
-        int index = getChildFPIndex((const VariableReference&) *c.fArguments[0]);
-
-        // Start a new extra emit code section so that the emitted child processor can depend on
-        // sksl variables defined in earlier sksl code.
-        this->newExtraEmitCodeBlock();
-
-        // Set to the empty string when no input color parameter should be emitted, which means this
-        // must be properly formatted with a prefixed comma when the parameter should be inserted
-        // into the emitChild() parameter list.
-        String inputArg;
-        if (c.fArguments.size() > 1) {
-            SkASSERT(c.fArguments.size() == 2);
-            // Use the emitChild() variant that accepts an input color, so convert the 2nd
-            // argument's expression into C++ code that produces sksl stored in an SkString.
-            String inputName = "_input" + to_string(index);
-            addExtraEmitCodeLine(convertSKSLExpressionToCPP(*c.fArguments[1], inputName));
-
-            // emitChild() needs a char*
-            inputArg = ", " + inputName + ".c_str()";
-        }
-
-        // Write the output handling after the possible input handling
-||||||| merged common ancestors
-        ASSERT(found);
-=======
         if (found) {
             break;
         }
@@ -604,18 +439,7 @@ void CPPCodeGenerator::writeFunctionCall(const FunctionCall& c) {
         }
 
         // Write the output handling after the possible input handling
->>>>>>> upstream-releases
         String childName = "_child" + to_string(index);
-<<<<<<< HEAD
-        addExtraEmitCodeLine("SkString " + childName + "(\"" + childName + "\");");
-        addExtraEmitCodeLine("this->emitChild(" + to_string(index) + inputArg +
-                             ", &" + childName + ", args);");
-
-||||||| merged common ancestors
-        fExtraEmitCodeCode += "        SkString " + childName + "(\"" + childName + "\");\n" +
-                              "        this->emitChild(" + to_string(index) + ", &" + childName +
-                              ", args);\n";
-=======
         addExtraEmitCodeLine("SkString " + childName + "(\"" + childName + "\");");
         if (c.fArguments[0]->fType.kind() == Type::kNullable_Kind) {
             addExtraEmitCodeLine("if (_outer." + String(child.fName) + "_index() >= 0) {\n    ");
@@ -633,7 +457,6 @@ void CPPCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                 "   fragBuilder->codeAppendf(\"half4 %s;\", " + childName + ".c_str());"
                 "}");
         }
->>>>>>> upstream-releases
         this->write("%s");
         fFormatArgs.push_back(childName + ".c_str()");
         return;
@@ -819,99 +642,6 @@ static bool is_accessible(const Variable& var) {
     const Type& type = var.fType.nonnullable();
     return Type::kSampler_Kind != type.kind() &&
            Type::kOther_Kind != type.kind();
-}
-
-void CPPCodeGenerator::newExtraEmitCodeBlock() {
-    // This should only be called when emitting SKSL for emitCode(), which can be detected if the
-    // cpp buffer is not null, and the cpp buffer is not the current output.
-    SkASSERT(fCPPBuffer && fCPPBuffer != fOut);
-
-    // Start a new block as an empty string
-    fExtraEmitCodeBlocks.push_back("");
-    // Mark its location in the output buffer, uses ${\d} for the token since ${} will not occur in
-    // valid sksl and makes detection trivial.
-    this->writef("${%zu}", fExtraEmitCodeBlocks.size() - 1);
-}
-
-void CPPCodeGenerator::addExtraEmitCodeLine(const String& toAppend) {
-    SkASSERT(fExtraEmitCodeBlocks.size() > 0);
-    String& currentBlock = fExtraEmitCodeBlocks[fExtraEmitCodeBlocks.size() - 1];
-    // Automatically add indentation and newline
-    currentBlock += "        " + toAppend + "\n";
-}
-
-void CPPCodeGenerator::flushEmittedCode() {
-    if (fCPPBuffer == nullptr) {
-        // Not actually within writeEmitCode() so nothing to flush
-        return;
-    }
-
-    StringStream* skslBuffer = static_cast<StringStream*>(fOut);
-
-    String sksl = skslBuffer->str();
-    // Empty the accumulation buffer since its current contents are consumed.
-    skslBuffer->reset();
-
-    // Switch to the cpp buffer
-    fOut = fCPPBuffer;
-
-    // Iterate through the sksl, keeping track of where the last statement ended (e.g. the latest
-    // encountered ';', '{', or '}'). If an extra emit code block token is encountered then the
-    // code from 0 to last statement end is sent to writeCodeAppend, the extra code block is
-    // appended to the cpp buffer, and then the sksl string is trimmed to start where the last
-    // statement left off (minus the encountered token).
-    size_t i = 0;
-    int flushPoint = -1;
-    int tokenStart = -1;
-    while (i < sksl.size()) {
-        if (tokenStart >= 0) {
-            // Looking for the end of the token
-            if (sksl[i] == '}') {
-                // Must append the sksl from 0 to flushPoint (inclusive) then the extra code
-                // accumulated in the block with index parsed from chars [tokenStart+2, i-1]
-                String toFlush = String(sksl.c_str(), flushPoint + 1);
-                // writeCodeAppend automatically removes the format args that it consumed, so
-                // fFormatArgs will be in a valid state for any future sksl
-                this->writeCodeAppend(toFlush);
-
-                int codeBlock = stoi(String(sksl.c_str() + tokenStart + 2, i - tokenStart - 2));
-                SkASSERT(codeBlock < (int) fExtraEmitCodeBlocks.size());
-                if (fExtraEmitCodeBlocks[codeBlock].size() > 0) {
-                    this->write(fExtraEmitCodeBlocks[codeBlock].c_str());
-                }
-
-                // Now reset the sksl buffer to start after the flush point, but remove the token.
-                String compacted = String(sksl.c_str() + flushPoint + 1,
-                                          tokenStart - flushPoint - 1);
-                if (i < sksl.size() - 1) {
-                    compacted += String(sksl.c_str() + i + 1, sksl.size() - i - 1);
-                }
-                sksl = compacted;
-
-                // And reset iteration
-                i = -1;
-                flushPoint = -1;
-                tokenStart = -1;
-            }
-        } else {
-            // Looking for the start of extra emit block tokens, and tracking when statements end
-            if (sksl[i] == ';' || sksl[i] == '{' || sksl[i] == '}') {
-                flushPoint = i;
-            } else if (i < sksl.size() - 1 && sksl[i] == '$' && sksl[i + 1] == '{') {
-                // found an extra emit code block token
-                tokenStart = i++;
-            }
-        }
-        i++;
-    }
-
-    // Once we've gone through the sksl string to this point, there are no remaining extra emit
-    // code blocks to interleave, so append the remainder as usual.
-    this->writeCodeAppend(sksl);
-
-    // After appending, switch back to the emptied sksl buffer and reset the extra code blocks
-    fOut = skslBuffer;
-    fExtraEmitCodeBlocks.clear();
 }
 
 void CPPCodeGenerator::newExtraEmitCodeBlock() {
@@ -1322,28 +1052,9 @@ void CPPCodeGenerator::writeClone() {
             this->writef("\n, %s(src.%s)", fieldName.c_str(), fieldName.c_str());
         }
         this->writef(" {\n");
-<<<<<<< HEAD
-        int childCount = 0;
         int samplerCount = 0;
-||||||| merged common ancestors
-        int childCount = 0;
-=======
-        int samplerCount = 0;
->>>>>>> upstream-releases
         for (const auto& param : fSectionAndParameterHelper.getParameters()) {
             if (param->fType.kind() == Type::kSampler_Kind) {
-<<<<<<< HEAD
-                ++samplerCount;
-            } else if (param->fType == *fContext.fFragmentProcessor_Type) {
-                this->writef("    this->registerChildProcessor(src.childProcessor(%d).clone());"
-                             "\n", childCount++);
-||||||| merged common ancestors
-                this->writef("    this->addTextureSampler(&%s);\n",
-                             HCodeGenerator::FieldName(String(param->fName).c_str()).c_str());
-            } else if (param->fType == *fContext.fFragmentProcessor_Type) {
-                this->writef("    this->registerChildProcessor(src.childProcessor(%d).clone());"
-                             "\n", childCount++);
-=======
                 ++samplerCount;
             } else if (param->fType.nonnullable() == *fContext.fFragmentProcessor_Type) {
                 String fieldName = HCodeGenerator::FieldName(String(param->fName).c_str());
@@ -1355,7 +1066,6 @@ void CPPCodeGenerator::writeClone() {
                 if (param->fType.kind() == Type::kNullable_Kind) {
                     this->writef("    }\n");
                 }
->>>>>>> upstream-releases
             }
         }
         if (samplerCount) {

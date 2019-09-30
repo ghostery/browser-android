@@ -256,32 +256,12 @@ already_AddRefed<nsIAccessibleEvent> a11y::MakeXPCEvent(AccEvent* aEvent) {
 
   if (eventGroup & (1 << AccEvent::eScrollingEvent)) {
     AccScrollingEvent* sa = downcast_accEvent(aEvent);
-<<<<<<< HEAD
-    xpEvent = new xpcAccScrollingEvent(
-        type, ToXPC(acc), ToXPCDocument(doc), node, fromUser, sa->ScrollX(),
-        sa->ScrollY(), sa->MaxScrollX(), sa->MaxScrollY());
-||||||| merged common ancestors
-    xpEvent = new xpcAccScrollingEvent(type, ToXPC(acc), ToXPCDocument(doc), node,
-                                       fromUser, sa->ScrollX(), sa->ScrollY(),
-                                       sa->MaxScrollX(), sa->MaxScrollY());
-=======
     xpEvent = new xpcAccScrollingEvent(
         type, ToXPC(acc), ToXPCDocument(doc), node, fromUser, sa->ScrollX(),
         sa->ScrollY(), sa->MaxScrollX(), sa->MaxScrollY());
     return xpEvent.forget();
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  xpEvent =
-      new xpcAccEvent(type, ToXPC(acc), ToXPCDocument(doc), node, fromUser);
-  return xpEvent.forget();
-}
-||||||| merged common ancestors
-  xpEvent = new xpcAccEvent(type, ToXPC(acc), ToXPCDocument(doc), node, fromUser);
-  return xpEvent.forget();
-  }
-=======
   if (eventGroup & (1 << AccEvent::eAnnouncementEvent)) {
     AccAnnouncementEvent* aa = downcast_accEvent(aEvent);
     xpEvent = new xpcAccAnnouncementEvent(type, ToXPC(acc), ToXPCDocument(doc),
@@ -294,4 +274,3 @@ already_AddRefed<nsIAccessibleEvent> a11y::MakeXPCEvent(AccEvent* aEvent) {
       new xpcAccEvent(type, ToXPC(acc), ToXPCDocument(doc), node, fromUser);
   return xpEvent.forget();
 }
->>>>>>> upstream-releases

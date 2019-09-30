@@ -10,28 +10,7 @@
 @AB_CD@.jar:
 % locale global @AB_CD@ %locale/@AB_CD@/global/
   locale/@AB_CD@/global/aboutReader.properties          (%chrome/global/aboutReader.properties)
-<<<<<<< HEAD
-  locale/@AB_CD@/global/aboutRights.dtd                 (%chrome/global/aboutRights.dtd)
-||||||| merged common ancestors
-  locale/@AB_CD@/global/aboutRights.dtd                 (%chrome/global/aboutRights.dtd)
-  locale/@AB_CD@/global/aboutNetworking.dtd             (%chrome/global/aboutNetworking.dtd)
-=======
->>>>>>> upstream-releases
   locale/@AB_CD@/global/aboutStudies.properties         (%chrome/global/aboutStudies.properties)
-<<<<<<< HEAD
-  locale/@AB_CD@/global/aboutSupport.dtd                (%chrome/global/aboutSupport.dtd)
-  locale/@AB_CD@/global/aboutSupport.properties         (%chrome/global/aboutSupport.properties)
-  locale/@AB_CD@/global/aboutTelemetry.dtd              (%chrome/global/aboutTelemetry.dtd)
-  locale/@AB_CD@/global/aboutTelemetry.properties       (%chrome/global/aboutTelemetry.properties)
-||||||| merged common ancestors
-  locale/@AB_CD@/global/aboutServiceWorkers.dtd         (%chrome/global/aboutServiceWorkers.dtd)
-  locale/@AB_CD@/global/aboutServiceWorkers.properties  (%chrome/global/aboutServiceWorkers.properties)
-  locale/@AB_CD@/global/aboutSupport.dtd                (%chrome/global/aboutSupport.dtd)
-  locale/@AB_CD@/global/aboutSupport.properties         (%chrome/global/aboutSupport.properties)
-  locale/@AB_CD@/global/aboutTelemetry.dtd              (%chrome/global/aboutTelemetry.dtd)
-  locale/@AB_CD@/global/aboutTelemetry.properties       (%chrome/global/aboutTelemetry.properties)
-=======
->>>>>>> upstream-releases
   locale/@AB_CD@/global/aboutWebrtc.properties          (%chrome/global/aboutWebrtc.properties)
   locale/@AB_CD@/global/autocomplete.properties         (%chrome/global/autocomplete.properties)
   locale/@AB_CD@/global/appPicker.dtd                   (%chrome/global/appPicker.dtd)
@@ -62,20 +41,7 @@
   locale/@AB_CD@/global/narrate.properties              (%chrome/global/narrate.properties)
 #endif
   locale/@AB_CD@/global/notification.dtd                (%chrome/global/notification.dtd)
-<<<<<<< HEAD
-#ifndef MOZ_FENNEC
-  locale/@AB_CD@/global/printPageSetup.dtd              (%chrome/global/printPageSetup.dtd)
-  locale/@AB_CD@/global/printPreview.dtd                (%chrome/global/printPreview.dtd)
-  locale/@AB_CD@/global/printPreviewProgress.dtd        (%chrome/global/printPreviewProgress.dtd)
-||||||| merged common ancestors
-  locale/@AB_CD@/global/preferences.dtd                 (%chrome/global/preferences.dtd)
-#ifndef MOZ_FENNEC
-  locale/@AB_CD@/global/printPageSetup.dtd              (%chrome/global/printPageSetup.dtd)
-  locale/@AB_CD@/global/printPreview.dtd                (%chrome/global/printPreview.dtd)
-  locale/@AB_CD@/global/printPreviewProgress.dtd        (%chrome/global/printPreviewProgress.dtd)
-=======
 #if !defined(XP_WIN) && !defined(MOZ_FENNEC)
->>>>>>> upstream-releases
   locale/@AB_CD@/global/printdialog.properties          (%chrome/global/printdialog.properties)
 #endif
   locale/@AB_CD@/global/resetProfile.dtd                (%chrome/global/resetProfile.dtd)

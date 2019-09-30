@@ -17,40 +17,16 @@
 
 class gfxContext;
 
-<<<<<<< HEAD
-class nsSVGForeignObjectFrame final : public nsContainerFrame,
-                                      public nsSVGDisplayableFrame {
-  friend nsContainerFrame* NS_NewSVGForeignObjectFrame(nsIPresShell* aPresShell,
-                                                       ComputedStyle* aStyle);
-
- protected:
-  explicit nsSVGForeignObjectFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-class nsSVGForeignObjectFrame final : public nsContainerFrame
-                                    , public nsSVGDisplayableFrame
-{
-  friend nsContainerFrame*
-  NS_NewSVGForeignObjectFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit nsSVGForeignObjectFrame(ComputedStyle* aStyle);
-=======
 class nsSVGForeignObjectFrame final : public nsContainerFrame,
                                       public nsSVGDisplayableFrame {
   friend nsContainerFrame* NS_NewSVGForeignObjectFrame(
       mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
  protected:
   explicit nsSVGForeignObjectFrame(ComputedStyle* aStyle,
                                    nsPresContext* aPresContext);
 
  public:
->>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsSVGForeignObjectFrame)
 
@@ -109,15 +85,9 @@ public:
   // Return our ::-moz-svg-foreign-content anonymous box.
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   virtual void DidSetComputedStyle(ComputedStyle* aOldComputedStyle) override;
 
  protected:
->>>>>>> upstream-releases
   // implementation helpers:
   void DoReflow();
   void RequestReflow(mozilla::IntrinsicDirty aType);

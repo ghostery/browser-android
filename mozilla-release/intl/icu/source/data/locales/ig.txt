@@ -94,13 +94,7 @@ ig{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.69"}
-=======
     Version{"2.1.48.45"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -222,16 +216,6 @@ ig{
                 yMd{"d/M/y"}
                 yQQQ{"QQQ y"}
                 yQQQQ{"QQQQ y"}
-<<<<<<< HEAD
-                yw{
-                    other{"'week' w 'of' Y"}
-                }
-||||||| merged common ancestors
-                yw{
-                    other{"'week' w 'of' y"}
-                }
-=======
->>>>>>> upstream-releases
             }
             dayNames{
                 format{

@@ -32,14 +32,6 @@ namespace mozilla {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  RefPtr<AudioWorkletImpl> impl =
-      new AudioWorkletImpl(window, principal, aContext->DestinationStream());
-  return MakeAndAddRef<dom::Worklet>(window, std::move(impl));
-||||||| merged common ancestors
-  RefPtr<AudioWorkletImpl> impl = new AudioWorkletImpl(window, principal);
-  return MakeAndAddRef<dom::Worklet>(window, std::move(impl));
-=======
   RefPtr<AudioWorkletImpl> impl =
       new AudioWorkletImpl(window, principal, aContext->DestinationStream());
 
@@ -48,7 +40,6 @@ namespace mozilla {
   // AudioDestinationNode alive.
   return MakeAndAddRef<dom::Worklet>(window, std::move(impl),
                                      ToSupports(aContext));
->>>>>>> upstream-releases
 }
 
 AudioWorkletImpl::AudioWorkletImpl(nsPIDOMWindowInner* aWindow,

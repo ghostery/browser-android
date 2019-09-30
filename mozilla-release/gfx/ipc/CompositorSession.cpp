@@ -21,33 +21,14 @@ namespace layers {
 using namespace gfx;
 using namespace widget;
 
-<<<<<<< HEAD
-CompositorSession::CompositorSession(CompositorWidgetDelegate* aDelegate,
-||||||| merged common ancestors
-
-CompositorSession::CompositorSession(CompositorWidgetDelegate* aDelegate,
-=======
 CompositorSession::CompositorSession(nsBaseWidget* aWidget,
                                      CompositorWidgetDelegate* aDelegate,
->>>>>>> upstream-releases
                                      CompositorBridgeChild* aChild,
                                      const LayersId& aRootLayerTreeId)
-<<<<<<< HEAD
-    : mCompositorWidgetDelegate(aDelegate),
-      mCompositorBridgeChild(aChild),
-      mRootLayerTreeId(aRootLayerTreeId) {}
-||||||| merged common ancestors
- : mCompositorWidgetDelegate(aDelegate),
-   mCompositorBridgeChild(aChild),
-   mRootLayerTreeId(aRootLayerTreeId)
-{
-}
-=======
     : mWidget(aWidget),
       mCompositorWidgetDelegate(aDelegate),
       mCompositorBridgeChild(aChild),
       mRootLayerTreeId(aRootLayerTreeId) {}
->>>>>>> upstream-releases
 
 CompositorSession::~CompositorSession() {}
 
@@ -55,13 +36,6 @@ CompositorBridgeChild* CompositorSession::GetCompositorBridgeChild() {
   return mCompositorBridgeChild;
 }
 
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 #if defined(MOZ_WIDGET_ANDROID)
 void CompositorSession::NotifyDisablingWebRender() {
   if (!mWidget) {
@@ -74,4 +48,3 @@ void CompositorSession::NotifyDisablingWebRender() {
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -14,15 +14,8 @@
 namespace mozilla {
 
 /* static */ ContentProcessSandboxParams
-<<<<<<< HEAD
-ContentProcessSandboxParams::ForThisProcess(const dom::MaybeFileDesc& aBroker) {
-||||||| merged common ancestors
-ContentProcessSandboxParams::ForThisProcess(const dom::MaybeFileDesc& aBroker)
-{
-=======
 ContentProcessSandboxParams::ForThisProcess(
     const Maybe<ipc::FileDescriptor>& aBroker) {
->>>>>>> upstream-releases
   ContentProcessSandboxParams params;
   params.mLevel = GetEffectiveContentSandboxLevel();
 

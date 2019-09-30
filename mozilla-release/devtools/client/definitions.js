@@ -8,46 +8,6 @@ const Services = require("Services");
 const osString = Services.appinfo.OS;
 
 // Panels
-<<<<<<< HEAD
-loader.lazyGetter(this, "OptionsPanel", () => require("devtools/client/framework/toolbox-options").OptionsPanel);
-loader.lazyGetter(this, "InspectorPanel", () => require("devtools/client/inspector/panel").InspectorPanel);
-loader.lazyGetter(this, "WebConsolePanel", () => require("devtools/client/webconsole/panel").WebConsolePanel);
-loader.lazyGetter(this, "NewDebuggerPanel", () => require("devtools/client/debugger/new/panel").DebuggerPanel);
-loader.lazyGetter(this, "StyleEditorPanel", () => require("devtools/client/styleeditor/panel").StyleEditorPanel);
-loader.lazyGetter(this, "CanvasDebuggerPanel", () => require("devtools/client/canvasdebugger/panel").CanvasDebuggerPanel);
-loader.lazyGetter(this, "WebAudioEditorPanel", () => require("devtools/client/webaudioeditor/panel").WebAudioEditorPanel);
-loader.lazyGetter(this, "MemoryPanel", () => require("devtools/client/memory/panel").MemoryPanel);
-loader.lazyGetter(this, "PerformancePanel", () => require("devtools/client/performance/panel").PerformancePanel);
-loader.lazyGetter(this, "NewPerformancePanel", () => require("devtools/client/performance-new/panel").PerformancePanel);
-loader.lazyGetter(this, "NetMonitorPanel", () => require("devtools/client/netmonitor/panel").NetMonitorPanel);
-loader.lazyGetter(this, "StoragePanel", () => require("devtools/client/storage/panel").StoragePanel);
-loader.lazyGetter(this, "ScratchpadPanel", () => require("devtools/client/scratchpad/panel").ScratchpadPanel);
-loader.lazyGetter(this, "DomPanel", () => require("devtools/client/dom/panel").DomPanel);
-loader.lazyGetter(this, "AccessibilityPanel", () => require("devtools/client/accessibility/panel").AccessibilityPanel);
-loader.lazyGetter(this, "ApplicationPanel", () => require("devtools/client/application/panel").ApplicationPanel);
-loader.lazyGetter(this, "reloadAndRecordTab", () => require("devtools/client/webreplay/menu.js").reloadAndRecordTab);
-loader.lazyGetter(this, "reloadAndStopRecordingTab", () => require("devtools/client/webreplay/menu.js").reloadAndStopRecordingTab);
-||||||| merged common ancestors
-loader.lazyGetter(this, "OptionsPanel", () => require("devtools/client/framework/toolbox-options").OptionsPanel);
-loader.lazyGetter(this, "InspectorPanel", () => require("devtools/client/inspector/panel").InspectorPanel);
-loader.lazyGetter(this, "WebConsolePanel", () => require("devtools/client/webconsole/panel").WebConsolePanel);
-loader.lazyGetter(this, "DebuggerPanel", () => require("devtools/client/debugger/panel").DebuggerPanel);
-loader.lazyGetter(this, "NewDebuggerPanel", () => require("devtools/client/debugger/new/panel").DebuggerPanel);
-loader.lazyGetter(this, "StyleEditorPanel", () => require("devtools/client/styleeditor/panel").StyleEditorPanel);
-loader.lazyGetter(this, "CanvasDebuggerPanel", () => require("devtools/client/canvasdebugger/panel").CanvasDebuggerPanel);
-loader.lazyGetter(this, "WebAudioEditorPanel", () => require("devtools/client/webaudioeditor/panel").WebAudioEditorPanel);
-loader.lazyGetter(this, "MemoryPanel", () => require("devtools/client/memory/panel").MemoryPanel);
-loader.lazyGetter(this, "PerformancePanel", () => require("devtools/client/performance/panel").PerformancePanel);
-loader.lazyGetter(this, "NewPerformancePanel", () => require("devtools/client/performance-new/panel").PerformancePanel);
-loader.lazyGetter(this, "NetMonitorPanel", () => require("devtools/client/netmonitor/panel").NetMonitorPanel);
-loader.lazyGetter(this, "StoragePanel", () => require("devtools/client/storage/panel").StoragePanel);
-loader.lazyGetter(this, "ScratchpadPanel", () => require("devtools/client/scratchpad/panel").ScratchpadPanel);
-loader.lazyGetter(this, "DomPanel", () => require("devtools/client/dom/panel").DomPanel);
-loader.lazyGetter(this, "AccessibilityPanel", () => require("devtools/client/accessibility/panel").AccessibilityPanel);
-loader.lazyGetter(this, "ApplicationPanel", () => require("devtools/client/application/panel").ApplicationPanel);
-loader.lazyGetter(this, "reloadAndRecordTab", () => require("devtools/client/webreplay/menu.js").reloadAndRecordTab);
-loader.lazyGetter(this, "reloadAndStopRecordingTab", () => require("devtools/client/webreplay/menu.js").reloadAndStopRecordingTab);
-=======
 loader.lazyGetter(
   this,
   "OptionsPanel",
@@ -128,7 +88,6 @@ loader.lazyGetter(
   "reloadAndStopRecordingTab",
   () => require("devtools/client/webreplay/menu.js").reloadAndStopRecordingTab
 );
->>>>>>> upstream-releases
 
 // Other dependencies
 loader.lazyRequireGetter(
@@ -254,13 +213,7 @@ Tools.jsdebugger = {
   accesskey: l10n("debuggerMenu.accesskey"),
   ordinal: 3,
   icon: "chrome://devtools/skin/images/tool-debugger.svg",
-<<<<<<< HEAD
-  url: "chrome://devtools/content/debugger/new/index.html",
-||||||| merged common ancestors
-  url: "chrome://devtools/content/debugger/index.xul",
-=======
   url: "chrome://devtools/content/debugger/index.html",
->>>>>>> upstream-releases
   label: l10n("ToolboxDebugger.label"),
   panelLabel: l10n("ToolboxDebugger.panelLabel"),
   get tooltip() {
@@ -271,7 +224,7 @@ Tools.jsdebugger = {
     return true;
   },
   build: function(iframeWindow, toolbox) {
-    return new NewDebuggerPanel(iframeWindow, toolbox);
+    return new DebuggerPanel(iframeWindow, toolbox);
   },
 };
 
@@ -362,18 +315,11 @@ Tools.memory = {
   tooltip: l10n("memory.tooltip"),
 
   isTargetSupported: function(target) {
-<<<<<<< HEAD
-    return target.getTrait("heapSnapshots") && !target.isAddon
-      && !target.isWorkerTarget;
-||||||| merged common ancestors
-    return target.getTrait("heapSnapshots") && !target.isAddon;
-=======
     return (
       target.getTrait("heapSnapshots") &&
       !target.isAddon &&
       !target.isWorkerTarget
     );
->>>>>>> upstream-releases
   },
 
   build: function(frame, target) {
@@ -494,17 +440,10 @@ Tools.accessibility = {
   label: l10n("accessibility.label"),
   panelLabel: l10n("accessibility.panelLabel"),
   get tooltip() {
-<<<<<<< HEAD
-    return l10n("accessibility.tooltip3",
-                "Shift+" + functionkey(l10n("accessibilityF12.commandkey")));
-||||||| merged common ancestors
-    return l10n("accessibility.tooltip2");
-=======
     return l10n(
       "accessibility.tooltip3",
       "Shift+" + functionkey(l10n("accessibilityF12.commandkey"))
     );
->>>>>>> upstream-releases
   },
   inMenu: true,
 

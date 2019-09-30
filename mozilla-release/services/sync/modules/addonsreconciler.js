@@ -567,74 +567,28 @@ AddonsReconciler.prototype = {
 
   // AddonListeners
   onEnabled: function onEnabled(addon) {
-<<<<<<< HEAD
-    this.queueCaller.enqueueCall(() => this._handleListener("onEnabled", addon));
-  },
-||||||| merged common ancestors
-    this.queueCaller.enqueueCall(() => this._handleListener("onEnabled", addon));
-  },
-  onDisabling: function onDisabling(addon, requiresRestart) {
-    this.queueCaller.enqueueCall(() => this._handleListener("onDisabling", addon, requiresRestart));
-  },
-=======
     this.queueCaller.enqueueCall(() =>
       this._handleListener("onEnabled", addon)
     );
   },
->>>>>>> upstream-releases
   onDisabled: function onDisabled(addon) {
-<<<<<<< HEAD
-    this.queueCaller.enqueueCall(() => this._handleListener("onDisabled", addon));
-  },
-||||||| merged common ancestors
-    this.queueCaller.enqueueCall(() => this._handleListener("onDisabled", addon));
-  },
-  onInstalling: function onInstalling(addon, requiresRestart) {
-    this.queueCaller.enqueueCall(() => this._handleListener("onInstalling", addon, requiresRestart));
-  },
-=======
     this.queueCaller.enqueueCall(() =>
       this._handleListener("onDisabled", addon)
     );
   },
->>>>>>> upstream-releases
   onInstalled: function onInstalled(addon) {
-<<<<<<< HEAD
-    this.queueCaller.enqueueCall(() => this._handleListener("onInstalled", addon));
-  },
-||||||| merged common ancestors
-    this.queueCaller.enqueueCall(() => this._handleListener("onInstalled", addon));
-  },
-  onUninstalling: function onUninstalling(addon, requiresRestart) {
-    this.queueCaller.enqueueCall(() => this._handleListener("onUninstalling", addon, requiresRestart));
-  },
-=======
     this.queueCaller.enqueueCall(() =>
       this._handleListener("onInstalled", addon)
     );
   },
->>>>>>> upstream-releases
   onUninstalled: function onUninstalled(addon) {
     this.queueCaller.enqueueCall(() =>
       this._handleListener("onUninstalled", addon)
     );
   },
   onOperationCancelled: function onOperationCancelled(addon) {
-<<<<<<< HEAD
-    this.queueCaller.enqueueCall(() => this._handleListener("onOperationCancelled", addon));
-  },
-||||||| merged common ancestors
-    this.queueCaller.enqueueCall(() => this._handleListener("onOperationCancelled", addon));
-  },
-
-  // InstallListeners
-  onInstallEnded: function onInstallEnded(install, addon) {
-    this.queueCaller.enqueueCall(() => this._handleListener("onInstallEnded", addon));
-  },
-=======
     this.queueCaller.enqueueCall(() =>
       this._handleListener("onOperationCancelled", addon)
     );
   },
->>>>>>> upstream-releases
 };

@@ -13,36 +13,6 @@ add_task(async function setup() {
   await promiseStartupManager();
   registerCleanupFunction(promiseShutdownManager);
 
-<<<<<<< HEAD
-  await promiseInstallWebExtension({
-    manifest: {
-      applications: {gecko: {id: "enabled@tests.mozilla.org"}},
-    },
-  });
-  await promiseInstallWebExtension({
-    manifest: {
-      applications: {gecko: {id: "disabled@tests.mozilla.org"}},
-    },
-  });
-
-  let addon = await promiseAddonByID("disabled@tests.mozilla.org");
-  notEqual(addon, null);
-  await addon.disable();
-||||||| merged common ancestors
-// Use bootstrap extensions so the changes will be immediate.
-// A packed extension, to be enabled
-add_task(async function setup() {
-  await promiseWriteInstallRDFToXPI({
-    id: "packed-enabled@tests.mozilla.org",
-    name: "Packed, Enabled",
-  }, profileDir);
-
-  // Packed, will be disabled
-  await promiseWriteInstallRDFToXPI({
-    id: "packed-disabled@tests.mozilla.org",
-    name: "Packed, Disabled",
-  }, profileDir);
-=======
   await promiseInstallWebExtension({
     manifest: {
       applications: { gecko: { id: "enabled@tests.mozilla.org" } },
@@ -57,7 +27,6 @@ add_task(async function setup() {
   let addon = await promiseAddonByID("disabled@tests.mozilla.org");
   notEqual(addon, null);
   await addon.disable();
->>>>>>> upstream-releases
 });
 
 // Keep track of the last time stamp we've used, so that we can keep moving
@@ -135,16 +104,10 @@ add_task(async function uninstall_bootstrap() {
   await pe.uninstall();
 
   let xpiState = await getXSJSON();
-<<<<<<< HEAD
-  Assert.equal(false, "enabled@tests.mozilla.org" in xpiState["app-profile"].addons);
-||||||| merged common ancestors
-  Assert.equal(false, "packed-enabled@tests.mozilla.org" in xpiState["app-profile"].addons);
-=======
   Assert.equal(
     false,
     "enabled@tests.mozilla.org" in xpiState["app-profile"].addons
   );
->>>>>>> upstream-releases
 });
 
 /*
@@ -154,23 +117,12 @@ add_task(async function install_bootstrap() {
   const ID = "addon@tests.mozilla.org";
   let XS = getXS();
 
-<<<<<<< HEAD
-  await promiseInstallWebExtension({
-    manifest: {
-      applications: {gecko: {id: ID}},
-    },
-  });
-  let addon = await promiseAddonByID(ID);
-||||||| merged common ancestors
-  let {addon} = await AddonTestUtils.promiseInstallXPI(ADDONS.test_bootstrap1_1);
-=======
   await promiseInstallWebExtension({
     manifest: {
       applications: { gecko: { id: ID } },
     },
   });
   let addon = await promiseAddonByID(ID);
->>>>>>> upstream-releases
 
   let xState = XS.getAddon("app-profile", ID);
   Assert.ok(!!xState);

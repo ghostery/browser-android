@@ -11796,15 +11796,9 @@ goip.de
 
 // Google, Inc.
 // Submitted by Eduardo Vela <evn@google.com>
-<<<<<<< HEAD
-run.app
-a.run.app
-||||||| merged common ancestors
-=======
 run.app
 a.run.app
 web.app
->>>>>>> upstream-releases
 *.0emm.com
 appspot.com
 blogspot.ae
@@ -12070,15 +12064,6 @@ git-repos.de
 lcube-server.de
 svn-repos.de
 
-<<<<<<< HEAD
-// Leadpages : https://www.leadpages.net
-// Submitted by Greg Dallavalle <domains@leadpages.net>
-leadpages.co
-lpages.co
-lpusercontent.com
-
-||||||| merged common ancestors
-=======
 // Leadpages : https://www.leadpages.net
 // Submitted by Greg Dallavalle <domains@leadpages.net>
 leadpages.co
@@ -12099,7 +12084,6 @@ co.network
 co.place
 co.technology
 
->>>>>>> upstream-releases
 // Lightmaker Property Manager, Inc. : https://app.lmpm.com/
 // Submitted by Greg Holland <greg.holland@lmpm.com>
 app.lmpm.com
@@ -12806,15 +12790,6 @@ gdynia.pl
 med.pl
 sopot.pl
 
-<<<<<<< HEAD
-// Telebit : https://telebit.cloud
-// Submitted by AJ ONeal <aj@telebit.cloud>
-telebit.app
-telebit.io
-*.telebit.xyz
-
-||||||| merged common ancestors
-=======
 // Teckids e.V. : https://www.teckids.org
 // Submitted by Dominik George <dominik.george@teckids.org>
 edugit.org
@@ -12825,7 +12800,6 @@ telebit.app
 telebit.io
 *.telebit.xyz
 
->>>>>>> upstream-releases
 // The Gwiddle Foundation : https://gwiddlefoundation.org.uk
 // Submitted by Joshua Bayfield <joshua.bayfield@gwiddlefoundation.org.uk>
 gwiddle.co.uk

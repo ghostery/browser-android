@@ -26,27 +26,11 @@ class FlattenedPath : public PathSink {
 
   FlattenedPath() : mCachedLength(0), mCalculatedLength(false) {}
 
-<<<<<<< HEAD
-  virtual void MoveTo(const Point &aPoint) override;
-  virtual void LineTo(const Point &aPoint) override;
-  virtual void BezierTo(const Point &aCP1, const Point &aCP2,
-                        const Point &aCP3) override;
-  virtual void QuadraticBezierTo(const Point &aCP1, const Point &aCP2) override;
-||||||| merged common ancestors
-  virtual void MoveTo(const Point &aPoint) override;
-  virtual void LineTo(const Point &aPoint) override;
-  virtual void BezierTo(const Point &aCP1,
-                        const Point &aCP2,
-                        const Point &aCP3) override;
-  virtual void QuadraticBezierTo(const Point &aCP1,
-                                 const Point &aCP2) override;
-=======
   virtual void MoveTo(const Point& aPoint) override;
   virtual void LineTo(const Point& aPoint) override;
   virtual void BezierTo(const Point& aCP1, const Point& aCP2,
                         const Point& aCP3) override;
   virtual void QuadraticBezierTo(const Point& aCP1, const Point& aCP2) override;
->>>>>>> upstream-releases
   virtual void Close() override;
   virtual void Arc(const Point& aOrigin, float aRadius, float aStartAngle,
                    float aEndAngle, bool aAntiClockwise = false) override;

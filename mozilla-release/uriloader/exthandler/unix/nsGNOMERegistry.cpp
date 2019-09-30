@@ -10,16 +10,8 @@
 #include "nsAutoPtr.h"
 #include "nsIGIOService.h"
 
-<<<<<<< HEAD
-/* static */ bool nsGNOMERegistry::HandlerExists(const char* aProtocolScheme) {
-||||||| merged common ancestors
-/* static */ bool
-nsGNOMERegistry::HandlerExists(const char *aProtocolScheme)
-{
-=======
 /* static */
 bool nsGNOMERegistry::HandlerExists(const char* aProtocolScheme) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
   if (!giovfs) {
     return false;
@@ -32,16 +24,8 @@ bool nsGNOMERegistry::HandlerExists(const char* aProtocolScheme) {
 
 // XXX Check HandlerExists() before calling LoadURL.
 
-<<<<<<< HEAD
-/* static */ nsresult nsGNOMERegistry::LoadURL(nsIURI* aURL) {
-||||||| merged common ancestors
-/* static */ nsresult
-nsGNOMERegistry::LoadURL(nsIURI *aURL)
-{
-=======
 /* static */
 nsresult nsGNOMERegistry::LoadURL(nsIURI* aURL) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
   if (!giovfs) {
     return NS_ERROR_FAILURE;
@@ -50,19 +34,9 @@ nsresult nsGNOMERegistry::LoadURL(nsIURI* aURL) {
   return giovfs->ShowURI(aURL);
 }
 
-<<<<<<< HEAD
-/* static */ void nsGNOMERegistry::GetAppDescForScheme(
-    const nsACString& aScheme, nsAString& aDesc) {
-||||||| merged common ancestors
-/* static */ void
-nsGNOMERegistry::GetAppDescForScheme(const nsACString& aScheme,
-                                     nsAString& aDesc)
-{
-=======
 /* static */
 void nsGNOMERegistry::GetAppDescForScheme(const nsACString& aScheme,
                                           nsAString& aDesc) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
   if (!giovfs) return;
 
@@ -73,19 +47,9 @@ void nsGNOMERegistry::GetAppDescForScheme(const nsACString& aScheme,
   app->GetName(aDesc);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsMIMEInfoBase> nsGNOMERegistry::GetFromExtension(
-    const nsACString& aFileExt) {
-||||||| merged common ancestors
-
-/* static */ already_AddRefed<nsMIMEInfoBase>
-nsGNOMERegistry::GetFromExtension(const nsACString& aFileExt)
-{
-=======
 /* static */
 already_AddRefed<nsMIMEInfoBase> nsGNOMERegistry::GetFromExtension(
     const nsACString& aFileExt) {
->>>>>>> upstream-releases
   nsAutoCString mimeType;
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
   if (!giovfs) {
@@ -107,18 +71,9 @@ already_AddRefed<nsMIMEInfoBase> nsGNOMERegistry::GetFromExtension(
   return mi.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsMIMEInfoBase> nsGNOMERegistry::GetFromType(
-    const nsACString& aMIMEType) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsMIMEInfoBase>
-nsGNOMERegistry::GetFromType(const nsACString& aMIMEType)
-{
-=======
 /* static */
 already_AddRefed<nsMIMEInfoBase> nsGNOMERegistry::GetFromType(
     const nsACString& aMIMEType) {
->>>>>>> upstream-releases
   RefPtr<nsMIMEInfoUnix> mimeInfo = new nsMIMEInfoUnix(aMIMEType);
   NS_ENSURE_TRUE(mimeInfo, nullptr);
 

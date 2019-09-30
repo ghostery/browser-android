@@ -21,25 +21,10 @@ namespace mozilla {
 
 class SVGTransform;
 
-<<<<<<< HEAD
-class SVGTransformListParser : public nsSVGDataParser {
- public:
-||||||| merged common ancestors
-class SVGTransformListParser : public nsSVGDataParser
-{
-public:
-=======
 class SVGTransformListParser : public SVGDataParser {
  public:
->>>>>>> upstream-releases
   explicit SVGTransformListParser(const nsAString& aValue)
-<<<<<<< HEAD
-      : nsSVGDataParser(aValue) {}
-||||||| merged common ancestors
-    : nsSVGDataParser(aValue) {}
-=======
       : SVGDataParser(aValue) {}
->>>>>>> upstream-releases
 
   bool Parse();
 

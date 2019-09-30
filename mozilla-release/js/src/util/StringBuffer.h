@@ -68,133 +68,6 @@ class StringBufferAllocPolicy {
  * buffer space) are guaranteed for strings built by this interface.
  * See |extractWellSized|.
  */
-<<<<<<< HEAD
-class StringBuffer {
-  /*
-   * The Vector's buffer may be either stolen or copied, so we need to use
-   * TempAllocPolicy and account for the memory manually when stealing.
-   */
-  typedef Vector<Latin1Char, 64> Latin1CharBuffer;
-  typedef Vector<char16_t, 32> TwoByteCharBuffer;
-
-  JSContext* cx;
-
-  /*
-   * If Latin1 strings are enabled, cb starts out as a Latin1CharBuffer. When
-   * a TwoByte char is appended, inflateChars() constructs a TwoByteCharBuffer
-   * and copies the Latin1 chars.
-   */
-  mozilla::MaybeOneOf<Latin1CharBuffer, TwoByteCharBuffer> cb;
-
-#ifdef DEBUG
-  /*
-   * Make sure ensureTwoByteChars() is called before calling
-   * infallibleAppend(char16_t).
-   */
-  bool hasEnsuredTwoByteChars_;
-#endif
-
-  /* Number of reserve()'d chars, see inflateChars. */
-  size_t reserved_;
-
-  StringBuffer(const StringBuffer& other) = delete;
-  void operator=(const StringBuffer& other) = delete;
-
-  MOZ_ALWAYS_INLINE bool isLatin1() const {
-    return cb.constructed<Latin1CharBuffer>();
-  }
-  MOZ_ALWAYS_INLINE bool isTwoByte() const { return !isLatin1(); }
-
-  MOZ_ALWAYS_INLINE TwoByteCharBuffer& twoByteChars() {
-    return cb.ref<TwoByteCharBuffer>();
-  }
-
-  MOZ_ALWAYS_INLINE const TwoByteCharBuffer& twoByteChars() const {
-    return cb.ref<TwoByteCharBuffer>();
-  }
-
-  MOZ_MUST_USE bool inflateChars();
-
- public:
-  explicit StringBuffer(JSContext* cx)
-      : cx(cx)
-#ifdef DEBUG
-        ,
-        hasEnsuredTwoByteChars_(false)
-#endif
-        ,
-        reserved_(0) {
-    cb.construct<Latin1CharBuffer>(cx);
-  }
-
-  MOZ_ALWAYS_INLINE Latin1CharBuffer& latin1Chars() {
-    return cb.ref<Latin1CharBuffer>();
-  }
-
-  MOZ_ALWAYS_INLINE const Latin1CharBuffer& latin1Chars() const {
-    return cb.ref<Latin1CharBuffer>();
-  }
-||||||| merged common ancestors
-class StringBuffer
-{
-    /*
-     * The Vector's buffer may be either stolen or copied, so we need to use
-     * TempAllocPolicy and account for the memory manually when stealing.
-     */
-    typedef Vector<Latin1Char, 64> Latin1CharBuffer;
-    typedef Vector<char16_t, 32> TwoByteCharBuffer;
-
-    JSContext* cx;
-
-    /*
-     * If Latin1 strings are enabled, cb starts out as a Latin1CharBuffer. When
-     * a TwoByte char is appended, inflateChars() constructs a TwoByteCharBuffer
-     * and copies the Latin1 chars.
-     */
-    mozilla::MaybeOneOf<Latin1CharBuffer, TwoByteCharBuffer> cb;
-
-#ifdef DEBUG
-    /*
-     * Make sure ensureTwoByteChars() is called before calling
-     * infallibleAppend(char16_t).
-     */
-    bool hasEnsuredTwoByteChars_;
-#endif
-
-    /* Number of reserve()'d chars, see inflateChars. */
-    size_t reserved_;
-
-    StringBuffer(const StringBuffer& other) = delete;
-    void operator=(const StringBuffer& other) = delete;
-
-    MOZ_ALWAYS_INLINE bool isLatin1() const { return cb.constructed<Latin1CharBuffer>(); }
-    MOZ_ALWAYS_INLINE bool isTwoByte() const { return !isLatin1(); }
-
-    MOZ_ALWAYS_INLINE TwoByteCharBuffer& twoByteChars() { return cb.ref<TwoByteCharBuffer>(); }
-
-    MOZ_ALWAYS_INLINE const TwoByteCharBuffer& twoByteChars() const {
-        return cb.ref<TwoByteCharBuffer>();
-    }
-
-    MOZ_MUST_USE bool inflateChars();
-
-  public:
-    explicit StringBuffer(JSContext* cx)
-      : cx(cx)
-#ifdef DEBUG
-      , hasEnsuredTwoByteChars_(false)
-#endif
-      , reserved_(0)
-    {
-        cb.construct<Latin1CharBuffer>(cx);
-    }
-
-    MOZ_ALWAYS_INLINE Latin1CharBuffer& latin1Chars() { return cb.ref<Latin1CharBuffer>(); }
-
-    MOZ_ALWAYS_INLINE const Latin1CharBuffer& latin1Chars() const {
-        return cb.ref<Latin1CharBuffer>();
-    }
-=======
 class StringBuffer {
  protected:
   template <typename CharT>
@@ -446,318 +319,12 @@ class StringBuffer {
    */
   char16_t* stealChars();
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void clear() {
-    if (isLatin1()) {
-      latin1Chars().clear();
-    } else {
-      twoByteChars().clear();
-    }
-  }
-  MOZ_MUST_USE bool reserve(size_t len) {
-    if (len > reserved_) {
-      reserved_ = len;
-    }
-    return isLatin1() ? latin1Chars().reserve(len)
-                      : twoByteChars().reserve(len);
-  }
-  MOZ_MUST_USE bool resize(size_t len) {
-    return isLatin1() ? latin1Chars().resize(len) : twoByteChars().resize(len);
-  }
-  bool empty() const {
-    return isLatin1() ? latin1Chars().empty() : twoByteChars().empty();
-  }
-  size_t length() const {
-    return isLatin1() ? latin1Chars().length() : twoByteChars().length();
-  }
-  char16_t getChar(size_t idx) const {
-    return isLatin1() ? latin1Chars()[idx] : twoByteChars()[idx];
-  }
-
-  MOZ_MUST_USE bool ensureTwoByteChars() {
-    if (isLatin1() && !inflateChars()) {
-      return false;
-    }
-||||||| merged common ancestors
-    void clear() {
-        if (isLatin1()) {
-            latin1Chars().clear();
-        } else {
-            twoByteChars().clear();
-        }
-    }
-    MOZ_MUST_USE bool reserve(size_t len) {
-        if (len > reserved_) {
-            reserved_ = len;
-        }
-        return isLatin1() ? latin1Chars().reserve(len) : twoByteChars().reserve(len);
-    }
-    MOZ_MUST_USE bool resize(size_t len) {
-        return isLatin1() ? latin1Chars().resize(len) : twoByteChars().resize(len);
-    }
-    bool empty() const {
-        return isLatin1() ? latin1Chars().empty() : twoByteChars().empty();
-    }
-    size_t length() const {
-        return isLatin1() ? latin1Chars().length() : twoByteChars().length();
-    }
-    char16_t getChar(size_t idx) const {
-        return isLatin1() ? latin1Chars()[idx] : twoByteChars()[idx];
-    }
-=======
 class JSStringBuilder : public StringBuffer {
  public:
   explicit JSStringBuilder(JSContext* cx)
       : StringBuffer(cx, js::StringBufferArena) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef DEBUG
-    hasEnsuredTwoByteChars_ = true;
-#endif
-    return true;
-  }
-
-  MOZ_MUST_USE bool append(const char16_t c) {
-    if (isLatin1()) {
-      if (c <= JSString::MAX_LATIN1_CHAR) {
-        return latin1Chars().append(Latin1Char(c));
-      }
-      if (!inflateChars()) {
-        return false;
-      }
-    }
-    return twoByteChars().append(c);
-  }
-  MOZ_MUST_USE bool append(Latin1Char c) {
-    return isLatin1() ? latin1Chars().append(c) : twoByteChars().append(c);
-  }
-  MOZ_MUST_USE bool append(char c) { return append(Latin1Char(c)); }
-
-  TwoByteCharBuffer& rawTwoByteBuffer() {
-    MOZ_ASSERT(hasEnsuredTwoByteChars_);
-    return twoByteChars();
-  }
-
-  inline MOZ_MUST_USE bool append(const char16_t* begin, const char16_t* end);
-
-  MOZ_MUST_USE bool append(const char16_t* chars, size_t len) {
-    return append(chars, chars + len);
-  }
-
-  MOZ_MUST_USE bool append(const Latin1Char* begin, const Latin1Char* end) {
-    return isLatin1() ? latin1Chars().append(begin, end)
-                      : twoByteChars().append(begin, end);
-  }
-  MOZ_MUST_USE bool append(const Latin1Char* chars, size_t len) {
-    return append(chars, chars + len);
-  }
-
-  /**
-   * Interpret the provided count of UTF-8 code units as UTF-8, and append
-   * the represented code points to this.  If the code units contain invalid
-   * UTF-8, leave the internal buffer in a consistent but unspecified state,
-   * report an error, and return false.
-   */
-  MOZ_MUST_USE bool append(const mozilla::Utf8Unit* units, size_t len);
-
-  MOZ_MUST_USE bool append(const JS::ConstCharPtr chars, size_t len) {
-    return append(chars.get(), chars.get() + len);
-  }
-  MOZ_MUST_USE bool appendN(Latin1Char c, size_t n) {
-    return isLatin1() ? latin1Chars().appendN(c, n)
-                      : twoByteChars().appendN(c, n);
-  }
-
-  inline MOZ_MUST_USE bool append(JSString* str);
-  inline MOZ_MUST_USE bool append(JSLinearString* str);
-  inline MOZ_MUST_USE bool appendSubstring(JSString* base, size_t off,
-                                           size_t len);
-  inline MOZ_MUST_USE bool appendSubstring(JSLinearString* base, size_t off,
-                                           size_t len);
-
-  MOZ_MUST_USE bool append(const char* chars, size_t len) {
-    return append(reinterpret_cast<const Latin1Char*>(chars), len);
-  }
-
-  template <size_t ArrayLength>
-  MOZ_MUST_USE bool append(const char (&array)[ArrayLength]) {
-    return append(array, ArrayLength - 1); /* No trailing '\0'. */
-  }
-
-  /* Infallible variants usable when the corresponding space is reserved. */
-  void infallibleAppend(Latin1Char c) {
-    if (isLatin1()) {
-      latin1Chars().infallibleAppend(c);
-    } else {
-      twoByteChars().infallibleAppend(c);
-    }
-  }
-  void infallibleAppend(char c) { infallibleAppend(Latin1Char(c)); }
-  void infallibleAppend(const Latin1Char* chars, size_t len) {
-    if (isLatin1()) {
-      latin1Chars().infallibleAppend(chars, len);
-    } else {
-      twoByteChars().infallibleAppend(chars, len);
-    }
-  }
-  void infallibleAppend(const char* chars, size_t len) {
-    infallibleAppend(reinterpret_cast<const Latin1Char*>(chars), len);
-  }
-
-  void infallibleAppendSubstring(JSLinearString* base, size_t off, size_t len);
-
-  /*
-   * Because inflation is fallible, these methods should only be used after
-   * calling ensureTwoByteChars().
-   */
-  void infallibleAppend(const char16_t* chars, size_t len) {
-    MOZ_ASSERT(hasEnsuredTwoByteChars_);
-    twoByteChars().infallibleAppend(chars, len);
-  }
-  void infallibleAppend(char16_t c) {
-    MOZ_ASSERT(hasEnsuredTwoByteChars_);
-    twoByteChars().infallibleAppend(c);
-  }
-
-  bool isUnderlyingBufferLatin1() const { return isLatin1(); }
-
-  char16_t* rawTwoByteBegin() { return twoByteChars().begin(); }
-  char16_t* rawTwoByteEnd() { return twoByteChars().end(); }
-  const char16_t* rawTwoByteBegin() const { return twoByteChars().begin(); }
-  const char16_t* rawTwoByteEnd() const { return twoByteChars().end(); }
-
-  Latin1Char* rawLatin1Begin() { return latin1Chars().begin(); }
-  Latin1Char* rawLatin1End() { return latin1Chars().end(); }
-  const Latin1Char* rawLatin1Begin() const { return latin1Chars().begin(); }
-  const Latin1Char* rawLatin1End() const { return latin1Chars().end(); }
-
-  /*
-   * Creates a string from the characters in this buffer, then (regardless
-   * whether string creation succeeded or failed) empties the buffer.
-   */
-  JSFlatString* finishString();
-
-  /* Identical to finishString() except that an atom is created. */
-  JSAtom* finishAtom();
-
-  /*
-   * Creates a raw string from the characters in this buffer.  The string is
-   * exactly the characters in this buffer (inflated to TwoByte), it is *not*
-   * null-terminated unless the last appended character was '\0'.
-   */
-  char16_t* stealChars();
-};
-
-inline bool StringBuffer::append(const char16_t* begin, const char16_t* end) {
-  MOZ_ASSERT(begin <= end);
-  if (isLatin1()) {
-    while (true) {
-      if (begin >= end) {
-        return true;
-      }
-      if (*begin > JSString::MAX_LATIN1_CHAR) {
-        break;
-      }
-      if (!latin1Chars().append(*begin)) {
-        return false;
-      }
-      ++begin;
-    }
-    if (!inflateChars()) {
-      return false;
-||||||| merged common ancestors
-    MOZ_MUST_USE bool ensureTwoByteChars() {
-        if (isLatin1() && !inflateChars()) {
-            return false;
-        }
-
-#ifdef DEBUG
-        hasEnsuredTwoByteChars_ = true;
-#endif
-        return true;
-    }
-
-    MOZ_MUST_USE bool append(const char16_t c) {
-        if (isLatin1()) {
-            if (c <= JSString::MAX_LATIN1_CHAR) {
-                return latin1Chars().append(Latin1Char(c));
-            }
-            if (!inflateChars()) {
-                return false;
-            }
-        }
-        return twoByteChars().append(c);
-    }
-    MOZ_MUST_USE bool append(Latin1Char c) {
-        return isLatin1() ? latin1Chars().append(c) : twoByteChars().append(c);
-    }
-    MOZ_MUST_USE bool append(char c) {
-        return append(Latin1Char(c));
-    }
-
-    TwoByteCharBuffer& rawTwoByteBuffer() {
-        MOZ_ASSERT(hasEnsuredTwoByteChars_);
-        return twoByteChars();
-    }
-
-    inline MOZ_MUST_USE bool append(const char16_t* begin, const char16_t* end);
-
-    MOZ_MUST_USE bool append(const char16_t* chars, size_t len) {
-        return append(chars, chars + len);
-    }
-
-    MOZ_MUST_USE bool append(const Latin1Char* begin, const Latin1Char* end) {
-        return isLatin1() ? latin1Chars().append(begin, end) : twoByteChars().append(begin, end);
-    }
-    MOZ_MUST_USE bool append(const Latin1Char* chars, size_t len) {
-        return append(chars, chars + len);
-    }
-
-    MOZ_MUST_USE bool append(const JS::ConstCharPtr chars, size_t len) {
-        return append(chars.get(), chars.get() + len);
-    }
-    MOZ_MUST_USE bool appendN(Latin1Char c, size_t n) {
-        return isLatin1() ? latin1Chars().appendN(c, n) : twoByteChars().appendN(c, n);
-    }
-
-    inline MOZ_MUST_USE bool append(JSString* str);
-    inline MOZ_MUST_USE bool append(JSLinearString* str);
-    inline MOZ_MUST_USE bool appendSubstring(JSString* base, size_t off, size_t len);
-    inline MOZ_MUST_USE bool appendSubstring(JSLinearString* base, size_t off, size_t len);
-
-    MOZ_MUST_USE bool append(const char* chars, size_t len) {
-        return append(reinterpret_cast<const Latin1Char*>(chars), len);
-    }
-
-    template <size_t ArrayLength>
-    MOZ_MUST_USE bool append(const char (&array)[ArrayLength]) {
-        return append(array, ArrayLength - 1); /* No trailing '\0'. */
-    }
-
-    /* Infallible variants usable when the corresponding space is reserved. */
-    void infallibleAppend(Latin1Char c) {
-        if (isLatin1()) {
-            latin1Chars().infallibleAppend(c);
-        } else {
-            twoByteChars().infallibleAppend(c);
-        }
-    }
-    void infallibleAppend(char c) {
-        infallibleAppend(Latin1Char(c));
-    }
-    void infallibleAppend(const Latin1Char* chars, size_t len) {
-        if (isLatin1()) {
-            latin1Chars().infallibleAppend(chars, len);
-        } else {
-            twoByteChars().infallibleAppend(chars, len);
-        }
-    }
-    void infallibleAppend(const char* chars, size_t len) {
-        infallibleAppend(reinterpret_cast<const Latin1Char*>(chars), len);
-=======
   /*
    * Creates a string from the characters in this buffer, then (regardless
    * whether string creation succeeded or failed) empties the buffer.
@@ -782,13 +349,11 @@ inline bool StringBuffer::append(const char16_t* begin, const char16_t* end) {
     }
     if (!inflateChars()) {
       return false;
->>>>>>> upstream-releases
     }
   }
   return twoByteChars().append(begin, end);
 }
 
-<<<<<<< HEAD
 inline bool StringBuffer::append(JSLinearString* str) {
   JS::AutoCheckCannotGC nogc;
   if (isLatin1()) {
@@ -797,95 +362,11 @@ inline bool StringBuffer::append(JSLinearString* str) {
     }
     if (!inflateChars()) {
       return false;
-||||||| merged common ancestors
-    void infallibleAppendSubstring(JSLinearString* base, size_t off, size_t len);
-
-    /*
-     * Because inflation is fallible, these methods should only be used after
-     * calling ensureTwoByteChars().
-     */
-    void infallibleAppend(const char16_t* chars, size_t len) {
-        MOZ_ASSERT(hasEnsuredTwoByteChars_);
-        twoByteChars().infallibleAppend(chars, len);
-    }
-    void infallibleAppend(char16_t c) {
-        MOZ_ASSERT(hasEnsuredTwoByteChars_);
-        twoByteChars().infallibleAppend(c);
-=======
-inline bool StringBuffer::append(JSLinearString* str) {
-  JS::AutoCheckCannotGC nogc;
-  if (isLatin1()) {
-    if (str->hasLatin1Chars()) {
-      return latin1Chars().append(str->latin1Chars(nogc), str->length());
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-  return str->hasLatin1Chars()
-             ? twoByteChars().append(str->latin1Chars(nogc), str->length())
-             : twoByteChars().append(str->twoByteChars(nogc), str->length());
-||||||| merged common ancestors
-
-    bool isUnderlyingBufferLatin1() const { return isLatin1(); }
-
-    char16_t* rawTwoByteBegin() { return twoByteChars().begin(); }
-    char16_t* rawTwoByteEnd() { return twoByteChars().end(); }
-    const char16_t* rawTwoByteBegin() const { return twoByteChars().begin(); }
-    const char16_t* rawTwoByteEnd() const { return twoByteChars().end(); }
-
-    Latin1Char* rawLatin1Begin() { return latin1Chars().begin(); }
-    Latin1Char* rawLatin1End() { return latin1Chars().end(); }
-    const Latin1Char* rawLatin1Begin() const { return latin1Chars().begin(); }
-    const Latin1Char* rawLatin1End() const { return latin1Chars().end(); }
-
-    /*
-     * Creates a string from the characters in this buffer, then (regardless
-     * whether string creation succeeded or failed) empties the buffer.
-     */
-    JSFlatString* finishString();
-
-    /* Identical to finishString() except that an atom is created. */
-    JSAtom* finishAtom();
-
-    /*
-     * Creates a raw string from the characters in this buffer.  The string is
-     * exactly the characters in this buffer (inflated to TwoByte), it is *not*
-     * null-terminated unless the last appended character was '\0'.
-     */
-    char16_t* stealChars();
-};
-
-inline bool
-StringBuffer::append(const char16_t* begin, const char16_t* end)
-{
-    MOZ_ASSERT(begin <= end);
-    if (isLatin1()) {
-        while (true) {
-            if (begin >= end) {
-                return true;
-            }
-            if (*begin > JSString::MAX_LATIN1_CHAR) {
-                break;
-            }
-            if (!latin1Chars().append(*begin)) {
-                return false;
-            }
-            ++begin;
-        }
-        if (!inflateChars()) {
-            return false;
-        }
-    }
-    return twoByteChars().append(begin, end);
-=======
-    if (!inflateChars()) {
-      return false;
     }
   }
   return str->hasLatin1Chars()
              ? twoByteChars().append(str->latin1Chars(nogc), str->length())
              : twoByteChars().append(str->twoByteChars(nogc), str->length());
->>>>>>> upstream-releases
 }
 
 inline void StringBuffer::infallibleAppendSubstring(JSLinearString* base,
@@ -919,54 +400,21 @@ inline bool StringBuffer::appendSubstring(JSLinearString* base, size_t off,
              : twoByteChars().append(base->twoByteChars(nogc) + off, len);
 }
 
-<<<<<<< HEAD
-inline bool StringBuffer::appendSubstring(JSString* base, size_t off,
-                                          size_t len) {
-  JSLinearString* linear = base->ensureLinear(cx);
-  if (!linear) {
-    return false;
-  }
-||||||| merged common ancestors
-inline bool
-StringBuffer::appendSubstring(JSString* base, size_t off, size_t len)
-{
-    JSLinearString* linear = base->ensureLinear(cx);
-    if (!linear) {
-        return false;
-    }
-=======
 inline bool StringBuffer::appendSubstring(JSString* base, size_t off,
                                           size_t len) {
   JSLinearString* linear = base->ensureLinear(cx_);
   if (!linear) {
     return false;
   }
->>>>>>> upstream-releases
 
   return appendSubstring(linear, off, len);
 }
 
-<<<<<<< HEAD
-inline bool StringBuffer::append(JSString* str) {
-  JSLinearString* linear = str->ensureLinear(cx);
-  if (!linear) {
-    return false;
-  }
-||||||| merged common ancestors
-inline bool
-StringBuffer::append(JSString* str)
-{
-    JSLinearString* linear = str->ensureLinear(cx);
-    if (!linear) {
-        return false;
-    }
-=======
 inline bool StringBuffer::append(JSString* str) {
   JSLinearString* linear = str->ensureLinear(cx_);
   if (!linear) {
     return false;
   }
->>>>>>> upstream-releases
 
   return append(linear);
 }

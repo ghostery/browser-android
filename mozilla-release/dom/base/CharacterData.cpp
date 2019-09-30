@@ -226,13 +226,7 @@ nsresult CharacterData::SetTextInternal(
     return NS_ERROR_OUT_OF_MEMORY;
   }
 
-<<<<<<< HEAD
-  nsIDocument* document = GetComposedDoc();
-||||||| merged common ancestors
-  nsIDocument *document = GetComposedDoc();
-=======
   Document* document = GetComposedDoc();
->>>>>>> upstream-releases
   mozAutoDocUpdate updateBatch(document, aNotify);
 
   bool haveMutationListeners =
@@ -251,19 +245,10 @@ nsresult CharacterData::SetTextInternal(
   }
 
   Directionality oldDir = eDir_NotSet;
-<<<<<<< HEAD
-  bool dirAffectsAncestor =
-      (NodeType() == TEXT_NODE &&
-       TextNodeWillChangeDirection(this, &oldDir, aOffset));
-||||||| merged common ancestors
-  bool dirAffectsAncestor = (NodeType() == TEXT_NODE &&
-                             TextNodeWillChangeDirection(this, &oldDir, aOffset));
-=======
   bool dirAffectsAncestor =
       (NodeType() == TEXT_NODE &&
        TextNodeWillChangeDirection(static_cast<nsTextNode*>(this), &oldDir,
                                    aOffset));
->>>>>>> upstream-releases
 
   if (aOffset == 0 && endOffset == textLength) {
     // Replacing whole text or old text was empty.  Don't bother to check for
@@ -402,68 +387,18 @@ void CharacterData::ToCString(nsAString& aBuf, int32_t aOffset,
 }
 #endif
 
-<<<<<<< HEAD
-nsresult CharacterData::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                   nsIContent* aBindingParent) {
-  MOZ_ASSERT(aParent || aDocument, "Must have document if no parent!");
-  MOZ_ASSERT(NODE_FROM(aParent, aDocument)->OwnerDoc() == OwnerDoc(),
-||||||| merged common ancestors
-
-nsresult
-CharacterData::BindToTree(nsIDocument* aDocument,
-                          nsIContent* aParent,
-                          nsIContent* aBindingParent)
-{
-  MOZ_ASSERT(aParent || aDocument, "Must have document if no parent!");
-  MOZ_ASSERT(NODE_FROM(aParent, aDocument)->OwnerDoc() == OwnerDoc(),
-=======
 nsresult CharacterData::BindToTree(BindContext& aContext, nsINode& aParent) {
   MOZ_ASSERT(aParent.IsContent() || aParent.IsDocument(),
              "Must have content or document parent!");
   MOZ_ASSERT(aParent.OwnerDoc() == OwnerDoc(),
->>>>>>> upstream-releases
              "Must have the same owner document");
-<<<<<<< HEAD
-  MOZ_ASSERT(!aParent || aDocument == aParent->GetUncomposedDoc(),
-             "aDocument must be current doc of aParent");
-  MOZ_ASSERT(!GetUncomposedDoc() && !IsInUncomposedDoc(),
-             "Already have a document.  Unbind first!");
-  MOZ_ASSERT(!IsInComposedDoc(), "Already have a document.  Unbind first!");
-||||||| merged common ancestors
-  MOZ_ASSERT(!aParent || aDocument == aParent->GetUncomposedDoc(),
-             "aDocument must be current doc of aParent");
-  MOZ_ASSERT(!GetUncomposedDoc() && !IsInUncomposedDoc(),
-             "Already have a document.  Unbind first!");
-  MOZ_ASSERT(!IsInComposedDoc(),
-             "Already have a document.  Unbind first!");
-=======
   MOZ_ASSERT(OwnerDoc() == &aContext.OwnerDoc(), "These should match too");
   MOZ_ASSERT(!IsInUncomposedDoc(), "Already have a document.  Unbind first!");
   MOZ_ASSERT(!IsInComposedDoc(), "Already have a document.  Unbind first!");
->>>>>>> upstream-releases
   // Note that as we recurse into the kids, they'll have a non-null parent.  So
   // only assert if our parent is _changing_ while we have a parent.
   MOZ_ASSERT(!GetParentNode() || &aParent == GetParentNode(),
              "Already have a parent.  Unbind first!");
-<<<<<<< HEAD
-  MOZ_ASSERT(!GetBindingParent() || aBindingParent == GetBindingParent() ||
-                 (!aBindingParent && aParent &&
-                  aParent->GetBindingParent() == GetBindingParent()),
-             "Already have a binding parent.  Unbind first!");
-  MOZ_ASSERT(aBindingParent != this,
-             "Content must not be its own binding parent");
-  MOZ_ASSERT(!IsRootOfNativeAnonymousSubtree() || aBindingParent == aParent,
-||||||| merged common ancestors
-  MOZ_ASSERT(!GetBindingParent() ||
-             aBindingParent == GetBindingParent() ||
-             (!aBindingParent && aParent &&
-              aParent->GetBindingParent() == GetBindingParent()),
-             "Already have a binding parent.  Unbind first!");
-  MOZ_ASSERT(aBindingParent != this,
-             "Content must not be its own binding parent");
-  MOZ_ASSERT(!IsRootOfNativeAnonymousSubtree() ||
-             aBindingParent == aParent,
-=======
   MOZ_ASSERT(
       !GetBindingParent() ||
           aContext.GetBindingParent() == GetBindingParent() ||
@@ -472,7 +407,6 @@ nsresult CharacterData::BindToTree(BindContext& aContext, nsINode& aParent) {
       "Already have a binding parent.  Unbind first!");
   MOZ_ASSERT(!IsRootOfNativeAnonymousSubtree() ||
                  aContext.GetBindingParent() == &aParent,
->>>>>>> upstream-releases
              "Native anonymous content must have its parent as its "
              "own binding parent");
   MOZ_ASSERT(aContext.GetBindingParent() || !aParent.IsContent() ||
@@ -481,45 +415,8 @@ nsresult CharacterData::BindToTree(BindContext& aContext, nsINode& aParent) {
              "We should be passed the right binding parent");
 
   // First set the binding parent
-<<<<<<< HEAD
-  if (aBindingParent) {
-    NS_ASSERTION(IsRootOfNativeAnonymousSubtree() ||
-                     !HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE) ||
-                     (aParent && aParent->IsInNativeAnonymousSubtree()),
-                 "Trying to re-bind content from native anonymous subtree to "
-                 "non-native anonymous parent!");
-    ExtendedContentSlots()->mBindingParent =
-        aBindingParent;  // Weak, so no addref happens.
-    if (aParent->IsInNativeAnonymousSubtree()) {
-      SetFlags(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE);
-    }
-    if (aParent->HasFlag(NODE_CHROME_ONLY_ACCESS)) {
-      SetFlags(NODE_CHROME_ONLY_ACCESS);
-    }
-    if (HasFlag(NODE_IS_ANONYMOUS_ROOT)) {
-      aParent->SetMayHaveAnonymousChildren();
-    }
-||||||| merged common ancestors
-  if (aBindingParent) {
-    NS_ASSERTION(IsRootOfNativeAnonymousSubtree() ||
-                 !HasFlag(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE) ||
-                 (aParent && aParent->IsInNativeAnonymousSubtree()),
-                 "Trying to re-bind content from native anonymous subtree to "
-                 "non-native anonymous parent!");
-    ExtendedContentSlots()->mBindingParent = aBindingParent; // Weak, so no addref happens.
-    if (aParent->IsInNativeAnonymousSubtree()) {
-      SetFlags(NODE_IS_IN_NATIVE_ANONYMOUS_SUBTREE);
-    }
-    if (aParent->HasFlag(NODE_CHROME_ONLY_ACCESS)) {
-      SetFlags(NODE_CHROME_ONLY_ACCESS);
-    }
-    if (HasFlag(NODE_IS_ANONYMOUS_ROOT)) {
-      aParent->SetMayHaveAnonymousChildren();
-    }
-=======
   if (Element* bindingParent = aContext.GetBindingParent()) {
     ExtendedContentSlots()->mBindingParent = bindingParent;
->>>>>>> upstream-releases
   }
 
   const bool hadParent = !!GetParentNode();
@@ -601,15 +498,7 @@ nsresult CharacterData::BindToTree(BindContext& aContext, nsINode& aParent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void CharacterData::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-CharacterData::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void CharacterData::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   // Unset frame flags; if we need them again later, they'll get set again.
   UnsetFlags(NS_CREATE_FRAME_IF_NON_WHITESPACE | NS_REFRAME_IF_WHITESPACE);
 

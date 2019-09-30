@@ -27,31 +27,6 @@ class nsPagePrintTimer final : public mozilla::Runnable,
 
   nsPagePrintTimer(nsPrintJob* aPrintJob,
                    nsIDocumentViewerPrint* aDocViewerPrint,
-<<<<<<< HEAD
-                   nsIDocument* aDocument, uint32_t aDelay)
-      : Runnable("nsPagePrintTimer"),
-        mPrintJob(aPrintJob),
-        mDocViewerPrint(*aDocViewerPrint),
-        mDocument(aDocument),
-        mDelay(aDelay),
-        mFiringCount(0),
-        mPrintObj(nullptr),
-        mWatchDogCount(0),
-        mDone(false) {
-||||||| merged common ancestors
-                   nsIDocument* aDocument,
-                   uint32_t aDelay)
-    : Runnable("nsPagePrintTimer")
-    , mPrintJob(aPrintJob)
-    , mDocViewerPrint(*aDocViewerPrint)
-    , mDocument(aDocument)
-    , mDelay(aDelay)
-    , mFiringCount(0)
-    , mPrintObj(nullptr)
-    , mWatchDogCount(0)
-    , mDone(false)
-  {
-=======
                    mozilla::dom::Document* aDocument, uint32_t aDelay)
       : Runnable("nsPagePrintTimer"),
         mPrintJob(aPrintJob),
@@ -62,7 +37,6 @@ class nsPagePrintTimer final : public mozilla::Runnable,
         mPrintObj(nullptr),
         mWatchDogCount(0),
         mDone(false) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aDocViewerPrint && aDocument);
     mDocViewerPrint->IncrementDestroyBlockedCount();
   }
@@ -93,31 +67,6 @@ class nsPagePrintTimer final : public mozilla::Runnable,
 
   nsPrintJob* mPrintJob;
   const mozilla::OwningNonNull<nsIDocumentViewerPrint> mDocViewerPrint;
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> mDocument;
-  nsCOMPtr<nsITimer> mTimer;
-  nsCOMPtr<nsITimer> mWatchDogTimer;
-  nsCOMPtr<nsITimer> mWaitingForRemotePrint;
-  uint32_t mDelay;
-  uint32_t mFiringCount;
-  nsPrintObject* mPrintObj;
-  uint32_t mWatchDogCount;
-  bool mDone;
-
-  static const uint32_t WATCH_DOG_INTERVAL = 1000;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument>      mDocument;
-  nsCOMPtr<nsITimer>         mTimer;
-  nsCOMPtr<nsITimer>         mWatchDogTimer;
-  nsCOMPtr<nsITimer>         mWaitingForRemotePrint;
-  uint32_t                   mDelay;
-  uint32_t                   mFiringCount;
-  nsPrintObject *            mPrintObj;
-  uint32_t                   mWatchDogCount;
-  bool                       mDone;
-
-  static const uint32_t WATCH_DOG_INTERVAL  = 1000;
-=======
   RefPtr<mozilla::dom::Document> mDocument;
   nsCOMPtr<nsITimer> mTimer;
   nsCOMPtr<nsITimer> mWatchDogTimer;
@@ -129,7 +78,6 @@ class nsPagePrintTimer final : public mozilla::Runnable,
   bool mDone;
 
   static const uint32_t WATCH_DOG_INTERVAL = 1000;
->>>>>>> upstream-releases
   static const uint32_t WATCH_DOG_MAX_COUNT =
 #ifdef DEBUG
       // Debug builds are very slow (on Mac at least) and can need extra time

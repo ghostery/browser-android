@@ -167,51 +167,6 @@ static mozilla::LazyLogModule sBMPLog("BMPDecoder");
 // The length of the mBIHSize field in the info header.
 static const uint32_t BIHSIZE_FIELD_LENGTH = 4;
 
-<<<<<<< HEAD
-nsBMPDecoder::nsBMPDecoder(RasterImage* aImage, State aState, size_t aLength)
-    : Decoder(aImage),
-      mLexer(Transition::To(aState, aLength), Transition::TerminateSuccess()),
-      mIsWithinICO(false),
-      mMayHaveTransparency(false),
-      mDoesHaveTransparency(false),
-      mNumColors(0),
-      mColors(nullptr),
-      mBytesPerColor(0),
-      mPreGapLength(0),
-      mPixelRowSize(0),
-      mCurrentRow(0),
-      mCurrentPos(0),
-      mAbsoluteModeNumPixels(0) {}
-
-// Constructor for normal BMP files or from the clipboard.
-nsBMPDecoder::nsBMPDecoder(RasterImage* aImage, bool aForClipboard)
-    : nsBMPDecoder(aImage,
-                   aForClipboard ? State::CLIPBOARD_HEADER : State::FILE_HEADER,
-                   aForClipboard ? BIHSIZE_FIELD_LENGTH : FILE_HEADER_LENGTH) {}
-||||||| merged common ancestors
-nsBMPDecoder::nsBMPDecoder(RasterImage* aImage, State aState, size_t aLength)
-  : Decoder(aImage)
-  , mLexer(Transition::To(aState, aLength), Transition::TerminateSuccess())
-  , mIsWithinICO(false)
-  , mMayHaveTransparency(false)
-  , mDoesHaveTransparency(false)
-  , mNumColors(0)
-  , mColors(nullptr)
-  , mBytesPerColor(0)
-  , mPreGapLength(0)
-  , mPixelRowSize(0)
-  , mCurrentRow(0)
-  , mCurrentPos(0)
-  , mAbsoluteModeNumPixels(0)
-{
-}
-
-// Constructor for normal BMP files.
-nsBMPDecoder::nsBMPDecoder(RasterImage* aImage)
-  : nsBMPDecoder(aImage, State::FILE_HEADER, FILE_HEADER_LENGTH)
-{
-}
-=======
 nsBMPDecoder::nsBMPDecoder(RasterImage* aImage, State aState, size_t aLength,
                            bool aForClipboard)
     : Decoder(aImage),
@@ -235,19 +190,11 @@ nsBMPDecoder::nsBMPDecoder(RasterImage* aImage, bool aForClipboard)
                    aForClipboard ? State::INFO_HEADER_SIZE : State::FILE_HEADER,
                    aForClipboard ? BIHSIZE_FIELD_LENGTH : FILE_HEADER_LENGTH,
                    aForClipboard) {}
->>>>>>> upstream-releases
 
 // Constructor used for WinBMPv3-ICO files, which lack a file header.
 nsBMPDecoder::nsBMPDecoder(RasterImage* aImage, uint32_t aDataOffset)
-<<<<<<< HEAD
-    : nsBMPDecoder(aImage, State::INFO_HEADER_SIZE, BIHSIZE_FIELD_LENGTH) {
-||||||| merged common ancestors
-  : nsBMPDecoder(aImage, State::INFO_HEADER_SIZE, BIHSIZE_FIELD_LENGTH)
-{
-=======
     : nsBMPDecoder(aImage, State::INFO_HEADER_SIZE, BIHSIZE_FIELD_LENGTH,
                    /* aForClipboard */ false) {
->>>>>>> upstream-releases
   SetIsWithinICO();
 
   // Even though the file header isn't present in this case, the dataOffset
@@ -468,63 +415,6 @@ LexerResult nsBMPDecoder::DoDecode(SourceBufferIterator& aIterator,
 
   return mLexer.Lex(aIterator, aOnResume,
                     [=](State aState, const char* aData, size_t aLength) {
-<<<<<<< HEAD
-                      switch (aState) {
-                        case State::FILE_HEADER:
-                          return ReadFileHeader(aData, aLength);
-                        case State::CLIPBOARD_HEADER:
-                          return ReadClipboardHeader(aData, aLength);
-                        case State::INFO_HEADER_SIZE:
-                          return ReadInfoHeaderSize(aData, aLength);
-                        case State::INFO_HEADER_REST:
-                          return ReadInfoHeaderRest(aData, aLength);
-                        case State::BITFIELDS:
-                          return ReadBitfields(aData, aLength);
-                        case State::COLOR_TABLE:
-                          return ReadColorTable(aData, aLength);
-                        case State::GAP:
-                          return SkipGap();
-                        case State::AFTER_GAP:
-                          return AfterGap();
-                        case State::PIXEL_ROW:
-                          return ReadPixelRow(aData);
-                        case State::RLE_SEGMENT:
-                          return ReadRLESegment(aData);
-                        case State::RLE_DELTA:
-                          return ReadRLEDelta(aData);
-                        case State::RLE_ABSOLUTE:
-                          return ReadRLEAbsolute(aData, aLength);
-                        default:
-                          MOZ_CRASH("Unknown State");
-                      }
-                    });
-}
-
-LexerTransition<nsBMPDecoder::State> nsBMPDecoder::ReadFileHeader(
-    const char* aData, size_t aLength) {
-||||||| merged common ancestors
-    switch (aState) {
-      case State::FILE_HEADER:      return ReadFileHeader(aData, aLength);
-      case State::INFO_HEADER_SIZE: return ReadInfoHeaderSize(aData, aLength);
-      case State::INFO_HEADER_REST: return ReadInfoHeaderRest(aData, aLength);
-      case State::BITFIELDS:        return ReadBitfields(aData, aLength);
-      case State::COLOR_TABLE:      return ReadColorTable(aData, aLength);
-      case State::GAP:              return SkipGap();
-      case State::AFTER_GAP:        return AfterGap();
-      case State::PIXEL_ROW:        return ReadPixelRow(aData);
-      case State::RLE_SEGMENT:      return ReadRLESegment(aData);
-      case State::RLE_DELTA:        return ReadRLEDelta(aData);
-      case State::RLE_ABSOLUTE:     return ReadRLEAbsolute(aData, aLength);
-      default:
-        MOZ_CRASH("Unknown State");
-    }
-  });
-}
-
-LexerTransition<nsBMPDecoder::State>
-nsBMPDecoder::ReadFileHeader(const char* aData, size_t aLength)
-{
-=======
                       switch (aState) {
                         case State::FILE_HEADER:
                           return ReadFileHeader(aData, aLength);
@@ -556,7 +446,6 @@ nsBMPDecoder::ReadFileHeader(const char* aData, size_t aLength)
 
 LexerTransition<nsBMPDecoder::State> nsBMPDecoder::ReadFileHeader(
     const char* aData, size_t aLength) {
->>>>>>> upstream-releases
   mPreGapLength += aLength;
 
   bool signatureOk = aData[0] == 'B' && aData[1] == 'M';
@@ -569,13 +458,6 @@ LexerTransition<nsBMPDecoder::State> nsBMPDecoder::ReadFileHeader(
   mH.mDataOffset = LittleEndian::readUint32(aData + 10);
 
   return Transition::To(State::INFO_HEADER_SIZE, BIHSIZE_FIELD_LENGTH);
-}
-
-LexerTransition<nsBMPDecoder::State> nsBMPDecoder::ReadClipboardHeader(
-    const char* aData, size_t aLength) {
-  // With the clipboard, the data offset is the header length.
-  mH.mDataOffset = LittleEndian::readUint32(aData);
-  return ReadInfoHeaderSize(aData, aLength);
 }
 
 // We read the info header in two steps: (a) read the mBIHSize field to
@@ -775,19 +657,9 @@ LexerTransition<nsBMPDecoder::State> nsBMPDecoder::ReadBitfields(
   }
 
   MOZ_ASSERT(!mImageData, "Already have a buffer allocated?");
-<<<<<<< HEAD
-  nsresult rv = AllocateFrame(
-      OutputSize(), FullOutputFrame(),
-      mMayHaveTransparency ? SurfaceFormat::B8G8R8A8 : SurfaceFormat::B8G8R8X8);
-||||||| merged common ancestors
-  nsresult rv = AllocateFrame(OutputSize(), FullOutputFrame(),
-                              mMayHaveTransparency ? SurfaceFormat::B8G8R8A8
-                                                   : SurfaceFormat::B8G8R8X8);
-=======
   nsresult rv = AllocateFrame(OutputSize(), mMayHaveTransparency
                                                 ? SurfaceFormat::B8G8R8A8
                                                 : SurfaceFormat::B8G8R8X8);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return Transition::TerminateFailure();
   }

@@ -23,52 +23,17 @@ class WebAuthnTransactionParent final : public PWebAuthnTransactionParent {
   NS_INLINE_DECL_REFCOUNTING(WebAuthnTransactionParent);
   WebAuthnTransactionParent() = default;
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvRequestRegister(
-      const uint64_t& aTransactionId,
-      const WebAuthnMakeCredentialInfo& aTransactionInfo) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvRequestRegister(const uint64_t& aTransactionId,
-                      const WebAuthnMakeCredentialInfo& aTransactionInfo) override;
-=======
   mozilla::ipc::IPCResult RecvRequestRegister(
       const uint64_t& aTransactionId,
       const WebAuthnMakeCredentialInfo& aTransactionInfo);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvRequestSign(
-      const uint64_t& aTransactionId,
-      const WebAuthnGetAssertionInfo& aTransactionInfo) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvRequestSign(const uint64_t& aTransactionId,
-                  const WebAuthnGetAssertionInfo& aTransactionInfo) override;
-=======
   mozilla::ipc::IPCResult RecvRequestSign(
       const uint64_t& aTransactionId,
       const WebAuthnGetAssertionInfo& aTransactionInfo);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvRequestCancel(
-      const uint64_t& aTransactionId) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvRequestCancel(const uint64_t& aTransactionId) override;
-=======
   mozilla::ipc::IPCResult RecvRequestCancel(const uint64_t& aTransactionId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvDestroyMe() override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvDestroyMe() override;
-=======
   mozilla::ipc::IPCResult RecvDestroyMe();
->>>>>>> upstream-releases
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 

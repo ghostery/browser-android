@@ -27,19 +27,10 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-typedef ProfilingStack* (*ProfilerLabelEnter)(const char*, const char*, void*);
-typedef void (*ProfilerLabelExit)(ProfilingStack*);
-||||||| merged common ancestors
-typedef ProfilingStack* (*ProfilerLabelEnter)(const char*, const char*, void*,
-                                           uint32_t);
-typedef void (*ProfilerLabelExit)(ProfilingStack*);
-=======
 // Enter should return a pointer that will be given to Exit.
 typedef void* (*ProfilerLabelEnter)(const char* aLabel,
                                     const char* aDynamicString, void* aSp);
 typedef void (*ProfilerLabelExit)(void* EntryContext);
->>>>>>> upstream-releases
 
 // Register callbacks that do the entry/exit work involving sProfilingStack.
 MFBT_API void RegisterProfilerLabelEnterExit(ProfilerLabelEnter aEnter,

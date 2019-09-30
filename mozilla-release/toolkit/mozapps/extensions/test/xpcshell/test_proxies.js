@@ -85,20 +85,6 @@ async function run_proxy_tests() {
     addon.proxyFile = profileDir.clone();
     addon.proxyFile.append(addon.dirId || addon.id);
 
-<<<<<<< HEAD
-    let files = ExtensionTestCommon.generateFiles({
-      manifest: {
-        name: addon.id,
-        applications: {gecko: {id: addon.id}},
-      },
-    });
-    let path = OS.Path.join(gTmpD.path, addon.id);
-    await AddonTestUtils.promiseWriteFilesToDir(path, files);
-||||||| merged common ancestors
-    METADATA.id = addon.id;
-    METADATA.name = addon.id;
-    await promiseWriteInstallRDFToDir(METADATA, gTmpD);
-=======
     let files = ExtensionTestCommon.generateFiles({
       manifest: {
         name: addon.id,
@@ -107,7 +93,6 @@ async function run_proxy_tests() {
     });
     let path = OS.Path.join(gTmpD.path, addon.id);
     await AddonTestUtils.promiseWriteFilesToDir(path, files);
->>>>>>> upstream-releases
 
     if (addon.type == "proxy") {
       await promiseWriteFile(addon.proxyFile, addon.directory.path);
@@ -205,19 +190,10 @@ async function run_symlink_tests() {
   let addonDirectory = profileDir.clone();
   addonDirectory.append(ID);
 
-<<<<<<< HEAD
-  let files = ExtensionTestCommon.generateFiles({
-    manifest: {applications: {gecko: {id: ID}}},
-  });
-  await AddonTestUtils.promiseWriteFilesToDir(addonDirectory.path, files);
-||||||| merged common ancestors
-  await promiseWriteInstallRDFToDir(METADATA, profileDir);
-=======
   let files = ExtensionTestCommon.generateFiles({
     manifest: { applications: { gecko: { id: ID } } },
   });
   await AddonTestUtils.promiseWriteFilesToDir(addonDirectory.path, files);
->>>>>>> upstream-releases
 
   let symlink = addonDirectory.clone();
   symlink.append(tempDirectory.leafName);

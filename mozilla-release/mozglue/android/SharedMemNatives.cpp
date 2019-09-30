@@ -15,16 +15,8 @@ extern "C" {
 
 JNIEXPORT
 void JNICALL
-<<<<<<< HEAD
-Java_org_mozilla_gecko_media_SharedMemBuffer_nativeReadFromDirectBuffer(
-    JNIEnv* jenv, jclass, jobject src, jlong dest, jint offset, jint size) {
-||||||| merged common ancestors
-Java_org_mozilla_gecko_media_SharedMemBuffer_nativeReadFromDirectBuffer(JNIEnv* jenv, jclass, jobject src, jlong dest, jint offset, jint size)
-{
-=======
 Java_org_mozilla_gecko_media_SampleBuffer_nativeReadFromDirectBuffer(
     JNIEnv* jenv, jclass, jobject src, jlong dest, jint offset, jint size) {
->>>>>>> upstream-releases
   uint8_t* from = static_cast<uint8_t*>(jenv->GetDirectBufferAddress(src));
   if (from == nullptr) {
     jenv->ThrowNew(jenv->FindClass("java/lang/NullPointerException"),
@@ -44,16 +36,8 @@ Java_org_mozilla_gecko_media_SampleBuffer_nativeReadFromDirectBuffer(
 
 JNIEXPORT
 void JNICALL
-<<<<<<< HEAD
-Java_org_mozilla_gecko_media_SharedMemBuffer_nativeWriteToDirectBuffer(
-    JNIEnv* jenv, jclass, jlong src, jobject dest, jint offset, jint size) {
-||||||| merged common ancestors
-Java_org_mozilla_gecko_media_SharedMemBuffer_nativeWriteToDirectBuffer(JNIEnv* jenv, jclass, jlong src, jobject dest, jint offset, jint size)
-{
-=======
 Java_org_mozilla_gecko_media_SampleBuffer_nativeWriteToDirectBuffer(
     JNIEnv* jenv, jclass, jlong src, jobject dest, jint offset, jint size) {
->>>>>>> upstream-releases
   uint8_t* from = reinterpret_cast<uint8_t*>(src);
   if (from == nullptr) {
     jenv->ThrowNew(jenv->FindClass("java/lang/NullPointerException"),

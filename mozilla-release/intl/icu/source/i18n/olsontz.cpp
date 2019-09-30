@@ -137,19 +137,9 @@ OlsonTimeZone::OlsonTimeZone(const UResourceBundle* top,
         StackUResourceBundle r;
 
         // Pre-32bit second transitions
-<<<<<<< HEAD
-        ures_getByKey(res, kTRANSPRE32, &r, &ec);
-        transitionTimesPre32 = ures_getIntVector(&r, &len, &ec);
-        transitionCountPre32 = static_cast<int16_t>(len >> 1);
-||||||| merged common ancestors
-        ures_getByKey(res, kTRANSPRE32, &r, &ec);
-        transitionTimesPre32 = ures_getIntVector(&r, &len, &ec);
-        transitionCountPre32 = len >> 1;
-=======
         ures_getByKey(res, kTRANSPRE32, r.getAlias(), &ec);
         transitionTimesPre32 = ures_getIntVector(r.getAlias(), &len, &ec);
         transitionCountPre32 = static_cast<int16_t>(len >> 1);
->>>>>>> upstream-releases
         if (ec == U_MISSING_RESOURCE_ERROR) {
             // No pre-32bit transitions
             transitionTimesPre32 = NULL;
@@ -160,19 +150,9 @@ OlsonTimeZone::OlsonTimeZone(const UResourceBundle* top,
         }
 
         // 32bit second transitions
-<<<<<<< HEAD
-        ures_getByKey(res, kTRANS, &r, &ec);
-        transitionTimes32 = ures_getIntVector(&r, &len, &ec);
-        transitionCount32 = static_cast<int16_t>(len);
-||||||| merged common ancestors
-        ures_getByKey(res, kTRANS, &r, &ec);
-        transitionTimes32 = ures_getIntVector(&r, &len, &ec);
-        transitionCount32 = len;
-=======
         ures_getByKey(res, kTRANS, r.getAlias(), &ec);
         transitionTimes32 = ures_getIntVector(r.getAlias(), &len, &ec);
         transitionCount32 = static_cast<int16_t>(len);
->>>>>>> upstream-releases
         if (ec == U_MISSING_RESOURCE_ERROR) {
             // No 32bit transitions
             transitionTimes32 = NULL;
@@ -183,19 +163,9 @@ OlsonTimeZone::OlsonTimeZone(const UResourceBundle* top,
         }
 
         // Post-32bit second transitions
-<<<<<<< HEAD
-        ures_getByKey(res, kTRANSPOST32, &r, &ec);
-        transitionTimesPost32 = ures_getIntVector(&r, &len, &ec);
-        transitionCountPost32 = static_cast<int16_t>(len >> 1);
-||||||| merged common ancestors
-        ures_getByKey(res, kTRANSPOST32, &r, &ec);
-        transitionTimesPost32 = ures_getIntVector(&r, &len, &ec);
-        transitionCountPost32 = len >> 1;
-=======
         ures_getByKey(res, kTRANSPOST32, r.getAlias(), &ec);
         transitionTimesPost32 = ures_getIntVector(r.getAlias(), &len, &ec);
         transitionCountPost32 = static_cast<int16_t>(len >> 1);
->>>>>>> upstream-releases
         if (ec == U_MISSING_RESOURCE_ERROR) {
             // No pre-32bit transitions
             transitionTimesPost32 = NULL;

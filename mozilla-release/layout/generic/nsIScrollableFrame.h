@@ -39,19 +39,11 @@ namespace layers {
 struct ScrollMetadata;
 class Layer;
 class LayerManager;
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 }  // namespace layers
 namespace layout {
 class ScrollAnchorContainer;
 }  // namespace layout
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 /**
  * Interface for frames that are scrollable. This interface exposes
@@ -117,16 +109,6 @@ class nsIScrollableFrame : public nsIScrollbarMediator {
   /**
    * Return the width for non-disappearing scrollbars.
    */
-<<<<<<< HEAD
-  virtual nscoord GetNondisappearingScrollbarWidth(
-      nsPresContext* aPresContext, gfxContext* aRC,
-      mozilla::WritingMode aWM) = 0;
-||||||| merged common ancestors
-  virtual nscoord
-  GetNondisappearingScrollbarWidth(nsPresContext* aPresContext,
-                                   gfxContext* aRC,
-                                   mozilla::WritingMode aWM) = 0;
-=======
   virtual nscoord GetNondisappearingScrollbarWidth(
       nsPresContext* aPresContext, gfxContext* aRC,
       mozilla::WritingMode aWM) = 0;
@@ -139,7 +121,6 @@ class nsIScrollableFrame : public nsIScrollbarMediator {
    * This value is used for Element.clientWidth and clientHeight.
    */
   virtual nsSize GetLayoutSize() const = 0;
->>>>>>> upstream-releases
   /**
    * GetScrolledRect is designed to encapsulate deciding which
    * directions of overflow should be reachable by scrolling and which
@@ -257,22 +238,11 @@ class nsIScrollableFrame : public nsIScrollbarMediator {
    * FIXME: Drop |aSnap| argument once after we finished the migration to the
    * Scroll Snap Module v1. We should alway use ENABLE_SNAP.
    */
-<<<<<<< HEAD
-  virtual void ScrollToCSSPixels(
-      const CSSIntPoint& aScrollPosition,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr) = 0;
-||||||| merged common ancestors
-  virtual void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
-                                 nsIScrollableFrame::ScrollMode aMode
-                                   = nsIScrollableFrame::INSTANT) = 0;
-=======
   virtual void ScrollToCSSPixels(const CSSIntPoint& aScrollPosition,
                                  ScrollMode aMode = ScrollMode::Instant,
                                  nsIScrollbarMediator::ScrollSnapMode aSnap =
                                      nsIScrollbarMediator::DEFAULT,
                                  nsAtom* aOrigin = nullptr) = 0;
->>>>>>> upstream-releases
   /**
    * @note This method might destroy the frame, pres shell and other objects.
    * Scrolls to a particular position in float CSS pixels.
@@ -307,18 +277,6 @@ class nsIScrollableFrame : public nsIScrollbarMediator {
                         nsIntPoint* aOverflow = nullptr,
                         nsAtom* aOrigin = nullptr,
                         ScrollMomentum aMomentum = NOT_MOMENTUM,
-<<<<<<< HEAD
-                        nsIScrollbarMediator::ScrollSnapMode aSnap =
-                            nsIScrollbarMediator::DISABLE_SNAP) = 0;
-
-  virtual void ScrollByCSSPixels(
-      const CSSIntPoint& aDelta,
-      nsIScrollableFrame::ScrollMode aMode = nsIScrollableFrame::INSTANT,
-      nsAtom* aOrigin = nullptr) = 0;
-||||||| merged common ancestors
-                        nsIScrollbarMediator::ScrollSnapMode aSnap
-                          = nsIScrollbarMediator::DISABLE_SNAP) = 0;
-=======
                         nsIScrollbarMediator::ScrollSnapMode aSnap =
                             nsIScrollbarMediator::DISABLE_SNAP) = 0;
 
@@ -331,7 +289,6 @@ class nsIScrollableFrame : public nsIScrollbarMediator {
                                  nsAtom* aOrigin = nullptr,
                                  nsIScrollbarMediator::ScrollSnapMode aSnap =
                                      nsIScrollbarMediator::DEFAULT) = 0;
->>>>>>> upstream-releases
 
   /**
    * Perform scroll snapping, possibly resulting in a smooth scroll to

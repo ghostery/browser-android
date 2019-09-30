@@ -18,25 +18,12 @@ namespace dom {
 
 class StorageObserver;
 
-<<<<<<< HEAD
-// Implementers are StorageManager and StorageDBParent to forward to
-// child processes.
-class StorageObserverSink {
- public:
-||||||| merged common ancestors
-// Implementers are StorageManager and StorageDBParent to forward to
-// child processes.
-class StorageObserverSink
-{
-public:
-=======
 // Main-thread interface implemented by legacy LocalStorageManager and current
 // SessionStorageManager for direct consumption. Also implemented by legacy
 // StorageDBParent and current SessionStorageObserverParent for propagation to
 // content processes.
 class StorageObserverSink {
  public:
->>>>>>> upstream-releases
   virtual ~StorageObserverSink() {}
 
  private:
@@ -68,15 +55,7 @@ class StorageObserver : public nsIObserver, public nsSupportsWeakReference {
  private:
   virtual ~StorageObserver() {}
 
-<<<<<<< HEAD
-  nsresult ClearMatchingOrigin(const char16_t* aData, nsACString& aOriginScope);
-||||||| merged common ancestors
-  nsresult
-  ClearMatchingOrigin(const char16_t* aData,
-                      nsACString& aOriginScope);
-=======
   nsresult GetOriginScope(const char16_t* aData, nsACString& aOriginScope);
->>>>>>> upstream-releases
 
   static void TestingPrefChanged(const char* aPrefName, void* aClosure);
 

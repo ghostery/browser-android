@@ -117,13 +117,7 @@ class NetworkLocationsForm extends PureComponent {
       ),
       dom.input({
         id: "about-debugging-network-locations-host-input",
-<<<<<<< HEAD
-        className: "default-input js-network-form-input",
-||||||| merged common ancestors
-        className: "std-input js-network-form-input",
-=======
         className: "default-input qa-network-form-input",
->>>>>>> upstream-releases
         placeholder: "localhost:6080",
         type: "text",
         value: this.state.value,
@@ -138,13 +132,7 @@ class NetworkLocationsForm extends PureComponent {
         },
         dom.button(
           {
-<<<<<<< HEAD
-            className: "default-button js-network-form-submit-button",
-||||||| merged common ancestors
-            className: "std-button js-network-form-submit-button",
-=======
             className: "primary-button qa-network-form-submit-button",
->>>>>>> upstream-releases
           },
           "Add"
         )

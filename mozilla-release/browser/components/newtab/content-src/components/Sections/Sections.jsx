@@ -258,63 +258,6 @@ export class Section extends React.PureComponent {
 
     // <Section> <-- React component
     // <section> <-- HTML5 element
-<<<<<<< HEAD
-    return (<ComponentPerfTimer {...this.props}>
-      <CollapsibleSection className={sectionClassName} icon={icon}
-        title={title}
-        id={id}
-        eventSource={eventSource}
-        collapsed={this.props.pref.collapsed}
-        showPrefName={(pref && pref.feed) || id}
-        privacyNoticeURL={privacyNoticeURL}
-        Prefs={this.props.Prefs}
-        isFirst={isFirst}
-        isLast={isLast}
-        learnMore={learnMore}
-        dispatch={this.props.dispatch}
-        isWebExtension={this.props.isWebExtension}>
-
-        {!shouldShowEmptyState && (<ul className="section-list" style={{padding: 0}}>
-          {cards}
-        </ul>)}
-        {shouldShowEmptyState &&
-          <div className="section-empty-state">
-            <div className="empty-state">
-              {emptyState.icon && emptyState.icon.startsWith("moz-extension://") ?
-                <span className="empty-state-icon icon" style={{"background-image": `url('${emptyState.icon}')`}} /> :
-                <span className={`empty-state-icon icon icon-${emptyState.icon}`} />}
-              <p className="empty-state-message">
-                {getFormattedMessage(emptyState.message)}
-              </p>
-||||||| merged common ancestors
-    return (<ComponentPerfTimer {...this.props}>
-      <CollapsibleSection className={sectionClassName} icon={icon}
-        title={title}
-        id={id}
-        eventSource={eventSource}
-        collapsed={this.props.pref.collapsed}
-        showPrefName={(pref && pref.feed) || id}
-        privacyNoticeURL={privacyNoticeURL}
-        Prefs={this.props.Prefs}
-        isFirst={isFirst}
-        isLast={isLast}
-        learnMore={learnMore}
-        dispatch={this.props.dispatch}
-        isWebExtension={this.props.isWebExtension}>
-
-        {!shouldShowEmptyState && (<ul className="section-list" style={{padding: 0}}>
-          {cards}
-        </ul>)}
-        {shouldShowEmptyState &&
-          <div className="section-empty-state">
-            <div className="empty-state">
-              {emptyState.icon && emptyState.icon.startsWith("moz-extension://") ?
-                <img className="empty-state-icon icon" style={{"background-image": `url('${emptyState.icon}')`}} /> :
-                <img className={`empty-state-icon icon icon-${emptyState.icon}`} />}
-              <p className="empty-state-message">
-                {getFormattedMessage(emptyState.message)}
-              </p>
-=======
     return (
       <ComponentPerfTimer {...this.props}>
         <CollapsibleSection
@@ -357,35 +300,7 @@ export class Section extends React.PureComponent {
                   <p className="empty-state-message" />
                 </FluentOrText>
               </div>
->>>>>>> upstream-releases
             </div>
-<<<<<<< HEAD
-          </div>}
-        {id === "topstories" &&
-          <div className="top-stories-bottom-container">
-            <div>
-              {shouldShowTopics && <Topics topics={this.props.topics} />}
-              {shouldShowPocketCta && <PocketLoggedInCta />}
-            </div>
-            <div>
-              {shouldShowReadMore &&
-                <MoreRecommendations read_more_endpoint={read_more_endpoint} />}
-            </div>
-          </div>}
-      </CollapsibleSection>
-    </ComponentPerfTimer>);
-||||||| merged common ancestors
-          </div>}
-        {id === "topstories" &&
-          <div className="top-stories-bottom-container">
-            {shouldShowTopics && <Topics topics={this.props.topics} />}
-            {shouldShowPocketCta && <PocketLoggedInCta />}
-            {shouldShowReadMore &&
-              <MoreRecommendations read_more_endpoint={read_more_endpoint} />}
-          </div>}
-      </CollapsibleSection>
-    </ComponentPerfTimer>);
-=======
           )}
           {id === "topstories" && (
             <div className="top-stories-bottom-container">
@@ -413,7 +328,6 @@ export class Section extends React.PureComponent {
         </CollapsibleSection>
       </ComponentPerfTimer>
     );
->>>>>>> upstream-releases
   }
 }
 

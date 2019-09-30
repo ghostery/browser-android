@@ -28,45 +28,18 @@ catch (e)          \n\
 }\n\
 //@ sourceMappingURL=http://example.com/path/to/source-map.json";
 
-<<<<<<< HEAD
-BEGIN_TEST(testScriptInfo) {
-  unsigned startLine = 1000;
-||||||| merged common ancestors
-BEGIN_TEST(testScriptInfo)
-{
-    unsigned startLine = 1000;
-=======
 BEGIN_TEST(testScriptInfo) {
   unsigned startLine = 1000;
 
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, startLine);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::CompileOptions options(cx);
-  options.setFileAndLine(__FILE__, startLine);
-||||||| merged common ancestors
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(__FILE__, startLine);
-=======
   JS::SourceText<mozilla::Utf8Unit> srcBuf;
   CHECK(srcBuf.init(cx, code, mozilla::ArrayLength(code) - 1,
                     JS::SourceOwnership::Borrowed));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::RootedScript script(cx);
-  CHECK(JS::CompileUtf8(cx, options, code, strlen(code), &script));
-  CHECK(script);
-||||||| merged common ancestors
-    JS::RootedScript script(cx);
-    CHECK(JS::CompileUtf8(cx, options, code, strlen(code), &script));
-    CHECK(script);
-=======
   JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
   CHECK(script);
->>>>>>> upstream-releases
 
   CHECK_EQUAL(JS_GetScriptBaseLineNumber(cx, script), startLine);
   CHECK(strcmp(JS_GetScriptFilename(script), __FILE__) == 0);

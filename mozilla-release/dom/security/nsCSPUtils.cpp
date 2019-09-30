@@ -85,17 +85,6 @@ void CSP_PercentDecodeStr(const nsAString& aEncStr, nsAString& outDecStr) {
   }
 }
 
-<<<<<<< HEAD
-void CSP_GetLocalizedStr(const char* aName, const char16_t** aParams,
-                         uint32_t aLength, nsAString& outResult) {
-||||||| merged common ancestors
-void
-CSP_GetLocalizedStr(const char* aName,
-                    const char16_t** aParams,
-                    uint32_t aLength,
-                    nsAString& outResult)
-{
-=======
 // The Content Security Policy should be inherited for
 // local schemes like: "about", "blob", "data", or "filesystem".
 // see: https://w3c.github.io/webappsec-csp/#initialize-document-csp
@@ -130,7 +119,6 @@ bool CSP_ShouldResponseInheritCSP(nsIChannel* aChannel) {
 
 void CSP_GetLocalizedStr(const char* aName, const nsTArray<nsString>& aParams,
                          nsAString& outResult) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIStringBundle> keyStringBundle;
   nsCOMPtr<nsIStringBundleService> stringBundleService =
       mozilla::services::GetStringBundleService();
@@ -145,14 +133,7 @@ void CSP_GetLocalizedStr(const char* aName, const nsTArray<nsString>& aParams,
   if (!keyStringBundle) {
     return;
   }
-<<<<<<< HEAD
-  keyStringBundle->FormatStringFromName(aName, aParams, aLength, outResult);
-||||||| merged common ancestors
-  keyStringBundle->FormatStringFromName(aName, aParams, aLength,
-                                        outResult);
-=======
   keyStringBundle->FormatStringFromName(aName, aParams, outResult);
->>>>>>> upstream-releases
 }
 
 void CSP_LogStrMessage(const nsAString& aMsg) {
@@ -206,25 +187,6 @@ void CSP_LogMessage(const nsAString& aMessage, const nsAString& aSourceName,
 
   nsresult rv;
   if (aInnerWindowID > 0) {
-<<<<<<< HEAD
-    rv = error->InitWithWindowID(cspMsg, aSourceName, aSourceLine, aLineNumber,
-                                 aColumnNumber, aFlags, category,
-                                 aInnerWindowID);
-  } else {
-    rv = error->Init(cspMsg, aSourceName, aSourceLine, aLineNumber,
-                     aColumnNumber, aFlags, category.get(), aFromPrivateWindow);
-||||||| merged common ancestors
-    rv = error->InitWithWindowID(cspMsg, aSourceName,
-                                 aSourceLine, aLineNumber,
-                                 aColumnNumber, aFlags,
-                                 category, aInnerWindowID);
-  }
-  else {
-    rv = error->Init(cspMsg, aSourceName,
-                     aSourceLine, aLineNumber,
-                     aColumnNumber, aFlags,
-                     category.get(), aFromPrivateWindow);
-=======
     rv = error->InitWithWindowID(cspMsg, aSourceName, aSourceLine, aLineNumber,
                                  aColumnNumber, aFlags, category,
                                  aInnerWindowID);
@@ -232,7 +194,6 @@ void CSP_LogMessage(const nsAString& aMessage, const nsAString& aSourceName,
     rv = error->Init(cspMsg, aSourceName, aSourceLine, aLineNumber,
                      aColumnNumber, aFlags, category.get(), aFromPrivateWindow,
                      true /* from chrome context */);
->>>>>>> upstream-releases
   }
   if (NS_FAILED(rv)) {
     return;
@@ -243,50 +204,16 @@ void CSP_LogMessage(const nsAString& aMessage, const nsAString& aSourceName,
 /**
  * Combines CSP_LogMessage and CSP_GetLocalizedStr into one call.
  */
-<<<<<<< HEAD
-void CSP_LogLocalizedStr(const char* aName, const char16_t** aParams,
-                         uint32_t aLength, const nsAString& aSourceName,
-                         const nsAString& aSourceLine, uint32_t aLineNumber,
-                         uint32_t aColumnNumber, uint32_t aFlags,
-                         const nsACString& aCategory, uint64_t aInnerWindowID,
-                         bool aFromPrivateWindow) {
-||||||| merged common ancestors
-void
-CSP_LogLocalizedStr(const char* aName,
-                    const char16_t** aParams,
-                    uint32_t aLength,
-                    const nsAString& aSourceName,
-                    const nsAString& aSourceLine,
-                    uint32_t aLineNumber,
-                    uint32_t aColumnNumber,
-                    uint32_t aFlags,
-                    const nsACString& aCategory,
-                    uint64_t aInnerWindowID,
-                    bool aFromPrivateWindow)
-{
-=======
 void CSP_LogLocalizedStr(const char* aName, const nsTArray<nsString>& aParams,
                          const nsAString& aSourceName,
                          const nsAString& aSourceLine, uint32_t aLineNumber,
                          uint32_t aColumnNumber, uint32_t aFlags,
                          const nsACString& aCategory, uint64_t aInnerWindowID,
                          bool aFromPrivateWindow) {
->>>>>>> upstream-releases
   nsAutoString logMsg;
-<<<<<<< HEAD
-  CSP_GetLocalizedStr(aName, aParams, aLength, logMsg);
-  CSP_LogMessage(logMsg, aSourceName, aSourceLine, aLineNumber, aColumnNumber,
-                 aFlags, aCategory, aInnerWindowID, aFromPrivateWindow);
-||||||| merged common ancestors
-  CSP_GetLocalizedStr(aName, aParams, aLength, logMsg);
-  CSP_LogMessage(logMsg, aSourceName, aSourceLine,
-                 aLineNumber, aColumnNumber, aFlags,
-                 aCategory, aInnerWindowID, aFromPrivateWindow);
-=======
   CSP_GetLocalizedStr(aName, aParams, logMsg);
   CSP_LogMessage(logMsg, aSourceName, aSourceLine, aLineNumber, aColumnNumber,
                  aFlags, aCategory, aInnerWindowID, aFromPrivateWindow);
->>>>>>> upstream-releases
 }
 
 /* ===== Helpers ============================ */
@@ -728,17 +655,8 @@ bool nsCSPHostSrc::permits(nsIURI* aUri, const nsAString& aNonce,
     bool isDataScheme =
         (NS_SUCCEEDED(aUri->SchemeIs("data", &isDataScheme)) && isDataScheme);
     bool isFileScheme =
-<<<<<<< HEAD
         (NS_SUCCEEDED(aUri->SchemeIs("filesystem", &isFileScheme)) &&
          isFileScheme);
-
-||||||| merged common ancestors
-      (NS_SUCCEEDED(aUri->SchemeIs("filesystem", &isFileScheme)) && isFileScheme);
-
-=======
-        (NS_SUCCEEDED(aUri->SchemeIs("filesystem", &isFileScheme)) &&
-         isFileScheme);
->>>>>>> upstream-releases
     if (isBlobScheme || isDataScheme || isFileScheme) {
       return false;
     }
@@ -750,20 +668,10 @@ bool nsCSPHostSrc::permits(nsIURI* aUri, const nsAString& aNonce,
     }
   }
   // 4.5) host matching: Check if the allowed host starts with a wilcard.
-<<<<<<< HEAD
-  if (mHost.First() == '*') {
-    NS_ASSERTION(
-        mHost[1] == '.',
-        "Second character needs to be '.' whenever host starts with '*'");
-||||||| merged common ancestors
-  if (mHost.First() == '*') {
-    NS_ASSERTION(mHost[1] == '.', "Second character needs to be '.' whenever host starts with '*'");
-=======
   else if (mHost.First() == '*') {
     NS_ASSERTION(
         mHost[1] == '.',
         "Second character needs to be '.' whenever host starts with '*'");
->>>>>>> upstream-releases
 
     // Eliminate leading "*", but keeping the FULL STOP (.) thereafter before
     // checking if the remaining characters match
@@ -1221,14 +1129,6 @@ void nsCSPDirective::toDomCSPStruct(mozilla::dom::CSP& outCSP) const {
       outCSP.mWorker_src.Value() = std::move(srcs);
       return;
 
-<<<<<<< HEAD
-      // REQUIRE_SRI_FOR is handled in nsCSPPolicy::toDomCSPStruct()
-
-||||||| merged common ancestors
-    // REQUIRE_SRI_FOR is handled in nsCSPPolicy::toDomCSPStruct()
-
-=======
->>>>>>> upstream-releases
     default:
       NS_ASSERTION(false, "cannot find directive to convert CSP to JSON");
   }
@@ -1371,116 +1271,7 @@ void nsUpgradeInsecureDirective::toString(nsAString& outStr) const {
 
 void nsUpgradeInsecureDirective::getDirName(nsAString& outStr) const {
   outStr.AppendASCII(CSP_CSPDirectiveToString(
-<<<<<<< HEAD
       nsIContentSecurityPolicy::UPGRADE_IF_INSECURE_DIRECTIVE));
-}
-
-/* ===== nsRequireSRIForDirective ========================= */
-
-nsRequireSRIForDirective::nsRequireSRIForDirective(CSPDirective aDirective)
-    : nsCSPDirective(aDirective) {}
-
-nsRequireSRIForDirective::~nsRequireSRIForDirective() {}
-
-void nsRequireSRIForDirective::toString(nsAString& outStr) const {
-  outStr.AppendASCII(
-      CSP_CSPDirectiveToString(nsIContentSecurityPolicy::REQUIRE_SRI_FOR));
-  for (uint32_t i = 0; i < mTypes.Length(); i++) {
-    if (mTypes[i] == nsIContentPolicy::TYPE_SCRIPT) {
-      outStr.AppendLiteral(" script");
-    } else if (mTypes[i] == nsIContentPolicy::TYPE_STYLESHEET) {
-      outStr.AppendLiteral(" style");
-    }
-  }
-}
-
-bool nsRequireSRIForDirective::hasType(nsContentPolicyType aType) const {
-  for (uint32_t i = 0; i < mTypes.Length(); i++) {
-    if (mTypes[i] == aType) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool nsRequireSRIForDirective::restrictsContentType(
-    const nsContentPolicyType aType) const {
-  return this->hasType(aType);
-}
-
-bool nsRequireSRIForDirective::allows(enum CSPKeyword aKeyword,
-                                      const nsAString& aHashOrNonce,
-                                      bool aParserCreated) const {
-  // can only disallow CSP_REQUIRE_SRI_FOR.
-  return (aKeyword != CSP_REQUIRE_SRI_FOR);
-}
-
-void nsRequireSRIForDirective::getDirName(nsAString& outStr) const {
-  outStr.AppendASCII(
-      CSP_CSPDirectiveToString(nsIContentSecurityPolicy::REQUIRE_SRI_FOR));
-||||||| merged common ancestors
-    nsIContentSecurityPolicy::UPGRADE_IF_INSECURE_DIRECTIVE));
-}
-
-/* ===== nsRequireSRIForDirective ========================= */
-
-nsRequireSRIForDirective::nsRequireSRIForDirective(CSPDirective aDirective)
-: nsCSPDirective(aDirective)
-{
-}
-
-nsRequireSRIForDirective::~nsRequireSRIForDirective()
-{
-}
-
-void
-nsRequireSRIForDirective::toString(nsAString &outStr) const
-{
-  outStr.AppendASCII(CSP_CSPDirectiveToString(
-    nsIContentSecurityPolicy::REQUIRE_SRI_FOR));
-  for (uint32_t i = 0; i < mTypes.Length(); i++) {
-    if (mTypes[i] == nsIContentPolicy::TYPE_SCRIPT) {
-      outStr.AppendLiteral(" script");
-    }
-    else if (mTypes[i] == nsIContentPolicy::TYPE_STYLESHEET) {
-      outStr.AppendLiteral(" style");
-    }
-  }
-}
-
-bool
-nsRequireSRIForDirective::hasType(nsContentPolicyType aType) const
-{
-  for (uint32_t i = 0; i < mTypes.Length(); i++) {
-    if (mTypes[i] == aType) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool
-nsRequireSRIForDirective::restrictsContentType(const nsContentPolicyType aType) const
-{
-  return this->hasType(aType);
-}
-
-bool
-nsRequireSRIForDirective::allows(enum CSPKeyword aKeyword, const nsAString& aHashOrNonce,
-                                 bool aParserCreated) const
-{
-  // can only disallow CSP_REQUIRE_SRI_FOR.
-  return (aKeyword != CSP_REQUIRE_SRI_FOR);
-}
-
-void
-nsRequireSRIForDirective::getDirName(nsAString& outStr) const
-{
-  outStr.AppendASCII(CSP_CSPDirectiveToString(
-    nsIContentSecurityPolicy::REQUIRE_SRI_FOR));
-=======
-      nsIContentSecurityPolicy::UPGRADE_IF_INSECURE_DIRECTIVE));
->>>>>>> upstream-releases
 }
 
 /* ===== nsCSPPolicy ========================= */
@@ -1722,28 +1513,3 @@ bool nsCSPPolicy::visitDirectiveSrcs(CSPDirective aDir,
   }
   return false;
 }
-<<<<<<< HEAD
-
-bool nsCSPPolicy::requireSRIForType(nsContentPolicyType aContentType) {
-  for (uint32_t i = 0; i < mDirectives.Length(); i++) {
-    if (mDirectives[i]->equals(nsIContentSecurityPolicy::REQUIRE_SRI_FOR)) {
-      return static_cast<nsRequireSRIForDirective*>(mDirectives[i])
-          ->hasType(aContentType);
-    }
-  }
-  return false;
-}
-||||||| merged common ancestors
-
-bool
-nsCSPPolicy::requireSRIForType(nsContentPolicyType aContentType)
-{
-  for (uint32_t i = 0; i < mDirectives.Length(); i++) {
-    if (mDirectives[i]->equals(nsIContentSecurityPolicy::REQUIRE_SRI_FOR)) {
-      return static_cast<nsRequireSRIForDirective*>(mDirectives[i])->hasType(aContentType);
-    }
-  }
-  return false;
-}
-=======
->>>>>>> upstream-releases

@@ -45,16 +45,8 @@ class nsZipWriter final : public nsIZipWriter, public nsIRequestObserver {
   NS_DECL_NSIZIPWRITER
   NS_DECL_NSIREQUESTOBSERVER
 
-<<<<<<< HEAD
-  nsZipWriter();
-  nsresult EntryCompleteCallback(nsZipHeader *aHeader, nsresult aStatus);
-||||||| merged common ancestors
-    nsZipWriter();
-    nsresult EntryCompleteCallback(nsZipHeader *aHeader, nsresult aStatus);
-=======
   nsZipWriter();
   nsresult EntryCompleteCallback(nsZipHeader* aHeader, nsresult aStatus);
->>>>>>> upstream-releases
 
  private:
   ~nsZipWriter();
@@ -72,33 +64,6 @@ class nsZipWriter final : public nsIZipWriter, public nsIRequestObserver {
   nsDataHashtable<nsCStringHashKey, int32_t> mEntryHash;
   nsCString mComment;
 
-<<<<<<< HEAD
-  nsresult SeekCDS();
-  void Cleanup();
-  nsresult ReadFile(nsIFile *aFile);
-  nsresult InternalAddEntryDirectory(const nsACString &aZipEntry,
-                                     PRTime aModTime, uint32_t aPermissions);
-  nsresult BeginProcessingAddition(nsZipQueueItem *aItem, bool *complete);
-  nsresult BeginProcessingRemoval(int32_t aPos);
-  nsresult AddEntryStream(const nsACString &aZipEntry, PRTime aModTime,
-                          int32_t aCompression, nsIInputStream *aStream,
-                          bool aQueue, uint32_t aPermissions);
-  void BeginProcessingNextItem();
-  void FinishQueue(nsresult aStatus);
-||||||| merged common ancestors
-    nsresult SeekCDS();
-    void Cleanup();
-    nsresult ReadFile(nsIFile *aFile);
-    nsresult InternalAddEntryDirectory(const nsACString & aZipEntry,
-                                       PRTime aModTime, uint32_t aPermissions);
-    nsresult BeginProcessingAddition(nsZipQueueItem* aItem, bool* complete);
-    nsresult BeginProcessingRemoval(int32_t aPos);
-    nsresult AddEntryStream(const nsACString & aZipEntry, PRTime aModTime,
-                            int32_t aCompression, nsIInputStream *aStream,
-                            bool aQueue, uint32_t aPermissions);
-    void BeginProcessingNextItem();
-    void FinishQueue(nsresult aStatus);
-=======
   nsresult SeekCDS();
   void Cleanup();
   nsresult ReadFile(nsIFile* aFile);
@@ -111,7 +76,6 @@ class nsZipWriter final : public nsIZipWriter, public nsIRequestObserver {
                           bool aQueue, uint32_t aPermissions);
   void BeginProcessingNextItem();
   void FinishQueue(nsresult aStatus);
->>>>>>> upstream-releases
 };
 
 #endif

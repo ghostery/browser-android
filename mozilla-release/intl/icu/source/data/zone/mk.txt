@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 mk{
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.27"}
->>>>>>> upstream-releases
     zoneStrings{
         "Africa:Abidjan"{
             ec{"Абиџан"}

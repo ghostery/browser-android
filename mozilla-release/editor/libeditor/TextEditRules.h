@@ -89,14 +89,6 @@ class TextEditRules : public nsITimerCallback, public nsINamed {
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult AfterEdit(EditSubAction aEditSubAction,
                              nsIEditor::EDirection aDirection);
-<<<<<<< HEAD
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  virtual nsresult WillDoAction(EditSubActionInfo& aInfo, bool* aCancel,
-||||||| merged common ancestors
-  virtual nsresult WillDoAction(Selection* aSelection,
-                                EditSubActionInfo& aInfo,
-                                bool* aCancel,
-=======
   // NOTE: Don't mark WillDoAction() nor DidDoAction() as MOZ_CAN_RUN_SCRIPT
   //       because they are too generic and doing it makes a lot of public
   //       editor methods marked as MOZ_CAN_RUN_SCRIPT too, but some of them
@@ -104,18 +96,9 @@ class TextEditRules : public nsITimerCallback, public nsINamed {
   //       each method callsed by this method public.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsresult WillDoAction(EditSubActionInfo& aInfo, bool* aCancel,
->>>>>>> upstream-releases
                                 bool* aHandled);
-<<<<<<< HEAD
-  virtual nsresult DidDoAction(EditSubActionInfo& aInfo, nsresult aResult);
-||||||| merged common ancestors
-  virtual nsresult DidDoAction(Selection* aSelection,
-                               EditSubActionInfo& aInfo,
-                               nsresult aResult);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsresult DidDoAction(EditSubActionInfo& aInfo, nsresult aResult);
->>>>>>> upstream-releases
 
   /**
    * Return false if the editor has non-empty text nodes or non-text
@@ -221,20 +204,10 @@ class TextEditRules : public nsITimerCallback, public nsINamed {
    * @param aMaxLength          The maximum string length which the text editor
    *                            allows to set.
    */
-<<<<<<< HEAD
-  MOZ_MUST_USE nsresult WillSetText(bool* aCancel, bool* aHandled,
-                                    const nsAString* inString,
-                                    int32_t aMaxLength);
-||||||| merged common ancestors
-  MOZ_MUST_USE nsresult
-  WillSetText(bool* aCancel, bool* aHandled,
-              const nsAString* inString, int32_t aMaxLength);
-=======
   MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillSetText(bool* aCancel, bool* aHandled,
                                     const nsAString* inString,
                                     int32_t aMaxLength);
->>>>>>> upstream-releases
 
   /**
    * Called before inserting something into the editor.
@@ -339,19 +312,8 @@ class TextEditRules : public nsITimerCallback, public nsINamed {
    * @return                Returns created <br> element or an error code
    *                        if couldn't create new <br> element.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  CreateElementResult CreateBR(
-      const EditorDOMPointBase<PT, CT>& aPointToInsert) {
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  CreateElementResult
-  CreateBR(const EditorDOMPointBase<PT, CT>& aPointToInsert)
-  {
-=======
   MOZ_CAN_RUN_SCRIPT CreateElementResult
   CreateBR(const EditorDOMPoint& aPointToInsert) {
->>>>>>> upstream-releases
     CreateElementResult ret = CreateBRInternal(aPointToInsert, false);
 #ifdef DEBUG
     // If editor is destroyed, it must return NS_ERROR_EDITOR_DESTROYED.
@@ -370,19 +332,8 @@ class TextEditRules : public nsITimerCallback, public nsINamed {
    * @return                Returns created <br> element or an error code
    *                        if couldn't create new <br> element.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  CreateElementResult CreateMozBR(
-      const EditorDOMPointBase<PT, CT>& aPointToInsert) {
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  CreateElementResult
-  CreateMozBR(const EditorDOMPointBase<PT, CT>& aPointToInsert)
-  {
-=======
   MOZ_CAN_RUN_SCRIPT CreateElementResult
   CreateMozBR(const EditorDOMPoint& aPointToInsert) {
->>>>>>> upstream-releases
     CreateElementResult ret = CreateBRInternal(aPointToInsert, true);
 #ifdef DEBUG
     // If editor is destroyed, it must return NS_ERROR_EDITOR_DESTROYED.
@@ -438,19 +389,8 @@ class TextEditRules : public nsITimerCallback, public nsINamed {
    * @return                    Returns created <br> element and error code.
    *                            If it succeeded, never returns nullptr.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  CreateElementResult CreateBRInternal(
-      const EditorDOMPointBase<PT, CT>& aPointToInsert, bool aCreateMozBR);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  CreateElementResult
-  CreateBRInternal(const EditorDOMPointBase<PT, CT>& aPointToInsert,
-                   bool aCreateMozBR);
-=======
   MOZ_CAN_RUN_SCRIPT CreateElementResult
   CreateBRInternal(const EditorDOMPoint& aPointToInsert, bool aCreateMozBR);
->>>>>>> upstream-releases
 
  protected:
   /**

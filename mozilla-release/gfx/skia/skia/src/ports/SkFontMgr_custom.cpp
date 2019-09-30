@@ -113,22 +113,6 @@ sk_sp<SkTypeface> SkTypeface_File::onMakeClone(const SkFontArguments& args) cons
                                          familyName);
 }
 
-sk_sp<SkTypeface> SkTypeface_File::onMakeClone(const SkFontArguments& args) const {
-    std::unique_ptr<SkFontData> data = this->cloneFontData(args);
-    if (!data) {
-        return nullptr;
-    }
-
-    SkString familyName;
-    this->getFamilyName(&familyName);
-
-    return sk_make_sp<SkTypeface_Stream>(std::move(data),
-                                         this->fontStyle(),
-                                         this->isFixedPitch(),
-                                         this->isSysFont(),
-                                         familyName);
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 
 SkFontStyleSet_Custom::SkFontStyleSet_Custom(const SkString familyName) : fFamilyName(familyName) {}

@@ -109,23 +109,9 @@
   margin: 0 1px;
   background-image: url(images/arrow-e.svg);
   background-repeat: no-repeat;
-<<<<<<< HEAD
-  background-size: contain;
-  -moz-context-properties: fill;
-  fill: var(--theme-body-color-inactive);
-||||||| merged common ancestors
-  background-size: 5px 8px;
-  background-position: left center;
-  padding-inline-start: 8px;
-}
-
-.computed-other-property-value:dir(rtl) {
-  background-position-x: right;
-=======
   background-size: contain;
   -moz-context-properties: fill;
   fill: var(--theme-text-color-inactive);
->>>>>>> upstream-releases
 }
 
 .computed-other-property-value:dir(rtl)::before {

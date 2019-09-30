@@ -87,33 +87,15 @@ void URLParams::Delete(const nsAString& aName) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void URLParams::ConvertString(const nsACString& aInput,
-                                           nsAString& aOutput) {
-||||||| merged common ancestors
-/* static */ void
-URLParams::ConvertString(const nsACString& aInput, nsAString& aOutput)
-{
-=======
 /* static */
 void URLParams::ConvertString(const nsACString& aInput, nsAString& aOutput) {
->>>>>>> upstream-releases
   if (NS_FAILED(UTF_8_ENCODING->DecodeWithoutBOMHandling(aInput, aOutput))) {
     MOZ_CRASH("Out of memory when converting URL params.");
   }
 }
 
-<<<<<<< HEAD
-/* static */ void URLParams::DecodeString(const nsACString& aInput,
-                                          nsAString& aOutput) {
-||||||| merged common ancestors
-/* static */ void
-URLParams::DecodeString(const nsACString& aInput, nsAString& aOutput)
-{
-=======
 /* static */
 void URLParams::DecodeString(const nsACString& aInput, nsAString& aOutput) {
->>>>>>> upstream-releases
   nsACString::const_iterator start, end;
   aInput.BeginReading(start);
   aInput.EndReading(end);
@@ -165,17 +147,8 @@ void URLParams::DecodeString(const nsACString& aInput, nsAString& aOutput) {
   ConvertString(unescaped, aOutput);
 }
 
-<<<<<<< HEAD
-/* static */ bool URLParams::Parse(const nsACString& aInput,
-                                   ForEachIterator& aIterator) {
-||||||| merged common ancestors
-/* static */ bool
-URLParams::Parse(const nsACString& aInput, ForEachIterator& aIterator)
-{
-=======
 /* static */
 bool URLParams::Parse(const nsACString& aInput, ForEachIterator& aIterator) {
->>>>>>> upstream-releases
   nsACString::const_iterator start, end;
   aInput.BeginReading(start);
   aInput.EndReading(end);
@@ -253,21 +226,9 @@ class MOZ_STACK_CLASS ExtractURLParam final
  * @param aValue The value of the extracted parameter, void if not found.
  * @return Whether the parameter was found in the form-urlencoded.
  */
-<<<<<<< HEAD
-/* static */ bool URLParams::Extract(const nsACString& aInput,
-                                     const nsAString& aName,
-                                     nsAString& aValue) {
-||||||| merged common ancestors
-/* static */ bool
-URLParams::Extract(const nsACString& aInput,
-                   const nsAString& aName,
-                   nsAString& aValue)
-{
-=======
 /* static */
 bool URLParams::Extract(const nsACString& aInput, const nsAString& aName,
                         nsAString& aValue) {
->>>>>>> upstream-releases
   aValue.SetIsVoid(true);
   ExtractURLParam iterator(aName, aValue);
   return !URLParams::Parse(aInput, iterator);
@@ -360,24 +321,11 @@ JSObject* URLSearchParams::WrapObject(JSContext* aCx,
   return URLSearchParams_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<URLSearchParams> URLSearchParams::Constructor(
-    const GlobalObject& aGlobal,
-    const USVStringSequenceSequenceOrUSVStringUSVStringRecordOrUSVString& aInit,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<URLSearchParams>
-URLSearchParams::Constructor(const GlobalObject& aGlobal,
-                             const USVStringSequenceSequenceOrUSVStringUSVStringRecordOrUSVString& aInit,
-                             ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<URLSearchParams> URLSearchParams::Constructor(
     const GlobalObject& aGlobal,
     const USVStringSequenceSequenceOrUSVStringUSVStringRecordOrUSVString& aInit,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<URLSearchParams> sp =
       new URLSearchParams(aGlobal.GetAsSupports(), nullptr);
 
@@ -475,65 +423,7 @@ void URLSearchParams::Sort(ErrorResult& aRv) {
   }
 }
 
-<<<<<<< HEAD
-// Helper functions for structured cloning
-inline bool ReadString(JSStructuredCloneReader* aReader, nsString& aString) {
-  MOZ_ASSERT(aReader);
-
-  bool read;
-  uint32_t nameLength, zero;
-  read = JS_ReadUint32Pair(aReader, &nameLength, &zero);
-  if (!read) {
-    return false;
-  }
-  MOZ_ASSERT(zero == 0);
-  if (NS_WARN_IF(!aString.SetLength(nameLength, fallible))) {
-    return false;
-  }
-  size_t charSize = sizeof(nsString::char_type);
-  read = JS_ReadBytes(aReader, (void*)aString.BeginWriting(),
-                      nameLength * charSize);
-  if (!read) {
-    return false;
-  }
-
-  return true;
-}
-
 nsresult URLParams::Sort() {
-||||||| merged common ancestors
-// Helper functions for structured cloning
-inline bool
-ReadString(JSStructuredCloneReader* aReader, nsString& aString)
-{
-  MOZ_ASSERT(aReader);
-
-  bool read;
-  uint32_t nameLength, zero;
-  read = JS_ReadUint32Pair(aReader, &nameLength, &zero);
-  if (!read) {
-    return false;
-  }
-  MOZ_ASSERT(zero == 0);
-  if (NS_WARN_IF(!aString.SetLength(nameLength, fallible))) {
-    return false;
-  }
-  size_t charSize = sizeof(nsString::char_type);
-  read = JS_ReadBytes(aReader, (void*) aString.BeginWriting(),
-                      nameLength * charSize);
-  if (!read) {
-    return false;
-  }
-
-  return true;
-}
-
-nsresult
-URLParams::Sort()
-{
-=======
-nsresult URLParams::Sort() {
->>>>>>> upstream-releases
   // Unfortunately we cannot use nsTArray<>.Sort() because it doesn't keep the
   // correct order of the values for equal keys.
 
@@ -563,34 +453,7 @@ nsresult URLParams::Sort() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-inline bool WriteString(JSStructuredCloneWriter* aWriter,
-                        const nsString& aString) {
-  MOZ_ASSERT(aWriter);
-
-  size_t charSize = sizeof(nsString::char_type);
-  return JS_WriteUint32Pair(aWriter, aString.Length(), 0) &&
-         JS_WriteBytes(aWriter, aString.get(), aString.Length() * charSize);
-}
-
 bool URLParams::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const {
-||||||| merged common ancestors
-inline bool
-WriteString(JSStructuredCloneWriter* aWriter, const nsString& aString)
-{
-  MOZ_ASSERT(aWriter);
-
-  size_t charSize = sizeof(nsString::char_type);
-  return JS_WriteUint32Pair(aWriter, aString.Length(), 0) &&
-         JS_WriteBytes(aWriter, aString.get(), aString.Length() * charSize);
-}
-
-bool
-URLParams::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const
-{
-=======
-bool URLParams::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const {
->>>>>>> upstream-releases
   const uint32_t& nParams = mParams.Length();
   if (!JS_WriteUint32Pair(aWriter, nParams, 0)) {
     return false;
@@ -625,29 +488,11 @@ bool URLParams::ReadStructuredClone(JSStructuredCloneReader* aReader) {
   return true;
 }
 
-<<<<<<< HEAD
-bool URLSearchParams::WriteStructuredClone(
-    JSStructuredCloneWriter* aWriter) const {
-||||||| merged common ancestors
-bool
-URLSearchParams::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const
-{
-=======
 bool URLSearchParams::WriteStructuredClone(
     JSContext* aCx, JSStructuredCloneWriter* aWriter) const {
->>>>>>> upstream-releases
   return mParams->WriteStructuredClone(aWriter);
 }
 
-<<<<<<< HEAD
-bool URLSearchParams::ReadStructuredClone(JSStructuredCloneReader* aReader) {
-  return mParams->ReadStructuredClone(aReader);
-||||||| merged common ancestors
-bool
-URLSearchParams::ReadStructuredClone(JSStructuredCloneReader* aReader)
-{
- return mParams->ReadStructuredClone(aReader);
-=======
 // static
 already_AddRefed<URLSearchParams> URLSearchParams::ReadStructuredClone(
     JSContext* aCx, nsIGlobalObject* aGlobal,
@@ -657,7 +502,6 @@ already_AddRefed<URLSearchParams> URLSearchParams::ReadStructuredClone(
     return nullptr;
   }
   return params.forget();
->>>>>>> upstream-releases
 }
 
 // contentTypeWithCharset can be set to the contentType or

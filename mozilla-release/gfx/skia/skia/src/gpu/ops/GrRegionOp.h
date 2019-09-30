@@ -10,7 +10,6 @@
 
 #include "GrTypesPriv.h"
 
-class GrContext;
 class GrDrawOp;
 class GrRecordingContext;
 class SkMatrix;
@@ -20,21 +19,11 @@ struct GrUserStencilSettings;
 
 namespace GrRegionOp {
 /** GrAAType must be kNone or kMSAA. */
-<<<<<<< HEAD
-std::unique_ptr<GrDrawOp> Make(GrContext*,
-                               GrPaint&&,
-                               const SkMatrix& viewMatrix,
-                               const SkRegion&,
-                               GrAAType,
-||||||| merged common ancestors
-std::unique_ptr<GrDrawOp> Make(GrPaint&&, const SkMatrix& viewMatrix, const SkRegion&, GrAAType,
-=======
 std::unique_ptr<GrDrawOp> Make(GrRecordingContext*,
                                GrPaint&&,
                                const SkMatrix& viewMatrix,
                                const SkRegion&,
                                GrAAType,
->>>>>>> upstream-releases
                                const GrUserStencilSettings* stencilSettings = nullptr);
 }
 

@@ -3,17 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "Snackbars", "resource://gre/modules/Snackbars.jsm");
-ChromeUtils.defineModuleGetter(this, "EventDispatcher", "resource://gre/modules/Messaging.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-
-XPCOMUtils.defineLazyModuleGetter(this, "Snackbars", "resource://gre/modules/Snackbars.jsm");
-XPCOMUtils.defineLazyModuleGetter(this, "EventDispatcher", "resource://gre/modules/Messaging.jsm");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "Snackbars",
@@ -24,7 +13,6 @@ ChromeUtils.defineModuleGetter(
   "EventDispatcher",
   "resource://gre/modules/Messaging.jsm"
 );
->>>>>>> upstream-releases
 
 add_task(async function test_snackbar_api() {
   Snackbars.show("This is a Snackbar", Snackbars.LENGTH_INDEFINITE, {

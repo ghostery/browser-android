@@ -32,14 +32,7 @@
 #include "nsObserverService.h"
 
 #include "nsDebugImpl.h"
-<<<<<<< HEAD
-#include "nsTraceRefcnt.h"
-||||||| merged common ancestors
-#include "nsTraceRefcnt.h"
-#include "nsErrorService.h"
-=======
 #include "nsSystemInfo.h"
->>>>>>> upstream-releases
 
 #include "nsINIParserImpl.h"
 
@@ -137,114 +130,8 @@ extern nsresult NS_CategoryManagerGetFactory(nsIFactory**);
 extern nsresult CreateAnonTempFileRemover();
 #endif
 
-<<<<<<< HEAD
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsProcess)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsID)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsString)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsCString)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRBool)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint8)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint16)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint32)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint64)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRTime)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsChar)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRInt16)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRInt32)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRInt64)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsFloat)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsDouble)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsInterfacePointer)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsConsoleService, Init)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsBinaryOutputStream)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsBinaryInputStream)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsStorageStream)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsVersionComparatorImpl)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsScriptableBase64Encoder)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsVariantCC)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsHashPropertyBagCC)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsUUIDGenerator, Init)
-
-#ifdef MOZ_WIDGET_COCOA
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsMacUtilsImpl)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsMacPreferencesReader)
-#endif
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsSystemInfo, Init)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsMemoryReporterManager, Init)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsMemoryInfoDumper)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsIOUtil)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSecurityConsoleMessage)
-
-static nsresult nsThreadManagerGetSingleton(nsISupports* aOuter,
-                                            const nsIID& aIID,
-                                            void** aInstancePtr) {
-||||||| merged common ancestors
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsProcess)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsID)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsString)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsCString)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRBool)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint8)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint16)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint32)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRUint64)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRTime)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsChar)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRInt16)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRInt32)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsPRInt64)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsFloat)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsDouble)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSupportsInterfacePointer)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsConsoleService, Init)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsBinaryOutputStream)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsBinaryInputStream)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsStorageStream)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsVersionComparatorImpl)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsScriptableBase64Encoder)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsVariantCC)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsHashPropertyBagCC)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsUUIDGenerator, Init)
-
-#ifdef MOZ_WIDGET_COCOA
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsMacUtilsImpl)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsMacPreferencesReader)
-#endif
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsSystemInfo, Init)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsMemoryReporterManager, Init)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsMemoryInfoDumper)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsIOUtil)
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSecurityConsoleMessage)
-
-static nsresult
-nsThreadManagerGetSingleton(nsISupports* aOuter,
-                            const nsIID& aIID,
-                            void** aInstancePtr)
-{
-=======
 nsresult nsThreadManagerGetSingleton(nsISupports* aOuter, const nsIID& aIID,
                                      void** aInstancePtr) {
->>>>>>> upstream-releases
   NS_ASSERTION(aInstancePtr, "null outptr");
   if (NS_WARN_IF(aOuter)) {
     return NS_ERROR_NO_AGGREGATION;
@@ -265,166 +152,18 @@ char16_t* gGREBinPath = nullptr;
 
 static NS_DEFINE_CID(kINIParserFactoryCID, NS_INIPARSERFACTORY_CID);
 
-<<<<<<< HEAD
-NS_DEFINE_NAMED_CID(NS_CHROMEREGISTRY_CID);
-NS_DEFINE_NAMED_CID(NS_CHROMEPROTOCOLHANDLER_CID);
-
-NS_DEFINE_NAMED_CID(NS_SECURITY_CONSOLE_MESSAGE_CID);
-
-#ifdef MOZ_WIDGET_COCOA
-NS_DEFINE_NAMED_CID(NS_MACPREFERENCESREADER_CID);
-#endif
-
-NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsChromeRegistry,
-                                         nsChromeRegistry::GetSingleton)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsChromeProtocolHandler)
-
 static already_AddRefed<nsIFactory> CreateINIParserFactory(
     const mozilla::Module& aModule, const mozilla::Module::CIDEntry& aEntry) {
-||||||| merged common ancestors
-NS_DEFINE_NAMED_CID(NS_CHROMEREGISTRY_CID);
-NS_DEFINE_NAMED_CID(NS_CHROMEPROTOCOLHANDLER_CID);
-
-NS_DEFINE_NAMED_CID(NS_SECURITY_CONSOLE_MESSAGE_CID);
-
-#ifdef MOZ_WIDGET_COCOA
-NS_DEFINE_NAMED_CID(NS_MACPREFERENCESREADER_CID);
-#endif
-
-NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsChromeRegistry,
-                                         nsChromeRegistry::GetSingleton)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsChromeProtocolHandler)
-
-static already_AddRefed<nsIFactory>
-CreateINIParserFactory(const mozilla::Module& aModule,
-                       const mozilla::Module::CIDEntry& aEntry)
-{
-=======
-static already_AddRefed<nsIFactory> CreateINIParserFactory(
-    const mozilla::Module& aModule, const mozilla::Module::CIDEntry& aEntry) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFactory> f = new nsINIParserFactory();
   return f.forget();
 }
 
-<<<<<<< HEAD
-#define COMPONENT(NAME, Ctor) \
-  static NS_DEFINE_CID(kNS_##NAME##_CID, NS_##NAME##_CID);
-#define COMPONENT_M(NAME, Ctor, Selector) \
-  static NS_DEFINE_CID(kNS_##NAME##_CID, NS_##NAME##_CID);
-#include "XPCOMModule.inc"
-#undef COMPONENT
-#undef COMPONENT_M
-
-#define COMPONENT(NAME, Ctor) {&kNS_##NAME##_CID, false, nullptr, Ctor},
-#define COMPONENT_M(NAME, Ctor, Selector) \
-  {&kNS_##NAME##_CID, false, nullptr, Ctor, Selector},
-||||||| merged common ancestors
-#define COMPONENT(NAME, Ctor) static NS_DEFINE_CID(kNS_##NAME##_CID, NS_##NAME##_CID);
-#define COMPONENT_M(NAME, Ctor, Selector) static NS_DEFINE_CID(kNS_##NAME##_CID, NS_##NAME##_CID);
-#include "XPCOMModule.inc"
-#undef COMPONENT
-#undef COMPONENT_M
-
-#define COMPONENT(NAME, Ctor) { &kNS_##NAME##_CID, false, nullptr, Ctor },
-#define COMPONENT_M(NAME, Ctor, Selector) { &kNS_##NAME##_CID, false, nullptr, Ctor, Selector },
-=======
->>>>>>> upstream-releases
 const mozilla::Module::CIDEntry kXPCOMCIDEntries[] = {
-<<<<<<< HEAD
-    {&kComponentManagerCID, true, nullptr, nsComponentManagerImpl::Create,
-     Module::ALLOW_IN_GPU_AND_VR_PROCESS},
-    {&kINIParserFactoryCID, false, CreateINIParserFactory},
-#include "XPCOMModule.inc"
-    {&kNS_CHROMEREGISTRY_CID, false, nullptr, nsChromeRegistryConstructor},
-    {&kNS_CHROMEPROTOCOLHANDLER_CID, false, nullptr,
-     nsChromeProtocolHandlerConstructor},
-    {&kNS_SECURITY_CONSOLE_MESSAGE_CID, false, nullptr,
-     nsSecurityConsoleMessageConstructor},
-#ifdef MOZ_WIDGET_COCOA
-    {&kNS_MACPREFERENCESREADER_CID, false, nullptr,
-     nsMacPreferencesReaderConstructor},
-#endif
-    {nullptr}};
-#undef COMPONENT
-#undef COMPONENT_M
-||||||| merged common ancestors
-  { &kComponentManagerCID, true, nullptr, nsComponentManagerImpl::Create, Module::ALLOW_IN_GPU_PROCESS },
-  { &kINIParserFactoryCID, false, CreateINIParserFactory },
-#include "XPCOMModule.inc"
-  { &kNS_CHROMEREGISTRY_CID, false, nullptr, nsChromeRegistryConstructor },
-  { &kNS_CHROMEPROTOCOLHANDLER_CID, false, nullptr, nsChromeProtocolHandlerConstructor },
-  { &kNS_SECURITY_CONSOLE_MESSAGE_CID, false, nullptr, nsSecurityConsoleMessageConstructor },
-#ifdef MOZ_WIDGET_COCOA
-  { &kNS_MACPREFERENCESREADER_CID, false, nullptr, nsMacPreferencesReaderConstructor },
-#endif
-  { nullptr }
-};
-#undef COMPONENT
-#undef COMPONENT_M
-=======
     {&kINIParserFactoryCID, false, CreateINIParserFactory}, {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define COMPONENT(NAME, Ctor) {NS_##NAME##_CONTRACTID, &kNS_##NAME##_CID},
-#define COMPONENT_M(NAME, Ctor, Selector) \
-  {NS_##NAME##_CONTRACTID, &kNS_##NAME##_CID, Selector},
-||||||| merged common ancestors
-#define COMPONENT(NAME, Ctor) { NS_##NAME##_CONTRACTID, &kNS_##NAME##_CID },
-#define COMPONENT_M(NAME, Ctor, Selector) { NS_##NAME##_CONTRACTID, &kNS_##NAME##_CID, Selector },
-=======
->>>>>>> upstream-releases
 const mozilla::Module::ContractIDEntry kXPCOMContracts[] = {
-<<<<<<< HEAD
-#include "XPCOMModule.inc"
-    {NS_CHROMEREGISTRY_CONTRACTID, &kNS_CHROMEREGISTRY_CID},
-    {NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX "chrome",
-     &kNS_CHROMEPROTOCOLHANDLER_CID},
-    {NS_INIPARSERFACTORY_CONTRACTID, &kINIParserFactoryCID},
-    {NS_SECURITY_CONSOLE_MESSAGE_CONTRACTID, &kNS_SECURITY_CONSOLE_MESSAGE_CID},
-#ifdef MOZ_WIDGET_COCOA
-    {NS_MACPREFERENCESREADER_CONTRACTID, &kNS_MACPREFERENCESREADER_CID},
-#endif
-    {nullptr}};
-#undef COMPONENT
-#undef COMPONENT_M
-||||||| merged common ancestors
-#include "XPCOMModule.inc"
-  { NS_CHROMEREGISTRY_CONTRACTID, &kNS_CHROMEREGISTRY_CID },
-  { NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX "chrome", &kNS_CHROMEPROTOCOLHANDLER_CID },
-  { NS_INIPARSERFACTORY_CONTRACTID, &kINIParserFactoryCID },
-  { NS_SECURITY_CONSOLE_MESSAGE_CONTRACTID, &kNS_SECURITY_CONSOLE_MESSAGE_CID },
-#ifdef MOZ_WIDGET_COCOA
-  { NS_MACPREFERENCESREADER_CONTRACTID, &kNS_MACPREFERENCESREADER_CID },
-#endif
-  { nullptr }
-};
-#undef COMPONENT
-#undef COMPONENT_M
-=======
     {NS_INIPARSERFACTORY_CONTRACTID, &kINIParserFactoryCID}, {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const mozilla::Module kXPCOMModule = {mozilla::Module::kVersion,
-                                      kXPCOMCIDEntries,
-                                      kXPCOMContracts,
-                                      nullptr,
-                                      nullptr,
-                                      nullptr,
-                                      nullptr,
-                                      Module::ALLOW_IN_GPU_AND_VR_PROCESS};
-||||||| merged common ancestors
-const mozilla::Module kXPCOMModule = {
-  mozilla::Module::kVersion, kXPCOMCIDEntries, kXPCOMContracts,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  Module::ALLOW_IN_GPU_PROCESS
-};
-=======
 const mozilla::Module kXPCOMModule = {
     mozilla::Module::kVersion,
     kXPCOMCIDEntries,
@@ -434,35 +173,13 @@ const mozilla::Module kXPCOMModule = {
     nullptr,
     nullptr,
     Module::ALLOW_IN_GPU_RDD_VR_AND_SOCKET_PROCESS};
->>>>>>> upstream-releases
 
 // gDebug will be freed during shutdown.
 static nsIDebug2* gDebug = nullptr;
 
 EXPORT_XPCOM_API(nsresult)
-<<<<<<< HEAD
 NS_GetDebug(nsIDebug2** aResult) {
   return nsDebugImpl::Create(nullptr, NS_GET_IID(nsIDebug2), (void**)aResult);
-}
-
-EXPORT_XPCOM_API(nsresult)
-NS_InitXPCOM(nsIServiceManager** aResult, nsIFile* aBinDirectory) {
-  return NS_InitXPCOM2(aResult, aBinDirectory, nullptr);
-||||||| merged common ancestors
-NS_GetDebug(nsIDebug2** aResult)
-{
-  return nsDebugImpl::Create(nullptr,  NS_GET_IID(nsIDebug2), (void**)aResult);
-}
-
-EXPORT_XPCOM_API(nsresult)
-NS_InitXPCOM(nsIServiceManager** aResult,
-             nsIFile* aBinDirectory)
-{
-  return NS_InitXPCOM2(aResult, aBinDirectory, nullptr);
-=======
-NS_GetDebug(nsIDebug2** aResult) {
-  return nsDebugImpl::Create(nullptr, NS_GET_IID(nsIDebug2), (void**)aResult);
->>>>>>> upstream-releases
 }
 
 class ICUReporter final : public nsIMemoryReporter,
@@ -522,168 +239,16 @@ class OggReporter final : public nsIMemoryReporter,
 
 NS_IMPL_ISUPPORTS(OggReporter, nsIMemoryReporter)
 
-<<<<<<< HEAD
 /* static */ template <>
 CountingAllocatorBase<OggReporter>::AmountType
     CountingAllocatorBase<OggReporter>::sAmount(0);
-
-#ifdef MOZ_VPX
-class VPXReporter final : public nsIMemoryReporter,
-                          public CountingAllocatorBase<VPXReporter> {
- public:
-  NS_DECL_ISUPPORTS
-
- private:
-  NS_IMETHOD
-  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
-                 bool aAnonymize) override {
-    MOZ_COLLECT_REPORT("explicit/media/libvpx", KIND_HEAP, UNITS_BYTES,
-                       MemoryAllocated(),
-                       "Memory allocated through libvpx for WebM media files.");
-
-    return NS_OK;
-  }
-
-  ~VPXReporter() {}
-};
-
-NS_IMPL_ISUPPORTS(VPXReporter, nsIMemoryReporter)
-
-/* static */ template <>
-Atomic<size_t> CountingAllocatorBase<VPXReporter>::sAmount(0);
-#endif /* MOZ_VPX */
-
-#ifdef ENABLE_BIGINT
-class GMPReporter final : public nsIMemoryReporter,
-                          public CountingAllocatorBase<GMPReporter> {
- public:
-  NS_DECL_ISUPPORTS
-
-  static void* Alloc(size_t size) { return CountingMalloc(size); }
-
-  static void* Realloc(void* ptr, size_t oldSize, size_t newSize) {
-    return CountingRealloc(ptr, newSize);
-  }
-
-  static void Free(void* ptr, size_t size) { return CountingFree(ptr); }
-
- private:
-  NS_IMETHOD
-  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
-                 bool aAnonymize) override {
-    MOZ_COLLECT_REPORT(
-        "explicit/gmp", KIND_HEAP, UNITS_BYTES, MemoryAllocated(),
-        "Memory allocated through libgmp for BigInt arithmetic.");
-
-    return NS_OK;
-  }
-
-  ~GMPReporter() {}
-};
-
-NS_IMPL_ISUPPORTS(GMPReporter, nsIMemoryReporter)
-
-/* static */ template <>
-Atomic<size_t> CountingAllocatorBase<GMPReporter>::sAmount(0);
-#endif  // ENABLE_BIGINT
-||||||| merged common ancestors
-/* static */ template<> CountingAllocatorBase<OggReporter>::AmountType
-CountingAllocatorBase<OggReporter>::sAmount(0);
-
-#ifdef MOZ_VPX
-class VPXReporter final
-  : public nsIMemoryReporter
-  , public CountingAllocatorBase<VPXReporter>
-{
-public:
-  NS_DECL_ISUPPORTS
-
-private:
-  NS_IMETHOD
-  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
-                 bool aAnonymize) override
-  {
-    MOZ_COLLECT_REPORT(
-      "explicit/media/libvpx", KIND_HEAP, UNITS_BYTES, MemoryAllocated(),
-      "Memory allocated through libvpx for WebM media files.");
-
-    return NS_OK;
-  }
-
-  ~VPXReporter() {}
-};
-
-NS_IMPL_ISUPPORTS(VPXReporter, nsIMemoryReporter)
-
-/* static */ template<> Atomic<size_t>
-CountingAllocatorBase<VPXReporter>::sAmount(0);
-#endif /* MOZ_VPX */
-
-#ifdef ENABLE_BIGINT
-class GMPReporter final
-  : public nsIMemoryReporter
-  , public CountingAllocatorBase<GMPReporter>
-{
-public:
-  NS_DECL_ISUPPORTS
-
-  static void* Alloc(size_t size)
-  {
-    return CountingMalloc(size);
-  }
-
-  static void* Realloc(void* ptr, size_t oldSize, size_t newSize)
-  {
-    return CountingRealloc(ptr, newSize);
-  }
-
-  static void Free(void* ptr, size_t size)
-  {
-    return CountingFree(ptr);
-  }
-
-private:
-  NS_IMETHOD
-  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
-                 bool aAnonymize) override
-  {
-    MOZ_COLLECT_REPORT(
-      "explicit/gmp", KIND_HEAP, UNITS_BYTES, MemoryAllocated(),
-      "Memory allocated through libgmp for BigInt arithmetic.");
-
-    return NS_OK;
-  }
-
-  ~GMPReporter() {}
-};
-
-NS_IMPL_ISUPPORTS(GMPReporter, nsIMemoryReporter)
-
-/* static */ template<> Atomic<size_t>
-CountingAllocatorBase<GMPReporter>::sAmount(0);
-#endif // ENABLE_BIGINT
-=======
-/* static */ template <>
-CountingAllocatorBase<OggReporter>::AmountType
-    CountingAllocatorBase<OggReporter>::sAmount(0);
->>>>>>> upstream-releases
 
 static bool sInitializedJS = false;
 
 // Note that on OSX, aBinDirectory will point to .app/Contents/Resources/browser
 EXPORT_XPCOM_API(nsresult)
-<<<<<<< HEAD
-NS_InitXPCOM2(nsIServiceManager** aResult, nsIFile* aBinDirectory,
-              nsIDirectoryServiceProvider* aAppFileLocationProvider) {
-||||||| merged common ancestors
-NS_InitXPCOM2(nsIServiceManager** aResult,
-              nsIFile* aBinDirectory,
-              nsIDirectoryServiceProvider* aAppFileLocationProvider)
-{
-=======
 NS_InitXPCOM(nsIServiceManager** aResult, nsIFile* aBinDirectory,
              nsIDirectoryServiceProvider* aAppFileLocationProvider) {
->>>>>>> upstream-releases
   static bool sInitialized = false;
   if (sInitialized) {
     return NS_ERROR_FAILURE;
@@ -866,49 +431,9 @@ NS_InitXPCOM(nsIServiceManager** aResult, nsIFile* aBinDirectory,
   mozilla::SetICUMemoryFunctions();
 
   // Do the same for libogg.
-<<<<<<< HEAD
   ogg_set_mem_functions(
       OggReporter::CountingMalloc, OggReporter::CountingCalloc,
       OggReporter::CountingRealloc, OggReporter::CountingFree);
-
-#if defined(MOZ_VPX) && !defined(MOZ_VPX_NO_MEM_REPORTING)
-  // And for VPX.
-  vpx_mem_set_functions(VPXReporter::CountingMalloc,
-                        VPXReporter::CountingCalloc,
-                        VPXReporter::CountingRealloc, VPXReporter::CountingFree,
-                        memcpy, memset, memmove);
-#endif
-
-#ifdef ENABLE_BIGINT
-  // And for libgmp.
-  mozilla::SetGMPMemoryFunctions();
-#endif
-||||||| merged common ancestors
-  ogg_set_mem_functions(OggReporter::CountingMalloc,
-                        OggReporter::CountingCalloc,
-                        OggReporter::CountingRealloc,
-                        OggReporter::CountingFree);
-
-#if defined(MOZ_VPX) && !defined(MOZ_VPX_NO_MEM_REPORTING)
-  // And for VPX.
-  vpx_mem_set_functions(VPXReporter::CountingMalloc,
-                        VPXReporter::CountingCalloc,
-                        VPXReporter::CountingRealloc,
-                        VPXReporter::CountingFree,
-                        memcpy,
-                        memset,
-                        memmove);
-#endif
-
-#ifdef ENABLE_BIGINT
-  // And for libgmp.
-  mozilla::SetGMPMemoryFunctions();
-#endif
-=======
-  ogg_set_mem_functions(
-      OggReporter::CountingMalloc, OggReporter::CountingCalloc,
-      OggReporter::CountingRealloc, OggReporter::CountingFree);
->>>>>>> upstream-releases
 
   // Initialize the JS engine.
   const char* jsInitFailureReason = JS_InitWithFailureDiagnostic();
@@ -1052,40 +577,7 @@ void SetICUMemoryFunctions() {
   }
 }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
-void SetGMPMemoryFunctions() {
-  static bool sGMPReporterInitialized = false;
-  if (!sGMPReporterInitialized) {
-    JS::SetGMPMemoryFunctions(GMPReporter::Alloc, GMPReporter::Realloc,
-                              GMPReporter::Free);
-    sGMPReporterInitialized = true;
-  }
-}
-#endif
-
 nsresult ShutdownXPCOM(nsIServiceManager* aServMgr) {
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-void
-SetGMPMemoryFunctions()
-{
-  static bool sGMPReporterInitialized = false;
-  if (!sGMPReporterInitialized) {
-    JS::SetGMPMemoryFunctions(GMPReporter::Alloc,
-                              GMPReporter::Realloc,
-                              GMPReporter::Free);
-    sGMPReporterInitialized = true;
-  }
-}
-#endif
-
-nsresult
-ShutdownXPCOM(nsIServiceManager* aServMgr)
-{
-=======
-nsresult ShutdownXPCOM(nsIServiceManager* aServMgr) {
->>>>>>> upstream-releases
   // Make sure the hang monitor is enabled for shutdown.
   BackgroundHangMonitor().NotifyActivity();
 
@@ -1131,14 +623,7 @@ nsresult ShutdownXPCOM(nsIServiceManager* aServMgr) {
     // are triggered by the NS_XPCOM_SHUTDOWN_OBSERVER_ID notification.
     NS_ProcessPendingEvents(thread);
     gfxPlatform::ShutdownLayersIPC();
-<<<<<<< HEAD
-    mozilla::dom::VideoDecoderManagerChild::Shutdown();
     mozilla::RemoteDecoderManagerChild::Shutdown();
-||||||| merged common ancestors
-    mozilla::dom::VideoDecoderManagerChild::Shutdown();
-=======
-    mozilla::RemoteDecoderManagerChild::Shutdown();
->>>>>>> upstream-releases
 
     mozilla::scache::StartupCache::DeleteSingleton();
     if (observerService) {

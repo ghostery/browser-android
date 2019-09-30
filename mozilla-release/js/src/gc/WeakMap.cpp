@@ -23,19 +23,8 @@ using namespace js;
 using namespace js::gc;
 
 WeakMapBase::WeakMapBase(JSObject* memOf, Zone* zone)
-<<<<<<< HEAD
-    : memberOf(memOf), zone_(zone), marked(false) {
-  MOZ_ASSERT_IF(memberOf, memberOf->compartment()->zone() == zone);
-||||||| merged common ancestors
-  : memberOf(memOf),
-    zone_(zone),
-    marked(false)
-{
-    MOZ_ASSERT_IF(memberOf, memberOf->compartment()->zone() == zone);
-=======
     : memberOf(memOf), zone_(zone), marked(false), markColor(MarkColor::Black) {
   MOZ_ASSERT_IF(memberOf, memberOf->compartment()->zone() == zone);
->>>>>>> upstream-releases
 }
 
 WeakMapBase::~WeakMapBase() {
@@ -48,23 +37,6 @@ void WeakMapBase::unmarkZone(JS::Zone* zone) {
   }
 }
 
-<<<<<<< HEAD
-void WeakMapBase::traceZone(JS::Zone* zone, JSTracer* tracer) {
-  MOZ_ASSERT(tracer->weakMapAction() != DoNotTraceWeakMaps);
-  for (WeakMapBase* m : zone->gcWeakMapList()) {
-    m->trace(tracer);
-    TraceNullableEdge(tracer, &m->memberOf, "memberOf");
-  }
-||||||| merged common ancestors
-void
-WeakMapBase::traceZone(JS::Zone* zone, JSTracer* tracer)
-{
-    MOZ_ASSERT(tracer->weakMapAction() != DoNotTraceWeakMaps);
-    for (WeakMapBase* m : zone->gcWeakMapList()) {
-        m->trace(tracer);
-        TraceNullableEdge(tracer, &m->memberOf, "memberOf");
-    }
-=======
 void WeakMapBase::traceZone(JS::Zone* zone, JSTracer* tracer) {
   MOZ_ASSERT(tracer->weakMapAction() != DoNotTraceWeakMaps);
   for (WeakMapBase* m : zone->gcWeakMapList()) {
@@ -86,56 +58,23 @@ bool WeakMapBase::checkMarkingForZone(JS::Zone* zone) {
   }
 
   return ok;
->>>>>>> upstream-releases
 }
 #endif
 
-<<<<<<< HEAD
-bool WeakMapBase::markZoneIteratively(JS::Zone* zone, GCMarker* marker) {
-  bool markedAny = false;
-  for (WeakMapBase* m : zone->gcWeakMapList()) {
-    if (m->marked && m->markIteratively(marker)) {
-      markedAny = true;
-||||||| merged common ancestors
-bool
-WeakMapBase::markZoneIteratively(JS::Zone* zone, GCMarker* marker)
-{
-    bool markedAny = false;
-    for (WeakMapBase* m : zone->gcWeakMapList()) {
-        if (m->marked && m->markIteratively(marker)) {
-            markedAny = true;
-        }
-=======
 bool WeakMapBase::markZoneIteratively(JS::Zone* zone, GCMarker* marker) {
   bool markedAny = false;
   for (WeakMapBase* m : zone->gcWeakMapList()) {
     if (m->marked && m->markEntries(marker)) {
       markedAny = true;
->>>>>>> upstream-releases
     }
   }
   return markedAny;
 }
 
-<<<<<<< HEAD
-bool WeakMapBase::findInterZoneEdges(JS::Zone* zone) {
-  for (WeakMapBase* m : zone->gcWeakMapList()) {
-    if (!m->findZoneEdges()) {
-      return false;
-||||||| merged common ancestors
-bool
-WeakMapBase::findInterZoneEdges(JS::Zone* zone)
-{
-    for (WeakMapBase* m : zone->gcWeakMapList()) {
-        if (!m->findZoneEdges()) {
-            return false;
-        }
-=======
 bool WeakMapBase::findSweepGroupEdges(JS::Zone* zone) {
   for (WeakMapBase* m : zone->gcWeakMapList()) {
     if (!m->findZoneEdges()) {
       return false;
->>>>>>> upstream-releases
     }
   }
   return true;
@@ -177,71 +116,6 @@ bool WeakMapBase::saveZoneMarkedWeakMaps(JS::Zone* zone,
     if (m->marked && !markedWeakMaps.put(m)) {
       return false;
     }
-<<<<<<< HEAD
-  }
-  return true;
-}
-
-void WeakMapBase::restoreMarkedWeakMaps(WeakMapSet& markedWeakMaps) {
-  for (WeakMapSet::Range r = markedWeakMaps.all(); !r.empty(); r.popFront()) {
-    WeakMapBase* map = r.front();
-    MOZ_ASSERT(map->zone()->isGCMarking());
-    MOZ_ASSERT(!map->marked);
-    map->marked = true;
-  }
-}
-
-bool ObjectValueMap::findZoneEdges() {
-  /*
-   * For unmarked weakmap keys with delegates in a different zone, add a zone
-   * edge to ensure that the delegate zone finishes marking before the key
-   * zone.
-   */
-  JS::AutoSuppressGCAnalysis nogc;
-  for (Range r = all(); !r.empty(); r.popFront()) {
-    JSObject* key = r.front().key();
-    if (key->asTenured().isMarkedBlack()) {
-      continue;
-    }
-    JSObject* delegate = getDelegate(key);
-    if (!delegate) {
-      continue;
-    }
-    Zone* delegateZone = delegate->zone();
-    if (delegateZone == zone() || !delegateZone->isGCMarking()) {
-      continue;
-    }
-    if (!delegateZone->gcSweepGroupEdges().put(key->zone())) {
-      return false;
-||||||| merged common ancestors
-}
-
-bool
-ObjectValueMap::findZoneEdges()
-{
-    /*
-     * For unmarked weakmap keys with delegates in a different zone, add a zone
-     * edge to ensure that the delegate zone finishes marking before the key
-     * zone.
-     */
-    JS::AutoSuppressGCAnalysis nogc;
-    for (Range r = all(); !r.empty(); r.popFront()) {
-        JSObject* key = r.front().key();
-        if (key->asTenured().isMarkedBlack()) {
-            continue;
-        }
-        JSObject* delegate = getDelegate(key);
-        if (!delegate) {
-            continue;
-        }
-        Zone* delegateZone = delegate->zone();
-        if (delegateZone == zone() || !delegateZone->isGCMarking()) {
-            continue;
-        }
-        if (!delegateZone->gcSweepGroupEdges().put(key->zone())) {
-            return false;
-        }
-=======
   }
   return true;
 }
@@ -278,20 +152,12 @@ bool ObjectValueMap::findZoneEdges() {
     Zone* delegateZone = delegate->zone();
     if (delegateZone == zone() || !delegateZone->isGCMarking()) {
       continue;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
     if (!delegateZone->addSweepGroupEdgeTo(key->zone())) {
       return false;
     }
   }
   return true;
->>>>>>> upstream-releases
 }
 
 ObjectWeakMap::ObjectWeakMap(JSContext* cx) : map(cx, nullptr) {}
@@ -306,25 +172,11 @@ JSObject* ObjectWeakMap::lookup(const JSObject* obj) {
 bool ObjectWeakMap::add(JSContext* cx, JSObject* obj, JSObject* target) {
   MOZ_ASSERT(obj && target);
 
-<<<<<<< HEAD
-  MOZ_ASSERT(!map.has(obj));
-  if (!map.put(obj, ObjectValue(*target))) {
-    ReportOutOfMemory(cx);
-    return false;
-  }
-||||||| merged common ancestors
-    MOZ_ASSERT(!map.has(obj));
-    if (!map.put(obj, ObjectValue(*target))) {
-        ReportOutOfMemory(cx);
-        return false;
-    }
-=======
   Value targetVal(ObjectValue(*target));
   if (!map.putNew(obj, targetVal)) {
     ReportOutOfMemory(cx);
     return false;
   }
->>>>>>> upstream-releases
 
   return true;
 }

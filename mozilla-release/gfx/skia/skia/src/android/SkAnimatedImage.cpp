@@ -149,31 +149,10 @@ bool SkAnimatedImage::Frame::copyTo(Frame* dst) const {
 void SkAnimatedImage::reset() {
     fFinished = false;
     fRepetitionsCompleted = 0;
-<<<<<<< HEAD
     if (fDisplayFrame.fIndex != 0) {
         fDisplayFrame.fIndex = SkCodec::kNoFrame;
         this->decodeNextFrame();
     }
-||||||| merged common ancestors
-    if (fActiveFrame.fIndex == 0) {
-        // Already showing the first frame.
-        return;
-    }
-
-    if (fRestoreFrame.fIndex == 0) {
-        SkTSwap(fActiveFrame, fRestoreFrame);
-        // Now we're showing the first frame.
-        return;
-    }
-
-    fActiveFrame.fIndex = SkCodec::kNone;
-    this->decodeNextFrame();
-=======
-    if (fDisplayFrame.fIndex != 0) {
-        fDisplayFrame.fIndex = SkCodec::kNoFrame;
-        this->decodeNextFrame();
-    }
->>>>>>> upstream-releases
 }
 
 static bool is_restore_previous(SkCodecAnimation::DisposalMethod dispose) {
@@ -288,11 +267,6 @@ int SkAnimatedImage::decodeNextFrame() {
             if (is_restore_previous(frameInfo.fDisposalMethod)) {
                 // fDecodingFrame is a good frame to use for this one, but we
                 // don't want to overwrite it.
-<<<<<<< HEAD
-                fDecodingFrame.copyTo(&fRestoreFrame);
-||||||| merged common ancestors
-                fActiveFrame.copyTo(&fRestoreFrame);
-=======
                 fDecodingFrame.copyTo(&fRestoreFrame);
             }
             options.fPriorFrame = fDecodingFrame.fIndex;
@@ -300,21 +274,8 @@ int SkAnimatedImage::decodeNextFrame() {
             if (!fDisplayFrame.copyTo(&fDecodingFrame)) {
                 SkCodecPrintf("Failed to allocate pixels for frame\n");
                 return this->finish();
->>>>>>> upstream-releases
-            }
-<<<<<<< HEAD
-            options.fPriorFrame = fDecodingFrame.fIndex;
-        } else if (validPriorFrame(fDisplayFrame)) {
-            if (!fDisplayFrame.copyTo(&fDecodingFrame)) {
-                SkCodecPrintf("Failed to allocate pixels for frame\n");
-                return this->finish();
             }
             options.fPriorFrame = fDecodingFrame.fIndex;
-||||||| merged common ancestors
-            options.fPriorFrame = fActiveFrame.fIndex;
-=======
-            options.fPriorFrame = fDecodingFrame.fIndex;
->>>>>>> upstream-releases
         } else if (validPriorFrame(fRestoreFrame)) {
             if (!is_restore_previous(frameInfo.fDisposalMethod)) {
                 using std::swap;

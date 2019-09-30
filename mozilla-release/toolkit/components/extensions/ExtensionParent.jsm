@@ -546,27 +546,6 @@ ProxyMessenger = {
       return promise1;
     }
 
-<<<<<<< HEAD
-    // Proxy scripts run in the parent process so we need to dispatch
-    // the message to both the parent and extension process and merge
-    // the results.
-    // Once proxy scripts are gone (bug 1443259) we can remove this
-    let promise2 = MessageChannel.sendMessage(Services.ppmm.getChildAt(0), messageName, data, {
-      sender,
-      recipient,
-      responseType,
-    });
-||||||| merged common ancestors
-    // If we have a proxy script sandbox or a remote, embedded extension, where
-    // the legacy side is running in a different process than the WebExtension
-    // side. As a result, we need to dispatch the message to both the parent and
-    // extension processes, and manually merge the results.
-    let promise2 = MessageChannel.sendMessage(Services.ppmm.getChildAt(0), messageName, data, {
-      sender,
-      recipient,
-      responseType,
-    });
-=======
     // Proxy scripts run in the parent process so we need to dispatch
     // the message to both the parent and extension process and merge
     // the results.
@@ -581,7 +560,6 @@ ProxyMessenger = {
         responseType,
       }
     );
->>>>>>> upstream-releases
 
     let result = undefined;
     let failures = 0;

@@ -209,20 +209,9 @@ uint32_t gNurseryPurpleBufferEntryCount = 0;
 
 void ClearNurseryPurpleBuffer();
 
-<<<<<<< HEAD
-void SuspectUsingNurseryPurpleBuffer(void* aPtr,
-                                     nsCycleCollectionParticipant* aCp,
-                                     nsCycleCollectingAutoRefCnt* aRefCnt) {
-||||||| merged common ancestors
-void SuspectUsingNurseryPurpleBuffer(void* aPtr,
-                                     nsCycleCollectionParticipant* aCp,
-                                     nsCycleCollectingAutoRefCnt* aRefCnt)
-{
-=======
 static void SuspectUsingNurseryPurpleBuffer(
     void* aPtr, nsCycleCollectionParticipant* aCp,
     nsCycleCollectingAutoRefCnt* aRefCnt) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Wrong thread!");
   MOZ_ASSERT(gNurseryPurpleBufferEnabled);
   if (gNurseryPurpleBufferEntryCount == NURSERY_PURPLE_BUFFER_SIZE) {
@@ -532,20 +521,9 @@ enum NodeColor { black, white, grey };
 // This structure should be kept as small as possible; we may expect
 // hundreds of thousands of them to be allocated and touched
 // repeatedly during each cycle collection.
-<<<<<<< HEAD
-
-class PtrInfo final {
- public:
-||||||| merged common ancestors
-
-class PtrInfo final
-{
-public:
-=======
 class PtrInfo final {
  public:
   // mParticipant knows a more concrete type.
->>>>>>> upstream-releases
   void* mPointer;
   nsCycleCollectionParticipant* mParticipant;
   uint32_t mColor : 2;
@@ -2439,16 +2417,8 @@ class SnowWhiteKiller : public TraceCallbacks {
     }
   }
 
-<<<<<<< HEAD
-  void MaybeKillObject(SnowWhiteObject& aObject) {
-||||||| merged common ancestors
-  void
-  MaybeKillObject(SnowWhiteObject& aObject)
-  {
-=======
  private:
   void MaybeKillObject(SnowWhiteObject& aObject) {
->>>>>>> upstream-releases
     if (!aObject.mRefCnt->get() && !aObject.mRefCnt->IsInPurpleBuffer()) {
       mCollector->RemoveObjectFromGraph(aObject.mPointer);
       aObject.mRefCnt->stabilizeForDeletion();
@@ -2460,22 +2430,6 @@ class SnowWhiteKiller : public TraceCallbacks {
     }
   }
 
-<<<<<<< HEAD
-  bool Visit(nsPurpleBuffer& aBuffer, nsPurpleBufferEntry* aEntry) {
-    // The cycle collector does not collect anything when recording/replaying.
-    if (recordreplay::IsRecordingOrReplaying()) {
-      return true;
-    }
-
-    if (mBudget) {
-||||||| merged common ancestors
-  bool
-  Visit(nsPurpleBuffer& aBuffer, nsPurpleBufferEntry* aEntry)
-  {
-    // Ignore any slice budget we have when recording/replaying, as it behaves
-    // non-deterministically.
-    if (mBudget && !recordreplay::IsRecordingOrReplaying()) {
-=======
  public:
   bool Visit(nsPurpleBuffer& aBuffer, nsPurpleBufferEntry* aEntry) {
     // The cycle collector does not collect anything when recording/replaying.
@@ -2484,7 +2438,6 @@ class SnowWhiteKiller : public TraceCallbacks {
     }
 
     if (mBudget) {
->>>>>>> upstream-releases
       if (mBudget->isOverBudget()) {
         return false;
       }
@@ -3325,16 +3278,8 @@ void nsCycleCollector::FixGrayBits(bool aForceGC, TimeLog& aTimeLog) {
 
   uint32_t count = 0;
   do {
-<<<<<<< HEAD
-    mCCJSRuntime->GarbageCollect(aForceGC ? JS::gcreason::SHUTDOWN_CC
-                                          : JS::gcreason::CC_FORCED);
-||||||| merged common ancestors
-    mCCJSRuntime->GarbageCollect(aForceGC ? JS::gcreason::SHUTDOWN_CC :
-                                          JS::gcreason::CC_FORCED);
-=======
     mCCJSRuntime->GarbageCollect(aForceGC ? JS::GCReason::SHUTDOWN_CC
                                           : JS::GCReason::CC_FORCED);
->>>>>>> upstream-releases
 
     mCCJSRuntime->FixWeakMappingGrayBits();
 
@@ -3780,16 +3725,8 @@ void nsCycleCollector_forgetJSContext() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ CycleCollectedJSContext* CycleCollectedJSContext::Get() {
-||||||| merged common ancestors
-/* static */ CycleCollectedJSContext*
-CycleCollectedJSContext::Get()
-{
-=======
 /* static */
 CycleCollectedJSContext* CycleCollectedJSContext::Get() {
->>>>>>> upstream-releases
   CollectorData* data = sCollectorData.get();
   if (data) {
     return data->mContext;

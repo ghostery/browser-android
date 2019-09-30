@@ -67,17 +67,6 @@ class NodeInstall(object):
 
         from mozboot import node
         self.install_toolchain_artifact(state_dir, checkout_root, node.LINUX)
-<<<<<<< HEAD
-
-
-class ClangStaticAnalysisInstall(object):
-    def __init__(self, **kwargs):
-        pass
-
-    def ensure_clang_static_analysis_package(self, checkout_root):
-        self.install_toolchain_static_analysis(checkout_root)
-||||||| merged common ancestors
-=======
 
 
 class ClangStaticAnalysisInstall(object):
@@ -93,4 +82,3 @@ class ClangStaticAnalysisInstall(object):
         from mozboot import static_analysis
         self.install_toolchain_static_analysis(
             state_dir, checkout_root, static_analysis.LINUX_CLANG_TIDY)
->>>>>>> upstream-releases

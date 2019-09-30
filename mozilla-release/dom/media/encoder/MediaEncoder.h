@@ -110,26 +110,12 @@ class MediaEncoder {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(MediaEncoder)
 
-<<<<<<< HEAD
-  MediaEncoder(TaskQueue* aEncoderThread, UniquePtr<ContainerWriter> aWriter,
-||||||| merged common ancestors
-  MediaEncoder(TaskQueue* aEncoderThread,
-               UniquePtr<ContainerWriter> aWriter,
-=======
   MediaEncoder(TaskQueue* aEncoderThread,
                RefPtr<DriftCompensator> aDriftCompensator,
                UniquePtr<ContainerWriter> aWriter,
->>>>>>> upstream-releases
                AudioTrackEncoder* aAudioEncoder,
-<<<<<<< HEAD
-               VideoTrackEncoder* aVideoEncoder, const nsAString& aMIMEType);
-||||||| merged common ancestors
-               VideoTrackEncoder* aVideoEncoder,
-               const nsAString& aMIMEType);
-=======
                VideoTrackEncoder* aVideoEncoder, TrackRate aTrackRate,
                const nsAString& aMIMEType);
->>>>>>> upstream-releases
 
   /**
    * Called on main thread from MediaRecorder::Pause.
@@ -248,11 +234,6 @@ class MediaEncoder {
  protected:
   ~MediaEncoder();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   /**
    * Takes a regular runnable and dispatches it to the graph wrapped in a
@@ -260,7 +241,6 @@ private:
    */
   void RunOnGraph(already_AddRefed<Runnable> aRunnable);
 
->>>>>>> upstream-releases
   /**
    * Shuts down the MediaEncoder and cleans up track encoders.
    * Listeners will be notified of the shutdown unless we were Cancel()ed first.

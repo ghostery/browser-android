@@ -159,20 +159,10 @@ class TableUpdateV4 : public TableUpdate {
     return mRemovalIndiceArray;
   }
   const nsACString& ClientState() const { return mClientState; }
-<<<<<<< HEAD
-  const nsACString& Checksum() const { return mChecksum; }
-  const FullHashResponseMap& FullHashResponse() const {
-    return mFullHashResponseMap;
-  }
-||||||| merged common ancestors
-  const nsACString& Checksum() const { return mChecksum; }
-  const FullHashResponseMap& FullHashResponse() const { return mFullHashResponseMap; }
-=======
   const nsACString& SHA256() const { return mSHA256; }
   const FullHashResponseMap& FullHashResponse() const {
     return mFullHashResponseMap;
   }
->>>>>>> upstream-releases
 
   // For downcasting.
   static const int TAG = 4;
@@ -186,16 +176,10 @@ class TableUpdateV4 : public TableUpdate {
   nsresult NewFullHashResponse(const Prefix& aPrefix,
                                const CachedFullHashResponse& aResponse);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // Clear Prefixes & Removal indice.
   void Clear();
 
  private:
->>>>>>> upstream-releases
   virtual int Tag() const override { return TAG; }
 
   bool mFullUpdate;
@@ -260,12 +244,6 @@ class HashStore {
 
   nsresult ReadCompletionsLegacyV3(AddCompleteArray& aCompletes);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   nsresult Reset();
 
  private:
@@ -292,22 +270,8 @@ private:
 
   nsresult PrepareForUpdate();
 
-<<<<<<< HEAD
-  bool AlreadyReadChunkNumbers() const;
-  bool AlreadyReadCompletions() const;
-
   // This is used for checking that the database is correct and for figuring out
   // the number of chunks, etc. to read from disk on restart.
-||||||| merged common ancestors
-  bool AlreadyReadChunkNumbers() const;
-  bool AlreadyReadCompletions() const;
-
- // This is used for checking that the database is correct and for figuring out
- // the number of chunks, etc. to read from disk on restart.
-=======
-  // This is used for checking that the database is correct and for figuring out
-  // the number of chunks, etc. to read from disk on restart.
->>>>>>> upstream-releases
   struct Header {
     uint32_t magic;
     uint32_t version;

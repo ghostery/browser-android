@@ -24,16 +24,8 @@ namespace mozilla {
 class ContentCacheInParent;
 
 namespace dom {
-<<<<<<< HEAD
-class TabParent;
-}  // namespace dom
-||||||| merged common ancestors
-class TabParent;
-} // namespace dom
-=======
 class BrowserParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * ContentCache stores various information of the child content.
@@ -271,20 +263,9 @@ class ContentCacheInChild final : public ContentCache {
                       const IMENotification* aNotification = nullptr);
 };
 
-<<<<<<< HEAD
-class ContentCacheInParent final : public ContentCache {
- public:
-  explicit ContentCacheInParent(dom::TabParent& aTabParent);
-||||||| merged common ancestors
-class ContentCacheInParent final : public ContentCache
-{
-public:
-  explicit ContentCacheInParent(dom::TabParent& aTabParent);
-=======
 class ContentCacheInParent final : public ContentCache {
  public:
   explicit ContentCacheInParent(dom::BrowserParent& aBrowserParent);
->>>>>>> upstream-releases
 
   /**
    * AssignContent() is called when BrowserParent receives ContentCache from

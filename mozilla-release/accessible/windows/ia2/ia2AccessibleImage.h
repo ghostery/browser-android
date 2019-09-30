@@ -16,7 +16,7 @@ namespace a11y {
 class ia2AccessibleImage : public IAccessibleImage {
  public:
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleImage
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_description(

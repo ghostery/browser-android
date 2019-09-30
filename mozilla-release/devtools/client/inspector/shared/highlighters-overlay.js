@@ -13,14 +13,6 @@ const {
   VIEW_NODE_SHAPE_POINT_TYPE,
 } = require("devtools/client/inspector/shared/node-types");
 
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "parseURL", "devtools/client/shared/source-utils", true);
-loader.lazyRequireGetter(this, "asyncStorage", "devtools/shared/async-storage");
-
-const DEFAULT_HIGHLIGHTER_COLOR = "#9400FF";
-||||||| merged common ancestors
-const DEFAULT_GRID_COLOR = "#4B0082";
-=======
 loader.lazyRequireGetter(
   this,
   "parseURL",
@@ -31,7 +23,6 @@ loader.lazyRequireGetter(this, "asyncStorage", "devtools/shared/async-storage");
 
 const DEFAULT_HIGHLIGHTER_COLOR = "#9400FF";
 const SUBGRID_PARENT_ALPHA = 0.5;
->>>>>>> upstream-releases
 
 /**
  * Highlighters overlay is a singleton managing all highlighters in the Inspector.
@@ -118,15 +109,8 @@ class HighlightersOverlay {
 
     // Add inspector events, not specific to a given view.
     this.inspector.on("markupmutation", this.onMarkupMutation);
-<<<<<<< HEAD
-    this.inspector.walker.on("display-change", this.onDisplayChange);
-    this.inspector.target.on("will-navigate", this.onWillNavigate);
-||||||| merged common ancestors
-    this.inspector.target.on("will-navigate", this.onWillNavigate);
-=======
     this.target.on("will-navigate", this.onWillNavigate);
     this.walker.on("display-change", this.onDisplayChange);
->>>>>>> upstream-releases
 
     EventEmitter.decorate(this);
   }
@@ -308,32 +292,6 @@ class HighlightersOverlay {
     // Attempt to get the flexbox highlighter color from the Redux store.
     const { flexbox } = this.store.getState();
     const color = flexbox.color;
-<<<<<<< HEAD
-
-    if (color) {
-      return color;
-    }
-
-    // If the flexbox inspector has not been initialized, attempt to get the flexbox
-    // highlighter from the async storage.
-    const customHostColors = await asyncStorage.getItem("flexboxInspectorHostColors") ||
-      {};
-
-    // Get the hostname, if there is no hostname, fall back on protocol
-    // ex: `data:` uri, and `about:` pages
-    let hostname;
-    try {
-      hostname = parseURL(this.inspector.target.url).hostname ||
-        parseURL(this.inspector.target.url).protocol;
-    } catch (e) {
-      this._handleRejection(e);
-    }
-
-    return hostname && customHostColors[hostname] ?
-      customHostColors[hostname] : DEFAULT_HIGHLIGHTER_COLOR;
-||||||| merged common ancestors
-    return { color };
-=======
 
     if (color) {
       return color;
@@ -358,7 +316,6 @@ class HighlightersOverlay {
     return hostname && customHostColors[hostname]
       ? customHostColors[hostname]
       : DEFAULT_HIGHLIGHTER_COLOR;
->>>>>>> upstream-releases
   }
 
   /**
@@ -417,20 +374,6 @@ class HighlightersOverlay {
 
     this._toggleRuleViewIcon(node, true, ".ruleview-flex");
 
-<<<<<<< HEAD
-    this.telemetry.toolOpened("flexbox_highlighter", this.inspector.toolbox.sessionId,
-      this);
-
-    if (trigger === "layout") {
-      this.telemetry.scalarAdd("devtools.layout.flexboxhighlighter.opened", 1);
-    } else if (trigger === "markup") {
-      this.telemetry.scalarAdd("devtools.markup.flexboxhighlighter.opened", 1);
-    } else if (trigger === "rule") {
-      this.telemetry.scalarAdd("devtools.rules.flexboxhighlighter.opened", 1);
-    }
-
-||||||| merged common ancestors
-=======
     this.telemetry.toolOpened(
       "flexbox_highlighter",
       this.inspector.toolbox.sessionId,
@@ -445,7 +388,6 @@ class HighlightersOverlay {
       this.telemetry.scalarAdd("devtools.rules.flexboxhighlighter.opened", 1);
     }
 
->>>>>>> upstream-releases
     try {
       // Save flexbox highlighter state.
       const { url } = this.target;
@@ -475,19 +417,12 @@ class HighlightersOverlay {
       return;
     }
 
-<<<<<<< HEAD
-    this.telemetry.toolClosed("flexbox_highlighter", this.inspector.toolbox.sessionId,
-      this);
-
-||||||| merged common ancestors
-=======
     this.telemetry.toolClosed(
       "flexbox_highlighter",
       this.inspector.toolbox.sessionId,
       this
     );
 
->>>>>>> upstream-releases
     this._toggleRuleViewIcon(node, false, ".ruleview-flex");
 
     await this.highlighters.FlexboxHighlighter.hide();
@@ -598,22 +533,10 @@ class HighlightersOverlay {
    *         The NodeFront of the grid container element to highlight.
    * @param  {Object} options
    *         Object used for passing options to the grid highlighter.
-<<<<<<< HEAD
-   * @param. {String} trigger
-   *         String name matching "grid", "markup" or "rule" to indicate where the
-   *         grid highlighter was toggled on from. "grid" represents the grid view.
-   *         "markup" represents the markup view. "rule" represents the rule view.
-||||||| merged common ancestors
-   * @param. {String|null} trigger
-   *         String name matching "grid" or "rule" to indicate where the
-   *         grid highlighter was toggled on from. "grid" represents the grid view
-   *         "rule" represents the rule view.
-=======
    * @param  {String} trigger
    *         String name matching "grid", "markup" or "rule" to indicate where the
    *         grid highlighter was toggled on from. "grid" represents the grid view.
    *         "markup" represents the markup view. "rule" represents the rule view.
->>>>>>> upstream-releases
    */
   async showGridHighlighter(node, options, trigger) {
     // When the grid highlighter has the given node, it is probably called with new
@@ -658,11 +581,6 @@ class HighlightersOverlay {
 
     this._toggleRuleViewIcon(node, true, ".ruleview-grid");
 
-<<<<<<< HEAD
-    if (trigger === "grid") {
-||||||| merged common ancestors
-    if (trigger == "grid") {
-=======
     if (!this.isGridHighlighterTimerActive) {
       this.telemetry.toolOpened(
         "grid_highlighter",
@@ -673,7 +591,6 @@ class HighlightersOverlay {
     }
 
     if (trigger === "grid") {
->>>>>>> upstream-releases
       this.telemetry.scalarAdd("devtools.grid.gridinspector.opened", 1);
     } else if (trigger === "markup") {
       this.telemetry.scalarAdd("devtools.markup.gridinspector.opened", 1);
@@ -1306,17 +1223,6 @@ class HighlightersOverlay {
       const view = this.inspector.getPanel("ruleview").view;
       const nodeInfo = view.getNodeInfo(event.target);
 
-<<<<<<< HEAD
-      this.toggleShapesHighlighter(this.inspector.selection.nodeFront, {
-        mode: event.target.dataset.mode,
-        transformMode: event.metaKey || event.ctrlKey,
-      }, nodeInfo.value.textProperty);
-||||||| merged common ancestors
-      this.toggleShapesHighlighter(this.inspector.selection.nodeFront, {
-        mode: event.target.dataset.mode,
-        transformMode: event.metaKey || event.ctrlKey
-      }, nodeInfo.value.textProperty);
-=======
       this.toggleShapesHighlighter(
         this.inspector.selection.nodeFront,
         {
@@ -1364,36 +1270,6 @@ class HighlightersOverlay {
 
       // Hide the grid highlighter if the node is no longer a subgrid.
       if (display !== "subgrid" && this.gridHighlighters.has(node)) {
-        await this.hideGridHighlighter(node);
-        return;
-      }
->>>>>>> upstream-releases
-    }
-  }
-
-  /**
-   * Handler for "display-change" events from the walker. Hides the flexbox or
-   * grid highlighter if their respective node is no longer a flex container or
-   * grid container.
-   *
-   * @param  {Array} nodes
-   *         An array of nodeFronts
-   */
-  async onDisplayChange(nodes) {
-    for (const node of nodes) {
-      const display = node.displayType;
-
-      // Hide the flexbox highlighter if the node is no longer a flexbox
-      // container.
-      if (display !== "flex" && display !== "inline-flex" &&
-          node == this.flexboxHighlighterShown) {
-        await this.hideFlexboxHighlighter(node);
-        return;
-      }
-
-      // Hide the grid highlighter if the node is no longer a grid container.
-      if (display !== "grid" && display !== "inline-grid" &&
-          this.gridHighlighters.has(node)) {
         await this.hideGridHighlighter(node);
         return;
       }

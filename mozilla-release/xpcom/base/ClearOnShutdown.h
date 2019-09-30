@@ -50,17 +50,9 @@ enum class ShutdownPhase {
   ShutdownThreads,
   ShutdownLoaders,
   ShutdownFinal,
-<<<<<<< HEAD
-  ShutdownPhase_Length,  // never pass this value
-  First = WillShutdown,  // for iteration
-||||||| merged common ancestors
-  ShutdownPhase_Length, // never pass this value
-  First = WillShutdown, // for iteration
-=======
   ShutdownPostLastCycleCollection,
   ShutdownPhase_Length,  // never pass this value
   First = WillShutdown,  // for iteration
->>>>>>> upstream-releases
   Last = ShutdownFinal
 };
 

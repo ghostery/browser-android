@@ -534,30 +534,14 @@ class SPSNALIterator {
 
 static int32_t ConditionDimension(float aValue) {
   // This will exclude NaNs and too-big values.
-<<<<<<< HEAD
-  if (aValue > 1.0 && aValue <= INT32_MAX) return int32_t(aValue);
-||||||| merged common ancestors
-  if (aValue > 1.0 && aValue <= INT32_MAX)
-    return int32_t(aValue);
-=======
   if (aValue > 1.0 && aValue <= INT32_MAX / 2) {
     return int32_t(aValue);
   }
->>>>>>> upstream-releases
   return 0;
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::DecodeSPS(const mozilla::MediaByteBuffer* aSPS,
-                                  SPSData& aDest) {
-||||||| merged common ancestors
-/* static */ bool
-H264::DecodeSPS(const mozilla::MediaByteBuffer* aSPS, SPSData& aDest)
-{
-=======
 /* static */
 bool H264::DecodeSPS(const mozilla::MediaByteBuffer* aSPS, SPSData& aDest) {
->>>>>>> upstream-releases
   if (!aSPS) {
     return false;
   }
@@ -730,16 +714,8 @@ bool H264::DecodeSPS(const mozilla::MediaByteBuffer* aSPS, SPSData& aDest) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::vui_parameters(BitReader& aBr, SPSData& aDest) {
-||||||| merged common ancestors
-/* static */ bool
-H264::vui_parameters(BitReader& aBr, SPSData& aDest)
-{
-=======
 /* static */
 bool H264::vui_parameters(BitReader& aBr, SPSData& aDest) {
->>>>>>> upstream-releases
   aDest.aspect_ratio_info_present_flag = aBr.ReadBit();
   if (aDest.aspect_ratio_info_present_flag) {
     aDest.aspect_ratio_idc = aBr.ReadBits(8);
@@ -916,19 +892,9 @@ bool H264::vui_parameters(BitReader& aBr, SPSData& aDest) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::DecodeSPSFromExtraData(
-    const mozilla::MediaByteBuffer* aExtraData, SPSData& aDest) {
-||||||| merged common ancestors
-/* static */ bool
-H264::DecodeSPSFromExtraData(const mozilla::MediaByteBuffer* aExtraData,
-                             SPSData& aDest)
-{
-=======
 /* static */
 bool H264::DecodeSPSFromExtraData(const mozilla::MediaByteBuffer* aExtraData,
                                   SPSData& aDest) {
->>>>>>> upstream-releases
   SPSNALIterator it(aExtraData);
   if (!it) {
     return false;
@@ -936,16 +902,8 @@ bool H264::DecodeSPSFromExtraData(const mozilla::MediaByteBuffer* aExtraData,
   return (*it).GetSPSData(aDest);
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::EnsureSPSIsSane(SPSData& aSPS) {
-||||||| merged common ancestors
-/* static */ bool
-H264::EnsureSPSIsSane(SPSData& aSPS)
-{
-=======
 /* static */
 bool H264::EnsureSPSIsSane(SPSData& aSPS) {
->>>>>>> upstream-releases
   bool valid = true;
   static const float default_aspect = 4.0f / 3.0f;
   if (aSPS.sample_ratio <= 0.0f || aSPS.sample_ratio > 6.0f) {
@@ -965,17 +923,8 @@ bool H264::EnsureSPSIsSane(SPSData& aSPS) {
   return valid;
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t H264::ComputeMaxRefFrames(
-    const mozilla::MediaByteBuffer* aExtraData) {
-||||||| merged common ancestors
-/* static */ uint32_t
-H264::ComputeMaxRefFrames(const mozilla::MediaByteBuffer* aExtraData)
-{
-=======
 /* static */
 uint32_t H264::ComputeMaxRefFrames(const mozilla::MediaByteBuffer* aExtraData) {
->>>>>>> upstream-releases
   uint32_t maxRefFrames = 4;
   // Retrieve video dimensions from H264 SPS NAL.
   SPSData spsdata;
@@ -1162,29 +1111,13 @@ uint32_t H264::ComputeMaxRefFrames(const mozilla::MediaByteBuffer* aExtraData) {
   return extradata.forget();
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::HasSPS(const mozilla::MediaByteBuffer* aExtraData) {
-||||||| merged common ancestors
-/* static */ bool
-H264::HasSPS(const mozilla::MediaByteBuffer* aExtraData)
-{
-=======
 /* static */
 bool H264::HasSPS(const mozilla::MediaByteBuffer* aExtraData) {
->>>>>>> upstream-releases
   return NumSPS(aExtraData) > 0;
 }
 
-<<<<<<< HEAD
-/* static */ uint8_t H264::NumSPS(const mozilla::MediaByteBuffer* aExtraData) {
-||||||| merged common ancestors
-/* static */ uint8_t
-H264::NumSPS(const mozilla::MediaByteBuffer* aExtraData)
-{
-=======
 /* static */
 uint8_t H264::NumSPS(const mozilla::MediaByteBuffer* aExtraData) {
->>>>>>> upstream-releases
   if (!aExtraData || aExtraData->IsEmpty()) {
     return 0;
   }
@@ -1200,20 +1133,9 @@ uint8_t H264::NumSPS(const mozilla::MediaByteBuffer* aExtraData) {
   return res.unwrap() & 0x1f;
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::CompareExtraData(
-    const mozilla::MediaByteBuffer* aExtraData1,
-    const mozilla::MediaByteBuffer* aExtraData2) {
-||||||| merged common ancestors
-/* static */ bool
-H264::CompareExtraData(const mozilla::MediaByteBuffer* aExtraData1,
-                       const mozilla::MediaByteBuffer* aExtraData2)
-{
-=======
 /* static */
 bool H264::CompareExtraData(const mozilla::MediaByteBuffer* aExtraData1,
                             const mozilla::MediaByteBuffer* aExtraData2) {
->>>>>>> upstream-releases
   if (aExtraData1 == aExtraData2) {
     return true;
   }
@@ -1252,19 +1174,9 @@ static inline Result<Ok, nsresult> ReadSEIInt(BufferReader& aBr,
   return Ok();
 }
 
-<<<<<<< HEAD
-/* static */ bool H264::DecodeRecoverySEI(const mozilla::MediaByteBuffer* aSEI,
-                                          SEIRecoveryData& aDest) {
-||||||| merged common ancestors
-/* static */ bool
-H264::DecodeRecoverySEI(const mozilla::MediaByteBuffer* aSEI,
-                        SEIRecoveryData& aDest)
-{
-=======
 /* static */
 bool H264::DecodeRecoverySEI(const mozilla::MediaByteBuffer* aSEI,
                              SEIRecoveryData& aDest) {
->>>>>>> upstream-releases
   if (!aSEI) {
     return false;
   }

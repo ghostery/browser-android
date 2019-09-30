@@ -335,16 +335,8 @@ pub struct OpcodeConstraints {
     typeset_offset: u8,
 
     /// Offset into `OPERAND_CONSTRAINT` table of the descriptors for this opcode. The first
-<<<<<<< HEAD
-    /// `num_fixed_results()` entries describe the result constraints, then follows constraints for the
-    /// fixed `Value` input operands. (`num_fixed_value_arguments()` of them).
-||||||| merged common ancestors
-    /// `fixed_results()` entries describe the result constraints, then follows constraints for the
-    /// fixed `Value` input operands. (`fixed_value_arguments()` of them).
-=======
     /// `num_fixed_results()` entries describe the result constraints, then follows constraints for
     /// the fixed `Value` input operands. (`num_fixed_value_arguments()` of them).
->>>>>>> upstream-releases
     constraint_offset: u16,
 }
 

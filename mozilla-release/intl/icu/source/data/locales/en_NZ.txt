@@ -2,13 +2,7 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 en_NZ{
     %%Parent{"en_001"}
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -78,18 +72,6 @@ en_NZ{
             availableFormats{
                 Md{"d/M"}
                 yMd{"d/MM/y"}
-<<<<<<< HEAD
-                yw{
-                    one{"'week' w 'of' Y"}
-                    other{"'week' w 'of' Y"}
-                }
-||||||| merged common ancestors
-                yw{
-                    one{"'week' w 'of' y"}
-                    other{"'week' w 'of' y"}
-                }
-=======
->>>>>>> upstream-releases
             }
             intervalFormats{
                 MEd{

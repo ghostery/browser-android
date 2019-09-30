@@ -11,32 +11,18 @@
 
 static char* end_chain(char*) { return nullptr; }
 
-<<<<<<< HEAD
-SkArenaAlloc::SkArenaAlloc(char* block, size_t size, size_t extraSize)
-||||||| merged common ancestors
-SkArenaAlloc::SkArenaAlloc(char* block, size_t size, size_t extraSize, Tracking tracking)
-=======
 static uint32_t first_allocated_block(uint32_t blockSize, uint32_t firstHeapAllocation) {
     return firstHeapAllocation > 0 ? firstHeapAllocation :
            blockSize           > 0 ? blockSize           : 1024;
 }
 
 SkArenaAlloc::SkArenaAlloc(char* block, size_t size, size_t firstHeapAllocation)
->>>>>>> upstream-releases
     : fDtorCursor {block}
     , fCursor     {block}
     , fEnd        {block + ToU32(size)}
     , fFirstBlock {block}
-<<<<<<< HEAD
-    , fFirstSize  {ToU32(size)}
-    , fExtraSize  {ToU32(extraSize)}
-||||||| merged common ancestors
-    , fFirstSize  {SkTo<uint32_t>(size)}
-    , fExtraSize  {SkTo<uint32_t>(extraSize)}
-=======
     , fFirstSize  {ToU32(size)}
     , fFirstHeapAllocationSize  {first_allocated_block(ToU32(size), ToU32(firstHeapAllocation))}
->>>>>>> upstream-releases
 {
     if (size < sizeof(Footer)) {
         fEnd = fCursor = fDtorCursor = nullptr;
@@ -53,14 +39,7 @@ SkArenaAlloc::~SkArenaAlloc() {
 
 void SkArenaAlloc::reset() {
     this->~SkArenaAlloc();
-<<<<<<< HEAD
-    new (this) SkArenaAlloc{fFirstBlock, fFirstSize, fExtraSize};
-||||||| merged common ancestors
-    new (this) SkArenaAlloc{fFirstBlock, fFirstSize, fExtraSize,
-                            fTotalSlop < 0 ? kDontTrack : kTrack};
-=======
     new (this) SkArenaAlloc{fFirstBlock, fFirstSize, fFirstHeapAllocationSize};
->>>>>>> upstream-releases
 }
 
 void SkArenaAlloc::installFooter(FooterAction* action, uint32_t padding) {

@@ -37,32 +37,6 @@
  * These macros are designed for use by library interfaces -- not for normal
  * methods or data used cross-file.
  */
-<<<<<<< HEAD
-#if defined(WIN32)
-#define MOZ_EXPORT __declspec(dllexport)
-#else /* Unix */
-#ifdef HAVE_VISIBILITY_ATTRIBUTE
-#define MOZ_EXPORT __attribute__((visibility("default")))
-#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#define MOZ_EXPORT __global
-#else
-#define MOZ_EXPORT /* nothing */
-#endif
-#endif
-||||||| merged common ancestors
-#if defined(WIN32)
-#  define MOZ_EXPORT   __declspec(dllexport)
-#else /* Unix */
-#  ifdef HAVE_VISIBILITY_ATTRIBUTE
-#    define MOZ_EXPORT       __attribute__((visibility("default")))
-#  elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#    define MOZ_EXPORT      __global
-#  else
-#    define MOZ_EXPORT /* nothing */
-#  endif
-#endif
-
-=======
 #  if defined(WIN32)
 #    define MOZ_EXPORT __declspec(dllexport)
 #  else /* Unix */
@@ -74,7 +48,6 @@
 #      define MOZ_EXPORT /* nothing */
 #    endif
 #  endif
->>>>>>> upstream-releases
 
 /*
  * Whereas implementers use MOZ_EXPORT to declare and define library symbols,
@@ -83,27 +56,6 @@
  * the export or import version of the macro, depending upon the compilation
  * mode.
  */
-<<<<<<< HEAD
-#ifdef _WIN32
-#if defined(__MWERKS__)
-#define MOZ_IMPORT_API /* nothing */
-#else
-#define MOZ_IMPORT_API __declspec(dllimport)
-#endif
-#else
-#define MOZ_IMPORT_API MOZ_EXPORT
-#endif
-||||||| merged common ancestors
-#ifdef _WIN32
-#  if defined(__MWERKS__)
-#    define MOZ_IMPORT_API /* nothing */
-#  else
-#    define MOZ_IMPORT_API __declspec(dllimport)
-#  endif
-#else
-#  define MOZ_IMPORT_API MOZ_EXPORT
-#endif
-=======
 #  ifdef _WIN32
 #    if defined(__MWERKS__)
 #      define MOZ_IMPORT_API /* nothing */
@@ -113,86 +65,18 @@
 #  else
 #    define MOZ_IMPORT_API MOZ_EXPORT
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if defined(_WIN32) && !defined(__MWERKS__)
-#define MOZ_IMPORT_DATA __declspec(dllimport)
-#else
-#define MOZ_IMPORT_DATA MOZ_EXPORT
-#endif
-||||||| merged common ancestors
-#if defined(_WIN32) && !defined(__MWERKS__)
-#  define MOZ_IMPORT_DATA  __declspec(dllimport)
-#else
-#  define MOZ_IMPORT_DATA  MOZ_EXPORT
-#endif
-=======
 #  if defined(_WIN32) && !defined(__MWERKS__)
 #    define MOZ_IMPORT_DATA __declspec(dllimport)
 #  else
 #    define MOZ_IMPORT_DATA MOZ_EXPORT
 #  endif
->>>>>>> upstream-releases
 
 /*
  * Consistent with the above comment, the MFBT_API and MFBT_DATA macros expose
  * export mfbt declarations when building mfbt, and they expose import mfbt
  * declarations when using mfbt.
  */
-<<<<<<< HEAD
-#if defined(IMPL_MFBT) ||                              \
-    (defined(JS_STANDALONE) && !defined(MOZ_MEMORY) && \
-     (defined(EXPORT_JS_API) || defined(STATIC_EXPORTABLE_JS_API)))
-#define MFBT_API MOZ_EXPORT
-#define MFBT_DATA MOZ_EXPORT
-#else
-#if defined(JS_STANDALONE) && !defined(MOZ_MEMORY) && defined(STATIC_JS_API)
-#define MFBT_API
-#define MFBT_DATA
-#else
-/*
- * On linux mozglue is linked in the program and we link libxul.so with
- * -z,defs. Normally that causes the linker to reject undefined references in
- * libxul.so, but as a loophole it allows undefined references to weak
- * symbols. We add the weak attribute to the import version of the MFBT API
- * macros to exploit this.
- */
-#if defined(MOZ_GLUE_IN_PROGRAM)
-#define MFBT_API __attribute__((weak)) MOZ_IMPORT_API
-#define MFBT_DATA __attribute__((weak)) MOZ_IMPORT_DATA
-#else
-#define MFBT_API MOZ_IMPORT_API
-#define MFBT_DATA MOZ_IMPORT_DATA
-#endif
-#endif
-#endif
-||||||| merged common ancestors
-#if defined(IMPL_MFBT) || (defined(JS_STANDALONE) && !defined(MOZ_MEMORY) && (defined(EXPORT_JS_API) || defined(STATIC_EXPORTABLE_JS_API)))
-#  define MFBT_API     MOZ_EXPORT
-#  define MFBT_DATA    MOZ_EXPORT
-#else
-#  if defined(JS_STANDALONE) && !defined(MOZ_MEMORY) && defined(STATIC_JS_API)
-#    define MFBT_API
-#    define MFBT_DATA
-#  else
-    /*
-     * On linux mozglue is linked in the program and we link libxul.so with
-     * -z,defs. Normally that causes the linker to reject undefined references in
-     * libxul.so, but as a loophole it allows undefined references to weak
-     * symbols. We add the weak attribute to the import version of the MFBT API
-     * macros to exploit this.
-     */
-#    if defined(MOZ_GLUE_IN_PROGRAM)
-#      define MFBT_API   __attribute__((weak)) MOZ_IMPORT_API
-#      define MFBT_DATA  __attribute__((weak)) MOZ_IMPORT_DATA
-#    else
-#      define MFBT_API   MOZ_IMPORT_API
-#      define MFBT_DATA  MOZ_IMPORT_DATA
-#    endif
-#  endif
-#endif
-=======
 #  if defined(IMPL_MFBT) ||                              \
       (defined(JS_STANDALONE) && !defined(MOZ_MEMORY) && \
        (defined(EXPORT_JS_API) || defined(STATIC_EXPORTABLE_JS_API)))
@@ -219,7 +103,6 @@
 #      endif
 #    endif
 #  endif
->>>>>>> upstream-releases
 
 /*
  * C symbols in C++ code must be declared immediately within |extern "C"|
@@ -238,23 +121,6 @@
  * This said, it is preferable to just use |extern "C"| in C++ header files for
  * its greater clarity.
  */
-<<<<<<< HEAD
-#ifdef __cplusplus
-#define MOZ_BEGIN_EXTERN_C extern "C" {
-#define MOZ_END_EXTERN_C }
-#else
-#define MOZ_BEGIN_EXTERN_C
-#define MOZ_END_EXTERN_C
-#endif
-||||||| merged common ancestors
-#ifdef __cplusplus
-#  define MOZ_BEGIN_EXTERN_C    extern "C" {
-#  define MOZ_END_EXTERN_C      }
-#else
-#  define MOZ_BEGIN_EXTERN_C
-#  define MOZ_END_EXTERN_C
-#endif
-=======
 #  ifdef __cplusplus
 #    define MOZ_BEGIN_EXTERN_C extern "C" {
 #    define MOZ_END_EXTERN_C }
@@ -262,26 +128,13 @@
 #    define MOZ_BEGIN_EXTERN_C
 #    define MOZ_END_EXTERN_C
 #  endif
->>>>>>> upstream-releases
 
 /*
  * GCC's typeof is available when decltype is not.
  */
-<<<<<<< HEAD
-#if defined(__GNUC__) && defined(__cplusplus) && \
-    !defined(__GXX_EXPERIMENTAL_CXX0X__) && __cplusplus < 201103L
-#define decltype __typeof__
-#endif
-||||||| merged common ancestors
-#if defined(__GNUC__) && defined(__cplusplus) && \
-  !defined(__GXX_EXPERIMENTAL_CXX0X__) && __cplusplus < 201103L
-#  define decltype __typeof__
-#endif
-=======
 #  if defined(__GNUC__) && defined(__cplusplus) && \
       !defined(__GXX_EXPERIMENTAL_CXX0X__) && __cplusplus < 201103L
 #    define decltype __typeof__
 #  endif
->>>>>>> upstream-releases
 
 #endif /* mozilla_Types_h */

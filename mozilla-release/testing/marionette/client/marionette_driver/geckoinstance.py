@@ -393,22 +393,7 @@ class FennecInstance(GeckoInstance):
     fennec_prefs = {
         # Enable output for dump() and chrome console API
         "browser.dom.window.dump.enabled": True,
-<<<<<<< HEAD
         "devtools.console.stdout.chrome": True,
-
-        # Disable Android snippets
-        "browser.snippets.enabled": False,
-        "browser.snippets.syncPromo.enabled": False,
-        "browser.snippets.firstrunHomepage.enabled": False,
-||||||| merged common ancestors
-
-        # Disable Android snippets
-        "browser.snippets.enabled": False,
-        "browser.snippets.syncPromo.enabled": False,
-        "browser.snippets.firstrunHomepage.enabled": False,
-=======
-        "devtools.console.stdout.chrome": True,
->>>>>>> upstream-releases
 
         # Disable safebrowsing components
         "browser.safebrowsing.blockedURIs.enabled": False,
@@ -430,19 +415,10 @@ class FennecInstance(GeckoInstance):
 
     def __init__(self, emulator_binary=None, avd_home=None, avd=None,
                  adb_path=None, serial=None, connect_to_running_emulator=False,
-<<<<<<< HEAD
-                 package_name=None, *args, **kwargs):
-        required_prefs = deepcopy(FennecInstance.fennec_prefs)
-        required_prefs.update(kwargs.get("prefs", {}))
-
-||||||| merged common ancestors
-                 package_name=None, *args, **kwargs):
-=======
                  package_name=None, env=None, *args, **kwargs):
         required_prefs = deepcopy(FennecInstance.fennec_prefs)
         required_prefs.update(kwargs.get("prefs", {}))
 
->>>>>>> upstream-releases
         super(FennecInstance, self).__init__(*args, **kwargs)
         self.required_prefs.update(required_prefs)
 
@@ -637,11 +613,6 @@ class DesktopInstance(GeckoInstance):
         required_prefs.update(kwargs.get("prefs", {}))
 
         super(DesktopInstance, self).__init__(*args, **kwargs)
-<<<<<<< HEAD
-        self.required_prefs.update(required_prefs)
-||||||| merged common ancestors
-        self.required_prefs.update(DesktopInstance.desktop_prefs)
-=======
         self.required_prefs.update(required_prefs)
 
 
@@ -658,7 +629,6 @@ class ThunderbirdInstance(GeckoInstance):
             except ImportError:
                 thunderbird_prefs = {}
         self.required_prefs.update(thunderbird_prefs)
->>>>>>> upstream-releases
 
 
 class NullOutput(object):

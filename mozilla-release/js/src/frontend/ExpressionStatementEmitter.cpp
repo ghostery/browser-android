@@ -29,35 +29,15 @@ bool ExpressionStatementEmitter::prepareForExpr(
   }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  depth_ = bce_->stackDepth;
-  state_ = State::Expr;
-||||||| merged common ancestors
-    depth_ = bce_->stackDepth;
-    state_ = State::Expr;
-=======
   depth_ = bce_->bytecodeSection().stackDepth();
   state_ = State::Expr;
->>>>>>> upstream-releases
 #endif
   return true;
 }
 
-<<<<<<< HEAD
-bool ExpressionStatementEmitter::emitEnd() {
-  MOZ_ASSERT(state_ == State::Expr);
-  MOZ_ASSERT(bce_->stackDepth == depth_ + 1);
-||||||| merged common ancestors
-bool
-ExpressionStatementEmitter::emitEnd()
-{
-    MOZ_ASSERT(state_ == State::Expr);
-    MOZ_ASSERT(bce_->stackDepth == depth_ + 1);
-=======
 bool ExpressionStatementEmitter::emitEnd() {
   MOZ_ASSERT(state_ == State::Expr);
   MOZ_ASSERT(bce_->bytecodeSection().stackDepth() == depth_ + 1);
->>>>>>> upstream-releases
 
   //                [stack] VAL
 

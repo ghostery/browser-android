@@ -149,18 +149,8 @@ BlockReflowInput::BlockReflowInput(const ReflowInput& aReflowInput,
   mMinLineHeight = aReflowInput.CalcLineHeight();
 }
 
-<<<<<<< HEAD
-nscoord BlockReflowInput::ConsumedBSize() {
-  if (mConsumedBSize == NS_INTRINSICSIZE) {
-||||||| merged common ancestors
-nscoord
-BlockReflowInput::ConsumedBSize()
-{
-  if (mConsumedBSize == NS_INTRINSICSIZE) {
-=======
 nscoord BlockReflowInput::ConsumedBSize() {
   if (mConsumedBSize == NS_UNCONSTRAINEDSIZE) {
->>>>>>> upstream-releases
     mConsumedBSize = mBlock->ConsumedBSize(mReflowInput.GetWritingMode());
   }
 
@@ -224,28 +214,11 @@ static nscoord GetBEndMarginClone(nsIFrame* aFrame,
 }
 
 // Compute the amount of available space for reflowing a block frame
-<<<<<<< HEAD
-// at the current Y coordinate. This method assumes that
-// GetAvailableSpace has already been called.
-void BlockReflowInput::ComputeBlockAvailSpace(
-    nsIFrame* aFrame, const nsFlowAreaRect& aFloatAvailableSpace,
-    bool aBlockAvoidsFloats, LogicalRect& aResult) {
-||||||| merged common ancestors
-// at the current Y coordinate. This method assumes that
-// GetAvailableSpace has already been called.
-void
-BlockReflowInput::ComputeBlockAvailSpace(nsIFrame* aFrame,
-                                         const nsFlowAreaRect& aFloatAvailableSpace,
-                                         bool aBlockAvoidsFloats,
-                                         LogicalRect& aResult)
-{
-=======
 // at the current block-direction coordinate. This method assumes that
 // GetFloatAvailableSpace has already been called.
 void BlockReflowInput::ComputeBlockAvailSpace(
     nsIFrame* aFrame, const nsFlowAreaRect& aFloatAvailableSpace,
     bool aBlockAvoidsFloats, LogicalRect& aResult) {
->>>>>>> upstream-releases
 #ifdef REALLY_NOISY_REFLOW
   printf("CBAS frame=%p has floats %d\n", aFrame,
          aFloatAvailableSpace.HasFloats());
@@ -504,25 +477,6 @@ void BlockReflowInput::RecoverFloats(nsLineList::iterator aLine,
         nscoord tI, tB;
         FloatManager()->GetTranslation(tI, tB);
         nsFrame::IndentBy(stdout, nsBlockFrame::gNoiseIndent);
-<<<<<<< HEAD
-        printf("RecoverFloats: tIB=%d,%d (%d,%d) ", tI, tB, mFloatManagerI,
-               mFloatManagerB);
-        nsFrame::ListTag(stdout, floatFrame);
-        LogicalRect region =
-            nsFloatManager::GetRegionFor(wm, floatFrame, ContainerSize());
-        printf(" aDeltaBCoord=%d region={%d,%d,%d,%d}\n", aDeltaBCoord,
-               region.IStart(wm), region.BStart(wm), region.ISize(wm),
-               region.BSize(wm));
-||||||| merged common ancestors
-        printf("RecoverFloats: tIB=%d,%d (%d,%d) ",
-               tI, tB, mFloatManagerI, mFloatManagerB);
-        nsFrame::ListTag(stdout, floatFrame);
-        LogicalRect region = nsFloatManager::GetRegionFor(wm, floatFrame,
-                                                          ContainerSize());
-        printf(" aDeltaBCoord=%d region={%d,%d,%d,%d}\n",
-               aDeltaBCoord, region.IStart(wm), region.BStart(wm),
-               region.ISize(wm), region.BSize(wm));
-=======
         printf("RecoverFloats: tIB=%d,%d (%d,%d) ", tI, tB, mFloatManagerI,
                mFloatManagerB);
         floatFrame->ListTag(stdout);
@@ -531,7 +485,6 @@ void BlockReflowInput::RecoverFloats(nsLineList::iterator aLine,
         printf(" aDeltaBCoord=%d region={%d,%d,%d,%d}\n", aDeltaBCoord,
                region.IStart(wm), region.BStart(wm), region.ISize(wm),
                region.BSize(wm));
->>>>>>> upstream-releases
       }
 #endif
       FloatManager()->AddFloat(

@@ -4,7 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 /*
  * Tests for correct behavior of asynchronous responses.
  */
@@ -25,36 +24,13 @@ function run_test() {
   runHttpTests(tests, testComplete(srv));
 }
 
-<<<<<<< HEAD
-
 /** *************
-||||||| merged common ancestors
-
-/***************
-=======
-/** *************
->>>>>>> upstream-releases
  * BEGIN TESTS *
  ***************/
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
     new Test(PREPATH + "/handleSync", null, start_handleSync, null),
-<<<<<<< HEAD
-    new Test(PREPATH + "/handleAsync1", null, start_handleAsync1,
-             stop_handleAsync1),
-    new Test(PREPATH + "/handleAsync2", init_handleAsync2, start_handleAsync2,
-             stop_handleAsync2),
-    new Test(PREPATH + "/handleAsyncOrdering", null, null,
-             stop_handleAsyncOrdering),
-||||||| merged common ancestors
-    new Test(PREPATH + "/handleAsync1", null, start_handleAsync1,
-             stop_handleAsync1),
-    new Test(PREPATH + "/handleAsync2", init_handleAsync2, start_handleAsync2,
-             stop_handleAsync2),
-    new Test(PREPATH + "/handleAsyncOrdering", null, null,
-             stop_handleAsyncOrdering)
-=======
     new Test(
       PREPATH + "/handleAsync1",
       null,
@@ -73,7 +49,6 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
       null,
       stop_handleAsyncOrdering
     ),
->>>>>>> upstream-releases
   ];
 });
 
@@ -93,14 +68,7 @@ function handleSync(request, response) {
 }
 handlers["/handleSync"] = handleSync;
 
-<<<<<<< HEAD
-function start_handleSync(ch, cx) {
-||||||| merged common ancestors
-function start_handleSync(ch, cx)
-{
-=======
 function start_handleSync(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 200);
   Assert.equal(ch.responseStatusText, "handleSync pass");
 }
@@ -146,27 +114,13 @@ function handleAsync1(request, response) {
 }
 handlers["/handleAsync1"] = handleAsync1;
 
-<<<<<<< HEAD
-function start_handleAsync1(ch, cx) {
-||||||| merged common ancestors
-function start_handleAsync1(ch, cx)
-{
-=======
 function start_handleAsync1(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 200);
   Assert.equal(ch.responseStatusText, "New status line!");
   Assert.equal(ch.getResponseHeader("X-Foo"), "new value");
 }
 
-<<<<<<< HEAD
-function stop_handleAsync1(ch, cx, status, data) {
-||||||| merged common ancestors
-function stop_handleAsync1(ch, cx, status, data)
-{
-=======
 function stop_handleAsync1(ch, status, data) {
->>>>>>> upstream-releases
   Assert.equal(data.length, 0);
 }
 
@@ -227,28 +181,12 @@ handlers["/handleAsync2"] = handleAsync2;
 
 var startTime_handleAsync2;
 
-<<<<<<< HEAD
-function init_handleAsync2(ch) {
-  var now = startTime_handleAsync2 = Date.now();
-||||||| merged common ancestors
-function init_handleAsync2(ch)
-{
-  var now = startTime_handleAsync2 = Date.now();
-=======
 function init_handleAsync2(ch) {
   var now = (startTime_handleAsync2 = Date.now());
->>>>>>> upstream-releases
   dumpn("*** init_HandleAsync2: start time " + now);
 }
 
-<<<<<<< HEAD
-function start_handleAsync2(ch, cx) {
-||||||| merged common ancestors
-function start_handleAsync2(ch, cx)
-{
-=======
 function start_handleAsync2(ch) {
->>>>>>> upstream-releases
   var now = Date.now();
   dumpn(
     "*** start_handleAsync2: onStartRequest time " +
@@ -264,14 +202,7 @@ function start_handleAsync2(ch) {
   Assert.equal(ch.getResponseHeader("X-Custom-Header"), "value");
 }
 
-<<<<<<< HEAD
-function stop_handleAsync2(ch, cx, status, data) {
-||||||| merged common ancestors
-function stop_handleAsync2(ch, cx, status, data)
-{
-=======
 function stop_handleAsync2(ch, status, data) {
->>>>>>> upstream-releases
   var now = Date.now();
   dumpn(
     "*** stop_handleAsync2: onStopRequest time " +
@@ -301,60 +232,13 @@ function handleAsyncOrdering(request, response) {
   }
   var count = 20;
 
-<<<<<<< HEAD
-  var writeData =
-    {
-      run() {
-        if (count-- === 0) {
-          response.finish();
-          return;
-        }
-||||||| merged common ancestors
-  var writeData =
-    {
-      run: function()
-      {
-        if (count-- === 0)
-        {
-          response.finish();
-          return;
-        }
-=======
   var writeData = {
     run() {
       if (count-- === 0) {
         response.finish();
         return;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        try {
-          out.writeByteArray(data, data.length);
-          step();
-        } catch (e) {
-          try {
-            do_throw("error writing data: " + e);
-          } finally {
-            response.finish();
-          }
-||||||| merged common ancestors
-        try
-        {
-          out.writeByteArray(data, data.length);
-          step();
-        }
-        catch (e)
-        {
-          try
-          {
-            do_throw("error writing data: " + e);
-          }
-          finally
-          {
-            response.finish();
-          }
-=======
       try {
         out.writeByteArray(data, data.length);
         step();
@@ -363,23 +247,11 @@ function handleAsyncOrdering(request, response) {
           do_throw("error writing data: " + e);
         } finally {
           response.finish();
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      },
-    };
-  function step() {
-||||||| merged common ancestors
-      }
-    };
-  function step()
-  {
-=======
       }
     },
   };
   function step() {
->>>>>>> upstream-releases
     // Use gThreadManager here because it's expedient, *not* because it's
     // intended for public use!  If you do this in client code, expect me to
     // knowingly break your code by changing the variable name.  :-P
@@ -390,26 +262,10 @@ function handleAsyncOrdering(request, response) {
 }
 handlers["/handleAsyncOrdering"] = handleAsyncOrdering;
 
-<<<<<<< HEAD
-function stop_handleAsyncOrdering(ch, cx, status, data) {
-||||||| merged common ancestors
-function stop_handleAsyncOrdering(ch, cx, status, data)
-{
-=======
 function stop_handleAsyncOrdering(ch, status, data) {
->>>>>>> upstream-releases
   Assert.equal(data.length, 20 * 65536);
-<<<<<<< HEAD
-  data.forEach(function(v, index) {
-    if (v !== 0)
-||||||| merged common ancestors
-  data.forEach(function(v, index)
-  {
-    if (v !== 0)
-=======
   data.forEach(function(v, index) {
     if (v !== 0) {
->>>>>>> upstream-releases
       do_throw("value " + v + " at index " + index + " should be zero");
     }
   });

@@ -41,34 +41,13 @@ static inline bool IsTableCell(mozilla::LayoutFrameType frameType) {
          frameType == mozilla::LayoutFrameType::BCTableCell;
 }
 
-<<<<<<< HEAD
-class nsDisplayTableItem : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayTableItem : public nsDisplayItem
-{
-public:
-=======
 class nsDisplayTableItem : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayTableItem(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-<<<<<<< HEAD
-                     bool aDrawsBackground = true)
-      : nsDisplayItem(aBuilder, aFrame),
-        mPartHasFixedBackground(false),
-        mDrawsBackground(aDrawsBackground) {}
-||||||| merged common ancestors
-                     bool aDrawsBackground = true) :
-      nsDisplayItem(aBuilder, aFrame),
-      mPartHasFixedBackground(false),
-      mDrawsBackground(aDrawsBackground) {}
-=======
                      bool aDrawsBackground = true)
       : nsPaintedDisplayItem(aBuilder, aFrame),
         mPartHasFixedBackground(false),
         mDrawsBackground(aDrawsBackground) {}
->>>>>>> upstream-releases
 
   // With collapsed borders, parts of the collapsed border can extend outside
   // the table part frames, so allow this display element to blow out to our
@@ -90,35 +69,6 @@ class nsDisplayTableItem : public nsPaintedDisplayItem {
   bool mDrawsBackground;
 };
 
-<<<<<<< HEAD
-class nsAutoPushCurrentTableItem {
- public:
-  nsAutoPushCurrentTableItem() : mBuilder(nullptr), mOldCurrentItem(nullptr) {}
-
-  void Push(nsDisplayListBuilder* aBuilder, nsDisplayTableItem* aPushItem) {
-    mBuilder = aBuilder;
-    mOldCurrentItem = aBuilder->GetCurrentTableItem();
-    aBuilder->SetCurrentTableItem(aPushItem);
-#ifdef DEBUG
-    mPushedItem = aPushItem;
-#endif
-||||||| merged common ancestors
-class nsAutoPushCurrentTableItem
-{
-public:
-  nsAutoPushCurrentTableItem()
-    : mBuilder(nullptr)
-    , mOldCurrentItem(nullptr) {}
-
-  void Push(nsDisplayListBuilder* aBuilder, nsDisplayTableItem* aPushItem)
-  {
-    mBuilder = aBuilder;
-    mOldCurrentItem = aBuilder->GetCurrentTableItem();
-    aBuilder->SetCurrentTableItem(aPushItem);
-#ifdef DEBUG
-    mPushedItem = aPushItem;
-#endif
-=======
 class nsDisplayTableBackgroundSet {
  public:
   nsDisplayList* ColGroupBackgrounds() { return &mColGroupBackgrounds; }
@@ -132,39 +82,14 @@ class nsDisplayTableBackgroundSet {
         mBuilder->FindReferenceFrameFor(aTable, &mToReferenceFrame);
     MOZ_ASSERT(nsLayoutUtils::IsAncestorFrameCrossDoc(reference, aTable));
     mDirtyRect = mBuilder->GetDirtyRect();
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  ~nsAutoPushCurrentTableItem() {
-    if (!mBuilder) return;
-#ifdef DEBUG
-    NS_ASSERTION(mBuilder->GetCurrentTableItem() == mPushedItem,
-                 "Someone messed with the current table item behind our back!");
-#endif
-    mBuilder->SetCurrentTableItem(mOldCurrentItem);
-||||||| merged common ancestors
-  ~nsAutoPushCurrentTableItem() {
-    if (!mBuilder)
-      return;
-#ifdef DEBUG
-    NS_ASSERTION(mBuilder->GetCurrentTableItem() == mPushedItem,
-                 "Someone messed with the current table item behind our back!");
-#endif
-    mBuilder->SetCurrentTableItem(mOldCurrentItem);
-=======
 
   ~nsDisplayTableBackgroundSet() {
     mozilla::DebugOnly<nsDisplayTableBackgroundSet*> result =
         mBuilder->SetTableBackgroundSet(mPrevTableBackgroundSet);
     MOZ_ASSERT(result == this);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   /**
    * Move all display items in our lists to top of the corresponding lists in
    * the destination.
@@ -188,19 +113,7 @@ private:
   void* operator new(size_t sz) CPP_THROW_NEW;
 
  protected:
->>>>>>> upstream-releases
   nsDisplayListBuilder* mBuilder;
-<<<<<<< HEAD
-  nsDisplayTableItem* mOldCurrentItem;
-#ifdef DEBUG
-  nsDisplayTableItem* mPushedItem;
-#endif
-||||||| merged common ancestors
-  nsDisplayTableItem*   mOldCurrentItem;
-#ifdef DEBUG
-  nsDisplayTableItem*   mPushedItem;
-#endif
-=======
   nsDisplayTableBackgroundSet* mPrevTableBackgroundSet;
 
   nsDisplayList mColGroupBackgrounds;
@@ -209,7 +122,6 @@ private:
   nsTArray<nsTableColFrame*> mColumns;
   nsPoint mToReferenceFrame;
   nsRect mDirtyRect;
->>>>>>> upstream-releases
 };
 
 /* ========================================================================== */
@@ -244,23 +156,6 @@ class nsTableFrame : public nsContainerFrame {
   /** nsTableWrapperFrame has intimate knowledge of the inner table frame */
   friend class nsTableWrapperFrame;
 
-<<<<<<< HEAD
-  /**
-   * instantiate a new instance of nsTableRowFrame.
-   *
-   * @param aPresShell the pres shell for this frame
-   *
-   * @return           the frame that was created
-   */
-  friend nsTableFrame* NS_NewTableFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-  /** instantiate a new instance of nsTableRowFrame.
-    * @param aPresShell the pres shell for this frame
-    *
-    * @return           the frame that was created
-    */
-  friend nsTableFrame* NS_NewTableFrame(nsIPresShell* aPresShell,
-=======
   /**
    * instantiate a new instance of nsTableRowFrame.
    *
@@ -269,7 +164,6 @@ class nsTableFrame : public nsContainerFrame {
    * @return           the frame that was created
    */
   friend nsTableFrame* NS_NewTableFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                         ComputedStyle* aStyle);
 
   /** sets defaults for table-specific style.
@@ -346,54 +240,6 @@ class nsTableFrame : public nsContainerFrame {
                                                    nsIFrame* aSourceFrame,
                                                    bool* aDidPassThrough);
 
-<<<<<<< HEAD
-  typedef void (*DisplayGenericTablePartTraversal)(
-      nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
-      const nsDisplayListSet& aLists);
-  static void GenericTraversal(nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
-                               const nsDisplayListSet& aLists);
-
-  /**
-   * Helper method to handle display common to table frames, rowgroup frames
-   * and row frames. It creates a background display item for handling events
-   * if necessary, an outline display item if necessary, and displays
-   * all the the frame's children.
-   * @param aDisplayItem the display item created for this part, or null
-   * if this part's border/background painting is delegated to an ancestor
-   * @param aTraversal a function that gets called to traverse the table
-   * part's child frames and add their display list items to a
-   * display list set.
-   */
-  static void DisplayGenericTablePart(
-      nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
-      const nsDisplayListSet& aLists,
-      DisplayGenericTablePartTraversal aTraversal = GenericTraversal);
-
-||||||| merged common ancestors
-  typedef void (* DisplayGenericTablePartTraversal)
-      (nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
-       const nsDisplayListSet& aLists);
-  static void GenericTraversal(nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
-                               const nsDisplayListSet& aLists);
-
-  /**
-   * Helper method to handle display common to table frames, rowgroup frames
-   * and row frames. It creates a background display item for handling events
-   * if necessary, an outline display item if necessary, and displays
-   * all the the frame's children.
-   * @param aDisplayItem the display item created for this part, or null
-   * if this part's border/background painting is delegated to an ancestor
-   * @param aTraversal a function that gets called to traverse the table
-   * part's child frames and add their display list items to a
-   * display list set.
-   */
-  static void DisplayGenericTablePart(nsDisplayListBuilder* aBuilder,
-                                      nsFrame* aFrame,
-                                      const nsDisplayListSet& aLists,
-                                      DisplayGenericTablePartTraversal aTraversal = GenericTraversal);
-
-=======
->>>>>>> upstream-releases
   // Return the closest sibling of aPriorChildFrame (including aPriroChildFrame)
   // of type aChildType.
   static nsIFrame* GetFrameAtOrBefore(nsIFrame* aParentFrame,
@@ -723,20 +569,10 @@ class nsTableFrame : public nsContainerFrame {
       mozilla::ServoRestyleState& aRestyleState);
 
   /** protected constructor.
-<<<<<<< HEAD
-   * @see NewFrame
-   */
-  explicit nsTableFrame(ComputedStyle* aStyle, ClassID aID = kClassID);
-||||||| merged common ancestors
-    * @see NewFrame
-    */
-  explicit nsTableFrame(ComputedStyle* aStyle, ClassID aID = kClassID);
-=======
    * @see NewFrame
    */
   explicit nsTableFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                         ClassID aID = kClassID);
->>>>>>> upstream-releases
 
   /** destructor, responsible for mColumnLayoutData */
   virtual ~nsTableFrame();
@@ -817,23 +653,10 @@ class nsTableFrame : public nsContainerFrame {
   // padding given its reflow input.
   nscoord CalcBorderBoxBSize(const ReflowInput& aReflowInput);
 
-<<<<<<< HEAD
- protected:
-  // update the  desired block-size of this table taking into account the
-  // current reflow state, the table attributes and the content driven rowgroup
-  // bsizes this function can change the overflow area
-||||||| merged common ancestors
-protected:
-
-  // update the  desired block-size of this table taking into account the current
-  // reflow state, the table attributes and the content driven rowgroup bsizes
-  // this function can change the overflow area
-=======
  protected:
   // update the  desired block-size of this table taking into account the
   // current reflow input, the table attributes and the content driven rowgroup
   // bsizes this function can change the overflow area
->>>>>>> upstream-releases
   void CalcDesiredBSize(const ReflowInput& aReflowInput,
                         ReflowOutput& aDesiredSize);
 

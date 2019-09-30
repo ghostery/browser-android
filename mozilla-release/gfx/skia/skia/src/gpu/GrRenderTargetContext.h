@@ -13,13 +13,8 @@
 #include "GrSurfaceContext.h"
 #include "GrTypesPriv.h"
 #include "GrXferProcessor.h"
-<<<<<<< HEAD
-#include "SkCanvas.h"
-||||||| merged common ancestors
-=======
 #include "SkCanvas.h"
 #include "SkDrawable.h"
->>>>>>> upstream-releases
 #include "SkRefCnt.h"
 #include "SkSurface.h"
 #include "SkSurfaceProps.h"
@@ -178,11 +173,6 @@ public:
      * Creates an op that draws a subrectangle of a texture. The passed color is modulated by the
      * texture's color. 'srcRect' specifies the rectangle of the texture to draw. 'dstRect'
      * specifies the rectangle to draw in local coords which will be transformed by 'viewMatrix' to
-<<<<<<< HEAD
-     * device space.
-||||||| merged common ancestors
-     * device space. This asserts that the view matrix does not have perspective.
-=======
      * device space.
      */
     void drawTexture(const GrClip& clip, sk_sp<GrTextureProxy>, GrSamplerState::Filter,
@@ -195,18 +185,7 @@ public:
      * 'viewMatrix', using the 'srcQuad' texture coordinates clamped to the optional 'domain'. If
      * 'domain' is null, it's equivalent to using the fast src rect constraint. If 'domain' is
      * provided, the strict src rect constraint is applied using 'domain'.
->>>>>>> upstream-releases
      */
-<<<<<<< HEAD
-    void drawTexture(const GrClip& clip, sk_sp<GrTextureProxy>, GrSamplerState::Filter, GrColor,
-                     const SkRect& srcRect, const SkRect& dstRect, GrQuadAAFlags,
-                     SkCanvas::SrcRectConstraint, const SkMatrix& viewMatrix,
-                     sk_sp<GrColorSpaceXform> texXform, sk_sp<GrColorSpaceXform> colorXform);
-||||||| merged common ancestors
-    void drawTextureAffine(const GrClip& clip, sk_sp<GrTextureProxy>, GrSamplerState::Filter,
-                           GrColor, const SkRect& srcRect, const SkRect& dstRect, GrAA aa,
-                           const SkMatrix& viewMatrix, sk_sp<GrColorSpaceXform>);
-=======
     void drawTextureQuad(const GrClip& clip, sk_sp<GrTextureProxy>, GrSamplerState::Filter,
                          SkBlendMode mode, const SkPMColor4f&, const SkPoint srcQuad[4],
                          const SkPoint dstQuad[4], GrAA, GrQuadAAFlags, const SkRect* domain,
@@ -232,7 +211,6 @@ public:
     void drawTextureSet(const GrClip&, const TextureSetEntry[], int cnt, GrSamplerState::Filter,
                         SkBlendMode mode, GrAA aa, const SkMatrix& viewMatrix,
                         sk_sp<GrColorSpaceXform> texXform);
->>>>>>> upstream-releases
 
     /**
      * Draw a roundrect using a paint.
@@ -441,13 +419,7 @@ public:
     void insertEventMarker(const SkString&);
 
     GrFSAAType fsaaType() const { return fRenderTargetProxy->fsaaType(); }
-<<<<<<< HEAD
-    const GrCaps* caps() const { return fContext->contextPriv().caps(); }
-||||||| merged common ancestors
-    const GrCaps* caps() const { return fContext->caps(); }
-=======
     const GrCaps* caps() const;
->>>>>>> upstream-releases
     int width() const { return fRenderTargetProxy->width(); }
     int height() const { return fRenderTargetProxy->height(); }
     int numColorSamples() const { return fRenderTargetProxy->numColorSamples(); }
@@ -459,29 +431,9 @@ public:
 
     void setNeedsStencil() { fRenderTargetProxy->setNeedsStencil(); }
 
-<<<<<<< HEAD
-    GrRenderTarget* accessRenderTarget() {
-        // TODO: usage of this entry point needs to be reduced and potentially eliminated
-        // since it ends the deferral of the GrRenderTarget's allocation
-        if (!fRenderTargetProxy->instantiate(fContext->contextPriv().resourceProvider())) {
-            return nullptr;
-        }
-        return fRenderTargetProxy->peekRenderTarget();
-    }
-||||||| merged common ancestors
-    GrRenderTarget* accessRenderTarget() {
-        // TODO: usage of this entry point needs to be reduced and potentially eliminated
-        // since it ends the deferral of the GrRenderTarget's allocation
-        if (!fRenderTargetProxy->instantiate(fContext->contextPriv().resourceProvider())) {
-            return nullptr;
-        }
-        return fRenderTargetProxy->priv().peekRenderTarget();
-    }
-=======
     // This entry point should only be called if the backing GPU object is known to be
     // instantiated.
     GrRenderTarget* accessRenderTarget() { return fRenderTargetProxy->peekRenderTarget(); }
->>>>>>> upstream-releases
 
     GrSurfaceProxy* asSurfaceProxy() override { return fRenderTargetProxy.get(); }
     const GrSurfaceProxy* asSurfaceProxy() const override { return fRenderTargetProxy.get(); }
@@ -570,17 +522,6 @@ private:
     void drawShapeUsingPathRenderer(const GrClip&, GrPaint&&, GrAA, const SkMatrix&,
                                     const GrShape&);
 
-<<<<<<< HEAD
-    // These perform processing specific to Gr[Mesh]DrawOp-derived ops before recording them into
-    // the op list. They return the id of the opList to which the op was added, or 0, if it was
-    // dropped (e.g., due to clipping or being combined).
-    uint32_t addDrawOp(const GrClip&, std::unique_ptr<GrDrawOp>);
-||||||| merged common ancestors
-    // These perform processing specific to Gr[Mesh]DrawOp-derived ops before recording them into
-    // the op list. They return the id of the opList to which the op was added, or 0, if it was
-    // dropped (e.g., due to clipping).
-    uint32_t addDrawOp(const GrClip&, std::unique_ptr<GrDrawOp>);
-=======
     // Allows caller of addDrawOp to know which op list an op will be added to.
     using WillAddOpFn = void(GrOp*, uint32_t opListID);
     // These perform processing specific to GrDrawOp-derived ops before recording them into an
@@ -589,7 +530,6 @@ private:
     // another op after the function is called (either before addDrawOp returns or some time later).
     void addDrawOp(const GrClip&, std::unique_ptr<GrDrawOp>,
                    const std::function<WillAddOpFn>& = std::function<WillAddOpFn>());
->>>>>>> upstream-releases
 
     // Makes a copy of the proxy if it is necessary for the draw and places the texture that should
     // be used by GrXferProcessor to access the destination color in 'result'. If the return

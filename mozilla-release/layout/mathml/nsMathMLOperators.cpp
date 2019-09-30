@@ -395,17 +395,8 @@ void nsMathMLOperators::LookupOperators(const nsString& aOperator,
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool nsMathMLOperators::IsMirrorableOperator(
-    const nsString& aOperator) {
-||||||| merged common ancestors
-/* static */ bool
-nsMathMLOperators::IsMirrorableOperator(const nsString& aOperator)
-{
-=======
 /* static */
 bool nsMathMLOperators::IsMirrorableOperator(const nsString& aOperator) {
->>>>>>> upstream-releases
   // LookupOperator will search infix, postfix and prefix forms of aOperator and
   // return the first form found. It is assumed that all these forms have same
   // mirrorability.
@@ -416,18 +407,9 @@ bool nsMathMLOperators::IsMirrorableOperator(const nsString& aOperator) {
   return NS_MATHML_OPERATOR_IS_MIRRORABLE(flags);
 }
 
-<<<<<<< HEAD
-/* static */ nsStretchDirection nsMathMLOperators::GetStretchyDirection(
-    const nsString& aOperator) {
-||||||| merged common ancestors
-/* static */ nsStretchDirection
-nsMathMLOperators::GetStretchyDirection(const nsString& aOperator)
-{
-=======
 /* static */
 nsStretchDirection nsMathMLOperators::GetStretchyDirection(
     const nsString& aOperator) {
->>>>>>> upstream-releases
   // LookupOperator will search infix, postfix and prefix forms of aOperator and
   // return the first form found. It is assumed that all these forms have same
   // direction.

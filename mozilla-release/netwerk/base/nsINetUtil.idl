@@ -213,20 +213,6 @@ interface nsINetUtil : nsISupports
    */
   unsigned long parseAttributePolicyString(in AString aPolicyString);
 
-<<<<<<< HEAD
-/**
-   * Convert referrer policy integer code (defined in nsIHttpChannel.idl) to
-   * string.
-   *
-   * @param aPolicy
-   *        the policy integer code (defined in nsIHttpChannel.idl)
-   * @return aPolicyString
-   *         referrer policy string from code
-   */
-  ACString getReferrerPolicyString(in unsigned long aPolicy);
-
-||||||| merged common ancestors
-=======
 /**
    * Convert referrer policy integer code (defined in nsIHttpChannel.idl) to
    * string.
@@ -243,7 +229,6 @@ interface nsINetUtil : nsISupports
    * telemetry.
    */
   void socketProcessTelemetryPing();
->>>>>>> upstream-releases
 
   /**
    * This is a void method that is C++ implemented and always

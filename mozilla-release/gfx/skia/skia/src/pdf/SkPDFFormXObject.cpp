@@ -34,14 +34,6 @@ SkPDFIndirectReference SkPDFMakeFormXObject(SkPDFDocument* doc,
         group->insertName("CS", colorSpace);
     }
     group->insertBool("I", true);  // Isolated.
-<<<<<<< HEAD
-    form->dict()->insertObject("Group", std::move(group));
-    return std::move(form);
-||||||| merged common ancestors
-    form->dict()->insertObject("Group", std::move(group));
-    return form;
-=======
     dict->insertObject("Group", std::move(group));
     return SkPDFStreamOut(std::move(dict), std::move(content), doc);
->>>>>>> upstream-releases
 }

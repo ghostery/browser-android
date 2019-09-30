@@ -28,33 +28,12 @@ using namespace mozilla;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-struct TableCellReflowInput : public ReflowInput {
-  TableCellReflowInput(nsPresContext* aPresContext,
-                       const ReflowInput& aParentReflowInput, nsIFrame* aFrame,
-                       const LogicalSize& aAvailableSpace, uint32_t aFlags = 0)
-      : ReflowInput(aPresContext, aParentReflowInput, aFrame, aAvailableSpace,
-                    nullptr, aFlags) {}
-||||||| merged common ancestors
-struct TableCellReflowInput : public ReflowInput
-{
-  TableCellReflowInput(nsPresContext*           aPresContext,
-                         const ReflowInput& aParentReflowInput,
-                         nsIFrame*                aFrame,
-                         const LogicalSize&       aAvailableSpace,
-                         uint32_t                 aFlags = 0)
-    : ReflowInput(aPresContext, aParentReflowInput, aFrame,
-                        aAvailableSpace, nullptr, aFlags)
-  {
-  }
-=======
 struct TableCellReflowInput : public ReflowInput {
   TableCellReflowInput(nsPresContext* aPresContext,
                        const ReflowInput& aParentReflowInput, nsIFrame* aFrame,
                        const LogicalSize& aAvailableSpace, uint32_t aFlags = 0)
       : ReflowInput(aPresContext, aParentReflowInput, aFrame, aAvailableSpace,
                     Nothing(), aFlags) {}
->>>>>>> upstream-releases
 
   void FixUp(const LogicalSize& aAvailSpace);
 };
@@ -138,34 +117,6 @@ NS_QUERYFRAME_HEAD(nsTableRowFrame)
   NS_QUERYFRAME_ENTRY(nsTableRowFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 
-<<<<<<< HEAD
-nsTableRowFrame::nsTableRowFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsContainerFrame(aStyle, aID),
-      mContentBSize(0),
-      mStylePctBSize(0),
-      mStyleFixedBSize(0),
-      mMaxCellAscent(0),
-      mMaxCellDescent(0),
-      mBStartBorderWidth(0),
-      mBEndBorderWidth(0),
-      mIEndContBorderWidth(0),
-      mBStartContBorderWidth(0),
-      mIStartContBorderWidth(0) {
-||||||| merged common ancestors
-nsTableRowFrame::nsTableRowFrame(ComputedStyle* aStyle, ClassID aID)
-  : nsContainerFrame(aStyle, aID)
-  , mContentBSize(0)
-  , mStylePctBSize(0)
-  , mStyleFixedBSize(0)
-  , mMaxCellAscent(0)
-  , mMaxCellDescent(0)
-  , mBStartBorderWidth(0)
-  , mBEndBorderWidth(0)
-  , mIEndContBorderWidth(0)
-  , mBStartContBorderWidth(0)
-  , mIStartContBorderWidth(0)
-{
-=======
 nsTableRowFrame::nsTableRowFrame(ComputedStyle* aStyle,
                                  nsPresContext* aPresContext, ClassID aID)
     : nsContainerFrame(aStyle, aPresContext, aID),
@@ -179,7 +130,6 @@ nsTableRowFrame::nsTableRowFrame(ComputedStyle* aStyle,
       mIEndContBorderWidth(0),
       mBStartContBorderWidth(0),
       mIStartContBorderWidth(0) {
->>>>>>> upstream-releases
   mBits.mRowIndex = 0;
   mBits.mHasFixedBSize = 0;
   mBits.mHasPctBSize = 0;
@@ -216,17 +166,8 @@ void nsTableRowFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsContainerFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsTableRowFrame::DidSetComputedStyle(
-    ComputedStyle* aOldComputedStyle) {
-||||||| merged common ancestors
-/* virtual */ void
-nsTableRowFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
-{
-=======
 /* virtual */
 void nsTableRowFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
->>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   if (!aOldComputedStyle)  // avoid this on init
@@ -326,49 +267,15 @@ void nsTableRowFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
   tableFrame->SetGeometryDirty();
 }
 
-<<<<<<< HEAD
-/* virtual */ nsMargin nsTableRowFrame::GetUsedMargin() const {
-  return nsMargin(0, 0, 0, 0);
-}
-||||||| merged common ancestors
-/* virtual */ nsMargin
-nsTableRowFrame::GetUsedMargin() const
-{
-  return nsMargin(0,0,0,0);
-}
-=======
 /* virtual */
 nsMargin nsTableRowFrame::GetUsedMargin() const { return nsMargin(0, 0, 0, 0); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* virtual */ nsMargin nsTableRowFrame::GetUsedBorder() const {
-  return nsMargin(0, 0, 0, 0);
-}
-||||||| merged common ancestors
-/* virtual */ nsMargin
-nsTableRowFrame::GetUsedBorder() const
-{
-  return nsMargin(0,0,0,0);
-}
-=======
 /* virtual */
 nsMargin nsTableRowFrame::GetUsedBorder() const { return nsMargin(0, 0, 0, 0); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* virtual */ nsMargin nsTableRowFrame::GetUsedPadding() const {
-  return nsMargin(0, 0, 0, 0);
-||||||| merged common ancestors
-/* virtual */ nsMargin
-nsTableRowFrame::GetUsedPadding() const
-{
-  return nsMargin(0,0,0,0);
-=======
 /* virtual */
 nsMargin nsTableRowFrame::GetUsedPadding() const {
   return nsMargin(0, 0, 0, 0);
->>>>>>> upstream-releases
 }
 
 static nscoord GetBSizeOfRowsSpannedBelowFirst(
@@ -595,20 +502,9 @@ nscoord nsTableRowFrame::CalcBSize(const ReflowInput& aReflowInput) {
   const nsStylePosition* position = StylePosition();
   const auto& bsizeStyleCoord = position->BSize(wm);
   if (bsizeStyleCoord.ConvertsToLength()) {
-<<<<<<< HEAD
-    SetFixedBSize(bsizeStyleCoord.ComputeCoordPercentCalc(0));
-  } else if (eStyleUnit_Percent == bsizeStyleCoord.GetUnit()) {
-    SetPctBSize(bsizeStyleCoord.GetPercentValue());
-||||||| merged common ancestors
-    SetFixedBSize(bsizeStyleCoord.ComputeCoordPercentCalc(0));
-  }
-  else if (eStyleUnit_Percent == bsizeStyleCoord.GetUnit()) {
-    SetPctBSize(bsizeStyleCoord.GetPercentValue());
-=======
     SetFixedBSize(bsizeStyleCoord.ToLength());
   } else if (bsizeStyleCoord.ConvertsToPercentage()) {
     SetPctBSize(bsizeStyleCoord.ToPercentage());
->>>>>>> upstream-releases
   }
 
   for (nsIFrame* kidFrame : mFrames) {
@@ -636,17 +532,6 @@ nscoord nsTableRowFrame::CalcBSize(const ReflowInput& aReflowInput) {
   return GetInitialBSize();
 }
 
-<<<<<<< HEAD
-void nsTableRowFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
-                                       const nsDisplayListSet& aLists) {
-  nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists);
-||||||| merged common ancestors
-void
-nsTableRowFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
-                                  const nsDisplayListSet& aLists)
-{
-  nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists);
-=======
 void nsTableRowFrame::PaintCellBackgroundsForFrame(
     nsIFrame* aFrame, nsDisplayListBuilder* aBuilder,
     const nsDisplayListSet& aLists, const nsPoint& aOffset) {
@@ -683,7 +568,6 @@ void nsTableRowFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   for (nsIFrame* kid : PrincipalChildList()) {
     BuildDisplayListForChild(aBuilder, kid, aLists);
   }
->>>>>>> upstream-releases
 }
 
 nsIFrame::LogicalSides nsTableRowFrame::GetLogicalSkipSides(
@@ -716,53 +600,6 @@ nsresult nsTableRowFrame::CalculateCellActualBSize(nsTableCellFrame* aCellFrame,
 
   int32_t rowSpan = GetTableFrame()->GetEffectiveRowSpan(*aCellFrame);
 
-<<<<<<< HEAD
-  const nsStyleCoord& bsizeStyleCoord = position->BSize(aWM);
-  switch (bsizeStyleCoord.GetUnit()) {
-    case eStyleUnit_Calc: {
-      if (bsizeStyleCoord.CalcHasPercent()) {
-        // Treat this like "auto"
-        break;
-      }
-      // Fall through to the coord case
-      MOZ_FALLTHROUGH;
-    }
-    case eStyleUnit_Coord: {
-      // In quirks mode, table cell isize should be content-box, but bsize
-      // should be border-box.
-      // Because of this historic anomaly, we do not use quirk.css
-      // (since we can't specify one value of box-sizing for isize and another
-      // for bsize)
-      specifiedBSize = bsizeStyleCoord.ComputeCoordPercentCalc(0);
-      if (PresContext()->CompatibilityMode() != eCompatibility_NavQuirks &&
-          position->mBoxSizing == StyleBoxSizing::Content) {
-        specifiedBSize +=
-            aCellFrame->GetLogicalUsedBorderAndPadding(aWM).BStartEnd(aWM);
-      }
-||||||| merged common ancestors
-  const nsStyleCoord& bsizeStyleCoord = position->BSize(aWM);
-  switch (bsizeStyleCoord.GetUnit()) {
-    case eStyleUnit_Calc: {
-      if (bsizeStyleCoord.CalcHasPercent()) {
-        // Treat this like "auto"
-        break;
-      }
-      // Fall through to the coord case
-      MOZ_FALLTHROUGH;
-    }
-    case eStyleUnit_Coord: {
-      // In quirks mode, table cell isize should be content-box, but bsize
-      // should be border-box.
-      // Because of this historic anomaly, we do not use quirk.css
-      // (since we can't specify one value of box-sizing for isize and another
-      // for bsize)
-      specifiedBSize = bsizeStyleCoord.ComputeCoordPercentCalc(0);
-      if (PresContext()->CompatibilityMode() != eCompatibility_NavQuirks &&
-          position->mBoxSizing == StyleBoxSizing::Content) {
-        specifiedBSize +=
-          aCellFrame->GetLogicalUsedBorderAndPadding(aWM).BStartEnd(aWM);
-      }
-=======
   const auto& bsizeStyleCoord = position->BSize(aWM);
   if (bsizeStyleCoord.ConvertsToLength()) {
     // In quirks mode, table cell isize should be content-box, but bsize
@@ -776,7 +613,6 @@ nsresult nsTableRowFrame::CalculateCellActualBSize(nsTableCellFrame* aCellFrame,
       specifiedBSize +=
           aCellFrame->GetLogicalUsedBorderAndPadding(aWM).BStartEnd(aWM);
     }
->>>>>>> upstream-releases
 
     if (1 == rowSpan) {
       SetFixedBSize(specifiedBSize);
@@ -1532,27 +1368,11 @@ void nsTableRowFrame::InitHasCellWithStyleBSize(nsTableFrame* aTableFrame) {
       continue;
     }
     // Ignore row-spanning cells
-<<<<<<< HEAD
-    const nsStyleCoord& cellBSize = cellFrame->StylePosition()->BSize(wm);
-||||||| merged common ancestors
-    const nsStyleCoord &cellBSize = cellFrame->StylePosition()->BSize(wm);
-=======
     const auto& cellBSize = cellFrame->StylePosition()->BSize(wm);
->>>>>>> upstream-releases
     if (aTableFrame->GetEffectiveRowSpan(*cellFrame) == 1 &&
-<<<<<<< HEAD
-        cellBSize.GetUnit() != eStyleUnit_Auto &&
-        /* calc() with percentages treated like 'auto' */
-        (!cellBSize.IsCalcUnit() || !cellBSize.HasPercent())) {
-||||||| merged common ancestors
-        cellBSize.GetUnit() != eStyleUnit_Auto &&
-         /* calc() with percentages treated like 'auto' */
-        (!cellBSize.IsCalcUnit() || !cellBSize.HasPercent())) {
-=======
         !cellBSize.IsAuto() &&
         /* calc() with both percentages and lengths treated like 'auto' */
         (cellBSize.ConvertsToLength() || cellBSize.ConvertsToPercentage())) {
->>>>>>> upstream-releases
       AddStateBits(NS_ROW_HAS_CELL_WITH_STYLE_BSIZE);
       return;
     }
@@ -1583,20 +1403,9 @@ void nsTableRowFrame::InvalidateFrameWithRect(const nsRect& aRect,
 
 /* ----- global methods ----- */
 
-<<<<<<< HEAD
-nsTableRowFrame* NS_NewTableRowFrame(nsIPresShell* aPresShell,
-                                     ComputedStyle* aStyle) {
-  return new (aPresShell) nsTableRowFrame(aStyle);
-||||||| merged common ancestors
-nsTableRowFrame*
-NS_NewTableRowFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsTableRowFrame(aStyle);
-=======
 nsTableRowFrame* NS_NewTableRowFrame(PresShell* aPresShell,
                                      ComputedStyle* aStyle) {
   return new (aPresShell) nsTableRowFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTableRowFrame)

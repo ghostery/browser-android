@@ -44,57 +44,25 @@ function recordEvent(aName) {
 }
 
 function TabOpen(aEvent) {
-<<<<<<< HEAD
-  if (aEvent.target == tab)
-    recordEvent("TabOpen");
-||||||| merged common ancestors
-  if (aEvent.target == tab)
-    record("TabOpen");
-=======
   if (aEvent.target == tab) {
     recordEvent("TabOpen");
   }
->>>>>>> upstream-releases
 }
 
 var progressListener = {
   onLocationChange: function onLocationChange(aBrowser) {
-<<<<<<< HEAD
-    if (aBrowser == tab.linkedBrowser)
-      recordEvent("onLocationChange");
-||||||| merged common ancestors
-    if (aBrowser == tab.linkedBrowser)
-      record("onLocationChange");
-=======
     if (aBrowser == tab.linkedBrowser) {
       recordEvent("onLocationChange");
     }
->>>>>>> upstream-releases
   },
   onStateChange: function onStateChange(aBrowser) {
-<<<<<<< HEAD
-    if (aBrowser == tab.linkedBrowser)
-      recordEvent("onStateChange");
-||||||| merged common ancestors
-    if (aBrowser == tab.linkedBrowser)
-      record("onStateChange");
-=======
     if (aBrowser == tab.linkedBrowser) {
       recordEvent("onStateChange");
     }
->>>>>>> upstream-releases
   },
   onLinkIconAvailable: function onLinkIconAvailable(aBrowser) {
-<<<<<<< HEAD
-    if (aBrowser == tab.linkedBrowser)
-      recordEvent("onLinkIconAvailable");
-||||||| merged common ancestors
-    if (aBrowser == tab.linkedBrowser)
-      record("onLinkIconAvailable");
-=======
     if (aBrowser == tab.linkedBrowser) {
       recordEvent("onLinkIconAvailable");
     }
->>>>>>> upstream-releases
   },
 };

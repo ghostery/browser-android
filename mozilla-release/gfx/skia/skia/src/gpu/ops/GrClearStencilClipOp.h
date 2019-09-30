@@ -12,35 +12,17 @@
 #include "GrOp.h"
 #include "GrRenderTargetProxy.h"
 
-<<<<<<< HEAD
-class GrOpFlushState;
-
-||||||| merged common ancestors
-=======
 class GrOpFlushState;
 class GrRecordingContext;
 
->>>>>>> upstream-releases
 class GrClearStencilClipOp final : public GrOp {
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrOp> Make(GrContext* context,
-                                      const GrFixedClip& clip,
-                                      bool insideStencilMask,
-                                      GrRenderTargetProxy* proxy);
-||||||| merged common ancestors
-    static std::unique_ptr<GrOp> Make(const GrFixedClip& clip, bool insideStencilMask,
-                                      GrRenderTargetProxy* proxy) {
-        return std::unique_ptr<GrOp>(new GrClearStencilClipOp(clip, insideStencilMask, proxy));
-    }
-=======
     static std::unique_ptr<GrOp> Make(GrRecordingContext* context,
                                       const GrFixedClip& clip,
                                       bool insideStencilMask,
                                       GrRenderTargetProxy* proxy);
->>>>>>> upstream-releases
 
     const char* name() const override { return "ClearStencilClip"; }
 
@@ -75,16 +57,7 @@ private:
 
     void onPrepare(GrOpFlushState*) override {}
 
-<<<<<<< HEAD
-    void onExecute(GrOpFlushState* state) override;
-||||||| merged common ancestors
-    void onExecute(GrOpFlushState* state) override {
-        SkASSERT(state->rtCommandBuffer());
-        state->rtCommandBuffer()->clearStencilClip(fClip, fInsideStencilMask);
-    }
-=======
     void onExecute(GrOpFlushState*, const SkRect& chainBounds) override;
->>>>>>> upstream-releases
 
     const GrFixedClip fClip;
     const bool        fInsideStencilMask;

@@ -8,20 +8,7 @@
 #ifndef SkDescriptor_DEFINED
 #define SkDescriptor_DEFINED
 
-<<<<<<< HEAD
-#include "SkMacros.h"
-#include "SkNoncopyable.h"
-#include "SkOpts.h"
-#include "SkTo.h"
-#include "SkTypes.h"
-
-||||||| merged common ancestors
-#include "SkOpts.h"
-#include "SkTypes.h"
-=======
->>>>>>> upstream-releases
 #include <memory>
-#include <new>
 
 #include "SkMacros.h"
 #include "SkNoncopyable.h"
@@ -100,24 +87,6 @@ public:
     void reset(size_t size);
     void reset(const SkDescriptor& desc);
     SkDescriptor* getDesc() const { SkASSERT(fDesc); return fDesc; }
-<<<<<<< HEAD
-private:
-    SkAutoDescriptor(SkAutoDescriptor&&) = delete;
-    SkAutoDescriptor& operator =(SkAutoDescriptor&&) = delete;
-    void free() {
-        if (fDesc != (SkDescriptor*)(void*)fStorage) {
-            delete fDesc;
-        }
-    }
-||||||| merged common ancestors
-private:
-    void free() {
-        if (fDesc != (SkDescriptor*)(void*)fStorage) {
-            delete fDesc;
-        }
-    }
-=======
->>>>>>> upstream-releases
 
 private:
     void free();

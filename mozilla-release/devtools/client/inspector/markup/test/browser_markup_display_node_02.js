@@ -98,20 +98,9 @@ const TEST_DATA = [
 ];
 
 add_task(async function() {
-<<<<<<< HEAD
-  info("Enable the flexbox highlighter to get the interactive flex display badge.");
-  await pushPref("devtools.inspector.flexboxHighlighter.enabled", true);
-
-  const {inspector, testActor} = await openInspectorForURL(
-    "data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
-||||||| merged common ancestors
-  const {inspector, testActor} = await openInspectorForURL(
-    "data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
-=======
   const { inspector, testActor } = await openInspectorForURL(
     "data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI)
   );
->>>>>>> upstream-releases
 
   for (const data of TEST_DATA) {
     info("Running test case: " + data.desc);
@@ -127,16 +116,6 @@ async function runTestData(
   await selectNode(selector, inspector);
   const container = await getContainerForSelector(selector, inspector);
 
-<<<<<<< HEAD
-  const beforeBadge = container.elt.querySelector(
-    ".inspector-badge.interactive[data-display]");
-  is(!!beforeBadge, before.visible,
-    `Display badge is visible as expected for ${selector}: ${before.visible}`);
-||||||| merged common ancestors
-  const beforeBadge = container.elt.querySelector(".markup-badge[data-display]");
-  is(!!beforeBadge, before.visible,
-    `Display badge is visible as expected for ${selector}: ${before.visible}`);
-=======
   const beforeBadge = container.elt.querySelector(
     ".inspector-badge.interactive[data-display]"
   );
@@ -145,7 +124,6 @@ async function runTestData(
     before.visible,
     `Display badge is visible as expected for ${selector}: ${before.visible}`
   );
->>>>>>> upstream-releases
   if (before.visible) {
     is(
       beforeBadge.textContent,
@@ -173,16 +151,6 @@ async function runTestData(
   }
   ok(foundContainer, "Container is part of the list of changed nodes");
 
-<<<<<<< HEAD
-  const afterBadge = container.elt.querySelector(
-    ".inspector-badge.interactive[data-display]");
-  is(!!afterBadge, after.visible,
-    `Display badge is visible as expected for ${selector}: ${after.visible}`);
-||||||| merged common ancestors
-  const afterBadge = container.elt.querySelector(".markup-badge[data-display]");
-  is(!!afterBadge, after.visible,
-    `Display badge is visible as expected for ${selector}: ${after.visible}`);
-=======
   const afterBadge = container.elt.querySelector(
     ".inspector-badge.interactive[data-display]"
   );
@@ -191,7 +159,6 @@ async function runTestData(
     after.visible,
     `Display badge is visible as expected for ${selector}: ${after.visible}`
   );
->>>>>>> upstream-releases
   if (after.visible) {
     is(
       afterBadge.textContent,

@@ -20,95 +20,6 @@ namespace net {
 // nsHttpChunkedDecoder <public>
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsresult nsHttpChunkedDecoder::HandleChunkedContent(
-    char *buf, uint32_t count, uint32_t *contentRead,
-    uint32_t *contentRemaining) {
-  LOG(("nsHttpChunkedDecoder::HandleChunkedContent [count=%u]\n", count));
-
-  *contentRead = 0;
-
-  // from RFC2616 section 3.6.1, the chunked transfer coding is defined as:
-  //
-  //   Chunked-Body    = *chunk
-  //                     last-chunk
-  //                     trailer
-  //                     CRLF
-  //   chunk           = chunk-size [ chunk-extension ] CRLF
-  //                     chunk-data CRLF
-  //   chunk-size      = 1*HEX
-  //   last-chunk      = 1*("0") [ chunk-extension ] CRLF
-  //
-  //   chunk-extension = *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
-  //   chunk-ext-name  = token
-  //   chunk-ext-val   = token | quoted-string
-  //   chunk-data      = chunk-size(OCTET)
-  //   trailer         = *(entity-header CRLF)
-  //
-  // the chunk-size field is a string of hex digits indicating the size of the
-  // chunk.  the chunked encoding is ended by any chunk whose size is zero,
-  // followed by the trailer, which is terminated by an empty line.
-
-  while (count) {
-    if (mChunkRemaining) {
-      uint32_t amt = std::min(mChunkRemaining, count);
-
-      count -= amt;
-      mChunkRemaining -= amt;
-
-      *contentRead += amt;
-      buf += amt;
-    } else if (mReachedEOF)
-      break;  // done
-    else {
-      uint32_t bytesConsumed = 0;
-||||||| merged common ancestors
-nsresult
-nsHttpChunkedDecoder::HandleChunkedContent(char *buf,
-                                           uint32_t count,
-                                           uint32_t *contentRead,
-                                           uint32_t *contentRemaining)
-{
-    LOG(("nsHttpChunkedDecoder::HandleChunkedContent [count=%u]\n", count));
-
-    *contentRead = 0;
-
-    // from RFC2616 section 3.6.1, the chunked transfer coding is defined as:
-    //
-    //   Chunked-Body    = *chunk
-    //                     last-chunk
-    //                     trailer
-    //                     CRLF
-    //   chunk           = chunk-size [ chunk-extension ] CRLF
-    //                     chunk-data CRLF
-    //   chunk-size      = 1*HEX
-    //   last-chunk      = 1*("0") [ chunk-extension ] CRLF
-    //
-    //   chunk-extension = *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
-    //   chunk-ext-name  = token
-    //   chunk-ext-val   = token | quoted-string
-    //   chunk-data      = chunk-size(OCTET)
-    //   trailer         = *(entity-header CRLF)
-    //
-    // the chunk-size field is a string of hex digits indicating the size of the
-    // chunk.  the chunked encoding is ended by any chunk whose size is zero,
-    // followed by the trailer, which is terminated by an empty line.
-
-    while (count) {
-        if (mChunkRemaining) {
-            uint32_t amt = std::min(mChunkRemaining, count);
-
-            count -= amt;
-            mChunkRemaining -= amt;
-
-            *contentRead += amt;
-            buf += amt;
-        }
-        else if (mReachedEOF)
-            break; // done
-        else {
-            uint32_t bytesConsumed = 0;
-=======
 nsresult nsHttpChunkedDecoder::HandleChunkedContent(
     char* buf, uint32_t count, uint32_t* contentRead,
     uint32_t* contentRemaining) {
@@ -150,7 +61,6 @@ nsresult nsHttpChunkedDecoder::HandleChunkedContent(
       break;  // done
     else {
       uint32_t bytesConsumed = 0;
->>>>>>> upstream-releases
 
       nsresult rv = ParseChunkRemaining(buf, count, &bytesConsumed);
       if (NS_FAILED(rv)) return rv;
@@ -172,44 +82,6 @@ nsresult nsHttpChunkedDecoder::HandleChunkedContent(
 // nsHttpChunkedDecoder <private>
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsresult nsHttpChunkedDecoder::ParseChunkRemaining(char *buf, uint32_t count,
-                                                   uint32_t *bytesConsumed) {
-  MOZ_ASSERT(mChunkRemaining == 0, "chunk remaining should be zero");
-  MOZ_ASSERT(count, "unexpected");
-
-  *bytesConsumed = 0;
-
-  char *p = static_cast<char *>(memchr(buf, '\n', count));
-  if (p) {
-    *p = 0;
-    count = p - buf;                        // new length
-    *bytesConsumed = count + 1;             // length + newline
-    if ((p > buf) && (*(p - 1) == '\r')) {  // eliminate a preceding CR
-      *(p - 1) = 0;
-      count--;
-    }
-||||||| merged common ancestors
-nsresult
-nsHttpChunkedDecoder::ParseChunkRemaining(char *buf,
-                                          uint32_t count,
-                                          uint32_t *bytesConsumed)
-{
-    MOZ_ASSERT(mChunkRemaining == 0, "chunk remaining should be zero");
-    MOZ_ASSERT(count, "unexpected");
-
-    *bytesConsumed = 0;
-
-    char *p = static_cast<char *>(memchr(buf, '\n', count));
-    if (p) {
-        *p = 0;
-        count = p - buf; // new length
-        *bytesConsumed = count + 1; // length + newline
-        if ((p > buf) && (*(p-1) == '\r')) { // eliminate a preceding CR
-            *(p-1) = 0;
-            count--;
-        }
-=======
 nsresult nsHttpChunkedDecoder::ParseChunkRemaining(char* buf, uint32_t count,
                                                    uint32_t* bytesConsumed) {
   MOZ_ASSERT(mChunkRemaining == 0, "chunk remaining should be zero");
@@ -226,30 +98,13 @@ nsresult nsHttpChunkedDecoder::ParseChunkRemaining(char* buf, uint32_t count,
       *(p - 1) = 0;
       count--;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // make buf point to the full line buffer to parse
-    if (!mLineBuf.IsEmpty()) {
-      mLineBuf.Append(buf, count);
-      buf = (char *)mLineBuf.get();
-      count = mLineBuf.Length();
-    }
-||||||| merged common ancestors
-        // make buf point to the full line buffer to parse
-        if (!mLineBuf.IsEmpty()) {
-            mLineBuf.Append(buf, count);
-            buf = (char *) mLineBuf.get();
-            count = mLineBuf.Length();
-        }
-=======
     // make buf point to the full line buffer to parse
     if (!mLineBuf.IsEmpty()) {
       mLineBuf.Append(buf, count);
       buf = (char*)mLineBuf.get();
       count = mLineBuf.Length();
     }
->>>>>>> upstream-releases
 
     if (mWaitEOF) {
       if (*buf) {
@@ -259,54 +114,6 @@ nsresult nsHttpChunkedDecoder::ParseChunkRemaining(char* buf, uint32_t count,
           mTrailers = new nsHttpHeaderArray();
         }
 
-<<<<<<< HEAD
-        nsHttpAtom hdr = {nullptr};
-        nsAutoCString headerNameOriginal;
-        nsAutoCString val;
-        if (NS_SUCCEEDED(
-                mTrailers->ParseHeaderLine(nsDependentCSubstring(buf, count),
-                                           &hdr, &headerNameOriginal, &val))) {
-          if (hdr == nsHttp::Server_Timing) {
-            Unused << mTrailers->SetHeaderFromNet(hdr, headerNameOriginal, val,
-                                                  true);
-          }
-        }
-      } else {
-        mWaitEOF = false;
-        mReachedEOF = true;
-        LOG(("reached end of chunked-body\n"));
-      }
-    } else if (*buf) {
-      char *endptr;
-      unsigned long parsedval;  // could be 64 bit, could be 32
-
-      // ignore any chunk-extensions
-      if ((p = PL_strchr(buf, ';')) != nullptr) *p = 0;
-
-      // mChunkRemaining is an uint32_t!
-      parsedval = strtoul(buf, &endptr, 16);
-      mChunkRemaining = (uint32_t)parsedval;
-
-      if ((endptr == buf) || ((errno == ERANGE) && (parsedval == ULONG_MAX)) ||
-          (parsedval != mChunkRemaining)) {
-        LOG(("failed parsing hex on string [%s]\n", buf));
-        return NS_ERROR_UNEXPECTED;
-      }
-
-      // we've discovered the last chunk
-      if (mChunkRemaining == 0) mWaitEOF = true;
-||||||| merged common ancestors
-        // ensure that the line buffer is clear
-        mLineBuf.Truncate();
-    }
-    else {
-        // save the partial line; wait for more data
-        *bytesConsumed = count;
-        // ignore a trailing CR
-        if (buf[count-1] == '\r')
-            count--;
-        mLineBuf.Append(buf, count);
-=======
         nsHttpAtom hdr = {nullptr};
         nsAutoCString headerNameOriginal;
         nsAutoCString val;
@@ -342,7 +149,6 @@ nsresult nsHttpChunkedDecoder::ParseChunkRemaining(char* buf, uint32_t count,
 
       // we've discovered the last chunk
       if (mChunkRemaining == 0) mWaitEOF = true;
->>>>>>> upstream-releases
     }
 
     // ensure that the line buffer is clear

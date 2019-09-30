@@ -15,37 +15,16 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMathMLmsqrtFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-  return new (aPresShell) nsMathMLmsqrtFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMathMLmsqrtFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMathMLmsqrtFrame(aStyle);
-=======
 nsIFrame* NS_NewMathMLmsqrtFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell)
       nsMathMLmsqrtFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmsqrtFrame)
 
-<<<<<<< HEAD
-nsMathMLmsqrtFrame::nsMathMLmsqrtFrame(ComputedStyle* aStyle)
-    : nsMathMLmencloseFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-nsMathMLmsqrtFrame::nsMathMLmsqrtFrame(ComputedStyle* aStyle) :
-  nsMathMLmencloseFrame(aStyle, kClassID)
-{
-}
-=======
 nsMathMLmsqrtFrame::nsMathMLmsqrtFrame(ComputedStyle* aStyle,
                                        nsPresContext* aPresContext)
     : nsMathMLmencloseFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
 nsMathMLmsqrtFrame::~nsMathMLmsqrtFrame() {}
 

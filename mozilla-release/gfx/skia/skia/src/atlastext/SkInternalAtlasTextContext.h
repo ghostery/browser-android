@@ -14,12 +14,7 @@
 #include "SkRefCnt.h"
 
 class GrContext;
-<<<<<<< HEAD
-class GrGlyphCache;
-||||||| merged common ancestors
-=======
 class GrStrikeCache;
->>>>>>> upstream-releases
 class GrTextBlobCache;
 
 class SkAtlasTextRenderer;
@@ -38,13 +33,7 @@ public:
     SkAtlasTextRenderer* renderer() const { return fRenderer.get(); }
 
     GrContext* grContext() const { return fGrContext.get(); }
-<<<<<<< HEAD
-    GrGlyphCache* glyphCache();
-||||||| merged common ancestors
-    GrAtlasGlyphCache* atlasGlyphCache();
-=======
     GrStrikeCache* glyphCache();
->>>>>>> upstream-releases
     GrTextBlobCache* textBlobCache();
 
     const GrTokenTracker* tokenTracker() final { return &fTokenTracker; }

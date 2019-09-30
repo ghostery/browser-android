@@ -38,64 +38,6 @@ void StyleInfo::TextAlign(nsAString& aValue) {
 void StyleInfo::TextIndent(nsAString& aValue) {
   aValue.Truncate();
 
-<<<<<<< HEAD
-  const nsStyleCoord& styleCoord = mComputedStyle->StyleText()->mTextIndent;
-
-  nscoord coordVal = 0;
-  switch (styleCoord.GetUnit()) {
-    case eStyleUnit_Coord:
-      coordVal = styleCoord.GetCoordValue();
-      aValue.AppendFloat(nsPresContext::AppUnitsToFloatCSSPixels(coordVal));
-      aValue.AppendLiteral("px");
-      break;
-
-    case eStyleUnit_Percent:
-      aValue.AppendFloat(styleCoord.GetPercentValue() * 100);
-      aValue.AppendLiteral("%");
-      break;
-
-    case eStyleUnit_Null:
-    case eStyleUnit_Normal:
-    case eStyleUnit_Auto:
-    case eStyleUnit_None:
-    case eStyleUnit_Factor:
-    case eStyleUnit_Degree:
-    case eStyleUnit_FlexFraction:
-    case eStyleUnit_Integer:
-    case eStyleUnit_Enumerated:
-    case eStyleUnit_Calc:
-      aValue.AppendLiteral("0px");
-      break;
-||||||| merged common ancestors
-  const nsStyleCoord& styleCoord =
-    mComputedStyle->StyleText()->mTextIndent;
-
-  nscoord coordVal = 0;
-  switch (styleCoord.GetUnit()) {
-    case eStyleUnit_Coord:
-      coordVal = styleCoord.GetCoordValue();
-      aValue.AppendFloat(nsPresContext::AppUnitsToFloatCSSPixels(coordVal));
-      aValue.AppendLiteral("px");
-      break;
-
-    case eStyleUnit_Percent:
-      aValue.AppendFloat(styleCoord.GetPercentValue() * 100);
-      aValue.AppendLiteral("%");
-      break;
-
-    case eStyleUnit_Null:
-    case eStyleUnit_Normal:
-    case eStyleUnit_Auto:
-    case eStyleUnit_None:
-    case eStyleUnit_Factor:
-    case eStyleUnit_Degree:
-    case eStyleUnit_FlexFraction:
-    case eStyleUnit_Integer:
-    case eStyleUnit_Enumerated:
-    case eStyleUnit_Calc:
-      aValue.AppendLiteral("0px");
-      break;
-=======
   const auto& textIndent = mComputedStyle->StyleText()->mTextIndent;
   if (textIndent.ConvertsToLength()) {
     aValue.AppendFloat(textIndent.LengthInCSSPixels());
@@ -106,7 +48,6 @@ void StyleInfo::TextIndent(nsAString& aValue) {
     aValue.AppendFloat(textIndent.ToPercentage() * 100);
     aValue.AppendLiteral("%");
     return;
->>>>>>> upstream-releases
   }
   // FIXME: This doesn't handle calc in any meaningful way?
   aValue.AppendLiteral("0px");

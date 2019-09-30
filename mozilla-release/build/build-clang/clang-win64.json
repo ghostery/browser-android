@@ -15,27 +15,11 @@
     "ml": "ml64.exe",
     "patches": [
       "workaround-issue38586.patch",
-<<<<<<< HEAD
-      "r342649-hotpatch-8-byte-nops.patch",
-      "r342652-unpoison-thread-stacks.patch",
-      "r343123-pin-asan-dll.patch",
-      "aarch64-vastart-checking.patch",
-      "downgrade-mangling-error.patch",
-      "r346300-compiler-rt-windows-mmap.patch",
-      "loosen-msvc-detection.patch"
-||||||| merged common ancestors
-      "r342649-hotpatch-8-byte-nops.patch",
-      "r342652-unpoison-thread-stacks.patch",
-      "r343123-pin-asan-dll.patch",
-      "aarch64-vastart-checking.patch",
-      "loosen-msvc-detection.patch"
-=======
       "unpoison-thread-stacks.patch",
       "downgrade-mangling-error.patch",
       "r355141-arm64-cfg.patch",
       "r357725-asan-vs2019.patch",
       "loosen-msvc-detection.patch",
       "revert-r355311.patch"
->>>>>>> upstream-releases
     ]
 }

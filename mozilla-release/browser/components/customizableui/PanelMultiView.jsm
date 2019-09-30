@@ -548,16 +548,6 @@ var PanelMultiView = class extends AssociatedToNode {
           return false;
         }
 
-<<<<<<< HEAD
-        if (options && typeof options == "object" && options.triggerEvent &&
-            options.triggerEvent.type == "keypress" &&
-            this.openViews.length) {
-          // This was opened via the keyboard, so focus the first item.
-          this.openViews[0].focusWhenActive = true;
-        }
-
-||||||| merged common ancestors
-=======
         if (
           options &&
           typeof options == "object" &&
@@ -569,7 +559,6 @@ var PanelMultiView = class extends AssociatedToNode {
           this.openViews[0].focusWhenActive = true;
         }
 
->>>>>>> upstream-releases
         return true;
       } catch (ex) {
         this.dispatchCustomEvent("popuphidden");
@@ -858,18 +847,10 @@ var PanelMultiView = class extends AssociatedToNode {
   _activateView(panelView) {
     if (panelView.isOpenIn(this)) {
       panelView.active = true;
-<<<<<<< HEAD
-      if (panelView.focusWhenActive) {
-        panelView.focusFirstNavigableElement();
-        panelView.focusWhenActive = false;
-      }
-||||||| merged common ancestors
-=======
       if (panelView.focusWhenActive) {
         panelView.focusFirstNavigableElement(false, true);
         panelView.focusWhenActive = false;
       }
->>>>>>> upstream-releases
       panelView.dispatchCustomEvent("ViewShown");
 
       // Re-enable panel autopositioning.
@@ -995,14 +976,8 @@ var PanelMultiView = class extends AssociatedToNode {
     details.phase = TRANSITION_PHASES.PREPARE;
 
     // The 'magic' part: build up the amount of pixels to move right or left.
-<<<<<<< HEAD
-    let moveToLeft = (this.window.RTL_UI && !reverse) || (!this.window.RTL_UI && reverse);
-||||||| merged common ancestors
-    let moveToLeft = (this._dir == "rtl" && !reverse) || (this._dir == "ltr" && reverse);
-=======
     let moveToLeft =
       (this.window.RTL_UI && !reverse) || (!this.window.RTL_UI && reverse);
->>>>>>> upstream-releases
     let deltaX = prevPanelView.knownWidth;
     let deepestNode = reverse ? previousViewNode : viewNode;
 
@@ -1790,18 +1765,10 @@ var PanelView = class extends AssociatedToNode {
           break;
         }
         stop();
-<<<<<<< HEAD
-        if ((!this.window.RTL_UI && keyCode == "ArrowLeft") ||
-            (this.window.RTL_UI && keyCode == "ArrowRight")) {
-||||||| merged common ancestors
-        if ((dir == "ltr" && keyCode == "ArrowLeft") ||
-            (dir == "rtl" && keyCode == "ArrowRight")) {
-=======
         if (
           (!this.window.RTL_UI && keyCode == "ArrowLeft") ||
           (this.window.RTL_UI && keyCode == "ArrowRight")
         ) {
->>>>>>> upstream-releases
           this.node.panelMultiView.goBack();
           break;
         }

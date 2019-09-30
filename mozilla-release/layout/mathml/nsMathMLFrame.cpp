@@ -90,58 +90,22 @@ nsMathMLFrame::UpdatePresentationData(uint32_t aFlagsValues,
 // a MathMLChar. Frame classes that use this should ensure that the
 // extra leaf ComputedStyle given to the MathMLChars are accessible to
 // the Style System via the Get/Set AdditionalComputedStyle() APIs.
-<<<<<<< HEAD
-/* static */ void nsMathMLFrame::ResolveMathMLCharStyle(
-    nsPresContext* aPresContext, nsIContent* aContent,
-    ComputedStyle* aParentComputedStyle, nsMathMLChar* aMathMLChar) {
-  CSSPseudoElementType pseudoType =
-      CSSPseudoElementType::mozMathAnonymous;  // savings
-||||||| merged common ancestors
-/* static */ void
-nsMathMLFrame::ResolveMathMLCharStyle(nsPresContext*  aPresContext,
-                                      nsIContent*      aContent,
-                                      ComputedStyle*  aParentComputedStyle,
-                                      nsMathMLChar*    aMathMLChar)
-{
-  CSSPseudoElementType pseudoType =
-    CSSPseudoElementType::mozMathAnonymous; // savings
-=======
 /* static */
 void nsMathMLFrame::ResolveMathMLCharStyle(nsPresContext* aPresContext,
                                            nsIContent* aContent,
                                            ComputedStyle* aParentComputedStyle,
                                            nsMathMLChar* aMathMLChar) {
   PseudoStyleType pseudoType = PseudoStyleType::mozMathAnonymous;  // savings
->>>>>>> upstream-releases
   RefPtr<ComputedStyle> newComputedStyle;
-<<<<<<< HEAD
-  newComputedStyle = aPresContext->StyleSet()->ResolvePseudoElementStyle(
-      aContent->AsElement(), pseudoType, aParentComputedStyle, nullptr);
-||||||| merged common ancestors
-  newComputedStyle = aPresContext->StyleSet()->
-    ResolvePseudoElementStyle(aContent->AsElement(), pseudoType,
-                              aParentComputedStyle, nullptr);
-=======
   newComputedStyle = aPresContext->StyleSet()->ResolvePseudoElementStyle(
       *aContent->AsElement(), pseudoType, aParentComputedStyle);
->>>>>>> upstream-releases
 
   aMathMLChar->SetComputedStyle(newComputedStyle);
 }
 
-<<<<<<< HEAD
-/* static */ void nsMathMLFrame::GetEmbellishDataFrom(
-    nsIFrame* aFrame, nsEmbellishData& aEmbellishData) {
-||||||| merged common ancestors
-/* static */ void
-nsMathMLFrame::GetEmbellishDataFrom(nsIFrame*        aFrame,
-                                    nsEmbellishData& aEmbellishData)
-{
-=======
 /* static */
 void nsMathMLFrame::GetEmbellishDataFrom(nsIFrame* aFrame,
                                          nsEmbellishData& aEmbellishData) {
->>>>>>> upstream-releases
   // initialize OUT params
   aEmbellishData.flags = 0;
   aEmbellishData.coreFrame = nullptr;
@@ -159,20 +123,9 @@ void nsMathMLFrame::GetEmbellishDataFrom(nsIFrame* aFrame,
 
 // helper to get the presentation data of a frame, by possibly walking up
 // the frame hierarchy if we happen to be surrounded by non-MathML frames.
-<<<<<<< HEAD
-/* static */ void nsMathMLFrame::GetPresentationDataFrom(
-    nsIFrame* aFrame, nsPresentationData& aPresentationData, bool aClimbTree) {
-||||||| merged common ancestors
-/* static */ void
-nsMathMLFrame::GetPresentationDataFrom(nsIFrame*           aFrame,
-                                       nsPresentationData& aPresentationData,
-                                       bool                aClimbTree)
-{
-=======
 /* static */
 void nsMathMLFrame::GetPresentationDataFrom(
     nsIFrame* aFrame, nsPresentationData& aPresentationData, bool aClimbTree) {
->>>>>>> upstream-releases
   // initialize OUT params
   aPresentationData.flags = 0;
   aPresentationData.baseFrame = nullptr;
@@ -206,22 +159,10 @@ void nsMathMLFrame::GetPresentationDataFrom(
       "bad MathML markup - could not find the top <math> element");
 }
 
-<<<<<<< HEAD
-/* static */ void nsMathMLFrame::GetRuleThickness(DrawTarget* aDrawTarget,
-                                                  nsFontMetrics* aFontMetrics,
-                                                  nscoord& aRuleThickness) {
-||||||| merged common ancestors
-/* static */ void
-nsMathMLFrame::GetRuleThickness(DrawTarget*    aDrawTarget,
-                                nsFontMetrics* aFontMetrics,
-                                nscoord&       aRuleThickness)
-{
-=======
 /* static */
 void nsMathMLFrame::GetRuleThickness(DrawTarget* aDrawTarget,
                                      nsFontMetrics* aFontMetrics,
                                      nscoord& aRuleThickness) {
->>>>>>> upstream-releases
   nscoord xHeight = aFontMetrics->XHeight();
   char16_t overBar = 0x00AF;
   nsBoundingMetrics bm = nsLayoutUtils::AppUnitBoundsOfString(
@@ -233,22 +174,10 @@ void nsMathMLFrame::GetRuleThickness(DrawTarget* aDrawTarget,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsMathMLFrame::GetAxisHeight(DrawTarget* aDrawTarget,
-                                               nsFontMetrics* aFontMetrics,
-                                               nscoord& aAxisHeight) {
-||||||| merged common ancestors
-/* static */ void
-nsMathMLFrame::GetAxisHeight(DrawTarget*    aDrawTarget,
-                             nsFontMetrics* aFontMetrics,
-                             nscoord&       aAxisHeight)
-{
-=======
 /* static */
 void nsMathMLFrame::GetAxisHeight(DrawTarget* aDrawTarget,
                                   nsFontMetrics* aFontMetrics,
                                   nscoord& aAxisHeight) {
->>>>>>> upstream-releases
   gfxFont* mathFont = aFontMetrics->GetThebesFontGroup()->GetFirstMathFont();
   if (mathFont) {
     aAxisHeight = mathFont->MathTable()->Constant(
@@ -267,25 +196,11 @@ void nsMathMLFrame::GetAxisHeight(DrawTarget* aDrawTarget,
   }
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsMathMLFrame::CalcLength(nsPresContext* aPresContext,
-                                               ComputedStyle* aComputedStyle,
-                                               const nsCSSValue& aCSSValue,
-                                               float aFontSizeInflation) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsMathMLFrame::CalcLength(nsPresContext*   aPresContext,
-                          ComputedStyle*   aComputedStyle,
-                          const nsCSSValue& aCSSValue,
-                          float             aFontSizeInflation)
-{
-=======
 /* static */
 nscoord nsMathMLFrame::CalcLength(nsPresContext* aPresContext,
                                   ComputedStyle* aComputedStyle,
                                   const nsCSSValue& aCSSValue,
                                   float aFontSizeInflation) {
->>>>>>> upstream-releases
   NS_ASSERTION(aCSSValue.IsLengthUnit(), "not a length unit");
 
   if (aCSSValue.IsPixelLengthUnit()) {
@@ -310,28 +225,12 @@ nscoord nsMathMLFrame::CalcLength(nsPresContext* aPresContext,
   return 0;
 }
 
-<<<<<<< HEAD
-/* static */ void nsMathMLFrame::ParseNumericValue(
-    const nsString& aString, nscoord* aLengthValue, uint32_t aFlags,
-    nsPresContext* aPresContext, ComputedStyle* aComputedStyle,
-    float aFontSizeInflation) {
-||||||| merged common ancestors
-/* static */ void
-nsMathMLFrame::ParseNumericValue(const nsString&   aString,
-                                 nscoord*          aLengthValue,
-                                 uint32_t          aFlags,
-                                 nsPresContext*    aPresContext,
-                                 ComputedStyle*   aComputedStyle,
-                                 float             aFontSizeInflation)
-{
-=======
 /* static */
 void nsMathMLFrame::ParseNumericValue(const nsString& aString,
                                       nscoord* aLengthValue, uint32_t aFlags,
                                       nsPresContext* aPresContext,
                                       ComputedStyle* aComputedStyle,
                                       float aFontSizeInflation) {
->>>>>>> upstream-releases
   nsCSSValue cssValue;
 
   if (!nsMathMLElement::ParseNumericValue(aString, cssValue, aFlags,
@@ -396,39 +295,16 @@ void nsMathMLFrame::DisplayBoundingMetrics(nsDisplayListBuilder* aBuilder,
   nscoord w = aMetrics.rightBearing - aMetrics.leftBearing;
   nscoord h = aMetrics.ascent + aMetrics.descent;
 
-<<<<<<< HEAD
-  aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayMathMLBoundingMetrics>(
-      aBuilder, aFrame, nsRect(x, y, w, h)));
-||||||| merged common ancestors
-  aLists.Content()->AppendToTop(
-      MakeDisplayItem<nsDisplayMathMLBoundingMetrics>(aBuilder, aFrame, nsRect(x,y,w,h)));
-=======
   aLists.Content()->AppendNewToTop<nsDisplayMathMLBoundingMetrics>(
       aBuilder, aFrame, nsRect(x, y, w, h));
->>>>>>> upstream-releases
 }
 #endif
 
-<<<<<<< HEAD
-class nsDisplayMathMLBar final : public nsDisplayItem {
- public:
-  nsDisplayMathMLBar(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-                     const nsRect& aRect, uint32_t aIndex)
-      : nsDisplayItem(aBuilder, aFrame), mRect(aRect), mIndex(aIndex) {
-||||||| merged common ancestors
-class nsDisplayMathMLBar final : public nsDisplayItem
-{
-public:
-  nsDisplayMathMLBar(nsDisplayListBuilder* aBuilder,
-                     nsIFrame* aFrame, const nsRect& aRect, uint32_t aIndex)
-    : nsDisplayItem(aBuilder, aFrame), mRect(aRect), mIndex(aIndex) {
-=======
 class nsDisplayMathMLBar final : public nsPaintedDisplayItem {
  public:
   nsDisplayMathMLBar(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                      const nsRect& aRect, uint16_t aIndex)
       : nsPaintedDisplayItem(aBuilder, aFrame), mRect(aRect), mIndex(aIndex) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayMathMLBar);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -439,19 +315,9 @@ class nsDisplayMathMLBar final : public nsPaintedDisplayItem {
 
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
   NS_DISPLAY_DECL_NAME("MathMLBar", TYPE_MATHML_BAR)
-<<<<<<< HEAD
- private:
-  nsRect mRect;
-  uint32_t mIndex;
-||||||| merged common ancestors
-private:
-  nsRect    mRect;
-  uint32_t  mIndex;
-=======
  private:
   nsRect mRect;
   uint16_t mIndex;
->>>>>>> upstream-releases
 };
 
 void nsDisplayMathMLBar::Paint(nsDisplayListBuilder* aBuilder,
@@ -472,16 +338,8 @@ void nsMathMLFrame::DisplayBar(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                                uint32_t aIndex) {
   if (!aFrame->StyleVisibility()->IsVisible() || aRect.IsEmpty()) return;
 
-<<<<<<< HEAD
-  aLists.Content()->AppendToTop(
-      MakeDisplayItem<nsDisplayMathMLBar>(aBuilder, aFrame, aRect, aIndex));
-||||||| merged common ancestors
-  aLists.Content()->AppendToTop(
-    MakeDisplayItem<nsDisplayMathMLBar>(aBuilder, aFrame, aRect, aIndex));
-=======
   aLists.Content()->AppendNewToTop<nsDisplayMathMLBar>(aBuilder, aFrame, aRect,
                                                        aIndex);
->>>>>>> upstream-releases
 }
 
 void nsMathMLFrame::GetRadicalParameters(nsFontMetrics* aFontMetrics,

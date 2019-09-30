@@ -1,23 +1,5 @@
 //! A Loop Invariant Code Motion optimization pass
 
-<<<<<<< HEAD
-use cursor::{Cursor, EncCursor, FuncCursor};
-use dominator_tree::DominatorTree;
-use entity::{EntityList, ListPool};
-use flowgraph::{BasicBlock, ControlFlowGraph};
-use fx::FxHashSet;
-use ir::{DataFlowGraph, Ebb, Function, Inst, InstBuilder, Layout, Opcode, Type, Value};
-use isa::TargetIsa;
-use loop_analysis::{Loop, LoopAnalysis};
-||||||| merged common ancestors
-use cursor::{Cursor, FuncCursor};
-use dominator_tree::DominatorTree;
-use entity::{EntityList, ListPool};
-use flowgraph::{BasicBlock, ControlFlowGraph};
-use fx::FxHashSet;
-use ir::{DataFlowGraph, Ebb, Function, Inst, InstBuilder, Layout, Opcode, Type, Value};
-use loop_analysis::{Loop, LoopAnalysis};
-=======
 use crate::cursor::{Cursor, EncCursor, FuncCursor};
 use crate::dominator_tree::DominatorTree;
 use crate::entity::{EntityList, ListPool};
@@ -29,19 +11,13 @@ use crate::ir::{
 use crate::isa::TargetIsa;
 use crate::loop_analysis::{Loop, LoopAnalysis};
 use crate::timing;
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// Performs the LICM pass by detecting loops within the CFG and moving
 /// loop-invariant instructions out of them.
 /// Changes the CFG and domtree in-place during the operation.
 pub fn do_licm(
-<<<<<<< HEAD
-    isa: &TargetIsa,
-||||||| merged common ancestors
-=======
     isa: &dyn TargetIsa,
->>>>>>> upstream-releases
     func: &mut Function,
     cfg: &mut ControlFlowGraph,
     domtree: &mut DominatorTree,
@@ -88,12 +64,7 @@ pub fn do_licm(
 // Insert a pre-header before the header, modifying the function layout and CFG to reflect it.
 // A jump instruction to the header is placed at the end of the pre-header.
 fn create_pre_header(
-<<<<<<< HEAD
-    isa: &TargetIsa,
-||||||| merged common ancestors
-=======
     isa: &dyn TargetIsa,
->>>>>>> upstream-releases
     header: Ebb,
     func: &mut Function,
     cfg: &mut ControlFlowGraph,

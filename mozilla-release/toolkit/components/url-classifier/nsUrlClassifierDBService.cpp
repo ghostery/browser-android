@@ -92,13 +92,6 @@ nsresult TablesToResponse(const nsACString& tables) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-}  // namespace safebrowsing
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace safebrowsing
-} // namespace mozilla
-=======
 }  // namespace safebrowsing
 }  // namespace mozilla
 
@@ -262,7 +255,6 @@ class nsUrlClassifierDBService::FeatureHolder final {
   nsTArray<FeatureData> mFeatureData;
   nsTArray<RefPtr<TableData>> mTableData;
 };
->>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::safebrowsing;
@@ -318,17 +310,6 @@ nsresult nsUrlClassifierDBServiceWorker::Init(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsUrlClassifierDBServiceWorker::QueueLookup(
-    const nsACString& spec, const nsACString& tables,
-    nsIUrlClassifierLookupCallback* callback) {
-||||||| merged common ancestors
-nsresult
-nsUrlClassifierDBServiceWorker::QueueLookup(const nsACString& spec,
-                                            const nsACString& tables,
-                                            nsIUrlClassifierLookupCallback* callback)
-{
-=======
 nsresult nsUrlClassifierDBServiceWorker::QueueLookup(
     const nsACString& aKey,
     nsUrlClassifierDBService::FeatureHolder* aFeatureHolder,
@@ -336,7 +317,6 @@ nsresult nsUrlClassifierDBServiceWorker::QueueLookup(
   MOZ_ASSERT(aFeatureHolder);
   MOZ_ASSERT(aCallback);
 
->>>>>>> upstream-releases
   MutexAutoLock lock(mPendingLookupLock);
   if (gShuttingDownThread) {
     return NS_ERROR_ABORT;
@@ -353,21 +333,9 @@ nsresult nsUrlClassifierDBServiceWorker::QueueLookup(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsUrlClassifierDBServiceWorker::DoLocalLookup(
-    const nsACString& spec, const nsACString& tables,
-    LookupResultArray& results) {
-||||||| merged common ancestors
-nsresult
-nsUrlClassifierDBServiceWorker::DoLocalLookup(const nsACString& spec,
-                                              const nsACString& tables,
-                                              LookupResultArray& results)
-{
-=======
 nsresult nsUrlClassifierDBServiceWorker::DoSingleLocalLookupWithURIFragments(
     const nsTArray<nsCString>& aSpecFragments, const nsACString& aTable,
     LookupResultArray& aResults) {
->>>>>>> upstream-releases
   if (gShuttingDownThread) {
     return NS_ERROR_ABORT;
   }
@@ -381,49 +349,10 @@ nsresult nsUrlClassifierDBServiceWorker::DoSingleLocalLookupWithURIFragments(
     return NS_ERROR_NOT_AVAILABLE;
   }
 
-<<<<<<< HEAD
-  // We ignore failures from Check because we'd rather return the
-  // results that were found than fail.
-  mClassifier->Check(spec, tables, results);
-
-  LOG(("Found %zu results.", results.Length()));
-  return NS_OK;
-}
-
-static nsresult ProcessLookupResults(const LookupResultArray& aResults,
-                                     nsTArray<nsCString>& aTables) {
-  // Build the result array, eliminating any duplicate tables.
-  for (const RefPtr<const LookupResult> result : aResults) {
-    MOZ_ASSERT(!result->mNoise, "Lookup results should not have noise added");
-    LOG(("Found result from table %s", result->mTableName.get()));
-    if (aTables.IndexOf(result->mTableName) == nsTArray<nsCString>::NoIndex) {
-      aTables.AppendElement(result->mTableName);
-    }
-||||||| merged common ancestors
-  // We ignore failures from Check because we'd rather return the
-  // results that were found than fail.
-  mClassifier->Check(spec, tables, results);
-
-  LOG(("Found %zu results.", results.Length()));
-  return NS_OK;
-}
-
-static nsresult
-ProcessLookupResults(const LookupResultArray& aResults, nsTArray<nsCString>& aTables)
-{
-  // Build the result array, eliminating any duplicate tables.
-  for (const RefPtr<const LookupResult> result : aResults) {
-    MOZ_ASSERT(!result->mNoise, "Lookup results should not have noise added");
-    LOG(("Found result from table %s", result->mTableName.get()));
-    if (aTables.IndexOf(result->mTableName) == nsTArray<nsCString>::NoIndex) {
-      aTables.AppendElement(result->mTableName);
-    }
-=======
   nsresult rv =
       mClassifier->CheckURIFragments(aSpecFragments, aTable, aResults);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
->>>>>>> upstream-releases
   }
 
   LOG(("Found %zu results.", aResults.Length()));
@@ -441,17 +370,6 @@ ProcessLookupResults(const LookupResultArray& aResults, nsTArray<nsCString>& aTa
  *    against the possible subfragments of the URL as described in the
  *    "Simplified Regular Expression Lookup" section of the protocol doc.
  */
-<<<<<<< HEAD
-nsresult nsUrlClassifierDBServiceWorker::DoLookup(
-    const nsACString& spec, const nsACString& tables,
-    nsIUrlClassifierLookupCallback* c) {
-||||||| merged common ancestors
-nsresult
-nsUrlClassifierDBServiceWorker::DoLookup(const nsACString& spec,
-                                         const nsACString& tables,
-                                         nsIUrlClassifierLookupCallback* c)
-{
-=======
 nsresult nsUrlClassifierDBServiceWorker::DoLookup(
     const nsACString& spec,
     nsUrlClassifierDBService::FeatureHolder* aFeatureHolder,
@@ -460,7 +378,6 @@ nsresult nsUrlClassifierDBServiceWorker::DoLookup(
   // otherwise we will not be able to load any url.
   auto scopeExit = MakeScopeExit([&c]() { c->LookupComplete(nullptr); });
 
->>>>>>> upstream-releases
   if (gShuttingDownThread) {
     return NS_ERROR_NOT_INITIALIZED;
   }
@@ -475,15 +392,6 @@ nsresult nsUrlClassifierDBServiceWorker::DoLookup(
     return rv;
   }
 
-<<<<<<< HEAD
-  LOG(("Found %zu results.", results->Length()));
-
-||||||| merged common ancestors
-  LOG(("Found %zu results.", results->Length()));
-
-
-=======
->>>>>>> upstream-releases
   if (LOG_ENABLED()) {
     PRIntervalTime clockEnd = PR_IntervalNow();
     LOG(("query took %dms\n",
@@ -875,18 +783,10 @@ nsresult nsUrlClassifierDBServiceWorker::NotifyUpdateObserver(
 
   mUpdateStatus = aUpdateStatus;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
   nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!urlUtil)) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   nsCString provider;
   // Assume that all the tables in update should have the same provider.
@@ -1655,18 +1555,10 @@ nsUrlClassifierClassifyCallback::HandleResult(const nsACString& aTable,
   matchedInfo->table = aTable;
   matchedInfo->fullhash = aFullHash;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
   nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!urlUtil)) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   nsCString provider;
   nsresult rv = urlUtil->GetProvider(aTable, provider);
@@ -1698,18 +1590,9 @@ NS_INTERFACE_MAP_BEGIN(nsUrlClassifierDBService)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIURIClassifier)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ nsUrlClassifierDBService* nsUrlClassifierDBService::GetInstance(
-    nsresult* result) {
-||||||| merged common ancestors
-/* static */ nsUrlClassifierDBService*
-nsUrlClassifierDBService::GetInstance(nsresult *result)
-{
-=======
 /* static */
 already_AddRefed<nsUrlClassifierDBService>
 nsUrlClassifierDBService::GetInstance(nsresult* result) {
->>>>>>> upstream-releases
   *result = NS_OK;
   if (!sUrlClassifierDBService) {
     sUrlClassifierDBService = new (fallible) nsUrlClassifierDBService();
@@ -1718,105 +1601,21 @@ nsUrlClassifierDBService::GetInstance(nsresult* result) {
       return nullptr;
     }
 
-<<<<<<< HEAD
-    NS_ADDREF(sUrlClassifierDBService);  // addref the global
-
-||||||| merged common ancestors
-    NS_ADDREF(sUrlClassifierDBService);   // addref the global
-
-=======
->>>>>>> upstream-releases
     *result = sUrlClassifierDBService->Init();
     if (NS_FAILED(*result)) {
       return nullptr;
     }
-<<<<<<< HEAD
-  } else {
-    // Already exists, just add a ref
-    NS_ADDREF(sUrlClassifierDBService);  // addref the return result
-||||||| merged common ancestors
-  } else {
-    // Already exists, just add a ref
-    NS_ADDREF(sUrlClassifierDBService);   // addref the return result
-=======
->>>>>>> upstream-releases
   }
   return do_AddRef(sUrlClassifierDBService);
 }
 
-<<<<<<< HEAD
-nsUrlClassifierDBService::nsUrlClassifierDBService()
-    : mCheckMalware(CHECK_MALWARE_DEFAULT),
-      mCheckPhishing(CHECK_PHISHING_DEFAULT),
-      mCheckBlockedURIs(CHECK_BLOCKED_DEFAULT),
-      mInUpdate(false) {}
-
-nsUrlClassifierDBService::~nsUrlClassifierDBService() {
-||||||| merged common ancestors
-
-nsUrlClassifierDBService::nsUrlClassifierDBService()
- : mCheckMalware(CHECK_MALWARE_DEFAULT)
- , mCheckPhishing(CHECK_PHISHING_DEFAULT)
- , mCheckBlockedURIs(CHECK_BLOCKED_DEFAULT)
- , mInUpdate(false)
-{
-}
-
-nsUrlClassifierDBService::~nsUrlClassifierDBService()
-{
-=======
 nsUrlClassifierDBService::nsUrlClassifierDBService() : mInUpdate(false) {}
 
 nsUrlClassifierDBService::~nsUrlClassifierDBService() {
->>>>>>> upstream-releases
   sUrlClassifierDBService = nullptr;
 }
 
-<<<<<<< HEAD
-void AppendTables(const nsCString& aTables, nsCString& outTables) {
-  if (!aTables.IsEmpty()) {
-    if (!outTables.IsEmpty()) {
-      outTables.Append(',');
-    }
-    outTables.Append(aTables);
-  }
-}
-
-nsresult nsUrlClassifierDBService::ReadTablesFromPrefs() {
-  mCheckMalware =
-      Preferences::GetBool(CHECK_MALWARE_PREF, CHECK_MALWARE_DEFAULT);
-  mCheckPhishing =
-      Preferences::GetBool(CHECK_PHISHING_PREF, CHECK_PHISHING_DEFAULT);
-  mCheckBlockedURIs =
-      Preferences::GetBool(CHECK_BLOCKED_PREF, CHECK_BLOCKED_DEFAULT);
-
-  nsAutoCString allTables;
-||||||| merged common ancestors
-void
-AppendTables(const nsCString& aTables, nsCString &outTables)
-{
-  if (!aTables.IsEmpty()) {
-    if (!outTables.IsEmpty()) {
-      outTables.Append(',');
-    }
-    outTables.Append(aTables);
-  }
-}
-
-nsresult
-nsUrlClassifierDBService::ReadTablesFromPrefs()
-{
-  mCheckMalware = Preferences::GetBool(CHECK_MALWARE_PREF,
-    CHECK_MALWARE_DEFAULT);
-  mCheckPhishing = Preferences::GetBool(CHECK_PHISHING_PREF,
-    CHECK_PHISHING_DEFAULT);
-  mCheckBlockedURIs = Preferences::GetBool(CHECK_BLOCKED_PREF,
-    CHECK_BLOCKED_DEFAULT);
-
-  nsAutoCString allTables;
-=======
 nsresult nsUrlClassifierDBService::ReadDisallowCompletionsTablesFromPrefs() {
->>>>>>> upstream-releases
   nsAutoCString tables;
 
   Preferences::GetCString(DISALLOW_COMPLETION_TABLE_PREF, tables);
@@ -1852,39 +1651,13 @@ nsresult nsUrlClassifierDBService::Init() {
       return NS_ERROR_NOT_AVAILABLE;
   }
 
-<<<<<<< HEAD
-  sGethashNoise =
-      Preferences::GetUint(GETHASH_NOISE_PREF, GETHASH_NOISE_DEFAULT);
-  ReadTablesFromPrefs();
-  nsresult rv;
-||||||| merged common ancestors
-  sGethashNoise = Preferences::GetUint(GETHASH_NOISE_PREF,
-    GETHASH_NOISE_DEFAULT);
-  ReadTablesFromPrefs();
-  nsresult rv;
-=======
   sGethashNoise =
       Preferences::GetUint(GETHASH_NOISE_PREF, GETHASH_NOISE_DEFAULT);
   ReadDisallowCompletionsTablesFromPrefs();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  {
-    // Force nsIUrlClassifierUtils loading on main thread.
-    nsCOMPtr<nsIUrlClassifierUtils> dummy =
-        do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID, &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  {
-    // Force nsIUrlClassifierUtils loading on main thread.
-    nsCOMPtr<nsIUrlClassifierUtils> dummy =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID, &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   // Force nsUrlClassifierUtils loading on main thread.
   if (NS_WARN_IF(!nsUrlClassifierUtils::GetInstance())) {
     return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
   }
 
   // Directory providers must also be accessed on the main thread.
@@ -1932,22 +1705,8 @@ nsresult nsUrlClassifierDBService::Init() {
   observerService->AddObserver(this, "profile-before-change", false);
 
   Preferences::AddUintVarCache(&sGethashNoise, GETHASH_NOISE_PREF,
-<<<<<<< HEAD
-                               GETHASH_NOISE_DEFAULT);
-
-  for (uint8_t i = 0; i < kObservedPrefs.Length(); i++) {
-    Preferences::AddStrongObserver(this, kObservedPrefs[i]);
-  }
-||||||| merged common ancestors
-    GETHASH_NOISE_DEFAULT);
-
-  for (uint8_t i = 0; i < kObservedPrefs.Length(); i++) {
-    Preferences::AddStrongObserver(this, kObservedPrefs[i]);
-  }
-=======
                                GETHASH_NOISE_DEFAULT);
   Preferences::AddStrongObserver(this, DISALLOW_COMPLETION_TABLE_PREF);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1956,17 +1715,7 @@ nsresult nsUrlClassifierDBService::Init() {
 NS_IMETHODIMP
 nsUrlClassifierDBService::Classify(nsIPrincipal* aPrincipal,
                                    nsIEventTarget* aEventTarget,
-<<<<<<< HEAD
-                                   bool aTrackingProtectionEnabled,
-                                   nsIURIClassifierCallback* c, bool* result) {
-||||||| merged common ancestors
-                                   bool aTrackingProtectionEnabled,
-                                   nsIURIClassifierCallback* c,
-                                   bool* result)
-{
-=======
                                    nsIURIClassifierCallback* c, bool* aResult) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aPrincipal);
   NS_ENSURE_ARG(aResult);
 
@@ -1981,19 +1730,8 @@ nsUrlClassifierDBService::Classify(nsIPrincipal* aPrincipal,
     ContentChild* content = ContentChild::GetSingleton();
     MOZ_ASSERT(content);
 
-<<<<<<< HEAD
-    auto actor =
-        static_cast<URLClassifierChild*>(content->AllocPURLClassifierChild(
-            IPC::Principal(aPrincipal), aTrackingProtectionEnabled, result));
-||||||| merged common ancestors
-    auto actor = static_cast<URLClassifierChild*>
-      (content->AllocPURLClassifierChild(IPC::Principal(aPrincipal),
-                                         aTrackingProtectionEnabled,
-                                         result));
-=======
     auto actor = static_cast<URLClassifierChild*>(
         content->AllocPURLClassifierChild(IPC::Principal(aPrincipal), aResult));
->>>>>>> upstream-releases
     MOZ_ASSERT(actor);
 
     if (aEventTarget) {
@@ -2006,21 +1744,9 @@ nsUrlClassifierDBService::Classify(nsIPrincipal* aPrincipal,
           mozilla::SystemGroup::EventTargetFor(mozilla::TaskCategory::Other);
       content->SetEventTargetForActor(actor, systemGroupEventTarget);
     }
-<<<<<<< HEAD
-    if (!content->SendPURLClassifierConstructor(
-            actor, IPC::Principal(aPrincipal), aTrackingProtectionEnabled,
-            result)) {
-      *result = false;
-||||||| merged common ancestors
-    if (!content->SendPURLClassifierConstructor(actor, IPC::Principal(aPrincipal),
-                  aTrackingProtectionEnabled,
-                  result)) {
-      *result = false;
-=======
     if (!content->SendPURLClassifierConstructor(
             actor, IPC::Principal(aPrincipal), aResult)) {
       *aResult = false;
->>>>>>> upstream-releases
       return NS_ERROR_FAILURE;
     }
 
@@ -2036,131 +1762,23 @@ nsUrlClassifierDBService::Classify(nsIPrincipal* aPrincipal,
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  RefPtr<nsUrlClassifierClassifyCallback> callback =
-      new (fallible) nsUrlClassifierClassifyCallback(c);
-
-  if (!callback) return NS_ERROR_OUT_OF_MEMORY;
-
-  nsCString tables = mBaseTables;
-  nsTArray<nsCString> extraTablesByPrefs;
-  nsTArray<nsCString> extraEntriesByPrefs;
-  if (aTrackingProtectionEnabled) {
-    AppendTables(mTrackingProtectionTables, tables);
-    extraTablesByPrefs.AppendElement(TABLE_TRACKING_WHITELIST_PREF);
-    extraEntriesByPrefs.AppendElement(
-        mTrackingProtectionWhitelistExtraEntriesByPrefs);
-
-    extraTablesByPrefs.AppendElement(TABLE_TRACKING_BLACKLIST_PREF);
-    extraEntriesByPrefs.AppendElement(
-        mTrackingProtectionBlacklistExtraEntriesByPrefs);
-  }
-||||||| merged common ancestors
-  RefPtr<nsUrlClassifierClassifyCallback> callback =
-    new (fallible) nsUrlClassifierClassifyCallback(c);
-
-  if (!callback) return NS_ERROR_OUT_OF_MEMORY;
-
-  nsCString tables = mBaseTables;
-  nsTArray<nsCString> extraTablesByPrefs;
-  nsTArray<nsCString> extraEntriesByPrefs;
-  if (aTrackingProtectionEnabled) {
-    AppendTables(mTrackingProtectionTables, tables);
-    extraTablesByPrefs.AppendElement(TABLE_TRACKING_WHITELIST_PREF);
-    extraEntriesByPrefs.AppendElement(mTrackingProtectionWhitelistExtraEntriesByPrefs);
-
-    extraTablesByPrefs.AppendElement(TABLE_TRACKING_BLACKLIST_PREF);
-    extraEntriesByPrefs.AppendElement(mTrackingProtectionBlacklistExtraEntriesByPrefs);
-  }
-=======
   uint32_t perm;
   nsresult rv = permissionManager->TestPermissionFromPrincipal(
       aPrincipal, NS_LITERAL_CSTRING("safe-browsing"), &perm);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   if (perm == nsIPermissionManager::ALLOW_ACTION) {
     *aResult = false;
     return NS_OK;
   }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsUrlClassifierDBService::ClassifyLocal(nsIURI* aURI, const nsACString& aTables,
-                                        nsACString& aTableResults) {
-  nsTArray<nsCString> results;
-  ClassifyLocalWithTables(aURI, aTables, results);
-
-  // Convert the result array to a comma separated string
-  aTableResults.AssignLiteral("");
-  bool first = true;
-  for (nsCString& result : results) {
-    if (first) {
-      first = false;
-    } else {
-      aTableResults.AppendLiteral(",");
-    }
-    aTableResults.Append(result);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsUrlClassifierDBService::ClassifyLocal(nsIURI *aURI,
-                                        const nsACString& aTables,
-                                        nsACString& aTableResults)
-{
-  nsTArray<nsCString> results;
-  ClassifyLocalWithTables(aURI, aTables, results);
-
-  // Convert the result array to a comma separated string
-  aTableResults.AssignLiteral("");
-  bool first = true;
-  for (nsCString& result : results) {
-    if (first) {
-      first = false;
-    } else {
-      aTableResults.AppendLiteral(",");
-    }
-    aTableResults.Append(result);
-=======
   nsTArray<RefPtr<nsIUrlClassifierFeature>> features;
   mozilla::net::UrlClassifierFeatureFactory::GetPhishingProtectionFeatures(
       features);
   if (features.IsEmpty()) {
     *aResult = false;
     return NS_OK;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsUrlClassifierDBService::AsyncClassifyLocalWithTables(
-    nsIURI* aURI, const nsACString& aTables,
-    const nsTArray<nsCString>& aExtraTablesByPrefs,
-    const nsTArray<nsCString>& aExtraEntriesByPrefs,
-    nsIURIClassifierCallback* aCallback) {
-  MOZ_ASSERT(NS_IsMainThread(),
-             "AsyncClassifyLocalWithTables must be called "
-             "on main thread");
-
-  nsresult rv;
-||||||| merged common ancestors
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsUrlClassifierDBService::AsyncClassifyLocalWithTables(nsIURI *aURI,
-                                                       const nsACString& aTables,
-                                                       const nsTArray<nsCString>& aExtraTablesByPrefs,
-                                                       const nsTArray<nsCString>& aExtraEntriesByPrefs,
-                                                       nsIURIClassifierCallback* aCallback)
-{
-  MOZ_ASSERT(NS_IsMainThread(), "AsyncClassifyLocalWithTables must be called "
-                                "on main thread");
-
-  nsresult rv;
-=======
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIURI> uri;
   rv = aPrincipal->GetURI(getter_AddRefs(uri));
@@ -2174,334 +1792,27 @@ nsUrlClassifierDBService::AsyncClassifyLocalWithTables(nsIURI *aURI,
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  // Let's see if we have special entries set by prefs.
-  if (!aExtraEntriesByPrefs.IsEmpty()) {
-    nsAutoCString host;
-    rv = uri->GetHost(host);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsAutoCString tables;
-    for (uint32_t i = 0; i < aExtraEntriesByPrefs.Length(); ++i) {
-      nsTArray<nsCString> entries;
-      Classifier::SplitTables(aExtraEntriesByPrefs[i], entries);
-
-      if (entries.Contains(host)) {
-        if (!tables.IsEmpty()) {
-          tables.AppendLiteral(",");
-        }
-        tables.Append(aExtraTablesByPrefs[i]);
-      }
-    }
-
-    if (!tables.IsEmpty()) {
-      nsCOMPtr<nsIURIClassifierCallback> callback(aCallback);
-      nsCOMPtr<nsIRunnable> cbRunnable = NS_NewRunnableFunction(
-        "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-        [callback, tables]() -> void {
-          callback->OnClassifyComplete(NS_OK, // Not used.
-                                       tables,
-                                       EmptyCString(),  // provider. (Not used)
-                                       EmptyCString()); // prefix. (Not used)
-        });
-
-      NS_DispatchToMainThread(cbRunnable);
-      return NS_OK;
-    }
-||||||| merged common ancestors
-  // Let's see if we have special entries set by prefs.
-  if (!aExtraEntriesByPrefs.IsEmpty()) {
-    nsAutoCString host;
-    rv = uri->GetHost(host);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    for (uint32_t i = 0; i < aExtraEntriesByPrefs.Length(); ++i) {
-      nsTArray<nsCString> entries;
-      Classifier::SplitTables(aExtraEntriesByPrefs[i], entries);
-
-      if (entries.Contains(host)) {
-        nsCString table = aExtraTablesByPrefs[i];
-        nsCOMPtr<nsIURIClassifierCallback> callback(aCallback);
-        nsCOMPtr<nsIRunnable> cbRunnable = NS_NewRunnableFunction(
-          "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-          [callback, table]() -> void {
-            callback->OnClassifyComplete(NS_OK, // Not used.
-                                         table,
-                                         EmptyCString(),  // provider. (Not used)
-                                         EmptyCString()); // prefix. (Not used)
-          });
-
-        NS_DispatchToMainThread(cbRunnable);
-        return NS_OK;
-      }
-    }
-=======
   uri = NS_GetInnermostURI(uri);
   NS_ENSURE_TRUE(uri, NS_ERROR_FAILURE);
 
   nsUrlClassifierUtils* utilsService = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!utilsService)) {
     return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
   }
 
   // Canonicalize the url
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
   nsAutoCString key;
->>>>>>> upstream-releases
   rv = utilsService->GetKeyForURI(uri, key);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  if (XRE_IsContentProcess()) {
-    using namespace mozilla::dom;
-    using namespace mozilla::ipc;
-
-    ContentChild* content = ContentChild::GetSingleton();
-    if (NS_WARN_IF(!content || content->IsShuttingDown())) {
-      return NS_ERROR_FAILURE;
-    }
-
-    auto actor = new URLClassifierLocalChild();
-
-    // TODO: Bug 1353701 - Supports custom event target for labelling.
-    nsCOMPtr<nsIEventTarget> systemGroupEventTarget =
-        mozilla::SystemGroup::EventTargetFor(mozilla::TaskCategory::Other);
-    content->SetEventTargetForActor(actor, systemGroupEventTarget);
-
-    URIParams uri;
-    SerializeURI(aURI, uri);
-    nsAutoCString tables(aTables);
-    if (!content->SendPURLClassifierLocalConstructor(actor, uri, tables)) {
-      return NS_ERROR_FAILURE;
-    }
-
-    actor->SetCallback(aCallback);
-    return NS_OK;
-  }
-
-  if (gShuttingDownThread) {
-    return NS_ERROR_ABORT;
-  }
-
-  using namespace mozilla::Telemetry;
-  auto startTime = TimeStamp::Now();  // For telemetry.
-
-  auto worker = mWorker;
-  nsCString tables(aTables);
-
-  // Since aCallback will be passed around threads...
-  nsMainThreadPtrHandle<nsIURIClassifierCallback> callback(
-      new nsMainThreadPtrHolder<nsIURIClassifierCallback>(
-          "nsIURIClassifierCallback", aCallback));
-
-  nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
-      "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-      [worker, key, tables, callback, startTime]() -> void {
-        nsCString matchedLists;
-        LookupResultArray results;
-        nsresult rv = worker->DoLocalLookup(key, tables, results);
-        if (NS_SUCCEEDED(rv)) {
-          for (uint32_t i = 0; i < results.Length(); i++) {
-            if (i > 0) {
-              matchedLists.AppendLiteral(",");
-            }
-            matchedLists.Append(results[i]->mTableName);
-          }
-        }
-
-        nsCOMPtr<nsIRunnable> cbRunnable = NS_NewRunnableFunction(
-            "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-            [callback, matchedLists, startTime]() -> void {
-              // Measure the time diff between calling and callback.
-              AccumulateTimeDelta(
-                  Telemetry::URLCLASSIFIER_ASYNC_CLASSIFYLOCAL_TIME, startTime);
-
-              // |callback| is captured as const value so ...
-              auto cb = const_cast<nsIURIClassifierCallback*>(callback.get());
-              cb->OnClassifyComplete(NS_OK,  // Not used.
-                                     matchedLists,
-                                     EmptyCString(),   // provider. (Not used)
-                                     EmptyCString());  // prefix. (Not used)
-            });
-
-        NS_DispatchToMainThread(cbRunnable);
-      });
-
-  return gDbBackgroundThread->Dispatch(r, NS_DISPATCH_NORMAL);
-}
-
-NS_IMETHODIMP
-nsUrlClassifierDBService::ClassifyLocalWithTables(
-    nsIURI* aURI, const nsACString& aTables,
-    nsTArray<nsCString>& aTableResults) {
-  MOZ_ASSERT(NS_IsMainThread(),
-             "ClassifyLocalWithTables must be on main thread");
-  if (gShuttingDownThread) {
-    return NS_ERROR_ABORT;
-  }
-
-  nsresult rv;
-  if (XRE_IsContentProcess()) {
-    using namespace mozilla::dom;
-    using namespace mozilla::ipc;
-    URIParams uri;
-    SerializeURI(aURI, uri);
-    nsAutoCString tables(aTables);
-    bool result = ContentChild::GetSingleton()->SendClassifyLocal(
-        uri, tables, &rv, &aTableResults);
-    if (result) {
-      return rv;
-    }
-    return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  if (XRE_IsContentProcess()) {
-    using namespace mozilla::dom;
-    using namespace mozilla::ipc;
-
-    ContentChild* content = ContentChild::GetSingleton();
-    if (NS_WARN_IF(!content || content->IsShuttingDown())) {
-      return NS_ERROR_FAILURE;
-    }
-
-    auto actor = new URLClassifierLocalChild();
-
-    // TODO: Bug 1353701 - Supports custom event target for labelling.
-    nsCOMPtr<nsIEventTarget> systemGroupEventTarget
-      = mozilla::SystemGroup::EventTargetFor(mozilla::TaskCategory::Other);
-    content->SetEventTargetForActor(actor, systemGroupEventTarget);
-
-    URIParams uri;
-    SerializeURI(aURI, uri);
-    nsAutoCString tables(aTables);
-    if (!content->SendPURLClassifierLocalConstructor(actor, uri, tables)) {
-      return NS_ERROR_FAILURE;
-    }
-
-    actor->SetCallback(aCallback);
-    return NS_OK;
-  }
-
-  if (gShuttingDownThread) {
-    return NS_ERROR_ABORT;
-  }
-
-  using namespace mozilla::Telemetry;
-  auto startTime = TimeStamp::Now(); // For telemetry.
-
-  auto worker = mWorker;
-  nsCString tables(aTables);
-
-  // Since aCallback will be passed around threads...
-  nsMainThreadPtrHandle<nsIURIClassifierCallback> callback(
-    new nsMainThreadPtrHolder<nsIURIClassifierCallback>(
-      "nsIURIClassifierCallback", aCallback));
-
-  nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
-    "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-    [worker, key, tables, callback, startTime]() -> void {
-
-      nsCString matchedLists;
-      LookupResultArray results;
-      nsresult rv = worker->DoLocalLookup(key, tables, results);
-      if (NS_SUCCEEDED(rv)) {
-        for (uint32_t i = 0; i < results.Length(); i++) {
-          if (i > 0) {
-            matchedLists.AppendLiteral(",");
-          }
-          matchedLists.Append(results[i]->mTableName);
-        }
-      }
-
-      nsCOMPtr<nsIRunnable> cbRunnable = NS_NewRunnableFunction(
-        "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-        [callback, matchedLists, startTime]() -> void {
-          // Measure the time diff between calling and callback.
-          AccumulateTimeDelta(Telemetry::URLCLASSIFIER_ASYNC_CLASSIFYLOCAL_TIME,
-                              startTime);
-
-          // |callback| is captured as const value so ...
-          auto cb = const_cast<nsIURIClassifierCallback*>(callback.get());
-          cb->OnClassifyComplete(NS_OK, // Not used.
-                                 matchedLists,
-                                 EmptyCString(),  // provider. (Not used)
-                                 EmptyCString()); // prefix. (Not used)
-        });
-
-      NS_DispatchToMainThread(cbRunnable);
-    });
-
-  return gDbBackgroundThread->Dispatch(r, NS_DISPATCH_NORMAL);
-}
-
-NS_IMETHODIMP
-nsUrlClassifierDBService::ClassifyLocalWithTables(nsIURI *aURI,
-                                                  const nsACString& aTables,
-                                                  nsTArray<nsCString>& aTableResults)
-{
-  MOZ_ASSERT(NS_IsMainThread(), "ClassifyLocalWithTables must be on main thread");
-  if (gShuttingDownThread) {
-    return NS_ERROR_ABORT;
-  }
-
-  nsresult rv;
-  if (XRE_IsContentProcess()) {
-    using namespace mozilla::dom;
-    using namespace mozilla::ipc;
-    URIParams uri;
-    SerializeURI(aURI, uri);
-    nsAutoCString tables(aTables);
-    bool result = ContentChild::GetSingleton()->SendClassifyLocal(uri, tables,
-                                                                  &rv,
-                                                                  &aTableResults);
-    if (result) {
-      return rv;
-    }
-    return NS_ERROR_FAILURE;
-=======
   RefPtr<nsUrlClassifierClassifyCallback> callback =
       new (fallible) nsUrlClassifierClassifyCallback(c);
   if (NS_WARN_IF(!callback)) {
     return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  AUTO_PROFILER_LABEL("nsUrlClassifierDBService::ClassifyLocalWithTables",
-                      OTHER);
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_CLASSIFYLOCAL_TIME> timer;
-
-  nsCOMPtr<nsIURI> uri = NS_GetInnermostURI(aURI);
-  NS_ENSURE_TRUE(uri, NS_ERROR_FAILURE);
-
-  nsAutoCString key;
-  // Canonicalize the url
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-  rv = utilsService->GetKeyForURI(uri, key);
-||||||| merged common ancestors
-  AUTO_PROFILER_LABEL("nsUrlClassifierDBService::ClassifyLocalWithTables",
-                      OTHER);
-  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_CLASSIFYLOCAL_TIME> timer;
-
-  nsCOMPtr<nsIURI> uri = NS_GetInnermostURI(aURI);
-  NS_ENSURE_TRUE(uri, NS_ERROR_FAILURE);
-
-  nsAutoCString key;
-  // Canonicalize the url
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-  rv = utilsService->GetKeyForURI(uri, key);
-=======
   // The rest is done async.
   rv = LookupURI(key, holder, callback);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   *aResult = true;
@@ -2524,16 +1835,7 @@ NS_IMPL_ISUPPORTS(ThreatHitReportListener, nsIStreamListener,
                   nsIRequestObserver)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ThreatHitReportListener::OnStartRequest(nsIRequest* aRequest,
-                                        nsISupports* aContext) {
-||||||| merged common ancestors
-ThreatHitReportListener::OnStartRequest(nsIRequest* aRequest,
-                                        nsISupports* aContext)
-{
-=======
 ThreatHitReportListener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   if (!LOG_ENABLED()) {
     return NS_OK;  // Nothing to do!
   }
@@ -2580,18 +1882,7 @@ ThreatHitReportListener::OnDataAvailable(nsIRequest* aRequest,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ThreatHitReportListener::OnStopRequest(nsIRequest* aRequest,
-                                       nsISupports* aContext,
-                                       nsresult aStatus) {
-||||||| merged common ancestors
-ThreatHitReportListener::OnStopRequest(nsIRequest* aRequest,
-                                       nsISupports* aContext,
-                                       nsresult aStatus)
-{
-=======
 ThreatHitReportListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(aRequest);
   NS_ENSURE_TRUE(httpChannel, aStatus);
 
@@ -2675,18 +1966,8 @@ nsUrlClassifierDBService::SendThreatHitReport(nsIChannel* aChannel,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-  if (!utilsService) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-  if (!utilsService) {
-=======
   nsUrlClassifierUtils* utilsService = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!utilsService)) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -2758,40 +2039,6 @@ nsUrlClassifierDBService::Lookup(nsIPrincipal* aPrincipal,
                                  nsIUrlClassifierCallback* c) {
   NS_ENSURE_TRUE(gDbBackgroundThread, NS_ERROR_NOT_INITIALIZED);
 
-<<<<<<< HEAD
-  bool dummy;
-  return LookupURI(aPrincipal, tables, nsTArray<nsCString>(),
-                   nsTArray<nsCString>(), c, true, &dummy);
-}
-
-nsresult nsUrlClassifierDBService::LookupURI(
-    nsIPrincipal* aPrincipal, const nsACString& tables,
-    const nsTArray<nsCString>& aExtraTablesByPrefs,
-    const nsTArray<nsCString>& aExtraEntriesByPrefs,
-    nsIUrlClassifierCallback* c, bool forceLookup, bool* didLookup) {
-  NS_ENSURE_TRUE(gDbBackgroundThread, NS_ERROR_NOT_INITIALIZED);
-  NS_ENSURE_ARG(aPrincipal);
-
-||||||| merged common ancestors
-  bool dummy;
-  return LookupURI(aPrincipal, tables, nsTArray<nsCString>(),
-                   nsTArray<nsCString>(), c, true, &dummy);
-}
-
-nsresult
-nsUrlClassifierDBService::LookupURI(nsIPrincipal* aPrincipal,
-                                    const nsACString& tables,
-                                    const nsTArray<nsCString>& aExtraTablesByPrefs,
-                                    const nsTArray<nsCString>& aExtraEntriesByPrefs,
-                                    nsIUrlClassifierCallback* c,
-                                    bool forceLookup,
-                                    bool *didLookup)
-{
-  NS_ENSURE_TRUE(gDbBackgroundThread, NS_ERROR_NOT_INITIALIZED);
-  NS_ENSURE_ARG(aPrincipal);
-
-=======
->>>>>>> upstream-releases
   if (nsContentUtils::IsSystemPrincipal(aPrincipal)) {
     // FIXME: we don't call 'c' here!
     return NS_OK;
@@ -2821,46 +2068,8 @@ nsUrlClassifierDBService::LookupURI(nsIPrincipal* aPrincipal,
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  if (!aExtraEntriesByPrefs.IsEmpty()) {
-    nsAutoCString host;
-    rv = uri->GetHost(host);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    for (uint32_t i = 0; i < aExtraEntriesByPrefs.Length(); ++i) {
-      nsTArray<nsCString> entries;
-      Classifier::SplitTables(aExtraEntriesByPrefs[i], entries);
-      if (entries.Contains(host)) {
-        *didLookup = true;
-
-        nsCString table = aExtraTablesByPrefs[i];
-        nsCOMPtr<nsIUrlClassifierCallback> callback(c);
-        nsCOMPtr<nsIRunnable> cbRunnable = NS_NewRunnableFunction(
-            "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-            [callback, table]() -> void { callback->HandleEvent(table); });
-||||||| merged common ancestors
-  if (!aExtraEntriesByPrefs.IsEmpty()) {
-    nsAutoCString host;
-    rv = uri->GetHost(host);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    for (uint32_t i = 0; i < aExtraEntriesByPrefs.Length(); ++i) {
-      nsTArray<nsCString> entries;
-      Classifier::SplitTables(aExtraEntriesByPrefs[i], entries);
-      if (entries.Contains(host)) {
-        *didLookup = true;
-
-        nsCString table = aExtraTablesByPrefs[i];
-        nsCOMPtr<nsIUrlClassifierCallback> callback(c);
-        nsCOMPtr<nsIRunnable> cbRunnable = NS_NewRunnableFunction(
-          "nsUrlClassifierDBService::AsyncClassifyLocalWithTables",
-          [callback, table]() -> void {
-            callback->HandleEvent(table);
-          });
-=======
   uri = NS_GetInnermostURI(uri);
   NS_ENSURE_TRUE(uri, NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
   nsUrlClassifierUtils* utilsService = nsUrlClassifierUtils::GetInstance();
   if (NS_WARN_IF(!utilsService)) {
@@ -2869,58 +2078,11 @@ nsUrlClassifierDBService::LookupURI(nsIPrincipal* aPrincipal,
 
   nsAutoCString key;
   // Canonicalize the url
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> utilsService =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
->>>>>>> upstream-releases
   rv = utilsService->GetKeyForURI(uri, key);
-<<<<<<< HEAD
-  if (NS_FAILED(rv)) return rv;
-
-  if (forceLookup) {
-    *didLookup = true;
-  } else {
-    bool clean = false;
-
-    if (!clean) {
-      nsCOMPtr<nsIPermissionManager> permissionManager =
-          services::GetPermissionManager();
-||||||| merged common ancestors
-  if (NS_FAILED(rv))
-    return rv;
-
-  if (forceLookup) {
-    *didLookup = true;
-  } else {
-    bool clean = false;
-
-    if (!clean) {
-      nsCOMPtr<nsIPermissionManager> permissionManager =
-        services::GetPermissionManager();
-=======
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (permissionManager) {
-        uint32_t perm;
-        rv = permissionManager->TestPermissionFromPrincipal(
-            aPrincipal, "safe-browsing", &perm);
-        NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-      if (permissionManager) {
-        uint32_t perm;
-        rv = permissionManager->TestPermissionFromPrincipal(aPrincipal,
-                                                           "safe-browsing", &perm);
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
   return LookupURI(key, holder, c);
 }
->>>>>>> upstream-releases
 
 nsresult nsUrlClassifierDBService::LookupURI(
     const nsACString& aKey, FeatureHolder* aHolder,
@@ -2934,19 +2096,7 @@ nsresult nsUrlClassifierDBService::LookupURI(
   // take care of confirming partial hash matches if necessary before
   // calling the client's callback.
   nsCOMPtr<nsIUrlClassifierLookupCallback> callback =
-<<<<<<< HEAD
-      new (fallible) nsUrlClassifierLookupCallback(this, c);
-  if (!callback) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-||||||| merged common ancestors
-    new (fallible) nsUrlClassifierLookupCallback(this, c);
-  if (!callback) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-=======
       new nsUrlClassifierLookupCallback(this, aCallback);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIUrlClassifierLookupCallback> proxyCallback =
       new UrlClassifierLookupCallbackProxy(callback);
@@ -3121,20 +2271,8 @@ nsresult nsUrlClassifierDBService::CacheCompletions(
   return mWorkerProxy->CacheCompletions(results);
 }
 
-<<<<<<< HEAD
-bool nsUrlClassifierDBService::CanComplete(const nsACString& aTableName) {
-  return mGethashTables.Contains(aTableName) &&
-         !mDisallowCompletionsTables.Contains(aTableName);
-||||||| merged common ancestors
-bool
-nsUrlClassifierDBService::CanComplete(const nsACString &aTableName)
-{
-  return mGethashTables.Contains(aTableName) &&
-    !mDisallowCompletionsTables.Contains(aTableName);
-=======
 bool nsUrlClassifierDBService::CanComplete(const nsACString& aTableName) {
   return !mDisallowCompletionsTables.Contains(aTableName);
->>>>>>> upstream-releases
 }
 
 bool nsUrlClassifierDBService::GetCompleter(

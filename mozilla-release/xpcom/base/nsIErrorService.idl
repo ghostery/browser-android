@@ -13,16 +13,8 @@
  * This service will eventually get replaced by extending xpidl to allow errors to be defined.
  * (http://bugzilla.mozilla.org/show_bug.cgi?id=13423).
  */
-<<<<<<< HEAD
-[uuid(afe1f190-a3c2-11e3-a5e2-0800200c9a66)]
-interface nsIErrorService : nsISupports 
-||||||| merged common ancestors
-[scriptable, uuid(afe1f190-a3c2-11e3-a5e2-0800200c9a66)]
-interface nsIErrorService : nsISupports 
-=======
 [uuid(afe1f190-a3c2-11e3-a5e2-0800200c9a66)]
 interface nsIErrorService : nsISupports
->>>>>>> upstream-releases
 {
     /**
      * Registers a string bundle URL for an error module. Error modules are obtained from

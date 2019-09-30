@@ -33,19 +33,11 @@ class PrintPreviewUserEventSuppressor;
 //   off right before we go to the timer.
 //------------------------------------------------------------------------
 class nsPrintData {
-<<<<<<< HEAD
- public:
-  typedef enum { eIsPrinting, eIsPrintPreview } ePrintDataType;
-||||||| merged common ancestors
-public:
-  typedef enum {eIsPrinting, eIsPrintPreview } ePrintDataType;
-=======
   typedef mozilla::PrintPreviewUserEventSuppressor
       PrintPreviewUserEventSuppressor;
 
  public:
   typedef enum { eIsPrinting, eIsPrintPreview } ePrintDataType;
->>>>>>> upstream-releases
 
   explicit nsPrintData(ePrintDataType aType);
 
@@ -73,49 +65,6 @@ public:
   // Array of non-owning pointers to all the nsPrintObjects owned by this
   // nsPrintData. This includes this->mPrintObject, as well as all of its
   // mKids (and their mKids, etc.)
-<<<<<<< HEAD
-  nsTArray<nsPrintObject*> mPrintDocList;
-
-  bool mIsIFrameSelected;
-  bool mIsParentAFrameSet;
-  bool mOnStartSent;
-  bool mIsAborted;            // tells us the document is being aborted
-  bool mPreparingForPrint;    // see comments above
-  bool mDocWasToBeDestroyed;  // see comments above
-  bool mShrinkToFit;
-  int16_t mPrintFrameType;
-  int32_t mNumPrintablePages;
-  int32_t mNumPagesPrinted;
-  float mShrinkRatio;
-
-  nsCOMPtr<nsIPrintSettings> mPrintSettings;
-  nsPrintPreviewListener* mPPEventListeners;
-
-  nsString mBrandName;  //  needed as a substitute name for a document
-
- private:
-||||||| merged common ancestors
-  nsTArray<nsPrintObject*>    mPrintDocList;
-
-  bool                        mIsIFrameSelected;
-  bool                        mIsParentAFrameSet;
-  bool                        mOnStartSent;
-  bool                        mIsAborted;           // tells us the document is being aborted
-  bool                        mPreparingForPrint;   // see comments above
-  bool                        mDocWasToBeDestroyed; // see comments above
-  bool                        mShrinkToFit;
-  int16_t                     mPrintFrameType;
-  int32_t                     mNumPrintablePages;
-  int32_t                     mNumPagesPrinted;
-  float                       mShrinkRatio;
-
-  nsCOMPtr<nsIPrintSettings>  mPrintSettings;
-  nsPrintPreviewListener*     mPPEventListeners;
-
-  nsString                    mBrandName; //  needed as a substitute name for a document
-
-private:
-=======
   nsTArray<nsPrintObject*> mPrintDocList;
 
   bool mIsIFrameSelected;
@@ -134,7 +83,6 @@ private:
   nsString mBrandName;  //  needed as a substitute name for a document
 
  private:
->>>>>>> upstream-releases
   nsPrintData() = delete;
   nsPrintData& operator=(const nsPrintData& aOther) = delete;
 

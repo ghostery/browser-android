@@ -6,15 +6,7 @@
  */
 
 #include "SkRasterPipeline.h"
-<<<<<<< HEAD
-#include "../jumper/SkJumper.h"
-||||||| merged common ancestors
-#include "SkPM4f.h"
-#include "SkPM4fPriv.h"
-#include "../jumper/SkJumper.h"
-=======
 #include "SkOpts.h"
->>>>>>> upstream-releases
 #include <algorithm>
 
 SkRasterPipeline::SkRasterPipeline(SkArenaAlloc* alloc) : fAlloc(alloc) {
@@ -102,23 +94,6 @@ void SkRasterPipeline::append_set_rgb(SkArenaAlloc* alloc, const float rgb[3]) {
     this->unchecked_append(stage, arg);
 }
 
-void SkRasterPipeline::append_set_rgb(SkArenaAlloc* alloc, const float rgb[3]) {
-    auto arg = alloc->makeArrayDefault<float>(3);
-    arg[0] = rgb[0];
-    arg[1] = rgb[1];
-    arg[2] = rgb[2];
-
-    auto stage = unbounded_set_rgb;
-    if (0 <= rgb[0] && rgb[0] <= 1 &&
-        0 <= rgb[1] && rgb[1] <= 1 &&
-        0 <= rgb[2] && rgb[2] <= 1)
-    {
-        stage = set_rgb;
-    }
-
-    this->unchecked_append(stage, arg);
-}
-
 void SkRasterPipeline::append_constant_color(SkArenaAlloc* alloc, const float rgba[4]) {
     // r,g,b might be outside [0,1], but alpha should probably always be in [0,1].
     SkASSERT(0 <= rgba[3] && rgba[3] <= 1);
@@ -132,7 +107,6 @@ void SkRasterPipeline::append_constant_color(SkArenaAlloc* alloc, const float rg
         Sk4f color = Sk4f::Load(rgba);
         color.store(&ctx->r);
 
-<<<<<<< HEAD
         // uniform_color requires colors in range and can go lowp,
         // while unbounded_uniform_color supports out-of-range colors too but not lowp.
         if (0 <= rgba[0] && rgba[0] <= rgba[3] &&
@@ -148,35 +122,6 @@ void SkRasterPipeline::append_constant_color(SkArenaAlloc* alloc, const float rg
         } else {
             this->unchecked_append(unbounded_uniform_color, ctx);
         }
-
-        INC_COLOR;
-||||||| merged common ancestors
-        // To make loads more direct, we store 8-bit values in 16-bit slots.
-        color = color * 255.0f + 0.5f;
-        ctx->rgba[0] = (uint16_t)color[0];
-        ctx->rgba[1] = (uint16_t)color[1];
-        ctx->rgba[2] = (uint16_t)color[2];
-        ctx->rgba[3] = (uint16_t)color[3];
-
-        this->unchecked_append(uniform_color, ctx);
-        INC_COLOR;
-=======
-        // uniform_color requires colors in range and can go lowp,
-        // while unbounded_uniform_color supports out-of-range colors too but not lowp.
-        if (0 <= rgba[0] && rgba[0] <= rgba[3] &&
-            0 <= rgba[1] && rgba[1] <= rgba[3] &&
-            0 <= rgba[2] && rgba[2] <= rgba[3]) {
-            // To make loads more direct, we store 8-bit values in 16-bit slots.
-            color = color * 255.0f + 0.5f;
-            ctx->rgba[0] = (uint16_t)color[0];
-            ctx->rgba[1] = (uint16_t)color[1];
-            ctx->rgba[2] = (uint16_t)color[2];
-            ctx->rgba[3] = (uint16_t)color[3];
-            this->unchecked_append(uniform_color, ctx);
-        } else {
-            this->unchecked_append(unbounded_uniform_color, ctx);
-        }
->>>>>>> upstream-releases
     }
 }
 
@@ -211,97 +156,6 @@ void SkRasterPipeline::append_matrix(SkArenaAlloc* alloc, const SkMatrix& matrix
     }
 }
 
-<<<<<<< HEAD
-void SkRasterPipeline::append_load(SkColorType ct, const SkJumper_MemoryCtx* ctx) {
-    switch (ct) {
-        case kUnknown_SkColorType: SkASSERT(false); break;
-
-        case kGray_8_SkColorType:       this->append(load_g8,      ctx); break;
-        case kAlpha_8_SkColorType:      this->append(load_a8,      ctx); break;
-        case kRGB_565_SkColorType:      this->append(load_565,     ctx); break;
-        case kARGB_4444_SkColorType:    this->append(load_4444,    ctx); break;
-        case kBGRA_8888_SkColorType:    this->append(load_bgra,    ctx); break;
-        case kRGBA_8888_SkColorType:    this->append(load_8888,    ctx); break;
-        case kRGBA_1010102_SkColorType: this->append(load_1010102, ctx); break;
-        case kRGBA_F16_SkColorType:     this->append(load_f16,     ctx); break;
-        case kRGBA_F32_SkColorType:     this->append(load_f32,     ctx); break;
-
-        case kRGB_888x_SkColorType:    this->append(load_8888, ctx);
-                                       this->append(force_opaque);
-                                       break;
-
-        case kRGB_101010x_SkColorType: this->append(load_1010102, ctx);
-                                       this->append(force_opaque);
-                                       break;
-    }
-}
-
-void SkRasterPipeline::append_load_dst(SkColorType ct, const SkJumper_MemoryCtx* ctx) {
-    switch (ct) {
-        case kUnknown_SkColorType: SkASSERT(false); break;
-
-        case kGray_8_SkColorType:       this->append(load_g8_dst,      ctx); break;
-        case kAlpha_8_SkColorType:      this->append(load_a8_dst,      ctx); break;
-        case kRGB_565_SkColorType:      this->append(load_565_dst,     ctx); break;
-        case kARGB_4444_SkColorType:    this->append(load_4444_dst,    ctx); break;
-        case kBGRA_8888_SkColorType:    this->append(load_bgra_dst,    ctx); break;
-        case kRGBA_8888_SkColorType:    this->append(load_8888_dst,    ctx); break;
-        case kRGBA_1010102_SkColorType: this->append(load_1010102_dst, ctx); break;
-        case kRGBA_F16_SkColorType:     this->append(load_f16_dst,     ctx); break;
-        case kRGBA_F32_SkColorType:     this->append(load_f32_dst,     ctx); break;
-
-        case kRGB_888x_SkColorType:     this->append(load_8888_dst, ctx);
-                                        this->append(force_opaque_dst);
-                                        break;
-
-        case kRGB_101010x_SkColorType:  this->append(load_1010102_dst, ctx);
-                                        this->append(force_opaque_dst);
-                                        break;
-    }
-}
-
-void SkRasterPipeline::append_store(SkColorType ct, const SkJumper_MemoryCtx* ctx) {
-    switch (ct) {
-        case kUnknown_SkColorType: SkASSERT(false); break;
-
-        case kAlpha_8_SkColorType:      this->append(store_a8,      ctx); break;
-        case kRGB_565_SkColorType:      this->append(store_565,     ctx); break;
-        case kARGB_4444_SkColorType:    this->append(store_4444,    ctx); break;
-        case kBGRA_8888_SkColorType:    this->append(store_bgra,    ctx); break;
-        case kRGBA_8888_SkColorType:    this->append(store_8888,    ctx); break;
-        case kRGBA_1010102_SkColorType: this->append(store_1010102, ctx); break;
-        case kRGBA_F16_SkColorType:     this->append(store_f16,     ctx); break;
-        case kRGBA_F32_SkColorType:     this->append(store_f32,     ctx); break;
-
-        case kRGB_888x_SkColorType:    this->append(force_opaque);
-                                       this->append(store_8888, ctx);
-                                       break;
-
-        case kRGB_101010x_SkColorType: this->append(force_opaque);
-                                       this->append(store_1010102, ctx);
-                                       break;
-
-        case kGray_8_SkColorType:      this->append(luminance_to_alpha);
-                                       this->append(store_a8, ctx);
-                                       break;
-    }
-}
-
-void SkRasterPipeline::append_gamut_clamp_if_normalized(const SkImageInfo& dstInfo) {
-    if (dstInfo.colorType() != kRGBA_F16_SkColorType &&
-        dstInfo.colorType() != kRGBA_F32_SkColorType &&
-        dstInfo.alphaType() == kPremul_SkAlphaType)
-    {
-        this->unchecked_append(SkRasterPipeline::clamp_gamut, nullptr);
-    }
-||||||| merged common ancestors
-void SkRasterPipeline::append_seed_shader() {
-    static const float iota[] = {
-        0.5f, 1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 6.5f, 7.5f,
-        8.5f, 9.5f,10.5f,11.5f,12.5f,13.5f,14.5f,15.5f,
-    };
-    this->unchecked_append(SkRasterPipeline::seed_shader, const_cast<float*>(iota));
-=======
 void SkRasterPipeline::append_load(SkColorType ct, const SkRasterPipeline_MemoryCtx* ctx) {
     switch (ct) {
         case kUnknown_SkColorType: SkASSERT(false); break;
@@ -464,5 +318,4 @@ std::function<void(size_t, size_t, size_t, size_t)> SkRasterPipeline::compile() 
     return [=](size_t x, size_t y, size_t w, size_t h) {
         start_pipeline(x,y,x+w,y+h, program);
     };
->>>>>>> upstream-releases
 }

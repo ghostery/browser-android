@@ -15,22 +15,11 @@ namespace net {
 
 class WebSocketEventService;
 
-<<<<<<< HEAD
-class WebSocketEventListenerParent final : public PWebSocketEventListenerParent,
-                                           public nsIWebSocketEventListener {
- public:
-||||||| merged common ancestors
-class WebSocketEventListenerParent final : public PWebSocketEventListenerParent
-                                         , public nsIWebSocketEventListener
-{
-public:
-=======
 class WebSocketEventListenerParent final : public PWebSocketEventListenerParent,
                                            public nsIWebSocketEventListener {
   friend class PWebSocketEventListenerParent;
 
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_DECL_NSIWEBSOCKETEVENTLISTENER
 

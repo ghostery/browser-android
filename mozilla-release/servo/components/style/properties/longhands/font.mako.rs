@@ -326,16 +326,8 @@ ${helpers.predefined_type(
 
         use app_units::Au;
         use cssparser::{Parser, ToCss};
-<<<<<<< HEAD
-        use crate::gecko_bindings::structs::FontFamilyType;
-        use crate::properties::longhands;
-||||||| merged common ancestors
-        use gecko_bindings::structs::FontFamilyType;
-        use properties::longhands;
-=======
         use crate::values::computed::font::GenericFontFamily;
         use crate::properties::longhands;
->>>>>>> upstream-releases
         use std::fmt;
         use std::hash::{Hash, Hasher};
         use style_traits::ParseError;
@@ -386,19 +378,9 @@ ${helpers.predefined_type(
                 use crate::gecko_bindings::bindings;
                 use crate::gecko_bindings::structs::{LookAndFeel_FontID, nsFont};
                 use std::mem;
-<<<<<<< HEAD
-                use crate::values::computed::Percentage;
-                use crate::values::computed::font::{FontSize, FontStretch, FontStyle, FontFamilyList};
-                use crate::values::generics::NonNegative;
-||||||| merged common ancestors
-                use values::computed::Percentage;
-                use values::computed::font::{FontSize, FontStretch, FontStyle, FontFamilyList};
-                use values::generics::NonNegative;
-=======
                 use crate::values::computed::Percentage;
                 use crate::values::computed::font::{FontFamily, FontSize, FontStretch, FontStyle, FontFamilyList};
                 use crate::values::generics::NonNegative;
->>>>>>> upstream-releases
 
                 let id = match *self {
                     % for font in system_fonts:

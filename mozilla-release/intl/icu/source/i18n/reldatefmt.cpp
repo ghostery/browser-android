@@ -145,46 +145,6 @@ const UnicodeString& RelativeDateTimeCacheData::getAbsoluteUnitString(
         UDateRelativeUnit unit,
         int32_t pastFutureIndex,
         int32_t pluralUnit) const {
-<<<<<<< HEAD
-   URelativeDateTimeUnit rdtunit = UDAT_REL_UNIT_COUNT;
-   switch (unit) {
-       case UDAT_RELATIVE_YEARS:   rdtunit = UDAT_REL_UNIT_YEAR; break;
-       case UDAT_RELATIVE_MONTHS:  rdtunit = UDAT_REL_UNIT_MONTH; break;
-       case UDAT_RELATIVE_WEEKS:   rdtunit = UDAT_REL_UNIT_WEEK; break;
-       case UDAT_RELATIVE_DAYS:    rdtunit = UDAT_REL_UNIT_DAY; break;
-       case UDAT_RELATIVE_HOURS:   rdtunit = UDAT_REL_UNIT_HOUR; break;
-       case UDAT_RELATIVE_MINUTES: rdtunit = UDAT_REL_UNIT_MINUTE; break;
-       case UDAT_RELATIVE_SECONDS: rdtunit = UDAT_REL_UNIT_SECOND; break;
-       default: // a unit that the above method does not handle
-            return nullptr;
-   }
-
-   return getRelativeDateTimeUnitFormatter(fStyle, rdtunit, pastFutureIndex, pluralUnit);
- }
-
- // Use fallback cache for SimpleFormatter relativeUnits.
- const SimpleFormatter* RelativeDateTimeCacheData::getRelativeDateTimeUnitFormatter(
-        int32_t fStyle,
-        URelativeDateTimeUnit unit,
-        int32_t pastFutureIndex,
-        int32_t pluralUnit) const {
-    while (true) {
-        int32_t style = fStyle;
-        do {
-            if (relativeUnitsFormatters[style][unit][pastFutureIndex][pluralUnit] != nullptr) {
-                return relativeUnitsFormatters[style][unit][pastFutureIndex][pluralUnit];
-            }
-            style = fallBackCache[style];
-        } while (style != -1);
-
-        if (pluralUnit == StandardPlural::OTHER) {
-            return nullptr;  // No formatter found.
-||||||| merged common ancestors
-    int32_t style = fStyle;
-    do {
-        if (relativeUnitsFormatters[style][unit][pastFutureIndex][pluralUnit] != NULL) {
-            return relativeUnitsFormatters[style][unit][pastFutureIndex][pluralUnit];
-=======
    URelativeDateTimeUnit rdtunit = UDAT_REL_UNIT_COUNT;
    switch (unit) {
        case UDAT_RELATIVE_YEARS:   rdtunit = UDAT_REL_UNIT_YEAR; break;
@@ -218,20 +178,10 @@ const UnicodeString& RelativeDateTimeCacheData::getAbsoluteUnitString(
 
         if (pluralUnit == StandardPlural::OTHER) {
             break;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        pluralUnit = StandardPlural::OTHER;
-    }
-||||||| merged common ancestors
-        style = fallBackCache[style];
-    } while (style != -1);
-    return NULL;  // No formatter found.
-=======
         pluralUnit = StandardPlural::OTHER;
     }
     return nullptr;  // No formatter found.
->>>>>>> upstream-releases
  }
 
 static UBool getStringWithFallback(
@@ -1009,16 +959,8 @@ void RelativeDateTimeFormatter::formatImpl(
     }
 
     const SimpleFormatter* formatter =
-<<<<<<< HEAD
-        fCache->getRelativeUnitFormatter(fStyle, unit, bFuture, pluralIndex);
-    if (formatter == nullptr) {
-||||||| merged common ancestors
-        fCache->getRelativeUnitFormatter(fStyle, unit, bFuture, pluralIndex);
-    if (formatter == NULL) {
-=======
         fCache->getRelativeUnitFormatter(fStyle, unit, bFuture, pluralForm);
     if (formatter == nullptr) {
->>>>>>> upstream-releases
         // TODO: WARN - look at quantity formatter's action with an error.
         status = U_INVALID_FORMAT_ERROR;
         return;
@@ -1059,70 +1001,13 @@ void RelativeDateTimeFormatter::formatNumericImpl(
         FormattedRelativeDateTimeData& output,
         UErrorCode& status) const {
     if (U_FAILURE(status)) {
-<<<<<<< HEAD
-        return appendTo;
-    }
-||||||| merged common ancestors
-        return appendTo;
-    }
-    // TODO:
-    // The full implementation of this depends on CLDR data that is not yet available,
-    // see: http://unicode.org/cldr/trac/ticket/9165 Add more relative field data.
-    // In the meantime do a quick bring-up by calling the old format method; this
-    // leaves some holes (even for data that is currently available, such as quarter).
-    // When the new CLDR data is available, update the data storage accordingly,
-    // rewrite this to use it directly, and rewrite the old format method to call this
-    // new one; that is covered by http://bugs.icu-project.org/trac/ticket/12171.
-    UDateRelativeUnit relunit = UDAT_RELATIVE_UNIT_COUNT;
-    switch (unit) {
-        case UDAT_REL_UNIT_YEAR:    relunit = UDAT_RELATIVE_YEARS; break;
-        case UDAT_REL_UNIT_MONTH:   relunit = UDAT_RELATIVE_MONTHS; break;
-        case UDAT_REL_UNIT_WEEK:    relunit = UDAT_RELATIVE_WEEKS; break;
-        case UDAT_REL_UNIT_DAY:     relunit = UDAT_RELATIVE_DAYS; break;
-        case UDAT_REL_UNIT_HOUR:    relunit = UDAT_RELATIVE_HOURS; break;
-        case UDAT_REL_UNIT_MINUTE:  relunit = UDAT_RELATIVE_MINUTES; break;
-        case UDAT_REL_UNIT_SECOND:  relunit = UDAT_RELATIVE_SECONDS; break;
-        default: // a unit that the above method does not handle
-            status = U_UNSUPPORTED_ERROR;
-            return appendTo;
-    }
-=======
         return;
     }
->>>>>>> upstream-releases
     UDateDirection direction = UDAT_DIRECTION_NEXT;
     if (std::signbit(offset)) { // needed to handle -0.0
         direction = UDAT_DIRECTION_LAST;
         offset = -offset;
     }
-<<<<<<< HEAD
-    if (direction != UDAT_DIRECTION_LAST && direction != UDAT_DIRECTION_NEXT) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return appendTo;
-    }
-    int32_t bFuture = direction == UDAT_DIRECTION_NEXT ? 1 : 0;
-    FieldPosition pos(FieldPosition::DONT_CARE);
-
-    UnicodeString result;
-    UnicodeString formattedNumber;
-
-    StandardPlural::Form pluralIndex = QuantityFormatter::selectPlural(
-        offset, **fNumberFormat, **fPluralRules, formattedNumber, pos,
-        status);
-
-    const SimpleFormatter* formatter =
-        fCache->getRelativeDateTimeUnitFormatter(fStyle, unit, bFuture, pluralIndex);
-    if (formatter == nullptr) {
-        // TODO: WARN - look at quantity formatter's action with an error.
-        status = U_INVALID_FORMAT_ERROR;
-        return appendTo;
-    }
-    formatter->format(formattedNumber, result, status);
-    adjustForContext(result);
-    return appendTo.append(result);
-||||||| merged common ancestors
-    return format(offset, direction, relunit, appendTo, status);
-=======
     if (direction != UDAT_DIRECTION_LAST && direction != UDAT_DIRECTION_NEXT) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
         return;
@@ -1152,7 +1037,6 @@ void RelativeDateTimeFormatter::formatNumericImpl(
     number::impl::SimpleModifier modifier(*formatter, kRDTLiteralField, false);
     modifier.formatAsPrefixSuffix(
         output.getStringRef(), 0, output.getStringRef().length(), status);
->>>>>>> upstream-releases
 }
 
 UnicodeString& RelativeDateTimeFormatter::format(
@@ -1193,26 +1077,10 @@ void RelativeDateTimeFormatter::formatAbsoluteImpl(
     }
 
     // Get string using fallback.
-<<<<<<< HEAD
-    UnicodeString result;
-    result.fastCopyFrom(fCache->getAbsoluteUnitString(fStyle, unit, direction));
-    if (fOptBreakIterator != nullptr) {
-        adjustForContext(result);
-    }
-    return appendTo.append(result);
-||||||| merged common ancestors
-    UnicodeString result;
-    result.fastCopyFrom(fCache->getAbsoluteUnitString(fStyle, unit, direction));
-    if (fOptBreakIterator != NULL) {
-        adjustForContext(result);
-    }
-    return appendTo.append(result);
-=======
     output.getStringRef().append(
         fCache->getAbsoluteUnitString(fStyle, unit, direction),
         kRDTLiteralField,
         status);
->>>>>>> upstream-releases
 }
 
 UnicodeString& RelativeDateTimeFormatter::format(
@@ -1292,33 +1160,9 @@ void RelativeDateTimeFormatter::formatRelativeImpl(
         default: break;
     }
     if (direction != UDAT_DIRECTION_COUNT && absunit != UDAT_ABSOLUTE_UNIT_COUNT) {
-<<<<<<< HEAD
-        const UnicodeString &unitFormatString =
-            fCache->getAbsoluteUnitString(fStyle, absunit, direction);
-        if (!unitFormatString.isEmpty()) {
-            if (fOptBreakIterator != nullptr) {
-                UnicodeString result(unitFormatString);
-                adjustForContext(result);
-                return appendTo.append(result);
-            } else {
-                return appendTo.append(unitFormatString);
-            }
-||||||| merged common ancestors
-        const UnicodeString &unitFormatString =
-            fCache->getAbsoluteUnitString(fStyle, absunit, direction);
-        if (!unitFormatString.isEmpty()) {
-            if (fOptBreakIterator != NULL) {
-                UnicodeString result(unitFormatString);
-                adjustForContext(result);
-                return appendTo.append(result);
-            } else {
-                return appendTo.append(unitFormatString);
-            }
-=======
         formatAbsoluteImpl(direction, absunit, output, status);
         if (output.getStringRef().length() != 0) {
             return;
->>>>>>> upstream-releases
         }
     }
     // otherwise fallback to formatNumeric
@@ -1332,16 +1176,8 @@ UnicodeString& RelativeDateTimeFormatter::combineDateAndTime(
             timeString, relativeDateString, appendTo, status);
 }
 
-<<<<<<< HEAD
-void RelativeDateTimeFormatter::adjustForContext(UnicodeString &str) const {
-    if (fOptBreakIterator == nullptr
-||||||| merged common ancestors
-void RelativeDateTimeFormatter::adjustForContext(UnicodeString &str) const {
-    if (fOptBreakIterator == NULL
-=======
 UnicodeString& RelativeDateTimeFormatter::adjustForContext(UnicodeString &str) const {
     if (fOptBreakIterator == nullptr
->>>>>>> upstream-releases
         || str.length() == 0 || !u_islower(str.char32At(0))) {
         return str;
     }

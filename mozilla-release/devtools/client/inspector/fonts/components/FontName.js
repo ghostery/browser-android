@@ -37,29 +37,6 @@ class FontName extends PureComponent {
   }
 
   render() {
-<<<<<<< HEAD
-    const options = {
-      className: "font-name",
-    };
-
-    if (Services.prefs.getBoolPref(FONT_HIGHLIGHTER_PREF)) {
-      options.onMouseOver = this.onNameMouseOver;
-      options.onMouseOut = this.onNameMouseOut;
-    }
-
-    return dom.span(options, this.props.font.name);
-||||||| merged common ancestors
-    const options = {
-      className: "font-name"
-    };
-
-    if (Services.prefs.getBoolPref(FONT_HIGHLIGHTER_PREF)) {
-      options.onMouseOver = this.onNameMouseOver;
-      options.onMouseOut = this.onNameMouseOut;
-    }
-
-    return dom.span(options, this.props.font.name);
-=======
     return dom.span(
       {
         className: "font-name",
@@ -68,7 +45,6 @@ class FontName extends PureComponent {
       },
       this.props.font.name
     );
->>>>>>> upstream-releases
   }
 }
 

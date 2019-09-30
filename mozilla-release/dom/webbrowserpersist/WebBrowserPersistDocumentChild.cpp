@@ -20,30 +20,12 @@ WebBrowserPersistDocumentChild::WebBrowserPersistDocumentChild() {}
 
 WebBrowserPersistDocumentChild::~WebBrowserPersistDocumentChild() = default;
 
-<<<<<<< HEAD
-void WebBrowserPersistDocumentChild::Start(nsIDocument* aDocument) {
-  RefPtr<WebBrowserPersistLocalDocument> doc;
-  if (aDocument) {
-    doc = new WebBrowserPersistLocalDocument(aDocument);
-  }
-  Start(doc);
-||||||| merged common ancestors
-void
-WebBrowserPersistDocumentChild::Start(nsIDocument* aDocument)
-{
-    RefPtr<WebBrowserPersistLocalDocument> doc;
-    if (aDocument) {
-        doc = new WebBrowserPersistLocalDocument(aDocument);
-    }
-    Start(doc);
-=======
 void WebBrowserPersistDocumentChild::Start(dom::Document* aDocument) {
   RefPtr<WebBrowserPersistLocalDocument> doc;
   if (aDocument) {
     doc = new WebBrowserPersistLocalDocument(aDocument);
   }
   Start(doc);
->>>>>>> upstream-releases
 }
 
 void WebBrowserPersistDocumentChild::Start(

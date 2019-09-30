@@ -28,37 +28,19 @@ README.md: index.html
 	    | $(EXPAND) $(EXPANDFLAGS) > $@
 
 messages.json: .FORCE
-<<<<<<< HEAD
-	$(CURL) $(CURLFLAGS) -O \
-	  https://sideshowbarker.net/nightlies/jar/vnu.jar
-	$(JAVA) $(JAVAFLAGS) -cp vnu.jar nu.validator.client.TestRunner \
-	  --ignore=html-its --write-messages $@
-||||||| merged common ancestors
-=======
 	$(CURL) $(CURLFLAGS) -O -L \
 	  https://github.com/validator/validator/releases/download/jar/vnu.jar
 	$(JAVA) $(JAVAFLAGS) -cp vnu.jar nu.validator.client.TestRunner \
 	  --ignore=html-its --write-messages $@
->>>>>>> upstream-releases
 	$(PYTHON) $(PYTHONFLAGS) -mjson.tool $@ > $@.tmp
 	mv $@.tmp $@
 
-<<<<<<< HEAD
-test: .FORCE
-	$(CURL) $(CURLFLAGS) -O \
-	  https://sideshowbarker.net/nightlies/jar/vnu.jar
-	$(JAVA) $(JAVAFLAGS) -cp vnu.jar nu.validator.client.TestRunner \
-	  --ignore=html-its messages.json
-
-||||||| merged common ancestors
-=======
 test: .FORCE
 	$(CURL) $(CURLFLAGS) -O -L \
 	  https://github.com/validator/validator/releases/download/jar/vnu.jar
 	$(JAVA) $(JAVAFLAGS) -cp vnu.jar nu.validator.client.TestRunner \
 	  --ignore=html-its messages.json
 
->>>>>>> upstream-releases
 push:
 	cd .. \
 	  && git push $(VNU_TEST_REPO) `git subtree split -P conformance-checkers`:master --force \

@@ -172,22 +172,10 @@ function testResponses() {
 }
 
 function testBlob() {
-<<<<<<< HEAD
-  return fetch(path + '/file_XHR_binary2.bin').then((r) => {
-    is(r.status, 200, "status should match");
-    return r.blob().then((b) => {
-      is(b.size, 65536, "blob should have size 65536");
-||||||| merged common ancestors
-  return fetch(path + '/file_XHR_binary2.bin').then((r) => {
-    ok(r.status, 200, "status should match");
-    return r.blob().then((b) => {
-      ok(b.size, 65536, "blob should have size 65536");
-=======
   return fetch(path + "/file_XHR_binary2.bin").then(r => {
     is(r.status, 200, "status should match");
     return r.blob().then(b => {
       is(b.size, 65536, "blob should have size 65536");
->>>>>>> upstream-releases
       return readAsArrayBuffer(b).then(function(ab) {
         var u8 = new Uint8Array(ab);
         for (var i = 0; i < 65536; i++) {
@@ -224,19 +212,9 @@ function testFormDataSend() {
     body: fd,
   });
 
-<<<<<<< HEAD
-  return fetch(req).then((r) => {
-    is(r.status, 200, "status should match");
-    return r.json().then((response) => {
-||||||| merged common ancestors
-  return fetch(req).then((r) => {
-    ok(r.status, 200, "status should match");
-    return r.json().then((response) => {
-=======
   return fetch(req).then(r => {
     is(r.status, 200, "status should match");
     return r.json().then(response => {
->>>>>>> upstream-releases
       for (var entry of response) {
         if (
           entry.headers["Content-Disposition"] != 'form-data; name="string"'

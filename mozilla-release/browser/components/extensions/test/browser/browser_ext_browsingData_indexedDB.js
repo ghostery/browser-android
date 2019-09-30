@@ -61,16 +61,6 @@ add_task(async function testIndexedDB() {
       let origins = [];
       Services.qms.getUsage(request => {
         for (let i = 0; i < request.result.length; ++i) {
-<<<<<<< HEAD
-          if (request.result[i].usage === 0) {
-            continue;
-          }
-          if (request.result[i].origin.startsWith("http://mochi.test") ||
-              request.result[i].origin.startsWith("http://example.com")) {
-||||||| merged common ancestors
-          if (request.result[i].origin.startsWith("http://mochi.test") ||
-              request.result[i].origin.startsWith("http://example.com")) {
-=======
           if (request.result[i].usage === 0) {
             continue;
           }
@@ -78,7 +68,6 @@ add_task(async function testIndexedDB() {
             request.result[i].origin.startsWith("http://mochi.test") ||
             request.result[i].origin.startsWith("http://example.com")
           ) {
->>>>>>> upstream-releases
             origins.push(request.result[i].origin);
           }
         }

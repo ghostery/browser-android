@@ -28,29 +28,12 @@ class SharedCertVerifier : public mozilla::psm::CertVerifier {
                      BRNameMatchingPolicy::Mode nameMatchingMode,
                      NetscapeStepUpPolicy netscapeStepUpPolicy,
                      CertificateTransparencyMode ctMode,
-<<<<<<< HEAD
-                     DistrustedCAPolicy distrustedCAPolicy)
-      : mozilla::psm::CertVerifier(
-            odc, osc, ocspSoftTimeout, ocspHardTimeout, certShortLifetimeInDays,
-            pinningMode, sha1Mode, nameMatchingMode, netscapeStepUpPolicy,
-            ctMode, distrustedCAPolicy) {}
-||||||| merged common ancestors
-                     DistrustedCAPolicy distrustedCAPolicy)
-    : mozilla::psm::CertVerifier(odc, osc, ocspSoftTimeout,
-                                 ocspHardTimeout, certShortLifetimeInDays,
-                                 pinningMode, sha1Mode, nameMatchingMode,
-                                 netscapeStepUpPolicy, ctMode,
-                                 distrustedCAPolicy)
-  {
-  }
-=======
                      DistrustedCAPolicy distrustedCAPolicy,
                      const Vector<EnterpriseCert>& thirdPartyCerts)
       : mozilla::psm::CertVerifier(
             odc, osc, ocspSoftTimeout, ocspHardTimeout, certShortLifetimeInDays,
             pinningMode, sha1Mode, nameMatchingMode, netscapeStepUpPolicy,
             ctMode, distrustedCAPolicy, thirdPartyCerts) {}
->>>>>>> upstream-releases
 };
 
 }  // namespace psm

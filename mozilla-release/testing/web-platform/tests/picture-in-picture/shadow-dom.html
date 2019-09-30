@@ -78,16 +78,11 @@ promise_test(async t => {
     assert_equals(getComputedStyle(ids.host3).color, 'rgb(0, 0, 127)');
     assert_equals(getComputedStyle(ids.host2).color, 'rgb(0, 0, 254)');
   })
-<<<<<<< HEAD
-  .then(() => document.exitPictureInPicture());
-||||||| merged common ancestors
-=======
   .then(() => document.exitPictureInPicture())
   .then(() => {
     assert_equals(getComputedStyle(ids.video).color, 'rgb(0, 254, 0)');
     assert_equals(getComputedStyle(ids.host3).color, 'rgb(0, 0, 127)');
     assert_equals(getComputedStyle(ids.host2).color, 'rgb(0, 0, 254)');
   });
->>>>>>> upstream-releases
 });
 </script>

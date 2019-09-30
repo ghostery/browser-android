@@ -24,20 +24,9 @@ class IMFYCbCrImage : public RecyclingPlanarYCbCrImage {
 
   TextureClient* GetTextureClient(KnowsCompositor* aKnowsCompositor) override;
 
-<<<<<<< HEAD
- protected:
-  TextureClient* GetD3D11TextureClient(KnowsCompositor* aForwarder);
-  static bool CopyDataToTexture(const Data& aData, ID3D11Device* aDevice,
-||||||| merged common ancestors
-protected:
-  TextureClient* GetD3D11TextureClient(KnowsCompositor* aForwarder);
-  static bool CopyDataToTexture(const Data& aData,
-                                ID3D11Device* aDevice,
-=======
  protected:
   TextureClient* GetD3D11TextureClient(KnowsCompositor* aKnowsCompositor);
   static bool CopyDataToTexture(const Data& aData, ID3D11Device* aDevice,
->>>>>>> upstream-releases
                                 DXGIYCbCrTextureData* aTextureData);
 
   virtual ~IMFYCbCrImage();

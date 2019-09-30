@@ -27,27 +27,12 @@ namespace IPC {
 class SerializedLoadContext {
  public:
   SerializedLoadContext()
-<<<<<<< HEAD
-      : mIsNotNull(false),
-        mIsPrivateBitValid(false),
-        mIsContent(false),
-        mUseRemoteTabs(false),
-        mUseTrackingProtection(false) {
-||||||| merged common ancestors
-    : mIsNotNull(false)
-    , mIsPrivateBitValid(false)
-    , mIsContent(false)
-    , mUseRemoteTabs(false)
-    , mUseTrackingProtection(false)
-  {
-=======
       : mIsNotNull(false),
         mIsPrivateBitValid(false),
         mIsContent(false),
         mUseRemoteTabs(false),
         mUseRemoteSubframes(false),
         mUseTrackingProtection(false) {
->>>>>>> upstream-releases
     Init(nullptr);
   }
 

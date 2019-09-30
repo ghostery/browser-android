@@ -319,10 +319,6 @@ class nsAttrValue {
     return DoParseHTMLDimension(aInput, false);
   }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
   /**
    * Parse a string into a nonzero dimension value.  This implements
    * https://html.spec.whatwg.org/multipage/#rules-for-parsing-non-zero-dimension-values
@@ -335,7 +331,6 @@ class nsAttrValue {
     return DoParseHTMLDimension(aInput, true);
   }
 
->>>>>>> upstream-releases
   /**
    * Parse a string value into an integer.
    *

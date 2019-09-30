@@ -30,21 +30,9 @@ nsApplicationCacheService::nsApplicationCacheService() {
 
 NS_IMETHODIMP
 nsApplicationCacheService::BuildGroupIDForInfo(
-<<<<<<< HEAD
-    nsIURI *aManifestURL, nsILoadContextInfo *aLoadContextInfo,
-    nsACString &_result) {
-  nsresult rv;
-||||||| merged common ancestors
-    nsIURI *aManifestURL,
-    nsILoadContextInfo *aLoadContextInfo,
-    nsACString &_result)
-{
-    nsresult rv;
-=======
     nsIURI* aManifestURL, nsILoadContextInfo* aLoadContextInfo,
     nsACString& _result) {
   nsresult rv;
->>>>>>> upstream-releases
 
   nsAutoCString originSuffix;
   if (aLoadContextInfo) {
@@ -60,21 +48,9 @@ nsApplicationCacheService::BuildGroupIDForInfo(
 
 NS_IMETHODIMP
 nsApplicationCacheService::BuildGroupIDForSuffix(
-<<<<<<< HEAD
-    nsIURI *aManifestURL, nsACString const &aOriginSuffix,
-    nsACString &_result) {
-  nsresult rv;
-||||||| merged common ancestors
-    nsIURI *aManifestURL,
-    nsACString const &aOriginSuffix,
-    nsACString &_result)
-{
-    nsresult rv;
-=======
     nsIURI* aManifestURL, nsACString const& aOriginSuffix,
     nsACString& _result) {
   nsresult rv;
->>>>>>> upstream-releases
 
   rv = nsOfflineCacheDevice::BuildApplicationCacheGroupID(
       aManifestURL, aOriginSuffix, _result);
@@ -84,27 +60,6 @@ nsApplicationCacheService::BuildGroupIDForSuffix(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::CreateApplicationCache(const nsACString &group,
-                                                  nsIApplicationCache **out) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->CreateApplicationCache(group, out);
-||||||| merged common ancestors
-nsApplicationCacheService::CreateApplicationCache(const nsACString &group,
-                                                  nsIApplicationCache **out)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->CreateApplicationCache(group, out);
-=======
 nsApplicationCacheService::CreateApplicationCache(const nsACString& group,
                                                   nsIApplicationCache** out) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
@@ -113,37 +68,9 @@ nsApplicationCacheService::CreateApplicationCache(const nsACString& group,
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->CreateApplicationCache(group, out);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::CreateCustomApplicationCache(
-    const nsACString &group, nsIFile *profileDir, int32_t quota,
-    nsIApplicationCache **out) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetCustomOfflineDevice(profileDir, quota,
-                                                      getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->CreateApplicationCache(group, out);
-||||||| merged common ancestors
-nsApplicationCacheService::CreateCustomApplicationCache(const nsACString & group,
-                                                        nsIFile *profileDir,
-                                                        int32_t quota,
-                                                        nsIApplicationCache **out)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetCustomOfflineDevice(profileDir,
-                                                        quota,
-                                                        getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->CreateApplicationCache(group, out);
-=======
 nsApplicationCacheService::CreateCustomApplicationCache(
     const nsACString& group, nsIFile* profileDir, int32_t quota,
     nsIApplicationCache** out) {
@@ -154,31 +81,9 @@ nsApplicationCacheService::CreateCustomApplicationCache(
                                                       getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->CreateApplicationCache(group, out);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::GetApplicationCache(const nsACString &clientID,
-                                               nsIApplicationCache **out) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->GetApplicationCache(clientID, out);
-||||||| merged common ancestors
-nsApplicationCacheService::GetApplicationCache(const nsACString &clientID,
-                                               nsIApplicationCache **out)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->GetApplicationCache(clientID, out);
-=======
 nsApplicationCacheService::GetApplicationCache(const nsACString& clientID,
                                                nsIApplicationCache** out) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
@@ -187,31 +92,9 @@ nsApplicationCacheService::GetApplicationCache(const nsACString& clientID,
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->GetApplicationCache(clientID, out);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::GetActiveCache(const nsACString &group,
-                                          nsIApplicationCache **out) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->GetActiveCache(group, out);
-||||||| merged common ancestors
-nsApplicationCacheService::GetActiveCache(const nsACString &group,
-                                          nsIApplicationCache **out)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->GetActiveCache(group, out);
-=======
 nsApplicationCacheService::GetActiveCache(const nsACString& group,
                                           nsIApplicationCache** out) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
@@ -220,22 +103,11 @@ nsApplicationCacheService::GetActiveCache(const nsACString& group,
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->GetActiveCache(group, out);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::DeactivateGroup(const nsACString &group) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-nsApplicationCacheService::DeactivateGroup(const nsACString &group)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-=======
 nsApplicationCacheService::DeactivateGroup(const nsACString& group) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
   RefPtr<nsOfflineCacheDevice> device;
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
@@ -244,27 +116,6 @@ nsApplicationCacheService::DeactivateGroup(const nsACString& group) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::ChooseApplicationCache(
-    const nsACString &key, nsILoadContextInfo *aLoadContextInfo,
-    nsIApplicationCache **out) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsApplicationCacheService::ChooseApplicationCache(const nsACString &key,
-                                                  nsILoadContextInfo *aLoadContextInfo,
-                                                  nsIApplicationCache **out)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsApplicationCacheService::ChooseApplicationCache(
     const nsACString& key, nsILoadContextInfo* aLoadContextInfo,
     nsIApplicationCache** out) {
@@ -273,33 +124,11 @@ nsApplicationCacheService::ChooseApplicationCache(
   RefPtr<nsOfflineCacheDevice> device;
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   return device->ChooseApplicationCache(key, aLoadContextInfo, out);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::CacheOpportunistically(nsIApplicationCache *cache,
-                                                  const nsACString &key) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->CacheOpportunistically(cache, key);
-||||||| merged common ancestors
-nsApplicationCacheService::CacheOpportunistically(nsIApplicationCache* cache,
-                                                  const nsACString &key)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->CacheOpportunistically(cache, key);
-=======
 nsApplicationCacheService::CacheOpportunistically(nsIApplicationCache* cache,
                                                   const nsACString& key) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
@@ -308,22 +137,11 @@ nsApplicationCacheService::CacheOpportunistically(nsIApplicationCache* cache,
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->CacheOpportunistically(cache, key);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::Evict(nsILoadContextInfo *aInfo) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-nsApplicationCacheService::Evict(nsILoadContextInfo *aInfo)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-=======
 nsApplicationCacheService::Evict(nsILoadContextInfo* aInfo) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
   RefPtr<nsOfflineCacheDevice> device;
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
@@ -332,38 +150,6 @@ nsApplicationCacheService::Evict(nsILoadContextInfo* aInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::EvictMatchingOriginAttributes(
-    nsAString const &aPattern) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  mozilla::OriginAttributesPattern pattern;
-  if (!pattern.Init(aPattern)) {
-    NS_ERROR(
-        "Could not parse OriginAttributesPattern JSON in "
-        "clear-origin-attributes-data notification");
-    return NS_ERROR_FAILURE;
-  }
-||||||| merged common ancestors
-nsApplicationCacheService::EvictMatchingOriginAttributes(nsAString const &aPattern)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    mozilla::OriginAttributesPattern pattern;
-    if (!pattern.Init(aPattern)) {
-        NS_ERROR("Could not parse OriginAttributesPattern JSON in clear-origin-attributes-data notification");
-        return NS_ERROR_FAILURE;
-    }
-=======
 nsApplicationCacheService::EvictMatchingOriginAttributes(
     nsAString const& aPattern) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
@@ -379,32 +165,11 @@ nsApplicationCacheService::EvictMatchingOriginAttributes(
         "clear-origin-attributes-data notification");
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   return device->Evict(pattern);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::GetGroups(uint32_t *count, char ***keys) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->GetGroups(count, keys);
-||||||| merged common ancestors
-nsApplicationCacheService::GetGroups(uint32_t *count,
-                                     char ***keys)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->GetGroups(count, keys);
-=======
 nsApplicationCacheService::GetGroups(nsTArray<nsCString>& keys) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
 
@@ -412,30 +177,9 @@ nsApplicationCacheService::GetGroups(nsTArray<nsCString>& keys) {
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->GetGroups(keys);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsApplicationCacheService::GetGroupsTimeOrdered(uint32_t *count, char ***keys) {
-  if (!mCacheService) return NS_ERROR_UNEXPECTED;
-
-  RefPtr<nsOfflineCacheDevice> device;
-  nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-  NS_ENSURE_SUCCESS(rv, rv);
-  return device->GetGroupsTimeOrdered(count, keys);
-||||||| merged common ancestors
-nsApplicationCacheService::GetGroupsTimeOrdered(uint32_t *count,
-                                                char ***keys)
-{
-    if (!mCacheService)
-        return NS_ERROR_UNEXPECTED;
-
-    RefPtr<nsOfflineCacheDevice> device;
-    nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
-    NS_ENSURE_SUCCESS(rv, rv);
-    return device->GetGroupsTimeOrdered(count, keys);
-=======
 nsApplicationCacheService::GetGroupsTimeOrdered(nsTArray<nsCString>& keys) {
   if (!mCacheService) return NS_ERROR_UNEXPECTED;
 
@@ -443,7 +187,6 @@ nsApplicationCacheService::GetGroupsTimeOrdered(nsTArray<nsCString>& keys) {
   nsresult rv = mCacheService->GetOfflineDevice(getter_AddRefs(device));
   NS_ENSURE_SUCCESS(rv, rv);
   return device->GetGroupsTimeOrdered(keys);
->>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -457,25 +200,11 @@ class AppCacheClearDataObserver final : public nsIObserver {
  public:
   NS_DECL_ISUPPORTS
 
-<<<<<<< HEAD
-  // nsIObserver implementation.
-  NS_IMETHOD
-  Observe(nsISupports *aSubject, const char *aTopic,
-          const char16_t *aData) override {
-    MOZ_ASSERT(!nsCRT::strcmp(aTopic, "clear-origin-attributes-data"));
-||||||| merged common ancestors
-    // nsIObserver implementation.
-    NS_IMETHOD
-    Observe(nsISupports *aSubject, const char *aTopic, const char16_t *aData) override
-    {
-        MOZ_ASSERT(!nsCRT::strcmp(aTopic, "clear-origin-attributes-data"));
-=======
   // nsIObserver implementation.
   NS_IMETHOD
   Observe(nsISupports* aSubject, const char* aTopic,
           const char16_t* aData) override {
     MOZ_ASSERT(!nsCRT::strcmp(aTopic, "clear-origin-attributes-data"));
->>>>>>> upstream-releases
 
     nsresult rv;
 

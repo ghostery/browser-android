@@ -15,20 +15,9 @@ use crate::stylesheets::{CssRule, Origin, StylesheetInDocument};
 use crate::values::CssUrl;
 use cssparser::SourceLocation;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use str::CssStringWriter;
-=======
 use std::mem::ManuallyDrop;
->>>>>>> upstream-releases
 use style_traits::{CssWriter, ToCss};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use stylesheets::{CssRule, Origin, StylesheetInDocument};
-use values::CssUrl;
-=======
 use to_shmem::{SharedMemoryBuilder, ToShmem};
->>>>>>> upstream-releases
 
 /// With asynchronous stylesheet parsing, we can't synchronously create a
 /// GeckoStyleSheet. So we use this placeholder instead.

@@ -6,13 +6,8 @@
 
 #![deny(missing_docs)]
 
-<<<<<<< HEAD
-use crate::stylesheets::UrlExtraData;
-||||||| merged common ancestors
-=======
 use crate::selector_parser::SelectorImpl;
 use crate::stylesheets::UrlExtraData;
->>>>>>> upstream-releases
 use cssparser::{BasicParseErrorKind, ParseErrorKind, SourceLocation, Token};
 use selectors::SelectorList;
 use std::fmt;

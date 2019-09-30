@@ -49,24 +49,10 @@ typedef uint32_t PromiseId;
 
 // This class is used on the main thread only.
 // Note: its addref/release is not (and can't be) thread safe!
-<<<<<<< HEAD
-class MediaKeys final : public nsISupports,
-                        public nsWrapperCache,
-                        public SupportsWeakPtr<MediaKeys>,
-                        public DecoderDoctorLifeLogger<MediaKeys> {
-||||||| merged common ancestors
-class MediaKeys final
-  : public nsISupports
-  , public nsWrapperCache
-  , public SupportsWeakPtr<MediaKeys>
-  , public DecoderDoctorLifeLogger<MediaKeys>
-{
-=======
 class MediaKeys final : public nsIDocumentActivity,
                         public nsWrapperCache,
                         public SupportsWeakPtr<MediaKeys>,
                         public DecoderDoctorLifeLogger<MediaKeys> {
->>>>>>> upstream-releases
   ~MediaKeys();
 
  public:
@@ -167,18 +153,9 @@ class MediaKeys final : public nsIDocumentActivity,
 
  private:
   // Instantiate CDMProxy instance.
-<<<<<<< HEAD
-  // It could be MediaDrmCDMProxy (Widevine on Fennec) or ChromiumCDMProxy (the
-  // rest).
-  already_AddRefed<CDMProxy> CreateCDMProxy(nsIEventTarget* aMainThread);
-||||||| merged common ancestors
-  // It could be MediaDrmCDMProxy (Widevine on Fennec) or ChromiumCDMProxy (the rest).
-  already_AddRefed<CDMProxy> CreateCDMProxy(nsIEventTarget* aMainThread);
-=======
   // It could be MediaDrmCDMProxy (Widevine on Fennec) or ChromiumCDMProxy (the
   // rest).
   already_AddRefed<CDMProxy> CreateCDMProxy(nsISerialEventTarget* aMainThread);
->>>>>>> upstream-releases
 
   // Removes promise from mPromises, and returns it.
   already_AddRefed<DetailedPromise> RetrievePromise(PromiseId aId);

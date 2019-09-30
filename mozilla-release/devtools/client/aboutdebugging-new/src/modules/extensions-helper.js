@@ -33,39 +33,10 @@ let addonToolbox = null;
  * @param {DebuggerClient} client
  *        Required for debugging.
  */
-<<<<<<< HEAD
-exports.debugRemoteAddon = async function(id, client) {
-  const addonTargetFront = await client.mainRoot.getAddon({ id });
-
-  // Close previous addon debugging toolbox.
-  closeToolbox();
-||||||| merged common ancestors
-exports.debugRemoteAddon = async function(id, client) {
-  const { addons } = await client.listAddons();
-  const addonForm = addons.find(addon => addon.id === id);
-
-  // Close previous addon debugging toolbox.
-  closeToolbox();
-=======
 exports.debugAddon = async function(id, client) {
   const addonFront = await client.mainRoot.getAddon({ id });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const options = {
-    activeTab: addonTargetFront,
-    chrome: true,
-    client,
-  };
-||||||| merged common ancestors
-  const options = {
-    form: addonForm,
-    chrome: true,
-    client,
-  };
-=======
   const target = await addonFront.connect();
->>>>>>> upstream-releases
 
   // Close previous addon debugging toolbox.
   if (addonToolbox) {

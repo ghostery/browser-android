@@ -29,14 +29,6 @@
 #include "mozilla/StaticPtr.h"
 #include "mozilla/StyleSheet.h"
 #include "mozilla/UniquePtr.h"
-<<<<<<< HEAD
-#include "nsContentUtils.h"  // For AddScriptBlocker().
-#include "nsCRT.h"
-||||||| merged common ancestors
-#include "nsAutoPtr.h"
-#include "nsContentUtils.h" // For AddScriptBlocker().
-#include "nsCRT.h"
-=======
 #include "mozilla/WeakPtr.h"
 #include "mozilla/dom/HTMLDocumentBinding.h"
 #include "mozilla/layers/FocusTarget.h"
@@ -51,7 +43,6 @@
 #include "nsHashKeys.h"
 #include "nsIContent.h"
 #include "nsIImageLoadingContent.h"
->>>>>>> upstream-releases
 #include "nsIObserver.h"
 #include "nsISelectionController.h"
 #include "nsIWidget.h"
@@ -1067,20 +1058,6 @@ class PresShell final : public nsStubDocumentObserver,
    */
   MOZ_CAN_RUN_SCRIPT void DidPaintWindow();
 
-<<<<<<< HEAD
-class PresShell final : public nsIPresShell,
-                        public nsISelectionController,
-                        public nsIObserver,
-                        public nsSupportsWeakReference {
-  typedef layers::FocusTarget FocusTarget;
-||||||| merged common ancestors
-class PresShell final : public nsIPresShell,
-                        public nsISelectionController,
-                        public nsIObserver,
-                        public nsSupportsWeakReference
-{
-  typedef layers::FocusTarget FocusTarget;
-=======
   bool IsVisible() const;
   bool IsUnderHiddenEmbedderElement() const {
     return mUnderHiddenEmbedderElement;
@@ -1101,18 +1078,9 @@ class PresShell final : public nsIPresShell,
    * doesn't change the value of the internal counter.
    */
   void RespectDisplayportSuppression(bool aEnabled);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  PresShell();
-||||||| merged common ancestors
-public:
-  PresShell();
-=======
   /* Whether or not the displayport is currently suppressed. */
   bool IsDisplayportSuppressed();
->>>>>>> upstream-releases
 
   void AddSizeOfIncludingThis(nsWindowSizes& aWindowSizes) const;
 
@@ -1123,20 +1091,9 @@ public:
     return mFontSizeInflationEmPerLine;
   }
 
-<<<<<<< HEAD
-  void Init(nsIDocument* aDocument, nsPresContext* aPresContext,
-            nsViewManager* aViewManager, UniquePtr<ServoStyleSet> aStyleSet);
-  void Destroy() override;
-||||||| merged common ancestors
-  void Init(nsIDocument* aDocument, nsPresContext* aPresContext,
-            nsViewManager* aViewManager,
-            UniquePtr<ServoStyleSet> aStyleSet);
-  void Destroy() override;
-=======
   uint32_t FontSizeInflationMinTwips() const {
     return mFontSizeInflationMinTwips;
   }
->>>>>>> upstream-releases
 
   uint32_t FontSizeInflationLineThreshold() const {
     return mFontSizeInflationLineThreshold;
@@ -1150,171 +1107,13 @@ public:
     return mFontSizeInflationDisabledInMasterProcess;
   }
 
-<<<<<<< HEAD
-  already_AddRefed<nsISelectionController>
-  GetSelectionControllerForFocusedContent(
-      nsIContent** aFocusedContent = nullptr) override;
-||||||| merged common ancestors
-  already_AddRefed<nsISelectionController>
-    GetSelectionControllerForFocusedContent(
-      nsIContent** aFocusedContent = nullptr) override;
-=======
   bool FontSizeInflationEnabled() const { return mFontSizeInflationEnabled; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_IMETHOD SetDisplaySelection(int16_t aToggle) override;
-  NS_IMETHOD GetDisplaySelection(int16_t* aToggle) override;
-  NS_IMETHOD ScrollSelectionIntoView(RawSelectionType aRawSelectionType,
-                                     SelectionRegion aRegion,
-                                     int16_t aFlags) override;
-  NS_IMETHOD RepaintSelection(RawSelectionType aRawSelectionType) override;
-||||||| merged common ancestors
-  NS_IMETHOD SetDisplaySelection(int16_t aToggle) override;
-  NS_IMETHOD GetDisplaySelection(int16_t *aToggle) override;
-  NS_IMETHOD ScrollSelectionIntoView(RawSelectionType aRawSelectionType,
-                                     SelectionRegion aRegion,
-                                     int16_t aFlags) override;
-  NS_IMETHOD RepaintSelection(RawSelectionType aRawSelectionType) override;
-=======
   /**
    * Recomputes whether font-size inflation is enabled.
    */
   void RecomputeFontSizeInflationEnabled();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult Initialize() override;
-  nsresult ResizeReflow(
-      nscoord aWidth, nscoord aHeight, nscoord aOldWidth = 0,
-      nscoord aOldHeight = 0,
-      ResizeReflowOptions aOptions = ResizeReflowOptions::eBSizeExact) override;
-  nsresult ResizeReflowIgnoreOverride(
-      nscoord aWidth, nscoord aHeight, nscoord aOldWidth, nscoord aOldHeight,
-      ResizeReflowOptions aOptions = ResizeReflowOptions::eBSizeExact) override;
-  nsIPageSequenceFrame* GetPageSequenceFrame() const override;
-  nsCanvasFrame* GetCanvasFrame() const override;
-
-  void FrameNeedsReflow(
-      nsIFrame* aFrame, IntrinsicDirty aIntrinsicDirty, nsFrameState aBitToAdd,
-      ReflowRootHandling aRootHandling = eInferFromBitToAdd) override;
-  void FrameNeedsToContinueReflow(nsIFrame* aFrame) override;
-  void CancelAllPendingReflows() override;
-  void DoFlushPendingNotifications(FlushType aType) override;
-  void DoFlushPendingNotifications(ChangesToFlush aType) override;
-
-  /**
-   * Post a callback that should be handled after reflow has finished.
-   */
-  nsresult PostReflowCallback(nsIReflowCallback* aCallback) override;
-  void CancelReflowCallback(nsIReflowCallback* aCallback) override;
-
-  void ClearFrameRefs(nsIFrame* aFrame) override;
-  already_AddRefed<gfxContext> CreateReferenceRenderingContext() override;
-  nsresult GoToAnchor(const nsAString& aAnchorName, bool aScroll,
-                      uint32_t aAdditionalScrollFlags = 0) override;
-  nsresult ScrollToAnchor() override;
-
-  nsresult ScrollContentIntoView(nsIContent* aContent, ScrollAxis aVertical,
-                                 ScrollAxis aHorizontal,
-                                 uint32_t aFlags) override;
-  bool ScrollFrameRectIntoView(nsIFrame* aFrame, const nsRect& aRect,
-                               ScrollAxis aVertical, ScrollAxis aHorizontal,
-                               uint32_t aFlags) override;
-  nsRectVisibility GetRectVisibility(nsIFrame* aFrame, const nsRect& aRect,
-                                     nscoord aMinTwips) const override;
-
-  void SetIgnoreFrameDestruction(bool aIgnore) override;
-  void NotifyDestroyingFrame(nsIFrame* aFrame) override;
-
-  nsresult CaptureHistoryState(
-      nsILayoutHistoryState** aLayoutHistoryState) override;
-
-  void UnsuppressPainting() override;
-
-  nsresult GetAgentStyleSheets(nsTArray<RefPtr<StyleSheet>>& aSheets) override;
-  nsresult SetAgentStyleSheets(
-      const nsTArray<RefPtr<StyleSheet>>& aSheets) override;
-
-  nsresult AddOverrideStyleSheet(StyleSheet* aSheet) override;
-  nsresult RemoveOverrideStyleSheet(StyleSheet* aSheet) override;
-
-  nsresult HandleEventWithTarget(
-      WidgetEvent* aEvent, nsIFrame* aFrame, nsIContent* aContent,
-      nsEventStatus* aStatus, bool aIsHandlingNativeEvent = false,
-      nsIContent** aTargetContent = nullptr,
-      nsIContent* aOverrideClickTarget = nullptr) override;
-||||||| merged common ancestors
-  nsresult Initialize() override;
-  nsresult ResizeReflow(nscoord aWidth, nscoord aHeight,
-                        nscoord aOldWidth = 0, nscoord aOldHeight = 0,
-                        ResizeReflowOptions aOptions =
-                        ResizeReflowOptions::eBSizeExact) override;
-  nsresult ResizeReflowIgnoreOverride(nscoord aWidth, nscoord aHeight,
-                                      nscoord aOldWidth, nscoord aOldHeight,
-                                      ResizeReflowOptions aOptions =
-                                      ResizeReflowOptions::eBSizeExact) override;
-  nsIPageSequenceFrame* GetPageSequenceFrame() const override;
-  nsCanvasFrame* GetCanvasFrame() const override;
-
-  void FrameNeedsReflow(nsIFrame *aFrame, IntrinsicDirty aIntrinsicDirty,
-                                nsFrameState aBitToAdd,
-                                ReflowRootHandling aRootHandling =
-                                  eInferFromBitToAdd) override;
-  void FrameNeedsToContinueReflow(nsIFrame *aFrame) override;
-  void CancelAllPendingReflows() override;
-  void DoFlushPendingNotifications(FlushType aType) override;
-  void DoFlushPendingNotifications(ChangesToFlush aType) override;
-
-  /**
-   * Post a callback that should be handled after reflow has finished.
-   */
-  nsresult PostReflowCallback(nsIReflowCallback* aCallback) override;
-  void CancelReflowCallback(nsIReflowCallback* aCallback) override;
-
-  void ClearFrameRefs(nsIFrame* aFrame) override;
-  already_AddRefed<gfxContext> CreateReferenceRenderingContext() override;
-  nsresult GoToAnchor(const nsAString& aAnchorName, bool aScroll,
-                              uint32_t aAdditionalScrollFlags = 0) override;
-  nsresult ScrollToAnchor() override;
-
-  nsresult ScrollContentIntoView(nsIContent* aContent,
-                                                     ScrollAxis  aVertical,
-                                                     ScrollAxis  aHorizontal,
-                                                     uint32_t    aFlags) override;
-  bool ScrollFrameRectIntoView(nsIFrame*     aFrame,
-                                       const nsRect& aRect,
-                                       ScrollAxis    aVertical,
-                                       ScrollAxis    aHorizontal,
-                                       uint32_t      aFlags) override;
-  nsRectVisibility GetRectVisibility(nsIFrame *aFrame,
-                                             const nsRect &aRect,
-                                             nscoord aMinTwips) const override;
-
-  void SetIgnoreFrameDestruction(bool aIgnore) override;
-  void NotifyDestroyingFrame(nsIFrame* aFrame) override;
-
-  nsresult CaptureHistoryState(nsILayoutHistoryState** aLayoutHistoryState) override;
-
-  void UnsuppressPainting() override;
-
-  nsresult GetAgentStyleSheets(
-      nsTArray<RefPtr<StyleSheet>>& aSheets) override;
-  nsresult SetAgentStyleSheets(
-      const nsTArray<RefPtr<StyleSheet>>& aSheets) override;
-
-  nsresult AddOverrideStyleSheet(StyleSheet* aSheet) override;
-  nsresult RemoveOverrideStyleSheet(StyleSheet* aSheet) override;
-
-  nsresult HandleEventWithTarget(WidgetEvent* aEvent,
-                                 nsIFrame* aFrame,
-                                 nsIContent* aContent,
-                                 nsEventStatus* aStatus,
-                                 bool aIsHandlingNativeEvent = false,
-                                 nsIContent** aTargetContent = nullptr,
-                                 nsIContent* aOverrideClickTarget = nullptr)
-                                 override;
-=======
   /**
    * Return true if the most recent interruptible reflow was interrupted.
    */
@@ -1327,7 +1126,6 @@ public:
   bool SuppressInterruptibleReflows() const {
     return mWasLastReflowInterrupted;
   }
->>>>>>> upstream-releases
 
   //////////////////////////////////////////////////////////////////////////////
   // Approximate frame visibility tracking public API.
@@ -1341,16 +1139,6 @@ public:
    */
   void ScheduleApproximateFrameVisibilityUpdateSoon();
 
-<<<<<<< HEAD
-  nsresult RenderDocument(const nsRect& aRect, uint32_t aFlags,
-                          nscolor aBackgroundColor,
-                          gfxContext* aThebesContext) override;
-||||||| merged common ancestors
-  nsresult RenderDocument(const nsRect& aRect,
-                          uint32_t aFlags,
-                          nscolor aBackgroundColor,
-                          gfxContext* aThebesContext) override;
-=======
   /**
    * Schedule an update of the list of approximately visible frames "now". The
    * update runs asynchronously, but it will be posted to the event loop
@@ -1393,22 +1181,7 @@ public:
   bool HasHandledUserInput() const { return mHasHandledUserInput; }
 
   void FireResizeEvent();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  already_AddRefed<SourceSurface> RenderNode(nsINode* aNode,
-                                             const Maybe<CSSIntRegion>& aRegion,
-                                             const LayoutDeviceIntPoint aPoint,
-                                             LayoutDeviceIntRect* aScreenRect,
-                                             uint32_t aFlags) override;
-||||||| merged common ancestors
-  already_AddRefed<SourceSurface>
-  RenderNode(nsINode* aNode,
-             const Maybe<CSSIntRegion>& aRegion,
-             const LayoutDeviceIntPoint aPoint,
-             LayoutDeviceIntRect* aScreenRect,
-             uint32_t aFlags) override;
-=======
   void NativeAnonymousContentRemoved(nsIContent* aAnonContent);
 
   /**
@@ -1420,33 +1193,14 @@ public:
         aKeyPressEventModel ==
         dom::Document_Binding::KEYPRESS_EVENT_MODEL_SPLIT;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  already_AddRefed<SourceSurface> RenderSelection(
-      dom::Selection* aSelection, const LayoutDeviceIntPoint aPoint,
-      LayoutDeviceIntRect* aScreenRect, uint32_t aFlags) override;
-||||||| merged common ancestors
-  already_AddRefed<SourceSurface>
-  RenderSelection(dom::Selection* aSelection,
-                  const LayoutDeviceIntPoint aPoint,
-                  LayoutDeviceIntRect* aScreenRect,
-                  uint32_t aFlags) override;
-=======
   bool AddRefreshObserver(nsARefreshObserver* aObserver, FlushType aFlushType);
   bool RemoveRefreshObserver(nsARefreshObserver* aObserver,
                              FlushType aFlushType);
->>>>>>> upstream-releases
 
   bool AddPostRefreshObserver(nsAPostRefreshObserver* aObserver);
   bool RemovePostRefreshObserver(nsAPostRefreshObserver* aObserver);
 
-<<<<<<< HEAD
-  already_AddRefed<nsPIDOMWindowOuter> GetFocusedDOMWindowInOurWindow()
-      override;
-||||||| merged common ancestors
-  already_AddRefed<nsPIDOMWindowOuter> GetFocusedDOMWindowInOurWindow() override;
-=======
   // Represents an update to the visual scroll offset that will be sent to APZ.
   // The update type is used to determine priority compared to other scroll
   // updates.
@@ -1455,7 +1209,6 @@ public:
     FrameMetrics::ScrollOffsetUpdateType mUpdateType;
     bool mAcknowledged = false;
   };
->>>>>>> upstream-releases
 
   // Ask APZ in the next transaction to scroll to the given visual viewport
   // offset (relative to the document).
@@ -1491,27 +1244,9 @@ public:
    */
   bool IsNeverPainting() { return mIsNeverPainting; }
 
-<<<<<<< HEAD
-  nsresult SetResolution(float aResolution) override {
-    return SetResolutionImpl(aResolution, /* aScaleToResolution = */ false,
-                             nsGkAtoms::other);
-||||||| merged common ancestors
-  nsresult SetResolution(float aResolution) override {
-    return SetResolutionImpl(aResolution, /* aScaleToResolution = */ false);
-=======
   void SetNeverPainting(bool aNeverPainting) {
     mIsNeverPainting = aNeverPainting;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  nsresult SetResolutionAndScaleTo(float aResolution,
-                                   nsAtom* aOrigin) override {
-    return SetResolutionImpl(aResolution, /* aScaleToResolution = */ true,
-                             aOrigin);
-||||||| merged common ancestors
-  nsresult SetResolutionAndScaleTo(float aResolution) override {
-    return SetResolutionImpl(aResolution, /* aScaleToResolution = */ true);
-=======
 
   /**
    * True if a reflow event has been scheduled, or is going to be scheduled
@@ -1519,32 +1254,8 @@ public:
    */
   bool HasPendingReflow() const {
     return mObservingLayoutFlushes || mReflowContinueTimer;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  bool ScaleToResolution() const override;
-  bool IsResolutionUpdated() const override { return mResolutionUpdated; }
-  void SetResolutionUpdated(bool aUpdated) override {
-    mResolutionUpdated = aUpdated;
-  }
-  float GetCumulativeResolution() override;
-  float GetCumulativeNonRootScaleResolution() override;
-  void SetRestoreResolution(float aResolution,
-                            LayoutDeviceIntSize aDisplaySize) override;
-||||||| merged common ancestors
-  bool ScaleToResolution() const override;
-  float GetCumulativeResolution() override;
-  float GetCumulativeNonRootScaleResolution() override;
-  void SetRestoreResolution(float aResolution,
-                            LayoutDeviceIntSize aDisplaySize) override;
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // nsIViewObserver interface
-||||||| merged common ancestors
-  //nsIViewObserver interface
-=======
   void SyncWindowProperties(nsView* aView);
 
   Document* GetPrimaryContentDocument();
@@ -1597,60 +1308,9 @@ public:
   void SysColorChanged() { mPresContext->SysColorChanged(); }
   void ThemeChanged() { mPresContext->ThemeChanged(); }
   void BackingScaleFactorChanged() { mPresContext->UIResolutionChangedSync(); }
->>>>>>> upstream-releases
 
   MOZ_CAN_RUN_SCRIPT
   void Paint(nsView* aViewToPaint, const nsRegion& aDirtyRegion,
-<<<<<<< HEAD
-             uint32_t aFlags) override;
-  MOZ_CAN_RUN_SCRIPT nsresult HandleEvent(nsIFrame* aFrame,
-                                          WidgetGUIEvent* aEvent,
-                                          bool aDontRetargetEvents,
-                                          nsEventStatus* aEventStatus) override;
-  nsresult HandleDOMEventWithTarget(nsIContent* aTargetContent,
-                                    WidgetEvent* aEvent,
-                                    nsEventStatus* aStatus) override;
-  nsresult HandleDOMEventWithTarget(nsIContent* aTargetContent,
-                                    dom::Event* aEvent,
-                                    nsEventStatus* aStatus) override;
-  bool ShouldIgnoreInvalidation() override;
-  void WillPaint() override;
-  void WillPaintWindow() override;
-  void DidPaintWindow() override;
-  void ScheduleViewManagerFlush(PaintType aType = PAINT_DEFAULT) override;
-  void ClearMouseCaptureOnView(nsView* aView) override;
-  bool IsVisible() override;
-  void SuppressDisplayport(bool aEnabled) override;
-  void RespectDisplayportSuppression(bool aEnabled) override;
-  bool IsDisplayportSuppressed() override;
-
-  already_AddRefed<AccessibleCaretEventHub> GetAccessibleCaretEventHub()
-      const override;
-||||||| merged common ancestors
-             uint32_t aFlags) override;
-  MOZ_CAN_RUN_SCRIPT nsresult HandleEvent(nsIFrame* aFrame,
-                                          WidgetGUIEvent* aEvent,
-                                          bool aDontRetargetEvents,
-                                          nsEventStatus* aEventStatus) override;
-  nsresult HandleDOMEventWithTarget(nsIContent* aTargetContent,
-                                    WidgetEvent* aEvent,
-                                    nsEventStatus* aStatus) override;
-  nsresult HandleDOMEventWithTarget(nsIContent* aTargetContent,
-                                    dom::Event* aEvent,
-                                    nsEventStatus* aStatus) override;
-  bool ShouldIgnoreInvalidation() override;
-  void WillPaint() override;
-  void WillPaintWindow() override;
-  void DidPaintWindow() override;
-  void ScheduleViewManagerFlush(PaintType aType = PAINT_DEFAULT) override;
-  void ClearMouseCaptureOnView(nsView* aView) override;
-  bool IsVisible() override;
-  void SuppressDisplayport(bool aEnabled) override;
-  void RespectDisplayportSuppression(bool aEnabled) override;
-  bool IsDisplayportSuppressed() override;
-
-  already_AddRefed<AccessibleCaretEventHub> GetAccessibleCaretEventHub() const override;
-=======
              PaintFlags aFlags);
 
   /**
@@ -1671,24 +1331,13 @@ public:
    * short cut optimizations.
    */
   void ScheduleViewManagerFlush(PaintType aType = PaintType::Default);
->>>>>>> upstream-releases
 
   // caret handling
   NS_IMETHOD SetCaretEnabled(bool aInEnable) override;
   NS_IMETHOD SetCaretReadOnly(bool aReadOnly) override;
   NS_IMETHOD GetCaretEnabled(bool* aOutEnabled) override;
   NS_IMETHOD SetCaretVisibilityDuringSelection(bool aVisibility) override;
-<<<<<<< HEAD
   NS_IMETHOD GetCaretVisible(bool* _retval) override;
-  void SetCaret(nsCaret* aNewCaret) override;
-  void RestoreCaret() override;
-||||||| merged common ancestors
-  NS_IMETHOD GetCaretVisible(bool *_retval) override;
-  void SetCaret(nsCaret *aNewCaret) override;
-  void RestoreCaret() override;
-=======
-  NS_IMETHOD GetCaretVisible(bool* _retval) override;
->>>>>>> upstream-releases
 
   /**
    * Should the images have borders etc.  Actual visual effects are determined
@@ -1699,11 +1348,6 @@ public:
    *                   if false visual selection effects are disabled
    */
   NS_IMETHOD SetSelectionFlags(int16_t aInEnable) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetSelectionFlags(int16_t* aOutEnable) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetSelectionFlags(int16_t *aOutEnable) override;
-=======
   NS_IMETHOD GetSelectionFlags(int16_t* aOutEnable) override;
 
   /**
@@ -1712,7 +1356,6 @@ public:
    *           as set by SetDisplayNonTextSelection
    */
   int16_t GetSelectionFlags() const { return mSelectionFlags; }
->>>>>>> upstream-releases
 
   // nsISelectionController
 
@@ -1756,45 +1399,13 @@ public:
 
   NS_DECL_NSIOBSERVER
 
-<<<<<<< HEAD
-#ifdef MOZ_REFLOW_PERF
-  void DumpReflows() override;
-  void CountReflows(const char* aName, nsIFrame* aFrame) override;
-  void PaintCount(const char* aName, gfxContext* aRenderingContext,
-                  nsPresContext* aPresContext, nsIFrame* aFrame,
-                  const nsPoint& aOffset, uint32_t aColor) override;
-  void SetPaintFrameCount(bool aOn) override;
-  bool IsPaintingFrameCounts() override;
-#endif
-||||||| merged common ancestors
-#ifdef MOZ_REFLOW_PERF
-  void DumpReflows() override;
-  void CountReflows(const char * aName, nsIFrame * aFrame) override;
-  void PaintCount(const char * aName,
-                  gfxContext* aRenderingContext,
-                  nsPresContext* aPresContext,
-                  nsIFrame * aFrame,
-                  const nsPoint& aOffset,
-                  uint32_t aColor) override;
-  void SetPaintFrameCount(bool aOn) override;
-  bool IsPaintingFrameCounts() override;
-#endif
-=======
   // Inline methods defined in PresShellInlines.h
   inline void EnsureStyleFlush();
   inline void SetNeedStyleFlush();
   inline void SetNeedLayoutFlush();
   inline void SetNeedThrottledAnimationFlush();
   inline ServoStyleSet* StyleSet() const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef DEBUG
-  void ListComputedStyles(FILE* out, int32_t aIndent = 0) override;
-||||||| merged common ancestors
-#ifdef DEBUG
-  void ListComputedStyles(FILE *out, int32_t aIndent = 0) override;
-=======
   /**
    * Whether we might need a flush for the given flush type.  If this
    * function returns false, we definitely don't need to flush.
@@ -1814,22 +1425,13 @@ public:
            aType >= FlushType::Display || mNeedThrottledAnimationFlush ||
            mInFlush;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ListStyleSheets(FILE* out, int32_t aIndent = 0) override;
-#endif
-||||||| merged common ancestors
-  void ListStyleSheets(FILE *out, int32_t aIndent = 0) override;
-#endif
-=======
   /**
    * Returns true if we might need to flush layout, even if we haven't scheduled
    * one yet (as opposed to HasPendingReflow, which returns true if a flush is
    * scheduled or will soon be scheduled).
    */
   bool NeedLayoutFlush() const { return mNeedLayoutFlush; }
->>>>>>> upstream-releases
 
   bool NeedStyleFlush() const { return mNeedStyleFlush; }
 
@@ -2115,38 +1717,12 @@ public:
    */
   void NotifyDestroyingFrame(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-  void AddCanvasBackgroundColorItem(nsDisplayListBuilder& aBuilder,
-                                    nsDisplayList& aList, nsIFrame* aFrame,
-                                    const nsRect& aBounds,
-                                    nscolor aBackstopColor,
-                                    uint32_t aFlags) override;
-||||||| merged common ancestors
-  void AddCanvasBackgroundColorItem(nsDisplayListBuilder& aBuilder,
-                                    nsDisplayList& aList,
-                                    nsIFrame* aFrame,
-                                    const nsRect& aBounds,
-                                    nscolor aBackstopColor,
-                                    uint32_t aFlags) override;
-=======
 #ifdef DEBUG
   nsIFrame* GetDrawEventTargetFrame() { return mDrawEventTargetFrame; }
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void AddPrintPreviewBackgroundItem(nsDisplayListBuilder& aBuilder,
-                                     nsDisplayList& aList, nsIFrame* aFrame,
-                                     const nsRect& aBounds) override;
-||||||| merged common ancestors
-  void AddPrintPreviewBackgroundItem(nsDisplayListBuilder& aBuilder,
-                                     nsDisplayList& aList,
-                                     nsIFrame* aFrame,
-                                     const nsRect& aBounds) override;
-=======
  private:
   ~PresShell();
->>>>>>> upstream-releases
 
   /**
    * Refresh observer management.
@@ -2178,32 +1754,12 @@ public:
   void PopCurrentEventInfo();
   nsIContent* GetCurrentEventContent();
 
-<<<<<<< HEAD
-  bool IsLayoutFlushObserver() override {
-    return GetPresContext()->RefreshDriver()->IsLayoutFlushObserver(this);
-  }
-||||||| merged common ancestors
-  bool IsLayoutFlushObserver() override
-  {
-    return GetPresContext()->RefreshDriver()->
-      IsLayoutFlushObserver(this);
-  }
-=======
   friend class ::nsRefreshDriver;
   friend class ::nsAutoCauseReflowNotifier;
->>>>>>> upstream-releases
 
   void WillCauseReflow();
   void DidCauseReflow();
 
-<<<<<<< HEAD
-  void AddSizeOfIncludingThis(nsWindowSizes& aWindowSizes) const override;
-  size_t SizeOfTextRuns(MallocSizeOf aMallocSizeOf) const;
-||||||| merged common ancestors
-  void AddSizeOfIncludingThis(nsWindowSizes& aWindowSizes)
-    const override;
-  size_t SizeOfTextRuns(MallocSizeOf aMallocSizeOf) const;
-=======
   void CancelPostedReflowCallbacks();
   void FlushPendingScrollAnchorAdjustments();
 
@@ -2216,109 +1772,18 @@ public:
 #endif
 
   void WillDoReflow();
->>>>>>> upstream-releases
 
   // This data is stored as a content property (nsGkAtoms::scrolling) on
   // mContentToScrollTo when we have a pending ScrollIntoView.
   struct ScrollIntoViewData {
     ScrollAxis mContentScrollVAxis;
     ScrollAxis mContentScrollHAxis;
-<<<<<<< HEAD
-    uint32_t mContentToScrollToFlags;
-||||||| merged common ancestors
-    uint32_t   mContentToScrollToFlags;
-=======
     ScrollFlags mContentToScrollToFlags;
->>>>>>> upstream-releases
   };
 
-<<<<<<< HEAD
-  //////////////////////////////////////////////////////////////////////////////
-  // Approximate frame visibility tracking public API.
-  //////////////////////////////////////////////////////////////////////////////
-
-  void ScheduleApproximateFrameVisibilityUpdateSoon() override;
-  void ScheduleApproximateFrameVisibilityUpdateNow() override;
-
-  void RebuildApproximateFrameVisibilityDisplayList(
-      const nsDisplayList& aList) override;
-  void RebuildApproximateFrameVisibility(nsRect* aRect = nullptr,
-                                         bool aRemoveOnly = false) override;
-
-  void EnsureFrameInApproximatelyVisibleList(nsIFrame* aFrame) override;
-  void RemoveFrameFromApproximatelyVisibleList(nsIFrame* aFrame) override;
-
-  bool AssumeAllFramesVisible() override;
-
-  bool CanDispatchEvent(const WidgetGUIEvent* aEvent = nullptr) const override;
-
-  void SetNextPaintCompressed() { mNextPaintCompressed = true; }
-
-  void NotifyStyleSheetServiceSheetAdded(StyleSheet* aSheet,
-                                         uint32_t aSheetType) override;
-  void NotifyStyleSheetServiceSheetRemoved(StyleSheet* aSheet,
-                                           uint32_t aSheetType) override;
-
-  bool HasHandledUserInput() const override { return mHasHandledUserInput; }
-
-  void FireResizeEvent() override;
-
-  static PresShell* GetShellForEventTarget(nsIFrame* aFrame,
-                                           nsIContent* aContent);
-  static PresShell* GetShellForTouchEvent(WidgetGUIEvent* aEvent);
-
- private:
-  ~PresShell();
-
-  void HandlePostedReflowCallbacks(bool aInterruptible);
-  void CancelPostedReflowCallbacks();
-||||||| merged common ancestors
-
-  //////////////////////////////////////////////////////////////////////////////
-  // Approximate frame visibility tracking public API.
-  //////////////////////////////////////////////////////////////////////////////
-
-  void ScheduleApproximateFrameVisibilityUpdateSoon() override;
-  void ScheduleApproximateFrameVisibilityUpdateNow() override;
-
-  void RebuildApproximateFrameVisibilityDisplayList(const nsDisplayList& aList) override;
-  void RebuildApproximateFrameVisibility(nsRect* aRect = nullptr,
-                                         bool aRemoveOnly = false) override;
-
-  void EnsureFrameInApproximatelyVisibleList(nsIFrame* aFrame) override;
-  void RemoveFrameFromApproximatelyVisibleList(nsIFrame* aFrame) override;
-
-  bool AssumeAllFramesVisible() override;
-
-  bool CanDispatchEvent(const WidgetGUIEvent* aEvent = nullptr) const override;
-
-  void SetNextPaintCompressed() { mNextPaintCompressed = true; }
-
-  void NotifyStyleSheetServiceSheetAdded(StyleSheet* aSheet,
-                                         uint32_t aSheetType) override;
-  void NotifyStyleSheetServiceSheetRemoved(StyleSheet* aSheet,
-                                           uint32_t aSheetType) override;
-
-  bool HasHandledUserInput() const override {
-    return mHasHandledUserInput;
-  }
-
-  void FireResizeEvent() override;
-
-  static PresShell* GetShellForEventTarget(nsIFrame* aFrame,
-                                           nsIContent* aContent);
-  static PresShell* GetShellForTouchEvent(WidgetGUIEvent* aEvent);
-
-private:
-  ~PresShell();
-
-  void HandlePostedReflowCallbacks(bool aInterruptible);
-  void CancelPostedReflowCallbacks();
-=======
   static LazyLogModule gLog;
 
   DOMHighResTimeStamp GetPerformanceNowUnclamped();
->>>>>>> upstream-releases
 
   // The callback for the mReflowContinueTimer timer.
   static void sReflowContinueCallback(nsITimer* aTimer, void* aPresShell);
@@ -2334,63 +1799,16 @@ private:
 
   friend class ::AutoPointerEventTargetUpdater;
 
-<<<<<<< HEAD
-  nsresult DispatchEventToDOM(WidgetEvent* aEvent, nsEventStatus* aStatus,
-                              nsPresShellEventCB* aEventCB);
-  void DispatchTouchEventToDOM(WidgetEvent* aEvent, nsEventStatus* aStatus,
-                               nsPresShellEventCB* aEventCB, bool aTouchIsNew);
-
-  void WillDoReflow();
-||||||| merged common ancestors
-  nsresult DispatchEventToDOM(WidgetEvent* aEvent,
-                              nsEventStatus* aStatus,
-                              nsPresShellEventCB* aEventCB);
-  void DispatchTouchEventToDOM(WidgetEvent* aEvent,
-                               nsEventStatus* aStatus,
-                               nsPresShellEventCB* aEventCB,
-                               bool aTouchIsNew);
-
-  void     WillDoReflow();
-=======
   // ProcessReflowCommands returns whether we processed all our dirty roots
   // without interruptions.
   MOZ_CAN_RUN_SCRIPT bool ProcessReflowCommands(bool aInterruptible);
->>>>>>> upstream-releases
 
   /**
    * Callback handler for whether reflow happened.
    *
    * @param aInterruptible Whether or not reflow interruption is allowed.
    */
-<<<<<<< HEAD
-  void DidDoReflow(bool aInterruptible);
-  // ProcessReflowCommands returns whether we processed all our dirty roots
-  // without interruptions.
-  bool ProcessReflowCommands(bool aInterruptible);
-  // MaybeScheduleReflow checks if posting a reflow is needed, then checks if
-  // the last reflow was interrupted. In the interrupted case ScheduleReflow is
-  // called off a timer, otherwise it is called directly.
-  void MaybeScheduleReflow();
-  // Actually schedules a reflow.  This should only be called by
-  // MaybeScheduleReflow and the reflow timer ScheduleReflowOffTimer
-  // sets up.
-  void ScheduleReflow();
-||||||| merged common ancestors
-  void     DidDoReflow(bool aInterruptible);
-  // ProcessReflowCommands returns whether we processed all our dirty roots
-  // without interruptions.
-  bool     ProcessReflowCommands(bool aInterruptible);
-  // MaybeScheduleReflow checks if posting a reflow is needed, then checks if
-  // the last reflow was interrupted. In the interrupted case ScheduleReflow is
-  // called off a timer, otherwise it is called directly.
-  void     MaybeScheduleReflow();
-  // Actually schedules a reflow.  This should only be called by
-  // MaybeScheduleReflow and the reflow timer ScheduleReflowOffTimer
-  // sets up.
-  void     ScheduleReflow();
-=======
   MOZ_CAN_RUN_SCRIPT void DidDoReflow(bool aInterruptible);
->>>>>>> upstream-releases
 
   MOZ_CAN_RUN_SCRIPT void HandlePostedReflowCallbacks(bool aInterruptible);
 
@@ -2427,17 +1845,8 @@ private:
 
   struct RenderingState {
     explicit RenderingState(PresShell* aPresShell)
-<<<<<<< HEAD
-        : mResolution(aPresShell->mResolution),
-          mRenderFlags(aPresShell->mRenderFlags) {}
-||||||| merged common ancestors
-      : mResolution(aPresShell->mResolution)
-      , mRenderFlags(aPresShell->mRenderFlags)
-    { }
-=======
         : mResolution(aPresShell->mResolution),
           mRenderingStateFlags(aPresShell->mRenderingStateFlags) {}
->>>>>>> upstream-releases
     Maybe<float> mResolution;
     RenderingStateFlags mRenderingStateFlags;
   };
@@ -2446,39 +1855,14 @@ private:
     explicit AutoSaveRestoreRenderingState(PresShell* aPresShell)
         : mPresShell(aPresShell), mOldState(aPresShell) {}
 
-<<<<<<< HEAD
-    ~AutoSaveRestoreRenderingState() {
-      mPresShell->mRenderFlags = mOldState.mRenderFlags;
-||||||| merged common ancestors
-    ~AutoSaveRestoreRenderingState()
-    {
-      mPresShell->mRenderFlags = mOldState.mRenderFlags;
-=======
     ~AutoSaveRestoreRenderingState() {
       mPresShell->mRenderingStateFlags = mOldState.mRenderingStateFlags;
->>>>>>> upstream-releases
       mPresShell->mResolution = mOldState.mResolution;
     }
 
     PresShell* mPresShell;
     RenderingState mOldState;
   };
-<<<<<<< HEAD
-  static RenderFlags ChangeFlag(RenderFlags aFlags, bool aOnOff,
-                                eRenderFlag aFlag) {
-    return aOnOff ? (aFlags | aFlag) : (aFlag & ~aFlag);
-  }
-
-||||||| merged common ancestors
-  static RenderFlags ChangeFlag(RenderFlags aFlags, bool aOnOff,
-                                eRenderFlag aFlag)
-  {
-    return aOnOff ? (aFlags | aFlag) : (aFlag & ~aFlag);
-  }
-
-
-=======
->>>>>>> upstream-releases
   void SetRenderingState(const RenderingState& aState);
 
   friend class ::nsPresShellEventCB;
@@ -2505,39 +1889,8 @@ private:
    * aPoint - reference point, typically the mouse position
    * aScreenRect - [out] set to the area of the screen the painted area should
    *               be displayed at
-<<<<<<< HEAD
-   * aFlags - set RENDER_AUTO_SCALE to scale down large images, but it must not
-   *          be set if a custom image was specified
-   */
-  already_AddRefed<SourceSurface> PaintRangePaintInfo(
-      const nsTArray<UniquePtr<RangePaintInfo>>& aItems,
-      dom::Selection* aSelection, const Maybe<CSSIntRegion>& aRegion,
-      nsRect aArea, const LayoutDeviceIntPoint aPoint,
-      LayoutDeviceIntRect* aScreenRect, uint32_t aFlags);
-
-  /**
-   * Methods to handle changes to user and UA sheet lists that we get
-   * notified about.
-||||||| merged common ancestors
-   * aFlags - set RENDER_AUTO_SCALE to scale down large images, but it must not
-   *          be set if a custom image was specified
-   */
-  already_AddRefed<SourceSurface>
-  PaintRangePaintInfo(const nsTArray<UniquePtr<RangePaintInfo>>& aItems,
-                      dom::Selection* aSelection,
-                      const Maybe<CSSIntRegion>& aRegion,
-                      nsRect aArea,
-                      const LayoutDeviceIntPoint aPoint,
-                      LayoutDeviceIntRect* aScreenRect,
-                      uint32_t aFlags);
-
-  /**
-   * Methods to handle changes to user and UA sheet lists that we get
-   * notified about.
-=======
    * aFlags - set RenderImageFlags::AutoScale to scale down large images, but
    * it must not be set if a custom image was specified
->>>>>>> upstream-releases
    */
   already_AddRefed<SourceSurface> PaintRangePaintInfo(
       const nsTArray<UniquePtr<RangePaintInfo>>& aItems,
@@ -2553,49 +1906,10 @@ private:
 
   void MaybeReleaseCapturingContent();
 
-<<<<<<< HEAD
-  nsresult HandleRetargetedEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
-                                 nsIContent* aTarget) {
-    PushCurrentEventInfo(nullptr, nullptr);
-    mCurrentEventContent = aTarget;
-    nsresult rv = NS_OK;
-    if (GetCurrentEventFrame()) {
-      rv = HandleEventInternal(aEvent, aStatus, true);
-    }
-    PopCurrentEventInfo();
-    return rv;
-  }
-
   class DelayedEvent {
    public:
     virtual ~DelayedEvent() {}
     virtual void Dispatch() {}
-||||||| merged common ancestors
-  nsresult HandleRetargetedEvent(WidgetEvent* aEvent,
-                                 nsEventStatus* aStatus,
-                                 nsIContent* aTarget)
-  {
-    PushCurrentEventInfo(nullptr, nullptr);
-    mCurrentEventContent = aTarget;
-    nsresult rv = NS_OK;
-    if (GetCurrentEventFrame()) {
-      rv = HandleEventInternal(aEvent, aStatus, true);
-    }
-    PopCurrentEventInfo();
-    return rv;
-  }
-
-  class DelayedEvent
-  {
-  public:
-    virtual ~DelayedEvent() { }
-    virtual void Dispatch() { }
-=======
-  class DelayedEvent {
-   public:
-    virtual ~DelayedEvent() {}
-    virtual void Dispatch() {}
->>>>>>> upstream-releases
     virtual bool IsKeyPressEvent() { return false; }
   };
 
@@ -2662,33 +1976,11 @@ private:
   void QueryIsActive();
   nsresult UpdateImageLockingState();
 
-<<<<<<< HEAD
-  bool InZombieDocument(nsIContent* aContent);
-  already_AddRefed<nsIPresShell> GetParentPresShellForEventHandling();
-  MOZ_CAN_RUN_SCRIPT nsresult
-  RetargetEventToParent(WidgetGUIEvent* aEvent, nsEventStatus* aEventStatus);
-||||||| merged common ancestors
-  bool InZombieDocument(nsIContent *aContent);
-  already_AddRefed<nsIPresShell> GetParentPresShellForEventHandling();
-  MOZ_CAN_RUN_SCRIPT nsresult
-  RetargetEventToParent(WidgetGUIEvent* aEvent, nsEventStatus* aEventStatus);
-=======
   already_AddRefed<PresShell> GetParentPresShellForEventHandling();
->>>>>>> upstream-releases
 
   /**
    * EventHandler is implementation of PresShell::HandleEvent().
    */
-<<<<<<< HEAD
-  nsresult HandleEventInternal(WidgetEvent* aEvent, nsEventStatus* aStatus,
-                               bool aIsHandlingNativeEvent,
-                               nsIContent* aOverrideClickTarget = nullptr);
-||||||| merged common ancestors
-  nsresult HandleEventInternal(WidgetEvent* aEvent,
-                               nsEventStatus* aStatus,
-                               bool aIsHandlingNativeEvent,
-                               nsIContent* aOverrideClickTarget = nullptr);
-=======
   class MOZ_STACK_CLASS EventHandler final {
    public:
     EventHandler() = delete;
@@ -3219,7 +2511,6 @@ private:
       return HandleEventWithCurrentEventInfo(aGUIEvent, aEventStatus, true,
                                              overrideClickTarget);
     }
->>>>>>> upstream-releases
 
     /**
      * HandleEventWithFrameForPresShell() handles aGUIEvent with the frame
@@ -3441,21 +2732,6 @@ private:
       EventHandler& mEventHandler;
     };
 
-<<<<<<< HEAD
-  // Get the selected item and coordinates in device pixels relative to root
-  // document's root view for element, first ensuring the element is onscreen
-  void GetCurrentItemAndPositionForElement(dom::Element* aFocusedElement,
-                                           nsIContent** aTargetToUse,
-                                           LayoutDeviceIntPoint& aTargetPt,
-                                           nsIWidget* aRootWidget);
-||||||| merged common ancestors
-  // Get the selected item and coordinates in device pixels relative to root
-  // document's root view for element, first ensuring the element is onscreen
-  void GetCurrentItemAndPositionForElement(dom::Element* aFocusedElement,
-                                           nsIContent **aTargetToUse,
-                                           LayoutDeviceIntPoint& aTargetPt,
-                                           nsIWidget *aRootWidget);
-=======
     /**
      * Wrapper methods to access methods of mPresShell.
      */
@@ -3475,7 +2751,6 @@ private:
     void PushDelayedEventIntoQueue(UniquePtr<DelayedEvent>&& aDelayedEvent) {
       mPresShell->mDelayedEvents.AppendElement(std::move(aDelayedEvent));
     }
->>>>>>> upstream-releases
 
     OwningNonNull<PresShell> mPresShell;
     AutoCurrentEventInfoSetter* mCurrentEventInfoSetter;
@@ -3491,40 +2766,6 @@ private:
   // The callback for the mPaintSuppressionTimer timer.
   static void sPaintSuppressionCallback(nsITimer* aTimer, void* aPresShell);
 
-<<<<<<< HEAD
-  // The callback for the mReflowContinueTimer timer.
-  static void sReflowContinueCallback(nsITimer* aTimer, void* aPresShell);
-  bool ScheduleReflowOffTimer();
-
-  // Widget notificiations
-  void WindowSizeMoveDone() override;
-  void SysColorChanged() override { mPresContext->SysColorChanged(); }
-  void ThemeChanged() override { mPresContext->ThemeChanged(); }
-  void BackingScaleFactorChanged() override {
-    mPresContext->UIResolutionChangedSync();
-  }
-  nsIDocument* GetPrimaryContentDocument() override;
-
-  void PausePainting() override;
-  void ResumePainting() override;
-
-||||||| merged common ancestors
-  // The callback for the mReflowContinueTimer timer.
-  static void sReflowContinueCallback(nsITimer* aTimer, void* aPresShell);
-  bool ScheduleReflowOffTimer();
-
-  // Widget notificiations
-  void WindowSizeMoveDone() override;
-  void SysColorChanged() override { mPresContext->SysColorChanged(); }
-  void ThemeChanged() override { mPresContext->ThemeChanged(); }
-  void BackingScaleFactorChanged() override { mPresContext->UIResolutionChangedSync(); }
-  nsIDocument* GetPrimaryContentDocument() override;
-
-  void PausePainting() override;
-  void ResumePainting() override;
-
-=======
->>>>>>> upstream-releases
   //////////////////////////////////////////////////////////////////////////////
   // Approximate frame visibility tracking implementation.
   //////////////////////////////////////////////////////////////////////////////
@@ -3555,13 +2796,6 @@ private:
   nsresult SetResolutionImpl(float aResolution, bool aScaleToResolution,
                              nsAtom* aOrigin);
 
-<<<<<<< HEAD
-  nsIContent* GetOverrideClickTarget(WidgetGUIEvent* aEvent, nsIFrame* aFrame);
-||||||| merged common ancestors
-  nsIContent* GetOverrideClickTarget(WidgetGUIEvent* aEvent,
-                                     nsIFrame* aFrame);
-=======
->>>>>>> upstream-releases
 #ifdef DEBUG
   MOZ_CAN_RUN_SCRIPT_BOUNDARY bool VerifyIncrementalReflow();
   MOZ_CAN_RUN_SCRIPT_BOUNDARY void DoVerifyReflow();
@@ -3613,13 +2847,6 @@ private:
   nsTHashtable<nsPtrHashKey<void>> mAllocatedPointers;
 #endif
 
-<<<<<<< HEAD
-#ifdef MOZ_REFLOW_PERF
-  UniquePtr<ReflowCountMgr> mReflowCountMgr;
-||||||| merged common ancestors
-#ifdef MOZ_REFLOW_PERF
-  ReflowCountMgr* mReflowCountMgr;
-=======
   // A list of stack weak frames. This is a pointer to the last item in the
   // list.
   AutoWeakFrame* mAutoWeakFrames;
@@ -3678,7 +2905,6 @@ private:
   // one that caused a call to SetNeedStyleFlush() / SetNeedLayoutFlush()).
   UniqueProfilerBacktrace mStyleCause;
   UniqueProfilerBacktrace mReflowCause;
->>>>>>> upstream-releases
 #endif
 
   nsTArray<UniquePtr<DelayedEvent>> mDelayedEvents;
@@ -3743,47 +2969,10 @@ private:
   // needed for the synthetic mouse events.
   layers::ScrollableLayerGuid mMouseEventTargetGuid;
 
-<<<<<<< HEAD
-  // mStyleSet owns it but we maintain a ref, may be null
-  RefPtr<StyleSheet> mPrefStyleSheet;
-
-  // Set of frames that we should mark with NS_FRAME_HAS_DIRTY_CHILDREN after
-  // we finish reflowing mCurrentReflowRoot.
-  nsTHashtable<nsPtrHashKey<nsIFrame>> mFramesToDirty;
-||||||| merged common ancestors
-  // mStyleSet owns it but we maintain a ref, may be null
-  RefPtr<StyleSheet> mPrefStyleSheet;
-
-  // Set of frames that we should mark with NS_FRAME_HAS_DIRTY_CHILDREN after
-  // we finish reflowing mCurrentReflowRoot.
-  nsTHashtable<nsPtrHashKey<nsIFrame> > mFramesToDirty;
-=======
   nsSize mVisualViewportSize;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsTArray<UniquePtr<DelayedEvent>> mDelayedEvents;
-
- private:
-  nsRevocableEventPtr<nsSynthMouseMoveEvent> mSynthMouseMoveEvent;
-  nsCOMPtr<nsIContent> mLastAnchorScrolledTo;
-  RefPtr<nsCaret> mCaret;
-  RefPtr<nsCaret> mOriginalCaret;
-  nsCallbackEventRequest* mFirstCallbackEventRequest;
-  nsCallbackEventRequest* mLastCallbackEventRequest;
-||||||| merged common ancestors
-  nsTArray<nsAutoPtr<DelayedEvent> > mDelayedEvents;
-private:
-  nsRevocableEventPtr<nsSynthMouseMoveEvent> mSynthMouseMoveEvent;
-  nsCOMPtr<nsIContent> mLastAnchorScrolledTo;
-  RefPtr<nsCaret> mCaret;
-  RefPtr<nsCaret> mOriginalCaret;
-  nsCallbackEventRequest* mFirstCallbackEventRequest;
-  nsCallbackEventRequest* mLastCallbackEventRequest;
-=======
   // The focus information needed for async keyboard scrolling
   FocusTarget mAPZFocusTarget;
->>>>>>> upstream-releases
 
   nsPresArena<8192> mFrameArena;
 
@@ -3946,32 +3135,9 @@ private:
   // Whether we have ever handled a user input event
   bool mHasHandledUserInput : 1;
 
-<<<<<<< HEAD
-  // Whether the most recent change to the pres shell resolution was
-  // originated by the main thread.
-  bool mResolutionUpdated : 1;
-
-||||||| merged common ancestors
-#ifdef NIGHTLY_BUILD
-=======
->>>>>>> upstream-releases
   // Whether we should dispatch keypress events even for non-printable keys
   // for keeping backward compatibility.
   bool mForceDispatchKeyPressEventsForNonPrintableKeys : 1;
-<<<<<<< HEAD
-  // Whether we should set keyCode or charCode value of keypress events whose
-  // value is zero to the other value or not.  When this is set to true, we
-  // should keep using legacy keyCode and charCode values (i.e., one of them
-  // is always 0).
-  bool mForceUseLegacyKeyCodeAndCharCodeValues : 1;
-  // Whether mForceDispatchKeyPressEventsForNonPrintableKeys and
-  // mForceUseLegacyKeyCodeAndCharCodeValues are initialized.
-  bool mInitializedWithKeyPressEventDispatchingBlacklist : 1;
-||||||| merged common ancestors
-  // Whether mForceDispatchKeyPressEventsForNonPrintableKeys is initialized.
-  bool mInitializedForceDispatchKeyPressEventsForNonPrintableKeys : 1;
-#endif // #ifdef NIGHTLY_BUILD
-=======
   // Whether we should set keyCode or charCode value of keypress events whose
   // value is zero to the other value or not.  When this is set to true, we
   // should keep using legacy keyCode and charCode values (i.e., one of them
@@ -4001,21 +3167,14 @@ private:
     bool mPreventDrag;
   };
   static CapturingContentInfo sCapturingContentInfo;
->>>>>>> upstream-releases
 
   static bool sDisableNonTestMouseEvents;
 
   static bool sProcessInteractable;
 };
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 NS_DEFINE_STATIC_IID_ACCESSOR(PresShell, NS_PRESSHELL_IID)
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_PresShell_h

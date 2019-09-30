@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-schema: 1
-
-bugzilla:
-  product: "Core"
-  component: "ImageLib"
-
-origin:
-  name: "libpng"
-  description: "PNG reference library"
-
-  url: "http://www.libpng.org/pub/png/libpng.html"
-  license: "libpng"
-
-  release: "1.6.35"
-||||||| merged common ancestors
-=======
 schema: 1
 
 bugzilla:
@@ -29,4 +12,3 @@ origin:
   license: "libpng"
 
   release: "1.6.37"
->>>>>>> upstream-releases

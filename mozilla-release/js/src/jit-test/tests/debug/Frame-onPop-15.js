@@ -1,20 +1,7 @@
-<<<<<<< HEAD
-// Each resumption of a generator gets the same Frame; its onPop handler
-// fires each time the generator yields.
-
-var g = newGlobal();
-||||||| merged common ancestors
-// Each resumption of a generator gets a fresh frame, whose onPop handler
-// fires the next time the generator yields.
-// This is not the behavior the spec requests, but it's what we do for the
-// moment, and it's good to check that at least we don't crash.
-var g = newGlobal();
-=======
 // Each resumption of a generator gets the same Frame; its onPop handler
 // fires each time the generator yields.
 
 var g = newGlobal({newCompartment: true});
->>>>>>> upstream-releases
 var dbg = new Debugger(g);
 var log;
 
@@ -41,10 +28,4 @@ dbg.onDebuggerStatement = function handleDebugger(frame) {
 g.eval("function* g() { for (var i = 0; i < 10; i++) { debugger; yield i; } }");
 log ='';
 assertEq(g.eval("var t = 0; for (j of g()) t += j; t;"), 45);
-<<<<<<< HEAD
-assertEq(log, "d)0d)0d)0d)3d)3d)3d)6d)6d)6d)9");
-||||||| merged common ancestors
-assertEq(log, "d)0ddd)3ddd)6ddd)9");
-=======
 assertEq(log, "d)0d)0d)0d)3d)3d)3d)6d)6d)6d)9)9");
->>>>>>> upstream-releases

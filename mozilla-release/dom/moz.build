@@ -103,16 +103,10 @@ DIRS += [
     'websocket',
     'serviceworkers',
     'simpledb',
-<<<<<<< HEAD
-    'reporting',
-    'localstorage',
-||||||| merged common ancestors
-=======
     'reporting',
     'localstorage',
     'prio',
     'l10n',
->>>>>>> upstream-releases
 ]
 
 if CONFIG['OS_ARCH'] == 'WINNT':

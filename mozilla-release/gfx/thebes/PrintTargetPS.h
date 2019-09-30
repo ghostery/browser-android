@@ -26,32 +26,6 @@ class PrintTargetPS final : public PrintTarget {
 
   virtual nsresult BeginPrinting(const nsAString& aTitle,
                                  const nsAString& aPrintToFileName,
-<<<<<<< HEAD
-                                 int32_t aStartPage, int32_t aEndPage) override;
-  virtual nsresult EndPage() override;
-  virtual void Finish() override;
-
-  virtual bool GetRotateForLandscape() { return (mOrientation == LANDSCAPE); }
-
- private:
-  PrintTargetPS(cairo_surface_t* aCairoSurface, const IntSize& aSize,
-                nsIOutputStream* aStream, PageOrientation aOrientation);
-||||||| merged common ancestors
-                                 int32_t aStartPage,
-                                 int32_t aEndPage) override;
-  virtual nsresult EndPage() override;
-  virtual void Finish() override;
-
-  virtual bool GetRotateForLandscape() {
-    return (mOrientation == LANDSCAPE);
-  }
-
-private:
-  PrintTargetPS(cairo_surface_t* aCairoSurface,
-                const IntSize& aSize,
-                nsIOutputStream *aStream,
-                PageOrientation aOrientation);
-=======
                                  int32_t aStartPage, int32_t aEndPage) override;
   nsresult EndPage() override;
   void Finish() override;
@@ -61,7 +35,6 @@ private:
  private:
   PrintTargetPS(cairo_surface_t* aCairoSurface, const IntSize& aSize,
                 nsIOutputStream* aStream, PageOrientation aOrientation);
->>>>>>> upstream-releases
   virtual ~PrintTargetPS();
 
   nsCOMPtr<nsIOutputStream> mStream;

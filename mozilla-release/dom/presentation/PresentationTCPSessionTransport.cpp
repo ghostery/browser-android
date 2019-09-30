@@ -44,29 +44,10 @@ class CopierCallbacks final : public nsIRequestObserver {
 NS_IMPL_ISUPPORTS(CopierCallbacks, nsIRequestObserver)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CopierCallbacks::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  return NS_OK;
-}
-||||||| merged common ancestors
-CopierCallbacks::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
-{
-  return NS_OK;
-}
-=======
 CopierCallbacks::OnStartRequest(nsIRequest* aRequest) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CopierCallbacks::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                               nsresult aStatus) {
-||||||| merged common ancestors
-CopierCallbacks::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext, nsresult aStatus)
-{
-=======
 CopierCallbacks::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   mOwner->NotifyCopyComplete(aStatus);
   return NS_OK;
 }
@@ -519,37 +500,16 @@ PresentationTCPSessionTransport::OnInputStreamReady(
 
 // nsIRequestObserver
 NS_IMETHODIMP
-<<<<<<< HEAD
-PresentationTCPSessionTransport::OnStartRequest(nsIRequest* aRequest,
-                                                nsISupports* aContext) {
-||||||| merged common ancestors
-PresentationTCPSessionTransport::OnStartRequest(nsIRequest* aRequest,
-                                                nsISupports* aContext)
-{
-=======
 PresentationTCPSessionTransport::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   // Do nothing.
   return NS_OK;
 }
 
 NS_IMETHODIMP
 PresentationTCPSessionTransport::OnStopRequest(nsIRequest* aRequest,
-<<<<<<< HEAD
-                                               nsISupports* aContext,
                                                nsresult aStatusCode) {
   PRES_DEBUG("%s:aStatusCode[%" PRIx32 "]\n", __func__,
              static_cast<uint32_t>(aStatusCode));
-||||||| merged common ancestors
-                                               nsISupports* aContext,
-                                               nsresult aStatusCode)
-{
-  PRES_DEBUG("%s:aStatusCode[%" PRIx32 "]\n", __func__, static_cast<uint32_t>(aStatusCode));
-=======
-                                               nsresult aStatusCode) {
-  PRES_DEBUG("%s:aStatusCode[%" PRIx32 "]\n", __func__,
-             static_cast<uint32_t>(aStatusCode));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(NS_IsMainThread());
 

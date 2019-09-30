@@ -21,17 +21,12 @@ EvaluationResult.propTypes = {
   message: PropTypes.object.isRequired,
   timestampsVisible: PropTypes.bool.isRequired,
   serviceContainer: PropTypes.object,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/EvaluationResult.js
-  maybeScrollToBottom: PropTypes.func,
-||||||| merged common ancestors
-=======
   maybeScrollToBottom: PropTypes.func,
   open: PropTypes.bool,
 };
 
 EvaluationResult.defaultProps = {
   open: false,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/EvaluationResult.js
 };
 
 function EvaluationResult(props) {
@@ -40,13 +35,8 @@ function EvaluationResult(props) {
     message,
     serviceContainer,
     timestampsVisible,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/EvaluationResult.js
-    maybeScrollToBottom,
-||||||| merged common ancestors
-=======
     maybeScrollToBottom,
     open,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/EvaluationResult.js
   } = props;
 
   const {
@@ -112,13 +102,8 @@ function EvaluationResult(props) {
     parameters,
     notes,
     timestampsVisible,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/EvaluationResult.js
-    maybeScrollToBottom,
-||||||| merged common ancestors
-=======
     maybeScrollToBottom,
     message,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/EvaluationResult.js
   });
 }
 

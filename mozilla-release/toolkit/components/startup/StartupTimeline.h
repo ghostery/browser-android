@@ -3,61 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #ifdef mozilla_StartupTimeline_Event
-<<<<<<< HEAD
-mozilla_StartupTimeline_Event(PROCESS_CREATION, "process")
-    mozilla_StartupTimeline_Event(START, "start")
-        mozilla_StartupTimeline_Event(MAIN, "main")
-            mozilla_StartupTimeline_Event(SELECT_PROFILE, "selectProfile")
-                mozilla_StartupTimeline_Event(AFTER_PROFILE_LOCKED,
-                                              "afterProfileLocked")
-    // Record the beginning and end of startup crash detection to compare with
-    // crash stats to know whether detection should be improved to start or end
-    // sooner.
-    mozilla_StartupTimeline_Event(STARTUP_CRASH_DETECTION_BEGIN,
-                                  "startupCrashDetectionBegin")
-        mozilla_StartupTimeline_Event(STARTUP_CRASH_DETECTION_END,
-                                      "startupCrashDetectionEnd")
-            mozilla_StartupTimeline_Event(FIRST_PAINT, "firstPaint")
-                mozilla_StartupTimeline_Event(SESSION_RESTORE_INIT,
-                                              "sessionRestoreInit")
-                    mozilla_StartupTimeline_Event(SESSION_RESTORED,
-                                                  "sessionRestored")
-                        mozilla_StartupTimeline_Event(CREATE_TOP_LEVEL_WINDOW,
-                                                      "createTopLevelWindow")
-                            mozilla_StartupTimeline_Event(LINKER_INITIALIZED,
-                                                          "linkerInitialized")
-                                mozilla_StartupTimeline_Event(LIBRARIES_LOADED,
-                                                              "librariesLoaded")
-                                    mozilla_StartupTimeline_Event(
-                                        FIRST_LOAD_URI, "firstLoadURI")
-
-    // The following are actually shutdown events, used to monitor the duration
-    // of shutdown
-    mozilla_StartupTimeline_Event(QUIT_APPLICATION, "quitApplication")
-        mozilla_StartupTimeline_Event(PROFILE_BEFORE_CHANGE,
-                                      "profileBeforeChange")
-||||||| merged common ancestors
-mozilla_StartupTimeline_Event(PROCESS_CREATION, "process")
-mozilla_StartupTimeline_Event(START, "start")
-mozilla_StartupTimeline_Event(MAIN, "main")
-mozilla_StartupTimeline_Event(SELECT_PROFILE, "selectProfile")
-mozilla_StartupTimeline_Event(AFTER_PROFILE_LOCKED, "afterProfileLocked")
-// Record the beginning and end of startup crash detection to compare with crash stats to know whether
-// detection should be improved to start or end sooner.
-mozilla_StartupTimeline_Event(STARTUP_CRASH_DETECTION_BEGIN, "startupCrashDetectionBegin")
-mozilla_StartupTimeline_Event(STARTUP_CRASH_DETECTION_END, "startupCrashDetectionEnd")
-mozilla_StartupTimeline_Event(FIRST_PAINT, "firstPaint")
-mozilla_StartupTimeline_Event(SESSION_RESTORE_INIT, "sessionRestoreInit")
-mozilla_StartupTimeline_Event(SESSION_RESTORED, "sessionRestored")
-mozilla_StartupTimeline_Event(CREATE_TOP_LEVEL_WINDOW, "createTopLevelWindow")
-mozilla_StartupTimeline_Event(LINKER_INITIALIZED, "linkerInitialized")
-mozilla_StartupTimeline_Event(LIBRARIES_LOADED, "librariesLoaded")
-mozilla_StartupTimeline_Event(FIRST_LOAD_URI, "firstLoadURI")
-
-// The following are actually shutdown events, used to monitor the duration of shutdown
-mozilla_StartupTimeline_Event(QUIT_APPLICATION, "quitApplication")
-mozilla_StartupTimeline_Event(PROFILE_BEFORE_CHANGE, "profileBeforeChange")
-=======
 // clang-format off
   mozilla_StartupTimeline_Event(PROCESS_CREATION, "process")
   mozilla_StartupTimeline_Event(START, "start")
@@ -83,7 +28,6 @@ mozilla_StartupTimeline_Event(PROFILE_BEFORE_CHANGE, "profileBeforeChange")
   mozilla_StartupTimeline_Event(QUIT_APPLICATION, "quitApplication")
   mozilla_StartupTimeline_Event(PROFILE_BEFORE_CHANGE, "profileBeforeChange")
 // clang-format on
->>>>>>> upstream-releases
 #else
 
 #  ifndef mozilla_StartupTimeline
@@ -104,19 +48,9 @@ void RecordShutdownStartTimeStamp();
 class StartupTimeline {
  public:
   enum Event {
-<<<<<<< HEAD
-#define mozilla_StartupTimeline_Event(ev, z) ev,
-#include "StartupTimeline.h"
-#undef mozilla_StartupTimeline_Event
-||||||| merged common ancestors
-    #define mozilla_StartupTimeline_Event(ev, z) ev,
-    #include "StartupTimeline.h"
-    #undef mozilla_StartupTimeline_Event
-=======
 #    define mozilla_StartupTimeline_Event(ev, z) ev,
 #    include "StartupTimeline.h"
 #    undef mozilla_StartupTimeline_Event
->>>>>>> upstream-releases
     MAX_EVENT_ID
   };
 

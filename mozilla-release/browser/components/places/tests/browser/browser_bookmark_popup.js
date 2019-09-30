@@ -128,21 +128,12 @@ async function test_bookmarks_popup({
 
       let onItemRemovedPromise = Promise.resolve();
       if (isBookmarkRemoved) {
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/general/browser_bookmark_popup.js
-        onItemRemovedPromise = PlacesTestUtils.waitForNotification("onItemRemoved",
-          (id, parentId, index, type, uri, guid, parentGuid) =>
-            parentGuid == PlacesUtils.bookmarks.unfiledGuid && TEST_URL == uri.spec);
-||||||| merged common ancestors
-        onItemRemovedPromise = PlacesTestUtils.waitForNotification("onItemRemoved",
-          (id, parentId, index, type, itemUrl) => TEST_URL == itemUrl.spec);
-=======
         onItemRemovedPromise = PlacesTestUtils.waitForNotification(
           "onItemRemoved",
           (id, parentId, index, type, uri, guid, parentGuid) =>
             parentGuid == PlacesUtils.bookmarks.unfiledGuid &&
             TEST_URL == uri.spec
         );
->>>>>>> upstream-releases:mozilla-release/browser/components/places/tests/browser/browser_bookmark_popup.js
       }
 
       let hiddenPromise = promisePopupHidden(bookmarkPanel);
@@ -208,16 +199,8 @@ add_task(
         "browser-places.js for this."
     );
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/general/browser_bookmark_popup.js
-  /*
-  await test_bookmarks_popup({
-||||||| merged common ancestors
-  /*
-  yield test_bookmarks_popup({
-=======
     /*
   await test_bookmarks_popup({
->>>>>>> upstream-releases:mozilla-release/browser/components/places/tests/browser/browser_bookmark_popup.js
     isNewBookmark: true,
     *popupShowFn() {
       EventUtils.synthesizeMouse(bookmarkStar, 10, 10, window);
@@ -652,16 +635,6 @@ add_task(async function escape_during_autocomplete_should_prevent_autoclose() {
       // Type Escape key to close autocomplete.
       EventUtils.synthesizeKey("KEY_Escape", {}, window);
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/general/browser_bookmark_popup.js
-      // The text reverts to what was typed.
-      // Note, it's important that this is different from the previously
-      // inserted tag, since it will test an untag/tag undo condition.
-      Assert.equal(tagsField.value, "a",
-        "Autocomplete should revert to what was typed");
-||||||| merged common ancestors
-      Assert.equal(tagsField.value, "Abc",
-        "Autocomplete should've inserted the selected item and shouldn't clear it");
-=======
       // The text reverts to what was typed.
       // Note, it's important that this is different from the previously
       // inserted tag, since it will test an untag/tag undo condition.
@@ -670,7 +643,6 @@ add_task(async function escape_during_autocomplete_should_prevent_autoclose() {
         "a",
         "Autocomplete should revert to what was typed"
       );
->>>>>>> upstream-releases:mozilla-release/browser/components/places/tests/browser/browser_bookmark_popup.js
     },
     shouldAutoClose: false,
     popupHideFn() {

@@ -101,24 +101,6 @@
   }
 }
 
-<<<<<<< HEAD
-@media not (-moz-os-version: windows-win7) {
-  @media not (-moz-os-version: windows-win8) {
-    /* On Windows 10, when temporarily showing the menu bar, make it at least as
-     * tall as the tab bar such that the window controls don't appear to move up. */
-    :root[tabsintitlebar] #toolbar-menubar[autohide="true"] {
-      height: calc(var(--tab-min-height) - @navbarTabsShadowSize@);
-    }
-    :root[tabsintitlebar][sizemode="normal"] #toolbar-menubar[autohide="true"] {
-      height: calc(var(--tab-min-height) + var(--space-above-tabbar) - @navbarTabsShadowSize@);
-    }
-  }
-||||||| merged common ancestors
-/* Hides the titlebar-placeholder underneath the window caption buttons when we
-   are not autohiding the menubar. */
-#toolbar-menubar:not([autohide="true"]) + #TabsToolbar > .titlebar-placeholder[type="caption-buttons"] {
-  display: none;
-=======
 @media not (-moz-os-version: windows-win7) {
   @media not (-moz-os-version: windows-win8) {
     /* On Windows 10, when temporarily showing the menu bar, make it at least as
@@ -130,7 +112,6 @@
       height: calc(var(--tab-min-height) + var(--space-above-tabbar) - var(--tabs-navbar-shadow-size));
     }
   }
->>>>>>> upstream-releases
 }
 
 :root[sizemode="normal"][chromehidden~="menubar"] #TabsToolbar > .toolbar-items,
@@ -693,37 +674,16 @@ menuitem.bookmark-item {
 }
 
 .browserContainer > findbar {
-<<<<<<< HEAD
-  background-color: var(--toolbar-bgcolor);
-  color: var(--toolbar-color);
-||||||| merged common ancestors
-  background-color: -moz-dialog;
-  color: -moz-DialogText;
-  text-shadow: none;
-=======
   background-color: var(--toolbar-non-lwt-bgcolor);
   color: var(--toolbar-non-lwt-textcolor);
   text-shadow: none;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.browserContainer > findbar:-moz-lwtheme {
-  background-color: var(--lwt-accent-color);
-  background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
-  border-top-color: var(--chrome-content-separator-color);
-  text-shadow: none;
-||||||| merged common ancestors
-.browserContainer > findbar:-moz-lwtheme {
-  background-color: var(--toolbar-bgcolor);
-  color: var(--toolbar-color, -moz-DialogText);
-=======
 :root:not([lwtheme-image]) .browserContainer > findbar:-moz-lwtheme {
   background-color: var(--lwt-accent-color);
   background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
   border-top-color: var(--chrome-content-separator-color);
   color: var(--toolbar-color);
->>>>>>> upstream-releases
 }
 
 /* Tabstrip */
@@ -938,35 +898,10 @@ notification[value="translation"] {
 
 /* End customization mode */
 
-<<<<<<< HEAD
-/* Prevent window controls from overlapping the nav bar's shadow on the tab
- * bar. */
-#TabsToolbar > .titlebar-buttonbox-container {
-  margin-bottom: @navbarTabsShadowSize@;
-||||||| merged common ancestors
-/* Private browsing and accessibility indicators */
-
-:root[sizemode="normal"][chromehidden~="menubar"] #TabsToolbar > .private-browsing-indicator,
-:root[sizemode="normal"][chromehidden~="menubar"] #TabsToolbar > .accessibility-indicator,
-:root[sizemode="normal"] #toolbar-menubar[autohide="true"][inactive] + #TabsToolbar > .private-browsing-indicator,
-:root[sizemode="normal"] #toolbar-menubar[autohide="true"][inactive] + #TabsToolbar > .accessibility-indicator {
-  margin-top: calc(-1 * var(--space-above-tabbar));
-}
-
-/* Compensate for 4px extra margin on top of the tabs toolbar on Windows 7. */
-@media (-moz-os-version: windows-win7) {
-  :root[sizemode="normal"][chromehidden~="menubar"] #TabsToolbar > .private-browsing-indicator,
-  :root[sizemode="normal"][chromehidden~="menubar"] #TabsToolbar > .accessibility-indicator,
-  :root[sizemode="normal"] #toolbar-menubar[autohide="true"][inactive] + #TabsToolbar > .private-browsing-indicator,
-  :root[sizemode="normal"] #toolbar-menubar[autohide="true"][inactive] + #TabsToolbar > .accessibility-indicator {
-    margin-top: calc(-1 * (var(--space-above-tabbar) + 4px));
-  }
-=======
 /* Prevent window controls from overlapping the nav bar's shadow on the tab
  * bar. */
 #TabsToolbar > .titlebar-buttonbox-container {
   margin-bottom: var(--tabs-navbar-shadow-size);
->>>>>>> upstream-releases
 }
 
 :root:not([privatebrowsingmode=temporary]) .accessibility-indicator,

@@ -52,22 +52,6 @@ class FFTBlock final {
       : mAvRDFT(nullptr),
         mAvIRDFT(nullptr)
 #else
-<<<<<<< HEAD
-      : mKissFFT(nullptr),
-        mKissIFFT(nullptr)
-#ifdef BUILD_ARM_NEON
-        ,
-        mOmxFFT(nullptr),
-        mOmxIFFT(nullptr)
-#endif
-||||||| merged common ancestors
-    : mKissFFT(nullptr)
-    , mKissIFFT(nullptr)
-#ifdef BUILD_ARM_NEON
-    , mOmxFFT(nullptr)
-    , mOmxIFFT(nullptr)
-#endif
-=======
       : mKissFFT(nullptr),
         mKissIFFT(nullptr)
 #  ifdef BUILD_ARM_NEON
@@ -75,7 +59,6 @@ class FFTBlock final {
         mOmxFFT(nullptr),
         mOmxIFFT(nullptr)
 #  endif
->>>>>>> upstream-releases
 #endif
   {
     MOZ_COUNT_CTOR(FFTBlock);

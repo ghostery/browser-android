@@ -33,20 +33,9 @@ nsHyphenationManager* nsHyphenationManager::sInstance = nullptr;
 NS_IMPL_ISUPPORTS(nsHyphenationManager::MemoryPressureObserver, nsIObserver)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHyphenationManager::MemoryPressureObserver::Observe(nsISupports *aSubject,
-                                                      const char *aTopic,
-                                                      const char16_t *aData) {
-||||||| merged common ancestors
-nsHyphenationManager::MemoryPressureObserver::Observe(nsISupports *aSubject,
-                                                      const char *aTopic,
-                                                      const char16_t *aData)
-{
-=======
 nsHyphenationManager::MemoryPressureObserver::Observe(nsISupports* aSubject,
                                                       const char* aTopic,
                                                       const char16_t* aData) {
->>>>>>> upstream-releases
   if (!nsCRT::strcmp(aTopic, kMemoryPressureNotification)) {
     // We don't call Instance() here, as we don't want to create a hyphenation
     // manager if there isn't already one in existence.
@@ -59,15 +48,7 @@ nsHyphenationManager::MemoryPressureObserver::Observe(nsISupports* aSubject,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsHyphenationManager *nsHyphenationManager::Instance() {
-||||||| merged common ancestors
-nsHyphenationManager*
-nsHyphenationManager::Instance()
-{
-=======
 nsHyphenationManager* nsHyphenationManager::Instance() {
->>>>>>> upstream-releases
   if (sInstance == nullptr) {
     sInstance = new nsHyphenationManager();
 
@@ -92,17 +73,8 @@ nsHyphenationManager::nsHyphenationManager() {
 
 nsHyphenationManager::~nsHyphenationManager() { sInstance = nullptr; }
 
-<<<<<<< HEAD
-already_AddRefed<nsHyphenator> nsHyphenationManager::GetHyphenator(
-    nsAtom *aLocale) {
-||||||| merged common ancestors
-already_AddRefed<nsHyphenator>
-nsHyphenationManager::GetHyphenator(nsAtom *aLocale)
-{
-=======
 already_AddRefed<nsHyphenator> nsHyphenationManager::GetHyphenator(
     nsAtom* aLocale) {
->>>>>>> upstream-releases
   RefPtr<nsHyphenator> hyph;
   mHyphenators.Get(aLocale, getter_AddRefs(hyph));
   if (hyph) {
@@ -249,15 +221,7 @@ void nsHyphenationManager::LoadPatternListFromOmnijar(Omnijar::Type aType) {
   delete find;
 }
 
-<<<<<<< HEAD
-void nsHyphenationManager::LoadPatternListFromDir(nsIFile *aDir) {
-||||||| merged common ancestors
-void
-nsHyphenationManager::LoadPatternListFromDir(nsIFile *aDir)
-{
-=======
 void nsHyphenationManager::LoadPatternListFromDir(nsIFile* aDir) {
->>>>>>> upstream-releases
   nsresult rv;
 
   bool check = false;
@@ -308,18 +272,8 @@ void nsHyphenationManager::LoadPatternListFromDir(nsIFile* aDir) {
   }
 }
 
-<<<<<<< HEAD
-void nsHyphenationManager::LoadAliases() {
-  nsIPrefBranch *prefRootBranch = Preferences::GetRootBranch();
-||||||| merged common ancestors
-void
-nsHyphenationManager::LoadAliases()
-{
-  nsIPrefBranch* prefRootBranch = Preferences::GetRootBranch();
-=======
 void nsHyphenationManager::LoadAliases() {
   nsIPrefBranch* prefRootBranch = Preferences::GetRootBranch();
->>>>>>> upstream-releases
   if (!prefRootBranch) {
     return;
   }

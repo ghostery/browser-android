@@ -491,30 +491,11 @@ already_AddRefed<nsComputedDOMStyle> CSSEditUtils::GetComputedStyle(
   return style.forget();
 }
 
-<<<<<<< HEAD
-// remove the CSS style "aProperty : aPropertyValue" and possibly remove the
-// whole node if it is a span and if its only attribute is _moz_dirty
-nsresult CSSEditUtils::RemoveCSSInlineStyle(nsINode& aNode, nsAtom* aProperty,
-                                            const nsAString& aPropertyValue) {
-  RefPtr<Element> element = aNode.AsElement();
-  NS_ENSURE_STATE(element);
-||||||| merged common ancestors
-// remove the CSS style "aProperty : aPropertyValue" and possibly remove the whole node
-// if it is a span and if its only attribute is _moz_dirty
-nsresult
-CSSEditUtils::RemoveCSSInlineStyle(nsINode& aNode,
-                                   nsAtom* aProperty,
-                                   const nsAString& aPropertyValue)
-{
-  RefPtr<Element> element = aNode.AsElement();
-  NS_ENSURE_STATE(element);
-=======
 // remove the CSS style "aProperty : aPropertyValue" and possibly remove the
 // whole node if it is a span and if its only attribute is _moz_dirty
 nsresult CSSEditUtils::RemoveCSSInlineStyle(nsINode& aNode, nsAtom* aProperty,
                                             const nsAString& aPropertyValue) {
   OwningNonNull<Element> element(*aNode.AsElement());
->>>>>>> upstream-releases
 
   // remove the property from the style attribute
   nsresult rv = RemoveCSSProperty(element, *aProperty, aPropertyValue);
@@ -867,19 +848,9 @@ nsresult CSSEditUtils::RemoveCSSEquivalentToHTMLStyle(
   // remove the individual CSS inline styles
   int32_t count = cssPropertyArray.Length();
   for (int32_t index = 0; index < count; index++) {
-<<<<<<< HEAD
-    nsresult rv = RemoveCSSProperty(*aElement, *cssPropertyArray[index],
-                                    cssValueArray[index], aSuppressTransaction);
-||||||| merged common ancestors
-    nsresult rv = RemoveCSSProperty(*aElement,
-                                    *cssPropertyArray[index],
-                                    cssValueArray[index],
-                                    aSuppressTransaction);
-=======
     nsresult rv =
         RemoveCSSProperty(*aElement, MOZ_KnownLive(*cssPropertyArray[index]),
                           cssValueArray[index], aSuppressTransaction);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
   return NS_OK;

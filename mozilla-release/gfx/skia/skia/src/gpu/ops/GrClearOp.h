@@ -18,46 +18,15 @@ class GrClearOp final : public GrOp {
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrClearOp> Make(GrContext* context,
-                                           const GrFixedClip& clip,
-                                           GrColor color,
-                                           GrSurfaceProxy* dstProxy);
-||||||| merged common ancestors
-    static std::unique_ptr<GrClearOp> Make(const GrFixedClip& clip, GrColor color,
-                                           GrSurfaceProxy* dstProxy) {
-        const SkIRect rect = SkIRect::MakeWH(dstProxy->width(), dstProxy->height());
-        if (clip.scissorEnabled() && !SkIRect::Intersects(clip.scissorRect(), rect)) {
-            return nullptr;
-        }
-
-        return std::unique_ptr<GrClearOp>(new GrClearOp(clip, color, dstProxy));
-    }
-=======
     static std::unique_ptr<GrClearOp> Make(GrRecordingContext* context,
                                            const GrFixedClip& clip,
                                            const SkPMColor4f& color,
                                            GrSurfaceProxy* dstProxy);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrClearOp> Make(GrContext* context,
-                                           const SkIRect& rect,
-                                           GrColor color,
-                                           bool fullScreen);
-||||||| merged common ancestors
-    static std::unique_ptr<GrClearOp> Make(const SkIRect& rect, GrColor color,
-                                           bool fullScreen) {
-        SkASSERT(fullScreen || !rect.isEmpty());
-
-        return std::unique_ptr<GrClearOp>(new GrClearOp(rect, color, fullScreen));
-    }
-=======
     static std::unique_ptr<GrClearOp> Make(GrRecordingContext* context,
                                            const SkIRect& rect,
                                            const SkPMColor4f& color,
                                            bool fullScreen);
->>>>>>> upstream-releases
 
     const char* name() const override { return "Clear"; }
 
@@ -81,17 +50,9 @@ public:
     void setColor(const SkPMColor4f& color) { fColor = color; }
 
 private:
-<<<<<<< HEAD
-    friend class GrOpMemoryPool; // for ctors
-
-    GrClearOp(const GrFixedClip& clip, GrColor color, GrSurfaceProxy* proxy);
-||||||| merged common ancestors
-    GrClearOp(const GrFixedClip& clip, GrColor color, GrSurfaceProxy* proxy);
-=======
     friend class GrOpMemoryPool; // for ctors
 
     GrClearOp(const GrFixedClip& clip, const SkPMColor4f& color, GrSurfaceProxy* proxy);
->>>>>>> upstream-releases
 
     GrClearOp(const SkIRect& rect, const SkPMColor4f& color, bool fullScreen)
         : INHERITED(ClassID())

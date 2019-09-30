@@ -1459,72 +1459,37 @@ decorate_task(
   withMockExperiments([
     experimentFactory({
       name: "defaultBranchRecipe",
-<<<<<<< HEAD
-      preferenceName: "fake.default",
-      preferenceValue: "experiment value",
-      preferenceBranchType: "default",
-||||||| merged common ancestors
-      preferenceName: "fake.default",
-      preferenceValue: "experiment value",
-      branch: "default",
-=======
       preferences: {
         "fake.default": {
           preferenceValue: "experiment value",
           preferenceBranchType: "default",
         },
       },
->>>>>>> upstream-releases
     }),
     experimentFactory({
       name: "userBranchRecipe",
-<<<<<<< HEAD
-      preferenceName: "fake.user",
-      preferenceValue: "experiment value",
-      preferenceBranchType: "user",
-||||||| merged common ancestors
-      preferenceName: "fake.user",
-      preferenceValue: "experiment value",
-      branch: "user",
-=======
       preferences: {
         "fake.user": {
           preferenceValue: "experiment value",
           preferenceBranchType: "user",
         },
       },
->>>>>>> upstream-releases
     }),
   ]),
   async function testSaveStartupPrefsUserBranch(experiments) {
-<<<<<<< HEAD
-    Assert.deepEqual(Services.prefs.getChildList(startupPrefs), [], "As a prerequisite no startup prefs are set");
-
-||||||| merged common ancestors
-=======
     Assert.deepEqual(
       Services.prefs.getChildList(startupPrefs),
       [],
       "As a prerequisite no startup prefs are set"
     );
 
->>>>>>> upstream-releases
     await PreferenceExperiments.saveStartupPrefs();
 
-<<<<<<< HEAD
-    Assert.deepEqual(
-      Services.prefs.getChildList(startupPrefs),
-      [`${startupPrefs}.fake.default`],
-      "only the expected prefs are set",
-    );
-||||||| merged common ancestors
-=======
     Assert.deepEqual(
       Services.prefs.getChildList(startupPrefs),
       [`${startupPrefs}.fake.default`],
       "only the expected prefs are set"
     );
->>>>>>> upstream-releases
     is(
       Services.prefs.getCharPref(
         `${startupPrefs}.fake.default`,

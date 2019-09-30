@@ -34,18 +34,6 @@ SimpleTest.waitForFocus(function() {
   SimpleTest.finish();
 });
 
-<<<<<<< HEAD
-function checkInnerTextboxTabindex(input, tabindex) {
-  let fields = SpecialPowers.wrap(input).openOrClosedShadowRoot.getElementsByClassName("datetime-edit-field");
-
-  for (let field of fields) {
-    is(field.tabIndex, tabindex, "tabIndex in the inner textbox should be correct");
-  }
-
-}
-
-||||||| merged common ancestors
-=======
 function checkInnerTextboxTabindex(input, tabindex) {
   let fields = SpecialPowers.wrap(input).openOrClosedShadowRoot.querySelectorAll(".datetime-edit-field");
 
@@ -55,7 +43,6 @@ function checkInnerTextboxTabindex(input, tabindex) {
 
 }
 
->>>>>>> upstream-releases
 function testTabindex(type) {
   let input1 = document.getElementById(type + "1");
   let input2 = document.getElementById(type + "2");

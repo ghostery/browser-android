@@ -117,20 +117,6 @@ function findTab(tabs, url) {
   return null;
 }
 
-<<<<<<< HEAD
-function attachTarget(client, tab) {
-  info("Attaching to tab with url '" + tab.url + "'.");
-  return client.attachTarget(tab);
-}
-
-||||||| merged common ancestors
-function attachTarget(client, tab) {
-  info("Attaching to tab with url '" + tab.url + "'.");
-  return client.attachTarget(tab.actor);
-}
-
-=======
->>>>>>> upstream-releases
 function listWorkers(targetFront) {
   info("Listing workers.");
   return targetFront.listWorkers();
@@ -185,33 +171,14 @@ function getSplitConsole(toolbox, win) {
 
 async function initWorkerDebugger(TAB_URL, WORKER_URL) {
   const tab = await addTab(TAB_URL);
-<<<<<<< HEAD
   const target = await TargetFactory.forTab(tab);
   await target.attach();
   const { client } = target;
-  const targetFront = target.activeTab;
-||||||| merged common ancestors
-  const { tabs } = await listTabs(client);
-  const [, targetFront] = await attachTarget(client, findTab(tabs, TAB_URL));
-=======
-  const target = await TargetFactory.forTab(tab);
-  await target.attach();
-  const { client } = target;
->>>>>>> upstream-releases
 
   await createWorkerInTab(tab, WORKER_URL);
 
-<<<<<<< HEAD
-  const { workers } = await listWorkers(targetFront);
-  const workerTargetFront = findWorker(workers, WORKER_URL);
-||||||| merged common ancestors
-  const { workers } = await listWorkers(targetFront);
-  const [, workerTargetFront] = await attachWorker(targetFront,
-                                             findWorker(workers, WORKER_URL));
-=======
   const { workers } = await listWorkers(target);
   const workerTargetFront = findWorker(workers, WORKER_URL);
->>>>>>> upstream-releases
 
   const toolbox = await gDevTools.showToolbox(
     workerTargetFront,
@@ -283,30 +250,6 @@ this.removeTab = function removeTab(tab, win) {
   targetBrowser.removeTab(tab);
   return deferred.promise;
 };
-<<<<<<< HEAD
-
-async function attachThreadActorForTab(tab) {
-  const target = await TargetFactory.forTab(tab);
-  await target.attach();
-  const targetFront = target.activeTab;
-  const [, threadClient] = await targetFront.attachThread();
-  await threadClient.resume();
-  return { client: target.client, threadClient };
-}
-
-function pushPrefs(...aPrefs) {
-  const deferred = getDeferredPromise().defer();
-  SpecialPowers.pushPrefEnv({"set": aPrefs}, deferred.resolve);
-  return deferred.promise;
-}
-
-function popPrefs() {
-  const deferred = getDeferredPromise().defer();
-  SpecialPowers.popPrefEnv(deferred.resolve);
-  return deferred.promise;
-}
-||||||| merged common ancestors
-=======
 
 async function attachThreadActorForTab(tab) {
   const target = await TargetFactory.forTab(tab);
@@ -327,4 +270,3 @@ function popPrefs() {
   SpecialPowers.popPrefEnv(deferred.resolve);
   return deferred.promise;
 }
->>>>>>> upstream-releases

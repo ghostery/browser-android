@@ -4,18 +4,6 @@
 
 //! Common handling for the specified value CSS url() values.
 
-<<<<<<< HEAD
-use crate::gecko_bindings::bindings;
-use crate::gecko_bindings::structs::root::mozilla::css::URLValue;
-use crate::gecko_bindings::structs::root::mozilla::CORSMode;
-use crate::gecko_bindings::structs::root::nsStyleImageRequest;
-use crate::gecko_bindings::sugar::ownership::{FFIArcHelpers, HasArcFFI};
-use crate::gecko_bindings::sugar::refptr::RefPtr;
-use crate::parser::{Parse, ParserContext};
-use crate::stylesheets::UrlExtraData;
-use crate::values::computed::{Context, ToComputedValue};
-||||||| merged common ancestors
-=======
 use crate::gecko_bindings::bindings;
 use crate::gecko_bindings::structs;
 use crate::gecko_bindings::structs::nsStyleImageRequest;
@@ -23,7 +11,6 @@ use crate::gecko_bindings::sugar::refptr::RefPtr;
 use crate::parser::{Parse, ParserContext};
 use crate::stylesheets::{CorsMode, UrlExtraData};
 use crate::values::computed::{Context, ToComputedValue};
->>>>>>> upstream-releases
 use cssparser::Parser;
 use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
 use nsstring::nsCString;
@@ -33,13 +20,7 @@ use std::fmt::{self, Write};
 use std::mem::ManuallyDrop;
 use std::sync::RwLock;
 use style_traits::{CssWriter, ParseError, ToCss};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use stylesheets::UrlExtraData;
-use values::computed::{Context, ToComputedValue};
-=======
 use to_shmem::{SharedMemoryBuilder, ToShmem};
->>>>>>> upstream-releases
 
 /// A CSS url() value for gecko.
 #[css(function = "url")]
@@ -169,30 +150,6 @@ struct LoadDataKey(*const LoadDataSource);
 unsafe impl Sync for LoadDataKey {}
 unsafe impl Send for LoadDataKey {}
 
-<<<<<<< HEAD
-    fn from_css_url_with_cors(url: CssUrl, cors: CORSMode) -> Self {
-        let url_value = unsafe {
-            let ptr = bindings::Gecko_URLValue_Create(url.0.clone().into_strong(), cors);
-            // We do not expect Gecko_URLValue_Create returns null.
-            debug_assert!(!ptr.is_null());
-            RefPtr::from_addrefed(ptr)
-        };
-        Self { url, url_value }
-    }
-||||||| merged common ancestors
-    fn from_css_url_with_cors(url: CssUrl, cors: CORSMode) -> Self {
-        let url_value = unsafe {
-            let ptr = bindings::Gecko_URLValue_Create(
-                url.0.clone().into_strong(),
-                cors,
-            );
-            // We do not expect Gecko_URLValue_Create returns null.
-            debug_assert!(!ptr.is_null());
-            RefPtr::from_addrefed(ptr)
-        };
-        Self { url, url_value }
-    }
-=======
 /// The load data for a given URL. This is mutable from C++, for now at least.
 #[repr(C)]
 #[derive(Debug)]
@@ -201,17 +158,7 @@ pub struct LoadData {
     load_id: u64,
     tried_to_resolve: bool,
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    fn from_css_url(url: CssUrl) -> Self {
-        use crate::gecko_bindings::structs::root::mozilla::CORSMode_CORS_NONE;
-        Self::from_css_url_with_cors(url, CORSMode_CORS_NONE)
-||||||| merged common ancestors
-    fn from_css_url(url: CssUrl) -> Self {
-        use gecko_bindings::structs::root::mozilla::CORSMode_CORS_NONE;
-        Self::from_css_url_with_cors(url, CORSMode_CORS_NONE)
-=======
 impl Drop for LoadData {
     fn drop(&mut self) {
         if self.load_id != 0 {
@@ -219,19 +166,9 @@ impl Drop for LoadData {
                 bindings::Gecko_LoadData_DeregisterLoad(self);
             }
         }
->>>>>>> upstream-releases
     }
 }
 
-<<<<<<< HEAD
-    fn from_css_url_with_cors_anonymous(url: CssUrl) -> Self {
-        use crate::gecko_bindings::structs::root::mozilla::CORSMode_CORS_ANONYMOUS;
-        Self::from_css_url_with_cors(url, CORSMode_CORS_ANONYMOUS)
-||||||| merged common ancestors
-    fn from_css_url_with_cors_anonymous(url: CssUrl) -> Self {
-        use gecko_bindings::structs::root::mozilla::CORSMode_CORS_ANONYMOUS;
-        Self::from_css_url_with_cors(url, CORSMode_CORS_ANONYMOUS)
-=======
 impl Default for LoadData {
     fn default() -> Self {
         Self {
@@ -239,7 +176,6 @@ impl Default for LoadData {
             load_id: 0,
             tried_to_resolve: false,
         }
->>>>>>> upstream-releases
     }
 }
 
@@ -382,15 +318,6 @@ impl ComputedUrl {
     where
         W: Write,
     {
-<<<<<<< HEAD
-        serialize_computed_url(&self.0.url_value, dest, bindings::Gecko_GetComputedURLSpec)
-||||||| merged common ancestors
-        serialize_computed_url(
-            &self.0.url_value,
-            dest,
-            bindings::Gecko_GetComputedURLSpec,
-        )
-=======
         dest.write_str("url(")?;
         unsafe {
             let mut string = nsCString::new();
@@ -398,7 +325,6 @@ impl ComputedUrl {
             string.as_str_unchecked().to_css(dest)?;
         }
         dest.write_char(')')
->>>>>>> upstream-releases
     }
 }
 

@@ -6,27 +6,6 @@
 
 #include "ClientLayerManager.h"  // for ClientLayerManager
 #include "ShadowLayers.h"
-<<<<<<< HEAD
-#include <set>                  // for _Rb_tree_const_iterator, etc
-#include <vector>               // for vector
-#include "GeckoProfiler.h"      // for AUTO_PROFILER_LABEL
-#include "ISurfaceAllocator.h"  // for IsSurfaceDescriptorValid
-#include "Layers.h"             // for Layer
-#include "RenderTrace.h"        // for RenderTraceScope
-#include "gfx2DGlue.h"          // for Moz2D transition helpers
-#include "gfxPlatform.h"        // for gfxImageFormat, gfxPlatform
-#include "gfxPrefs.h"
-||||||| merged common ancestors
-#include <set>                          // for _Rb_tree_const_iterator, etc
-#include <vector>                       // for vector
-#include "GeckoProfiler.h"              // for AUTO_PROFILER_LABEL
-#include "ISurfaceAllocator.h"          // for IsSurfaceDescriptorValid
-#include "Layers.h"                     // for Layer
-#include "RenderTrace.h"                // for RenderTraceScope
-#include "gfx2DGlue.h"                  // for Moz2D transition helpers
-#include "gfxPlatform.h"                // for gfxImageFormat, gfxPlatform
-#include "gfxPrefs.h"
-=======
 #include <set>                  // for _Rb_tree_const_iterator, etc
 #include <vector>               // for vector
 #include "GeckoProfiler.h"      // for AUTO_PROFILER_LABEL
@@ -36,7 +15,6 @@
 #include "gfx2DGlue.h"          // for Moz2D transition helpers
 #include "gfxPlatform.h"        // for gfxImageFormat, gfxPlatform
 
->>>>>>> upstream-releases
 //#include "gfxSharedImageSurface.h"      // for gfxSharedImageSurface
 #include "ipc/IPCMessageUtils.h"  // for gfxContentType, null_t
 #include "IPDLActor.h"
@@ -424,21 +402,10 @@ void ShadowLayerForwarder::UpdateTextureRegion(
       OpPaintTextureRegion(aThebesBufferData, aUpdatedRegion)));
 }
 
-<<<<<<< HEAD
-void ShadowLayerForwarder::UseTextures(
-    CompositableClient* aCompositable,
-    const nsTArray<TimedTextureClient>& aTextures) {
-||||||| merged common ancestors
-void
-ShadowLayerForwarder::UseTextures(CompositableClient* aCompositable,
-                                  const nsTArray<TimedTextureClient>& aTextures)
-{
-=======
 void ShadowLayerForwarder::UseTextures(
     CompositableClient* aCompositable,
     const nsTArray<TimedTextureClient>& aTextures,
     const Maybe<wr::RenderRoot>& aRenderRoot) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCompositable);
 
   if (!aCompositable->IsConnected()) {
@@ -516,19 +483,9 @@ bool ShadowLayerForwarder::DestroyInTransaction(
   return AddOpDestroy(mTxn, OpDestroy(aHandle));
 }
 
-<<<<<<< HEAD
-void ShadowLayerForwarder::RemoveTextureFromCompositable(
-    CompositableClient* aCompositable, TextureClient* aTexture) {
-||||||| merged common ancestors
-void
-ShadowLayerForwarder::RemoveTextureFromCompositable(CompositableClient* aCompositable,
-                                                    TextureClient* aTexture)
-{
-=======
 void ShadowLayerForwarder::RemoveTextureFromCompositable(
     CompositableClient* aCompositable, TextureClient* aTexture,
     const Maybe<wr::RenderRoot>& aRenderRoot) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCompositable);
   MOZ_ASSERT(aTexture);
   MOZ_ASSERT(aTexture->GetIPDLActor());
@@ -570,26 +527,6 @@ void ShadowLayerForwarder::SendPaintTime(TransactionId aId,
   }
 }
 
-<<<<<<< HEAD
-bool ShadowLayerForwarder::EndTransaction(
-    const nsIntRegion& aRegionToClear, TransactionId aId,
-    bool aScheduleComposite, uint32_t aPaintSequenceNumber,
-    bool aIsRepeatTransaction, const mozilla::VsyncId& aVsyncId,
-    const mozilla::TimeStamp& aRefreshStart,
-    const mozilla::TimeStamp& aTransactionStart, const nsCString& aURL,
-    bool* aSent) {
-||||||| merged common ancestors
-bool
-ShadowLayerForwarder::EndTransaction(const nsIntRegion& aRegionToClear,
-                                     TransactionId aId,
-                                     bool aScheduleComposite,
-                                     uint32_t aPaintSequenceNumber,
-                                     bool aIsRepeatTransaction,
-                                     const mozilla::TimeStamp& aRefreshStart,
-                                     const mozilla::TimeStamp& aTransactionStart,
-                                     bool* aSent)
-{
-=======
 bool ShadowLayerForwarder::EndTransaction(
     const nsIntRegion& aRegionToClear, TransactionId aId,
     bool aScheduleComposite, uint32_t aPaintSequenceNumber,
@@ -599,7 +536,6 @@ bool ShadowLayerForwarder::EndTransaction(
     const mozilla::TimeStamp& aTransactionStart, bool aContainsSVG,
     const nsCString& aURL, bool* aSent,
     const InfallibleTArray<CompositionPayload>& aPayload) {
->>>>>>> upstream-releases
   *aSent = false;
 
   TransactionInfo info;
@@ -739,22 +675,12 @@ bool ShadowLayerForwarder::EndTransaction(
   info.scheduleComposite() = aScheduleComposite;
   info.paintSequenceNumber() = aPaintSequenceNumber;
   info.isRepeatTransaction() = aIsRepeatTransaction;
-<<<<<<< HEAD
-  info.vsyncId() = aVsyncId;
-||||||| merged common ancestors
-=======
   info.vsyncId() = aVsyncId;
   info.vsyncStart() = aVsyncStart;
->>>>>>> upstream-releases
   info.refreshStart() = aRefreshStart;
   info.transactionStart() = aTransactionStart;
-<<<<<<< HEAD
-  info.url() = aURL;
-||||||| merged common ancestors
-=======
   info.url() = aURL;
   info.containsSVG() = aContainsSVG;
->>>>>>> upstream-releases
 #if defined(ENABLE_FRAME_LATENCY_LOG)
   info.fwdTime() = TimeStamp::Now();
 #endif
@@ -869,17 +795,8 @@ LayerHandle ShadowLayerForwarder::ConstructShadowFor(ShadowableLayer* aLayer) {
 
 #if !defined(MOZ_HAVE_PLATFORM_SPECIFIC_LAYER_BUFFERS)
 
-<<<<<<< HEAD
-/*static*/ void ShadowLayerForwarder::PlatformSyncBeforeUpdate() {}
-||||||| merged common ancestors
-/*static*/ void
-ShadowLayerForwarder::PlatformSyncBeforeUpdate()
-{
-}
-=======
 /*static*/
 void ShadowLayerForwarder::PlatformSyncBeforeUpdate() {}
->>>>>>> upstream-releases
 
 #endif  // !defined(MOZ_HAVE_PLATFORM_SPECIFIC_LAYER_BUFFERS)
 
@@ -1062,26 +979,12 @@ bool ShadowLayerForwarder::AllocSurfaceDescriptorWithCaps(
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool ShadowLayerForwarder::IsShmem(SurfaceDescriptor* aSurface) {
-  return aSurface &&
-         (aSurface->type() == SurfaceDescriptor::TSurfaceDescriptorBuffer) &&
-         (aSurface->get_SurfaceDescriptorBuffer().data().type() ==
-          MemoryOrShmem::TShmem);
-||||||| merged common ancestors
-/* static */ bool
-ShadowLayerForwarder::IsShmem(SurfaceDescriptor* aSurface)
-{
-  return aSurface && (aSurface->type() == SurfaceDescriptor::TSurfaceDescriptorBuffer)
-      && (aSurface->get_SurfaceDescriptorBuffer().data().type() == MemoryOrShmem::TShmem);
-=======
 /* static */
 bool ShadowLayerForwarder::IsShmem(SurfaceDescriptor* aSurface) {
   return aSurface &&
          (aSurface->type() == SurfaceDescriptor::TSurfaceDescriptorBuffer) &&
          (aSurface->get_SurfaceDescriptorBuffer().data().type() ==
           MemoryOrShmem::TShmem);
->>>>>>> upstream-releases
 }
 
 void ShadowLayerForwarder::DestroySurfaceDescriptor(

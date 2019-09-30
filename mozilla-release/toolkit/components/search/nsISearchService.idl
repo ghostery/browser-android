@@ -429,21 +429,12 @@ interface nsISearchService : nsISupports
   Promise removeWebExtensionEngine(in AString id);
 
   /**
-<<<<<<< HEAD:mozilla-release/netwerk/base/nsIBrowserSearchService.idl
-||||||| merged common ancestors
-   * Alias for the currentEngine attribute, kept for add-on compatibility.
-   */
-  attribute nsISearchEngine defaultEngine;
-
-  /**
-=======
    * The original Engine object that is the default for this region,
    * ignoring changes the user may have subsequently made.
    */
   readonly attribute nsISearchEngine originalDefaultEngine;
 
   /**
->>>>>>> upstream-releases:mozilla-release/toolkit/components/search/nsISearchService.idl
    * The currently active search engine.
    * Unless the application doesn't ship any search plugin, this should never
    * be null. If the currently active engine is removed, this attribute will
@@ -451,12 +442,6 @@ interface nsISearchService : nsISupports
    * the first visible engine, and as a last resort it will unhide the original
    * default engine.
    */
-<<<<<<< HEAD:mozilla-release/netwerk/base/nsIBrowserSearchService.idl
-  attribute nsISearchEngine defaultEngine;
-
-||||||| merged common ancestors
-  attribute nsISearchEngine currentEngine;
-=======
   attribute nsISearchEngine defaultEngine;
 
   Promise getDefault();
@@ -470,7 +455,6 @@ interface nsISearchService : nsISupports
 
   Promise getDefaultPrivate();
   Promise setDefaultPrivate(in nsISearchEngine engine);
->>>>>>> upstream-releases:mozilla-release/toolkit/components/search/nsISearchService.idl
 
   /**
    * Gets a representation of the default engine in an anonymized JSON

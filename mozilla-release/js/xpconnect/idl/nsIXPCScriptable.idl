@@ -79,15 +79,8 @@ interface nsIXPCScriptable : nsISupports
 
     boolean newEnumerate(in nsIXPConnectWrappedNative wrapper,
                         in JSContextPtr cx, in JSObjectPtr obj,
-<<<<<<< HEAD
-                        in JSAutoIdVector properties,
-                        in boolean enumerableOnly);
-||||||| merged common ancestors
-                        in JSAutoIdVector properties);
-=======
                         in JSMutableHandleIdVector properties,
                         in boolean enumerableOnly);
->>>>>>> upstream-releases
 
     boolean resolve(in nsIXPConnectWrappedNative wrapper,
                     in JSContextPtr cx, in JSObjectPtr obj, in jsid id,

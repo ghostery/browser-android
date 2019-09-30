@@ -24,101 +24,6 @@ const TEST_URI =
 //   - name: the name of the property that is set by the css rule
 //   - ruleSelector: the selector of the rule
 //   - styleSheetLocation: the fileName:lineNumber
-<<<<<<< HEAD
-const VALUES_TEST_DATA = [{
-  selector: "#div1",
-  values: [{
-    name: "margin-top",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1",
-  }, {
-    name: "margin-right",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1",
-  }, {
-    name: "margin-bottom",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1",
-  }, {
-    name: "margin-left",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1",
-  }],
-}, {
-  selector: "#div2",
-  values: [{
-    name: "border-bottom-width",
-    ruleSelector: "#div2",
-    styleSheetLocation: "inline:2",
-  }],
-}, {
-  selector: "#div3",
-  values: [{
-    name: "padding-top",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3",
-  }, {
-    name: "padding-right",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3",
-  }, {
-    name: "padding-bottom",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3",
-  }, {
-    name: "padding-left",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3",
-  }],
-}];
-||||||| merged common ancestors
-const VALUES_TEST_DATA = [{
-  selector: "#div1",
-  values: [{
-    name: "margin-top",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1"
-  }, {
-    name: "margin-right",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1"
-  }, {
-    name: "margin-bottom",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1"
-  }, {
-    name: "margin-left",
-    ruleSelector: "#div1",
-    styleSheetLocation: "inline:1"
-  }]
-}, {
-  selector: "#div2",
-  values: [{
-    name: "border-bottom-width",
-    ruleSelector: "#div2",
-    styleSheetLocation: "inline:2"
-  }]
-}, {
-  selector: "#div3",
-  values: [{
-    name: "padding-top",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3"
-  }, {
-    name: "padding-right",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3"
-  }, {
-    name: "padding-bottom",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3"
-  }, {
-    name: "padding-left",
-    ruleSelector: "html, body, #div3",
-    styleSheetLocation: "inline:3"
-  }]
-}];
-=======
 const VALUES_TEST_DATA = [
   {
     selector: "#div1",
@@ -181,7 +86,6 @@ const VALUES_TEST_DATA = [
     ],
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));

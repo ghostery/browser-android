@@ -52,27 +52,11 @@ OuterDocAccessible::OuterDocAccessible(nsIContent* aContent,
   // created. It will appended to outerdoc accessible children asynchronously.
   dom::Document* outerDoc = mContent->GetUncomposedDoc();
   if (outerDoc) {
-<<<<<<< HEAD
-    nsIDocument* innerDoc = outerDoc->GetSubDocumentFor(mContent);
-    if (innerDoc) GetAccService()->GetDocAccessible(innerDoc);
-||||||| merged common ancestors
-    nsIDocument* innerDoc = outerDoc->GetSubDocumentFor(mContent);
-    if (innerDoc)
-      GetAccService()->GetDocAccessible(innerDoc);
-=======
     dom::Document* innerDoc = outerDoc->GetSubDocumentFor(mContent);
     if (innerDoc) GetAccService()->GetDocAccessible(innerDoc);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-OuterDocAccessible::~OuterDocAccessible() {}
-||||||| merged common ancestors
-OuterDocAccessible::~OuterDocAccessible()
-{
-}
-=======
 OuterDocAccessible::~OuterDocAccessible() {}
 
 void OuterDocAccessible::SendEmbedderAccessible(
@@ -84,7 +68,6 @@ void OuterDocAccessible::SendEmbedderAccessible(
     aBridge->SendSetEmbedderAccessible(ipcDoc, id);
   }
 }
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 // Accessible public (DON'T add methods here)
@@ -249,22 +232,9 @@ Accessible* OuterDocAccessible::GetChildAt(uint32_t aIndex) const {
 
 #endif  // defined(XP_WIN)
 
-<<<<<<< HEAD
-DocAccessibleParent* OuterDocAccessible::RemoteChildDoc() const {
-  dom::TabParent* tab = dom::TabParent::GetFrom(GetContent());
-  if (!tab) return nullptr;
-||||||| merged common ancestors
-DocAccessibleParent*
-OuterDocAccessible::RemoteChildDoc() const
-{
-  dom::TabParent* tab = dom::TabParent::GetFrom(GetContent());
-  if (!tab)
-    return nullptr;
-=======
 DocAccessibleParent* OuterDocAccessible::RemoteChildDoc() const {
   dom::BrowserParent* tab = dom::BrowserParent::GetFrom(GetContent());
   if (!tab) return nullptr;
->>>>>>> upstream-releases
 
   return tab->GetTopLevelDocAccessible();
 }

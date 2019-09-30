@@ -17,16 +17,8 @@ b.postMessage(42);
 
 SimpleTest.waitForExplicitFinish();
 
-<<<<<<< HEAD
-onmessage= function(e) {
-  is(e.data, 42, "BroadcastChannel works with data URLs");
-||||||| merged common ancestors
-onmessage= function(e) {
-  ok(e.data, "42", "BroadcastChannel works with data URLs");
-=======
 onmessage = function(e) {
   is(e.data, 42, "BroadcastChannel works with data URLs");
->>>>>>> upstream-releases
   SimpleTest.finish();
 };
 

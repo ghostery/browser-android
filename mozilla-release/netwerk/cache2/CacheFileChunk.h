@@ -28,33 +28,13 @@ class CacheFileChunkBuffer {
   explicit CacheFileChunkBuffer(CacheFileChunk* aChunk);
 
   nsresult EnsureBufSize(uint32_t aSize);
-<<<<<<< HEAD
-  void CopyFrom(CacheFileChunkBuffer *aOther);
-  nsresult FillInvalidRanges(CacheFileChunkBuffer *aOther,
-                             CacheFileUtils::ValidityMap *aMap);
-  size_t SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
-||||||| merged common ancestors
-  void     CopyFrom(CacheFileChunkBuffer *aOther);
-  nsresult FillInvalidRanges(CacheFileChunkBuffer *aOther,
-                             CacheFileUtils::ValidityMap *aMap);
-  size_t   SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
-=======
   void CopyFrom(CacheFileChunkBuffer* aOther);
   nsresult FillInvalidRanges(CacheFileChunkBuffer* aOther,
                              CacheFileUtils::ValidityMap* aMap);
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  char *Buf() const { return mBuf; }
-  void SetDataSize(uint32_t aDataSize);
-||||||| merged common ancestors
-  char *   Buf() const { return mBuf; }
-  void     SetDataSize(uint32_t aDataSize);
-=======
   char* Buf() const { return mBuf; }
   void SetDataSize(uint32_t aDataSize);
->>>>>>> upstream-releases
   uint32_t DataSize() const { return mDataSize; }
   uint32_t ReadHandlesCount() const { return mReadHandlesCount; }
   bool WriteHandleExists() const { return mWriteHandleExists; }
@@ -75,28 +55,12 @@ class CacheFileChunkBuffer {
   // buffer is referenced only by chunk and handles. Handles are always
   // destroyed before the chunk so it is guaranteed that mChunk is a valid
   // pointer for the whole buffer's lifetime.
-<<<<<<< HEAD
-  CacheFileChunk *mChunk;
-  char *mBuf;
-  uint32_t mBufSize;
-  uint32_t mDataSize;
-  uint32_t mReadHandlesCount;
-  bool mWriteHandleExists;
-||||||| merged common ancestors
-  CacheFileChunk *mChunk;
-  char           *mBuf;
-  uint32_t        mBufSize;
-  uint32_t        mDataSize;
-  uint32_t        mReadHandlesCount;
-  bool            mWriteHandleExists;
-=======
   CacheFileChunk* mChunk;
   char* mBuf;
   uint32_t mBufSize;
   uint32_t mDataSize;
   uint32_t mReadHandlesCount;
   bool mWriteHandleExists;
->>>>>>> upstream-releases
 };
 
 class CacheFileChunkHandle {
@@ -108,39 +72,17 @@ class CacheFileChunkHandle {
   RefPtr<CacheFileChunkBuffer> mBuf;
 };
 
-<<<<<<< HEAD
-class CacheFileChunkReadHandle : public CacheFileChunkHandle {
- public:
-  explicit CacheFileChunkReadHandle(CacheFileChunkBuffer *aBuf);
-||||||| merged common ancestors
-class CacheFileChunkReadHandle : public CacheFileChunkHandle
-{
-public:
-  explicit CacheFileChunkReadHandle(CacheFileChunkBuffer *aBuf);
-=======
 class CacheFileChunkReadHandle : public CacheFileChunkHandle {
  public:
   explicit CacheFileChunkReadHandle(CacheFileChunkBuffer* aBuf);
->>>>>>> upstream-releases
   ~CacheFileChunkReadHandle();
 
   const char* Buf();
 };
 
-<<<<<<< HEAD
-class CacheFileChunkWriteHandle : public CacheFileChunkHandle {
- public:
-  explicit CacheFileChunkWriteHandle(CacheFileChunkBuffer *aBuf);
-||||||| merged common ancestors
-class CacheFileChunkWriteHandle : public CacheFileChunkHandle
-{
-public:
-  explicit CacheFileChunkWriteHandle(CacheFileChunkBuffer *aBuf);
-=======
 class CacheFileChunkWriteHandle : public CacheFileChunkHandle {
  public:
   explicit CacheFileChunkWriteHandle(CacheFileChunkBuffer* aBuf);
->>>>>>> upstream-releases
   ~CacheFileChunkWriteHandle();
 
   char* Buf();
@@ -193,29 +135,12 @@ class CacheFileChunk final : public CacheFileIOListener,
 
   CacheFileChunk(CacheFile* aFile, uint32_t aIndex, bool aInitByWriter);
 
-<<<<<<< HEAD
-  void InitNew();
-  nsresult Read(CacheFileHandle *aHandle, uint32_t aLen,
-                CacheHash::Hash16_t aHash, CacheFileChunkListener *aCallback);
-  nsresult Write(CacheFileHandle *aHandle, CacheFileChunkListener *aCallback);
-  void WaitForUpdate(CacheFileChunkListener *aCallback);
-  nsresult CancelWait(CacheFileChunkListener *aCallback);
-||||||| merged common ancestors
-  void     InitNew();
-  nsresult Read(CacheFileHandle *aHandle, uint32_t aLen,
-                CacheHash::Hash16_t aHash,
-                CacheFileChunkListener *aCallback);
-  nsresult Write(CacheFileHandle *aHandle, CacheFileChunkListener *aCallback);
-  void     WaitForUpdate(CacheFileChunkListener *aCallback);
-  nsresult CancelWait(CacheFileChunkListener *aCallback);
-=======
   void InitNew();
   nsresult Read(CacheFileHandle* aHandle, uint32_t aLen,
                 CacheHash::Hash16_t aHash, CacheFileChunkListener* aCallback);
   nsresult Write(CacheFileHandle* aHandle, CacheFileChunkListener* aCallback);
   void WaitForUpdate(CacheFileChunkListener* aCallback);
   nsresult CancelWait(CacheFileChunkListener* aCallback);
->>>>>>> upstream-releases
   nsresult NotifyUpdateListeners();
 
   uint32_t Index() const;
@@ -225,24 +150,11 @@ class CacheFileChunk final : public CacheFileIOListener,
   NS_IMETHOD OnFileOpened(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnDataWritten(CacheFileHandle* aHandle, const char* aBuf,
                            nsresult aResult) override;
-<<<<<<< HEAD
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                        nsresult aResult) override;
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
-||||||| merged common ancestors
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf, nsresult aResult) override;
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
-=======
   NS_IMETHOD OnDataRead(CacheFileHandle* aHandle, char* aBuf,
                         nsresult aResult) override;
   NS_IMETHOD OnFileDoomed(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnEOFSet(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnFileRenamed(CacheFileHandle* aHandle, nsresult aResult) override;
->>>>>>> upstream-releases
   virtual bool IsKilled() override;
 
   bool IsReady() const;
@@ -275,7 +187,7 @@ class CacheFileChunk final : public CacheFileIOListener,
   bool CanAllocate(uint32_t aSize) const;
   void BuffersAllocationChanged(uint32_t aFreed, uint32_t aAllocated);
 
-  mozilla::Atomic<uint32_t, ReleaseAcquire> &ChunksMemoryUsage() const;
+  mozilla::Atomic<uint32_t, ReleaseAcquire>& ChunksMemoryUsage() const;
 
   enum EState { INITIAL = 0, READING = 1, WRITING = 2, READY = 3 };
 
@@ -316,16 +228,8 @@ class CacheFileChunk final : public CacheFileIOListener,
   RefPtr<CacheFile> mFile;  // is null if chunk is cached to
                             // prevent reference cycles
   nsCOMPtr<CacheFileChunkListener> mListener;
-<<<<<<< HEAD
-  nsTArray<ChunkListenerItem *> mUpdateListeners;
-  CacheFileUtils::ValidityMap mValidityMap;
-||||||| merged common ancestors
-  nsTArray<ChunkListenerItem *>    mUpdateListeners;
-  CacheFileUtils::ValidityMap      mValidityMap;
-=======
   nsTArray<ChunkListenerItem*> mUpdateListeners;
   CacheFileUtils::ValidityMap mValidityMap;
->>>>>>> upstream-releases
 };
 
 }  // namespace net

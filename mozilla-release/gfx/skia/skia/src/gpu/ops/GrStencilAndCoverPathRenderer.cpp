@@ -157,20 +157,6 @@ bool GrStencilAndCoverPathRenderer::onDrawPath(const DrawPathArgs& args) {
             if (GrAAType::kMixedSamples == coverAAType) {
                 coverAAType = GrAAType::kNone;
             }
-<<<<<<< HEAD
-            std::unique_ptr<GrDrawOp> op = GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
-                                                         args.fContext, std::move(args.fPaint),
-                                                         coverMatrix, localMatrix, coverBounds,
-                                                         coverAAType, &kInvertedCoverPass);
-
-            args.fRenderTargetContext->addDrawOp(*args.fClip, std::move(op));
-||||||| merged common ancestors
-            args.fRenderTargetContext->addDrawOp(*args.fClip,
-                                                 GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
-                                                         std::move(args.fPaint), coverMatrix,
-                                                         localMatrix, coverBounds, coverAAType,
-                                                         &kInvertedCoverPass));
-=======
             // This is a non-coverage aa rect operation
             SkASSERT(coverAAType == GrAAType::kNone || coverAAType == GrAAType::kMSAA);
             std::unique_ptr<GrDrawOp> op = GrFillRectOp::MakeWithLocalMatrix(
@@ -179,7 +165,6 @@ bool GrStencilAndCoverPathRenderer::onDrawPath(const DrawPathArgs& args) {
                                                          coverBounds, &kInvertedCoverPass);
 
             args.fRenderTargetContext->addDrawOp(*args.fClip, std::move(op));
->>>>>>> upstream-releases
         }
     } else {
         std::unique_ptr<GrDrawOp> op =

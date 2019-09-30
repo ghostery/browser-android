@@ -39,13 +39,7 @@ static const uint32_t VREG_INCREMENT = 1;
 static const uint32_t THIS_FRAME_ARGSLOT = 0;
 
 #if defined(JS_NUNBOX32)
-<<<<<<< HEAD
-#define BOX_PIECES 2
-||||||| merged common ancestors
-# define BOX_PIECES         2
-=======
 #  define BOX_PIECES 2
->>>>>>> upstream-releases
 static const uint32_t VREG_TYPE_OFFSET = 0;
 static const uint32_t VREG_DATA_OFFSET = 1;
 static const uint32_t TYPE_INDEX = 0;
@@ -53,21 +47,9 @@ static const uint32_t PAYLOAD_INDEX = 1;
 static const uint32_t INT64LOW_INDEX = 0;
 static const uint32_t INT64HIGH_INDEX = 1;
 #elif defined(JS_PUNBOX64)
-<<<<<<< HEAD
-#define BOX_PIECES 1
-||||||| merged common ancestors
-# define BOX_PIECES         1
-=======
 #  define BOX_PIECES 1
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#error "Unknown!"
-||||||| merged common ancestors
-# error "Unknown!"
-=======
 #  error "Unknown!"
->>>>>>> upstream-releases
 #endif
 
 static const uint32_t INT64_PIECES = sizeof(int64_t) / sizeof(uintptr_t);
@@ -407,7 +389,6 @@ class LDefinition {
     //   * A register, which may not appear as any fixed temporary.
     //   * A stack slot or argument.
     //
-<<<<<<< HEAD
     // Register allocation will not modify a fixed allocation.
     FIXED,
 
@@ -429,79 +410,6 @@ class LDefinition {
     DOUBLE,      // 64-bit floating-point value (FPU).
     SIMD128INT,  // 128-bit SIMD integer vector (FPU).
     SIMD128FLOAT,  // 128-bit SIMD floating point vector (FPU).
-    SINCOS,
-||||||| merged common ancestors
-    // Right now, pre-allocated outputs are limited to the following:
-    //   * Physical argument stack slots.
-    //   * Physical registers.
-    LAllocation output_;
-
-    static const uint32_t TYPE_BITS = 4;
-    static const uint32_t TYPE_SHIFT = 0;
-    static const uint32_t TYPE_MASK = (1 << TYPE_BITS) - 1;
-    static const uint32_t POLICY_BITS = 2;
-    static const uint32_t POLICY_SHIFT = TYPE_SHIFT + TYPE_BITS;
-    static const uint32_t POLICY_MASK = (1 << POLICY_BITS) - 1;
-
-    static const uint32_t VREG_BITS = (sizeof(uint32_t) * 8) - (POLICY_BITS + TYPE_BITS);
-    static const uint32_t VREG_SHIFT = POLICY_SHIFT + POLICY_BITS;
-    static const uint32_t VREG_MASK = (1 << VREG_BITS) - 1;
-
-  public:
-    // Note that definitions, by default, are always allocated a register,
-    // unless the policy specifies that an input can be re-used and that input
-    // is a stack slot.
-    enum Policy {
-        // The policy is predetermined by the LAllocation attached to this
-        // definition. The allocation may be:
-        //   * A register, which may not appear as any fixed temporary.
-        //   * A stack slot or argument.
-        //
-        // Register allocation will not modify a fixed allocation.
-        FIXED,
-
-        // A random register of an appropriate class will be assigned.
-        REGISTER,
-
-        // One definition per instruction must re-use the first input
-        // allocation, which (for now) must be a register.
-        MUST_REUSE_INPUT
-    };
-
-    // This should be kept in sync with LIR.cpp's TypeChars.
-    enum Type {
-        GENERAL,      // Generic, integer or pointer-width data (GPR).
-        INT32,        // int32 data (GPR).
-        OBJECT,       // Pointer that may be collected as garbage (GPR).
-        SLOTS,        // Slots/elements pointer that may be moved by minor GCs (GPR).
-        FLOAT32,      // 32-bit floating-point value (FPU).
-        DOUBLE,       // 64-bit floating-point value (FPU).
-        SIMD128INT,   // 128-bit SIMD integer vector (FPU).
-        SIMD128FLOAT, // 128-bit SIMD floating point vector (FPU).
-        SINCOS,
-=======
-    // Register allocation will not modify a fixed allocation.
-    FIXED,
-
-    // A random register of an appropriate class will be assigned.
-    REGISTER,
-
-    // One definition per instruction must re-use the first input
-    // allocation, which (for now) must be a register.
-    MUST_REUSE_INPUT
-  };
-
-  // This should be kept in sync with LIR.cpp's TypeChars.
-  enum Type {
-    GENERAL,     // Generic, integer or pointer-width data (GPR).
-    INT32,       // int32 data (GPR).
-    OBJECT,      // Pointer that may be collected as garbage (GPR).
-    SLOTS,       // Slots/elements pointer that may be moved by minor GCs (GPR).
-    FLOAT32,     // 32-bit floating-point value (FPU).
-    DOUBLE,      // 64-bit floating-point value (FPU).
-    SIMD128INT,  // 128-bit SIMD integer vector (FPU).
-    SIMD128FLOAT,  // 128-bit SIMD floating point vector (FPU).
->>>>>>> upstream-releases
 #ifdef JS_NUNBOX32
     // A type virtual register must be followed by a payload virtual
     // register, as both will be tracked as a single gcthing.
@@ -571,120 +479,6 @@ class LDefinition {
 #else
     return isFloatReg() == other.isFloatReg();
 #endif
-<<<<<<< HEAD
-  }
-
-  bool isFloatReg() const {
-    return type() == FLOAT32 || type() == DOUBLE || isSimdType();
-  }
-  uint32_t virtualRegister() const {
-    uint32_t index = (bits_ >> VREG_SHIFT) & VREG_MASK;
-    // MOZ_ASSERT(index != 0);
-    return index;
-  }
-  LAllocation* output() { return &output_; }
-  const LAllocation* output() const { return &output_; }
-  bool isFixed() const { return policy() == FIXED; }
-  bool isBogusTemp() const { return isFixed() && output()->isBogus(); }
-  void setVirtualRegister(uint32_t index) {
-    MOZ_ASSERT(index < VREG_MASK);
-    bits_ &= ~(VREG_MASK << VREG_SHIFT);
-    bits_ |= index << VREG_SHIFT;
-  }
-  void setOutput(const LAllocation& a) {
-    output_ = a;
-    if (!a.isUse()) {
-      bits_ &= ~(POLICY_MASK << POLICY_SHIFT);
-      bits_ |= FIXED << POLICY_SHIFT;
-    }
-  }
-  void setReusedInput(uint32_t operand) {
-    output_ = LConstantIndex::FromIndex(operand);
-  }
-  uint32_t getReusedInput() const {
-    MOZ_ASSERT(policy() == LDefinition::MUST_REUSE_INPUT);
-    return output_.toConstantIndex()->index();
-  }
-
-  static inline Type TypeFrom(MIRType type) {
-    switch (type) {
-      case MIRType::Boolean:
-      case MIRType::Int32:
-        // The stack slot allocator doesn't currently support allocating
-        // 1-byte slots, so for now we lower MIRType::Boolean into INT32.
-        static_assert(sizeof(bool) <= sizeof(int32_t),
-                      "bool doesn't fit in an int32 slot");
-        return LDefinition::INT32;
-      case MIRType::String:
-      case MIRType::Symbol:
-      case MIRType::Object:
-      case MIRType::ObjectOrNull:
-        return LDefinition::OBJECT;
-      case MIRType::Double:
-        return LDefinition::DOUBLE;
-      case MIRType::Float32:
-        return LDefinition::FLOAT32;
-||||||| merged common ancestors
-    }
-
-    bool isFloatReg() const {
-        return type() == FLOAT32 || type() == DOUBLE || isSimdType();
-    }
-    uint32_t virtualRegister() const {
-        uint32_t index = (bits_ >> VREG_SHIFT) & VREG_MASK;
-        //MOZ_ASSERT(index != 0);
-        return index;
-    }
-    LAllocation* output() {
-        return &output_;
-    }
-    const LAllocation* output() const {
-        return &output_;
-    }
-    bool isFixed() const {
-        return policy() == FIXED;
-    }
-    bool isBogusTemp() const {
-        return isFixed() && output()->isBogus();
-    }
-    void setVirtualRegister(uint32_t index) {
-        MOZ_ASSERT(index < VREG_MASK);
-        bits_ &= ~(VREG_MASK << VREG_SHIFT);
-        bits_ |= index << VREG_SHIFT;
-    }
-    void setOutput(const LAllocation& a) {
-        output_ = a;
-        if (!a.isUse()) {
-            bits_ &= ~(POLICY_MASK << POLICY_SHIFT);
-            bits_ |= FIXED << POLICY_SHIFT;
-        }
-    }
-    void setReusedInput(uint32_t operand) {
-        output_ = LConstantIndex::FromIndex(operand);
-    }
-    uint32_t getReusedInput() const {
-        MOZ_ASSERT(policy() == LDefinition::MUST_REUSE_INPUT);
-        return output_.toConstantIndex()->index();
-    }
-
-    static inline Type TypeFrom(MIRType type) {
-        switch (type) {
-          case MIRType::Boolean:
-          case MIRType::Int32:
-            // The stack slot allocator doesn't currently support allocating
-            // 1-byte slots, so for now we lower MIRType::Boolean into INT32.
-            static_assert(sizeof(bool) <= sizeof(int32_t), "bool doesn't fit in an int32 slot");
-            return LDefinition::INT32;
-          case MIRType::String:
-          case MIRType::Symbol:
-          case MIRType::Object:
-          case MIRType::ObjectOrNull:
-            return LDefinition::OBJECT;
-          case MIRType::Double:
-            return LDefinition::DOUBLE;
-          case MIRType::Float32:
-            return LDefinition::FLOAT32;
-=======
   }
 
   bool isFloatReg() const {
@@ -739,34 +533,15 @@ class LDefinition {
         return LDefinition::DOUBLE;
       case MIRType::Float32:
         return LDefinition::FLOAT32;
->>>>>>> upstream-releases
 #if defined(JS_PUNBOX64)
       case MIRType::Value:
         return LDefinition::BOX;
 #endif
-<<<<<<< HEAD
-      case MIRType::SinCosDouble:
-        return LDefinition::SINCOS;
       case MIRType::Slots:
       case MIRType::Elements:
         return LDefinition::SLOTS;
       case MIRType::Pointer:
         return LDefinition::GENERAL;
-||||||| merged common ancestors
-          case MIRType::SinCosDouble:
-            return LDefinition::SINCOS;
-          case MIRType::Slots:
-          case MIRType::Elements:
-            return LDefinition::SLOTS;
-          case MIRType::Pointer:
-            return LDefinition::GENERAL;
-=======
-      case MIRType::Slots:
-      case MIRType::Elements:
-        return LDefinition::SLOTS;
-      case MIRType::Pointer:
-        return LDefinition::GENERAL;
->>>>>>> upstream-releases
 #if defined(JS_PUNBOX64)
       case MIRType::Int64:
         return LDefinition::GENERAL;
@@ -1492,50 +1267,11 @@ class LSnapshot : public TempObject {
 };
 
 struct SafepointSlotEntry {
-<<<<<<< HEAD
   // Flag indicating whether this is a slot in the stack or argument space.
   uint32_t stack : 1;
 
   // Byte offset of the slot, as in LStackSlot or LArgument.
   uint32_t slot : 31;
-||||||| merged common ancestors
-    // Flag indicating whether this is a slot in the stack or argument space.
-    uint32_t stack:1;
-
-    // Byte offset of the slot, as in LStackSlot or LArgument.
-    uint32_t slot:31;
-
-    SafepointSlotEntry() : stack(0), slot(0) { }
-    SafepointSlotEntry(bool stack, uint32_t slot)
-      : stack(stack), slot(slot)
-    { }
-    explicit SafepointSlotEntry(const LAllocation* a)
-      : stack(a->isStackSlot()), slot(a->memorySlot())
-    { }
-};
-
-struct SafepointNunboxEntry {
-    uint32_t typeVreg;
-    LAllocation type;
-    LAllocation payload;
-
-    SafepointNunboxEntry() : typeVreg(0) { }
-    SafepointNunboxEntry(uint32_t typeVreg, LAllocation type, LAllocation payload)
-      : typeVreg(typeVreg), type(type), payload(payload)
-    { }
-};
-
-class LSafepoint : public TempObject
-{
-    typedef SafepointSlotEntry SlotEntry;
-    typedef SafepointNunboxEntry NunboxEntry;
-=======
-  // Flag indicating whether this is a slot in the stack or argument space.
-  uint32_t stack : 1;
-
-  // Byte offset of the slot, as in LStackSlot or LArgument.
-  uint32_t slot : 31;
->>>>>>> upstream-releases
 
   SafepointSlotEntry() : stack(0), slot(0) {}
   SafepointSlotEntry(bool stack, uint32_t slot) : stack(stack), slot(slot) {}
@@ -1607,27 +1343,6 @@ class LSafepoint : public TempObject {
   LiveGeneralRegisterSet valueRegs_;
 #endif
 
-<<<<<<< HEAD
-  // The subset of liveRegs which contains pointers to slots/elements.
-  LiveGeneralRegisterSet slotsOrElementsRegs_;
-
-  // List of slots which have slots/elements pointers.
-  SlotList slotsOrElementsSlots_;
-
- public:
-  void assertInvariants() {
-    // Every register in valueRegs and gcRegs should also be in liveRegs.
-||||||| merged common ancestors
-    // The subset of liveRegs which contains pointers to slots/elements.
-    LiveGeneralRegisterSet slotsOrElementsRegs_;
-
-    // List of slots which have slots/elements pointers.
-    SlotList slotsOrElementsSlots_;
-
-  public:
-    void assertInvariants() {
-        // Every register in valueRegs and gcRegs should also be in liveRegs.
-=======
   // The subset of liveRegs which contains pointers to slots/elements.
   LiveGeneralRegisterSet slotsOrElementsRegs_;
 
@@ -1656,7 +1371,6 @@ class LSafepoint : public TempObject {
  public:
   void assertInvariants() {
     // Every register in valueRegs and gcRegs should also be in liveRegs.
->>>>>>> upstream-releases
 #ifndef JS_NUNBOX32
     MOZ_ASSERT((valueRegs().bits() & ~liveRegs().gprs().bits()) == 0);
 #endif
@@ -1672,29 +1386,6 @@ class LSafepoint : public TempObject {
         ,
         nunboxParts_(alloc)
 #endif
-<<<<<<< HEAD
-        ,
-        slotsOrElementsSlots_(alloc) {
-    assertInvariants();
-  }
-  void addLiveRegister(AnyRegister reg) {
-    liveRegs_.addUnchecked(reg);
-    assertInvariants();
-  }
-  const LiveRegisterSet& liveRegs() const { return liveRegs_; }
-||||||| merged common ancestors
-      , slotsOrElementsSlots_(alloc)
-    {
-      assertInvariants();
-    }
-    void addLiveRegister(AnyRegister reg) {
-        liveRegs_.addUnchecked(reg);
-        assertInvariants();
-    }
-    const LiveRegisterSet& liveRegs() const {
-        return liveRegs_;
-    }
-=======
         ,
         slotsOrElementsSlots_(alloc),
         isWasmTrap_(false),
@@ -1706,7 +1397,6 @@ class LSafepoint : public TempObject {
     assertInvariants();
   }
   const LiveRegisterSet& liveRegs() const { return liveRegs_; }
->>>>>>> upstream-releases
 #ifdef CHECK_OSIPOINT_REGISTERS
   void addClobberedRegister(AnyRegister reg) {
     clobberedRegs_.addUnchecked(reg);
@@ -1766,26 +1456,13 @@ class LSafepoint : public TempObject {
     return false;
   }
 
-<<<<<<< HEAD
   MOZ_MUST_USE bool addGcPointer(LAllocation alloc) {
     if (alloc.isMemory()) {
       return addGcSlot(alloc.isStackSlot(), alloc.memorySlot());
     }
     if (alloc.isRegister()) {
       addGcRegister(alloc.toRegister().gpr());
-||||||| merged common ancestors
-    SlotList& slotsOrElementsSlots() {
-        return slotsOrElementsSlots_;
     }
-    LiveGeneralRegisterSet slotsOrElementsRegs() const {
-        return slotsOrElementsRegs_;
-=======
-  MOZ_MUST_USE bool addGcPointer(LAllocation alloc) {
-    if (alloc.isMemory()) {
-      return addGcSlot(alloc.isStackSlot(), alloc.memorySlot());
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
     assertInvariants();
     return true;
   }
@@ -1808,141 +1485,31 @@ class LSafepoint : public TempObject {
     bool result = valueSlots_.append(SlotEntry(stack, slot));
     if (result) {
       assertInvariants();
-||||||| merged common ancestors
-    void addSlotsOrElementsRegister(Register reg) {
-        slotsOrElementsRegs_.addUnchecked(reg);
-        assertInvariants();
     }
-    MOZ_MUST_USE bool addSlotsOrElementsSlot(bool stack, uint32_t slot) {
-        bool result = slotsOrElementsSlots_.append(SlotEntry(stack, slot));
-        if (result) {
-            assertInvariants();
-        }
-        return result;
-    }
-    MOZ_MUST_USE bool addSlotsOrElementsPointer(LAllocation alloc) {
-        if (alloc.isMemory()) {
-            return addSlotsOrElementsSlot(alloc.isStackSlot(), alloc.memorySlot());
-        }
-        MOZ_ASSERT(alloc.isRegister());
-        addSlotsOrElementsRegister(alloc.toRegister().gpr());
-        assertInvariants();
-        return true;
-    }
-    bool hasSlotsOrElementsPointer(LAllocation alloc) const {
-        if (alloc.isRegister()) {
-            return slotsOrElementsRegs().has(alloc.toRegister().gpr());
-        }
-        for (size_t i = 0; i < slotsOrElementsSlots_.length(); i++) {
-            const SlotEntry& entry = slotsOrElementsSlots_[i];
-            if (entry.stack == alloc.isStackSlot() && entry.slot == alloc.memorySlot()) {
-                return true;
-            }
-        }
-        return false;
-=======
-    if (alloc.isRegister()) {
-      addGcRegister(alloc.toRegister().gpr());
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
     return result;
   }
   SlotList& valueSlots() { return valueSlots_; }
-||||||| merged common ancestors
-=======
-    assertInvariants();
-    return true;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   bool hasValueSlot(bool stack, uint32_t slot) const {
     for (size_t i = 0; i < valueSlots_.length(); i++) {
       if (valueSlots_[i].stack == stack && valueSlots_[i].slot == slot) {
         return true;
       }
-||||||| merged common ancestors
-    MOZ_MUST_USE bool addGcPointer(LAllocation alloc) {
-        if (alloc.isMemory()) {
-            return addGcSlot(alloc.isStackSlot(), alloc.memorySlot());
-        }
-        if (alloc.isRegister()) {
-            addGcRegister(alloc.toRegister().gpr());
-        }
-        assertInvariants();
-        return true;
-=======
-  bool hasGcPointer(LAllocation alloc) const {
-    if (alloc.isRegister()) {
-      return gcRegs().has(alloc.toRegister().gpr());
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
     return false;
   }
 
 #ifdef JS_NUNBOX32
-||||||| merged common ancestors
 
-    bool hasGcPointer(LAllocation alloc) const {
-        if (alloc.isRegister()) {
-            return gcRegs().has(alloc.toRegister().gpr());
-        }
-        MOZ_ASSERT(alloc.isMemory());
-        for (size_t i = 0; i < gcSlots_.length(); i++) {
-            if (gcSlots_[i].stack == alloc.isStackSlot() && gcSlots_[i].slot == alloc.memorySlot()) {
-                return true;
-            }
-        }
-        return false;
-    }
-=======
-    MOZ_ASSERT(alloc.isMemory());
-    for (size_t i = 0; i < gcSlots_.length(); i++) {
-      if (gcSlots_[i].stack == alloc.isStackSlot() &&
-          gcSlots_[i].slot == alloc.memorySlot()) {
-        return true;
-      }
-    }
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   MOZ_MUST_USE bool addNunboxParts(uint32_t typeVreg, LAllocation type,
                                    LAllocation payload) {
     bool result = nunboxParts_.append(NunboxEntry(typeVreg, type, payload));
     if (result) {
       assertInvariants();
-||||||| merged common ancestors
-    MOZ_MUST_USE bool addValueSlot(bool stack, uint32_t slot) {
-        bool result = valueSlots_.append(SlotEntry(stack, slot));
-        if (result) {
-            assertInvariants();
-        }
-        return result;
     }
-    SlotList& valueSlots() {
-        return valueSlots_;
-=======
-  MOZ_MUST_USE bool addValueSlot(bool stack, uint32_t slot) {
-    bool result = valueSlots_.append(SlotEntry(stack, slot));
-    if (result) {
-      assertInvariants();
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
     return result;
   }
-||||||| merged common ancestors
-=======
-    return result;
-  }
-  SlotList& valueSlots() { return valueSlots_; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   MOZ_MUST_USE bool addNunboxType(uint32_t typeVreg, LAllocation type) {
     for (size_t i = 0; i < nunboxParts_.length(); i++) {
       if (nunboxParts_[i].type == type) {
@@ -1952,55 +1519,18 @@ class LSafepoint : public TempObject {
         nunboxParts_[i].type = type;
         return true;
       }
-||||||| merged common ancestors
-    bool hasValueSlot(bool stack, uint32_t slot) const {
-        for (size_t i = 0; i < valueSlots_.length(); i++) {
-            if (valueSlots_[i].stack == stack && valueSlots_[i].slot == slot) {
-                return true;
-            }
-        }
-        return false;
-=======
-  bool hasValueSlot(bool stack, uint32_t slot) const {
-    for (size_t i = 0; i < valueSlots_.length(); i++) {
-      if (valueSlots_[i].stack == stack && valueSlots_[i].slot == slot) {
-        return true;
-      }
->>>>>>> upstream-releases
     }
-    return false;
-  }
 
-<<<<<<< HEAD
     // vregs for nunbox pairs are adjacent, with the type coming first.
     uint32_t payloadVreg = typeVreg + 1;
     bool result = nunboxParts_.append(
         NunboxEntry(typeVreg, type, LUse(payloadVreg, LUse::ANY)));
     if (result) {
       assertInvariants();
-||||||| merged common ancestors
-#ifdef JS_NUNBOX32
-
-    MOZ_MUST_USE bool addNunboxParts(uint32_t typeVreg, LAllocation type, LAllocation payload) {
-        bool result = nunboxParts_.append(NunboxEntry(typeVreg, type, payload));
-        if (result) {
-            assertInvariants();
-        }
-        return result;
-=======
-#ifdef JS_NUNBOX32
-
-  MOZ_MUST_USE bool addNunboxParts(uint32_t typeVreg, LAllocation type,
-                                   LAllocation payload) {
-    bool result = nunboxParts_.append(NunboxEntry(typeVreg, type, payload));
-    if (result) {
-      assertInvariants();
->>>>>>> upstream-releases
     }
     return result;
   }
 
-<<<<<<< HEAD
   MOZ_MUST_USE bool addNunboxPayload(uint32_t payloadVreg,
                                      LAllocation payload) {
     for (size_t i = 0; i < nunboxParts_.length(); i++) {
@@ -2011,160 +1541,15 @@ class LSafepoint : public TempObject {
         nunboxParts_[i].payload = payload;
         return true;
       }
-||||||| merged common ancestors
-    MOZ_MUST_USE bool addNunboxType(uint32_t typeVreg, LAllocation type) {
-        for (size_t i = 0; i < nunboxParts_.length(); i++) {
-            if (nunboxParts_[i].type == type) {
-                return true;
-            }
-            if (nunboxParts_[i].type == LUse(typeVreg, LUse::ANY)) {
-                nunboxParts_[i].type = type;
-                return true;
-            }
-        }
-
-        // vregs for nunbox pairs are adjacent, with the type coming first.
-        uint32_t payloadVreg = typeVreg + 1;
-        bool result = nunboxParts_.append(NunboxEntry(typeVreg, type, LUse(payloadVreg, LUse::ANY)));
-        if (result) {
-            assertInvariants();
-        }
-        return result;
-=======
-  MOZ_MUST_USE bool addNunboxType(uint32_t typeVreg, LAllocation type) {
-    for (size_t i = 0; i < nunboxParts_.length(); i++) {
-      if (nunboxParts_[i].type == type) {
-        return true;
-      }
-      if (nunboxParts_[i].type == LUse(typeVreg, LUse::ANY)) {
-        nunboxParts_[i].type = type;
-        return true;
-      }
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
     // vregs for nunbox pairs are adjacent, with the type coming first.
     uint32_t typeVreg = payloadVreg - 1;
     bool result = nunboxParts_.append(
         NunboxEntry(typeVreg, LUse(typeVreg, LUse::ANY), payload));
     if (result) {
       assertInvariants();
-||||||| merged common ancestors
-    MOZ_MUST_USE bool addNunboxPayload(uint32_t payloadVreg, LAllocation payload) {
-        for (size_t i = 0; i < nunboxParts_.length(); i++) {
-            if (nunboxParts_[i].payload == payload) {
-                return true;
-            }
-            if (nunboxParts_[i].payload == LUse(payloadVreg, LUse::ANY)) {
-                nunboxParts_[i].payload = payload;
-                return true;
-            }
-        }
-
-        // vregs for nunbox pairs are adjacent, with the type coming first.
-        uint32_t typeVreg = payloadVreg - 1;
-        bool result = nunboxParts_.append(NunboxEntry(typeVreg, LUse(typeVreg, LUse::ANY), payload));
-        if (result) {
-            assertInvariants();
-        }
-        return result;
-=======
-    // vregs for nunbox pairs are adjacent, with the type coming first.
-    uint32_t payloadVreg = typeVreg + 1;
-    bool result = nunboxParts_.append(
-        NunboxEntry(typeVreg, type, LUse(payloadVreg, LUse::ANY)));
-    if (result) {
-      assertInvariants();
->>>>>>> upstream-releases
     }
-    return result;
-  }
-
-<<<<<<< HEAD
-  LAllocation findTypeAllocation(uint32_t typeVreg) {
-    // Look for some allocation for the specified type vreg, to go with a
-    // partial nunbox entry for the payload. Note that we don't need to
-    // look at the value slots in the safepoint, as these aren't used by
-    // register allocators which add partial nunbox entries.
-    for (size_t i = 0; i < nunboxParts_.length(); i++) {
-      if (nunboxParts_[i].typeVreg == typeVreg &&
-          !nunboxParts_[i].type.isUse()) {
-        return nunboxParts_[i].type;
-      }
-||||||| merged common ancestors
-    LAllocation findTypeAllocation(uint32_t typeVreg) {
-        // Look for some allocation for the specified type vreg, to go with a
-        // partial nunbox entry for the payload. Note that we don't need to
-        // look at the value slots in the safepoint, as these aren't used by
-        // register allocators which add partial nunbox entries.
-        for (size_t i = 0; i < nunboxParts_.length(); i++) {
-            if (nunboxParts_[i].typeVreg == typeVreg && !nunboxParts_[i].type.isUse()) {
-                return nunboxParts_[i].type;
-            }
-        }
-        return LUse(typeVreg, LUse::ANY);
-=======
-  MOZ_MUST_USE bool addNunboxPayload(uint32_t payloadVreg,
-                                     LAllocation payload) {
-    for (size_t i = 0; i < nunboxParts_.length(); i++) {
-      if (nunboxParts_[i].payload == payload) {
-        return true;
-      }
-      if (nunboxParts_[i].payload == LUse(payloadVreg, LUse::ANY)) {
-        nunboxParts_[i].payload = payload;
-        return true;
-      }
->>>>>>> upstream-releases
-    }
-    return LUse(typeVreg, LUse::ANY);
-  }
-
-<<<<<<< HEAD
-#ifdef DEBUG
-  bool hasNunboxPayload(LAllocation payload) const {
-    if (payload.isMemory() &&
-        hasValueSlot(payload.isStackSlot(), payload.memorySlot())) {
-      return true;
-    }
-    for (size_t i = 0; i < nunboxParts_.length(); i++) {
-      if (nunboxParts_[i].payload == payload) {
-        return true;
-      }
-||||||| merged common ancestors
-#ifdef DEBUG
-    bool hasNunboxPayload(LAllocation payload) const {
-        if (payload.isMemory() && hasValueSlot(payload.isStackSlot(), payload.memorySlot())) {
-            return true;
-        }
-        for (size_t i = 0; i < nunboxParts_.length(); i++) {
-            if (nunboxParts_[i].payload == payload) {
-                return true;
-            }
-        }
-        return false;
-=======
-    // vregs for nunbox pairs are adjacent, with the type coming first.
-    uint32_t typeVreg = payloadVreg - 1;
-    bool result = nunboxParts_.append(
-        NunboxEntry(typeVreg, LUse(typeVreg, LUse::ANY), payload));
-    if (result) {
-      assertInvariants();
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    return false;
-  }
-#endif
-
-  NunboxList& nunboxParts() { return nunboxParts_; }
-||||||| merged common ancestors
-#endif
-
-    NunboxList& nunboxParts() {
-        return nunboxParts_;
-    }
-=======
     return result;
   }
 
@@ -2198,67 +1583,9 @@ class LSafepoint : public TempObject {
 #  endif
 
   NunboxList& nunboxParts() { return nunboxParts_; }
->>>>>>> upstream-releases
 
 #elif JS_PUNBOX64
 
-<<<<<<< HEAD
-  void addValueRegister(Register reg) {
-    valueRegs_.add(reg);
-    assertInvariants();
-  }
-  LiveGeneralRegisterSet valueRegs() const { return valueRegs_; }
-
-  MOZ_MUST_USE bool addBoxedValue(LAllocation alloc) {
-    if (alloc.isRegister()) {
-      Register reg = alloc.toRegister().gpr();
-      if (!valueRegs().has(reg)) {
-        addValueRegister(reg);
-      }
-      return true;
-    }
-    if (hasValueSlot(alloc.isStackSlot(), alloc.memorySlot())) {
-      return true;
-    }
-    return addValueSlot(alloc.isStackSlot(), alloc.memorySlot());
-  }
-
-  bool hasBoxedValue(LAllocation alloc) const {
-    if (alloc.isRegister()) {
-      return valueRegs().has(alloc.toRegister().gpr());
-    }
-    return hasValueSlot(alloc.isStackSlot(), alloc.memorySlot());
-  }
-
-#endif  // JS_PUNBOX64
-
-  bool encoded() const { return safepointOffset_ != INVALID_SAFEPOINT_OFFSET; }
-  uint32_t offset() const {
-    MOZ_ASSERT(encoded());
-    return safepointOffset_;
-  }
-  void setOffset(uint32_t offset) { safepointOffset_ = offset; }
-  uint32_t osiReturnPointOffset() const {
-    // In general, pointer arithmetic on code is bad, but in this case,
-    // getting the return address from a call instruction, stepping over pools
-    // would be wrong.
-    return osiCallPointOffset_ + Assembler::PatchWrite_NearCallSize();
-  }
-  uint32_t osiCallPointOffset() const { return osiCallPointOffset_; }
-  void setOsiCallPointOffset(uint32_t osiCallPointOffset) {
-    MOZ_ASSERT(!osiCallPointOffset_);
-    osiCallPointOffset_ = osiCallPointOffset;
-  }
-};
-||||||| merged common ancestors
-    void addValueRegister(Register reg) {
-        valueRegs_.add(reg);
-        assertInvariants();
-    }
-    LiveGeneralRegisterSet valueRegs() const {
-        return valueRegs_;
-    }
-=======
   void addValueRegister(Register reg) {
     valueRegs_.add(reg);
     assertInvariants();
@@ -2317,7 +1644,6 @@ class LSafepoint : public TempObject {
     framePushedAtStackMapBase_ = n;
   }
 };
->>>>>>> upstream-releases
 
 class LInstruction::InputIterator {
  private:
@@ -2333,61 +1659,12 @@ class LInstruction::InputIterator {
     }
   }
 
-<<<<<<< HEAD
- public:
-  explicit InputIterator(LInstruction& ins)
-      : ins_(ins), idx_(0), snapshot_(false) {
-    handleOperandsEnd();
-  }
-||||||| merged common ancestors
-#endif // JS_PUNBOX64
-
-    bool encoded() const {
-        return safepointOffset_ != INVALID_SAFEPOINT_OFFSET;
-    }
-    uint32_t offset() const {
-        MOZ_ASSERT(encoded());
-        return safepointOffset_;
-    }
-    void setOffset(uint32_t offset) {
-        safepointOffset_ = offset;
-    }
-    uint32_t osiReturnPointOffset() const {
-        // In general, pointer arithmetic on code is bad, but in this case,
-        // getting the return address from a call instruction, stepping over pools
-        // would be wrong.
-        return osiCallPointOffset_ + Assembler::PatchWrite_NearCallSize();
-    }
-    uint32_t osiCallPointOffset() const {
-        return osiCallPointOffset_;
-    }
-    void setOsiCallPointOffset(uint32_t osiCallPointOffset) {
-        MOZ_ASSERT(!osiCallPointOffset_);
-        osiCallPointOffset_ = osiCallPointOffset;
-    }
-};
-=======
  public:
   explicit InputIterator(LInstruction& ins)
       : ins_(ins), idx_(0), snapshot_(false) {
     handleOperandsEnd();
   }
 
-  bool more() const {
-    if (snapshot_) {
-      return idx_ < ins_.snapshot()->numEntries();
-    }
-    if (idx_ < ins_.numOperands()) {
-      return true;
-    }
-    if (ins_.snapshot() && ins_.snapshot()->numEntries()) {
-      return true;
-    }
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   bool more() const {
     if (snapshot_) {
       return idx_ < ins_.snapshot()->numEntries();
@@ -2408,62 +1685,6 @@ class LInstruction::InputIterator {
     idx_++;
     handleOperandsEnd();
   }
-||||||| merged common ancestors
-class LInstruction::InputIterator
-{
-  private:
-    LInstruction& ins_;
-    size_t idx_;
-    bool snapshot_;
-
-    void handleOperandsEnd() {
-        // Iterate on the snapshot when iteration over all operands is done.
-        if (!snapshot_ && idx_ == ins_.numOperands() && ins_.snapshot()) {
-            idx_ = 0;
-            snapshot_ = true;
-        }
-    }
-
-public:
-    explicit InputIterator(LInstruction& ins) :
-      ins_(ins),
-      idx_(0),
-      snapshot_(false)
-    {
-        handleOperandsEnd();
-    }
-
-    bool more() const {
-        if (snapshot_) {
-            return idx_ < ins_.snapshot()->numEntries();
-        }
-        if (idx_ < ins_.numOperands()) {
-            return true;
-        }
-        if (ins_.snapshot() && ins_.snapshot()->numEntries()) {
-            return true;
-        }
-        return false;
-    }
-
-    bool isSnapshotInput() const {
-        return snapshot_;
-    }
-
-    void next() {
-        MOZ_ASSERT(more());
-        idx_++;
-        handleOperandsEnd();
-    }
-=======
-  bool isSnapshotInput() const { return snapshot_; }
-
-  void next() {
-    MOZ_ASSERT(more());
-    idx_++;
-    handleOperandsEnd();
-  }
->>>>>>> upstream-releases
 
   void replace(const LAllocation& alloc) {
     if (snapshot_) {
@@ -2610,83 +1831,27 @@ AnyRegister LAllocation::toRegister() const {
 
 #include "jit/shared/LIR-shared.h"
 #if defined(JS_CODEGEN_X86) || defined(JS_CODEGEN_X64)
-<<<<<<< HEAD
-#if defined(JS_CODEGEN_X86)
-#include "jit/x86/LIR-x86.h"
-#elif defined(JS_CODEGEN_X64)
-#include "jit/x64/LIR-x64.h"
-#endif
-#include "jit/x86-shared/LIR-x86-shared.h"
-||||||| merged common ancestors
-# if defined(JS_CODEGEN_X86)
-#  include "jit/x86/LIR-x86.h"
-# elif defined(JS_CODEGEN_X64)
-#  include "jit/x64/LIR-x64.h"
-# endif
-# include "jit/x86-shared/LIR-x86-shared.h"
-=======
 #  if defined(JS_CODEGEN_X86)
 #    include "jit/x86/LIR-x86.h"
 #  elif defined(JS_CODEGEN_X64)
 #    include "jit/x64/LIR-x64.h"
 #  endif
 #  include "jit/x86-shared/LIR-x86-shared.h"
->>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_ARM)
-<<<<<<< HEAD
-#include "jit/arm/LIR-arm.h"
-||||||| merged common ancestors
-# include "jit/arm/LIR-arm.h"
-=======
 #  include "jit/arm/LIR-arm.h"
->>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_ARM64)
-<<<<<<< HEAD
-#include "jit/arm64/LIR-arm64.h"
-||||||| merged common ancestors
-# include "jit/arm64/LIR-arm64.h"
-=======
 #  include "jit/arm64/LIR-arm64.h"
->>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_MIPS32) || defined(JS_CODEGEN_MIPS64)
-<<<<<<< HEAD
-#if defined(JS_CODEGEN_MIPS32)
-#include "jit/mips32/LIR-mips32.h"
-#elif defined(JS_CODEGEN_MIPS64)
-#include "jit/mips64/LIR-mips64.h"
-#endif
-#include "jit/mips-shared/LIR-mips-shared.h"
-||||||| merged common ancestors
-# if defined(JS_CODEGEN_MIPS32)
-#  include "jit/mips32/LIR-mips32.h"
-# elif defined(JS_CODEGEN_MIPS64)
-#  include "jit/mips64/LIR-mips64.h"
-# endif
-# include "jit/mips-shared/LIR-mips-shared.h"
-=======
 #  if defined(JS_CODEGEN_MIPS32)
 #    include "jit/mips32/LIR-mips32.h"
 #  elif defined(JS_CODEGEN_MIPS64)
 #    include "jit/mips64/LIR-mips64.h"
 #  endif
 #  include "jit/mips-shared/LIR-mips-shared.h"
->>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_NONE)
-<<<<<<< HEAD
-#include "jit/none/LIR-none.h"
-||||||| merged common ancestors
-# include "jit/none/LIR-none.h"
-=======
 #  include "jit/none/LIR-none.h"
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#error "Unknown architecture!"
-||||||| merged common ancestors
-# error "Unknown architecture!"
-=======
 #  error "Unknown architecture!"
->>>>>>> upstream-releases
 #endif
 
 #undef LIR_HEADER

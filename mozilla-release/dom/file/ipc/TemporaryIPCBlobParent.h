@@ -15,20 +15,10 @@ class nsIFile;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class TemporaryIPCBlobParent final
-    : public mozilla::ipc::PTemporaryIPCBlobParent {
- public:
-||||||| merged common ancestors
-class TemporaryIPCBlobParent final : public mozilla::ipc::PTemporaryIPCBlobParent
-{
-public:
-=======
 class TemporaryIPCBlobParent final : public PTemporaryIPCBlobParent {
   friend class PTemporaryIPCBlobParent;
 
  public:
->>>>>>> upstream-releases
   explicit TemporaryIPCBlobParent();
 
   mozilla::ipc::IPCResult CreateAndShareFile();
@@ -36,26 +26,10 @@ class TemporaryIPCBlobParent final : public PTemporaryIPCBlobParent {
  private:
   ~TemporaryIPCBlobParent();
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvOperationFailed() override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvOperationFailed() override;
-=======
   mozilla::ipc::IPCResult RecvOperationFailed();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvOperationDone(const nsCString& aContentType,
-                                            const FileDescriptor& aFD) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvOperationDone(const nsCString& aContentType,
-                    const FileDescriptor& aFD) override;
-=======
   mozilla::ipc::IPCResult RecvOperationDone(const nsCString& aContentType,
                                             const FileDescriptor& aFD);
->>>>>>> upstream-releases
 
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
@@ -68,10 +42,4 @@ class TemporaryIPCBlobParent final : public PTemporaryIPCBlobParent {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_ipc_TemporaryIPCBlobParent_h
-||||||| merged common ancestors
-#endif // mozilla_dom_ipc_TemporaryIPCBlobParent_h
-=======
 #endif  // mozilla_dom_TemporaryIPCBlobParent_h
->>>>>>> upstream-releases

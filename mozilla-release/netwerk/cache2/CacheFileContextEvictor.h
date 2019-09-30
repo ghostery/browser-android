@@ -34,31 +34,15 @@ class CacheFileContextEvictor {
  private:
   virtual ~CacheFileContextEvictor();
 
-<<<<<<< HEAD
- public:
-  nsresult Init(nsIFile *aCacheDirectory);
-||||||| merged common ancestors
-public:
-  nsresult Init(nsIFile *aCacheDirectory);
-=======
  public:
   nsresult Init(nsIFile* aCacheDirectory);
->>>>>>> upstream-releases
   void Shutdown();
 
   // Returns number of contexts that are being evicted.
   uint32_t ContextsCount();
   // Start evicting given context and an origin, if not empty.
-<<<<<<< HEAD
-  nsresult AddContext(nsILoadContextInfo *aLoadContextInfo, bool aPinned,
-                      const nsAString &aOrigin);
-||||||| merged common ancestors
-  nsresult AddContext(nsILoadContextInfo *aLoadContextInfo, bool aPinned,
-                      const nsAString& aOrigin);
-=======
   nsresult AddContext(nsILoadContextInfo* aLoadContextInfo, bool aPinned,
                       const nsAString& aOrigin);
->>>>>>> upstream-releases
   // CacheFileIOManager calls this method when CacheIndex's state changes. We
   // check whether the index is up to date and start or stop evicting according
   // to index's state.
@@ -76,41 +60,17 @@ public:
   // done for every context added to the evictor to be able to recover eviction
   // after a shutdown or crash. When the context file is found after startup, we
   // restore mTimeStamp from the last modified time of the file.
-<<<<<<< HEAD
-  nsresult PersistEvictionInfoToDisk(nsILoadContextInfo *aLoadContextInfo,
-                                     bool aPinned, const nsAString &aOrigin);
-||||||| merged common ancestors
-  nsresult PersistEvictionInfoToDisk(nsILoadContextInfo *aLoadContextInfo,
-                                     bool aPinned, const nsAString& aOrigin);
-=======
   nsresult PersistEvictionInfoToDisk(nsILoadContextInfo* aLoadContextInfo,
                                      bool aPinned, const nsAString& aOrigin);
->>>>>>> upstream-releases
   // Once we are done with eviction for the given context, the eviction info is
   // removed from the disk.
-<<<<<<< HEAD
-  nsresult RemoveEvictInfoFromDisk(nsILoadContextInfo *aLoadContextInfo,
-                                   bool aPinned, const nsAString &aOrigin);
-||||||| merged common ancestors
-  nsresult RemoveEvictInfoFromDisk(nsILoadContextInfo *aLoadContextInfo,
-                                   bool aPinned, const nsAString& aOrigin);
-=======
   nsresult RemoveEvictInfoFromDisk(nsILoadContextInfo* aLoadContextInfo,
                                    bool aPinned, const nsAString& aOrigin);
->>>>>>> upstream-releases
   // Tries to load all contexts from the disk. This method is called just once
   // after startup.
   nsresult LoadEvictInfoFromDisk();
-<<<<<<< HEAD
-  nsresult GetContextFile(nsILoadContextInfo *aLoadContextInfo, bool aPinned,
-                          const nsAString &aOrigin, nsIFile **_retval);
-||||||| merged common ancestors
-  nsresult GetContextFile(nsILoadContextInfo *aLoadContextInfo, bool aPinned,
-                          const nsAString& aOrigin, nsIFile **_retval);
-=======
   nsresult GetContextFile(nsILoadContextInfo* aLoadContextInfo, bool aPinned,
                           const nsAString& aOrigin, nsIFile** _retval);
->>>>>>> upstream-releases
 
   void CreateIterators();
   void CloseIterators();

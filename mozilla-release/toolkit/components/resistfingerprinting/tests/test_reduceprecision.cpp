@@ -193,17 +193,9 @@ TEST(ResistFingerprinting, ReducePrecision_ExpectedLossOfPrecision)
 // If you're doing logging, you really don't want to run this test.
 #define RUN_AGGRESSIVE false
 
-<<<<<<< HEAD
-TEST(ResistFingerprinting, ReducePrecision_Aggressive) {
-  if (!RUN_AGGRESSIVE) {
-||||||| merged common ancestors
-TEST(ResistFingerprinting, ReducePrecision_Aggressive) {
-  if(!RUN_AGGRESSIVE) {
-=======
 TEST(ResistFingerprinting, ReducePrecision_Aggressive)
 {
   if (!RUN_AGGRESSIVE) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -256,15 +248,8 @@ TEST(ResistFingerprinting, ReducePrecision_Aggressive)
   cleanupJitter(jitterEnabled);
 }
 
-<<<<<<< HEAD
-TEST(ResistFingerprinting, ReducePrecision_JitterTestVectors) {
-||||||| merged common ancestors
-
-TEST(ResistFingerprinting, ReducePrecision_JitterTestVectors) {
-=======
 TEST(ResistFingerprinting, ReducePrecision_JitterTestVectors)
 {
->>>>>>> upstream-releases
   bool jitterEnabled = setupJitter(true);
 
   // clang-format off

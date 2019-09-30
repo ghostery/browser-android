@@ -376,23 +376,10 @@ protected:
 
     //  Subclasses *must* override this method to work with the PDF backend.
     virtual std::unique_ptr<SkAdvancedTypefaceMetrics> onGetAdvancedMetrics() const;
-<<<<<<< HEAD
     // For type1 postscript fonts only, set the glyph names for each glyph.
     // destination array is non-null, and points to an array of size this->countGlyphs().
     // Backends that do not suport type1 fonts should not override.
     virtual void getPostScriptGlyphNames(SkString*) const {}
-
-    // The mapping from glyph to Unicode; array indices are glyph ids.
-    // For each glyph, give the default Unicode value, if it exists.
-    // dstArray is non-null, and points to an array of size this->countGlyphs().
-    virtual void getGlyphToUnicodeMap(SkUnichar* dstArray) const;
-||||||| merged common ancestors
-=======
-    // For type1 postscript fonts only, set the glyph names for each glyph.
-    // destination array is non-null, and points to an array of size this->countGlyphs().
-    // Backends that do not suport type1 fonts should not override.
-    virtual void getPostScriptGlyphNames(SkString*) const {}
->>>>>>> upstream-releases
 
     // The mapping from glyph to Unicode; array indices are glyph ids.
     // For each glyph, give the default Unicode value, if it exists.
@@ -453,19 +440,10 @@ private:
     };
     static SkFontStyle FromOldStyle(Style oldStyle);
     static SkTypeface* GetDefaultTypeface(Style style = SkTypeface::kNormal);
-<<<<<<< HEAD
-    friend class SkPaintPriv;      // GetDefaultTypeface
-||||||| merged common ancestors
-    friend class GrPathRendering;  // GetDefaultTypeface
-    friend class SkGlyphCache;     // GetDefaultTypeface
-    friend class SkPaint;          // GetDefaultTypeface
-    friend class SkScalerContext;  // GetDefaultTypeface
-=======
 
     friend class SkFontPriv;       // GetDefaultTypeface
     friend class SkPaintPriv;      // GetDefaultTypeface
     friend class SkFont;           // getGlyphToUnicodeMap
->>>>>>> upstream-releases
 
 private:
     SkFontID            fUniqueID;

@@ -77,14 +77,9 @@ class FirefoxDataProvider {
       fromCache,
       fromServiceWorker,
       isThirdPartyTrackingResource,
-<<<<<<< HEAD
-      referrerPolicy,
-||||||| merged common ancestors
-=======
       referrerPolicy,
       blockedReason,
       channelId,
->>>>>>> upstream-releases
     } = data;
 
     // Insert blocked reason in the payload queue as well, as we'll need it later
@@ -94,44 +89,6 @@ class FirefoxDataProvider {
     });
 
     if (this.actionsEnabled && this.actions.addRequest) {
-<<<<<<< HEAD
-      await this.actions.addRequest(id, {
-        // Convert the received date/time string to a unix timestamp.
-        startedMillis: Date.parse(startedDateTime),
-        method,
-        url,
-        isXHR,
-        cause,
-
-        // Compatibility code to support Firefox 58 and earlier that always
-        // send stack-trace immediately on networkEvent message.
-        // FF59+ supports fetching the traces lazily via requestData.
-        stacktrace: cause.stacktrace,
-
-        fromCache,
-        fromServiceWorker,
-        isThirdPartyTrackingResource,
-        referrerPolicy,
-      }, true);
-||||||| merged common ancestors
-      await this.actions.addRequest(id, {
-        // Convert the received date/time string to a unix timestamp.
-        startedMillis: Date.parse(startedDateTime),
-        method,
-        url,
-        isXHR,
-        cause,
-
-        // Compatibility code to support Firefox 58 and earlier that always
-        // send stack-trace immediately on networkEvent message.
-        // FF59+ supports fetching the traces lazily via requestData.
-        stacktrace: cause.stacktrace,
-
-        fromCache,
-        fromServiceWorker,
-        isThirdPartyTrackingResource,
-      }, true);
-=======
       await this.actions.addRequest(
         id,
         {
@@ -156,7 +113,6 @@ class FirefoxDataProvider {
         },
         true
       );
->>>>>>> upstream-releases
     }
 
     this.emit(EVENTS.REQUEST_ADDED, id);
@@ -403,14 +359,9 @@ class FirefoxDataProvider {
       request: { method, url },
       startedDateTime,
       isThirdPartyTrackingResource,
-<<<<<<< HEAD
-      referrerPolicy,
-||||||| merged common ancestors
-=======
       referrerPolicy,
       blockedReason,
       channelId,
->>>>>>> upstream-releases
     } = networkInfo;
 
     await this.addRequest(actor, {
@@ -422,14 +373,9 @@ class FirefoxDataProvider {
       startedDateTime,
       url,
       isThirdPartyTrackingResource,
-<<<<<<< HEAD
-      referrerPolicy,
-||||||| merged common ancestors
-=======
       referrerPolicy,
       blockedReason,
       channelId,
->>>>>>> upstream-releases
     });
 
     this.emit(EVENTS.NETWORK_EVENT, actor);

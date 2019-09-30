@@ -25,32 +25,11 @@ namespace gfx {
  * particularly desirable to avoid the overhead of allocating on the
  * free-store.
  */
-<<<<<<< HEAD
-class GeneralPattern {
- public:
-  explicit GeneralPattern() : mPattern(nullptr) {}
-||||||| merged common ancestors
-class GeneralPattern
-{
-public:
-  explicit GeneralPattern()
-    : mPattern(nullptr)
-  {}
-=======
 class GeneralPattern final {
  public:
   explicit GeneralPattern() = default;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  GeneralPattern(const GeneralPattern &aOther) : mPattern(nullptr) {}
-||||||| merged common ancestors
-  GeneralPattern(const GeneralPattern& aOther)
-    : mPattern(nullptr)
-  {}
-=======
   GeneralPattern(const GeneralPattern& aOther) {}
->>>>>>> upstream-releases
 
   ~GeneralPattern() {
     if (mPattern) {
@@ -58,48 +37,9 @@ class GeneralPattern final {
     }
   }
 
-  Pattern *Init(const Pattern &aPattern) {
+  Pattern* Init(const Pattern& aPattern) {
     MOZ_ASSERT(!mPattern);
     switch (aPattern.GetType()) {
-<<<<<<< HEAD
-      case PatternType::COLOR:
-        mPattern = new (mColorPattern.addr())
-            ColorPattern(static_cast<const ColorPattern &>(aPattern));
-        break;
-      case PatternType::LINEAR_GRADIENT:
-        mPattern = new (mLinearGradientPattern.addr()) LinearGradientPattern(
-            static_cast<const LinearGradientPattern &>(aPattern));
-        break;
-      case PatternType::RADIAL_GRADIENT:
-        mPattern = new (mRadialGradientPattern.addr()) RadialGradientPattern(
-            static_cast<const RadialGradientPattern &>(aPattern));
-        break;
-      case PatternType::SURFACE:
-        mPattern = new (mSurfacePattern.addr())
-            SurfacePattern(static_cast<const SurfacePattern &>(aPattern));
-        break;
-      default:
-        MOZ_MAKE_COMPILER_ASSUME_IS_UNREACHABLE("Unknown pattern type");
-||||||| merged common ancestors
-    case PatternType::COLOR:
-      mPattern = new (mColorPattern.addr())
-        ColorPattern(static_cast<const ColorPattern&>(aPattern));
-      break;
-    case PatternType::LINEAR_GRADIENT:
-      mPattern = new (mLinearGradientPattern.addr())
-        LinearGradientPattern(static_cast<const LinearGradientPattern&>(aPattern));
-      break;
-    case PatternType::RADIAL_GRADIENT:
-      mPattern = new (mRadialGradientPattern.addr())
-        RadialGradientPattern(static_cast<const RadialGradientPattern&>(aPattern));
-      break;
-    case PatternType::SURFACE:
-      mPattern = new (mSurfacePattern.addr())
-        SurfacePattern(static_cast<const SurfacePattern&>(aPattern));
-      break;
-    default:
-      MOZ_MAKE_COMPILER_ASSUME_IS_UNREACHABLE("Unknown pattern type");
-=======
       case PatternType::COLOR:
         mPattern = new (mColorPattern.addr())
             ColorPattern(static_cast<const ColorPattern&>(aPattern));
@@ -118,111 +58,50 @@ class GeneralPattern final {
         break;
       default:
         MOZ_MAKE_COMPILER_ASSUME_IS_UNREACHABLE("Unknown pattern type");
->>>>>>> upstream-releases
     }
     return mPattern;
   }
 
-<<<<<<< HEAD
-  ColorPattern *InitColorPattern(const Color &aColor) {
-||||||| merged common ancestors
-  ColorPattern* InitColorPattern(const Color &aColor) {
-=======
   ColorPattern* InitColorPattern(const Color& aColor) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mPattern);
     mPattern = new (mColorPattern.addr()) ColorPattern(aColor);
     return mColorPattern.addr();
   }
 
-<<<<<<< HEAD
-  LinearGradientPattern *InitLinearGradientPattern(
-      const Point &aBegin, const Point &aEnd, GradientStops *aStops,
-      const Matrix &aMatrix = Matrix()) {
-||||||| merged common ancestors
-  LinearGradientPattern* InitLinearGradientPattern(const Point &aBegin,
-                                                   const Point &aEnd,
-                                                   GradientStops *aStops,
-                                                   const Matrix &aMatrix = Matrix()) {
-=======
   LinearGradientPattern* InitLinearGradientPattern(
       const Point& aBegin, const Point& aEnd, GradientStops* aStops,
       const Matrix& aMatrix = Matrix()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mPattern);
     mPattern = new (mLinearGradientPattern.addr())
         LinearGradientPattern(aBegin, aEnd, aStops, aMatrix);
     return mLinearGradientPattern.addr();
   }
 
-<<<<<<< HEAD
-  RadialGradientPattern *InitRadialGradientPattern(
-      const Point &aCenter1, const Point &aCenter2, Float aRadius1,
-      Float aRadius2, GradientStops *aStops, const Matrix &aMatrix = Matrix()) {
-||||||| merged common ancestors
-  RadialGradientPattern* InitRadialGradientPattern(const Point &aCenter1,
-                                                   const Point &aCenter2,
-                                                   Float aRadius1,
-                                                   Float aRadius2,
-                                                   GradientStops *aStops,
-                                                   const Matrix &aMatrix = Matrix()) {
-=======
   RadialGradientPattern* InitRadialGradientPattern(
       const Point& aCenter1, const Point& aCenter2, Float aRadius1,
       Float aRadius2, GradientStops* aStops, const Matrix& aMatrix = Matrix()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mPattern);
     mPattern = new (mRadialGradientPattern.addr()) RadialGradientPattern(
         aCenter1, aCenter2, aRadius1, aRadius2, aStops, aMatrix);
     return mRadialGradientPattern.addr();
   }
 
-<<<<<<< HEAD
-  SurfacePattern *InitSurfacePattern(
-      SourceSurface *aSourceSurface, ExtendMode aExtendMode,
-      const Matrix &aMatrix = Matrix(),
-      SamplingFilter aSamplingFilter = SamplingFilter::GOOD,
-      const IntRect &aSamplingRect = IntRect()) {
-||||||| merged common ancestors
-  SurfacePattern* InitSurfacePattern(SourceSurface *aSourceSurface,
-                                     ExtendMode aExtendMode,
-                                     const Matrix &aMatrix = Matrix(),
-                                     SamplingFilter aSamplingFilter = SamplingFilter::GOOD,
-                                     const IntRect &aSamplingRect = IntRect()) {
-=======
   SurfacePattern* InitSurfacePattern(
       SourceSurface* aSourceSurface, ExtendMode aExtendMode,
       const Matrix& aMatrix = Matrix(),
       SamplingFilter aSamplingFilter = SamplingFilter::GOOD,
       const IntRect& aSamplingRect = IntRect()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mPattern);
     mPattern = new (mSurfacePattern.addr()) SurfacePattern(
         aSourceSurface, aExtendMode, aMatrix, aSamplingFilter, aSamplingRect);
     return mSurfacePattern.addr();
   }
 
-<<<<<<< HEAD
-  Pattern *GetPattern() { return mPattern; }
-||||||| merged common ancestors
-  Pattern* GetPattern() {
-    return mPattern;
-  }
-=======
   Pattern* GetPattern() { return mPattern; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const Pattern *GetPattern() const { return mPattern; }
-||||||| merged common ancestors
-  const Pattern* GetPattern() const {
-    return mPattern;
-  }
-=======
   const Pattern* GetPattern() const { return mPattern; }
->>>>>>> upstream-releases
 
-  operator Pattern &() {
+  operator Pattern&() {
     if (!mPattern) {
       MOZ_CRASH("GFX: GeneralPattern not initialized");
     }

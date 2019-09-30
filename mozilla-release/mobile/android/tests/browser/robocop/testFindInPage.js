@@ -5,20 +5,10 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/Messaging.jsm");
-Cu.import("resource://gre/modules/Services.jsm");
-=======
 const { EventDispatcher } = ChromeUtils.import(
   "resource://gre/modules/Messaging.jsm"
 );
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 const TEST_URL = "http://mochi.test:8888/tests/robocop/robocop_text_page.html";
 

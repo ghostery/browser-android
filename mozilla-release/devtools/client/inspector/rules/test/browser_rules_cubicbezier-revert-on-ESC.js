@@ -30,17 +30,9 @@ async function testPressingEscapeRevertsChanges(view) {
     {
       selector: "body",
       name: "animation-timing-function",
-<<<<<<< HEAD
-      value: "cubic-bezier(0.1, 2, 0.9, -1)",
-    });
-||||||| merged common ancestors
-      value: "cubic-bezier(0.1, 2, 0.9, -1)"
-    });
-=======
       value: "cubic-bezier(0.1, 2, 0.9, -1)",
     }
   );
->>>>>>> upstream-releases
 
   is(
     propEditor.valueSpan.textContent,

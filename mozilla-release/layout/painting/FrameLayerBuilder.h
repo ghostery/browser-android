@@ -40,14 +40,8 @@ class LayerManager;
 class BasicLayerManager;
 class PaintedLayer;
 class ImageLayer;
-<<<<<<< HEAD
-}  // namespace layers
-||||||| merged common ancestors
-} // namespace layers
-=======
 struct LayerProperties;
 }  // namespace layers
->>>>>>> upstream-releases
 
 class FrameLayerBuilder;
 class LayerManagerData;
@@ -55,25 +49,6 @@ class PaintedLayerData;
 class ContainerState;
 class PaintedDisplayItemLayerUserData;
 
-<<<<<<< HEAD
-enum class DisplayItemEntryType {
-  ITEM,
-  PUSH_OPACITY,
-  PUSH_OPACITY_WITH_BG,
-  POP_OPACITY,
-  PUSH_TRANSFORM,
-  POP_TRANSFORM,
-  HIT_TEST_INFO
-||||||| merged common ancestors
-enum class DisplayItemEntryType
-{
-  ITEM,
-  PUSH_OPACITY,
-  PUSH_OPACITY_WITH_BG,
-  POP_OPACITY,
-  PUSH_TRANSFORM,
-  POP_TRANSFORM
-=======
 enum class DisplayItemEntryType : uint8_t {
   Item,
   PushOpacity,
@@ -82,7 +57,6 @@ enum class DisplayItemEntryType : uint8_t {
   PushTransform,
   PopTransform,
   HitTestInfo,
->>>>>>> upstream-releases
 };
 
 /**
@@ -197,27 +171,10 @@ class DisplayItemData final {
    * EndUpdate must be called before the end of the transaction to complete the
    * update.
    */
-<<<<<<< HEAD
-  void BeginUpdate(layers::Layer* aLayer, LayerState aState, bool aFirstUpdate,
-                   nsDisplayItem* aItem = nullptr);
-  void BeginUpdate(layers::Layer* aLayer, LayerState aState,
-                   nsDisplayItem* aItem, bool aIsReused, bool aIsMerged);
-||||||| merged common ancestors
-  void BeginUpdate(layers::Layer* aLayer,
-                   LayerState aState,
-                   bool aFirstUpdate,
-                   nsDisplayItem* aItem = nullptr);
-  void BeginUpdate(layers::Layer* aLayer,
-                   LayerState aState,
-                   nsDisplayItem* aItem,
-                   bool aIsReused,
-                   bool aIsMerged);
-=======
   void BeginUpdate(layers::Layer* aLayer, LayerState aState, bool aFirstUpdate,
                    nsPaintedDisplayItem* aItem = nullptr);
   void BeginUpdate(layers::Layer* aLayer, LayerState aState,
                    nsPaintedDisplayItem* aItem, bool aIsReused, bool aIsMerged);
->>>>>>> upstream-releases
 
   /**
    * Completes the update of this, and removes any references to data that won't
@@ -270,31 +227,6 @@ class RefCountedRegion {
   bool mIsInfinite;
 };
 
-<<<<<<< HEAD
-struct AssignedDisplayItem {
-  AssignedDisplayItem(nsDisplayItem* aItem, LayerState aLayerState,
-                      DisplayItemData* aData, const nsRect& aContentRect,
-                      DisplayItemEntryType aType, const bool aHasOpacity,
-                      const RefPtr<TransformClipNode>& aTransform);
-  ~AssignedDisplayItem();
-
-  nsDisplayItem* mItem;
-  LayerState mLayerState;
-||||||| merged common ancestors
-struct AssignedDisplayItem
-{
-  AssignedDisplayItem(nsDisplayItem* aItem,
-                      LayerState aLayerState,
-                      DisplayItemData* aData,
-                      const nsRect& aContentRect,
-                      DisplayItemEntryType aType,
-                      const bool aHasOpacity,
-                      const RefPtr<TransformClipNode>& aTransform);
-  ~AssignedDisplayItem();
-
-  nsDisplayItem* mItem;
-  LayerState mLayerState;
-=======
 struct InactiveLayerData {
   RefPtr<layers::BasicLayerManager> mLayerManager;
   RefPtr<layers::Layer> mLayer;
@@ -316,7 +248,6 @@ struct AssignedDisplayItem {
   bool HasTransform() const { return mTransform; }
 
   nsPaintedDisplayItem* mItem;
->>>>>>> upstream-releases
   DisplayItemData* mDisplayItemData;
 
   /**
@@ -339,33 +270,6 @@ struct AssignedDisplayItem {
 
 struct ContainerLayerParameters {
   ContainerLayerParameters()
-<<<<<<< HEAD
-      : mXScale(1),
-        mYScale(1),
-        mLayerContentsVisibleRect(nullptr),
-        mBackgroundColor(NS_RGBA(0, 0, 0, 0)),
-        mScrollMetadataASR(nullptr),
-        mCompositorASR(nullptr),
-        mInTransformedSubtree(false),
-        mInActiveTransformedSubtree(false),
-        mDisableSubpixelAntialiasingInDescendants(false),
-        mForEventsAndPluginsOnly(false),
-        mLayerCreationHint(layers::LayerManager::NONE) {}
-||||||| merged common ancestors
-    : mXScale(1)
-    , mYScale(1)
-    , mLayerContentsVisibleRect(nullptr)
-    , mBackgroundColor(NS_RGBA(0, 0, 0, 0))
-    , mScrollMetadataASR(nullptr)
-    , mCompositorASR(nullptr)
-    , mInTransformedSubtree(false)
-    , mInActiveTransformedSubtree(false)
-    , mDisableSubpixelAntialiasingInDescendants(false)
-    , mForEventsAndPluginsOnly(false)
-    , mLayerCreationHint(layers::LayerManager::NONE)
-  {
-  }
-=======
       : mXScale(1),
         mYScale(1),
         mLayerContentsVisibleRect(nullptr),
@@ -376,38 +280,7 @@ struct ContainerLayerParameters {
         mInActiveTransformedSubtree(false),
         mDisableSubpixelAntialiasingInDescendants(false),
         mLayerCreationHint(layers::LayerManager::NONE) {}
->>>>>>> upstream-releases
   ContainerLayerParameters(float aXScale, float aYScale)
-<<<<<<< HEAD
-      : mXScale(aXScale),
-        mYScale(aYScale),
-        mLayerContentsVisibleRect(nullptr),
-        mBackgroundColor(NS_RGBA(0, 0, 0, 0)),
-        mScrollMetadataASR(nullptr),
-        mCompositorASR(nullptr),
-        mInTransformedSubtree(false),
-        mInActiveTransformedSubtree(false),
-        mDisableSubpixelAntialiasingInDescendants(false),
-        mForEventsAndPluginsOnly(false),
-        mLayerCreationHint(layers::LayerManager::NONE) {}
-  ContainerLayerParameters(float aXScale, float aYScale,
-||||||| merged common ancestors
-    : mXScale(aXScale)
-    , mYScale(aYScale)
-    , mLayerContentsVisibleRect(nullptr)
-    , mBackgroundColor(NS_RGBA(0, 0, 0, 0))
-    , mScrollMetadataASR(nullptr)
-    , mCompositorASR(nullptr)
-    , mInTransformedSubtree(false)
-    , mInActiveTransformedSubtree(false)
-    , mDisableSubpixelAntialiasingInDescendants(false)
-    , mForEventsAndPluginsOnly(false)
-    , mLayerCreationHint(layers::LayerManager::NONE)
-  {
-  }
-  ContainerLayerParameters(float aXScale,
-                           float aYScale,
-=======
       : mXScale(aXScale),
         mYScale(aYScale),
         mLayerContentsVisibleRect(nullptr),
@@ -420,40 +293,8 @@ struct ContainerLayerParameters {
         mDisableSubpixelAntialiasingInDescendants(false),
         mLayerCreationHint(layers::LayerManager::NONE) {}
   ContainerLayerParameters(float aXScale, float aYScale,
->>>>>>> upstream-releases
                            const nsIntPoint& aOffset,
                            const ContainerLayerParameters& aParent)
-<<<<<<< HEAD
-      : mXScale(aXScale),
-        mYScale(aYScale),
-        mLayerContentsVisibleRect(nullptr),
-        mOffset(aOffset),
-        mBackgroundColor(aParent.mBackgroundColor),
-        mScrollMetadataASR(aParent.mScrollMetadataASR),
-        mCompositorASR(aParent.mCompositorASR),
-        mInTransformedSubtree(aParent.mInTransformedSubtree),
-        mInActiveTransformedSubtree(aParent.mInActiveTransformedSubtree),
-        mDisableSubpixelAntialiasingInDescendants(
-            aParent.mDisableSubpixelAntialiasingInDescendants),
-        mForEventsAndPluginsOnly(aParent.mForEventsAndPluginsOnly),
-        mLayerCreationHint(aParent.mLayerCreationHint) {}
-||||||| merged common ancestors
-    : mXScale(aXScale)
-    , mYScale(aYScale)
-    , mLayerContentsVisibleRect(nullptr)
-    , mOffset(aOffset)
-    , mBackgroundColor(aParent.mBackgroundColor)
-    , mScrollMetadataASR(aParent.mScrollMetadataASR)
-    , mCompositorASR(aParent.mCompositorASR)
-    , mInTransformedSubtree(aParent.mInTransformedSubtree)
-    , mInActiveTransformedSubtree(aParent.mInActiveTransformedSubtree)
-    , mDisableSubpixelAntialiasingInDescendants(
-        aParent.mDisableSubpixelAntialiasingInDescendants)
-    , mForEventsAndPluginsOnly(aParent.mForEventsAndPluginsOnly)
-    , mLayerCreationHint(aParent.mLayerCreationHint)
-  {
-  }
-=======
       : mXScale(aXScale),
         mYScale(aYScale),
         mLayerContentsVisibleRect(nullptr),
@@ -467,7 +308,6 @@ struct ContainerLayerParameters {
         mDisableSubpixelAntialiasingInDescendants(
             aParent.mDisableSubpixelAntialiasingInDescendants),
         mLayerCreationHint(aParent.mLayerCreationHint) {}
->>>>>>> upstream-releases
 
   float mXScale, mYScale;
 
@@ -660,26 +500,6 @@ class FrameLayerBuilder : public layers::LayerUserData {
   static Layer* GetDedicatedLayer(nsIFrame* aFrame,
                                   DisplayItemType aDisplayItemType);
 
-<<<<<<< HEAD
-  using CompositorAnimatableDisplayItemTypes =
-      Array<DisplayItemType, nsCSSPropertyIDSet::CompositorAnimatableCount()>;
-  using AnimationGenerationCallback = std::function<bool(
-      const Maybe<uint64_t>& aGeneration, DisplayItemType aDisplayItemType)>;
-  /**
-   * Enumerates layers for the given display item types and calls |aCallback|
-   * with the animation generation for the layer.  If there is no corresponding
-   * layer for the display item or the layer has no animation, the animation
-   * generation is Nothing().
-   *
-   * The enumeration stops if |aCallback| returns false.
-   */
-  static void EnumerateGenerationForDedicatedLayers(
-      const nsIFrame* aFrame,
-      const CompositorAnimatableDisplayItemTypes& aDisplayItemTypes,
-      const AnimationGenerationCallback& aCallback);
-
-||||||| merged common ancestors
-=======
   using AnimationGenerationCallback = std::function<bool(
       const Maybe<uint64_t>& aGeneration, DisplayItemType aDisplayItemType)>;
   /**
@@ -694,7 +514,6 @@ class FrameLayerBuilder : public layers::LayerUserData {
   static void EnumerateGenerationForDedicatedLayers(
       const nsIFrame* aFrame, const AnimationGenerationCallback& aCallback);
 
->>>>>>> upstream-releases
   /**
    * This callback must be provided to EndTransaction. The callback data
    * must be the nsDisplayListBuilder containing this FrameLayerBuilder.
@@ -743,14 +562,7 @@ class FrameLayerBuilder : public layers::LayerUserData {
    */
   void AddPaintedDisplayItem(PaintedLayerData* aLayerData,
                              AssignedDisplayItem& aAssignedDisplayItem,
-<<<<<<< HEAD
-                             ContainerState& aContainerState, Layer* aLayer);
-||||||| merged common ancestors
-                             ContainerState& aContainerState,
                              Layer* aLayer);
-=======
-                             Layer* aLayer);
->>>>>>> upstream-releases
 
   /**
    * Calls GetOldLayerForFrame on the underlying frame of the display item,
@@ -845,26 +657,10 @@ class FrameLayerBuilder : public layers::LayerUserData {
    * Stores DisplayItemData associated with aFrame, stores the data in
    * mNewDisplayItemData.
    */
-<<<<<<< HEAD
-  DisplayItemData* StoreDataForFrame(nsDisplayItem* aItem, Layer* aLayer,
-                                     LayerState aState, DisplayItemData* aData);
-  void StoreDataForFrame(nsIFrame* aFrame, uint32_t aDisplayItemKey,
-                         Layer* aLayer, LayerState aState);
-||||||| merged common ancestors
-  DisplayItemData* StoreDataForFrame(nsDisplayItem* aItem,
-                                     Layer* aLayer,
-                                     LayerState aState,
-                                     DisplayItemData* aData);
-  void StoreDataForFrame(nsIFrame* aFrame,
-                         uint32_t aDisplayItemKey,
-                         Layer* aLayer,
-                         LayerState aState);
-=======
   DisplayItemData* StoreDataForFrame(nsPaintedDisplayItem* aItem, Layer* aLayer,
                                      LayerState aState, DisplayItemData* aData);
   void StoreDataForFrame(nsIFrame* aFrame, uint32_t aDisplayItemKey,
                          Layer* aLayer, LayerState aState);
->>>>>>> upstream-releases
 
  protected:
   friend class LayerManagerData;
@@ -886,24 +682,7 @@ class FrameLayerBuilder : public layers::LayerUserData {
    * using the LayerManager instead of FrameLayerBuilder.
    */
   static DisplayItemData* GetDisplayItemDataForManager(
-<<<<<<< HEAD
-      nsIFrame* aFrame, uint32_t aDisplayItemKey);
-  static DisplayItemData* GetDisplayItemDataForManager(nsDisplayItem* aItem,
-                                                       LayerManager* aManager);
-  static DisplayItemData* GetDisplayItemDataForManager(nsIFrame* aFrame,
-                                                       uint32_t aDisplayItemKey,
-                                                       LayerManagerData* aData);
-||||||| merged common ancestors
-    nsIFrame* aFrame,
-    uint32_t aDisplayItemKey);
-  static DisplayItemData* GetDisplayItemDataForManager(nsDisplayItem* aItem,
-                                                       LayerManager* aManager);
-  static DisplayItemData* GetDisplayItemDataForManager(nsIFrame* aFrame,
-                                                       uint32_t aDisplayItemKey,
-                                                       LayerManagerData* aData);
-=======
       nsPaintedDisplayItem* aItem, LayerManager* aManager);
->>>>>>> upstream-releases
 
   /**
    * We store one of these for each display item associated with a

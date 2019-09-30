@@ -763,20 +763,9 @@ SourceSurfaceImage::SourceSurfaceImage(gfx::SourceSurface* aSourceSurface)
 
 SourceSurfaceImage::~SourceSurfaceImage() = default;
 
-<<<<<<< HEAD
-TextureClient* SourceSurfaceImage::GetTextureClient(
-    KnowsCompositor* aForwarder) {
-  if (!aForwarder) {
-||||||| merged common ancestors
-TextureClient*
-SourceSurfaceImage::GetTextureClient(KnowsCompositor* aForwarder)
-{
-  if (!aForwarder) {
-=======
 TextureClient* SourceSurfaceImage::GetTextureClient(
     KnowsCompositor* aKnowsCompositor) {
   if (!aKnowsCompositor) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -790,34 +779,13 @@ TextureClient* SourceSurfaceImage::GetTextureClient(
   MOZ_ASSERT(surface);
   if (surface) {
     // gfx::BackendType::NONE means default to content backend
-<<<<<<< HEAD
-    textureClient = TextureClient::CreateFromSurface(
-        aForwarder, surface, BackendSelector::Content, mTextureFlags,
-        ALLOC_DEFAULT);
-||||||| merged common ancestors
-    textureClient =
-      TextureClient::CreateFromSurface(aForwarder,
-                                       surface,
-                                       BackendSelector::Content,
-                                       mTextureFlags,
-                                       ALLOC_DEFAULT);
-=======
     textureClient = TextureClient::CreateFromSurface(
         aKnowsCompositor, surface, BackendSelector::Content, mTextureFlags,
         ALLOC_DEFAULT);
->>>>>>> upstream-releases
   }
   if (textureClient) {
-<<<<<<< HEAD
-    textureClient->SyncWithObject(aForwarder->GetSyncObject());
-    entry.OrInsert([&textureClient]() { return textureClient; });
-||||||| merged common ancestors
-    textureClient->SyncWithObject(aForwarder->GetSyncObject());
-    entry.OrInsert([&textureClient](){ return textureClient; });
-=======
     textureClient->SyncWithObject(aKnowsCompositor->GetSyncObject());
     entry.OrInsert([&textureClient]() { return textureClient; });
->>>>>>> upstream-releases
     return textureClient;
   }
 

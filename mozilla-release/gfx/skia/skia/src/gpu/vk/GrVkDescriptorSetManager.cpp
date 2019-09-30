@@ -36,27 +36,11 @@ GrVkDescriptorSetManager* GrVkDescriptorSetManager::CreateUniformManager(GrVkGpu
 GrVkDescriptorSetManager* GrVkDescriptorSetManager::CreateSamplerManager(
         GrVkGpu* gpu, VkDescriptorType type, const GrVkUniformHandler& uniformHandler) {
     SkSTArray<4, uint32_t> visibilities;
-<<<<<<< HEAD
-    SkASSERT(type == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-    for (int i = 0 ; i < uniformHandler.numSamplers(); ++i) {
-        visibilities.push_back(uniformHandler.samplerVisibility(i));
-||||||| merged common ancestors
-    if (VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER == type) {
-        for (int i = 0 ; i < uniformHandler.numSamplers(); ++i) {
-            visibilities.push_back(uniformHandler.samplerVisibility(i));
-        }
-    } else {
-        SkASSERT(type == VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER);
-        for (int i = 0 ; i < uniformHandler.numTexelBuffers(); ++i) {
-            visibilities.push_back(uniformHandler.texelBufferVisibility(i));
-        }
-=======
     SkSTArray<4, const GrVkSampler*> immutableSamplers;
     SkASSERT(type == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
     for (int i = 0 ; i < uniformHandler.numSamplers(); ++i) {
         visibilities.push_back(uniformHandler.samplerVisibility(i));
         immutableSamplers.push_back(uniformHandler.immutableSampler(i));
->>>>>>> upstream-releases
     }
     return new GrVkDescriptorSetManager(gpu, type, visibilities, immutableSamplers);
 }
@@ -156,26 +140,6 @@ bool GrVkDescriptorSetManager::isCompatible(VkDescriptorType type,
         return false;
     }
 
-<<<<<<< HEAD
-    SkASSERT(type == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-    if (fBindingVisibilities.count() != uniHandler->numSamplers()) {
-        return false;
-    }
-    for (int i = 0; i < uniHandler->numSamplers(); ++i) {
-        if (uniHandler->samplerVisibility(i) != fBindingVisibilities[i]) {
-||||||| merged common ancestors
-    if (type == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) {
-        if (fBindingVisibilities.count() != uniHandler->numSamplers()) {
-            return false;
-        }
-        for (int i = 0; i < uniHandler->numSamplers(); ++i) {
-            if (uniHandler->samplerVisibility(i) != fBindingVisibilities[i]) {
-                return false;
-            }
-        }
-    } else if (VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER == type) {
-        if (fBindingVisibilities.count() != uniHandler->numTexelBuffers()) {
-=======
     SkASSERT(type == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
     if (fBindingVisibilities.count() != uniHandler->numSamplers()) {
         return false;
@@ -183,7 +147,6 @@ bool GrVkDescriptorSetManager::isCompatible(VkDescriptorType type,
     for (int i = 0; i < uniHandler->numSamplers(); ++i) {
         if (uniHandler->samplerVisibility(i) != fBindingVisibilities[i] ||
             uniHandler->immutableSampler(i) != fImmutableSamplers[i]) {
->>>>>>> upstream-releases
             return false;
         }
     }

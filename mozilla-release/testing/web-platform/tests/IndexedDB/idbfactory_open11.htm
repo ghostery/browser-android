@@ -8,13 +8,7 @@
 <script>
     var db;
     var count_done = 0;
-<<<<<<< HEAD
-    var open_rq = createdb(async_test(document.title));
-||||||| merged common ancestors
-    var open_rq = createdb(async_test(document.title, {timeout: 10000}));
-=======
     var open_rq = createdb(async_test());
->>>>>>> upstream-releases
 
     open_rq.onupgradeneeded = function(e) {
         db = e.target.result;

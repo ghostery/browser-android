@@ -67,67 +67,6 @@ const {
   processNetworkUpdates,
 } = require("devtools/client/netmonitor/src/utils/request-utils");
 
-<<<<<<< HEAD
-const MessageState = overrides => Object.freeze(Object.assign({
-  // List of all the messages added to the console.
-  messagesById: new Map(),
-  // When recording or replaying, all progress values in messagesById.
-  replayProgressMessages: new Set(),
-  // Array of the visible messages.
-  visibleMessages: [],
-  // Object for the filtered messages.
-  filteredMessagesCount: getDefaultFiltersCounter(),
-  // List of the message ids which are opened.
-  messagesUiById: [],
-  // Map of the form {messageId : tableData}, which represent the data passed
-  // as an argument in console.table calls.
-  messagesTableDataById: new Map(),
-  // Map of the form {groupMessageId : groupArray},
-  // where groupArray is the list of of all the parent groups' ids of the groupMessageId.
-  groupsById: new Map(),
-  // Message id of the current group (no corresponding console.groupEnd yet).
-  currentGroup: null,
-  // Array of removed actors (i.e. actors logged in removed messages) we keep track of
-  // in order to properly release them.
-  // This array is not supposed to be consumed by any UI component.
-  removedActors: [],
-  // Map of the form {messageId : numberOfRepeat}
-  repeatById: {},
-  // Map of the form {messageId : networkInformation}
-  // `networkInformation` holds request, response, totalTime, ...
-  networkMessagesUpdateById: {},
-  pausedExecutionPoint: null,
-}, overrides));
-||||||| merged common ancestors
-const MessageState = overrides => Object.freeze(Object.assign({
-  // List of all the messages added to the console.
-  messagesById: new Map(),
-  // Array of the visible messages.
-  visibleMessages: [],
-  // Object for the filtered messages.
-  filteredMessagesCount: getDefaultFiltersCounter(),
-  // List of the message ids which are opened.
-  messagesUiById: [],
-  // Map of the form {messageId : tableData}, which represent the data passed
-  // as an argument in console.table calls.
-  messagesTableDataById: new Map(),
-  // Map of the form {groupMessageId : groupArray},
-  // where groupArray is the list of of all the parent groups' ids of the groupMessageId.
-  groupsById: new Map(),
-  // Message id of the current group (no corresponding console.groupEnd yet).
-  currentGroup: null,
-  // Array of removed actors (i.e. actors logged in removed messages) we keep track of
-  // in order to properly release them.
-  // This array is not supposed to be consumed by any UI component.
-  removedActors: [],
-  // Map of the form {messageId : numberOfRepeat}
-  repeatById: {},
-  // Map of the form {messageId : networkInformation}
-  // `networkInformation` holds request, response, totalTime, ...
-  networkMessagesUpdateById: {},
-  pausedExecutionPoint: null,
-}, overrides));
-=======
 const MessageState = overrides =>
   Object.freeze(
     Object.assign(
@@ -170,12 +109,10 @@ const MessageState = overrides =>
       overrides
     )
   );
->>>>>>> upstream-releases
 
 function cloneState(state) {
   return {
     messagesById: new Map(state.messagesById),
-    replayProgressMessages: new Set(state.replayProgressMessages),
     visibleMessages: [...state.visibleMessages],
     filteredMessagesCount: { ...state.filteredMessagesCount },
     messagesUiById: [...state.messagesUiById],
@@ -192,24 +129,6 @@ function cloneState(state) {
   };
 }
 
-<<<<<<< HEAD
-function addMessage(state, filtersState, prefsState, newMessage) {
-  const {
-    messagesById,
-    replayProgressMessages,
-    groupsById,
-    currentGroup,
-    repeatById,
-  } = state;
-||||||| merged common ancestors
-function addMessage(state, filtersState, prefsState, newMessage) {
-  const {
-    messagesById,
-    groupsById,
-    currentGroup,
-    repeatById,
-  } = state;
-=======
 /**
  * Add a console message to the state.
  *
@@ -223,26 +142,12 @@ function addMessage(state, filtersState, prefsState, newMessage) {
 /* eslint-disable complexity */
 function addMessage(newMessage, state, filtersState, prefsState, uiState) {
   const { messagesById, groupsById, currentGroup, repeatById } = state;
->>>>>>> upstream-releases
 
   if (newMessage.type === constants.MESSAGE_TYPE.NULL_MESSAGE) {
     // When the message has a NULL type, we don't add it.
     return state;
   }
 
-<<<<<<< HEAD
-  if (newMessage.executionPoint) {
-    // When replaying old behaviors in a tab, we might see the same messages
-    // multiple times. Ignore duplicate messages with the same progress values.
-    const progress = newMessage.executionPoint.progress;
-    if (replayProgressMessages.has(progress)) {
-      return state;
-    }
-    state.replayProgressMessages.add(progress);
-  }
-
-||||||| merged common ancestors
-=======
   // After messages with a given logpoint ID have been removed, ignore all
   // future messages with that ID.
   if (
@@ -253,7 +158,6 @@ function addMessage(newMessage, state, filtersState, prefsState, uiState) {
     return state;
   }
 
->>>>>>> upstream-releases
   if (newMessage.type === constants.MESSAGE_TYPE.END_GROUP) {
     // Compute the new current group.
     state.currentGroup = getNewCurrentGroup(currentGroup, groupsById);

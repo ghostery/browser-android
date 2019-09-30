@@ -93,21 +93,6 @@ RetainedDisplayListData* GetRetainedDisplayListData(nsIFrame* aRootFrame);
  */
 RetainedDisplayListData* GetOrSetRetainedDisplayListData(nsIFrame* aRootFrame);
 
-<<<<<<< HEAD
-struct RetainedDisplayListBuilder {
-  RetainedDisplayListBuilder(nsIFrame* aReferenceFrame,
-                             nsDisplayListBuilderMode aMode, bool aBuildCaret)
-      : mBuilder(aReferenceFrame, aMode, aBuildCaret, true) {}
-||||||| merged common ancestors
-struct RetainedDisplayListBuilder
-{
-  RetainedDisplayListBuilder(nsIFrame* aReferenceFrame,
-                             nsDisplayListBuilderMode aMode,
-                             bool aBuildCaret)
-    : mBuilder(aReferenceFrame, aMode, aBuildCaret, true)
-  {
-  }
-=======
 enum class PartialUpdateResult { Failed, NoChange, Updated };
 
 enum class PartialUpdateFailReason {
@@ -186,25 +171,13 @@ struct RetainedDisplayListBuilder {
   RetainedDisplayListBuilder(nsIFrame* aReferenceFrame,
                              nsDisplayListBuilderMode aMode, bool aBuildCaret)
       : mBuilder(aReferenceFrame, aMode, aBuildCaret, true) {}
->>>>>>> upstream-releases
   ~RetainedDisplayListBuilder() { mList.DeleteAll(&mBuilder); }
 
   nsDisplayListBuilder* Builder() { return &mBuilder; }
 
   nsDisplayList* List() { return &mList; }
 
-<<<<<<< HEAD
-  enum class PartialUpdateResult { Failed, NoChange, Updated };
-||||||| merged common ancestors
-  enum class PartialUpdateResult
-  {
-    Failed,
-    NoChange,
-    Updated
-  };
-=======
   RetainedDisplayListMetrics* Metrics() { return &mMetrics; }
->>>>>>> upstream-releases
 
   PartialUpdateResult AttemptPartialUpdate(
       nscolor aBackstop, mozilla::DisplayListChecker* aChecker);
@@ -220,11 +193,6 @@ struct RetainedDisplayListBuilder {
 
   NS_DECLARE_FRAME_PROPERTY_DELETABLE(Cached, RetainedDisplayListBuilder)
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   void IncrementSubDocPresShellPaintCount(nsDisplayItem* aItem);
 
@@ -249,7 +217,6 @@ private:
    * aKeepLinked=true internally for sub-lists that can't be changed to keep the
    * original list structure linked for fast re-use.
    */
->>>>>>> upstream-releases
   bool PreProcessDisplayList(RetainedDisplayList* aList,
                              AnimatedGeometryRoot* aAGR,
                              PartialUpdateResult& aUpdated,
@@ -270,37 +237,17 @@ private:
    * aOutList) is different from aOldList.
    */
   bool MergeDisplayLists(
-<<<<<<< HEAD
-      nsDisplayList* aNewList, RetainedDisplayList* aOldList,
-      RetainedDisplayList* aOutList,
-      mozilla::Maybe<const mozilla::ActiveScrolledRoot*>& aOutContainerASR,
-      uint32_t aOuterKey = 0);
-||||||| merged common ancestors
-    nsDisplayList* aNewList,
-    RetainedDisplayList* aOldList,
-    RetainedDisplayList* aOutList,
-    mozilla::Maybe<const mozilla::ActiveScrolledRoot*>& aOutContainerASR,
-    uint32_t aOuterKey = 0);
-=======
       nsDisplayList* aNewList, RetainedDisplayList* aOldList,
       RetainedDisplayList* aOutList,
       mozilla::Maybe<const mozilla::ActiveScrolledRoot*>& aOutContainerASR,
       nsDisplayItem* aOuterItem = nullptr);
->>>>>>> upstream-releases
 
   bool ComputeRebuildRegion(nsTArray<nsIFrame*>& aModifiedFrames,
                             nsRect* aOutDirty,
                             AnimatedGeometryRoot** aOutModifiedAGR,
                             nsTArray<nsIFrame*>& aOutFramesWithProps);
-<<<<<<< HEAD
-  bool ProcessFrame(nsIFrame* aFrame, nsDisplayListBuilder& aBuilder,
-||||||| merged common ancestors
-  bool ProcessFrame(nsIFrame* aFrame,
-                    nsDisplayListBuilder& aBuilder,
-=======
 
   bool ProcessFrame(nsIFrame* aFrame, nsDisplayListBuilder* aBuilder,
->>>>>>> upstream-releases
                     nsIFrame* aStopAtFrame,
                     nsTArray<nsIFrame*>& aOutFramesWithProps,
                     const bool aStopAtStackingContext, nsRect* aOutDirty,

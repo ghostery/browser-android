@@ -45,19 +45,9 @@ class Zip : public mozilla::external::AtomicRefCounted<Zip> {
     return Create(nullptr, buffer, size);
   }
 
-<<<<<<< HEAD
- private:
-  static already_AddRefed<Zip> Create(const char *filename, void *buffer,
-                                      size_t size);
-||||||| merged common ancestors
-private:
-  static already_AddRefed<Zip> Create(const char *filename,
-                                           void *buffer, size_t size);
-=======
  private:
   static already_AddRefed<Zip> Create(const char* filename, void* buffer,
                                       size_t size);
->>>>>>> upstream-releases
 
   /**
    * Private constructor
@@ -104,26 +94,11 @@ private:
      * buffer as inflate output. The caller is expected to allocate enough
      * memory for the Stream uncompressed size.
      */
-<<<<<<< HEAD
-    z_stream GetZStream(void *buf) {
-||||||| merged common ancestors
-    z_stream GetZStream(void *buf)
-    {
-=======
     z_stream GetZStream(void* buf) {
->>>>>>> upstream-releases
       z_stream zStream;
       zStream.avail_in = compressedSize;
-<<<<<<< HEAD
-      zStream.next_in =
-          reinterpret_cast<Bytef *>(const_cast<void *>(compressedBuf));
-||||||| merged common ancestors
-      zStream.next_in = reinterpret_cast<Bytef *>(
-                        const_cast<void *>(compressedBuf));
-=======
       zStream.next_in =
           reinterpret_cast<Bytef*>(const_cast<void*>(compressedBuf));
->>>>>>> upstream-releases
       zStream.avail_out = uncompressedSize;
       zStream.next_out = static_cast<Bytef*>(buf);
       zStream.zalloc = nullptr;
@@ -149,16 +124,7 @@ private:
   /**
    * Returns the file name of the archive
    */
-<<<<<<< HEAD
-  const char *GetName() const { return name; }
-||||||| merged common ancestors
-  const char *GetName() const
-  {
-    return name;
-  }
-=======
   const char* GetName() const { return name; }
->>>>>>> upstream-releases
 
   /**
    * Returns whether all files have correct CRC checksum.
@@ -182,39 +148,18 @@ private:
     /**
      * Constructor
      */
-<<<<<<< HEAD
-    StringBuf(const char *buf, size_t length) : buf(buf), length(length) {}
-||||||| merged common ancestors
-    StringBuf(const char *buf, size_t length): buf(buf), length(length) { }
-=======
     StringBuf(const char* buf, size_t length) : buf(buf), length(length) {}
->>>>>>> upstream-releases
 
     /**
      * Returns whether the string has the same content as the given zero
      * terminated string.
      */
-<<<<<<< HEAD
-    bool Equals(const char *str) const {
-||||||| merged common ancestors
-    bool Equals(const char *str) const
-    {
-=======
     bool Equals(const char* str) const {
->>>>>>> upstream-releases
       return (strncmp(str, buf, length) == 0 && str[length] == '\0');
     }
 
-<<<<<<< HEAD
-   private:
-    const char *buf;
-||||||| merged common ancestors
-  private:
-    const char *buf;
-=======
    private:
     const char* buf;
->>>>>>> upstream-releases
     size_t length;
   };
 
@@ -233,21 +178,9 @@ private:
      * Equivalent to reinterpret_cast<const T *>(buf), with an additional
      * check of the signature.
      */
-<<<<<<< HEAD
-    static const T *validate(const void *buf) {
-      const T *ret = static_cast<const T *>(buf);
-      if (ret->signature == T::magic) return ret;
-||||||| merged common ancestors
-    static const T *validate(const void *buf)
-    {
-      const T *ret = static_cast<const T *>(buf);
-      if (ret->signature == T::magic)
-        return ret;
-=======
     static const T* validate(const void* buf) {
       const T* ret = static_cast<const T*>(buf);
       if (ret->signature == T::magic) return ret;
->>>>>>> upstream-releases
       return nullptr;
     }
 
@@ -269,37 +202,17 @@ private:
     /**
      * Returns the file name
      */
-<<<<<<< HEAD
-    StringBuf GetName() const {
-      return StringBuf(reinterpret_cast<const char *>(this) + sizeof(*this),
-||||||| merged common ancestors
-    StringBuf GetName() const
-    {
-      return StringBuf(reinterpret_cast<const char *>(this) + sizeof(*this),
-=======
     StringBuf GetName() const {
       return StringBuf(reinterpret_cast<const char*>(this) + sizeof(*this),
->>>>>>> upstream-releases
                        filenameSize);
     }
 
     /**
      * Returns a pointer to the data associated with this header
      */
-<<<<<<< HEAD
-    const void *GetData() const {
-      return reinterpret_cast<const char *>(this) + sizeof(*this) +
-             filenameSize + extraFieldSize;
-||||||| merged common ancestors
-    const void *GetData() const
-    {
-      return reinterpret_cast<const char *>(this) + sizeof(*this)
-             + filenameSize + extraFieldSize;
-=======
     const void* GetData() const {
       return reinterpret_cast<const char*>(this) + sizeof(*this) +
              filenameSize + extraFieldSize;
->>>>>>> upstream-releases
     }
 
     le_uint16 minVersion;
@@ -340,37 +253,17 @@ private:
     /**
      * Returns the file name
      */
-<<<<<<< HEAD
-    StringBuf GetName() const {
-      return StringBuf(reinterpret_cast<const char *>(this) + sizeof(*this),
-||||||| merged common ancestors
-    StringBuf GetName() const
-    {
-      return StringBuf(reinterpret_cast<const char *>(this) + sizeof(*this),
-=======
     StringBuf GetName() const {
       return StringBuf(reinterpret_cast<const char*>(this) + sizeof(*this),
->>>>>>> upstream-releases
                        filenameSize);
     }
 
     /**
      * Returns  the Central Directory Entry following this one.
      */
-<<<<<<< HEAD
-    const DirectoryEntry *GetNext() const {
-      return validate(reinterpret_cast<const char *>(this) + sizeof(*this) +
-                      filenameSize + extraFieldSize + fileCommentSize);
-||||||| merged common ancestors
-    const DirectoryEntry *GetNext() const
-    {
-      return validate(reinterpret_cast<const char *>(this) + sizeof(*this)
-                      + filenameSize + extraFieldSize + fileCommentSize);
-=======
     const DirectoryEntry* GetNext() const {
       return validate(reinterpret_cast<const char*>(this) + sizeof(*this) +
                       filenameSize + extraFieldSize + fileCommentSize);
->>>>>>> upstream-releases
     }
 
     le_uint16 creatorVersion;
@@ -470,27 +363,15 @@ inline void RefCounted<Zip, AtomicRefCount>::Release() const {
   MOZ_ASSERT(static_cast<int32_t>(mRefCnt) > 0);
   const auto count = --mRefCnt;
   if (count == 1) {
-<<<<<<< HEAD
-    // No external references are left, attempt to remove it from the
-    // collection. If it's successfully removed from the collection, Release()
-    // will be called with mRefCnt = 1, which will finally delete this zip.
-    ZipCollection::Forget(static_cast<const Zip *>(this));
-||||||| merged common ancestors
-    // No external references are left, attempt to remove it from the collection.
-    // If it's successfully removed from the collection, Release() will be called
-    // with mRefCnt = 1, which will finally delete this zip.
-    ZipCollection::Forget(static_cast<const Zip*>(this));
-=======
     // No external references are left, attempt to remove it from the
     // collection. If it's successfully removed from the collection, Release()
     // will be called with mRefCnt = 1, which will finally delete this zip.
     ZipCollection::Forget(static_cast<const Zip*>(this));
->>>>>>> upstream-releases
   } else if (count == 0) {
 #ifdef DEBUG
     mRefCnt = detail::DEAD;
 #endif
-    delete static_cast<const Zip *>(this);
+    delete static_cast<const Zip*>(this);
   }
 }
 

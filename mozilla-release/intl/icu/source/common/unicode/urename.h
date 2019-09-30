@@ -1123,13 +1123,8 @@
 #define ulocdata_getPaperSize U_ICU_ENTRY_POINT_RENAME(ulocdata_getPaperSize)
 #define ulocdata_open U_ICU_ENTRY_POINT_RENAME(ulocdata_open)
 #define ulocdata_setNoSubstitute U_ICU_ENTRY_POINT_RENAME(ulocdata_setNoSubstitute)
-<<<<<<< HEAD
-#define ulocimp_forLanguageTag U_ICU_ENTRY_POINT_RENAME(ulocimp_forLanguageTag)
-||||||| merged common ancestors
-=======
 #define ulocimp_addLikelySubtags U_ICU_ENTRY_POINT_RENAME(ulocimp_addLikelySubtags)
 #define ulocimp_forLanguageTag U_ICU_ENTRY_POINT_RENAME(ulocimp_forLanguageTag)
->>>>>>> upstream-releases
 #define ulocimp_getCountry U_ICU_ENTRY_POINT_RENAME(ulocimp_getCountry)
 #define ulocimp_getLanguage U_ICU_ENTRY_POINT_RENAME(ulocimp_getLanguage)
 #define ulocimp_getRegionForSupplementalData U_ICU_ENTRY_POINT_RENAME(ulocimp_getRegionForSupplementalData)

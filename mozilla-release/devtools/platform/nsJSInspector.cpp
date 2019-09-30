@@ -61,16 +61,8 @@ nsJSInspector::~nsJSInspector() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSInspector::EnterNestedEventLoop(JS::Handle<JS::Value> requestor,
-                                    uint32_t *out) {
-||||||| merged common ancestors
-nsJSInspector::EnterNestedEventLoop(JS::Handle<JS::Value> requestor, uint32_t *out)
-{
-=======
 nsJSInspector::EnterNestedEventLoop(JS::Handle<JS::Value> requestor,
                                     uint32_t* out) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   mLastRequestor = requestor;
@@ -96,14 +88,7 @@ nsJSInspector::EnterNestedEventLoop(JS::Handle<JS::Value> requestor,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSInspector::ExitNestedEventLoop(uint32_t *out) {
-||||||| merged common ancestors
-nsJSInspector::ExitNestedEventLoop(uint32_t *out)
-{
-=======
 nsJSInspector::ExitNestedEventLoop(uint32_t* out) {
->>>>>>> upstream-releases
   if (mNestedLoopLevel > 0) {
     mRequestors.RemoveElementAt(--mNestedLoopLevel);
     if (mNestedLoopLevel > 0)
@@ -120,14 +105,7 @@ nsJSInspector::ExitNestedEventLoop(uint32_t* out) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJSInspector::GetEventLoopNestLevel(uint32_t *out) {
-||||||| merged common ancestors
-nsJSInspector::GetEventLoopNestLevel(uint32_t *out)
-{
-=======
 nsJSInspector::GetEventLoopNestLevel(uint32_t* out) {
->>>>>>> upstream-releases
   *out = mNestedLoopLevel;
   return NS_OK;
 }
@@ -138,48 +116,5 @@ nsJSInspector::GetLastNestRequestor(JS::MutableHandle<JS::Value> out) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
 }  // namespace jsinspector
 }  // namespace mozilla
-
-NS_DEFINE_NAMED_CID(JSINSPECTOR_CID);
-
-static const mozilla::Module::CIDEntry kJSInspectorCIDs[] = {
-    {&kJSINSPECTOR_CID, false, nullptr,
-     mozilla::jsinspector::nsJSInspectorConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kJSInspectorContracts[] = {
-    {JSINSPECTOR_CONTRACTID, &kJSINSPECTOR_CID}, {nullptr}};
-
-static const mozilla::Module kJSInspectorModule = {
-    mozilla::Module::kVersion, kJSInspectorCIDs, kJSInspectorContracts};
-
-NSMODULE_DEFN(jsinspector) = &kJSInspectorModule;
-||||||| merged common ancestors
-} // namespace jsinspector
-} // namespace mozilla
-
-NS_DEFINE_NAMED_CID(JSINSPECTOR_CID);
-
-static const mozilla::Module::CIDEntry kJSInspectorCIDs[] = {
-  { &kJSINSPECTOR_CID, false, nullptr, mozilla::jsinspector::nsJSInspectorConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kJSInspectorContracts[] = {
-  { JSINSPECTOR_CONTRACTID, &kJSINSPECTOR_CID },
-  { nullptr }
-};
-
-static const mozilla::Module kJSInspectorModule = {
-  mozilla::Module::kVersion,
-  kJSInspectorCIDs,
-  kJSInspectorContracts
-};
-
-NSMODULE_DEFN(jsinspector) = &kJSInspectorModule;
-=======
-}  // namespace jsinspector
-}  // namespace mozilla
->>>>>>> upstream-releases

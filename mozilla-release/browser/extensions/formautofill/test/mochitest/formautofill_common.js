@@ -1,6 +1,5 @@
 /* import-globals-from ../../../../../testing/mochitest/tests/SimpleTest/SimpleTest.js */
 /* import-globals-from ../../../../../testing/mochitest/tests/SimpleTest/EventUtils.js */
-/* import-globals-from ../../../../../testing/mochitest/tests/SimpleTest/AddTask.js */
 /* import-globals-from ../../../../../toolkit/components/satchel/test/satchel_common.js */
 /* eslint-disable no-unused-vars */
 
@@ -141,26 +140,6 @@ function triggerAutofillAndCheckProfile(profile) {
     const expectingEvent =
       document.activeElement == element ? "input" : "change";
     const checkFieldAutofilled = Promise.all([
-<<<<<<< HEAD
-      new Promise(resolve => element.addEventListener("input", (event) => {
-        if (element.tagName == "INPUT" && element.type == "text") {
-          ok(event instanceof InputEvent,
-             `"input" event should be dispatched with InputEvent interface on ${element.tagName}`);
-        } else {
-          ok(event instanceof Event && !(event instanceof UIEvent),
-             `"input" event should be dispatched with Event interface on ${element.tagName}`);
-        }
-        is(event.cancelable, false,
-           `"input" event should be never cancelable on ${element.tagName}`);
-        is(event.bubbles, true,
-           `"input" event should always bubble on ${element.tagName}`);
-        resolve();
-      }, {once: true})),
-      new Promise(resolve => element.addEventListener(expectingEvent, resolve, {once: true})),
-||||||| merged common ancestors
-      new Promise(resolve => element.addEventListener("input", resolve, {once: true})),
-      new Promise(resolve => element.addEventListener(expectingEvent, resolve, {once: true})),
-=======
       new Promise(resolve =>
         element.addEventListener(
           "input",
@@ -205,7 +184,6 @@ function triggerAutofillAndCheckProfile(profile) {
       new Promise(resolve =>
         element.addEventListener(expectingEvent, resolve, { once: true })
       ),
->>>>>>> upstream-releases
     ]).then(() => checkFieldValue(element, value));
 
     promises.push(checkFieldAutofilled);
@@ -301,18 +279,6 @@ async function cleanUpStorage() {
   await cleanUpCreditCards();
 }
 
-<<<<<<< HEAD
-async function canTestOSKeyStoreLogin() {
-  let {canTest} = await invokeAsyncChromeTask("FormAutofillTest:CanTestOSKeyStoreLogin", "FormAutofillTest:CanTestOSKeyStoreLoginResult");
-  return canTest;
-}
-
-async function waitForOSKeyStoreLogin(login = false) {
-  await invokeAsyncChromeTask("FormAutofillTest:OSKeyStoreLogin", "FormAutofillTest:OSKeyStoreLoggedIn", {login});
-}
-
-||||||| merged common ancestors
-=======
 async function canTestOSKeyStoreLogin() {
   let { canTest } = await invokeAsyncChromeTask(
     "FormAutofillTest:CanTestOSKeyStoreLogin"
@@ -324,7 +290,6 @@ async function waitForOSKeyStoreLogin(login = false) {
   await invokeAsyncChromeTask("FormAutofillTest:OSKeyStoreLogin", { login });
 }
 
->>>>>>> upstream-releases
 function patchRecordCCNumber(record) {
   const number = record["cc-number"];
   const ccNumberFmt = {
@@ -390,21 +355,11 @@ function formAutoFillCommonSetup() {
     }
   });
 
-<<<<<<< HEAD
-  add_task(async function setup() {
-    formFillChromeScript.sendAsyncMessage("setup");
-    info(`expecting the storage setup`);
-    await formFillChromeScript.promiseOneMessage("setup-finished");
-  });
-
-||||||| merged common ancestors
-=======
   add_task(async function setup() {
     info(`expecting the storage setup`);
     await formFillChromeScript.sendQuery("setup");
   });
 
->>>>>>> upstream-releases
   SimpleTest.registerCleanupFunction(async () => {
     info(`expecting the storage cleanup`);
     await formFillChromeScript.sendQuery("cleanup");

@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-root:
-  items:
-    - type: stacking-context
-      transform: scale(5.0) rotate(45)
-      transform-origin: 300 300
-      raster-space: local(1.0)
-      items:
-      - text: "Local"
-        origin: 20 50
-        size: 20
-        font: "FreeSans.ttf"
-    - type: stacking-context
-      transform: scale(5.0) rotate(45)
-      transform-origin: 0 400
-      items:
-      - text: "Screen"
-        origin: 20 50
-        size: 20
-        font: "FreeSans.ttf"
-||||||| merged common ancestors
-=======
 root:
   items:
     - type: stacking-context
@@ -48,4 +26,3 @@ root:
         origin: 20 50
         size: 10
         font: "FreeSans.ttf"
->>>>>>> upstream-releases

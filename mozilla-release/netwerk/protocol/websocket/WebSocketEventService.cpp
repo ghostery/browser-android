@@ -107,45 +107,6 @@ class WebSocketCreatedRunnable final : public WebSocketBaseRunnable {
   const nsCString mProtocols;
 };
 
-<<<<<<< HEAD
-class WebSocketOpenedRunnable final : public WebSocketBaseRunnable {
- public:
-  WebSocketOpenedRunnable(uint32_t aWebSocketSerialID, uint64_t aInnerWindowID,
-                          const nsAString& aEffectiveURI,
-                          const nsACString& aProtocols,
-                          const nsACString& aExtensions)
-      : WebSocketBaseRunnable(aWebSocketSerialID, aInnerWindowID),
-        mEffectiveURI(aEffectiveURI),
-        mProtocols(aProtocols),
-        mExtensions(aExtensions) {}
-
- private:
-  virtual void DoWork(nsIWebSocketEventListener* aListener) override {
-    DebugOnly<nsresult> rv = aListener->WebSocketOpened(
-        mWebSocketSerialID, mEffectiveURI, mProtocols, mExtensions);
-||||||| merged common ancestors
-class WebSocketOpenedRunnable final : public WebSocketBaseRunnable
-{
-public:
-  WebSocketOpenedRunnable(uint32_t aWebSocketSerialID,
-                           uint64_t aInnerWindowID,
-                           const nsAString& aEffectiveURI,
-                           const nsACString& aProtocols,
-                           const nsACString& aExtensions)
-    : WebSocketBaseRunnable(aWebSocketSerialID, aInnerWindowID)
-    , mEffectiveURI(aEffectiveURI)
-    , mProtocols(aProtocols)
-    , mExtensions(aExtensions)
-  {}
-
-private:
-  virtual void DoWork(nsIWebSocketEventListener* aListener) override
-  {
-    DebugOnly<nsresult> rv = aListener->WebSocketOpened(mWebSocketSerialID,
-                                                        mEffectiveURI,
-                                                        mProtocols,
-                                                        mExtensions);
-=======
 class WebSocketOpenedRunnable final : public WebSocketBaseRunnable {
  public:
   WebSocketOpenedRunnable(uint32_t aWebSocketSerialID, uint64_t aInnerWindowID,
@@ -164,7 +125,6 @@ class WebSocketOpenedRunnable final : public WebSocketBaseRunnable {
     DebugOnly<nsresult> rv =
         aListener->WebSocketOpened(mWebSocketSerialID, mEffectiveURI,
                                    mProtocols, mExtensions, mHttpChannelId);
->>>>>>> upstream-releases
     NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "WebSocketOpened failed");
   }
 
@@ -217,33 +177,15 @@ class WebSocketClosedRunnable final : public WebSocketBaseRunnable {
   const nsString mReason;
 };
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<WebSocketEventService>
-WebSocketEventService::Get() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<WebSocketEventService>
-WebSocketEventService::Get()
-{
-=======
 /* static */
 already_AddRefed<WebSocketEventService> WebSocketEventService::Get() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   RefPtr<WebSocketEventService> service = gWebSocketEventService.get();
   return service.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<WebSocketEventService>
-WebSocketEventService::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<WebSocketEventService>
-WebSocketEventService::GetOrCreate()
-{
-=======
 /* static */
 already_AddRefed<WebSocketEventService> WebSocketEventService::GetOrCreate() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!gWebSocketEventService) {
@@ -295,23 +237,6 @@ void WebSocketEventService::WebSocketCreated(uint32_t aWebSocketSerialID,
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "NS_DispatchToMainThread failed");
 }
 
-<<<<<<< HEAD
-void WebSocketEventService::WebSocketOpened(uint32_t aWebSocketSerialID,
-                                            uint64_t aInnerWindowID,
-                                            const nsAString& aEffectiveURI,
-                                            const nsACString& aProtocols,
-                                            const nsACString& aExtensions,
-                                            nsIEventTarget* aTarget) {
-||||||| merged common ancestors
-void
-WebSocketEventService::WebSocketOpened(uint32_t aWebSocketSerialID,
-                                       uint64_t aInnerWindowID,
-                                       const nsAString& aEffectiveURI,
-                                       const nsACString& aProtocols,
-                                       const nsACString& aExtensions,
-                                       nsIEventTarget* aTarget)
-{
-=======
 void WebSocketEventService::WebSocketOpened(uint32_t aWebSocketSerialID,
                                             uint64_t aInnerWindowID,
                                             const nsAString& aEffectiveURI,
@@ -319,25 +244,14 @@ void WebSocketEventService::WebSocketOpened(uint32_t aWebSocketSerialID,
                                             const nsACString& aExtensions,
                                             uint64_t aHttpChannelId,
                                             nsIEventTarget* aTarget) {
->>>>>>> upstream-releases
   // Let's continue only if we have some listeners.
   if (!HasListeners()) {
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<WebSocketOpenedRunnable> runnable =
-      new WebSocketOpenedRunnable(aWebSocketSerialID, aInnerWindowID,
-                                  aEffectiveURI, aProtocols, aExtensions);
-||||||| merged common ancestors
-  RefPtr<WebSocketOpenedRunnable> runnable =
-    new WebSocketOpenedRunnable(aWebSocketSerialID, aInnerWindowID,
-                                aEffectiveURI, aProtocols, aExtensions);
-=======
   RefPtr<WebSocketOpenedRunnable> runnable = new WebSocketOpenedRunnable(
       aWebSocketSerialID, aInnerWindowID, aEffectiveURI, aProtocols,
       aExtensions, aHttpChannelId);
->>>>>>> upstream-releases
   DebugOnly<nsresult> rv = aTarget
                                ? aTarget->Dispatch(runnable, NS_DISPATCH_NORMAL)
                                : NS_DispatchToMainThread(runnable);

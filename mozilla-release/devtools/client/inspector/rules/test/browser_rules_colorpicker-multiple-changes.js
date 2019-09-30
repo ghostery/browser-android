@@ -51,19 +51,9 @@ async function testSimpleMultipleColorChanges(inspector, ruleView) {
 
   info("Changing the color several times");
   const colors = [
-<<<<<<< HEAD
-    {rgba: [0, 0, 0, 1], computed: "rgb(0, 0, 0)"},
-    {rgba: [100, 100, 100, 1], computed: "rgb(100, 100, 100)"},
-    {rgba: [200, 200, 200, 1], computed: "rgb(200, 200, 200)"},
-||||||| merged common ancestors
-    {rgba: [0, 0, 0, 1], computed: "rgb(0, 0, 0)"},
-    {rgba: [100, 100, 100, 1], computed: "rgb(100, 100, 100)"},
-    {rgba: [200, 200, 200, 1], computed: "rgb(200, 200, 200)"}
-=======
     { rgba: [0, 0, 0, 1], computed: "rgb(0, 0, 0)" },
     { rgba: [100, 100, 100, 1], computed: "rgb(100, 100, 100)" },
     { rgba: [200, 200, 200, 1], computed: "rgb(200, 200, 200)" },
->>>>>>> upstream-releases
   ];
   for (const { rgba, computed } of colors) {
     await simulateColorPickerChange(ruleView, picker, rgba, {
@@ -98,19 +88,9 @@ async function testComplexMultipleColorChanges(inspector, ruleView) {
 
   info("Changing the color several times");
   const colors = [
-<<<<<<< HEAD
-    {rgba: [0, 0, 0, 1], computed: "rgb(0, 0, 0)"},
-    {rgba: [100, 100, 100, 1], computed: "rgb(100, 100, 100)"},
-    {rgba: [200, 200, 200, 1], computed: "rgb(200, 200, 200)"},
-||||||| merged common ancestors
-    {rgba: [0, 0, 0, 1], computed: "rgb(0, 0, 0)"},
-    {rgba: [100, 100, 100, 1], computed: "rgb(100, 100, 100)"},
-    {rgba: [200, 200, 200, 1], computed: "rgb(200, 200, 200)"}
-=======
     { rgba: [0, 0, 0, 1], computed: "rgb(0, 0, 0)" },
     { rgba: [100, 100, 100, 1], computed: "rgb(100, 100, 100)" },
     { rgba: [200, 200, 200, 1], computed: "rgb(200, 200, 200)" },
->>>>>>> upstream-releases
   ];
   for (const { rgba, computed } of colors) {
     await simulateColorPickerChange(ruleView, picker, rgba, {

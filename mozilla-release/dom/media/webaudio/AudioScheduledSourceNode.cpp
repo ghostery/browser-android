@@ -9,40 +9,6 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-AudioScheduledSourceNode::AudioScheduledSourceNode(
-    AudioContext* aContext, uint32_t aChannelCount,
-    ChannelCountMode aChannelCountMode,
-    ChannelInterpretation aChannelInterpretation)
-    : AudioNode(aContext, aChannelCount, aChannelCountMode,
-                aChannelInterpretation) {}
-
-JSObject* AudioScheduledSourceNode::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-  return AudioScheduledSourceNode_Binding::Wrap(aCx, this, aGivenProto);
-}
-
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-AudioScheduledSourceNode::AudioScheduledSourceNode(AudioContext* aContext,
-                                                   uint32_t aChannelCount,
-                                                   ChannelCountMode aChannelCountMode,
-                                                   ChannelInterpretation aChannelInterpretation)
-  : AudioNode(aContext, aChannelCount, aChannelCountMode,
-              aChannelInterpretation)
-{}
-
-JSObject*
-AudioScheduledSourceNode::WrapObject(JSContext* aCx,
-                                     JS::Handle<JSObject*> aGivenProto)
-{
-  return AudioScheduledSourceNode_Binding::Wrap(aCx, this, aGivenProto);
-}
-
-} // dom namespace
-} // mozilla namespace
-=======
 AudioScheduledSourceNode::AudioScheduledSourceNode(
     AudioContext* aContext, uint32_t aChannelCount,
     ChannelCountMode aChannelCountMode,
@@ -51,4 +17,3 @@ AudioScheduledSourceNode::AudioScheduledSourceNode(
                 aChannelInterpretation) {}
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

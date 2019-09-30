@@ -13,19 +13,6 @@ function is(a, b, message) {
 }
 
 onmessage = function(e) {
-<<<<<<< HEAD
-  self[e.data](SAME_COMPARTMENT).then(ok => {
-    postMessage({type: 'done'});
-  }, exc => {
-    dump(exc);
-    dump(exc.stack);
-    postMessage({type: 'error', message: exc.toString()});
-  });
-}
-||||||| merged common ancestors
-  self[e.data](SAME_COMPARTMENT);
-}
-=======
   self[e.data](SAME_COMPARTMENT).then(
     ok => {
       postMessage({ type: "done" });
@@ -37,4 +24,3 @@ onmessage = function(e) {
     }
   );
 };
->>>>>>> upstream-releases

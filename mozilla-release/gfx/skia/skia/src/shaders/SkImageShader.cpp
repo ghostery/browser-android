@@ -69,23 +69,9 @@ bool SkImageShader::isOpaque() const {
     return fImage->isOpaque() && fTileModeX != kDecal_TileMode && fTileModeY != kDecal_TileMode;
 }
 
-<<<<<<< HEAD
-static bool legacy_shader_can_handle(const SkMatrix& inv) {
-    if (!inv.isScaleTranslate()) {
-||||||| merged common ancestors
-static bool legacy_shader_can_handle(const SkMatrix& a, const SkMatrix& b) {
-    SkMatrix m = SkMatrix::Concat(a, b);
-    if (!m.isScaleTranslate()) {
-        return false;
-    }
-
-    SkMatrix inv;
-    if (!m.invert(&inv)) {
-=======
 #ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
 static bool legacy_shader_can_handle(const SkMatrix& inv) {
     if (!inv.isScaleTranslate()) {
->>>>>>> upstream-releases
         return false;
     }
 
@@ -106,62 +92,17 @@ static bool legacy_shader_can_handle(const SkMatrix& inv) {
     return true;
 }
 
-<<<<<<< HEAD
-SkShaderBase::Context* SkImageShader::onMakeContext(const ContextRec& rec,
-                                                    SkArenaAlloc* alloc) const {
-    const auto info = as_IB(fImage)->onImageInfo();
-
-    if (info.colorType() != kN32_SkColorType) {
-        return nullptr;
-||||||| merged common ancestors
-bool SkImageShader::IsRasterPipelineOnly(const SkMatrix& ctm, SkColorType ct, SkAlphaType at,
-                                         SkShader::TileMode tx, SkShader::TileMode ty,
-                                         const SkMatrix& localM) {
-    if (ct != kN32_SkColorType) {
-        return true;
-=======
 SkShaderBase::Context* SkImageShader::onMakeContext(const ContextRec& rec,
                                                     SkArenaAlloc* alloc) const {
     if (fImage->alphaType() == kUnpremul_SkAlphaType) {
         return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (info.alphaType() == kUnpremul_SkAlphaType) {
-        return nullptr;
-||||||| merged common ancestors
-    if (at == kUnpremul_SkAlphaType) {
-        return true;
-=======
     if (fImage->colorType() != kN32_SkColorType) {
         return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#ifndef SK_SUPPORT_LEGACY_TILED_BITMAPS
     if (fTileModeX != fTileModeY) {
         return nullptr;
-||||||| merged common ancestors
-#ifndef SK_SUPPORT_LEGACY_TILED_BITMAPS
-    if (tx != ty) {
-        return true;
-=======
-    if (fTileModeX != fTileModeY) {
-        return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#endif
-    if (fTileModeX == kDecal_TileMode || fTileModeY == kDecal_TileMode) {
-        return nullptr;
-||||||| merged common ancestors
-#endif
-    if (tx == kDecal_TileMode || ty == kDecal_TileMode) {
-        return true;
-    }
-    if (!legacy_shader_can_handle(ctm, localM)) {
-        return true;
-=======
     if (fTileModeX == kDecal_TileMode || fTileModeY == kDecal_TileMode) {
         return nullptr;
     }
@@ -179,22 +120,8 @@ SkShaderBase::Context* SkImageShader::onMakeContext(const ContextRec& rec,
     if (fImage-> width() > 32767 ||
         fImage->height() > 32767) {
         return nullptr;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    SkMatrix inv;
-    if (!this->computeTotalInverse(*rec.fMatrix, rec.fLocalMatrix, &inv) ||
-        !legacy_shader_can_handle(inv)) {
-        return nullptr;
-    }
-||||||| merged common ancestors
-bool SkImageShader::onIsRasterPipelineOnly(const SkMatrix& ctm) const {
-    SkBitmapProvider provider(fImage.get(), nullptr);
-    return IsRasterPipelineOnly(ctm, provider.info().colorType(), provider.info().alphaType(),
-                                fTileModeX, fTileModeY, this->getLocalMatrix());
-}
-=======
     SkMatrix inv;
     if (!this->computeTotalInverse(*rec.fMatrix, rec.fLocalMatrix, &inv) ||
         !legacy_shader_can_handle(inv)) {
@@ -204,7 +131,6 @@ bool SkImageShader::onIsRasterPipelineOnly(const SkMatrix& ctm) const {
     if (!rec.isLegacyCompatible(fImage->colorSpace())) {
         return nullptr;
     }
->>>>>>> upstream-releases
 
     return SkBitmapProcLegacyShader::MakeContext(*this, fTileModeX, fTileModeY,
                                                  SkBitmapProvider(fImage.get()), rec, alloc);
@@ -292,16 +218,8 @@ std::unique_ptr<GrFragmentProcessor> SkImageShader::asFragmentProcessor(
     // are provided by the caller.
     bool doBicubic;
     GrSamplerState::Filter textureFilterMode = GrSkFilterQualityToGrFilterMode(
-<<<<<<< HEAD
-            args.fFilterQuality, *args.fViewMatrix, *lm,
-            args.fContext->contextPriv().sharpenMipmappedTextures(), &doBicubic);
-||||||| merged common ancestors
-            args.fFilterQuality, *args.fViewMatrix, lm,
-            args.fContext->contextPriv().sharpenMipmappedTextures(), &doBicubic);
-=======
             args.fFilterQuality, *args.fViewMatrix, *lm,
             args.fContext->priv().options().fSharpenMipmappedTextures, &doBicubic);
->>>>>>> upstream-releases
     GrSamplerState samplerState(wrapModes, textureFilterMode);
     SkScalar scaleAdjust[2] = { 1.0f, 1.0f };
     sk_sp<GrTextureProxy> proxy(as_IB(fImage)->asTextureProxyRef(args.fContext, samplerState,
@@ -331,15 +249,8 @@ std::unique_ptr<GrFragmentProcessor> SkImageShader::asFragmentProcessor(
             inner = GrSimpleTextureEffect::Make(std::move(proxy), lmInverse, samplerState);
         }
     }
-<<<<<<< HEAD
-    inner = GrColorSpaceXformEffect::Make(std::move(inner), texColorSpace.get(),
-                                          fImage->alphaType(),
-||||||| merged common ancestors
-    inner = GrColorSpaceXformEffect::Make(std::move(inner), texColorSpace.get(), config,
-=======
     inner = GrColorSpaceXformEffect::Make(std::move(inner), fImage->colorSpace(),
                                           fImage->alphaType(),
->>>>>>> upstream-releases
                                           args.fDstColorSpaceInfo->colorSpace());
     if (isAlphaOnly) {
         return inner;
@@ -418,15 +329,7 @@ bool SkImageShader::onAppendStages(const StageRec& rec) const {
     limit_y->scale = pm.height();
     limit_y->invScale = 1.0f / pm.height();
 
-<<<<<<< HEAD
-    SkJumper_DecalTileCtx* decal_ctx = nullptr;
-||||||| merged common ancestors
-    bool is_srgb = rec.fDstCS && (!info.colorSpace() || info.gammaCloseToSRGB());
-
-    SkJumper_DecalTileCtx* decal_ctx = nullptr;
-=======
     SkRasterPipeline_DecalTileCtx* decal_ctx = nullptr;
->>>>>>> upstream-releases
     bool decal_x_and_y = fTileModeX == kDecal_TileMode && fTileModeY == kDecal_TileMode;
     if (fTileModeX == kDecal_TileMode || fTileModeY == kDecal_TileMode) {
         decal_ctx = alloc->make<SkRasterPipeline_DecalTileCtx>();
@@ -461,15 +364,10 @@ bool SkImageShader::onAppendStages(const StageRec& rec) const {
             case kRGBA_1010102_SkColorType: p->append(SkRasterPipeline::gather_1010102, ctx); break;
             case kRGBA_F16Norm_SkColorType:
             case kRGBA_F16_SkColorType:     p->append(SkRasterPipeline::gather_f16,     ctx); break;
-<<<<<<< HEAD
-            case kRGBA_F32_SkColorType:     p->append(SkRasterPipeline::gather_f32,     ctx); break;
-||||||| merged common ancestors
-=======
             case kRGBA_F32_SkColorType:     p->append(SkRasterPipeline::gather_f32,     ctx); break;
 
             case kGray_8_SkColorType:       p->append(SkRasterPipeline::gather_a8,      ctx);
                                             p->append(SkRasterPipeline::alpha_to_gray      ); break;
->>>>>>> upstream-releases
 
             case kRGB_888x_SkColorType:     p->append(SkRasterPipeline::gather_8888,    ctx);
                                             p->append(SkRasterPipeline::force_opaque       ); break;
@@ -505,25 +403,6 @@ bool SkImageShader::onAppendStages(const StageRec& rec) const {
             p->append(fClampAsIfUnpremul ? SkRasterPipeline::clamp_1
                                          : SkRasterPipeline::clamp_a);
         }
-<<<<<<< HEAD
-
-        if (rec.fDstCS) {
-            // If color managed, convert from premul source all the way to premul dst color space.
-            auto srcCS = info.colorSpace();
-            if (!srcCS || info.colorType() == kAlpha_8_SkColorType) {
-                // We treat untagged images as sRGB.
-                // A8 images get their r,g,b from the paint color, so they're also sRGB.
-                srcCS = sk_srgb_singleton();
-            }
-            alloc->make<SkColorSpaceXformSteps>(srcCS     , kPremul_SkAlphaType,
-                                                rec.fDstCS, kPremul_SkAlphaType)
-                ->apply(p);
-        }
-
-||||||| merged common ancestors
-        append_gamut_transform(p, alloc, info.colorSpace(), rec.fDstCS,
-                               fClampAsIfUnpremul ? kUnpremul_SkAlphaType : kPremul_SkAlphaType);
-=======
 
         if (rec.fDstCS) {
             // If color managed, convert from premul source all the way to premul dst color space.
@@ -538,7 +417,6 @@ bool SkImageShader::onAppendStages(const StageRec& rec) const {
                 ->apply(p, info.colorType());
         }
 
->>>>>>> upstream-releases
         return true;
     };
 

@@ -83,7 +83,7 @@ typedef struct nr_ice_turn_server_ nr_ice_turn_server;
 typedef struct nr_resolver_ nr_resolver;
 typedef struct nr_proxy_tunnel_config_ nr_proxy_tunnel_config;
 
-typedef void *NR_SOCKET;
+typedef void* NR_SOCKET;
 
 namespace mozilla {
 
@@ -102,25 +102,14 @@ extern const char kNrIceTransportTls[];
 
 class NrIceStunServer {
  public:
-  explicit NrIceStunServer(const PRNetAddr &addr) : has_addr_(true) {
+  explicit NrIceStunServer(const PRNetAddr& addr) : has_addr_(true) {
     memcpy(&addr_, &addr, sizeof(addr));
   }
 
-<<<<<<< HEAD
-  // The main function to use. Will take either an address or a hostname.
-  static UniquePtr<NrIceStunServer> Create(
-      const std::string &addr, uint16_t port,
-      const char *transport = kNrIceTransportUdp) {
-||||||| merged common ancestors
-   // The main function to use. Will take either an address or a hostname.
-  static UniquePtr<NrIceStunServer> Create(const std::string& addr, uint16_t port,
-      const char *transport = kNrIceTransportUdp) {
-=======
   // The main function to use. Will take either an address or a hostname.
   static UniquePtr<NrIceStunServer> Create(
       const std::string& addr, uint16_t port,
       const char* transport = kNrIceTransportUdp) {
->>>>>>> upstream-releases
     UniquePtr<NrIceStunServer> server(new NrIceStunServer(transport));
 
     nsresult rv = server->Init(addr, port);
@@ -129,21 +118,13 @@ class NrIceStunServer {
     return server;
   }
 
-  nsresult ToNicerStunStruct(nr_ice_stun_server *server) const;
+  nsresult ToNicerStunStruct(nr_ice_stun_server* server) const;
 
  protected:
-<<<<<<< HEAD
-  explicit NrIceStunServer(const char *transport)
-      : addr_(), transport_(transport) {}
-||||||| merged common ancestors
-  explicit NrIceStunServer(const char *transport) :
-      addr_(), transport_(transport) {}
-=======
   explicit NrIceStunServer(const char* transport)
       : addr_(), transport_(transport) {}
->>>>>>> upstream-releases
 
-  nsresult Init(const std::string &addr, uint16_t port) {
+  nsresult Init(const std::string& addr, uint16_t port) {
     PRStatus status = PR_StringToNetAddr(addr.c_str(), &addr_);
     if (status == PR_SUCCESS) {
       // Parseable as an address
@@ -171,27 +152,12 @@ class NrIceStunServer {
 
 class NrIceTurnServer : public NrIceStunServer {
  public:
-<<<<<<< HEAD
-  static UniquePtr<NrIceTurnServer> Create(
-      const std::string &addr, uint16_t port, const std::string &username,
-      const std::vector<unsigned char> &password,
-      const char *transport = kNrIceTransportUdp) {
-    UniquePtr<NrIceTurnServer> server(
-        new NrIceTurnServer(username, password, transport));
-||||||| merged common ancestors
-  static UniquePtr<NrIceTurnServer> Create(const std::string& addr, uint16_t port,
-                                           const std::string& username,
-                                           const std::vector<unsigned char>& password,
-                                           const char *transport = kNrIceTransportUdp) {
-    UniquePtr<NrIceTurnServer> server(new NrIceTurnServer(username, password, transport));
-=======
   static UniquePtr<NrIceTurnServer> Create(
       const std::string& addr, uint16_t port, const std::string& username,
       const std::vector<unsigned char>& password,
       const char* transport = kNrIceTransportUdp) {
     UniquePtr<NrIceTurnServer> server(
         new NrIceTurnServer(username, password, transport));
->>>>>>> upstream-releases
 
     nsresult rv = server->Init(addr, port);
     if (NS_FAILED(rv)) return nullptr;
@@ -202,22 +168,10 @@ class NrIceTurnServer : public NrIceStunServer {
   nsresult ToNicerTurnStruct(nr_ice_turn_server* server) const;
 
  private:
-<<<<<<< HEAD
-  NrIceTurnServer(const std::string &username,
-                  const std::vector<unsigned char> &password,
-                  const char *transport)
-      : NrIceStunServer(transport), username_(username), password_(password) {}
-||||||| merged common ancestors
-  NrIceTurnServer(const std::string& username,
-                  const std::vector<unsigned char>& password,
-                  const char *transport) :
-      NrIceStunServer(transport), username_(username), password_(password) {}
-=======
   NrIceTurnServer(const std::string& username,
                   const std::vector<unsigned char>& password,
                   const char* transport)
       : NrIceStunServer(transport), username_(username), password_(password) {}
->>>>>>> upstream-releases
 
   std::string username_;
   std::vector<unsigned char> password_;
@@ -255,29 +209,15 @@ class NrIceCtx {
 
   enum Policy { ICE_POLICY_RELAY, ICE_POLICY_NO_HOST, ICE_POLICY_ALL };
 
-<<<<<<< HEAD
-  static RefPtr<NrIceCtx> Create(
-      const std::string &name, bool allow_loopback = false,
-      bool tcp_enabled = true, bool allow_link_local = false,
-      NrIceCtx::Policy policy = NrIceCtx::ICE_POLICY_ALL);
-||||||| merged common ancestors
-  static RefPtr<NrIceCtx> Create(const std::string& name,
-                                 bool allow_loopback = false,
-                                 bool tcp_enabled = true,
-                                 bool allow_link_local = false,
-                                 NrIceCtx::Policy policy =
-                                   NrIceCtx::ICE_POLICY_ALL);
-=======
   static RefPtr<NrIceCtx> Create(
       const std::string& name, bool allow_loopback = false,
       bool tcp_enabled = true, bool allow_link_local = false,
       NrIceCtx::Policy policy = NrIceCtx::ICE_POLICY_ALL);
->>>>>>> upstream-releases
 
-  RefPtr<NrIceMediaStream> CreateStream(const std::string &id,
-                                        const std::string &name,
+  RefPtr<NrIceMediaStream> CreateStream(const std::string& id,
+                                        const std::string& name,
                                         int components);
-  void DestroyStream(const std::string &id);
+  void DestroyStream(const std::string& id);
 
   // initialize ICE globals, crypto, and logging
   static void InitializeGlobals(bool allow_loopback = false,
@@ -287,11 +227,11 @@ class NrIceCtx {
   // static GetStunAddrs for use in parent process to support
   // sandboxing restrictions
   static nsTArray<NrIceStunAddr> GetStunAddrs();
-  void SetStunAddrs(const nsTArray<NrIceStunAddr> &addrs);
+  void SetStunAddrs(const nsTArray<NrIceStunAddr>& addrs);
 
   bool Initialize();
 
-  int SetNat(const RefPtr<TestNat> &aNat);
+  int SetNat(const RefPtr<TestNat>& aNat);
 
   // Deinitialize all ICE global state. Used only for testing.
   static void internal_DeinitializeGlobal();
@@ -305,7 +245,7 @@ class NrIceCtx {
   // Testing only.
   void destroy_peer_ctx();
 
-  RefPtr<NrIceMediaStream> GetStream(const std::string &id) {
+  RefPtr<NrIceMediaStream> GetStream(const std::string& id) {
     auto it = streams_.find(id);
     if (it != streams_.end()) {
       return it->second;
@@ -315,7 +255,7 @@ class NrIceCtx {
 
   std::vector<RefPtr<NrIceMediaStream>> GetStreams() const {
     std::vector<RefPtr<NrIceMediaStream>> result;
-    for (auto &idAndStream : streams_) {
+    for (auto& idAndStream : streams_) {
       result.push_back(idAndStream.second);
     }
     return result;
@@ -324,7 +264,7 @@ class NrIceCtx {
   bool HasStreamsToConnect() const;
 
   // The name of the ctx
-  const std::string &name() const { return name_; }
+  const std::string& name() const { return name_; }
 
   // Current state
   ConnectionState connection_state() const { return connection_state_; }
@@ -351,11 +291,11 @@ class NrIceCtx {
 
   // Set the STUN servers. Must be called before StartGathering
   // (if at all).
-  nsresult SetStunServers(const std::vector<NrIceStunServer> &stun_servers);
+  nsresult SetStunServers(const std::vector<NrIceStunServer>& stun_servers);
 
   // Set the TURN servers. Must be called before StartGathering
   // (if at all).
-  nsresult SetTurnServers(const std::vector<NrIceTurnServer> &turn_servers);
+  nsresult SetTurnServers(const std::vector<NrIceTurnServer>& turn_servers);
 
   // Provide the resolution provider. Must be called before
   // StartGathering.
@@ -363,21 +303,11 @@ class NrIceCtx {
 
   // Provide the proxy address. Must be called before
   // StartGathering.
-<<<<<<< HEAD
-  nsresult SetProxyServer(NrSocketProxyConfig &&config);
-
-  const std::shared_ptr<NrSocketProxyConfig> &GetProxyConfig() {
-    return proxy_config_;
-  }
-||||||| merged common ancestors
-  nsresult SetProxyServer(const NrIceProxyServer& proxy_server);
-=======
   nsresult SetProxyServer(NrSocketProxyConfig&& config);
 
   const std::shared_ptr<NrSocketProxyConfig>& GetProxyConfig() {
     return proxy_config_;
   }
->>>>>>> upstream-releases
 
   void SetCtxFlags(bool default_route_only, bool proxy_only);
 
@@ -394,7 +324,7 @@ class NrIceCtx {
   // more forking.
   nsresult Finalize();
 
-  void AccumulateStats(const NrIceStats &stats);
+  void AccumulateStats(const NrIceStats& stats);
   NrIceStats Destroy();
 
   // Are we trickling?
@@ -402,38 +332,18 @@ class NrIceCtx {
 
   // Signals to indicate events. API users can (and should)
   // register for these.
-<<<<<<< HEAD
-  sigslot::signal2<NrIceCtx *, NrIceCtx::GatheringState>
-      SignalGatheringStateChange;
-  sigslot::signal2<NrIceCtx *, NrIceCtx::ConnectionState>
-      SignalConnectionStateChange;
-||||||| merged common ancestors
-  sigslot::signal2<NrIceCtx*, NrIceCtx::GatheringState>
-    SignalGatheringStateChange;
-  sigslot::signal2<NrIceCtx*, NrIceCtx::ConnectionState>
-    SignalConnectionStateChange;
-=======
   sigslot::signal2<NrIceCtx*, NrIceCtx::GatheringState>
       SignalGatheringStateChange;
   sigslot::signal2<NrIceCtx*, NrIceCtx::ConnectionState>
       SignalConnectionStateChange;
->>>>>>> upstream-releases
 
   // The thread to direct method calls to
   nsCOMPtr<nsIEventTarget> thread() { return sts_target_; }
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(NrIceCtx)
 
-<<<<<<< HEAD
- private:
-  NrIceCtx(const std::string &name, Policy policy);
-||||||| merged common ancestors
-private:
-  NrIceCtx(const std::string& name, Policy policy);
-=======
  private:
   NrIceCtx(const std::string& name, Policy policy);
->>>>>>> upstream-releases
 
   virtual ~NrIceCtx();
 
@@ -443,41 +353,9 @@ private:
   static void gather_cb(NR_SOCKET s, int h, void* arg);  // ICE gather complete
 
   // Handler implementation
-<<<<<<< HEAD
-  static int select_pair(void *obj, nr_ice_media_stream *stream,
-                         int component_id, nr_ice_cand_pair **potentials,
-||||||| merged common ancestors
-  static int select_pair(void *obj,nr_ice_media_stream *stream,
-                         int component_id, nr_ice_cand_pair **potentials,
-=======
   static int select_pair(void* obj, nr_ice_media_stream* stream,
                          int component_id, nr_ice_cand_pair** potentials,
->>>>>>> upstream-releases
                          int potential_ct);
-<<<<<<< HEAD
-  static int stream_ready(void *obj, nr_ice_media_stream *stream);
-  static int stream_failed(void *obj, nr_ice_media_stream *stream);
-  static int ice_checking(void *obj, nr_ice_peer_ctx *pctx);
-  static int ice_connected(void *obj, nr_ice_peer_ctx *pctx);
-  static int ice_disconnected(void *obj, nr_ice_peer_ctx *pctx);
-  static int msg_recvd(void *obj, nr_ice_peer_ctx *pctx,
-                       nr_ice_media_stream *stream, int component_id,
-                       unsigned char *msg, int len);
-  static void trickle_cb(void *arg, nr_ice_ctx *ctx,
-                         nr_ice_media_stream *stream, int component_id,
-                         nr_ice_candidate *candidate);
-||||||| merged common ancestors
-  static int stream_ready(void *obj, nr_ice_media_stream *stream);
-  static int stream_failed(void *obj, nr_ice_media_stream *stream);
-  static int ice_checking(void *obj, nr_ice_peer_ctx *pctx);
-  static int ice_connected(void *obj, nr_ice_peer_ctx *pctx);
-  static int ice_disconnected(void *obj, nr_ice_peer_ctx *pctx);
-  static int msg_recvd(void *obj, nr_ice_peer_ctx *pctx,
-                       nr_ice_media_stream *stream, int component_id,
-                       unsigned char *msg, int len);
-  static void trickle_cb(void *arg, nr_ice_ctx *ctx, nr_ice_media_stream *stream,
-                         int component_id, nr_ice_candidate *candidate);
-=======
   static int stream_ready(void* obj, nr_ice_media_stream* stream);
   static int stream_failed(void* obj, nr_ice_media_stream* stream);
   static int ice_checking(void* obj, nr_ice_peer_ctx* pctx);
@@ -489,7 +367,6 @@ private:
   static void trickle_cb(void* arg, nr_ice_ctx* ctx,
                          nr_ice_media_stream* stream, int component_id,
                          nr_ice_candidate* candidate);
->>>>>>> upstream-releases
 
   // Find a media stream by stream ptr. Gross
   RefPtr<NrIceMediaStream> FindStream(nr_ice_media_stream* stream);
@@ -506,25 +383,11 @@ private:
   bool offerer_;
   TimeStamp ice_start_time_;
   bool ice_controlling_set_;
-<<<<<<< HEAD
-  std::map<std::string, RefPtr<NrIceMediaStream>> streams_;
-  nr_ice_ctx *ctx_;
-  nr_ice_peer_ctx *peer_;
-  nr_ice_handler_vtbl *ice_handler_vtbl_;  // Must be pointer
-  nr_ice_handler *ice_handler_;            // Must be pointer
-||||||| merged common ancestors
-  std::map<std::string, RefPtr<NrIceMediaStream> > streams_;
-  nr_ice_ctx *ctx_;
-  nr_ice_peer_ctx *peer_;
-  nr_ice_handler_vtbl* ice_handler_vtbl_;  // Must be pointer
-  nr_ice_handler* ice_handler_;  // Must be pointer
-=======
   std::map<std::string, RefPtr<NrIceMediaStream>> streams_;
   nr_ice_ctx* ctx_;
   nr_ice_peer_ctx* peer_;
   nr_ice_handler_vtbl* ice_handler_vtbl_;  // Must be pointer
   nr_ice_handler* ice_handler_;            // Must be pointer
->>>>>>> upstream-releases
   bool trickle_;
   nsCOMPtr<nsIEventTarget> sts_target_;  // The thread to run on
   Policy policy_;

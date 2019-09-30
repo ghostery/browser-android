@@ -35,15 +35,6 @@ function handleSubmit() { // eslint-disable-line no-unused-vars
 function handleInput(aEvent) {
   info("Input");
   is(input.value, expectedValue, "Check input value");
-<<<<<<< HEAD
-  ok(aEvent instanceof InputEvent,
-     '"input" event should be dispatched with InputEvent interface');
-  is(aEvent.cancelable, false,
-     '"input" event should be never cancelable');
-  is(aEvent.bubbles, true,
-     '"input" event should always bubble');
-||||||| merged common ancestors
-=======
   ok(aEvent instanceof InputEvent,
      '"input" event should be dispatched with InputEvent interface');
   is(aEvent.cancelable, false,
@@ -56,7 +47,6 @@ function handleInput(aEvent) {
      `data should be "${expectedValue}"`);
   is(aEvent.dataTransfer, null,
      "dataTransfer should be null");
->>>>>>> upstream-releases
   input.removeEventListener("input", handleInput, true);
   SimpleTest.finish();
 }

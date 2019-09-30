@@ -111,110 +111,6 @@ class LCovRealm {
   LCovSourceVector* sources_;
 };
 
-<<<<<<< HEAD
-class LCovRuntime {
- public:
-  LCovRuntime();
-  ~LCovRuntime();
-
-  // If the environment variable JS_CODE_COVERAGE_OUTPUT_DIR is set to a
-  // directory, create a file inside this directory which uses the process
-  // ID, the thread ID and a timestamp to ensure the uniqueness of the
-  // file.
-  //
-  // At the end of the execution, this file should contains the LCOV output of
-  // all the scripts executed in the current JSRuntime.
-  void init();
-
-  // Check if we should collect code coverage information.
-  bool isEnabled() const {
-    static bool isEnabled_ = ([]() {
-      const char* outDir = getenv("JS_CODE_COVERAGE_OUTPUT_DIR");
-      return outDir && *outDir != 0;
-    })();
-    return isEnabled_;
-  }
-
-  // Write the aggregated result of the code coverage of a realm
-  // into a file.
-  void writeLCovResult(LCovRealm& realm);
-
- private:
-  // When a process forks, the file will remain open, but 2 processes will
-  // have the same file. To avoid conflicting writes, we open a new file for
-  // the child process.
-  void maybeReopenAfterFork();
-
-  // Fill an array with the name of the file. Return false if we are unable to
-  // serialize the filename in this array.
-  bool fillWithFilename(char* name, size_t length);
-
-  // Finish the current opened file, and remove if it does not have any
-  // content.
-  void finishFile();
-
- private:
-  // Output file which is created if code coverage is enabled.
-  Fprinter out_;
-
-  // The process' PID is used to watch for fork. When the process fork,
-  // we want to close the current file and open a new one.
-  uint32_t pid_;
-
-  // Flag used to report if the generated file is empty or not. If it is empty
-  // when the runtime is destroyed, then the file would be removed as an empty
-  // file is not a valid LCov file.
-  bool isEmpty_;
-||||||| merged common ancestors
-class LCovRuntime
-{
-  public:
-    LCovRuntime();
-    ~LCovRuntime();
-
-    // If the environment variable JS_CODE_COVERAGE_OUTPUT_DIR is set to a
-    // directory, create a file inside this directory which uses the process
-    // ID, the thread ID and a timestamp to ensure the uniqueness of the
-    // file.
-    //
-    // At the end of the execution, this file should contains the LCOV output of
-    // all the scripts executed in the current JSRuntime.
-    void init();
-
-    // Check if we should collect code coverage information.
-    bool isEnabled() const { return out_.isInitialized(); }
-
-    // Write the aggregated result of the code coverage of a realm
-    // into a file.
-    void writeLCovResult(LCovRealm& realm);
-
-  private:
-    // When a process forks, the file will remain open, but 2 processes will
-    // have the same file. To avoid conflicting writes, we open a new file for
-    // the child process.
-    void maybeReopenAfterFork();
-
-    // Fill an array with the name of the file. Return false if we are unable to
-    // serialize the filename in this array.
-    bool fillWithFilename(char *name, size_t length);
-
-    // Finish the current opened file, and remove if it does not have any
-    // content.
-    void finishFile();
-
-  private:
-    // Output file which is created if code coverage is enabled.
-    Fprinter out_;
-
-    // The process' PID is used to watch for fork. When the process fork,
-    // we want to close the current file and open a new one.
-    uint32_t pid_;
-
-    // Flag used to report if the generated file is empty or not. If it is empty
-    // when the runtime is destroyed, then the file would be removed as an empty
-    // file is not a valid LCov file.
-    bool isEmpty_;
-=======
 class LCovRuntime {
  public:
   LCovRuntime();
@@ -259,27 +155,12 @@ class LCovRuntime {
   // when the runtime is destroyed, then the file would be removed as an empty
   // file is not a valid LCov file.
   bool isEmpty_;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-}  // namespace coverage
-}  // namespace js
-||||||| merged common ancestors
-} // namespace coverage
-} // namespace js
-
-#endif // vm_Printer_h
-=======
 extern void InitLCov();
 
 extern void EnableLCov();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // vm_Printer_h
-||||||| merged common ancestors
-=======
 inline bool IsLCovEnabled() {
   extern bool gLCovIsEnabled;
   return gLCovIsEnabled;
@@ -289,4 +170,3 @@ inline bool IsLCovEnabled() {
 }  // namespace js
 
 #endif  // vm_Printer_h
->>>>>>> upstream-releases

@@ -13,40 +13,15 @@ from distutils.spawn import find_executable
 
 from mozboot.util import get_state_dir
 from mozterm import Terminal
-<<<<<<< HEAD
-from six import string_types
-||||||| merged common ancestors
-from moztest.resolve import TestResolver, get_suite_definition
-from six import string_types
-=======
->>>>>>> upstream-releases
 
 from ..cli import BaseTryParser
-<<<<<<< HEAD
-from ..tasks import generate_tasks, filter_tasks_by_paths
-from ..push import check_working_directory, push_to_try, vcs
-||||||| merged common ancestors
-from ..tasks import generate_tasks
-from ..push import check_working_directory, push_to_try, vcs
-=======
 from ..tasks import generate_tasks, filter_tasks_by_paths
 from ..push import check_working_directory, push_to_try, generate_try_task_config
->>>>>>> upstream-releases
 
 terminal = Terminal()
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-<<<<<<< HEAD
-# Some tasks show up in the target task set, but are either special cases
-# or uncommon enough that they should only be selectable with --full.
-TARGET_TASK_FILTERS = (
-    '.*-ccov\/.*',
-)
-
-
-||||||| merged common ancestors
-=======
 # Some tasks show up in the target task set, but are either special cases
 # or uncommon enough that they should only be selectable with --full.
 TARGET_TASK_FILTERS = (
@@ -56,7 +31,6 @@ TARGET_TASK_FILTERS = (
 )
 
 
->>>>>>> upstream-releases
 FZF_NOT_FOUND = """
 Could not find the `fzf` binary.
 
@@ -147,15 +121,9 @@ class FuzzyParser(BaseTryParser):
           }],
     ]
     common_groups = ['push', 'task', 'preset']
-<<<<<<< HEAD
-    templates = ['artifact', 'path', 'env', 'rebuild', 'chemspill-prio', 'gecko-profile']
-||||||| merged common ancestors
-    templates = ['artifact', 'path', 'env', 'rebuild', 'chemspill-prio', 'talos-profile']
-=======
     templates = [
         'artifact', 'path', 'env', 'rebuild', 'chemspill-prio', 'gecko-profile', 'disable-pgo',
     ]
->>>>>>> upstream-releases
 
 
 def run_cmd(cmd, cwd=None):
@@ -249,27 +217,9 @@ def run_fzf(cmd, tasks):
     return query, selected
 
 
-<<<<<<< HEAD
 def filter_target_task(task):
     return not any(re.search(pattern, task) for pattern in TARGET_TASK_FILTERS)
 
-
-def run_fuzzy_try(update=False, query=None, templates=None, full=False, parameters=None,
-                  save=False, preset=None, mod_presets=False, push=True, message='{msg}',
-                  paths=None, **kwargs):
-    if mod_presets:
-        return getattr(pset, mod_presets)(section='fuzzy')
-||||||| merged common ancestors
-def run_fuzzy_try(update=False, query=None, templates=None, full=False, parameters=None,
-                  save=False, preset=None, mod_presets=False, push=True, message='{msg}',
-                  paths=None, **kwargs):
-    if mod_presets:
-        return getattr(pset, mod_presets)(section='fuzzy')
-=======
-def filter_target_task(task):
-    return not any(re.search(pattern, task) for pattern in TARGET_TASK_FILTERS)
-
->>>>>>> upstream-releases
 
 def run(update=False, query=None, intersect_query=None, try_config=None, full=False,
         parameters=None, save_query=False, push=True, message='{msg}',
@@ -281,32 +231,14 @@ def run(update=False, query=None, intersect_query=None, try_config=None, full=Fa
         return 1
 
     check_working_directory(push)
-<<<<<<< HEAD
-    tg = generate_tasks(parameters, full, root=vcs.path)
-    all_tasks = sorted(tg.tasks.keys())
-
-    if not full:
-        all_tasks = filter(filter_target_task, all_tasks)
-||||||| merged common ancestors
-    all_tasks = generate_tasks(parameters, full, root=vcs.path)
-=======
     tg = generate_tasks(parameters, full)
     all_tasks = sorted(tg.tasks.keys())
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if paths:
-        all_tasks = filter_tasks_by_paths(all_tasks, paths)
-||||||| merged common ancestors
-    if paths:
-        all_tasks = filter_by_paths(all_tasks, paths)
-=======
     if not full:
         all_tasks = filter(filter_target_task, all_tasks)
 
     if test_paths:
         all_tasks = filter_tasks_by_paths(all_tasks, test_paths)
->>>>>>> upstream-releases
         if not all_tasks:
             return 1
 

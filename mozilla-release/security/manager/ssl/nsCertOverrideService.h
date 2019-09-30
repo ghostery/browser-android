@@ -31,25 +31,9 @@ class nsCertOverride {
   nsCertOverride()
       : mPort(-1), mIsTemporary(false), mOverrideBits(OverrideBits::None) {}
 
-<<<<<<< HEAD
-  nsCertOverride(const nsCertOverride &other) { this->operator=(other); }
-||||||| merged common ancestors
-  nsCertOverride(const nsCertOverride &other)
-  {
-    this->operator=(other);
-  }
-=======
   nsCertOverride(const nsCertOverride& other) { this->operator=(other); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCertOverride &operator=(const nsCertOverride &other) {
-||||||| merged common ancestors
-  nsCertOverride &operator=(const nsCertOverride &other)
-  {
-=======
   nsCertOverride& operator=(const nsCertOverride& other) {
->>>>>>> upstream-releases
     mAsciiHost = other.mAsciiHost;
     mPort = other.mPort;
     mIsTemporary = other.mIsTemporary;
@@ -75,108 +59,6 @@ class nsCertOverride {
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(nsCertOverride::OverrideBits)
 
 // hash entry class
-<<<<<<< HEAD
-class nsCertOverrideEntry final : public PLDHashEntryHdr {
- public:
-  // Hash methods
-  typedef const char *KeyType;
-  typedef const char *KeyTypePointer;
-
-  // do nothing with aHost - we require mHead to be set before we're live!
-  explicit nsCertOverrideEntry(KeyTypePointer aHostWithPortUTF8) {}
-
-  nsCertOverrideEntry(nsCertOverrideEntry &&toMove)
-      : PLDHashEntryHdr(std::move(toMove)),
-        mSettings(std::move(toMove.mSettings)),
-        mHostWithPort(std::move(toMove.mHostWithPort)) {}
-
-  ~nsCertOverrideEntry() {}
-
-  KeyType GetKey() const { return HostWithPortPtr(); }
-
-  KeyTypePointer GetKeyPointer() const { return HostWithPortPtr(); }
-
-  bool KeyEquals(KeyTypePointer aKey) const {
-    return !strcmp(HostWithPortPtr(), aKey);
-  }
-
-  static KeyTypePointer KeyToPointer(KeyType aKey) { return aKey; }
-
-  static PLDHashNumber HashKey(KeyTypePointer aKey) {
-    return mozilla::HashString(aKey);
-  }
-
-  enum { ALLOW_MEMMOVE = false };
-
-  // get methods
-  inline const nsCString &HostWithPort() const { return mHostWithPort; }
-
-  inline KeyTypePointer HostWithPortPtr() const { return mHostWithPort.get(); }
-
-  nsCertOverride mSettings;
-  nsCString mHostWithPort;
-||||||| merged common ancestors
-class nsCertOverrideEntry final : public PLDHashEntryHdr
-{
-  public:
-    // Hash methods
-    typedef const char* KeyType;
-    typedef const char* KeyTypePointer;
-
-    // do nothing with aHost - we require mHead to be set before we're live!
-    explicit nsCertOverrideEntry(KeyTypePointer aHostWithPortUTF8)
-    {
-    }
-
-    nsCertOverrideEntry(nsCertOverrideEntry&& toMove)
-      : PLDHashEntryHdr(std::move(toMove))
-      , mSettings(std::move(toMove.mSettings))
-      , mHostWithPort(std::move(toMove.mHostWithPort))
-    {
-    }
-
-    ~nsCertOverrideEntry()
-    {
-    }
-
-    KeyType GetKey() const
-    {
-      return HostWithPortPtr();
-    }
-
-    KeyTypePointer GetKeyPointer() const
-    {
-      return HostWithPortPtr();
-    }
-
-    bool KeyEquals(KeyTypePointer aKey) const
-    {
-      return !strcmp(HostWithPortPtr(), aKey);
-    }
-
-    static KeyTypePointer KeyToPointer(KeyType aKey)
-    {
-      return aKey;
-    }
-
-    static PLDHashNumber HashKey(KeyTypePointer aKey)
-    {
-      return mozilla::HashString(aKey);
-    }
-
-    enum { ALLOW_MEMMOVE = false };
-
-    // get methods
-    inline const nsCString &HostWithPort() const { return mHostWithPort; }
-
-    inline KeyTypePointer HostWithPortPtr() const
-    {
-      return mHostWithPort.get();
-    }
-
-    nsCertOverride mSettings;
-    nsCString mHostWithPort;
-=======
 class nsCertOverrideEntry final : public PLDHashEntryHdr {
  public:
   // Hash methods
@@ -216,7 +98,6 @@ class nsCertOverrideEntry final : public PLDHashEntryHdr {
 
   nsCertOverride mSettings;
   nsCString mHostWithPort;
->>>>>>> upstream-releases
 };
 
 class nsCertOverrideService final : public nsICertOverrideService,
@@ -232,78 +113,13 @@ class nsCertOverrideService final : public nsICertOverrideService,
   nsresult Init();
   void RemoveAllTemporaryOverrides();
 
-<<<<<<< HEAD
-  typedef void (*CertOverrideEnumerator)(const nsCertOverride &aSettings,
-                                         void *aUserData);
-||||||| merged common ancestors
-  typedef void
-  (*CertOverrideEnumerator)(const nsCertOverride &aSettings,
-                            void *aUserData);
-=======
   typedef void (*CertOverrideEnumerator)(const nsCertOverride& aSettings,
                                          void* aUserData);
->>>>>>> upstream-releases
 
   // aCert == null: return all overrides
   // aCert != null: return overrides that match the given cert
   nsresult EnumerateCertOverrides(nsIX509Cert* aCert,
                                   CertOverrideEnumerator enumerator,
-<<<<<<< HEAD
-                                  void *aUserData);
-
-  // Concates host name and the port number. If the port number is -1 then
-  // port 443 is automatically used. This method ensures there is always a port
-  // number separated with colon.
-  static void GetHostWithPort(const nsACString &aHostName, int32_t aPort,
-                              nsACString &_retval);
-
- protected:
-  ~nsCertOverrideService();
-
-  mozilla::Mutex mMutex;
-  nsCOMPtr<nsIFile> mSettingsFile;
-  nsTHashtable<nsCertOverrideEntry> mSettingsTable;
-
-  void CountPermanentOverrideTelemetry(
-      const mozilla::MutexAutoLock &aProofOfLock);
-
-  void RemoveAllFromMemory();
-  nsresult Read(const mozilla::MutexAutoLock &aProofOfLock);
-  nsresult Write(const mozilla::MutexAutoLock &aProofOfLock);
-  nsresult AddEntryToList(const nsACString &host, int32_t port,
-                          nsIX509Cert *aCert, const bool aIsTemporary,
-                          const nsACString &fingerprint,
-                          nsCertOverride::OverrideBits ob,
-                          const nsACString &dbKey,
-                          const mozilla::MutexAutoLock &aProofOfLock);
-||||||| merged common ancestors
-                                  void *aUserData);
-
-    // Concates host name and the port number. If the port number is -1 then
-    // port 443 is automatically used. This method ensures there is always a port
-    // number separated with colon.
-    static void GetHostWithPort(const nsACString & aHostName, int32_t aPort, nsACString& _retval);
-
-protected:
-    ~nsCertOverrideService();
-
-    mozilla::Mutex mMutex;
-    nsCOMPtr<nsIFile> mSettingsFile;
-    nsTHashtable<nsCertOverrideEntry> mSettingsTable;
-
-    void CountPermanentOverrideTelemetry(const mozilla::MutexAutoLock& aProofOfLock);
-
-    void RemoveAllFromMemory();
-    nsresult Read(const mozilla::MutexAutoLock& aProofOfLock);
-    nsresult Write(const mozilla::MutexAutoLock& aProofOfLock);
-    nsresult AddEntryToList(const nsACString &host, int32_t port,
-                            nsIX509Cert *aCert,
-                            const bool aIsTemporary,
-                            const nsACString &fingerprint,
-                            nsCertOverride::OverrideBits ob,
-                            const nsACString &dbKey,
-                            const mozilla::MutexAutoLock& aProofOfLock);
-=======
                                   void* aUserData);
 
   // Concates host name and the port number. If the port number is -1 then
@@ -331,7 +147,6 @@ protected:
                           nsCertOverride::OverrideBits ob,
                           const nsACString& dbKey,
                           const mozilla::MutexAutoLock& aProofOfLock);
->>>>>>> upstream-releases
 };
 
 #define NS_CERTOVERRIDE_CID                          \

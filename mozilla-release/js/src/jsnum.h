@@ -21,42 +21,16 @@
 // This macro is should be `one' if current compiler supports builtin functions
 // like __builtin_sadd_overflow.
 #if MOZ_IS_GCC
-<<<<<<< HEAD
-// GCC supports these functions.
-#define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) 1
-||||||| merged common ancestors
-    // GCC supports these functions.
-    #define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) 1
-=======
 // GCC supports these functions.
 #  define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) 1
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-// For CLANG, we use its own function to check for this.
-#ifdef __has_builtin
-#define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) __has_builtin(x)
-#endif
-||||||| merged common ancestors
-    // For CLANG, we use its own function to check for this.
-    #ifdef __has_builtin
-        #define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) __has_builtin(x)
-    #endif
-=======
 // For CLANG, we use its own function to check for this.
 #  ifdef __has_builtin
 #    define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) __has_builtin(x)
 #  endif
->>>>>>> upstream-releases
 #endif
 #ifndef BUILTIN_CHECKED_ARITHMETIC_SUPPORTED
-<<<<<<< HEAD
-#define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) 0
-||||||| merged common ancestors
-    #define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) 0
-=======
 #  define BUILTIN_CHECKED_ARITHMETIC_SUPPORTED(x) 0
->>>>>>> upstream-releases
 #endif
 
 namespace js {
@@ -145,16 +119,9 @@ const double DOUBLE_INTEGRAL_PRECISION_LIMIT = uint64_t(1) << 53;
  * DOUBLE_INTEGRAL_PRECISION_LIMIT
  */
 template <typename CharT>
-<<<<<<< HEAD
-extern double ParseDecimalNumber(const mozilla::Range<const CharT> chars);
-||||||| merged common ancestors
-extern double
-ParseDecimalNumber(const mozilla::Range<const CharT> chars);
-=======
 extern double ParseDecimalNumber(const mozilla::Range<const CharT> chars);
 
 enum class IntegerSeparatorHandling : bool { None, SkipUnderscore };
->>>>>>> upstream-releases
 
 /*
  * Compute the positive integer of the given base described immediately at the
@@ -174,42 +141,14 @@ enum class IntegerSeparatorHandling : bool { None, SkipUnderscore };
  * *dp == 0 and *endp == start upon return.
  */
 template <typename CharT>
-<<<<<<< HEAD
-extern MOZ_MUST_USE bool GetPrefixInteger(JSContext* cx, const CharT* start,
-                                          const CharT* end, int base,
-                                          const CharT** endp, double* dp);
-||||||| merged common ancestors
-extern MOZ_MUST_USE bool
-GetPrefixInteger(JSContext* cx, const CharT* start, const CharT* end, int base,
-                 const CharT** endp, double* dp);
-
-inline const char16_t*
-ToRawChars(const char16_t* units)
-{
-    return units;
-}
-=======
 extern MOZ_MUST_USE bool GetPrefixInteger(
     JSContext* cx, const CharT* start, const CharT* end, int base,
     IntegerSeparatorHandling separatorHandling, const CharT** endp, double* dp);
 
 inline const char16_t* ToRawChars(const char16_t* units) { return units; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-inline const char16_t* ToRawChars(const char16_t* units) { return units; }
 
 inline const unsigned char* ToRawChars(const unsigned char* units) {
   return units;
-||||||| merged common ancestors
-inline const unsigned char*
-ToRawChars(const unsigned char* units)
-{
-    return units;
-=======
-inline const unsigned char* ToRawChars(const unsigned char* units) {
-  return units;
->>>>>>> upstream-releases
 }
 
 inline const unsigned char* ToRawChars(const mozilla::Utf8Unit* units) {
@@ -221,28 +160,6 @@ inline const unsigned char* ToRawChars(const mozilla::Utf8Unit* units) {
  * base (and so this function doesn't take a useless outparam).
  */
 template <typename CharT>
-<<<<<<< HEAD
-extern MOZ_MUST_USE bool GetFullInteger(JSContext* cx, const CharT* start,
-                                        const CharT* end, int base,
-                                        double* dp) {
-  decltype(ToRawChars(start)) realEnd;
-  if (GetPrefixInteger(cx, ToRawChars(start), ToRawChars(end), base, &realEnd,
-                       dp)) {
-    MOZ_ASSERT(end == static_cast<const void*>(realEnd));
-    return true;
-  }
-  return false;
-||||||| merged common ancestors
-extern MOZ_MUST_USE bool
-GetFullInteger(JSContext* cx, const CharT* start, const CharT* end, int base, double* dp)
-{
-    decltype(ToRawChars(start)) realEnd;
-    if (GetPrefixInteger(cx, ToRawChars(start), ToRawChars(end), base, &realEnd, dp)) {
-        MOZ_ASSERT(end == static_cast<const void*>(realEnd));
-        return true;
-    }
-    return false;
-=======
 extern MOZ_MUST_USE bool GetFullInteger(
     JSContext* cx, const CharT* start, const CharT* end, int base,
     IntegerSeparatorHandling separatorHandling, double* dp) {
@@ -253,7 +170,6 @@ extern MOZ_MUST_USE bool GetFullInteger(
     return true;
   }
   return false;
->>>>>>> upstream-releases
 }
 
 /*
@@ -272,16 +188,8 @@ extern MOZ_MUST_USE bool GetDecimalInteger(JSContext* cx, const CharT* start,
  * cf. ES2020, 11.8.3 Numeric Literals.
  */
 template <typename CharT>
-<<<<<<< HEAD
-extern MOZ_MUST_USE bool GetDecimalInteger(JSContext* cx, const CharT* start,
-                                           const CharT* end, double* dp);
-||||||| merged common ancestors
-extern MOZ_MUST_USE bool
-GetDecimalInteger(JSContext* cx, const CharT* start, const CharT* end, double* dp);
-=======
 extern MOZ_MUST_USE bool GetDecimalNonInteger(JSContext* cx, const CharT* start,
                                               const CharT* end, double* dp);
->>>>>>> upstream-releases
 
 extern MOZ_MUST_USE bool StringToNumber(JSContext* cx, JSString* str,
                                         double* result);
@@ -309,32 +217,6 @@ MOZ_ALWAYS_INLINE MOZ_MUST_USE bool ToNumber(JSContext* cx,
 bool ToNumericSlow(JSContext* cx, JS::MutableHandleValue vp);
 
 // BigInt proposal section 3.1.6
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE MOZ_MUST_USE bool ToNumeric(JSContext* cx,
-                                              JS::MutableHandleValue vp) {
-  if (vp.isNumber()) {
-    return true;
-  }
-#ifdef ENABLE_BIGINT
-  if (vp.isBigInt()) {
-    return true;
-  }
-#endif
-  return ToNumericSlow(cx, vp);
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE MOZ_MUST_USE bool
-ToNumeric(JSContext* cx, JS::MutableHandleValue vp)
-{
-    if (vp.isNumber()) {
-        return true;
-    }
-#ifdef ENABLE_BIGINT
-    if (vp.isBigInt()) {
-        return true;
-    }
-#endif
-    return ToNumericSlow(cx, vp);
-=======
 MOZ_ALWAYS_INLINE MOZ_MUST_USE bool ToNumeric(JSContext* cx,
                                               JS::MutableHandleValue vp) {
   if (vp.isNumber()) {
@@ -344,7 +226,6 @@ MOZ_ALWAYS_INLINE MOZ_MUST_USE bool ToNumeric(JSContext* cx,
     return true;
   }
   return ToNumericSlow(cx, vp);
->>>>>>> upstream-releases
 }
 
 bool ToInt32OrBigIntSlow(JSContext* cx, JS::MutableHandleValue vp);
@@ -381,35 +262,6 @@ extern MOZ_MUST_USE bool js_strtod(JSContext* cx, const CharT* begin,
 namespace js {
 
 /**
-<<<<<<< HEAD
- * Like js_strtod, but for when you don't require a |dEnd| argument *and* it's
- * possible that the number in the string will not occupy the full [begin, end)
- * range.
- */
-template <typename CharT>
-extern MOZ_MUST_USE bool StringToDouble(JSContext* cx, const CharT* begin,
-                                        const CharT* end, double* d) {
-  decltype(ToRawChars(begin)) dummy;
-  return js_strtod(cx, ToRawChars(begin), ToRawChars(end), &dummy, d);
-}
-
-/**
-||||||| merged common ancestors
- * Like js_strtod, but for when you don't require a |dEnd| argument *and* it's
- * possible that the number in the string will not occupy the full [begin, end)
- * range.
- */
-template <typename CharT>
-extern MOZ_MUST_USE bool
-StringToDouble(JSContext* cx, const CharT* begin, const CharT* end, double* d)
-{
-    decltype(ToRawChars(begin)) dummy;
-    return js_strtod(cx, ToRawChars(begin), ToRawChars(end), &dummy, d);
-}
-
-/**
-=======
->>>>>>> upstream-releases
  * Like js_strtod, but for when the number always constitutes the entire range
  * (and so |dEnd| would be a value already known).
  */

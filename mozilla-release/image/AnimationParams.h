@@ -32,12 +32,6 @@ enum class DisposalMethod : int8_t {
   RESTORE_PREVIOUS  // Restore the previous (composited) frame.
 };
 
-<<<<<<< HEAD
-struct AnimationParams {
-||||||| merged common ancestors
-struct AnimationParams
-{
-=======
 struct AnimationParams {
   AnimationParams(const gfx::IntRect& aBlendRect, const FrameTimeout& aTimeout,
                   uint32_t aFrameNum, BlendMethod aBlendMethod,
@@ -48,7 +42,6 @@ struct AnimationParams {
         mBlendMethod(aBlendMethod),
         mDisposalMethod(aDisposalMethod) {}
 
->>>>>>> upstream-releases
   gfx::IntRect mBlendRect;
   FrameTimeout mTimeout;
   uint32_t mFrameNum;

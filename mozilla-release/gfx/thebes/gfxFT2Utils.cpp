@@ -20,33 +20,6 @@ uint32_t gfxFT2LockedFace::GetGlyph(uint32_t aCharCode) {
   if (MOZ_UNLIKELY(!mFace)) return 0;
 
 #ifdef HAVE_FONTCONFIG_FCFREETYPE_H
-<<<<<<< HEAD
-  // FcFreeTypeCharIndex will search starting from the most recently
-  // selected charmap.  This can cause non-determistic behavior when more
-  // than one charmap supports a character but with different glyphs, as
-  // with older versions of MS Gothic, for example.  Always prefer a Unicode
-  // charmap, if there is one.  (FcFreeTypeCharIndex usually does the
-  // appropriate Unicode conversion, but some fonts have non-Roman glyphs
-  // for FT_ENCODING_APPLE_ROMAN characters.)
-  if (!mFace->charmap || mFace->charmap->encoding != FT_ENCODING_UNICODE) {
-    FT_Select_Charmap(mFace, FT_ENCODING_UNICODE);
-  }
-
-  return FcFreeTypeCharIndex(mFace, aCharCode);
-||||||| merged common ancestors
-    // FcFreeTypeCharIndex will search starting from the most recently
-    // selected charmap.  This can cause non-determistic behavior when more
-    // than one charmap supports a character but with different glyphs, as
-    // with older versions of MS Gothic, for example.  Always prefer a Unicode
-    // charmap, if there is one.  (FcFreeTypeCharIndex usually does the
-    // appropriate Unicode conversion, but some fonts have non-Roman glyphs
-    // for FT_ENCODING_APPLE_ROMAN characters.)
-    if (!mFace->charmap || mFace->charmap->encoding != FT_ENCODING_UNICODE) {
-        FT_Select_Charmap(mFace, FT_ENCODING_UNICODE);
-    }
-
-    return FcFreeTypeCharIndex(mFace, aCharCode);
-=======
   // FcFreeTypeCharIndex will search starting from the most recently
   // selected charmap.  This can cause non-determistic behavior when more
   // than one charmap supports a character but with different glyphs, as
@@ -64,7 +37,6 @@ uint32_t gfxFT2LockedFace::GetGlyph(uint32_t aCharCode) {
   }
 
   return FcFreeTypeCharIndex(mFace, aCharCode);
->>>>>>> upstream-releases
 #else
   return FT_Get_Char_Index(mFace, aCharCode);
 #endif

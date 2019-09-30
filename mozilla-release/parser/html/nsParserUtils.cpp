@@ -45,67 +45,16 @@ nsParserUtils::ConvertToPlainText(const nsAString& aFromStr, uint32_t aFlags,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParserUtils::Unescape(const nsAString& aFromStr, nsAString& aToStr) {
-  return nsContentUtils::ConvertToPlainText(
-      aFromStr, aToStr,
-      nsIDocumentEncoder::OutputSelectionOnly |
-          nsIDocumentEncoder::OutputAbsoluteLinks,
-      0);
-}
-
-NS_IMETHODIMP
 nsParserUtils::Sanitize(const nsAString& aFromStr, uint32_t aFlags,
                         nsAString& aToStr) {
-||||||| merged common ancestors
-nsParserUtils::Unescape(const nsAString& aFromStr, nsAString& aToStr)
-{
-  return nsContentUtils::ConvertToPlainText(
-    aFromStr,
-    aToStr,
-    nsIDocumentEncoder::OutputSelectionOnly |
-      nsIDocumentEncoder::OutputAbsoluteLinks,
-    0);
-}
-
-NS_IMETHODIMP
-nsParserUtils::Sanitize(const nsAString& aFromStr,
-                        uint32_t aFlags,
-                        nsAString& aToStr)
-{
-=======
-nsParserUtils::Sanitize(const nsAString& aFromStr, uint32_t aFlags,
-                        nsAString& aToStr) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri;
   NS_NewURI(getter_AddRefs(uri), "about:blank");
   nsCOMPtr<nsIPrincipal> principal =
-<<<<<<< HEAD
-      mozilla::NullPrincipal::CreateWithoutOriginAttributes();
-  nsCOMPtr<nsIDocument> document;
-  nsresult rv = NS_NewDOMDocument(getter_AddRefs(document), EmptyString(),
-                                  EmptyString(), nullptr, uri, uri, principal,
-                                  true, nullptr, DocumentFlavorHTML);
-||||||| merged common ancestors
-    mozilla::NullPrincipal::CreateWithoutOriginAttributes();
-  nsCOMPtr<nsIDocument> document;
-  nsresult rv = NS_NewDOMDocument(getter_AddRefs(document),
-                                  EmptyString(),
-                                  EmptyString(),
-                                  nullptr,
-                                  uri,
-                                  uri,
-                                  principal,
-                                  true,
-                                  nullptr,
-                                  DocumentFlavorHTML);
-=======
       mozilla::NullPrincipal::CreateWithoutOriginAttributes();
   RefPtr<Document> document;
   nsresult rv = NS_NewDOMDocument(getter_AddRefs(document), EmptyString(),
                                   EmptyString(), nullptr, uri, uri, principal,
                                   true, nullptr, DocumentFlavorHTML);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   rv = nsContentUtils::ParseDocumentHTML(aFromStr, document, false);
@@ -127,37 +76,8 @@ nsParserUtils::Sanitize(const nsAString& aFromStr, uint32_t aFlags,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsParserUtils::ParseFragment(const nsAString& aFragment, bool aIsXML,
-                             nsIURI* aBaseURI, Element* aContextElement,
-                             DocumentFragment** aReturn) {
-  return nsParserUtils::ParseFragment(aFragment, 0, aIsXML, aBaseURI,
-                                      aContextElement, aReturn);
-}
-
-NS_IMETHODIMP
 nsParserUtils::ParseFragment(const nsAString& aFragment, uint32_t aFlags,
                              bool aIsXML, nsIURI* aBaseURI,
-||||||| merged common ancestors
-nsParserUtils::ParseFragment(const nsAString& aFragment,
-                             bool aIsXML,
-                             nsIURI* aBaseURI,
-                             Element* aContextElement,
-                             DocumentFragment** aReturn)
-{
-  return nsParserUtils::ParseFragment(
-    aFragment, 0, aIsXML, aBaseURI, aContextElement, aReturn);
-}
-
-NS_IMETHODIMP
-nsParserUtils::ParseFragment(const nsAString& aFragment,
-                             uint32_t aFlags,
-                             bool aIsXML,
-                             nsIURI* aBaseURI,
-=======
-nsParserUtils::ParseFragment(const nsAString& aFragment, uint32_t aFlags,
-                             bool aIsXML, nsIURI* aBaseURI,
->>>>>>> upstream-releases
                              Element* aContextElement,
                              DocumentFragment** aReturn) {
   NS_ENSURE_ARG(aContextElement);

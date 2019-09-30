@@ -26,52 +26,6 @@ struct nsAutoLayoutPhase {
   uint32_t mCount;
 };
 
-<<<<<<< HEAD
-#define AUTO_LAYOUT_PHASE_ENTRY_POINT(pc_, phase_) \
-  nsAutoLayoutPhase autoLayoutPhase((pc_), (eLayoutPhase_##phase_))
-#define LAYOUT_PHASE_TEMP_EXIT() \
-  PR_BEGIN_MACRO                 \
-  autoLayoutPhase.Exit();        \
-  PR_END_MACRO
-#define LAYOUT_PHASE_TEMP_REENTER() \
-  PR_BEGIN_MACRO                    \
-  autoLayoutPhase.Enter();          \
-  PR_END_MACRO
-
-#else  // DEBUG
-
-#define AUTO_LAYOUT_PHASE_ENTRY_POINT(pc_, phase_) PR_BEGIN_MACRO PR_END_MACRO
-#define LAYOUT_PHASE_TEMP_EXIT() PR_BEGIN_MACRO PR_END_MACRO
-#define LAYOUT_PHASE_TEMP_REENTER() PR_BEGIN_MACRO PR_END_MACRO
-
-#endif  // DEBUG
-
-#endif  // nsAutoLayoutPhase_h
-||||||| merged common ancestors
-#define AUTO_LAYOUT_PHASE_ENTRY_POINT(pc_, phase_) \
-  nsAutoLayoutPhase autoLayoutPhase((pc_), (eLayoutPhase_##phase_))
-#define LAYOUT_PHASE_TEMP_EXIT() \
-  PR_BEGIN_MACRO \
-    autoLayoutPhase.Exit(); \
-  PR_END_MACRO
-#define LAYOUT_PHASE_TEMP_REENTER() \
-  PR_BEGIN_MACRO \
-    autoLayoutPhase.Enter(); \
-  PR_END_MACRO
-
-#else // DEBUG
-
-#define AUTO_LAYOUT_PHASE_ENTRY_POINT(pc_, phase_) \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define LAYOUT_PHASE_TEMP_EXIT() \
-  PR_BEGIN_MACRO PR_END_MACRO
-#define LAYOUT_PHASE_TEMP_REENTER() \
-  PR_BEGIN_MACRO PR_END_MACRO
-
-#endif // DEBUG
-
-#endif // nsAutoLayoutPhase_h
-=======
 #  define AUTO_LAYOUT_PHASE_ENTRY_POINT(pc_, phase_) \
     nsAutoLayoutPhase autoLayoutPhase((pc_), (eLayoutPhase_##phase_))
 #  define LAYOUT_PHASE_TEMP_EXIT() \
@@ -92,4 +46,3 @@ struct nsAutoLayoutPhase {
 #endif  // DEBUG
 
 #endif  // nsAutoLayoutPhase_h
->>>>>>> upstream-releases

@@ -14,29 +14,11 @@ debug("loaded");
 
 var BrowserElementIsReady;
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/BrowserElementPromptService.jsm");
-
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/BrowserElementPromptService.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ManifestFinder",
-                               "resource://gre/modules/ManifestFinder.jsm");
-ChromeUtils.defineModuleGetter(this, "ManifestObtainer",
-                               "resource://gre/modules/ManifestObtainer.jsm");
-
-
-=======
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { BrowserElementPromptService } = ChromeUtils.import(
   "resource://gre/modules/BrowserElementPromptService.jsm"
 );
 
->>>>>>> upstream-releases
 var kLongestReturnedString = 128;
 
 var Timer = Components.Constructor(
@@ -326,20 +308,7 @@ BrowserElementChild.prototype = {
       "owner-visibility-change": this._recvOwnerVisibilityChange,
       "entered-fullscreen": this._recvEnteredFullscreen,
       "exit-fullscreen": this._recvExitFullscreen,
-<<<<<<< HEAD
-    }
-||||||| merged common ancestors
-      "activate-next-paint-listener": this._activateNextPaintListener,
-      "deactivate-next-paint-listener": this._deactivateNextPaintListener,
-      "find-all": this._recvFindAll,
-      "find-next": this._recvFindNext,
-      "clear-match": this._recvClearMatch,
-      "execute-script": this._recvExecuteScript,
-      "get-web-manifest": this._recvGetWebManifest,
-    }
-=======
     };
->>>>>>> upstream-releases
 
     if (message.data.msg_name in mmCalls) {
       return mmCalls[message.data.msg_name].apply(self, arguments);
@@ -615,30 +584,9 @@ BrowserElementChild.prototype = {
       return;
     }
 
-<<<<<<< HEAD
-    sendAsyncMsg('opensearch', { title: e.target.title,
-                                 href: e.target.href });
-
-  },
-
-||||||| merged common ancestors
-    sendAsyncMsg('opensearch', { title: e.target.title,
-                                 href: e.target.href });
-
-  },
-
-  _manifestChangedHandler: function(e) {
-    debug('Got manifestchanged: (' + e.target.href + ')');
-    let manifest = { href: e.target.href };
-    sendAsyncMsg('manifestchange', manifest);
-
-  },
-
-=======
     sendAsyncMsg("opensearch", { title: e.target.title, href: e.target.href });
   },
 
->>>>>>> upstream-releases
   // Processes the "rel" field in <link> tags and forward to specific handlers.
   _linkAddedHandler(e) {
     let win = e.target.ownerGlobal;
@@ -650,23 +598,10 @@ BrowserElementChild.prototype = {
     }
 
     let handlers = {
-<<<<<<< HEAD
-      'icon': this._iconChangedHandler.bind(this),
-      'apple-touch-icon': this._iconChangedHandler.bind(this),
-      'apple-touch-icon-precomposed': this._iconChangedHandler.bind(this),
-      'search': this._openSearchHandler,
-||||||| merged common ancestors
-      'icon': this._iconChangedHandler.bind(this),
-      'apple-touch-icon': this._iconChangedHandler.bind(this),
-      'apple-touch-icon-precomposed': this._iconChangedHandler.bind(this),
-      'search': this._openSearchHandler,
-      'manifest': this._manifestChangedHandler
-=======
       icon: this._iconChangedHandler.bind(this),
       "apple-touch-icon": this._iconChangedHandler.bind(this),
       "apple-touch-icon-precomposed": this._iconChangedHandler.bind(this),
       search: this._openSearchHandler,
->>>>>>> upstream-releases
     };
 
     debug("Got linkAdded: (" + e.target.href + ") " + e.target.rel);
@@ -816,34 +751,7 @@ BrowserElementChild.prototype = {
     return onMozAfterPaint;
   },
 
-<<<<<<< HEAD
-  _windowCloseHandler: function(e) {
-||||||| merged common ancestors
-  _removeMozAfterPaintHandler: function(listener) {
-    removeEventListener('MozAfterPaint', listener,
-                        /* useCapture = */ true);
-  },
-
-  _activateNextPaintListener: function(e) {
-    if (!this._nextPaintHandler) {
-      this._nextPaintHandler = this._addMozAfterPaintHandler(() => {
-        this._nextPaintHandler = null;
-        sendAsyncMsg('nextpaint');
-      });
-    }
-  },
-
-  _deactivateNextPaintListener: function(e) {
-    if (this._nextPaintHandler) {
-      this._removeMozAfterPaintHandler(this._nextPaintHandler);
-      this._nextPaintHandler = null;
-    }
-  },
-
-  _windowCloseHandler: function(e) {
-=======
   _windowCloseHandler(e) {
->>>>>>> upstream-releases
     let win = e.target;
     if (win != content || e.defaultPrevented) {
       return;
@@ -1044,144 +952,8 @@ BrowserElementChild.prototype = {
     sendAsyncMsg("scroll", { top: win.scrollY, left: win.scrollX });
   },
 
-<<<<<<< HEAD
-  _mozScrollAreaChanged: function(e) {
-    sendAsyncMsg('scrollareachanged', {
-||||||| merged common ancestors
-  _recvPurgeHistory: function(data) {
-    debug("Received purgeHistory message: (" + data.json.id + ")");
-
-    let history = docShell.QueryInterface(Ci.nsIWebNavigation).sessionHistory;
-
-    try {
-      if (history && history.count) {
-        history.legacySHistory.PurgeHistory(history.count);
-      }
-    } catch(e) {}
-
-    sendAsyncMsg('got-purge-history', { id: data.json.id, successRv: true });
-  },
-
-  _recvGetScreenshot: function(data) {
-    debug("Received getScreenshot message: (" + data.json.id + ")");
-
-    let self = this;
-    let maxWidth = data.json.args.width;
-    let maxHeight = data.json.args.height;
-    let mimeType = data.json.args.mimeType;
-    let domRequestID = data.json.id;
-
-    let takeScreenshotClosure = function() {
-      self._takeScreenshot(maxWidth, maxHeight, mimeType, domRequestID);
-    };
-
-    let maxDelayMS = Services.prefs.getIntPref('dom.browserElement.maxScreenshotDelayMS', 2000);
-
-    // Try to wait for the event loop to go idle before we take the screenshot,
-    // but once we've waited maxDelayMS milliseconds, go ahead and take it
-    // anyway.
-    Cc['@mozilla.org/message-loop;1'].getService(Ci.nsIMessageLoop).postIdleTask(
-      takeScreenshotClosure, maxDelayMS);
-  },
-
-  _recvExecuteScript: function(data) {
-    debug("Received executeScript message: (" + data.json.id + ")");
-
-    let domRequestID = data.json.id;
-
-    let sendError = errorMsg => sendAsyncMsg("execute-script-done", {
-      errorMsg,
-      id: domRequestID
-    });
-
-    let sendSuccess = successRv => sendAsyncMsg("execute-script-done", {
-      successRv,
-      id: domRequestID
-    });
-
-    let isJSON = obj => {
-      try {
-        JSON.stringify(obj);
-      } catch(e) {
-        return false;
-      }
-      return true;
-    }
-
-    let expectedOrigin = data.json.args.options.origin;
-    let expectedUrl = data.json.args.options.url;
-
-    if (expectedOrigin) {
-      if (expectedOrigin != content.location.origin) {
-        sendError("Origin mismatches");
-        return;
-      }
-    }
-
-    if (expectedUrl) {
-      let expectedURI
-      try {
-       expectedURI = Services.io.newURI(expectedUrl);
-      } catch(e) {
-        sendError("Malformed URL");
-        return;
-      }
-      let currentURI = docShell.QueryInterface(Ci.nsIWebNavigation).currentURI;
-      if (!currentURI.equalsExceptRef(expectedURI)) {
-        sendError("URL mismatches");
-        return;
-      }
-    }
-
-    let sandbox = new Cu.Sandbox([content], {
-      sandboxPrototype: content,
-      sandboxName: "browser-api-execute-script",
-      allowWaivers: false,
-      sameZoneAs: content
-    });
-
-    try {
-      let sandboxRv = Cu.evalInSandbox(data.json.args.script, sandbox, "1.8");
-      if (sandboxRv instanceof sandbox.Promise) {
-        sandboxRv.then(rv => {
-          if (isJSON(rv)) {
-            sendSuccess(rv);
-          } else {
-            sendError("Value returned (resolve) by promise is not a valid JSON object");
-          }
-        }, error => {
-          if (isJSON(error)) {
-            sendError(error);
-          } else {
-            sendError("Value returned (reject) by promise is not a valid JSON object");
-          }
-        });
-      } else {
-        if (isJSON(sandboxRv)) {
-          sendSuccess(sandboxRv);
-        } else {
-          sendError("Script last expression must be a promise or a JSON object");
-        }
-      }
-    } catch(e) {
-      sendError(e.toString());
-    }
-  },
-
-  _recvGetContentDimensions: function(data) {
-    debug("Received getContentDimensions message: (" + data.json.id + ")");
-    sendAsyncMsg('got-contentdimensions', {
-      id: data.json.id,
-      successRv: this._getContentDimensions()
-    });
-  },
-
-  _mozScrollAreaChanged: function(e) {
-    sendAsyncMsg('scrollareachanged', {
-=======
   _mozScrollAreaChanged(e) {
     sendAsyncMsg("scrollareachanged", {
->>>>>>> upstream-releases
       width: e.width,
       height: e.height,
     });
@@ -1201,112 +973,7 @@ BrowserElementChild.prototype = {
     sendAsyncMsg("exit-dom-fullscreen");
   },
 
-<<<<<<< HEAD
-  _recvFireCtxCallback: function(data) {
-||||||| merged common ancestors
-  _getContentDimensions: function() {
-    return {
-      width: content.document.body.scrollWidth,
-      height: content.document.body.scrollHeight
-    }
-  },
-
-  /**
-   * Actually take a screenshot and foward the result up to our parent, given
-   * the desired maxWidth and maxHeight (in CSS pixels), and given the
-   * DOMRequest ID associated with the request from the parent.
-   */
-  _takeScreenshot: function(maxWidth, maxHeight, mimeType, domRequestID) {
-    // You can think of the screenshotting algorithm as carrying out the
-    // following steps:
-    //
-    // - Calculate maxWidth, maxHeight, and viewport's width and height in the
-    //   dimension of device pixels by multiply the numbers with
-    //   window.devicePixelRatio.
-    //
-    // - Let scaleWidth be the factor by which we'd need to downscale the
-    //   viewport pixel width so it would fit within maxPixelWidth.
-    //   (If the viewport's pixel width is less than maxPixelWidth, let
-    //   scaleWidth be 1.) Compute scaleHeight the same way.
-    //
-    // - Scale the viewport by max(scaleWidth, scaleHeight).  Now either the
-    //   viewport's width is no larger than maxWidth, the viewport's height is
-    //   no larger than maxHeight, or both.
-    //
-    // - Crop the viewport so its width is no larger than maxWidth and its
-    //   height is no larger than maxHeight.
-    //
-    // - Set mozOpaque to true and background color to solid white
-    //   if we are taking a JPEG screenshot, keep transparent if otherwise.
-    //
-    // - Return a screenshot of the page's viewport scaled and cropped per
-    //   above.
-    debug("Taking a screenshot: maxWidth=" + maxWidth +
-          ", maxHeight=" + maxHeight +
-          ", mimeType=" + mimeType +
-          ", domRequestID=" + domRequestID + ".");
-
-    if (!content) {
-      // If content is not loaded yet, bail out since even sendAsyncMessage
-      // fails...
-      debug("No content yet!");
-      return;
-    }
-
-    let devicePixelRatio = content.devicePixelRatio;
-
-    let maxPixelWidth = Math.round(maxWidth * devicePixelRatio);
-    let maxPixelHeight = Math.round(maxHeight * devicePixelRatio);
-
-    let contentPixelWidth = content.innerWidth * devicePixelRatio;
-    let contentPixelHeight = content.innerHeight * devicePixelRatio;
-
-    let scaleWidth = Math.min(1, maxPixelWidth / contentPixelWidth);
-    let scaleHeight = Math.min(1, maxPixelHeight / contentPixelHeight);
-
-    let scale = Math.max(scaleWidth, scaleHeight);
-
-    let canvasWidth =
-      Math.min(maxPixelWidth, Math.round(contentPixelWidth * scale));
-    let canvasHeight =
-      Math.min(maxPixelHeight, Math.round(contentPixelHeight * scale));
-
-    let transparent = (mimeType !== 'image/jpeg');
-
-    var canvas = content.document
-      .createElementNS("http://www.w3.org/1999/xhtml", "canvas");
-    if (!transparent)
-      canvas.mozOpaque = true;
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    let ctx = canvas.getContext("2d", { willReadFrequently: true });
-    ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
-
-    let flags = ctx.DRAWWINDOW_DRAW_VIEW |
-                ctx.DRAWWINDOW_USE_WIDGET_LAYERS |
-                ctx.DRAWWINDOW_DO_NOT_FLUSH |
-                ctx.DRAWWINDOW_ASYNC_DECODE_IMAGES;
-    ctx.drawWindow(content, 0, 0, content.innerWidth, content.innerHeight,
-                   transparent ? "rgba(255,255,255,0)" : "rgb(255,255,255)",
-                   flags);
-
-    // Take a JPEG screenshot by default instead of PNG with alpha channel.
-    // This requires us to unpremultiply the alpha channel, which
-    // is expensive on ARM processors because they lack a hardware integer
-    // division instruction.
-    canvas.toBlob(function(blob) {
-      sendAsyncMsg('got-screenshot', {
-        id: domRequestID,
-        successRv: blob
-      });
-    }, mimeType);
-  },
-
-  _recvFireCtxCallback: function(data) {
-=======
   _recvFireCtxCallback(data) {
->>>>>>> upstream-releases
     debug("Received fireCtxCallback message: (" + data.json.menuitem + ")");
 
     let doCommandIfEnabled = command => {
@@ -1397,22 +1064,7 @@ BrowserElementChild.prototype = {
     );
   },
 
-<<<<<<< HEAD
-  _recvCanGoBack: function(data) {
-||||||| merged common ancestors
-  _recvSendTouchEvent: function(data) {
-    let json = data.json;
-    let utils = content.windowUtils;
-    utils.sendTouchEventToWindow(json.type, json.identifiers, json.touchesX,
-                                 json.touchesY, json.radiisX, json.radiisY,
-                                 json.rotationAngles, json.forces, json.count,
-                                 json.modifiers);
-  },
-
-  _recvCanGoBack: function(data) {
-=======
   _recvCanGoBack(data) {
->>>>>>> upstream-releases
     var webNav = docShell.QueryInterface(Ci.nsIWebNavigation);
     sendAsyncMsg("got-can-go-back", {
       id: data.json.id,
@@ -1640,14 +1292,7 @@ BrowserElementChild.prototype = {
       }
     },
 
-<<<<<<< HEAD
-    onSecurityChange: function(webProgress, request, state) {
-||||||| merged common ancestors
-    onSecurityChange: function(webProgress, request, oldState, state,
-                               contentBlockingLogJSON) {
-=======
     onSecurityChange(webProgress, request, state) {
->>>>>>> upstream-releases
       if (webProgress != docShell) {
         return;
       }

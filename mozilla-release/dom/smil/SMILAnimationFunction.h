@@ -21,15 +21,7 @@
 namespace mozilla {
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
 }  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
 //----------------------------------------------------------------------
 // SMILAnimationFunction
@@ -43,20 +35,9 @@ class SVGAnimationElement;
 // element (e.g. from, by, to, values, calcMode, additive, accumulate, keyTimes,
 // keySplines)
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-class nsSMILAnimationFunction {
- public:
-  nsSMILAnimationFunction();
-||||||| merged common ancestors
-class nsSMILAnimationFunction
-{
-public:
-  nsSMILAnimationFunction();
-=======
 class SMILAnimationFunction {
  public:
   SMILAnimationFunction();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   /*
    * Sets the owning animation element which this class uses to query attribute
@@ -98,14 +79,7 @@ class SMILAnimationFunction {
    * @param aRepeatIteration  The repeat iteration for this sample. The first
    *                          iteration has a value of 0.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  void SampleAt(nsSMILTime aSampleTime, const nsSMILTimeValue& aSimpleDuration,
-||||||| merged common ancestors
-  void SampleAt(nsSMILTime aSampleTime,
-                const nsSMILTimeValue& aSimpleDuration,
-=======
   void SampleAt(SMILTime aSampleTime, const SMILTimeValue& aSimpleDuration,
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
                 uint32_t aRepeatIteration);
 
   /**
@@ -271,27 +245,6 @@ class SMILAnimationFunction {
 
   // Comparator utility class, used for sorting SMILAnimationFunctions
   class Comparator {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-   public:
-    bool Equals(const nsSMILAnimationFunction* aElem1,
-                const nsSMILAnimationFunction* aElem2) const {
-      return (aElem1->CompareTo(aElem2) == 0);
-    }
-    bool LessThan(const nsSMILAnimationFunction* aElem1,
-                  const nsSMILAnimationFunction* aElem2) const {
-      return (aElem1->CompareTo(aElem2) < 0);
-    }
-||||||| merged common ancestors
-    public:
-      bool Equals(const nsSMILAnimationFunction* aElem1,
-                    const nsSMILAnimationFunction* aElem2) const {
-        return (aElem1->CompareTo(aElem2) == 0);
-      }
-      bool LessThan(const nsSMILAnimationFunction* aElem1,
-                      const nsSMILAnimationFunction* aElem2) const {
-        return (aElem1->CompareTo(aElem2) < 0);
-      }
-=======
    public:
     bool Equals(const SMILAnimationFunction* aElem1,
                 const SMILAnimationFunction* aElem2) const {
@@ -301,7 +254,6 @@ class SMILAnimationFunction {
                   const SMILAnimationFunction* aElem2) const {
       return (aElem1->CompareTo(aElem2) < 0);
     }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
   };
 
  protected:
@@ -309,14 +261,7 @@ class SMILAnimationFunction {
   typedef FallibleTArray<SMILValue> SMILValueArray;
 
   // Types
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  enum nsSMILCalcMode : uint8_t {
-||||||| merged common ancestors
-  enum nsSMILCalcMode : uint8_t
-  {
-=======
   enum SMILCalcMode : uint8_t {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
     CALC_LINEAR,
     CALC_DISCRETE,
     CALC_PACED,
@@ -327,19 +272,9 @@ class SMILAnimationFunction {
   SMILTime GetBeginTime() const { return mBeginTime; }
 
   // Property getters
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  bool GetAccumulate() const;
-  bool GetAdditive() const;
-  virtual nsSMILCalcMode GetCalcMode() const;
-||||||| merged common ancestors
-  bool                   GetAccumulate() const;
-  bool                   GetAdditive() const;
-  virtual nsSMILCalcMode GetCalcMode() const;
-=======
   bool GetAccumulate() const;
   bool GetAdditive() const;
   virtual SMILCalcMode GetCalcMode() const;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   // Property setters
   nsresult SetAccumulate(const nsAString& aAccumulate, nsAttrValue& aResult);
@@ -363,30 +298,14 @@ class SMILAnimationFunction {
   nsresult ComputePacedPosition(const SMILValueArray& aValues,
                                 double aSimpleProgress,
                                 double& aIntervalProgress,
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-                                const nsSMILValue*& aFrom,
-                                const nsSMILValue*& aTo);
-  double ComputePacedTotalDistance(const nsSMILValueArray& aValues) const;
-||||||| merged common ancestors
-                                const nsSMILValue*& aFrom,
-                                const nsSMILValue*& aTo);
-  double   ComputePacedTotalDistance(const nsSMILValueArray& aValues) const;
-=======
                                 const SMILValue*& aFrom, const SMILValue*& aTo);
   double ComputePacedTotalDistance(const SMILValueArray& aValues) const;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   /**
    * Adjust the simple progress, that is, the point within the simple duration,
    * by applying any keyTimes.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  double ScaleSimpleProgress(double aProgress, nsSMILCalcMode aCalcMode);
-||||||| merged common ancestors
-  double   ScaleSimpleProgress(double aProgress, nsSMILCalcMode aCalcMode);
-=======
   double ScaleSimpleProgress(double aProgress, SMILCalcMode aCalcMode);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
   /**
    * Adjust the progress within an interval, that is, between two animation
    * values, by applying any keySplines.
@@ -399,17 +318,8 @@ class SMILAnimationFunction {
   virtual const nsAttrValue* GetAttr(nsAtom* aAttName) const;
   virtual bool GetAttr(nsAtom* aAttName, nsAString& aResult) const;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  bool ParseAttr(nsAtom* aAttName, const nsISMILAttr& aSMILAttr,
-                 nsSMILValue& aResult, bool& aPreventCachingOfSandwich) const;
-||||||| merged common ancestors
-  bool     ParseAttr(nsAtom* aAttName, const nsISMILAttr& aSMILAttr,
-                     nsSMILValue& aResult,
-                     bool& aPreventCachingOfSandwich) const;
-=======
   bool ParseAttr(nsAtom* aAttName, const SMILAttr& aSMILAttr,
                  SMILValue& aResult, bool& aPreventCachingOfSandwich) const;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   virtual nsresult GetValues(const SMILAttr& aSMILAttr,
                              SMILValueArray& aResult);
@@ -487,43 +397,19 @@ class SMILAnimationFunction {
   static nsAttrValue::EnumTable sCalcModeTable[];
   static nsAttrValue::EnumTable sAccumulateTable[];
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  FallibleTArray<double> mKeyTimes;
-  FallibleTArray<nsSMILKeySpline> mKeySplines;
-||||||| merged common ancestors
-  FallibleTArray<double>          mKeyTimes;
-  FallibleTArray<nsSMILKeySpline> mKeySplines;
-=======
   FallibleTArray<double> mKeyTimes;
   FallibleTArray<SMILKeySpline> mKeySplines;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   // These are the parameters provided by the previous sample. Currently we
   // perform lazy calculation. That is, we only calculate the result if and when
   // instructed by the compositor. This allows us to apply the result directly
   // to the animation value and allows the compositor to filter out functions
   // that it determines will not contribute to the final result.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  nsSMILTime mSampleTime;  // sample time within simple dur
-  nsSMILTimeValue mSimpleDuration;
-  uint32_t mRepeatIteration;
-||||||| merged common ancestors
-  nsSMILTime                    mSampleTime; // sample time within simple dur
-  nsSMILTimeValue               mSimpleDuration;
-  uint32_t                      mRepeatIteration;
-=======
   SMILTime mSampleTime;  // sample time within simple dur
   SMILTimeValue mSimpleDuration;
   uint32_t mRepeatIteration;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  nsSMILTime mBeginTime;  // document time
-||||||| merged common ancestors
-  nsSMILTime                    mBeginTime; // document time
-=======
   SMILTime mBeginTime;  // document time
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   // The owning animation element. This is used for sorting based on document
   // position and for fetching attribute values stored in the element.
@@ -539,13 +425,7 @@ class SMILAnimationFunction {
   // Allows us to check whether an animation function has changed target from
   // sample to sample (because if neither target nor animated value have
   // changed, we don't have to do anything).
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-  nsSMILWeakTargetIdentifier mLastTarget;
-||||||| merged common ancestors
-  nsSMILWeakTargetIdentifier    mLastTarget;
-=======
   SMILWeakTargetIdentifier mLastTarget;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h
 
   // Boolean flags
   bool mIsActive : 1;
@@ -557,12 +437,6 @@ class SMILAnimationFunction {
   bool mWasSkippedInPrevSample : 1;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.h
-#endif  // NS_SMILANIMATIONFUNCTION_H_
-||||||| merged common ancestors
-#endif // NS_SMILANIMATIONFUNCTION_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILAnimationFunction_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.h

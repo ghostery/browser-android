@@ -8,16 +8,7 @@ use bytes::{Bytes, BytesMut, IntoBuf};
 use cmsg;
 use codec::Codec;
 use futures::{AsyncSink, Poll, Sink, StartSend, Stream};
-<<<<<<< HEAD
-use libc;
-use messages::AssocRawFd;
-||||||| merged common ancestors
-use libc;
-use messages::AssocRawFd;
-use std::{fmt, io, mem};
-=======
 use messages::AssocRawPlatformHandle;
->>>>>>> upstream-releases
 use std::collections::VecDeque;
 use std::os::unix::io::RawFd;
 use std::{fmt, io, mem};

@@ -22,26 +22,12 @@
 #  define JS_CODEGEN_MIPS_HARDFP
 #endif
 
-<<<<<<< HEAD
-#if (defined(_MIPS_SIM) && (_MIPS_SIM == _ABIO32)) || \
-    defined(JS_SIMULATOR_MIPS32)
-#define USES_O32_ABI
-#elif (defined(_MIPS_SIM) && (_MIPS_SIM == _ABI64)) || \
-    defined(JS_SIMULATOR_MIPS64)
-#define USES_N64_ABI
-||||||| merged common ancestors
-#if (defined(_MIPS_SIM) && (_MIPS_SIM == _ABIO32)) || defined(JS_SIMULATOR_MIPS32)
-#define USES_O32_ABI
-#elif (defined(_MIPS_SIM) && (_MIPS_SIM == _ABI64)) || defined(JS_SIMULATOR_MIPS64)
-#define USES_N64_ABI
-=======
 #if (defined(_MIPS_SIM) && (_MIPS_SIM == _ABIO32)) || \
     defined(JS_SIMULATOR_MIPS32)
 #  define USES_O32_ABI
 #elif (defined(_MIPS_SIM) && (_MIPS_SIM == _ABI64)) || \
     defined(JS_SIMULATOR_MIPS64)
 #  define USES_N64_ABI
->>>>>>> upstream-releases
 #else
 #  error "Unsupported ABI"
 #endif

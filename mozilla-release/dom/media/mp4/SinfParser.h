@@ -13,19 +13,6 @@ namespace mozilla {
 
 class Box;
 
-<<<<<<< HEAD
-class Sinf : public Atom {
- public:
-  Sinf() : mDefaultIVSize(0), mDefaultEncryptionType() {}
-||||||| merged common ancestors
-class Sinf : public Atom
-{
-public:
-  Sinf()
-    : mDefaultIVSize(0)
-    , mDefaultEncryptionType()
-  {}
-=======
 class Sinf : public Atom {
  public:
   Sinf()
@@ -33,22 +20,12 @@ class Sinf : public Atom {
         mDefaultEncryptionType(),
         mDefaultCryptByteBlock(0),
         mDefaultSkipByteBlock(0) {}
->>>>>>> upstream-releases
   explicit Sinf(Box& aBox);
 
-<<<<<<< HEAD
-  virtual bool IsValid() override {
-    return !!mDefaultIVSize && !!mDefaultEncryptionType;
-||||||| merged common ancestors
-  virtual bool IsValid() override
-  {
-    return !!mDefaultIVSize && !!mDefaultEncryptionType;
-=======
   bool IsValid() override {
     return !!mDefaultEncryptionType &&  // Should have an encryption scheme
            (mDefaultIVSize > 0 ||       // and either a default IV size
             mDefaultConstantIV.Length() > 0);  // or a constant IV.
->>>>>>> upstream-releases
   }
 
   uint8_t mDefaultIVSize;

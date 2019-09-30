@@ -3,17 +3,6 @@ const gCompleteState =
   Ci.nsIWebProgressListener.STATE_IS_NETWORK;
 
 var gFrontProgressListener = {
-<<<<<<< HEAD
-  onProgressChange(aWebProgress, aRequest,
-                   aCurSelfProgress, aMaxSelfProgress,
-                   aCurTotalProgress, aMaxTotalProgress) {
-  },
-||||||| merged common ancestors
-  onProgressChange(aWebProgress, aRequest,
-                             aCurSelfProgress, aMaxSelfProgress,
-                             aCurTotalProgress, aMaxTotalProgress) {
-  },
-=======
   onProgressChange(
     aWebProgress,
     aRequest,
@@ -22,17 +11,8 @@ var gFrontProgressListener = {
     aCurTotalProgress,
     aMaxTotalProgress
   ) {},
->>>>>>> upstream-releases
 
   onStateChange(aWebProgress, aRequest, aStateFlags, aStatus) {
-<<<<<<< HEAD
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-||||||| merged common ancestors
-=======
     if (
       aRequest &&
       aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank"
@@ -40,7 +20,6 @@ var gFrontProgressListener = {
       // ignore initial about blank
       return;
     }
->>>>>>> upstream-releases
     var state = "onStateChange";
     info("FrontProgress: " + state + " 0x" + aStateFlags.toString(16));
     ok(
@@ -56,14 +35,6 @@ var gFrontProgressListener = {
   },
 
   onLocationChange(aWebProgress, aRequest, aLocationURI, aFlags) {
-<<<<<<< HEAD
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-||||||| merged common ancestors
-=======
     if (
       aRequest &&
       aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank"
@@ -71,7 +42,6 @@ var gFrontProgressListener = {
       // ignore initial about blank
       return;
     }
->>>>>>> upstream-releases
     var state = "onLocationChange";
     info("FrontProgress: " + state + " " + aLocationURI.spec);
     ok(
@@ -86,23 +56,6 @@ var gFrontProgressListener = {
     gFrontNotificationsPos++;
   },
 
-<<<<<<< HEAD
-  onStatusChange(aWebProgress, aRequest, aStatus, aMessage) {
-  },
-
-  onSecurityChange(aWebProgress, aRequest, aState) {
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-||||||| merged common ancestors
-  onStatusChange(aWebProgress, aRequest, aStatus, aMessage) {
-  },
-
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON) {
-=======
   onSecurityChange(aWebProgress, aRequest, aState) {
     if (
       aRequest &&
@@ -111,7 +64,6 @@ var gFrontProgressListener = {
       // ignore initial about blank
       return;
     }
->>>>>>> upstream-releases
     var state = "onSecurityChange";
     info("FrontProgress: " + state + " 0x" + aState.toString(16));
     ok(
@@ -129,14 +81,6 @@ var gFrontProgressListener = {
 
 var gAllProgressListener = {
   onStateChange(aBrowser, aWebProgress, aRequest, aStateFlags, aStatus) {
-<<<<<<< HEAD
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-||||||| merged common ancestors
-=======
     if (
       aRequest &&
       aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank"
@@ -144,7 +88,6 @@ var gAllProgressListener = {
       // ignore initial about blank
       return;
     }
->>>>>>> upstream-releases
     var state = "onStateChange";
     info("AllProgress: " + state + " 0x" + aStateFlags.toString(16));
     ok(
@@ -175,17 +118,6 @@ var gAllProgressListener = {
     }
   },
 
-<<<<<<< HEAD
-  onLocationChange(aBrowser, aWebProgress, aRequest, aLocationURI, aFlags) {
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-||||||| merged common ancestors
-  onLocationChange(aBrowser, aWebProgress, aRequest, aLocationURI,
-                             aFlags) {
-=======
   onLocationChange(aBrowser, aWebProgress, aRequest, aLocationURI, aFlags) {
     if (
       aRequest &&
@@ -194,7 +126,6 @@ var gAllProgressListener = {
       // ignore initial about blank
       return;
     }
->>>>>>> upstream-releases
     var state = "onLocationChange";
     info("AllProgress: " + state + " " + aLocationURI.spec);
     ok(
@@ -213,32 +144,6 @@ var gAllProgressListener = {
     gAllNotificationsPos++;
   },
 
-<<<<<<< HEAD
-  onStatusChange(aBrowser, aWebProgress, aRequest, aStatus, aMessage) {
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-    var state = "onStatusChange";
-    ok(aBrowser == gTestBrowser, state + " notification came from the correct browser");
-  },
-
-  onSecurityChange(aBrowser, aWebProgress, aRequest, aState) {
-    if (aRequest &&
-        aRequest.QueryInterface(Ci.nsIChannel).originalURI.spec == "about:blank") {
-      // ignore initial about blank
-      return;
-    }
-||||||| merged common ancestors
-  onStatusChange(aBrowser, aWebProgress, aRequest, aStatus, aMessage) {
-    var state = "onStatusChange";
-    ok(aBrowser == gTestBrowser, state + " notification came from the correct browser");
-  },
-
-  onSecurityChange(aBrowser, aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON) {
-=======
   onSecurityChange(aBrowser, aWebProgress, aRequest, aState) {
     if (
       aRequest &&
@@ -247,7 +152,6 @@ var gAllProgressListener = {
       // ignore initial about blank
       return;
     }
->>>>>>> upstream-releases
     var state = "onSecurityChange";
     info("AllProgress: " + state + " 0x" + aState.toString(16));
     ok(

@@ -36,62 +36,27 @@ class ModuleLoadRequest final : public ScriptLoadRequest {
   ModuleLoadRequest(const ModuleLoadRequest& aOther) = delete;
   ModuleLoadRequest(ModuleLoadRequest&& aOther) = delete;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   ModuleLoadRequest(nsIURI* aURI, ScriptFetchOptions* aFetchOptions,
                     const SRIMetadata& aIntegrity, nsIURI* aReferrer,
                     bool aIsTopLevel, bool aIsDynamicImport,
                     ScriptLoader* aLoader, VisitedURLSet* aVisitedSet);
 
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(ModuleLoadRequest,
                                                          ScriptLoadRequest)
 
   // Create a top-level module load request.
-<<<<<<< HEAD
-  ModuleLoadRequest(nsIURI* aURI, ScriptFetchOptions* aFetchOptions,
-                    const SRIMetadata& aIntegrity, nsIURI* aReferrer,
-                    ScriptLoader* aLoader);
-||||||| merged common ancestors
-  ModuleLoadRequest(nsIURI* aURI,
-                    ScriptFetchOptions* aFetchOptions,
-                    const SRIMetadata& aIntegrity,
-                    nsIURI* aReferrer,
-                    ScriptLoader* aLoader);
-=======
   static ModuleLoadRequest* CreateTopLevel(nsIURI* aURI,
                                            ScriptFetchOptions* aFetchOptions,
                                            const SRIMetadata& aIntegrity,
                                            nsIURI* aReferrer,
                                            ScriptLoader* aLoader);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Create a module load request for an imported module.
-  ModuleLoadRequest(nsIURI* aURI, ModuleLoadRequest* aParent);
-||||||| merged common ancestors
-  // Create a module load request for an imported module.
-  ModuleLoadRequest(nsIURI* aURI,
-                    ModuleLoadRequest* aParent);
-=======
   // Create a module load request for a static module import.
   static ModuleLoadRequest* CreateStaticImport(nsIURI* aURI,
                                                ModuleLoadRequest* aParent);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool IsTopLevel() const override { return mIsTopLevel; }
-||||||| merged common ancestors
-  bool IsTopLevel() const override
-  {
-    return mIsTopLevel;
-  }
-=======
   // Create a module load request for dynamic module import.
   static ModuleLoadRequest* CreateDynamicImport(
       nsIURI* aURI, ScriptFetchOptions* aFetchOptions, nsIURI* aBaseURL,
@@ -101,7 +66,6 @@ public:
   bool IsTopLevel() const override { return mIsTopLevel; }
 
   bool IsDynamicImport() const { return mIsDynamicImport; }
->>>>>>> upstream-releases
 
   void SetReady() override;
   void Cancel() override;

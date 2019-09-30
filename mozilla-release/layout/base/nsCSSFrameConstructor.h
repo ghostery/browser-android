@@ -66,19 +66,9 @@ class nsCSSFrameConstructor final : public nsFrameManager {
   // FIXME(emilio): Is this really needed?
   friend class mozilla::RestyleManager;
 
-<<<<<<< HEAD
-  nsCSSFrameConstructor(nsIDocument* aDocument, nsIPresShell* aPresShell);
-  ~nsCSSFrameConstructor() { MOZ_ASSERT(mFCItemsInUse == 0); }
-||||||| merged common ancestors
-  nsCSSFrameConstructor(nsIDocument* aDocument, nsIPresShell* aPresShell);
-  ~nsCSSFrameConstructor() {
-    MOZ_ASSERT(mFCItemsInUse == 0);
-  }
-=======
   nsCSSFrameConstructor(mozilla::dom::Document* aDocument,
                         PresShell* aPresShell);
   ~nsCSSFrameConstructor() { MOZ_ASSERT(mFCItemsInUse == 0); }
->>>>>>> upstream-releases
 
   // get the alternate text for a content node
   static void GetAlternateTextFor(Element* aContent,
@@ -362,28 +352,13 @@ class nsCSSFrameConstructor final : public nsFrameManager {
 
   void AddSizeOfIncludingThis(nsWindowSizes& aSizes) const;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // temporary - please don't add external uses outside of nsBulletFrame
   nsCounterManager* CounterManager() { return &mCounterManager; }
 
  private:
->>>>>>> upstream-releases
   struct FrameConstructionItem;
   class FrameConstructionItemList;
 
-<<<<<<< HEAD
-  nsContainerFrame* ConstructPageFrame(nsIPresShell* aPresShell,
-                                       nsContainerFrame* aParentFrame,
-                                       nsIFrame* aPrevPageFrame,
-||||||| merged common ancestors
-  nsContainerFrame* ConstructPageFrame(nsIPresShell*      aPresShell,
-                                       nsContainerFrame*  aParentFrame,
-                                       nsIFrame*          aPrevPageFrame,
-=======
   // Set the root element frame, and create frames for anonymous content if
   // there is a canvas frame.
   //
@@ -397,7 +372,6 @@ private:
   nsContainerFrame* ConstructPageFrame(PresShell* aPresShell,
                                        nsContainerFrame* aParentFrame,
                                        nsIFrame* aPrevPageFrame,
->>>>>>> upstream-releases
                                        nsContainerFrame*& aCanvasFrame);
 
   void InitAndRestoreFrame(const nsFrameConstructorState& aState,
@@ -468,20 +442,9 @@ private:
    * Create a text node containing the given string. If aText is non-null
    * then we also set aText to the returned node.
    */
-<<<<<<< HEAD
-  already_AddRefed<nsIContent> CreateGenConTextNode(
-      nsFrameConstructorState& aState, const nsString& aString,
-      RefPtr<nsTextNode>* aText, nsGenConInitializer* aInitializer);
-||||||| merged common ancestors
-  already_AddRefed<nsIContent> CreateGenConTextNode(nsFrameConstructorState& aState,
-                                                    const nsString& aString,
-                                                    RefPtr<nsTextNode>* aText,
-                                                    nsGenConInitializer* aInitializer);
-=======
   already_AddRefed<nsIContent> CreateGenConTextNode(
       nsFrameConstructorState& aState, const nsString& aString,
       mozilla::UniquePtr<nsGenConInitializer> aInitializer);
->>>>>>> upstream-releases
 
   /**
    * Create a content node for the given generated content style.
@@ -498,41 +461,10 @@ private:
   // aParentFrame may be null; this method doesn't use it directly in any case.
   void CreateGeneratedContentItem(nsFrameConstructorState& aState,
                                   nsContainerFrame* aParentFrame,
-<<<<<<< HEAD
-                                  Element& aOriginatingElement, ComputedStyle&,
-                                  CSSPseudoElementType aPseudoElement,
-||||||| merged common ancestors
-                                  Element& aOriginatingElement,
-                                  ComputedStyle&,
-                                  CSSPseudoElementType aPseudoElement,
-=======
                                   Element& aOriginatingElement, ComputedStyle&,
                                   PseudoStyleType aPseudoElement,
->>>>>>> upstream-releases
                                   FrameConstructionItemList& aItems);
 
-<<<<<<< HEAD
-  // This method can change aFrameList: it can chop off the beginning and put
-  // it in aParentFrame while putting the remainder into a ib-split sibling of
-  // aParentFrame.  aPrevSibling must be the frame after which aFrameList is to
-  // be placed on aParentFrame's principal child list.  It may be null if
-  // aFrameList is being added at the beginning of the child list.
-  void AppendFramesToParent(nsFrameConstructorState& aState,
-                            nsContainerFrame* aParentFrame,
-                            nsFrameItems& aFrameList, nsIFrame* aPrevSibling,
-                            bool aIsRecursiveCall = false);
-||||||| merged common ancestors
-  // This method can change aFrameList: it can chop off the beginning and put
-  // it in aParentFrame while putting the remainder into a ib-split sibling of
-  // aParentFrame.  aPrevSibling must be the frame after which aFrameList is to
-  // be placed on aParentFrame's principal child list.  It may be null if
-  // aFrameList is being added at the beginning of the child list.
-  void AppendFramesToParent(nsFrameConstructorState&       aState,
-                            nsContainerFrame*              aParentFrame,
-                            nsFrameItems&                  aFrameList,
-                            nsIFrame*                      aPrevSibling,
-                            bool                           aIsRecursiveCall = false);
-=======
   // This method is called by ContentAppended() and ContentRangeInserted() when
   // appending flowed frames to a parent's principal child list. It handles the
   // case where the parent is the trailing inline of an ib-split or is the last
@@ -550,7 +482,6 @@ private:
                             nsContainerFrame* aParentFrame,
                             nsFrameList& aFrameList, nsIFrame* aPrevSibling,
                             bool aIsRecursiveCall = false);
->>>>>>> upstream-releases
 
   // BEGIN TABLE SECTION
   /**
@@ -558,85 +489,37 @@ private:
    * callback used for the job.
    */
   nsIFrame* ConstructTable(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                           FrameConstructionItem& aItem,
-                           nsContainerFrame* aParentFrame,
-                           const nsStyleDisplay* aDisplay,
-                           nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                           FrameConstructionItem&   aItem,
-                           nsContainerFrame*        aParentFrame,
-                           const nsStyleDisplay*    aDisplay,
-                           nsFrameItems&            aFrameItems);
-=======
                            FrameConstructionItem& aItem,
                            nsContainerFrame* aParentFrame,
                            const nsStyleDisplay* aDisplay,
                            nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * FrameConstructionData callback for constructing table rows and row groups.
    */
   nsIFrame* ConstructTableRowOrRowGroup(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                                        FrameConstructionItem& aItem,
-                                        nsContainerFrame* aParentFrame,
-                                        const nsStyleDisplay* aStyleDisplay,
-                                        nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                                        FrameConstructionItem&   aItem,
-                                        nsContainerFrame*        aParentFrame,
-                                        const nsStyleDisplay*    aStyleDisplay,
-                                        nsFrameItems&            aFrameItems);
-=======
                                         FrameConstructionItem& aItem,
                                         nsContainerFrame* aParentFrame,
                                         const nsStyleDisplay* aStyleDisplay,
                                         nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * FrameConstructionData callback used for constructing table columns.
    */
   nsIFrame* ConstructTableCol(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                              FrameConstructionItem& aItem,
-                              nsContainerFrame* aParentFrame,
-                              const nsStyleDisplay* aStyleDisplay,
-                              nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                              FrameConstructionItem&   aItem,
-                              nsContainerFrame*        aParentFrame,
-                              const nsStyleDisplay*    aStyleDisplay,
-                              nsFrameItems&            aFrameItems);
-=======
                               FrameConstructionItem& aItem,
                               nsContainerFrame* aParentFrame,
                               const nsStyleDisplay* aStyleDisplay,
                               nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * FrameConstructionData callback used for constructing table cells.
    */
   nsIFrame* ConstructTableCell(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                               FrameConstructionItem& aItem,
-                               nsContainerFrame* aParentFrame,
-                               const nsStyleDisplay* aStyleDisplay,
-                               nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                               FrameConstructionItem&   aItem,
-                               nsContainerFrame*        aParentFrame,
-                               const nsStyleDisplay*    aStyleDisplay,
-                               nsFrameItems&            aFrameItems);
-=======
                                FrameConstructionItem& aItem,
                                nsContainerFrame* aParentFrame,
                                const nsStyleDisplay* aStyleDisplay,
                                nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
  private:
   /* An enum of possible parent types for anonymous table or ruby object
@@ -692,22 +575,10 @@ private:
      @param PresShell the presshell whose arena should be used to allocate
                       the frame.
      @param ComputedStyle the style to use for the frame. */
-<<<<<<< HEAD
-  typedef nsIFrame* (*FrameCreationFunc)(nsIPresShell*, ComputedStyle*);
-  typedef nsContainerFrame* (*ContainerFrameCreationFunc)(nsIPresShell*,
-                                                          ComputedStyle*);
-  typedef nsBlockFrame* (*BlockFrameCreationFunc)(nsIPresShell*,
-                                                  ComputedStyle*);
-||||||| merged common ancestors
-  typedef nsIFrame* (* FrameCreationFunc)(nsIPresShell*, ComputedStyle*);
-  typedef nsContainerFrame* (* ContainerFrameCreationFunc)(nsIPresShell*, ComputedStyle*);
-  typedef nsBlockFrame* (* BlockFrameCreationFunc)(nsIPresShell*, ComputedStyle*);
-=======
   typedef nsIFrame* (*FrameCreationFunc)(PresShell*, ComputedStyle*);
   typedef nsContainerFrame* (*ContainerFrameCreationFunc)(PresShell*,
                                                           ComputedStyle*);
   typedef nsBlockFrame* (*BlockFrameCreationFunc)(PresShell*, ComputedStyle*);
->>>>>>> upstream-releases
 
   /* A function that can be used to get a FrameConstructionData.  Such
      a function is allowed to return null.
@@ -739,24 +610,10 @@ private:
      @return the frame that was constructed.  This frame is what the caller
              will set as the frame on the content.  Guaranteed non-null.
   */
-<<<<<<< HEAD
-  typedef nsIFrame* (nsCSSFrameConstructor::*FrameFullConstructor)(
-      nsFrameConstructorState& aState, FrameConstructionItem& aItem,
-      nsContainerFrame* aParentFrame, const nsStyleDisplay* aStyleDisplay,
-      nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-  typedef nsIFrame*
-    (nsCSSFrameConstructor::* FrameFullConstructor)(nsFrameConstructorState& aState,
-                                                    FrameConstructionItem& aItem,
-                                                    nsContainerFrame* aParentFrame,
-                                                    const nsStyleDisplay* aStyleDisplay,
-                                                    nsFrameItems& aFrameItems);
-=======
   typedef nsIFrame* (nsCSSFrameConstructor::*FrameFullConstructor)(
       nsFrameConstructorState& aState, FrameConstructionItem& aItem,
       nsContainerFrame* aParentFrame, const nsStyleDisplay* aStyleDisplay,
       nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /* Bits that modify the way a FrameConstructionData is handled */
 
@@ -923,16 +780,7 @@ private:
   //
   // This is expected to just be used temporarily to aggregate the different
   // objects that LoadXBLBindingIfNeeded returns.
-<<<<<<< HEAD
   struct MOZ_STACK_CLASS XBLBindingLoadInfo {
-    RefPtr<ComputedStyle> mStyle;
-||||||| merged common ancestors
-  struct MOZ_STACK_CLASS XBLBindingLoadInfo
-  {
-    RefPtr<ComputedStyle> mStyle;
-=======
-  struct MOZ_STACK_CLASS XBLBindingLoadInfo {
->>>>>>> upstream-releases
     mozilla::UniquePtr<PendingBinding> mPendingBinding;
     bool mSuccess = false;
 
@@ -941,17 +789,8 @@ private:
     explicit XBLBindingLoadInfo(mozilla::UniquePtr<PendingBinding>);
   };
 
-<<<<<<< HEAD
-  // Returns null mStyle / mTag members to signal an error.
-  XBLBindingLoadInfo LoadXBLBindingIfNeeded(nsIContent&, ComputedStyle&,
-||||||| merged common ancestors
-  // Returns null mStyle / mTag members to signal an error.
-  XBLBindingLoadInfo LoadXBLBindingIfNeeded(nsIContent&,
-                                            ComputedStyle&,
-=======
   // Returns null mStyle member to signal an error.
   XBLBindingLoadInfo LoadXBLBindingIfNeeded(nsIContent&, const ComputedStyle&,
->>>>>>> upstream-releases
                                             uint32_t aFlags);
 
   const FrameConstructionData* FindDataForContent(nsIContent&, ComputedStyle&,
@@ -963,14 +802,7 @@ private:
                                                    nsIFrame* aParentFrame);
   const FrameConstructionData* FindElementData(const Element&, ComputedStyle&,
                                                nsIFrame* aParentFrame,
-<<<<<<< HEAD
-                                               nsAtom* aTag, uint32_t aFlags);
-||||||| merged common ancestors
-                                               nsAtom* aTag,
                                                uint32_t aFlags);
-=======
-                                               uint32_t aFlags);
->>>>>>> upstream-releases
   const FrameConstructionData* FindElementTagData(const Element&,
                                                   ComputedStyle&,
                                                   nsIFrame* aParentFrame,
@@ -994,22 +826,9 @@ private:
    * FrameConstructionDataGetter that returns null. In the case that the tags
    * actually match, aTagFound will be true, even if the return value is null.
    */
-<<<<<<< HEAD
-  static const FrameConstructionData* FindDataByTag(
-      nsAtom* aTag, const Element& aElement, ComputedStyle& aComputedStyle,
-      const FrameConstructionDataByTag* aDataPtr, uint32_t aDataLength);
-||||||| merged common ancestors
-  static const FrameConstructionData*
-    FindDataByTag(nsAtom* aTag,
-                  const Element& aElement,
-                  ComputedStyle& aComputedStyle,
-                  const FrameConstructionDataByTag* aDataPtr,
-                  uint32_t aDataLength);
-=======
   static const FrameConstructionData* FindDataByTag(
       const Element& aElement, ComputedStyle& aComputedStyle,
       const FrameConstructionDataByTag* aDataPtr, uint32_t aDataLength);
->>>>>>> upstream-releases
 
   /* A class representing a list of FrameConstructionItems.  Instances of this
      class are only created as AutoFrameConstructionItemList, or as a member
@@ -1515,130 +1334,32 @@ private:
                                          FrameConstructionItemList& aItems,
                                          nsIFrame* aParentFrame);
 
-<<<<<<< HEAD
-  /**
-   * Function to adjust aParentFrame to deal with captions.
-   * @param aParentFrame the frame we think should be the parent.  This will be
-   *        adjusted to point to the right parent frame.
-   * @param aFCData the FrameConstructionData that would be used for frame
-   *        construction.
-   * @param aComputedStyle the style for aChildContent
-   */
-  // XXXbz this function should really go away once we rework pseudo-frame
-  // handling to be better. This should simply be part of the job of
-  // GetGeometricParent, and stuff like the frameitems and parent frame should
-  // be kept track of in the state...
-  void AdjustParentFrame(nsContainerFrame** aParentFrame,
-                         const FrameConstructionData* aFCData,
-                         ComputedStyle* aComputedStyle);
-
-||||||| merged common ancestors
-  /**
-   * Function to adjust aParentFrame to deal with captions.
-   * @param aParentFrame the frame we think should be the parent.  This will be
-   *        adjusted to point to the right parent frame.
-   * @param aFCData the FrameConstructionData that would be used for frame
-   *        construction.
-   * @param aComputedStyle the style for aChildContent
-   */
-  // XXXbz this function should really go away once we rework pseudo-frame
-  // handling to be better. This should simply be part of the job of
-  // GetGeometricParent, and stuff like the frameitems and parent frame should
-  // be kept track of in the state...
-  void AdjustParentFrame(nsContainerFrame**           aParentFrame,
-                         const FrameConstructionData* aFCData,
-                         ComputedStyle*              aComputedStyle);
-
-=======
->>>>>>> upstream-releases
   // END TABLE SECTION
 
-<<<<<<< HEAD
- protected:
-  static nsIFrame* CreatePlaceholderFrameFor(nsIPresShell* aPresShell,
-                                             nsIContent* aContent,
-                                             nsIFrame* aFrame,
-||||||| merged common ancestors
-protected:
-  static nsIFrame* CreatePlaceholderFrameFor(nsIPresShell*     aPresShell,
-                                             nsIContent*       aContent,
-                                             nsIFrame*         aFrame,
-=======
  protected:
   static nsIFrame* CreatePlaceholderFrameFor(PresShell* aPresShell,
                                              nsIContent* aContent,
                                              nsIFrame* aFrame,
->>>>>>> upstream-releases
                                              nsContainerFrame* aParentFrame,
-<<<<<<< HEAD
                                              nsIFrame* aPrevInFlow,
                                              nsFrameState aTypeBit);
 
-  static nsIFrame* CreateBackdropFrameFor(nsIPresShell* aPresShell,
-                                          nsIContent* aContent,
-                                          nsIFrame* aFrame,
-                                          nsContainerFrame* aParentFrame);
-||||||| merged common ancestors
-                                             nsIFrame*         aPrevInFlow,
-                                             nsFrameState      aTypeBit);
-
-  static nsIFrame* CreateBackdropFrameFor(nsIPresShell* aPresShell,
-                                          nsIContent* aContent,
-                                          nsIFrame* aFrame,
-                                          nsContainerFrame* aParentFrame);
-=======
-                                             nsIFrame* aPrevInFlow,
-                                             nsFrameState aTypeBit);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- private:
-  // ConstructSelectFrame puts the new frame in aFrameItems and
-||||||| merged common ancestors
-private:
-  // ConstructSelectFrame puts the new frame in aFrameItems and
-=======
  private:
   // ConstructSelectFrame puts the new frame in aFrameList and
->>>>>>> upstream-releases
   // handles the kids of the select.
   nsIFrame* ConstructSelectFrame(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                                 FrameConstructionItem& aItem,
-                                 nsContainerFrame* aParentFrame,
-                                 const nsStyleDisplay* aStyleDisplay,
-                                 nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                                 FrameConstructionItem&   aItem,
-                                 nsContainerFrame*        aParentFrame,
-                                 const nsStyleDisplay*    aStyleDisplay,
-                                 nsFrameItems&            aFrameItems);
-=======
                                  FrameConstructionItem& aItem,
                                  nsContainerFrame* aParentFrame,
                                  const nsStyleDisplay* aStyleDisplay,
                                  nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   // ConstructFieldSetFrame puts the new frame in aFrameList and
   // handles the kids of the fieldset
   nsIFrame* ConstructFieldSetFrame(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                                   FrameConstructionItem& aItem,
-                                   nsContainerFrame* aParentFrame,
-                                   const nsStyleDisplay* aStyleDisplay,
-                                   nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                                   FrameConstructionItem&   aItem,
-                                   nsContainerFrame*        aParentFrame,
-                                   const nsStyleDisplay*    aStyleDisplay,
-                                   nsFrameItems&            aFrameItems);
-=======
                                    FrameConstructionItem& aItem,
                                    nsContainerFrame* aParentFrame,
                                    const nsStyleDisplay* aStyleDisplay,
                                    nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   // ConstructDetailsFrame puts the new frame in aFrameList and
   // handles the kids of the details.
@@ -1649,23 +1370,10 @@ private:
                                   nsFrameList& aFrameList);
 
   void ConstructTextFrame(const FrameConstructionData* aData,
-<<<<<<< HEAD
-                          nsFrameConstructorState& aState, nsIContent* aContent,
-                          nsContainerFrame* aParentFrame,
-                          ComputedStyle* aComputedStyle,
-                          nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                          nsFrameConstructorState& aState,
-                          nsIContent*              aContent,
-                          nsContainerFrame*        aParentFrame,
-                          ComputedStyle*          aComputedStyle,
-                          nsFrameItems&            aFrameItems);
-=======
                           nsFrameConstructorState& aState, nsIContent* aContent,
                           nsContainerFrame* aParentFrame,
                           ComputedStyle* aComputedStyle,
                           nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   // If aPossibleTextContent is a text node and doesn't have a frame, append a
   // frame construction item for it to aItems.
@@ -1791,24 +1499,6 @@ private:
                                                          ComputedStyle&);
   // sXULTextBoxData used for both labels and descriptions
   static const FrameConstructionData sXULTextBoxData;
-<<<<<<< HEAD
-  static const FrameConstructionData* FindXULLabelData(const Element&,
-                                                       ComputedStyle&);
-  static const FrameConstructionData* FindXULDescriptionData(const Element&,
-                                                             ComputedStyle&);
-#ifdef XP_MACOSX
-  static const FrameConstructionData* FindXULMenubarData(const Element&,
-                                                         ComputedStyle&);
-#endif /* XP_MACOSX */
-#endif /* MOZ_XUL */
-||||||| merged common ancestors
-  static const FrameConstructionData* FindXULLabelData(const Element&, ComputedStyle&);
-  static const FrameConstructionData* FindXULDescriptionData(const Element&, ComputedStyle&);
-#ifdef XP_MACOSX
-  static const FrameConstructionData* FindXULMenubarData(const Element&, ComputedStyle&);
-#endif /* XP_MACOSX */
-#endif /* MOZ_XUL */
-=======
   static const FrameConstructionData* FindXULButtonData(const Element&,
                                                         ComputedStyle&);
   static const FrameConstructionData* FindXULLabelData(const Element&,
@@ -1820,7 +1510,6 @@ private:
                                                          ComputedStyle&);
 #  endif /* XP_MACOSX */
 #endif   /* MOZ_XUL */
->>>>>>> upstream-releases
 
   // Function to find FrameConstructionData for an element using one of the XUL
   // display types.  Will return null if the style doesn't have a XUL display
@@ -1837,70 +1526,29 @@ private:
    * child for their children to go in to.
    */
   nsContainerFrame* ConstructFrameWithAnonymousChild(
-<<<<<<< HEAD
-      nsFrameConstructorState& aState, FrameConstructionItem& aItem,
-      nsContainerFrame* aParentFrame, nsFrameItems& aFrameItems,
-      ContainerFrameCreationFunc aConstructor,
-      ContainerFrameCreationFunc aInnerConstructor,
-      nsCSSAnonBoxPseudoStaticAtom* aInnerPseudo, bool aCandidateRootFrame);
-||||||| merged common ancestors
-                                  nsFrameConstructorState& aState,
-                                  FrameConstructionItem&   aItem,
-                                  nsContainerFrame*        aParentFrame,
-                                  nsFrameItems&            aFrameItems,
-                                  ContainerFrameCreationFunc aConstructor,
-                                  ContainerFrameCreationFunc aInnerConstructor,
-                                  nsCSSAnonBoxPseudoStaticAtom* aInnerPseudo,
-                                  bool                     aCandidateRootFrame);
-=======
       nsFrameConstructorState& aState, FrameConstructionItem& aItem,
       nsContainerFrame* aParentFrame, nsFrameList& aFrameList,
       ContainerFrameCreationFunc aConstructor,
       ContainerFrameCreationFunc aInnerConstructor,
       mozilla::PseudoStyleType aInnerPseudo, bool aCandidateRootFrame);
->>>>>>> upstream-releases
 
   /**
    * Construct an nsSVGOuterSVGFrame.
    */
   nsIFrame* ConstructOuterSVG(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                              FrameConstructionItem& aItem,
-                              nsContainerFrame* aParentFrame,
-                              const nsStyleDisplay* aDisplay,
-                              nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                              FrameConstructionItem&   aItem,
-                              nsContainerFrame*        aParentFrame,
-                              const nsStyleDisplay*    aDisplay,
-                              nsFrameItems&            aFrameItems);
-=======
                               FrameConstructionItem& aItem,
                               nsContainerFrame* aParentFrame,
                               const nsStyleDisplay* aDisplay,
                               nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * Construct an nsSVGMarkerFrame.
    */
   nsIFrame* ConstructMarker(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                            FrameConstructionItem& aItem,
-                            nsContainerFrame* aParentFrame,
-                            const nsStyleDisplay* aDisplay,
-                            nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                            FrameConstructionItem&   aItem,
-                            nsContainerFrame*        aParentFrame,
-                            const nsStyleDisplay*    aDisplay,
-                            nsFrameItems&            aFrameItems);
-=======
                             FrameConstructionItem& aItem,
                             nsContainerFrame* aParentFrame,
                             const nsStyleDisplay* aDisplay,
                             nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   static const FrameConstructionData* FindSVGData(const Element&,
                                                   nsIFrame* aParentFrame,
@@ -1917,87 +1565,37 @@ private:
    * Construct a scrollable block frame
    */
   nsIFrame* ConstructScrollableBlock(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                                     FrameConstructionItem& aItem,
-                                     nsContainerFrame* aParentFrame,
-                                     const nsStyleDisplay* aDisplay,
-                                     nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                                     FrameConstructionItem&   aItem,
-                                     nsContainerFrame*        aParentFrame,
-                                     const nsStyleDisplay*    aDisplay,
-                                     nsFrameItems&            aFrameItems);
-=======
                                      FrameConstructionItem& aItem,
                                      nsContainerFrame* aParentFrame,
                                      const nsStyleDisplay* aDisplay,
                                      nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * Construct a scrollable block frame using the given block frame creation
    * function.
    */
   nsIFrame* ConstructScrollableBlockWithConstructor(
-<<<<<<< HEAD
-      nsFrameConstructorState& aState, FrameConstructionItem& aItem,
-      nsContainerFrame* aParentFrame, const nsStyleDisplay* aDisplay,
-      nsFrameItems& aFrameItems, BlockFrameCreationFunc aConstructor);
-||||||| merged common ancestors
-    nsFrameConstructorState& aState,
-    FrameConstructionItem& aItem,
-    nsContainerFrame* aParentFrame,
-    const nsStyleDisplay* aDisplay,
-    nsFrameItems& aFrameItems,
-    BlockFrameCreationFunc aConstructor);
-=======
       nsFrameConstructorState& aState, FrameConstructionItem& aItem,
       nsContainerFrame* aParentFrame, const nsStyleDisplay* aDisplay,
       nsFrameList& aFrameList, BlockFrameCreationFunc aConstructor);
->>>>>>> upstream-releases
 
   /**
    * Construct a non-scrollable block frame
    */
   nsIFrame* ConstructNonScrollableBlock(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                                        FrameConstructionItem& aItem,
-                                        nsContainerFrame* aParentFrame,
-                                        const nsStyleDisplay* aDisplay,
-                                        nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                                        FrameConstructionItem&   aItem,
-                                        nsContainerFrame*        aParentFrame,
-                                        const nsStyleDisplay*    aDisplay,
-                                        nsFrameItems&            aFrameItems);
-=======
                                         FrameConstructionItem& aItem,
                                         nsContainerFrame* aParentFrame,
                                         const nsStyleDisplay* aDisplay,
                                         nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * Construct a non-scrollable block frame using the given block frame creation
    * function.
    */
   nsIFrame* ConstructNonScrollableBlockWithConstructor(
-<<<<<<< HEAD
-      nsFrameConstructorState& aState, FrameConstructionItem& aItem,
-      nsContainerFrame* aParentFrame, const nsStyleDisplay* aDisplay,
-      nsFrameItems& aFrameItems, BlockFrameCreationFunc aConstructor);
-||||||| merged common ancestors
-    nsFrameConstructorState& aState,
-    FrameConstructionItem& aItem,
-    nsContainerFrame* aParentFrame,
-    const nsStyleDisplay* aDisplay,
-    nsFrameItems& aFrameItems,
-    BlockFrameCreationFunc aConstructor);
-=======
       nsFrameConstructorState& aState, FrameConstructionItem& aItem,
       nsContainerFrame* aParentFrame, const nsStyleDisplay* aDisplay,
       nsFrameList& aFrameList, BlockFrameCreationFunc aConstructor);
->>>>>>> upstream-releases
 
   /**
    * This adds FrameConstructionItem objects to aItemsToConstruct for the
@@ -2040,25 +1638,6 @@ private:
    *        test and the anonymous content creation.  If null, aFrame will be
    *        used.
    */
-<<<<<<< HEAD
-  void ProcessChildren(nsFrameConstructorState& aState, nsIContent* aContent,
-                       ComputedStyle* aComputedStyle,
-                       nsContainerFrame* aParentFrame,
-                       const bool aCanHaveGeneratedContent,
-                       nsFrameItems& aFrameItems, const bool aAllowBlockStyles,
-                       PendingBinding* aPendingBinding,
-                       nsIFrame* aPossiblyLeafFrame = nullptr);
-||||||| merged common ancestors
-  void ProcessChildren(nsFrameConstructorState& aState,
-                       nsIContent*              aContent,
-                       ComputedStyle*           aComputedStyle,
-                       nsContainerFrame*        aParentFrame,
-                       const bool               aCanHaveGeneratedContent,
-                       nsFrameItems&            aFrameItems,
-                       const bool               aAllowBlockStyles,
-                       PendingBinding*          aPendingBinding,
-                       nsIFrame*                aPossiblyLeafFrame = nullptr);
-=======
   void ProcessChildren(nsFrameConstructorState& aState, nsIContent* aContent,
                        ComputedStyle* aComputedStyle,
                        nsContainerFrame* aParentFrame,
@@ -2066,7 +1645,6 @@ private:
                        nsFrameList& aFrameList, const bool aAllowBlockStyles,
                        PendingBinding* aPendingBinding,
                        nsIFrame* aPossiblyLeafFrame = nullptr);
->>>>>>> upstream-releases
 
   /**
    * These two functions are used when we start frame creation from a non-root
@@ -2094,67 +1672,13 @@ private:
                         nsContainerFrame*& aNewFrame);
 
   // Builds the initial ScrollFrame
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> BeginBuildingScrollFrame(
-      nsFrameConstructorState& aState, nsIContent* aContent,
-      ComputedStyle* aContentStyle, nsContainerFrame* aParentFrame,
-      nsAtom* aScrolledPseudo, bool aIsRoot, nsContainerFrame*& aNewFrame);
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-  BeginBuildingScrollFrame(nsFrameConstructorState& aState,
-                           nsIContent*              aContent,
-                           ComputedStyle*           aContentStyle,
-                           nsContainerFrame*        aParentFrame,
-                           nsAtom*                  aScrolledPseudo,
-                           bool                     aIsRoot,
-                           nsContainerFrame*&       aNewFrame);
-=======
   already_AddRefed<ComputedStyle> BeginBuildingScrollFrame(
       nsFrameConstructorState& aState, nsIContent* aContent,
       ComputedStyle* aContentStyle, nsContainerFrame* aParentFrame,
       mozilla::PseudoStyleType aScrolledPseudo, bool aIsRoot,
       nsContainerFrame*& aNewFrame);
->>>>>>> upstream-releases
 
   // Completes the building of the scrollframe:
-<<<<<<< HEAD
-  // Creates a view for the scrolledframe and makes it the child of the
-  // scrollframe.
-  void FinishBuildingScrollFrame(nsContainerFrame* aScrollFrame,
-                                 nsIFrame* aScrolledFrame);
-
-  // InitializeSelectFrame puts scrollFrame in aFrameItems if aBuildCombobox is
-  // false aBuildCombobox indicates if we are building a combobox that has a
-  // dropdown popup widget or not.
-  void InitializeSelectFrame(nsFrameConstructorState& aState,
-                             nsContainerFrame* aScrollFrame,
-                             nsContainerFrame* aScrolledFrame,
-                             nsIContent* aContent,
-                             nsContainerFrame* aParentFrame,
-                             ComputedStyle* aComputedStyle, bool aBuildCombobox,
-                             PendingBinding* aPendingBinding,
-                             nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-  // Creates a view for the scrolledframe and makes it the child of the scrollframe.
-  void
-  FinishBuildingScrollFrame(nsContainerFrame* aScrollFrame,
-                            nsIFrame* aScrolledFrame);
-
-  // InitializeSelectFrame puts scrollFrame in aFrameItems if aBuildCombobox is false
-  // aBuildCombobox indicates if we are building a combobox that has a dropdown
-  // popup widget or not.
-  void
-  InitializeSelectFrame(nsFrameConstructorState& aState,
-                        nsContainerFrame*        aScrollFrame,
-                        nsContainerFrame*        aScrolledFrame,
-                        nsIContent*              aContent,
-                        nsContainerFrame*        aParentFrame,
-                        ComputedStyle*           aComputedStyle,
-                        bool                     aBuildCombobox,
-                        PendingBinding*          aPendingBinding,
-                        nsFrameItems&            aFrameItems);
-
-=======
   // Creates a view for the scrolledframe and makes it the child of the
   // scrollframe.
   void FinishBuildingScrollFrame(nsContainerFrame* aScrollFrame,
@@ -2171,7 +1695,6 @@ private:
                              ComputedStyle* aComputedStyle, bool aBuildCombobox,
                              PendingBinding* aPendingBinding,
                              nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * Recreate frames for aContent.
@@ -2194,32 +1717,14 @@ private:
   // not null).
   bool MaybeRecreateContainerForFrameRemoval(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-  nsIFrame* CreateContinuingOuterTableFrame(nsIPresShell* aPresShell,
-                                            nsPresContext* aPresContext,
-                                            nsIFrame* aFrame,
-||||||| merged common ancestors
-  nsIFrame* CreateContinuingOuterTableFrame(nsIPresShell*     aPresShell,
-                                            nsPresContext*    aPresContext,
-                                            nsIFrame*         aFrame,
-=======
   nsIFrame* CreateContinuingOuterTableFrame(PresShell* aPresShell,
                                             nsPresContext* aPresContext,
                                             nsIFrame* aFrame,
->>>>>>> upstream-releases
                                             nsContainerFrame* aParentFrame,
                                             nsIContent* aContent,
                                             ComputedStyle* aComputedStyle);
 
-<<<<<<< HEAD
-  nsIFrame* CreateContinuingTableFrame(nsIPresShell* aPresShell,
-                                       nsIFrame* aFrame,
-||||||| merged common ancestors
-  nsIFrame* CreateContinuingTableFrame(nsIPresShell*     aPresShell,
-                                       nsIFrame*         aFrame,
-=======
   nsIFrame* CreateContinuingTableFrame(PresShell* aPresShell, nsIFrame* aFrame,
->>>>>>> upstream-releases
                                        nsContainerFrame* aParentFrame,
                                        nsIContent* aContent,
                                        ComputedStyle* aComputedStyle);
@@ -2246,48 +1751,8 @@ private:
 
   void ShouldHaveSpecialBlockStyle(nsIContent* aContent,
                                    ComputedStyle* aComputedStyle,
-<<<<<<< HEAD
                                    bool* aHaveFirstLetterStyle,
                                    bool* aHaveFirstLineStyle);
-
-  // Initialize aBlockFrame, and wrap it in a ColumnSetFrame if needed.
-  //
-  // If a ColumnSetFrame needs to be created, then this function will create
-  // one, and set aBlockFrame as its child (with an updated "columnContent"
-  // ComputedStyle() pointer), and initialize both frames. Otherwise, it
-  // initializes aBlockFrame.
-  //
-  // @return the new ColumnSetFrame if needed; otherwise aBlockFrame.
-  //
-  // FIXME (Bug 1489295): Callers using this function to create multi-column
-  // hierarchy should be revised to support column-span.
-  nsContainerFrame* InitAndWrapInColumnSetFrameIfNeeded(
-      nsFrameConstructorState& aState, nsIContent* aContent,
-      nsContainerFrame* aParentFrame, nsContainerFrame* aBlockFrame,
-      ComputedStyle* aComputedStyle);
-||||||| merged common ancestors
-                                   bool*          aHaveFirstLetterStyle,
-                                   bool*          aHaveFirstLineStyle);
-
-
-  // Initialize aBlockFrame, and wrap it in a ColumnSetFrame if needed.
-  //
-  // If a ColumnSetFrame needs to be created, then this function will create
-  // one, and set aBlockFrame as its child (with an updated "columnContent"
-  // ComputedStyle() pointer), and initialize both frames. Otherwise, it
-  // initializes aBlockFrame.
-  //
-  // @return the new ColumnSetFrame if needed; otherwise aBlockFrame.
-  nsContainerFrame* InitAndWrapInColumnSetFrameIfNeeded(
-    nsFrameConstructorState& aState,
-    nsIContent* aContent,
-    nsContainerFrame* aParentFrame,
-    nsContainerFrame* aBlockFrame,
-    ComputedStyle* aComputedStyle);
-=======
-                                   bool* aHaveFirstLetterStyle,
-                                   bool* aHaveFirstLineStyle);
->>>>>>> upstream-releases
 
   // |aContentParentFrame| should be null if it's really the same as
   // |aParentFrame|.
@@ -2305,29 +1770,6 @@ private:
   // is the frame whose style is making this block an abs-pos container.
   // @param aPendingBinding the pending binding  from this block's frame
   // construction item.
-<<<<<<< HEAD
-  void ConstructBlock(nsFrameConstructorState& aState, nsIContent* aContent,
-                      nsContainerFrame* aParentFrame,
-                      nsContainerFrame* aContentParentFrame,
-                      ComputedStyle* aComputedStyle,
-                      nsContainerFrame** aNewFrame, nsFrameItems& aFrameItems,
-                      nsIFrame* aPositionedFrameForAbsPosContainer,
-                      PendingBinding* aPendingBinding);
-
-  void CreateBulletFrameForListItemIfNeeded(nsBlockFrame* aBlockFrame);
-||||||| merged common ancestors
-  void ConstructBlock(nsFrameConstructorState& aState,
-                      nsIContent*              aContent,
-                      nsContainerFrame*        aParentFrame,
-                      nsContainerFrame*        aContentParentFrame,
-                      ComputedStyle*           aComputedStyle,
-                      nsContainerFrame**       aNewFrame,
-                      nsFrameItems&            aFrameItems,
-                      nsIFrame*                aPositionedFrameForAbsPosContainer,
-                      PendingBinding*          aPendingBinding);
-
-  void CreateBulletFrameForListItemIfNeeded(nsBlockFrame* aBlockFrame);
-=======
   void ConstructBlock(nsFrameConstructorState& aState, nsIContent* aContent,
                       nsContainerFrame* aParentFrame,
                       nsContainerFrame* aContentParentFrame,
@@ -2429,98 +1871,12 @@ private:
                                   nsContainerFrame* aParentFrame,
                                   nsFrameList& aFrameList,
                                   nsIFrame* aPrevSibling);
->>>>>>> upstream-releases
-
-  // Build the initial column hierarchy around aColumnContent. This function
-  // should be called before constructing aColumnContent's children.
-  //
-  // Before calling FinishBuildingColumns(), we need to create column-span
-  // siblings for aColumnContent's children. Caller can use helpers
-  // MayNeedToCreateColumnSpanSiblings() and CreateColumnSpanSiblings() to
-  // check whether column-span siblings might need to be created and to do
-  // the actual work of creating them if they're needed.
-  //
-  // @param aColumnContent the block that we're wrapping in a ColumnSet. On
-  //        entry to this function it has aComputedStyle as its style. After
-  //        this function returns, aColumnContent has a ::-moz-column-content
-  //        anonymous box style.
-  // @param aParentFrame the parent frame we want to use for the
-  //        ColumnSetWrapperFrame (which would have been the parent of
-  //        aColumnContent if we were not creating a column hierarchy).
-  // @param aContent is the content of the aColumnContent.
-  // @return the outermost ColumnSetWrapperFrame (or ColumnSetFrame if
-  //         "column-span" is disabled).
-  //
-  // Bug 1499281: We can change the return type to ColumnSetWrapperFrame
-  // once "layout.css.column-span.enabled" is removed.
-  nsContainerFrame* BeginBuildingColumns(nsFrameConstructorState& aState,
-                                         nsIContent* aContent,
-                                         nsContainerFrame* aParentFrame,
-                                         nsContainerFrame* aColumnContent,
-                                         ComputedStyle* aComputedStyle);
-
-  // Complete building the column hierarchy by first wrapping each
-  // non-column-span child in aChildList in a ColumnSetFrame (skipping
-  // column-span children), and reparenting them to have aColumnSetWrapper
-  // as their parent.
-  //
-  // @param aColumnSetWrapper is the frame returned by
-  //        BeginBuildingColumns(), and is the grandparent of aColumnContent.
-  // @param aColumnContent is the block frame passed into
-  //        BeginBuildingColumns()
-  // @param aColumnContentSiblings contains the aColumnContent's siblings, which
-  //        are the column spanners and aColumnContent's continuations returned
-  //        by CreateColumnSpanSiblings(). It'll become empty after this call.
-  //
-  // Note: No need to call this function if "column-span" is disabled.
-  void FinishBuildingColumns(nsFrameConstructorState& aState,
-                             nsContainerFrame* aColumnSetWrapper,
-                             nsContainerFrame* aColumnContent,
-                             nsFrameList& aColumnContentSiblings);
-
-  // Return whether aBlockFrame's children in aChildList, which might
-  // contain column-span, may need to be wrapped in
-  // ::moz-column-span-wrapper and promoted as aBlockFrame's siblings.
-  //
-  // @param aBlockFrame is the parent of the frames in aChildList.
-  //
-  // Note: This a check without actually looking into each frame in the
-  // child list, so it may return false positive.
-  bool MayNeedToCreateColumnSpanSiblings(nsContainerFrame* aBlockFrame,
-                                         const nsFrameList& aChildList);
-
-  // Wrap consecutive runs of column-span kids and runs of non-column-span
-  // kids in blocks for aInitialBlock's children.
-  //
-  // @param aInitialBlock is the parent of those frames in aChildList.
-  // @param aChildList must begin with a column-span kid. It becomes empty
-  //        after this call.
-  // @param aPositionedFrame if non-null, it's the frame whose style is making
-  //        aInitialBlock an abs-pos container.
-  //
-  // Return those wrapping blocks in nsFrameItems.
-  nsFrameItems CreateColumnSpanSiblings(nsFrameConstructorState& aState,
-                                        nsContainerFrame* aInitialBlock,
-                                        nsFrameList& aChildList,
-                                        nsIFrame* aPositionedFrame);
 
   nsIFrame* ConstructInline(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                            FrameConstructionItem& aItem,
-                            nsContainerFrame* aParentFrame,
-                            const nsStyleDisplay* aDisplay,
-                            nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                            FrameConstructionItem&   aItem,
-                            nsContainerFrame*        aParentFrame,
-                            const nsStyleDisplay*    aDisplay,
-                            nsFrameItems&            aFrameItems);
-=======
                             FrameConstructionItem& aItem,
                             nsContainerFrame* aParentFrame,
                             const nsStyleDisplay* aDisplay,
                             nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * Create any additional {ib} siblings needed to contain aChildList and put
@@ -2541,18 +1897,8 @@ private:
    * needed.
    */
   void CreateIBSiblings(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                        nsContainerFrame* aInitialInline, bool aIsPositioned,
-                        nsFrameItems& aChildItems, nsFrameItems& aSiblings);
-||||||| merged common ancestors
-                        nsContainerFrame* aInitialInline,
-                        bool aIsPositioned,
-                        nsFrameItems& aChildItems,
-                        nsFrameItems& aSiblings);
-=======
                         nsContainerFrame* aInitialInline, bool aIsPositioned,
                         nsFrameList& aChildList, nsFrameList& aSiblings);
->>>>>>> upstream-releases
 
   /**
    * For an inline aParentItem, construct its list of child
@@ -2584,33 +1930,6 @@ private:
 
   // Methods support :first-letter style
 
-<<<<<<< HEAD
-  nsFirstLetterFrame* CreateFloatingLetterFrame(
-      nsFrameConstructorState& aState, nsIContent* aTextContent,
-      nsIFrame* aTextFrame, nsContainerFrame* aParentFrame,
-      ComputedStyle* aParentComputedStyle, ComputedStyle* aComputedStyle,
-      nsFrameItems& aResult);
-
-  void CreateLetterFrame(nsContainerFrame* aBlockFrame,
-                         nsContainerFrame* aBlockContinuation,
-                         nsIContent* aTextContent,
-                         nsContainerFrame* aParentFrame, nsFrameItems& aResult);
-||||||| merged common ancestors
-  nsFirstLetterFrame*
-  CreateFloatingLetterFrame(nsFrameConstructorState& aState,
-                            nsIContent*              aTextContent,
-                            nsIFrame*                aTextFrame,
-                            nsContainerFrame*        aParentFrame,
-                            ComputedStyle*           aParentComputedStyle,
-                            ComputedStyle*           aComputedStyle,
-                            nsFrameItems&            aResult);
-
-  void CreateLetterFrame(nsContainerFrame*        aBlockFrame,
-                         nsContainerFrame*        aBlockContinuation,
-                         nsIContent*              aTextContent,
-                         nsContainerFrame*        aParentFrame,
-                         nsFrameItems&            aResult);
-=======
   nsFirstLetterFrame* CreateFloatingLetterFrame(
       nsFrameConstructorState& aState, mozilla::dom::Text* aTextContent,
       nsIFrame* aTextFrame, nsContainerFrame* aParentFrame,
@@ -2621,16 +1940,9 @@ private:
                          nsContainerFrame* aBlockContinuation,
                          mozilla::dom::Text* aTextContent,
                          nsContainerFrame* aParentFrame, nsFrameList& aResult);
->>>>>>> upstream-releases
 
   void WrapFramesInFirstLetterFrame(nsContainerFrame* aBlockFrame,
-<<<<<<< HEAD
-                                    nsFrameItems& aBlockFrames);
-||||||| merged common ancestors
-                                    nsFrameItems&     aBlockFrames);
-=======
                                     nsFrameList& aBlockFrames);
->>>>>>> upstream-releases
 
   /**
    * Looks in the block aBlockFrame for a text frame that contains the
@@ -2651,67 +1963,24 @@ private:
    * @param aPrevFrame returns the previous sibling of aTextFrame
    * @param aLetterFrames returns the frames that were created
    */
-<<<<<<< HEAD
-  void WrapFramesInFirstLetterFrame(
-      nsContainerFrame* aBlockFrame, nsContainerFrame* aBlockContinuation,
-      nsContainerFrame* aParentFrame, nsIFrame* aParentFrameList,
-      nsContainerFrame** aModifiedParent, nsIFrame** aTextFrame,
-      nsIFrame** aPrevFrame, nsFrameItems& aLetterFrames, bool* aStopLooking);
-||||||| merged common ancestors
-  void WrapFramesInFirstLetterFrame(nsContainerFrame*  aBlockFrame,
-                                    nsContainerFrame*  aBlockContinuation,
-                                    nsContainerFrame*  aParentFrame,
-                                    nsIFrame*          aParentFrameList,
-                                    nsContainerFrame** aModifiedParent,
-                                    nsIFrame**         aTextFrame,
-                                    nsIFrame**         aPrevFrame,
-                                    nsFrameItems&      aLetterFrames,
-                                    bool*              aStopLooking);
-=======
   void WrapFramesInFirstLetterFrame(
       nsContainerFrame* aBlockFrame, nsContainerFrame* aBlockContinuation,
       nsContainerFrame* aParentFrame, nsIFrame* aParentFrameList,
       nsContainerFrame** aModifiedParent, nsIFrame** aTextFrame,
       nsIFrame** aPrevFrame, nsFrameList& aLetterFrames, bool* aStopLooking);
->>>>>>> upstream-releases
 
   void RecoverLetterFrames(nsContainerFrame* aBlockFrame);
 
-<<<<<<< HEAD
-  void RemoveLetterFrames(nsIPresShell* aPresShell,
-                          nsContainerFrame* aBlockFrame);
-||||||| merged common ancestors
-  //
-  void RemoveLetterFrames(nsIPresShell*     aPresShell,
-                          nsContainerFrame* aBlockFrame);
-=======
   void RemoveLetterFrames(PresShell* aPresShell, nsContainerFrame* aBlockFrame);
->>>>>>> upstream-releases
 
   // Recursive helper for RemoveLetterFrames
-<<<<<<< HEAD
-  void RemoveFirstLetterFrames(nsIPresShell* aPresShell,
-                               nsContainerFrame* aFrame,
-||||||| merged common ancestors
-  void RemoveFirstLetterFrames(nsIPresShell*     aPresShell,
-                               nsContainerFrame* aFrame,
-=======
   void RemoveFirstLetterFrames(PresShell* aPresShell, nsContainerFrame* aFrame,
->>>>>>> upstream-releases
                                nsContainerFrame* aBlockFrame,
                                bool* aStopLooking);
 
   // Special remove method for those pesky floating first-letter frames
-<<<<<<< HEAD
-  void RemoveFloatingFirstLetterFrames(nsIPresShell* aPresShell,
-                                       nsIFrame* aBlockFrame);
-||||||| merged common ancestors
-  void RemoveFloatingFirstLetterFrames(nsIPresShell*    aPresShell,
-                                       nsIFrame*        aBlockFrame);
-=======
   void RemoveFloatingFirstLetterFrames(PresShell* aPresShell,
                                        nsIFrame* aBlockFrame);
->>>>>>> upstream-releases
 
   // Capture state for the frame tree rooted at the frame associated with the
   // content object, aContent
@@ -2730,39 +1999,17 @@ private:
   // After this call, aFrameList holds the frames that need to become kids of
   // the block (possibly including line frames).
   void WrapFramesInFirstLineFrame(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                                  nsIContent* aBlockContent,
-                                  nsContainerFrame* aBlockFrame,
-                                  nsFirstLineFrame* aLineFrame,
-                                  nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                                  nsIContent*              aBlockContent,
-                                  nsContainerFrame*        aBlockFrame,
-                                  nsFirstLineFrame*        aLineFrame,
-                                  nsFrameItems&            aFrameItems);
-=======
                                   nsIContent* aBlockContent,
                                   nsContainerFrame* aBlockFrame,
                                   nsFirstLineFrame* aLineFrame,
                                   nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   // Handle the case when a block with first-line style is appended to (by
   // possibly calling WrapFramesInFirstLineFrame as needed).
   void AppendFirstLineFrames(nsFrameConstructorState& aState,
-<<<<<<< HEAD
-                             nsIContent* aContent,
-                             nsContainerFrame* aBlockFrame,
-                             nsFrameItems& aFrameItems);
-||||||| merged common ancestors
-                             nsIContent*              aContent,
-                             nsContainerFrame*        aBlockFrame,
-                             nsFrameItems&            aFrameItems);
-=======
                              nsIContent* aContent,
                              nsContainerFrame* aBlockFrame,
                              nsFrameList& aFrameList);
->>>>>>> upstream-releases
 
   /**
    * When aFrameList is being inserted into aParentFrame, and aParentFrame has
@@ -2865,21 +2112,10 @@ private:
 
   void ConstructAnonymousContentForCanvas(nsFrameConstructorState& aState,
                                           nsIFrame* aFrame,
-<<<<<<< HEAD
-                                          nsIContent* aDocElement);
-
- public:
-||||||| merged common ancestors
-                                          nsIContent* aDocElement);
-
-public:
-
-=======
                                           nsIContent* aDocElement,
                                           nsFrameList&);
 
  public:
->>>>>>> upstream-releases
   friend class nsFrameConstructorState;
 
  private:
@@ -2888,13 +2124,7 @@ public:
   void* AllocateFCItem();
   void FreeFCItem(FrameConstructionItem*);
 
-<<<<<<< HEAD
-  nsIDocument* mDocument;  // Weak ref
-||||||| merged common ancestors
-  nsIDocument*        mDocument;  // Weak ref
-=======
   mozilla::dom::Document* mDocument;  // Weak ref
->>>>>>> upstream-releases
 
   // See the comment at the start of ConstructRootFrame for more details
   // about the following frames.
@@ -2905,16 +2135,8 @@ public:
   nsIFrame* mRootElementStyleFrame;
   // This is the containing block that contains the root element ---
   // the real "initial containing block" according to CSS 2.1.
-<<<<<<< HEAD
-  nsContainerFrame* mDocElementContainingBlock;
-  nsIFrame* mPageSequenceFrame;
-||||||| merged common ancestors
-  nsContainerFrame*   mDocElementContainingBlock;
-  nsIFrame*           mPageSequenceFrame;
-=======
   nsContainerFrame* mDocElementContainingBlock;
   nsPageSequenceFrame* mPageSequenceFrame;
->>>>>>> upstream-releases
 
   // FrameConstructionItem arena + list of freed items available for re-use.
   mozilla::ArenaAllocator<4096, 8> mFCItemPool;

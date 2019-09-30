@@ -16,23 +16,10 @@
 #include "mozilla/Attributes.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-// XPerf-backed probes
-#include "mozilla/perfprobe.h"
-#include "nsAutoPtr.h"
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-//XPerf-backed probes
-#include "mozilla/perfprobe.h"
-#include "nsAutoPtr.h"
-#endif //defined(XP_WIN)
-
-=======
 // XPerf-backed probes
 #  include "mozilla/perfprobe.h"
 #  include "nsAutoPtr.h"
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
 // {7DD4D320-C84B-4624-8D45-7BB9B2356977}
 #define NS_TOOLKIT_APPSTARTUP_CID                    \
@@ -64,7 +51,6 @@ class nsAppStartup final : public nsIAppStartup,
 
   nsCOMPtr<nsIAppShell> mAppShell;
 
-<<<<<<< HEAD
   int32_t mConsiderQuitStopper;  // if > 0, Quit(eConsiderQuit) fails
   bool mRunning;                 // Have we started the main event loop?
   bool mShuttingDown;            // Quit method reentrancy check
@@ -75,30 +61,6 @@ class nsAppStartup final : public nsIAppStartup,
   bool mIsSafeModeNecessary;        // Whether safe mode is necessary
   bool mStartupCrashTrackingEnded;  // Whether startup crash tracking has
                                     // already ended
-  bool mRestartNotSameProfile;      // Quit(eRestartNotSameProfile)
-||||||| merged common ancestors
-  int32_t      mConsiderQuitStopper; // if > 0, Quit(eConsiderQuit) fails
-  bool mRunning;        // Have we started the main event loop?
-  bool mShuttingDown;   // Quit method reentrancy check
-  bool mStartingUp;     // Have we passed final-ui-startup?
-  bool mAttemptingQuit; // Quit(eAttemptQuit) still trying
-  bool mRestart;        // Quit(eRestart)
-  bool mInterrupted;    // Was startup interrupted by an interactive prompt?
-  bool mIsSafeModeNecessary;       // Whether safe mode is necessary
-  bool mStartupCrashTrackingEnded; // Whether startup crash tracking has already ended
-  bool mRestartNotSameProfile;     // Quit(eRestartNotSameProfile)
-=======
-  int32_t mConsiderQuitStopper;  // if > 0, Quit(eConsiderQuit) fails
-  bool mRunning;                 // Have we started the main event loop?
-  bool mShuttingDown;            // Quit method reentrancy check
-  bool mStartingUp;              // Have we passed final-ui-startup?
-  bool mAttemptingQuit;          // Quit(eAttemptQuit) still trying
-  bool mRestart;                 // Quit(eRestart)
-  bool mInterrupted;  // Was startup interrupted by an interactive prompt?
-  bool mIsSafeModeNecessary;        // Whether safe mode is necessary
-  bool mStartupCrashTrackingEnded;  // Whether startup crash tracking has
-                                    // already ended
->>>>>>> upstream-releases
 
 #if defined(XP_WIN)
   // Interaction with OS-provided profiling probes

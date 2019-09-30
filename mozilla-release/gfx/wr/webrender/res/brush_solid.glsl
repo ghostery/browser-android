@@ -36,17 +36,9 @@ void brush_vs(
     vec4 unused
 ) {
     SolidBrush prim = fetch_solid_primitive(prim_address);
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/brush_solid.glsl
-
-    float opacity = float(user_data.x) / 65535.0;
-    vColor = prim.color * opacity;
-||||||| merged common ancestors
-    vColor = prim.color;
-=======
 
     float opacity = float(prim_user_data.x) / 65535.0;
     vColor = prim.color * opacity;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/brush_solid.glsl
 
 #ifdef WR_FEATURE_ALPHA_PASS
     vLocalPos = vi.local_pos;

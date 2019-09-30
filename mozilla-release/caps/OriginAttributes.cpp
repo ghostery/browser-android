@@ -37,18 +37,8 @@ void OriginAttributes::InitPrefs() {
   }
 }
 
-<<<<<<< HEAD
-void OriginAttributes::SetFirstPartyDomain(const bool aIsTopLevelDocument,
-                                           nsIURI* aURI) {
-||||||| merged common ancestors
-void
-OriginAttributes::SetFirstPartyDomain(const bool aIsTopLevelDocument,
-                                      nsIURI* aURI)
-{
-=======
 void OriginAttributes::SetFirstPartyDomain(const bool aIsTopLevelDocument,
                                            nsIURI* aURI, bool aForced) {
->>>>>>> upstream-releases
   bool isFirstPartyEnabled = IsFirstPartyEnabled();
 
   // If the prefs are off or this is not a top level load, bail out.
@@ -211,34 +201,7 @@ class MOZ_STACK_CLASS PopulateFromSuffixIterator final
   }
 
   bool URLParamsIterator(const nsAString& aName,
-<<<<<<< HEAD
                          const nsAString& aValue) override {
-    if (aName.EqualsLiteral("appId")) {
-      nsresult rv;
-      int64_t val = aValue.ToInteger64(&rv);
-      NS_ENSURE_SUCCESS(rv, false);
-      NS_ENSURE_TRUE(val <= UINT32_MAX, false);
-      mOriginAttributes->mAppId = static_cast<uint32_t>(val);
-
-      return true;
-    }
-
-||||||| merged common ancestors
-                         const nsAString& aValue) override
-  {
-    if (aName.EqualsLiteral("appId")) {
-      nsresult rv;
-      int64_t val  = aValue.ToInteger64(&rv);
-      NS_ENSURE_SUCCESS(rv, false);
-      NS_ENSURE_TRUE(val <= UINT32_MAX, false);
-      mOriginAttributes->mAppId = static_cast<uint32_t>(val);
-
-      return true;
-    }
-
-=======
-                         const nsAString& aValue) override {
->>>>>>> upstream-releases
     if (aName.EqualsLiteral("inBrowser")) {
       if (!aValue.EqualsLiteral("1")) {
         return false;

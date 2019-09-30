@@ -46,25 +46,11 @@ JSObject* DocumentTimeline::WrapObject(JSContext* aCx,
   return DocumentTimeline_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DocumentTimeline> DocumentTimeline::Constructor(
-    const GlobalObject& aGlobal, const DocumentTimelineOptions& aOptions,
-    ErrorResult& aRv) {
-  nsIDocument* doc = AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
-||||||| merged common ancestors
-/* static */ already_AddRefed<DocumentTimeline>
-DocumentTimeline::Constructor(const GlobalObject& aGlobal,
-                              const DocumentTimelineOptions& aOptions,
-                              ErrorResult& aRv)
-{
-  nsIDocument* doc = AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
-=======
 /* static */
 already_AddRefed<DocumentTimeline> DocumentTimeline::Constructor(
     const GlobalObject& aGlobal, const DocumentTimelineOptions& aOptions,
     ErrorResult& aRv) {
   Document* doc = AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
->>>>>>> upstream-releases
   if (!doc) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -201,29 +187,7 @@ void DocumentTimeline::MostRecentRefreshTimeUpdated() {
   }
 }
 
-<<<<<<< HEAD
 void DocumentTimeline::WillRefresh(mozilla::TimeStamp aTime) {
-  // https://drafts.csswg.org/web-animations-1/#update-animations-and-send-events,
-  // step2.
-  // Note that this should be done before nsAutoAnimationMutationBatch which is
-  // inside MostRecentRefreshTimeUpdated().  If PerformMicroTaskCheckpoint was
-  // called before nsAutoAnimationMutationBatch is destroyed, some mutation
-  // records might not be delivered in this checkpoint.
-  nsAutoMicroTask mt;
-||||||| merged common ancestors
-void
-DocumentTimeline::WillRefresh(mozilla::TimeStamp aTime)
-{
-  // https://drafts.csswg.org/web-animations-1/#update-animations-and-send-events,
-  // step2.
-  // Note that this should be done before nsAutoAnimationMutationBatch which is
-  // inside MostRecentRefreshTimeUpdated().  If PerformMicroTaskCheckpoint was
-  // called before nsAutoAnimationMutationBatch is destroyed, some mutation
-  // records might not be delivered in this checkpoint.
-  nsAutoMicroTask mt;
-=======
-void DocumentTimeline::WillRefresh(mozilla::TimeStamp aTime) {
->>>>>>> upstream-releases
   MostRecentRefreshTimeUpdated();
 }
 

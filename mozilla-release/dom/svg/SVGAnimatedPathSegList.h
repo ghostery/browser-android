@@ -20,14 +20,8 @@ class SMILValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD
-}  // namespace dom
-||||||| merged common ancestors
-} // namespace dom
-=======
 class SVGElement;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * Class SVGAnimatedPathSegList
@@ -49,16 +43,8 @@ class SVGAnimatedPathSegList final {
   friend class DOMSVGPathSeg;
   friend class DOMSVGPathSegList;
 
-<<<<<<< HEAD
- public:
-  SVGAnimatedPathSegList() {}
-||||||| merged common ancestors
-public:
-  SVGAnimatedPathSegList() {}
-=======
  public:
   SVGAnimatedPathSegList() = default;
->>>>>>> upstream-releases
 
   /**
    * Because it's so important that mBaseVal and its DOMSVGPathSegList wrapper
@@ -79,23 +65,10 @@ public:
     return mAnimVal ? *mAnimVal : mBaseVal;
   }
 
-<<<<<<< HEAD
-  nsresult SetAnimValue(const SVGPathData& aValue, nsSVGElement* aElement);
-||||||| merged common ancestors
-  nsresult SetAnimValue(const SVGPathData& aValue,
-                        nsSVGElement *aElement);
-=======
   nsresult SetAnimValue(const SVGPathData& aNewAnimValue,
                         dom::SVGElement* aElement);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ClearAnimValue(nsSVGElement* aElement);
-||||||| merged common ancestors
-  void ClearAnimValue(nsSVGElement *aElement);
-=======
   void ClearAnimValue(dom::SVGElement* aElement);
->>>>>>> upstream-releases
 
   /**
    * Empty paths are not rendered.
@@ -124,54 +97,15 @@ public:
   SVGPathData mBaseVal;
   nsAutoPtr<SVGPathData> mAnimVal;
 
-<<<<<<< HEAD
-  struct SMILAnimatedPathSegList : public nsISMILAttr {
-   public:
-||||||| merged common ancestors
-  struct SMILAnimatedPathSegList : public nsISMILAttr
-  {
-  public:
-=======
   struct SMILAnimatedPathSegList : public SMILAttr {
    public:
->>>>>>> upstream-releases
     SMILAnimatedPathSegList(SVGAnimatedPathSegList* aVal,
-<<<<<<< HEAD
-                            nsSVGElement* aElement)
-        : mVal(aVal), mElement(aElement) {}
-||||||| merged common ancestors
-                            nsSVGElement* aElement)
-      : mVal(aVal)
-      , mElement(aElement)
-    {}
-=======
                             dom::SVGElement* aElement)
         : mVal(aVal), mElement(aElement) {}
->>>>>>> upstream-releases
 
     // These will stay alive because a SMILAttr only lives as long
     // as the Compositing step, and DOM elements don't get a chance to
     // die during that.
-<<<<<<< HEAD
-    SVGAnimatedPathSegList* mVal;
-    nsSVGElement* mElement;
-
-    // nsISMILAttr methods
-    virtual nsresult ValueFromString(
-        const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
-        nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
-    virtual nsSMILValue GetBaseValue() const override;
-||||||| merged common ancestors
-    SVGAnimatedPathSegList *mVal;
-    nsSVGElement *mElement;
-
-    // nsISMILAttr methods
-    virtual nsresult ValueFromString(const nsAString& aStr,
-                                     const dom::SVGAnimationElement* aSrcElement,
-                                     nsSMILValue& aValue,
-                                     bool& aPreventCachingOfSandwich) const override;
-    virtual nsSMILValue GetBaseValue() const override;
-=======
     SVGAnimatedPathSegList* mVal;
     dom::SVGElement* mElement;
 
@@ -180,7 +114,6 @@ public:
         const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
         SMILValue& aValue, bool& aPreventCachingOfSandwich) const override;
     virtual SMILValue GetBaseValue() const override;
->>>>>>> upstream-releases
     virtual void ClearAnimValue() override;
     virtual nsresult SetAnimValue(const SMILValue& aValue) override;
   };

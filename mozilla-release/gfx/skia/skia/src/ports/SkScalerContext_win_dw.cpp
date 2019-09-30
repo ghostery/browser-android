@@ -429,16 +429,8 @@ bool SkScalerContext_DW::generateAdvance(SkGlyph* glyph) {
     if (DWRITE_MEASURING_MODE_GDI_CLASSIC == fMeasuringMode ||
         DWRITE_MEASURING_MODE_GDI_NATURAL == fMeasuringMode)
     {
-<<<<<<< HEAD
-        SkAutoExclusive l(DWriteFactoryMutex);
-        HRBM(this->getDWriteTypeface()->fDWriteFontFace->GetGdiCompatibleGlyphMetrics(
-||||||| merged common ancestors
-        SkAutoExclusive l(DWriteFactoryMutex);
-        HRVM(this->getDWriteTypeface()->fDWriteFontFace->GetGdiCompatibleGlyphMetrics(
-=======
         MaybeExclusive l(this);
         HRBM(this->getDWriteTypeface()->fDWriteFontFace->GetGdiCompatibleGlyphMetrics(
->>>>>>> upstream-releases
                  fTextSizeMeasure,
                  1.0f, // pixelsPerDip
                  // This parameter does not act like the lpmat2 parameter to GetGlyphOutlineW.
@@ -449,16 +441,8 @@ bool SkScalerContext_DW::generateAdvance(SkGlyph* glyph) {
                  &gm),
              "Could not get gdi compatible glyph metrics.");
     } else {
-<<<<<<< HEAD
-        SkAutoExclusive l(DWriteFactoryMutex);
-        HRBM(this->getDWriteTypeface()->fDWriteFontFace->GetDesignGlyphMetrics(&glyphId, 1, &gm),
-||||||| merged common ancestors
-        SkAutoExclusive l(DWriteFactoryMutex);
-        HRVM(this->getDWriteTypeface()->fDWriteFontFace->GetDesignGlyphMetrics(&glyphId, 1, &gm),
-=======
         MaybeExclusive l(this);
         HRBM(this->getDWriteTypeface()->fDWriteFontFace->GetDesignGlyphMetrics(&glyphId, 1, &gm),
->>>>>>> upstream-releases
              "Could not get design metrics.");
     }
 
@@ -620,123 +604,6 @@ bool SkScalerContext_DW::getColorGlyphRun(const SkGlyph& glyph,
     return true;
 }
 
-<<<<<<< HEAD
-void SkScalerContext_DW::generateColorMetrics(SkGlyph* glyph) {
-    SkTScopedComPtr<IDWriteColorGlyphRunEnumerator> colorLayers;
-    HRVM(getColorGlyphRun(*glyph, &colorLayers), "Could not get color glyph run");
-    SkASSERT(colorLayers.get());
-
-    SkRect bounds = SkRect::MakeEmpty();
-    BOOL hasNextRun = FALSE;
-    while (SUCCEEDED(colorLayers->MoveNext(&hasNextRun)) && hasNextRun) {
-        const DWRITE_COLOR_GLYPH_RUN* colorGlyph;
-        HRVM(colorLayers->GetCurrentRun(&colorGlyph), "Could not get current color glyph run");
-
-        SkPath path;
-        SkTScopedComPtr<IDWriteGeometrySink> geometryToPath;
-        HRVM(SkDWriteGeometrySink::Create(&path, &geometryToPath),
-            "Could not create geometry to path converter.");
-        {
-            SkAutoExclusive l(DWriteFactoryMutex);
-            HRVM(colorGlyph->glyphRun.fontFace->GetGlyphRunOutline(
-                    colorGlyph->glyphRun.fontEmSize,
-                    colorGlyph->glyphRun.glyphIndices,
-                    colorGlyph->glyphRun.glyphAdvances,
-                    colorGlyph->glyphRun.glyphOffsets,
-                    colorGlyph->glyphRun.glyphCount,
-                    colorGlyph->glyphRun.isSideways,
-                    colorGlyph->glyphRun.bidiLevel % 2, //rtl
-                    geometryToPath.get()),
-                "Could not create glyph outline.");
-        }
-        bounds.join(path.getBounds());
-    }
-    SkMatrix matrix = fSkXform;
-    if (this->isSubpixel()) {
-        matrix.postTranslate(SkFixedToScalar(glyph->getSubXFixed()),
-                             SkFixedToScalar(glyph->getSubYFixed()));
-    }
-    matrix.mapRect(&bounds);
-    // Round float bound values into integer.
-    SkIRect ibounds = bounds.roundOut();
-
-    glyph->fWidth = ibounds.fRight - ibounds.fLeft;
-    glyph->fHeight = ibounds.fBottom - ibounds.fTop;
-    glyph->fLeft = ibounds.fLeft;
-    glyph->fTop = ibounds.fTop;
-}
-
-#ifdef USE_PNG
-namespace {
-struct Context {
-    SkTScopedComPtr<IDWriteFontFace4> fontFace4;
-    void* glyphDataContext;
-    Context(IDWriteFontFace4* face4, void* context)
-        : fontFace4(SkRefComPtr(face4))
-        , glyphDataContext(context)
-    {}
-};
-
-static void ReleaseProc(const void* ptr, void* context) {
-    Context* ctx = (Context*)context;
-    ctx->fontFace4->ReleaseGlyphImageData(ctx->glyphDataContext);
-    delete ctx;
-}
-}
-
-void SkScalerContext_DW::generatePngMetrics(SkGlyph* glyph) {
-    SkASSERT(isPngGlyph(*glyph));
-    SkASSERT(glyph->fMaskFormat == SkMask::Format::kARGB32_Format);
-    SkASSERT(this->getDWriteTypeface()->fDWriteFontFace4);
-
-    IDWriteFontFace4* fontFace4 = this->getDWriteTypeface()->fDWriteFontFace4.get();
-    DWRITE_GLYPH_IMAGE_DATA glyphData;
-    void* glyphDataContext;
-    HRVM(fontFace4->GetGlyphImageData(glyph->getGlyphID(),
-                                      fTextSizeRender,
-                                      DWRITE_GLYPH_IMAGE_FORMATS_PNG,
-                                      &glyphData,
-                                      &glyphDataContext),
-         "Glyph image data could not be acquired.");
-
-    Context* context = new Context(fontFace4, glyphDataContext);
-    sk_sp<SkData> data = SkData::MakeWithProc(glyphData.imageData,
-                                              glyphData.imageDataSize,
-                                              &ReleaseProc,
-                                              context);
-
-    std::unique_ptr<SkCodec> codec = SkCodec::MakeFromData(std::move(data));
-    if (!codec) {
-        return;
-    }
-
-    SkImageInfo info = codec->getInfo();
-    SkRect bounds = SkRect::MakeLTRB(SkIntToScalar(info.bounds().fLeft),
-                                     SkIntToScalar(info.bounds().fTop),
-                                     SkIntToScalar(info.bounds().fRight),
-                                     SkIntToScalar(info.bounds().fBottom));
-
-    SkMatrix matrix = fSkXform;
-    SkScalar scale = fTextSizeRender / glyphData.pixelsPerEm;
-    matrix.preScale(scale, scale);
-    matrix.preTranslate(-glyphData.horizontalLeftOrigin.x, -glyphData.horizontalLeftOrigin.y);
-    if (this->isSubpixel()) {
-        matrix.postTranslate(SkFixedToScalar(glyph->getSubXFixed()),
-                             SkFixedToScalar(glyph->getSubYFixed()));
-    }
-    matrix.mapRect(&bounds);
-    bounds.roundOut();
-
-    glyph->fWidth = bounds.width();
-    glyph->fHeight = bounds.height();
-    glyph->fLeft = bounds.left();
-    glyph->fTop = bounds.top();
-    return;
-}
-#endif
-
-||||||| merged common ancestors
-=======
 void SkScalerContext_DW::generateColorMetrics(SkGlyph* glyph) {
     SkTScopedComPtr<IDWriteColorGlyphRunEnumerator> colorLayers;
     HRVM(getColorGlyphRun(*glyph, &colorLayers), "Could not get color glyph run");
@@ -851,7 +718,6 @@ void SkScalerContext_DW::generatePngMetrics(SkGlyph* glyph) {
 }
 #endif
 
->>>>>>> upstream-releases
 void SkScalerContext_DW::generateMetrics(SkGlyph* glyph) {
     glyph->fWidth = 0;
     glyph->fHeight = 0;

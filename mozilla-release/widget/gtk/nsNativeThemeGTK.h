@@ -30,37 +30,6 @@ class nsNativeThemeGTK final : private nsNativeTheme,
                                   const nsRect& aRect,
                                   const nsRect& aDirtyRect) override;
 
-<<<<<<< HEAD
-  bool CreateWebRenderCommandsForWidget(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsIFrame* aFrame,
-      StyleAppearance aAppearance, const nsRect& aRect) override;
-
-  MOZ_MUST_USE LayoutDeviceIntMargin
-  GetWidgetBorder(nsDeviceContext* aContext, nsIFrame* aFrame,
-                  StyleAppearance aAppearance) override;
-
-  bool GetWidgetPadding(nsDeviceContext* aContext, nsIFrame* aFrame,
-                        StyleAppearance aAppearance,
-||||||| merged common ancestors
-  bool CreateWebRenderCommandsForWidget(mozilla::wr::DisplayListBuilder& aBuilder,
-                                        mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                        const mozilla::layers::StackingContextHelper& aSc,
-                                        mozilla::layers::WebRenderLayerManager* aManager,
-                                        nsIFrame* aFrame,
-                                        WidgetType aWidgetType,
-                                        const nsRect& aRect) override;
-
-  MOZ_MUST_USE LayoutDeviceIntMargin GetWidgetBorder(nsDeviceContext* aContext,
-                                                     nsIFrame* aFrame,
-                                                     WidgetType aWidgetType) override;
-
-  bool GetWidgetPadding(nsDeviceContext* aContext,
-                        nsIFrame* aFrame,
-                        WidgetType aWidgetType,
-=======
   bool CreateWebRenderCommandsForWidget(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -74,7 +43,6 @@ class nsNativeThemeGTK final : private nsNativeTheme,
 
   bool GetWidgetPadding(nsDeviceContext* aContext, nsIFrame* aFrame,
                         StyleAppearance aAppearance,
->>>>>>> upstream-releases
                         LayoutDeviceIntMargin* aResult) override;
 
   virtual bool GetWidgetOverflow(nsDeviceContext* aContext, nsIFrame* aFrame,

@@ -1,13 +1,6 @@
 use base64;
 use crate::logging;
 use hyper::Method;
-<<<<<<< HEAD
-use regex::Captures;
-||||||| merged common ancestors
-use logging;
-use regex::Captures;
-=======
->>>>>>> upstream-releases
 use serde::de::{self, Deserialize, Deserializer};
 use serde_json::{self, Value};
 use std::env;

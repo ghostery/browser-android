@@ -2,13 +2,8 @@ from __future__ import absolute_import, unicode_literals
 from six import reraise
 
 import os
-<<<<<<< HEAD
-import sys
-||||||| merged common ancestors
-=======
 import requests
 import sys
->>>>>>> upstream-releases
 import threading
 import time
 
@@ -18,24 +13,8 @@ import pytest
 from mozprofile import BaseProfile
 from mozrunner.errors import RunnerNotStartedError
 
-<<<<<<< HEAD
 # need this so raptor imports work both from /raptor and via mach
 here = os.path.abspath(os.path.dirname(__file__))
-if os.environ.get('SCRIPTSPATH', None) is not None:
-    # in production it is env SCRIPTS_PATH
-    mozharness_dir = os.environ['SCRIPTSPATH']
-else:
-    # locally it's in source tree
-    mozharness_dir = os.path.join(here, '../../mozharness')
-sys.path.insert(0, mozharness_dir)
-
-from raptor.raptor import Raptor
-||||||| merged common ancestors
-from raptor.raptor import Raptor
-=======
-# need this so raptor imports work both from /raptor and via mach
-here = os.path.abspath(os.path.dirname(__file__))
->>>>>>> upstream-releases
 
 from raptor.raptor import RaptorDesktopFirefox, RaptorDesktopChrome, RaptorAndroid
 

@@ -333,27 +333,10 @@ RefPtr<MediaDataDecoder::DecodePromise> OpusDataDecoder::ProcessDecode(
   buffer.SetLength(frames * channels);
 
   return DecodePromise::CreateAndResolve(
-<<<<<<< HEAD
-      DecodedData{new AudioData(aSample->mOffset, time, duration, frames,
-                                std::move(buffer), mOpusParser->mChannels,
-                                mOpusParser->mRate, mChannelMap)},
-      __func__);
-||||||| merged common ancestors
-    DecodedData{ new AudioData(aSample->mOffset,
-                               time,
-                               duration,
-                               frames,
-                               std::move(buffer),
-                               mOpusParser->mChannels,
-                               mOpusParser->mRate,
-                               mChannelMap) },
-    __func__);
-=======
       DecodedData{new AudioData(aSample->mOffset, time, std::move(buffer),
                                 mOpusParser->mChannels, mOpusParser->mRate,
                                 mChannelMap)},
       __func__);
->>>>>>> upstream-releases
 }
 
 RefPtr<MediaDataDecoder::DecodePromise> OpusDataDecoder::Drain() {

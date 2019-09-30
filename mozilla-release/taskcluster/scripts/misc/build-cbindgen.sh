@@ -2,16 +2,8 @@
 set -x -e -v
 
 # If you update this, make sure to update the minimum version in
-<<<<<<< HEAD
-# build/moz.configure/rust.configure as well.
-CBINDGEN_VERSION=v0.6.7
-||||||| merged common ancestors
-# build/moz.configure/rust.configure and python/mozboot/mozboot/osx.py as well.
-CBINDGEN_VERSION=v0.6.4
-=======
 # build/moz.configure/bindgen.configure as well.
 CBINDGEN_REVISION=e19526e00b3fe6921b881682147a1fe5d6b64124 # v0.9.0
->>>>>>> upstream-releases
 TARGET="$1"
 
 case "$(uname -s)" in
@@ -40,28 +32,6 @@ cd $WORKSPACE/build/src
 
 . taskcluster/scripts/misc/tooltool-download.sh
 
-<<<<<<< HEAD
-# OSX cross builds are a bit harder
-if [ "$TARGET" == "x86_64-apple-darwin" ]; then
-  export PATH="$PWD/llvm-dsymutil/bin:$PATH"
-  export PATH="$PWD/cctools/bin:$PATH"
-  cat >cross-linker <<EOF
-exec $PWD/clang/bin/clang -v \
-  -fuse-ld=$PWD/cctools/bin/x86_64-apple-darwin11-ld \
-  -mmacosx-version-min=10.11 \
-  -target $TARGET \
-  -B $PWD/cctools/bin \
-  -isysroot $PWD/MacOSX10.11.sdk \
-  "\$@"
-EOF
-  chmod +x cross-linker
-  export RUSTFLAGS="-C linker=$PWD/cross-linker"
-fi
-
-export PATH="$PWD/rustc/bin:$PATH"
-||||||| merged common ancestors
-PATH="$PWD/rustc/bin:$PATH"
-=======
 # OSX cross builds are a bit harder
 if [ "$TARGET" == "x86_64-apple-darwin" ]; then
   export PATH="$PWD/llvm-dsymutil/bin:$PATH"
@@ -80,7 +50,6 @@ EOF
 fi
 
 export PATH="$PWD/rustc/bin:$PATH"
->>>>>>> upstream-releases
 
 # XXX On Windows there's a workspace/builds/src/Cargo.toml from the root of
 # mozilla-central, and cargo complains below if it's not gone...

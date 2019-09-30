@@ -70,17 +70,8 @@ static nsIFrame* CheckForTrailingTextFrameRecursive(nsIFrame* aFrame,
 static nsLineBox* FindContainingLine(nsIFrame* aFrame) {
   while (aFrame && aFrame->IsFrameOfType(nsIFrame::eLineParticipant)) {
     nsIFrame* parent = aFrame->GetParent();
-<<<<<<< HEAD
-    nsBlockFrame* blockParent = nsLayoutUtils::GetAsBlock(parent);
-    if (blockParent) {
-||||||| merged common ancestors
-    nsBlockFrame* blockParent = nsLayoutUtils::GetAsBlock(parent);
-    if (blockParent)
-    {
-=======
     nsBlockFrame* blockParent = do_QueryFrame(parent);
     if (blockParent) {
->>>>>>> upstream-releases
       bool isValid;
       nsBlockInFlowLineIterator iter(blockParent, aFrame, &isValid);
       return isValid ? iter.GetLine().get() : nullptr;
@@ -114,48 +105,6 @@ static void AdjustCaretFrameForLineEnd(nsIFrame** aFrame, int32_t* aOffset) {
 static bool IsBidiUI() { return Preferences::GetBool("bidi.browser.ui"); }
 
 nsCaret::nsCaret()
-<<<<<<< HEAD
-    : mOverrideOffset(0),
-      mBlinkCount(-1),
-      mBlinkRate(0),
-      mHideCount(0),
-      mIsBlinkOn(false),
-      mVisible(false),
-      mReadOnly(false),
-      mShowDuringSelection(false),
-      mIgnoreUserModify(true) {}
-
-nsCaret::~nsCaret() { StopBlinking(); }
-
-nsresult nsCaret::Init(nsIPresShell* inPresShell) {
-  NS_ENSURE_ARG(inPresShell);
-
-  mPresShell =
-      do_GetWeakReference(inPresShell);  // the presshell owns us, so no addref
-||||||| merged common ancestors
-: mOverrideOffset(0)
-, mBlinkCount(-1)
-, mBlinkRate(0)
-, mHideCount(0)
-, mIsBlinkOn(false)
-, mVisible(false)
-, mReadOnly(false)
-, mShowDuringSelection(false)
-, mIgnoreUserModify(true)
-{
-}
-
-nsCaret::~nsCaret()
-{
-  StopBlinking();
-}
-
-nsresult nsCaret::Init(nsIPresShell *inPresShell)
-{
-  NS_ENSURE_ARG(inPresShell);
-
-  mPresShell = do_GetWeakReference(inPresShell);    // the presshell owns us, so no addref
-=======
     : mOverrideOffset(0),
       mBlinkCount(-1),
       mBlinkRate(0),
@@ -173,45 +122,14 @@ nsresult nsCaret::Init(PresShell* aPresShell) {
 
   mPresShell =
       do_GetWeakReference(aPresShell);  // the presshell owns us, so no addref
->>>>>>> upstream-releases
   NS_ASSERTION(mPresShell, "Hey, pres shell should support weak refs");
 
   mShowDuringSelection =
-<<<<<<< HEAD
       LookAndFeel::GetInt(LookAndFeel::eIntID_ShowCaretDuringSelection,
                           mShowDuringSelection ? 1 : 0) != 0;
-
-  // get the selection from the pres shell, and set ourselves up as a selection
-  // listener
-
-  nsCOMPtr<nsISelectionController> selCon = do_QueryReferent(mPresShell);
-  if (!selCon) {
-    return NS_ERROR_FAILURE;
-  }
-||||||| merged common ancestors
-    LookAndFeel::GetInt(LookAndFeel::eIntID_ShowCaretDuringSelection,
-                        mShowDuringSelection ? 1 : 0) != 0;
-
-  // get the selection from the pres shell, and set ourselves up as a selection
-  // listener
-
-  nsCOMPtr<nsISelectionController> selCon = do_QueryReferent(mPresShell);
-  if (!selCon) {
-    return NS_ERROR_FAILURE;
-  }
-=======
-      LookAndFeel::GetInt(LookAndFeel::eIntID_ShowCaretDuringSelection,
-                          mShowDuringSelection ? 1 : 0) != 0;
->>>>>>> upstream-releases
 
   RefPtr<Selection> selection =
-<<<<<<< HEAD
-      selCon->GetSelection(nsISelectionController::SELECTION_NORMAL);
-||||||| merged common ancestors
-    selCon->GetSelection(nsISelectionController::SELECTION_NORMAL);
-=======
       aPresShell->GetSelection(nsISelectionController::SELECTION_NORMAL);
->>>>>>> upstream-releases
   if (!selection) {
     return NS_ERROR_FAILURE;
   }
@@ -314,21 +232,9 @@ void nsCaret::SetCaretReadOnly(bool inMakeReadonly) {
   SchedulePaint();
 }
 
-<<<<<<< HEAD
-/* static */ nsRect nsCaret::GetGeometryForFrame(nsIFrame* aFrame,
-                                                 int32_t aFrameOffset,
-                                                 nscoord* aBidiIndicatorSize) {
-||||||| merged common ancestors
-/* static */ nsRect
-nsCaret::GetGeometryForFrame(nsIFrame* aFrame,
-                             int32_t   aFrameOffset,
-                             nscoord*  aBidiIndicatorSize)
-{
-=======
 /* static */
 nsRect nsCaret::GetGeometryForFrame(nsIFrame* aFrame, int32_t aFrameOffset,
                                     nscoord* aBidiIndicatorSize) {
->>>>>>> upstream-releases
   nsPoint framePos(0, 0);
   nsRect rect;
   nsresult rv = aFrame->GetPointFromOffset(aFrameOffset, &framePos);
@@ -400,15 +306,6 @@ nsRect nsCaret::GetGeometryForFrame(nsIFrame* aFrame, int32_t aFrameOffset,
 
   // Clamp the inline-position to be within our scroll frame. If we don't, then
   // it clips us, and we don't appear at all. See bug 335560.
-<<<<<<< HEAD
-  nsIFrame* scrollFrame =
-      nsLayoutUtils::GetClosestFrameOfType(aFrame, LayoutFrameType::Scroll);
-  if (scrollFrame) {
-||||||| merged common ancestors
-  nsIFrame* scrollFrame =
-    nsLayoutUtils::GetClosestFrameOfType(aFrame, LayoutFrameType::Scroll);
-  if (scrollFrame) {
-=======
 
   // Find the ancestor scroll frame and determine whether we have any transforms
   // up the ancestor chain.
@@ -429,7 +326,6 @@ nsRect nsCaret::GetGeometryForFrame(nsIFrame* aFrame, int32_t aFrameOffset,
   // account. We could change this clamping to take transforms into account, but
   // the clamping seems to be broken anyway; see bug 1539720.
   if (scrollFrame && !hasTransform) {
->>>>>>> upstream-releases
     // First, use the scrollFrame to get at the scrollable view that we're in.
     nsIScrollableFrame* sf = do_QueryFrame(scrollFrame);
     nsIFrame* scrolled = sf->GetScrolledFrame();
@@ -497,17 +393,8 @@ nsIFrame* nsCaret::GetFrameAndOffset(Selection* aSelection,
   return frame;
 }
 
-<<<<<<< HEAD
-/* static */ nsIFrame* nsCaret::GetGeometry(Selection* aSelection,
-                                            nsRect* aRect) {
-||||||| merged common ancestors
-/* static */ nsIFrame*
-nsCaret::GetGeometry(Selection* aSelection, nsRect* aRect)
-{
-=======
 /* static */
 nsIFrame* nsCaret::GetGeometry(Selection* aSelection, nsRect* aRect) {
->>>>>>> upstream-releases
   int32_t frameOffset;
   nsIFrame* frame = GetFrameAndOffset(aSelection, nullptr, 0, &frameOffset);
   if (frame) {
@@ -649,17 +536,8 @@ void nsCaret::PaintCaret(DrawTarget& aDrawTarget, nsIFrame* aForFrame,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCaret::NotifySelectionChanged(nsIDocument*, Selection* aDomSel,
-                                int16_t aReason) {
-||||||| merged common ancestors
-nsCaret::NotifySelectionChanged(nsIDocument *, Selection* aDomSel,
-                                int16_t aReason)
-{
-=======
 nsCaret::NotifySelectionChanged(Document*, Selection* aDomSel,
                                 int16_t aReason) {
->>>>>>> upstream-releases
   // Note that aDomSel, per the comment below may not be the same as our
   // selection, but that's OK since if that is the case, it wouldn't have
   // mattered what IsVisible() returns here, so we just opt for checking
@@ -731,31 +609,6 @@ void nsCaret::StopBlinking() {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsCaret::GetCaretFrameForNodeOffset(
-    nsFrameSelection* aFrameSelection, nsIContent* aContentNode,
-    int32_t aOffset, CaretAssociationHint aFrameHint, nsBidiLevel aBidiLevel,
-    nsIFrame** aReturnFrame, nsIFrame** aReturnUnadjustedFrame,
-    int32_t* aReturnOffset) {
-  if (!aFrameSelection) return NS_ERROR_FAILURE;
-  nsIPresShell* presShell = aFrameSelection->GetShell();
-  if (!presShell) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsresult
-nsCaret::GetCaretFrameForNodeOffset(nsFrameSelection*    aFrameSelection,
-                                    nsIContent*          aContentNode,
-                                    int32_t              aOffset,
-                                    CaretAssociationHint aFrameHint,
-                                    nsBidiLevel          aBidiLevel,
-                                    nsIFrame**           aReturnFrame,
-                                    int32_t*             aReturnOffset)
-{
-  if (!aFrameSelection)
-    return NS_ERROR_FAILURE;
-  nsIPresShell* presShell = aFrameSelection->GetShell();
-  if (!presShell)
-    return NS_ERROR_FAILURE;
-=======
 nsresult nsCaret::GetCaretFrameForNodeOffset(
     nsFrameSelection* aFrameSelection, nsIContent* aContentNode,
     int32_t aOffset, CaretAssociationHint aFrameHint, nsBidiLevel aBidiLevel,
@@ -766,7 +619,6 @@ nsresult nsCaret::GetCaretFrameForNodeOffset(
   if (!presShell) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   if (!aContentNode || !aContentNode->IsInComposedDoc() ||
       presShell->GetDocument() != aContentNode->GetComposedDoc())

@@ -103,36 +103,6 @@ async function test_cookie_settings({
   if (cookiesExpireAfterSession || !cookiesEnabled) {
     expectedCookieCount = 0;
   }
-<<<<<<< HEAD
-  is(Services.cookies.countCookiesFromHost(firstPartyURI.host), expectedCookieCount,
-     "Number of cookies was not what expected after restarting session");
-
-  is(Services.prefs.prefIsLocked("network.cookie.cookieBehavior"), cookieSettingsLocked,
-     "Cookie behavior pref lock status should be what is expected");
-  is(Services.prefs.prefIsLocked("network.cookie.lifetimePolicy"), cookieSettingsLocked,
-     "Cookie lifetime pref lock status should be what is expected");
-
-  let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, "about:preferences");
-  // eslint-disable-next-line no-shadow
-  await ContentTask.spawn(tab.linkedBrowser, {cookiesEnabled, cookieSettingsLocked}, async function({cookiesEnabled, cookieSettingsLocked}) {
-    content.setTimeout(() => {
-      let deleteOnCloseCheckbox = content.document.getElementById("deleteOnClose");
-||||||| merged common ancestors
-  is(Services.cookies.countCookiesFromHost(firstPartyURI.host), expectedCookieCount,
-     "Number of cookies was not what expected after restarting session");
-
-  is(Services.prefs.prefIsLocked("network.cookie.cookieBehavior"), cookieSettingsLocked,
-     "Cookie behavior pref lock status should be what is expected");
-  is(Services.prefs.prefIsLocked("network.cookie.lifetimePolicy"), cookieSettingsLocked,
-     "Cookie lifetime pref lock status should be what is expected");
-
-  let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, "about:preferences");
-  // eslint-disable-next-line no-shadow
-  await ContentTask.spawn(tab.linkedBrowser, {cookiesEnabled, cookieSettingsLocked}, async function({cookiesEnabled, cookieSettingsLocked}) {
-    content.setTimeout(() => {
-      let keepUntilLabel = content.document.getElementById("keepUntil");
-      let keepUntilMenu = content.document.getElementById("keepCookiesUntil");
-=======
   is(
     Services.cookies.countCookiesFromHost(firstPartyURI.host),
     expectedCookieCount,
@@ -168,22 +138,8 @@ async function test_cookie_settings({
         null,
         "deleteOnCloseCheckbox should not be null."
       );
->>>>>>> upstream-releases
 
       let expectControlsDisabled = !cookiesEnabled || cookieSettingsLocked;
-<<<<<<< HEAD
-      is(deleteOnCloseCheckbox.disabled, expectControlsDisabled,
-         "\"Delete cookies when Firefox is closed\" checkbox disabled status should match expected");
-    }, 0);
-  });
-||||||| merged common ancestors
-      is(keepUntilLabel.disabled, expectControlsDisabled,
-         "\"Keep Cookies Until\" Label disabled status should match expected");
-      is(keepUntilMenu.disabled, expectControlsDisabled,
-         "\"Keep Cookies Until\" Menu disabled status should match expected");
-    }, 0);
-  });
-=======
       is(
         deleteOnCloseCheckbox.disabled,
         expectControlsDisabled,
@@ -191,7 +147,6 @@ async function test_cookie_settings({
       );
     }
   );
->>>>>>> upstream-releases
   BrowserTestUtils.removeTab(tab);
 
   if (rejectTrackers) {

@@ -67,25 +67,6 @@
 #endif
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include "mozilla/WindowsVersion.h"
-#include "nsILocalFileWin.h"
-
-#include "windows.h"  // this needs to be before the following includes
-#include "lmcons.h"
-#include "sddl.h"
-#include "wincrypt.h"
-#include "nsIWindowsRegKey.h"
-||||||| merged common ancestors
-#include "mozilla/WindowsVersion.h"
-#include "nsILocalFileWin.h"
-
-#include "windows.h" // this needs to be before the following includes
-#include "lmcons.h"
-#include "sddl.h"
-#include "wincrypt.h"
-#include "nsIWindowsRegKey.h"
-=======
 #  include "mozilla/WindowsVersion.h"
 #  include "nsILocalFileWin.h"
 
@@ -94,7 +75,6 @@
 #  include "sddl.h"
 #  include "wincrypt.h"
 #  include "nsIWindowsRegKey.h"
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla;
@@ -465,211 +445,6 @@ static nsresult AccountHasFamilySafetyEnabled(bool& enabled) {
   enabled = loggingRequired == 1 || webFilterOn == 1;
   return NS_OK;
 }
-<<<<<<< HEAD
-
-nsresult nsNSSComponent::MaybeImportFamilySafetyRoot(
-    PCCERT_CONTEXT certificate, bool& wasFamilySafetyRoot) {
-  MutexAutoLock lock(mMutex);
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return NS_ERROR_NOT_SAME_THREAD;
-  }
-  MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("MaybeImportFamilySafetyRoot"));
-  wasFamilySafetyRoot = false;
-
-  UniqueCERTCertificate nssCertificate(
-      PCCERT_CONTEXTToCERTCertificate(certificate));
-  if (!nssCertificate) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't decode certificate"));
-    return NS_ERROR_FAILURE;
-  }
-  // Looking for a certificate with the common name 'Microsoft Family Safety'
-  UniquePORTString subjectName(CERT_GetCommonName(&nssCertificate->subject));
-  MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-          ("subject name is '%s'", subjectName.get()));
-  if (kMicrosoftFamilySafetyCN.Equals(subjectName.get())) {
-    wasFamilySafetyRoot = true;
-    MOZ_ASSERT(!mFamilySafetyRoot);
-    mFamilySafetyRoot = std::move(nssCertificate);
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("added Family Safety root"));
-  }
-  return NS_OK;
-}
-
-nsresult nsNSSComponent::LoadFamilySafetyRoot() {
-  ScopedCertStore certstore(
-      CertOpenSystemStore(0, kWindowsDefaultRootStoreName));
-  if (!certstore.get()) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("couldn't get certstore '%S'", kWindowsDefaultRootStoreName));
-    return NS_ERROR_FAILURE;
-  }
-  // Any resources held by the certificate are released by the next call to
-  // CertFindCertificateInStore.
-  PCCERT_CONTEXT certificate = nullptr;
-  while ((certificate = CertFindCertificateInStore(
-              certstore.get(), X509_ASN_ENCODING, 0, CERT_FIND_ANY, nullptr,
-              certificate))) {
-    bool wasFamilySafetyRoot = false;
-    nsresult rv = MaybeImportFamilySafetyRoot(certificate, wasFamilySafetyRoot);
-    if (NS_SUCCEEDED(rv) && wasFamilySafetyRoot) {
-      return NS_OK;  // We're done (we're only expecting one root).
-    }
-  }
-  return NS_ERROR_FAILURE;
-}
-#endif  // XP_WIN
-
-void nsNSSComponent::UnloadFamilySafetyRoot() {
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return;
-  }
-  MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("UnloadFamilySafetyRoot"));
-
-  // We can't call ChangeCertTrustWithPossibleAuthentication while holding
-  // mMutex (because it could potentially call back in to nsNSSComponent and
-  // attempt to acquire mMutex), so we move mFamilySafetyRoot out of
-  // nsNSSComponent into a local handle. This has the side-effect of clearing
-  // mFamilySafetyRoot, which is what we want anyway.
-  UniqueCERTCertificate familySafetyRoot;
-  {
-    MutexAutoLock lock(mMutex);
-    if (!mFamilySafetyRoot) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("Family Safety Root wasn't present"));
-      return;
-    }
-    familySafetyRoot = std::move(mFamilySafetyRoot);
-    MOZ_ASSERT(!mFamilySafetyRoot);
-  }
-  MOZ_ASSERT(familySafetyRoot);
-  // It would be intuitive to set the trust to { 0, 0, 0 } here. However, this
-  // doesn't work for temporary certificates because CERT_ChangeCertTrust first
-  // looks up the current trust settings in the permanent cert database, finds
-  // that such trust doesn't exist, considers the current trust to be
-  // { 0, 0, 0 }, and decides that it doesn't need to update the trust since
-  // they're the same. To work around this, we set a non-zero flag to ensure
-  // that the trust will get updated.
-  CERTCertTrust trust = {CERTDB_USER, 0, 0};
-  if (ChangeCertTrustWithPossibleAuthentication(familySafetyRoot, trust,
-                                                nullptr) != SECSuccess) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("couldn't untrust certificate for TLS server auth"));
-  }
-}
-
-// The supported values of this pref are:
-// 0: disable detecting Family Safety mode and importing the root
-// 1: only attempt to detect Family Safety mode (don't import the root)
-// 2: detect Family Safety mode and import the root
-||||||| merged common ancestors
-
-nsresult
-nsNSSComponent::MaybeImportFamilySafetyRoot(PCCERT_CONTEXT certificate,
-                                            bool& wasFamilySafetyRoot)
-{
-  MutexAutoLock lock(mMutex);
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return NS_ERROR_NOT_SAME_THREAD;
-  }
-  MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("MaybeImportFamilySafetyRoot"));
-  wasFamilySafetyRoot = false;
-
-  UniqueCERTCertificate nssCertificate(
-    PCCERT_CONTEXTToCERTCertificate(certificate));
-  if (!nssCertificate) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("couldn't decode certificate"));
-    return NS_ERROR_FAILURE;
-  }
-  // Looking for a certificate with the common name 'Microsoft Family Safety'
-  UniquePORTString subjectName(CERT_GetCommonName(&nssCertificate->subject));
-  MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-          ("subject name is '%s'", subjectName.get()));
-  if (kMicrosoftFamilySafetyCN.Equals(subjectName.get())) {
-    wasFamilySafetyRoot = true;
-    MOZ_ASSERT(!mFamilySafetyRoot);
-    mFamilySafetyRoot = std::move(nssCertificate);
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("added Family Safety root"));
-  }
-  return NS_OK;
-}
-
-nsresult
-nsNSSComponent::LoadFamilySafetyRoot()
-{
-  ScopedCertStore certstore(
-    CertOpenSystemStore(0, kWindowsDefaultRootStoreName));
-  if (!certstore.get()) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("couldn't get certstore '%S'", kWindowsDefaultRootStoreName));
-    return NS_ERROR_FAILURE;
-  }
-  // Any resources held by the certificate are released by the next call to
-  // CertFindCertificateInStore.
-  PCCERT_CONTEXT certificate = nullptr;
-  while ((certificate = CertFindCertificateInStore(certstore.get(),
-                                                   X509_ASN_ENCODING, 0,
-                                                   CERT_FIND_ANY, nullptr,
-                                                   certificate))) {
-    bool wasFamilySafetyRoot = false;
-    nsresult rv = MaybeImportFamilySafetyRoot(certificate,
-                                              wasFamilySafetyRoot);
-    if (NS_SUCCEEDED(rv) && wasFamilySafetyRoot) {
-      return NS_OK; // We're done (we're only expecting one root).
-    }
-  }
-  return NS_ERROR_FAILURE;
-}
-#endif // XP_WIN
-
-void
-nsNSSComponent::UnloadFamilySafetyRoot()
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return;
-  }
-  MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("UnloadFamilySafetyRoot"));
-
-  // We can't call ChangeCertTrustWithPossibleAuthentication while holding
-  // mMutex (because it could potentially call back in to nsNSSComponent and
-  // attempt to acquire mMutex), so we move mFamilySafetyRoot out of
-  // nsNSSComponent into a local handle. This has the side-effect of clearing
-  // mFamilySafetyRoot, which is what we want anyway.
-  UniqueCERTCertificate familySafetyRoot;
-  {
-    MutexAutoLock lock(mMutex);
-    if (!mFamilySafetyRoot) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("Family Safety Root wasn't present"));
-      return;
-    }
-    familySafetyRoot = std::move(mFamilySafetyRoot);
-    MOZ_ASSERT(!mFamilySafetyRoot);
-  }
-  MOZ_ASSERT(familySafetyRoot);
-  // It would be intuitive to set the trust to { 0, 0, 0 } here. However, this
-  // doesn't work for temporary certificates because CERT_ChangeCertTrust first
-  // looks up the current trust settings in the permanent cert database, finds
-  // that such trust doesn't exist, considers the current trust to be
-  // { 0, 0, 0 }, and decides that it doesn't need to update the trust since
-  // they're the same. To work around this, we set a non-zero flag to ensure
-  // that the trust will get updated.
-  CERTCertTrust trust = { CERTDB_USER, 0, 0 };
-  if (ChangeCertTrustWithPossibleAuthentication(familySafetyRoot, trust,
-                                                nullptr) != SECSuccess) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("couldn't untrust certificate for TLS server auth"));
-  }
-}
-
-// The supported values of this pref are:
-// 0: disable detecting Family Safety mode and importing the root
-// 1: only attempt to detect Family Safety mode (don't import the root)
-// 2: detect Family Safety mode and import the root
-=======
 #endif  // XP_WIN
 
 // On Windows 8.1, if the following preference is 2, we will attempt to detect
@@ -678,35 +453,11 @@ nsNSSComponent::UnloadFamilySafetyRoot()
 // and trust third party root certificates from the OS).
 // With any other value of the pref or on any other platform, this does nothing.
 // This preference takes precedence over "security.enterprise_roots.enabled".
->>>>>>> upstream-releases
 const char* kFamilySafetyModePref = "security.family_safety.mode";
 const uint32_t kFamilySafetyModeDefault = 0;
 
-<<<<<<< HEAD
-// The telemetry gathered by this function is as follows:
-// 0-2: the value of the Family Safety mode pref
-// 3: detecting Family Safety mode failed
-// 4: Family Safety was not enabled
-// 5: Family Safety was enabled
-// 6: failed to import the Family Safety root
-// 7: successfully imported the root
-void nsNSSComponent::MaybeEnableFamilySafetyCompatibility(
-    uint32_t familySafetyMode) {
-||||||| merged common ancestors
-// The telemetry gathered by this function is as follows:
-// 0-2: the value of the Family Safety mode pref
-// 3: detecting Family Safety mode failed
-// 4: Family Safety was not enabled
-// 5: Family Safety was enabled
-// 6: failed to import the Family Safety root
-// 7: successfully imported the root
-void
-nsNSSComponent::MaybeEnableFamilySafetyCompatibility(uint32_t familySafetyMode)
-{
-=======
 bool nsNSSComponent::ShouldEnableEnterpriseRootsForFamilySafety(
     uint32_t familySafetyMode) {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   if (!(IsWin8Point1OrLater() && !IsWin10OrLater())) {
     return false;
@@ -719,16 +470,10 @@ bool nsNSSComponent::ShouldEnableEnterpriseRootsForFamilySafety(
   if (NS_FAILED(rv)) {
     return false;
   }
-<<<<<<< HEAD
-#endif  // XP_WIN
-||||||| merged common ancestors
-#endif // XP_WIN
-=======
   return familySafetyEnabled;
 #else
   return false;
 #endif  // XP_WIN
->>>>>>> upstream-releases
 }
 
 void nsNSSComponent::UnloadEnterpriseRoots() {
@@ -742,85 +487,6 @@ void nsNSSComponent::UnloadEnterpriseRoots() {
   setValidationOptions(false, lock);
 }
 
-<<<<<<< HEAD
-  // We can't call ChangeCertTrustWithPossibleAuthentication while holding
-  // mMutex (because it could potentially call back in to nsNSSComponent and
-  // attempt to acquire mMutex), so we move mEnterpriseRoots out of
-  // nsNSSComponent into a local handle. This has the side-effect of clearing
-  // mEnterpriseRoots, which is what we want anyway.
-  UniqueCERTCertList enterpriseRoots;
-  {
-    MutexAutoLock lock(mMutex);
-    if (!mEnterpriseRoots) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("no enterprise roots were present"));
-      return;
-    }
-    enterpriseRoots = std::move(mEnterpriseRoots);
-    MOZ_ASSERT(!mEnterpriseRoots);
-  }
-  MOZ_ASSERT(enterpriseRoots);
-  // It would be intuitive to set the trust to { 0, 0, 0 } here. However, this
-  // doesn't work for temporary certificates because CERT_ChangeCertTrust first
-  // looks up the current trust settings in the permanent cert database, finds
-  // that such trust doesn't exist, considers the current trust to be
-  // { 0, 0, 0 }, and decides that it doesn't need to update the trust since
-  // they're the same. To work around this, we set a non-zero flag to ensure
-  // that the trust will get updated.
-  CERTCertTrust trust = {CERTDB_USER, 0, 0};
-  for (CERTCertListNode* n = CERT_LIST_HEAD(enterpriseRoots.get());
-       !CERT_LIST_END(n, enterpriseRoots.get()); n = CERT_LIST_NEXT(n)) {
-    if (!n) {
-      break;
-    }
-    if (!n->cert) {
-      continue;
-    }
-    UniqueCERTCertificate cert(CERT_DupCertificate(n->cert));
-    if (ChangeCertTrustWithPossibleAuthentication(cert, trust, nullptr) !=
-        SECSuccess) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("couldn't untrust certificate for TLS server auth"));
-||||||| merged common ancestors
-  // We can't call ChangeCertTrustWithPossibleAuthentication while holding
-  // mMutex (because it could potentially call back in to nsNSSComponent and
-  // attempt to acquire mMutex), so we move mEnterpriseRoots out of
-  // nsNSSComponent into a local handle. This has the side-effect of clearing
-  // mEnterpriseRoots, which is what we want anyway.
-  UniqueCERTCertList enterpriseRoots;
-  {
-    MutexAutoLock lock(mMutex);
-    if (!mEnterpriseRoots) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("no enterprise roots were present"));
-      return;
-    }
-    enterpriseRoots = std::move(mEnterpriseRoots);
-    MOZ_ASSERT(!mEnterpriseRoots);
-  }
-  MOZ_ASSERT(enterpriseRoots);
-  // It would be intuitive to set the trust to { 0, 0, 0 } here. However, this
-  // doesn't work for temporary certificates because CERT_ChangeCertTrust first
-  // looks up the current trust settings in the permanent cert database, finds
-  // that such trust doesn't exist, considers the current trust to be
-  // { 0, 0, 0 }, and decides that it doesn't need to update the trust since
-  // they're the same. To work around this, we set a non-zero flag to ensure
-  // that the trust will get updated.
-  CERTCertTrust trust = { CERTDB_USER, 0, 0 };
-  for (CERTCertListNode* n = CERT_LIST_HEAD(enterpriseRoots.get());
-       !CERT_LIST_END(n, enterpriseRoots.get()); n = CERT_LIST_NEXT(n)) {
-    if (!n) {
-      break;
-    }
-    if (!n->cert) {
-      continue;
-    }
-    UniqueCERTCertificate cert(CERT_DupCertificate(n->cert));
-    if (ChangeCertTrustWithPossibleAuthentication(cert, trust, nullptr)
-          != SECSuccess) {
-      MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-              ("couldn't untrust certificate for TLS server auth"));
-=======
 static const char* kEnterpriseRootModePref =
     "security.enterprise_roots.enabled";
 
@@ -842,36 +508,17 @@ class BackgroundImportEnterpriseCertsTask final : public CryptoTask {
     if (observerService) {
       observerService->NotifyObservers(nullptr, "psm:enterprise-certs-imported",
                                        nullptr);
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-static const char* kEnterpriseRootModePref =
-    "security.enterprise_roots.enabled";
-||||||| merged common ancestors
-static const char* kEnterpriseRootModePref = "security.enterprise_roots.enabled";
-=======
   RefPtr<nsNSSComponent> mNSSComponent;
 };
->>>>>>> upstream-releases
 
 void nsNSSComponent::MaybeImportEnterpriseRoots() {
   MOZ_ASSERT(NS_IsMainThread());
   if (!NS_IsMainThread()) {
     return;
   }
-<<<<<<< HEAD
-  bool importEnterpriseRoots =
-      Preferences::GetBool(kEnterpriseRootModePref, false);
-  if (!importEnterpriseRoots) {
-    return;
-||||||| merged common ancestors
-  bool importEnterpriseRoots = Preferences::GetBool(kEnterpriseRootModePref,
-                                                    false);
-  if (!importEnterpriseRoots) {
-    return;
-=======
   bool importEnterpriseRoots =
       Preferences::GetBool(kEnterpriseRootModePref, false);
   uint32_t familySafetyMode =
@@ -885,29 +532,12 @@ void nsNSSComponent::MaybeImportEnterpriseRoots() {
     RefPtr<BackgroundImportEnterpriseCertsTask> task =
         new BackgroundImportEnterpriseCertsTask(this);
     Unused << task->Dispatch();
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void nsNSSComponent::ImportEnterpriseRoots() {
-  UniqueCERTCertList roots;
-  nsresult rv = GatherEnterpriseRoots(roots);
-  if (NS_FAILED(rv)) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("failed gathering enterprise roots"));
-||||||| merged common ancestors
-void
-nsNSSComponent::ImportEnterpriseRoots()
-{
-  UniqueCERTCertList roots;
-  nsresult rv = GatherEnterpriseRoots(roots);
-  if (NS_FAILED(rv)) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("failed gathering enterprise roots"));
-=======
 void nsNSSComponent::ImportEnterpriseRoots() {
   MOZ_ASSERT(!NS_IsMainThread());
   if (NS_IsMainThread()) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -921,83 +551,13 @@ void nsNSSComponent::ImportEnterpriseRoots() {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsNSSComponent::TrustLoaded3rdPartyRoots() {
-  // We can't call ChangeCertTrustWithPossibleAuthentication while holding
-  // mMutex (because it could potentially call back in to nsNSSComponent and
-  // attempt to acquire mMutex), so we copy mEnterpriseRoots.
-  UniqueCERTCertList enterpriseRoots;
-  {
-    MutexAutoLock lock(mMutex);
-    if (mEnterpriseRoots) {
-      enterpriseRoots = nsNSSCertList::DupCertList(mEnterpriseRoots);
-      if (!enterpriseRoots) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
-    }
-||||||| merged common ancestors
-nsresult
-nsNSSComponent::TrustLoaded3rdPartyRoots()
-{
-  // We can't call ChangeCertTrustWithPossibleAuthentication while holding
-  // mMutex (because it could potentially call back in to nsNSSComponent and
-  // attempt to acquire mMutex), so we copy mEnterpriseRoots.
-  UniqueCERTCertList enterpriseRoots;
-  {
-    MutexAutoLock lock(mMutex);
-    if (mEnterpriseRoots) {
-      enterpriseRoots = nsNSSCertList::DupCertList(mEnterpriseRoots);
-      if (!enterpriseRoots) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
-    }
-=======
 nsresult nsNSSComponent::CommonGetEnterpriseCerts(
     nsTArray<nsTArray<uint8_t>>& enterpriseCerts, bool getRoots) {
   nsresult rv = BlockUntilLoadableRootsLoaded();
   if (NS_FAILED(rv)) {
     return rv;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  CERTCertTrust trust = {CERTDB_TRUSTED_CA | CERTDB_VALID_CA | CERTDB_USER, 0,
-                         0};
-  if (enterpriseRoots) {
-    for (CERTCertListNode* n = CERT_LIST_HEAD(enterpriseRoots.get());
-         !CERT_LIST_END(n, enterpriseRoots.get()); n = CERT_LIST_NEXT(n)) {
-      if (!n) {
-        break;
-      }
-      if (!n->cert) {
-        continue;
-      }
-      UniqueCERTCertificate cert(CERT_DupCertificate(n->cert));
-      if (ChangeCertTrustWithPossibleAuthentication(cert, trust, nullptr) !=
-          SECSuccess) {
-        MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-                ("couldn't trust enterprise certificate for TLS server auth"));
-||||||| merged common ancestors
-  CERTCertTrust trust = {
-    CERTDB_TRUSTED_CA | CERTDB_VALID_CA | CERTDB_USER,
-    0,
-    0
-  };
-  if (enterpriseRoots) {
-    for (CERTCertListNode* n = CERT_LIST_HEAD(enterpriseRoots.get());
-         !CERT_LIST_END(n, enterpriseRoots.get()); n = CERT_LIST_NEXT(n)) {
-      if (!n) {
-        break;
-      }
-      if (!n->cert) {
-        continue;
-      }
-      UniqueCERTCertificate cert(CERT_DupCertificate(n->cert));
-      if (ChangeCertTrustWithPossibleAuthentication(cert, trust, nullptr)
-            != SECSuccess) {
-        MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-                ("couldn't trust enterprise certificate for TLS server auth"));
-=======
   MutexAutoLock nsNSSComponentLock(mMutex);
   enterpriseCerts.Clear();
   for (const auto& cert : mEnterpriseCerts) {
@@ -1007,98 +567,25 @@ nsresult nsNSSComponent::CommonGetEnterpriseCerts(
       nsresult rv = cert.CopyBytes(certCopy);
       if (NS_FAILED(rv)) {
         return rv;
->>>>>>> upstream-releases
       }
       if (!enterpriseCerts.AppendElement(std::move(certCopy))) {
         return NS_ERROR_OUT_OF_MEMORY;
       }
     }
   }
-<<<<<<< HEAD
-  if (familySafetyRoot && ChangeCertTrustWithPossibleAuthentication(
-                              familySafetyRoot, trust, nullptr) != SECSuccess) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("couldn't trust family safety certificate for TLS server auth"));
-  }
-#endif
-||||||| merged common ancestors
-  if (familySafetyRoot &&
-      ChangeCertTrustWithPossibleAuthentication(familySafetyRoot, trust,
-                                                nullptr) != SECSuccess) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Debug,
-            ("couldn't trust family safety certificate for TLS server auth"));
-  }
-#endif
-=======
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNSSComponent::GetEnterpriseRoots(nsIX509CertList** enterpriseRoots) {
-  MutexAutoLock nsNSSComponentLock(mMutex);
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return NS_ERROR_NOT_SAME_THREAD;
-  }
-  NS_ENSURE_ARG_POINTER(enterpriseRoots);
-||||||| merged common ancestors
-nsNSSComponent::GetEnterpriseRoots(nsIX509CertList** enterpriseRoots)
-{
-  MutexAutoLock nsNSSComponentLock(mMutex);
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return NS_ERROR_NOT_SAME_THREAD;
-  }
-  NS_ENSURE_ARG_POINTER(enterpriseRoots);
-=======
 nsNSSComponent::GetEnterpriseRoots(
     nsTArray<nsTArray<uint8_t>>& enterpriseRoots) {
   return CommonGetEnterpriseCerts(enterpriseRoots, true);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!mEnterpriseRoots) {
-    *enterpriseRoots = nullptr;
-    return NS_OK;
-  }
-  UniqueCERTCertList enterpriseRootsCopy(
-      nsNSSCertList::DupCertList(mEnterpriseRoots));
-  if (!enterpriseRootsCopy) {
-    return NS_ERROR_FAILURE;
-  }
-  nsCOMPtr<nsIX509CertList> enterpriseRootsCertList(
-      new nsNSSCertList(std::move(enterpriseRootsCopy)));
-  if (!enterpriseRootsCertList) {
-    return NS_ERROR_FAILURE;
-  }
-  enterpriseRootsCertList.forget(enterpriseRoots);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!mEnterpriseRoots) {
-    *enterpriseRoots = nullptr;
-    return NS_OK;
-  }
-  UniqueCERTCertList enterpriseRootsCopy(
-    nsNSSCertList::DupCertList(mEnterpriseRoots));
-  if (!enterpriseRootsCopy) {
-    return NS_ERROR_FAILURE;
-  }
-  nsCOMPtr<nsIX509CertList> enterpriseRootsCertList(
-    new nsNSSCertList(std::move(enterpriseRootsCopy)));
-  if (!enterpriseRootsCertList) {
-    return NS_ERROR_FAILURE;
-  }
-  enterpriseRootsCertList.forget(enterpriseRoots);
-  return NS_OK;
-=======
 NS_IMETHODIMP
 nsNSSComponent::GetEnterpriseIntermediates(
     nsTArray<nsTArray<uint8_t>>& enterpriseIntermediates) {
   return CommonGetEnterpriseCerts(enterpriseIntermediates, false);
->>>>>>> upstream-releases
 }
 
 class LoadLoadableRootsTask final : public Runnable {
@@ -1128,24 +615,6 @@ class LoadLoadableRootsTask final : public Runnable {
   Vector<nsCString> mPossibleLoadableRootsLocations;
 };
 
-<<<<<<< HEAD
-nsresult LoadLoadableRootsTask::Dispatch() {
-  // Can't add 'this' as the event to run, since mThread may not be set yet
-  nsresult rv = NS_NewNamedThread("LoadRoots", getter_AddRefs(mThread), nullptr,
-                                  nsIThreadManager::DEFAULT_STACK_SIZE);
-  if (NS_FAILED(rv)) {
-    return rv;
-||||||| merged common ancestors
-nsresult
-LoadLoadableRootsTask::Dispatch()
-{
-  // Can't add 'this' as the event to run, since mThread may not be set yet
-  nsresult rv = NS_NewNamedThread("LoadRoots", getter_AddRefs(mThread),
-                                  nullptr,
-                                  nsIThreadManager::DEFAULT_STACK_SIZE);
-  if (NS_FAILED(rv)) {
-    return rv;
-=======
 nsresult LoadLoadableRootsTask::Dispatch() {
   // The stream transport service (note: not the socket transport service) can
   // be used to perform background tasks or I/O that would otherwise block the
@@ -1154,54 +623,12 @@ nsresult LoadLoadableRootsTask::Dispatch() {
       do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID));
   if (!target) {
     return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
   }
   return target->Dispatch(this, NS_DISPATCH_NORMAL);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
 LoadLoadableRootsTask::Run() {
-  // First we Run() on the "LoadRoots" thread, do our work, and then we Run()
-  // again on the main thread so we can shut down the thread (since we don't
-  // need it any more). We can't shut down the thread while we're *on* the
-  // thread, which is why we do the dispatch to the main thread. CryptoTask.cpp
-  // (which informs this code) says that we can't null out mThread. This appears
-  // to be because its refcount could be decreased while this dispatch is being
-  // processed, so it might get prematurely destroyed. I'm not sure this makes
-  // sense but it'll get cleaned up in our destructor anyway, so it's fine to
-  // not null it out here (as long as we don't run twice on the main thread,
-  // which shouldn't be possible).
-  if (NS_IsMainThread()) {
-    if (mThread) {
-      mThread->Shutdown();
-    }
-    return NS_OK;
-  }
-
-||||||| merged common ancestors
-LoadLoadableRootsTask::Run()
-{
-  // First we Run() on the "LoadRoots" thread, do our work, and then we Run()
-  // again on the main thread so we can shut down the thread (since we don't
-  // need it any more). We can't shut down the thread while we're *on* the
-  // thread, which is why we do the dispatch to the main thread. CryptoTask.cpp
-  // (which informs this code) says that we can't null out mThread. This appears
-  // to be because its refcount could be decreased while this dispatch is being
-  // processed, so it might get prematurely destroyed. I'm not sure this makes
-  // sense but it'll get cleaned up in our destructor anyway, so it's fine to
-  // not null it out here (as long as we don't run twice on the main thread,
-  // which shouldn't be possible).
-  if (NS_IsMainThread()) {
-    if (mThread) {
-      mThread->Shutdown();
-    }
-    return NS_OK;
-  }
-
-=======
-LoadLoadableRootsTask::Run() {
->>>>>>> upstream-releases
   nsresult loadLoadableRootsResult = LoadLoadableRoots();
   if (NS_WARN_IF(NS_FAILED(loadLoadableRootsResult))) {
     MOZ_LOG(gPIPNSSLog, LogLevel::Error, ("LoadLoadableRoots failed"));
@@ -1537,25 +964,11 @@ static const CipherPref sCipherPrefs[] = {
 // This function will convert from pref values like 1, 2, ...
 // to the internal values of SSL_LIBRARY_VERSION_TLS_1_0,
 // SSL_LIBRARY_VERSION_TLS_1_1, ...
-<<<<<<< HEAD
-/*static*/ void nsNSSComponent::FillTLSVersionRange(SSLVersionRange& rangeOut,
-                                                    uint32_t minFromPrefs,
-                                                    uint32_t maxFromPrefs,
-                                                    SSLVersionRange defaults) {
-||||||| merged common ancestors
-/*static*/ void
-nsNSSComponent::FillTLSVersionRange(SSLVersionRange& rangeOut,
-                                    uint32_t minFromPrefs,
-                                    uint32_t maxFromPrefs,
-                                    SSLVersionRange defaults)
-{
-=======
 /*static*/
 void nsNSSComponent::FillTLSVersionRange(SSLVersionRange& rangeOut,
                                          uint32_t minFromPrefs,
                                          uint32_t maxFromPrefs,
                                          SSLVersionRange defaults) {
->>>>>>> upstream-releases
   rangeOut = defaults;
   // determine what versions are supported
   SSLVersionRange supported;
@@ -1678,12 +1091,6 @@ nsresult CipherSuiteChangeObserver::Observe(nsISupports* /*aSubject*/,
 }  // namespace
 
 void nsNSSComponent::setValidationOptions(
-<<<<<<< HEAD
-    bool isInitialSetting, const mozilla::MutexAutoLock& proofOfLock) {
-||||||| merged common ancestors
-  bool isInitialSetting, const mozilla::MutexAutoLock& proofOfLock)
-{
-=======
     bool isInitialSetting, const mozilla::MutexAutoLock& proofOfLock) {
   // We access prefs so this must be done on the main thread.
   MOZ_ASSERT(NS_IsMainThread());
@@ -1691,7 +1098,6 @@ void nsNSSComponent::setValidationOptions(
     return;
   }
 
->>>>>>> upstream-releases
   // This preference controls whether we do OCSP fetching and does not affect
   // OCSP stapling.
   // 0 = disabled, 1 = enabled
@@ -1815,20 +1221,6 @@ void nsNSSComponent::setValidationOptions(
 
   GetRevocationBehaviorFromPrefs(&odc, &osc, &certShortLifetimeInDays,
                                  softTimeout, hardTimeout, proofOfLock);
-<<<<<<< HEAD
-  mDefaultCertVerifier = new SharedCertVerifier(
-      odc, osc, softTimeout, hardTimeout, certShortLifetimeInDays, pinningMode,
-      sha1Mode, nameMatchingMode, netscapeStepUpPolicy, ctMode,
-      distrustedCAPolicy);
-||||||| merged common ancestors
-  mDefaultCertVerifier = new SharedCertVerifier(odc, osc, softTimeout,
-                                                hardTimeout,
-                                                certShortLifetimeInDays,
-                                                pinningMode, sha1Mode,
-                                                nameMatchingMode,
-                                                netscapeStepUpPolicy,
-                                                ctMode, distrustedCAPolicy);
-=======
 
   mDefaultCertVerifier = new SharedCertVerifier(
       odc, osc, softTimeout, hardTimeout, certShortLifetimeInDays, pinningMode,
@@ -1853,7 +1245,6 @@ void nsNSSComponent::UpdateCertVerifierWithEnterpriseRoots() {
       oldCertVerifier->mSHA1Mode, oldCertVerifier->mNameMatchingMode,
       oldCertVerifier->mNetscapeStepUpPolicy, oldCertVerifier->mCTMode,
       oldCertVerifier->mDistrustedCAPolicy, mEnterpriseCerts);
->>>>>>> upstream-releases
 }
 
 // Enable the TLS versions given in the prefs, defaulting to TLS 1.0 (min) and
@@ -1915,13 +1306,7 @@ static void SetNSSDatabaseCacheModeAsAppropriate() {
   } else {
     MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("not setting NSS_SDB_USE_CACHE"));
   }
-<<<<<<< HEAD
-#endif  // defined(XP_LINUX) && !defined(ANDROID)
-||||||| merged common ancestors
-#endif // defined(XP_LINUX) && !defined(ANDROID)
-=======
 #  endif  // defined(XP_LINUX) && !defined(ANDROID)
->>>>>>> upstream-releases
 
 #  ifdef XP_WIN
   wchar_t volPath[MAX_PATH];
@@ -1935,13 +1320,7 @@ static void SetNSSDatabaseCacheModeAsAppropriate() {
   } else {
     MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("not setting NSS_SDB_USE_CACHE"));
   }
-<<<<<<< HEAD
-#endif  // XP_WIN
-||||||| merged common ancestors
-#endif // XP_WIN
-=======
 #  endif  // XP_WIN
->>>>>>> upstream-releases
 }
 #endif  // defined(XP_WIN) || (defined(XP_LINUX) && !defined(ANDROID))
 
@@ -2376,14 +1755,6 @@ nsresult nsNSSComponent::InitializeNSS() {
                        Preferences::GetBool("security.tls.enable_0rtt_data",
                                             ENABLED_0RTT_DATA_DEFAULT));
 
-<<<<<<< HEAD
-  if (NS_FAILED(InitializeCipherSuite())) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Error,
-            ("Unable to initialize cipher suite settings\n"));
-||||||| merged common ancestors
-  if (NS_FAILED(InitializeCipherSuite())) {
-    MOZ_LOG(gPIPNSSLog, LogLevel::Error, ("Unable to initialize cipher suite settings\n"));
-=======
   SSL_OptionSetDefault(
       SSL_ENABLE_POST_HANDSHAKE_AUTH,
       Preferences::GetBool("security.tls.enable_post_handshake_auth",
@@ -2394,7 +1765,6 @@ nsresult nsNSSComponent::InitializeNSS() {
   if (NS_FAILED(rv)) {
     MOZ_LOG(gPIPNSSLog, LogLevel::Error,
             ("Unable to initialize cipher suite settings\n"));
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -2404,53 +1774,6 @@ nsresult nsNSSComponent::InitializeNSS() {
     Telemetry::Accumulate(Telemetry::FIPS_ENABLED, true);
   }
 
-<<<<<<< HEAD
-  // Gather telemetry on any PKCS#11 modules we have loaded. Note that because
-  // we load the built-in root module asynchronously after this, the telemetry
-  // will not include it.
-  {  // Introduce scope for the AutoSECMODListReadLock.
-    AutoSECMODListReadLock lock;
-    for (SECMODModuleList* list = SECMOD_GetDefaultModuleList(); list;
-         list = list->next) {
-      nsAutoString scalarKey;
-      GetModuleNameForTelemetry(list->module, scalarKey);
-      // Scalar keys must be between 0 and 70 characters (exclusive).
-      // GetModuleNameForTelemetry takes care of keys that are too long. If for
-      // some reason it couldn't come up with an appropriate name and returned
-      // an empty result, however, we need to not attempt to record this (it
-      // wouldn't give us anything useful anyway).
-      if (scalarKey.Length() > 0) {
-        Telemetry::ScalarSet(
-            Telemetry::ScalarID::SECURITY_PKCS11_MODULES_LOADED, scalarKey,
-            true);
-      }
-    }
-  }
-
-||||||| merged common ancestors
-  // Gather telemetry on any PKCS#11 modules we have loaded. Note that because
-  // we load the built-in root module asynchronously after this, the telemetry
-  // will not include it.
-  { // Introduce scope for the AutoSECMODListReadLock.
-    AutoSECMODListReadLock lock;
-    for (SECMODModuleList* list = SECMOD_GetDefaultModuleList(); list;
-         list = list->next) {
-      nsAutoString scalarKey;
-      GetModuleNameForTelemetry(list->module, scalarKey);
-      // Scalar keys must be between 0 and 70 characters (exclusive).
-      // GetModuleNameForTelemetry takes care of keys that are too long. If for
-      // some reason it couldn't come up with an appropriate name and returned
-      // an empty result, however, we need to not attempt to record this (it
-      // wouldn't give us anything useful anyway).
-      if (scalarKey.Length() > 0) {
-        Telemetry::ScalarSet(
-          Telemetry::ScalarID::SECURITY_PKCS11_MODULES_LOADED, scalarKey, true);
-      }
-    }
-  }
-
-=======
->>>>>>> upstream-releases
   MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("NSS Initialization done\n"));
 
   {
@@ -2520,25 +1843,7 @@ void nsNSSComponent::ShutdownNSS() {
 
   ::mozilla::psm::UnloadLoadableRoots();
 
-<<<<<<< HEAD
-  MutexAutoLock lock(mMutex);
-#ifdef XP_WIN
-  mFamilySafetyRoot = nullptr;
-  mEnterpriseRoots = nullptr;
-#endif
-
   PK11_SetPasswordFunc((PK11PasswordFunc) nullptr);
-||||||| merged common ancestors
-  MutexAutoLock lock(mMutex);
-#ifdef XP_WIN
-  mFamilySafetyRoot = nullptr;
-  mEnterpriseRoots = nullptr;
-#endif
-
-  PK11_SetPasswordFunc((PK11PasswordFunc)nullptr);
-=======
-  PK11_SetPasswordFunc((PK11PasswordFunc) nullptr);
->>>>>>> upstream-releases
 
   Preferences::RemoveObserver(this, "security.");
 
@@ -2625,12 +1930,6 @@ nsNSSComponent::Observe(nsISupports* aSubject, const char* aTopic,
       SSL_OptionSetDefault(SSL_ENABLE_0RTT_DATA,
                            Preferences::GetBool("security.tls.enable_0rtt_data",
                                                 ENABLED_0RTT_DATA_DEFAULT));
-<<<<<<< HEAD
-    } else if (prefName.EqualsLiteral(
-                   "security.ssl.disable_session_identifiers")) {
-||||||| merged common ancestors
-    } else if (prefName.EqualsLiteral("security.ssl.disable_session_identifiers")) {
-=======
     } else if (prefName.EqualsLiteral(
                    "security.tls.enable_post_handshake_auth")) {
       SSL_OptionSetDefault(
@@ -2639,7 +1938,6 @@ nsNSSComponent::Observe(nsISupports* aSubject, const char* aTopic,
                                ENABLED_POST_HANDSHAKE_AUTH_DEFAULT));
     } else if (prefName.EqualsLiteral(
                    "security.ssl.disable_session_identifiers")) {
->>>>>>> upstream-releases
       ConfigureTLSSessionIdentifiers();
     } else if (prefName.EqualsLiteral("security.OCSP.enabled") ||
                prefName.EqualsLiteral("security.OCSP.require") ||
@@ -2667,29 +1965,7 @@ nsNSSComponent::Observe(nsISupports* aSubject, const char* aTopic,
       mTestBuiltInRootHash.Truncate();
       Preferences::GetString("security.test.built_in_root_hash",
                              mTestBuiltInRootHash);
-<<<<<<< HEAD
 #endif  // DEBUG
-    } else if (prefName.Equals(kFamilySafetyModePref)) {
-      // When the pref changes, it is safe to change the trust of 3rd party
-      // roots in the same event tick that they're loaded.
-      UnloadFamilySafetyRoot();
-      uint32_t familySafetyMode =
-          Preferences::GetUint(kFamilySafetyModePref, kFamilySafetyModeDefault);
-      MaybeEnableFamilySafetyCompatibility(familySafetyMode);
-      TrustLoaded3rdPartyRoots();
-||||||| merged common ancestors
-#endif // DEBUG
-    } else if (prefName.Equals(kFamilySafetyModePref)) {
-      // When the pref changes, it is safe to change the trust of 3rd party
-      // roots in the same event tick that they're loaded.
-      UnloadFamilySafetyRoot();
-      uint32_t familySafetyMode = Preferences::GetUint(
-        kFamilySafetyModePref, kFamilySafetyModeDefault);
-      MaybeEnableFamilySafetyCompatibility(familySafetyMode);
-      TrustLoaded3rdPartyRoots();
-=======
-#endif  // DEBUG
->>>>>>> upstream-releases
     } else if (prefName.EqualsLiteral("security.content.signature.root_hash")) {
       MutexAutoLock lock(mMutex);
       mContentSigningRootHash.Truncate();
@@ -2718,16 +1994,8 @@ nsNSSComponent::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/*static*/ nsresult nsNSSComponent::GetNewPrompter(nsIPrompt** result) {
-||||||| merged common ancestors
-/*static*/ nsresult
-nsNSSComponent::GetNewPrompter(nsIPrompt** result)
-{
-=======
 /*static*/
 nsresult nsNSSComponent::GetNewPrompter(nsIPrompt** result) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(result);
   *result = nullptr;
 

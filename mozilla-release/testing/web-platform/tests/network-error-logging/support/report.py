@@ -7,15 +7,8 @@ def retrieve_from_stash(request, key, timeout, min_count, default_value):
   while time.time() - t0 < timeout:
     time.sleep(0.5)
     value = request.server.stash.take(key=key)
-<<<<<<< HEAD
-    if value is not None:
-      request.server.stash.put(key=key, value=value)
-||||||| merged common ancestors
-    if value is not None:
-=======
     if value is not None and len(value) >= min_count:
       request.server.stash.put(key=key, value=value)
->>>>>>> upstream-releases
       return json.dumps(value)
 
   return default_value

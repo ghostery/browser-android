@@ -71,24 +71,12 @@ add_task(async function() {
  */
 function updateImageSrc(img, newSrc, inspector) {
   const onMutated = inspector.once("markupmutation");
-<<<<<<< HEAD
-  const onModified = img.modifyAttributes([{
-    attributeName: "src",
-    newValue: newSrc,
-  }]);
-||||||| merged common ancestors
-  const onModified = img.modifyAttributes([{
-    attributeName: "src",
-    newValue: newSrc
-  }]);
-=======
   const onModified = img.modifyAttributes([
     {
       attributeName: "src",
       newValue: newSrc,
     },
   ]);
->>>>>>> upstream-releases
 
   return Promise.all([onMutated, onModified]);
 }

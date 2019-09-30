@@ -41,14 +41,7 @@ class ActiveResourceTracker : public nsExpirationTracker<ActiveResource, 3> {
                         nsIEventTarget* aEventTarget)
       : nsExpirationTracker(aExpirationCycle, aName, aEventTarget) {}
 
-<<<<<<< HEAD
-  virtual void NotifyExpired(ActiveResource* aResource) override {
-||||||| merged common ancestors
-  virtual void NotifyExpired(ActiveResource* aResource) override
-  {
-=======
   void NotifyExpired(ActiveResource* aResource) override {
->>>>>>> upstream-releases
     RemoveObject(aResource);
     aResource->NotifyInactive();
   }
@@ -173,30 +166,12 @@ class KnowsCompositorMediaProxy : public KnowsCompositor {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(KnowsCompositorMediaProxy, override);
 
-<<<<<<< HEAD
   explicit KnowsCompositorMediaProxy(
       const TextureFactoryIdentifier& aIdentifier);
 
-  virtual TextureForwarder* GetTextureForwarder() override;
-||||||| merged common ancestors
-  explicit KnowsCompositorMediaProxy(const TextureFactoryIdentifier& aIdentifier);
-
-  virtual TextureForwarder* GetTextureForwarder() override;
-=======
-  explicit KnowsCompositorMediaProxy(
-      const TextureFactoryIdentifier& aIdentifier);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual LayersIPCActor* GetLayersIPCActor() override;
-||||||| merged common ancestors
-
-  virtual LayersIPCActor* GetLayersIPCActor() override;
-=======
   TextureForwarder* GetTextureForwarder() override;
 
   LayersIPCActor* GetLayersIPCActor() override;
->>>>>>> upstream-releases
 
   ActiveResourceTracker* GetActiveResourceTracker() override;
 

@@ -52,16 +52,6 @@ bool nsGenConList::DestroyNodesFor(nsIFrame* aFrame) {
  * own element
  * @return -2 for ::marker, -1 for ::before, +1 for ::after, and 0 otherwise.
  */
-<<<<<<< HEAD
-inline int32_t PseudoCompareType(nsIFrame* aFrame, nsIContent** aContent) {
-  nsAtom* pseudo = aFrame->Style()->GetPseudo();
-  if (pseudo == nsCSSPseudoElements::before()) {
-||||||| merged common ancestors
-inline int32_t PseudoCompareType(nsIFrame* aFrame, nsIContent** aContent)
-{
-  nsAtom *pseudo = aFrame->Style()->GetPseudo();
-  if (pseudo == nsCSSPseudoElements::before()) {
-=======
 inline int32_t PseudoCompareType(nsIFrame* aFrame, nsIContent** aContent) {
   auto pseudo = aFrame->Style()->GetPseudoType();
   if (pseudo == mozilla::PseudoStyleType::marker) {
@@ -69,7 +59,6 @@ inline int32_t PseudoCompareType(nsIFrame* aFrame, nsIContent** aContent) {
     return -2;
   }
   if (pseudo == mozilla::PseudoStyleType::before) {
->>>>>>> upstream-releases
     *aContent = aFrame->GetContent()->GetParent();
     return -1;
   }
@@ -81,14 +70,6 @@ inline int32_t PseudoCompareType(nsIFrame* aFrame, nsIContent** aContent) {
   return 0;
 }
 
-<<<<<<< HEAD
-/* static */ bool nsGenConList::NodeAfter(const nsGenConNode* aNode1,
-                                          const nsGenConNode* aNode2) {
-||||||| merged common ancestors
-/* static */ bool
-nsGenConList::NodeAfter(const nsGenConNode* aNode1, const nsGenConNode* aNode2)
-{
-=======
 #ifdef DEBUG
 static bool IsXBLInvolved(nsIContent* aContent1, nsIContent* aContent2) {
   auto* ancestor = nsContentUtils::GetCommonAncestor(aContent1, aContent2);
@@ -100,7 +81,6 @@ static bool IsXBLInvolved(nsIContent* aContent1, nsIContent* aContent2) {
 /* static */
 bool nsGenConList::NodeAfter(const nsGenConNode* aNode1,
                              const nsGenConNode* aNode2) {
->>>>>>> upstream-releases
   nsIFrame* frame1 = aNode1->mPseudoFrame;
   nsIFrame* frame2 = aNode2->mPseudoFrame;
   if (frame1 == frame2) {

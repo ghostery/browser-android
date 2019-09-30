@@ -9,12 +9,7 @@
 #define GrResourceProvider_DEFINED
 
 #include "GrContextOptions.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "GrPathRange.h"
-=======
 #include "GrGpuBuffer.h"
->>>>>>> upstream-releases
 #include "GrResourceCache.h"
 #include "SkImageInfoPriv.h"
 #include "SkScalerContext.h"
@@ -45,27 +40,6 @@ class SkTypeface;
  */
 class GrResourceProvider {
 public:
-<<<<<<< HEAD
-    /** These flags govern which scratch resources we are allowed to return */
-    enum class Flags {
-        kNone            = 0x0,
-
-        /** If the caller intends to do direct reads/writes to/from the CPU then this flag must be
-         *  set when accessing resources during a GrOpList flush. This includes the execution of
-         *  GrOp objects. The reason is that these memory operations are done immediately and
-         *  will occur out of order WRT the operations being flushed.
-         *  Make this automatic: https://bug.skia.org/4156
-         */
-        kNoPendingIO     = 0x1,
-
-        /** Normally the caps may indicate a preference for client-side buffers. Set this flag when
-         *  creating a buffer to guarantee it resides in GPU memory.
-         */
-        kRequireGpuMemory = 0x2,
-    };
-
-||||||| merged common ancestors
-=======
     /** These flags govern which scratch resources we are allowed to return */
     enum class Flags {
         kNone            = 0x0,
@@ -79,7 +53,6 @@ public:
         kNoPendingIO     = 0x1,
     };
 
->>>>>>> upstream-releases
     GrResourceProvider(GrGpu*, GrResourceCache*, GrSingleOwner*,
                        bool explicitlyAllocateGPUResources);
 
@@ -185,23 +158,6 @@ public:
      *
      * @return The index buffer if successful, otherwise nullptr.
      */
-<<<<<<< HEAD
-    sk_sp<const GrBuffer> findOrCreatePatternedIndexBuffer(const uint16_t* pattern,
-                                                           int patternSize,
-                                                           int reps,
-                                                           int vertCount,
-                                                           const GrUniqueKey& key) {
-        if (auto buffer = this->findByUniqueKey<GrBuffer>(key)) {
-            return std::move(buffer);
-||||||| merged common ancestors
-    sk_sp<const GrBuffer> findOrCreatePatternedIndexBuffer(const uint16_t* pattern,
-                                                           int patternSize,
-                                                           int reps,
-                                                           int vertCount,
-                                                           const GrUniqueKey& key) {
-        if (auto buffer = this->findByUniqueKey<GrBuffer>(key)) {
-            return buffer;
-=======
     sk_sp<const GrGpuBuffer> findOrCreatePatternedIndexBuffer(const uint16_t* pattern,
                                                               int patternSize,
                                                               int reps,
@@ -209,7 +165,6 @@ public:
                                                               const GrUniqueKey& key) {
         if (auto buffer = this->findByUniqueKey<const GrGpuBuffer>(key)) {
             return buffer;
->>>>>>> upstream-releases
         }
         return this->createPatternedIndexBuffer(pattern, patternSize, reps, vertCount, &key);
     }
@@ -247,18 +202,8 @@ public:
      *
      * @return the buffer if successful, otherwise nullptr.
      */
-<<<<<<< HEAD
-    GrBuffer* createBuffer(size_t size, GrBufferType intendedType, GrAccessPattern, Flags,
-                           const void* data = nullptr);
-
-||||||| merged common ancestors
-    GrBuffer* createBuffer(size_t size, GrBufferType intendedType, GrAccessPattern, uint32_t flags,
-                           const void* data = nullptr);
-
-=======
     sk_sp<GrGpuBuffer> createBuffer(size_t size, GrGpuBufferType intendedType, GrAccessPattern,
                                     const void* data = nullptr);
->>>>>>> upstream-releases
 
     /**
      * If passed in render target already has a stencil buffer, return true. Otherwise attempt to

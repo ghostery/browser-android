@@ -22,46 +22,6 @@ class GLBlitHelper;
 }
 namespace layers {
 
-<<<<<<< HEAD
-class D3D11RecycleAllocator : public TextureClientRecycleAllocator {
- public:
-  explicit D3D11RecycleAllocator(KnowsCompositor* aAllocator,
-                                 ID3D11Device* aDevice)
-      : TextureClientRecycleAllocator(aAllocator), mDevice(aDevice) {}
-
-  already_AddRefed<TextureClient> CreateOrRecycleClient(
-      gfx::SurfaceFormat aFormat, const gfx::IntSize& aSize);
-
- protected:
-  virtual already_AddRefed<TextureClient> Allocate(
-      gfx::SurfaceFormat aFormat, gfx::IntSize aSize, BackendSelector aSelector,
-      TextureFlags aTextureFlags, TextureAllocationFlags aAllocFlags) override;
-
-  RefPtr<ID3D11Device> mDevice;
-||||||| merged common ancestors
-class D3D11RecycleAllocator : public TextureClientRecycleAllocator
-{
-public:
-  explicit D3D11RecycleAllocator(KnowsCompositor* aAllocator,
-                                 ID3D11Device* aDevice)
-    : TextureClientRecycleAllocator(aAllocator)
-    , mDevice(aDevice)
-  {}
-
-  already_AddRefed<TextureClient>
-  CreateOrRecycleClient(gfx::SurfaceFormat aFormat,
-                        const gfx::IntSize& aSize);
-
-protected:
-  virtual already_AddRefed<TextureClient> Allocate(
-    gfx::SurfaceFormat aFormat,
-    gfx::IntSize aSize,
-    BackendSelector aSelector,
-    TextureFlags aTextureFlags,
-    TextureAllocationFlags aAllocFlags) override;
-
-  RefPtr<ID3D11Device> mDevice;
-=======
 class D3D11RecycleAllocator final : public TextureClientRecycleAllocator {
  public:
   D3D11RecycleAllocator(KnowsCompositor* aAllocator, ID3D11Device* aDevice,
@@ -77,7 +37,6 @@ class D3D11RecycleAllocator final : public TextureClientRecycleAllocator {
   const bool mCanUseNV12;
   const bool mCanUseP010;
   const bool mCanUseP016;
->>>>>>> upstream-releases
   /**
    * Used for checking if CompositorDevice/ContentDevice is updated.
    */
@@ -90,23 +49,10 @@ class D3D11RecycleAllocator final : public TextureClientRecycleAllocator {
 // This class also manages the synchronization of the copy, to ensure the
 // resource is ready to use.
 class D3D11ShareHandleImage final : public Image {
-<<<<<<< HEAD
- public:
-  D3D11ShareHandleImage(const gfx::IntSize& aSize, const gfx::IntRect& aRect,
-                        const GUID& aSourceFormat);
-  virtual ~D3D11ShareHandleImage() {}
-||||||| merged common ancestors
-public:
-  D3D11ShareHandleImage(const gfx::IntSize& aSize,
-                        const gfx::IntRect& aRect,
-                        const GUID& aSourceFormat);
-  virtual ~D3D11ShareHandleImage() {}
-=======
  public:
   D3D11ShareHandleImage(const gfx::IntSize& aSize, const gfx::IntRect& aRect,
                         gfx::YUVColorSpace aColorSpace);
   virtual ~D3D11ShareHandleImage() = default;
->>>>>>> upstream-releases
 
   bool AllocateTexture(D3D11RecycleAllocator* aAllocator,
                        ID3D11Device* aDevice);
@@ -118,11 +64,6 @@ public:
 
   ID3D11Texture2D* GetTexture() const;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   gfx::YUVColorSpace GetYUVColorSpace() const { return mYUVColorSpace; }
 
  private:
@@ -134,7 +75,6 @@ private:
     return mTextureClient->GetInternalData()->AsD3D11TextureData();
   }
 
->>>>>>> upstream-releases
   gfx::IntSize mSize;
   gfx::IntRect mPictureRect;
   gfx::YUVColorSpace mYUVColorSpace;

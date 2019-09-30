@@ -94,37 +94,6 @@ class MediaStreamTrack::MSGListener : public MediaStreamTrackListener {
     mTrack->NotifyPrincipalHandleChanged(aNewPrincipalHandle);
   }
 
-<<<<<<< HEAD
-  void NotifyPrincipalHandleChanged(
-      MediaStreamGraph* aGraph,
-      const PrincipalHandle& aNewPrincipalHandle) override {
-    mGraph->DispatchToMainThreadAfterStreamStateUpdate(
-        NewRunnableMethod<StoreCopyPassByConstLRef<PrincipalHandle>>(
-            "dom::MediaStreamTrack::MSGListener::"
-            "DoNotifyPrincipalHandleChanged",
-            this, &MSGListener::DoNotifyPrincipalHandleChanged,
-            aNewPrincipalHandle));
-  }
-
-  void NotifyRemoved() override {
-    // `mTrack` is a WeakPtr and must be destroyed on main thread.
-    // We dispatch ourselves to main thread here in case the MediaStreamGraph
-    // is holding the last reference to us.
-    mGraph->DispatchToMainThreadAfterStreamStateUpdate(
-        NS_NewRunnableFunction("MediaStreamTrack::MSGListener::mTrackReleaser",
-                               [self = RefPtr<MSGListener>(this)]() {}));
-||||||| merged common ancestors
-  void NotifyPrincipalHandleChanged(MediaStreamGraph* aGraph,
-                                    const PrincipalHandle& aNewPrincipalHandle) override
-  {
-    aGraph->DispatchToMainThreadAfterStreamStateUpdate(
-      NewRunnableMethod<StoreCopyPassByConstLRef<PrincipalHandle>>(
-        "dom::MediaStreamTrack::PrincipalHandleListener::"
-        "DoNotifyPrincipalHandleChanged",
-        this,
-        &PrincipalHandleListener::DoNotifyPrincipalHandleChanged,
-        aNewPrincipalHandle));
-=======
   void NotifyPrincipalHandleChanged(
       MediaStreamGraph* aGraph,
       const PrincipalHandle& aNewPrincipalHandle) override {
@@ -143,71 +112,8 @@ class MediaStreamTrack::MSGListener : public MediaStreamTrackListener {
     mGraph->DispatchToMainThreadStableState(
         NS_NewRunnableFunction("MediaStreamTrack::MSGListener::mTrackReleaser",
                                [self = RefPtr<MSGListener>(this)]() {}));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  void DoNotifyEnded() {
-    MOZ_ASSERT(NS_IsMainThread());
-
-    if (!mTrack) {
-      return;
-    }
-
-    mGraph->AbstractMainThread()->Dispatch(
-        NewRunnableMethod("MediaStreamTrack::OverrideEnded", mTrack.get(),
-                          &MediaStreamTrack::OverrideEnded));
-  }
-
-  void NotifyEnded() override {
-    mGraph->DispatchToMainThreadAfterStreamStateUpdate(
-        NewRunnableMethod("MediaStreamTrack::MSGListener::DoNotifyEnded", this,
-                          &MSGListener::DoNotifyEnded));
-  }
-
- protected:
-  const RefPtr<MediaStreamGraphImpl> mGraph;
-
-  // Main thread only.
-  WeakPtr<MediaStreamTrack> mTrack;
-};
-
-class TrackSink : public MediaStreamTrackSource::Sink {
- public:
-  explicit TrackSink(MediaStreamTrack* aTrack) : mTrack(aTrack) {}
-
-  /**
-   * Keep the track source alive. This track and any clones are controlling the
-   * lifetime of the source by being registered as its sinks.
-   */
-  bool KeepsSourceAlive() const override { return true; }
-
-  bool Enabled() const override {
-    if (!mTrack) {
-      return false;
-    }
-    return mTrack->Enabled();
-  }
-
-  void PrincipalChanged() override {
-    if (mTrack) {
-      mTrack->PrincipalChanged();
-    }
-  }
-
-  void MutedChanged(bool aNewState) override {
-    if (mTrack) {
-      mTrack->MutedChanged(aNewState);
-    }
-  }
-
- private:
-  WeakPtr<MediaStreamTrack> mTrack;
-||||||| merged common ancestors
-protected:
-  // These fields may only be accessed on the main thread
-  MediaStreamTrack* mTrack;
-=======
   void DoNotifyEnded() {
     MOZ_ASSERT(NS_IsMainThread());
 
@@ -264,7 +170,6 @@ class TrackSink : public MediaStreamTrackSource::Sink {
 
  private:
   WeakPtr<MediaStreamTrack> mTrack;
->>>>>>> upstream-releases
 };
 
 MediaStreamTrack::MediaStreamTrack(DOMMediaStream* aStream, TrackID aTrackID,
@@ -493,26 +398,6 @@ void MediaStreamTrack::SetPrincipal(nsIPrincipal* aPrincipal) {
   }
   mPrincipal = aPrincipal;
 
-<<<<<<< HEAD
-  LOG(LogLevel::Info, ("MediaStreamTrack %p principal changed to %p. Now: "
-                       "null=%d, codebase=%d, expanded=%d, system=%d",
-                       this, mPrincipal.get(), mPrincipal->GetIsNullPrincipal(),
-                       mPrincipal->GetIsCodebasePrincipal(),
-                       mPrincipal->GetIsExpandedPrincipal(),
-                       mPrincipal->GetIsSystemPrincipal()));
-  for (PrincipalChangeObserver<MediaStreamTrack>* observer :
-       mPrincipalChangeObservers) {
-||||||| merged common ancestors
-  LOG(LogLevel::Info, ("MediaStreamTrack %p principal changed to %p. Now: "
-                       "null=%d, codebase=%d, expanded=%d, system=%d",
-                       this, mPrincipal.get(),
-                       mPrincipal->GetIsNullPrincipal(),
-                       mPrincipal->GetIsCodebasePrincipal(),
-                       mPrincipal->GetIsExpandedPrincipal(),
-                       mPrincipal->GetIsSystemPrincipal()));
-  for (PrincipalChangeObserver<MediaStreamTrack>* observer
-      : mPrincipalChangeObservers) {
-=======
   LOG(LogLevel::Info,
       ("MediaStreamTrack %p principal changed to %p. Now: "
        "null=%d, codebase=%d, expanded=%d, system=%d",
@@ -521,7 +406,6 @@ void MediaStreamTrack::SetPrincipal(nsIPrincipal* aPrincipal) {
        mPrincipal->GetIsExpandedPrincipal(), mPrincipal->IsSystemPrincipal()));
   for (PrincipalChangeObserver<MediaStreamTrack>* observer :
        mPrincipalChangeObservers) {
->>>>>>> upstream-releases
     observer->PrincipalChanged(this);
   }
 }

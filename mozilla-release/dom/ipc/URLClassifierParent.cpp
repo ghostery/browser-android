@@ -19,19 +19,8 @@ using namespace mozilla::dom;
 
 NS_IMPL_ISUPPORTS(URLClassifierParent, nsIURIClassifierCallback)
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult URLClassifierParent::StartClassify(
-    nsIPrincipal* aPrincipal, bool aUseTrackingProtection, bool* aSuccess) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-URLClassifierParent::StartClassify(nsIPrincipal* aPrincipal,
-                                   bool aUseTrackingProtection,
-                                   bool* aSuccess)
-{
-=======
 mozilla::ipc::IPCResult URLClassifierParent::StartClassify(
     nsIPrincipal* aPrincipal, bool* aSuccess) {
->>>>>>> upstream-releases
   *aSuccess = false;
   nsresult rv = NS_OK;
   // Note that in safe mode, the URL classifier service isn't available, so we
@@ -54,26 +43,7 @@ mozilla::ipc::IPCResult URLClassifierParent::StartClassify(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void URLClassifierParent::ActorDestroy(ActorDestroyReason aWhy) {
-  mIPCOpen = false;
-}
-
-||||||| merged common ancestors
-void
-URLClassifierParent::ActorDestroy(ActorDestroyReason aWhy)
-{
-  mIPCOpen = false;
-}
-
-=======
->>>>>>> upstream-releases
 /////////////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-// URLClassifierLocalParent.
-||||||| merged common ancestors
-//URLClassifierLocalParent.
-=======
 // URLClassifierLocalParent.
 
 namespace {
@@ -133,7 +103,6 @@ class IPCFeature final : public nsIUrlClassifierFeature {
     // Nothing to do here.
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   NS_IMETHOD
   GetURIByListType(nsIChannel* aChannel,
@@ -164,39 +133,14 @@ mozilla::ipc::IPCResult URLClassifierLocalParent::StartClassify(
     nsIURI* aURI, const nsTArray<IPCURLClassifierFeature>& aFeatures) {
   MOZ_ASSERT(aURI);
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult URLClassifierLocalParent::StartClassify(
-    nsIURI* aURI, const nsACString& aTables) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-URLClassifierLocalParent::StartClassify(nsIURI* aURI, const nsACString& aTables)
-{
-=======
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   // Note that in safe mode, the URL classifier service isn't available, so we
   // should handle the service not being present gracefully.
   nsCOMPtr<nsIURIClassifier> uriClassifier =
-<<<<<<< HEAD
-      do_GetService(NS_URICLASSIFIERSERVICE_CONTRACTID, &rv);
-  if (NS_SUCCEEDED(rv)) {
-    MOZ_ASSERT(aURI);
-    rv = uriClassifier->AsyncClassifyLocalWithTables(
-        aURI, aTables, nsTArray<nsCString>(), nsTArray<nsCString>(), this);
-||||||| merged common ancestors
-    do_GetService(NS_URICLASSIFIERSERVICE_CONTRACTID, &rv);
-  if (NS_SUCCEEDED(rv)) {
-    MOZ_ASSERT(aURI);
-    rv = uriClassifier->AsyncClassifyLocalWithTables(aURI, aTables,
-                                                     nsTArray<nsCString>(),
-                                                     nsTArray<nsCString>(),
-                                                     this);
-=======
       do_GetService(NS_URICLASSIFIERSERVICE_CONTRACTID, &rv);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     OnClassifyComplete(nsTArray<RefPtr<nsIUrlClassifierFeatureResult>>());
     return IPC_OK();
->>>>>>> upstream-releases
   }
 
   nsTArray<RefPtr<nsIUrlClassifierFeature>> features;
@@ -216,15 +160,6 @@ URLClassifierLocalParent::StartClassify(nsIURI* aURI, const nsACString& aTables)
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void URLClassifierLocalParent::ActorDestroy(ActorDestroyReason aWhy) {
-  mIPCOpen = false;
-||||||| merged common ancestors
-void
-URLClassifierLocalParent::ActorDestroy(ActorDestroyReason aWhy)
-{
-  mIPCOpen = false;
-=======
 NS_IMETHODIMP
 URLClassifierLocalParent::OnClassifyComplete(
     const nsTArray<RefPtr<nsIUrlClassifierFeatureResult>>& aResults) {
@@ -244,5 +179,4 @@ URLClassifierLocalParent::OnClassifyComplete(
     Unused << Send__delete__(this, ipcResults);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }

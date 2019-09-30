@@ -143,10 +143,6 @@ class MediaCodecs {
   nsString mCodecs;
 };
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 // Electro-Optical Transfer Functions
 enum class EOTF {
   UNSPECIFIED = -1,
@@ -154,7 +150,6 @@ enum class EOTF {
   BT709 = 1,
 };
 
->>>>>>> upstream-releases
 // Class containing pre-parsed media MIME type parameters, e.g.:
 // MIME type/subtype, optional codecs, etc.
 class MediaExtendedMIMEType {
@@ -200,21 +195,10 @@ class MediaExtendedMIMEType {
       const dom::AudioConfiguration& aConfig);
 
   MediaExtendedMIMEType(const nsACString& aOriginalString,
-<<<<<<< HEAD
-                        const nsACString& aMIMEType, bool aHaveCodecs,
-                        const nsAString& aCodecs, int32_t aWidth,
-                        int32_t aHeight, double aFramerate, int32_t aBitrate);
-||||||| merged common ancestors
-                        const nsACString& aMIMEType,
-                        bool aHaveCodecs, const nsAString& aCodecs,
-                        int32_t aWidth, int32_t aHeight,
-                        double aFramerate, int32_t aBitrate);
-=======
                         const nsACString& aMIMEType, bool aHaveCodecs,
                         const nsAString& aCodecs, int32_t aWidth,
                         int32_t aHeight, double aFramerate, int32_t aBitrate,
                         EOTF aEOTF = EOTF::UNSPECIFIED, int32_t aChannels = -1);
->>>>>>> upstream-releases
   MediaExtendedMIMEType(const nsACString& aOriginalString,
                         const nsACString& aMIMEType, bool aHaveCodecs,
                         const nsAString& aCodecs, int32_t aChannels,
@@ -230,20 +214,10 @@ class MediaExtendedMIMEType {
   bool mHaveCodecs = false;   // If false, mCodecs must be empty.
   MediaCodecs mCodecs;
   // For video
-<<<<<<< HEAD
-  int32_t mWidth = -1;     // -1 if not provided.
-  int32_t mHeight = -1;    // -1 if not provided.
-  double mFramerate = -1;  // -1 if not provided.
-||||||| merged common ancestors
-  int32_t mWidth = -1; // -1 if not provided.
-  int32_t mHeight = -1; // -1 if not provided.
-  double mFramerate = -1; // -1 if not provided.
-=======
   int32_t mWidth = -1;     // -1 if not provided.
   int32_t mHeight = -1;    // -1 if not provided.
   double mFramerate = -1;  // -1 if not provided.
   EOTF mEOTF = EOTF::UNSPECIFIED;
->>>>>>> upstream-releases
   // For audio
   int32_t mChannels = -1;    // -1 if not provided.
   int32_t mSamplerate = -1;  // -1 if not provided.

@@ -12,26 +12,6 @@
 #include "SVGObserverUtils.h"
 #include "SVGFilters.h"
 
-<<<<<<< HEAD
-using namespace mozilla;
-
-class SVGFEUnstyledLeafFrame final : public nsFrame {
-  friend nsIFrame* NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell,
-                                                ComputedStyle* aStyle);
-
- protected:
-  explicit SVGFEUnstyledLeafFrame(ComputedStyle* aStyle)
-      : nsFrame(aStyle, kClassID) {
-||||||| merged common ancestors
-class SVGFEUnstyledLeafFrame final : public nsFrame
-{
-  friend nsIFrame*
-  NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit SVGFEUnstyledLeafFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, kClassID)
-  {
-=======
 using namespace mozilla;
 
 class SVGFEUnstyledLeafFrame final : public nsFrame {
@@ -42,7 +22,6 @@ class SVGFEUnstyledLeafFrame final : public nsFrame {
   explicit SVGFEUnstyledLeafFrame(ComputedStyle* aStyle,
                                   nsPresContext* aPresContext)
       : nsFrame(aStyle, aPresContext, kClassID) {
->>>>>>> upstream-releases
     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -75,21 +54,10 @@ class SVGFEUnstyledLeafFrame final : public nsFrame {
   }
 };
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell,
-                                       ComputedStyle* aStyle) {
-  return new (aPresShell) SVGFEUnstyledLeafFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) SVGFEUnstyledLeafFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGFEUnstyledLeafFrame(PresShell* aPresShell,
                                        ComputedStyle* aStyle) {
   return new (aPresShell)
       SVGFEUnstyledLeafFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(SVGFEUnstyledLeafFrame)

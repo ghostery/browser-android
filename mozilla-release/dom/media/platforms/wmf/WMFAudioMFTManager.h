@@ -44,32 +44,7 @@ class WMFAudioMFTManager : public MFTManager {
   uint32_t mAudioRate;
   nsTArray<BYTE> mUserData;
 
-<<<<<<< HEAD
-  // The offset, at which playback started since the
-  // last discontinuity.
-  media::TimeUnit mAudioTimeOffset;
-  // The number of audio frames that we've played since the last
-  // discontinuity.
-  int64_t mAudioFrameSum = 0;
-
   enum StreamType { Unknown, AAC, MP3 };
-||||||| merged common ancestors
-  // The offset, at which playback started since the
-  // last discontinuity.
-  media::TimeUnit mAudioTimeOffset;
-  // The number of audio frames that we've played since the last
-  // discontinuity.
-  int64_t mAudioFrameSum = 0;
-
-  enum StreamType
-  {
-    Unknown,
-    AAC,
-    MP3
-  };
-=======
-  enum StreamType { Unknown, AAC, MP3 };
->>>>>>> upstream-releases
   StreamType mStreamType;
 
   const GUID& GetMFTGUID();

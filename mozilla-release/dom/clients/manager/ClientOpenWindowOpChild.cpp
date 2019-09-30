@@ -11,57 +11,15 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-already_AddRefed<ClientOpPromise> ClientOpenWindowOpChild::DoOpenWindow(
-    const ClientOpenWindowArgs& aArgs) {
-  RefPtr<ClientOpPromise> ref = ClientOpenWindowInCurrentProcess(aArgs);
-  return ref.forget();
-||||||| merged common ancestors
-already_AddRefed<ClientOpPromise>
-ClientOpenWindowOpChild::DoOpenWindow(const ClientOpenWindowArgs& aArgs)
-{
-  RefPtr<ClientOpPromise> ref =
-    ClientOpenWindowInCurrentProcess(aArgs);
-  return ref.forget();
-=======
 RefPtr<ClientOpPromise> ClientOpenWindowOpChild::DoOpenWindow(
     const ClientOpenWindowArgs& aArgs) {
   return ClientOpenWindowInCurrentProcess(aArgs);
->>>>>>> upstream-releases
 }
 
 void ClientOpenWindowOpChild::ActorDestroy(ActorDestroyReason aReason) {
   mPromiseRequestHolder.DisconnectIfExists();
 }
 
-<<<<<<< HEAD
-void ClientOpenWindowOpChild::Init(const ClientOpenWindowArgs& aArgs) {
-  RefPtr<ClientOpPromise> promise = DoOpenWindow(aArgs);
-  promise
-      ->Then(SystemGroup::EventTargetFor(TaskCategory::Other), __func__,
-             [this](const ClientOpResult& aResult) {
-               mPromiseRequestHolder.Complete();
-               PClientOpenWindowOpChild::Send__delete__(this, aResult);
-             },
-             [this](nsresult aResult) {
-               mPromiseRequestHolder.Complete();
-               PClientOpenWindowOpChild::Send__delete__(this, aResult);
-             })
-      ->Track(mPromiseRequestHolder);
-||||||| merged common ancestors
-void
-ClientOpenWindowOpChild::Init(const ClientOpenWindowArgs& aArgs)
-{
-  RefPtr<ClientOpPromise> promise = DoOpenWindow(aArgs);
-  promise->Then(SystemGroup::EventTargetFor(TaskCategory::Other), __func__,
-    [this] (const ClientOpResult& aResult) {
-      mPromiseRequestHolder.Complete();
-      PClientOpenWindowOpChild::Send__delete__(this, aResult);
-    }, [this] (nsresult aResult) {
-      mPromiseRequestHolder.Complete();
-      PClientOpenWindowOpChild::Send__delete__(this, aResult);
-  })->Track(mPromiseRequestHolder);
-=======
 void ClientOpenWindowOpChild::Init(const ClientOpenWindowArgs& aArgs) {
   DoOpenWindow(aArgs)
       ->Then(
@@ -75,7 +33,6 @@ void ClientOpenWindowOpChild::Init(const ClientOpenWindowArgs& aArgs) {
             PClientOpenWindowOpChild::Send__delete__(this, aResult);
           })
       ->Track(mPromiseRequestHolder);
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

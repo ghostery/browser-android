@@ -23,19 +23,9 @@
 #include "sslt.h"
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include "windows.h"  // this needs to be before the following includes
-#include "wincrypt.h"
-#endif  // XP_WIN
-||||||| merged common ancestors
-#include "windows.h" // this needs to be before the following includes
-#include "wincrypt.h"
-#endif // XP_WIN
-=======
 #  include "windows.h"  // this needs to be before the following includes
 #  include "wincrypt.h"
 #endif  // XP_WIN
->>>>>>> upstream-releases
 
 class nsIDOMWindow;
 class nsIPrompt;
@@ -103,31 +93,7 @@ class nsNSSComponent final : public nsINSSComponent, public nsIObserver {
   nsresult CommonGetEnterpriseCerts(
       nsTArray<nsTArray<uint8_t>>& enterpriseCerts, bool getRoots);
 
-<<<<<<< HEAD
-  void MaybeEnableFamilySafetyCompatibility(uint32_t familySafetyMode);
-  void UnloadFamilySafetyRoot();
-
-  nsresult TrustLoaded3rdPartyRoots();
-
-#ifdef XP_WIN
-  nsresult MaybeImportFamilySafetyRoot(PCCERT_CONTEXT certificate,
-                                       bool& wasFamilySafetyRoot);
-  nsresult LoadFamilySafetyRoot();
-#endif  // XP_WIN
-||||||| merged common ancestors
-  void MaybeEnableFamilySafetyCompatibility(uint32_t familySafetyMode);
-  void UnloadFamilySafetyRoot();
-
-  nsresult TrustLoaded3rdPartyRoots();
-
-#ifdef XP_WIN
-  nsresult MaybeImportFamilySafetyRoot(PCCERT_CONTEXT certificate,
-                                       bool& wasFamilySafetyRoot);
-  nsresult LoadFamilySafetyRoot();
-#endif // XP_WIN
-=======
   bool ShouldEnableEnterpriseRootsForFamilySafety(uint32_t familySafetyMode);
->>>>>>> upstream-releases
 
   // mLoadableRootsLoadedMonitor protects mLoadableRootsLoaded.
   mozilla::Monitor mLoadableRootsLoadedMonitor;

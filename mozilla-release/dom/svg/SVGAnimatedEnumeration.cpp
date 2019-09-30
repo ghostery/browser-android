@@ -162,16 +162,6 @@ void SVGAnimatedEnumeration::SMILEnum::ClearAnimValue() {
   }
 }
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedEnumeration::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedEnumeration_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedEnumeration::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedEnumeration_Binding::Wrap(aCx, this, aGivenProto);
-=======
 nsresult SVGAnimatedEnumeration::SMILEnum::SetAnimValue(
     const SMILValue& aValue) {
   NS_ASSERTION(aValue.mType == SMILEnumType::Singleton(),
@@ -182,15 +172,6 @@ nsresult SVGAnimatedEnumeration::SMILEnum::SetAnimValue(
     mVal->SetAnimValue(uint16_t(aValue.mU.mUint), mSVGElement);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

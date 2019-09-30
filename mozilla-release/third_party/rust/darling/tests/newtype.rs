@@ -20,25 +20,11 @@ struct DemoContainer {
 
 #[test]
 fn generated() {
-<<<<<<< HEAD
-    let di = syn::parse_str(
-        r#"
-||||||| merged common ancestors
-    let di = syn::parse_str(r#"
-=======
     let di = parse_quote! {
->>>>>>> upstream-releases
         #[derive(Baz)]
         #[newtype(lorem = false)]
         pub struct Foo;
-<<<<<<< HEAD
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    "#).unwrap();
-=======
     };
->>>>>>> upstream-releases
 
     let c = DemoContainer::from_derive_input(&di).unwrap();
 

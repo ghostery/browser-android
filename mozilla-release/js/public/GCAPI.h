@@ -22,33 +22,15 @@
 struct JSFreeOp;
 
 #ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
-<<<<<<< HEAD
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif  // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-||||||| merged common ancestors
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-=======
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wattributes"
 #endif  // JS_BROKEN_GCC_ATTRIBUTE_WARNING
->>>>>>> upstream-releases
 
 class JS_PUBLIC_API JSTracer;
 
 #ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
-<<<<<<< HEAD
-#pragma GCC diagnostic pop
-#endif  // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-||||||| merged common ancestors
-#pragma GCC diagnostic pop
-#endif // JS_BROKEN_GCC_ATTRIBUTE_WARNING
-=======
 #  pragma GCC diagnostic pop
 #endif  // JS_BROKEN_GCC_ATTRIBUTE_WARNING
->>>>>>> upstream-releases
 
 namespace js {
 namespace gc {
@@ -66,25 +48,11 @@ typedef enum JSGCMode {
   /** Perform per-zone GCs until too much garbage has accumulated. */
   JSGC_MODE_ZONE = 1,
 
-<<<<<<< HEAD
-  /**
-   * Collect in short time slices rather than all at once. Implies
-   * JSGC_MODE_ZONE.
-   */
-  JSGC_MODE_INCREMENTAL = 2
-||||||| merged common ancestors
-    /**
-     * Collect in short time slices rather than all at once. Implies
-     * JSGC_MODE_ZONE.
-     */
-    JSGC_MODE_INCREMENTAL = 2
-=======
   /** Collect in short time slices rather than all at once. */
   JSGC_MODE_INCREMENTAL = 2,
 
   /** Both of the above. */
   JSGC_MODE_ZONE_INCREMENTAL = 3,
->>>>>>> upstream-releases
 } JSGCMode;
 
 /**
@@ -99,405 +67,6 @@ typedef enum JSGCInvocationKind {
 } JSGCInvocationKind;
 
 typedef enum JSGCParamKey {
-<<<<<<< HEAD
-  /**
-   * Maximum nominal heap before last ditch GC.
-   *
-   * Soft limit on the number of bytes we are allowed to allocate in the GC
-   * heap. Attempts to allocate gcthings over this limit will return null and
-   * subsequently invoke the standard OOM machinery, independent of available
-   * physical memory.
-   *
-   * Pref: javascript.options.mem.max
-   * Default: 0xffffffff
-   */
-  JSGC_MAX_BYTES = 0,
-
-  /**
-   * Initial value for the malloc bytes threshold.
-   *
-   * Pref: javascript.options.mem.high_water_mark
-   * Default: TuningDefaults::MaxMallocBytes
-   */
-  JSGC_MAX_MALLOC_BYTES = 1,
-
-  /**
-   * Maximum size of the generational GC nurseries.
-   *
-   * Pref: javascript.options.mem.nursery.max_kb
-   * Default: JS::DefaultNurseryBytes
-   */
-  JSGC_MAX_NURSERY_BYTES = 2,
-
-  /** Amount of bytes allocated by the GC. */
-  JSGC_BYTES = 3,
-
-  /** Number of times GC has been invoked. Includes both major and minor GC. */
-  JSGC_NUMBER = 4,
-
-  /**
-   * Select GC mode.
-   *
-   * See: JSGCMode in GCAPI.h
-   * prefs: javascript.options.mem.gc_per_zone and
-   *   javascript.options.mem.gc_incremental.
-   * Default: JSGC_MODE_INCREMENTAL
-   */
-  JSGC_MODE = 6,
-
-  /** Number of cached empty GC chunks. */
-  JSGC_UNUSED_CHUNKS = 7,
-
-  /** Total number of allocated GC chunks. */
-  JSGC_TOTAL_CHUNKS = 8,
-
-  /**
-   * Max milliseconds to spend in an incremental GC slice.
-   *
-   * Pref: javascript.options.mem.gc_incremental_slice_ms
-   * Default: DefaultTimeBudget.
-   */
-  JSGC_SLICE_TIME_BUDGET = 9,
-
-  /**
-   * Maximum size the GC mark stack can grow to.
-   *
-   * Pref: none
-   * Default: MarkStack::DefaultCapacity
-   */
-  JSGC_MARK_STACK_LIMIT = 10,
-
-  /**
-   * GCs less than this far apart in time will be considered 'high-frequency
-   * GCs'.
-   *
-   * See setGCLastBytes in jsgc.cpp.
-   *
-   * Pref: javascript.options.mem.gc_high_frequency_time_limit_ms
-   * Default: HighFrequencyThreshold
-   */
-  JSGC_HIGH_FREQUENCY_TIME_LIMIT = 11,
-
-  /**
-   * Start of dynamic heap growth.
-   *
-   * Pref: javascript.options.mem.gc_high_frequency_low_limit_mb
-   * Default: HighFrequencyLowLimitBytes
-   */
-  JSGC_HIGH_FREQUENCY_LOW_LIMIT = 12,
-
-  /**
-   * End of dynamic heap growth.
-   *
-   * Pref: javascript.options.mem.gc_high_frequency_high_limit_mb
-   * Default: HighFrequencyHighLimitBytes
-   */
-  JSGC_HIGH_FREQUENCY_HIGH_LIMIT = 13,
-
-  /**
-   * Upper bound of heap growth.
-   *
-   * Pref: javascript.options.mem.gc_high_frequency_heap_growth_max
-   * Default: HighFrequencyHeapGrowthMax
-   */
-  JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MAX = 14,
-
-  /**
-   * Lower bound of heap growth.
-   *
-   * Pref: javascript.options.mem.gc_high_frequency_heap_growth_min
-   * Default: HighFrequencyHeapGrowthMin
-   */
-  JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MIN = 15,
-
-  /**
-   * Heap growth for low frequency GCs.
-   *
-   * Pref: javascript.options.mem.gc_low_frequency_heap_growth
-   * Default: LowFrequencyHeapGrowth
-   */
-  JSGC_LOW_FREQUENCY_HEAP_GROWTH = 16,
-
-  /**
-   * If false, the heap growth factor is fixed at 3. If true, it is determined
-   * based on whether GCs are high- or low- frequency.
-   *
-   * Pref: javascript.options.mem.gc_dynamic_heap_growth
-   * Default: DynamicHeapGrowthEnabled
-   */
-  JSGC_DYNAMIC_HEAP_GROWTH = 17,
-
-  /**
-   * If true, high-frequency GCs will use a longer mark slice.
-   *
-   * Pref: javascript.options.mem.gc_dynamic_mark_slice
-   * Default: DynamicMarkSliceEnabled
-   */
-  JSGC_DYNAMIC_MARK_SLICE = 18,
-
-  /**
-   * Lower limit after which we limit the heap growth.
-   *
-   * The base value used to compute zone->threshold.gcTriggerBytes(). When
-   * usage.gcBytes() surpasses threshold.gcTriggerBytes() for a zone, the
-   * zone may be scheduled for a GC, depending on the exact circumstances.
-   *
-   * Pref: javascript.options.mem.gc_allocation_threshold_mb
-   * Default GCZoneAllocThresholdBase
-   */
-  JSGC_ALLOCATION_THRESHOLD = 19,
-
-  /**
-   * We try to keep at least this many unused chunks in the free chunk pool at
-   * all times, even after a shrinking GC.
-   *
-   * Pref: javascript.options.mem.gc_min_empty_chunk_count
-   * Default: MinEmptyChunkCount
-   */
-  JSGC_MIN_EMPTY_CHUNK_COUNT = 21,
-
-  /**
-   * We never keep more than this many unused chunks in the free chunk
-   * pool.
-   *
-   * Pref: javascript.options.mem.gc_min_empty_chunk_count
-   * Default: MinEmptyChunkCount
-   */
-  JSGC_MAX_EMPTY_CHUNK_COUNT = 22,
-
-  /**
-   * Whether compacting GC is enabled.
-   *
-   * Pref: javascript.options.mem.gc_compacting
-   * Default: CompactingEnabled
-   */
-  JSGC_COMPACTING_ENABLED = 23,
-
-  /**
-   * Factor for triggering a GC based on JSGC_ALLOCATION_THRESHOLD
-   *
-   * Default: ZoneAllocThresholdFactorDefault
-   * Pref: None
-   */
-  JSGC_ALLOCATION_THRESHOLD_FACTOR = 25,
-
-  /**
-   * Factor for triggering a GC based on JSGC_ALLOCATION_THRESHOLD.
-   * Used if another GC (in different zones) is already running.
-   *
-   * Default: ZoneAllocThresholdFactorAvoidInterruptDefault
-   * Pref: None
-   */
-  JSGC_ALLOCATION_THRESHOLD_FACTOR_AVOID_INTERRUPT = 26,
-
-  /**
-   * Attempt to run a minor GC in the idle time if the free space falls
-   * below this threshold.
-   *
-   * Default: NurseryChunkUsableSize / 4
-   * Pref: None
-   */
-  JSGC_NURSERY_FREE_THRESHOLD_FOR_IDLE_COLLECTION = 27,
-||||||| merged common ancestors
-    /**
-     * Maximum nominal heap before last ditch GC.
-     *
-     * Soft limit on the number of bytes we are allowed to allocate in the GC
-     * heap. Attempts to allocate gcthings over this limit will return null and
-     * subsequently invoke the standard OOM machinery, independent of available
-     * physical memory.
-     *
-     * Pref: javascript.options.mem.max
-     * Default: 0xffffffff
-     */
-    JSGC_MAX_BYTES          = 0,
-
-    /**
-     * Initial value for the malloc bytes threshold.
-     *
-     * Pref: javascript.options.mem.high_water_mark
-     * Default: TuningDefaults::MaxMallocBytes
-     */
-    JSGC_MAX_MALLOC_BYTES   = 1,
-
-    /**
-     * Maximum size of the generational GC nurseries.
-     *
-     * Pref: javascript.options.mem.nursery.max_kb
-     * Default: JS::DefaultNurseryBytes
-     */
-    JSGC_MAX_NURSERY_BYTES  = 2,
-
-    /** Amount of bytes allocated by the GC. */
-    JSGC_BYTES = 3,
-
-    /** Number of times GC has been invoked. Includes both major and minor GC. */
-    JSGC_NUMBER = 4,
-
-    /**
-     * Select GC mode.
-     *
-     * See: JSGCMode in GCAPI.h
-     * prefs: javascript.options.mem.gc_per_zone and
-     *   javascript.options.mem.gc_incremental.
-     * Default: JSGC_MODE_INCREMENTAL
-     */
-    JSGC_MODE = 6,
-
-    /** Number of cached empty GC chunks. */
-    JSGC_UNUSED_CHUNKS = 7,
-
-    /** Total number of allocated GC chunks. */
-    JSGC_TOTAL_CHUNKS = 8,
-
-    /**
-     * Max milliseconds to spend in an incremental GC slice.
-     *
-     * Pref: javascript.options.mem.gc_incremental_slice_ms
-     * Default: DefaultTimeBudget.
-     */
-    JSGC_SLICE_TIME_BUDGET = 9,
-
-    /**
-     * Maximum size the GC mark stack can grow to.
-     *
-     * Pref: none
-     * Default: MarkStack::DefaultCapacity
-     */
-    JSGC_MARK_STACK_LIMIT = 10,
-
-    /**
-     * GCs less than this far apart in time will be considered 'high-frequency
-     * GCs'.
-     *
-     * See setGCLastBytes in jsgc.cpp.
-     *
-     * Pref: javascript.options.mem.gc_high_frequency_time_limit_ms
-     * Default: HighFrequencyThreshold
-     */
-    JSGC_HIGH_FREQUENCY_TIME_LIMIT = 11,
-
-    /**
-     * Start of dynamic heap growth.
-     *
-     * Pref: javascript.options.mem.gc_high_frequency_low_limit_mb
-     * Default: HighFrequencyLowLimitBytes
-     */
-    JSGC_HIGH_FREQUENCY_LOW_LIMIT = 12,
-
-    /**
-     * End of dynamic heap growth.
-     *
-     * Pref: javascript.options.mem.gc_high_frequency_high_limit_mb
-     * Default: HighFrequencyHighLimitBytes
-     */
-    JSGC_HIGH_FREQUENCY_HIGH_LIMIT = 13,
-
-    /**
-     * Upper bound of heap growth.
-     *
-     * Pref: javascript.options.mem.gc_high_frequency_heap_growth_max
-     * Default: HighFrequencyHeapGrowthMax
-     */
-    JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MAX = 14,
-
-    /**
-     * Lower bound of heap growth.
-     *
-     * Pref: javascript.options.mem.gc_high_frequency_heap_growth_min
-     * Default: HighFrequencyHeapGrowthMin
-     */
-    JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MIN = 15,
-
-    /**
-     * Heap growth for low frequency GCs.
-     *
-     * Pref: javascript.options.mem.gc_low_frequency_heap_growth
-     * Default: LowFrequencyHeapGrowth
-     */
-    JSGC_LOW_FREQUENCY_HEAP_GROWTH = 16,
-
-    /**
-     * If false, the heap growth factor is fixed at 3. If true, it is determined
-     * based on whether GCs are high- or low- frequency.
-     *
-     * Pref: javascript.options.mem.gc_dynamic_heap_growth
-     * Default: DynamicHeapGrowthEnabled
-     */
-    JSGC_DYNAMIC_HEAP_GROWTH = 17,
-
-    /**
-     * If true, high-frequency GCs will use a longer mark slice.
-     *
-     * Pref: javascript.options.mem.gc_dynamic_mark_slice
-     * Default: DynamicMarkSliceEnabled
-     */
-    JSGC_DYNAMIC_MARK_SLICE = 18,
-
-    /**
-     * Lower limit after which we limit the heap growth.
-     *
-     * The base value used to compute zone->threshold.gcTriggerBytes(). When
-     * usage.gcBytes() surpasses threshold.gcTriggerBytes() for a zone, the
-     * zone may be scheduled for a GC, depending on the exact circumstances.
-     *
-     * Pref: javascript.options.mem.gc_allocation_threshold_mb
-     * Default GCZoneAllocThresholdBase
-     */
-    JSGC_ALLOCATION_THRESHOLD = 19,
-
-    /**
-     * We try to keep at least this many unused chunks in the free chunk pool at
-     * all times, even after a shrinking GC.
-     *
-     * Pref: javascript.options.mem.gc_min_empty_chunk_count
-     * Default: MinEmptyChunkCount
-     */
-    JSGC_MIN_EMPTY_CHUNK_COUNT = 21,
-
-    /**
-     * We never keep more than this many unused chunks in the free chunk
-     * pool.
-     *
-     * Pref: javascript.options.mem.gc_min_empty_chunk_count
-     * Default: MinEmptyChunkCount
-     */
-    JSGC_MAX_EMPTY_CHUNK_COUNT = 22,
-
-    /**
-     * Whether compacting GC is enabled.
-     *
-     * Pref: javascript.options.mem.gc_compacting
-     * Default: CompactingEnabled
-     */
-    JSGC_COMPACTING_ENABLED = 23,
-
-    /**
-     * Factor for triggering a GC based on JSGC_ALLOCATION_THRESHOLD
-     *
-     * Default: ZoneAllocThresholdFactorDefault
-     * Pref: None
-     */
-    JSGC_ALLOCATION_THRESHOLD_FACTOR = 25,
-
-    /**
-     * Factor for triggering a GC based on JSGC_ALLOCATION_THRESHOLD.
-     * Used if another GC (in different zones) is already running.
-     *
-     * Default: ZoneAllocThresholdFactorAvoidInterruptDefault
-     * Pref: None
-     */
-    JSGC_ALLOCATION_THRESHOLD_FACTOR_AVOID_INTERRUPT = 26,
-
-    /**
-     * Attempt to run a minor GC in the idle time if the free space falls
-     * below this threshold.
-     *
-     * Default: NurseryChunkUsableSize / 4
-     * Pref: None
-     */
-    JSGC_NURSERY_FREE_THRESHOLD_FOR_IDLE_COLLECTION = 27,
-=======
   /**
    * Maximum nominal heap before last ditch GC.
    *
@@ -776,7 +345,6 @@ typedef enum JSGCParamKey {
    */
   JSGC_ZONE_ALLOC_DELAY_KB = 33,
 
->>>>>>> upstream-releases
 } JSGCParamKey;
 
 /*
@@ -837,147 +405,6 @@ struct JSStringFinalizer {
 
 namespace JS {
 
-<<<<<<< HEAD
-#define GCREASONS(D)                       \
-  /* Reasons internal to the JS engine */  \
-  D(API, 0)                                \
-  D(EAGER_ALLOC_TRIGGER, 1)                \
-  D(DESTROY_RUNTIME, 2)                    \
-  D(ROOTS_REMOVED, 3)                      \
-  D(LAST_DITCH, 4)                         \
-  D(TOO_MUCH_MALLOC, 5)                    \
-  D(ALLOC_TRIGGER, 6)                      \
-  D(DEBUG_GC, 7)                           \
-  D(COMPARTMENT_REVIVED, 8)                \
-  D(RESET, 9)                              \
-  D(OUT_OF_NURSERY, 10)                    \
-  D(EVICT_NURSERY, 11)                     \
-  D(DELAYED_ATOMS_GC, 12)                  \
-  D(SHARED_MEMORY_LIMIT, 13)               \
-  D(IDLE_TIME_COLLECTION, 14)              \
-  D(INCREMENTAL_TOO_SLOW, 15)              \
-  D(ABORT_GC, 16)                          \
-  D(FULL_WHOLE_CELL_BUFFER, 17)            \
-  D(FULL_GENERIC_BUFFER, 18)               \
-  D(FULL_VALUE_BUFFER, 19)                 \
-  D(FULL_CELL_PTR_BUFFER, 20)              \
-  D(FULL_SLOT_BUFFER, 21)                  \
-  D(FULL_SHAPE_BUFFER, 22)                 \
-  D(TOO_MUCH_WASM_MEMORY, 23)              \
-                                           \
-  /* These are reserved for future use. */ \
-  D(RESERVED0, 24)                         \
-  D(RESERVED1, 25)                         \
-  D(RESERVED2, 26)                         \
-  D(RESERVED3, 27)                         \
-  D(RESERVED4, 28)                         \
-  D(RESERVED5, 29)                         \
-  D(RESERVED6, 30)                         \
-  D(RESERVED7, 31)                         \
-  D(RESERVED8, 32)                         \
-                                           \
-  /* Reasons from Firefox */               \
-  D(DOM_WINDOW_UTILS, 33)                  \
-  D(COMPONENT_UTILS, 34)                   \
-  D(MEM_PRESSURE, 35)                      \
-  D(CC_WAITING, 36)                        \
-  D(CC_FORCED, 37)                         \
-  D(LOAD_END, 38)                          \
-  D(POST_COMPARTMENT, 39)                  \
-  D(PAGE_HIDE, 40)                         \
-  D(NSJSCONTEXT_DESTROY, 41)               \
-  D(SET_NEW_DOCUMENT, 42)                  \
-  D(SET_DOC_SHELL, 43)                     \
-  D(DOM_UTILS, 44)                         \
-  D(DOM_IPC, 45)                           \
-  D(DOM_WORKER, 46)                        \
-  D(INTER_SLICE_GC, 47)                    \
-  D(UNUSED1, 48)                           \
-  D(FULL_GC_TIMER, 49)                     \
-  D(SHUTDOWN_CC, 50)                       \
-  D(UNUSED2, 51)                           \
-  D(USER_INACTIVE, 52)                     \
-  D(XPCONNECT_SHUTDOWN, 53)                \
-  D(DOCSHELL, 54)                          \
-  D(HTML_PARSER, 55)
-
-namespace gcreason {
-
-/* GCReasons will end up looking like JSGC_MAYBEGC */
-enum Reason {
-#define MAKE_REASON(name, val) name = val,
-  GCREASONS(MAKE_REASON)
-||||||| merged common ancestors
-#define GCREASONS(D)                            \
-    /* Reasons internal to the JS engine */     \
-    D(API)                                      \
-    D(EAGER_ALLOC_TRIGGER)                      \
-    D(DESTROY_RUNTIME)                          \
-    D(ROOTS_REMOVED)                            \
-    D(LAST_DITCH)                               \
-    D(TOO_MUCH_MALLOC)                          \
-    D(ALLOC_TRIGGER)                            \
-    D(DEBUG_GC)                                 \
-    D(COMPARTMENT_REVIVED)                      \
-    D(RESET)                                    \
-    D(OUT_OF_NURSERY)                           \
-    D(EVICT_NURSERY)                            \
-    D(DELAYED_ATOMS_GC)                         \
-    D(SHARED_MEMORY_LIMIT)                      \
-    D(IDLE_TIME_COLLECTION)                     \
-    D(INCREMENTAL_TOO_SLOW)                     \
-    D(ABORT_GC)                                 \
-    D(FULL_WHOLE_CELL_BUFFER)                   \
-    D(FULL_GENERIC_BUFFER)                      \
-    D(FULL_VALUE_BUFFER)                        \
-    D(FULL_CELL_PTR_BUFFER)                     \
-    D(FULL_SLOT_BUFFER)                         \
-    D(FULL_SHAPE_BUFFER)                        \
-    D(TOO_MUCH_WASM_MEMORY)                     \
-                                                \
-    /* These are reserved for future use. */    \
-    D(RESERVED0)                                \
-    D(RESERVED1)                                \
-    D(RESERVED2)                                \
-    D(RESERVED3)                                \
-    D(RESERVED4)                                \
-    D(RESERVED5)                                \
-    D(RESERVED6)                                \
-    D(RESERVED7)                                \
-    D(RESERVED8)                                \
-                                                \
-    /* Reasons from Firefox */                  \
-    D(DOM_WINDOW_UTILS)                         \
-    D(COMPONENT_UTILS)                          \
-    D(MEM_PRESSURE)                             \
-    D(CC_WAITING)                               \
-    D(CC_FORCED)                                \
-    D(LOAD_END)                                 \
-    D(POST_COMPARTMENT)                         \
-    D(PAGE_HIDE)                                \
-    D(NSJSCONTEXT_DESTROY)                      \
-    D(SET_NEW_DOCUMENT)                         \
-    D(SET_DOC_SHELL)                            \
-    D(DOM_UTILS)                                \
-    D(DOM_IPC)                                  \
-    D(DOM_WORKER)                               \
-    D(INTER_SLICE_GC)                           \
-    D(UNUSED1)                                  \
-    D(FULL_GC_TIMER)                            \
-    D(SHUTDOWN_CC)                              \
-    D(UNUSED2)                                  \
-    D(USER_INACTIVE)                            \
-    D(XPCONNECT_SHUTDOWN)                       \
-    D(DOCSHELL)                                 \
-    D(HTML_PARSER)
-
-namespace gcreason {
-
-/* GCReasons will end up looking like JSGC_MAYBEGC */
-enum Reason {
-#define MAKE_REASON(name) name,
-    GCREASONS(MAKE_REASON)
-=======
 #define GCREASONS(D)                       \
   /* Reasons internal to the JS engine */  \
   D(API, 0)                                \
@@ -1044,31 +471,7 @@ enum Reason {
 enum class GCReason {
 #define MAKE_REASON(name, val) name = val,
   GCREASONS(MAKE_REASON)
->>>>>>> upstream-releases
 #undef MAKE_REASON
-<<<<<<< HEAD
-      NO_REASON,
-  NUM_REASONS,
-
-  /*
-   * For telemetry, we want to keep a fixed max bucket size over time so we
-   * don't have to switch histograms. 100 is conservative; as of this writing
-   * there are 52. But the cost of extra buckets seems to be low while the
-   * cost of switching histograms is high.
-   */
-  NUM_TELEMETRY_REASONS = 100
-||||||| merged common ancestors
-    NO_REASON,
-    NUM_REASONS,
-
-    /*
-     * For telemetry, we want to keep a fixed max bucket size over time so we
-     * don't have to switch histograms. 100 is conservative; as of this writing
-     * there are 52. But the cost of extra buckets seems to be low while the
-     * cost of switching histograms is high.
-     */
-    NUM_TELEMETRY_REASONS = 100
-=======
       NO_REASON,
   NUM_REASONS,
 
@@ -1078,24 +481,12 @@ enum class GCReason {
    * buckets seems to be low while the cost of switching histograms is high.
    */
   NUM_TELEMETRY_REASONS = 100
->>>>>>> upstream-releases
 };
 
 /**
  * Get a statically allocated C string explaining the given GC reason.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API const char* ExplainReason(JS::gcreason::Reason reason);
-
-} /* namespace gcreason */
-||||||| merged common ancestors
-extern JS_PUBLIC_API(const char*)
-ExplainReason(JS::gcreason::Reason reason);
-
-} /* namespace gcreason */
-=======
 extern JS_PUBLIC_API const char* ExplainGCReason(JS::GCReason reason);
->>>>>>> upstream-releases
 
 /*
  * Zone GC:
@@ -1155,18 +546,9 @@ extern JS_PUBLIC_API void SkipZoneForGC(Zone* zone);
  * to objects will be cleared and all unreferenced objects will be removed from
  * the system.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API void NonIncrementalGC(JSContext* cx,
-                                           JSGCInvocationKind gckind,
-                                           gcreason::Reason reason);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-NonIncrementalGC(JSContext* cx, JSGCInvocationKind gckind, gcreason::Reason reason);
-=======
 extern JS_PUBLIC_API void NonIncrementalGC(JSContext* cx,
                                            JSGCInvocationKind gckind,
                                            GCReason reason);
->>>>>>> upstream-releases
 
 /*
  * Incremental GC:
@@ -1197,21 +579,10 @@ extern JS_PUBLIC_API void NonIncrementalGC(JSContext* cx,
  * Note: SpiderMonkey's GC is not realtime. Slices in practice may be longer or
  *       shorter than the requested interval.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API void StartIncrementalGC(JSContext* cx,
-                                             JSGCInvocationKind gckind,
-                                             gcreason::Reason reason,
-                                             int64_t millis = 0);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-StartIncrementalGC(JSContext* cx, JSGCInvocationKind gckind, gcreason::Reason reason,
-                   int64_t millis = 0);
-=======
 extern JS_PUBLIC_API void StartIncrementalGC(JSContext* cx,
                                              JSGCInvocationKind gckind,
                                              GCReason reason,
                                              int64_t millis = 0);
->>>>>>> upstream-releases
 
 /**
  * Perform a slice of an ongoing incremental collection. When this function
@@ -1221,14 +592,6 @@ extern JS_PUBLIC_API void StartIncrementalGC(JSContext* cx,
  * Note: SpiderMonkey's GC is not realtime. Slices in practice may be longer or
  *       shorter than the requested interval.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API void IncrementalGCSlice(JSContext* cx,
-                                             gcreason::Reason reason,
-                                             int64_t millis = 0);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-IncrementalGCSlice(JSContext* cx, gcreason::Reason reason, int64_t millis = 0);
-=======
 extern JS_PUBLIC_API void IncrementalGCSlice(JSContext* cx, GCReason reason,
                                              int64_t millis = 0);
 
@@ -1239,7 +602,6 @@ extern JS_PUBLIC_API void IncrementalGCSlice(JSContext* cx, GCReason reason,
  * now would return immediately.
  */
 extern JS_PUBLIC_API bool IncrementalGCHasForegroundWork(JSContext* cx);
->>>>>>> upstream-releases
 
 /**
  * If IsIncrementalGCInProgress(cx), this call finishes the ongoing collection
@@ -1247,15 +609,7 @@ extern JS_PUBLIC_API bool IncrementalGCHasForegroundWork(JSContext* cx);
  * this is equivalent to NonIncrementalGC. When this function returns,
  * IsIncrementalGCInProgress(cx) will always be false.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API void FinishIncrementalGC(JSContext* cx,
-                                              gcreason::Reason reason);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-FinishIncrementalGC(JSContext* cx, gcreason::Reason reason);
-=======
 extern JS_PUBLIC_API void FinishIncrementalGC(JSContext* cx, GCReason reason);
->>>>>>> upstream-releases
 
 /**
  * If IsIncrementalGCInProgress(cx), this call aborts the ongoing collection and
@@ -1327,83 +681,33 @@ enum GCProgress {
   GC_CYCLE_END
 };
 
-<<<<<<< HEAD
-struct JS_PUBLIC_API GCDescription {
-  bool isZone_;
-  bool isComplete_;
-  JSGCInvocationKind invocationKind_;
-  gcreason::Reason reason_;
-||||||| merged common ancestors
-struct JS_PUBLIC_API(GCDescription) {
-    bool isZone_;
-    bool isComplete_;
-    JSGCInvocationKind invocationKind_;
-    gcreason::Reason reason_;
-=======
 struct JS_PUBLIC_API GCDescription {
   bool isZone_;
   bool isComplete_;
   JSGCInvocationKind invocationKind_;
   GCReason reason_;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  GCDescription(bool isZone, bool isComplete, JSGCInvocationKind kind,
-                gcreason::Reason reason)
-      : isZone_(isZone),
-        isComplete_(isComplete),
-        invocationKind_(kind),
-        reason_(reason) {}
-||||||| merged common ancestors
-    GCDescription(bool isZone, bool isComplete, JSGCInvocationKind kind, gcreason::Reason reason)
-      : isZone_(isZone), isComplete_(isComplete), invocationKind_(kind), reason_(reason) {}
-=======
   GCDescription(bool isZone, bool isComplete, JSGCInvocationKind kind,
                 GCReason reason)
       : isZone_(isZone),
         isComplete_(isComplete),
         invocationKind_(kind),
         reason_(reason) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   char16_t* formatSliceMessage(JSContext* cx) const;
   char16_t* formatSummaryMessage(JSContext* cx) const;
-  char16_t* formatJSON(JSContext* cx, uint64_t timestamp) const;
-||||||| merged common ancestors
-    char16_t* formatSliceMessage(JSContext* cx) const;
-    char16_t* formatSummaryMessage(JSContext* cx) const;
-    char16_t* formatJSON(JSContext* cx, uint64_t timestamp) const;
-=======
-  char16_t* formatSliceMessage(JSContext* cx) const;
-  char16_t* formatSummaryMessage(JSContext* cx) const;
->>>>>>> upstream-releases
 
   mozilla::TimeStamp startTime(JSContext* cx) const;
   mozilla::TimeStamp endTime(JSContext* cx) const;
   mozilla::TimeStamp lastSliceStart(JSContext* cx) const;
   mozilla::TimeStamp lastSliceEnd(JSContext* cx) const;
 
-<<<<<<< HEAD
-  JS::UniqueChars sliceToJSON(JSContext* cx) const;
-  JS::UniqueChars summaryToJSON(JSContext* cx) const;
-||||||| merged common ancestors
-    JS::UniqueChars sliceToJSON(JSContext* cx) const;
-    JS::UniqueChars summaryToJSON(JSContext* cx) const;
-=======
   char16_t* formatJSONTelemetry(JSContext* cx, uint64_t timestamp) const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::dbg::GarbageCollectionEvent::Ptr toGCEvent(JSContext* cx) const;
-||||||| merged common ancestors
-    JS::dbg::GarbageCollectionEvent::Ptr toGCEvent(JSContext* cx) const;
-=======
   JS::UniqueChars sliceToJSONProfiler(JSContext* cx) const;
   JS::UniqueChars formatJSONProfiler(JSContext* cx) const;
 
   JS::dbg::GarbageCollectionEvent::Ptr toGCEvent(JSContext* cx) const;
->>>>>>> upstream-releases
 };
 
 extern JS_PUBLIC_API UniqueChars MinorGcToJSON(JSContext* cx);
@@ -1437,18 +741,9 @@ enum class GCNurseryProgress {
  * A nursery collection callback receives the progress of the nursery collection
  * and the reason for the collection.
  */
-<<<<<<< HEAD
-using GCNurseryCollectionCallback = void (*)(JSContext* cx,
-                                             GCNurseryProgress progress,
-                                             gcreason::Reason reason);
-||||||| merged common ancestors
-using GCNurseryCollectionCallback = void(*)(JSContext* cx, GCNurseryProgress progress,
-                                            gcreason::Reason reason);
-=======
 using GCNurseryCollectionCallback = void (*)(JSContext* cx,
                                              GCNurseryProgress progress,
                                              GCReason reason);
->>>>>>> upstream-releases
 
 /**
  * Set the nursery collection callback for the given runtime. When set, it will
@@ -1652,15 +947,8 @@ extern JS_PUBLIC_API void JS_RemoveExtraGCRootsTracer(JSContext* cx,
                                                       JSTraceDataOp traceOp,
                                                       void* data);
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API void JS_GC(JSContext* cx);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(void)
-JS_GC(JSContext* cx);
-=======
 extern JS_PUBLIC_API void JS_GC(JSContext* cx,
                                 JS::GCReason reason = JS::GCReason::API);
->>>>>>> upstream-releases
 
 extern JS_PUBLIC_API void JS_MaybeGC(JSContext* cx);
 

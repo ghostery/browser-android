@@ -28,15 +28,7 @@ class DebugTargetList extends PureComponent {
       additionalActionsComponent: PropTypes.any,
       detailComponent: PropTypes.any.isRequired,
       dispatch: PropTypes.func.isRequired,
-<<<<<<< HEAD
-      isCollapsed: PropTypes.bool.isRequired,
       targets: PropTypes.arrayOf(Types.debugTarget).isRequired,
-||||||| merged common ancestors
-      isCollapsed: PropTypes.bool.isRequired,
-      targets: PropTypes.arrayOf(PropTypes.object).isRequired,
-=======
-      targets: PropTypes.arrayOf(Types.debugTarget).isRequired,
->>>>>>> upstream-releases
     };
   }
 

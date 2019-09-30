@@ -41,31 +41,14 @@ class PlacesObservers {
   static void RemoveListener(const nsTArray<PlacesEventType>& aEventTypes,
                              places::INativePlacesEventCallback* aCallback);
 
-<<<<<<< HEAD
-  static void NotifyListeners(
-      GlobalObject& aGlobal,
-      const Sequence<OwningNonNull<PlacesEvent>>& aEvents, ErrorResult& rv);
-||||||| merged common ancestors
-  static void NotifyListeners(GlobalObject& aGlobal,
-                              const Sequence<OwningNonNull<PlacesEvent>>& aEvents,
-                              ErrorResult& rv);
-=======
   MOZ_CAN_RUN_SCRIPT
   static void NotifyListeners(
       GlobalObject& aGlobal,
       const Sequence<OwningNonNull<PlacesEvent>>& aEvents, ErrorResult& rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void NotifyListeners(
-      const Sequence<OwningNonNull<PlacesEvent>>& aEvents);
-||||||| merged common ancestors
-  static void NotifyListeners(const Sequence<OwningNonNull<PlacesEvent>>& aEvents);
-=======
   MOZ_CAN_RUN_SCRIPT
   static void NotifyListeners(
       const Sequence<OwningNonNull<PlacesEvent>>& aEvents);
->>>>>>> upstream-releases
 
  private:
   static void RemoveListener(uint32_t aFlags, PlacesEventCallback& aCallback);

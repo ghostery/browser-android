@@ -75,24 +75,11 @@ bool DoWhileEmitter::emitEnd() {
     return false;
   }
 
-<<<<<<< HEAD
-  if (!bce_->addTryNote(JSTRY_LOOP, bce_->stackDepth, loopInfo_->headOffset(),
-                        loopInfo_->breakTargetOffset())) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!bce_->tryNoteList.append(JSTRY_LOOP, bce_->stackDepth, loopInfo_->headOffset(),
-                                  loopInfo_->breakTargetOffset()))
-    {
-        return false;
-    }
-=======
   if (!bce_->addTryNote(JSTRY_LOOP, bce_->bytecodeSection().stackDepth(),
                         loopInfo_->headOffset(),
                         loopInfo_->breakTargetOffset())) {
     return false;
   }
->>>>>>> upstream-releases
 
   // Update the annotations with the update and back edge positions, for
   // IonBuilder.

@@ -113,29 +113,13 @@ inline ClippedTime TimeClip(double time) {
 
 // Produce a double Value from the given time.  Because times may be NaN,
 // prefer using this to manual canonicalization.
-<<<<<<< HEAD
-inline Value TimeValue(ClippedTime time) {
-  return DoubleValue(JS::CanonicalizeNaN(time.toDouble()));
-||||||| merged common ancestors
-inline Value
-TimeValue(ClippedTime time)
-{
-    return DoubleValue(JS::CanonicalizeNaN(time.toDouble()));
-=======
 inline Value TimeValue(ClippedTime time) {
   return CanonicalizedDoubleValue(time.toDouble());
->>>>>>> upstream-releases
 }
 
 // Create a new Date object whose [[DateValue]] internal slot contains the
 // clipped |time|.  (Users who must represent times outside that range must use
 // another representation.)
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* NewDateObject(JSContext* cx, ClippedTime time);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(JSObject*)
-NewDateObject(JSContext* cx, ClippedTime time);
-=======
 extern JS_PUBLIC_API JSObject* NewDateObject(JSContext* cx, ClippedTime time);
 
 /**
@@ -162,7 +146,6 @@ extern JS_PUBLIC_API JSObject* NewDateObject(JSContext* cx, int year, int mon,
  */
 extern JS_PUBLIC_API bool ObjectIsDate(JSContext* cx, Handle<JSObject*> obj,
                                        bool* isDate);
->>>>>>> upstream-releases
 
 // Year is a year, month is 0-11, day is 1-based.  The return value is a number
 // of milliseconds since the epoch.

@@ -23,43 +23,15 @@ class RemoteSpellcheckEngineParent : public PRemoteSpellcheckEngineParent {
   virtual mozilla::ipc::IPCResult RecvSetDictionary(const nsString& aDictionary,
                                                     bool* success);
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvSetDictionaryFromList(
-      nsTArray<nsString>&& aList,
-      SetDictionaryFromListResolver&& aResolve) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvSetDictionaryFromList(nsTArray<nsString>&& aList,
-                            SetDictionaryFromListResolver&& aResolve) override;
-=======
   virtual mozilla::ipc::IPCResult RecvSetDictionaryFromList(
       nsTArray<nsString>&& aList, SetDictionaryFromListResolver&& aResolve);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvCheck(const nsString& aWord,
-                                            bool* aIsMisspelled) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvCheck(const nsString& aWord, bool* aIsMisspelled) override;
-=======
   virtual mozilla::ipc::IPCResult RecvCheckAsync(nsTArray<nsString>&& aWord,
                                                  CheckAsyncResolver&& aResolve);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvCheckAndSuggest(
-      const nsString& aWord, bool* aIsMisspelled,
-      InfallibleTArray<nsString>* aSuggestions) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvCheckAndSuggest(const nsString& aWord,
-                                                      bool* aIsMisspelled,
-                                                      InfallibleTArray<nsString>* aSuggestions)
-      override;
-=======
   virtual mozilla::ipc::IPCResult RecvCheckAndSuggest(
       const nsString& aWord, bool* aIsMisspelled,
       InfallibleTArray<nsString>* aSuggestions);
->>>>>>> upstream-releases
 
  private:
   RefPtr<mozSpellChecker> mSpellChecker;

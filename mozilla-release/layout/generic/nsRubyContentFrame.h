@@ -25,21 +25,10 @@ class nsRubyContentFrame : public nsInlineFrame {
   // See http://dev.w3.org/csswg/css-ruby/#anon-gen-interpret-space
   bool IsIntraLevelWhitespace() const;
 
-<<<<<<< HEAD
- protected:
-  nsRubyContentFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsInlineFrame(aStyle, aID) {}
-||||||| merged common ancestors
-protected:
-  nsRubyContentFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsInlineFrame(aStyle, aID)
-  {}
-=======
  protected:
   nsRubyContentFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                      ClassID aID)
       : nsInlineFrame(aStyle, aPresContext, aID) {}
->>>>>>> upstream-releases
 };
 
 #endif /* nsRubyContentFrame_h___ */

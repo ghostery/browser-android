@@ -33,16 +33,8 @@ use simd_funcs::*;
         all(target_endian = "little", target_arch = "aarch64"),
         all(target_endian = "little", target_feature = "neon")
     )
-<<<<<<< HEAD
-))]
-use simd::u16x8;
-||||||| merged common ancestors
-)]
-use simd::u16x8;
-=======
 ))]
 use packed_simd::u16x8;
->>>>>>> upstream-releases
 
 use super::DecoderResult;
 use super::EncoderResult;

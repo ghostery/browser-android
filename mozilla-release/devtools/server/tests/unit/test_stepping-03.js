@@ -8,62 +8,6 @@
  * Check basic step-out functionality.
  */
 
-<<<<<<< HEAD
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  dumpn("Evaluating test code and waiting for first debugger statement");
-  await executeOnNextTickAndWaitForPause(() => evaluateTestCode(debuggee), client);
-
-  const step1 = await stepOut(client, threadClient);
-  equal(step1.type, "paused");
-  equal(step1.frame.where.line, 8);
-  equal(step1.why.type, "resumeLimit");
-
-  equal(debuggee.a, 1);
-  equal(debuggee.b, 2);
-}));
-
-function evaluateTestCode(debuggee) {
-||||||| merged common ancestors
-var gDebuggee;
-var gClient;
-var gCallback;
-
-function run_test() {
-  run_test_with_server(DebuggerServer, function() {
-    run_test_with_server(WorkerDebuggerServer, do_test_finished);
-  });
-  do_test_pending();
-}
-
-function run_test_with_server(server, callback) {
-  gCallback = callback;
-  initTestDebuggerServer(server);
-  gDebuggee = addTestGlobal("test-stepping", server);
-  gClient = new DebuggerClient(server.connectPipe());
-  gClient.connect(test_simple_stepping);
-}
-
-async function test_simple_stepping() {
-  const [attachResponse,, threadClient] = await attachTestTabAndResume(gClient,
-                                                                       "test-stepping");
-  ok(!attachResponse.error, "Should not get an error attaching");
-
-  dumpn("Evaluating test code and waiting for first debugger statement");
-  await executeOnNextTickAndWaitForPause(evaluateTestCode, gClient);
-
-  const step1 = await stepOut(gClient, threadClient);
-  equal(step1.type, "paused");
-  equal(step1.frame.where.line, 8);
-  equal(step1.why.type, "resumeLimit");
-
-  equal(gDebuggee.a, 1);
-  equal(gDebuggee.b, 2);
-
-  finishClient(gClient, gCallback);
-}
-
-function evaluateTestCode() {
-=======
 add_task(
   threadClientTest(async ({ threadClient, debuggee }) => {
     dumpn("Evaluating test code and waiting for first debugger statement");
@@ -82,7 +26,6 @@ add_task(
 );
 
 function evaluateTestCode(debuggee) {
->>>>>>> upstream-releases
   /* eslint-disable */
   Cu.evalInSandbox(
     `                                   // 1

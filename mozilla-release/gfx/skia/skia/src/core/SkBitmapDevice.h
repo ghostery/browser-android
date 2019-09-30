@@ -88,16 +88,7 @@ protected:
      *  may do this to implement helpers such as drawOval, by placing a temp
      *  path on the stack to hold the representation of the oval.
      */
-<<<<<<< HEAD
     void drawPath(const SkPath&, const SkPaint&, bool pathIsMutable) override;
-    void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y, const SkPaint&) override;
-||||||| merged common ancestors
-    void drawPath(const SkPath&, const SkPaint&, const SkMatrix* prePathMatrix,
-                          bool pathIsMutable) override;
-    void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y, const SkPaint&) override;
-=======
-    void drawPath(const SkPath&, const SkPaint&, bool pathIsMutable) override;
->>>>>>> upstream-releases
     void drawSprite(const SkBitmap&, int x, int y, const SkPaint&) override;
 
     /**

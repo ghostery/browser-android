@@ -126,14 +126,6 @@ WINDOWS_WORKER_TYPES = {
       'virtual-with-gpu': 't-win10-64-gpu',
       'hardware': 't-win10-64-hw',
     },
-<<<<<<< HEAD
-    'windows10-64-ux': {
-      'virtual': 'aws-provisioner-v1/gecko-t-win10-64',
-      'virtual-with-gpu': 'aws-provisioner-v1/gecko-t-win10-64-gpu',
-      'hardware': 'releng-hardware/gecko-t-win10-64-ux',
-    },
-||||||| merged common ancestors
-=======
     'windows10-64-pgo-qr': {
       'virtual': 't-win10-64',
       'virtual-with-gpu': 't-win10-64-gpu',
@@ -154,7 +146,6 @@ WINDOWS_WORKER_TYPES = {
     #   'virtual-with-gpu': 't-win10-64-gpu',
     #   'hardware': 't-win10-64-ref-hw',
     # },
->>>>>>> upstream-releases
 }
 
 # os x worker types keyed by test-platform
@@ -545,15 +536,7 @@ def set_defaults(config, tests):
             # all Android test tasks download internal objects from tooltool
             test['mozharness']['tooltool-downloads'] = 'internal'
             test['mozharness']['actions'] = ['get-secrets']
-<<<<<<< HEAD
-            # Fennec is non-e10s; geckoview handled in set_target
-            test['e10s'] = False
-||||||| merged common ancestors
-            # Android doesn't do e10s
-            test['e10s'] = False
-=======
 
->>>>>>> upstream-releases
             # loopback-video is always true for Android, but false for other
             # platform phyla
             test['loopback-video'] = True
@@ -590,15 +573,8 @@ def set_defaults(config, tests):
         test.setdefault('loopback-video', False)
         test.setdefault('docker-image', {'in-tree': 'desktop1604-test'})
         test.setdefault('checkout', False)
-<<<<<<< HEAD
-        test.setdefault('serviceworker-e10s', False)
-        test.setdefault('require-signed-extensions', False)
-||||||| merged common ancestors
-        test.setdefault('serviceworker-e10s', False)
-=======
         test.setdefault('require-signed-extensions', False)
         test.setdefault('variants', [])
->>>>>>> upstream-releases
 
         test['mozharness'].setdefault('extra-options', [])
         test['mozharness'].setdefault('requires-signed-builds', False)
@@ -609,12 +585,6 @@ def set_defaults(config, tests):
         yield test
 
 
-<<<<<<< HEAD
-transforms.add_validate(test_description_schema)
-
-
-||||||| merged common ancestors
-=======
 transforms.add_validate(test_description_schema)
 
 
@@ -631,28 +601,9 @@ def resolve_keys(config, tests):
         yield test
 
 
->>>>>>> upstream-releases
 @transforms.add
-<<<<<<< HEAD
-def resolve_keys(config, tests):
-||||||| merged common ancestors
-def validate(config, tests):
-=======
 def handle_suite_category(config, tests):
->>>>>>> upstream-releases
     for test in tests:
-<<<<<<< HEAD
-        resolve_keyed_by(
-            test, 'require-signed-extensions',
-            item_name=test['test-name'],
-            **{
-                'release-type': config.params['release_type'],
-            }
-        )
-||||||| merged common ancestors
-        validate_schema(test_description_schema, test,
-                        "In test {!r}:".format(test['test-name']))
-=======
         test.setdefault('suite', {})
 
         if isinstance(test['suite'], basestring):
@@ -682,7 +633,6 @@ def handle_suite_category(config, tests):
 
         # From here on out we only use the suite name.
         test['suite'] = suite
->>>>>>> upstream-releases
         yield test
 
 
@@ -741,8 +691,6 @@ def set_target(config, tests):
         if 'target' in test:
             resolve_keyed_by(test, 'target', item_name=test['test-name'])
             target = test['target']
-            if target and 'geckoview' in target:
-                test['e10s'] = True
         if not target:
             if build_platform.startswith('macosx'):
                 target = 'target.dmg'
@@ -880,18 +828,11 @@ def set_tier(config, tests):
                                          'macosx1014-64-qr/debug',
                                          'android-em-4.3-arm7-api-16/opt',
                                          'android-em-4.3-arm7-api-16/debug',
-<<<<<<< HEAD
-                                         'android-em-4.2-x86/opt',
-                                         'android-em-7.0-x86/opt']:
-||||||| merged common ancestors
-                                         'android-em-4.2-x86/opt']:
-=======
                                          'android-em-4.3-arm7-api-16/pgo',
                                          'android-em-4.2-x86/opt',
                                          'android-em-7.0-x86_64/opt',
                                          'android-em-7.0-x86_64/debug',
                                          'android-em-7.0-x86/opt']:
->>>>>>> upstream-releases
                 test['tier'] = 1
             else:
                 test['tier'] = 2
@@ -1192,11 +1133,6 @@ def enable_webrender(config, tests):
         if test.get('webrender'):
             test['mozharness'].setdefault('extra-options', [])\
                               .append("--enable-webrender")
-        # Explicitly disable WebRender on non-WR AWSY, since that job runs on
-        # virtual-with-gpu and thus is considered qualified hardware.
-        elif test['suite'] == 'awsy':
-            test['mozharness'].setdefault('extra-options', [])\
-                              .append("--disable-webrender")
 
         yield test
 
@@ -1276,14 +1212,6 @@ def set_worker_type(config, tests):
             # figure out what platform the job needs to run on
             if test['virtualization'] == 'hardware':
                 # some jobs like talos and reftest run on real h/w - those are all win10
-<<<<<<< HEAD
-                if test_platform.startswith('windows10-64-ux'):
-                    win_worker_type_platform = WINDOWS_WORKER_TYPES['windows10-64-ux']
-                else:
-                    win_worker_type_platform = WINDOWS_WORKER_TYPES['windows10-64']
-||||||| merged common ancestors
-                win_worker_type_platform = WINDOWS_WORKER_TYPES['windows10-64']
-=======
                 if test_platform.startswith('windows10-64-ux'):
                     win_worker_type_platform = WINDOWS_WORKER_TYPES['windows10-64-ux']
                 # elif test_platform.startswith('windows10-64-ref-hw-2017'):
@@ -1292,7 +1220,6 @@ def set_worker_type(config, tests):
                     win_worker_type_platform = WINDOWS_WORKER_TYPES['windows10-aarch64']
                 else:
                     win_worker_type_platform = WINDOWS_WORKER_TYPES['windows10-64']
->>>>>>> upstream-releases
             else:
                 # the other jobs run on a vm which may or may not be a win10 vm
                 win_worker_type_platform = WINDOWS_WORKER_TYPES[

@@ -44,20 +44,9 @@ void DocAccessibleChild::Shutdown() {
   DetachDocument();
 }
 
-<<<<<<< HEAD
-ipc::IPCResult DocAccessibleChild::RecvParentCOMProxy(
-    const IDispatchHolder& aParentCOMProxy) {
-  MOZ_ASSERT(!mParentProxy && !aParentCOMProxy.IsNull());
-||||||| merged common ancestors
-ipc::IPCResult
-DocAccessibleChild::RecvParentCOMProxy(const IDispatchHolder& aParentCOMProxy)
-{
-  MOZ_ASSERT(!mParentProxy && !aParentCOMProxy.IsNull());
-=======
 ipc::IPCResult DocAccessibleChild::RecvParentCOMProxy(
     const IDispatchHolder& aParentCOMProxy) {
   MOZ_ASSERT(!aParentCOMProxy.IsNull());
->>>>>>> upstream-releases
   mParentProxy.reset(const_cast<IDispatchHolder&>(aParentCOMProxy).Release());
   SetConstructedInParentProcess();
 
@@ -104,16 +93,8 @@ void DocAccessibleChild::PushDeferredEvent(UniquePtr<DeferredEvent> aEvent) {
       return;
     }
 
-<<<<<<< HEAD
-    topLevelIPCDoc = static_cast<DocAccessibleChild*>(
-        tabChild->GetTopLevelDocAccessibleChild());
-||||||| merged common ancestors
-    topLevelIPCDoc =
-      static_cast<DocAccessibleChild*>(tabChild->GetTopLevelDocAccessibleChild());
-=======
     topLevelIPCDoc = static_cast<DocAccessibleChild*>(
         browserChild->GetTopLevelDocAccessibleChild());
->>>>>>> upstream-releases
   }
 
   if (topLevelIPCDoc) {
@@ -213,27 +194,10 @@ bool DocAccessibleChild::SendCaretMoveEvent(
   return true;
 }
 
-<<<<<<< HEAD
-bool DocAccessibleChild::SendTextChangeEvent(
-    const uint64_t& aID, const nsString& aStr, const int32_t& aStart,
-    const uint32_t& aLen, const bool& aIsInsert, const bool& aFromUser,
-    const bool aDoSyncCheck) {
-||||||| merged common ancestors
-bool
-DocAccessibleChild::SendTextChangeEvent(const uint64_t& aID,
-                                        const nsString& aStr,
-                                        const int32_t& aStart,
-                                        const uint32_t& aLen,
-                                        const bool& aIsInsert,
-                                        const bool& aFromUser,
-                                        const bool aDoSyncCheck)
-{
-=======
 bool DocAccessibleChild::SendTextChangeEvent(
     const uint64_t& aID, const nsString& aStr, const int32_t& aStart,
     const uint32_t& aLen, const bool& aIsInsert, const bool& aFromUser,
     const bool aDoSync) {
->>>>>>> upstream-releases
   if (IsConstructedInParentProcess()) {
     if (aDoSync) {
       // The AT is going to need to reenter content while the event is being
@@ -291,23 +255,10 @@ bool DocAccessibleChild::ConstructChildDocInParentProcess(
     DocAccessibleChild* aNewChildDoc, uint64_t aUniqueID, uint32_t aMsaaID) {
   if (IsConstructedInParentProcess()) {
     // We may send the constructor immediately
-<<<<<<< HEAD
-    auto tabChild = static_cast<dom::TabChild*>(Manager());
-    MOZ_ASSERT(tabChild);
-    bool result = tabChild->SendPDocAccessibleConstructor(
-        aNewChildDoc, this, aUniqueID, aMsaaID, IAccessibleHolder());
-||||||| merged common ancestors
-    auto tabChild = static_cast<dom::TabChild*>(Manager());
-    MOZ_ASSERT(tabChild);
-    bool result = tabChild->SendPDocAccessibleConstructor(aNewChildDoc, this,
-                                                          aUniqueID, aMsaaID,
-                                                          IAccessibleHolder());
-=======
     auto browserChild = static_cast<dom::BrowserChild*>(Manager());
     MOZ_ASSERT(browserChild);
     bool result = browserChild->SendPDocAccessibleConstructor(
         aNewChildDoc, this, aUniqueID, aMsaaID, IAccessibleHolder());
->>>>>>> upstream-releases
     if (result) {
       aNewChildDoc->SetConstructedInParentProcess();
     }

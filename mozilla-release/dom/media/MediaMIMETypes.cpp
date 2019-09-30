@@ -113,68 +113,6 @@ static int32_t GetParameterAsNumber(const nsContentTypeParser& aParser,
   return number;
 }
 
-<<<<<<< HEAD
-MediaExtendedMIMEType::MediaExtendedMIMEType(
-    const nsACString& aOriginalString, const nsACString& aMIMEType,
-    bool aHaveCodecs, const nsAString& aCodecs, int32_t aWidth, int32_t aHeight,
-    double aFramerate, int32_t aBitrate)
-    : mOriginalString(aOriginalString),
-      mMIMEType(aMIMEType),
-      mHaveCodecs(aHaveCodecs),
-      mCodecs(aCodecs),
-      mWidth(aWidth),
-      mHeight(aHeight),
-      mFramerate(aFramerate),
-      mBitrate(aBitrate) {}
-
-MediaExtendedMIMEType::MediaExtendedMIMEType(
-    const nsACString& aOriginalString, const nsACString& aMIMEType,
-    bool aHaveCodecs, const nsAString& aCodecs, int32_t aChannels,
-    int32_t aSamplerate, int32_t aBitrate)
-    : mOriginalString(aOriginalString),
-      mMIMEType(aMIMEType),
-      mHaveCodecs(aHaveCodecs),
-      mCodecs(aCodecs),
-      mChannels(aChannels),
-      mSamplerate(aSamplerate),
-      mBitrate(aBitrate) {}
-||||||| merged common ancestors
-MediaExtendedMIMEType::MediaExtendedMIMEType(const nsACString& aOriginalString,
-                                             const nsACString& aMIMEType,
-                                             bool aHaveCodecs,
-                                             const nsAString& aCodecs,
-                                             int32_t aWidth,
-                                             int32_t aHeight,
-                                             double aFramerate,
-                                             int32_t aBitrate)
-  : mOriginalString(aOriginalString)
-  , mMIMEType(aMIMEType)
-  , mHaveCodecs(aHaveCodecs)
-  , mCodecs(aCodecs)
-  , mWidth(aWidth)
-  , mHeight(aHeight)
-  , mFramerate(aFramerate)
-  , mBitrate(aBitrate)
-{
-}
-
-MediaExtendedMIMEType::MediaExtendedMIMEType(const nsACString& aOriginalString,
-                                             const nsACString& aMIMEType,
-                                             bool aHaveCodecs,
-                                             const nsAString& aCodecs,
-                                             int32_t aChannels,
-                                             int32_t aSamplerate,
-                                             int32_t aBitrate)
-  : mOriginalString(aOriginalString)
-  , mMIMEType(aMIMEType)
-  , mHaveCodecs(aHaveCodecs)
-  , mCodecs(aCodecs)
-  , mChannels(aChannels)
-  , mSamplerate(aSamplerate)
-  , mBitrate(aBitrate)
-{
-}
-=======
 MediaExtendedMIMEType::MediaExtendedMIMEType(
     const nsACString& aOriginalString, const nsACString& aMIMEType,
     bool aHaveCodecs, const nsAString& aCodecs, int32_t aWidth, int32_t aHeight,
@@ -201,7 +139,6 @@ MediaExtendedMIMEType::MediaExtendedMIMEType(
       mChannels(aChannels),
       mSamplerate(aSamplerate),
       mBitrate(aBitrate) {}
->>>>>>> upstream-releases
 
 MediaExtendedMIMEType::MediaExtendedMIMEType(const MediaMIMEType& aType)
     : mOriginalString(aType.AsString()), mMIMEType(aType) {}
@@ -209,18 +146,9 @@ MediaExtendedMIMEType::MediaExtendedMIMEType(const MediaMIMEType& aType)
 MediaExtendedMIMEType::MediaExtendedMIMEType(MediaMIMEType&& aType)
     : mOriginalString(aType.AsString()), mMIMEType(std::move(aType)) {}
 
-<<<<<<< HEAD
-/* static */ Maybe<double> MediaExtendedMIMEType::ComputeFractionalString(
-    const nsAString& aFrac) {
-||||||| merged common ancestors
-/* static */ Maybe<double>
-MediaExtendedMIMEType::ComputeFractionalString(const nsAString& aFrac)
-{
-=======
 /* static */
 Maybe<double> MediaExtendedMIMEType::ComputeFractionalString(
     const nsAString& aFrac) {
->>>>>>> upstream-releases
   nsAutoString frac(aFrac);
   nsresult error;
   double result = frac.ToDouble(&error);
@@ -255,13 +183,6 @@ Maybe<double> MediaExtendedMIMEType::ComputeFractionalString(
   return Some(result);
 }
 
-<<<<<<< HEAD
-Maybe<MediaExtendedMIMEType> MakeMediaExtendedMIMEType(const nsAString& aType) {
-||||||| merged common ancestors
-Maybe<MediaExtendedMIMEType>
-MakeMediaExtendedMIMEType(const nsAString& aType)
-{
-=======
 static EOTF GetParameterAsEOTF(const nsContentTypeParser& aParser) {
   nsAutoString eotf;
   nsresult rv = aParser.GetParameter("eotf", eotf);
@@ -275,7 +196,6 @@ static EOTF GetParameterAsEOTF(const nsContentTypeParser& aParser) {
 }
 
 Maybe<MediaExtendedMIMEType> MakeMediaExtendedMIMEType(const nsAString& aType) {
->>>>>>> upstream-releases
   nsContentTypeParser parser(aType);
   nsAutoString mime;
   nsresult rv = parser.GetType(mime);
@@ -299,21 +219,9 @@ Maybe<MediaExtendedMIMEType> MakeMediaExtendedMIMEType(const nsAString& aType) {
   EOTF eotf = GetParameterAsEOTF(parser);
   int32_t channels = GetParameterAsNumber(parser, "channels", -1);
 
-<<<<<<< HEAD
-  return Some(MediaExtendedMIMEType(NS_ConvertUTF16toUTF8(aType), mime8,
-                                    haveCodecs, codecs, width, height,
-                                    framerate, bitrate));
-||||||| merged common ancestors
-  return Some(MediaExtendedMIMEType(NS_ConvertUTF16toUTF8(aType),
-                                    mime8,
-                                    haveCodecs, codecs,
-                                    width, height,
-                                    framerate, bitrate));
-=======
   return Some(MediaExtendedMIMEType(NS_ConvertUTF16toUTF8(aType), mime8,
                                     haveCodecs, codecs, width, height,
                                     framerate, bitrate, eotf, channels));
->>>>>>> upstream-releases
 }
 
 Maybe<MediaExtendedMIMEType> MakeMediaExtendedMIMEType(
@@ -343,26 +251,10 @@ Maybe<MediaExtendedMIMEType> MakeMediaExtendedMIMEType(
     return Nothing();
   }
 
-<<<<<<< HEAD
-  return Some(MediaExtendedMIMEType(
-      NS_ConvertUTF16toUTF8(aConfig.mContentType), mime8, haveCodecs, codecs,
-      aConfig.mWidth, aConfig.mHeight, framerate.ref(), aConfig.mBitrate));
-||||||| merged common ancestors
-  return Some(
-    MediaExtendedMIMEType(NS_ConvertUTF16toUTF8(aConfig.mContentType),
-                          mime8,
-                          haveCodecs,
-                          codecs,
-                          aConfig.mWidth,
-                          aConfig.mHeight,
-                          framerate.ref(),
-                          aConfig.mBitrate));
-=======
   return Some(MediaExtendedMIMEType(NS_ConvertUTF16toUTF8(aConfig.mContentType),
                                     mime8, haveCodecs, codecs, aConfig.mWidth,
                                     aConfig.mHeight, framerate.ref(),
                                     aConfig.mBitrate, EOTF::UNSPECIFIED));
->>>>>>> upstream-releases
 }
 
 Maybe<MediaExtendedMIMEType> MakeMediaExtendedMIMEType(

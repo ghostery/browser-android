@@ -2010,36 +2010,6 @@ this.LoginManagerContent = {
   },
 
   /**
-<<<<<<< HEAD
-   * Returns the username and password fields found in the form by input
-   * element into form.
-   *
-   * @param {HTMLInputElement} aField
-   *                           A form field into form.
-   * @return {Array} [usernameField, newPasswordField, oldPasswordField]
-   *
-   * More detail of these values is same as _getFormFields.
-   */
-  getUserNameAndPasswordFields(aField) {
-    // If the element is not a proper form field, return null.
-    if (ChromeUtils.getClassName(aField) !== "HTMLInputElement" ||
-        (aField.type != "password" && !LoginHelper.isUsernameFieldType(aField)) ||
-        aField.nodePrincipal.isNullPrincipal ||
-        !aField.ownerDocument) {
-      return [null, null, null];
-    }
-    let form = LoginFormFactory.createFromField(aField);
-
-    let doc = aField.ownerDocument;
-    let formOrigin = LoginUtils._getPasswordOrigin(doc.documentURI);
-    let recipes = LoginRecipesContent.getRecipes(formOrigin, doc.defaultView);
-
-    return this._getFormFields(form, false, recipes);
-  },
-
-  /**
-||||||| merged common ancestors
-=======
    * Returns the username and password fields found in the form by input
    * element into form.
    *
@@ -2069,7 +2039,6 @@ this.LoginManagerContent = {
   },
 
   /**
->>>>>>> upstream-releases
    * Verify if a field is a valid login form field and
    * returns some information about it's LoginForm.
    *
@@ -2090,25 +2059,10 @@ this.LoginManagerContent = {
     ) {
       return null;
     }
-<<<<<<< HEAD
-
-    let [usernameField, newPasswordField] =
-          this.getUserNameAndPasswordFields(aField);
-||||||| merged common ancestors
-    let form = LoginFormFactory.createFromField(aField);
-
-    let doc = aField.ownerDocument;
-    let formOrigin = LoginUtils._getPasswordOrigin(doc.documentURI);
-    let recipes = LoginRecipesContent.getRecipes(formOrigin, doc.defaultView);
-
-    let [usernameField, newPasswordField] =
-          this._getFormFields(form, false, recipes);
-=======
 
     let [usernameField, newPasswordField] = this.getUserNameAndPasswordFields(
       aField
     );
->>>>>>> upstream-releases
 
     // If we are not verifying a password field, we want
     // to use aField as the username field.

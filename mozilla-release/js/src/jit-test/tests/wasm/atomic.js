@@ -495,13 +495,7 @@ assertErrorMessage(() => wasmEvalText(`(module (memory 1 1 shared)
 
 assertErrorMessage(() => wasmEvalText(`(module (memory 1 1 shared)
 					(func (param i32) (result i32)
-<<<<<<< HEAD
-					 (atomic.notify (get_local 0) (i32.const 1)))
-||||||| merged common ancestors
-					 (atomic.wake (get_local 0) (i32.const 1)))
-=======
 					 (atomic.notify (local.get 0) (i32.const 1)))
->>>>>>> upstream-releases
 					(export "" 0))`).exports[""](65536),
 		   RuntimeError, oob);
 
@@ -509,13 +503,7 @@ assertErrorMessage(() => wasmEvalText(`(module (memory 1 1 shared)
 for (let addr of [1,2,3,5,6,7]) {
     assertErrorMessage(() => wasmEvalText(`(module (memory 1 1 shared)
 					    (func (export "f") (param i32) (result i32)
-<<<<<<< HEAD
-					     (atomic.notify (get_local 0) (i32.const 1))))`).exports.f(addr),
-||||||| merged common ancestors
-					     (atomic.wake (get_local 0) (i32.const 1))))`).exports.f(addr),
-=======
 					     (atomic.notify (local.get 0) (i32.const 1))))`).exports.f(addr),
->>>>>>> upstream-releases
 		       RuntimeError, unaligned);
 }
 

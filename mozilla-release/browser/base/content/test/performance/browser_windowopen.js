@@ -18,38 +18,6 @@ const EXPECTED_REFLOWS = [
    */
 ];
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-if (Services.appinfo.OS == "WINNT") {
-  EXPECTED_REFLOWS.push(
-    {
-      stack: [
-        "verticalMargins@chrome://browser/content/browser-tabsintitlebar.js",
-        "_layOutTitlebar@chrome://browser/content/browser-tabsintitlebar.js",
-        "update@chrome://browser/content/browser-tabsintitlebar.js",
-        "whenWindowLayoutReady@chrome://browser/content/browser-tabsintitlebar.js",
-      ],
-      maxCount: 2, // This number should only ever go down - never up.
-    },
-  );
-}
-
-if (Services.appinfo.OS == "WINNT" || Services.appinfo.OS == "Darwin") {
-  EXPECTED_REFLOWS.push(
-    {
-      stack: [
-        "rect@chrome://browser/content/browser-tabsintitlebar.js",
-        "_layOutTitlebar@chrome://browser/content/browser-tabsintitlebar.js",
-        "update@chrome://browser/content/browser-tabsintitlebar.js",
-        "whenWindowLayoutReady@chrome://browser/content/browser-tabsintitlebar.js",
-      ],
-      // These numbers should only ever go down - never up.
-      maxCount: Services.appinfo.OS == "WINNT" ? 5 : 4,
-    },
-  );
-}
-
-=======
 // We'll assume the changes we are seeing are due to this focus change if
 // there are at least 5 areas that changed near the top of the screen, or if
 // the toolbar background is involved on OSX, but will only ignore this once.
@@ -67,7 +35,6 @@ function isLikelyFocusChange(rects) {
   return false;
 }
 
->>>>>>> upstream-releases
 /*
  * This test ensures that there are no unexpected
  * uninterruptible reflows or flickering areas when opening new windows.
@@ -159,62 +126,6 @@ add_task(async function() {
         subject => subject == win
       );
 
-<<<<<<< HEAD
-    await new Promise(resolve => {
-      // 10 is an arbitrary value here, it needs to be at least 2 to avoid
-      // races with code initializing itself using idle callbacks.
-      (function waitForIdle(count = 10) {
-        if (!count) {
-          resolve();
-          return;
-        }
-        Services.tm.idleDispatchToMainThread(() => {
-          waitForIdle(count - 1);
-        });
-      })();
-    });
-  }, expectations, win);
-||||||| merged common ancestors
-    if (Services.appinfo.OS == "WINNT" && win.windowState == win.STATE_MAXIMIZED) {
-      // The reflows below are triggered by maximizing the window after
-      // layout. They should be fixed by bug 1447864.
-      EXPECTED_REFLOWS.push(
-        {
-          stack: [
-            "rect@chrome://browser/content/browser-tabsintitlebar.js",
-            "_layOutTitlebar@chrome://browser/content/browser-tabsintitlebar.js",
-            "update@chrome://browser/content/browser-tabsintitlebar.js",
-            "handleEvent@chrome://browser/content/browser-tabsintitlebar.js",
-          ],
-          maxCount: 4,
-        },
-        {
-          stack: [
-            "verticalMargins@chrome://browser/content/browser-tabsintitlebar.js",
-            "_layOutTitlebar@chrome://browser/content/browser-tabsintitlebar.js",
-            "update@chrome://browser/content/browser-tabsintitlebar.js",
-            "handleEvent@chrome://browser/content/browser-tabsintitlebar.js",
-          ],
-          maxCount: 2,
-        },
-      );
-    }
-
-    await new Promise(resolve => {
-      // 10 is an arbitrary value here, it needs to be at least 2 to avoid
-      // races with code initializing itself using idle callbacks.
-      (function waitForIdle(count = 10) {
-        if (!count) {
-          resolve();
-          return;
-        }
-        Services.tm.idleDispatchToMainThread(() => {
-          waitForIdle(count - 1);
-        });
-      })();
-    });
-  }, expectations, win);
-=======
       await BrowserTestUtils.firstBrowserLoaded(win, false);
       await BrowserTestUtils.browserStopped(
         win.gBrowser.selectedBrowser,
@@ -238,7 +149,6 @@ add_task(async function() {
     expectations,
     win
   );
->>>>>>> upstream-releases
 
   await BrowserTestUtils.closeWindow(win);
 });

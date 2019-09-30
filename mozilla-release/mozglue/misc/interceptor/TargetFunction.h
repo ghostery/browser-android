@@ -38,35 +38,15 @@ inline bool CommitAndWriteShortInternal<MMPolicyOutOfProcess>(
   return aMMPolicy.Write(aDest, &aValue, sizeof(uint16_t));
 }
 
-<<<<<<< HEAD
-#endif  // defined(_M_IX86)
-||||||| merged common ancestors
-#endif // defined(_M_IX86)
-=======
 #endif  // defined(_M_IX86)
 
 // Forward declaration
 template <typename MMPolicy>
 class ReadOnlyTargetFunction;
->>>>>>> upstream-releases
-
-// Forward declaration
-template <typename MMPolicy>
-<<<<<<< HEAD
-class ReadOnlyTargetFunction;
 
 template <typename MMPolicy>
 class MOZ_STACK_CLASS WritableTargetFunction final {
   class AutoProtect final {
-||||||| merged common ancestors
-class MOZ_STACK_CLASS WritableTargetFunction final
-{
-  class AutoProtect final
-  {
-=======
-class MOZ_STACK_CLASS WritableTargetFunction final {
-  class AutoProtect final {
->>>>>>> upstream-releases
     using ProtectParams = Tuple<uintptr_t, uint32_t>;
 
    public:
@@ -337,24 +317,6 @@ class MOZ_STACK_CLASS WritableTargetFunction final {
     mOffset += sizeof(int32_t);
   }
 
-<<<<<<< HEAD
-#if defined(_M_X64)
-  void WriteLong(const uint32_t aValue) {
-    if (!mLocalBytes.append(reinterpret_cast<const uint8_t*>(&aValue),
-                            sizeof(uint32_t))) {
-      mAccumulatedStatus = false;
-      return;
-    }
-
-    mOffset += sizeof(uint32_t);
-  }
-#endif  // defined(_M_X64)
-
-  void WritePointer(const uintptr_t aAbsTarget) {
-||||||| merged common ancestors
-  void WritePointer(const uintptr_t aAbsTarget)
-  {
-=======
 #if defined(_M_X64) || defined(_M_ARM64)
   void WriteLong(const uint32_t aValue) {
     if (!mLocalBytes.append(reinterpret_cast<const uint8_t*>(&aValue),
@@ -368,7 +330,6 @@ class MOZ_STACK_CLASS WritableTargetFunction final {
 #endif  // defined(_M_X64)
 
   void WritePointer(const uintptr_t aAbsTarget) {
->>>>>>> upstream-releases
     if (!mLocalBytes.append(reinterpret_cast<const uint8_t*>(&aAbsTarget),
                             sizeof(uintptr_t))) {
       mAccumulatedStatus = false;
@@ -718,25 +679,9 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final {
 
   static uintptr_t DecodePtr(uintptr_t aEncodedPtr) {
     return reinterpret_cast<uintptr_t>(
-<<<<<<< HEAD
         ::DecodePointer(reinterpret_cast<PVOID>(aEncodedPtr)));
   }
 
-  bool IsValidAtOffset(const int8_t aOffset) const {
-    return mTargetBytes->IsValidAtOffset(aOffset);
-||||||| merged common ancestors
-      ::DecodePointer(reinterpret_cast<PVOID>(aEncodedPtr)));
-=======
-        ::DecodePointer(reinterpret_cast<PVOID>(aEncodedPtr)));
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  uint8_t const& operator*() const {
-||||||| merged common ancestors
-  uint8_t const & operator*() const
-  {
-=======
   bool IsValidAtOffset(const int8_t aOffset) const {
     return mTargetBytes->IsValidAtOffset(aOffset);
   }
@@ -763,7 +708,6 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final {
 #else
 
   uint8_t const& operator*() const {
->>>>>>> upstream-releases
     mTargetBytes->EnsureLimit(mOffset);
     return *(mTargetBytes->GetLocalBytes() + mOffset);
   }
@@ -783,21 +727,7 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final {
     return *this;
   }
 
-<<<<<<< HEAD
-  uint32_t GetOffset() const { return mOffset; }
-
   uintptr_t ReadDisp32AsAbsolute() {
-||||||| merged common ancestors
-  uint32_t GetOffset() const
-  {
-    return mOffset;
-  }
-
-  uintptr_t ReadDisp32AsAbsolute()
-  {
-=======
-  uintptr_t ReadDisp32AsAbsolute() {
->>>>>>> upstream-releases
     mTargetBytes->EnsureLimit(mOffset + sizeof(int32_t));
     int32_t disp = *reinterpret_cast<const int32_t*>(
         mTargetBytes->GetLocalBytes() + mOffset);
@@ -807,12 +737,6 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final {
     return result;
   }
 
-<<<<<<< HEAD
-  uintptr_t OffsetToAbsolute(const uint8_t aOffset) const {
-||||||| merged common ancestors
-  uintptr_t OffsetToAbsolute(const uint8_t aOffset) const
-  {
-=======
 #endif
 
   void Rewind() { mOffset = 0; }
@@ -820,7 +744,6 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final {
   uint32_t GetOffset() const { return mOffset; }
 
   uintptr_t OffsetToAbsolute(const uint8_t aOffset) const {
->>>>>>> upstream-releases
     return mTargetBytes->GetBase() + mOffset + aOffset;
   }
 

@@ -51,17 +51,10 @@ add_task(async function() {
     "Should be able to change origin attributes prior to a document load"
   );
 
-<<<<<<< HEAD
-  let systemPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-  webNav.loadURI("data:text/html,", webNav.LOAD_FLAGS_NONE, null, null, null, systemPrincipal);
-||||||| merged common ancestors
-  webNav.loadURI("data:text/html,", webNav.LOAD_FLAGS_NONE, null, null, null);
-=======
   let loadURIOptions = {
     triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
   };
   webNav.loadURI("data:text/html,", loadURIOptions);
->>>>>>> upstream-releases
 
   // Return to the event loop so the load can begin.
   await new Promise(executeSoon);

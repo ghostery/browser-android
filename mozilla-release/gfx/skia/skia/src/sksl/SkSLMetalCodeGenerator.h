@@ -94,29 +94,6 @@ protected:
     static constexpr Requirements kInputs_Requirement   = 1 << 0;
     static constexpr Requirements kOutputs_Requirement  = 1 << 1;
     static constexpr Requirements kUniforms_Requirement = 1 << 2;
-<<<<<<< HEAD
-    static constexpr Requirements kGlobals_Requirement  = 1 << 3;
-
-    enum IntrinsicKind {
-        kSpecial_IntrinsicKind,
-        kMetal_IntrinsicKind,
-    };
-
-    enum SpecialIntrinsic {
-        kTexture_SpecialIntrinsic,
-        kMod_SpecialIntrinsic,
-    };
-
-    enum MetalIntrinsic {
-        kLessThan_MetalIntrinsic,
-        kLessThanEqual_MetalIntrinsic,
-        kGreaterThan_MetalIntrinsic,
-        kGreaterThanEqual_MetalIntrinsic,
-    };
-
-    void setupIntrinsics();
-||||||| merged common ancestors
-=======
     static constexpr Requirements kGlobals_Requirement  = 1 << 3;
 
     enum IntrinsicKind {
@@ -139,7 +116,6 @@ protected:
     };
 
     void setupIntrinsics();
->>>>>>> upstream-releases
 
     void write(const char* s);
 
@@ -208,13 +184,6 @@ protected:
 
     void writeFunctionCall(const FunctionCall& c);
 
-<<<<<<< HEAD
-    void writeSpecialIntrinsic(const FunctionCall& c, SpecialIntrinsic kind);
-
-    void writeConstructor(const Constructor& c);
-||||||| merged common ancestors
-    void writeConstructor(const Constructor& c);
-=======
     void writeInverseHack(const Expression& mat);
 
     String getMatrixConstructHelper(const Type& matrix, const Type& arg);
@@ -226,7 +195,6 @@ protected:
     bool canCoerce(const Type& t1, const Type& t2);
 
     void writeConstructor(const Constructor& c, Precedence parentPrecedence);
->>>>>>> upstream-releases
 
     void writeFieldAccess(const FieldAccess& f);
 

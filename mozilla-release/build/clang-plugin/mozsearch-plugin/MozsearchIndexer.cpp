@@ -34,22 +34,12 @@
 #include "JSONFormatter.h"
 #include "StringOperations.h"
 
-<<<<<<< HEAD
-#if CLANG_VERSION_FULL < 800
-// Starting with Clang 8.0 some basic functions have been renamed
-#define getBeginLoc getLocStart
-#define getEndLoc getLocEnd
-#endif
-
-||||||| merged common ancestors
-=======
 #if CLANG_VERSION_MAJOR < 8
 // Starting with Clang 8.0 some basic functions have been renamed
 #define getBeginLoc getLocStart
 #define getEndLoc getLocEnd
 #endif
 
->>>>>>> upstream-releases
 using namespace clang;
 
 const std::string GENERATED("__GENERATED__" PATHSEP_STRING);
@@ -1200,16 +1190,10 @@ public:
     int Flags = 0;
     const char *Kind = "def";
     const char *PrettyKind = "?";
-<<<<<<< HEAD
-    SourceRange PeekRange(D->getBeginLoc(), D->getEndLoc());
-||||||| merged common ancestors
-    SourceRange PeekRange(D->getLocStart(), D->getLocEnd());
-=======
     SourceRange PeekRange(D->getBeginLoc(), D->getEndLoc());
     // The nesting range identifies the left brace and right brace, which
     // heavily depends on the AST node type.
     SourceRange NestingRange;
->>>>>>> upstream-releases
     if (FunctionDecl *D2 = dyn_cast<FunctionDecl>(D)) {
       if (D2->isTemplateInstantiation()) {
         D = D2->getTemplateInstantiationPattern();

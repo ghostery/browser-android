@@ -124,71 +124,6 @@ nrappkit copyright:
 
 #if defined(MOZILLA_INTERNAL_API)
 // csi_platform.h deep in nrappkit defines LOG_INFO and LOG_WARNING
-<<<<<<< HEAD
-#ifdef LOG_INFO
-#define LOG_TEMP_INFO LOG_INFO
-#undef LOG_INFO
-#endif
-#ifdef LOG_WARNING
-#define LOG_TEMP_WARNING LOG_WARNING
-#undef LOG_WARNING
-#endif
-#if defined(LOG_DEBUG)
-#define LOG_TEMP_DEBUG LOG_DEBUG
-#undef LOG_DEBUG
-#endif
-#undef strlcpy
-
-#include "mozilla/dom/network/TCPSocketChild.h"
-#include "mozilla/dom/network/UDPSocketChild.h"
-#include "nr_socket_proxy.h"
-
-#ifdef LOG_TEMP_INFO
-#define LOG_INFO LOG_TEMP_INFO
-#endif
-#ifdef LOG_TEMP_WARNING
-#define LOG_WARNING LOG_TEMP_WARNING
-#endif
-
-#ifdef LOG_TEMP_DEBUG
-#define LOG_DEBUG LOG_TEMP_DEBUG
-#endif
-#ifdef XP_WIN
-#ifdef LOG_DEBUG
-#undef LOG_DEBUG
-#endif
-||||||| merged common ancestors
-#ifdef LOG_INFO
-#define LOG_TEMP_INFO LOG_INFO
-#undef LOG_INFO
-#endif
-#ifdef LOG_WARNING
-#define LOG_TEMP_WARNING LOG_WARNING
-#undef LOG_WARNING
-#endif
-#if defined(LOG_DEBUG)
-#define LOG_TEMP_DEBUG LOG_DEBUG
-#undef LOG_DEBUG
-#endif
-#undef strlcpy
-
-#include "mozilla/dom/network/TCPSocketChild.h"
-
-#ifdef LOG_TEMP_INFO
-#define LOG_INFO LOG_TEMP_INFO
-#endif
-#ifdef LOG_TEMP_WARNING
-#define LOG_WARNING LOG_TEMP_WARNING
-#endif
-
-#ifdef LOG_TEMP_DEBUG
-#define LOG_DEBUG LOG_TEMP_DEBUG
-#endif
-#ifdef XP_WIN
-#ifdef LOG_DEBUG
-#undef LOG_DEBUG
-#endif
-=======
 #  ifdef LOG_INFO
 #    define LOG_TEMP_INFO LOG_INFO
 #    undef LOG_INFO
@@ -221,7 +156,6 @@ nrappkit copyright:
 #    ifdef LOG_DEBUG
 #      undef LOG_DEBUG
 #    endif
->>>>>>> upstream-releases
 // cloned from csi_platform.h.  Win32 doesn't like how we hide symbols
 #    define LOG_DEBUG 7
 #  endif
@@ -261,27 +195,11 @@ class SingletonThreadHolder final {
   // Must be threadsafe for StaticRefPtr/ClearOnShutdown
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(SingletonThreadHolder)
 
-<<<<<<< HEAD
-  explicit SingletonThreadHolder(const nsACString &aName) : mName(aName) {
-||||||| merged common ancestors
-  explicit SingletonThreadHolder(const nsACString& aName)
-    : mName(aName)
-  {
-=======
   explicit SingletonThreadHolder(const nsACString& aName) : mName(aName) {
->>>>>>> upstream-releases
     mParentThread = NS_GetCurrentThread();
   }
 
-<<<<<<< HEAD
-  nsIThread *GetThread() { return mThread; }
-||||||| merged common ancestors
-  nsIThread* GetThread() {
-    return mThread;
-  }
-=======
   nsIThread* GetThread() { return mThread; }
->>>>>>> upstream-releases
 
   /*
    * Keep track of how many instances are using a SingletonThreadHolder.
@@ -332,14 +250,7 @@ static void ClearSingletonOnShutdown() {
 }
 #endif
 
-<<<<<<< HEAD
-static nsIThread *GetIOThreadAndAddUse_s() {
-||||||| merged common ancestors
-static nsIThread* GetIOThreadAndAddUse_s()
-{
-=======
 static nsIThread* GetIOThreadAndAddUse_s() {
->>>>>>> upstream-releases
   // Always runs on STS thread!
 #if defined(MOZILLA_INTERNAL_API)
   // We need to safely release this on shutdown to avoid leaks
@@ -359,15 +270,7 @@ static nsIThread* GetIOThreadAndAddUse_s() {
 #endif
 }
 
-<<<<<<< HEAD
-NrSocketIpc::NrSocketIpc(nsIEventTarget *aThread) : io_thread_(aThread) {}
-||||||| merged common ancestors
-NrSocketIpc::NrSocketIpc(nsIEventTarget *aThread)
-  : io_thread_(aThread)
-{}
-=======
 NrSocketIpc::NrSocketIpc(nsIEventTarget* aThread) : io_thread_(aThread) {}
->>>>>>> upstream-releases
 
 static TimeStamp nr_socket_short_term_violation_time;
 static TimeStamp nr_socket_long_term_violation_time;
@@ -440,17 +343,8 @@ void NrSocketBase::fire_callback(int how) {
 NS_IMPL_ISUPPORTS0(NrSocket)
 
 // The nsASocket callbacks
-<<<<<<< HEAD
-void NrSocket::OnSocketReady(PRFileDesc *fd, int16_t outflags) {
-  if (outflags & PR_POLL_READ & poll_flags()) fire_callback(NR_ASYNC_WAIT_READ);
-||||||| merged common ancestors
-void NrSocket::OnSocketReady(PRFileDesc *fd, int16_t outflags) {
-  if (outflags & PR_POLL_READ & poll_flags())
-    fire_callback(NR_ASYNC_WAIT_READ);
-=======
 void NrSocket::OnSocketReady(PRFileDesc* fd, int16_t outflags) {
   if (outflags & PR_POLL_READ & poll_flags()) fire_callback(NR_ASYNC_WAIT_READ);
->>>>>>> upstream-releases
   if (outflags & PR_POLL_WRITE & poll_flags())
     fire_callback(NR_ASYNC_WAIT_WRITE);
   if (outflags & (PR_POLL_ERR | PR_POLL_NVAL | PR_POLL_HUP))
@@ -468,16 +362,8 @@ void NrSocket::IsLocal(bool* aIsLocal) {
 }
 
 // async_event APIs
-<<<<<<< HEAD
-int NrSocket::async_wait(int how, NR_async_cb cb, void *cb_arg, char *function,
-                         int line) {
-||||||| merged common ancestors
-int NrSocket::async_wait(int how, NR_async_cb cb, void *cb_arg,
-                         char *function, int line) {
-=======
 int NrSocket::async_wait(int how, NR_async_cb cb, void* cb_arg, char* function,
                          int line) {
->>>>>>> upstream-releases
   int r = NrSocketBase::async_wait(how, cb, cb_arg, function, line);
 
   if (!r) {
@@ -498,61 +384,10 @@ int NrSocket::cancel(int how) {
 }
 
 // Helper functions for addresses
-<<<<<<< HEAD
-static int nr_transport_addr_to_praddr(nr_transport_addr *addr,
-                                       PRNetAddr *naddr) {
-  int _status;
-
-  memset(naddr, 0, sizeof(*naddr));
-||||||| merged common ancestors
-static int nr_transport_addr_to_praddr(nr_transport_addr *addr,
-  PRNetAddr *naddr)
-  {
-    int _status;
-
-    memset(naddr, 0, sizeof(*naddr));
-=======
 static int nr_transport_addr_to_praddr(nr_transport_addr* addr,
                                        PRNetAddr* naddr) {
   int _status;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  switch (addr->protocol) {
-    case IPPROTO_TCP:
-      break;
-    case IPPROTO_UDP:
-      break;
-    default:
-      ABORT(R_BAD_ARGS);
-  }
-||||||| merged common ancestors
-    switch(addr->protocol){
-      case IPPROTO_TCP:
-        break;
-      case IPPROTO_UDP:
-        break;
-      default:
-        ABORT(R_BAD_ARGS);
-    }
-
-    switch(addr->ip_version){
-      case NR_IPV4:
-        naddr->inet.family = PR_AF_INET;
-        naddr->inet.port = addr->u.addr4.sin_port;
-        naddr->inet.ip = addr->u.addr4.sin_addr.s_addr;
-        break;
-      case NR_IPV6:
-        naddr->ipv6.family = PR_AF_INET6;
-        naddr->ipv6.port = addr->u.addr6.sin6_port;
-        naddr->ipv6.flowinfo = addr->u.addr6.sin6_flowinfo;
-        memcpy(&naddr->ipv6.ip, &addr->u.addr6.sin6_addr, sizeof(in6_addr));
-        naddr->ipv6.scope_id = addr->u.addr6.sin6_scope_id;
-        break;
-      default:
-        ABORT(R_BAD_ARGS);
-    }
-=======
   memset(naddr, 0, sizeof(*naddr));
 
   switch (addr->protocol) {
@@ -563,7 +398,6 @@ static int nr_transport_addr_to_praddr(nr_transport_addr* addr,
     default:
       ABORT(R_BAD_ARGS);
   }
->>>>>>> upstream-releases
 
   switch (addr->ip_version) {
     case NR_IPV4:
@@ -589,14 +423,7 @@ abort:
 
 // XXX schien@mozilla.com: copy from PRNetAddrToNetAddr,
 // should be removed after fix the link error in signaling_unittests
-<<<<<<< HEAD
-static int praddr_to_netaddr(const PRNetAddr *prAddr, net::NetAddr *addr) {
-||||||| merged common ancestors
-static int praddr_to_netaddr(const PRNetAddr *prAddr, net::NetAddr *addr)
-{
-=======
 static int praddr_to_netaddr(const PRNetAddr* prAddr, net::NetAddr* addr) {
->>>>>>> upstream-releases
   int _status;
 
   switch (prAddr->raw.family) {
@@ -622,17 +449,8 @@ abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-static int nr_transport_addr_to_netaddr(nr_transport_addr *addr,
-                                        net::NetAddr *naddr) {
-||||||| merged common ancestors
-static int nr_transport_addr_to_netaddr(nr_transport_addr *addr,
-  net::NetAddr *naddr)
-{
-=======
 static int nr_transport_addr_to_netaddr(nr_transport_addr* addr,
                                         net::NetAddr* naddr) {
->>>>>>> upstream-releases
   int r, _status;
   PRNetAddr praddr;
 
@@ -649,56 +467,6 @@ abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-int nr_netaddr_to_transport_addr(const net::NetAddr *netaddr,
-                                 nr_transport_addr *addr, int protocol) {
-  int _status;
-  int r;
-
-  switch (netaddr->raw.family) {
-    case AF_INET:
-      if ((r = nr_ip4_port_to_transport_addr(ntohl(netaddr->inet.ip),
-                                             ntohs(netaddr->inet.port),
-                                             protocol, addr)))
-        ABORT(r);
-      break;
-    case AF_INET6:
-      if ((r = nr_ip6_port_to_transport_addr((in6_addr *)&netaddr->inet6.ip.u8,
-                                             ntohs(netaddr->inet6.port),
-                                             protocol, addr)))
-        ABORT(r);
-      break;
-    default:
-      MOZ_ASSERT(false);
-      ABORT(R_BAD_ARGS);
-||||||| merged common ancestors
-int nr_netaddr_to_transport_addr(const net::NetAddr *netaddr,
-                                 nr_transport_addr *addr, int protocol)
-  {
-    int _status;
-    int r;
-
-    switch(netaddr->raw.family) {
-      case AF_INET:
-        if ((r = nr_ip4_port_to_transport_addr(ntohl(netaddr->inet.ip),
-                                               ntohs(netaddr->inet.port),
-                                               protocol, addr)))
-          ABORT(r);
-        break;
-      case AF_INET6:
-        if ((r = nr_ip6_port_to_transport_addr((in6_addr *)&netaddr->inet6.ip.u8,
-                                               ntohs(netaddr->inet6.port),
-                                               protocol, addr)))
-          ABORT(r);
-        break;
-      default:
-        MOZ_ASSERT(false);
-        ABORT(R_BAD_ARGS);
-    }
-    _status = 0;
-  abort:
-    return(_status);
-=======
 int nr_netaddr_to_transport_addr(const net::NetAddr* netaddr,
                                  nr_transport_addr* addr, int protocol) {
   int _status;
@@ -720,55 +488,12 @@ int nr_netaddr_to_transport_addr(const net::NetAddr* netaddr,
     default:
       MOZ_ASSERT(false);
       ABORT(R_BAD_ARGS);
->>>>>>> upstream-releases
   }
   _status = 0;
 abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-int nr_praddr_to_transport_addr(const PRNetAddr *praddr,
-                                nr_transport_addr *addr, int protocol,
-                                int keep) {
-  int _status;
-  int r;
-  struct sockaddr_in ip4;
-  struct sockaddr_in6 ip6;
-||||||| merged common ancestors
-int nr_praddr_to_transport_addr(const PRNetAddr *praddr,
-                                nr_transport_addr *addr, int protocol,
-                                int keep)
-  {
-    int _status;
-    int r;
-    struct sockaddr_in ip4;
-    struct sockaddr_in6 ip6;
-
-    switch(praddr->raw.family) {
-      case PR_AF_INET:
-        ip4.sin_family = PF_INET;
-        ip4.sin_addr.s_addr = praddr->inet.ip;
-        ip4.sin_port = praddr->inet.port;
-        if ((r = nr_sockaddr_to_transport_addr((sockaddr *)&ip4,
-                                               protocol, keep,
-                                               addr)))
-          ABORT(r);
-        break;
-      case PR_AF_INET6:
-        ip6.sin6_family = PF_INET6;
-        ip6.sin6_port = praddr->ipv6.port;
-        ip6.sin6_flowinfo = praddr->ipv6.flowinfo;
-        memcpy(&ip6.sin6_addr, &praddr->ipv6.ip, sizeof(in6_addr));
-        ip6.sin6_scope_id = praddr->ipv6.scope_id;
-        if ((r = nr_sockaddr_to_transport_addr((sockaddr *)&ip6,protocol,keep,addr)))
-          ABORT(r);
-        break;
-      default:
-        MOZ_ASSERT(false);
-        ABORT(R_BAD_ARGS);
-    }
-=======
 int nr_praddr_to_transport_addr(const PRNetAddr* praddr,
                                 nr_transport_addr* addr, int protocol,
                                 int keep) {
@@ -776,36 +501,7 @@ int nr_praddr_to_transport_addr(const PRNetAddr* praddr,
   int r;
   struct sockaddr_in ip4;
   struct sockaddr_in6 ip6;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  switch (praddr->raw.family) {
-    case PR_AF_INET:
-      ip4.sin_family = PF_INET;
-      ip4.sin_addr.s_addr = praddr->inet.ip;
-      ip4.sin_port = praddr->inet.port;
-      if ((r = nr_sockaddr_to_transport_addr((sockaddr *)&ip4, protocol, keep,
-                                             addr)))
-        ABORT(r);
-      break;
-    case PR_AF_INET6:
-      ip6.sin6_family = PF_INET6;
-      ip6.sin6_port = praddr->ipv6.port;
-      ip6.sin6_flowinfo = praddr->ipv6.flowinfo;
-      memcpy(&ip6.sin6_addr, &praddr->ipv6.ip, sizeof(in6_addr));
-      ip6.sin6_scope_id = praddr->ipv6.scope_id;
-      if ((r = nr_sockaddr_to_transport_addr((sockaddr *)&ip6, protocol, keep,
-                                             addr)))
-        ABORT(r);
-      break;
-    default:
-      MOZ_ASSERT(false);
-      ABORT(R_BAD_ARGS);
-||||||| merged common ancestors
-    _status = 0;
- abort:
-    return(_status);
-=======
   switch (praddr->raw.family) {
     case PR_AF_INET:
       ip4.sin_family = PF_INET;
@@ -828,7 +524,6 @@ int nr_praddr_to_transport_addr(const PRNetAddr* praddr,
     default:
       MOZ_ASSERT(false);
       ABORT(R_BAD_ARGS);
->>>>>>> upstream-releases
   }
 
   _status = 0;
@@ -865,16 +560,8 @@ abort:
 }
 
 // nr_socket APIs (as member functions)
-<<<<<<< HEAD
-int NrSocket::create(nr_transport_addr *addr) {
-  int r, _status;
-||||||| merged common ancestors
-int NrSocket::create(nr_transport_addr *addr) {
-  int r,_status;
-=======
 int NrSocket::create(nr_transport_addr* addr) {
   int r, _status;
->>>>>>> upstream-releases
 
   PRStatus status;
   PRNetAddr naddr;
@@ -1097,16 +784,8 @@ static int ShouldDrop(size_t len) {
 }
 
 // This should be called on the STS thread.
-<<<<<<< HEAD
-int NrSocket::sendto(const void *msg, size_t len, int flags,
-                     nr_transport_addr *to) {
-||||||| merged common ancestors
-int NrSocket::sendto(const void *msg, size_t len,
-                     int flags, nr_transport_addr *to) {
-=======
 int NrSocket::sendto(const void* msg, size_t len, int flags,
                      nr_transport_addr* to) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(ststhread_);
   int r, _status;
   PRNetAddr naddr;
@@ -1116,7 +795,7 @@ int NrSocket::sendto(const void* msg, size_t len, int flags,
 
   if (fd_ == nullptr) ABORT(R_EOD);
 
-  if (nr_is_stun_request_message((UCHAR *)msg, len) && ShouldDrop(len)) {
+  if (nr_is_stun_request_message((UCHAR*)msg, len) && ShouldDrop(len)) {
     ABORT(R_WOULDBLOCK);
   }
 
@@ -1135,17 +814,8 @@ abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-int NrSocket::recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
-                       nr_transport_addr *from) {
-||||||| merged common ancestors
-int NrSocket::recvfrom(void * buf, size_t maxlen,
-                       size_t *len, int flags,
-                       nr_transport_addr *from) {
-=======
 int NrSocket::recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
                        nr_transport_addr* from) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(ststhread_);
   int r, _status;
   PRNetAddr nfrom;
@@ -1180,14 +850,7 @@ void NrSocket::close() {
   mCondition = NS_BASE_STREAM_CLOSED;
 }
 
-<<<<<<< HEAD
-int NrSocket::connect(nr_transport_addr *addr) {
-||||||| merged common ancestors
-
-int NrSocket::connect(nr_transport_addr *addr) {
-=======
 int NrSocket::connect(nr_transport_addr* addr) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(ststhread_);
   int r, _status;
   PRNetAddr naddr;
@@ -1228,14 +891,7 @@ abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-int NrSocket::write(const void *msg, size_t len, size_t *written) {
-||||||| merged common ancestors
-
-int NrSocket::write(const void *msg, size_t len, size_t *written) {
-=======
 int NrSocket::write(const void* msg, size_t len, size_t* written) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(ststhread_);
   int _status;
   int32_t status;
@@ -1256,13 +912,7 @@ abort:
   return _status;
 }
 
-<<<<<<< HEAD
-int NrSocket::read(void *buf, size_t maxlen, size_t *len) {
-||||||| merged common ancestors
-int NrSocket::read(void* buf, size_t maxlen, size_t *len) {
-=======
 int NrSocket::read(void* buf, size_t maxlen, size_t* len) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(ststhread_);
   int _status;
   int32_t status;
@@ -1307,13 +957,7 @@ int NrSocket::accept(nr_transport_addr* addrp, nr_socket** sockp) {
   PRStatus status;
   PRFileDesc* prfd;
   PRNetAddr nfrom;
-<<<<<<< HEAD
-  NrSocket *sock = nullptr;
-||||||| merged common ancestors
-  NrSocket *sock=nullptr;
-=======
   NrSocket* sock = nullptr;
->>>>>>> upstream-releases
   nsresult rv;
   PRSocketOptionData opt_nonblock, opt_nodelay;
   nsCOMPtr<nsISocketTransportService> stservice =
@@ -1360,14 +1004,7 @@ int NrSocket::accept(nr_transport_addr* addrp, nr_socket** sockp) {
   }
 
   // Should fail only with OOM
-<<<<<<< HEAD
-  if ((r = nr_socket_create_int(static_cast<void *>(sock), sock->vtbl(),
-                                sockp)))
-||||||| merged common ancestors
-  if ((r=nr_socket_create_int(static_cast<void *>(sock), sock->vtbl(), sockp)))
-=======
   if ((r = nr_socket_create_int(static_cast<void*>(sock), sock->vtbl(), sockp)))
->>>>>>> upstream-releases
     ABORT(r);
 
   // Remember our thread.
@@ -1395,15 +1032,7 @@ abort:
 
 NS_IMPL_ISUPPORTS(NrUdpSocketIpcProxy, nsIUDPSocketInternal)
 
-<<<<<<< HEAD
-nsresult NrUdpSocketIpcProxy::Init(const RefPtr<NrUdpSocketIpc> &socket) {
-||||||| merged common ancestors
-nsresult
-NrUdpSocketIpcProxy::Init(const RefPtr<NrUdpSocketIpc>& socket)
-{
-=======
 nsresult NrUdpSocketIpcProxy::Init(const RefPtr<NrUdpSocketIpc>& socket) {
->>>>>>> upstream-releases
   nsresult rv;
   sts_thread_ = do_GetService(NS_SOCKETTRANSPORTSERVICE_CONTRACTID, &rv);
   if (NS_FAILED(rv)) {
@@ -1430,22 +1059,9 @@ NS_IMETHODIMP NrUdpSocketIpcProxy::CallListenerError(const nsACString& message,
 }
 
 // callback while receiving UDP packet
-<<<<<<< HEAD
-NS_IMETHODIMP NrUdpSocketIpcProxy::CallListenerReceivedData(
-    const nsACString &host, uint16_t port, const uint8_t *data,
-    uint32_t data_length) {
-  return socket_->CallListenerReceivedData(host, port, data, data_length);
-||||||| merged common ancestors
-NS_IMETHODIMP NrUdpSocketIpcProxy::CallListenerReceivedData(const nsACString &host,
-                                                            uint16_t port,
-                                                            const uint8_t *data,
-                                                            uint32_t data_length) {
-  return socket_->CallListenerReceivedData(host, port, data, data_length);
-=======
 NS_IMETHODIMP NrUdpSocketIpcProxy::CallListenerReceivedData(
     const nsACString& host, uint16_t port, const nsTArray<uint8_t>& data) {
   return socket_->CallListenerReceivedData(host, port, data);
->>>>>>> upstream-releases
 }
 
 // callback while UDP socket is opened
@@ -1491,15 +1107,8 @@ NS_IMETHODIMP NrUdpSocketIpc::CallListenerError(const nsACString& message,
   ASSERT_ON_THREAD(io_thread_);
 
   r_log(LOG_GENERIC, LOG_ERR, "UDP socket error:%s at %s:%d this=%p",
-<<<<<<< HEAD
-        message.BeginReading(), filename.BeginReading(), line_number,
-        (void *)this);
-||||||| merged common ancestors
-        message.BeginReading(), filename.BeginReading(), line_number, (void*) this );
-=======
         message.BeginReading(), filename.BeginReading(), line_number,
         (void*)this);
->>>>>>> upstream-releases
 
   ReentrantMonitorAutoEnter mon(monitor_);
   err_ = true;
@@ -1548,23 +1157,7 @@ NS_IMETHODIMP NrUdpSocketIpc::CallListenerReceivedData(
 nsresult NrUdpSocketIpc::SetAddress() {
   uint16_t port = socket_child_->LocalPort();
 
-<<<<<<< HEAD
-  nsAutoCString address;
-  if (NS_FAILED(socket_child_->GetLocalAddress(address))) {
-    err_ = true;
-    MOZ_ASSERT(false, "Failed to get local address");
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  nsAutoCString address;
-  if(NS_FAILED(socket_child_->GetLocalAddress(address))) {
-    err_ = true;
-    MOZ_ASSERT(false, "Failed to get local address");
-    return NS_OK;
-  }
-=======
   nsAutoCString address(socket_child_->LocalAddress());
->>>>>>> upstream-releases
 
   PRNetAddr praddr;
   if (PR_SUCCESS != PR_InitializeNetAddr(PR_IpAddrAny, port, &praddr)) {
@@ -1605,13 +1198,7 @@ NS_IMETHODIMP NrUdpSocketIpc::CallListenerOpened() {
   ASSERT_ON_THREAD(io_thread_);
   ReentrantMonitorAutoEnter mon(monitor_);
 
-<<<<<<< HEAD
-  r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket opened this=%p", (void *)this);
-||||||| merged common ancestors
-  r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket opened this=%p", (void*) this);
-=======
   r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket opened this=%p", (void*)this);
->>>>>>> upstream-releases
   nsresult rv = SetAddress();
   if (NS_FAILED(rv)) {
     return rv;
@@ -1628,13 +1215,7 @@ NS_IMETHODIMP NrUdpSocketIpc::CallListenerConnected() {
 
   ReentrantMonitorAutoEnter mon(monitor_);
 
-<<<<<<< HEAD
-  r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket connected this=%p", (void *)this);
-||||||| merged common ancestors
-  r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket connected this=%p", (void*) this);
-=======
   r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket connected this=%p", (void*)this);
->>>>>>> upstream-releases
   MOZ_ASSERT(state_ == NR_CONNECTED);
 
   nsresult rv = SetAddress();
@@ -1655,13 +1236,7 @@ NS_IMETHODIMP NrUdpSocketIpc::CallListenerClosed() {
 
   ReentrantMonitorAutoEnter mon(monitor_);
 
-<<<<<<< HEAD
-  r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket closed this=%p", (void *)this);
-||||||| merged common ancestors
-  r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket closed this=%p", (void*) this);
-=======
   r_log(LOG_GENERIC, LOG_DEBUG, "UDP socket closed this=%p", (void*)this);
->>>>>>> upstream-releases
   MOZ_ASSERT(state_ == NR_CONNECTED || state_ == NR_CLOSING);
   state_ = NR_CLOSED;
 
@@ -1724,16 +1299,8 @@ abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-int NrUdpSocketIpc::sendto(const void *msg, size_t len, int flags,
-                           nr_transport_addr *to) {
-||||||| merged common ancestors
-int NrUdpSocketIpc::sendto(const void *msg, size_t len, int flags,
-                        nr_transport_addr *to) {
-=======
 int NrUdpSocketIpc::sendto(const void* msg, size_t len, int flags,
                            nr_transport_addr* to) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(sts_thread_);
 
   ReentrantMonitorAutoEnter mon(monitor_);
@@ -1753,12 +1320,12 @@ int NrUdpSocketIpc::sendto(const void* msg, size_t len, int flags,
     return r;
   }
 
-  if (nr_is_stun_request_message((UCHAR *)msg, len) && ShouldDrop(len)) {
+  if (nr_is_stun_request_message((UCHAR*)msg, len) && ShouldDrop(len)) {
     return R_WOULDBLOCK;
   }
 
   nsAutoPtr<MediaPacket> buf(new MediaPacket);
-  buf->Copy(static_cast<const uint8_t *>(msg), len);
+  buf->Copy(static_cast<const uint8_t*>(msg), len);
 
   RUN_ON_THREAD(io_thread_,
                 mozilla::WrapRunnable(RefPtr<NrUdpSocketIpc>(this),
@@ -1785,16 +1352,8 @@ void NrUdpSocketIpc::close() {
   std::swap(received_msgs_, empty);
 }
 
-<<<<<<< HEAD
-int NrUdpSocketIpc::recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
-                             nr_transport_addr *from) {
-||||||| merged common ancestors
-int NrUdpSocketIpc::recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
-                          nr_transport_addr *from) {
-=======
 int NrUdpSocketIpc::recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
                              nr_transport_addr* from) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(sts_thread_);
 
   ReentrantMonitorAutoEnter mon(monitor_);
@@ -1850,30 +1409,14 @@ int NrUdpSocketIpc::getaddr(nr_transport_addr* addrp) {
   return nr_transport_addr_copy(addrp, &my_addr_);
 }
 
-<<<<<<< HEAD
-int NrUdpSocketIpc::connect(nr_transport_addr *addr) {
-  int r, _status;
-||||||| merged common ancestors
-int NrUdpSocketIpc::connect(nr_transport_addr *addr) {
-  int r,_status;
-=======
 int NrUdpSocketIpc::connect(nr_transport_addr* addr) {
   int r, _status;
->>>>>>> upstream-releases
   int32_t port;
   nsCString host;
 
   ReentrantMonitorAutoEnter mon(monitor_);
-<<<<<<< HEAD
-  r_log(LOG_GENERIC, LOG_DEBUG, "NrUdpSocketIpc::connect(%s) this=%p",
-        addr->as_string, (void *)this);
-||||||| merged common ancestors
-  r_log(LOG_GENERIC, LOG_DEBUG, "NrUdpSocketIpc::connect(%s) this=%p", addr->as_string,
-        (void*) this);
-=======
   r_log(LOG_GENERIC, LOG_DEBUG, "NrUdpSocketIpc::connect(%s) this=%p",
         addr->as_string, (void*)this);
->>>>>>> upstream-releases
 
   if ((r = nr_transport_addr_get_addrstring_and_port(addr, &host, &port))) {
     ABORT(r);
@@ -1888,18 +1431,9 @@ int NrUdpSocketIpc::connect(nr_transport_addr* addr) {
   // Wait until connect() completes.
   mon.Wait();
 
-<<<<<<< HEAD
-  r_log(LOG_GENERIC, LOG_DEBUG,
-        "NrUdpSocketIpc::connect this=%p completed err_ = %s", (void *)this,
-        err_ ? "true" : "false");
-||||||| merged common ancestors
-  r_log(LOG_GENERIC, LOG_DEBUG, "NrUdpSocketIpc::connect this=%p completed err_ = %s",
-        (void*) this, err_ ? "true" : "false");
-=======
   r_log(LOG_GENERIC, LOG_DEBUG,
         "NrUdpSocketIpc::connect this=%p completed err_ = %s", (void*)this,
         err_ ? "true" : "false");
->>>>>>> upstream-releases
 
   if (err_) {
     ABORT(R_INTERNAL);
@@ -1915,13 +1449,7 @@ int NrUdpSocketIpc::write(const void* msg, size_t len, size_t* written) {
   return R_INTERNAL;
 }
 
-<<<<<<< HEAD
-int NrUdpSocketIpc::read(void *buf, size_t maxlen, size_t *len) {
-||||||| merged common ancestors
-int NrUdpSocketIpc::read(void* buf, size_t maxlen, size_t *len) {
-=======
 int NrUdpSocketIpc::read(void* buf, size_t maxlen, size_t* len) {
->>>>>>> upstream-releases
   MOZ_ASSERT(false);
   return R_INTERNAL;
 }
@@ -1941,20 +1469,7 @@ void NrUdpSocketIpc::create_i(const nsACString& host, const uint16_t port) {
   ASSERT_ON_THREAD(io_thread_);
 
   uint32_t minBuffSize = 0;
-<<<<<<< HEAD
-  nsCOMPtr<nsIUDPSocketChild> socketChild = new dom::UDPSocketChild();
-||||||| merged common ancestors
-  nsresult rv;
-  nsCOMPtr<nsIUDPSocketChild> socketChild = do_CreateInstance("@mozilla.org/udp-socket-child;1", &rv);
-  if (NS_FAILED(rv)) {
-    ReentrantMonitorAutoEnter mon(monitor_);
-    err_ = true;
-    MOZ_ASSERT(false, "Failed to create UDPSocketChild");
-    return;
-  }
-=======
   RefPtr<dom::UDPSocketChild> socketChild = new dom::UDPSocketChild();
->>>>>>> upstream-releases
 
   // This can spin the event loop; don't do that with the monitor held
   socketChild->SetBackgroundSpinsEvents();
@@ -2017,16 +1532,8 @@ void NrUdpSocketIpc::connect_i(const nsACString& host, const uint16_t port) {
   socket_child_->Connect(proxy, host, port);
 }
 
-<<<<<<< HEAD
-void NrUdpSocketIpc::sendto_i(const net::NetAddr &addr,
-                              nsAutoPtr<MediaPacket> buf) {
-||||||| merged common ancestors
-
-void NrUdpSocketIpc::sendto_i(const net::NetAddr &addr, nsAutoPtr<MediaPacket> buf) {
-=======
 void NrUdpSocketIpc::sendto_i(const net::NetAddr& addr,
                               nsAutoPtr<MediaPacket> buf) {
->>>>>>> upstream-releases
   ASSERT_ON_THREAD(io_thread_);
 
   ReentrantMonitorAutoEnter mon(monitor_);
@@ -2057,22 +1564,10 @@ static void ReleaseIOThread_s() { sThread->ReleaseUse(); }
 
 // close(), but transfer the socket_child_ reference to die as well
 // static
-<<<<<<< HEAD
-void NrUdpSocketIpc::destroy_i(nsIUDPSocketChild *aChild,
-                               nsCOMPtr<nsIEventTarget> &aStsThread) {
-  RefPtr<nsIUDPSocketChild> socket_child_ref =
-      already_AddRefed<nsIUDPSocketChild>(aChild);
-||||||| merged common ancestors
-void NrUdpSocketIpc::destroy_i(nsIUDPSocketChild* aChild,
-                               nsCOMPtr<nsIEventTarget>& aStsThread) {
-  RefPtr<nsIUDPSocketChild> socket_child_ref =
-    already_AddRefed<nsIUDPSocketChild>(aChild);
-=======
 void NrUdpSocketIpc::destroy_i(dom::UDPSocketChild* aChild,
                                nsCOMPtr<nsIEventTarget>& aStsThread) {
   RefPtr<dom::UDPSocketChild> socket_child_ref =
       already_AddRefed<dom::UDPSocketChild>(aChild);
->>>>>>> upstream-releases
   if (socket_child_ref) {
     socket_child_ref->Close();
   }
@@ -2102,23 +1597,10 @@ void NrUdpSocketIpc::recv_callback_s(RefPtr<nr_udp_message> msg) {
 
 #if defined(MOZILLA_INTERNAL_API)
 // TCPSocket.
-<<<<<<< HEAD
-class NrTcpSocketIpc::TcpSocketReadyRunner : public Runnable {
- public:
-  explicit TcpSocketReadyRunner(NrTcpSocketIpc *sck)
-      : Runnable("NrTcpSocketIpc::TcpSocketReadyRunner"), socket_(sck) {}
-||||||| merged common ancestors
-class NrTcpSocketIpc::TcpSocketReadyRunner: public Runnable
-{
-public:
-  explicit TcpSocketReadyRunner(NrTcpSocketIpc *sck)
-    : Runnable("NrTcpSocketIpc::TcpSocketReadyRunner"), socket_(sck) {}
-=======
 class NrTcpSocketIpc::TcpSocketReadyRunner : public Runnable {
  public:
   explicit TcpSocketReadyRunner(NrTcpSocketIpc* sck)
       : Runnable("NrTcpSocketIpc::TcpSocketReadyRunner"), socket_(sck) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     socket_->maybe_post_socket_ready();
@@ -2129,37 +1611,8 @@ class NrTcpSocketIpc::TcpSocketReadyRunner : public Runnable {
   RefPtr<NrTcpSocketIpc> socket_;
 };
 
-<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(NrTcpSocketIpc, nsITCPSocketCallback)
 
-NrTcpSocketIpc::NrTcpSocketIpc(nsIThread *aThread)
-    : NrSocketIpc(static_cast<nsIEventTarget *>(aThread)),
-      mirror_state_(NR_INIT),
-      state_(NR_INIT),
-      buffered_bytes_(0),
-      tracking_number_(0) {}
-||||||| merged common ancestors
-
-NS_IMPL_ISUPPORTS(NrTcpSocketIpc,
-                  nsITCPSocketCallback)
-=======
-NS_IMPL_ISUPPORTS(NrTcpSocketIpc, nsITCPSocketCallback)
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-NrTcpSocketIpc::~NrTcpSocketIpc() {
-||||||| merged common ancestors
-NrTcpSocketIpc::NrTcpSocketIpc(nsIThread* aThread)
-  : NrSocketIpc(static_cast<nsIEventTarget*>(aThread)),
-    mirror_state_(NR_INIT),
-    state_(NR_INIT),
-    buffered_bytes_(0),
-    tracking_number_(0) {
-}
-
-NrTcpSocketIpc::~NrTcpSocketIpc()
-{
-=======
 NrTcpSocketIpc::NrTcpSocketIpc(nsIThread* aThread)
     : NrSocketIpc(static_cast<nsIEventTarget*>(aThread)),
       mirror_state_(NR_INIT),
@@ -2168,7 +1621,6 @@ NrTcpSocketIpc::NrTcpSocketIpc(nsIThread* aThread)
       tracking_number_(0) {}
 
 NrTcpSocketIpc::~NrTcpSocketIpc() {
->>>>>>> upstream-releases
   // also guarantees socket_child_ is released from the io_thread
 
   // close(), but transfer the socket_child_ reference to die as well
@@ -2221,24 +1673,10 @@ NS_IMETHODIMP NrTcpSocketIpc::UpdateBufferedAmount(uint32_t buffered_amount,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP NrTcpSocketIpc::FireDataArrayEvent(
-    const nsAString &aType, const InfallibleTArray<uint8_t> &buffer) {
-||||||| merged common ancestors
-NS_IMETHODIMP NrTcpSocketIpc::FireDataArrayEvent(const nsAString& aType,
-                                                 const InfallibleTArray<uint8_t>& buffer) {
-=======
 NS_IMETHODIMP NrTcpSocketIpc::FireDataArrayEvent(
     const nsAString& aType, const InfallibleTArray<uint8_t>& buffer) {
->>>>>>> upstream-releases
   // Called when we received data.
-<<<<<<< HEAD
-  uint8_t *buf = const_cast<uint8_t *>(buffer.Elements());
-||||||| merged common ancestors
-  uint8_t *buf = const_cast<uint8_t*>(buffer.Elements());
-=======
   uint8_t* buf = const_cast<uint8_t*>(buffer.Elements());
->>>>>>> upstream-releases
 
   nsAutoPtr<MediaPacket> data_buf(new MediaPacket);
   data_buf->Copy(buf, buffer.Length());
@@ -2251,25 +1689,11 @@ NS_IMETHODIMP NrTcpSocketIpc::FireDataArrayEvent(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP NrTcpSocketIpc::FireErrorEvent(const nsAString &type,
-                                             const nsAString &name) {
-  r_log(LOG_GENERIC, LOG_ERR, "Error from TCPSocketChild: type: %s, name: %s",
-        NS_LossyConvertUTF16toASCII(type).get(),
-        NS_LossyConvertUTF16toASCII(name).get());
-||||||| merged common ancestors
-NS_IMETHODIMP NrTcpSocketIpc::FireErrorEvent(const nsAString &type,
-                                             const nsAString &name) {
-  r_log(LOG_GENERIC, LOG_ERR,
-        "Error from TCPSocketChild: type: %s, name: %s",
-        NS_LossyConvertUTF16toASCII(type).get(), NS_LossyConvertUTF16toASCII(name).get());
-=======
 NS_IMETHODIMP NrTcpSocketIpc::FireErrorEvent(const nsAString& type,
                                              const nsAString& name) {
   r_log(LOG_GENERIC, LOG_ERR, "Error from TCPSocketChild: type: %s, name: %s",
         NS_LossyConvertUTF16toASCII(type).get(),
         NS_LossyConvertUTF16toASCII(name).get());
->>>>>>> upstream-releases
   socket_child_ = nullptr;
 
   mirror_state_ = NR_CLOSED;
@@ -2327,31 +1751,14 @@ abort:
   return (_status);
 }
 
-<<<<<<< HEAD
-int NrTcpSocketIpc::sendto(const void *msg, size_t len, int flags,
-                           nr_transport_addr *to) {
-||||||| merged common ancestors
-int NrTcpSocketIpc::sendto(const void *msg, size_t len,
-                           int flags, nr_transport_addr *to) {
-=======
 int NrTcpSocketIpc::sendto(const void* msg, size_t len, int flags,
                            nr_transport_addr* to) {
->>>>>>> upstream-releases
   MOZ_ASSERT(false);
   return R_INTERNAL;
 }
 
-<<<<<<< HEAD
-int NrTcpSocketIpc::recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
-                             nr_transport_addr *from) {
-||||||| merged common ancestors
-int NrTcpSocketIpc::recvfrom(void * buf, size_t maxlen,
-                             size_t *len, int flags,
-                             nr_transport_addr *from) {
-=======
 int NrTcpSocketIpc::recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
                              nr_transport_addr* from) {
->>>>>>> upstream-releases
   MOZ_ASSERT(false);
   return R_INTERNAL;
 }
@@ -2423,8 +1830,8 @@ int NrTcpSocketIpc::write(const void* msg, size_t len, size_t* written) {
 
   buffered_bytes_ += len;
   {
-    InfallibleTArray<uint8_t> *arr = new InfallibleTArray<uint8_t>();
-    arr->AppendElements(static_cast<const uint8_t *>(msg), len);
+    InfallibleTArray<uint8_t>* arr = new InfallibleTArray<uint8_t>();
+    arr->AppendElements(static_cast<const uint8_t*>(msg), len);
     // keep track of un-acknowleged writes by tracking number.
     writes_in_flight_.push_back(len);
     RUN_ON_THREAD(
@@ -2439,13 +1846,7 @@ abort:
   return _status;
 }
 
-<<<<<<< HEAD
-int NrTcpSocketIpc::read(void *buf, size_t maxlen, size_t *len) {
-||||||| merged common ancestors
-int NrTcpSocketIpc::read(void* buf, size_t maxlen, size_t *len) {
-=======
 int NrTcpSocketIpc::read(void* buf, size_t maxlen, size_t* len) {
->>>>>>> upstream-releases
   int _status = 0;
   if (state_ != NR_CONNECTED) {
     ABORT(R_FAILED);
@@ -2490,20 +1891,9 @@ void NrTcpSocketIpc::connect_i(const nsACString& remote_addr,
 
   mirror_state_ = NR_CONNECTING;
 
-<<<<<<< HEAD
-  dom::TCPSocketChild *child =
-      new dom::TCPSocketChild(NS_ConvertUTF8toUTF16(remote_addr), remote_port,
-                              SystemGroup::EventTargetFor(TaskCategory::Other));
-||||||| merged common ancestors
-  dom::TCPSocketChild* child =
-    new dom::TCPSocketChild(NS_ConvertUTF8toUTF16(remote_addr),
-                            remote_port,
-                            SystemGroup::EventTargetFor(TaskCategory::Other));
-=======
   dom::TCPSocketChild* child =
       new dom::TCPSocketChild(NS_ConvertUTF8toUTF16(remote_addr), remote_port,
                               SystemGroup::EventTargetFor(TaskCategory::Other));
->>>>>>> upstream-releases
   socket_child_ = child;
 
   // Bug 1285330: put filtering back in here
@@ -2543,7 +1933,7 @@ void NrTcpSocketIpc::close_i() {
 
 // close(), but transfer the socket_child_ reference to die as well
 // static
-void NrTcpSocketIpc::release_child_i(dom::TCPSocketChild *aChild) {
+void NrTcpSocketIpc::release_child_i(dom::TCPSocketChild* aChild) {
   RefPtr<dom::TCPSocketChild> socket_child_ref =
       already_AddRefed<dom::TCPSocketChild>(aChild);
   if (socket_child_ref) {
@@ -2647,70 +2037,6 @@ void NrTcpSocketIpc::maybe_post_socket_ready() {
 using namespace mozilla;
 
 // Bridge to the nr_socket interface
-<<<<<<< HEAD
-static int nr_socket_local_destroy(void **objp);
-static int nr_socket_local_sendto(void *obj, const void *msg, size_t len,
-                                  int flags, nr_transport_addr *to);
-static int nr_socket_local_recvfrom(void *obj, void *restrict buf,
-                                    size_t maxlen, size_t *len, int flags,
-                                    nr_transport_addr *from);
-static int nr_socket_local_getfd(void *obj, NR_SOCKET *fd);
-static int nr_socket_local_getaddr(void *obj, nr_transport_addr *addrp);
-static int nr_socket_local_close(void *obj);
-static int nr_socket_local_connect(void *sock, nr_transport_addr *addr);
-static int nr_socket_local_write(void *obj, const void *msg, size_t len,
-                                 size_t *written);
-static int nr_socket_local_read(void *obj, void *restrict buf, size_t maxlen,
-                                size_t *len);
-static int nr_socket_local_listen(void *obj, int backlog);
-static int nr_socket_local_accept(void *obj, nr_transport_addr *addrp,
-                                  nr_socket **sockp);
-
-static nr_socket_vtbl nr_socket_local_vtbl = {2,
-                                              nr_socket_local_destroy,
-                                              nr_socket_local_sendto,
-                                              nr_socket_local_recvfrom,
-                                              nr_socket_local_getfd,
-                                              nr_socket_local_getaddr,
-                                              nr_socket_local_connect,
-                                              nr_socket_local_write,
-                                              nr_socket_local_read,
-                                              nr_socket_local_close,
-                                              nr_socket_local_listen,
-                                              nr_socket_local_accept};
-||||||| merged common ancestors
-static int nr_socket_local_destroy(void **objp);
-static int nr_socket_local_sendto(void *obj,const void *msg, size_t len,
-                                  int flags, nr_transport_addr *to);
-static int nr_socket_local_recvfrom(void *obj,void * restrict buf,
-  size_t maxlen, size_t *len, int flags, nr_transport_addr *from);
-static int nr_socket_local_getfd(void *obj, NR_SOCKET *fd);
-static int nr_socket_local_getaddr(void *obj, nr_transport_addr *addrp);
-static int nr_socket_local_close(void *obj);
-static int nr_socket_local_connect(void *sock, nr_transport_addr *addr);
-static int nr_socket_local_write(void *obj,const void *msg, size_t len,
-                                 size_t *written);
-static int nr_socket_local_read(void *obj,void * restrict buf, size_t maxlen,
-                                size_t *len);
-static int nr_socket_local_listen(void *obj, int backlog);
-static int nr_socket_local_accept(void *obj, nr_transport_addr *addrp,
-                                  nr_socket **sockp);
-
-static nr_socket_vtbl nr_socket_local_vtbl={
-  2,
-  nr_socket_local_destroy,
-  nr_socket_local_sendto,
-  nr_socket_local_recvfrom,
-  nr_socket_local_getfd,
-  nr_socket_local_getaddr,
-  nr_socket_local_connect,
-  nr_socket_local_write,
-  nr_socket_local_read,
-  nr_socket_local_close,
-  nr_socket_local_listen,
-  nr_socket_local_accept
-};
-=======
 static int nr_socket_local_destroy(void** objp);
 static int nr_socket_local_sendto(void* obj, const void* msg, size_t len,
                                   int flags, nr_transport_addr* to);
@@ -2741,22 +2067,11 @@ static nr_socket_vtbl nr_socket_local_vtbl = {2,
                                               nr_socket_local_close,
                                               nr_socket_local_listen,
                                               nr_socket_local_accept};
->>>>>>> upstream-releases
 
 /* static */
-<<<<<<< HEAD
-int NrSocketBase::CreateSocket(
-    nr_transport_addr *addr, RefPtr<NrSocketBase> *sock,
-    const std::shared_ptr<NrSocketProxyConfig> &config) {
-||||||| merged common ancestors
-int
-NrSocketBase::CreateSocket(nr_transport_addr *addr, RefPtr<NrSocketBase> *sock)
-{
-=======
 int NrSocketBase::CreateSocket(
     nr_transport_addr* addr, RefPtr<NrSocketBase>* sock,
     const std::shared_ptr<NrSocketProxyConfig>& config) {
->>>>>>> upstream-releases
   int r, _status;
 
   if (IsForbiddenAddress(addr)) {
@@ -2804,19 +2119,9 @@ abort:
   return _status;
 }
 
-<<<<<<< HEAD
-// static
-bool NrSocketBase::IsForbiddenAddress(nr_transport_addr *addr) {
-  int r, port;
-||||||| merged common ancestors
-int nr_socket_local_create(void *obj, nr_transport_addr *addr, nr_socket **sockp) {
-  RefPtr<NrSocketBase> sock;
-  int r, _status;
-=======
 // static
 bool NrSocketBase::IsForbiddenAddress(nr_transport_addr* addr) {
   int r, port;
->>>>>>> upstream-releases
 
   r = nr_transport_addr_get_port(addr, &port);
   if (r) {
@@ -2835,24 +2140,10 @@ bool NrSocketBase::IsForbiddenAddress(nr_transport_addr* addr) {
   return false;
 }
 
-<<<<<<< HEAD
-static int nr_socket_local_destroy(void **objp) {
-  if (!objp || !*objp) return 0;
-
-  NrSocketBase *sock = static_cast<NrSocketBase *>(*objp);
-||||||| merged common ancestors
-
-static int nr_socket_local_destroy(void **objp) {
-  if(!objp || !*objp)
-    return 0;
-
-  NrSocketBase *sock = static_cast<NrSocketBase *>(*objp);
-=======
 static int nr_socket_local_destroy(void** objp) {
   if (!objp || !*objp) return 0;
 
   NrSocketBase* sock = static_cast<NrSocketBase*>(*objp);
->>>>>>> upstream-releases
   *objp = nullptr;
 
   sock->close();    // Signal STS that we want not to listen
@@ -2861,39 +2152,17 @@ static int nr_socket_local_destroy(void** objp) {
   return 0;
 }
 
-<<<<<<< HEAD
-static int nr_socket_local_sendto(void *obj, const void *msg, size_t len,
-                                  int flags, nr_transport_addr *addr) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-||||||| merged common ancestors
-static int nr_socket_local_sendto(void *obj,const void *msg, size_t len,
-                                  int flags, nr_transport_addr *addr) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-=======
 static int nr_socket_local_sendto(void* obj, const void* msg, size_t len,
                                   int flags, nr_transport_addr* addr) {
   NrSocketBase* sock = static_cast<NrSocketBase*>(obj);
->>>>>>> upstream-releases
 
   return sock->sendto(msg, len, flags, addr);
 }
 
-<<<<<<< HEAD
-static int nr_socket_local_recvfrom(void *obj, void *restrict buf,
-                                    size_t maxlen, size_t *len, int flags,
-                                    nr_transport_addr *addr) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-||||||| merged common ancestors
-static int nr_socket_local_recvfrom(void *obj,void * restrict buf,
-                                    size_t maxlen, size_t *len, int flags,
-                                    nr_transport_addr *addr) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-=======
 static int nr_socket_local_recvfrom(void* obj, void* restrict buf,
                                     size_t maxlen, size_t* len, int flags,
                                     nr_transport_addr* addr) {
   NrSocketBase* sock = static_cast<NrSocketBase*>(obj);
->>>>>>> upstream-releases
 
   return sock->recvfrom(buf, maxlen, len, flags, addr);
 }
@@ -2912,17 +2181,8 @@ static int nr_socket_local_getaddr(void* obj, nr_transport_addr* addrp) {
   return sock->getaddr(addrp);
 }
 
-<<<<<<< HEAD
-static int nr_socket_local_close(void *obj) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-||||||| merged common ancestors
-
-static int nr_socket_local_close(void *obj) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-=======
 static int nr_socket_local_close(void* obj) {
   NrSocketBase* sock = static_cast<NrSocketBase*>(obj);
->>>>>>> upstream-releases
 
   sock->close();
 
@@ -2936,19 +2196,9 @@ static int nr_socket_local_write(void* obj, const void* msg, size_t len,
   return sock->write(msg, len, written);
 }
 
-<<<<<<< HEAD
-static int nr_socket_local_read(void *obj, void *restrict buf, size_t maxlen,
-                                size_t *len) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-||||||| merged common ancestors
-static int nr_socket_local_read(void *obj, void * restrict buf, size_t maxlen,
-                                size_t *len) {
-  NrSocketBase *sock = static_cast<NrSocketBase *>(obj);
-=======
 static int nr_socket_local_read(void* obj, void* restrict buf, size_t maxlen,
                                 size_t* len) {
   NrSocketBase* sock = static_cast<NrSocketBase*>(obj);
->>>>>>> upstream-releases
 
   return sock->read(buf, maxlen, len);
 }
@@ -2973,43 +2223,17 @@ static int nr_socket_local_accept(void* obj, nr_transport_addr* addrp,
 }
 
 // Implement async api
-<<<<<<< HEAD
-int NR_async_wait(NR_SOCKET sock, int how, NR_async_cb cb, void *cb_arg,
-                  char *function, int line) {
-  NrSocketBase *s = static_cast<NrSocketBase *>(sock);
-||||||| merged common ancestors
-int NR_async_wait(NR_SOCKET sock, int how, NR_async_cb cb,void *cb_arg,
-                  char *function,int line) {
-  NrSocketBase *s = static_cast<NrSocketBase *>(sock);
-=======
 int NR_async_wait(NR_SOCKET sock, int how, NR_async_cb cb, void* cb_arg,
                   char* function, int line) {
   NrSocketBase* s = static_cast<NrSocketBase*>(sock);
->>>>>>> upstream-releases
 
   return s->async_wait(how, cb, cb_arg, function, line);
 }
 
-<<<<<<< HEAD
-int NR_async_cancel(NR_SOCKET sock, int how) {
-  NrSocketBase *s = static_cast<NrSocketBase *>(sock);
-||||||| merged common ancestors
-int NR_async_cancel(NR_SOCKET sock,int how) {
-  NrSocketBase *s = static_cast<NrSocketBase *>(sock);
-=======
 int NR_async_cancel(NR_SOCKET sock, int how) {
   NrSocketBase* s = static_cast<NrSocketBase*>(sock);
->>>>>>> upstream-releases
 
   return s->cancel(how);
 }
 
-<<<<<<< HEAD
-nr_socket_vtbl *NrSocketBase::vtbl() { return &nr_socket_local_vtbl; }
-||||||| merged common ancestors
-nr_socket_vtbl* NrSocketBase::vtbl() {
-  return &nr_socket_local_vtbl;
-}
-=======
 nr_socket_vtbl* NrSocketBase::vtbl() { return &nr_socket_local_vtbl; }
->>>>>>> upstream-releases

@@ -113,7 +113,7 @@ class Connection final : public mozIStorageConnection,
   /**
    * Same as initialize, but to be used on the async thread.
    */
-  nsresult initializeOnAsyncThread(nsIFile *aStorageFile);
+  nsresult initializeOnAsyncThread(nsIFile* aStorageFile);
 
   /**
    * Fetches runtime status information for this connection.
@@ -125,13 +125,7 @@ class Connection final : public mozIStorageConnection,
    * @return the current value for the specified option.
    */
   int32_t getSqliteRuntimeStatus(int32_t aStatusOption,
-<<<<<<< HEAD
-                                 int32_t *aMaxValue = nullptr);
-||||||| merged common ancestors
-                                 int32_t* aMaxValue=nullptr);
-=======
                                  int32_t* aMaxValue = nullptr);
->>>>>>> upstream-releases
   /**
    * Registers/unregisters a commit hook callback.
    *
@@ -140,13 +134,7 @@ class Connection final : public mozIStorageConnection,
    * @param [optional] aData if provided, will be passed to the callback.
    * @see http://sqlite.org/c3ref/commit_hook.html
    */
-<<<<<<< HEAD
-  void setCommitHook(int (*aCallbackFn)(void *), void *aData = nullptr) {
-||||||| merged common ancestors
-  void setCommitHook(int (*aCallbackFn)(void *) , void *aData=nullptr) {
-=======
   void setCommitHook(int (*aCallbackFn)(void*), void* aData = nullptr) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mDBConn, "A connection must exist at this point");
     ::sqlite3_commit_hook(mDBConn, aCallbackFn, aData);
   };
@@ -221,16 +209,8 @@ class Connection final : public mozIStorageConnection,
    *        New sqlite3_stmt object.
    * @return the result from sqlite3_prepare_v2.
    */
-<<<<<<< HEAD
-  int prepareStatement(sqlite3 *aNativeConnection, const nsCString &aSQL,
-                       sqlite3_stmt **_stmt);
-||||||| merged common ancestors
-  int prepareStatement(sqlite3* aNativeConnection,
-                       const nsCString &aSQL, sqlite3_stmt **_stmt);
-=======
   int prepareStatement(sqlite3* aNativeConnection, const nsCString& aSQL,
                        sqlite3_stmt** _stmt);
->>>>>>> upstream-releases
 
   /**
    * Performs a sqlite3_step on aStatement, while properly handling
@@ -242,31 +222,18 @@ class Connection final : public mozIStorageConnection,
    *        A pointer to a sqlite3_stmt object.
    * @return the result from sqlite3_step.
    */
-  int stepStatement(sqlite3 *aNativeConnection, sqlite3_stmt *aStatement);
+  int stepStatement(sqlite3* aNativeConnection, sqlite3_stmt* aStatement);
 
   /**
    * Raw connection transaction management.
    *
    * @see BeginTransactionAs, CommitTransaction, RollbackTransaction.
    */
-<<<<<<< HEAD
-  nsresult beginTransactionInternal(
-      sqlite3 *aNativeConnection,
-      int32_t aTransactionType = TRANSACTION_DEFERRED);
-  nsresult commitTransactionInternal(sqlite3 *aNativeConnection);
-  nsresult rollbackTransactionInternal(sqlite3 *aNativeConnection);
-||||||| merged common ancestors
-  nsresult beginTransactionInternal(sqlite3 *aNativeConnection,
-                                    int32_t aTransactionType=TRANSACTION_DEFERRED);
-  nsresult commitTransactionInternal(sqlite3 *aNativeConnection);
-  nsresult rollbackTransactionInternal(sqlite3 *aNativeConnection);
-=======
   nsresult beginTransactionInternal(
       sqlite3* aNativeConnection,
       int32_t aTransactionType = TRANSACTION_DEFERRED);
   nsresult commitTransactionInternal(sqlite3* aNativeConnection);
   nsresult rollbackTransactionInternal(sqlite3* aNativeConnection);
->>>>>>> upstream-releases
 
   /**
    * Indicates if this database connection is open.
@@ -316,7 +283,7 @@ class Connection final : public mozIStorageConnection,
    * Same as isClosed(), but takes a proof-of-lock instead of locking
    * internally.
    */
-  bool isClosed(MutexAutoLock &lock);
+  bool isClosed(MutexAutoLock& lock);
 
   /**
    * True if the async execution thread is alive and able to be used (i.e., it
@@ -371,14 +338,7 @@ class Connection final : public mozIStorageConnection,
    * @returns true if element exists, false otherwise
    */
   nsresult databaseElementExists(enum DatabaseElementType aElementType,
-<<<<<<< HEAD
-                                 const nsACString &aElementName, bool *_exists);
-||||||| merged common ancestors
-                                 const nsACString& aElementName,
-                                 bool *_exists);
-=======
                                  const nsACString& aElementName, bool* _exists);
->>>>>>> upstream-releases
 
   bool findFunctionByInstance(nsISupports* aInstance);
 
@@ -490,14 +450,9 @@ class Connection final : public mozIStorageConnection,
    */
   const ConnectionOperation mSupportedOperations;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
   nsresult synchronousClose();
 };
 
->>>>>>> upstream-releases
 /**
  * A Runnable designed to call a mozIStorageCompletionCallback on
  * the appropriate thread.
@@ -510,14 +465,7 @@ class CallbackComplete final : public Runnable {
    * @param aCallback The callback. It must already be owned by the
    *                  main thread.
    */
-<<<<<<< HEAD
-  CallbackComplete(nsresult aStatus, nsISupports *aValue,
-||||||| merged common ancestors
-  CallbackComplete(nsresult aStatus,
-                   nsISupports* aValue,
-=======
   CallbackComplete(nsresult aStatus, nsISupports* aValue,
->>>>>>> upstream-releases
                    already_AddRefed<mozIStorageCompletionCallback> aCallback)
       : Runnable("storage::CallbackComplete"),
         mStatus(aStatus),
@@ -550,18 +498,8 @@ class CallbackComplete final : public Runnable {
  * Casting Connection to nsISupports is ambiguous.
  * This method handles that.
  */
-<<<<<<< HEAD
-inline nsISupports *ToSupports(mozilla::storage::Connection *p) {
-  return NS_ISUPPORTS_CAST(mozIStorageAsyncConnection *, p);
-||||||| merged common ancestors
-inline nsISupports*
-ToSupports(mozilla::storage::Connection* p)
-{
-  return NS_ISUPPORTS_CAST(mozIStorageAsyncConnection*, p);
-=======
 inline nsISupports* ToSupports(mozilla::storage::Connection* p) {
   return NS_ISUPPORTS_CAST(mozIStorageAsyncConnection*, p);
->>>>>>> upstream-releases
 }
 
 #endif  // mozilla_storage_Connection_h

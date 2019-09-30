@@ -27,18 +27,9 @@ bool MP3Decoder::IsSupportedType(const MediaContainerType& aContainerType) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ nsTArray<UniquePtr<TrackInfo>> MP3Decoder::GetTracksInfo(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/* static */ nsTArray<UniquePtr<TrackInfo>>
-MP3Decoder::GetTracksInfo(const MediaContainerType& aType)
-{
-=======
 /* static */
 nsTArray<UniquePtr<TrackInfo>> MP3Decoder::GetTracksInfo(
     const MediaContainerType& aType) {
->>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   if (!IsSupportedType(aType)) {
     return tracks;

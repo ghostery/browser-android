@@ -41,10 +41,6 @@ add_task(async function() {
     "The console is scrolled to the bottom"
   );
 
-  info("Wait until all stacktraces are rendered");
-  await waitFor(() => outputContainer.querySelectorAll(".frames").length === 10);
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-
   await refreshTab();
 
   info("Console should be scrolled to bottom after refresh from page logs");
@@ -63,10 +59,6 @@ add_task(async function() {
     isScrolledToBottom(outputContainer),
     "The console is scrolled to the bottom"
   );
-
-  info("Wait until all stacktraces are rendered");
-  await waitFor(() => outputContainer.querySelectorAll(".frames").length === 10);
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
 
   info("Scroll up");
   outputContainer.scrollTop = 0;
@@ -94,28 +86,13 @@ add_task(async function() {
     "The console is scrolled to the bottom"
   );
 
-<<<<<<< HEAD
-  info("Add a message to check that the console do scroll since we're at the bottom");
-  onMessage = waitForMessage(hud, "scroll");
-||||||| merged common ancestors
-  info("Add a message to check that the console do scroll since we're at the bottom");
-  receievedMessages = waitForMessages({hud, messages: [{
-    text: "scroll",
-  }]});
-=======
   info(
     "Add a message to check that the console do scroll since we're at the bottom"
   );
   onMessage = waitForMessage(hud, "scroll");
->>>>>>> upstream-releases
   ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
     content.wrappedJSObject.console.log("scroll");
   });
-<<<<<<< HEAD
-  await onMessage;
-||||||| merged common ancestors
-  await receievedMessages;
-=======
   await onMessage;
   ok(hasVerticalOverflow(outputContainer), "There is a vertical overflow");
   ok(
@@ -156,40 +133,7 @@ add_task(async function() {
     content.wrappedJSObject.c();
   });
   message = await onMessage;
->>>>>>> upstream-releases
   ok(hasVerticalOverflow(outputContainer), "There is a vertical overflow");
-<<<<<<< HEAD
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-
-  info("Evaluate an Error object to check that the console scrolls to the bottom");
-  onMessage = waitForMessage(hud, "myErrorObject", ".message.result");
-  ui.jsterm.execute(`
-    x = new Error("myErrorObject");
-    x.stack = "a@b/c.js:1:2\\nd@e/f.js:3:4";
-    x;`
-  );
-  message = await onMessage;
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-
-  info("Wait until the stacktrace is rendered and check the console is scrolled");
-  await waitFor(() => message.node.querySelector(".objectBox-stackTrace .frame"));
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-
-  info("Add a console.trace message to check that the console stays scrolled to bottom");
-  onMessage = waitForMessage(hud, "trace in C");
-  ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
-    content.wrappedJSObject.c();
-  });
-  message = await onMessage;
-  ok(hasVerticalOverflow(outputContainer), "There is a vertical overflow");
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-
-  info("Wait until the stacktrace is rendered");
-  await waitFor(() => message.node.querySelector(".frame"));
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-||||||| merged common ancestors
-  ok(isScrolledToBottom(outputContainer), "The console is scrolled to the bottom");
-=======
   ok(
     isScrolledToBottom(outputContainer),
     "The console is scrolled to the bottom"
@@ -234,7 +178,6 @@ add_task(async function() {
     isScrolledToBottom(outputContainer),
     "The console is scrolled to the bottom after a repeated message"
   );
->>>>>>> upstream-releases
 });
 
 function hasVerticalOverflow(container) {

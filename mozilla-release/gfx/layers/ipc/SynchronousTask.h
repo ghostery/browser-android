@@ -38,17 +38,8 @@ class MOZ_STACK_CLASS SynchronousTask {
   bool mDone;
 };
 
-<<<<<<< HEAD
-class MOZ_STACK_CLASS AutoCompleteTask {
- public:
-||||||| merged common ancestors
-class MOZ_STACK_CLASS AutoCompleteTask
-{
-public:
-=======
 class MOZ_STACK_CLASS AutoCompleteTask final {
  public:
->>>>>>> upstream-releases
   explicit AutoCompleteTask(SynchronousTask* aTask)
       : mTask(aTask), mAutoEnter(aTask->mMonitor) {}
   ~AutoCompleteTask() { mTask->Complete(); }

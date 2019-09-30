@@ -35,62 +35,28 @@ class MemoryReportRequestHost final {
   bool mSuccess;
 };
 
-<<<<<<< HEAD
-class MemoryReportRequestClient final : public nsIRunnable {
- public:
-||||||| merged common ancestors
-class MemoryReportRequestClient final : public nsIRunnable
-{
-public:
-=======
 class MemoryReportRequestClient final : public nsIRunnable {
  public:
   using ReportCallback = std::function<void(const MemoryReport&)>;
   using FinishCallback = std::function<bool(const uint32_t&)>;
 
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
 
-<<<<<<< HEAD
-  static void Start(uint32_t aGeneration, bool aAnonymize,
-                    bool aMinimizeMemoryUsage, const MaybeFileDesc& aDMDFile,
-                    const nsACString& aProcessString);
-||||||| merged common ancestors
-  static void Start(uint32_t aGeneration,
-                    bool aAnonymize,
-                    bool aMinimizeMemoryUsage,
-                    const MaybeFileDesc& aDMDFile,
-                    const nsACString& aProcessString);
-=======
   static void Start(uint32_t aGeneration, bool aAnonymize,
                     bool aMinimizeMemoryUsage,
                     const Maybe<mozilla::ipc::FileDescriptor>& aDMDFile,
                     const nsACString& aProcessString,
                     const ReportCallback& aReportCallback,
                     const FinishCallback& aFinishCallback);
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override;
 
-<<<<<<< HEAD
- private:
-  MemoryReportRequestClient(uint32_t aGeneration, bool aAnonymize,
-                            const MaybeFileDesc& aDMDFile,
-                            const nsACString& aProcessString);
-||||||| merged common ancestors
-private:
-  MemoryReportRequestClient(uint32_t aGeneration,
-                            bool aAnonymize,
-                            const MaybeFileDesc& aDMDFile,
-                            const nsACString& aProcessString);
-=======
  private:
   MemoryReportRequestClient(uint32_t aGeneration, bool aAnonymize,
                             const Maybe<mozilla::ipc::FileDescriptor>& aDMDFile,
                             const nsACString& aProcessString,
                             const ReportCallback& aReportCallback,
                             const FinishCallback& aFinishCallback);
->>>>>>> upstream-releases
 
  private:
   ~MemoryReportRequestClient();

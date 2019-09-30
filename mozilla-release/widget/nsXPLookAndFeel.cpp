@@ -28,185 +28,6 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsLookAndFeelIntPref nsXPLookAndFeel::sIntPrefs[] = {
-    {"ui.caretBlinkTime", eIntID_CaretBlinkTime, false, 0},
-    {"ui.caretWidth", eIntID_CaretWidth, false, 0},
-    {"ui.caretVisibleWithSelection", eIntID_ShowCaretDuringSelection, false, 0},
-    {"ui.submenuDelay", eIntID_SubmenuDelay, false, 0},
-    {"ui.dragThresholdX", eIntID_DragThresholdX, false, 0},
-    {"ui.dragThresholdY", eIntID_DragThresholdY, false, 0},
-    {"ui.useAccessibilityTheme", eIntID_UseAccessibilityTheme, false, 0},
-    {"ui.menusCanOverlapOSBar", eIntID_MenusCanOverlapOSBar, false, 0},
-    {"ui.useOverlayScrollbars", eIntID_UseOverlayScrollbars, false, 0},
-    {"ui.scrollbarDisplayOnMouseMove", eIntID_ScrollbarDisplayOnMouseMove,
-     false, 0},
-    {"ui.scrollbarFadeBeginDelay", eIntID_ScrollbarFadeBeginDelay, false, 0},
-    {"ui.scrollbarFadeDuration", eIntID_ScrollbarFadeDuration, false, 0},
-    {"ui.showHideScrollbars", eIntID_ShowHideScrollbars, false, 0},
-    {"ui.skipNavigatingDisabledMenuItem", eIntID_SkipNavigatingDisabledMenuItem,
-     false, 0},
-    {"ui.treeOpenDelay", eIntID_TreeOpenDelay, false, 0},
-    {"ui.treeCloseDelay", eIntID_TreeCloseDelay, false, 0},
-    {"ui.treeLazyScrollDelay", eIntID_TreeLazyScrollDelay, false, 0},
-    {"ui.treeScrollDelay", eIntID_TreeScrollDelay, false, 0},
-    {"ui.treeScrollLinesMax", eIntID_TreeScrollLinesMax, false, 0},
-    {"accessibility.tabfocus", eIntID_TabFocusModel, false, 0},
-    {"ui.alertNotificationOrigin", eIntID_AlertNotificationOrigin, false, 0},
-    {"ui.scrollToClick", eIntID_ScrollToClick, false, 0},
-    {"ui.IMERawInputUnderlineStyle", eIntID_IMERawInputUnderlineStyle, false,
-     0},
-    {"ui.IMESelectedRawTextUnderlineStyle",
-     eIntID_IMESelectedRawTextUnderlineStyle, false, 0},
-    {"ui.IMEConvertedTextUnderlineStyle", eIntID_IMEConvertedTextUnderlineStyle,
-     false, 0},
-    {"ui.IMESelectedConvertedTextUnderlineStyle",
-     eIntID_IMESelectedConvertedTextUnderline, false, 0},
-    {"ui.SpellCheckerUnderlineStyle", eIntID_SpellCheckerUnderlineStyle, false,
-     0},
-    {"ui.scrollbarButtonAutoRepeatBehavior",
-     eIntID_ScrollbarButtonAutoRepeatBehavior, false, 0},
-    {"ui.tooltipDelay", eIntID_TooltipDelay, false, 0},
-    {"ui.contextMenuOffsetVertical", eIntID_ContextMenuOffsetVertical, false,
-     0},
-    {"ui.contextMenuOffsetHorizontal", eIntID_ContextMenuOffsetHorizontal,
-     false, 0},
-    {"ui.GtkCSDAvailable", eIntID_GTKCSDAvailable, false, 0},
-    {"ui.GtkCSDTransparentBackground", eIntID_GTKCSDTransparentBackground,
-     false, 0},
-    {"ui.GtkCSDMinimizeButton", eIntID_GTKCSDMinimizeButton, false, 0},
-    {"ui.GtkCSDMaximizeButton", eIntID_GTKCSDMaximizeButton, false, 0},
-    {"ui.GtkCSDCloseButton", eIntID_GTKCSDCloseButton, false, 0},
-    {"ui.systemUsesDarkTheme", eIntID_SystemUsesDarkTheme, false, 0},
-    {"ui.prefersReducedMotion", eIntID_PrefersReducedMotion, false, 0},
-    {"ui.primaryPointerCapabilities", eIntID_PrimaryPointerCapabilities, false,
-     6 /* fine and hover-capable pointer, i.e. mouse-type */},
-    {"ui.allPointerCapabilities", eIntID_AllPointerCapabilities, false,
-     6 /* fine and hover-capable pointer, i.e. mouse-type */},
-||||||| merged common ancestors
-nsLookAndFeelIntPref nsXPLookAndFeel::sIntPrefs[] =
-{
-  { "ui.caretBlinkTime",
-    eIntID_CaretBlinkTime,
-    false, 0 },
-  { "ui.caretWidth",
-    eIntID_CaretWidth,
-    false, 0 },
-  { "ui.caretVisibleWithSelection",
-    eIntID_ShowCaretDuringSelection,
-    false, 0 },
-  { "ui.submenuDelay",
-    eIntID_SubmenuDelay,
-    false, 0 },
-  { "ui.dragThresholdX",
-    eIntID_DragThresholdX,
-    false, 0 },
-  { "ui.dragThresholdY",
-    eIntID_DragThresholdY,
-    false, 0 },
-  { "ui.useAccessibilityTheme",
-    eIntID_UseAccessibilityTheme,
-    false, 0 },
-  { "ui.menusCanOverlapOSBar",
-    eIntID_MenusCanOverlapOSBar,
-    false, 0 },
-  { "ui.useOverlayScrollbars",
-    eIntID_UseOverlayScrollbars,
-    false, 0 },
-  { "ui.scrollbarDisplayOnMouseMove",
-    eIntID_ScrollbarDisplayOnMouseMove,
-    false, 0 },
-  { "ui.scrollbarFadeBeginDelay",
-    eIntID_ScrollbarFadeBeginDelay,
-    false, 0 },
-  { "ui.scrollbarFadeDuration",
-    eIntID_ScrollbarFadeDuration,
-    false, 0 },
-  { "ui.showHideScrollbars",
-    eIntID_ShowHideScrollbars,
-    false, 0 },
-  { "ui.skipNavigatingDisabledMenuItem",
-    eIntID_SkipNavigatingDisabledMenuItem,
-    false, 0 },
-  { "ui.treeOpenDelay",
-    eIntID_TreeOpenDelay,
-    false, 0 },
-  { "ui.treeCloseDelay",
-    eIntID_TreeCloseDelay,
-    false, 0 },
-  { "ui.treeLazyScrollDelay",
-    eIntID_TreeLazyScrollDelay,
-    false, 0 },
-  { "ui.treeScrollDelay",
-    eIntID_TreeScrollDelay,
-    false, 0 },
-  { "ui.treeScrollLinesMax",
-    eIntID_TreeScrollLinesMax,
-    false, 0 },
-  { "accessibility.tabfocus",
-    eIntID_TabFocusModel,
-    false, 0 },
-  { "ui.alertNotificationOrigin",
-    eIntID_AlertNotificationOrigin,
-    false, 0 },
-  { "ui.scrollToClick",
-    eIntID_ScrollToClick,
-    false, 0 },
-  { "ui.IMERawInputUnderlineStyle",
-    eIntID_IMERawInputUnderlineStyle,
-    false, 0 },
-  { "ui.IMESelectedRawTextUnderlineStyle",
-    eIntID_IMESelectedRawTextUnderlineStyle,
-    false, 0 },
-  { "ui.IMEConvertedTextUnderlineStyle",
-    eIntID_IMEConvertedTextUnderlineStyle,
-    false, 0 },
-  { "ui.IMESelectedConvertedTextUnderlineStyle",
-    eIntID_IMESelectedConvertedTextUnderline,
-    false, 0 },
-  { "ui.SpellCheckerUnderlineStyle",
-    eIntID_SpellCheckerUnderlineStyle,
-    false, 0 },
-  { "ui.scrollbarButtonAutoRepeatBehavior",
-    eIntID_ScrollbarButtonAutoRepeatBehavior,
-    false, 0 },
-  { "ui.tooltipDelay",
-    eIntID_TooltipDelay,
-    false, 0 },
-  { "ui.contextMenuOffsetVertical",
-    eIntID_ContextMenuOffsetVertical,
-    false, 0 },
-  { "ui.contextMenuOffsetHorizontal",
-    eIntID_ContextMenuOffsetHorizontal,
-    false, 0 },
-  { "ui.GtkCSDAvailable",
-    eIntID_GTKCSDAvailable,
-    false, 0 },
-  { "ui.GtkCSDTransparentBackground",
-    eIntID_GTKCSDTransparentBackground,
-    false, 0 },
-  { "ui.GtkCSDMinimizeButton",
-    eIntID_GTKCSDMinimizeButton,
-    false, 0 },
-  { "ui.GtkCSDMaximizeButton",
-    eIntID_GTKCSDMaximizeButton,
-    false, 0 },
-  { "ui.GtkCSDCloseButton",
-    eIntID_GTKCSDCloseButton,
-    false, 0 },
-  { "ui.systemUsesDarkTheme",
-    eIntID_SystemUsesDarkTheme,
-    false, 0 },
-  { "ui.prefersReducedMotion",
-    eIntID_PrefersReducedMotion,
-    false, 0 },
-  { "ui.primaryPointerCapabilities",
-    eIntID_PrimaryPointerCapabilities,
-    false, 6 /* fine and hover-capable pointer, i.e. mouse-type */ },
-  { "ui.allPointerCapabilities",
-    eIntID_AllPointerCapabilities,
-    false, 6 /* fine and hover-capable pointer, i.e. mouse-type */ },
-=======
 nsLookAndFeelIntPref nsXPLookAndFeel::sIntPrefs[] = {
     {"ui.caretBlinkTime", eIntID_CaretBlinkTime, false, 0},
     {"ui.caretWidth", eIntID_CaretWidth, false, 0},
@@ -263,7 +84,6 @@ nsLookAndFeelIntPref nsXPLookAndFeel::sIntPrefs[] = {
      6 /* fine and hover-capable pointer, i.e. mouse-type */},
     {"ui.allPointerCapabilities", eIntID_AllPointerCapabilities, false,
      6 /* fine and hover-capable pointer, i.e. mouse-type */},
->>>>>>> upstream-releases
 };
 
 nsLookAndFeelFloatPref nsXPLookAndFeel::sFloatPrefs[] = {
@@ -274,240 +94,13 @@ nsLookAndFeelFloatPref nsXPLookAndFeel::sFloatPrefs[] = {
     {"ui.caretAspectRatio", eFloatID_CaretAspectRatio, false, 0},
 };
 
-<<<<<<< HEAD
-// This array MUST be kept in the same order as the color list in LookAndFeel.h.
-||||||| merged common ancestors
-
-// This array MUST be kept in the same order as the color list in LookAndFeel.h.
-=======
 // This array MUST be kept in the same order as the color list in
 // specified/color.rs
->>>>>>> upstream-releases
 /* XXX If you add any strings longer than
  * "ui.-moz-mac-active-source-list-selection"
  * to the following array then you MUST update the
  * sizes of the sColorPrefs array in nsXPLookAndFeel.h
  */
-<<<<<<< HEAD
-const char nsXPLookAndFeel::sColorPrefs[][41] = {
-    "ui.windowBackground",
-    "ui.windowForeground",
-    "ui.widgetBackground",
-    "ui.widgetForeground",
-    "ui.widgetSelectBackground",
-    "ui.widgetSelectForeground",
-    "ui.widget3DHighlight",
-    "ui.widget3DShadow",
-    "ui.textBackground",
-    "ui.textForeground",
-    "ui.textSelectBackground",
-    "ui.textSelectForeground",
-    "ui.textSelectForegroundCustom",
-    "ui.textSelectBackgroundDisabled",
-    "ui.textSelectBackgroundAttention",
-    "ui.textHighlightBackground",
-    "ui.textHighlightForeground",
-    "ui.IMERawInputBackground",
-    "ui.IMERawInputForeground",
-    "ui.IMERawInputUnderline",
-    "ui.IMESelectedRawTextBackground",
-    "ui.IMESelectedRawTextForeground",
-    "ui.IMESelectedRawTextUnderline",
-    "ui.IMEConvertedTextBackground",
-    "ui.IMEConvertedTextForeground",
-    "ui.IMEConvertedTextUnderline",
-    "ui.IMESelectedConvertedTextBackground",
-    "ui.IMESelectedConvertedTextForeground",
-    "ui.IMESelectedConvertedTextUnderline",
-    "ui.SpellCheckerUnderline",
-    "ui.activeborder",
-    "ui.activecaption",
-    "ui.appworkspace",
-    "ui.background",
-    "ui.buttonface",
-    "ui.buttonhighlight",
-    "ui.buttonshadow",
-    "ui.buttontext",
-    "ui.captiontext",
-    "ui.graytext",
-    "ui.highlight",
-    "ui.highlighttext",
-    "ui.inactiveborder",
-    "ui.inactivecaption",
-    "ui.inactivecaptiontext",
-    "ui.infobackground",
-    "ui.infotext",
-    "ui.menu",
-    "ui.menutext",
-    "ui.scrollbar",
-    "ui.threeddarkshadow",
-    "ui.threedface",
-    "ui.threedhighlight",
-    "ui.threedlightshadow",
-    "ui.threedshadow",
-    "ui.window",
-    "ui.windowframe",
-    "ui.windowtext",
-    "ui.-moz-buttondefault",
-    "ui.-moz-field",
-    "ui.-moz-fieldtext",
-    "ui.-moz-dialog",
-    "ui.-moz-dialogtext",
-    "ui.-moz-dragtargetzone",
-    "ui.-moz-cellhighlight",
-    "ui.-moz_cellhighlighttext",
-    "ui.-moz-html-cellhighlight",
-    "ui.-moz-html-cellhighlighttext",
-    "ui.-moz-buttonhoverface",
-    "ui.-moz_buttonhovertext",
-    "ui.-moz_menuhover",
-    "ui.-moz_menuhovertext",
-    "ui.-moz_menubartext",
-    "ui.-moz_menubarhovertext",
-    "ui.-moz_eventreerow",
-    "ui.-moz_oddtreerow",
-    "ui.-moz-mac-buttonactivetext",
-    "ui.-moz_mac_chrome_active",
-    "ui.-moz_mac_chrome_inactive",
-    "ui.-moz-mac-defaultbuttontext",
-    "ui.-moz-mac-focusring",
-    "ui.-moz-mac-menuselect",
-    "ui.-moz-mac-menushadow",
-    "ui.-moz-mac-menutextdisable",
-    "ui.-moz-mac-menutextselect",
-    "ui.-moz_mac_disabledtoolbartext",
-    "ui.-moz-mac-secondaryhighlight",
-    "ui.-moz-mac-vibrancy-light",
-    "ui.-moz-mac-vibrancy-dark",
-    "ui.-moz-mac-vibrant-titlebar-light",
-    "ui.-moz-mac-vibrant-titlebar-dark",
-    "ui.-moz-mac-menupopup",
-    "ui.-moz-mac-menuitem",
-    "ui.-moz-mac-active-menuitem",
-    "ui.-moz-mac-source-list",
-    "ui.-moz-mac-source-list-selection",
-    "ui.-moz-mac-active-source-list-selection",
-    "ui.-moz-mac-tooltip",
-    "ui.-moz-win-accentcolor",
-    "ui.-moz-win-accentcolortext",
-    "ui.-moz-win-mediatext",
-    "ui.-moz-win-communicationstext",
-    "ui.-moz-nativehyperlinktext",
-    "ui.-moz-comboboxtext",
-    "ui.-moz-combobox",
-    "ui.-moz-gtk-info-bar-text"};
-
-int32_t nsXPLookAndFeel::sCachedColors[LookAndFeel::eColorID_LAST_COLOR] = {0};
-||||||| merged common ancestors
-const char nsXPLookAndFeel::sColorPrefs[][41] =
-{
-  "ui.windowBackground",
-  "ui.windowForeground",
-  "ui.widgetBackground",
-  "ui.widgetForeground",
-  "ui.widgetSelectBackground",
-  "ui.widgetSelectForeground",
-  "ui.widget3DHighlight",
-  "ui.widget3DShadow",
-  "ui.textBackground",
-  "ui.textForeground",
-  "ui.textSelectBackground",
-  "ui.textSelectForeground",
-  "ui.textSelectForegroundCustom",
-  "ui.textSelectBackgroundDisabled",
-  "ui.textSelectBackgroundAttention",
-  "ui.textHighlightBackground",
-  "ui.textHighlightForeground",
-  "ui.IMERawInputBackground",
-  "ui.IMERawInputForeground",
-  "ui.IMERawInputUnderline",
-  "ui.IMESelectedRawTextBackground",
-  "ui.IMESelectedRawTextForeground",
-  "ui.IMESelectedRawTextUnderline",
-  "ui.IMEConvertedTextBackground",
-  "ui.IMEConvertedTextForeground",
-  "ui.IMEConvertedTextUnderline",
-  "ui.IMESelectedConvertedTextBackground",
-  "ui.IMESelectedConvertedTextForeground",
-  "ui.IMESelectedConvertedTextUnderline",
-  "ui.SpellCheckerUnderline",
-  "ui.activeborder",
-  "ui.activecaption",
-  "ui.appworkspace",
-  "ui.background",
-  "ui.buttonface",
-  "ui.buttonhighlight",
-  "ui.buttonshadow",
-  "ui.buttontext",
-  "ui.captiontext",
-  "ui.graytext",
-  "ui.highlight",
-  "ui.highlighttext",
-  "ui.inactiveborder",
-  "ui.inactivecaption",
-  "ui.inactivecaptiontext",
-  "ui.infobackground",
-  "ui.infotext",
-  "ui.menu",
-  "ui.menutext",
-  "ui.scrollbar",
-  "ui.threeddarkshadow",
-  "ui.threedface",
-  "ui.threedhighlight",
-  "ui.threedlightshadow",
-  "ui.threedshadow",
-  "ui.window",
-  "ui.windowframe",
-  "ui.windowtext",
-  "ui.-moz-buttondefault",
-  "ui.-moz-field",
-  "ui.-moz-fieldtext",
-  "ui.-moz-dialog",
-  "ui.-moz-dialogtext",
-  "ui.-moz-dragtargetzone",
-  "ui.-moz-cellhighlight",
-  "ui.-moz_cellhighlighttext",
-  "ui.-moz-html-cellhighlight",
-  "ui.-moz-html-cellhighlighttext",
-  "ui.-moz-buttonhoverface",
-  "ui.-moz_buttonhovertext",
-  "ui.-moz_menuhover",
-  "ui.-moz_menuhovertext",
-  "ui.-moz_menubartext",
-  "ui.-moz_menubarhovertext",
-  "ui.-moz_eventreerow",
-  "ui.-moz_oddtreerow",
-  "ui.-moz-mac-buttonactivetext",
-  "ui.-moz_mac_chrome_active",
-  "ui.-moz_mac_chrome_inactive",
-  "ui.-moz-mac-defaultbuttontext",
-  "ui.-moz-mac-focusring",
-  "ui.-moz-mac-menuselect",
-  "ui.-moz-mac-menushadow",
-  "ui.-moz-mac-menutextdisable",
-  "ui.-moz-mac-menutextselect",
-  "ui.-moz_mac_disabledtoolbartext",
-  "ui.-moz-mac-secondaryhighlight",
-  "ui.-moz-mac-vibrancy-light",
-  "ui.-moz-mac-vibrancy-dark",
-  "ui.-moz-mac-vibrant-titlebar-light",
-  "ui.-moz-mac-vibrant-titlebar-dark",
-  "ui.-moz-mac-menupopup",
-  "ui.-moz-mac-menuitem",
-  "ui.-moz-mac-active-menuitem",
-  "ui.-moz-mac-source-list",
-  "ui.-moz-mac-source-list-selection",
-  "ui.-moz-mac-active-source-list-selection",
-  "ui.-moz-mac-tooltip",
-  "ui.-moz-win-mediatext",
-  "ui.-moz-win-communicationstext",
-  "ui.-moz-nativehyperlinktext",
-  "ui.-moz-comboboxtext",
-  "ui.-moz-combobox"
-};
-
-int32_t nsXPLookAndFeel::sCachedColors[LookAndFeel::eColorID_LAST_COLOR] = {0};
-=======
 const char nsXPLookAndFeel::sColorPrefs[][41] = {
     "ui.windowBackground",
     "ui.windowForeground",
@@ -618,7 +211,6 @@ const char nsXPLookAndFeel::sColorPrefs[][41] = {
     "ui.-moz-gtk-info-bar-text"};
 
 int32_t nsXPLookAndFeel::sCachedColors[size_t(LookAndFeel::ColorID::End)] = {0};
->>>>>>> upstream-releases
 int32_t nsXPLookAndFeel::sCachedColorBits[COLOR_CACHE_SIZE] = {0};
 
 bool nsXPLookAndFeel::sInitialized = false;
@@ -744,18 +336,10 @@ void nsXPLookAndFeel::InitFromPref(nsLookAndFeelFloatPref* aPref) {
   }
 }
 
-<<<<<<< HEAD
-void nsXPLookAndFeel::InitColorFromPref(int32_t i) {
-||||||| merged common ancestors
-void
-nsXPLookAndFeel::InitColorFromPref(int32_t i)
-{
-=======
 void nsXPLookAndFeel::InitColorFromPref(int32_t i) {
   static_assert(ArrayLength(sColorPrefs) == size_t(ColorID::End),
                 "Should have a pref for each color value");
 
->>>>>>> upstream-releases
   nsAutoString colorStr;
   nsresult rv = Preferences::GetString(sColorPrefs[i], colorStr);
   if (NS_FAILED(rv) || colorStr.IsEmpty()) {
@@ -934,299 +518,6 @@ nscolor nsXPLookAndFeel::GetStandinForNativeColor(ColorID aID) {
   // except Mac-specific colors which are taken from Mac OS 10.7.
   switch (aID) {
     // CSS 2 colors:
-<<<<<<< HEAD
-    case eColorID_activeborder:
-      result = NS_RGB(0xB4, 0xB4, 0xB4);
-      break;
-    case eColorID_activecaption:
-      result = NS_RGB(0x99, 0xB4, 0xD1);
-      break;
-    case eColorID_appworkspace:
-      result = NS_RGB(0xAB, 0xAB, 0xAB);
-      break;
-    case eColorID_background:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID_buttonface:
-      result = NS_RGB(0xF0, 0xF0, 0xF0);
-      break;
-    case eColorID_buttonhighlight:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID_buttonshadow:
-      result = NS_RGB(0xA0, 0xA0, 0xA0);
-      break;
-    case eColorID_buttontext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID_captiontext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID_graytext:
-      result = NS_RGB(0x6D, 0x6D, 0x6D);
-      break;
-    case eColorID_highlight:
-      result = NS_RGB(0x33, 0x99, 0xFF);
-      break;
-    case eColorID_highlighttext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID_inactiveborder:
-      result = NS_RGB(0xF4, 0xF7, 0xFC);
-      break;
-    case eColorID_inactivecaption:
-      result = NS_RGB(0xBF, 0xCD, 0xDB);
-      break;
-    case eColorID_inactivecaptiontext:
-      result = NS_RGB(0x43, 0x4E, 0x54);
-      break;
-    case eColorID_infobackground:
-      result = NS_RGB(0xFF, 0xFF, 0xE1);
-      break;
-    case eColorID_infotext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID_menu:
-      result = NS_RGB(0xF0, 0xF0, 0xF0);
-      break;
-    case eColorID_menutext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID_scrollbar:
-      result = NS_RGB(0xC8, 0xC8, 0xC8);
-      break;
-    case eColorID_threeddarkshadow:
-      result = NS_RGB(0x69, 0x69, 0x69);
-      break;
-    case eColorID_threedface:
-      result = NS_RGB(0xF0, 0xF0, 0xF0);
-      break;
-    case eColorID_threedhighlight:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID_threedlightshadow:
-      result = NS_RGB(0xE3, 0xE3, 0xE3);
-      break;
-    case eColorID_threedshadow:
-      result = NS_RGB(0xA0, 0xA0, 0xA0);
-      break;
-    case eColorID_window:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID_windowframe:
-      result = NS_RGB(0x64, 0x64, 0x64);
-      break;
-    case eColorID_windowtext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_buttondefault:
-      result = NS_RGB(0x69, 0x69, 0x69);
-      break;
-    case eColorID__moz_field:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_fieldtext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_dialog:
-      result = NS_RGB(0xF0, 0xF0, 0xF0);
-      break;
-    case eColorID__moz_dialogtext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_dragtargetzone:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_cellhighlight:
-      result = NS_RGB(0xF0, 0xF0, 0xF0);
-      break;
-    case eColorID__moz_cellhighlighttext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_html_cellhighlight:
-      result = NS_RGB(0x33, 0x99, 0xFF);
-      break;
-    case eColorID__moz_html_cellhighlighttext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_buttonhoverface:
-      result = NS_RGB(0xF0, 0xF0, 0xF0);
-      break;
-    case eColorID__moz_buttonhovertext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_menuhover:
-      result = NS_RGB(0x33, 0x99, 0xFF);
-      break;
-    case eColorID__moz_menuhovertext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_menubartext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_menubarhovertext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_oddtreerow:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_mac_chrome_active:
-      result = NS_RGB(0xB2, 0xB2, 0xB2);
-      break;
-    case eColorID__moz_mac_chrome_inactive:
-      result = NS_RGB(0xE1, 0xE1, 0xE1);
-      break;
-    case eColorID__moz_mac_focusring:
-      result = NS_RGB(0x60, 0x9D, 0xD7);
-      break;
-    case eColorID__moz_mac_menuselect:
-      result = NS_RGB(0x38, 0x75, 0xD7);
-      break;
-    case eColorID__moz_mac_menushadow:
-      result = NS_RGB(0xA3, 0xA3, 0xA3);
-      break;
-    case eColorID__moz_mac_menutextdisable:
-      result = NS_RGB(0x88, 0x88, 0x88);
-      break;
-    case eColorID__moz_mac_menutextselect:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_mac_disabledtoolbartext:
-      result = NS_RGB(0x3F, 0x3F, 0x3F);
-      break;
-    case eColorID__moz_mac_secondaryhighlight:
-      result = NS_RGB(0xD4, 0xD4, 0xD4);
-      break;
-    case eColorID__moz_mac_vibrancy_light:
-    case eColorID__moz_mac_vibrant_titlebar_light:
-      result = NS_RGB(0xf7, 0xf7, 0xf7);
-      break;
-    case eColorID__moz_mac_vibrancy_dark:
-    case eColorID__moz_mac_vibrant_titlebar_dark:
-      result = NS_RGB(0x28, 0x28, 0x28);
-      break;
-    case eColorID__moz_mac_menupopup:
-      result = NS_RGB(0xe6, 0xe6, 0xe6);
-      break;
-    case eColorID__moz_mac_menuitem:
-      result = NS_RGB(0xe6, 0xe6, 0xe6);
-      break;
-    case eColorID__moz_mac_active_menuitem:
-      result = NS_RGB(0x0a, 0x64, 0xdc);
-      break;
-    case eColorID__moz_mac_source_list:
-      result = NS_RGB(0xf7, 0xf7, 0xf7);
-      break;
-    case eColorID__moz_mac_source_list_selection:
-      result = NS_RGB(0xc8, 0xc8, 0xc8);
-      break;
-    case eColorID__moz_mac_active_source_list_selection:
-      result = NS_RGB(0x0a, 0x64, 0xdc);
-      break;
-    case eColorID__moz_mac_tooltip:
-      result = NS_RGB(0xf7, 0xf7, 0xf7);
-      break;
-    case eColorID__moz_win_accentcolor:
-||||||| merged common ancestors
-    case eColorID_activeborder:      result = NS_RGB(0xB4, 0xB4, 0xB4); break;
-    case eColorID_activecaption:     result = NS_RGB(0x99, 0xB4, 0xD1); break;
-    case eColorID_appworkspace:      result = NS_RGB(0xAB, 0xAB, 0xAB); break;
-    case eColorID_background:        result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID_buttonface:        result = NS_RGB(0xF0, 0xF0, 0xF0); break;
-    case eColorID_buttonhighlight:   result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID_buttonshadow:      result = NS_RGB(0xA0, 0xA0, 0xA0); break;
-    case eColorID_buttontext:        result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID_captiontext:       result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID_graytext:          result = NS_RGB(0x6D, 0x6D, 0x6D); break;
-    case eColorID_highlight:         result = NS_RGB(0x33, 0x99, 0xFF); break;
-    case eColorID_highlighttext:     result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID_inactiveborder:    result = NS_RGB(0xF4, 0xF7, 0xFC); break;
-    case eColorID_inactivecaption:   result = NS_RGB(0xBF, 0xCD, 0xDB); break;
-    case eColorID_inactivecaptiontext:
-      result = NS_RGB(0x43, 0x4E, 0x54); break;
-    case eColorID_infobackground:    result = NS_RGB(0xFF, 0xFF, 0xE1); break;
-    case eColorID_infotext:          result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID_menu:              result = NS_RGB(0xF0, 0xF0, 0xF0); break;
-    case eColorID_menutext:          result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID_scrollbar:         result = NS_RGB(0xC8, 0xC8, 0xC8); break;
-    case eColorID_threeddarkshadow:  result = NS_RGB(0x69, 0x69, 0x69); break;
-    case eColorID_threedface:        result = NS_RGB(0xF0, 0xF0, 0xF0); break;
-    case eColorID_threedhighlight:   result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID_threedlightshadow: result = NS_RGB(0xE3, 0xE3, 0xE3); break;
-    case eColorID_threedshadow:      result = NS_RGB(0xA0, 0xA0, 0xA0); break;
-    case eColorID_window:            result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID_windowframe:       result = NS_RGB(0x64, 0x64, 0x64); break;
-    case eColorID_windowtext:        result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_buttondefault:
-      result = NS_RGB(0x69, 0x69, 0x69); break;
-    case eColorID__moz_field:        result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_fieldtext:    result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_dialog:       result = NS_RGB(0xF0, 0xF0, 0xF0); break;
-    case eColorID__moz_dialogtext:   result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_dragtargetzone:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_cellhighlight:
-      result = NS_RGB(0xF0, 0xF0, 0xF0); break;
-    case eColorID__moz_cellhighlighttext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_html_cellhighlight:
-      result = NS_RGB(0x33, 0x99, 0xFF); break;
-    case eColorID__moz_html_cellhighlighttext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_buttonhoverface:
-      result = NS_RGB(0xF0, 0xF0, 0xF0); break;
-    case eColorID__moz_buttonhovertext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_menuhover:
-      result = NS_RGB(0x33, 0x99, 0xFF); break;
-    case eColorID__moz_menuhovertext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_menubartext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_menubarhovertext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_oddtreerow:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_mac_chrome_active:
-      result = NS_RGB(0xB2, 0xB2, 0xB2); break;
-    case eColorID__moz_mac_chrome_inactive:
-      result = NS_RGB(0xE1, 0xE1, 0xE1); break;
-    case eColorID__moz_mac_focusring:
-      result = NS_RGB(0x60, 0x9D, 0xD7); break;
-    case eColorID__moz_mac_menuselect:
-      result = NS_RGB(0x38, 0x75, 0xD7); break;
-    case eColorID__moz_mac_menushadow:
-      result = NS_RGB(0xA3, 0xA3, 0xA3); break;
-    case eColorID__moz_mac_menutextdisable:
-      result = NS_RGB(0x88, 0x88, 0x88); break;
-    case eColorID__moz_mac_menutextselect:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_mac_disabledtoolbartext:
-      result = NS_RGB(0x3F, 0x3F, 0x3F); break;
-    case eColorID__moz_mac_secondaryhighlight:
-      result = NS_RGB(0xD4, 0xD4, 0xD4); break;
-    case eColorID__moz_mac_vibrancy_light:
-    case eColorID__moz_mac_vibrant_titlebar_light:
-      result = NS_RGB(0xf7, 0xf7, 0xf7); break;
-    case eColorID__moz_mac_vibrancy_dark:
-    case eColorID__moz_mac_vibrant_titlebar_dark:
-      result = NS_RGB(0x28, 0x28, 0x28); break;
-    case eColorID__moz_mac_menupopup:
-      result = NS_RGB(0xe6, 0xe6, 0xe6); break;
-    case eColorID__moz_mac_menuitem:
-      result = NS_RGB(0xe6, 0xe6, 0xe6); break;
-    case eColorID__moz_mac_active_menuitem:
-      result = NS_RGB(0x0a, 0x64, 0xdc); break;
-    case eColorID__moz_mac_source_list:
-      result = NS_RGB(0xf7, 0xf7, 0xf7); break;
-    case eColorID__moz_mac_source_list_selection:
-      result = NS_RGB(0xc8, 0xc8, 0xc8); break;
-    case eColorID__moz_mac_active_source_list_selection:
-      result = NS_RGB(0x0a, 0x64, 0xdc); break;
-    case eColorID__moz_mac_tooltip:
-      result = NS_RGB(0xf7, 0xf7, 0xf7); break;
-    case eColorID__moz_win_accentcolor:
-=======
     case ColorID::Activeborder:
       result = NS_RGB(0xB4, 0xB4, 0xB4);
       break;
@@ -1420,44 +711,7 @@ nscolor nsXPLookAndFeel::GetStandinForNativeColor(ColorID aID) {
       result = NS_RGB(0xf7, 0xf7, 0xf7);
       break;
     case ColorID::MozWinAccentcolor:
->>>>>>> upstream-releases
       // Seems to be the default color (hardcoded because of bug 1065998)
-<<<<<<< HEAD
-      result = NS_RGB(0x9E, 0x9E, 0x9E);
-      break;
-    case eColorID__moz_win_accentcolortext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_win_mediatext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_win_communicationstext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-    case eColorID__moz_nativehyperlinktext:
-      result = NS_RGB(0x00, 0x66, 0xCC);
-      break;
-    case eColorID__moz_comboboxtext:
-      result = NS_RGB(0x00, 0x00, 0x00);
-      break;
-    case eColorID__moz_combobox:
-      result = NS_RGB(0xFF, 0xFF, 0xFF);
-      break;
-||||||| merged common ancestors
-      result = NS_RGB(0x9E, 0x9E, 0x9E); break;
-    case eColorID__moz_win_accentcolortext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_win_mediatext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_win_communicationstext:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-    case eColorID__moz_nativehyperlinktext:
-      result = NS_RGB(0x00, 0x66, 0xCC); break;
-    case eColorID__moz_comboboxtext:
-      result = NS_RGB(0x00, 0x00, 0x00); break;
-    case eColorID__moz_combobox:
-      result = NS_RGB(0xFF, 0xFF, 0xFF); break;
-=======
       result = NS_RGB(0x9E, 0x9E, 0x9E);
       break;
     case ColorID::MozWinAccentcolortext:
@@ -1478,7 +732,6 @@ nscolor nsXPLookAndFeel::GetStandinForNativeColor(ColorID aID) {
     case ColorID::MozCombobox:
       result = NS_RGB(0xFF, 0xFF, 0xFF);
       break;
->>>>>>> upstream-releases
     default:
       break;
   }
@@ -1509,120 +762,46 @@ nsresult nsXPLookAndFeel::GetColorImpl(ColorID aID,
     nsresult rv = NS_OK;
     switch (aID) {
         // css2  http://www.w3.org/TR/REC-CSS2/ui.html#system-colors
-<<<<<<< HEAD
-      case eColorID_activecaption:
-        // active window caption background
-      case eColorID_captiontext:
-        // text in active window caption
-||||||| merged common ancestors
-      case eColorID_activecaption:
-          // active window caption background
-      case eColorID_captiontext:
-          // text in active window caption
-=======
       case ColorID::Activecaption:
         // active window caption background
       case ColorID::Captiontext:
         // text in active window caption
->>>>>>> upstream-releases
         aResult = NS_RGB(0xff, 0x00, 0x00);
         break;
 
-<<<<<<< HEAD
-      case eColorID_highlight:
-        // background of selected item
-      case eColorID_highlighttext:
-        // text of selected item
-||||||| merged common ancestors
-      case eColorID_highlight:
-          // background of selected item
-      case eColorID_highlighttext:
-          // text of selected item
-=======
       case ColorID::Highlight:
         // background of selected item
       case ColorID::Highlighttext:
         // text of selected item
->>>>>>> upstream-releases
         aResult = NS_RGB(0xff, 0xff, 0x00);
         break;
 
-<<<<<<< HEAD
-      case eColorID_inactivecaption:
-        // inactive window caption
-      case eColorID_inactivecaptiontext:
-        // text in inactive window caption
-||||||| merged common ancestors
-      case eColorID_inactivecaption:
-          // inactive window caption
-      case eColorID_inactivecaptiontext:
-          // text in inactive window caption
-=======
       case ColorID::Inactivecaption:
         // inactive window caption
       case ColorID::Inactivecaptiontext:
         // text in inactive window caption
->>>>>>> upstream-releases
         aResult = NS_RGB(0x66, 0x66, 0x00);
         break;
 
-<<<<<<< HEAD
-      case eColorID_infobackground:
-        // tooltip background color
-      case eColorID_infotext:
-        // tooltip text color
-||||||| merged common ancestors
-      case eColorID_infobackground:
-          // tooltip background color
-      case eColorID_infotext:
-          // tooltip text color
-=======
       case ColorID::Infobackground:
         // tooltip background color
       case ColorID::Infotext:
         // tooltip text color
->>>>>>> upstream-releases
         aResult = NS_RGB(0x00, 0xff, 0x00);
         break;
 
-<<<<<<< HEAD
-      case eColorID_menu:
-        // menu background
-      case eColorID_menutext:
-        // menu text
-||||||| merged common ancestors
-      case eColorID_menu:
-          // menu background
-      case eColorID_menutext:
-          // menu text
-=======
       case ColorID::Menu:
         // menu background
       case ColorID::Menutext:
         // menu text
->>>>>>> upstream-releases
         aResult = NS_RGB(0x00, 0xff, 0xff);
         break;
 
-<<<<<<< HEAD
-      case eColorID_threedface:
-      case eColorID_buttonface:
-        // 3-D face color
-      case eColorID_buttontext:
-        // text on push buttons
-||||||| merged common ancestors
-      case eColorID_threedface:
-      case eColorID_buttonface:
-          // 3-D face color
-      case eColorID_buttontext:
-          // text on push buttons
-=======
       case ColorID::Threedface:
       case ColorID::Buttonface:
         // 3-D face color
       case ColorID::Buttontext:
         // text on push buttons
->>>>>>> upstream-releases
         aResult = NS_RGB(0x00, 0x66, 0x66);
         break;
 
@@ -1776,18 +955,8 @@ nsresult nsXPLookAndFeel::GetFloatImpl(FloatID aID, float& aResult) {
 void nsXPLookAndFeel::RefreshImpl() {
   // Wipe out our color cache.
   uint32_t i;
-<<<<<<< HEAD
-  for (i = 0; i < eColorID_LAST_COLOR; i++) sCachedColors[i] = 0;
-  for (i = 0; i < COLOR_CACHE_SIZE; i++) sCachedColorBits[i] = 0;
-||||||| merged common ancestors
-  for (i = 0; i < eColorID_LAST_COLOR; i++)
-    sCachedColors[i] = 0;
-  for (i = 0; i < COLOR_CACHE_SIZE; i++)
-    sCachedColorBits[i] = 0;
-=======
   for (i = 0; i < uint32_t(ColorID::End); i++) sCachedColors[i] = 0;
   for (i = 0; i < COLOR_CACHE_SIZE; i++) sCachedColorBits[i] = 0;
->>>>>>> upstream-releases
 }
 
 nsTArray<LookAndFeelInt> nsXPLookAndFeel::GetIntCacheImpl() {
@@ -1818,22 +987,8 @@ nsresult LookAndFeel::GetFloat(FloatID aID, float* aResult) {
 }
 
 // static
-<<<<<<< HEAD
-bool LookAndFeel::GetFont(FontID aID, nsString& aName, gfxFontStyle& aStyle,
-                          float aDevPixPerCSSPixel) {
-  return nsLookAndFeel::GetInstance()->GetFontImpl(aID, aName, aStyle,
-                                                   aDevPixPerCSSPixel);
-||||||| merged common ancestors
-bool
-LookAndFeel::GetFont(FontID aID, nsString& aName, gfxFontStyle& aStyle,
-                     float aDevPixPerCSSPixel)
-{
-  return nsLookAndFeel::GetInstance()->GetFontImpl(aID, aName, aStyle,
-                                                   aDevPixPerCSSPixel);
-=======
 bool LookAndFeel::GetFont(FontID aID, nsString& aName, gfxFontStyle& aStyle) {
   return nsLookAndFeel::GetInstance()->GetFontImpl(aID, aName, aStyle);
->>>>>>> upstream-releases
 }
 
 // static

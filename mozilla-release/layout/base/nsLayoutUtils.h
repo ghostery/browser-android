@@ -18,20 +18,7 @@
 #include "mozilla/layout/FrameChildList.h"
 #include "mozilla/layers/ScrollableLayerGuid.h"
 #include "nsThreadUtils.h"
-<<<<<<< HEAD
-#include "nsIPrincipal.h"
-#include "nsIWidget.h"
-#include "nsCSSPropertyID.h"
-#include "nsStyleCoord.h"
-||||||| merged common ancestors
-#include "nsIPrincipal.h"
-#include "FrameMetrics.h"
-#include "nsIWidget.h"
-#include "nsCSSPropertyID.h"
-#include "nsStyleCoord.h"
-=======
 #include "nsCSSPropertyIDSet.h"
->>>>>>> upstream-releases
 #include "nsStyleConsts.h"
 #include "nsGkAtoms.h"
 #include "mozilla/gfx/2D.h"
@@ -141,49 +128,18 @@ enum class RelativeTo { ScrollPort, ScrollFrame };
 
 // Flags to customize the behavior of nsLayoutUtils::DrawString.
 enum class DrawStringFlags {
-<<<<<<< HEAD
-  eDefault = 0x0,
-  eForceHorizontal = 0x1  // Forces the text to be drawn horizontally.
-||||||| merged common ancestors
-  eDefault         = 0x0,
-  eForceHorizontal = 0x1 // Forces the text to be drawn horizontally.
-=======
   Default = 0x0,
   ForceHorizontal = 0x1  // Forces the text to be drawn horizontally.
->>>>>>> upstream-releases
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(DrawStringFlags)
 
-<<<<<<< HEAD
-enum class ReparentingDirection {
-  Backwards,
-  Forwards,
-  Variable  // Could be either of the above; take most pessimistic action.
-};
-
-||||||| merged common ancestors
-enum class ReparentingDirection {
-  Backwards,
-  Forwards,
-  Variable // Could be either of the above; take most pessimistic action.
-};
-
-=======
->>>>>>> upstream-releases
 /**
  * nsLayoutUtils is a namespace class used for various helper
  * functions that are useful in multiple places in layout.  The goal
  * is not to define multiple copies of the same static helper.
  */
-<<<<<<< HEAD
-class nsLayoutUtils {
-||||||| merged common ancestors
-class nsLayoutUtils
-{
-=======
 class nsLayoutUtils {
   typedef mozilla::AspectRatio AspectRatio;
->>>>>>> upstream-releases
   typedef mozilla::ComputedStyle ComputedStyle;
   typedef mozilla::LengthPercentage LengthPercentage;
   typedef mozilla::LengthPercentageOrAuto LengthPercentageOrAuto;
@@ -328,22 +284,9 @@ class nsLayoutUtils {
    * @param aRepaintMode whether to schedule a paint after setting the margins
    * @return true if the new margins were applied.
    */
-<<<<<<< HEAD
-  static bool SetDisplayPortMargins(
-      nsIContent* aContent, nsIPresShell* aPresShell,
-      const ScreenMargin& aMargins, uint32_t aPriority = 0,
-      RepaintMode aRepaintMode = RepaintMode::Repaint);
-||||||| merged common ancestors
-  static bool SetDisplayPortMargins(nsIContent* aContent,
-                                    nsIPresShell* aPresShell,
-                                    const ScreenMargin& aMargins,
-                                    uint32_t aPriority = 0,
-                                    RepaintMode aRepaintMode = RepaintMode::Repaint);
-=======
   static bool SetDisplayPortMargins(
       nsIContent* aContent, PresShell* aPresShell, const ScreenMargin& aMargins,
       uint32_t aPriority = 0, RepaintMode aRepaintMode = RepaintMode::Repaint);
->>>>>>> upstream-releases
 
   /**
    * Set the display port base rect for given element to be used with display
@@ -616,17 +559,9 @@ class nsLayoutUtils {
    * aAncestorFrame. If non-null, this can bound the search and speed up
    * the function
    */
-<<<<<<< HEAD
-  static bool IsProperAncestorFrame(nsIFrame* aAncestorFrame, nsIFrame* aFrame,
-                                    nsIFrame* aCommonAncestor = nullptr);
-||||||| merged common ancestors
-  static bool IsProperAncestorFrame(nsIFrame* aAncestorFrame, nsIFrame* aFrame,
-                                      nsIFrame* aCommonAncestor = nullptr);
-=======
   static bool IsProperAncestorFrame(const nsIFrame* aAncestorFrame,
                                     const nsIFrame* aFrame,
                                     const nsIFrame* aCommonAncestor = nullptr);
->>>>>>> upstream-releases
 
   /**
    * Like IsProperAncestorFrame, but looks across document boundaries.
@@ -938,16 +873,8 @@ class nsLayoutUtils {
    * @param aFlags some combination of FrameForPointOption.
    */
   static nsresult GetFramesForArea(nsIFrame* aFrame, const nsRect& aRect,
-<<<<<<< HEAD
-                                   nsTArray<nsIFrame*>& aOutFrames,
-                                   uint32_t aFlags = 0);
-||||||| merged common ancestors
-                                   nsTArray<nsIFrame*> &aOutFrames,
-                                   uint32_t aFlags = 0);
-=======
                                    nsTArray<nsIFrame*>& aOutFrames,
                                    mozilla::EnumSet<FrameForPointOption> = {});
->>>>>>> upstream-releases
 
   /**
    * Transform aRect relative to aFrame up to the coordinate system of
@@ -1171,14 +1098,7 @@ class nsLayoutUtils {
                                         const nsRect& aTestRect);
 
   static bool MaybeCreateDisplayPortInFirstScrollFrameEncountered(
-<<<<<<< HEAD
-      nsIFrame* aFrame, nsDisplayListBuilder& aBuilder);
-||||||| merged common ancestors
-    nsIFrame* aFrame, nsDisplayListBuilder& aBuilder);
-
-=======
       nsIFrame* aFrame, nsDisplayListBuilder* aBuilder);
->>>>>>> upstream-releases
 
   enum class PaintFrameFlags : uint32_t {
     InTransform = 0x01,
@@ -1535,16 +1455,8 @@ class nsLayoutUtils {
   static const auto PREF_ISIZE = IntrinsicISizeType::PrefISize;
   enum {
     IGNORE_PADDING = 0x01,
-<<<<<<< HEAD
-    BAIL_IF_REFLOW_NEEDED = 0x02,  // returns NS_INTRINSIC_WIDTH_UNKNOWN if so
-    MIN_INTRINSIC_ISIZE = 0x04,  // use min-width/height instead of width/height
-||||||| merged common ancestors
-    BAIL_IF_REFLOW_NEEDED = 0x02, // returns NS_INTRINSIC_WIDTH_UNKNOWN if so
-    MIN_INTRINSIC_ISIZE = 0x04, // use min-width/height instead of width/height
-=======
     BAIL_IF_REFLOW_NEEDED = 0x02,  // returns NS_INTRINSIC_ISIZE_UNKNOWN if so
     MIN_INTRINSIC_ISIZE = 0x04,  // use min-width/height instead of width/height
->>>>>>> upstream-releases
   };
   static nscoord IntrinsicForAxis(
       mozilla::PhysicalAxis aAxis, gfxContext* aRenderingContext,
@@ -1606,30 +1518,12 @@ class nsLayoutUtils {
     return ComputeCBDependentValue(aPercentBasis, aCoord.AsLengthPercentage());
   }
 
-<<<<<<< HEAD
-  static nscoord ComputeBSizeDependentValue(nscoord aContainingBlockBSize,
-                                            const nsStyleCoord& aCoord);
-||||||| merged common ancestors
-  static nscoord ComputeBSizeDependentValue(
-                   nscoord              aContainingBlockBSize,
-                   const nsStyleCoord&  aCoord);
-=======
   static nscoord ComputeBSizeDependentValue(nscoord aContainingBlockBSize,
                                             const LengthPercentageOrAuto&);
->>>>>>> upstream-releases
 
   static nscoord ComputeBSizeValue(nscoord aContainingBlockBSize,
-<<<<<<< HEAD
-                                   nscoord aContentEdgeToBoxSizingBoxEdge,
-                                   const nsStyleCoord& aCoord) {
-||||||| merged common ancestors
-                                    nscoord aContentEdgeToBoxSizingBoxEdge,
-                                    const nsStyleCoord& aCoord)
-  {
-=======
                                    nscoord aContentEdgeToBoxSizingBoxEdge,
                                    const LengthPercentage& aCoord) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aContainingBlockBSize != nscoord_MAX || !aCoord.HasPercent(),
                "caller must deal with %% of unconstrained block-size");
 
@@ -1638,38 +1532,6 @@ class nsLayoutUtils {
     return std::max(0, result - aContentEdgeToBoxSizingBoxEdge);
   }
 
-<<<<<<< HEAD
-  static bool IsAutoBSize(const nsStyleCoord& aCoord, nscoord aCBBSize) {
-    nsStyleUnit unit = aCoord.GetUnit();
-    return unit == eStyleUnit_Auto ||  // only for 'height'
-           unit == eStyleUnit_None ||  // only for 'max-height'
-           // The enumerated values were originally aimed at inline-size
-           // (or width, as it was before logicalization). For now, let them
-           // return true here, so that we don't call ComputeBSizeValue with
-           // value types that it doesn't understand. (See bug 1113216.)
-           //
-           // FIXME (bug 567039, bug 527285)
-           // This isn't correct for the 'fill' value or for the 'min-*' or
-           // 'max-*' properties, which need to be handled differently by
-           // the callers of IsAutoBSize().
-           unit == eStyleUnit_Enumerated ||
-||||||| merged common ancestors
-  static bool IsAutoBSize(const nsStyleCoord &aCoord, nscoord aCBBSize)
-  {
-    nsStyleUnit unit = aCoord.GetUnit();
-    return unit == eStyleUnit_Auto ||  // only for 'height'
-           unit == eStyleUnit_None ||  // only for 'max-height'
-           // The enumerated values were originally aimed at inline-size
-           // (or width, as it was before logicalization). For now, let them
-           // return true here, so that we don't call ComputeBSizeValue with
-           // value types that it doesn't understand. (See bug 1113216.)
-           //
-           // FIXME (bug 567039, bug 527285)
-           // This isn't correct for the 'fill' value or for the 'min-*' or
-           // 'max-*' properties, which need to be handled differently by
-           // the callers of IsAutoBSize().
-           unit == eStyleUnit_Enumerated ||
-=======
   /**
    * The "extremum length" values (see ExtremumLength) were originally aimed at
    * inline-size (or width, as it was before logicalization). For now, we return
@@ -1684,61 +1546,16 @@ class nsLayoutUtils {
   template <typename SizeOrMaxSize>
   static bool IsAutoBSize(const SizeOrMaxSize& aCoord, nscoord aCBBSize) {
     return aCoord.BehavesLikeInitialValueOnBlockAxis() ||
->>>>>>> upstream-releases
            (aCBBSize == nscoord_MAX && aCoord.HasPercent());
   }
 
-<<<<<<< HEAD
-  static bool IsPaddingZero(const nsStyleCoord& aCoord) {
-    return (aCoord.GetUnit() == eStyleUnit_Coord &&
-            aCoord.GetCoordValue() == 0) ||
-           (aCoord.GetUnit() == eStyleUnit_Percent &&
-            aCoord.GetPercentValue() == 0.0f) ||
-           (aCoord.IsCalcUnit() &&
-            // clamp negative calc() to 0
-            aCoord.ComputeCoordPercentCalc(nscoord_MAX) <= 0 &&
-            aCoord.ComputeCoordPercentCalc(0) <= 0);
-||||||| merged common ancestors
-  static bool IsPaddingZero(const nsStyleCoord &aCoord)
-  {
-    return (aCoord.GetUnit() == eStyleUnit_Coord &&
-            aCoord.GetCoordValue() == 0) ||
-           (aCoord.GetUnit() == eStyleUnit_Percent &&
-            aCoord.GetPercentValue() == 0.0f) ||
-           (aCoord.IsCalcUnit() &&
-            // clamp negative calc() to 0
-            aCoord.ComputeCoordPercentCalc(nscoord_MAX) <= 0 &&
-            aCoord.ComputeCoordPercentCalc(0) <= 0);
-=======
   static bool IsPaddingZero(const LengthPercentage& aLength) {
     // clamp negative calc() to 0
     return aLength.Resolve(nscoord_MAX) <= 0 && aLength.Resolve(0) <= 0;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  static bool IsMarginZero(const nsStyleCoord& aCoord) {
-    return (aCoord.GetUnit() == eStyleUnit_Coord &&
-            aCoord.GetCoordValue() == 0) ||
-           (aCoord.GetUnit() == eStyleUnit_Percent &&
-            aCoord.GetPercentValue() == 0.0f) ||
-           (aCoord.IsCalcUnit() &&
-            aCoord.ComputeCoordPercentCalc(nscoord_MAX) == 0 &&
-            aCoord.ComputeCoordPercentCalc(0) == 0);
-||||||| merged common ancestors
-  static bool IsMarginZero(const nsStyleCoord &aCoord)
-  {
-    return (aCoord.GetUnit() == eStyleUnit_Coord &&
-            aCoord.GetCoordValue() == 0) ||
-           (aCoord.GetUnit() == eStyleUnit_Percent &&
-            aCoord.GetPercentValue() == 0.0f) ||
-           (aCoord.IsCalcUnit() &&
-            aCoord.ComputeCoordPercentCalc(nscoord_MAX) == 0 &&
-            aCoord.ComputeCoordPercentCalc(0) == 0);
-=======
   static bool IsMarginZero(const LengthPercentage& aLength) {
     return aLength.Resolve(nscoord_MAX) == 0 && aLength.Resolve(0) == 0;
->>>>>>> upstream-releases
   }
 
   static void MarkDescendantsDirty(nsIFrame* aSubtreeRoot);
@@ -1823,13 +1640,7 @@ class nsLayoutUtils {
                          gfxContext* aContext, const char16_t* aString,
                          int32_t aLength, nsPoint aPoint,
                          ComputedStyle* aComputedStyle = nullptr,
-<<<<<<< HEAD
-                         DrawStringFlags aFlags = DrawStringFlags::eDefault);
-||||||| merged common ancestors
-                         DrawStringFlags         aFlags = DrawStringFlags::eDefault);
-=======
                          DrawStringFlags aFlags = DrawStringFlags::Default);
->>>>>>> upstream-releases
 
   static nsPoint GetBackgroundFirstTilePos(const nsPoint& aDest,
                                            const nsPoint& aFill,
@@ -1973,83 +1784,6 @@ class nsLayoutUtils {
    * Draw a background image.  The image's dimensions are as specified in aDest;
    * the image itself is not consulted to determine a size.
    * See https://wiki.mozilla.org/Gecko:Image_Snapping_and_Rendering
-<<<<<<< HEAD
-   *
-   * @param aContext
-   *   The context to draw to, already set up with an appropriate scale and
-   *   transform for drawing in app units.
-   * @param aForFrame
-   *   The nsIFrame that we're drawing this image for.
-   * @param aImage
-   *   The image.
-   * @param aImageSize
-   *  The unscaled size of the image being drawn. (This might be the image's
-   *  size if no scaling occurs, or it might be the image's size if the image is
-   *  a vector image being rendered at that size.)
-   * @param aDest
-   *  The position and scaled area where one copy of the image should be drawn.
-   *  This area represents the image itself in its correct position as defined
-   *  with the background-position css property.
-   * @param aFill
-   *  The area to be filled with copies of the image.
-   * @param aRepeatSize
-   *  The distance between the positions of two subsequent repeats of the image.
-   *  Sizes larger than aDest.Size() create gaps between the images.
-   * @param aAnchor
-   *  A point in aFill which we will ensure is pixel-aligned in the output.
-   * @param aDirty
-   *   Pixels outside this area may be skipped.
-   * @param aImageFlags
-   *   Image flags of the imgIContainer::FLAG_* variety.
-   * @param aExtendMode
-   *   How to extend the image over the dest rect.
-   */
-  static ImgDrawResult DrawBackgroundImage(
-      gfxContext& aContext, nsIFrame* aForFrame, nsPresContext* aPresContext,
-      imgIContainer* aImage, const CSSIntSize& aImageSize,
-      SamplingFilter aSamplingFilter, const nsRect& aDest, const nsRect& aFill,
-      const nsSize& aRepeatSize, const nsPoint& aAnchor, const nsRect& aDirty,
-      uint32_t aImageFlags, ExtendMode aExtendMode, float aOpacity);
-||||||| merged common ancestors
-   *   @param aContext          The context to draw to, already set up with an
-   *                            appropriate scale and transform for drawing in
-   *                            app units.
-   *   @param aForFrame         The nsIFrame that we're drawing this image for.
-   *   @param aImage            The image.
-   *   @param aImageSize        The unscaled size of the image being drawn.
-   *                            (This might be the image's size if no scaling
-   *                            occurs, or it might be the image's size if
-   *                            the image is a vector image being rendered at
-   *                            that size.)
-   *   @param aDest             The position and scaled area where one copy of
-   *                            the image should be drawn. This area represents
-   *                            the image itself in its correct position as defined
-   *                            with the background-position css property.
-   *   @param aFill             The area to be filled with copies of the image.
-   *   @param aRepeatSize       The distance between the positions of two subsequent
-   *                            repeats of the image. Sizes larger than aDest.Size()
-   *                            create gaps between the images.
-   *   @param aAnchor           A point in aFill which we will ensure is
-   *                            pixel-aligned in the output.
-   *   @param aDirty            Pixels outside this area may be skipped.
-   *   @param aImageFlags       Image flags of the imgIContainer::FLAG_* variety.
-   *   @param aExtendMode       How to extend the image over the dest rect.
-   */
-  static ImgDrawResult DrawBackgroundImage(gfxContext&         aContext,
-                                        nsIFrame*           aForFrame,
-                                        nsPresContext*      aPresContext,
-                                        imgIContainer*      aImage,
-                                        const CSSIntSize&   aImageSize,
-                                        SamplingFilter      aSamplingFilter,
-                                        const nsRect&       aDest,
-                                        const nsRect&       aFill,
-                                        const nsSize&       aRepeatSize,
-                                        const nsPoint&      aAnchor,
-                                        const nsRect&       aDirty,
-                                        uint32_t            aImageFlags,
-                                        ExtendMode          aExtendMode,
-                                        float               aOpacity);
-=======
    *
    * @param aContext
    *   The context to draw to, already set up with an appropriate scale and
@@ -2082,7 +1816,6 @@ class nsLayoutUtils {
       const nsRect& aDest, const nsRect& aFill, const nsSize& aRepeatSize,
       const nsPoint& aAnchor, const nsRect& aDirty, uint32_t aImageFlags,
       ExtendMode aExtendMode, float aOpacity);
->>>>>>> upstream-releases
 
   /**
    * Draw an image.
@@ -2191,20 +1924,9 @@ class nsLayoutUtils {
    * have less information about the frame tree.
    */
   static void ComputeSizeForDrawing(imgIContainer* aImage,
-<<<<<<< HEAD
-                                    CSSIntSize& aImageSize,
-                                    nsSize& aIntrinsicRatio, bool& aGotWidth,
-                                    bool& aGotHeight);
-||||||| merged common ancestors
-                                    CSSIntSize&    aImageSize,
-                                    nsSize&        aIntrinsicRatio,
-                                    bool&          aGotWidth,
-                                    bool&          aGotHeight);
-=======
                                     CSSIntSize& aImageSize,
                                     AspectRatio& aIntrinsicRatio,
                                     bool& aGotWidth, bool& aGotHeight);
->>>>>>> upstream-releases
 
   /**
    * Given an imgIContainer, this method attempts to obtain an intrinsic
@@ -2266,16 +1988,8 @@ class nsLayoutUtils {
    * Determine if there is any corner radius on corners adjacent to the
    * given side.
    */
-<<<<<<< HEAD
-  static bool HasNonZeroCornerOnSide(const nsStyleCorners& aCorners,
-                                     mozilla::Side aSide);
-||||||| merged common ancestors
-  static bool HasNonZeroCornerOnSide(const nsStyleCorners& aCorners,
-                                       mozilla::Side aSide);
-=======
   static bool HasNonZeroCornerOnSide(const mozilla::BorderRadius& aCorners,
                                      mozilla::Side aSide);
->>>>>>> upstream-releases
 
   /**
    * Determine if a widget is likely to require transparency or translucency.
@@ -2446,18 +2160,11 @@ class nsLayoutUtils {
     nsCOMPtr<nsIPrincipal> mPrincipal;
     /* The image request, if the element is an nsIImageLoadingContent */
     nsCOMPtr<imgIRequest> mImageRequest;
-<<<<<<< HEAD
-    /* Whether the element was "write only", that is, the bits should not be
-     * exposed to content */
-||||||| merged common ancestors
-    /* Whether the element was "write only", that is, the bits should not be exposed to content */
-=======
     /* True if cross-origins redirects have been done in order to load this
      * resource */
     bool mHadCrossOriginRedirects;
     /* Whether the element was "write only", that is, the bits should not be
      * exposed to content */
->>>>>>> upstream-releases
     bool mIsWriteOnly;
     /* Whether the element was still loading.  Some consumers need to handle
        this case specially. */
@@ -2535,28 +2242,11 @@ class nsLayoutUtils {
    *  <body><p contenteditable="true"></p></body>
    *    returns nullptr because <body> isn't editable.
    */
-<<<<<<< HEAD
-  static mozilla::dom::Element* GetEditableRootContentByContentEditable(
-      nsIDocument* aDocument);
-||||||| merged common ancestors
-  static mozilla::dom::Element*
-  GetEditableRootContentByContentEditable(nsIDocument* aDocument);
-=======
   static mozilla::dom::Element* GetEditableRootContentByContentEditable(
       mozilla::dom::Document* aDocument);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void AddExtraBackgroundItems(nsDisplayListBuilder& aBuilder,
-                                      nsDisplayList& aList, nsIFrame* aFrame,
-||||||| merged common ancestors
-  static void AddExtraBackgroundItems(nsDisplayListBuilder& aBuilder,
-                                      nsDisplayList& aList,
-                                      nsIFrame* aFrame,
-=======
   static void AddExtraBackgroundItems(nsDisplayListBuilder* aBuilder,
                                       nsDisplayList* aList, nsIFrame* aFrame,
->>>>>>> upstream-releases
                                       const nsRect& aCanvasArea,
                                       const nsRegion& aVisibleRegion,
                                       nscolor aBackstop);
@@ -2644,17 +2334,6 @@ class nsLayoutUtils {
                                     nsCSSPropertyID aProperty);
 
   /**
-<<<<<<< HEAD
-   * Returns all effective animated CSS properties on |aFrame|. That means
-   * properties that can be animated on the compositor and are not overridden by
-   * a higher cascade level.
-   */
-  static nsCSSPropertyIDSet GetAnimationPropertiesForCompositor(
-      const nsIFrame* aFrame);
-
-  /**
-||||||| merged common ancestors
-=======
    * Returns true if |aFrame| has an animation where at least one of the
    * properties in |aPropertySet| is not overridden by !important rules.
    *
@@ -2683,7 +2362,6 @@ class nsLayoutUtils {
       const nsIFrame* aStyleFrame);
 
   /**
->>>>>>> upstream-releases
    * Checks if off-main-thread animations are enabled.
    */
   static bool AreAsyncAnimationsEnabled();
@@ -2730,24 +2408,7 @@ class nsLayoutUtils {
    */
   static bool IsInterCharacterRubyEnabled();
 
-<<<<<<< HEAD
-  /**
-   * Checks whether content-select is enabled.
-   */
-  static bool IsContentSelectEnabled();
-
   static bool InterruptibleReflowEnabled() {
-||||||| merged common ancestors
-  /**
-   * Checks whether content-select is enabled.
-   */
-  static bool IsContentSelectEnabled();
-
-  static bool InterruptibleReflowEnabled()
-  {
-=======
-  static bool InterruptibleReflowEnabled() {
->>>>>>> upstream-releases
     return sInterruptibleReflowEnabled;
   }
 
@@ -2984,14 +2645,7 @@ class nsLayoutUtils {
   /**
    * Helper method to get touch action behaviour from the frame
    */
-<<<<<<< HEAD
-  static uint32_t GetTouchActionFromFrame(nsIFrame* aFrame);
-||||||| merged common ancestors
-  static uint32_t
-  GetTouchActionFromFrame(nsIFrame* aFrame);
-=======
   static mozilla::StyleTouchAction GetTouchActionFromFrame(nsIFrame* aFrame);
->>>>>>> upstream-releases
 
   /**
    * Helper method to transform |aBounds| from aFrame to aAncestorFrame,
@@ -3177,16 +2831,8 @@ class nsLayoutUtils {
    * Sets a zero margin display port on all proper ancestors of aFrame that
    * are async scrollable.
    */
-<<<<<<< HEAD
-  static void SetZeroMarginDisplayPortOnAsyncScrollableAncestors(
-      nsIFrame* aFrame, RepaintMode aRepaintMode);
-||||||| merged common ancestors
-  static void SetZeroMarginDisplayPortOnAsyncScrollableAncestors(nsIFrame* aFrame,
-                                                                 RepaintMode aRepaintMode);
-=======
   static void SetZeroMarginDisplayPortOnAsyncScrollableAncestors(
       nsIFrame* aFrame);
->>>>>>> upstream-releases
   /**
    * Finds the closest ancestor async scrollable frame from aFrame that has a
    * displayport and attempts to trigger the displayport expiry on that
@@ -3208,14 +2854,7 @@ class nsLayoutUtils {
    * for the root scroll frame of this document
    * (see nsIDOMWindowUtils.setVisualViewportSize).
    */
-<<<<<<< HEAD
-  static void SetVisualViewportSize(nsIPresShell* aPresShell, CSSSize aSize);
-||||||| merged common ancestors
-  static void SetVisualViewportSize(nsIPresShell* aPresShell,
-                                                      CSSSize aSize);
-=======
   static void SetVisualViewportSize(PresShell* aPresShell, CSSSize aSize);
->>>>>>> upstream-releases
 
   /**
    * Returns true if the given scroll origin is "higher priority" than APZ.
@@ -3346,46 +2985,18 @@ class nsLayoutUtils {
 
   /*
    * Checks whether a node is an invisible break.
-<<<<<<< HEAD
-   * If not, returns the first frame on the next line if such a next line
-   * exists.
-||||||| merged common ancestors
-   * If not, returns the first frame on the next line if such a next line exists.
-=======
    * If not, returns the first frame on the next line if such a next line
    * exists.
    *
    * @return
    *   true if the node is an invisible break. aNextLineFrame is returned null
    *   in this case.
->>>>>>> upstream-releases
    *
-<<<<<<< HEAD
-   * @return
-   *   true if the node is an invisible break. aNextLineFrame is returned null
-   *   in this case.
-||||||| merged common ancestors
-   * @return  true if the node is an invisible break.
-   *          aNextLineFrame is returned null in this case.
-   *          false if the node causes a visible break or if the node is no break.
-=======
-   *   false if the node causes a visible break or if the node is no break.
->>>>>>> upstream-releases
-   *
-<<<<<<< HEAD
    *   false if the node causes a visible break or if the node is no break.
    *
    * @param aNextLineFrame
    *   assigned to first frame on the next line if such a next line exists, null
    *   otherwise.
-||||||| merged common ancestors
-   * @param   aNextLineFrame  assigned to first frame on the next line if such a
-   *                          next line exists, null otherwise.
-=======
-   * @param aNextLineFrame
-   *   assigned to first frame on the next line if such a next line exists, null
-   *   otherwise.
->>>>>>> upstream-releases
    */
   static bool IsInvisibleBreak(nsINode* aNode,
                                nsIFrame** aNextLineFrame = nullptr);
@@ -3400,90 +3011,16 @@ class nsLayoutUtils {
   // from preferences.
   static uint8_t ControlCharVisibilityDefault();
 
-<<<<<<< HEAD
-  enum class FlushUserFontSet {
-    Yes,
-    No,
-  };
-
-  static already_AddRefed<nsFontMetrics> GetMetricsFor(
-      nsPresContext* aPresContext, bool aIsVertical,
-      const nsStyleFont* aStyleFont, nscoord aFontSize, bool aUseUserFontSet,
-      FlushUserFontSet aFlushUserFontSet);
-
-  /**
-   * Appropriately add the correct font if we are using DocumentFonts or
-   * overriding for XUL
-   */
-  static void FixupNoneGeneric(nsFont* aFont, const nsPresContext* aPresContext,
-                               uint8_t aGenericFontID,
-                               const nsFont* aDefaultVariableFont);
-
-  /**
-   * For an nsStyleFont with mSize set, apply minimum font size constraints
-   * from preferences, as well as -moz-min-font-size-ratio.
-   */
-  static void ApplyMinFontSize(nsStyleFont* aFont,
-                               const nsPresContext* aPresContext,
-                               nscoord aMinFontSize);
-||||||| merged common ancestors
-  enum class FlushUserFontSet {
-    Yes,
-    No,
-  };
-
-  static already_AddRefed<nsFontMetrics> GetMetricsFor(nsPresContext* aPresContext,
-                                                       bool aIsVertical,
-                                                       const nsStyleFont* aStyleFont,
-                                                       nscoord aFontSize,
-                                                       bool aUseUserFontSet,
-                                                       FlushUserFontSet aFlushUserFontSet);
-
-  /**
-   * Appropriately add the correct font if we are using DocumentFonts or
-   * overriding for XUL
-   */
-  static void FixupNoneGeneric(nsFont* aFont,
-                               const nsPresContext* aPresContext,
-                               uint8_t aGenericFontID,
-                               const nsFont* aDefaultVariableFont);
-
-  /**
-   * For an nsStyleFont with mSize set, apply minimum font size constraints
-   * from preferences, as well as -moz-min-font-size-ratio.
-   */
-  static void ApplyMinFontSize(nsStyleFont* aFont,
-                               const nsPresContext* aPresContext,
-                               nscoord aMinFontSize);
-=======
   // Callers are responsible to ensure the user-font-set is up-to-date if
   // aUseUserFontSet is true.
   static already_AddRefed<nsFontMetrics> GetMetricsFor(
       nsPresContext* aPresContext, bool aIsVertical,
       const nsStyleFont* aStyleFont, nscoord aFontSize, bool aUseUserFontSet);
->>>>>>> upstream-releases
 
   static void ComputeSystemFont(nsFont* aSystemFont,
                                 mozilla::LookAndFeel::FontID aFontID,
                                 const nsFont* aDefaultVariableFont);
 
-<<<<<<< HEAD
-  static void ComputeFontFeatures(const nsCSSValuePairList* aFeaturesList,
-                                  nsTArray<gfxFontFeature>& aFeatureSettings);
-
-  static void ComputeFontVariations(
-      const nsCSSValuePairList* aVariationsList,
-      nsTArray<gfxFontVariation>& aVariationSettings);
-
-||||||| merged common ancestors
-  static void ComputeFontFeatures(const nsCSSValuePairList* aFeaturesList,
-                                  nsTArray<gfxFontFeature>& aFeatureSettings);
-
-  static void ComputeFontVariations(const nsCSSValuePairList* aVariationsList,
-                                    nsTArray<gfxFontVariation>& aVariationSettings);
-
-=======
->>>>>>> upstream-releases
   static uint32_t ParseFontLanguageOverride(const nsAString& aLangTag);
 
   /**
@@ -3495,82 +3032,6 @@ class nsLayoutUtils {
   /**
    * Resolve a CSS <length-percentage> value to a definite size.
    */
-<<<<<<< HEAD
-  template <bool clampNegativeResultToZero>
-  static nscoord ResolveToLength(const nsStyleCoord& aCoord,
-                                 nscoord aPercentageBasis) {
-    NS_WARNING_ASSERTION(aPercentageBasis >= nscoord(0), "nscoord overflow?");
-
-    switch (aCoord.GetUnit()) {
-      case eStyleUnit_Coord:
-        MOZ_ASSERT(!clampNegativeResultToZero || aCoord.GetCoordValue() >= 0,
-                   "This value should have been rejected by the style system");
-        return aCoord.GetCoordValue();
-      case eStyleUnit_Percent:
-        if (aPercentageBasis == NS_UNCONSTRAINEDSIZE) {
-          return nscoord(0);
-        }
-        MOZ_ASSERT(!clampNegativeResultToZero || aCoord.GetPercentValue() >= 0,
-                   "This value should have been rejected by the style system");
-        return NSToCoordFloorClamped(aPercentageBasis *
-                                     aCoord.GetPercentValue());
-      case eStyleUnit_Calc: {
-        nsStyleCoord::Calc* calc = aCoord.GetCalcValue();
-        nscoord result;
-        if (aPercentageBasis == NS_UNCONSTRAINEDSIZE) {
-          result = calc->mLength;
-        } else {
-          result = calc->mLength +
-                   NSToCoordFloorClamped(aPercentageBasis * calc->mPercent);
-        }
-        if (clampNegativeResultToZero && result < 0) {
-          return nscoord(0);
-        }
-        return result;
-      }
-      default:
-        MOZ_ASSERT_UNREACHABLE("Unexpected unit!");
-        return nscoord(0);
-    }
-||||||| merged common ancestors
-  template<bool clampNegativeResultToZero>
-  static nscoord ResolveToLength(const nsStyleCoord& aCoord,
-                                 nscoord aPercentageBasis)
-  {
-    NS_WARNING_ASSERTION(aPercentageBasis >= nscoord(0), "nscoord overflow?");
-
-    switch (aCoord.GetUnit()) {
-      case eStyleUnit_Coord:
-        MOZ_ASSERT(!clampNegativeResultToZero || aCoord.GetCoordValue() >= 0,
-                   "This value should have been rejected by the style system");
-        return aCoord.GetCoordValue();
-      case eStyleUnit_Percent:
-        if (aPercentageBasis == NS_UNCONSTRAINEDSIZE) {
-          return nscoord(0);
-        }
-        MOZ_ASSERT(!clampNegativeResultToZero || aCoord.GetPercentValue() >= 0,
-                   "This value should have been rejected by the style system");
-        return NSToCoordFloorClamped(aPercentageBasis *
-                                     aCoord.GetPercentValue());
-      case eStyleUnit_Calc: {
-        nsStyleCoord::Calc* calc = aCoord.GetCalcValue();
-        nscoord result;
-        if (aPercentageBasis == NS_UNCONSTRAINEDSIZE) {
-          result = calc->mLength;
-        } else {
-          result = calc->mLength +
-            NSToCoordFloorClamped(aPercentageBasis * calc->mPercent);
-        }
-        if (clampNegativeResultToZero && result < 0) {
-          return nscoord(0);
-        }
-        return result;
-      }
-      default:
-        MOZ_ASSERT_UNREACHABLE("Unexpected unit!");
-        return nscoord(0);
-    }
-=======
   template <bool clampNegativeResultToZero>
   static nscoord ResolveToLength(const LengthPercentage& aLengthPercentage,
                                  nscoord aPercentageBasis) {
@@ -3578,7 +3039,6 @@ class nsLayoutUtils {
                         ? aLengthPercentage.Resolve(0)
                         : aLengthPercentage.Resolve(aPercentageBasis);
     return clampNegativeResultToZero ? std::max(0, value) : value;
->>>>>>> upstream-releases
   }
 
   /**
@@ -3586,21 +3046,10 @@ class nsLayoutUtils {
    * @note This method resolves 'normal' to zero.
    *   Callers who want different behavior should handle 'normal' on their own.
    */
-<<<<<<< HEAD
-  static nscoord ResolveGapToLength(const nsStyleCoord& aGap,
-                                    nscoord aPercentageBasis) {
-    if (aGap.GetUnit() == eStyleUnit_Normal) {
-||||||| merged common ancestors
-  static nscoord ResolveGapToLength(const nsStyleCoord& aGap,
-                                    nscoord aPercentageBasis)
-  {
-    if (aGap.GetUnit() == eStyleUnit_Normal) {
-=======
   static nscoord ResolveGapToLength(
       const mozilla::NonNegativeLengthPercentageOrNormal& aGap,
       nscoord aPercentageBasis) {
     if (aGap.IsNormal()) {
->>>>>>> upstream-releases
       return nscoord(0);
     }
     return ResolveToLength<true>(aGap.AsLengthPercentage(), aPercentageBasis);

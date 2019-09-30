@@ -165,13 +165,6 @@ var State = {
     let counters = await ChromeUtils.requestPerformanceMetrics();
     let tabs = {};
     for (let counter of counters) {
-<<<<<<< HEAD
-      let {items, host, pid, counterId, windowId, duration, isWorker,
-           memoryInfo, isTopLevel} = counter;
-||||||| merged common ancestors
-      let {items, host, pid, counterId, windowId, duration, isWorker,
-           isTopLevel} = counter;
-=======
       let {
         items,
         host,
@@ -183,7 +176,6 @@ var State = {
         memoryInfo,
         isTopLevel,
       } = counter;
->>>>>>> upstream-releases
       // If a worker has a windowId of 0 or max uint64, attach it to the
       // browser UI (doc group with id 1).
       if (isWorker && (windowId == 18446744073709552000 || !windowId)) {
@@ -213,11 +205,6 @@ var State = {
       if (id in tabs) {
         tab = tabs[id];
       } else {
-<<<<<<< HEAD
-        tab = {windowId, host, dispatchCount: 0, duration: 0, memory: 0, children: []};
-||||||| merged common ancestors
-        tab = {windowId, host, dispatchCount: 0, duration: 0, children: []};
-=======
         tab = {
           windowId,
           host,
@@ -226,20 +213,12 @@ var State = {
           memory: 0,
           children: [],
         };
->>>>>>> upstream-releases
         tabs[id] = tab;
       }
       tab.dispatchCount += dispatchCount;
       tab.duration += duration;
       tab.memory += memory;
       if (!isTopLevel || isWorker) {
-<<<<<<< HEAD
-        tab.children.push({host, isWorker, dispatchCount, duration, memory,
-                           counterId: pid + ":" + counterId});
-||||||| merged common ancestors
-        tab.children.push({host, isWorker, dispatchCount, duration,
-                           counterId: pid + ":" + counterId});
-=======
         tab.children.push({
           host,
           isWorker,
@@ -248,7 +227,6 @@ var State = {
           memory,
           counterId: pid + ":" + counterId,
         });
->>>>>>> upstream-releases
       }
     }
 
@@ -266,11 +244,6 @@ var State = {
         if (id in tabs) {
           tab = tabs[id];
         } else {
-<<<<<<< HEAD
-          tab = {windowId: 0, host: id, dispatchCount: 0, duration: 0, memory: 0, children: []};
-||||||| merged common ancestors
-          tab = {windowId: 0, host: id, dispatchCount: 0, duration: 0, children: []};
-=======
           tab = {
             windowId: 0,
             host: id,
@@ -279,7 +252,6 @@ var State = {
             memory: 0,
             children: [],
           };
->>>>>>> upstream-releases
           tabs[id] = tab;
         }
         tab.dispatchCount += dispatchCount;
@@ -429,12 +401,6 @@ var State = {
       }
       // For each subitem, create a new object including the deltas since the previous time.
       let children = tab.children.map(child => {
-<<<<<<< HEAD
-        let {host, dispatchCount, duration, memory, isWorker, counterId} = child;
-||||||| merged common ancestors
-        let {host, dispatchCount, duration, isWorker, counterId} = child;
-
-=======
         let {
           host,
           dispatchCount,
@@ -443,7 +409,6 @@ var State = {
           isWorker,
           counterId,
         } = child;
->>>>>>> upstream-releases
         let dispatchesSincePrevious = dispatchCount;
         let durationSincePrevious = duration;
         if (prevChildren.has(counterId)) {
@@ -453,13 +418,6 @@ var State = {
           prevChildren.delete(counterId);
         }
 
-<<<<<<< HEAD
-        return {host, dispatchCount, duration, isWorker, memory,
-                dispatchesSincePrevious, durationSincePrevious};
-||||||| merged common ancestors
-        return {host, dispatchCount, duration, isWorker,
-                dispatchesSincePrevious, durationSincePrevious};
-=======
         return {
           host,
           dispatchCount,
@@ -469,7 +427,6 @@ var State = {
           dispatchesSincePrevious,
           durationSincePrevious,
         };
->>>>>>> upstream-releases
       });
 
       // Any item that remains in prevChildren is a subitem that no longer
@@ -508,19 +465,6 @@ var State = {
         durationSinceStartOfBuffer =
           duration - oldest.duration - (oldest.durationFromFormerChildren || 0);
       }
-<<<<<<< HEAD
-      counters.push({id, name, image, type, memory: tab.memory,
-                     totalDispatches: dispatches, totalDuration: duration,
-                     durationSincePrevious, dispatchesSincePrevious,
-                     durationSinceStartOfBuffer, dispatchesSinceStartOfBuffer,
-                     children});
-||||||| merged common ancestors
-      counters.push({id, name, image, type,
-                     totalDispatches: dispatches, totalDuration: duration,
-                     durationSincePrevious, dispatchesSincePrevious,
-                     durationSinceStartOfBuffer, dispatchesSinceStartOfBuffer,
-                     children});
-=======
       counters.push({
         id,
         name,
@@ -535,7 +479,6 @@ var State = {
         dispatchesSinceStartOfBuffer,
         children,
       });
->>>>>>> upstream-releases
     }
     return counters;
   },
@@ -611,29 +554,6 @@ var View = {
     this.displayEnergyImpact(elt, energyImpact);
     row.appendChild(elt);
 
-<<<<<<< HEAD
-    elt = document.createElement("td");
-    if (!memory) {
-      elt.textContent = "–";
-    } else {
-      let unit = "KB";
-      memory = Math.ceil(memory / 1024);
-      if (memory > 1024) {
-        memory = Math.ceil(memory / 1024 * 10) / 10;
-        unit = "MB";
-        if (memory > 1024) {
-          memory = Math.ceil(memory / 1024 * 100) / 100;
-          unit = "GB";
-        }
-      }
-      document.l10n.setAttributes(elt, "size-" + unit, {value: memory});
-    }
-    row.appendChild(elt);
-
-    if (tooltip)
-||||||| merged common ancestors
-    if (tooltip)
-=======
     elt = document.createElement("td");
     if (!memory) {
       elt.textContent = "–";
@@ -658,7 +578,6 @@ var View = {
           tooltip[key] = "–";
         }
       }
->>>>>>> upstream-releases
       document.l10n.setAttributes(row, "item", tooltip);
     }
 
@@ -683,15 +602,6 @@ var View = {
 
 var Control = {
   _openItems: new Set(),
-<<<<<<< HEAD
-  _removeSubtree(row) {
-    while (row.nextSibling &&
-           row.nextSibling.firstChild.classList.contains("indent")) {
-      row.nextSibling.remove();
-    }
-  },
-||||||| merged common ancestors
-=======
   _sortOrder: "",
   _removeSubtree(row) {
     while (
@@ -701,7 +611,6 @@ var Control = {
       row.nextSibling.remove();
     }
   },
->>>>>>> upstream-releases
   init() {
     let tbody = document.getElementById("dispatch-tbody");
     tbody.addEventListener("click", event => {
@@ -833,41 +742,7 @@ var Control = {
       return;
     }
 
-<<<<<<< HEAD
-      // Make sure that we do not keep obsolete stuff around.
-      View.DOMCache.trimTo(state.deltas);
-    } else {
-      // If the mouse has been moved recently, update the data displayed
-      // without moving any item to avoid the risk of users clicking an action
-      // button for the wrong item.
-      // Memory use is unlikely to change dramatically within a few seconds, so
-      // it's probably fine to not update the Memory column in this case.
-      if (Date.now() - this._lastMouseEvent < TIME_BEFORE_SORTING_AGAIN) {
-        let energyImpactPerId = new Map();
-        for (let {id, dispatchesSincePrevious,
-                  durationSincePrevious} of State.getCounters()) {
-          let energyImpact = this._computeEnergyImpact(dispatchesSincePrevious,
-                                                       durationSincePrevious);
-          energyImpactPerId.set(id, energyImpact);
-        }
-||||||| merged common ancestors
-      // Make sure that we do not keep obsolete stuff around.
-      View.DOMCache.trimTo(state.deltas);
-    } else {
-      // If the mouse has been moved recently, update the data displayed
-      // without moving any item to avoid the risk of users clicking an action
-      // button for the wrong item.
-      if (Date.now() - this._lastMouseEvent < TIME_BEFORE_SORTING_AGAIN) {
-        let energyImpactPerId = new Map();
-        for (let {id, dispatchesSincePrevious,
-                  durationSincePrevious} of State.getCounters()) {
-          let energyImpact = this._computeEnergyImpact(dispatchesSincePrevious,
-                                                       durationSincePrevious);
-          energyImpactPerId.set(id, energyImpact);
-        }
-=======
     await wait(0);
->>>>>>> upstream-releases
 
     await this._updateDisplay();
   },
@@ -955,49 +830,6 @@ var Control = {
         row.setAttribute("selected", "true");
         this.selectedRow = row;
       }
-<<<<<<< HEAD
-      let openItems = this._openItems;
-      this._openItems = new Set();
-
-      let counters = this._sortCounters(State.getCounters());
-      for (let {id, name, image, type, totalDispatches, dispatchesSincePrevious,
-                memory, totalDuration, durationSincePrevious, children} of counters) {
-        let row =
-          View.appendRow(name,
-                         this._computeEnergyImpact(dispatchesSincePrevious,
-                                                   durationSincePrevious),
-                         memory,
-                         {totalDispatches, totalDuration: Math.ceil(totalDuration / 1000),
-                          dispatchesSincePrevious,
-                          durationSincePrevious: Math.ceil(durationSincePrevious / 1000)},
-                         type, image);
-        row.windowId = id;
-        if (id == selectedId) {
-          row.setAttribute("selected", "true");
-          this.selectedRow = row;
-        }
-||||||| merged common ancestors
-      let openItems = this._openItems;
-      this._openItems = new Set();
-
-      let counters = this._sortCounters(State.getCounters());
-      for (let {id, name, image, type, totalDispatches, dispatchesSincePrevious,
-                totalDuration, durationSincePrevious, children} of counters) {
-        let row =
-          View.appendRow(name,
-                         this._computeEnergyImpact(dispatchesSincePrevious,
-                                                   durationSincePrevious),
-                         {totalDispatches, totalDuration: Math.ceil(totalDuration / 1000),
-                          dispatchesSincePrevious,
-                          durationSincePrevious: Math.ceil(durationSincePrevious / 1000)},
-                         type, image);
-        row.windowId = id;
-        if (id == selectedId) {
-          row.setAttribute("selected", "true");
-          this.selectedRow = row;
-        }
-=======
->>>>>>> upstream-releases
 
       if (!children.length) {
         continue;
@@ -1047,26 +879,6 @@ var Control = {
       }
       if (row.isWorker) {
         type = "worker";
-<<<<<<< HEAD
-      View.appendRow(row.host,
-                     this._computeEnergyImpact(row.dispatchesSincePrevious,
-                                               row.durationSincePrevious),
-                     row.memory,
-                     {totalDispatches: row.dispatchCount,
-                      totalDuration: Math.ceil(row.duration / 1000),
-                      dispatchesSincePrevious: row.dispatchesSincePrevious,
-                      durationSincePrevious: Math.ceil(row.durationSincePrevious / 1000)},
-                     type);
-||||||| merged common ancestors
-      View.appendRow(row.host,
-                     this._computeEnergyImpact(row.dispatchesSincePrevious,
-                                               row.durationSincePrevious),
-                     {totalDispatches: row.dispatchCount,
-                      totalDuration: Math.ceil(row.duration / 1000),
-                      dispatchesSincePrevious: row.dispatchesSincePrevious,
-                      durationSincePrevious: Math.ceil(row.durationSincePrevious / 1000)},
-                     type);
-=======
       }
       View.appendRow(
         row.host,
@@ -1083,7 +895,6 @@ var Control = {
         },
         type
       );
->>>>>>> upstream-releases
     }
   },
   _computeEnergyImpact(dispatches, duration) {

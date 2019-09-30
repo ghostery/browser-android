@@ -29,22 +29,10 @@ class MediaQueryList final : public DOMEventTargetHelper,
  public:
   // The caller who constructs is responsible for calling Evaluate
   // before calling any other methods.
-<<<<<<< HEAD
-  MediaQueryList(nsIDocument* aDocument, const nsAString& aMediaQueryList,
-                 mozilla::dom::CallerType aCallerType);
-
- private:
-||||||| merged common ancestors
-  MediaQueryList(nsIDocument* aDocument,
-                 const nsAString& aMediaQueryList,
-                 mozilla::dom::CallerType aCallerType);
-private:
-=======
   MediaQueryList(Document* aDocument, const nsAString& aMediaQueryList,
                  CallerType aCallerType);
 
  private:
->>>>>>> upstream-releases
   ~MediaQueryList();
 
  public:

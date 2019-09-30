@@ -367,16 +367,8 @@ fuzzy-if(OSX,0-1,0-100) fuzzy-if(skiaContent,0-1,0-14) == mfrac-D-1.html mfrac-D
 fuzzy-if(geckoview&&webrender,0-198,0-776) == mfrac-D-3.html mfrac-D-3-ref.html
 fuzzy-if(geckoview&&webrender,0-198,0-270) == mfrac-D-4.html mfrac-D-4-ref.html
 == mfrac-E-1.html mfrac-E-1-ref.html
-<<<<<<< HEAD
-== shadow-dom-1.html shadow-dom-1-ref.html
-pref(dom.meta-viewport.enabled,true) pref(font.size.inflation.emPerLine,25) fuzzy-if(webrender&&!gtkWidget,0-255,0-244) == font-inflation-1.html font-inflation-1-ref.html
-||||||| merged common ancestors
-test-pref(dom.webcomponents.shadowdom.enabled,true) == shadow-dom-1.html shadow-dom-1-ref.html
-pref(dom.meta-viewport.enabled,true) pref(font.size.inflation.emPerLine,25) fuzzy-if(webrender&&!gtkWidget,0-255,0-244) == font-inflation-1.html font-inflation-1-ref.html
-=======
 == shadow-dom-1.html shadow-dom-1-ref.html
 pref(dom.meta-viewport.enabled,true) pref(font.size.inflation.emPerLine,25) fuzzy-if(webrender&&!gtkWidget,0-255,0-324) == font-inflation-1.html font-inflation-1-ref.html
->>>>>>> upstream-releases
 test-pref(font.minimum-size.x-math,40) == default-font.html default-font-ref.html
 != radicalbar-1.html about:blank
 != radicalbar-1a.html about:blank

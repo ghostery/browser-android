@@ -54,18 +54,10 @@ class IAPZCTreeManager;
 namespace widget {
 class RectTextureImage;
 class WidgetRenderingContext;
-<<<<<<< HEAD
-}  // namespace widget
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace widget
-} // namespace mozilla
-=======
 }  // namespace widget
 }  // namespace mozilla
 
 @class PixelHostingView;
->>>>>>> upstream-releases
 
 @interface NSEvent (Undocumented)
 
@@ -245,20 +237,12 @@ class WidgetRenderingContext;
 - (void)updateGLContext;
 - (void)_surfaceNeedsUpdate:(NSNotification*)notification;
 
-<<<<<<< HEAD
-- (bool)preRender:(NSOpenGLContext*)aGLContext;
-- (void)postRender:(NSOpenGLContext*)aGLContext;
-||||||| merged common ancestors
-- (bool)preRender:(NSOpenGLContext *)aGLContext;
-- (void)postRender:(NSOpenGLContext *)aGLContext;
-=======
 - (bool)preRender:(NSOpenGLContext*)aGLContext;
 - (void)postRender:(NSOpenGLContext*)aGLContext;
 
 - (NSView*)vibrancyViewsContainer;
 - (NSView*)nonDraggableViewsContainer;
 - (NSView*)pixelHostingView;
->>>>>>> upstream-releases
 
 - (BOOL)isCoveringTitlebar;
 
@@ -346,19 +330,9 @@ class nsChildView final : public nsBaseWidget {
   virtual void Resize(double aWidth, double aHeight, bool aRepaint) override;
   virtual void Resize(double aX, double aY, double aWidth, double aHeight, bool aRepaint) override;
 
-<<<<<<< HEAD
-  virtual void Enable(bool aState) override;
-  virtual bool IsEnabled() const override;
-  virtual nsresult SetFocus(bool aRaise) override;
-||||||| merged common ancestors
-  virtual void            Enable(bool aState) override;
-  virtual bool            IsEnabled() const override;
-  virtual nsresult        SetFocus(bool aRaise) override;
-=======
   virtual void Enable(bool aState) override;
   virtual bool IsEnabled() const override;
   virtual void SetFocus(Raise) override;
->>>>>>> upstream-releases
   virtual LayoutDeviceIntRect GetBounds() override;
   virtual LayoutDeviceIntRect GetClientBounds() override;
   virtual LayoutDeviceIntRect GetScreenBounds() override;
@@ -395,13 +369,7 @@ class nsChildView final : public nsBaseWidget {
   virtual void* GetNativeData(uint32_t aDataType) override;
   virtual nsresult ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override;
   virtual LayoutDeviceIntPoint WidgetToScreenOffset() override;
-<<<<<<< HEAD
-  virtual bool ShowsResizeIndicator(LayoutDeviceIntRect* aResizerRect) override;
-||||||| merged common ancestors
-  virtual bool            ShowsResizeIndicator(LayoutDeviceIntRect* aResizerRect) override;
-=======
   virtual bool ShowsResizeIndicator(LayoutDeviceIntRect* aResizerRect) override { return false; }
->>>>>>> upstream-releases
 
   static bool ConvertStatus(nsEventStatus aStatus) {
     return aStatus == nsEventStatus_eConsumeNoDefault;
@@ -411,18 +379,8 @@ class nsChildView final : public nsBaseWidget {
   virtual bool WidgetTypeSupportsAcceleration() override;
   virtual bool ShouldUseOffMainThreadCompositing() override;
 
-<<<<<<< HEAD
-  virtual void SetCursor(nsCursor aCursor) override;
-  virtual nsresult SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                             uint32_t aHotspotY) override;
-||||||| merged common ancestors
-  virtual void      SetCursor(nsCursor aCursor) override;
-  virtual nsresult  SetCursor(imgIContainer* aCursor,
-                              uint32_t aHotspotX, uint32_t aHotspotY) override;
-=======
   virtual void SetCursor(nsCursor aDefaultCursor, imgIContainer* aCursor, uint32_t aHotspotX,
                          uint32_t aHotspotY) override;
->>>>>>> upstream-releases
 
   virtual nsresult SetTitle(const nsAString& title) override;
 
@@ -530,20 +488,9 @@ class nsChildView final : public nsBaseWidget {
 
   mozilla::widget::TextInputHandler* GetTextInputHandler() { return mTextInputHandler; }
 
-<<<<<<< HEAD
-  void ClearVibrantAreas();
   NSColor* VibrancyFillColorForThemeGeometryType(nsITheme::ThemeGeometryType aThemeGeometryType);
   NSColor* VibrancyFontSmoothingBackgroundColorForThemeGeometryType(
       nsITheme::ThemeGeometryType aThemeGeometryType);
-||||||| merged common ancestors
-  void              ClearVibrantAreas();
-  NSColor*          VibrancyFillColorForThemeGeometryType(nsITheme::ThemeGeometryType aThemeGeometryType);
-  NSColor*          VibrancyFontSmoothingBackgroundColorForThemeGeometryType(nsITheme::ThemeGeometryType aThemeGeometryType);
-=======
-  NSColor* VibrancyFillColorForThemeGeometryType(nsITheme::ThemeGeometryType aThemeGeometryType);
-  NSColor* VibrancyFontSmoothingBackgroundColorForThemeGeometryType(
-      nsITheme::ThemeGeometryType aThemeGeometryType);
->>>>>>> upstream-releases
 
   // unit conversion convenience functions
   int32_t CocoaPointsToDevPixels(CGFloat aPts) const {
@@ -595,19 +542,7 @@ class nsChildView final : public nsBaseWidget {
   void ReportMoveEvent();
   void ReportSizeEvent();
 
-<<<<<<< HEAD
-  // override to create different kinds of child views. Autoreleases, so
-  // caller must retain.
-  virtual NSView* CreateCocoaView(NSRect inFrame);
   void TearDownView();
-||||||| merged common ancestors
-  // override to create different kinds of child views. Autoreleases, so
-  // caller must retain.
-  virtual NSView*   CreateCocoaView(NSRect inFrame);
-  void              TearDownView();
-=======
-  void TearDownView();
->>>>>>> upstream-releases
 
   virtual already_AddRefed<nsIWidget> AllocateChildPopupWidget() override {
     return nsIWidget::CreateTopLevelWindow();
@@ -620,17 +555,8 @@ class nsChildView final : public nsBaseWidget {
 
   // Overlay drawing functions for OpenGL drawing
   void DrawWindowOverlay(mozilla::layers::GLManager* aManager, LayoutDeviceIntRect aRect);
-<<<<<<< HEAD
-  void MaybeDrawResizeIndicator(mozilla::layers::GLManager* aManager);
   void MaybeDrawRoundedCorners(mozilla::layers::GLManager* aManager,
                                const LayoutDeviceIntRect& aRect);
-||||||| merged common ancestors
-  void MaybeDrawResizeIndicator(mozilla::layers::GLManager* aManager);
-  void MaybeDrawRoundedCorners(mozilla::layers::GLManager* aManager, const LayoutDeviceIntRect& aRect);
-=======
-  void MaybeDrawRoundedCorners(mozilla::layers::GLManager* aManager,
-                               const LayoutDeviceIntRect& aRect);
->>>>>>> upstream-releases
   void MaybeDrawTitlebar(mozilla::layers::GLManager* aManager);
 
   // Redraw the contents of mTitlebarCGContext on the main thread, as
@@ -652,30 +578,13 @@ class nsChildView final : public nsBaseWidget {
   void TrackScrollEventAsSwipe(const mozilla::PanGestureInput& aSwipeStartEvent,
                                uint32_t aAllowedDirections);
 
-<<<<<<< HEAD
- protected:
-  NSView<mozView>* mView;  // my parallel cocoa view (ChildView or NativeScrollbarView), [STRONG]
-||||||| merged common ancestors
-protected:
-
-  NSView<mozView>*      mView;      // my parallel cocoa view (ChildView or NativeScrollbarView), [STRONG]
-=======
  protected:
   ChildView* mView;  // my parallel cocoa view, [STRONG]
->>>>>>> upstream-releases
   RefPtr<mozilla::widget::TextInputHandler> mTextInputHandler;
   InputContext mInputContext;
 
-<<<<<<< HEAD
-  NSView<mozView>* mParentView;
-  nsIWidget* mParentWidget;
-||||||| merged common ancestors
-  NSView<mozView>*      mParentView;
-  nsIWidget*            mParentWidget;
-=======
   NSView* mParentView;
   nsIWidget* mParentWidget;
->>>>>>> upstream-releases
 
 #ifdef ACCESSIBILITY
   // weak ref to this childview's associated mozAccessible for speed reasons

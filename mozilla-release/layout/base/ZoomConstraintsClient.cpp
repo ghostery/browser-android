@@ -7,13 +7,6 @@
 #include "ZoomConstraintsClient.h"
 
 #include <inttypes.h>
-<<<<<<< HEAD
-#include "gfxPrefs.h"
-||||||| merged common ancestors
-#include "FrameMetrics.h"
-#include "gfxPrefs.h"
-=======
->>>>>>> upstream-releases
 #include "LayersLogging.h"
 #include "mozilla/layers/APZCCallbackHelper.h"
 #include "mozilla/layers/ScrollableLayerGuid.h"
@@ -51,18 +44,8 @@ ZoomConstraintsClient::ZoomConstraintsClient()
 
 ZoomConstraintsClient::~ZoomConstraintsClient() {}
 
-<<<<<<< HEAD
-static nsIWidget* GetWidget(nsIPresShell* aShell) {
-  if (!aShell) {
-||||||| merged common ancestors
-static nsIWidget*
-GetWidget(nsIPresShell* aShell)
-{
-  if (!aShell) {
-=======
 static nsIWidget* GetWidget(PresShell* aPresShell) {
   if (!aPresShell) {
->>>>>>> upstream-releases
     return nullptr;
   }
   if (nsIFrame* rootFrame = aPresShell->GetRootFrame()) {
@@ -113,16 +96,7 @@ void ZoomConstraintsClient::Destroy() {
   mPresShell = nullptr;
 }
 
-<<<<<<< HEAD
-void ZoomConstraintsClient::Init(nsIPresShell* aPresShell,
-                                 nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-ZoomConstraintsClient::Init(nsIPresShell* aPresShell, nsIDocument* aDocument)
-{
-=======
 void ZoomConstraintsClient::Init(PresShell* aPresShell, Document* aDocument) {
->>>>>>> upstream-releases
   if (!(aPresShell && aDocument)) {
     return;
   }
@@ -168,21 +142,10 @@ ZoomConstraintsClient::HandleEvent(dom::Event* event) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ZoomConstraintsClient::Observe(nsISupports* aSubject, const char* aTopic,
-                               const char16_t* aData) {
-  if (SameCOMIdentity(aSubject, mDocument) &&
-      BEFORE_FIRST_PAINT.EqualsASCII(aTopic)) {
-||||||| merged common ancestors
-ZoomConstraintsClient::Observe(nsISupports* aSubject, const char* aTopic, const char16_t* aData)
-{
-  if (SameCOMIdentity(aSubject, mDocument) && BEFORE_FIRST_PAINT.EqualsASCII(aTopic)) {
-=======
 ZoomConstraintsClient::Observe(nsISupports* aSubject, const char* aTopic,
                                const char16_t* aData) {
   if (SameCOMIdentity(aSubject, ToSupports(mDocument)) &&
       BEFORE_FIRST_PAINT.EqualsASCII(aTopic)) {
->>>>>>> upstream-releases
     ZCC_LOG("Got a before-first-paint event in %p\n", this);
     RefreshZoomConstraints();
   } else if (NS_PREF_CHANGED.EqualsASCII(aTopic)) {
@@ -205,32 +168,13 @@ void ZoomConstraintsClient::ScreenSizeChanged() {
   RefreshZoomConstraints();
 }
 
-<<<<<<< HEAD
-static mozilla::layers::ZoomConstraints ComputeZoomConstraintsFromViewportInfo(
-    const nsViewportInfo& aViewportInfo) {
-||||||| merged common ancestors
-static mozilla::layers::ZoomConstraints
-ComputeZoomConstraintsFromViewportInfo(const nsViewportInfo& aViewportInfo)
-{
-=======
 static mozilla::layers::ZoomConstraints ComputeZoomConstraintsFromViewportInfo(
     const nsViewportInfo& aViewportInfo, Document* aDocument) {
->>>>>>> upstream-releases
   mozilla::layers::ZoomConstraints constraints;
-<<<<<<< HEAD
-  constraints.mAllowZoom =
-      aViewportInfo.IsZoomAllowed() && gfxPrefs::APZAllowZooming();
-  constraints.mAllowDoubleTapZoom =
-      constraints.mAllowZoom && gfxPrefs::APZAllowDoubleTapZooming();
-||||||| merged common ancestors
-  constraints.mAllowZoom = aViewportInfo.IsZoomAllowed() && gfxPrefs::APZAllowZooming();
-  constraints.mAllowDoubleTapZoom = constraints.mAllowZoom && gfxPrefs::APZAllowDoubleTapZooming();
-=======
   constraints.mAllowZoom = aViewportInfo.IsZoomAllowed() &&
                            nsLayoutUtils::AllowZoomingForDocument(aDocument);
   constraints.mAllowDoubleTapZoom =
       constraints.mAllowZoom && StaticPrefs::apz_allow_double_tap_zooming();
->>>>>>> upstream-releases
   if (constraints.mAllowZoom) {
     constraints.mMinZoom.scale = aViewportInfo.GetMinZoom().scale;
     constraints.mMaxZoom.scale = aViewportInfo.GetMaxZoom().scale;
@@ -266,13 +210,7 @@ void ZoomConstraintsClient::RefreshZoomConstraints() {
       screenSize, PixelCastJustification::LayoutDeviceIsScreenForBounds));
 
   mozilla::layers::ZoomConstraints zoomConstraints =
-<<<<<<< HEAD
-      ComputeZoomConstraintsFromViewportInfo(viewportInfo);
-||||||| merged common ancestors
-    ComputeZoomConstraintsFromViewportInfo(viewportInfo);
-=======
       ComputeZoomConstraintsFromViewportInfo(viewportInfo, mDocument);
->>>>>>> upstream-releases
 
   if (mDocument->Fullscreen()) {
     ZCC_LOG("%p is in fullscreen, disallowing zooming\n", this);

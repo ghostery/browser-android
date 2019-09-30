@@ -78,61 +78,6 @@ private:
     Parser* fParser;
 };
 
-<<<<<<< HEAD
-std::unordered_map<String, Parser::LayoutToken>* Parser::layoutTokens;
-
-void Parser::InitLayoutMap() {
-    layoutTokens = new std::unordered_map<String, LayoutToken>;
-    #define TOKEN(name, text) (*layoutTokens)[text] = LayoutToken::name;
-    TOKEN(LOCATION,                     "location");
-    TOKEN(OFFSET,                       "offset");
-    TOKEN(BINDING,                      "binding");
-    TOKEN(INDEX,                        "index");
-    TOKEN(SET,                          "set");
-    TOKEN(BUILTIN,                      "builtin");
-    TOKEN(INPUT_ATTACHMENT_INDEX,       "input_attachment_index");
-    TOKEN(ORIGIN_UPPER_LEFT,            "origin_upper_left");
-    TOKEN(OVERRIDE_COVERAGE,            "override_coverage");
-    TOKEN(BLEND_SUPPORT_ALL_EQUATIONS,  "blend_support_all_equations");
-    TOKEN(BLEND_SUPPORT_MULTIPLY,       "blend_support_multiply");
-    TOKEN(BLEND_SUPPORT_SCREEN,         "blend_support_screen");
-    TOKEN(BLEND_SUPPORT_OVERLAY,        "blend_support_overlay");
-    TOKEN(BLEND_SUPPORT_DARKEN,         "blend_support_darken");
-    TOKEN(BLEND_SUPPORT_LIGHTEN,        "blend_support_lighten");
-    TOKEN(BLEND_SUPPORT_COLORDODGE,     "blend_support_colordodge");
-    TOKEN(BLEND_SUPPORT_COLORBURN,      "blend_support_colorburn");
-    TOKEN(BLEND_SUPPORT_HARDLIGHT,      "blend_support_hardlight");
-    TOKEN(BLEND_SUPPORT_SOFTLIGHT,      "blend_support_softlight");
-    TOKEN(BLEND_SUPPORT_DIFFERENCE,     "blend_support_difference");
-    TOKEN(BLEND_SUPPORT_EXCLUSION,      "blend_support_exclusion");
-    TOKEN(BLEND_SUPPORT_HSL_HUE,        "blend_support_hsl_hue");
-    TOKEN(BLEND_SUPPORT_HSL_SATURATION, "blend_support_hsl_saturation");
-    TOKEN(BLEND_SUPPORT_HSL_COLOR,      "blend_support_hsl_color");
-    TOKEN(BLEND_SUPPORT_HSL_LUMINOSITY, "blend_support_hsl_luminosity");
-    TOKEN(PUSH_CONSTANT,                "push_constant");
-    TOKEN(POINTS,                       "points");
-    TOKEN(LINES,                        "lines");
-    TOKEN(LINE_STRIP,                   "line_strip");
-    TOKEN(LINES_ADJACENCY,              "lines_adjacency");
-    TOKEN(TRIANGLES,                    "triangles");
-    TOKEN(TRIANGLE_STRIP,               "triangle_strip");
-    TOKEN(TRIANGLES_ADJACENCY,          "triangles_adjacency");
-    TOKEN(MAX_VERTICES,                 "max_vertices");
-    TOKEN(INVOCATIONS,                  "invocations");
-    TOKEN(WHEN,                         "when");
-    TOKEN(KEY,                          "key");
-    TOKEN(TRACKED,                      "tracked");
-    TOKEN(CTYPE,                        "ctype");
-    TOKEN(GRCOLOR4F,                    "GrColor4f");
-    TOKEN(SKPMCOLOR4F,                  "SkPMColor4f");
-    TOKEN(SKRECT,                       "SkRect");
-    TOKEN(SKIRECT,                      "SkIRect");
-    TOKEN(SKPMCOLOR,                    "SkPMColor");
-    #undef TOKEN
-}
-
-||||||| merged common ancestors
-=======
 std::unordered_map<String, Parser::LayoutToken>* Parser::layoutTokens;
 
 void Parser::InitLayoutMap() {
@@ -184,7 +129,6 @@ void Parser::InitLayoutMap() {
     #undef TOKEN
 }
 
->>>>>>> upstream-releases
 Parser::Parser(const char* text, size_t length, SymbolTable& types, ErrorReporter& errors)
 : fText(text)
 , fPushback(Token::INVALID, -1, -1)
@@ -778,35 +722,6 @@ Layout::Key Parser::layoutKey() {
     return Layout::kKey_Key;
 }
 
-<<<<<<< HEAD
-Layout::CType Parser::layoutCType() {
-    if (this->expect(Token::EQ, "'='")) {
-        Token t = this->nextToken();
-        String text = this->text(t);
-        auto found = layoutTokens->find(text);
-        if (found != layoutTokens->end()) {
-            switch (found->second) {
-                case LayoutToken::GRCOLOR4F:
-                    return Layout::CType::kGrColor4f;
-                case LayoutToken::SKPMCOLOR4F:
-                    return Layout::CType::kSkPMColor4f;
-                case LayoutToken::SKRECT:
-                    return Layout::CType::kSkRect;
-                case LayoutToken::SKIRECT:
-                    return Layout::CType::kSkIRect;
-                case LayoutToken::SKPMCOLOR:
-                    return Layout::CType::kSkPMColor;
-                default:
-                    break;
-            }
-        }
-        this->error(t, "unsupported ctype");
-    }
-    return Layout::CType::kDefault;
-}
-
-||||||| merged common ancestors
-=======
 Layout::CType Parser::layoutCType() {
     if (this->expect(Token::EQ, "'='")) {
         Token t = this->nextToken();
@@ -831,7 +746,6 @@ Layout::CType Parser::layoutCType() {
     return Layout::CType::kDefault;
 }
 
->>>>>>> upstream-releases
 /* LAYOUT LPAREN IDENTIFIER (EQ INT_LITERAL)? (COMMA IDENTIFIER (EQ INT_LITERAL)?)* RPAREN */
 Layout Parser::layout() {
     int flags = 0;

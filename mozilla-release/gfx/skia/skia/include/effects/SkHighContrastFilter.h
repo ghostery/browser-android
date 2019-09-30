@@ -78,13 +78,7 @@ public:
     // Returns the filter, or nullptr if the config is invalid.
     static sk_sp<SkColorFilter> Make(const SkHighContrastConfig& config);
 
-<<<<<<< HEAD
-    static void InitializeFlattenables();
-||||||| merged common ancestors
-    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
-=======
     static void RegisterFlattenables();
->>>>>>> upstream-releases
 };
 
 #endif

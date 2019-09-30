@@ -280,37 +280,17 @@
     <!-- Security & Privacy -->
     <vbox id="securityPanel">
       <!-- Identity Section -->
-<<<<<<< HEAD
-      <groupbox>
-        <label class="header" value="&securityView.identity.header;"/>
-        <grid>
-||||||| merged common ancestors
-      <groupbox id="security-identity-groupbox" flex="1">
-        <caption id="security-identity" label="&securityView.identity.header;"/>
-        <grid id="security-identity-grid" flex="1">
-=======
       <groupbox>
         <label class="header" data-l10n-id="security-view-identity"/>
         <grid>
->>>>>>> upstream-releases
           <columns>
             <column/>
             <column flex="1"/>
           </columns>
           <rows>
             <!-- Domain -->
-<<<<<<< HEAD
-            <row>
-              <label value="&securityView.identity.domain;"
-||||||| merged common ancestors
-            <row id="security-identity-domain-row">
-              <label id="security-identity-domain-label"
-                     class="fieldLabel"
-                     value="&securityView.identity.domain;"
-=======
             <row>
               <label data-l10n-id="security-view-identity-domain"
->>>>>>> upstream-releases
                      control="security-identity-domain-value"/>
               <textbox id="security-identity-domain-value" readonly="true"/>
             </row>
@@ -323,50 +303,19 @@
               <textbox id="security-identity-owner-value" readonly="true"/>
             </row>
             <!-- Verifier -->
-<<<<<<< HEAD
-            <row>
-              <label value="&securityView.identity.verifier;"
-||||||| merged common ancestors
-            <row id="security-identity-verifier-row">
-              <label id="security-identity-verifier-label"
-                     class="fieldLabel"
-                     value="&securityView.identity.verifier;"
-=======
             <row>
               <label data-l10n-id="security-view-identity-verifier"
->>>>>>> upstream-releases
                      control="security-identity-verifier-value"/>
-<<<<<<< HEAD
-              <hbox align="center">
-                <textbox id="security-identity-verifier-value" readonly="true"
-                         flex="1"/>
-                <button id="security-view-cert" label="&securityView.certView;"
-                        accesskey="&securityView.accesskey;"
-                        oncommand="security.viewCert();"/>
-              </hbox>
-||||||| merged common ancestors
-              <textbox id="security-identity-verifier-value"
-                       class="fieldValue" readonly="true" />
-=======
               <hbox align="center">
                 <textbox id="security-identity-verifier-value" readonly="true"
                          flex="1"/>
                 <button id="security-view-cert" data-l10n-id="security-view"
                         oncommand="security.viewCert();"/>
               </hbox>
->>>>>>> upstream-releases
             </row>
             <!-- Certificate Validity -->
             <row id="security-identity-validity-row">
-<<<<<<< HEAD
-              <label value="&securityView.identity.validity;"
-||||||| merged common ancestors
-              <label id="security-identity-validity-label"
-                     class="fieldLabel"
-                     value="&securityView.identity.validity;"
-=======
               <label data-l10n-id="security-view-identity-validity"
->>>>>>> upstream-releases
                      control="security-identity-validity-value"/>
               <textbox id="security-identity-validity-value" readonly="true"/>
             </row>
@@ -375,72 +324,26 @@
       </groupbox>
 
       <!-- Privacy & History section -->
-<<<<<<< HEAD
-      <groupbox>
-        <label class="header" value="&securityView.privacy.header;"/>
-        <grid>
-||||||| merged common ancestors
-      <groupbox id="security-privacy-groupbox" flex="1">
-        <caption id="security-privacy" label="&securityView.privacy.header;" />
-        <grid id="security-privacy-grid">
-=======
       <groupbox>
         <label class="header" data-l10n-id="security-view-privacy"/>
         <grid>
->>>>>>> upstream-releases
           <columns>
             <column flex="1"/>
             <column flex="1"/>
           </columns>
           <rows>
             <!-- History -->
-<<<<<<< HEAD
-            <row>
-              <label control="security-privacy-history-value">&securityView.privacy.history;</label>
-||||||| merged common ancestors
-            <row id="security-privacy-history-row">
-              <label id="security-privacy-history-label"
-                           control="security-privacy-history-value"
-                           class="fieldLabel">&securityView.privacy.history;</label>
-=======
             <row>
               <label control="security-privacy-history-value" data-l10n-id="security-view-privacy-history-value"/>
->>>>>>> upstream-releases
               <label id="security-privacy-history-value"
-<<<<<<< HEAD
-                     value="&securityView.unknown;"/>
-||||||| merged common ancestors
-                     class="fieldValue"
-                     value="&securityView.unknown;"/>
-=======
                      data-l10n-id="security-view-unknown"/>
->>>>>>> upstream-releases
             </row>
             <!-- Site Data & Cookies -->
-<<<<<<< HEAD
-            <row>
-              <label control="security-privacy-sitedata-value">&securityView.privacy.siteData;</label>
-||||||| merged common ancestors
-            <row id="security-privacy-sitedata-row">
-              <label id="security-privacy-sitedata-label"
-                           control="security-privacy-sitedata-value"
-                           class="fieldLabel">&securityView.privacy.siteData;</label>
-=======
             <row id="security-privacy-sitedata-row">
               <label control="security-privacy-sitedata-value" data-l10n-id="security-view-privacy-sitedata-value"/>
->>>>>>> upstream-releases
               <hbox id="security-privacy-sitedata-box" align="center">
-<<<<<<< HEAD
-                <label id="security-privacy-sitedata-value"
-                       flex="1">&securityView.unknown;</label>
-||||||| merged common ancestors
-                <label id="security-privacy-sitedata-value"
-                       class="fieldValue"
-                       flex="1">&securityView.unknown;</label>
-=======
                 <label id="security-privacy-sitedata-value" data-l10n-id="security-view-unknown"
                        flex="1"/>
->>>>>>> upstream-releases
                 <button id="security-clear-sitedata"
                         disabled="true"
                         data-l10n-id="security-view-privacy-clearsitedata"
@@ -448,28 +351,11 @@
               </hbox>
             </row>
             <!-- Passwords -->
-<<<<<<< HEAD
-            <row>
-              <label control="security-privacy-passwords-value">&securityView.privacy.passwords;</label>
-||||||| merged common ancestors
-            <row id="security-privacy-passwords-row">
-              <label id="security-privacy-passwords-label"
-                            control="security-privacy-passwords-value"
-                            class="fieldLabel">&securityView.privacy.passwords;</label>
-=======
             <row>
               <label control="security-privacy-passwords-value" data-l10n-id="security-view-privacy-passwords-value"/>
->>>>>>> upstream-releases
               <hbox id="security-privacy-passwords-box" align="center">
                 <label id="security-privacy-passwords-value"
-<<<<<<< HEAD
-                       value="&securityView.unknown;"
-||||||| merged common ancestors
-                       class="fieldValue"
-                       value="&securityView.unknown;"
-=======
                        data-l10n-id="security-view-unknown"
->>>>>>> upstream-releases
                        flex="1"/>
                 <button id="security-view-password"
                         data-l10n-id="security-view-privacy-viewpasswords"
@@ -481,30 +367,12 @@
       </groupbox>
 
       <!-- Technical Details section -->
-<<<<<<< HEAD
-      <groupbox>
-        <label class="header" value="&securityView.technical.header;"/>
-        <label id="security-technical-shortform"/>
-        <description id="security-technical-longform1"/>
-        <description id="security-technical-longform2"/>
-        <description id="security-technical-certificate-transparency"/>
-||||||| merged common ancestors
-      <groupbox id="security-technical-groupbox" flex="1">
-        <caption id="security-technical" label="&securityView.technical.header;" />
-        <vbox id="security-technical-box" flex="1">
-          <label id="security-technical-shortform" class="fieldValue"/>
-          <description id="security-technical-longform1" class="fieldLabel"/>
-          <description id="security-technical-longform2" class="fieldLabel"/>
-          <description id="security-technical-certificate-transparency" class="fieldLabel"/>
-        </vbox>
-=======
       <groupbox>
         <label class="header" data-l10n-id="security-view-technical"/>
         <label id="security-technical-shortform"/>
         <description id="security-technical-longform1"/>
         <description id="security-technical-longform2"/>
         <description id="security-technical-certificate-transparency"/>
->>>>>>> upstream-releases
       </groupbox>
 
       <hbox pack="end">

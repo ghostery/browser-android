@@ -56,19 +56,6 @@ AutoInitializeImageLib::AutoInitializeImageLib() {
   // Depending on initialization order, it is possible that our pref changes
   // have not taken effect yet because there are pending gfx-related events on
   // the main thread.
-<<<<<<< HEAD
-  SpinPendingEvents();
-||||||| merged common ancestors
-  nsCOMPtr<nsIThread> mainThread = do_GetMainThread();
-  EXPECT_TRUE(mainThread != nullptr);
-
-  bool processed;
-  do {
-    processed = false;
-    nsresult rv = mainThread->ProcessNextEvent(false, &processed);
-    EXPECT_TRUE(NS_SUCCEEDED(rv));
-  } while (processed);
-=======
   SpinPendingEvents();
 }
 
@@ -87,7 +74,6 @@ void ImageBenchmarkBase::SetUp() {
   rv = mSourceBuffer->AppendFromInputStream(inputStream, length);
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   mSourceBuffer->Complete(NS_OK);
->>>>>>> upstream-releases
 }
 
 void ImageBenchmarkBase::TearDown() {}
@@ -128,29 +114,6 @@ void ImageBenchmarkBase::TearDown() {}
     return rv;                        \
   }
 
-<<<<<<< HEAD
-void
-SpinPendingEvents()
-{
-  nsCOMPtr<nsIThread> mainThread = do_GetMainThread();
-  EXPECT_TRUE(mainThread != nullptr);
-
-  bool processed;
-  do {
-    processed = false;
-    nsresult rv = mainThread->ProcessNextEvent(false, &processed);
-    EXPECT_TRUE(NS_SUCCEEDED(rv));
-  } while (processed);
-}
-
-already_AddRefed<nsIInputStream>
-LoadFile(const char* aRelativePath)
-{
-||||||| merged common ancestors
-already_AddRefed<nsIInputStream>
-LoadFile(const char* aRelativePath)
-{
-=======
 void SpinPendingEvents() {
   nsCOMPtr<nsIThread> mainThread = do_GetMainThread();
   EXPECT_TRUE(mainThread != nullptr);
@@ -164,7 +127,6 @@ void SpinPendingEvents() {
 }
 
 already_AddRefed<nsIInputStream> LoadFile(const char* aRelativePath) {
->>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIProperties> dirService =
@@ -360,24 +322,6 @@ void CheckGeneratedImage(Decoder* aDecoder, const IntRect& aRect,
                          uint8_t aFuzz /* = 0 */) {
   RawAccessFrameRef currentFrame = aDecoder->GetCurrentFrameRef();
   RefPtr<SourceSurface> surface = currentFrame->GetSourceSurface();
-<<<<<<< HEAD
-  CheckGeneratedSurface(surface, aRect,
-                        BGRAColor::Green(),
-                        BGRAColor::Transparent(),
-                        aFuzz);
-}
-
-void
-CheckGeneratedSurface(SourceSurface* aSurface,
-                      const IntRect& aRect,
-                      const BGRAColor& aInnerColor,
-                      const BGRAColor& aOuterColor,
-                      uint8_t aFuzz /* = 0 */)
-{
-  const IntSize surfaceSize = aSurface->GetSize();
-||||||| merged common ancestors
-  const IntSize surfaceSize = surface->GetSize();
-=======
   CheckGeneratedSurface(surface, aRect, BGRAColor::Green(),
                         BGRAColor::Transparent(), aFuzz);
 }
@@ -387,7 +331,6 @@ void CheckGeneratedSurface(SourceSurface* aSurface, const IntRect& aRect,
                            const BGRAColor& aOuterColor,
                            uint8_t aFuzz /* = 0 */) {
   const IntSize surfaceSize = aSurface->GetSize();
->>>>>>> upstream-releases
 
   // This diagram shows how the surface is divided into regions that the code
   // below tests for the correct content. The output rect is the bounds of the
@@ -409,58 +352,24 @@ void CheckGeneratedSurface(SourceSurface* aSurface, const IntRect& aRect,
                                IntRect(0, 0, surfaceSize.width, aRect.Y()),
                                aOuterColor, aFuzz));
 
-<<<<<<< HEAD
-  // Check that the area to the left of the output rect is the outer color. (Region 'B'.)
-  EXPECT_TRUE(RectIsSolidColor(aSurface,
-||||||| merged common ancestors
-  // Check that the area to the left of the output rect is transparent. (Region 'B'.)
-  EXPECT_TRUE(RectIsSolidColor(surface,
-=======
   // Check that the area to the left of the output rect is the outer color.
   // (Region 'B'.)
   EXPECT_TRUE(RectIsSolidColor(aSurface,
->>>>>>> upstream-releases
                                IntRect(0, aRect.Y(), aRect.X(), aRect.YMost()),
                                aOuterColor, aFuzz));
 
-<<<<<<< HEAD
-  // Check that the area to the right of the output rect is the outer color. (Region 'D'.)
-||||||| merged common ancestors
-  // Check that the area to the right of the output rect is transparent. (Region 'D'.)
-=======
   // Check that the area to the right of the output rect is the outer color.
   // (Region 'D'.)
->>>>>>> upstream-releases
   const int32_t widthOnRight = surfaceSize.width - aRect.XMost();
-<<<<<<< HEAD
-  EXPECT_TRUE(RectIsSolidColor(aSurface,
-                               IntRect(aRect.XMost(), aRect.Y(), widthOnRight, aRect.YMost()),
-                               aOuterColor, aFuzz));
-||||||| merged common ancestors
-  EXPECT_TRUE(RectIsSolidColor(surface,
-                               IntRect(aRect.XMost(), aRect.Y(), widthOnRight, aRect.YMost()),
-                               BGRAColor::Transparent(), aFuzz));
-=======
   EXPECT_TRUE(RectIsSolidColor(
       aSurface, IntRect(aRect.XMost(), aRect.Y(), widthOnRight, aRect.YMost()),
       aOuterColor, aFuzz));
->>>>>>> upstream-releases
 
   // Check that the area below the output rect is the outer color. (Region 'E'.)
   const int32_t heightBelow = surfaceSize.height - aRect.YMost();
-<<<<<<< HEAD
-  EXPECT_TRUE(RectIsSolidColor(aSurface,
-                               IntRect(0, aRect.YMost(), surfaceSize.width, heightBelow),
-                               aOuterColor, aFuzz));
-||||||| merged common ancestors
-  EXPECT_TRUE(RectIsSolidColor(surface,
-                               IntRect(0, aRect.YMost(), surfaceSize.width, heightBelow),
-                               BGRAColor::Transparent(), aFuzz));
-=======
   EXPECT_TRUE(RectIsSolidColor(
       aSurface, IntRect(0, aRect.YMost(), surfaceSize.width, heightBelow),
       aOuterColor, aFuzz));
->>>>>>> upstream-releases
 }
 
 void CheckGeneratedPalettedImage(Decoder* aDecoder, const IntRect& aRect) {
@@ -635,29 +544,6 @@ ImageTestCase GreenIconTestCase() {
                        TEST_CASE_IS_TRANSPARENT);
 }
 
-<<<<<<< HEAD
-ImageTestCase GreenWebPTestCase()
-{
-  return ImageTestCase("green.webp", "image/webp", IntSize(100, 100));
-}
-
-ImageTestCase LargeWebPTestCase()
-{
-  return ImageTestCase("large.webp", "image/webp", IntSize(1200, 660),
-                       TEST_CASE_IGNORE_OUTPUT);
-}
-
-ImageTestCase GreenWebPIccSrgbTestCase()
-{
-  return ImageTestCase("green.icc_srgb.webp", "image/webp", IntSize(100, 100));
-}
-
-ImageTestCase GreenFirstFrameAnimatedGIFTestCase()
-{
-||||||| merged common ancestors
-ImageTestCase GreenFirstFrameAnimatedGIFTestCase()
-{
-=======
 ImageTestCase GreenWebPTestCase() {
   return ImageTestCase("green.webp", "image/webp", IntSize(100, 100));
 }
@@ -672,7 +558,6 @@ ImageTestCase GreenWebPIccSrgbTestCase() {
 }
 
 ImageTestCase GreenFirstFrameAnimatedGIFTestCase() {
->>>>>>> upstream-releases
   return ImageTestCase("first-frame-green.gif", "image/gif", IntSize(100, 100),
                        TEST_CASE_IS_ANIMATED);
 }
@@ -682,37 +567,6 @@ ImageTestCase GreenFirstFrameAnimatedPNGTestCase() {
                        TEST_CASE_IS_TRANSPARENT | TEST_CASE_IS_ANIMATED);
 }
 
-<<<<<<< HEAD
-ImageTestCase GreenFirstFrameAnimatedWebPTestCase()
-{
-  return ImageTestCase("first-frame-green.webp", "image/webp", IntSize(100, 100),
-                       TEST_CASE_IS_ANIMATED);
-}
-
-ImageTestCase BlendAnimatedGIFTestCase()
-{
-  return ImageTestCase("blend.gif", "image/gif", IntSize(100, 100),
-                       TEST_CASE_IS_ANIMATED);
-}
-
-ImageTestCase BlendAnimatedPNGTestCase()
-{
-  return ImageTestCase("blend.png", "image/png", IntSize(100, 100),
-                       TEST_CASE_IS_TRANSPARENT | TEST_CASE_IS_ANIMATED);
-}
-
-ImageTestCase BlendAnimatedWebPTestCase()
-{
-  return ImageTestCase("blend.webp", "image/webp", IntSize(100, 100),
-                       TEST_CASE_IS_TRANSPARENT | TEST_CASE_IS_ANIMATED);
-}
-
-ImageTestCase CorruptTestCase()
-{
-||||||| merged common ancestors
-ImageTestCase CorruptTestCase()
-{
-=======
 ImageTestCase GreenFirstFrameAnimatedWebPTestCase() {
   return ImageTestCase("first-frame-green.webp", "image/webp",
                        IntSize(100, 100), TEST_CASE_IS_ANIMATED);
@@ -734,7 +588,6 @@ ImageTestCase BlendAnimatedWebPTestCase() {
 }
 
 ImageTestCase CorruptTestCase() {
->>>>>>> upstream-releases
   return ImageTestCase("corrupt.jpg", "image/jpeg", IntSize(100, 100),
                        TEST_CASE_HAS_ERROR);
 }
@@ -865,26 +718,12 @@ ImageTestCase DownscaledIconTestCase() {
                        IntSize(20, 20), TEST_CASE_IS_TRANSPARENT);
 }
 
-<<<<<<< HEAD
-ImageTestCase DownscaledWebPTestCase()
-{
-  return ImageTestCase("downscaled.webp", "image/webp", IntSize(100, 100),
-                       IntSize(20, 20));
-}
-
-ImageTestCase DownscaledTransparentICOWithANDMaskTestCase()
-{
-||||||| merged common ancestors
-ImageTestCase DownscaledTransparentICOWithANDMaskTestCase()
-{
-=======
 ImageTestCase DownscaledWebPTestCase() {
   return ImageTestCase("downscaled.webp", "image/webp", IntSize(100, 100),
                        IntSize(20, 20));
 }
 
 ImageTestCase DownscaledTransparentICOWithANDMaskTestCase() {
->>>>>>> upstream-releases
   // This test case is an ICO with AND mask transparency. We want to ensure that
   // we can downscale it without crashing or triggering ASAN failures, but its
   // content isn't simple to verify, so for now we don't check the output.

@@ -20,41 +20,6 @@
 #define DOM_SIZEOF_MEMBER(t, m) sizeof(((t*)0)->m)
 
 #if defined(XP_UNIX)
-<<<<<<< HEAD
-#include "unistd.h"
-#include "dirent.h"
-#include "poll.h"
-#include "sys/stat.h"
-#if defined(XP_LINUX)
-#include <sys/vfs.h>
-#define statvfs statfs
-#define f_frsize f_bsize
-#else
-#include "sys/statvfs.h"
-#endif  // defined(XP_LINUX)
-#if !defined(ANDROID)
-#include "sys/wait.h"
-#include <spawn.h>
-#endif  // !defined(ANDROID)
-#endif  // defined(XP_UNIX)
-||||||| merged common ancestors
-#include "unistd.h"
-#include "dirent.h"
-#include "poll.h"
-#include "sys/stat.h"
-#if defined(XP_LINUX)
-#include <sys/vfs.h>
-#define statvfs statfs
-#define f_frsize f_bsize
-#else
-#include "sys/statvfs.h"
-#endif // defined(XP_LINUX)
-#if !defined(ANDROID)
-#include "sys/wait.h"
-#include <spawn.h>
-#endif // !defined(ANDROID)
-#endif // defined(XP_UNIX)
-=======
 #  include "unistd.h"
 #  include "dirent.h"
 #  include "poll.h"
@@ -71,49 +36,22 @@
 #    include <spawn.h>
 #  endif  // !defined(ANDROID)
 #endif    // defined(XP_UNIX)
->>>>>>> upstream-releases
 
 #if defined(XP_LINUX)
-<<<<<<< HEAD
-#include <linux/fadvise.h>
-#endif  // defined(XP_LINUX)
-||||||| merged common ancestors
-#include <linux/fadvise.h>
-#endif // defined(XP_LINUX)
-=======
 #  include <linux/fadvise.h>
 #endif  // defined(XP_LINUX)
->>>>>>> upstream-releases
 
 #if defined(XP_MACOSX)
-<<<<<<< HEAD
-#include "copyfile.h"
-#endif  // defined(XP_MACOSX)
-||||||| merged common ancestors
-#include "copyfile.h"
-#endif // defined(XP_MACOSX)
-=======
 #  include "copyfile.h"
 #endif  // defined(XP_MACOSX)
->>>>>>> upstream-releases
 
 #if defined(XP_WIN)
 #  include <windows.h>
 #  include <accctrl.h>
 
-<<<<<<< HEAD
-#ifndef PATH_MAX
-#define PATH_MAX MAX_PATH
-#endif
-||||||| merged common ancestors
-#ifndef PATH_MAX
-#  define PATH_MAX MAX_PATH
-#endif
-=======
 #  ifndef PATH_MAX
 #    define PATH_MAX MAX_PATH
 #  endif
->>>>>>> upstream-releases
 
 #endif  // defined(XP_WIN)
 
@@ -146,19 +84,9 @@
 #include "nsIOSFileConstantsService.h"
 #include "nsZipArchive.h"
 
-<<<<<<< HEAD
-#if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
-    defined(__OpenBSD__)
-#define __dd_fd dd_fd
-||||||| merged common ancestors
-#if defined(__DragonFly__) || defined(__FreeBSD__) \
-  || defined(__NetBSD__) || defined(__OpenBSD__)
-#define __dd_fd dd_fd
-=======
 #if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
     defined(__OpenBSD__)
 #  define __dd_fd dd_fd
->>>>>>> upstream-releases
 #endif
 
 /**
@@ -199,14 +127,7 @@ struct OSFileConstantsService::Paths {
  * @param aOutPath The path to the special directory. In case of error,
  * the string is set to void.
  */
-<<<<<<< HEAD
-nsresult GetPathToSpecialDir(const char *aKey, nsString &aOutPath) {
-||||||| merged common ancestors
-nsresult GetPathToSpecialDir(const char *aKey, nsString& aOutPath)
-{
-=======
 nsresult GetPathToSpecialDir(const char* aKey, nsString& aOutPath) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> file;
   nsresult rv = NS_GetSpecialDirectory(aKey, getter_AddRefs(file));
   if (NS_FAILED(rv) || !file) {
@@ -227,18 +148,8 @@ nsresult GetPathToSpecialDir(const char* aKey, nsString& aOutPath) {
  * and |mPaths->localProfileDir| once the profile is setup.
  */
 NS_IMETHODIMP
-<<<<<<< HEAD
-OSFileConstantsService::Observe(nsISupports *, const char *aTopic,
-                                const char16_t *) {
-||||||| merged common ancestors
-OSFileConstantsService::Observe(nsISupports*,
-                                const char* aTopic,
-                                const char16_t*)
-{
-=======
 OSFileConstantsService::Observe(nsISupports*, const char* aTopic,
                                 const char16_t*) {
->>>>>>> upstream-releases
   if (!mInitialized) {
     // Initialization has not taken place, something is wrong,
     // don't make things worse.
@@ -358,35 +269,6 @@ nsresult OSFileConstantsService::InitOSFileConstants() {
 
 // Define missing constants for Android
 #if !defined(S_IRGRP)
-<<<<<<< HEAD
-#define S_IXOTH 0001
-#define S_IWOTH 0002
-#define S_IROTH 0004
-#define S_IRWXO 0007
-#define S_IXGRP 0010
-#define S_IWGRP 0020
-#define S_IRGRP 0040
-#define S_IRWXG 0070
-#define S_IXUSR 0100
-#define S_IWUSR 0200
-#define S_IRUSR 0400
-#define S_IRWXU 0700
-#endif  // !defined(S_IRGRP)
-||||||| merged common ancestors
-#define S_IXOTH 0001
-#define S_IWOTH 0002
-#define S_IROTH 0004
-#define S_IRWXO 0007
-#define S_IXGRP 0010
-#define S_IWGRP 0020
-#define S_IRGRP 0040
-#define S_IRWXG 0070
-#define S_IXUSR 0100
-#define S_IWUSR 0200
-#define S_IRUSR 0400
-#define S_IRWXU 0700
-#endif // !defined(S_IRGRP)
-=======
 #  define S_IXOTH 0001
 #  define S_IWOTH 0002
 #  define S_IROTH 0004
@@ -400,7 +282,6 @@ nsresult OSFileConstantsService::InitOSFileConstants() {
 #  define S_IRUSR 0400
 #  define S_IRWXU 0700
 #endif  // !defined(S_IRGRP)
->>>>>>> upstream-releases
 
 /**
  * The properties defined in libc.
@@ -499,87 +380,6 @@ static const dom::ConstantSpec gLibcProperties[] = {
     INT_CONSTANT(SEEK_SET),
 
 #if defined(XP_UNIX)
-<<<<<<< HEAD
-    // poll
-    INT_CONSTANT(POLLERR),
-    INT_CONSTANT(POLLHUP),
-    INT_CONSTANT(POLLIN),
-    INT_CONSTANT(POLLNVAL),
-    INT_CONSTANT(POLLOUT),
-
-// wait
-#if defined(WNOHANG)
-    INT_CONSTANT(WNOHANG),
-#endif  // defined(WNOHANG)
-
-    // fcntl command values
-    INT_CONSTANT(F_GETLK),
-    INT_CONSTANT(F_SETFD),
-    INT_CONSTANT(F_SETFL),
-    INT_CONSTANT(F_SETLK),
-    INT_CONSTANT(F_SETLKW),
-
-    // flock type values
-    INT_CONSTANT(F_RDLCK),
-    INT_CONSTANT(F_WRLCK),
-    INT_CONSTANT(F_UNLCK),
-
-// splice
-#if defined(SPLICE_F_MOVE)
-    INT_CONSTANT(SPLICE_F_MOVE),
-#endif  // defined(SPLICE_F_MOVE)
-#if defined(SPLICE_F_NONBLOCK)
-    INT_CONSTANT(SPLICE_F_NONBLOCK),
-#endif  // defined(SPLICE_F_NONBLOCK)
-#if defined(SPLICE_F_MORE)
-    INT_CONSTANT(SPLICE_F_MORE),
-#endif  // defined(SPLICE_F_MORE)
-#if defined(SPLICE_F_GIFT)
-    INT_CONSTANT(SPLICE_F_GIFT),
-#endif  // defined(SPLICE_F_GIFT)
-#endif  // defined(XP_UNIX)
-// copyfile
-||||||| merged common ancestors
-  // poll
-  INT_CONSTANT(POLLERR),
-  INT_CONSTANT(POLLHUP),
-  INT_CONSTANT(POLLIN),
-  INT_CONSTANT(POLLNVAL),
-  INT_CONSTANT(POLLOUT),
-
-  // wait
-#if defined(WNOHANG)
-  INT_CONSTANT(WNOHANG),
-#endif // defined(WNOHANG)
-
-  // fcntl command values
-  INT_CONSTANT(F_GETLK),
-  INT_CONSTANT(F_SETFD),
-  INT_CONSTANT(F_SETFL),
-  INT_CONSTANT(F_SETLK),
-  INT_CONSTANT(F_SETLKW),
-
-  // flock type values
-  INT_CONSTANT(F_RDLCK),
-  INT_CONSTANT(F_WRLCK),
-  INT_CONSTANT(F_UNLCK),
-
-  // splice
-#if defined(SPLICE_F_MOVE)
-  INT_CONSTANT(SPLICE_F_MOVE),
-#endif // defined(SPLICE_F_MOVE)
-#if defined(SPLICE_F_NONBLOCK)
-  INT_CONSTANT(SPLICE_F_NONBLOCK),
-#endif // defined(SPLICE_F_NONBLOCK)
-#if defined(SPLICE_F_MORE)
-  INT_CONSTANT(SPLICE_F_MORE),
-#endif // defined(SPLICE_F_MORE)
-#if defined(SPLICE_F_GIFT)
-  INT_CONSTANT(SPLICE_F_GIFT),
-#endif // defined(SPLICE_F_GIFT)
-#endif // defined(XP_UNIX)
-  // copyfile
-=======
     // poll
     INT_CONSTANT(POLLERR),
     INT_CONSTANT(POLLHUP),
@@ -619,7 +419,6 @@ static const dom::ConstantSpec gLibcProperties[] = {
 #  endif  // defined(SPLICE_F_GIFT)
 #endif    // defined(XP_UNIX)
 // copyfile
->>>>>>> upstream-releases
 #if defined(COPYFILE_DATA)
     INT_CONSTANT(COPYFILE_DATA),
     INT_CONSTANT(COPYFILE_EXCL),
@@ -702,188 +501,6 @@ static const dom::ConstantSpec gLibcProperties[] = {
 // define the structure in JS.
 
 #if defined(XP_UNIX)
-<<<<<<< HEAD
-    // The size of |mode_t|.
-    {"OSFILE_SIZEOF_MODE_T", JS::Int32Value(sizeof(mode_t))},
-
-    // The size of |gid_t|.
-    {"OSFILE_SIZEOF_GID_T", JS::Int32Value(sizeof(gid_t))},
-
-    // The size of |uid_t|.
-    {"OSFILE_SIZEOF_UID_T", JS::Int32Value(sizeof(uid_t))},
-
-    // The size of |time_t|.
-    {"OSFILE_SIZEOF_TIME_T", JS::Int32Value(sizeof(time_t))},
-
-    // The size of |fsblkcnt_t|.
-    {"OSFILE_SIZEOF_FSBLKCNT_T", JS::Int32Value(sizeof(fsblkcnt_t))},
-
-#if !defined(ANDROID)
-    // The size of |posix_spawn_file_actions_t|.
-    {"OSFILE_SIZEOF_POSIX_SPAWN_FILE_ACTIONS_T",
-     JS::Int32Value(sizeof(posix_spawn_file_actions_t))},
-#endif  // !defined(ANDROID)
-
-    // Defining |dirent|.
-    // Size
-    {"OSFILE_SIZEOF_DIRENT", JS::Int32Value(sizeof(dirent))},
-
-// Defining |flock|.
-#if defined(XP_UNIX)
-    {"OSFILE_SIZEOF_FLOCK", JS::Int32Value(sizeof(struct flock))},
-    {"OSFILE_OFFSETOF_FLOCK_L_START",
-     JS::Int32Value(offsetof(struct flock, l_start))},
-    {"OSFILE_OFFSETOF_FLOCK_L_LEN",
-     JS::Int32Value(offsetof(struct flock, l_len))},
-    {"OSFILE_OFFSETOF_FLOCK_L_PID",
-     JS::Int32Value(offsetof(struct flock, l_pid))},
-    {"OSFILE_OFFSETOF_FLOCK_L_TYPE",
-     JS::Int32Value(offsetof(struct flock, l_type))},
-    {"OSFILE_OFFSETOF_FLOCK_L_WHENCE",
-     JS::Int32Value(offsetof(struct flock, l_whence))},
-#endif  // defined(XP_UNIX)
-    // Offset of field |d_name|.
-    {"OSFILE_OFFSETOF_DIRENT_D_NAME",
-     JS::Int32Value(offsetof(struct dirent, d_name))},
-    // An upper bound to the length of field |d_name| of struct |dirent|.
-    // (may not be exact, depending on padding).
-    {"OSFILE_SIZEOF_DIRENT_D_NAME",
-     JS::Int32Value(sizeof(struct dirent) - offsetof(struct dirent, d_name))},
-
-    // Defining |timeval|.
-    {"OSFILE_SIZEOF_TIMEVAL", JS::Int32Value(sizeof(struct timeval))},
-    {"OSFILE_OFFSETOF_TIMEVAL_TV_SEC",
-     JS::Int32Value(offsetof(struct timeval, tv_sec))},
-    {"OSFILE_OFFSETOF_TIMEVAL_TV_USEC",
-     JS::Int32Value(offsetof(struct timeval, tv_usec))},
-
-#if defined(DT_UNKNOWN)
-    // Position of field |d_type| in |dirent|
-    // Not strictly posix, but seems defined on all platforms
-    // except mingw32.
-    {"OSFILE_OFFSETOF_DIRENT_D_TYPE",
-     JS::Int32Value(offsetof(struct dirent, d_type))},
-#endif  // defined(DT_UNKNOWN)
-
-// Under MacOS X and BSDs, |dirfd| is a macro rather than a
-// function, so we need a little help to get it to work
-#if defined(dirfd)
-    {"OSFILE_SIZEOF_DIR", JS::Int32Value(sizeof(DIR))},
-
-    {"OSFILE_OFFSETOF_DIR_DD_FD", JS::Int32Value(offsetof(DIR, __dd_fd))},
-#endif
-
-    // Defining |stat|
-
-    {"OSFILE_SIZEOF_STAT", JS::Int32Value(sizeof(struct stat))},
-
-    {"OSFILE_OFFSETOF_STAT_ST_MODE",
-     JS::Int32Value(offsetof(struct stat, st_mode))},
-    {"OSFILE_OFFSETOF_STAT_ST_UID",
-     JS::Int32Value(offsetof(struct stat, st_uid))},
-    {"OSFILE_OFFSETOF_STAT_ST_GID",
-     JS::Int32Value(offsetof(struct stat, st_gid))},
-    {"OSFILE_OFFSETOF_STAT_ST_SIZE",
-     JS::Int32Value(offsetof(struct stat, st_size))},
-
-#if defined(HAVE_ST_ATIMESPEC)
-    {"OSFILE_OFFSETOF_STAT_ST_ATIME",
-     JS::Int32Value(offsetof(struct stat, st_atimespec))},
-    {"OSFILE_OFFSETOF_STAT_ST_MTIME",
-     JS::Int32Value(offsetof(struct stat, st_mtimespec))},
-    {"OSFILE_OFFSETOF_STAT_ST_CTIME",
-     JS::Int32Value(offsetof(struct stat, st_ctimespec))},
-#else
-    {"OSFILE_OFFSETOF_STAT_ST_ATIME",
-     JS::Int32Value(offsetof(struct stat, st_atime))},
-    {"OSFILE_OFFSETOF_STAT_ST_MTIME",
-     JS::Int32Value(offsetof(struct stat, st_mtime))},
-    {"OSFILE_OFFSETOF_STAT_ST_CTIME",
-     JS::Int32Value(offsetof(struct stat, st_ctime))},
-#endif  // defined(HAVE_ST_ATIME)
-
-// Several OSes have a birthtime field. For the moment, supporting only Darwin.
-||||||| merged common ancestors
-  // The size of |mode_t|.
-  { "OSFILE_SIZEOF_MODE_T", JS::Int32Value(sizeof (mode_t)) },
-
-  // The size of |gid_t|.
-  { "OSFILE_SIZEOF_GID_T", JS::Int32Value(sizeof (gid_t)) },
-
-  // The size of |uid_t|.
-  { "OSFILE_SIZEOF_UID_T", JS::Int32Value(sizeof (uid_t)) },
-
-  // The size of |time_t|.
-  { "OSFILE_SIZEOF_TIME_T", JS::Int32Value(sizeof (time_t)) },
-
-  // The size of |fsblkcnt_t|.
-  { "OSFILE_SIZEOF_FSBLKCNT_T", JS::Int32Value(sizeof (fsblkcnt_t)) },
-
-#if !defined(ANDROID)
-  // The size of |posix_spawn_file_actions_t|.
-  { "OSFILE_SIZEOF_POSIX_SPAWN_FILE_ACTIONS_T", JS::Int32Value(sizeof (posix_spawn_file_actions_t)) },
-#endif // !defined(ANDROID)
-
-  // Defining |dirent|.
-  // Size
-  { "OSFILE_SIZEOF_DIRENT", JS::Int32Value(sizeof (dirent)) },
-
-  // Defining |flock|.
-#if defined(XP_UNIX)
-  { "OSFILE_SIZEOF_FLOCK", JS::Int32Value(sizeof (struct flock)) },
-  { "OSFILE_OFFSETOF_FLOCK_L_START", JS::Int32Value(offsetof (struct flock, l_start)) },
-  { "OSFILE_OFFSETOF_FLOCK_L_LEN", JS::Int32Value(offsetof (struct flock, l_len)) },
-  { "OSFILE_OFFSETOF_FLOCK_L_PID", JS::Int32Value(offsetof (struct flock, l_pid)) },
-  { "OSFILE_OFFSETOF_FLOCK_L_TYPE", JS::Int32Value(offsetof (struct flock, l_type)) },
-  { "OSFILE_OFFSETOF_FLOCK_L_WHENCE", JS::Int32Value(offsetof (struct flock, l_whence)) },
-#endif // defined(XP_UNIX)
-  // Offset of field |d_name|.
-  { "OSFILE_OFFSETOF_DIRENT_D_NAME", JS::Int32Value(offsetof (struct dirent, d_name)) },
-  // An upper bound to the length of field |d_name| of struct |dirent|.
-  // (may not be exact, depending on padding).
-  { "OSFILE_SIZEOF_DIRENT_D_NAME", JS::Int32Value(sizeof (struct dirent) - offsetof (struct dirent, d_name)) },
-
-  // Defining |timeval|.
-  { "OSFILE_SIZEOF_TIMEVAL", JS::Int32Value(sizeof (struct timeval)) },
-  { "OSFILE_OFFSETOF_TIMEVAL_TV_SEC", JS::Int32Value(offsetof (struct timeval, tv_sec)) },
-  { "OSFILE_OFFSETOF_TIMEVAL_TV_USEC", JS::Int32Value(offsetof (struct timeval, tv_usec)) },
-
-#if defined(DT_UNKNOWN)
-  // Position of field |d_type| in |dirent|
-  // Not strictly posix, but seems defined on all platforms
-  // except mingw32.
-  { "OSFILE_OFFSETOF_DIRENT_D_TYPE", JS::Int32Value(offsetof (struct dirent, d_type)) },
-#endif // defined(DT_UNKNOWN)
-
-  // Under MacOS X and BSDs, |dirfd| is a macro rather than a
-  // function, so we need a little help to get it to work
-#if defined(dirfd)
-  { "OSFILE_SIZEOF_DIR", JS::Int32Value(sizeof (DIR)) },
-
-  { "OSFILE_OFFSETOF_DIR_DD_FD", JS::Int32Value(offsetof (DIR, __dd_fd)) },
-#endif
-
-  // Defining |stat|
-
-  { "OSFILE_SIZEOF_STAT", JS::Int32Value(sizeof (struct stat)) },
-
-  { "OSFILE_OFFSETOF_STAT_ST_MODE", JS::Int32Value(offsetof (struct stat, st_mode)) },
-  { "OSFILE_OFFSETOF_STAT_ST_UID", JS::Int32Value(offsetof (struct stat, st_uid)) },
-  { "OSFILE_OFFSETOF_STAT_ST_GID", JS::Int32Value(offsetof (struct stat, st_gid)) },
-  { "OSFILE_OFFSETOF_STAT_ST_SIZE", JS::Int32Value(offsetof (struct stat, st_size)) },
-
-#if defined(HAVE_ST_ATIMESPEC)
-  { "OSFILE_OFFSETOF_STAT_ST_ATIME", JS::Int32Value(offsetof (struct stat, st_atimespec)) },
-  { "OSFILE_OFFSETOF_STAT_ST_MTIME", JS::Int32Value(offsetof (struct stat, st_mtimespec)) },
-  { "OSFILE_OFFSETOF_STAT_ST_CTIME", JS::Int32Value(offsetof (struct stat, st_ctimespec)) },
-#else
-  { "OSFILE_OFFSETOF_STAT_ST_ATIME", JS::Int32Value(offsetof (struct stat, st_atime)) },
-  { "OSFILE_OFFSETOF_STAT_ST_MTIME", JS::Int32Value(offsetof (struct stat, st_mtime)) },
-  { "OSFILE_OFFSETOF_STAT_ST_CTIME", JS::Int32Value(offsetof (struct stat, st_ctime)) },
-#endif // defined(HAVE_ST_ATIME)
-
-  // Several OSes have a birthtime field. For the moment, supporting only Darwin.
-=======
     // The size of |mode_t|.
     {"OSFILE_SIZEOF_MODE_T", JS::Int32Value(sizeof(mode_t))},
 
@@ -1011,71 +628,11 @@ static const dom::ConstantSpec gLibcProperties[] = {
 // functions, we need to adapt the name of the symbols we are using,
 // whenever macro _DARWIN_FEATURE_64_BIT_INODE is set. We export
 // this value to be able to do so from JavaScript.
->>>>>>> upstream-releases
-#if defined(_DARWIN_FEATURE_64_BIT_INODE)
-<<<<<<< HEAD
-    {"OSFILE_OFFSETOF_STAT_ST_BIRTHTIME",
-     JS::Int32Value(offsetof(struct stat, st_birthtime))},
-#endif  // defined(_DARWIN_FEATURE_64_BIT_INODE)
-
-    // Defining |statvfs|
-
-    {"OSFILE_SIZEOF_STATVFS", JS::Int32Value(sizeof(struct statvfs))},
-
-    {"OSFILE_OFFSETOF_STATVFS_F_FRSIZE",
-     JS::Int32Value(offsetof(struct statvfs, f_frsize))},
-    {"OSFILE_OFFSETOF_STATVFS_F_BAVAIL",
-     JS::Int32Value(offsetof(struct statvfs, f_bavail))},
-
-#endif  // defined(XP_UNIX)
-
-// System configuration
-
-// Under MacOSX, to avoid using deprecated functions that do not
-// match the constants we define in this object (including
-// |sizeof|/|offsetof| stuff, but not only), for a number of
-// functions, we need to adapt the name of the symbols we are using,
-// whenever macro _DARWIN_FEATURE_64_BIT_INODE is set. We export
-// this value to be able to do so from JavaScript.
 #if defined(_DARWIN_FEATURE_64_BIT_INODE)
     {"_DARWIN_FEATURE_64_BIT_INODE", JS::Int32Value(1)},
 #endif  // defined(_DARWIN_FEATURE_64_BIT_INODE)
 
 // Similar feature for Linux
-||||||| merged common ancestors
-  { "OSFILE_OFFSETOF_STAT_ST_BIRTHTIME", JS::Int32Value(offsetof (struct stat, st_birthtime)) },
-#endif // defined(_DARWIN_FEATURE_64_BIT_INODE)
-
-  // Defining |statvfs|
-
-  { "OSFILE_SIZEOF_STATVFS", JS::Int32Value(sizeof (struct statvfs)) },
-
-  { "OSFILE_OFFSETOF_STATVFS_F_FRSIZE", JS::Int32Value(offsetof (struct statvfs, f_frsize)) },
-  { "OSFILE_OFFSETOF_STATVFS_F_BAVAIL", JS::Int32Value(offsetof (struct statvfs, f_bavail)) },
-
-#endif // defined(XP_UNIX)
-
-
-
-  // System configuration
-
-  // Under MacOSX, to avoid using deprecated functions that do not
-  // match the constants we define in this object (including
-  // |sizeof|/|offsetof| stuff, but not only), for a number of
-  // functions, we need to adapt the name of the symbols we are using,
-  // whenever macro _DARWIN_FEATURE_64_BIT_INODE is set. We export
-  // this value to be able to do so from JavaScript.
-#if defined(_DARWIN_FEATURE_64_BIT_INODE)
-   { "_DARWIN_FEATURE_64_BIT_INODE", JS::Int32Value(1) },
-#endif // defined(_DARWIN_FEATURE_64_BIT_INODE)
-
-  // Similar feature for Linux
-=======
-    {"_DARWIN_FEATURE_64_BIT_INODE", JS::Int32Value(1)},
-#endif  // defined(_DARWIN_FEATURE_64_BIT_INODE)
-
-// Similar feature for Linux
->>>>>>> upstream-releases
 #if defined(_STAT_VER)
     INT_CONSTANT(_STAT_VER),
 #endif  // defined(_STAT_VER)
@@ -1179,19 +736,9 @@ static const dom::ConstantSpec gWinProperties[] = {
  * If the field does not exist, create it. If it exists but is not an
  * object, throw a JS error.
  */
-<<<<<<< HEAD
-JSObject *GetOrCreateObjectProperty(JSContext *cx,
-                                    JS::Handle<JSObject *> aObject,
-                                    const char *aProperty) {
-||||||| merged common ancestors
-JSObject *GetOrCreateObjectProperty(JSContext *cx, JS::Handle<JSObject*> aObject,
-                                    const char *aProperty)
-{
-=======
 JSObject* GetOrCreateObjectProperty(JSContext* cx,
                                     JS::Handle<JSObject*> aObject,
                                     const char* aProperty) {
->>>>>>> upstream-releases
   JS::Rooted<JS::Value> val(cx);
   if (!JS_GetProperty(cx, aObject, aProperty, &val)) {
     return nullptr;
@@ -1214,21 +761,12 @@ JSObject* GetOrCreateObjectProperty(JSContext* cx,
  *
  * If the nsString is void (i.e. IsVoid is true), do nothing.
  */
-<<<<<<< HEAD
-bool SetStringProperty(JSContext *cx, JS::Handle<JSObject *> aObject,
-                       const char *aProperty, const nsString aValue) {
-||||||| merged common ancestors
-bool SetStringProperty(JSContext *cx, JS::Handle<JSObject*> aObject, const char *aProperty,
-                       const nsString aValue)
-{
-=======
 bool SetStringProperty(JSContext* cx, JS::Handle<JSObject*> aObject,
                        const char* aProperty, const nsString aValue) {
->>>>>>> upstream-releases
   if (aValue.IsVoid()) {
     return true;
   }
-  JSString *strValue = JS_NewUCStringCopyZ(cx, aValue.get());
+  JSString* strValue = JS_NewUCStringCopyZ(cx, aValue.get());
   NS_ENSURE_TRUE(strValue, false);
   JS::Rooted<JS::Value> valValue(cx, JS::StringValue(strValue));
   return JS_SetProperty(cx, aObject, aProperty, valValue);
@@ -1240,18 +778,8 @@ bool SetStringProperty(JSContext* cx, JS::Handle<JSObject*> aObject,
  * This function creates or uses JS object |OS.Constants| to store
  * all its constants.
  */
-<<<<<<< HEAD
-bool OSFileConstantsService::DefineOSFileConstants(
-    JSContext *aCx, JS::Handle<JSObject *> aGlobal) {
-||||||| merged common ancestors
-bool
-OSFileConstantsService::DefineOSFileConstants(JSContext* aCx,
-                                              JS::Handle<JSObject*> aGlobal)
-{
-=======
 bool OSFileConstantsService::DefineOSFileConstants(
     JSContext* aCx, JS::Handle<JSObject*> aGlobal) {
->>>>>>> upstream-releases
   if (!mInitialized) {
     JS_ReportErrorNumberASCII(aCx, js::GetErrorMessage, nullptr,
                               JSMSG_CANT_OPEN, "OSFileConstants",
@@ -1259,18 +787,18 @@ bool OSFileConstantsService::DefineOSFileConstants(
     return false;
   }
 
-  JS::Rooted<JSObject *> objOS(aCx);
+  JS::Rooted<JSObject*> objOS(aCx);
   if (!(objOS = GetOrCreateObjectProperty(aCx, aGlobal, "OS"))) {
     return false;
   }
-  JS::Rooted<JSObject *> objConstants(aCx);
+  JS::Rooted<JSObject*> objConstants(aCx);
   if (!(objConstants = GetOrCreateObjectProperty(aCx, objOS, "Constants"))) {
     return false;
   }
 
   // Build OS.Constants.libc
 
-  JS::Rooted<JSObject *> objLibc(aCx);
+  JS::Rooted<JSObject*> objLibc(aCx);
   if (!(objLibc = GetOrCreateObjectProperty(aCx, objConstants, "libc"))) {
     return false;
   }
@@ -1281,7 +809,7 @@ bool OSFileConstantsService::DefineOSFileConstants(
 #if defined(XP_WIN)
   // Build OS.Constants.Win
 
-  JS::Rooted<JSObject *> objWin(aCx);
+  JS::Rooted<JSObject*> objWin(aCx);
   if (!(objWin = GetOrCreateObjectProperty(aCx, objConstants, "Win"))) {
     return false;
   }
@@ -1292,7 +820,7 @@ bool OSFileConstantsService::DefineOSFileConstants(
 
   // Build OS.Constants.Sys
 
-  JS::Rooted<JSObject *> objSys(aCx);
+  JS::Rooted<JSObject*> objSys(aCx);
   if (!(objSys = GetOrCreateObjectProperty(aCx, objConstants, "Sys"))) {
     return false;
   }
@@ -1304,7 +832,7 @@ bool OSFileConstantsService::DefineOSFileConstants(
     DebugOnly<nsresult> rv = runtime->GetOS(os);
     MOZ_ASSERT(NS_SUCCEEDED(rv));
 
-    JSString *strVersion = JS_NewStringCopyZ(aCx, os.get());
+    JSString* strVersion = JS_NewStringCopyZ(aCx, os.get());
     if (!strVersion) {
       return false;
     }
@@ -1339,7 +867,7 @@ bool OSFileConstantsService::DefineOSFileConstants(
 
   // Build OS.Constants.Path
 
-  JS::Rooted<JSObject *> objPath(aCx);
+  JS::Rooted<JSObject*> objPath(aCx);
   if (!(objPath = GetOrCreateObjectProperty(aCx, objConstants, "Path"))) {
     return false;
   }
@@ -1415,17 +943,8 @@ bool OSFileConstantsService::DefineOSFileConstants(
 NS_IMPL_ISUPPORTS(OSFileConstantsService, nsIOSFileConstantsService,
                   nsIObserver)
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<OSFileConstantsService>
-OSFileConstantsService::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<OSFileConstantsService>
-OSFileConstantsService::GetOrCreate()
-{
-=======
 /* static */
 already_AddRefed<OSFileConstantsService> OSFileConstantsService::GetOrCreate() {
->>>>>>> upstream-releases
   if (!gInstance) {
     MOZ_ASSERT(NS_IsMainThread());
 
@@ -1453,14 +972,7 @@ OSFileConstantsService::~OSFileConstantsService() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-OSFileConstantsService::Init(JSContext *aCx) {
-||||||| merged common ancestors
-OSFileConstantsService::Init(JSContext *aCx)
-{
-=======
 OSFileConstantsService::Init(JSContext* aCx) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsresult rv = InitOSFileConstants();
@@ -1468,8 +980,8 @@ OSFileConstantsService::Init(JSContext* aCx) {
     return rv;
   }
 
-  mozJSComponentLoader *loader = mozJSComponentLoader::Get();
-  JS::Rooted<JSObject *> targetObj(aCx);
+  mozJSComponentLoader* loader = mozJSComponentLoader::Get();
+  JS::Rooted<JSObject*> targetObj(aCx);
   loader->FindTargetObject(aCx, &targetObj);
 
   if (!DefineOSFileConstants(aCx, targetObj)) {

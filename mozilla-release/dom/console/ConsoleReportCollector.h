@@ -31,19 +31,9 @@ class ConsoleReportCollector final : public nsIConsoleReportCollector {
       const nsACString& aScope,
       ReportAction aAction = ReportAction::Forget) override;
 
-<<<<<<< HEAD
-  void FlushConsoleReports(
-      nsIDocument* aDocument,
-      ReportAction aAction = ReportAction::Forget) override;
-||||||| merged common ancestors
-  void
-  FlushConsoleReports(nsIDocument* aDocument,
-                      ReportAction aAction = ReportAction::Forget) override;
-=======
   void FlushConsoleReports(
       dom::Document* aDocument,
       ReportAction aAction = ReportAction::Forget) override;
->>>>>>> upstream-releases
 
   void FlushConsoleReports(
       nsILoadGroup* aLoadGroup,

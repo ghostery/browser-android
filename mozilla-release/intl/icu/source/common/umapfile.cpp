@@ -125,19 +125,6 @@ typedef HANDLE MemoryMap;
          UErrorCode *status     /* Error status, used to report out-of-memory errors. */
          )
     {
-<<<<<<< HEAD
-        HANDLE map;
-        HANDLE file;
-
-        if (U_FAILURE(*status)) {
-            return FALSE;
-        }
-
-||||||| merged common ancestors
-        HANDLE map;
-        HANDLE file;
-        
-=======
         if (U_FAILURE(*status)) {
             return FALSE;
         }
@@ -145,7 +132,6 @@ typedef HANDLE MemoryMap;
         HANDLE map = nullptr;
         HANDLE file = INVALID_HANDLE_VALUE;
 
->>>>>>> upstream-releases
         UDataMemory_init(pData); /* Clear the output struct.        */
 
         /* open the input file */
@@ -158,7 +144,6 @@ typedef HANDLE MemoryMap;
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL|FILE_FLAG_RANDOM_ACCESS, nullptr);
 #else
-<<<<<<< HEAD
         // Convert from UTF-8 string to UTF-16 string.
         wchar_t utf16Path[MAX_PATH];
         int32_t pathUtf16Len = 0;
@@ -170,56 +155,6 @@ typedef HANDLE MemoryMap;
         if (*status == U_STRING_NOT_TERMINATED_WARNING) {
             // Report back an error instead of a warning.
             *status = U_BUFFER_OVERFLOW_ERROR;
-            return FALSE;
-        }
-||||||| merged common ancestors
-        // First we need to go from char to UTF-16
-        // u_UCharsToChars could work but it requires length.
-        WCHAR utf16Path[MAX_PATH];
-        int32_t i;
-        for (i = 0; i < UPRV_LENGTHOF(utf16Path); i++)
-        {
-            utf16Path[i] = path[i];
-            if (path[i] == '\0')
-            {
-                break;
-            }
-        }
-        if (i >= UPRV_LENGTHOF(utf16Path))
-        {
-            // Ran out of room, unlikely but be safe
-            utf16Path[UPRV_LENGTHOF(utf16Path) - 1] = '\0';
-        }
-=======
-        // Convert from UTF-8 string to UTF-16 string.
-        wchar_t utf16Path[MAX_PATH];
-        int32_t pathUtf16Len = 0;
-        u_strFromUTF8(reinterpret_cast<UChar*>(utf16Path), static_cast<int32_t>(UPRV_LENGTHOF(utf16Path)), &pathUtf16Len, path, -1, status);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-        // TODO: Is it worth setting extended parameters to specify random access?
-        file = CreateFile2(utf16Path, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, NULL);
-#endif
-        if (file == INVALID_HANDLE_VALUE) {
-            // If we failed to open the file due to an out-of-memory error, then we want
-            // to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-            }
-||||||| merged common ancestors
-        // TODO: Is it worth setting extended parameters to specify random access?
-        file = CreateFile2(utf16Path, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, NULL);
-#endif
-        if(file==INVALID_HANDLE_VALUE) {
-=======
-        if (U_FAILURE(*status)) {
-            return FALSE;
-        }
-        if (*status == U_STRING_NOT_TERMINATED_WARNING) {
-            // Report back an error instead of a warning.
-            *status = U_BUFFER_OVERFLOW_ERROR;
->>>>>>> upstream-releases
             return FALSE;
         }
 
@@ -242,23 +177,12 @@ typedef HANDLE MemoryMap;
         map = CreateFileMappingW(file, nullptr, PAGE_READONLY, 0, 0, nullptr);
 
         CloseHandle(file);
-<<<<<<< HEAD
-        if (map == NULL) {
-            // If we failed to create the mapping due to an out-of-memory error, then 
-            // we want to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-            }
-||||||| merged common ancestors
-        if(map==NULL) {
-=======
         if (map == nullptr) {
             // If we failed to create the mapping due to an out-of-memory error, then 
             // we want to report that error back to the caller.
             if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
             }
->>>>>>> upstream-releases
             return FALSE;
         }
 

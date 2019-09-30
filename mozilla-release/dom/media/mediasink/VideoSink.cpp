@@ -29,15 +29,6 @@ extern LazyLogModule gMediaDecoderLog;
 #undef FMT
 
 #define FMT(x, ...) "VideoSink=%p " x, this, ##__VA_ARGS__
-<<<<<<< HEAD
-#define VSINK_LOG(x, ...) \
-  MOZ_LOG(gMediaDecoderLog, LogLevel::Debug, (FMT(x, ##__VA_ARGS__)))
-#define VSINK_LOG_V(x, ...) \
-  MOZ_LOG(gMediaDecoderLog, LogLevel::Verbose, (FMT(x, ##__VA_ARGS__)))
-||||||| merged common ancestors
-#define VSINK_LOG(x, ...)   MOZ_LOG(gMediaDecoderLog, LogLevel::Debug,   (FMT(x, ##__VA_ARGS__)))
-#define VSINK_LOG_V(x, ...) MOZ_LOG(gMediaDecoderLog, LogLevel::Verbose, (FMT(x, ##__VA_ARGS__)))
-=======
 #define VSINK_LOG(x, ...) \
   MOZ_LOG(gMediaDecoderLog, LogLevel::Debug, (FMT(x, ##__VA_ARGS__)))
 #define VSINK_LOG_V(x, ...) \
@@ -70,7 +61,6 @@ class VideoFrameMarkerPayload : public ProfilerMarkerPayload {
     aWriter.IntProperty("audio", mAudioPositionUs);
     aWriter.IntProperty("video", mVideoFrameTimeUs);
   }
->>>>>>> upstream-releases
 
  private:
   int64_t mAudioPositionUs;
@@ -86,12 +76,6 @@ using namespace mozilla::layers;
 // duration of a 60-fps frame.
 static const int64_t MIN_UPDATE_INTERVAL_US = 1000000 / (60 * 2);
 
-<<<<<<< HEAD
-VideoSink::VideoSink(AbstractThread* aThread, MediaSink* aAudioSink,
-||||||| merged common ancestors
-VideoSink::VideoSink(AbstractThread* aThread,
-                     MediaSink* aAudioSink,
-=======
 static void SetImageToGreenPixel(PlanarYCbCrImage* aImage) {
   static uint8_t greenPixel[] = {0x00, 0x00, 0x00};
   PlanarYCbCrData data;
@@ -104,40 +88,10 @@ static void SetImageToGreenPixel(PlanarYCbCrImage* aImage) {
 }
 
 VideoSink::VideoSink(AbstractThread* aThread, MediaSink* aAudioSink,
->>>>>>> upstream-releases
                      MediaQueue<VideoData>& aVideoQueue,
                      VideoFrameContainer* aContainer,
                      FrameStatistics& aFrameStats,
                      uint32_t aVQueueSentToCompositerSize)
-<<<<<<< HEAD
-    : mOwnerThread(aThread),
-      mAudioSink(aAudioSink),
-      mVideoQueue(aVideoQueue),
-      mContainer(aContainer),
-      mProducerID(ImageContainer::AllocateProducerID()),
-      mFrameStats(aFrameStats),
-      mOldCompositorDroppedCount(mContainer ? mContainer->GetDroppedImageCount()
-                                            : 0),
-      mPendingDroppedCount(0),
-      mHasVideo(false),
-      mUpdateScheduler(aThread),
-      mVideoQueueSendToCompositorSize(aVQueueSentToCompositerSize),
-      mMinVideoQueueSize(StaticPrefs::MediaRuinAvSyncEnabled() ? 1 : 0)
-||||||| merged common ancestors
-  : mOwnerThread(aThread)
-  , mAudioSink(aAudioSink)
-  , mVideoQueue(aVideoQueue)
-  , mContainer(aContainer)
-  , mProducerID(ImageContainer::AllocateProducerID())
-  , mFrameStats(aFrameStats)
-  , mOldCompositorDroppedCount(mContainer ? mContainer->GetDroppedImageCount()
-                                          : 0)
-  , mPendingDroppedCount(0)
-  , mHasVideo(false)
-  , mUpdateScheduler(aThread)
-  , mVideoQueueSendToCompositorSize(aVQueueSentToCompositerSize)
-  , mMinVideoQueueSize(StaticPrefs::MediaRuinAvSyncEnabled() ? 1 : 0)
-=======
     : mOwnerThread(aThread),
       mAudioSink(aAudioSink),
       mVideoQueue(aVideoQueue),
@@ -151,7 +105,6 @@ VideoSink::VideoSink(AbstractThread* aThread, MediaSink* aAudioSink,
       mUpdateScheduler(aThread),
       mVideoQueueSendToCompositorSize(aVQueueSentToCompositerSize),
       mMinVideoQueueSize(StaticPrefs::media_ruin_av_sync_enabled() ? 1 : 0)
->>>>>>> upstream-releases
 #ifdef XP_WIN
       ,
       mHiResTimersRequested(false)
@@ -184,15 +137,7 @@ void VideoSink::SetPlaybackParams(const PlaybackParams& aParams) {
   mAudioSink->SetPlaybackParams(aParams);
 }
 
-<<<<<<< HEAD
-RefPtr<GenericPromise> VideoSink::OnEnded(TrackType aType) {
-||||||| merged common ancestors
-RefPtr<GenericPromise>
-VideoSink::OnEnded(TrackType aType)
-{
-=======
 RefPtr<VideoSink::EndedPromise> VideoSink::OnEnded(TrackType aType) {
->>>>>>> upstream-releases
   AssertOwnerThread();
   MOZ_ASSERT(mAudioSink->IsStarted(), "Must be called after playback starts.");
 
@@ -317,39 +262,6 @@ nsresult VideoSink::Start(const TimeUnit& aStartTime, const MediaInfo& aInfo) {
     RefPtr<EndedPromise> p = mAudioSink->OnEnded(TrackInfo::kVideoTrack);
     if (p) {
       RefPtr<VideoSink> self = this;
-<<<<<<< HEAD
-      p->Then(mOwnerThread, __func__,
-              [self]() {
-                self->mVideoSinkEndRequest.Complete();
-                self->TryUpdateRenderedVideoFrames();
-                // It is possible the video queue size is 0 and we have no
-                // frames to render. However, we need to call
-                // MaybeResolveEndPromise() to ensure mEndPromiseHolder is
-                // resolved.
-                self->MaybeResolveEndPromise();
-              },
-              [self]() {
-                self->mVideoSinkEndRequest.Complete();
-                self->TryUpdateRenderedVideoFrames();
-                self->MaybeResolveEndPromise();
-              })
-          ->Track(mVideoSinkEndRequest);
-||||||| merged common ancestors
-      p->Then(mOwnerThread, __func__,
-        [self] () {
-          self->mVideoSinkEndRequest.Complete();
-          self->TryUpdateRenderedVideoFrames();
-          // It is possible the video queue size is 0 and we have no frames to
-          // render. However, we need to call MaybeResolveEndPromise() to ensure
-          // mEndPromiseHolder is resolved.
-          self->MaybeResolveEndPromise();
-        }, [self] () {
-          self->mVideoSinkEndRequest.Complete();
-          self->TryUpdateRenderedVideoFrames();
-          self->MaybeResolveEndPromise();
-        })
-        ->Track(mVideoSinkEndRequest);
-=======
       p->Then(
            mOwnerThread, __func__,
            [self]() {
@@ -367,7 +279,6 @@ nsresult VideoSink::Start(const TimeUnit& aStartTime, const MediaInfo& aInfo) {
              self->MaybeResolveEndPromise();
            })
           ->Track(mVideoSinkEndRequest);
->>>>>>> upstream-releases
     }
 
     ConnectListener();
@@ -454,17 +365,10 @@ void VideoSink::Redraw(const VideoInfo& aInfo) {
       video->mImage = mBlankImage;
     }
     video->MarkSentToCompositor();
-<<<<<<< HEAD
-    mContainer->SetCurrentFrame(video->mDisplay, video->mImage,
-                                TimeStamp::Now());
-||||||| merged common ancestors
-    mContainer->SetCurrentFrame(video->mDisplay, video->mImage, TimeStamp::Now());
-=======
     mContainer->SetCurrentFrame(video->mDisplay, video->mImage, now);
     if (mSecondaryContainer) {
       mSecondaryContainer->SetCurrentFrame(video->mDisplay, video->mImage, now);
     }
->>>>>>> upstream-releases
     return;
   }
 
@@ -473,20 +377,12 @@ void VideoSink::Redraw(const VideoInfo& aInfo) {
   // to fire 'loadeddata'.
 
   RefPtr<Image> blank =
-<<<<<<< HEAD
-      mContainer->GetImageContainer()->CreatePlanarYCbCrImage();
-  mContainer->SetCurrentFrame(aInfo.mDisplay, blank, TimeStamp::Now());
-||||||| merged common ancestors
-    mContainer->GetImageContainer()->CreatePlanarYCbCrImage();
-  mContainer->SetCurrentFrame(aInfo.mDisplay, blank, TimeStamp::Now());
-=======
       mContainer->GetImageContainer()->CreatePlanarYCbCrImage();
   mContainer->SetCurrentFrame(aInfo.mDisplay, blank, now);
 
   if (mSecondaryContainer) {
     mSecondaryContainer->SetCurrentFrame(aInfo.mDisplay, blank, now);
   }
->>>>>>> upstream-releases
 }
 
 void VideoSink::TryUpdateRenderedVideoFrames() {
@@ -632,18 +528,9 @@ void VideoSink::UpdateRenderedVideoFrames() {
     if (frame->IsSentToCompositor()) {
       sentToCompositorCount++;
     } else {
-<<<<<<< HEAD
-      droppedCount++;
-      VSINK_LOG_V("discarding video frame mTime=%" PRId64
-                  " clock_time=%" PRId64,
-||||||| merged common ancestors
-      droppedCount++;
-      VSINK_LOG_V("discarding video frame mTime=%" PRId64 " clock_time=%" PRId64,
-=======
       droppedInSink++;
       VSINK_LOG_V("discarding video frame mTime=%" PRId64
                   " clock_time=%" PRId64,
->>>>>>> upstream-releases
                   frame->mTime.ToMicroseconds(), clockTime.ToMicroseconds());
       VSINK_ADD_PROFILER_MARKER("VideoSink: discard", nowTime,
                                 clockTime.ToMicroseconds(),
@@ -653,19 +540,9 @@ void VideoSink::UpdateRenderedVideoFrames() {
 
   if (droppedInSink || sentToCompositorCount) {
     uint32_t totalCompositorDroppedCount = mContainer->GetDroppedImageCount();
-<<<<<<< HEAD
-    uint32_t compositorDroppedCount =
-        totalCompositorDroppedCount - mOldCompositorDroppedCount;
-    if (compositorDroppedCount > 0) {
-||||||| merged common ancestors
-    uint32_t compositorDroppedCount =
-      totalCompositorDroppedCount - mOldCompositorDroppedCount;
-    if (compositorDroppedCount > 0) {
-=======
     uint32_t droppedInCompositor =
         totalCompositorDroppedCount - mOldCompositorDroppedCount;
     if (droppedInCompositor > 0) {
->>>>>>> upstream-releases
       mOldCompositorDroppedCount = totalCompositorDroppedCount;
       VSINK_LOG_V("%u video frame previously discarded by compositor",
                   droppedInCompositor);
@@ -676,18 +553,8 @@ void VideoSink::UpdateRenderedVideoFrames() {
                                    : mPendingDroppedCount;
     mPendingDroppedCount -= droppedReported;
 
-<<<<<<< HEAD
-    mFrameStats.Accumulate({0, 0, droppedCount + droppedReported,
-                            sentToCompositorCount - droppedReported});
-||||||| merged common ancestors
-    mFrameStats.Accumulate({ 0,
-                             0,
-                             droppedCount + droppedReported,
-                             sentToCompositorCount - droppedReported });
-=======
     mFrameStats.Accumulate({0, 0, sentToCompositorCount - droppedReported, 0,
                             droppedInSink, droppedInCompositor});
->>>>>>> upstream-releases
   }
 
   // The presentation end time of the last video frame displayed is either
@@ -734,13 +601,7 @@ void VideoSink::MaybeResolveEndPromise() {
       // Remove the last frame since we have sent it to compositor.
       RefPtr<VideoData> frame = VideoQueue().PopFront();
       if (mPendingDroppedCount > 0) {
-<<<<<<< HEAD
-        mFrameStats.Accumulate({0, 0, 1, 0});
-||||||| merged common ancestors
-        mFrameStats.Accumulate({ 0, 0, 1, 0 });
-=======
         mFrameStats.Accumulate({0, 0, 0, 0, 0, 1});
->>>>>>> upstream-releases
         mPendingDroppedCount--;
       } else {
         mFrameStats.NotifyPresentedFrame();
@@ -769,51 +630,8 @@ void VideoSink::MaybeResolveEndPromise() {
   }
 }
 
-<<<<<<< HEAD
-nsCString VideoSink::GetDebugInfo() {
-||||||| merged common ancestors
-nsCString
-VideoSink::GetDebugInfo()
-{
-=======
 void VideoSink::SetSecondaryVideoContainer(VideoFrameContainer* aSecondary) {
->>>>>>> upstream-releases
   AssertOwnerThread();
-<<<<<<< HEAD
-  auto str = nsPrintfCString(
-      "VideoSink: IsStarted=%d IsPlaying=%d VideoQueue(finished=%d "
-      "size=%zu) mVideoFrameEndTime=%" PRId64
-      " mHasVideo=%d "
-      "mVideoSinkEndRequest.Exists()=%d mEndPromiseHolder.IsEmpty()=%d",
-      IsStarted(), IsPlaying(), VideoQueue().IsFinished(),
-      VideoQueue().GetSize(), mVideoFrameEndTime.ToMicroseconds(), mHasVideo,
-      mVideoSinkEndRequest.Exists(), mEndPromiseHolder.IsEmpty());
-  AppendStringIfNotEmpty(str, mAudioSink->GetDebugInfo());
-  return std::move(str);
-}
-
-}  // namespace media
-}  // namespace mozilla
-||||||| merged common ancestors
-  auto str = nsPrintfCString(
-    "VideoSink: IsStarted=%d IsPlaying=%d VideoQueue(finished=%d "
-    "size=%zu) mVideoFrameEndTime=%" PRId64 " mHasVideo=%d "
-    "mVideoSinkEndRequest.Exists()=%d mEndPromiseHolder.IsEmpty()=%d",
-    IsStarted(),
-    IsPlaying(),
-    VideoQueue().IsFinished(),
-    VideoQueue().GetSize(),
-    mVideoFrameEndTime.ToMicroseconds(),
-    mHasVideo,
-    mVideoSinkEndRequest.Exists(),
-    mEndPromiseHolder.IsEmpty());
-  AppendStringIfNotEmpty(str, mAudioSink->GetDebugInfo());
-  return std::move(str);
-}
-
-} // namespace media
-} // namespace mozilla
-=======
   mSecondaryContainer = aSecondary;
   if (!IsPlaying() && mSecondaryContainer) {
     ImageContainer* mainImageContainer = mContainer->GetImageContainer();
@@ -869,4 +687,3 @@ bool VideoSink::InitializeBlankImage() {
   return true;
 }
 }  // namespace mozilla
->>>>>>> upstream-releases

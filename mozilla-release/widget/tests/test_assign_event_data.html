@@ -333,16 +333,8 @@ const kTests = [
       document.getElementById(this.targetID).focus();
       synthesizeComposition({ type: "compositioncommit", data: "\u306D", key: { key: "," } });
     },
-<<<<<<< HEAD
-    canRun: function () {
-      return !SpecialPowers.getBoolPref("dom.compositionevent.text.dispatch_only_system_group_in_content");
-||||||| merged common ancestors
-    canRun: function () {
-      return true;
-=======
     canRun() {
       return !SpecialPowers.getBoolPref("dom.compositionevent.text.dispatch_only_system_group_in_content");
->>>>>>> upstream-releases
     },
     todoMismatch: [ ],
   },

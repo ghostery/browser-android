@@ -263,51 +263,12 @@ button.warning {
 
 #go-back,
 #header-utils-btn {
-<<<<<<< HEAD
-  -moz-appearance: none;
-  border: 1px solid var(--in-content-box-border-color);
-  border-radius: 2px;
-  line-height: 20px;
-  background-color: var(--in-content-page-background);
-  padding-right: 10px;
-  padding-left: 10px;
-  /* This button is too tall, adding margin-bottom shrinks it. */
-  margin-bottom: 2px;
-||||||| merged common ancestors
-  line-height: 20px;
-  border-color: var(--in-content-box-border-color);
-  background-color: var(--in-content-page-background);
-  padding-right: 10px;
-  padding-left: 10px;
-  /* This button is too tall, adding margin-bottom shrinks it. */
-  margin-bottom: 2px;
-=======
   -moz-context-properties: fill;
   fill: currentColor;
   min-width: auto;
->>>>>>> upstream-releases
   margin-inline-end: 0;
 }
 
-<<<<<<< HEAD
-#header-utils-btn:hover {
-  background-color: var(--in-content-box-background-hover);
-  cursor: pointer;
-||||||| merged common ancestors
-#header-utils-btn:not([disabled="true"]):active:hover,
-#header-utils-btn[open="true"] {
-  background-color: var(--in-content-box-background-active);
-}
-
-.header-button {
-  -moz-appearance: none;
-  border: 1px solid;
-  border-radius: 2px;
-}
-
-.header-button[disabled="true"] > .toolbarbutton-icon {
-  opacity: 0.4;
-=======
 #header-utils-btn > .button-box > hbox > .button-icon {
   list-style-image: url("chrome://mozapps/skin/extensions/utilities.svg");
 }
@@ -323,32 +284,13 @@ button.warning {
 #go-back > .button-box > .button-text,
 #header-utils-btn > .button-box > hbox > .button-text {
   display: none;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#header-utils-btn:active:hover,
-#header-utils-btn[open="true"] {
-  background-color: var(--in-content-box-background-active);
-||||||| merged common ancestors
-.header-button:not([disabled="true"]):hover,
-#header-utils-btn:not([disabled="true"]):hover {
-  background-color: #ebebeb;
-  cursor: pointer;
-=======
 #go-back {
   margin-inline-start: 0;
   margin-inline-end: 16px;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#header-utils-btn > .toolbarbutton-text {
-  display: none;
-||||||| merged common ancestors
-.header-button > .toolbarbutton-text {
-  display: none;
-=======
 #go-back > .button-box > .button-icon {
   list-style-image: url("chrome://global/skin/icons/calendar-arrow-left.svg");
   margin: 0;
@@ -356,7 +298,6 @@ button.warning {
 
 #go-back > .button-box > .button-icon:-moz-locale-dir(rtl) {
   list-style-image: url("chrome://global/skin/icons/calendar-arrow-right.svg");
->>>>>>> upstream-releases
 }
 
 #heading {

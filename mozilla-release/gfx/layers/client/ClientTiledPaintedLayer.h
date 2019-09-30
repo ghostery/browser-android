@@ -42,25 +42,10 @@ class ClientTiledPaintedLayer : public PaintedLayer, public ClientLayer {
                                    ClientLayerManager::PaintedLayerCreationHint
                                        aCreationHint = LayerManager::NONE);
 
-<<<<<<< HEAD
- protected:
-  ~ClientTiledPaintedLayer();
-||||||| merged common ancestors
-protected:
-  ~ClientTiledPaintedLayer();
-=======
  protected:
   virtual ~ClientTiledPaintedLayer();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void PrintInfo(std::stringstream& aStream,
-                         const char* aPrefix) override;
-||||||| merged common ancestors
-  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
-=======
   void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
->>>>>>> upstream-releases
 
  public:
   // Override name to distinguish it from ClientPaintedLayer in layer dumps
@@ -86,14 +71,7 @@ protected:
 
   void ClearCachedResources() override;
 
-<<<<<<< HEAD
-  virtual void HandleMemoryPressure() override {
-||||||| merged common ancestors
-  virtual void HandleMemoryPressure() override
-  {
-=======
   void HandleMemoryPressure() override {
->>>>>>> upstream-releases
     if (mContentClient) {
       mContentClient->HandleMemoryPressure();
     }
@@ -108,15 +86,8 @@ protected:
                          LayerMetricsWrapper* aOutDisplayPortAncestor,
                          bool* aOutHasTransformAnimation);
 
-<<<<<<< HEAD
-  virtual bool IsOptimizedFor(
-      LayerManager::PaintedLayerCreationHint aCreationHint) override;
-||||||| merged common ancestors
-  virtual bool IsOptimizedFor(LayerManager::PaintedLayerCreationHint aCreationHint) override;
-=======
   bool IsOptimizedFor(
       LayerManager::PaintedLayerCreationHint aCreationHint) override;
->>>>>>> upstream-releases
 
  private:
   ClientLayerManager* ClientManager() {

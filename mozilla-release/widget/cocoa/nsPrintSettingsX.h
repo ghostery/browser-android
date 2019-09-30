@@ -15,27 +15,11 @@
 // values are consistent across OS versions so the rename does not affect
 // runtime, just compilation.
 #ifdef __MAC_10_9
-<<<<<<< HEAD
-#define NS_PAPER_ORIENTATION_PORTRAIT (NSPaperOrientationPortrait)
-#define NS_PAPER_ORIENTATION_LANDSCAPE (NSPaperOrientationLandscape)
-||||||| merged common ancestors
-#define NS_PAPER_ORIENTATION_PORTRAIT   (NSPaperOrientationPortrait)
-#define NS_PAPER_ORIENTATION_LANDSCAPE  (NSPaperOrientationLandscape)
-=======
 #  define NS_PAPER_ORIENTATION_PORTRAIT (NSPaperOrientationPortrait)
 #  define NS_PAPER_ORIENTATION_LANDSCAPE (NSPaperOrientationLandscape)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define NS_PAPER_ORIENTATION_PORTRAIT (NSPortraitOrientation)
-#define NS_PAPER_ORIENTATION_LANDSCAPE (NSLandscapeOrientation)
-||||||| merged common ancestors
-#define NS_PAPER_ORIENTATION_PORTRAIT   (NSPortraitOrientation)
-#define NS_PAPER_ORIENTATION_LANDSCAPE  (NSLandscapeOrientation)
-=======
 #  define NS_PAPER_ORIENTATION_PORTRAIT (NSPortraitOrientation)
 #  define NS_PAPER_ORIENTATION_LANDSCAPE (NSLandscapeOrientation)
->>>>>>> upstream-releases
 #endif
 
 #define NS_PRINTSETTINGSX_IID                        \
@@ -52,23 +36,13 @@ class nsPrintSettingsX : public nsPrintSettings {
 
   nsPrintSettingsX();
   nsresult Init();
-  NSPrintInfo *GetCocoaPrintInfo() { return mPrintInfo; }
-  void SetCocoaPrintInfo(NSPrintInfo *aPrintInfo);
+  NSPrintInfo* GetCocoaPrintInfo() { return mPrintInfo; }
+  void SetCocoaPrintInfo(NSPrintInfo* aPrintInfo);
   virtual nsresult ReadPageFormatFromPrefs();
   virtual nsresult WritePageFormatToPrefs();
-<<<<<<< HEAD
-  virtual nsresult GetEffectivePageSize(double *aWidth,
-                                        double *aHeight) override;
-  void GetFilePageSize(double *aWidth, double *aHeight);
-||||||| merged common ancestors
-  virtual nsresult GetEffectivePageSize(double *aWidth,
-      double *aHeight) override;
-  void GetFilePageSize(double *aWidth, double *aHeight);
-=======
   virtual nsresult GetEffectivePageSize(double* aWidth,
                                         double* aHeight) override;
   void GetFilePageSize(double* aWidth, double* aHeight);
->>>>>>> upstream-releases
 
   // In addition to setting the paper width and height, these
   // overrides set the adjusted width and height returned from
@@ -96,7 +70,7 @@ class nsPrintSettingsX : public nsPrintSettings {
   NS_IMETHOD SetScaling(double aScaling) override;
   NS_IMETHOD GetScaling(double* aScaling) override;
 
-  NS_IMETHOD SetToFileName(const nsAString &aToFileName) override;
+  NS_IMETHOD SetToFileName(const nsAString& aToFileName) override;
 
   NS_IMETHOD GetOrientation(int32_t* aOrientation) override;
   NS_IMETHOD SetOrientation(int32_t aOrientation) override;
@@ -111,47 +85,28 @@ class nsPrintSettingsX : public nsPrintSettings {
   void GetAdjustedPaperSize(double* aWidth, double* aHeight);
   nsresult SetCocoaPaperSize(double aWidth, double aHeight);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // Set the printer name using the native PrintInfo data.
   void SetPrinterNameFromPrintInfo();
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsPrintSettingsX();
 
-  nsPrintSettingsX(const nsPrintSettingsX &src);
-  nsPrintSettingsX &operator=(const nsPrintSettingsX &rhs);
+  nsPrintSettingsX(const nsPrintSettingsX& src);
+  nsPrintSettingsX& operator=(const nsPrintSettingsX& rhs);
 
   nsresult _Clone(nsIPrintSettings** _retval) override;
   nsresult _Assign(nsIPrintSettings* aPS) override;
 
   int GetCocoaUnit(int16_t aGeckoUnit);
 
-<<<<<<< HEAD
-  // The out param has a ref count of 1 on return so caller needs to PMRelase()
-  // when done.
-  OSStatus CreateDefaultPageFormat(PMPrintSession aSession,
-                                   PMPageFormat &outFormat);
-  OSStatus CreateDefaultPrintSettings(PMPrintSession aSession,
-                                      PMPrintSettings &outSettings);
-||||||| merged common ancestors
-  // The out param has a ref count of 1 on return so caller needs to PMRelase() when done.
-  OSStatus CreateDefaultPageFormat(PMPrintSession aSession, PMPageFormat& outFormat);
-  OSStatus CreateDefaultPrintSettings(PMPrintSession aSession, PMPrintSettings& outSettings);
-=======
   // The out param has a ref count of 1 on return so caller needs to PMRelase()
   // when done.
   OSStatus CreateDefaultPageFormat(PMPrintSession aSession,
                                    PMPageFormat& outFormat);
   OSStatus CreateDefaultPrintSettings(PMPrintSession aSession,
                                       PMPrintSettings& outSettings);
->>>>>>> upstream-releases
 
-  NSPrintInfo *mPrintInfo;
+  NSPrintInfo* mPrintInfo;
 
   // Scaling factors used to convert the NSPrintInfo
   // paper size units to inches

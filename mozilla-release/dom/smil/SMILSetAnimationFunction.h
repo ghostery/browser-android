@@ -18,17 +18,8 @@ namespace mozilla {
 // Subclass of SMILAnimationFunction that limits the behaviour to that offered
 // by a <set> element.
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILSetAnimationFunction.h
-class nsSMILSetAnimationFunction : public nsSMILAnimationFunction {
- public:
-||||||| merged common ancestors
-class nsSMILSetAnimationFunction : public nsSMILAnimationFunction
-{
-public:
-=======
 class SMILSetAnimationFunction : public SMILAnimationFunction {
  public:
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILSetAnimationFunction.h
   /*
    * Sets animation-specific attributes (or marks them dirty, in the case
    * of from/to/by/values).
@@ -71,12 +62,6 @@ class SMILSetAnimationFunction : public SMILAnimationFunction {
   bool IsDisallowedAttribute(const nsAtom* aAttribute) const;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILSetAnimationFunction.h
-#endif  // NS_SMILSETANIMATIONFUNCTION_H_
-||||||| merged common ancestors
-#endif // NS_SMILSETANIMATIONFUNCTION_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILSetAnimationFunction_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILSetAnimationFunction.h

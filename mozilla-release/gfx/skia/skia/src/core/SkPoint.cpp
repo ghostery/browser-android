@@ -27,63 +27,6 @@ bool SkPoint::setLength(SkScalar length) {
     return this->setLength(fX, fY, length);
 }
 
-<<<<<<< HEAD
-// Returns the square of the Euclidian distance to (dx,dy).
-static inline float getLengthSquared(float dx, float dy) {
-    return dx * dx + dy * dy;
-}
-
-// Calculates the square of the Euclidian distance to (dx,dy) and stores it in
-// *lengthSquared.  Returns true if the distance is judged to be "nearly zero".
-//
-// This logic is encapsulated in a helper method to make it explicit that we
-// always perform this check in the same manner, to avoid inconsistencies
-// (see http://code.google.com/p/skia/issues/detail?id=560 ).
-static inline bool is_length_nearly_zero(float dx, float dy,
-                                         float *lengthSquared) {
-    *lengthSquared = getLengthSquared(dx, dy);
-    return *lengthSquared <= (SK_ScalarNearlyZero * SK_ScalarNearlyZero);
-}
-
-/*
- *  We have to worry about 2 tricky conditions:
- *  1. underflow of mag2 (compared against nearlyzero^2)
- *  2. overflow of mag2 (compared w/ isfinite)
- *
- *  If we underflow, we return false. If we overflow, we compute again using
- *  doubles, which is much slower (3x in a desktop test) but will not overflow.
- */
-template <bool use_rsqrt> bool set_point_length(SkPoint* pt, float x, float y, float length,
-                                                float* orig_length = nullptr) {
-    SkASSERT(!use_rsqrt || (orig_length == nullptr));
-
-    float mag = 0;
-    float mag2;
-    if (is_length_nearly_zero(x, y, &mag2)) {
-||||||| merged common ancestors
-// Returns the square of the Euclidian distance to (dx,dy).
-static inline float getLengthSquared(float dx, float dy) {
-    return dx * dx + dy * dy;
-}
-
-// Calculates the square of the Euclidian distance to (dx,dy) and stores it in
-// *lengthSquared.  Returns true if the distance is judged to be "nearly zero".
-//
-// This logic is encapsulated in a helper method to make it explicit that we
-// always perform this check in the same manner, to avoid inconsistencies
-// (see http://code.google.com/p/skia/issues/detail?id=560 ).
-static inline bool is_length_nearly_zero(float dx, float dy,
-                                         float *lengthSquared) {
-    *lengthSquared = getLengthSquared(dx, dy);
-    return *lengthSquared <= (SK_ScalarNearlyZero * SK_ScalarNearlyZero);
-}
-
-SkScalar SkPoint::Normalize(SkPoint* pt) {
-    float x = pt->fX;
-    float y = pt->fY;
-    float mag2;
-    if (is_length_nearly_zero(x, y, &mag2)) {
-=======
 /*
  *  We have to worry about 2 tricky conditions:
  *  1. underflow of mag2 (compared against nearlyzero^2)
@@ -107,13 +50,7 @@ template <bool use_rsqrt> bool set_point_length(SkPoint* pt, float x, float y, f
     y *= dscale;
     // check if we're not finite, or we're zero-length
     if (!sk_float_isfinite(x) || !sk_float_isfinite(y) || (x == 0 && y == 0)) {
->>>>>>> upstream-releases
         pt->set(0, 0);
-<<<<<<< HEAD
-        return false;
-||||||| merged common ancestors
-        return 0;
-=======
         return false;
     }
     float mag = 0;
@@ -123,70 +60,7 @@ template <bool use_rsqrt> bool set_point_length(SkPoint* pt, float x, float y, f
     pt->set(x, y);
     if (orig_length) {
         *orig_length = mag;
->>>>>>> upstream-releases
     }
-    return true;
-}
-
-<<<<<<< HEAD
-    if (sk_float_isfinite(mag2)) {
-        float scale;
-        if (use_rsqrt) {
-            scale = length * sk_float_rsqrt(mag2);
-        } else {
-            mag = sk_float_sqrt(mag2);
-            scale = length / mag;
-        }
-        x *= scale;
-        y *= scale;
-    } else {
-        // our mag2 step overflowed to infinity, so use doubles instead.
-        // much slower, but needed when x or y are very large, other wise we
-        // divide by inf. and return (0,0) vector.
-        double xx = x;
-        double yy = y;
-        double dmag = sqrt(xx * xx + yy * yy);
-        double dscale = length / dmag;
-        x *= dscale;
-        y *= dscale;
-        // check if we're not finite, or we're zero-length
-        if (!sk_float_isfinite(x) || !sk_float_isfinite(y) || (x == 0 && y == 0)) {
-            pt->set(0, 0);
-            return false;
-        }
-        if (orig_length) {
-            mag = sk_double_to_float(dmag);
-        }
-    }
-    pt->set(x, y);
-    if (orig_length) {
-        *orig_length = mag;
-||||||| merged common ancestors
-    float mag, scale;
-    if (SkScalarIsFinite(mag2)) {
-        mag = sk_float_sqrt(mag2);
-        scale = 1 / mag;
-    } else {
-        // our mag2 step overflowed to infinity, so use doubles instead.
-        // much slower, but needed when x or y are very large, other wise we
-        // divide by inf. and return (0,0) vector.
-        double xx = x;
-        double yy = y;
-        double magmag = sqrt(xx * xx + yy * yy);
-        mag = (float)magmag;
-        // we perform the divide with the double magmag, to stay exactly the
-        // same as setLength. It would be faster to perform the divide with
-        // mag, but it is possible that mag has overflowed to inf. but still
-        // have a non-zero value for scale (thanks to denormalized numbers).
-        scale = (float)(1 / magmag);
-=======
-SkScalar SkPoint::Normalize(SkPoint* pt) {
-    float mag;
-    if (set_point_length<false>(pt, pt->fX, pt->fY, 1.0f, &mag)) {
-        return mag;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
     return true;
 }
 
@@ -196,12 +70,6 @@ SkScalar SkPoint::Normalize(SkPoint* pt) {
         return mag;
     }
     return 0;
-||||||| merged common ancestors
-    pt->set(x * scale, y * scale);
-    return mag;
-=======
-    return 0;
->>>>>>> upstream-releases
 }
 
 SkScalar SkPoint::Length(SkScalar dx, SkScalar dy) {

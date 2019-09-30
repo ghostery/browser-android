@@ -134,25 +134,11 @@ bool HasBuilder() { return mBuilder; }
  *                next call to this method.
  * @return true if successful; false if out of memory
  */
-<<<<<<< HEAD
-bool EnsureBufferSpace(int32_t aLength);
-||||||| merged common ancestors
-bool
-EnsureBufferSpace(int32_t aLength);
-=======
 bool EnsureBufferSpace(int32_t aLength);
 
 void EnableViewSource(nsHtml5Highlighter* aHighlighter);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void EnableViewSource(nsHtml5Highlighter* aHighlighter);
-||||||| merged common ancestors
-void
-EnableViewSource(nsHtml5Highlighter* aHighlighter);
-=======
 void errDeepTree();
->>>>>>> upstream-releases
 
 void errStrayStartTag(nsAtom* aName);
 

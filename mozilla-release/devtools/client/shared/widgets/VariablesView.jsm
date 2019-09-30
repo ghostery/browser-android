@@ -444,16 +444,7 @@ VariablesView.prototype = {
     ));
     searchbox.className = "variables-view-searchinput devtools-filterinput";
     searchbox.setAttribute("placeholder", this._searchboxPlaceholder);
-<<<<<<< HEAD
-    searchbox.setAttribute("flex", "1");
     searchbox.addEventListener("input", this._onSearchboxInput);
-||||||| merged common ancestors
-    searchbox.setAttribute("type", "search");
-    searchbox.setAttribute("flex", "1");
-    searchbox.addEventListener("command", this._onSearchboxInput);
-=======
-    searchbox.addEventListener("input", this._onSearchboxInput);
->>>>>>> upstream-releases
     searchbox.addEventListener("keydown", this._onSearchboxKeyDown);
 
     container.appendChild(searchbox);
@@ -470,19 +461,11 @@ VariablesView.prototype = {
       return;
     }
     this._searchboxContainer.remove();
-<<<<<<< HEAD
-    this._searchboxNode.removeEventListener("input", this._onSearchboxInput);
-    this._searchboxNode.removeEventListener("keydown", this._onSearchboxKeyDown);
-||||||| merged common ancestors
-    this._searchboxNode.removeEventListener("command", this._onSearchboxInput);
-    this._searchboxNode.removeEventListener("keydown", this._onSearchboxKeyDown);
-=======
     this._searchboxNode.removeEventListener("input", this._onSearchboxInput);
     this._searchboxNode.removeEventListener(
       "keydown",
       this._onSearchboxKeyDown
     );
->>>>>>> upstream-releases
 
     this._searchboxContainer = null;
     this._searchboxNode = null;
@@ -2951,23 +2934,11 @@ Variable.prototype = extend(Scope.prototype, {
    */
   highlightDomNode: async function() {
     if (this.toolbox) {
-<<<<<<< HEAD
-      await this.toolbox.initInspector();
-      if (!this._nodeFront) {
-        this.nodeFront = await this.toolbox.walker.gripToNodeFront(this._valueGrip);
-||||||| merged common ancestors
-      if (this._nodeFront) {
-        // If the nodeFront has been retrieved before, no need to ask the server
-        // again for it
-        this.toolbox.highlighterUtils.highlightNodeFront(this._nodeFront);
-        return;
-=======
       await this.toolbox.initInspector();
       if (!this._nodeFront) {
         this.nodeFront = await this.toolbox.walker.gripToNodeFront(
           this._valueGrip
         );
->>>>>>> upstream-releases
       }
       await this.toolbox.highlighter.highlight(this._nodeFront);
     }

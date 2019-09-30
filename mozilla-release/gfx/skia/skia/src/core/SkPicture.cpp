@@ -5,16 +5,8 @@
  * found in the LICENSE file.
  */
 
-<<<<<<< HEAD
 #include "SkPicture.h"
 
-#include "SkAtomics.h"
-||||||| merged common ancestors
-#include "SkAtomics.h"
-=======
-#include "SkPicture.h"
-
->>>>>>> upstream-releases
 #include "SkImageGenerator.h"
 #include "SkMathPriv.h"
 #include "SkPictureCommon.h"
@@ -24,13 +16,8 @@
 #include "SkPictureRecord.h"
 #include "SkPictureRecorder.h"
 #include "SkSerialProcs.h"
-<<<<<<< HEAD
-#include "SkTo.h"
-||||||| merged common ancestors
-=======
 #include "SkTo.h"
 #include <atomic>
->>>>>>> upstream-releases
 
 // When we read/write the SkPictInfo via a stream, we have a sentinel byte right after the info.
 // Note: in the read/write buffer versions, we have a slightly different convention:

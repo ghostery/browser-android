@@ -50,21 +50,10 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
   ];
 });
 
-<<<<<<< HEAD
-function init_content_length(ch) {
-  var content = Cc["@mozilla.org/io/string-input-stream;1"]
-                  .createInstance(Ci.nsIStringInputStream);
-||||||| merged common ancestors
-function init_content_length(ch)
-{
-  var content = Cc["@mozilla.org/io/string-input-stream;1"]
-                  .createInstance(Ci.nsIStringInputStream);
-=======
 function init_content_length(ch) {
   var content = Cc["@mozilla.org/io/string-input-stream;1"].createInstance(
     Ci.nsIStringInputStream
   );
->>>>>>> upstream-releases
   content.data = REQUEST_DATA;
 
   ch.QueryInterface(Ci.nsIUploadChannel).setUploadStream(

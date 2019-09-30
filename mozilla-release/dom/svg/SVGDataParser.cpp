@@ -8,33 +8,13 @@
 #include "nsContentUtils.h"
 #include "SVGContentUtils.h"
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.cpp
-nsSVGDataParser::nsSVGDataParser(const nsAString& aValue)
-    : mIter(SVGContentUtils::GetStartRangedPtr(aValue)),
-      mEnd(SVGContentUtils::GetEndRangedPtr(aValue)) {}
-||||||| merged common ancestors
-nsSVGDataParser::nsSVGDataParser(const nsAString& aValue)
-  : mIter(SVGContentUtils::GetStartRangedPtr(aValue)),
-    mEnd(SVGContentUtils::GetEndRangedPtr(aValue))
-{
-}
-=======
 namespace mozilla {
 
 SVGDataParser::SVGDataParser(const nsAString& aValue)
     : mIter(SVGContentUtils::GetStartRangedPtr(aValue)),
       mEnd(SVGContentUtils::GetEndRangedPtr(aValue)) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.cpp
-bool nsSVGDataParser::SkipCommaWsp() {
-||||||| merged common ancestors
-bool
-nsSVGDataParser::SkipCommaWsp()
-{
-=======
 bool SVGDataParser::SkipCommaWsp() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.cpp
   if (!SkipWsp()) {
     // end of string
     return false;
@@ -46,15 +26,7 @@ bool SVGDataParser::SkipCommaWsp() {
   return SkipWsp();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.cpp
-bool nsSVGDataParser::SkipWsp() {
-||||||| merged common ancestors
-bool
-nsSVGDataParser::SkipWsp()
-{
-=======
 bool SVGDataParser::SkipWsp() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.cpp
   while (mIter != mEnd) {
     if (!nsContentUtils::IsHTMLWhitespace(*mIter)) {
       return true;

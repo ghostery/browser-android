@@ -301,13 +301,7 @@ inline static BSTR CopyBSTR(BSTR aSrc) {
 }  // namespace a11y
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // !defined(MOZILLA_INTERNAL_API)
-||||||| merged common ancestors
-#endif // !defined(MOZILLA_INTERNAL_API)
-=======
 #  endif  // !defined(MOZILLA_INTERNAL_API)
->>>>>>> upstream-releases
 
 #endif  // defined(__midl)
 

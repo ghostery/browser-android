@@ -894,10 +894,6 @@ static const struct EVInfo kEVInfos[] = {
     "ViBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5IFJTQSBSMg==",
     "VrYpzTS8ePY=",
   },
-<<<<<<< HEAD
-    // clang-format on
-||||||| merged common ancestors
-=======
   {
     // CN=UCA Extended Validation Root,O=UniTrust,C=CN
     "2.23.140.1.1",
@@ -968,7 +964,6 @@ static const struct EVInfo kEVInfos[] = {
     "e3G2gla4EnycqA==",
   },
     // clang-format on
->>>>>>> upstream-releases
 };
 
 static SECOidTag sEVInfoOIDTags[ArrayLength(kEVInfos)];

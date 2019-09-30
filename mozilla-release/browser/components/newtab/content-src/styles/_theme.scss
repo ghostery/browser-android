@@ -21,45 +21,6 @@ $shadow-secondary: 0 1px 4px 0 $grey-90-20;
 // Default theme
 body {
   // General styles
-<<<<<<< HEAD
-  --newtab-background-color: #{$grey-10};
-  --newtab-border-primary-color: #{$grey-40};
-  --newtab-border-secondary-color: #{$grey-30};
-  --newtab-button-primary-color: #{$blue-60};
-  --newtab-button-secondary-color: inherit;
-  --newtab-element-active-color: #{$grey-30-60};
-  --newtab-element-hover-color: #{$grey-20};
-  --newtab-icon-primary-color: #{$grey-90-80};
-  --newtab-icon-secondary-color: #{$grey-90-60};
-  --newtab-icon-tertiary-color: #{$grey-30};
-  --newtab-inner-box-shadow-color: #{$black-10};
-  --newtab-link-primary-color: #{$blue-60};
-  --newtab-link-secondary-color: #{$teal-70};
-  --newtab-text-conditional-color: #{$grey-60};
-  --newtab-text-primary-color: #{$grey-90};
-  --newtab-text-secondary-color: #{$grey-50};
-  --newtab-textbox-background-color: #{$white};
-  --newtab-textbox-border: #{$grey-90-20};
-||||||| merged common ancestors
-  --newtab-background-color: $grey-10;
-  --newtab-border-primary-color: $grey-40;
-  --newtab-border-secondary-color: $grey-30;
-  --newtab-button-primary-color: $blue-60;
-  --newtab-button-secondary-color: inherit;
-  --newtab-element-active-color: $grey-30-60;
-  --newtab-element-hover-color: $grey-20;
-  --newtab-icon-primary-color: $grey-90-80;
-  --newtab-icon-secondary-color: $grey-90-60;
-  --newtab-icon-tertiary-color: $grey-30;
-  --newtab-inner-box-shadow-color: $black-10;
-  --newtab-link-primary-color: $blue-60;
-  --newtab-link-secondary-color: $teal-70;
-  --newtab-text-conditional-color: $grey-60;
-  --newtab-text-primary-color: $grey-90;
-  --newtab-text-secondary-color: $grey-50;
-  --newtab-textbox-background-color: $white;
-  --newtab-textbox-border: $grey-90-20;
-=======
   --newtab-background-color: #{$grey-10};
   --newtab-border-primary-color: #{$grey-40};
   --newtab-border-secondary-color: #{$grey-30};
@@ -76,7 +37,6 @@ body {
   --newtab-text-secondary-color: #{$grey-50};
   --newtab-textbox-background-color: #{$white};
   --newtab-textbox-border: #{$grey-90-20};
->>>>>>> upstream-releases
   @include textbox-focus($blue-60); // sass-lint:disable-line mixins-before-declarations
 
   // Buttons
@@ -117,23 +77,11 @@ body {
   --newtab-topsites-label-color: inherit;
 
   // Cards
-<<<<<<< HEAD
-  --newtab-card-active-outline-color: #{$grey-30};
-  --newtab-card-background-color: #{$white};
-  --newtab-card-hairline-color: #{$black-10};
-  --newtab-card-shadow: 0 1px 4px 0 #{$grey-90-10};
-||||||| merged common ancestors
-  --newtab-card-active-outline-color: $grey-30;
-  --newtab-card-background-color: $white;
-  --newtab-card-hairline-color: $black-10;
-  --newtab-card-shadow: 0 1px 4px 0 $grey-90-10;
-=======
   --newtab-card-active-outline-color: #{$grey-30};
   --newtab-card-background-color: #{$white};
   --newtab-card-hairline-color: #{$black-10};
   --newtab-card-placeholder-color: #{$grey-30};
   --newtab-card-shadow: 0 1px 4px 0 #{$grey-90-10};
->>>>>>> upstream-releases
 
   // Snippets
   --newtab-snippets-background-color: #{$white};
@@ -202,32 +150,13 @@ body {
     --newtab-topsites-label-color: #{$grey-10-80};
 
     // Cards
-<<<<<<< HEAD
-    --newtab-card-active-outline-color: #{$grey-60};
-    --newtab-card-background-color: #{$grey-70};
-    --newtab-card-hairline-color: #{$grey-10-10};
-    --newtab-card-shadow: 0 1px 8px 0 #{$grey-90-20};
-||||||| merged common ancestors
-    --newtab-card-active-outline-color: $grey-60;
-    --newtab-card-background-color: $grey-70;
-    --newtab-card-hairline-color: $grey-10-10;
-    --newtab-card-shadow: 0 1px 8px 0 $grey-90-20;
-=======
     --newtab-card-active-outline-color: #{$grey-60};
     --newtab-card-background-color: #{$grey-70};
     --newtab-card-hairline-color: #{$grey-10-10};
     --newtab-card-placeholder-color: #{$grey-60};
     --newtab-card-shadow: 0 1px 8px 0 #{$grey-90-20};
->>>>>>> upstream-releases
 
     // Snippets
-<<<<<<< HEAD
-    --newtab-snippets-background-color: #{$grey-70};
-    --newtab-snippets-hairline-color: #{$white-10};
-||||||| merged common ancestors
-    --newtab-snippets-background-color: $grey-70;
-    --newtab-snippets-hairline-color: $white-10;
-=======
     --newtab-snippets-background-color: #{$grey-70};
     --newtab-snippets-hairline-color: #{$white-10};
 
@@ -237,6 +166,5 @@ body {
     --trailhead-card-button-background-color: #{$grey-90-30};
     --trailhead-card-button-background-hover-color: #{$grey-90-50};
     --trailhead-card-button-background-active-color: #{$grey-90-70};
->>>>>>> upstream-releases
   }
 }

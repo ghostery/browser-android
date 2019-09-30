@@ -16,29 +16,12 @@ extern "C" {
 #include "stun_codec.h"
 }
 
-<<<<<<< HEAD
-int FuzzingInitStunParser(int *argc, char ***argv) { return 0; }
-||||||| merged common ancestors
-int FuzzingInitStunParser(int *argc, char ***argv) {
-  return 0;
-}
-=======
 int FuzzingInitStunParser(int* argc, char*** argv) { return 0; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static int RunStunParserFuzzing(const uint8_t *data, size_t size) {
-  nr_stun_message *req = 0;
-||||||| merged common ancestors
-static int
-RunStunParserFuzzing(const uint8_t* data, size_t size) {
-  nr_stun_message *req = 0;
-=======
 static int RunStunParserFuzzing(const uint8_t* data, size_t size) {
   nr_stun_message* req = 0;
->>>>>>> upstream-releases
 
-  UCHAR *mes = (UCHAR *)data;
+  UCHAR* mes = (UCHAR*)data;
 
   if (!nr_stun_message_create2(&req, mes, size)) {
     nr_stun_decode_message(req, nullptr, nullptr);

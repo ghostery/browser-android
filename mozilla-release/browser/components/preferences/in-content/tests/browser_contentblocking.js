@@ -1,38 +1,14 @@
 /* eslint-env webextensions */
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "Preferences",
-                               "resource://gre/modules/Preferences.jsm");
-
-||||||| merged common ancestors
-const CB_PREF = "browser.contentblocking.enabled";
-const CB_UI_PREF = "browser.contentblocking.ui.enabled";
-const CB_FB_UI_PREF = "browser.contentblocking.fastblock.ui.enabled";
-const CB_TP_UI_PREF = "browser.contentblocking.trackingprotection.ui.enabled";
-const CB_RT_UI_PREF = "browser.contentblocking.rejecttrackers.ui.enabled";
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "Preferences",
   "resource://gre/modules/Preferences.jsm"
 );
 
->>>>>>> upstream-releases
 const TP_PREF = "privacy.trackingprotection.enabled";
 const TP_PBM_PREF = "privacy.trackingprotection.pbmode.enabled";
-<<<<<<< HEAD
-const TP_LIST_PREF = "urlclassifier.trackingTable";
-||||||| merged common ancestors
-const TP_LIST_PREF = "urlclassifier.trackingTable";
-const FB_PREF = "browser.fastblock.enabled";
-=======
->>>>>>> upstream-releases
 const NCB_PREF = "network.cookie.cookieBehavior";
-<<<<<<< HEAD
-const CAT_PREF = "browser.contentblocking.category";
-||||||| merged common ancestors
-const TOGGLE_PREF = "browser.contentblocking.global-toggle.enabled";
-=======
 const CAT_PREF = "browser.contentblocking.category";
 const FP_PREF = "privacy.trackingprotection.fingerprinting.enabled";
 const CM_PREF = "privacy.trackingprotection.cryptomining.enabled";
@@ -45,57 +21,9 @@ const { EnterprisePolicyTesting, PoliciesPrefTracker } = ChromeUtils.import(
   "resource://testing-common/EnterprisePolicyTesting.jsm",
   null
 );
->>>>>>> upstream-releases
 
 requestLongerTimeout(2);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-// Checks that the content blocking toggle follows and changes the CB pref.
-add_task(async function testContentBlockingToggle() {
-  SpecialPowers.pushPrefEnv({set: [
-    [CB_UI_PREF, true],
-    [TOGGLE_PREF, true],
-  ]});
-
-  await openPreferencesViaOpenPreferencesAPI("privacy", {leaveOpen: true});
-  let doc = gBrowser.contentDocument;
-
-  let contentBlockingToggle = doc.getElementById("contentBlockingToggle");
-  let contentBlockingCheckbox = doc.getElementById("contentBlockingCheckbox");
-  let contentBlockingToggleLabel = doc.getElementById("contentBlockingToggleLabel");
-
-  Services.prefs.setBoolPref(CB_PREF, true);
-  await TestUtils.waitForCondition(() => contentBlockingToggleLabel.textContent == "ON", "toggle label is correct");
-
-  ok(contentBlockingCheckbox.checked, "Checkbox is checked when CB is on");
-  is(contentBlockingToggle.getAttribute("aria-pressed"), "true", "toggle button has correct aria attribute");
-
-  Services.prefs.setBoolPref(CB_PREF, false);
-  await TestUtils.waitForCondition(() => contentBlockingToggleLabel.textContent == "OFF", "toggle label is correct");
-
-  ok(!contentBlockingCheckbox.checked, "Checkbox is not checked when CB is off");
-  is(contentBlockingToggle.getAttribute("aria-pressed"), "false", "toggle button has correct aria attribute");
-
-  contentBlockingToggle.click();
-  await TestUtils.waitForCondition(() => contentBlockingToggleLabel.textContent == "ON", "toggle label is correct");
-
-  is(Services.prefs.getBoolPref(CB_PREF), true, "Content Blocking is on");
-  ok(contentBlockingCheckbox.checked, "Checkbox is checked when CB is on");
-  is(contentBlockingToggle.getAttribute("aria-pressed"), "true", "toggle button has correct aria attribute");
-
-  contentBlockingToggle.click();
-  await TestUtils.waitForCondition(() => contentBlockingToggleLabel.textContent == "OFF", "toggle label is correct");
-
-  is(Services.prefs.getBoolPref(CB_PREF), false, "Content Blocking is off");
-  ok(!contentBlockingCheckbox.checked, "Checkbox is not checked when CB is off");
-  is(contentBlockingToggle.getAttribute("aria-pressed"), "false", "toggle button has correct aria attribute");
-
-  Services.prefs.clearUserPref(CB_PREF);
-  gBrowser.removeCurrentTab();
-});
-
-=======
 add_task(async function testListUpdate() {
   SpecialPowers.pushPrefEnv({ set: [[PREF_TEST_NOTIFICATIONS, true]] });
 
@@ -133,7 +61,6 @@ add_task(async function testListUpdate() {
   gBrowser.removeCurrentTab();
 });
 
->>>>>>> upstream-releases
 // Tests that the content blocking main category checkboxes have the correct default state.
 add_task(async function testContentBlockingMainCategory() {
   let prefs = [
@@ -184,18 +111,6 @@ add_task(async function testContentBlockingMainCategory() {
   tpCheckbox.checked = true;
 
   // Select "Always" under "All Detected Trackers".
-<<<<<<< HEAD
-  let menu = doc.querySelector("#trackingProtectionMenu");
-  let always = doc.querySelector("#trackingProtectionMenu > menupopup > menuitem[value=always]");
-  let private = doc.querySelector("#trackingProtectionMenu > menupopup > menuitem[value=private]");
-  menu.selectedItem = always;
-  ok(!private.selected, "The Only in private windows item should not be selected");
-||||||| merged common ancestors
-  let always = doc.querySelector("#trackingProtectionMenu > radio[value=always]");
-  let private = doc.querySelector("#trackingProtectionMenu > radio[value=private]");
-  always.radioGroup.selectedItem = always;
-  ok(!private.selected, "The Only in private windows item should not be selected");
-=======
   let menu = doc.querySelector("#trackingProtectionMenu");
   let always = doc.querySelector(
     "#trackingProtectionMenu > menupopup > menuitem[value=always]"
@@ -208,7 +123,6 @@ add_task(async function testContentBlockingMainCategory() {
     !private.selected,
     "The Only in private windows item should not be selected"
   );
->>>>>>> upstream-releases
   ok(always.selected, "The Always item should be selected");
 
   // The first time, privacy-pane-tp-ui-updated won't be dispatched since the
@@ -239,20 +153,12 @@ add_task(async function testContentBlockingMainCategory() {
 
     await promise;
     is(tpCheckbox.checked, i % 2 == 0, "The checkbox should now be unchecked");
-<<<<<<< HEAD
-    is(private.selected, i % 2 == 0, "The Only in private windows item should be selected by default, when the checkbox is checked");
-    ok(!always.selected, "The Always item should no longer be selected");
-||||||| merged common ancestors
-    ok(!private.selected, "The Only in private windows item should still not be selected");
-    ok(always.selected, "The Always item should still be selected");
-=======
     is(
       private.selected,
       i % 2 == 0,
       "The Only in private windows item should be selected by default, when the checkbox is checked"
     );
     ok(!always.selected, "The Always item should no longer be selected");
->>>>>>> upstream-releases
   }
 
   gBrowser.removeCurrentTab();
@@ -265,50 +171,16 @@ add_task(async function testContentBlockingMainCategory() {
 // Tests that the content blocking "Standard" category radio sets the prefs to their default values.
 add_task(async function testContentBlockingStandardCategory() {
   let prefs = {
-<<<<<<< HEAD
-    [TP_LIST_PREF]: null,
-    [TP_PREF]: null,
-    [TP_PBM_PREF]: null,
-    [NCB_PREF]: null,
-||||||| merged common ancestors
-    CB_PREF: null,
-    FB_PREF: null,
-    TP_LIST_PREF: null,
-    TP_PREF: null,
-    TP_PBM_PREF: null,
-    NCB_PREF: null,
-=======
     [TP_PREF]: null,
     [TP_PBM_PREF]: null,
     [NCB_PREF]: null,
     [FP_PREF]: null,
     [CM_PREF]: null,
->>>>>>> upstream-releases
   };
 
   for (let pref in prefs) {
     Services.prefs.clearUserPref(pref);
     switch (Services.prefs.getPrefType(pref)) {
-<<<<<<< HEAD
-    case Services.prefs.PREF_BOOL:
-      prefs[pref] = Services.prefs.getBoolPref(pref);
-      break;
-    case Services.prefs.PREF_INT:
-      prefs[pref] = Services.prefs.getIntPref(pref);
-      break;
-    case Services.prefs.PREF_STRING:
-      prefs[pref] = Services.prefs.getCharPref(pref);
-      break;
-    default:
-      ok(false, `Unknown pref type for ${pref}`);
-||||||| merged common ancestors
-    case Services.prefs.PREF_BOOL:
-      prefs[pref] = Services.prefs.getBoolPref(pref);
-      break;
-    case Services.prefs.PREF_INT:
-      prefs[pref] = Services.prefs.getIntPref(pref);
-      break;
-=======
       case Services.prefs.PREF_BOOL:
         prefs[pref] = Services.prefs.getBoolPref(pref);
         break;
@@ -320,18 +192,9 @@ add_task(async function testContentBlockingStandardCategory() {
         break;
       default:
         ok(false, `Unknown pref type for ${pref}`);
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  Services.prefs.setStringPref(TP_LIST_PREF, "test-track-simple,base-track-digest256,content-track-digest256");
-||||||| merged common ancestors
-  Services.prefs.setBoolPref(CB_PREF, false);
-  Services.prefs.setBoolPref(FB_PREF, !Services.prefs.getBoolPref(FB_PREF));
-  Services.prefs.setStringPref(TP_LIST_PREF, "test-track-simple,base-track-digest256,content-track-digest256");
-=======
->>>>>>> upstream-releases
   Services.prefs.setBoolPref(TP_PREF, true);
   Services.prefs.setBoolPref(TP_PBM_PREF, false);
   Services.prefs.setIntPref(
@@ -343,38 +206,6 @@ add_task(async function testContentBlockingStandardCategory() {
 
   for (let pref in prefs) {
     switch (Services.prefs.getPrefType(pref)) {
-<<<<<<< HEAD
-    case Services.prefs.PREF_BOOL:
-      // Account for prefs that may have retained their default value
-      if (Services.prefs.getBoolPref(pref) != prefs[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-    case Services.prefs.PREF_INT:
-      if (Services.prefs.getIntPref(pref) != prefs[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-    case Services.prefs.PREF_STRING:
-      if (Services.prefs.getCharPref(pref) != prefs[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-    default:
-      ok(false, `Unknown pref type for ${pref}`);
-||||||| merged common ancestors
-    case Services.prefs.PREF_BOOL:
-      // Account for prefs that may have retained their default value
-      if (Services.prefs.getBoolPref(pref) != prefs[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-    case Services.prefs.PREF_INT:
-      if (Services.prefs.getIntPref(pref) != prefs[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-=======
       case Services.prefs.PREF_BOOL:
         // Account for prefs that may have retained their default value
         if (Services.prefs.getBoolPref(pref) != prefs[pref]) {
@@ -402,7 +233,6 @@ add_task(async function testContentBlockingStandardCategory() {
         break;
       default:
         ok(false, `Unknown pref type for ${pref}`);
->>>>>>> upstream-releases
     }
   }
 
@@ -420,73 +250,15 @@ add_task(async function testContentBlockingStandardCategory() {
   for (let pref in prefs) {
     ok(!Services.prefs.prefHasUserValue(pref), `reset the pref ${pref}`);
   }
-<<<<<<< HEAD
-  is(Services.prefs.getStringPref(CAT_PREF), "standard", `${CAT_PREF} has been set to standard`);
-||||||| merged common ancestors
-=======
   is(
     Services.prefs.getStringPref(CAT_PREF),
     "standard",
     `${CAT_PREF} has been set to standard`
   );
->>>>>>> upstream-releases
 
   gBrowser.removeCurrentTab();
 });
 
-<<<<<<< HEAD
-// Tests that the content blocking "Strict" category radio sets the prefs to the expected values.
-add_task(async function testContentBlockingStrictCategory() {
-  Services.prefs.setBoolPref(TP_PREF, false);
-  Services.prefs.setBoolPref(TP_PBM_PREF, false);
-  Services.prefs.setIntPref(NCB_PREF, Ci.nsICookieService.BEHAVIOR_LIMIT_FOREIGN);
-  Services.prefs.setStringPref(TP_LIST_PREF, "test-track-simple,base-track-digest256,content-track-digest256");
-||||||| merged common ancestors
-// Tests that the content blocking "Restore Defaults" button does not restore prefs
-// that are controlled by extensions.
-add_task(async function testContentBlockingRestoreDefaultsSkipExtensionControlled() {
-  SpecialPowers.pushPrefEnv({set: [
-    [CB_UI_PREF, true],
-  ]});
-
-  function background() {
-    browser.privacy.websites.trackingProtectionMode.set({value: "always"});
-  }
-
-  // Install an extension that sets Tracking Protection.
-  let extension = ExtensionTestUtils.loadExtension({
-    useAddonManager: "permanent",
-    manifest: {
-      name: "set_tp",
-      applications: {gecko: {id: "@set_tp"}},
-      permissions: ["privacy"],
-    },
-    background,
-  });
-
-  let resettable = {
-    CB_PREF: null,
-    FB_PREF: null,
-    TP_LIST_PREF: null,
-    NCB_PREF: null,
-  };
-
-  for (let pref in resettable) {
-    switch (Services.prefs.getPrefType(pref)) {
-    case Services.prefs.PREF_BOOL:
-      resettable[pref] = Services.prefs.getBoolPref(pref);
-      break;
-    case Services.prefs.PREF_INT:
-      resettable[pref] = Services.prefs.getIntPref(pref);
-      break;
-    }
-  }
-
-  Services.prefs.setBoolPref(CB_PREF, false);
-  Services.prefs.setBoolPref(FB_PREF, !Services.prefs.getBoolPref(FB_PREF));
-  Services.prefs.setStringPref(TP_LIST_PREF, "test-track-simple,base-track-digest256,content-track-digest256");
-  Services.prefs.setIntPref(NCB_PREF, Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER);
-=======
 // Tests that the content blocking "Strict" category radio sets the prefs to the expected values.
 add_task(async function testContentBlockingStrictCategory() {
   Services.prefs.setBoolPref(TP_PREF, false);
@@ -502,28 +274,7 @@ add_task(async function testContentBlockingStrictCategory() {
 
   let strictRadioOption = doc.getElementById("strictRadio");
   strictRadioOption.click();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  await openPreferencesViaOpenPreferencesAPI("privacy", {leaveOpen: true});
-  let doc = gBrowser.contentDocument;
-||||||| merged common ancestors
-  for (let pref in resettable) {
-    switch (Services.prefs.getPrefType(pref)) {
-    case Services.prefs.PREF_BOOL:
-      // Account for prefs that may have retained their default value
-      if (Services.prefs.getBoolPref(pref) != resettable[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-    case Services.prefs.PREF_INT:
-      if (Services.prefs.getIntPref(pref) != resettable[pref]) {
-        ok(Services.prefs.prefHasUserValue(pref), `modified the pref ${pref}`);
-      }
-      break;
-    }
-  }
-=======
   // TP prefs are reset async to check for extensions controlling them.
   await TestUtils.waitForCondition(
     () => Services.prefs.getStringPref(CAT_PREF) == "strict"
@@ -643,82 +394,16 @@ add_task(async function testContentBlockingStrictCategory() {
         break;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let strictRadioOption = doc.getElementById("strictRadio");
-  strictRadioOption.click();
-
-  // TP prefs are reset async to check for extensions controlling them.
-  await TestUtils.waitForCondition(() => Services.prefs.prefHasUserValue(TP_PREF));
-
-  is(Services.prefs.getStringPref(CAT_PREF), "strict", `${CAT_PREF} has been set to strict`);
-  is(Services.prefs.getBoolPref(TP_PREF), true, `${TP_PREF} has been set to true`);
-  is(Services.prefs.getBoolPref(TP_PBM_PREF), true, `${TP_PBM_PREF} has been set to true`);
-  is(Services.prefs.getIntPref(NCB_PREF), Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER, `${NCB_PREF} has been set to ${Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER}`);
-  ok(!Services.prefs.prefHasUserValue(TP_LIST_PREF), `reset the pref ${TP_LIST_PREF}`);
-||||||| merged common ancestors
-  await extension.startup();
-
-  await TestUtils.waitForCondition(() => Services.prefs.prefHasUserValue(TP_PREF));
-
-  let dependentControls = [
-    ".fast-block-ui .content-blocking-checkbox",
-    ".reject-trackers-ui .content-blocking-checkbox",
-    "#content-blocking-categories-label",
-    "#changeBlockListLink",
-    "#contentBlockingChangeCookieSettings",
-    "#blockCookiesCB, #blockCookiesCB > radio",
-  ];
-  let alwaysDisabledControls = [
-    ".tracking-protection-ui .content-blocking-checkbox",
-    "#trackingProtectionMenu",
-    "[control=trackingProtectionMenu]",
-  ];
-=======
-  gBrowser.removeCurrentTab();
-});
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   gBrowser.removeCurrentTab();
 });
 
-// Tests that the content blocking "Custom" category behaves as expected.
-add_task(async function testContentBlockingCustomCategory() {
-  let prefs = [TP_LIST_PREF, TP_PREF, TP_PBM_PREF, NCB_PREF];
-||||||| merged common ancestors
-  await doDependentControlChecks(dependentControls, alwaysDisabledControls);
-=======
 // Tests that the content blocking "Custom" category behaves as expected.
 add_task(async function testContentBlockingCustomCategory() {
   let prefs = [TP_PREF, TP_PBM_PREF, NCB_PREF, FP_PREF, CM_PREF];
->>>>>>> upstream-releases
 
   await openPreferencesViaOpenPreferencesAPI("privacy", { leaveOpen: true });
   let doc = gBrowser.contentDocument;
-<<<<<<< HEAD
-  let strictRadioOption = doc.getElementById("strictRadio");
-  let standardRadioOption = doc.getElementById("standardRadio");
-  let customRadioOption = doc.getElementById("customRadio");
-  let defaults = new Preferences({defaultBranch: true});
-
-  standardRadioOption.click();
-  await TestUtils.waitForCondition(() => !Services.prefs.prefHasUserValue(TP_PREF));
-
-  customRadioOption.click();
-  await TestUtils.waitForCondition(() => Services.prefs.getStringPref(CAT_PREF) == "custom");
-  // The custom option does not force changes of any prefs, other than CAT_PREF, all other TP prefs should remain as they were for standard.
-  for (let pref of prefs) {
-    ok(!Services.prefs.prefHasUserValue(pref), `the pref ${pref} remains as default value`);
-||||||| merged common ancestors
-
-  let contentBlockingRestoreDefaults = doc.getElementById("contentBlockingRestoreDefaults");
-  contentBlockingRestoreDefaults.click();
-
-  for (let pref in resettable) {
-    ok(!Services.prefs.prefHasUserValue(pref), `reset the pref ${pref}`);
-=======
   let strictRadioOption = doc.getElementById("strictRadio");
   let standardRadioOption = doc.getElementById("standardRadio");
   let customRadioOption = doc.getElementById("customRadio");
@@ -767,16 +452,8 @@ add_task(async function testContentBlockingCustomCategory() {
     await TestUtils.waitForCondition(
       () => Services.prefs.getStringPref(CAT_PREF) == "strict"
     );
->>>>>>> upstream-releases
   }
-  is(Services.prefs.getStringPref(CAT_PREF), "custom", `${CAT_PREF} has been set to custom`);
 
-<<<<<<< HEAD
-  strictRadioOption.click();
-  await TestUtils.waitForCondition(() => Services.prefs.prefHasUserValue(TP_PREF));
-||||||| merged common ancestors
-  ok(Services.prefs.prefHasUserValue(TP_PREF), "did not reset the TP pref");
-=======
   // Changing the NCB_PREF should necessarily set CAT_PREF to "custom"
   let defaultNCB = defaults.get(NCB_PREF);
   let nonDefaultNCB;
@@ -804,45 +481,10 @@ add_task(async function testContentBlockingCustomCategory() {
     "custom",
     `${CAT_PREF} has been set to custom`
   );
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Changing the TP_PREF should necessarily set CAT_PREF to "custom"
-  Services.prefs.setBoolPref(TP_PREF, false);
-  await TestUtils.waitForCondition(() => !Services.prefs.prefHasUserValue(TP_PREF));
-  is(Services.prefs.getStringPref(CAT_PREF), "custom", `${CAT_PREF} has been set to custom`);
-
-  strictRadioOption.click();
-  await TestUtils.waitForCondition(() => Services.prefs.getStringPref(CAT_PREF) == "strict");
-
-  // Changing the NCB_PREF should necessarily set CAT_PREF to "custom"
-  let defaultNCB = defaults.get(NCB_PREF);
-  let nonDefaultNCB;
-  switch (defaultNCB) {
-  case Ci.nsICookieService.BEHAVIOR_ACCEPT:
-    nonDefaultNCB = Ci.nsICookieService.BEHAVIOR_REJECT;
-    break;
-  case Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER:
-    nonDefaultNCB = Ci.nsICookieService.BEHAVIOR_ACCEPT;
-    break;
-  default:
-    ok(false, "Unexpected default value found for " + NCB_PREF + ": " + defaultNCB);
-    break;
-  }
-  Services.prefs.setIntPref(NCB_PREF, nonDefaultNCB);
-  await TestUtils.waitForCondition(() => Services.prefs.prefHasUserValue(NCB_PREF));
-  is(Services.prefs.getStringPref(CAT_PREF), "custom", `${CAT_PREF} has been set to custom`);
 
   for (let pref of prefs) {
     SpecialPowers.clearUserPref(pref);
   }
-||||||| merged common ancestors
-  await extension.unload();
-=======
-  for (let pref of prefs) {
-    SpecialPowers.clearUserPref(pref);
-  }
->>>>>>> upstream-releases
 
   gBrowser.removeCurrentTab();
 });
@@ -853,149 +495,16 @@ function checkControlState(doc, controls, enabled) {
       if (enabled) {
         ok(!control.hasAttribute("disabled"), `${selector} is enabled.`);
       } else {
-<<<<<<< HEAD
-        is(control.getAttribute("disabled"), "true", `${selector} is disabled.`);
-||||||| merged common ancestors
-        is(control.getAttribute("disabled"), "true", `${selector} is disabled because CB is off`);
-=======
         is(
           control.getAttribute("disabled"),
           "true",
           `${selector} is disabled.`
         );
->>>>>>> upstream-releases
       }
     }
   }
 }
 
-<<<<<<< HEAD
-// Checks that the menulists for tracking protection and cookie blocking are disabled when all TP prefs are off.
-add_task(async function testContentBlockingDependentTPControls() {
-  SpecialPowers.pushPrefEnv({set: [
-    [TP_PREF, false],
-    [TP_PBM_PREF, false],
-    [NCB_PREF, Ci.nsICookieService.BEHAVIOR_ACCEPT],
-    [CAT_PREF, "custom"],
-  ]});
-||||||| merged common ancestors
-function checkControlState(doc, dependentControls) {
-  let enabled = Services.prefs.getBoolPref(CB_PREF);
-  return checkControlStateWorker(doc, dependentControls, enabled);
-}
-
-async function doDependentControlChecks(dependentControls,
-                                        alwaysDisabledControls = []) {
-  Services.prefs.setBoolPref(CB_PREF, true);
-  Services.prefs.setBoolPref(TOGGLE_PREF, true);
-
-  await openPreferencesViaOpenPreferencesAPI("privacy", {leaveOpen: true});
-  let doc = gBrowser.contentDocument;
-
-  is(Services.prefs.getBoolPref(CB_PREF), true, "Content Blocking is on");
-  checkControlState(doc, dependentControls);
-  checkControlStateWorker(doc, alwaysDisabledControls, false);
-
-  gBrowser.removeCurrentTab();
-
-  Services.prefs.setBoolPref(CB_PREF, false);
-
-  await openPreferencesViaOpenPreferencesAPI("privacy", {leaveOpen: true});
-  doc = gBrowser.contentDocument;
-
-  is(Services.prefs.getBoolPref(CB_PREF), false, "Content Blocking is off");
-  checkControlState(doc, dependentControls);
-  checkControlStateWorker(doc, alwaysDisabledControls, false);
-
-  let contentBlockingToggle = doc.getElementById("contentBlockingToggle");
-  contentBlockingToggle.doCommand();
-
-  await TestUtils.topicObserved("privacy-pane-tp-ui-updated");
-
-  is(Services.prefs.getBoolPref(CB_PREF), true, "Content Blocking is on");
-  checkControlState(doc, dependentControls);
-  checkControlStateWorker(doc, alwaysDisabledControls, false);
-
-  contentBlockingToggle.doCommand();
-
-  await TestUtils.topicObserved("privacy-pane-tp-ui-updated");
-
-  is(Services.prefs.getBoolPref(CB_PREF), false, "Content Blocking is off");
-  checkControlState(doc, dependentControls);
-  checkControlStateWorker(doc, alwaysDisabledControls, false);
-
-  Services.prefs.clearUserPref(CB_PREF);
-  Services.prefs.clearUserPref(TOGGLE_PREF);
-  gBrowser.removeCurrentTab();
-}
-
-// Checks that the granular controls are disabled or enabled depending on the master pref for CB.
-add_task(async function testContentBlockingDependentControls() {
-  // In Accept All Cookies mode, the radiogroup under Third-Party Cookies is always disabled
-  // since the checkbox next to Third-Party Cookies would be unchecked.
-  SpecialPowers.pushPrefEnv({set: [
-    [CB_UI_PREF, true],
-    [CB_FB_UI_PREF, true],
-    [CB_TP_UI_PREF, true],
-    [CB_RT_UI_PREF, true],
-    [NCB_PREF, Ci.nsICookieService.BEHAVIOR_ACCEPT],
-  ]});
-
-  let dependentControls = [
-    ".content-blocking-checkbox",
-    "#content-blocking-categories-label",
-    "#changeBlockListLink",
-    "#contentBlockingChangeCookieSettings",
-    "#blockCookies, #blockCookies > radio",
-    "#keepUntil",
-    "#keepCookiesUntil",
-  ];
-  let alwaysDisabledControls = [
-    "#blockCookiesCB, #blockCookiesCB > radio",
-    "#blockCookiesLabel",
-    "#blockCookiesMenu",
-  ];
-
-  await doDependentControlChecks(dependentControls, alwaysDisabledControls);
-
-  // In Block Cookies from Trackers (or Block Cookies from All Third-Parties) mode, the
-  // radiogroup's disabled status must obey the content blocking enabled state.
-  SpecialPowers.pushPrefEnv({set: [
-    [CB_UI_PREF, true],
-    [CB_FB_UI_PREF, true],
-    [CB_TP_UI_PREF, true],
-    [CB_RT_UI_PREF, true],
-    [NCB_PREF, Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-  ]});
-
-  dependentControls = [
-    ".content-blocking-checkbox",
-    "#content-blocking-categories-label",
-    "#changeBlockListLink",
-    "#contentBlockingChangeCookieSettings",
-    "#blockCookiesCB, #blockCookiesCB > radio",
-    "#blockCookies, #blockCookies > radio",
-    "#blockCookiesLabel",
-    "#blockCookiesMenu",
-    "#keepUntil",
-    "#keepCookiesUntil",
-  ];
-
-  await doDependentControlChecks(dependentControls);
-});
-
-// Checks that the controls for tracking protection are disabled when all TP prefs are off.
-add_task(async function testContentBlockingDependentTPControls() {
-  SpecialPowers.pushPrefEnv({set: [
-    [CB_UI_PREF, true],
-    [CB_FB_UI_PREF, true],
-    [CB_TP_UI_PREF, true],
-    [CB_RT_UI_PREF, true],
-    [TP_PREF, false],
-    [TP_PBM_PREF, false],
-    [NCB_PREF, Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-  ]});
-=======
 // Checks that the menulists for tracking protection and cookie blocking are disabled when all TP prefs are off.
 add_task(async function testContentBlockingDependentTPControls() {
   SpecialPowers.pushPrefEnv({
@@ -1075,222 +584,9 @@ add_task(async function testCustomOptionsVisibility() {
 
   ok(!cryptominersOption.hidden, "Cryptomining is shown");
   ok(!fingerprintersOption.hidden, "Fingerprinting is shown");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let disabledControls = [
-    "#trackingProtectionMenu",
-    "#blockCookiesMenu",
-  ];
-||||||| merged common ancestors
-  let dependentControls = [
-    "#content-blocking-categories-label",
-    "[control=trackingProtectionMenu]",
-    "#changeBlockListLink",
-    "#contentBlockingChangeCookieSettings",
-    "#blockCookiesCB, #blockCookiesCB > radio",
-    "#blockCookies, #blockCookies > radio",
-    "#blockCookiesLabel",
-    "#blockCookiesMenu",
-    "#keepUntil",
-    "#keepCookiesUntil",
-  ];
-  let alwaysDisabledControls = [
-    "#trackingProtectionMenu",
-  ];
-=======
   gBrowser.removeCurrentTab();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  await openPreferencesViaOpenPreferencesAPI("privacy", {leaveOpen: true});
-||||||| merged common ancestors
-  await doDependentControlChecks(dependentControls, alwaysDisabledControls);
-});
-
-
-// Checks that the granular controls are disabled or enabled depending on the master pref for CB
-// when the Cookies and Site Data section is set to block either "All Cookies" or "Cookies from
-// unvisited websites".
-add_task(async function testContentBlockingDependentControlsOnSiteDataUI() {
-  let prefValuesToTest = [
-    Ci.nsICookieService.BEHAVIOR_REJECT,        // Block All Cookies
-  ];
-  for (let value of prefValuesToTest) {
-    await SpecialPowers.pushPrefEnv({set: [
-      [CB_UI_PREF, true],
-      [CB_FB_UI_PREF, true],
-      [CB_TP_UI_PREF, true],
-      [CB_RT_UI_PREF, true],
-      [TP_PREF, false],
-      [TP_PBM_PREF, true],
-      [NCB_PREF, value],
-    ]});
-
-    // When Block All Cookies is selected, the Third-Party Cookies section under Content Blocking
-    // as well as the Keep Until controls under Cookies and Site Data should get disabled
-    // unconditionally.
-    let dependentControls = [
-      "#content-blocking-categories-label",
-      "#contentBlockingFastBlockCheckbox",
-      "#contentBlockingTrackingProtectionCheckbox",
-      ".fastblock-icon",
-      ".tracking-protection-icon",
-      "#trackingProtectionMenu",
-      "[control=trackingProtectionMenu]",
-      "#changeBlockListLink",
-      "#contentBlockingChangeCookieSettings",
-      "#blockCookies, #blockCookies > radio",
-      "#blockCookiesLabel",
-      "#blockCookiesMenu",
-    ];
-    let alwaysDisabledControls = [
-      "[control=blockCookiesCB]",
-      "#blockCookiesCBDeck",
-      "#blockCookiesCB, #blockCookiesCB > radio",
-      "#keepUntil",
-      "#keepCookiesUntil",
-    ];
-
-    await doDependentControlChecks(dependentControls, alwaysDisabledControls);
-  }
-
-  // When Block Cookies from unvisited websites is selected, the Third-Party Cookies section under
-  // Content Blocking should get disabled unconditionally.
-  prefValuesToTest = [
-    Ci.nsICookieService.BEHAVIOR_LIMIT_FOREIGN, // Block Cookies from unvisited websites
-  ];
-  for (let value of prefValuesToTest) {
-    await SpecialPowers.pushPrefEnv({set: [
-      [CB_UI_PREF, true],
-      [CB_FB_UI_PREF, true],
-      [CB_TP_UI_PREF, true],
-      [CB_RT_UI_PREF, true],
-      [TP_PREF, false],
-      [TP_PBM_PREF, true],
-      [NCB_PREF, value],
-    ]});
-
-    let dependentControls = [
-      "#content-blocking-categories-label",
-      "#contentBlockingFastBlockCheckbox",
-      "#contentBlockingTrackingProtectionCheckbox",
-      ".fastblock-icon",
-      ".tracking-protection-icon",
-      "#trackingProtectionMenu",
-      "[control=trackingProtectionMenu]",
-      "#changeBlockListLink",
-      "#contentBlockingChangeCookieSettings",
-      "#blockCookies, #blockCookies > radio",
-      "#blockCookiesLabel",
-      "#blockCookiesMenu",
-      "#keepUntil",
-      "#keepCookiesUntil",
-    ];
-    let alwaysDisabledControls = [
-      "[control=blockCookiesCB]",
-      "#blockCookiesCBDeck",
-      "#blockCookiesCB, #blockCookiesCB > radio",
-    ];
-
-    await doDependentControlChecks(dependentControls, alwaysDisabledControls);
-  }
-
-  // When Accept All Cookies is selected, the radio buttons under Third-Party Cookies
-  // in Content Blocking as well as the Type blocked controls in Cookies and Site Data
-  // must remain disabled unconditionally.
-  prefValuesToTest = [
-    Ci.nsICookieService.BEHAVIOR_ACCEPT,         // Accept All Cookies
-  ];
-  for (let value of prefValuesToTest) {
-    await SpecialPowers.pushPrefEnv({set: [
-      [CB_UI_PREF, true],
-      [CB_FB_UI_PREF, true],
-      [CB_TP_UI_PREF, true],
-      [CB_RT_UI_PREF, true],
-      [TP_PREF, false],
-      [TP_PBM_PREF, true],
-      [NCB_PREF, value],
-    ]});
-
-    let dependentControls = [
-      "#content-blocking-categories-label",
-      ".content-blocking-checkbox",
-      "#trackingProtectionMenu",
-      "[control=trackingProtectionMenu]",
-      "#changeBlockListLink",
-      "#contentBlockingChangeCookieSettings",
-      "#blockCookies, #blockCookies > radio",
-      "#keepUntil",
-      "#keepCookiesUntil",
-    ];
-    let alwaysDisabledControls = [
-      "#blockCookiesCB, #blockCookiesCB > radio",
-      "#blockCookiesLabel",
-      "#blockCookiesMenu",
-    ];
-
-    await doDependentControlChecks(dependentControls, alwaysDisabledControls);
-  }
-
-  // For other choices of cookie policies, no parts of the UI should get disabled
-  // unconditionally.
-  prefValuesToTest = [
-    Ci.nsICookieService.BEHAVIOR_REJECT_FOREIGN, // Block All Third-Party Cookies
-    Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER, // Block Cookies from third-party trackers
-  ];
-  for (let value of prefValuesToTest) {
-    await SpecialPowers.pushPrefEnv({set: [
-      [CB_UI_PREF, true],
-      [CB_FB_UI_PREF, true],
-      [CB_TP_UI_PREF, true],
-      [CB_RT_UI_PREF, true],
-      [TP_PREF, false],
-      [TP_PBM_PREF, true],
-      [NCB_PREF, value],
-    ]});
-
-    let dependentControls = [
-      "#content-blocking-categories-label",
-      ".content-blocking-checkbox",
-      "#trackingProtectionMenu",
-      "[control=trackingProtectionMenu]",
-      "#changeBlockListLink",
-      "#contentBlockingChangeCookieSettings",
-      "#blockCookiesCB, #blockCookiesCB > radio",
-      "#blockCookies, #blockCookies > radio",
-      "#blockCookiesLabel",
-      "#blockCookiesMenu",
-      "#keepUntil",
-      "#keepCookiesUntil",
-    ];
-
-    await doDependentControlChecks(dependentControls);
-  }
-});
-
-
-// Checks that the warnings in the Content Blocking Third-Party Cookies section correctly appear based on
-// the selections in the Cookies and Site Data section.
-add_task(async function testContentBlockingThirdPartyCookiesWarning() {
-  await SpecialPowers.pushPrefEnv({set: [
-    [CB_PREF, true],
-    [CB_UI_PREF, true],
-    [CB_FB_UI_PREF, true],
-    [CB_TP_UI_PREF, true],
-    [CB_RT_UI_PREF, true],
-  ]});
-
-  let expectedDeckIndex = new Map([
-    [Ci.nsICookieService.BEHAVIOR_ACCEPT, 0],
-    [Ci.nsICookieService.BEHAVIOR_REJECT_FOREIGN, 0],
-    [Ci.nsICookieService.BEHAVIOR_REJECT, 1],
-    [Ci.nsICookieService.BEHAVIOR_LIMIT_FOREIGN, 2],
-    [Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER, 0],
-  ]);
-
-  await openPreferencesViaOpenPreferencesAPI("privacy", {leaveOpen: true});
-=======
   Services.prefs.clearUserPref(
     "browser.contentblocking.cryptomining.preferences.ui.enabled"
   );
@@ -1396,22 +692,7 @@ add_task(async function testPolicyCategorization() {
 add_task(async function testContentBlockingReloadWarning() {
   Services.prefs.setStringPref(CAT_PREF, "standard");
   await openPreferencesViaOpenPreferencesAPI("privacy", { leaveOpen: true });
->>>>>>> upstream-releases
   let doc = gBrowser.contentDocument;
-<<<<<<< HEAD
-  checkControlState(doc, disabledControls, false);
-||||||| merged common ancestors
-
-  let deck = doc.getElementById("blockCookiesCBDeck");
-
-  for (let obj of expectedDeckIndex) {
-    Services.prefs.setIntPref(NCB_PREF, obj[0]);
-
-    is(deck.selectedIndex, obj[1], "Correct deck index is being displayed");
-
-    Services.prefs.clearUserPref(NCB_PREF);
-  }
-=======
   let reloadWarnings = [
     ...doc.querySelectorAll(".content-blocking-warning.reload-tabs"),
   ];
@@ -1437,7 +718,6 @@ add_task(async function testContentBlockingReloadWarning() {
 add_task(async function testContentBlockingReloadWarning() {
   Services.prefs.setStringPref(CAT_PREF, "standard");
   await BrowserTestUtils.loadURI(gBrowser.selectedBrowser, PRIVACY_PAGE);
->>>>>>> upstream-releases
 
   let reloadWarnings = [
     ...gBrowser.contentDocument.querySelectorAll(
@@ -1460,10 +740,6 @@ add_task(async function testContentBlockingReloadWarning() {
   Services.prefs.setStringPref(CAT_PREF, "standard");
   await BrowserTestUtils.loadURI(gBrowser.selectedBrowser, "about:newtab");
 });
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 
 // Checks that the reload tabs message reloads all tabs except the active tab.
 add_task(async function testReloadTabsMessage() {
@@ -1516,4 +792,3 @@ add_task(async function testReloadTabsMessage() {
   gBrowser.removeTab(examplePinnedTab);
   gBrowser.removeCurrentTab();
 });
->>>>>>> upstream-releases

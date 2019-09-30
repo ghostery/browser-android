@@ -83,16 +83,6 @@ class HTMLTrackElement final : public nsGenericHTMLElement {
 
   // Override BindToTree() so that we can trigger a load when we become
   // the child of a media element.
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument,
-                              nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent) override;
 
@@ -101,7 +91,6 @@ class HTMLTrackElement final : public nsGenericHTMLElement {
                                 const nsAttrValue* aOldValue,
                                 nsIPrincipal* aMaybeScriptedPrincipal,
                                 bool aNotify) override;
->>>>>>> upstream-releases
 
   void DispatchTrackRunnable(const nsString& aEventName);
   void DispatchTrustedEvent(const nsAString& aName);
@@ -130,18 +119,10 @@ class HTMLTrackElement final : public nsGenericHTMLElement {
 
   void CreateTextTrack();
 
-<<<<<<< HEAD
- private:
-  void DispatchLoadResource();
-||||||| merged common ancestors
-private:
-  void DispatchLoadResource();
-=======
  private:
   // Open a new channel to the HTMLTrackElement's src attribute and call
   // mListener's LoadResource().
   void LoadResource(RefPtr<WebVTTListener>&& aWebVTTListener);
->>>>>>> upstream-releases
   bool mLoadResourceDispatched;
 
   void MaybeClearAllCues();

@@ -684,29 +684,15 @@ def emit_level1_hashtable(cpumode, level1, offt, fmt):
             # Empty hash table entry. Include the default legalization action.
             if not level2:
                 fmt.format(
-<<<<<<< HEAD
-                        'Level1Entry {{ ty: ir::types::INVALID, log2len: !0, '
-                        'offset: 0, legalize: {} }},',
-||||||| merged common ancestors
-                        'Level1Entry {{ ty: ir::types::VOID, log2len: !0, '
-                        'offset: 0, legalize: {} }},',
-=======
                         'Level1Entry {{ ty: crate::ir::types::INVALID, '
                         'log2len: !0, offset: 0, legalize: {} }},',
->>>>>>> upstream-releases
                         level1.legalize_code)
                 continue
 
             if level2.ty is not None:
                 tyname = level2.ty.rust_name()
             else:
-<<<<<<< HEAD
-                tyname = 'ir::types::INVALID'
-||||||| merged common ancestors
-                tyname = 'ir::types::VOID'
-=======
                 tyname = 'crate::ir::types::INVALID'
->>>>>>> upstream-releases
 
             lcode = cpumode.isa.legalize_code(level2.legalize)
 

@@ -54,14 +54,8 @@ public:
 
     int maxWindowRectangles(const GrCaps& caps) const;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    GrRenderTargetFlags testingOnly_getFlags() const;
-
-=======
     bool wrapsVkSecondaryCB() const { return fWrapsVkSecondaryCB == WrapsVkSecondaryCB::kYes; }
 
->>>>>>> upstream-releases
     // TODO: move this to a priv class!
     bool refsWrappedObjects() const;
 
@@ -74,18 +68,10 @@ protected:
     friend class GrRenderTargetProxyPriv;
 
     // Deferred version
-<<<<<<< HEAD
-    GrRenderTargetProxy(const GrCaps&, const GrSurfaceDesc&, GrSurfaceOrigin, SkBackingFit,
-                        SkBudgeted, GrInternalSurfaceFlags);
-||||||| merged common ancestors
-    GrRenderTargetProxy(const GrCaps&, const GrSurfaceDesc&,
-                        SkBackingFit, SkBudgeted, uint32_t flags);
-=======
     GrRenderTargetProxy(const GrCaps&, const GrBackendFormat&, const GrSurfaceDesc&,
                         GrSurfaceOrigin, SkBackingFit, SkBudgeted, GrInternalSurfaceFlags);
 
     enum class WrapsVkSecondaryCB : bool { kNo = false, kYes = true };
->>>>>>> upstream-releases
 
     // Lazy-callback version
     // There are two main use cases for lazily-instantiated proxies:
@@ -98,17 +84,9 @@ protected:
     // The minimal knowledge version is used for CCPR where we are generating an atlas but we do not
     // know the final size until flush time.
     GrRenderTargetProxy(LazyInstantiateCallback&&, LazyInstantiationType lazyType,
-<<<<<<< HEAD
-                        const GrSurfaceDesc&, GrSurfaceOrigin, SkBackingFit, SkBudgeted,
-                        GrInternalSurfaceFlags);
-||||||| merged common ancestors
-                        const GrSurfaceDesc&, SkBackingFit, SkBudgeted, uint32_t flags,
-                        GrRenderTargetFlags renderTargetFlags);
-=======
                         const GrBackendFormat&, const GrSurfaceDesc&, GrSurfaceOrigin,
                         SkBackingFit, SkBudgeted, GrInternalSurfaceFlags,
                         WrapsVkSecondaryCB wrapsVkSecondaryCB);
->>>>>>> upstream-releases
 
     // Wrapped version
     GrRenderTargetProxy(sk_sp<GrSurface>, GrSurfaceOrigin,
@@ -117,29 +95,6 @@ protected:
     sk_sp<GrSurface> createSurface(GrResourceProvider*) const override;
 
 private:
-<<<<<<< HEAD
-    void setHasMixedSamples() {
-        fSurfaceFlags |= GrInternalSurfaceFlags::kMixedSampled;
-    }
-    bool hasMixedSamples() const { return fSurfaceFlags & GrInternalSurfaceFlags::kMixedSampled; }
-
-    void setSupportsWindowRects() {
-        fSurfaceFlags |= GrInternalSurfaceFlags::kWindowRectsSupport;
-    }
-    bool supportsWindowRects() const {
-        return fSurfaceFlags & GrInternalSurfaceFlags::kWindowRectsSupport;
-    }
-
-    void setGLRTFBOIDIs0() {
-        fSurfaceFlags |= GrInternalSurfaceFlags::kGLRTFBOIDIs0;
-    }
-    bool glRTFBOIDIs0() const {
-        return fSurfaceFlags & GrInternalSurfaceFlags::kGLRTFBOIDIs0;
-    }
-
-
-||||||| merged common ancestors
-=======
     void setHasMixedSamples() {
         fSurfaceFlags |= GrInternalSurfaceFlags::kMixedSampled;
     }
@@ -153,23 +108,8 @@ private:
     }
 
 
->>>>>>> upstream-releases
     size_t onUninstantiatedGpuMemorySize() const override;
-<<<<<<< HEAD
     SkDEBUGCODE(void onValidateSurface(const GrSurface*) override;)
-
-    // WARNING: Be careful when adding or removing fields here. ASAN is likely to trigger warnings
-    // when instantiating GrTextureRenderTargetProxy. The std::function in GrSurfaceProxy makes
-    // each class in the diamond require 16 byte alignment. Clang appears to layout the fields for
-    // each class to achieve the necessary alignment. However, ASAN checks the alignment of 'this'
-    // in the constructors, and always looks for the full 16 byte alignment, even if the fields in
-    // that particular class don't require it. Changing the size of this object can move the start
-    // address of other types, leading to this problem.
-||||||| merged common ancestors
-    SkDEBUGCODE(void validateLazySurface(const GrSurface*) override;)
-=======
-    SkDEBUGCODE(void onValidateSurface(const GrSurface*) override;)
->>>>>>> upstream-releases
 
     // WARNING: Be careful when adding or removing fields here. ASAN is likely to trigger warnings
     // when instantiating GrTextureRenderTargetProxy. The std::function in GrSurfaceProxy makes

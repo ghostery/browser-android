@@ -30,23 +30,6 @@ extern "C" {
 typedef struct _XtClient XtClient;
 
 struct _XtClient {
-<<<<<<< HEAD
-  Display *xtdisplay;
-  Widget top_widget;   /* The toplevel widget */
-  Widget child_widget; /* The embedded widget */
-  Visual *xtvisual;
-  int xtdepth;
-  Colormap xtcolormap;
-  Window oldwindow;
-||||||| merged common ancestors
-  Display	*xtdisplay;
-  Widget	top_widget;    /* The toplevel widget */
-  Widget	child_widget;  /* The embedded widget */
-  Visual	*xtvisual;
-  int		xtdepth;
-  Colormap	xtcolormap;
-  Window	oldwindow;
-=======
   Display* xtdisplay;
   Widget top_widget;   /* The toplevel widget */
   Widget child_widget; /* The embedded widget */
@@ -54,50 +37,12 @@ struct _XtClient {
   int xtdepth;
   Colormap xtcolormap;
   Window oldwindow;
->>>>>>> upstream-releases
 };
 
 #if (GTK_MAJOR_VERSION == 2)
 typedef struct _GtkXtBin GtkXtBin;
 typedef struct _GtkXtBinClass GtkXtBinClass;
 
-<<<<<<< HEAD
-#define GTK_TYPE_XTBIN (gtk_xtbin_get_type())
-#define GTK_XTBIN(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), GTK_TYPE_XTBIN, GtkXtBin))
-#define GTK_XTBIN_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass), GTK_TYPE_XTBIN, GtkXtBinClass))
-#define GTK_IS_XTBIN(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), GTK_TYPE_XTBIN))
-#define GTK_IS_XTBIN_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass), GTK_TYPE_XTBIN))
-
-struct _GtkXtBin {
-  GtkSocket gsocket;
-  GdkWindow *parent_window;
-  Display *xtdisplay; /* Xt Toolkit Display */
-
-  Window xtwindow;   /* Xt Toolkit XWindow */
-  XtClient xtclient; /* Xt Client for XEmbed */
-||||||| merged common ancestors
-#define GTK_TYPE_XTBIN                  (gtk_xtbin_get_type ())
-#define GTK_XTBIN(obj)                  (G_TYPE_CHECK_INSTANCE_CAST  ((obj), \
-                                         GTK_TYPE_XTBIN, GtkXtBin))
-#define GTK_XTBIN_CLASS(klass)          (G_TYPE_CHECK_CLASS_CAST ((klass), \
-                                         GTK_TYPE_XTBIN, GtkXtBinClass))
-#define GTK_IS_XTBIN(obj)               (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
-                                         GTK_TYPE_XTBIN))
-#define GTK_IS_XTBIN_CLASS(klass)       (G_TYPE_CHECK_CLASS_TYPE ((klass), \
-                                         GTK_TYPE_XTBIN))
-
-struct _GtkXtBin
-{
-  GtkSocket      gsocket;
-  GdkWindow     *parent_window;
-  Display       *xtdisplay;        /* Xt Toolkit Display */
-
-  Window         xtwindow;         /* Xt Toolkit XWindow */
-  XtClient	 xtclient;         /* Xt Client for XEmbed */
-=======
 #  define GTK_TYPE_XTBIN (gtk_xtbin_get_type())
 #  define GTK_XTBIN(obj) \
     (G_TYPE_CHECK_INSTANCE_CAST((obj), GTK_TYPE_XTBIN, GtkXtBin))
@@ -114,108 +59,24 @@ struct _GtkXtBin {
 
   Window xtwindow;   /* Xt Toolkit XWindow */
   XtClient xtclient; /* Xt Client for XEmbed */
->>>>>>> upstream-releases
 };
 
 struct _GtkXtBinClass {
   GtkSocketClass parent_class;
 };
 
-<<<<<<< HEAD
-GTKXTBIN_API(GType) gtk_xtbin_get_type(void);
-GTKXTBIN_API(GtkWidget *) gtk_xtbin_new(GdkWindow *parent_window, String *f);
-||||||| merged common ancestors
-GTKXTBIN_API(GType)       gtk_xtbin_get_type (void);
-GTKXTBIN_API(GtkWidget *) gtk_xtbin_new (GdkWindow *parent_window, String *f);
-=======
 GTKXTBIN_API(GType) gtk_xtbin_get_type(void);
 GTKXTBIN_API(GtkWidget*) gtk_xtbin_new(GdkWindow* parent_window, String* f);
->>>>>>> upstream-releases
 #endif
 
 typedef struct _XtTMRec {
-<<<<<<< HEAD
-  XtTranslations translations;       /* private to Translation Manager    */
-  XtBoundActions proc_table;         /* procedure bindings for actions    */
-  struct _XtStateRec *current_state; /* Translation Manager state ptr     */
-  unsigned long lastEventTime;
-} XtTMRec, *XtTM;
-||||||| merged common ancestors
-    XtTranslations  translations;       /* private to Translation Manager    */
-    XtBoundActions  proc_table;         /* procedure bindings for actions    */
-    struct _XtStateRec *current_state;  /* Translation Manager state ptr     */
-    unsigned long   lastEventTime;
-} XtTMRec, *XtTM;   
-=======
   XtTranslations translations;       /* private to Translation Manager    */
   XtBoundActions proc_table;         /* procedure bindings for actions    */
   struct _XtStateRec* current_state; /* Translation Manager state ptr     */
   unsigned long lastEventTime;
 } XtTMRec, *XtTM;
->>>>>>> upstream-releases
 
 typedef struct _CorePart {
-<<<<<<< HEAD
-  Widget self;                      /* pointer to widget itself          */
-  WidgetClass widget_class;         /* pointer to Widget's ClassRec      */
-  Widget parent;                    /* parent widget                     */
-  XrmName xrm_name;                 /* widget resource name quarkified   */
-  Boolean being_destroyed;          /* marked for destroy                */
-  XtCallbackList destroy_callbacks; /* who to call when widget destroyed */
-  XtPointer constraints;            /* constraint record                 */
-  Position x, y;                    /* window position                   */
-  Dimension width, height;          /* window dimensions                 */
-  Dimension border_width;           /* window border width               */
-  Boolean managed;                  /* is widget geometry managed?       */
-  Boolean sensitive;                /* is widget sensitive to user events*/
-  Boolean ancestor_sensitive;       /* are all ancestors sensitive?      */
-  XtEventTable event_table;         /* private to event dispatcher       */
-  XtTMRec tm;                       /* translation management            */
-  XtTranslations accelerators;      /* accelerator translations          */
-  Pixel border_pixel;               /* window border pixel               */
-  Pixmap border_pixmap;             /* window border pixmap or NULL      */
-  WidgetList popup_list;            /* list of popups                    */
-  Cardinal num_popups;              /* how many popups                   */
-  String name;                      /* widget resource name              */
-  Screen *screen;                   /* window's screen                   */
-  Colormap colormap;                /* colormap                          */
-  Window window;                    /* window ID                         */
-  Cardinal depth;                   /* number of planes in window        */
-  Pixel background_pixel;           /* window background pixel           */
-  Pixmap background_pixmap;         /* window background pixmap or NULL  */
-  Boolean visible;                  /* is window mapped and not occluded?*/
-  Boolean mapped_when_managed;      /* map window if it's managed?       */
-||||||| merged common ancestors
-    Widget          self;               /* pointer to widget itself          */
-    WidgetClass     widget_class;       /* pointer to Widget's ClassRec      */
-    Widget          parent;             /* parent widget                     */
-    XrmName         xrm_name;           /* widget resource name quarkified   */
-    Boolean         being_destroyed;    /* marked for destroy                */
-    XtCallbackList  destroy_callbacks;  /* who to call when widget destroyed */
-    XtPointer       constraints;        /* constraint record                 */
-    Position        x, y;               /* window position                   */
-    Dimension       width, height;      /* window dimensions                 */
-    Dimension       border_width;       /* window border width               */
-    Boolean         managed;            /* is widget geometry managed?       */
-    Boolean         sensitive;          /* is widget sensitive to user events*/
-    Boolean         ancestor_sensitive; /* are all ancestors sensitive?      */
-    XtEventTable    event_table;        /* private to event dispatcher       */
-    XtTMRec         tm;                 /* translation management            */
-    XtTranslations  accelerators;       /* accelerator translations          */
-    Pixel           border_pixel;       /* window border pixel               */
-    Pixmap          border_pixmap;      /* window border pixmap or NULL      */
-    WidgetList      popup_list;         /* list of popups                    */
-    Cardinal        num_popups;         /* how many popups                   */
-    String          name;               /* widget resource name              */
-    Screen          *screen;            /* window's screen                   */
-    Colormap        colormap;           /* colormap                          */
-    Window          window;             /* window ID                         */
-    Cardinal        depth;              /* number of planes in window        */
-    Pixel           background_pixel;   /* window background pixel           */
-    Pixmap          background_pixmap;  /* window background pixmap or NULL  */
-    Boolean         visible;            /* is window mapped and not occluded?*/
-    Boolean         mapped_when_managed;/* map window if it's managed?       */
-=======
   Widget self;                      /* pointer to widget itself          */
   WidgetClass widget_class;         /* pointer to Widget's ClassRec      */
   Widget parent;                    /* parent widget                     */
@@ -245,7 +106,6 @@ typedef struct _CorePart {
   Pixmap background_pixmap;         /* window background pixmap or NULL  */
   Boolean visible;                  /* is window mapped and not occluded?*/
   Boolean mapped_when_managed;      /* map window if it's managed?       */
->>>>>>> upstream-releases
 } CorePart;
 
 typedef struct _WidgetRec {
@@ -253,35 +113,15 @@ typedef struct _WidgetRec {
 } WidgetRec, CoreRec;
 
 /* Exported functions, used by Xt plugins */
-<<<<<<< HEAD
-void xt_client_create(XtClient *xtclient, Window embeder, int height,
-                      int width);
-void xt_client_unrealize(XtClient *xtclient);
-void xt_client_destroy(XtClient *xtclient);
-void xt_client_init(XtClient *xtclient, Visual *xtvisual, Colormap xtcolormap,
-                    int xtdepth);
-||||||| merged common ancestors
-void xt_client_create(XtClient * xtclient, Window embeder, int height, int width);
-void xt_client_unrealize(XtClient* xtclient);
-void xt_client_destroy(XtClient* xtclient);
-void xt_client_init(XtClient * xtclient, Visual *xtvisual, Colormap xtcolormap, int xtdepth);
-=======
 void xt_client_create(XtClient* xtclient, Window embeder, int height,
                       int width);
 void xt_client_unrealize(XtClient* xtclient);
 void xt_client_destroy(XtClient* xtclient);
 void xt_client_init(XtClient* xtclient, Visual* xtvisual, Colormap xtcolormap,
                     int xtdepth);
->>>>>>> upstream-releases
 void xt_client_xloop_create(void);
 void xt_client_xloop_destroy(void);
-<<<<<<< HEAD
-Display *xt_client_get_display(void);
-||||||| merged common ancestors
-Display * xt_client_get_display(void);
-=======
 Display* xt_client_get_display(void);
->>>>>>> upstream-releases
 
 #ifdef __cplusplus
 }

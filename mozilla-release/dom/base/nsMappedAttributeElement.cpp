@@ -25,15 +25,7 @@ nsMappedAttributeElement::GetAttributeMappingFunction() const {
 void nsMappedAttributeElement::MapNoAttributesInto(
     const nsMappedAttributes*, mozilla::MappedDeclarations&) {}
 
-<<<<<<< HEAD
-void nsMappedAttributeElement::NodeInfoChanged(nsIDocument* aOldDoc) {
-||||||| merged common ancestors
-void
-nsMappedAttributeElement::NodeInfoChanged(nsIDocument* aOldDoc)
-{
-=======
 void nsMappedAttributeElement::NodeInfoChanged(Document* aOldDoc) {
->>>>>>> upstream-releases
   nsHTMLStyleSheet* sheet = OwnerDoc()->GetAttributeStyleSheet();
   mAttrs.SetMappedAttrStyleSheet(sheet);
   nsMappedAttributeElementBase::NodeInfoChanged(aOldDoc);

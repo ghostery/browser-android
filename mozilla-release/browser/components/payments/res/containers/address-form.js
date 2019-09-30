@@ -139,19 +139,7 @@ export default class AddressForm extends HandleEventMixin(
       throw new Error("AddressForm without an id");
     }
     let record;
-<<<<<<< HEAD
-    let {
-      page,
-      [this.id]: addressPage,
-    } = state;
-||||||| merged common ancestors
-    let {
-      page,
-      "address-page": addressPage,
-    } = state;
-=======
     let { page, [this.id]: addressPage } = state;
->>>>>>> upstream-releases
 
     if (this.id && page && page.id !== this.id) {
       log.debug(`${this.id}: no need to further render inactive page`);
@@ -173,15 +161,9 @@ export default class AddressForm extends HandleEventMixin(
     this.backButton.hidden = page.onboardingWizard;
     this.cancelButton.hidden = !page.onboardingWizard;
 
-<<<<<<< HEAD
-    this.pageTitleHeading.textContent = editing ? this.dataset.titleEdit : this.dataset.titleAdd;
-||||||| merged common ancestors
-    this.pageTitleHeading.textContent = addressPage.title;
-=======
     this.pageTitleHeading.textContent = editing
       ? this.dataset.titleEdit
       : this.dataset.titleAdd;
->>>>>>> upstream-releases
     this.genericErrorText.textContent = page.error;
 
     let addresses = paymentRequest.getAddresses(state);
@@ -225,23 +207,6 @@ export default class AddressForm extends HandleEventMixin(
     this.updateRequiredState();
 
     // Show merchant errors for the appropriate address form.
-<<<<<<< HEAD
-    let merchantFieldErrors = AddressForm.merchantFieldErrorsForForm(state, selectedStateKey);
-    for (let [errorName, errorSelector] of Object.entries(this._errorFieldMap)) {
-      let errorText = "";
-      // Never show errors on an 'add' screen as they would be for a different address.
-      if (editing && merchantFieldErrors) {
-        if (errorName == "region" || errorName == "regionCode") {
-          errorText = merchantFieldErrors.regionCode || merchantFieldErrors.region || "";
-        } else {
-          errorText = merchantFieldErrors[errorName] || "";
-        }
-      }
-||||||| merged common ancestors
-    let merchantFieldErrors = AddressForm.merchantFieldErrorsForForm(state,
-                                                                     addressPage.selectedStateKey);
-    for (let [errorName, errorSelector] of Object.entries(this._errorFieldMap)) {
-=======
     let merchantFieldErrors = AddressForm.merchantFieldErrorsForForm(
       state,
       selectedStateKey
@@ -259,7 +224,6 @@ export default class AddressForm extends HandleEventMixin(
           errorText = merchantFieldErrors[errorName] || "";
         }
       }
->>>>>>> upstream-releases
       let container = this.form.querySelector(errorSelector + "-container");
       let field = this.form.querySelector(errorSelector);
       field.setCustomValidity(errorText);
@@ -270,57 +234,12 @@ export default class AddressForm extends HandleEventMixin(
     this.updateSaveButtonState();
   }
 
-<<<<<<< HEAD
-  handleEvent(event) {
-    switch (event.type) {
-      case "change": {
-        if (event.target.id == "country") {
-          this.updateRequiredState();
-        }
-        this.updateSaveButtonState();
-        break;
-      }
-      case "click": {
-        this.onClick(event);
-        break;
-      }
-      case "input": {
-        this.onInput(event);
-        break;
-      }
-      case "invalid": {
-        if (event.target instanceof HTMLFormElement) {
-          this.onInvalidForm(event);
-          break;
-        }
-||||||| merged common ancestors
-  handleEvent(event) {
-    switch (event.type) {
-      case "change": {
-        this.updateSaveButtonState();
-        break;
-      }
-      case "click": {
-        this.onClick(event);
-        break;
-      }
-      case "input": {
-        this.onInput(event);
-        break;
-      }
-      case "invalid": {
-        if (event.target instanceof HTMLFormElement) {
-          this.onInvalidForm(event);
-          break;
-        }
-=======
   onChange(event) {
     if (event.target.id == "country") {
       this.updateRequiredState();
     }
     this.updateSaveButtonState();
   }
->>>>>>> upstream-releases
 
   onInvalid(event) {
     if (event.target instanceof HTMLFormElement) {
@@ -456,20 +375,12 @@ export default class AddressForm extends HandleEventMixin(
     }
 
     try {
-<<<<<<< HEAD
-      let {guid} = await paymentRequest.updateAutofillRecord("addresses", record, addressPage.guid);
-      let selectedStateKey = this.getAttribute("selected-state-key").split("|");
-||||||| merged common ancestors
-      let {guid} = await paymentRequest.updateAutofillRecord("addresses", record, addressPage.guid);
-      let selectedStateKey = addressPage.selectedStateKey;
-=======
       let { guid } = await paymentRequest.updateAutofillRecord(
         "addresses",
         record,
         addressPage.guid
       );
       let selectedStateKey = this.getAttribute("selected-state-key").split("|");
->>>>>>> upstream-releases
 
       if (selectedStateKey.length == 1) {
         Object.assign(successStateChange, {
@@ -520,19 +431,11 @@ export default class AddressForm extends HandleEventMixin(
       }
       case "basic-card-page|billingAddressGUID": {
         // `paymentMethod` can be null.
-<<<<<<< HEAD
-        return (paymentDetails.paymentMethodErrors
-                && paymentDetails.paymentMethodErrors.billingAddress) || {};
-||||||| merged common ancestors
-        return (paymentDetails.paymentMethod
-                && paymentDetails.paymentMethod.billingAddress) || {};
-=======
         return (
           (paymentDetails.paymentMethodErrors &&
             paymentDetails.paymentMethodErrors.billingAddress) ||
           {}
         );
->>>>>>> upstream-releases
       }
       default: {
         throw new Error("Unknown selectedStateKey");

@@ -57,17 +57,9 @@ class GeckoSessionTestRuleTest : BaseSessionTest(noErrorCollector = true) {
         assertThat("USE_TRACKING_PROTECTION should be set",
                    sessionRule.session.settings.useTrackingProtection,
                    equalTo(true))
-<<<<<<< HEAD
-        assertThat("ALLOW_JAVASCRIPT should be set",
-                sessionRule.session.settings.getBoolean(
-                        GeckoSessionSettings.ALLOW_JAVASCRIPT),
-                equalTo(false))
-||||||| merged common ancestors
-=======
         assertThat("ALLOW_JAVASCRIPT should be set",
                 sessionRule.session.settings.allowJavascript,
                 equalTo(false))
->>>>>>> upstream-releases
     }
 
     @Test(expected = UiThreadUtils.TimeoutException::class)

@@ -170,13 +170,6 @@ bool ExpandedPrincipal::AddonAllowsLoad(nsIURI* aURI,
   return false;
 }
 
-<<<<<<< HEAD
-nsIPrincipal* ExpandedPrincipal::PrincipalToInherit(nsIURI* aRequestedURI) {
-||||||| merged common ancestors
-nsIPrincipal*
-ExpandedPrincipal::PrincipalToInherit(nsIURI* aRequestedURI)
-{
-=======
 void ExpandedPrincipal::SetCsp(nsIContentSecurityPolicy* aCSP) { mCSP = aCSP; }
 
 NS_IMETHODIMP
@@ -186,7 +179,6 @@ ExpandedPrincipal::GetCsp(nsIContentSecurityPolicy** aCsp) {
 }
 
 nsIPrincipal* ExpandedPrincipal::PrincipalToInherit(nsIURI* aRequestedURI) {
->>>>>>> upstream-releases
   if (aRequestedURI) {
     // If a given sub-principal subsumes the given URI, use that principal for
     // inheritance. In general, this only happens with certain CORS modes, loads
@@ -271,50 +263,9 @@ ExpandedPrincipal::Read(nsIObjectInputStream* aStream) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ExpandedPrincipal::Write(nsIObjectOutputStream* aStream) {
-  nsresult rv = aStream->Write32(kSerializationVersion);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  rv = aStream->Write32(mPrincipals.Length());
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  for (auto& principal : mPrincipals) {
-    rv = aStream->WriteObject(principal, true);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-  }
-
-||||||| merged common ancestors
-ExpandedPrincipal::Write(nsIObjectOutputStream* aStream)
-{
-  nsresult rv = aStream->Write32(kSerializationVersion);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  rv = aStream->Write32(mPrincipals.Length());
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  for (auto& principal : mPrincipals) {
-    rv = aStream->WriteObject(principal, true);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-  }
-
-=======
 ExpandedPrincipal::Write(nsIObjectOutputStream* aStream) {
   // Read is used still for legacy principals
   MOZ_RELEASE_ASSERT(false, "Old style serialization is removed");
->>>>>>> upstream-releases
   return NS_OK;
 }
 

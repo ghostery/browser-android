@@ -22,12 +22,14 @@ using mozilla::UniquePtr;
 namespace CrashReporter {
 namespace {
 
-TEST(TestCrashThreadAnnotation, TestInitShutdown) {
+TEST(TestCrashThreadAnnotation, TestInitShutdown)
+{
   InitThreadAnnotation();
   ShutdownThreadAnnotation();
 }
 
-TEST(TestCrashThreadAnnotation, TestNestedInitShutdown) {
+TEST(TestCrashThreadAnnotation, TestNestedInitShutdown)
+{
   // No bad things should happen in case we have extra init/shutdown calls.
   InitThreadAnnotation();
   InitThreadAnnotation();
@@ -35,28 +37,32 @@ TEST(TestCrashThreadAnnotation, TestNestedInitShutdown) {
   ShutdownThreadAnnotation();
 }
 
-TEST(TestCrashThreadAnnotation, TestUnbalancedInit) {
+TEST(TestCrashThreadAnnotation, TestUnbalancedInit)
+{
   // No bad things should happen in case we have unbalanced init/shutdown calls.
   InitThreadAnnotation();
   InitThreadAnnotation();
   ShutdownThreadAnnotation();
 }
 
-TEST(TestCrashThreadAnnotation, TestUnbalancedShutdown) {
+TEST(TestCrashThreadAnnotation, TestUnbalancedShutdown)
+{
   // No bad things should happen in case we have unbalanced init/shutdown calls.
   InitThreadAnnotation();
   ShutdownThreadAnnotation();
   ShutdownThreadAnnotation();
 }
 
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_BeforeInit) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_BeforeInit)
+{
   // GetFlatThreadAnnotation() should not return anything before init.
   std::function<void(const char*)> getThreadAnnotationCB =
       [&](const char* aAnnotation) -> void { ASSERT_STREQ(aAnnotation, ""); };
   GetFlatThreadAnnotation(getThreadAnnotationCB);
 }
 
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_AfterShutdown) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_AfterShutdown)
+{
   // GetFlatThreadAnnotation() should not return anything after shutdown.
   InitThreadAnnotation();
   ShutdownThreadAnnotation();
@@ -82,7 +88,8 @@ already_AddRefed<nsIThread> CreateTestThread(const char* aName,
   return thread.forget();
 }
 
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_OneThread) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_OneThread)
+{
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -109,7 +116,8 @@ TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_OneThread) {
   thread->Shutdown();
 }
 
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_SetNameTwice) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_SetNameTwice)
+{
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -149,7 +157,8 @@ TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_SetNameTwice) {
   thread->Shutdown();
 }
 
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TwoThreads) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TwoThreads)
+{
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -185,7 +194,8 @@ TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TwoThreads) {
   thread2->Shutdown();
 }
 
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_ShutdownOneThread) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_ShutdownOneThread)
+{
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -223,8 +233,8 @@ TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_ShutdownOneThread) {
   thread2->Shutdown();
 }
 
-TEST(TestCrashThreadAnnotation,
-     TestGetFlatThreadAnnotation_ShutdownBothThreads) {
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_ShutdownBothThreads)
+{
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -262,17 +272,9 @@ TEST(TestCrashThreadAnnotation,
   ShutdownThreadAnnotation();
 }
 
-<<<<<<< HEAD
-TEST(TestCrashThreadAnnotation,
-     TestGetFlatThreadAnnotation_TestNameOfBaseThread) {
-||||||| merged common ancestors
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TestNameOfBaseThread)
-{
-=======
 TEST(TestCrashThreadAnnotation,
      TestGetFlatThreadAnnotation_TestNameOfBaseThread)
 {
->>>>>>> upstream-releases
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -298,17 +300,9 @@ TEST(TestCrashThreadAnnotation,
   ShutdownThreadAnnotation();
 }
 
-<<<<<<< HEAD
-TEST(TestCrashThreadAnnotation,
-     TestGetFlatThreadAnnotation_TestShutdownBaseThread) {
-||||||| merged common ancestors
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TestShutdownBaseThread)
-{
-=======
 TEST(TestCrashThreadAnnotation,
      TestGetFlatThreadAnnotation_TestShutdownBaseThread)
 {
->>>>>>> upstream-releases
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -335,17 +329,9 @@ TEST(TestCrashThreadAnnotation,
   ShutdownThreadAnnotation();
 }
 
-<<<<<<< HEAD
-TEST(TestCrashThreadAnnotation,
-     TestGetFlatThreadAnnotation_TestShutdownBothBaseThreads) {
-||||||| merged common ancestors
-TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TestShutdownBothBaseThreads)
-{
-=======
 TEST(TestCrashThreadAnnotation,
      TestGetFlatThreadAnnotation_TestShutdownBothBaseThreads)
 {
->>>>>>> upstream-releases
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");

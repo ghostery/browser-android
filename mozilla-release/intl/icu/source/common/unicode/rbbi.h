@@ -107,16 +107,8 @@ private:
      *
      * If present, the special LanguageBreakEngine used for handling
      * characters that are in the dictionary set, but not handled by any
-<<<<<<< HEAD
-     * LangugageBreakEngine.
-     * @internal (private)
-||||||| merged common ancestors
-     * LangugageBreakEngine.
-     * @internal
-=======
      * LanguageBreakEngine.
      * @internal (private)
->>>>>>> upstream-releases
      */
     UnhandledEngine     *fUnhandledBreakEngine;
 

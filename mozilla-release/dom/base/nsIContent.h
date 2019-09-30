@@ -57,17 +57,9 @@ enum nsLinkState {
  * is supported by all content objects.
  */
 class nsIContent : public nsINode {
-<<<<<<< HEAD
- public:
-  typedef mozilla::widget::IMEState IMEState;
-||||||| merged common ancestors
-public:
-  typedef mozilla::widget::IMEState IMEState;
-=======
  public:
   using IMEState = mozilla::widget::IMEState;
   using BindContext = mozilla::dom::BindContext;
->>>>>>> upstream-releases
 
   void ConstructUbiNode(void* storage) override;
 
@@ -108,16 +100,7 @@ public:
    * TODO(emilio): Should we move to nsIContent::BindToTree most of the
    * FragmentOrElement / CharacterData duplicated code?
    */
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) = 0;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument,
-                              nsIContent* aParent,
-                              nsIContent* aBindingParent) = 0;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) = 0;
->>>>>>> upstream-releases
 
   /**
    * Unbind this content node from a tree.  This will set its current document
@@ -133,14 +116,7 @@ public:
    *        recursively calling UnbindFromTree when a subtree is detached.
    * @note This method is safe to call on nodes that are not bound to a tree.
    */
-<<<<<<< HEAD
-  virtual void UnbindFromTree(bool aDeep = true, bool aNullParent = true) = 0;
-||||||| merged common ancestors
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) = 0;
-=======
   virtual void UnbindFromTree(bool aNullParent = true) = 0;
->>>>>>> upstream-releases
 
   enum {
     /**
@@ -217,51 +193,10 @@ public:
    * Returns true if and only if this node has a parent, but is not in
    * its parent's child list.
    */
-<<<<<<< HEAD
-  bool IsRootOfAnonymousSubtree() const {
-    NS_ASSERTION(!IsRootOfNativeAnonymousSubtree() ||
-                     (GetParent() && GetBindingParent() == GetParent()),
-                 "root of native anonymous subtree must have parent equal "
-                 "to binding parent");
-    NS_ASSERTION(!GetParent() ||
-                     ((GetBindingParent() == GetParent()) ==
-                      HasFlag(NODE_IS_ANONYMOUS_ROOT)) ||
-                     // Unfortunately default content for XBL insertion points
-                     // is anonymous content that is bound with the parent of
-                     // the insertion point as the parent but the bound element
-                     // for the binding as the binding parent.  So we have to
-                     // complicate the assert a bit here.
-                     (GetBindingParent() &&
-                      (GetBindingParent() == GetParent()->GetBindingParent()) ==
-                          HasFlag(NODE_IS_ANONYMOUS_ROOT)),
-                 "For nodes with parent, flag and GetBindingParent() check "
-                 "should match");
-||||||| merged common ancestors
-  bool IsRootOfAnonymousSubtree() const
-  {
-    NS_ASSERTION(!IsRootOfNativeAnonymousSubtree() ||
-                 (GetParent() && GetBindingParent() == GetParent()),
-                 "root of native anonymous subtree must have parent equal "
-                 "to binding parent");
-    NS_ASSERTION(!GetParent() ||
-                 ((GetBindingParent() == GetParent()) ==
-                  HasFlag(NODE_IS_ANONYMOUS_ROOT)) ||
-                 // Unfortunately default content for XBL insertion points is
-                 // anonymous content that is bound with the parent of the
-                 // insertion point as the parent but the bound element for the
-                 // binding as the binding parent.  So we have to complicate
-                 // the assert a bit here.
-                 (GetBindingParent() &&
-                  (GetBindingParent() == GetParent()->GetBindingParent()) ==
-                  HasFlag(NODE_IS_ANONYMOUS_ROOT)),
-                 "For nodes with parent, flag and GetBindingParent() check "
-                 "should match");
-=======
   bool IsRootOfAnonymousSubtree() const {
 #ifdef DEBUG
     AssertAnonymousSubtreeRelatedInvariants();
 #endif
->>>>>>> upstream-releases
     return HasFlag(NODE_IS_ANONYMOUS_ROOT);
   }
 
@@ -455,14 +390,7 @@ public:
    *
    * @return the binding parent
    */
-<<<<<<< HEAD
-  virtual nsIContent* GetBindingParent() const {
-||||||| merged common ancestors
-  virtual nsIContent* GetBindingParent() const
-  {
-=======
   virtual mozilla::dom::Element* GetBindingParent() const {
->>>>>>> upstream-releases
     const nsExtendedContentSlots* slots = GetExistingExtendedContentSlots();
     return slots ? slots->mBindingParent.get() : nullptr;
   }

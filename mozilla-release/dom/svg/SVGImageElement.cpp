@@ -31,24 +31,6 @@ JSObject* SVGImageElement::WrapNode(JSContext* aCx,
   return SVGImageElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthInfo SVGImageElement::sLengthInfo[4] = {
-    {nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::X},
-    {nsGkAtoms::y, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::Y},
-    {nsGkAtoms::width, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::X},
-    {nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::Y},
-||||||| merged common ancestors
-nsSVGElement::LengthInfo SVGImageElement::sLengthInfo[4] =
-{
-  { nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
-  { nsGkAtoms::y, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
-  { nsGkAtoms::width, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
-  { nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
-=======
 SVGElement::LengthInfo SVGImageElement::sLengthInfo[4] = {
     {nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::X},
@@ -58,24 +40,11 @@ SVGElement::LengthInfo SVGImageElement::sLengthInfo[4] = {
      SVGContentUtils::X},
     {nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::Y},
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-nsSVGElement::StringInfo SVGImageElement::sStringInfo[2] = {
-    {nsGkAtoms::href, kNameSpaceID_None, true},
-    {nsGkAtoms::href, kNameSpaceID_XLink, true}};
-||||||| merged common ancestors
-nsSVGElement::StringInfo SVGImageElement::sStringInfo[2] =
-{
-  { nsGkAtoms::href, kNameSpaceID_None, true },
-  { nsGkAtoms::href, kNameSpaceID_XLink, true }
-};
-=======
 SVGElement::StringInfo SVGImageElement::sStringInfo[2] = {
     {nsGkAtoms::href, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_XLink, true}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsISupports methods
@@ -86,35 +55,15 @@ NS_IMPL_ISUPPORTS_INHERITED(SVGImageElement, SVGImageElementBase,
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-SVGImageElement::SVGImageElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGImageElementBase(std::move(aNodeInfo)) {
-||||||| merged common ancestors
-SVGImageElement::SVGImageElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-  : SVGImageElementBase(std::move(aNodeInfo))
-{
-=======
 namespace SVGT = SVGGeometryProperty::Tags;
 
 SVGImageElement::SVGImageElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGImageElementBase(std::move(aNodeInfo)) {
->>>>>>> upstream-releases
   // We start out broken
   AddStatesSilently(NS_EVENT_STATE_BROKEN);
 }
 
-<<<<<<< HEAD
-SVGImageElement::~SVGImageElement() { DestroyImageLoadingContent(); }
-
-||||||| merged common ancestors
-SVGImageElement::~SVGImageElement()
-{
-  DestroyImageLoadingContent();
-}
-
-=======
 SVGImageElement::~SVGImageElement() { DestroyImageLoadingContent(); }
 
 nsCSSPropertyID SVGImageElement::GetCSSPropertyIdForAttrEnum(
@@ -133,7 +82,6 @@ nsCSSPropertyID SVGImageElement::GetCSSPropertyIdForAttrEnum(
       return eCSSProperty_UNKNOWN;
   }
 }
->>>>>>> upstream-releases
 //----------------------------------------------------------------------
 // nsINode methods
 
@@ -141,51 +89,19 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGImageElement)
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGImageElement::X() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGImageElement::X()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGImageElement::X() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_X].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGImageElement::Y() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGImageElement::Y()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGImageElement::Y() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_Y].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGImageElement::Width() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGImageElement::Width()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGImageElement::Width() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_WIDTH].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGImageElement::Height() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGImageElement::Height()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGImageElement::Height() {
->>>>>>> upstream-releases
   return mLengthAttributes[ATTR_HEIGHT].ToDOMAnimatedLength(this);
 }
 
@@ -194,15 +110,7 @@ SVGImageElement::PreserveAspectRatio() {
   return mPreserveAspectRatio.ToDOMAnimatedPreserveAspectRatio(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGImageElement::Href() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGImageElement::Href()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGImageElement::Href() {
->>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -295,23 +203,8 @@ void SVGImageElement::MaybeLoadSVGImage() {
   }
 }
 
-<<<<<<< HEAD
-nsresult SVGImageElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-  nsresult rv =
-      SVGImageElementBase::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-SVGImageElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-  nsresult rv = SVGImageElementBase::BindToTree(aDocument, aParent,
-                                                aBindingParent);
-=======
 nsresult SVGImageElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = SVGImageElementBase::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsImageLoadingContent::BindToTree(aContext, aParent);
@@ -326,21 +219,9 @@ nsresult SVGImageElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return rv;
 }
 
-<<<<<<< HEAD
-void SVGImageElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsImageLoadingContent::UnbindFromTree(aDeep, aNullParent);
-  SVGImageElementBase::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-SVGImageElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsImageLoadingContent::UnbindFromTree(aDeep, aNullParent);
-  SVGImageElementBase::UnbindFromTree(aDeep, aNullParent);
-=======
 void SVGImageElement::UnbindFromTree(bool aNullParent) {
   nsImageLoadingContent::UnbindFromTree(aNullParent);
   SVGImageElementBase::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 }
 
 EventStates SVGImageElement::IntrinsicState() const {
@@ -354,17 +235,9 @@ SVGImageElement::IsAttributeMapped(const nsAtom* name) const {
       sViewportsMap,
   };
 
-<<<<<<< HEAD
-  return FindAttributeDependence(name, map) ||
-         SVGImageElementBase::IsAttributeMapped(name);
-||||||| merged common ancestors
-  return FindAttributeDependence(name, map) ||
-    SVGImageElementBase::IsAttributeMapped(name);
-=======
   return IsInLengthInfo(name, sLengthInfo) ||
          FindAttributeDependence(name, map) ||
          SVGImageElementBase::IsAttributeMapped(name);
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -376,17 +249,10 @@ bool SVGImageElement::GetGeometryBounds(
     Rect* aBounds, const StrokeOptions& aStrokeOptions,
     const Matrix& aToBoundsSpace, const Matrix* aToNonScalingStrokeSpace) {
   Rect rect;
-<<<<<<< HEAD
-  GetAnimatedLengthValues(&rect.x, &rect.y, &rect.width, &rect.height, nullptr);
-||||||| merged common ancestors
-  GetAnimatedLengthValues(&rect.x, &rect.y, &rect.width,
-                          &rect.height, nullptr);
-=======
 
   MOZ_ASSERT(GetPrimaryFrame());
   SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height>(
       this, &rect.x, &rect.y, &rect.width, &rect.height);
->>>>>>> upstream-releases
 
   if (rect.IsEmpty()) {
     // Rendering of the element disabled
@@ -397,23 +263,6 @@ bool SVGImageElement::GetGeometryBounds(
   return true;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Path> SVGImageElement::BuildPath(PathBuilder* aBuilder) {
-  // We get called in order to get bounds for this element, and for
-  // hit-testing against it. For that we just pretend to be a rectangle.
-
-  float x, y, width, height;
-  GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
-||||||| merged common ancestors
-already_AddRefed<Path>
-SVGImageElement::BuildPath(PathBuilder* aBuilder)
-{
-  // We get called in order to get bounds for this element, and for
-  // hit-testing against it. For that we just pretend to be a rectangle.
-
-  float x, y, width, height;
-  GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
-=======
 already_AddRefed<Path> SVGImageElement::BuildPath(PathBuilder* aBuilder) {
   // To get bound, the faster method GetGeometryBounds() should already return
   // success. For render and hittest, nsSVGImageFrame should have its own
@@ -422,7 +271,6 @@ already_AddRefed<Path> SVGImageElement::BuildPath(PathBuilder* aBuilder) {
       "There is no reason to call BuildPath for SVGImageElement");
   return nullptr;
 }
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // SVGElement methods
@@ -435,66 +283,20 @@ bool SVGImageElement::HasValidDimensions() const {
   SVGGeometryProperty::ResolveAll<SVGT::Width, SVGT::Height>(this, &width,
                                                              &height);
 
-<<<<<<< HEAD
-//----------------------------------------------------------------------
-// nsSVGElement methods
-
-/* virtual */ bool SVGImageElement::HasValidDimensions() const {
-  return mLengthAttributes[ATTR_WIDTH].IsExplicitlySet() &&
-         mLengthAttributes[ATTR_WIDTH].GetAnimValInSpecifiedUnits() > 0 &&
-         mLengthAttributes[ATTR_HEIGHT].IsExplicitlySet() &&
-         mLengthAttributes[ATTR_HEIGHT].GetAnimValInSpecifiedUnits() > 0;
-||||||| merged common ancestors
-//----------------------------------------------------------------------
-// nsSVGElement methods
-
-/* virtual */ bool
-SVGImageElement::HasValidDimensions() const
-{
-  return mLengthAttributes[ATTR_WIDTH].IsExplicitlySet() &&
-         mLengthAttributes[ATTR_WIDTH].GetAnimValInSpecifiedUnits() > 0 &&
-         mLengthAttributes[ATTR_HEIGHT].IsExplicitlySet() &&
-         mLengthAttributes[ATTR_HEIGHT].GetAnimValInSpecifiedUnits() > 0;
-=======
   return width > 0 && height > 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthAttributesInfo SVGImageElement::GetLengthInfo() {
-||||||| merged common ancestors
-nsSVGElement::LengthAttributesInfo
-SVGImageElement::GetLengthInfo()
-{
-=======
 SVGElement::LengthAttributesInfo SVGImageElement::GetLengthInfo() {
->>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
 
-<<<<<<< HEAD
-SVGAnimatedPreserveAspectRatio* SVGImageElement::GetPreserveAspectRatio() {
-||||||| merged common ancestors
-SVGAnimatedPreserveAspectRatio *
-SVGImageElement::GetPreserveAspectRatio()
-{
-=======
 SVGAnimatedPreserveAspectRatio*
 SVGImageElement::GetAnimatedPreserveAspectRatio() {
->>>>>>> upstream-releases
   return &mPreserveAspectRatio;
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGImageElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGImageElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGImageElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

@@ -42,38 +42,9 @@ class ImageHost : public CompositableHost, public ImageComposite {
   explicit ImageHost(const TextureInfo& aTextureInfo);
   virtual ~ImageHost();
 
-<<<<<<< HEAD
-  virtual CompositableType GetType() override {
-    return mTextureInfo.mCompositableType;
-  }
-  virtual ImageHost* AsImageHost() override { return this; }
-||||||| merged common ancestors
-  virtual CompositableType GetType() override { return mTextureInfo.mCompositableType; }
-  virtual ImageHost* AsImageHost() override { return this; }
-=======
   CompositableType GetType() override { return mTextureInfo.mCompositableType; }
   ImageHost* AsImageHost() override { return this; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Composite(
-      Compositor* aCompositor, LayerComposite* aLayer,
-      EffectChain& aEffectChain, float aOpacity,
-      const gfx::Matrix4x4& aTransform,
-      const gfx::SamplingFilter aSamplingFilter, const gfx::IntRect& aClipRect,
-      const nsIntRegion* aVisibleRegion = nullptr,
-      const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
-||||||| merged common ancestors
-  virtual void Composite(Compositor* aCompositor,
-                         LayerComposite* aLayer,
-                         EffectChain& aEffectChain,
-                         float aOpacity,
-                         const gfx::Matrix4x4& aTransform,
-                         const gfx::SamplingFilter aSamplingFilter,
-                         const gfx::IntRect& aClipRect,
-                         const nsIntRegion* aVisibleRegion = nullptr,
-                         const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
-=======
   void Composite(Compositor* aCompositor, LayerComposite* aLayer,
                  EffectChain& aEffectChain, float aOpacity,
                  const gfx::Matrix4x4& aTransform,
@@ -81,64 +52,24 @@ class ImageHost : public CompositableHost, public ImageComposite {
                  const gfx::IntRect& aClipRect,
                  const nsIntRegion* aVisibleRegion = nullptr,
                  const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
->>>>>>> upstream-releases
 
   void UseTextureHost(const nsTArray<TimedTexture>& aTextures) override;
 
   void RemoveTextureHost(TextureHost* aTexture) override;
 
-<<<<<<< HEAD
-  virtual TextureHost* GetAsTextureHost(
-      gfx::IntRect* aPictureRect = nullptr) override;
-||||||| merged common ancestors
-  virtual TextureHost* GetAsTextureHost(gfx::IntRect* aPictureRect = nullptr) override;
-=======
   TextureHost* GetAsTextureHost(gfx::IntRect* aPictureRect = nullptr) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Attach(Layer* aLayer, TextureSourceProvider* aProvider,
-                      AttachFlags aFlags = NO_FLAGS) override;
-||||||| merged common ancestors
-  virtual void Attach(Layer* aLayer,
-                      TextureSourceProvider* aProvider,
-                      AttachFlags aFlags = NO_FLAGS) override;
-=======
   void Attach(Layer* aLayer, TextureSourceProvider* aProvider,
               AttachFlags aFlags = NO_FLAGS) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void SetTextureSourceProvider(
-      TextureSourceProvider* aProvider) override;
-||||||| merged common ancestors
-  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
-=======
   void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
->>>>>>> upstream-releases
 
   gfx::IntSize GetImageSize() override;
 
-<<<<<<< HEAD
-  virtual void PrintInfo(std::stringstream& aStream,
-                         const char* aPrefix) override;
-||||||| merged common ancestors
-  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
-=======
   void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Dump(std::stringstream& aStream, const char* aPrefix = "",
-                    bool aDumpHtml = false) override;
-||||||| merged common ancestors
-  virtual void Dump(std::stringstream& aStream,
-                    const char* aPrefix = "",
-                    bool aDumpHtml = false) override;
-=======
   void Dump(std::stringstream& aStream, const char* aPrefix = "",
             bool aDumpHtml = false) override;
->>>>>>> upstream-releases
 
   already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
 
@@ -146,15 +77,8 @@ class ImageHost : public CompositableHost, public ImageComposite {
 
   void Unlock() override;
 
-<<<<<<< HEAD
-  virtual already_AddRefed<TexturedEffect> GenEffect(
-      const gfx::SamplingFilter aSamplingFilter) override;
-||||||| merged common ancestors
-  virtual already_AddRefed<TexturedEffect> GenEffect(const gfx::SamplingFilter aSamplingFilter) override;
-=======
   already_AddRefed<TexturedEffect> GenEffect(
       const gfx::SamplingFilter aSamplingFilter) override;
->>>>>>> upstream-releases
 
   void SetCurrentTextureHost(TextureHost* aTexture);
 

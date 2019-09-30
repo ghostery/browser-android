@@ -71,16 +71,8 @@ void OnlyReportDirtyWrites();
  */
 void ClearPoisonIOInterposer();
 
-<<<<<<< HEAD
-}  // namespace mozilla
-#endif /* __cplusplus */
-||||||| merged common ancestors
-} // namespace mozilla
-#endif /* __cplusplus */
-=======
 }  // namespace mozilla
 #  endif /* __cplusplus */
->>>>>>> upstream-releases
 
 #else /* defined(XP_MACOSX) || (defined(XP_WIN) && !defined(__MINGW32__)) */
 
@@ -91,19 +83,9 @@ inline void InitPoisonIOInterposer() {}
 inline void ClearPoisonIOInterposer() {}
 #    ifdef XP_MACOSX
 inline void OnlyReportDirtyWrites() {}
-<<<<<<< HEAD
-#endif /* XP_MACOSX */
-}  // namespace mozilla
-#endif /* __cplusplus */
-||||||| merged common ancestors
-#endif /* XP_MACOSX */
-} // namespace mozilla
-#endif /* __cplusplus */
-=======
 #    endif /* XP_MACOSX */
 }  // namespace mozilla
 #  endif   /* __cplusplus */
->>>>>>> upstream-releases
 
 #endif /* XP_WIN || XP_MACOSX */
 

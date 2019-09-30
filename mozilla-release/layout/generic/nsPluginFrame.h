@@ -22,13 +22,7 @@
 #include "mozilla/webrender/WebRenderAPI.h"
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include <windows.h>  // For HWND :(
-||||||| merged common ancestors
-#include <windows.h> // For HWND :(
-=======
 #  include <windows.h>  // For HWND :(
->>>>>>> upstream-releases
 // Undo the windows.h damage
 #  undef GetMessage
 #  undef CreateEvent
@@ -76,15 +70,8 @@ class nsPluginFrame final : public nsFrame,
   NS_DECL_FRAMEARENA_HELPERS(nsPluginFrame)
   NS_DECL_QUERYFRAME
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewObjectFrame(nsIPresShell* aPresShell,
-                                     ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewObjectFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewObjectFrame(mozilla::PresShell* aPresShell,
                                      ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* aPrevInFlow) override;
@@ -155,19 +142,9 @@ class nsPluginFrame final : public nsFrame,
   // accessibility support
 #ifdef ACCESSIBILITY
   virtual mozilla::a11y::AccType AccessibleType() override;
-<<<<<<< HEAD
-#ifdef XP_WIN
-  NS_IMETHOD GetPluginPort(HWND* aPort);
-#endif
-||||||| merged common ancestors
-#ifdef XP_WIN
-  NS_IMETHOD GetPluginPort(HWND *aPort);
-#endif
-=======
 #  ifdef XP_WIN
   NS_IMETHOD GetPluginPort(HWND* aPort);
 #  endif
->>>>>>> upstream-releases
 #endif
 
   // local methods
@@ -246,26 +223,6 @@ class nsPluginFrame final : public nsFrame,
    */
   bool WantsToHandleWheelEventAsDefaultAction() const;
 
-<<<<<<< HEAD
-  bool CreateWebRenderCommands(nsDisplayItem* aItem,
-                               mozilla::wr::DisplayListBuilder& aBuilder,
-                               mozilla::wr::IpcResourceUpdateQueue& aResources,
-                               const StackingContextHelper& aSc,
-                               mozilla::layers::WebRenderLayerManager* aManager,
-                               nsDisplayListBuilder* aDisplayListBuilder);
-
- protected:
-  explicit nsPluginFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-  bool CreateWebRenderCommands(nsDisplayItem* aItem,
-                               mozilla::wr::DisplayListBuilder& aBuilder,
-                               mozilla::wr::IpcResourceUpdateQueue& aResources,
-                               const StackingContextHelper& aSc,
-                               mozilla::layers::WebRenderLayerManager* aManager,
-                               nsDisplayListBuilder* aDisplayListBuilder);
-protected:
-  explicit nsPluginFrame(ComputedStyle* aStyle);
-=======
   bool CreateWebRenderCommands(
       nsDisplayItem* aItem, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -275,7 +232,6 @@ protected:
 
  protected:
   explicit nsPluginFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
->>>>>>> upstream-releases
   virtual ~nsPluginFrame();
 
   // NOTE:  This frame class does not inherit from |nsLeafFrame|, so
@@ -397,26 +353,10 @@ class nsDisplayPluginGeometry : public nsDisplayItemGenericGeometry {
   virtual bool InvalidateForSyncDecodeImages() const override { return true; }
 };
 
-<<<<<<< HEAD
-class nsDisplayPlugin final : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayPlugin final : public nsDisplayItem
-{
-public:
-=======
 class nsDisplayPlugin final : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayPlugin(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame)
-<<<<<<< HEAD
-      : nsDisplayItem(aBuilder, aFrame) {
-||||||| merged common ancestors
-    : nsDisplayItem(aBuilder, aFrame)
-  {
-=======
       : nsPaintedDisplayItem(aBuilder, aFrame) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayPlugin);
     aBuilder->SetContainsPluginItem();
   }
@@ -453,27 +393,12 @@ class nsDisplayPlugin final : public nsPaintedDisplayItem {
     return new nsDisplayPluginGeometry(this, aBuilder);
   }
 
-<<<<<<< HEAD
-  virtual bool CreateWebRenderCommands(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder) override;
-||||||| merged common ancestors
-  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                       const StackingContextHelper& aSc,
-                                       mozilla::layers::WebRenderLayerManager* aManager,
-                                       nsDisplayListBuilder* aDisplayListBuilder) override;
-=======
   virtual bool CreateWebRenderCommands(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override;
->>>>>>> upstream-releases
 };
 
 #endif /* nsPluginFrame_h___ */

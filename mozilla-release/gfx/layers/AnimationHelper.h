@@ -8,20 +8,10 @@
 #define mozilla_layers_AnimationHelper_h
 
 #include "mozilla/dom/Nullable.h"
-<<<<<<< HEAD
-#include "mozilla/ComputedTimingFunction.h"  // for ComputedTimingFunction
-#include "mozilla/layers/LayersMessages.h"   // for TransformData, etc
-#include "mozilla/TimeStamp.h"               // for TimeStamp
-||||||| merged common ancestors
-#include "mozilla/ComputedTimingFunction.h" // for ComputedTimingFunction
-#include "mozilla/layers/LayersMessages.h" // for TransformData, etc
-#include "mozilla/TimeStamp.h"          // for TimeStamp
-=======
 #include "mozilla/ComputedTimingFunction.h"    // for ComputedTimingFunction
 #include "mozilla/layers/LayersMessages.h"     // for TransformData, etc
 #include "mozilla/webrender/WebRenderTypes.h"  // for RenderRoot
 #include "mozilla/TimeStamp.h"                 // for TimeStamp
->>>>>>> upstream-releases
 #include "mozilla/TimingParams.h"
 #include "mozilla/Variant.h"
 #include "X11UndefineNone.h"
@@ -98,33 +88,9 @@ struct AnimationTransform {
   TransformData mData;
 };
 
-<<<<<<< HEAD
-struct AnimatedValue {
-  enum { TRANSFORM, OPACITY, COLOR, NONE } mType{NONE};
-||||||| merged common ancestors
-struct AnimatedValue {
-  enum {
-    TRANSFORM,
-    OPACITY,
-    NONE
-  } mType {NONE};
-=======
 struct AnimatedValue final {
   typedef Variant<AnimationTransform, float, nscolor> AnimatedValueType;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  union {
-    AnimationTransform mTransform;
-    float mOpacity;
-    nscolor mColor;
-  };
-||||||| merged common ancestors
-  union {
-    AnimationTransform mTransform;
-    float mOpacity;
-  };
-=======
   const AnimatedValueType& Value() const { return mValue; }
   const AnimationTransform& Transform() const {
     return mValue.as<AnimationTransform>();
@@ -135,61 +101,19 @@ struct AnimatedValue final {
   bool Is() const {
     return mValue.is<T>();
   }
->>>>>>> upstream-releases
 
   AnimatedValue(gfx::Matrix4x4&& aTransformInDevSpace,
-<<<<<<< HEAD
-                gfx::Matrix4x4&& aFrameTransform, const TransformData& aData)
-      : mType(AnimatedValue::TRANSFORM), mOpacity(0.0) {
-    mTransform.mTransformInDevSpace = std::move(aTransformInDevSpace);
-    mTransform.mFrameTransform = std::move(aFrameTransform);
-    mTransform.mData = aData;
-  }
-||||||| merged common ancestors
-                gfx::Matrix4x4&& aFrameTransform,
-                const TransformData& aData)
-    : mType(AnimatedValue::TRANSFORM)
-    , mOpacity(0.0)
-  {
-    mTransform.mTransformInDevSpace = std::move(aTransformInDevSpace);
-    mTransform.mFrameTransform = std::move(aFrameTransform);
-    mTransform.mData = aData;
-  }
-=======
                 gfx::Matrix4x4&& aFrameTransform, const TransformData& aData)
       : mValue(
             AsVariant(AnimationTransform{std::move(aTransformInDevSpace),
                                          std::move(aFrameTransform), aData})) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  explicit AnimatedValue(const float& aValue)
-      : mType(AnimatedValue::OPACITY), mOpacity(aValue) {}
-
-  explicit AnimatedValue(nscolor aValue)
-      : mType(AnimatedValue::COLOR), mColor(aValue) {}
-||||||| merged common ancestors
-  explicit AnimatedValue(const float& aValue)
-    : mType(AnimatedValue::OPACITY)
-    , mOpacity(aValue)
-  {
-  }
-=======
   explicit AnimatedValue(const float& aValue) : mValue(AsVariant(aValue)) {}
->>>>>>> upstream-releases
 
   explicit AnimatedValue(nscolor aValue) : mValue(AsVariant(aValue)) {}
 
-<<<<<<< HEAD
- private:
-  AnimatedValue() = delete;
-||||||| merged common ancestors
-private:
-  AnimatedValue() = delete;
-=======
  private:
   AnimatedValueType mValue;
->>>>>>> upstream-releases
 };
 
 // CompositorAnimationStorage stores the animations and animated values
@@ -272,20 +196,11 @@ class CompositorAnimationStorage final {
     return mAnimations.ConstIter();
   }
 
-<<<<<<< HEAD
-  uint32_t AnimationsCount() const { return mAnimations.Count(); }
-||||||| merged common ancestors
-  uint32_t AnimationsCount() const
-  {
-    return mAnimations.Count();
-  }
-=======
   uint32_t AnimationsCount() const { return mAnimations.Count(); }
 
   wr::RenderRoot AnimationRenderRoot(const uint64_t& aId) const {
     return mAnimationRenderRoots.Get(aId);
   }
->>>>>>> upstream-releases
 
   /**
    * Clear AnimatedValues and Animations data
@@ -349,28 +264,12 @@ class AnimationHelper {
    * For transform animations, the caller (SampleAnimations) will combine the
    * result of the various transform properties into a final matrix.
    */
-<<<<<<< HEAD
-  static SampleResult SampleAnimationForEachNode(
-      TimeStamp aPreviousFrameTime, TimeStamp aCurrentFrameTime,
-      AnimationArray& aAnimations, InfallibleTArray<AnimData>& aAnimationData,
-      RefPtr<RawServoAnimationValue>& aAnimationValue,
-      const AnimatedValue* aPreviousValue);
-||||||| merged common ancestors
-  static SampleResult
-  SampleAnimationForEachNode(TimeStamp aPreviousFrameTime,
-                             TimeStamp aCurrentFrameTime,
-                             AnimationArray& aAnimations,
-                             InfallibleTArray<AnimData>& aAnimationData,
-                             RefPtr<RawServoAnimationValue>& aAnimationValue,
-                             const AnimatedValue* aPreviousValue);
-=======
   static SampleResult SampleAnimationForEachNode(
       TimeStamp aPreviousFrameTime, TimeStamp aCurrentFrameTime,
       const AnimatedValue* aPreviousValue,
       nsTArray<PropertyAnimationGroup>& aPropertyAnimationGroups,
       nsTArray<RefPtr<RawServoAnimationValue>>& aAnimationValues);
 
->>>>>>> upstream-releases
   /**
    * Extract organized animation data by property into an array of
    * PropertyAnimationGroup objects.
@@ -406,19 +305,8 @@ class AnimationHelper {
    * from the rather compact representation we use for transferring across the
    * IPC boundary into something we can readily use for sampling.
    */
-<<<<<<< HEAD
-  static void SetAnimations(
-      AnimationArray& aAnimations, InfallibleTArray<AnimData>& aAnimData,
-      RefPtr<RawServoAnimationValue>& aBaseAnimationStyle);
-||||||| merged common ancestors
-  static void
-  SetAnimations(AnimationArray& aAnimations,
-                InfallibleTArray<AnimData>& aAnimData,
-                RefPtr<RawServoAnimationValue>& aBaseAnimationStyle);
-=======
   static nsTArray<PropertyAnimationGroup> ExtractAnimations(
       const AnimationArray& aAnimations);
->>>>>>> upstream-releases
 
   /**
    * Get a unique id to represent the compositor animation between child
@@ -450,20 +338,9 @@ class AnimationHelper {
    * transform parameters. |aValue| must be a transform-like value
    * (e.g. transform, translate etc.).
    */
-<<<<<<< HEAD
-  static bool SampleAnimations(CompositorAnimationStorage* aStorage,
-                               TimeStamp aPreviousFrameTime,
-                               TimeStamp aCurrentFrameTime);
-||||||| merged common ancestors
-  static bool
-  SampleAnimations(CompositorAnimationStorage* aStorage,
-                   TimeStamp aPreviousFrameTime,
-                   TimeStamp aCurrentFrameTime);
-=======
   static gfx::Matrix4x4 ServoAnimationValueToMatrix4x4(
       const nsTArray<RefPtr<RawServoAnimationValue>>& aValue,
       const TransformData& aTransformData);
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

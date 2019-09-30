@@ -145,11 +145,6 @@ impl RonFrameWriter {
                 ResourceUpdate::DeleteFont(_) => {}
                 ResourceUpdate::AddFontInstance(_) => {}
                 ResourceUpdate::DeleteFontInstance(_) => {}
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/ron_frame_writer.rs
-                ResourceUpdate::SetBlobImageVisibleArea(..) => {}
-||||||| merged common ancestors
-                ResourceUpdate::SetImageVisibleArea(..) => {}
-=======
                 ResourceUpdate::SetBlobImageVisibleArea(..) => {}
             }
         }
@@ -176,7 +171,6 @@ impl RonFrameWriter {
                     );
                 }
                 _ => {}
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/ron_frame_writer.rs
             }
         }
     }

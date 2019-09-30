@@ -132,18 +132,6 @@ export function getMatchIndex(
  * @memberof utils/source-search
  * @static
  */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/source-search.js
-function doSearch(ctx, rev, query, keepSelection, modifiers: SearchModifiers) {
-  const { cm } = ctx;
-||||||| merged common ancestors
-
-
-function doSearch(ctx, rev, query, keepSelection, modifiers) {
-  const {
-    cm
-  } = ctx;
-
-=======
 function doSearch(
   ctx,
   rev,
@@ -153,7 +141,6 @@ function doSearch(
   focusFirstResult?: boolean = true
 ) {
   const { cm, ed } = ctx;
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/source-search.js
   if (!cm) {
     return;
   }
@@ -172,10 +159,6 @@ function doSearch(
     updateOverlay(cm, state, query, modifiers);
     updateCursor(cm, state, keepSelection);
     const searchLocation = searchNext(ctx, rev, query, isNewQuery, modifiers);
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/source-search.js
-
-||||||| merged common ancestors
-=======
 
     // We don't want to jump the editor
     // when we're selecting text
@@ -184,7 +167,6 @@ function doSearch(
       cm.setSelection(searchLocation.from, searchLocation.to);
     }
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/source-search.js
     return searchLocation ? searchLocation.from : defaultIndex;
   });
 }
@@ -229,16 +211,7 @@ function getCursorPos(newQuery, rev, state) {
  * @static
  */
 function searchNext(ctx, rev, query, newQuery, modifiers) {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/source-search.js
-  const { cm, ed } = ctx;
-||||||| merged common ancestors
-  const {
-    cm,
-    ed
-  } = ctx;
-=======
   const { cm } = ctx;
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/source-search.js
   let nextMatch;
   cm.operation(function() {
     const state = getSearchState(cm, query);
@@ -259,24 +232,6 @@ function searchNext(ctx, rev, query, newQuery, modifiers) {
       if (!cursor.find(rev)) {
         return;
       }
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/source-search.js
-    }
-
-    // We don't want to jump the editor
-    // when we're selecting text
-    if (!cm.state.selectingText) {
-      ed.alignLine(cursor.from().line, "center");
-      cm.setSelection(cursor.from(), cursor.to());
-||||||| merged common ancestors
-    } // We don't want to jump the editor
-    // when we're selecting text
-
-
-    if (!cm.state.selectingText) {
-      ed.alignLine(cursor.from().line, "center");
-      cm.setSelection(cursor.from(), cursor.to());
-=======
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/source-search.js
     }
 
     nextMatch = { from: cursor.from(), to: cursor.to() };
@@ -344,18 +299,6 @@ export function clearSearch(cm: any, query: string) {
  * @memberof utils/source-search
  * @static
  */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/source-search.js
-export function find(
-  ctx: any,
-  query: string,
-  keepSelection: boolean,
-  modifiers: SearchModifiers
-) {
-||||||| merged common ancestors
-
-
-function find(ctx, query, keepSelection, modifiers) {
-=======
 export function find(
   ctx: any,
   query: string,
@@ -363,7 +306,6 @@ export function find(
   modifiers: SearchModifiers,
   focusFirstResult?: boolean
 ) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/source-search.js
   clearSearch(ctx.cm, query);
   return doSearch(
     ctx,

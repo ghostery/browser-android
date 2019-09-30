@@ -9,26 +9,6 @@
 
 #include "nsMIMEInfoImpl.h"
 
-<<<<<<< HEAD
-class nsMIMEInfoUnix : public nsMIMEInfoImpl {
- public:
-  explicit nsMIMEInfoUnix(const char *aMIMEType = "")
-      : nsMIMEInfoImpl(aMIMEType) {}
-  explicit nsMIMEInfoUnix(const nsACString &aMIMEType)
-      : nsMIMEInfoImpl(aMIMEType) {}
-  nsMIMEInfoUnix(const nsACString &aType, HandlerClass aClass)
-      : nsMIMEInfoImpl(aType, aClass) {}
-  static bool HandlerExists(const char *aProtocolScheme);
-||||||| merged common ancestors
-class nsMIMEInfoUnix : public nsMIMEInfoImpl
-{
-public:
-  explicit nsMIMEInfoUnix(const char *aMIMEType = "") : nsMIMEInfoImpl(aMIMEType) {}
-  explicit nsMIMEInfoUnix(const nsACString& aMIMEType) : nsMIMEInfoImpl(aMIMEType) {}
-  nsMIMEInfoUnix(const nsACString& aType, HandlerClass aClass) :
-    nsMIMEInfoImpl(aType, aClass) {}
-  static bool HandlerExists(const char *aProtocolScheme);
-=======
 class nsMIMEInfoUnix : public nsMIMEInfoImpl {
  public:
   explicit nsMIMEInfoUnix(const char* aMIMEType = "")
@@ -38,18 +18,9 @@ class nsMIMEInfoUnix : public nsMIMEInfoImpl {
   nsMIMEInfoUnix(const nsACString& aType, HandlerClass aClass)
       : nsMIMEInfoImpl(aType, aClass) {}
   static bool HandlerExists(const char* aProtocolScheme);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  NS_IMETHOD GetHasDefaultHandler(bool *_retval) override;
-||||||| merged common ancestors
-protected:
-  NS_IMETHOD GetHasDefaultHandler(bool *_retval) override;
-=======
  protected:
   NS_IMETHOD GetHasDefaultHandler(bool* _retval) override;
->>>>>>> upstream-releases
 
   virtual nsresult LoadUriInternal(nsIURI* aURI) override;
 

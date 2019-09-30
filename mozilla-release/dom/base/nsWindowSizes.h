@@ -87,45 +87,9 @@ struct nsStyleSizes {
 #define NS_ARENA_SIZES_FIELD(classname) mArena##classname
 
 struct nsArenaSizes {
-<<<<<<< HEAD
-#define FOR_EACH_SIZE(MACRO) \
-  MACRO(Other, mLineBoxes)   \
-  MACRO(Style, mRuleNodes)   \
-  MACRO(Style, mComputedStyles)
-||||||| merged common ancestors
-#define FOR_EACH_SIZE(macro) \
-  macro(Other, mLineBoxes) \
-  macro(Style, mRuleNodes) \
-  macro(Style, mComputedStyles)
-=======
 #define FOR_EACH_SIZE(MACRO) MACRO(Other, mLineBoxes)
->>>>>>> upstream-releases
 
   nsArenaSizes()
-<<<<<<< HEAD
-      : FOR_EACH_SIZE(ZERO_SIZE)
-#define FRAME_ID(classname, ...) NS_ARENA_SIZES_FIELD(classname)(0),
-#define ABSTRACT_FRAME_ID(...)
-#include "nsFrameIdList.h"
-#undef FRAME_ID
-#undef ABSTRACT_FRAME_ID
-
-            dummy() {
-  }
-||||||| merged common ancestors
-    :
-      FOR_EACH_SIZE(ZERO_SIZE)
-
-      #define FRAME_ID(classname, ...) \
-        NS_ARENA_SIZES_FIELD(classname)(0),
-      #define ABSTRACT_FRAME_ID(...)
-      #include "nsFrameIdList.h"
-      #undef FRAME_ID
-      #undef ABSTRACT_FRAME_ID
-
-      dummy()
-  {}
-=======
       : FOR_EACH_SIZE(ZERO_SIZE)
 #define FRAME_ID(classname, ...) NS_ARENA_SIZES_FIELD(classname)(0),
 #define ABSTRACT_FRAME_ID(...)
@@ -135,33 +99,16 @@ struct nsArenaSizes {
 
             dummy() {
   }
->>>>>>> upstream-releases
 
   void addToTabSizes(nsTabSizes* aSizes) const {
     FOR_EACH_SIZE(ADD_TO_TAB_SIZES)
 
-<<<<<<< HEAD
-#define FRAME_ID(classname, ...) \
-  aSizes->add(nsTabSizes::Other, NS_ARENA_SIZES_FIELD(classname));
-#define ABSTRACT_FRAME_ID(...)
-#include "nsFrameIdList.h"
-#undef FRAME_ID
-#undef ABSTRACT_FRAME_ID
-||||||| merged common ancestors
-    #define FRAME_ID(classname, ...) \
-      aSizes->add(nsTabSizes::Other, NS_ARENA_SIZES_FIELD(classname));
-    #define ABSTRACT_FRAME_ID(...)
-    #include "nsFrameIdList.h"
-    #undef FRAME_ID
-    #undef ABSTRACT_FRAME_ID
-=======
 #define FRAME_ID(classname, ...) \
   aSizes->add(nsTabSizes::Other, NS_ARENA_SIZES_FIELD(classname));
 #define ABSTRACT_FRAME_ID(...)
 #include "mozilla/FrameIdList.h"
 #undef FRAME_ID
 #undef ABSTRACT_FRAME_ID
->>>>>>> upstream-releases
   }
 
   size_t getTotalSize() const {
@@ -169,52 +116,22 @@ struct nsArenaSizes {
 
     FOR_EACH_SIZE(ADD_TO_TOTAL_SIZE)
 
-<<<<<<< HEAD
-#define FRAME_ID(classname, ...) total += NS_ARENA_SIZES_FIELD(classname);
-#define ABSTRACT_FRAME_ID(...)
-#include "nsFrameIdList.h"
-#undef FRAME_ID
-#undef ABSTRACT_FRAME_ID
-||||||| merged common ancestors
-    #define FRAME_ID(classname, ...) \
-      total += NS_ARENA_SIZES_FIELD(classname);
-    #define ABSTRACT_FRAME_ID(...)
-    #include "nsFrameIdList.h"
-    #undef FRAME_ID
-    #undef ABSTRACT_FRAME_ID
-=======
 #define FRAME_ID(classname, ...) total += NS_ARENA_SIZES_FIELD(classname);
 #define ABSTRACT_FRAME_ID(...)
 #include "mozilla/FrameIdList.h"
 #undef FRAME_ID
 #undef ABSTRACT_FRAME_ID
->>>>>>> upstream-releases
 
     return total;
   }
 
   FOR_EACH_SIZE(DECL_SIZE)
 
-<<<<<<< HEAD
-#define FRAME_ID(classname, ...) size_t NS_ARENA_SIZES_FIELD(classname);
-#define ABSTRACT_FRAME_ID(...)
-#include "nsFrameIdList.h"
-#undef FRAME_ID
-#undef ABSTRACT_FRAME_ID
-||||||| merged common ancestors
-  #define FRAME_ID(classname, ...) \
-    size_t NS_ARENA_SIZES_FIELD(classname);
-  #define ABSTRACT_FRAME_ID(...)
-  #include "nsFrameIdList.h"
-  #undef FRAME_ID
-  #undef ABSTRACT_FRAME_ID
-=======
 #define FRAME_ID(classname, ...) size_t NS_ARENA_SIZES_FIELD(classname);
 #define ABSTRACT_FRAME_ID(...)
 #include "mozilla/FrameIdList.h"
 #undef FRAME_ID
 #undef ABSTRACT_FRAME_ID
->>>>>>> upstream-releases
 
   // Present just to absorb the trailing comma in the constructor.
   int dummy;
@@ -222,74 +139,6 @@ struct nsArenaSizes {
 #undef FOR_EACH_SIZE
 };
 
-<<<<<<< HEAD
-class nsWindowSizes {
-#define FOR_EACH_SIZE(MACRO)                                 \
-  MACRO(DOM, mDOMElementNodesSize)                           \
-  MACRO(DOM, mDOMTextNodesSize)                              \
-  MACRO(DOM, mDOMCDATANodesSize)                             \
-  MACRO(DOM, mDOMCommentNodesSize)                           \
-  MACRO(DOM, mDOMEventTargetsSize)                           \
-  MACRO(DOM, mDOMMediaQueryLists)                            \
-  MACRO(DOM, mDOMPerformanceUserEntries)                     \
-  MACRO(DOM, mDOMPerformanceResourceEntries)                 \
-  MACRO(DOM, mDOMOtherSize)                                  \
-  MACRO(Style, mLayoutStyleSheetsSize)                       \
-  MACRO(Style, mLayoutShadowDomStyleSheetsSize)              \
-  MACRO(Style, mLayoutShadowDomAuthorStyles)                 \
-  MACRO(Other, mLayoutPresShellSize)                         \
-  MACRO(Style, mLayoutStyleSetsStylistRuleTree)              \
-  MACRO(Style, mLayoutStyleSetsStylistElementAndPseudosMaps) \
-  MACRO(Style, mLayoutStyleSetsStylistInvalidationMap)       \
-  MACRO(Style, mLayoutStyleSetsStylistRevalidationSelectors) \
-  MACRO(Style, mLayoutStyleSetsStylistOther)                 \
-  MACRO(Style, mLayoutStyleSetsOther)                        \
-  MACRO(Style, mLayoutElementDataObjects)                    \
-  MACRO(Other, mLayoutTextRunsSize)                          \
-  MACRO(Other, mLayoutPresContextSize)                       \
-  MACRO(Other, mLayoutFramePropertiesSize)                   \
-  MACRO(Style, mLayoutComputedValuesDom)                     \
-  MACRO(Style, mLayoutComputedValuesNonDom)                  \
-  MACRO(Style, mLayoutComputedValuesVisited)                 \
-  MACRO(Other, mPropertyTablesSize)                          \
-  MACRO(Other, mBindingsSize)
-
- public:
-||||||| merged common ancestors
-class nsWindowSizes
-{
-#define FOR_EACH_SIZE(macro) \
-  macro(DOM,   mDOMElementNodesSize) \
-  macro(DOM,   mDOMTextNodesSize) \
-  macro(DOM,   mDOMCDATANodesSize) \
-  macro(DOM,   mDOMCommentNodesSize) \
-  macro(DOM,   mDOMEventTargetsSize) \
-  macro(DOM,   mDOMMediaQueryLists) \
-  macro(DOM,   mDOMPerformanceUserEntries) \
-  macro(DOM,   mDOMPerformanceResourceEntries) \
-  macro(DOM,   mDOMOtherSize) \
-  macro(Style, mLayoutStyleSheetsSize) \
-  macro(Style, mLayoutShadowDomStyleSheetsSize) \
-  macro(Style, mLayoutShadowDomAuthorStyles) \
-  macro(Other, mLayoutPresShellSize) \
-  macro(Style, mLayoutStyleSetsStylistRuleTree) \
-  macro(Style, mLayoutStyleSetsStylistElementAndPseudosMaps) \
-  macro(Style, mLayoutStyleSetsStylistInvalidationMap) \
-  macro(Style, mLayoutStyleSetsStylistRevalidationSelectors) \
-  macro(Style, mLayoutStyleSetsStylistOther) \
-  macro(Style, mLayoutStyleSetsOther) \
-  macro(Style, mLayoutElementDataObjects) \
-  macro(Other, mLayoutTextRunsSize) \
-  macro(Other, mLayoutPresContextSize) \
-  macro(Other, mLayoutFramePropertiesSize) \
-  macro(Style, mLayoutComputedValuesDom) \
-  macro(Style, mLayoutComputedValuesNonDom) \
-  macro(Style, mLayoutComputedValuesVisited) \
-  macro(Other, mPropertyTablesSize) \
-  macro(Other, mBindingsSize) \
-
-public:
-=======
 class nsWindowSizes {
 #define FOR_EACH_SIZE(MACRO)                                 \
   MACRO(DOM, mDOMElementNodesSize)                           \
@@ -324,7 +173,6 @@ class nsWindowSizes {
   MACRO(Other, mBindingsSize)
 
  public:
->>>>>>> upstream-releases
   explicit nsWindowSizes(mozilla::SizeOfState& aState)
       : FOR_EACH_SIZE(ZERO_SIZE) mDOMEventTargetsCount(0),
         mDOMEventListenersCount(0),

@@ -14,12 +14,6 @@
 #include "prlock.h"
 #include "mozilla/RefPtr.h"
 #include "nsAutoPtr.h"
-<<<<<<< HEAD
-#include "nsIWeakReferenceUtils.h"  // for the definition of nsWeakPtr
-||||||| merged common ancestors
-#include "nsIWeakReferenceUtils.h" // for the definition of nsWeakPtr
-=======
->>>>>>> upstream-releases
 #include "IPeerConnection.h"
 #include "nsComponentManagerUtils.h"
 #include "nsPIDOMWindow.h"
@@ -37,15 +31,7 @@
 #include "signaling/src/sdp/SdpMediaSection.h"
 
 #include "mozilla/ErrorResult.h"
-<<<<<<< HEAD
-#include "mozilla/dom/PeerConnectionImplEnumsBinding.h"
 #include "mozilla/dom/RTCPeerConnectionBinding.h"  // mozPacketDumpType, maybe move?
-||||||| merged common ancestors
-#include "mozilla/dom/PeerConnectionImplEnumsBinding.h"
-#include "mozilla/dom/RTCPeerConnectionBinding.h" // mozPacketDumpType, maybe move?
-=======
-#include "mozilla/dom/RTCPeerConnectionBinding.h"  // mozPacketDumpType, maybe move?
->>>>>>> upstream-releases
 #include "mozilla/dom/RTCRtpTransceiverBinding.h"
 #include "mozilla/dom/RTCConfigurationBinding.h"
 #include "PrincipalChangeObserver.h"
@@ -98,13 +84,7 @@ typedef NS_ConvertUTF8toUTF16 PCObserverString;
 #if defined(__cplusplus) && __cplusplus >= 201103L
 typedef struct Timecard Timecard;
 #else
-<<<<<<< HEAD
-#include "signaling/src/common/time_profiling/timecard.h"
-||||||| merged common ancestors
-#include "timecard.h"
-=======
 #  include "signaling/src/common/time_profiling/timecard.h"
->>>>>>> upstream-releases
 #endif
 
 // To preserve blame, convert nsresult to ErrorResult with wrappers. These
@@ -116,20 +96,8 @@ typedef struct Timecard Timecard;
   void func(__VA_ARGS__, rv)
 
 #define NS_IMETHODIMP_TO_ERRORRESULT_RETREF(resulttype, func, rv, ...) \
-<<<<<<< HEAD
   NS_IMETHODIMP func(__VA_ARGS__, resulttype** result);                \
   already_AddRefed<resulttype> func(__VA_ARGS__, rv)
-
-struct MediaStreamTable;
-||||||| merged common ancestors
-NS_IMETHODIMP func(__VA_ARGS__, resulttype **result);                  \
-already_AddRefed<resulttype> func (__VA_ARGS__, rv)
-
-struct MediaStreamTable;
-=======
-  NS_IMETHODIMP func(__VA_ARGS__, resulttype** result);                \
-  already_AddRefed<resulttype> func(__VA_ARGS__, rv)
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -156,42 +124,6 @@ class PCUuidGenerator : public mozilla::JsepUuidGenerator {
 
 // Not an inner class so we can forward declare.
 class RTCStatsQuery {
-<<<<<<< HEAD
- public:
-  explicit RTCStatsQuery(bool internalStats);
-  RTCStatsQuery(RTCStatsQuery&& aOrig) = default;
-  ~RTCStatsQuery();
-
-  nsAutoPtr<mozilla::dom::RTCStatsReportInternal> report;
-  // A timestamp to help with telemetry.
-  mozilla::TimeStamp iceStartTime;
-
-  bool internalStats;
-  std::string transportId;
-  bool grabAllLevels;
-  DOMHighResTimeStamp now;
-||||||| merged common ancestors
-  public:
-    explicit RTCStatsQuery(bool internalStats);
-    ~RTCStatsQuery();
-
-    nsAutoPtr<mozilla::dom::RTCStatsReportInternal> report;
-    std::string error;
-    // A timestamp to help with telemetry.
-    mozilla::TimeStamp iceStartTime;
-    // Just for convenience, maybe integrate into the report later
-    bool failed;
-
-  private:
-    friend class PeerConnectionImpl;
-    std::string pcName;
-    bool internalStats;
-    nsTArray<RefPtr<mozilla::MediaPipeline>> pipelines;
-    std::string transportId;
-    RefPtr<PeerConnectionMedia> media;
-    bool grabAllLevels;
-    DOMHighResTimeStamp now;
-=======
  public:
   explicit RTCStatsQuery(bool aInternalStats, bool aRecordTelemetry);
   RTCStatsQuery(RTCStatsQuery&& aOrig) = default;
@@ -206,7 +138,6 @@ class RTCStatsQuery {
   std::string transportId;
   bool grabAllLevels;
   DOMHighResTimeStamp now;
->>>>>>> upstream-releases
 };
 
 typedef MozPromise<UniquePtr<RTCStatsQuery>, nsresult, true>
@@ -228,52 +159,6 @@ typedef MozPromise<UniquePtr<RTCStatsQuery>, nsresult, true>
   } while (0)
 #define PC_AUTO_ENTER_API_CALL_NO_CHECK() CheckThread()
 
-<<<<<<< HEAD
-class PeerConnectionImpl final
-    : public nsISupports,
-      public mozilla::DataChannelConnection::DataConnectionListener,
-      public dom::PrincipalChangeObserver<dom::MediaStreamTrack>,
-      public sigslot::has_slots<> {
-  struct Internal;  // Avoid exposing c includes to bindings
-
- public:
-  explicit PeerConnectionImpl(
-      const mozilla::dom::GlobalObject* aGlobal = nullptr);
-
-  enum Error {
-    kNoError = 0,
-    kInvalidCandidate = 2,
-    kInvalidMediastreamTrack = 3,
-    kInvalidState = 4,
-    kInvalidSessionDescription = 5,
-    kIncompatibleSessionDescription = 6,
-    kIncompatibleMediaStreamTrack = 8,
-    kInternalError = 9,
-    kTypeError = 10,
-    kOperationError = 11
-  };
-||||||| merged common ancestors
-class PeerConnectionImpl final : public nsISupports,
-                                 public mozilla::DataChannelConnection::DataConnectionListener,
-                                 public dom::PrincipalChangeObserver<dom::MediaStreamTrack>,
-                                 public sigslot::has_slots<>
-{
-  struct Internal; // Avoid exposing c includes to bindings
-
-public:
-  explicit PeerConnectionImpl(const mozilla::dom::GlobalObject* aGlobal = nullptr);
-
-  enum Error {
-    kNoError                          = 0,
-    kInvalidCandidate                 = 2,
-    kInvalidMediastreamTrack          = 3,
-    kInvalidState                     = 4,
-    kInvalidSessionDescription        = 5,
-    kIncompatibleSessionDescription   = 6,
-    kIncompatibleMediaStreamTrack     = 8,
-    kInternalError                    = 9
-  };
-=======
 class PeerConnectionImpl final
     : public nsISupports,
       public mozilla::DataChannelConnection::DataConnectionListener,
@@ -283,7 +168,6 @@ class PeerConnectionImpl final
  public:
   explicit PeerConnectionImpl(
       const mozilla::dom::GlobalObject* aGlobal = nullptr);
->>>>>>> upstream-releases
 
   NS_DECL_THREADSAFE_ISUPPORTS
 
@@ -299,22 +183,11 @@ class PeerConnectionImpl final
 
   // DataConnection observers
   void NotifyDataChannel(already_AddRefed<mozilla::DataChannel> aChannel)
-<<<<<<< HEAD
-      // PeerConnectionImpl only inherits from mozilla::DataChannelConnection
-      // inside libxul.
-      override;
-||||||| merged common ancestors
-    // PeerConnectionImpl only inherits from mozilla::DataChannelConnection
-    // inside libxul.
-    override
-    ;
-=======
       // PeerConnectionImpl only inherits from mozilla::DataChannelConnection
       // inside libxul.
       override;
 
   const RefPtr<MediaTransportHandler> GetTransportHandler() const;
->>>>>>> upstream-releases
 
   // Get the media object
   const RefPtr<PeerConnectionMedia>& media() const {
@@ -402,27 +275,13 @@ class PeerConnectionImpl final
   }
 
   NS_IMETHODIMP AddIceCandidate(const char* aCandidate, const char* aMid,
-<<<<<<< HEAD
-                                const dom::Nullable<unsigned short>& aLevel);
-||||||| merged common ancestors
-                                unsigned short aLevel);
-=======
                                 const char* aUfrag,
                                 const dom::Nullable<unsigned short>& aLevel);
->>>>>>> upstream-releases
 
   void AddIceCandidate(const nsAString& aCandidate, const nsAString& aMid,
-<<<<<<< HEAD
-                       const dom::Nullable<unsigned short>& aLevel,
-                       ErrorResult& rv) {
-||||||| merged common ancestors
-                       unsigned short aLevel, ErrorResult &rv)
-  {
-=======
                        const nsAString& aUfrag,
                        const dom::Nullable<unsigned short>& aLevel,
                        ErrorResult& rv) {
->>>>>>> upstream-releases
     rv = AddIceCandidate(NS_ConvertUTF16toUTF8(aCandidate).get(),
                          NS_ConvertUTF16toUTF8(aMid).get(),
                          NS_ConvertUTF16toUTF8(aUfrag).get(), aLevel);
@@ -552,55 +411,24 @@ class PeerConnectionImpl final
 
   NS_IMETHODIMP SignalingState(mozilla::dom::RTCSignalingState* aState);
 
-<<<<<<< HEAD
-  mozilla::dom::PCImplSignalingState SignalingState() {
-    mozilla::dom::PCImplSignalingState state;
-||||||| merged common ancestors
-  mozilla::dom::PCImplSignalingState SignalingState()
-  {
-    mozilla::dom::PCImplSignalingState state;
-=======
   mozilla::dom::RTCSignalingState SignalingState() {
     mozilla::dom::RTCSignalingState state;
->>>>>>> upstream-releases
     SignalingState(&state);
     return state;
   }
 
   NS_IMETHODIMP IceConnectionState(mozilla::dom::RTCIceConnectionState* aState);
 
-<<<<<<< HEAD
-  mozilla::dom::PCImplIceConnectionState IceConnectionState() {
-    mozilla::dom::PCImplIceConnectionState state;
-||||||| merged common ancestors
-  mozilla::dom::PCImplIceConnectionState IceConnectionState()
-  {
-    mozilla::dom::PCImplIceConnectionState state;
-=======
   mozilla::dom::RTCIceConnectionState IceConnectionState() {
     mozilla::dom::RTCIceConnectionState state;
->>>>>>> upstream-releases
     IceConnectionState(&state);
     return state;
   }
 
   NS_IMETHODIMP IceGatheringState(mozilla::dom::RTCIceGatheringState* aState);
 
-<<<<<<< HEAD
-  mozilla::dom::PCImplIceGatheringState IceGatheringState() {
-    mozilla::dom::PCImplIceGatheringState state;
-    IceGatheringState(&state);
-    return state;
-||||||| merged common ancestors
-  mozilla::dom::PCImplIceGatheringState IceGatheringState()
-  {
-    mozilla::dom::PCImplIceGatheringState state;
-    IceGatheringState(&state);
-    return state;
-=======
   mozilla::dom::RTCIceGatheringState IceGatheringState() {
     return mIceGatheringState;
->>>>>>> upstream-releases
   }
 
   NS_IMETHODIMP Close();
@@ -649,20 +477,9 @@ class PeerConnectionImpl final
   // initialize telemetry for when calls start
   void startCallTelem();
 
-<<<<<<< HEAD
-  RefPtr<RTCStatsQueryPromise> GetStats(dom::MediaStreamTrack* aSelector,
-                                        bool aInternalStats);
-||||||| merged common ancestors
-  nsresult BuildStatsQuery_m(
-      mozilla::dom::MediaStreamTrack *aSelector,
-      RTCStatsQuery *query);
-
-  static nsresult ExecuteStatsQuery_s(RTCStatsQuery *query);
-=======
   RefPtr<RTCStatsQueryPromise> GetStats(dom::MediaStreamTrack* aSelector,
                                         bool aInternalStats,
                                         bool aRecordTelemetry);
->>>>>>> upstream-releases
 
   // for monitoring changes in track ownership
   // PeerConnectionMedia can't do it because it doesn't know about principals
@@ -715,30 +532,6 @@ class PeerConnectionImpl final
   void ShutdownMedia();
 
   void CandidateReady(const std::string& candidate,
-<<<<<<< HEAD
-                      const std::string& transportId);
-  void SendLocalIceCandidateToContent(uint16_t level, const std::string& mid,
-                                      const std::string& candidate);
-
-  nsresult GetDatachannelParameters(uint32_t* channels, uint16_t* localport,
-                                    uint16_t* remoteport,
-                                    uint32_t* maxmessagesize, bool* mmsset,
-                                    std::string* transportId,
-                                    bool* client) const;
-||||||| merged common ancestors
-                      const std::string& transportId);
-  void SendLocalIceCandidateToContent(uint16_t level,
-                                      const std::string& mid,
-                                      const std::string& candidate);
-
-  nsresult GetDatachannelParameters(
-      uint32_t* channels,
-      uint16_t* localport,
-      uint16_t* remoteport,
-      uint32_t* maxmessagesize,
-      bool*     mmsset,
-      std::string* transportId) const;
-=======
                       const std::string& transportId, const std::string& ufrag);
   void SendLocalIceCandidateToContent(uint16_t level, const std::string& mid,
                                       const std::string& candidate,
@@ -749,7 +542,6 @@ class PeerConnectionImpl final
                                     uint32_t* maxmessagesize, bool* mmsset,
                                     std::string* transportId,
                                     bool* client) const;
->>>>>>> upstream-releases
 
   nsresult AddRtpTransceiverToJsepSession(RefPtr<JsepTransceiver>& transceiver);
   already_AddRefed<TransceiverImpl> CreateTransceiverImpl(
@@ -778,23 +570,9 @@ class PeerConnectionImpl final
   mozilla::dom::RTCSignalingState mSignalingState;
 
   // ICE State
-<<<<<<< HEAD
-  mozilla::dom::PCImplIceConnectionState mIceConnectionState;
-  mozilla::dom::PCImplIceGatheringState mIceGatheringState;
-
-||||||| merged common ancestors
-  mozilla::dom::PCImplIceConnectionState mIceConnectionState;
-  mozilla::dom::PCImplIceGatheringState mIceGatheringState;
-
-  // DTLS
-  // this is true if we have been connected ever, see SetDtlsConnected
-  bool mDtlsConnected;
-
-=======
   mozilla::dom::RTCIceConnectionState mIceConnectionState;
   mozilla::dom::RTCIceGatheringState mIceGatheringState;
 
->>>>>>> upstream-releases
   nsCOMPtr<nsIThread> mThread;
   RefPtr<PeerConnectionObserver> mPCObserver;
 
@@ -866,36 +644,6 @@ class PeerConnectionImpl final
 
   // DTMF
   class DTMFState : public nsITimerCallback {
-<<<<<<< HEAD
-    virtual ~DTMFState();
-
-   public:
-    DTMFState();
-
-    NS_DECL_NSITIMERCALLBACK
-    NS_DECL_THREADSAFE_ISUPPORTS
-
-    nsWeakPtr mPCObserver;
-    RefPtr<TransceiverImpl> mTransceiver;
-    nsCOMPtr<nsITimer> mSendTimer;
-    nsString mTones;
-    uint32_t mDuration;
-    uint32_t mInterToneGap;
-||||||| merged common ancestors
-      virtual ~DTMFState();
-    public:
-      DTMFState();
-
-      NS_DECL_NSITIMERCALLBACK
-      NS_DECL_THREADSAFE_ISUPPORTS
-
-      nsWeakPtr mPCObserver;
-      RefPtr<TransceiverImpl> mTransceiver;
-      nsCOMPtr<nsITimer> mSendTimer;
-      nsString mTones;
-      uint32_t mDuration;
-      uint32_t mInterToneGap;
-=======
     virtual ~DTMFState();
 
    public:
@@ -913,7 +661,6 @@ class PeerConnectionImpl final
     nsString mTones;
     uint32_t mDuration;
     uint32_t mInterToneGap;
->>>>>>> upstream-releases
   };
 
   // TODO(bug 1401983): Move DTMF stuff to TransceiverImpl

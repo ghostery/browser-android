@@ -27,64 +27,6 @@ add_task(async function setup_storage() {
 });
 
 add_task(async function test_detach_tab_marked() {
-<<<<<<< HEAD
-  let tab = await BrowserTestUtils.openNewForegroundTab({gBrowser, url: URL});
-  let browser = tab.linkedBrowser;
-  const {autoCompletePopup} = browser;
-
-  // Check the page after the initial load
-  await openPopupOn(browser, "#street-address");
-  checkPopup(autoCompletePopup);
-  await closePopup(browser);
-
-  // Detach the tab to a new window
-  info("expecting tab replaced with new window");
-  let windowLoadedPromise = BrowserTestUtils.waitForNewWindow();
-  let newWin = gBrowser.replaceTabWithWindow(gBrowser.getTabForBrowser(browser));
-  await windowLoadedPromise;
-
-  info("tab was detached");
-  let newBrowser = newWin.gBrowser.selectedBrowser;
-  ok(newBrowser, "Found new <browser>");
-  let newAutoCompletePopup = newBrowser.autoCompletePopup;
-  ok(newAutoCompletePopup, "Found new autocomplete popup");
-
-  await openPopupOn(newBrowser, "#street-address");
-  checkPopup(newAutoCompletePopup);
-
-  await closePopup(newBrowser);
-  let windowRefocusedPromise = BrowserTestUtils.waitForEvent(window, "focus");
-  await BrowserTestUtils.closeWindow(newWin);
-  await windowRefocusedPromise;
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({gBrowser, url: URL}, async function(browser) {
-    const {autoCompletePopup} = browser;
-
-    // Check the page after the initial load
-    await openPopupOn(browser, "#street-address");
-    checkPopup(autoCompletePopup);
-    await closePopup(browser);
-
-    // Detach the tab to a new window
-    info("expecting tab replaced with new window");
-    let newWin = gBrowser.replaceTabWithWindow(gBrowser.getTabForBrowser(browser));
-    await TestUtils.topicObserved("browser-delayed-startup-finished", subject => {
-      return subject == newWin;
-    });
-
-    info("tab was detached");
-    let newBrowser = newWin.gBrowser.selectedBrowser;
-    ok(newBrowser, "Found new <browser>");
-    let newAutoCompletePopup = newBrowser.autoCompletePopup;
-    ok(newAutoCompletePopup, "Found new autocomplete popup");
-
-    await openPopupOn(newBrowser, "#street-address");
-    checkPopup(newAutoCompletePopup);
-
-    await closePopup(newBrowser);
-    await BrowserTestUtils.closeWindow(newWin);
-  });
-=======
   let tab = await BrowserTestUtils.openNewForegroundTab({ gBrowser, url: URL });
   let browser = tab.linkedBrowser;
   const { autoCompletePopup } = browser;
@@ -115,5 +57,4 @@ add_task(async function test_detach_tab_marked() {
   let windowRefocusedPromise = BrowserTestUtils.waitForEvent(window, "focus");
   await BrowserTestUtils.closeWindow(newWin);
   await windowRefocusedPromise;
->>>>>>> upstream-releases
 });

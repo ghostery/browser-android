@@ -27,19 +27,6 @@ const SUBMISSION_NO = new Map([
   ["Other2 Test", "https://googlebutnotgoogle.com?q={searchTerms}"],
 ]);
 
-<<<<<<< HEAD
-function addAndMakeDefault(name, searchURL) {
-   Services.search.addEngineWithDetails(name, null, null, null, "GET", searchURL);
-   let engine = Services.search.getEngineByName(name);
-   Services.search.defaultEngine = engine;
-   return engine;
-||||||| merged common ancestors
-function addAndMakeDefault(name, searchURL) {
-   Services.search.addEngineWithDetails(name, null, null, null, "GET", searchURL);
-   let engine = Services.search.getEngineByName(name);
-   Services.search.currentEngine = engine;
-   return engine;
-=======
 add_task(async function setup() {
   await AddonTestUtils.promiseStartupManager();
 });
@@ -52,7 +39,6 @@ async function addAndMakeDefault(name, searchURL) {
   let engine = Services.search.getEngineByName(name);
   await Services.search.setDefault(engine);
   return engine;
->>>>>>> upstream-releases
 }
 
 add_task(async function test() {

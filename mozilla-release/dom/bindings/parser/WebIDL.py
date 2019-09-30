@@ -480,17 +480,7 @@ class IDLExposureMixins():
         return 'Window' in self.exposureSet
 
     def isExposedOnMainThread(self):
-<<<<<<< HEAD
         return self.isExposedInWindow()
-
-    def isExposedOffMainThread(self):
-        return len(self.exposureSet - {'Window', 'FakeTestPrimaryGlobal'}) > 0
-||||||| merged common ancestors
-        return (self.isExposedInWindow() or
-                self.isExposedInSystemGlobals())
-=======
-        return self.isExposedInWindow()
->>>>>>> upstream-releases
 
     def isExposedInAnyWorker(self):
         return len(self.getWorkerExposureSet()) > 0
@@ -1347,21 +1337,6 @@ class IDLInterfaceOrNamespace(IDLObjectWithScope, IDLExposureMixins):
                     checkDuplicateNames(member, bindingAlias, "BindingAlias")
 
 
-<<<<<<< HEAD
-        if self.getExtendedAttribute("Pref") and self.isExposedOffMainThread():
-            raise WebIDLError("[Pref] used on an interface that is not "
-                              "main-thread-only",
-                              [self.location])
-
-||||||| merged common ancestors
-        if (self.getExtendedAttribute("Pref") and
-            self._exposureGlobalNames != set([self.parentScope.primaryGlobalName])):
-            raise WebIDLError("[Pref] used on an interface that is not %s-only" %
-                              self.parentScope.primaryGlobalName,
-                              [self.location])
-
-=======
->>>>>>> upstream-releases
         # Conditional exposure makes no sense for interfaces with no
         # interface object, unless they're navigator properties.
         # And SecureContext makes sense for interfaces with no interface object,
@@ -3788,21 +3763,6 @@ class IDLInterfaceMember(IDLObjectWithIdentifier, IDLExposureMixins):
         IDLExposureMixins.finish(self, scope)
 
     def validate(self):
-<<<<<<< HEAD
-        if self.getExtendedAttribute("Pref") and self.isExposedOffMainThread():
-            raise WebIDLError("[Pref] used on an interface member that is not "
-                              "main-thread-only",
-                              [self.location])
-
-||||||| merged common ancestors
-        if (self.getExtendedAttribute("Pref") and
-            self.exposureSet != set([self._globalScope.primaryGlobalName])):
-            raise WebIDLError("[Pref] used on an interface member that is not "
-                              "%s-only" % self._globalScope.primaryGlobalName,
-                              [self.location])
-
-=======
->>>>>>> upstream-releases
         if self.isAttr() or self.isMethod():
             if self.affects == "Everything" and self.dependsOn != "Everything":
                 raise WebIDLError("Interface member is flagged as affecting "

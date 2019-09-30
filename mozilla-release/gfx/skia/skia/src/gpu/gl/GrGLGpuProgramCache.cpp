@@ -68,24 +68,12 @@ void GrGLGpu::ProgramCache::abandon() {
     fMap.reset();
 }
 
-<<<<<<< HEAD
-GrGLProgram* GrGLGpu::ProgramCache::refProgram(const GrGLGpu* gpu,
-||||||| merged common ancestors
-GrGLProgram* GrGLGpu::ProgramCache::refProgram(const GrGLGpu* gpu,
-                                               const GrPipeline& pipeline,
-=======
 GrGLProgram* GrGLGpu::ProgramCache::refProgram(GrGLGpu* gpu,
                                                GrRenderTarget* renderTarget,
                                                GrSurfaceOrigin origin,
->>>>>>> upstream-releases
                                                const GrPrimitiveProcessor& primProc,
-<<<<<<< HEAD
-                                               const GrPipeline& pipeline,
-||||||| merged common ancestors
-=======
                                                const GrTextureProxy* const primProcProxies[],
                                                const GrPipeline& pipeline,
->>>>>>> upstream-releases
                                                bool isPoints) {
 #ifdef PROGRAM_CACHE_STATS
     ++fTotalRequests;
@@ -108,15 +96,9 @@ GrGLProgram* GrGLGpu::ProgramCache::refProgram(GrGLGpu* gpu,
 #ifdef PROGRAM_CACHE_STATS
         ++fCacheMisses;
 #endif
-<<<<<<< HEAD
-        GrGLProgram* program = GrGLProgramBuilder::CreateProgram(primProc, pipeline, &desc, fGpu);
-||||||| merged common ancestors
-        GrGLProgram* program = GrGLProgramBuilder::CreateProgram(pipeline, primProc, &desc, fGpu);
-=======
         GrGLProgram* program = GrGLProgramBuilder::CreateProgram(renderTarget, origin,
                                                                  primProc, primProcProxies,
                                                                  pipeline, &desc, fGpu);
->>>>>>> upstream-releases
         if (nullptr == program) {
             return nullptr;
         }

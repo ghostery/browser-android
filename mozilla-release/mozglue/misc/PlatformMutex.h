@@ -13,13 +13,7 @@
 #include "mozilla/RecordReplay.h"
 
 #if !defined(XP_WIN)
-<<<<<<< HEAD
-#include <pthread.h>
-||||||| merged common ancestors
-# include <pthread.h>
-=======
 #  include <pthread.h>
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -65,18 +59,9 @@ class MutexImpl {
   // have to wait. May be accessed by multiple threads concurrently. Getting the
   // latest value is not essential hence relaxed memory ordering is sufficient.
   mozilla::Atomic<int32_t, mozilla::MemoryOrdering::Relaxed,
-<<<<<<< HEAD
-                  recordreplay::Behavior::DontPreserve>
-      averageSpins;
-#endif
-||||||| merged common ancestors
-                  recordreplay::Behavior::DontPreserve> averageSpins;
-#endif
-=======
                   recordreplay::Behavior::DontPreserve>
       averageSpins;
 #  endif
->>>>>>> upstream-releases
 #else
   void* platformData_[6];
 #endif

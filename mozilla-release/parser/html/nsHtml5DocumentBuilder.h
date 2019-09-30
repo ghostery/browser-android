@@ -35,15 +35,7 @@ class nsHtml5DocumentBuilder : public nsContentSink {
     *(mOwnedElements.AppendElement()) = aContent;
   }
 
-<<<<<<< HEAD
-  nsresult Init(nsIDocument* aDoc, nsIURI* aURI, nsISupports* aContainer,
-||||||| merged common ancestors
-  nsresult Init(nsIDocument* aDoc,
-                nsIURI* aURI,
-                nsISupports* aContainer,
-=======
   nsresult Init(Document* aDoc, nsIURI* aURI, nsISupports* aContainer,
->>>>>>> upstream-releases
                 nsIChannel* aChannel);
 
   // Getters and setters for fields from nsContentSink

@@ -277,30 +277,6 @@ var AUSTLMY = {
   },
 
   /**
-<<<<<<< HEAD
-   * Submit a telemetry ping for a failing binary transparency result.
-   *
-   * @param  aSuffix
-   *         Key to use on the update.binarytransparencyresult collection.
-   *         Must be one of "COMPLETE_STARTUP", "PARTIAL_STARTUP",
-   *         "UNKNOWN_STARTUP", "COMPLETE_STAGE", "PARTIAL_STAGE",
-   *         "UNKNOWN_STAGE".
-   * @param  aCode
-   *         An integer value for the error code from the update.bt file.
-   */
-  pingBinaryTransparencyResult: function UT_pingBinaryTransparencyResult(aSuffix, aCode) {
-    try {
-      let id = "update.binarytransparencyresult";
-      let key = aSuffix.toLowerCase().replace("_", "-");
-      Services.telemetry.keyedScalarSet(id, key, aCode);
-    } catch (e) {
-      Cu.reportError(e);
-    }
-  },
-
-  /**
-||||||| merged common ancestors
-=======
    * Submit a telemetry ping for a failing binary transparency result.
    *
    * @param  aSuffix
@@ -440,7 +416,6 @@ var AUSTLMY = {
   },
 
   /**
->>>>>>> upstream-releases
    * Submit the interval in days since the last notification for this background
    * update check or a boolean if the last notification is in the future.
    *

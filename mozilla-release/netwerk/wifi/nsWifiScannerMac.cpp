@@ -22,15 +22,8 @@ using namespace mozilla;
 // defined in osx_corewlan.mm
 // basically replaces accesspoints in the passed reference
 // it lives in a separate file so that we can use objective c.
-<<<<<<< HEAD
-extern nsresult GetAccessPointsFromWLAN(
-    nsCOMArray<nsWifiAccessPoint> &accessPoints);
-||||||| merged common ancestors
-extern nsresult GetAccessPointsFromWLAN(nsCOMArray<nsWifiAccessPoint> &accessPoints);
-=======
 extern nsresult GetAccessPointsFromWLAN(
     nsCOMArray<nsWifiAccessPoint>& accessPoints);
->>>>>>> upstream-releases
 
 nsresult nsWifiMonitor::DoScan() {
   // Regularly get the access point data.

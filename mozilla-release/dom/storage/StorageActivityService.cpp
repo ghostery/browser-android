@@ -22,17 +22,8 @@ namespace dom {
 static StaticRefPtr<StorageActivityService> gStorageActivityService;
 static bool gStorageActivityShutdown = false;
 
-<<<<<<< HEAD
-/* static */ void StorageActivityService::SendActivity(
-    nsIPrincipal* aPrincipal) {
-||||||| merged common ancestors
-/* static */ void
-StorageActivityService::SendActivity(nsIPrincipal* aPrincipal)
-{
-=======
 /* static */
 void StorageActivityService::SendActivity(nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!aPrincipal || BasePrincipal::Cast(aPrincipal)->Kind() !=
@@ -49,18 +40,9 @@ void StorageActivityService::SendActivity(nsIPrincipal* aPrincipal) {
   service->SendActivityInternal(aPrincipal);
 }
 
-<<<<<<< HEAD
-/* static */ void StorageActivityService::SendActivity(
-    const mozilla::ipc::PrincipalInfo& aPrincipalInfo) {
-||||||| merged common ancestors
-/* static */ void
-StorageActivityService::SendActivity(const mozilla::ipc::PrincipalInfo& aPrincipalInfo)
-{
-=======
 /* static */
 void StorageActivityService::SendActivity(
     const mozilla::ipc::PrincipalInfo& aPrincipalInfo) {
->>>>>>> upstream-releases
   if (aPrincipalInfo.type() !=
       mozilla::ipc::PrincipalInfo::TContentPrincipalInfo) {
     // only content principal.
@@ -80,17 +62,8 @@ void StorageActivityService::SendActivity(
   SystemGroup::Dispatch(TaskCategory::Other, r.forget());
 }
 
-<<<<<<< HEAD
-/* static */ void StorageActivityService::SendActivity(
-    const nsACString& aOrigin) {
-||||||| merged common ancestors
-/* static */ void
-StorageActivityService::SendActivity(const nsACString& aOrigin)
-{
-=======
 /* static */
 void StorageActivityService::SendActivity(const nsACString& aOrigin) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   nsCString origin;
@@ -115,17 +88,8 @@ void StorageActivityService::SendActivity(const nsACString& aOrigin) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<StorageActivityService>
-StorageActivityService::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<StorageActivityService>
-StorageActivityService::GetOrCreate()
-{
-=======
 /* static */
 already_AddRefed<StorageActivityService> StorageActivityService::GetOrCreate() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!gStorageActivityService && !gStorageActivityShutdown) {

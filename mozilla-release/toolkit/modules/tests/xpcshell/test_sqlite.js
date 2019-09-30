@@ -118,17 +118,6 @@ add_task(async function test_open_normal_error() {
 
   await OS.File.copy(src, path);
 
-<<<<<<< HEAD
-  let openPromise = Sqlite.openConnection({path});
-  await Assert.rejects(openPromise, reason => {
-    return reason.result == Cr.NS_ERROR_FILE_CORRUPTED;
-  }, "Check error status");
-||||||| merged common ancestors
-  let openPromise = Sqlite.openConnection({path});
-  await Assert.rejects(openPromise, reason => {
-    return reason.status == Cr.NS_ERROR_FILE_CORRUPTED;
-  }, "Check error status");
-=======
   let openPromise = Sqlite.openConnection({ path });
   await Assert.rejects(
     openPromise,
@@ -137,7 +126,6 @@ add_task(async function test_open_normal_error() {
     },
     "Check error status"
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_open_unshared() {

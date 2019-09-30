@@ -25,19 +25,9 @@ function promiseBrowserEvent(browserOrFrame, eventType, options = {}) {
         return;
       }
       info("Received event " + eventType + " from browser");
-<<<<<<< HEAD
-      browserOrFrame.removeEventListener(eventType, handle, true);
-      if (options && options.resolveAtNextTick) {
-        Services.tm.dispatchToMainThread(() => resolve(event));
-||||||| merged common ancestors
-      browserOrFrame.removeEventListener(eventType, handle, true);
-      if (options && options.resolveAtNextTick) {
-        setTimeout(() => resolve(event), 0);
-=======
       browserOrFrame.removeEventListener(eventType, handle, listenerOptions);
       if (options.resolveAtNextTick) {
         Services.tm.dispatchToMainThread(() => resolve(event));
->>>>>>> upstream-releases
       } else {
         resolve(event);
       }

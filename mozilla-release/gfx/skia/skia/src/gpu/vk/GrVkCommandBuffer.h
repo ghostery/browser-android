@@ -121,18 +121,6 @@ public:
         fTrackedRecycledResources.append(1, &resource);
     }
 
-<<<<<<< HEAD
-    // Add ref-counted resource that will be tracked and released when this command buffer finishes
-    // recording.
-    void addRecordingResource(const GrVkResource* resource) {
-        resource->ref();
-        fTrackedRecordingResources.append(1, &resource);
-    }
-
-    void reset(GrVkGpu* gpu);
-||||||| merged common ancestors
-    void reset(GrVkGpu* gpu);
-=======
     // Add ref-counted resource that will be tracked and released when this command buffer finishes
     // recording.
     void addRecordingResource(const GrVkResource* resource) {
@@ -142,7 +130,6 @@ public:
     }
 
     void releaseResources(GrVkGpu* gpu);
->>>>>>> upstream-releases
 
 protected:
         GrVkCommandBuffer(VkCommandBuffer cmdBuffer, GrVkCommandPool* cmdPool,

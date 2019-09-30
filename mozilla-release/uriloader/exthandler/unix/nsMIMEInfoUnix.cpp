@@ -14,27 +14,12 @@
 #  include "nsDBusHandlerApp.h"
 #endif
 
-<<<<<<< HEAD
-nsresult nsMIMEInfoUnix::LoadUriInternal(nsIURI *aURI) {
-||||||| merged common ancestors
-nsresult
-nsMIMEInfoUnix::LoadUriInternal(nsIURI * aURI)
-{
-=======
 nsresult nsMIMEInfoUnix::LoadUriInternal(nsIURI* aURI) {
->>>>>>> upstream-releases
   return nsGNOMERegistry::LoadURL(aURI);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMIMEInfoUnix::GetHasDefaultHandler(bool *_retval) {
-||||||| merged common ancestors
-nsMIMEInfoUnix::GetHasDefaultHandler(bool *_retval)
-{
-=======
 nsMIMEInfoUnix::GetHasDefaultHandler(bool* _retval) {
->>>>>>> upstream-releases
   // if mDefaultApplication is set, it means the application has been set from
   // either /etc/mailcap or ${HOME}/.mailcap, in which case we don't want to
   // give the GNOME answer.
@@ -62,15 +47,7 @@ nsMIMEInfoUnix::GetHasDefaultHandler(bool* _retval) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsMIMEInfoUnix::LaunchDefaultWithFile(nsIFile *aFile) {
-||||||| merged common ancestors
-nsresult
-nsMIMEInfoUnix::LaunchDefaultWithFile(nsIFile *aFile)
-{
-=======
 nsresult nsMIMEInfoUnix::LaunchDefaultWithFile(nsIFile* aFile) {
->>>>>>> upstream-releases
   // if mDefaultApplication is set, it means the application has been set from
   // either /etc/mailcap or ${HOME}/.mailcap, in which case we don't want to
   // give the GNOME answer.

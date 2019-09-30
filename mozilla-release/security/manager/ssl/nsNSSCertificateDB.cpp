@@ -46,13 +46,7 @@
 #include "ssl.h"
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include <winsock.h>  // for ntohl
-||||||| merged common ancestors
-#include <winsock.h> // for ntohl
-=======
 #  include <winsock.h>  // for ntohl
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla;
@@ -263,17 +257,8 @@ nsresult nsNSSCertificateDB::handleCACertDownload(NotNull<nsIArray*> x509Certs,
   uint32_t numCerts;
 
   x509Certs->GetLength(&numCerts);
-<<<<<<< HEAD
-  MOZ_ASSERT(numCerts > 0, "Didn't get any certs to import.");
-  if (numCerts == 0) return NS_OK;  // Nothing to import, so nothing to do.
-||||||| merged common ancestors
-  MOZ_ASSERT(numCerts > 0, "Didn't get any certs to import.");
-  if (numCerts == 0)
-    return NS_OK; // Nothing to import, so nothing to do.
-=======
 
   if (numCerts == 0) return NS_OK;  // Nothing to import, so nothing to do.
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIX509Cert> certToShow;
   uint32_t selCertIndex;
@@ -846,22 +831,9 @@ nsNSSCertificateDB::ImportPKCS12File(nsIFile* aFile, const nsAString& aPassword,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNSSCertificateDB::ExportPKCS12File(nsIFile* aFile, uint32_t aCount,
-                                     nsIX509Cert** aCerts,
-                                     const nsAString& aPassword,
-                                     uint32_t* aError) {
-||||||| merged common ancestors
-nsNSSCertificateDB::ExportPKCS12File(nsIFile* aFile, uint32_t aCount,
-                                     nsIX509Cert** aCerts,
-                                     const nsAString& aPassword,
-                                     uint32_t* aError)
-{
-=======
 nsNSSCertificateDB::ExportPKCS12File(
     nsIFile* aFile, const nsTArray<RefPtr<nsIX509Cert>>& aCerts,
     const nsAString& aPassword, uint32_t* aError) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return NS_ERROR_NOT_SAME_THREAD;
   }
@@ -1132,73 +1104,12 @@ nsNSSCertificateDB::GetCerts(nsIX509CertList** _retval) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsNSSCertificateDB::GetEnterpriseRoots(nsIX509CertList** enterpriseRoots) {
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return NS_ERROR_NOT_SAME_THREAD;
-  }
-
-  NS_ENSURE_ARG_POINTER(enterpriseRoots);
-
-#ifdef XP_WIN
-  nsCOMPtr<nsINSSComponent> psm(do_GetService(PSM_COMPONENT_CONTRACTID));
-  if (!psm) {
-    return NS_ERROR_FAILURE;
-  }
-  return psm->GetEnterpriseRoots(enterpriseRoots);
-#else
-  return NS_ERROR_NOT_IMPLEMENTED;
-#endif
-}
-
 nsresult VerifyCertAtTime(nsIX509Cert* aCert,
                           int64_t /*SECCertificateUsage*/ aUsage,
                           uint32_t aFlags, const nsACString& aHostname,
                           mozilla::pkix::Time aTime,
                           nsIX509CertList** aVerifiedChain, bool* aHasEVPolicy,
                           int32_t* /*PRErrorCode*/ _retval) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsNSSCertificateDB::GetEnterpriseRoots(nsIX509CertList** enterpriseRoots)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!NS_IsMainThread()) {
-    return NS_ERROR_NOT_SAME_THREAD;
-  }
-
-  NS_ENSURE_ARG_POINTER(enterpriseRoots);
-
-#ifdef XP_WIN
-  nsCOMPtr<nsINSSComponent> psm(do_GetService(PSM_COMPONENT_CONTRACTID));
-  if (!psm) {
-    return NS_ERROR_FAILURE;
-  }
-  return psm->GetEnterpriseRoots(enterpriseRoots);
-#else
-  return NS_ERROR_NOT_IMPLEMENTED;
-#endif
-}
-
-nsresult
-VerifyCertAtTime(nsIX509Cert* aCert,
-                 int64_t /*SECCertificateUsage*/ aUsage,
-                 uint32_t aFlags,
-                 const nsACString& aHostname,
-                 mozilla::pkix::Time aTime,
-                 nsIX509CertList** aVerifiedChain,
-                 bool* aHasEVPolicy,
-                 int32_t* /*PRErrorCode*/ _retval)
-{
-=======
-nsresult VerifyCertAtTime(nsIX509Cert* aCert,
-                          int64_t /*SECCertificateUsage*/ aUsage,
-                          uint32_t aFlags, const nsACString& aHostname,
-                          mozilla::pkix::Time aTime,
-                          nsIX509CertList** aVerifiedChain, bool* aHasEVPolicy,
-                          int32_t* /*PRErrorCode*/ _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aCert);
   NS_ENSURE_ARG_POINTER(aHasEVPolicy);
   NS_ENSURE_ARG_POINTER(aVerifiedChain);
@@ -1305,27 +1216,6 @@ class VerifyCertAtTimeTask final : public CryptoTask {
 };
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNSSCertificateDB::AsyncVerifyCertAtTime(
-    nsIX509Cert* aCert, int64_t /*SECCertificateUsage*/ aUsage, uint32_t aFlags,
-    const nsACString& aHostname, uint64_t aTime,
-    nsICertVerificationCallback* aCallback) {
-  RefPtr<VerifyCertAtTimeTask> task(new VerifyCertAtTimeTask(
-      aCert, aUsage, aFlags, aHostname, aTime, aCallback));
-  return task->Dispatch("VerifyCert");
-||||||| merged common ancestors
-nsNSSCertificateDB::AsyncVerifyCertAtTime(nsIX509Cert* aCert,
-                                          int64_t /*SECCertificateUsage*/ aUsage,
-                                          uint32_t aFlags,
-                                          const nsACString& aHostname,
-                                          uint64_t aTime,
-                                          nsICertVerificationCallback* aCallback)
-{
-  RefPtr<VerifyCertAtTimeTask> task(new VerifyCertAtTimeTask(aCert, aUsage,
-                                                             aFlags, aHostname,
-                                                             aTime, aCallback));
-  return task->Dispatch("VerifyCert");
-=======
 nsNSSCertificateDB::AsyncVerifyCertAtTime(
     nsIX509Cert* aCert, int64_t /*SECCertificateUsage*/ aUsage, uint32_t aFlags,
     const nsACString& aHostname, uint64_t aTime,
@@ -1333,7 +1223,6 @@ nsNSSCertificateDB::AsyncVerifyCertAtTime(
   RefPtr<VerifyCertAtTimeTask> task(new VerifyCertAtTimeTask(
       aCert, aUsage, aFlags, aHostname, aTime, aCallback));
   return task->Dispatch();
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

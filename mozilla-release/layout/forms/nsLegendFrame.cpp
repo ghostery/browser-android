@@ -5,15 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsLegendFrame.h"
-<<<<<<< HEAD
-
-#include "ComputedStyle.h"
-||||||| merged common ancestors
-=======
 
 #include "mozilla/PresShell.h"
 #include "ComputedStyle.h"
->>>>>>> upstream-releases
 #include "nsIContent.h"
 #include "nsGenericHTMLElement.h"
 #include "nsAttrValueInlines.h"
@@ -25,15 +19,7 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewLegendFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-||||||| merged common ancestors
-nsIFrame*
-NS_NewLegendFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-=======
 nsIFrame* NS_NewLegendFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   const nsStyleDisplay* disp = aStyle->StyleDisplay();
   NS_ASSERTION(!disp->IsAbsolutelyPositionedStyle() && !disp->IsFloatingStyle(),

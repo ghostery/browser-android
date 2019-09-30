@@ -59,19 +59,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
           "dest": "app",
           "help": "name of the application we are testing (default: firefox)"
           }],
-<<<<<<< HEAD
-        [["--is-release-build"],
-         {"action": "store_true",
-          "dest": "is_release_build",
-          "help": "Whether the build is a release build which requires work arounds "
-                  "using MOZ_DISABLE_NONLOCAL_CONNECTIONS to support installing unsigned "
-                  "webextensions. Defaults to False."
-||||||| merged common ancestors
-        [["--branch-name"],
-         {"action": "store",
-          "dest": "branch",
-          "help": "branch running against"
-=======
         [["--activity"],
          {"dest": "activity",
           "help": "the android activity used to launch the android app. "
@@ -87,7 +74,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
           "help": "Whether the build is a release build which requires work arounds "
                   "using MOZ_DISABLE_NONLOCAL_CONNECTIONS to support installing unsigned "
                   "webextensions. Defaults to False."
->>>>>>> upstream-releases
           }],
         [["--add-option"],
          {"action": "extend",
@@ -188,65 +174,7 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
             "default": True,
             "help": "Run without multiple processes (e10s).",
         }],
-<<<<<<< HEAD
-        [["--geckoProfile"], {
-            "dest": "gecko_profile",
-            "action": "store_true",
-            "default": False,
-            "help": argparse.SUPPRESS
-        }],
-        [["--geckoProfileInterval"], {
-            "dest": "gecko_profile_interval",
-            "type": "int",
-            "help": argparse.SUPPRESS
-        }],
-        [["--geckoProfileEntries"], {
-            "dest": "gecko_profile_entries",
-            "type": "int",
-            "help": argparse.SUPPRESS
-        }],
-        [["--gecko-profile"], {
-            "dest": "gecko_profile",
-            "action": "store_true",
-            "default": False,
-            "help": "Whether or not to profile the test run and save the profile results"
-        }],
-        [["--gecko-profile-interval"], {
-            "dest": "gecko_profile_interval",
-            "type": "int",
-            "help": "The interval between samples taken by the profiler (milliseconds)"
-        }],
-        [["--gecko-profile-entries"], {
-            "dest": "gecko_profile_entries",
-            "type": "int",
-            "help": "How many samples to take with the profiler"
-        }],
-        [["--page-cycles"], {
-            "dest": "page_cycles",
-            "type": "int",
-            "help": "How many times to repeat loading the test page (for page load tests); "
-                    "for benchmark tests this is how many times the benchmark test will be run"
-        }],
-        [["--page-timeout"], {
-            "dest": "page_timeout",
-            "type": "int",
-            "help": "How long to wait (ms) for one page_cycle to complete, before timing out"
-        }],
-        [["--host"], {
-            "dest": "host",
-            "help": "Hostname from which to serve urls (default: 127.0.0.1).",
-        }],
-        [["--debug-mode"], {
-            "dest": "debug_mode",
-            "action": "store_true",
-            "default": False,
-            "help": "Run Raptor in debug mode (open browser console, limited page-cycles, etc.)",
-        }],
 
-||||||| merged common ancestors
-=======
-
->>>>>>> upstream-releases
     ] + testing_config_options + copy.deepcopy(code_coverage_config_options)
 
     def __init__(self, **kwargs):
@@ -326,12 +254,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
         self.gecko_profile_interval = self.config.get('gecko_profile_interval')
         self.gecko_profile_entries = self.config.get('gecko_profile_entries')
         self.test_packages_url = self.config.get('test_packages_url')
-<<<<<<< HEAD
-        self.host = self.config.get('host')
-        self.is_release_build = self.config.get('is_release_build')
-        self.debug_mode = self.config.get('debug_mode', False)
-||||||| merged common ancestors
-=======
         self.host = self.config.get('host')
         if self.host == 'HOST_IP':
             self.host = os.environ['HOST_IP']
@@ -341,7 +263,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
         self.is_release_build = self.config.get('is_release_build')
         self.debug_mode = self.config.get('debug_mode', False)
         self.firefox_android_browsers = ["fennec", "geckoview", "refbrow", "fenix"]
->>>>>>> upstream-releases
 
     # We accept some configuration options from the try commit message in the
     # format mozharness: <options>. Example try commit message: mozharness:
@@ -468,11 +389,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
             options += self.config['raptor_cmd_line_args']
         if self.config.get('code_coverage', False):
             options.extend(['--code-coverage'])
-<<<<<<< HEAD
-        if self.config.get('is_release_build', False):
-            options.extend(['--is-release-build'])
-||||||| merged common ancestors
-=======
         if self.config.get('is_release_build', False):
             options.extend(['--is-release-build'])
         if self.config.get('power_test', False):
@@ -483,7 +399,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
             options.extend(['--cpu-test'])
         if self.config.get('enable_webrender', False):
             options.extend(['--enable-webrender'])
->>>>>>> upstream-releases
         for key, value in kw_options.items():
             options.extend(['--%s' % key, value])
 
@@ -596,66 +511,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
         else:
             super(Raptor, self).install()
 
-<<<<<<< HEAD
-    def _install_view_gecko_profile_req(self):
-        # if running locally and gecko profiing is on, we will be using the
-        # view-gecko-profile tool which has its own requirements too
-        if self.gecko_profile and self.run_local:
-            tools = os.path.join(self.config['repo_path'], 'testing', 'tools')
-            view_gecko_profile_req = os.path.join(tools,
-                                                  'view_gecko_profile',
-                                                  'requirements.txt')
-            self.info("installing requirements for the view-gecko-profile tool")
-            self.install_module(requirements=[view_gecko_profile_req])
-
-    def _validate_treeherder_data(self, parser):
-        # late import is required, because install is done in create_virtualenv
-        import jsonschema
-
-        if len(parser.found_perf_data) != 1:
-            self.critical("PERFHERDER_DATA was seen %d times, expected 1."
-                          % len(parser.found_perf_data))
-            return
-
-        schema_path = os.path.join(external_tools_path,
-                                   'performance-artifact-schema.json')
-        self.info("Validating PERFHERDER_DATA against %s" % schema_path)
-        try:
-            with open(schema_path) as f:
-                schema = json.load(f)
-            data = json.loads(parser.found_perf_data[0])
-            jsonschema.validate(data, schema)
-        except Exception as e:
-            self.exception("Error while validating PERFHERDER_DATA")
-            self.info(str(e))
-
-    def _artifact_perf_data(self, dest):
-        src = os.path.join(self.query_abs_dirs()['abs_work_dir'], 'raptor.json')
-||||||| merged common ancestors
-    def _validate_treeherder_data(self, parser):
-        # late import is required, because install is done in create_virtualenv
-        import jsonschema
-
-        if len(parser.found_perf_data) != 1:
-            self.critical("PERFHERDER_DATA was seen %d times, expected 1."
-                          % len(parser.found_perf_data))
-            return
-
-        schema_path = os.path.join(external_tools_path,
-                                   'performance-artifact-schema.json')
-        self.info("Validating PERFHERDER_DATA against %s" % schema_path)
-        try:
-            with open(schema_path) as f:
-                schema = json.load(f)
-            data = json.loads(parser.found_perf_data[0])
-            jsonschema.validate(data, schema)
-        except Exception as e:
-            self.exception("Error while validating PERFHERDER_DATA")
-            self.info(str(e))
-
-    def _artifact_perf_data(self, dest):
-        src = os.path.join(self.query_abs_dirs()['abs_work_dir'], 'raptor.json')
-=======
     def _install_view_gecko_profile_req(self):
         # if running locally and gecko profiing is on, we will be using the
         # view-gecko-profile tool which has its own requirements too
@@ -668,7 +523,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
             self.install_module(requirements=[view_gecko_profile_req])
 
     def _artifact_perf_data(self, src, dest):
->>>>>>> upstream-releases
         if not os.path.isdir(os.path.dirname(dest)):
             # create upload dir if it doesn't already exist
             self.info("creating dir: %s" % os.path.dirname(dest))
@@ -764,27 +618,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
             for item in parser.minidump_output:
                 self.run_command(["ls", "-l", item])
 
-<<<<<<< HEAD
-        elif '--no-upload-results' not in options:
-            if not self.gecko_profile:
-                self._validate_treeherder_data(parser)
-            if not self.run_local:
-                # copy results to upload dir so they are included as an artifact
-                self.info("copying raptor results to upload dir:")
-                dest = os.path.join(env['MOZ_UPLOAD_DIR'], 'perfherder-data.json')
-                self.info(str(dest))
-                self._artifact_perf_data(dest)
-||||||| merged common ancestors
-        elif '--no-upload-results' not in options:
-            if not self.gecko_profile:
-                self._validate_treeherder_data(parser)
-                if not self.run_local:
-                    # copy results to upload dir so they are included as an artifact
-                    self.info("copying raptor results to upload dir:")
-                    dest = os.path.join(env['MOZ_UPLOAD_DIR'], 'perfherder-data.json')
-                    self.info(str(dest))
-                    self._artifact_perf_data(dest)
-=======
         elif not self.run_local:
             # copy results to upload dir so they are included as an artifact
             self.info("copying raptor results to upload dir:")
@@ -811,7 +644,6 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
                 dest = os.path.join(env['MOZ_UPLOAD_DIR'], 'screenshots.html')
                 self.info(str(dest))
                 self._artifact_perf_data(src, dest)
->>>>>>> upstream-releases
 
 
 class RaptorOutputParser(OutputParser):

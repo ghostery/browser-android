@@ -48,25 +48,6 @@ class GfxInfoBase : public nsIGfxInfo,
   // using GfxInfoBase::GetFeatureStatus;
   // using GfxInfoBase::GetFeatureSuggestedDriverVersion;
   // to import the relevant methods into their namespace.
-<<<<<<< HEAD
-  NS_IMETHOD GetFeatureStatus(int32_t aFeature, nsACString& aFailureId,
-                              int32_t* _retval) override;
-  NS_IMETHOD GetFeatureSuggestedDriverVersion(int32_t aFeature,
-                                              nsAString& _retval) override;
-
-  NS_IMETHOD GetMonitors(JSContext* cx,
-                         JS::MutableHandleValue _retval) override;
-  NS_IMETHOD GetFailures(uint32_t* failureCount, int32_t** indices,
-                         char*** failures) override;
-  NS_IMETHOD_(void) LogFailure(const nsACString& failure) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetFeatureStatus(int32_t aFeature, nsACString& aFailureId, int32_t *_retval) override;
-  NS_IMETHOD GetFeatureSuggestedDriverVersion(int32_t aFeature, nsAString & _retval) override;
-
-  NS_IMETHOD GetMonitors(JSContext* cx, JS::MutableHandleValue _retval) override;
-  NS_IMETHOD GetFailures(uint32_t *failureCount, int32_t** indices, char ***failures) override;
-  NS_IMETHOD_(void) LogFailure(const nsACString &failure) override;
-=======
   NS_IMETHOD GetFeatureStatus(int32_t aFeature, nsACString& aFailureId,
                               int32_t* _retval) override;
   NS_IMETHOD GetFeatureSuggestedDriverVersion(int32_t aFeature,
@@ -77,7 +58,6 @@ class GfxInfoBase : public nsIGfxInfo,
   NS_IMETHOD GetFailures(nsTArray<int32_t>& indices,
                          nsTArray<nsCString>& failures) override;
   NS_IMETHOD_(void) LogFailure(const nsACString& failure) override;
->>>>>>> upstream-releases
   NS_IMETHOD GetInfo(JSContext*, JS::MutableHandle<JS::Value>) override;
   NS_IMETHOD GetFeatures(JSContext*, JS::MutableHandle<JS::Value>) override;
   NS_IMETHOD GetFeatureLog(JSContext*, JS::MutableHandle<JS::Value>) override;
@@ -89,21 +69,11 @@ class GfxInfoBase : public nsIGfxInfo,
   NS_IMETHOD GetIsHeadless(bool* aIsHeadless) override;
   NS_IMETHOD GetUsesTiling(bool* aUsesTiling) override;
   NS_IMETHOD GetContentUsesTiling(bool* aUsesTiling) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetOffMainThreadPaintEnabled(
-      bool* aOffMainThreadPaintEnabled) override;
-  NS_IMETHOD GetOffMainThreadPaintWorkerCount(
-      int32_t* aOffMainThreadPaintWorkerCount) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetOffMainThreadPaintEnabled(bool* aOffMainThreadPaintEnabled) override;
-  NS_IMETHOD GetOffMainThreadPaintWorkerCount(int32_t* aOffMainThreadPaintWorkerCount) override;
-=======
   NS_IMETHOD GetOffMainThreadPaintEnabled(
       bool* aOffMainThreadPaintEnabled) override;
   NS_IMETHOD GetOffMainThreadPaintWorkerCount(
       int32_t* aOffMainThreadPaintWorkerCount) override;
   NS_IMETHOD GetTargetFrameRate(uint32_t* aTargetFrameRate) override;
->>>>>>> upstream-releases
 
   // Initialization function. If you override this, you must call this class's
   // version of Init first.
@@ -152,35 +122,6 @@ class GfxInfoBase : public nsIGfxInfo,
   virtual const nsTArray<GfxDriverInfo>& GetGfxDriverInfo() = 0;
 
   virtual void DescribeFeatures(JSContext* aCx, JS::Handle<JSObject*> obj);
-<<<<<<< HEAD
-  bool InitFeatureObject(JSContext* aCx, JS::Handle<JSObject*> aContainer,
-                         const char* aName,
-                         mozilla::gfx::FeatureStatus& aKnownStatus,
-                         JS::MutableHandle<JSObject*> aOutObj);
-
-  NS_IMETHOD ControlGPUProcessForXPCShell(bool aEnable, bool* _retval) override;
-
- private:
-  virtual int32_t FindBlocklistedDeviceInList(
-      const nsTArray<GfxDriverInfo>& aDriverInfo, nsAString& aSuggestedVersion,
-      int32_t aFeature, nsACString& aFailureId, OperatingSystem os);
-||||||| merged common ancestors
-  bool InitFeatureObject(
-    JSContext* aCx,
-    JS::Handle<JSObject*> aContainer,
-    const char* aName,
-    mozilla::gfx::FeatureStatus& aKnownStatus,
-    JS::MutableHandle<JSObject*> aOutObj);
-
-  NS_IMETHOD ControlGPUProcessForXPCShell(bool aEnable, bool *_retval) override;
-
-private:
-  virtual int32_t FindBlocklistedDeviceInList(const nsTArray<GfxDriverInfo>& aDriverInfo,
-                                              nsAString& aSuggestedVersion,
-                                              int32_t aFeature,
-                                              nsACString &aFailureId,
-                                              OperatingSystem os);
-=======
 
   bool DoesVendorMatch(const nsAString& aBlocklistVendor,
                        const nsAString& aAdapterVendor);
@@ -199,7 +140,6 @@ private:
   virtual int32_t FindBlocklistedDeviceInList(
       const nsTArray<GfxDriverInfo>& aDriverInfo, nsAString& aSuggestedVersion,
       int32_t aFeature, nsACString& aFailureId, OperatingSystem os);
->>>>>>> upstream-releases
 
   void EvaluateDownloadedBlacklist(nsTArray<GfxDriverInfo>& aDriverInfo);
 

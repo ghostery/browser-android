@@ -6,17 +6,6 @@
 
 #include "nsMacUtilsImpl.h"
 
-<<<<<<< HEAD
-#include "base/command_line.h"
-#include "nsDirectoryServiceDefs.h"
-#include "nsCOMPtr.h"
-#include "nsIFile.h"
-#include "nsIProperties.h"
-#include "nsServiceManagerUtils.h"
-#include "nsXULAppAPI.h"
-
-||||||| merged common ancestors
-=======
 #include "base/command_line.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/dom/ContentChild.h"
@@ -33,20 +22,12 @@
 #  include "mozilla/SandboxSettings.h"
 #endif
 
->>>>>>> upstream-releases
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h>
 #include <sys/sysctl.h>
 
 NS_IMPL_ISUPPORTS(nsMacUtilsImpl, nsIMacUtils)
 
-<<<<<<< HEAD
-nsresult nsMacUtilsImpl::GetArchString(nsAString& aArchString) {
-||||||| merged common ancestors
-nsresult
-nsMacUtilsImpl::GetArchString(nsAString& aArchString)
-{
-=======
 using mozilla::StaticMutexAutoLock;
 using mozilla::Unused;
 
@@ -64,7 +45,6 @@ StaticMutex nsMacUtilsImpl::sCachedAppPathMutex;
 Atomic<nsMacUtilsImpl::TCSMStatus> nsMacUtilsImpl::sTCSMStatus(TCSM_Unknown);
 
 nsresult nsMacUtilsImpl::GetArchString(nsAString& aArchString) {
->>>>>>> upstream-releases
   if (!mBinaryArchs.IsEmpty()) {
     aArchString.Assign(mBinaryArchs);
     return NS_OK;
@@ -172,86 +152,6 @@ nsMacUtilsImpl::GetIsTranslated(bool* aIsTranslated) {
 
   return NS_OK;
 }
-<<<<<<< HEAD
-
-#if defined(MOZ_CONTENT_SANDBOX)
-// Get the path to the .app directory (aka bundle) for the parent process.
-// When executing in the child process, this is the outer .app (such as
-// Firefox.app) and not the inner .app containing the child process
-// executable. We don't rely on the actual .app extension to allow for the
-// bundle being renamed.
-bool nsMacUtilsImpl::GetAppPath(nsCString& aAppPath) {
-  nsAutoCString appPath;
-  nsAutoCString appBinaryPath(
-      (CommandLine::ForCurrentProcess()->argv()[0]).c_str());
-
-  // The binary path resides within the .app dir in Contents/MacOS,
-  // e.g., Firefox.app/Contents/MacOS/firefox. Search backwards in
-  // the binary path for the end of .app path.
-  auto pattern = NS_LITERAL_CSTRING("/Contents/MacOS/");
-  nsAutoCString::const_iterator start, end;
-  appBinaryPath.BeginReading(start);
-  appBinaryPath.EndReading(end);
-  if (RFindInReadable(pattern, start, end)) {
-    end = start;
-    appBinaryPath.BeginReading(start);
-
-    // If we're executing in a child process, get the parent .app path
-    // by searching backwards once more. The child executable resides
-    // in Firefox.app/Contents/MacOS/plugin-container/Contents/MacOS.
-    if (!XRE_IsParentProcess()) {
-      if (RFindInReadable(pattern, start, end)) {
-        end = start;
-        appBinaryPath.BeginReading(start);
-      } else {
-        return false;
-      }
-    }
-
-    appPath.Assign(Substring(start, end));
-  } else {
-    return false;
-  }
-
-  nsCOMPtr<nsIFile> app;
-  nsresult rv = NS_NewLocalFile(NS_ConvertUTF8toUTF16(appPath), true,
-                                getter_AddRefs(app));
-  if (NS_FAILED(rv)) {
-    return false;
-  }
-
-  rv = app->Normalize();
-  if (NS_FAILED(rv)) {
-    return false;
-  }
-  app->GetNativePath(aAppPath);
-
-  return true;
-}
-
-#if defined(DEBUG)
-// Given a path to a file, return the directory which contains it.
-nsAutoCString nsMacUtilsImpl::GetDirectoryPath(const char* aPath) {
-  nsCOMPtr<nsIFile> file = do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
-  if (!file || NS_FAILED(file->InitWithNativePath(nsDependentCString(aPath)))) {
-    MOZ_CRASH("Failed to create or init an nsIFile");
-  }
-  nsCOMPtr<nsIFile> directoryFile;
-  if (NS_FAILED(file->GetParent(getter_AddRefs(directoryFile))) ||
-      !directoryFile) {
-    MOZ_CRASH("Failed to get parent for an nsIFile");
-  }
-  directoryFile->Normalize();
-  nsAutoCString directoryPath;
-  if (NS_FAILED(directoryFile->GetNativePath(directoryPath))) {
-    MOZ_CRASH("Failed to get path for an nsIFile");
-  }
-  return directoryPath;
-}
-#endif /* DEBUG */
-#endif /* MOZ_CONTENT_SANDBOX */
-||||||| merged common ancestors
-=======
 
 #if defined(MOZ_SANDBOX)
 // Get the path to the .app directory (aka bundle) for the parent process.
@@ -541,4 +441,3 @@ nsresult nsMacUtilsImpl::GetObjDir(nsIFile** aObjDir) {
 #endif
   return GetDirFromBundlePlist(NS_LITERAL_STRING(MAC_DEV_OBJ_KEY), aObjDir);
 }
->>>>>>> upstream-releases

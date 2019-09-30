@@ -24,15 +24,7 @@ struct SMILTargetIdentifier;
 namespace dom {
 class Element;
 class SVGAnimationElement;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
 }  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
 //----------------------------------------------------------------------
 // SMILAnimationController
@@ -47,23 +39,10 @@ class SVGAnimationElement;
 // a compound document. These time containers can be paused individually or
 // here, at the document level.
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
-class nsSMILAnimationController final : public nsSMILTimeContainer,
-                                        public nsARefreshObserver {
- public:
-  explicit nsSMILAnimationController(nsIDocument* aDoc);
-||||||| merged common ancestors
-class nsSMILAnimationController final : public nsSMILTimeContainer,
-                                        public nsARefreshObserver
-{
-public:
-  explicit nsSMILAnimationController(nsIDocument* aDoc);
-=======
 class SMILAnimationController final : public SMILTimeContainer,
                                       public nsARefreshObserver {
  public:
   explicit SMILAnimationController(mozilla::dom::Document* aDoc);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
   // Clears mDocument pointer. (Called by our mozilla::dom::Document when it's
   // going away)
@@ -130,16 +109,8 @@ class SMILAnimationController final : public SMILTimeContainer,
   bool PreTraverse();
   bool PreTraverseInSubtree(mozilla::dom::Element* aRoot);
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
- protected:
-  ~nsSMILAnimationController();
-||||||| merged common ancestors
-protected:
-  ~nsSMILAnimationController();
-=======
  protected:
   ~SMILAnimationController();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
   // Typedefs
   typedef nsPtrHashKey<SMILTimeContainer> TimeContainerPtrKey;
@@ -171,37 +142,15 @@ protected:
 
   static void AddAnimationToCompositorTable(
       mozilla::dom::SVGAnimationElement* aElement,
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
-      nsSMILCompositorTable* aCompositorTable, bool& aStyleFlushNeeded);
-||||||| merged common ancestors
-      nsSMILCompositorTable* aCompositorTable,
-      bool& aStyleFlushNeeded);
-=======
       SMILCompositorTable* aCompositorTable, bool& aStyleFlushNeeded);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
   static bool GetTargetIdentifierForAnimation(
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
-      mozilla::dom::SVGAnimationElement* aAnimElem,
-      nsSMILTargetIdentifier& aResult);
-||||||| merged common ancestors
-      mozilla::dom::SVGAnimationElement* aAnimElem, nsSMILTargetIdentifier& aResult);
-=======
       mozilla::dom::SVGAnimationElement* aAnimElem,
       SMILTargetIdentifier& aResult);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
   // Methods for adding/removing time containers
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
-  virtual nsresult AddChild(nsSMILTimeContainer& aChild) override;
-  virtual void RemoveChild(nsSMILTimeContainer& aChild) override;
-||||||| merged common ancestors
-  virtual nsresult AddChild(nsSMILTimeContainer& aChild) override;
-  virtual void     RemoveChild(nsSMILTimeContainer& aChild) override;
-=======
   virtual nsresult AddChild(SMILTimeContainer& aChild) override;
   virtual void RemoveChild(SMILTimeContainer& aChild) override;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
   void FlagDocumentNeedsFlush();
 
@@ -230,13 +179,7 @@ protected:
   // This behaviour does not affect pausing (since we're not *expecting* any
   // samples then) nor seeking (where the SMIL model behaves somewhat
   // differently such as not dispatching events).
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
-  nsSMILTime mAvgTimeBetweenSamples;
-||||||| merged common ancestors
-  nsSMILTime                 mAvgTimeBetweenSamples;
-=======
   SMILTime mAvgTimeBetweenSamples;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h
 
   bool mResampleNeeded;
   // If we're told to start sampling but there are no animation elements we just
@@ -262,12 +205,6 @@ protected:
   nsAutoPtr<SMILCompositorTable> mLastCompositorTable;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.h
-#endif  // NS_SMILANIMATIONCONTROLLER_H_
-||||||| merged common ancestors
-#endif // NS_SMILANIMATIONCONTROLLER_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILAnimationController_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.h

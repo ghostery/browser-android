@@ -23,35 +23,15 @@ class TabGroup;
 // delegate to the DocGroup or TabGroup. We can't use the Dispatcher class
 // directly because it inherits from nsISupports.
 class DispatcherTrait {
-<<<<<<< HEAD
- public:
-  // This method may or may not be safe off of the main thread. For nsIDocument
-  // it is safe. For nsIGlobalWindow it is not safe.
-||||||| merged common ancestors
-public:
-  // This method may or may not be safe off of the main thread. For nsIDocument
-  // it is safe. For nsIGlobalWindow it is not safe.
-=======
  public:
   // This method may or may not be safe off of the main thread. For Document it
   // is safe. For nsIGlobalWindow it is not safe.
->>>>>>> upstream-releases
   virtual nsresult Dispatch(TaskCategory aCategory,
                             already_AddRefed<nsIRunnable>&& aRunnable);
 
-<<<<<<< HEAD
-  // This method may or may not be safe off of the main thread. For nsIDocument
-  // it is safe. For nsIGlobalWindow it is not safe. The nsISerialEventTarget
-  // can always be used off the main thread.
-||||||| merged common ancestors
-  // This method may or may not be safe off of the main thread. For nsIDocument
-  // it is safe. For nsIGlobalWindow it is not safe. The nsISerialEventTarget can
-  // always be used off the main thread.
-=======
   // This method may or may not be safe off of the main thread. For Document it
   // is safe. For nsIGlobalWindow it is not safe. The nsISerialEventTarget can
   // always be used off the main thread.
->>>>>>> upstream-releases
   virtual nsISerialEventTarget* EventTargetFor(TaskCategory aCategory) const;
 
   // Must be called on the main thread. The AbstractThread can always be used

@@ -196,21 +196,11 @@ SuggestAutoComplete.prototype = {
    */
   _triggerSearch(searchString, searchParam, listener, privacyMode) {
     this._listener = listener;
-<<<<<<< HEAD:mozilla-release/toolkit/components/search/nsSearchSuggestions.js
-    this._suggestionController.fetch(searchString,
-                                     privacyMode,
-                                     Services.search.defaultEngine);
-||||||| merged common ancestors
-    this._suggestionController.fetch(searchString,
-                                     privacyMode,
-                                     Services.search.currentEngine);
-=======
     this._suggestionController.fetch(
       searchString,
       privacyMode,
       Services.search.defaultEngine
     );
->>>>>>> upstream-releases:mozilla-release/toolkit/components/search/SearchSuggestions.jsm
   },
 
   /**

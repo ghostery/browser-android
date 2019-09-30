@@ -36,12 +36,6 @@ def test(mod, path, entity=None):
         if re.match(r"toolkit/about/[^/]*About.ftl", path):
             # error on toolkit/about/*About.ftl
             return "error"
-<<<<<<< HEAD
-        if re.match(r"toolkit/about/[^/]*Plugins.ftl", path):
-            # error on toolkit/about/*Plugins.ftl
-            return "error"
-||||||| merged common ancestors
-=======
         if re.match(r"toolkit/about/[^/]*Plugins.ftl", path):
             # error on toolkit/about/*Plugins.ftl
             return "error"
@@ -54,7 +48,6 @@ def test(mod, path, entity=None):
         if re.match(r"toolkit/about/[^/]*Support.ftl", path):
             # error on toolkit/about/*Support.ftl
             return "error"
->>>>>>> upstream-releases
         return "ignore"
 
     if mod == "dom":

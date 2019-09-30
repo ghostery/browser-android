@@ -193,21 +193,10 @@ void ComputedTimingFunction::AppendToString(nsAString& aResult) const {
   Servo_SerializeEasing(&timing, &aResult);
 }
 
-<<<<<<< HEAD
-/* static */ int32_t ComputedTimingFunction::Compare(
-    const Maybe<ComputedTimingFunction>& aLhs,
-    const Maybe<ComputedTimingFunction>& aRhs) {
-||||||| merged common ancestors
-/* static */ int32_t
-ComputedTimingFunction::Compare(const Maybe<ComputedTimingFunction>& aLhs,
-                                const Maybe<ComputedTimingFunction>& aRhs)
-{
-=======
 /* static */
 int32_t ComputedTimingFunction::Compare(
     const Maybe<ComputedTimingFunction>& aLhs,
     const Maybe<ComputedTimingFunction>& aRhs) {
->>>>>>> upstream-releases
   // We can't use |operator<| for const Maybe<>& here because
   // 'ease' is prior to 'linear' which is represented by Nothing().
   // So we have to convert Nothing() as 'linear' and check it first.

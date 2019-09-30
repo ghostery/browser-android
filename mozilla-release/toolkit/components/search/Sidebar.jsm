@@ -3,14 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/search/nsSidebar.js
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases:mozilla-release/toolkit/components/search/Sidebar.jsm
 
 function nsSidebar() {}
 

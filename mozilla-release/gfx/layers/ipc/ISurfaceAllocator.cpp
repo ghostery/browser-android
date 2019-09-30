@@ -6,18 +6,8 @@
 
 #include "ISurfaceAllocator.h"
 
-<<<<<<< HEAD
-#include "gfxPrefs.h"
 #include "mozilla/layers/ImageBridgeParent.h"  // for ImageBridgeParent
 #include "mozilla/layers/TextureHost.h"        // for TextureHost
-||||||| merged common ancestors
-#include "gfxPrefs.h"
-#include "mozilla/layers/ImageBridgeParent.h" // for ImageBridgeParent
-#include "mozilla/layers/TextureHost.h"       // for TextureHost
-=======
-#include "mozilla/layers/ImageBridgeParent.h"  // for ImageBridgeParent
-#include "mozilla/layers/TextureHost.h"        // for TextureHost
->>>>>>> upstream-releases
 #include "mozilla/layers/TextureForwarder.h"
 #include "mozilla/layers/CompositableForwarder.h"
 
@@ -28,15 +18,8 @@ NS_IMPL_ISUPPORTS(GfxMemoryImageReporter, nsIMemoryReporter)
 
 mozilla::Atomic<ptrdiff_t> GfxMemoryImageReporter::sAmount(0);
 
-<<<<<<< HEAD
-/* static */ uint32_t CompositableForwarder::GetMaxFileDescriptorsPerMessage() {
-||||||| merged common ancestors
-/* static */ uint32_t
-CompositableForwarder::GetMaxFileDescriptorsPerMessage() {
-=======
 /* static */
 uint32_t CompositableForwarder::GetMaxFileDescriptorsPerMessage() {
->>>>>>> upstream-releases
 #if defined(OS_POSIX)
   static const uint32_t kMaxFileDescriptors =
       FileDescriptorSet::MAX_DESCRIPTORS_PER_MESSAGE;

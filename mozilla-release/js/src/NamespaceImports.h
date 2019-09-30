@@ -64,13 +64,8 @@ using JS::PrivateUint32Value;
 using JS::PrivateValue;
 using JS::StringValue;
 using JS::UndefinedValue;
-<<<<<<< HEAD
-using JS::Value;
-||||||| merged common ancestors
-=======
 using JS::Value;
 using JS::ValueType;
->>>>>>> upstream-releases
 
 using JS::ConstTwoByteChars;
 using JS::Latin1Char;
@@ -88,15 +83,6 @@ using JS::Ok;
 using JS::OOM;
 using JS::Result;
 
-<<<<<<< HEAD
-using JS::AutoIdVector;
-using JS::AutoObjectVector;
-using JS::AutoValueVector;
-||||||| merged common ancestors
-using JS::AutoValueVector;
-using JS::AutoIdVector;
-using JS::AutoObjectVector;
-=======
 using JS::HandleIdVector;
 using JS::HandleObjectVector;
 using JS::HandleValueVector;
@@ -106,7 +92,6 @@ using JS::MutableHandleValueVector;
 using JS::RootedIdVector;
 using JS::RootedObjectVector;
 using JS::RootedValueVector;
->>>>>>> upstream-releases
 
 using JS::IdVector;
 using JS::ScriptVector;
@@ -179,14 +164,7 @@ using JS::Symbol;
 using JS::SymbolCode;
 
 using JS::BigInt;
-<<<<<<< HEAD
-#endif
 
-||||||| merged common ancestors
-#endif
-=======
-
->>>>>>> upstream-releases
 } /* namespace js */
 
 #endif /* NamespaceImports_h */

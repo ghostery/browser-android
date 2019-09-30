@@ -22,29 +22,11 @@ interface BrowsingContext {
 
   sequence<BrowsingContext> getChildren();
 
-<<<<<<< HEAD
-  readonly attribute nsIDocShell? docShell;
-
-||||||| merged common ancestors
-=======
   readonly attribute nsIDocShell? docShell;
 
   readonly attribute Element? embedderElement;
 
->>>>>>> upstream-releases
   readonly attribute unsigned long long id;
-<<<<<<< HEAD
-
-  readonly attribute BrowsingContext? opener;
-};
-
-[Exposed=Window, ChromeOnly]
-interface ChromeBrowsingContext : BrowsingContext {
-  sequence<WindowGlobalParent> getWindowGlobals();
-
-  readonly attribute WindowGlobalParent? currentWindowGlobal;
-||||||| merged common ancestors
-=======
 
   readonly attribute BrowsingContext? opener;
 
@@ -72,5 +54,4 @@ interface CanonicalBrowsingContext : BrowsingContext {
 [Exposed=Window, ChromeOnly]
 interface BrowsingContextGroup {
   sequence<BrowsingContext> getToplevels();
->>>>>>> upstream-releases
 };

@@ -13,13 +13,6 @@ chrome.jar:
   skin/aboutExperiments.css                 (aboutExperiments.css)
   skin/aboutPrivateBrowsing.css             (aboutPrivateBrowsing.css)
   skin/aboutReader.css                      (aboutReader.css)
-<<<<<<< HEAD
-  skin/aboutSupport.css                     (aboutSupport.css)
-||||||| merged common ancestors
-  skin/aboutSupport.css                     (aboutSupport.css)
-  skin/config.css                           (config.css)
-=======
->>>>>>> upstream-releases
   skin/defines.css                          (defines.css)
   skin/netError.css                         (netError.css)
   skin/spinner.css                          (spinner.css)

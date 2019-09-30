@@ -13,30 +13,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://formautofill/OSKeyStore.jsm", this);
-ChromeUtils.import("resource://testing-common/OSKeyStoreTestUtils.jsm", this);
-
-const MANAGE_ADDRESSES_DIALOG_URL = "chrome://formautofill/content/manageAddresses.xhtml";
-const MANAGE_CREDIT_CARDS_DIALOG_URL = "chrome://formautofill/content/manageCreditCards.xhtml";
-const EDIT_ADDRESS_DIALOG_URL = "chrome://formautofill/content/editAddress.xhtml";
-const EDIT_CREDIT_CARD_DIALOG_URL = "chrome://formautofill/content/editCreditCard.xhtml";
-const BASE_URL = "http://mochi.test:8888/browser/browser/extensions/formautofill/test/browser/";
-const FORM_URL = "http://mochi.test:8888/browser/browser/extensions/formautofill/test/browser/autocomplete_basic.html";
-const CREDITCARD_FORM_URL = "https://example.org/browser/browser/extensions/formautofill/test/browser/autocomplete_creditcard_basic.html";
-||||||| merged common ancestors
-ChromeUtils.import("resource://testing-common/LoginTestUtils.jsm", this);
-ChromeUtils.import("resource://formautofill/MasterPassword.jsm", this);
-
-const MANAGE_ADDRESSES_DIALOG_URL = "chrome://formautofill/content/manageAddresses.xhtml";
-const MANAGE_CREDIT_CARDS_DIALOG_URL = "chrome://formautofill/content/manageCreditCards.xhtml";
-const EDIT_ADDRESS_DIALOG_URL = "chrome://formautofill/content/editAddress.xhtml";
-const EDIT_CREDIT_CARD_DIALOG_URL = "chrome://formautofill/content/editCreditCard.xhtml";
-const BASE_URL = "http://mochi.test:8888/browser/browser/extensions/formautofill/test/browser/";
-const FORM_URL = "http://mochi.test:8888/browser/browser/extensions/formautofill/test/browser/autocomplete_basic.html";
-const CREDITCARD_FORM_URL =
-  "https://example.org/browser/browser/extensions/formautofill/test/browser/autocomplete_creditcard_basic.html";
-=======
 ChromeUtils.import("resource://formautofill/OSKeyStore.jsm", this);
 ChromeUtils.import("resource://testing-common/OSKeyStoreTestUtils.jsm", this);
 
@@ -57,7 +33,6 @@ const CREDITCARD_FORM_URL =
   HTTP_TEST_PATH +
   "creditCard/autocomplete_creditcard_basic.html";
 
->>>>>>> upstream-releases
 const FTU_PREF = "extensions.formautofill.firstTimeUse";
 const CREDITCARDS_USED_STATUS_PREF = "extensions.formautofill.creditCards.used";
 const ENABLED_AUTOFILL_ADDRESSES_PREF =
@@ -425,16 +400,6 @@ async function waitForFocusAndFormReady(win) {
 }
 
 async function testDialog(url, testFn, arg = undefined) {
-<<<<<<< HEAD
-  // Skip this step for test cards that lack an encrypted
-  // number since they will fail to decrypt.
-  if (url == EDIT_CREDIT_CARD_DIALOG_URL &&
-      arg &&
-      arg.record &&
-      arg.record["cc-number-encrypted"]) {
-||||||| merged common ancestors
-  if (url == EDIT_CREDIT_CARD_DIALOG_URL && arg && arg.record) {
-=======
   // Skip this step for test cards that lack an encrypted
   // number since they will fail to decrypt.
   if (
@@ -443,7 +408,6 @@ async function testDialog(url, testFn, arg = undefined) {
     arg.record &&
     arg.record["cc-number-encrypted"]
   ) {
->>>>>>> upstream-releases
     arg.record = Object.assign({}, arg.record, {
       "cc-number": await OSKeyStore.decrypt(arg.record["cc-number-encrypted"]),
     });

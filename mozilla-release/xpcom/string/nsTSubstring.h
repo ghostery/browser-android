@@ -656,20 +656,8 @@ class nsTSubstring : public mozilla::detail::nsTStringRepr<T> {
    */
   void AppendPrintf(const char* aFormat, ...) MOZ_FORMAT_PRINTF(2, 3);
   void AppendPrintf(const char* aFormat, va_list aAp) MOZ_FORMAT_PRINTF(2, 0);
-<<<<<<< HEAD
-  void AppendInt(int32_t aInteger) { AppendPrintf("%" PRId32, aInteger); }
-  void AppendInt(int32_t aInteger, int aRadix) {
-||||||| merged common ancestors
-  void AppendInt(int32_t aInteger)
-  {
-    AppendPrintf("%" PRId32, aInteger);
-  }
-  void AppendInt(int32_t aInteger, int aRadix)
-  {
-=======
   void AppendInt(int32_t aInteger) { AppendIntDec(aInteger); }
   void AppendInt(int32_t aInteger, int aRadix) {
->>>>>>> upstream-releases
     if (aRadix == 10) {
       AppendIntDec(aInteger);
     } else if (aRadix == 8) {
@@ -678,35 +666,8 @@ class nsTSubstring : public mozilla::detail::nsTStringRepr<T> {
       AppendIntHex(static_cast<uint32_t>(aInteger));
     }
   }
-<<<<<<< HEAD
-  void AppendInt(uint32_t aInteger) { AppendPrintf("%" PRIu32, aInteger); }
-  void AppendInt(uint32_t aInteger, int aRadix) {
-    AppendPrintf(
-        aRadix == 10 ? "%" PRIu32 : aRadix == 8 ? "%" PRIo32 : "%" PRIx32,
-        aInteger);
-  }
-  void AppendInt(int64_t aInteger) { AppendPrintf("%" PRId64, aInteger); }
-  void AppendInt(int64_t aInteger, int aRadix) {
-||||||| merged common ancestors
-  void AppendInt(uint32_t aInteger)
-  {
-    AppendPrintf("%" PRIu32, aInteger);
-  }
-  void AppendInt(uint32_t aInteger, int aRadix)
-  {
-    AppendPrintf(aRadix == 10 ? "%" PRIu32 : aRadix == 8 ? "%" PRIo32 : "%" PRIx32,
-                 aInteger);
-  }
-  void AppendInt(int64_t aInteger)
-  {
-    AppendPrintf("%" PRId64, aInteger);
-  }
-  void AppendInt(int64_t aInteger, int aRadix)
-  {
-=======
   void AppendInt(uint32_t aInteger) { AppendIntDec(aInteger); }
   void AppendInt(uint32_t aInteger, int aRadix) {
->>>>>>> upstream-releases
     if (aRadix == 10) {
       AppendIntDec(aInteger);
     } else if (aRadix == 8) {
@@ -715,22 +676,6 @@ class nsTSubstring : public mozilla::detail::nsTStringRepr<T> {
       AppendIntHex(aInteger);
     }
   }
-<<<<<<< HEAD
-  void AppendInt(uint64_t aInteger) { AppendPrintf("%" PRIu64, aInteger); }
-  void AppendInt(uint64_t aInteger, int aRadix) {
-    AppendPrintf(
-        aRadix == 10 ? "%" PRIu64 : aRadix == 8 ? "%" PRIo64 : "%" PRIx64,
-        aInteger);
-||||||| merged common ancestors
-  void AppendInt(uint64_t aInteger)
-  {
-    AppendPrintf("%" PRIu64, aInteger);
-  }
-  void AppendInt(uint64_t aInteger, int aRadix)
-  {
-    AppendPrintf(aRadix == 10 ? "%" PRIu64 : aRadix == 8 ? "%" PRIo64 : "%" PRIx64,
-                 aInteger);
-=======
   void AppendInt(int64_t aInteger) { AppendIntDec(aInteger); }
   void AppendInt(int64_t aInteger, int aRadix) {
     if (aRadix == 10) {
@@ -750,7 +695,6 @@ class nsTSubstring : public mozilla::detail::nsTStringRepr<T> {
     } else {
       AppendIntHex(aInteger);
     }
->>>>>>> upstream-releases
   }
 
  private:
@@ -1195,28 +1139,11 @@ class nsTSubstring : public mozilla::detail::nsTStringRepr<T> {
                ClassFlags aClassFlags)
 // XXXbz or can I just include nscore.h and use NS_BUILD_REFCNT_LOGGING?
 #if defined(DEBUG) || defined(FORCE_BUILD_REFCNT_LOGGING)
-<<<<<<< HEAD
-#define XPCOM_STRING_CONSTRUCTOR_OUT_OF_LINE
-      ;
-||||||| merged common ancestors
-#define XPCOM_STRING_CONSTRUCTOR_OUT_OF_LINE
-    ;
-=======
 #  define XPCOM_STRING_CONSTRUCTOR_OUT_OF_LINE
       ;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#undef XPCOM_STRING_CONSTRUCTOR_OUT_OF_LINE
-      : base_string_type(aData, aLength, aDataFlags, aClassFlags) {
-||||||| merged common ancestors
-#undef XPCOM_STRING_CONSTRUCTOR_OUT_OF_LINE
-    : base_string_type(aData, aLength, aDataFlags, aClassFlags)
-  {
-=======
 #  undef XPCOM_STRING_CONSTRUCTOR_OUT_OF_LINE
       : base_string_type(aData, aLength, aDataFlags, aClassFlags) {
->>>>>>> upstream-releases
     AssertValid();
     MOZ_RELEASE_ASSERT(CheckCapacity(aLength), "String is too large.");
   }

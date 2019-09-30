@@ -1,44 +1,3 @@
-<<<<<<< HEAD
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-include PBackgroundSharedTypes;
-
-namespace mozilla {
-namespace dom {
-
-struct LSRequestPrepareDatastoreParams
-{
-  PrincipalInfo principalInfo;
-  bool createIfNotExists;
-};
-
-struct LSRequestPrepareObserverParams
-{
-  PrincipalInfo principalInfo;
-};
-
-union LSRequestParams
-{
-  LSRequestPrepareDatastoreParams;
-  LSRequestPrepareObserverParams;
-};
-
-struct LSSimpleRequestPreloadedParams
-{
-  PrincipalInfo principalInfo;
-};
-
-union LSSimpleRequestParams
-{
-  LSSimpleRequestPreloadedParams;
-};
-
-} // namespace dom
-} // namespace mozilla
-||||||| merged common ancestors
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -111,4 +70,3 @@ struct LSItemInfo
 
 } // namespace dom
 } // namespace mozilla
->>>>>>> upstream-releases

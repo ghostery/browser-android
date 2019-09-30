@@ -142,59 +142,6 @@ async function testSubmenu(toolbox) {
   const submenu = new Menu({
     id: "submenu-popup",
   });
-<<<<<<< HEAD
-  submenu.append(new MenuItem({
-    label: "Submenu item",
-    click: () => {
-      info("Click callback has fired for submenu item");
-      clickFired = true;
-    },
-  }));
-  menu.append(new MenuItem({
-    l10nID: "editmenu-copy",
-    submenu: submenu,
-  }));
-  menu.append(new MenuItem({
-    label: "Submenu parent with attributes",
-    id: "submenu-parent-with-attrs",
-    submenu: submenu,
-    accesskey: "A",
-    disabled: true,
-  }));
-
-  menu.popup(0, 0, toolbox);
-  ok(toolbox.doc.querySelector("#menu-popup"), "A popup is in the DOM");
-  is(toolbox.doc.querySelectorAll("#menu-popup > menuitem").length, 0,
-    "No menuitem children");
-
-  const menus = toolbox.doc.querySelectorAll("#menu-popup > menu");
-||||||| merged common ancestors
-  submenu.append(new MenuItem({
-    label: "Submenu item",
-    click: () => {
-      info("Click callback has fired for submenu item");
-      clickFired = true;
-    },
-  }));
-  menu.append(new MenuItem({
-    l10nID: "submenu-parent",
-    submenu: submenu,
-  }));
-  menu.append(new MenuItem({
-    label: "Submenu parent with attributes",
-    id: "submenu-parent-with-attrs",
-    submenu: submenu,
-    accesskey: "A",
-    disabled: true,
-  }));
-
-  menu.popup(0, 0, toolbox);
-  ok(toolbox.doc.querySelector("#menu-popup"), "A popup is in the DOM");
-  is(toolbox.doc.querySelectorAll("#menu-popup > menuitem").length, 0,
-    "No menuitem children");
-
-  const menus = toolbox.doc.querySelectorAll("#menu-popup > menu");
-=======
   submenu.append(
     new MenuItem({
       label: "Submenu item",
@@ -229,24 +176,17 @@ async function testSubmenu(toolbox) {
   );
 
   const menus = toolbox.topDoc.querySelectorAll("#menu-popup > menu");
->>>>>>> upstream-releases
   is(menus.length, 2, "Correct number of menus");
   ok(
     !menus[0].hasAttribute("label"),
     "No label: should be set by localization"
   );
   ok(!menus[0].hasAttribute("disabled"), "Correct disabled state");
-<<<<<<< HEAD
-  is(menus[0].getAttribute("data-l10n-id"), "editmenu-copy", "Correct localization attribute");
-||||||| merged common ancestors
-  is(menus[0].getAttribute("data-l10n-id"), "submenu-parent", "Correct localization attribute");
-=======
   is(
     menus[0].getAttribute("data-l10n-id"),
     "editmenu-copy",
     "Correct localization attribute"
   );
->>>>>>> upstream-releases
 
   is(menus[1].getAttribute("accesskey"), "A", "Correct accesskey");
   ok(menus[1].hasAttribute("disabled"), "Correct disabled state");

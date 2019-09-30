@@ -392,28 +392,6 @@ mozilla::ipc::IPCResult ChromiumCDMChild::RecvInit(
   mPersistentStateAllowed = aAllowPersistentState;
 
   RefPtr<ChromiumCDMChild::InitPromise> promise = mInitPromise.Ensure(__func__);
-<<<<<<< HEAD
-  promise->Then(mPlugin->GMPMessageLoop()->SerialEventTarget(), __func__,
-                [aResolver](bool /* unused */) { aResolver(true); },
-                [aResolver](nsresult rv) {
-                  GMP_LOG(
-                      "ChromiumCDMChild::RecvInit() init promise rejected with "
-                      "rv=%" PRIu32,
-                      static_cast<uint32_t>(rv));
-                  aResolver(false);
-                });
-||||||| merged common ancestors
-  promise->Then(
-    mPlugin->GMPMessageLoop()->SerialEventTarget(),
-    __func__,
-    [aResolver](bool /* unused */) { aResolver(true); },
-    [aResolver](nsresult rv) {
-      GMP_LOG(
-        "ChromiumCDMChild::RecvInit() init promise rejected with rv=%" PRIu32,
-        static_cast<uint32_t>(rv));
-      aResolver(false);
-    });
-=======
   promise->Then(
       mPlugin->GMPMessageLoop()->SerialEventTarget(), __func__,
       [aResolver](bool /* unused */) { aResolver(true); },
@@ -424,7 +402,6 @@ mozilla::ipc::IPCResult ChromiumCDMChild::RecvInit(
             static_cast<uint32_t>(rv));
         aResolver(false);
       });
->>>>>>> upstream-releases
 
   if (mCDM) {
     // Once the CDM is initialized we expect it to resolve mInitPromise via

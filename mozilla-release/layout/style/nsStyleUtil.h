@@ -28,20 +28,11 @@ class FontSlantStyle;
 namespace dom {
 class Document;
 class Element;
-<<<<<<< HEAD
-}
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 // Style utility functions
 class nsStyleUtil {
-<<<<<<< HEAD
  public:
   static bool DashMatchCompare(const nsAString& aAttributeValue,
                                const nsAString& aSelectorValue,
@@ -50,26 +41,6 @@ class nsStyleUtil {
   static bool ValueIncludes(const nsAString& aValueList,
                             const nsAString& aValue,
                             const nsStringComparator& aComparator);
-||||||| merged common ancestors
-public:
-
- static bool DashMatchCompare(const nsAString& aAttributeValue,
-                                const nsAString& aSelectorValue,
-                                const nsStringComparator& aComparator);
-
- static bool ValueIncludes(const nsAString& aValueList,
-                           const nsAString& aValue,
-                           const nsStringComparator& aComparator);
-=======
- public:
-  static bool DashMatchCompare(const nsAString& aAttributeValue,
-                               const nsAString& aSelectorValue,
-                               const nsStringComparator& aComparator);
-
-  static bool ValueIncludes(const nsAString& aValueList,
-                            const nsAString& aValue,
-                            const nsStringComparator& aComparator);
->>>>>>> upstream-releases
 
   // Append a quoted (with 'quoteChar') and escaped version of aString
   // to aResult.  'quoteChar' must be ' or ".
@@ -90,22 +61,8 @@ public:
  public:
   // Append a bitmask-valued property's value(s) (space-separated) to aResult.
   static void AppendBitmaskCSSValue(const nsCSSKTableEntry aTable[],
-<<<<<<< HEAD
                                     int32_t aMaskedValue, int32_t aFirstMask,
                                     int32_t aLastMask, nsAString& aResult);
-
-  static void AppendAngleValue(const nsStyleCoord& aValue, nsAString& aResult);
-||||||| merged common ancestors
-                                    int32_t aMaskedValue,
-                                    int32_t aFirstMask,
-                                    int32_t aLastMask,
-                                    nsAString& aResult);
-
-  static void AppendAngleValue(const nsStyleCoord& aValue, nsAString& aResult);
-=======
-                                    int32_t aMaskedValue, int32_t aFirstMask,
-                                    int32_t aLastMask, nsAString& aResult);
->>>>>>> upstream-releases
 
   static void AppendPaintOrderValue(uint8_t aValue, nsAString& aResult);
 
@@ -198,20 +155,8 @@ public:
   static bool CSPAllowsInlineStyle(mozilla::dom::Element* aContent,
                                    mozilla::dom::Document* aDocument,
                                    nsIPrincipal* aTriggeringPrincipal,
-<<<<<<< HEAD
-                                   nsIURI* aSourceURI, uint32_t aLineNumber,
-                                   uint32_t aColumnNumber,
-                                   const nsAString& aStyleText, nsresult* aRv);
-||||||| merged common ancestors
-                                   nsIURI* aSourceURI,
-                                   uint32_t aLineNumber,
-                                   uint32_t aColumnNumber,
-                                   const nsAString& aStyleText,
-                                   nsresult* aRv);
-=======
                                    uint32_t aLineNumber, uint32_t aColumnNumber,
                                    const nsAString& aStyleText, nsresult* aRv);
->>>>>>> upstream-releases
 
   template <size_t N>
   static bool MatchesLanguagePrefix(const char16_t* aLang, size_t aLen,

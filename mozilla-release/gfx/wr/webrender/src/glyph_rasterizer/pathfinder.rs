@@ -288,39 +288,6 @@ fn request_render_task_from_pathfinder(
     let embolden_amount = compute_embolden_amount(size.to_f32_px());
 
     let location = RenderTaskLocation::Dynamic(None, *glyph_size);
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/pathfinder.rs
-    let glyph_render_task = RenderTask::new_glyph(location.clone(),
-                                                  mesh,
-                                                  &glyph_origin,
-                                                  &subpixel_offset,
-                                                  font.render_mode,
-                                                  &embolden_amount);
-
-    let root_task_id = render_tasks.add(glyph_render_task);
-    let render_pass = match render_mode {
-        FontRenderMode::Mono | FontRenderMode::Alpha => &mut render_passes.alpha_glyph_pass,
-        FontRenderMode::Subpixel => &mut render_passes.color_glyph_pass,
-    };
-    render_pass.add_render_task(root_task_id, *glyph_size, RenderTargetKind::Color, &location);
-
-    Ok(root_task_id)
-||||||| merged common ancestors
-    let glyph_render_task = RenderTask::new_glyph(location,
-                                                  mesh,
-                                                  &glyph_origin,
-                                                  &subpixel_offset,
-                                                  font.render_mode,
-                                                  &embolden_amount);
-
-    let root_task_id = render_tasks.add(glyph_render_task);
-    let render_pass = match render_mode {
-        FontRenderMode::Mono | FontRenderMode::Alpha => &mut render_passes.alpha_glyph_pass,
-        FontRenderMode::Subpixel => &mut render_passes.color_glyph_pass,
-    };
-    render_pass.add_render_task(root_task_id, *glyph_size, RenderTargetKind::Color);
-
-    Ok(root_task_id)
-=======
     let glyph_render_task = RenderTask::new_glyph(
         location.clone(),
         mesh,
@@ -331,7 +298,6 @@ fn request_render_task_from_pathfinder(
     );
 
     Ok(render_tasks.add(glyph_render_task))
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/pathfinder.rs
 }
 
 pub struct NativeFontHandleWrapper<'a>(pub &'a NativeFontHandle);

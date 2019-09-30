@@ -385,18 +385,6 @@ partial namespace ChromeUtils {
   [Throws]
   Promise<sequence<IOActivityDataDictionary>> requestIOActivity();
 
-<<<<<<< HEAD
-  /**
-   * Returns the BrowsingContext referred by the given id.
-   */
-  [ChromeOnly]
-  BrowsingContext? getBrowsingContext(unsigned long long id);
-
-  /**
-   * Returns all the root BrowsingContexts.
-   */
-||||||| merged common ancestors
-=======
   /**
   * Returns a Promise containing all processes info
   */
@@ -436,16 +424,7 @@ partial namespace ChromeUtils {
   [ChromeOnly]
   void unregisterWindowActor(DOMString aName);
 
->>>>>>> upstream-releases
   [ChromeOnly]
-<<<<<<< HEAD
-  sequence<BrowsingContext> getRootBrowsingContexts();
-
-  [ChromeOnly, Throws]
-  boolean hasReportingHeaderForOrigin(DOMString aOrigin);
-||||||| merged common ancestors
-  sequence<BrowsingContext> getRootBrowsingContexts();
-=======
   // aError should a nsresult.
   boolean isClassifierBlockingErrorCode(unsigned long aError);
 };
@@ -501,15 +480,12 @@ dictionary ParentProcInfoDictionary {
   sequence<ChildProcInfoDictionary> children = [];
   // Firefox info
   ProcType type = "browser";
->>>>>>> upstream-releases
 };
 
 /**
  * Dictionaries duplicating IPDL types in dom/ipc/DOMTypes.ipdlh
  * Used by requestPerformanceMetrics
  */
-<<<<<<< HEAD
-
 dictionary MediaMemoryInfoDictionary {
   unsigned long long audioSize = 0;
   unsigned long long videoSize = 0;
@@ -524,23 +500,6 @@ dictionary MemoryInfoDictionary {
   required MediaMemoryInfoDictionary media;
 };
 
-||||||| merged common ancestors
-=======
-dictionary MediaMemoryInfoDictionary {
-  unsigned long long audioSize = 0;
-  unsigned long long videoSize = 0;
-  unsigned long long resourcesSize = 0;
-};
-
-dictionary MemoryInfoDictionary {
-  unsigned long long domDom = 0;
-  unsigned long long domStyle = 0;
-  unsigned long long domOther = 0;
-  unsigned long long GCHeapUsage = 0;
-  required MediaMemoryInfoDictionary media;
-};
-
->>>>>>> upstream-releases
 dictionary CategoryDispatchDictionary
 {
   unsigned short category = 0;

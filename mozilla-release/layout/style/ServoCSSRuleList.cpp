@@ -22,12 +22,7 @@
 #include "mozilla/IntegerRange.h"
 #include "mozilla/ServoBindings.h"
 #include "mozilla/StyleSheet.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/Document.h"
->>>>>>> upstream-releases
 
 using namespace mozilla::dom;
 
@@ -187,19 +182,11 @@ nsresult ServoCSSRuleList::InsertRule(const nsAString& aRule, uint32_t aIndex) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult ServoCSSRuleList::DeleteRule(uint32_t aIndex) {
-||||||| merged common ancestors
-nsresult
-ServoCSSRuleList::DeleteRule(uint32_t aIndex)
-{
-=======
 nsresult ServoCSSRuleList::DeleteRule(uint32_t aIndex) {
   if (IsReadOnly()) {
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   nsresult rv = Servo_CssRules_DeleteRule(mRawRules, aIndex);
   if (!NS_FAILED(rv)) {
     uintptr_t rule = mRules[aIndex];
@@ -225,11 +212,6 @@ ServoCSSRuleList::~ServoCSSRuleList() {
   DropAllRules();
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 bool ServoCSSRuleList::IsReadOnly() const {
   MOZ_ASSERT(!mStyleSheet || !mParentRule ||
                  mStyleSheet->IsReadOnly() == mParentRule->IsReadOnly(),
@@ -239,4 +221,3 @@ bool ServoCSSRuleList::IsReadOnly() const {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

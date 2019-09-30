@@ -33,33 +33,15 @@ void GrDrawOpAtlas::instantiate(GrOnFlushResourceProvider* onFlushResourceProvid
     }
 }
 
-<<<<<<< HEAD
-std::unique_ptr<GrDrawOpAtlas> GrDrawOpAtlas::Make(GrProxyProvider* proxyProvider,
-                                                   GrPixelConfig config, int width,
-                                                   int height, int numPlotsX, int numPlotsY,
-||||||| merged common ancestors
-std::unique_ptr<GrDrawOpAtlas> GrDrawOpAtlas::Make(GrContext* ctx, GrPixelConfig config, int width,
-                                                   int height, int numPlotsX, int numPlotsY,
-=======
 std::unique_ptr<GrDrawOpAtlas> GrDrawOpAtlas::Make(GrProxyProvider* proxyProvider,
                                                    const GrBackendFormat& format,
                                                    GrPixelConfig config, int width,
                                                    int height, int plotWidth, int plotHeight,
->>>>>>> upstream-releases
                                                    AllowMultitexturing allowMultitexturing,
                                                    GrDrawOpAtlas::EvictionFunc func, void* data) {
-<<<<<<< HEAD
-    std::unique_ptr<GrDrawOpAtlas> atlas(new GrDrawOpAtlas(proxyProvider, config, width, height,
-                                                           numPlotsX, numPlotsY,
-                                                           allowMultitexturing));
-||||||| merged common ancestors
-    std::unique_ptr<GrDrawOpAtlas> atlas(new GrDrawOpAtlas(ctx, config, width, height, numPlotsX,
-                                                           numPlotsY, allowMultitexturing));
-=======
     std::unique_ptr<GrDrawOpAtlas> atlas(new GrDrawOpAtlas(proxyProvider, format, config, width,
                                                            height, plotWidth, plotHeight,
                                                            allowMultitexturing));
->>>>>>> upstream-releases
     if (!atlas->getProxies()[0]) {
         return nullptr;
     }
@@ -197,48 +179,22 @@ void GrDrawOpAtlas::Plot::resetRects() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-GrDrawOpAtlas::GrDrawOpAtlas(GrProxyProvider* proxyProvider,
-                             GrPixelConfig config, int width, int height,
-                             int numPlotsX, int numPlotsY, AllowMultitexturing allowMultitexturing)
-        : fPixelConfig(config)
-||||||| merged common ancestors
-GrDrawOpAtlas::GrDrawOpAtlas(GrContext* context, GrPixelConfig config, int width, int height,
-                             int numPlotsX, int numPlotsY, AllowMultitexturing allowMultitexturing)
-        : fContext(context)
-        , fPixelConfig(config)
-=======
 GrDrawOpAtlas::GrDrawOpAtlas(GrProxyProvider* proxyProvider, const GrBackendFormat& format,
                              GrPixelConfig config, int width, int height,
                              int plotWidth, int plotHeight, AllowMultitexturing allowMultitexturing)
         : fFormat(format)
         , fPixelConfig(config)
->>>>>>> upstream-releases
         , fTextureWidth(width)
         , fTextureHeight(height)
         , fPlotWidth(plotWidth)
         , fPlotHeight(plotHeight)
         , fAtlasGeneration(kInvalidAtlasGeneration + 1)
         , fPrevFlushToken(GrDeferredUploadToken::AlreadyFlushedToken())
-<<<<<<< HEAD
-        , fMaxPages(AllowMultitexturing::kYes == allowMultitexturing ? kMaxMultitexturePages : 1)
-        , fNumActivePages(0) {
-    fPlotWidth = fTextureWidth / numPlotsX;
-    fPlotHeight = fTextureHeight / numPlotsY;
-    SkASSERT(numPlotsX * numPlotsY <= BulkUseTokenUpdater::kMaxPlots);
-||||||| merged common ancestors
-        , fAllowMultitexturing(allowMultitexturing)
-        , fNumPages(0) {
-    fPlotWidth = fTextureWidth / numPlotsX;
-    fPlotHeight = fTextureHeight / numPlotsY;
-    SkASSERT(numPlotsX * numPlotsY <= BulkUseTokenUpdater::kMaxPlots);
-=======
         , fMaxPages(AllowMultitexturing::kYes == allowMultitexturing ? kMaxMultitexturePages : 1)
         , fNumActivePages(0) {
     int numPlotsX = width/plotWidth;
     int numPlotsY = height/plotHeight;
     SkASSERT(numPlotsX * numPlotsY <= GrDrawOpAtlas::kMaxPlots);
->>>>>>> upstream-releases
     SkASSERT(fPlotWidth * numPlotsX == fTextureWidth);
     SkASSERT(fPlotHeight * numPlotsY == fTextureHeight);
 
@@ -327,35 +283,6 @@ GrDrawOpAtlas::ErrorCode GrDrawOpAtlas::addToAtlas(GrResourceProvider* resourceP
     // We wait until we've grown to the full number of pages to begin evicting already flushed
     // plots so that we can maximize the opportunity for reuse.
     // As before we prioritize this upload to the first pages, not the most recently used.
-<<<<<<< HEAD
-    if (fNumActivePages == this->maxPages()) {
-        for (unsigned int pageIdx = 0; pageIdx < fNumActivePages; ++pageIdx) {
-            Plot* plot = fPages[pageIdx].fPlotList.tail();
-            SkASSERT(plot);
-            if (plot->lastUseToken() < target->tokenTracker()->nextTokenToFlush() ||
-                plot->flushesSinceLastUsed() >= kRecentlyUsedCount) {
-                this->processEvictionAndResetRects(plot);
-                SkASSERT(GrBytesPerPixel(fProxies[pageIdx]->config()) == plot->bpp());
-                SkDEBUGCODE(bool verify = )plot->addSubImage(width, height, image, loc);
-                SkASSERT(verify);
-                if (!this->updatePlot(target, id, plot)) {
-                    return ErrorCode::kError;
-                }
-                return ErrorCode::kSucceeded;
-||||||| merged common ancestors
-    for (unsigned int pageIdx = 0; pageIdx < fNumPages; ++pageIdx) {
-        Plot* plot = fPages[pageIdx].fPlotList.tail();
-        SkASSERT(plot);
-        if ((fNumPages == this->maxPages() &&
-             plot->lastUseToken() < target->tokenTracker()->nextTokenToFlush()) ||
-            plot->flushesSinceLastUsed() >= kRecentlyUsedCount) {
-            this->processEvictionAndResetRects(plot);
-            SkASSERT(GrBytesPerPixel(fProxies[pageIdx]->config()) == plot->bpp());
-            SkDEBUGCODE(bool verify = )plot->addSubImage(width, height, image, loc);
-            SkASSERT(verify);
-            if (!this->updatePlot(target, id, plot)) {
-                return false;
-=======
     if (fNumActivePages == this->maxPages()) {
         for (unsigned int pageIdx = 0; pageIdx < fNumActivePages; ++pageIdx) {
             Plot* plot = fPages[pageIdx].fPlotList.tail();
@@ -369,7 +296,6 @@ GrDrawOpAtlas::ErrorCode GrDrawOpAtlas::addToAtlas(GrResourceProvider* resourceP
                     return ErrorCode::kError;
                 }
                 return ErrorCode::kSucceeded;
->>>>>>> upstream-releases
             }
         }
     } else {
@@ -597,20 +523,6 @@ bool GrDrawOpAtlas::createPages(GrProxyProvider* proxyProvider) {
     int numPlotsX = fTextureWidth/fPlotWidth;
     int numPlotsY = fTextureHeight/fPlotHeight;
 
-<<<<<<< HEAD
-    for (uint32_t i = 0; i < this->maxPages(); ++i) {
-        fProxies[i] = proxyProvider->createProxy(desc, kTopLeft_GrSurfaceOrigin,
-                SkBackingFit::kExact, SkBudgeted::kYes, GrInternalSurfaceFlags::kNoPendingIO);
-        if (!fProxies[i]) {
-            return false;
-        }
-
-        // set up allocated plots
-        fPages[i].fPlotArray.reset(new sk_sp<Plot>[ numPlotsX * numPlotsY ]);
-||||||| merged common ancestors
-    // set up allocated plots
-    fPages[fNumPages].fPlotArray.reset(new sk_sp<Plot>[ numPlotsX * numPlotsY ]);
-=======
     for (uint32_t i = 0; i < this->maxPages(); ++i) {
         fProxies[i] = proxyProvider->createProxy(fFormat, desc, kTopLeft_GrSurfaceOrigin,
                 SkBackingFit::kExact, SkBudgeted::kYes, GrInternalSurfaceFlags::kNoPendingIO);
@@ -620,7 +532,6 @@ bool GrDrawOpAtlas::createPages(GrProxyProvider* proxyProvider) {
 
         // set up allocated plots
         fPages[i].fPlotArray.reset(new sk_sp<Plot>[ numPlotsX * numPlotsY ]);
->>>>>>> upstream-releases
 
         sk_sp<Plot>* currPlot = fPages[i].fPlotArray.get();
         for (int y = numPlotsY - 1, r = 0; y >= 0; --y, ++r) {
@@ -668,31 +579,6 @@ inline void GrDrawOpAtlas::deactivateLastPage() {
     int numPlotsY = fTextureHeight/fPlotHeight;
 
     fPages[lastPageIndex].fPlotList.reset();
-<<<<<<< HEAD
-    for (int r = 0; r < numPlotsY; ++r) {
-        for (int c = 0; c < numPlotsX; ++c) {
-            uint32_t plotIndex = r * numPlotsX + c;
-
-            Plot* currPlot = fPages[lastPageIndex].fPlotArray[plotIndex].get();
-            currPlot->resetRects();
-            currPlot->resetFlushesSinceLastUsed();
-
-            // rebuild the LRU list
-            SkDEBUGCODE(currPlot->fPrev = currPlot->fNext = nullptr);
-            SkDEBUGCODE(currPlot->fList = nullptr);
-            fPages[lastPageIndex].fPlotList.addToHead(currPlot);
-        }
-    }
-
-    // remove ref to the backing texture
-    fProxies[lastPageIndex]->deInstantiate();
-    --fNumActivePages;
-||||||| merged common ancestors
-    fPages[lastPageIndex].fPlotArray.reset(nullptr);
-    // remove ref to texture proxy
-    fProxies[lastPageIndex].reset(nullptr);
-    --fNumPages;
-=======
     for (int r = 0; r < numPlotsY; ++r) {
         for (int c = 0; c < numPlotsX; ++c) {
             uint32_t plotIndex = r * numPlotsX + c;
@@ -764,7 +650,6 @@ SkISize GrDrawOpAtlasConfig::plotDimensions(GrMaskFormat type) const {
         // ARGB and LCD always use 256x256 plots -- this has been shown to be faster
         return { 256, 256 };
     }
->>>>>>> upstream-releases
 }
 
 constexpr int GrDrawOpAtlasConfig::kMaxAtlasDim;

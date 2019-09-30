@@ -236,22 +236,6 @@ var CustomizableUIInternal = {
       navbarPlacements.splice(2, 0, "developer-button");
     }
 
-<<<<<<< HEAD
-    this.registerArea(CustomizableUI.AREA_NAVBAR, {
-      type: CustomizableUI.TYPE_TOOLBAR,
-      overflowable: true,
-      defaultPlacements: navbarPlacements,
-      defaultCollapsed: false,
-    }, true);
-||||||| merged common ancestors
-    this.registerArea(CustomizableUI.AREA_NAVBAR, {
-      legacy: true,
-      type: CustomizableUI.TYPE_TOOLBAR,
-      overflowable: true,
-      defaultPlacements: navbarPlacements,
-      defaultCollapsed: false,
-    }, true);
-=======
     this.registerArea(
       CustomizableUI.AREA_NAVBAR,
       {
@@ -262,15 +246,8 @@ var CustomizableUIInternal = {
       },
       true
     );
->>>>>>> upstream-releases
 
     if (AppConstants.MENUBAR_CAN_AUTOHIDE) {
-<<<<<<< HEAD
-      this.registerArea(CustomizableUI.AREA_MENUBAR, {
-||||||| merged common ancestors
-      this.registerArea(CustomizableUI.AREA_MENUBAR, {
-        legacy: true,
-=======
       this.registerArea(
         CustomizableUI.AREA_MENUBAR,
         {
@@ -285,7 +262,6 @@ var CustomizableUIInternal = {
     this.registerArea(
       CustomizableUI.AREA_TABSTRIP,
       {
->>>>>>> upstream-releases
         type: CustomizableUI.TYPE_TOOLBAR,
         defaultPlacements: [
           "tabbrowser-tabs",
@@ -302,53 +278,9 @@ var CustomizableUIInternal = {
         type: CustomizableUI.TYPE_TOOLBAR,
         defaultPlacements: ["personal-bookmarks"],
         defaultCollapsed: true,
-<<<<<<< HEAD
-      }, true);
-    }
-
-    this.registerArea(CustomizableUI.AREA_TABSTRIP, {
-      type: CustomizableUI.TYPE_TOOLBAR,
-      defaultPlacements: [
-        "tabbrowser-tabs",
-        "new-tab-button",
-        "alltabs-button",
-      ],
-      defaultCollapsed: null,
-    }, true);
-    this.registerArea(CustomizableUI.AREA_BOOKMARKS, {
-      type: CustomizableUI.TYPE_TOOLBAR,
-      defaultPlacements: [
-        "personal-bookmarks",
-      ],
-      defaultCollapsed: true,
-    }, true);
-||||||| merged common ancestors
-      }, true);
-    }
-
-    this.registerArea(CustomizableUI.AREA_TABSTRIP, {
-      legacy: true,
-      type: CustomizableUI.TYPE_TOOLBAR,
-      defaultPlacements: [
-        "tabbrowser-tabs",
-        "new-tab-button",
-        "alltabs-button",
-      ],
-      defaultCollapsed: null,
-    }, true);
-    this.registerArea(CustomizableUI.AREA_BOOKMARKS, {
-      legacy: true,
-      type: CustomizableUI.TYPE_TOOLBAR,
-      defaultPlacements: [
-        "personal-bookmarks",
-      ],
-      defaultCollapsed: true,
-    }, true);
-=======
       },
       true
     );
->>>>>>> upstream-releases
 
     SearchWidgetTracker.init();
   },
@@ -722,28 +654,6 @@ var CustomizableUIInternal = {
     this.saveState();
   },
 
-<<<<<<< HEAD
-  getCustomizationTarget(aElement) {
-    if (!aElement) {
-      return null;
-    }
-
-    if (!aElement._customizationTarget && aElement.hasAttribute("customizable")) {
-      let id = aElement.getAttribute("customizationtarget");
-      if (id) {
-        aElement._customizationTarget = aElement.ownerDocument.getElementById(id);
-      }
-
-      if (!aElement._customizationTarget) {
-        aElement._customizationTarget = aElement;
-      }
-    }
-
-    return aElement._customizationTarget;
-  },
-
-||||||| merged common ancestors
-=======
   getCustomizationTarget(aElement) {
     if (!aElement) {
       return null;
@@ -768,7 +678,6 @@ var CustomizableUIInternal = {
     return aElement._customizationTarget;
   },
 
->>>>>>> upstream-releases
   wrapWidget(aWidgetId) {
     if (gGroupWrapperCache.has(aWidgetId)) {
       return gGroupWrapperCache.get(aWidgetId);
@@ -856,16 +765,10 @@ var CustomizableUIInternal = {
       // Reconcile new default widgets. Have to do this before we start restoring things.
       this._placeNewDefaultWidgetsInArea(aName);
 
-<<<<<<< HEAD
-      if (props.get("type") == CustomizableUI.TYPE_TOOLBAR && !gPlacements.has(aName)) {
-||||||| merged common ancestors
-      if (props.get("legacy") && !gPlacements.has(aName)) {
-=======
       if (
         props.get("type") == CustomizableUI.TYPE_TOOLBAR &&
         !gPlacements.has(aName)
       ) {
->>>>>>> upstream-releases
         // Guarantee this area exists in gFuturePlacements, to avoid checking it in
         // various places elsewhere.
         if (!gFuturePlacements.has(aName)) {
@@ -918,21 +821,12 @@ var CustomizableUIInternal = {
       let existingAreaNodes = gBuildAreas.get(aName);
       if (existingAreaNodes) {
         for (let areaNode of existingAreaNodes) {
-<<<<<<< HEAD
-          this.notifyListeners("onAreaNodeUnregistered", aName,
-                               this.getCustomizationTarget(areaNode),
-                               CustomizableUI.REASON_AREA_UNREGISTERED);
-||||||| merged common ancestors
-          this.notifyListeners("onAreaNodeUnregistered", aName, areaNode.customizationTarget,
-                               CustomizableUI.REASON_AREA_UNREGISTERED);
-=======
           this.notifyListeners(
             "onAreaNodeUnregistered",
             aName,
             this.getCustomizationTarget(areaNode),
             CustomizableUI.REASON_AREA_UNREGISTERED
           );
->>>>>>> upstream-releases
         }
       }
       gBuildAreas.delete(aName);
@@ -960,40 +854,14 @@ var CustomizableUIInternal = {
     this.beginBatchUpdate();
     try {
       let placements = gPlacements.get(area);
-<<<<<<< HEAD
-      if (!placements && areaProperties.get("type") == CustomizableUI.TYPE_TOOLBAR) {
-        this.restoreStateForArea(area);
-||||||| merged common ancestors
-      if (!placements && areaProperties.has("legacy")) {
-        let legacyState = aToolbar.getAttribute("currentset");
-        if (legacyState) {
-          legacyState = legacyState.split(",").filter(s => s);
-        }
-
-        // Manually restore the state here, so the legacy state can be converted.
-        this.restoreStateForArea(area, legacyState);
-=======
       if (
         !placements &&
         areaProperties.get("type") == CustomizableUI.TYPE_TOOLBAR
       ) {
         this.restoreStateForArea(area);
->>>>>>> upstream-releases
         placements = gPlacements.get(area);
       }
 
-<<<<<<< HEAD
-      // For toolbars that need it, mark as dirty.
-      let defaultPlacements = areaProperties.get("defaultPlacements");
-      if (!this._builtinToolbars.has(area) ||
-          placements.length != defaultPlacements.length ||
-          !placements.every((id, i) => id == defaultPlacements[i])) {
-||||||| merged common ancestors
-      // Check that the current children and the current placements match. If
-      // not, mark it as dirty:
-      if (aExistingChildren.length != placements.length ||
-          aExistingChildren.every((id, i) => id == placements[i])) {
-=======
       // For toolbars that need it, mark as dirty.
       let defaultPlacements = areaProperties.get("defaultPlacements");
       if (
@@ -1001,7 +869,6 @@ var CustomizableUIInternal = {
         placements.length != defaultPlacements.length ||
         !placements.every((id, i) => id == defaultPlacements[i])
       ) {
->>>>>>> upstream-releases
         gDirtyAreaCache.add(area);
       }
 
@@ -1029,41 +896,16 @@ var CustomizableUIInternal = {
           this.updateSpecialsForBuiltinToolbar(aToolbar, specials);
         }
       }
-<<<<<<< HEAD
-      this.notifyListeners("onAreaNodeRegistered", area,
-                           this.getCustomizationTarget(aToolbar));
-||||||| merged common ancestors
-      this.notifyListeners("onAreaNodeRegistered", area, aToolbar.customizationTarget);
-      aToolbar.setAttribute("currentset", placements.join(","));
-=======
       this.notifyListeners(
         "onAreaNodeRegistered",
         area,
         this.getCustomizationTarget(aToolbar)
       );
->>>>>>> upstream-releases
     } finally {
       this.endBatchUpdate();
     }
   },
 
-<<<<<<< HEAD
-  updateSpecialsForBuiltinToolbar(aToolbar, aSpecialIDs) {
-    // Nodes are going to be in the correct order, so we can do this straightforwardly:
-    let {children} = this.getCustomizationTarget(aToolbar);
-    for (let kid of children) {
-      if (this.matchingSpecials(aSpecialIDs[0], kid) &&
-          kid.getAttribute("skipintoolbarset") != "true") {
-        kid.id = aSpecialIDs.shift();
-      }
-      if (!aSpecialIDs.length) {
-        return;
-      }
-    }
-  },
-
-||||||| merged common ancestors
-=======
   updateSpecialsForBuiltinToolbar(aToolbar, aSpecialIDs) {
     // Nodes are going to be in the correct order, so we can do this straightforwardly:
     let { children } = this.getCustomizationTarget(aToolbar);
@@ -1080,22 +922,13 @@ var CustomizableUIInternal = {
     }
   },
 
->>>>>>> upstream-releases
   buildArea(aArea, aPlacements, aAreaNode) {
     let document = aAreaNode.ownerDocument;
     let window = document.defaultView;
     let inPrivateWindow = PrivateBrowsingUtils.isWindowPrivate(window);
-<<<<<<< HEAD
-    let container = this.getCustomizationTarget(aAreaNode);
-    let areaIsPanel = gAreas.get(aArea).get("type") == CustomizableUI.TYPE_MENU_PANEL;
-||||||| merged common ancestors
-    let container = aAreaNode.customizationTarget;
-    let areaIsPanel = gAreas.get(aArea).get("type") == CustomizableUI.TYPE_MENU_PANEL;
-=======
     let container = this.getCustomizationTarget(aAreaNode);
     let areaIsPanel =
       gAreas.get(aArea).get("type") == CustomizableUI.TYPE_MENU_PANEL;
->>>>>>> upstream-releases
 
     if (!container) {
       throw new Error(
@@ -1194,21 +1027,11 @@ var CustomizableUIInternal = {
           // node is not removable, we leave it where it is. However, we can only
           // safely touch elements that have an ID - both because we depend on
           // IDs (or are specials), and because such elements are not intended to
-<<<<<<< HEAD
-          // be widgets (eg, titlebar-spacer elements).
-          if ((node.id || this.isSpecialWidget(node)) &&
-              node.getAttribute("skipintoolbarset") != "true") {
-||||||| merged common ancestors
-          // be widgets (eg, titlebar-placeholder elements).
-          if ((node.id || this.isSpecialWidget(node)) &&
-              node.getAttribute("skipintoolbarset") != "true") {
-=======
           // be widgets (eg, titlebar-spacer elements).
           if (
             (node.id || this.isSpecialWidget(node)) &&
             node.getAttribute("skipintoolbarset") != "true"
           ) {
->>>>>>> upstream-releases
             if (this.isWidgetRemovable(node)) {
               if (node.id && (gResetting || gUndoResetting)) {
                 let widget = gPalette.get(node.id);
@@ -1439,17 +1262,6 @@ var CustomizableUIInternal = {
       } else {
         window.gNavToolbox.palette.appendChild(widgetNode);
       }
-<<<<<<< HEAD
-      this.notifyListeners("onWidgetAfterDOMChange", widgetNode, null, container, true);
-
-||||||| merged common ancestors
-      this.notifyListeners("onWidgetAfterDOMChange", widgetNode, null, container, true);
-
-      if (isToolbar) {
-        areaNode.setAttribute("currentset", gPlacements.get(aArea).join(","));
-      }
-
-=======
       this.notifyListeners(
         "onWidgetAfterDOMChange",
         widgetNode,
@@ -1458,7 +1270,6 @@ var CustomizableUIInternal = {
         true
       );
 
->>>>>>> upstream-releases
       let windowCache = gSingleWrapperCache.get(window);
       if (windowCache) {
         windowCache.delete(aWidgetId);
@@ -1528,21 +1339,12 @@ var CustomizableUIInternal = {
       let areaProperties = gAreas.get(areaId);
       for (let node of areaNodes) {
         if (node.ownerDocument == document) {
-<<<<<<< HEAD
-          this.notifyListeners("onAreaNodeUnregistered", areaId,
-                               this.getCustomizationTarget(node),
-                               CustomizableUI.REASON_WINDOW_CLOSED);
-||||||| merged common ancestors
-          this.notifyListeners("onAreaNodeUnregistered", areaId, node.customizationTarget,
-                               CustomizableUI.REASON_WINDOW_CLOSED);
-=======
           this.notifyListeners(
             "onAreaNodeUnregistered",
             areaId,
             this.getCustomizationTarget(node),
             CustomizableUI.REASON_WINDOW_CLOSED
           );
->>>>>>> upstream-releases
           if (areaProperties.has("overflowable")) {
             node.overflowable.uninit();
             node.overflowable = null;
@@ -1804,13 +1606,6 @@ var CustomizableUIInternal = {
     let node = document.getElementById(aId);
     if (node) {
       let parent = node.parentNode;
-<<<<<<< HEAD
-      while (parent && !(this.getCustomizationTarget(parent) ||
-                         parent == aWindow.gNavToolbox.palette)) {
-||||||| merged common ancestors
-      while (parent && !(parent.customizationTarget ||
-                         parent == aWindow.gNavToolbox.palette)) {
-=======
       while (
         parent &&
         !(
@@ -1818,7 +1613,6 @@ var CustomizableUIInternal = {
           parent == aWindow.gNavToolbox.palette
         )
       ) {
->>>>>>> upstream-releases
         parent = parent.parentNode;
       }
 
@@ -1828,37 +1622,21 @@ var CustomizableUIInternal = {
             ? node.parentNode
             : node;
         // Check if we're in a customization target, or in the palette:
-<<<<<<< HEAD
-        if ((this.getCustomizationTarget(parent) == nodeInArea.parentNode &&
-             gBuildWindows.get(aWindow).has(aWindow.gNavToolbox)) ||
-            aWindow.gNavToolbox.palette == nodeInArea.parentNode) {
-||||||| merged common ancestors
-        if ((parent.customizationTarget == nodeInArea.parentNode &&
-             gBuildWindows.get(aWindow).has(aWindow.gNavToolbox)) ||
-            aWindow.gNavToolbox.palette == nodeInArea.parentNode) {
-=======
         if (
           (this.getCustomizationTarget(parent) == nodeInArea.parentNode &&
             gBuildWindows.get(aWindow).has(aWindow.gNavToolbox)) ||
           aWindow.gNavToolbox.palette == nodeInArea.parentNode
         ) {
->>>>>>> upstream-releases
           // Normalize the removable attribute. For backwards compat, if
           // the widget is not located in a toolbox palette then absence
           // of the "removable" attribute means it is not removable.
           if (!node.hasAttribute("removable")) {
             // If we first see this in customization mode, it may be in the
             // customization palette instead of the toolbox palette.
-<<<<<<< HEAD
-            node.setAttribute("removable", !this.getCustomizationTarget(parent));
-||||||| merged common ancestors
-            node.setAttribute("removable", !parent.customizationTarget);
-=======
             node.setAttribute(
               "removable",
               !this.getCustomizationTarget(parent)
             );
->>>>>>> upstream-releases
           }
           return node;
         }
@@ -3441,33 +3219,6 @@ var CustomizableUIInternal = {
     return true;
   },
 
-<<<<<<< HEAD
-  _getCurrentWidgetsInContainer(container) {
-    // Get a list of all the widget IDs in this container, including any that
-    // are overflown.
-    let currentWidgets = new Set();
-    function addUnskippedChildren(parent) {
-      for (let node of parent.children) {
-        let realNode = node.localName == "toolbarpaletteitem" ? node.firstElementChild : node;
-        if (realNode.getAttribute("skipintoolbarset") != "true") {
-          currentWidgets.add(realNode.id);
-        }
-      }
-    }
-    addUnskippedChildren(this.getCustomizationTarget(container));
-    if (container.getAttribute("overflowing") == "true") {
-      let overflowTarget = container.getAttribute("overflowtarget");
-      addUnskippedChildren(container.ownerDocument.getElementById(overflowTarget));
-    }
-    // Then get the sorted list of placements, and filter based on the nodes
-    // that are present. This avoids including items that don't exist (e.g. ids
-    // of add-on items that the user has uninstalled).
-    let orderedPlacements = CustomizableUI.getWidgetIdsInArea(container.id);
-    return orderedPlacements.filter(w => currentWidgets.has(w));
-  },
-
-||||||| merged common ancestors
-=======
   _getCurrentWidgetsInContainer(container) {
     // Get a list of all the widget IDs in this container, including any that
     // are overflown.
@@ -3497,7 +3248,6 @@ var CustomizableUIInternal = {
     return orderedPlacements.filter(w => currentWidgets.has(w));
   },
 
->>>>>>> upstream-releases
   get inDefaultState() {
     for (let [areaId, props] of gAreas) {
       let defaultPlacements = props.get("defaultPlacements");
@@ -3520,28 +3270,11 @@ var CustomizableUIInternal = {
         // Toolbars need to deal with overflown widgets (if any) - so
         // specialcase them:
         if (props.get("type") == CustomizableUI.TYPE_TOOLBAR) {
-<<<<<<< HEAD
-          currentPlacements =
-            this._getCurrentWidgetsInContainer(container).filter(removableOrDefault);
-||||||| merged common ancestors
-          let currentSet = container.currentSet;
-          currentPlacements = currentSet ? currentSet.split(",") : [];
-          currentPlacements = currentPlacements.filter(removableOrDefault);
-=======
           currentPlacements = this._getCurrentWidgetsInContainer(
             container
           ).filter(removableOrDefault);
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-          currentPlacements = currentPlacements.filter((item) => {
-||||||| merged common ancestors
-          // Clone the array so we don't modify the actual placements...
-          currentPlacements = [...currentPlacements];
-          currentPlacements = currentPlacements.filter((item) => {
-=======
           currentPlacements = currentPlacements.filter(item => {
->>>>>>> upstream-releases
             let itemNode = container.getElementsByAttribute("id", item)[0];
             return itemNode && removableOrDefault(itemNode || item);
           });
@@ -3555,12 +3288,6 @@ var CustomizableUIInternal = {
           let collapsed = container.getAttribute(attribute) == "true";
           let defaultCollapsed = props.get("defaultCollapsed");
           if (defaultCollapsed !== null && collapsed != defaultCollapsed) {
-<<<<<<< HEAD
-            log.debug("Found " + areaId + " had non-default toolbar visibility" +
-                      "(expected " + defaultCollapsed + ", was " + collapsed + ")");
-||||||| merged common ancestors
-            log.debug("Found " + areaId + " had non-default toolbar visibility (expected " + defaultCollapsed + ", was " + collapsed + ")");
-=======
             log.debug(
               "Found " +
                 areaId +
@@ -3571,7 +3298,6 @@ var CustomizableUIInternal = {
                 collapsed +
                 ")"
             );
->>>>>>> upstream-releases
             return false;
           }
         }

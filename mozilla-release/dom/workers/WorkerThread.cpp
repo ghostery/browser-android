@@ -142,21 +142,7 @@ void WorkerThread::SetWorker(const WorkerThreadFriendKey& /* aKey */,
   }
 }
 
-<<<<<<< HEAD
 void WorkerThread::IncrementDispatchCounter() {
-  if (!mozilla::StaticPrefs::dom_performance_enable_scheduler_timing()) {
-    return;
-  }
-||||||| merged common ancestors
-void
-WorkerThread::IncrementDispatchCounter()
-{
-  if (!mozilla::StaticPrefs::dom_performance_enable_scheduler_timing()) {
-    return;
-  }
-=======
-void WorkerThread::IncrementDispatchCounter() {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   if (mWorkerPrivate) {
     PerformanceCounter* performanceCounter =

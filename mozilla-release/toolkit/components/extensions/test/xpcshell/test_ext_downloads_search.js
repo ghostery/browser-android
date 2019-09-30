@@ -2,19 +2,11 @@
 /* vim: set sts=2 sw=2 et tw=80: */
 "use strict";
 
-<<<<<<< HEAD
-PromiseTestUtils.whitelistRejectionsGlobally(/Message manager disconnected/);
-
-ChromeUtils.import("resource://gre/modules/Downloads.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Downloads.jsm");
-=======
 PromiseTestUtils.whitelistRejectionsGlobally(/Message manager disconnected/);
 
 const { Downloads } = ChromeUtils.import(
   "resource://gre/modules/Downloads.jsm"
 );
->>>>>>> upstream-releases
 
 const server = createHttpServer();
 server.registerDirectory("/data/", do_get_file("data"));
@@ -166,18 +158,10 @@ add_task(async function test_search() {
   equal(msg.status, "success", "download() succeeded");
   downloadIds.txt2 = msg.id;
 
-<<<<<<< HEAD
-  msg = await download({url: EMPTY_URL});
-  equal(msg.status, "success", "download() succeeded");
-  downloadIds.txt3 = msg.id;
-
-||||||| merged common ancestors
-=======
   msg = await download({ url: EMPTY_URL });
   equal(msg.status, "success", "download() succeeded");
   downloadIds.txt3 = msg.id;
 
->>>>>>> upstream-releases
   const time2 = new Date();
 
   msg = await download({ url: HTML_URL });
@@ -344,22 +328,12 @@ add_task(async function test_search() {
   );
 
   // Check that simple positive search terms work.
-<<<<<<< HEAD
-  await checkSearch({query: ["file_download"]}, ["txt1", "txt2", "txt3", "html1", "html2"],
-                    "term file_download");
-  await checkSearch({query: ["NewFile"]}, ["txt2"], "term NewFile");
-||||||| merged common ancestors
-  await checkSearch({query: ["file_download"]}, ["txt1", "txt2", "html1", "html2"],
-                    "term file_download");
-  await checkSearch({query: ["NewFile"]}, ["txt2"], "term NewFile");
-=======
   await checkSearch(
     { query: ["file_download"] },
     ["txt1", "txt2", "txt3", "html1", "html2"],
     "term file_download"
   );
   await checkSearch({ query: ["NewFile"] }, ["txt2"], "term NewFile");
->>>>>>> upstream-releases
 
   // Check that positive search terms work case-insensitive.
   await checkSearch({ query: ["nEwfILe"] }, ["txt2"], "term nEwfiLe");
@@ -402,15 +376,6 @@ add_task(async function test_search() {
   }
 
   // Check startedBefore
-<<<<<<< HEAD
-  await checkSearchWithDate({startedBefore: time1}, [], "before time1");
-  await checkSearchWithDate({startedBefore: time2}, ["txt1", "txt2", "txt3"], "before time2");
-  await checkSearchWithDate({startedBefore: time3}, ["txt1", "txt2", "txt3", "html1", "html2"], "before time3");
-||||||| merged common ancestors
-  await checkSearchWithDate({startedBefore: time1}, [], "before time1");
-  await checkSearchWithDate({startedBefore: time2}, ["txt1", "txt2"], "before time2");
-  await checkSearchWithDate({startedBefore: time3}, ["txt1", "txt2", "html1", "html2"], "before time3");
-=======
   await checkSearchWithDate({ startedBefore: time1 }, [], "before time1");
   await checkSearchWithDate(
     { startedBefore: time2 },
@@ -422,18 +387,8 @@ add_task(async function test_search() {
     ["txt1", "txt2", "txt3", "html1", "html2"],
     "before time3"
   );
->>>>>>> upstream-releases
 
   // Check startedAfter
-<<<<<<< HEAD
-  await checkSearchWithDate({startedAfter: time1}, ["txt1", "txt2", "txt3", "html1", "html2"], "after time1");
-  await checkSearchWithDate({startedAfter: time2}, ["html1", "html2"], "after time2");
-  await checkSearchWithDate({startedAfter: time3}, [], "after time3");
-||||||| merged common ancestors
-  await checkSearchWithDate({startedAfter: time1}, ["txt1", "txt2", "html1", "html2"], "after time1");
-  await checkSearchWithDate({startedAfter: time2}, ["html1", "html2"], "after time2");
-  await checkSearchWithDate({startedAfter: time3}, [], "after time3");
-=======
   await checkSearchWithDate(
     { startedAfter: time1 },
     ["txt1", "txt2", "txt3", "html1", "html2"],
@@ -445,7 +400,6 @@ add_task(async function test_search() {
     "after time2"
   );
   await checkSearchWithDate({ startedAfter: time3 }, [], "after time3");
->>>>>>> upstream-releases
 
   // Check simple search on totalBytes
   await checkSearch({ totalBytes: TXT_LEN }, ["txt1", "txt2"], "totalBytes");
@@ -453,24 +407,6 @@ add_task(async function test_search() {
 
   // Check simple test on totalBytes{Greater,Less}
   // (NB: TXT_LEN < HTML_LEN < BIG_LEN)
-<<<<<<< HEAD
-  await checkSearch({totalBytesGreater: 0}, ["txt1", "txt2", "html1", "html2"], "totalBytesGreater than 0");
-  await checkSearch({totalBytesGreater: TXT_LEN}, ["html1", "html2"], `totalBytesGreater than ${TXT_LEN}`);
-  await checkSearch({totalBytesGreater: HTML_LEN}, [], `totalBytesGreater than ${HTML_LEN}`);
-  await checkSearch({totalBytesLess: TXT_LEN}, ["txt3"], `totalBytesLess than ${TXT_LEN}`);
-  await checkSearch({totalBytesLess: HTML_LEN}, ["txt1", "txt2", "txt3"], `totalBytesLess than ${HTML_LEN}`);
-  await checkSearch({totalBytesLess: BIG_LEN}, ["txt1", "txt2", "txt3", "html1", "html2"], `totalBytesLess than ${BIG_LEN}`);
-
-  // Bug 1503760 check if 0 byte files with no search query are returned.
-  await checkSearch({}, ["txt1", "txt2", "txt3", "html1", "html2"], "totalBytesGreater than -1");
-||||||| merged common ancestors
-  await checkSearch({totalBytesGreater: 0}, ["txt1", "txt2", "html1", "html2"], "totalBytesGreater than 0");
-  await checkSearch({totalBytesGreater: TXT_LEN}, ["html1", "html2"], `totalBytesGreater than ${TXT_LEN}`);
-  await checkSearch({totalBytesGreater: HTML_LEN}, [], `totalBytesGreater than ${HTML_LEN}`);
-  await checkSearch({totalBytesLess: TXT_LEN}, [], `totalBytesLess than ${TXT_LEN}`);
-  await checkSearch({totalBytesLess: HTML_LEN}, ["txt1", "txt2"], `totalBytesLess than ${HTML_LEN}`);
-  await checkSearch({totalBytesLess: BIG_LEN}, ["txt1", "txt2", "html1", "html2"], `totalBytesLess than ${BIG_LEN}`);
-=======
   await checkSearch(
     { totalBytesGreater: 0 },
     ["txt1", "txt2", "html1", "html2"],
@@ -508,7 +444,6 @@ add_task(async function test_search() {
     ["txt1", "txt2", "txt3", "html1", "html2"],
     "totalBytesGreater than -1"
   );
->>>>>>> upstream-releases
 
   // Check good combinations of totalBytes*.
   await checkSearch(
@@ -545,15 +480,6 @@ add_task(async function test_search() {
   );
 
   // Check mime.
-<<<<<<< HEAD
-  await checkSearch({mime: "text/plain"}, ["txt1", "txt2", "txt3"], "mime text/plain");
-  await checkSearch({mime: "text/html"}, ["html1", "html2"], "mime text/htmlplain");
-  await checkSearch({mime: "video/webm"}, [], "mime video/webm");
-||||||| merged common ancestors
-  await checkSearch({mime: "text/plain"}, ["txt1", "txt2"], "mime text/plain");
-  await checkSearch({mime: "text/html"}, ["html1", "html2"], "mime text/htmlplain");
-  await checkSearch({mime: "video/webm"}, [], "mime video/webm");
-=======
   await checkSearch(
     { mime: "text/plain" },
     ["txt1", "txt2", "txt3"],
@@ -565,7 +491,6 @@ add_task(async function test_search() {
     "mime text/htmlplain"
   );
   await checkSearch({ mime: "video/webm" }, [], "mime video/webm");
->>>>>>> upstream-releases
 
   // Check fileSize.
   await checkSearch({ fileSize: TXT_LEN }, ["txt1", "txt2"], "fileSize");
@@ -602,13 +527,6 @@ add_task(async function test_search() {
   );
 
   // Check simple orderBy (forward and backward).
-<<<<<<< HEAD
-  await checkSearch({orderBy: ["startTime"]}, ["txt1", "txt2", "txt3", "html1", "html2"], "orderBy startTime", true);
-  await checkSearch({orderBy: ["-startTime"]}, ["html2", "html1", "txt3", "txt2", "txt1"], "orderBy -startTime", true);
-||||||| merged common ancestors
-  await checkSearch({orderBy: ["startTime"]}, ["txt1", "txt2", "html1", "html2"], "orderBy startTime", true);
-  await checkSearch({orderBy: ["-startTime"]}, ["html2", "html1", "txt2", "txt1"], "orderBy -startTime", true);
-=======
   await checkSearch(
     { orderBy: ["startTime"] },
     ["txt1", "txt2", "txt3", "html1", "html2"],
@@ -621,16 +539,9 @@ add_task(async function test_search() {
     "orderBy -startTime",
     true
   );
->>>>>>> upstream-releases
 
   // Check orderBy with multiple fields.
   // NB: TXT_URL and HTML_URL differ only in extension and .html precedes .txt
-<<<<<<< HEAD
-  // EMPTY_URL begins with e which precedes f
-  await checkSearch({orderBy: ["url", "-startTime"]}, ["txt3", "html2", "html1", "txt2", "txt1"], "orderBy with multiple fields", true);
-||||||| merged common ancestors
-  await checkSearch({orderBy: ["url", "-startTime"]}, ["html2", "html1", "txt2", "txt1"], "orderBy with multiple fields", true);
-=======
   // EMPTY_URL begins with e which precedes f
   await checkSearch(
     { orderBy: ["url", "-startTime"] },
@@ -638,21 +549,14 @@ add_task(async function test_search() {
     "orderBy with multiple fields",
     true
   );
->>>>>>> upstream-releases
 
   // Check orderBy with limit.
-<<<<<<< HEAD
-  await checkSearch({orderBy: ["url"], limit: 1}, ["txt3"], "orderBy with limit", true);
-||||||| merged common ancestors
-  await checkSearch({orderBy: ["url"], limit: 1}, ["html1"], "orderBy with limit", true);
-=======
   await checkSearch(
     { orderBy: ["url"], limit: 1 },
     ["txt3"],
     "orderBy with limit",
     true
   );
->>>>>>> upstream-releases
 
   // Check bad arguments.
   async function checkBadSearch(query, pattern, description) {
@@ -722,55 +626,6 @@ add_task(async function test_search() {
 
   await extension.unload();
 });
-<<<<<<< HEAD
-
-// Test that downloads with totalBytes of -1 (ie, that have not yet started)
-// work properly.  See bug 1519762 for details of a past regression in
-// this area.
-add_task(async function test_inprogress() {
-  let resume, resumePromise = new Promise(resolve => { resume = resolve; });
-  server.registerPathHandler("/slow", async (request, response) => {
-    response.processAsync();
-    await resumePromise;
-    response.setHeader("Content-type", "text/plain");
-    response.write("");
-    response.finish();
-  });
-
-  let extension = ExtensionTestUtils.loadExtension({
-    manifest: {
-      permissions: ["downloads"],
-    },
-    background() {
-      browser.test.onMessage.addListener(async (msg, url) => {
-        let id = await browser.downloads.download({url});
-        let full = await browser.downloads.search({id});
-
-        browser.test.assertEq(full.length, 1,
-                              "Found new download in search results");
-        browser.test.assertEq(full[0].totalBytes, -1,
-                              "New download still has totalBytes == -1");
-
-        browser.downloads.onChanged.addListener(info => {
-          if (info.id == id && info.state.current == "complete") {
-            browser.test.notifyPass("done");
-          }
-        });
-
-        browser.test.sendMessage("started");
-      });
-    },
-  });
-
-  await extension.startup();
-  extension.sendMessage("go", `${BASE}/slow`);
-  await extension.awaitMessage("started");
-  resume();
-  await extension.awaitFinish("done");
-  await extension.unload();
-});
-||||||| merged common ancestors
-=======
 
 // Test that downloads with totalBytes of -1 (ie, that have not yet started)
 // work properly.  See bug 1519762 for details of a past regression in
@@ -826,4 +681,3 @@ add_task(async function test_inprogress() {
   await extension.awaitFinish("done");
   await extension.unload();
 });
->>>>>>> upstream-releases

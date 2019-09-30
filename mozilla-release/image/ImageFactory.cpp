@@ -29,16 +29,8 @@
 namespace mozilla {
 namespace image {
 
-<<<<<<< HEAD
-/*static*/ void ImageFactory::Initialize() {}
-||||||| merged common ancestors
-/*static*/ void
-ImageFactory::Initialize()
-{ }
-=======
 /*static*/
 void ImageFactory::Initialize() {}
->>>>>>> upstream-releases
 
 static uint32_t ComputeImageFlags(nsIURI* uri, const nsCString& aMimeType,
                                   bool isMultiPart) {
@@ -113,33 +105,11 @@ static void NotifyImageLoading(nsIURI* aURI) {
 }
 #endif
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageFactory::CreateImage(
-    nsIRequest* aRequest, ProgressTracker* aProgressTracker,
-    const nsCString& aMimeType, nsIURI* aURI, bool aIsMultiPart,
-    uint32_t aInnerWindowId) {
-  MOZ_ASSERT(gfxPrefs::SingletonExists(),
-             "Pref observers should have been initialized already");
-
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageFactory::CreateImage(nsIRequest* aRequest,
-                          ProgressTracker* aProgressTracker,
-                          const nsCString& aMimeType,
-                          nsIURI* aURI,
-                          bool aIsMultiPart,
-                          uint32_t aInnerWindowId)
-{
-  MOZ_ASSERT(gfxPrefs::SingletonExists(),
-             "Pref observers should have been initialized already");
-
-=======
 /* static */
 already_AddRefed<Image> ImageFactory::CreateImage(
     nsIRequest* aRequest, ProgressTracker* aProgressTracker,
     const nsCString& aMimeType, nsIURI* aURI, bool aIsMultiPart,
     uint32_t aInnerWindowId) {
->>>>>>> upstream-releases
   // Compute the image's initialization flags.
   uint32_t imageFlags = ComputeImageFlags(aURI, aMimeType, aIsMultiPart);
 
@@ -170,19 +140,9 @@ static already_AddRefed<Image> BadImage(const char* aMessage,
   return aImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageFactory::CreateAnonymousImage(
-    const nsCString& aMimeType, uint32_t aSizeHint /* = 0 */) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageFactory::CreateAnonymousImage(const nsCString& aMimeType,
-                                   uint32_t aSizeHint /* = 0 */)
-{
-=======
 /* static */
 already_AddRefed<Image> ImageFactory::CreateAnonymousImage(
     const nsCString& aMimeType, uint32_t aSizeHint /* = 0 */) {
->>>>>>> upstream-releases
   nsresult rv;
 
   RefPtr<RasterImage> newImage = new RasterImage();
@@ -204,20 +164,9 @@ already_AddRefed<Image> ImageFactory::CreateAnonymousImage(
   return newImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MultipartImage>
-ImageFactory::CreateMultipartImage(Image* aFirstPart,
-                                   ProgressTracker* aProgressTracker) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MultipartImage>
-ImageFactory::CreateMultipartImage(Image* aFirstPart,
-                                   ProgressTracker* aProgressTracker)
-{
-=======
 /* static */
 already_AddRefed<MultipartImage> ImageFactory::CreateMultipartImage(
     Image* aFirstPart, ProgressTracker* aProgressTracker) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFirstPart);
   MOZ_ASSERT(aProgressTracker);
 
@@ -269,27 +218,11 @@ uint32_t GetContentSize(nsIRequest* aRequest) {
   return 0;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageFactory::CreateRasterImage(
-    nsIRequest* aRequest, ProgressTracker* aProgressTracker,
-    const nsCString& aMimeType, nsIURI* aURI, uint32_t aImageFlags,
-    uint32_t aInnerWindowId) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageFactory::CreateRasterImage(nsIRequest* aRequest,
-                                ProgressTracker* aProgressTracker,
-                                const nsCString& aMimeType,
-                                nsIURI* aURI,
-                                uint32_t aImageFlags,
-                                uint32_t aInnerWindowId)
-{
-=======
 /* static */
 already_AddRefed<Image> ImageFactory::CreateRasterImage(
     nsIRequest* aRequest, ProgressTracker* aProgressTracker,
     const nsCString& aMimeType, nsIURI* aURI, uint32_t aImageFlags,
     uint32_t aInnerWindowId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aProgressTracker);
 
   nsresult rv;
@@ -313,27 +246,11 @@ already_AddRefed<Image> ImageFactory::CreateRasterImage(
   return newImage.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Image> ImageFactory::CreateVectorImage(
-    nsIRequest* aRequest, ProgressTracker* aProgressTracker,
-    const nsCString& aMimeType, nsIURI* aURI, uint32_t aImageFlags,
-    uint32_t aInnerWindowId) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Image>
-ImageFactory::CreateVectorImage(nsIRequest* aRequest,
-                                ProgressTracker* aProgressTracker,
-                                const nsCString& aMimeType,
-                                nsIURI* aURI,
-                                uint32_t aImageFlags,
-                                uint32_t aInnerWindowId)
-{
-=======
 /* static */
 already_AddRefed<Image> ImageFactory::CreateVectorImage(
     nsIRequest* aRequest, ProgressTracker* aProgressTracker,
     const nsCString& aMimeType, nsIURI* aURI, uint32_t aImageFlags,
     uint32_t aInnerWindowId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aProgressTracker);
 
   nsresult rv;

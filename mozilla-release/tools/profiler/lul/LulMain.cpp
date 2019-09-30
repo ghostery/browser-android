@@ -97,13 +97,7 @@ static const char* NameOf_DW_REG(int16_t aReg) {
     case DW_REG_MIPS_PC:
       return "pc";
 #else
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
     default:
       return "???";
@@ -164,13 +158,7 @@ void RuleSet::Print(void (*aLog)(const char*)) const {
   res += mSPexpr.ShowRule(" SP");
   res += mFPexpr.ShowRule(" FP");
 #else
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
   aLog(res.c_str());
 }
@@ -207,27 +195,6 @@ LExpr* RuleSet::ExprForRegno(DW_REG_NUMBER aRegno) {
     case DW_REG_AARCH64_SP:
       return &mSPexpr;
 #elif defined(GP_ARCH_mips64)
-<<<<<<< HEAD
-    case DW_REG_MIPS_SP:
-      return &mSPexpr;
-    case DW_REG_MIPS_FP:
-      return &mFPexpr;
-    case DW_REG_MIPS_PC:
-      return &mPCexpr;
-#else
-#error "Unknown arch"
-#endif
-    default:
-      return nullptr;
-||||||| merged common ancestors
-    case DW_REG_MIPS_SP:    return &mSPexpr;
-    case DW_REG_MIPS_FP:    return &mFPexpr;
-    case DW_REG_MIPS_PC:    return &mPCexpr;
-#   else
-#     error "Unknown arch"
-#   endif
-    default: return nullptr;
-=======
     case DW_REG_MIPS_SP:
       return &mSPexpr;
     case DW_REG_MIPS_FP:
@@ -239,7 +206,6 @@ LExpr* RuleSet::ExprForRegno(DW_REG_NUMBER aRegno) {
 #endif
     default:
       return nullptr;
->>>>>>> upstream-releases
   }
 }
 
@@ -718,24 +684,6 @@ class PriMap {
 // LUL                                                        //
 ////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-#define LUL_LOG(_str)                                                  \
-  do {                                                                 \
-    char buf[200];                                                     \
-    SprintfLiteral(buf, "LUL: pid %d tid %d lul-obj %p: %s", getpid(), \
-                   gettid(), this, (_str));                            \
-    buf[sizeof(buf) - 1] = 0;                                          \
-    mLog(buf);                                                         \
-||||||| merged common ancestors
-#define LUL_LOG(_str) \
-  do { \
-    char buf[200]; \
-    SprintfLiteral(buf, \
-                   "LUL: pid %d tid %d lul-obj %p: %s", \
-                   getpid(), gettid(), this, (_str));   \
-    buf[sizeof(buf)-1] = 0; \
-    mLog(buf); \
-=======
 #define LUL_LOG(_str)                                           \
   do {                                                          \
     char buf[200];                                              \
@@ -744,33 +692,15 @@ class PriMap {
                    profiler_current_thread_id(), this, (_str)); \
     buf[sizeof(buf) - 1] = 0;                                   \
     mLog(buf);                                                  \
->>>>>>> upstream-releases
   } while (0)
 
 LUL::LUL(void (*aLog)(const char*))
-<<<<<<< HEAD
-    : mLog(aLog),
-      mAdminMode(true),
-      mAdminThreadId(gettid()),
-      mPriMap(new PriMap(aLog)),
-      mSegArray(new SegArray()),
-      mUSU(new UniqueStringUniverse()) {
-||||||| merged common ancestors
-  : mLog(aLog)
-  , mAdminMode(true)
-  , mAdminThreadId(gettid())
-  , mPriMap(new PriMap(aLog))
-  , mSegArray(new SegArray())
-  , mUSU(new UniqueStringUniverse())
-{
-=======
     : mLog(aLog),
       mAdminMode(true),
       mAdminThreadId(profiler_current_thread_id()),
       mPriMap(new PriMap(aLog)),
       mSegArray(new SegArray()),
       mUSU(new UniqueStringUniverse()) {
->>>>>>> upstream-releases
   LUL_LOG("LUL::LUL: Created object");
 }
 
@@ -1001,13 +931,7 @@ static TaggedUWord EvaluateReg(int16_t aReg, const UnwindRegs* aOldRegs,
     case DW_REG_MIPS_PC:
       return aOldRegs->pc;
 #else
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
     default:
       MOZ_ASSERT(0);
@@ -1210,7 +1134,7 @@ static void UseRuleSet(/*MOD*/ UnwindRegs* aRegs, const StackImage* aStackImg,
   aRegs->fp = TaggedUWord();
   aRegs->pc = TaggedUWord();
 #else
-#error "Unsupported arch"
+#  error "Unsupported arch"
 #endif
 
   // This is generally useful.
@@ -1255,13 +1179,7 @@ static void UseRuleSet(/*MOD*/ UnwindRegs* aRegs, const StackImage* aStackImg,
   aRegs->fp = aRS->mFPexpr.EvaluateExpr(&old_regs, cfa, aStackImg, aPfxInstrs);
   aRegs->pc = aRS->mPCexpr.EvaluateExpr(&old_regs, cfa, aStackImg, aPfxInstrs);
 #else
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
 
   // We're done.  Any regs for which we didn't manage to compute a
@@ -1330,13 +1248,7 @@ void LUL::Unwind(/*OUT*/ uintptr_t* aFramePCs,
       buf[sizeof(buf) - 1] = 0;
       mLog(buf);
 #else
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
     }
 
@@ -1353,13 +1265,7 @@ void LUL::Unwind(/*OUT*/ uintptr_t* aFramePCs,
     TaggedUWord ia = regs.pc;
     TaggedUWord sp = regs.sp;
 #else
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
 
     if (*aFramesUsed >= aFramesAvail) {
@@ -1551,11 +1457,6 @@ void LUL::Unwind(/*OUT*/ uintptr_t* aFramePCs,
         }
       }
     }
-<<<<<<< HEAD
-#endif  // defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux)
-||||||| merged common ancestors
-#endif // defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux)
-=======
 #elif defined(GP_ARCH_arm64)
     // Here is an example of generated code for prologue and epilogue..
     //
@@ -1618,7 +1519,6 @@ void LUL::Unwind(/*OUT*/ uintptr_t* aFramePCs,
       }
     }
 #endif  // defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux)
->>>>>>> upstream-releases
 
     // We failed to recover a frame either using CFI or FP chasing, and we
     // have no other ways to recover the frame.  So we have to give up.
@@ -1767,13 +1667,7 @@ static __attribute__((noinline)) bool GetAndCheckStackTrace(
   const uintptr_t REDZONE_SIZE = 0;
   uintptr_t start = block[1] - REDZONE_SIZE;
 #else
-<<<<<<< HEAD
-#error "Unsupported platform"
-||||||| merged common ancestors
-# error "Unsupported platform"
-=======
 #  error "Unsupported platform"
->>>>>>> upstream-releases
 #endif
 
   // Get hold of the innermost LUL_UNIT_TEST_STACK_SIZE bytes of the

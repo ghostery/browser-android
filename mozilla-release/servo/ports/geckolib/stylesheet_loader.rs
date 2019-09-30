@@ -58,23 +58,6 @@ impl StyleStylesheetLoader for StylesheetLoader {
         // so this raw pointer will still be valid.
 
         let child_sheet = unsafe {
-<<<<<<< HEAD
-            Gecko_LoadStyleSheet(
-                self.0,
-                self.1,
-                self.2,
-                self.3,
-                url.0.clone().into_strong(),
-                media.into_strong(),
-            )
-||||||| merged common ancestors
-            Gecko_LoadStyleSheet(self.0,
-                                 self.1,
-                                 self.2,
-                                 self.3,
-                                 url.0.clone().into_strong(),
-                                 media.into_strong())
-=======
             Gecko_LoadStyleSheet(
                 self.0,
                 self.1,
@@ -83,7 +66,6 @@ impl StyleStylesheetLoader for StylesheetLoader {
                 &url,
                 media.into_strong(),
             )
->>>>>>> upstream-releases
         };
 
         debug_assert!(

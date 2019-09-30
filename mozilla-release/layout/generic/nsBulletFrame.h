@@ -49,28 +49,11 @@ class nsBulletFrame final : public nsFrame {
   NS_DECL_QUERYFRAME
 #endif
 
-<<<<<<< HEAD
-  explicit nsBulletFrame(ComputedStyle* aStyle)
-      : nsFrame(aStyle, kClassID),
-        mPadding(GetWritingMode()),
-        mIntrinsicSize(GetWritingMode()),
-        mOrdinal(0),
-        mRequestRegistered(false) {}
-||||||| merged common ancestors
-  explicit nsBulletFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, kClassID)
-    , mPadding(GetWritingMode())
-    , mIntrinsicSize(GetWritingMode())
-    , mOrdinal(0)
-    , mRequestRegistered(false)
-  {}
-=======
   explicit nsBulletFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsFrame(aStyle, aPresContext, kClassID),
         mPadding(GetWritingMode()),
         mIntrinsicSize(GetWritingMode()),
         mRequestRegistered(false) {}
->>>>>>> upstream-releases
 
   virtual ~nsBulletFrame();
 
@@ -122,12 +105,6 @@ class nsBulletFrame final : public nsFrame {
 
   virtual bool IsEmpty() override;
   virtual bool IsSelfEmpty() override;
-<<<<<<< HEAD
-  virtual nscoord GetLogicalBaseline(
-      mozilla::WritingMode aWritingMode) const override;
-||||||| merged common ancestors
-  virtual nscoord GetLogicalBaseline(mozilla::WritingMode aWritingMode) const override;
-=======
 
   // XXXmats note that this method returns a non-standard baseline that includes
   // the ::marker block-start margin.  New code should probably use
@@ -139,7 +116,6 @@ class nsBulletFrame final : public nsFrame {
   bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
                                  BaselineSharingGroup aBaselineGroup,
                                  nscoord* aBaseline) const override;
->>>>>>> upstream-releases
 
   float GetFontSizeInflation() const;
   bool HasFontSizeInflation() const {
@@ -162,16 +138,8 @@ class nsBulletFrame final : public nsFrame {
                       float aFontSizeInflation,
                       mozilla::LogicalMargin* aPadding);
 
-<<<<<<< HEAD
-  void GetLoadGroup(nsPresContext* aPresContext, nsILoadGroup** aLoadGroup);
-  nsIDocument* GetOurCurrentDoc() const;
-||||||| merged common ancestors
-  void GetLoadGroup(nsPresContext *aPresContext, nsILoadGroup **aLoadGroup);
-  nsIDocument* GetOurCurrentDoc() const;
-=======
   void GetLoadGroup(nsPresContext* aPresContext, nsILoadGroup** aLoadGroup);
   mozilla::dom::Document* GetOurCurrentDoc() const;
->>>>>>> upstream-releases
 
   mozilla::LogicalMargin mPadding;
   RefPtr<imgRequestProxy> mImageRequest;
@@ -179,15 +147,9 @@ class nsBulletFrame final : public nsFrame {
 
   mozilla::LogicalSize mIntrinsicSize;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   mozilla::CounterStyle* ResolveCounterStyle();
   nscoord GetListStyleAscent() const;
->>>>>>> upstream-releases
   void RegisterImageRequest(bool aKnownToBeAnimated);
   void DeregisterAndCancelImageRequest();
 

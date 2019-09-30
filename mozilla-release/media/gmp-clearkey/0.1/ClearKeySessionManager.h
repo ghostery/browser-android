@@ -33,20 +33,9 @@
 #include <set>
 #include <string>
 
-<<<<<<< HEAD
-class ClearKeySessionManager final : public RefCounted {
- public:
-  explicit ClearKeySessionManager(cdm::Host_9* aHost);
-||||||| merged common ancestors
-class ClearKeySessionManager final : public RefCounted
-{
-public:
-  explicit ClearKeySessionManager(cdm::Host_9* aHost);
-=======
 class ClearKeySessionManager final : public RefCounted {
  public:
   explicit ClearKeySessionManager(cdm::Host_10* aHost);
->>>>>>> upstream-releases
 
   void Init(bool aDistinctiveIdentifierAllowed, bool aPersistentStateAllowed);
 

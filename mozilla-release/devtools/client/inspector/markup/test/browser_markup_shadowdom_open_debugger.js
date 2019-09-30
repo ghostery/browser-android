@@ -52,15 +52,7 @@ const TEST_URL =
 </script>`);
 
 add_task(async function() {
-<<<<<<< HEAD
-  const {inspector, toolbox} = await openInspectorForURL(TEST_URL);
-||||||| merged common ancestors
-  await enableWebComponents();
-
-  const {inspector, toolbox} = await openInspectorForURL(TEST_URL);
-=======
   const { inspector, toolbox } = await openInspectorForURL(TEST_URL);
->>>>>>> upstream-releases
 
   // Test with an element to which we attach a shadow.
   await runTest(inspector, toolbox, "test-component", "attachTestComponent");
@@ -75,16 +67,9 @@ async function runTest(inspector, toolbox, selector, contentMethod) {
   await selectNode(selector, inspector);
   const testFront = await getNodeFront(selector, inspector);
   const testContainer = inspector.markup.getContainer(testFront);
-<<<<<<< HEAD
-  let customBadge = testContainer.elt.querySelector(
-    ".inspector-badge.interactive[data-custom]");
-||||||| merged common ancestors
-  let customBadge = testContainer.elt.querySelector(".markup-badge[data-custom]");
-=======
   let customBadge = testContainer.elt.querySelector(
     ".inspector-badge.interactive[data-custom]"
   );
->>>>>>> upstream-releases
 
   // Verify that the "custom" badge and menu item are hidden.
   ok(!customBadge, "[custom] badge is hidden");
@@ -108,16 +93,9 @@ async function runTest(inspector, toolbox, selector, contentMethod) {
   // Test element should now have a custom element definition.
 
   // Check that the badge opens the debugger.
-<<<<<<< HEAD
-  customBadge = testContainer.elt.querySelector(
-    ".inspector-badge.interactive[data-custom]");
-||||||| merged common ancestors
-  customBadge = testContainer.elt.querySelector(".markup-badge[data-custom]");
-=======
   customBadge = testContainer.elt.querySelector(
     ".inspector-badge.interactive[data-custom]"
   );
->>>>>>> upstream-releases
   ok(customBadge, "[custom] badge is visible");
 
   info("Click on the `custom` badge and verify that the debugger opens.");

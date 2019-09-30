@@ -12,14 +12,6 @@ kind-dependencies:
     - release-generate-checksums-signing
 
 job-template:
-<<<<<<< HEAD
-   shipping-phase: promote
-   attributes:
-      artifact_map: taskcluster/taskgraph/manifests/release_checksums.yml
-||||||| merged common ancestors
-   shipping-phase: promote
-=======
     shipping-phase: promote
     attributes:
         artifact_map: taskcluster/taskgraph/manifests/release_checksums.yml
->>>>>>> upstream-releases

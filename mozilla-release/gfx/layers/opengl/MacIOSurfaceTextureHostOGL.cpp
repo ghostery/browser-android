@@ -115,14 +115,6 @@ gl::GLContext* MacIOSurfaceTextureHostOGL::gl() const {
   return mProvider ? mProvider->GetGLContext() : nullptr;
 }
 
-<<<<<<< HEAD
-void MacIOSurfaceTextureHostOGL::CreateRenderTexture(
-    const wr::ExternalImageId& aExternalImageId) {
-||||||| merged common ancestors
-void
-MacIOSurfaceTextureHostOGL::CreateRenderTexture(const wr::ExternalImageId& aExternalImageId)
-{
-=======
 gfx::YUVColorSpace MacIOSurfaceTextureHostOGL::GetYUVColorSpace() const {
   if (!mSurface) {
     return gfx::YUVColorSpace::UNKNOWN;
@@ -132,7 +124,6 @@ gfx::YUVColorSpace MacIOSurfaceTextureHostOGL::GetYUVColorSpace() const {
 
 void MacIOSurfaceTextureHostOGL::CreateRenderTexture(
     const wr::ExternalImageId& aExternalImageId) {
->>>>>>> upstream-releases
   RefPtr<wr::RenderTextureHost> texture =
       new wr::RenderMacIOSurfaceTextureHostOGL(GetMacIOSurface());
 
@@ -140,15 +131,7 @@ void MacIOSurfaceTextureHostOGL::CreateRenderTexture(
                                                  texture.forget());
 }
 
-<<<<<<< HEAD
-uint32_t MacIOSurfaceTextureHostOGL::NumSubTextures() const {
-||||||| merged common ancestors
-uint32_t
-MacIOSurfaceTextureHostOGL::NumSubTextures() const
-{
-=======
 uint32_t MacIOSurfaceTextureHostOGL::NumSubTextures() {
->>>>>>> upstream-releases
   switch (GetFormat()) {
     case gfx::SurfaceFormat::R8G8B8X8:
     case gfx::SurfaceFormat::R8G8B8A8:
@@ -172,22 +155,11 @@ void MacIOSurfaceTextureHostOGL::PushResourceUpdates(
     const Range<wr::ImageKey>& aImageKeys, const wr::ExternalImageId& aExtID) {
   MOZ_ASSERT(mSurface);
 
-<<<<<<< HEAD
-  auto method = aOp == TextureHost::ADD_IMAGE
-                    ? &wr::TransactionBuilder::AddExternalImage
-                    : &wr::TransactionBuilder::UpdateExternalImage;
-  auto bufferType = wr::WrExternalImageBufferType::TextureRectHandle;
-||||||| merged common ancestors
-  auto method = aOp == TextureHost::ADD_IMAGE ? &wr::TransactionBuilder::AddExternalImage
-                                              : &wr::TransactionBuilder::UpdateExternalImage;
-  auto bufferType = wr::WrExternalImageBufferType::TextureRectHandle;
-=======
   auto method = aOp == TextureHost::ADD_IMAGE
                     ? &wr::TransactionBuilder::AddExternalImage
                     : &wr::TransactionBuilder::UpdateExternalImage;
   auto imageType =
       wr::ExternalImageType::TextureHandle(wr::TextureTarget::Rect);
->>>>>>> upstream-releases
 
   switch (GetFormat()) {
     case gfx::SurfaceFormat::R8G8B8X8:
@@ -217,25 +189,6 @@ void MacIOSurfaceTextureHostOGL::PushResourceUpdates(
     case gfx::SurfaceFormat::NV12: {
       MOZ_ASSERT(aImageKeys.length() == 2);
       MOZ_ASSERT(mSurface->GetPlaneCount() == 2);
-<<<<<<< HEAD
-      wr::ImageDescriptor descriptor0(
-          gfx::IntSize(mSurface->GetDevicePixelWidth(0),
-                       mSurface->GetDevicePixelHeight(0)),
-          gfx::SurfaceFormat::A8);
-      wr::ImageDescriptor descriptor1(
-          gfx::IntSize(mSurface->GetDevicePixelWidth(1),
-                       mSurface->GetDevicePixelHeight(1)),
-          gfx::SurfaceFormat::R8G8);
-      (aResources.*method)(aImageKeys[0], descriptor0, aExtID, bufferType, 0);
-      (aResources.*method)(aImageKeys[1], descriptor1, aExtID, bufferType, 1);
-||||||| merged common ancestors
-      wr::ImageDescriptor descriptor0(gfx::IntSize(mSurface->GetDevicePixelWidth(0), mSurface->GetDevicePixelHeight(0)),
-                                      gfx::SurfaceFormat::A8);
-      wr::ImageDescriptor descriptor1(gfx::IntSize(mSurface->GetDevicePixelWidth(1), mSurface->GetDevicePixelHeight(1)),
-                                      gfx::SurfaceFormat::R8G8);
-      (aResources.*method)(aImageKeys[0], descriptor0, aExtID, bufferType, 0);
-      (aResources.*method)(aImageKeys[1], descriptor1, aExtID, bufferType, 1);
-=======
       wr::ImageDescriptor descriptor0(
           gfx::IntSize(mSurface->GetDevicePixelWidth(0),
                        mSurface->GetDevicePixelHeight(0)),
@@ -246,10 +199,11 @@ void MacIOSurfaceTextureHostOGL::PushResourceUpdates(
           gfx::SurfaceFormat::R8G8);
       (aResources.*method)(aImageKeys[0], descriptor0, aExtID, imageType, 0);
       (aResources.*method)(aImageKeys[1], descriptor1, aExtID, imageType, 1);
->>>>>>> upstream-releases
       break;
     }
-    default: { MOZ_ASSERT_UNREACHABLE("unexpected to be called"); }
+    default: {
+      MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+    }
   }
 }
 
@@ -273,23 +227,9 @@ void MacIOSurfaceTextureHostOGL::PushDisplayItems(
       MOZ_ASSERT(mSurface->GetPlaneCount() == 0);
       // Those images can only be generated at present by the Apple H264 decoder
       // which only supports 8 bits color depth.
-<<<<<<< HEAD
-      aBuilder.PushYCbCrInterleavedImage(
-          aBounds, aClip, true, aImageKeys[0], wr::ColorDepth::Color8,
-          wr::ToWrYuvColorSpace(YUVColorSpace::BT601), aFilter);
-||||||| merged common ancestors
-      aBuilder.PushYCbCrInterleavedImage(aBounds,
-                                         aClip,
-                                         true,
-                                         aImageKeys[0],
-                                         wr::ColorDepth::Color8,
-                                         wr::ToWrYuvColorSpace(YUVColorSpace::BT601),
-                                         aFilter);
-=======
       aBuilder.PushYCbCrInterleavedImage(
           aBounds, aClip, true, aImageKeys[0], wr::ColorDepth::Color8,
           wr::ToWrYuvColorSpace(GetYUVColorSpace()), aFilter);
->>>>>>> upstream-releases
       break;
     }
     case gfx::SurfaceFormat::NV12: {
@@ -303,7 +243,9 @@ void MacIOSurfaceTextureHostOGL::PushDisplayItems(
                              aFilter);
       break;
     }
-    default: { MOZ_ASSERT_UNREACHABLE("unexpected to be called"); }
+    default: {
+      MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+    }
   }
 }
 

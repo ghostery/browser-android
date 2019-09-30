@@ -62,54 +62,17 @@ Maybe<const SharedPrefMap::Pref> SharedPrefMap::Get(const char* aKey) const {
 bool SharedPrefMap::Find(const char* aKey, size_t* aIndex) const {
   const auto& keys = KeyTable();
 
-<<<<<<< HEAD
-  return BinarySearchIf(Entries(), 0, EntryCount(),
-                        [&](const Entry& aEntry) {
-                          return strcmp(aKey, keys.GetBare(aEntry.mKey));
-                        },
-                        aIndex);
-||||||| merged common ancestors
-  return BinarySearchIf(Entries(),
-                        0,
-                        EntryCount(),
-                        [&](const Entry& aEntry) {
-                          return strcmp(aKey, keys.GetBare(aEntry.mKey));
-                        },
-                        aIndex);
-=======
   return BinarySearchIf(
       Entries(), 0, EntryCount(),
       [&](const Entry& aEntry) {
         return strcmp(aKey, keys.GetBare(aEntry.mKey));
       },
       aIndex);
->>>>>>> upstream-releases
 }
 
 void SharedPrefMapBuilder::Add(const char* aKey, const Flags& aFlags,
                                bool aDefaultValue, bool aUserValue) {
   mEntries.AppendElement(Entry{
-<<<<<<< HEAD
-      aKey,
-      mKeyTable.Add(aKey),
-      {aDefaultValue, aUserValue},
-      uint8_t(PrefType::Bool),
-      aFlags.mHasDefaultValue,
-      aFlags.mHasUserValue,
-      aFlags.mIsSticky,
-      aFlags.mIsLocked,
-      aFlags.mDefaultChanged,
-||||||| merged common ancestors
-    aKey,
-    mKeyTable.Add(aKey),
-    { aDefaultValue, aUserValue },
-    uint8_t(PrefType::Bool),
-    aFlags.mHasDefaultValue,
-    aFlags.mHasUserValue,
-    aFlags.mIsSticky,
-    aFlags.mIsLocked,
-    aFlags.mDefaultChanged,
-=======
       aKey,
       mKeyTable.Add(aKey),
       {aDefaultValue, aUserValue},
@@ -120,7 +83,6 @@ void SharedPrefMapBuilder::Add(const char* aKey, const Flags& aFlags,
       aFlags.mIsLocked,
       aFlags.mDefaultChanged,
       aFlags.mIsSkippedByIteration,
->>>>>>> upstream-releases
   });
 }
 
@@ -134,27 +96,6 @@ void SharedPrefMapBuilder::Add(const char* aKey, const Flags& aFlags,
   }
 
   mEntries.AppendElement(Entry{
-<<<<<<< HEAD
-      aKey,
-      mKeyTable.Add(aKey),
-      {index},
-      uint8_t(PrefType::Int),
-      aFlags.mHasDefaultValue,
-      aFlags.mHasUserValue,
-      aFlags.mIsSticky,
-      aFlags.mIsLocked,
-      aFlags.mDefaultChanged,
-||||||| merged common ancestors
-    aKey,
-    mKeyTable.Add(aKey),
-    { index },
-    uint8_t(PrefType::Int),
-    aFlags.mHasDefaultValue,
-    aFlags.mHasUserValue,
-    aFlags.mIsSticky,
-    aFlags.mIsLocked,
-    aFlags.mDefaultChanged,
-=======
       aKey,
       mKeyTable.Add(aKey),
       {index},
@@ -165,7 +106,6 @@ void SharedPrefMapBuilder::Add(const char* aKey, const Flags& aFlags,
       aFlags.mIsLocked,
       aFlags.mDefaultChanged,
       aFlags.mIsSkippedByIteration,
->>>>>>> upstream-releases
   });
 }
 
@@ -182,27 +122,6 @@ void SharedPrefMapBuilder::Add(const char* aKey, const Flags& aFlags,
   }
 
   mEntries.AppendElement(Entry{
-<<<<<<< HEAD
-      aKey,
-      mKeyTable.Add(aKey),
-      {index},
-      uint8_t(PrefType::String),
-      aFlags.mHasDefaultValue,
-      aFlags.mHasUserValue,
-      aFlags.mIsSticky,
-      aFlags.mIsLocked,
-      aFlags.mDefaultChanged,
-||||||| merged common ancestors
-    aKey,
-    mKeyTable.Add(aKey),
-    { index },
-    uint8_t(PrefType::String),
-    aFlags.mHasDefaultValue,
-    aFlags.mHasUserValue,
-    aFlags.mIsSticky,
-    aFlags.mIsLocked,
-    aFlags.mDefaultChanged,
-=======
       aKey,
       mKeyTable.Add(aKey),
       {index},
@@ -213,7 +132,6 @@ void SharedPrefMapBuilder::Add(const char* aKey, const Flags& aFlags,
       aFlags.mIsLocked,
       aFlags.mDefaultChanged,
       aFlags.mIsSkippedByIteration,
->>>>>>> upstream-releases
   });
 }
 
@@ -275,17 +193,6 @@ Result<Ok, nsresult> SharedPrefMapBuilder::Finalize(loader::AutoMemMap& aMap) {
   auto* entryPtr = reinterpret_cast<SharedPrefMap::Entry*>(&headerPtr[1]);
   for (auto* entry : entries) {
     *entryPtr = {
-<<<<<<< HEAD
-        entry->mKey,          GetValue(*entry),
-        entry->mType,         entry->mHasDefaultValue,
-        entry->mHasUserValue, entry->mIsSticky,
-        entry->mIsLocked,     entry->mDefaultChanged,
-||||||| merged common ancestors
-      entry->mKey,          GetValue(*entry),
-      entry->mType,         entry->mHasDefaultValue,
-      entry->mHasUserValue, entry->mIsSticky,
-      entry->mIsLocked,     entry->mDefaultChanged,
-=======
         entry->mKey,
         GetValue(*entry),
         entry->mType,
@@ -295,7 +202,6 @@ Result<Ok, nsresult> SharedPrefMapBuilder::Finalize(loader::AutoMemMap& aMap) {
         entry->mIsLocked,
         entry->mDefaultChanged,
         entry->mIsSkippedByIteration,
->>>>>>> upstream-releases
     };
     entryPtr++;
   }

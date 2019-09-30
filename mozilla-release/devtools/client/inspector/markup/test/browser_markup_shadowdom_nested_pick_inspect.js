@@ -48,17 +48,9 @@ const TEST_URL =
   </script>`);
 
 add_task(async function() {
-<<<<<<< HEAD
-  const { inspector, toolbox, tab, testActor } = await openInspectorForURL(TEST_URL);
-||||||| merged common ancestors
-  await enableWebComponents();
-
-  const { inspector, toolbox, tab, testActor } = await openInspectorForURL(TEST_URL);
-=======
   const { inspector, toolbox, tab, testActor } = await openInspectorForURL(
     TEST_URL
   );
->>>>>>> upstream-releases
 
   info("Waiting for element picker to become active");
   await startPicker(toolbox);

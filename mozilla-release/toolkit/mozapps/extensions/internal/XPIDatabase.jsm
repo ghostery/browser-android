@@ -103,27 +103,6 @@ const KEY_APP_TEMPORARY = "app-temporary";
 const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 
 // Properties to cache and reload when an addon installation is pending
-<<<<<<< HEAD
-const PENDING_INSTALL_METADATA =
-    ["syncGUID", "targetApplications", "userDisabled", "softDisabled",
-     "existingAddonID", "sourceURI", "releaseNotesURI", "installDate",
-     "updateDate", "applyBackgroundUpdates", "compatibilityOverrides",
-     "installTelemetryInfo"];
-
-||||||| merged common ancestors
-const PENDING_INSTALL_METADATA =
-    ["syncGUID", "targetApplications", "userDisabled", "softDisabled",
-     "existingAddonID", "sourceURI", "releaseNotesURI", "installDate",
-     "updateDate", "applyBackgroundUpdates", "compatibilityOverrides",
-     "installTelemetryInfo"];
-
-const COMPATIBLE_BY_DEFAULT_TYPES = {
-  extension: true,
-  dictionary: true,
-  "webextension-dictionary": true,
-};
-
-=======
 const PENDING_INSTALL_METADATA = [
   "syncGUID",
   "targetApplications",
@@ -139,69 +118,7 @@ const PENDING_INSTALL_METADATA = [
   "installTelemetryInfo",
 ];
 
->>>>>>> upstream-releases
 // Properties to save in JSON file
-<<<<<<< HEAD
-const PROP_JSON_FIELDS = ["id", "syncGUID", "version", "type",
-                          "loader", "updateURL", "optionsURL",
-                          "optionsType", "optionsBrowserStyle", "aboutURL",
-                          "defaultLocale", "visible", "active", "userDisabled",
-                          "appDisabled", "pendingUninstall", "installDate",
-                          "updateDate", "applyBackgroundUpdates", "path",
-                          "skinnable", "sourceURI", "releaseNotesURI",
-                          "softDisabled", "foreignInstall",
-                          "strictCompatibility", "locales", "targetApplications",
-                          "targetPlatforms", "signedState",
-                          "seen", "dependencies",
-                          "userPermissions", "icons", "iconURL",
-                          "blocklistState", "blocklistURL", "startupData",
-                          "previewImage", "hidden", "installTelemetryInfo"];
-
-const LEGACY_TYPES = new Set([
-  "extension",
-]);
-
-const SIGNED_TYPES = new Set([
-  "extension",
-  "locale",
-  "theme",
-]);
-||||||| merged common ancestors
-const PROP_JSON_FIELDS = ["id", "syncGUID", "version", "type",
-                          "updateURL", "optionsURL",
-                          "optionsType", "optionsBrowserStyle", "aboutURL",
-                          "defaultLocale", "visible", "active", "userDisabled",
-                          "appDisabled", "pendingUninstall", "installDate",
-                          "updateDate", "applyBackgroundUpdates", "path",
-                          "skinnable", "sourceURI", "releaseNotesURI",
-                          "softDisabled", "foreignInstall",
-                          "strictCompatibility", "locales", "targetApplications",
-                          "targetPlatforms", "signedState",
-                          "seen", "dependencies", "hasEmbeddedWebExtension",
-                          "userPermissions", "icons", "iconURL", "icon64URL",
-                          "blocklistState", "blocklistURL", "startupData",
-                          "previewImage", "hidden", "installTelemetryInfo"];
-
-const LEGACY_TYPES = new Set([
-  "extension",
-]);
-
-// Some add-on types that we track internally are presented as other types
-// externally
-const TYPE_ALIASES = {
-  "webextension": "extension",
-  "webextension-dictionary": "dictionary",
-  "webextension-langpack": "locale",
-  "webextension-theme": "theme",
-};
-
-const SIGNED_TYPES = new Set([
-  "extension",
-  "webextension",
-  "webextension-langpack",
-  "webextension-theme",
-]);
-=======
 const PROP_JSON_FIELDS = [
   "id",
   "syncGUID",
@@ -252,7 +169,6 @@ const PROP_JSON_FIELDS = [
 const LEGACY_TYPES = new Set(["extension"]);
 
 const SIGNED_TYPES = new Set(["extension", "locale", "theme"]);
->>>>>>> upstream-releases
 
 // Time to wait before async save of XPI JSON database, in milliseconds
 const ASYNC_SAVE_DELAY_MS = 20;
@@ -619,22 +535,10 @@ class AddonInternal {
     // Only extensions and dictionaries can be compatible by default; themes
     // and language packs always use strict compatibility checking.
     // Dictionaries are compatible by default unless requested by the dictinary.
-<<<<<<< HEAD
-    if (!this.strictCompatibility &&
-        (!AddonManager.strictCompatibility || this.type == "dictionary")) {
-
-||||||| merged common ancestors
-    if (this.type in COMPATIBLE_BY_DEFAULT_TYPES &&
-        !this.strictCompatibility &&
-        (!AddonManager.strictCompatibility ||
-         this.type == "webextension-dictionary")) {
-
-=======
     if (
       !this.strictCompatibility &&
       (!AddonManager.strictCompatibility || this.type == "dictionary")
     ) {
->>>>>>> upstream-releases
       // The repository can specify compatibility overrides.
       // Note: For now, only blacklisting is supported by overrides.
       let overrides = AddonRepository.getCompatibilityOverridesSync(this.id);
@@ -1198,16 +1102,8 @@ AddonWrapper = class {
 
     if (addon.inDatabase) {
       // When softDisabling a theme just enable the active theme
-<<<<<<< HEAD
-      if (addon.type === "theme" && val && !addon.userDisabled) {
-        if (addon.isWebExtension)
-||||||| merged common ancestors
-      if (isTheme(addon.type) && val && !addon.userDisabled) {
-        if (isWebExtension(addon.type))
-=======
       if (addon.type === "theme" && val && !addon.userDisabled) {
         if (addon.isWebExtension) {
->>>>>>> upstream-releases
           XPIDatabase.updateAddonDisabledState(addon, undefined, val);
         }
       } else {
@@ -1359,28 +1255,6 @@ function defineAddonWrapperProperty(name, getter) {
   });
 }
 
-<<<<<<< HEAD
-["id", "syncGUID", "version", "type", "isWebExtension",
- "isCompatible", "isPlatformCompatible",
- "providesUpdatesSecurely", "blocklistState", "appDisabled",
- "softDisabled", "skinnable", "foreignInstall",
- "strictCompatibility", "updateURL", "dependencies",
- "signedState", "isCorrectlySigned"].forEach(function(aProp) {
-   defineAddonWrapperProperty(aProp, function() {
-     let addon = addonFor(this);
-     return (aProp in addon) ? addon[aProp] : undefined;
-   });
-||||||| merged common ancestors
-["id", "syncGUID", "version", "isCompatible", "isPlatformCompatible",
- "providesUpdatesSecurely", "blocklistState", "appDisabled",
- "softDisabled", "skinnable", "foreignInstall",
- "strictCompatibility", "updateURL", "dependencies",
- "signedState", "isCorrectlySigned"].forEach(function(aProp) {
-   defineAddonWrapperProperty(aProp, function() {
-     let addon = addonFor(this);
-     return (aProp in addon) ? addon[aProp] : undefined;
-   });
-=======
 [
   "id",
   "syncGUID",
@@ -1405,7 +1279,6 @@ function defineAddonWrapperProperty(name, getter) {
     let addon = addonFor(this);
     return aProp in addon ? addon[aProp] : undefined;
   });
->>>>>>> upstream-releases
 });
 
 [
@@ -1703,23 +1576,12 @@ this.XPIDatabase = {
         throw error;
       }
 
-<<<<<<< HEAD
-      if (inputAddons.schemaVersion == 27) {
-        // Types were translated in bug 857456.
-        for (let addon of inputAddons.addons) {
-          migrateAddonLoader(addon);
-        }
-      } else if (inputAddons.schemaVersion != DB_SCHEMA) {
-||||||| merged common ancestors
-      if (inputAddons.schemaVersion != DB_SCHEMA) {
-=======
       if (inputAddons.schemaVersion <= 27) {
         // Types were translated in bug 857456.
         for (let addon of inputAddons.addons) {
           migrateAddonLoader(addon);
         }
       } else if (inputAddons.schemaVersion != DB_SCHEMA) {
->>>>>>> upstream-releases
         // For now, we assume compatibility for JSON data with a
         // mismatched schema version, though we throw away any fields we
         // don't know about (bug 902956)
@@ -1996,28 +1858,8 @@ this.XPIDatabase = {
    */
   async addonChanged(aId, aType) {
     // We only care about themes in this provider
-<<<<<<< HEAD
-    if (aType !== "theme")
-||||||| merged common ancestors
-    if (!isTheme(aType))
-=======
     if (aType !== "theme") {
->>>>>>> upstream-releases
       return;
-<<<<<<< HEAD
-
-    let addons = this.getAddonsByType("theme");
-    for (let theme of addons) {
-      if (theme.visible && theme.id != aId)
-        await this.updateAddonDisabledState(theme, true, undefined, true);
-||||||| merged common ancestors
-
-    let addons = this.getAddonsByType("webextension-theme");
-    for (let theme of addons) {
-      if (theme.visible && theme.id != aId)
-        await this.updateAddonDisabledState(theme, true, undefined, true);
-=======
->>>>>>> upstream-releases
     }
 
     Services.prefs.setCharPref(
@@ -2038,30 +1880,11 @@ this.XPIDatabase = {
       }
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  /**
-   * Converts an internal add-on type to the type presented through the API.
-   *
-   * @param {string} aType
-   *        The internal add-on type
-   * @returns {string}
-   *        An external add-on type
-   */
-  getExternalType(aType) {
-    if (aType in TYPE_ALIASES)
-      return TYPE_ALIASES[aType];
-    return aType;
-  },
-
-  isTheme,
-=======
     if (enableTheme) {
       await this.updateAddonDisabledState(enableTheme, false, undefined, true);
     }
   },
 
->>>>>>> upstream-releases
   SIGNED_TYPES,
 
   /**
@@ -2273,36 +2096,6 @@ this.XPIDatabase = {
    * @returns {boolean} Whether the addon should be disabled for being legacy
    */
   isDisabledLegacy(addon) {
-<<<<<<< HEAD
-    return (!AddonSettings.ALLOW_LEGACY_EXTENSIONS &&
-            !addon.isWebExtension &&
-            LEGACY_TYPES.has(addon.type) &&
-
-            // Legacy add-ons are allowed in the system location.
-            !addon.location.isSystem &&
-
-            // Legacy extensions may be installed temporarily in
-            // non-release builds.
-            !(AppConstants.MOZ_ALLOW_LEGACY_EXTENSIONS &&
-              addon.location.isTemporary) &&
-
-            // Properly signed legacy extensions are allowed.
-            addon.signedState !== AddonManager.SIGNEDSTATE_PRIVILEGED);
-||||||| merged common ancestors
-    return (!AddonSettings.ALLOW_LEGACY_EXTENSIONS &&
-            LEGACY_TYPES.has(addon.type) &&
-
-            // Legacy add-ons are allowed in the system location.
-            !addon.location.isSystem &&
-
-            // Legacy extensions may be installed temporarily in
-            // non-release builds.
-            !(AppConstants.MOZ_ALLOW_LEGACY_EXTENSIONS &&
-              addon.location.isTemporary) &&
-
-            // Properly signed legacy extensions are allowed.
-            addon.signedState !== AddonManager.SIGNEDSTATE_PRIVILEGED);
-=======
     return (
       !AddonSettings.ALLOW_LEGACY_EXTENSIONS &&
       !addon.isWebExtension &&
@@ -2317,7 +2110,6 @@ this.XPIDatabase = {
       // Properly signed legacy extensions are allowed.
       addon.signedState !== AddonManager.SIGNEDSTATE_PRIVILEGED
     );
->>>>>>> upstream-releases
   },
 
   /**
@@ -3544,13 +3336,7 @@ this.XPIDatabaseReconcile = {
     } else if (xpiState && xpiState.wasRestored) {
       isActive = xpiState.enabled;
 
-<<<<<<< HEAD
-      if (currentAddon.isWebExtension && currentAddon.type == "theme")
-||||||| merged common ancestors
-      if (currentAddon.type == "webextension-theme")
-=======
       if (currentAddon.isWebExtension && currentAddon.type == "theme") {
->>>>>>> upstream-releases
         currentAddon.userDisabled = !isActive;
       }
 

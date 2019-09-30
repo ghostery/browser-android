@@ -36,48 +36,20 @@ impl From<syn::Ident> for Lorem {
 
 #[test]
 fn parsing_fail() {
-<<<<<<< HEAD
-    let di = syn::parse_str(
-        r#"
-||||||| merged common ancestors
-    let di = syn::parse_str(r#"
-=======
     let di = parse_quote! {
->>>>>>> upstream-releases
         #[hello(ipsum(amet = "yes", world = false))]
         pub struct Foo;
-<<<<<<< HEAD
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    "#).unwrap();
-=======
     };
->>>>>>> upstream-releases
 
     println!("{}", Lorem::from_derive_input(&di).unwrap_err());
 }
 
 #[test]
 fn missing_field() {
-<<<<<<< HEAD
-    let di = syn::parse_str(
-        r#"
-||||||| merged common ancestors
-    let di = syn::parse_str(r#"
-=======
     let di = parse_quote! {
->>>>>>> upstream-releases
         #[hello(ipsum(amet = true))]
         pub struct Foo;
-<<<<<<< HEAD
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    "#).unwrap();
-=======
     };
->>>>>>> upstream-releases
 
     println!("{}", Lorem::from_derive_input(&di).unwrap_err());
 }

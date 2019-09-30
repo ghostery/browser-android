@@ -20,20 +20,11 @@ namespace dom {
 class WakeLock;
 class VideoPlaybackQuality;
 
-<<<<<<< HEAD
-class HTMLVideoElement final : public HTMLMediaElement {
- public:
-||||||| merged common ancestors
-class HTMLVideoElement final : public HTMLMediaElement
-{
-public:
-=======
 class HTMLVideoElement final : public HTMLMediaElement {
  public:
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(HTMLVideoElement, HTMLMediaElement)
 
->>>>>>> upstream-releases
   typedef mozilla::dom::NodeInfo NodeInfo;
 
   explicit HTMLVideoElement(already_AddRefed<NodeInfo>&& aNodeInfo);
@@ -42,27 +33,12 @@ class HTMLVideoElement final : public HTMLMediaElement {
 
   using HTMLMediaElement::GetPaused;
 
-<<<<<<< HEAD
-  virtual bool IsVideo() const override { return true; }
-||||||| merged common ancestors
-  virtual bool IsVideo() const override {
-    return true;
-  }
-=======
   void Invalidate(bool aImageSizeChanged, Maybe<nsIntSize>& aNewIntrinsicSize,
                   bool aForceInvalidate) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
-||||||| merged common ancestors
-  virtual bool ParseAttribute(int32_t aNamespaceID,
-                              nsAtom* aAttribute,
-=======
   virtual bool IsVideo() const override { return true; }
 
   virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
->>>>>>> upstream-releases
                               const nsAString& aValue,
                               nsIPrincipal* aMaybeScriptedPrincipal,
                               nsAttrValue& aResult) override;
@@ -90,35 +66,17 @@ class HTMLVideoElement final : public HTMLMediaElement {
 
   // WebIDL
 
-<<<<<<< HEAD
-  uint32_t Width() const { return GetIntAttr(nsGkAtoms::width, 0); }
-||||||| merged common ancestors
-  uint32_t Width() const
-  {
-    return GetIntAttr(nsGkAtoms::width, 0);
-  }
-=======
   uint32_t Width() const {
     return GetDimensionAttrAsUnsignedInt(nsGkAtoms::width, 0);
   }
->>>>>>> upstream-releases
 
   void SetWidth(uint32_t aValue, ErrorResult& aRv) {
     SetUnsignedIntAttr(nsGkAtoms::width, aValue, 0, aRv);
   }
 
-<<<<<<< HEAD
-  uint32_t Height() const { return GetIntAttr(nsGkAtoms::height, 0); }
-||||||| merged common ancestors
-  uint32_t Height() const
-  {
-    return GetIntAttr(nsGkAtoms::height, 0);
-  }
-=======
   uint32_t Height() const {
     return GetDimensionAttrAsUnsignedInt(nsGkAtoms::height, 0);
   }
->>>>>>> upstream-releases
 
   void SetHeight(uint32_t aValue, ErrorResult& aRv) {
     SetUnsignedIntAttr(nsGkAtoms::height, aValue, 0, aRv);
@@ -150,16 +108,9 @@ class HTMLVideoElement final : public HTMLMediaElement {
     return mMediaInfo.mVideo.mRotation;
   }
 
-<<<<<<< HEAD
-  void GetPoster(nsAString& aValue) {
-||||||| merged common ancestors
-  void GetPoster(nsAString& aValue)
-  {
-=======
   bool HasAlpha() const { return mMediaInfo.mVideo.HasAlpha(); }
 
   void GetPoster(nsAString& aValue) {
->>>>>>> upstream-releases
     GetURIAttr(nsGkAtoms::poster, nullptr, aValue);
   }
   void SetPoster(const nsAString& aValue, ErrorResult& aRv) {
@@ -183,30 +134,12 @@ class HTMLVideoElement final : public HTMLMediaElement {
 
   already_AddRefed<VideoPlaybackQuality> GetVideoPlaybackQuality();
 
-<<<<<<< HEAD
-  bool MozOrientationLockEnabled() const {
-    return StaticPrefs::MediaVideocontrolsLockVideoOrientation();
-||||||| merged common ancestors
-
-  bool MozOrientationLockEnabled() const
-  {
-    return StaticPrefs::MediaVideocontrolsLockVideoOrientation();
-=======
   bool MozOrientationLockEnabled() const {
     return StaticPrefs::media_videocontrols_lock_video_orientation();
->>>>>>> upstream-releases
   }
 
   bool MozIsOrientationLocked() const { return mIsOrientationLocked; }
 
-<<<<<<< HEAD
-  void SetMozIsOrientationLocked(bool aLock) { mIsOrientationLocked = aLock; }
-||||||| merged common ancestors
-  void SetMozIsOrientationLocked(bool aLock)
-  {
-    mIsOrientationLocked = aLock;
-  }
-=======
   void SetMozIsOrientationLocked(bool aLock) { mIsOrientationLocked = aLock; }
 
   void CloneElementVisually(HTMLVideoElement& aTarget, ErrorResult& rv);
@@ -214,17 +147,10 @@ class HTMLVideoElement final : public HTMLMediaElement {
   void StopCloningElementVisually();
 
   bool IsCloningElementVisually() const { return !!mVisualCloneTarget; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   void TogglePictureInPicture(ErrorResult& rv);
 
  protected:
->>>>>>> upstream-releases
   virtual ~HTMLVideoElement();
 
   virtual JSObject* WrapNode(JSContext* aCx,
@@ -247,11 +173,6 @@ protected:
 
   bool mIsOrientationLocked;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   bool SetVisualCloneTarget(HTMLVideoElement* aCloneTarget);
   bool SetVisualCloneSource(HTMLVideoElement* aCloneSource);
@@ -272,7 +193,6 @@ private:
   // SetVisualCloneTarget() instead.
   RefPtr<HTMLVideoElement> mVisualCloneSource;
 
->>>>>>> upstream-releases
   static void MapAttributesIntoRule(const nsMappedAttributes* aAttributes,
                                     MappedDeclarations&);
 

@@ -73,16 +73,8 @@ uint64_t XULMenuitemAccessible::NativeState() const {
   if (isComboboxOption) {
     // Is selected?
     bool isSelected = false;
-<<<<<<< HEAD
-    nsCOMPtr<nsIDOMXULSelectControlItemElement> item(
-        do_QueryInterface(mContent));
-||||||| merged common ancestors
-    nsCOMPtr<nsIDOMXULSelectControlItemElement>
-      item(do_QueryInterface(mContent));
-=======
     nsCOMPtr<nsIDOMXULSelectControlItemElement> item =
         Elm()->AsXULSelectControlItem();
->>>>>>> upstream-releases
     NS_ENSURE_TRUE(item, state);
     item->GetSelected(&isSelected);
 
@@ -226,22 +218,9 @@ KeyBinding XULMenuitemAccessible::KeyboardShortcut() const {
   return KeyBinding(key, modifierMask);
 }
 
-<<<<<<< HEAD
-role XULMenuitemAccessible::NativeRole() const {
-  nsCOMPtr<nsIDOMXULContainerElement> xulContainer(do_QueryInterface(mContent));
-  if (xulContainer) return roles::PARENT_MENUITEM;
-||||||| merged common ancestors
-role
-XULMenuitemAccessible::NativeRole() const
-{
-  nsCOMPtr<nsIDOMXULContainerElement> xulContainer(do_QueryInterface(mContent));
-  if (xulContainer)
-    return roles::PARENT_MENUITEM;
-=======
 role XULMenuitemAccessible::NativeRole() const {
   nsCOMPtr<nsIDOMXULContainerElement> xulContainer = Elm()->AsXULContainer();
   if (xulContainer) return roles::PARENT_MENUITEM;
->>>>>>> upstream-releases
 
   if (mParent && mParent->Role() == roles::COMBOBOX_LIST)
     return roles::COMBOBOX_OPTION;
@@ -292,23 +271,10 @@ bool XULMenuitemAccessible::IsActiveWidget() const {
   return false;
 }
 
-<<<<<<< HEAD
-bool XULMenuitemAccessible::AreItemsOperable() const {
-  // Parent menu item is a widget, its items are operable when its popup is
-  // open.
-  nsIContent* menuPopupContent = mContent->GetFirstChild();
-||||||| merged common ancestors
-bool
-XULMenuitemAccessible::AreItemsOperable() const
-{
-  // Parent menu item is a widget, its items are operable when its popup is open.
-  nsIContent* menuPopupContent = mContent->GetFirstChild();
-=======
 bool XULMenuitemAccessible::AreItemsOperable() const {
   // Parent menu item is a widget, its items are operable when its popup is
   // open.
   nsIContent* menuPopupContent = mContent->GetLastChild();
->>>>>>> upstream-releases
   if (menuPopupContent) {
     nsMenuPopupFrame* menuPopupFrame =
         do_QueryFrame(menuPopupContent->GetPrimaryFrame());
@@ -375,14 +341,6 @@ XULMenupopupAccessible::XULMenupopupAccessible(nsIContent* aContent,
   if (menuPopupFrame && menuPopupFrame->IsMenu()) mType = eMenuPopupType;
 
   // May be the anonymous <menupopup> inside <menulist> (a combobox)
-<<<<<<< HEAD
-  mSelectControl = do_QueryInterface(mContent->GetFlattenedTreeParent());
-  if (!mSelectControl) mGenericTypes &= ~eSelect;
-||||||| merged common ancestors
-  mSelectControl = do_QueryInterface(mContent->GetFlattenedTreeParent());
-  if (!mSelectControl)
-    mGenericTypes &= ~eSelect;
-=======
   nsIContent* parent = mContent->GetFlattenedTreeParent();
   nsCOMPtr<nsIDOMXULSelectControlElement> selectControl =
       parent && parent->AsElement() ? parent->AsElement()->AsXULSelectControl()
@@ -393,7 +351,6 @@ XULMenupopupAccessible::XULMenupopupAccessible(nsIContent* aContent,
     mSelectControl = nullptr;
     mGenericTypes &= ~eSelect;
   }
->>>>>>> upstream-releases
 
   mStateFlags |= eNoXBLKids;
 }

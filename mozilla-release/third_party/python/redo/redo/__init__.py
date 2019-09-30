@@ -90,15 +90,6 @@ def retrier(attempts=5, sleeptime=10, max_sleeptime=300, sleepscale=1.5, jitter=
             time.sleep(sleeptime_real)
 
 
-<<<<<<< HEAD
-def retry(action, attempts=5, sleeptime=60, max_sleeptime=5 * 60,
-          sleepscale=1.5, jitter=1, retry_exceptions=(Exception,),
-          cleanup=None, args=(), kwargs={}, log_args=True):
-||||||| merged common ancestors
-def retry(action, attempts=5, sleeptime=60, max_sleeptime=5 * 60,
-          sleepscale=1.5, jitter=1, retry_exceptions=(Exception,),
-          cleanup=None, args=(), kwargs={}):
-=======
 def retry(
     action,
     attempts=5,
@@ -112,7 +103,6 @@ def retry(
     kwargs={},
     log_args=True,
 ):
->>>>>>> upstream-releases
     """
     Calls an action function until it succeeds, or we give up.
 
@@ -166,19 +156,6 @@ def retry(
     assert callable(action)
     assert not cleanup or callable(cleanup)
 
-<<<<<<< HEAD
-    action_name = getattr(action, '__name__', action)
-    if log_args and (args or kwargs):
-        log_attempt_args = ("retry: calling %s with args: %s,"
-                            " kwargs: %s, attempt #%d",
-                            action_name, args, kwargs)
-||||||| merged common ancestors
-    action_name = getattr(action, '__name__', action)
-    if args or kwargs:
-        log_attempt_format = ("retry: calling %s with args: %s,"
-                              " kwargs: %s, attempt #%%d"
-                              % (action_name, args, kwargs))
-=======
     action_name = getattr(action, "__name__", action)
     if log_args and (args or kwargs):
         log_attempt_args = (
@@ -187,28 +164,11 @@ def retry(
             args,
             kwargs,
         )
->>>>>>> upstream-releases
     else:
-<<<<<<< HEAD
-        log_attempt_args = ("retry: calling %s, attempt #%d",
-                            action_name)
-||||||| merged common ancestors
-        log_attempt_format = ("retry: calling %s, attempt #%%d"
-                              % action_name)
-=======
         log_attempt_args = ("retry: calling %s, attempt #%d", action_name)
->>>>>>> upstream-releases
 
     if max_sleeptime < sleeptime:
-<<<<<<< HEAD
-        log.debug("max_sleeptime %d less than sleeptime %d",
-                  max_sleeptime, sleeptime)
-||||||| merged common ancestors
-        log.debug("max_sleeptime %d less than sleeptime %d" % (
-            max_sleeptime, sleeptime))
-=======
         log.debug("max_sleeptime %d less than sleeptime %d", max_sleeptime, sleeptime)
->>>>>>> upstream-releases
 
     n = 1
     for _ in retrier(
@@ -220,15 +180,8 @@ def retry(
     ):
         try:
             logfn = log.info if n != 1 else log.debug
-<<<<<<< HEAD
-            log_attempt_args += (n, )
-            logfn(*log_attempt_args)
-||||||| merged common ancestors
-            logfn(log_attempt_format, n)
-=======
             logfn_args = log_attempt_args + (n,)
             logfn(*logfn_args)
->>>>>>> upstream-releases
             return action(*args, **kwargs)
         except retry_exceptions:
             log.debug("retry: Caught exception: ", exc_info=True)

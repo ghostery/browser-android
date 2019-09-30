@@ -7,15 +7,9 @@
 #ifndef mozilla_layers_CompositorController_h
 #define mozilla_layers_CompositorController_h
 
-<<<<<<< HEAD
-#include "nsISupportsImpl.h"  // for NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
-||||||| merged common ancestors
-#include "nsISupportsImpl.h" // for NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
-=======
 #include "nsISupportsImpl.h"  // for NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
 #include "mozilla/Maybe.h"
 #include "mozilla/webrender/WebRenderTypes.h"
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -35,16 +29,8 @@ class CompositorController {
   virtual void ScheduleHideAllPluginWindows() = 0;
   virtual void ScheduleShowAllPluginWindows() = 0;
 
-<<<<<<< HEAD
- protected:
-  virtual ~CompositorController() {}
-||||||| merged common ancestors
-protected:
-  virtual ~CompositorController() {}
-=======
  protected:
   virtual ~CompositorController() = default;
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

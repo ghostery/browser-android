@@ -148,35 +148,16 @@ class InterceptedHttpChannel final
   GetSecurityInfo(nsISupports** aSecurityInfo) override;
 
   NS_IMETHOD
-<<<<<<< HEAD
-  AsyncOpen(nsIStreamListener* aListener, nsISupports* aContext) override;
-||||||| merged common ancestors
-  AsyncOpen(nsIStreamListener *aListener, nsISupports *aContext) override;
-=======
   AsyncOpen(nsIStreamListener* aListener) override;
->>>>>>> upstream-releases
 
   NS_IMETHOD
-<<<<<<< HEAD
-  AsyncOpen2(nsIStreamListener* aListener) override;
-||||||| merged common ancestors
-  AsyncOpen2(nsIStreamListener *aListener) override;
-=======
   LogBlockedCORSRequest(const nsAString& aMessage,
                         const nsACString& aCategory) override;
->>>>>>> upstream-releases
 
   NS_IMETHOD
-<<<<<<< HEAD
-  LogBlockedCORSRequest(const nsAString& aMessage,
-                        const nsACString& aCategory) override;
-||||||| merged common ancestors
-  LogBlockedCORSRequest(const nsAString & aMessage, const nsACString& aCategory) override;
-=======
   LogMimeTypeMismatch(const nsACString& aMessageName, bool aWarning,
                       const nsAString& aURL,
                       const nsAString& aContentType) override;
->>>>>>> upstream-releases
 
   NS_IMETHOD
   SetupFallbackChannel(const char* aFallbackKey) override;

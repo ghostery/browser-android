@@ -23,18 +23,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-namespace wr {
-struct WrWindowId;
-}  // namespace wr
-
-||||||| merged common ancestors
-namespace wr {
-struct WrWindowId;
-} // namespace wr
-
-=======
->>>>>>> upstream-releases
 namespace layers {
 
 class APZCTreeManager;
@@ -74,18 +62,8 @@ class APZUpdater {
   void UpdateFocusState(LayersId aRootLayerTreeId,
                         WRRootId aOriginatingWrRootId,
                         const FocusTarget& aFocusTarget);
-<<<<<<< HEAD
-  void UpdateHitTestingTree(LayersId aRootLayerTreeId, Layer* aRoot,
-                            bool aIsFirstPaint, LayersId aOriginatingLayersId,
-||||||| merged common ancestors
-  void UpdateHitTestingTree(LayersId aRootLayerTreeId,
-                            Layer* aRoot,
-                            bool aIsFirstPaint,
-                            LayersId aOriginatingLayersId,
-=======
   void UpdateHitTestingTree(Layer* aRoot, bool aIsFirstPaint,
                             LayersId aOriginatingLayersId,
->>>>>>> upstream-releases
                             uint32_t aPaintSequenceNumber);
   /**
    * This should be called (in the WR-enabled case) when the compositor receives
@@ -116,27 +94,11 @@ class APZUpdater {
 
   bool GetAPZTestData(WRRootId aWrRootId, APZTestData* aOutData);
 
-<<<<<<< HEAD
-  void SetTestAsyncScrollOffset(LayersId aLayersId,
-                                const ScrollableLayerGuid::ViewID& aScrollId,
-||||||| merged common ancestors
-  void SetTestAsyncScrollOffset(LayersId aLayersId,
-                                const FrameMetrics::ViewID& aScrollId,
-=======
   void SetTestAsyncScrollOffset(WRRootId aWrRootId,
                                 const ScrollableLayerGuid::ViewID& aScrollId,
->>>>>>> upstream-releases
                                 const CSSPoint& aOffset);
-<<<<<<< HEAD
-  void SetTestAsyncZoom(LayersId aLayersId,
-                        const ScrollableLayerGuid::ViewID& aScrollId,
-||||||| merged common ancestors
-  void SetTestAsyncZoom(LayersId aLayersId,
-                        const FrameMetrics::ViewID& aScrollId,
-=======
   void SetTestAsyncZoom(WRRootId aWrRootId,
                         const ScrollableLayerGuid::ViewID& aScrollId,
->>>>>>> upstream-releases
                         const LayerToParentLayerScale& aZoom);
 
   // This can only be called on the updater thread.
@@ -174,27 +136,6 @@ class APZUpdater {
   bool IsUpdaterThread() const;
 
   /**
-<<<<<<< HEAD
-   * Dispatches the given task to the APZ "controller thread", but does it
-   * *from* the updater thread. That is, if the thread on which this function is
-   * called is not the updater thread, the task is first dispatched to the
-   * updater thread. When the updater thread runs it (or if this is called
-   * directly on the updater thread), that is when the task gets dispatched to
-   * the controller thread. The controller thread then actually runs the task.
-   * The layers id argument should be the id of the layer tree that is
-   * requesting this task to be run; in most cases this will probably just be
-   * the root layers id of the compositor.
-||||||| merged common ancestors
-   * Dispatches the given task to the APZ "controller thread", but does it *from*
-   * the updater thread. That is, if the thread on which this function is called
-   * is not the updater thread, the task is first dispatched to the updater thread.
-   * When the updater thread runs it (or if this is called directly on the updater
-   * thread), that is when the task gets dispatched to the controller thread.
-   * The controller thread then actually runs the task.
-   * The layers id argument should be the id of the layer tree that is
-   * requesting this task to be run; in most cases this will probably just be
-   * the root layers id of the compositor.
-=======
    * Dispatches the given task to the APZ "controller thread", but does it
    * *from* the updater thread. That is, if the thread on which this function is
    * called is not the updater thread, the task is first dispatched to the
@@ -203,17 +144,9 @@ class APZUpdater {
    * the controller thread. The controller thread then actually runs the task.
    *
    * See the RunOnUpdaterThread method for details on the aSelector argument.
->>>>>>> upstream-releases
    */
-<<<<<<< HEAD
-  void RunOnControllerThread(LayersId aLayersId,
-                             already_AddRefed<Runnable> aTask);
-||||||| merged common ancestors
-  void RunOnControllerThread(LayersId aLayersId, already_AddRefed<Runnable> aTask);
-=======
   void RunOnControllerThread(UpdaterQueueSelector aSelector,
                              already_AddRefed<Runnable> aTask);
->>>>>>> upstream-releases
 
  protected:
   virtual ~APZUpdater();
@@ -231,17 +164,8 @@ class APZUpdater {
 
   // Map from WRRoot id to WebRenderScrollData. This can only be touched on
   // the updater thread.
-<<<<<<< HEAD
-  std::unordered_map<LayersId, WebRenderScrollData, LayersId::HashFn>
-      mScrollData;
-||||||| merged common ancestors
-  std::unordered_map<LayersId,
-                     WebRenderScrollData,
-                     LayersId::HashFn> mScrollData;
-=======
   std::unordered_map<WRRootId, WebRenderScrollData, WRRootId::HashFn>
       mScrollData;
->>>>>>> upstream-releases
 
   // Stores epoch state for a particular WRRoot id. This structure is only
   // accessed on the updater thread.
@@ -250,15 +174,8 @@ class APZUpdater {
     wr::Epoch mRequired;
     // The epoch for the most recent scene built and swapped in on the WR side.
     Maybe<wr::Epoch> mBuilt;
-<<<<<<< HEAD
-    // True if and only if the layers id is the root layers id for the
-    // compositor
-||||||| merged common ancestors
-    // True if and only if the layers id is the root layers id for the compositor
-=======
     // True if and only if the WRRoot id is the root WRRoot id for the
     // compositor
->>>>>>> upstream-releases
     bool mIsRoot;
 
     EpochState();
@@ -279,27 +196,6 @@ class APZUpdater {
 
   // Map from WRRoot id to epoch state.
   // This data structure can only be touched on the updater thread.
-<<<<<<< HEAD
-  std::unordered_map<LayersId, EpochState, LayersId::HashFn> mEpochData;
-
-  // Used to manage the mapping from a WR window id to APZUpdater. These are
-  // only used if WebRender is enabled. Both sWindowIdMap and mWindowId should
-  // only be used while holding the sWindowIdLock. Note that we use a
-  // StaticAutoPtr wrapper on sWindowIdMap to avoid a static initializer for the
-  // unordered_map. This also avoids the initializer/memory allocation in cases
-  // where we're not using WebRender.
-||||||| merged common ancestors
-  std::unordered_map<LayersId,
-                     EpochState,
-                     LayersId::HashFn> mEpochData;
-
-  // Used to manage the mapping from a WR window id to APZUpdater. These are only
-  // used if WebRender is enabled. Both sWindowIdMap and mWindowId should only
-  // be used while holding the sWindowIdLock. Note that we use a StaticAutoPtr
-  // wrapper on sWindowIdMap to avoid a static initializer for the unordered_map.
-  // This also avoids the initializer/memory allocation in cases where we're
-  // not using WebRender.
-=======
   std::unordered_map<WRRootId, EpochState, WRRootId::HashFn> mEpochData;
 
   // Used to manage the mapping from a WR window id to APZUpdater. These are
@@ -308,7 +204,6 @@ class APZUpdater {
   // StaticAutoPtr wrapper on sWindowIdMap to avoid a static initializer for the
   // unordered_map. This also avoids the initializer/memory allocation in cases
   // where we're not using WebRender.
->>>>>>> upstream-releases
   static StaticMutex sWindowIdLock;
   static StaticAutoPtr<std::unordered_map<uint64_t, APZUpdater*>> sWindowIdMap;
   Maybe<wr::WrWindowId> mWindowId;

@@ -21,15 +21,6 @@ using namespace mozilla::dom::SVGTransform_Binding;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-static nsSVGAttrTearoffTable<nsSVGAnimatedTransformList,
-                             SVGAnimatedTransformList>
-    sSVGAnimatedTransformListTearoffTable;
-||||||| merged common ancestors
-static
-  nsSVGAttrTearoffTable<nsSVGAnimatedTransformList, SVGAnimatedTransformList>
-  sSVGAnimatedTransformListTearoffTable;
-=======
 nsresult SVGAnimatedTransformList::SetBaseValueString(const nsAString& aValue,
                                                       SVGElement* aSVGElement) {
   SVGTransformList newBaseValue;
@@ -53,32 +44,14 @@ nsresult SVGAnimatedTransformList::SetBaseValue(const SVGTransformList& aValue,
     //
     domWrapper->InternalBaseValListWillChangeLengthTo(aValue.Length());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(SVGAnimatedTransformList,
-                                               mElement)
-||||||| merged common ancestors
-NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(SVGAnimatedTransformList, mElement)
-=======
   // (This bool will be copied to our member-var, if attr-change succeeds.)
   bool hadTransform = HasTransform();
->>>>>>> upstream-releases
 
   // We don't need to call DidChange* here - we're only called by
   // SVGElement::ParseAttribute under Element::SetAttr,
   // which takes care of notifying.
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedTransformList::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedTransformList_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedTransformList::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedTransformList_Binding::Wrap(aCx, this, aGivenProto);
-=======
   nsresult rv = mBaseVal.CopyFrom(aValue);
   if (NS_FAILED(rv) && domWrapper) {
     // Attempting to increase mBaseVal's length failed - reduce domWrapper
@@ -92,22 +65,8 @@ SVGAnimatedTransformList::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGive
         aSVGElement->GetPrimaryFrame() && !hadTransform;
   }
   return rv;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-//----------------------------------------------------------------------
-already_AddRefed<DOMSVGTransformList> SVGAnimatedTransformList::BaseVal() {
-  if (!mBaseVal) {
-    mBaseVal = new DOMSVGTransformList(this, InternalAList().GetBaseValue());
-||||||| merged common ancestors
-//----------------------------------------------------------------------
-already_AddRefed<DOMSVGTransformList>
-SVGAnimatedTransformList::BaseVal()
-{
-  if (!mBaseVal) {
-    mBaseVal = new DOMSVGTransformList(this, InternalAList().GetBaseValue());
-=======
 void SVGAnimatedTransformList::ClearBaseValue() {
   mRequiresFrameReconstruction = !HasTransform();
 
@@ -116,20 +75,12 @@ void SVGAnimatedTransformList::ClearBaseValue() {
   if (domWrapper) {
     // We must send this notification *before* changing mBaseVal! (See above.)
     domWrapper->InternalBaseValListWillChangeLengthTo(0);
->>>>>>> upstream-releases
   }
   mBaseVal.Clear();
   mIsAttrSet = false;
   // Caller notifies
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMSVGTransformList> SVGAnimatedTransformList::AnimVal() {
-||||||| merged common ancestors
-already_AddRefed<DOMSVGTransformList>
-SVGAnimatedTransformList::AnimVal()
-{
-=======
 nsresult SVGAnimatedTransformList::SetAnimValue(const SVGTransformList& aValue,
                                                 SVGElement* aElement) {
   bool prevSet = HasTransform() || aElement->GetAnimateMotionTransform();
@@ -154,7 +105,6 @@ nsresult SVGAnimatedTransformList::SetAnimValue(const SVGTransformList& aValue,
     //
     domWrapper->InternalAnimValListWillChangeLengthTo(aValue.Length());
   }
->>>>>>> upstream-releases
   if (!mAnimVal) {
     mAnimVal = new SVGTransformList();
   }
@@ -175,30 +125,6 @@ nsresult SVGAnimatedTransformList::SetAnimValue(const SVGTransformList& aValue,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<SVGAnimatedTransformList>
-SVGAnimatedTransformList::GetDOMWrapper(nsSVGAnimatedTransformList* aList,
-                                        nsSVGElement* aElement) {
-  RefPtr<SVGAnimatedTransformList> wrapper =
-      sSVGAnimatedTransformListTearoffTable.GetTearoff(aList);
-  if (!wrapper) {
-    wrapper = new SVGAnimatedTransformList(aElement);
-    sSVGAnimatedTransformListTearoffTable.AddTearoff(aList, wrapper);
-  }
-  return wrapper.forget();
-||||||| merged common ancestors
-/* static */ already_AddRefed<SVGAnimatedTransformList>
-SVGAnimatedTransformList::GetDOMWrapper(nsSVGAnimatedTransformList *aList,
-                                        nsSVGElement *aElement)
-{
-  RefPtr<SVGAnimatedTransformList> wrapper =
-    sSVGAnimatedTransformListTearoffTable.GetTearoff(aList);
-  if (!wrapper) {
-    wrapper = new SVGAnimatedTransformList(aElement);
-    sSVGAnimatedTransformListTearoffTable.AddTearoff(aList, wrapper);
-  }
-  return wrapper.forget();
-=======
 void SVGAnimatedTransformList::ClearAnimValue(SVGElement* aElement) {
   DOMSVGAnimatedTransformList* domWrapper =
       DOMSVGAnimatedTransformList::GetDOMWrapperIfExists(this);
@@ -218,21 +144,8 @@ void SVGAnimatedTransformList::ClearAnimValue(SVGElement* aElement) {
     modType = MutationEvent_Binding::REMOVAL;
   }
   aElement->DidAnimateTransformList(modType);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ SVGAnimatedTransformList*
-SVGAnimatedTransformList::GetDOMWrapperIfExists(
-    nsSVGAnimatedTransformList* aList) {
-  return sSVGAnimatedTransformListTearoffTable.GetTearoff(aList);
-||||||| merged common ancestors
-/* static */ SVGAnimatedTransformList*
-SVGAnimatedTransformList::GetDOMWrapperIfExists(
-  nsSVGAnimatedTransformList *aList)
-{
-  return sSVGAnimatedTransformListTearoffTable.GetTearoff(aList);
-=======
 bool SVGAnimatedTransformList::IsExplicitlySet() const {
   // Like other methods of this name, we need to know when a transform value has
   // been explicitly set.
@@ -246,62 +159,13 @@ bool SVGAnimatedTransformList::IsExplicitlySet() const {
   //    the list.
   // 3) Animation -- which will cause the mAnimVal member to be allocated
   return mIsAttrSet || !mBaseVal.IsEmpty() || mAnimVal;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-SVGAnimatedTransformList::~SVGAnimatedTransformList() {
-  // Script no longer has any references to us, to our base/animVal objects, or
-  // to any of their list items.
-  sSVGAnimatedTransformListTearoffTable.RemoveTearoff(&InternalAList());
-||||||| merged common ancestors
-SVGAnimatedTransformList::~SVGAnimatedTransformList()
-{
-  // Script no longer has any references to us, to our base/animVal objects, or
-  // to any of their list items.
-  sSVGAnimatedTransformListTearoffTable.RemoveTearoff(&InternalAList());
-=======
 UniquePtr<SMILAttr> SVGAnimatedTransformList::ToSMILAttr(
     SVGElement* aSVGElement) {
   return MakeUnique<SMILAnimatedTransformList>(this, aSVGElement);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void SVGAnimatedTransformList::InternalBaseValListWillChangeLengthTo(
-    uint32_t aNewLength) {
-  // When the number of items in our internal counterpart's baseVal changes,
-  // we MUST keep our baseVal in sync. If we don't, script will either see a
-  // list that is too short and be unable to access indexes that should be
-  // valid, or else, MUCH WORSE, script will see a list that is too long and be
-  // able to access "items" at indexes that are out of bounds (read/write to
-  // bad memory)!!
-
-  RefPtr<SVGAnimatedTransformList> kungFuDeathGrip;
-  if (mBaseVal) {
-    if (aNewLength < mBaseVal->LengthNoFlush()) {
-      // InternalListLengthWillChange might clear last reference to |this|.
-      // Retain a temporary reference to keep from dying before returning.
-      kungFuDeathGrip = this;
-||||||| merged common ancestors
-void
-SVGAnimatedTransformList::InternalBaseValListWillChangeLengthTo(
-  uint32_t aNewLength)
-{
-  // When the number of items in our internal counterpart's baseVal changes,
-  // we MUST keep our baseVal in sync. If we don't, script will either see a
-  // list that is too short and be unable to access indexes that should be
-  // valid, or else, MUCH WORSE, script will see a list that is too long and be
-  // able to access "items" at indexes that are out of bounds (read/write to
-  // bad memory)!!
-
-  RefPtr<SVGAnimatedTransformList> kungFuDeathGrip;
-  if (mBaseVal) {
-    if (aNewLength < mBaseVal->LengthNoFlush()) {
-      // InternalListLengthWillChange might clear last reference to |this|.
-      // Retain a temporary reference to keep from dying before returning.
-      kungFuDeathGrip = this;
-=======
 nsresult SVGAnimatedTransformList::SMILAnimatedTransformList::ValueFromString(
     const nsAString& aStr, const dom::SVGAnimationElement* aSrcElement,
     SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
@@ -317,7 +181,6 @@ nsresult SVGAnimatedTransformList::SMILAnimatedTransformList::ValueFromString(
       // something other than an atom, then we know already our |type| is
       // invalid.
       return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
     }
     transformType = typeAttr->GetAtomValue();
   }
@@ -376,19 +239,6 @@ void SVGAnimatedTransformList::SMILAnimatedTransformList::ParseValue(
   aResult = std::move(val);
 }
 
-<<<<<<< HEAD
-void SVGAnimatedTransformList::InternalAnimValListWillChangeLengthTo(
-    uint32_t aNewLength) {
-  if (mAnimVal) {
-    mAnimVal->InternalListLengthWillChange(aNewLength);
-||||||| merged common ancestors
-void
-SVGAnimatedTransformList::InternalAnimValListWillChangeLengthTo(
-  uint32_t aNewLength)
-{
-  if (mAnimVal) {
-    mAnimVal->InternalListLengthWillChange(aNewLength);
-=======
 int32_t SVGAnimatedTransformList::SMILAnimatedTransformList::ParseParameterList(
     const nsAString& aSpec, float* aVars, int32_t aNVars) {
   nsCharSeparatedTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
@@ -405,20 +255,10 @@ int32_t SVGAnimatedTransformList::SMILAnimatedTransformList::ParseParameterList(
       aVars[numArgsFound] = f;
     }
     numArgsFound++;
->>>>>>> upstream-releases
   }
   return numArgsFound;
 }
 
-<<<<<<< HEAD
-bool SVGAnimatedTransformList::IsAnimating() const {
-  return InternalAList().IsAnimating();
-||||||| merged common ancestors
-bool
-SVGAnimatedTransformList::IsAnimating() const
-{
-  return InternalAList().IsAnimating();
-=======
 SMILValue SVGAnimatedTransformList::SMILAnimatedTransformList::GetBaseValue()
     const {
   // To benefit from Return Value Optimization and avoid copy constructor calls
@@ -430,18 +270,8 @@ SMILValue SVGAnimatedTransformList::SMILAnimatedTransformList::GetBaseValue()
   }
 
   return val;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGAnimatedTransformList& SVGAnimatedTransformList::InternalAList() {
-  return *mElement->GetAnimatedTransformList();
-||||||| merged common ancestors
-nsSVGAnimatedTransformList&
-SVGAnimatedTransformList::InternalAList()
-{
-  return *mElement->GetAnimatedTransformList();
-=======
 nsresult SVGAnimatedTransformList::SMILAnimatedTransformList::SetAnimValue(
     const SMILValue& aNewAnimValue) {
   MOZ_ASSERT(aNewAnimValue.mType == SVGTransformListSMILType::Singleton(),
@@ -452,32 +282,12 @@ nsresult SVGAnimatedTransformList::SMILAnimatedTransformList::SetAnimValue(
   }
 
   return mVal->SetAnimValue(animVal, mElement);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const nsSVGAnimatedTransformList& SVGAnimatedTransformList::InternalAList()
-    const {
-  return *mElement->GetAnimatedTransformList();
-||||||| merged common ancestors
-const nsSVGAnimatedTransformList&
-SVGAnimatedTransformList::InternalAList() const
-{
-  return *mElement->GetAnimatedTransformList();
-=======
 void SVGAnimatedTransformList::SMILAnimatedTransformList::ClearAnimValue() {
   if (mVal->mAnimVal) {
     mVal->ClearAnimValue(mElement);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

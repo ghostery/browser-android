@@ -14,14 +14,8 @@
 
   <!-- test code goes here -->
   <script type="application/javascript"><![CDATA[
-<<<<<<< HEAD
-    SpecialPowers.pushPrefEnv({"set": [["security.allow_eval_with_system_principal",
-                                        true]]});
-||||||| merged common ancestors
-=======
     SimpleTest.waitForExplicitFinish();
 
->>>>>>> upstream-releases
     function init() {
       var f = new Function("let test = 'let is ok'; return test;");
       is(f(), 'let is ok', 'let should be ok');

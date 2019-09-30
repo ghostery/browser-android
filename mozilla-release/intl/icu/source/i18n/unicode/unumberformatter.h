@@ -265,25 +265,10 @@ typedef enum UNumberGroupingStrategy {
      * @internal ICU 62: The numeric value may change over time; see ICU ticket #12420.
      */
             UNUM_GROUPING_COUNT
-<<<<<<< HEAD
 #endif  /* U_HIDE_INTERNAL_API */
 
 } UNumberGroupingStrategy;
 
-#ifndef U_HIDE_DEPRECATED_API
-/**
- * Old name for compatibility: will be removed in ICU 64.
- * @deprecated ICU 63
- */
-typedef UNumberGroupingStrategy UGroupingStrategy;
-#endif  /* U_HIDE_DEPRECATED_API */
-||||||| merged common ancestors
-=======
-#endif  /* U_HIDE_INTERNAL_API */
-
-} UNumberGroupingStrategy;
-
->>>>>>> upstream-releases
 
 #endif  /* U_HIDE_DRAFT_API */
 
@@ -420,15 +405,7 @@ typedef enum UNumberDecimalSeparatorDisplay {
 } UNumberDecimalSeparatorDisplay;
 #endif  /* U_HIDE_DRAFT_API */
 
-<<<<<<< HEAD
-#ifndef U_HIDE_DRAFT_API
-
 struct UNumberFormatter;
-||||||| merged common ancestors
-#ifndef U_HIDE_DRAFT_API
-=======
-struct UNumberFormatter;
->>>>>>> upstream-releases
 /**
  * C-compatible version of icu::number::LocalizedNumberFormatter.
  *

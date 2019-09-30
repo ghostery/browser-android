@@ -53,22 +53,6 @@ Documentation
   * [Self-serving an ARM build](https://firefox-source-docs.mozilla.org/testing/geckodriver/ARM.html)
 
 
-<<<<<<< HEAD
-* [Contributing](https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/#for-developers)
-
-
-Source code
------------
-
-geckodriver’s canonical source code can be found in [mozilla-central].
-We only use this GitHub repository for issue tracking and making releases.
-See our [contribution documentation] for more information.
-
-[mozilla-central]: https://hg.mozilla.org/mozilla-central/file/tip/testing/geckodriver
-[contribution documentation]: https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/#for-developers
-||||||| merged common ancestors
-* [Contributing](https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/index.html#for-developers)
-=======
 Source code
 -----------
 
@@ -80,7 +64,6 @@ This GitHub repository is only used for issue tracking and making releases.
 [source code]: https://hg.mozilla.org/mozilla-unified/file/tip/testing/geckodriver
 [Mozilla Public License]: https://www.mozilla.org/en-US/MPL/2.0/
 [mozilla-central]: https://hg.mozilla.org/mozilla-central/file/tip/testing/geckodriver
->>>>>>> upstream-releases
 
 
 Contact

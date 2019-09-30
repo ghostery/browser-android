@@ -34,16 +34,9 @@ class MozQueryInterface final : public NonRefcountedDOMObject {
 
   bool QueriesTo(const nsIID& aIID) const;
 
-<<<<<<< HEAD
-  void LegacyCall(JSContext* cx, JS::Handle<JS::Value> thisv, nsIJSID* aIID,
-                  JS::MutableHandle<JS::Value> aResult, ErrorResult& aRv) const;
-||||||| merged common ancestors
-  void LegacyCall(JSContext* cx, JS::Handle<JS::Value> thisv, nsIJSID* aIID, JS::MutableHandle<JS::Value> aResult, ErrorResult& aRv) const;
-=======
   void LegacyCall(JSContext* cx, JS::Handle<JS::Value> thisv,
                   JS::Handle<JS::Value> aIID,
                   JS::MutableHandle<JS::Value> aResult, ErrorResult& aRv) const;
->>>>>>> upstream-releases
 
   nsISupports* GetParentObject() const { return nullptr; }
 

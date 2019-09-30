@@ -34,19 +34,10 @@ class nsNodeInfoManager;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class NodeInfo final {
- public:
-||||||| merged common ancestors
-class NodeInfo final
-{
-public:
-=======
 class Document;
 
 class NodeInfo final {
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(NodeInfo)
   NS_DECL_CYCLE_COLLECTION_SKIPPABLE_NATIVE_CLASS_WITH_CUSTOM_DELETE(NodeInfo)
 
@@ -182,16 +173,7 @@ class NodeInfo final {
   /*
    * Retrieve a pointer to the document that owns this node info.
    */
-<<<<<<< HEAD
-  nsIDocument* GetDocument() const { return mDocument; }
-||||||| merged common ancestors
-  nsIDocument* GetDocument() const
-  {
-    return mDocument;
-  }
-=======
   Document* GetDocument() const { return mDocument; }
->>>>>>> upstream-releases
 
  private:
   NodeInfo() = delete;
@@ -300,14 +282,7 @@ class NodeInfo final {
 
   // This is a non-owning reference, but it's safe since it's set to nullptr
   // by nsNodeInfoManager::DropDocumentReference when the document is destroyed.
-<<<<<<< HEAD
-  nsIDocument* MOZ_NON_OWNING_REF
-      mDocument;  // Cache of mOwnerManager->mDocument
-||||||| merged common ancestors
-  nsIDocument* MOZ_NON_OWNING_REF mDocument; // Cache of mOwnerManager->mDocument
-=======
   Document* MOZ_NON_OWNING_REF mDocument;  // Cache of mOwnerManager->mDocument
->>>>>>> upstream-releases
 
   NodeInfoInner mInner;
 

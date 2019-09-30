@@ -176,28 +176,8 @@ public class GeckoScreenOrientation {
         Log.d(LOGTAG, "updating to new orientation " + mScreenOrientation);
         notifyListeners(mScreenOrientation);
         if (mShouldNotify) {
-<<<<<<< HEAD
-            // Gecko expects a definite screen orientation, so we default to the
-            // primary orientations.
-            if (aScreenOrientation == ScreenOrientation.PORTRAIT) {
-                aScreenOrientation = ScreenOrientation.PORTRAIT_PRIMARY;
-            } else if (aScreenOrientation == ScreenOrientation.LANDSCAPE) {
-                aScreenOrientation = ScreenOrientation.LANDSCAPE_PRIMARY;
-            } else if (aScreenOrientation == ScreenOrientation.DEFAULT) {
-                aScreenOrientation = ScreenOrientation.PORTRAIT_PRIMARY;
-            } else if (aScreenOrientation == ScreenOrientation.NONE) {
-                return false;
-||||||| merged common ancestors
-            // Gecko expects a definite screen orientation, so we default to the
-            // primary orientations.
-            if (aScreenOrientation == ScreenOrientation.PORTRAIT) {
-                aScreenOrientation = ScreenOrientation.PORTRAIT_PRIMARY;
-            } else if (aScreenOrientation == ScreenOrientation.LANDSCAPE) {
-                aScreenOrientation = ScreenOrientation.LANDSCAPE_PRIMARY;
-=======
             if (aScreenOrientation == ScreenOrientation.NONE) {
                 return false;
->>>>>>> upstream-releases
             }
 
             if (GeckoThread.isRunning()) {

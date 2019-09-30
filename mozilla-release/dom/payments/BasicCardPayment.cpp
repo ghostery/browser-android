@@ -15,7 +15,6 @@
 namespace mozilla {
 namespace dom {
 namespace {
-<<<<<<< HEAD
 bool IsValidNetwork(const nsAString& aNetwork) {
   return aNetwork.Equals(NS_LITERAL_STRING("amex")) ||
          aNetwork.Equals(NS_LITERAL_STRING("cartebancaire")) ||
@@ -28,61 +27,6 @@ bool IsValidNetwork(const nsAString& aNetwork) {
          aNetwork.Equals(NS_LITERAL_STRING("visa"));
 }
 }  // end of namespace
-||||||| merged common ancestors
-
-bool IsValidNetwork(const nsAString& aNetwork)
-{
-  return AMEX.Equals(aNetwork) ||
-         CARTEBANCAIRE.Equals(aNetwork) ||
-         DINERS.Equals(aNetwork) ||
-         DISCOVER.Equals(aNetwork) ||
-         JCB.Equals(aNetwork) ||
-         MASTERCARD.Equals(aNetwork) ||
-         MIR.Equals(aNetwork) ||
-         UNIONPAY.Equals(aNetwork) ||
-         VISA.Equals(aNetwork);
-}
-
-bool IsBasicCardKey(const nsAString& aKey)
-{
-  return CardholderName.Equals(aKey) ||
-         CardNumber.Equals(aKey) ||
-         ExpiryMonth.Equals(aKey) ||
-         ExpiryYear.Equals(aKey) ||
-         CardSecurityCode.Equals(aKey);
-}
-
-bool IsAddressKey(const nsAString& aKey)
-{
-  return Country.Equals(aKey) ||
-         AddressLine.Equals(aKey) ||
-         Region.Equals(aKey) ||
-         RegionCode.Equals(aKey) ||
-         City.Equals(aKey) ||
-         DependentLocality.Equals(aKey) ||
-         PostalCode.Equals(aKey) ||
-         SortingCode.Equals(aKey) ||
-         Organization.Equals(aKey) ||
-         Recipient.Equals(aKey) ||
-         Phone.Equals(aKey);
-}
-
-} // end of namespace
-
-=======
-bool IsValidNetwork(const nsAString& aNetwork) {
-  return aNetwork.Equals(NS_LITERAL_STRING("amex")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("cartebancaire")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("diners")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("discover")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("jcb")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("mastercard")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("mir")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("unionpay")) ||
-         aNetwork.Equals(NS_LITERAL_STRING("visa"));
-}
-}  // end of namespace
->>>>>>> upstream-releases
 
 StaticRefPtr<BasicCardService> gBasicCardService;
 
@@ -113,28 +57,11 @@ bool BasicCardService::IsValidBasicCardRequest(JSContext* aCx, JSObject* aData,
     return false;
   }
 
-<<<<<<< HEAD
-  if (request.mSupportedNetworks.WasPassed()) {
-    for (const nsString& network : request.mSupportedNetworks.Value()) {
-      if (!IsValidNetwork(network)) {
-        aErrorMsg.Assign(network +
-                         NS_LITERAL_STRING(" is not an valid network."));
-        return false;
-      }
-||||||| merged common ancestors
-  if (request.mSupportedNetworks.WasPassed()) {
-    for (const nsString& network : request.mSupportedNetworks.Value()) {
-      if (!IsValidNetwork(network)) {
-        aErrorMsg.Assign(network + NS_LITERAL_STRING(" is not an valid network."));
-        return false;
-      }
-=======
   for (const nsString& network : request.mSupportedNetworks) {
     if (!IsValidNetwork(network)) {
       aErrorMsg.Assign(network +
                        NS_LITERAL_STRING(" is not an valid network."));
       return false;
->>>>>>> upstream-releases
     }
   }
   return true;

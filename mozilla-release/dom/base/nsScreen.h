@@ -119,17 +119,8 @@ class nsScreen : public mozilla::DOMEventTargetHelper {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  static bool MediaCapabilitiesEnabled(JSContext* aCx, JSObject* aGlobal) {
-    return mozilla::StaticPrefs::MediaCapabilitiesScreenEnabled();
-||||||| merged common ancestors
-  static bool MediaCapabilitiesEnabled(JSContext* aCx, JSObject* aGlobal)
-  {
-    return mozilla::StaticPrefs::MediaCapabilitiesScreenEnabled();
-=======
   static bool MediaCapabilitiesEnabled(JSContext* aCx, JSObject* aGlobal) {
     return mozilla::StaticPrefs::media_media_capabilities_screen_enabled();
->>>>>>> upstream-releases
   }
 
   IMPL_EVENT_HANDLER(change);

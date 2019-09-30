@@ -27,14 +27,6 @@ allprojects {
     }
 
     repositories {
-        maven {
-            url "$rootDir/../cliqz/node_modules/react-native/android"
-        }
-        maven {
-            // Local Maven repo containing AARs with JSC library built for Android
-            url "$rootDir/../cliqz/node_modules/jsc-android/dist"
-        }
-        mavenCentral()
         gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
             maven {
                 url repository
@@ -91,12 +83,7 @@ buildscript {
     }
 
     dependencies {
-<<<<<<< HEAD
-        classpath 'org.mozilla.apilint:apilint:0.1.4'
-||||||| merged common ancestors
-=======
         classpath 'org.mozilla.apilint:apilint:0.2.1'
->>>>>>> upstream-releases
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
         classpath 'org.apache.commons:commons-exec:1.3'

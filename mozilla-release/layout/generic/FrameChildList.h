@@ -22,68 +22,7 @@ namespace layout {
 extern const char* ChildListName(FrameChildListID aListID);
 #endif
 
-<<<<<<< HEAD
-class FrameChildListIDs {
-  friend class FrameChildListIterator;
-
- public:
-  FrameChildListIDs() : mIDs(0) {}
-  FrameChildListIDs(const FrameChildListIDs& aOther) : mIDs(aOther.mIDs) {}
-  MOZ_IMPLICIT FrameChildListIDs(FrameChildListID aListID) : mIDs(aListID) {}
-
-  FrameChildListIDs operator|(FrameChildListIDs aOther) const {
-    return FrameChildListIDs(mIDs | aOther.mIDs);
-  }
-  FrameChildListIDs& operator|=(FrameChildListIDs aOther) {
-    mIDs |= aOther.mIDs;
-    return *this;
-  }
-  bool operator==(FrameChildListIDs aOther) const {
-    return mIDs == aOther.mIDs;
-  }
-  bool operator!=(const FrameChildListIDs& aOther) const {
-    return !(*this == aOther);
-  }
-  bool Contains(FrameChildListIDs aOther) const {
-    return (mIDs & aOther.mIDs) == aOther.mIDs;
-  }
-
- protected:
-  explicit FrameChildListIDs(uint32_t aIDs) : mIDs(aIDs) {}
-  uint32_t mIDs;
-};
-||||||| merged common ancestors
-class FrameChildListIDs {
-friend class FrameChildListIterator;
- public:
-  FrameChildListIDs() : mIDs(0) {}
-  FrameChildListIDs(const FrameChildListIDs& aOther) : mIDs(aOther.mIDs) {}
-  MOZ_IMPLICIT FrameChildListIDs(FrameChildListID aListID) : mIDs(aListID) {}
-
-  FrameChildListIDs operator|(FrameChildListIDs aOther) const {
-    return FrameChildListIDs(mIDs | aOther.mIDs);
-  }
-  FrameChildListIDs& operator|=(FrameChildListIDs aOther) {
-    mIDs |= aOther.mIDs;
-    return *this;
-  }
-  bool operator==(FrameChildListIDs aOther) const {
-    return mIDs == aOther.mIDs;
-  }
-  bool operator!=(const FrameChildListIDs& aOther) const {
-    return !(*this == aOther);
-  }
-  bool Contains(FrameChildListIDs aOther) const {
-    return (mIDs & aOther.mIDs) == aOther.mIDs;
-  }
-
- protected:
-  explicit FrameChildListIDs(uint32_t aIDs) : mIDs(aIDs) {}
-  uint32_t mIDs;
-};
-=======
 using FrameChildListIDs = EnumSet<FrameChildListID>;
->>>>>>> upstream-releases
 
 class FrameChildList {
  public:
@@ -131,44 +70,8 @@ class MOZ_STACK_CLASS FrameChildListIterator
   AutoTArray<FrameChildList, 4> mLists;
 };
 
-<<<<<<< HEAD
-inline mozilla::layout::FrameChildListIDs operator|(
-    mozilla::layout::FrameChildListID aLeftOp,
-    mozilla::layout::FrameChildListID aRightOp) {
-  return mozilla::layout::FrameChildListIDs(aLeftOp) |
-         mozilla::layout::FrameChildListIDs(aRightOp);
-}
-
-inline mozilla::layout::FrameChildListIDs operator|(
-    mozilla::layout::FrameChildListID aLeftOp,
-    const mozilla::layout::FrameChildListIDs& aRightOp) {
-  return mozilla::layout::FrameChildListIDs(aLeftOp) | aRightOp;
-}
-
 }  // namespace layout
 }  // namespace mozilla
-||||||| merged common ancestors
-inline mozilla::layout::FrameChildListIDs
-operator|(mozilla::layout::FrameChildListID aLeftOp,
-          mozilla::layout::FrameChildListID aRightOp)
-{
-  return mozilla::layout::FrameChildListIDs(aLeftOp) |
-         mozilla::layout::FrameChildListIDs(aRightOp);
-}
-
-inline mozilla::layout::FrameChildListIDs
-operator|(mozilla::layout::FrameChildListID aLeftOp,
-          const mozilla::layout::FrameChildListIDs& aRightOp)
-{
-  return mozilla::layout::FrameChildListIDs(aLeftOp) | aRightOp;
-}
-
-} // namespace layout
-} // namespace mozilla
-=======
-}  // namespace layout
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 inline void nsFrameList::AppendIfNonempty(
     nsTArray<mozilla::layout::FrameChildList>* aLists,

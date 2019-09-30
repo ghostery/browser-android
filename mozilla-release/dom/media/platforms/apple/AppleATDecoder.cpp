@@ -300,33 +300,12 @@ MediaResult AppleATDecoder::DecodeSample(MediaRawData* aSample) {
     data = mAudioConverter->Process(std::move(data));
   }
 
-<<<<<<< HEAD
-  RefPtr<AudioData> audio =
-      new AudioData(aSample->mOffset, aSample->mTime, duration, numFrames,
-                    data.Forget(), channels, rate,
-                    mChannelLayout && mChannelLayout->IsValid()
-                        ? mChannelLayout->Map()
-                        : AudioConfig::ChannelLayout::UNKNOWN_MAP);
-||||||| merged common ancestors
-  RefPtr<AudioData> audio =
-    new AudioData(aSample->mOffset,
-                  aSample->mTime,
-                  duration,
-                  numFrames,
-                  data.Forget(),
-                  channels,
-                  rate,
-                  mChannelLayout && mChannelLayout->IsValid()
-                    ? mChannelLayout->Map()
-                    : AudioConfig::ChannelLayout::UNKNOWN_MAP);
-=======
   RefPtr<AudioData> audio = new AudioData(
       aSample->mOffset, aSample->mTime, data.Forget(), channels, rate,
       mChannelLayout && mChannelLayout->IsValid()
           ? mChannelLayout->Map()
           : AudioConfig::ChannelLayout::UNKNOWN_MAP);
   MOZ_DIAGNOSTIC_ASSERT(duration == audio->mDuration, "must be equal");
->>>>>>> upstream-releases
   mDecodedSamples.AppendElement(std::move(audio));
   return NS_OK;
 }
@@ -555,13 +534,7 @@ MediaResult AppleATDecoder::SetupDecoder(MediaRawData* aSample) {
   mOutputFormat.mBitsPerChannel = 16;
   mOutputFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | 0;
 #else
-<<<<<<< HEAD
-#error Unknown audio sample type
-||||||| merged common ancestors
-# error Unknown audio sample type
-=======
 #  error Unknown audio sample type
->>>>>>> upstream-releases
 #endif
   // Set up the decoder so it gives us one sample per frame
   mOutputFormat.mFramesPerPacket = 1;

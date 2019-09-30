@@ -22,16 +22,8 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class UDPSocketChildBase : public nsIUDPSocketChild {
- public:
-||||||| merged common ancestors
-class UDPSocketChildBase : public nsIUDPSocketChild {
-public:
-=======
 class UDPSocketChildBase : public nsISupports {
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
 
   void AddIPDLReference();
@@ -44,56 +36,14 @@ class UDPSocketChildBase : public nsISupports {
   bool mIPCOpen;
 };
 
-<<<<<<< HEAD
 class UDPSocketChild : public mozilla::net::PUDPSocketChild,
                        public UDPSocketChildBase {
  public:
-  NS_DECL_NSIUDPSOCKETCHILD
-||||||| merged common ancestors
-class UDPSocketChild : public mozilla::net::PUDPSocketChild
-                     , public UDPSocketChildBase
-{
-public:
-  NS_DECL_NSIUDPSOCKETCHILD
-=======
-class UDPSocketChild : public mozilla::net::PUDPSocketChild,
-                       public UDPSocketChildBase {
- public:
->>>>>>> upstream-releases
   NS_IMETHOD_(MozExternalRefCountType) Release() override;
 
   UDPSocketChild();
   virtual ~UDPSocketChild();
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvCallbackOpened(
-      const UDPAddressInfo& aAddressInfo) override;
-  virtual mozilla::ipc::IPCResult RecvCallbackConnected(
-      const UDPAddressInfo& aAddressInfo) override;
-  virtual mozilla::ipc::IPCResult RecvCallbackClosed() override;
-  virtual mozilla::ipc::IPCResult RecvCallbackReceivedData(
-      const UDPAddressInfo& aAddressInfo,
-      InfallibleTArray<uint8_t>&& aData) override;
-  virtual mozilla::ipc::IPCResult RecvCallbackError(
-      const nsCString& aMessage, const nsCString& aFilename,
-      const uint32_t& aLineNumber) override;
-
- private:
-  nsresult SendDataInternal(const UDPSocketAddr& aAddr, const uint8_t* aData,
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvCallbackOpened(const UDPAddressInfo& aAddressInfo) override;
-  virtual mozilla::ipc::IPCResult RecvCallbackConnected(const UDPAddressInfo& aAddressInfo) override;
-  virtual mozilla::ipc::IPCResult RecvCallbackClosed() override;
-  virtual mozilla::ipc::IPCResult RecvCallbackReceivedData(const UDPAddressInfo& aAddressInfo,
-                                                           InfallibleTArray<uint8_t>&& aData) override;
-  virtual mozilla::ipc::IPCResult RecvCallbackError(const nsCString& aMessage,
-                                                    const nsCString& aFilename,
-                                                    const uint32_t& aLineNumber) override;
-
-private:
-  nsresult SendDataInternal(const UDPSocketAddr& aAddr,
-                            const uint8_t* aData,
-=======
   uint16_t LocalPort() const { return mLocalPort; }
   // Local address as UTF-8.
   const nsACString& LocalAddress() const { return mLocalAddress; }
@@ -145,7 +95,6 @@ private:
 
  private:
   nsresult SendDataInternal(const UDPSocketAddr& aAddr, const uint8_t* aData,
->>>>>>> upstream-releases
                             const uint32_t aByteLength);
 
   mozilla::ipc::PBackgroundChild* mBackgroundManager;

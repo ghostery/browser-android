@@ -268,23 +268,10 @@ PaymentShowActionResponse::Init(const nsAString& aRequestId,
         }
         break;
       }
-<<<<<<< HEAD
-      default: { return NS_ERROR_FAILURE; }
-    }
-||||||| merged common ancestors
       default: {
         return NS_ERROR_FAILURE;
       }
     }
-    if (mData.IsEmpty()) {
-      return NS_ERROR_FAILURE;
-    }
-=======
-      default: {
-        return NS_ERROR_FAILURE;
-      }
-    }
->>>>>>> upstream-releases
   }
   mData = aData;
   mPayerName = aPayerName;

@@ -1,14 +1,5 @@
-<<<<<<< HEAD
-﻿// © 2016 and later: Unicode, Inc. and others.
-// License & terms of use: http://www.unicode.org/copyright.html#License
-mi_NZ{
-    Version{"2.1.44.15"}
-}
-||||||| merged common ancestors
-=======
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 mi_NZ{
     Version{"2.1.47.82"}
 }
->>>>>>> upstream-releases

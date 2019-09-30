@@ -8,22 +8,6 @@
 #include <tlhelp32.h>
 #ifndef ONLY_SERVICE_LAUNCHING
 
-<<<<<<< HEAD
-#include <stdio.h>
-#include "shlobj.h"
-#include "updatehelper.h"
-#include "uachelper.h"
-#include "pathhash.h"
-#include "mozilla/UniquePtr.h"
-#include "nsWindowsHelpers.h"
-||||||| merged common ancestors
-#include <stdio.h>
-#include "shlobj.h"
-#include "updatehelper.h"
-#include "uachelper.h"
-#include "pathhash.h"
-#include "mozilla/UniquePtr.h"
-=======
 #  include <stdio.h>
 #  include "mozilla/UniquePtr.h"
 #  include "pathhash.h"
@@ -32,7 +16,6 @@
 #  include "uachelper.h"
 #  include "updatehelper.h"
 #  include "updateutils_win.h"
->>>>>>> upstream-releases
 
 // Needed for PathAppendW
 #  include <shlwapi.h>
@@ -40,16 +23,7 @@
 using mozilla::MakeUnique;
 using mozilla::UniquePtr;
 
-<<<<<<< HEAD
-BOOL PathAppendSafe(LPWSTR base, LPCWSTR extra);
 BOOL PathGetSiblingFilePath(LPWSTR destinationBuffer, LPCWSTR siblingFilePath,
-||||||| merged common ancestors
-BOOL PathAppendSafe(LPWSTR base, LPCWSTR extra);
-BOOL PathGetSiblingFilePath(LPWSTR destinationBuffer,
-                            LPCWSTR siblingFilePath,
-=======
-BOOL PathGetSiblingFilePath(LPWSTR destinationBuffer, LPCWSTR siblingFilePath,
->>>>>>> upstream-releases
                             LPCWSTR newFileName);
 
 /**
@@ -116,37 +90,18 @@ BOOL StartServiceUpdate(LPCWSTR installDir) {
   // Get the service config information, in particular we want the binary
   // path of the service.
   UniquePtr<char[]> serviceConfigBuffer = MakeUnique<char[]>(bytesNeeded);
-<<<<<<< HEAD
-  if (!QueryServiceConfigW(
-          svc,
-          reinterpret_cast<QUERY_SERVICE_CONFIGW *>(serviceConfigBuffer.get()),
-          bytesNeeded, &bytesNeeded)) {
-||||||| merged common ancestors
-  if (!QueryServiceConfigW(svc,
-      reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get()),
-      bytesNeeded, &bytesNeeded)) {
-=======
   if (!QueryServiceConfigW(
           svc,
           reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get()),
           bytesNeeded, &bytesNeeded)) {
->>>>>>> upstream-releases
     CloseServiceHandle(svc);
     return FALSE;
   }
 
   CloseServiceHandle(svc);
 
-<<<<<<< HEAD
-  QUERY_SERVICE_CONFIGW &serviceConfig =
-      *reinterpret_cast<QUERY_SERVICE_CONFIGW *>(serviceConfigBuffer.get());
-||||||| merged common ancestors
-  QUERY_SERVICE_CONFIGW &serviceConfig =
-    *reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get());
-=======
   QUERY_SERVICE_CONFIGW& serviceConfig =
       *reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get());
->>>>>>> upstream-releases
 
   PathUnquoteSpacesW(serviceConfig.lpBinaryPathName);
 
@@ -210,14 +165,7 @@ BOOL StartServiceUpdate(LPCWSTR installDir) {
  *         17002 if the service could not be opened
  */
 DWORD
-<<<<<<< HEAD
-StartServiceCommand(int argc, LPCWSTR *argv) {
-||||||| merged common ancestors
-StartServiceCommand(int argc, LPCWSTR* argv)
-{
-=======
 StartServiceCommand(int argc, LPCWSTR* argv) {
->>>>>>> upstream-releases
   DWORD lastState = WaitForServiceStop(SVC_NAME, 5);
   if (lastState != SERVICE_STOPPED) {
     return 20000 + lastState;
@@ -270,34 +218,14 @@ StartServiceCommand(int argc, LPCWSTR* argv) {
  * @return ERROR_SUCCESS if successful
  */
 DWORD
-<<<<<<< HEAD
-LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR *argv) {
-||||||| merged common ancestors
-LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR* argv)
-{
-=======
 LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR* argv) {
->>>>>>> upstream-releases
   // The service command is the same as the updater.exe command line except
-<<<<<<< HEAD
-  // it has 4 extra args:
-  // 0) The name of the service, automatically added by Windows
-  // 1) "MozillaMaintenance" (I think this is redundant with 0)
-  // 2) The command being executed, which is "software-update"
-  // 3) The path to updater.exe (from argv[0])
-  LPCWSTR *updaterServiceArgv = new LPCWSTR[argc + 2];
-||||||| merged common ancestors
-  // it has 2 extra args: 1) The Path to udpater.exe, and 2) the command
-  // being executed which is "software-update"
-  LPCWSTR *updaterServiceArgv = new LPCWSTR[argc + 2];
-=======
   // it has 4 extra args:
   // 0) The name of the service, automatically added by Windows
   // 1) "MozillaMaintenance" (I think this is redundant with 0)
   // 2) The command being executed, which is "software-update"
   // 3) The path to updater.exe (from argv[0])
   LPCWSTR* updaterServiceArgv = new LPCWSTR[argc + 2];
->>>>>>> upstream-releases
   updaterServiceArgv[0] = L"MozillaMaintenance";
   updaterServiceArgv[1] = L"software-update";
 
@@ -313,151 +241,14 @@ LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR* argv) {
 }
 
 /**
-<<<<<<< HEAD
- * Joins a base directory path with a filename.
- *
- * @param  base  The base directory path of size MAX_PATH + 1
- * @param  extra The filename to append
- * @return TRUE if the file name was successful appended to base
- */
-BOOL PathAppendSafe(LPWSTR base, LPCWSTR extra) {
-  if (wcslen(base) + wcslen(extra) >= MAX_PATH) {
-    return FALSE;
-  }
-
-  return PathAppendW(base, extra);
-}
-
-/**
- * Build a temporary file path whose name component is a UUID.
- *
- * @param  basePath  The base directory path for the temp file
- * @param  prefix    Optional prefix for the beginning of the file name
- * @param  tmpPath   Output full path, with the base directory and the file
- * name. Must already have been allocated with size >= MAX_PATH.
- * @return TRUE if tmpPath was successfully filled in, FALSE on errors
- */
-BOOL GetUUIDTempFilePath(LPCWSTR basePath, LPCWSTR prefix, LPWSTR tmpPath) {
-  WCHAR filename[MAX_PATH + 1] = {L"\0"};
-  if (prefix) {
-    wcsncpy(filename, prefix, MAX_PATH);
-  }
-
-  UUID tmpFileNameUuid;
-  RPC_WSTR tmpFileNameString = nullptr;
-  if (UuidCreate(&tmpFileNameUuid) != RPC_S_OK) {
-    return FALSE;
-  }
-  if (UuidToStringW(&tmpFileNameUuid, &tmpFileNameString) != RPC_S_OK) {
-    return FALSE;
-  }
-  if (!tmpFileNameString) {
-    return FALSE;
-  }
-
-  wcsncat(filename, (LPCWSTR)tmpFileNameString, MAX_PATH);
-  RpcStringFreeW(&tmpFileNameString);
-
-  wcsncpy(tmpPath, basePath, MAX_PATH);
-  if (!PathAppendSafe(tmpPath, filename)) {
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-/**
-||||||| merged common ancestors
- * Joins a base directory path with a filename.
- *
- * @param  base  The base directory path of size MAX_PATH + 1
- * @param  extra The filename to append
- * @return TRUE if the file name was successful appended to base
- */
-BOOL
-PathAppendSafe(LPWSTR base, LPCWSTR extra)
-{
-  if (wcslen(base) + wcslen(extra) >= MAX_PATH) {
-    return FALSE;
-  }
-
-  return PathAppendW(base, extra);
-}
-
-/**
- * Build a temporary file path whose name component is a UUID.
- *
- * @param  basePath  The base directory path for the temp file
- * @param  prefix    Optional prefix for the beginning of the file name
- * @param  tmpPath   Output full path, with the base directory and the file name.
- *                   Must already have been allocated with size >= MAX_PATH.
- * @return TRUE if tmpPath was successfully filled in, FALSE on errors
- */
-BOOL
-GetUUIDTempFilePath(LPCWSTR basePath, LPCWSTR prefix, LPWSTR tmpPath)
-{
-  WCHAR filename[MAX_PATH + 1] = { L"\0" };
-  if (prefix) {
-    wcsncpy(filename, prefix, MAX_PATH);
-  }
-
-  UUID tmpFileNameUuid;
-  RPC_WSTR tmpFileNameString = nullptr;
-  if (UuidCreate(&tmpFileNameUuid) != RPC_S_OK) {
-    return FALSE;
-  }
-  if (UuidToStringW(&tmpFileNameUuid, &tmpFileNameString) != RPC_S_OK) {
-    return FALSE;
-  }
-  if (!tmpFileNameString) {
-    return FALSE;
-  }
-
-  wcsncat(filename, (LPCWSTR)tmpFileNameString, MAX_PATH);
-  RpcStringFreeW(&tmpFileNameString);
-
-  wcsncpy(tmpPath, basePath, MAX_PATH);
-  if (!PathAppendSafe(tmpPath, filename)) {
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-/**
-=======
->>>>>>> upstream-releases
  * Sets update.status to a specific failure code
  *
-<<<<<<< HEAD
- * @param  updateDirPath   The path of the update directory
- * @param  errorCode       Error code to set
- * @param  userToken       Impersonation token to use
- *
-||||||| merged common ancestors
- * @param  updateDirPath The path of the update directory
-=======
  * @param  updateDirPath   The path of the update directory
  * @param  errorCode       Error code to set
  *
->>>>>>> upstream-releases
  * @return TRUE if successful
  */
-<<<<<<< HEAD
-BOOL WriteStatusFailure(LPCWSTR updateDirPath, int errorCode,
-                        nsAutoHandle &userToken) {
-  ImpersonationScope impersonated(userToken);
-  if (userToken && !impersonated) {
-    return FALSE;
-  }
-
-||||||| merged common ancestors
-BOOL
-WriteStatusFailure(LPCWSTR updateDirPath, int errorCode)
-{
-=======
 BOOL WriteStatusFailure(LPCWSTR updateDirPath, int errorCode) {
->>>>>>> upstream-releases
   // The temp file is not removed on failure since there is client code that
   // will remove it.
   WCHAR tmpUpdateStatusFilePath[MAX_PATH + 1] = {L'\0'};
@@ -716,21 +507,9 @@ BOOL DoesFallbackKeyExist() {
  * @param file path to check the filesystem type for, must be at most MAX_PATH
  * @param isLocal out parameter which will hold TRUE if the drive is local
  * @return TRUE if the call succeeded
-<<<<<<< HEAD
- */
-BOOL IsLocalFile(LPCWSTR file, BOOL &isLocal) {
-  WCHAR rootPath[MAX_PATH + 1] = {L'\0'};
-||||||| merged common ancestors
-*/
-BOOL
-IsLocalFile(LPCWSTR file, BOOL &isLocal)
-{
-  WCHAR rootPath[MAX_PATH + 1] = { L'\0' };
-=======
  */
 BOOL IsLocalFile(LPCWSTR file, BOOL& isLocal) {
   WCHAR rootPath[MAX_PATH + 1] = {L'\0'};
->>>>>>> upstream-releases
   if (wcslen(file) > MAX_PATH) {
     return FALSE;
   }
@@ -748,18 +527,8 @@ BOOL IsLocalFile(LPCWSTR file, BOOL& isLocal) {
  * @param valueName The name of the value
  * @param retValue  Out parameter which will hold the value
  * @return TRUE on success
-<<<<<<< HEAD
- */
-static BOOL GetDWORDValue(HKEY key, LPCWSTR valueName, DWORD &retValue) {
-||||||| merged common ancestors
-*/
-static BOOL
-GetDWORDValue(HKEY key, LPCWSTR valueName, DWORD &retValue)
-{
-=======
  */
 static BOOL GetDWORDValue(HKEY key, LPCWSTR valueName, DWORD& retValue) {
->>>>>>> upstream-releases
   DWORD regDWORDValueSize = sizeof(DWORD);
   LONG retCode =
       RegQueryValueExW(key, valueName, 0, nullptr,
@@ -775,18 +544,8 @@ static BOOL GetDWORDValue(HKEY key, LPCWSTR valueName, DWORD& retValue) {
  *                              elevation is allowed.
  * @return TRUE if the user can actually elevate and the value was obtained
  *         successfully.
-<<<<<<< HEAD
- */
-BOOL IsUnpromptedElevation(BOOL &isUnpromptedElevation) {
-||||||| merged common ancestors
-*/
-BOOL
-IsUnpromptedElevation(BOOL &isUnpromptedElevation)
-{
-=======
  */
 BOOL IsUnpromptedElevation(BOOL& isUnpromptedElevation) {
->>>>>>> upstream-releases
   if (!UACHelper::CanUserElevate()) {
     return FALSE;
   }

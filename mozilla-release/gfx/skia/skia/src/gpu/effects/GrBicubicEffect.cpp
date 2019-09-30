@@ -106,16 +106,8 @@ void GrGLBicubicEffect::emitCode(EmitArgs& args) {
 void GrGLBicubicEffect::onSetData(const GrGLSLProgramDataManager& pdman,
                                   const GrFragmentProcessor& processor) {
     const GrBicubicEffect& bicubicEffect = processor.cast<GrBicubicEffect>();
-<<<<<<< HEAD
-    GrSurfaceProxy* proxy = processor.textureSampler(0).proxy();
-    GrTexture* texture = proxy->peekTexture();
-||||||| merged common ancestors
-    GrSurfaceProxy* proxy = processor.textureSampler(0).proxy();
-    GrTexture* texture = proxy->priv().peekTexture();
-=======
     GrTextureProxy* proxy = processor.textureSampler(0).proxy();
     GrTexture* texture = proxy->peekTexture();
->>>>>>> upstream-releases
 
     float imageIncrement[2];
     imageIncrement[0] = 1.0f / texture->width();
@@ -137,35 +129,7 @@ GrBicubicEffect::GrBicubicEffect(sk_sp<GrTextureProxy> proxy,
         , fTextureSampler(std::move(proxy),
                           GrSamplerState(wrapModes, GrSamplerState::Filter::kNearest)) {
     this->addCoordTransform(&fCoordTransform);
-<<<<<<< HEAD
     this->setTextureSamplerCnt(1);
-}
-
-GrBicubicEffect::GrBicubicEffect(sk_sp<GrTextureProxy> proxy,
-                                 const SkMatrix& matrix,
-                                 const SkRect& domain)
-        : INHERITED(kGrBicubicEffect_ClassID, ModulateByConfigOptimizationFlags(proxy->config()))
-        , fCoordTransform(matrix, proxy.get())
-        , fDomain(proxy.get(), domain, GrTextureDomain::kClamp_Mode)
-        , fTextureSampler(std::move(proxy)) {
-    this->addCoordTransform(&fCoordTransform);
-    this->setTextureSamplerCnt(1);
-||||||| merged common ancestors
-    this->addTextureSampler(&fTextureSampler);
-}
-
-GrBicubicEffect::GrBicubicEffect(sk_sp<GrTextureProxy> proxy,
-                                 const SkMatrix& matrix,
-                                 const SkRect& domain)
-        : INHERITED(kGrBicubicEffect_ClassID, ModulateByConfigOptimizationFlags(proxy->config()))
-        , fCoordTransform(matrix, proxy.get())
-        , fDomain(proxy.get(), domain, GrTextureDomain::kClamp_Mode)
-        , fTextureSampler(std::move(proxy)) {
-    this->addCoordTransform(&fCoordTransform);
-    this->addTextureSampler(&fTextureSampler);
-=======
-    this->setTextureSamplerCnt(1);
->>>>>>> upstream-releases
 }
 
 GrBicubicEffect::GrBicubicEffect(const GrBicubicEffect& that)

@@ -40,71 +40,26 @@
 #include <limits.h>
 
 #if defined(XP_WIN)
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-#include <io.h>
-||||||| merged common ancestors
-# include <io.h>
-=======
 #  include <io.h>
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 #else
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-#include <unistd.h>
-||||||| merged common ancestors
-# include <unistd.h>
-=======
 #  include <unistd.h>
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 #endif
 
 #ifdef XP_WIN
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-#include <winsock2.h>
-||||||| merged common ancestors
-# include <winsock2.h>
-=======
 #  include <winsock2.h>
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 #else
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-#include <arpa/inet.h>
-||||||| merged common ancestors
-# include <arpa/inet.h>
-=======
 #  include <arpa/inet.h>
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 #endif
 
 #ifndef SSIZE_MAX
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-#define SSIZE_MAX LONG_MAX
-||||||| merged common ancestors
-# define SSIZE_MAX LONG_MAX
-=======
 #  define SSIZE_MAX LONG_MAX
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 #endif
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-int MBS_ReadHeader(FILE *file, MBSPatchHeader *header) {
-||||||| merged common ancestors
-int
-MBS_ReadHeader(FILE* file, MBSPatchHeader *header)
-{
-=======
 int MBS_ReadHeader(FILE* file, MBSPatchHeader* header) {
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
   size_t s = fread(header, 1, sizeof(MBSPatchHeader), file);
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-  if (s != sizeof(MBSPatchHeader)) return READ_ERROR;
-||||||| merged common ancestors
-  if (s != sizeof(MBSPatchHeader))
-    return READ_ERROR;
-=======
   if (s != sizeof(MBSPatchHeader)) {
     return READ_ERROR;
   }
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
   header->slen = ntohl(header->slen);
   header->scrc32 = ntohl(header->scrc32);
@@ -115,12 +70,6 @@ int MBS_ReadHeader(FILE* file, MBSPatchHeader* header) {
 
   struct stat hs;
   s = fstat(fileno(file), &hs);
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-  if (s != 0) return READ_ERROR;
-||||||| merged common ancestors
-  if (s)
-    return READ_ERROR;
-=======
   if (s != 0) {
     return READ_ERROR;
   }
@@ -132,45 +81,13 @@ int MBS_ReadHeader(FILE* file, MBSPatchHeader* header) {
   if (hs.st_size > INT_MAX) {
     return UNEXPECTED_BSPATCH_ERROR;
   }
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-  if (memcmp(header->tag, "MBDIFF10", 8) != 0) return UNEXPECTED_BSPATCH_ERROR;
-||||||| merged common ancestors
-  if (memcmp(header->tag, "MBDIFF10", 8) != 0)
-    return UNEXPECTED_BSPATCH_ERROR;
-=======
   size_t size = static_cast<size_t>(hs.st_size);
   if (size < sizeof(MBSPatchHeader)) {
     return UNEXPECTED_BSPATCH_ERROR;
   }
   size -= sizeof(MBSPatchHeader);
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-  if (hs.st_size > INT_MAX) return UNEXPECTED_BSPATCH_ERROR;
-
-  size_t size = static_cast<size_t>(hs.st_size);
-  if (size < sizeof(MBSPatchHeader)) return UNEXPECTED_BSPATCH_ERROR;
-  size -= sizeof(MBSPatchHeader);
-
-  if (size < header->cblen) return UNEXPECTED_BSPATCH_ERROR;
-  size -= header->cblen;
-
-  if (size < header->difflen) return UNEXPECTED_BSPATCH_ERROR;
-  size -= header->difflen;
-
-  if (size < header->extralen) return UNEXPECTED_BSPATCH_ERROR;
-  size -= header->extralen;
-
-  if (size != 0) return UNEXPECTED_BSPATCH_ERROR;
-||||||| merged common ancestors
-  if (sizeof(MBSPatchHeader) +
-      header->cblen +
-      header->difflen +
-      header->extralen != uint32_t(hs.st_size))
-    return UNEXPECTED_BSPATCH_ERROR;
-=======
   if (size < header->cblen) {
     return UNEXPECTED_BSPATCH_ERROR;
   }
@@ -189,46 +106,20 @@ int MBS_ReadHeader(FILE* file, MBSPatchHeader* header) {
   if (size != 0) {
     return UNEXPECTED_BSPATCH_ERROR;
   }
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
   return OK;
 }
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-int MBS_ApplyPatch(const MBSPatchHeader *header, FILE *patchFile,
-                   unsigned char *fbuffer, FILE *file) {
-  unsigned char *fbufstart = fbuffer;
-  unsigned char *fbufend = fbuffer + header->slen;
-||||||| merged common ancestors
-int
-MBS_ApplyPatch(const MBSPatchHeader *header, FILE* patchFile,
-               unsigned char *fbuffer, FILE* file)
-{
-  unsigned char *fbufend = fbuffer + header->slen;
-=======
 int MBS_ApplyPatch(const MBSPatchHeader* header, FILE* patchFile,
                    unsigned char* fbuffer, FILE* file) {
   unsigned char* fbufstart = fbuffer;
   unsigned char* fbufend = fbuffer + header->slen;
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-  unsigned char *buf = (unsigned char *)malloc(header->cblen + header->difflen +
-                                               header->extralen);
-  if (!buf) return BSPATCH_MEM_ERROR;
-||||||| merged common ancestors
-  unsigned char *buf = (unsigned char*) malloc(header->cblen +
-                                               header->difflen +
-                                               header->extralen);
-  if (!buf)
-    return BSPATCH_MEM_ERROR;
-=======
   unsigned char* buf = (unsigned char*)malloc(header->cblen + header->difflen +
                                               header->extralen);
   if (!buf) {
     return BSPATCH_MEM_ERROR;
   }
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
   int rv = OK;
 
@@ -252,20 +143,6 @@ int MBS_ApplyPatch(const MBSPatchHeader* header, FILE* patchFile,
   }
 
   {
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-    MBSPatchTriple *ctrlsrc = (MBSPatchTriple *)buf;
-    if (header->cblen % sizeof(MBSPatchTriple) != 0) {
-      rv = UNEXPECTED_BSPATCH_ERROR;
-      goto end;
-    }
-
-    unsigned char *diffsrc = buf + header->cblen;
-    unsigned char *extrasrc = diffsrc + header->difflen;
-||||||| merged common ancestors
-    MBSPatchTriple *ctrlsrc = (MBSPatchTriple*) buf;
-    unsigned char *diffsrc = buf + header->cblen;
-    unsigned char *extrasrc = diffsrc + header->difflen;
-=======
     MBSPatchTriple* ctrlsrc = (MBSPatchTriple*)buf;
     if (header->cblen % sizeof(MBSPatchTriple) != 0) {
       rv = UNEXPECTED_BSPATCH_ERROR;
@@ -274,21 +151,10 @@ int MBS_ApplyPatch(const MBSPatchHeader* header, FILE* patchFile,
 
     unsigned char* diffsrc = buf + header->cblen;
     unsigned char* extrasrc = diffsrc + header->difflen;
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/updater/bspatch.cpp
-    MBSPatchTriple *ctrlend = (MBSPatchTriple *)diffsrc;
-    unsigned char *diffend = extrasrc;
-    unsigned char *extraend = extrasrc + header->extralen;
-||||||| merged common ancestors
-    MBSPatchTriple *ctrlend = (MBSPatchTriple*) diffsrc;
-    unsigned char *diffend = extrasrc;
-    unsigned char *extraend = extrasrc + header->extralen;
-=======
     MBSPatchTriple* ctrlend = (MBSPatchTriple*)diffsrc;
     unsigned char* diffend = extrasrc;
     unsigned char* extraend = extrasrc + header->extralen;
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/updater/bspatch/bspatch.cpp
 
     while (ctrlsrc < ctrlend) {
       ctrlsrc->x = ntohl(ctrlsrc->x);

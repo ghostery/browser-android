@@ -158,17 +158,9 @@ class XULTreeGridCellAccessible : public LeafAccessible,
   virtual ~XULTreeGridCellAccessible();
 
   // Accessible
-<<<<<<< HEAD
-  virtual Accessible* GetSiblingAtOffset(
-      int32_t aOffset, nsresult* aError = nullptr) const override;
-||||||| merged common ancestors
-  virtual Accessible* GetSiblingAtOffset(int32_t aOffset,
-                                         nsresult* aError = nullptr) const override;
-=======
   virtual Accessible* GetSiblingAtOffset(
       int32_t aOffset, nsresult* aError = nullptr) const override;
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   virtual void DispatchClickEvent(nsIContent* aContent,
                                   uint32_t aActionIndex) const override;
 

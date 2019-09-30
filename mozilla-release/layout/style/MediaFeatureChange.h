@@ -43,41 +43,17 @@ enum class MediaFeatureChangeReason {
 
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(MediaFeatureChangeReason)
 
-<<<<<<< HEAD
-struct MediaFeatureChange {
-  nsRestyleHint mRestyleHint;
-||||||| merged common ancestors
-struct MediaFeatureChange
-{
-  nsRestyleHint mRestyleHint;
-=======
 struct MediaFeatureChange {
   static const auto kAllChanges = static_cast<MediaFeatureChangeReason>(~0);
 
   RestyleHint mRestyleHint;
->>>>>>> upstream-releases
   nsChangeHint mChangeHint;
   MediaFeatureChangeReason mReason;
 
   MOZ_IMPLICIT MediaFeatureChange(MediaFeatureChangeReason aReason)
-<<<<<<< HEAD
-      : MediaFeatureChange(nsRestyleHint(0), nsChangeHint(0), aReason) {}
-||||||| merged common ancestors
-    : MediaFeatureChange(nsRestyleHint(0), nsChangeHint(0), aReason)
-  {
-  }
-=======
       : MediaFeatureChange(RestyleHint{0}, nsChangeHint(0), aReason) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MediaFeatureChange(nsRestyleHint aRestyleHint, nsChangeHint aChangeHint,
-||||||| merged common ancestors
-  MediaFeatureChange(nsRestyleHint aRestyleHint,
-                     nsChangeHint aChangeHint,
-=======
   MediaFeatureChange(RestyleHint aRestyleHint, nsChangeHint aChangeHint,
->>>>>>> upstream-releases
                      MediaFeatureChangeReason aReason)
       : mRestyleHint(aRestyleHint),
         mChangeHint(aChangeHint),

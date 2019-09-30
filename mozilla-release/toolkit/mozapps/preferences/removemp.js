@@ -33,17 +33,6 @@ var gRemovePasswordDialog = {
     this._okButton.disabled = !this._token.checkPassword(this._password.value);
   },
 
-<<<<<<< HEAD
-  async createAlert(titleL10nId, messageL10nId) {
-    const [title, message] = await document.l10n.formatValues([
-      {id: titleL10nId},
-      {id: messageL10nId},
-    ]);
-    Services.prompt.alert(window, title, message);
-  },
-
-||||||| merged common ancestors
-=======
   async createAlert(titleL10nId, messageL10nId) {
     const [title, message] = await document.l10n.formatValues([
       { id: titleL10nId },
@@ -52,7 +41,6 @@ var gRemovePasswordDialog = {
     Services.prompt.alert(window, title, message);
   },
 
->>>>>>> upstream-releases
   removePassword() {
     if (this._token.checkPassword(this._password.value)) {
       this._token.changePassword(this._password.value, "");

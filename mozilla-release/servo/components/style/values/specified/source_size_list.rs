@@ -11,23 +11,7 @@ use crate::parser::{Parse, ParserContext};
 use crate::values::computed::{self, ToComputedValue};
 use crate::values::specified::{Length, NoCalcLength, ViewportPercentageLength};
 use app_units::Au;
-<<<<<<< HEAD
-#[cfg(feature = "gecko")]
-use crate::gecko_bindings::sugar::ownership::{HasBoxFFI, HasFFI, HasSimpleFFI};
-use crate::media_queries::{Device, MediaCondition};
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::{self, ToComputedValue};
-use crate::values::specified::{Length, NoCalcLength, ViewportPercentageLength};
 use cssparser::{Delimiter, Parser, Token};
-||||||| merged common ancestors
-use cssparser::{Delimiter, Parser, Token};
-#[cfg(feature = "gecko")]
-use gecko_bindings::sugar::ownership::{HasBoxFFI, HasFFI, HasSimpleFFI};
-use media_queries::{Device, MediaCondition};
-use parser::{Parse, ParserContext};
-=======
-use cssparser::{Delimiter, Parser, Token};
->>>>>>> upstream-releases
 use selectors::context::QuirksMode;
 use style_traits::ParseError;
 

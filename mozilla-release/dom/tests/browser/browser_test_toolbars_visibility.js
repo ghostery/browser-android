@@ -127,78 +127,6 @@ function testNonDefaultChromeToolbars(toolbars) {
  * menubar=no, status=no", should only have location visible.
  */
 add_task(async function() {
-<<<<<<< HEAD
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: CONTENT_PAGE,
-  }, async function(browser) {
-    // First, call the default window.open() which will open a new tab
-    let newTabPromise = BrowserTestUtils.waitForNewTab(gBrowser);
-    await BrowserTestUtils.synthesizeMouseAtCenter("#winOpenDefault", {}, browser);
-    let tab = await newTabPromise;
-
-    // Check that all toolbars are visible
-    let toolbars = await getToolbarsFromBrowserContent(gBrowser.selectedBrowser);
-    testDefaultToolbars(toolbars);
-
-    // Cleanup
-    BrowserTestUtils.removeTab(tab);
-
-    // Now let's open a window with toolbars hidden
-    let winPromise = BrowserTestUtils.waitForNewWindow({url: TARGET_PAGE});
-    await BrowserTestUtils.synthesizeMouseAtCenter("#winOpenNonDefault", {}, browser);
-    let popupWindow = await winPromise;
-
-    let popupBrowser = popupWindow.gBrowser.selectedBrowser;
-
-    // Test toolbars visibility
-    let popupToolbars = await getToolbarsFromBrowserContent(popupBrowser);
-    testNonDefaultContentToolbars(popupToolbars);
-
-    // Ensure that chrome toolbars agree with content
-    let chromeToolbars = getToolbarsFromWindowChrome(popupWindow);
-    testNonDefaultContentToolbars(chromeToolbars);
-
-    // Close the new window
-    await BrowserTestUtils.closeWindow(popupWindow);
-  });
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: CONTENT_PAGE,
-  }, async function(browser) {
-    // First, call the default window.open() which will open a new tab
-    let newTabPromise = BrowserTestUtils.waitForNewTab(gBrowser);
-    await BrowserTestUtils.synthesizeMouseAtCenter("#winOpenDefault", {}, browser);
-    let tab = await newTabPromise;
-
-    // Check that all toolbars are visible
-    let toolbars = await getToolbarsFromBrowserContent(gBrowser.selectedBrowser);
-    testDefaultToolbars(toolbars);
-
-    // Cleanup
-    BrowserTestUtils.removeTab(tab);
-
-    // Now let's open a window with toolbars hidden
-    let winPromise = BrowserTestUtils.waitForNewWindow();
-    await BrowserTestUtils.synthesizeMouseAtCenter("#winOpenNonDefault", {}, browser);
-    let popupWindow = await winPromise;
-
-    let popupBrowser = popupWindow.gBrowser.selectedBrowser;
-    await BrowserTestUtils.browserLoaded(popupBrowser);
-
-    // Test toolbars visibility
-    let popupToolbars = await getToolbarsFromBrowserContent(popupBrowser);
-    testNonDefaultContentToolbars(popupToolbars);
-
-    // Ensure that chrome toolbars agree with content
-    let chromeToolbars = getToolbarsFromWindowChrome(popupWindow);
-    testNonDefaultContentToolbars(chromeToolbars);
-
-    // Close the new window
-    await BrowserTestUtils.closeWindow(popupWindow);
-  });
-=======
   await BrowserTestUtils.withNewTab(
     {
       gBrowser,
@@ -246,7 +174,6 @@ add_task(async function() {
       await BrowserTestUtils.closeWindow(popupWindow);
     }
   );
->>>>>>> upstream-releases
 });
 
 /**
@@ -298,15 +225,9 @@ add_task(async function() {
  */
 add_task(async function() {
   // First open a default window from this chrome context
-<<<<<<< HEAD
-  let defaultWindowPromise = BrowserTestUtils.waitForNewWindow({url: TARGET_PAGE});
-||||||| merged common ancestors
-  let defaultWindowPromise = BrowserTestUtils.waitForNewWindow();
-=======
   let defaultWindowPromise = BrowserTestUtils.waitForNewWindow({
     url: TARGET_PAGE,
   });
->>>>>>> upstream-releases
   window.open(TARGET_PAGE, "_blank");
   let defaultWindow = await defaultWindowPromise;
 
@@ -315,19 +236,11 @@ add_task(async function() {
   testDefaultToolbars(toolbars);
 
   // Now lets open a window with toolbars hidden from this chrome context
-<<<<<<< HEAD
-  let features = "location=no, personalbar=no, toolbar=no, scrollbars=no, menubar=no, status=no";
-  let popupWindowPromise = BrowserTestUtils.waitForNewWindow({url: TARGET_PAGE});
-||||||| merged common ancestors
-  let features = "location=no, personalbar=no, toolbar=no, scrollbars=no, menubar=no, status=no";
-  let popupWindowPromise = BrowserTestUtils.waitForNewWindow();
-=======
   let features =
     "location=no, personalbar=no, toolbar=no, scrollbars=no, menubar=no, status=no";
   let popupWindowPromise = BrowserTestUtils.waitForNewWindow({
     url: TARGET_PAGE,
   });
->>>>>>> upstream-releases
   window.open(TARGET_PAGE, "_blank", features);
   let popupWindow = await popupWindowPromise;
 

@@ -19,13 +19,6 @@ use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Write};
 use std::mem;
 use std::num::Wrapping;
-<<<<<<< HEAD
-use std::ops::Range;
-||||||| merged common ancestors
-use std::ops::Range;
-use str::CssStringWriter;
-=======
->>>>>>> upstream-releases
 use style_traits::{Comma, CssWriter, OneOrMoreSeparated, ParseError};
 use style_traits::{StyleParseErrorKind, ToCss};
 
@@ -501,46 +494,7 @@ impl Parse for CounterRanges {
             .try(|input| input.expect_ident_matching("auto"))
             .is_ok()
         {
-<<<<<<< HEAD
-            Ok(Ranges(Vec::new()))
-        } else {
-            input
-                .parse_comma_separated(|input| {
-                    let opt_start = parse_bound(context, input)?;
-                    let opt_end = parse_bound(context, input)?;
-                    if let (CounterBound::Integer(start), CounterBound::Integer(end)) =
-                        (opt_start, opt_end)
-                    {
-                        if start > end {
-                            return Err(
-                                input.new_custom_error(StyleParseErrorKind::UnspecifiedError)
-                            );
-                        }
-                    }
-                    Ok(opt_start..opt_end)
-                })
-                .map(Ranges)
-||||||| merged common ancestors
-            Ok(Ranges(Vec::new()))
-        } else {
-            input
-                .parse_comma_separated(|input| {
-                    let opt_start = parse_bound(context, input)?;
-                    let opt_end = parse_bound(context, input)?;
-                    if let (CounterBound::Integer(start), CounterBound::Integer(end)) =
-                        (opt_start, opt_end)
-                    {
-                        if start > end {
-                            return Err(
-                                input.new_custom_error(StyleParseErrorKind::UnspecifiedError)
-                            );
-                        }
-                    }
-                    Ok(opt_start..opt_end)
-                }).map(Ranges)
-=======
             return Ok(CounterRanges(Default::default()));
->>>>>>> upstream-releases
         }
 
         let ranges = input.parse_comma_separated(|input| {

@@ -30,128 +30,6 @@ class nsIDataObjCollection : public IUnknown {
  * associated with instances via SetDragDrop().
  */
 
-<<<<<<< HEAD
-class nsDataObjCollection final : public nsIDataObjCollection,
-                                  public nsDataObj {
- public:
-  nsDataObjCollection();
-  ~nsDataObjCollection();
-
- public:  // IUnknown methods - see iunknown.h for documentation
-  STDMETHODIMP_(ULONG) AddRef();
-  STDMETHODIMP QueryInterface(REFIID, void**);
-  STDMETHODIMP_(ULONG) Release();
-
- public:  // DataGet and DataSet helper methods
-  virtual HRESULT GetFile(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-  virtual HRESULT GetText(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-  virtual HRESULT GetFileDescriptors(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-  virtual HRESULT GetFileContents(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-  virtual HRESULT GetFirstSupporting(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-
-  using nsDataObj::GetFile;
-  using nsDataObj::GetFileContents;
-  using nsDataObj::GetText;
-
-  // support for clipboard
-  void AddDataFlavor(const char* aDataFlavor, LPFORMATETC aFE);
-
-  // from nsPIDataObjCollection
-  void AddDataObject(IDataObject* aDataObj);
-  int32_t GetNumDataObjects() { return mDataObjects.Length(); }
-  nsDataObj* GetDataObjectAt(uint32_t aItem) {
-    return mDataObjects.SafeElementAt(aItem, RefPtr<nsDataObj>());
-  }
-
-  // Return the registered OLE class ID of this object's CfDataObj.
-  CLSID GetClassID() const;
-
- public:
-  // Store data in pSTM according to the format specified by pFE, if the
-  // format is supported (supported formats are specified in CfDragDrop::
-  // GetFormats) and return NOERROR; otherwise return DATA_E_FORMATETC. It
-  // is the callers responsibility to free pSTM if NOERROR is returned.
-  STDMETHODIMP GetData(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-
-  // Similar to GetData except that the caller allocates the structure
-  // referenced by pSTM.
-  STDMETHODIMP GetDataHere(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-
-  // Returns S_TRUE if this object supports the format specified by pSTM,
-  // S_FALSE otherwise.
-  STDMETHODIMP QueryGetData(LPFORMATETC pFE);
-
-  // Set this objects data according to the format specified by pFE and
-  // the storage medium specified by pSTM and return NOERROR, if the format
-  // is supported. If release is TRUE this object must release the storage
-  // associated with pSTM.
-  STDMETHODIMP SetData(LPFORMATETC pFE, LPSTGMEDIUM pSTM, BOOL release);
-
- protected:
-  ULONG m_cRef;  // the reference count
-
-  nsTArray<RefPtr<nsDataObj> > mDataObjects;
-||||||| merged common ancestors
-class nsDataObjCollection final : public nsIDataObjCollection, public nsDataObj
-{
-  public:
-    nsDataObjCollection();
-    ~nsDataObjCollection();
-
-  public: // IUnknown methods - see iunknown.h for documentation
-    STDMETHODIMP_(ULONG) AddRef        ();
-    STDMETHODIMP       QueryInterface(REFIID, void**);
-    STDMETHODIMP_(ULONG) Release       ();
-
-  public: // DataGet and DataSet helper methods
-    virtual HRESULT GetFile(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-    virtual HRESULT GetText(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-    virtual HRESULT GetFileDescriptors(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-    virtual HRESULT GetFileContents(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-    virtual HRESULT GetFirstSupporting(LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-
-    using nsDataObj::GetFile;
-    using nsDataObj::GetFileContents;
-    using nsDataObj::GetText;
-
-    // support for clipboard
-    void AddDataFlavor(const char * aDataFlavor, LPFORMATETC aFE);
-
-    // from nsPIDataObjCollection
-    void AddDataObject(IDataObject * aDataObj);
-    int32_t GetNumDataObjects() { return mDataObjects.Length(); }
-    nsDataObj* GetDataObjectAt(uint32_t aItem)
-            { return mDataObjects.SafeElementAt(aItem, RefPtr<nsDataObj>()); }
-
-    // Return the registered OLE class ID of this object's CfDataObj.
-    CLSID GetClassID() const;
-
-  public:
-    // Store data in pSTM according to the format specified by pFE, if the
-    // format is supported (supported formats are specified in CfDragDrop::
-    // GetFormats) and return NOERROR; otherwise return DATA_E_FORMATETC. It
-    // is the callers responsibility to free pSTM if NOERROR is returned.
-    STDMETHODIMP GetData  (LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-
-    // Similar to GetData except that the caller allocates the structure
-    // referenced by pSTM.
-    STDMETHODIMP GetDataHere (LPFORMATETC pFE, LPSTGMEDIUM pSTM);
-
-    // Returns S_TRUE if this object supports the format specified by pSTM,
-    // S_FALSE otherwise.
-    STDMETHODIMP QueryGetData (LPFORMATETC pFE);
-
-    // Set this objects data according to the format specified by pFE and
-    // the storage medium specified by pSTM and return NOERROR, if the format
-    // is supported. If release is TRUE this object must release the storage
-    // associated with pSTM.
-    STDMETHODIMP SetData  (LPFORMATETC pFE, LPSTGMEDIUM pSTM, BOOL release);
-
-  protected:
-    ULONG m_cRef;              // the reference count
-
-    nsTArray<RefPtr<nsDataObj> > mDataObjects;
-=======
 class nsDataObjCollection final : public nsIDataObjCollection,
                                   public nsDataObj {
  public:
@@ -209,7 +87,6 @@ class nsDataObjCollection final : public nsIDataObjCollection,
 
  private:
   nsTArray<RefPtr<nsDataObj> > mDataObjects;
->>>>>>> upstream-releases
 };
 
 #endif  //

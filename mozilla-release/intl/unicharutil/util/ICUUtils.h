@@ -10,49 +10,13 @@
 // nsGkAtom, so we only build when included into internal libs:
 #ifdef MOZILLA_INTERNAL_API
 
-<<<<<<< HEAD
-#include "mozilla/Scoped.h"
-#include "nsString.h"
-#include "unicode/unum.h"  // for UNumberFormat
-||||||| merged common ancestors
-#include "mozilla/Scoped.h"
-#include "nsString.h"
-#include "unicode/unum.h" // for UNumberFormat
-=======
 #  include "nsString.h"
 #  include "unicode/unum.h"  // for UNumberFormat
->>>>>>> upstream-releases
 
 class nsIContent;
 
-<<<<<<< HEAD
-struct ScopedUNumberFormatTraits {
-  typedef UNumberFormat* type;
-  static type empty() { return nullptr; }
-  static void release(type handle) {
-    if (handle) unum_close(handle);
-  }
-};
-typedef mozilla::Scoped<ScopedUNumberFormatTraits> AutoCloseUNumberFormat;
-
 class ICUUtils {
  public:
-||||||| merged common ancestors
-struct ScopedUNumberFormatTraits {
-  typedef UNumberFormat* type;
-  static type empty() { return nullptr; }
-  static void release(type handle) { if (handle) unum_close(handle); }
-};
-typedef mozilla::Scoped<ScopedUNumberFormatTraits> AutoCloseUNumberFormat;
-
-class ICUUtils
-{
-public:
-
-=======
-class ICUUtils {
- public:
->>>>>>> upstream-releases
   /**
    * This class is used to encapsulate an nsIContent object to allow lazy
    * iteration over its primary and fallback BCP 47 language tags.

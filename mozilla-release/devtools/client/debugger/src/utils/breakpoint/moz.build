@@ -7,13 +7,7 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/breakpoint/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/breakpoint/moz.build
     'astBreakpointLocation.js',
     'breakpointPositions.js',
     'index.js',

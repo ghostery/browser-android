@@ -243,11 +243,6 @@ ha{
             "Dalar zimbabuwe",
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.2"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Currencies%narrow{
         BRL{"R$"}
         CNY{"¥"}
@@ -293,5 +288,4 @@ ha{
         other{"{0} {1}"}
     }
     Version{"2.1.48.45"}
->>>>>>> upstream-releases
 }

@@ -12,44 +12,19 @@
 #include "nsIAnonymousContentCreator.h"
 
 namespace mozilla {
-<<<<<<< HEAD
-enum class CSSPseudoElementType : uint8_t;
-}  // namespace mozilla
-||||||| merged common ancestors
-enum class CSSPseudoElementType : uint8_t;
-} // namespace mozilla
-=======
 enum class PseudoStyleType : uint8_t;
 class PresShell;
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 // Class which implements the input type=color
 
 class nsColorControlFrame final : public nsHTMLButtonControlFrame,
-<<<<<<< HEAD
-                                  public nsIAnonymousContentCreator {
-  typedef mozilla::CSSPseudoElementType CSSPseudoElementType;
-||||||| merged common ancestors
-                                  public nsIAnonymousContentCreator
-{
-  typedef mozilla::CSSPseudoElementType CSSPseudoElementType;
-=======
                                   public nsIAnonymousContentCreator {
   typedef mozilla::PseudoStyleType PseudoStyleType;
->>>>>>> upstream-releases
   typedef mozilla::dom::Element Element;
 
-<<<<<<< HEAD
- public:
-  friend nsIFrame* NS_NewColorControlFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-public:
-  friend nsIFrame* NS_NewColorControlFrame(nsIPresShell* aPresShell,
-=======
  public:
   friend nsIFrame* NS_NewColorControlFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                            ComputedStyle* aStyle);
 
   virtual void DestroyFrom(nsIFrame* aDestructRoot,
@@ -76,17 +51,9 @@ public:
   // Refresh the color swatch, using associated input's value
   nsresult UpdateColor();
 
-<<<<<<< HEAD
- private:
-  explicit nsColorControlFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-private:
-  explicit nsColorControlFrame(ComputedStyle* aStyle);
-=======
  private:
   explicit nsColorControlFrame(ComputedStyle* aStyle,
                                nsPresContext* aPresContext);
->>>>>>> upstream-releases
 
   nsCOMPtr<Element> mColorContent;
 };

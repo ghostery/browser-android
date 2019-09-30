@@ -26,64 +26,6 @@ const address = Cc["@mozilla.org/supports-string;1"].createInstance(
 );
 address.data = "Easton Ave";
 addressLine.appendElement(address);
-<<<<<<< HEAD
-billingAddress.init("USA",               // country
-                     addressLine,        // address line
-                     "CA",               // region
-                     "CA",               // region code
-                     "San Bruno",        // city
-                     "",                 // dependent locality
-                     "94066",            // postal code
-                     "123456",           // sorting code
-                     "",                 // organization
-                     "Bill A. Pacheco",  // recipient
-                     "+14344413879"); // phone
-
-const specialAddress = Cc["@mozilla.org/dom/payments/payment-address;1"].
-                           createInstance(Ci.nsIPaymentAddress);
-const specialAddressLine = Cc["@mozilla.org/array;1"].createInstance(Ci.nsIMutableArray);
-const specialData = Cc["@mozilla.org/supports-string;1"].createInstance(Ci.nsISupportsString);
-specialData.data = ":$%@&*";
-specialAddressLine.appendElement(specialData);
-specialAddress.init("USA",               // country
-                     specialAddressLine, // address line
-                     "CA",               // region
-                     "CA",               // region code
-                     "San Bruno",        // city
-                     "",                 // dependent locality
-                     "94066",            // postal code
-                     "123456",           // sorting code
-                     "",                 // organization
-                     "Bill A. Pacheco",  // recipient
-                     "+14344413879"); // phone
-
-const basiccardResponseData = Cc["@mozilla.org/dom/payments/basiccard-response-data;1"].
-                                 createInstance(Ci.nsIBasicCardResponseData);
-
-const basiccardChangeDetails = Cc["@mozilla.org/dom/payments/basiccard-change-details;1"].
-                                  createInstance(Ci.nsIBasicCardChangeDetails);
-
-const showResponse = Cc["@mozilla.org/dom/payments/payment-show-action-response;1"].
-                        createInstance(Ci.nsIPaymentShowActionResponse);
-||||||| merged common ancestors
-billingAddress.init("USA",               // country
-                     addressLine,        // address line
-                     "CA",               // region
-                     "CA",               // region code
-                     "San Bruno",        // city
-                     "",                 // dependent locality
-                     "94066",            // postal code
-                     "123456",           // sorting code
-                     "",                 // organization
-                     "Bill A. Pacheco",  // recipient
-                     "+14344413879"); // phone
-
-const basiccardResponseData = Cc["@mozilla.org/dom/payments/basiccard-response-data;1"].
-                                 createInstance(Ci.nsIBasicCardResponseData);
-
-const showResponse = Cc["@mozilla.org/dom/payments/payment-show-action-response;1"].
-                        createInstance(Ci.nsIPaymentShowActionResponse);
-=======
 billingAddress.init(
   "USA", // country
   addressLine, // address line
@@ -134,7 +76,6 @@ const basiccardChangeDetails = Cc[
 const showResponse = Cc[
   "@mozilla.org/dom/payments/payment-show-action-response;1"
 ].createInstance(Ci.nsIPaymentShowActionResponse);
->>>>>>> upstream-releases
 
 function abortPaymentResponse(requestId) {
   let abortResponse = Cc[
@@ -159,26 +100,9 @@ function completePaymentResponse(requestId) {
   );
 }
 
-<<<<<<< HEAD
 function showRequest(requestId) {
   if (DummyUIService.showAction === "payment-method-change") {
     basiccardChangeDetails.initData(billingAddress);
-    try {
-      paymentSrv.changePaymentMethod(requestId, "basic-card", basiccardChangeDetails.QueryInterface(Ci.nsIMethodChangeDetails));
-    } catch (error) {
-      emitTestFail(`Unexpected error (${error.name}) when calling PaymentRequestService::changePaymentMethod`);
-    }
-    return;
-  }
-  if (DummyUIService.showAction === "detailBasicCardResponse") {
-||||||| merged common ancestors
-const detailedResponseUI = {
-  showPayment: function(requestId) {
-=======
-function showRequest(requestId) {
-  if (DummyUIService.showAction === "payment-method-change") {
-    basiccardChangeDetails.initData(billingAddress);
->>>>>>> upstream-releases
     try {
       paymentSrv.changePaymentMethod(
         requestId,
@@ -221,74 +145,6 @@ function showRequest(requestId) {
     } catch (e) {
       emitTestFail("Fail to initialize basic card response data.");
     }
-<<<<<<< HEAD
-  }
-  if (DummyUIService.showAction === "specialAddressResponse") {
-    try {
-      basiccardResponseData.initData("Bill A. Pacheco",  // cardholderName
-                                     "4916855166538720", // cardNumber
-                                     "01",               // expiryMonth
-                                     "2024",             // expiryYear
-                                     "180",              // cardSecurityCode
-                                     specialAddress);    // billingAddress
-    } catch (e) {
-      emitTestFail("Fail to initialize basic card response data.");
-    }
-  }
-  showResponse.init(requestId,
-                    Ci.nsIPaymentActionResponse.PAYMENT_ACCEPTED,
-                    "basic-card",         // payment method
-                    basiccardResponseData,// payment method data
-                    "Bill A. Pacheco",    // payer name
-                    "",                   // payer email
-                    "");                  // payer phone
-  paymentSrv.respondPayment(showResponse.QueryInterface(Ci.nsIPaymentActionResponse));
-}
-
-const DummyUIService = {
-  testName: "",
-  showAction: "",
-  showPayment: showRequest,
-  abortPayment: abortPaymentResponse,
-  completePayment: completePaymentResponse,
-  updatePayment: (requestId) => {
-    try {
-      basiccardResponseData.initData("Bill A. Pacheco",  // cardholderName
-                                     "4916855166538720", // cardNumber
-                                     "01",               // expiryMonth
-                                     "2024",             // expiryYear
-                                     "180",              // cardSecurityCode
-                                     billingAddress);   // billingAddress
-    } catch (e) {
-      emitTestFail("Fail to initialize basic card response data.");
-    }
-    showResponse.init(requestId,
-                      Ci.nsIPaymentActionResponse.PAYMENT_ACCEPTED,
-                      "basic-card",         // payment method
-                      basiccardResponseData,// payment method data
-                      "Bill A. Pacheco",    // payer name
-                      "",                   // payer email
-                      "");                  // payer phone
-    paymentSrv.respondPayment(showResponse.QueryInterface(Ci.nsIPaymentActionResponse));
-  },
-  closePayment: (requestId) => {},
-||||||| merged common ancestors
-    showResponse.init(requestId,
-                      Ci.nsIPaymentActionResponse.PAYMENT_ACCEPTED,
-                      "basic-card",         // payment method
-                      basiccardResponseData,// payment method data
-                      "Bill A. Pacheco",    // payer name
-                      "",                   // payer email
-                      "");                  // payer phone
-    paymentSrv.respondPayment(showResponse.QueryInterface(Ci.nsIPaymentActionResponse));
-  },
-  abortPayment: abortPaymentResponse,
-  completePayment: completePaymentResponse,
-  updatePayment: function(requestId) {
-  },
-  closePayment: function(requestId) {
-  },
-=======
   }
   if (DummyUIService.showAction === "specialAddressResponse") {
     try {
@@ -351,33 +207,9 @@ const DummyUIService = {
     );
   },
   closePayment: requestId => {},
->>>>>>> upstream-releases
   QueryInterface: ChromeUtils.generateQI([Ci.nsIPaymentUIService]),
 };
 
-<<<<<<< HEAD
-paymentSrv.setTestingUIService(DummyUIService.QueryInterface(Ci.nsIPaymentUIService));
-
-addMessageListener("set-detailed-ui-service", function(testName) {
-  DummyUIService.testName = testName;
-  DummyUIService.showAction = "detailBasicCardResponse";
-  sendAsyncMessage("set-detailed-ui-service-complete");
-});
-
-addMessageListener("set-simple-ui-service", function(testName) {
-  DummyUIService.testName = testName;
-  DummyUIService.showAction = "simpleBasicCardResponse";
-  sendAsyncMessage("set-simple-ui-service-complete");
-});
-
-addMessageListener("set-special-address-ui-service", function(testName) {
-  DummyUIService.testName = testName;
-  DummyUIService.showAction = "specialAddressResponse";
-  sendAsyncMessage("set-special-address-ui-service-complete");
-||||||| merged common ancestors
-addMessageListener("set-detailed-ui-service", function() {
-  paymentSrv.setTestingUIService(detailedResponseUI.QueryInterface(Ci.nsIPaymentUIService));
-=======
 paymentSrv.setTestingUIService(
   DummyUIService.QueryInterface(Ci.nsIPaymentUIService)
 );
@@ -386,30 +218,14 @@ addMessageListener("set-detailed-ui-service", function(testName) {
   DummyUIService.testName = testName;
   DummyUIService.showAction = "detailBasicCardResponse";
   sendAsyncMessage("set-detailed-ui-service-complete");
->>>>>>> upstream-releases
 });
 
-<<<<<<< HEAD
-addMessageListener("method-change-to-basic-card", function(testName) {
-  DummyUIService.testName = testName;
-  DummyUIService.showAction = "payment-method-change";
-  sendAsyncMessage("method-change-to-basic-card-complete");
-||||||| merged common ancestors
-addMessageListener("set-simple-ui-service", function() {
-  paymentSrv.setTestingUIService(simpleResponseUI.QueryInterface(Ci.nsIPaymentUIService));
-=======
 addMessageListener("set-simple-ui-service", function(testName) {
   DummyUIService.testName = testName;
   DummyUIService.showAction = "simpleBasicCardResponse";
   sendAsyncMessage("set-simple-ui-service-complete");
->>>>>>> upstream-releases
 });
 
-<<<<<<< HEAD
-addMessageListener("error-response-test", function(testName) {
-||||||| merged common ancestors
-addMessageListener("error-response-test", function() {
-=======
 addMessageListener("set-special-address-ui-service", function(testName) {
   DummyUIService.testName = testName;
   DummyUIService.showAction = "specialAddressResponse";
@@ -423,7 +239,6 @@ addMessageListener("method-change-to-basic-card", function(testName) {
 });
 
 addMessageListener("error-response-test", function(testName) {
->>>>>>> upstream-releases
   // test empty cardNumber
   try {
     basiccardResponseData.initData("", "", "", "", "", null);

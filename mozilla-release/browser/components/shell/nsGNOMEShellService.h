@@ -11,21 +11,10 @@
 #include "nsString.h"
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-class nsGNOMEShellService final : public nsIGNOMEShellService {
- public:
-  nsGNOMEShellService() : mAppIsInPath(false) {}
-||||||| merged common ancestors
-class nsGNOMEShellService final : public nsIGNOMEShellService
-{
-public:
-  nsGNOMEShellService() : mAppIsInPath(false) { }
-=======
 class nsGNOMEShellService final : public nsIGNOMEShellService,
                                   public nsToolkitShellService {
  public:
   nsGNOMEShellService() : mAppIsInPath(false) {}
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSISHELLSERVICE

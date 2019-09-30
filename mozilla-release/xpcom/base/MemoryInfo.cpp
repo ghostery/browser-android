@@ -12,16 +12,8 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ MemoryInfo MemoryInfo::Get(const void* aPtr, size_t aSize) {
-||||||| merged common ancestors
-/* static */ MemoryInfo
-MemoryInfo::Get(const void* aPtr, size_t aSize)
-{
-=======
 /* static */
 MemoryInfo MemoryInfo::Get(const void* aPtr, size_t aSize) {
->>>>>>> upstream-releases
   MemoryInfo result;
 
   result.mStart = uintptr_t(aPtr);

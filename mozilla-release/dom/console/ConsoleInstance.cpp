@@ -108,27 +108,12 @@ JSObject* ConsoleInstance::WrapObject(JSContext* aCx,
   return ConsoleInstance_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-#define METHOD(name, string)                                     \
-  void ConsoleInstance::name(JSContext* aCx,                     \
-                             const Sequence<JS::Value>& aData) { \
-    mConsole->MethodInternal(aCx, Console::Method##name,         \
-                             NS_LITERAL_STRING(string), aData);  \
-||||||| merged common ancestors
-#define METHOD(name, string)                                               \
-  void                                                                     \
-  ConsoleInstance::name(JSContext* aCx, const Sequence<JS::Value>& aData)  \
-  {                                                                        \
-    mConsole->MethodInternal(aCx, Console::Method##name,                   \
-                             NS_LITERAL_STRING(string), aData);            \
-=======
 #define METHOD(name, string)                                     \
   void ConsoleInstance::name(JSContext* aCx,                     \
                              const Sequence<JS::Value>& aData) { \
     RefPtr<Console> console(mConsole);                           \
     console->MethodInternal(aCx, Console::Method##name,          \
                             NS_LITERAL_STRING(string), aData);   \
->>>>>>> upstream-releases
   }
 
 METHOD(Log, "log")
@@ -153,66 +138,24 @@ void ConsoleInstance::GroupEnd(JSContext* aCx) {
                           NS_LITERAL_STRING("groupEnd"), data);
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::Time(JSContext* aCx, const nsAString& aLabel) {
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodTime,
-                                 NS_LITERAL_STRING("time"));
-||||||| merged common ancestors
-void
-ConsoleInstance::Time(JSContext* aCx, const nsAString& aLabel)
-{
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodTime,
-                                 NS_LITERAL_STRING("time"));
-=======
 void ConsoleInstance::Time(JSContext* aCx, const nsAString& aLabel) {
   RefPtr<Console> console(mConsole);
   console->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
                                 Console::MethodTime, NS_LITERAL_STRING("time"));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::TimeLog(JSContext* aCx, const nsAString& aLabel,
-                              const Sequence<JS::Value>& aData) {
-  mConsole->StringMethodInternal(aCx, aLabel, aData, Console::MethodTimeLog,
-                                 NS_LITERAL_STRING("timeLog"));
-||||||| merged common ancestors
-void
-ConsoleInstance::TimeLog(JSContext* aCx, const nsAString& aLabel,
-                         const Sequence<JS::Value>& aData)
-{
-  mConsole->StringMethodInternal(aCx, aLabel, aData, Console::MethodTimeLog,
-                                 NS_LITERAL_STRING("timeLog"));
-=======
 void ConsoleInstance::TimeLog(JSContext* aCx, const nsAString& aLabel,
                               const Sequence<JS::Value>& aData) {
   RefPtr<Console> console(mConsole);
   console->StringMethodInternal(aCx, aLabel, aData, Console::MethodTimeLog,
                                 NS_LITERAL_STRING("timeLog"));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::TimeEnd(JSContext* aCx, const nsAString& aLabel) {
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodTimeEnd,
-                                 NS_LITERAL_STRING("timeEnd"));
-||||||| merged common ancestors
-void
-ConsoleInstance::TimeEnd(JSContext* aCx, const nsAString& aLabel)
-{
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodTimeEnd,
-                                 NS_LITERAL_STRING("timeEnd"));
-=======
 void ConsoleInstance::TimeEnd(JSContext* aCx, const nsAString& aLabel) {
   RefPtr<Console> console(mConsole);
   console->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
                                 Console::MethodTimeEnd,
                                 NS_LITERAL_STRING("timeEnd"));
->>>>>>> upstream-releases
 }
 
 void ConsoleInstance::TimeStamp(JSContext* aCx,
@@ -231,44 +174,18 @@ void ConsoleInstance::TimeStamp(JSContext* aCx,
                           NS_LITERAL_STRING("timeStamp"), data);
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::Profile(JSContext* aCx,
-                              const Sequence<JS::Value>& aData) {
-  mConsole->ProfileMethodInternal(aCx, Console::MethodProfile,
-                                  NS_LITERAL_STRING("profile"), aData);
-||||||| merged common ancestors
-void
-ConsoleInstance::Profile(JSContext* aCx, const Sequence<JS::Value>& aData)
-{
-  mConsole->ProfileMethodInternal(aCx, Console::MethodProfile,
-                                  NS_LITERAL_STRING("profile"), aData);
-=======
 void ConsoleInstance::Profile(JSContext* aCx,
                               const Sequence<JS::Value>& aData) {
   RefPtr<Console> console(mConsole);
   console->ProfileMethodInternal(aCx, Console::MethodProfile,
                                  NS_LITERAL_STRING("profile"), aData);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::ProfileEnd(JSContext* aCx,
-                                 const Sequence<JS::Value>& aData) {
-  mConsole->ProfileMethodInternal(aCx, Console::MethodProfileEnd,
-                                  NS_LITERAL_STRING("profileEnd"), aData);
-||||||| merged common ancestors
-void
-ConsoleInstance::ProfileEnd(JSContext* aCx, const Sequence<JS::Value>& aData)
-{
-  mConsole->ProfileMethodInternal(aCx, Console::MethodProfileEnd,
-                                  NS_LITERAL_STRING("profileEnd"), aData);
-=======
 void ConsoleInstance::ProfileEnd(JSContext* aCx,
                                  const Sequence<JS::Value>& aData) {
   RefPtr<Console> console(mConsole);
   console->ProfileMethodInternal(aCx, Console::MethodProfileEnd,
                                  NS_LITERAL_STRING("profileEnd"), aData);
->>>>>>> upstream-releases
 }
 
 void ConsoleInstance::Assert(JSContext* aCx, bool aCondition,
@@ -280,75 +197,22 @@ void ConsoleInstance::Assert(JSContext* aCx, bool aCondition,
   }
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::Count(JSContext* aCx, const nsAString& aLabel) {
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodCount,
-                                 NS_LITERAL_STRING("count"));
-||||||| merged common ancestors
-void
-ConsoleInstance::Count(JSContext* aCx, const nsAString& aLabel)
-{
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodCount,
-                                 NS_LITERAL_STRING("count"));
-=======
 void ConsoleInstance::Count(JSContext* aCx, const nsAString& aLabel) {
   RefPtr<Console> console(mConsole);
   console->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
                                 Console::MethodCount,
                                 NS_LITERAL_STRING("count"));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ConsoleInstance::CountReset(JSContext* aCx, const nsAString& aLabel) {
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodCountReset,
-                                 NS_LITERAL_STRING("countReset"));
-||||||| merged common ancestors
-void
-ConsoleInstance::CountReset(JSContext* aCx, const nsAString& aLabel)
-{
-  mConsole->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
-                                 Console::MethodCountReset,
-                                 NS_LITERAL_STRING("countReset"));
-=======
 void ConsoleInstance::CountReset(JSContext* aCx, const nsAString& aLabel) {
   RefPtr<Console> console(mConsole);
   console->StringMethodInternal(aCx, aLabel, Sequence<JS::Value>(),
                                 Console::MethodCountReset,
                                 NS_LITERAL_STRING("countReset"));
->>>>>>> upstream-releases
 }
 
 void ConsoleInstance::Clear(JSContext* aCx) {
   const Sequence<JS::Value> data;
-<<<<<<< HEAD
-  mConsole->MethodInternal(aCx, Console::MethodClear,
-                           NS_LITERAL_STRING("clear"), data);
-}
-
-void ConsoleInstance::ReportForServiceWorkerScope(const nsAString& aScope,
-                                                  const nsAString& aMessage,
-                                                  const nsAString& aFilename,
-                                                  uint32_t aLineNumber,
-                                                  uint32_t aColumnNumber,
-                                                  ConsoleLevel aLevel) {
-||||||| merged common ancestors
-  mConsole->MethodInternal(aCx, Console::MethodClear,
-                           NS_LITERAL_STRING("clear"), data);
-}
-
-void
-ConsoleInstance::ReportForServiceWorkerScope(const nsAString& aScope,
-                                             const nsAString& aMessage,
-                                             const nsAString& aFilename,
-                                             uint32_t aLineNumber,
-                                             uint32_t aColumnNumber,
-                                             ConsoleLevel aLevel)
-{
-=======
   RefPtr<Console> console(mConsole);
   console->MethodInternal(aCx, Console::MethodClear, NS_LITERAL_STRING("clear"),
                           data);
@@ -360,7 +224,6 @@ void ConsoleInstance::ReportForServiceWorkerScope(const nsAString& aScope,
                                                   uint32_t aLineNumber,
                                                   uint32_t aColumnNumber,
                                                   ConsoleLevel aLevel) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return;
   }

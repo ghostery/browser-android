@@ -34,17 +34,6 @@ add_task(async function() {
   const elementStyle = view._elementStyle;
 
   const expected = [
-<<<<<<< HEAD
-    {name: "something", overridden: true, isNameValid: false, isValid: false},
-    {name: "color", overridden: true, isNameValid: true, isValid: false},
-    {name: "background-color", overridden: true, isNameValid: true, isValid: true},
-    {name: "background-color", overridden: false, isNameValid: true, isValid: true},
-||||||| merged common ancestors
-    {name: "something", overridden: true, isNameValid: false, isValid: false},
-    {name: "color", overridden: true, isNameValid: true, isValid: false},
-    {name: "background-color", overridden: true, isNameValid: true, isValid: true},
-    {name: "background-color", overridden: false, isNameValid: true, isValid: true}
-=======
     { name: "something", overridden: true, isNameValid: false, isValid: false },
     { name: "color", overridden: true, isNameValid: true, isValid: false },
     {
@@ -59,7 +48,6 @@ add_task(async function() {
       isNameValid: true,
       isValid: true,
     },
->>>>>>> upstream-releases
   ];
 
   const rule = elementStyle.rules[1];

@@ -65,16 +65,6 @@ struct ParamTraits<nsSizeMode>
 
 template <>
 struct ParamTraits<UIStateChangeType>
-<<<<<<< HEAD
-    : public ContiguousEnumSerializer<UIStateChangeType,
-                                      UIStateChangeType_NoChange,
-                                      UIStateChangeType_Invalid> {};
-||||||| merged common ancestors
-  : public ContiguousEnumSerializer<UIStateChangeType,
-                                    UIStateChangeType_NoChange,
-                                    UIStateChangeType_Invalid>
-{ };
-=======
     : public ContiguousEnumSerializer<UIStateChangeType,
                                       UIStateChangeType_NoChange,
                                       UIStateChangeType_Invalid> {};
@@ -103,7 +93,6 @@ struct ParamTraits<mozilla::dom::EffectsInfo> {
            ReadParam(aMsg, aIter, &aResult->mScaleY);
   }
 };
->>>>>>> upstream-releases
 
 }  // namespace IPC
 

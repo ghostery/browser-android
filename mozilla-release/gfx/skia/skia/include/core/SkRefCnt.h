@@ -41,33 +41,7 @@ public:
         SkASSERTF(this->getRefCnt() == 1, "fRefCnt was %d", this->getRefCnt());
         // illegal value, to catch us if we reuse after delete
         fRefCnt.store(0, std::memory_order_relaxed);
-<<<<<<< HEAD
-#endif
-    }
-
-#ifdef SK_DEBUG
-    /** Return the reference count. Use only for debugging. */
-    int32_t getRefCnt() const {
-        return fRefCnt.load(std::memory_order_relaxed);
-    }
-
-    void validate() const {
-        SkASSERT(getRefCnt() > 0);
-||||||| merged common ancestors
-#endif
-    }
-
-    /** Return the reference count. Use only for debugging. */
-    int32_t getRefCnt() const {
-        return fRefCnt.load(std::memory_order_relaxed);
-    }
-
-#ifdef SK_DEBUG
-    void validate() const {
-        SkASSERT(getRefCnt() > 0);
-=======
     #endif
->>>>>>> upstream-releases
     }
 
     /** May return true if the caller is the only owner.
@@ -211,26 +185,11 @@ public:
 
 private:
     mutable std::atomic<int32_t> fRefCnt;
-<<<<<<< HEAD
-    int32_t getRefCnt() const {
-        return fRefCnt.load(std::memory_order_relaxed);
-    }
 
     SkNVRefCnt(SkNVRefCnt&&) = delete;
     SkNVRefCnt(const SkNVRefCnt&) = delete;
     SkNVRefCnt& operator=(SkNVRefCnt&&) = delete;
     SkNVRefCnt& operator=(const SkNVRefCnt&) = delete;
-||||||| merged common ancestors
-    int32_t getRefCnt() const {
-        return fRefCnt.load(std::memory_order_relaxed);
-    }
-=======
-
-    SkNVRefCnt(SkNVRefCnt&&) = delete;
-    SkNVRefCnt(const SkNVRefCnt&) = delete;
-    SkNVRefCnt& operator=(SkNVRefCnt&&) = delete;
-    SkNVRefCnt& operator=(const SkNVRefCnt&) = delete;
->>>>>>> upstream-releases
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

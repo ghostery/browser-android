@@ -22,17 +22,11 @@ LOG = RaptorLogger(component='raptor-control-server')
 here = os.path.abspath(os.path.dirname(__file__))
 
 
-<<<<<<< HEAD
-def MakeCustomHandlerClass(results_handler, shutdown_browser, write_raw_gecko_profile):
-||||||| merged common ancestors
-def MakeCustomHandlerClass(results_handler, shutdown_browser):
-=======
 def MakeCustomHandlerClass(results_handler,
                            shutdown_browser,
                            handle_gecko_profile,
                            background_app,
                            foreground_app):
->>>>>>> upstream-releases
 
     class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler, object):
         """
@@ -114,14 +108,9 @@ def MakeCustomHandlerClass(results_handler,
         def __init__(self, *args, **kwargs):
             self.results_handler = results_handler
             self.shutdown_browser = shutdown_browser
-<<<<<<< HEAD
-            self.write_raw_gecko_profile = write_raw_gecko_profile
-||||||| merged common ancestors
-=======
             self.handle_gecko_profile = handle_gecko_profile
             self.background_app = background_app
             self.foreground_app = foreground_app
->>>>>>> upstream-releases
             super(MyHandler, self).__init__(*args, **kwargs)
 
         def log_request(self, code='-', size='-'):
@@ -159,38 +148,6 @@ def MakeCustomHandlerClass(results_handler,
             post_body = self.rfile.read(content_len)
             # could have received a status update or test results
             data = json.loads(post_body)
-<<<<<<< HEAD
-
-            if data['type'] == "webext_gecko_profile":
-                # received gecko profiling results
-                _test = str(data['data'][0])
-                _pagecycle = str(data['data'][1])
-                _raw_profile = data['data'][2]
-                LOG.info("received gecko profile for test %s pagecycle %s" % (_test, _pagecycle))
-                self.write_raw_gecko_profile(_test, _pagecycle, _raw_profile)
-            else:
-                LOG.info("received " + data['type'] + ": " + str(data['data']))
-                if data['type'] == 'webext_results':
-                    self.results_handler.add(data['data'])
-                elif data['type'] == "webext_raptor-page-timeout":
-                    # pageload test has timed out; record it as a failure
-                    self.results_handler.add_page_timeout(str(data['data'][0]),
-                                                          str(data['data'][1]))
-                elif data['data'] == "__raptor_shutdownBrowser":
-                    # webext is telling us it's done, and time to shutdown the browser
-                    self.shutdown_browser()
-||||||| merged common ancestors
-            LOG.info("received " + data['type'] + ": " + str(data['data']))
-            if data['type'] == 'webext_results':
-                self.results_handler.add(data['data'])
-            elif data['type'] == "webext_raptor-page-timeout":
-                # pageload test has timed out; record it as a failure
-                self.results_handler.add_page_timeout(str(data['data'][0]),
-                                                      str(data['data'][1]))
-            elif data['data'] == "__raptor_shutdownBrowser":
-                # webext is telling us it's done, and time to shutdown the browser
-                self.shutdown_browser()
-=======
 
             if data['type'] == 'webext_status':
                 wait_key = "%s/%s" % (data['type'], data['data'])
@@ -285,7 +242,6 @@ def MakeCustomHandlerClass(results_handler,
                         MyHandler.waiting_in_state = None
             else:
                 LOG.info("received " + data['type'] + ": " + str(data['data']))
->>>>>>> upstream-releases
 
         def do_OPTIONS(self):
             self.send_response(200, "ok")
@@ -324,15 +280,9 @@ class RaptorControlServer():
         self._finished = False
         self.device = None
         self.app_name = None
-<<<<<<< HEAD
-        self.gecko_profile_dir = None
-        self.debug_mode = debug_mode
-||||||| merged common ancestors
-=======
         self.gecko_profile_dir = None
         self.debug_mode = debug_mode
         self.user_profile = None
->>>>>>> upstream-releases
 
     def start(self):
         config_dir = os.path.join(here, 'tests')
@@ -345,22 +295,12 @@ class RaptorControlServer():
         sock.close()
         server_address = ('', self.port)
 
-<<<<<<< HEAD
-        server_class = BaseHTTPServer.HTTPServer
-        handler_class = MakeCustomHandlerClass(self.results_handler,
-                                               self.shutdown_browser,
-                                               self.write_raw_gecko_profile)
-||||||| merged common ancestors
-        server_class = BaseHTTPServer.HTTPServer
-        handler_class = MakeCustomHandlerClass(self.results_handler, self.shutdown_browser)
-=======
         server_class = ThreadedHTTPServer
         handler_class = MakeCustomHandlerClass(self.results_handler,
                                                self.shutdown_browser,
                                                self.handle_gecko_profile,
                                                self.background_app,
                                                self.foreground_app)
->>>>>>> upstream-releases
 
         httpd = server_class(server_address, handler_class)
 
@@ -386,21 +326,6 @@ class RaptorControlServer():
         self.kill_thread.daemon = True
         self.kill_thread.start()
 
-<<<<<<< HEAD
-    def write_raw_gecko_profile(self, test, pagecycle, profile):
-        profile_file = '%s_pagecycle_%s.profile' % (test, pagecycle)
-        profile_path = os.path.join(self.gecko_profile_dir, profile_file)
-        LOG.info("writing raw gecko profile to disk: %s" % str(profile_path))
-
-        try:
-            with open(profile_path, 'w') as profile_file:
-                json.dump(profile, profile_file)
-                profile_file.close()
-        except Exception:
-            LOG.critical("Encountered an exception whie writing raw gecko profile to disk")
-
-||||||| merged common ancestors
-=======
     def handle_gecko_profile(self, filename):
         # Move the stored profile to a location outside the Firefox profile
         source_path = os.path.join(self.user_profile.profile, "profiler", filename)
@@ -434,7 +359,6 @@ class RaptorControlServer():
         else:
             LOG.info("%s was successfully foregrounded" % self.app_name)
 
->>>>>>> upstream-releases
     def wait_for_quit(self, timeout=15):
         """Wait timeout seconds for the process to exit. If it hasn't
         exited by then, kill it.

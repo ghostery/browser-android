@@ -51,15 +51,6 @@ const COLLAPSE_DATA_URL_LENGTH = 60;
 
 // Contains only void (without end tag) HTML elements
 const HTML_VOID_ELEMENTS = [
-<<<<<<< HEAD
-  "area", "base", "br", "col", "command", "embed",
-  "hr", "img", "input", "keygen", "link", "meta", "param", "source",
-  "track", "wbr",
-||||||| merged common ancestors
-  "area", "base", "br", "col", "command", "embed",
-  "hr", "img", "input", "keygen", "link", "meta", "param", "source",
-  "track", "wbr"
-=======
   "area",
   "base",
   "br",
@@ -76,7 +67,6 @@ const HTML_VOID_ELEMENTS = [
   "source",
   "track",
   "wbr",
->>>>>>> upstream-releases
 ];
 
 // Contains only valid computed display property types of the node to display in the
@@ -425,21 +415,6 @@ ElementEditor.prototype = {
     );
 
     if (displayType === "flex" || displayType === "inline-flex") {
-<<<<<<< HEAD
-      this._displayBadge.classList.toggle("interactive",
-        Services.prefs.getBoolPref("devtools.inspector.flexboxHighlighter.enabled"));
-    } else if (displayType === "grid" || displayType === "inline-grid") {
-      this._displayBadge.classList.toggle("interactive",
-        this.highlighters.canGridHighlighterToggle(this.node));
-    } else {
-      this._displayBadge.classList.remove("interactive");
-||||||| merged common ancestors
-      this._displayBadge.classList.toggle("interactive",
-        Services.prefs.getBoolPref("devtools.inspector.flexboxHighlighter.enabled"));
-    } else if (displayType === "grid" || displayType === "inline-grid") {
-      this._displayBadge.classList.toggle("interactive",
-        this.highlighters.canGridHighlighterToggle(this.node));
-=======
       this._displayBadge.classList.toggle("interactive", true);
     } else if (
       displayType === "grid" ||
@@ -452,7 +427,6 @@ ElementEditor.prototype = {
       );
     } else {
       this._displayBadge.classList.remove("interactive");
->>>>>>> upstream-releases
     }
   },
 

@@ -59,10 +59,6 @@ typedef struct _nsCocoaWindowList {
 - (void)setDrawsContentsIntoWindowFrame:(BOOL)aState;
 - (BOOL)drawsContentsIntoWindowFrame;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 // These two methods are like contentRectForFrameRect and frameRectForContentRect,
 // but they deal with the rect of the window's "main ChildView" instead of the
 // rect of the window's content view. The two are sometimes sized differently: The
@@ -73,7 +69,6 @@ typedef struct _nsCocoaWindowList {
 - (NSRect)childViewRectForFrameRect:(NSRect)aFrameRect;
 - (NSRect)frameRectForChildViewRect:(NSRect)aChildViewRect;
 
->>>>>>> upstream-releases
 - (void)mouseEntered:(NSEvent*)aEvent;
 - (void)mouseExited:(NSEvent*)aEvent;
 - (void)mouseMoved:(NSEvent*)aEvent;
@@ -176,35 +171,10 @@ typedef struct _nsCocoaWindowList {
 - (void)sendToplevelDeactivateEvents;
 @end
 
-<<<<<<< HEAD
-@class ToolbarWindow;
-
-||||||| merged common ancestors
-@class ToolbarWindow;
-
-// NSColor subclass that allows us to draw separate colors both in the titlebar
-// and for background of the window.
-@interface TitlebarAndBackgroundColor : NSColor
-{
-  ToolbarWindow *mWindow; // [WEAK] (we are owned by the window)
-}
-
-- (id)initWithWindow:(ToolbarWindow*)aWindow;
-
-@end
-
-=======
 @interface TitlebarGradientView : NSView
 @end
 
->>>>>>> upstream-releases
 // NSWindow subclass for handling windows with toolbars.
-<<<<<<< HEAD
-@interface ToolbarWindow : BaseWindow {
-||||||| merged common ancestors
-@interface ToolbarWindow : BaseWindow
-{
-=======
 @interface ToolbarWindow : BaseWindow {
   // This window's titlebar gradient view, if present.
   // Will be nil if drawsContentsIntoWindowFrame is YES.
@@ -212,7 +182,6 @@ typedef struct _nsCocoaWindowList {
   // destroyed by updateTitlebarGradientViewPresence.
   TitlebarGradientView* mTitlebarGradientView;  // [STRONG]
 
->>>>>>> upstream-releases
   CGFloat mUnifiedToolbarHeight;
   CGFloat mSheetAttachmentPosition;
   NSRect mWindowButtonsRect;
@@ -237,279 +206,6 @@ class nsCocoaWindow final : public nsBaseWidget, public nsPIWidgetCocoa {
  private:
   typedef nsBaseWidget Inherited;
 
-<<<<<<< HEAD
- public:
-  nsCocoaWindow();
-
-  NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_NSPIWIDGETCOCOA
-
-  virtual MOZ_MUST_USE nsresult Create(nsIWidget* aParent, nsNativeWidget aNativeParent,
-                                       const DesktopIntRect& aRect,
-                                       nsWidgetInitData* aInitData = nullptr) override;
-
-  virtual MOZ_MUST_USE nsresult Create(nsIWidget* aParent, nsNativeWidget aNativeParent,
-                                       const LayoutDeviceIntRect& aRect,
-                                       nsWidgetInitData* aInitData = nullptr) override;
-
-  virtual void Destroy() override;
-
-  virtual void Show(bool aState) override;
-  virtual nsIWidget* GetSheetWindowParent(void) override;
-  virtual void Enable(bool aState) override;
-  virtual bool IsEnabled() const override;
-  virtual void SetModal(bool aState) override;
-  virtual void SetFakeModal(bool aState) override;
-  virtual bool IsRunningAppModal() override;
-  virtual bool IsVisible() const override;
-  virtual nsresult SetFocus(bool aState = false) override;
-  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override;
-  virtual LayoutDeviceIntPoint GetClientOffset() override;
-  virtual LayoutDeviceIntSize ClientToWindowSize(const LayoutDeviceIntSize& aClientSize) override;
-
-  virtual void* GetNativeData(uint32_t aDataType) override;
-
-  virtual void ConstrainPosition(bool aAllowSlop, int32_t* aX, int32_t* aY) override;
-  virtual void SetSizeConstraints(const SizeConstraints& aConstraints) override;
-  virtual void Move(double aX, double aY) override;
-  virtual void SetSizeMode(nsSizeMode aMode) override;
-  virtual void SuppressAnimation(bool aSuppress) override;
-  virtual void HideWindowChrome(bool aShouldHide) override;
-
-  void WillEnterFullScreen(bool aFullScreen);
-  void EnteredFullScreen(bool aFullScreen, bool aNativeMode = true);
-  virtual bool PrepareForFullscreenTransition(nsISupports** aData) override;
-  virtual void PerformFullscreenTransition(FullscreenTransitionStage aStage, uint16_t aDuration,
-                                           nsISupports* aData, nsIRunnable* aCallback) override;
-  nsresult MakeFullScreen(bool aFullScreen, nsIScreen* aTargetScreen = nullptr) final;
-  nsresult MakeFullScreenWithNativeTransition(bool aFullScreen,
-                                              nsIScreen* aTargetScreen = nullptr) final;
-  NSAnimation* FullscreenTransitionAnimation() const { return mFullscreenTransitionAnimation; }
-  void ReleaseFullscreenTransitionAnimation() {
-    MOZ_ASSERT(mFullscreenTransitionAnimation, "Should only be called when there is animation");
-    [mFullscreenTransitionAnimation release];
-    mFullscreenTransitionAnimation = nil;
-  }
-
-  virtual void Resize(double aWidth, double aHeight, bool aRepaint) override;
-  virtual void Resize(double aX, double aY, double aWidth, double aHeight, bool aRepaint) override;
-  virtual LayoutDeviceIntRect GetClientBounds() override;
-  virtual LayoutDeviceIntRect GetScreenBounds() override;
-  void ReportMoveEvent();
-  void ReportSizeEvent();
-  virtual void SetCursor(nsCursor aCursor) override;
-  virtual nsresult SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                             uint32_t aHotspotY) override;
-
-  CGFloat BackingScaleFactor();
-  void BackingScaleFactorChanged();
-  virtual double GetDefaultScaleInternal() override;
-  virtual int32_t RoundsWidgetCoordinatesTo() override;
-
-  mozilla::DesktopToLayoutDeviceScale GetDesktopToDeviceScale() final {
-    return mozilla::DesktopToLayoutDeviceScale(BackingScaleFactor());
-  }
-
-  virtual nsresult SetTitle(const nsAString& aTitle) override;
-
-  virtual void Invalidate(const LayoutDeviceIntRect& aRect) override;
-  virtual nsresult ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override;
-  virtual LayerManager* GetLayerManager(
-      PLayerTransactionChild* aShadowManager = nullptr,
-      LayersBackend aBackendHint = mozilla::layers::LayersBackend::LAYERS_NONE,
-      LayerManagerPersistence aPersistence = LAYER_MANAGER_CURRENT) override;
-  virtual nsresult DispatchEvent(mozilla::WidgetGUIEvent* aEvent, nsEventStatus& aStatus) override;
-  virtual void CaptureRollupEvents(nsIRollupListener* aListener, bool aDoCapture) override;
-  virtual MOZ_MUST_USE nsresult GetAttention(int32_t aCycleCount) override;
-  virtual bool HasPendingInputEvent() override;
-  virtual nsTransparencyMode GetTransparencyMode() override;
-  virtual void SetTransparencyMode(nsTransparencyMode aMode) override;
-  virtual void SetWindowShadowStyle(int32_t aStyle) override;
-  virtual void SetWindowOpacity(float aOpacity) override;
-  virtual void SetWindowTransform(const mozilla::gfx::Matrix& aTransform) override;
-  virtual void SetShowsToolbarButton(bool aShow) override;
-  virtual void SetShowsFullScreenButton(bool aShow) override;
-  virtual void SetWindowAnimationType(WindowAnimationType aType) override;
-  virtual void SetDrawsTitle(bool aDrawTitle) override;
-  virtual void SetUseBrightTitlebarForeground(bool aBrightForeground) override;
-  virtual nsresult SetNonClientMargins(LayoutDeviceIntMargin& aMargins) override;
-  virtual void SetDrawsInTitlebar(bool aState) override;
-  virtual void UpdateThemeGeometries(const nsTArray<ThemeGeometry>& aThemeGeometries) override;
-  virtual nsresult SynthesizeNativeMouseEvent(LayoutDeviceIntPoint aPoint, uint32_t aNativeMessage,
-                                              uint32_t aModifierFlags,
-                                              nsIObserver* aObserver) override;
-
-  void DispatchSizeModeEvent();
-  void DispatchOcclusionEvent();
-
-  // be notified that a some form of drag event needs to go into Gecko
-  virtual bool DragEvent(unsigned int aMessage, mozilla::gfx::Point aMouseGlobal,
-                         UInt16 aKeyModifiers);
-
-  bool HasModalDescendents() { return mNumModalDescendents > 0; }
-  NSWindow* GetCocoaWindow() { return mWindow; }
-
-  void SetMenuBar(nsMenuBarX* aMenuBar);
-  nsMenuBarX* GetMenuBar();
-
-  virtual void SetInputContext(const InputContext& aContext,
-                               const InputContextAction& aAction) override;
-  virtual InputContext GetInputContext() override { return mInputContext; }
-  virtual void GetEditCommands(NativeKeyBindingsType aType,
-                               const mozilla::WidgetKeyboardEvent& aEvent,
-                               nsTArray<mozilla::CommandInt>& aCommands) override;
-
-  void SetPopupWindowLevel();
-
-  bool InFullScreenMode() const { return mInFullScreenMode; }
-
- protected:
-||||||| merged common ancestors
-public:
-
-    nsCocoaWindow();
-
-    NS_DECL_ISUPPORTS_INHERITED
-    NS_DECL_NSPIWIDGETCOCOA
-
-    virtual MOZ_MUST_USE nsresult Create(nsIWidget* aParent,
-                                         nsNativeWidget aNativeParent,
-                                         const DesktopIntRect& aRect,
-                                         nsWidgetInitData* aInitData = nullptr)
-                                         override;
-
-    virtual MOZ_MUST_USE nsresult Create(nsIWidget* aParent,
-                                         nsNativeWidget aNativeParent,
-                                         const LayoutDeviceIntRect& aRect,
-                                         nsWidgetInitData* aInitData = nullptr)
-                                         override;
-
-    virtual void            Destroy() override;
-
-    virtual void            Show(bool aState) override;
-    virtual nsIWidget*      GetSheetWindowParent(void) override;
-    virtual void            Enable(bool aState) override;
-    virtual bool            IsEnabled() const override;
-    virtual void            SetModal(bool aState) override;
-    virtual void            SetFakeModal(bool aState) override;
-    virtual bool            IsRunningAppModal() override;
-    virtual bool            IsVisible() const override;
-    virtual nsresult        SetFocus(bool aState=false) override;
-    virtual LayoutDeviceIntPoint WidgetToScreenOffset() override;
-    virtual LayoutDeviceIntPoint GetClientOffset() override;
-    virtual LayoutDeviceIntSize
-    ClientToWindowSize(const LayoutDeviceIntSize& aClientSize) override;
-
-    virtual void* GetNativeData(uint32_t aDataType) override;
-
-    virtual void            ConstrainPosition(bool aAllowSlop,
-                                              int32_t *aX, int32_t *aY) override;
-    virtual void            SetSizeConstraints(const SizeConstraints& aConstraints) override;
-    virtual void            Move(double aX, double aY) override;
-    virtual void            SetSizeMode(nsSizeMode aMode) override;
-    virtual void            SuppressAnimation(bool aSuppress) override;
-    virtual void            HideWindowChrome(bool aShouldHide) override;
-
-    void WillEnterFullScreen(bool aFullScreen);
-    void EnteredFullScreen(bool aFullScreen, bool aNativeMode = true);
-    virtual bool PrepareForFullscreenTransition(nsISupports** aData) override;
-    virtual void PerformFullscreenTransition(FullscreenTransitionStage aStage,
-                                             uint16_t aDuration,
-                                             nsISupports* aData,
-                                             nsIRunnable* aCallback) override;
-    nsresult MakeFullScreen(
-      bool aFullScreen, nsIScreen* aTargetScreen = nullptr) final;
-    nsresult MakeFullScreenWithNativeTransition(
-      bool aFullScreen, nsIScreen* aTargetScreen = nullptr) final;
-    NSAnimation* FullscreenTransitionAnimation() const { return mFullscreenTransitionAnimation; }
-    void ReleaseFullscreenTransitionAnimation()
-    {
-      MOZ_ASSERT(mFullscreenTransitionAnimation,
-                 "Should only be called when there is animation");
-      [mFullscreenTransitionAnimation release];
-      mFullscreenTransitionAnimation = nil;
-    }
-
-    virtual void            Resize(double aWidth, double aHeight, bool aRepaint) override;
-    virtual void            Resize(double aX, double aY, double aWidth, double aHeight, bool aRepaint) override;
-    virtual LayoutDeviceIntRect GetClientBounds() override;
-    virtual LayoutDeviceIntRect GetScreenBounds() override;
-    void                    ReportMoveEvent();
-    void                    ReportSizeEvent();
-    virtual void            SetCursor(nsCursor aCursor) override;
-    virtual nsresult        SetCursor(imgIContainer* aCursor,
-                                      uint32_t aHotspotX, uint32_t aHotspotY)
-                                      override;
-
-    CGFloat                 BackingScaleFactor();
-    void                    BackingScaleFactorChanged();
-    virtual double          GetDefaultScaleInternal() override;
-    virtual int32_t         RoundsWidgetCoordinatesTo() override;
-
-    mozilla::DesktopToLayoutDeviceScale GetDesktopToDeviceScale() final {
-      return mozilla::DesktopToLayoutDeviceScale(BackingScaleFactor());
-    }
-
-    virtual nsresult        SetTitle(const nsAString& aTitle) override;
-
-    virtual void Invalidate(const LayoutDeviceIntRect& aRect) override;
-    virtual nsresult ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override;
-    virtual LayerManager* GetLayerManager(PLayerTransactionChild* aShadowManager = nullptr,
-                                          LayersBackend aBackendHint = mozilla::layers::LayersBackend::LAYERS_NONE,
-                                          LayerManagerPersistence aPersistence = LAYER_MANAGER_CURRENT) override;
-    virtual nsresult DispatchEvent(mozilla::WidgetGUIEvent* aEvent,
-                                   nsEventStatus& aStatus) override;
-    virtual void CaptureRollupEvents(nsIRollupListener * aListener,
-                                     bool aDoCapture) override;
-    virtual MOZ_MUST_USE nsresult GetAttention(int32_t aCycleCount) override;
-    virtual bool HasPendingInputEvent() override;
-    virtual nsTransparencyMode GetTransparencyMode() override;
-    virtual void SetTransparencyMode(nsTransparencyMode aMode) override;
-    virtual void SetWindowShadowStyle(int32_t aStyle) override;
-    virtual void SetWindowOpacity(float aOpacity) override;
-    virtual void SetWindowTransform(const mozilla::gfx::Matrix& aTransform) override;
-    virtual void SetShowsToolbarButton(bool aShow) override;
-    virtual void SetShowsFullScreenButton(bool aShow) override;
-    virtual void SetWindowAnimationType(WindowAnimationType aType) override;
-    virtual void SetDrawsTitle(bool aDrawTitle) override;
-    virtual void SetUseBrightTitlebarForeground(bool aBrightForeground) override;
-    virtual nsresult SetNonClientMargins(LayoutDeviceIntMargin& aMargins) override;
-    virtual void SetDrawsInTitlebar(bool aState) override;
-    virtual void UpdateThemeGeometries(const nsTArray<ThemeGeometry>& aThemeGeometries) override;
-    virtual nsresult SynthesizeNativeMouseEvent(LayoutDeviceIntPoint aPoint,
-                                                uint32_t aNativeMessage,
-                                                uint32_t aModifierFlags,
-                                                nsIObserver* aObserver) override;
-
-    void DispatchSizeModeEvent();
-    void DispatchOcclusionEvent();
-
-    // be notified that a some form of drag event needs to go into Gecko
-    virtual bool DragEvent(unsigned int aMessage, mozilla::gfx::Point aMouseGlobal, UInt16 aKeyModifiers);
-
-    bool HasModalDescendents() { return mNumModalDescendents > 0; }
-    NSWindow *GetCocoaWindow() { return mWindow; }
-
-    void SetMenuBar(nsMenuBarX* aMenuBar);
-    nsMenuBarX *GetMenuBar();
-
-    virtual void SetInputContext(const InputContext& aContext,
-                                 const InputContextAction& aAction) override;
-    virtual InputContext GetInputContext() override
-    {
-      return mInputContext;
-    }
-    virtual void GetEditCommands(
-                   NativeKeyBindingsType aType,
-                   const mozilla::WidgetKeyboardEvent& aEvent,
-                   nsTArray<mozilla::CommandInt>& aCommands) override;
-
-    void SetPopupWindowLevel();
-
-    bool InFullScreenMode() const { return mInFullScreenMode; }
-
-protected:
-=======
  public:
   nsCocoaWindow();
 
@@ -636,7 +332,6 @@ protected:
   bool InFullScreenMode() const { return mInFullScreenMode; }
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsCocoaWindow();
 
   nsresult CreateNativeWindow(const NSRect& aRect, nsBorderStyle aBorderStyle,

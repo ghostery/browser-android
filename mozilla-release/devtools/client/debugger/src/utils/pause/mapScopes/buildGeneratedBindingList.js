@@ -11,21 +11,11 @@ import { createObjectClient } from "../../../client/firefox";
 
 import { locColumn } from "./locColumn";
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/mapScopes/buildGeneratedBindingList.js
-export type GeneratedBindingLocation = {
-  name: string,
-  loc: BindingLocation,
-  desc: () => Promise<BindingContents | null>
-};
-||||||| merged common ancestors
-var _locColumn = require("./locColumn");
-=======
 export type GeneratedBindingLocation = {
   name: string,
   loc: BindingLocation,
   desc: () => Promise<BindingContents | null>,
 };
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/mapScopes/buildGeneratedBindingList.js
 
 export function buildGeneratedBindingList(
   scopes: Scope,

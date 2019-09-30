@@ -18,15 +18,7 @@ class SMILValue;
 
 namespace dom {
 class SVGAnimationElement;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILAttr.h
 }  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAttr.h
 
 ////////////////////////////////////////////////////////////////////////
 // SMILAttr: A variable targeted by SMIL for animation and can therefore have
@@ -37,17 +29,8 @@ class SVGAnimationElement;
 // calculations. They have a single owner who is responsible for deleting the
 // object.
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILAttr.h
-class nsISMILAttr {
- public:
-||||||| merged common ancestors
-class nsISMILAttr
-{
-public:
-=======
 class SMILAttr {
  public:
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAttr.h
   /**
    * Creates a new SMILValue for this attribute from a string. The string is
    * parsed in the context of this attribute so that context-dependent values
@@ -67,22 +50,10 @@ class SMILAttr {
    *                    reused in future samples.
    * @return NS_OK on success or an error code if creation failed.
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILAttr.h
-  virtual nsresult ValueFromString(
-      const nsAString& aStr,
-      const mozilla::dom::SVGAnimationElement* aSrcElement, nsSMILValue& aValue,
-      bool& aPreventCachingOfSandwich) const = 0;
-||||||| merged common ancestors
-  virtual nsresult ValueFromString(const nsAString& aStr,
-                                   const mozilla::dom::SVGAnimationElement* aSrcElement,
-                                   nsSMILValue& aValue,
-                                   bool& aPreventCachingOfSandwich) const = 0;
-=======
   virtual nsresult ValueFromString(
       const nsAString& aStr,
       const mozilla::dom::SVGAnimationElement* aSrcElement, SMILValue& aValue,
       bool& aPreventCachingOfSandwich) const = 0;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAttr.h
 
   /**
    * Gets the underlying value of this attribute.
@@ -124,12 +95,6 @@ class SMILAttr {
   virtual ~SMILAttr() {}
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILAttr.h
-#endif  // NS_ISMILATTR_H_
-||||||| merged common ancestors
-#endif // NS_ISMILATTR_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILAttr_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAttr.h

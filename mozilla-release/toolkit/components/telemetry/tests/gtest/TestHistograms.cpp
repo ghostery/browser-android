@@ -121,13 +121,7 @@ TEST_F(TelemetryTestFixture, TestKeyedKeysHistogram) {
   JS::RootedValue expectedKeyData(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "testkey", histogram, &expectedKeyData);
   ASSERT_TRUE(!expectedKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Cannot find the expected key in the histogram data";
-||||||| merged common ancestors
-    << "Cannot find the expected key in the histogram data";
-=======
   << "Cannot find the expected key in the histogram data";
->>>>>>> upstream-releases
   JS::RootedValue sum(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "sum", expectedKeyData, &sum);
   uint32_t uSum = 0;
@@ -138,29 +132,15 @@ TEST_F(TelemetryTestFixture, TestKeyedKeysHistogram) {
   // Do the same for the "CommonKey" property.
   GetProperty(cx.GetJSContext(), "CommonKey", histogram, &expectedKeyData);
   ASSERT_TRUE(!expectedKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Cannot find the expected key in the histogram data";
-  GetProperty(cx.GetJSContext(), "sum", expectedKeyData, &sum);
-||||||| merged common ancestors
-    << "Cannot find the expected key in the histogram data";
-  GetProperty(cx.GetJSContext(), "sum", expectedKeyData,  &sum);
-=======
   << "Cannot find the expected key in the histogram data";
   GetProperty(cx.GetJSContext(), "sum", expectedKeyData, &sum);
->>>>>>> upstream-releases
   JS::ToUint32(cx.GetJSContext(), sum, &uSum);
   ASSERT_EQ(uSum, 1U)
       << "The histogram is not returning expected sum for 'CommonKey'";
 
   GetProperty(cx.GetJSContext(), "not-allowed", histogram, &expectedKeyData);
   ASSERT_TRUE(expectedKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Unallowed keys must not be recorded in the histogram data";
-||||||| merged common ancestors
-    << "Unallowed keys must not be recorded in the histogram data";
-=======
   << "Unallowed keys must not be recorded in the histogram data";
->>>>>>> upstream-releases
 
   // The 'not-allowed' key accumulation for 'TELEMETRY_TESTED_KEYED_KEYS' was
   // attemtped twice, so we expect the count of
@@ -492,13 +472,7 @@ TEST_F(TelemetryTestFixture, TestKeyedLinearHistogram_MultipleSamples) {
   JS::RootedValue expectedKeyData(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "testkey", histogram, &expectedKeyData);
   ASSERT_TRUE(!expectedKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Cannot find the expected key in the histogram data";
-||||||| merged common ancestors
-    << "Cannot find the expected key in the histogram data";
-=======
   << "Cannot find the expected key in the histogram data";
->>>>>>> upstream-releases
 
   // Get values object from 'testkey' histogram.
   JS::RootedValue values(cx.GetJSContext());
@@ -568,13 +542,7 @@ TEST_F(TelemetryTestFixture, TestKeyedKeysHistogram_MultipleSamples) {
   JS::RootedValue testKeyData(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "testkey", histogram, &testKeyData);
   ASSERT_TRUE(!testKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Cannot find the key 'testkey' in the histogram data";
-||||||| merged common ancestors
-    << "Cannot find the key 'testkey' in the histogram data";
-=======
   << "Cannot find the key 'testkey' in the histogram data";
->>>>>>> upstream-releases
 
   JS::RootedValue values(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "values", testKeyData, &values);
@@ -620,15 +588,8 @@ TEST_F(TelemetryTestFixture, TestKeyedKeysHistogram_MultipleSamples) {
   JS::RootedValue commonKeyData(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "CommonKey", histogram, &commonKeyData);
   ASSERT_TRUE(commonKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Found data in key 'CommonKey' even though we accumulated no data to "
-         "it";
-||||||| merged common ancestors
-    << "Found data in key 'CommonKey' even though we accumulated no data to it";
-=======
   << "Found data in key 'CommonKey' even though we accumulated no data to "
      "it";
->>>>>>> upstream-releases
 
   // Here we check that our function does not allow accumulation into unallowed
   // keys. Get 'not-allowed' property from histogram and check that this also
@@ -636,15 +597,8 @@ TEST_F(TelemetryTestFixture, TestKeyedKeysHistogram_MultipleSamples) {
   JS::RootedValue notAllowedKeyData(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "not-allowed", histogram, &notAllowedKeyData);
   ASSERT_TRUE(notAllowedKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Found data in key 'not-allowed' even though accumuling data to it is "
-         "not allowed";
-||||||| merged common ancestors
-    << "Found data in key 'not-allowed' even though accumuling data to it is not allowed";
-=======
   << "Found data in key 'not-allowed' even though accumuling data to it is "
      "not allowed";
->>>>>>> upstream-releases
 
   // The 'not-allowed' key accumulation for 'TELEMETRY_TESTED_KEYED_KEYS' was
   // attemtped once, so we expect the count of

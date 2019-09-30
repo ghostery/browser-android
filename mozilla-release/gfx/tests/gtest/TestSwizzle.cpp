@@ -11,27 +11,12 @@
 using namespace mozilla;
 using namespace mozilla::gfx;
 
-<<<<<<< HEAD
-TEST(Moz2D, PremultiplyData) {
-  const uint8_t in_bgra[5 * 4] = {
-      255, 255, 0,   255,  // verify 255 alpha leaves RGB unchanged
-      0,   0,   255, 255,
-      0,   255, 255, 0,  // verify 0 alpha zeroes out RGB
-||||||| merged common ancestors
-TEST(Moz2D, PremultiplyData) {
-  const uint8_t in_bgra[5*4] =
-  {
-    255, 255,   0, 255, // verify 255 alpha leaves RGB unchanged
-      0,   0, 255, 255,
-      0, 255, 255,   0, // verify 0 alpha zeroes out RGB
-=======
 TEST(Moz2D, PremultiplyData)
 {
   const uint8_t in_bgra[5 * 4] = {
       255, 255, 0,   255,  // verify 255 alpha leaves RGB unchanged
       0,   0,   255, 255,
       0,   255, 255, 0,  // verify 0 alpha zeroes out RGB
->>>>>>> upstream-releases
       0,   0,   0,   0,
       255, 0,   0,   128,  // verify that 255 RGB maps to alpha
   };
@@ -60,23 +45,6 @@ TEST(Moz2D, PremultiplyData)
   EXPECT_TRUE(ArrayEqual(out, check_argb));
 }
 
-<<<<<<< HEAD
-TEST(Moz2D, UnpremultiplyData) {
-  const uint8_t in_bgra[5 * 4] = {
-      255, 255, 0,   255,              // verify 255 alpha leaves RGB unchanged
-      0,   0,   255, 255, 0, 0, 0, 0,  // verify 0 alpha leaves RGB at 0
-      0,   0,   0,   64,   // verify 0 RGB stays 0 with non-zero alpha
-      128, 0,   0,   128,  // verify that RGB == alpha maps to 255
-||||||| merged common ancestors
-TEST(Moz2D, UnpremultiplyData) {
-  const uint8_t in_bgra[5*4] =
-  {
-    255, 255,   0, 255, // verify 255 alpha leaves RGB unchanged
-      0,   0, 255, 255,
-      0,   0,   0,   0, // verify 0 alpha leaves RGB at 0
-      0,   0,   0,  64, // verify 0 RGB stays 0 with non-zero alpha
-    128,   0,   0, 128, // verify that RGB == alpha maps to 255
-=======
 TEST(Moz2D, UnpremultiplyData)
 {
   const uint8_t in_bgra[5 * 4] = {
@@ -84,7 +52,6 @@ TEST(Moz2D, UnpremultiplyData)
       0,   0,   255, 255, 0, 0, 0, 0,  // verify 0 alpha leaves RGB at 0
       0,   0,   0,   64,   // verify 0 RGB stays 0 with non-zero alpha
       128, 0,   0,   128,  // verify that RGB == alpha maps to 255
->>>>>>> upstream-releases
 
   };
   uint8_t out[5 * 4];
@@ -112,25 +79,10 @@ TEST(Moz2D, UnpremultiplyData)
   EXPECT_TRUE(ArrayEqual(out, check_argb));
 }
 
-<<<<<<< HEAD
-TEST(Moz2D, SwizzleData) {
-  const uint8_t in_bgra[5 * 4] = {
-      253, 254, 0, 255, 0, 0, 255, 255, 0, 0, 0, 0, 1, 2, 3, 64, 127, 0, 9, 128,
-||||||| merged common ancestors
-TEST(Moz2D, SwizzleData) {
-  const uint8_t in_bgra[5*4] =
-  {
-    253, 254,   0, 255,
-      0,   0, 255, 255,
-      0,   0,   0,   0,
-      1,   2,   3,  64,
-    127,   0,   9, 128,
-=======
 TEST(Moz2D, SwizzleData)
 {
   const uint8_t in_bgra[5 * 4] = {
       253, 254, 0, 255, 0, 0, 255, 255, 0, 0, 0, 0, 1, 2, 3, 64, 127, 0, 9, 128,
->>>>>>> upstream-releases
 
   };
   uint8_t out[5 * 4];

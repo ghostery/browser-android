@@ -212,28 +212,11 @@ protected:
     virtual void drawImageLattice(const SkImage*, const SkCanvas::Lattice&,
                                   const SkRect& dst, const SkPaint&);
 
-<<<<<<< HEAD
-
-    virtual void drawVertices(const SkVertices*, const SkVertices::Bone bones[], int boneCount,
-                              SkBlendMode, const SkPaint&) = 0;
-||||||| merged common ancestors
-    /**
-     *  Does not handle text decoration.
-     *  Decorations (underline and stike-thru) will be handled by SkCanvas.
-     */
-    virtual void drawText(const void* text, size_t len,
-                          SkScalar x, SkScalar y, const SkPaint& paint) = 0;
-    virtual void drawPosText(const void* text, size_t len,
-                             const SkScalar pos[], int scalarsPerPos,
-                             const SkPoint& offset, const SkPaint& paint) = 0;
-    virtual void drawVertices(const SkVertices*, SkBlendMode, const SkPaint&) = 0;
-=======
     virtual void drawImageSet(const SkCanvas::ImageSetEntry[], int count, SkFilterQuality,
                               SkBlendMode);
 
     virtual void drawVertices(const SkVertices*, const SkVertices::Bone bones[], int boneCount,
                               SkBlendMode, const SkPaint&) = 0;
->>>>>>> upstream-releases
     virtual void drawShadow(const SkPath&, const SkDrawShadowRec&);
 
     virtual void drawGlyphRunList(const SkGlyphRunList& glyphRunList) = 0;
@@ -250,28 +233,12 @@ protected:
     /** The SkDevice passed will be an SkDevice which was returned by a call to
         onCreateDevice on this device with kNeverTile_TileExpectation.
      */
-<<<<<<< HEAD
-    virtual void drawDevice(SkBaseDevice*, int x, int y, const SkPaint&) = 0;
-||||||| merged common ancestors
-    virtual void drawDevice(SkBaseDevice*, int x, int y,
-                            const SkPaint&) = 0;
-=======
     virtual void drawDevice(SkBaseDevice*, int x, int y, const SkPaint&) = 0;
 
     void drawGlyphRunRSXform(const SkFont&, const SkGlyphID[], const SkRSXform[], int count,
                              SkPoint origin, const SkPaint& paint);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    void drawGlyphRunRSXform(SkGlyphRun* run, const SkRSXform* xform);
-||||||| merged common ancestors
-    virtual void drawTextOnPath(const void* text, size_t len, const SkPath&,
-                                const SkMatrix*, const SkPaint&);
-    virtual void drawTextRSXform(const void* text, size_t len, const SkRSXform[],
-                                 const SkPaint&);
-=======
     virtual void drawDrawable(SkDrawable*, const SkMatrix*, SkCanvas*);
->>>>>>> upstream-releases
 
     virtual void drawSpecial(SkSpecialImage*, int x, int y, const SkPaint&,
                              SkImage* clipImage, const SkMatrix& clipMatrix);
@@ -369,13 +336,6 @@ private:
     friend class SkSurface_Raster;
     friend class DeviceTestingAccess;
 
-<<<<<<< HEAD
-    // Temporarily friend the SkGlyphRunBuilder until drawPosText is gone.
-    friend class SkGlyphRun;
-    friend class SkGlyphRunList;
-
-||||||| merged common ancestors
-=======
     // Temporarily friend the SkGlyphRunBuilder until drawPosText is gone.
     friend class SkGlyphRun;
     friend class SkGlyphRunList;
@@ -383,7 +343,6 @@ private:
 
     friend class ClipTileRenderer;  // GM needs context() until API is in SkCanvas
 
->>>>>>> upstream-releases
     // used to change the backend's pixels (and possibly config/rowbytes)
     // but cannot change the width/height, so there should be no change to
     // any clip information.
@@ -420,60 +379,6 @@ private:
     typedef SkRefCnt INHERITED;
 };
 
-<<<<<<< HEAD
-class SkNoPixelsDevice : public SkBaseDevice {
-public:
-    SkNoPixelsDevice(const SkIRect& bounds, const SkSurfaceProps& props)
-            : SkBaseDevice(SkImageInfo::MakeUnknown(bounds.width(), bounds.height()), props)
-    {
-        // this fails if we enable this assert: DiscardableImageMapTest.GetDiscardableImagesInRectMaxImage
-        //SkASSERT(bounds.width() >= 0 && bounds.height() >= 0);
-    }
-
-    void resetForNextPicture(const SkIRect& bounds) {
-        //SkASSERT(bounds.width() >= 0 && bounds.height() >= 0);
-        this->privateResize(bounds.width(), bounds.height());
-    }
-
-protected:
-    // We don't track the clip at all (for performance), but we have to respond to some queries.
-    // We pretend to be wide-open. We could pretend to always be empty, but that *seems* worse.
-    void onSave() override {}
-    void onRestore() override {}
-    void onClipRect(const SkRect& rect, SkClipOp, bool aa) override {}
-    void onClipRRect(const SkRRect& rrect, SkClipOp, bool aa) override {}
-    void onClipPath(const SkPath& path, SkClipOp, bool aa) override {}
-    void onClipRegion(const SkRegion& deviceRgn, SkClipOp) override {}
-    void onSetDeviceClipRestriction(SkIRect* mutableClipRestriction) override {}
-    bool onClipIsAA() const override { return false; }
-    void onAsRgnClip(SkRegion* rgn) const override {
-        rgn->setRect(SkIRect::MakeWH(this->width(), this->height()));
-    }
-    ClipType onGetClipType() const override {
-        return kRect_ClipType;
-    }
-
-    void drawPaint(const SkPaint& paint) override {}
-    void drawPoints(SkCanvas::PointMode, size_t, const SkPoint[], const SkPaint&) override {}
-    void drawRect(const SkRect&, const SkPaint&) override {}
-    void drawOval(const SkRect&, const SkPaint&) override {}
-    void drawRRect(const SkRRect&, const SkPaint&) override {}
-    void drawPath(const SkPath&, const SkPaint&, bool) override {}
-    void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y, const SkPaint&) override {}
-    void drawSprite(const SkBitmap&, int, int, const SkPaint&) override {}
-    void drawBitmapRect(const SkBitmap&, const SkRect*, const SkRect&, const SkPaint&,
-                        SkCanvas::SrcRectConstraint) override {}
-    void drawDevice(SkBaseDevice*, int, int, const SkPaint&) override {}
-    void drawGlyphRunList(const SkGlyphRunList& glyphRunList) override {}
-    void drawVertices(const SkVertices*, const SkVertices::Bone[], int, SkBlendMode,
-                      const SkPaint&) override {}
-
-private:
-    typedef SkBaseDevice INHERITED;
-};
-
-||||||| merged common ancestors
-=======
 class SkNoPixelsDevice : public SkBaseDevice {
 public:
     SkNoPixelsDevice(const SkIRect& bounds, const SkSurfaceProps& props,
@@ -526,7 +431,6 @@ private:
     typedef SkBaseDevice INHERITED;
 };
 
->>>>>>> upstream-releases
 class SkAutoDeviceCTMRestore : SkNoncopyable {
 public:
     SkAutoDeviceCTMRestore(SkBaseDevice* device, const SkMatrix& ctm)

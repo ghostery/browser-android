@@ -23,19 +23,9 @@
 #  include "mozilla/Vector.h"
 #  include "mozilla/WinHeaderOnlyUtils.h"
 
-<<<<<<< HEAD
-#include <wchar.h>
-#include <windows.h>
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#include <wchar.h>
-#include <windows.h>
-#endif // defined(XP_WIN)
-=======
 #  include <wchar.h>
 #  include <windows.h>
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
 #include "mozilla/MemoryChecking.h"
 #include "mozilla/TypedEnumBits.h"
@@ -98,17 +88,7 @@ inline bool strimatch(const wchar_t* lowerstr, const wchar_t* mixedstr) {
   return internal::strimatch(&towlower, lowerstr, mixedstr);
 }
 
-<<<<<<< HEAD
-enum class FlagLiteral { osint, safemode };
-||||||| merged common ancestors
-enum class FlagLiteral
-{
-  osint,
-  safemode
-};
-=======
 enum class FlagLiteral { osint, safemode, url };
->>>>>>> upstream-releases
 
 template <typename CharT, FlagLiteral Literal>
 inline const CharT* GetLiteral();
@@ -130,16 +110,8 @@ DECLARE_FLAG_LITERAL(url, "url")
 
 enum class CheckArgFlag : uint32_t {
   None = 0,
-<<<<<<< HEAD
-  CheckOSInt = (1 << 0),  // Retrun ARG_BAD if osint arg is also present.
-  RemoveArg = (1 << 1)    // Remove the argument from the argv array.
-||||||| merged common ancestors
-  CheckOSInt = (1 << 0), // Retrun ARG_BAD if osint arg is also present.
-  RemoveArg = (1 << 1)   // Remove the argument from the argv array.
-=======
   // (1 << 0) Used to be CheckOSInt
   RemoveArg = (1 << 1)  // Remove the argument from the argv array.
->>>>>>> upstream-releases
 };
 
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(CheckArgFlag)
@@ -157,19 +129,9 @@ MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(CheckArgFlag)
  * @param aFlags Flags @see CheckArgFlag
  */
 template <typename CharT>
-<<<<<<< HEAD
-inline ArgResult CheckArg(int& aArgc, CharT** aArgv, const CharT* aArg,
-                          const CharT** aParam, CheckArgFlag aFlags) {
-||||||| merged common ancestors
-inline ArgResult
-CheckArg(int& aArgc, CharT** aArgv, const CharT* aArg, const CharT **aParam,
-         CheckArgFlag aFlags)
-{
-=======
 inline ArgResult CheckArg(int& aArgc, CharT** aArgv, const CharT* aArg,
                           const CharT** aParam = nullptr,
                           CheckArgFlag aFlags = CheckArgFlag::RemoveArg) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aArgv && aArg);
 
   CharT** curarg = aArgv + 1;  // skip argv[0]
@@ -227,28 +189,6 @@ inline ArgResult CheckArg(int& aArgc, CharT** aArgv, const CharT* aArg,
     ++curarg;
   }
 
-<<<<<<< HEAD
-  if ((aFlags & CheckArgFlag::CheckOSInt) && ar == ARG_FOUND) {
-    ArgResult arOSInt =
-        CheckArg(aArgc, aArgv, GetLiteral<CharT, FlagLiteral::osint>(),
-                 static_cast<const CharT**>(nullptr), CheckArgFlag::None);
-    if (arOSInt == ARG_FOUND) {
-      ar = ARG_BAD;
-#if defined(MOZILLA_INTERNAL_API)
-      PR_fprintf(PR_STDERR, "Error: argument --osint is invalid\n");
-#endif  // defined(MOZILLA_INTERNAL_API)
-||||||| merged common ancestors
-  if ((aFlags & CheckArgFlag::CheckOSInt) && ar == ARG_FOUND) {
-    ArgResult arOSInt = CheckArg(aArgc, aArgv,
-                                 GetLiteral<CharT, FlagLiteral::osint>(),
-                                 static_cast<const CharT**>(nullptr),
-                                 CheckArgFlag::None);
-    if (arOSInt == ARG_FOUND) {
-      ar = ARG_BAD;
-#if defined(MOZILLA_INTERNAL_API)
-      PR_fprintf(PR_STDERR, "Error: argument --osint is invalid\n");
-#endif // defined(MOZILLA_INTERNAL_API)
-=======
   return ar;
 }
 
@@ -266,7 +206,6 @@ inline void EnsureCommandlineSafe(int& aArgc, CharT** aArgv) {
     // There should be 4 items left (app name + -osint + -url + param)
     if (aArgc != 4) {
       exit(127);
->>>>>>> upstream-releases
     }
 
     // The first should be osint.
@@ -425,17 +364,9 @@ inline wchar_t* ArgToString(wchar_t* d, const wchar_t* s) {
  * @param aArgvExtra Optional array of arguments to be appended to the resulting
  *                   command line after those provided by |argv|.
  */
-<<<<<<< HEAD
-inline UniquePtr<wchar_t[]> MakeCommandLine(int argc, wchar_t** argv) {
-||||||| merged common ancestors
-inline UniquePtr<wchar_t[]>
-MakeCommandLine(int argc, wchar_t **argv)
-{
-=======
 inline UniquePtr<wchar_t[]> MakeCommandLine(int argc, wchar_t** argv,
                                             int aArgcExtra = 0,
                                             wchar_t** aArgvExtra = nullptr) {
->>>>>>> upstream-releases
   int i;
   int len = 0;
 
@@ -459,15 +390,9 @@ inline UniquePtr<wchar_t[]> MakeCommandLine(int argc, wchar_t** argv,
     return s;
   }
 
-<<<<<<< HEAD
-  wchar_t* c = s.get();
-||||||| merged common ancestors
-  wchar_t *c = s.get();
-=======
   int totalArgc = argc + aArgcExtra;
 
   wchar_t* c = s.get();
->>>>>>> upstream-releases
   for (i = 0; i < argc; ++i) {
     c = internal::ArgToString(c, argv[i]);
     if (i + 1 != totalArgc) {
@@ -540,16 +465,10 @@ inline bool EnvHasValue(const char* aVarName) {
 #endif
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 #ifndef NS_NO_XPCOM
 already_AddRefed<nsIFile> GetFileFromEnv(const char* name);
 #endif
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_CmdLineAndEnvUtils_h

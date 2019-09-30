@@ -1,37 +1,9 @@
-<<<<<<< HEAD
-commit f3fa0d604ef6527a01dab96f4bfa3c5290127337
-Author: Markus Scherer <markus.icu@gmail.com>
-Date:   Fri Nov 9 12:54:22 2018 -0800
-||||||| merged common ancestors
-commit 4a3ba8eee90ea1414d4f7ee36563e6c9b28fda96
-Author: Yoshito Umaoka <y.umaoka@gmail.com>
-Date:   Wed Jun 20 05:34:56 2018 +0000
-=======
 commit e2d85306162d3a0691b070b4f0a73e4012433444
 Author: Steven R. Loomis <srloomis@us.ibm.com>
 Date:   Wed Apr 17 08:58:08 2019 -0700
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ICU-20250 make UnicodeSet(intprop=value) faster
-    - fastpath for UnicodeSet.add(new last range)
-    - fewer UnicodeSet memory allocations:
-      initial internal list array, exponential array growth,
-      allocate strings list/set only when first one is added
-    - faster CodePointTrie.getRange(): fewer calls to filter function
-    - revert UnicodeSet(intprop=value) from trie ranges to range starts + lookup
-    - cache per-int-prop range starts: fewer lookups
-||||||| merged common ancestors
-    ICU-13823 Merged #13840 number parser memory overflow fix (r41541) to maint-62 for 62.1 GA.
-=======
     ICU-20563 fix macosx rpath breakage in the data build
->>>>>>> upstream-releases
     
-<<<<<<< HEAD
-    (cherry picked from commit 98f9170004c29388d756a8a283573164a7a26bef)
-||||||| merged common ancestors
-    X-SVN-Rev: 41542
-=======
     - in the rpath case, we do NOT want a trailing space in LD_SONAME
     
     regression was introduced in ICU-20526 with
@@ -39,4 +11,3 @@ Date:   Wed Apr 17 08:58:08 2019 -0700
      b76cb6517efa113739a3ffadda7ff024db0d5689 (in maint-64)
     
     (cherry picked from commit 1c553b9cf28d25c0aaf961c5f587f4ad3cee2679)
->>>>>>> upstream-releases

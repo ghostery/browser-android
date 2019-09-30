@@ -109,57 +109,19 @@ async function attachAddon(addonId) {
 
   await client.connect();
 
-<<<<<<< HEAD
-  const addonTargetFront = await client.mainRoot.getAddon({ id: addonId });
-||||||| merged common ancestors
-  const {addons} = await client.mainRoot.listAddons();
-  const addonTargetActor = addons.filter(actor => actor.id === addonId).pop();
-=======
   const addonFront = await client.mainRoot.getAddon({ id: addonId });
   const addonTarget = await addonFront.connect();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!addonTargetFront) {
-||||||| merged common ancestors
-  if (!addonTargetActor) {
-=======
   if (!addonTarget) {
->>>>>>> upstream-releases
     client.close();
     throw new Error(`No WebExtension Actor found for ${addonId}`);
   }
 
-<<<<<<< HEAD
-  const addonTarget = await TargetFactory.forRemoteTab({
-    activeTab: addonTargetFront,
-    client,
-    chrome: true,
-  });
-
-||||||| merged common ancestors
-  const addonTarget = await TargetFactory.forRemoteTab({
-    form: addonTargetActor,
-    client,
-    chrome: true,
-  });
-
-=======
->>>>>>> upstream-releases
   return addonTarget;
 }
 
-<<<<<<< HEAD
-async function reloadAddon({client}, addonId) {
-  const addonTargetFront = await client.mainRoot.getAddon({ id: addonId });
-||||||| merged common ancestors
-async function reloadAddon({client}, addonId) {
-  const {addons} = await client.mainRoot.listAddons();
-  const addonTargetActor = addons.filter(actor => actor.id === addonId).pop();
-=======
 async function reloadAddon({ client }, addonId) {
   const addonTargetFront = await client.mainRoot.getAddon({ id: addonId });
->>>>>>> upstream-releases
 
   if (!addonTargetFront) {
     client.close();

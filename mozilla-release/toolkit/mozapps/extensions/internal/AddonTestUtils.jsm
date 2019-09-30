@@ -11,42 +11,6 @@ var EXPORTED_SYMBOLS = ["AddonTestUtils", "MockAsyncShutdown"];
 
 const CERTDB_CONTRACTID = "@mozilla.org/security/x509certdb;1";
 
-<<<<<<< HEAD
-Cu.importGlobalProperties(["fetch", "TextEncoder"]);
-
-ChromeUtils.import("resource://gre/modules/AsyncShutdown.jsm");
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-const {EventEmitter} = ChromeUtils.import("resource://gre/modules/EventEmitter.jsm", {});
-const {OS} = ChromeUtils.import("resource://gre/modules/osfile.jsm", {});
-
-ChromeUtils.defineModuleGetter(this, "AMTelemetry",
-                               "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "ExtensionTestCommon",
-                               "resource://testing-common/ExtensionTestCommon.jsm");
-||||||| merged common ancestors
-Cu.importGlobalProperties(["fetch", "TextEncoder"]);
-
-ChromeUtils.import("resource://gre/modules/AsyncShutdown.jsm");
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-const {EventEmitter} = ChromeUtils.import("resource://gre/modules/EventEmitter.jsm", {});
-const {OS} = ChromeUtils.import("resource://gre/modules/osfile.jsm", {});
-
-
-ChromeUtils.defineModuleGetter(this, "AMTelemetry",
-                               "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "Extension",
-                               "resource://gre/modules/Extension.jsm");
-=======
 Cu.importGlobalProperties(["fetch"]);
 
 const { AsyncShutdown } = ChromeUtils.import(
@@ -77,7 +41,6 @@ ChromeUtils.defineModuleGetter(
   "ExtensionTestCommon",
   "resource://testing-common/ExtensionTestCommon.jsm"
 );
->>>>>>> upstream-releases
 XPCOMUtils.defineLazyGetter(this, "Management", () => {
   let { Management } = ChromeUtils.import(
     "resource://gre/modules/Extension.jsm",
@@ -793,17 +756,6 @@ var AddonTestUtils = {
 
           let fakeCert = { commonName: id };
           if (this.usePrivilegedSignatures) {
-<<<<<<< HEAD
-            let privileged = typeof this.usePrivilegedSignatures == "function" ?
-                             this.usePrivilegedSignatures(id) : this.usePrivilegedSignatures;
-            if (privileged === "system") {
-              fakeCert.organizationalUnit = "Mozilla Components";
-            } else if (privileged) {
-||||||| merged common ancestors
-            let privileged = typeof this.usePrivilegedSignatures == "function" ?
-                             this.usePrivilegedSignatures(id) : this.usePrivilegedSignatures;
-            if (privileged) {
-=======
             let privileged =
               typeof this.usePrivilegedSignatures == "function"
                 ? this.usePrivilegedSignatures(id)
@@ -811,7 +763,6 @@ var AddonTestUtils = {
             if (privileged === "system") {
               fakeCert.organizationalUnit = "Mozilla Components";
             } else if (privileged) {
->>>>>>> upstream-releases
               fakeCert.organizationalUnit = "Mozilla Extensions";
             }
           }
@@ -1047,16 +998,8 @@ var AddonTestUtils = {
     );
   },
 
-<<<<<<< HEAD
-  async promiseShutdownManager(clearOverrides = true) {
-    if (!this.addonIntegrationService)
-||||||| merged common ancestors
-  async promiseShutdownManager() {
-    if (!this.addonIntegrationService)
-=======
   async promiseShutdownManager(clearOverrides = true) {
     if (!this.addonIntegrationService) {
->>>>>>> upstream-releases
       return false;
     }
 
@@ -1146,245 +1089,6 @@ var AddonTestUtils = {
   },
 
   /**
-<<<<<<< HEAD
-   * Creates an update.rdf structure as a string using for the update data passed.
-   *
-   * @param {Object} data
-   *        The update data as a JS object. Each property name is an add-on ID,
-   *        the property value is an array of each version of the add-on. Each
-   *        array value is a JS object containing the data for the version, at
-   *        minimum a "version" and "targetApplications" property should be
-   *        included to create a functional update manifest.
-   * @return {string} The update.rdf structure as a string.
-   */
-  createUpdateRDF(data) {
-    var rdf = '<?xml version="1.0"?>\n';
-    rdf += '<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
-           '     xmlns:em="http://www.mozilla.org/2004/em-rdf#">\n';
-
-    for (let addon in data) {
-      rdf += escaped`  <Description about="urn:mozilla:extension:${addon}"><em:updates><Seq>\n`;
-
-      for (let versionData of data[addon]) {
-        rdf += "    <li><Description>\n";
-        rdf += this._writeProps(versionData, ["version"],
-                                `      `);
-        for (let app of versionData.targetApplications || []) {
-          rdf += "      <em:targetApplication><Description>\n";
-          rdf += this._writeProps(app, ["id", "minVersion", "maxVersion", "updateLink", "updateHash"],
-                                  `        `);
-          rdf += "      </Description></em:targetApplication>\n";
-        }
-        rdf += "    </Description></li>\n";
-      }
-      rdf += "  </Seq></em:updates></Description>\n";
-    }
-    rdf += "</RDF>\n";
-
-    return rdf;
-  },
-
-  _writeProps(obj, props, indent = "  ") {
-    let items = [];
-    for (let prop of props) {
-      if (obj[prop] !== undefined)
-        items.push(escaped`${indent}<em:${prop}>${obj[prop]}</em:${prop}>\n`);
-    }
-    return items.join("");
-  },
-
-  _writeArrayProps(obj, props, indent = "  ") {
-    let items = [];
-    for (let prop of props) {
-      for (let val of obj[prop] || [])
-        items.push(escaped`${indent}<em:${prop}>${val}</em:${prop}>\n`);
-    }
-    return items.join("");
-  },
-
-  _writeLocaleStrings(data) {
-    let items = [];
-
-    items.push(this._writeProps(data, ["name", "description", "creator", "homepageURL"]));
-    items.push(this._writeArrayProps(data, ["developer", "translator", "contributor"]));
-
-    return items.join("");
-  },
-
-  createInstallRDF(data) {
-    let defaults = {
-      bootstrap: true,
-      version: "1.0",
-      name: `Test Extension ${data.id}`,
-      targetApplications: [
-        {
-          "id": "xpcshell@tests.mozilla.org",
-          "minVersion": "1",
-          "maxVersion": "64.*",
-        },
-      ],
-    };
-
-    var rdf = '<?xml version="1.0"?>\n';
-    rdf += '<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
-           '     xmlns:em="http://www.mozilla.org/2004/em-rdf#">\n';
-
-    rdf += '<Description about="urn:mozilla:install-manifest">\n';
-
-    data = Object.assign({}, defaults, data);
-
-    let props = ["id", "version", "type", "internalName", "updateURL",
-                 "optionsURL", "optionsType", "aboutURL", "iconURL",
-                 "skinnable", "bootstrap", "strictCompatibility"];
-    rdf += this._writeProps(data, props);
-
-    rdf += this._writeLocaleStrings(data);
-
-    for (let platform of data.targetPlatforms || [])
-      rdf += escaped`<em:targetPlatform>${platform}</em:targetPlatform>\n`;
-
-    for (let app of data.targetApplications || []) {
-      rdf += "<em:targetApplication><Description>\n";
-      rdf += this._writeProps(app, ["id", "minVersion", "maxVersion"]);
-      rdf += "</Description></em:targetApplication>\n";
-    }
-
-    for (let localized of data.localized || []) {
-      rdf += "<em:localized><Description>\n";
-      rdf += this._writeArrayProps(localized, ["locale"]);
-      rdf += this._writeLocaleStrings(localized);
-      rdf += "</Description></em:localized>\n";
-    }
-
-    for (let dep of data.dependencies || [])
-      rdf += escaped`<em:dependency><Description em:id="${dep}"/></em:dependency>\n`;
-
-    rdf += "</Description>\n</RDF>\n";
-    return rdf;
-  },
-
-  /**
-||||||| merged common ancestors
-   * Creates an update.rdf structure as a string using for the update data passed.
-   *
-   * @param {Object} data
-   *        The update data as a JS object. Each property name is an add-on ID,
-   *        the property value is an array of each version of the add-on. Each
-   *        array value is a JS object containing the data for the version, at
-   *        minimum a "version" and "targetApplications" property should be
-   *        included to create a functional update manifest.
-   * @return {string} The update.rdf structure as a string.
-   */
-  createUpdateRDF(data) {
-    var rdf = '<?xml version="1.0"?>\n';
-    rdf += '<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
-           '     xmlns:em="http://www.mozilla.org/2004/em-rdf#">\n';
-
-    for (let addon in data) {
-      rdf += escaped`  <Description about="urn:mozilla:extension:${addon}"><em:updates><Seq>\n`;
-
-      for (let versionData of data[addon]) {
-        rdf += "    <li><Description>\n";
-        rdf += this._writeProps(versionData, ["version"],
-                                `      `);
-        for (let app of versionData.targetApplications || []) {
-          rdf += "      <em:targetApplication><Description>\n";
-          rdf += this._writeProps(app, ["id", "minVersion", "maxVersion", "updateLink", "updateHash"],
-                                  `        `);
-          rdf += "      </Description></em:targetApplication>\n";
-        }
-        rdf += "    </Description></li>\n";
-      }
-      rdf += "  </Seq></em:updates></Description>\n";
-    }
-    rdf += "</RDF>\n";
-
-    return rdf;
-  },
-
-  _writeProps(obj, props, indent = "  ") {
-    let items = [];
-    for (let prop of props) {
-      if (obj[prop] !== undefined)
-        items.push(escaped`${indent}<em:${prop}>${obj[prop]}</em:${prop}>\n`);
-    }
-    return items.join("");
-  },
-
-  _writeArrayProps(obj, props, indent = "  ") {
-    let items = [];
-    for (let prop of props) {
-      for (let val of obj[prop] || [])
-        items.push(escaped`${indent}<em:${prop}>${val}</em:${prop}>\n`);
-    }
-    return items.join("");
-  },
-
-  _writeLocaleStrings(data) {
-    let items = [];
-
-    items.push(this._writeProps(data, ["name", "description", "creator", "homepageURL"]));
-    items.push(this._writeArrayProps(data, ["developer", "translator", "contributor"]));
-
-    return items.join("");
-  },
-
-  createInstallRDF(data) {
-    let defaults = {
-      bootstrap: true,
-      version: "1.0",
-      name: `Test Extension ${data.id}`,
-      targetApplications: [
-        {
-          "id": "xpcshell@tests.mozilla.org",
-          "minVersion": "1",
-          "maxVersion": "64.*",
-        },
-      ],
-    };
-
-    var rdf = '<?xml version="1.0"?>\n';
-    rdf += '<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
-           '     xmlns:em="http://www.mozilla.org/2004/em-rdf#">\n';
-
-    rdf += '<Description about="urn:mozilla:install-manifest">\n';
-
-    data = Object.assign({}, defaults, data);
-
-    let props = ["id", "version", "type", "internalName", "updateURL",
-                 "optionsURL", "optionsType", "aboutURL", "iconURL", "icon64URL",
-                 "skinnable", "bootstrap", "strictCompatibility",
-                 "hasEmbeddedWebExtension"];
-    rdf += this._writeProps(data, props);
-
-    rdf += this._writeLocaleStrings(data);
-
-    for (let platform of data.targetPlatforms || [])
-      rdf += escaped`<em:targetPlatform>${platform}</em:targetPlatform>\n`;
-
-    for (let app of data.targetApplications || []) {
-      rdf += "<em:targetApplication><Description>\n";
-      rdf += this._writeProps(app, ["id", "minVersion", "maxVersion"]);
-      rdf += "</Description></em:targetApplication>\n";
-    }
-
-    for (let localized of data.localized || []) {
-      rdf += "<em:localized><Description>\n";
-      rdf += this._writeArrayProps(localized, ["locale"]);
-      rdf += this._writeLocaleStrings(localized);
-      rdf += "</Description></em:localized>\n";
-    }
-
-    for (let dep of data.dependencies || [])
-      rdf += escaped`<em:dependency><Description em:id="${dep}"/></em:dependency>\n`;
-
-    rdf += "</Description>\n</RDF>\n";
-    return rdf;
-  },
-
-  /**
-=======
->>>>>>> upstream-releases
    * Recursively create all directories up to and including the given
    * path, if they do not exist.
    *
@@ -1528,24 +1232,7 @@ var AddonTestUtils = {
    * @return {nsIFile} A file pointing to the created XPI file
    */
   createTempXPIFile(files) {
-<<<<<<< HEAD
     let file = this.allocTempXPIFile();
-    if (typeof files["install.rdf"] === "object")
-      files["install.rdf"] = this.createInstallRDF(files["install.rdf"]);
-
-||||||| merged common ancestors
-    var file = this.tempDir.clone();
-    let uuid = uuidGen.generateUUID().number.slice(1, -1);
-    file.append(`${uuid}.xpi`);
-
-    this.tempXPIs.push(file);
-
-    if (typeof files["install.rdf"] === "object")
-      files["install.rdf"] = this.createInstallRDF(files["install.rdf"]);
-
-=======
-    let file = this.allocTempXPIFile();
->>>>>>> upstream-releases
     this.writeFilesToZip(file.path, files);
     return file;
   },

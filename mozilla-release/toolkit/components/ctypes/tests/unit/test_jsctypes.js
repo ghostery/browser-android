@@ -6,31 +6,11 @@
 /* eslint-disable no-new-wrappers */
 
 try {
-<<<<<<< HEAD
-  // We might be running without privileges, in which case it's up to the
-  // harness to give us the 'ctypes' object.
-  ChromeUtils.import("resource://gre/modules/ctypes.jsm");
-  ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-  Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-  registerCleanupFunction(() => {
-    Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-  });
-} catch (e) {
-}
-||||||| merged common ancestors
-  // We might be running without privileges, in which case it's up to the
-  // harness to give us the 'ctypes' object.
-  ChromeUtils.import("resource://gre/modules/ctypes.jsm");
-} catch (e) {
-}
-=======
   Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
   registerCleanupFunction(() => {
     Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
   });
 } catch (e) {}
->>>>>>> upstream-releases
 
 const CTYPES_TEST_LIB = ctypes.libraryName("jsctypes-test");
 const CTYPES_UNICODE_LIB = ctypes.libraryName("jsctyp\u00E8s-t\u00EB\u00DFt");

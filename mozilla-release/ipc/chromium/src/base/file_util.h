@@ -15,22 +15,10 @@
 #if defined(OS_WIN)
 #  include <windows.h>
 #elif defined(ANDROID)
-<<<<<<< HEAD
-#include <sys/stat.h>
-#elif defined(OS_POSIX)
-#include <sys/types.h>
-#include <sys/stat.h>
-||||||| merged common ancestors
-#include <sys/stat.h>
-#elif defined(OS_POSIX) 
-#include <sys/types.h>
-#include <sys/stat.h>
-=======
 #  include <sys/stat.h>
 #elif defined(OS_POSIX)
 #  include <sys/types.h>
 #  include <sys/stat.h>
->>>>>>> upstream-releases
 #endif
 
 #include <stdio.h>

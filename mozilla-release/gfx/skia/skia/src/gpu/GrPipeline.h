@@ -93,13 +93,7 @@ public:
      * must be "Porter Duff" (<= kLastCoeffMode). If using GrScissorTest::kEnabled, the caller must
      * specify a scissor rectangle through the DynamicState struct.
      **/
-<<<<<<< HEAD
-    GrPipeline(GrRenderTargetProxy*, GrScissorTest, SkBlendMode);
-||||||| merged common ancestors
-    GrPipeline(GrRenderTargetProxy*, ScissorState, SkBlendMode);
-=======
     GrPipeline(GrScissorTest, SkBlendMode);
->>>>>>> upstream-releases
 
     GrPipeline(const InitArgs&, GrProcessorSet&&, GrAppliedClip&&);
 
@@ -165,26 +159,6 @@ public:
 
     /// @}
 
-<<<<<<< HEAD
-    /**
-     * Retrieves the currently set render-target.
-     *
-     * @return    The currently set render target.
-     */
-    GrRenderTargetProxy* proxy() const { return fProxy.get(); }
-    GrRenderTarget* renderTarget() const { return fProxy.get()->peekRenderTarget(); }
-
-||||||| merged common ancestors
-    /**
-     * Retrieves the currently set render-target.
-     *
-     * @return    The currently set render target.
-     */
-    GrRenderTargetProxy* proxy() const { return fProxy.get(); }
-    GrRenderTarget* renderTarget() const { return fProxy.get()->priv().peekRenderTarget(); }
-
-=======
->>>>>>> upstream-releases
     const GrUserStencilSettings* getUserStencil() const { return fUserStencilSettings; }
 
     bool isScissorEnabled() const {
@@ -240,15 +214,6 @@ private:
 
     DstTextureProxy fDstTextureProxy;
     SkIPoint fDstTextureOffset;
-<<<<<<< HEAD
-    // MDB TODO: do we still need the destination proxy here?
-    RenderTargetProxy fProxy;
-||||||| merged common ancestors
-    // MDB TODO: do we still need the destination proxy here?
-    RenderTargetProxy fProxy;
-    GrScissorState fScissorState;
-=======
->>>>>>> upstream-releases
     GrWindowRectsState fWindowRectsState;
     const GrUserStencilSettings* fUserStencilSettings;
     uint16_t fFlags;

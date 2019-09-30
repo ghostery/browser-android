@@ -301,23 +301,6 @@ public class GeckoMediaDrmBridgeV21 implements GeckoMediaDrm {
         return mCrypto;
     }
 
-<<<<<<< HEAD
-    @Override
-    public void setServerCertificate(final byte[] cert) {
-        if (DEBUG) Log.d(LOGTAG, "setServerCertificate()");
-        if (mDrm == null) {
-            throw new IllegalStateException("MediaDrm instance doesn't exist !!");
-        }
-        mDrm.setPropertyByteArray("serviceCertificate", cert);
-        return;
-    }
-
-    protected void HandleKeyStatusChangeByDummyKey(String sessionId)
-    {
-||||||| merged common ancestors
-    protected void HandleKeyStatusChangeByDummyKey(String sessionId)
-    {
-=======
     @SuppressLint("WrongConstant")
     @Override
     public void setServerCertificate(final byte[] cert) {
@@ -330,7 +313,6 @@ public class GeckoMediaDrmBridgeV21 implements GeckoMediaDrm {
     }
 
     protected void HandleKeyStatusChangeByDummyKey(final String sessionId) {
->>>>>>> upstream-releases
         SessionKeyInfo[] keyInfos = new SessionKeyInfo[1];
         keyInfos[0] = new SessionKeyInfo(DUMMY_KEY_ID,
                                          MediaDrm.KeyStatus.STATUS_USABLE);

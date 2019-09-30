@@ -22,27 +22,11 @@ NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(AudioWorkletProcessor, Release)
 AudioWorkletProcessor::AudioWorkletProcessor(nsIGlobalObject* aParent)
     : mParent(aParent) {}
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioWorkletProcessor>
-AudioWorkletProcessor::Constructor(const GlobalObject& aGlobal,
-                                   const AudioWorkletNodeOptions& aOptions,
-                                   ErrorResult& aRv) {
-  nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioWorkletProcessor>
-AudioWorkletProcessor::Constructor(const GlobalObject& aGlobal,
-                                   const AudioWorkletNodeOptions& aOptions,
-                                   ErrorResult& aRv)
-{
-  nsCOMPtr<nsIGlobalObject> global =
-      do_QueryInterface(aGlobal.GetAsSupports());
-=======
 /* static */
 already_AddRefed<AudioWorkletProcessor> AudioWorkletProcessor::Constructor(
     const GlobalObject& aGlobal, const AudioWorkletNodeOptions& aOptions,
     ErrorResult& aRv) {
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
->>>>>>> upstream-releases
   MOZ_ASSERT(global);
 
   RefPtr<AudioWorkletProcessor> audioWorkletProcessor =

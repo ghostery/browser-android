@@ -21,18 +21,11 @@ struct nsRect;
 class nsRegion;
 class nsDeviceContext;
 
-<<<<<<< HEAD
-class nsViewManager final {
-||||||| merged common ancestors
-class nsViewManager final
-{
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsViewManager final {
->>>>>>> upstream-releases
   ~nsViewManager();
 
  public:
@@ -136,15 +129,8 @@ class nsViewManager final {
    * @param aViewTarget dispatch the event to this view
    * @param aStatus event handling status
    */
-<<<<<<< HEAD
-  void DispatchEvent(mozilla::WidgetGUIEvent* aEvent, nsView* aViewTarget,
-||||||| merged common ancestors
-  void DispatchEvent(mozilla::WidgetGUIEvent *aEvent,
-                     nsView* aViewTarget,
-=======
   MOZ_CAN_RUN_SCRIPT
   void DispatchEvent(mozilla::WidgetGUIEvent* aEvent, nsView* aViewTarget,
->>>>>>> upstream-releases
                      nsEventStatus* aStatus);
 
   /**
@@ -240,13 +226,7 @@ class nsViewManager final {
    * Set the presshell associated with this manager
    * @param aPresShell - new presshell
    */
-<<<<<<< HEAD
-  void SetPresShell(nsIPresShell* aPresShell) { mPresShell = aPresShell; }
-||||||| merged common ancestors
-  void SetPresShell(nsIPresShell *aPresShell) { mPresShell = aPresShell; }
-=======
   void SetPresShell(mozilla::PresShell* aPresShell) { mPresShell = aPresShell; }
->>>>>>> upstream-releases
 
   /**
    * Get the pres shell associated with this manager
@@ -348,50 +328,23 @@ class nsViewManager final {
   void InvalidateHierarchy();
   void FlushPendingInvalidates();
 
-<<<<<<< HEAD
-  void ProcessPendingUpdatesForView(nsView* aView,
-||||||| merged common ancestors
-  void ProcessPendingUpdatesForView(nsView *aView,
-=======
   MOZ_CAN_RUN_SCRIPT
   void ProcessPendingUpdatesForView(nsView* aView,
->>>>>>> upstream-releases
                                     bool aFlushDirtyRegion = true);
-<<<<<<< HEAD
-  void ProcessPendingUpdatesRecurse(
-      nsView* aView, AutoTArray<nsCOMPtr<nsIWidget>, 1>& aWidgets);
-||||||| merged common ancestors
-  void ProcessPendingUpdatesRecurse(nsView* aView,
-                                    AutoTArray<nsCOMPtr<nsIWidget>, 1>& aWidgets);
-=======
   void ProcessPendingUpdatesRecurse(
       nsView* aView, AutoTArray<nsCOMPtr<nsIWidget>, 1>& aWidgets);
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   void ProcessPendingUpdatesPaint(nsIWidget* aWidget);
 
   void FlushDirtyRegionToWidget(nsView* aView);
   /**
    * Call WillPaint() on all view observers under this vm root.
    */
-<<<<<<< HEAD
-  void CallWillPaintOnObservers();
-  void ReparentChildWidgets(nsView* aView, nsIWidget* aNewWidget);
-  void ReparentWidgets(nsView* aView, nsView* aParent);
-  void InvalidateWidgetArea(nsView* aWidgetView,
-                            const nsRegion& aDamagedRegion);
-||||||| merged common ancestors
-  void CallWillPaintOnObservers();
-  void ReparentChildWidgets(nsView* aView, nsIWidget *aNewWidget);
-  void ReparentWidgets(nsView* aView, nsView *aParent);
-  void InvalidateWidgetArea(nsView *aWidgetView, const nsRegion &aDamagedRegion);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY void CallWillPaintOnObservers();
   void ReparentChildWidgets(nsView* aView, nsIWidget* aNewWidget);
   void ReparentWidgets(nsView* aView, nsView* aParent);
   void InvalidateWidgetArea(nsView* aWidgetView,
                             const nsRegion& aDamagedRegion);
->>>>>>> upstream-releases
 
   void InvalidateViews(nsView* aView);
 
@@ -440,13 +393,7 @@ class nsViewManager final {
   void PostPendingUpdate();
 
   RefPtr<nsDeviceContext> mContext;
-<<<<<<< HEAD
-  nsIPresShell* mPresShell;
-||||||| merged common ancestors
-  nsIPresShell   *mPresShell;
-=======
   mozilla::PresShell* mPresShell;
->>>>>>> upstream-releases
 
   // The size for a resize that we delayed until the root view becomes
   // visible again.

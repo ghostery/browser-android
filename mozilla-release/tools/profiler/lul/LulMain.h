@@ -153,13 +153,7 @@ struct UnwindRegs {
   TaggedUWord fp;
   TaggedUWord pc;
 #else
-<<<<<<< HEAD
-#error "Unknown plat"
-||||||| merged common ancestors
-# error "Unknown plat"
-=======
 #  error "Unknown plat"
->>>>>>> upstream-releases
 #endif
 };
 

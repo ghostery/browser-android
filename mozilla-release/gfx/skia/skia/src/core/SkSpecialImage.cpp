@@ -13,14 +13,7 @@
 #include "SkImage_Base.h"
 #include "SkSpecialSurface.h"
 #include "SkSurfacePriv.h"
-<<<<<<< HEAD
-#include "SkPixelRef.h"
 #include <atomic>
-||||||| merged common ancestors
-#include "SkPixelRef.h"
-=======
-#include <atomic>
->>>>>>> upstream-releases
 
 #if SK_SUPPORT_GPU
 #include "GrContext.h"
@@ -373,18 +366,10 @@ sk_sp<SkSpecialImage> SkSpecialImage::CopyFromRaster(const SkIRect& subset,
 ///////////////////////////////////////////////////////////////////////////////
 static sk_sp<SkImage> wrap_proxy_in_image(GrRecordingContext* context, sk_sp<GrTextureProxy> proxy,
                                           SkAlphaType alphaType, sk_sp<SkColorSpace> colorSpace) {
-<<<<<<< HEAD
-    return sk_make_sp<SkImage_Gpu>(sk_ref_sp(context), kNeedNewImageUniqueID, alphaType,
-                                   std::move(proxy), std::move(colorSpace), SkBudgeted::kYes);
-||||||| merged common ancestors
-    return sk_make_sp<SkImage_Gpu>(context, kNeedNewImageUniqueID, alphaType,
-                                   std::move(proxy), std::move(colorSpace), SkBudgeted::kYes);
-=======
     // CONTEXT TODO: remove this use of 'backdoor' to create an SkImage
     return sk_make_sp<SkImage_Gpu>(sk_ref_sp(context->priv().backdoor()),
                                    kNeedNewImageUniqueID, alphaType,
                                    std::move(proxy), std::move(colorSpace));
->>>>>>> upstream-releases
 }
 
 class SkSpecialImage_Gpu : public SkSpecialImage_Base {
@@ -420,20 +405,9 @@ public:
         // instantiates itself it is going to have to either be okay with having a larger
         // than expected backing texture (unlikely) or the 'fit' of the SurfaceProxy needs
         // to be tightened (if it is deferred).
-<<<<<<< HEAD
-        sk_sp<SkImage> img = sk_sp<SkImage>(
-                new SkImage_Gpu(sk_ref_sp(canvas->getGrContext()), this->uniqueID(), fAlphaType,
-                                fTextureProxy, fColorSpace, SkBudgeted::kNo));
-||||||| merged common ancestors
-        sk_sp<SkImage> img = sk_sp<SkImage>(new SkImage_Gpu(canvas->getGrContext(),
-                                                            this->uniqueID(), fAlphaType,
-                                                            fTextureProxy,
-                                                            fColorSpace, SkBudgeted::kNo));
-=======
         sk_sp<SkImage> img =
                 sk_sp<SkImage>(new SkImage_Gpu(sk_ref_sp(canvas->getGrContext()), this->uniqueID(),
                                                fAlphaType, fTextureProxy, fColorSpace));
->>>>>>> upstream-releases
 
         canvas->drawImageRect(img, this->subset(),
                               dst, paint, SkCanvas::kStrict_SrcRectConstraint);
@@ -446,14 +420,7 @@ public:
     }
 
     bool onGetROPixels(SkBitmap* dst) const override {
-<<<<<<< HEAD
-        const auto desc = SkBitmapCacheDesc::Make(this->uniqueID(), kN32_SkColorType,
-                                                  fColorSpace.get(), this->subset());
-||||||| merged common ancestors
-        const auto desc = SkBitmapCacheDesc::Make(this->uniqueID(), this->width(), this->height());
-=======
         const auto desc = SkBitmapCacheDesc::Make(this->uniqueID(), this->subset());
->>>>>>> upstream-releases
         if (SkBitmapCache::Find(desc, dst)) {
             SkASSERT(dst->getGenerationID() == this->uniqueID());
             SkASSERT(dst->isImmutable());
@@ -468,20 +435,8 @@ public:
         if (!rec) {
             return false;
         }
-<<<<<<< HEAD
-        sk_sp<GrSurfaceContext> sContext = fContext->contextPriv().makeWrappedSurfaceContext(
-                fTextureProxy, fColorSpace);
-||||||| merged common ancestors
-        sk_sp<SkColorSpace> colorSpace;
-        if (GrPixelConfigIsSRGB(fTextureProxy->config())) {
-            colorSpace = SkColorSpace::MakeSRGB();
-        }
-        sk_sp<GrSurfaceContext> sContext = fContext->contextPriv().makeWrappedSurfaceContext(
-                fTextureProxy, std::move(colorSpace));
-=======
         sk_sp<GrSurfaceContext> sContext = fContext->priv().makeWrappedSurfaceContext(
                 fTextureProxy, fColorSpace);
->>>>>>> upstream-releases
         if (!sContext) {
             return false;
         }
@@ -507,27 +462,13 @@ public:
             return nullptr;
         }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-        SkColorSpace* colorSpace = outProps.colorSpace();
-=======
         GrBackendFormat format =
             fContext->priv().caps()->getBackendFormatFromColorType(outProps.colorType());
 
->>>>>>> upstream-releases
         return SkSpecialSurface::MakeRenderTarget(
-<<<<<<< HEAD
-            fContext, size.width(), size.height(),
-            SkColorType2GrPixelConfig(outProps.colorType()), sk_ref_sp(outProps.colorSpace()),
-            props);
-||||||| merged common ancestors
-            fContext, size.width(), size.height(),
-            GrRenderableConfigForColorSpace(colorSpace), sk_ref_sp(colorSpace));
-=======
             fContext, format, size.width(), size.height(),
             SkColorType2GrPixelConfig(outProps.colorType()), sk_ref_sp(outProps.colorSpace()),
             props);
->>>>>>> upstream-releases
     }
 
     sk_sp<SkSpecialImage> onMakeSubset(const SkIRect& subset) const override {
@@ -584,25 +525,11 @@ public:
     }
 
 private:
-<<<<<<< HEAD
-    GrContext*                fContext;
-    sk_sp<GrTextureProxy>     fTextureProxy;
-    const SkAlphaType         fAlphaType;
-    sk_sp<SkColorSpace>       fColorSpace;
-    mutable std::atomic<bool> fAddedRasterVersionToCache;
-||||||| merged common ancestors
-    GrContext*              fContext;
-    sk_sp<GrTextureProxy>   fTextureProxy;
-    const SkAlphaType       fAlphaType;
-    sk_sp<SkColorSpace>     fColorSpace;
-    mutable SkAtomic<bool>  fAddedRasterVersionToCache;
-=======
     GrRecordingContext*       fContext;
     sk_sp<GrTextureProxy>     fTextureProxy;
     const SkAlphaType         fAlphaType;
     sk_sp<SkColorSpace>       fColorSpace;
     mutable std::atomic<bool> fAddedRasterVersionToCache;
->>>>>>> upstream-releases
 
     typedef SkSpecialImage_Base INHERITED;
 };
@@ -614,19 +541,10 @@ sk_sp<SkSpecialImage> SkSpecialImage::MakeDeferredFromGpu(GrRecordingContext* co
                                                           sk_sp<SkColorSpace> colorSpace,
                                                           const SkSurfaceProps* props,
                                                           SkAlphaType at) {
-<<<<<<< HEAD
-    if (!context || context->abandoned() || !proxy) {
-        return nullptr;
-    }
-    SkASSERT_RELEASE(rect_fits(subset, proxy->width(), proxy->height()));
-||||||| merged common ancestors
-    SkASSERT(rect_fits(subset, proxy->width(), proxy->height()));
-=======
     if (!context || context->priv().abandoned() || !proxy) {
         return nullptr;
     }
     SkASSERT_RELEASE(rect_fits(subset, proxy->width(), proxy->height()));
->>>>>>> upstream-releases
     return sk_make_sp<SkSpecialImage_Gpu>(context, subset, uniqueID, std::move(proxy), at,
                                           std::move(colorSpace), props);
 }

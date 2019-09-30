@@ -20,45 +20,6 @@ namespace detail {
 // pointers. The only users should be for NurseryAwareHashMap; it is defined
 // externally because we need a GCPolicy for its use in the contained map.
 template <typename T>
-<<<<<<< HEAD
-class UnsafeBareReadBarriered : public ReadBarrieredBase<T> {
- public:
-  UnsafeBareReadBarriered()
-      : ReadBarrieredBase<T>(JS::SafelyInitialized<T>()) {}
-  MOZ_IMPLICIT UnsafeBareReadBarriered(const T& v) : ReadBarrieredBase<T>(v) {}
-  explicit UnsafeBareReadBarriered(const UnsafeBareReadBarriered& v)
-      : ReadBarrieredBase<T>(v) {}
-  UnsafeBareReadBarriered(UnsafeBareReadBarriered&& v)
-      : ReadBarrieredBase<T>(std::move(v)) {}
-
-  UnsafeBareReadBarriered& operator=(const UnsafeBareReadBarriered& v) {
-    this->value = v.value;
-    return *this;
-  }
-
-  UnsafeBareReadBarriered& operator=(const T& v) {
-    this->value = v;
-    return *this;
-  }
-
-  const T get() const {
-    if (!InternalBarrierMethods<T>::isMarkable(this->value)) {
-      return JS::SafelyInitialized<T>();
-||||||| merged common ancestors
-class UnsafeBareReadBarriered : public ReadBarrieredBase<T>
-{
-  public:
-    UnsafeBareReadBarriered() : ReadBarrieredBase<T>(JS::SafelyInitialized<T>()) {}
-    MOZ_IMPLICIT UnsafeBareReadBarriered(const T& v) : ReadBarrieredBase<T>(v) {}
-    explicit UnsafeBareReadBarriered(const UnsafeBareReadBarriered& v) : ReadBarrieredBase<T>(v) {}
-    UnsafeBareReadBarriered(UnsafeBareReadBarriered&& v)
-      : ReadBarrieredBase<T>(std::move(v))
-    {}
-
-    UnsafeBareReadBarriered& operator=(const UnsafeBareReadBarriered& v) {
-        this->value = v.value;
-        return *this;
-=======
 class UnsafeBareWeakHeapPtr : public ReadBarriered<T> {
  public:
   UnsafeBareWeakHeapPtr() : ReadBarriered<T>(JS::SafelyInitialized<T>()) {}
@@ -81,7 +42,6 @@ class UnsafeBareWeakHeapPtr : public ReadBarriered<T> {
   const T get() const {
     if (!InternalBarrierMethods<T>::isMarkable(this->value)) {
       return JS::SafelyInitialized<T>();
->>>>>>> upstream-releases
     }
     this->read();
     return this->value;
@@ -109,100 +69,6 @@ class UnsafeBareWeakHeapPtr : public ReadBarriered<T> {
 template <typename Key, typename Value,
           typename HashPolicy = DefaultHasher<Key>,
           typename AllocPolicy = TempAllocPolicy>
-<<<<<<< HEAD
-class NurseryAwareHashMap {
-  using BarrieredValue = detail::UnsafeBareReadBarriered<Value>;
-  using MapType =
-      GCRekeyableHashMap<Key, BarrieredValue, HashPolicy, AllocPolicy>;
-  MapType map;
-
-  // Keep a list of all keys for which JS::GCPolicy<Key>::isTenured is false.
-  // This lets us avoid a full traveral of the map on each minor GC, keeping
-  // the minor GC times proportional to the nursery heap size.
-  Vector<Key, 0, AllocPolicy> nurseryEntries;
-
- public:
-  using Lookup = typename MapType::Lookup;
-  using Ptr = typename MapType::Ptr;
-  using Range = typename MapType::Range;
-  using Entry = typename MapType::Entry;
-
-  explicit NurseryAwareHashMap(AllocPolicy a = AllocPolicy()) : map(a) {}
-  explicit NurseryAwareHashMap(size_t length) : map(length) {}
-  NurseryAwareHashMap(AllocPolicy a, size_t length) : map(a, length) {}
-
-  bool empty() const { return map.empty(); }
-  Ptr lookup(const Lookup& l) const { return map.lookup(l); }
-  void remove(Ptr p) { map.remove(p); }
-  Range all() const { return map.all(); }
-  struct Enum : public MapType::Enum {
-    explicit Enum(NurseryAwareHashMap& namap) : MapType::Enum(namap.map) {}
-  };
-  size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-    return map.shallowSizeOfExcludingThis(mallocSizeOf) +
-           nurseryEntries.sizeOfExcludingThis(mallocSizeOf);
-  }
-  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-    return map.shallowSizeOfIncludingThis(mallocSizeOf) +
-           nurseryEntries.sizeOfIncludingThis(mallocSizeOf);
-  }
-
-  MOZ_MUST_USE bool put(const Key& k, const Value& v) {
-    auto p = map.lookupForAdd(k);
-    if (p) {
-      if (!JS::GCPolicy<Key>::isTenured(k) ||
-          !JS::GCPolicy<Value>::isTenured(v)) {
-        if (!nurseryEntries.append(k)) {
-          return false;
-||||||| merged common ancestors
-class NurseryAwareHashMap
-{
-    using BarrieredValue = detail::UnsafeBareReadBarriered<Value>;
-    using MapType = GCRekeyableHashMap<Key, BarrieredValue, HashPolicy, AllocPolicy>;
-    MapType map;
-
-    // Keep a list of all keys for which JS::GCPolicy<Key>::isTenured is false.
-    // This lets us avoid a full traveral of the map on each minor GC, keeping
-    // the minor GC times proportional to the nursery heap size.
-    Vector<Key, 0, AllocPolicy> nurseryEntries;
-
-  public:
-    using Lookup = typename MapType::Lookup;
-    using Ptr = typename MapType::Ptr;
-    using Range = typename MapType::Range;
-    using Entry = typename MapType::Entry;
-
-    explicit NurseryAwareHashMap(AllocPolicy a = AllocPolicy()) : map(a) {}
-    explicit NurseryAwareHashMap(size_t length) : map(length) {}
-    NurseryAwareHashMap(AllocPolicy a, size_t length) : map(a, length) {}
-
-    bool empty() const { return map.empty(); }
-    Ptr lookup(const Lookup& l) const { return map.lookup(l); }
-    void remove(Ptr p) { map.remove(p); }
-    Range all() const { return map.all(); }
-    struct Enum : public MapType::Enum {
-        explicit Enum(NurseryAwareHashMap& namap) : MapType::Enum(namap.map) {}
-    };
-    size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-        return map.shallowSizeOfExcludingThis(mallocSizeOf) +
-               nurseryEntries.sizeOfExcludingThis(mallocSizeOf);
-    }
-    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-        return map.shallowSizeOfIncludingThis(mallocSizeOf) +
-               nurseryEntries.sizeOfIncludingThis(mallocSizeOf);
-    }
-
-    MOZ_MUST_USE bool put(const Key& k, const Value& v) {
-        auto p = map.lookupForAdd(k);
-        if (p) {
-            if (!JS::GCPolicy<Key>::isTenured(k) || !JS::GCPolicy<Value>::isTenured(v)) {
-                if (!nurseryEntries.append(k)) {
-                    return false;
-                }
-            }
-            p->value() = v;
-            return true;
-=======
 class NurseryAwareHashMap {
   using BarrieredValue = detail::UnsafeBareWeakHeapPtr<Value>;
   using MapType =
@@ -249,7 +115,6 @@ class NurseryAwareHashMap {
           !JS::GCPolicy<Value>::isTenured(v)) {
         if (!nurseryEntries.append(k)) {
           return false;
->>>>>>> upstream-releases
         }
       }
       p->value() = v;
@@ -316,28 +181,6 @@ class NurseryAwareHashMap {
 
 namespace JS {
 template <typename T>
-<<<<<<< HEAD
-struct GCPolicy<js::detail::UnsafeBareReadBarriered<T>> {
-  static void trace(JSTracer* trc,
-                    js::detail::UnsafeBareReadBarriered<T>* thingp,
-                    const char* name) {
-    js::TraceEdge(trc, thingp, name);
-  }
-  static bool needsSweep(js::detail::UnsafeBareReadBarriered<T>* thingp) {
-    return js::gc::IsAboutToBeFinalized(thingp);
-  }
-||||||| merged common ancestors
-struct GCPolicy<js::detail::UnsafeBareReadBarriered<T>>
-{
-    static void trace(JSTracer* trc, js::detail::UnsafeBareReadBarriered<T>* thingp,
-                      const char* name)
-    {
-        js::TraceEdge(trc, thingp, name);
-    }
-    static bool needsSweep(js::detail::UnsafeBareReadBarriered<T>* thingp) {
-        return js::gc::IsAboutToBeFinalized(thingp);
-    }
-=======
 struct GCPolicy<js::detail::UnsafeBareWeakHeapPtr<T>> {
   static void trace(JSTracer* trc, js::detail::UnsafeBareWeakHeapPtr<T>* thingp,
                     const char* name) {
@@ -346,7 +189,6 @@ struct GCPolicy<js::detail::UnsafeBareWeakHeapPtr<T>> {
   static bool needsSweep(js::detail::UnsafeBareWeakHeapPtr<T>* thingp) {
     return js::gc::IsAboutToBeFinalized(thingp);
   }
->>>>>>> upstream-releases
 };
 }  // namespace JS
 

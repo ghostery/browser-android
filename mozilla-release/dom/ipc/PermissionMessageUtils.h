@@ -14,38 +14,11 @@
 
 namespace IPC {
 
-<<<<<<< HEAD
-template <>
-struct ParamTraits<nsIPrincipal> {
-  static void Write(Message* aMsg, nsIPrincipal* aParam);
-  static bool Read(const Message* aMsg, PickleIterator* aIter,
-                   RefPtr<nsIPrincipal>* aResult);
-};
-
-||||||| merged common ancestors
-template<>
-struct ParamTraits<nsIPrincipal>
-{
-  static void Write(Message* aMsg, nsIPrincipal* aParam);
-  static bool Read(const Message* aMsg, PickleIterator* aIter, RefPtr<nsIPrincipal>* aResult);
-};
-
-=======
->>>>>>> upstream-releases
 /**
  * Legacy IPC::Principal type. Use nsIPrincipal directly in new IPDL code.
  */
-<<<<<<< HEAD
-class Principal {
-  friend struct ParamTraits<Principal>;
-||||||| merged common ancestors
-class Principal
-{
-  friend struct ParamTraits<Principal>;
-=======
 class Principal {
   friend struct mozilla::ipc::IPDLParamTraits<Principal>;
->>>>>>> upstream-releases
 
  public:
   Principal() : mPrincipal(nullptr) {}
@@ -69,27 +42,6 @@ namespace mozilla {
 namespace ipc {
 
 template <>
-<<<<<<< HEAD
-struct ParamTraits<Principal> {
-  typedef Principal paramType;
-  static void Write(Message* aMsg, const paramType& aParam) {
-    WriteParam(aMsg, aParam.mPrincipal);
-  }
-  static bool Read(const Message* aMsg, PickleIterator* aIter,
-                   paramType* aResult) {
-    return ReadParam(aMsg, aIter, &aResult->mPrincipal);
-||||||| merged common ancestors
-struct ParamTraits<Principal>
-{
-  typedef Principal paramType;
-  static void Write(Message* aMsg, const paramType& aParam)
-  {
-    WriteParam(aMsg, aParam.mPrincipal);
-  }
-  static bool Read(const Message* aMsg, PickleIterator* aIter, paramType* aResult)
-  {
-    return ReadParam(aMsg, aIter, &aResult->mPrincipal);
-=======
 struct IPDLParamTraits<nsIPrincipal*> {
   static void Write(IPC::Message* aMsg, IProtocol* aActor,
                     nsIPrincipal* aParam);
@@ -105,17 +57,9 @@ struct IPDLParamTraits<nsIPrincipal*> {
     }
     *aResult = result.forget();
     return true;
->>>>>>> upstream-releases
   }
 };
 
-<<<<<<< HEAD
-}  // namespace IPC
-||||||| merged common ancestors
-} // namespace IPC
-
-#endif // mozilla_dom_permission_message_utils_h__
-=======
 template <>
 struct IPDLParamTraits<IPC::Principal> {
   typedef IPC::Principal paramType;
@@ -131,6 +75,5 @@ struct IPDLParamTraits<IPC::Principal> {
 
 }  // namespace ipc
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_dom_permission_message_utils_h__

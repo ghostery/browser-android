@@ -58,36 +58,14 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-bool WebGLContext::ValidateObject(const char* const argName,
-                                  const WebGLProgram& object) {
-  return ValidateObject(argName, object, true);
-||||||| merged common ancestors
-bool
-WebGLContext::ValidateObject(const char* const argName, const WebGLProgram& object)
-{
-    return ValidateObject(argName, object, true);
-=======
 bool WebGLContext::ValidateObject(const char* const argName,
                                   const WebGLProgram& object) const {
   return ValidateObject(argName, object, true);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool WebGLContext::ValidateObject(const char* const argName,
-                                  const WebGLShader& object) {
-  return ValidateObject(argName, object, true);
-||||||| merged common ancestors
-bool
-WebGLContext::ValidateObject(const char* const argName, const WebGLShader& object)
-{
-    return ValidateObject(argName, object, true);
-=======
 bool WebGLContext::ValidateObject(const char* const argName,
                                   const WebGLShader& object) const {
   return ValidateObject(argName, object, true);
->>>>>>> upstream-releases
 }
 
 using namespace mozilla::dom;
@@ -468,30 +446,8 @@ void WebGLContext::DepthRange(GLfloat zNear, GLfloat zFar) {
   gl->fDepthRange(zNear, zFar);
 }
 
-<<<<<<< HEAD
-void WebGLContext::FramebufferRenderbuffer(GLenum target, GLenum attachment,
-                                           GLenum rbtarget,
-                                           WebGLRenderbuffer* wrb) {
-  const FuncScope funcScope(*this, "framebufferRenderbuffer");
-  if (IsContextLost()) return;
-||||||| merged common ancestors
-void
-WebGLContext::FramebufferRenderbuffer(GLenum target, GLenum attachment,
-                                      GLenum rbtarget, WebGLRenderbuffer* wrb)
-{
-    const FuncScope funcScope(*this, "framebufferRenderbuffer");
-    if (IsContextLost())
-        return;
-=======
 // -
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!ValidateFramebufferTarget(target)) return;
-||||||| merged common ancestors
-    if (!ValidateFramebufferTarget(target))
-        return;
-=======
 void WebGLContext::FramebufferAttach(
     const GLenum target, const GLenum attachEnum, const TexTarget reqTexTarget,
     const webgl::FbAttachInfo& toAttach) const {
@@ -541,57 +497,21 @@ void WebGLContext::FramebufferAttach(
         maxZLayer = 1;
         maxZLayerText = "1";
         break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  WebGLFramebuffer* fb;
-  switch (target) {
-    case LOCAL_GL_FRAMEBUFFER:
-    case LOCAL_GL_DRAW_FRAMEBUFFER:
-      fb = mBoundDrawFramebuffer;
-      break;
-||||||| merged common ancestors
-    WebGLFramebuffer* fb;
-    switch (target) {
-    case LOCAL_GL_FRAMEBUFFER:
-    case LOCAL_GL_DRAW_FRAMEBUFFER:
-        fb = mBoundDrawFramebuffer;
-        break;
-=======
       case LOCAL_GL_TEXTURE_CUBE_MAP:
         maxMipLevel = FloorLog2(mGLMaxCubeMapTextureSize);
         maxMipLevelText = "log2(MAX_CUBE_MAP_TEXTURE_SIZE)";
         maxZLayer = 6;
         maxZLayerText = "6";
         break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_READ_FRAMEBUFFER:
-      fb = mBoundReadFramebuffer;
-      break;
-||||||| merged common ancestors
-    case LOCAL_GL_READ_FRAMEBUFFER:
-        fb = mBoundReadFramebuffer;
-        break;
-=======
       case LOCAL_GL_TEXTURE_3D:
         maxMipLevel = FloorLog2(mGLMax3DTextureSize);
         maxMipLevelText = "log2(MAX_3D_TEXTURE_SIZE)";
         maxZLayer = mGLMax3DTextureSize - 1;
         maxZLayerText = "MAX_3D_TEXTURE_SIZE";
         break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    default:
-      MOZ_CRASH("GFX: Bad target.");
-  }
-||||||| merged common ancestors
-    default:
-        MOZ_CRASH("GFX: Bad target.");
-    }
-=======
       case LOCAL_GL_TEXTURE_2D_ARRAY:
         maxMipLevel = FloorLog2(mGLMaxTextureSize);
         maxMipLevelText = "log2(MAX_TEXTURE_SIZE)";
@@ -607,27 +527,14 @@ void WebGLContext::FramebufferAttach(
       maxMipLevel = 0;
       maxMipLevelText = "0";
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!fb) return ErrorInvalidOperation("Cannot modify framebuffer 0.");
-||||||| merged common ancestors
-    if (!fb)
-        return ErrorInvalidOperation("Cannot modify framebuffer 0.");
-=======
     if (toAttach.mipLevel < 0)
       return ErrorInvalidValue("`level` must be >= 0.");
     if (toAttach.mipLevel > maxMipLevel) {
       ErrorInvalidValue("`level` must be <= %s.", maxMipLevelText);
       return;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  fb->FramebufferRenderbuffer(attachment, rbtarget, wrb);
-||||||| merged common ancestors
-    fb->FramebufferRenderbuffer(attachment, rbtarget, wrb);
-=======
     if (toAttach.zLayer < 0) return ErrorInvalidValue("`layer` must be >= 0.");
     if (toAttach.zLayerCount < 1)
       return ErrorInvalidValue("`numViews` must be >= 1.");
@@ -646,76 +553,24 @@ void WebGLContext::FramebufferAttach(
   }
 
   fb->FramebufferAttach(attachEnum, toAttach);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void WebGLContext::FramebufferTexture2D(GLenum target, GLenum attachment,
-                                        GLenum textarget, WebGLTexture* tobj,
-                                        GLint level) {
-  const FuncScope funcScope(*this, "framebufferTexture2D");
-  if (IsContextLost()) return;
-||||||| merged common ancestors
-void
-WebGLContext::FramebufferTexture2D(GLenum target,
-                                   GLenum attachment,
-                                   GLenum textarget,
-                                   WebGLTexture* tobj,
-                                   GLint level)
-{
-    const FuncScope funcScope(*this, "framebufferTexture2D");
-    if (IsContextLost())
-        return;
-=======
 void WebGLContext::FramebufferRenderbuffer(const GLenum target,
                                            const GLenum attachEnum,
                                            const GLenum rbTarget,
                                            WebGLRenderbuffer* const rb) const {
   const FuncScope funcScope(*this, "framebufferRenderbuffer");
   if (IsContextLost()) return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!ValidateFramebufferTarget(target)) return;
-||||||| merged common ancestors
-    if (!ValidateFramebufferTarget(target))
-        return;
-=======
   if (rbTarget != LOCAL_GL_RENDERBUFFER) {
     ErrorInvalidEnumArg("rbTarget", rbTarget);
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  WebGLFramebuffer* fb;
-  switch (target) {
-    case LOCAL_GL_FRAMEBUFFER:
-    case LOCAL_GL_DRAW_FRAMEBUFFER:
-      fb = mBoundDrawFramebuffer;
-      break;
-||||||| merged common ancestors
-    WebGLFramebuffer* fb;
-    switch (target) {
-    case LOCAL_GL_FRAMEBUFFER:
-    case LOCAL_GL_DRAW_FRAMEBUFFER:
-        fb = mBoundDrawFramebuffer;
-        break;
-=======
   const auto toAttach = webgl::FbAttachInfo{rb};
   FramebufferAttach(target, attachEnum, 0, toAttach);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_READ_FRAMEBUFFER:
-      fb = mBoundReadFramebuffer;
-      break;
-||||||| merged common ancestors
-    case LOCAL_GL_READ_FRAMEBUFFER:
-        fb = mBoundReadFramebuffer;
-        break;
-=======
 void WebGLContext::FramebufferTexture2D(const GLenum target,
                                         const GLenum attachEnum,
                                         const GLenum imageTarget,
@@ -744,17 +599,7 @@ void WebGLContext::FramebufferTexture2D(const GLenum target,
         return;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    default:
-      MOZ_CRASH("GFX: Bad target.");
-  }
-||||||| merged common ancestors
-    default:
-        MOZ_CRASH("GFX: Bad target.");
-    }
-=======
   FramebufferAttach(target, attachEnum, reqTexTarget, toAttach);
 }
 
@@ -785,64 +630,20 @@ void WebGLContext::FramebufferTextureLayer(const GLenum target,
 
   FramebufferAttach(target, attachEnum, 0, toAttach);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!fb) return ErrorInvalidOperation("Cannot modify framebuffer 0.");
-||||||| merged common ancestors
-    if (!fb)
-        return ErrorInvalidOperation("Cannot modify framebuffer 0.");
-=======
 void WebGLContext::FramebufferTextureMultiview(
     const GLenum target, const GLenum attachEnum, WebGLTexture* const tex,
     const GLint mipLevel, const GLint zLayerBase,
     const GLsizei numViewLayers) const {
   if (IsContextLost()) return;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  fb->FramebufferTexture2D(attachment, textarget, tobj, level);
-||||||| merged common ancestors
-    fb->FramebufferTexture2D(attachment, textarget, tobj, level);
-=======
   const auto toAttach = webgl::FbAttachInfo{nullptr,    tex,           mipLevel,
                                             zLayerBase, numViewLayers, true};
   FramebufferAttach(target, attachEnum, LOCAL_GL_TEXTURE_2D_ARRAY, toAttach);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void WebGLContext::FrontFace(GLenum mode) {
-  const FuncScope funcScope(*this, "frontFace");
-  if (IsContextLost()) return;
-||||||| merged common ancestors
-void
-WebGLContext::FrontFace(GLenum mode)
-{
-    const FuncScope funcScope(*this, "frontFace");
-    if (IsContextLost())
-        return;
-=======
 // -
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  switch (mode) {
-    case LOCAL_GL_CW:
-    case LOCAL_GL_CCW:
-      break;
-    default:
-      return ErrorInvalidEnumInfo("mode", mode);
-  }
-||||||| merged common ancestors
-    switch (mode) {
-        case LOCAL_GL_CW:
-        case LOCAL_GL_CCW:
-            break;
-        default:
-            return ErrorInvalidEnumInfo("mode", mode);
-    }
-=======
 void WebGLContext::FrontFace(GLenum mode) {
   const FuncScope funcScope(*this, "frontFace");
   if (IsContextLost()) return;
@@ -854,7 +655,6 @@ void WebGLContext::FrontFace(GLenum mode) {
     default:
       return ErrorInvalidEnumInfo("mode", mode);
   }
->>>>>>> upstream-releases
 
   gl->fFrontFace(mode);
 }
@@ -1270,34 +1070,13 @@ bool WebGLContext::IsProgram(const WebGLProgram* const obj) {
   return ValidateIsObject(obj);
 }
 
-<<<<<<< HEAD
-bool WebGLContext::IsQuery(const WebGLQuery* const obj) {
-  const FuncScope funcScope(*this, "isQuery");
-  if (!ValidateIsObject(obj)) return false;
-||||||| merged common ancestors
-bool
-WebGLContext::IsQuery(const WebGLQuery* const obj)
-{
-    const FuncScope funcScope(*this, "isQuery");
-    if (!ValidateIsObject(obj))
-        return false;
-=======
 bool WebGLContext::IsQuery(const WebGLQuery* const obj) {
   const FuncScope funcScope(*this, "isQuery");
   if (!ValidateIsObject(obj)) return false;
 
   if (obj->IsDeleteRequested()) return false;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (obj->IsDeleteRequested()) return false;
 
   return bool(obj->Target());
-||||||| merged common ancestors
-    return obj->IsQuery();
-=======
-  return bool(obj->Target());
->>>>>>> upstream-releases
 }
 
 bool WebGLContext::IsRenderbuffer(const WebGLRenderbuffer* const obj) {
@@ -1314,64 +1093,22 @@ bool WebGLContext::IsShader(const WebGLShader* const obj) {
   return ValidateIsObject(obj);
 }
 
-<<<<<<< HEAD
 bool WebGLContext::IsTexture(const WebGLTexture* const obj) {
   const FuncScope funcScope(*this, "isTexture");
   if (!ValidateIsObject(obj)) return false;
 
   if (obj->IsDeleteRequested()) return false;
-||||||| merged common ancestors
-bool
-WebGLContext::IsTexture(const WebGLTexture* const obj)
-{
-    const FuncScope funcScope(*this, "isTexture");
-    if (!ValidateIsObject(obj))
-        return false;
-=======
-bool WebGLContext::IsTexture(const WebGLTexture* const obj) {
-  const FuncScope funcScope(*this, "isTexture");
-  if (!ValidateIsObject(obj)) return false;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return bool(obj->Target());
-||||||| merged common ancestors
-    return obj->IsTexture();
-=======
-  if (obj->IsDeleteRequested()) return false;
 
   return bool(obj->Target());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool WebGLContext::IsVertexArray(const WebGLVertexArray* const obj) {
-  const FuncScope funcScope(*this, "isVertexArray");
-  if (!ValidateIsObject(obj)) return false;
-||||||| merged common ancestors
-bool
-WebGLContext::IsVertexArray(const WebGLVertexArray* const obj)
-{
-    const FuncScope funcScope(*this, "isVertexArray");
-    if (!ValidateIsObject(obj))
-        return false;
-=======
 bool WebGLContext::IsVertexArray(const WebGLVertexArray* const obj) {
   const FuncScope funcScope(*this, "isVertexArray");
   if (!ValidateIsObject(obj)) return false;
 
   if (obj->IsDeleteRequested()) return false;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (obj->IsDeleteRequested()) return false;
 
   return obj->mHasBeenBound;
-||||||| merged common ancestors
-    return obj->IsVertexArray();
-=======
-  return obj->mHasBeenBound;
->>>>>>> upstream-releases
 }
 
 // -
@@ -1672,23 +1409,11 @@ void WebGLContext::ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
   ////
 
-<<<<<<< HEAD
-  uint8_t* bytes;
-  size_t byteLen;
-  if (!ValidateArrayBufferView(dstView, dstElemOffset, 0, &bytes, &byteLen))
-    return;
-||||||| merged common ancestors
-    uint8_t* bytes;
-    size_t byteLen;
-    if (!ValidateArrayBufferView(dstView, dstElemOffset, 0, &bytes, &byteLen))
-        return;
-=======
   uint8_t* bytes;
   size_t byteLen;
   if (!ValidateArrayBufferView(dstView, dstElemOffset, 0,
                                LOCAL_GL_INVALID_VALUE, &bytes, &byteLen))
     return;
->>>>>>> upstream-releases
 
   ////
 
@@ -1761,33 +1486,10 @@ static webgl::PackingInfo DefaultReadPixelPI(
   }
 }
 
-<<<<<<< HEAD
 static bool ArePossiblePackEnums(const WebGLContext* webgl,
                                  const webgl::PackingInfo& pi) {
   // OpenGL ES 2.0 $4.3.1 - IMPLEMENTATION_COLOR_READ_{TYPE/FORMAT} is a valid
   // combination for glReadPixels()...
-
-  // So yeah, we are actually checking that these are valid as /unpack/ formats,
-  // instead of /pack/ formats here, but it should cover the INVALID_ENUM cases.
-  if (!webgl->mFormatUsage->AreUnpackEnumsValid(pi.format, pi.type))
-    return false;
-||||||| merged common ancestors
-static bool
-ArePossiblePackEnums(const WebGLContext* webgl, const webgl::PackingInfo& pi)
-{
-    // OpenGL ES 2.0 $4.3.1 - IMPLEMENTATION_COLOR_READ_{TYPE/FORMAT} is a valid
-    // combination for glReadPixels()...
-
-    // So yeah, we are actually checking that these are valid as /unpack/ formats, instead
-    // of /pack/ formats here, but it should cover the INVALID_ENUM cases.
-    if (!webgl->mFormatUsage->AreUnpackEnumsValid(pi.format, pi.type))
-        return false;
-=======
-static bool ArePossiblePackEnums(const WebGLContext* webgl,
-                                 const webgl::PackingInfo& pi) {
-  // OpenGL ES 2.0 $4.3.1 - IMPLEMENTATION_COLOR_READ_{TYPE/FORMAT} is a valid
-  // combination for glReadPixels()...
->>>>>>> upstream-releases
 
   // Only valid when pulled from:
   // * GLES 2.0.25 p105:
@@ -1804,16 +1506,10 @@ static bool ArePossiblePackEnums(const WebGLContext* webgl,
 
   if (pi.type == LOCAL_GL_UNSIGNED_INT_24_8) return false;
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   uint8_t bytes;
   if (!GetBytesPerPixel(pi, &bytes)) return false;
 
   return true;
->>>>>>> upstream-releases
 }
 
 webgl::PackingInfo WebGLContext::ValidImplementationColorReadPI(
@@ -2017,14 +1713,8 @@ void WebGLContext::Scissor(GLint x, GLint y, GLsizei width, GLsizei height) {
     return;
   }
 
-<<<<<<< HEAD
-  gl->fScissor(x, y, width, height);
-||||||| merged common ancestors
-    gl->fScissor(x, y, width, height);
-=======
   mScissorRect = {x, y, width, height};
   mScissorRect.Apply(*gl);
->>>>>>> upstream-releases
 }
 
 void WebGLContext::StencilFunc(GLenum func, GLint ref, GLuint mask) {
@@ -2218,7 +1908,6 @@ void WebGLContext::Uniform4f(WebGLUniformLocation* loc, GLfloat a1, GLfloat a2,
 ////////////////////////////////////////
 // Array
 
-<<<<<<< HEAD
 static bool ValidateArrOffsetAndCount(WebGLContext* webgl, size_t elemsAvail,
                                       GLuint elemOffset,
                                       GLuint elemCountOverride,
@@ -2238,67 +1927,6 @@ static bool ValidateArrOffsetAndCount(WebGLContext* webgl, size_t elemsAvail,
     }
     elemsAvail = elemCountOverride;
   }
-||||||| merged common ancestors
-static bool
-ValidateArrOffsetAndCount(WebGLContext* webgl, size_t elemsAvail,
-                          GLuint elemOffset, GLuint elemCountOverride,
-                          size_t* const out_elemCount)
-{
-    if (webgl->IsContextLost())
-        return false;
-
-    if (elemOffset > elemsAvail) {
-        webgl->ErrorInvalidValue("Bad offset into list.");
-        return false;
-    }
-    elemsAvail -= elemOffset;
-
-    if (elemCountOverride) {
-        if (elemCountOverride > elemsAvail) {
-            webgl->ErrorInvalidValue("Bad count override for sub-list.");
-            return false;
-        }
-        elemsAvail = elemCountOverride;
-    }
-
-    *out_elemCount = elemsAvail;
-    return true;
-}
-
-void
-WebGLContext::UniformNiv(const char* funcName, uint8_t N, WebGLUniformLocation* loc,
-                         const Int32Arr& arr, GLuint elemOffset, GLuint elemCountOverride)
-{
-    const FuncScope funcScope(*this, funcName);
-
-    size_t elemCount;
-    if (!ValidateArrOffsetAndCount(this, arr.elemCount, elemOffset,
-                                   elemCountOverride, &elemCount))
-    {
-        return;
-    }
-    const auto elemBytes = arr.elemBytes + elemOffset;
-=======
-static bool ValidateArrOffsetAndCount(WebGLContext* webgl, size_t elemsAvail,
-                                      GLuint elemOffset,
-                                      GLuint elemCountOverride,
-                                      size_t* const out_elemCount) {
-  if (webgl->IsContextLost()) return false;
-
-  if (elemOffset > elemsAvail) {
-    webgl->ErrorInvalidValue("Bad offset into list.");
-    return false;
-  }
-  elemsAvail -= elemOffset;
-
-  if (elemCountOverride) {
-    if (elemCountOverride > elemsAvail) {
-      webgl->ErrorInvalidValue("Bad count override for sub-list.");
-      return false;
-    }
-    elemsAvail = elemCountOverride;
-  }
->>>>>>> upstream-releases
 
   *out_elemCount = elemsAvail;
   return true;
@@ -2400,7 +2028,6 @@ static inline void MatrixAxBToRowMajor(const uint8_t width,
   }
 }
 
-<<<<<<< HEAD
 void WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A,
                                       uint8_t B, WebGLUniformLocation* loc,
                                       const bool transpose,
@@ -2408,56 +2035,6 @@ void WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A,
                                       GLuint elemCountOverride) {
   const FuncScope funcScope(*this, funcName);
 
-  size_t elemCount;
-  if (!ValidateArrOffsetAndCount(this, arr.elemCount, elemOffset,
-                                 elemCountOverride, &elemCount)) {
-    return;
-  }
-  const auto elemBytes = arr.elemBytes + elemOffset;
-||||||| merged common ancestors
-void
-WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A, uint8_t B,
-                                 WebGLUniformLocation* loc, const bool transpose,
-                                 const Float32Arr& arr, GLuint elemOffset,
-                                 GLuint elemCountOverride)
-{
-    const FuncScope funcScope(*this, funcName);
-
-    size_t elemCount;
-    if (!ValidateArrOffsetAndCount(this, arr.elemCount, elemOffset,
-                                   elemCountOverride, &elemCount))
-    {
-        return;
-    }
-    const auto elemBytes = arr.elemBytes + elemOffset;
-=======
-void WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A,
-                                      uint8_t B, WebGLUniformLocation* loc,
-                                      const bool transpose,
-                                      const Float32Arr& arr, GLuint elemOffset,
-                                      GLuint elemCountOverride) {
-  const FuncScope funcScope(*this, funcName);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  uint32_t numMatsToUpload;
-  if (!ValidateUniformMatrixArraySetter(loc, A, B, webgl::AttribBaseType::Float,
-                                        elemCount, transpose,
-                                        &numMatsToUpload)) {
-    return;
-  }
-  MOZ_ASSERT(!loc->mInfo->mSamplerTexList, "Should not be a sampler.");
-||||||| merged common ancestors
-    uint32_t numMatsToUpload;
-    if (!ValidateUniformMatrixArraySetter(loc, A, B, webgl::AttribBaseType::Float,
-                                          elemCount, transpose, &numMatsToUpload))
-    {
-        return;
-    }
-    MOZ_ASSERT(!loc->mInfo->mSamplerTexList, "Should not be a sampler.");
-
-    ////
-=======
   size_t elemCount;
   if (!ValidateArrOffsetAndCount(this, arr.elemCount, elemOffset,
                                  elemCountOverride, &elemCount)) {
@@ -2472,7 +2049,6 @@ void WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A,
     return;
   }
   MOZ_ASSERT(!loc->mInfo->mSamplerTexList, "Should not be a sampler.");
->>>>>>> upstream-releases
 
   ////
 
@@ -2501,72 +2077,24 @@ void WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A,
       dstItr += kElemsPerMat;
     }
 
-<<<<<<< HEAD
     uploadBytes = (const float*)temp.get();
     uploadTranspose = true;
   }
 
   ////
-||||||| merged common ancestors
-    ////
-=======
-    uploadBytes = (const float*)temp.get();
-    uploadTranspose = true;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   static const decltype(&gl::GLContext::fUniformMatrix2fv) kFuncList[] = {
       &gl::GLContext::fUniformMatrix2fv,   &gl::GLContext::fUniformMatrix2x3fv,
       &gl::GLContext::fUniformMatrix2x4fv,
-||||||| merged common ancestors
-    static const decltype(&gl::GLContext::fUniformMatrix2fv) kFuncList[] = {
-        &gl::GLContext::fUniformMatrix2fv,
-        &gl::GLContext::fUniformMatrix2x3fv,
-        &gl::GLContext::fUniformMatrix2x4fv,
-=======
-  ////
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
       &gl::GLContext::fUniformMatrix3x2fv, &gl::GLContext::fUniformMatrix3fv,
       &gl::GLContext::fUniformMatrix3x4fv,
-||||||| merged common ancestors
-        &gl::GLContext::fUniformMatrix3x2fv,
-        &gl::GLContext::fUniformMatrix3fv,
-        &gl::GLContext::fUniformMatrix3x4fv,
-=======
-  static const decltype(&gl::GLContext::fUniformMatrix2fv) kFuncList[] = {
-      &gl::GLContext::fUniformMatrix2fv,   &gl::GLContext::fUniformMatrix2x3fv,
-      &gl::GLContext::fUniformMatrix2x4fv,
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      &gl::GLContext::fUniformMatrix4x2fv, &gl::GLContext::fUniformMatrix4x3fv,
-      &gl::GLContext::fUniformMatrix4fv};
-  const auto func = kFuncList[3 * (A - 2) + (B - 2)];
-||||||| merged common ancestors
-        &gl::GLContext::fUniformMatrix4x2fv,
-        &gl::GLContext::fUniformMatrix4x3fv,
-        &gl::GLContext::fUniformMatrix4fv
-    };
-    const auto func = kFuncList[3*(A-2) + (B-2)];
-=======
-      &gl::GLContext::fUniformMatrix3x2fv, &gl::GLContext::fUniformMatrix3fv,
-      &gl::GLContext::fUniformMatrix3x4fv,
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  (gl->*func)(loc->mLoc, numMatsToUpload, uploadTranspose, uploadBytes);
-||||||| merged common ancestors
-    (gl->*func)(loc->mLoc, numMatsToUpload, uploadTranspose, uploadBytes);
-=======
       &gl::GLContext::fUniformMatrix4x2fv, &gl::GLContext::fUniformMatrix4x3fv,
       &gl::GLContext::fUniformMatrix4fv};
   const auto func = kFuncList[3 * (A - 2) + (B - 2)];
 
   (gl->*func)(loc->mLoc, numMatsToUpload, uploadTranspose, uploadBytes);
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////

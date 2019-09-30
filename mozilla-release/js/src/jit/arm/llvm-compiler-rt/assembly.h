@@ -35,16 +35,8 @@
 #define SYMBOL_NAME(name) GLUE(__USER_LABEL_PREFIX__, name)
 
 #ifdef VISIBILITY_HIDDEN
-<<<<<<< HEAD
-#define DECLARE_SYMBOL_VISIBILITY(name) \
-  HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
-||||||| merged common ancestors
-#define DECLARE_SYMBOL_VISIBILITY(name)                    \
-  HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
-=======
 #  define DECLARE_SYMBOL_VISIBILITY(name) \
     HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
->>>>>>> upstream-releases
 #else
 #  define DECLARE_SYMBOL_VISIBILITY(name)
 #endif
@@ -66,27 +58,11 @@
   .globl SYMBOL_NAME(name) SEPARATOR.set SYMBOL_NAME(name), \
       SYMBOL_NAME(target) SEPARATOR
 
-<<<<<<< HEAD
-#if defined(__ARM_EABI__)
-#define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name) \
-  DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
-||||||| merged common ancestors
-#if defined (__ARM_EABI__)
-# define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)      \
-  DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
-=======
 #if defined(__ARM_EABI__)
 #  define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name) \
     DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)
-||||||| merged common ancestors
-# define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)
-=======
 #  define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)
->>>>>>> upstream-releases
 #endif
 
 #endif /* COMPILERRT_ASSEMBLY_H */

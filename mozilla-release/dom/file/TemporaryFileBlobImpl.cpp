@@ -50,15 +50,6 @@ class TemporaryFileInputStream final : public nsFileInputStream {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  void Serialize(InputStreamParams& aParams,
-                 FileDescriptorArray& aFileDescriptors) override {
-||||||| merged common ancestors
-  void
-  Serialize(InputStreamParams& aParams,
-            FileDescriptorArray& aFileDescriptors) override
-  {
-=======
   void Serialize(InputStreamParams& aParams,
                  FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
                  uint32_t aMaxSize, uint32_t* aSizeUsed,
@@ -77,19 +68,9 @@ class TemporaryFileInputStream final : public nsFileInputStream {
                  FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
                  uint32_t aMaxSize, uint32_t* aSizeUsed,
                  ContentParent* aManager) override {
->>>>>>> upstream-releases
     MOZ_CRASH("This inputStream cannot be serialized.");
   }
 
-<<<<<<< HEAD
-  bool Deserialize(const InputStreamParams& aParams,
-                   const FileDescriptorArray& aFileDescriptors) override {
-||||||| merged common ancestors
-  bool
-  Deserialize(const InputStreamParams& aParams,
-              const FileDescriptorArray& aFileDescriptors) override
-  {
-=======
   void Serialize(InputStreamParams& aParams,
                  FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
                  uint32_t aMaxSize, uint32_t* aSizeUsed,
@@ -99,7 +80,6 @@ class TemporaryFileInputStream final : public nsFileInputStream {
 
   bool Deserialize(const InputStreamParams& aParams,
                    const FileDescriptorArray& aFileDescriptors) override {
->>>>>>> upstream-releases
     MOZ_CRASH("This inputStream cannot be deserialized.");
     return false;
   }
@@ -130,14 +110,8 @@ class TemporaryFileInputStream final : public nsFileInputStream {
 
 TemporaryFileBlobImpl::TemporaryFileBlobImpl(nsIFile* aFile,
                                              const nsAString& aContentType)
-<<<<<<< HEAD
-    : FileBlobImpl(aFile, EmptyString(), aContentType)
-||||||| merged common ancestors
-  : FileBlobImpl(aFile, EmptyString(), aContentType)
-=======
     : FileBlobImpl(aFile, EmptyString(), aContentType,
                    NS_LITERAL_STRING("TemporaryBlobImpl"))
->>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mInputStreamCreated(false)

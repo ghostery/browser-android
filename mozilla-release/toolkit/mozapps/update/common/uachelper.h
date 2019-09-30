@@ -14,16 +14,8 @@ class UACHelper {
 
  private:
   static BOOL SetPrivilege(HANDLE token, LPCTSTR privs, BOOL enable);
-<<<<<<< HEAD
-  static BOOL DisableUnneededPrivileges(HANDLE token, LPCTSTR *unneededPrivs,
-                                        size_t count);
-||||||| merged common ancestors
-  static BOOL DisableUnneededPrivileges(HANDLE token,
-                                        LPCTSTR *unneededPrivs, size_t count);
-=======
   static BOOL DisableUnneededPrivileges(HANDLE token, LPCTSTR* unneededPrivs,
                                         size_t count);
->>>>>>> upstream-releases
   static LPCTSTR PrivsToDisable[];
 };
 

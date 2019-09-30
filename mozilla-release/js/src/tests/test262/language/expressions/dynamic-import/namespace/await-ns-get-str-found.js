@@ -1,9 +1,4 @@
-<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/namespace/await-ns-get-str-found.js
-||||||| merged common ancestors
-// |reftest| skip -- dynamic-import is not supported
-=======
 // |reftest| skip-if(!xulRuntime.shell) -- dynamic-import is not enabled unconditionally
->>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/namespace/await-ns-get-str-found.js
 // This file was procedurally generated from the following sources:
 // - src/dynamic-import/ns-get-str-found.case
 // - src/dynamic-import/namespace/await.template

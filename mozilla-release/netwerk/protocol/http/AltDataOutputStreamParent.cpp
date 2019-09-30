@@ -42,16 +42,8 @@ mozilla::ipc::IPCResult AltDataOutputStreamParent::RecvWriteData(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult AltDataOutputStreamParent::RecvClose() {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-AltDataOutputStreamParent::RecvClose()
-{
-=======
 mozilla::ipc::IPCResult AltDataOutputStreamParent::RecvClose(
     const nsresult& aStatus) {
->>>>>>> upstream-releases
   if (NS_FAILED(mStatus)) {
     if (mIPCOpen) {
       Unused << SendError(mStatus);

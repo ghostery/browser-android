@@ -39,75 +39,6 @@ const TEST_URL = `data:text/html;charset=utf-8,
 const ID = "geometry-editor-";
 const HIGHLIGHTER_TYPE = "GeometryEditorHighlighter";
 
-<<<<<<< HEAD
-const POSITIONED_ELEMENT_TESTS = [{
-  selector: "#positioned",
-  expectedLabels: [
-    {side: "left", visible: true, label: "5rem"},
-    {side: "top", visible: true, label: "30px"},
-    {side: "right", visible: true, label: "300px"},
-    {side: "bottom", visible: true, label: "10em"},
-  ],
-}, {
-  selector: "#positioned2",
-  expectedLabels: [
-    {side: "left", visible: false},
-    {side: "top", visible: true, label: "5vmin"},
-    {side: "right", visible: true, label: "10%"},
-    {side: "bottom", visible: false},
-  ],
-}, {
-  selector: "#relative",
-  expectedLabels: [
-    {side: "left", visible: true, label: "20px"},
-    {side: "top", visible: true, label: "10px"},
-    {side: "right", visible: false},
-    {side: "bottom", visible: false},
-  ],
-}, {
-  selector: "#relative2",
-  expectedLabels: [
-    {side: "left", visible: false},
-    {side: "top", visible: true, label: "0px"},
-    {side: "right", visible: false},
-    {side: "bottom", visible: false},
-  ],
-}];
-||||||| merged common ancestors
-const POSITIONED_ELEMENT_TESTS = [{
-  selector: "#positioned",
-  expectedLabels: [
-    {side: "left", visible: true, label: "5rem"},
-    {side: "top", visible: true, label: "30px"},
-    {side: "right", visible: true, label: "300px"},
-    {side: "bottom", visible: true, label: "10em"}
-  ]
-}, {
-  selector: "#positioned2",
-  expectedLabels: [
-    {side: "left", visible: false},
-    {side: "top", visible: true, label: "5vmin"},
-    {side: "right", visible: true, label: "10%"},
-    {side: "bottom", visible: false}
-  ]
-}, {
-  selector: "#relative",
-  expectedLabels: [
-    {side: "left", visible: true, label: "20px"},
-    {side: "top", visible: true, label: "10px"},
-    {side: "right", visible: false},
-    {side: "bottom", visible: false}
-  ]
-}, {
-  selector: "#relative2",
-  expectedLabels: [
-    {side: "left", visible: false},
-    {side: "top", visible: true, label: "0px"},
-    {side: "right", visible: false},
-    {side: "bottom", visible: false}
-  ]
-}];
-=======
 const POSITIONED_ELEMENT_TESTS = [
   {
     selector: "#positioned",
@@ -146,7 +77,6 @@ const POSITIONED_ELEMENT_TESTS = [
     ],
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const helper = await openInspectorForURL(TEST_URL).then(

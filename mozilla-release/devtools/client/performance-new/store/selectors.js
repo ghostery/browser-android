@@ -9,21 +9,14 @@ const getRecordingUnexpectedlyStopped = state =>
 const getIsSupportedPlatform = state => state.isSupportedPlatform;
 const getInterval = state => state.interval;
 const getEntries = state => state.entries;
-const getDuration = state => state.duration;
 const getFeatures = state => state.features;
 const getThreads = state => state.threads;
 const getThreadsString = state => getThreads(state).join(",");
-<<<<<<< HEAD
-const getActorVersion = state => state.actorVersion;
-||||||| merged common ancestors
-=======
 const getObjdirs = state => state.objdirs;
->>>>>>> upstream-releases
 
 const getRecordingSettings = state => {
   return {
     entries: getEntries(state),
-    duration: getDuration(state),
     interval: getInterval(state),
     features: getFeatures(state),
     threads: getThreads(state),
@@ -50,7 +43,6 @@ module.exports = {
   getIsSupportedPlatform,
   getInterval,
   getEntries,
-  getDuration,
   getFeatures,
   getThreads,
   getThreadsString,
@@ -60,5 +52,4 @@ module.exports = {
   getPerfFront,
   getReceiveProfileFn,
   getSetRecordingPreferencesFn,
-  getActorVersion,
 };

@@ -37,12 +37,6 @@
 #include "nsIScriptError.h"
 #include "nsIXULRuntime.h"
 
-<<<<<<< HEAD
-#define SELECTED_SKIN_PREF "general.skins.selectedSkin"
-||||||| merged common ancestors
-#define SELECTED_SKIN_PREF   "general.skins.selectedSkin"
-=======
->>>>>>> upstream-releases
 #define PACKAGE_OVERRIDE_BRANCH "chrome.override_package."
 #define SKIN NS_LITERAL_CSTRING("classic/1.0")
 
@@ -98,84 +92,14 @@ nsChromeRegistryChrome::~nsChromeRegistryChrome() {}
 
 nsresult nsChromeRegistryChrome::Init() {
   nsresult rv = nsChromeRegistry::Init();
-<<<<<<< HEAD
   if (NS_FAILED(rv)) return rv;
-
-  mSelectedSkin = NS_LITERAL_CSTRING("classic/1.0");
-||||||| merged common ancestors
-  if (NS_FAILED(rv))
-    return rv;
-
-  mSelectedSkin = NS_LITERAL_CSTRING("classic/1.0");
-=======
-  if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   bool safeMode = false;
-<<<<<<< HEAD
   nsCOMPtr<nsIXULRuntime> xulrun(do_GetService(XULAPPINFO_SERVICE_CONTRACTID));
   if (xulrun) xulrun->GetInSafeMode(&safeMode);
 
-  nsCOMPtr<nsIPrefService> prefserv(do_GetService(NS_PREFSERVICE_CONTRACTID));
-  nsCOMPtr<nsIPrefBranch> prefs;
-
-  if (prefserv) {
-    if (safeMode) {
-      prefserv->GetDefaultBranch(nullptr, getter_AddRefs(prefs));
-    } else {
-      prefs = do_QueryInterface(prefserv);
-    }
-  }
-||||||| merged common ancestors
-  nsCOMPtr<nsIXULRuntime> xulrun (do_GetService(XULAPPINFO_SERVICE_CONTRACTID));
-  if (xulrun)
-    xulrun->GetInSafeMode(&safeMode);
-
-  nsCOMPtr<nsIPrefService> prefserv (do_GetService(NS_PREFSERVICE_CONTRACTID));
-  nsCOMPtr<nsIPrefBranch> prefs;
-
-  if (prefserv) {
-    if (safeMode) {
-      prefserv->GetDefaultBranch(nullptr, getter_AddRefs(prefs));
-    } else {
-      prefs = do_QueryInterface(prefserv);
-    }
-  }
-=======
-  nsCOMPtr<nsIXULRuntime> xulrun(do_GetService(XULAPPINFO_SERVICE_CONTRACTID));
-  if (xulrun) xulrun->GetInSafeMode(&safeMode);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!prefs) {
-    NS_WARNING("Could not get pref service!");
-  } else {
-    nsAutoCString provider;
-    rv = prefs->GetCharPref(SELECTED_SKIN_PREF, provider);
-    if (NS_SUCCEEDED(rv)) mSelectedSkin = provider;
-
-    rv = prefs->AddObserver(SELECTED_SKIN_PREF, this, true);
-  }
-
   nsCOMPtr<nsIObserverService> obsService =
       mozilla::services::GetObserverService();
-||||||| merged common ancestors
-  if (!prefs) {
-    NS_WARNING("Could not get pref service!");
-  } else {
-    nsAutoCString provider;
-    rv = prefs->GetCharPref(SELECTED_SKIN_PREF, provider);
-    if (NS_SUCCEEDED(rv))
-      mSelectedSkin = provider;
-
-    rv = prefs->AddObserver(SELECTED_SKIN_PREF, this, true);
-  }
-
-  nsCOMPtr<nsIObserverService> obsService = mozilla::services::GetObserverService();
-=======
-  nsCOMPtr<nsIObserverService> obsService =
-      mozilla::services::GetObserverService();
->>>>>>> upstream-releases
   if (obsService) {
     obsService->AddObserver(this, "profile-initial-state", true);
     obsService->AddObserver(this, "intl:app-locales-changed", true);
@@ -185,60 +109,8 @@ nsresult nsChromeRegistryChrome::Init() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeRegistryChrome::CheckForOSAccessibility() {
-  int32_t useAccessibilityTheme =
-      LookAndFeel::GetInt(LookAndFeel::eIntID_UseAccessibilityTheme, 0);
-
-  if (useAccessibilityTheme) {
-    /* Set the skin to classic and remove pref observers */
-    if (!mSelectedSkin.EqualsLiteral("classic/1.0")) {
-      mSelectedSkin.AssignLiteral("classic/1.0");
-      RefreshSkins();
-    }
-
-    nsCOMPtr<nsIPrefBranch> prefs(do_GetService(NS_PREFSERVICE_CONTRACTID));
-    if (prefs) {
-      prefs->RemoveObserver(SELECTED_SKIN_PREF, this);
-    }
-  }
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
 nsChromeRegistryChrome::GetLocalesForPackage(
     const nsACString& aPackage, nsIUTF8StringEnumerator** aResult) {
-||||||| merged common ancestors
-nsChromeRegistryChrome::CheckForOSAccessibility()
-{
-  int32_t useAccessibilityTheme =
-    LookAndFeel::GetInt(LookAndFeel::eIntID_UseAccessibilityTheme, 0);
-
-  if (useAccessibilityTheme) {
-    /* Set the skin to classic and remove pref observers */
-    if (!mSelectedSkin.EqualsLiteral("classic/1.0")) {
-      mSelectedSkin.AssignLiteral("classic/1.0");
-      RefreshSkins();
-    }
-
-    nsCOMPtr<nsIPrefBranch> prefs (do_GetService(NS_PREFSERVICE_CONTRACTID));
-    if (prefs) {
-      prefs->RemoveObserver(SELECTED_SKIN_PREF, this);
-    }
-  }
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsChromeRegistryChrome::GetLocalesForPackage(const nsACString& aPackage,
-                                       nsIUTF8StringEnumerator* *aResult)
-{
-=======
-nsChromeRegistryChrome::GetLocalesForPackage(
-    const nsACString& aPackage, nsIUTF8StringEnumerator** aResult) {
->>>>>>> upstream-releases
   nsCString realpackage;
   nsresult rv = OverrideLocalePackage(aPackage, realpackage);
   if (NS_FAILED(rv)) return rv;
@@ -324,52 +196,7 @@ nsChromeRegistryChrome::Observe(nsISupports* aSubject, const char* aTopic,
                                 const char16_t* someData) {
   nsresult rv = NS_OK;
 
-<<<<<<< HEAD
-  if (!strcmp(NS_PREFBRANCH_PREFCHANGE_TOPIC_ID, aTopic)) {
-    nsCOMPtr<nsIPrefBranch> prefs(do_QueryInterface(aSubject));
-    NS_ASSERTION(prefs, "Bad observer call!");
-
-    NS_ConvertUTF16toUTF8 pref(someData);
-
-    if (pref.EqualsLiteral(SELECTED_SKIN_PREF)) {
-      nsAutoCString provider;
-      rv = prefs->GetCharPref(pref.get(), provider);
-      if (NS_FAILED(rv)) {
-        NS_ERROR("Couldn't get new skin pref!");
-        return rv;
-      }
-
-      mSelectedSkin = provider;
-      RefreshSkins();
-    } else {
-      NS_ERROR("Unexpected pref!");
-    }
-  } else if (!strcmp("profile-initial-state", aTopic)) {
-||||||| merged common ancestors
-  if (!strcmp(NS_PREFBRANCH_PREFCHANGE_TOPIC_ID, aTopic)) {
-    nsCOMPtr<nsIPrefBranch> prefs (do_QueryInterface(aSubject));
-    NS_ASSERTION(prefs, "Bad observer call!");
-
-    NS_ConvertUTF16toUTF8 pref(someData);
-
-    if (pref.EqualsLiteral(SELECTED_SKIN_PREF)) {
-      nsAutoCString provider;
-      rv = prefs->GetCharPref(pref.get(), provider);
-      if (NS_FAILED(rv)) {
-        NS_ERROR("Couldn't get new skin pref!");
-        return rv;
-      }
-
-      mSelectedSkin = provider;
-      RefreshSkins();
-    } else {
-      NS_ERROR("Unexpected pref!");
-    }
-  }
-  else if (!strcmp("profile-initial-state", aTopic)) {
-=======
   if (!strcmp("profile-initial-state", aTopic)) {
->>>>>>> upstream-releases
     mProfileLoaded = true;
   } else if (!strcmp("intl:app-locales-changed", aTopic)) {
     if (mProfileLoaded) {
@@ -383,12 +210,6 @@ nsChromeRegistryChrome::Observe(nsISupports* aSubject, const char* aTopic,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeRegistryChrome::CheckForNewChrome() {
-||||||| merged common ancestors
-nsChromeRegistryChrome::CheckForNewChrome()
-{
-=======
 nsChromeRegistryChrome::CheckForNewChrome() {
   nsCOMPtr<nsIAppStartup> appStartup = components::AppStartup::Service();
   if (appStartup->GetShuttingDown()) {
@@ -396,7 +217,6 @@ nsChromeRegistryChrome::CheckForNewChrome() {
     return NS_ERROR_UNEXPECTED;
   }
 
->>>>>>> upstream-releases
   mPackagesHash.Clear();
   mOverrideTable.Clear();
 
@@ -477,23 +297,10 @@ void nsChromeRegistryChrome::SendRegisteredChrome(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsChromeRegistryChrome::ChromePackageFromPackageEntry(
-    const nsACString& aPackageName, PackageEntry* aPackage,
-    ChromePackage* aChromePackage, const nsCString& aSelectedSkin) {
-||||||| merged common ancestors
-/* static */ void
-nsChromeRegistryChrome::ChromePackageFromPackageEntry(const nsACString& aPackageName,
-                                                      PackageEntry* aPackage,
-                                                      ChromePackage* aChromePackage,
-                                                      const nsCString& aSelectedSkin)
-{
-=======
 /* static */
 void nsChromeRegistryChrome::ChromePackageFromPackageEntry(
     const nsACString& aPackageName, PackageEntry* aPackage,
     ChromePackage* aChromePackage, const nsCString& aSelectedSkin) {
->>>>>>> upstream-releases
   nsAutoCString appLocale;
   LocaleService::GetInstance()->GetAppLocaleAsLangTag(appLocale);
 
@@ -531,21 +338,9 @@ nsIURI* nsChromeRegistryChrome::GetBaseURIFromPackage(
     nsAutoCString appLocale;
     LocaleService::GetInstance()->GetAppLocaleAsLangTag(appLocale);
     return entry->locales.GetBase(appLocale, nsProviderArray::LOCALE);
-<<<<<<< HEAD
-  } else if (aProvider.EqualsLiteral("skin")) {
-    return entry->skins.GetBase(mSelectedSkin, nsProviderArray::ANY);
-  } else if (aProvider.EqualsLiteral("content")) {
-||||||| merged common ancestors
-  }
-  else if (aProvider.EqualsLiteral("skin")) {
-    return entry->skins.GetBase(mSelectedSkin, nsProviderArray::ANY);
-  }
-  else if (aProvider.EqualsLiteral("content")) {
-=======
   } else if (aProvider.EqualsLiteral("skin")) {
     return entry->skins.GetBase(SKIN, nsProviderArray::ANY);
   } else if (aProvider.EqualsLiteral("content")) {
->>>>>>> upstream-releases
     return entry->baseURI;
   }
   return nullptr;

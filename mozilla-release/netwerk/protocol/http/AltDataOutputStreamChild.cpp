@@ -43,15 +43,7 @@ NS_INTERFACE_MAP_BEGIN(AltDataOutputStreamChild)
 NS_INTERFACE_MAP_END
 
 AltDataOutputStreamChild::AltDataOutputStreamChild()
-<<<<<<< HEAD
-    : mIPCOpen(false), mError(NS_OK) {
-||||||| merged common ancestors
-  : mIPCOpen(false)
-  , mError(NS_OK)
-{
-=======
     : mIPCOpen(false), mError(NS_OK), mCallbackFlags(0) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Main thread only");
 }
 
@@ -72,20 +64,9 @@ void AltDataOutputStreamChild::ReleaseIPDLReference() {
   Release();
 }
 
-<<<<<<< HEAD
-bool AltDataOutputStreamChild::WriteDataInChunks(
-    const nsDependentCSubstring &data) {
-  const uint32_t kChunkSize = 128 * 1024;
-||||||| merged common ancestors
-bool
-AltDataOutputStreamChild::WriteDataInChunks(const nsDependentCSubstring& data)
-{
-  const uint32_t kChunkSize = 128*1024;
-=======
 bool AltDataOutputStreamChild::WriteDataInChunks(
     const nsDependentCSubstring& data) {
   const uint32_t kChunkSize = 128 * 1024;
->>>>>>> upstream-releases
   uint32_t next = std::min(data.Length(), kChunkSize);
   for (uint32_t i = 0; i < data.Length();
        i = next, next = std::min(data.Length(), next + kChunkSize)) {
@@ -99,32 +80,7 @@ bool AltDataOutputStreamChild::WriteDataInChunks(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AltDataOutputStreamChild::Close() {
-  if (!mIPCOpen) {
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-  if (NS_FAILED(mError)) {
-    return mError;
-  }
-  Unused << SendClose();
-  return NS_OK;
-}
-||||||| merged common ancestors
-AltDataOutputStreamChild::Close()
-{
-  if (!mIPCOpen) {
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-  if (NS_FAILED(mError)) {
-    return mError;
-  }
-  Unused << SendClose();
-  return NS_OK;
-}
-=======
 AltDataOutputStreamChild::Close() { return CloseWithStatus(NS_OK); }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 AltDataOutputStreamChild::Flush() {
@@ -140,16 +96,8 @@ AltDataOutputStreamChild::Flush() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AltDataOutputStreamChild::Write(const char *aBuf, uint32_t aCount,
-                                uint32_t *_retval) {
-||||||| merged common ancestors
-AltDataOutputStreamChild::Write(const char * aBuf, uint32_t aCount, uint32_t *_retval)
-{
-=======
 AltDataOutputStreamChild::Write(const char* aBuf, uint32_t aCount,
                                 uint32_t* _retval) {
->>>>>>> upstream-releases
   if (!mIPCOpen) {
     return NS_ERROR_NOT_AVAILABLE;
   }
@@ -164,59 +112,26 @@ AltDataOutputStreamChild::Write(const char* aBuf, uint32_t aCount,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AltDataOutputStreamChild::WriteFrom(nsIInputStream *aFromStream,
-                                    uint32_t aCount, uint32_t *_retval) {
-||||||| merged common ancestors
-AltDataOutputStreamChild::WriteFrom(nsIInputStream *aFromStream, uint32_t aCount, uint32_t *_retval)
-{
-=======
 AltDataOutputStreamChild::WriteFrom(nsIInputStream* aFromStream,
                                     uint32_t aCount, uint32_t* _retval) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AltDataOutputStreamChild::WriteSegments(nsReadSegmentFun aReader,
-                                        void *aClosure, uint32_t aCount,
-                                        uint32_t *_retval) {
-||||||| merged common ancestors
-AltDataOutputStreamChild::WriteSegments(nsReadSegmentFun aReader, void *aClosure, uint32_t aCount, uint32_t *_retval)
-{
-=======
 AltDataOutputStreamChild::WriteSegments(nsReadSegmentFun aReader,
                                         void* aClosure, uint32_t aCount,
                                         uint32_t* _retval) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AltDataOutputStreamChild::IsNonBlocking(bool *_retval) {
-||||||| merged common ancestors
-AltDataOutputStreamChild::IsNonBlocking(bool *_retval)
-{
-=======
 AltDataOutputStreamChild::IsNonBlocking(bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult AltDataOutputStreamChild::RecvError(
-    const nsresult &err) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-AltDataOutputStreamChild::RecvError(const nsresult& err)
-{
-=======
 mozilla::ipc::IPCResult AltDataOutputStreamChild::RecvError(
     const nsresult& err) {
->>>>>>> upstream-releases
   mError = err;
   return IPC_OK();
 }
@@ -226,13 +141,6 @@ mozilla::ipc::IPCResult AltDataOutputStreamChild::RecvDeleteSelf() {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-}  // namespace net
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace net
-} // namespace mozilla
-=======
 // nsIAsyncOutputStream
 
 NS_IMETHODIMP
@@ -286,4 +194,3 @@ void AltDataOutputStreamChild::NotifyListener() {
 
 }  // namespace net
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -48,20 +48,6 @@ this.protocolHandlers = class extends ExtensionAPI {
       handler.name = handlerConfig.name;
       handler.uriTemplate = handlerConfig.uriTemplate;
 
-<<<<<<< HEAD
-      let protoInfo = protocolService.getProtocolHandlerInfo(handlerConfig.protocol);
-      let handlers =  protoInfo.possibleApplicationHandlers;
-      if (protoInfo.preferredApplicationHandler || handlers.length) {
-        protoInfo.alwaysAskBeforeHandling = true;
-      } else {
-        protoInfo.preferredApplicationHandler = handler;
-        protoInfo.alwaysAskBeforeHandling = false;
-      }
-      handlers.appendElement(handler);
-||||||| merged common ancestors
-      let protoInfo = protocolService.getProtocolHandlerInfo(handlerConfig.protocol);
-      protoInfo.possibleApplicationHandlers.appendElement(handler);
-=======
       let protoInfo = protocolService.getProtocolHandlerInfo(
         handlerConfig.protocol
       );
@@ -73,7 +59,6 @@ this.protocolHandlers = class extends ExtensionAPI {
         protoInfo.alwaysAskBeforeHandling = false;
       }
       handlers.appendElement(handler);
->>>>>>> upstream-releases
       handlerService.store(protoInfo);
     }
   }

@@ -329,124 +329,13 @@ class RTCStatsReport {
     return this.__DOM_IMPL__.__set(aKey, aObj);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-  // TODO: Remove legacy API eventually
-  // see Bug 1328194
-  //
-  // Since maplike is recent, we still also make the stats available as legacy
-  // enumerable read-only properties directly on our content-facing object.
-  //
-  // In addition, we warn on iteration over isRemote:true entries, which is set
-  // to break in Firefox 66.
-  //
-||||||| merged common ancestors
-  // TODO: Remove legacy API eventually
-  // see Bug 1328194
-  //
-  // Since maplike is recent, we still also make the stats available as legacy
-  // enumerable read-only properties directly on our content-facing object.
-  //
-  // In addition, we warn on iteration over isRemote:true entries, which is set
-  // to break in Firefox 65.
-  //
-=======
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
   // Must be called after our webidl sandwich is made.
 
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-  makeStatsPublic(warnNullable, warnRemoteNullable, isLegacy) {
-    let legacyProps = {};
-    for (let key in this._report) {
-      const underlying = this._report[key];
-      // Add legacy names for renamed stats
-      if (underlying.type == "local-candidate" || underlying.type == "remote-candidate") {
-            // RTCIceCandidateStats transportId is ChromeOnly, don't copy it
-            delete underlying.transportId;
-            if (isLegacy) {
-              // Copy stat.address to the legacy field name
-              underlying.ipAddress = underlying.address;
-              // Callback stats are frozen to have legacy names
-              delete underlying.address;
-            }
-      }
-
-      let internal = Cu.cloneInto(this._report[key], this._win);
-      if (isLegacy) {
-        internal.type = this._specToLegacyFieldMapping[internal.type] || internal.type;
-      } else if (warnRemoteNullable.warn) {
-        let entry = Cu.createObjectIn(this._win);
-        let stat = internal;
-        for (let key in stat) {
-          Object.defineProperty(entry, key, {
-            enumerable: true, configurable: false,
-            get: Cu.exportFunction(function() {
-              // Warn on remote stat access other than the recommended approach of
-              //
-              // for (let stat of stats.values()) {
-              //   switch (stat.type) {
-              //     case "outbound-rtp": {
-              //       if (stat.isRemote) continue;
-              //       let rtcp = stats.get(stat.remoteId);
-              //
-              if (warnRemoteNullable.warn && stat.isRemote &&
-                  key != "type" &&
-                  key != "isRemote") {
-                // id is first prop, a sign of JSON.stringify(), cancel warnings.
-                if (key != "id") {
-                  warnRemoteNullable.warn(key);
-                }
-                warnRemoteNullable.warn = null;
-              }
-              return stat[key];
-            }, entry),
-          });
-        }
-        Cu.unwaiveXrays(entry)._isRemote = stat.isRemote;
-        internal = entry;
-||||||| merged common ancestors
-  makeStatsPublic(warnNullable, warnRemoteNullable, isLegacy) {
-    let legacyProps = {};
-    for (let key in this._report) {
-      let internal = Cu.cloneInto(this._report[key], this._win);
-      if (isLegacy) {
-        internal.type = this._specToLegacyFieldMapping[internal.type] || internal.type;
-      } else if (warnRemoteNullable.warn) {
-        let entry = Cu.createObjectIn(this._win);
-        let stat = internal;
-        for (let key in stat) {
-          Object.defineProperty(entry, key, {
-            enumerable: true, configurable: false,
-            get: Cu.exportFunction(function() {
-              // Warn on remote stat access other than the recommended approach of
-              //
-              // for (let stat of stats.values()) {
-              //   switch (stat.type) {
-              //     case "outbound-rtp": {
-              //       if (stat.isRemote) continue;
-              //       let rtcp = stats.get(stat.remoteId);
-              //
-              if (warnRemoteNullable.warn && stat.isRemote &&
-                  key != "type" &&
-                  key != "isRemote") {
-                // id is first prop, a sign of JSON.stringify(), cancel warnings.
-                if (key != "id") {
-                  warnRemoteNullable.warn(key);
-                }
-                warnRemoteNullable.warn = null;
-              }
-              return stat[key];
-            }, entry),
-          });
-        }
-        Cu.unwaiveXrays(entry)._isRemote = stat.isRemote;
-        internal = entry;
-=======
   makeStatsPublic() {
     for (const key in this._report) {
       const value = this._report[key];
       if (value.type == "local-candidate" || value.type == "remote-candidate") {
         delete value.transportId;
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
       }
       this.setInternal(key, Cu.cloneInto(value, this._win));
     }
@@ -679,48 +568,14 @@ class RTCPeerConnection {
     this._operationsChain = this._win.Promise.resolve();
 
     this.__DOM_IMPL__._innerObject = this;
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-    this._observer = new this._win.PeerConnectionObserver(this.__DOM_IMPL__);
-
-    // Warn just once per PeerConnection about deprecated getStats usage.
-    this._warnDeprecatedStatsAccessNullable = { warn: () =>
-      this.logWarning("non-maplike pc.getStats access is deprecated, and will be removed in Firefox 66! " +
-                      "See http://w3c.github.io/webrtc-pc/#getstats-example for usage.") };
-||||||| merged common ancestors
-    this._observer = new this._win.PeerConnectionObserver(this.__DOM_IMPL__);
-
-    // Warn just once per PeerConnection about deprecated getStats usage.
-    this._warnDeprecatedStatsAccessNullable = { warn: () =>
-      this.logWarning("non-maplike pc.getStats access is deprecated, and will be removed in the near future! " +
-                      "See http://w3c.github.io/webrtc-pc/#getstats-example for usage.") };
-=======
     const observer = new this._win.PeerConnectionObserver(this.__DOM_IMPL__);
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
 
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-    this._warnDeprecatedStatsCallbacksNullable = { warn: () =>
-      this.logWarning("Callback-based pc.getStats is deprecated, and will be removed in Firefox 66! Use promise-version! " +
-                      "See http://w3c.github.io/webrtc-pc/#getstats-example for usage.") };
-
-    this._warnDeprecatedStatsRemoteAccessNullable = { warn: (key) =>
-      this.logWarning(`Detected soon-to-break getStats() use with key="${key}"! stat.isRemote goes away in Firefox 66, but won't warn there!\
- - See https://blog.mozilla.org/webrtc/getstats-isremote-66/`) };
-||||||| merged common ancestors
-    this._warnDeprecatedStatsCallbacksNullable = { warn: () =>
-      this.logWarning("Callback-based pc.getStats is deprecated, and will be removed in the near future! Use promise-version! " +
-                      "See http://w3c.github.io/webrtc-pc/#getstats-example for usage.") };
-
-    this._warnDeprecatedStatsRemoteAccessNullable = { warn: (key) =>
-      this.logWarning(`Detected soon-to-break getStats() use with key="${key}"! stat.isRemote goes away in Firefox 65, but won't warn there!\
- - See https://blog.mozilla.org/webrtc/getstats-isremote-65/`) };
-=======
     this._warnDeprecatedStatsRemoteAccessNullable = {
       warn: key =>
         this
           .logWarning(`Detected soon-to-break getStats() use with key="${key}"! stat.isRemote goes away in Firefox 66, but won't warn there!\
  - See https://blog.mozilla.org/webrtc/getstats-isremote-66/`),
     };
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
 
     // Add a reference to the PeerConnection to global list (before init).
     _globalPCList.addPC(this);
@@ -1445,16 +1300,6 @@ class RTCPeerConnection {
   }
 
   addIceCandidate(cand, onSucc, onErr) {
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-    if (cand === null) {
-      throw new this._win.DOMException(
-        "Empty candidate can not be added.",
-        "TypeError");
-    }
-    return this._auto(onSucc, onErr, () => cand && this._addIceCandidate(cand));
-||||||| merged common ancestors
-    return this._auto(onSucc, onErr, () => cand && this._addIceCandidate(cand));
-=======
     if (
       cand.candidate != "" &&
       cand.sdpMid == null &&
@@ -1466,7 +1311,6 @@ class RTCPeerConnection {
       );
     }
     return this._auto(onSucc, onErr, () => this._addIceCandidate(cand));
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
   }
 
   async _addIceCandidate({
@@ -1494,16 +1338,7 @@ class RTCPeerConnection {
     stream.getTracks().forEach(track => this.addTrack(track, stream));
   }
 
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-  addTrack(track, stream) {
-||||||| merged common ancestors
-  addTrack(track, stream) {
-    if (stream.currentTime === undefined) {
-      throw new this._win.DOMException("invalid stream.", "InvalidParameterError");
-    }
-=======
   addTrack(track, ...streams) {
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
     this._checkClosed();
 
     if (
@@ -2129,43 +1964,7 @@ class PeerConnectionObserver {
     this._dompc = dompc._innerObject;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-  newError(message, code) {
-    // These strings must match those defined in the WebRTC spec.
-    const reasonName = [
-      "",
-      "InternalError",
-      "InternalError",
-      "InvalidParameterError",
-      "InvalidStateError",
-      "InvalidSessionDescriptionError",
-      "IncompatibleSessionDescriptionError",
-      "InternalError",
-      "IncompatibleMediaStreamTrackError",
-      "InternalError",
-      "TypeError",
-      "OperationError",
-    ];
-    let name = reasonName[Math.min(code, reasonName.length - 1)];
-||||||| merged common ancestors
-  newError(message, code) {
-    // These strings must match those defined in the WebRTC spec.
-    const reasonName = [
-      "",
-      "InternalError",
-      "InvalidCandidateError",
-      "InvalidParameterError",
-      "InvalidStateError",
-      "InvalidSessionDescriptionError",
-      "IncompatibleSessionDescriptionError",
-      "InternalError",
-      "IncompatibleMediaStreamTrackError",
-      "InternalError",
-    ];
-    let name = reasonName[Math.min(code, reasonName.length - 1)];
-=======
   newError({ message, name }) {
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
     return new this._dompc._win.DOMException(message, name);
   }
 
@@ -2316,12 +2115,6 @@ class PeerConnectionObserver {
       return;
     }
 
-<<<<<<< HEAD:mozilla-release/dom/media/PeerConnection.js
-  onStateChange(state) {
-    if (!this._dompc) {
-      return;
-    }
-
     if (state == "SignalingState") {
       this.dispatchEvent(new this._win.Event("signalingstatechange"));
       return;
@@ -2330,22 +2123,6 @@ class PeerConnectionObserver {
     if (!this._dompc._pc) {
       return;
     }
-||||||| merged common ancestors
-  onStateChange(state) {
-    switch (state) {
-      case "SignalingState":
-        this.dispatchEvent(new this._win.Event("signalingstatechange"));
-        break;
-=======
-    if (state == "SignalingState") {
-      this.dispatchEvent(new this._win.Event("signalingstatechange"));
-      return;
-    }
-
-    if (!this._dompc._pc) {
-      return;
-    }
->>>>>>> upstream-releases:mozilla-release/dom/media/PeerConnection.jsm
 
     switch (state) {
       case "IceConnectionState":

@@ -1033,13 +1033,7 @@ UBool RegexMatcher::findUsingChunk(UErrorCode &status) {
                 return FALSE;
         }
     }
-<<<<<<< HEAD
-    U_ASSERT(FALSE);
-||||||| merged common ancestors
-        U_ASSERT(FALSE);
-=======
     UPRV_UNREACHABLE;
->>>>>>> upstream-releases
 
     case START_STRING:
     case START_CHAR:

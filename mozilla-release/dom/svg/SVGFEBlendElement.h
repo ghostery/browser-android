@@ -29,31 +29,6 @@ class SVGFEBlendElement : public SVGFEBlendElementBase {
   virtual JSObject* WrapNode(JSContext* cx,
                              JS::Handle<JSObject*> aGivenProto) override;
 
-<<<<<<< HEAD
- public:
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-  }
-  virtual void GetSourceImageNames(
-      nsTArray<nsSVGStringInfo>& aSources) override;
-||||||| merged common ancestors
-public:
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources) override;
-=======
  public:
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
@@ -65,31 +40,15 @@ public:
     return mStringAttributes[RESULT];
   }
   virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
->>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedString> In1();
-  already_AddRefed<SVGAnimatedString> In2();
-  already_AddRefed<SVGAnimatedEnumeration> Mode();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedString> In1();
-  already_AddRefed<SVGAnimatedString> In2();
-  already_AddRefed<SVGAnimatedEnumeration> Mode();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedString> In1();
   already_AddRefed<DOMSVGAnimatedString> In2();
   already_AddRefed<DOMSVGAnimatedEnumeration> Mode();
 
  protected:
->>>>>>> upstream-releases
   virtual EnumAttributesInfo GetEnumInfo() override;
   virtual StringAttributesInfo GetStringInfo() override;
 

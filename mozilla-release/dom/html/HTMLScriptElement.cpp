@@ -47,24 +47,9 @@ NS_IMPL_ISUPPORTS_INHERITED(HTMLScriptElement, nsGenericHTMLElement,
                             nsIScriptLoaderObserver, nsIScriptElement,
                             nsIMutationObserver)
 
-<<<<<<< HEAD
-nsresult HTMLScriptElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLScriptElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLScriptElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (IsInComposedDoc()) {
@@ -181,15 +166,7 @@ void HTMLScriptElement::GetScriptCharset(nsAString& charset) {
   GetCharset(charset);
 }
 
-<<<<<<< HEAD
-void HTMLScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc) {
-||||||| merged common ancestors
-void
-HTMLScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc)
-{
-=======
 void HTMLScriptElement::FreezeExecutionAttrs(Document* aOwnerDoc) {
->>>>>>> upstream-releases
   if (mFrozen) {
     return;
   }
@@ -214,61 +191,21 @@ void HTMLScriptElement::FreezeExecutionAttrs(Document* aOwnerDoc) {
                                                 OwnerDoc(), baseURI);
 
       if (!mUri) {
-<<<<<<< HEAD
-        const char16_t* params[] = {u"src", src.get()};
-||||||| merged common ancestors
-        const char16_t* params[] = { u"src", src.get() };
-=======
         AutoTArray<nsString, 2> params = {NS_LITERAL_STRING("src"), src};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        nsContentUtils::ReportToConsole(
-            nsIScriptError::warningFlag, NS_LITERAL_CSTRING("HTML"), OwnerDoc(),
-            nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri", params,
-            ArrayLength(params), nullptr, EmptyString(), GetScriptLineNumber(),
-            GetScriptColumnNumber());
-||||||| merged common ancestors
-        nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-          NS_LITERAL_CSTRING("HTML"), OwnerDoc(),
-          nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri",
-          params, ArrayLength(params), nullptr,
-          EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
-=======
         nsContentUtils::ReportToConsole(
             nsIScriptError::warningFlag, NS_LITERAL_CSTRING("HTML"), OwnerDoc(),
             nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri", params,
             nullptr, EmptyString(), GetScriptLineNumber(),
             GetScriptColumnNumber());
->>>>>>> upstream-releases
       }
     } else {
-<<<<<<< HEAD
-      const char16_t* params[] = {u"src"};
-||||||| merged common ancestors
-      const char16_t* params[] = { u"src" };
-=======
       AutoTArray<nsString, 1> params = {NS_LITERAL_STRING("src")};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      nsContentUtils::ReportToConsole(
-          nsIScriptError::warningFlag, NS_LITERAL_CSTRING("HTML"), OwnerDoc(),
-          nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty", params,
-          ArrayLength(params), nullptr, EmptyString(), GetScriptLineNumber(),
-          GetScriptColumnNumber());
-||||||| merged common ancestors
-      nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-        NS_LITERAL_CSTRING("HTML"), OwnerDoc(),
-        nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty",
-        params, ArrayLength(params), nullptr,
-        EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
-=======
       nsContentUtils::ReportToConsole(
           nsIScriptError::warningFlag, NS_LITERAL_CSTRING("HTML"), OwnerDoc(),
           nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty", params, nullptr,
           EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
->>>>>>> upstream-releases
     }
 
     // At this point mUri will be null for invalid URLs.

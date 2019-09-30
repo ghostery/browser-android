@@ -393,49 +393,6 @@ ClientEngine.prototype = {
     }
   },
 
-<<<<<<< HEAD
-  async _fetchFxADevices() {
-    const now = new Date().getTime();
-    if ((this._lastFxADevicesFetch || 0) + TIME_BETWEEN_FXA_DEVICES_FETCH_MS >= now) {
-      return;
-    }
-    const remoteClients = Object.values(this.remoteClients);
-    try {
-      this._fxaDevices = await this.fxAccounts.getDeviceList();
-      for (const device of this._fxaDevices) {
-        device.clientRecord = remoteClients.find(c => c.fxaDeviceId == device.id);
-      }
-    } catch (e) {
-      this._log.error("Could not retrieve the FxA device list", e);
-      this._fxaDevices = [];
-    }
-    this._lastFxADevicesFetch = now;
-
-    // We assume that clients not present in the FxA Device Manager list have been
-    // disconnected and so are stale
-    this._log.debug("Refreshing the known stale clients list");
-    let localClients = Object.values(this._store._remoteClients)
-                             .filter(client => client.fxaDeviceId) // iOS client records don't have fxaDeviceId
-                             .map(client => client.fxaDeviceId);
-    const fxaClients = this._fxaDevices.map(device => device.id);
-||||||| merged common ancestors
-  // We assume that clients not present in the FxA Device Manager list have been
-  // disconnected and so are stale
-  async _refreshKnownStaleClients() {
-    this._log.debug("Refreshing the known stale clients list");
-    let localClients = Object.values(this._store._remoteClients)
-                             .filter(client => client.fxaDeviceId) // iOS client records don't have fxaDeviceId
-                             .map(client => client.fxaDeviceId);
-    let fxaClients;
-    try {
-      let deviceList = await this.fxAccounts.getDeviceList();
-      fxaClients = deviceList.map(device => device.id);
-    } catch (ex) {
-      this._log.error("Could not retrieve the FxA device list", ex);
-      this._knownStaleFxADeviceIds = [];
-      return;
-    }
-=======
   async _fetchFxADevices() {
     const now = new Date().getTime();
     if (
@@ -465,7 +422,6 @@ ClientEngine.prototype = {
       .filter(client => client.fxaDeviceId) // iOS client records don't have fxaDeviceId
       .map(client => client.fxaDeviceId);
     const fxaClients = this._fxaDevices.map(device => device.id);
->>>>>>> upstream-releases
     this._knownStaleFxADeviceIds = Utils.arraySub(localClients, fxaClients);
   },
 

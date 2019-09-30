@@ -391,11 +391,5 @@ void DOMSVGLengthList::MaybeRemoveItemFromAnimValListAt(uint32_t aIndex) {
   UpdateListIndicesFromIndex(animVal->mItems, aIndex);
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -784,17 +784,6 @@ module.exports = {
     return pathName.replace(/^"/, "").replace(/"$/, "");
   },
 
-<<<<<<< HEAD
-  get globalScriptPaths() {
-    return [
-      path.join(this.rootDir, "browser", "base", "content", "browser.xul"),
-      path.join(this.rootDir, "browser", "base", "content", "global-scripts.inc"),
-    ];
-||||||| merged common ancestors
-  get globalScriptsPath() {
-    return path.join(this.rootDir, "browser",
-                     "base", "content", "global-scripts.inc");
-=======
   get globalScriptPaths() {
     return [
       path.join(this.rootDir, "browser", "base", "content", "browser.xhtml"),
@@ -806,7 +795,6 @@ module.exports = {
         "global-scripts.inc"
       ),
     ];
->>>>>>> upstream-releases
   },
 
   isMozillaCentralBased() {

@@ -432,16 +432,8 @@ class Binary {
     // Emit section length.
     this.emit_u32v(section.length);
     // Copy the temporary buffer.
-<<<<<<< HEAD
-    for (const b of section) {
-      this.push(b);
-    }
-||||||| merged common ancestors
-    this.push(...section);
-=======
     // Avoid spread because {section} can be huge.
     this.emit_bytes(section.trunc_buffer());
->>>>>>> upstream-releases
   }
 }
 
@@ -451,15 +443,6 @@ class WasmFunctionBuilder {
     this.name = name;
     this.type_index = type_index;
     this.body = [];
-  }
-
-  numLocalNames() {
-    if (this.local_names === undefined) return 0;
-    let num_local_names = 0;
-    for (let loc_name of this.local_names) {
-      if (loc_name !== undefined) ++num_local_names;
-    }
-    return num_local_names;
   }
 
   exportAs(name) {
@@ -473,50 +456,18 @@ class WasmFunctionBuilder {
   }
 
   addBody(body) {
-<<<<<<< HEAD
-    for (let b of body) {
-      if (typeof b !== 'number' || (b & (~0xFF)) !== 0 )
-        throw new Error('invalid body (entries must be 8 bit numbers): ' + body);
-    }
-    this.body = body.slice();
-    // Automatically add the end for the function block to the body.
-    this.body.push(kExprEnd);
-    return this;
-  }
-
-  addBodyWithEnd(body) {
-||||||| merged common ancestors
-=======
     const bodyCopy = body.slice();
     bodyCopy.push(kExprEnd);
     return this.addBodyWithEnd(bodyCopy);
   }
 
   addBodyWithEnd(body) {
->>>>>>> upstream-releases
     this.body = body;
     return this;
   }
 
-  getNumLocals() {
-    let total_locals = 0;
-    for (let l of this.locals || []) {
-      for (let type of ["i32", "i64", "f32", "f64"]) {
-        total_locals += l[type + "_count"] || 0;
-      }
-    }
-    return total_locals;
-  }
-
-  addLocals(locals, names) {
-    const old_num_locals = this.getNumLocals();
-    if (!this.locals) this.locals = []
-    this.locals.push(locals);
-    if (names) {
-      if (!this.local_names) this.local_names = [];
-      const missing_names = old_num_locals - this.local_names.length;
-      this.local_names.push(...new Array(missing_names), ...names);
-    }
+  addLocals(locals) {
+    this.locals = locals;
     return this;
   }
 
@@ -547,23 +498,11 @@ class WasmModuleBuilder {
     this.exports = [];
     this.globals = [];
     this.functions = [];
-<<<<<<< HEAD
-    this.table_length_min = 0;
-    this.table_length_max = undefined;
-    this.element_segments = [];
-    this.data_segments = [];
-||||||| merged common ancestors
-    this.function_table = [];
-    this.function_table_length = 0;
-    this.function_table_inits = [];
-    this.segments = [];
-=======
     this.table_length_min = 0;
     this.table_length_max = undefined;
     this.element_segments = [];
     this.data_segments = [];
     this.segments = [];
->>>>>>> upstream-releases
     this.explicit = [];
     this.num_imported_funcs = 0;
     this.num_imported_globals = 0;
@@ -583,22 +522,6 @@ class WasmModuleBuilder {
   addExplicitSection(bytes) {
     this.explicit.push(bytes);
     return this;
-  }
-
-  stringToBytes(name) {
-    var result = new Binary();
-    result.emit_u32v(name.length);
-    for (var i = 0; i < name.length; i++) {
-      result.emit_u8(name.charCodeAt(i));
-    }
-    return result;
-  }
-
-  addCustomSection(name, bytes) {
-    name = this.stringToBytes(name);
-    var length = new Binary();
-    length.emit_u32v(name.length + bytes.length);
-    this.explicit.push([0, ...length, ...name, ...bytes]);
   }
 
   addType(type) {
@@ -623,34 +546,16 @@ class WasmModuleBuilder {
     return func;
   }
 
-<<<<<<< HEAD
-  addImport(module = "", name, type) {
-    if (this.functions.length != 0) {
-      throw new Error('Imported functions must be declared before local ones');
-    }
-||||||| merged common ancestors
-  addImport(module = "", name, type) {
-=======
   addImport(module, name, type) {
->>>>>>> upstream-releases
     let type_index = (typeof type) == "number" ? type : this.addType(type);
     this.imports.push({module: module, name: name, kind: kExternalFunction,
                        type: type_index});
     return this.num_imported_funcs++;
   }
 
-<<<<<<< HEAD
-  addImportedGlobal(module = "", name, type, mutable = false) {
-    if (this.globals.length != 0) {
-      throw new Error('Imported globals must be declared before local ones');
-    }
-||||||| merged common ancestors
-  addImportedGlobal(module = "", name, type) {
-=======
   addImportedGlobal(module, name, type) {
->>>>>>> upstream-releases
     let o = {module: module, name: name, kind: kExternalGlobal, type: type,
-             mutable: mutable};
+             mutable: false}
     this.imports.push(o);
     return this.num_imported_globals++;
   }
@@ -679,17 +584,9 @@ class WasmModuleBuilder {
   }
 
   addDataSegment(addr, data, is_global = false) {
-<<<<<<< HEAD
-    this.data_segments.push({addr: addr, data: data, is_global: is_global});
-    return this.data_segments.length - 1;
-||||||| merged common ancestors
-    this.segments.push({addr: addr, data: data, is_global: is_global});
-    return this.segments.length - 1;
-=======
     this.data_segments.push(
         {addr: addr, data: data, is_global: is_global});
     return this.data_segments.length - 1;
->>>>>>> upstream-releases
   }
 
   exportMemoryAs(name) {
@@ -712,7 +609,6 @@ class WasmModuleBuilder {
   }
 
   appendToTable(array) {
-<<<<<<< HEAD
     for (let n of array) {
       if (typeof n != 'number')
         throw new Error('invalid table (entries have to be numbers): ' + array);
@@ -720,38 +616,9 @@ class WasmModuleBuilder {
     return this.addElementSegment(this.table_length_min, false, array);
   }
 
-  setTableBounds(min, max) {
-    this.table_length_min = min;
-    this.table_length_max = max;
-    return this;
-||||||| merged common ancestors
-    return this.addFunctionTableInit(this.function_table.length, false, array);
-=======
-    for (let n of array) {
-      if (typeof n != 'number')
-        throw new Error('invalid table (entries have to be numbers): ' + array);
-    }
-    return this.addElementSegment(this.table_length_min, false, array);
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  setTableLength(length) {
-    this.table_length_min = length;
-    this.table_length_max = length;
-    return this;
-  }
-
-  setName(name) {
-    this.name = name;
-||||||| merged common ancestors
-  setFunctionTableLength(length) {
-    this.function_table_length = length;
-=======
   setTableBounds(min, max = undefined) {
     this.table_length_min = min;
     this.table_length_max = max;
->>>>>>> upstream-releases
     return this;
   }
 
@@ -814,11 +681,15 @@ class WasmModuleBuilder {
     }
 
     // Add functions declarations
+    let has_names = false;
+    let names = false;
     if (wasm.functions.length > 0) {
       if (debug) print("emitting function decls @ " + binary.length);
       binary.emit_section(kFunctionSectionCode, section => {
         section.emit_u32v(wasm.functions.length);
         for (let func of wasm.functions) {
+          has_names = has_names || (func.name != undefined &&
+                                   func.name.length > 0);
           section.emit_u32v(func.type_index);
         }
       });
@@ -843,15 +714,8 @@ class WasmModuleBuilder {
       if (debug) print("emitting memory @ " + binary.length);
       binary.emit_section(kMemorySectionCode, section => {
         section.emit_u8(1);  // one memory entry
-<<<<<<< HEAD
-        const has_max = wasm.memory.max !== undefined;
-        section.emit_u8(has_max ? kHasMaximumFlag : 0);
-||||||| merged common ancestors
-        section.emit_u32v(kResizableMaximumFlag);
-=======
         const has_max = wasm.memory.max !== undefined;
         section.emit_u8(has_max ? 1 : 0);
->>>>>>> upstream-releases
         section.emit_u32v(wasm.memory.min);
         if (has_max) section.emit_u32v(wasm.memory.max);
       });
@@ -874,7 +738,7 @@ class WasmModuleBuilder {
               break;
             case kWasmI64:
               section.emit_u8(kExprI64Const);
-              section.emit_u32v(global.init);
+              section.emit_u8(global.init);
               break;
             case kWasmF32:
               section.emit_u8(kExprF32Const);
@@ -933,12 +797,7 @@ class WasmModuleBuilder {
         section.emit_u32v(inits.length);
 
         for (let init of inits) {
-<<<<<<< HEAD
-          section.emit_u8(0); // table index
-||||||| merged common ancestors
-=======
           section.emit_u8(0);  // table index / flags
->>>>>>> upstream-releases
           if (init.is_global) {
             section.emit_u8(kExprGetGlobal);
           } else {
@@ -965,7 +824,9 @@ class WasmModuleBuilder {
           header.reset();
           // Function body length will be patched later.
           let local_decls = [];
-          for (let l of func.locals || []) {
+          let l = func.locals;
+          if (l != undefined) {
+            let local_decls_count = 0;
             if (l.i32_count > 0) {
               local_decls.push({count: l.i32_count, type: kWasmI32});
             }
@@ -997,19 +858,9 @@ class WasmModuleBuilder {
     if (wasm.data_segments.length > 0) {
       if (debug) print("emitting data segments @ " + binary.length);
       binary.emit_section(kDataSectionCode, section => {
-<<<<<<< HEAD
-        section.emit_u32v(wasm.data_segments.length);
-        for (let seg of wasm.data_segments) {
-          section.emit_u8(0);  // linear memory index 0
-||||||| merged common ancestors
-        section.emit_u32v(wasm.segments.length);
-        for (let seg of wasm.segments) {
-          section.emit_u8(0);  // linear memory index 0
-=======
         section.emit_u32v(wasm.data_segments.length);
         for (let seg of wasm.data_segments) {
           section.emit_u8(0);  // linear memory index 0 / flags
->>>>>>> upstream-releases
           if (seg.is_global) {
             // initializer is a global variable
             section.emit_u8(kExprGetGlobal);
@@ -1032,50 +883,21 @@ class WasmModuleBuilder {
       binary.emit_bytes(exp);
     }
 
-    // Add names.
-    let num_function_names = 0;
-    let num_functions_with_local_names = 0;
-    for (let func of wasm.functions) {
-      if (func.name !== undefined) ++num_function_names;
-      if (func.numLocalNames() > 0) ++num_functions_with_local_names;
-    }
-    if (num_function_names > 0 || num_functions_with_local_names > 0 ||
-        wasm.name !== undefined) {
-      if (debug) print('emitting names @ ' + binary.length);
+    // Add function names.
+    if (has_names) {
+      if (debug) print("emitting names @ " + binary.length);
       binary.emit_section(kUnknownSectionCode, section => {
-        section.emit_string('name');
-        // Emit module name.
-        if (wasm.name !== undefined) {
-          section.emit_section(kModuleNameCode, name_section => {
-            name_section.emit_string(wasm.name);
-          });
+        section.emit_string("name");
+        var count = wasm.functions.length + wasm.num_imported_funcs;
+        section.emit_u32v(count);
+        for (var i = 0; i < wasm.num_imported_funcs; i++) {
+          section.emit_u8(0); // empty string
+          section.emit_u8(0); // local names count == 0
         }
-        // Emit function names.
-        if (num_function_names > 0) {
-          section.emit_section(kFunctionNamesCode, name_section => {
-            name_section.emit_u32v(num_function_names);
-            for (let func of wasm.functions) {
-              if (func.name === undefined) continue;
-              name_section.emit_u32v(func.index);
-              name_section.emit_string(func.name);
-            }
-          });
-        }
-        // Emit local names.
-        if (num_functions_with_local_names > 0) {
-          section.emit_section(kLocalNamesCode, name_section => {
-            name_section.emit_u32v(num_functions_with_local_names);
-            for (let func of wasm.functions) {
-              if (func.numLocalNames() == 0) continue;
-              name_section.emit_u32v(func.index);
-              name_section.emit_u32v(func.numLocalNames());
-              for (let i = 0; i < func.local_names.length; ++i) {
-                if (func.local_names[i] === undefined) continue;
-                name_section.emit_u32v(i);
-                name_section.emit_string(func.local_names[i]);
-              }
-            }
-          });
+        for (let func of wasm.functions) {
+          var name = func.name == undefined ? "" : func.name;
+          section.emit_string(name);
+          section.emit_u8(0);  // local names count == 0
         }
       });
     }
@@ -1083,61 +905,15 @@ class WasmModuleBuilder {
     return binary.trunc_buffer();
   }
 
-<<<<<<< HEAD
-  toBuffer(debug = false) {
-    let bytes = this.toArray(debug);
-    let buffer = new ArrayBuffer(bytes.length);
-    let view = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.length; i++) {
-      let val = bytes[i];
-      if ((typeof val) == "string") val = val.charCodeAt(0);
-      view[i] = val | 0;
-    }
-    return buffer;
-||||||| merged common ancestors
-  toBuffer(debug = false) {
-    let bytes = this.toArray(debug);
-    let buffer = new ArrayBuffer(bytes.length);
-    let view = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.length; i++) {
-      let val = bytes[i];
-      if ((typeof val) == "string") val = val.charCodeAt(0);
-      view[i] = val | 0;
-    }
-    return new Uint8Array(buffer);
-=======
   toArray(debug = false) {
     return Array.from(this.toBuffer(debug));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  instantiate(ffi) {
-    let module = new WebAssembly.Module(this.toBuffer());
-    let instance = new WebAssembly.Instance(module, ffi);
-||||||| merged common ancestors
-  instantiate(...args) {
-    let module = new WebAssembly.Module(this.toBuffer());
-    let instance = new WebAssembly.Instance(module, ...args);
-=======
   instantiate(ffi) {
     let module = this.toModule();
     let instance = new WebAssembly.Instance(module, ffi);
->>>>>>> upstream-releases
     return instance;
   }
-<<<<<<< HEAD
-
-  asyncInstantiate(ffi) {
-    return WebAssembly.instantiate(this.toBuffer(), ffi)
-        .then(({module, instance}) => instance);
-  }
-
-  toModule(debug = false) {
-    return new WebAssembly.Module(this.toBuffer(debug));
-  }
-||||||| merged common ancestors
-=======
 
   asyncInstantiate(ffi) {
     return WebAssembly.instantiate(this.toBuffer(), ffi)
@@ -1173,5 +949,4 @@ function wasmF64Const(f) {
     f64_bytes_view[3], f64_bytes_view[4], f64_bytes_view[5], f64_bytes_view[6],
     f64_bytes_view[7]
   ];
->>>>>>> upstream-releases
 }

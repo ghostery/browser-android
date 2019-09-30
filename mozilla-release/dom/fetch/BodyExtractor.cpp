@@ -61,24 +61,10 @@ nsresult BodyExtractor<const ArrayBufferView>::GetAsStream(
                                aCharset);
 }
 
-<<<<<<< HEAD
-template <>
-nsresult BodyExtractor<nsIDocument>::GetAsStream(
-    nsIInputStream** aResult, uint64_t* aContentLength,
-    nsACString& aContentTypeWithCharset, nsACString& aCharset) const {
-||||||| merged common ancestors
-template<> nsresult
-BodyExtractor<nsIDocument>::GetAsStream(nsIInputStream** aResult,
-                                        uint64_t* aContentLength,
-                                        nsACString& aContentTypeWithCharset,
-                                        nsACString& aCharset) const
-{
-=======
 template <>
 nsresult BodyExtractor<Document>::GetAsStream(
     nsIInputStream** aResult, uint64_t* aContentLength,
     nsACString& aContentTypeWithCharset, nsACString& aCharset) const {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mBody);
   aCharset.AssignLiteral("UTF-8");
 

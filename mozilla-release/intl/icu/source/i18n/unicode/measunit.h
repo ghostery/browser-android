@@ -595,29 +595,6 @@ class U_I18N_API MeasureUnit: public UObject {
      */
     static MeasureUnit *createPartPerMillion(UErrorCode &status);
 
-<<<<<<< HEAD
-#ifndef U_HIDE_DRAFT_API
-    /**
-     * Returns unit of concentr: percent.
-     * Caller owns returned value and must free it.
-     * @param status ICU error code.
-     * @draft ICU 63
-     */
-    static MeasureUnit *createPercent(UErrorCode &status);
-#endif /* U_HIDE_DRAFT_API */
-
-#ifndef U_HIDE_DRAFT_API
-    /**
-     * Returns unit of concentr: permille.
-     * Caller owns returned value and must free it.
-     * @param status ICU error code.
-     * @draft ICU 63
-     */
-    static MeasureUnit *createPermille(UErrorCode &status);
-#endif /* U_HIDE_DRAFT_API */
-
-||||||| merged common ancestors
-=======
 #ifndef U_HIDE_DRAFT_API
     /**
      * Returns by value, unit of concentr: part-per-million.
@@ -685,7 +662,6 @@ class U_I18N_API MeasureUnit: public UObject {
     static MeasureUnit getPermyriad();
 #endif /* U_HIDE_DRAFT_API */
 
->>>>>>> upstream-releases
     /**
      * Returns by pointer, unit of consumption: liter-per-100kilometers.
      * Caller owns returned value and must free it.
@@ -893,19 +869,6 @@ class U_I18N_API MeasureUnit: public UObject {
      */
     static MeasureUnit *createMegabyte(UErrorCode &status);
 
-<<<<<<< HEAD
-#ifndef U_HIDE_DRAFT_API
-    /**
-     * Returns unit of digital: petabyte.
-     * Caller owns returned value and must free it.
-     * @param status ICU error code.
-     * @draft ICU 63
-     */
-    static MeasureUnit *createPetabyte(UErrorCode &status);
-#endif /* U_HIDE_DRAFT_API */
-
-||||||| merged common ancestors
-=======
 #ifndef U_HIDE_DRAFT_API
     /**
      * Returns by value, unit of digital: megabyte.
@@ -916,7 +879,6 @@ class U_I18N_API MeasureUnit: public UObject {
 #endif  /* U_HIDE_DRAFT_API */
 
 #ifndef U_HIDE_DRAFT_API
->>>>>>> upstream-releases
     /**
      * Returns by pointer, unit of digital: petabyte.
      * Caller owns returned value and must free it.
@@ -2339,19 +2301,6 @@ class U_I18N_API MeasureUnit: public UObject {
      */
     static MeasureUnit *createWatt(UErrorCode &status);
 
-<<<<<<< HEAD
-#ifndef U_HIDE_DRAFT_API
-    /**
-     * Returns unit of pressure: atmosphere.
-     * Caller owns returned value and must free it.
-     * @param status ICU error code.
-     * @draft ICU 63
-     */
-    static MeasureUnit *createAtmosphere(UErrorCode &status);
-#endif /* U_HIDE_DRAFT_API */
-
-||||||| merged common ancestors
-=======
 #ifndef U_HIDE_DRAFT_API
     /**
      * Returns by value, unit of power: watt.
@@ -2381,7 +2330,6 @@ class U_I18N_API MeasureUnit: public UObject {
     static MeasureUnit getAtmosphere();
 #endif /* U_HIDE_DRAFT_API */
 
->>>>>>> upstream-releases
     /**
      * Returns by pointer, unit of pressure: hectopascal.
      * Caller owns returned value and must free it.

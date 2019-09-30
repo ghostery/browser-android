@@ -5,22 +5,12 @@
 #include <string>
 #include <vector>
 
-<<<<<<< HEAD
-void testServerTimingHeader(
-    const char* headerValue,
-    std::vector<std::vector<std::string>> expectedResults) {
-||||||| merged common ancestors
-void testServerTimingHeader(const char* headerValue,
-                            std::vector<std::vector<std::string>> expectedResults)
-{
-=======
 using namespace mozilla;
 using namespace mozilla::net;
 
 void testServerTimingHeader(
     const char* headerValue,
     std::vector<std::vector<std::string>> expectedResults) {
->>>>>>> upstream-releases
   nsAutoCString header(headerValue);
   ServerTimingParser parser(header);
   parser.Parse();

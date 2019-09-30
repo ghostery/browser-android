@@ -60,16 +60,8 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(CSSImportRule)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END_INHERITED(css::Rule)
 
 #ifdef DEBUG
-<<<<<<< HEAD
-/* virtual */ void CSSImportRule::List(FILE* out, int32_t aIndent) const {
-||||||| merged common ancestors
-/* virtual */ void
-CSSImportRule::List(FILE* out, int32_t aIndent) const
-{
-=======
 /* virtual */
 void CSSImportRule::List(FILE* out, int32_t aIndent) const {
->>>>>>> upstream-releases
   nsAutoCString str;
   for (int32_t i = 0; i < aIndent; i++) {
     str.AppendLiteral("  ");
@@ -88,31 +80,14 @@ void CSSImportRule::GetHref(nsAString& aHref) const {
   Servo_ImportRule_GetHref(mRawRule, &aHref);
 }
 
-<<<<<<< HEAD
-/* virtual */ void CSSImportRule::GetCssText(nsAString& aCssText) const {
-||||||| merged common ancestors
-/* virtual */ void
-CSSImportRule::GetCssText(nsAString& aCssText) const
-{
-=======
 /* virtual */
 void CSSImportRule::GetCssText(nsAString& aCssText) const {
->>>>>>> upstream-releases
   Servo_ImportRule_GetCssText(mRawRule, &aCssText);
 }
 
-<<<<<<< HEAD
-/* virtual */ size_t CSSImportRule::SizeOfIncludingThis(
-    mozilla::MallocSizeOf aMallocSizeOf) const {
-||||||| merged common ancestors
-/* virtual */ size_t
-CSSImportRule::SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
-{
-=======
 /* virtual */
 size_t CSSImportRule::SizeOfIncludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) const {
->>>>>>> upstream-releases
   // TODO Implement this!
   return aMallocSizeOf(this);
 }
@@ -122,19 +97,9 @@ bool CSSImportRule::IsCCLeaf() const {
   return false;
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* CSSImportRule::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-CSSImportRule::WrapObject(JSContext* aCx,
-                          JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* CSSImportRule::WrapObject(JSContext* aCx,
                                     JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return CSSImportRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

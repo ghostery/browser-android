@@ -200,15 +200,6 @@ XPCOMUtils.defineLazyGetter(this, "KeyShortcuts", function() {
       shortcut: KeyShortcutsBundle.GetStringFromName("dom.commandkey"),
       modifiers,
     },
-<<<<<<< HEAD:mozilla-release/devtools/startup/devtools-startup.js
-    // Key for opening the Accessibility Panel
-    {
-      toolId: "accessibility",
-      shortcut: KeyShortcutsBundle.GetStringFromName("accessibilityF12.commandkey"),
-      modifiers: "shift",
-    },
-||||||| merged common ancestors
-=======
     // Key for opening the Accessibility Panel
     {
       toolId: "accessibility",
@@ -217,7 +208,6 @@ XPCOMUtils.defineLazyGetter(this, "KeyShortcuts", function() {
       ),
       modifiers: "shift",
     },
->>>>>>> upstream-releases:mozilla-release/devtools/startup/DevToolsStartup.jsm
   ];
 
   if (isMac) {
@@ -1078,21 +1068,12 @@ DevToolsStartup.prototype = {
       // settings).
       const serverLoader = new DevToolsLoader();
       serverLoader.invisibleToDebugger = true;
-<<<<<<< HEAD:mozilla-release/devtools/startup/devtools-startup.js
-      const { DebuggerServer: debuggerServer } =
-        serverLoader.require("devtools/server/main");
-      const { SocketListener } = serverLoader.require("devtools/shared/security/socket");
-||||||| merged common ancestors
-      const { DebuggerServer: debuggerServer } =
-        serverLoader.require("devtools/server/main");
-=======
       const { DebuggerServer: debuggerServer } = serverLoader.require(
         "devtools/server/main"
       );
       const { SocketListener } = serverLoader.require(
         "devtools/shared/security/socket"
       );
->>>>>>> upstream-releases:mozilla-release/devtools/startup/DevToolsStartup.jsm
       debuggerServer.init();
       debuggerServer.registerAllActors();
       debuggerServer.allowChromeProcess = true;

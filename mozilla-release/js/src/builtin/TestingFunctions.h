@@ -22,19 +22,11 @@ MOZ_MUST_USE bool testingFunc_assertRecoveredOnBailout(JSContext* cx,
                                                        unsigned argc,
                                                        Value* vp);
 
-<<<<<<< HEAD
-extern JSScript* TestingFunctionArgumentToScript(JSContext* cx, HandleValue v,
-                                                 JSFunction** funp = nullptr);
-||||||| merged common ancestors
-extern JSScript*
-TestingFunctionArgumentToScript(JSContext* cx, HandleValue v, JSFunction** funp = nullptr);
-=======
 MOZ_MUST_USE bool testingFunc_serialize(JSContext* cx, unsigned argc,
                                         Value* vp);
 
 extern JSScript* TestingFunctionArgumentToScript(JSContext* cx, HandleValue v,
                                                  JSFunction** funp = nullptr);
->>>>>>> upstream-releases
 
 } /* namespace js */
 

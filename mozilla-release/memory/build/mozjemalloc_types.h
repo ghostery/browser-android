@@ -56,30 +56,14 @@ typedef MALLOC_USABLE_SIZE_CONST_PTR void* usable_ptr_t;
 
 typedef size_t arena_id_t;
 
-<<<<<<< HEAD
-typedef struct arena_params_s {
-||||||| merged common ancestors
-typedef struct arena_params_s
-{
-=======
 #define ARENA_FLAG_RANDOMIZE_SMALL 1
 
 typedef struct arena_params_s {
->>>>>>> upstream-releases
   size_t mMaxDirty;
   uint32_t mFlags;
 
 #ifdef __cplusplus
-<<<<<<< HEAD
-  arena_params_s() : mMaxDirty(0) {}
-||||||| merged common ancestors
-  arena_params_s()
-    : mMaxDirty(0)
-  {
-  }
-=======
   arena_params_s() : mMaxDirty(0), mFlags(0) {}
->>>>>>> upstream-releases
 #endif
 } arena_params_t;
 
@@ -135,22 +119,8 @@ enum PtrInfoTag {
 // - The number of fields is minimized.
 // - The 'tag' field unambiguously defines the meaning of the subsequent fields.
 // Helper functions are used to group together related categories of tags.
-<<<<<<< HEAD
-typedef struct {
-||||||| merged common ancestors
-typedef struct
-{
-=======
 typedef struct jemalloc_ptr_info_s {
->>>>>>> upstream-releases
   enum PtrInfoTag tag;
-<<<<<<< HEAD
-  void* addr;   // meaning depends on tag; see above
-  size_t size;  // meaning depends on tag; see above
-||||||| merged common ancestors
-  void* addr;  // meaning depends on tag; see above
-  size_t size; // meaning depends on tag; see above
-=======
   void* addr;   // meaning depends on tag; see above
   size_t size;  // meaning depends on tag; see above
 
@@ -172,59 +142,18 @@ typedef struct jemalloc_ptr_info_s {
   {
   }
 #endif
->>>>>>> upstream-releases
 } jemalloc_ptr_info_t;
 
-<<<<<<< HEAD
-static inline bool jemalloc_ptr_is_live(jemalloc_ptr_info_t* info) {
-  return info->tag == TagLiveSmall || info->tag == TagLiveLarge ||
-         info->tag == TagLiveHuge;
-||||||| merged common ancestors
-static inline bool
-jemalloc_ptr_is_live(jemalloc_ptr_info_t* info)
-{
-  return info->tag == TagLiveSmall || info->tag == TagLiveLarge ||
-         info->tag == TagLiveHuge;
-=======
 static inline bool jemalloc_ptr_is_live(jemalloc_ptr_info_t* info) {
   return info->tag == TagLiveAlloc;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline bool jemalloc_ptr_is_freed(jemalloc_ptr_info_t* info) {
-  return info->tag == TagFreedSmall || info->tag == TagFreedPageDirty ||
-         info->tag == TagFreedPageDecommitted ||
-         info->tag == TagFreedPageMadvised || info->tag == TagFreedPageZeroed;
-||||||| merged common ancestors
-static inline bool
-jemalloc_ptr_is_freed(jemalloc_ptr_info_t* info)
-{
-  return info->tag == TagFreedSmall || info->tag == TagFreedPageDirty ||
-         info->tag == TagFreedPageDecommitted ||
-         info->tag == TagFreedPageMadvised || info->tag == TagFreedPageZeroed;
-=======
 static inline bool jemalloc_ptr_is_freed(jemalloc_ptr_info_t* info) {
   return info->tag == TagFreedAlloc || info->tag == TagFreedPage;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline bool jemalloc_ptr_is_freed_page(jemalloc_ptr_info_t* info) {
-  return info->tag == TagFreedPageDirty ||
-         info->tag == TagFreedPageDecommitted ||
-         info->tag == TagFreedPageMadvised || info->tag == TagFreedPageZeroed;
-||||||| merged common ancestors
-static inline bool
-jemalloc_ptr_is_freed_page(jemalloc_ptr_info_t* info)
-{
-  return info->tag == TagFreedPageDirty ||
-         info->tag == TagFreedPageDecommitted ||
-         info->tag == TagFreedPageMadvised || info->tag == TagFreedPageZeroed;
-=======
 static inline bool jemalloc_ptr_is_freed_page(jemalloc_ptr_info_t* info) {
   return info->tag == TagFreedPage;
->>>>>>> upstream-releases
 }
 
 #ifdef __cplusplus

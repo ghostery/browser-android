@@ -31,23 +31,6 @@ inline double NumberDiv(double a, double b) {
   return a / b;
 }
 
-<<<<<<< HEAD
-inline double NumberMod(double a, double b) {
-  AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-  if (b == 0) {
-    return JS::GenericNaN();
-  }
-  return fmod(a, b);
-||||||| merged common ancestors
-inline double
-NumberMod(double a, double b)
-{
-    AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
-    if (b == 0) {
-        return JS::GenericNaN();
-    }
-    return fmod(a, b);
-=======
 inline double NumberMod(double a, double b) {
   AutoUnsafeCallWithABI unsafe(UnsafeABIStrictness::AllowPendingExceptions);
   if (b == 0) {
@@ -63,7 +46,6 @@ inline double NumberMod(double a, double b) {
   }
 #endif
   return r;
->>>>>>> upstream-releases
 }
 
 }  // namespace js

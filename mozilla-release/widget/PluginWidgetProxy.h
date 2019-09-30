@@ -25,20 +25,9 @@ class PluginWidgetChild;
 }  // namespace plugins
 namespace widget {
 
-<<<<<<< HEAD
-class PluginWidgetProxy final : public PuppetWidget {
- public:
-  explicit PluginWidgetProxy(dom::TabChild* aTabChild,
-||||||| merged common ancestors
-class PluginWidgetProxy final : public PuppetWidget
-{
-public:
-  explicit PluginWidgetProxy(dom::TabChild* aTabChild,
-=======
 class PluginWidgetProxy final : public PuppetWidget {
  public:
   explicit PluginWidgetProxy(dom::BrowserChild* aBrowserChild,
->>>>>>> upstream-releases
                              mozilla::plugins::PluginWidgetChild* aChannel);
 
  protected:

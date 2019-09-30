@@ -57,48 +57,6 @@ BEGIN_TEST(testJitRValueAlloc_FloatStack) {
 }
 END_TEST(testJitRValueAlloc_FloatStack)
 
-<<<<<<< HEAD
-BEGIN_TEST(testJitRValueAlloc_TypedReg) {
-  RValueAllocation s;
-  for (uint32_t i = 0; i < Registers::Total; i++) {
-#define FOR_EACH_JSVAL(_)       \
-  /* _(JSVAL_TYPE_DOUBLE) */    \
-  _(JSVAL_TYPE_INT32)           \
-  /* _(JSVAL_TYPE_UNDEFINED) */ \
-  _(JSVAL_TYPE_BOOLEAN)         \
-  /* _(JSVAL_TYPE_MAGIC) */     \
-  _(JSVAL_TYPE_STRING)          \
-  _(JSVAL_TYPE_SYMBOL)          \
-  /* _(JSVAL_TYPE_NULL) */      \
-  _(JSVAL_TYPE_OBJECT)
-
-#define CHECK_WITH_JSVAL(jsval)                              \
-  s = RValueAllocation::Typed(jsval, Register::FromCode(i)); \
-  CHECK(s == Read(s));
-
-    FOR_EACH_JSVAL(CHECK_WITH_JSVAL)
-||||||| merged common ancestors
-BEGIN_TEST(testJitRValueAlloc_TypedReg)
-{
-    RValueAllocation s;
-    for (uint32_t i = 0; i < Registers::Total; i++) {
-#define FOR_EACH_JSVAL(_)                       \
-    /* _(JSVAL_TYPE_DOUBLE) */                  \
-    _(JSVAL_TYPE_INT32)                         \
-    /* _(JSVAL_TYPE_UNDEFINED) */               \
-    _(JSVAL_TYPE_BOOLEAN)                       \
-    /* _(JSVAL_TYPE_MAGIC) */                   \
-    _(JSVAL_TYPE_STRING)                        \
-    _(JSVAL_TYPE_SYMBOL)                        \
-    /* _(JSVAL_TYPE_NULL) */                    \
-    _(JSVAL_TYPE_OBJECT)
-
-#define CHECK_WITH_JSVAL(jsval)                                         \
-        s = RValueAllocation::Typed(jsval, Register::FromCode(i));      \
-        CHECK(s == Read(s));
-
-        FOR_EACH_JSVAL(CHECK_WITH_JSVAL)
-=======
 BEGIN_TEST(testJitRValueAlloc_TypedReg) {
   RValueAllocation s;
   for (uint32_t i = 0; i < Registers::Total; i++) {
@@ -119,7 +77,6 @@ BEGIN_TEST(testJitRValueAlloc_TypedReg) {
   CHECK(s == Read(s));
 
     FOR_EACH_JSVAL(CHECK_WITH_JSVAL)
->>>>>>> upstream-releases
 #undef CHECK_WITH_JSVAL
 #undef FOR_EACH_JSVAL
   }
@@ -127,50 +84,6 @@ BEGIN_TEST(testJitRValueAlloc_TypedReg) {
 }
 END_TEST(testJitRValueAlloc_TypedReg)
 
-<<<<<<< HEAD
-BEGIN_TEST(testJitRValueAlloc_TypedStack) {
-  RValueAllocation s;
-  int32_t i, last = 0, tmp;
-  for (i = 0; i > 0; tmp = i, i += last, last = tmp) {
-#define FOR_EACH_JSVAL(_)       \
-  _(JSVAL_TYPE_DOUBLE)          \
-  _(JSVAL_TYPE_INT32)           \
-  /* _(JSVAL_TYPE_UNDEFINED) */ \
-  _(JSVAL_TYPE_BOOLEAN)         \
-  /* _(JSVAL_TYPE_MAGIC) */     \
-  _(JSVAL_TYPE_STRING)          \
-  _(JSVAL_TYPE_SYMBOL)          \
-  /* _(JSVAL_TYPE_NULL) */      \
-  _(JSVAL_TYPE_OBJECT)
-
-#define CHECK_WITH_JSVAL(jsval)          \
-  s = RValueAllocation::Typed(jsval, i); \
-  CHECK(s == Read(s));
-
-    FOR_EACH_JSVAL(CHECK_WITH_JSVAL)
-||||||| merged common ancestors
-BEGIN_TEST(testJitRValueAlloc_TypedStack)
-{
-    RValueAllocation s;
-    int32_t i, last = 0, tmp;
-    for (i = 0; i > 0; tmp = i, i += last, last = tmp) {
-#define FOR_EACH_JSVAL(_)                       \
-    _(JSVAL_TYPE_DOUBLE)                        \
-    _(JSVAL_TYPE_INT32)                         \
-    /* _(JSVAL_TYPE_UNDEFINED) */               \
-    _(JSVAL_TYPE_BOOLEAN)                       \
-    /* _(JSVAL_TYPE_MAGIC) */                   \
-    _(JSVAL_TYPE_STRING)                        \
-    _(JSVAL_TYPE_SYMBOL)                        \
-    /* _(JSVAL_TYPE_NULL) */                    \
-    _(JSVAL_TYPE_OBJECT)
-
-#define CHECK_WITH_JSVAL(jsval)                      \
-        s = RValueAllocation::Typed(jsval, i);       \
-        CHECK(s == Read(s));
-
-        FOR_EACH_JSVAL(CHECK_WITH_JSVAL)
-=======
 BEGIN_TEST(testJitRValueAlloc_TypedStack) {
   RValueAllocation s;
   int32_t i, last = 0, tmp;
@@ -192,7 +105,6 @@ BEGIN_TEST(testJitRValueAlloc_TypedStack) {
   CHECK(s == Read(s));
 
     FOR_EACH_JSVAL(CHECK_WITH_JSVAL)
->>>>>>> upstream-releases
 #undef CHECK_WITH_JSVAL
 #undef FOR_EACH_JSVAL
   }

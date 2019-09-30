@@ -51,40 +51,17 @@ function run_test() {
 
 // TEST DATA
 
-<<<<<<< HEAD
-function start_test(ch, cx) {
-||||||| merged common ancestors
-function start_test(ch, cx)
-{
-=======
 function start_test(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatusText, "QI Tests Passed");
   Assert.equal(ch.responseStatus, 200);
 }
 
-<<<<<<< HEAD
-function start_sjs_qi(ch, cx) {
-||||||| merged common ancestors
-function start_sjs_qi(ch, cx)
-{
-=======
 function start_sjs_qi(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatusText, "SJS QI Tests Passed");
   Assert.equal(ch.responseStatus, 200);
 }
 
-<<<<<<< HEAD
-
 function testHandler(request, response) {
-||||||| merged common ancestors
-
-function testHandler(request, response)
-{
-=======
-function testHandler(request, response) {
->>>>>>> upstream-releases
   var exstr;
   var qid;
 

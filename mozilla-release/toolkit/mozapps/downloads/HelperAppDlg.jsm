@@ -75,16 +75,7 @@ nsUnknownContentTypeDialogProgressListener.prototype = {
 
   onSecurityChange(aWebProgress, aRequest, aState) {},
 
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/downloads/nsHelperAppDlg.js
-  onSecurityChange(aWebProgress, aRequest, state) {
-  },
-||||||| merged common ancestors
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON) {
-  },
-=======
   onContentBlockingEvent(aWebProgress, aRequest, aEvent) {},
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/downloads/HelperAppDlg.jsm
 
   onRefreshAttempted(aWebProgress, aURI, aDelay, aSameURI) {
     return true;

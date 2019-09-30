@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-"use strict";
-
-module.exports = {
-  "extends": [
-    "plugin:mozilla/browser-test",
-  ]
-};
-||||||| merged common ancestors
-=======
 "use strict";
 
 module.exports = {
@@ -26,4 +16,3 @@ module.exports = {
     "plugin:mozilla/browser-test"
   ]
 };
->>>>>>> upstream-releases

@@ -4,10 +4,6 @@
 
 //! Specified values for font properties
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use Atom;
-=======
 #[cfg(feature = "gecko")]
 use crate::gecko_bindings::bindings;
 use crate::parser::{Parse, ParserContext};
@@ -24,33 +20,10 @@ use crate::values::specified::{AllowQuirks, Angle, Integer, LengthPercentage};
 use crate::values::specified::{NoCalcLength, NonNegativeNumber, Number, Percentage};
 use crate::values::CustomIdent;
 use crate::Atom;
->>>>>>> upstream-releases
 use app_units::Au;
 use byteorder::{BigEndian, ByteOrder};
-#[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::gecko_bindings::bindings;
-use crate::parser::{Parse, ParserContext};
-use crate::properties::longhands::system_font::SystemFont;
-use crate::values::computed::font::{FamilyName, FontFamilyList, FontStyleAngle, SingleFontFamily};
-use crate::values::computed::{font as computed, Length, NonNegativeLength};
-use crate::values::computed::{Angle as ComputedAngle, Percentage as ComputedPercentage};
-use crate::values::computed::{Context, ToComputedValue};
-use crate::values::generics::font::{self as generics, FeatureTagValue, FontSettings, FontTag};
-use crate::values::generics::font::{KeywordSize, VariationValue};
-use crate::values::generics::NonNegative;
-use crate::values::specified::length::{FontBaseSize, AU_PER_PT, AU_PER_PX};
-use crate::values::specified::{AllowQuirks, Angle, Integer, LengthOrPercentage};
-use crate::values::specified::{NoCalcLength, Number, Percentage};
-use crate::values::CustomIdent;
-use crate::Atom;
 use cssparser::{Parser, Token};
 #[cfg(feature = "gecko")]
-||||||| merged common ancestors
-use gecko_bindings::bindings;
-#[cfg(feature = "gecko")]
-=======
->>>>>>> upstream-releases
 use malloc_size_of::{MallocSizeOf, MallocSizeOfOps};
 use std::fmt::{self, Write};
 use style_traits::values::SequenceWriter;

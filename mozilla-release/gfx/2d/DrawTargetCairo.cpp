@@ -192,38 +192,16 @@ static bool PatternIsCompatible(const Pattern& aPattern) {
 
 static cairo_user_data_key_t surfaceDataKey;
 
-<<<<<<< HEAD
-void ReleaseData(void* aData) {
-  DataSourceSurface* data = static_cast<DataSourceSurface*>(aData);
-||||||| merged common ancestors
-void
-ReleaseData(void* aData)
-{
-  DataSourceSurface *data = static_cast<DataSourceSurface*>(aData);
-=======
 static void ReleaseData(void* aData) {
   DataSourceSurface* data = static_cast<DataSourceSurface*>(aData);
->>>>>>> upstream-releases
   data->Unmap();
   data->Release();
 }
 
-<<<<<<< HEAD
-cairo_surface_t* CopyToImageSurface(unsigned char* aData, const IntRect& aRect,
-                                    int32_t aStride, SurfaceFormat aFormat) {
-||||||| merged common ancestors
-cairo_surface_t*
-CopyToImageSurface(unsigned char *aData,
-                   const IntRect &aRect,
-                   int32_t aStride,
-                   SurfaceFormat aFormat)
-{
-=======
 static cairo_surface_t* CopyToImageSurface(unsigned char* aData,
                                            const IntRect& aRect,
                                            int32_t aStride,
                                            SurfaceFormat aFormat) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aData);
 
   auto aRectWidth = aRect.Width();
@@ -260,14 +238,7 @@ static cairo_surface_t* CopyToImageSurface(unsigned char* aData,
  * CAIRO_SURFACE_TYPE_IMAGE then returns that surface. Does
  * not add a reference.
  */
-<<<<<<< HEAD
-cairo_surface_t* GetAsImageSurface(cairo_surface_t* aSurface) {
-||||||| merged common ancestors
-cairo_surface_t* GetAsImageSurface(cairo_surface_t* aSurface)
-{
-=======
 static cairo_surface_t* GetAsImageSurface(cairo_surface_t* aSurface) {
->>>>>>> upstream-releases
   if (cairo_surface_get_type(aSurface) == CAIRO_SURFACE_TYPE_IMAGE) {
     return aSurface;
 #ifdef CAIRO_HAS_WIN32_SURFACE
@@ -279,21 +250,9 @@ static cairo_surface_t* GetAsImageSurface(cairo_surface_t* aSurface) {
   return nullptr;
 }
 
-<<<<<<< HEAD
-cairo_surface_t* CreateSubImageForData(unsigned char* aData,
-                                       const IntRect& aRect, int aStride,
-                                       SurfaceFormat aFormat) {
-||||||| merged common ancestors
-cairo_surface_t* CreateSubImageForData(unsigned char* aData,
-                                       const IntRect& aRect,
-                                       int aStride,
-                                       SurfaceFormat aFormat)
-{
-=======
 static cairo_surface_t* CreateSubImageForData(unsigned char* aData,
                                               const IntRect& aRect, int aStride,
                                               SurfaceFormat aFormat) {
->>>>>>> upstream-releases
   if (!aData) {
     gfxWarning() << "DrawTargetCairo.CreateSubImageForData null aData";
     return nullptr;
@@ -312,20 +271,9 @@ static cairo_surface_t* CreateSubImageForData(unsigned char* aData,
  * Returns a referenced cairo_surface_t representing the
  * sub-image specified by aSubImage.
  */
-<<<<<<< HEAD
-cairo_surface_t* ExtractSubImage(cairo_surface_t* aSurface,
-                                 const IntRect& aSubImage,
-                                 SurfaceFormat aFormat) {
-||||||| merged common ancestors
-cairo_surface_t* ExtractSubImage(cairo_surface_t* aSurface,
-                                 const IntRect& aSubImage,
-                                 SurfaceFormat aFormat)
-{
-=======
 static cairo_surface_t* ExtractSubImage(cairo_surface_t* aSurface,
                                         const IntRect& aSubImage,
                                         SurfaceFormat aFormat) {
->>>>>>> upstream-releases
   // No need to worry about retaining a reference to the original
   // surface since the only caller of this function guarantees
   // that aSurface will stay alive as long as the result
@@ -359,21 +307,9 @@ static cairo_surface_t* ExtractSubImage(cairo_surface_t* aSurface,
  * In either case, the caller must call cairo_surface_destroy on the
  * result when it is done with it.
  */
-<<<<<<< HEAD
-cairo_surface_t* GetCairoSurfaceForSourceSurface(
-    SourceSurface* aSurface, bool aExistingOnly = false,
-    const IntRect& aSubImage = IntRect()) {
-||||||| merged common ancestors
-cairo_surface_t*
-GetCairoSurfaceForSourceSurface(SourceSurface *aSurface,
-                                bool aExistingOnly = false,
-                                const IntRect& aSubImage = IntRect())
-{
-=======
 static cairo_surface_t* GetCairoSurfaceForSourceSurface(
     SourceSurface* aSurface, bool aExistingOnly = false,
     const IntRect& aSubImage = IntRect()) {
->>>>>>> upstream-releases
   if (!aSurface) {
     return nullptr;
   }
@@ -451,17 +387,8 @@ static cairo_surface_t* GetCairoSurfaceForSourceSurface(
 // An RAII class to temporarily clear any device offset set
 // on a surface. Note that this does not take a reference to the
 // surface.
-<<<<<<< HEAD
-class AutoClearDeviceOffset {
- public:
-||||||| merged common ancestors
-class AutoClearDeviceOffset
-{
-public:
-=======
 class AutoClearDeviceOffset final {
  public:
->>>>>>> upstream-releases
   explicit AutoClearDeviceOffset(SourceSurface* aSurface)
       : mSurface(nullptr), mX(0), mY(0) {
     Init(aSurface);
@@ -1381,17 +1308,8 @@ void DrawTargetCairo::FillGlyphs(ScaledFont* aFont, const GlyphBuffer& aBuffer,
     glyphs[i].y = aBuffer.mGlyphs[i].mPosition.y;
   }
 
-<<<<<<< HEAD
-  if (!SupportsVariationSettings(mSurface) && aFont->HasVariationSettings() &&
-      gfxPrefs::PrintFontVariationsAsPaths()) {
-||||||| merged common ancestors
-  if (!SupportsVariationSettings(mSurface) &&
-      aFont->HasVariationSettings() &&
-      gfxPrefs::PrintFontVariationsAsPaths()) {
-=======
   if (!SupportsVariationSettings(mSurface) && aFont->HasVariationSettings() &&
       StaticPrefs::print_font_variations_as_paths()) {
->>>>>>> upstream-releases
     cairo_set_fill_rule(mContext, CAIRO_FILL_RULE_WINDING);
     cairo_new_path(mContext);
     cairo_glyph_path(mContext, &glyphs[0], aBuffer.mNumGlyphs);
@@ -1499,17 +1417,9 @@ void DrawTargetCairo::MaskSurface(const Pattern& aSource, SourceSurface* aMask,
   cairo_pattern_t* mask = cairo_pattern_create_for_surface(surf);
   cairo_matrix_t matrix;
 
-<<<<<<< HEAD
-  cairo_matrix_init_translate(&matrix, -aOffset.x, -aOffset.y);
-  cairo_pattern_set_matrix(mask, &matrix);
-||||||| merged common ancestors
-  cairo_matrix_init_translate (&matrix, -aOffset.x, -aOffset.y);
-  cairo_pattern_set_matrix (mask, &matrix);
-=======
   cairo_matrix_init_translate(&matrix, -aOffset.x - aMask->GetRect().x,
                               -aOffset.y - aMask->GetRect().y);
   cairo_pattern_set_matrix(mask, &matrix);
->>>>>>> upstream-releases
 
   cairo_set_operator(mContext, GfxOpToCairoOp(aOptions.mCompositionOp));
 
@@ -1747,22 +1657,10 @@ already_AddRefed<SourceSurface> DrawTargetCairo::OptimizeSourceSurface(
     return surface.forget();
   }
 
-<<<<<<< HEAD
-// Although the dimension parameters in the xCreatePixmapReq wire protocol are
-// 16-bit unsigned integers, the server's CreatePixmap returns BadAlloc if
-// either dimension cannot be represented by a 16-bit *signed* integer.
-#define XLIB_IMAGE_SIDE_SIZE_LIMIT 0x7fff
-||||||| merged common ancestors
-  // Although the dimension parameters in the xCreatePixmapReq wire protocol are
-  // 16-bit unsigned integers, the server's CreatePixmap returns BadAlloc if
-  // either dimension cannot be represented by a 16-bit *signed* integer.
-  #define XLIB_IMAGE_SIDE_SIZE_LIMIT 0x7fff
-=======
 // Although the dimension parameters in the xCreatePixmapReq wire protocol are
 // 16-bit unsigned integers, the server's CreatePixmap returns BadAlloc if
 // either dimension cannot be represented by a 16-bit *signed* integer.
 #  define XLIB_IMAGE_SIDE_SIZE_LIMIT 0x7fff
->>>>>>> upstream-releases
 
   if (size.width > XLIB_IMAGE_SIDE_SIZE_LIMIT ||
       size.height > XLIB_IMAGE_SIDE_SIZE_LIMIT) {
@@ -1877,15 +1775,6 @@ already_AddRefed<DrawTarget> DrawTargetCairo::CreateSimilarDrawTarget(
   return nullptr;
 }
 
-<<<<<<< HEAD
-bool DrawTargetCairo::InitAlreadyReferenced(cairo_surface_t* aSurface,
-                                            const IntSize& aSize,
-                                            SurfaceFormat* aFormat) {
-||||||| merged common ancestors
-bool
-DrawTargetCairo::InitAlreadyReferenced(cairo_surface_t* aSurface, const IntSize& aSize, SurfaceFormat* aFormat)
-{
-=======
 RefPtr<DrawTarget> DrawTargetCairo::CreateClippedDrawTarget(
     const Rect& aBounds, SurfaceFormat aFormat) {
   RefPtr<DrawTarget> result;
@@ -1917,7 +1806,6 @@ RefPtr<DrawTarget> DrawTargetCairo::CreateClippedDrawTarget(
 bool DrawTargetCairo::InitAlreadyReferenced(cairo_surface_t* aSurface,
                                             const IntSize& aSize,
                                             SurfaceFormat* aFormat) {
->>>>>>> upstream-releases
   if (cairo_surface_status(aSurface)) {
     gfxCriticalNote << "Attempt to create DrawTarget for invalid surface. "
                     << aSize
@@ -2279,15 +2167,7 @@ void DrawTargetCairo::SetTransform(const Matrix& aTransform) {
   }
 }
 
-<<<<<<< HEAD
-Rect DrawTargetCairo::GetUserSpaceClip() {
-||||||| merged common ancestors
-Rect
-DrawTargetCairo::GetUserSpaceClip()
-{
-=======
 Rect DrawTargetCairo::GetUserSpaceClip() const {
->>>>>>> upstream-releases
   double clipX1, clipY1, clipX2, clipY2;
   cairo_clip_extents(mContext, &clipX1, &clipY1, &clipX2, &clipY2);
   return Rect(clipX1, clipY1, clipX2 - clipX1,
@@ -2333,17 +2213,8 @@ bool BorrowedXlibDrawable::Init(DrawTarget* aDT) {
   mDT = aDT;
   mDrawable = X11None;
 
-<<<<<<< HEAD
-#ifdef CAIRO_HAS_XLIB_SURFACE
-  if (aDT->GetBackendType() != BackendType::CAIRO || aDT->IsDualDrawTarget() ||
-||||||| merged common ancestors
-#ifdef CAIRO_HAS_XLIB_SURFACE
-  if (aDT->GetBackendType() != BackendType::CAIRO ||
-      aDT->IsDualDrawTarget() ||
-=======
 #  ifdef CAIRO_HAS_XLIB_SURFACE
   if (aDT->GetBackendType() != BackendType::CAIRO || aDT->IsDualDrawTarget() ||
->>>>>>> upstream-releases
       aDT->IsTiledDrawTarget()) {
     return false;
   }

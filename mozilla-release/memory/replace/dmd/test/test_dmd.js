@@ -6,19 +6,10 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-var {classes: Cc, interfaces: Ci, utils: Cu} = Components
-
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-=======
 const { FileUtils } = ChromeUtils.import(
   "resource://gre/modules/FileUtils.jsm"
 );
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 // The xpcshell test harness sets PYTHON so we can read it here.
 var gEnv = Cc["@mozilla.org/process/environment;1"].getService(
@@ -89,14 +80,8 @@ function test(aPrefix, aArgs) {
   let args = [
     gDmdScriptFile.path,
     "--filter-stacks-for-testing",
-<<<<<<< HEAD
-    "-o", actualFile.path,
-||||||| merged common ancestors
-    "-o", actualFile.path
-=======
     "-o",
     actualFile.path,
->>>>>>> upstream-releases
   ].concat(aArgs);
 
   runProcess(new FileUtils.File(gPythonName), args);
@@ -205,21 +190,6 @@ function run_test() {
   // appropriately. The number of records in the output is different for each
   // of the tested values.
   jsonFile = FileUtils.getFile("CurWorkD", ["script-max-frames.json"]);
-<<<<<<< HEAD
-  test("script-max-frames-8",
-       [jsonFile.path]); // --max-frames=8 is the default
-  test("script-max-frames-3",
-       ["--max-frames=3", "--no-fix-stacks", jsonFile.path]);
-  test("script-max-frames-1",
-       ["--max-frames=1", jsonFile.path]);
-||||||| merged common ancestors
-  test("script-max-frames-8",
-       [jsonFile.path]);  // --max-frames=8 is the default
-  test("script-max-frames-3",
-       ["--max-frames=3", "--no-fix-stacks", jsonFile.path]);
-  test("script-max-frames-1",
-       ["--max-frames=1", jsonFile.path]);
-=======
   test("script-max-frames-8", [jsonFile.path]); // --max-frames=8 is the default
   test("script-max-frames-3", [
     "--max-frames=3",
@@ -227,7 +197,6 @@ function run_test() {
     jsonFile.path,
   ]);
   test("script-max-frames-1", ["--max-frames=1", jsonFile.path]);
->>>>>>> upstream-releases
 
   // This file has three records that are shown in a different order for each
   // of the different sort values. It also tests the handling of gzipped JSON

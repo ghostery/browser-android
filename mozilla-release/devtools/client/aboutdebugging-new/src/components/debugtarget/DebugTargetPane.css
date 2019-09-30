@@ -2,25 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-.debug-target-pane__icon {
-||||||| merged common ancestors
-.debug-target-pane__title {
-  align-items: center;
-  display: flex;
-}
-
-.debug-target-pane__title::before {
-  background-image: url(chrome://devtools/skin/images/aboutdebugging-collapse-icon.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  content: "";
-  display: inline-block;
-  fill: currentColor;
-  height: 1em;
-  margin-inline-end: 0.5em;
-=======
 /*
  *  Style for the heading of a debug target pane
  *  +-----------------+---------------+-----------------+
@@ -33,13 +14,7 @@
 }
 
 .debug-target-pane__icon {
->>>>>>> upstream-releases
   transition: transform 150ms cubic-bezier(.07, .95, 0, 1);
-<<<<<<< HEAD
-||||||| merged common ancestors
-  width: 1em;
-  -moz-context-properties: fill;
-=======
   transform: rotate(90deg);
 }
 
@@ -49,26 +24,8 @@
 
 .debug-target-pane__title {
   cursor: pointer;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.debug-target-pane__icon--collapsed {
-  transform: rotate(-90deg);
-||||||| merged common ancestors
-.debug-target-pane__title,
-.debug-target-pane__title:active,
-.debug-target-pane__title:hover,
-.debug-target-pane__title:hover:active,
-.debug-target-pane__title:link,
-.debug-target-pane__title:visited {
-  text-decoration: none;
-  color: var(--text-color);
-}
-
-.debug-target-pane__title--collapsed::before {
-  transform: rotate(-90deg);
-=======
 .debug-target-pane__collapsable {
   overflow: hidden;
   /* padding will give space for card shadow to appear and
@@ -79,9 +36,4 @@
 
 .debug-target-pane__collapsable--collapsed {
   max-height: 0;
->>>>>>> upstream-releases
-}
-
-.debug-target-pane__title {
-  cursor: pointer;
 }

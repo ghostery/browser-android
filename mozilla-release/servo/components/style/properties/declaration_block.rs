@@ -24,15 +24,9 @@ use crate::str::{CssString, CssStringBorrow, CssStringWriter};
 use style_traits::{CssWriter, ParseError, ParsingMode, StyleParseErrorKind, ToCss};
 use crate::stylesheets::{CssRuleType, Origin, UrlExtraData};
 use super::*;
-<<<<<<< HEAD
-use crate::values::computed::Context;
-||||||| merged common ancestors
-use values::computed::Context;
-=======
 use crate::values::computed::Context;
 use crate::selector_parser::SelectorImpl;
 use selectors::SelectorList;
->>>>>>> upstream-releases
 
 /// The animation rules.
 ///

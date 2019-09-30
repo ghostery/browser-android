@@ -661,10 +661,10 @@ load 1275059.html
 load 1278007.html
 load 1278080.html
 load 1279814.html
-skip-if(webrender&&gtkWidget) load large-border-radius-dashed.html   # bug 1510076
-skip-if(webrender&&gtkWidget) load large-border-radius-dashed2.html  # bug 1510076
-skip-if(webrender&&gtkWidget) load large-border-radius-dotted.html   # bug 1510076
-skip-if(webrender&&gtkWidget) load large-border-radius-dotted2.html  # bug 1510076
+load large-border-radius-dashed.html
+load large-border-radius-dashed2.html
+load large-border-radius-dotted.html
+load large-border-radius-dotted2.html
 load 1278461-1.html
 load 1278461-2.html
 load 1281102.html
@@ -719,10 +719,6 @@ load 1493710.html
 load 1493741.html
 load 1494380.html
 load 1505817.html
-<<<<<<< HEAD
-pref(layout.css.column-span.enabled,true) load 1506216.html
-||||||| merged common ancestors
-=======
 pref(layout.css.column-span.enabled,true) load 1506216.html
 pref(layout.css.column-span.enabled,true) load 1506306.html
 pref(layout.css.column-span.enabled,true) load 1507196.html
@@ -739,4 +735,3 @@ pref(layout.css.grid-template-subgrid-value.enabled,true) load 1553824.html
 load 1346454-1.html
 load 1346454-2.html
 load 1562105.html
->>>>>>> upstream-releases

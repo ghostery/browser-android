@@ -16,17 +16,7 @@
 #include "mozilla/RefPtr.h"
 #include "nsWrapperCache.h"
 
-<<<<<<< HEAD
-class nsSVGElement;
-
 #define MOZ_SVG_LIST_INDEX_BIT_COUNT 27  // supports > 134 million list items
-||||||| merged common ancestors
-class nsSVGElement;
-
-#define MOZ_SVG_LIST_INDEX_BIT_COUNT 27 // supports > 134 million list items
-=======
-#define MOZ_SVG_LIST_INDEX_BIT_COUNT 27  // supports > 134 million list items
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -134,15 +124,8 @@ class DOMSVGNumber final : public nsISupports, public nsWrapperCache {
 
   void SetValue(float aValue, ErrorResult& aRv);
 
-<<<<<<< HEAD
- private:
-  nsSVGElement* Element() { return mList->Element(); }
-||||||| merged common ancestors
-private:
-=======
  private:
   dom::SVGElement* Element() { return mList->Element(); }
->>>>>>> upstream-releases
 
   uint8_t AttrEnum() const { return mAttrEnum; }
 
@@ -175,14 +158,8 @@ private:
   float mValue;
 };
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #undef MOZ_SVG_LIST_INDEX_BIT_COUNT
 

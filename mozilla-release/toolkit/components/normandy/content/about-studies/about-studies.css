@@ -154,17 +154,6 @@ button > .button-box {
 }
 
 .study-description code {
-<<<<<<< HEAD
-  background-color: var(--grey-20);
-  border-radius: 3px;
-  box-sizing: border-box;
-  color: var(--in-content-text-color);
-  font-size: 85%;
-  font-family: 'Fira Mono', 'mono', monospace;
-  padding: .2em .4em;
-||||||| merged common ancestors
-  font: italic 1.0rem 'Fira Mono', 'mono', 'monospace';
-=======
   background-color: rgb(128, 128, 128, 0.1);
   border-radius: 3px;
   box-sizing: border-box;
@@ -172,7 +161,6 @@ button > .button-box {
   font-size: 85%;
   font-family: 'Fira Mono', 'mono', monospace;
   padding: .05em .4em;
->>>>>>> upstream-releases
 }
 
 .study-actions {

@@ -5,40 +5,6 @@
 
 const TP_PREF = "privacy.trackingprotection.enabled";
 const TPC_PREF = "network.cookie.cookieBehavior";
-<<<<<<< HEAD
-const TRACKING_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
-
-async function waitAndAssertPreferencesShown() {
-  await BrowserTestUtils.waitForEvent(gIdentityHandler._identityPopup, "popuphidden");
-  await TestUtils.waitForCondition(() => gBrowser.currentURI.spec == "about:preferences#privacy",
-    "Should open about:preferences.");
-
-  await ContentTask.spawn(gBrowser.selectedBrowser, {}, async function() {
-    let doc = content.document;
-    let section = await ContentTaskUtils.waitForCondition(
-      () => doc.querySelector(".spotlight"), "The spotlight should appear.");
-    is(section.getAttribute("data-subcategory"), "trackingprotection",
-      "The trackingprotection section is spotlighted.");
-  });
-||||||| merged common ancestors
-const FB_UI_PREF = "browser.contentblocking.fastblock.control-center.ui.enabled";
-const TP_UI_PREF = "browser.contentblocking.trackingprotection.control-center.ui.enabled";
-const RT_UI_PREF = "browser.contentblocking.rejecttrackers.control-center.ui.enabled";
-const TRACKING_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
-
-async function waitAndAssertPreferencesShown() {
-  await BrowserTestUtils.waitForEvent(gIdentityHandler._identityPopup, "popuphidden");
-  await TestUtils.waitForCondition(() => gBrowser.currentURI.spec == "about:preferences#privacy",
-    "Should open about:preferences.");
-
-  await ContentTask.spawn(gBrowser.selectedBrowser, {}, async function() {
-    let doc = content.document;
-    let section = await ContentTaskUtils.waitForCondition(
-      () => doc.querySelector(".spotlight"), "The spotlight should appear.");
-    is(section.getAttribute("data-subcategory"), "trackingprotection",
-      "The trackingprotection section is spotlighted.");
-  });
-=======
 const TRACKING_PAGE =
   "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
 
@@ -68,7 +34,6 @@ async function waitAndAssertPreferencesShown(_spotlight) {
       );
     }
   );
->>>>>>> upstream-releases
 
   BrowserTestUtils.removeTab(gBrowser.selectedTab);
 }
@@ -166,28 +131,8 @@ add_task(async function testOpenPreferencesFromPermissionsPrefsButton() {
 
 // Tests that pressing the preferences button in the trackers subview
 // links to about:preferences
-<<<<<<< HEAD
-add_task(async function testOpenPreferencesFromAddBlockingButtons() {
-  SpecialPowers.pushPrefEnv({set: [
-    [TP_PREF, false],
-    [TPC_PREF, Ci.nsICookieService.BEHAVIOR_ACCEPT],
-  ]});
-||||||| merged common ancestors
-add_task(async function testOpenPreferencesFromAddBlockingButtons() {
-  SpecialPowers.pushPrefEnv({set: [
-    [CB_PREF, true],
-    [CB_UI_PREF, true],
-    [FB_PREF, false],
-    [TP_PREF, false],
-    [TPC_PREF, Ci.nsICookieService.BEHAVIOR_ACCEPT],
-    [FB_UI_PREF, true],
-    [TP_UI_PREF, true],
-    [RT_UI_PREF, true],
-  ]});
-=======
 add_task(async function testOpenPreferencesFromTrackersSubview() {
   Services.prefs.setBoolPref(TP_PREF, true);
->>>>>>> upstream-releases
 
   await BrowserTestUtils.withNewTab(TRACKING_PAGE, async function() {
     let promisePanelOpen = BrowserTestUtils.waitForEvent(

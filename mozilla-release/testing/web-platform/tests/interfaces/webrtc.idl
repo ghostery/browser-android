@@ -403,14 +403,8 @@ dictionary RTCRtpSynchronizationSource : RTCRtpContributingSource {
 };
 
 [Exposed=Window] interface RTCDtlsTransport : EventTarget {
-<<<<<<< HEAD
-    readonly        attribute RTCIceTransport iceTransport;
-||||||| merged common ancestors
-    readonly        attribute RTCIceTransport transport;
-=======
     [SameObject]
     readonly        attribute RTCIceTransport iceTransport;
->>>>>>> upstream-releases
     readonly        attribute RTCDtlsTransportState state;
     sequence<ArrayBuffer> getRemoteCertificates();
                     attribute EventHandler onstatechange;

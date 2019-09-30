@@ -13,39 +13,6 @@
 #include "SkGr.h"
 #include "SkRectPriv.h"
 
-<<<<<<< HEAD
-std::unique_ptr<GrDrawOp> GrDrawVerticesOp::Make(GrContext* context,
-                                                 GrPaint&& paint,
-                                                 sk_sp<SkVertices> vertices,
-                                                 const SkVertices::Bone bones[],
-                                                 int boneCount,
-                                                 const SkMatrix& viewMatrix,
-                                                 GrAAType aaType,
-                                                 sk_sp<GrColorSpaceXform> colorSpaceXform,
-                                                 GrPrimitiveType* overridePrimType) {
-    SkASSERT(vertices);
-    GrPrimitiveType primType = overridePrimType ? *overridePrimType
-                                                : SkVertexModeToGrPrimitiveType(vertices->mode());
-    return Helper::FactoryHelper<GrDrawVerticesOp>(context, std::move(paint), std::move(vertices),
-                                                   bones, boneCount, primType, aaType,
-                                                   std::move(colorSpaceXform), viewMatrix);
-}
-||||||| merged common ancestors
-std::unique_ptr<GrDrawOp> GrDrawVerticesOp::Make(GrPaint&& paint,
-                                                 sk_sp<SkVertices> vertices,
-                                                 const SkMatrix& viewMatrix,
-                                                 GrAAType aaType,
-                                                 bool gammaCorrect,
-                                                 sk_sp<GrColorSpaceXform> colorSpaceXform,
-                                                 GrPrimitiveType* overridePrimType) {
-    SkASSERT(vertices);
-    GrPrimitiveType primType = overridePrimType ? *overridePrimType
-                                                : SkVertexModeToGrPrimitiveType(vertices->mode());
-    return Helper::FactoryHelper<GrDrawVerticesOp>(std::move(paint), std::move(vertices), primType,
-                                                   aaType, gammaCorrect, std::move(colorSpaceXform),
-                                                   viewMatrix);
-}
-=======
 namespace {
 
 class DrawVerticesOp final : public GrMeshDrawOp {
@@ -64,21 +31,7 @@ public:
     void visitProxies(const VisitProxyFunc& func, VisitorType) const override {
         fHelper.visitProxies(func);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-GrDrawVerticesOp::GrDrawVerticesOp(const Helper::MakeArgs& helperArgs, GrColor color,
-                                   sk_sp<SkVertices> vertices, const SkVertices::Bone bones[],
-                                   int boneCount, GrPrimitiveType primitiveType, GrAAType aaType,
-                                   sk_sp<GrColorSpaceXform> colorSpaceXform,
-                                   const SkMatrix& viewMatrix)
-||||||| merged common ancestors
-GrDrawVerticesOp::GrDrawVerticesOp(const Helper::MakeArgs& helperArgs, GrColor color,
-                                   sk_sp<SkVertices> vertices, GrPrimitiveType primitiveType,
-                                   GrAAType aaType, bool gammaCorrect,
-                                   sk_sp<GrColorSpaceXform> colorSpaceXform,
-                                   const SkMatrix& viewMatrix)
-=======
 #ifdef SK_DEBUG
     SkString dumpInfo() const override;
 #endif
@@ -183,7 +136,6 @@ DrawVerticesOp::DrawVerticesOp(const Helper::MakeArgs& helperArgs, const SkPMCol
                                int boneCount, GrPrimitiveType primitiveType, GrAAType aaType,
                                sk_sp<GrColorSpaceXform> colorSpaceXform,
                                const SkMatrix& viewMatrix)
->>>>>>> upstream-releases
         : INHERITED(ClassID())
         , fHelper(helperArgs, aaType)
         , fPrimitiveType(primitiveType)
@@ -201,20 +153,6 @@ DrawVerticesOp::DrawVerticesOp(const Helper::MakeArgs& helperArgs, const SkPMCol
     mesh.fVertices = std::move(vertices);
     mesh.fIgnoreTexCoords = false;
     mesh.fIgnoreColors = false;
-    mesh.fIgnoreBones = false;
-
-    if (mesh.fVertices->hasBones() && bones) {
-        // Perform the transformations on the CPU instead of the GPU.
-        mesh.fVertices = mesh.fVertices->applyBones(bones, boneCount);
-    } else {
-        if (bones && boneCount > 1) {
-            // NOTE: This should never be used. All bone transforms are being done on the CPU
-            // instead of the GPU.
-
-            // Copy the bone data.
-            fBones.assign(bones, bones + boneCount);
-        }
-    }
 
     if (mesh.fVertices->hasBones() && bones) {
         // Perform the transformations on the CPU instead of the GPU.
@@ -228,22 +166,6 @@ DrawVerticesOp::DrawVerticesOp(const Helper::MakeArgs& helperArgs, const SkPMCol
         fFlags |= kRequiresPerVertexColors_Flag;
     }
     if (mesh.hasExplicitLocalCoords()) {
-<<<<<<< HEAD
-        fFlags |= kAnyMeshHasExplicitLocalCoords_Flag;
-    }
-    if (mesh.hasBones()) {
-        fFlags |= kHasBones_Flag;
-    }
-
-    // Special case for meshes with a world transform but no bone weights.
-    // These will be considered normal vertices draws without bones.
-    if (!mesh.fVertices->hasBones() && boneCount == 1) {
-        SkMatrix worldTransform;
-        worldTransform.setAffine(bones[0].values);
-        mesh.fViewMatrix.preConcat(worldTransform);
-||||||| merged common ancestors
-        fFlags |= kAnyMeshHasExplicitLocalCoords;
-=======
         fFlags |= kAnyMeshHasExplicitLocalCoords_Flag;
     }
 
@@ -253,7 +175,6 @@ DrawVerticesOp::DrawVerticesOp(const Helper::MakeArgs& helperArgs, const SkPMCol
         SkMatrix worldTransform;
         worldTransform.setAffine(bones[0].values);
         mesh.fViewMatrix.preConcat(worldTransform);
->>>>>>> upstream-releases
     }
 
     IsZeroArea zeroArea;
@@ -262,37 +183,11 @@ DrawVerticesOp::DrawVerticesOp(const Helper::MakeArgs& helperArgs, const SkPMCol
     } else {
         zeroArea = IsZeroArea::kNo;
     }
-<<<<<<< HEAD
-
-    if (this->hasBones()) {
-        // We don't know the bounds if there are deformations involved, so attempt to calculate
-        // the maximum possible.
-        SkRect bounds = SkRect::MakeEmpty();
-        const SkRect originalBounds = bones[0].mapRect(mesh.fVertices->bounds());
-        for (int i = 1; i < boneCount; i++) {
-            const SkVertices::Bone& matrix = bones[i];
-            bounds.join(matrix.mapRect(originalBounds));
-        }
-
-        this->setTransformedBounds(bounds,
-                                   mesh.fViewMatrix,
-                                   HasAABloat::kNo,
-                                   zeroArea);
-    } else {
-        this->setTransformedBounds(mesh.fVertices->bounds(),
-                                   mesh.fViewMatrix,
-                                   HasAABloat::kNo,
-                                   zeroArea);
-    }
-||||||| merged common ancestors
-    this->setTransformedBounds(mesh.fVertices->bounds(), viewMatrix, HasAABloat::kNo, zeroArea);
-=======
 
     this->setTransformedBounds(mesh.fVertices->bounds(),
                                 mesh.fViewMatrix,
                                 HasAABloat::kNo,
                                 zeroArea);
->>>>>>> upstream-releases
 }
 
 #ifdef SK_DEBUG
@@ -310,33 +205,16 @@ GrDrawOp::FixedFunctionFlags DrawVerticesOp::fixedFunctionFlags() const {
     return fHelper.fixedFunctionFlags();
 }
 
-<<<<<<< HEAD
-GrDrawOp::RequiresDstTexture GrDrawVerticesOp::finalize(const GrCaps& caps,
-                                                        const GrAppliedClip* clip) {
-||||||| merged common ancestors
-GrDrawOp::RequiresDstTexture GrDrawVerticesOp::finalize(const GrCaps& caps,
-                                                        const GrAppliedClip* clip,
-                                                        GrPixelConfigIsClamped dstIsClamped) {
-=======
 GrProcessorSet::Analysis DrawVerticesOp::finalize(
         const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) {
->>>>>>> upstream-releases
     GrProcessorAnalysisColor gpColor;
     if (this->requiresPerVertexColors()) {
         gpColor.setToUnknown();
     } else {
         gpColor.setToConstant(fMeshes.front().fColor);
     }
-<<<<<<< HEAD
-    auto result = fHelper.xpRequiresDstTexture(caps, clip, GrProcessorAnalysisCoverage::kNone,
-                                               &gpColor);
-||||||| merged common ancestors
-    auto result = fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped,
-                                               GrProcessorAnalysisCoverage::kNone, &gpColor);
-=======
     auto result = fHelper.finalizeProcessors(
             caps, clip, fsaaType, GrProcessorAnalysisCoverage::kNone, &gpColor);
->>>>>>> upstream-releases
     if (gpColor.isConstant(&fMeshes.front().fColor)) {
         fMeshes.front().fIgnoreColors = true;
         fFlags &= ~kRequiresPerVertexColors_Flag;
@@ -349,19 +227,9 @@ GrProcessorSet::Analysis DrawVerticesOp::finalize(
     return result;
 }
 
-<<<<<<< HEAD
-sk_sp<GrGeometryProcessor> GrDrawVerticesOp::makeGP(const GrShaderCaps* shaderCaps,
-                                                    bool* hasColorAttribute,
-                                                    bool* hasLocalCoordAttribute,
-                                                    bool* hasBoneAttribute) const {
-||||||| merged common ancestors
-sk_sp<GrGeometryProcessor> GrDrawVerticesOp::makeGP(bool* hasColorAttribute,
-                                                    bool* hasLocalCoordAttribute) const {
-=======
 sk_sp<GrGeometryProcessor> DrawVerticesOp::makeGP(const GrShaderCaps* shaderCaps,
                                                   bool* hasColorAttribute,
                                                   bool* hasLocalCoordAttribute) const {
->>>>>>> upstream-releases
     using namespace GrDefaultGeoProcFactory;
     LocalCoords::Type localCoordsType;
     if (fHelper.usesLocalCoords()) {
@@ -390,40 +258,9 @@ sk_sp<GrGeometryProcessor> DrawVerticesOp::makeGP(const GrShaderCaps* shaderCaps
         *hasColorAttribute = true;
     } else {
         *hasColorAttribute = false;
-<<<<<<< HEAD
-    };
-
-||||||| merged common ancestors
-    };
-=======
     }
 
->>>>>>> upstream-releases
     const SkMatrix& vm = this->hasMultipleViewMatrices() ? SkMatrix::I() : fMeshes[0].fViewMatrix;
-<<<<<<< HEAD
-
-    // The bones are packed as 6 floats in column major order, so we can directly upload them to
-    // the GPU as groups of 3 vec2s.
-    Bones bones(reinterpret_cast<const float*>(fBones.data()), fBones.size());
-    *hasBoneAttribute = this->hasBones();
-
-    if (this->hasBones()) {
-        return GrDefaultGeoProcFactory::MakeWithBones(shaderCaps,
-                                                      color,
-                                                      Coverage::kSolid_Type,
-                                                      localCoordsType,
-                                                      bones,
-                                                      vm);
-    } else {
-        return GrDefaultGeoProcFactory::Make(shaderCaps,
-                                             color,
-                                             Coverage::kSolid_Type,
-                                             localCoordsType,
-                                             vm);
-    }
-||||||| merged common ancestors
-    return GrDefaultGeoProcFactory::Make(color, Coverage::kSolid_Type, localCoordsType, vm);
-=======
 
     return GrDefaultGeoProcFactory::Make(shaderCaps,
                                             color,
@@ -439,60 +276,11 @@ void DrawVerticesOp::onPrepareDraws(Target* target) {
     } else {
         this->drawNonVolatile(target);
     }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GrDrawVerticesOp::onPrepareDraws(Target* target) {
-    bool hasMapBufferSupport = GrCaps::kNone_MapFlags != target->caps().mapBufferFlags();
-    if (fMeshes[0].fVertices->isVolatile() || !hasMapBufferSupport) {
-        this->drawVolatile(target);
-    } else {
-        this->drawNonVolatile(target);
-    }
-}
-
-void GrDrawVerticesOp::drawVolatile(Target* target) {
-||||||| merged common ancestors
-void GrDrawVerticesOp::onPrepareDraws(Target* target) {
-=======
 void DrawVerticesOp::drawVolatile(Target* target) {
->>>>>>> upstream-releases
     bool hasColorAttribute;
     bool hasLocalCoordsAttribute;
-<<<<<<< HEAD
-    bool hasBoneAttribute;
-    sk_sp<GrGeometryProcessor> gp = this->makeGP(target->caps().shaderCaps(),
-                                                 &hasColorAttribute,
-                                                 &hasLocalCoordsAttribute,
-                                                 &hasBoneAttribute);
-
-    // Calculate the stride.
-    size_t vertexStride = sizeof(SkPoint) +
-                          (hasColorAttribute ? sizeof(uint32_t) : 0) +
-                          (hasLocalCoordsAttribute ? sizeof(SkPoint) : 0) +
-                          (hasBoneAttribute ? 4 * (sizeof(int8_t) + sizeof(uint8_t)) : 0);
-    SkASSERT(vertexStride == gp->debugOnly_vertexStride());
-
-    // Allocate buffers.
-    const GrBuffer* vertexBuffer = nullptr;
-    int firstVertex = 0;
-    void* verts = target->makeVertexSpace(vertexStride, fVertexCount, &vertexBuffer, &firstVertex);
-||||||| merged common ancestors
-    sk_sp<GrGeometryProcessor> gp = this->makeGP(&hasColorAttribute, &hasLocalCoordsAttribute);
-    size_t vertexStride = gp->getVertexStride();
-
-    SkASSERT(vertexStride == sizeof(SkPoint) + (hasColorAttribute ? sizeof(uint32_t) : 0) +
-                                     (hasLocalCoordsAttribute ? sizeof(SkPoint) : 0));
-
-    int instanceCount = fMeshes.count();
-
-    const GrBuffer* vertexBuffer;
-    int firstVertex;
-
-    void* verts = target->makeVertexSpace(vertexStride, fVertexCount, &vertexBuffer, &firstVertex);
-
-=======
     sk_sp<GrGeometryProcessor> gp = this->makeGP(target->caps().shaderCaps(),
                                                  &hasColorAttribute,
                                                  &hasLocalCoordsAttribute);
@@ -571,95 +359,6 @@ void DrawVerticesOp::drawNonVolatile(Target* target) {
     vertexBuffer = rp->createBuffer(
             fVertexCount * vertexStride, GrGpuBufferType::kVertex, kStatic_GrAccessPattern);
     void* verts = vertexBuffer ? vertexBuffer->map() : nullptr;
->>>>>>> upstream-releases
-    if (!verts) {
-        SkDebugf("Could not allocate vertices\n");
-        return;
-    }
-
-<<<<<<< HEAD
-    const GrBuffer* indexBuffer = nullptr;
-    int firstIndex = 0;
-||||||| merged common ancestors
-    const GrBuffer* indexBuffer = nullptr;
-    int firstIndex = 0;
-
-=======
-    // Allocate index buffer.
->>>>>>> upstream-releases
-    uint16_t* indices = nullptr;
-    if (this->isIndexed()) {
-<<<<<<< HEAD
-        indices = target->makeIndexSpace(fIndexCount, &indexBuffer, &firstIndex);
-        if (!indices) {
-            SkDebugf("Could not allocate indices\n");
-            return;
-        }
-    }
-
-    // Fill the buffers.
-    this->fillBuffers(hasColorAttribute,
-                      hasLocalCoordsAttribute,
-                      hasBoneAttribute,
-                      vertexStride,
-                      verts,
-                      indices);
-
-    // Draw the vertices.
-    this->drawVertices(target, std::move(gp), vertexBuffer, firstVertex, indexBuffer, firstIndex);
-}
-
-void GrDrawVerticesOp::drawNonVolatile(Target* target) {
-    static const GrUniqueKey::Domain kDomain = GrUniqueKey::GenerateDomain();
-
-    bool hasColorAttribute;
-    bool hasLocalCoordsAttribute;
-    bool hasBoneAttribute;
-    sk_sp<GrGeometryProcessor> gp = this->makeGP(target->caps().shaderCaps(),
-                                                 &hasColorAttribute,
-                                                 &hasLocalCoordsAttribute,
-                                                 &hasBoneAttribute);
-
-    SkASSERT(fMeshes.count() == 1); // Non-volatile meshes should never combine.
-
-    // Get the resource provider.
-    GrResourceProvider* rp = target->resourceProvider();
-
-    // Generate keys for the buffers.
-    GrUniqueKey vertexKey, indexKey;
-    GrUniqueKey::Builder vertexKeyBuilder(&vertexKey, kDomain, 2);
-    GrUniqueKey::Builder indexKeyBuilder(&indexKey, kDomain, 2);
-    vertexKeyBuilder[0] = indexKeyBuilder[0] = fMeshes[0].fVertices->uniqueID();
-    vertexKeyBuilder[1] = 0;
-    indexKeyBuilder[1] = 1;
-    vertexKeyBuilder.finish();
-    indexKeyBuilder.finish();
-
-    // Try to grab data from the cache.
-    sk_sp<GrBuffer> vertexBuffer = rp->findByUniqueKey<GrBuffer>(vertexKey);
-    sk_sp<GrBuffer> indexBuffer = this->isIndexed() ?
-            rp->findByUniqueKey<GrBuffer>(indexKey) :
-            nullptr;
-
-    // Draw using the cached buffers if possible.
-    if (vertexBuffer && (!this->isIndexed() || indexBuffer)) {
-        this->drawVertices(target, std::move(gp), vertexBuffer.get(), 0, indexBuffer.get(), 0);
-        return;
-    }
-
-    // Calculate the stride.
-    size_t vertexStride = sizeof(SkPoint) +
-                          (hasColorAttribute ? sizeof(uint32_t) : 0) +
-                          (hasLocalCoordsAttribute ? sizeof(SkPoint) : 0) +
-                          (hasBoneAttribute ? 4 * (sizeof(int8_t) + sizeof(uint8_t)) : 0);
-    SkASSERT(vertexStride == gp->debugOnly_vertexStride());
-
-    // Allocate vertex buffer.
-    vertexBuffer.reset(rp->createBuffer(fVertexCount * vertexStride,
-                                        kVertex_GrBufferType,
-                                        kStatic_GrAccessPattern,
-                                        GrResourceProvider::Flags::kNone));
-    void* verts = vertexBuffer ? vertexBuffer->map() : nullptr;
     if (!verts) {
         SkDebugf("Could not allocate vertices\n");
         return;
@@ -668,59 +367,15 @@ void GrDrawVerticesOp::drawNonVolatile(Target* target) {
     // Allocate index buffer.
     uint16_t* indices = nullptr;
     if (this->isIndexed()) {
-        indexBuffer.reset(rp->createBuffer(fIndexCount * sizeof(uint16_t),
-                                           kIndex_GrBufferType,
-                                           kStatic_GrAccessPattern,
-                                           GrResourceProvider::Flags::kNone));
-        indices = indexBuffer ? static_cast<uint16_t*>(indexBuffer->map()) : nullptr;
-||||||| merged common ancestors
-        indices = target->makeIndexSpace(fIndexCount, &indexBuffer, &firstIndex);
-
-=======
         indexBuffer = rp->createBuffer(
                 fIndexCount * sizeof(uint16_t), GrGpuBufferType::kIndex, kStatic_GrAccessPattern);
         indices = indexBuffer ? static_cast<uint16_t*>(indexBuffer->map()) : nullptr;
->>>>>>> upstream-releases
         if (!indices) {
             SkDebugf("Could not allocate indices\n");
             return;
         }
     }
 
-<<<<<<< HEAD
-    // Fill the buffers.
-    this->fillBuffers(hasColorAttribute,
-                      hasLocalCoordsAttribute,
-                      hasBoneAttribute,
-                      vertexStride,
-                      verts,
-                      indices);
-
-    // Unmap the buffers.
-    vertexBuffer->unmap();
-    if (indexBuffer) {
-        indexBuffer->unmap();
-    }
-
-    // Cache the buffers.
-    rp->assignUniqueKeyToResource(vertexKey, vertexBuffer.get());
-    rp->assignUniqueKeyToResource(indexKey, indexBuffer.get());
-
-    // Draw the vertices.
-    this->drawVertices(target, std::move(gp), vertexBuffer.get(), 0, indexBuffer.get(), 0);
-}
-
-void GrDrawVerticesOp::fillBuffers(bool hasColorAttribute,
-                                   bool hasLocalCoordsAttribute,
-                                   bool hasBoneAttribute,
-                                   size_t vertexStride,
-                                   void* verts,
-                                   uint16_t* indices) const {
-    int instanceCount = fMeshes.count();
-
-    // Copy data into the buffers.
-||||||| merged common ancestors
-=======
     // Fill the buffers.
     this->fillBuffers(hasColorAttribute,
                       hasLocalCoordsAttribute,
@@ -751,12 +406,10 @@ void DrawVerticesOp::fillBuffers(bool hasColorAttribute,
     int instanceCount = fMeshes.count();
 
     // Copy data into the buffers.
->>>>>>> upstream-releases
     int vertexOffset = 0;
     // We have a fast case below for uploading the vertex data when the matrix is translate
-    // only and there are colors but not local coords. Fast case does not apply when there are bone
-    // transformations.
-    bool fastAttrs = hasColorAttribute && !hasLocalCoordsAttribute && !hasBoneAttribute;
+    // only and there are colors but not local coords.
+    bool fastAttrs = hasColorAttribute && !hasLocalCoordsAttribute;
     for (int i = 0; i < instanceCount; i++) {
         // Get each mesh.
         const Mesh& mesh = fMeshes[i];
@@ -774,8 +427,6 @@ void DrawVerticesOp::fillBuffers(bool hasColorAttribute,
         const SkPoint* positions = mesh.fVertices->positions();
         const SkColor* colors = mesh.fVertices->colors();
         const SkPoint* localCoords = mesh.fVertices->texCoords();
-        const SkVertices::BoneIndices* boneIndices = mesh.fVertices->boneIndices();
-        const SkVertices::BoneWeights* boneWeights = mesh.fVertices->boneWeights();
         bool fastMesh = (!this->hasMultipleViewMatrices() ||
                          mesh.fViewMatrix.getType() <= SkMatrix::kTranslate_Mask) &&
                         mesh.hasPerVertexColors();
@@ -800,24 +451,6 @@ void DrawVerticesOp::fillBuffers(bool hasColorAttribute,
         } else {
             // Normal case.
             static constexpr size_t kColorOffset = sizeof(SkPoint);
-<<<<<<< HEAD
-            size_t offset = kColorOffset;
-            if (hasColorAttribute) {
-                offset += sizeof(uint32_t);
-            }
-            size_t localCoordOffset = offset;
-            if (hasLocalCoordsAttribute) {
-                offset += sizeof(SkPoint);
-            }
-            size_t boneIndexOffset = offset;
-            if (hasBoneAttribute) {
-                offset += 4 * sizeof(int8_t);
-            }
-            size_t boneWeightOffset = offset;
-||||||| merged common ancestors
-            size_t localCoordOffset =
-                    hasColorAttribute ? kColorOffset + sizeof(uint32_t) : kColorOffset;
-=======
             size_t offset = kColorOffset;
             if (hasColorAttribute) {
                 offset += sizeof(uint32_t);
@@ -829,7 +462,6 @@ void DrawVerticesOp::fillBuffers(bool hasColorAttribute,
 
             // TODO4F: Preserve float colors
             GrColor color = mesh.fColor.toBytes_RGBA();
->>>>>>> upstream-releases
 
             for (int j = 0; j < vertexCount; ++j) {
                 if (this->hasMultipleViewMatrices()) {
@@ -851,16 +483,6 @@ void DrawVerticesOp::fillBuffers(bool hasColorAttribute,
                         *(SkPoint*)((intptr_t)verts + localCoordOffset) = positions[j];
                     }
                 }
-                if (hasBoneAttribute) {
-                    const SkVertices::BoneIndices& indices = boneIndices[j];
-                    const SkVertices::BoneWeights& weights = boneWeights[j];
-                    for (int k = 0; k < 4; k++) {
-                        size_t indexOffset = boneIndexOffset + sizeof(int8_t) * k;
-                        size_t weightOffset = boneWeightOffset + sizeof(uint8_t) * k;
-                        *(int8_t*)((intptr_t)verts + indexOffset) = indices.indices[k];
-                        *(uint8_t*)((intptr_t)verts + weightOffset) = weights.weights[k] * 255.0f;
-                    }
-                }
                 verts = (void*)((intptr_t)verts + vertexStride);
             }
         }
@@ -868,22 +490,6 @@ void DrawVerticesOp::fillBuffers(bool hasColorAttribute,
     }
 }
 
-<<<<<<< HEAD
-void GrDrawVerticesOp::drawVertices(Target* target,
-                                    sk_sp<const GrGeometryProcessor> gp,
-                                    const GrBuffer* vertexBuffer,
-                                    int firstVertex,
-                                    const GrBuffer* indexBuffer,
-                                    int firstIndex) {
-    GrMesh* mesh = target->allocMesh(this->primitiveType());
-    if (this->isIndexed()) {
-        mesh->setIndexed(indexBuffer, fIndexCount, firstIndex, 0, fVertexCount - 1,
-                         GrPrimitiveRestart::kNo);
-||||||| merged common ancestors
-    GrMesh mesh(this->primitiveType());
-    if (!indices) {
-        mesh.setNonIndexedNonInstanced(fVertexCount);
-=======
 void DrawVerticesOp::drawVertices(Target* target,
                                   sk_sp<const GrGeometryProcessor> gp,
                                   sk_sp<const GrBuffer> vertexBuffer,
@@ -894,47 +500,21 @@ void DrawVerticesOp::drawVertices(Target* target,
     if (this->isIndexed()) {
         mesh->setIndexed(std::move(indexBuffer), fIndexCount, firstIndex, 0, fVertexCount - 1,
                          GrPrimitiveRestart::kNo);
->>>>>>> upstream-releases
     } else {
         mesh->setNonIndexedNonInstanced(fVertexCount);
     }
-<<<<<<< HEAD
-    mesh->setVertexData(vertexBuffer, firstVertex);
-    auto pipe = fHelper.makePipeline(target);
-    target->draw(std::move(gp), pipe.fPipeline, pipe.fFixedDynamicState, mesh);
-||||||| merged common ancestors
-    mesh.setVertexData(vertexBuffer, firstVertex);
-    target->draw(gp.get(), fHelper.makePipeline(target), mesh);
-=======
     mesh->setVertexData(std::move(vertexBuffer), firstVertex);
     target->recordDraw(std::move(gp), mesh);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-GrOp::CombineResult GrDrawVerticesOp::onCombineIfPossible(GrOp* t, const GrCaps& caps) {
-    GrDrawVerticesOp* that = t->cast<GrDrawVerticesOp>();
-||||||| merged common ancestors
-bool GrDrawVerticesOp::onCombineIfPossible(GrOp* t, const GrCaps& caps) {
-    GrDrawVerticesOp* that = t->cast<GrDrawVerticesOp>();
-=======
 void DrawVerticesOp::onExecute(GrOpFlushState* flushState, const SkRect& chainBounds) {
     fHelper.executeDrawsAndUploads(this, flushState, chainBounds);
 }
 
 GrOp::CombineResult DrawVerticesOp::onCombineIfPossible(GrOp* t, const GrCaps& caps) {
     DrawVerticesOp* that = t->cast<DrawVerticesOp>();
->>>>>>> upstream-releases
 
     if (!fHelper.isCompatible(that->fHelper, caps, this->bounds(), that->bounds())) {
-<<<<<<< HEAD
-        return CombineResult::kCannotCombine;
-    }
-
-    // Meshes with bones cannot be combined because different meshes use different bones, so to
-    // combine them, the matrices would have to be combined, and the bone indices on each vertex
-    // would change, thus making the vertices uncacheable.
-    if (this->hasBones() || that->hasBones()) {
         return CombineResult::kCannotCombine;
     }
 
@@ -943,18 +523,6 @@ GrOp::CombineResult DrawVerticesOp::onCombineIfPossible(GrOp* t, const GrCaps& c
     // that was saved in its vertex buffer, which is not necessarily there anymore.
     if (!this->fMeshes[0].fVertices->isVolatile() || !that->fMeshes[0].fVertices->isVolatile()) {
         return CombineResult::kCannotCombine;
-||||||| merged common ancestors
-        return false;
-=======
-        return CombineResult::kCannotCombine;
-    }
-
-    // Non-volatile meshes cannot batch, because if a non-volatile mesh batches with another mesh,
-    // then on the next frame, if that non-volatile mesh is drawn, it will draw the other mesh
-    // that was saved in its vertex buffer, which is not necessarily there anymore.
-    if (!this->fMeshes[0].fVertices->isVolatile() || !that->fMeshes[0].fVertices->isVolatile()) {
-        return CombineResult::kCannotCombine;
->>>>>>> upstream-releases
     }
 
     if (!this->combinablePrimitive() || this->primitiveType() != that->primitiveType()) {
@@ -994,13 +562,6 @@ GrOp::CombineResult DrawVerticesOp::onCombineIfPossible(GrOp* t, const GrCaps& c
     fVertexCount += that->fVertexCount;
     fIndexCount += that->fIndexCount;
 
-<<<<<<< HEAD
-    this->joinBounds(*that);
-    return CombineResult::kMerged;
-||||||| merged common ancestors
-    this->joinBounds(*that);
-    return true;
-=======
     return CombineResult::kMerged;
 }
 
@@ -1024,7 +585,6 @@ std::unique_ptr<GrDrawOp> GrDrawVerticesOp::Make(GrRecordingContext* context,
                                                                    primType, aaType,
                                                                    std::move(colorSpaceXform),
                                                                    viewMatrix);
->>>>>>> upstream-releases
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1099,13 +659,7 @@ GR_DRAW_OP_TEST_DEFINE(DrawVerticesOp) {
     do {
        type = GrPrimitiveType(random->nextULessThan(kNumGrPrimitiveTypes));
     } while (GrPrimTypeRequiresGeometryShaderSupport(type) &&
-<<<<<<< HEAD
-             !context->contextPriv().caps()->shaderCaps()->geometryShaderSupport());
-||||||| merged common ancestors
-             !context->caps()->shaderCaps()->geometryShaderSupport());
-=======
              !context->priv().caps()->shaderCaps()->geometryShaderSupport());
->>>>>>> upstream-releases
 
     uint32_t primitiveCount = random->nextRangeU(1, 100);
 

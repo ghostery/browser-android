@@ -230,16 +230,8 @@ with Files("tests/css/css-paint-api/**"):
 with Files("tests/css/css-scoping/**"):
     BUG_COMPONENT = ("Core", "CSS Parsing and Computation")
 
-<<<<<<< HEAD
-with Files("tests/css/css-easing/**"):
-    BUG_COMPONENT = ("Core", "Layout")
-||||||| merged common ancestors
-with Files("tests/css/css-timing/**"):
-    BUG_COMPONENT = ("Core", "Layout")
-=======
 with Files("tests/css/css-transitions/**"):
     BUG_COMPONENT = ("Core", "CSS Transitions and Animations")
->>>>>>> upstream-releases
 
 with Files("tests/css/css-typed-om/**"):
     BUG_COMPONENT = ("Core", "DOM: CSS Object Model")

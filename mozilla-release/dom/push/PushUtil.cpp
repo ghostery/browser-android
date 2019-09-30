@@ -9,59 +9,28 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ bool PushUtil::CopyArrayBufferToArray(const ArrayBuffer& aBuffer,
-                                                   nsTArray<uint8_t>& aArray) {
-||||||| merged common ancestors
-/* static */ bool
-PushUtil::CopyArrayBufferToArray(const ArrayBuffer& aBuffer,
-                                 nsTArray<uint8_t>& aArray)
-{
-=======
 /* static */
 bool PushUtil::CopyArrayBufferToArray(const ArrayBuffer& aBuffer,
                                       nsTArray<uint8_t>& aArray) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aArray.IsEmpty());
   aBuffer.ComputeLengthAndData();
   return aArray.SetCapacity(aBuffer.Length(), fallible) &&
          aArray.InsertElementsAt(0, aBuffer.Data(), aBuffer.Length(), fallible);
 }
 
-<<<<<<< HEAD
-/* static */ bool PushUtil::CopyArrayBufferViewToArray(
-    const ArrayBufferView& aView, nsTArray<uint8_t>& aArray) {
-||||||| merged common ancestors
-/* static */ bool
-PushUtil::CopyArrayBufferViewToArray(const ArrayBufferView& aView,
-                                     nsTArray<uint8_t>& aArray)
-{
-=======
 /* static */
 bool PushUtil::CopyArrayBufferViewToArray(const ArrayBufferView& aView,
                                           nsTArray<uint8_t>& aArray) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aArray.IsEmpty());
   aView.ComputeLengthAndData();
   return aArray.SetCapacity(aView.Length(), fallible) &&
          aArray.InsertElementsAt(0, aView.Data(), aView.Length(), fallible);
 }
 
-<<<<<<< HEAD
-/* static */ bool PushUtil::CopyBufferSourceToArray(
-    const OwningArrayBufferViewOrArrayBuffer& aSource,
-    nsTArray<uint8_t>& aArray) {
-||||||| merged common ancestors
-/* static */ bool
-PushUtil::CopyBufferSourceToArray(
-  const OwningArrayBufferViewOrArrayBuffer& aSource, nsTArray<uint8_t>& aArray)
-{
-=======
 /* static */
 bool PushUtil::CopyBufferSourceToArray(
     const OwningArrayBufferViewOrArrayBuffer& aSource,
     nsTArray<uint8_t>& aArray) {
->>>>>>> upstream-releases
   if (aSource.IsArrayBuffer()) {
     return CopyArrayBufferToArray(aSource.GetAsArrayBuffer(), aArray);
   }
@@ -71,24 +40,11 @@ bool PushUtil::CopyBufferSourceToArray(
   MOZ_CRASH("Uninitialized union: expected buffer or view");
 }
 
-<<<<<<< HEAD
-/* static */ void PushUtil::CopyArrayToArrayBuffer(
-    JSContext* aCx, const nsTArray<uint8_t>& aArray,
-    JS::MutableHandle<JSObject*> aValue, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-PushUtil::CopyArrayToArrayBuffer(JSContext* aCx,
-                                 const nsTArray<uint8_t>& aArray,
-                                 JS::MutableHandle<JSObject*> aValue,
-                                 ErrorResult& aRv)
-{
-=======
 /* static */
 void PushUtil::CopyArrayToArrayBuffer(JSContext* aCx,
                                       const nsTArray<uint8_t>& aArray,
                                       JS::MutableHandle<JSObject*> aValue,
                                       ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (aArray.IsEmpty()) {
     aValue.set(nullptr);
     return;

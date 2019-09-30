@@ -15,29 +15,6 @@ namespace mozilla {
 namespace dom {
 
 #define MOZILLA_DOM_MEDIADEVICEINFO_IMPLEMENTATION_IID \
-<<<<<<< HEAD
-  {                                                    \
-    0x25091870, 0x84d6, 0x4acf, {                      \
-      0xaf, 0x97, 0x6e, 0xd5, 0x5b, 0xe0, 0x47, 0xb2   \
-    }                                                  \
-  }
-
-class MediaDeviceInfo final : public nsISupports, public nsWrapperCache {
- public:
-  explicit MediaDeviceInfo(const nsAString& aDeviceId, MediaDeviceKind aKind,
-                           const nsAString& aLabel,
-                           const nsAString& aGroupId = nsString());
-||||||| merged common ancestors
-{0x25091870, 0x84d6, 0x4acf, {0xaf, 0x97, 0x6e, 0xd5, 0x5b, 0xe0, 0x47, 0xb2}}
-
-class MediaDeviceInfo final : public nsISupports, public nsWrapperCache
-{
-public:
-  explicit MediaDeviceInfo(const nsAString& aDeviceId,
-                           MediaDeviceKind aKind,
-                           const nsAString& aLabel,
-                           const nsAString& aGroupId = nsString());
-=======
   {                                                    \
     0x25091870, 0x84d6, 0x4acf, {                      \
       0xaf, 0x97, 0x6e, 0xd5, 0x5b, 0xe0, 0x47, 0xb2   \
@@ -48,7 +25,6 @@ class MediaDeviceInfo final : public nsISupports, public nsWrapperCache {
  public:
   explicit MediaDeviceInfo(const nsAString& aDeviceId, MediaDeviceKind aKind,
                            const nsAString& aLabel, const nsAString& aGroupId);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(MediaDeviceInfo)

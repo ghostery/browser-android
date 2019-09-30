@@ -232,28 +232,9 @@ nsresult InterceptedHttpChannel::RedirectForResponseURL(
   // as well, though, so we can call them if a failure occurs.
   nsCOMPtr<nsIInterceptedBodyCallback> bodyCallback = mBodyCallback.forget();
 
-<<<<<<< HEAD
   RefPtr<InterceptedHttpChannel> newChannel = CreateForSynthesis(
       mResponseHead, mBodyReader, bodyCallback, mChannelCreationTime,
       mChannelCreationTimestamp, mAsyncOpenTime);
-
-  rv = newChannel->Init(aResponseURI, mCaps,
-                        static_cast<nsProxyInfo*>(mProxyInfo.get()),
-                        mProxyResolveFlags, mProxyURI, mChannelId);
-||||||| merged common ancestors
-  RefPtr<InterceptedHttpChannel> newChannel =
-    CreateForSynthesis(mResponseHead, mBodyReader, bodyCallback,
-                       mChannelCreationTime, mChannelCreationTimestamp,
-                       mAsyncOpenTime);
-
-  rv = newChannel->Init(aResponseURI, mCaps,
-                        static_cast<nsProxyInfo*>(mProxyInfo.get()),
-                        mProxyResolveFlags, mProxyURI, mChannelId);
-=======
-  RefPtr<InterceptedHttpChannel> newChannel = CreateForSynthesis(
-      mResponseHead, mBodyReader, bodyCallback, mChannelCreationTime,
-      mChannelCreationTimestamp, mAsyncOpenTime);
->>>>>>> upstream-releases
 
   // If the response has been redirected, propagate all the URLs to content.
   // Thus, the exact value of the redirect flag does not matter as long as it's
@@ -262,11 +243,6 @@ nsresult InterceptedHttpChannel::RedirectForResponseURL(
                                        : nsIChannelEventSink::REDIRECT_INTERNAL;
 
   nsCOMPtr<nsILoadInfo> redirectLoadInfo =
-<<<<<<< HEAD
-      CloneLoadInfoForRedirect(aResponseURI, flags);
-||||||| merged common ancestors
-    CloneLoadInfoForRedirect(aResponseURI, flags);
-=======
       CloneLoadInfoForRedirect(aResponseURI, flags);
 
   nsContentPolicyType contentPolicyType =
@@ -277,7 +253,6 @@ nsresult InterceptedHttpChannel::RedirectForResponseURL(
       aResponseURI, mCaps, static_cast<nsProxyInfo*>(mProxyInfo.get()),
       mProxyResolveFlags, mProxyURI, mChannelId, contentPolicyType);
 
->>>>>>> upstream-releases
   newChannel->SetLoadInfo(redirectLoadInfo);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -371,24 +346,7 @@ nsresult InterceptedHttpChannel::OpenRedirectChannel() {
   mRedirectChannel->SetOriginalURI(mOriginalURI);
 
   // open new channel
-<<<<<<< HEAD
-  if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-    MOZ_ASSERT(!mListenerContext, "mListenerContext should be null!");
-    rv = mRedirectChannel->AsyncOpen2(mListener);
-  } else {
-    rv = mRedirectChannel->AsyncOpen(mListener, mListenerContext);
-  }
-||||||| merged common ancestors
-  if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-    MOZ_ASSERT(!mListenerContext, "mListenerContext should be null!");
-    rv = mRedirectChannel->AsyncOpen2(mListener);
-  }
-  else {
-    rv = mRedirectChannel->AsyncOpen(mListener, mListenerContext);
-  }
-=======
   rv = mRedirectChannel->AsyncOpen(mListener);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   mStatus = NS_BINDING_REDIRECTED;
@@ -561,13 +519,6 @@ InterceptedHttpChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::AsyncOpen(nsIStreamListener* aListener,
-                                  nsISupports* aContext) {
-||||||| merged common ancestors
-InterceptedHttpChannel::AsyncOpen(nsIStreamListener* aListener, nsISupports* aContext)
-{
-=======
 InterceptedHttpChannel::AsyncOpen(nsIStreamListener* aListener) {
   nsCOMPtr<nsIStreamListener> listener(aListener);
   nsresult rv =
@@ -576,7 +527,6 @@ InterceptedHttpChannel::AsyncOpen(nsIStreamListener* aListener) {
     Cancel(rv);
     return rv;
   }
->>>>>>> upstream-releases
   if (mCanceled) {
     return mStatus;
   }
@@ -591,50 +541,17 @@ InterceptedHttpChannel::AsyncOpen(nsIStreamListener* aListener) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::AsyncOpen2(nsIStreamListener* aListener) {
-  nsCOMPtr<nsIStreamListener> listener(aListener);
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    Cancel(rv);
-    return rv;
-  }
-  return AsyncOpen(listener, nullptr);
-||||||| merged common ancestors
-InterceptedHttpChannel::AsyncOpen2(nsIStreamListener* aListener)
-{
-  nsCOMPtr<nsIStreamListener> listener(aListener);
-  nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    Cancel(rv);
-    return rv;
-  }
-  return AsyncOpen(listener, nullptr);
-=======
 InterceptedHttpChannel::LogBlockedCORSRequest(const nsAString& aMessage,
                                               const nsACString& aCategory) {
   // Synthetic responses should not trigger CORS blocking.
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::LogBlockedCORSRequest(const nsAString& aMessage,
-                                              const nsACString& aCategory) {
-  // Synthetic responses should not trigger CORS blocking.
-||||||| merged common ancestors
-InterceptedHttpChannel::LogBlockedCORSRequest(const nsAString& aMessage,
-                                              const nsACString& aCategory)
-{
-  // Synthetic responses should not trigger CORS blocking.
-=======
 InterceptedHttpChannel::LogMimeTypeMismatch(const nsACString& aMessageName,
                                             bool aWarning,
                                             const nsAString& aURL,
                                             const nsAString& aContentType) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -1091,16 +1008,7 @@ InterceptedHttpChannel::OnRedirectVerifyCallback(nsresult rv) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::OnStartRequest(nsIRequest* aRequest,
-                                       nsISupports* aContext) {
-||||||| merged common ancestors
-InterceptedHttpChannel::OnStartRequest(nsIRequest* aRequest,
-                                       nsISupports* aContext)
-{
-=======
 InterceptedHttpChannel::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!mProgressSink) {
@@ -1118,17 +1026,7 @@ InterceptedHttpChannel::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::OnStopRequest(nsIRequest* aRequest,
-                                      nsISupports* aContext, nsresult aStatus) {
-||||||| merged common ancestors
-InterceptedHttpChannel::OnStopRequest(nsIRequest* aRequest,
-                                      nsISupports* aContext,
-                                      nsresult aStatus)
-{
-=======
 InterceptedHttpChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (NS_SUCCEEDED(mStatus)) {
@@ -1279,12 +1177,6 @@ InterceptedHttpChannel::IsFromCache(bool* value) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::GetCacheEntryId(uint64_t* aCacheEntryId) {
-||||||| merged common ancestors
-InterceptedHttpChannel::GetCacheEntryId(uint64_t *aCacheEntryId)
-{
-=======
 InterceptedHttpChannel::IsRacing(bool* value) {
   if (mSynthesizedCacheInfo) {
     return mSynthesizedCacheInfo->IsRacing(value);
@@ -1295,7 +1187,6 @@ InterceptedHttpChannel::IsRacing(bool* value) {
 
 NS_IMETHODIMP
 InterceptedHttpChannel::GetCacheEntryId(uint64_t* aCacheEntryId) {
->>>>>>> upstream-releases
   if (mSynthesizedCacheInfo) {
     return mSynthesizedCacheInfo->GetCacheEntryId(aCacheEntryId);
   }
@@ -1359,42 +1250,17 @@ InterceptedHttpChannel::GetAllowStaleCacheContent(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::PreferAlternativeDataType(
-    const nsACString& aType, const nsACString& aContentType) {
-||||||| merged common ancestors
-InterceptedHttpChannel::PreferAlternativeDataType(const nsACString & aType,
-                                                  const nsACString& aContentType)
-{
-=======
 InterceptedHttpChannel::PreferAlternativeDataType(
     const nsACString& aType, const nsACString& aContentType,
     bool aDeliverAltData) {
->>>>>>> upstream-releases
   ENSURE_CALLED_BEFORE_ASYNC_OPEN();
-<<<<<<< HEAD
-  mPreferredCachedAltDataTypes.AppendElement(
-      MakePair(nsCString(aType), nsCString(aContentType)));
-||||||| merged common ancestors
-  mPreferredCachedAltDataTypes.AppendElement(MakePair(nsCString(aType), nsCString(aContentType)));
-=======
   mPreferredCachedAltDataTypes.AppendElement(PreferredAlternativeDataTypeParams(
       nsCString(aType), nsCString(aContentType), aDeliverAltData));
->>>>>>> upstream-releases
   return NS_OK;
 }
 
-<<<<<<< HEAD
-const nsTArray<mozilla::Tuple<nsCString, nsCString>>&
-InterceptedHttpChannel::PreferredAlternativeDataTypes() {
-||||||| merged common ancestors
-const nsTArray<mozilla::Tuple<nsCString, nsCString>>&
-InterceptedHttpChannel::PreferredAlternativeDataTypes()
-{
-=======
 const nsTArray<PreferredAlternativeDataTypeParams>&
 InterceptedHttpChannel::PreferredAlternativeDataTypes() {
->>>>>>> upstream-releases
   return mPreferredCachedAltDataTypes;
 }
 
@@ -1407,18 +1273,9 @@ InterceptedHttpChannel::GetAlternativeDataType(nsACString& aType) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::OpenAlternativeOutputStream(const nsACString& type,
-                                                    int64_t predictedSize,
-                                                    nsIOutputStream** _retval) {
-||||||| merged common ancestors
-InterceptedHttpChannel::OpenAlternativeOutputStream(const nsACString & type, int64_t predictedSize, nsIOutputStream * *_retval)
-{
-=======
 InterceptedHttpChannel::OpenAlternativeOutputStream(
     const nsACString& type, int64_t predictedSize,
     nsIAsyncOutputStream** _retval) {
->>>>>>> upstream-releases
   if (mSynthesizedCacheInfo) {
     return mSynthesizedCacheInfo->OpenAlternativeOutputStream(
         type, predictedSize, _retval);
@@ -1436,12 +1293,6 @@ InterceptedHttpChannel::GetOriginalInputStream(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-InterceptedHttpChannel::GetCacheKey(uint32_t* key) {
-||||||| merged common ancestors
-InterceptedHttpChannel::GetCacheKey(uint32_t* key)
-{
-=======
 InterceptedHttpChannel::GetAltDataInputStream(
     const nsACString& aType, nsIInputStreamReceiver* aReceiver) {
   if (mSynthesizedCacheInfo) {
@@ -1452,7 +1303,6 @@ InterceptedHttpChannel::GetAltDataInputStream(
 
 NS_IMETHODIMP
 InterceptedHttpChannel::GetCacheKey(uint32_t* key) {
->>>>>>> upstream-releases
   if (mSynthesizedCacheInfo) {
     return mSynthesizedCacheInfo->GetCacheKey(key);
   }

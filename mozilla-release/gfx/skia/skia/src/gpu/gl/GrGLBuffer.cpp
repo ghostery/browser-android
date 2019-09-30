@@ -176,16 +176,8 @@ void GrGLBuffer::onMap() {
         case GrGLCaps::kMapBuffer_MapBufferType: {
             GrGLenum target = this->glGpu()->bindBuffer(fIntendedType, this);
             // Let driver know it can discard the old data
-<<<<<<< HEAD
-            if (this->glCaps().useBufferDataNullHint() || fGLSizeInBytes != this->sizeInBytes()) {
-                GL_CALL(BufferData(target, this->sizeInBytes(), nullptr, fUsage));
-||||||| merged common ancestors
-            if (GR_GL_USE_BUFFER_DATA_NULL_HINT || fGLSizeInBytes != this->sizeInBytes()) {
-                GL_CALL(BufferData(target, this->sizeInBytes(), nullptr, fUsage));
-=======
             if (this->glCaps().useBufferDataNullHint() || fGLSizeInBytes != this->size()) {
                 GL_CALL(BufferData(target, this->size(), nullptr, fUsage));
->>>>>>> upstream-releases
             }
             GL_CALL_RET(fMapPtr, MapBuffer(target, readOnly ? GR_GL_READ_ONLY : GR_GL_WRITE_ONLY));
             break;
@@ -266,27 +258,6 @@ bool GrGLBuffer::onUpdateData(const void* src, size_t srcSizeInBytes) {
     // bindbuffer handles dirty context
     GrGLenum target = this->glGpu()->bindBuffer(fIntendedType, this);
 
-<<<<<<< HEAD
-    if (this->glCaps().useBufferDataNullHint()) {
-        if (this->sizeInBytes() == srcSizeInBytes) {
-            GL_CALL(BufferData(target, (GrGLsizeiptr) srcSizeInBytes, src, fUsage));
-        } else {
-            // Before we call glBufferSubData we give the driver a hint using
-            // glBufferData with nullptr. This makes the old buffer contents
-            // inaccessible to future draws. The GPU may still be processing
-            // draws that reference the old contents. With this hint it can
-            // assign a different allocation for the new contents to avoid
-            // flushing the gpu past draws consuming the old contents.
-            // TODO I think we actually want to try calling bufferData here
-            GL_CALL(BufferData(target, this->sizeInBytes(), nullptr, fUsage));
-            GL_CALL(BufferSubData(target, 0, (GrGLsizeiptr) srcSizeInBytes, src));
-        }
-        fGLSizeInBytes = this->sizeInBytes();
-||||||| merged common ancestors
-#if GR_GL_USE_BUFFER_DATA_NULL_HINT
-    if (this->sizeInBytes() == srcSizeInBytes) {
-        GL_CALL(BufferData(target, (GrGLsizeiptr) srcSizeInBytes, src, fUsage));
-=======
     if (this->glCaps().useBufferDataNullHint()) {
         if (this->size() == srcSizeInBytes) {
             GL_CALL(BufferData(target, (GrGLsizeiptr) srcSizeInBytes, src, fUsage));
@@ -302,7 +273,6 @@ bool GrGLBuffer::onUpdateData(const void* src, size_t srcSizeInBytes) {
             GL_CALL(BufferSubData(target, 0, (GrGLsizeiptr) srcSizeInBytes, src));
         }
         fGLSizeInBytes = this->size();
->>>>>>> upstream-releases
     } else {
         // Note that we're cheating on the size here. Currently no methods
         // allow a partial update that preserves contents of non-updated

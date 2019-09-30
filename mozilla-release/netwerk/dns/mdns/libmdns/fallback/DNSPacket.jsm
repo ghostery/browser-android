@@ -8,25 +8,8 @@
 
 var EXPORTED_SYMBOLS = ["DNSPacket"];
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-ChromeUtils.import('resource://gre/modules/Services.jsm');
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/DataReader.jsm");
-ChromeUtils.import("resource://gre/modules/DataWriter.jsm");
-ChromeUtils.import("resource://gre/modules/DNSRecord.jsm");
-ChromeUtils.import("resource://gre/modules/DNSResourceRecord.jsm");
-||||||| merged common ancestors
-ChromeUtils.import('resource://gre/modules/DataReader.jsm');
-ChromeUtils.import('resource://gre/modules/DataWriter.jsm');
-ChromeUtils.import('resource://gre/modules/DNSRecord.jsm');
-ChromeUtils.import('resource://gre/modules/DNSResourceRecord.jsm');
-=======
 const { DataReader } = ChromeUtils.import(
   "resource://gre/modules/DataReader.jsm"
 );
@@ -39,7 +22,6 @@ const { DNSRecord } = ChromeUtils.import(
 const { DNSResourceRecord } = ChromeUtils.import(
   "resource://gre/modules/DNSResourceRecord.jsm"
 );
->>>>>>> upstream-releases
 
 const DEBUG = true;
 
@@ -48,22 +30,10 @@ function debug(msg) {
 }
 
 let DNS_PACKET_SECTION_TYPES = [
-<<<<<<< HEAD
-  "QD", // Question
-  "AN", // Answer
-  "NS", // Authority
-  "AR",  // Additional
-||||||| merged common ancestors
-  'QD', // Question
-  'AN', // Answer
-  'NS', // Authority
-  'AR'  // Additional
-=======
   "QD", // Question
   "AN", // Answer
   "NS", // Authority
   "AR", // Additional
->>>>>>> upstream-releases
 ];
 
 /**
@@ -188,23 +158,6 @@ class DNSPacket {
     DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
       let recordCount = recordCounts[sectionType];
       for (let i = 0; i < recordCount; i++) {
-<<<<<<< HEAD
-        if (sectionType === "QD") {
-          packet.addRecord(sectionType,
-              DNSRecord.parseFromPacketReader(reader));
-        } else {
-          packet.addRecord(sectionType,
-              DNSResourceRecord.parseFromPacketReader(reader));
-||||||| merged common ancestors
-        if (sectionType === 'QD') {
-          packet.addRecord(sectionType,
-              DNSRecord.parseFromPacketReader(reader));
-        }
-
-        else {
-          packet.addRecord(sectionType,
-              DNSResourceRecord.parseFromPacketReader(reader));
-=======
         if (sectionType === "QD") {
           packet.addRecord(
             sectionType,
@@ -215,7 +168,6 @@ class DNSPacket {
             sectionType,
             DNSResourceRecord.parseFromPacketReader(reader)
           );
->>>>>>> upstream-releases
         }
       }
     });

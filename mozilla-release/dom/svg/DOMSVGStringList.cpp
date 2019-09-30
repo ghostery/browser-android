@@ -20,24 +20,10 @@ namespace mozilla {
 
 using namespace dom;
 
-<<<<<<< HEAD
-static inline nsSVGAttrTearoffTable<SVGStringList, DOMSVGStringList>&
-SVGStringListTearoffTable() {
-  static nsSVGAttrTearoffTable<SVGStringList, DOMSVGStringList>
-      sSVGStringListTearoffTable;
-||||||| merged common ancestors
-static inline
-nsSVGAttrTearoffTable<SVGStringList, DOMSVGStringList>&
-SVGStringListTearoffTable()
-{
-  static nsSVGAttrTearoffTable<SVGStringList, DOMSVGStringList>
-    sSVGStringListTearoffTable;
-=======
 static inline SVGAttrTearoffTable<SVGStringList, DOMSVGStringList>&
 SVGStringListTearoffTable() {
   static SVGAttrTearoffTable<SVGStringList, DOMSVGStringList>
       sSVGStringListTearoffTable;
->>>>>>> upstream-releases
   return sSVGStringListTearoffTable;
 }
 
@@ -78,23 +64,10 @@ class MOZ_RAII AutoChangeStringListNotifier {
   MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
 };
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DOMSVGStringList> DOMSVGStringList::GetDOMWrapper(
-    SVGStringList* aList, nsSVGElement* aElement,
-    bool aIsConditionalProcessingAttribute, uint8_t aAttrEnum) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<DOMSVGStringList>
-DOMSVGStringList::GetDOMWrapper(SVGStringList *aList,
-                                nsSVGElement *aElement,
-                                bool aIsConditionalProcessingAttribute,
-                                uint8_t aAttrEnum)
-{
-=======
 /* static */
 already_AddRefed<DOMSVGStringList> DOMSVGStringList::GetDOMWrapper(
     SVGStringList* aList, SVGElement* aElement,
     bool aIsConditionalProcessingAttribute, uint8_t aAttrEnum) {
->>>>>>> upstream-releases
   RefPtr<DOMSVGStringList> wrapper =
       SVGStringListTearoffTable().GetTearoff(aList);
   if (!wrapper) {
@@ -110,18 +83,9 @@ DOMSVGStringList::~DOMSVGStringList() {
   SVGStringListTearoffTable().RemoveTearoff(&InternalList());
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* DOMSVGStringList::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-DOMSVGStringList::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* DOMSVGStringList::WrapObject(JSContext* aCx,
                                        JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return SVGStringList_Binding::Wrap(aCx, this, aGivenProto);
 }
 

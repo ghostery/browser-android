@@ -40,41 +40,6 @@ using namespace mozilla::ipc;
 IDBTransaction::IDBTransaction(IDBDatabase* aDatabase,
                                const nsTArray<nsString>& aObjectStoreNames,
                                Mode aMode)
-<<<<<<< HEAD
-    : IDBWrapperCache(aDatabase),
-      mDatabase(aDatabase),
-      mObjectStoreNames(aObjectStoreNames),
-      mLoggingSerialNumber(0),
-      mNextObjectStoreId(0),
-      mNextIndexId(0),
-      mAbortCode(NS_OK),
-      mPendingRequestCount(0),
-      mLineNo(0),
-      mColumn(0),
-      mReadyState(IDBTransaction::INITIAL),
-      mMode(aMode),
-      mCreating(false),
-      mRegistered(false),
-      mAbortedByScript(false),
-      mNotedActiveTransaction(false)
-||||||| merged common ancestors
-  : IDBWrapperCache(aDatabase)
-  , mDatabase(aDatabase)
-  , mObjectStoreNames(aObjectStoreNames)
-  , mLoggingSerialNumber(0)
-  , mNextObjectStoreId(0)
-  , mNextIndexId(0)
-  , mAbortCode(NS_OK)
-  , mPendingRequestCount(0)
-  , mLineNo(0)
-  , mColumn(0)
-  , mReadyState(IDBTransaction::INITIAL)
-  , mMode(aMode)
-  , mCreating(false)
-  , mRegistered(false)
-  , mAbortedByScript(false)
-  , mNotedActiveTransaction(false)
-=======
     : DOMEventTargetHelper(aDatabase),
       mDatabase(aDatabase),
       mObjectStoreNames(aObjectStoreNames),
@@ -91,7 +56,6 @@ IDBTransaction::IDBTransaction(IDBDatabase* aDatabase,
       mRegistered(false),
       mAbortedByScript(false),
       mNotedActiveTransaction(false)
->>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mSentCommitOrAbort(false),
@@ -189,25 +153,9 @@ already_AddRefed<IDBTransaction> IDBTransaction::CreateVersionChange(
   nsTArray<nsString> emptyObjectStoreNames;
 
   RefPtr<IDBTransaction> transaction =
-<<<<<<< HEAD
       new IDBTransaction(aDatabase, emptyObjectStoreNames, VERSION_CHANGE);
   aOpenRequest->GetCallerLocation(transaction->mFilename, &transaction->mLineNo,
                                   &transaction->mColumn);
-
-  transaction->SetScriptOwner(aDatabase->GetScriptOwner());
-||||||| merged common ancestors
-    new IDBTransaction(aDatabase,
-                       emptyObjectStoreNames,
-                       VERSION_CHANGE);
-  aOpenRequest->GetCallerLocation(transaction->mFilename,
-                                  &transaction->mLineNo, &transaction->mColumn);
-
-  transaction->SetScriptOwner(aDatabase->GetScriptOwner());
-=======
-      new IDBTransaction(aDatabase, emptyObjectStoreNames, VERSION_CHANGE);
-  aOpenRequest->GetCallerLocation(transaction->mFilename, &transaction->mLineNo,
-                                  &transaction->mColumn);
->>>>>>> upstream-releases
 
   transaction->NoteActiveTransaction();
 
@@ -852,15 +800,7 @@ int64_t IDBTransaction::NextIndexId() {
   return mNextIndexId++;
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowInner* IDBTransaction::GetParentObject() const {
-||||||| merged common ancestors
-nsPIDOMWindowInner*
-IDBTransaction::GetParentObject() const
-{
-=======
 nsIGlobalObject* IDBTransaction::GetParentObject() const {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   return mDatabase->GetParentObject();

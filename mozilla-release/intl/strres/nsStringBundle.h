@@ -60,24 +60,10 @@ class nsStringBundleBase : public nsIStringBundle, public nsIMemoryReporter {
   size_t SizeOfIncludingThisIfUnshared(
       mozilla::MallocSizeOf aMallocSizeOf) const override;
 
-<<<<<<< HEAD
- public:
-  static nsresult FormatString(const char16_t* formatStr,
-                               const char16_t** aParams, uint32_t aLength,
-                               nsAString& aResult);
-||||||| merged common ancestors
-    size_t SizeOfIncludingThisIfUnshared(mozilla::MallocSizeOf aMallocSizeOf) const override;
-
-public:
-    static nsresult FormatString(const char16_t *formatStr,
-                                 const char16_t **aParams, uint32_t aLength,
-                                 nsAString& aResult);
-=======
  public:
   static nsresult FormatString(const char16_t* formatStr,
                                const nsTArray<nsString>& aParams,
                                nsAString& aResult);
->>>>>>> upstream-releases
 };
 
 class nsStringBundle : public nsStringBundleBase {

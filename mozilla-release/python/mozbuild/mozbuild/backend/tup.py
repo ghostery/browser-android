@@ -863,15 +863,9 @@ class TupBackend(CommonBackend):
 
             invocation['full-deps'] = set()
 
-<<<<<<< HEAD
-            if os.path.basename(invocation['program']) in ['build-script-build', 'build-script-main']:
-||||||| merged common ancestors
-            if os.path.basename(invocation['program']) == 'build-script-build':
-=======
             if os.path.basename(invocation['program']) in [
                 'build-script-build', 'build-script-main'
             ]:
->>>>>>> upstream-releases
                 out_dir = invocation['env']['OUT_DIR']
                 for output in cargo_extra_outputs.get(shortname, []):
                     outputs.append(os.path.join(out_dir, output))

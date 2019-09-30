@@ -33,19 +33,7 @@ function testComputedList(inspector, view) {
   const propEditor = rule.textProps[0].editor;
   const expander = propEditor.expander;
   const overriddenItems = propEditor.shorthandOverridden.children;
-<<<<<<< HEAD
-  const propNames = [
-    "margin-right",
-    "margin-left",
-  ];
-||||||| merged common ancestors
-  const propNames = [
-    "margin-right",
-    "margin-left"
-  ];
-=======
   const propNames = ["margin-right", "margin-left"];
->>>>>>> upstream-releases
 
   ok(!expander.hasAttribute("open"), "margin computed list is closed.");
   ok(

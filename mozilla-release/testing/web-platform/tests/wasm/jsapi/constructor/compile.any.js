@@ -61,20 +61,11 @@ test(() => {
 promise_test(t => {
   const buffer = new Uint8Array();
   return promise_rejects(t, new WebAssembly.CompileError(), WebAssembly.compile(buffer));
-<<<<<<< HEAD
-}, "Empty buffer");
-
-test(() => {
-  const buffer = new Uint8Array(Array.from(emptyModuleBinary).concat([0, 0]));
-  assert_throws(new WebAssembly.CompileError(), () => WebAssembly.compile(buffer));
-||||||| merged common ancestors
-=======
 }, "Empty buffer");
 
 promise_test(t => {
   const buffer = new Uint8Array(Array.from(emptyModuleBinary).concat([0, 0]));
   return promise_rejects(t, new WebAssembly.CompileError(), WebAssembly.compile(buffer));
->>>>>>> upstream-releases
 }, "Invalid code");
 
 promise_test(() => {
@@ -86,7 +77,7 @@ promise_test(() => {
 }, "Stray argument");
 
 promise_test(() => {
-  const buffer = new Uint8Array(new WasmModuleBuilder().toBuffer());
+  const buffer = new WasmModuleBuilder().toBuffer();
   assert_equals(buffer[0], 0);
   const promise = WebAssembly.compile(buffer);
   buffer[0] = 1;

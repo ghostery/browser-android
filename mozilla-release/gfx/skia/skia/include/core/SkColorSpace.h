@@ -8,20 +8,14 @@
 #ifndef SkColorSpace_DEFINED
 #define SkColorSpace_DEFINED
 
-<<<<<<< HEAD
-#include "../private/SkOnce.h"
-||||||| merged common ancestors
-=======
 #include "../private/SkFixed.h"
 #include "../private/SkOnce.h"
 #include "../../third_party/skcms/skcms.h"
->>>>>>> upstream-releases
 #include "SkMatrix44.h"
 #include "SkRefCnt.h"
 #include <memory>
 
 class SkData;
-struct skcms_ICCProfile;
 
 /**
  *  Describes a color gamut with primaries and a white point.
@@ -43,71 +37,6 @@ struct SK_API SkColorSpacePrimaries {
     bool toXYZD50(skcms_Matrix3x3* toXYZD50) const;
 };
 
-<<<<<<< HEAD
-/**
- *  Contains the coefficients for a common transfer function equation, specified as
- *  a transformation from a curved space to linear.
- *
- *  LinearVal = sign(InputVal) * (  C*|InputVal| + F       ), for 0.0f <= |InputVal| <  D
- *  LinearVal = sign(InputVal) * ( (A*|InputVal| + B)^G + E), for D    <= |InputVal|
- *
- *  Function must be positive and increasing.
- */
-struct SK_API SkColorSpaceTransferFn {
-    float fG;
-    float fA;
-    float fB;
-    float fC;
-    float fD;
-    float fE;
-    float fF;
-};
-
-class SK_API SkColorSpace : public SkNVRefCnt<SkColorSpace> {
-||||||| merged common ancestors
-/**
- *  Contains the coefficients for a common transfer function equation, specified as
- *  a transformation from a curved space to linear.
- *
- *  LinearVal = C*InputVal + F        , for 0.0f <= InputVal <  D
- *  LinearVal = (A*InputVal + B)^G + E, for D    <= InputVal <= 1.0f
- *
- *  Function is undefined if InputVal is not in [ 0.0f, 1.0f ].
- *  Resulting LinearVals must be in [ 0.0f, 1.0f ].
- *  Function must be positive and increasing.
- */
-struct SK_API SkColorSpaceTransferFn {
-    float fG;
-    float fA;
-    float fB;
-    float fC;
-    float fD;
-    float fE;
-    float fF;
-
-    /**
-     * Produces a new parametric transfer function equation that is the mathematical inverse of
-     * this one.
-     */
-    SkColorSpaceTransferFn invert() const;
-
-    /**
-     * Transform a single float by this transfer function.
-     * For negative inputs, returns sign(x) * f(abs(x)).
-     */
-    float operator()(float x) {
-        SkScalar s = SkScalarSignAsScalar(x);
-        x = sk_float_abs(x);
-        if (x >= fD) {
-            return s * (powf(fA * x + fB, fG) + fE);
-        } else {
-            return s * (fC * x + fF);
-        }
-    }
-};
-
-class SK_API SkColorSpace : public SkRefCnt {
-=======
 namespace SkNamedTransferFn {
 
 // Like SkNamedGamut::kSRGB, keeping this bitwise exactly the same as skcms makes things fastest.
@@ -165,7 +94,6 @@ static constexpr skcms_Matrix3x3 kXYZ = {{
 }
 
 class SK_API SkColorSpace : public SkNVRefCnt<SkColorSpace> {
->>>>>>> upstream-releases
 public:
     /**
      *  Create the sRGB color space.
@@ -191,32 +119,17 @@ public:
     /**
      *  Convert this color space to an skcms ICC profile struct.
      */
-<<<<<<< HEAD
     void toProfile(skcms_ICCProfile*) const;
-
-    SkGammaNamed gammaNamed() const { return fGammaNamed; }
-||||||| merged common ancestors
-    enum Type {
-        kRGB_Type,
-        kCMYK_Type,
-        kGray_Type,
-    };
-    Type type() const;
-
-    SkGammaNamed gammaNamed() const;
-=======
-    void toProfile(skcms_ICCProfile*) const;
->>>>>>> upstream-releases
 
     /**
      *  Returns true if the color space gamma is near enough to be approximated as sRGB.
      */
-    bool gammaCloseToSRGB() const { return kSRGB_SkGammaNamed == fGammaNamed; }
+    bool gammaCloseToSRGB() const;
 
     /**
      *  Returns true if the color space gamma is linear.
      */
-    bool gammaIsLinear() const { return kLinear_SkGammaNamed == fGammaNamed; }
+    bool gammaIsLinear() const;
 
     /**
      *  If the transfer function can be represented as coefficients to the standard
@@ -232,30 +145,10 @@ public:
      */
     bool toXYZD50(SkMatrix44* toXYZD50) const;
 
-<<<<<<< HEAD
-    /**
-     *  Returns a hash of the gamut transformation to XYZ D50. Allows for fast equality checking
-||||||| merged common ancestors
-    /**
-     *  Describes color space gamut as a transformation to XYZ D50.
-     *  Returns nullptr if color gamut cannot be described in terms of XYZ D50.
-     */
-    const SkMatrix44* toXYZD50() const;
-
-    /**
-     *  Describes color space gamut as a transformation from XYZ D50
-     *  Returns nullptr if color gamut cannot be described in terms of XYZ D50.
-     */
-    const SkMatrix44* fromXYZD50() const;
-
-    /**
-     *  Returns a hash of the gamut transofmration to XYZ D50. Allows for fast equality checking
-=======
     bool toXYZD50(skcms_Matrix3x3* toXYZD50) const;
 
     /**
      *  Returns a hash of the gamut transformation to XYZ D50. Allows for fast equality checking
->>>>>>> upstream-releases
      *  of gamuts, at the (very small) risk of collision.
      */
     uint32_t toXYZD50Hash() const { return fToXYZD50Hash; }
@@ -328,34 +221,13 @@ public:
 private:
     friend class SkColorSpaceSingletonFactory;
 
-<<<<<<< HEAD
-    SkColorSpace(SkGammaNamed gammaNamed,
-                 const float transferFn[7],
-                 const SkMatrix44& toXYZ);
-||||||| merged common ancestors
-    virtual SkGammaNamed onGammaNamed() const = 0;
-    virtual bool onGammaCloseToSRGB() const = 0;
-    virtual bool onGammaIsLinear() const = 0;
-    virtual bool onIsNumericalTransferFn(SkColorSpaceTransferFn* coeffs) const = 0;
-    virtual bool onIsCMYK() const { return false; }
-=======
     SkColorSpace(const float transferFn[7],
                  const skcms_Matrix3x3& toXYZ);
->>>>>>> upstream-releases
 
     void computeLazyDstFields() const;
 
-<<<<<<< HEAD
-    SkGammaNamed                        fGammaNamed;         // TODO: 2-bit, pack tightly?  drop?
     uint32_t                            fTransferFnHash;
     uint32_t                            fToXYZD50Hash;
-||||||| merged common ancestors
-    using INHERITED = SkRefCnt;
-};
-=======
-    uint32_t                            fTransferFnHash;
-    uint32_t                            fToXYZD50Hash;
->>>>>>> upstream-releases
 
     float                               fTransferFn[7];
     float                               fToXYZD50_3x3[9];    // row-major

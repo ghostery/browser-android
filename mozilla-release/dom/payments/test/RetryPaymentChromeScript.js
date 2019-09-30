@@ -143,15 +143,9 @@ function checkPayerErrors(testName, errors) {
 
 function checkPaymentMethodErrors(testName, errors) {
   if (!errors) {
-<<<<<<< HEAD
-    emitTestFail(`${testName} :Expect non-null paymentMethodErrors, but got null.`);
-||||||| merged common ancestors
-    emitTestFail(`${testName} :Expect non-null payerMethodErrors, but got null.`);
-=======
     emitTestFail(
       `${testName} :Expect non-null paymentMethodErrors, but got null.`
     );
->>>>>>> upstream-releases
     return;
   }
   for (const [key, msg] of Object.entries(errors)) {
@@ -195,15 +189,6 @@ const DummyUIService = {
           "'"
       );
     }
-<<<<<<< HEAD
-    checkAddressErrors(this.testName, payment.paymentDetails.shippingAddressErrors)
-    checkPayerErrors(this.testName, payment.paymentDetails.payerErrors);
-    checkPaymentMethodErrors(this.testName, payment.paymentDetails.paymentMethodErrors);
-||||||| merged common ancestors
-    checkAddressErrors(this.testName, payment.paymentDetails.shippingAddressErrors)
-    checkPayerErrors(this.testName, payment.paymentDetails.payer);
-    checkPaymentMethodErrors(this.testName, payment.paymentDetails.paymentMethod);
-=======
     checkAddressErrors(
       this.testName,
       payment.paymentDetails.shippingAddressErrors
@@ -213,7 +198,6 @@ const DummyUIService = {
       this.testName,
       payment.paymentDetails.paymentMethodErrors
     );
->>>>>>> upstream-releases
     if (this.rejectRetry) {
       rejectPayment(requestId);
     } else {

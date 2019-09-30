@@ -122,14 +122,6 @@ extern nsresult NS_CancelAsyncCopy(nsISupports* aCopierCtx, nsresult aReason);
  *        Note: The data copied to the string may contain null bytes and may
  *        contain non-ASCII values.
  */
-<<<<<<< HEAD
-extern nsresult NS_ConsumeStream(nsIInputStream* aSource, uint32_t aMaxCount,
-                                 nsACString& aBuffer);
-||||||| merged common ancestors
-extern nsresult
-NS_ConsumeStream(nsIInputStream* aSource, uint32_t aMaxCount,
-                 nsACString& aBuffer);
-=======
 extern nsresult NS_ConsumeStream(nsIInputStream* aSource, uint32_t aMaxCount,
                                  nsACString& aBuffer);
 
@@ -138,7 +130,6 @@ extern nsresult NS_ConsumeStream(nsIInputStream* aSource, uint32_t aMaxCount,
  */
 extern nsresult NS_ConsumeStream(nsIInputStream* aSource, uint32_t aMaxCount,
                                  nsTArray<uint8_t>& aBuffer);
->>>>>>> upstream-releases
 
 /**
  * This function tests whether or not the input stream is buffered. A buffered

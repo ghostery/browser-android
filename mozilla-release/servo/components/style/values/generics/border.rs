@@ -4,15 +4,9 @@
 
 //! Generic types for CSS values related to borders.
 
-<<<<<<< HEAD
-use crate::values::generics::rect::Rect;
-use crate::values::generics::size::Size;
-||||||| merged common ancestors
-=======
 use crate::values::generics::rect::Rect;
 use crate::values::generics::size::Size2D;
 use crate::Zero;
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
 

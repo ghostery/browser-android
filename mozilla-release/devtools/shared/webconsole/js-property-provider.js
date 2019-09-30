@@ -11,17 +11,12 @@ const DevToolsUtils = require("devtools/shared/DevToolsUtils");
 if (!isWorker) {
   loader.lazyImporter(this, "Parser", "resource://devtools/shared/Parser.jsm");
 }
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "Reflect", "resource://gre/modules/reflect.jsm", true);
-||||||| merged common ancestors
-=======
 loader.lazyRequireGetter(
   this,
   "Reflect",
   "resource://gre/modules/reflect.jsm",
   true
 );
->>>>>>> upstream-releases
 
 // Provide an easy way to bail out of even attempting an autocompletion
 // if an object has way too many properties. Protects against large objects
@@ -137,24 +132,6 @@ function analyzeInputString(str) {
           const nextNonSpaceCharIndex = after.indexOf(nextNonSpaceChar);
           const previousNonSpaceChar = trimmedBefore[trimmedBefore.length - 1];
 
-<<<<<<< HEAD
-          // If the previous char isn't a dot or opening bracket, and the next one isn't
-          // one either, and the current computed statement is not a
-          // variable/function/class declaration, update the start position.
-          if (
-            previousNonSpaceChar !== "." && nextNonSpaceChar !== "." &&
-            previousNonSpaceChar !== "[" && nextNonSpaceChar !== "[" &&
-            !NO_AUTOCOMPLETE_PREFIXES.includes(currentLastStatement)
-          ) {
-            start = i + (
-              nextNonSpaceCharIndex >= 0
-                ? nextNonSpaceCharIndex
-                : (after.length + 1)
-            );
-          }
-
-||||||| merged common ancestors
-=======
           // If the previous char isn't a dot or opening bracket, and the next one isn't
           // one either, and the current computed statement is not a
           // variable/function/class declaration, update the start position.
@@ -172,7 +149,6 @@ function analyzeInputString(str) {
                 : after.length + 1);
           }
 
->>>>>>> upstream-releases
           // There's only spaces after that, so we can return.
           if (!nextNonSpaceChar) {
             return buildReturnObject();
@@ -261,19 +237,6 @@ function analyzeInputString(str) {
  *        Optional offset in the input where the cursor is located. If this is
  *        omitted then the cursor is assumed to be at the end of the input
  *        value.
-<<<<<<< HEAD
- * - {Boolean} invokeUnsafeGetter (defaults to false).
- *        Optional boolean to indicate if the function should execute unsafe getter
- *        in order to retrieve its result's properties.
- *        ⚠️ This should be set to true *ONLY* on user action as it may cause side-effects
- *        in the content page ⚠️
- * - {WebconsoleActor} webconsoleActor
- *        A reference to a webconsole actor which we can use to retrieve the last
- *        evaluation result or create a debuggee value.
- * - {String}: selectedNodeActor
- *        The actor id of the selected node in the inspector.
-||||||| merged common ancestors
-=======
  * - {Array} authorizedEvaluations (defaults to []).
  *        Optional array containing all the different properties access that the engine
  *        can execute in order to retrieve its result's properties.
@@ -284,25 +247,7 @@ function analyzeInputString(str) {
  *        evaluation result or create a debuggee value.
  * - {String}: selectedNodeActor
  *        The actor id of the selected node in the inspector.
->>>>>>> upstream-releases
  * @returns null or object
-<<<<<<< HEAD
- *          If the inputValue is an unsafe getter and invokeUnsafeGetter is false, the
- *          following form is returned:
- *
- *          {
- *            isUnsafeGetter: true,
- *            getterName: {String} The name of the unsafe getter
- *          }
- *
- *          If no completion valued could be computed, and the input is not an unsafe
- *          getter, null is returned.
- *
- *          Otherwise an object with the following form is returned:
-||||||| merged common ancestors
- *          If no completion valued could be computed, null is returned,
- *          otherwise a object with the following form is returned:
-=======
  *          If the inputValue is an unsafe getter and invokeUnsafeGetter is false, the
  *          following form is returned:
  *
@@ -316,7 +261,6 @@ function analyzeInputString(str) {
  *          getter, null is returned.
  *
  *          Otherwise an object with the following form is returned:
->>>>>>> upstream-releases
  *            {
  *              matches: Set<string>
  *              matchProp: Last part of the inputValue that was used to find
@@ -325,19 +269,6 @@ function analyzeInputString(str) {
  *                               access (e.g. `window["addEvent`).
  *            }
  */
-<<<<<<< HEAD
-function JSPropertyProvider({
-  dbgObject,
-  environment,
-  inputValue,
-  cursor,
-  invokeUnsafeGetter = false,
-  webconsoleActor,
-  selectedNodeActor,
-}) {
-||||||| merged common ancestors
-function JSPropertyProvider(dbgObject, anEnvironment, inputValue, cursor) {
-=======
 /* eslint-disable complexity */
 function JSPropertyProvider({
   dbgObject,
@@ -348,7 +279,6 @@ function JSPropertyProvider({
   webconsoleActor,
   selectedNodeActor,
 }) {
->>>>>>> upstream-releases
   if (cursor === undefined) {
     cursor = inputValue.length;
   }
@@ -418,44 +348,6 @@ function JSPropertyProvider({
     // Finding the last expression since we've sliced up until the dot.
     // If there were parse errors this won't exist.
     if (lastBody) {
-<<<<<<< HEAD
-      astExpression = lastBody.expression;
-      let matchingObject;
-
-      if (astExpression.type === "ArrayExpression") {
-        matchingObject = Array.prototype;
-      } else if (
-        astExpression.type === "Literal" &&
-        typeof astExpression.value === "string"
-      ) {
-        matchingObject = String.prototype;
-      } else if (
-        astExpression.type === "Literal" &&
-        Number.isFinite(astExpression.value)
-      ) {
-        // The parser rightfuly indicates that we have a number in some cases (e.g. `1.`),
-        // but we don't want to return Number proto properties in that case since
-        // the result would be invalid (i.e. `1.toFixed()` throws).
-        // So if the expression value is an integer, it should not end with `{Number}.`
-        // (but the following are fine: `1..`, `(1.).`).
-        if (
-          !Number.isInteger(astExpression.value) ||
-          /\d[^\.]{0}\.$/.test(completionPart) === false
-        ) {
-          matchingObject = Number.prototype;
-        } else {
-          return null;
-        }
-||||||| merged common ancestors
-      const expression = lastBody.expression;
-      const matchProp = completionPart.slice(lastCompletionCharIndex + 1).trimLeft();
-      let search = matchProp;
-
-      let elementAccessQuote;
-      if (isElementAccess && startQuoteRegex.test(matchProp)) {
-        elementAccessQuote = matchProp[0];
-        search = matchProp.replace(startQuoteRegex, "");
-=======
       astExpression = lastBody.expression;
       let matchingObject;
 
@@ -483,7 +375,6 @@ function JSPropertyProvider({
         } else {
           return null;
         }
->>>>>>> upstream-releases
       }
 
       if (matchingObject) {
@@ -495,14 +386,7 @@ function JSPropertyProvider({
           search = matchProp.replace(startQuoteRegex, "");
         }
 
-<<<<<<< HEAD
-        let props = getMatchedProps(matchingObject, search);
-||||||| merged common ancestors
-      if (expression.type === "Literal" && typeof expression.value === "string") {
-        let stringProtoProps = getMatchedProps(String.prototype, search);
-=======
         let props = getMatchedPropsInDbgObject(matchingObject, search);
->>>>>>> upstream-releases
         if (isElementAccess) {
           props = wrapMatchesInQuotes(props, elementAccessQuote);
         }
@@ -528,19 +412,6 @@ function JSPropertyProvider({
       }
     }
   } else {
-<<<<<<< HEAD
-    properties = completionPart.split(".");
-    if (isElementAccess) {
-      const lastPart = properties[properties.length - 1];
-      const openBracketIndex = lastPart.lastIndexOf("[");
-      matchProp = lastPart.substr(openBracketIndex + 1);
-      properties[properties.length - 1] = lastPart.substring(0, openBracketIndex);
-    } else {
-      matchProp = properties.pop().trimLeft();
-    }
-||||||| merged common ancestors
-    matchProp = properties.pop().trimLeft();
-=======
     properties = completionPart.split(".");
     if (isElementAccess) {
       const lastPart = properties[properties.length - 1];
@@ -553,7 +424,6 @@ function JSPropertyProvider({
     } else {
       matchProp = properties.pop().trimLeft();
     }
->>>>>>> upstream-releases
   }
 
   let search = matchProp;
@@ -564,20 +434,6 @@ function JSPropertyProvider({
   }
 
   let obj = dbgObject;
-<<<<<<< HEAD
-
-  // The first property must be found in the environment of the paused debugger
-  // or of the global lexical scope.
-  const env = environment || obj.asEnvironment();
-
-||||||| merged common ancestors
-
-  // The first property must be found in the environment of the paused debugger
-  // or of the global lexical scope.
-  const env = anEnvironment || obj.asEnvironment();
-
-=======
->>>>>>> upstream-releases
   if (properties.length === 0) {
     return {
       isElementAccess,
@@ -627,24 +483,6 @@ function JSPropertyProvider({
       return null;
     }
 
-<<<<<<< HEAD
-    if (!invokeUnsafeGetter && DevToolsUtils.isUnsafeGetter(obj, prop)) {
-      // If the unsafe getter is not the last property access of the input, bail out as
-      // things might get complex.
-      if (index !== properties.length - 1) {
-        return null;
-      }
-
-      // If we try to access an unsafe getter, return its name so we can consume that
-      // on the frontend.
-      return {
-        isUnsafeGetter: true,
-        getterName: prop,
-      };
-    }
-
-||||||| merged common ancestors
-=======
     const propPath = [firstProp].concat(properties.slice(0, index + 1));
     const authorized = authorizedEvaluations.some(
       x => JSON.stringify(x) === JSON.stringify(propPath)
@@ -659,19 +497,12 @@ function JSPropertyProvider({
       };
     }
 
->>>>>>> upstream-releases
     if (hasArrayIndex(prop)) {
       // The property to autocomplete is a member of array. For example
       // list[i][j]..[n]. Traverse the array to get the actual element.
       obj = getArrayMemberProperty(obj, null, prop);
     } else {
-<<<<<<< HEAD
-      obj = DevToolsUtils.getProperty(obj, prop, invokeUnsafeGetter);
-||||||| merged common ancestors
-      obj = DevToolsUtils.getProperty(obj, prop);
-=======
       obj = DevToolsUtils.getProperty(obj, prop, authorized);
->>>>>>> upstream-releases
     }
 
     if (!isObjectUsable(obj)) {
@@ -679,35 +510,6 @@ function JSPropertyProvider({
     }
   }
 
-<<<<<<< HEAD
-  const prepareReturnedObject = matches => {
-    if (isElementAccess) {
-      // If it's an element access, we need to wrap properties in quotes (either the one
-      // the user already typed, or `"`).
-      matches = wrapMatchesInQuotes(matches, elementAccessQuote);
-    } else if (!isWorker) {
-      // If we're not performing an element access, we need to check that the property
-      // are suited for a dot access. (Reflect.jsm is not available in worker context yet,
-      // see Bug 1507181).
-      matches = new Set([...matches].filter(propertyName => {
-        let valid = true;
-        try {
-          // In order to know if the property is suited for dot notation, we use Reflect
-          // to parse an expression where we try to access the property with a dot. If it
-          // throws, this means that we need to do an element access instead.
-          Reflect.parse(`({${propertyName}: true})`);
-        } catch (e) {
-          valid = false;
-        }
-        return valid;
-      }));
-    }
-
-    return {isElementAccess, matchProp, matches};
-  };
-
-||||||| merged common ancestors
-=======
   const prepareReturnedObject = matches => {
     if (isElementAccess) {
       // If it's an element access, we need to wrap properties in quotes (either the one
@@ -732,18 +534,8 @@ function JSPropertyProvider({
     return { isElementAccess, matchProp, matches };
   };
 
->>>>>>> upstream-releases
   // If the final property is a primitive
   if (typeof obj != "object") {
-<<<<<<< HEAD
-    return prepareReturnedObject(getMatchedProps(obj, search));
-||||||| merged common ancestors
-    return {
-      isElementAccess,
-      matchProp,
-      matches: getMatchedProps(obj, search),
-    };
-=======
     return prepareReturnedObject(getMatchedProps(obj, search));
   }
 
@@ -769,48 +561,8 @@ function getContentPrototypeObject(env, name) {
   const constructorObj = DevToolsUtils.getProperty(outermostEnv.object, name);
   if (!constructorObj) {
     return null;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return prepareReturnedObject(getMatchedPropsInDbgObject(obj, search));
-}
-
-/**
- * @param {Object} ast: An AST representing a property access (e.g. `foo.bar["baz"].x`)
- * @returns {Array|null} An array representing the property access
- *                       (e.g. ["foo", "bar", "baz", "x"]).
- */
-function getPropertiesFromAstExpression(ast) {
-  let result = [];
-  if (!ast) {
-    return result;
-  }
-  const {type, property, object, name} = ast;
-  if (type === "ThisExpression") {
-    result.unshift("this");
-  } else if (type === "Identifier" && name) {
-    result.unshift(name);
-  } else if (type === "MemberExpression") {
-    if (property) {
-      if (property.type === "Identifier" && property.name) {
-        result.unshift(property.name);
-      } else if (property.type === "Literal") {
-        result.unshift(property.value);
-      }
-    }
-    if (object) {
-      result = (getPropertiesFromAstExpression(object) || []).concat(result);
-    }
-  } else {
-    return null;
-||||||| merged common ancestors
-  let matches = getMatchedPropsInDbgObject(obj, search);
-  if (isElementAccess) {
-    // If it's an element access, we need to wrap properties in quotes (either the one
-    // the user already typed, or `"`).
-    matches = wrapMatchesInQuotes(matches, elementAccessQuote);
-=======
   return DevToolsUtils.getProperty(constructorObj, "prototype");
 }
 
@@ -823,13 +575,7 @@ function getPropertiesFromAstExpression(ast) {
   let result = [];
   if (!ast) {
     return result;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  return result;
-||||||| merged common ancestors
-  return {isElementAccess, matchProp, matches};
-=======
   const { type, property, object, name } = ast;
   if (type === "ThisExpression") {
     result.unshift("this");
@@ -850,7 +596,6 @@ function getPropertiesFromAstExpression(ast) {
     return null;
   }
   return result;
->>>>>>> upstream-releases
 }
 
 function wrapMatchesInQuotes(matches, quote = `"`) {

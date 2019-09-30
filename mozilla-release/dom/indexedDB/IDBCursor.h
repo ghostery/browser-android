@@ -112,14 +112,7 @@ class IDBCursor final : public nsISupports, public nsWrapperCache {
   }
 #endif
 
-<<<<<<< HEAD
-  nsPIDOMWindowInner* GetParentObject() const;
-||||||| merged common ancestors
-  nsPIDOMWindowInner*
-  GetParentObject() const;
-=======
   nsIGlobalObject* GetParentObject() const;
->>>>>>> upstream-releases
 
   void GetSource(OwningIDBObjectStoreOrIDBIndex& aSource) const;
 

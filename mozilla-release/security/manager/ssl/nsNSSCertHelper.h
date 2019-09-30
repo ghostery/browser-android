@@ -23,25 +23,6 @@ nsresult GetCertFingerprintByOidTag(CERTCertificate* nsscert, SECOidTag aOidTag,
 void LossyUTF8ToUTF16(const char* str, uint32_t len, /*out*/ nsAString& result);
 
 // Must be used on the main thread only.
-<<<<<<< HEAD
-nsresult GetPIPNSSBundleString(const char* stringName, nsAString& result);
-nsresult GetPIPNSSBundleString(const char* stringName, nsACString& result);
-nsresult PIPBundleFormatStringFromName(const char* stringName,
-                                       const char16_t** params,
-                                       uint32_t numParams, nsAString& result);
-
-#endif  // nsNSSCertHelper_h
-||||||| merged common ancestors
-nsresult
-GetPIPNSSBundleString(const char* stringName, nsAString& result);
-nsresult
-GetPIPNSSBundleString(const char* stringName, nsACString& result);
-nsresult
-PIPBundleFormatStringFromName(const char* stringName, const char16_t** params,
-                              uint32_t numParams, nsAString& result);
-
-#endif // nsNSSCertHelper_h
-=======
 nsresult GetPIPNSSBundleString(const char* stringName, nsAString& result);
 nsresult GetPIPNSSBundleString(const char* stringName, nsACString& result);
 nsresult PIPBundleFormatStringFromName(const char* stringName,
@@ -49,4 +30,3 @@ nsresult PIPBundleFormatStringFromName(const char* stringName,
                                        nsAString& result);
 
 #endif  // nsNSSCertHelper_h
->>>>>>> upstream-releases

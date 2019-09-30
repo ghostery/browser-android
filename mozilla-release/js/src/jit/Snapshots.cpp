@@ -9,13 +9,7 @@
 #include "jit/CompileInfo.h"
 #include "jit/JitSpewer.h"
 #ifdef TRACK_SNAPSHOTS
-<<<<<<< HEAD
-#include "jit/LIR.h"
-||||||| merged common ancestors
-# include "jit/LIR.h"
-=======
 #  include "jit/LIR.h"
->>>>>>> upstream-releases
 #endif
 #include "jit/MIR.h"
 #include "jit/Recover.h"
@@ -339,50 +333,6 @@ HashNumber RValueAllocation::hash() const {
   return res;
 }
 
-<<<<<<< HEAD
-static const char* ValTypeToString(JSValueType type) {
-  switch (type) {
-    case JSVAL_TYPE_INT32:
-      return "int32_t";
-    case JSVAL_TYPE_DOUBLE:
-      return "double";
-    case JSVAL_TYPE_STRING:
-      return "string";
-    case JSVAL_TYPE_SYMBOL:
-      return "symbol";
-    case JSVAL_TYPE_BOOLEAN:
-      return "boolean";
-    case JSVAL_TYPE_OBJECT:
-      return "object";
-    case JSVAL_TYPE_MAGIC:
-      return "magic";
-    default:
-      MOZ_CRASH("no payload");
-  }
-||||||| merged common ancestors
-void
-RValueAllocation::dumpPayload(GenericPrinter& out, PayloadType type, Payload p)
-{
-    switch (type) {
-      case PAYLOAD_NONE:
-        break;
-      case PAYLOAD_INDEX:
-        out.printf("index %u", p.index);
-        break;
-      case PAYLOAD_STACK_OFFSET:
-        out.printf("stack %d", p.stackOffset);
-        break;
-      case PAYLOAD_GPR:
-        out.printf("reg %s", p.gpr.name());
-        break;
-      case PAYLOAD_FPU:
-        out.printf("reg %s", p.fpu.name());
-        break;
-      case PAYLOAD_PACKED_TAG:
-        out.printf("%s", ValTypeToString(p.type));
-        break;
-    }
-=======
 static const char* ValTypeToString(JSValueType type) {
   switch (type) {
     case JSVAL_TYPE_INT32:
@@ -404,7 +354,6 @@ static const char* ValTypeToString(JSValueType type) {
     default:
       MOZ_CRASH("no payload");
   }
->>>>>>> upstream-releases
 }
 
 void RValueAllocation::dumpPayload(GenericPrinter& out, PayloadType type,

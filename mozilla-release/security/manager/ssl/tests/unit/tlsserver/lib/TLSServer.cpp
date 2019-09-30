@@ -470,17 +470,6 @@ SECStatus ConfigSecureServerWithNamedCert(
   return SECSuccess;
 }
 
-<<<<<<< HEAD
-int StartServer(const char* nssCertDBDir, SSLSNISocketConfig sniSocketConfig,
-                void* sniSocketConfigArg) {
-  const char* debugLevel = PR_GetEnv("MOZ_TLS_SERVER_DEBUG_LEVEL");
-||||||| merged common ancestors
-int
-StartServer(const char *nssCertDBDir, SSLSNISocketConfig sniSocketConfig,
-            void *sniSocketConfigArg)
-{
-  const char *debugLevel = PR_GetEnv("MOZ_TLS_SERVER_DEBUG_LEVEL");
-=======
 #ifdef XP_WIN
 using PidType = DWORD;
 constexpr bool IsValidPid(long long pid) {
@@ -513,7 +502,6 @@ int StartServer(int argc, char* argv[], SSLSNISocketConfig sniSocketConfig,
   PidType ppid = ConvertPid(argv[2]);
 
   const char* debugLevel = PR_GetEnv("MOZ_TLS_SERVER_DEBUG_LEVEL");
->>>>>>> upstream-releases
   if (debugLevel) {
     int level = atoi(debugLevel);
     switch (level) {

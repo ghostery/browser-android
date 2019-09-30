@@ -16,7 +16,7 @@ public class TopSite implements WebpageModel {
     private final String url;
     private final String title;
     private @Nullable Boolean isBookmarked;
-    private final boolean isPinned;
+    private final @Nullable boolean isPinned;
     private @BrowserContract.TopSites.TopSiteType final int type;
     private final Metadata metadata;
 
@@ -71,7 +71,6 @@ public class TopSite implements WebpageModel {
         return type;
     }
 
-    @NonNull
     public Boolean isPinned() {
         return isPinned;
     }

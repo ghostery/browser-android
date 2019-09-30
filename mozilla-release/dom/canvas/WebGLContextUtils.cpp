@@ -61,70 +61,6 @@ void WebGLContext::GenerateWarning(const char* fmt, ...) const {
   va_end(ap);
 }
 
-<<<<<<< HEAD
-void WebGLContext::GenerateWarning(const char* fmt, va_list ap) const {
-  if (!ShouldGenerateWarnings()) return;
-
-  mAlreadyGeneratedWarnings++;
-
-  char buf[1024];
-  VsprintfLiteral(buf, fmt, ap);
-
-  // no need to print to stderr, as JS_ReportWarning takes care of this for us.
-
-  if (!mCanvasElement) {
-    return;
-  }
-
-  dom::AutoJSAPI api;
-  if (!api.Init(mCanvasElement->OwnerDoc()->GetScopeObject())) {
-    return;
-  }
-
-  JSContext* cx = api.cx();
-  const auto funcName = FuncName();
-  JS_ReportWarningASCII(cx, "WebGL warning: %s: %s", funcName, buf);
-  if (!ShouldGenerateWarnings()) {
-    JS_ReportWarningASCII(cx,
-                          "WebGL: No further warnings will be reported for"
-                          " this WebGL context."
-                          " (already reported %d warnings)",
-                          mAlreadyGeneratedWarnings);
-  }
-||||||| merged common ancestors
-void
-WebGLContext::GenerateWarning(const char* fmt, va_list ap) const
-{
-    if (!ShouldGenerateWarnings())
-        return;
-
-    mAlreadyGeneratedWarnings++;
-
-    char buf[1024];
-    VsprintfLiteral(buf, fmt, ap);
-
-    // no need to print to stderr, as JS_ReportWarning takes care of this for us.
-
-    if (!mCanvasElement) {
-        return;
-    }
-
-    dom::AutoJSAPI api;
-    if (!api.Init(mCanvasElement->OwnerDoc()->GetScopeObject())) {
-        return;
-    }
-
-    JSContext* cx = api.cx();
-    const auto funcName = FuncName();
-    JS_ReportWarningASCII(cx, "WebGL warning: %s: %s", funcName, buf);
-    if (!ShouldGenerateWarnings()) {
-        JS_ReportWarningASCII(cx,
-                              "WebGL: No further warnings will be reported for"
-                              " this WebGL context."
-                              " (already reported %d warnings)",
-                              mAlreadyGeneratedWarnings);
-    }
-=======
 void WebGLContext::GenerateWarning(const char* fmt, va_list ap) const {
   if (!ShouldGenerateWarnings()) return;
 
@@ -153,7 +89,6 @@ void WebGLContext::GenerateWarning(const char* fmt, va_list ap) const {
                   "context. (already reported %d warnings)",
                   mAlreadyGeneratedWarnings);
   }
->>>>>>> upstream-releases
 }
 
 bool WebGLContext::ShouldGenerateWarnings() const {
@@ -183,43 +118,16 @@ void WebGLContext::GeneratePerfWarning(const char* fmt, ...) const {
 
   ////
 
-<<<<<<< HEAD
-  const auto funcName = FuncName();
-  JS_ReportWarningASCII(cx, "WebGL perf warning: %s: %s", funcName, buf);
-  mNumPerfWarnings++;
-||||||| merged common ancestors
-    const auto funcName = FuncName();
-    JS_ReportWarningASCII(cx, "WebGL perf warning: %s: %s", funcName, buf);
-    mNumPerfWarnings++;
-=======
   const auto funcName = FuncName();
   JS::WarnASCII(cx, "WebGL perf warning: %s: %s", funcName, buf);
   mNumPerfWarnings++;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!ShouldGeneratePerfWarnings()) {
-    JS_ReportWarningASCII(
-        cx,
-        "WebGL: After reporting %u, no further perf warnings will"
-        " be reported for this WebGL context.",
-        uint32_t(mNumPerfWarnings));
-  }
-||||||| merged common ancestors
-    if (!ShouldGeneratePerfWarnings()) {
-        JS_ReportWarningASCII(cx,
-                              "WebGL: After reporting %u, no further perf warnings will"
-                              " be reported for this WebGL context.",
-                              uint32_t(mNumPerfWarnings));
-    }
-=======
   if (!ShouldGeneratePerfWarnings()) {
     JS::WarnASCII(cx,
                   "WebGL: After reporting %u, no further perf warnings will be "
                   "reported for this WebGL context.",
                   uint32_t(mNumPerfWarnings));
   }
->>>>>>> upstream-releases
 }
 
 void WebGLContext::SynthesizeGLError(GLenum err) const {
@@ -232,28 +140,12 @@ void WebGLContext::SynthesizeGLError(GLenum err) const {
   if (!mWebGLError) mWebGLError = err;
 }
 
-<<<<<<< HEAD
-void WebGLContext::SynthesizeGLError(GLenum err, const char* fmt, ...) const {
-  va_list va;
-  va_start(va, fmt);
-  GenerateWarning(fmt, va);
-  va_end(va);
-||||||| merged common ancestors
-void
-WebGLContext::SynthesizeGLError(GLenum err, const char* fmt, ...) const
-{
-    va_list va;
-    va_start(va, fmt);
-    GenerateWarning(fmt, va);
-    va_end(va);
-=======
 void WebGLContext::GenerateError(const GLenum err, const char* const fmt,
                                  ...) const {
   va_list va;
   va_start(va, fmt);
   GenerateWarning(fmt, va);
   va_end(va);
->>>>>>> upstream-releases
 
   return SynthesizeGLError(err);
 }
@@ -674,23 +566,6 @@ const char* GetEnumName(const GLenum val, const char* const defaultRet) {
   return defaultRet;
 }
 
-<<<<<<< HEAD
-/*static*/ void WebGLContext::EnumName(GLenum val, nsCString* out_name) {
-  const char* name = GetEnumName(val, nullptr);
-  if (name) {
-    *out_name = name;
-    return;
-  }
-||||||| merged common ancestors
-/*static*/ void
-WebGLContext::EnumName(GLenum val, nsCString* out_name)
-{
-    const char* name = GetEnumName(val, nullptr);
-    if (name) {
-        *out_name = name;
-        return;
-    }
-=======
 /*static*/
 void WebGLContext::EnumName(GLenum val, nsCString* out_name) {
   const char* name = GetEnumName(val, nullptr);
@@ -698,7 +573,6 @@ void WebGLContext::EnumName(GLenum val, nsCString* out_name) {
     *out_name = name;
     return;
   }
->>>>>>> upstream-releases
 
   *out_name = nsPrintfCString("<enum 0x%04x>", val);
 }

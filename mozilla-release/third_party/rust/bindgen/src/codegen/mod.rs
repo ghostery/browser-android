@@ -569,17 +569,6 @@ impl CodeGenerator for Var {
                 attrs.push(attributes::link_name(link_name));
             }
 
-<<<<<<< HEAD
-            let maybe_mut = if self.is_const() {
-                quote! { }
-            } else {
-                quote! { mut }
-            };
-
-            let mut tokens = quote!(
-||||||| merged common ancestors
-            let mut tokens = quote!(
-=======
             let maybe_mut = if self.is_const() {
                 quote! { }
             } else {
@@ -587,7 +576,6 @@ impl CodeGenerator for Var {
             };
 
             let tokens = quote!(
->>>>>>> upstream-releases
                 extern "C" {
                     #(#attrs)*
                     pub static #maybe_mut #canonical_ident: #ty;
@@ -1604,35 +1592,6 @@ impl CodeGenerator for CompInfo {
                     }
                 }
             }
-<<<<<<< HEAD
-        } else if is_union && !self.is_forward_declaration() {
-            result.saw_union();
-            if !self.can_be_rust_union(ctx) {
-                result.saw_bindgen_union();
-            }
-
-            // TODO(emilio): It'd be nice to unify this with the struct path
-            // above somehow.
-            let layout = layout.expect("Unable to get layout information?");
-
-            if struct_layout.requires_explicit_align(layout) {
-                explicit_align = Some(layout.align);
-            }
-
-            let ty = helpers::blob(ctx, layout);
-            fields.push(if self.can_be_rust_union(ctx) {
-                quote! {
-                    _bindgen_union_align: #ty ,
-                }
-            } else {
-                struct_layout.saw_union(layout);
-
-                quote! {
-                    pub bindgen_union_field: #ty ,
-                }
-            });
-||||||| merged common ancestors
-=======
         } else if is_union && !self.is_forward_declaration() {
             // TODO(emilio): It'd be nice to unify this with the struct path
             // above somehow.
@@ -1653,7 +1612,6 @@ impl CodeGenerator for CompInfo {
                     pub bindgen_union_field: #ty ,
                 }
             });
->>>>>>> upstream-releases
         }
 
         // C++ requires every struct to be addressable, so what C++ compilers do
@@ -1842,16 +1800,8 @@ impl CodeGenerator for CompInfo {
         // all the tests to shit when parsing things like max_align_t.
         if self.found_unknown_attr() {
             warn!(
-<<<<<<< HEAD
-                "Type {} has an unknown attribute that may affect layout",
-                canonical_ident.as_str()
-||||||| merged common ancestors
-                "Type {} has an unkown attribute that may affect layout",
-                canonical_ident.as_str()
-=======
                 "Type {} has an unknown attribute that may affect layout",
                 canonical_ident
->>>>>>> upstream-releases
             );
         }
 
@@ -3694,28 +3644,6 @@ mod utils {
         result.extend(old_items.into_iter());
     }
 
-<<<<<<< HEAD
-    pub fn prepend_block_header(
-        ctx: &BindgenContext,
-        result: &mut Vec<quote::Tokens>,
-    ) {
-        let use_block = if ctx.options().block_extern_crate {
-            quote! {
-                extern crate block;
-            }
-        } else {
-            quote! {
-                use block;
-            }
-        };
-
-        let items = vec![use_block];
-        let old_items = mem::replace(result, items);
-        result.extend(old_items.into_iter());
-    }
-
-||||||| merged common ancestors
-=======
     pub fn prepend_block_header(
         ctx: &BindgenContext,
         result: &mut Vec<proc_macro2::TokenStream>,
@@ -3735,7 +3663,6 @@ mod utils {
         result.extend(old_items.into_iter());
     }
 
->>>>>>> upstream-releases
     pub fn prepend_union_types(
         ctx: &BindgenContext,
         result: &mut Vec<proc_macro2::TokenStream>,
@@ -4058,31 +3985,6 @@ mod utils {
 
         args
     }
-<<<<<<< HEAD
-
-    pub fn fnsig_block(
-        ctx: &BindgenContext,
-        sig: &FunctionSig,
-    ) -> quote::Tokens {
-        let args = sig.argument_types().iter().map(|&(_, ty)| {
-            let arg_item = ctx.resolve_item(ty);
-
-            arg_item.to_rust_ty_or_opaque(ctx, &())
-        });
-
-        let return_item = ctx.resolve_item(sig.return_type());
-        let ret_ty = if let TypeKind::Void = *return_item.kind().expect_type().kind() {
-            quote! { () }
-        } else {
-            return_item.to_rust_ty_or_opaque(ctx, &())
-        };
-
-        quote! {
-            *const ::block::Block<(#(#args),*), #ret_ty>
-        }
-    }
-||||||| merged common ancestors
-=======
 
     pub fn fnsig_block(
         ctx: &BindgenContext,
@@ -4180,5 +4082,4 @@ mod utils {
 
         true
     }
->>>>>>> upstream-releases
 }

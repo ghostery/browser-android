@@ -311,11 +311,6 @@ interface nsIExpandedPrincipal : nsISupports
    * should not be changed and should only be used ephemerally.
    */
   [noscript, notxpcom, nostdcall]
-<<<<<<< HEAD
-  PrincipalArray AllowList();
-||||||| merged common ancestors
-  PrincipalArray WhiteList();
-=======
   PrincipalArray AllowList();
 
 
@@ -337,5 +332,4 @@ interface nsIExpandedPrincipal : nsISupports
   }
 %}
 
->>>>>>> upstream-releases
 };

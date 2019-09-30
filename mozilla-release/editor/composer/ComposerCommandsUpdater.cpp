@@ -10,23 +10,6 @@
 #include "mozilla/TransactionManager.h"  // for TransactionManager
 #include "mozilla/dom/Selection.h"
 #include "nsAString.h"
-<<<<<<< HEAD
-#include "nsComponentManagerUtils.h"     // for do_CreateInstance
-#include "nsDebug.h"                     // for NS_ENSURE_TRUE, etc
-#include "nsError.h"                     // for NS_OK, NS_ERROR_FAILURE, etc
-#include "nsICommandManager.h"           // for nsICommandManager
-#include "nsID.h"                        // for NS_GET_IID, etc
-#include "nsIDOMWindow.h"                // for nsIDOMWindow
-#include "nsIDocShell.h"                 // for nsIDocShell
-||||||| merged common ancestors
-#include "nsComponentManagerUtils.h"    // for do_CreateInstance
-#include "nsDebug.h"                    // for NS_ENSURE_TRUE, etc
-#include "nsError.h"                    // for NS_OK, NS_ERROR_FAILURE, etc
-#include "nsICommandManager.h"          // for nsICommandManager
-#include "nsID.h"                       // for NS_GET_IID, etc
-#include "nsIDOMWindow.h"               // for nsIDOMWindow
-#include "nsIDocShell.h"                // for nsIDocShell
-=======
 #include "nsCommandManager.h"            // for nsCommandManager
 #include "nsComponentManagerUtils.h"     // for do_CreateInstance
 #include "nsDebug.h"                     // for NS_ENSURE_TRUE, etc
@@ -34,23 +17,10 @@
 #include "nsID.h"                        // for NS_GET_IID, etc
 #include "nsIDOMWindow.h"                // for nsIDOMWindow
 #include "nsIDocShell.h"                 // for nsIDocShell
->>>>>>> upstream-releases
 #include "nsIInterfaceRequestorUtils.h"  // for do_GetInterface
-<<<<<<< HEAD
-#include "nsITransactionManager.h"       // for nsITransactionManager
-#include "nsLiteralString.h"             // for NS_LITERAL_STRING
-#include "nsPICommandUpdater.h"          // for nsPICommandUpdater
-#include "nsPIDOMWindow.h"               // for nsPIDOMWindow
-||||||| merged common ancestors
-#include "nsITransactionManager.h"      // for nsITransactionManager
-#include "nsLiteralString.h"            // for NS_LITERAL_STRING
-#include "nsPICommandUpdater.h"         // for nsPICommandUpdater
-#include "nsPIDOMWindow.h"              // for nsPIDOMWindow
-=======
 #include "nsITransactionManager.h"       // for nsITransactionManager
 #include "nsLiteralString.h"             // for NS_LITERAL_STRING
 #include "nsPIDOMWindow.h"               // for nsPIDOMWindow
->>>>>>> upstream-releases
 
 class nsITransaction;
 
@@ -229,29 +199,9 @@ ComposerCommandsUpdater::DidMerge(nsITransactionManager* aManager,
 #  pragma mark -
 #endif
 
-<<<<<<< HEAD
-nsresult ComposerCommandsUpdater::Init(nsPIDOMWindowOuter* aDOMWindow) {
-  if (NS_WARN_IF(!aDOMWindow)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-  mDOMWindow = aDOMWindow;
-  mDocShell = aDOMWindow->GetDocShell();
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-ComposerCommandsUpdater::Init(nsPIDOMWindowOuter* aDOMWindow)
-{
-  if (NS_WARN_IF(!aDOMWindow)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-  mDOMWindow = aDOMWindow;
-  mDocShell = aDOMWindow->GetDocShell();
-  return NS_OK;
-=======
 void ComposerCommandsUpdater::Init(nsPIDOMWindowOuter& aDOMWindow) {
   mDOMWindow = &aDOMWindow;
   mDocShell = aDOMWindow.GetDocShell();
->>>>>>> upstream-releases
 }
 
 nsresult ComposerCommandsUpdater::PrimeUpdateTimer() {
@@ -290,27 +240,11 @@ nsresult ComposerCommandsUpdater::UpdateDirtyState(bool aNowDirty) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult ComposerCommandsUpdater::UpdateCommandGroup(
-    const nsAString& aCommandGroup) {
-  nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
-  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
-
-||||||| merged common ancestors
-nsresult
-ComposerCommandsUpdater::UpdateCommandGroup(const nsAString& aCommandGroup)
-{
-  nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
-  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
-
-
-=======
 nsresult ComposerCommandsUpdater::UpdateCommandGroup(
     const nsAString& aCommandGroup) {
   RefPtr<nsCommandManager> commandManager = GetCommandManager();
   NS_ENSURE_TRUE(commandManager, NS_ERROR_FAILURE);
 
->>>>>>> upstream-releases
   if (aCommandGroup.EqualsLiteral("undo")) {
     commandManager->CommandStatusChanged("cmd_undo");
     commandManager->CommandStatusChanged("cmd_redo");
@@ -359,28 +293,10 @@ nsresult ComposerCommandsUpdater::UpdateCommandGroup(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult ComposerCommandsUpdater::UpdateOneCommand(const char* aCommand) {
-  nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
-  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
-
-  commandUpdater->CommandStatusChanged(aCommand);
-
-||||||| merged common ancestors
-nsresult
-ComposerCommandsUpdater::UpdateOneCommand(const char* aCommand)
-{
-  nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
-  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
-
-  commandUpdater->CommandStatusChanged(aCommand);
-
-=======
 nsresult ComposerCommandsUpdater::UpdateOneCommand(const char* aCommand) {
   RefPtr<nsCommandManager> commandManager = GetCommandManager();
   NS_ENSURE_TRUE(commandManager, NS_ERROR_FAILURE);
   commandManager->CommandStatusChanged(aCommand);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -397,16 +313,7 @@ bool ComposerCommandsUpdater::SelectionIsCollapsed() {
   return domSelection->IsCollapsed();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPICommandUpdater>
-ComposerCommandsUpdater::GetCommandUpdater() {
-||||||| merged common ancestors
-already_AddRefed<nsPICommandUpdater>
-ComposerCommandsUpdater::GetCommandUpdater()
-{
-=======
 nsCommandManager* ComposerCommandsUpdater::GetCommandManager() {
->>>>>>> upstream-releases
   if (NS_WARN_IF(!mDocShell)) {
     return nullptr;
   }

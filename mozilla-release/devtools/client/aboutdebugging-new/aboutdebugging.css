@@ -12,15 +12,9 @@
 * Components
 */
 @import "resource://devtools/client/aboutdebugging-new/src/components/App.css";
-<<<<<<< HEAD
-@import "resource://devtools/client/aboutdebugging-new/src/components/RuntimePage.css";
-||||||| merged common ancestors
-@import "resource://devtools/client/aboutdebugging-new/src/components/RuntimeInfo.css";
-=======
 @import "resource://devtools/client/aboutdebugging-new/src/components/ProfilerDialog.css";
 @import "resource://devtools/client/aboutdebugging-new/src/components/RuntimeActions.css";
 @import "resource://devtools/client/aboutdebugging-new/src/components/RuntimeInfo.css";
->>>>>>> upstream-releases
 @import "resource://devtools/client/aboutdebugging-new/src/components/connect/ConnectPage.css";
 @import "resource://devtools/client/aboutdebugging-new/src/components/connect/ConnectSection.css";
 @import "resource://devtools/client/aboutdebugging-new/src/components/connect/ConnectSteps.css";

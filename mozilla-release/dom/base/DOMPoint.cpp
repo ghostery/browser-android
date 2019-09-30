@@ -37,19 +37,6 @@ JSObject* DOMPointReadOnly::WrapObject(JSContext* aCx,
   return DOMPointReadOnly_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMPoint> DOMPoint::FromPoint(const GlobalObject& aGlobal,
-                                               const DOMPointInit& aParams) {
-  RefPtr<DOMPoint> obj = new DOMPoint(aGlobal.GetAsSupports(), aParams.mX,
-                                      aParams.mY, aParams.mZ, aParams.mW);
-||||||| merged common ancestors
-already_AddRefed<DOMPoint>
-DOMPoint::FromPoint(const GlobalObject& aGlobal, const DOMPointInit& aParams)
-{
-  RefPtr<DOMPoint> obj =
-    new DOMPoint(aGlobal.GetAsSupports(), aParams.mX, aParams.mY,
-                 aParams.mZ, aParams.mW);
-=======
 already_AddRefed<DOMPoint> DOMPointReadOnly::MatrixTransform(
     const DOMMatrixInit& aInit, ErrorResult& aRv) {
   RefPtr<DOMMatrixReadOnly> matrix =
@@ -114,7 +101,6 @@ already_AddRefed<DOMPoint> DOMPoint::FromPoint(const GlobalObject& aGlobal,
                                                const DOMPointInit& aParams) {
   RefPtr<DOMPoint> obj = new DOMPoint(aGlobal.GetAsSupports(), aParams.mX,
                                       aParams.mY, aParams.mZ, aParams.mW);
->>>>>>> upstream-releases
   return obj.forget();
 }
 

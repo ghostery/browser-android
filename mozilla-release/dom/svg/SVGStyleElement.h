@@ -12,20 +12,8 @@
 #include "nsStyleLinkElement.h"
 #include "nsStubMutationObserver.h"
 
-<<<<<<< HEAD
 nsresult NS_NewSVGStyleElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-
-typedef nsSVGElement SVGStyleElementBase;
-||||||| merged common ancestors
-nsresult NS_NewSVGStyleElement(nsIContent **aResult,
-                               already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-
-typedef nsSVGElement SVGStyleElementBase;
-=======
-nsresult NS_NewSVGStyleElement(
-    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -34,33 +22,6 @@ typedef SVGElement SVGStyleElementBase;
 
 class SVGStyleElement final : public SVGStyleElementBase,
                               public nsStyleLinkElement,
-<<<<<<< HEAD
-                              public nsStubMutationObserver {
- protected:
-  friend nsresult(::NS_NewSVGStyleElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGStyleElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGStyleElement();
-
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
-||||||| merged common ancestors
-                              public nsStubMutationObserver
-{
-protected:
-  friend nsresult (::NS_NewSVGStyleElement(nsIContent **aResult,
-                                           already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGStyleElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGStyleElement();
-
-  virtual JSObject* WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-=======
                               public nsStubMutationObserver {
  protected:
   friend nsresult(::NS_NewSVGStyleElement(
@@ -74,7 +35,6 @@ public:
                              JS::Handle<JSObject*> aGivenProto) override;
 
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS_INHERITED
 
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(SVGStyleElement, SVGStyleElementBase)

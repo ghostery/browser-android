@@ -19,19 +19,7 @@
 #include "glsl/GrGLSLShaderBuilder.h"
 #include "glsl/GrGLSLUniformHandler.h"
 
-<<<<<<< HEAD
 #include <utility>
-
-static bool can_ignore_rect(GrTextureProxy* proxy, const SkRect& domain) {
-    if (GrProxyProvider::IsFunctionallyExact(proxy)) {
-        const SkIRect kFullRect = SkIRect::MakeWH(proxy->width(), proxy->height());
-||||||| merged common ancestors
-static bool can_ignore_rect(GrTextureProxy* proxy, const SkRect& domain) {
-    if (GrProxyProvider::IsFunctionallyExact(proxy)) {
-        const SkIRect kFullRect = SkIRect::MakeWH(proxy->width(), proxy->height());
-=======
-#include <utility>
->>>>>>> upstream-releases
 
 GrTextureDomain::GrTextureDomain(GrTextureProxy* proxy, const SkRect& domain, Mode modeX,
                                  Mode modeY, int index)
@@ -191,21 +179,6 @@ void GrTextureDomain::GLDomain::sampleTexture(GrGLSLShaderBuilder* builder,
 
 void GrTextureDomain::GLDomain::setData(const GrGLSLProgramDataManager& pdman,
                                         const GrTextureDomain& textureDomain,
-<<<<<<< HEAD
-                                        GrSurfaceProxy* proxy) {
-    GrTexture* tex = proxy->peekTexture();
-    SkASSERT(fHasMode && textureDomain.mode() == fMode);
-    if (kIgnore_Mode != textureDomain.mode()) {
-        SkScalar wInv = SK_Scalar1 / tex->width();
-        SkScalar hInv = SK_Scalar1 / tex->height();
-||||||| merged common ancestors
-                                        GrSurfaceProxy* proxy) {
-    GrTexture* tex = proxy->priv().peekTexture();
-    SkASSERT(fHasMode && textureDomain.mode() == fMode);
-    if (kIgnore_Mode != textureDomain.mode()) {
-        SkScalar wInv = SK_Scalar1 / tex->width();
-        SkScalar hInv = SK_Scalar1 / tex->height();
-=======
                                         GrTextureProxy* proxy,
                                         const GrSamplerState& sampler) {
     GrTexture* tex = proxy->peekTexture();
@@ -238,7 +211,6 @@ void GrTextureDomain::GLDomain::setData(const GrGLSLProgramDataManager& pdman,
                 pdman.set3f(fDecalUni, tex->width(), tex->height(), decalFilterWeight);
             }
         }
->>>>>>> upstream-releases
 
         float values[kPrevDomainCount] = {
             SkScalarToFloat(textureDomain.domain().fLeft * wInv),
@@ -421,20 +393,10 @@ GrDeviceSpaceTextureDecalFragmentProcessor::GrDeviceSpaceTextureDecalFragmentPro
         : INHERITED(kGrDeviceSpaceTextureDecalFragmentProcessor_ClassID,
                     kCompatibleWithCoverageAsAlpha_OptimizationFlag)
         , fTextureSampler(proxy, GrSamplerState::ClampNearest())
-<<<<<<< HEAD
-        , fTextureDomain(proxy.get(), GrTextureDomain::MakeTexelDomain(subset),
-                         GrTextureDomain::kDecal_Mode) {
-    this->setTextureSamplerCnt(1);
-||||||| merged common ancestors
-        , fTextureDomain(proxy.get(), GrTextureDomain::MakeTexelDomain(subset),
-                         GrTextureDomain::kDecal_Mode) {
-    this->addTextureSampler(&fTextureSampler);
-=======
         , fTextureDomain(proxy.get(),
                          GrTextureDomain::MakeTexelDomain(subset, GrTextureDomain::kDecal_Mode),
                          GrTextureDomain::kDecal_Mode, GrTextureDomain::kDecal_Mode) {
     this->setTextureSamplerCnt(1);
->>>>>>> upstream-releases
     fDeviceSpaceOffset.fX = deviceSpaceOffset.fX - subset.fLeft;
     fDeviceSpaceOffset.fY = deviceSpaceOffset.fY - subset.fTop;
 }
@@ -482,16 +444,8 @@ GrGLSLFragmentProcessor* GrDeviceSpaceTextureDecalFragmentProcessor::onCreateGLS
                        const GrFragmentProcessor& fp) override {
             const GrDeviceSpaceTextureDecalFragmentProcessor& dstdfp =
                     fp.cast<GrDeviceSpaceTextureDecalFragmentProcessor>();
-<<<<<<< HEAD
-            GrSurfaceProxy* proxy = dstdfp.textureSampler(0).proxy();
-            GrTexture* texture = proxy->peekTexture();
-||||||| merged common ancestors
-            GrSurfaceProxy* proxy = dstdfp.textureSampler(0).proxy();
-            GrTexture* texture = proxy->priv().peekTexture();
-=======
             GrTextureProxy* proxy = dstdfp.textureSampler(0).proxy();
             GrTexture* texture = proxy->peekTexture();
->>>>>>> upstream-releases
 
             fGLDomain.setData(pdman, dstdfp.fTextureDomain, proxy,
                               dstdfp.textureSampler(0).samplerState());

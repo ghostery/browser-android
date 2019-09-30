@@ -51,14 +51,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-<<<<<<< HEAD
-import java.util.Arrays;
-import java.util.HashSet;
-||||||| merged common ancestors
-=======
 import java.util.ArrayList;
 import java.util.HashSet;
->>>>>>> upstream-releases
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -122,20 +116,11 @@ public class GeckoViewActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.toolbar));
 
-<<<<<<< HEAD
-        mLocationView = new LocationView(this);
-        mLocationView.setId(R.id.url_bar);
-        getSupportActionBar().setCustomView(mLocationView,
-||||||| merged common ancestors
-        mLocationView = new LocationView(this);
-        getSupportActionBar().setCustomView(mLocationView,
-=======
         mToolbarView = new ToolbarLayout(this, mTabSessionManager);
         mToolbarView.setId(R.id.toolbar_layout);
         mToolbarView.setTabListener(this::switchToSessionAtIndex);
 
         getSupportActionBar().setCustomView(mToolbarView,
->>>>>>> upstream-releases
                 new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                         ActionBar.LayoutParams.WRAP_CONTENT));
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -228,21 +213,10 @@ public class GeckoViewActivity extends AppCompatActivity {
 
     private void connectSession(GeckoSession session) {
         session.setContentDelegate(new ExampleContentDelegate());
-<<<<<<< HEAD
-        session.setHistoryDelegate(new ExampleHistoryDelegate());
-        final ExampleTrackingProtectionDelegate tp = new ExampleTrackingProtectionDelegate();
-        session.setTrackingProtectionDelegate(tp);
-        session.setProgressDelegate(new ExampleProgressDelegate(tp));
-||||||| merged common ancestors
-        final ExampleTrackingProtectionDelegate tp = new ExampleTrackingProtectionDelegate();
-        session.setTrackingProtectionDelegate(tp);
-        session.setProgressDelegate(new ExampleProgressDelegate(tp));
-=======
         session.setHistoryDelegate(new ExampleHistoryDelegate());
         final ExampleContentBlockingDelegate cb = new ExampleContentBlockingDelegate();
         session.setContentBlockingDelegate(cb);
         session.setProgressDelegate(new ExampleProgressDelegate(cb));
->>>>>>> upstream-releases
         session.setNavigationDelegate(new ExampleNavigationDelegate());
 
         final BasicGeckoViewPrompt prompt = new BasicGeckoViewPrompt(this);
@@ -554,35 +528,6 @@ public class GeckoViewActivity extends AppCompatActivity {
         return mErrorTemplate.replace("$ERROR", error);
     }
 
-<<<<<<< HEAD
-    private class ExampleHistoryDelegate implements GeckoSession.HistoryDelegate {
-        private final HashSet<String> mVisitedURLs;
-
-        private ExampleHistoryDelegate() {
-            mVisitedURLs = new HashSet<String>();
-        }
-
-        @Override
-        public GeckoResult<Boolean> onVisited(GeckoSession session, String url,
-                                              String lastVisitedURL, int flags) {
-            Log.i(LOGTAG, "Visited URL: " + url);
-
-            mVisitedURLs.add(url);
-            return GeckoResult.fromValue(true);
-        }
-
-        @Override
-        public GeckoResult<boolean[]> getVisited(GeckoSession session, String[] urls) {
-            boolean[] visited = new boolean[urls.length];
-            for (int i = 0; i < urls.length; i++) {
-                visited[i] = mVisitedURLs.contains(urls[i]);
-            }
-            return GeckoResult.fromValue(visited);
-        }
-    }
-
-||||||| merged common ancestors
-=======
     private class ExampleHistoryDelegate implements GeckoSession.HistoryDelegate {
         private final HashSet<String> mVisitedURLs;
 
@@ -615,7 +560,6 @@ public class GeckoViewActivity extends AppCompatActivity {
         }
     }
 
->>>>>>> upstream-releases
     private class ExampleContentDelegate implements GeckoSession.ContentDelegate {
         @Override
         public void onTitleChange(GeckoSession session, String title) {
@@ -680,14 +624,6 @@ public class GeckoViewActivity extends AppCompatActivity {
             session.open(sGeckoRuntime);
             session.loadUri(DEFAULT_URL);
         }
-<<<<<<< HEAD
-
-        @Override
-        public void onFirstComposite(final GeckoSession session) {
-            Log.d(LOGTAG, "onFirstComposite");
-        }
-||||||| merged common ancestors
-=======
 
         @Override
         public void onFirstComposite(final GeckoSession session) {
@@ -698,7 +634,6 @@ public class GeckoViewActivity extends AppCompatActivity {
         public void onWebAppManifest(final GeckoSession session, JSONObject manifest) {
             Log.d(LOGTAG, "onWebAppManifest: " + manifest);
         }
->>>>>>> upstream-releases
     }
 
     private class ExampleProgressDelegate implements GeckoSession.ProgressDelegate {
@@ -836,11 +771,6 @@ public class GeckoViewActivity extends AppCompatActivity {
                     return;
                 }
                 resId = R.string.request_notification;
-<<<<<<< HEAD
-            } else if (PERMISSION_AUTOPLAY_MEDIA == type) {
-                resId = R.string.request_autoplay;
-||||||| merged common ancestors
-=======
                 contentPermissionCallback = new ExampleNotificationCallback(callback);
             } else if (PERMISSION_PERSISTENT_STORAGE == type) {
                 if (mAcceptedPersistentStorage.contains(uri)) {
@@ -850,7 +780,6 @@ public class GeckoViewActivity extends AppCompatActivity {
                 }
                 resId = R.string.request_storage;
                 contentPermissionCallback = new ExamplePersistentStorageCallback(callback, uri);
->>>>>>> upstream-releases
             } else {
                 Log.w(LOGTAG, "Unknown permission: " + type);
                 callback.reject();

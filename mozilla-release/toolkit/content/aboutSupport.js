@@ -117,20 +117,8 @@ var snapshotFormatters = {
       case 6:
       case 7:
       case 8:
-<<<<<<< HEAD
-        statusText = strings.GetStringFromName("multiProcessStatus." + data.autoStartStatus);
-        break;
-||||||| merged common ancestors
-        statusText = strings.GetStringFromName("multiProcessStatus." + data.autoStartStatus);
-        break;
-
-      case 10:
-        statusText = (Services.appinfo.OS == "Darwin" ? "OS X 10.6 - 10.8" : "Windows XP");
-        break;
-=======
         statusTextId = "multi-process-status-" + data.autoStartStatus;
         break;
->>>>>>> upstream-releases
     }
 
     document.l10n.setAttributes(
@@ -1412,41 +1400,11 @@ function safeModeRestart() {
  * Set up event listeners for buttons.
  */
 function setupEventListeners() {
-<<<<<<< HEAD
-  let button = $("show-update-history-button");
-  if (button) {
-    button.addEventListener("click", function(event) {
-      var prompter = Cc["@mozilla.org/updates/update-prompt;1"].createInstance(Ci.nsIUpdatePrompt);
-      prompter.showUpdateHistory(window);
-    });
-  }
-  button = $("reset-box-button");
-  if (button) {
-    button.addEventListener("click", function(event) {
-||||||| merged common ancestors
-  if (AppConstants.platform !== "android") {
-    $("show-update-history-button").addEventListener("click", function(event) {
-      var prompter = Cc["@mozilla.org/updates/update-prompt;1"].createInstance(Ci.nsIUpdatePrompt);
-      prompter.showUpdateHistory(window);
-    });
-    $("reset-box-button").addEventListener("click", function(event) {
-=======
   let button = $("reset-box-button");
   if (button) {
     button.addEventListener("click", function(event) {
->>>>>>> upstream-releases
       ResetProfile.openConfirmationDialog(window);
     });
-<<<<<<< HEAD
-  }
-  button = $("restart-in-safe-mode-button");
-  if (button) {
-    button.addEventListener("click", function(event) {
-      if (Services.obs.enumerateObservers("restart-in-safe-mode").hasMoreElements()) {
-||||||| merged common ancestors
-    $("restart-in-safe-mode-button").addEventListener("click", function(event) {
-      if (Services.obs.enumerateObservers("restart-in-safe-mode").hasMoreElements()) {
-=======
   }
   button = $("restart-in-safe-mode-button");
   if (button) {
@@ -1456,22 +1414,11 @@ function setupEventListeners() {
           .enumerateObservers("restart-in-safe-mode")
           .hasMoreElements()
       ) {
->>>>>>> upstream-releases
         Services.obs.notifyObservers(null, "restart-in-safe-mode");
       } else {
         safeModeRestart();
       }
     });
-<<<<<<< HEAD
-  }
-  button = $("verify-place-integrity-button");
-  if (button) {
-    button.addEventListener("click", function(event) {
-      PlacesDBUtils.checkAndFixDatabase().then((tasksStatusMap) => {
-||||||| merged common ancestors
-    $("verify-place-integrity-button").addEventListener("click", function(event) {
-      PlacesDBUtils.checkAndFixDatabase().then((tasksStatusMap) => {
-=======
   }
   if (AppConstants.MOZ_UPDATER) {
     button = $("update-dir-button");
@@ -1507,7 +1454,6 @@ function setupEventListeners() {
   if (button) {
     button.addEventListener("click", function(event) {
       PlacesDBUtils.checkAndFixDatabase().then(tasksStatusMap => {
->>>>>>> upstream-releases
         let logs = [];
         for (let [key, value] of tasksStatusMap) {
           logs.push(`> Task: ${key}`);

@@ -48,16 +48,8 @@ class CSSKeyframesRule final : public css::Rule {
  private:
   uint32_t FindRuleIndexForKey(const nsAString& aKey);
 
-<<<<<<< HEAD
-  template <typename Func>
-  void UpdateRule(Func aCallback);
-||||||| merged common ancestors
-  template<typename Func>
-  void UpdateRule(Func aCallback);
-=======
   template <typename Func>
   nsresult UpdateRule(Func aCallback);
->>>>>>> upstream-releases
 
   virtual ~CSSKeyframesRule();
 

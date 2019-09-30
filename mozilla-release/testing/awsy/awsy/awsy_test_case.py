@@ -91,54 +91,6 @@ class AwsyTestCase(MarionetteTestCase):
     def tearDown(self):
         MarionetteTestCase.tearDown(self)
 
-<<<<<<< HEAD
-        try:
-            self.logger.info("processing data in %s!" % self._resultsDir)
-            perf_blob = process_perf_data.create_perf_data(
-                            self._resultsDir, self.perf_suites(),
-                            self.perf_checkpoints())
-            self.logger.info("PERFHERDER_DATA: %s" % json.dumps(perf_blob))
-
-            perf_file = os.path.join(self._resultsDir, "perfherder_data.json")
-            with open(perf_file, 'w') as fp:
-                json.dump(perf_blob, fp, indent=2)
-            self.logger.info("Perfherder data written to %s" % perf_file)
-        except:
-            raise
-        finally:
-            # Make sure we cleanup and upload any existing files even if there
-            # were errors processing the perf data.
-            if self._dmd:
-                self.cleanup_dmd()
-
-            # copy it to moz upload dir if set
-            if 'MOZ_UPLOAD_DIR' in os.environ:
-                for file in os.listdir(self._resultsDir):
-                    file = os.path.join(self._resultsDir, file)
-                    if os.path.isfile(file):
-                        shutil.copy2(file, os.environ["MOZ_UPLOAD_DIR"])
-||||||| merged common ancestors
-        self.logger.info("processing data in %s!" % self._resultsDir)
-        perf_blob = process_perf_data.create_perf_data(
-                        self._resultsDir, self.perf_suites(),
-                        self.perf_checkpoints())
-        self.logger.info("PERFHERDER_DATA: %s" % json.dumps(perf_blob))
-
-        perf_file = os.path.join(self._resultsDir, "perfherder_data.json")
-        with open(perf_file, 'w') as fp:
-            json.dump(perf_blob, fp, indent=2)
-        self.logger.info("Perfherder data written to %s" % perf_file)
-
-        if self._dmd:
-            self.cleanup_dmd()
-
-        # copy it to moz upload dir if set
-        if 'MOZ_UPLOAD_DIR' in os.environ:
-            for file in os.listdir(self._resultsDir):
-                file = os.path.join(self._resultsDir, file)
-                if os.path.isfile(file):
-                    shutil.copy2(file, os.environ["MOZ_UPLOAD_DIR"])
-=======
         try:
             self.logger.info("processing data in %s!" % self._resultsDir)
             perf_blob = process_perf_data.create_perf_data(
@@ -165,7 +117,6 @@ class AwsyTestCase(MarionetteTestCase):
                     file = os.path.join(self._resultsDir, file)
                     if os.path.isfile(file):
                         shutil.copy2(file, os.environ["MOZ_UPLOAD_DIR"])
->>>>>>> upstream-releases
 
     def cleanup_dmd(self):
         """

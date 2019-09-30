@@ -53,18 +53,7 @@ UNIFIED_SOURCES += [
     'TestTextFormatter.cpp',
     'TestThreadManager.cpp',
     'TestThreadPoolListener.cpp',
-<<<<<<< HEAD
-    'TestThreads.cpp',
-    'TestThreadUtils.cpp',
     'TestThrottledEventQueue.cpp',
-    'TestTimers.cpp',
-||||||| merged common ancestors
-    'TestThreads.cpp',
-    'TestThreadUtils.cpp',
-    'TestTimers.cpp',
-=======
-    'TestThrottledEventQueue.cpp',
->>>>>>> upstream-releases
     'TestTimeStamp.cpp',
     'TestTokenizer.cpp',
     'TestUTF.cpp',

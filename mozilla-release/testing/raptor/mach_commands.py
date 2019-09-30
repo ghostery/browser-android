@@ -30,73 +30,25 @@ FIREFOX_ANDROID_BROWSERS = ["fennec", "geckoview", "refbrow", "fenix"]
 
 
 class RaptorRunner(MozbuildObject):
-<<<<<<< HEAD
-    def run_test(self, raptor_args, kwargs):
-        """
-        We want to do couple of things before running raptor
-||||||| merged common ancestors
-    def run_test(self, raptor_args, app=None):
-        """
-        We want to do couple of things before running raptor
-=======
 
     def run_test(self, raptor_args, kwargs):
         """Setup and run mozharness.
 
         We want to do a few things before running Raptor:
 
->>>>>>> upstream-releases
         1. Clone mozharness
         2. Make the config for Raptor mozharness
         3. Run mozharness
         """
-<<<<<<< HEAD
-
         self.init_variables(raptor_args, kwargs)
-||||||| merged common ancestors
-
-        self.init_variables(raptor_args, app=app)
-=======
-        self.init_variables(raptor_args, kwargs)
->>>>>>> upstream-releases
         self.setup_benchmarks()
         self.make_config()
         self.write_config()
         self.make_args()
         return self.run_mozharness()
 
-<<<<<<< HEAD
     def init_variables(self, raptor_args, kwargs):
-        self.raptor_dir = os.path.join(self.topsrcdir, 'testing', 'raptor')
-        self.mozharness_dir = os.path.join(self.topsrcdir, 'testing',
-                                           'mozharness')
-        self.config_file_path = os.path.join(self._topobjdir, 'testing',
-                                             'raptor-in_tree_conf.json')
-        self.binary_path = self.get_binary_path() if kwargs['app'] != 'geckoview' else None
-        self.virtualenv_script = os.path.join(self.topsrcdir, 'third_party', 'python',
-                                              'virtualenv', 'virtualenv.py')
-        self.virtualenv_path = os.path.join(self._topobjdir, 'testing',
-                                            'raptor-venv')
-        self.python_interp = sys.executable
-||||||| merged common ancestors
-    def init_variables(self, raptor_args, app=None):
-        self.raptor_dir = os.path.join(self.topsrcdir, 'testing', 'raptor')
-        self.mozharness_dir = os.path.join(self.topsrcdir, 'testing',
-                                           'mozharness')
-        self.config_file_path = os.path.join(self._topobjdir, 'testing',
-                                             'raptor-in_tree_conf.json')
-        self.binary_path = self.get_binary_path() if app != 'geckoview' else None
-        self.virtualenv_script = os.path.join(self.topsrcdir, 'third_party', 'python',
-                                              'virtualenv', 'virtualenv.py')
-        self.virtualenv_path = os.path.join(self._topobjdir, 'testing',
-                                            'raptor-venv')
-        self.python_interp = sys.executable
-=======
-    def init_variables(self, raptor_args, kwargs):
->>>>>>> upstream-releases
         self.raptor_args = raptor_args
-        self.host = kwargs['host']
-        self.is_release_build = kwargs['is_release_build']
 
         if kwargs.get('host') == 'HOST_IP':
             kwargs['host'] = os.environ['HOST_IP']
@@ -133,13 +85,6 @@ class RaptorRunner(MozbuildObject):
 
         print("Updating external benchmarks from {}".format(BENCHMARK_REPOSITORY))
         print("Cloning the benchmarks to {}".format(external_repo_path))
-
-        try:
-            subprocess.check_output(['git', '--version'])
-        except Exception as ex:
-            print("Git is not available! Please install git and "
-                  "ensure it is included in the terminal path")
-            raise ex
 
         try:
             subprocess.check_output(['git', '--version'])
@@ -205,25 +150,11 @@ class RaptorRunner(MozbuildObject):
             'title': socket.gethostname(),
             'default_actions': default_actions,
             'raptor_cmd_line_args': self.raptor_args,
-<<<<<<< HEAD
-            'python3_manifest': {
-                'win32': 'python3.manifest',
-                'win64': 'python3_x64.manifest',
-            },
-            'host': self.host,
-            'is_release_build': self.is_release_build,
-||||||| merged common ancestors
-            'python3_manifest': {
-                'win32': 'python3.manifest',
-                'win64': 'python3_x64.manifest',
-            }
-=======
             'host': self.host,
             'power_test': self.power_test,
             'memory_test': self.memory_test,
             'cpu_test': self.cpu_test,
             'is_release_build': self.is_release_build,
->>>>>>> upstream-releases
         }
 
     def make_args(self):
@@ -281,11 +212,6 @@ class MachRaptor(MachCommandBase):
         raptor = self._spawn(RaptorRunner)
 
         try:
-<<<<<<< HEAD
-            return raptor.run_test(sys.argv[2:], kwargs)
-||||||| merged common ancestors
-            return raptor.run_test(sys.argv[2:], app=kwargs['app'])
-=======
             if is_android and kwargs['power_test']:
                 device = ADBAndroid(verbose=True)
                 adbhost = ADBHost(verbose=True)
@@ -299,7 +225,6 @@ class MachRaptor(MachCommandBase):
                 # verify_android_device to match our new tcpip value.
                 os.environ["DEVICE_SERIAL"] = device_serial
             return raptor.run_test(sys.argv[2:], kwargs)
->>>>>>> upstream-releases
         except Exception as e:
             print(repr(e))
             return 1

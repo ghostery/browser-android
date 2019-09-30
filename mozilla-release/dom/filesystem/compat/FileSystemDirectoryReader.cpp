@@ -36,21 +36,10 @@ class PromiseHandler final : public PromiseNativeHandler {
     MOZ_ASSERT(aSuccessCallback);
   }
 
-<<<<<<< HEAD
-  virtual void ResolvedCallback(JSContext* aCx,
-                                JS::Handle<JS::Value> aValue) override {
-    if (NS_WARN_IF(!aValue.isObject())) {
-||||||| merged common ancestors
-  virtual void
-  ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override
-  {
-    if(NS_WARN_IF(!aValue.isObject())) {
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void ResolvedCallback(JSContext* aCx,
                                 JS::Handle<JS::Value> aValue) override {
     if (NS_WARN_IF(!aValue.isObject())) {
->>>>>>> upstream-releases
       return;
     }
 

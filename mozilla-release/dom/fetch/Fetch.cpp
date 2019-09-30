@@ -354,24 +354,6 @@ class MainThreadFetchRunnable : public Runnable {
                           const ClientInfo& aClientInfo,
                           const Maybe<ServiceWorkerDescriptor>& aController,
                           nsICSPEventListener* aCSPEventListener,
-<<<<<<< HEAD
-                          InternalRequest* aRequest)
-      : Runnable("dom::MainThreadFetchRunnable"),
-        mResolver(aResolver),
-        mClientInfo(aClientInfo),
-        mController(aController),
-        mCSPEventListener(aCSPEventListener),
-        mRequest(aRequest) {
-||||||| merged common ancestors
-                          InternalRequest* aRequest)
-    : Runnable("dom::MainThreadFetchRunnable")
-    , mResolver(aResolver)
-    , mClientInfo(aClientInfo)
-    , mController(aController)
-    , mCSPEventListener(aCSPEventListener)
-    , mRequest(aRequest)
-  {
-=======
                           InternalRequest* aRequest,
                           UniquePtr<SerializedStackHolder>&& aOriginStack)
       : Runnable("dom::MainThreadFetchRunnable"),
@@ -381,7 +363,6 @@ class MainThreadFetchRunnable : public Runnable {
         mCSPEventListener(aCSPEventListener),
         mRequest(aRequest),
         mOriginStack(std::move(aOriginStack)) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mResolver);
   }
 
@@ -409,15 +390,8 @@ class MainThreadFetchRunnable : public Runnable {
       // so pass false as the last argument to FetchDriver().
       fetch = new FetchDriver(mRequest, principal, loadGroup,
                               workerPrivate->MainThreadEventTarget(),
-<<<<<<< HEAD
-                              workerPrivate->GetPerformanceStorage(), false);
-||||||| merged common ancestors
-                              workerPrivate->GetPerformanceStorage(),
-                              false);
-=======
                               workerPrivate->CookieSettings(),
                               workerPrivate->GetPerformanceStorage(), false);
->>>>>>> upstream-releases
       nsAutoCString spec;
       if (proxy->GetWorkerPrivate()->GetBaseURI()) {
         proxy->GetWorkerPrivate()->GetBaseURI()->GetAsciiSpec(spec);
@@ -526,30 +500,12 @@ already_AddRefed<Promise> FetchRequest(nsIGlobalObject* aGlobal,
 
     Telemetry::Accumulate(Telemetry::FETCH_IS_MAINTHREAD, 1);
 
-<<<<<<< HEAD
-    RefPtr<MainThreadFetchResolver> resolver = new MainThreadFetchResolver(
-        p, observer, signalImpl, request->MozErrors());
-    RefPtr<FetchDriver> fetch = new FetchDriver(
-        r, principal, loadGroup, aGlobal->EventTargetFor(TaskCategory::Other),
-        nullptr,  // PerformanceStorage
-        isTrackingFetch);
-||||||| merged common ancestors
-    RefPtr<MainThreadFetchResolver> resolver =
-      new MainThreadFetchResolver(p, observer, signalImpl,
-                                  request->MozErrors());
-    RefPtr<FetchDriver> fetch =
-      new FetchDriver(r, principal, loadGroup,
-                      aGlobal->EventTargetFor(TaskCategory::Other),
-                      nullptr, // PerformanceStorage
-                      isTrackingFetch);
-=======
     RefPtr<MainThreadFetchResolver> resolver = new MainThreadFetchResolver(
         p, observer, signalImpl, request->MozErrors());
     RefPtr<FetchDriver> fetch = new FetchDriver(
         r, principal, loadGroup, aGlobal->EventTargetFor(TaskCategory::Other),
         cookieSettings, nullptr,  // PerformanceStorage
         isTrackingFetch);
->>>>>>> upstream-releases
     fetch->SetDocument(doc);
     resolver->SetLoadGroup(loadGroup);
     aRv = fetch->Fetch(signalImpl, resolver);
@@ -580,16 +536,6 @@ already_AddRefed<Promise> FetchRequest(nsIGlobalObject* aGlobal,
       return nullptr;
     }
 
-<<<<<<< HEAD
-    RefPtr<MainThreadFetchRunnable> run = new MainThreadFetchRunnable(
-        resolver, clientInfo.ref(), worker->GetController(),
-        worker->CSPEventListener(), r);
-||||||| merged common ancestors
-    RefPtr<MainThreadFetchRunnable> run =
-      new MainThreadFetchRunnable(resolver, clientInfo.ref(),
-                                  worker->GetController(),
-                                  worker->CSPEventListener(), r);
-=======
     UniquePtr<SerializedStackHolder> stack;
     if (worker->IsWatchedByDevtools()) {
       stack = GetCurrentStackForNetMonitor(cx);
@@ -598,21 +544,12 @@ already_AddRefed<Promise> FetchRequest(nsIGlobalObject* aGlobal,
     RefPtr<MainThreadFetchRunnable> run = new MainThreadFetchRunnable(
         resolver, clientInfo.ref(), worker->GetController(),
         worker->CSPEventListener(), r, std::move(stack));
->>>>>>> upstream-releases
     worker->DispatchToMainThread(run.forget());
   }
 
   return p.forget();
 }
 
-<<<<<<< HEAD
-void MainThreadFetchResolver::OnResponseAvailableInternal(
-    InternalResponse* aResponse) {
-||||||| merged common ancestors
-void
-MainThreadFetchResolver::OnResponseAvailableInternal(InternalResponse* aResponse)
-{
-=======
 class ResolveFetchPromise : public Runnable {
  public:
   ResolveFetchPromise(Promise* aPromise, Response* aResponse)
@@ -630,7 +567,6 @@ class ResolveFetchPromise : public Runnable {
 
 void MainThreadFetchResolver::OnResponseAvailableInternal(
     InternalResponse* aResponse) {
->>>>>>> upstream-releases
   NS_ASSERT_OWNINGTHREAD(MainThreadFetchResolver);
   AssertIsOnMainThread();
 
@@ -1164,16 +1100,10 @@ void FetchBody<Derived>::SetBodyUsed(JSContext* aCx, ErrorResult& aRv) {
   // If we already have a ReadableStreamBody and it has been created by DOM, we
   // have to lock it now because it can have been shared with other objects.
   if (mReadableStreamBody) {
-<<<<<<< HEAD
-    aRv.MightThrowJSException();
-
-||||||| merged common ancestors
-=======
     aRv.MightThrowJSException();
 
     JSAutoRealm ar(aCx, mOwner->GetGlobalJSObject());
 
->>>>>>> upstream-releases
     JS::Rooted<JSObject*> readableStreamObj(aCx, mReadableStreamBody);
 
     JS::ReadableStreamMode mode;
@@ -1208,22 +1138,10 @@ template void FetchBody<Response>::SetBodyUsed(JSContext* aCx,
                                                ErrorResult& aRv);
 
 template <class Derived>
-<<<<<<< HEAD
-already_AddRefed<Promise> FetchBody<Derived>::ConsumeBody(
-    JSContext* aCx, FetchConsumeType aType, ErrorResult& aRv) {
-  aRv.MightThrowJSException();
-
-||||||| merged common ancestors
-already_AddRefed<Promise>
-FetchBody<Derived>::ConsumeBody(JSContext* aCx, FetchConsumeType aType,
-                                ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> FetchBody<Derived>::ConsumeBody(
     JSContext* aCx, BodyConsumer::ConsumeType aType, ErrorResult& aRv) {
   aRv.MightThrowJSException();
 
->>>>>>> upstream-releases
   RefPtr<AbortSignalImpl> signalImpl = DerivedClass()->GetSignalImpl();
   if (signalImpl && signalImpl->Aborted()) {
     aRv.Throw(NS_ERROR_DOM_ABORT_ERR);
@@ -1268,14 +1186,6 @@ already_AddRefed<Promise> FetchBody<Derived>::ConsumeBody(
 
   nsCOMPtr<nsIGlobalObject> global = DerivedClass()->GetParentObject();
 
-<<<<<<< HEAD
-  RefPtr<Promise> promise = FetchBodyConsumer<Derived>::Create(
-      global, mMainThreadEventTarget, this, bodyStream, signalImpl, aType, aRv);
-||||||| merged common ancestors
-  RefPtr<Promise> promise =
-    FetchBodyConsumer<Derived>::Create(global, mMainThreadEventTarget, this,
-                                       signalImpl, aType, aRv);
-=======
   MutableBlobStorage::MutableBlobStorageType blobStorageType =
       MutableBlobStorage::eOnlyInMemory;
   const mozilla::UniquePtr<mozilla::ipc::PrincipalInfo>& principalInfo =
@@ -1295,7 +1205,6 @@ already_AddRefed<Promise> FetchBody<Derived>::ConsumeBody(
   RefPtr<Promise> promise = BodyConsumer::Create(
       global, mMainThreadEventTarget, bodyStream, signalImpl, aType,
       BodyBlobURISpec(), BodyLocalPath(), MimeType(), blobStorageType, aRv);
->>>>>>> upstream-releases
   if (NS_WARN_IF(aRv.Failed())) {
     return nullptr;
   }
@@ -1303,37 +1212,14 @@ already_AddRefed<Promise> FetchBody<Derived>::ConsumeBody(
   return promise.forget();
 }
 
-<<<<<<< HEAD
-template already_AddRefed<Promise> FetchBody<Request>::ConsumeBody(
-    JSContext* aCx, FetchConsumeType aType, ErrorResult& aRv);
-||||||| merged common ancestors
-template
-already_AddRefed<Promise>
-FetchBody<Request>::ConsumeBody(JSContext* aCx, FetchConsumeType aType,
-                                ErrorResult& aRv);
-=======
 template already_AddRefed<Promise> FetchBody<Request>::ConsumeBody(
     JSContext* aCx, BodyConsumer::ConsumeType aType, ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template already_AddRefed<Promise> FetchBody<Response>::ConsumeBody(
-    JSContext* aCx, FetchConsumeType aType, ErrorResult& aRv);
-
-template already_AddRefed<Promise> FetchBody<EmptyBody>::ConsumeBody(
-    JSContext* aCx, FetchConsumeType aType, ErrorResult& aRv);
-||||||| merged common ancestors
-template
-already_AddRefed<Promise>
-FetchBody<Response>::ConsumeBody(JSContext* aCx, FetchConsumeType aType,
-                                 ErrorResult& aRv);
-=======
 template already_AddRefed<Promise> FetchBody<Response>::ConsumeBody(
     JSContext* aCx, BodyConsumer::ConsumeType aType, ErrorResult& aRv);
 
 template already_AddRefed<Promise> FetchBody<EmptyBody>::ConsumeBody(
     JSContext* aCx, BodyConsumer::ConsumeType aType, ErrorResult& aRv);
->>>>>>> upstream-releases
 
 template <class Derived>
 void FetchBody<Derived>::SetMimeType() {
@@ -1354,72 +1240,25 @@ void FetchBody<Derived>::SetMimeType() {
   }
 }
 
-<<<<<<< HEAD
-template void FetchBody<Request>::SetMimeType();
-||||||| merged common ancestors
-template
-void
-FetchBody<Request>::SetMimeType();
-=======
 template void FetchBody<Request>::SetMimeType();
 
 template void FetchBody<Response>::SetMimeType();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-template void FetchBody<Response>::SetMimeType();
-||||||| merged common ancestors
-template
-void
-FetchBody<Response>::SetMimeType();
-=======
-template <class Derived>
-void FetchBody<Derived>::OverrideMimeType(const nsACString& aMimeType) {
-  mMimeType = aMimeType;
-}
->>>>>>> upstream-releases
 
 template <class Derived>
-<<<<<<< HEAD
 void FetchBody<Derived>::OverrideMimeType(const nsACString& aMimeType) {
   mMimeType = aMimeType;
 }
 
 template <class Derived>
 const nsACString& FetchBody<Derived>::BodyBlobURISpec() const {
-||||||| merged common ancestors
-const nsACString&
-FetchBody<Derived>::BodyBlobURISpec() const
-{
-=======
-const nsACString& FetchBody<Derived>::BodyBlobURISpec() const {
->>>>>>> upstream-releases
   return DerivedClass()->BodyBlobURISpec();
 }
 
-<<<<<<< HEAD
-template const nsACString& FetchBody<Request>::BodyBlobURISpec() const;
-||||||| merged common ancestors
-template
-const nsACString&
-FetchBody<Request>::BodyBlobURISpec() const;
-=======
 template const nsACString& FetchBody<Request>::BodyBlobURISpec() const;
 
 template const nsACString& FetchBody<Response>::BodyBlobURISpec() const;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-template const nsACString& FetchBody<Response>::BodyBlobURISpec() const;
 
 template const nsACString& FetchBody<EmptyBody>::BodyBlobURISpec() const;
-||||||| merged common ancestors
-template
-const nsACString&
-FetchBody<Response>::BodyBlobURISpec() const;
-=======
-template const nsACString& FetchBody<EmptyBody>::BodyBlobURISpec() const;
->>>>>>> upstream-releases
 
 template <class Derived>
 const nsAString& FetchBody<Derived>::BodyLocalPath() const {
@@ -1480,18 +1319,8 @@ void FetchBody<Derived>::GetBody(JSContext* aCx,
     return;
   }
 
-<<<<<<< HEAD
-  JS::Rooted<JSObject*> body(aCx);
-  FetchStream::Create(aCx, this, DerivedClass()->GetParentObject(), inputStream,
-                      &body, aRv);
-||||||| merged common ancestors
-  JS::Rooted<JSObject*> body(aCx);
-  FetchStream::Create(aCx, this, DerivedClass()->GetParentObject(),
-                      inputStream, &body, aRv);
-=======
   BodyStream::Create(aCx, this, DerivedClass()->GetParentObject(), inputStream,
                      aRv);
->>>>>>> upstream-releases
   if (NS_WARN_IF(aRv.Failed())) {
     return;
   }
@@ -1585,16 +1414,10 @@ void FetchBody<Derived>::MaybeTeeReadableStreamBody(
     return;
   }
 
-<<<<<<< HEAD
-  aRv.MightThrowJSException();
-
-||||||| merged common ancestors
-=======
   aRv.MightThrowJSException();
 
   JSAutoRealm ar(aCx, mOwner->GetGlobalJSObject());
 
->>>>>>> upstream-releases
   JS::Rooted<JSObject*> stream(aCx, mReadableStreamBody);
 
   // If this is a ReadableStream with an external source, this has been

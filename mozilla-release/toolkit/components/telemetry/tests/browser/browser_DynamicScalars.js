@@ -18,19 +18,6 @@ async function waitForProcessesScalars(
   aAdditionalCondition = data => true
 ) {
   await ContentTaskUtils.waitForCondition(() => {
-<<<<<<< HEAD
-    const scalars = aKeyed ?
-      Services.telemetry.getSnapshotForKeyedScalars("main", false) :
-      Services.telemetry.getSnapshotForScalars("main", false);
-    return aProcesses.every(p => Object.keys(scalars).includes(p))
-           && aAdditionalCondition(scalars);
-||||||| merged common ancestors
-    const scalars = aKeyed ?
-      Services.telemetry.snapshotKeyedScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN) :
-      Services.telemetry.snapshotScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN);
-    return aProcesses.every(p => Object.keys(scalars).includes(p))
-           && aAdditionalCondition(scalars);
-=======
     const scalars = aKeyed
       ? Services.telemetry.getSnapshotForKeyedScalars("main", false)
       : Services.telemetry.getSnapshotForScalars("main", false);
@@ -38,7 +25,6 @@ async function waitForProcessesScalars(
       aProcesses.every(p => Object.keys(scalars).includes(p)) &&
       aAdditionalCondition(scalars)
     );
->>>>>>> upstream-releases
   });
 }
 
@@ -141,37 +127,6 @@ add_task(async function test_recording() {
   });
 
   // Verify the content of the snapshots.
-<<<<<<< HEAD
-  const scalars =
-      Services.telemetry.getSnapshotForScalars("main", false);
-  ok("dynamic" in scalars,
-     "The scalars must contain the 'dynamic' process section");
-  ok("telemetry.test.dynamic.pre_content_spawn" in scalars.dynamic,
-     "Dynamic scalars registered before a process spawns must be present.");
-  is(scalars.dynamic["telemetry.test.dynamic.pre_content_spawn"], 3,
-    "The dynamic scalar must contain the expected value.");
-  is(scalars.dynamic["telemetry.test.dynamic.pre_content_spawn_expiration"], 3,
-    "The dynamic scalar must not be updated after being expired.");
-  ok("telemetry.test.dynamic.post_content_spawn" in scalars.dynamic,
-     "Dynamic scalars registered after a process spawns must be present.");
-  is(scalars.dynamic["telemetry.test.dynamic.post_content_spawn"], true,
-     "The dynamic scalar must contain the expected value.");
-||||||| merged common ancestors
-  const scalars =
-      Services.telemetry.snapshotScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN);
-  ok("dynamic" in scalars,
-     "The scalars must contain the 'dynamic' process section");
-  ok("telemetry.test.dynamic.pre_content_spawn" in scalars.dynamic,
-     "Dynamic scalars registered before a process spawns must be present.");
-  is(scalars.dynamic["telemetry.test.dynamic.pre_content_spawn"], 3,
-    "The dynamic scalar must contain the expected value.");
-  is(scalars.dynamic["telemetry.test.dynamic.pre_content_spawn_expiration"], 3,
-    "The dynamic scalar must not be updated after being expired.");
-  ok("telemetry.test.dynamic.post_content_spawn" in scalars.dynamic,
-     "Dynamic scalars registered after a process spawns must be present.");
-  is(scalars.dynamic["telemetry.test.dynamic.post_content_spawn"], true,
-     "The dynamic scalar must contain the expected value.");
-=======
   const scalars = Services.telemetry.getSnapshotForScalars("main", false);
   ok(
     "dynamic" in scalars,
@@ -200,29 +155,10 @@ add_task(async function test_recording() {
     true,
     "The dynamic scalar must contain the expected value."
   );
->>>>>>> upstream-releases
 
   // Wait for the dynamic scalars to appear in the keyed snapshots.
   await waitForProcessesScalars(["dynamic"], true);
 
-<<<<<<< HEAD
-  const keyedScalars = Services.telemetry.getSnapshotForKeyedScalars("main", false);
-  ok("dynamic" in keyedScalars,
-     "The keyed scalars must contain the 'dynamic' process section");
-  ok("telemetry.test.dynamic.post_content_spawn_keyed" in keyedScalars.dynamic,
-     "Dynamic keyed scalars registered after a process spawns must be present.");
-  is(keyedScalars.dynamic["telemetry.test.dynamic.post_content_spawn_keyed"].testKey, 3,
-     "The dynamic keyed scalar must contain the expected value.");
-||||||| merged common ancestors
-  const keyedScalars =
-      Services.telemetry.snapshotKeyedScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN);
-  ok("dynamic" in keyedScalars,
-     "The keyed scalars must contain the 'dynamic' process section");
-  ok("telemetry.test.dynamic.post_content_spawn_keyed" in keyedScalars.dynamic,
-     "Dynamic keyed scalars registered after a process spawns must be present.");
-  is(keyedScalars.dynamic["telemetry.test.dynamic.post_content_spawn_keyed"].testKey, 3,
-     "The dynamic keyed scalar must contain the expected value.");
-=======
   const keyedScalars = Services.telemetry.getSnapshotForKeyedScalars(
     "main",
     false
@@ -241,7 +177,6 @@ add_task(async function test_recording() {
     3,
     "The dynamic keyed scalar must contain the expected value."
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_aggregation() {

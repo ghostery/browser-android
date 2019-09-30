@@ -102,22 +102,9 @@ static inline nsTArray<gfx::IntRect> ToRectArray(const T& aRegion) {
   return rects;
 }
 
-<<<<<<< HEAD
-struct SimpleTraits {
-  explicit SimpleTraits(const ItemInfo& aItem, const gfx::Rect& aRect)
-      : mItem(aItem), mRect(aRect) {}
-||||||| merged common ancestors
-struct SimpleTraits
-{
-  explicit SimpleTraits(const ItemInfo& aItem, const gfx::Rect& aRect)
-   : mItem(aItem),
-     mRect(aRect)
-  {}
-=======
 struct SimpleTraits {
   SimpleTraits(const ItemInfo& aItem, const gfx::Rect& aRect)
       : mItem(aItem), mRect(aRect) {}
->>>>>>> upstream-releases
 
   // Helper nonce structs so functions can break vertex data up by each
   // triangle in a quad, or return vertex info for a unit quad.

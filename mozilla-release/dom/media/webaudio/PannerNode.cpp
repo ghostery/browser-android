@@ -203,21 +203,10 @@ class PannerNodeEngine final : public AudioNodeEngine {
           mHRTFPanner->reset();
 
           RefPtr<PlayingRefChangeHandler> refchanged =
-<<<<<<< HEAD
-              new PlayingRefChangeHandler(aStream,
-                                          PlayingRefChangeHandler::RELEASE);
-          aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-              refchanged.forget());
-||||||| merged common ancestors
-            new PlayingRefChangeHandler(aStream, PlayingRefChangeHandler::RELEASE);
-          aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-=======
               new PlayingRefChangeHandler(aStream,
                                           PlayingRefChangeHandler::RELEASE);
           aStream->Graph()->DispatchToMainThreadStableState(
               refchanged.forget());
->>>>>>> upstream-releases
         }
         aOutput->SetNull(WEBAUDIO_BLOCK_SIZE);
         return;
@@ -226,20 +215,9 @@ class PannerNodeEngine final : public AudioNodeEngine {
                &PannerNodeEngine::HRTFPanningFunction) {
       if (mLeftOverData == INT_MIN) {
         RefPtr<PlayingRefChangeHandler> refchanged =
-<<<<<<< HEAD
-            new PlayingRefChangeHandler(aStream,
-                                        PlayingRefChangeHandler::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-||||||| merged common ancestors
-          new PlayingRefChangeHandler(aStream, PlayingRefChangeHandler::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-          refchanged.forget());
-=======
             new PlayingRefChangeHandler(aStream,
                                         PlayingRefChangeHandler::ADDREF);
         aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
->>>>>>> upstream-releases
       }
       mLeftOverData = mHRTFPanner->maxTailFrames();
     }
@@ -311,54 +289,6 @@ class PannerNodeEngine final : public AudioNodeEngine {
 };
 
 PannerNode::PannerNode(AudioContext* aContext)
-<<<<<<< HEAD
-    : AudioNode(aContext, 2, ChannelCountMode::Clamped_max,
-                ChannelInterpretation::Speakers)
-      // Please keep these default values consistent with
-      // PannerNodeEngine::PannerNodeEngine above.
-      ,
-      mPanningModel(PanningModelType::Equalpower),
-      mDistanceModel(DistanceModelType::Inverse),
-      mPositionX(
-          new AudioParam(this, PannerNode::POSITIONX, this->NodeType(), 0.f)),
-      mPositionY(
-          new AudioParam(this, PannerNode::POSITIONY, this->NodeType(), 0.f)),
-      mPositionZ(
-          new AudioParam(this, PannerNode::POSITIONZ, this->NodeType(), 0.f)),
-      mOrientationX(new AudioParam(this, PannerNode::ORIENTATIONX,
-                                   this->NodeType(), 1.0f)),
-      mOrientationY(new AudioParam(this, PannerNode::ORIENTATIONY,
-                                   this->NodeType(), 0.f)),
-      mOrientationZ(new AudioParam(this, PannerNode::ORIENTATIONZ,
-                                   this->NodeType(), 0.f)),
-      mRefDistance(1.),
-      mMaxDistance(10000.),
-      mRolloffFactor(1.),
-      mConeInnerAngle(360.),
-      mConeOuterAngle(360.),
-      mConeOuterGain(0.) {
-||||||| merged common ancestors
-  : AudioNode(aContext,
-              2,
-              ChannelCountMode::Clamped_max,
-              ChannelInterpretation::Speakers)
-  // Please keep these default values consistent with PannerNodeEngine::PannerNodeEngine above.
-  , mPanningModel(PanningModelType::Equalpower)
-  , mDistanceModel(DistanceModelType::Inverse)
-  , mPositionX(new AudioParam(this, PannerNode::POSITIONX, this->NodeType(), 0.f))
-  , mPositionY(new AudioParam(this, PannerNode::POSITIONY, this->NodeType(), 0.f))
-  , mPositionZ(new AudioParam(this, PannerNode::POSITIONZ, this->NodeType(), 0.f))
-  , mOrientationX(new AudioParam(this, PannerNode::ORIENTATIONX, this->NodeType(), 1.0f))
-  , mOrientationY(new AudioParam(this, PannerNode::ORIENTATIONY, this->NodeType(), 0.f))
-  , mOrientationZ(new AudioParam(this, PannerNode::ORIENTATIONZ, this->NodeType(), 0.f))
-  , mRefDistance(1.)
-  , mMaxDistance(10000.)
-  , mRolloffFactor(1.)
-  , mConeInnerAngle(360.)
-  , mConeOuterAngle(360.)
-  , mConeOuterGain(0.)
-{
-=======
     : AudioNode(aContext, 2, ChannelCountMode::Clamped_max,
                 ChannelInterpretation::Speakers)
       // Please keep these default values consistent with
@@ -381,7 +311,6 @@ PannerNode::PannerNode(AudioContext* aContext)
                    0.f);
   CreateAudioParam(mOrientationZ, PannerNode::ORIENTATIONZ, this->NodeType(),
                    0.f);
->>>>>>> upstream-releases
   mStream = AudioNodeStream::Create(
       aContext,
       new PannerNodeEngine(this, aContext->Destination(),
@@ -389,30 +318,10 @@ PannerNode::PannerNode(AudioContext* aContext)
       AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PannerNode> PannerNode::Create(
-    AudioContext& aAudioContext, const PannerOptions& aOptions,
-    ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-||||||| merged common ancestors
-/* static */ already_AddRefed<PannerNode>
-PannerNode::Create(AudioContext& aAudioContext,
-                   const PannerOptions& aOptions,
-                   ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-=======
 /* static */
 already_AddRefed<PannerNode> PannerNode::Create(AudioContext& aAudioContext,
                                                 const PannerOptions& aOptions,
                                                 ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<PannerNode> audioNode = new PannerNode(&aAudioContext);
 
   audioNode->Initialize(aOptions, aRv);

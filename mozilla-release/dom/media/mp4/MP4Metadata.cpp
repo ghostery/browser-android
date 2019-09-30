@@ -267,65 +267,6 @@ MP4Metadata::ResultAndTrackInfo MP4Metadata::GetTrackInfo(
             nullptr};
   }
 #ifdef DEBUG
-<<<<<<< HEAD
-  const char* codec_string = "unrecognized";
-  switch (info.codec) {
-    case MP4PARSE_CODEC_UNKNOWN:
-      codec_string = "unknown";
-      break;
-    case MP4PARSE_CODEC_AAC:
-      codec_string = "aac";
-      break;
-    case MP4PARSE_CODEC_OPUS:
-      codec_string = "opus";
-      break;
-    case MP4PARSE_CODEC_FLAC:
-      codec_string = "flac";
-      break;
-    case MP4PARSE_CODEC_ALAC:
-      codec_string = "alac";
-      break;
-    case MP4PARSE_CODEC_AVC:
-      codec_string = "h.264";
-      break;
-    case MP4PARSE_CODEC_VP9:
-      codec_string = "vp9";
-      break;
-    case MP4PARSE_CODEC_AV1:
-      codec_string = "av1";
-      break;
-    case MP4PARSE_CODEC_MP3:
-      codec_string = "mp3";
-      break;
-    case MP4PARSE_CODEC_MP4V:
-      codec_string = "mp4v";
-      break;
-    case MP4PARSE_CODEC_JPEG:
-      codec_string = "jpeg";
-      break;
-    case MP4PARSE_CODEC_AC3:
-      codec_string = "ac-3";
-      break;
-    case MP4PARSE_CODEC_EC3:
-      codec_string = "ec-3";
-      break;
-||||||| merged common ancestors
-  const char* codec_string = "unrecognized";
-  switch (info.codec) {
-    case MP4PARSE_CODEC_UNKNOWN: codec_string = "unknown"; break;
-    case MP4PARSE_CODEC_AAC: codec_string = "aac"; break;
-    case MP4PARSE_CODEC_OPUS: codec_string = "opus"; break;
-    case MP4PARSE_CODEC_FLAC: codec_string = "flac"; break;
-    case MP4PARSE_CODEC_ALAC: codec_string = "alac"; break;
-    case MP4PARSE_CODEC_AVC: codec_string = "h.264"; break;
-    case MP4PARSE_CODEC_VP9: codec_string = "vp9"; break;
-    case MP4PARSE_CODEC_AV1: codec_string = "av1"; break;
-    case MP4PARSE_CODEC_MP3: codec_string = "mp3"; break;
-    case MP4PARSE_CODEC_MP4V: codec_string = "mp4v"; break;
-    case MP4PARSE_CODEC_JPEG: codec_string = "jpeg"; break;
-    case MP4PARSE_CODEC_AC3: codec_string = "ac-3"; break;
-    case MP4PARSE_CODEC_EC3: codec_string = "ec-3"; break;
-=======
   bool haveSampleInfo = false;
   const char* codecString = "unrecognized";
   Mp4parseCodec codecType = MP4PARSE_CODEC_UNKNOWN;
@@ -388,16 +329,9 @@ MP4Metadata::ResultAndTrackInfo MP4Metadata::GetTrackInfo(
         codecString = "ec-3";
         break;
     }
->>>>>>> upstream-releases
   }
   MOZ_LOG(gMP4MetadataLog, LogLevel::Debug,
-<<<<<<< HEAD
-          ("track codec %s (%u)\n", codec_string, info.codec));
-||||||| merged common ancestors
-    ("track codec %s (%u)\n", codec_string, info.codec));
-=======
           ("track codec %s (%u)\n", codecString, codecType));
->>>>>>> upstream-releases
 #endif
 
   // This specialization interface is crazy.
@@ -524,21 +458,10 @@ MP4Metadata::ResultAndIndice MP4Metadata::GetTrackIndice(
   return {NS_OK, std::move(indice)};
 }
 
-<<<<<<< HEAD
-/*static*/ MP4Metadata::ResultAndByteBuffer MP4Metadata::Metadata(
-    ByteStream* aSource) {
-  auto parser = mozilla::MakeUnique<MoofParser>(aSource, 0, false);
-||||||| merged common ancestors
-/*static*/ MP4Metadata::ResultAndByteBuffer
-MP4Metadata::Metadata(ByteStream* aSource)
-{
-  auto parser = mozilla::MakeUnique<MoofParser>(aSource, 0, false);
-=======
 /*static*/ MP4Metadata::ResultAndByteBuffer MP4Metadata::Metadata(
     ByteStream* aSource) {
   auto parser = mozilla::MakeUnique<MoofParser>(
       aSource, AsVariant(ParseAllTracks{}), false);
->>>>>>> upstream-releases
   RefPtr<mozilla::MediaByteBuffer> buffer = parser->Metadata();
   if (!buffer) {
     return {MediaResult(NS_ERROR_DOM_MEDIA_METADATA_ERR,

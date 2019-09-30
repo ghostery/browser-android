@@ -4,22 +4,10 @@
 
 //! GPU glyph rasterization using Pathfinder.
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_glyph_renderer.rs
-use api::{DeviceIntPoint, DeviceIntRect, DeviceIntSize, FontRenderMode};
-use api::{ImageFormat, TextureTarget};
-use debug_colors;
-use device::{DrawTarget, Device, Texture, TextureFilter, VAO};
-||||||| merged common ancestors
-use api::{DeviceIntPoint, DeviceIntRect, DeviceUintSize, FontRenderMode};
-use api::{ImageFormat, TextureTarget};
-use debug_colors;
-use device::{Device, Texture, TextureDrawTarget, TextureFilter, VAO};
-=======
 use crate::api::{ImageFormat, FontRenderMode, TextureTarget};
 use crate::api::units::*;
 use crate::debug_colors;
 use crate::device::{DrawTarget, Device, Texture, TextureFilter, VAO};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_glyph_renderer.rs
 use euclid::{Point2D, Size2D, Transform3D, TypedVector2D, Vector2D};
 use crate::internal_types::RenderTargetInfo;
 use pathfinder_gfx_utils::ShelfBinPacker;
@@ -203,25 +191,11 @@ impl Renderer {
                                                     projection,
                                                     &mut self.renderer_errors);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_glyph_renderer.rs
-        self.device.bind_draw_target(DrawTarget::Texture {
-            texture: &current_page.texture,
-            layer: 0,
-            with_depth: false,
-        });
-||||||| merged common ancestors
-        self.device.bind_draw_target(Some(TextureDrawTarget {
-            texture: &current_page.texture,
-            layer: 0,
-            with_depth: false,
-        }), Some(*target_size));
-=======
         self.device.bind_draw_target(DrawTarget::from_texture(
             &current_page.texture,
             0,
             false,
         ));
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_glyph_renderer.rs
         self.device.clear_target(Some([0.0, 0.0, 0.0, 0.0]), None, None);
 
         self.device.set_blend(true);

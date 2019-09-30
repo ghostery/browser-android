@@ -55,21 +55,9 @@ class KeyframeUtils {
    *   filled-in with the appropriate error code and an empty array will be
    *   returned.
    */
-<<<<<<< HEAD
-  static nsTArray<Keyframe> GetKeyframesFromObject(
-      JSContext* aCx, nsIDocument* aDocument, JS::Handle<JSObject*> aFrames,
-      ErrorResult& aRv);
-||||||| merged common ancestors
-  static nsTArray<Keyframe>
-  GetKeyframesFromObject(JSContext* aCx,
-                         nsIDocument* aDocument,
-                         JS::Handle<JSObject*> aFrames,
-                         ErrorResult& aRv);
-=======
   static nsTArray<Keyframe> GetKeyframesFromObject(
       JSContext* aCx, dom::Document* aDocument, JS::Handle<JSObject*> aFrames,
       ErrorResult& aRv);
->>>>>>> upstream-releases
 
   /**
    * Calculate the computed offset of keyframes by evenly distributing keyframes

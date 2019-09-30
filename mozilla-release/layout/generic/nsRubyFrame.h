@@ -44,28 +44,11 @@ class nsRubyFrame final : public nsInlineFrame {
 
   mozilla::RubyBlockLeadings GetBlockLeadings() const { return mLeadings; }
 
-<<<<<<< HEAD
- protected:
-  friend nsContainerFrame* NS_NewRubyFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-protected:
-  friend nsContainerFrame* NS_NewRubyFrame(nsIPresShell* aPresShell,
-=======
  protected:
   friend nsContainerFrame* NS_NewRubyFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                            ComputedStyle* aStyle);
-<<<<<<< HEAD
-  explicit nsRubyFrame(ComputedStyle* aStyle)
-      : nsInlineFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-  explicit nsRubyFrame(ComputedStyle* aStyle)
-    : nsInlineFrame(aStyle, kClassID)
-  {}
-=======
   explicit nsRubyFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsInlineFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   void ReflowSegment(nsPresContext* aPresContext,
                      const ReflowInput& aReflowInput,

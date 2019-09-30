@@ -186,121 +186,6 @@ struct SizeComputationInput {
 
   struct ReflowInputFlags {
     ReflowInputFlags() { memset(this, 0, sizeof(*this)); }
-<<<<<<< HEAD
-
-    // used by tables to communicate special reflow (in process) to handle
-    // percent bsize frames inside cells which may not have computed bsizes
-    bool mSpecialBSizeReflow : 1;
-
-    // nothing in the frame's next-in-flow (or its descendants) is changing
-    bool mNextInFlowUntouched : 1;
-
-    // Is the current context at the top of a page?  When true, we force
-    // something that's too tall for a page/column to fit anyway to avoid
-    // infinite loops.
-    bool mIsTopOfPage : 1;
-
-    // parent frame is an nsIScrollableFrame and it is assuming a horizontal
-    // scrollbar
-    bool mAssumingHScrollbar : 1;
-
-    // parent frame is an nsIScrollableFrame and it is assuming a vertical
-    // scrollbar
-    bool mAssumingVScrollbar : 1;
-
-    // Is frame (a) not dirty and (b) a different inline-size than before?
-    bool mIsIResize : 1;
-
-    // Is frame (a) not dirty and (b) a different block-size than before or
-    // (potentially) in a context where percent block-sizes have a different
-    // basis?
-    bool mIsBResize : 1;
-
-    // tables are splittable, this should happen only inside a page and never
-    // insider a column frame
-    bool mTableIsSplittable : 1;
-
-    // Does frame height depend on an ancestor table-cell?
-    bool mHeightDependsOnAncestorCell : 1;
-
-    // nsColumnSetFrame is balancing columns
-    bool mIsColumnBalancing : 1;
-
-    // nsFlexContainerFrame is reflowing this child to measure its intrinsic
-    // BSize.
-    bool mIsFlexContainerMeasuringBSize : 1;
-
-    // a "fake" reflow state made in order to be the parent of a real one
-    bool mDummyParentReflowInput : 1;
-
-    // Should this frame reflow its place-holder children? If the available
-    // height of this frame didn't change, but its in a paginated environment
-    // (e.g. columns), it should always reflow its placeholder children.
-    bool mMustReflowPlaceholders : 1;
-
-    // stores the COMPUTE_SIZE_SHRINK_WRAP ctor flag
-    bool mShrinkWrap : 1;
-
-    // stores the COMPUTE_SIZE_USE_AUTO_BSIZE ctor flag
-    bool mUseAutoBSize : 1;
-
-    // the STATIC_POS_IS_CB_ORIGIN ctor flag
-    bool mStaticPosIsCBOrigin : 1;
-
-    // the I_CLAMP_MARGIN_BOX_MIN_SIZE ctor flag
-    bool mIClampMarginBoxMinSize : 1;
-
-    // the B_CLAMP_MARGIN_BOX_MIN_SIZE ctor flag
-    bool mBClampMarginBoxMinSize : 1;
-
-    // the I_APPLY_AUTO_MIN_SIZE ctor flag
-    bool mApplyAutoMinSize : 1;
-||||||| merged common ancestors
-    bool mSpecialBSizeReflow : 1;    // used by tables to communicate special reflow (in process) to handle
-                                     // percent bsize frames inside cells which may not have computed bsizes
-    bool mNextInFlowUntouched : 1;   // nothing in the frame's next-in-flow (or its descendants)
-                                     // is changing
-    bool mIsTopOfPage : 1;           // Is the current context at the top of a
-                                     // page?  When true, we force something
-                                     // that's too tall for a page/column to
-                                     // fit anyway to avoid infinite loops.
-    bool mAssumingHScrollbar : 1;    // parent frame is an nsIScrollableFrame and it
-                                     // is assuming a horizontal scrollbar
-    bool mAssumingVScrollbar : 1;    // parent frame is an nsIScrollableFrame and it
-                                     // is assuming a vertical scrollbar
-
-    bool mIsIResize : 1;             // Is frame (a) not dirty and (b) a
-                                     // different inline-size than before?
-
-    bool mIsBResize : 1;             // Is frame (a) not dirty and (b) a
-                                     // different block-size than before or
-                                     // (potentially) in a context where
-                                     // percent block-sizes have a different
-                                     // basis?
-    bool mTableIsSplittable : 1;     // tables are splittable, this should happen only inside a page
-                                     // and never insider a column frame
-    bool mHeightDependsOnAncestorCell : 1;     // Does frame height depend on
-                                               // an ancestor table-cell?
-    bool mIsColumnBalancing : 1;     // nsColumnSetFrame is balancing columns
-    bool mIsFlexContainerMeasuringBSize : 1;   // nsFlexContainerFrame is
-                                               // reflowing this child to
-                                               // measure its intrinsic BSize.
-    bool mDummyParentReflowInput : 1;   // a "fake" reflow state made
-                                        // in order to be the parent
-                                        // of a real one
-    bool mMustReflowPlaceholders : 1;   // Should this frame reflow its place-
-                                        // holder children? If the available
-                                        // height of this frame didn't change,
-                                        // but its in a paginated environment
-                                        // (e.g. columns), it should always
-                                        // reflow its placeholder children.
-    bool mShrinkWrap : 1; // stores the COMPUTE_SIZE_SHRINK_WRAP ctor flag
-    bool mUseAutoBSize : 1; // stores the COMPUTE_SIZE_USE_AUTO_BSIZE ctor flag
-    bool mStaticPosIsCBOrigin : 1; // the STATIC_POS_IS_CB_ORIGIN ctor flag
-    bool mIClampMarginBoxMinSize : 1; // the I_CLAMP_MARGIN_BOX_MIN_SIZE ctor flag
-    bool mBClampMarginBoxMinSize : 1; // the B_CLAMP_MARGIN_BOX_MIN_SIZE ctor flag
-    bool mApplyAutoMinSize : 1;       // the I_APPLY_AUTO_MIN_SIZE ctor flag
-=======
 
     // used by tables to communicate special reflow (in process) to handle
     // percent bsize frames inside cells which may not have computed bsizes
@@ -369,7 +254,6 @@ struct SizeComputationInput {
 
     // the I_APPLY_AUTO_MIN_SIZE ctor flag
     bool mApplyAutoMinSize : 1;
->>>>>>> upstream-releases
 
     // If set, the following two flags indicate that:
     // (1) this frame is absolutely-positioned (or fixed-positioned).
@@ -490,13 +374,7 @@ struct ReflowInput : public SizeComputationInput {
   nsFloatManager* mFloatManager = nullptr;
 
   // LineLayout object (only for inline reflow; set to nullptr otherwise)
-<<<<<<< HEAD
-  nsLineLayout* mLineLayout;
-||||||| merged common ancestors
-  nsLineLayout*    mLineLayout;
-=======
   nsLineLayout* mLineLayout = nullptr;
->>>>>>> upstream-releases
 
   // The appropriate reflow input for the containing block (for
   // percentage widths, etc.) of this reflow input's frame. It will be setup
@@ -505,15 +383,7 @@ struct ReflowInput : public SizeComputationInput {
 
   // The type of frame, from css's perspective. This value is
   // initialized by the Init method below.
-<<<<<<< HEAD
-  MOZ_INIT_OUTSIDE_CTOR
-  nsCSSFrameType mFrameType;
-||||||| merged common ancestors
-  MOZ_INIT_OUTSIDE_CTOR
-  nsCSSFrameType   mFrameType;
-=======
   nsCSSFrameType mFrameType = NS_CSS_FRAME_TYPE_UNKNOWN;
->>>>>>> upstream-releases
 
   // The amount the in-flow position of the block is moving vertically relative
   // to its previous in-flow position (i.e. the amount the line containing the
@@ -714,13 +584,7 @@ struct ReflowInput : public SizeComputationInput {
   // represents the amount of room for the frame's margin, border,
   // padding, and content area. The frame size you choose should fit
   // within the available width.
-<<<<<<< HEAD
-  nscoord mAvailableWidth;
-||||||| merged common ancestors
-  nscoord              mAvailableWidth;
-=======
   nscoord mAvailableWidth = 0;
->>>>>>> upstream-releases
 
   // A value of NS_UNCONSTRAINEDSIZE for the available height means
   // you can choose whatever size you want. In galley mode the
@@ -730,13 +594,7 @@ struct ReflowInput : public SizeComputationInput {
   // element is complete after reflow then its bottom border, padding
   // and margin (and similar for its complete ancestors) will need to
   // fit in this height.
-<<<<<<< HEAD
-  nscoord mAvailableHeight;
-||||||| merged common ancestors
-  nscoord              mAvailableHeight;
-=======
   nscoord mAvailableHeight = 0;
->>>>>>> upstream-releases
 
   // The computed width specifies the frame's content area width, and it does
   // not apply to inline non-replaced elements
@@ -780,49 +638,8 @@ struct ReflowInput : public SizeComputationInput {
 
  public:
   // Our saved containing block dimensions.
-<<<<<<< HEAD
-  MOZ_INIT_OUTSIDE_CTOR
-  LogicalSize mContainingBlockSize;
-||||||| merged common ancestors
-  MOZ_INIT_OUTSIDE_CTOR
-  LogicalSize      mContainingBlockSize;
-=======
   LogicalSize mContainingBlockSize = LogicalSize(mWritingMode);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Cached pointers to the various style structs used during intialization
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleDisplay* mStyleDisplay;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleVisibility* mStyleVisibility;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStylePosition* mStylePosition;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleBorder* mStyleBorder;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleMargin* mStyleMargin;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStylePadding* mStylePadding;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleText* mStyleText;
-||||||| merged common ancestors
-  // Cached pointers to the various style structs used during intialization
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleDisplay*    mStyleDisplay;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleVisibility* mStyleVisibility;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStylePosition*   mStylePosition;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleBorder*     mStyleBorder;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleMargin*     mStyleMargin;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStylePadding*    mStylePadding;
-  MOZ_INIT_OUTSIDE_CTOR
-  const nsStyleText*       mStyleText;
-=======
   // Cached pointers to the various style structs used during initialization.
   const nsStyleDisplay* mStyleDisplay = nullptr;
   const nsStyleVisibility* mStyleVisibility = nullptr;
@@ -831,7 +648,6 @@ struct ReflowInput : public SizeComputationInput {
   const nsStyleMargin* mStyleMargin = nullptr;
   const nsStylePadding* mStylePadding = nullptr;
   const nsStyleText* mStyleText = nullptr;
->>>>>>> upstream-releases
 
   bool IsFloating() const;
 
@@ -924,29 +740,15 @@ struct ReflowInput : public SizeComputationInput {
   ReflowInput(nsPresContext* aPresContext,
               const ReflowInput& aParentReflowInput, nsIFrame* aFrame,
               const mozilla::LogicalSize& aAvailableSpace,
-<<<<<<< HEAD
-              const mozilla::LogicalSize* aContainingBlockSize = nullptr,
-              uint32_t aFlags = 0);
-||||||| merged common ancestors
-              const mozilla::LogicalSize* aContainingBlockSize = nullptr,
-              uint32_t                    aFlags = 0);
-=======
               const mozilla::Maybe<mozilla::LogicalSize>& aContainingBlockSize =
                   mozilla::Nothing(),
               uint32_t aFlags = 0);
->>>>>>> upstream-releases
 
   // Values for |aFlags| passed to constructor
   enum {
     // Indicates that the parent of this reflow input is "fake" (see
     // mDummyParentReflowInput in mFlags).
-<<<<<<< HEAD
-    DUMMY_PARENT_REFLOW_STATE = (1 << 0),
-||||||| merged common ancestors
-    DUMMY_PARENT_REFLOW_STATE = (1<<0),
-=======
     DUMMY_PARENT_REFLOW_INPUT = (1 << 0),
->>>>>>> upstream-releases
 
     // Indicates that the calling function will initialize the reflow input, and
     // that the constructor should not call Init().
@@ -978,23 +780,11 @@ struct ReflowInput : public SizeComputationInput {
 
   // This method initializes various data members. It is automatically
   // called by the various constructors
-<<<<<<< HEAD
-  void Init(nsPresContext* aPresContext,
-            const mozilla::LogicalSize* aContainingBlockSize = nullptr,
-            const nsMargin* aBorder = nullptr,
-            const nsMargin* aPadding = nullptr);
-||||||| merged common ancestors
-  void Init(nsPresContext*              aPresContext,
-            const mozilla::LogicalSize* aContainingBlockSize = nullptr,
-            const nsMargin*             aBorder = nullptr,
-            const nsMargin*             aPadding = nullptr);
-=======
   void Init(nsPresContext* aPresContext,
             const mozilla::Maybe<mozilla::LogicalSize>& aContainingBlockSize =
                 mozilla::Nothing(),
             const nsMargin* aBorder = nullptr,
             const nsMargin* aPadding = nullptr);
->>>>>>> upstream-releases
 
   /**
    * Find the content isize of our containing block for the given writing mode,
@@ -1206,24 +996,11 @@ struct ReflowInput : public SizeComputationInput {
                        mozilla::LayoutFrameType aFrameType);
   void InitDynamicReflowRoot();
 
-<<<<<<< HEAD
-  void InitConstraints(nsPresContext* aPresContext,
-                       const mozilla::LogicalSize& aContainingBlockSize,
-                       const nsMargin* aBorder, const nsMargin* aPadding,
-                       mozilla::LayoutFrameType aFrameType);
-||||||| merged common ancestors
-  void InitConstraints(nsPresContext* aPresContext,
-                       const mozilla::LogicalSize& aContainingBlockSize,
-                       const nsMargin* aBorder,
-                       const nsMargin* aPadding,
-                       mozilla::LayoutFrameType aFrameType);
-=======
   void InitConstraints(
       nsPresContext* aPresContext,
       const mozilla::Maybe<mozilla::LogicalSize>& aContainingBlockSize,
       const nsMargin* aBorder, const nsMargin* aPadding,
       mozilla::LayoutFrameType aFrameType);
->>>>>>> upstream-releases
 
   // Returns the nearest containing block or block frame (whether or not
   // it is a containing block) for the specified frame.  Also returns

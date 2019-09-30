@@ -146,27 +146,12 @@ void GetFileOrDirectoryTaskChild::HandlerCallback() {
  * GetFileOrDirectoryTaskParent
  */
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<GetFileOrDirectoryTaskParent>
-GetFileOrDirectoryTaskParent::Create(
-    FileSystemBase* aFileSystem,
-    const FileSystemGetFileOrDirectoryParams& aParam,
-    FileSystemRequestParent* aParent, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<GetFileOrDirectoryTaskParent>
-GetFileOrDirectoryTaskParent::Create(FileSystemBase* aFileSystem,
-                                     const FileSystemGetFileOrDirectoryParams& aParam,
-                                     FileSystemRequestParent* aParent,
-                                     ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<GetFileOrDirectoryTaskParent>
 GetFileOrDirectoryTaskParent::Create(
     FileSystemBase* aFileSystem,
     const FileSystemGetFileOrDirectoryParams& aParam,
     FileSystemRequestParent* aParent, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess(), "Only call from parent process!");
   AssertIsOnBackgroundThread();
   MOZ_ASSERT(aFileSystem);

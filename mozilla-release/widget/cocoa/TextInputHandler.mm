@@ -3931,23 +3931,12 @@ void IMEInputHandler::SetMarkedText(NSAttributedString* aAttrString, NSRange& aS
     // range as selection.
     if (aReplacementRange && aReplacementRange->location != NSNotFound &&
         !NSEqualRanges(SelectedRange(), *aReplacementRange)) {
-<<<<<<< HEAD
-      // Set temporary selection range since OnSelectionChange is async.
-      mSelectedRange = *aReplacementRange;
-      if (NS_WARN_IF(!SetSelection(*aReplacementRange))) {
-        mSelectedRange.location = NSNotFound; // Marking dirty
-        return;
-      }
-||||||| merged common ancestors
-      NS_ENSURE_TRUE_VOID(SetSelection(*aReplacementRange));
-=======
       // Set temporary selection range since OnSelectionChange is async.
       mSelectedRange = *aReplacementRange;
       if (NS_WARN_IF(!SetSelection(*aReplacementRange))) {
         mSelectedRange.location = NSNotFound;  // Marking dirty
         return;
       }
->>>>>>> upstream-releases
     }
 
     mMarkedRange.location = SelectedRange().location;

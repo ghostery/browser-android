@@ -207,15 +207,7 @@ bool GMPVideoDecoderChild::Alloc(size_t aSize,
   return rv;
 }
 
-<<<<<<< HEAD
-void GMPVideoDecoderChild::Dealloc(Shmem& aMem) {
-||||||| merged common ancestors
-void
-GMPVideoDecoderChild::Dealloc(Shmem& aMem)
-{
-=======
 void GMPVideoDecoderChild::Dealloc(Shmem&& aMem) {
->>>>>>> upstream-releases
 #ifndef SHMEM_ALLOC_IN_CHILD
   SendParentShmemForPool(std::move(aMem));
 #else

@@ -9,13 +9,7 @@ ar{
                 "&ت<<ة<<<ﺔ<<<ﺓ"
                 "&ي<<ى<<<ﯨ<<<ﯩ<<<ﻰ<<<ﻯ<<<ﲐ<<<ﱝ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -403,13 +397,7 @@ ar{
                 "‎&ۓ‎=ﮰ‎=ﮱ"
                 "‎&ۀ‎=ﮤ‎=ﮥ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

@@ -8,13 +8,7 @@ from __future__ import absolute_import
 from setuptools import setup
 
 PACKAGE_NAME = 'mozdevice'
-<<<<<<< HEAD
-PACKAGE_VERSION = '2.0'
-||||||| merged common ancestors
-PACKAGE_VERSION = '1.1.3'
-=======
 PACKAGE_VERSION = '3.0.2'
->>>>>>> upstream-releases
 
 deps = ['mozlog >= 3.0']
 

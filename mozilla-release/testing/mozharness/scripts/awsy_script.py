@@ -56,12 +56,6 @@ class AWSY(TestingMixin, MercurialScript, TooltoolMixin, CodeCoverageMixin):
           "default": False,
           "help": "Enable the WebRender compositor in Gecko.",
           }],
-        [["--disable-webrender"],
-         {"action": "store_true",
-          "dest": "disable_webrender",
-          "default": False,
-          "help": "Force-disables the WebRender compositor.",
-          }],
         [["--base"],
          {"action": "store_true",
           "dest": "test_about_blank",
@@ -263,23 +257,6 @@ class AWSY(TestingMixin, MercurialScript, TooltoolMixin, CodeCoverageMixin):
         # TODO: consider getting rid of this as stylo is enabled by default
         env['STYLO_FORCE_ENABLED'] = '1'
 
-<<<<<<< HEAD
-        if self.config['enable_webrender']:
-            env['MOZ_WEBRENDER'] = '1'
-            env['MOZ_ACCELERATED'] = '1'
-
-        # Allow explicitly disabling webrender, so that we don't run WR on non-QR
-        # test platforms just because they run on qualified hardware.
-        if self.config['disable_webrender']:
-            env['MOZ_WEBRENDER'] = '0'
-
-||||||| merged common ancestors
-        if self.config['enable_webrender']:
-            env['MOZ_WEBRENDER'] = '1'
-            env['MOZ_ACCELERATED'] = '1'
-
-=======
->>>>>>> upstream-releases
         env['MOZ_UPLOAD_DIR'] = dirs['abs_blob_upload_dir']
         if not os.path.isdir(env['MOZ_UPLOAD_DIR']):
             self.mkdir_p(env['MOZ_UPLOAD_DIR'])

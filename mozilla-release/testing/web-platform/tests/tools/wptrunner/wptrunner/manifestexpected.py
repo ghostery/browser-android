@@ -95,23 +95,6 @@ def set_prop(name, node):
     return rv
 
 
-<<<<<<< HEAD
-def leak_threshold(node):
-    rv = {}
-    try:
-        node_items = node.get("leak-threshold")
-        if isinstance(node_items, (str, unicode)):
-            node_items = [node_items]
-        for item in node_items:
-            process, value = item.rsplit(":", 1)
-            rv[process.strip()] = int(value.strip())
-    except KeyError:
-        pass
-    return rv
-
-
-||||||| merged common ancestors
-=======
 def leak_threshold(node):
     rv = {}
     try:
@@ -225,7 +208,6 @@ def fuzzy_prop(node):
     return rv
 
 
->>>>>>> upstream-releases
 class ExpectedManifest(ManifestItem):
     def __init__(self, node, test_path, url_base):
         """Object representing all the tests in a particular manifest

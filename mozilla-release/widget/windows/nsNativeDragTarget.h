@@ -11,16 +11,8 @@
 #include <shlobj.h>
 
 #ifndef IDropTargetHelper
-<<<<<<< HEAD
-#include <shobjidl.h>  // Vista drag image interfaces
-#undef LogSeverity     // SetupAPI.h #defines this as DWORD
-||||||| merged common ancestors
-#include <shobjidl.h> // Vista drag image interfaces
-#undef LogSeverity // SetupAPI.h #defines this as DWORD
-=======
 #  include <shobjidl.h>  // Vista drag image interfaces
 #  undef LogSeverity     // SetupAPI.h #defines this as DWORD
->>>>>>> upstream-releases
 #endif
 
 #include "mozilla/Attributes.h"
@@ -70,17 +62,9 @@ class nsNativeDragTarget final : public IDropTarget {
   // grfKeyState (DROPEFFECT_MOVE if the control key was not pressed,
   // DROPEFFECT_COPY if the control key was pressed). Otherwise return
   // E_FAIL.
-<<<<<<< HEAD
-  STDMETHODIMP Drop(LPDATAOBJECT pSource, DWORD grfKeyState, POINTL point,
-                    DWORD* pEffect);
-||||||| merged common ancestors
-  STDMETHODIMP Drop(LPDATAOBJECT pSource, DWORD grfKeyState,
-                    POINTL point, DWORD* pEffect);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY STDMETHODIMP Drop(LPDATAOBJECT pSource,
                                                 DWORD grfKeyState, POINTL point,
                                                 DWORD* pEffect);
->>>>>>> upstream-releases
   /**
    * Cancel the current drag session, if any.
    */

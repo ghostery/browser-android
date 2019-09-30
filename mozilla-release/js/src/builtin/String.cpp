@@ -38,16 +38,8 @@
 #include "js/StableStringChars.h"
 #include "js/UniquePtr.h"
 #if ENABLE_INTL_API
-<<<<<<< HEAD
-#include "unicode/uchar.h"
-#include "unicode/unorm2.h"
-||||||| merged common ancestors
-# include "unicode/uchar.h"
-# include "unicode/unorm2.h"
-=======
 #  include "unicode/uchar.h"
 #  include "unicode/unorm2.h"
->>>>>>> upstream-releases
 #endif
 #include "util/StringBuffer.h"
 #include "util/Unicode.h"
@@ -234,39 +226,10 @@ static bool str_escape(JSContext* cx, unsigned argc, Value* vp) {
 }
 
 template <typename CharT>
-<<<<<<< HEAD
-static inline bool Unhex4(const RangedPtr<const CharT> chars,
-                          char16_t* result) {
-  char16_t a = chars[0], b = chars[1], c = chars[2], d = chars[3];
-||||||| merged common ancestors
-static inline bool
-Unhex2(const RangedPtr<const CharT> chars, char16_t* result)
-{
-    char16_t a = chars[0],
-             b = chars[1];
-=======
 static inline bool Unhex4(const RangedPtr<const CharT> chars,
                           char16_t* result) {
   CharT a = chars[0], b = chars[1], c = chars[2], d = chars[3];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!(JS7_ISHEX(a) && JS7_ISHEX(b) && JS7_ISHEX(c) && JS7_ISHEX(d))) {
-    return false;
-  }
-
-  *result =
-      (((((JS7_UNHEX(a) << 4) + JS7_UNHEX(b)) << 4) + JS7_UNHEX(c)) << 4) +
-      JS7_UNHEX(d);
-  return true;
-||||||| merged common ancestors
-    if (!(JS7_ISHEX(a) && JS7_ISHEX(b))) {
-        return false;
-    }
-
-    *result = (JS7_UNHEX(a) << 4) + JS7_UNHEX(b);
-    return true;
-=======
   if (!(IsAsciiHexDigit(a) && IsAsciiHexDigit(b) && IsAsciiHexDigit(c) &&
         IsAsciiHexDigit(d))) {
     return false;
@@ -278,64 +241,20 @@ static inline bool Unhex4(const RangedPtr<const CharT> chars,
   unhex = (unhex << 4) + AsciiAlphanumericToNumber(d);
   *result = unhex;
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename CharT>
-<<<<<<< HEAD
-static inline bool Unhex2(const RangedPtr<const CharT> chars,
-                          char16_t* result) {
-  char16_t a = chars[0], b = chars[1];
-||||||| merged common ancestors
-static bool
-Unescape(StringBuffer& sb, const mozilla::Range<const CharT> chars)
-{
-    // Step 2.
-    uint32_t length = chars.length();
-=======
 static inline bool Unhex2(const RangedPtr<const CharT> chars,
                           char16_t* result) {
   CharT a = chars[0], b = chars[1];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!(JS7_ISHEX(a) && JS7_ISHEX(b))) {
-    return false;
-  }
-||||||| merged common ancestors
-    /*
-     * Note that the spec algorithm has been optimized to avoid building
-     * a string in the case where no escapes are present.
-     */
-    bool building = false;
-
-#define ENSURE_BUILDING                                      \
-        do {                                                 \
-            if (!building) {                                 \
-                building = true;                             \
-                if (!sb.reserve(length))                     \
-                    return false;                            \
-                sb.infallibleAppend(chars.begin().get(), k); \
-            }                                                \
-        } while(false);
-=======
   if (!(IsAsciiHexDigit(a) && IsAsciiHexDigit(b))) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *result = (JS7_UNHEX(a) << 4) + JS7_UNHEX(b);
-  return true;
-}
-||||||| merged common ancestors
-    // Step 4.
-    uint32_t k = 0;
-=======
   *result = (AsciiAlphanumericToNumber(a) << 4) + AsciiAlphanumericToNumber(b);
   return true;
 }
->>>>>>> upstream-releases
 
 template <typename CharT>
 static bool Unescape(StringBuffer& sb,
@@ -409,45 +328,12 @@ static bool str_unescape(JSContext* cx, unsigned argc, Value* vp) {
     return false;
   }
 
-<<<<<<< HEAD
-  // Step 3.
-  StringBuffer sb(cx);
-  if (str->hasTwoByteChars() && !sb.ensureTwoByteChars()) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Step 3.
-    StringBuffer sb(cx);
-    if (str->hasTwoByteChars() && !sb.ensureTwoByteChars()) {
-        return false;
-    }
-=======
   // Step 3.
   JSStringBuilder sb(cx);
   if (str->hasTwoByteChars() && !sb.ensureTwoByteChars()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Steps 2, 4-5.
-  if (str->hasLatin1Chars()) {
-    AutoCheckCannotGC nogc;
-    if (!Unescape(sb, str->latin1Range(nogc))) {
-      return false;
-||||||| merged common ancestors
-    // Steps 2, 4-5.
-    if (str->hasLatin1Chars()) {
-        AutoCheckCannotGC nogc;
-        if (!Unescape(sb, str->latin1Range(nogc))) {
-            return false;
-        }
-    } else {
-        AutoCheckCannotGC nogc;
-        if (!Unescape(sb, str->twoByteRange(nogc))) {
-            return false;
-        }
-=======
   // Steps 2, 4-5.
   if (str->hasLatin1Chars()) {
     AutoCheckCannotGC nogc;
@@ -458,19 +344,8 @@ static bool str_unescape(JSContext* cx, unsigned argc, Value* vp) {
     AutoCheckCannotGC nogc;
     if (!Unescape(sb, str->twoByteRange(nogc))) {
       return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } else {
-    AutoCheckCannotGC nogc;
-    if (!Unescape(sb, str->twoByteRange(nogc))) {
-      return false;
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   // Step 6.
   JSLinearString* result;
@@ -628,27 +503,11 @@ MOZ_ALWAYS_INLINE bool str_toSource_impl(JSContext* cx, const CallArgs& args) {
     return false;
   }
 
-<<<<<<< HEAD
-  StringBuffer sb(cx);
-  if (!sb.append("(new String(") ||
-      !sb.append(quoted.get(), strlen(quoted.get())) || !sb.append("))")) {
-    return false;
-  }
-||||||| merged common ancestors
-    StringBuffer sb(cx);
-    if (!sb.append("(new String(") ||
-        !sb.append(quoted.get(), strlen(quoted.get())) ||
-        !sb.append("))"))
-    {
-        return false;
-    }
-=======
   JSStringBuilder sb(cx);
   if (!sb.append("(new String(") ||
       !sb.append(quoted.get(), strlen(quoted.get())) || !sb.append("))")) {
     return false;
   }
->>>>>>> upstream-releases
 
   JSString* result = sb.finishString();
   if (!result) {
@@ -682,25 +541,6 @@ bool js::str_toString(JSContext* cx, unsigned argc, Value* vp) {
  * Java-like string native methods.
  */
 
-<<<<<<< HEAD
-JSString* js::SubstringKernel(JSContext* cx, HandleString str, int32_t beginInt,
-                              int32_t lengthInt) {
-  MOZ_ASSERT(0 <= beginInt);
-  MOZ_ASSERT(0 <= lengthInt);
-  MOZ_ASSERT(uint32_t(beginInt) <= str->length());
-  MOZ_ASSERT(uint32_t(lengthInt) <= str->length() - beginInt);
-||||||| merged common ancestors
-JSString*
-js::SubstringKernel(JSContext* cx, HandleString str, int32_t beginInt, int32_t lengthInt)
-{
-    MOZ_ASSERT(0 <= beginInt);
-    MOZ_ASSERT(0 <= lengthInt);
-    MOZ_ASSERT(uint32_t(beginInt) <= str->length());
-    MOZ_ASSERT(uint32_t(lengthInt) <= str->length() - beginInt);
-
-    uint32_t begin = beginInt;
-    uint32_t len = lengthInt;
-=======
 JSString* js::SubstringKernel(JSContext* cx, HandleString str, int32_t beginInt,
                               int32_t lengthInt) {
   MOZ_ASSERT(0 <= beginInt);
@@ -708,11 +548,6 @@ JSString* js::SubstringKernel(JSContext* cx, HandleString str, int32_t beginInt,
   MOZ_ASSERT(uint32_t(beginInt) <= str->length());
   MOZ_ASSERT(uint32_t(lengthInt) <= str->length() - beginInt);
 
-  uint32_t begin = beginInt;
-  uint32_t len = lengthInt;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   uint32_t begin = beginInt;
   uint32_t len = lengthInt;
 
@@ -727,36 +562,6 @@ JSString* js::SubstringKernel(JSContext* cx, HandleString str, int32_t beginInt,
    */
   if (str->isRope()) {
     JSRope* rope = &str->asRope();
-||||||| merged common ancestors
-    /*
-     * Optimization for one level deep ropes.
-     * This is common for the following pattern:
-     *
-     * while() {
-     *   text = text.substr(0, x) + "bla" + text.substr(x)
-     *   test.charCodeAt(x + 1)
-     * }
-     */
-    if (str->isRope()) {
-        JSRope* rope = &str->asRope();
-
-        /* Substring is totally in leftChild of rope. */
-        if (begin + len <= rope->leftChild()->length()) {
-            return NewDependentString(cx, rope->leftChild(), begin, len);
-        }
-=======
-  /*
-   * Optimization for one level deep ropes.
-   * This is common for the following pattern:
-   *
-   * while() {
-   *   text = text.substr(0, x) + "bla" + text.substr(x)
-   *   test.charCodeAt(x + 1)
-   * }
-   */
-  if (str->isRope()) {
-    JSRope* rope = &str->asRope();
->>>>>>> upstream-releases
 
     /* Substring is totally in leftChild of rope. */
     if (begin + len <= rope->leftChild()->length()) {
@@ -889,7 +694,6 @@ static Latin1Char Final_Sigma(const Latin1Char* chars, size_t length,
 // size to hold all lower case mapped characters, i.e.
 // |destLength == ToLowerCaseLength(srcChars, 0, srcLength)| is true.
 template <typename CharT>
-<<<<<<< HEAD
 static size_t ToLowerCaseImpl(CharT* destChars, const CharT* srcChars,
                               size_t startIndex, size_t srcLength,
                               size_t destLength) {
@@ -918,87 +722,8 @@ static size_t ToLowerCaseImpl(CharT* destChars, const CharT* srcChars,
         // Return if the output buffer is too small.
         if (srcLength == destLength) {
           return i;
-||||||| merged common ancestors
-static size_t
-ToLowerCaseImpl(CharT* destChars, const CharT* srcChars, size_t startIndex, size_t srcLength,
-                size_t destLength)
-{
-    MOZ_ASSERT(startIndex < srcLength);
-    MOZ_ASSERT(srcLength <= destLength);
-    MOZ_ASSERT_IF((IsSame<CharT, Latin1Char>::value), srcLength == destLength);
-
-    size_t j = startIndex;
-    for (size_t i = startIndex; i < srcLength; i++) {
-        char16_t c = srcChars[i];
-        if (!IsSame<CharT, Latin1Char>::value) {
-            if (unicode::IsLeadSurrogate(c) && i + 1 < srcLength) {
-                char16_t trail = srcChars[i + 1];
-                if (unicode::IsTrailSurrogate(trail)) {
-                    trail = unicode::ToLowerCaseNonBMPTrail(c, trail);
-                    destChars[j++] = c;
-                    destChars[j++] = trail;
-                    i++;
-                    continue;
-                }
-            }
-
-            // Special case: U+0130 LATIN CAPITAL LETTER I WITH DOT ABOVE
-            // lowercases to <U+0069 U+0307>.
-            if (c == unicode::LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE) {
-                // Return if the output buffer is too small.
-                if (srcLength == destLength) {
-                    return i;
-                }
-
-                destChars[j++] = CharT('i');
-                destChars[j++] = CharT(unicode::COMBINING_DOT_ABOVE);
-                continue;
-            }
-
-            // Special case: U+03A3 GREEK CAPITAL LETTER SIGMA lowercases to
-            // one of two codepoints depending on context.
-            if (c == unicode::GREEK_CAPITAL_LETTER_SIGMA) {
-                destChars[j++] = Final_Sigma(srcChars, srcLength, i);
-                continue;
-            }
-=======
-static size_t ToLowerCaseImpl(CharT* destChars, const CharT* srcChars,
-                              size_t startIndex, size_t srcLength,
-                              size_t destLength) {
-  MOZ_ASSERT(startIndex < srcLength);
-  MOZ_ASSERT(srcLength <= destLength);
-  MOZ_ASSERT_IF((IsSame<CharT, Latin1Char>::value), srcLength == destLength);
-
-  size_t j = startIndex;
-  for (size_t i = startIndex; i < srcLength; i++) {
-    char16_t c = srcChars[i];
-    if (!IsSame<CharT, Latin1Char>::value) {
-      if (unicode::IsLeadSurrogate(c) && i + 1 < srcLength) {
-        char16_t trail = srcChars[i + 1];
-        if (unicode::IsTrailSurrogate(trail)) {
-          trail = unicode::ToLowerCaseNonBMPTrail(c, trail);
-          destChars[j++] = c;
-          destChars[j++] = trail;
-          i++;
-          continue;
->>>>>>> upstream-releases
-        }
-      }
-
-      // Special case: U+0130 LATIN CAPITAL LETTER I WITH DOT ABOVE
-      // lowercases to <U+0069 U+0307>.
-      if (c == unicode::LATIN_CAPITAL_LETTER_I_WITH_DOT_ABOVE) {
-        // Return if the output buffer is too small.
-        if (srcLength == destLength) {
-          return i;
         }
 
-        destChars[j++] = CharT('i');
-        destChars[j++] = CharT(unicode::COMBINING_DOT_ABOVE);
-        continue;
-      }
-
-<<<<<<< HEAD
         destChars[j++] = CharT('i');
         destChars[j++] = CharT(unicode::COMBINING_DOT_ABOVE);
         continue;
@@ -1010,18 +735,6 @@ static size_t ToLowerCaseImpl(CharT* destChars, const CharT* srcChars,
         destChars[j++] = Final_Sigma(srcChars, srcLength, i);
         continue;
       }
-||||||| merged common ancestors
-        c = unicode::ToLowerCase(c);
-        MOZ_ASSERT_IF((IsSame<CharT, Latin1Char>::value), c <= JSString::MAX_LATIN1_CHAR);
-        destChars[j++] = c;
-=======
-      // Special case: U+03A3 GREEK CAPITAL LETTER SIGMA lowercases to
-      // one of two codepoints depending on context.
-      if (c == unicode::GREEK_CAPITAL_LETTER_SIGMA) {
-        destChars[j++] = Final_Sigma(srcChars, srcLength, i);
-        continue;
-      }
->>>>>>> upstream-releases
     }
 
     c = unicode::ToLowerCase(c);
@@ -1198,7 +911,6 @@ static const char* CaseMappingLocale(JSContext* cx, JSString* str) {
   return "";  // ICU root locale
 }
 
-<<<<<<< HEAD
 bool js::intl_toLocaleLowerCase(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   MOZ_ASSERT(args.length() == 2);
@@ -1206,30 +918,6 @@ bool js::intl_toLocaleLowerCase(JSContext* cx, unsigned argc, Value* vp) {
   MOZ_ASSERT(args[1].isString());
 
   RootedString string(cx, args[0].toString());
-||||||| merged common ancestors
-bool
-js::intl_toLocaleLowerCase(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    MOZ_ASSERT(args.length() == 2);
-    MOZ_ASSERT(args[0].isString());
-    MOZ_ASSERT(args[1].isString());
-
-    RootedString string(cx, args[0].toString());
-
-    const char* locale = CaseMappingLocale(cx, args[1].toString());
-    if (!locale) {
-        return false;
-    }
-=======
-bool js::intl_toLocaleLowerCase(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  MOZ_ASSERT(args.length() == 2);
-  MOZ_ASSERT(args[0].isString());
-  MOZ_ASSERT(args[1].isString());
-
-  RootedString string(cx, args[0].toString());
->>>>>>> upstream-releases
 
   const char* locale = CaseMappingLocale(cx, args[1].toString());
   if (!locale) {
@@ -1521,7 +1209,6 @@ static JSString* ToUpperCase(JSContext* cx, JSLinearString* str) {
           return cx->staticStrings().getUnit(upper);
         }
 
-<<<<<<< HEAD
         MOZ_ASSERT(unicode::ToUpperCase(c) > JSString::MAX_LATIN1_CHAR ||
                    ToUpperCaseHasSpecialCasing(c));
       }
@@ -1538,49 +1225,6 @@ static JSString* ToUpperCase(JSContext* cx, JSLinearString* str) {
             if (unicode::ChangesWhenUpperCasedNonBMP(c, trail)) {
               break;
             }
-||||||| merged common ancestors
-        // Look for the first character that changes when uppercased.
-        size_t i = 0;
-        for (; i < length; i++) {
-            CharT c = chars[i];
-            if (!IsSame<CharT, Latin1Char>::value) {
-                if (unicode::IsLeadSurrogate(c) && i + 1 < length) {
-                    CharT trail = chars[i + 1];
-                    if (unicode::IsTrailSurrogate(trail)) {
-                        if (unicode::ChangesWhenUpperCasedNonBMP(c, trail)) {
-                            break;
-                        }
-
-                        i++;
-                        continue;
-                    }
-                }
-            }
-            if (unicode::ChangesWhenUpperCased(c)) {
-                break;
-            }
-            if (MOZ_UNLIKELY(c > 0x7f && ToUpperCaseHasSpecialCasing(c))) {
-                break;
-            }
-        }
-=======
-        MOZ_ASSERT(unicode::ToUpperCase(c) > JSString::MAX_LATIN1_CHAR ||
-                   ToUpperCaseHasSpecialCasing(c));
-      }
-    }
-
-    // Look for the first character that changes when uppercased.
-    size_t i = 0;
-    for (; i < length; i++) {
-      CharT c = chars[i];
-      if (!IsSame<CharT, Latin1Char>::value) {
-        if (unicode::IsLeadSurrogate(c) && i + 1 < length) {
-          CharT trail = chars[i + 1];
-          if (unicode::IsTrailSurrogate(trail)) {
-            if (unicode::ChangesWhenUpperCasedNonBMP(c, trail)) {
-              break;
-            }
->>>>>>> upstream-releases
 
             i++;
             continue;
@@ -1682,7 +1326,6 @@ bool js::str_toUpperCase(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-<<<<<<< HEAD
 bool js::intl_toLocaleUpperCase(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   MOZ_ASSERT(args.length() == 2);
@@ -1690,30 +1333,6 @@ bool js::intl_toLocaleUpperCase(JSContext* cx, unsigned argc, Value* vp) {
   MOZ_ASSERT(args[1].isString());
 
   RootedString string(cx, args[0].toString());
-||||||| merged common ancestors
-bool
-js::intl_toLocaleUpperCase(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    MOZ_ASSERT(args.length() == 2);
-    MOZ_ASSERT(args[0].isString());
-    MOZ_ASSERT(args[1].isString());
-
-    RootedString string(cx, args[0].toString());
-
-    const char* locale = CaseMappingLocale(cx, args[1].toString());
-    if (!locale) {
-        return false;
-    }
-=======
-bool js::intl_toLocaleUpperCase(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  MOZ_ASSERT(args.length() == 2);
-  MOZ_ASSERT(args[0].isString());
-  MOZ_ASSERT(args[1].isString());
-
-  RootedString string(cx, args[0].toString());
->>>>>>> upstream-releases
 
   const char* locale = CaseMappingLocale(cx, args[1].toString());
   if (!locale) {
@@ -1860,7 +1479,6 @@ bool js::str_localeCompare(JSContext* cx, unsigned argc, Value* vp) {
 
 // ES2017 draft rev 45e890512fd77add72cc0ee742785f9f6f6482de
 // 21.1.3.12 String.prototype.normalize ( [ form ] )
-<<<<<<< HEAD
 bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -1869,57 +1487,6 @@ bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
   if (!str) {
     return false;
   }
-||||||| merged common ancestors
-bool
-js::str_normalize(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    // Steps 1-2.
-    RootedString str(cx, ToStringForStringFunction(cx, args.thisv()));
-    if (!str) {
-        return false;
-    }
-
-    enum NormalizationForm {
-        NFC, NFD, NFKC, NFKD
-    };
-
-    NormalizationForm form;
-    if (!args.hasDefined(0)) {
-        // Step 3.
-        form = NFC;
-    } else {
-        // Step 4.
-        JSLinearString* formStr = ArgToLinearString(cx, args, 0);
-        if (!formStr) {
-            return false;
-        }
-
-        // Step 5.
-        if (EqualStrings(formStr, cx->names().NFC)) {
-            form = NFC;
-        } else if (EqualStrings(formStr, cx->names().NFD)) {
-            form = NFD;
-        } else if (EqualStrings(formStr, cx->names().NFKC)) {
-            form = NFKC;
-        } else if (EqualStrings(formStr, cx->names().NFKD)) {
-            form = NFKD;
-        } else {
-            JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_INVALID_NORMALIZE_FORM);
-            return false;
-        }
-    }
-=======
-bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  // Steps 1-2.
-  RootedString str(cx, ToStringForStringFunction(cx, args.thisv()));
-  if (!str) {
-    return false;
-  }
->>>>>>> upstream-releases
 
   enum NormalizationForm { NFC, NFD, NFKC, NFKD };
 
@@ -1944,37 +1511,11 @@ bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
     } else if (EqualStrings(formStr, cx->names().NFKD)) {
       form = NFKD;
     } else {
-<<<<<<< HEAD
       JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                                 JSMSG_INVALID_NORMALIZE_FORM);
       return false;
     }
   }
-||||||| merged common ancestors
-        MOZ_ASSERT(form == NFKD);
-        normalizer = unorm2_getNFKDInstance(&status);
-    }
-    if (U_FAILURE(status)) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_INTERNAL_INTL_ERROR);
-        return false;
-    }
-
-    int32_t spanLengthInt = unorm2_spanQuickCheckYes(normalizer,
-                                                     srcChars.begin().get(), srcChars.length(),
-                                                     &status);
-    if (U_FAILURE(status)) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_INTERNAL_INTL_ERROR);
-        return false;
-    }
-    MOZ_ASSERT(0 <= spanLengthInt && size_t(spanLengthInt) <= srcChars.length());
-    size_t spanLength = size_t(spanLengthInt);
-=======
-      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                JSMSG_INVALID_NORMALIZE_FORM);
-      return false;
-    }
-  }
->>>>>>> upstream-releases
 
   // Latin-1 strings are already in Normalization Form C.
   if (form == NFC && str->hasLatin1Chars()) {
@@ -2030,41 +1571,6 @@ bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
 
   static const size_t INLINE_CAPACITY = js::intl::INITIAL_CHAR_BUFFER_SIZE;
 
-<<<<<<< HEAD
-  Vector<char16_t, INLINE_CAPACITY> chars(cx);
-  if (!chars.resize(Max(INLINE_CAPACITY, srcChars.length()))) {
-    return false;
-  }
-
-  // Copy the already normalized prefix.
-  if (spanLength > 0) {
-    PodCopy(chars.begin(), srcChars.begin().get(), spanLength);
-  }
-
-  int32_t size =
-      intl::CallICU(cx,
-                    [normalizer, &srcChars, spanLength](
-                        UChar* chars, uint32_t size, UErrorCode* status) {
-                      mozilla::RangedPtr<const char16_t> remainingStart =
-                          srcChars.begin() + spanLength;
-                      size_t remainingLength = srcChars.length() - spanLength;
-
-                      return unorm2_normalizeSecondAndAppend(
-                          normalizer, chars, spanLength, size,
-                          remainingStart.get(), remainingLength, status);
-                    },
-                    chars);
-  if (size < 0) {
-    return false;
-  }
-||||||| merged common ancestors
-            return unorm2_normalizeSecondAndAppend(normalizer, chars, spanLength, size,
-                                                   remainingStart.get(), remainingLength, status);
-        }, chars);
-    if (size < 0) {
-        return false;
-    }
-=======
   Vector<char16_t, INLINE_CAPACITY> chars(cx);
   if (!chars.resize(Max(INLINE_CAPACITY, srcChars.length()))) {
     return false;
@@ -2091,7 +1597,6 @@ bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
   if (size < 0) {
     return false;
   }
->>>>>>> upstream-releases
 
   JSString* ns = NewStringCopyN<CanGC>(cx, chars.begin(), size);
   if (!ns) {
@@ -2103,38 +1608,10 @@ bool js::str_normalize(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-<<<<<<< HEAD
 #endif  // EXPOSE_INTL_API
 
 bool js::str_charAt(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
-||||||| merged common ancestors
-#endif // EXPOSE_INTL_API
-
-bool
-js::str_charAt(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    RootedString str(cx);
-    size_t i;
-    if (args.thisv().isString() && args.length() != 0 && args[0].isInt32()) {
-        str = args.thisv().toString();
-        i = size_t(args[0].toInt32());
-        if (i >= str->length()) {
-            goto out_of_range;
-        }
-    } else {
-        str = ToStringForStringFunction(cx, args.thisv());
-        if (!str) {
-            return false;
-        }
-=======
-#endif  // EXPOSE_INTL_API
-
-bool js::str_charAt(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
->>>>>>> upstream-releases
 
   RootedString str(cx);
   size_t i;
@@ -2354,7 +1831,6 @@ static const char* FirstCharMatcher8bit(const char* text, uint32_t n,
 }
 
 template <class InnerMatch, typename TextChar, typename PatChar>
-<<<<<<< HEAD
 static int Matcher(const TextChar* text, uint32_t textlen, const PatChar* pat,
                    uint32_t patlen) {
   MOZ_ASSERT(patlen > 0);
@@ -2362,26 +1838,6 @@ static int Matcher(const TextChar* text, uint32_t textlen, const PatChar* pat,
   if (sizeof(TextChar) == 1 && sizeof(PatChar) > 1 && pat[0] > 0xff) {
     return -1;
   }
-||||||| merged common ancestors
-static int
-Matcher(const TextChar* text, uint32_t textlen, const PatChar* pat, uint32_t patlen)
-{
-    MOZ_ASSERT(patlen > 0);
-
-    if (sizeof(TextChar) == 1 && sizeof(PatChar) > 1 && pat[0] > 0xff) {
-        return -1;
-    }
-
-    const typename InnerMatch::Extent extent = InnerMatch::computeExtent(pat, patlen);
-=======
-static int Matcher(const TextChar* text, uint32_t textlen, const PatChar* pat,
-                   uint32_t patlen) {
-  MOZ_ASSERT(patlen > 0);
-
-  if (sizeof(TextChar) == 1 && sizeof(PatChar) > 1 && pat[0] > 0xff) {
-    return -1;
-  }
->>>>>>> upstream-releases
 
   const typename InnerMatch::Extent extent =
       InnerMatch::computeExtent(pat, patlen);
@@ -2484,16 +1940,6 @@ static int32_t StringMatch(JSLinearString* text, JSLinearString* pat,
     if (pat->hasLatin1Chars()) {
       match = StringMatch(textChars, textLen, pat->latin1Chars(nogc), patLen);
     } else {
-<<<<<<< HEAD
-      match = StringMatch(textChars, textLen, pat->twoByteChars(nogc), patLen);
-||||||| merged common ancestors
-        const char16_t* textChars = text->twoByteChars(nogc) + start;
-        if (pat->hasLatin1Chars()) {
-            match = StringMatch(textChars, textLen, pat->latin1Chars(nogc), patLen);
-        } else {
-            match = StringMatch(textChars, textLen, pat->twoByteChars(nogc), patLen);
-        }
-=======
       match = StringMatch(textChars, textLen, pat->twoByteChars(nogc), patLen);
     }
   } else {
@@ -2502,21 +1948,8 @@ static int32_t StringMatch(JSLinearString* text, JSLinearString* pat,
       match = StringMatch(textChars, textLen, pat->latin1Chars(nogc), patLen);
     } else {
       match = StringMatch(textChars, textLen, pat->twoByteChars(nogc), patLen);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } else {
-    const char16_t* textChars = text->twoByteChars(nogc) + start;
-    if (pat->hasLatin1Chars()) {
-      match = StringMatch(textChars, textLen, pat->latin1Chars(nogc), patLen);
-    } else {
-      match = StringMatch(textChars, textLen, pat->twoByteChars(nogc), patLen);
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   return (match == -1) ? -1 : start + match;
 }
@@ -2617,22 +2050,10 @@ static int RopeMatchImpl(const AutoCheckCannotGC& nogc,
             return -1;
           }
 
-<<<<<<< HEAD
-          JSLinearString* inner = *innerp;
-          tt = inner->chars<TextChar>(nogc);
-          ttend = tt + inner->length();
-||||||| merged common ancestors
-          break_continue:;
-=======
           JSLinearString* inner = *innerp;
           tt = inner->chars<TextChar>(nogc);
           ttend = tt + inner->length();
         }
-        if (*pp != *tt) {
-          goto break_continue;
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
         if (*pp != *tt) {
           goto break_continue;
         }
@@ -2640,13 +2061,6 @@ static int RopeMatchImpl(const AutoCheckCannotGC& nogc,
 
       /* Matched! */
       return pos + (t - chars) - 1; /* -1 because of *t++ above */
-||||||| merged common ancestors
-=======
-      }
-
-      /* Matched! */
-      return pos + (t - chars) - 1; /* -1 because of *t++ above */
->>>>>>> upstream-releases
 
     break_continue:;
     }
@@ -2721,16 +2135,6 @@ static bool RopeMatch(JSContext* cx, JSRope* text, JSLinearString* pat,
       *match = RopeMatchImpl<Latin1Char>(nogc, strings, pat->latin1Chars(nogc),
                                          patLen);
     } else {
-<<<<<<< HEAD
-      *match = RopeMatchImpl<Latin1Char>(nogc, strings, pat->twoByteChars(nogc),
-                                         patLen);
-||||||| merged common ancestors
-        if (pat->hasLatin1Chars()) {
-            *match = RopeMatchImpl<char16_t>(nogc, strings, pat->latin1Chars(nogc), patLen);
-        } else {
-            *match = RopeMatchImpl<char16_t>(nogc, strings, pat->twoByteChars(nogc), patLen);
-        }
-=======
       *match = RopeMatchImpl<Latin1Char>(nogc, strings, pat->twoByteChars(nogc),
                                          patLen);
     }
@@ -2741,22 +2145,8 @@ static bool RopeMatch(JSContext* cx, JSRope* text, JSLinearString* pat,
     } else {
       *match = RopeMatchImpl<char16_t>(nogc, strings, pat->twoByteChars(nogc),
                                        patLen);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } else {
-    if (pat->hasLatin1Chars()) {
-      *match = RopeMatchImpl<char16_t>(nogc, strings, pat->latin1Chars(nogc),
-                                       patLen);
-    } else {
-      *match = RopeMatchImpl<char16_t>(nogc, strings, pat->twoByteChars(nogc),
-                                       patLen);
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   return true;
 }
@@ -2820,40 +2210,11 @@ bool js::str_includes(JSContext* cx, unsigned argc, Value* vp) {
     }
   }
 
-<<<<<<< HEAD
   // Step 7.
   uint32_t textLen = str->length();
 
   // Step 8.
   uint32_t start = Min(Max(pos, 0U), textLen);
-||||||| merged common ancestors
-    // Step 6.
-    uint32_t pos = 0;
-    if (args.hasDefined(1)) {
-        if (args[1].isInt32()) {
-            int i = args[1].toInt32();
-            pos = (i < 0) ? 0U : uint32_t(i);
-        } else {
-            double d;
-            if (!ToInteger(cx, args[1], &d)) {
-                return false;
-            }
-            pos = uint32_t(Min(Max(d, 0.0), double(UINT32_MAX)));
-        }
-    }
-
-    // Step 7.
-    uint32_t textLen = str->length();
-
-    // Step 8.
-    uint32_t start = Min(Max(pos, 0U), textLen);
-=======
-  // Step 7.
-  uint32_t textLen = str->length();
-
-  // Step 8.
-  uint32_t start = Min(Max(pos, 0U), textLen);
->>>>>>> upstream-releases
 
   // Steps 9-10.
   JSLinearString* text = str->ensureLinear(cx);
@@ -2896,53 +2257,9 @@ bool js::str_indexOf(JSContext* cx, unsigned argc, Value* vp) {
     }
   }
 
-<<<<<<< HEAD
   // Step 8
   uint32_t textLen = str->length();
 
-  // Step 9
-  uint32_t start = Min(Max(pos, 0U), textLen);
-||||||| merged common ancestors
-    // Steps 6 and 7
-    uint32_t pos = 0;
-    if (args.hasDefined(1)) {
-        if (args[1].isInt32()) {
-            int i = args[1].toInt32();
-            pos = (i < 0) ? 0U : uint32_t(i);
-        } else {
-            double d;
-            if (!ToInteger(cx, args[1], &d)) {
-                return false;
-            }
-            pos = uint32_t(Min(Max(d, 0.0), double(UINT32_MAX)));
-        }
-    }
-
-   // Step 8
-    uint32_t textLen = str->length();
-=======
-  // Step 8
-  uint32_t textLen = str->length();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (str == searchStr) {
-    // AngularJS often invokes "false".indexOf("false"). This check should
-    // be cheap enough to not hurt anything else.
-    args.rval().setInt32(start == 0 ? 0 : -1);
-    return true;
-  }
-||||||| merged common ancestors
-    // Step 9
-    uint32_t start = Min(Max(pos, 0U), textLen);
-
-    if (str == searchStr) {
-        // AngularJS often invokes "false".indexOf("false"). This check should
-        // be cheap enough to not hurt anything else.
-        args.rval().setInt32(start == 0 ? 0 : -1);
-        return true;
-    }
-=======
   // Step 9
   uint32_t start = Min(Max(pos, 0U), textLen);
 
@@ -2952,7 +2269,6 @@ bool js::str_indexOf(JSContext* cx, unsigned argc, Value* vp) {
     args.rval().setInt32(start == 0 ? 0 : -1);
     return true;
   }
->>>>>>> upstream-releases
 
   // Steps 10 and 11
   JSLinearString* text = str->ensureLinear(cx);
@@ -3127,40 +2443,11 @@ bool js::str_startsWith(JSContext* cx, unsigned argc, Value* vp) {
     }
   }
 
-<<<<<<< HEAD
   // Step 7.
   uint32_t textLen = str->length();
 
   // Step 8.
   uint32_t start = Min(Max(pos, 0U), textLen);
-||||||| merged common ancestors
-    // Step 6.
-    uint32_t pos = 0;
-    if (args.hasDefined(1)) {
-        if (args[1].isInt32()) {
-            int i = args[1].toInt32();
-            pos = (i < 0) ? 0U : uint32_t(i);
-        } else {
-            double d;
-            if (!ToInteger(cx, args[1], &d)) {
-                return false;
-            }
-            pos = uint32_t(Min(Max(d, 0.0), double(UINT32_MAX)));
-        }
-    }
-
-    // Step 7.
-    uint32_t textLen = str->length();
-
-    // Step 8.
-    uint32_t start = Min(Max(pos, 0U), textLen);
-=======
-  // Step 7.
-  uint32_t textLen = str->length();
-
-  // Step 8.
-  uint32_t start = Min(Max(pos, 0U), textLen);
->>>>>>> upstream-releases
 
   // Step 9.
   uint32_t searchLen = searchStr->length();
@@ -3364,7 +2651,6 @@ static JSString* BuildFlatReplacement(JSContext* cx, HandleString textstr,
     return nullptr;
   }
 
-<<<<<<< HEAD
   resultStr = ConcatStrings<CanGC>(cx, resultStr, repstr);
   if (!resultStr) {
     return nullptr;
@@ -3376,33 +2662,8 @@ static JSString* BuildFlatReplacement(JSContext* cx, HandleString textstr,
   if (!rest) {
     return nullptr;
   }
-||||||| merged common ancestors
-    MOZ_ASSERT(textstr->length() >= matchEnd);
-    RootedString rest(cx, NewDependentString(cx, textstr, matchEnd, textstr->length() - matchEnd));
-    if (!rest) {
-        return nullptr;
-    }
-=======
-  resultStr = ConcatStrings<CanGC>(cx, resultStr, repstr);
-  if (!resultStr) {
-    return nullptr;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return ConcatStrings<CanGC>(cx, resultStr, rest);
-||||||| merged common ancestors
-    return ConcatStrings<CanGC>(cx, resultStr, rest);
-=======
-  MOZ_ASSERT(textstr->length() >= matchEnd);
-  RootedString rest(cx, NewDependentString(cx, textstr, matchEnd,
-                                           textstr->length() - matchEnd));
-  if (!rest) {
-    return nullptr;
-  }
 
   return ConcatStrings<CanGC>(cx, resultStr, rest);
->>>>>>> upstream-releases
 }
 
 static JSString* BuildFlatRopeReplacement(JSContext* cx, HandleString textstr,
@@ -3502,76 +2763,12 @@ static bool AppendDollarReplacement(StringBuffer& newReplaceChars,
       continue;
     }
 
-<<<<<<< HEAD
     switch (*(it + 1)) {
       case '$':
         // Eat one of the dollars.
         if (!newReplaceChars.append(*it)) {
           return false;
         }
-        break;
-      case '&':
-        if (!newReplaceChars.appendSubstring(text, matchStart,
-                                             matchLimit - matchStart)) {
-          return false;
-||||||| merged common ancestors
-        switch (*(it + 1)) {
-          case '$': /* Eat one of the dollars. */
-            if (!newReplaceChars.append(*it)) {
-                return false;
-            }
-            break;
-          case '&':
-            if (!newReplaceChars.appendSubstring(text, matchStart, matchLimit - matchStart)) {
-                return false;
-            }
-            break;
-          case '`':
-            if (!newReplaceChars.appendSubstring(text, 0, matchStart)) {
-                return false;
-            }
-            break;
-          case '\'':
-            if (!newReplaceChars.appendSubstring(text, matchLimit, text->length() - matchLimit)) {
-                return false;
-            }
-            break;
-          default: /* The dollar we saw was not special (no matter what its mother told it). */
-            if (!newReplaceChars.append(*it)) {
-                return false;
-            }
-            continue;
-=======
-    switch (*(it + 1)) {
-      case '$':
-        // Eat one of the dollars.
-        if (!newReplaceChars.append(*it)) {
-          return false;
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        break;
-      case '`':
-        if (!newReplaceChars.appendSubstring(text, 0, matchStart)) {
-          return false;
-        }
-        break;
-      case '\'':
-        if (!newReplaceChars.appendSubstring(text, matchLimit,
-                                             text->length() - matchLimit)) {
-          return false;
-        }
-        break;
-      default:
-        // The dollar we saw was not special (no matter what its mother told
-        // it).
-        if (!newReplaceChars.append(*it)) {
-          return false;
-        }
-        continue;
-||||||| merged common ancestors
-        ++it; /* We always eat an extra char in the above switch. */
-=======
         break;
       case '&':
         if (!newReplaceChars.appendSubstring(text, matchStart,
@@ -3597,7 +2794,6 @@ static bool AppendDollarReplacement(StringBuffer& newReplaceChars,
           return false;
         }
         continue;
->>>>>>> upstream-releases
     }
     ++it;  // We always eat an extra char in the above switch.
   }
@@ -3608,52 +2804,6 @@ static bool AppendDollarReplacement(StringBuffer& newReplaceChars,
 /*
  * Perform a linear-scan dollar substitution on the replacement text.
  */
-<<<<<<< HEAD
-static JSLinearString* InterpretDollarReplacement(
-    JSContext* cx, HandleString textstrArg, HandleLinearString repstr,
-    uint32_t firstDollarIndex, size_t matchStart, size_t patternLength) {
-  RootedLinearString textstr(cx, textstrArg->ensureLinear(cx));
-  if (!textstr) {
-    return nullptr;
-  }
-
-  size_t matchLimit = matchStart + patternLength;
-
-  /*
-   * Most probably:
-   *
-   *      len(newstr) >= len(orig) - len(match) + len(replacement)
-   *
-   * Note that dollar vars _could_ make the resulting text smaller than this.
-   */
-  StringBuffer newReplaceChars(cx);
-  if (repstr->hasTwoByteChars() && !newReplaceChars.ensureTwoByteChars()) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-static JSLinearString*
-InterpretDollarReplacement(JSContext* cx, HandleString textstrArg, HandleLinearString repstr,
-                           uint32_t firstDollarIndex, size_t matchStart, size_t patternLength)
-{
-    RootedLinearString textstr(cx, textstrArg->ensureLinear(cx));
-    if (!textstr) {
-        return nullptr;
-    }
-
-    size_t matchLimit = matchStart + patternLength;
-
-    /*
-     * Most probably:
-     *
-     *      len(newstr) >= len(orig) - len(match) + len(replacement)
-     *
-     * Note that dollar vars _could_ make the resulting text smaller than this.
-     */
-    StringBuffer newReplaceChars(cx);
-    if (repstr->hasTwoByteChars() && !newReplaceChars.ensureTwoByteChars()) {
-        return nullptr;
-    }
-=======
 static JSLinearString* InterpretDollarReplacement(
     JSContext* cx, HandleString textstrArg, HandleLinearString repstr,
     uint32_t firstDollarIndex, size_t matchStart, size_t patternLength) {
@@ -3675,7 +2825,6 @@ static JSLinearString* InterpretDollarReplacement(
   if (repstr->hasTwoByteChars() && !newReplaceChars.ensureTwoByteChars()) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   if (!newReplaceChars.reserve(textstr->length() - patternLength +
                                repstr->length())) {
@@ -3766,31 +2915,6 @@ static bool StrFlatReplaceGlobal(JSContext* cx, JSLinearString* str,
 
 // This is identical to "str.split(pattern).join(replacement)" except that we
 // do some deforestation optimization in Ion.
-<<<<<<< HEAD
-JSString* js::str_flat_replace_string(JSContext* cx, HandleString string,
-                                      HandleString pattern,
-                                      HandleString replacement) {
-  MOZ_ASSERT(string);
-  MOZ_ASSERT(pattern);
-  MOZ_ASSERT(replacement);
-
-  if (!string->length()) {
-    return string;
-  }
-
-  RootedLinearString linearRepl(cx, replacement->ensureLinear(cx));
-  if (!linearRepl) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-JSString*
-js::str_flat_replace_string(JSContext* cx, HandleString string, HandleString pattern,
-                            HandleString replacement)
-{
-    MOZ_ASSERT(string);
-    MOZ_ASSERT(pattern);
-    MOZ_ASSERT(replacement);
-=======
 JSString* js::StringFlatReplaceString(JSContext* cx, HandleString string,
                                       HandleString pattern,
                                       HandleString replacement) {
@@ -3806,7 +2930,6 @@ JSString* js::StringFlatReplaceString(JSContext* cx, HandleString string,
   if (!linearRepl) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   RootedLinearString linearPat(cx, pattern->ensureLinear(cx));
   if (!linearPat) {
@@ -3818,21 +2941,10 @@ JSString* js::StringFlatReplaceString(JSContext* cx, HandleString string,
     return nullptr;
   }
 
-<<<<<<< HEAD
-  StringBuffer sb(cx);
-  if (linearStr->hasTwoByteChars()) {
-    if (!sb.ensureTwoByteChars()) {
-      return nullptr;
-||||||| merged common ancestors
-    RootedLinearString linearPat(cx, pattern->ensureLinear(cx));
-    if (!linearPat) {
-        return nullptr;
-=======
   JSStringBuilder sb(cx);
   if (linearStr->hasTwoByteChars()) {
     if (!sb.ensureTwoByteChars()) {
       return nullptr;
->>>>>>> upstream-releases
     }
     if (linearRepl->hasTwoByteChars()) {
       if (!StrFlatReplaceGlobal<char16_t, char16_t>(cx, linearStr, linearPat,
@@ -3845,19 +2957,6 @@ JSString* js::StringFlatReplaceString(JSContext* cx, HandleString string,
         return nullptr;
       }
     }
-<<<<<<< HEAD
-  } else {
-    if (linearRepl->hasTwoByteChars()) {
-      if (!sb.ensureTwoByteChars()) {
-        return nullptr;
-      }
-      if (!StrFlatReplaceGlobal<Latin1Char, char16_t>(cx, linearStr, linearPat,
-                                                      linearRepl, sb)) {
-||||||| merged common ancestors
-
-    RootedLinearString pat(cx, pattern->ensureLinear(cx));
-    if (!pat) {
-=======
   } else {
     if (linearRepl->hasTwoByteChars()) {
       if (!sb.ensureTwoByteChars()) {
@@ -3870,19 +2969,8 @@ JSString* js::StringFlatReplaceString(JSContext* cx, HandleString string,
     } else {
       if (!StrFlatReplaceGlobal<Latin1Char, Latin1Char>(
               cx, linearStr, linearPat, linearRepl, sb)) {
->>>>>>> upstream-releases
-        return nullptr;
-<<<<<<< HEAD
-      }
-    } else {
-      if (!StrFlatReplaceGlobal<Latin1Char, Latin1Char>(
-              cx, linearStr, linearPat, linearRepl, sb)) {
         return nullptr;
       }
-||||||| merged common ancestors
-=======
-      }
->>>>>>> upstream-releases
     }
   }
 
@@ -3975,164 +3063,6 @@ static ArrayObject* SingleElementStringArray(JSContext* cx,
 }
 
 // ES 2016 draft Mar 25, 2016 21.1.3.17 steps 4, 8, 12-18.
-<<<<<<< HEAD
-static ArrayObject* SplitHelper(JSContext* cx, HandleLinearString str,
-                                uint32_t limit, HandleLinearString sep,
-                                HandleObjectGroup group) {
-  size_t strLength = str->length();
-  size_t sepLength = sep->length();
-  MOZ_ASSERT(sepLength != 0);
-
-  // Step 12.
-  if (strLength == 0) {
-    // Step 12.a.
-    int match = StringMatch(str, sep, 0);
-
-    // Step 12.b.
-    if (match != -1) {
-      return NewFullyAllocatedArrayTryUseGroup(cx, group, 0);
-    }
-
-    // Steps 12.c-e.
-    return SingleElementStringArray(cx, group, str);
-  }
-
-  // Step 3 (reordered).
-  AutoValueVector splits(cx);
-
-  // Step 8 (reordered).
-  size_t lastEndIndex = 0;
-
-  // Step 13.
-  size_t index = 0;
-
-  // Step 14.
-  while (index != strLength) {
-    // Step 14.a.
-    int match = StringMatch(str, sep, index);
-
-    // Step 14.b.
-    //
-    // Our match algorithm differs from the spec in that it returns the
-    // next index at which a match happens.  If no match happens we're
-    // done.
-    //
-    // But what if the match is at the end of the string (and the string is
-    // not empty)?  Per 14.c.i this shouldn't be a match, so we have to
-    // specially exclude it.  Thus this case should hold:
-    //
-    //   var a = "abc".split(/\b/);
-    //   assertEq(a.length, 1);
-    //   assertEq(a[0], "abc");
-    if (match == -1) {
-      break;
-    }
-
-    // Step 14.c.
-    size_t endIndex = match + sepLength;
-
-    // Step 14.c.i.
-    if (endIndex == lastEndIndex) {
-      index++;
-      continue;
-    }
-
-    // Step 14.c.ii.
-    MOZ_ASSERT(lastEndIndex < endIndex);
-    MOZ_ASSERT(sepLength <= strLength);
-    MOZ_ASSERT(lastEndIndex + sepLength <= endIndex);
-
-    // Step 14.c.ii.1.
-    size_t subLength = size_t(endIndex - sepLength - lastEndIndex);
-    JSString* sub = NewDependentString(cx, str, lastEndIndex, subLength);
-
-    // Steps 14.c.ii.2-4.
-    if (!sub || !splits.append(StringValue(sub))) {
-      return nullptr;
-    }
-
-    // Step 14.c.ii.5.
-    if (splits.length() == limit) {
-      return NewCopiedArrayTryUseGroup(cx, group, splits.begin(),
-                                       splits.length());
-    }
-||||||| merged common ancestors
-static ArrayObject*
-SplitHelper(JSContext* cx, HandleLinearString str, uint32_t limit, HandleLinearString sep,
-            HandleObjectGroup group)
-{
-    size_t strLength = str->length();
-    size_t sepLength = sep->length();
-    MOZ_ASSERT(sepLength != 0);
-
-    // Step 12.
-    if (strLength == 0) {
-        // Step 12.a.
-        int match = StringMatch(str, sep, 0);
-
-        // Step 12.b.
-        if (match != -1) {
-            return NewFullyAllocatedArrayTryUseGroup(cx, group, 0);
-        }
-
-        // Steps 12.c-e.
-        return SingleElementStringArray(cx, group, str);
-    }
-
-    // Step 3 (reordered).
-    AutoValueVector splits(cx);
-
-    // Step 8 (reordered).
-    size_t lastEndIndex = 0;
-
-    // Step 13.
-    size_t index = 0;
-
-    // Step 14.
-    while (index != strLength) {
-        // Step 14.a.
-        int match = StringMatch(str, sep, index);
-
-        // Step 14.b.
-        //
-        // Our match algorithm differs from the spec in that it returns the
-        // next index at which a match happens.  If no match happens we're
-        // done.
-        //
-        // But what if the match is at the end of the string (and the string is
-        // not empty)?  Per 14.c.i this shouldn't be a match, so we have to
-        // specially exclude it.  Thus this case should hold:
-        //
-        //   var a = "abc".split(/\b/);
-        //   assertEq(a.length, 1);
-        //   assertEq(a[0], "abc");
-        if (match == -1) {
-            break;
-        }
-
-        // Step 14.c.
-        size_t endIndex = match + sepLength;
-
-        // Step 14.c.i.
-        if (endIndex == lastEndIndex) {
-            index++;
-            continue;
-        }
-
-        // Step 14.c.ii.
-        MOZ_ASSERT(lastEndIndex < endIndex);
-        MOZ_ASSERT(sepLength <= strLength);
-        MOZ_ASSERT(lastEndIndex + sepLength <= endIndex);
-
-        // Step 14.c.ii.1.
-        size_t subLength = size_t(endIndex - sepLength - lastEndIndex);
-        JSString* sub = NewDependentString(cx, str, lastEndIndex, subLength);
-
-        // Steps 14.c.ii.2-4.
-        if (!sub || !splits.append(StringValue(sub))) {
-            return nullptr;
-        }
-=======
 static ArrayObject* SplitHelper(JSContext* cx, HandleLinearString str,
                                 uint32_t limit, HandleLinearString sep,
                                 HandleObjectGroup group) {
@@ -4207,64 +3137,20 @@ static ArrayObject* SplitHelper(JSContext* cx, HandleLinearString str,
     if (!sub || !splits.append(StringValue(sub))) {
       return nullptr;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Step 14.c.ii.6.
-    index = endIndex;
-||||||| merged common ancestors
-        // Step 14.c.ii.5.
-        if (splits.length() == limit) {
-            return NewCopiedArrayTryUseGroup(cx, group, splits.begin(), splits.length());
-        }
-=======
     // Step 14.c.ii.5.
     if (splits.length() == limit) {
       return NewCopiedArrayTryUseGroup(cx, group, splits.begin(),
                                        splits.length());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Step 14.c.ii.7.
-    lastEndIndex = index;
-  }
-||||||| merged common ancestors
-        // Step 14.c.ii.6.
-        index = endIndex;
-=======
     // Step 14.c.ii.6.
     index = endIndex;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 15.
-  JSString* sub =
-      NewDependentString(cx, str, lastEndIndex, strLength - lastEndIndex);
-||||||| merged common ancestors
-        // Step 14.c.ii.7.
-        lastEndIndex = index;
-    }
-=======
     // Step 14.c.ii.7.
     lastEndIndex = index;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Steps 16-17.
-  if (!sub || !splits.append(StringValue(sub))) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    // Step 15.
-    JSString* sub = NewDependentString(cx, str, lastEndIndex, strLength - lastEndIndex);
-
-    // Steps 16-17.
-    if (!sub || !splits.append(StringValue(sub))) {
-        return nullptr;
-    }
-=======
   // Step 15.
   JSString* sub =
       NewDependentString(cx, str, lastEndIndex, strLength - lastEndIndex);
@@ -4273,7 +3159,6 @@ static ArrayObject* SplitHelper(JSContext* cx, HandleLinearString str,
   if (!sub || !splits.append(StringValue(sub))) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   // Step 18.
   return NewCopiedArrayTryUseGroup(cx, group, splits.begin(), splits.length());
@@ -4397,28 +3282,10 @@ static ArrayObject* SplitSingleCharHelper(JSContext* cx, HandleLinearString str,
 }
 
 // ES 2016 draft Mar 25, 2016 21.1.3.17 steps 4, 8, 12-18.
-<<<<<<< HEAD
-ArrayObject* js::str_split_string(JSContext* cx, HandleObjectGroup group,
-                                  HandleString str, HandleString sep,
-                                  uint32_t limit) {
-  MOZ_ASSERT(limit > 0, "Only called for strictly positive limit.");
-||||||| merged common ancestors
-ArrayObject*
-js::str_split_string(JSContext* cx, HandleObjectGroup group, HandleString str, HandleString sep,
-                     uint32_t limit)
-{
-    MOZ_ASSERT(limit > 0, "Only called for strictly positive limit.");
-
-    RootedLinearString linearStr(cx, str->ensureLinear(cx));
-    if (!linearStr) {
-        return nullptr;
-    }
-=======
 ArrayObject* js::StringSplitString(JSContext* cx, HandleObjectGroup group,
                                    HandleString str, HandleString sep,
                                    uint32_t limit) {
   MOZ_ASSERT(limit > 0, "Only called for strictly positive limit.");
->>>>>>> upstream-releases
 
   RootedLinearString linearStr(cx, str->ensureLinear(cx));
   if (!linearStr) {
@@ -4430,16 +3297,6 @@ ArrayObject* js::StringSplitString(JSContext* cx, HandleObjectGroup group,
     return nullptr;
   }
 
-<<<<<<< HEAD
-  if (linearSep->length() == 0) {
-    return CharSplitHelper(cx, linearStr, limit, group);
-  }
-||||||| merged common ancestors
-    if (linearSep->length() == 1 && limit >= static_cast<uint32_t>(INT32_MAX)) {
-        char16_t ch = linearSep->latin1OrTwoByteChar(0);
-        return SplitSingleCharHelper(cx, linearStr, ch, group);
-    }
-=======
   if (linearSep->length() == 0) {
     return CharSplitHelper(cx, linearStr, limit, group);
   }
@@ -4448,20 +3305,8 @@ ArrayObject* js::StringSplitString(JSContext* cx, HandleObjectGroup group,
     char16_t ch = linearSep->latin1OrTwoByteChar(0);
     return SplitSingleCharHelper(cx, linearStr, ch, group);
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (linearSep->length() == 1 && limit >= static_cast<uint32_t>(INT32_MAX)) {
-    char16_t ch = linearSep->latin1OrTwoByteChar(0);
-    return SplitSingleCharHelper(cx, linearStr, ch, group);
-  }
 
   return SplitHelper(cx, linearStr, limit, linearSep, group);
-||||||| merged common ancestors
-    return SplitHelper(cx, linearStr, limit, linearSep, group);
-=======
-  return SplitHelper(cx, linearStr, limit, linearSep, group);
->>>>>>> upstream-releases
 }
 
 /*
@@ -4536,26 +3381,12 @@ static const JSFunctionSpec string_methods[] = {
 #endif
 
     /* Perl-ish methods (search is actually Python-esque). */
-<<<<<<< HEAD
-    JS_SELF_HOSTED_FN("match", "String_match", 1, 0),
-    JS_SELF_HOSTED_FN("search", "String_search", 1, 0),
-    JS_SELF_HOSTED_FN("replace", "String_replace", 2, 0),
-    JS_SELF_HOSTED_FN("split", "String_split", 2, 0),
-    JS_SELF_HOSTED_FN("substr", "String_substr", 2, 0),
-||||||| merged common ancestors
-    JS_SELF_HOSTED_FN("match", "String_match",        1,0),
-    JS_SELF_HOSTED_FN("search", "String_search",      1,0),
-    JS_SELF_HOSTED_FN("replace", "String_replace",    2,0),
-    JS_SELF_HOSTED_FN("split",  "String_split",       2,0),
-    JS_SELF_HOSTED_FN("substr", "String_substr",      2,0),
-=======
     JS_SELF_HOSTED_FN("match", "String_match", 1, 0),
     JS_SELF_HOSTED_FN("matchAll", "String_matchAll", 1, 0),
     JS_SELF_HOSTED_FN("search", "String_search", 1, 0),
     JS_SELF_HOSTED_FN("replace", "String_replace", 2, 0),
     JS_SELF_HOSTED_FN("split", "String_split", 2, 0),
     JS_SELF_HOSTED_FN("substr", "String_substr", 2, 0),
->>>>>>> upstream-releases
 
     /* Python-esque sequence methods. */
     JS_FN("concat", str_concat, 1, 0),
@@ -4596,24 +3427,10 @@ bool js::StringConstructor(JSContext* cx, unsigned argc, Value* vp) {
     str = cx->runtime()->emptyString;
   }
 
-<<<<<<< HEAD
-  if (args.isConstructing()) {
-    RootedObject proto(cx);
-    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-      return false;
-||||||| merged common ancestors
-        StringObject* strobj = StringObject::create(cx, str, proto);
-        if (!strobj) {
-            return false;
-        }
-        args.rval().setObject(*strobj);
-        return true;
-=======
   if (args.isConstructing()) {
     RootedObject proto(cx);
     if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_String, &proto)) {
       return false;
->>>>>>> upstream-releases
     }
 
     StringObject* strobj = StringObject::create(cx, str, proto);
@@ -4622,78 +3439,22 @@ bool js::StringConstructor(JSContext* cx, unsigned argc, Value* vp) {
     }
     args.rval().setObject(*strobj);
     return true;
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-}
-
-bool
-js::str_fromCharCode(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-=======
   }
 
   args.rval().setString(str);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  args.rval().setString(str);
-  return true;
-}
-||||||| merged common ancestors
-    MOZ_ASSERT(args.length() <= ARGS_LENGTH_MAX);
-=======
 bool js::str_fromCharCode(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool js::str_fromCharCode(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-||||||| merged common ancestors
-    // Optimize the single-char case.
-    if (args.length() == 1) {
-        return str_fromCharCode_one_arg(cx, args[0], args.rval());
-    }
-=======
   MOZ_ASSERT(args.length() <= ARGS_LENGTH_MAX);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(args.length() <= ARGS_LENGTH_MAX);
-||||||| merged common ancestors
-    // Optimize the case where the result will definitely fit in an inline
-    // string (thin or fat) and so we don't need to malloc the chars. (We could
-    // cover some cases where args.length() goes up to
-    // JSFatInlineString::MAX_LENGTH_LATIN1 if we also checked if the chars are
-    // all Latin-1, but it doesn't seem worth the effort.)
-    InlineCharBuffer<char16_t> chars;
-    if (!chars.maybeAlloc(cx, args.length())) {
-        return false;
-    }
-=======
   // Optimize the single-char case.
   if (args.length() == 1) {
     return str_fromCharCode_one_arg(cx, args[0], args.rval());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Optimize the single-char case.
-  if (args.length() == 1) {
-    return str_fromCharCode_one_arg(cx, args[0], args.rval());
-  }
-||||||| merged common ancestors
-    char16_t* rawChars = chars.get();
-    for (unsigned i = 0; i < args.length(); i++) {
-        uint16_t code;
-        if (!ToUint16(cx, args[i], &code)) {
-            return false;
-        }
-=======
   // Optimize the case where the result will definitely fit in an inline
   // string (thin or fat) and so we don't need to malloc the chars. (We could
   // cover some cases where args.length() goes up to
@@ -4703,55 +3464,17 @@ bool js::str_fromCharCode(JSContext* cx, unsigned argc, Value* vp) {
   if (!chars.maybeAlloc(cx, args.length())) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Optimize the case where the result will definitely fit in an inline
-  // string (thin or fat) and so we don't need to malloc the chars. (We could
-  // cover some cases where args.length() goes up to
-  // JSFatInlineString::MAX_LENGTH_LATIN1 if we also checked if the chars are
-  // all Latin-1, but it doesn't seem worth the effort.)
-  InlineCharBuffer<char16_t> chars;
-  if (!chars.maybeAlloc(cx, args.length())) {
-    return false;
-  }
-||||||| merged common ancestors
-        rawChars[i] = char16_t(code);
-    }
-=======
   char16_t* rawChars = chars.get();
   for (unsigned i = 0; i < args.length(); i++) {
     uint16_t code;
     if (!ToUint16(cx, args[i], &code)) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  char16_t* rawChars = chars.get();
-  for (unsigned i = 0; i < args.length(); i++) {
-    uint16_t code;
-    if (!ToUint16(cx, args[i], &code)) {
-      return false;
-    }
-||||||| merged common ancestors
-    JSString* str = chars.toString(cx, args.length());
-    if (!str) {
-        return false;
-    }
-=======
     rawChars[i] = char16_t(code);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    rawChars[i] = char16_t(code);
-  }
-||||||| merged common ancestors
-    args.rval().setString(str);
-    return true;
-}
-=======
   JSString* str = chars.toString(cx, args.length());
   if (!str) {
     return false;
@@ -4760,49 +3483,7 @@ bool js::str_fromCharCode(JSContext* cx, unsigned argc, Value* vp) {
   args.rval().setString(str);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSString* str = chars.toString(cx, args.length());
-  if (!str) {
-    return false;
-  }
-||||||| merged common ancestors
-static inline bool
-CodeUnitToString(JSContext* cx, uint16_t ucode, MutableHandleValue rval)
-{
-    if (StaticStrings::hasUnit(ucode)) {
-        rval.setString(cx->staticStrings().getUnit(ucode));
-        return true;
-    }
-=======
-static inline bool CodeUnitToString(JSContext* cx, uint16_t ucode,
-                                    MutableHandleValue rval) {
-  if (StaticStrings::hasUnit(ucode)) {
-    rval.setString(cx->staticStrings().getUnit(ucode));
-    return true;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  args.rval().setString(str);
-  return true;
-}
-||||||| merged common ancestors
-    char16_t c = char16_t(ucode);
-    JSString* str = NewStringCopyNDontDeflate<CanGC>(cx, &c, 1);
-    if (!str) {
-        return false;
-    }
-=======
-  char16_t c = char16_t(ucode);
-  JSString* str = NewStringCopyNDontDeflate<CanGC>(cx, &c, 1);
-  if (!str) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 static inline bool CodeUnitToString(JSContext* cx, uint16_t ucode,
                                     MutableHandleValue rval) {
   if (StaticStrings::hasUnit(ucode)) {
@@ -4818,13 +3499,6 @@ static inline bool CodeUnitToString(JSContext* cx, uint16_t ucode,
 
   rval.setString(str);
   return true;
-||||||| merged common ancestors
-    rval.setString(str);
-    return true;
-=======
-  rval.setString(str);
-  return true;
->>>>>>> upstream-releases
 }
 
 bool js::str_fromCharCode_one_arg(JSContext* cx, HandleValue code,
@@ -4930,56 +3604,6 @@ static bool str_fromCodePoint_few_args(JSContext* cx, const CallArgs& args) {
 
 // ES2017 draft rev 40edb3a95a475c1b251141ac681b8793129d9a6d
 // 21.1.2.2 String.fromCodePoint(...codePoints)
-<<<<<<< HEAD
-bool js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  // Optimize the single code-point case.
-  if (args.length() == 1) {
-    return str_fromCodePoint_one_arg(cx, args[0], args.rval());
-  }
-
-  // Optimize the case where the result will definitely fit in an inline
-  // string (thin or fat) and so we don't need to malloc the chars. (We could
-  // cover some cases where |args.length()| goes up to
-  // JSFatInlineString::MAX_LENGTH_LATIN1 / 2 if we also checked if the chars
-  // are all Latin-1, but it doesn't seem worth the effort.)
-  if (args.length() <= JSFatInlineString::MAX_LENGTH_TWO_BYTE / 2) {
-    return str_fromCodePoint_few_args(cx, args);
-  }
-
-  // Steps 1-2 (omitted).
-
-  // Step 3.
-  static_assert(
-      ARGS_LENGTH_MAX < std::numeric_limits<decltype(args.length())>::max() / 2,
-      "|args.length() * 2 + 1| does not overflow");
-  auto elements = cx->make_pod_array<char16_t>(args.length() * 2 + 1);
-  if (!elements) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    // Optimize the single code-point case.
-    if (args.length() == 1) {
-        return str_fromCodePoint_one_arg(cx, args[0], args.rval());
-    }
-
-    // Optimize the case where the result will definitely fit in an inline
-    // string (thin or fat) and so we don't need to malloc the chars. (We could
-    // cover some cases where |args.length()| goes up to
-    // JSFatInlineString::MAX_LENGTH_LATIN1 / 2 if we also checked if the chars
-    // are all Latin-1, but it doesn't seem worth the effort.)
-    if (args.length() <= JSFatInlineString::MAX_LENGTH_TWO_BYTE / 2) {
-        return str_fromCodePoint_few_args(cx, args);
-    }
-
-    // Steps 1-2 (omitted).
-=======
 bool js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -5008,7 +3632,6 @@ bool js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp) {
   if (!elements) {
     return false;
   }
->>>>>>> upstream-releases
 
   // Steps 4-5.
   unsigned length = 0;
@@ -5035,109 +3658,17 @@ bool js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp) {
 }
 
 static const JSFunctionSpec string_static_methods[] = {
-<<<<<<< HEAD
     JS_INLINABLE_FN("fromCharCode", js::str_fromCharCode, 1, 0,
                     StringFromCharCode),
     JS_INLINABLE_FN("fromCodePoint", js::str_fromCodePoint, 1, 0,
                     StringFromCodePoint),
 
-    JS_SELF_HOSTED_FN("raw", "String_static_raw", 1, 0),
-    JS_SELF_HOSTED_FN("substring", "String_static_substring", 3, 0),
-    JS_SELF_HOSTED_FN("substr", "String_static_substr", 3, 0),
-    JS_SELF_HOSTED_FN("slice", "String_static_slice", 3, 0),
-
-    JS_SELF_HOSTED_FN("match", "String_generic_match", 2, 0),
-    JS_SELF_HOSTED_FN("replace", "String_generic_replace", 3, 0),
-    JS_SELF_HOSTED_FN("search", "String_generic_search", 2, 0),
-    JS_SELF_HOSTED_FN("split", "String_generic_split", 3, 0),
-
-    JS_SELF_HOSTED_FN("toLowerCase", "String_static_toLowerCase", 1, 0),
-    JS_SELF_HOSTED_FN("toUpperCase", "String_static_toUpperCase", 1, 0),
-    JS_SELF_HOSTED_FN("charAt", "String_static_charAt", 2, 0),
-    JS_SELF_HOSTED_FN("charCodeAt", "String_static_charCodeAt", 2, 0),
-    JS_SELF_HOSTED_FN("includes", "String_static_includes", 2, 0),
-    JS_SELF_HOSTED_FN("indexOf", "String_static_indexOf", 2, 0),
-    JS_SELF_HOSTED_FN("lastIndexOf", "String_static_lastIndexOf", 2, 0),
-    JS_SELF_HOSTED_FN("startsWith", "String_static_startsWith", 2, 0),
-    JS_SELF_HOSTED_FN("endsWith", "String_static_endsWith", 2, 0),
-    JS_SELF_HOSTED_FN("trim", "String_static_trim", 1, 0),
-    JS_SELF_HOSTED_FN("trimLeft", "String_static_trimLeft", 1, 0),
-    JS_SELF_HOSTED_FN("trimRight", "String_static_trimRight", 1, 0),
-    JS_SELF_HOSTED_FN("toLocaleLowerCase", "String_static_toLocaleLowerCase", 1,
-                      0),
-    JS_SELF_HOSTED_FN("toLocaleUpperCase", "String_static_toLocaleUpperCase", 1,
-                      0),
-#if EXPOSE_INTL_API
-    JS_SELF_HOSTED_FN("normalize", "String_static_normalize", 1, 0),
-#endif
-    JS_SELF_HOSTED_FN("concat", "String_static_concat", 2, 0),
-||||||| merged common ancestors
-    // clang-format off
-    JS_INLINABLE_FN("fromCharCode", js::str_fromCharCode, 1, 0, StringFromCharCode),
-    JS_INLINABLE_FN("fromCodePoint", js::str_fromCodePoint, 1, 0, StringFromCodePoint),
-
-    JS_SELF_HOSTED_FN("raw",             "String_static_raw",           1,0),
-    JS_SELF_HOSTED_FN("substring",       "String_static_substring",     3,0),
-    JS_SELF_HOSTED_FN("substr",          "String_static_substr",        3,0),
-    JS_SELF_HOSTED_FN("slice",           "String_static_slice",         3,0),
-
-    JS_SELF_HOSTED_FN("match",           "String_generic_match",        2,0),
-    JS_SELF_HOSTED_FN("replace",         "String_generic_replace",      3,0),
-    JS_SELF_HOSTED_FN("search",          "String_generic_search",       2,0),
-    JS_SELF_HOSTED_FN("split",           "String_generic_split",        3,0),
-
-    JS_SELF_HOSTED_FN("toLowerCase",     "String_static_toLowerCase",   1,0),
-    JS_SELF_HOSTED_FN("toUpperCase",     "String_static_toUpperCase",   1,0),
-    JS_SELF_HOSTED_FN("charAt",          "String_static_charAt",        2,0),
-    JS_SELF_HOSTED_FN("charCodeAt",      "String_static_charCodeAt",    2,0),
-    JS_SELF_HOSTED_FN("includes",        "String_static_includes",      2,0),
-    JS_SELF_HOSTED_FN("indexOf",         "String_static_indexOf",       2,0),
-    JS_SELF_HOSTED_FN("lastIndexOf",     "String_static_lastIndexOf",   2,0),
-    JS_SELF_HOSTED_FN("startsWith",      "String_static_startsWith",    2,0),
-    JS_SELF_HOSTED_FN("endsWith",        "String_static_endsWith",      2,0),
-    JS_SELF_HOSTED_FN("trim",            "String_static_trim",          1,0),
-    JS_SELF_HOSTED_FN("trimLeft",        "String_static_trimLeft",      1,0),
-    JS_SELF_HOSTED_FN("trimRight",       "String_static_trimRight",     1,0),
-    JS_SELF_HOSTED_FN("toLocaleLowerCase","String_static_toLocaleLowerCase",1,0),
-    JS_SELF_HOSTED_FN("toLocaleUpperCase","String_static_toLocaleUpperCase",1,0),
-#if EXPOSE_INTL_API
-    JS_SELF_HOSTED_FN("normalize",       "String_static_normalize",     1,0),
-#endif
-    JS_SELF_HOSTED_FN("concat",          "String_static_concat",        2,0),
-=======
-    JS_INLINABLE_FN("fromCharCode", js::str_fromCharCode, 1, 0,
-                    StringFromCharCode),
-    JS_INLINABLE_FN("fromCodePoint", js::str_fromCodePoint, 1, 0,
-                    StringFromCodePoint),
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    JS_SELF_HOSTED_FN("localeCompare", "String_static_localeCompare", 2, 0),
-    JS_FS_END};
-||||||| merged common ancestors
-    JS_SELF_HOSTED_FN("localeCompare",   "String_static_localeCompare", 2,0),
-    JS_FS_END
-    // clang-format on
-};
-=======
     JS_SELF_HOSTED_FN("raw", "String_static_raw", 1, 0), JS_FS_END};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ Shape* StringObject::assignInitialShape(
-    JSContext* cx, Handle<StringObject*> obj) {
-  MOZ_ASSERT(obj->empty());
-||||||| merged common ancestors
-/* static */ Shape*
-StringObject::assignInitialShape(JSContext* cx, Handle<StringObject*> obj)
-{
-    MOZ_ASSERT(obj->empty());
-=======
 /* static */
 Shape* StringObject::assignInitialShape(JSContext* cx,
                                         Handle<StringObject*> obj) {
   MOZ_ASSERT(obj->empty());
->>>>>>> upstream-releases
 
   return NativeObject::addDataProperty(cx, obj, cx->names().length, LENGTH_SLOT,
                                        JSPROP_PERMANENT | JSPROP_READONLY);
@@ -5276,30 +3807,12 @@ static const bool js_isUriUnescaped[] = {
 
 #undef ____
 
-<<<<<<< HEAD
-static inline bool TransferBufferToString(StringBuffer& sb, JSString* str,
-                                          MutableHandleValue rval) {
-  if (!sb.empty()) {
-    str = sb.finishString();
-    if (!str) {
-      return false;
-||||||| merged common ancestors
-static inline bool
-TransferBufferToString(StringBuffer& sb, JSString* str, MutableHandleValue rval)
-{
-    if (!sb.empty()) {
-        str = sb.finishString();
-        if (!str) {
-            return false;
-        }
-=======
 static inline bool TransferBufferToString(JSStringBuilder& sb, JSString* str,
                                           MutableHandleValue rval) {
   if (!sb.empty()) {
     str = sb.finishString();
     if (!str) {
       return false;
->>>>>>> upstream-releases
     }
   }
   rval.setString(str);
@@ -5422,13 +3935,7 @@ static MOZ_ALWAYS_INLINE bool Encode(JSContext* cx, HandleLinearString str,
     return true;
   }
 
-<<<<<<< HEAD
-  StringBuffer sb(cx);
-||||||| merged common ancestors
-    StringBuffer sb(cx);
-=======
   JSStringBuilder sb(cx);
->>>>>>> upstream-releases
 
   EncodeResult res;
   if (str->hasLatin1Chars()) {
@@ -5455,47 +3962,6 @@ static MOZ_ALWAYS_INLINE bool Encode(JSContext* cx, HandleLinearString str,
 enum DecodeResult { Decode_Failure, Decode_BadUri, Decode_Success };
 
 template <typename CharT>
-<<<<<<< HEAD
-static DecodeResult Decode(StringBuffer& sb, const CharT* chars, size_t length,
-                           const bool* reservedSet) {
-  auto appendRange = [&sb, chars](size_t start, size_t end) {
-    MOZ_ASSERT(start <= end);
-
-    if (start < end) {
-      return sb.append(chars + start, chars + end);
-    }
-    return true;
-  };
-
-  size_t startAppend = 0;
-  for (size_t k = 0; k < length; k++) {
-    CharT c = chars[k];
-    if (c == '%') {
-      size_t start = k;
-      if ((k + 2) >= length) {
-        return Decode_BadUri;
-      }
-
-      if (!JS7_ISHEX(chars[k + 1]) || !JS7_ISHEX(chars[k + 2])) {
-        return Decode_BadUri;
-      }
-
-      uint32_t B = JS7_UNHEX(chars[k + 1]) * 16 + JS7_UNHEX(chars[k + 2]);
-      k += 2;
-      if (B < 128) {
-        Latin1Char ch = Latin1Char(B);
-        if (reservedSet && reservedSet[ch]) {
-          continue;
-||||||| merged common ancestors
-static DecodeResult
-Decode(StringBuffer& sb, const CharT* chars, size_t length, const bool* reservedSet)
-{
-    auto appendRange = [&sb, chars](size_t start, size_t end) {
-        MOZ_ASSERT(start <= end);
-
-        if (start < end) {
-            return sb.append(chars + start, chars + end);
-=======
 static DecodeResult Decode(StringBuffer& sb, const CharT* chars, size_t length,
                            const bool* reservedSet) {
   auto appendRange = [&sb, chars](size_t start, size_t end) {
@@ -5527,7 +3993,6 @@ static DecodeResult Decode(StringBuffer& sb, const CharT* chars, size_t length,
         Latin1Char ch = Latin1Char(B);
         if (reservedSet && reservedSet[ch]) {
           continue;
->>>>>>> upstream-releases
         }
 
         if (!appendRange(startAppend, start)) {
@@ -5546,118 +4011,12 @@ static DecodeResult Decode(StringBuffer& sb, const CharT* chars, size_t length,
           return Decode_BadUri;
         }
 
-<<<<<<< HEAD
         uint8_t octets[4];
         octets[0] = (uint8_t)B;
         if (k + 3 * (n - 1) >= length) {
           return Decode_BadUri;
         }
 
-        for (int j = 1; j < n; j++) {
-          k++;
-          if (chars[k] != '%') {
-            return Decode_BadUri;
-          }
-
-          if (!JS7_ISHEX(chars[k + 1]) || !JS7_ISHEX(chars[k + 2])) {
-            return Decode_BadUri;
-          }
-||||||| merged common ancestors
-            uint32_t B = JS7_UNHEX(chars[k+1]) * 16 + JS7_UNHEX(chars[k+2]);
-            k += 2;
-            if (B < 128) {
-                Latin1Char ch = Latin1Char(B);
-                if (reservedSet && reservedSet[ch]) {
-                    continue;
-                }
-
-                if (!appendRange(startAppend, start)) {
-                    return Decode_Failure;
-                }
-                if (!sb.append(ch)) {
-                    return Decode_Failure;
-                }
-            } else {
-                int n = 1;
-                while (B & (0x80 >> n)) {
-                    n++;
-                }
-
-                if (n == 1 || n > 4) {
-                    return Decode_BadUri;
-                }
-
-                uint8_t octets[4];
-                octets[0] = (uint8_t)B;
-                if (k + 3 * (n - 1) >= length) {
-                    return Decode_BadUri;
-                }
-
-                for (int j = 1; j < n; j++) {
-                    k++;
-                    if (chars[k] != '%') {
-                        return Decode_BadUri;
-                    }
-
-                    if (!JS7_ISHEX(chars[k+1]) || !JS7_ISHEX(chars[k+2])) {
-                        return Decode_BadUri;
-                    }
-
-                    B = JS7_UNHEX(chars[k+1]) * 16 + JS7_UNHEX(chars[k+2]);
-                    if ((B & 0xC0) != 0x80) {
-                        return Decode_BadUri;
-                    }
-
-                    k += 2;
-                    octets[j] = char(B);
-                }
-
-                if (!appendRange(startAppend, start)) {
-                    return Decode_Failure;
-                }
-
-                uint32_t v = JS::Utf8ToOneUcs4Char(octets, n);
-                MOZ_ASSERT(v >= 128);
-                if (v >= unicode::NonBMPMin) {
-                    if (v > unicode::NonBMPMax) {
-                        return Decode_BadUri;
-                    }
-
-                    if (!sb.append(unicode::LeadSurrogate(v))) {
-                        return Decode_Failure;
-                    }
-                    if (!sb.append(unicode::TrailSurrogate(v))) {
-                        return Decode_Failure;
-                    }
-                } else {
-                    if (!sb.append(char16_t(v))) {
-                        return Decode_Failure;
-                    }
-                }
-            }
-=======
-        uint8_t octets[4];
-        octets[0] = (uint8_t)B;
-        if (k + 3 * (n - 1) >= length) {
-          return Decode_BadUri;
-        }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-          B = JS7_UNHEX(chars[k + 1]) * 16 + JS7_UNHEX(chars[k + 2]);
-          if ((B & 0xC0) != 0x80) {
-            return Decode_BadUri;
-          }
-
-          k += 2;
-          octets[j] = char(B);
-        }
-
-        if (!appendRange(startAppend, start)) {
-          return Decode_Failure;
-||||||| merged common ancestors
-            startAppend = k + 1;
-=======
         for (int j = 1; j < n; j++) {
           k++;
           if (chars[k] != '%') {
@@ -5681,7 +4040,6 @@ static DecodeResult Decode(StringBuffer& sb, const CharT* chars, size_t length,
 
         if (!appendRange(startAppend, start)) {
           return Decode_Failure;
->>>>>>> upstream-releases
         }
 
         uint32_t v = JS::Utf8ToOneUcs4Char(octets, n);
@@ -5725,13 +4083,7 @@ static bool Decode(JSContext* cx, HandleLinearString str,
     return true;
   }
 
-<<<<<<< HEAD
-  StringBuffer sb(cx);
-||||||| merged common ancestors
-    StringBuffer sb(cx);
-=======
   JSStringBuilder sb(cx);
->>>>>>> upstream-releases
 
   DecodeResult res;
   if (str->hasLatin1Chars()) {
@@ -5795,41 +4147,6 @@ static bool str_encodeURI_Component(JSContext* cx, unsigned argc, Value* vp) {
   return Encode(cx, str, nullptr, args.rval());
 }
 
-<<<<<<< HEAD
-JSString* js::EncodeURI(JSContext* cx, const char* chars, size_t length) {
-  StringBuffer sb(cx);
-  EncodeResult result = Encode(sb, reinterpret_cast<const Latin1Char*>(chars),
-                               length, js_isUriReservedPlusPound);
-  if (result == EncodeResult::Encode_Failure) {
-    return nullptr;
-  }
-  if (result == EncodeResult::Encode_BadUri) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_URI);
-    return nullptr;
-  }
-  if (sb.empty()) {
-    return NewStringCopyN<CanGC>(cx, chars, length);
-  }
-  return sb.finishString();
-||||||| merged common ancestors
-JSString*
-js::EncodeURI(JSContext* cx, const char* chars, size_t length)
-{
-    StringBuffer sb(cx);
-    EncodeResult result = Encode(sb, reinterpret_cast<const Latin1Char*>(chars), length,
-                                 js_isUriReservedPlusPound);
-    if (result == EncodeResult::Encode_Failure) {
-        return nullptr;
-    }
-    if (result == EncodeResult::Encode_BadUri) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_URI);
-        return nullptr;
-    }
-    if (sb.empty()) {
-        return NewStringCopyN<CanGC>(cx, chars, length);
-    }
-    return sb.finishString();
-=======
 JSString* js::EncodeURI(JSContext* cx, const char* chars, size_t length) {
   JSStringBuilder sb(cx);
   EncodeResult result = Encode(sb, reinterpret_cast<const Latin1Char*>(chars),
@@ -5845,7 +4162,6 @@ JSString* js::EncodeURI(JSContext* cx, const char* chars, size_t length) {
     return NewStringCopyN<CanGC>(cx, chars, length);
   }
   return sb.finishString();
->>>>>>> upstream-releases
 }
 
 static bool FlatStringMatchHelper(JSContext* cx, HandleString str,

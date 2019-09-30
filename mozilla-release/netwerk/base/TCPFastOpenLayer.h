@@ -86,21 +86,9 @@ void TCPFastOpenFinish(PRFileDesc* fd, PRErrorCode& err,
 
 int32_t TCPFastOpenGetBufferSizeLeft(PRFileDesc* fd);
 
-<<<<<<< HEAD
-bool TCPFastOpenGetCurrentBufferSize(PRFileDesc *fd);
-bool TCPFastOpenFlushBuffer(PRFileDesc *fd);
-}  // namespace net
-}  // namespace mozilla
-||||||| merged common ancestors
-bool TCPFastOpenGetCurrentBufferSize(PRFileDesc *fd);
-bool TCPFastOpenFlushBuffer(PRFileDesc *fd);
-}
-}
-=======
 bool TCPFastOpenGetCurrentBufferSize(PRFileDesc* fd);
 bool TCPFastOpenFlushBuffer(PRFileDesc* fd);
 }  // namespace net
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // TCPFastOpenLayer_h__

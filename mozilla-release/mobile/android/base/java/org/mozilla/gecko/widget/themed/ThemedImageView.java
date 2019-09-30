@@ -19,7 +19,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-public class ThemedImageView extends android.support.v7.widget.AppCompatImageView
+public class ThemedImageView extends android.widget.ImageView
                                      implements LightweightTheme.OnChangeListener {
     private LightweightTheme theme;
 
@@ -37,12 +37,6 @@ public class ThemedImageView extends android.support.v7.widget.AppCompatImageVie
     private boolean autoUpdateTheme;        // always false if there's no theme.
 
     private ColorStateList drawableColors;
-
-    /* Cliqz Start */
-    private static final int[] LIGHT_THEME = { R.attr.light_theme };
-    private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
-    private boolean isLightTheme;
-    /* Cliqz End */
 
     public ThemedImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -93,25 +87,14 @@ public class ThemedImageView extends android.support.v7.widget.AppCompatImageVie
 
     @Override
     public int[] onCreateDrawableState(int extraSpace) {
-        /* Cliqz Start */
-        final int[] addedState;
+        final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
 
-        if (isLightTheme && isPrivate)
-            addedState = LIGHT_THEME_PRIVATE_MODE;
-        else if (isLightTheme)
-            addedState = LIGHT_THEME;
-        else if (isPrivate)
-            addedState =  STATE_PRIVATE_MODE;
+        if (isPrivate)
+            mergeDrawableStates(drawableState, STATE_PRIVATE_MODE);
         else if (isLight)
-            addedState =  STATE_LIGHT;
+            mergeDrawableStates(drawableState, STATE_LIGHT);
         else if (isDark)
-            addedState =  STATE_DARK;
-        else
-            addedState = new int[]{};
-
-        final int[] drawableState = super.onCreateDrawableState(extraSpace + addedState.length);
-        mergeDrawableStates(drawableState, addedState);
-        /* Cliqz End */
+            mergeDrawableStates(drawableState, STATE_DARK);
 
         return drawableState;
     }
@@ -217,14 +200,4 @@ public class ThemedImageView extends android.support.v7.widget.AppCompatImageVie
     protected LightweightTheme getTheme() {
         return theme;
     }
-
-    /* Cliqz Start */
-    public void setLightTheme(boolean isLightTheme) {
-        if (this.isLightTheme != isLightTheme) {
-            this.isLightTheme = isLightTheme;
-            refreshDrawableState();
-            invalidate();
-        }
-    }
-    /* Cliqz End */
 }

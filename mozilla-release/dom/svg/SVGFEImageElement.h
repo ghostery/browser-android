@@ -43,26 +43,6 @@ class SVGFEImageElement final : public SVGFEImageElementBase,
   // EventTarget
   virtual void AsyncEventRunning(AsyncEventDispatcher* aEvent) override;
 
-<<<<<<< HEAD
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-  }
-||||||| merged common ancestors
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-=======
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
       const nsTArray<bool>& aInputsAreTainted,
@@ -72,7 +52,6 @@ class SVGFEImageElement final : public SVGFEImageElementBase,
   virtual SVGAnimatedString& GetResultImageName() override {
     return mStringAttributes[RESULT];
   }
->>>>>>> upstream-releases
   virtual bool OutputIsTainted(const nsTArray<bool>& aInputsAreTainted,
                                nsIPrincipal* aReferencePrincipal) override;
 
@@ -108,14 +87,8 @@ class SVGFEImageElement final : public SVGFEImageElementBase,
  protected:
   virtual bool ProducesSRGB() override { return true; }
 
-<<<<<<< HEAD
-  virtual SVGAnimatedPreserveAspectRatio* GetPreserveAspectRatio() override;
-||||||| merged common ancestors
-  virtual SVGAnimatedPreserveAspectRatio *GetPreserveAspectRatio() override;
-=======
   virtual SVGAnimatedPreserveAspectRatio* GetAnimatedPreserveAspectRatio()
       override;
->>>>>>> upstream-releases
   virtual StringAttributesInfo GetStringInfo() override;
 
   // Override for nsImageLoadingContent.

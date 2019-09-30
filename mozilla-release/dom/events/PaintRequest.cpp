@@ -27,18 +27,9 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(PaintRequest)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(PaintRequest)
 
-<<<<<<< HEAD
-/* virtual */ JSObject* PaintRequest::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-PaintRequest::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* PaintRequest::WrapObject(JSContext* aCx,
                                    JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return PaintRequest_Binding::Wrap(aCx, this, aGivenProto);
 }
 

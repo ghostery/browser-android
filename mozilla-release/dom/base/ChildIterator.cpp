@@ -37,21 +37,12 @@ nsIContent* ExplicitChildIterator::GetNextChild() {
       const nsTArray<RefPtr<nsINode>>& assignedNodes =
           mParentAsSlot->AssignedNodes();
 
-<<<<<<< HEAD
-      mChild = (mIndexInInserted < assignedNodes.Length())
-                   ? assignedNodes[mIndexInInserted++]->AsContent()
-                   : nullptr;
-||||||| merged common ancestors
-      mChild = (mIndexInInserted < assignedNodes.Length()) ?
-        assignedNodes[mIndexInInserted++]->AsContent() : nullptr;
-=======
       mChild = (mIndexInInserted < assignedNodes.Length())
                    ? assignedNodes[mIndexInInserted++]->AsContent()
                    : nullptr;
       if (!mChild) {
         mIndexInInserted = 0;
       }
->>>>>>> upstream-releases
       return mChild;
     }
 
@@ -333,16 +324,6 @@ nsIContent* AllChildrenIterator::Get() const {
   }
 }
 
-<<<<<<< HEAD
-bool AllChildrenIterator::Seek(const nsIContent* aChildToFind) {
-  if (mPhase == eAtBegin || mPhase == eAtBeforeKid) {
-||||||| merged common ancestors
-
-bool
-AllChildrenIterator::Seek(const nsIContent* aChildToFind)
-{
-  if (mPhase == eAtBegin || mPhase == eAtBeforeKid) {
-=======
 bool AllChildrenIterator::Seek(const nsIContent* aChildToFind) {
   if (mPhase == eAtBegin || mPhase == eAtMarkerKid) {
     mPhase = eAtBeforeKid;
@@ -353,7 +334,6 @@ bool AllChildrenIterator::Seek(const nsIContent* aChildToFind) {
     }
   }
   if (mPhase == eAtBeforeKid) {
->>>>>>> upstream-releases
     mPhase = eAtExplicitKids;
     Element* beforePseudo = nsLayoutUtils::GetBeforePseudo(mOriginalContent);
     if (beforePseudo && beforePseudo == aChildToFind) {

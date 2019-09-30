@@ -423,15 +423,7 @@ bool GMPParent::EnsureProcessLoaded() {
   return NS_SUCCEEDED(rv);
 }
 
-<<<<<<< HEAD
-void GMPParent::WriteExtraDataForMinidump() {
-||||||| merged common ancestors
-void
-GMPParent::WriteExtraDataForMinidump()
-{
-=======
 void GMPParent::AddCrashAnnotations() {
->>>>>>> upstream-releases
   mCrashReporter->AddAnnotation(CrashReporter::Annotation::GMPPlugin, true);
   mCrashReporter->AddAnnotation(CrashReporter::Annotation::PluginFilename,
                                 NS_ConvertUTF16toUTF8(mName));

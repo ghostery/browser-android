@@ -158,32 +158,16 @@ bool SharedSSLState::SocketCreated() {
   return mSocketCreated;
 }
 
-<<<<<<< HEAD
-/*static*/ void SharedSSLState::GlobalInit() {
-||||||| merged common ancestors
-/*static*/ void
-SharedSSLState::GlobalInit()
-{
-=======
 /*static*/
 void SharedSSLState::GlobalInit() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Not on main thread");
   gPublicState = new SharedSSLState();
   gPrivateState = new SharedSSLState();
   gPrivateState->NotePrivateBrowsingStatus();
 }
 
-<<<<<<< HEAD
-/*static*/ void SharedSSLState::GlobalCleanup() {
-||||||| merged common ancestors
-/*static*/ void
-SharedSSLState::GlobalCleanup()
-{
-=======
 /*static*/
 void SharedSSLState::GlobalCleanup() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Not on main thread");
 
   if (gPrivateState) {
@@ -199,16 +183,8 @@ void SharedSSLState::GlobalCleanup() {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void SharedSSLState::NoteCertOverrideServiceInstantiated() {
-||||||| merged common ancestors
-/*static*/ void
-SharedSSLState::NoteCertOverrideServiceInstantiated()
-{
-=======
 /*static*/
 void SharedSSLState::NoteCertOverrideServiceInstantiated() {
->>>>>>> upstream-releases
   sCertOverrideSvcExists = true;
 }
 

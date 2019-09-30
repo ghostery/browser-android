@@ -476,29 +476,6 @@ Repackage-signing take the repackaged installers (windows) and signs them.
 
 repackage-signing-l10n
 ----------------------
-<<<<<<< HEAD
-Repackage-signing-l10n take the repackaged installers (windows) and signs them for localized versions.
-
-mar-signing
------------
-Mar-signing takes the complete update MARs and signs them.
-
-mar-signing-l10n
-----------------
-Mar-signing-l10n takes the complete update MARs and signs them for localized versions.
-
-repackage-msi
--------------
-Repackage-msi takes the signed full installer and produces an msi installer (that wraps the full installer)
-Using the ```./mach repackage``` command
-
-repackage-signing-msi
----------------------
-Repackage-signing-msi takes the repackaged msi installers and signs them.
-||||||| merged common ancestors
-Repackage-signing take the repackaged installers (windows) and update packaging (with
-the signed internal bits) and signs them for localized versions.
-=======
 Repackage-signing-l10n take the repackaged installers (windows) and signs them for localized versions.
 
 mar-signing
@@ -521,7 +498,6 @@ Using the ```./mach repackage``` command
 repackage-signing-msi
 ---------------------
 Repackage-signing-msi takes the repackaged msi installers and signs them.
->>>>>>> upstream-releases
 
 repo-update
 -----------

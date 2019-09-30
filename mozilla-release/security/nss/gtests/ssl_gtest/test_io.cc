@@ -48,20 +48,6 @@ void DummyPrSocket::Reset() {
   write_error_ = 0;
 }
 
-void DummyPrSocket::Reset() {
-  auto p = peer_.lock();
-  peer_.reset();
-  if (p) {
-    p->peer_.reset();
-    p->Reset();
-  }
-  while (!input_.empty()) {
-    input_.pop();
-  }
-  filter_ = nullptr;
-  write_error_ = 0;
-}
-
 void DummyPrSocket::PacketReceived(const DataBuffer &packet) {
   input_.push(Packet(packet));
 }

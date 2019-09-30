@@ -35,16 +35,8 @@ class nsAutoCompleteController final : public nsIAutoCompleteController,
 
   nsAutoCompleteController();
 
-<<<<<<< HEAD
- protected:
-  virtual ~nsAutoCompleteController();
-||||||| merged common ancestors
-protected:
-  virtual ~nsAutoCompleteController();
-=======
  protected:
   MOZ_CAN_RUN_SCRIPT virtual ~nsAutoCompleteController();
->>>>>>> upstream-releases
 
   /**
    * SetValueOfInputTo() sets value of mInput to aValue and notifies the input
@@ -71,27 +63,12 @@ protected:
   nsresult ClearSearchTimer();
   void MaybeCompletePlaceholder();
 
-<<<<<<< HEAD
-  nsresult ProcessResult(int32_t aSearchIndex, nsIAutoCompleteResult* aResult);
-  nsresult PostSearchCleanup();
-||||||| merged common ancestors
-  nsresult ProcessResult(int32_t aSearchIndex, nsIAutoCompleteResult *aResult);
-  nsresult PostSearchCleanup();
-=======
   MOZ_CAN_RUN_SCRIPT nsresult ProcessResult(int32_t aSearchIndex,
                                             nsIAutoCompleteResult* aResult);
   MOZ_CAN_RUN_SCRIPT nsresult PostSearchCleanup();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult EnterMatch(bool aIsPopupSelection, mozilla::dom::Event* aEvent);
-||||||| merged common ancestors
-  nsresult EnterMatch(bool aIsPopupSelection,
-                      mozilla::dom::Event* aEvent);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult EnterMatch(bool aIsPopupSelection,
                                          mozilla::dom::Event* aEvent);
->>>>>>> upstream-releases
   nsresult RevertTextValue();
 
   nsresult CompleteDefaultIndex(int32_t aResultIndex);
@@ -100,16 +77,6 @@ protected:
   nsresult GetResultAt(int32_t aIndex, nsIAutoCompleteResult** aResult,
                        int32_t* aMatchIndex);
   nsresult GetResultValueAt(int32_t aIndex, bool aGetFinalValue,
-<<<<<<< HEAD
-                            nsAString& _retval);
-  nsresult GetResultLabelAt(int32_t aIndex, nsAString& _retval);
-
- private:
-||||||| merged common ancestors
-                            nsAString & _retval);
-  nsresult GetResultLabelAt(int32_t aIndex, nsAString & _retval);
-private:
-=======
                             nsAString& _retval);
   nsresult GetResultLabelAt(int32_t aIndex, nsAString& _retval);
 
@@ -136,7 +103,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   nsresult GetResultValueLabelAt(int32_t aIndex, bool aGetFinalValue,
                                  bool aGetValue, nsAString& _retval);
 

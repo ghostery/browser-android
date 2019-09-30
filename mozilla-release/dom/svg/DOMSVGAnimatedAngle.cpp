@@ -17,40 +17,15 @@ NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(DOMSVGAnimatedAngle, mSVGElement)
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(DOMSVGAnimatedAngle, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(DOMSVGAnimatedAngle, Release)
 
-<<<<<<< HEAD:mozilla-release/dom/svg/SVGAnimatedAngle.cpp
-JSObject* SVGAnimatedAngle::WrapObject(JSContext* aCx,
-                                       JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedAngle::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 JSObject* DOMSVGAnimatedAngle::WrapObject(JSContext* aCx,
                                           JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/DOMSVGAnimatedAngle.cpp
   return SVGAnimatedAngle_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/SVGAnimatedAngle.cpp
-already_AddRefed<SVGAngle> SVGAnimatedAngle::BaseVal() {
-||||||| merged common ancestors
-already_AddRefed<SVGAngle>
-SVGAnimatedAngle::BaseVal()
-{
-=======
 already_AddRefed<DOMSVGAngle> DOMSVGAnimatedAngle::BaseVal() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/DOMSVGAnimatedAngle.cpp
   return mVal->ToDOMBaseVal(mSVGElement);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/SVGAnimatedAngle.cpp
-already_AddRefed<SVGAngle> SVGAnimatedAngle::AnimVal() {
-||||||| merged common ancestors
-already_AddRefed<SVGAngle>
-SVGAnimatedAngle::AnimVal()
-{
-=======
 already_AddRefed<DOMSVGAngle> DOMSVGAnimatedAngle::AnimVal() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/DOMSVGAnimatedAngle.cpp
   return mVal->ToDOMAnimVal(mSVGElement);
 }

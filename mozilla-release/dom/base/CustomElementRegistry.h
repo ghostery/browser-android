@@ -40,20 +40,9 @@ struct LifecycleCallbackArgs {
   size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const;
 };
 
-<<<<<<< HEAD
-struct LifecycleAdoptedCallbackArgs {
-  nsCOMPtr<nsIDocument> mOldDocument;
-  nsCOMPtr<nsIDocument> mNewDocument;
-||||||| merged common ancestors
-struct LifecycleAdoptedCallbackArgs
-{
-  nsCOMPtr<nsIDocument> mOldDocument;
-  nsCOMPtr<nsIDocument> mNewDocument;
-=======
 struct LifecycleAdoptedCallbackArgs {
   RefPtr<Document> mOldDocument;
   RefPtr<Document> mNewDocument;
->>>>>>> upstream-releases
 };
 
 class CustomElementCallback {
@@ -64,37 +53,16 @@ class CustomElementCallback {
   void Traverse(nsCycleCollectionTraversalCallback& aCb) const;
   size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
   void Call();
-<<<<<<< HEAD
-  void SetArgs(LifecycleCallbackArgs& aArgs) {
-    MOZ_ASSERT(mType == nsIDocument::eAttributeChanged,
-||||||| merged common ancestors
-  void SetArgs(LifecycleCallbackArgs& aArgs)
-  {
-    MOZ_ASSERT(mType == nsIDocument::eAttributeChanged,
-=======
   void SetArgs(LifecycleCallbackArgs& aArgs) {
     MOZ_ASSERT(mType == Document::eAttributeChanged,
->>>>>>> upstream-releases
                "Arguments are only used by attribute changed callback.");
     mArgs = aArgs;
   }
 
-<<<<<<< HEAD
-  void SetAdoptedCallbackArgs(
-      LifecycleAdoptedCallbackArgs& aAdoptedCallbackArgs) {
-    MOZ_ASSERT(mType == nsIDocument::eAdopted,
-               "Arguments are only used by adopted callback.");
-||||||| merged common ancestors
-  void SetAdoptedCallbackArgs(LifecycleAdoptedCallbackArgs& aAdoptedCallbackArgs)
-  {
-    MOZ_ASSERT(mType == nsIDocument::eAdopted,
-      "Arguments are only used by adopted callback.");
-=======
   void SetAdoptedCallbackArgs(
       LifecycleAdoptedCallbackArgs& aAdoptedCallbackArgs) {
     MOZ_ASSERT(mType == Document::eAdopted,
                "Arguments are only used by adopted callback.");
->>>>>>> upstream-releases
     mAdoptedCallbackArgs = aAdoptedCallbackArgs;
   }
 
@@ -110,33 +78,6 @@ class CustomElementCallback {
   LifecycleAdoptedCallbackArgs mAdoptedCallbackArgs;
 };
 
-<<<<<<< HEAD
-class CustomElementConstructor final : public CallbackFunction {
- public:
-  explicit CustomElementConstructor(CallbackFunction* aOther)
-      : CallbackFunction(aOther) {
-    MOZ_ASSERT(JS::IsConstructor(mCallback));
-  }
-
-  already_AddRefed<Element> Construct(const char* aExecutionReason,
-                                      ErrorResult& aRv);
-};
-
-||||||| merged common ancestors
-class CustomElementConstructor final : public CallbackFunction
-{
-public:
-  explicit CustomElementConstructor(CallbackFunction* aOther)
-    : CallbackFunction(aOther)
-  {
-    MOZ_ASSERT(JS::IsConstructor(mCallback));
-  }
-
-  already_AddRefed<Element> Construct(const char* aExecutionReason, ErrorResult& aRv);
-};
-
-=======
->>>>>>> upstream-releases
 // Each custom element has an associated callback queue and an element is
 // being created flag.
 struct CustomElementData {
@@ -192,19 +133,9 @@ struct CustomElementDefinition {
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(CustomElementDefinition)
   NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(CustomElementDefinition)
 
-<<<<<<< HEAD
-  CustomElementDefinition(nsAtom* aType, nsAtom* aLocalName,
-                          int32_t aNamespaceID, Function* aConstructor,
-||||||| merged common ancestors
-  CustomElementDefinition(nsAtom* aType,
-                          nsAtom* aLocalName,
-                          int32_t aNamespaceID,
-                          Function* aConstructor,
-=======
   CustomElementDefinition(nsAtom* aType, nsAtom* aLocalName,
                           int32_t aNamespaceID,
                           CustomElementConstructor* aConstructor,
->>>>>>> upstream-releases
                           nsTArray<RefPtr<nsAtom>>&& aObservedAttributes,
                           UniquePtr<LifecycleCallbacks>&& aCallbacks);
 
@@ -331,15 +262,8 @@ class CustomElementReactionsStack {
    *        aWasElementQueuePushed used for restoring status after leaving
    *                               current recursion.
    */
-<<<<<<< HEAD
-  void LeaveCEReactions(JSContext* aCx, bool aWasElementQueuePushed) {
-||||||| merged common ancestors
-  void LeaveCEReactions(JSContext* aCx, bool aWasElementQueuePushed)
-  {
-=======
   MOZ_CAN_RUN_SCRIPT
   void LeaveCEReactions(JSContext* aCx, bool aWasElementQueuePushed) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mRecursionDepth);
 
     if (mIsElementQueuePushedForCurrentRecursionDepth) {
@@ -405,108 +329,31 @@ class CustomElementReactionsStack {
       mReactionStack->mIsBackupQueueProcessing = true;
     }
 
-<<<<<<< HEAD
-    virtual void Run(AutoSlowOperation& aAso) override {
-      mReactionStack->InvokeBackupQueue();
-      mReactionStack->mIsBackupQueueProcessing = false;
-    }
-||||||| merged common ancestors
-      virtual void Run(AutoSlowOperation& aAso) override
-      {
-        mReactionStack->InvokeBackupQueue();
-        mReactionStack->mIsBackupQueueProcessing = false;
-      }
-=======
     MOZ_CAN_RUN_SCRIPT virtual void Run(AutoSlowOperation& aAso) override {
       mReactionStack->InvokeBackupQueue();
       mReactionStack->mIsBackupQueueProcessing = false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-   private:
-    RefPtr<CustomElementReactionsStack> mReactionStack;
-||||||| merged common ancestors
-    private:
-      RefPtr<CustomElementReactionsStack> mReactionStack;
-=======
    private:
     const RefPtr<CustomElementReactionsStack> mReactionStack;
->>>>>>> upstream-releases
   };
 };
 
-<<<<<<< HEAD
-class CustomElementRegistry final : public nsISupports, public nsWrapperCache {
-  // Allow nsDocument to access mCustomDefinitions and mCandidatesMap.
-  friend class ::nsDocument;
-
- public:
-||||||| merged common ancestors
-class CustomElementRegistry final : public nsISupports,
-                                    public nsWrapperCache
-{
-  // Allow nsDocument to access mCustomDefinitions and mCandidatesMap.
-  friend class ::nsDocument;
-
-public:
-=======
 class CustomElementRegistry final : public nsISupports, public nsWrapperCache {
  public:
->>>>>>> upstream-releases
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(CustomElementRegistry)
 
  public:
   explicit CustomElementRegistry(nsPIDOMWindowInner* aWindow);
 
-<<<<<<< HEAD
- private:
-  class RunCustomElementCreationCallback : public mozilla::Runnable {
-   public:
-||||||| merged common ancestors
-private:
-  class RunCustomElementCreationCallback : public mozilla::Runnable
-  {
-  public:
-=======
  private:
   class RunCustomElementCreationCallback : public mozilla::Runnable {
    public:
     // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is MOZ_CAN_RUN_SCRIPT.
     // See bug 1535398.
     MOZ_CAN_RUN_SCRIPT_BOUNDARY
->>>>>>> upstream-releases
     NS_DECL_NSIRUNNABLE
-<<<<<<< HEAD
-    explicit RunCustomElementCreationCallback(
-        CustomElementRegistry* aRegistry, nsAtom* aAtom,
-        CustomElementCreationCallback* aCallback)
-        : mozilla::Runnable(
-              "CustomElementRegistry::RunCustomElementCreationCallback"),
-          mRegistry(aRegistry),
-          mAtom(aAtom),
-          mCallback(aCallback) {}
-
-   private:
-    RefPtr<CustomElementRegistry> mRegistry;
-    RefPtr<nsAtom> mAtom;
-    RefPtr<CustomElementCreationCallback> mCallback;
-||||||| merged common ancestors
-    explicit RunCustomElementCreationCallback(CustomElementRegistry* aRegistry,
-                                              nsAtom* aAtom,
-                                              CustomElementCreationCallback* aCallback)
-      : mozilla::Runnable("CustomElementRegistry::RunCustomElementCreationCallback")
-      , mRegistry(aRegistry)
-      , mAtom(aAtom)
-      , mCallback(aCallback)
-    {
-    }
-    private:
-      RefPtr<CustomElementRegistry> mRegistry;
-      RefPtr<nsAtom> mAtom;
-      RefPtr<CustomElementCreationCallback> mCallback;
-=======
 
     explicit RunCustomElementCreationCallback(
         CustomElementRegistry* aRegistry, nsAtom* aAtom,
@@ -521,7 +368,6 @@ private:
     RefPtr<CustomElementRegistry> mRegistry;
     RefPtr<nsAtom> mAtom;
     RefPtr<CustomElementCreationCallback> mCallback;
->>>>>>> upstream-releases
   };
 
  public:
@@ -546,40 +392,19 @@ private:
   CustomElementDefinition* LookupCustomElementDefinition(
       JSContext* aCx, JSObject* aConstructor) const;
 
-<<<<<<< HEAD
-  static void EnqueueLifecycleCallback(
-      nsIDocument::ElementCallbackType aType, Element* aCustomElement,
-      LifecycleCallbackArgs* aArgs,
-      LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
-      CustomElementDefinition* aDefinition);
-||||||| merged common ancestors
-  static void EnqueueLifecycleCallback(nsIDocument::ElementCallbackType aType,
-                                       Element* aCustomElement,
-                                       LifecycleCallbackArgs* aArgs,
-                                       LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
-                                       CustomElementDefinition* aDefinition);
-=======
   static void EnqueueLifecycleCallback(
       Document::ElementCallbackType aType, Element* aCustomElement,
       LifecycleCallbackArgs* aArgs,
       LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
       CustomElementDefinition* aDefinition);
->>>>>>> upstream-releases
 
   /**
    * Upgrade an element.
    * https://html.spec.whatwg.org/multipage/scripting.html#upgrades
    */
-<<<<<<< HEAD
-  static void Upgrade(Element* aElement, CustomElementDefinition* aDefinition,
-                      ErrorResult& aRv);
-||||||| merged common ancestors
-  static void Upgrade(Element* aElement, CustomElementDefinition* aDefinition, ErrorResult& aRv);
-=======
   MOZ_CAN_RUN_SCRIPT
   static void Upgrade(Element* aElement, CustomElementDefinition* aDefinition,
                       ErrorResult& aRv);
->>>>>>> upstream-releases
 
   /**
    * To allow native code to call methods of chrome-implemented custom elements,
@@ -644,22 +469,10 @@ private:
   ~CustomElementRegistry();
 
   static UniquePtr<CustomElementCallback> CreateCustomElementCallback(
-<<<<<<< HEAD
-      nsIDocument::ElementCallbackType aType, Element* aCustomElement,
-      LifecycleCallbackArgs* aArgs,
-      LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
-      CustomElementDefinition* aDefinition);
-||||||| merged common ancestors
-    nsIDocument::ElementCallbackType aType, Element* aCustomElement,
-    LifecycleCallbackArgs* aArgs,
-    LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
-    CustomElementDefinition* aDefinition);
-=======
       Document::ElementCallbackType aType, Element* aCustomElement,
       LifecycleCallbackArgs* aArgs,
       LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
       CustomElementDefinition* aDefinition);
->>>>>>> upstream-releases
 
   void UpgradeCandidates(nsAtom* aKey, CustomElementDefinition* aDefinition,
                          ErrorResult& aRv);
@@ -766,37 +579,16 @@ class MOZ_RAII AutoCEReaction final {
         mReactionsStack->EnterCEReactions();
   }
 
-<<<<<<< HEAD
-  ~AutoCEReaction() {
-    mReactionsStack->LeaveCEReactions(
-||||||| merged common ancestors
-    ~AutoCEReaction()
-    {
-      mReactionsStack->LeaveCEReactions(
-=======
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY because this is called from Maybe<>.reset().
   MOZ_CAN_RUN_SCRIPT_BOUNDARY ~AutoCEReaction() {
     mReactionsStack->LeaveCEReactions(
->>>>>>> upstream-releases
         mCx, mIsElementQueuePushedForPreviousRecursionDepth);
   }
 
-<<<<<<< HEAD
- private:
-  RefPtr<CustomElementReactionsStack> mReactionsStack;
-  JSContext* mCx;
-  bool mIsElementQueuePushedForPreviousRecursionDepth;
-||||||| merged common ancestors
-  private:
-    RefPtr<CustomElementReactionsStack> mReactionsStack;
-    JSContext* mCx;
-    bool mIsElementQueuePushedForPreviousRecursionDepth;
-=======
  private:
   const RefPtr<CustomElementReactionsStack> mReactionsStack;
   JSContext* mCx;
   bool mIsElementQueuePushedForPreviousRecursionDepth;
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

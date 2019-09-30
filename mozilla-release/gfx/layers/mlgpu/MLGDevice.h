@@ -78,20 +78,9 @@ class MLGRenderTarget {
   int32_t mLastDepthStart;
 };
 
-<<<<<<< HEAD
-class MLGSwapChain {
- protected:
-  virtual ~MLGSwapChain() {}
-||||||| merged common ancestors
-class MLGSwapChain
-{
-protected:
-  virtual ~MLGSwapChain() {}
-=======
 class MLGSwapChain {
  protected:
   virtual ~MLGSwapChain() = default;
->>>>>>> upstream-releases
 
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(MLGSwapChain)
@@ -152,16 +141,8 @@ class MLGResource {
   virtual Type GetType() const = 0;
   virtual MLGResourceD3D11* AsResourceD3D11() { return nullptr; }
 
-<<<<<<< HEAD
- protected:
-  virtual ~MLGResource() {}
-||||||| merged common ancestors
-protected:
-  virtual ~MLGResource() {}
-=======
  protected:
   virtual ~MLGResource() = default;
->>>>>>> upstream-releases
 };
 
 // A buffer for use as a shader input.
@@ -171,16 +152,8 @@ class MLGBuffer : public MLGResource {
   virtual MLGBufferD3D11* AsD3D11() { return nullptr; }
   virtual size_t GetSize() const = 0;
 
-<<<<<<< HEAD
- protected:
-  ~MLGBuffer() override {}
-||||||| merged common ancestors
-protected:
-  ~MLGBuffer() override {}
-=======
  protected:
   virtual ~MLGBuffer() = default;
->>>>>>> upstream-releases
 };
 
 // This is a lower-level resource than a TextureSource. It wraps
@@ -450,16 +423,8 @@ class MLGDevice {
   // MOZ_FORMAT_PRINTF macro does not work on this function, so we
   // disable the warning.
 #if defined(__GNUC__)
-<<<<<<< HEAD
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-security"
-||||||| merged common ancestors
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wformat-security"
-=======
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wformat-security"
->>>>>>> upstream-releases
 #endif
   template <typename... T>
   bool Fail(const char* aFailureId) {
@@ -473,13 +438,7 @@ class MLGDevice {
     return Fail(failureId, &message);
   }
 #if defined(__GNUC__)
-<<<<<<< HEAD
-#pragma GCC diagnostic pop
-||||||| merged common ancestors
-# pragma GCC diagnostic pop
-=======
 #  pragma GCC diagnostic pop
->>>>>>> upstream-releases
 #endif
 
   void UnmapSharedBuffers();
@@ -495,17 +454,9 @@ class MLGDevice {
   nsCString mFailureMessage;
   bool mInitialized;
 
-<<<<<<< HEAD
-  typedef EnumeratedArray<YUVColorSpace, YUVColorSpace::UNKNOWN,
-                          RefPtr<MLGBuffer>>
-      ColorSpaceArray;
-||||||| merged common ancestors
-  typedef EnumeratedArray<YUVColorSpace, YUVColorSpace::UNKNOWN, RefPtr<MLGBuffer>> ColorSpaceArray;
-=======
   typedef EnumeratedArray<gfx::YUVColorSpace, gfx::YUVColorSpace::UNKNOWN,
                           RefPtr<MLGBuffer>>
       ColorSpaceArray;
->>>>>>> upstream-releases
   ColorSpaceArray mColorSpaceBuffers;
   typedef EnumeratedArray<gfx::ColorDepth, gfx::ColorDepth::UNKNOWN,
                           RefPtr<MLGBuffer>>

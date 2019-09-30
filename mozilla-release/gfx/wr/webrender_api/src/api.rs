@@ -12,20 +12,6 @@ use std::os::raw::c_void;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::u32;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-use {BuiltDisplayList, BuiltDisplayListDescriptor, ColorF, DeviceIntPoint, DeviceIntRect};
-use {DeviceIntSize, ExternalScrollId, FontInstanceKey, FontInstanceOptions};
-use {FontInstancePlatformOptions, FontKey, FontVariation, GlyphDimensions, GlyphIndex, ImageData};
-use {ImageDescriptor, ItemTag, LayoutPoint, LayoutSize, LayoutTransform, LayoutVector2D};
-use {BlobDirtyRect, ImageDirtyRect, ImageKey, BlobImageKey, BlobImageData};
-use {NativeFontHandle, WorldPoint};
-||||||| merged common ancestors
-use {BuiltDisplayList, BuiltDisplayListDescriptor, ColorF, DeviceIntPoint, DeviceUintRect};
-use {DeviceUintSize, ExternalScrollId, FontInstanceKey, FontInstanceOptions};
-use {FontInstancePlatformOptions, FontKey, FontVariation, GlyphDimensions, GlyphIndex, ImageData};
-use {ImageDescriptor, ImageKey, ItemTag, LayoutPoint, LayoutSize, LayoutTransform, LayoutVector2D};
-use {NativeFontHandle, WorldPoint};
-=======
 // local imports
 use crate::{display_item as di, font};
 use crate::color::{ColorU, ColorF};
@@ -33,7 +19,6 @@ use crate::display_list::{BuiltDisplayList, BuiltDisplayListDescriptor};
 use crate::image::{BlobImageData, BlobImageKey, ImageData, ImageDescriptor, ImageKey};
 use crate::units::*;
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
 
 pub type TileSize = u16;
 /// Documents are rendered in the ascending order of their associated layer values.
@@ -136,14 +121,8 @@ impl Transaction {
     /// # Examples
     ///
     /// ```
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-    /// # use webrender_api::{DeviceIntSize, PipelineId, RenderApiSender, Transaction};
-||||||| merged common ancestors
-    /// # use webrender_api::{DeviceUintSize, PipelineId, RenderApiSender, Transaction};
-=======
     /// # use webrender_api::{PipelineId, RenderApiSender, Transaction};
     /// # use webrender_api::units::{DeviceIntSize};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
     /// # fn example() {
     /// let pipeline_id = PipelineId(0, 0);
     /// let mut txn = Transaction::new();
@@ -223,15 +202,7 @@ impl Transaction {
     /// Setup the output region in the framebuffer for a given document.
     pub fn set_document_view(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-        window_size: DeviceIntSize,
-        inner_rect: DeviceIntRect,
-||||||| merged common ancestors
-        window_size: DeviceUintSize,
-        inner_rect: DeviceUintRect,
-=======
         device_rect: DeviceIntRect,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
         device_pixel_ratio: f32,
     ) {
         self.scene_ops.push(
@@ -371,7 +342,6 @@ impl Transaction {
         self.resource_updates.push(ResourceUpdate::DeleteImage(key));
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
     pub fn add_blob_image(
         &mut self,
         key: BlobImageKey,
@@ -404,51 +374,6 @@ impl Transaction {
                 dirty_rect: *dirty_rect,
             })
         );
-    }
-
-    pub fn delete_blob_image(&mut self, key: BlobImageKey) {
-        self.resource_updates.push(ResourceUpdate::DeleteImage(key.as_image()));
-    }
-
-    pub fn set_blob_image_visible_area(&mut self, key: BlobImageKey, area: DeviceIntRect) {
-        self.resource_updates.push(ResourceUpdate::SetBlobImageVisibleArea(key, area))
-||||||| merged common ancestors
-    pub fn set_image_visible_area(&mut self, key: ImageKey, area: DeviceUintRect) {
-        self.resource_updates.push(ResourceUpdate::SetImageVisibleArea(key, area))
-=======
-    pub fn add_blob_image(
-        &mut self,
-        key: BlobImageKey,
-        descriptor: ImageDescriptor,
-        data: Arc<BlobImageData>,
-        tiling: Option<TileSize>,
-    ) {
-        self.resource_updates.push(
-            ResourceUpdate::AddBlobImage(AddBlobImage {
-                key,
-                descriptor,
-                data,
-                tiling,
-            })
-        );
-    }
-
-    pub fn update_blob_image(
-        &mut self,
-        key: BlobImageKey,
-        descriptor: ImageDescriptor,
-        data: Arc<BlobImageData>,
-        dirty_rect: &BlobDirtyRect,
-    ) {
-        self.resource_updates.push(
-            ResourceUpdate::UpdateBlobImage(UpdateBlobImage {
-                key,
-                descriptor,
-                data,
-                dirty_rect: *dirty_rect,
-            })
-        );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
     }
 
     pub fn delete_blob_image(&mut self, key: BlobImageKey) {
@@ -678,18 +603,8 @@ pub enum SceneMsg {
         content_size: LayoutSize,
         preserve_frame_state: bool,
     },
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-    SetWindowParameters {
-        window_size: DeviceIntSize,
-        inner_rect: DeviceIntRect,
-||||||| merged common ancestors
-    SetWindowParameters {
-        window_size: DeviceUintSize,
-        inner_rect: DeviceUintRect,
-=======
     SetDocumentView {
         device_rect: DeviceIntRect,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
         device_pixel_ratio: f32,
     },
 }
@@ -769,12 +684,6 @@ bitflags!{
 pub struct CapturedDocument {
     pub document_id: DocumentId,
     pub root_pipeline_id: Option<PipelineId>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-    pub window_size: DeviceIntSize,
-||||||| merged common ancestors
-    pub window_size: DeviceUintSize,
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
 }
 
 #[derive(Clone, Deserialize, Serialize)]
@@ -807,9 +716,6 @@ pub enum DebugCommand {
     /// Causes the low priority scene builder to pause for a given amount of milliseconds
     /// each time it processes a transaction.
     SimulateLongLowPrioritySceneBuild(u32),
-    /// Sets the provided debug flags. This may overlap with some of the functionality
-    /// above.
-    SetFlags(DebugFlags),
 }
 
 #[derive(Clone, Deserialize, Serialize)]
@@ -1016,14 +922,9 @@ pub struct MemoryReport {
     pub fonts: usize,
     pub images: usize,
     pub rasterized_blobs: usize,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-    pub shader_cache: usize,
-||||||| merged common ancestors
-=======
     pub shader_cache: usize,
     pub interning: InterningMemoryReport,
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
     //
     // GPU memory.
     //
@@ -1032,52 +933,7 @@ pub struct MemoryReport {
     pub render_target_textures: usize,
     pub texture_cache_textures: usize,
     pub depth_target_textures: usize,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
     pub swap_chain: usize,
-}
-
-impl ::std::ops::AddAssign for MemoryReport {
-    fn add_assign(&mut self, other: MemoryReport) {
-        self.primitive_stores += other.primitive_stores;
-        self.clip_stores += other.clip_stores;
-        self.gpu_cache_metadata += other.gpu_cache_metadata;
-        self.gpu_cache_cpu_mirror += other.gpu_cache_cpu_mirror;
-        self.render_tasks += other.render_tasks;
-        self.hit_testers += other.hit_testers;
-        self.fonts += other.fonts;
-        self.images += other.images;
-        self.rasterized_blobs += other.rasterized_blobs;
-        self.shader_cache += other.shader_cache;
-        self.gpu_cache_textures += other.gpu_cache_textures;
-        self.vertex_data_textures += other.vertex_data_textures;
-        self.render_target_textures += other.render_target_textures;
-        self.texture_cache_textures += other.texture_cache_textures;
-        self.depth_target_textures += other.depth_target_textures;
-        self.swap_chain += other.swap_chain;
-    }
-||||||| merged common ancestors
-}
-
-impl ::std::ops::AddAssign for MemoryReport {
-    fn add_assign(&mut self, other: MemoryReport) {
-        self.primitive_stores += other.primitive_stores;
-        self.clip_stores += other.clip_stores;
-        self.gpu_cache_metadata += other.gpu_cache_metadata;
-        self.gpu_cache_cpu_mirror += other.gpu_cache_cpu_mirror;
-        self.render_tasks += other.render_tasks;
-        self.hit_testers += other.hit_testers;
-        self.fonts += other.fonts;
-        self.images += other.images;
-        self.rasterized_blobs += other.rasterized_blobs;
-        self.gpu_cache_textures += other.gpu_cache_textures;
-        self.vertex_data_textures += other.vertex_data_textures;
-        self.render_target_textures += other.render_target_textures;
-        self.texture_cache_textures += other.texture_cache_textures;
-        self.depth_target_textures += other.depth_target_textures;
-    }
-=======
-    pub swap_chain: usize,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
 }
 
 /// A C function that takes a pointer to a heap allocation and returns its size.
@@ -1172,28 +1028,6 @@ impl RenderApiSender {
     }
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-bitflags! {
-    #[derive(Default, Deserialize, Serialize)]
-    pub struct DebugFlags: u32 {
-        const PROFILER_DBG          = 1 << 0;
-        const RENDER_TARGET_DBG     = 1 << 1;
-        const TEXTURE_CACHE_DBG     = 1 << 2;
-        const GPU_TIME_QUERIES      = 1 << 3;
-        const GPU_SAMPLE_QUERIES    = 1 << 4;
-        const DISABLE_BATCHING      = 1 << 5;
-        const EPOCHS                = 1 << 6;
-        const COMPACT_PROFILER      = 1 << 7;
-        const ECHO_DRIVER_MESSAGES  = 1 << 8;
-        const NEW_FRAME_INDICATOR   = 1 << 9;
-        const NEW_SCENE_INDICATOR   = 1 << 10;
-        const SHOW_OVERDRAW         = 1 << 11;
-        const GPU_CACHE_DBG         = 1 << 12;
-        const SLOW_FRAME_INDICATOR  = 1 << 13;
-        const TEXTURE_CACHE_DBG_CLEAR_EVICTED = 1 << 14;
-    }
-||||||| merged common ancestors
-=======
 bitflags! {
     #[repr(C)]
     #[derive(Default, Deserialize, MallocSizeOf, Serialize)]
@@ -1239,7 +1073,6 @@ bitflags! {
         const DISABLE_TEXT_PRIMS = 1 << 22;
         const DISABLE_GRADIENT_PRIMS = 1 << 23;
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
 }
 
 pub struct RenderApi {
@@ -1464,15 +1297,7 @@ impl RenderApi {
     pub fn set_document_view(
         &self,
         document_id: DocumentId,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/api.rs
-        window_size: DeviceIntSize,
-        inner_rect: DeviceIntRect,
-||||||| merged common ancestors
-        window_size: DeviceUintSize,
-        inner_rect: DeviceUintRect,
-=======
         device_rect: DeviceIntRect,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/api.rs
         device_pixel_ratio: f32,
     ) {
         self.send_scene_msg(

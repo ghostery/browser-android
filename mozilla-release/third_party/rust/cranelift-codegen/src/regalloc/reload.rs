@@ -9,29 +9,6 @@
 //! possible to minimize the number of `fill` instructions needed. This must not cause the register
 //! pressure limits to be exceeded.
 
-<<<<<<< HEAD
-use cursor::{Cursor, EncCursor};
-use dominator_tree::DominatorTree;
-use entity::{SparseMap, SparseMapValue};
-use ir::{AbiParam, ArgumentLoc, InstBuilder};
-use ir::{Ebb, Function, Inst, InstructionData, Opcode, Value};
-use isa::RegClass;
-use isa::{ConstraintKind, EncInfo, Encoding, RecipeConstraints, TargetIsa};
-use regalloc::affinity::Affinity;
-use regalloc::live_value_tracker::{LiveValue, LiveValueTracker};
-use regalloc::liveness::Liveness;
-||||||| merged common ancestors
-use cursor::{Cursor, EncCursor};
-use dominator_tree::DominatorTree;
-use entity::{SparseMap, SparseMapValue};
-use ir::{AbiParam, ArgumentLoc, InstBuilder};
-use ir::{Ebb, Function, Inst, Value};
-use isa::RegClass;
-use isa::{ConstraintKind, EncInfo, Encoding, RecipeConstraints, TargetIsa};
-use regalloc::affinity::Affinity;
-use regalloc::live_value_tracker::{LiveValue, LiveValueTracker};
-use regalloc::liveness::Liveness;
-=======
 use crate::cursor::{Cursor, EncCursor};
 use crate::dominator_tree::DominatorTree;
 use crate::entity::{SparseMap, SparseMapValue};
@@ -45,7 +22,6 @@ use crate::regalloc::liveness::Liveness;
 use crate::timing;
 use crate::topo_order::TopoOrder;
 use log::debug;
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// Reusable data structures for the reload pass.
@@ -235,51 +211,6 @@ impl<'a> Context<'a> {
         debug_assert!(self.candidates.is_empty());
         self.find_candidates(inst, constraints);
 
-<<<<<<< HEAD
-        if let InstructionData::Unary {
-            opcode: Opcode::Copy,
-            ..
-        } = self.cur.func.dfg[inst]
-        {
-            self.reload_copy_candidates(inst);
-        } else {
-            self.reload_inst_candidates(ebb, inst);
-||||||| merged common ancestors
-        // Insert fill instructions before `inst` and replace `cand.value` with the filled value.
-        for cand in self.candidates.iter_mut() {
-            if let Some(reload) = self.reloads.get(cand.value) {
-                cand.value = reload.reg;
-                continue;
-            }
-
-            let reg = self.cur.ins().fill(cand.value);
-            let fill = self.cur.built_inst();
-
-            self.reloads.insert(ReloadedValue {
-                stack: cand.value,
-                reg,
-            });
-            cand.value = reg;
-
-            // Create a live range for the new reload.
-            let affinity = Affinity::Reg(cand.regclass.into());
-            self.liveness.create_dead(reg, fill, affinity);
-            self.liveness
-                .extend_locally(reg, ebb, inst, &self.cur.func.layout);
-        }
-
-        // Rewrite instruction arguments.
-        //
-        // Only rewrite those arguments that were identified as candidates. This leaves EBB
-        // arguments on branches as-is without rewriting them. A spilled EBB argument needs to stay
-        // spilled because the matching EBB parameter is going to be in the same virtual register
-        // and therefore the same stack slot as the EBB argument value.
-        if !self.candidates.is_empty() {
-            let args = self.cur.func.dfg.inst_args_mut(inst);
-            while let Some(cand) = self.candidates.pop() {
-                args[cand.argidx] = cand.value;
-            }
-=======
         // If we find a copy from a stack slot to the same stack slot, replace
         // it with a `copy_nop` but otherwise ignore it.  In particular, don't
         // generate a reload immediately followed by a spill.  The `copy_nop`
@@ -335,7 +266,6 @@ impl<'a> Context<'a> {
             self.reload_copy_candidates(inst);
         } else {
             self.reload_inst_candidates(ebb, inst);
->>>>>>> upstream-releases
         }
 
         // TODO: Reuse reloads for future instructions.
@@ -381,19 +311,10 @@ impl<'a> Context<'a> {
         }
 
         // Same thing for spilled call return values.
-<<<<<<< HEAD
-        let retvals = &defs[self.cur.func.dfg[inst]
-                                .opcode()
-                                .constraints()
-                                .num_fixed_results()..];
-||||||| merged common ancestors
-        let retvals = &defs[constraints.outs.len()..];
-=======
         let retvals = &defs[self.cur.func.dfg[inst]
             .opcode()
             .constraints()
             .num_fixed_results()..];
->>>>>>> upstream-releases
         if !retvals.is_empty() {
             let sig = self
                 .cur

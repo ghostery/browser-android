@@ -48,26 +48,12 @@ class XULTreeGridCellAccessibleWrap : public XULTreeGridCellAccessible,
  public:
   XULTreeGridCellAccessibleWrap(nsIContent* aContent, DocAccessible* aDoc,
                                 XULTreeGridRowAccessible* aRowAcc,
-<<<<<<< HEAD
-                                nsITreeBoxObject* aTree, nsITreeView* aTreeView,
-                                int32_t aRow, nsTreeColumn* aColumn)
-      : XULTreeGridCellAccessible(aContent, aDoc, aRowAcc, aTree, aTreeView,
-                                  aRow, aColumn),
-        ia2AccessibleTableCell(this) {}
-||||||| merged common ancestors
-                                nsITreeBoxObject* aTree,
-                                nsITreeView* aTreeView,
-                                int32_t aRow, nsTreeColumn* aColumn) :
-    XULTreeGridCellAccessible(aContent, aDoc, aRowAcc, aTree, aTreeView, aRow,
-                              aColumn), ia2AccessibleTableCell(this) {}
-=======
                                 dom::XULTreeElement* aTree,
                                 nsITreeView* aTreeView, int32_t aRow,
                                 nsTreeColumn* aColumn)
       : XULTreeGridCellAccessible(aContent, aDoc, aRowAcc, aTree, aTreeView,
                                   aRow, aColumn),
         ia2AccessibleTableCell(this) {}
->>>>>>> upstream-releases
 
   // IUnknown
   DECL_IUNKNOWN_INHERITED

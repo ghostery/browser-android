@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-Changes for 0.0.1:
-------------------
-
-Initial release
-||||||| merged common ancestors
-=======
 Changes for 0.4.0 'Cheetah':
 ----------------------------
 
@@ -76,4 +69,3 @@ Initial release of dav1d, the fast and small AV1 decoder.
  - Full acceleration for AVX-2 64bits processors, making it the fastest decoder
  - Partial acceleration for SSSE3 processors
  - Partial acceleration for NEON processors
->>>>>>> upstream-releases

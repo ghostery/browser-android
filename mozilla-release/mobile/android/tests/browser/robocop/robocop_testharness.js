@@ -64,16 +64,7 @@ function _evalURI(uri, sandbox) {
  * Robocop:Java messages.
  */
 function testOneFile(uri) {
-<<<<<<< HEAD
-  let HEAD_JS = [
-    "head.js",
-    "robocop_head.js",
-  ];
-||||||| merged common ancestors
-  let HEAD_JS = "robocop_head.js";
-=======
   let HEAD_JS = ["head.js", "robocop_head.js"];
->>>>>>> upstream-releases
 
   // System principal.  This is dangerous, but this is test code that
   // should only run on developer and build farm machines, and the
@@ -85,18 +76,10 @@ function testOneFile(uri) {
     "@mozilla.org/systemprincipal;1"
   ].createInstance(SpecialPowers.Ci.nsIPrincipal);
 
-<<<<<<< HEAD
-  let testScope =
-    SpecialPowers.Cu.Sandbox(principal, { sandboxName: uri,
-                                          wantGlobalProperties: ["ChromeUtils"] });
-||||||| merged common ancestors
-  let testScope = SpecialPowers.Cu.Sandbox(principal);
-=======
   let testScope = SpecialPowers.Cu.Sandbox(principal, {
     sandboxName: uri,
     wantGlobalProperties: ["ChromeUtils"],
   });
->>>>>>> upstream-releases
 
   // Populate test environment with test harness prerequisites.
   testScope.SpecialPowers = SpecialPowers;

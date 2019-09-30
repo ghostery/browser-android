@@ -3,23 +3,6 @@
 //! The order of extended basic blocks in a function and the order of instructions in an EBB is
 //! determined by the `Layout` data structure defined in this module.
 
-<<<<<<< HEAD
-use entity::SecondaryMap;
-use ir::progpoint::{ExpandedProgramPoint, ProgramOrder};
-use ir::{Ebb, Inst};
-use packed_option::PackedOption;
-use std::cmp;
-use std::iter::{IntoIterator, Iterator};
-use timing;
-||||||| merged common ancestors
-use entity::EntityMap;
-use ir::progpoint::{ExpandedProgramPoint, ProgramOrder};
-use ir::{Ebb, Inst};
-use packed_option::PackedOption;
-use std::cmp;
-use std::iter::{IntoIterator, Iterator};
-use timing;
-=======
 use crate::entity::SecondaryMap;
 use crate::ir::progpoint::{ExpandedProgramPoint, ProgramOrder};
 use crate::ir::{Ebb, Inst};
@@ -28,7 +11,6 @@ use crate::timing;
 use core::cmp;
 use core::iter::{IntoIterator, Iterator};
 use log::debug;
->>>>>>> upstream-releases
 
 /// The `Layout` struct determines the layout of EBBs and instructions in a function. It does not
 /// contain definitions of instructions or EBBs, but depends on `Inst` and `Ebb` entity references

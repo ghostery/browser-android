@@ -8,21 +8,9 @@ add_task(async function() {
   await createCorruptDb("places.sqlite");
 
   let count = Services.telemetry
-<<<<<<< HEAD
-                      .getHistogramById("PLACES_DATABASE_CORRUPTION_HANDLING_STAGE")
-                      .snapshot()
-                      .values[3];
-  Assert.equal(count, undefined, "There should be no telemetry");
-||||||| merged common ancestors
-                      .getHistogramById("PLACES_DATABASE_CORRUPTION_HANDLING_STAGE")
-                      .snapshot()
-                      .counts[3];
-  Assert.equal(count, 0, "There should be no telemetry");
-=======
     .getHistogramById("PLACES_DATABASE_CORRUPTION_HANDLING_STAGE")
     .snapshot().values[3];
   Assert.equal(count, undefined, "There should be no telemetry");
->>>>>>> upstream-releases
 
   Assert.equal(
     PlacesUtils.history.databaseStatus,
@@ -30,17 +18,7 @@ add_task(async function() {
   );
 
   count = Services.telemetry
-<<<<<<< HEAD
-                  .getHistogramById("PLACES_DATABASE_CORRUPTION_HANDLING_STAGE")
-                  .snapshot()
-                  .values[3];
-||||||| merged common ancestors
-                  .getHistogramById("PLACES_DATABASE_CORRUPTION_HANDLING_STAGE")
-                  .snapshot()
-                  .counts[3];
-=======
     .getHistogramById("PLACES_DATABASE_CORRUPTION_HANDLING_STAGE")
     .snapshot().values[3];
->>>>>>> upstream-releases
   Assert.equal(count, 1, "Telemetry should have been added");
 });

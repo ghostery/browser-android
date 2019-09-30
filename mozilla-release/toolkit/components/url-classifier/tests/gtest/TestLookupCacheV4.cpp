@@ -4,7 +4,6 @@
 
 #include "Common.h"
 
-<<<<<<< HEAD
 void TestHasPrefix(const _Fragment& aFragment, bool aExpectedHas,
                    bool aExpectedComplete) {
   _PrefixArray array = {GeneratePrefix(_Fragment("bravo.com/"), 32),
@@ -13,27 +12,6 @@ void TestHasPrefix(const _Fragment& aFragment, bool aExpectedHas,
                         GeneratePrefix(_Fragment("small.com/"), 4)};
 
   RunTestInNewThread([&]() -> void {
-||||||| merged common ancestors
-void
-TestHasPrefix(const _Fragment& aFragment, bool aExpectedHas, bool aExpectedComplete)
-{
-  _PrefixArray array = { GeneratePrefix(_Fragment("bravo.com/"), 32),
-                         GeneratePrefix(_Fragment("browsing.com/"), 8),
-                         GeneratePrefix(_Fragment("gound.com/"), 5),
-                         GeneratePrefix(_Fragment("small.com/"), 4)
-                       };
-
-  RunTestInNewThread([&] () -> void {
-=======
-void TestHasPrefix(const _Fragment& aFragment, bool aExpectedHas,
-                   bool aExpectedComplete) {
-  _PrefixArray array = {GeneratePrefix(_Fragment("bravo.com/"), 32),
-                        GeneratePrefix(_Fragment("browsing.com/"), 8),
-                        GeneratePrefix(_Fragment("gound.com/"), 5),
-                        GeneratePrefix(_Fragment("small.com/"), 4)};
-
-  RunTestInNewThread([&]() -> void {
->>>>>>> upstream-releases
     RefPtr<LookupCache> cache = SetupLookupCache<LookupCacheV4>(array);
 
     Completion lookupHash;
@@ -54,14 +32,6 @@ void TestHasPrefix(const _Fragment& aFragment, bool aExpectedHas,
   });
 }
 
-<<<<<<< HEAD
-TEST(UrlClassifierLookupCacheV4, HasComplete) {
-  TestHasPrefix(_Fragment("bravo.com/"), true, true);
-||||||| merged common ancestors
-TEST(UrlClassifierLookupCacheV4, HasComplete)
-{
-  TestHasPrefix(_Fragment("bravo.com/"), true, true);
-=======
 TEST(UrlClassifierLookupCacheV4, HasComplete)
 { TestHasPrefix(_Fragment("bravo.com/"), true, true); }
 
@@ -115,17 +85,8 @@ TEST(UrlClassifierLookupCacheV4, RemoveOldPset)
   EXPECT_EQ(exists, false);
 
   newPsetFile->Remove(false);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-TEST(UrlClassifierLookupCacheV4, HasPrefix) {
-  TestHasPrefix(_Fragment("browsing.com/"), true, false);
-||||||| merged common ancestors
-TEST(UrlClassifierLookupCacheV4, HasPrefix)
-{
-  TestHasPrefix(_Fragment("browsing.com/"), true, false);
-=======
 // Test the legacy load
 TEST(UrlClassifierLookupCacheV4, LoadOldPset)
 {
@@ -162,17 +123,8 @@ TEST(UrlClassifierLookupCacheV4, LoadOldPset)
   CheckContent(cacheV4, array);
 
   oldPsetFile->Remove(false);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-TEST(UrlClassifierLookupCacheV4, Nomatch) {
-  TestHasPrefix(_Fragment("nomatch.com/"), false, false);
-||||||| merged common ancestors
-TEST(UrlClassifierLookupCacheV4, Nomatch)
-{
-  TestHasPrefix(_Fragment("nomatch.com/"), false, false);
-=======
 TEST(UrlClassifierLookupCacheV4, BuildAPI)
 {
   _PrefixArray init = {_Prefix("alph")};
@@ -186,5 +138,4 @@ TEST(UrlClassifierLookupCacheV4, BuildAPI)
   EXPECT_TRUE(map.IsEmpty());
 
   CheckContent(cache, update);
->>>>>>> upstream-releases
 }

@@ -2,38 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-use super::super::shader_source;
-use api::{ColorF, ImageFormat, MemoryReport};
-use api::{DeviceIntPoint, DeviceIntRect, DeviceIntSize};
-use api::TextureTarget;
-use api::VoidPtrToSizeFn;
-#[cfg(any(feature = "debug_renderer", feature="capture"))]
-use api::ImageDescriptor;
-||||||| merged common ancestors
-use super::super::shader_source;
-use api::{ColorF, ImageFormat, MemoryReport};
-use api::{DeviceIntPoint, DeviceIntRect, DeviceUintRect, DeviceUintSize};
-use api::TextureTarget;
-#[cfg(any(feature = "debug_renderer", feature="capture"))]
-use api::ImageDescriptor;
-=======
 use super::super::shader_source::SHADERS;
 use api::{ColorF, ImageDescriptor, ImageFormat, MemoryReport};
 use api::{MixBlendMode, TextureTarget, VoidPtrToSizeFn};
 use api::units::*;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 use euclid::Transform3D;
 use gleam::gl;
 use crate::internal_types::{FastHashMap, LayerIndex, RenderTargetInfo};
 use log::Level;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-use sha2::{Digest, Sha256};
-||||||| merged common ancestors
-=======
 use crate::profiler;
 use sha2::{Digest, Sha256};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 use smallvec::SmallVec;
 use std::borrow::Cow;
 use std::cell::{Cell, RefCell};
@@ -41,25 +19,15 @@ use std::cmp;
 use std::collections::hash_map::Entry;
 use std::marker::PhantomData;
 use std::mem;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-use std::os::raw::c_void;
-||||||| merged common ancestors
-=======
 use std::num::NonZeroUsize;
 use std::os::raw::c_void;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 use std::ops::Add;
 use std::path::PathBuf;
 use std::ptr;
 use std::rc::Rc;
 use std::slice;
 use std::sync::Arc;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-use std::sync::atomic::{AtomicUsize, ATOMIC_USIZE_INIT, Ordering};
-||||||| merged common ancestors
-=======
 use std::sync::atomic::{AtomicUsize, Ordering};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 use std::thread;
 use std::time::Duration;
 use webrender_build::shader::ProgramSourceDigest;
@@ -71,35 +39,6 @@ use webrender_build::shader::{parse_shader_source, shader_source_from_file};
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct GpuFrameId(usize);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-/// Tracks the total number of GPU bytes allocated across all WebRender instances.
-///
-/// Assuming all WebRender instances run on the same thread, this doesn't need
-/// to be atomic per se, but we make it atomic to satisfy the thread safety
-/// invariants in the type system. We could also put the value in TLS, but that
-/// would be more expensive to access.
-static GPU_BYTES_ALLOCATED: AtomicUsize = ATOMIC_USIZE_INIT;
-
-/// Returns the number of GPU bytes currently allocated.
-pub fn total_gpu_bytes_allocated() -> usize {
-    GPU_BYTES_ALLOCATED.load(Ordering::Relaxed)
-}
-
-/// Records an allocation in VRAM.
-fn record_gpu_alloc(num_bytes: usize) {
-    GPU_BYTES_ALLOCATED.fetch_add(num_bytes, Ordering::Relaxed);
-}
-
-/// Records an deallocation in VRAM.
-fn record_gpu_free(num_bytes: usize) {
-    let old = GPU_BYTES_ALLOCATED.fetch_sub(num_bytes, Ordering::Relaxed);
-    assert!(old >= num_bytes, "Freeing {} bytes but only {} allocated", num_bytes, old);
-}
-
-impl GpuFrameId {
-||||||| merged common ancestors
-impl FrameId {
-=======
 /// Tracks the total number of GPU bytes allocated across all WebRender instances.
 ///
 /// Assuming all WebRender instances run on the same thread, this doesn't need
@@ -125,7 +64,6 @@ fn record_gpu_free(num_bytes: usize) {
 }
 
 impl GpuFrameId {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     pub fn new(value: usize) -> Self {
         GpuFrameId(value)
     }
@@ -207,32 +145,12 @@ pub unsafe trait Texel: Copy {}
 unsafe impl Texel for u8 {}
 unsafe impl Texel for f32 {}
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 /// Returns the size in bytes of a depth target with the given dimensions.
 fn depth_target_size_in_bytes(dimensions: &DeviceIntSize) -> usize {
     // DEPTH24 textures generally reserve 3 bytes for depth and 1 byte
     // for stencil, so we measure them as 32 bits.
     let pixels = dimensions.width * dimensions.height;
     (pixels as usize) * 4
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum ReadPixelsFormat {
-    Standard(ImageFormat),
-    Rgba8,
-||||||| merged common ancestors
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum ReadPixelsFormat {
-    Standard(ImageFormat),
-    Rgba8,
-=======
-/// Returns the size in bytes of a depth target with the given dimensions.
-fn depth_target_size_in_bytes(dimensions: &DeviceIntSize) -> usize {
-    // DEPTH24 textures generally reserve 3 bytes for depth and 1 byte
-    // for stencil, so we measure them as 32 bits.
-    let pixels = dimensions.width * dimensions.height;
-    (pixels as usize) * 4
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 }
 
 pub fn get_gl_target(target: TextureTarget) -> gl::GLuint {
@@ -257,36 +175,9 @@ fn get_shader_version(gl: &dyn gl::Gl) -> &'static str {
 
 // Get a shader string by name, from the built in resources or
 // an override path, if supplied.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-fn get_shader_source(shader_name: &str, base_path: &Option<PathBuf>) -> Option<Cow<'static, str>> {
-    if let Some(ref base) = *base_path {
-||||||| merged common ancestors
-fn get_shader_source(shader_name: &str, base_path: &Option<PathBuf>) -> Option<String> {
-    if let Some(ref base) = *base_path {
-=======
 fn get_shader_source(shader_name: &str, base_path: Option<&PathBuf>) -> Cow<'static, str> {
     if let Some(ref base) = base_path {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         let shader_path = base.join(&format!("{}.glsl", shader_name));
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        if shader_path.exists() {
-            let mut source = String::new();
-            File::open(&shader_path)
-                .unwrap()
-                .read_to_string(&mut source)
-                .unwrap();
-            return Some(Cow::Owned(source));
-        }
-||||||| merged common ancestors
-        if shader_path.exists() {
-            let mut source = String::new();
-            File::open(&shader_path)
-                .unwrap()
-                .read_to_string(&mut source)
-                .unwrap();
-            return Some(source);
-        }
-=======
         Cow::Owned(shader_source_from_file(&shader_path))
     } else {
         Cow::Borrowed(
@@ -295,37 +186,9 @@ fn get_shader_source(shader_name: &str, base_path: Option<&PathBuf>) -> Cow<'sta
             .expect("Shader not found")
             .source
         )
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-
-    shader_source::SHADERS
-        .get(shader_name)
-        .map(|s| Cow::Borrowed(*s))
-||||||| merged common ancestors
-
-    shader_source::SHADERS
-        .get(shader_name)
-        .map(|s| s.to_string())
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-// Parse a shader string for imports. Imports are recursively processed, and
-// prepended to the output stream.
-fn parse_shader_source<F: FnMut(&str)>(source: Cow<'static, str>, base_path: &Option<PathBuf>, output: &mut F) {
-    for line in source.lines() {
-        if line.starts_with(SHADER_IMPORT) {
-            let imports = line[SHADER_IMPORT.len() ..].split(',');
-||||||| merged common ancestors
-// Parse a shader string for imports. Imports are recursively processed, and
-// prepended to the list of outputs.
-fn parse_shader_source(source: String, base_path: &Option<PathBuf>, output: &mut String) {
-    for line in source.lines() {
-        if line.starts_with(SHADER_IMPORT) {
-            let imports = line[SHADER_IMPORT.len() ..].split(',');
-=======
 /// Creates heap-allocated strings for both vertex and fragment shaders. Public
 /// to be accessible to tests.
 pub fn build_shader_strings(
@@ -343,65 +206,6 @@ pub fn build_shader_strings(
         override_path,
         |s| vs_source.push_str(s),
     );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-            // For each import, get the source, and recurse.
-            for import in imports {
-                if let Some(include) = get_shader_source(import, base_path) {
-                    parse_shader_source(include, base_path, output);
-                }
-            }
-        } else {
-            output(line);
-            output("\n");
-        }
-    }
-||||||| merged common ancestors
-            // For each import, get the source, and recurse.
-            for import in imports {
-                if let Some(include) = get_shader_source(import, base_path) {
-                    parse_shader_source(include, base_path, output);
-                }
-            }
-        } else {
-            output.push_str(line);
-            output.push_str("\n");
-        }
-    }
-=======
-    let mut fs_source = String::new();
-    do_build_shader_string(
-        gl_version_string,
-        features,
-        SHADER_KIND_FRAGMENT,
-        base_filename,
-        override_path,
-        |s| fs_source.push_str(s),
-    );
-
-    (vs_source, fs_source)
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-}
-
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-/// Creates heap-allocated strings for both vertex and fragment shaders. Public
-/// to be accessible to tests.
-pub fn build_shader_strings(
-     gl_version_string: &str,
-     features: &str,
-     base_filename: &str,
-     override_path: &Option<PathBuf>,
-) -> (String, String) {
-    let mut vs_source = String::new();
-    do_build_shader_string(
-        gl_version_string,
-        features,
-        SHADER_KIND_VERTEX,
-        base_filename,
-        override_path,
-        |s| vs_source.push_str(s),
-    );
 
     let mut fs_source = String::new();
     do_build_shader_string(
@@ -415,17 +219,7 @@ pub fn build_shader_strings(
 
     (vs_source, fs_source)
 }
-||||||| merged common ancestors
-pub fn build_shader_strings(
-    gl_version_string: &str,
-    features: &str,
-    base_filename: &str,
-    override_path: &Option<PathBuf>,
-) -> (String, String) {
-    // Construct a list of strings to be passed to the shader compiler.
-    let mut vs_source = String::new();
-    let mut fs_source = String::new();
-=======
+
 /// Walks the given shader string and applies the output to the provided
 /// callback. Assuming an override path is not used, does no heap allocation
 /// and no I/O.
@@ -440,22 +234,7 @@ fn do_build_shader_string<F: FnMut(&str)>(
     build_shader_prefix_string(gl_version_string, features, kind, base_filename, &mut output);
     build_shader_main_string(base_filename, override_path, &mut output);
 }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-/// Walks the given shader string and applies the output to the provided
-/// callback. Assuming an override path is not used, does no heap allocation
-/// and no I/O.
-fn do_build_shader_string<F: FnMut(&str)>(
-    gl_version_string: &str,
-    features: &str,
-    kind: &str,
-    base_filename: &str,
-    override_path: &Option<PathBuf>,
-    mut output: F,
-) {
-||||||| merged common ancestors
-=======
 /// Walks the prefix section of the shader string, which manages the various
 /// defines for features etc.
 fn build_shader_prefix_string<F: FnMut(&str)>(
@@ -465,7 +244,6 @@ fn build_shader_prefix_string<F: FnMut(&str)>(
     base_filename: &str,
     output: &mut F,
 ) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     // GLSL requires that the version number comes first.
     output(gl_version_string);
 
@@ -477,30 +255,6 @@ fn build_shader_prefix_string<F: FnMut(&str)>(
     output(kind);
 
     // Add any defines that were passed by the caller.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    output(features);
-
-    // Parse the main .glsl file, including any imports
-    // and append them to the list of sources.
-    if let Some(shared_source) = get_shader_source(base_filename, override_path) {
-        parse_shader_source(shared_source, override_path, &mut output);
-    }
-||||||| merged common ancestors
-    vs_source.push_str(features);
-    fs_source.push_str(features);
-
-    // Parse the main .glsl file, including any imports
-    // and append them to the list of sources.
-    let mut shared_result = String::new();
-    if let Some(shared_source) = get_shader_source(base_filename, override_path) {
-        parse_shader_source(shared_source, override_path, &mut shared_result);
-    }
-
-    vs_source.push_str(&shared_result);
-    fs_source.push_str(&shared_result);
-
-    (vs_source, fs_source)
-=======
     output(features);
 }
 
@@ -512,7 +266,6 @@ fn build_shader_main_string<F: FnMut(&str)>(
 ) {
     let shared_source = get_shader_source(base_filename, override_path);
     parse_shader_source(shared_source, &|f| get_shader_source(f, override_path), output);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 }
 
 pub trait FileWatcherHandler: Send {
@@ -764,16 +517,10 @@ pub struct Texture {
     /// configurations). But that would complicate a lot of logic in this module,
     /// and FBOs are cheap enough to create.
     fbos_with_depth: Vec<FBOId>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    last_frame_used: GpuFrameId,
-||||||| merged common ancestors
-    last_frame_used: FrameId,
-=======
     /// If we are unable to blit directly to a texture array then we need
     /// an intermediate renderbuffer.
     blit_workaround_buffer: Option<(RBOId, FBOId)>,
     last_frame_used: GpuFrameId,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 }
 
 impl Texture {
@@ -948,35 +695,6 @@ pub struct VBOId(gl::GLuint);
 #[derive(PartialEq, Eq, Hash, Debug, Copy, Clone)]
 struct IBOId(gl::GLuint);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-#[derive(PartialEq, Eq, Hash, Debug, Clone, Default)]
-#[cfg_attr(feature = "serialize_program", derive(Deserialize, Serialize))]
-pub struct ProgramSourceDigest([u8; 32]);
-
-impl ::std::fmt::Display for ProgramSourceDigest {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        for byte in self.0.iter() {
-            f.write_fmt(format_args!("{:02x}", byte))?;
-        }
-        Ok(())
-    }
-||||||| merged common ancestors
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "serialize_program", derive(Deserialize, Serialize))]
-pub struct ProgramSources {
-    renderer_name: String,
-    vs_source: String,
-    fs_source: String,
-=======
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub struct ProgramSourceInfo {
-    base_filename: &'static str,
-    features: String,
-    digest: ProgramSourceDigest,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-}
-
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct ProgramSourceInfo {
     base_filename: &'static str,
@@ -984,56 +702,6 @@ pub struct ProgramSourceInfo {
     digest: ProgramSourceDigest,
 }
 
-impl ProgramSourceInfo {
-    fn new(
-        device: &Device,
-        base_filename: &'static str,
-        features: String,
-    ) -> Self {
-        // Compute the digest. Assuming the device has a `ProgramCache`, this
-        // will always be needed, whereas the source is rarely needed. As such,
-        // we compute the hash by walking the static strings in the same order
-        // as we would when concatenating the source, to avoid heap-allocating
-        // in the common case.
-
-        // Construct the hasher.
-        let mut hasher = Sha256::new();
-
-        // Hash the renderer name.
-        hasher.input(device.renderer_name.as_bytes());
-
-        // Hash the vertex shader.
-        device.build_shader_string(
-            &features,
-            SHADER_KIND_VERTEX,
-            &base_filename,
-            |s| hasher.input(s.as_bytes()),
-        );
-
-        // Hash the fragment shader.
-        device.build_shader_string(
-            &features,
-            SHADER_KIND_FRAGMENT,
-            base_filename,
-            |s| hasher.input(s.as_bytes()),
-        );
-
-        // Finish.
-        let mut digest = ProgramSourceDigest::default();
-        digest.0.copy_from_slice(hasher.result().as_slice());
-
-        ProgramSourceInfo {
-            base_filename,
-            features,
-            digest,
-||||||| merged common ancestors
-impl ProgramSources {
-    fn new(renderer_name: String, vs_source: String, fs_source: String) -> Self {
-        ProgramSources {
-            renderer_name,
-            vs_source,
-            fs_source,
-=======
 impl ProgramSourceInfo {
     fn new(
         device: &Device,
@@ -1088,7 +756,6 @@ impl ProgramSourceInfo {
             base_filename: name,
             features,
             digest: hasher.into(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         }
     }
 
@@ -1322,11 +989,6 @@ pub struct Device {
 
     // Frame counter. This is used to map between CPU
     // frames and GPU frames.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    frame_id: GpuFrameId,
-||||||| merged common ancestors
-    frame_id: FrameId,
-=======
     frame_id: GpuFrameId,
 
     /// When to use glTexStorage*. We prefer this over glTexImage* because it
@@ -1335,27 +997,8 @@ pub struct Device {
     /// at all, or for BGRA8 format. If it's not supported for the required
     /// format, we fall back to glTexImage*.
     texture_storage_usage: TexStorageUsage,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    /// When to use glTexStorage*. We prefer this over glTexImage* because it
-    /// guarantees that mipmaps won't be generated (which they otherwise are on
-    /// some drivers, particularly ANGLE). However, it is not always supported
-    /// at all, or for BGRA8 format. If it's not supported for the required
-    /// format, we fall back to glTexImage*.
-    texture_storage_usage: TexStorageUsage,
-
-    /// Whether the function glCopyImageSubData is available.
-    supports_copy_image_sub_data: bool,
-||||||| merged common ancestors
-    /// Whether glTexStorage* is supported. We prefer this over glTexImage*
-    /// because it guarantees that mipmaps won't be generated (which they
-    /// otherwise are on some drivers, particularly ANGLE), If it's not
-    /// supported, we fall back to glTexImage*.
-    supports_texture_storage: bool,
-=======
     optimal_pbo_stride: NonZeroUsize,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 
     // GL extensions
     extensions: Vec<String>,
@@ -1366,47 +1009,6 @@ pub struct Device {
 
 /// Contains the parameters necessary to bind a draw target.
 #[derive(Clone, Copy)]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-pub enum DrawTarget<'a> {
-    /// Use the device's default draw target, with the provided dimensions,
-    /// which are used to set the viewport.
-    Default(DeviceIntSize),
-    /// Use the provided texture.
-    Texture {
-        /// The target texture.
-        texture: &'a Texture,
-        /// The slice within the texture array to draw to.
-        layer: LayerIndex,
-        /// Whether to draw with the texture's associated depth target.
-        with_depth: bool,
-    },
-}
-
-impl<'a> DrawTarget<'a> {
-    /// Returns true if this draw target corresponds to the default framebuffer.
-    pub fn is_default(&self) -> bool {
-        match *self {
-            DrawTarget::Default(..) => true,
-            _ => false,
-        }
-    }
-
-    /// Returns the dimensions of this draw-target.
-    pub fn dimensions(&self) -> DeviceIntSize {
-        match *self {
-            DrawTarget::Default(d) => d,
-            DrawTarget::Texture { texture, .. } => texture.get_dimensions(),
-        }
-    }
-||||||| merged common ancestors
-pub struct TextureDrawTarget<'a> {
-    /// The target texture.
-    pub texture: &'a Texture,
-    /// The slice within the texture array to draw to.
-    pub layer: LayerIndex,
-    /// Whether to draw with the texture's associated depth target.
-    pub with_depth: bool,
-=======
 pub enum DrawTarget {
     /// Use the device's default draw target, with the provided dimensions,
     /// which are used to set the viewport.
@@ -1530,29 +1132,10 @@ impl DrawTarget {
             }
         }
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 }
 
 /// Contains the parameters necessary to bind a texture-backed read target.
 #[derive(Clone, Copy)]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-pub enum ReadTarget<'a> {
-    /// Use the device's default draw target.
-    Default,
-    /// Use the provided texture,
-    Texture {
-        /// The source texture.
-        texture: &'a Texture,
-        /// The slice within the texture array to read from.
-        layer: LayerIndex,
-    }
-||||||| merged common ancestors
-pub struct TextureReadTarget<'a> {
-    /// The source texture.
-    pub texture: &'a Texture,
-    /// The slice within the texture array to read from.
-    pub layer: LayerIndex,
-=======
 pub enum ReadTarget {
     /// Use the device's default draw target.
     Default,
@@ -1576,23 +1159,8 @@ impl ReadTarget {
             fbo_id: texture.fbos[layer],
         }
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-impl<'a> From<DrawTarget<'a>> for ReadTarget<'a> {
-    fn from(t: DrawTarget<'a>) -> Self {
-        match t {
-            DrawTarget::Default(..) => ReadTarget::Default,
-            DrawTarget::Texture { texture, layer, .. } =>
-                ReadTarget::Texture { texture, layer },
-||||||| merged common ancestors
-impl<'a> From<TextureDrawTarget<'a>> for TextureReadTarget<'a> {
-    fn from(t: TextureDrawTarget<'a>) -> Self {
-        TextureReadTarget {
-            texture: t.texture,
-            layer: t.layer,
-=======
 impl From<DrawTarget> for ReadTarget {
     fn from(t: DrawTarget) -> Self {
         match t {
@@ -1601,7 +1169,6 @@ impl From<DrawTarget> for ReadTarget {
                 ReadTarget::Texture { fbo_id },
             DrawTarget::External { fbo, .. } =>
                 ReadTarget::External { fbo },
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         }
     }
 }
@@ -1676,22 +1243,6 @@ impl Device {
         // [2] https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_format_BGRA8888.txt
         // [3] https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_storage.txt
         let supports_bgra = supports_extension(&extensions, "GL_EXT_texture_format_BGRA8888");
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        let supports_texture_storage = match gl.get_type() {
-            gl::GlType::Gl => supports_extension(&extensions, "GL_ARB_texture_storage"),
-            gl::GlType::Gles => true,
-||||||| merged common ancestors
-        let (bgra_format_internal, bgra_format_external) = if supports_bgra {
-            assert_eq!(gl.get_type(), gl::GlType::Gles, "gleam only detects bgra on gles");
-            (gl::BGRA8_EXT, gl::BGRA_EXT)
-        } else {
-            (gl::RGBA8, gl::BGRA)
-        };
-
-        let supports_texture_storage = match gl.get_type() {
-            gl::GlType::Gl => supports_extension(&extensions, "GL_ARB_texture_storage"),
-            gl::GlType::Gles => true,
-=======
         let supports_texture_storage = match gl.get_type() {
             gl::GlType::Gl => supports_extension(&extensions, "GL_ARB_texture_storage"),
             gl::GlType::Gles => true,
@@ -1778,60 +1329,7 @@ impl Device {
             NonZeroUsize::new(256).unwrap()
         } else {
             NonZeroUsize::new(4).unwrap()
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         };
-
-
-        let (bgra_format_internal, bgra_format_external, texture_storage_usage) = if supports_bgra {
-            assert_eq!(gl.get_type(), gl::GlType::Gles, "gleam only detects bgra on gles");
-            // To support BGRA8 with glTexStorage* we specifically need
-            // GL_EXT_texture_storage and GL_EXT_texture_format_BGRA8888.
-            if supports_extension(&extensions, "GL_EXT_texture_format_BGRA8888") && supports_extension(&extensions, "GL_EXT_texture_storage") {
-                // We can use glTexStorage with BGRA8 as the internal format.
-                (gl::BGRA8_EXT, gl::BGRA_EXT, TexStorageUsage::Always)
-            } else {
-                // For BGRA8 textures we must must use the unsized BGRA internal
-                // format and glTexImage. If texture storage is supported we can
-                // use it for other formats.
-                (
-                    gl::BGRA_EXT,
-                    gl::BGRA_EXT,
-                    if supports_texture_storage {
-                        TexStorageUsage::NonBGRA8
-                    } else {
-                        TexStorageUsage::Never
-                    },
-                )
-            }
-        } else {
-            // BGRA is not supported as an internal format, therefore we will
-            // use RGBA. On non-gles we can swizzle during upload. This is not
-            // allowed on gles, so we must us RGBA for the external format too.
-            // Red and blue will appear reversed, but it is the best we can do.
-            // Since the internal format will actually be RGBA, if texture
-            // storage is supported we can use it for such textures.
-            (
-                gl::RGBA8,
-                if gl.get_type() == gl::GlType::Gles {
-                    gl::RGBA
-                } else {
-                    gl::BGRA
-                },
-                if supports_texture_storage {
-                    TexStorageUsage::Always
-                } else {
-                    TexStorageUsage::Never
-                },
-            )
-        };
-
-        let supports_copy_image_sub_data = supports_extension(&extensions, "GL_EXT_copy_image") ||
-            supports_extension(&extensions, "GL_ARB_copy_image");
-
-        // Explicitly set some global states to the values we expect.
-        gl.disable(gl::FRAMEBUFFER_SRGB);
-        gl.disable(gl::MULTISAMPLE);
-        gl.disable(gl::POLYGON_SMOOTH);
 
         Device {
             gl,
@@ -1871,16 +1369,9 @@ impl Device {
             cached_programs,
             frame_id: GpuFrameId(0),
             extensions,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-            texture_storage_usage,
-            supports_copy_image_sub_data
-||||||| merged common ancestors
-            supports_texture_storage,
-=======
             texture_storage_usage,
             optimal_pbo_stride,
             dump_shader_source,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         }
     }
 
@@ -1908,22 +1399,11 @@ impl Device {
         self.max_texture_size
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     /// Returns the limit on texture array layers.
     pub fn max_texture_layers(&self) -> usize {
         self.max_texture_layers as usize
     }
 
-    #[cfg(feature = "debug_renderer")]
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-=======
-    /// Returns the limit on texture array layers.
-    pub fn max_texture_layers(&self) -> usize {
-        self.max_texture_layers as usize
-    }
-
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     pub fn get_capabilities(&self) -> &Capabilities {
         &self.capabilities
     }
@@ -1982,29 +1462,10 @@ impl Device {
         }
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    // If an assertion is hit in this function, something outside of WebRender is likely
-    // messing with the GL context's global state.
-    pub fn check_gl_state(&self) {
-        debug_assert!(self.gl.is_enabled(gl::FRAMEBUFFER_SRGB) == 0);
-        debug_assert!(self.gl.is_enabled(gl::MULTISAMPLE) == 0);
-        debug_assert!(self.gl.is_enabled(gl::POLYGON_SMOOTH) == 0);
-    }
-
     pub fn begin_frame(&mut self) -> GpuFrameId {
-||||||| merged common ancestors
-    pub fn begin_frame(&mut self) -> FrameId {
-=======
-    pub fn begin_frame(&mut self) -> GpuFrameId {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         debug_assert!(!self.inside_frame);
         self.inside_frame = true;
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        self.check_gl_state();
-
-||||||| merged common ancestors
-=======
         // If our profiler state has changed, apply or remove the profiling
         // wrapper from our GL context.
         let being_profiled = profiler::thread_is_being_profiled();
@@ -2021,7 +1482,6 @@ impl Device {
             self.gl = self.base_gl.take().unwrap();
         }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         // Retrieve the currently set FBO.
         let mut default_read_fbo = [0];
         unsafe {
@@ -2098,25 +1558,12 @@ impl Device {
         }
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    pub fn bind_read_target(&mut self, target: ReadTarget) {
-        let fbo_id = match target {
-            ReadTarget::Default => self.default_read_fbo,
-            ReadTarget::Texture { texture, layer } => texture.fbos[layer],
-        };
-||||||| merged common ancestors
-    pub fn bind_read_target(&mut self, texture_target: Option<TextureReadTarget>) {
-        let fbo_id = texture_target.map_or(FBOId(self.default_read_fbo), |target| {
-            target.texture.fbos[target.layer]
-        });
-=======
     pub fn bind_read_target(&mut self, target: ReadTarget) {
         let fbo_id = match target {
             ReadTarget::Default => self.default_read_fbo,
             ReadTarget::Texture { fbo_id } => fbo_id,
             ReadTarget::External { fbo } => fbo,
         };
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 
         self.bind_read_target_impl(fbo_id)
     }
@@ -2146,27 +1593,6 @@ impl Device {
         &mut self,
         target: DrawTarget,
     ) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        let (fbo_id, dimensions, depth_available) = match target {
-            DrawTarget::Default(d) => (self.default_draw_fbo, d, true),
-            DrawTarget::Texture { texture, layer, with_depth } => {
-                let dim = texture.get_dimensions();
-                if with_depth {
-                    (texture.fbos_with_depth[layer], dim, true)
-                } else {
-                    (texture.fbos[layer], dim, false)
-                }
-            }
-        };
-||||||| merged common ancestors
-        let fbo_id = texture_target.map_or(FBOId(self.default_draw_fbo), |target| {
-            if target.with_depth {
-                target.texture.fbos_with_depth[target.layer]
-            } else {
-                target.texture.fbos[target.layer]
-            }
-        });
-=======
         let (fbo_id, rect, depth_available) = match target {
             DrawTarget::Default { rect, .. } => (self.default_draw_fbo, rect, true),
             DrawTarget::Texture { dimensions, fbo_id, with_depth, .. } => {
@@ -2178,28 +1604,9 @@ impl Device {
             },
             DrawTarget::External { fbo, size } => (fbo, size.into(), false),
         };
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
 
         self.depth_available = depth_available;
         self.bind_draw_target_impl(fbo_id);
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        self.gl.viewport(
-            0,
-            0,
-            dimensions.width as _,
-            dimensions.height as _,
-        );
-||||||| merged common ancestors
-
-        if let Some(dimensions) = dimensions {
-            self.gl.viewport(
-                0,
-                0,
-                dimensions.width as _,
-                dimensions.height as _,
-            );
-        }
-=======
         self.gl.viewport(
             rect.origin.x,
             rect.origin.y,
@@ -2212,7 +1619,6 @@ impl Device {
     /// required to make it complete.
     pub fn create_fbo(&mut self) -> FBOId {
         FBOId(self.gl.gen_framebuffers(1)[0])
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     }
 
     /// Creates an FBO with the given texture bound as the color attachment.
@@ -2311,55 +1717,6 @@ impl Device {
                         self.gl.delete_shader(vs_id);
                         return Err(err);
                     }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-                };
-
-            // Attach shaders
-            self.gl.attach_shader(program.id, vs_id);
-            self.gl.attach_shader(program.id, fs_id);
-
-            // Bind vertex attributes
-            for (i, attr) in descriptor
-                .vertex_attributes
-                .iter()
-                .chain(descriptor.instance_attributes.iter())
-                .enumerate()
-            {
-                self.gl
-                    .bind_attrib_location(program.id, i as gl::GLuint, attr.name);
-            }
-
-            if self.cached_programs.is_some() {
-                self.gl.program_parameter_i(program.id, gl::PROGRAM_BINARY_RETRIEVABLE_HINT, gl::TRUE as gl::GLint);
-            }
-
-            // Link!
-            self.gl.link_program(program.id);
-
-            // GL recommends detaching and deleting shaders once the link
-            // is complete (whether successful or not). This allows the driver
-            // to free any memory associated with the parsing and compilation.
-            self.gl.detach_shader(program.id, vs_id);
-            self.gl.detach_shader(program.id, fs_id);
-            self.gl.delete_shader(vs_id);
-            self.gl.delete_shader(fs_id);
-
-            let mut link_status = [0];
-            unsafe {
-                self.gl.get_program_iv(program.id, gl::LINK_STATUS, &mut link_status);
-            }
-            if link_status[0] == 0 {
-                let error_log = self.gl.get_program_info_log(program.id);
-                error!(
-                    "Failed to link shader program: {}\n{}",
-                    &info.base_filename,
-                    error_log
-                );
-                self.gl.delete_program(program.id);
-                return Err(ShaderError::Link(info.base_filename.to_owned(), error_log));
-||||||| merged common ancestors
-                }
-=======
                 };
 
             // Check if shader source should be dumped
@@ -2386,27 +1743,8 @@ impl Device {
 
             if self.cached_programs.is_some() {
                 self.gl.program_parameter_i(program.id, gl::PROGRAM_BINARY_RETRIEVABLE_HINT, gl::TRUE as gl::GLint);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
             }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-            if let Some(ref cached_programs) = self.cached_programs {
-                if !cached_programs.entries.borrow().contains_key(&info.digest) {
-                    let (buffer, format) = self.gl.get_program_binary(program.id);
-                    if buffer.len() > 0 {
-                        let entry = ProgramCacheEntry {
-                            binary: Arc::new(ProgramBinary::new(buffer, format, info.digest.clone())),
-                            linked: true,
-                        };
-                        cached_programs.entries.borrow_mut().insert(info.digest.clone(), entry);
-                    }
-                }
-            }
-||||||| merged common ancestors
-            // If we get here, the link succeeded, so get the uniforms.
-            program.u_transform = self.gl.get_uniform_location(program.id, "uTransform");
-            program.u_mode = self.gl.get_uniform_location(program.id, "uMode");
-=======
             // Link!
             self.gl.link_program(program.id);
 
@@ -2445,7 +1783,6 @@ impl Device {
                     }
                 }
             }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         }
 
         // If we get here, the link succeeded, so get the uniforms.
@@ -2582,11 +1919,6 @@ impl Device {
             }
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        record_gpu_alloc(texture.size_in_bytes());
-
-||||||| merged common ancestors
-=======
         // Set up intermediate buffer for blitting to texture, if required.
         if texture.layer_count > 1 && !self.capabilities.supports_blit_to_texture_array {
             let rbo = RBOId(self.gl.gen_renderbuffers(1)[0]);
@@ -2611,7 +1943,6 @@ impl Device {
 
         record_gpu_alloc(texture.size_in_bytes());
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         texture
     }
 
@@ -2645,41 +1976,6 @@ impl Device {
         src: &Texture,
     ) {
         debug_assert!(self.inside_frame);
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        debug_assert!(dst.size.width >= src.size.width);
-        debug_assert!(dst.size.height >= src.size.height);
-        debug_assert!(dst.layer_count >= src.layer_count);
-
-        if self.supports_copy_image_sub_data {
-            assert_ne!(src.id, dst.id,
-                    "glCopyImageSubData's behaviour is undefined if src and dst images are identical and the rectangles overlap.");
-            unsafe {
-                self.gl.copy_image_sub_data(src.id, src.target, 0,
-                                            0, 0, 0,
-                                            dst.id, dst.target, 0,
-                                            0, 0, 0,
-                                            src.size.width as _, src.size.height as _, src.layer_count);
-            }
-        } else {
-            // Note that zip() truncates to the shorter of the two iterators.
-            let rect = DeviceIntRect::new(DeviceIntPoint::zero(), src.get_dimensions().to_i32());
-            for (read_fbo, draw_fbo) in src.fbos.iter().zip(&dst.fbos) {
-                self.bind_read_target_impl(*read_fbo);
-                self.bind_draw_target_impl(*draw_fbo);
-                self.blit_render_target(rect, rect);
-            }
-            self.reset_draw_target();
-            self.reset_read_target();
-||||||| merged common ancestors
-        debug_assert!(dst.width >= src.width);
-        debug_assert!(dst.height >= src.height);
-
-        let rect = DeviceIntRect::new(DeviceIntPoint::zero(), src.get_dimensions().to_i32());
-        for (read_fbo, draw_fbo) in src.fbos.iter().zip(&dst.fbos) {
-            self.bind_read_target_impl(*read_fbo);
-            self.bind_draw_target_impl(*draw_fbo);
-            self.blit_render_target(rect, rect);
-=======
         debug_assert!(dst.size.width >= src.size.width);
         debug_assert!(dst.size.height >= src.size.height);
         debug_assert!(dst.layer_count >= src.layer_count);
@@ -2710,7 +2006,6 @@ impl Device {
             }
             self.reset_draw_target();
             self.reset_read_target();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         }
     }
 
@@ -2980,29 +2275,6 @@ impl Device {
         );
     }
 
-    /// Performs a blit while flipping vertically. Useful for blitting textures
-    /// (which use origin-bottom-left) to the main framebuffer (which uses
-    /// origin-top-left).
-    pub fn blit_render_target_invert_y(
-        &mut self,
-        src_rect: DeviceIntRect,
-        dest_rect: DeviceIntRect,
-    ) {
-        debug_assert!(self.inside_frame);
-        self.gl.blit_framebuffer(
-            src_rect.origin.x,
-            src_rect.origin.y,
-            src_rect.origin.x + src_rect.size.width,
-            src_rect.origin.y + src_rect.size.height,
-            dest_rect.origin.x,
-            dest_rect.origin.y + dest_rect.size.height,
-            dest_rect.origin.x + dest_rect.size.width,
-            dest_rect.origin.y,
-            gl::COLOR_BUFFER_BIT,
-            gl::LINEAR,
-        );
-    }
-
     pub fn delete_texture(&mut self, mut texture: Texture) {
         debug_assert!(self.inside_frame);
         record_gpu_free(texture.size_in_bytes());
@@ -3088,26 +2360,6 @@ impl Device {
         Ok(program)
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-    fn build_shader_string<F: FnMut(&str)>(
-        &self,
-        features: &str,
-        kind: &str,
-        base_filename: &str,
-        output: F,
-    ) {
-        do_build_shader_string(
-            get_shader_version(&*self.gl),
-            features,
-            kind,
-            base_filename,
-            &self.resource_override_path,
-            output,
-        )
-    }
-
-||||||| merged common ancestors
-=======
     fn build_shader_string<F: FnMut(&str)>(
         &self,
         features: &str,
@@ -3125,7 +2377,6 @@ impl Device {
         )
     }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
     pub fn bind_shader_samplers<S>(&mut self, program: &Program, bindings: &[(&'static str, S)])
     where
         S: Into<TextureSlot> + Copy,
@@ -3345,16 +2596,8 @@ impl Device {
     /// Read rectangle of pixels into the specified output slice.
     pub fn read_pixels_into(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        rect: DeviceIntRect,
-        format: ReadPixelsFormat,
-||||||| merged common ancestors
-        rect: DeviceUintRect,
-        format: ReadPixelsFormat,
-=======
         rect: FramebufferIntRect,
         format: ImageFormat,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         output: &mut [u8],
     ) {
         let bytes_per_pixel = format.bytes_per_pixel();
@@ -4092,13 +3335,7 @@ fn round_up_to_multiple(val: usize, mul: NonZeroUsize) -> usize {
 impl<'a, T> TextureUploader<'a, T> {
     pub fn upload(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/device/gl.rs
-        rect: DeviceIntRect,
-||||||| merged common ancestors
-        rect: DeviceUintRect,
-=======
         mut rect: DeviceIntRect,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/device/gl.rs
         layer_index: i32,
         stride: Option<i32>,
         data: &[T],

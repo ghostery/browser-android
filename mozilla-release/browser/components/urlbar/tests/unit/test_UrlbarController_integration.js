@@ -12,19 +12,11 @@ const { PromiseUtils } = ChromeUtils.import(
 );
 
 const TEST_URL = "http://example.com";
-<<<<<<< HEAD
-const match = new UrlbarMatch(UrlbarUtils.MATCH_TYPE.TAB_SWITCH,
-                              UrlbarUtils.MATCH_SOURCE.TABS,
-                              { url: TEST_URL });
-||||||| merged common ancestors
-const match = new UrlbarMatch(UrlbarUtils.MATCH_TYPE.TAB_SWITCH, { url: TEST_URL });
-=======
 const match = new UrlbarResult(
   UrlbarUtils.RESULT_TYPE.TAB_SWITCH,
   UrlbarUtils.RESULT_SOURCE.TABS,
   { url: TEST_URL }
 );
->>>>>>> upstream-releases
 let controller;
 
 /**

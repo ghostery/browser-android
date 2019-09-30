@@ -26,12 +26,6 @@ struct ServoRawOffsetArc {
   T* mPtr;
 };
 
-<<<<<<< HEAD
-struct ServoWritingMode {
-||||||| merged common ancestors
-struct ServoWritingMode
-{
-=======
 // A wrapper that gets replaced by ManuallyDrop<T> by bindgen.
 //
 // NOTE(emilio): All this file is a bit gross, and most of this we make cleaner
@@ -42,7 +36,6 @@ struct ServoManuallyDrop {
 };
 
 struct ServoWritingMode {
->>>>>>> upstream-releases
   uint8_t mBits;
 };
 

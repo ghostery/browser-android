@@ -145,44 +145,6 @@ const TESTS = {
   badCert: {
     fails: true,
     updateList: [
-<<<<<<< HEAD
-      { id: "system1@tests.mozilla.org", version: "1.0", path: "system1_1_badcert.xpi" },
-      { id: "system3@tests.mozilla.org", version: "1.0", path: "system3_1.xpi" },
-    ],
-  },
-||||||| merged common ancestors
-      { id: "system1@tests.mozilla.org", version: "1.0", path: "system1_1_badcert.xpi" },
-      { id: "system3@tests.mozilla.org", version: "1.0", path: "system3_1.xpi" },
-    ],
-  },
-
-  // An unpacked add-on should stop updates.
-  notPacked: {
-    fails: true,
-    updateList: [
-      { id: "system6@tests.mozilla.org", version: "1.0", path: "system6_1_unpack.xpi" },
-      { id: "system3@tests.mozilla.org", version: "1.0", path: "system3_1.xpi" },
-    ],
-  },
-
-  // A non-bootstrap add-on should stop updates.
-  notBootstrap: {
-    fails: true,
-    updateList: [
-      { id: "system6@tests.mozilla.org", version: "1.0", path: "system6_2_notBootstrap.xpi" },
-      { id: "system3@tests.mozilla.org", version: "1.0", path: "system3_1.xpi" },
-    ],
-  },
-
-  // A non-multiprocess add-on should stop updates.
-  notMultiprocess: {
-    fails: true,
-    updateList: [
-      { id: "system6@tests.mozilla.org", version: "1.0", path: "system6_3_notMultiprocess.xpi" },
-      { id: "system3@tests.mozilla.org", version: "1.0", path: "system3_1.xpi" },
-    ],
-  },
-=======
       {
         id: "system1@tests.mozilla.org",
         version: "1.0",
@@ -195,7 +157,6 @@ const TESTS = {
       },
     ],
   },
->>>>>>> upstream-releases
 };
 
 add_task(async function setup() {

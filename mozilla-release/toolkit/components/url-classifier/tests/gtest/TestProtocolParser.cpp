@@ -10,32 +10,6 @@ using namespace mozilla::safebrowsing;
 
 typedef FetchThreatListUpdatesResponse_ListUpdateResponse ListUpdateResponse;
 
-<<<<<<< HEAD
-static bool InitUpdateResponse(ListUpdateResponse* aUpdateResponse,
-                               ThreatType aThreatType, const nsACString& aState,
-                               const nsACString& aChecksum, bool isFullUpdate,
-                               const nsTArray<uint32_t>& aFixedLengthPrefixes,
-                               bool aDoPrefixEncoding);
-
-static void DumpBinary(const nsACString& aBinary);
-
-TEST(UrlClassifierProtocolParser, UpdateWait) {
-||||||| merged common ancestors
-static bool
-InitUpdateResponse(ListUpdateResponse* aUpdateResponse,
-                   ThreatType aThreatType,
-                   const nsACString& aState,
-                   const nsACString& aChecksum,
-                   bool isFullUpdate,
-                   const nsTArray<uint32_t>& aFixedLengthPrefixes,
-                   bool aDoPrefixEncoding);
-
-static void
-DumpBinary(const nsACString& aBinary);
-
-TEST(UrlClassifierProtocolParser, UpdateWait)
-{
-=======
 static bool InitUpdateResponse(ListUpdateResponse* aUpdateResponse,
                                ThreatType aThreatType, const nsACString& aState,
                                const nsACString& aChecksum, bool isFullUpdate,
@@ -46,7 +20,6 @@ static void DumpBinary(const nsACString& aBinary);
 
 TEST(UrlClassifierProtocolParser, UpdateWait)
 {
->>>>>>> upstream-releases
   // Top level response which contains a list of update response
   // for different lists.
   FetchThreatListUpdatesResponse response;
@@ -73,7 +46,8 @@ TEST(UrlClassifierProtocolParser, UpdateWait)
   delete p;
 }
 
-TEST(UrlClassifierProtocolParser, SingleValueEncoding) {
+TEST(UrlClassifierProtocolParser, SingleValueEncoding)
+{
   // Top level response which contains a list of update response
   // for different lists.
   FetchThreatListUpdatesResponse response;

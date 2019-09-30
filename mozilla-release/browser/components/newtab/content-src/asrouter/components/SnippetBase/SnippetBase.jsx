@@ -5,10 +5,6 @@ export class SnippetBase extends React.PureComponent {
   constructor(props) {
     super(props);
     this.onBlockClicked = this.onBlockClicked.bind(this);
-<<<<<<< HEAD
-    this.onDismissClicked = this.onDismissClicked.bind(this);
-||||||| merged common ancestors
-=======
     this.onDismissClicked = this.onDismissClicked.bind(this);
     this.setBlockButtonRef = this.setBlockButtonRef.bind(this);
     this.onBlockButtonMouseEnter = this.onBlockButtonMouseEnter.bind(this);
@@ -52,7 +48,6 @@ export class SnippetBase extends React.PureComponent {
 
   onBlockButtonMouseLeave() {
     this.setState({ blockButtonHover: false });
->>>>>>> upstream-releases
   }
 
   onBlockClicked() {
@@ -66,17 +61,6 @@ export class SnippetBase extends React.PureComponent {
     this.props.onBlock();
   }
 
-<<<<<<< HEAD
-  onDismissClicked() {
-    if (this.props.provider !== "preview") {
-      this.props.sendUserActionTelemetry({event: "DISMISS", id: this.props.UISurface});
-    }
-
-    this.props.onDismiss();
-  }
-
-||||||| merged common ancestors
-=======
   onDismissClicked() {
     if (this.props.provider !== "preview") {
       this.props.sendUserActionTelemetry({
@@ -88,7 +72,6 @@ export class SnippetBase extends React.PureComponent {
     this.props.onDismiss();
   }
 
->>>>>>> upstream-releases
   renderDismissButton() {
     if (this.props.footerDismiss) {
       return (
@@ -96,14 +79,8 @@ export class SnippetBase extends React.PureComponent {
           <div className="footer-content">
             <button
               className="ASRouterButton secondary"
-<<<<<<< HEAD
-              onClick={this.onDismissClicked}>
-||||||| merged common ancestors
-              onClick={this.props.onDismiss}>
-=======
               onClick={this.onDismissClicked}
             >
->>>>>>> upstream-releases
               {this.props.content.scene2_dismiss_button_text}
             </button>
           </div>

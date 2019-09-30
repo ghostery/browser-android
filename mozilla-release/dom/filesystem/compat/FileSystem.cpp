@@ -22,16 +22,8 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(FileSystem)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<FileSystem> FileSystem::Create(
-    nsIGlobalObject* aGlobalObject)
-||||||| merged common ancestors
-/* static */ already_AddRefed<FileSystem>
-FileSystem::Create(nsIGlobalObject* aGlobalObject)
-=======
 /* static */
 already_AddRefed<FileSystem> FileSystem::Create(nsIGlobalObject* aGlobalObject)
->>>>>>> upstream-releases
 
 {
   MOZ_ASSERT(aGlobalObject);

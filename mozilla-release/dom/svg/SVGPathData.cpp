@@ -18,13 +18,7 @@
 #include <stdarg.h>
 #include "nsStyleConsts.h"
 #include "SVGContentUtils.h"
-<<<<<<< HEAD
-#include "SVGGeometryElement.h"  // for nsSVGMark
-||||||| merged common ancestors
-#include "SVGGeometryElement.h" // for nsSVGMark
-=======
 #include "SVGGeometryElement.h"
->>>>>>> upstream-releases
 #include "SVGPathSegUtils.h"
 #include <algorithm>
 
@@ -334,87 +328,6 @@ already_AddRefed<Path> SVGPathData::BuildPath(PathBuilder* aBuilder,
         if (segEnd != segStart) {
           subpathHasLength = true;
           aBuilder->LineTo(segEnd);
-<<<<<<< HEAD
-        }
-        break;
-
-      case PATHSEG_LINETO_REL:
-        segEnd = segStart + Point(mData[i], mData[i + 1]);
-        if (segEnd != segStart) {
-          subpathHasLength = true;
-          aBuilder->LineTo(segEnd);
-        }
-        break;
-
-      case PATHSEG_CURVETO_CUBIC_ABS:
-        cp1 = Point(mData[i], mData[i + 1]);
-        cp2 = Point(mData[i + 2], mData[i + 3]);
-        segEnd = Point(mData[i + 4], mData[i + 5]);
-        if (segEnd != segStart || segEnd != cp1 || segEnd != cp2) {
-          subpathHasLength = true;
-          aBuilder->BezierTo(cp1, cp2, segEnd);
-        }
-        break;
-
-      case PATHSEG_CURVETO_CUBIC_REL:
-        cp1 = segStart + Point(mData[i], mData[i + 1]);
-        cp2 = segStart + Point(mData[i + 2], mData[i + 3]);
-        segEnd = segStart + Point(mData[i + 4], mData[i + 5]);
-        if (segEnd != segStart || segEnd != cp1 || segEnd != cp2) {
-          subpathHasLength = true;
-          aBuilder->BezierTo(cp1, cp2, segEnd);
-        }
-        break;
-
-      case PATHSEG_CURVETO_QUADRATIC_ABS:
-        cp1 = Point(mData[i], mData[i + 1]);
-        // Convert quadratic curve to cubic curve:
-        tcp1 = segStart + (cp1 - segStart) * 2 / 3;
-        segEnd = Point(mData[i + 2], mData[i + 3]);  // set before setting tcp2!
-        tcp2 = cp1 + (segEnd - cp1) / 3;
-        if (segEnd != segStart || segEnd != cp1) {
-          subpathHasLength = true;
-          aBuilder->BezierTo(tcp1, tcp2, segEnd);
-        }
-        break;
-
-      case PATHSEG_CURVETO_QUADRATIC_REL:
-        cp1 = segStart + Point(mData[i], mData[i + 1]);
-        // Convert quadratic curve to cubic curve:
-        tcp1 = segStart + (cp1 - segStart) * 2 / 3;
-        segEnd = segStart +
-                 Point(mData[i + 2], mData[i + 3]);  // set before setting tcp2!
-        tcp2 = cp1 + (segEnd - cp1) / 3;
-        if (segEnd != segStart || segEnd != cp1) {
-          subpathHasLength = true;
-          aBuilder->BezierTo(tcp1, tcp2, segEnd);
-        }
-        break;
-
-      case PATHSEG_ARC_ABS:
-      case PATHSEG_ARC_REL: {
-        Point radii(mData[i], mData[i + 1]);
-        segEnd = Point(mData[i + 5], mData[i + 6]);
-        if (segType == PATHSEG_ARC_REL) {
-          segEnd += segStart;
-        }
-        if (segEnd != segStart) {
-          subpathHasLength = true;
-          if (radii.x == 0.0f || radii.y == 0.0f) {
-            aBuilder->LineTo(segEnd);
-          } else {
-            nsSVGArcConverter converter(segStart, segEnd, radii, mData[i + 2],
-                                        mData[i + 3] != 0, mData[i + 4] != 0);
-            while (converter.GetNextSegment(&cp1, &cp2, &segEnd)) {
-              aBuilder->BezierTo(cp1, cp2, segEnd);
-            }
-||||||| merged common ancestors
-        } else {
-          nsSVGArcConverter converter(segStart, segEnd, radii, mData[i+2],
-                                      mData[i+3] != 0, mData[i+4] != 0);
-          while (converter.GetNextSegment(&cp1, &cp2, &segEnd)) {
-            aBuilder->BezierTo(cp1, cp2, segEnd);
-=======
         }
         break;
 
@@ -488,7 +401,6 @@ already_AddRefed<Path> SVGPathData::BuildPath(PathBuilder* aBuilder,
             while (converter.GetNextSegment(&cp1, &cp2, &segEnd)) {
               aBuilder->BezierTo(cp1, cp2, segEnd);
             }
->>>>>>> upstream-releases
           }
         }
         break;
@@ -616,24 +528,10 @@ already_AddRefed<Path> SVGPathData::BuildPathForMeasuring() const {
 // We could simplify this function because this is only used by CSS motion path
 // and clip-path, which don't render the SVG Path. i.e. The returned path is
 // used as a reference.
-<<<<<<< HEAD
-/* static */ already_AddRefed<Path> SVGPathData::BuildPath(
-    const nsTArray<StylePathCommand>& aPath, PathBuilder* aBuilder,
-    uint8_t aStrokeLineCap, Float aStrokeWidth, float aZoomFactor) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Path>
-SVGPathData::BuildPath(const nsTArray<StylePathCommand>& aPath,
-                       PathBuilder* aBuilder,
-                       uint8_t aStrokeLineCap,
-                       Float aStrokeWidth,
-                       float aZoomFactor)
-{
-=======
 /* static */
 already_AddRefed<Path> SVGPathData::BuildPath(
     Span<const StylePathCommand> aPath, PathBuilder* aBuilder,
     uint8_t aStrokeLineCap, Float aStrokeWidth, float aZoomFactor) {
->>>>>>> upstream-releases
   if (aPath.IsEmpty() || !aPath[0].IsMoveTo()) {
     return nullptr;  // paths without an initial moveto are invalid
   }
@@ -851,15 +749,7 @@ static float AngleOfVector(const Point& cp1, const Point& cp2) {
   return static_cast<float>(AngleOfVector(cp1 - cp2));
 }
 
-<<<<<<< HEAD
-void SVGPathData::GetMarkerPositioningData(nsTArray<nsSVGMark>* aMarks) const {
-||||||| merged common ancestors
-void
-SVGPathData::GetMarkerPositioningData(nsTArray<nsSVGMark> *aMarks) const
-{
-=======
 void SVGPathData::GetMarkerPositioningData(nsTArray<SVGMark>* aMarks) const {
->>>>>>> upstream-releases
   // This code should assume that ANY type of segment can appear at ANY index.
   // It should also assume that segments such as M and Z can appear in weird
   // places, and repeat multiple times consecutively.
@@ -891,43 +781,6 @@ void SVGPathData::GetMarkerPositioningData(nsTArray<SVGMark>* aMarks) const {
         segStartAngle = segEndAngle = AngleOfVector(segEnd, segStart);
         break;
 
-<<<<<<< HEAD
-      case PATHSEG_MOVETO_ABS:
-      case PATHSEG_MOVETO_REL:
-        if (segType == PATHSEG_MOVETO_ABS) {
-          segEnd = Point(mData[i], mData[i + 1]);
-        } else {
-          segEnd = segStart + Point(mData[i], mData[i + 1]);
-        }
-        pathStart = segEnd;
-        // If authors are going to specify multiple consecutive moveto commands
-        // with markers, me might as well make the angle do something useful:
-        segStartAngle = segEndAngle = AngleOfVector(segEnd, segStart);
-        i += 2;
-        break;
-||||||| merged common ancestors
-    case PATHSEG_CURVETO_CUBIC_ABS:
-    case PATHSEG_CURVETO_CUBIC_REL:
-    {
-      Point cp1, cp2; // control points
-      if (segType == PATHSEG_CURVETO_CUBIC_ABS) {
-        cp1 = Point(mData[i], mData[i+1]);
-        cp2 = Point(mData[i+2], mData[i+3]);
-        segEnd = Point(mData[i+4], mData[i+5]);
-      } else {
-        cp1 = segStart + Point(mData[i], mData[i+1]);
-        cp2 = segStart + Point(mData[i+2], mData[i+3]);
-        segEnd = segStart + Point(mData[i+4], mData[i+5]);
-      }
-      prevCP = cp2;
-      segStartAngle =
-        AngleOfVector(cp1 == segStart ? (cp1 == cp2 ? segEnd : cp2) : cp1, segStart);
-      segEndAngle =
-        AngleOfVector(segEnd, cp2 == segEnd ? (cp1 == cp2 ? segStart : cp1) : cp2);
-      i += 6;
-      break;
-    }
-=======
       case PATHSEG_MOVETO_ABS:
       case PATHSEG_MOVETO_REL:
         if (segType == PATHSEG_MOVETO_ABS) {
@@ -942,7 +795,6 @@ void SVGPathData::GetMarkerPositioningData(nsTArray<SVGMark>* aMarks) const {
         segStartAngle = segEndAngle = AngleOfVector(segEnd, segStart);
         i += 2;
         break;
->>>>>>> upstream-releases
 
       case PATHSEG_LINETO_ABS:
       case PATHSEG_LINETO_REL:
@@ -1169,13 +1021,7 @@ void SVGPathData::GetMarkerPositioningData(nsTArray<SVGMark>* aMarks) const {
 
     // Set the angle of the mark at the start of this segment:
     if (aMarks->Length()) {
-<<<<<<< HEAD
-      nsSVGMark& mark = aMarks->LastElement();
-||||||| merged common ancestors
-      nsSVGMark &mark = aMarks->LastElement();
-=======
       SVGMark& mark = aMarks->LastElement();
->>>>>>> upstream-releases
       if (!IsMoveto(segType) && IsMoveto(prevSegType)) {
         // start of new subpath
         pathStartAngle = mark.angle = segStartAngle;
@@ -1190,42 +1036,16 @@ void SVGPathData::GetMarkerPositioningData(nsTArray<SVGMark>* aMarks) const {
     }
 
     // Add the mark at the end of this segment, and set its position:
-<<<<<<< HEAD
-    if (!aMarks->AppendElement(nsSVGMark(static_cast<float>(segEnd.x),
-                                         static_cast<float>(segEnd.y), 0.0f,
-                                         nsSVGMark::eMid))) {
-      aMarks->Clear();  // OOM, so try to free some
-||||||| merged common ancestors
-    if (!aMarks->AppendElement(nsSVGMark(static_cast<float>(segEnd.x),
-                                         static_cast<float>(segEnd.y),
-                                         0.0f,
-                                         nsSVGMark::eMid))) {
-      aMarks->Clear(); // OOM, so try to free some
-=======
     if (!aMarks->AppendElement(SVGMark(static_cast<float>(segEnd.x),
                                        static_cast<float>(segEnd.y), 0.0f,
                                        SVGMark::eMid))) {
       aMarks->Clear();  // OOM, so try to free some
->>>>>>> upstream-releases
       return;
     }
 
-<<<<<<< HEAD
-    if (segType == PATHSEG_CLOSEPATH && prevSegType != PATHSEG_CLOSEPATH) {
-      aMarks->LastElement().angle =
-          // aMarks->ElementAt(pathStartIndex).angle =
-          SVGContentUtils::AngleBisect(segEndAngle, pathStartAngle);
-||||||| merged common ancestors
-    if (segType == PATHSEG_CLOSEPATH &&
-        prevSegType != PATHSEG_CLOSEPATH) {
-      aMarks->LastElement().angle =
-        //aMarks->ElementAt(pathStartIndex).angle =
-        SVGContentUtils::AngleBisect(segEndAngle, pathStartAngle);
-=======
     if (segType == PATHSEG_CLOSEPATH && prevSegType != PATHSEG_CLOSEPATH) {
       aMarks->LastElement().angle = aMarks->ElementAt(pathStartIndex).angle =
           SVGContentUtils::AngleBisect(segEndAngle, pathStartAngle);
->>>>>>> upstream-releases
     }
 
     prevSegType = segType;

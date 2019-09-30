@@ -62,15 +62,7 @@ using namespace mozilla;
 // - No duplicates in the first VALS_LEN results, which is useful for ensuring
 //   the tables get to a particular size, and also for guaranteeing lookups
 //   that fail.
-<<<<<<< HEAD
-uintptr_t MyRand() {
-||||||| merged common ancestors
-uintptr_t
-MyRand()
-{
-=======
 static uintptr_t MyRand() {
->>>>>>> upstream-releases
   static uintptr_t s = 0;
   s = s * 1103515245 + 12345;
   return s;
@@ -90,16 +82,8 @@ struct Params {
 // benchmark against.
 //
 // Keep this in sync with all the other Bench_*() functions.
-<<<<<<< HEAD
-void Bench_Cpp_unordered_set(const Params* aParams, void** aVals, size_t aLen) {
-||||||| merged common ancestors
-void
-Bench_Cpp_unordered_set(const Params* aParams, void** aVals, size_t aLen)
-{
-=======
 static void Bench_Cpp_unordered_set(const Params* aParams, void** aVals,
                                     size_t aLen) {
->>>>>>> upstream-releases
   std::unordered_set<void*> hs;
 
   for (size_t j = 0; j < aParams->mNumInserts; j++) {
@@ -139,16 +123,8 @@ static void Bench_Cpp_unordered_set(const Params* aParams, void** aVals,
 }
 
 // Keep this in sync with all the other Bench_*() functions.
-<<<<<<< HEAD
-void Bench_Cpp_PLDHashTable(const Params* aParams, void** aVals, size_t aLen) {
-||||||| merged common ancestors
-void
-Bench_Cpp_PLDHashTable(const Params* aParams, void** aVals, size_t aLen)
-{
-=======
 static void Bench_Cpp_PLDHashTable(const Params* aParams, void** aVals,
                                    size_t aLen) {
->>>>>>> upstream-releases
   PLDHashTable hs(PLDHashTable::StubOps(), sizeof(PLDHashEntryStub));
 
   for (size_t j = 0; j < aParams->mNumInserts; j++) {
@@ -189,16 +165,8 @@ static void Bench_Cpp_PLDHashTable(const Params* aParams, void** aVals,
 }
 
 // Keep this in sync with all the other Bench_*() functions.
-<<<<<<< HEAD
-void Bench_Cpp_MozHashSet(const Params* aParams, void** aVals, size_t aLen) {
-||||||| merged common ancestors
-void
-Bench_Cpp_MozHashSet(const Params* aParams, void** aVals, size_t aLen)
-{
-=======
 static void Bench_Cpp_MozHashSet(const Params* aParams, void** aVals,
                                  size_t aLen) {
->>>>>>> upstream-releases
   mozilla::HashSet<void*, mozilla::DefaultHasher<void*>, MallocAllocPolicy> hs;
 
   for (size_t j = 0; j < aParams->mNumInserts; j++) {

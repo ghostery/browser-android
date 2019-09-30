@@ -109,19 +109,8 @@ class CompareNetwork final : public nsIStreamLoaderObserver,
     MOZ_ASSERT(NS_IsMainThread());
   }
 
-<<<<<<< HEAD
-  nsresult Initialize(nsIPrincipal* aPrincipal, const nsAString& aURL,
-                      nsILoadGroup* aLoadGroup, Cache* const aCache);
-||||||| merged common ancestors
-  nsresult
-  Initialize(nsIPrincipal* aPrincipal,
-             const nsAString& aURL,
-             nsILoadGroup* aLoadGroup,
-             Cache* const aCache);
-=======
   nsresult Initialize(nsIPrincipal* aPrincipal, const nsAString& aURL,
                       Cache* const aCache);
->>>>>>> upstream-releases
 
   void Abort();
 
@@ -268,17 +257,8 @@ class CompareManager final : public PromiseNativeHandler {
     MOZ_ASSERT(aRegistration);
   }
 
-<<<<<<< HEAD
-  nsresult Initialize(nsIPrincipal* aPrincipal, const nsAString& aURL,
-                      const nsAString& aCacheName, nsILoadGroup* aLoadGroup);
-||||||| merged common ancestors
-  nsresult
-  Initialize(nsIPrincipal* aPrincipal, const nsAString& aURL,
-             const nsAString& aCacheName, nsILoadGroup* aLoadGroup);
-=======
   nsresult Initialize(nsIPrincipal* aPrincipal, const nsAString& aURL,
                       const nsAString& aCacheName);
->>>>>>> upstream-releases
 
   void ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) override;
 
@@ -634,23 +614,9 @@ class CompareManager final : public PromiseNativeHandler {
 
 NS_IMPL_ISUPPORTS0(CompareManager)
 
-<<<<<<< HEAD
-nsresult CompareNetwork::Initialize(nsIPrincipal* aPrincipal,
-                                    const nsAString& aURL,
-                                    nsILoadGroup* aLoadGroup,
-                                    Cache* const aCache) {
-||||||| merged common ancestors
-nsresult
-CompareNetwork::Initialize(nsIPrincipal* aPrincipal,
-                           const nsAString& aURL,
-                           nsILoadGroup* aLoadGroup,
-                           Cache* const aCache)
-{
-=======
 nsresult CompareNetwork::Initialize(nsIPrincipal* aPrincipal,
                                     const nsAString& aURL,
                                     Cache* const aCache) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aPrincipal);
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -700,20 +666,9 @@ nsresult CompareNetwork::Initialize(nsIPrincipal* aPrincipal,
   // use the TYPE_INTERNAL_SCRIPT content policy types when loading a service
   // worker.
   rv = NS_NewChannel(getter_AddRefs(mChannel), uri, aPrincipal, secFlags,
-<<<<<<< HEAD
-                     contentPolicyType, nullptr, /* aPerformanceStorage */
-                     loadGroup, nullptr /* aCallbacks */, mLoadFlags);
-||||||| merged common ancestors
-                     contentPolicyType,
-                     nullptr, /* aPerformanceStorage */
-                     loadGroup,
-                     nullptr /* aCallbacks */,
-                     mLoadFlags);
-=======
                      contentPolicyType, cookieSettings,
                      nullptr /* aPerformanceStorage */, loadGroup,
                      nullptr /* aCallbacks */, mLoadFlags);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -840,14 +795,7 @@ void CompareNetwork::Abort() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CompareNetwork::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-||||||| merged common ancestors
-CompareNetwork::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
-{
-=======
 CompareNetwork::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (mState == Finished) {
@@ -901,16 +849,7 @@ nsresult CompareNetwork::SetPrincipalInfo(nsIChannel* aChannel) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CompareNetwork::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                              nsresult aStatusCode) {
-||||||| merged common ancestors
-CompareNetwork::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                              nsresult aStatusCode)
-{
-=======
 CompareNetwork::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
->>>>>>> upstream-releases
   // Nothing to do here!
   return NS_OK;
 }
@@ -1206,23 +1145,9 @@ void CompareCache::ManageValueResult(JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-nsresult CompareManager::Initialize(nsIPrincipal* aPrincipal,
-                                    const nsAString& aURL,
-                                    const nsAString& aCacheName,
-                                    nsILoadGroup* aLoadGroup) {
-||||||| merged common ancestors
-nsresult
-CompareManager::Initialize(nsIPrincipal* aPrincipal,
-                           const nsAString& aURL,
-                           const nsAString& aCacheName,
-                           nsILoadGroup* aLoadGroup)
-{
-=======
 nsresult CompareManager::Initialize(nsIPrincipal* aPrincipal,
                                     const nsAString& aURL,
                                     const nsAString& aCacheName) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aPrincipal);
   MOZ_ASSERT(mPendingCount == 0);
@@ -1356,11 +1281,6 @@ void CompareManager::Cleanup() {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace
-||||||| merged common ancestors
-} // namespace
-=======
 class NoopPromiseHandler final : public PromiseNativeHandler {
  public:
   NS_DECL_ISUPPORTS
@@ -1379,7 +1299,6 @@ class NoopPromiseHandler final : public PromiseNativeHandler {
 NS_IMPL_ISUPPORTS0(NoopPromiseHandler)
 
 }  // namespace
->>>>>>> upstream-releases
 
 nsresult PurgeCache(nsIPrincipal* aPrincipal, const nsAString& aCacheName) {
   MOZ_ASSERT(NS_IsMainThread());
@@ -1436,23 +1355,9 @@ nsresult GenerateCacheName(nsAString& aName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult Compare(ServiceWorkerRegistrationInfo* aRegistration,
-                 nsIPrincipal* aPrincipal, const nsAString& aCacheName,
-                 const nsAString& aURL, CompareCallback* aCallback,
-                 nsILoadGroup* aLoadGroup) {
-||||||| merged common ancestors
-nsresult
-Compare(ServiceWorkerRegistrationInfo* aRegistration,
-        nsIPrincipal* aPrincipal, const nsAString& aCacheName,
-        const nsAString& aURL, CompareCallback* aCallback,
-        nsILoadGroup* aLoadGroup)
-{
-=======
 nsresult Compare(ServiceWorkerRegistrationInfo* aRegistration,
                  nsIPrincipal* aPrincipal, const nsAString& aCacheName,
                  const nsAString& aURL, CompareCallback* aCallback) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aRegistration);
   MOZ_ASSERT(aPrincipal);

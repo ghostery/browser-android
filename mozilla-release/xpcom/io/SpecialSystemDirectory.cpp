@@ -89,23 +89,10 @@ static nsresult GetWindowsFolder(int aFolder, nsIFile** aFile) {
   return NS_NewLocalFile(nsDependentString(path, len), true, aFile);
 }
 
-<<<<<<< HEAD
-#if WINVER < 0x0601
-__inline HRESULT SHLoadLibraryFromKnownFolder(REFKNOWNFOLDERID aFolderId,
-                                              DWORD aMode, REFIID riid,
-                                              void** ppv) {
-||||||| merged common ancestors
-#if WINVER < 0x0601
-__inline HRESULT
-SHLoadLibraryFromKnownFolder(REFKNOWNFOLDERID aFolderId, DWORD aMode,
-                             REFIID riid, void** ppv)
-{
-=======
 #  if WINVER < 0x0601
 __inline HRESULT SHLoadLibraryFromKnownFolder(REFKNOWNFOLDERID aFolderId,
                                               DWORD aMode, REFIID riid,
                                               void** ppv) {
->>>>>>> upstream-releases
   *ppv = nullptr;
   IShellLibrary* plib;
   HRESULT hr = CoCreateInstance(CLSID_ShellLibrary, nullptr,
@@ -189,36 +176,14 @@ static nsresult GetRegWindowsAppDataFolder(bool aLocal, nsIFile** aFile) {
 #endif  // XP_WIN
 
 #if defined(XP_UNIX)
-<<<<<<< HEAD
-static nsresult GetUnixHomeDir(nsIFile** aFile) {
-#if defined(ANDROID)
-||||||| merged common ancestors
-static nsresult
-GetUnixHomeDir(nsIFile** aFile)
-{
-#if defined(ANDROID)
-=======
 static nsresult GetUnixHomeDir(nsIFile** aFile) {
 #  if defined(ANDROID)
->>>>>>> upstream-releases
   // XXX no home dir on android; maybe we should return the sdcard if present?
   return NS_ERROR_FAILURE;
-<<<<<<< HEAD
-#else
-  return NS_NewNativeLocalFile(nsDependentCString(PR_GetEnv("HOME")), true,
-                               aFile);
-#endif
-||||||| merged common ancestors
-#else
-  return NS_NewNativeLocalFile(nsDependentCString(PR_GetEnv("HOME")),
-                               true, aFile);
-#endif
-=======
 #  else
   return NS_NewNativeLocalFile(nsDependentCString(PR_GetEnv("HOME")), true,
                                aFile);
 #  endif
->>>>>>> upstream-releases
 }
 
 /*

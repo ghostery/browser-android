@@ -16,20 +16,9 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PermissionStatus> PermissionStatus::Create(
-    nsPIDOMWindowInner* aWindow, PermissionName aName, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PermissionStatus>
-PermissionStatus::Create(nsPIDOMWindowInner* aWindow,
-                         PermissionName aName,
-                         ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<PermissionStatus> PermissionStatus::Create(
     nsPIDOMWindowInner* aWindow, PermissionName aName, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<PermissionStatus> status = new PermissionStatus(aWindow, aName);
   aRv = status->Init();
   if (NS_WARN_IF(aRv.Failed())) {
@@ -108,14 +97,7 @@ already_AddRefed<nsIPrincipal> PermissionStatus::GetPrincipal() const {
   }
 
   nsCOMPtr<nsIPrincipal> principal =
-<<<<<<< HEAD
-      mozilla::BasePrincipal::Cast(doc->NodePrincipal())
-          ->CloneStrippingUserContextIdAndFirstPartyDomain();
-||||||| merged common ancestors
-    mozilla::BasePrincipal::Cast(doc->NodePrincipal())->CloneStrippingUserContextIdAndFirstPartyDomain();
-=======
       nsPermission::ClonePrincipalForPermission(doc->NodePrincipal());
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(principal, nullptr);
 
   return principal.forget();

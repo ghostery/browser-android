@@ -61,16 +61,6 @@ interface nsITelemetry : nsISupports
    *   histogram_type - HISTOGRAM_EXPONENTIAL, HISTOGRAM_LINEAR, HISTOGRAM_BOOLEAN,
    *                    HISTOGRAM_FLAG, HISTOGRAM_COUNT, or HISTOGRAM_CATEGORICAL
    *   sum - sum of the bucket contents
-<<<<<<< HEAD
-   *   range - A 2-item array of minimum and maximum bucket size
-   *   values - Map from bucket to the bucket's count
-   *
-   * @param aStoreName The name of the store to snapshot. Something like "main".
-||||||| merged common ancestors
-   * TODO(bug 1468761): Return packed histograms.
-   *
-   * @param aStoreName The name of the store to snapshot. Ignored at the moment.
-=======
    *   range - A 2-item array of minimum and maximum bucket size
    *   values - Map from bucket to the bucket's count
    *
@@ -79,162 +69,71 @@ interface nsITelemetry : nsISupports
    *                   Custom stores are available when probes have them defined.
    *                   See the `record_into_store` attribute on histograms.
    *                   @see https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/collection/histograms.html#record-into-store
->>>>>>> upstream-releases
    * @param aClearStore Whether to clear out the histograms in the named store after snapshotting.
-<<<<<<< HEAD
-   * @param aFilterTest If true, `TELEMETRY_TEST_` histograms will be filtered out.
-                        Filtered histograms are still cleared if `aClearStore` is true.
-   *                    Defaults to false.
-||||||| merged common ancestors
-=======
    *                    Defaults to false.
    * @param aFilterTest If true, `TELEMETRY_TEST_` histograms will be filtered out.
                         Filtered histograms are still cleared if `aClearStore` is true.
    *                    Defaults to false.
->>>>>>> upstream-releases
    */
   [implicit_jscontext]
-<<<<<<< HEAD
-  jsval getSnapshotForHistograms(in ACString aStoreName, in boolean aClearStore, [optional] in boolean aFilterTest);
-||||||| merged common ancestors
-  jsval getSnapshotForHistograms(in ACString aStoreName, in boolean aClearStore);
-=======
   jsval getSnapshotForHistograms([optional] in ACString aStoreName, [optional] in boolean aClearStore, [optional] in boolean aFilterTest);
->>>>>>> upstream-releases
 
   /**
    * Serializes the keyed histograms from the given store to a JSON-style object.
    * The returned structure looks like:
    *   { "process": { "name1": { "key_1": histogramData1, "key_2": histogramData2 }, ...}, ... }
    *
-<<<<<<< HEAD
-   * @param aStoreName The name of the store to snapshot. Something like "main".
-||||||| merged common ancestors
-   * @param aStoreName The name of the store to snapshot. Ignored at the moment.
-=======
    * @param aStoreName The name of the store to snapshot.
    *                   Defaults to "main".
    *                   Custom stores are available when probes have them defined.
    *                   See the `record_into_store` attribute on histograms.
    *                   @see https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/collection/histograms.html#record-into-store
->>>>>>> upstream-releases
    * @param aClearStore Whether to clear out the keyed histograms in the named store after snapshotting.
-<<<<<<< HEAD
-   * @param aFilterTest If true, `TELEMETRY_TEST_` histograms will be filtered out.
-                        Filtered histograms are still cleared if `aClearStore` is true.
-   *                    Defaults to false.
-||||||| merged common ancestors
-=======
    *                    Defaults to false.
    * @param aFilterTest If true, `TELEMETRY_TEST_` histograms will be filtered out.
                         Filtered histograms are still cleared if `aClearStore` is true.
    *                    Defaults to false.
->>>>>>> upstream-releases
    */
   [implicit_jscontext]
-<<<<<<< HEAD
-  jsval getSnapshotForKeyedHistograms(in ACString aStoreName, in boolean aClearStore, [optional] in boolean aFilterTest);
-||||||| merged common ancestors
-  jsval getSnapshotForKeyedHistograms(in ACString aStoreName, in boolean aClearStore);
-=======
   jsval getSnapshotForKeyedHistograms([optional] in ACString aStoreName, [optional] in boolean aClearStore, [optional] in boolean aFilterTest);
->>>>>>> upstream-releases
 
   /**
    * Serializes the scalars from the given store to a JSON-style object.
    * The returned structure looks like:
    *   { "process": { "category1.probe": 1,"category1.other_probe": false, ... }, ... }.
    *
-<<<<<<< HEAD
-   * @param aStoreName The name of the store to snapshot. Something like "main".
-||||||| merged common ancestors
-   * @param aStoreName The name of the store to snapshot. Ignored at the moment.
-=======
    * @param aStoreName The name of the store to snapshot.
    *                   Defaults to "main".
    *                   Custom stores are available when probes have them defined.
    *                   See the `record_into_store` attribute on scalars.
    *                   @see https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/collection/scalars.html#optional-fields
->>>>>>> upstream-releases
    * @param aClearStore Whether to clear out the scalars in the named store after snapshotting.
-<<<<<<< HEAD
-   * @param aFilterTest If true, `telemetry.test` scalars will be filtered out.
-                        Filtered scalars are still cleared if `aClearStore` is true.
-   *                    Defaults to false.
-||||||| merged common ancestors
-=======
    *                    Defaults to false.
    * @param aFilterTest If true, `telemetry.test` scalars will be filtered out.
                         Filtered scalars are still cleared if `aClearStore` is true.
    *                    Defaults to false.
->>>>>>> upstream-releases
    */
   [implicit_jscontext]
-<<<<<<< HEAD
-  jsval getSnapshotForScalars(in ACString aStoreName, in boolean aClearStore, [optional] in boolean aFilterTest);
-||||||| merged common ancestors
-  jsval getSnapshotForScalars(in ACString aStoreName, in boolean aClearStore);
-=======
   jsval getSnapshotForScalars([optional] in ACString aStoreName, [optional] in boolean aClearStore, [optional] in boolean aFilterTest);
->>>>>>> upstream-releases
 
   /**
    * Serializes the keyed scalars from the given store to a JSON-style object.
    * The returned structure looks like:
    *   { "process": { "category1.probe": { "key_1": 2, "key_2": 1, ... }, ... }, ... }
    *
-<<<<<<< HEAD
-   * @param aStoreName The name of the store to snapshot. Something like "main".
-||||||| merged common ancestors
-   * @param aStoreName The name of the store to snapshot. Ignored at the moment.
-=======
    * @param aStoreName The name of the store to snapshot.
    *                   Defaults to "main".
    *                   Custom stores are available when probes have them defined.
    *                   See the `record_into_store` attribute on scalars.
    *                   @see https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/collection/scalars.html#optional-fields
->>>>>>> upstream-releases
    * @param aClearStore Whether to clear out the keyed scalars in the named store after snapshotting.
-<<<<<<< HEAD
-   * @param aFilterTest If true, `telemetry.test` scalars will be filtered out.
-                        Filtered scalars are still cleared if `aClearStore` is true.
-   *                    Defaults to false.
-||||||| merged common ancestors
-=======
    *                    Defaults to false.
    * @param aFilterTest If true, `telemetry.test` scalars will be filtered out.
                         Filtered scalars are still cleared if `aClearStore` is true.
    *                    Defaults to false.
->>>>>>> upstream-releases
    */
   [implicit_jscontext]
-<<<<<<< HEAD
-  jsval getSnapshotForKeyedScalars(in ACString aStoreName, in boolean aClearStore, [optional] in boolean aFilterTest);
-||||||| merged common ancestors
-  jsval getSnapshotForKeyedScalars(in ACString aStoreName, in boolean aClearStore);
-
-  /**
-   * Serializes the histograms from the given dataset to a JSON-style object.
-   * The returned structure looks like:
-   *   { process1: {name1: {histogramData1}, name2:{histogramData2}...}}
-   *
-   * Where histogramDataN has the following properties:
-   *   min - minimum bucket size
-   *   max - maximum bucket size
-   *   histogram_type - HISTOGRAM_EXPONENTIAL, HISTOGRAM_LINEAR, HISTOGRAM_BOOLEAN,
-   *                    HISTOGRAM_FLAG, HISTOGRAM_COUNT, or HISTOGRAM_CATEGORICAL
-   *   counts - array representing contents of the buckets in the histogram
-   *   ranges - array with calculated bucket sizes
-   *   sum - sum of the bucket contents
-   *
-   * @param aDataset DATASET_RELEASE_CHANNEL_OPTOUT or DATASET_RELEASE_CHANNEL_OPTIN.
-   * @param aClear Whether to clear out the histograms after snapshotting
-   */
-  [implicit_jscontext]
-  jsval snapshotHistograms(in uint32_t aDataset, in boolean aClear);
-=======
   jsval getSnapshotForKeyedScalars([optional] in ACString aStoreName, [optional] in boolean aClearStore, [optional] in boolean aFilterTest);
->>>>>>> upstream-releases
 
   /**
    * The amount of time, in milliseconds, that the last session took

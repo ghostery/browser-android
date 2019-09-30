@@ -2,26 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-use crate::cg;
-||||||| merged common ancestors
-use cg;
-=======
->>>>>>> upstream-releases
 use darling::util::IdentList;
-<<<<<<< HEAD
-use proc_macro2::TokenStream;
-use quote::TokenStreamExt;
-use syn::{DeriveInput, Path};
-||||||| merged common ancestors
-use quote::Tokens;
-use syn::{DeriveInput, Path};
-=======
 use derive_common::cg;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
 use syn::{DeriveInput, Path, WhereClause};
->>>>>>> upstream-releases
 use synstructure::{Structure, VariantInfo};
 
 pub fn derive(mut input: DeriveInput) -> TokenStream {
@@ -86,16 +71,10 @@ pub fn derive(mut input: DeriveInput) -> TokenStream {
     }
 }
 
-<<<<<<< HEAD
-fn derive_variant_arm(variant: &VariantInfo) -> Result<TokenStream, ()> {
-||||||| merged common ancestors
-fn derive_variant_arm(variant: &VariantInfo) -> Result<Tokens, ()> {
-=======
 fn derive_variant_arm(
     variant: &VariantInfo,
     where_clause: &mut Option<WhereClause>,
 ) -> Result<TokenStream, ()> {
->>>>>>> upstream-releases
     let variant_attrs = cg::parse_variant_attrs_from_ast::<AnimationVariantAttrs>(&variant.ast());
     if variant_attrs.error {
         return Err(());

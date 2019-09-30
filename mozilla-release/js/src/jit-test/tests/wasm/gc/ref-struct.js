@@ -8,13 +8,7 @@ const v2vSigSection = sigSection([{args:[], ret:VoidCode}]);
 
 function checkInvalid(body, errorMessage) {
     assertErrorMessage(() => new WebAssembly.Module(
-<<<<<<< HEAD
-        moduleWithSections([gcFeatureOptInSection(2),
-||||||| merged common ancestors
-        moduleWithSections([gcFeatureOptInSection(1),
-=======
         moduleWithSections([gcFeatureOptInSection(3),
->>>>>>> upstream-releases
                             v2vSigSection,
                             declSection([0]),
                             bodySection([body])])),
@@ -28,13 +22,7 @@ function checkInvalid(body, errorMessage) {
 {
     let bin = wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
           (import $print_lp "" "print_lp" (func))
           (import $print_rp "" "print_rp" (func))
@@ -54,22 +42,10 @@ function checkInvalid(body, errorMessage) {
 
           (func $make (param $n i32) (result (ref $wabbit))
                 (local $tmp i32)
-<<<<<<< HEAD
-                (set_local $tmp (get_global $k))
-                (set_global $k (i32.add (get_local $tmp) (i32.const 1)))
-                (if (ref $wabbit) (i32.le_s (get_local $n) (i32.const 2))
-                    (struct.new $wabbit (get_local $tmp) (ref.null) (ref.null))
-||||||| merged common ancestors
-                (set_local $tmp (get_global $k))
-                (set_global $k (i32.add (get_local $tmp) (i32.const 1)))
-                (if (ref $wabbit) (i32.le_s (get_local $n) (i32.const 2))
-                    (struct.new $wabbit (get_local $tmp) (ref.null (ref $wabbit)) (ref.null (ref $wabbit)))
-=======
                 (local.set $tmp (global.get $k))
                 (global.set $k (i32.add (local.get $tmp) (i32.const 1)))
                 (if (ref $wabbit) (i32.le_s (local.get $n) (i32.const 2))
                     (struct.new $wabbit (local.get $tmp) (ref.null) (ref.null))
->>>>>>> upstream-releases
                     (block (ref $wabbit)
                       (struct.new $wabbit
                                   (local.get $tmp)
@@ -143,13 +119,7 @@ function checkInvalid(body, errorMessage) {
 
 wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field (mut (ref $node)))))
       (type $nix (struct (field (mut (ref $node))) (field i32)))
       (func $f (param $p (ref $node)) (param $q (ref $nix))
@@ -159,13 +129,7 @@ wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field i32) (field f32)))
       (func $f (param $p (ref $node)) (result (ref $node2))
@@ -178,13 +142,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field i32) (field f32)))
       (func $f (param $p (ref $node)) (result (ref $node2))
@@ -199,13 +157,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field (mut i32))))
       (type $node2 (struct (field (mut i32)) (field f32)))
       (func $f (param $p (ref $node)) (result (ref $node2))
@@ -227,13 +179,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
       (type $node (struct (field i32)))
       (type $node2a (struct (field i32) (field (ref $node))))
@@ -244,27 +190,13 @@ assertEq(wasmEvalText(
 
       (func (export "test") (result i32)
        (local $n (ref $node))
-<<<<<<< HEAD
-       (set_local $n (struct.new $node2a (i32.const 0) (ref.null)))
-       (ref.eq (call $f (get_local $n)) (get_local $n))))`).exports.test(),
-||||||| merged common ancestors
-       (set_local $n (struct.new $node2a (i32.const 0) (ref.null (ref $node))))
-       (ref.eq (call $f (get_local $n)) (get_local $n))))`).exports.test(),
-=======
        (local.set $n (struct.new $node2a (i32.const 0) (ref.null)))
        (ref.eq (call $f (local.get $n)) (local.get $n))))`).exports.test(),
->>>>>>> upstream-releases
          1);
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
       (type $node (struct (field i32)))
       (type $nodeCopy (struct (field i32)))
@@ -276,16 +208,8 @@ assertEq(wasmEvalText(
 
       (func (export "test") (result i32)
        (local $n (ref $node))
-<<<<<<< HEAD
-       (set_local $n (struct.new $node2a (i32.const 0) (ref.null)))
-       (ref.eq (call $f (get_local $n)) (get_local $n))))`).exports.test(),
-||||||| merged common ancestors
-       (set_local $n (struct.new $node2a (i32.const 0) (ref.null (ref $node))))
-       (ref.eq (call $f (get_local $n)) (get_local $n))))`).exports.test(),
-=======
        (local.set $n (struct.new $node2a (i32.const 0) (ref.null)))
        (ref.eq (call $f (local.get $n)) (local.get $n))))`).exports.test(),
->>>>>>> upstream-releases
          0);
 
 // Another subtle case: struct.narrow can target a type that is not the concrete
@@ -293,13 +217,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field i32) (field f32)))
       (type $node3 (struct (field i32) (field f32) (field f64)))
@@ -315,13 +233,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field i32) (field f32)))
       (type $snort (struct (field i32) (field f64)))
@@ -336,13 +248,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func $f (param $p anyref) (result (ref $node))
        (struct.narrow anyref (ref $node) (local.get $p)))
@@ -356,13 +262,7 @@ assertEq(wasmEvalText(
 
 assertEq(wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func (export "test") (param $p anyref) (result anyref)
        (struct.narrow anyref (ref $node) (local.get $p))))`).exports.test({hi:37}),
@@ -373,13 +273,7 @@ assertEq(wasmEvalText(
 {
     let txt =
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $node (struct (field i32)))
           (func (export "make") (param $n i32) (result anyref)
            (struct.new $node (local.get $n)))
@@ -399,13 +293,7 @@ assertEq(wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func $f (param $p (ref $node))
        (struct.set $node 0 (local.get $p) (i32.const 37))))`),
@@ -416,13 +304,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field (mut i32))))
       (func $f (param $p (ref $node))
        (struct.set $node 0 (local.get $p) (f32.const 37))))`),
@@ -433,13 +315,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func $f (param $p (ref $node)) (result i32)
        (struct.get $node 1 (local.get $p))))`),
@@ -450,13 +326,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field (mut i32))))
       (func $f (param $p (ref $node))
        (struct.set $node 1 (local.get $p) (i32.const 37))))`),
@@ -467,13 +337,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $snort (struct (field f64)))
       (func $f (param $p (ref $snort)) (result i32)
@@ -485,13 +349,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field (mut i32))))
       (type $snort (struct (field f64)))
       (func $f (param $p (ref $snort)) (result i32)
@@ -503,13 +361,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field i32) (field f32)))
       (type $snort (struct (field f64)))
@@ -522,13 +374,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field (mut i32)) (field f32)))
       (func $f (param $p (ref $node)) (result (ref $node2))
@@ -538,13 +384,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field (mut i32))))
       (type $node2 (struct (field i32) (field f32)))
       (func $f (param $p (ref $node)) (result (ref $node2))
@@ -556,13 +396,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func $f (param $p (ref $node)) (result anyref)
        (struct.narrow i32 anyref (local.get 0))))`),
@@ -571,13 +405,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func $f (param $p (ref $node)) (result anyref)
        (struct.narrow anyref i32 (local.get 0))))`),
@@ -588,14 +416,7 @@ assertErrorMessage(() => wasmEvalText(
 
 checkInvalid(funcBody({locals:[],
                        body:[
-<<<<<<< HEAD
-                           RefNull,
-||||||| merged common ancestors
-                           RefNull,
-                           AnyrefCode,
-=======
                            RefNullCode,
->>>>>>> upstream-releases
                            MiscPrefix, StructNarrow, I32Code, AnyrefCode,
                            DropCode
                        ]}),
@@ -603,14 +424,7 @@ checkInvalid(funcBody({locals:[],
 
 checkInvalid(funcBody({locals:[],
                        body:[
-<<<<<<< HEAD
-                           RefNull,
-||||||| merged common ancestors
-                           RefNull,
-                           AnyrefCode,
-=======
                            RefNullCode,
->>>>>>> upstream-releases
                            MiscPrefix, StructNarrow, AnyrefCode, I32Code,
                            DropCode
                        ]}),
@@ -620,13 +434,7 @@ checkInvalid(funcBody({locals:[],
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (func $f (param $p (ref $node)) (result anyref)
        (struct.narrow (ref $node) anyref (local.get 0))))`),
@@ -637,13 +445,7 @@ assertErrorMessage(() => wasmEvalText(
 
 assertErrorMessage(() => wasmEvalText(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32)))
       (type $node2 (struct (field i32) (field f32)))
       (func $f (param $p (ref $node2)) (result anyref)
@@ -656,13 +458,7 @@ assertErrorMessage(() => wasmEvalText(
 assertErrorMessage(function() {
     let ins = wasmEvalText(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $node (struct (field i32)))
           (func (export "test")
            (drop (call $f (ref.null))))
@@ -678,13 +474,7 @@ assertErrorMessage(function() {
 assertErrorMessage(function() {
     let ins = wasmEvalText(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $node (struct (field (mut i32))))
           (func (export "test")
            (call $f (ref.null)))

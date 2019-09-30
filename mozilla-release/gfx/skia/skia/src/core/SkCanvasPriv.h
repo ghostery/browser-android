@@ -37,19 +37,12 @@ public:
     // return the byte-size of the lattice, even if the buffer is null
     // storage must be 4-byte aligned
     static size_t WriteLattice(void* storage, const SkCanvas::Lattice&);
-<<<<<<< HEAD
-
-    static SkCanvas::SaveLayerFlags LegacySaveFlagsToSaveLayerFlags(uint32_t legacySaveFlags);
-
-||||||| merged common ancestors
-=======
 
     static SkCanvas::SaveLayerFlags LegacySaveFlagsToSaveLayerFlags(uint32_t legacySaveFlags);
 
     static int SaveBehind(SkCanvas* canvas, const SkRect* subset) {
         return canvas->only_axis_aligned_saveBehind(subset);
     }
->>>>>>> upstream-releases
 };
 
 #endif

@@ -79,15 +79,7 @@ UPRV_FORMATTED_VALUE_SUBCLASS_AUTO_IMPL(FormattedList)
 #endif
 
 
-<<<<<<< HEAD:mozilla-release/intl/icu/source/i18n/listformatter.cpp
 static Hashtable* listPatternHash = nullptr;
-static UMutex listFormatterMutex = U_MUTEX_INITIALIZER;
-||||||| merged common ancestors
-static Hashtable* listPatternHash = NULL;
-static UMutex listFormatterMutex = U_MUTEX_INITIALIZER;
-=======
-static Hashtable* listPatternHash = nullptr;
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/i18n/listformatter.cpp
 static const char STANDARD_STYLE[] = "standard";
 
 U_CDECL_BEGIN
@@ -151,14 +143,8 @@ const ListFormatInternal* ListFormatter::getListFormatInternal(
     CharString keyBuffer(locale.getName(), errorCode);
     keyBuffer.append(':', errorCode).append(style, errorCode);
     UnicodeString key(keyBuffer.data(), -1, US_INV);
-<<<<<<< HEAD:mozilla-release/intl/icu/source/i18n/listformatter.cpp
-    ListFormatInternal* result = nullptr;
-||||||| merged common ancestors
-    ListFormatInternal* result = NULL;
-=======
     ListFormatInternal* result = nullptr;
     static UMutex listFormatterMutex = U_MUTEX_INITIALIZER;
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/i18n/listformatter.cpp
     {
         Mutex m(&listFormatterMutex);
         if (listPatternHash == nullptr) {
@@ -394,10 +380,6 @@ UnicodeString& ListFormatter::format(
     return format(items, nItems, appendTo, -1, offset, errorCode);
 }
 
-<<<<<<< HEAD:mozilla-release/intl/icu/source/i18n/listformatter.cpp
-#if !UCONFIG_NO_FORMATTING
-||||||| merged common ancestors
-=======
 #if !UCONFIG_NO_FORMATTING
 UnicodeString& ListFormatter::format(
         const UnicodeString items[],
@@ -411,19 +393,6 @@ UnicodeString& ListFormatter::format(
 }
 #endif
 
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/i18n/listformatter.cpp
-UnicodeString& ListFormatter::format(
-        const UnicodeString items[],
-        int32_t nItems,
-        UnicodeString & appendTo,
-        FieldPositionIterator* posIter,
-        UErrorCode& errorCode) const {
-  int32_t offset;
-  FieldPositionIteratorHandler handler(posIter, errorCode);
-  return format_(items, nItems, appendTo, -1, offset, &handler, errorCode);
-};
-#endif
-
 UnicodeString& ListFormatter::format(
         const UnicodeString items[],
         int32_t nItems,
@@ -431,21 +400,6 @@ UnicodeString& ListFormatter::format(
         int32_t index,
         int32_t &offset,
         UErrorCode& errorCode) const {
-  return format_(items, nItems, appendTo, index, offset, nullptr, errorCode);
-}
-
-UnicodeString& ListFormatter::format_(
-        const UnicodeString items[],
-        int32_t nItems,
-        UnicodeString& appendTo,
-        int32_t index,
-        int32_t &offset,
-        FieldPositionHandler* handler,
-        UErrorCode& errorCode) const {
-<<<<<<< HEAD:mozilla-release/intl/icu/source/i18n/listformatter.cpp
-#if !UCONFIG_NO_FORMATTING
-||||||| merged common ancestors
-=======
   return format_(items, nItems, appendTo, index, offset, nullptr, errorCode);
 }
 
@@ -496,7 +450,6 @@ UnicodeString& ListFormatter::format_(
         FieldPositionHandler* handler,
         UErrorCode& errorCode) const {
 #if !UCONFIG_NO_FORMATTING
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/i18n/listformatter.cpp
     offset = -1;
     if (U_FAILURE(errorCode)) {
         return appendTo;

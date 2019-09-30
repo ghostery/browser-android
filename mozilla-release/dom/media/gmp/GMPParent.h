@@ -54,19 +54,10 @@ enum GMPState {
 
 class GMPContentParent;
 
-<<<<<<< HEAD
-class GMPParent final : public PGMPParent {
- public:
-||||||| merged common ancestors
-class GMPParent final : public PGMPParent
-{
-public:
-=======
 class GMPParent final : public PGMPParent {
   friend class PGMPParent;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GMPParent)
 
   explicit GMPParent(AbstractThread* aMainThread);
@@ -158,83 +149,30 @@ class GMPParent final : public PGMPParent {
   bool EnsureProcessLoaded();
   RefPtr<GenericPromise> ReadGMPMetaData();
   RefPtr<GenericPromise> ReadGMPInfoFile(nsIFile* aFile);
-<<<<<<< HEAD
-  RefPtr<GenericPromise> ParseChromiumManifest(
-      const nsAString& aJSON);  // Main thread.
-  RefPtr<GenericPromise> ReadChromiumManifestFile(
-      nsIFile* aFile);  // GMP thread.
-  void WriteExtraDataForMinidump();
-||||||| merged common ancestors
-  RefPtr<GenericPromise> ParseChromiumManifest(const nsAString& aJSON); // Main thread.
-  RefPtr<GenericPromise> ReadChromiumManifestFile(nsIFile* aFile); // GMP thread.
-  void WriteExtraDataForMinidump();
-=======
   RefPtr<GenericPromise> ParseChromiumManifest(
       const nsAString& aJSON);  // Main thread.
   RefPtr<GenericPromise> ReadChromiumManifestFile(
       nsIFile* aFile);  // GMP thread.
   void AddCrashAnnotations();
->>>>>>> upstream-releases
   bool GetCrashID(nsString& aResult);
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvInitCrashReporter(
-      Shmem&& shmem, const NativeThreadId& aThreadId) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvInitCrashReporter(Shmem&& shmem, const NativeThreadId& aThreadId) override;
-=======
   mozilla::ipc::IPCResult RecvInitCrashReporter(
       Shmem&& shmem, const NativeThreadId& aThreadId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvPGMPStorageConstructor(
-      PGMPStorageParent* actor) override;
-  PGMPStorageParent* AllocPGMPStorageParent() override;
-  bool DeallocPGMPStorageParent(PGMPStorageParent* aActor) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvPGMPStorageConstructor(PGMPStorageParent* actor) override;
-  PGMPStorageParent* AllocPGMPStorageParent() override;
-  bool DeallocPGMPStorageParent(PGMPStorageParent* aActor) override;
-=======
   mozilla::ipc::IPCResult RecvPGMPStorageConstructor(
       PGMPStorageParent* actor) override;
   PGMPStorageParent* AllocPGMPStorageParent();
   bool DeallocPGMPStorageParent(PGMPStorageParent* aActor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvPGMPTimerConstructor(
-      PGMPTimerParent* actor) override;
-  PGMPTimerParent* AllocPGMPTimerParent() override;
-  bool DeallocPGMPTimerParent(PGMPTimerParent* aActor) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvPGMPTimerConstructor(PGMPTimerParent* actor) override;
-  PGMPTimerParent* AllocPGMPTimerParent() override;
-  bool DeallocPGMPTimerParent(PGMPTimerParent* aActor) override;
-=======
   mozilla::ipc::IPCResult RecvPGMPTimerConstructor(
       PGMPTimerParent* actor) override;
   PGMPTimerParent* AllocPGMPTimerParent();
   bool DeallocPGMPTimerParent(PGMPTimerParent* aActor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvPGMPContentChildDestroyed() override;
-  bool IsUsed() {
-    return mGMPContentChildCount > 0 || !mGetContentParentPromises.IsEmpty();
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvPGMPContentChildDestroyed() override;
-  bool IsUsed()
-  {
-    return mGMPContentChildCount > 0 ||
-           !mGetContentParentPromises.IsEmpty();
-=======
   mozilla::ipc::IPCResult RecvPGMPContentChildDestroyed();
   bool IsUsed() {
     return mGMPContentChildCount > 0 || !mGetContentParentPromises.IsEmpty();
->>>>>>> upstream-releases
   }
 
   void ResolveGetContentParentPromises();

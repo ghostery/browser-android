@@ -299,18 +299,6 @@ function do_throw_todo(text, stack) {
 function do_report_unexpected_exception(ex, text) {
   var caller_stack = Components.stack.caller;
   text = text ? text + " - " : "";
-<<<<<<< HEAD
-  var caller_filename = caller_stack ? caller_stack.filename : "unknown file";
-
-  _dump("TEST-UNEXPECTED-FAIL | " + caller_filename + " | " + text +
-        "Unexpected exception " + ex + ", see following stack:\n" + ex.stack +
-        "\n");
-||||||| merged common ancestors
-
-  _dump("TEST-UNEXPECTED-FAIL | " + caller_stack.filename + " | " + text +
-        "Unexpected exception " + ex + ", see following stack:\n" + ex.stack +
-        "\n");
-=======
   var caller_filename = caller_stack ? caller_stack.filename : "unknown file";
 
   _dump(
@@ -324,7 +312,6 @@ function do_report_unexpected_exception(ex, text) {
       ex.stack +
       "\n"
   );
->>>>>>> upstream-releases
 
   _do_quit();
   throw Components.results.NS_ERROR_ABORT;
@@ -690,31 +677,15 @@ function format_pattern_match_failure(diagnosis, indent = "") {
 function do_test_pending() {
   ++_tests_pending;
 
-<<<<<<< HEAD
-  _dump("TEST-INFO | (robocop_head.js) | test " + _tests_pending +
-         " pending\n");
-||||||| merged common ancestors
-  _dump("TEST-INFO | (xpcshell/head.js) | test " + _tests_pending +
-         " pending\n");
-=======
   _dump(
     "TEST-INFO | (robocop_head.js) | test " + _tests_pending + " pending\n"
   );
->>>>>>> upstream-releases
 }
 
 function do_test_finished() {
-<<<<<<< HEAD
-  _dump("TEST-INFO | (robocop_head.js) | test " + _tests_pending +
-         " finished\n");
-||||||| merged common ancestors
-  _dump("TEST-INFO | (xpcshell/head.js) | test " + _tests_pending +
-         " finished\n");
-=======
   _dump(
     "TEST-INFO | (robocop_head.js) | test " + _tests_pending + " finished\n"
   );
->>>>>>> upstream-releases
 
   if (--_tests_pending == 0) {
     _do_execute_cleanup();

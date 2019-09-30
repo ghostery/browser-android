@@ -509,18 +509,7 @@ add_test(function test_Capabilities_fromJSON() {
   caps = fromJSON({ strictFileInteractability: true });
   equal(true, caps.get("strictFileInteractability"));
 
-<<<<<<< HEAD
-  caps = fromJSON({strictFileInteractability: false});
-  equal(false, caps.get("strictFileInteractability"));
-  caps = fromJSON({strictFileInteractability: true});
-  equal(true, caps.get("strictFileInteractability"));
-
-  caps = fromJSON({"moz:accessibilityChecks": true});
-||||||| merged common ancestors
-  caps = fromJSON({"moz:accessibilityChecks": true});
-=======
   caps = fromJSON({ "moz:accessibilityChecks": true });
->>>>>>> upstream-releases
   equal(true, caps.get("moz:accessibilityChecks"));
   caps = fromJSON({ "moz:accessibilityChecks": false });
   equal(false, caps.get("moz:accessibilityChecks"));

@@ -412,17 +412,9 @@ CssComputedView.prototype = {
         isHref)
     ) {
       value = {
-<<<<<<< HEAD
-        property: parent.querySelector(".computed-property-name").firstChild.textContent,
-        value: parent.querySelector(".computed-property-value").textContent,
-||||||| merged common ancestors
-        property: parent.querySelector(".computed-property-name").firstChild.textContent,
-        value: parent.querySelector(".computed-property-value").textContent
-=======
         property: parent.querySelector(".computed-property-name").firstChild
           .textContent,
         value: parent.querySelector(".computed-property-value").textContent,
->>>>>>> upstream-releases
       };
     }
     if (
@@ -431,50 +423,24 @@ CssComputedView.prototype = {
     ) {
       const view = propertyContent.previousSibling;
       value = {
-<<<<<<< HEAD
-        property: view.querySelector(".computed-property-name").firstChild.textContent,
-        value: node.textContent,
-||||||| merged common ancestors
-        property: view.querySelector(".computed-property-name").firstChild.textContent,
-        value: node.textContent
-=======
         property: view.querySelector(".computed-property-name").firstChild
           .textContent,
         value: node.textContent,
->>>>>>> upstream-releases
       };
     }
     if (classes.contains("computed-font-family")) {
       if (propertyView) {
         value = {
-<<<<<<< HEAD
-          property: parent.querySelector(
-            ".computed-property-name").firstChild.textContent,
-          value: node.parentNode.textContent,
-||||||| merged common ancestors
-          property: parent.querySelector(
-            ".computed-property-name").firstChild.textContent,
-          value: node.parentNode.textContent
-=======
           property: parent.querySelector(".computed-property-name").firstChild
             .textContent,
           value: node.parentNode.textContent,
->>>>>>> upstream-releases
         };
       } else if (propertyContent) {
         const view = propertyContent.previousSibling;
         value = {
-<<<<<<< HEAD
-          property: view.querySelector(".computed-property-name").firstChild.textContent,
-          value: node.parentNode.textContent,
-||||||| merged common ancestors
-          property: view.querySelector(".computed-property-name").firstChild.textContent,
-          value: node.parentNode.textContent
-=======
           property: view.querySelector(".computed-property-name").firstChild
             .textContent,
           value: node.parentNode.textContent,
->>>>>>> upstream-releases
         };
       } else {
         return null;
@@ -561,31 +527,6 @@ CssComputedView.prototype = {
     // early if it changed
     const viewedElement = this._viewedElement;
 
-<<<<<<< HEAD
-    return promise.all([
-      this._createPropertyViews(),
-      this.pageStyle.getComputed(this._viewedElement, {
-        filter: this._sourceFilter,
-        onlyMatched: !this.includeBrowserStyles,
-        markMatched: true,
-      }),
-    ]).then(([, computed]) => {
-      if (viewedElement !== this._viewedElement) {
-        return promise.resolve();
-      }
-||||||| merged common ancestors
-    return promise.all([
-      this._createPropertyViews(),
-      this.pageStyle.getComputed(this._viewedElement, {
-        filter: this._sourceFilter,
-        onlyMatched: !this.includeBrowserStyles,
-        markMatched: true
-      })
-    ]).then(([, computed]) => {
-      if (viewedElement !== this._viewedElement) {
-        return promise.resolve();
-      }
-=======
     return promise
       .all([
         this._createPropertyViews(),
@@ -599,7 +540,6 @@ CssComputedView.prototype = {
         if (viewedElement !== this._viewedElement) {
           return promise.resolve();
         }
->>>>>>> upstream-releases
 
         this._matchedProperties = new Set();
         for (const name in computed) {
@@ -613,85 +553,6 @@ CssComputedView.prototype = {
           this._refreshProcess.cancel();
         }
 
-<<<<<<< HEAD
-      this.noResults.hidden = true;
-
-      // Reset visible property count
-      this.numVisibleProperties = 0;
-
-      // Reset zebra striping.
-      this._darkStripe = true;
-
-      return new Promise((resolve, reject) => {
-        this._refreshProcess = new UpdateProcess(
-          this.styleWindow, this.propertyViews, {
-            onItem: (propView) => {
-              propView.refresh();
-            },
-            onCancel: () => {
-              reject("_refreshProcess of computed view cancelled");
-            },
-            onDone: () => {
-              this._refreshProcess = null;
-              this.noResults.hidden = this.numVisibleProperties > 0;
-
-              if (this.searchField.value.length > 0 &&
-                  !this.numVisibleProperties) {
-                this.searchField.classList
-                                .add("devtools-style-searchbox-no-match");
-              } else {
-                this.searchField.classList
-                                .remove("devtools-style-searchbox-no-match");
-              }
-
-              this.inspector.emit("computed-view-refreshed");
-              resolve(undefined);
-            },
-          }
-        );
-        this._refreshProcess.schedule();
-      });
-    }).catch(console.error);
-||||||| merged common ancestors
-      this.noResults.hidden = true;
-
-      // Reset visible property count
-      this.numVisibleProperties = 0;
-
-      // Reset zebra striping.
-      this._darkStripe = true;
-
-      return new Promise((resolve, reject) => {
-        this._refreshProcess = new UpdateProcess(
-          this.styleWindow, this.propertyViews, {
-            onItem: (propView) => {
-              propView.refresh();
-            },
-            onCancel: () => {
-              reject("_refreshProcess of computed view cancelled");
-            },
-            onDone: () => {
-              this._refreshProcess = null;
-              this.noResults.hidden = this.numVisibleProperties > 0;
-
-              if (this.searchField.value.length > 0 &&
-                  !this.numVisibleProperties) {
-                this.searchField.classList
-                                .add("devtools-style-searchbox-no-match");
-              } else {
-                this.searchField.classList
-                                .remove("devtools-style-searchbox-no-match");
-              }
-
-              this.inspector.emit("computed-view-refreshed");
-              resolve(undefined);
-            }
-          }
-        );
-        this._refreshProcess.schedule();
-      });
-    }).catch(console.error);
-=======
         this.noResults.hidden = true;
 
         // Reset visible property count
@@ -731,7 +592,6 @@ CssComputedView.prototype = {
         });
       })
       .catch(console.error);
->>>>>>> upstream-releases
   },
 
   /**
@@ -1352,14 +1212,8 @@ PropertyView.prototype = {
       });
 
       const valueDiv = createChild(status, "div", {
-<<<<<<< HEAD
-        class: "fix-get-selection computed-other-property-value theme-fg-color1",
-||||||| merged common ancestors
-        class: "fix-get-selection computed-other-property-value theme-fg-color1"
-=======
         class:
           "fix-get-selection computed-other-property-value theme-fg-color1",
->>>>>>> upstream-releases
       });
       valueDiv.appendChild(selector.outputFragment);
     }
@@ -1480,17 +1334,7 @@ SelectorView.STATUS_NAMES = [
   // "Parent Match", "Matched", "Best Match"
 ];
 
-<<<<<<< HEAD
-SelectorView.CLASS_NAMES = [
-  "parentmatch", "matched", "bestmatch",
-];
-||||||| merged common ancestors
-SelectorView.CLASS_NAMES = [
-  "parentmatch", "matched", "bestmatch"
-];
-=======
 SelectorView.CLASS_NAMES = ["parentmatch", "matched", "bestmatch"];
->>>>>>> upstream-releases
 
 SelectorView.prototype = {
   /**

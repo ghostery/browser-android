@@ -46,28 +46,6 @@ class SVGFilterElement : public SVGFilterElementBase {
   virtual bool HasValidDimensions() const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
-  already_AddRefed<SVGAnimatedEnumeration> FilterUnits();
-  already_AddRefed<SVGAnimatedEnumeration> PrimitiveUnits();
-  already_AddRefed<SVGAnimatedString> Href();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
-  already_AddRefed<SVGAnimatedEnumeration> FilterUnits();
-  already_AddRefed<SVGAnimatedEnumeration> PrimitiveUnits();
-  already_AddRefed<SVGAnimatedString> Href();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedLength> X();
   already_AddRefed<DOMSVGAnimatedLength> Y();
   already_AddRefed<DOMSVGAnimatedLength> Width();
@@ -77,7 +55,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedString> Href();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
   virtual EnumAttributesInfo GetEnumInfo() override;
   virtual StringAttributesInfo GetStringInfo() override;

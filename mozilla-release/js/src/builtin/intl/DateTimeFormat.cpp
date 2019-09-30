@@ -79,50 +79,14 @@ static const JSFunctionSpec dateTimeFormat_methods[] = {
     JS_FN(js_toSource_str, dateTimeFormat_toSource, 0, 0), JS_FS_END};
 
 static const JSPropertySpec dateTimeFormat_properties[] = {
-<<<<<<< HEAD
-    JS_SELF_HOSTED_GET("format", "Intl_DateTimeFormat_format_get", 0),
-    JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY), JS_PS_END};
-||||||| merged common ancestors
-    JS_SELF_HOSTED_GET("format", "Intl_DateTimeFormat_format_get", 0),
-    JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY),
-    JS_PS_END
-};
-=======
     JS_SELF_HOSTED_GET("format", "$Intl_DateTimeFormat_format_get", 0),
     JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY), JS_PS_END};
->>>>>>> upstream-releases
 
 /**
  * 12.2.1 Intl.DateTimeFormat([ locales [, options]])
  *
  * ES2017 Intl draft rev 94045d234762ad107a3d09bb6f7381a65f1a2f9b
  */
-<<<<<<< HEAD
-static bool DateTimeFormat(JSContext* cx, const CallArgs& args, bool construct,
-                           DateTimeFormatOptions dtfOptions) {
-  // Step 1 (Handled by OrdinaryCreateFromConstructor fallback code).
-
-  // Step 2 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
-  RootedObject proto(cx);
-  if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-    return false;
-  }
-
-  if (!proto) {
-    proto = GlobalObject::getOrCreateDateTimeFormatPrototype(cx, cx->global());
-||||||| merged common ancestors
-static bool
-DateTimeFormat(JSContext* cx, const CallArgs& args, bool construct, DateTimeFormatOptions dtfOptions)
-{
-    // Step 1 (Handled by OrdinaryCreateFromConstructor fallback code).
-
-    // Step 2 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
-    RootedObject proto(cx);
-    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-        return false;
-    }
-
-=======
 static bool DateTimeFormat(JSContext* cx, const CallArgs& args, bool construct,
                            DateTimeFormatOptions dtfOptions) {
   // Step 1 (Handled by OrdinaryCreateFromConstructor fallback code).
@@ -135,7 +99,6 @@ static bool DateTimeFormat(JSContext* cx, const CallArgs& args, bool construct,
 
   if (!proto) {
     proto = GlobalObject::getOrCreateDateTimeFormatPrototype(cx, cx->global());
->>>>>>> upstream-releases
     if (!proto) {
       return false;
     }
@@ -567,86 +530,6 @@ bool js::intl_isDefaultTimeZone(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-<<<<<<< HEAD
-bool js::intl_patternForSkeleton(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  MOZ_ASSERT(args.length() == 2);
-  MOZ_ASSERT(args[0].isString());
-  MOZ_ASSERT(args[1].isString());
-
-  UniqueChars locale = intl::EncodeLocale(cx, args[0].toString());
-  if (!locale) {
-    return false;
-  }
-
-  AutoStableStringChars skeleton(cx);
-  if (!skeleton.initTwoByte(cx, args[1].toString())) {
-    return false;
-  }
-
-  mozilla::Range<const char16_t> skelChars = skeleton.twoByteRange();
-
-  UErrorCode status = U_ZERO_ERROR;
-  UDateTimePatternGenerator* gen =
-      udatpg_open(IcuLocale(locale.get()), &status);
-  if (U_FAILURE(status)) {
-    intl::ReportInternalError(cx);
-    return false;
-  }
-  ScopedICUObject<UDateTimePatternGenerator, udatpg_close> toClose(gen);
-
-  JSString* str = CallICU(
-      cx, [gen, &skelChars](UChar* chars, uint32_t size, UErrorCode* status) {
-        return udatpg_getBestPattern(gen, skelChars.begin().get(),
-                                     skelChars.length(), chars, size, status);
-      });
-  if (!str) {
-    return false;
-  }
-
-  args.rval().setString(str);
-  return true;
-||||||| merged common ancestors
-bool
-js::intl_patternForSkeleton(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    MOZ_ASSERT(args.length() == 2);
-    MOZ_ASSERT(args[0].isString());
-    MOZ_ASSERT(args[1].isString());
-
-    UniqueChars locale = intl::EncodeLocale(cx, args[0].toString());
-    if (!locale) {
-        return false;
-    }
-
-    AutoStableStringChars skeleton(cx);
-    if (!skeleton.initTwoByte(cx, args[1].toString())) {
-        return false;
-    }
-
-    mozilla::Range<const char16_t> skelChars = skeleton.twoByteRange();
-
-    UErrorCode status = U_ZERO_ERROR;
-    UDateTimePatternGenerator* gen = udatpg_open(IcuLocale(locale.get()), &status);
-    if (U_FAILURE(status)) {
-        intl::ReportInternalError(cx);
-        return false;
-    }
-    ScopedICUObject<UDateTimePatternGenerator, udatpg_close> toClose(gen);
-
-    JSString* str =
-        CallICU(cx, [gen, &skelChars](UChar* chars, uint32_t size, UErrorCode* status) {
-            return udatpg_getBestPattern(gen, skelChars.begin().get(), skelChars.length(),
-                                         chars, size, status);
-        });
-    if (!str) {
-        return false;
-    }
-
-    args.rval().setString(str);
-    return true;
-=======
 bool js::intl_patternForSkeleton(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   MOZ_ASSERT(args.length() == 2);
@@ -683,7 +566,6 @@ bool js::intl_patternForSkeleton(JSContext* cx, unsigned argc, Value* vp) {
 
   args.rval().setString(str);
   return true;
->>>>>>> upstream-releases
 }
 
 bool js::intl_patternForStyle(JSContext* cx, unsigned argc, Value* vp) {

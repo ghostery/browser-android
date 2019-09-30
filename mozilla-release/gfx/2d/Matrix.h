@@ -324,17 +324,8 @@ class BaseMatrix {
    * translation by integers.
    */
   bool HasNonIntegerTranslation() const {
-<<<<<<< HEAD
-    return HasNonTranslation() || !FuzzyEqual(_31, floor(_31 + T(0.5))) ||
-           !FuzzyEqual(_32, floor(_32 + T(0.5)));
-||||||| merged common ancestors
-    return HasNonTranslation() ||
-      !FuzzyEqual(_31, floor(_31 + T(0.5))) ||
-      !FuzzyEqual(_32, floor(_32 + T(0.5)));
-=======
     return HasNonTranslation() || !FuzzyEqual(_31, floor(_31 + 0.5f)) ||
            !FuzzyEqual(_32, floor(_32 + 0.5f));
->>>>>>> upstream-releases
   }
 
   /**
@@ -490,33 +481,6 @@ Point4DTyped<Units, F> ComputePerspectivePlaneIntercept(
   return aFirst + (aSecond - aFirst) * t;
 }
 
-<<<<<<< HEAD
-template <typename SourceUnits, typename TargetUnits>
-class Matrix4x4Typed {
- public:
-  typedef PointTyped<SourceUnits> SourcePoint;
-  typedef PointTyped<TargetUnits> TargetPoint;
-  typedef Point3DTyped<SourceUnits> SourcePoint3D;
-  typedef Point3DTyped<TargetUnits> TargetPoint3D;
-  typedef Point4DTyped<SourceUnits> SourcePoint4D;
-  typedef Point4DTyped<TargetUnits> TargetPoint4D;
-  typedef RectTyped<SourceUnits> SourceRect;
-  typedef RectTyped<TargetUnits> TargetRect;
-||||||| merged common ancestors
-
-template <typename SourceUnits, typename TargetUnits>
-class Matrix4x4Typed
-{
-public:
-  typedef PointTyped<SourceUnits> SourcePoint;
-  typedef PointTyped<TargetUnits> TargetPoint;
-  typedef Point3DTyped<SourceUnits> SourcePoint3D;
-  typedef Point3DTyped<TargetUnits> TargetPoint3D;
-  typedef Point4DTyped<SourceUnits> SourcePoint4D;
-  typedef Point4DTyped<TargetUnits> TargetPoint4D;
-  typedef RectTyped<SourceUnits> SourceRect;
-  typedef RectTyped<TargetUnits> TargetRect;
-=======
 template <class SourceUnits, class TargetUnits, class T>
 class Matrix4x4Typed {
  public:
@@ -528,69 +492,8 @@ class Matrix4x4Typed {
   typedef Point4DTyped<TargetUnits, T> TargetPoint4D;
   typedef RectTyped<SourceUnits, T> SourceRect;
   typedef RectTyped<TargetUnits, T> TargetRect;
->>>>>>> upstream-releases
 
   Matrix4x4Typed()
-<<<<<<< HEAD
-      : _11(1.0f),
-        _12(0.0f),
-        _13(0.0f),
-        _14(0.0f),
-        _21(0.0f),
-        _22(1.0f),
-        _23(0.0f),
-        _24(0.0f),
-        _31(0.0f),
-        _32(0.0f),
-        _33(1.0f),
-        _34(0.0f),
-        _41(0.0f),
-        _42(0.0f),
-        _43(0.0f),
-        _44(1.0f) {}
-
-  Matrix4x4Typed(Float a11, Float a12, Float a13, Float a14, Float a21,
-                 Float a22, Float a23, Float a24, Float a31, Float a32,
-                 Float a33, Float a34, Float a41, Float a42, Float a43,
-                 Float a44)
-      : _11(a11),
-        _12(a12),
-        _13(a13),
-        _14(a14),
-        _21(a21),
-        _22(a22),
-        _23(a23),
-        _24(a24),
-        _31(a31),
-        _32(a32),
-        _33(a33),
-        _34(a34),
-        _41(a41),
-        _42(a42),
-        _43(a43),
-        _44(a44) {}
-
-  explicit Matrix4x4Typed(const Float aArray[16]) {
-||||||| merged common ancestors
-    : _11(1.0f), _12(0.0f), _13(0.0f), _14(0.0f)
-    , _21(0.0f), _22(1.0f), _23(0.0f), _24(0.0f)
-    , _31(0.0f), _32(0.0f), _33(1.0f), _34(0.0f)
-    , _41(0.0f), _42(0.0f), _43(0.0f), _44(1.0f)
-  {}
-
-  Matrix4x4Typed(Float a11, Float a12, Float a13, Float a14,
-                 Float a21, Float a22, Float a23, Float a24,
-                 Float a31, Float a32, Float a33, Float a34,
-                 Float a41, Float a42, Float a43, Float a44)
-    : _11(a11), _12(a12), _13(a13), _14(a14)
-    , _21(a21), _22(a22), _23(a23), _24(a24)
-    , _31(a31), _32(a32), _33(a33), _34(a34)
-    , _41(a41), _42(a42), _43(a43), _44(a44)
-  {}
-
-  explicit Matrix4x4Typed(const Float aArray[16])
-  {
-=======
       : _11(1.0f),
         _12(0.0f),
         _13(0.0f),
@@ -628,20 +531,9 @@ class Matrix4x4Typed {
         _44(a44) {}
 
   explicit Matrix4x4Typed(const T aArray[16]) {
->>>>>>> upstream-releases
     memcpy(components, aArray, sizeof(components));
   }
 
-<<<<<<< HEAD
-  Matrix4x4Typed(const Matrix4x4Typed& aOther) {
-    memcpy(this, &aOther, sizeof(*this));
-  }
-||||||| merged common ancestors
-  Matrix4x4Typed(const Matrix4x4Typed& aOther)
-  {
-    memcpy(this, &aOther, sizeof(*this));
-  }
-=======
   Matrix4x4Typed(const Matrix4x4Typed& aOther) {
     memcpy(components, aOther.components, sizeof(components));
   }
@@ -665,7 +557,6 @@ class Matrix4x4Typed {
         _42(aOther._42),
         _43(aOther._43),
         _44(aOther._44) {}
->>>>>>> upstream-releases
 
   union {
     struct {
@@ -677,30 +568,6 @@ class Matrix4x4Typed {
     T components[16];
   };
 
-<<<<<<< HEAD
-  friend std::ostream& operator<<(std::ostream& aStream,
-                                  const Matrix4x4Typed& aMatrix) {
-    const Float* f = &aMatrix._11;
-    aStream << "[ " << f[0] << " " << f[1] << " " << f[2] << " " << f[3] << " ;"
-            << std::endl;
-    f += 4;
-    aStream << "  " << f[0] << " " << f[1] << " " << f[2] << " " << f[3] << " ;"
-            << std::endl;
-    f += 4;
-    aStream << "  " << f[0] << " " << f[1] << " " << f[2] << " " << f[3] << " ;"
-            << std::endl;
-    f += 4;
-    aStream << "  " << f[0] << " " << f[1] << " " << f[2] << " " << f[3] << " ]"
-            << std::endl;
-||||||| merged common ancestors
-  friend std::ostream& operator<<(std::ostream& aStream, const Matrix4x4Typed& aMatrix)
-  {
-    const Float *f = &aMatrix._11;
-    aStream << "[ " << f[0] << " "  << f[1] << " " << f[2] << " " << f[3] << " ;" << std::endl; f += 4;
-    aStream << "  " << f[0] << " "  << f[1] << " " << f[2] << " " << f[3] << " ;" << std::endl; f += 4;
-    aStream << "  " << f[0] << " "  << f[1] << " " << f[2] << " " << f[3] << " ;" << std::endl; f += 4;
-    aStream << "  " << f[0] << " "  << f[1] << " " << f[2] << " " << f[3] << " ]" << std::endl;
-=======
   friend std::ostream& operator<<(std::ostream& aStream,
                                   const Matrix4x4Typed& aMatrix) {
     const T* f = &aMatrix._11;
@@ -715,41 +582,18 @@ class Matrix4x4Typed {
     f += 4;
     aStream << "  " << f[0] << " " << f[1] << " " << f[2] << " " << f[3] << " ]"
             << std::endl;
->>>>>>> upstream-releases
     return aStream;
   }
 
-<<<<<<< HEAD
-  Point4D& operator[](int aIndex) {
-    MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-    return *reinterpret_cast<Point4D*>((&_11) + 4 * aIndex);
-||||||| merged common ancestors
-  Point4D& operator[](int aIndex)
-  {
-      MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-      return *reinterpret_cast<Point4D*>((&_11)+4*aIndex);
-=======
   Point4DTyped<UnknownUnits, T>& operator[](int aIndex) {
     MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
     return *reinterpret_cast<Point4DTyped<UnknownUnits, T>*>((&_11) +
                                                              4 * aIndex);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  const Point4D& operator[](int aIndex) const {
-    MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-    return *reinterpret_cast<const Point4D*>((&_11) + 4 * aIndex);
-||||||| merged common ancestors
-  const Point4D& operator[](int aIndex) const
-  {
-      MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-      return *reinterpret_cast<const Point4D*>((&_11)+4*aIndex);
-=======
   const Point4DTyped<UnknownUnits, T>& operator[](int aIndex) const {
     MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
     return *reinterpret_cast<const Point4DTyped<UnknownUnits, T>*>((&_11) +
                                                                    4 * aIndex);
->>>>>>> upstream-releases
   }
 
   /**
@@ -779,31 +623,14 @@ class Matrix4x4Typed {
     return true;
   }
 
-<<<<<<< HEAD
-  Matrix As2D() const {
-||||||| merged common ancestors
-  Matrix As2D() const
-  {
-=======
   BaseMatrix<T> As2D() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(Is2D(), "Matrix is not a 2D affine transform");
 
     return BaseMatrix<T>(_11, _12, _21, _22, _41, _42);
   }
 
-<<<<<<< HEAD
-  bool CanDraw2D(Matrix* aMatrix = nullptr) const {
-    if (_14 != 0.0f || _24 != 0.0f || _44 != 1.0f) {
-||||||| merged common ancestors
-  bool CanDraw2D(Matrix* aMatrix = nullptr) const {
-    if (_14 != 0.0f ||
-        _24 != 0.0f ||
-        _44 != 1.0f) {
-=======
   bool CanDraw2D(BaseMatrix<T>* aMatrix = nullptr) const {
     if (_14 != 0.0f || _24 != 0.0f || _44 != 1.0f) {
->>>>>>> upstream-releases
       return false;
     }
     if (aMatrix) {
@@ -832,17 +659,8 @@ class Matrix4x4Typed {
     // coordinate transform divide by W. The matrix can be converted to
     // a true 2D matrix by normalizing out the scaling effect of _44 on
     // the remaining components ahead of time.
-<<<<<<< HEAD
-    if (_14 == 0.0f && _24 == 0.0f && _44 != 1.0f && _44 != 0.0f) {
-      Float scale = 1.0f / _44;
-||||||| merged common ancestors
-    if (_14 == 0.0f && _24 == 0.0f &&
-        _44 != 1.0f && _44 != 0.0f) {
-      Float scale = 1.0f / _44;
-=======
     if (_14 == 0.0f && _24 == 0.0f && _44 != 1.0f && _44 != 0.0f) {
       T scale = 1.0f / _44;
->>>>>>> upstream-releases
       _11 *= scale;
       _12 *= scale;
       _21 *= scale;
@@ -1089,13 +907,7 @@ class Matrix4x4Typed {
 
   static const int kTransformAndClipRectMaxVerts = 32;
 
-<<<<<<< HEAD
-  static Matrix4x4Typed From2D(const Matrix& aMatrix) {
-||||||| merged common ancestors
-  static Matrix4x4Typed From2D(const Matrix &aMatrix) {
-=======
   static Matrix4x4Typed From2D(const BaseMatrix<T>& aMatrix) {
->>>>>>> upstream-releases
     Matrix4x4Typed matrix;
     matrix._11 = aMatrix._11;
     matrix._12 = aMatrix._12;
@@ -1191,22 +1003,9 @@ class Matrix4x4Typed {
                                      max_y - min_y);
   }
 
-<<<<<<< HEAD
-  static Matrix4x4Typed Translation(Float aX, Float aY, Float aZ) {
-    return Matrix4x4Typed(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-                          0.0f, 1.0f, 0.0f, aX, aY, aZ, 1.0f);
-||||||| merged common ancestors
-  static Matrix4x4Typed Translation(Float aX, Float aY, Float aZ)
-  {
-    return Matrix4x4Typed(1.0f, 0.0f, 0.0f, 0.0f,
-                          0.0f, 1.0f, 0.0f, 0.0f,
-                          0.0f, 0.0f, 1.0f, 0.0f,
-                          aX,   aY,   aZ, 1.0f);
-=======
   static Matrix4x4Typed Translation(T aX, T aY, T aZ) {
     return Matrix4x4Typed(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
                           0.0f, 1.0f, 0.0f, aX, aY, aZ, 1.0f);
->>>>>>> upstream-releases
   }
 
   static Matrix4x4Typed Translation(const TargetPoint3D& aP) {
@@ -1236,14 +1035,7 @@ class Matrix4x4Typed {
    * this method would be preferred since it only involves 12 floating-point
    * multiplications.)
    */
-<<<<<<< HEAD
-  Matrix4x4Typed& PreTranslate(Float aX, Float aY, Float aZ) {
-||||||| merged common ancestors
-  Matrix4x4Typed &PreTranslate(Float aX, Float aY, Float aZ)
-  {
-=======
   Matrix4x4Typed& PreTranslate(T aX, T aY, T aZ) {
->>>>>>> upstream-releases
     _41 += aX * _11 + aY * _21 + aZ * _31;
     _42 += aX * _12 + aY * _22 + aZ * _32;
     _43 += aX * _13 + aY * _23 + aZ * _33;
@@ -1252,13 +1044,7 @@ class Matrix4x4Typed {
     return *this;
   }
 
-<<<<<<< HEAD
-  Matrix4x4Typed& PreTranslate(const Point3D& aPoint) {
-||||||| merged common ancestors
-  Matrix4x4Typed &PreTranslate(const Point3D& aPoint) {
-=======
   Matrix4x4Typed& PreTranslate(const Point3DTyped<UnknownUnits, T>& aPoint) {
->>>>>>> upstream-releases
     return PreTranslate(aPoint.x, aPoint.y, aPoint.z);
   }
 
@@ -1274,14 +1060,7 @@ class Matrix4x4Typed {
    * the Post* methods add a transform to the device space end of the
    * transformation.
    */
-<<<<<<< HEAD
-  Matrix4x4Typed& PostTranslate(Float aX, Float aY, Float aZ) {
-||||||| merged common ancestors
-  Matrix4x4Typed &PostTranslate(Float aX, Float aY, Float aZ)
-  {
-=======
   Matrix4x4Typed& PostTranslate(T aX, T aY, T aZ) {
->>>>>>> upstream-releases
     _11 += _14 * aX;
     _21 += _24 * aX;
     _31 += _34 * aX;
@@ -1306,35 +1085,15 @@ class Matrix4x4Typed {
     return PostTranslate(aPoint.x, aPoint.y, 0);
   }
 
-<<<<<<< HEAD
-  static Matrix4x4Typed Scaling(Float aScaleX, Float aScaleY, float aScaleZ) {
-    return Matrix4x4Typed(aScaleX, 0.0f, 0.0f, 0.0f, 0.0f, aScaleY, 0.0f, 0.0f,
-                          0.0f, 0.0f, aScaleZ, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-||||||| merged common ancestors
-  static Matrix4x4Typed Scaling(Float aScaleX, Float aScaleY, float aScaleZ)
-  {
-    return Matrix4x4Typed(aScaleX, 0.0f, 0.0f, 0.0f,
-                          0.0f, aScaleY, 0.0f, 0.0f,
-                          0.0f, 0.0f, aScaleZ, 0.0f,
-                          0.0f, 0.0f, 0.0f, 1.0f);
-=======
   static Matrix4x4Typed Scaling(T aScaleX, T aScaleY, T aScaleZ) {
     return Matrix4x4Typed(aScaleX, 0.0f, 0.0f, 0.0f, 0.0f, aScaleY, 0.0f, 0.0f,
                           0.0f, 0.0f, aScaleZ, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
->>>>>>> upstream-releases
   }
 
   /**
    * Similar to PreTranslate, but applies a scale instead of a translation.
    */
-<<<<<<< HEAD
-  Matrix4x4Typed& PreScale(Float aX, Float aY, Float aZ) {
-||||||| merged common ancestors
-  Matrix4x4Typed &PreScale(Float aX, Float aY, Float aZ)
-  {
-=======
   Matrix4x4Typed& PreScale(T aX, T aY, T aZ) {
->>>>>>> upstream-releases
     _11 *= aX;
     _12 *= aX;
     _13 *= aX;
@@ -1354,14 +1113,7 @@ class Matrix4x4Typed {
   /**
    * Similar to PostTranslate, but applies a scale instead of a translation.
    */
-<<<<<<< HEAD
-  Matrix4x4Typed& PostScale(Float aScaleX, Float aScaleY, Float aScaleZ) {
-||||||| merged common ancestors
-  Matrix4x4Typed &PostScale(Float aScaleX, Float aScaleY, Float aScaleZ)
-  {
-=======
   Matrix4x4Typed& PostScale(T aScaleX, T aScaleY, T aScaleZ) {
->>>>>>> upstream-releases
     _11 *= aScaleX;
     _21 *= aScaleX;
     _31 *= aScaleX;
@@ -1378,58 +1130,17 @@ class Matrix4x4Typed {
     return *this;
   }
 
-<<<<<<< HEAD
-  void SkewXY(Float aSkew) { (*this)[1] += (*this)[0] * aSkew; }
-||||||| merged common ancestors
-  void SkewXY(Float aSkew)
-  {
-    (*this)[1] += (*this)[0] * aSkew;
-  }
-=======
   void SkewXY(T aSkew) { (*this)[1] += (*this)[0] * aSkew; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SkewXZ(Float aSkew) { (*this)[2] += (*this)[0] * aSkew; }
-||||||| merged common ancestors
-  void SkewXZ(Float aSkew)
-  {
-      (*this)[2] += (*this)[0] * aSkew;
-  }
-=======
   void SkewXZ(T aSkew) { (*this)[2] += (*this)[0] * aSkew; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SkewYZ(Float aSkew) { (*this)[2] += (*this)[1] * aSkew; }
-||||||| merged common ancestors
-  void SkewYZ(Float aSkew)
-  {
-      (*this)[2] += (*this)[1] * aSkew;
-  }
-=======
   void SkewYZ(T aSkew) { (*this)[2] += (*this)[1] * aSkew; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Matrix4x4Typed& ChangeBasis(const Point3D& aOrigin) {
-||||||| merged common ancestors
-  Matrix4x4Typed &ChangeBasis(const Point3D& aOrigin)
-  {
-=======
   Matrix4x4Typed& ChangeBasis(const Point3DTyped<UnknownUnits, T>& aOrigin) {
->>>>>>> upstream-releases
     return ChangeBasis(aOrigin.x, aOrigin.y, aOrigin.z);
   }
 
-<<<<<<< HEAD
-  Matrix4x4Typed& ChangeBasis(Float aX, Float aY, Float aZ) {
-||||||| merged common ancestors
-  Matrix4x4Typed &ChangeBasis(Float aX, Float aY, Float aZ)
-  {
-=======
   Matrix4x4Typed& ChangeBasis(T aX, T aY, T aZ) {
->>>>>>> upstream-releases
     // Translate to the origin before applying this matrix
     PreTranslate(-aX, -aY, -aZ);
 
@@ -1463,65 +1174,6 @@ class Matrix4x4Typed {
   bool operator!=(const Matrix4x4Typed& o) const { return !((*this) == o); }
 
   template <typename NewTargetUnits>
-<<<<<<< HEAD
-  Matrix4x4Typed<SourceUnits, NewTargetUnits> operator*(
-      const Matrix4x4Typed<TargetUnits, NewTargetUnits>& aMatrix) const {
-    Matrix4x4Typed<SourceUnits, NewTargetUnits> matrix;
-
-    matrix._11 = _11 * aMatrix._11 + _12 * aMatrix._21 + _13 * aMatrix._31 +
-                 _14 * aMatrix._41;
-    matrix._21 = _21 * aMatrix._11 + _22 * aMatrix._21 + _23 * aMatrix._31 +
-                 _24 * aMatrix._41;
-    matrix._31 = _31 * aMatrix._11 + _32 * aMatrix._21 + _33 * aMatrix._31 +
-                 _34 * aMatrix._41;
-    matrix._41 = _41 * aMatrix._11 + _42 * aMatrix._21 + _43 * aMatrix._31 +
-                 _44 * aMatrix._41;
-    matrix._12 = _11 * aMatrix._12 + _12 * aMatrix._22 + _13 * aMatrix._32 +
-                 _14 * aMatrix._42;
-    matrix._22 = _21 * aMatrix._12 + _22 * aMatrix._22 + _23 * aMatrix._32 +
-                 _24 * aMatrix._42;
-    matrix._32 = _31 * aMatrix._12 + _32 * aMatrix._22 + _33 * aMatrix._32 +
-                 _34 * aMatrix._42;
-    matrix._42 = _41 * aMatrix._12 + _42 * aMatrix._22 + _43 * aMatrix._32 +
-                 _44 * aMatrix._42;
-    matrix._13 = _11 * aMatrix._13 + _12 * aMatrix._23 + _13 * aMatrix._33 +
-                 _14 * aMatrix._43;
-    matrix._23 = _21 * aMatrix._13 + _22 * aMatrix._23 + _23 * aMatrix._33 +
-                 _24 * aMatrix._43;
-    matrix._33 = _31 * aMatrix._13 + _32 * aMatrix._23 + _33 * aMatrix._33 +
-                 _34 * aMatrix._43;
-    matrix._43 = _41 * aMatrix._13 + _42 * aMatrix._23 + _43 * aMatrix._33 +
-                 _44 * aMatrix._43;
-    matrix._14 = _11 * aMatrix._14 + _12 * aMatrix._24 + _13 * aMatrix._34 +
-                 _14 * aMatrix._44;
-    matrix._24 = _21 * aMatrix._14 + _22 * aMatrix._24 + _23 * aMatrix._34 +
-                 _24 * aMatrix._44;
-    matrix._34 = _31 * aMatrix._14 + _32 * aMatrix._24 + _33 * aMatrix._34 +
-                 _34 * aMatrix._44;
-    matrix._44 = _41 * aMatrix._14 + _42 * aMatrix._24 + _43 * aMatrix._34 +
-                 _44 * aMatrix._44;
-||||||| merged common ancestors
-  Matrix4x4Typed<SourceUnits, NewTargetUnits> operator*(const Matrix4x4Typed<TargetUnits, NewTargetUnits> &aMatrix) const
-  {
-    Matrix4x4Typed<SourceUnits, NewTargetUnits> matrix;
-
-    matrix._11 = _11 * aMatrix._11 + _12 * aMatrix._21 + _13 * aMatrix._31 + _14 * aMatrix._41;
-    matrix._21 = _21 * aMatrix._11 + _22 * aMatrix._21 + _23 * aMatrix._31 + _24 * aMatrix._41;
-    matrix._31 = _31 * aMatrix._11 + _32 * aMatrix._21 + _33 * aMatrix._31 + _34 * aMatrix._41;
-    matrix._41 = _41 * aMatrix._11 + _42 * aMatrix._21 + _43 * aMatrix._31 + _44 * aMatrix._41;
-    matrix._12 = _11 * aMatrix._12 + _12 * aMatrix._22 + _13 * aMatrix._32 + _14 * aMatrix._42;
-    matrix._22 = _21 * aMatrix._12 + _22 * aMatrix._22 + _23 * aMatrix._32 + _24 * aMatrix._42;
-    matrix._32 = _31 * aMatrix._12 + _32 * aMatrix._22 + _33 * aMatrix._32 + _34 * aMatrix._42;
-    matrix._42 = _41 * aMatrix._12 + _42 * aMatrix._22 + _43 * aMatrix._32 + _44 * aMatrix._42;
-    matrix._13 = _11 * aMatrix._13 + _12 * aMatrix._23 + _13 * aMatrix._33 + _14 * aMatrix._43;
-    matrix._23 = _21 * aMatrix._13 + _22 * aMatrix._23 + _23 * aMatrix._33 + _24 * aMatrix._43;
-    matrix._33 = _31 * aMatrix._13 + _32 * aMatrix._23 + _33 * aMatrix._33 + _34 * aMatrix._43;
-    matrix._43 = _41 * aMatrix._13 + _42 * aMatrix._23 + _43 * aMatrix._33 + _44 * aMatrix._43;
-    matrix._14 = _11 * aMatrix._14 + _12 * aMatrix._24 + _13 * aMatrix._34 + _14 * aMatrix._44;
-    matrix._24 = _21 * aMatrix._14 + _22 * aMatrix._24 + _23 * aMatrix._34 + _24 * aMatrix._44;
-    matrix._34 = _31 * aMatrix._14 + _32 * aMatrix._24 + _33 * aMatrix._34 + _34 * aMatrix._44;
-    matrix._44 = _41 * aMatrix._14 + _42 * aMatrix._24 + _43 * aMatrix._34 + _44 * aMatrix._44;
-=======
   Matrix4x4Typed<SourceUnits, NewTargetUnits, T> operator*(
       const Matrix4x4Typed<TargetUnits, NewTargetUnits, T>& aMatrix) const {
     Matrix4x4Typed<SourceUnits, NewTargetUnits, T> matrix;
@@ -1558,21 +1210,12 @@ class Matrix4x4Typed {
                  _34 * aMatrix._44;
     matrix._44 = _41 * aMatrix._14 + _42 * aMatrix._24 + _43 * aMatrix._34 +
                  _44 * aMatrix._44;
->>>>>>> upstream-releases
 
     return matrix;
   }
 
-<<<<<<< HEAD
-  Matrix4x4Typed& operator*=(
-      const Matrix4x4Typed<TargetUnits, TargetUnits>& aMatrix) {
-||||||| merged common ancestors
-  Matrix4x4Typed& operator*=(const Matrix4x4Typed<TargetUnits, TargetUnits> &aMatrix)
-  {
-=======
   Matrix4x4Typed& operator*=(
       const Matrix4x4Typed<TargetUnits, TargetUnits, T>& aMatrix) {
->>>>>>> upstream-releases
     *this = *this * aMatrix;
     return *this;
   }
@@ -1586,55 +1229,6 @@ class Matrix4x4Typed {
            _41 == 0.0f && _42 == 0.0f && _43 == 0.0f && _44 == 1.0f;
   }
 
-<<<<<<< HEAD
-  bool IsSingular() const { return Determinant() == 0.0; }
-
-  Float Determinant() const {
-    return _14 * _23 * _32 * _41 - _13 * _24 * _32 * _41 -
-           _14 * _22 * _33 * _41 + _12 * _24 * _33 * _41 +
-           _13 * _22 * _34 * _41 - _12 * _23 * _34 * _41 -
-           _14 * _23 * _31 * _42 + _13 * _24 * _31 * _42 +
-           _14 * _21 * _33 * _42 - _11 * _24 * _33 * _42 -
-           _13 * _21 * _34 * _42 + _11 * _23 * _34 * _42 +
-           _14 * _22 * _31 * _43 - _12 * _24 * _31 * _43 -
-           _14 * _21 * _32 * _43 + _11 * _24 * _32 * _43 +
-           _12 * _21 * _34 * _43 - _11 * _22 * _34 * _43 -
-           _13 * _22 * _31 * _44 + _12 * _23 * _31 * _44 +
-           _13 * _21 * _32 * _44 - _11 * _23 * _32 * _44 -
-           _12 * _21 * _33 * _44 + _11 * _22 * _33 * _44;
-||||||| merged common ancestors
-  bool IsSingular() const
-  {
-    return Determinant() == 0.0;
-  }
-
-  Float Determinant() const
-  {
-    return _14 * _23 * _32 * _41
-         - _13 * _24 * _32 * _41
-         - _14 * _22 * _33 * _41
-         + _12 * _24 * _33 * _41
-         + _13 * _22 * _34 * _41
-         - _12 * _23 * _34 * _41
-         - _14 * _23 * _31 * _42
-         + _13 * _24 * _31 * _42
-         + _14 * _21 * _33 * _42
-         - _11 * _24 * _33 * _42
-         - _13 * _21 * _34 * _42
-         + _11 * _23 * _34 * _42
-         + _14 * _22 * _31 * _43
-         - _12 * _24 * _31 * _43
-         - _14 * _21 * _32 * _43
-         + _11 * _24 * _32 * _43
-         + _12 * _21 * _34 * _43
-         - _11 * _22 * _34 * _43
-         - _13 * _22 * _31 * _44
-         + _12 * _23 * _31 * _44
-         + _13 * _21 * _32 * _44
-         - _11 * _23 * _32 * _44
-         - _12 * _21 * _33 * _44
-         + _11 * _22 * _33 * _44;
-=======
   bool IsSingular() const { return Determinant() == 0.0; }
 
   T Determinant() const {
@@ -1650,78 +1244,15 @@ class Matrix4x4Typed {
            _13 * _22 * _31 * _44 + _12 * _23 * _31 * _44 +
            _13 * _21 * _32 * _44 - _11 * _23 * _32 * _44 -
            _12 * _21 * _33 * _44 + _11 * _22 * _33 * _44;
->>>>>>> upstream-releases
   }
 
   // Invert() is not unit-correct. Prefer Inverse() where possible.
-<<<<<<< HEAD
-  bool Invert() {
-    Float det = Determinant();
-||||||| merged common ancestors
-  bool Invert()
-  {
-    Float det = Determinant();
-=======
   bool Invert() {
     T det = Determinant();
->>>>>>> upstream-releases
     if (!det) {
       return false;
     }
 
-<<<<<<< HEAD
-    Matrix4x4Typed<SourceUnits, TargetUnits> result;
-    result._11 = _23 * _34 * _42 - _24 * _33 * _42 + _24 * _32 * _43 -
-                 _22 * _34 * _43 - _23 * _32 * _44 + _22 * _33 * _44;
-    result._12 = _14 * _33 * _42 - _13 * _34 * _42 - _14 * _32 * _43 +
-                 _12 * _34 * _43 + _13 * _32 * _44 - _12 * _33 * _44;
-    result._13 = _13 * _24 * _42 - _14 * _23 * _42 + _14 * _22 * _43 -
-                 _12 * _24 * _43 - _13 * _22 * _44 + _12 * _23 * _44;
-    result._14 = _14 * _23 * _32 - _13 * _24 * _32 - _14 * _22 * _33 +
-                 _12 * _24 * _33 + _13 * _22 * _34 - _12 * _23 * _34;
-    result._21 = _24 * _33 * _41 - _23 * _34 * _41 - _24 * _31 * _43 +
-                 _21 * _34 * _43 + _23 * _31 * _44 - _21 * _33 * _44;
-    result._22 = _13 * _34 * _41 - _14 * _33 * _41 + _14 * _31 * _43 -
-                 _11 * _34 * _43 - _13 * _31 * _44 + _11 * _33 * _44;
-    result._23 = _14 * _23 * _41 - _13 * _24 * _41 - _14 * _21 * _43 +
-                 _11 * _24 * _43 + _13 * _21 * _44 - _11 * _23 * _44;
-    result._24 = _13 * _24 * _31 - _14 * _23 * _31 + _14 * _21 * _33 -
-                 _11 * _24 * _33 - _13 * _21 * _34 + _11 * _23 * _34;
-    result._31 = _22 * _34 * _41 - _24 * _32 * _41 + _24 * _31 * _42 -
-                 _21 * _34 * _42 - _22 * _31 * _44 + _21 * _32 * _44;
-    result._32 = _14 * _32 * _41 - _12 * _34 * _41 - _14 * _31 * _42 +
-                 _11 * _34 * _42 + _12 * _31 * _44 - _11 * _32 * _44;
-    result._33 = _12 * _24 * _41 - _14 * _22 * _41 + _14 * _21 * _42 -
-                 _11 * _24 * _42 - _12 * _21 * _44 + _11 * _22 * _44;
-    result._34 = _14 * _22 * _31 - _12 * _24 * _31 - _14 * _21 * _32 +
-                 _11 * _24 * _32 + _12 * _21 * _34 - _11 * _22 * _34;
-    result._41 = _23 * _32 * _41 - _22 * _33 * _41 - _23 * _31 * _42 +
-                 _21 * _33 * _42 + _22 * _31 * _43 - _21 * _32 * _43;
-    result._42 = _12 * _33 * _41 - _13 * _32 * _41 + _13 * _31 * _42 -
-                 _11 * _33 * _42 - _12 * _31 * _43 + _11 * _32 * _43;
-    result._43 = _13 * _22 * _41 - _12 * _23 * _41 - _13 * _21 * _42 +
-                 _11 * _23 * _42 + _12 * _21 * _43 - _11 * _22 * _43;
-    result._44 = _12 * _23 * _31 - _13 * _22 * _31 + _13 * _21 * _32 -
-                 _11 * _23 * _32 - _12 * _21 * _33 + _11 * _22 * _33;
-||||||| merged common ancestors
-    Matrix4x4Typed<SourceUnits, TargetUnits> result;
-    result._11 = _23 * _34 * _42 - _24 * _33 * _42 + _24 * _32 * _43 - _22 * _34 * _43 - _23 * _32 * _44 + _22 * _33 * _44;
-    result._12 = _14 * _33 * _42 - _13 * _34 * _42 - _14 * _32 * _43 + _12 * _34 * _43 + _13 * _32 * _44 - _12 * _33 * _44;
-    result._13 = _13 * _24 * _42 - _14 * _23 * _42 + _14 * _22 * _43 - _12 * _24 * _43 - _13 * _22 * _44 + _12 * _23 * _44;
-    result._14 = _14 * _23 * _32 - _13 * _24 * _32 - _14 * _22 * _33 + _12 * _24 * _33 + _13 * _22 * _34 - _12 * _23 * _34;
-    result._21 = _24 * _33 * _41 - _23 * _34 * _41 - _24 * _31 * _43 + _21 * _34 * _43 + _23 * _31 * _44 - _21 * _33 * _44;
-    result._22 = _13 * _34 * _41 - _14 * _33 * _41 + _14 * _31 * _43 - _11 * _34 * _43 - _13 * _31 * _44 + _11 * _33 * _44;
-    result._23 = _14 * _23 * _41 - _13 * _24 * _41 - _14 * _21 * _43 + _11 * _24 * _43 + _13 * _21 * _44 - _11 * _23 * _44;
-    result._24 = _13 * _24 * _31 - _14 * _23 * _31 + _14 * _21 * _33 - _11 * _24 * _33 - _13 * _21 * _34 + _11 * _23 * _34;
-    result._31 = _22 * _34 * _41 - _24 * _32 * _41 + _24 * _31 * _42 - _21 * _34 * _42 - _22 * _31 * _44 + _21 * _32 * _44;
-    result._32 = _14 * _32 * _41 - _12 * _34 * _41 - _14 * _31 * _42 + _11 * _34 * _42 + _12 * _31 * _44 - _11 * _32 * _44;
-    result._33 = _12 * _24 * _41 - _14 * _22 * _41 + _14 * _21 * _42 - _11 * _24 * _42 - _12 * _21 * _44 + _11 * _22 * _44;
-    result._34 = _14 * _22 * _31 - _12 * _24 * _31 - _14 * _21 * _32 + _11 * _24 * _32 + _12 * _21 * _34 - _11 * _22 * _34;
-    result._41 = _23 * _32 * _41 - _22 * _33 * _41 - _23 * _31 * _42 + _21 * _33 * _42 + _22 * _31 * _43 - _21 * _32 * _43;
-    result._42 = _12 * _33 * _41 - _13 * _32 * _41 + _13 * _31 * _42 - _11 * _33 * _42 - _12 * _31 * _43 + _11 * _32 * _43;
-    result._43 = _13 * _22 * _41 - _12 * _23 * _41 - _13 * _21 * _42 + _11 * _23 * _42 + _12 * _21 * _43 - _11 * _22 * _43;
-    result._44 = _12 * _23 * _31 - _13 * _22 * _31 + _13 * _21 * _32 - _11 * _23 * _32 - _12 * _21 * _33 + _11 * _22 * _33;
-=======
     Matrix4x4Typed<SourceUnits, TargetUnits, T> result;
     result._11 = _23 * _34 * _42 - _24 * _33 * _42 + _24 * _32 * _43 -
                  _22 * _34 * _43 - _23 * _32 * _44 + _22 * _33 * _44;
@@ -1755,7 +1286,6 @@ class Matrix4x4Typed {
                  _11 * _23 * _42 + _12 * _21 * _43 - _11 * _22 * _43;
     result._44 = _12 * _23 * _31 - _13 * _22 * _31 + _13 * _21 * _32 -
                  _11 * _23 * _32 - _12 * _21 * _33 + _11 * _22 * _33;
->>>>>>> upstream-releases
 
     result._11 /= det;
     result._12 /= det;
@@ -1778,17 +1308,8 @@ class Matrix4x4Typed {
     return true;
   }
 
-<<<<<<< HEAD
-  Matrix4x4Typed<TargetUnits, SourceUnits> Inverse() const {
-    typedef Matrix4x4Typed<TargetUnits, SourceUnits> InvertedMatrix;
-||||||| merged common ancestors
-  Matrix4x4Typed<TargetUnits, SourceUnits> Inverse() const
-  {
-    typedef Matrix4x4Typed<TargetUnits, SourceUnits> InvertedMatrix;
-=======
   Matrix4x4Typed<TargetUnits, SourceUnits, T> Inverse() const {
     typedef Matrix4x4Typed<TargetUnits, SourceUnits, T> InvertedMatrix;
->>>>>>> upstream-releases
     InvertedMatrix clone = InvertedMatrix::FromUnknownMatrix(ToUnknownMatrix());
     DebugOnly<bool> inverted = clone.Invert();
     MOZ_ASSERT(inverted,
@@ -1796,17 +1317,8 @@ class Matrix4x4Typed {
     return clone;
   }
 
-<<<<<<< HEAD
-  Maybe<Matrix4x4Typed<TargetUnits, SourceUnits>> MaybeInverse() const {
-    typedef Matrix4x4Typed<TargetUnits, SourceUnits> InvertedMatrix;
-||||||| merged common ancestors
-  Maybe<Matrix4x4Typed<TargetUnits, SourceUnits>> MaybeInverse() const
-  {
-    typedef Matrix4x4Typed<TargetUnits, SourceUnits> InvertedMatrix;
-=======
   Maybe<Matrix4x4Typed<TargetUnits, SourceUnits, T>> MaybeInverse() const {
     typedef Matrix4x4Typed<TargetUnits, SourceUnits, T> InvertedMatrix;
->>>>>>> upstream-releases
     InvertedMatrix clone = InvertedMatrix::FromUnknownMatrix(ToUnknownMatrix());
     if (clone.Invert()) {
       return Some(clone);
@@ -1854,20 +1366,9 @@ class Matrix4x4Typed {
 
   bool IsBackfaceVisible() const {
     // Inverse()._33 < 0;
-<<<<<<< HEAD
-    Float det = Determinant();
-    Float __33 = _12 * _24 * _41 - _14 * _22 * _41 + _14 * _21 * _42 -
-                 _11 * _24 * _42 - _12 * _21 * _44 + _11 * _22 * _44;
-||||||| merged common ancestors
-    Float det = Determinant();
-    Float __33 = _12*_24*_41 - _14*_22*_41 +
-                _14*_21*_42 - _11*_24*_42 -
-                _12*_21*_44 + _11*_22*_44;
-=======
     T det = Determinant();
     T __33 = _12 * _24 * _41 - _14 * _22 * _41 + _14 * _21 * _42 -
              _11 * _24 * _42 - _12 * _21 * _44 + _11 * _22 * _44;
->>>>>>> upstream-releases
     return (__33 * det) < 0;
   }
 
@@ -1892,61 +1393,24 @@ class Matrix4x4Typed {
     return *this;
   }
 
-<<<<<<< HEAD
-  Point4D TransposedVector(int aIndex) const {
-    MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-    return Point4D(*((&_11) + aIndex), *((&_21) + aIndex), *((&_31) + aIndex),
-                   *((&_41) + aIndex));
-||||||| merged common ancestors
-  Point4D TransposedVector(int aIndex) const
-  {
-      MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-      return Point4D(*((&_11)+aIndex), *((&_21)+aIndex), *((&_31)+aIndex), *((&_41)+aIndex));
-=======
   Point4D TransposedVector(int aIndex) const {
     MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
     return Point4DTyped<UnknownUnits, T>(*((&_11) + aIndex), *((&_21) + aIndex),
                                          *((&_31) + aIndex),
                                          *((&_41) + aIndex));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  void SetTransposedVector(int aIndex, Point4D& aVector) {
-    MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-    *((&_11) + aIndex) = aVector.x;
-    *((&_21) + aIndex) = aVector.y;
-    *((&_31) + aIndex) = aVector.z;
-    *((&_41) + aIndex) = aVector.w;
-||||||| merged common ancestors
-  void SetTransposedVector(int aIndex, Point4D &aVector)
-  {
-      MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
-      *((&_11)+aIndex) = aVector.x;
-      *((&_21)+aIndex) = aVector.y;
-      *((&_31)+aIndex) = aVector.z;
-      *((&_41)+aIndex) = aVector.w;
-=======
   void SetTransposedVector(int aIndex, Point4DTyped<UnknownUnits, T>& aVector) {
     MOZ_ASSERT(aIndex >= 0 && aIndex <= 3, "Invalid matrix array index");
     *((&_11) + aIndex) = aVector.x;
     *((&_21) + aIndex) = aVector.y;
     *((&_31) + aIndex) = aVector.z;
     *((&_41) + aIndex) = aVector.w;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  bool Decompose(Point3D& translation, Quaternion& rotation,
-                 Point3D& scale) const {
-||||||| merged common ancestors
-  bool Decompose(Point3D& translation, Quaternion& rotation, Point3D& scale) const
-  {
-=======
   bool Decompose(Point3DTyped<UnknownUnits, T>& translation,
                  BaseQuaternion<T>& rotation,
                  Point3DTyped<UnknownUnits, T>& scale) const {
->>>>>>> upstream-releases
     // Ensure matrix can be normalized
     if (gfx::FuzzyEqual(_44, 0.0f)) {
       return false;
@@ -2000,26 +1464,11 @@ class Matrix4x4Typed {
   // Sets this matrix to a rotation matrix given by aQuat.
   // This quaternion *MUST* be normalized!
   // Implemented in Quaternion.cpp
-<<<<<<< HEAD
-  void SetRotationFromQuaternion(const Quaternion& q) {
-    const Float x2 = q.x + q.x, y2 = q.y + q.y, z2 = q.z + q.z;
-    const Float xx = q.x * x2, xy = q.x * y2, xz = q.x * z2;
-    const Float yy = q.y * y2, yz = q.y * z2, zz = q.z * z2;
-    const Float wx = q.w * x2, wy = q.w * y2, wz = q.w * z2;
-||||||| merged common ancestors
-  void SetRotationFromQuaternion(const Quaternion& q)
-  {
-    const Float x2 = q.x + q.x, y2 = q.y + q.y, z2 = q.z + q.z;
-    const Float xx = q.x * x2, xy = q.x * y2, xz = q.x * z2;
-    const Float yy = q.y * y2, yz = q.y * z2, zz = q.z * z2;
-    const Float wx = q.w * x2, wy = q.w * y2, wz = q.w * z2;
-=======
   void SetRotationFromQuaternion(const BaseQuaternion<T>& q) {
     const T x2 = q.x + q.x, y2 = q.y + q.y, z2 = q.z + q.z;
     const T xx = q.x * x2, xy = q.x * y2, xz = q.x * z2;
     const T yy = q.y * y2, yz = q.y * z2, zz = q.z * z2;
     const T wx = q.w * x2, wy = q.w * y2, wz = q.w * z2;
->>>>>>> upstream-releases
 
     _11 = 1.0f - (yy + zz);
     _21 = xy + wz;
@@ -2041,51 +1490,6 @@ class Matrix4x4Typed {
   }
 
   // Set all the members of the matrix to NaN
-<<<<<<< HEAD
-  void SetNAN() {
-    _11 = UnspecifiedNaN<Float>();
-    _21 = UnspecifiedNaN<Float>();
-    _31 = UnspecifiedNaN<Float>();
-    _41 = UnspecifiedNaN<Float>();
-    _12 = UnspecifiedNaN<Float>();
-    _22 = UnspecifiedNaN<Float>();
-    _32 = UnspecifiedNaN<Float>();
-    _42 = UnspecifiedNaN<Float>();
-    _13 = UnspecifiedNaN<Float>();
-    _23 = UnspecifiedNaN<Float>();
-    _33 = UnspecifiedNaN<Float>();
-    _43 = UnspecifiedNaN<Float>();
-    _14 = UnspecifiedNaN<Float>();
-    _24 = UnspecifiedNaN<Float>();
-    _34 = UnspecifiedNaN<Float>();
-    _44 = UnspecifiedNaN<Float>();
-  }
-
-  void SkewXY(double aXSkew, double aYSkew) {
-||||||| merged common ancestors
-  void SetNAN()
-  {
-    _11 = UnspecifiedNaN<Float>();
-    _21 = UnspecifiedNaN<Float>();
-    _31 = UnspecifiedNaN<Float>();
-    _41 = UnspecifiedNaN<Float>();
-    _12 = UnspecifiedNaN<Float>();
-    _22 = UnspecifiedNaN<Float>();
-    _32 = UnspecifiedNaN<Float>();
-    _42 = UnspecifiedNaN<Float>();
-    _13 = UnspecifiedNaN<Float>();
-    _23 = UnspecifiedNaN<Float>();
-    _33 = UnspecifiedNaN<Float>();
-    _43 = UnspecifiedNaN<Float>();
-    _14 = UnspecifiedNaN<Float>();
-    _24 = UnspecifiedNaN<Float>();
-    _34 = UnspecifiedNaN<Float>();
-    _44 = UnspecifiedNaN<Float>();
-  }
-
-  void SkewXY(double aXSkew, double aYSkew)
-  {
-=======
   void SetNAN() {
     _11 = UnspecifiedNaN<T>();
     _21 = UnspecifiedNaN<T>();
@@ -2106,7 +1510,6 @@ class Matrix4x4Typed {
   }
 
   void SkewXY(double aXSkew, double aYSkew) {
->>>>>>> upstream-releases
     // XXX Is double precision really necessary here
     T tanX = SafeTangent(aXSkew);
     T tanY = SafeTangent(aYSkew);
@@ -2205,17 +1608,8 @@ class Matrix4x4Typed {
   // vector [x,y,z] by angle theta. The vector is normalized
   // to a unit vector.
   // https://drafts.csswg.org/css-transforms-2/#Rotate3dDefined
-<<<<<<< HEAD
-  void SetRotateAxisAngle(double aX, double aY, double aZ, double aTheta) {
-    Point3D vector(aX, aY, aZ);
-||||||| merged common ancestors
-  void SetRotateAxisAngle(double aX, double aY, double aZ, double aTheta)
-  {
-    Point3D vector(aX, aY, aZ);
-=======
   void SetRotateAxisAngle(double aX, double aY, double aZ, double aTheta) {
     Point3DTyped<UnknownUnits, T> vector(aX, aY, aZ);
->>>>>>> upstream-releases
     if (!vector.Length()) {
       return;
     }
@@ -2251,14 +1645,7 @@ class Matrix4x4Typed {
     _44 = 1.0f;
   }
 
-<<<<<<< HEAD
-  void Perspective(float aDepth) {
-||||||| merged common ancestors
-  void Perspective(float aDepth)
-  {
-=======
   void Perspective(T aDepth) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aDepth > 0.0f, "Perspective must be positive!");
     _31 += -1.0 / aDepth * _41;
     _32 += -1.0 / aDepth * _42;

@@ -43,21 +43,9 @@ class CompareCallback {
   NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
 };
 
-<<<<<<< HEAD
-nsresult Compare(ServiceWorkerRegistrationInfo* aRegistration,
-                 nsIPrincipal* aPrincipal, const nsAString& aCacheName,
-                 const nsAString& aURL, CompareCallback* aCallback,
-                 nsILoadGroup* aLoadGroup);
-||||||| merged common ancestors
-nsresult
-Compare(ServiceWorkerRegistrationInfo* aRegistration,
-        nsIPrincipal* aPrincipal, const nsAString& aCacheName,
-        const nsAString& aURL, CompareCallback* aCallback, nsILoadGroup* aLoadGroup);
-=======
 nsresult Compare(ServiceWorkerRegistrationInfo* aRegistration,
                  nsIPrincipal* aPrincipal, const nsAString& aCacheName,
                  const nsAString& aURL, CompareCallback* aCallback);
->>>>>>> upstream-releases
 
 }  // namespace serviceWorkerScriptCache
 

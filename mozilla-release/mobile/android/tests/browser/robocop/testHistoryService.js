@@ -5,18 +5,8 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-Cu.import("resource://gre/modules/Services.jsm");
-=======
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 // Make the timer global so it doesn't get GC'd
 var gTimer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);

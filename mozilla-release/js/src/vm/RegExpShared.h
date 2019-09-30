@@ -83,224 +83,23 @@ class RegExpShared : public gc::TenuredCell {
   friend class RegExpStatics;
   friend class RegExpZone;
 
-<<<<<<< HEAD
-  struct RegExpCompilation {
-    ReadBarriered<jit::JitCode*> jitCode;
-    uint8_t* byteCode;
-||||||| merged common ancestors
-    static bool compileIfNecessary(JSContext* cx, MutableHandleRegExpShared res,
-                                   HandleLinearString input, CompilationMode mode,
-                                   ForceByteCodeEnum force);
-=======
   struct RegExpCompilation {
     WeakHeapPtr<jit::JitCode*> jitCode;
     uint8_t* byteCode = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    RegExpCompilation() : byteCode(nullptr) {}
-||||||| merged common ancestors
-    const RegExpCompilation& compilation(CompilationMode mode, bool latin1) const {
-        return compilationArray[CompilationIndex(mode, latin1)];
-    }
-=======
     bool compiled(ForceByteCodeEnum force = DontForceByteCode) const {
       return byteCode || (force == DontForceByteCode && jitCode);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    bool compiled(ForceByteCodeEnum force = DontForceByteCode) const {
-      return byteCode || (force == DontForceByteCode && jitCode);
-||||||| merged common ancestors
-    RegExpCompilation& compilation(CompilationMode mode, bool latin1) {
-        return compilationArray[CompilationIndex(mode, latin1)];
-=======
     size_t byteCodeLength() const {
       MOZ_ASSERT(byteCode);
       auto header = reinterpret_cast<RegExpByteCodeHeader*>(byteCode);
       return header->length;
->>>>>>> upstream-releases
     }
   };
 
-<<<<<<< HEAD
-  /* Source to the RegExp, for lazy compilation. */
-  GCPtr<JSAtom*> source;
-
-  RegExpFlag flags;
-  bool canStringMatch;
-  size_t parenCount;
-
   RegExpCompilation compilationArray[4];
-||||||| merged common ancestors
-  public:
-    ~RegExpShared() = delete;
 
-    // Execute this RegExp on input starting from searchIndex, filling in
-    // matches if specified and otherwise only determining if there is a match.
-    static RegExpRunStatus execute(JSContext* cx, MutableHandleRegExpShared res,
-                                   HandleLinearString input, size_t searchIndex,
-                                   VectorMatchPairs* matches, size_t* endIndex);
-
-    // Register a table with this RegExpShared, and take ownership.
-    bool addTable(JitCodeTable table) {
-        return tables.append(std::move(table));
-    }
-=======
-  RegExpCompilation compilationArray[4];
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  static int CompilationIndex(CompilationMode mode, bool latin1) {
-    switch (mode) {
-      case Normal:
-        return latin1 ? 0 : 1;
-      case MatchOnly:
-        return latin1 ? 2 : 3;
-    }
-    MOZ_CRASH();
-  }
-
-  // Tables referenced by JIT code.
-  JitCodeTables tables;
-
-  /* Internal functions. */
-  RegExpShared(JSAtom* source, RegExpFlag flags);
-
-  static bool compile(JSContext* cx, MutableHandleRegExpShared res,
-                      HandleLinearString input, CompilationMode mode,
-                      ForceByteCodeEnum force);
-  static bool compile(JSContext* cx, MutableHandleRegExpShared res,
-                      HandleAtom pattern, HandleLinearString input,
-                      CompilationMode mode, ForceByteCodeEnum force);
-
-  static bool compileIfNecessary(JSContext* cx, MutableHandleRegExpShared res,
-                                 HandleLinearString input, CompilationMode mode,
-                                 ForceByteCodeEnum force);
-
-  const RegExpCompilation& compilation(CompilationMode mode,
-                                       bool latin1) const {
-    return compilationArray[CompilationIndex(mode, latin1)];
-  }
-
-  RegExpCompilation& compilation(CompilationMode mode, bool latin1) {
-    return compilationArray[CompilationIndex(mode, latin1)];
-  }
-
- public:
-  ~RegExpShared() = delete;
-
-  // Execute this RegExp on input starting from searchIndex, filling in
-  // matches if specified and otherwise only determining if there is a match.
-  static RegExpRunStatus execute(JSContext* cx, MutableHandleRegExpShared res,
-                                 HandleLinearString input, size_t searchIndex,
-                                 VectorMatchPairs* matches, size_t* endIndex);
-
-  // Register a table with this RegExpShared, and take ownership.
-  bool addTable(JitCodeTable table) { return tables.append(std::move(table)); }
-
-  /* Accessors */
-
-  size_t getParenCount() const {
-    MOZ_ASSERT(isCompiled());
-    return parenCount;
-  }
-
-  /* Accounts for the "0" (whole match) pair. */
-  size_t pairCount() const { return getParenCount() + 1; }
-
-  JSAtom* getSource() const { return source; }
-  RegExpFlag getFlags() const { return flags; }
-  bool ignoreCase() const { return flags & IgnoreCaseFlag; }
-  bool global() const { return flags & GlobalFlag; }
-  bool multiline() const { return flags & MultilineFlag; }
-  bool sticky() const { return flags & StickyFlag; }
-  bool unicode() const { return flags & UnicodeFlag; }
-
-  bool isCompiled(CompilationMode mode, bool latin1,
-                  ForceByteCodeEnum force = DontForceByteCode) const {
-    return compilation(mode, latin1).compiled(force);
-  }
-  bool isCompiled() const {
-    return isCompiled(Normal, true) || isCompiled(Normal, false) ||
-           isCompiled(MatchOnly, true) || isCompiled(MatchOnly, false);
-  }
-
-  void traceChildren(JSTracer* trc);
-  void discardJitCode();
-  void finalize(FreeOp* fop);
-
-  static size_t offsetOfSource() { return offsetof(RegExpShared, source); }
-
-  static size_t offsetOfFlags() { return offsetof(RegExpShared, flags); }
-
-  static size_t offsetOfParenCount() {
-    return offsetof(RegExpShared, parenCount);
-  }
-
-  static size_t offsetOfLatin1JitCode(CompilationMode mode) {
-    return offsetof(RegExpShared, compilationArray) +
-           (CompilationIndex(mode, true) * sizeof(RegExpCompilation)) +
-           offsetof(RegExpCompilation, jitCode);
-  }
-  static size_t offsetOfTwoByteJitCode(CompilationMode mode) {
-    return offsetof(RegExpShared, compilationArray) +
-           (CompilationIndex(mode, false) * sizeof(RegExpCompilation)) +
-           offsetof(RegExpCompilation, jitCode);
-  }
-
-  size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
-
-#ifdef DEBUG
-  static bool dumpBytecode(JSContext* cx, MutableHandleRegExpShared res,
-                           bool match_only, HandleLinearString input);
-#endif
-};
-||||||| merged common ancestors
-    /* Accessors */
-
-    size_t getParenCount() const {
-        MOZ_ASSERT(isCompiled());
-        return parenCount;
-    }
-
-    /* Accounts for the "0" (whole match) pair. */
-    size_t pairCount() const            { return getParenCount() + 1; }
-
-    JSAtom* getSource() const           { return source; }
-    RegExpFlag getFlags() const         { return flags; }
-    bool ignoreCase() const             { return flags & IgnoreCaseFlag; }
-    bool global() const                 { return flags & GlobalFlag; }
-    bool multiline() const              { return flags & MultilineFlag; }
-    bool sticky() const                 { return flags & StickyFlag; }
-    bool unicode() const                { return flags & UnicodeFlag; }
-
-    bool isCompiled(CompilationMode mode, bool latin1,
-                    ForceByteCodeEnum force = DontForceByteCode) const {
-        return compilation(mode, latin1).compiled(force);
-    }
-    bool isCompiled() const {
-        return isCompiled(Normal, true) || isCompiled(Normal, false)
-            || isCompiled(MatchOnly, true) || isCompiled(MatchOnly, false);
-    }
-
-    void traceChildren(JSTracer* trc);
-    void discardJitCode();
-    void finalize(FreeOp* fop);
-
-    static size_t offsetOfSource() {
-        return offsetof(RegExpShared, source);
-    }
-
-    static size_t offsetOfFlags() {
-        return offsetof(RegExpShared, flags);
-    }
-
-    static size_t offsetOfParenCount() {
-        return offsetof(RegExpShared, parenCount);
-    }
-=======
   /* Source to the RegExp, for lazy compilation. */
   GCPtr<JSAtom*> source;
 
@@ -414,30 +213,7 @@ class RegExpShared : public gc::TenuredCell {
                            bool match_only, HandleLinearString input);
 #endif
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class RegExpZone {
-  struct Key {
-    JSAtom* atom;
-    uint16_t flag;
-
-    Key() : atom(nullptr), flag(0) {}
-    Key(JSAtom* atom, RegExpFlag flag) : atom(atom), flag(flag) {}
-    MOZ_IMPLICIT Key(const ReadBarriered<RegExpShared*>& shared)
-        : atom(shared.unbarrieredGet()->getSource()),
-          flag(shared.unbarrieredGet()->getFlags()) {}
-
-    typedef Key Lookup;
-    static HashNumber hash(const Lookup& l) {
-      HashNumber hash = DefaultHasher<JSAtom*>::hash(l.atom);
-      return mozilla::AddToHash(hash, l.flag);
-||||||| merged common ancestors
-    static size_t offsetOfLatin1JitCode(CompilationMode mode) {
-        return offsetof(RegExpShared, compilationArray)
-             + (CompilationIndex(mode, true) * sizeof(RegExpCompilation))
-             + offsetof(RegExpCompilation, jitCode);
-=======
 class RegExpZone {
   struct Key {
     JSAtom* atom = nullptr;
@@ -453,34 +229,12 @@ class RegExpZone {
     static HashNumber hash(const Lookup& l) {
       HashNumber hash = DefaultHasher<JSAtom*>::hash(l.atom);
       return mozilla::AddToHash(hash, l.flags.value());
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    static bool match(Key l, Key r) {
-      return l.atom == r.atom && l.flag == r.flag;
-||||||| merged common ancestors
-    static size_t offsetOfTwoByteJitCode(CompilationMode mode) {
-        return offsetof(RegExpShared, compilationArray)
-             + (CompilationIndex(mode, false) * sizeof(RegExpCompilation))
-             + offsetof(RegExpCompilation, jitCode);
-=======
     static bool match(Key l, Key r) {
       return l.atom == r.atom && l.flags == r.flags;
->>>>>>> upstream-releases
     }
   };
 
-<<<<<<< HEAD
-  /*
-   * The set of all RegExpShareds in the zone. On every GC, every RegExpShared
-   * that was not marked is deleted and removed from the set.
-   */
-  using Set = JS::WeakCache<
-      JS::GCHashSet<ReadBarriered<RegExpShared*>, Key, ZoneAllocPolicy>>;
-  Set set_;
-||||||| merged common ancestors
-    size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
-=======
   /*
    * The set of all RegExpShareds in the zone. On every GC, every RegExpShared
    * that was not marked is deleted and removed from the set.
@@ -488,7 +242,6 @@ class RegExpZone {
   using Set = JS::WeakCache<
       JS::GCHashSet<WeakHeapPtr<RegExpShared*>, Key, ZoneAllocPolicy>>;
   Set set_;
->>>>>>> upstream-releases
 
  public:
   explicit RegExpZone(Zone* zone);
@@ -497,30 +250,12 @@ class RegExpZone {
 
   bool empty() const { return set_.empty(); }
 
-<<<<<<< HEAD
-  RegExpShared* maybeGet(JSAtom* source, RegExpFlag flags) const {
-    Set::Ptr p = set_.lookup(Key(source, flags));
-    return p ? *p : nullptr;
-  }
-||||||| merged common ancestors
-    RegExpShared* maybeGet(JSAtom* source, RegExpFlag flags) const {
-        Set::Ptr p = set_.lookup(Key(source, flags));
-        return p ? *p : nullptr;
-    }
-=======
   RegExpShared* maybeGet(JSAtom* source, JS::RegExpFlags flags) const {
     Set::Ptr p = set_.lookup(Key(source, flags));
     return p ? *p : nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RegExpShared* get(JSContext* cx, HandleAtom source, RegExpFlag flags);
-||||||| merged common ancestors
-    RegExpShared* get(JSContext* cx, HandleAtom source, RegExpFlag flags);
-=======
   RegExpShared* get(JSContext* cx, HandleAtom source, JS::RegExpFlags flags);
->>>>>>> upstream-releases
 
   /* Like 'get', but compile 'maybeOpt' (if non-null). */
   RegExpShared* get(JSContext* cx, HandleAtom source, JSString* maybeOpt);
@@ -532,118 +267,6 @@ class RegExpZone {
   size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
 };
 
-<<<<<<< HEAD
-class RegExpRealm {
-  /*
-   * This is the template object where the result of re.exec() is based on,
-   * if there is a result. This is used in CreateRegExpMatchResult to set
-   * the input/index properties faster.
-   */
-  ReadBarriered<ArrayObject*> matchResultTemplateObject_;
-
-  /*
-   * The shape of RegExp.prototype object that satisfies following:
-   *   * RegExp.prototype.flags getter is not modified
-   *   * RegExp.prototype.global getter is not modified
-   *   * RegExp.prototype.ignoreCase getter is not modified
-   *   * RegExp.prototype.multiline getter is not modified
-   *   * RegExp.prototype.sticky getter is not modified
-   *   * RegExp.prototype.unicode getter is not modified
-   *   * RegExp.prototype.exec is an own data property
-   *   * RegExp.prototype[@@match] is an own data property
-   *   * RegExp.prototype[@@search] is an own data property
-   */
-  ReadBarriered<Shape*> optimizableRegExpPrototypeShape_;
-
-  /*
-   * The shape of RegExp instance that satisfies following:
-   *   * lastProperty is lastIndex
-   *   * prototype is RegExp.prototype
-   */
-  ReadBarriered<Shape*> optimizableRegExpInstanceShape_;
-
-  ArrayObject* createMatchResultTemplateObject(JSContext* cx);
-
- public:
-  explicit RegExpRealm();
-
-  void sweep();
-
-  static const size_t MatchResultObjectIndexSlot = 0;
-  static const size_t MatchResultObjectInputSlot = 1;
-
-  /* Get or create template object used to base the result of .exec() on. */
-  ArrayObject* getOrCreateMatchResultTemplateObject(JSContext* cx) {
-    if (matchResultTemplateObject_) {
-      return matchResultTemplateObject_;
-||||||| merged common ancestors
-class RegExpRealm
-{
-    /*
-     * This is the template object where the result of re.exec() is based on,
-     * if there is a result. This is used in CreateRegExpMatchResult to set
-     * the input/index properties faster.
-     */
-    ReadBarriered<ArrayObject*> matchResultTemplateObject_;
-
-    /*
-     * The shape of RegExp.prototype object that satisfies following:
-     *   * RegExp.prototype.flags getter is not modified
-     *   * RegExp.prototype.global getter is not modified
-     *   * RegExp.prototype.ignoreCase getter is not modified
-     *   * RegExp.prototype.multiline getter is not modified
-     *   * RegExp.prototype.sticky getter is not modified
-     *   * RegExp.prototype.unicode getter is not modified
-     *   * RegExp.prototype.exec is an own data property
-     *   * RegExp.prototype[@@match] is an own data property
-     *   * RegExp.prototype[@@search] is an own data property
-     */
-    ReadBarriered<Shape*> optimizableRegExpPrototypeShape_;
-
-    /*
-     * The shape of RegExp instance that satisfies following:
-     *   * lastProperty is lastIndex
-     *   * prototype is RegExp.prototype
-     */
-    ReadBarriered<Shape*> optimizableRegExpInstanceShape_;
-
-    ArrayObject* createMatchResultTemplateObject(JSContext* cx);
-
-  public:
-    explicit RegExpRealm();
-
-    void sweep();
-
-    static const size_t MatchResultObjectIndexSlot = 0;
-    static const size_t MatchResultObjectInputSlot = 1;
-
-    /* Get or create template object used to base the result of .exec() on. */
-    ArrayObject* getOrCreateMatchResultTemplateObject(JSContext* cx) {
-        if (matchResultTemplateObject_) {
-            return matchResultTemplateObject_;
-        }
-        return createMatchResultTemplateObject(cx);
-    }
-
-    Shape* getOptimizableRegExpPrototypeShape() {
-        return optimizableRegExpPrototypeShape_;
-    }
-    void setOptimizableRegExpPrototypeShape(Shape* shape) {
-        optimizableRegExpPrototypeShape_ = shape;
-    }
-    Shape* getOptimizableRegExpInstanceShape() {
-        return optimizableRegExpInstanceShape_;
-    }
-    void setOptimizableRegExpInstanceShape(Shape* shape) {
-        optimizableRegExpInstanceShape_ = shape;
-    }
-
-    static size_t offsetOfOptimizableRegExpPrototypeShape() {
-        return offsetof(RegExpRealm, optimizableRegExpPrototypeShape_);
-    }
-    static size_t offsetOfOptimizableRegExpInstanceShape() {
-        return offsetof(RegExpRealm, optimizableRegExpInstanceShape_);
-=======
 class RegExpRealm {
   /*
    * This is the template object where the result of re.exec() is based on,
@@ -687,7 +310,6 @@ class RegExpRealm {
   ArrayObject* getOrCreateMatchResultTemplateObject(JSContext* cx) {
     if (matchResultTemplateObject_) {
       return matchResultTemplateObject_;
->>>>>>> upstream-releases
     }
     return createMatchResultTemplateObject(cx);
   }

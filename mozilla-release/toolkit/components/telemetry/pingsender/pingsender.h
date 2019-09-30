@@ -8,16 +8,8 @@
 #ifdef DEBUG
 #  define PINGSENDER_LOG(s, ...) printf(s, ##__VA_ARGS__)
 #else
-<<<<<<< HEAD
-#define PINGSENDER_LOG(s, ...)
-#endif  // DEBUG
-||||||| merged common ancestors
-#define PINGSENDER_LOG(s, ...)
-#endif // DEBUG
-=======
 #  define PINGSENDER_LOG(s, ...)
 #endif  // DEBUG
->>>>>>> upstream-releases
 
 namespace PingSender {
 

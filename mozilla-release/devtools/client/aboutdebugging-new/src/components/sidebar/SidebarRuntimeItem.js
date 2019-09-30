@@ -54,14 +54,8 @@ class SidebarRuntimeItem extends PureComponent {
       },
       dom.button(
         {
-<<<<<<< HEAD
-          className: "default-button default-button--micro js-connect-button",
-||||||| merged common ancestors
-          className: "sidebar-item__connect-button",
-=======
           className: "default-button default-button--micro qa-connect-button",
           disabled: isConnecting,
->>>>>>> upstream-releases
           onClick: () => {
             const { dispatch, runtimeId } = this.props;
             dispatch(Actions.connectRuntime(runtimeId));
@@ -161,13 +155,6 @@ class SidebarRuntimeItem extends PureComponent {
 
   render() {
     const {
-<<<<<<< HEAD
-      deviceName,
-||||||| merged common ancestors
-      deviceName,
-      dispatch,
-=======
->>>>>>> upstream-releases
       getString,
       icon,
       isConnected,
@@ -190,39 +177,8 @@ class SidebarRuntimeItem extends PureComponent {
         isSelected,
         to: isConnected ? `/runtime/${encodeURIComponent(runtimeId)}` : null,
       },
-<<<<<<< HEAD
-      dom.div(
-||||||| merged common ancestors
-      dom.img(
-=======
       dom.section(
->>>>>>> upstream-releases
         {
-<<<<<<< HEAD
-          className: "sidebar-runtime-item__container",
-        },
-        dom.img(
-          {
-            className: "sidebar-runtime-item__icon ",
-            src: icon,
-            alt: connectionStatus,
-            title: connectionStatus,
-          }
-        ),
-        deviceName ? this.renderNameWithDevice(name, deviceName) : this.renderName(name),
-        !isConnected ? this.renderConnectButton() : null
-      )
-||||||| merged common ancestors
-          className: "sidebar-runtime-item__icon " +
-            `${isConnected ? "sidebar-runtime-item__icon--connected" : "" }`,
-          src: icon,
-          alt: connectionStatus,
-          title: connectionStatus,
-        }
-      ),
-      deviceName ? this.renderNameWithDevice(name, deviceName) : this.renderName(name),
-      !isConnected ? this.renderConnectButton() : null
-=======
           className: "sidebar-runtime-item__container",
         },
         dom.img({
@@ -252,7 +208,6 @@ class SidebarRuntimeItem extends PureComponent {
         "about-debugging-sidebar-item-connect-button-connection-not-responding",
         "qa-connection-not-responding"
       )
->>>>>>> upstream-releases
     );
   }
 }

@@ -969,22 +969,9 @@ bool nsTreeSanitizer::MustFlatten(int32_t aNamespace, nsAtom* aLocal) {
         (nsGkAtoms::font == aLocal || nsGkAtoms::center == aLocal)) {
       return true;
     }
-<<<<<<< HEAD
-    if (mDropForms &&
-        (nsGkAtoms::form == aLocal || nsGkAtoms::input == aLocal ||
-         nsGkAtoms::keygen == aLocal || nsGkAtoms::option == aLocal ||
-         nsGkAtoms::optgroup == aLocal)) {
-||||||| merged common ancestors
-    if (mDropForms && (nsGkAtoms::form == aLocal ||
-                       nsGkAtoms::input == aLocal ||
-                       nsGkAtoms::keygen == aLocal ||
-                       nsGkAtoms::option == aLocal ||
-                       nsGkAtoms::optgroup == aLocal)) {
-=======
     if (mDropForms &&
         (nsGkAtoms::form == aLocal || nsGkAtoms::input == aLocal ||
          nsGkAtoms::option == aLocal || nsGkAtoms::optgroup == aLocal)) {
->>>>>>> upstream-releases
       return true;
     }
     if (mFullDocument &&
@@ -1079,24 +1066,10 @@ bool nsTreeSanitizer::SanitizeStyleDeclaration(DeclarationBlock* aDeclaration) {
   return aDeclaration->RemovePropertyByID(eCSSProperty__moz_binding);
 }
 
-<<<<<<< HEAD
-bool nsTreeSanitizer::SanitizeStyleSheet(const nsAString& aOriginal,
-                                         nsAString& aSanitized,
-                                         nsIDocument* aDocument,
-                                         nsIURI* aBaseURI) {
-||||||| merged common ancestors
-bool
-nsTreeSanitizer::SanitizeStyleSheet(const nsAString& aOriginal,
-                                    nsAString& aSanitized,
-                                    nsIDocument* aDocument,
-                                    nsIURI* aBaseURI)
-{
-=======
 bool nsTreeSanitizer::SanitizeStyleSheet(const nsAString& aOriginal,
                                          nsAString& aSanitized,
                                          Document* aDocument,
                                          nsIURI* aBaseURI) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   aSanitized.Truncate();
   // aSanitized will hold the permitted CSS text.
@@ -1258,28 +1231,6 @@ void nsTreeSanitizer::SanitizeAttributes(mozilla::dom::Element* aElement,
       }
       // else not allowed
     } else if (kNameSpaceID_XML == attrNs) {
-<<<<<<< HEAD
-      if (nsGkAtoms::base == attrLocal) {
-        if (SanitizeURL(aElement, attrNs, attrLocal)) {
-          // in case the attribute removal shuffled the attribute order, start
-          // the loop again.
-          --ac;
-          i = ac;  // i will be decremented immediately thanks to the for loop
-        }
-        continue;
-      }
-||||||| merged common ancestors
-      if (nsGkAtoms::base == attrLocal) {
-        if (SanitizeURL(aElement, attrNs, attrLocal)) {
-          // in case the attribute removal shuffled the attribute order, start
-          // the loop again.
-          --ac;
-          i = ac; // i will be decremented immediately thanks to the for loop
-        }
-        continue;
-      }
-=======
->>>>>>> upstream-releases
       if (nsGkAtoms::lang == attrLocal || nsGkAtoms::space == attrLocal) {
         continue;
       }
@@ -1383,15 +1334,7 @@ void nsTreeSanitizer::Sanitize(DocumentFragment* aFragment) {
   SanitizeChildren(aFragment);
 }
 
-<<<<<<< HEAD
-void nsTreeSanitizer::Sanitize(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-nsTreeSanitizer::Sanitize(nsIDocument* aDocument)
-{
-=======
 void nsTreeSanitizer::Sanitize(Document* aDocument) {
->>>>>>> upstream-releases
   // If you want to relax these preconditions, be sure to check the code in
   // here that notifies / does not notify or that fires mutation events if
   // in tree.
@@ -1531,18 +1474,8 @@ void nsTreeSanitizer::RemoveAllAttributes(Element* aElement) {
   }
 }
 
-<<<<<<< HEAD
-void nsTreeSanitizer::LogMessage(const char* aMessage, nsIDocument* aDoc,
-                                 Element* aElement, nsAtom* aAttr) {
-||||||| merged common ancestors
-void
-nsTreeSanitizer::LogMessage(const char* aMessage, nsIDocument* aDoc,
-                            Element* aElement, nsAtom* aAttr)
-{
-=======
 void nsTreeSanitizer::LogMessage(const char* aMessage, Document* aDoc,
                                  Element* aElement, nsAtom* aAttr) {
->>>>>>> upstream-releases
   if (mLogRemovals) {
     nsAutoString msg;
     msg.Assign(NS_ConvertASCIItoUTF16(aMessage));

@@ -67,39 +67,11 @@ CSS_KEY(all-scroll, all_scroll)
 CSS_KEY(auto, auto)
 CSS_KEY(baseline, baseline)
 CSS_KEY(block, block)
-<<<<<<< HEAD
-CSS_KEY(blur, blur)
-CSS_KEY(bottom, bottom)
-CSS_KEY(brightness, brightness)
-||||||| merged common ancestors
-CSS_KEY(blur, blur)
-CSS_KEY(border-box, border_box)
-CSS_KEY(bottom, bottom)
-CSS_KEY(brightness, brightness)
-=======
->>>>>>> upstream-releases
 CSS_KEY(cell, cell)
 CSS_KEY(center, center)
 CSS_KEY(circle, circle)
-<<<<<<< HEAD
-CSS_KEY(clip, clip)
-CSS_KEY(closest-side, closest_side)
-||||||| merged common ancestors
-CSS_KEY(clip, clip)
-CSS_KEY(closest-corner, closest_corner)
-CSS_KEY(closest-side, closest_side)
-=======
->>>>>>> upstream-releases
 CSS_KEY(col-resize, col_resize)
 CSS_KEY(column, column)
-<<<<<<< HEAD
-CSS_KEY(content, content)
-||||||| merged common ancestors
-CSS_KEY(contain, contain)
-CSS_KEY(content, content)
-CSS_KEY(content-box, content_box)
-=======
->>>>>>> upstream-releases
 CSS_KEY(contents, contents)
 CSS_KEY(context-menu, context_menu)
 CSS_KEY(copy, copy)
@@ -112,33 +84,8 @@ CSS_KEY(dotted, dotted)
 CSS_KEY(double, double)
 CSS_KEY(double-circle, double_circle)
 CSS_KEY(e-resize, e_resize)
-<<<<<<< HEAD
-CSS_KEY(ellipse, ellipse)
-CSS_KEY(ellipsis, ellipsis)
-||||||| merged common ancestors
-CSS_KEY(ease, ease)
-CSS_KEY(ease-in, ease_in)
-CSS_KEY(ease-in-out, ease_in_out)
-CSS_KEY(ease-out, ease_out)
-CSS_KEY(ellipse, ellipse)
-CSS_KEY(ellipsis, ellipsis)
-=======
->>>>>>> upstream-releases
 CSS_KEY(end, end)
 CSS_KEY(ew-resize, ew_resize)
-<<<<<<< HEAD
-CSS_KEY(farthest-side, farthest_side)
-CSS_KEY(fill, fill)
-CSS_KEY(filled, filled)
-||||||| merged common ancestors
-CSS_KEY(farthest-side, farthest_side)
-CSS_KEY(farthest-corner, farthest_corner)
-CSS_KEY(fill, fill)
-CSS_KEY(filled, filled)
-CSS_KEY(fill-box, fill_box)
-CSS_KEY(flat, flat)
-=======
->>>>>>> upstream-releases
 CSS_KEY(flex, flex)
 CSS_KEY(flex-end, flex_end)
 CSS_KEY(flex-start, flex_start)
@@ -157,29 +104,7 @@ CSS_KEY(inset, inset)
 CSS_KEY(justify, justify)
 CSS_KEY(last baseline, last_baseline) // only used for DevTools auto-completion
 CSS_KEY(left, left)
-<<<<<<< HEAD
-CSS_KEY(legacy, legacy)
-CSS_KEY(line-through, line_through)
-||||||| merged common ancestors
-CSS_KEY(legacy, legacy)
-CSS_KEY(line-through, line_through)
-CSS_KEY(linear, linear)
-=======
->>>>>>> upstream-releases
 CSS_KEY(list-item, list_item)
-<<<<<<< HEAD
-CSS_KEY(manipulation, manipulation)
-CSS_KEY(matrix, matrix)
-CSS_KEY(matrix3d, matrix3d)
-||||||| merged common ancestors
-CSS_KEY(mandatory, mandatory)
-CSS_KEY(manipulation, manipulation)
-CSS_KEY(margin-box, margin_box)
-CSS_KEY(match-parent, match_parent)
-CSS_KEY(matrix, matrix)
-CSS_KEY(matrix3d, matrix3d)
-=======
->>>>>>> upstream-releases
 CSS_KEY(max-content, max_content)
 CSS_KEY(min-content, min_content)
 CSS_KEY(move, move)
@@ -193,54 +118,9 @@ CSS_KEY(not-allowed, not_allowed)
 CSS_KEY(ns-resize, ns_resize)
 CSS_KEY(nw-resize, nw_resize)
 CSS_KEY(nwse-resize, nwse_resize)
-<<<<<<< HEAD
-CSS_KEY(opacity, opacity)
-CSS_KEY(open, open)
-CSS_KEY(over, over)
-CSS_KEY(overline, overline)
-CSS_KEY(paint, paint)
-CSS_KEY(pan-x, pan_x)
-CSS_KEY(pan-y, pan_y)
-CSS_KEY(perspective, perspective)
-||||||| merged common ancestors
-CSS_KEY(opacity, opacity)
-CSS_KEY(open, open)
-CSS_KEY(ornaments, ornaments)
-CSS_KEY(outset, outset)
-CSS_KEY(over, over)
-CSS_KEY(overline, overline)
-CSS_KEY(paint, paint)
-CSS_KEY(padding-box, padding_box)
-CSS_KEY(pan-x, pan_x)
-CSS_KEY(pan-y, pan_y)
-CSS_KEY(perspective, perspective)
-=======
->>>>>>> upstream-releases
 CSS_KEY(pointer, pointer)
-<<<<<<< HEAD
-CSS_KEY(polygon, polygon)
-||||||| merged common ancestors
-CSS_KEY(polygon, polygon)
-CSS_KEY(preserve-3d, preserve_3d)
-=======
->>>>>>> upstream-releases
 CSS_KEY(progress, progress)
 CSS_KEY(right, right)
-<<<<<<< HEAD
-CSS_KEY(rotate, rotate)
-CSS_KEY(rotate3d, rotate3d)
-CSS_KEY(rotatex, rotatex)
-CSS_KEY(rotatey, rotatey)
-CSS_KEY(rotatez, rotatez)
-||||||| merged common ancestors
-CSS_KEY(rotate, rotate)
-CSS_KEY(rotate3d, rotate3d)
-CSS_KEY(rotatex, rotatex)
-CSS_KEY(rotatey, rotatey)
-CSS_KEY(rotatez, rotatez)
-CSS_KEY(round, round)
-=======
->>>>>>> upstream-releases
 CSS_KEY(row, row)
 CSS_KEY(row-resize, row_resize)
 CSS_KEY(ruby, ruby)
@@ -253,38 +133,12 @@ CSS_KEY(se-resize, se_resize)
 CSS_KEY(self-end, self_end)
 CSS_KEY(self-start, self_start)
 CSS_KEY(sesame, sesame)
-<<<<<<< HEAD
-CSS_KEY(size, size)
-CSS_KEY(skew, skew)
-CSS_KEY(skewx, skewx)
-CSS_KEY(skewy, skewy)
-||||||| merged common ancestors
-CSS_KEY(size, size)
-CSS_KEY(skew, skew)
-CSS_KEY(skewx, skewx)
-CSS_KEY(skewy, skewy)
-CSS_KEY(small-caps, small_caps)
-=======
->>>>>>> upstream-releases
 CSS_KEY(solid, solid)
 CSS_KEY(space-around, space_around)
 CSS_KEY(space-between, space_between)
 CSS_KEY(space-evenly, space_evenly)
 CSS_KEY(start, start)
 CSS_KEY(stretch, stretch)
-<<<<<<< HEAD
-CSS_KEY(strict, strict)
-CSS_KEY(style, style)
-CSS_KEY(sub, sub)
-||||||| merged common ancestors
-CSS_KEY(strict, strict)
-CSS_KEY(stroke-box, stroke_box)
-CSS_KEY(style, style)
-CSS_KEY(styleset, styleset)
-CSS_KEY(stylistic, stylistic)
-CSS_KEY(sub, sub)
-=======
->>>>>>> upstream-releases
 CSS_KEY(subgrid, subgrid)
 CSS_KEY(sw-resize, sw_resize)
 CSS_KEY(table, table)
@@ -299,13 +153,6 @@ CSS_KEY(table-row-group, table_row_group)
 CSS_KEY(text, text)
 CSS_KEY(triangle, triangle)
 CSS_KEY(vertical-text, vertical_text)
-<<<<<<< HEAD
-CSS_KEY(visible, visible)
-||||||| merged common ancestors
-CSS_KEY(view-box, view_box)
-CSS_KEY(visible, visible)
-=======
->>>>>>> upstream-releases
 CSS_KEY(w-resize, w_resize)
 CSS_KEY(wait, wait)
 CSS_KEY(wavy, wavy)

@@ -53,66 +53,24 @@ nsresult HeadlessLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
     case ColorID::IMESelectedConvertedTextUnderline:
       aColor = NS_SAME_AS_FOREGROUND_COLOR;
       break;
-<<<<<<< HEAD
-    case eColorID__moz_eventreerow:
-      aColor = NS_RGB(0xff, 0xff, 0xff);
-||||||| merged common ancestors
-    case eColorID__moz_eventreerow:
-      aColor = NS_RGB(0xff,0xff,0xff);
-=======
     case ColorID::MozEventreerow:
       aColor = NS_RGB(0xff, 0xff, 0xff);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID__moz_gtk_info_bar_text:
-      aColor = NS_RGB(0x00, 0x00, 0x00);
-||||||| merged common ancestors
-    case eColorID__moz_gtk_info_bar_text:
-      aColor = NS_RGB(0x00,0x00,0x00);
-=======
     case ColorID::MozGtkInfoBarText:
       aColor = NS_RGB(0x00, 0x00, 0x00);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID__moz_mac_buttonactivetext:
-    case eColorID__moz_mac_defaultbuttontext:
-      aColor = NS_RGB(0xff, 0xff, 0xff);
-||||||| merged common ancestors
-    case eColorID__moz_mac_buttonactivetext:
-    case eColorID__moz_mac_defaultbuttontext:
-      aColor = NS_RGB(0xff,0xff,0xff);
-=======
     case ColorID::MozMacButtonactivetext:
     case ColorID::MozMacDefaultbuttontext:
       aColor = NS_RGB(0xff, 0xff, 0xff);
->>>>>>> upstream-releases
       break;
     case ColorID::SpellCheckerUnderline:
       aColor = NS_RGB(0xff, 0x00, 0x00);
       break;
-<<<<<<< HEAD
-    case eColorID_TextBackground:
-      aColor = NS_RGB(0xff, 0xff, 0xff);
-||||||| merged common ancestors
-    case eColorID_TextBackground:
-      aColor = NS_RGB(0xff,0xff,0xff);
-=======
     case ColorID::TextBackground:
       aColor = NS_RGB(0xff, 0xff, 0xff);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_TextForeground:
-      aColor = NS_RGB(0x00, 0x00, 0x00);
-||||||| merged common ancestors
-    case eColorID_TextForeground:
-      aColor = NS_RGB(0x00,0x00,0x00);
-=======
     case ColorID::TextForeground:
       aColor = NS_RGB(0x00, 0x00, 0x00);
->>>>>>> upstream-releases
       break;
     case ColorID::TextHighlightBackground:
       aColor = NS_RGB(0xef, 0x0f, 0xff);
@@ -120,30 +78,14 @@ nsresult HeadlessLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
     case ColorID::TextHighlightForeground:
       aColor = NS_RGB(0xff, 0xff, 0xff);
       break;
-<<<<<<< HEAD
-    case eColorID_TextSelectBackground:
-      aColor = NS_RGB(0xaa, 0xaa, 0xaa);
-||||||| merged common ancestors
-    case eColorID_TextSelectBackground:
-      aColor = NS_RGB(0xaa,0xaa,0xaa);
-=======
     case ColorID::TextSelectBackground:
       aColor = NS_RGB(0xaa, 0xaa, 0xaa);
->>>>>>> upstream-releases
       break;
     case ColorID::TextSelectBackgroundAttention:
       aColor = NS_TRANSPARENT;
       break;
-<<<<<<< HEAD
-    case eColorID_TextSelectBackgroundDisabled:
-      aColor = NS_RGB(0xaa, 0xaa, 0xaa);
-||||||| merged common ancestors
-    case eColorID_TextSelectBackgroundDisabled:
-      aColor = NS_RGB(0xaa,0xaa,0xaa);
-=======
     case ColorID::TextSelectBackgroundDisabled:
       aColor = NS_RGB(0xaa, 0xaa, 0xaa);
->>>>>>> upstream-releases
       break;
     case ColorID::TextSelectForeground:
       GetColor(ColorID::TextSelectBackground, aColor);
@@ -152,93 +94,29 @@ nsresult HeadlessLookAndFeel::NativeGetColor(ColorID aID, nscolor& aColor) {
       else
         aColor = NS_DONT_CHANGE_COLOR;
       break;
-<<<<<<< HEAD
-    case eColorID_Widget3DHighlight:
-      aColor = NS_RGB(0xa0, 0xa0, 0xa0);
-||||||| merged common ancestors
-    case eColorID_Widget3DHighlight:
-      aColor = NS_RGB(0xa0,0xa0,0xa0);
-=======
     case ColorID::Widget3DHighlight:
       aColor = NS_RGB(0xa0, 0xa0, 0xa0);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_Widget3DShadow:
-      aColor = NS_RGB(0x40, 0x40, 0x40);
-||||||| merged common ancestors
-    case eColorID_Widget3DShadow:
-      aColor = NS_RGB(0x40,0x40,0x40);
-=======
     case ColorID::Widget3DShadow:
       aColor = NS_RGB(0x40, 0x40, 0x40);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_WidgetBackground:
-      aColor = NS_RGB(0xdd, 0xdd, 0xdd);
-||||||| merged common ancestors
-    case eColorID_WidgetBackground:
-      aColor = NS_RGB(0xdd,0xdd,0xdd);
-=======
     case ColorID::WidgetBackground:
       aColor = NS_RGB(0xdd, 0xdd, 0xdd);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_WidgetForeground:
-      aColor = NS_RGB(0x00, 0x00, 0x00);
-||||||| merged common ancestors
-    case eColorID_WidgetForeground:
-      aColor = NS_RGB(0x00,0x00,0x00);
-=======
     case ColorID::WidgetForeground:
       aColor = NS_RGB(0x00, 0x00, 0x00);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_WidgetSelectBackground:
-      aColor = NS_RGB(0x80, 0x80, 0x80);
-||||||| merged common ancestors
-    case eColorID_WidgetSelectBackground:
-      aColor = NS_RGB(0x80,0x80,0x80);
-=======
     case ColorID::WidgetSelectBackground:
       aColor = NS_RGB(0x80, 0x80, 0x80);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_WidgetSelectForeground:
-      aColor = NS_RGB(0x00, 0x00, 0x80);
-||||||| merged common ancestors
-    case eColorID_WidgetSelectForeground:
-      aColor = NS_RGB(0x00,0x00,0x80);
-=======
     case ColorID::WidgetSelectForeground:
       aColor = NS_RGB(0x00, 0x00, 0x80);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_WindowBackground:
-      aColor = NS_RGB(0xff, 0xff, 0xff);
-||||||| merged common ancestors
-    case eColorID_WindowBackground:
-      aColor = NS_RGB(0xff,0xff,0xff);
-=======
     case ColorID::WindowBackground:
       aColor = NS_RGB(0xff, 0xff, 0xff);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    case eColorID_WindowForeground:
-      aColor = NS_RGB(0x00, 0x00, 0x00);
-||||||| merged common ancestors
-    case eColorID_WindowForeground:
-      aColor = NS_RGB(0x00,0x00,0x00);
-=======
     case ColorID::WindowForeground:
       aColor = NS_RGB(0x00, 0x00, 0x00);
->>>>>>> upstream-releases
       break;
     default:
       aColor = GetStandinForNativeColor(aID);
@@ -448,37 +326,13 @@ nsresult HeadlessLookAndFeel::GetFloatImpl(FloatID aID, float& aResult) {
   return res;
 }
 
-<<<<<<< HEAD
-bool HeadlessLookAndFeel::GetFontImpl(FontID aID, nsString& aFontName,
-                                      gfxFontStyle& aFontStyle,
-                                      float aDevPixPerCSSPixel) {
-||||||| merged common ancestors
-bool
-HeadlessLookAndFeel::GetFontImpl(FontID aID, nsString& aFontName,
-               gfxFontStyle& aFontStyle,
-               float aDevPixPerCSSPixel)
-{
-=======
 bool HeadlessLookAndFeel::GetFontImpl(FontID aID, nsString& aFontName,
                                       gfxFontStyle& aFontStyle) {
->>>>>>> upstream-releases
   // Default to san-serif for everything.
-<<<<<<< HEAD
-  aFontStyle.style = FontSlantStyle::Normal();
-  aFontStyle.weight = FontWeight::Normal();
-  aFontStyle.stretch = FontStretch::Normal();
-  aFontStyle.size = 14 * aDevPixPerCSSPixel;
-||||||| merged common ancestors
-  aFontStyle.style      = FontSlantStyle::Normal();
-  aFontStyle.weight     = FontWeight::Normal();
-  aFontStyle.stretch    = FontStretch::Normal();
-  aFontStyle.size       = 14 * aDevPixPerCSSPixel;
-=======
   aFontStyle.style = FontSlantStyle::Normal();
   aFontStyle.weight = FontWeight::Normal();
   aFontStyle.stretch = FontStretch::Normal();
   aFontStyle.size = 14;
->>>>>>> upstream-releases
   aFontStyle.systemFont = true;
 
   aFontName.AssignLiteral("sans-serif");

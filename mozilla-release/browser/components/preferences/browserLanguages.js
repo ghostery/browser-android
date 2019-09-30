@@ -4,56 +4,6 @@
 
 /* import-globals-from ../../../toolkit/content/preferencesBindings.js */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-ChromeUtils.defineModuleGetter(this, "AddonManager",
-                               "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "AddonRepository",
-                               "resource://gre/modules/addons/AddonRepository.jsm");
-ChromeUtils.defineModuleGetter(this, "RemoteSettings",
-                               "resource://services-settings/remote-settings.js");
-ChromeUtils.defineModuleGetter(this, "SelectionChangedMenulist",
-                               "resource:///modules/SelectionChangedMenulist.jsm");
-
-/* This dialog provides an interface for managing what language the browser is
- * displayed in.
- *
- * There is a list of "requested" locales and a list of "available" locales. The
- * requested locales must be installed and enabled. Available locales could be
- * installed and enabled, or fetched from the AMO language tools API.
- *
- * If a langpack is disabled, there is no way to determine what locale it is for and
- * it will only be listed as available if that locale is also available on AMO and
- * the user has opted to search for more languages.
- */
-
-async function installFromUrl(url, hash, callback) {
-  let telemetryInfo = {
-    source: "about:preferences",
-  };
-  let install = await AddonManager.getInstallForURL(
-    url, "application/x-xpinstall", hash, null, null, null, null, telemetryInfo);
-  if (callback) {
-    callback(install.installId.toString());
-  }
-  await install.install();
-  return install.addon;
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-ChromeUtils.defineModuleGetter(this, "AddonManager",
-                               "resource://gre/modules/AddonManager.jsm");
-ChromeUtils.defineModuleGetter(this, "AddonRepository",
-                               "resource://gre/modules/addons/AddonRepository.jsm");
-ChromeUtils.defineModuleGetter(this, "RemoteSettings",
-                               "resource://services-settings/remote-settings.js");
-
-async function installFromUrl(url, hash) {
-  let install = await AddonManager.getInstallForURL(
-    url, "application/x-xpinstall", hash);
-  return install.install();
-=======
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 // This is exported by preferences.js but we can't import that in a subdialog.
@@ -110,7 +60,6 @@ async function installFromUrl(url, hash, callback) {
   }
   await install.install();
   return install.addon;
->>>>>>> upstream-releases
 }
 
 async function dictionaryIdsForLocale(locale) {
@@ -124,11 +73,6 @@ async function dictionaryIdsForLocale(locale) {
 }
 
 class OrderedListBox {
-<<<<<<< HEAD
-  constructor({richlistbox, upButton, downButton, removeButton, onRemove, onReorder}) {
-||||||| merged common ancestors
-  constructor({richlistbox, upButton, downButton, removeButton, onRemove}) {
-=======
   constructor({
     richlistbox,
     upButton,
@@ -137,7 +81,6 @@ class OrderedListBox {
     onRemove,
     onReorder,
   }) {
->>>>>>> upstream-releases
     this.richlistbox = richlistbox;
     this.upButton = upButton;
     this.downButton = downButton;
@@ -425,14 +368,6 @@ var gBrowserLanguagesDialog = {
     return Services.prefs.getBoolPref("intl.multilingual.downloadEnabled");
   },
 
-<<<<<<< HEAD
-  recordTelemetry(method, extra = null) {
-    Services.telemetry.recordEvent(
-      "intl.ui.browserLanguage", method, "dialog", this.telemetryId, extra);
-  },
-
-||||||| merged common ancestors
-=======
   recordTelemetry(method, extra = null) {
     Services.telemetry.recordEvent(
       "intl.ui.browserLanguage",
@@ -443,7 +378,6 @@ var gBrowserLanguagesDialog = {
     );
   },
 
->>>>>>> upstream-releases
   beforeAccept() {
     this.selected = this.getSelectedLocales();
     this.accepted = true;
@@ -451,40 +385,6 @@ var gBrowserLanguagesDialog = {
   },
 
   async onLoad() {
-<<<<<<< HEAD
-    // Maintain the previously selected locales even if we cancel out.
-    let {telemetryId, selected, search} = window.arguments[0];
-    this.telemetryId = telemetryId;
-    this.selectedLocales = selected;
-
-    // This is a list of available locales that the user selected. It's more
-    // restricted than the Intl notion of `requested` as it only contains
-    // locale codes for which we have matching locales available.
-    // The first time this dialog is opened, populate with appLocalesAsBCP47.
-    let selectedLocales = this.selectedLocales || Services.locale.appLocalesAsBCP47;
-    let selectedLocaleSet = new Set(selectedLocales);
-    let available = Services.locale.availableLocales;
-    let availableSet = new Set(available);
-
-    // Filter selectedLocales since the user may select a locale when it is
-    // available and then disable it.
-    selectedLocales = selectedLocales.filter(locale => availableSet.has(locale));
-    // Nothing in available should be in selectedSet.
-    available = available.filter(locale => !selectedLocaleSet.has(locale));
-
-    this.initSelectedLocales(selectedLocales);
-||||||| merged common ancestors
-    // Maintain the previously requested locales even if we cancel out.
-    let {requesting, search} = window.arguments[0] || {};
-    this.requestedLocales = requesting;
-
-    let requested = this.requestedLocales || Services.locale.requestedLocales;
-    let requestedSet = new Set(requested);
-    let available = Services.locale.availableLocales
-      .filter(locale => !requestedSet.has(locale));
-
-    this.initRequestedLocales(requested);
-=======
     // Maintain the previously selected locales even if we cancel out.
     let { telemetryId, selected, search } = window.arguments[0];
     this.telemetryId = telemetryId;
@@ -509,45 +409,21 @@ var gBrowserLanguagesDialog = {
     available = available.filter(locale => !selectedLocaleSet.has(locale));
 
     await this.initSelectedLocales(selectedLocales);
->>>>>>> upstream-releases
     await this.initAvailableLocales(available, search);
 
     this.initialized = true;
   },
 
-<<<<<<< HEAD
-  initSelectedLocales(selectedLocales) {
-    this._selectedLocales = new OrderedListBox({
-      richlistbox: document.getElementById("selectedLocales"),
-||||||| merged common ancestors
-  initRequestedLocales(requested) {
-    this._requestedLocales = new OrderedListBox({
-      richlistbox: document.getElementById("requestedLocales"),
-=======
   async initSelectedLocales(selectedLocales) {
     this._selectedLocales = new OrderedListBox({
       richlistbox: document.getElementById("selectedLocales"),
->>>>>>> upstream-releases
       upButton: document.getElementById("up"),
       downButton: document.getElementById("down"),
       removeButton: document.getElementById("remove"),
-<<<<<<< HEAD
-      onRemove: (item) => this.selectedLocaleRemoved(item),
-      onReorder: () => this.recordTelemetry("reorder"),
-||||||| merged common ancestors
-      onRemove: (item) => this.requestedLocaleRemoved(item),
-=======
       onRemove: item => this.selectedLocaleRemoved(item),
       onReorder: () => this.recordTelemetry("reorder"),
->>>>>>> upstream-releases
     });
-<<<<<<< HEAD
-    this._selectedLocales.setItems(getLocaleDisplayInfo(selectedLocales));
-||||||| merged common ancestors
-    this._requestedLocales.setItems(getLocaleDisplayInfo(requested));
-=======
     this._selectedLocales.setItems(await getLocaleDisplayInfo(selectedLocales));
->>>>>>> upstream-releases
   },
 
   async initAvailableLocales(available, search) {
@@ -603,38 +479,14 @@ var gBrowserLanguagesDialog = {
       this.availableLangpacks.set(target_locale, { url, hash });
     }
 
-<<<<<<< HEAD
-    // Remove the installed locales from the available ones.
-    let installedLocales = new Set(Services.locale.availableLocales);
-    let notInstalledLocales = availableLangpacks
-      .filter(({target_locale}) => !installedLocales.has(target_locale))
-||||||| merged common ancestors
-    // Create a list of installed locales to hide.
-    let installedLocales = new Set([
-      ...Services.locale.requestedLocales,
-      ...Services.locale.availableLocales,
-    ]);
-
-    let availableLocales = availableLangpacks
-      .filter(({target_locale}) => !installedLocales.has(target_locale))
-=======
     // Remove the installed locales from the available ones.
     let installedLocales = new Set(await getAvailableLocales());
     let notInstalledLocales = availableLangpacks
       .filter(({ target_locale }) => !installedLocales.has(target_locale))
->>>>>>> upstream-releases
       .map(lang => lang.target_locale);
-<<<<<<< HEAD
-
-    // Create the rows for the remote locales.
-    let availableItems = getLocaleDisplayInfo(notInstalledLocales);
-||||||| merged common ancestors
-    let availableItems = getLocaleDisplayInfo(availableLocales);
-=======
 
     // Create the rows for the remote locales.
     let availableItems = await getLocaleDisplayInfo(notInstalledLocales);
->>>>>>> upstream-releases
     availableItems.push({
       label: await document.l10n.formatValue(
         "browser-languages-available-label"
@@ -674,18 +526,9 @@ var gBrowserLanguagesDialog = {
   },
 
   async availableLanguageSelected(item) {
-<<<<<<< HEAD
-    if (Services.locale.availableLocales.includes(item.value)) {
-      this.recordTelemetry("add");
-      this.requestLocalLanguage(item);
-||||||| merged common ancestors
-    if (Services.locale.availableLocales.includes(item.value)) {
-      this.requestLocalLanguage(item);
-=======
     if ((await getAvailableLocales()).includes(item.value)) {
       this.recordTelemetry("add");
       await this.requestLocalLanguage(item);
->>>>>>> upstream-releases
     } else if (this.availableLangpacks.has(item.value)) {
       // Telemetry is tracked in requestRemoteLanguage.
       await this.requestRemoteLanguage(item);
@@ -694,39 +537,19 @@ var gBrowserLanguagesDialog = {
     }
   },
 
-<<<<<<< HEAD
-  requestLocalLanguage(item, available) {
-    this._selectedLocales.addItem(item);
-    let selectedCount = this._selectedLocales.items.length;
-    let availableCount = Services.locale.availableLocales.length;
-    if (selectedCount == availableCount) {
-||||||| merged common ancestors
-  requestLocalLanguage(item, available) {
-    this._requestedLocales.addItem(item);
-    let requestedCount = this._requestedLocales.items.length;
-    let availableCount = Services.locale.availableLocales.length;
-    if (requestedCount == availableCount) {
-=======
   async requestLocalLanguage(item, available) {
     this._selectedLocales.addItem(item);
     let selectedCount = this._selectedLocales.items.length;
     let availableCount = (await getAvailableLocales()).length;
     if (selectedCount == availableCount) {
->>>>>>> upstream-releases
       // Remove the installed label, they're all installed.
       this._availableLocales.items.shift();
       this._availableLocales.setItems(this._availableLocales.items);
     }
-<<<<<<< HEAD
-    // The label isn't always reset when the selected item is removed, so set it again.
-    this._availableLocales.enableWithMessageId("browser-languages-select-language");
-||||||| merged common ancestors
-=======
     // The label isn't always reset when the selected item is removed, so set it again.
     this._availableLocales.enableWithMessageId(
       "browser-languages-select-language"
     );
->>>>>>> upstream-releases
   },
 
   async requestRemoteLanguage(item) {
@@ -734,27 +557,13 @@ var gBrowserLanguagesDialog = {
       "browser-languages-downloading"
     );
 
-<<<<<<< HEAD
-    let {url, hash} = this.availableLangpacks.get(item.value);
-    let addon;
-||||||| merged common ancestors
-    let {url, hash} = this.availableLangpacks.get(item.value);
-=======
     let { url, hash } = this.availableLangpacks.get(item.value);
     let addon;
->>>>>>> upstream-releases
 
     try {
-<<<<<<< HEAD
-      addon = await installFromUrl(
-        url, hash, (installId) => this.recordTelemetry("add", {installId}));
-||||||| merged common ancestors
-      await installFromUrl(url, hash);
-=======
       addon = await installFromUrl(url, hash, installId =>
         this.recordTelemetry("add", { installId })
       );
->>>>>>> upstream-releases
     } catch (e) {
       this.showError();
       return;
@@ -791,20 +600,6 @@ var gBrowserLanguagesDialog = {
 
   showError() {
     document.getElementById("warning-message").hidden = false;
-<<<<<<< HEAD
-    this._availableLocales.enableWithMessageId("browser-languages-select-language");
-
-    // The height has likely changed, find our SubDialog and tell it to resize.
-    requestAnimationFrame(() => {
-      let dialogs = window.opener.gSubDialog._dialogs;
-      let index = dialogs.findIndex(d => d._frame.contentDocument == document);
-      if (index != -1) {
-        dialogs[index].resizeDialog();
-      }
-    });
-||||||| merged common ancestors
-    this._availableLocales.enableWithMessageId("browser-languages-select-language");
-=======
     this._availableLocales.enableWithMessageId(
       "browser-languages-select-language"
     );
@@ -817,7 +612,6 @@ var gBrowserLanguagesDialog = {
         dialogs[index].resizeDialog();
       }
     });
->>>>>>> upstream-releases
   },
 
   hideError() {

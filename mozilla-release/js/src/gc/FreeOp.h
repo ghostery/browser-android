@@ -9,27 +9,12 @@
 
 #include "mozilla/Assertions.h"  // MOZ_ASSERT
 
-<<<<<<< HEAD
-#include "jit/ExecutableAllocator.h"  // jit::JitPoisonRangeVector
-#include "js/AllocPolicy.h"           // SystemAllocPolicy
-#include "js/MemoryFunctions.h"       // JSFreeOp
-#include "js/Utility.h"               // AutoEnterOOMUnsafeRegion, js_free
-#include "js/Vector.h"                // js::Vector
-||||||| merged common ancestors
-#include "jsapi.h" // JSFreeOp
-
-#include "jit/ExecutableAllocator.h" // jit::JitPoisonRangeVector
-#include "js/AllocPolicy.h" // SystemAllocPolicy
-#include "js/Utility.h" // AutoEnterOOMUnsafeRegion, js_free
-#include "js/Vector.h" // js::Vector
-=======
 #include "gc/GCEnum.h"                // js::MemoryUse
 #include "jit/ExecutableAllocator.h"  // jit::JitPoisonRangeVector
 #include "js/AllocPolicy.h"           // SystemAllocPolicy
 #include "js/MemoryFunctions.h"       // JSFreeOp
 #include "js/Utility.h"               // AutoEnterOOMUnsafeRegion, js_free
 #include "js/Vector.h"                // js::Vector
->>>>>>> upstream-releases
 
 struct JSRuntime;
 
@@ -42,77 +27,6 @@ namespace js {
  * FreeOp is passed to finalizers and other sweep-phase hooks so that we do not
  * need to pass a JSContext to those hooks.
  */
-<<<<<<< HEAD
-class FreeOp : public JSFreeOp {
-  Vector<void*, 0, SystemAllocPolicy> freeLaterList;
-  jit::JitPoisonRangeVector jitPoisonRanges;
-
- public:
-  static FreeOp* get(JSFreeOp* fop) { return static_cast<FreeOp*>(fop); }
-
-  explicit FreeOp(JSRuntime* maybeRuntime);
-  ~FreeOp();
-
-  bool onMainThread() const { return runtime_ != nullptr; }
-
-  bool maybeOnHelperThread() const {
-    // Sometimes background finalization happens on the main thread so
-    // runtime_ being null doesn't always mean we are off thread.
-    return !runtime_;
-  }
-
-  bool isDefaultFreeOp() const;
-
-  void free_(void* p) { js_free(p); }
-
-  void freeLater(void* p) {
-    // FreeOps other than the defaultFreeOp() are constructed on the stack,
-    // and won't hold onto the pointers to free indefinitely.
-    MOZ_ASSERT(!isDefaultFreeOp());
-
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    if (!freeLaterList.append(p)) {
-      oomUnsafe.crash("FreeOp::freeLater");
-||||||| merged common ancestors
-class FreeOp : public JSFreeOp
-{
-    Vector<void*, 0, SystemAllocPolicy> freeLaterList;
-    jit::JitPoisonRangeVector jitPoisonRanges;
-
-  public:
-    static FreeOp* get(JSFreeOp* fop) {
-        return static_cast<FreeOp*>(fop);
-    }
-
-    explicit FreeOp(JSRuntime* maybeRuntime);
-    ~FreeOp();
-
-    bool onMainThread() const {
-        return runtime_ != nullptr;
-    }
-
-    bool maybeOnHelperThread() const {
-        // Sometimes background finalization happens on the main thread so
-        // runtime_ being null doesn't always mean we are off thread.
-        return !runtime_;
-    }
-
-    bool isDefaultFreeOp() const;
-
-    void free_(void* p) {
-        js_free(p);
-    }
-
-    void freeLater(void* p) {
-        // FreeOps other than the defaultFreeOp() are constructed on the stack,
-        // and won't hold onto the pointers to free indefinitely.
-        MOZ_ASSERT(!isDefaultFreeOp());
-
-        AutoEnterOOMUnsafeRegion oomUnsafe;
-        if (!freeLaterList.append(p)) {
-            oomUnsafe.crash("FreeOp::freeLater");
-        }
-=======
 class FreeOp : public JSFreeOp {
   Vector<void*, 0, SystemAllocPolicy> freeLaterList;
   jit::JitPoisonRangeVector jitPoisonRanges;
@@ -169,41 +83,7 @@ class FreeOp : public JSFreeOp {
     if (p) {
       p->~T();
       free_(p);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  bool appendJitPoisonRange(const jit::JitPoisonRange& range) {
-    // FreeOps other than the defaultFreeOp() are constructed on the stack,
-    // and won't hold onto the pointers to free indefinitely.
-    MOZ_ASSERT(!isDefaultFreeOp());
-
-    return jitPoisonRanges.append(range);
-  }
-
-  template <class T>
-  void delete_(T* p) {
-    if (p) {
-      p->~T();
-      free_(p);
-||||||| merged common ancestors
-
-    bool appendJitPoisonRange(const jit::JitPoisonRange& range) {
-        // FreeOps other than the defaultFreeOp() are constructed on the stack,
-        // and won't hold onto the pointers to free indefinitely.
-        MOZ_ASSERT(!isDefaultFreeOp());
-
-        return jitPoisonRanges.append(range);
-    }
-
-    template <class T>
-    void delete_(T* p) {
-        if (p) {
-            p->~T();
-            free_(p);
-        }
-=======
   }
 
   // Delete a C++ object that was associated with a GC thing and update the
@@ -228,12 +108,7 @@ class FreeOp : public JSFreeOp {
     if (p) {
       p->~T();
       free_(cell, p, nbytes, use);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   }
 
   // Release a RefCounted object that was associated with a GC thing and update
@@ -260,7 +135,6 @@ class FreeOp : public JSFreeOp {
   // js::AddCellMemory.
   template <class T>
   void release(gc::Cell* cell, T* p, size_t nbytes, MemoryUse use);
->>>>>>> upstream-releases
 };
 
 }  // namespace js

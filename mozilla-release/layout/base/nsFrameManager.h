@@ -32,32 +32,13 @@ class PresShell;
  * FIXME(emilio): The comment above doesn't make any sense, there's no "frame
  * model lock" of any sort afaict.
  */
-<<<<<<< HEAD
-class nsFrameManager {
-||||||| merged common ancestors
-class nsFrameManager
-{
-=======
 class nsFrameManager {
   typedef mozilla::PresShell PresShell;
->>>>>>> upstream-releases
   typedef mozilla::layout::FrameChildListID ChildListID;
 
-<<<<<<< HEAD
- public:
-  explicit nsFrameManager(nsIPresShell* aPresShell)
-      : mPresShell(aPresShell), mRootFrame(nullptr) {
-||||||| merged common ancestors
-public:
-  explicit nsFrameManager(nsIPresShell* aPresShell)
-    : mPresShell(aPresShell)
-    , mRootFrame(nullptr)
-  {
-=======
  public:
   explicit nsFrameManager(PresShell* aPresShell)
       : mPresShell(aPresShell), mRootFrame(nullptr) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mPresShell, "need a pres shell");
   }
   ~nsFrameManager();

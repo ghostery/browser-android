@@ -31,21 +31,9 @@ static bool ParseInteger(const nsAString& aString, int32_t& aInt) {
   nsContentUtils::ParseHTMLIntegerResultFlags parseResult;
   aInt = nsContentUtils::ParseHTMLInteger(aString, &parseResult);
   return !(parseResult &
-<<<<<<< HEAD
-           (nsContentUtils::eParseHTMLInteger_Error |
-            nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput |
-            nsContentUtils::eParseHTMLInteger_IsPercent |
-            nsContentUtils::eParseHTMLInteger_NonStandard));
-||||||| merged common ancestors
-           ( nsContentUtils::eParseHTMLInteger_Error |
-             nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput |
-             nsContentUtils::eParseHTMLInteger_IsPercent |
-             nsContentUtils::eParseHTMLInteger_NonStandard ));
-=======
            (nsContentUtils::eParseHTMLInteger_Error |
             nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput |
             nsContentUtils::eParseHTMLInteger_NonStandard));
->>>>>>> upstream-releases
 }
 
 static bool ParseFloat(const nsAString& aString, double& aDouble) {
@@ -113,19 +101,8 @@ static bool ParseFloat(const nsAString& aString, double& aDouble) {
 ResponsiveImageSelector::ResponsiveImageSelector(nsIContent* aContent)
     : mOwnerNode(aContent), mSelectedCandidateIndex(-1) {}
 
-<<<<<<< HEAD
-ResponsiveImageSelector::ResponsiveImageSelector(nsIDocument* aDocument)
-    : mOwnerNode(aDocument), mSelectedCandidateIndex(-1) {}
-||||||| merged common ancestors
-ResponsiveImageSelector::ResponsiveImageSelector(nsIDocument *aDocument)
-  : mOwnerNode(aDocument),
-    mSelectedCandidateIndex(-1)
-{
-}
-=======
 ResponsiveImageSelector::ResponsiveImageSelector(dom::Document* aDocument)
     : mOwnerNode(aDocument), mSelectedCandidateIndex(-1) {}
->>>>>>> upstream-releases
 
 ResponsiveImageSelector::~ResponsiveImageSelector() {}
 
@@ -216,15 +193,7 @@ nsIContent* ResponsiveImageSelector::Content() {
   return mOwnerNode->IsContent() ? mOwnerNode->AsContent() : nullptr;
 }
 
-<<<<<<< HEAD
-nsIDocument* ResponsiveImageSelector::Document() {
-||||||| merged common ancestors
-nsIDocument*
-ResponsiveImageSelector::Document()
-{
-=======
 dom::Document* ResponsiveImageSelector::Document() {
->>>>>>> upstream-releases
   return mOwnerNode->OwnerDoc();
 }
 
@@ -430,23 +399,10 @@ int ResponsiveImageSelector::GetSelectedCandidateIndex() {
   return mSelectedCandidateIndex;
 }
 
-<<<<<<< HEAD
-bool ResponsiveImageSelector::ComputeFinalWidthForCurrentViewport(
-    double* aWidth) {
-  nsIDocument* doc = Document();
-  nsIPresShell* presShell = doc->GetShell();
-||||||| merged common ancestors
-bool
-ResponsiveImageSelector::ComputeFinalWidthForCurrentViewport(double *aWidth)
-{
-  nsIDocument* doc = Document();
-  nsIPresShell* presShell = doc->GetShell();
-=======
 bool ResponsiveImageSelector::ComputeFinalWidthForCurrentViewport(
     double* aWidth) {
   dom::Document* doc = Document();
   PresShell* presShell = doc->GetPresShell();
->>>>>>> upstream-releases
   nsPresContext* pctx = presShell ? presShell->GetPresContext() : nullptr;
 
   if (!pctx) {

@@ -18,10 +18,6 @@
 
 #include <string>
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-using std::vector;
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
 #  include "mozilla/dom/ContentChild.h"
 #  include "mozilla/Sandbox.h"
@@ -29,7 +25,6 @@ using std::vector;
 #  include "nsMacUtilsImpl.h"
 #endif
 
->>>>>>> upstream-releases
 using std::string;
 using std::vector;
 
@@ -71,13 +66,6 @@ void GMPProcessParent::InitStaticMainThread() {
 #endif
 
 GMPProcessParent::GMPProcessParent(const std::string& aGMPPath)
-<<<<<<< HEAD
-    : GeckoChildProcessHost(GeckoProcessType_GMPlugin), mGMPPath(aGMPPath) {
-||||||| merged common ancestors
-: GeckoChildProcessHost(GeckoProcessType_GMPlugin),
-  mGMPPath(aGMPPath)
-{
-=======
     : GeckoChildProcessHost(GeckoProcessType_GMPlugin),
       mGMPPath(aGMPPath)
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
@@ -85,7 +73,6 @@ GMPProcessParent::GMPProcessParent(const std::string& aGMPPath)
       mRequiresWindowServer(false)
 #endif
 {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(GMPProcessParent);
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
   MOZ_ASSERT(sIsMainThreadInitDone == true);
@@ -259,13 +246,6 @@ bool GMPProcessParent::FillMacSandboxInfo(MacSandboxInfo& aInfo) {
   return true;
 }
 
-<<<<<<< HEAD
-}  // namespace gmp
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gmp
-} // namespace mozilla
-=======
 nsresult GMPProcessParent::NormalizePath(const char* aPath,
                                          nsACString& aNormalizedPath) {
   nsCOMPtr<nsIFile> fileOrDir;
@@ -283,4 +263,3 @@ nsresult GMPProcessParent::NormalizePath(const char* aPath,
 
 }  // namespace gmp
 }  // namespace mozilla
->>>>>>> upstream-releases

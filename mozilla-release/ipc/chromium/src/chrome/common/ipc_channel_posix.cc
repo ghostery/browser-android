@@ -131,18 +131,9 @@ class PipeMap {
     DCHECK(fd != -1);
 
     ChannelToFDMap::const_iterator i = map_.find(channel_id);
-<<<<<<< HEAD
-    CHECK(i == map_.end()) << "Creating second IPC server for '" << channel_id
-                           << "' while first still exists";
-||||||| merged common ancestors
-    CHECK(i == map_.end()) << "Creating second IPC server for '"
-                           << channel_id
-                           << "' while first still exists";
-=======
     CHECK(i == map_.end())
     << "Creating second IPC server for '" << channel_id
     << "' while first still exists";
->>>>>>> upstream-releases
     map_[channel_id] = fd;
   }
 
@@ -705,61 +696,6 @@ bool Channel::ChannelImpl::ProcessOutgoingMessages() {
 
     if (bytes_written < 0) {
       switch (errno) {
-<<<<<<< HEAD
-        case EAGAIN:
-          // Not an error; the sendmsg would have blocked, so return to the
-          // event loop and try again later.
-          break;
-#if defined(OS_MACOSX)
-          // (Note: this comment is copied from https://crrev.com/86c3d9ef4fdf6;
-          // see also bug 1142693 comment #73.)
-          //
-          // On OS X if sendmsg() is trying to send fds between processes and
-          // there isn't enough room in the output buffer to send the fd
-          // structure over atomically then EMSGSIZE is returned.
-          //
-          // EMSGSIZE presents a problem since the system APIs can only call us
-          // when there's room in the socket buffer and not when there is
-          // "enough" room.
-          //
-          // The current behavior is to return to the event loop when EMSGSIZE
-          // is received and hopefull service another FD.  This is however still
-          // technically a busy wait since the event loop will call us right
-          // back until the receiver has read enough data to allow passing the
-          // FD over atomically.
-        case EMSGSIZE:
-          // Because this is likely to result in a busy-wait, we'll try to make
-          // it easier for the receiver to make progress.
-          sched_yield();
-          break;
-||||||| merged common ancestors
-      case EAGAIN:
-        // Not an error; the sendmsg would have blocked, so return to the
-        // event loop and try again later.
-        break;
-#if defined(OS_MACOSX)
-        // (Note: this comment is copied from https://crrev.com/86c3d9ef4fdf6;
-        // see also bug 1142693 comment #73.)
-        //
-        // On OS X if sendmsg() is trying to send fds between processes and
-        // there isn't enough room in the output buffer to send the fd
-        // structure over atomically then EMSGSIZE is returned.
-        //
-        // EMSGSIZE presents a problem since the system APIs can only call us
-        // when there's room in the socket buffer and not when there is
-        // "enough" room.
-        //
-        // The current behavior is to return to the event loop when EMSGSIZE
-        // is received and hopefull service another FD.  This is however still
-        // technically a busy wait since the event loop will call us right
-        // back until the receiver has read enough data to allow passing the
-        // FD over atomically.
-      case EMSGSIZE:
-        // Because this is likely to result in a busy-wait, we'll try to make
-        // it easier for the receiver to make progress.
-        sched_yield();
-        break;
-=======
         case EAGAIN:
           // Not an error; the sendmsg would have blocked, so return to the
           // event loop and try again later.
@@ -787,7 +723,6 @@ bool Channel::ChannelImpl::ProcessOutgoingMessages() {
           // it easier for the receiver to make progress.
           sched_yield();
           break;
->>>>>>> upstream-releases
 #endif
         default:
           CHROMIUM_LOG(ERROR) << "pipe error: " << strerror(errno);

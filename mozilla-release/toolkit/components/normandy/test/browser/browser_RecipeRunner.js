@@ -170,14 +170,9 @@ decorate_task(
 );
 
 decorate_task(
-<<<<<<< HEAD
-||||||| merged common ancestors
-  withSpy(AddonStudies, "close"),
-=======
   withPrefEnv({
     set: [["features.normandy-remote-settings.enabled", false]],
   }),
->>>>>>> upstream-releases
   withStub(Uptake, "reportRunner"),
   withStub(NormandyApi, "fetchRecipes"),
   withStub(ActionsManager.prototype, "runRecipe"),
@@ -238,12 +233,6 @@ decorate_task(
       [[noMatchRecipe, Uptake.RECIPE_DIDNT_MATCH_FILTER]],
       "Filtered-out recipes should be reported"
     );
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-    // Ensure storage is closed after the run.
-    ok(closeSpy.calledOnce, "Storage should be closed after the run");
-=======
   }
 );
 
@@ -357,7 +346,6 @@ decorate_task(
       [[Uptake.RUNNER_INVALID_SIGNATURE]],
       "RecipeRunner should report uptake telemetry"
     );
->>>>>>> upstream-releases
   }
 );
 
@@ -375,14 +363,6 @@ decorate_task(
     // If the recipe fetch failed, report a server error
     sinon.assert.calledWith(reportRunner, Uptake.RUNNER_SERVER_ERROR);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    // If the recipe fetch failed, we don't need to call close since nothing
-    // opened a connection in the first place.
-    sinon.assert.notCalled(closeSpy);
-
-    closeSpy.restore();
-=======
     // Test that network errors report a specific uptake error
     reportRunner.reset();
     mockApi.fetchRecipes.rejects(
@@ -399,7 +379,6 @@ decorate_task(
     await RecipeRunner.run();
     sinon.assert.calledWith(reportRunner, Uptake.RUNNER_INVALID_SIGNATURE);
 
->>>>>>> upstream-releases
     reportRunner.restore();
   }
 );

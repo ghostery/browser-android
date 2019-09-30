@@ -244,17 +244,8 @@ nsresult TCPSocket::Init() {
     socketTypes.AppendElement(NS_LITERAL_CSTRING("starttls"));
   }
   nsCOMPtr<nsISocketTransport> transport;
-<<<<<<< HEAD
-  nsresult rv =
-      sts->CreateTransport(socketTypes, 1, NS_ConvertUTF16toUTF8(mHost), mPort,
-                           nullptr, getter_AddRefs(transport));
-||||||| merged common ancestors
-  nsresult rv = sts->CreateTransport(socketTypes, 1, NS_ConvertUTF16toUTF8(mHost), mPort,
-                                     nullptr, getter_AddRefs(transport));
-=======
   nsresult rv = sts->CreateTransport(socketTypes, NS_ConvertUTF16toUTF8(mHost),
                                      mPort, nullptr, getter_AddRefs(transport));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   return InitWithUnconnectedTransport(transport);
@@ -327,29 +318,10 @@ class CopierCallbacks final : public nsIRequestObserver {
 NS_IMPL_ISUPPORTS(CopierCallbacks, nsIRequestObserver)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CopierCallbacks::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  return NS_OK;
-}
-||||||| merged common ancestors
-CopierCallbacks::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
-{
-  return NS_OK;
-}
-=======
 CopierCallbacks::OnStartRequest(nsIRequest* aRequest) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CopierCallbacks::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                               nsresult aStatus) {
-||||||| merged common ancestors
-CopierCallbacks::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext, nsresult aStatus)
-{
-=======
 CopierCallbacks::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   mOwner->NotifyCopyComplete(aStatus);
   mOwner = nullptr;
   return NS_OK;
@@ -413,19 +385,9 @@ void TCPSocket::NotifyCopyComplete(nsresult aStatus) {
   }
   mBufferedAmount = bufferedAmount;
 
-<<<<<<< HEAD
-  if (mSocketBridgeParent) {
-    mozilla::Unused << mSocketBridgeParent->SendUpdateBufferedAmount(
-        BufferedAmount(), mTrackingNumber);
-||||||| merged common ancestors
-  if (mSocketBridgeParent) {
-    mozilla::Unused << mSocketBridgeParent->SendUpdateBufferedAmount(BufferedAmount(),
-                                                                     mTrackingNumber);
-=======
   if (mSocketBridgeParent && mSocketBridgeParent->IPCOpen()) {
     mozilla::Unused << mSocketBridgeParent->SendUpdateBufferedAmount(
         BufferedAmount(), mTrackingNumber);
->>>>>>> upstream-releases
   }
 
   if (NS_FAILED(aStatus)) {
@@ -966,32 +928,11 @@ TCPSocket::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TCPSocket::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  return NS_OK;
-}
-||||||| merged common ancestors
-TCPSocket::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
-{
-  return NS_OK;
-}
-=======
 TCPSocket::OnStartRequest(nsIRequest* aRequest) { return NS_OK; }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TCPSocket::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                           nsIInputStream* aStream, uint64_t aOffset,
-                           uint32_t aCount) {
-||||||| merged common ancestors
-TCPSocket::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext, nsIInputStream* aStream,
-                           uint64_t aOffset, uint32_t aCount)
-{
-=======
 TCPSocket::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
                            uint64_t aOffset, uint32_t aCount) {
->>>>>>> upstream-releases
   if (mUseArrayBuffers) {
     nsTArray<uint8_t> buffer;
     buffer.SetCapacity(aCount);
@@ -1046,15 +987,7 @@ TCPSocket::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TCPSocket::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                         nsresult aStatus) {
-||||||| merged common ancestors
-TCPSocket::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext, nsresult aStatus)
-{
-=======
 TCPSocket::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   mInputStreamPump = nullptr;
 
   if (mAsyncCopierActive && NS_SUCCEEDED(aStatus)) {
@@ -1071,17 +1004,9 @@ TCPSocket::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void TCPSocket::SetSocketBridgeParent(TCPSocketParent* aBridgeParent) {
-||||||| merged common ancestors
-void
-TCPSocket::SetSocketBridgeParent(TCPSocketParent* aBridgeParent)
-{
-=======
 void TCPSocket::SetSocketBridgeParent(TCPSocketParent* aBridgeParent) {
   MOZ_ASSERT(NS_IsMainThread());
 
->>>>>>> upstream-releases
   mSocketBridgeParent = aBridgeParent;
 }
 

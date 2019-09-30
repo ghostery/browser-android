@@ -13,30 +13,6 @@ const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 XPCOMUtils.defineLazyGlobalGetters(this, ["Blob", "FileReader"]);
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "DeferredTask",
-  "resource://gre/modules/DeferredTask.jsm");
-ChromeUtils.defineModuleGetter(this, "PromiseUtils",
-  "resource://gre/modules/PromiseUtils.jsm");
-
-const STREAM_SEGMENT_SIZE = 4096;
-const PR_UINT32_MAX = 0xffffffff;
-
-const BinaryInputStream = Components.Constructor("@mozilla.org/binaryinputstream;1",
-                                                 "nsIBinaryInputStream", "setInputStream");
-const StorageStream = Components.Constructor("@mozilla.org/storagestream;1",
-                                             "nsIStorageStream", "init");
-const BufferedOutputStream = Components.Constructor("@mozilla.org/network/buffered-output-stream;1",
-                                                    "nsIBufferedOutputStream", "init");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "DeferredTask",
-  "resource://gre/modules/DeferredTask.jsm");
-ChromeUtils.defineModuleGetter(this, "PromiseUtils",
-  "resource://gre/modules/PromiseUtils.jsm");
-
-const BinaryInputStream = Components.Constructor("@mozilla.org/binaryinputstream;1",
-                                                 "nsIBinaryInputStream", "setInputStream");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "DeferredTask",
@@ -66,7 +42,6 @@ const BufferedOutputStream = Components.Constructor(
   "nsIBufferedOutputStream",
   "init"
 );
->>>>>>> upstream-releases
 
 const SIZES_TELEMETRY_ENUM = {
   NO_SIZES: 0,
@@ -108,24 +83,6 @@ function promiseBlobAsOctets(blob) {
   });
 }
 
-<<<<<<< HEAD
-function promiseImage(stream, type) {
-  return new Promise((resolve, reject) => {
-    let imgTools = Cc["@mozilla.org/image/tools;1"].getService(Ci.imgITools);
-
-    imgTools.decodeImageAsync(stream, type, (image, result) => {
-      if (!Components.isSuccessCode(result)) {
-        reject();
-        return;
-      }
-
-      resolve(image);
-    }, Services.tm.currentThread);
-  });
-}
-
-||||||| merged common ancestors
-=======
 function promiseImage(stream, type) {
   return new Promise((resolve, reject) => {
     let imgTools = Cc["@mozilla.org/image/tools;1"].getService(Ci.imgITools);
@@ -146,7 +103,6 @@ function promiseImage(stream, type) {
   });
 }
 
->>>>>>> upstream-releases
 class FaviconLoad {
   constructor(iconInfo) {
     this.icon = iconInfo;
@@ -197,27 +153,6 @@ class FaviconLoad {
 
   load() {
     this._deferred = PromiseUtils.defer();
-<<<<<<< HEAD
-
-    // Clear the references when we succeed or fail.
-    let cleanup = () => {
-      this.channel = null;
-      this.dataBuffer = null;
-      this.stream = null;
-    };
-    this._deferred.promise.then(cleanup, cleanup);
-
-    this.dataBuffer = new StorageStream(STREAM_SEGMENT_SIZE, PR_UINT32_MAX);
-
-    // storage streams do not implement writeFrom so wrap it with a buffered stream.
-    this.stream = new BufferedOutputStream(this.dataBuffer.getOutputStream(0), STREAM_SEGMENT_SIZE * 2);
-||||||| merged common ancestors
-    // Clear the channel reference when we succeed or fail.
-    this._deferred.promise.then(
-      () => this.channel = null,
-      () => this.channel = null
-    );
-=======
 
     // Clear the references when we succeed or fail.
     let cleanup = () => {
@@ -234,7 +169,6 @@ class FaviconLoad {
       this.dataBuffer.getOutputStream(0),
       STREAM_SEGMENT_SIZE * 2
     );
->>>>>>> upstream-releases
 
     try {
       this.channel.asyncOpen(this);
@@ -255,19 +189,8 @@ class FaviconLoad {
 
   onStartRequest(request) {}
 
-<<<<<<< HEAD
-  onDataAvailable(request, context, inputStream, offset, count) {
-    this.stream.writeFrom(inputStream, count);
-||||||| merged common ancestors
-  onDataAvailable(request, context, inputStream, offset, count) {
-    let stream = new BinaryInputStream(inputStream);
-    let buffer = new ArrayBuffer(count);
-    stream.readArrayBuffer(buffer.byteLength, buffer);
-    this.buffers.push(new Uint8Array(buffer));
-=======
   onDataAvailable(request, inputStream, offset, count) {
     this.stream.writeFrom(inputStream, count);
->>>>>>> upstream-releases
   }
 
   asyncOnChannelRedirect(oldChannel, newChannel, flags, callback) {
@@ -367,20 +290,6 @@ class FaviconLoad {
         }
 
         blob = blob.slice(0, blob.size, type);
-<<<<<<< HEAD
-
-        let image;
-        try {
-          image = await promiseImage(this.dataBuffer.newInputStream(0), type);
-        } catch (e) {
-          throw Components.Exception(`Favicon at "${this.icon.iconUri.spec}" could not be decoded.`, Cr.NS_ERROR_FAILURE);
-        }
-
-        if (image.width > MAX_ICON_SIZE || image.height > MAX_ICON_SIZE) {
-          throw Components.Exception(`Favicon at "${this.icon.iconUri.spec}" is too large.`, Cr.NS_ERROR_FAILURE);
-        }
-||||||| merged common ancestors
-=======
 
         let image;
         try {
@@ -398,7 +307,6 @@ class FaviconLoad {
             Cr.NS_ERROR_FAILURE
           );
         }
->>>>>>> upstream-releases
       }
 
       let dataURL = await promiseBlobAsDataURL(blob);

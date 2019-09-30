@@ -37,26 +37,12 @@ class TimeEvent final : public Event {
 
   int32_t Detail() const { return mDetail; }
 
-<<<<<<< HEAD
-  nsPIDOMWindowOuter* GetView() const { return mView; }
-||||||| merged common ancestors
-  int32_t Detail() const
-  {
-    return mDetail;
-  }
-
-  nsPIDOMWindowOuter* GetView() const
-  {
-    return mView;
-  }
-=======
   Nullable<WindowProxyHolder> GetView() const {
     if (!mView) {
       return nullptr;
     }
     return WindowProxyHolder(mView->GetBrowsingContext());
   }
->>>>>>> upstream-releases
 
   TimeEvent* AsTimeEvent() final { return this; }
 
@@ -74,10 +60,4 @@ already_AddRefed<mozilla::dom::TimeEvent> NS_NewDOMTimeEvent(
     mozilla::dom::EventTarget* aOwner, nsPresContext* aPresContext,
     mozilla::InternalSMILTimeEvent* aEvent);
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_TimeEvent_h_
-||||||| merged common ancestors
-#endif // mozilla_dom_TimeEvent_h_
-=======
 #endif  // mozilla_dom_TimeEvent_h
->>>>>>> upstream-releases

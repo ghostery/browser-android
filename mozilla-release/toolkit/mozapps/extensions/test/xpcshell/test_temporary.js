@@ -53,20 +53,6 @@ add_task(async function setup() {
   }
 });
 
-const XPIS = {};
-
-add_task(async function setup() {
-  for (let n of [1, 2]) {
-    XPIS[n] = await createTempWebExtensionFile({
-      manifest: {
-        name: "Test",
-        version: `${n}.0`,
-        applications: {gecko: {id: ID}},
-      },
-    });
-  }
-});
-
 // Install a temporary add-on with no existing add-on present.
 // Restart and make sure it has gone away.
 add_task(async function test_new_temporary() {
@@ -187,52 +173,16 @@ add_task(async function test_replace_temporary() {
         manifest: {
           name: "Test",
           version: newversion,
-<<<<<<< HEAD
-          applications: {gecko: {id: ID}},
-        },
-      });
-||||||| merged common ancestors
-          name: "Test Bootstrap 1 (temporary)",
-        }),
-        "bootstrap.js": bootstrapJS,
-      };
-
-      let target;
-      if (!packed) {
-        // Unpacked extensions don't support signing, which means that
-        // our mock signing service is not able to give them a
-        // privileged signed state, and we can't install them on release
-        // builds.
-        if (!AppConstants.MOZ_ALLOW_LEGACY_EXTENSIONS) {
-          continue;
-        }
-
-        target = tempdir.clone();
-        target.append(ID);
-
-        await AddonTestUtils.promiseWriteFilesToDir(target.path, files);
-      } else {
-        target = tempdir.clone();
-        target.append(`${ID}.xpi`);
-=======
           applications: { gecko: { id: ID } },
         },
       });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      let target = await AddonTestUtils.promiseWriteFilesToExtension(tempdir.path, ID, files, !packed);
-||||||| merged common ancestors
-        await AddonTestUtils.promiseWriteFilesToZip(target.path, files);
-      }
-=======
       let target = await AddonTestUtils.promiseWriteFilesToExtension(
         tempdir.path,
         ID,
         files,
         !packed
       );
->>>>>>> upstream-releases
 
       let onShutdown = waitForBootstrapEvent("shutdown", ID);
       let onUpdate = waitForBootstrapEvent("update", ID);
@@ -439,26 +389,12 @@ add_task(async function test_replace_permanent() {
   let unpacked_addon = gTmpD.clone();
   unpacked_addon.append(ID);
 
-<<<<<<< HEAD
-  let files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      version: "2.0",
-      name: "Test Bootstrap 1 (temporary)",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpacked_addon, {
-    applications: {gecko: {id: ID}},
-    version: "2.0",
-    name: "Test Bootstrap 1 (temporary)",
-=======
   let files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       version: "2.0",
       name: "Test Bootstrap 1 (temporary)",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpacked_addon.path, files);
 
@@ -548,23 +484,11 @@ add_task(async function test_replace_temporary() {
   const unpackedAddon = gTmpD.clone();
   unpackedAddon.append(ID);
 
-<<<<<<< HEAD
-  let files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      version: "1.0",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpackedAddon, {
-    applications: {gecko: {id: ID}},
-    version: "1.0",
-=======
   let files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       version: "1.0",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpackedAddon.path, files);
 
@@ -572,23 +496,11 @@ add_task(async function test_replace_temporary() {
 
   // Increment the version number, re-install it, and make sure it
   // gets marked as an upgrade.
-<<<<<<< HEAD
-  files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      version: "2.0",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpackedAddon, {
-    applications: {gecko: {id: ID}},
-    version: "2.0",
-=======
   files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       version: "2.0",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpackedAddon.path, files);
 
@@ -633,23 +545,11 @@ add_task(async function test_replace_temporary_downgrade() {
   const unpackedAddon = gTmpD.clone();
   unpackedAddon.append(ID);
 
-<<<<<<< HEAD
-  let files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      version: "1.0",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpackedAddon, {
-    applications: {gecko: {id: ID}},
-    version: "1.0",
-=======
   let files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       version: "1.0",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpackedAddon.path, files);
 
@@ -657,23 +557,11 @@ add_task(async function test_replace_temporary_downgrade() {
 
   // Decrement the version number, re-install, and make sure
   // it gets marked as a downgrade.
-<<<<<<< HEAD
-  files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      version: "0.8",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpackedAddon, {
-    applications: {gecko: {id: ID}},
-    version: "0.8",
-=======
   files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       version: "0.8",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpackedAddon.path, files);
 
@@ -717,23 +605,11 @@ add_task(async function test_replace_same_version() {
   const unpackedAddon = gTmpD.clone();
   unpackedAddon.append(ID);
 
-<<<<<<< HEAD
-  let files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      version: "1.0",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpackedAddon, {
-    applications: {gecko: {id: ID}},
-    version: "1.0",
-=======
   let files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       version: "1.0",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpackedAddon.path, files);
 
@@ -810,26 +686,12 @@ add_task(async function test_replace_permanent_disabled() {
   let unpacked_addon = gTmpD.clone();
   unpacked_addon.append(ID);
 
-<<<<<<< HEAD
-  let files = ExtensionTestCommon.generateFiles({
-    manifest: {
-      applications: {gecko: {id: ID}},
-      name: "Test",
-      version: "2.0",
-    },
-||||||| merged common ancestors
-  await promiseWriteWebExtensionToDir(unpacked_addon, {
-    applications: {gecko: {id: ID}},
-    name: "Test Bootstrap 1 (temporary)",
-    version: "2.0",
-=======
   let files = ExtensionTestCommon.generateFiles({
     manifest: {
       applications: { gecko: { id: ID } },
       name: "Test",
       version: "2.0",
     },
->>>>>>> upstream-releases
   });
   await AddonTestUtils.promiseWriteFilesToDir(unpacked_addon.path, files);
 

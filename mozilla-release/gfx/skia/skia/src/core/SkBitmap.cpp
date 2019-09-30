@@ -6,13 +6,7 @@
  */
 
 #include "SkBitmap.h"
-<<<<<<< HEAD
 
-#include "SkAtomics.h"
-||||||| merged common ancestors
-=======
-
->>>>>>> upstream-releases
 #include "SkColorData.h"
 #include "SkConvertPixels.h"
 #include "SkData.h"
@@ -419,61 +413,7 @@ void* SkBitmap::getAddr(int x, int y) const {
 
     char* base = (char*)this->getPixels();
     if (base) {
-<<<<<<< HEAD
-        base += y * this->rowBytes();
-        switch (this->colorType()) {
-            case kRGBA_F32_SkColorType:
-                base += x << 4;
-                break;
-            case kRGBA_F16_SkColorType:
-                base += x << 3;
-                break;
-            case kRGB_888x_SkColorType:
-            case kRGBA_8888_SkColorType:
-            case kBGRA_8888_SkColorType:
-            case kRGB_101010x_SkColorType:
-            case kRGBA_1010102_SkColorType:
-                base += x << 2;
-                break;
-            case kARGB_4444_SkColorType:
-            case kRGB_565_SkColorType:
-                base += x << 1;
-                break;
-            case kAlpha_8_SkColorType:
-            case kGray_8_SkColorType:
-                base += x;
-                break;
-            default:
-                SkDEBUGFAIL("Can't return addr for config");
-                base = nullptr;
-                break;
-        }
-||||||| merged common ancestors
-        base += y * this->rowBytes();
-        switch (this->colorType()) {
-            case kRGBA_F16_SkColorType:
-                base += x << 3;
-                break;
-            case kRGBA_8888_SkColorType:
-            case kBGRA_8888_SkColorType:
-                base += x << 2;
-                break;
-            case kARGB_4444_SkColorType:
-            case kRGB_565_SkColorType:
-                base += x << 1;
-                break;
-            case kAlpha_8_SkColorType:
-            case kGray_8_SkColorType:
-                base += x;
-                break;
-            default:
-                SkDEBUGFAIL("Can't return addr for config");
-                base = nullptr;
-                break;
-        }
-=======
         base += (y * this->rowBytes()) + (x << this->shiftPerPixel());
->>>>>>> upstream-releases
     }
     return base;
 }

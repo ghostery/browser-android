@@ -20,15 +20,7 @@ const FAKE_BELOW_SEARCH_SNIPPET = FAKE_LOCAL_MESSAGES.find(
   msg => msg.id === "belowsearch"
 );
 
-<<<<<<< HEAD
-FAKE_MESSAGE = Object.assign({}, FAKE_MESSAGE, {provider: "fakeprovider"});
-const FAKE_BUNDLED_MESSAGE = {bundle: [{id: "foo", template: "onboarding", content: {title: "Foo", primary_button: {}, body: "Foo123"}}], extraTemplateStrings: {}, template: "onboarding"};
-||||||| merged common ancestors
-FAKE_MESSAGE = Object.assign({}, FAKE_MESSAGE, {provider: "fakeprovider"});
-const FAKE_BUNDLED_MESSAGE = {bundle: [{id: "foo", template: "onboarding", content: {title: "Foo", body: "Foo123"}}], extraTemplateStrings: {}, template: "onboarding"};
-=======
 FAKE_MESSAGE = Object.assign({}, FAKE_MESSAGE, { provider: "fakeprovider" });
->>>>>>> upstream-releases
 
 describe("ASRouterUtils", () => {
   let global;
@@ -65,11 +57,6 @@ describe("ASRouterUISurface", () => {
   let fetchStub;
 
   beforeEach(() => {
-<<<<<<< HEAD
-    sandbox = sinon.createSandbox();
-||||||| merged common ancestors
-    sandbox = sinon.sandbox.create();
-=======
     sandbox = sinon.createSandbox();
     headerPortal = document.createElement("div");
     footerPortal = document.createElement("div");
@@ -79,7 +66,6 @@ describe("ASRouterUISurface", () => {
       status: 200,
       json: () => Promise.resolve({}),
     });
->>>>>>> upstream-releases
     fakeDocument = {
       location: { href: "" },
       _listeners: new Set(),

@@ -22,18 +22,9 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(AbortController)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AbortController> AbortController::Constructor(
-    const GlobalObject& aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AbortController>
-AbortController::Constructor(const GlobalObject& aGlobal, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<AbortController> AbortController::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   if (!global) {
     aRv.Throw(NS_ERROR_FAILURE);

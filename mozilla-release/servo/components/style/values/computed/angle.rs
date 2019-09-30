@@ -4,28 +4,12 @@
 
 //! Computed angles.
 
-<<<<<<< HEAD
-use crate::values::distance::{ComputeSquaredDistance, SquaredDistance};
-use crate::values::CSSFloat;
-use num_traits::Zero;
-||||||| merged common ancestors
-use num_traits::Zero;
-use std::{f32, f64};
-=======
 use crate::values::distance::{ComputeSquaredDistance, SquaredDistance};
 use crate::values::CSSFloat;
 use crate::Zero;
->>>>>>> upstream-releases
 use std::f64::consts::PI;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use std::ops::Add;
 use std::{f32, f64};
-||||||| merged common ancestors
-use std::ops::Add;
-=======
-use std::{f32, f64};
->>>>>>> upstream-releases
 use style_traits::{CssWriter, ToCss};
 
 /// A computed angle in degrees.

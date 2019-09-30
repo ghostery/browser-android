@@ -1,38 +1,5 @@
 //! Data flow graph tracking Instructions, Values, and EBBs.
 
-<<<<<<< HEAD
-use entity::{self, PrimaryMap, SecondaryMap};
-use ir;
-use ir::builder::ReplaceBuilder;
-use ir::extfunc::ExtFuncData;
-use ir::instructions::{BranchInfo, CallInfo, InstructionData};
-use ir::types;
-use ir::{Ebb, FuncRef, Inst, SigRef, Signature, Type, Value, ValueList, ValueListPool};
-use isa::TargetIsa;
-use packed_option::ReservedValue;
-use std::fmt;
-use std::iter;
-use std::mem;
-use std::ops::{Index, IndexMut};
-use std::u16;
-use write::write_operands;
-||||||| merged common ancestors
-use entity::{EntityMap, PrimaryMap};
-use ir;
-use ir::builder::ReplaceBuilder;
-use ir::extfunc::ExtFuncData;
-use ir::instructions::{BranchInfo, CallInfo, InstructionData};
-use ir::types;
-use ir::{Ebb, FuncRef, Inst, SigRef, Signature, Type, Value, ValueList, ValueListPool};
-use isa::TargetIsa;
-use packed_option::ReservedValue;
-use std::fmt;
-use std::iter;
-use std::mem;
-use std::ops::{Index, IndexMut};
-use std::u16;
-use write::write_operands;
-=======
 use crate::entity::{self, PrimaryMap, SecondaryMap};
 use crate::ir;
 use crate::ir::builder::ReplaceBuilder;
@@ -52,7 +19,6 @@ use core::mem;
 use core::ops::{Index, IndexMut};
 use core::u16;
 use std::collections::HashMap;
->>>>>>> upstream-releases
 
 /// A data flow graph defines all instructions and extended basic blocks in a function as well as
 /// the data flow dependencies between them. The DFG also tracks values which can be either

@@ -22,21 +22,9 @@ class GetUserMediaRequest : public nsISupports, public nsWrapperCache {
   GetUserMediaRequest(nsPIDOMWindowInner* aInnerWindow,
                       const nsAString& aCallID,
                       const MediaStreamConstraints& aConstraints,
-<<<<<<< HEAD
-                      bool aIsSecure, bool aIsHandlingUserInput);
-  GetUserMediaRequest(nsPIDOMWindowInner* aInnerWindow, const nsAString& aRawId,
-                      const nsAString& aMediaSource);
-||||||| merged common ancestors
-                      bool aIsSecure,
-                      bool aIsHandlingUserInput);
-  GetUserMediaRequest(nsPIDOMWindowInner* aInnerWindow,
-                      const nsAString& aRawId,
-                      const nsAString& aMediaSource);
-=======
                       bool aIsSecure, bool aIsHandlingUserInput);
   GetUserMediaRequest(nsPIDOMWindowInner* aInnerWindow, const nsAString& aRawId,
                       const nsAString& aMediaSource, bool aIsHandlingUserInput);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(GetUserMediaRequest)

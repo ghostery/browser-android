@@ -40,15 +40,7 @@ add_task(async function test_sideloading() {
     iconURL: "foo-icon.png",
   });
 
-<<<<<<< HEAD
-  const ID2 = "addon2@tests.mozilla.org";
   await createWebExtension({
-||||||| merged common ancestors
-  const ID2 = "addon2@tests.mozilla.org";
-  await createXULExtension({
-=======
-  await createWebExtension({
->>>>>>> upstream-releases
     id: ID2,
     name: "Test 2",
     permissions: ["<all_urls>"],
@@ -66,15 +58,6 @@ add_task(async function test_sideloading() {
 
   sideloaded.sort((a, b) => a.id.localeCompare(b.id));
 
-<<<<<<< HEAD
-  deepEqual(sideloaded.map(a => a.id),
-            [ID1, ID2, ID3],
-            "Got the correct sideload add-ons");
-||||||| merged common ancestors
-  deepEqual(sideloaded.map(a => a.id),
-            [ID1, ID2, ID3, ID4],
-            "Got the correct sideload add-ons");
-=======
   deepEqual(
     sideloaded.map(a => a.id),
     [ID1, ID2, ID3],
@@ -97,17 +80,7 @@ add_task(async function test_getNewSideload_on_invalid_extension() {
       name: "Invalid Extension",
     },
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  deepEqual(sideloaded.map(a => a.userDisabled),
-            [true, true, true],
-            "All sideloaded add-ons are disabled");
-||||||| merged common ancestors
-  deepEqual(sideloaded.map(a => a.userDisabled),
-            [true, true, true, true],
-            "All sideloaded add-ons are disabled");
-=======
   // Create an invalid sideload by creating a file name that doesn't match the
   // actual extension id.
   await OS.File.copy(
@@ -141,5 +114,4 @@ add_task(async function test_getNewSideload_on_invalid_extension() {
     ],
     "Got the expected sideloaded extensions"
   );
->>>>>>> upstream-releases
 });

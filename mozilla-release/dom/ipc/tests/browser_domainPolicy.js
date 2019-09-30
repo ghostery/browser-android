@@ -123,36 +123,16 @@ async function test_domainPolicy() {
   info("Creating child process first, activating domainPolicy after");
   tab = await initProcess();
   activateDomainPolicy();
-<<<<<<< HEAD
-  var bl = policy.blocklist;
-  bl.add(Services.io.newURI('http://example.com'));
-||||||| merged common ancestors
-  var bl = policy.blacklist;
-  bl.add(Services.io.newURI('http://example.com'));
-=======
   var bl = policy.blocklist;
   bl.add(Services.io.newURI("http://example.com"));
->>>>>>> upstream-releases
   currentTask = runTest(testDomain("http://example.com"));
   checkAndCleanup(await currentTask);
 
   info("Activating domainPolicy first, creating child process after");
   activateDomainPolicy();
-<<<<<<< HEAD
-  var bl = policy.blocklist;
-  bl.add(Services.io.newURI('http://example.com'));
-  currentTask = initProcess();
-  await currentTask;
-||||||| merged common ancestors
-  var bl = policy.blacklist;
-  bl.add(Services.io.newURI('http://example.com'));
-  currentTask = initProcess();
-  await currentTask;
-=======
   bl = policy.blocklist;
   bl.add(Services.io.newURI("http://example.com"));
   tab = await initProcess();
->>>>>>> upstream-releases
   currentTask = runTest(testDomain("http://example.com"));
   checkAndCleanup(await currentTask);
 
@@ -225,75 +205,6 @@ async function test_domainPolicy() {
 
   function activate(isBlock, exceptions, superExceptions) {
     activateDomainPolicy();
-<<<<<<< HEAD
-						let set = isBlock ? policy.blocklist : policy.allowlist;
-						let superSet = isBlock ? policy.superBlocklist : policy.superAllowlist;
-						for (var e of exceptions)
-							set.add(makeURI(e));
-						for (var e of superExceptions)
-							superSet.add(makeURI(e));
-					};
-
-					info("Testing Blocklist-style Domain Policy");
-					info("Activating domainPolicy first, creating child process after");
-					activate(true, testPolicy.exceptions, testPolicy.superExceptions);
-					currentTask = initProcess();
-					await currentTask;
-					let results = [];
-					currentTask = runTest(testList(true, testPolicy.notExempt));
-					results = results.concat(await currentTask);
-					currentTask = runTest(testList(false, testPolicy.exempt));
-					results = results.concat(await currentTask);
-					checkAndCleanup(results);
-
-					info("Creating child process first, activating domainPolicy after");
-					currentTask = initProcess();
-					await currentTask;
-					activate(true, testPolicy.exceptions, testPolicy.superExceptions);
-					results = [];
-					currentTask = runTest(testList(true, testPolicy.notExempt));
-					results = results.concat(await currentTask);
-					currentTask = runTest(testList(false, testPolicy.exempt));
-					results = results.concat(await currentTask);
-					checkAndCleanup(results);
-
-					info("Testing Allowlist-style Domain Policy");
-  deferred = Promise.defer();
-||||||| merged common ancestors
-    let set = isBlack ? policy.blacklist : policy.whitelist;
-    let superSet = isBlack ? policy.superBlacklist : policy.superWhitelist;
-    for (var e of exceptions)
-      set.add(makeURI(e));
-    for (var e of superExceptions)
-      superSet.add(makeURI(e));
-  };
-
-  info("Testing Blacklist-style Domain Policy");
-  info("Activating domainPolicy first, creating child process after");
-  activate(true, testPolicy.exceptions, testPolicy.superExceptions);
-  currentTask = initProcess();
-  await currentTask;
-  let results = [];
-  currentTask = runTest(testList(true, testPolicy.notExempt));
-  results = results.concat(await currentTask);
-  currentTask = runTest(testList(false, testPolicy.exempt));
-  results = results.concat(await currentTask);
-  checkAndCleanup(results);
-
-  info("Creating child process first, activating domainPolicy after");
-  currentTask = initProcess();
-  await currentTask;
-  activate(true, testPolicy.exceptions, testPolicy.superExceptions);
-  results = [];
-  currentTask = runTest(testList(true, testPolicy.notExempt));
-  results = results.concat(await currentTask);
-  currentTask = runTest(testList(false, testPolicy.exempt));
-  results = results.concat(await currentTask);
-  checkAndCleanup(results);
-
-  info("Testing Whitelist-style Domain Policy");
-  deferred = Promise.defer();
-=======
     let set = isBlock ? policy.blocklist : policy.allowlist;
     let superSet = isBlock ? policy.superBlocklist : policy.superAllowlist;
     for (let e of exceptions) {
@@ -327,7 +238,6 @@ async function test_domainPolicy() {
 
   info("Testing Allowlist-style Domain Policy");
   let deferred = Promise.defer();
->>>>>>> upstream-releases
   currentTask = deferred.promise;
   SpecialPowers.pushPrefEnv({ set: [["javascript.enabled", false]] }, () => {
     return deferred.resolve();

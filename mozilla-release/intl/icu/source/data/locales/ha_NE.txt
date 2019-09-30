@@ -4,11 +4,6 @@ ha_NE{
     AuxExemplarCharacters{"[á à â é è ê í ì î ó ò ô p q {r\u0303} ú ù û v x {ʼy}]"}
     ExemplarCharacters{"[a b ɓ c d ɗ e f g h i j k ƙ l m n o r s {sh} t {ts} u w y ƴ z ʼ]"}
     ExemplarCharactersIndex{"[A B Ɓ C D Ɗ E F G H I J K Ƙ L M N O P Q R S T U V W X Y Ƴ Z]"}
-<<<<<<< HEAD
-    Version{"2.1.44.53"}
-||||||| merged common ancestors
-    Version{"2.1.39.37"}
-=======
     ExemplarCharactersNumbers{"[\\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]"}
     ExemplarCharactersPunctuation{"[\\- , ; \\: ! ? . ' ‘ ’ \u0022 “ ” ( ) \\[ \\] \\{ \\} ′ ″]"}
     NumberElements{
@@ -844,7 +839,6 @@ ha_NE{
         quotationEnd{"”"}
         quotationStart{"“"}
     }
->>>>>>> upstream-releases
     fields{
         day{
             dn{"Kwana"}

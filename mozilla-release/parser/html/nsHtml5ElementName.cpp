@@ -782,39 +782,6 @@ void nsHtml5ElementName::initializeStatics() {
       nsGkAtoms::caption, nsGkAtoms::caption, NS_NewHTMLTableCaptionElement,
       NS_NewSVGUnknownElement, nsHtml5TreeBuilder::CAPTION | SPECIAL | SCOPING);
   ELT_FIGCAPTION = new nsHtml5ElementName(
-<<<<<<< HEAD
-      nsGkAtoms::figcaption, nsGkAtoms::figcaption, NS_NewHTMLElement,
-      NS_NewSVGUnknownElement,
-      nsHtml5TreeBuilder::
-              ADDRESS_OR_ARTICLE_OR_ASIDE_OR_DETAILS_OR_DIALOG_OR_DIR_OR_FIGCAPTION_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_HGROUP_OR_MAIN_OR_NAV_OR_SECTION_OR_SUMMARY |
-          SPECIAL);
-  ELT_MN = new nsHtml5ElementName(
-      nsGkAtoms::mn_, nsGkAtoms::mn_, NS_NewHTMLUnknownElement,
-      NS_NewSVGUnknownElement,
-      nsHtml5TreeBuilder::MI_MO_MN_MS_MTEXT | SCOPING_AS_MATHML);
-  ELT_KEYGEN = new nsHtml5ElementName(
-      nsGkAtoms::keygen, nsGkAtoms::keygen, NS_NewHTMLSpanElement,
-      NS_NewSVGUnknownElement, nsHtml5TreeBuilder::KEYGEN);
-||||||| merged common ancestors
-    nsGkAtoms::figcaption,
-    nsGkAtoms::figcaption,
-    NS_NewHTMLElement,
-    NS_NewSVGUnknownElement,
-    nsHtml5TreeBuilder::
-        ADDRESS_OR_ARTICLE_OR_ASIDE_OR_DETAILS_OR_DIALOG_OR_DIR_OR_FIGCAPTION_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_HGROUP_OR_MAIN_OR_NAV_OR_SECTION_OR_SUMMARY |
-      SPECIAL);
-  ELT_MN = new nsHtml5ElementName(nsGkAtoms::mn_,
-                                  nsGkAtoms::mn_,
-                                  NS_NewHTMLUnknownElement,
-                                  NS_NewSVGUnknownElement,
-                                  nsHtml5TreeBuilder::MI_MO_MN_MS_MTEXT |
-                                    SCOPING_AS_MATHML);
-  ELT_KEYGEN = new nsHtml5ElementName(nsGkAtoms::keygen,
-                                      nsGkAtoms::keygen,
-                                      NS_NewHTMLSpanElement,
-                                      NS_NewSVGUnknownElement,
-                                      nsHtml5TreeBuilder::KEYGEN);
-=======
       nsGkAtoms::figcaption, nsGkAtoms::figcaption, NS_NewHTMLElement,
       NS_NewSVGUnknownElement,
       nsHtml5TreeBuilder::
@@ -827,7 +794,6 @@ void nsHtml5ElementName::initializeStatics() {
   ELT_KEYGEN = new nsHtml5ElementName(
       nsGkAtoms::keygen, nsGkAtoms::keygen, NS_NewHTMLElement,
       NS_NewSVGUnknownElement, nsHtml5TreeBuilder::KEYGEN | SPECIAL);
->>>>>>> upstream-releases
   ELT_MAIN = new nsHtml5ElementName(
       nsGkAtoms::main, nsGkAtoms::main, NS_NewHTMLElement,
       NS_NewSVGUnknownElement,

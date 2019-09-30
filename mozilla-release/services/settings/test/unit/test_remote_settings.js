@@ -2,28 +2,6 @@
 
 const { Constructor: CC } = Components;
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://testing-common/httpd.js");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-
-const IS_ANDROID = AppConstants.platform == "android";
-
-const { RemoteSettings } = ChromeUtils.import("resource://services-settings/remote-settings.js", {});
-const { UptakeTelemetry } = ChromeUtils.import("resource://services-common/uptake-telemetry.js", {});
-
-const BinaryInputStream = CC("@mozilla.org/binaryinputstream;1",
-  "nsIBinaryInputStream", "setInputStream");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://testing-common/httpd.js");
-
-const { RemoteSettings } = ChromeUtils.import("resource://services-settings/remote-settings.js", {});
-const { UptakeTelemetry } = ChromeUtils.import("resource://services-common/uptake-telemetry.js", {});
-
-const BinaryInputStream = CC("@mozilla.org/binaryinputstream;1",
-  "nsIBinaryInputStream", "setInputStream");
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
@@ -47,7 +25,6 @@ const BinaryInputStream = CC(
   "nsIBinaryInputStream",
   "setInputStream"
 );
->>>>>>> upstream-releases
 
 let server;
 let client;
@@ -83,14 +60,7 @@ function run_test() {
     `http://localhost:${server.identity.primaryPort}/v1`
   );
 
-<<<<<<< HEAD
-  client = RemoteSettings("password-fields");
-  clientWithDump = RemoteSettings("language-dictionaries");
-||||||| merged common ancestors
-  client = RemoteSettings("password-fields");
-=======
   Services.prefs.setCharPref("services.settings.loglevel", "debug");
->>>>>>> upstream-releases
 
   client = RemoteSettings("password-fields");
   clientWithDump = RemoteSettings("language-dictionaries");
@@ -145,15 +115,6 @@ add_task(async function test_records_obtained_from_server_are_stored_in_db() {
 });
 add_task(clear_state);
 
-<<<<<<< HEAD
-add_task(async function test_records_can_have_local_fields() {
-  const c = RemoteSettings("password-fields", { localFields: ["accepted"] });
-  await c.maybeSync(2000);
-||||||| merged common ancestors
-add_task(async function test_records_can_have_local_fields() {
-  const c = RemoteSettings("password-fields", { localFields: ["accepted"] });
-  await c.maybeSync(2000, Date.now());
-=======
 add_task(
   async function test_records_from_dump_are_listed_as_created_in_event() {
     if (IS_ANDROID) {
@@ -195,7 +156,6 @@ add_task(
   }
 );
 add_task(clear_state);
->>>>>>> upstream-releases
 
 add_task(async function test_sync_event_is_sent_even_if_up_to_date() {
   if (IS_ANDROID) {
@@ -213,20 +173,6 @@ add_task(async function test_sync_event_is_sent_even_if_up_to_date() {
   ok(received.current.length > 0, "Dump records are listed as created");
   equal(received.current.length, received.created.length);
 
-<<<<<<< HEAD
-  await c.maybeSync(2000); // Does not fail.
-||||||| merged common ancestors
-  await c.maybeSync(2000, Date.now()); // Does not fail.
-});
-add_task(clear_state);
-
-add_task(async function test_current_server_time_is_saved_in_pref() {
-  const serverTime = Date.now();
-  await client.maybeSync(2000, serverTime);
-  equal(client.lastCheckTimePref, "services.settings.main.password-fields.last_check");
-  const after = Services.prefs.getIntPref(client.lastCheckTimePref);
-  equal(after, Math.round(serverTime / 1000));
-=======
   const endHistogram = getUptakeTelemetrySnapshot(clientWithDump.identifier);
   const expectedIncrements = { [UptakeTelemetry.STATUS.UP_TO_DATE]: 1 };
   checkUptakeTelemetry(startHistogram, endHistogram, expectedIncrements);
@@ -245,7 +191,6 @@ add_task(async function test_records_can_have_local_fields() {
     accepted: true,
   });
   await c.maybeSync(3000); // Does not fail.
->>>>>>> upstream-releases
 });
 add_task(clear_state);
 
@@ -261,11 +206,6 @@ add_task(
       { useRecordId: true }
     );
 
-<<<<<<< HEAD
-  await client.maybeSync(2000);
-||||||| merged common ancestors
-  await client.maybeSync(2000, Date.now());
-=======
     await client.maybeSync(2000);
 
     const data = await client.get();
@@ -273,7 +213,6 @@ add_task(
   }
 );
 add_task(clear_state);
->>>>>>> upstream-releases
 
 add_task(
   async function test_get_loads_default_records_from_a_local_dump_when_database_is_empty() {
@@ -325,18 +264,6 @@ add_task(
 );
 add_task(clear_state);
 
-<<<<<<< HEAD
-add_task(async function test_get_loads_default_records_from_a_local_dump_when_database_is_empty() {
-  if (IS_ANDROID) {
-    // Skip test: we don't ship remote settings dumps on Android (see package-manifest).
-    return;
-  }
-||||||| merged common ancestors
-add_task(async function test_default_records_come_from_a_local_dump_when_database_is_empty() {
-  // When collection is unknown, no dump is loaded, and there is no error.
-  let data = await RemoteSettings("some-unknown-key").get();
-  equal(data.length, 0);
-=======
 add_task(async function test_get_ignores_synchronization_errors() {
   // The monitor endpoint won't contain any information about this collection.
   let data = await RemoteSettings("some-unknown-key").get();
@@ -370,18 +297,7 @@ add_task(async function test_get_can_verify_signature() {
   };
   await client.get({ verifySignature: true });
   ok(calledSignature.endsWith("abcdef"));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // When collection has a dump in services/settings/dumps/{bucket}/{collection}.json
-  const data = await clientWithDump.get();
-  notEqual(data.length, 0);
-  // No synchronization happened (responses are not mocked).
-||||||| merged common ancestors
-  // When collection has a dump in services/settings/dumps/{bucket}/{collection}.json
-  data = await RemoteSettings("certificates", { bucketNamePref: "services.blocklist.bucket" }).get();
-  notEqual(data.length, 0);
-=======
   // It throws when signature does not verify.
   const col = await client.openCollection();
   await col.delete("9d500963-d80e-3a91-6e74-66f3811b99cc");
@@ -391,19 +307,9 @@ add_task(async function test_get_can_verify_signature() {
     error = e;
   }
   equal(error.message, "Invalid content signature (main/password-fields)");
->>>>>>> upstream-releases
 });
 add_task(clear_state);
 
-<<<<<<< HEAD
-add_task(async function test_get_triggers_synchronization_when_database_is_empty() {
-  // The "password-fields" collection has no local dump, and no local data.
-  // Therefore a synchronization will happen.
-  const data = await client.get();
-||||||| merged common ancestors
-add_task(async function test_sync_event_provides_information_about_records() {
-  const serverTime = Date.now();
-=======
 add_task(async function test_get_does_not_verify_signature_if_load_dump() {
   if (IS_ANDROID) {
     // Skip test: we don't ship remote settings dumps on Android (see package-manifest).
@@ -417,28 +323,7 @@ add_task(async function test_get_does_not_verify_signature_if_load_dump() {
       return true;
     },
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Data comes from mocked HTTP response (see below).
-  equal(data.length, 1);
-  equal(data[0].selector, "#webpage[field-pwd]");
-});
-add_task(clear_state);
-
-add_task(async function test_get_ignores_synchronization_errors() {
-  // The monitor endpoint won't contain any information about this collection.
-  let data = await RemoteSettings("some-unknown-key").get();
-  equal(data.length, 0);
-  // The sync endpoints are not mocked, this fails internally.
-  data = await RemoteSettings("no-mocked-responses").get();
-  equal(data.length, 0);
-});
-add_task(clear_state);
-
-add_task(async function test_sync_event_provides_information_about_records() {
-||||||| merged common ancestors
-=======
   // When dump is loaded, signature is not verified.
   const records = await clientWithDump.get({ verifySignature: true });
   ok(records.length > 0, "dump is loaded");
@@ -510,7 +395,6 @@ add_task(
 add_task(clear_state);
 
 add_task(async function test_sync_event_provides_information_about_records() {
->>>>>>> upstream-releases
   let eventData;
   client.on("sync", ({ data }) => (eventData = data));
 
@@ -542,12 +426,6 @@ add_task(async function test_inspect_method() {
 
   const inspected = await RemoteSettings.inspect();
 
-<<<<<<< HEAD
-  // Assertion for global attributes.
-  const { mainBucket, serverURL, defaultSigner, collections, serverTimestamp } = inspected;
-||||||| merged common ancestors
-  const { mainBucket, serverURL, defaultSigner, collections } = inspected;
-=======
   // Assertion for global attributes.
   const {
     mainBucket,
@@ -556,7 +434,6 @@ add_task(async function test_inspect_method() {
     collections,
     serverTimestamp,
   } = inspected;
->>>>>>> upstream-releases
   const rsSigner = "remote-settings.content-signature.mozilla.org";
   equal(mainBucket, "main");
   equal(serverURL, `http://localhost:${server.identity.primaryPort}/v1`);
@@ -707,11 +584,6 @@ add_task(async function test_telemetry_reports_if_sync_fails() {
   const startHistogram = getUptakeTelemetrySnapshot(client.identifier);
 
   try {
-<<<<<<< HEAD
-    await client.maybeSync(10000);
-||||||| merged common ancestors
-    await client.maybeSync(10000, serverTime);
-=======
     await client.maybeSync(10000);
   } catch (e) {}
 
@@ -729,7 +601,6 @@ add_task(async function test_telemetry_reports_if_parsing_fails() {
 
   try {
     await client.maybeSync(10001);
->>>>>>> upstream-releases
   } catch (e) {}
 
   const endHistogram = getUptakeTelemetrySnapshot(client.identifier);
@@ -804,24 +675,6 @@ add_task(async function test_bucketname_changes_when_bucket_pref_changes() {
 });
 add_task(clear_state);
 
-<<<<<<< HEAD
-add_task(async function test_inspect_changes_the_list_when_bucket_pref_is_changed() {
-  if (IS_ANDROID) {
-     // Skip test: we don't ship remote settings dumps on Android (see package-manifest).
-    return;
-  }
-  // Register a client only listed in -preview...
-  RemoteSettings("crash-rate");
-
-  const { collections: before } = await RemoteSettings.inspect();
-||||||| merged common ancestors
-add_task(async function test_inspect_changes_the_list_when_bucket_pref_is_changed() {
-  // Register a client only listed in -preview...
-  RemoteSettings("crash-rate");
-
-  const { collections: before } = await RemoteSettings.inspect();
-  deepEqual(before.map(c => c.collection).sort(), ["password-fields"]);
-=======
 add_task(
   async function test_inspect_changes_the_list_when_bucket_pref_is_changed() {
     if (IS_ANDROID) {
@@ -855,14 +708,7 @@ add_task(
   }
 );
 add_task(clear_state);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // These two collections are listed in the main bucket in monitor/changes (one with dump, one registered).
-  deepEqual(before.map(c => c.collection).sort(), ["language-dictionaries", "password-fields"]);
-||||||| merged common ancestors
-  Services.prefs.setCharPref("services.settings.default_bucket", "main-preview");
-=======
 function handleResponse(request, response) {
   try {
     const sample = getSampleResponse(request, server.identity.primaryPort);
@@ -873,25 +719,7 @@ function handleResponse(request, response) {
         }`
       );
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Switch to main-preview bucket.
-  Services.prefs.setCharPref("services.settings.default_bucket", "main-preview");
-  const { collections: after, mainBucket } = await RemoteSettings.inspect();
-
-  // These two collections are listed in the main bucket in monitor/changes (both are registered).
-  deepEqual(after.map(c => c.collection).sort(), ["crash-rate", "password-fields"]);
-  equal(mainBucket, "main-preview");
-});
-add_task(clear_state);
-||||||| merged common ancestors
-  const { collections: after, mainBucket } = await RemoteSettings.inspect();
-  deepEqual(after.map(c => c.collection).sort(), ["crash-rate", "password-fields"]);
-  equal(mainBucket, "main-preview");
-});
-add_task(clear_state);
-=======
     response.setStatusLine(
       null,
       sample.status.status,
@@ -914,7 +742,6 @@ add_task(clear_state);
     info(e);
   }
 }
->>>>>>> upstream-releases
 
 function getSampleResponse(req, port) {
   const responses = {
@@ -955,68 +782,8 @@ function getSampleResponse(req, port) {
         "Content-Type: application/json; charset=UTF-8",
         "Server: waitress",
         `Date: ${new Date().toUTCString()}`,
-<<<<<<< HEAD
-        "Etag: \"5000\"",
-||||||| merged common ancestors
-        "Etag: \"4000\"",
-=======
         'Etag: "5000"',
->>>>>>> upstream-releases
       ],
-<<<<<<< HEAD
-      "status": { status: 200, statusText: "OK" },
-      "responseBody": {
-        "data": [{
-          "id": "4676f0c7-9757-4796-a0e8-b40a5a37a9c9",
-          "bucket": "main",
-          "collection": "unknown-locally",
-          "last_modified": 5000,
-        }, {
-          "id": "4676f0c7-9757-4796-a0e8-b40a5a37a9c9",
-          "bucket": "main",
-          "collection": "language-dictionaries",
-          "last_modified": 4000,
-        }, {
-          "id": "0af8da0b-3e03-48fb-8d0d-2d8e4cb7514d",
-          "bucket": "main",
-          "collection": "password-fields",
-          "last_modified": 3000,
-        }, {
-          "id": "4acda969-3bd3-4074-a678-ff311eeb076e",
-          "bucket": "main-preview",
-          "collection": "password-fields",
-          "last_modified": 2000,
-        }, {
-          "id": "58697bd1-315f-4185-9bee-3371befc2585",
-          "bucket": "main-preview",
-          "collection": "crash-rate",
-          "last_modified": 1000,
-        }],
-||||||| merged common ancestors
-      "status": { status: 200, statusText: "OK" },
-      "responseBody": {
-        "data": [{
-          "id": "4676f0c7-9757-4796-a0e8-b40a5a37a9c9",
-          "bucket": "main",
-          "collection": "unknown",
-          "last_modified": 4000,
-        }, {
-          "id": "0af8da0b-3e03-48fb-8d0d-2d8e4cb7514d",
-          "bucket": "main",
-          "collection": "password-fields",
-          "last_modified": 3000,
-        }, {
-          "id": "4acda969-3bd3-4074-a678-ff311eeb076e",
-          "bucket": "main-preview",
-          "collection": "password-fields",
-          "last_modified": 2000,
-        }, {
-          "id": "58697bd1-315f-4185-9bee-3371befc2585",
-          "bucket": "main-preview",
-          "collection": "crash-rate",
-          "last_modified": 1000,
-        }],
-=======
       status: { status: 200, statusText: "OK" },
       responseBody: {
         data: [
@@ -1051,7 +818,6 @@ function getSampleResponse(req, port) {
             last_modified: 1000,
           },
         ],
->>>>>>> upstream-releases
       },
     },
     "GET:/v1/buckets/main/collections/password-fields": {
@@ -1162,65 +928,6 @@ wNuvFqc=
         error: "Service Unavailable",
       },
     },
-<<<<<<< HEAD
-    "GET:/v1/buckets/monitor/collections/changes/records?collection=password-fields&bucket=main": {
-      "sampleHeaders": [
-        "Access-Control-Allow-Origin: *",
-        "Access-Control-Expose-Headers: Retry-After, Content-Length, Alert, Backoff",
-        "Content-Type: application/json; charset=UTF-8",
-        "Server: waitress",
-        `Date: ${new Date().toUTCString()}`,
-        "Etag: \"1338\"",
-      ],
-      "status": { status: 200, statusText: "OK" },
-      "responseBody": {
-        "data": [{
-          "id": "fe5758d0-c67a-42d0-bb4f-8f2d75106b65",
-          "bucket": "main",
-          "collection": "password-fields",
-          "last_modified": 1337,
-        }],
-      },
-    },
-    "GET:/v1/buckets/main/collections/password-fields/records?_expected=1337&_sort=-last_modified": {
-      "sampleHeaders": [
-        "Access-Control-Allow-Origin: *",
-        "Access-Control-Expose-Headers: Retry-After, Content-Length, Alert, Backoff",
-        "Content-Type: application/json; charset=UTF-8",
-        "Server: waitress",
-        "Etag: \"3000\"",
-      ],
-      "status": { status: 200, statusText: "OK" },
-      "responseBody": {
-        "data": [{
-          "id": "312cc78d-9c1f-4291-a4fa-a1be56f6cc69",
-          "last_modified": 3000,
-          "website": "https://some-website.com",
-          "selector": "#webpage[field-pwd]",
-        }],
-      },
-    },
-    "GET:/v1/buckets/monitor/collections/changes/records?collection=no-mocked-responses&bucket=main": {
-      "sampleHeaders": [
-        "Access-Control-Allow-Origin: *",
-        "Access-Control-Expose-Headers: Retry-After, Content-Length, Alert, Backoff",
-        "Content-Type: application/json; charset=UTF-8",
-        "Server: waitress",
-        `Date: ${new Date().toUTCString()}`,
-        "Etag: \"713705\"",
-      ],
-      "status": { status: 200, statusText: "OK" },
-      "responseBody": {
-        "data": [{
-          "id": "07a98d1b-7c62-4344-ab18-76856b3facd8",
-          "bucket": "main",
-          "collection": "no-mocked-responses",
-          "last_modified": 713705,
-        }],
-      },
-    },
-||||||| merged common ancestors
-=======
     "GET:/v1/buckets/main/collections/password-fields/records?_expected=10001&_sort=-last_modified&_since=10000": {
       sampleHeaders: [
         "Access-Control-Allow-Origin: *",
@@ -1432,7 +1139,6 @@ wNuvFqc=
         ],
       },
     },
->>>>>>> upstream-releases
   };
   return (
     responses[`${req.method}:${req.path}?${req.queryString}`] ||

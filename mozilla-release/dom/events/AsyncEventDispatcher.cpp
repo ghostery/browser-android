@@ -86,18 +86,9 @@ nsresult AsyncEventDispatcher::PostDOMEvent() {
     // Sometimes GetOwnerGlobal returns null because it uses
     // GetScriptHandlingObject rather than GetScopeObject.
     if (nsCOMPtr<nsINode> node = do_QueryInterface(mTarget)) {
-<<<<<<< HEAD
-      nsCOMPtr<nsIDocument> doc = node->OwnerDoc();
-      return doc->Dispatch(TaskCategory::Other,
-                           ensureDeletionWhenFailing.forget());
-||||||| merged common ancestors
-      nsCOMPtr<nsIDocument> doc = node->OwnerDoc();
-      return doc->Dispatch(TaskCategory::Other, ensureDeletionWhenFailing.forget());
-=======
       nsCOMPtr<Document> doc = node->OwnerDoc();
       return doc->Dispatch(TaskCategory::Other,
                            ensureDeletionWhenFailing.forget());
->>>>>>> upstream-releases
     }
   }
   return NS_DispatchToCurrentThread(this);

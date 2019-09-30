@@ -25,12 +25,7 @@ add_task(async function test() {
   await BrowserTestUtils.browserLoaded(browser);
 
   info("Opening a new window from this tab...");
-<<<<<<< HEAD
-  let newWinPromise = BrowserTestUtils.waitForNewWindow({url: BASE_URI});
-||||||| merged common ancestors
-=======
   let newWinPromise = BrowserTestUtils.waitForNewWindow({ url: BASE_URI });
->>>>>>> upstream-releases
   ContentTask.spawn(browser, BASE_URI, function(url) {
     content.window.newWindow = content.window.open(url, "_blank");
   });

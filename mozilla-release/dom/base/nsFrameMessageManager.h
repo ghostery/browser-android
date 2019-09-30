@@ -109,16 +109,8 @@ class MessageManagerCallback {
   virtual void DoGetRemoteType(nsAString& aRemoteType,
                                ErrorResult& aError) const;
 
-<<<<<<< HEAD
- protected:
-  bool BuildClonedMessageDataForParent(nsIContentParent* aParent,
-||||||| merged common ancestors
-protected:
-  bool BuildClonedMessageDataForParent(nsIContentParent* aParent,
-=======
  protected:
   bool BuildClonedMessageDataForParent(ContentParent* aParent,
->>>>>>> upstream-releases
                                        StructuredCloneData& aData,
                                        ClonedMessageData& aClonedData);
   bool BuildClonedMessageDataForChild(ContentChild* aChild,

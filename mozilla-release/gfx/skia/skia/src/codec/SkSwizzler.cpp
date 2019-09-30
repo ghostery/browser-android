@@ -879,55 +879,12 @@ std::unique_ptr<SkSwizzler> SkSwizzler::Make(const SkEncodedInfo& encodedInfo,
                             proc = &swizzle_grayalpha_to_n32_premul;
                             fastProc = &fast_swizzle_grayalpha_to_n32_premul;
                         }
-<<<<<<< HEAD
-                        break;
-                    default:
-                        return nullptr;
-                }
-                break;
-            case SkEncodedInfo::kXAlpha_Color:
-            case SkEncodedInfo::kGrayAlpha_Color:
-                switch (dstInfo.colorType()) {
-                    case kRGBA_8888_SkColorType:
-                    case kBGRA_8888_SkColorType:
-                        if (premultiply) {
-                            if (SkCodec::kYes_ZeroInitialized == zeroInit) {
-                                proc = &SkipLeadingGrayAlphaZerosThen
-                                        <swizzle_grayalpha_to_n32_premul>;
-                                fastProc = &SkipLeadingGrayAlphaZerosThen
-                                        <fast_swizzle_grayalpha_to_n32_premul>;
-                            } else {
-                                proc = &swizzle_grayalpha_to_n32_premul;
-                                fastProc = &fast_swizzle_grayalpha_to_n32_premul;
-                            }
-||||||| merged common ancestors
-                        break;
-                    default:
-                        return nullptr;
-                }
-                break;
-            case SkEncodedInfo::kGrayAlpha_Color:
-                switch (dstInfo.colorType()) {
-                    case kRGBA_8888_SkColorType:
-                    case kBGRA_8888_SkColorType:
-                        if (premultiply) {
-                            if (SkCodec::kYes_ZeroInitialized == zeroInit) {
-                                proc = &SkipLeadingGrayAlphaZerosThen
-                                        <swizzle_grayalpha_to_n32_premul>;
-                                fastProc = &SkipLeadingGrayAlphaZerosThen
-                                        <fast_swizzle_grayalpha_to_n32_premul>;
-                            } else {
-                                proc = &swizzle_grayalpha_to_n32_premul;
-                                fastProc = &fast_swizzle_grayalpha_to_n32_premul;
-                            }
-=======
                     } else {
                         if (SkCodec::kYes_ZeroInitialized == zeroInit) {
                             proc = &SkipLeadingGrayAlphaZerosThen
                                     <swizzle_grayalpha_to_n32_unpremul>;
                             fastProc = &SkipLeadingGrayAlphaZerosThen
                                     <fast_swizzle_grayalpha_to_n32_unpremul>;
->>>>>>> upstream-releases
                         } else {
                             proc = &swizzle_grayalpha_to_n32_unpremul;
                             fastProc = &fast_swizzle_grayalpha_to_n32_unpremul;
@@ -1011,43 +968,6 @@ std::unique_ptr<SkSwizzler> SkSwizzler::Make(const SkEncodedInfo& encodedInfo,
                     if (16 == encodedInfo.bitsPerComponent()) {
                         proc = &swizzle_rgb16_to_565;
                         break;
-<<<<<<< HEAD
-                    default:
-                        return nullptr;
-                }
-                break;
-            case SkEncodedInfo::k565_Color:
-                // Treat 565 exactly like RGB (since it's still encoded as 8 bits per component).
-                // We just mark as 565 when we have a hint that there are only 5/6/5 "significant"
-                // bits in each channel.
-            case SkEncodedInfo::kRGB_Color:
-                switch (dstInfo.colorType()) {
-                    case kRGBA_8888_SkColorType:
-                        if (16 == encodedInfo.bitsPerComponent()) {
-                            proc = &swizzle_rgb16_to_rgba;
-                            break;
-                        }
-
-                        SkASSERT(8 == encodedInfo.bitsPerComponent());
-                        proc = &swizzle_rgb_to_rgba;
-                        fastProc = &fast_swizzle_rgb_to_rgba;
-||||||| merged common ancestors
-                    default:
-                        return nullptr;
-                }
-                break;
-            case SkEncodedInfo::kRGB_Color:
-                switch (dstInfo.colorType()) {
-                    case kRGBA_8888_SkColorType:
-                        if (16 == encodedInfo.bitsPerComponent()) {
-                            proc = &swizzle_rgb16_to_rgba;
-                            break;
-                        }
-
-                        SkASSERT(8 == encodedInfo.bitsPerComponent());
-                        proc = &swizzle_rgb_to_rgba;
-                        fastProc = &fast_swizzle_rgb_to_rgba;
-=======
                     }
 
                     proc = &swizzle_rgb_to_565;
@@ -1062,7 +982,6 @@ std::unique_ptr<SkSwizzler> SkSwizzler::Make(const SkEncodedInfo& encodedInfo,
                     if (16 == encodedInfo.bitsPerComponent()) {
                         proc = premultiply ? &swizzle_rgba16_to_rgba_premul :
                                              &swizzle_rgba16_to_rgba_unpremul;
->>>>>>> upstream-releases
                         break;
                     }
 

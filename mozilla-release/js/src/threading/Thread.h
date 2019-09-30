@@ -23,27 +23,11 @@
 #include "vm/MutexIDs.h"
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#define THREAD_RETURN_TYPE unsigned int
-#define THREAD_CALL_API __stdcall
-||||||| merged common ancestors
-# define THREAD_RETURN_TYPE unsigned int
-# define THREAD_CALL_API __stdcall
-=======
 #  define THREAD_RETURN_TYPE unsigned int
 #  define THREAD_CALL_API __stdcall
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define THREAD_RETURN_TYPE void*
-#define THREAD_CALL_API
-||||||| merged common ancestors
-# define THREAD_RETURN_TYPE void*
-# define THREAD_CALL_API
-=======
 #  define THREAD_RETURN_TYPE void*
 #  define THREAD_CALL_API
->>>>>>> upstream-releases
 #endif
 
 namespace js {

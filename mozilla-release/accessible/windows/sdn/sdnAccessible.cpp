@@ -263,18 +263,9 @@ sdnAccessible::get_computedStyleForProperties(
   return S_OK;
 }
 
-<<<<<<< HEAD
-STDMETHODIMP
-sdnAccessible::scrollTo(boolean aScrollTopLeft) {
-||||||| merged common ancestors
-STDMETHODIMP
-sdnAccessible::scrollTo(boolean aScrollTopLeft)
-{
-=======
 // XXX Use MOZ_CAN_RUN_SCRIPT_BOUNDARY for now due to bug 1543294.
 MOZ_CAN_RUN_SCRIPT_BOUNDARY STDMETHODIMP
 sdnAccessible::scrollTo(boolean aScrollTopLeft) {
->>>>>>> upstream-releases
   DocAccessible* document = GetDocument();
   if (!document)  // that's IsDefunct check
     return CO_E_OBJNOTCONNECTED;

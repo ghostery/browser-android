@@ -32,22 +32,10 @@ bool DeserializeArrayBuffer(JSContext* cx,
   if (!data) return false;
   memcpy(data.get(), aBuffer.Elements(), aBuffer.Length());
 
-<<<<<<< HEAD
-  JSObject* obj =
-      JS_NewArrayBufferWithContents(cx, aBuffer.Length(), data.get());
-  if (!obj) return false;
-  // If JS_NewArrayBufferWithContents returns non-null, the ownership of
-||||||| merged common ancestors
-  JSObject* obj = JS_NewArrayBufferWithContents(cx, aBuffer.Length(), data.get());
-  if (!obj)
-      return false;
-  // If JS_NewArrayBufferWithContents returns non-null, the ownership of
-=======
   JSObject* obj =
       JS::NewArrayBufferWithContents(cx, aBuffer.Length(), data.get());
   if (!obj) return false;
   // If JS::NewArrayBufferWithContents returns non-null, the ownership of
->>>>>>> upstream-releases
   // the data is transfered to obj, so we release the ownership here.
   mozilla::Unused << data.release();
 

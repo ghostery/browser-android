@@ -137,25 +137,7 @@ class Talos(TestingMixin, MercurialScript, TooltoolMixin,
             "dest": "gecko_profile_interval",
             "type": "int",
             "default": 0,
-<<<<<<< HEAD
             "help": argparse.SUPPRESS
-        }],
-        [["--gecko-profile"], {
-            "dest": "gecko_profile",
-            "action": "store_true",
-            "default": False,
-            "help": "Whether or not to profile the test run and save the profile results"
-        }],
-        [["--gecko-profile-interval"], {
-            "dest": "gecko_profile_interval",
-            "type": "int",
-            "default": 0,
-            "help": "The interval between samples taken by the profiler (milliseconds)"
-||||||| merged common ancestors
-            "help": "The interval between samples taken by the profiler (milliseconds)"
-=======
-            "help": argparse.SUPPRESS
->>>>>>> upstream-releases
         }],
         [["--gecko-profile"], {
             "dest": "gecko_profile",

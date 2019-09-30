@@ -71,34 +71,10 @@ static MOZ_ALWAYS_INLINE JSInlineString* NewInlineString(
 
 // Create a thin inline string if possible, and a fat inline string if not.
 template <typename CharT>
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE JSInlineString* NewInlineString(
-    JSContext* cx, HandleLinearString base, size_t start, size_t length) {
-  MOZ_ASSERT(JSInlineString::lengthFits<CharT>(length));
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE JSInlineString*
-NewInlineString(JSContext* cx, HandleLinearString base, size_t start, size_t length)
-{
-    MOZ_ASSERT(JSInlineString::lengthFits<CharT>(length));
-
-    CharT* chars;
-    JSInlineString* s = AllocateInlineString<CanGC>(cx, length, &chars);
-    if (!s) {
-        return nullptr;
-    }
-=======
 static MOZ_ALWAYS_INLINE JSInlineString* NewInlineString(
     JSContext* cx, HandleLinearString base, size_t start, size_t length) {
   MOZ_ASSERT(JSInlineString::lengthFits<CharT>(length));
 
-  CharT* chars;
-  JSInlineString* s = AllocateInlineString<CanGC>(cx, length, &chars);
-  if (!s) {
-    return nullptr;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   CharT* chars;
   JSInlineString* s = AllocateInlineString<CanGC>(cx, length, &chars);
   if (!s) {
@@ -109,46 +85,8 @@ static MOZ_ALWAYS_INLINE JSInlineString* NewInlineString(
   mozilla::PodCopy(chars, base->chars<CharT>(nogc) + start, length);
   chars[length] = 0;
   return s;
-||||||| merged common ancestors
-    JS::AutoCheckCannotGC nogc;
-    mozilla::PodCopy(chars, base->chars<CharT>(nogc) + start, length);
-    chars[length] = 0;
-    return s;
-=======
-  JS::AutoCheckCannotGC nogc;
-  mozilla::PodCopy(chars, base->chars<CharT>(nogc) + start, length);
-  chars[length] = 0;
-  return s;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename CharT>
-static MOZ_ALWAYS_INLINE JSFlatString* TryEmptyOrStaticString(
-    JSContext* cx, const CharT* chars, size_t n) {
-  // Measurements on popular websites indicate empty strings are pretty common
-  // and most strings with length 1 or 2 are in the StaticStrings table. For
-  // length 3 strings that's only about 1%, so we check n <= 2.
-  if (n <= 2) {
-    if (n == 0) {
-      return cx->emptyString();
-||||||| merged common ancestors
-template <typename CharT>
-static MOZ_ALWAYS_INLINE JSFlatString*
-TryEmptyOrStaticString(JSContext* cx, const CharT* chars, size_t n)
-{
-    // Measurements on popular websites indicate empty strings are pretty common
-    // and most strings with length 1 or 2 are in the StaticStrings table. For
-    // length 3 strings that's only about 1%, so we check n <= 2.
-    if (n <= 2) {
-        if (n == 0) {
-            return cx->emptyString();
-        }
-
-        if (JSFlatString* str = cx->staticStrings().lookup(chars, n)) {
-            return str;
-        }
-=======
 template <typename Chars>
 static MOZ_ALWAYS_INLINE JSFlatString* TryEmptyOrStaticString(JSContext* cx,
                                                               Chars chars,
@@ -159,19 +97,8 @@ static MOZ_ALWAYS_INLINE JSFlatString* TryEmptyOrStaticString(JSContext* cx,
   if (n <= 2) {
     if (n == 0) {
       return cx->emptyString();
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (JSFlatString* str = cx->staticStrings().lookup(chars, n)) {
-      return str;
-    }
-  }
-
-  return nullptr;
-||||||| merged common ancestors
-    return nullptr;
-=======
     if (JSFlatString* str = cx->staticStrings().lookup(chars, n)) {
       return str;
     }
@@ -186,7 +113,6 @@ static MOZ_ALWAYS_INLINE JSFlatString* TryEmptyOrStaticString(JSContext* cx,
                                                               CharT* chars,
                                                               size_t n) {
   return TryEmptyOrStaticString(cx, const_cast<const CharT*>(chars), n);
->>>>>>> upstream-releases
 }
 
 } /* namespace js */
@@ -235,38 +161,6 @@ MOZ_ALWAYS_INLINE void JSRope::init(JSContext* cx, JSString* left,
 }
 
 template <js::AllowGC allowGC>
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE JSRope* JSRope::new_(
-    JSContext* cx,
-    typename js::MaybeRooted<JSString*, allowGC>::HandleType left,
-    typename js::MaybeRooted<JSString*, allowGC>::HandleType right,
-    size_t length, js::gc::InitialHeap heap) {
-  if (!validateLength(cx, length)) {
-    return nullptr;
-  }
-  JSRope* str = js::Allocate<JSRope, allowGC>(cx, heap);
-  if (!str) {
-    return nullptr;
-  }
-  str->init(cx, left, right, length);
-  return str;
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE JSRope*
-JSRope::new_(JSContext* cx,
-             typename js::MaybeRooted<JSString*, allowGC>::HandleType left,
-             typename js::MaybeRooted<JSString*, allowGC>::HandleType right,
-             size_t length, js::gc::InitialHeap heap)
-{
-    if (!validateLength(cx, length)) {
-        return nullptr;
-    }
-    JSRope* str = js::Allocate<JSRope, allowGC>(cx, heap);
-    if (!str) {
-        return nullptr;
-    }
-    str->init(cx, left, right, length);
-    return str;
-=======
 MOZ_ALWAYS_INLINE JSRope* JSRope::new_(
     JSContext* cx,
     typename js::MaybeRooted<JSString*, allowGC>::HandleType left,
@@ -281,7 +175,6 @@ MOZ_ALWAYS_INLINE JSRope* JSRope::new_(
   }
   str->init(cx, left, right, length);
   return str;
->>>>>>> upstream-releases
 }
 
 MOZ_ALWAYS_INLINE void JSDependentString::init(JSContext* cx,
@@ -336,179 +229,45 @@ MOZ_ALWAYS_INLINE JSLinearString* JSDependentString::new_(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  JSDependentString* str =
-      js::Allocate<JSDependentString, js::NoGC>(cx, js::gc::DefaultHeap);
-  if (str) {
-    str->init(cx, baseArg, start, length);
-    return str;
-  }
-||||||| merged common ancestors
-    JSDependentString* str = js::Allocate<JSDependentString, js::NoGC>(cx, js::gc::DefaultHeap);
-    if (str) {
-        str->init(cx, baseArg, start, length);
-        return str;
-    }
-=======
   JSDependentString* str =
       js::AllocateString<JSDependentString, js::NoGC>(cx, js::gc::DefaultHeap);
   if (str) {
     str->init(cx, baseArg, start, length);
     return str;
   }
->>>>>>> upstream-releases
 
   js::RootedLinearString base(cx, baseArg);
 
-<<<<<<< HEAD
-  str = js::Allocate<JSDependentString>(cx, js::gc::DefaultHeap);
-  if (!str) {
-    return nullptr;
-  }
-  str->init(cx, base, start, length);
-  return str;
-||||||| merged common ancestors
-    str = js::Allocate<JSDependentString>(cx, js::gc::DefaultHeap);
-    if (!str) {
-        return nullptr;
-    }
-    str->init(cx, base, start, length);
-    return str;
-=======
   str = js::AllocateString<JSDependentString>(cx, js::gc::DefaultHeap);
   if (!str) {
     return nullptr;
   }
   str->init(cx, base, start, length);
   return str;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE void JSFlatString::init(const char16_t* chars,
-                                          size_t length) {
-  setLengthAndFlags(length, INIT_FLAT_FLAGS);
-  d.s.u2.nonInlineCharsTwoByte = chars;
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE void
-JSFlatString::init(const char16_t* chars, size_t length)
-{
-    setLengthAndFlags(length, INIT_FLAT_FLAGS);
-    d.s.u2.nonInlineCharsTwoByte = chars;
-=======
 MOZ_ALWAYS_INLINE void JSFlatString::init(const char16_t* chars,
                                           size_t length) {
   setLengthAndFlags(length, INIT_FLAT_FLAGS);
   // Check that the new buffer is located in the StringBufferArena
   checkStringCharsArena(chars);
   d.s.u2.nonInlineCharsTwoByte = chars;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE void JSFlatString::init(const JS::Latin1Char* chars,
-                                          size_t length) {
-  setLengthAndFlags(length, INIT_FLAT_FLAGS | LATIN1_CHARS_BIT);
-  d.s.u2.nonInlineCharsLatin1 = chars;
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE void
-JSFlatString::init(const JS::Latin1Char* chars, size_t length)
-{
-    setLengthAndFlags(length, INIT_FLAT_FLAGS | LATIN1_CHARS_BIT);
-    d.s.u2.nonInlineCharsLatin1 = chars;
-=======
 MOZ_ALWAYS_INLINE void JSFlatString::init(const JS::Latin1Char* chars,
                                           size_t length) {
   setLengthAndFlags(length, INIT_FLAT_FLAGS | LATIN1_CHARS_BIT);
   // Check that the new buffer is located in the StringBufferArena
   checkStringCharsArena(chars);
   d.s.u2.nonInlineCharsLatin1 = chars;
->>>>>>> upstream-releases
 }
 
 template <js::AllowGC allowGC, typename CharT>
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE JSFlatString* JSFlatString::new_(JSContext* cx,
-                                                   const CharT* chars,
-                                                   size_t length) {
-  MOZ_ASSERT(chars[length] == CharT(0));
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE JSFlatString*
-JSFlatString::new_(JSContext* cx, const CharT* chars, size_t length)
-{
-    MOZ_ASSERT(chars[length] == CharT(0));
-
-    if (!validateLength(cx, length)) {
-        return nullptr;
-    }
-
-    JSFlatString* str;
-    if (cx->zone()->isAtomsZone()) {
-        str = js::Allocate<js::NormalAtom, allowGC>(cx);
-    } else {
-        str = js::Allocate<JSFlatString, allowGC>(cx, js::gc::DefaultHeap);
-    }
-    if (!str) {
-        return nullptr;
-    }
-=======
 MOZ_ALWAYS_INLINE JSFlatString* JSFlatString::new_(
     JSContext* cx, js::UniquePtr<CharT[], JS::FreePolicy> chars,
     size_t length) {
   MOZ_ASSERT(chars[length] == CharT(0));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!validateLength(cx, length)) {
-    return nullptr;
-  }
-
-  JSFlatString* str;
-  if (cx->zone()->isAtomsZone()) {
-    str = js::Allocate<js::NormalAtom, allowGC>(cx);
-  } else {
-    str = js::Allocate<JSFlatString, allowGC>(cx, js::gc::DefaultHeap);
-  }
-  if (!str) {
-    return nullptr;
-  }
-
-  if (!str->isTenured()) {
-    // The chars pointer is only considered to be handed over to this
-    // function on a successful return. If the following registration
-    // fails, the string is partially initialized and must be made valid,
-    // or its finalizer may attempt to free uninitialized memory.
-    void* ptr = const_cast<void*>(static_cast<const void*>(chars));
-    if (!cx->runtime()->gc.nursery().registerMallocedBuffer(ptr)) {
-      str->init((JS::Latin1Char*)nullptr, 0);
-      if (allowGC) {
-        ReportOutOfMemory(cx);
-      }
-      return nullptr;
-    }
-  }
-
-  str->init(chars, length);
-  return str;
-||||||| merged common ancestors
-    if (!str->isTenured()) {
-        // The chars pointer is only considered to be handed over to this
-        // function on a successful return. If the following registration
-        // fails, the string is partially initialized and must be made valid,
-        // or its finalizer may attempt to free uninitialized memory.
-        void* ptr = const_cast<void*>(static_cast<const void*>(chars));
-        if (!cx->runtime()->gc.nursery().registerMallocedBuffer(ptr)) {
-            str->init((JS::Latin1Char*)nullptr, 0);
-            if (allowGC) {
-                ReportOutOfMemory(cx);
-            }
-            return nullptr;
-        }
-    }
-
-    str->init(chars, length);
-    return str;
-=======
   if (!validateLength(cx, length)) {
     return nullptr;
   }
@@ -542,7 +301,6 @@ MOZ_ALWAYS_INLINE JSFlatString* JSFlatString::new_(
 
   str->init(chars.release(), length);
   return str;
->>>>>>> upstream-releases
 }
 
 inline js::PropertyName* JSFlatString::toPropertyName(JSContext* cx) {
@@ -566,14 +324,8 @@ MOZ_ALWAYS_INLINE JSThinInlineString* JSThinInlineString::new_(JSContext* cx) {
     return (JSThinInlineString*)(js::Allocate<js::NormalAtom, allowGC>(cx));
   }
 
-<<<<<<< HEAD
-  return js::Allocate<JSThinInlineString, allowGC>(cx, js::gc::DefaultHeap);
-||||||| merged common ancestors
-    return js::Allocate<JSThinInlineString, allowGC>(cx, js::gc::DefaultHeap);
-=======
   return js::AllocateString<JSThinInlineString, allowGC>(cx,
                                                          js::gc::DefaultHeap);
->>>>>>> upstream-releases
 }
 
 template <js::AllowGC allowGC>
@@ -582,14 +334,8 @@ MOZ_ALWAYS_INLINE JSFatInlineString* JSFatInlineString::new_(JSContext* cx) {
     return (JSFatInlineString*)(js::Allocate<js::FatInlineAtom, allowGC>(cx));
   }
 
-<<<<<<< HEAD
-  return js::Allocate<JSFatInlineString, allowGC>(cx, js::gc::DefaultHeap);
-||||||| merged common ancestors
-    return js::Allocate<JSFatInlineString, allowGC>(cx, js::gc::DefaultHeap);
-=======
   return js::AllocateString<JSFatInlineString, allowGC>(cx,
                                                         js::gc::DefaultHeap);
->>>>>>> upstream-releases
 }
 
 template <>
@@ -632,36 +378,6 @@ MOZ_ALWAYS_INLINE void JSExternalString::init(const char16_t* chars,
   d.s.u3.externalFinalizer = fin;
 }
 
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE JSExternalString* JSExternalString::new_(
-    JSContext* cx, const char16_t* chars, size_t length,
-    const JSStringFinalizer* fin) {
-  if (!validateLength(cx, length)) {
-    return nullptr;
-  }
-  JSExternalString* str = js::Allocate<JSExternalString>(cx);
-  if (!str) {
-    return nullptr;
-  }
-  str->init(chars, length, fin);
-  cx->updateMallocCounter((length + 1) * sizeof(char16_t));
-  return str;
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE JSExternalString*
-JSExternalString::new_(JSContext* cx, const char16_t* chars, size_t length,
-                       const JSStringFinalizer* fin)
-{
-    if (!validateLength(cx, length)) {
-        return nullptr;
-    }
-    JSExternalString* str = js::Allocate<JSExternalString>(cx);
-    if (!str) {
-        return nullptr;
-    }
-    str->init(chars, length, fin);
-    cx->updateMallocCounter((length + 1) * sizeof(char16_t));
-    return str;
-=======
 MOZ_ALWAYS_INLINE JSExternalString* JSExternalString::new_(
     JSContext* cx, const char16_t* chars, size_t length,
     const JSStringFinalizer* fin) {
@@ -680,7 +396,6 @@ MOZ_ALWAYS_INLINE JSExternalString* JSExternalString::new_(
   js::AddCellMemory(str, nbytes, js::MemoryUse::StringContents);
 
   return str;
->>>>>>> upstream-releases
 }
 
 inline JSLinearString* js::StaticStrings::getUnitStringForElement(
@@ -713,78 +428,26 @@ inline void JSFlatString::finalize(js::FreeOp* fop) {
   MOZ_ASSERT(getAllocKind() != js::gc::AllocKind::FAT_INLINE_STRING);
   MOZ_ASSERT(getAllocKind() != js::gc::AllocKind::FAT_INLINE_ATOM);
 
-<<<<<<< HEAD
-  if (!isInline()) {
-    fop->free_(nonInlineCharsRaw());
-  }
-||||||| merged common ancestors
-    if (!isInline()) {
-        fop->free_(nonInlineCharsRaw());
-    }
-=======
   if (!isInline()) {
     fop->free_(this, nonInlineCharsRaw(), allocSize(),
                js::MemoryUse::StringContents);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JSFatInlineString::finalize(js::FreeOp* fop) {
-  MOZ_ASSERT(getAllocKind() == js::gc::AllocKind::FAT_INLINE_STRING);
-  MOZ_ASSERT(isInline());
-||||||| merged common ancestors
-inline void
-JSFatInlineString::finalize(js::FreeOp* fop)
-{
-    MOZ_ASSERT(getAllocKind() == js::gc::AllocKind::FAT_INLINE_STRING);
-    MOZ_ASSERT(isInline());
-=======
 inline size_t JSFlatString::allocSize() const {
   MOZ_ASSERT(!isInline());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Nothing to do.
-||||||| merged common ancestors
-    // Nothing to do.
-=======
   size_t charSize =
       hasLatin1Chars() ? sizeof(JS::Latin1Char) : sizeof(char16_t);
   size_t count = isExtensible() ? asExtensible().capacity() : length();
   return (count + 1) * charSize;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JSAtom::finalize(js::FreeOp* fop) {
-  MOZ_ASSERT(JSString::isAtom());
-  MOZ_ASSERT(JSString::isFlat());
-  MOZ_ASSERT(getAllocKind() == js::gc::AllocKind::ATOM);
-||||||| merged common ancestors
-inline void
-JSAtom::finalize(js::FreeOp* fop)
-{
-    MOZ_ASSERT(JSString::isAtom());
-    MOZ_ASSERT(JSString::isFlat());
-    MOZ_ASSERT(getAllocKind() == js::gc::AllocKind::ATOM);
-=======
 inline void JSFatInlineString::finalize(js::FreeOp* fop) {
   MOZ_ASSERT(getAllocKind() == js::gc::AllocKind::FAT_INLINE_STRING);
   MOZ_ASSERT(isInline());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!isInline()) {
-    fop->free_(nonInlineCharsRaw());
-  }
-||||||| merged common ancestors
-    if (!isInline()) {
-        fop->free_(nonInlineCharsRaw());
-    }
-=======
   // Nothing to do.
->>>>>>> upstream-releases
 }
 
 inline void js::FatInlineAtom::finalize(js::FreeOp* fop) {
@@ -794,33 +457,6 @@ inline void js::FatInlineAtom::finalize(js::FreeOp* fop) {
   // Nothing to do.
 }
 
-<<<<<<< HEAD
-inline void JSExternalString::finalize(js::FreeOp* fop) {
-  if (!JSString::isExternal()) {
-    // This started out as an external string, but was turned into a
-    // non-external string by JSExternalString::ensureFlat.
-    MOZ_ASSERT(isFlat());
-    fop->free_(nonInlineCharsRaw());
-    return;
-  }
-
-  const JSStringFinalizer* fin = externalFinalizer();
-  fin->finalize(fin, const_cast<char16_t*>(rawTwoByteChars()));
-||||||| merged common ancestors
-inline void
-JSExternalString::finalize(js::FreeOp* fop)
-{
-    if (!JSString::isExternal()) {
-        // This started out as an external string, but was turned into a
-        // non-external string by JSExternalString::ensureFlat.
-        MOZ_ASSERT(isFlat());
-        fop->free_(nonInlineCharsRaw());
-        return;
-    }
-
-    const JSStringFinalizer* fin = externalFinalizer();
-    fin->finalize(fin, const_cast<char16_t*>(rawTwoByteChars()));
-=======
 inline void JSExternalString::finalize(js::FreeOp* fop) {
   if (!JSString::isExternal()) {
     // This started out as an external string, but was turned into a
@@ -834,7 +470,6 @@ inline void JSExternalString::finalize(js::FreeOp* fop) {
 
   const JSStringFinalizer* fin = externalFinalizer();
   fin->finalize(fin, const_cast<char16_t*>(rawTwoByteChars()));
->>>>>>> upstream-releases
 }
 
 #endif /* vm_StringType_inl_h */

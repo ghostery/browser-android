@@ -2,23 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-use crate::cg;
-use crate::parse::ParseVariantAttrs;
-use crate::to_css::{CssFieldAttrs, CssInputAttrs, CssVariantAttrs};
-use proc_macro2::TokenStream;
-use quote::TokenStreamExt;
-||||||| merged common ancestors
-use cg;
-use parse::ParseVariantAttrs;
-use quote::Tokens;
-=======
 use crate::parse::ParseVariantAttrs;
 use crate::to_css::{CssFieldAttrs, CssInputAttrs, CssVariantAttrs};
 use derive_common::cg;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
->>>>>>> upstream-releases
 use syn::{Data, DeriveInput, Fields, Ident, Type};
 
 pub fn derive(mut input: DeriveInput) -> TokenStream {

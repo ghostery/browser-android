@@ -47,17 +47,6 @@ public:
         return GrBackendFormat(format, target);
     }
 
-<<<<<<< HEAD
-    static GrBackendFormat MakeVk(VkFormat format) {
-        return GrBackendFormat(format);
-    }
-
-#ifdef SK_METAL
-    static GrBackendFormat MakeMtl(GrMTLPixelFormat format) {
-||||||| merged common ancestors
-#ifdef SK_VULKAN
-    static GrBackendFormat MakeVK(VkFormat format) {
-=======
     static GrBackendFormat MakeVk(VkFormat format) {
         return GrBackendFormat(format, GrVkYcbcrConversionInfo());
     }
@@ -69,7 +58,6 @@ public:
 
 #ifdef SK_METAL
     static GrBackendFormat MakeMtl(GrMTLPixelFormat format) {
->>>>>>> upstream-releases
         return GrBackendFormat(format);
     }
 #endif
@@ -92,14 +80,6 @@ public:
     // If the backend API is Vulkan, this returns a pointer to a VkFormat. Otherwise
     // it returns nullptr
     const VkFormat* getVkFormat() const;
-<<<<<<< HEAD
-
-#ifdef SK_METAL
-    // If the backend API is Metal, this returns a pointer to a GrMTLPixelFormat. Otherwise
-    // it returns nullptr
-    const GrMTLPixelFormat* getMtlFormat() const;
-||||||| merged common ancestors
-=======
 
     const GrVkYcbcrConversionInfo* getVkYcbcrConversionInfo() const;
 
@@ -107,7 +87,6 @@ public:
     // If the backend API is Metal, this returns a pointer to a GrMTLPixelFormat. Otherwise
     // it returns nullptr
     const GrMTLPixelFormat* getMtlFormat() const;
->>>>>>> upstream-releases
 #endif
 
     // If the backend API is Mock, this returns a pointer to a GrPixelConfig. Otherwise
@@ -123,20 +102,10 @@ public:
 private:
     GrBackendFormat(GrGLenum format, GrGLenum target);
 
-<<<<<<< HEAD
-    GrBackendFormat(const VkFormat vkFormat);
-
-#ifdef SK_METAL
-    GrBackendFormat(const GrMTLPixelFormat mtlFormat);
-||||||| merged common ancestors
-#ifdef SK_VULKAN
-    GrBackendFormat(const VkFormat vkFormat);
-=======
     GrBackendFormat(const VkFormat vkFormat, const GrVkYcbcrConversionInfo&);
 
 #ifdef SK_METAL
     GrBackendFormat(const GrMTLPixelFormat mtlFormat);
->>>>>>> upstream-releases
 #endif
 
     GrBackendFormat(const GrPixelConfig config);
@@ -147,26 +116,11 @@ private:
     union {
         GrGLenum         fGLFormat; // the sized, internal format of the GL resource
         struct {
-<<<<<<< HEAD
-            GrGLenum fTarget; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL or GL_TEXTURE_RECTANGLE
-            GrGLenum fFormat; // the sized, internal format of the GL resource
-        } fGL;
-        VkFormat         fVkFormat;
-#ifdef SK_METAL
-        GrMTLPixelFormat fMtlFormat;
-||||||| merged common ancestors
-            GrGLenum fTarget; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL or GL_TEXTURE_RECTANGLE
-            GrGLenum fFormat; // the sized, internal format of the GL resource
-        } fGL;
-#ifdef SK_VULKAN
-        VkFormat      fVkFormat;
-=======
             VkFormat                 fFormat;
             GrVkYcbcrConversionInfo  fYcbcrConversionInfo;
         } fVk;
 #ifdef SK_METAL
         GrMTLPixelFormat fMtlFormat;
->>>>>>> upstream-releases
 #endif
         GrPixelConfig    fMockFormat;
     };
@@ -230,45 +184,16 @@ public:
     bool getMtlTextureInfo(GrMtlTextureInfo*) const;
 #endif
 
-<<<<<<< HEAD
-    // If the backend API is Mock, copies a snapshot of the GrMockTextureInfo struct into the passed
-    // in pointer and returns true. Otherwise returns false if the backend API is not Mock.
-    bool getMockTextureInfo(GrMockTextureInfo*) const;
-||||||| merged common ancestors
-    // If the backend API is Mock, this returns a pointer to the GrMockTextureInfo struct. Otherwise
-    // it returns nullptr.
-    const GrMockTextureInfo* getMockTextureInfo() const;
-=======
     // Get the GrBackendFormat for this texture (or an invalid format if this is not valid).
     GrBackendFormat getBackendFormat() const;
 
     // If the backend API is Mock, copies a snapshot of the GrMockTextureInfo struct into the passed
     // in pointer and returns true. Otherwise returns false if the backend API is not Mock.
     bool getMockTextureInfo(GrMockTextureInfo*) const;
->>>>>>> upstream-releases
 
     // Returns true if the backend texture has been initialized.
-<<<<<<< HEAD
     bool isValid() const { return fIsValid; }
 
-#if GR_TEST_UTILS
-    // We can remove the pixelConfig getter and setter once we remove the GrPixelConfig from the
-    // GrBackendTexture and plumb the GrPixelconfig manually throughout our code (or remove all use
-    // of GrPixelConfig in general).
-    GrPixelConfig pixelConfig() const { return fConfig; }
-    void setPixelConfig(GrPixelConfig config) { fConfig = config; }
-||||||| merged common ancestors
-    bool isValid() const { return fConfig != kUnknown_GrPixelConfig; }
-=======
-    bool isValid() const { return fIsValid; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    static bool TestingOnly_Equals(const GrBackendTexture& , const GrBackendTexture&);
-#endif
-||||||| merged common ancestors
-    GrPixelConfig testingOnly_getPixelConfig() const;
-=======
 #if GR_TEST_UTILS
     // We can remove the pixelConfig getter and setter once we remove the GrPixelConfig from the
     // GrBackendTexture and plumb the GrPixelconfig manually throughout our code (or remove all use
@@ -278,7 +203,6 @@ public:
 
     static bool TestingOnly_Equals(const GrBackendTexture& , const GrBackendTexture&);
 #endif
->>>>>>> upstream-releases
 
 private:
     // Friending for access to the GrPixelConfig

@@ -44,19 +44,9 @@ function testFirstTab() {
   return addTab(TAB1_URL).then(tab => {
     gTab1 = tab;
 
-<<<<<<< HEAD
-    return getTargetActorForUrl(gClient, TAB1_URL).then(form => {
-      ok(form, "Should find a target actor for the first tab.");
-      gTab1Actor = form.actor;
-||||||| merged common ancestors
-    return getTargetActorForUrl(gClient, TAB1_URL).then(grip => {
-      ok(grip, "Should find a target actor for the first tab.");
-      gTab1Actor = grip.actor;
-=======
     return getTargetActorForUrl(gClient, TAB1_URL).then(front => {
       ok(front, "Should find a target actor for the first tab.");
       gTab1Front = front;
->>>>>>> upstream-releases
     });
   });
 }
@@ -77,16 +67,8 @@ function testSecondTab() {
 
 function testRemoveTab() {
   return removeTab(gTab1).then(() => {
-<<<<<<< HEAD
-    return getTargetActorForUrl(gClient, TAB1_URL).then(form => {
-      ok(!form, "Shouldn't find a target actor for the first tab anymore.");
-||||||| merged common ancestors
-    return getTargetActorForUrl(gClient, TAB1_URL).then(grip => {
-      ok(!grip, "Shouldn't find a target actor for the first tab anymore.");
-=======
     return getTargetActorForUrl(gClient, TAB1_URL).then(front => {
       ok(!front, "Shouldn't find a target actor for the first tab anymore.");
->>>>>>> upstream-releases
     });
   });
 }
@@ -123,25 +105,8 @@ registerCleanupFunction(function() {
   gClient = null;
 });
 
-<<<<<<< HEAD
-async function getTargetActorForUrl(client, url) {
-  const { tabs } = await client.listTabs();
-  const targetActor = tabs.filter(form => form.url == url).pop();
-  return targetActor;
-||||||| merged common ancestors
-function getTargetActorForUrl(client, url) {
-  const deferred = promise.defer();
-
-  client.listTabs().then(response => {
-    const targetActor = response.tabs.filter(grip => grip.url == url).pop();
-    deferred.resolve(targetActor);
-  });
-
-  return deferred.promise;
-=======
 async function getTargetActorForUrl(client, url) {
   const tabs = await client.mainRoot.listTabs();
   const targetFront = tabs.find(front => front.url == url);
   return targetFront;
->>>>>>> upstream-releases
 }

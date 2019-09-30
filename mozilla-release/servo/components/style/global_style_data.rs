@@ -4,43 +4,14 @@
 
 //! Global style data
 
-<<<<<<< HEAD:mozilla-release/servo/components/style/gecko/global_style_data.rs
-use crate::context::StyleSystemOptions;
-use crate::gecko_bindings::bindings;
-use crate::parallel::STYLE_THREAD_STACK_SIZE_KB;
-use crate::shared_lock::SharedRwLock;
-use crate::thread_state;
-use num_cpus;
-||||||| merged common ancestors
-use context::StyleSystemOptions;
-use gecko_bindings::bindings::{Gecko_RegisterProfilerThread, Gecko_UnregisterProfilerThread};
-use gecko_bindings::bindings::Gecko_SetJemallocThreadLocalArena;
-use num_cpus;
-use parallel::STYLE_THREAD_STACK_SIZE_KB;
-=======
 use crate::context::StyleSystemOptions;
 #[cfg(feature = "gecko")]
 use crate::gecko_bindings::bindings;
 use crate::parallel::STYLE_THREAD_STACK_SIZE_KB;
 use crate::shared_lock::SharedRwLock;
 use crate::thread_state;
->>>>>>> upstream-releases:mozilla-release/servo/components/style/global_style_data.rs
 use rayon;
-<<<<<<< HEAD:mozilla-release/servo/components/style/gecko/global_style_data.rs
-use std::cmp;
-||||||| merged common ancestors
-use shared_lock::SharedRwLock;
-use std::cmp;
-=======
->>>>>>> upstream-releases:mozilla-release/servo/components/style/global_style_data.rs
 use std::env;
-<<<<<<< HEAD:mozilla-release/servo/components/style/gecko/global_style_data.rs
-use std::ffi::CString;
-||||||| merged common ancestors
-use std::ffi::CString;
-use thread_state;
-=======
->>>>>>> upstream-releases:mozilla-release/servo/components/style/global_style_data.rs
 
 /// Global style data
 pub struct GlobalStyleData {
@@ -68,25 +39,11 @@ fn thread_startup(_index: usize) {
     thread_state::initialize_layout_worker_thread();
     #[cfg(feature = "gecko")]
     unsafe {
-<<<<<<< HEAD:mozilla-release/servo/components/style/gecko/global_style_data.rs
-        bindings::Gecko_SetJemallocThreadLocalArena(true);
-    }
-    let name = thread_name(index);
-    let name = CString::new(name).unwrap();
-    unsafe {
-||||||| merged common ancestors
-        Gecko_SetJemallocThreadLocalArena(true);
-    }
-    let name = thread_name(index);
-    let name = CString::new(name).unwrap();
-    unsafe {
-=======
         use std::ffi::CString;
 
         bindings::Gecko_SetJemallocThreadLocalArena(true);
         let name = thread_name(_index);
         let name = CString::new(name).unwrap();
->>>>>>> upstream-releases:mozilla-release/servo/components/style/global_style_data.rs
         // Gecko_RegisterProfilerThread copies the passed name here.
         bindings::Gecko_RegisterProfilerThread(name.as_ptr());
     }

@@ -20,9 +20,9 @@
 #include "nsThreadUtils.h"
 
 #if defined(_MSC_VER)
-#define FUNC __FUNCSIG__
+#  define FUNC __FUNCSIG__
 #else
-#define FUNC __PRETTY_FUNCTION__
+#  define FUNC __PRETTY_FUNCTION__
 #endif
 
 namespace mozilla {
@@ -39,23 +39,6 @@ namespace extensions {
 using namespace mozilla::dom;
 using mozilla::ipc::IPCResult;
 
-<<<<<<< HEAD
-class StreamFilterParent final : public PStreamFilterParent,
-                                 public nsIStreamListener,
-                                 public nsIThreadRetargetableStreamListener,
-                                 public nsIRequest,
-                                 public StreamFilterBase {
- public:
-||||||| merged common ancestors
-class StreamFilterParent final
-  : public PStreamFilterParent
-  , public nsIStreamListener
-  , public nsIThreadRetargetableStreamListener
-  , public nsIRequest
-  , public StreamFilterBase
-{
-public:
-=======
 class StreamFilterParent final : public PStreamFilterParent,
                                  public nsIStreamListener,
                                  public nsIThreadRetargetableStreamListener,
@@ -64,7 +47,6 @@ class StreamFilterParent final : public PStreamFilterParent,
   friend class PStreamFilterParent;
 
  public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSISTREAMLISTENER
   NS_DECL_NSIREQUEST
@@ -106,37 +88,6 @@ class StreamFilterParent final : public PStreamFilterParent,
  protected:
   virtual ~StreamFilterParent();
 
-<<<<<<< HEAD
-  virtual IPCResult RecvWrite(Data&& aData) override;
-  virtual IPCResult RecvFlushedData() override;
-  virtual IPCResult RecvSuspend() override;
-  virtual IPCResult RecvResume() override;
-  virtual IPCResult RecvClose() override;
-  virtual IPCResult RecvDisconnect() override;
-  virtual IPCResult RecvDestroy() override;
-
-  virtual void DeallocPStreamFilterParent() override;
-
- private:
-  bool IPCActive() {
-    return (mState != State::Closed && mState != State::Disconnecting &&
-||||||| merged common ancestors
-  virtual IPCResult RecvWrite(Data&& aData) override;
-  virtual IPCResult RecvFlushedData() override;
-  virtual IPCResult RecvSuspend() override;
-  virtual IPCResult RecvResume() override;
-  virtual IPCResult RecvClose() override;
-  virtual IPCResult RecvDisconnect() override;
-  virtual IPCResult RecvDestroy() override;
-
-  virtual void DeallocPStreamFilterParent() override;
-
-private:
-  bool IPCActive()
-  {
-    return (mState != State::Closed &&
-            mState != State::Disconnecting &&
-=======
   IPCResult RecvWrite(Data&& aData);
   IPCResult RecvFlushedData();
   IPCResult RecvSuspend();
@@ -150,7 +101,6 @@ private:
  private:
   bool IPCActive() {
     return (mState != State::Closed && mState != State::Disconnecting &&
->>>>>>> upstream-releases
             mState != State::Disconnected);
   }
 

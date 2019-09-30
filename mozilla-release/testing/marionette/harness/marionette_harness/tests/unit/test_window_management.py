@@ -41,24 +41,8 @@ class TestNoSuchWindowContent(WindowManagerMixin, MarionetteTestCase):
 
     @skip_if_mobile("Fennec doesn't support other chrome windows")
     def test_closed_chrome_window_while_in_frame(self):
-<<<<<<< HEAD
-        win = self.open_chrome_window("chrome://marionette/content/test.xul")
-        self.marionette.switch_to_window(win)
-||||||| merged common ancestors
-
-        def open_window_with_js():
-            with self.marionette.using_context("chrome"):
-                self.marionette.execute_script("""
-                  window.open('chrome://marionette/content/test.xul',
-                              'foo', 'chrome,centerscreen');
-                """)
-
-        win = self.open_window(trigger=open_window_with_js)
-        self.marionette.switch_to_window(win)
-=======
         new_window = self.open_chrome_window("chrome://marionette/content/test.xul")
         self.marionette.switch_to_window(new_window)
->>>>>>> upstream-releases
         with self.marionette.using_context("chrome"):
             self.marionette.switch_to_frame("iframe")
         self.marionette.close_chrome_window()

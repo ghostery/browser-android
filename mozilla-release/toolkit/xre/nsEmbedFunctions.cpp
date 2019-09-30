@@ -56,20 +56,10 @@
 #include "base/process_util.h"
 #include "chrome/common/child_process.h"
 #if defined(MOZ_WIDGET_ANDROID)
-<<<<<<< HEAD
-#include "chrome/common/ipc_channel.h"
-#include "mozilla/jni/Utils.h"
-#endif  //  defined(MOZ_WIDGET_ANDROID)
-||||||| merged common ancestors
-#include "chrome/common/ipc_channel.h"
-#include "mozilla/jni/Utils.h"
-#endif //  defined(MOZ_WIDGET_ANDROID)
-=======
 #  include "chrome/common/ipc_channel.h"
 #  include "mozilla/jni/Utils.h"
 #  include "ProcessUtils.h"
 #endif  //  defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
 
 #include "mozilla/AbstractThread.h"
 #include "mozilla/FilePreferences.h"
@@ -138,19 +128,11 @@ using mozilla::_ipdltest::IPDLUnitTestProcessChild;
 #  include "jprof.h"
 #endif
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-#if defined(XP_WIN) && defined(MOZ_ENABLE_SKIA_PDF)
-#include "mozilla/widget/PDFiumProcessChild.h"
-#endif
-
-=======
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)
 #  include "mozilla/sandboxing/SandboxInitialization.h"
 #  include "mozilla/sandboxing/sandboxLogging.h"
 #endif
 
->>>>>>> upstream-releases
 #include "VRProcessChild.h"
 
 using namespace mozilla;
@@ -212,17 +194,8 @@ nsresult XRE_InitEmbedding2(nsIFile* aLibXULDirectory, nsIFile* aAppDirectory,
                                        aAppDirProvider);
   if (NS_FAILED(rv)) return rv;
 
-<<<<<<< HEAD
-  rv = NS_InitXPCOM2(nullptr, aAppDirectory, gDirServiceProvider);
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-  rv = NS_InitXPCOM2(nullptr, aAppDirectory, gDirServiceProvider);
-  if (NS_FAILED(rv))
-    return rv;
-=======
   rv = NS_InitXPCOM(nullptr, aAppDirectory, gDirServiceProvider);
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   // We do not need to autoregister components here. The CheckCompatibility()
   // bits in nsAppRunner.cpp check for an invalidation flag in
@@ -251,18 +224,6 @@ void XRE_TermEmbedding() {
   delete gDirServiceProvider;
 }
 
-<<<<<<< HEAD
-const char* XRE_ChildProcessTypeToString(GeckoProcessType aProcessType) {
-  return (aProcessType < GeckoProcessType_End)
-             ? kGeckoProcessTypeString[aProcessType]
-             : "invalid";
-||||||| merged common ancestors
-const char*
-XRE_ChildProcessTypeToString(GeckoProcessType aProcessType)
-{
-  return (aProcessType < GeckoProcessType_End) ?
-    kGeckoProcessTypeString[aProcessType] : "invalid";
-=======
 const char* XRE_ChildProcessTypeToString(GeckoProcessType aProcessType) {
   return (aProcessType < GeckoProcessType_End)
              ? kGeckoProcessTypeString[aProcessType]
@@ -282,7 +243,6 @@ const char* XRE_ChildProcessTypeToAnnotation(GeckoProcessType aProcessType) {
     default:
       return XRE_ChildProcessTypeToString(aProcessType);
   }
->>>>>>> upstream-releases
 }
 
 namespace mozilla {
@@ -318,28 +278,6 @@ void XRE_SetProcessType(const char* aProcessTypeString) {
   }
 }
 
-<<<<<<< HEAD
-// FIXME/bug 539522: this out-of-place function is stuck here because
-// IPDL wants access to this crashreporter interface, and
-// crashreporter is built in such a way to make that awkward
-bool XRE_TakeMinidumpForChild(uint32_t aChildPid, nsIFile** aDump,
-                              uint32_t* aSequence) {
-  return CrashReporter::TakeMinidumpForChild(aChildPid, aDump, aSequence);
-}
-
-||||||| merged common ancestors
-// FIXME/bug 539522: this out-of-place function is stuck here because
-// IPDL wants access to this crashreporter interface, and
-// crashreporter is built in such a way to make that awkward
-bool
-XRE_TakeMinidumpForChild(uint32_t aChildPid, nsIFile** aDump,
-                         uint32_t* aSequence)
-{
-  return CrashReporter::TakeMinidumpForChild(aChildPid, aDump, aSequence);
-}
-
-=======
->>>>>>> upstream-releases
 bool
 #if defined(XP_WIN)
 XRE_SetRemoteExceptionHandler(const char* aPipe /*= 0*/,
@@ -368,18 +306,8 @@ void SetTaskbarGroupId(const nsString& aId) {
 }
 #endif
 
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX)
-void AddContentSandboxLevelAnnotation() {
-||||||| merged common ancestors
-#if defined(MOZ_CONTENT_SANDBOX)
-void
-AddContentSandboxLevelAnnotation()
-{
-=======
 #if defined(MOZ_SANDBOX)
 void AddContentSandboxLevelAnnotation() {
->>>>>>> upstream-releases
   if (XRE_GetProcessType() == GeckoProcessType_Content) {
     int level = GetEffectiveContentSandboxLevel();
     CrashReporter::AnnotateCrashReport(
@@ -466,39 +394,7 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
   // Try to attach console to the parent process.
   // It will succeed when the parent process is a command line,
   // so that stdio will be displayed in it.
-<<<<<<< HEAD
-  if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-    // Change std handles to refer to new console handles.
-    // Before doing so, ensure that stdout/stderr haven't been
-    // redirected to a valid file
-    if (_fileno(stdout) == -1 || _get_osfhandle(fileno(stdout)) == -1)
-      freopen("CONOUT$", "w", stdout);
-    // Merge stderr into CONOUT$ since there isn't any `CONERR$`.
-    // http://msdn.microsoft.com/en-us/library/windows/desktop/ms683231%28v=vs.85%29.aspx
-    if (_fileno(stderr) == -1 || _get_osfhandle(fileno(stderr)) == -1)
-      freopen("CONOUT$", "w", stderr);
-    if (_fileno(stdin) == -1 || _get_osfhandle(fileno(stdin)) == -1)
-      freopen("CONIN$", "r", stdin);
-  }
-||||||| merged common ancestors
-  if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-    // Change std handles to refer to new console handles.
-    // Before doing so, ensure that stdout/stderr haven't been
-    // redirected to a valid file
-    if (_fileno(stdout) == -1 ||
-        _get_osfhandle(fileno(stdout)) == -1)
-        freopen("CONOUT$", "w", stdout);
-    // Merge stderr into CONOUT$ since there isn't any `CONERR$`.
-    // http://msdn.microsoft.com/en-us/library/windows/desktop/ms683231%28v=vs.85%29.aspx
-    if (_fileno(stderr) == -1 ||
-        _get_osfhandle(fileno(stderr)) == -1)
-        freopen("CONOUT$", "w", stderr);
-    if (_fileno(stdin) == -1 || _get_osfhandle(fileno(stdin)) == -1)
-        freopen("CONIN$", "r", stdin);
-  }
-=======
   UseParentConsole();
->>>>>>> upstream-releases
 
 #  if defined(MOZ_SANDBOX)
   if (aChildData->sandboxTargetServices) {
@@ -525,19 +421,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
   // Complete 'task_t' exchange for Mac OS X. This structure has the same size
   // regardless of architecture so we don't have any cross-arch issues here.
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-  if (aArgc < 1) return NS_ERROR_FAILURE;
-
-#if defined(MOZ_CONTENT_SANDBOX)
-  // Save the original number of arguments to pass to the sandbox
-  // setup routine which also uses the crash server argument.
-  int allArgc = aArgc;
-#endif /* MOZ_CONTENT_SANDBOX */
-
-||||||| merged common ancestors
-  if (aArgc < 1)
-    return NS_ERROR_FAILURE;
-=======
   if (aArgc < 1) return NS_ERROR_FAILURE;
 
 #  if defined(MOZ_SANDBOX)
@@ -546,7 +429,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
   int allArgc = aArgc;
 #  endif /* MOZ_SANDBOX */
 
->>>>>>> upstream-releases
   const char* const mach_port_name = aArgv[--aArgc];
 
   Maybe<recordreplay::AutoPassThroughThreadEvents> pt;
@@ -623,17 +505,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX)
-  std::string sandboxError;
-  if (!EarlyStartMacSandboxIfEnabled(allArgc, aArgv, sandboxError)) {
-    printf_stderr("Sandbox error: %s\n", sandboxError.c_str());
-    MOZ_CRASH("Sandbox initialization failed");
-  }
-#endif /* MOZ_CONTENT_SANDBOX */
-
-||||||| merged common ancestors
-=======
 #  if defined(MOZ_SANDBOX)
   std::string sandboxError;
   if (!GeckoChildProcessHost::StartMacSandbox(allArgc, aArgv, sandboxError)) {
@@ -642,7 +513,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
   }
 #  endif /* MOZ_SANDBOX */
 
->>>>>>> upstream-releases
   pt.reset();
 #endif /* XP_MACOSX */
 
@@ -709,24 +579,11 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
     if (prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0) != 0) {
       printf_stderr("Could not allow ptrace from any process.\n");
     }
-<<<<<<< HEAD
-#endif
-    printf_stderr(
-        "\n\nCHILDCHILDCHILDCHILD (process type %s)\n  debug me @ %d\n\n",
-        XRE_ChildProcessTypeToString(XRE_GetProcessType()),
-        base::GetCurrentProcId());
-||||||| merged common ancestors
-#endif
-    printf_stderr("\n\nCHILDCHILDCHILDCHILD (process type %s)\n  debug me @ %d\n\n",
-                  XRE_ChildProcessTypeToString(XRE_GetProcessType()),
-                  base::GetCurrentProcId());
-=======
 #  endif
     printf_stderr(
         "\n\nCHILDCHILDCHILDCHILD (process type %s)\n  debug me @ %d\n\n",
         XRE_ChildProcessTypeToString(XRE_GetProcessType()),
         base::GetCurrentProcId());
->>>>>>> upstream-releases
     sleep(GetDebugChildPauseTime());
   }
 #elif defined(OS_WIN)
@@ -753,40 +610,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
   base::ProcessId parentPID = strtol(parentPIDString, &end, 10);
   MOZ_ASSERT(!*end, "invalid parent PID");
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIFile> crashReportTmpDir;
-  if (XRE_GetProcessType() == GeckoProcessType_GPU ||
-      XRE_GetProcessType() == GeckoProcessType_RDD) {
-    aArgc--;
-    if (strlen(aArgv[aArgc])) {  // if it's empty, ignore it
-      nsresult rv =
-          XRE_GetFileFromPath(aArgv[aArgc], getter_AddRefs(crashReportTmpDir));
-      if (NS_FAILED(rv)) {
-        // If we don't have a valid tmp dir we can probably still run ok, but
-        // crash report .extra files might not get picked up by the parent
-        // process. Debug-assert because this shouldn't happen in practice.
-        MOZ_ASSERT(false, "GPU process started without valid tmp dir!");
-      }
-    }
-  }
-
-||||||| merged common ancestors
-  nsCOMPtr<nsIFile> crashReportTmpDir;
-  if (XRE_GetProcessType() == GeckoProcessType_GPU) {
-    aArgc--;
-    if (strlen(aArgv[aArgc])) { // if it's empty, ignore it
-      nsresult rv = XRE_GetFileFromPath(aArgv[aArgc], getter_AddRefs(crashReportTmpDir));
-      if (NS_FAILED(rv)) {
-        // If we don't have a valid tmp dir we can probably still run ok, but
-        // crash report .extra files might not get picked up by the parent
-        // process. Debug-assert because this shouldn't happen in practice.
-        MOZ_ASSERT(false, "GPU process started without valid tmp dir!");
-      }
-    }
-  }
-
-=======
->>>>>>> upstream-releases
   // While replaying, use the parent PID that existed while recording.
   parentPID = recordreplay::RecordReplayValue(parentPID);
 
@@ -823,34 +646,16 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
 
   MessageLoop::Type uiLoopType;
   switch (XRE_GetProcessType()) {
-<<<<<<< HEAD
-    case GeckoProcessType_Content:
-    case GeckoProcessType_GPU:
-    case GeckoProcessType_VR:
-    case GeckoProcessType_RDD:
-||||||| merged common ancestors
-  case GeckoProcessType_Content:
-  case GeckoProcessType_GPU:
-=======
     case GeckoProcessType_Content:
     case GeckoProcessType_GPU:
     case GeckoProcessType_VR:
     case GeckoProcessType_RDD:
     case GeckoProcessType_Socket:
->>>>>>> upstream-releases
       // Content processes need the XPCOM/chromium frankenventloop
       uiLoopType = MessageLoop::TYPE_MOZILLA_CHILD;
       break;
-<<<<<<< HEAD
-    case GeckoProcessType_GMPlugin:
-||||||| merged common ancestors
-  case GeckoProcessType_GMPlugin:
-  case GeckoProcessType_PDFium:
-  case GeckoProcessType_VR:
-=======
     case GeckoProcessType_GMPlugin:
     case GeckoProcessType_RemoteSandboxBroker:
->>>>>>> upstream-releases
       uiLoopType = MessageLoop::TYPE_DEFAULT;
       break;
     default:
@@ -918,13 +723,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
           process = new RDDProcessImpl(parentPID);
           break;
 
-<<<<<<< HEAD
-        default:
-          MOZ_CRASH("Unknown main thread class");
-||||||| merged common ancestors
-      default:
-        MOZ_CRASH("Unknown main thread class");
-=======
         case GeckoProcessType_Socket:
           process = new net::SocketProcessImpl(parentPID);
           break;
@@ -936,7 +734,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
 #endif
         default:
           MOZ_CRASH("Unknown main thread class");
->>>>>>> upstream-releases
       }
 
       if (!process->Init(aArgc, aArgv)) {
@@ -1222,18 +1019,8 @@ bool XRE_ShutdownTestShell() {
 }
 
 #ifdef MOZ_X11
-<<<<<<< HEAD
-void XRE_InstallX11ErrorHandler() {
-#ifdef MOZ_WIDGET_GTK
-||||||| merged common ancestors
-void
-XRE_InstallX11ErrorHandler()
-{
-#ifdef MOZ_WIDGET_GTK
-=======
 void XRE_InstallX11ErrorHandler() {
 #  ifdef MOZ_WIDGET_GTK
->>>>>>> upstream-releases
   InstallGdkErrorHandler();
 #  else
   InstallX11ErrorHandler();

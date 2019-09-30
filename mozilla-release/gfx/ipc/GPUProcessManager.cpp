@@ -30,13 +30,7 @@
 #include "mozilla/widget/PlatformWidgetTypes.h"
 #include "nsAppRunner.h"
 #ifdef MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING
-<<<<<<< HEAD
-#include "mozilla/widget/CompositorWidgetChild.h"
-||||||| merged common ancestors
-# include "mozilla/widget/CompositorWidgetChild.h"
-=======
 #  include "mozilla/widget/CompositorWidgetChild.h"
->>>>>>> upstream-releases
 #endif
 #include "nsBaseWidget.h"
 #include "nsContentUtils.h"
@@ -49,19 +43,9 @@
 #include "nsPrintfCString.h"
 
 #if defined(MOZ_WIDGET_ANDROID)
-<<<<<<< HEAD
-#include "mozilla/widget/AndroidUiThread.h"
-#include "mozilla/layers/UiCompositorControllerChild.h"
-#endif  // defined(MOZ_WIDGET_ANDROID)
-||||||| merged common ancestors
-#include "mozilla/widget/AndroidUiThread.h"
-#include "mozilla/layers/UiCompositorControllerChild.h"
-#endif // defined(MOZ_WIDGET_ANDROID)
-=======
 #  include "mozilla/widget/AndroidUiThread.h"
 #  include "mozilla/layers/UiCompositorControllerChild.h"
 #endif  // defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace gfx {
@@ -145,13 +129,6 @@ void GPUProcessManager::OnXPCOMShutdown() {
   CleanShutdown();
 }
 
-<<<<<<< HEAD
-void GPUProcessManager::LaunchGPUProcess() {
-||||||| merged common ancestors
-void
-GPUProcessManager::LaunchGPUProcess()
-{
-=======
 void GPUProcessManager::OnPreferenceChange(const char16_t* aData) {
   // A pref changed. If it's not on the blacklist, inform child processes.
   if (!dom::ContentParent::ShouldSyncPreference(aData)) {
@@ -172,7 +149,6 @@ void GPUProcessManager::OnPreferenceChange(const char16_t* aData) {
 }
 
 void GPUProcessManager::LaunchGPUProcess() {
->>>>>>> upstream-releases
   if (mProcess) {
     return;
   }
@@ -529,27 +505,6 @@ void GPUProcessManager::OnRemoteProcessDeviceReset(GPUProcessHost* aHost) {
   NotifyListenersOnCompositeDeviceReset();
 }
 
-<<<<<<< HEAD
-void GPUProcessManager::FallbackToSoftware(const char* aMessage) {
-  gfxConfig::SetFailed(Feature::HW_COMPOSITING, FeatureStatus::Blocked,
-                       aMessage);
-  gfxConfig::SetFailed(Feature::D3D11_COMPOSITING, FeatureStatus::Blocked,
-                       aMessage);
-  gfxConfig::SetFailed(Feature::DIRECT2D, FeatureStatus::Blocked, aMessage);
-||||||| merged common ancestors
-void
-GPUProcessManager::FallbackToSoftware(const char* aMessage)
-{
-  gfxConfig::SetFailed(Feature::HW_COMPOSITING,
-    FeatureStatus::Blocked,
-    aMessage);
-  gfxConfig::SetFailed(Feature::D3D11_COMPOSITING,
-    FeatureStatus::Blocked,
-    aMessage);
-  gfxConfig::SetFailed(Feature::DIRECT2D,
-    FeatureStatus::Blocked,
-    aMessage);
-=======
 void GPUProcessManager::FallbackToSoftware(const char* aMessage) {
   gfxConfig::SetFailed(Feature::HW_COMPOSITING, FeatureStatus::Blocked,
                        aMessage);
@@ -558,7 +513,6 @@ void GPUProcessManager::FallbackToSoftware(const char* aMessage) {
                        aMessage);
   gfxConfig::SetFailed(Feature::DIRECT2D, FeatureStatus::Blocked, aMessage);
 #endif
->>>>>>> upstream-releases
 }
 
 void GPUProcessManager::NotifyListenersOnCompositeDeviceReset() {
@@ -579,16 +533,9 @@ void GPUProcessManager::OnProcessUnexpectedShutdown(GPUProcessHost* aHost) {
     SprintfLiteral(disableMessage, "GPU process disabled after %d attempts",
                    mNumProcessAttempts);
     DisableGPUProcess(disableMessage);
-<<<<<<< HEAD
-  } else if (mNumProcessAttempts >
-                 uint32_t(gfxPrefs::GPUProcessMaxRestartsWithDecoder()) &&
-||||||| merged common ancestors
-  } else if (mNumProcessAttempts > uint32_t(gfxPrefs::GPUProcessMaxRestartsWithDecoder()) &&
-=======
   } else if (mNumProcessAttempts >
                  uint32_t(StaticPrefs::
                               layers_gpu_process_max_restarts_with_decoder()) &&
->>>>>>> upstream-releases
              mDecodeVideoOnGpuProcess) {
     mDecodeVideoOnGpuProcess = false;
     Telemetry::Accumulate(Telemetry::GPU_PROCESS_CRASH_FALLBACKS,
@@ -645,22 +592,10 @@ void GPUProcessManager::HandleProcessLost() {
   //      to re-request association with the compositor for the window
   //      owning the tab. The sequence of calls looks like:
   //        (a) [CONTENT] ContentChild::RecvReinitRendering
-<<<<<<< HEAD
-  //        (b) [CONTENT] TabChild::ReinitRendering
-  //        (c) [CONTENT] TabChild::SendEnsureLayersConnected
-  //        (d)      [UI] TabParent::RecvEnsureLayersConnected
-  //        (e)      [UI] RenderFrame::EnsureLayersConnected
-||||||| merged common ancestors
-  //        (b) [CONTENT] TabChild::ReinitRendering
-  //        (c) [CONTENT] TabChild::SendEnsureLayersConnected
-  //        (d)      [UI] TabParent::RecvEnsureLayersConnected
-  //        (e)      [UI] RenderFrameParent::EnsureLayersConnected
-=======
   //        (b) [CONTENT] BrowserChild::ReinitRendering
   //        (c) [CONTENT] BrowserChild::SendEnsureLayersConnected
   //        (d)      [UI] BrowserParent::RecvEnsureLayersConnected
   //        (e)      [UI] RenderFrame::EnsureLayersConnected
->>>>>>> upstream-releases
   //        (f)      [UI] CompositorBridgeChild::SendNotifyChildRecreated
   //
   //      Note that at step (e), RenderFrame will call GetLayerManager
@@ -722,14 +657,6 @@ void GPUProcessManager::RebuildInProcessSessions() {
   }
 }
 
-<<<<<<< HEAD
-void GPUProcessManager::NotifyRemoteActorDestroyed(
-    const uint64_t& aProcessToken) {
-||||||| merged common ancestors
-void
-GPUProcessManager::NotifyRemoteActorDestroyed(const uint64_t& aProcessToken)
-{
-=======
 void GPUProcessManager::NotifyDisablingWebRender() {
 #if defined(MOZ_WIDGET_ANDROID)
   for (const auto& session : mRemoteSessions) {
@@ -744,7 +671,6 @@ void GPUProcessManager::NotifyDisablingWebRender() {
 
 void GPUProcessManager::NotifyRemoteActorDestroyed(
     const uint64_t& aProcessToken) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     RefPtr<Runnable> task = mTaskFactory.NewRunnableMethod(
         &GPUProcessManager::NotifyRemoteActorDestroyed, aProcessToken);
@@ -896,24 +822,6 @@ RefPtr<CompositorSession> GPUProcessManager::CreateRemoteSession(
 #endif
 }
 
-<<<<<<< HEAD
-bool GPUProcessManager::CreateContentBridges(
-    base::ProcessId aOtherProcess,
-    ipc::Endpoint<PCompositorManagerChild>* aOutCompositor,
-    ipc::Endpoint<PImageBridgeChild>* aOutImageBridge,
-    ipc::Endpoint<PVRManagerChild>* aOutVRBridge,
-    ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutVideoManager,
-    nsTArray<uint32_t>* aNamespaces) {
-||||||| merged common ancestors
-bool
-GPUProcessManager::CreateContentBridges(base::ProcessId aOtherProcess,
-                                        ipc::Endpoint<PCompositorManagerChild>* aOutCompositor,
-                                        ipc::Endpoint<PImageBridgeChild>* aOutImageBridge,
-                                        ipc::Endpoint<PVRManagerChild>* aOutVRBridge,
-                                        ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutVideoManager,
-                                        nsTArray<uint32_t>* aNamespaces)
-{
-=======
 bool GPUProcessManager::CreateContentBridges(
     base::ProcessId aOtherProcess,
     ipc::Endpoint<PCompositorManagerChild>* aOutCompositor,
@@ -921,30 +829,16 @@ bool GPUProcessManager::CreateContentBridges(
     ipc::Endpoint<PVRManagerChild>* aOutVRBridge,
     ipc::Endpoint<PRemoteDecoderManagerChild>* aOutVideoManager,
     nsTArray<uint32_t>* aNamespaces) {
->>>>>>> upstream-releases
   if (!CreateContentCompositorManager(aOtherProcess, aOutCompositor) ||
       !CreateContentImageBridge(aOtherProcess, aOutImageBridge) ||
       !CreateContentVRManager(aOtherProcess, aOutVRBridge)) {
     return false;
   }
-<<<<<<< HEAD
-  // VideoDeocderManager is only supported in the GPU process, so we allow this
-  // to be fallible.
-  CreateContentVideoDecoderManager(aOtherProcess, aOutVideoManager);
-  // Allocates 3 namespaces(for CompositorManagerChild, CompositorBridgeChild
-  // and ImageBridgeChild)
-||||||| merged common ancestors
-  // VideoDeocderManager is only supported in the GPU process, so we allow this to be
-  // fallible.
-  CreateContentVideoDecoderManager(aOtherProcess, aOutVideoManager);
-  // Allocates 3 namespaces(for CompositorManagerChild, CompositorBridgeChild and ImageBridgeChild)
-=======
   // VideoDeocderManager is only supported in the GPU process, so we allow this
   // to be fallible.
   CreateContentRemoteDecoderManager(aOtherProcess, aOutVideoManager);
   // Allocates 3 namespaces(for CompositorManagerChild, CompositorBridgeChild
   // and ImageBridgeChild)
->>>>>>> upstream-releases
   aNamespaces->AppendElement(AllocateNamespace());
   aNamespaces->AppendElement(AllocateNamespace());
   aNamespaces->AppendElement(AllocateNamespace());
@@ -1044,24 +938,10 @@ bool GPUProcessManager::CreateContentVRManager(
   return true;
 }
 
-<<<<<<< HEAD
-void GPUProcessManager::CreateContentVideoDecoderManager(
-    base::ProcessId aOtherProcess,
-    ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutEndpoint) {
-  if (!EnsureGPUReady() || !StaticPrefs::MediaGpuProcessDecoder() ||
-||||||| merged common ancestors
-void
-GPUProcessManager::CreateContentVideoDecoderManager(base::ProcessId aOtherProcess,
-                                                    ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutEndpoint)
-{
-  if (!EnsureGPUReady() ||
-      !StaticPrefs::MediaGpuProcessDecoder() ||
-=======
 void GPUProcessManager::CreateContentRemoteDecoderManager(
     base::ProcessId aOtherProcess,
     ipc::Endpoint<PRemoteDecoderManagerChild>* aOutEndpoint) {
   if (!EnsureGPUReady() || !StaticPrefs::media_gpu_process_decoder() ||
->>>>>>> upstream-releases
       !mDecodeVideoOnGpuProcess) {
     return;
   }
@@ -1069,19 +949,8 @@ void GPUProcessManager::CreateContentRemoteDecoderManager(
   ipc::Endpoint<PRemoteDecoderManagerParent> parentPipe;
   ipc::Endpoint<PRemoteDecoderManagerChild> childPipe;
 
-<<<<<<< HEAD
-  nsresult rv = dom::PVideoDecoderManager::CreateEndpoints(
-      mGPUChild->OtherPid(), aOtherProcess, &parentPipe, &childPipe);
-||||||| merged common ancestors
-  nsresult rv = dom::PVideoDecoderManager::CreateEndpoints(
-    mGPUChild->OtherPid(),
-    aOtherProcess,
-    &parentPipe,
-    &childPipe);
-=======
   nsresult rv = PRemoteDecoderManager::CreateEndpoints(
       mGPUChild->OtherPid(), aOtherProcess, &parentPipe, &childPipe);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     gfxCriticalNote << "Could not create content video decoder: "
                     << hexa(int(rv));
@@ -1229,14 +1098,7 @@ class GPUMemoryReporter : public MemoryReportingProcess {
   bool SendRequestMemoryReport(const uint32_t& aGeneration,
                                const bool& aAnonymize,
                                const bool& aMinimizeMemoryUsage,
-<<<<<<< HEAD
-                               const dom::MaybeFileDesc& aDMDFile) override {
-||||||| merged common ancestors
-                               const dom::MaybeFileDesc& aDMDFile) override
-  {
-=======
                                const Maybe<FileDescriptor>& aDMDFile) override {
->>>>>>> upstream-releases
     GPUChild* child = GetChild();
     if (!child) {
       return false;

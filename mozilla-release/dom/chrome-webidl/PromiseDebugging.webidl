@@ -50,16 +50,8 @@ callback interface UncaughtRejectionObserver {
   void onConsumed(object p);
 };
 
-<<<<<<< HEAD
-[ChromeOnly, Exposed=Window]
-interface PromiseDebugging {
-||||||| merged common ancestors
-[ChromeOnly, Exposed=(Window,System)]
-interface PromiseDebugging {
-=======
 [ChromeOnly, Exposed=Window]
 namespace PromiseDebugging {
->>>>>>> upstream-releases
   /**
    * The various functions on this interface all expect to take promises but
    * don't want the WebIDL behavior of assimilating random passed-in objects

@@ -160,12 +160,6 @@ NS_IMETHODIMP ContentHandlerService::FillHandlerInfo(
     nsIHandlerInfo* aHandlerInfo, const nsACString& aOverrideType) {
   HandlerInfo info, returnedInfo;
   nsIHandlerInfoToHandlerInfo(aHandlerInfo, &info);
-<<<<<<< HEAD
-  mHandlerServiceChild->SendFillHandlerInfo(info, nsCString(aOverrideType),
-                                            &returnedInfo);
-||||||| merged common ancestors
-  mHandlerServiceChild->SendFillHandlerInfo(info, nsCString(aOverrideType), &returnedInfo);
-=======
   mHandlerServiceChild->SendFillHandlerInfo(info, nsCString(aOverrideType),
                                             &returnedInfo);
   CopyHanderInfoTonsIHandlerInfo(returnedInfo, aHandlerInfo);
@@ -187,7 +181,6 @@ NS_IMETHODIMP ContentHandlerService::GetMIMEInfoFromOS(
     return rv;
   }
 
->>>>>>> upstream-releases
   CopyHanderInfoTonsIHandlerInfo(returnedInfo, aHandlerInfo);
   return NS_OK;
 }
@@ -209,33 +202,15 @@ NS_IMETHODIMP ContentHandlerService::Remove(nsIHandlerInfo* aHandlerInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ContentHandlerService::ExistsForProtocol(const nsACString& aProtocolScheme,
-                                         bool* aRetval) {
-  if (!mHandlerServiceChild->SendExistsForProtocol(nsCString(aProtocolScheme),
-                                                   aRetval)) {
-||||||| merged common ancestors
-ContentHandlerService::ExistsForProtocol(const nsACString& aProtocolScheme, bool* aRetval)
-{
-  if (!mHandlerServiceChild->SendExistsForProtocol(nsCString(aProtocolScheme), aRetval)) {
-=======
 ContentHandlerService::ExistsForProtocolOS(const nsACString& aProtocolScheme,
                                            bool* aRetval) {
   if (!mHandlerServiceChild->SendExistsForProtocolOS(nsCString(aProtocolScheme),
                                                      aRetval)) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP ContentHandlerService::GetTypeFromExtension(
-    const nsACString& aFileExtension, nsACString& _retval) {
-||||||| merged common ancestors
-NS_IMETHODIMP ContentHandlerService::GetTypeFromExtension(const nsACString & aFileExtension, nsACString & _retval)
-{
-=======
 NS_IMETHODIMP
 ContentHandlerService::ExistsForProtocol(const nsACString& aProtocolScheme,
                                          bool* aRetval) {
@@ -248,7 +223,6 @@ ContentHandlerService::ExistsForProtocol(const nsACString& aProtocolScheme,
 
 NS_IMETHODIMP ContentHandlerService::GetTypeFromExtension(
     const nsACString& aFileExtension, nsACString& _retval) {
->>>>>>> upstream-releases
   nsCString* cachedType = nullptr;
   if (!!mExtToTypeMap.Get(aFileExtension, &cachedType) && !!cachedType) {
     _retval.Assign(*cachedType);
@@ -263,13 +237,6 @@ NS_IMETHODIMP ContentHandlerService::GetTypeFromExtension(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 NS_IMETHODIMP ContentHandlerService::GetApplicationDescription(
     const nsACString& aProtocolScheme, nsAString& aRetVal) {
   nsresult rv = NS_ERROR_FAILURE;
@@ -282,4 +249,3 @@ NS_IMETHODIMP ContentHandlerService::GetApplicationDescription(
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

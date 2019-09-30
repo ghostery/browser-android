@@ -269,14 +269,8 @@ public:
     }
 
 private:
-<<<<<<< HEAD
-    SkTArray<sk_sp<SkTypeface_AndroidSystem>> fStyles;
-||||||| merged common ancestors
-    SkTArray<sk_sp<SkTypeface_AndroidSystem>, true> fStyles;
-=======
     SkTArray<sk_sp<SkTypeface_AndroidSystem>> fStyles;
     SkString fFallbackFor;
->>>>>>> upstream-releases
 
     friend struct NameToFamily;
     friend class SkFontMgr_Android;

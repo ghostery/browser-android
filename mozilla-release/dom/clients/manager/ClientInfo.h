@@ -88,12 +88,6 @@ class ClientInfo final {
 
   // Get a main-thread nsIPrincipal for the client.  This may return nullptr
   // if the PrincipalInfo() fails to deserialize for some reason.
-<<<<<<< HEAD
-  nsCOMPtr<nsIPrincipal> GetPrincipal() const;
-||||||| merged common ancestors
-  nsCOMPtr<nsIPrincipal>
-  GetPrincipal() const;
-=======
   nsCOMPtr<nsIPrincipal> GetPrincipal() const;
 
   const Maybe<mozilla::ipc::CSPInfo>& GetCspInfo() const;
@@ -101,7 +95,6 @@ class ClientInfo final {
 
   const Maybe<mozilla::ipc::CSPInfo>& GetPreloadCspInfo() const;
   void SetPreloadCspInfo(const mozilla::ipc::CSPInfo& aPreloadCSPInfo);
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

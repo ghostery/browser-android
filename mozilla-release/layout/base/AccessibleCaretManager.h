@@ -45,20 +45,9 @@ class Selection;
 // Please see the wiki page for more information.
 // https://wiki.mozilla.org/AccessibleCaret
 //
-<<<<<<< HEAD
-class AccessibleCaretManager {
- public:
-  explicit AccessibleCaretManager(nsIPresShell* aPresShell);
-||||||| merged common ancestors
-class AccessibleCaretManager
-{
-public:
-  explicit AccessibleCaretManager(nsIPresShell* aPresShell);
-=======
 class AccessibleCaretManager {
  public:
   explicit AccessibleCaretManager(PresShell* aPresShell);
->>>>>>> upstream-releases
   virtual ~AccessibleCaretManager();
 
   // Called by AccessibleCaretEventHub to inform us that PresShell is destroyed.
@@ -114,14 +103,7 @@ class AccessibleCaretManager {
 
   // Handle NotifySelectionChanged event from nsISelectionListener.
   MOZ_CAN_RUN_SCRIPT
-<<<<<<< HEAD
-  virtual nsresult OnSelectionChanged(nsIDocument* aDoc, dom::Selection* aSel,
-||||||| merged common ancestors
-  virtual nsresult OnSelectionChanged(nsIDocument* aDoc,
-                                      dom::Selection* aSel,
-=======
   virtual nsresult OnSelectionChanged(dom::Document* aDoc, dom::Selection* aSel,
->>>>>>> upstream-releases
                                       int16_t aReason);
   // Handle key event.
   MOZ_CAN_RUN_SCRIPT

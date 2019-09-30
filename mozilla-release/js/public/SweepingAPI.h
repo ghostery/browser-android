@@ -52,60 +52,6 @@ class WeakCacheBase : public mozilla::LinkedListElement<WeakCacheBase> {
 // constructor is used.
 template <typename T>
 class WeakCache : protected detail::WeakCacheBase,
-<<<<<<< HEAD
-                  public js::MutableWrappedPtrOperations<T, WeakCache<T>> {
-  T cache;
-
- public:
-  using Type = T;
-
-  template <typename... Args>
-  explicit WeakCache(Zone* zone, Args&&... args)
-      : WeakCacheBase(zone), cache(std::forward<Args>(args)...) {}
-  template <typename... Args>
-  explicit WeakCache(JSRuntime* rt, Args&&... args)
-      : WeakCacheBase(rt), cache(std::forward<Args>(args)...) {}
-
-  const T& get() const { return cache; }
-  T& get() { return cache; }
-
-  size_t sweep() override {
-    GCPolicy<T>::sweep(&cache);
-    return 0;
-  }
-
-  bool needsSweep() override { return cache.needsSweep(); }
-};
-||||||| merged common ancestors
-                  public js::MutableWrappedPtrOperations<T, WeakCache<T>>
-{
-    T cache;
-
-  public:
-    using Type = T;
-
-    template <typename... Args>
-    explicit WeakCache(Zone* zone, Args&&... args)
-      : WeakCacheBase(zone), cache(std::forward<Args>(args)...)
-    {}
-    template <typename... Args>
-    explicit WeakCache(JSRuntime* rt, Args&&... args)
-      : WeakCacheBase(rt), cache(std::forward<Args>(args)...)
-    {}
-
-    const T& get() const { return cache; }
-    T& get() { return cache; }
-
-    size_t sweep() override {
-        GCPolicy<T>::sweep(&cache);
-        return 0;
-    }
-
-    bool needsSweep() override {
-        return cache.needsSweep();
-    }
-};
-=======
                   public js::MutableWrappedPtrOperations<T, WeakCache<T>> {
   T cache;
 
@@ -129,7 +75,6 @@ class WeakCache : protected detail::WeakCacheBase,
 
   bool needsSweep() override { return cache.needsSweep(); }
 } JS_HAZ_NON_GC_POINTER;
->>>>>>> upstream-releases
 
 }  // namespace JS
 

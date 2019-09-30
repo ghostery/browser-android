@@ -15,16 +15,8 @@ use std::ffi::CString;
 use std::os::raw::c_void;
 use std::ptr;
 use std::sync::mpsc;
-<<<<<<< HEAD
-use tokio_uds::UnixStream;
 use ClientContext;
 use {assert_not_in_callback, set_in_callback};
-||||||| merged common ancestors
-use tokio_uds::UnixStream;
-=======
-use ClientContext;
-use {assert_not_in_callback, set_in_callback};
->>>>>>> upstream-releases
 
 // TODO: Remove and let caller allocate based on cubeb backend requirements.
 const SHM_AREA_SIZE: usize = 2 * 1024 * 1024;

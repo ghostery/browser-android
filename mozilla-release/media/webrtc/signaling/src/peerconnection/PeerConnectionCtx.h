@@ -71,16 +71,10 @@ class PeerConnectionCtx {
   // We could make these available only via accessors but it's too much trouble.
   std::map<const std::string, PeerConnectionImpl*> mPeerConnections;
 
-<<<<<<< HEAD
-  PeerConnectionCtx() : mGMPReady(false) {}
-||||||| merged common ancestors
-  PeerConnectionCtx() :  mGMPReady(false) {}
-=======
   PeerConnectionCtx()
       : mGMPReady(false),
         mTransportHandler(
             MediaTransportHandler::Create(GetMainThreadSerialEventTarget())) {}
->>>>>>> upstream-releases
   // This is a singleton, so don't copy construct it, etc.
   PeerConnectionCtx(const PeerConnectionCtx& other) = delete;
   void operator=(const PeerConnectionCtx& other) = delete;
@@ -109,19 +103,6 @@ class PeerConnectionCtx {
   bool mGMPReady;
   nsTArray<nsCOMPtr<nsIRunnable>> mQueuedJSEPOperations;
 
-<<<<<<< HEAD
-  static PeerConnectionCtx* gInstance;
-
- public:
-  static nsIThread* gMainThread;
-  static mozilla::StaticRefPtr<mozilla::PeerConnectionCtxObserver>
-      gPeerConnectionCtxObserver;
-||||||| merged common ancestors
-  static PeerConnectionCtx *gInstance;
-public:
-  static nsIThread *gMainThread;
-  static mozilla::StaticRefPtr<mozilla::PeerConnectionCtxObserver> gPeerConnectionCtxObserver;
-=======
   // Not initted, just for ICE logging stuff
   RefPtr<MediaTransportHandler> mTransportHandler;
 
@@ -131,7 +112,6 @@ public:
   static nsIThread* gMainThread;
   static mozilla::StaticRefPtr<mozilla::PeerConnectionCtxObserver>
       gPeerConnectionCtxObserver;
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

@@ -543,66 +543,6 @@ impl<'a> ReftestHarness<'a> {
                 );
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/reftest.rs
-        let comparison = test.compare(&reference);
-
-        if let Some(expected_draw_calls) = t.expected_draw_calls {
-            if expected_draw_calls != stats.total_draw_calls {
-                println!("REFTEST TEST-UNEXPECTED-FAIL | {} | {}/{} | expected_draw_calls",
-                    t,
-                    stats.total_draw_calls,
-                    expected_draw_calls
-                );
-                println!("REFTEST TEST-END | {}", t);
-                return false;
-            }
-        }
-        if let Some(expected_alpha_targets) = t.expected_alpha_targets {
-            if expected_alpha_targets != stats.alpha_target_count {
-                println!("REFTEST TEST-UNEXPECTED-FAIL | {} | {}/{} | alpha_target_count",
-                    t,
-                    stats.alpha_target_count,
-                    expected_alpha_targets
-                );
-                println!("REFTEST TEST-END | {}", t);
-                return false;
-            }
-        }
-        if let Some(expected_color_targets) = t.expected_color_targets {
-            if expected_color_targets != stats.color_target_count {
-                println!("REFTEST TEST-UNEXPECTED-FAIL | {} | {}/{} | color_target_count",
-                    t,
-                    stats.color_target_count,
-                    expected_color_targets
-||||||| merged common ancestors
-        let comparison = test.compare(&reference);
-
-        if let Some(expected_draw_calls) = t.expected_draw_calls {
-            if expected_draw_calls != stats.total_draw_calls {
-                println!("REFTEST TEST-UNEXPECTED-FAIL | {}/{} | expected_draw_calls",
-                    stats.total_draw_calls,
-                    expected_draw_calls
-                );
-                println!("REFTEST TEST-END | {}", t);
-                return false;
-            }
-        }
-        if let Some(expected_alpha_targets) = t.expected_alpha_targets {
-            if expected_alpha_targets != stats.alpha_target_count {
-                println!("REFTEST TEST-UNEXPECTED-FAIL | {}/{} | alpha_target_count",
-                    stats.alpha_target_count,
-                    expected_alpha_targets
-                );
-                println!("REFTEST TEST-END | {}", t);
-                return false;
-            }
-        }
-        if let Some(expected_color_targets) = t.expected_color_targets {
-            if expected_color_targets != stats.color_target_count {
-                println!("REFTEST TEST-UNEXPECTED-FAIL | {}/{} | color_target_count",
-                    stats.color_target_count,
-                    expected_color_targets
-=======
         for extra_check in t.extra_checks.iter() {
             if !extra_check.run(&results) {
                 println!(
@@ -610,7 +550,6 @@ impl<'a> ReftestHarness<'a> {
                     t,
                     extra_check,
                     results,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/reftest.rs
                 );
                 println!("REFTEST TEST-END | {}", t);
                 return false;
@@ -695,16 +634,10 @@ impl<'a> ReftestHarness<'a> {
         );
 
         // taking the bottom left sub-rectangle
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/reftest.rs
-        let rect = DeviceIntRect::new(DeviceIntPoint::new(0, window_size.height - size.height), size);
-||||||| merged common ancestors
-        let rect = DeviceUintRect::new(DeviceUintPoint::new(0, window_size.height - size.height), size);
-=======
         let rect = FramebufferIntRect::new(
             FramebufferIntPoint::new(0, window_size.height - size.height),
             FramebufferIntSize::new(size.width, size.height),
         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/reftest.rs
         let pixels = self.wrench.renderer.read_pixels_rgba8(rect);
         self.window.swap_buffers();
 

@@ -6,17 +6,8 @@ import { connect } from "react-redux";
 import { DiscoveryStreamBase } from "content-src/components/DiscoveryStreamBase/DiscoveryStreamBase";
 import { ErrorBoundary } from "content-src/components/ErrorBoundary/ErrorBoundary";
 import React from "react";
-<<<<<<< HEAD
-import {Search} from "content-src/components/Search/Search";
-import {Sections} from "content-src/components/Sections/Sections";
-||||||| merged common ancestors
-import {Search} from "content-src/components/Search/Search";
-import {Sections} from "content-src/components/Sections/Sections";
-import {StartupOverlay} from "content-src/components/StartupOverlay/StartupOverlay";
-=======
 import { Search } from "content-src/components/Search/Search";
 import { Sections } from "content-src/components/Sections/Sections";
->>>>>>> upstream-releases
 
 const PrefsButton = props => (
   <div className="prefs-button">
@@ -193,15 +184,8 @@ export class BaseContent extends React.PureComponent {
             <ConfirmDialog />
           </main>
         </div>
-<<<<<<< HEAD
-      </div>);
-||||||| merged common ancestors
-        {this.props.isFirstrun && <StartupOverlay />}
-      </div>);
-=======
       </div>
     );
->>>>>>> upstream-releases
   }
 }
 

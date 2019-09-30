@@ -72,20 +72,10 @@ void PublicKeyCredential::SetResponse(RefPtr<AuthenticatorResponse> aResponse) {
   mResponse = aResponse;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Promise>
-PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(
-    GlobalObject& aGlobal) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Promise>
-PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(GlobalObject& aGlobal)
-{
-=======
 /* static */
 already_AddRefed<Promise>
 PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(
     GlobalObject& aGlobal) {
->>>>>>> upstream-releases
   nsIGlobalObject* globalObject = xpc::CurrentNativeGlobal(aGlobal.Context());
   if (NS_WARN_IF(!globalObject)) {
     return nullptr;
@@ -114,14 +104,6 @@ PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(
   return promise.forget();
 }
 
-<<<<<<< HEAD
-void PublicKeyCredential::GetClientExtensionResults(
-    AuthenticationExtensionsClientOutputs& aResult) {
-||||||| merged common ancestors
-void
-PublicKeyCredential::GetClientExtensionResults(AuthenticationExtensionsClientOutputs& aResult)
-{
-=======
 /* static */
 already_AddRefed<Promise>
 PublicKeyCredential::IsExternalCTAP2SecurityKeySupported(
@@ -150,7 +132,6 @@ PublicKeyCredential::IsExternalCTAP2SecurityKeySupported(
 
 void PublicKeyCredential::GetClientExtensionResults(
     AuthenticationExtensionsClientOutputs& aResult) {
->>>>>>> upstream-releases
   aResult = mClientExtensionOutputs;
 }
 
@@ -159,14 +140,6 @@ void PublicKeyCredential::SetClientExtensionResultAppId(bool aResult) {
   mClientExtensionOutputs.mAppid.Value() = aResult;
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-
-} // namespace dom
-} // namespace mozilla
-=======
 void PublicKeyCredential::SetClientExtensionResultHmacSecret(
     bool aHmacCreateSecret) {
   mClientExtensionOutputs.mHmacCreateSecret.Construct();
@@ -175,4 +148,3 @@ void PublicKeyCredential::SetClientExtensionResultHmacSecret(
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

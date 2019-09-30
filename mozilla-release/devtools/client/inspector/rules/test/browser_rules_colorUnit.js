@@ -17,16 +17,8 @@ const TEST_URI = `
 
 add_task(async function() {
   const TESTS = [
-<<<<<<< HEAD
-    {name: "hex", result: "#0f0"},
-    {name: "rgb", result: "rgb(0, 255, 0)"},
-||||||| merged common ancestors
-    {name: "hex", result: "#0f0"},
-    {name: "rgb", result: "rgb(0, 255, 0)"}
-=======
     { name: "hex", result: "#0f0" },
     { name: "rgb", result: "rgb(0, 255, 0)" },
->>>>>>> upstream-releases
   ];
 
   for (const { name, result } of TESTS) {

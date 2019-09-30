@@ -85,24 +85,11 @@ class TestUserData : public LayerUserData {
   virtual ~TestUserData() { Die(); }
 };
 
-<<<<<<< HEAD
-TEST(Layers, LayerConstructor) { TestContainerLayer layer(nullptr); }
-
-TEST(Layers, Defaults) {
-||||||| merged common ancestors
-
-TEST(Layers, LayerConstructor) {
-  TestContainerLayer layer(nullptr);
-}
-
-TEST(Layers, Defaults) {
-=======
 TEST(Layers, LayerConstructor)
 { TestContainerLayer layer(nullptr); }
 
 TEST(Layers, Defaults)
 {
->>>>>>> upstream-releases
   TestContainerLayer layer(nullptr);
   ASSERT_EQ(1.0, layer.GetOpacity());
   ASSERT_EQ(1.0f, layer.GetPostXScale());

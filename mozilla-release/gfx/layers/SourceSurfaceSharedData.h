@@ -279,16 +279,7 @@ class SourceSurfaceSharedData final : public DataSourceSurface {
  private:
   friend class SourceSurfaceSharedDataWrapper;
 
-<<<<<<< HEAD
-  ~SourceSurfaceSharedData() override {}
-||||||| merged common ancestors
-  ~SourceSurfaceSharedData() override
-  {
-    MOZ_ASSERT(mMapCount == 0);
-  }
-=======
   virtual ~SourceSurfaceSharedData() = default;
->>>>>>> upstream-releases
 
   void LockHandle() {
     MutexAutoLock lock(mMutex);

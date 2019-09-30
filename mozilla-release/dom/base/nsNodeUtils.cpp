@@ -57,98 +57,6 @@ enum class IsRemoveNotification {
 #endif
 
 // This macro expects the ownerDocument of content_ to be in scope as
-<<<<<<< HEAD
-// |nsIDocument* doc|
-#define IMPL_MUTATION_NOTIFICATION(func_, content_, params_, remove_)         \
-  PR_BEGIN_MACRO                                                              \
-  bool needsEnterLeave = doc->MayHaveDOMMutationObservers();                  \
-  if (needsEnterLeave) {                                                      \
-    nsDOMMutationObserver::EnterMutationHandling();                           \
-  }                                                                           \
-  nsINode* node = content_;                                                   \
-  COMPOSED_DOC_DECL                                                           \
-  NS_ASSERTION(node->OwnerDoc() == doc, "Bogus document");                    \
-  if (remove_ == IsRemoveNotification::Yes && node->GetComposedDoc()) {       \
-    if (nsIPresShell* shell = doc->GetObservingShell()) {                     \
-      shell->func_ params_;                                                   \
-    }                                                                         \
-  }                                                                           \
-  doc->BindingManager()->func_ params_;                                       \
-  nsINode* last;                                                              \
-  do {                                                                        \
-    nsINode::nsSlots* slots = node->GetExistingSlots();                       \
-    if (slots && !slots->mMutationObservers.IsEmpty()) {                      \
-      NS_OBSERVER_AUTO_ARRAY_NOTIFY_OBSERVERS(                                \
-          slots->mMutationObservers, nsIMutationObserver, 1, func_, params_); \
-    }                                                                         \
-    last = node;                                                              \
-    if (ShadowRoot* shadow = ShadowRoot::FromNode(node)) {                    \
-      node = shadow->GetHost();                                               \
-    } else {                                                                  \
-      node = node->GetParentNode();                                           \
-    }                                                                         \
-  } while (node);                                                             \
-  /* Whitelist NativeAnonymousChildListChange removal notifications from      \
-   * the assertion since it runs from UnbindFromTree, and thus we don't       \
-   * reach the document, but doesn't matter. */                               \
-  MOZ_ASSERT((last == doc) == wasInComposedDoc ||                             \
-             (remove_ == IsRemoveNotification::Yes &&                         \
-              !strcmp(#func_, "NativeAnonymousChildListChange")));            \
-  if (remove_ == IsRemoveNotification::No && last == doc) {                   \
-    if (nsIPresShell* shell = doc->GetObservingShell()) {                     \
-      shell->func_ params_;                                                   \
-    }                                                                         \
-  }                                                                           \
-  if (needsEnterLeave) {                                                      \
-    nsDOMMutationObserver::LeaveMutationHandling();                           \
-  }                                                                           \
-||||||| merged common ancestors
-// |nsIDocument* doc|
-#define IMPL_MUTATION_NOTIFICATION(func_, content_, params_, remove_)       \
-  PR_BEGIN_MACRO                                                            \
-  bool needsEnterLeave = doc->MayHaveDOMMutationObservers();                \
-  if (needsEnterLeave) {                                                    \
-    nsDOMMutationObserver::EnterMutationHandling();                         \
-  }                                                                         \
-  nsINode* node = content_;                                                 \
-  COMPOSED_DOC_DECL                                                         \
-  NS_ASSERTION(node->OwnerDoc() == doc, "Bogus document");                  \
-  if (remove_ == IsRemoveNotification::Yes && node->GetComposedDoc()) {     \
-    if (nsIPresShell* shell = doc->GetObservingShell()) {                   \
-      shell->func_ params_;                                                 \
-    }                                                                       \
-  }                                                                         \
-  doc->BindingManager()->func_ params_;                                     \
-  nsINode* last;                                                            \
-  do {                                                                      \
-    nsINode::nsSlots* slots = node->GetExistingSlots();                     \
-    if (slots && !slots->mMutationObservers.IsEmpty()) {                    \
-      NS_OBSERVER_AUTO_ARRAY_NOTIFY_OBSERVERS(                              \
-        slots->mMutationObservers, nsIMutationObserver, 1,                  \
-        func_, params_);                                                    \
-    }                                                                       \
-    last = node;                                                            \
-    if (ShadowRoot* shadow = ShadowRoot::FromNode(node)) {                  \
-      node = shadow->GetHost();                                             \
-    } else {                                                                \
-      node = node->GetParentNode();                                         \
-    }                                                                       \
-  } while (node);                                                           \
-  /* Whitelist NativeAnonymousChildListChange removal notifications from    \
-   * the assertion since it runs from UnbindFromTree, and thus we don't     \
-   * reach the document, but doesn't matter. */                             \
-  MOZ_ASSERT((last == doc) == wasInComposedDoc ||                           \
-             (remove_ == IsRemoveNotification::Yes &&                       \
-              !strcmp(#func_, "NativeAnonymousChildListChange")));          \
-  if (remove_ == IsRemoveNotification::No && last == doc) {                 \
-    if (nsIPresShell* shell = doc->GetObservingShell()) {                   \
-      shell->func_ params_;                                                 \
-    }                                                                       \
-  }                                                                         \
-  if (needsEnterLeave) {                                                    \
-    nsDOMMutationObserver::LeaveMutationHandling();                         \
-  }                                                                         \
-=======
 // |Document* doc|
 #define IMPL_MUTATION_NOTIFICATION(func_, content_, params_, remove_)         \
   PR_BEGIN_MACRO                                                              \
@@ -193,7 +101,6 @@ enum class IsRemoveNotification {
   if (needsEnterLeave) {                                                      \
     nsDOMMutationObserver::LeaveMutationHandling();                           \
   }                                                                           \
->>>>>>> upstream-releases
   PR_END_MACRO
 
 #define IMPL_ANIMATION_NOTIFICATION(func_, content_, params_) \
@@ -221,102 +128,29 @@ enum class IsRemoveNotification {
   }                                                           \
   PR_END_MACRO
 
-<<<<<<< HEAD
-void nsNodeUtils::CharacterDataWillChange(
-    nsIContent* aContent, const CharacterDataChangeInfo& aInfo) {
-  nsIDocument* doc = aContent->OwnerDoc();
-||||||| merged common ancestors
-void
-nsNodeUtils::CharacterDataWillChange(nsIContent* aContent,
-                                     const CharacterDataChangeInfo& aInfo)
-{
-  nsIDocument* doc = aContent->OwnerDoc();
-=======
 void nsNodeUtils::CharacterDataWillChange(
     nsIContent* aContent, const CharacterDataChangeInfo& aInfo) {
   Document* doc = aContent->OwnerDoc();
->>>>>>> upstream-releases
   IMPL_MUTATION_NOTIFICATION(CharacterDataWillChange, aContent,
                              (aContent, aInfo), IsRemoveNotification::No);
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::CharacterDataChanged(nsIContent* aContent,
-                                       const CharacterDataChangeInfo& aInfo) {
-  nsIDocument* doc = aContent->OwnerDoc();
-  IMPL_MUTATION_NOTIFICATION(CharacterDataChanged, aContent, (aContent, aInfo),
-                             IsRemoveNotification::No);
-||||||| merged common ancestors
-void
-nsNodeUtils::CharacterDataChanged(nsIContent* aContent,
-                                  const CharacterDataChangeInfo& aInfo)
-{
-  nsIDocument* doc = aContent->OwnerDoc();
-  IMPL_MUTATION_NOTIFICATION(CharacterDataChanged, aContent,
-                             (aContent, aInfo), IsRemoveNotification::No);
-=======
 void nsNodeUtils::CharacterDataChanged(nsIContent* aContent,
                                        const CharacterDataChangeInfo& aInfo) {
   Document* doc = aContent->OwnerDoc();
   doc->Changed();
   IMPL_MUTATION_NOTIFICATION(CharacterDataChanged, aContent, (aContent, aInfo),
                              IsRemoveNotification::No);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AttributeWillChange(Element* aElement, int32_t aNameSpaceID,
-                                      nsAtom* aAttribute, int32_t aModType,
-                                      const nsAttrValue* aNewValue) {
-  nsIDocument* doc = aElement->OwnerDoc();
-  IMPL_MUTATION_NOTIFICATION(
-      AttributeWillChange, aElement,
-      (aElement, aNameSpaceID, aAttribute, aModType, aNewValue),
-      IsRemoveNotification::No);
-||||||| merged common ancestors
-void
-nsNodeUtils::AttributeWillChange(Element* aElement,
-                                 int32_t aNameSpaceID,
-                                 nsAtom* aAttribute,
-                                 int32_t aModType,
-                                 const nsAttrValue* aNewValue)
-{
-  nsIDocument* doc = aElement->OwnerDoc();
-  IMPL_MUTATION_NOTIFICATION(AttributeWillChange, aElement,
-                             (aElement, aNameSpaceID, aAttribute,
-                              aModType, aNewValue), IsRemoveNotification::No);
-=======
 void nsNodeUtils::AttributeWillChange(Element* aElement, int32_t aNameSpaceID,
                                       nsAtom* aAttribute, int32_t aModType) {
   Document* doc = aElement->OwnerDoc();
   IMPL_MUTATION_NOTIFICATION(AttributeWillChange, aElement,
                              (aElement, aNameSpaceID, aAttribute, aModType),
                              IsRemoveNotification::No);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AttributeChanged(Element* aElement, int32_t aNameSpaceID,
-                                   nsAtom* aAttribute, int32_t aModType,
-                                   const nsAttrValue* aOldValue) {
-  nsIDocument* doc = aElement->OwnerDoc();
-  IMPL_MUTATION_NOTIFICATION(
-      AttributeChanged, aElement,
-      (aElement, aNameSpaceID, aAttribute, aModType, aOldValue),
-      IsRemoveNotification::No);
-||||||| merged common ancestors
-void
-nsNodeUtils::AttributeChanged(Element* aElement,
-                              int32_t aNameSpaceID,
-                              nsAtom* aAttribute,
-                              int32_t aModType,
-                              const nsAttrValue* aOldValue)
-{
-  nsIDocument* doc = aElement->OwnerDoc();
-  IMPL_MUTATION_NOTIFICATION(AttributeChanged, aElement,
-                             (aElement, aNameSpaceID, aAttribute,
-                              aModType, aOldValue), IsRemoveNotification::No);
-=======
 void nsNodeUtils::AttributeChanged(Element* aElement, int32_t aNameSpaceID,
                                    nsAtom* aAttribute, int32_t aModType,
                                    const nsAttrValue* aOldValue) {
@@ -326,78 +160,30 @@ void nsNodeUtils::AttributeChanged(Element* aElement, int32_t aNameSpaceID,
       AttributeChanged, aElement,
       (aElement, aNameSpaceID, aAttribute, aModType, aOldValue),
       IsRemoveNotification::No);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AttributeSetToCurrentValue(Element* aElement,
-                                             int32_t aNameSpaceID,
-                                             nsAtom* aAttribute) {
-  nsIDocument* doc = aElement->OwnerDoc();
-||||||| merged common ancestors
-void
-nsNodeUtils::AttributeSetToCurrentValue(Element* aElement,
-                                        int32_t aNameSpaceID,
-                                        nsAtom* aAttribute)
-{
-  nsIDocument* doc = aElement->OwnerDoc();
-=======
 void nsNodeUtils::AttributeSetToCurrentValue(Element* aElement,
                                              int32_t aNameSpaceID,
                                              nsAtom* aAttribute) {
   Document* doc = aElement->OwnerDoc();
->>>>>>> upstream-releases
   IMPL_MUTATION_NOTIFICATION(AttributeSetToCurrentValue, aElement,
                              (aElement, aNameSpaceID, aAttribute),
                              IsRemoveNotification::No);
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::ContentAppended(nsIContent* aContainer,
-                                  nsIContent* aFirstNewContent) {
-  nsIDocument* doc = aContainer->OwnerDoc();
-
-  IMPL_MUTATION_NOTIFICATION(ContentAppended, aContainer, (aFirstNewContent),
-||||||| merged common ancestors
-void
-nsNodeUtils::ContentAppended(nsIContent* aContainer,
-                             nsIContent* aFirstNewContent)
-{
-  nsIDocument* doc = aContainer->OwnerDoc();
-
-  IMPL_MUTATION_NOTIFICATION(ContentAppended, aContainer,
-                             (aFirstNewContent),
-=======
 void nsNodeUtils::ContentAppended(nsIContent* aContainer,
                                   nsIContent* aFirstNewContent) {
   Document* doc = aContainer->OwnerDoc();
   doc->Changed();
   IMPL_MUTATION_NOTIFICATION(ContentAppended, aContainer, (aFirstNewContent),
->>>>>>> upstream-releases
                              IsRemoveNotification::No);
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::NativeAnonymousChildListChange(nsIContent* aContent,
-                                                 bool aIsRemove) {
-  nsIDocument* doc = aContent->OwnerDoc();
-  auto isRemove =
-      aIsRemove ? IsRemoveNotification::Yes : IsRemoveNotification::No;
-||||||| merged common ancestors
-void
-nsNodeUtils::NativeAnonymousChildListChange(nsIContent* aContent,
-                                            bool aIsRemove)
-{
-  nsIDocument* doc = aContent->OwnerDoc();
-  auto isRemove = aIsRemove
-    ? IsRemoveNotification::Yes : IsRemoveNotification::No;
-=======
 void nsNodeUtils::NativeAnonymousChildListChange(nsIContent* aContent,
                                                  bool aIsRemove) {
   Document* doc = aContent->OwnerDoc();
   auto isRemove =
       aIsRemove ? IsRemoveNotification::Yes : IsRemoveNotification::No;
->>>>>>> upstream-releases
   IMPL_MUTATION_NOTIFICATION(NativeAnonymousChildListChange, aContent,
                              (aContent, aIsRemove), isRemove);
 }
@@ -424,17 +210,8 @@ void nsNodeUtils::ContentRemoved(nsINode* aContainer, nsIContent* aChild,
                              IsRemoveNotification::Yes);
 }
 
-<<<<<<< HEAD
-Maybe<NonOwningAnimationTarget> nsNodeUtils::GetTargetForAnimation(
-    const Animation* aAnimation) {
-||||||| merged common ancestors
-Maybe<NonOwningAnimationTarget>
-nsNodeUtils::GetTargetForAnimation(const Animation* aAnimation)
-{
-=======
 Maybe<NonOwningAnimationTarget> nsNodeUtils::GetTargetForAnimation(
     const dom::Animation* aAnimation) {
->>>>>>> upstream-releases
   AnimationEffect* effect = aAnimation->GetEffect();
   if (!effect || !effect->AsKeyframeEffect()) {
     return Nothing();
@@ -442,18 +219,8 @@ Maybe<NonOwningAnimationTarget> nsNodeUtils::GetTargetForAnimation(
   return effect->AsKeyframeEffect()->GetTarget();
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AnimationMutated(Animation* aAnimation,
-                                   AnimationMutationType aMutatedType) {
-||||||| merged common ancestors
-void
-nsNodeUtils::AnimationMutated(Animation* aAnimation,
-                              AnimationMutationType aMutatedType)
-{
-=======
 void nsNodeUtils::AnimationMutated(dom::Animation* aAnimation,
                                    AnimationMutationType aMutatedType) {
->>>>>>> upstream-releases
   Maybe<NonOwningAnimationTarget> target = GetTargetForAnimation(aAnimation);
   if (!target) {
     return;
@@ -480,39 +247,15 @@ void nsNodeUtils::AnimationMutated(dom::Animation* aAnimation,
   }
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AnimationAdded(Animation* aAnimation) {
-||||||| merged common ancestors
-void
-nsNodeUtils::AnimationAdded(Animation* aAnimation)
-{
-=======
 void nsNodeUtils::AnimationAdded(dom::Animation* aAnimation) {
->>>>>>> upstream-releases
   AnimationMutated(aAnimation, AnimationMutationType::Added);
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AnimationChanged(Animation* aAnimation) {
-||||||| merged common ancestors
-void
-nsNodeUtils::AnimationChanged(Animation* aAnimation)
-{
-=======
 void nsNodeUtils::AnimationChanged(dom::Animation* aAnimation) {
->>>>>>> upstream-releases
   AnimationMutated(aAnimation, AnimationMutationType::Changed);
 }
 
-<<<<<<< HEAD
-void nsNodeUtils::AnimationRemoved(Animation* aAnimation) {
-||||||| merged common ancestors
-void
-nsNodeUtils::AnimationRemoved(Animation* aAnimation)
-{
-=======
 void nsNodeUtils::AnimationRemoved(dom::Animation* aAnimation) {
->>>>>>> upstream-releases
   AnimationMutated(aAnimation, AnimationMutationType::Removed);
 }
 
@@ -689,17 +432,8 @@ already_AddRefed<nsINode> nsNodeUtils::CloneAndAdopt(
       // cloned document).
       nodeInfoManager = clone->mNodeInfo->NodeInfoManager();
     }
-<<<<<<< HEAD
-  } else if (nodeInfoManager) {
-    nsIDocument* oldDoc = aNode->OwnerDoc();
-||||||| merged common ancestors
-  }
-  else if (nodeInfoManager) {
-    nsIDocument* oldDoc = aNode->OwnerDoc();
-=======
   } else if (nodeInfoManager) {
     Document* oldDoc = aNode->OwnerDoc();
->>>>>>> upstream-releases
     bool wasRegistered = false;
     if (elem) {
       wasRegistered = oldDoc->UnregisterActivityObserver(elem);
@@ -717,22 +451,9 @@ already_AddRefed<nsINode> nsNodeUtils::CloneAndAdopt(
         // shadow-including inclusive descendants that is custom.
         CustomElementData* data = elem->GetCustomElementData();
         if (data && data->mState == CustomElementData::State::eCustom) {
-<<<<<<< HEAD
-          LifecycleAdoptedCallbackArgs args = {oldDoc, newDoc};
-          nsContentUtils::EnqueueLifecycleCallback(nsIDocument::eAdopted, elem,
-                                                   nullptr, &args);
-||||||| merged common ancestors
-          LifecycleAdoptedCallbackArgs args = {
-            oldDoc,
-            newDoc
-          };
-          nsContentUtils::EnqueueLifecycleCallback(nsIDocument::eAdopted,
-                                                   elem, nullptr, &args);
-=======
           LifecycleAdoptedCallbackArgs args = {oldDoc, newDoc};
           nsContentUtils::EnqueueLifecycleCallback(Document::eAdopted, elem,
                                                    nullptr, &args);
->>>>>>> upstream-releases
         }
       }
 

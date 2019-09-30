@@ -12,13 +12,7 @@
 
 [package]
 name = "bindgen"
-<<<<<<< HEAD
-version = "0.43.0"
-||||||| merged common ancestors
-version = "0.39.0"
-=======
 version = "0.49.3"
->>>>>>> upstream-releases
 authors = ["Jyun-Yan You <jyyou.tw@gmail.com>", "Emilio Cobos Álvarez <emilio@crisal.io>", "Nick Fitzgerald <fitzgen@gmail.com>", "The Servo project developers"]
 build = "build.rs"
 include = ["LICENSE", "README.md", "Cargo.toml", "build.rs", "src/*.rs", "src/**/*.rs"]
@@ -49,13 +43,7 @@ version = "0.3.3"
 version = "0.1.0"
 
 [dependencies.clang-sys]
-<<<<<<< HEAD
-version = "0.26"
-||||||| merged common ancestors
-version = "0.23"
-=======
 version = "0.28.0"
->>>>>>> upstream-releases
 features = ["runtime", "clang_6_0"]
 
 [dependencies.clap]

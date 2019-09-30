@@ -4,15 +4,7 @@
 ---
 loader: taskgraph.loader.multi_dep:loader
 
-<<<<<<< HEAD
-loader: taskgraph.loader.multi_dep:loader
-
 group-by: single-locale
-||||||| merged common ancestors
-loader: taskgraph.loader.single_dep:loader
-=======
-group-by: single-locale
->>>>>>> upstream-releases
 
 transforms:
     - taskgraph.transforms.name_sanity:transforms
@@ -40,33 +32,6 @@ primary-dependency:
     - repackage-l10n
 
 only-for-build-platforms:
-<<<<<<< HEAD
-    - linux-nightly/opt
-    - linux64-nightly/opt
-    - macosx64-nightly/opt
-    - win32-nightly/opt
-    - win64-nightly/opt
-    - linux-devedition-nightly/opt
-    - linux64-devedition-nightly/opt
-    - macosx64-devedition-nightly/opt
-    - win32-devedition-nightly/opt
-    - win64-devedition-nightly/opt
-    - linux64-asan-reporter-nightly/opt
-    - win64-asan-reporter-nightly/opt
-||||||| merged common ancestors
-   - linux-nightly/opt
-   - linux64-nightly/opt
-   - macosx64-nightly/opt
-   - win32-nightly/opt
-   - win64-nightly/opt
-   - linux-devedition-nightly/opt
-   - linux64-devedition-nightly/opt
-   - macosx64-devedition-nightly/opt
-   - win32-devedition-nightly/opt
-   - win64-devedition-nightly/opt
-   - linux64-asan-reporter-nightly/opt
-   - win64-asan-reporter-nightly/opt
-=======
     - linux-shippable/opt
     - linux64-shippable/opt
     - macosx64-shippable/opt
@@ -87,18 +52,11 @@ only-for-build-platforms:
     - win64-aarch64-devedition-nightly/opt
     - linux64-asan-reporter-nightly/opt
     - win64-asan-reporter-nightly/opt
->>>>>>> upstream-releases
 
 job-template:
-<<<<<<< HEAD
-    shipping-phase: promote
-||||||| merged common ancestors
-   shipping-phase: promote
-=======
     shipping-phase: promote
     attributes:
         artifact_map:
             by-release-type:
                 beta|release.*|esr.*: taskcluster/taskgraph/manifests/firefox_candidates.yml
                 default: taskcluster/taskgraph/manifests/firefox_nightly.yml
->>>>>>> upstream-releases

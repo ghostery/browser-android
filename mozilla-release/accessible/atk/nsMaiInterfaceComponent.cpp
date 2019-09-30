@@ -47,16 +47,8 @@ static gboolean grabFocusCB(AtkComponent* aComponent) {
 }
 
 // ScrollType is compatible
-<<<<<<< HEAD
-static gboolean scrollToCB(AtkComponent* aComponent, AtkScrollType type) {
-||||||| merged common ancestors
-static gboolean
-scrollToCB(AtkComponent* aComponent, AtkScrollType type)
-{
-=======
 MOZ_CAN_RUN_SCRIPT_BOUNDARY
 static gboolean scrollToCB(AtkComponent* aComponent, AtkScrollType type) {
->>>>>>> upstream-releases
   AtkObject* atkObject = ATK_OBJECT(aComponent);
   if (RefPtr<AccessibleWrap> accWrap = GetAccessibleWrap(atkObject)) {
     accWrap->ScrollTo(type);

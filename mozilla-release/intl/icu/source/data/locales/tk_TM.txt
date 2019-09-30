@@ -1,13 +1,5 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
-<<<<<<< HEAD:mozilla-release/intl/icu/source/data/locales/tk_TM.txt
 tk_TM{
-    Version{"2.1.38.69"}
-||||||| merged common ancestors
-ff_SN{
-    Version{"2.1.38.69"}
-=======
-ff_SN{
-    "%%ALIAS"{"ff_Latn_SN"}
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/data/locales/ff_SN.txt
+    Version{"2.1.47.71"}
 }

@@ -109,34 +109,16 @@ bool SharedMemory::Create(size_t size) {
   return true;
 }
 
-<<<<<<< HEAD
-bool SharedMemory::Map(size_t bytes) {
-  if (mapped_file_ == NULL) return false;
-||||||| merged common ancestors
-bool SharedMemory::Map(size_t bytes) {
-  if (mapped_file_ == NULL)
-    return false;
-=======
 bool SharedMemory::Map(size_t bytes, void* fixed_address) {
   if (mapped_file_ == NULL) return false;
->>>>>>> upstream-releases
 
   if (external_section_ && !IsSectionSafeToMap(mapped_file_)) {
     return false;
   }
 
-<<<<<<< HEAD
-  memory_ = MapViewOfFile(
-      mapped_file_, read_only_ ? FILE_MAP_READ : FILE_MAP_READ | FILE_MAP_WRITE,
-      0, 0, bytes);
-||||||| merged common ancestors
-  memory_ = MapViewOfFile(mapped_file_,
-      read_only_ ? FILE_MAP_READ : FILE_MAP_READ | FILE_MAP_WRITE, 0, 0, bytes);
-=======
   memory_ = MapViewOfFileEx(
       mapped_file_, read_only_ ? FILE_MAP_READ : FILE_MAP_READ | FILE_MAP_WRITE,
       0, 0, bytes, fixed_address);
->>>>>>> upstream-releases
   if (memory_ != NULL) {
     MOZ_ASSERT(!fixed_address || memory_ == fixed_address,
                "MapViewOfFileEx returned an expected address");

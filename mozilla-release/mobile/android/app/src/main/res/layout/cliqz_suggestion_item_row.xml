@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Derived from home_item_row.xml -->
-<org.mozilla.gecko.home.TwoLinePageRowSuggestionItem xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Widget.TwoLinePageRow"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/search_item_min_height"
-    android:gravity="center_vertical" />

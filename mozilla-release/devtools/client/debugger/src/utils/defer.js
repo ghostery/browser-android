@@ -4,14 +4,6 @@
 
 // @flow
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/defer.js
-export default function defer() {
-  let resolve = () => {};
-  let reject = () => {};
-  const promise: Promise<any> = new Promise((_res, _rej) => {
-||||||| merged common ancestors
-  const promise = new Promise((_res, _rej) => {
-=======
 type Deferred<T> = {
   promise: Promise<T>,
   resolve: (arg: T) => mixed,
@@ -22,7 +14,6 @@ export default function defer<T>(): Deferred<T> {
   let resolve = () => {};
   let reject = () => {};
   const promise = new Promise((_res, _rej) => {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/defer.js
     resolve = _res;
     reject = _rej;
   });

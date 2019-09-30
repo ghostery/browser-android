@@ -13,19 +13,9 @@
 #include "mozilla/Move.h"
 #include "mozilla/mscom/ProxyStream.h"
 #include "mozilla/mscom/Ptr.h"
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX)
-#include "mozilla/SandboxSettings.h"
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#if defined(MOZ_CONTENT_SANDBOX)
-#include "mozilla/SandboxSettings.h"
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #if defined(MOZ_SANDBOX)
 #  include "mozilla/SandboxSettings.h"
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 #include "nsExceptionHandler.h"
 
 namespace mozilla {
@@ -68,35 +58,16 @@ class COMPtrHolder {
   PreservedStreamPtr GetPreservedStream() {
     return std::move(mMarshaledStream);
   }
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 
   COMPtrHolder(const COMPtrHolder& aOther) = delete;
 
   COMPtrHolder(COMPtrHolder&& aOther)
-<<<<<<< HEAD
-      : mPtr(std::move(aOther.mPtr))
-#if defined(MOZ_CONTENT_SANDBOX)
-        ,
-        mMarshaledStream(std::move(aOther.mMarshaledStream))
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-    : mPtr(std::move(aOther.mPtr))
-#if defined(MOZ_CONTENT_SANDBOX)
-    , mMarshaledStream(std::move(aOther.mMarshaledStream))
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
       : mPtr(std::move(aOther.mPtr))
 #if defined(MOZ_SANDBOX)
         ,
         mMarshaledStream(std::move(aOther.mMarshaledStream))
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   {
   }
 
@@ -112,13 +83,7 @@ class COMPtrHolder {
 
 #if defined(MOZ_SANDBOX)
     mMarshaledStream = std::move(aOther.mMarshaledStream);
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 
     return *this;
   }
@@ -128,13 +93,7 @@ class COMPtrHolder {
 
 #if defined(MOZ_SANDBOX)
     mMarshaledStream = std::move(aOther.mMarshaledStream);
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 
     return *this;
   }
@@ -152,13 +111,7 @@ class COMPtrHolder {
   // This is mutable so that we may optionally store a reference to a marshaled
   // stream to be cleaned up later via PreserveStream().
   mutable PreservedStreamPtr mMarshaledStream;
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 };
 
 }  // namespace mscom
@@ -170,29 +123,14 @@ template <typename Interface, const IID& _IID>
 struct ParamTraits<mozilla::mscom::COMPtrHolder<Interface, _IID>> {
   typedef mozilla::mscom::COMPtrHolder<Interface, _IID> paramType;
 
-<<<<<<< HEAD
-  static void Write(Message* aMsg, const paramType& aParam) {
-#if defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-  static void Write(Message* aMsg, const paramType& aParam)
-  {
-#if defined(MOZ_CONTENT_SANDBOX)
-=======
   static void Write(Message* aMsg, const paramType& aParam) {
 #if defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
     static const bool sIsStreamPreservationNeeded =
         XRE_IsParentProcess() &&
         mozilla::GetEffectiveContentSandboxLevel() >= 3;
 #else
     const bool sIsStreamPreservationNeeded = false;
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 
     typename paramType::EnvType env;
 
@@ -221,13 +159,7 @@ struct ParamTraits<mozilla::mscom::COMPtrHolder<Interface, _IID>> {
        */
       aParam.PreserveStream(proxyStream.GetPreservedStream());
     }
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   }
 
   static bool Read(const Message* aMsg, PickleIterator* aIter,

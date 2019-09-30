@@ -17,17 +17,6 @@ only-for-attributes:
     - shippable
 
 job-template:
-<<<<<<< HEAD
-   shipping-phase: promote
-   attributes:
-      artifact_prefix: public
-      artifact_map:
-         by-platform:
-            android.*: taskcluster/taskgraph/manifests/fennec_nightly_checksums.yml
-            default: taskcluster/taskgraph/manifests/firefox_nightly_checksums.yml
-||||||| merged common ancestors
-   shipping-phase: promote
-=======
     shipping-phase: promote
     attributes:
         artifact_prefix: public
@@ -41,4 +30,3 @@ job-template:
                     by-platform:
                         android.*: taskcluster/taskgraph/manifests/fennec_nightly_checksums.yml
                         default: taskcluster/taskgraph/manifests/firefox_nightly_checksums.yml
->>>>>>> upstream-releases

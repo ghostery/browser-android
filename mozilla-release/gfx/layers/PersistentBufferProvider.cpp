@@ -98,22 +98,12 @@ PersistentBufferProviderBasic::Create(gfx::IntSize aSize,
 already_AddRefed<PersistentBufferProviderShared>
 PersistentBufferProviderShared::Create(gfx::IntSize aSize,
                                        gfx::SurfaceFormat aFormat,
-<<<<<<< HEAD
-                                       KnowsCompositor* aKnowsCompositor) {
-  if (!aKnowsCompositor ||
-      !aKnowsCompositor->GetTextureForwarder()->IPCOpen()) {
-||||||| merged common ancestors
-                                       KnowsCompositor* aKnowsCompositor)
-{
-  if (!aKnowsCompositor || !aKnowsCompositor->GetTextureForwarder()->IPCOpen()) {
-=======
                                        KnowsCompositor* aKnowsCompositor) {
   if (!aKnowsCompositor ||
       !aKnowsCompositor->GetTextureForwarder()->IPCOpen() ||
       // Bug 1556433 - shared buffer provider and direct texture mapping do not
       // synchronize properly
       aKnowsCompositor->SupportsTextureDirectMapping()) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -363,22 +353,6 @@ PersistentBufferProviderShared::BorrowDrawTarget(
 
   mDrawTarget = tex->BorrowDrawTarget();
   if (mBack != previousBackBuffer && !aPersistedRect.IsEmpty()) {
-<<<<<<< HEAD
-    TextureClient* previous = GetTexture(previousBackBuffer);
-    if (previous && previous->Lock(OpenMode::OPEN_READ)) {
-      DebugOnly<bool> success =
-          previous->CopyToTextureClient(tex, &aPersistedRect, nullptr);
-      MOZ_ASSERT(success);
-
-      previous->Unlock();
-||||||| merged common ancestors
-    TextureClient* previous = GetTexture(previousBackBuffer);
-    if (previous && previous->Lock(OpenMode::OPEN_READ)) {
-      DebugOnly<bool> success = previous->CopyToTextureClient(tex, &aPersistedRect, nullptr);
-      MOZ_ASSERT(success);
-
-      previous->Unlock();
-=======
     if (mPreviousSnapshot) {
       mDrawTarget->CopySurface(mPreviousSnapshot, aPersistedRect,
                                gfx::IntPoint(0, 0));
@@ -391,7 +365,6 @@ PersistentBufferProviderShared::BorrowDrawTarget(
 
         previous->Unlock();
       }
->>>>>>> upstream-releases
     }
   }
   mPreviousSnapshot = nullptr;
@@ -454,14 +427,6 @@ TextureClient* PersistentBufferProviderShared::GetTextureClient() {
 }
 
 already_AddRefed<gfx::SourceSurface>
-<<<<<<< HEAD
-PersistentBufferProviderShared::BorrowSnapshot() {
-  MOZ_ASSERT(!mDrawTarget);
-||||||| merged common ancestors
-PersistentBufferProviderShared::BorrowSnapshot()
-{
-  MOZ_ASSERT(!mDrawTarget);
-=======
 PersistentBufferProviderShared::BorrowSnapshot() {
   if (mPreviousSnapshot) {
     mSnapshot = mPreviousSnapshot;
@@ -474,7 +439,6 @@ PersistentBufferProviderShared::BorrowSnapshot() {
     mSnapshot = back->BorrowSnapshot();
     return do_AddRef(mSnapshot);
   }
->>>>>>> upstream-releases
 
   auto front = GetTexture(mFront);
   if (!front || front->IsLocked()) {

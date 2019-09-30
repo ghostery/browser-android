@@ -4,14 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-#include "mozilla/ArrayUtils.h"  // MOZ_ARRAY_LENGTH
-
-||||||| merged common ancestors
-#include "mozilla/ArrayUtils.h" // MOZ_ARRAY_LENGTH
-
-=======
->>>>>>> upstream-releases
 #include "SVGPathSegUtils.h"
 
 #include "mozilla/ArrayUtils.h"  // MOZ_ARRAY_LENGTH
@@ -26,18 +18,8 @@ using namespace mozilla::gfx;
 static const float PATH_SEG_LENGTH_TOLERANCE = 0.0000001f;
 static const uint32_t MAX_RECURSION = 10;
 
-<<<<<<< HEAD
-/* static */ void SVGPathSegUtils::GetValueAsString(const float* aSeg,
-                                                    nsAString& aValue) {
-||||||| merged common ancestors
-
-/* static */ void
-SVGPathSegUtils::GetValueAsString(const float* aSeg, nsAString& aValue)
-{
-=======
 /* static */
 void SVGPathSegUtils::GetValueAsString(const float* aSeg, nsAString& aValue) {
->>>>>>> upstream-releases
   // Adding new seg type? Is the formatting below acceptable for the new types?
   static_assert(
       NS_SVG_PATH_SEG_LAST_VALID_TYPE == PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL,
@@ -355,19 +337,9 @@ static void TraverseArcAbs(const float* aArgs, SVGPathTraversalState& aState) {
     if (radii.x == 0.0f || radii.y == 0.0f) {
       dist = CalcDistanceBetweenPoints(aState.pos, to);
     } else {
-<<<<<<< HEAD
-      Point bez[4] = {aState.pos, Point(0, 0), Point(0, 0), Point(0, 0)};
-      nsSVGArcConverter converter(aState.pos, to, radii, aArgs[2],
-                                  aArgs[3] != 0, aArgs[4] != 0);
-||||||| merged common ancestors
-      Point bez[4] = { aState.pos, Point(0, 0), Point(0, 0), Point(0, 0) };
-      nsSVGArcConverter converter(aState.pos, to, radii, aArgs[2],
-                                  aArgs[3] != 0, aArgs[4] != 0);
-=======
       Point bez[4] = {aState.pos, Point(0, 0), Point(0, 0), Point(0, 0)};
       SVGArcConverter converter(aState.pos, to, radii, aArgs[2], aArgs[3] != 0,
                                 aArgs[4] != 0);
->>>>>>> upstream-releases
       while (converter.GetNextSegment(&bez[1], &bez[2], &bez[3])) {
         dist += CalcBezLengthHelper(bez, 4, 0, SplitCubicBezier);
         bez[0] = bez[3];
@@ -387,19 +359,9 @@ static void TraverseArcRel(const float* aArgs, SVGPathTraversalState& aState) {
     if (radii.x == 0.0f || radii.y == 0.0f) {
       dist = CalcDistanceBetweenPoints(aState.pos, to);
     } else {
-<<<<<<< HEAD
-      Point bez[4] = {aState.pos, Point(0, 0), Point(0, 0), Point(0, 0)};
-      nsSVGArcConverter converter(aState.pos, to, radii, aArgs[2],
-                                  aArgs[3] != 0, aArgs[4] != 0);
-||||||| merged common ancestors
-      Point bez[4] = { aState.pos, Point(0, 0), Point(0, 0), Point(0, 0) };
-      nsSVGArcConverter converter(aState.pos, to, radii, aArgs[2],
-                                  aArgs[3] != 0, aArgs[4] != 0);
-=======
       Point bez[4] = {aState.pos, Point(0, 0), Point(0, 0), Point(0, 0)};
       SVGArcConverter converter(aState.pos, to, radii, aArgs[2], aArgs[3] != 0,
                                 aArgs[4] != 0);
->>>>>>> upstream-releases
       while (converter.GetNextSegment(&bez[1], &bez[2], &bez[3])) {
         dist += CalcBezLengthHelper(bez, 4, 0, SplitCubicBezier);
         bez[0] = bez[3];
@@ -414,64 +376,6 @@ static void TraverseArcRel(const float* aArgs, SVGPathTraversalState& aState) {
 typedef void (*TraverseFunc)(const float*, SVGPathTraversalState&);
 
 static TraverseFunc gTraverseFuncTable[NS_SVG_PATH_SEG_TYPE_COUNT] = {
-<<<<<<< HEAD
-    nullptr,  //  0 == PATHSEG_UNKNOWN
-    TraverseClosePath,
-    TraverseMovetoAbs,
-    TraverseMovetoRel,
-    TraverseLinetoAbs,
-    TraverseLinetoRel,
-    TraverseCurvetoCubicAbs,
-    TraverseCurvetoCubicRel,
-    TraverseCurvetoQuadraticAbs,
-    TraverseCurvetoQuadraticRel,
-    TraverseArcAbs,
-    TraverseArcRel,
-    TraverseLinetoHorizontalAbs,
-    TraverseLinetoHorizontalRel,
-    TraverseLinetoVerticalAbs,
-    TraverseLinetoVerticalRel,
-    TraverseCurvetoCubicSmoothAbs,
-    TraverseCurvetoCubicSmoothRel,
-    TraverseCurvetoQuadraticSmoothAbs,
-    TraverseCurvetoQuadraticSmoothRel};
-
-/* static */ void SVGPathSegUtils::TraversePathSegment(
-    const float* aData, SVGPathTraversalState& aState) {
-  static_assert(
-      MOZ_ARRAY_LENGTH(gTraverseFuncTable) == NS_SVG_PATH_SEG_TYPE_COUNT,
-      "gTraverseFuncTable is out of date");
-||||||| merged common ancestors
-  nullptr, //  0 == PATHSEG_UNKNOWN
-  TraverseClosePath,
-  TraverseMovetoAbs,
-  TraverseMovetoRel,
-  TraverseLinetoAbs,
-  TraverseLinetoRel,
-  TraverseCurvetoCubicAbs,
-  TraverseCurvetoCubicRel,
-  TraverseCurvetoQuadraticAbs,
-  TraverseCurvetoQuadraticRel,
-  TraverseArcAbs,
-  TraverseArcRel,
-  TraverseLinetoHorizontalAbs,
-  TraverseLinetoHorizontalRel,
-  TraverseLinetoVerticalAbs,
-  TraverseLinetoVerticalRel,
-  TraverseCurvetoCubicSmoothAbs,
-  TraverseCurvetoCubicSmoothRel,
-  TraverseCurvetoQuadraticSmoothAbs,
-  TraverseCurvetoQuadraticSmoothRel
-};
-
-/* static */ void
-SVGPathSegUtils::TraversePathSegment(const float* aData,
-                                     SVGPathTraversalState& aState)
-{
-  static_assert(MOZ_ARRAY_LENGTH(gTraverseFuncTable) ==
-                NS_SVG_PATH_SEG_TYPE_COUNT,
-                "gTraverseFuncTable is out of date");
-=======
     nullptr,  //  0 == PATHSEG_UNKNOWN
     TraverseClosePath,
     TraverseMovetoAbs,
@@ -499,7 +403,6 @@ void SVGPathSegUtils::TraversePathSegment(const float* aData,
   static_assert(
       MOZ_ARRAY_LENGTH(gTraverseFuncTable) == NS_SVG_PATH_SEG_TYPE_COUNT,
       "gTraverseFuncTable is out of date");
->>>>>>> upstream-releases
   uint32_t type = DecodeType(aData[0]);
   gTraverseFuncTable[type](aData + 1, aState);
 }

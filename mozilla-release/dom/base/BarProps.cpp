@@ -22,19 +22,7 @@ BarProp::BarProp(nsGlobalWindowInner* aWindow) : mDOMWindow(aWindow) {}
 
 BarProp::~BarProp() {}
 
-<<<<<<< HEAD
-nsPIDOMWindowInner* BarProp::GetParentObject() const {
-  return mDOMWindow->AsInner();
-}
-||||||| merged common ancestors
-nsPIDOMWindowInner*
-BarProp::GetParentObject() const
-{
-  return mDOMWindow->AsInner();
-}
-=======
 nsPIDOMWindowInner* BarProp::GetParentObject() const { return mDOMWindow; }
->>>>>>> upstream-releases
 
 JSObject* BarProp::WrapObject(JSContext* aCx,
                               JS::Handle<JSObject*> aGivenProto) {

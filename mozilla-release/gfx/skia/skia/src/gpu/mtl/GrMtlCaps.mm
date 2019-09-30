@@ -114,86 +114,6 @@ void GrMtlCaps::initFeatureSet(MTLFeatureSet featureSet) {
     SK_ABORT("Requested an unsupported feature set");
 }
 
-<<<<<<< HEAD
-bool GrMtlCaps::canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCount,
-                              GrSurfaceOrigin dstOrigin,
-                              GrPixelConfig srcConfig, int srcSampleCount,
-                              GrSurfaceOrigin srcOrigin,
-                              const SkIRect& srcRect, const SkIPoint& dstPoint,
-                              bool areDstSrcSameObj) const {
-    if (dstConfig != srcConfig) {
-        return false;
-    }
-    if ((dstSampleCount > 1 || srcSampleCount > 1) && (dstSampleCount != srcSampleCount)) {
-        return false;
-    }
-    if (dstOrigin != srcOrigin) {
-        return false;
-    }
-    if (areDstSrcSameObj) {
-        SkIRect dstRect = SkIRect::MakeXYWH(dstPoint.x(), dstPoint.y(),
-                                            srcRect.width(), srcRect.height());
-        if (dstRect.intersect(srcRect)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool GrMtlCaps::canCopyAsDraw(GrPixelConfig dstConfig, bool dstIsRenderable,
-                              GrPixelConfig srcConfig, bool srcIsTextureable) const {
-    // TODO: Make copySurfaceAsDraw handle the swizzle
-    if (this->shaderCaps()->configOutputSwizzle(srcConfig) !=
-        this->shaderCaps()->configOutputSwizzle(dstConfig)) {
-        return false;
-    }
-
-    if (!dstIsRenderable || !srcIsTextureable) {
-        return false;
-    }
-    return true;
-}
-
-bool GrMtlCaps::canCopyAsDrawThenBlit(GrPixelConfig dstConfig, GrPixelConfig srcConfig,
-                                      bool srcIsTextureable) const {
-    // TODO: Make copySurfaceAsDraw handle the swizzle
-    if (this->shaderCaps()->configOutputSwizzle(srcConfig) !=
-        this->shaderCaps()->configOutputSwizzle(dstConfig)) {
-        return false;
-    }
-    if (!srcIsTextureable) {
-        return false;
-    }
-    return true;
-}
-
-bool GrMtlCaps::canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
-                               const SkIRect& srcRect, const SkIPoint& dstPoint) const {
-    GrSurfaceOrigin dstOrigin = dst->origin();
-    GrSurfaceOrigin srcOrigin = src->origin();
-
-    int dstSampleCnt = 0;
-    int srcSampleCnt = 0;
-    if (const GrRenderTargetProxy* rtProxy = dst->asRenderTargetProxy()) {
-        dstSampleCnt = rtProxy->numColorSamples();
-    }
-    if (const GrRenderTargetProxy* rtProxy = src->asRenderTargetProxy()) {
-        srcSampleCnt = rtProxy->numColorSamples();
-    }
-    SkASSERT((dstSampleCnt > 0) == SkToBool(dst->asRenderTargetProxy()));
-    SkASSERT((srcSampleCnt > 0) == SkToBool(src->asRenderTargetProxy()));
-
-    return this->canCopyAsBlit(dst->config(), dstSampleCnt, dstOrigin,
-                               src->config(), srcSampleCnt, srcOrigin,
-                               srcRect, dstPoint, dst == src) ||
-           this->canCopyAsDraw(dst->config(), SkToBool(dst->asRenderTargetProxy()),
-                               src->config(), SkToBool(src->asTextureProxy())) ||
-           this->canCopyAsDrawThenBlit(dst->config(), src->config(),
-                                       SkToBool(src->asTextureProxy()));
-}
-
-||||||| merged common ancestors
-=======
 bool GrMtlCaps::canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCount,
                               GrSurfaceOrigin dstOrigin,
                               GrPixelConfig srcConfig, int srcSampleCount,
@@ -271,7 +191,6 @@ bool GrMtlCaps::onCanCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy
                                        SkToBool(src->asTextureProxy()));
 }
 
->>>>>>> upstream-releases
 void GrMtlCaps::initGrCaps(const id<MTLDevice> device) {
     // Max vertex attribs is the same on all devices
     fMaxVertexAttributes = 31;
@@ -505,25 +424,6 @@ void GrMtlCaps::initConfigTable() {
     info = &fConfigTable[kRGBA_half_GrPixelConfig];
     info->fFlags = ConfigInfo::kAllFlags;
 }
-<<<<<<< HEAD
-
-void GrMtlCaps::initStencilFormat(id<MTLDevice> physDev) {
-    fPreferredStencilFormat = StencilFormat{ MTLPixelFormatStencil8, 8, 8, true };
-}
-
-#ifdef GR_TEST_UTILS
-GrBackendFormat GrMtlCaps::onCreateFormatFromBackendTexture(
-        const GrBackendTexture& backendTex) const {
-    GrMtlTextureInfo mtlInfo;
-    SkAssertResult(backendTex.getMtlTextureInfo(&mtlInfo));
-    id<MTLTexture> mtlTexture = GrGetMTLTexture(mtlInfo.fTexture,
-                                                GrWrapOwnership::kBorrow_GrWrapOwnership);
-    return GrBackendFormat::MakeMtl(mtlTexture.pixelFormat);
-}
-#endif
-
-||||||| merged common ancestors
-=======
 
 void GrMtlCaps::initStencilFormat(id<MTLDevice> physDev) {
     fPreferredStencilFormat = StencilFormat{ MTLPixelFormatStencil8, 8, 8, true };
@@ -673,4 +573,3 @@ GrBackendFormat GrMtlCaps::getBackendFormatFromGrColorType(GrColorType ct,
     return GrBackendFormat::MakeMtl(format);
 }
 
->>>>>>> upstream-releases

@@ -14,36 +14,6 @@ const { createValueGrip } = require("devtools/server/actors/object/utils");
 const { ActorClassWithSpec, Actor } = require("devtools/shared/protocol");
 const DevToolsUtils = require("devtools/shared/DevToolsUtils");
 const { assert, dumpn } = DevToolsUtils;
-<<<<<<< HEAD
-const { DevToolsWorker } = require("devtools/shared/worker/worker");
-const { threadSpec } = require("devtools/shared/specs/script");
-
-loader.lazyRequireGetter(this, "findCssSelector", "devtools/shared/inspector/css-logic", true);
-loader.lazyRequireGetter(this, "BreakpointActor", "devtools/server/actors/breakpoint", true);
-loader.lazyRequireGetter(this, "setBreakpointAtEntryPoints", "devtools/server/actors/breakpoint", true);
-loader.lazyRequireGetter(this, "EnvironmentActor", "devtools/server/actors/environment", true);
-loader.lazyRequireGetter(this, "SourceActorStore", "devtools/server/actors/utils/source-actor-store", true);
-loader.lazyRequireGetter(this, "BreakpointActorMap", "devtools/server/actors/utils/breakpoint-actor-map", true);
-loader.lazyRequireGetter(this, "PauseScopedObjectActor", "devtools/server/actors/pause-scoped", true);
-loader.lazyRequireGetter(this, "EventLoopStack", "devtools/server/actors/utils/event-loop", true);
-loader.lazyRequireGetter(this, "FrameActor", "devtools/server/actors/frame", true);
-loader.lazyRequireGetter(this, "EventEmitter", "devtools/shared/event-emitter");
-loader.lazyRequireGetter(this, "throttle", "devtools/shared/throttle", true);
-||||||| merged common ancestors
-const { DevToolsWorker } = require("devtools/shared/worker/worker");
-const { threadSpec } = require("devtools/shared/specs/script");
-
-loader.lazyRequireGetter(this, "findCssSelector", "devtools/shared/inspector/css-logic", true);
-loader.lazyRequireGetter(this, "BreakpointActor", "devtools/server/actors/breakpoint", true);
-loader.lazyRequireGetter(this, "setBreakpointAtEntryPoints", "devtools/server/actors/breakpoint", true);
-loader.lazyRequireGetter(this, "EnvironmentActor", "devtools/server/actors/environment", true);
-loader.lazyRequireGetter(this, "SourceActorStore", "devtools/server/actors/utils/source-actor-store", true);
-loader.lazyRequireGetter(this, "BreakpointActorMap", "devtools/server/actors/utils/breakpoint-actor-map", true);
-loader.lazyRequireGetter(this, "PauseScopedObjectActor", "devtools/server/actors/pause-scoped", true);
-loader.lazyRequireGetter(this, "EventLoopStack", "devtools/server/actors/utils/event-loop", true);
-loader.lazyRequireGetter(this, "FrameActor", "devtools/server/actors/frame", true);
-loader.lazyRequireGetter(this, "EventEmitter", "devtools/shared/event-emitter");
-=======
 const { threadSpec } = require("devtools/shared/specs/thread");
 const {
   getAvailableEventBreakpoints,
@@ -82,7 +52,6 @@ loader.lazyRequireGetter(
   true
 );
 loader.lazyRequireGetter(this, "throttle", "devtools/shared/throttle", true);
->>>>>>> upstream-releases
 
 /**
  * JSD2 actors.
@@ -178,19 +147,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
       this._dbg.onNewScript = this.onNewScript;
       this._dbg.onNewDebuggee = this._onNewDebuggee;
       if (this._dbg.replaying) {
-<<<<<<< HEAD
-        this._dbg.replayingOnForcedPause = this.replayingOnForcedPause.bind(this);
-        const sendProgress = throttle((recording, executionPoint) => {
-          if (this.attached) {
-            this.conn.send({ type: "progress", from: this.actorID,
-                             recording, executionPoint });
-          }
-        }, 100);
-        this._dbg.replayingOnPositionChange =
-          this.replayingOnPositionChange.bind(this, sendProgress);
-||||||| merged common ancestors
-        this._dbg.replayingOnForcedPause = this.replayingOnForcedPause.bind(this);
-=======
         this._dbg.replayingOnForcedPause = this.replayingOnForcedPause.bind(
           this
         );
@@ -208,7 +164,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
           this,
           sendProgress
         );
->>>>>>> upstream-releases
       }
       // Keep the debugger disabled until a client attaches.
       this._dbg.enabled = this._state != "detached";
@@ -620,14 +575,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
     if ("observeAsmJS" in options) {
       this.dbg.allowUnobservedAsmJS = !options.observeAsmJS;
     }
-<<<<<<< HEAD
-
-    if ("skipBreakpoints" in options) {
-      this.skipBreakpoints = options.skipBreakpoints;
-||||||| merged common ancestors
-    if ("wasmBinarySource" in options) {
-      this.dbg.allowWasmBinarySource = !!options.wasmBinarySource;
-=======
 
     if ("skipBreakpoints" in options) {
       this.skipBreakpoints = options.skipBreakpoints;
@@ -637,7 +584,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
       if (this._parent.pauseWorkersUntilAttach) {
         this._parent.pauseWorkersUntilAttach(options.pauseWorkersUntilAttach);
       }
->>>>>>> upstream-releases
     }
 
     Object.assign(this._options, options);
@@ -844,16 +790,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
       if (steppingType == "finish") {
         const parentFrame = thread._getNextStepFrame(this);
         if (parentFrame && parentFrame.script) {
-<<<<<<< HEAD
-          // We can't use the completion value in stepping hooks if we're
-          // replaying, as we can't use its contents after resuming.
-          const ncompletion = thread.dbg.replaying ? null : completion;
-          const { onStep, onPop } = thread._makeSteppingHooks(
-            originalLocation, "next", false, ncompletion
-||||||| merged common ancestors
-          const { onStep } = thread._makeSteppingHooks(
-            originalLocation, "next", false, completion
-=======
           // We can't use the completion value in stepping hooks if we're
           // replaying, as we can't use its contents after resuming.
           const ncompletion = thread.dbg.replaying ? null : completion;
@@ -862,28 +798,7 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
             "next",
             false,
             ncompletion
->>>>>>> upstream-releases
           );
-<<<<<<< HEAD
-          if (thread.dbg.replaying) {
-            const parentGeneratedLocation = thread.sources.getFrameLocation(parentFrame);
-            const parentOriginalLocation = thread.unsafeSynchronize(
-              thread.sources.getOriginalLocation(parentGeneratedLocation)
-            );
-            const offsets =
-              thread._findReplayingStepOffsets(parentOriginalLocation, parentFrame,
-                                               /* rewinding = */ false);
-            parentFrame.setReplayingOnStep(onStep, offsets);
-          } else {
-            parentFrame.onStep = onStep;
-          }
-          // We need the onPop alongside the onStep because it is possible that
-          // the parent frame won't have any steppable offsets, and we want to
-          // make sure that we always pause in the parent _somewhere_.
-          parentFrame.onPop = onPop;
-||||||| merged common ancestors
-          parentFrame.onStep = onStep;
-=======
           if (thread.dbg.replaying) {
             const parentLocation = thread.sources.getFrameLocation(parentFrame);
             const offsets = thread._findReplayingStepOffsets(
@@ -899,7 +814,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
           // the parent frame won't have any steppable offsets, and we want to
           // make sure that we always pause in the parent _somewhere_.
           parentFrame.onPop = onPop;
->>>>>>> upstream-releases
           return undefined;
         }
       }
@@ -1263,21 +1177,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
       };
     }
 
-<<<<<<< HEAD
-    let resumeLimitHandled;
-    if (request && request.resumeLimit) {
-      resumeLimitHandled = this._handleResumeLimit(request);
-    } else {
-      this._clearSteppingHooks();
-      resumeLimitHandled = Promise.resolve(true);
-||||||| merged common ancestors
-    let resumeLimitHandled;
-    if (request && request.resumeLimit) {
-      resumeLimitHandled = this._handleResumeLimit(request);
-    } else {
-      this._clearSteppingHooks(this.youngestFrame);
-      resumeLimitHandled = Promise.resolve(true);
-=======
     try {
       if (resumeLimit) {
         await this._handleResumeLimit({ resumeLimit, rewind });
@@ -1296,7 +1195,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
         : // It is a known error, and the promise was rejected with an error
           // packet.
           error;
->>>>>>> upstream-releases
     }
   },
 
@@ -1568,48 +1466,7 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
     // Clear stepping hooks.
     this.dbg.onEnterFrame = undefined;
     this.dbg.onExceptionUnwind = undefined;
-<<<<<<< HEAD
     this._clearSteppingHooks();
-
-    // Clear DOM event breakpoints.
-    // XPCShell tests don't use actual DOM windows for globals and cause
-    // removeListenerForAllEvents to throw.
-    if (!isWorker &&
-        this.global &&
-        !this.dbg.replaying &&
-        !this.global.toString().includes("Sandbox")) {
-      Services.els.removeListenerForAllEvents(this.global, this._allEventsListener, true);
-      for (const [, bp] of this._hiddenBreakpoints) {
-        bp.delete();
-      }
-      this._hiddenBreakpoints.clear();
-    }
-
-    this._state = "paused";
-||||||| merged common ancestors
-    if (frame) {
-      frame.onStep = undefined;
-      frame.onPop = undefined;
-    }
-
-    // Clear DOM event breakpoints.
-    // XPCShell tests don't use actual DOM windows for globals and cause
-    // removeListenerForAllEvents to throw.
-    if (!isWorker &&
-        this.global &&
-        !this.dbg.replaying &&
-        !this.global.toString().includes("Sandbox")) {
-      Services.els.removeListenerForAllEvents(this.global, this._allEventsListener, true);
-      for (const [, bp] of this._hiddenBreakpoints) {
-        bp.delete();
-      }
-      this._hiddenBreakpoints.clear();
-    }
-
-    this._state = "paused";
-=======
-    this._clearSteppingHooks();
->>>>>>> upstream-releases
 
     // Create the actor pool that will hold the pause actor and its
     // children.
@@ -1923,20 +1780,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
     return { skip };
   },
 
-<<<<<<< HEAD
-  /*
-   * A function that the engine calls when a recording/replaying process has
-   * changed its position: a checkpoint was reached or a switch between a
-   * recording and replaying child process occurred.
-   */
-  replayingOnPositionChange: function(sendProgress) {
-    const recording = this.dbg.replayIsRecording();
-    const executionPoint = this.dbg.replayCurrentExecutionPoint();
-    sendProgress(recording, executionPoint);
-  },
-
-||||||| merged common ancestors
-=======
   onPauseOnExceptions: function({ pauseOnExceptions, ignoreCaughtExceptions }) {
     Object.assign(this._options, { pauseOnExceptions, ignoreCaughtExceptions });
     this.maybePauseOnExceptions();
@@ -1954,7 +1797,6 @@ const ThreadActor = ActorClassWithSpec(threadSpec, {
     sendProgress(recording, executionPoint);
   },
 
->>>>>>> upstream-releases
   /**
    * A function that the engine calls when replay has hit a point where it will
    * pause, even if no breakpoint has been set. Such points include hitting the

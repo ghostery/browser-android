@@ -24,18 +24,9 @@ DummyPresentationTransportBuilderConstructor::CreateTransportBuilder(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsIPresentationTransportBuilderConstructor>
-PresentationTransportBuilderConstructor::Create() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsIPresentationTransportBuilderConstructor>
-PresentationTransportBuilderConstructor::Create()
-{
-=======
 /* static */
 already_AddRefed<nsIPresentationTransportBuilderConstructor>
 PresentationTransportBuilderConstructor::Create() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIPresentationTransportBuilderConstructor> constructor;
   if (XRE_IsContentProcess()) {
     constructor = new DummyPresentationTransportBuilderConstructor();

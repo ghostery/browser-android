@@ -428,17 +428,10 @@ export default class PaymentDialog extends HandleEventMixin(
   _renderPayerFields(state) {
     let paymentOptions = state.request.paymentOptions;
     let payerRequested = this._isPayerRequested(paymentOptions);
-<<<<<<< HEAD
-    let payerAddressForm =
-      this.querySelector("address-form[selected-state-key='selectedPayerAddress']");
-
-||||||| merged common ancestors
-=======
     let payerAddressForm = this.querySelector(
       "address-form[selected-state-key='selectedPayerAddress']"
     );
 
->>>>>>> upstream-releases
     for (let element of this._payerRelatedEls) {
       element.hidden = !payerRequested;
     }
@@ -529,33 +522,15 @@ export default class PaymentDialog extends HandleEventMixin(
       !displayItems.length && !additionalItems.length;
 
     let shippingType = state.request.paymentOptions.shippingType || "shipping";
-<<<<<<< HEAD
-    let addressPickerLabel = this._shippingAddressPicker.dataset[shippingType + "AddressLabel"];
-||||||| merged common ancestors
-    this._shippingAddressPicker.dataset.addAddressTitle =
-      this.dataset[shippingType + "AddressTitleAdd"];
-    this._shippingAddressPicker.dataset.editAddressTitle =
-      this.dataset[shippingType + "AddressTitleEdit"];
-    let addressPickerLabel = this._shippingAddressPicker.dataset[shippingType + "AddressLabel"];
-=======
     let addressPickerLabel = this._shippingAddressPicker.dataset[
       shippingType + "AddressLabel"
     ];
->>>>>>> upstream-releases
     this._shippingAddressPicker.setAttribute("label", addressPickerLabel);
     let optionPickerLabel = this._shippingOptionPicker.dataset[
       shippingType + "OptionsLabel"
     ];
     this._shippingOptionPicker.setAttribute("label", optionPickerLabel);
 
-<<<<<<< HEAD
-    let shippingAddressForm =
-      this.querySelector("address-form[selected-state-key='selectedShippingAddress']");
-    shippingAddressForm.dataset.titleAdd = this.dataset[shippingType + "AddressTitleAdd"];
-    shippingAddressForm.dataset.titleEdit = this.dataset[shippingType + "AddressTitleEdit"];
-
-||||||| merged common ancestors
-=======
     let shippingAddressForm = this.querySelector(
       "address-form[selected-state-key='selectedShippingAddress']"
     );
@@ -566,7 +541,6 @@ export default class PaymentDialog extends HandleEventMixin(
       shippingType + "AddressTitleEdit"
     ];
 
->>>>>>> upstream-releases
     let totalItem = paymentRequest.getTotalItem(state);
     let totalAmountEl = this.querySelector("#total > currency-amount");
     totalAmountEl.value = totalItem.amount.value;

@@ -32,11 +32,6 @@ The ``get()`` method returns the list of entries for a specific key. Each entry 
     });
 
 .. note::
-    The data updates are managed internally, and ``.get()`` only returns the local data.
-    The data is pulled from the server only if this collection has no local data yet and no JSON dump
-    could be found (see :ref:`services/initial-data` below).
-
-.. note::
     The ``id`` and ``last_modified`` (timestamp) attributes are assigned by the server.
 
 
@@ -136,22 +131,6 @@ Remote files are not downloaded automatically. In order to keep attachments in s
       );
     });
 
-<<<<<<< HEAD
-    data.filter(d => d.attachment)
-        .forEach(async ({ attachment: { url, filename, size } }) => {
-          if (size < OS.freeDiskSpace) {
-            // Planned feature, see Bug 1501214
-            await downloadLocally(url, filename);
-          }
-        });
-||||||| merged common ancestors
-    data.filter(d => d.attachment)
-        .forEach(async ({ attachment: { url, filename, size } }) => {
-          if (size < OS.freeDiskSpace) {
-            await downloadLocally(url, filename);
-          }
-        });
-=======
 The provided helper will:
 - fetch the remote binary content
 - check the file size
@@ -172,9 +151,6 @@ The provided helper will:
     This will allow us to package attachments as part of a Firefox release (see `Bug 1542177 <https://bugzilla.mozilla.org/show_bug.cgi?id=1542177>`_)
     and return them to calling code as ``resource://`` from within a package archive.
 
-
-.. _services/initial-data:
->>>>>>> upstream-releases
 
 .. _services/initial-data:
 
@@ -233,31 +209,6 @@ And once done:
 #. Wait for Firefox to pick-up the changes for your settings key
 
 
-<<<<<<< HEAD
-Advanced Options
-================
-
-``filterFunc``: custom filtering function
------------------------------------------
-
-By default, the entries returned by ``.get()`` are filtered based on the JEXL expression result from the ``filter_expression`` field. The ``filterFunc`` option allows to execute a custom filter (async) function, that should return the record (modified or not) if kept or a falsy value if filtered out.
-
-.. code-block:: javascript
-
-    RemoteSettings("a-collection", {
-      filterFunc: (record, environment) => {
-        const { enabled, ...entry } = record;
-        return enabled ? entry : null;
-      }
-    });
-
-
-Debugging and testing
-=====================
-||||||| merged common ancestors
-Debugging and testing
-=====================
-=======
 Global Notifications
 ====================
 
@@ -328,7 +279,6 @@ Remote Settings Dev Tools
 
 The Remote Settings Dev Tools extension provides some tooling to inspect synchronization statuses, to change the remote server or to switch to *preview* mode in order to sign-off pending changes. `More information on the dedicated repository <https://github.com/mozilla/remote-settings-devtools>`_.
 
->>>>>>> upstream-releases
 
 Trigger a synchronization manually
 ----------------------------------
@@ -339,11 +289,6 @@ The synchronization of every known remote settings clients can be triggered manu
 
     await RemoteSettings.pollChanges()
 
-<<<<<<< HEAD
-The synchronization of a single client can be forced with the ``.sync()`` method:
-||||||| merged common ancestors
-The synchronization of a single client can be forced with ``maybeSync()``:
-=======
 The synchronization of a single client can be forced with the ``.sync()`` method:
 
 .. code-block:: js
@@ -375,33 +320,17 @@ Simulate ``"sync"`` events
 --------------------------
 
 You can forge a ``payload`` that contains the events attributes as described above, and emit it :)
->>>>>>> upstream-releases
 
 .. code-block:: js
 
-<<<<<<< HEAD
-    await RemoteSettings("a-key").sync();
-
-.. important::
-||||||| merged common ancestors
-    const fakeTimestamp = Infinity;
-    const fakeServerTime = Date.now();
-=======
     const payload = {
       current: [{ id: "abc", age: 43 }],
       created: [],
       updated: [{ old: { id: "abc", age: 42 }, new: { id: "abc", age: 43 }}],
       deleted: [],
     };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    The above methods are only relevant during development or debugging and should never be called in production code.
-||||||| merged common ancestors
-    await RemoteSettings("a-key").maybeSync(fakeTimestamp, fakeServerTime)
-=======
     await RemoteSettings("a-key").emit("sync", { data: payload });
->>>>>>> upstream-releases
 
 
 Manipulate local data
@@ -449,40 +378,8 @@ The local data can be flushed with ``clear()``:
 For further documentation in collection API, checkout the `kinto.js library <https://kintojs.readthedocs.io/>`_, which is in charge of the IndexedDB interactions behind-the-scenes.
 
 
-<<<<<<< HEAD
-Inspect local data
-------------------
-
-The internal IndexedDB of Remote Settings can be accessed via the Storage Inspector in the `browser toolbox <https://developer.mozilla.org/en-US/docs/Tools/Browser_Toolbox>`_.
-
-For example, the local data of the ``"key"`` collection can be accessed in the ``remote-settings`` database at *Browser Toolbox* > *Storage* > *IndexedDB* > *chrome*, in the ``records`` store.
-
-
-Remote Settings Dev Tools
--------------------------
-
-The Remote Settings Dev Tools extension provides some tooling to inspect synchronization statuses, to change the remote server or to switch to *preview* mode in order to sign-off pending changes. `More information on the dedicated repository <https://github.com/mozilla/remote-settings-devtools>`_.
-||||||| merged common ancestors
-Inspect local data
-------------------
-
-The internal IndexedDBs of remote settings can be accessed via the Storage Inspector in the `browser toolbox <https://developer.mozilla.org/en-US/docs/Tools/Browser_Toolbox>`_.
-
-For example, the local data of the ``"key"`` collection can be accessed in the ``main/key`` IndexedDB store at *Browser Toolbox* > *Storage* > *IndexedDB* > *chrome* > *main/key*.
-
-
-\about:remotesettings
----------------------
-
-The ``about:remotesettings`` extension provides some tooling to inspect synchronization statuses, to change the remote server or to switch to *preview* mode in order to sign-off pending changes. `More information on the dedicated repository <https://github.com/leplatrem/aboutremotesettings>`_.
-
-.. note::
-
-    With `Bug 1406036 <https://bugzilla.mozilla.org/show_bug.cgi?id=1406036>`_, about:remotesettings will be available natively.
-=======
 Misc
 ====
->>>>>>> upstream-releases
 
 We host more documentation on https://remote-settings.readthedocs.io/, on how to run a server locally, manage attachments, or use the REST API etc.
 

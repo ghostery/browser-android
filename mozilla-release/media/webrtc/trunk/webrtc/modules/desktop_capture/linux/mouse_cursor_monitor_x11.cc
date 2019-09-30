@@ -10,30 +10,10 @@
 
 #include "modules/desktop_capture/linux/mouse_cursor_monitor_x11.h"
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/mouse_cursor_monitor_x11.cc
-#include "modules/desktop_capture/mouse_cursor_monitor.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/mouse_cursor_monitor.h"
-=======
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/mouse_cursor_monitor_x11.cc
 
 #include <X11/Xutil.h>
 #include <X11/extensions/Xfixes.h>
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/mouse_cursor_monitor_x11.cc
-#include "modules/desktop_capture/desktop_capture_options.h"
-#include "modules/desktop_capture/desktop_capture_types.h"
-#include "modules/desktop_capture/desktop_frame.h"
-#include "modules/desktop_capture/mouse_cursor.h"
-#include "modules/desktop_capture/x11/x_error_trap.h"
-#include "rtc_base/logging.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/desktop_capture_options.h"
-#include "webrtc/modules/desktop_capture/desktop_frame.h"
-#include "webrtc/modules/desktop_capture/mouse_cursor.h"
-#include "webrtc/modules/desktop_capture/x11/x_error_trap.h"
-#include "webrtc/system_wrappers/include/logging.h"
-=======
 #include <algorithm>
 #include <memory>
 
@@ -44,7 +24,6 @@
 #include "modules/desktop_capture/mouse_cursor.h"
 #include "modules/desktop_capture/mouse_cursor_monitor.h"
 #include "rtc_base/logging.h"
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/mouse_cursor_monitor_x11.cc
 
 namespace {
 
@@ -83,74 +62,6 @@ Window GetTopLevelWindow(Display* display, Window window) {
 
 namespace webrtc {
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/mouse_cursor_monitor_x11.cc
-class MouseCursorMonitorX11 : public MouseCursorMonitor,
-                              public SharedXDisplay::XEventHandler {
- public:
-  MouseCursorMonitorX11(const DesktopCaptureOptions& options, Window window, Window inner_window);
-  ~MouseCursorMonitorX11() override;
-
-  void Init(Callback* callback, Mode mode) override;
-  void Stop() override;
-  void Capture() override;
-
- private:
-  // SharedXDisplay::XEventHandler interface.
-  bool HandleXEvent(const XEvent& event) override;
-
-  Display* display() { return x_display_->display(); }
-
-  // Captures current cursor shape and stores it in |cursor_shape_|.
-  void CaptureCursor();
-
-  rtc::scoped_refptr<SharedXDisplay> x_display_;
-  Callback* callback_;
-  Mode mode_;
-  Window window_;
-  Window inner_window_;
-
-  bool have_xfixes_;
-  int xfixes_event_base_;
-  int xfixes_error_base_;
-
-  std::unique_ptr<MouseCursor> cursor_shape_;
-};
-
-||||||| merged common ancestors
-class MouseCursorMonitorX11 : public MouseCursorMonitor,
-                              public SharedXDisplay::XEventHandler {
- public:
-  MouseCursorMonitorX11(const DesktopCaptureOptions& options, Window window, Window inner_window);
-  ~MouseCursorMonitorX11() override;
-
-  void Start(Callback* callback, Mode mode) override;
-  void Stop() override;
-  void Capture() override;
-
- private:
-  // SharedXDisplay::XEventHandler interface.
-  bool HandleXEvent(const XEvent& event) override;
-
-  Display* display() { return x_display_->display(); }
-
-  // Captures current cursor shape and stores it in |cursor_shape_|.
-  void CaptureCursor();
-
-  rtc::scoped_refptr<SharedXDisplay> x_display_;
-  Callback* callback_;
-  Mode mode_;
-  Window window_;
-  Window inner_window_;
-
-  bool have_xfixes_;
-  int xfixes_event_base_;
-  int xfixes_error_base_;
-
-  std::unique_ptr<MouseCursor> cursor_shape_;
-};
-
-=======
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/mouse_cursor_monitor_x11.cc
 MouseCursorMonitorX11::MouseCursorMonitorX11(
     const DesktopCaptureOptions& options,
     Window window, Window inner_window)
@@ -212,29 +123,7 @@ void MouseCursorMonitorX11::Init(Callback* callback, Mode mode) {
 
     CaptureCursor();
   } else {
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/mouse_cursor_monitor_x11.cc
     RTC_LOG(LS_INFO) << "X server does not support XFixes.";
-  }
-}
-
-void MouseCursorMonitorX11::Stop() {
-  callback_ = NULL;
-  if (have_xfixes_) {
-    x_display_->RemoveEventHandler(xfixes_event_base_ + XFixesCursorNotify,
-                                   this);
-||||||| merged common ancestors
-    LOG(LS_INFO) << "X server does not support XFixes.";
-  }
-}
-
-void MouseCursorMonitorX11::Stop() {
-  callback_ = NULL;
-  if (have_xfixes_) {
-    x_display_->RemoveEventHandler(xfixes_event_base_ + XFixesCursorNotify,
-                                   this);
-=======
-    RTC_LOG(LS_INFO) << "X server does not support XFixes.";
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/mouse_cursor_monitor_x11.cc
   }
 }
 
@@ -358,20 +247,10 @@ MouseCursorMonitor* MouseCursorMonitorX11::CreateForScreen(
   return new MouseCursorMonitorX11(options, window, window);
 }
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/mouse_cursor_monitor_x11.cc
-std::unique_ptr<MouseCursorMonitor> MouseCursorMonitor::Create(
-    const DesktopCaptureOptions& options) {
-  return std::unique_ptr<MouseCursorMonitor>(
-      CreateForScreen(options, kFullDesktopScreenId));
-}
-
-||||||| merged common ancestors
-=======
 std::unique_ptr<MouseCursorMonitor> MouseCursorMonitorX11::Create(
     const DesktopCaptureOptions& options) {
   return std::unique_ptr<MouseCursorMonitor>(
       CreateForScreen(options, kFullDesktopScreenId));
 }
 
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/mouse_cursor_monitor_x11.cc
 }  // namespace webrtc

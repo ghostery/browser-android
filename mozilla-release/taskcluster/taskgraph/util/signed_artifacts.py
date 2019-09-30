@@ -32,16 +32,10 @@ def generate_specifications_of_artifacts_to_sign(
             'artifacts': [
                 get_artifact_path(job, '{locale}/target.apk'),
             ],
-<<<<<<< HEAD
-            'formats': ['autograph_apk_fennec_sha1'],
-||||||| merged common ancestors
-            'formats': ['jar'],
-=======
             'formats': ['autograph_apk_fennec_sha1'],
         }, {
             'artifacts': get_geckoview_artifacts_to_sign(config, job),
             'formats': ['autograph_gpg'],
->>>>>>> upstream-releases
         }]
     # XXX: Mars aren't signed here (on any platform) because internals will be
     # signed at after this stage of the release

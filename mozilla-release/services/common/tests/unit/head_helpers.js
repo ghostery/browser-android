@@ -222,42 +222,15 @@ function getUptakeTelemetrySnapshot(key) {
     "resource://gre/modules/Services.jsm"
   );
   const TELEMETRY_HISTOGRAM_ID = "UPTAKE_REMOTE_CONTENT_RESULT_1";
-<<<<<<< HEAD
-  return Services.telemetry
-           .getKeyedHistogramById(TELEMETRY_HISTOGRAM_ID)
-           .snapshot()[key];
-||||||| merged common ancestors
-  return Services.telemetry
-           .getKeyedHistogramById(TELEMETRY_HISTOGRAM_ID)
-           .snapshot(key);
-=======
   const TELEMETRY_COMPONENT = "remotesettings";
   const histogram = Services.telemetry
     .getKeyedHistogramById(TELEMETRY_HISTOGRAM_ID)
     .snapshot()[key];
   const events = _eventsTelemetrySnapshot(TELEMETRY_COMPONENT, key);
   return { histogram, events };
->>>>>>> upstream-releases
 }
 
 function checkUptakeTelemetry(snapshot1, snapshot2, expectedIncrements) {
-<<<<<<< HEAD
-  const LABELS = ["up_to_date", "success", "backoff", "pref_disabled", "parse_error", "content_error", "sign_error", "sign_retry_error", "conflict_error", "sync_error", "apply_error", "server_error", "certificate_error", "download_error", "timeout_error", "network_error", "offline_error", "cleanup_error", "unknown_error", "custom_1_error", "custom_2_error", "custom_3_error", "custom_4_error", "custom_5_error"];
-  for (const label of LABELS) {
-    const key = LABELS.indexOf(label);
-    const expected = expectedIncrements[label] || 0;
-    let value1 = (snapshot1 && snapshot1.values[key]) || 0;
-    let value2 = (snapshot2 && snapshot2.values[key]) || 0;
-    const actual = value2 - value1;
-    equal(expected, actual, `check histogram values for ${label}`);
-||||||| merged common ancestors
-  const LABELS = ["up_to_date", "success", "backoff", "pref_disabled", "parse_error", "content_error", "sign_error", "sign_retry_error", "conflict_error", "sync_error", "apply_error", "server_error", "certificate_error", "download_error", "timeout_error", "network_error", "offline_error", "cleanup_error", "unknown_error", "custom_1_error", "custom_2_error", "custom_3_error", "custom_4_error", "custom_5_error"];
-  for (const label of LABELS) {
-    const key = LABELS.indexOf(label);
-    const expected = expectedIncrements[label] || 0;
-    const actual = snapshot2.counts[key] - snapshot1.counts[key];
-    equal(expected, actual, `check histogram count for ${label}`);
-=======
   const STATUSES = [
     "up_to_date",
     "success",
@@ -323,6 +296,5 @@ async function withFakeChannel(channel, f) {
     return await f();
   } finally {
     module.Policy = oldPolicy;
->>>>>>> upstream-releases
   }
 }

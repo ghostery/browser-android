@@ -47,21 +47,6 @@ function testMarkOverridden(inspector, view) {
   const RESULTS = [
     // We skip the first element
     [],
-<<<<<<< HEAD
-    [{name: "margin-left", value: "23px", overridden: true}],
-    [{name: "margin-right", value: "23px", overridden: false},
-     {name: "margin-left", value: "1px", overridden: false}],
-    [{name: "font-size", value: "12px", overridden: false}],
-    [{name: "margin-right", value: "1px", overridden: true},
-     {name: "font-size", value: "79px", overridden: true}],
-||||||| merged common ancestors
-    [{name: "margin-left", value: "23px", overridden: true}],
-    [{name: "margin-right", value: "23px", overridden: false},
-     {name: "margin-left", value: "1px", overridden: false}],
-    [{name: "font-size", value: "12px", overridden: false}],
-    [{name: "margin-right", value: "1px", overridden: true},
-     {name: "font-size", value: "79px", overridden: true}]
-=======
     [{ name: "margin-left", value: "23px", overridden: true }],
     [
       { name: "margin-right", value: "23px", overridden: false },
@@ -72,7 +57,6 @@ function testMarkOverridden(inspector, view) {
       { name: "margin-right", value: "1px", overridden: true },
       { name: "font-size", value: "79px", overridden: true },
     ],
->>>>>>> upstream-releases
   ];
 
   for (let i = 1; i < RESULTS.length; ++i) {

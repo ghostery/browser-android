@@ -19,11 +19,4 @@
 # remain unchanged across different versions (Nightly, Beta, etc.).
 -brand-product-name = Firefox
 -vendor-short-name = Mozilla
-<<<<<<< HEAD
--brand-full-name = Mozilla Firefox
--brand-shorter-name = Firefox
 trademarkInfo = Firefox and the Firefox logos are trademarks of the Mozilla Foundation.
-||||||| merged common ancestors
-=======
-trademarkInfo = Firefox and the Firefox logos are trademarks of the Mozilla Foundation.
->>>>>>> upstream-releases

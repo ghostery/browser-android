@@ -29,46 +29,6 @@ using namespace indexedDB;
 
 IDBCursor::IDBCursor(Type aType, BackgroundCursorChild* aBackgroundActor,
                      const Key& aKey)
-<<<<<<< HEAD
-    : mBackgroundActor(aBackgroundActor),
-      mRequest(aBackgroundActor->GetRequest()),
-      mSourceObjectStore(aBackgroundActor->GetObjectStore()),
-      mSourceIndex(aBackgroundActor->GetIndex()),
-      mTransaction(mRequest->GetTransaction()),
-      mScriptOwner(mTransaction->Database()->GetScriptOwner()),
-      mCachedKey(JS::UndefinedValue()),
-      mCachedPrimaryKey(JS::UndefinedValue()),
-      mCachedValue(JS::UndefinedValue()),
-      mKey(aKey),
-      mType(aType),
-      mDirection(aBackgroundActor->GetDirection()),
-      mHaveCachedKey(false),
-      mHaveCachedPrimaryKey(false),
-      mHaveCachedValue(false),
-      mRooted(false),
-      mContinueCalled(false),
-      mHaveValue(true) {
-||||||| merged common ancestors
-  : mBackgroundActor(aBackgroundActor)
-  , mRequest(aBackgroundActor->GetRequest())
-  , mSourceObjectStore(aBackgroundActor->GetObjectStore())
-  , mSourceIndex(aBackgroundActor->GetIndex())
-  , mTransaction(mRequest->GetTransaction())
-  , mScriptOwner(mTransaction->Database()->GetScriptOwner())
-  , mCachedKey(JS::UndefinedValue())
-  , mCachedPrimaryKey(JS::UndefinedValue())
-  , mCachedValue(JS::UndefinedValue())
-  , mKey(aKey)
-  , mType(aType)
-  , mDirection(aBackgroundActor->GetDirection())
-  , mHaveCachedKey(false)
-  , mHaveCachedPrimaryKey(false)
-  , mHaveCachedValue(false)
-  , mRooted(false)
-  , mContinueCalled(false)
-  , mHaveValue(true)
-{
-=======
     : mBackgroundActor(aBackgroundActor),
       mRequest(aBackgroundActor->GetRequest()),
       mSourceObjectStore(aBackgroundActor->GetObjectStore()),
@@ -86,7 +46,6 @@ IDBCursor::IDBCursor(Type aType, BackgroundCursorChild* aBackgroundActor,
       mRooted(false),
       mContinueCalled(false),
       mHaveValue(true) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aBackgroundActor);
   aBackgroundActor->AssertIsOnOwningThread();
   MOZ_ASSERT(mRequest);
@@ -267,15 +226,7 @@ void IDBCursor::Reset() {
   mContinueCalled = false;
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowInner* IDBCursor::GetParentObject() const {
-||||||| merged common ancestors
-nsPIDOMWindowInner*
-IDBCursor::GetParentObject() const
-{
-=======
 nsIGlobalObject* IDBCursor::GetParentObject() const {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
   MOZ_ASSERT(mTransaction);
 

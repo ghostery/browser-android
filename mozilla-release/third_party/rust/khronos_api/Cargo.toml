@@ -12,13 +12,7 @@
 
 [package]
 name = "khronos_api"
-<<<<<<< HEAD
-version = "3.0.0"
-||||||| merged common ancestors
-version = "2.2.0"
-=======
 version = "3.1.0"
->>>>>>> upstream-releases
 authors = ["Brendan Zabarauskas <bjzaba@yahoo.com.au>", "Corey Richardson", "Arseny Kapoulkine", "Pierre Krieger <pierre.krieger1708@gmail.com>"]
 include = ["/README.md", "/src/**/*", "/Cargo.toml", "/build.rs", "/api/xml/**/*.xml", "/api_angle/scripts/**/*.xml", "/api_egl/api/**/*.xml", "/api_webgl/specs/latest/**/*.idl", "/api_webgl/extensions/**/extension.xml"]
 description = "The Khronos XML API Registry, exposed as byte string constants."

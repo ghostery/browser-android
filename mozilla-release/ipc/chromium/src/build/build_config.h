@@ -42,35 +42,16 @@
 
 // For access to standard BSD features, use OS_BSD instead of a
 // more specific macro.
-<<<<<<< HEAD
-#if defined(OS_DRAGONFLY) || defined(OS_FREEBSD) || defined(OS_NETBSD) || \
-    defined(OS_OPENBSD)
-#define OS_BSD 1
-||||||| merged common ancestors
-#if defined(OS_DRAGONFLY) || defined(OS_FREEBSD)	\
-  || defined(OS_NETBSD) || defined(OS_OPENBSD)
-#define OS_BSD 1
-=======
 #if defined(OS_DRAGONFLY) || defined(OS_FREEBSD) || defined(OS_NETBSD) || \
     defined(OS_OPENBSD)
 #  define OS_BSD 1
->>>>>>> upstream-releases
 #endif
 
 // For access to standard POSIX features, use OS_POSIX instead of a more
 // specific macro.
-<<<<<<< HEAD
-#if defined(OS_MACOSX) || defined(OS_LINUX) || defined(OS_BSD) || \
-    defined(OS_SOLARIS)
-#define OS_POSIX 1
-||||||| merged common ancestors
-#if defined(OS_MACOSX) || defined(OS_LINUX) || defined(OS_BSD) || defined(OS_SOLARIS)
-#define OS_POSIX 1
-=======
 #if defined(OS_MACOSX) || defined(OS_LINUX) || defined(OS_BSD) || \
     defined(OS_SOLARIS)
 #  define OS_POSIX 1
->>>>>>> upstream-releases
 #endif
 
 // Compiler detection.

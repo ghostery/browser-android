@@ -23,91 +23,12 @@ class nsIURI;
 class nsIPrincipal;
 class nsIChannel;
 
-<<<<<<< HEAD
-class nsSyncLoadService {
- public:
-  /**
-   * Synchronously load the document from the specified URI.
-   *
-   * @param aURI URI to load the document from.
-   * @param aContentPolicyType contentPolicyType to be set on the channel
-   * @param aLoaderPrincipal Principal of loading document. For security
-   *                         checks and referrer header.
-   * @param aSecurityFlags securityFlags to be set on the channel
-   * @param aLoadGroup The loadgroup to use for loading the document.
-   * @param aForceToXML Whether to parse the document as XML, regardless of
-   *                    content type.
-   * @param referrerPolicy Referrer policy.
-   * @param aResult [out] The document loaded from the URI.
-   */
-  static nsresult LoadDocument(nsIURI* aURI,
-                               nsContentPolicyType aContentPolicyType,
-                               nsIPrincipal* aLoaderPrincipal,
-                               nsSecurityFlags aSecurityFlags,
-                               nsILoadGroup* aLoadGroup, bool aForceToXML,
-                               mozilla::net::ReferrerPolicy aReferrerPolicy,
-                               nsIDocument** aResult);
-||||||| merged common ancestors
-class nsSyncLoadService
-{
-public:
-    /**
-     * Synchronously load the document from the specified URI.
-     *
-     * @param aURI URI to load the document from.
-     * @param aContentPolicyType contentPolicyType to be set on the channel
-     * @param aLoaderPrincipal Principal of loading document. For security
-     *                         checks and referrer header.
-     * @param aSecurityFlags securityFlags to be set on the channel
-     * @param aLoadGroup The loadgroup to use for loading the document.
-     * @param aForceToXML Whether to parse the document as XML, regardless of
-     *                    content type.
-     * @param referrerPolicy Referrer policy.
-     * @param aResult [out] The document loaded from the URI.
-     */
-    static nsresult LoadDocument(nsIURI *aURI,
-                                 nsContentPolicyType aContentPolicyType,
-                                 nsIPrincipal *aLoaderPrincipal,
-                                 nsSecurityFlags aSecurityFlags,
-                                 nsILoadGroup *aLoadGroup,
-                                 bool aForceToXML,
-                                 mozilla::net::ReferrerPolicy aReferrerPolicy,
-                                 nsIDocument** aResult);
-=======
 namespace mozilla {
 namespace dom {
 class Document;
 }
 }  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /**
-   * Read input stream aIn in chunks and deliver synchronously to aListener.
-   *
-   * @param aIn The stream to be read. The ownership of this stream is taken.
-   * @param aListener The listener that will receive
-   *                  OnStartRequest/OnDataAvailable/OnStopRequest
-   *                  notifications.
-   * @param aChannel The channel that aIn was opened from.
-   */
-  static nsresult PushSyncStreamToListener(already_AddRefed<nsIInputStream> aIn,
-                                           nsIStreamListener* aListener,
-                                           nsIChannel* aChannel);
-||||||| merged common ancestors
-    /**
-     * Read input stream aIn in chunks and deliver synchronously to aListener.
-     *
-     * @param aIn The stream to be read. The ownership of this stream is taken.
-     * @param aListener The listener that will receive
-     *                  OnStartRequest/OnDataAvailable/OnStopRequest
-     *                  notifications.
-     * @param aChannel The channel that aIn was opened from.
-     */
-    static nsresult PushSyncStreamToListener(already_AddRefed<nsIInputStream> aIn,
-                                             nsIStreamListener* aListener,
-                                             nsIChannel* aChannel);
-=======
 class nsSyncLoadService {
  public:
   /**
@@ -143,7 +64,6 @@ class nsSyncLoadService {
   static nsresult PushSyncStreamToListener(already_AddRefed<nsIInputStream> aIn,
                                            nsIStreamListener* aListener,
                                            nsIChannel* aChannel);
->>>>>>> upstream-releases
 };
 
 #endif  // nsSyncLoadService_h__

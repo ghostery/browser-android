@@ -55,29 +55,6 @@ void ClientSourceOpChild::DoSourceOp(Method aMethod, const Args& aArgs) {
   // or the actor starts shutting down and we disconnect our Thenable.
   // If the ClientSource is doing something async it may throw away the
   // promise on its side if the global is closed.
-<<<<<<< HEAD
-  promise
-      ->Then(target, __func__,
-             [this, promise](const mozilla::dom::ClientOpResult& aResult) {
-               mPromiseRequestHolder.Complete();
-               Unused << PClientSourceOpChild::Send__delete__(this, aResult);
-             },
-             [this, promise](nsresult aRv) {
-               mPromiseRequestHolder.Complete();
-               Unused << PClientSourceOpChild::Send__delete__(this, aRv);
-             })
-      ->Track(mPromiseRequestHolder);
-||||||| merged common ancestors
-  promise->Then(target, __func__,
-    [this, promise] (const mozilla::dom::ClientOpResult& aResult) {
-      mPromiseRequestHolder.Complete();
-      Unused << PClientSourceOpChild::Send__delete__(this, aResult);
-    },
-    [this, promise] (nsresult aRv) {
-      mPromiseRequestHolder.Complete();
-      Unused << PClientSourceOpChild::Send__delete__(this, aRv);
-    })->Track(mPromiseRequestHolder);
-=======
   promise
       ->Then(
           target, __func__,
@@ -90,7 +67,6 @@ void ClientSourceOpChild::DoSourceOp(Method aMethod, const Args& aArgs) {
             Unused << PClientSourceOpChild::Send__delete__(this, aRv);
           })
       ->Track(mPromiseRequestHolder);
->>>>>>> upstream-releases
 }
 
 void ClientSourceOpChild::ActorDestroy(ActorDestroyReason aReason) {

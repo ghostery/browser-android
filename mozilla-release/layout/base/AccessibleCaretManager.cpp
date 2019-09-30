@@ -71,17 +71,8 @@ std::ostream& operator<<(
 }
 #undef AC_PROCESS_ENUM_TO_STREAM
 
-<<<<<<< HEAD
-AccessibleCaretManager::AccessibleCaretManager(nsIPresShell* aPresShell)
-    : mPresShell(aPresShell) {
-||||||| merged common ancestors
-AccessibleCaretManager::AccessibleCaretManager(nsIPresShell* aPresShell)
-  : mPresShell(aPresShell)
-{
-=======
 AccessibleCaretManager::AccessibleCaretManager(PresShell* aPresShell)
     : mPresShell(aPresShell) {
->>>>>>> upstream-releases
   if (!mPresShell) {
     return;
   }
@@ -101,20 +92,9 @@ void AccessibleCaretManager::Terminate() {
   mPresShell = nullptr;
 }
 
-<<<<<<< HEAD
-nsresult AccessibleCaretManager::OnSelectionChanged(nsIDocument* aDoc,
-                                                    Selection* aSel,
-                                                    int16_t aReason) {
-||||||| merged common ancestors
-nsresult
-AccessibleCaretManager::OnSelectionChanged(nsIDocument* aDoc,
-                                           Selection* aSel, int16_t aReason)
-{
-=======
 nsresult AccessibleCaretManager::OnSelectionChanged(Document* aDoc,
                                                     Selection* aSel,
                                                     int16_t aReason) {
->>>>>>> upstream-releases
   Selection* selection = GetSelection();
   AC_LOG("%s: aSel: %p, GetSelection(): %p, aReason: %d", __FUNCTION__, aSel,
          selection, aReason);
@@ -490,13 +470,6 @@ nsresult AccessibleCaretManager::TapCaret(const nsPoint& aPoint) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult AccessibleCaretManager::SelectWordOrShortcut(const nsPoint& aPoint) {
-||||||| merged common ancestors
-nsresult
-AccessibleCaretManager::SelectWordOrShortcut(const nsPoint& aPoint)
-{
-=======
 static EnumSet<nsLayoutUtils::FrameForPointOption> GetHitTestOptions() {
   EnumSet<nsLayoutUtils::FrameForPointOption> options = {
       nsLayoutUtils::FrameForPointOption::IgnorePaintSuppression,
@@ -510,7 +483,6 @@ static EnumSet<nsLayoutUtils::FrameForPointOption> GetHitTestOptions() {
 }
 
 nsresult AccessibleCaretManager::SelectWordOrShortcut(const nsPoint& aPoint) {
->>>>>>> upstream-releases
   // If the long-tap is landing on a pre-existing selection, don't replace
   // it with a new one. Instead just return and let the context menu pop up
   // on the pre-existing selection.
@@ -532,31 +504,9 @@ nsresult AccessibleCaretManager::SelectWordOrShortcut(const nsPoint& aPoint) {
   }
 
   // Find the frame under point.
-<<<<<<< HEAD
-  uint32_t flags =
-      nsLayoutUtils::IGNORE_PAINT_SUPPRESSION | nsLayoutUtils::IGNORE_CROSS_DOC;
-#ifdef MOZ_WIDGET_ANDROID
-  // On Android, we need IGNORE_ROOT_SCROLL_FRAME for correct hit testing
-  // when zoomed in or out.
-  flags = nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME;
-#endif
-  AutoWeakFrame ptFrame =
-      nsLayoutUtils::GetFrameForPoint(rootFrame, aPoint, flags);
-  if (!ptFrame.IsAlive()) {
-||||||| merged common ancestors
-  uint32_t flags = nsLayoutUtils::IGNORE_PAINT_SUPPRESSION | nsLayoutUtils::IGNORE_CROSS_DOC;
-#ifdef MOZ_WIDGET_ANDROID
-  // On Android, we need IGNORE_ROOT_SCROLL_FRAME for correct hit testing
-  // when zoomed in or out.
-  flags = nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME;
-#endif
-  AutoWeakFrame ptFrame = nsLayoutUtils::GetFrameForPoint(rootFrame, aPoint, flags);
-  if (!ptFrame.IsAlive()) {
-=======
   AutoWeakFrame ptFrame =
       nsLayoutUtils::GetFrameForPoint(rootFrame, aPoint, GetHitTestOptions());
   if (!ptFrame.GetFrame()) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -871,18 +821,8 @@ void AccessibleCaretManager::SetSelectionDragState(bool aState) const {
   }
 }
 
-<<<<<<< HEAD
-bool AccessibleCaretManager::IsPhoneNumber(nsAString& aCandidate) const {
-  RefPtr<nsIDocument> doc = mPresShell->GetDocument();
-||||||| merged common ancestors
-bool
-AccessibleCaretManager::IsPhoneNumber(nsAString& aCandidate) const
-{
-  RefPtr<nsIDocument> doc = mPresShell->GetDocument();
-=======
 bool AccessibleCaretManager::IsPhoneNumber(nsAString& aCandidate) const {
   RefPtr<Document> doc = mPresShell->GetDocument();
->>>>>>> upstream-releases
   nsAutoString phoneNumberRegex(
       NS_LITERAL_STRING("(^\\+)?[0-9 ,\\-.()*#pw]{1,30}$"));
   return nsContentUtils::IsPatternMatching(aCandidate, phoneNumberRegex, doc);
@@ -972,18 +912,8 @@ void AccessibleCaretManager::ClearMaintainedSelection() const {
   }
 }
 
-<<<<<<< HEAD
-bool AccessibleCaretManager::FlushLayout() {
-  if (mPresShell) {
-||||||| merged common ancestors
-bool
-AccessibleCaretManager::FlushLayout()
-{
-  if (mPresShell) {
-=======
 bool AccessibleCaretManager::FlushLayout() {
   if (mPresShell && mAllowFlushingLayout) {
->>>>>>> upstream-releases
     AutoRestore<bool> flushing(mFlushingLayout);
     mFlushingLayout = true;
 
@@ -1171,20 +1101,9 @@ nsresult AccessibleCaretManager::DragCaretInternal(const nsPoint& aPoint) {
       nsPoint(aPoint.x, aPoint.y + mOffsetYToCaretLogicalPosition));
 
   // Find out which content we point to
-<<<<<<< HEAD
-  nsIFrame* ptFrame =
-      nsLayoutUtils::GetFrameForPoint(rootFrame, point,
-                                      nsLayoutUtils::IGNORE_PAINT_SUPPRESSION |
-                                          nsLayoutUtils::IGNORE_CROSS_DOC);
-||||||| merged common ancestors
-  nsIFrame* ptFrame = nsLayoutUtils::GetFrameForPoint(
-    rootFrame, point,
-    nsLayoutUtils::IGNORE_PAINT_SUPPRESSION | nsLayoutUtils::IGNORE_CROSS_DOC);
-=======
 
   nsIFrame* ptFrame =
       nsLayoutUtils::GetFrameForPoint(rootFrame, point, GetHitTestOptions());
->>>>>>> upstream-releases
   if (!ptFrame) {
     return NS_ERROR_FAILURE;
   }
@@ -1419,25 +1338,11 @@ void AccessibleCaretManager::DispatchCaretStateChangedEvent(
   init.mBoundingClientRect = domRect;
   init.mReason = aReason;
   init.mCollapsed = sel->IsCollapsed();
-<<<<<<< HEAD
-  init.mCaretVisible =
-      mFirstCaret->IsLogicallyVisible() || mSecondCaret->IsLogicallyVisible();
-  init.mCaretVisuallyVisible =
-      mFirstCaret->IsVisuallyVisible() || mSecondCaret->IsVisuallyVisible();
-  sel->Stringify(init.mSelectedTextContent);
-||||||| merged common ancestors
-  init.mCaretVisible = mFirstCaret->IsLogicallyVisible() ||
-                       mSecondCaret->IsLogicallyVisible();
-  init.mCaretVisuallyVisible = mFirstCaret->IsVisuallyVisible() ||
-                                mSecondCaret->IsVisuallyVisible();
-  sel->Stringify(init.mSelectedTextContent);
-=======
   init.mCaretVisible =
       mFirstCaret->IsLogicallyVisible() || mSecondCaret->IsLogicallyVisible();
   init.mCaretVisuallyVisible =
       mFirstCaret->IsVisuallyVisible() || mSecondCaret->IsVisuallyVisible();
   init.mSelectedTextContent = StringifiedSelection();
->>>>>>> upstream-releases
 
   RefPtr<CaretStateChangedEvent> event = CaretStateChangedEvent::Constructor(
       doc, NS_LITERAL_STRING("mozcaretstatechanged"), init);

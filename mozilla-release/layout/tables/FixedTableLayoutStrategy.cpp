@@ -17,41 +17,19 @@
 #include "WritingModes.h"
 #include <algorithm>
 
-<<<<<<< HEAD
-using namespace mozilla;
-
-FixedTableLayoutStrategy::FixedTableLayoutStrategy(nsTableFrame *aTableFrame)
-    : nsITableLayoutStrategy(nsITableLayoutStrategy::Fixed),
-      mTableFrame(aTableFrame) {
-||||||| merged common ancestors
-FixedTableLayoutStrategy::FixedTableLayoutStrategy(nsTableFrame *aTableFrame)
-  : nsITableLayoutStrategy(nsITableLayoutStrategy::Fixed)
-  , mTableFrame(aTableFrame)
-{
-=======
 using namespace mozilla;
 
 FixedTableLayoutStrategy::FixedTableLayoutStrategy(nsTableFrame* aTableFrame)
     : nsITableLayoutStrategy(nsITableLayoutStrategy::Fixed),
       mTableFrame(aTableFrame) {
->>>>>>> upstream-releases
   MarkIntrinsicISizesDirty();
 }
 
 /* virtual */
 FixedTableLayoutStrategy::~FixedTableLayoutStrategy() {}
 
-<<<<<<< HEAD
-/* virtual */ nscoord FixedTableLayoutStrategy::GetMinISize(
-    gfxContext *aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-FixedTableLayoutStrategy::GetMinISize(gfxContext* aRenderingContext)
-{
-=======
 /* virtual */
 nscoord FixedTableLayoutStrategy::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   DISPLAY_MIN_INLINE_SIZE(mTableFrame, mMinISize);
   if (mMinISize != NS_INTRINSIC_ISIZE_UNKNOWN) {
     return mMinISize;
@@ -91,69 +69,24 @@ nscoord FixedTableLayoutStrategy::GetMinISize(gfxContext* aRenderingContext) {
     nscoord spacing = mTableFrame->GetColSpacing(col);
     const auto* styleISize = &colFrame->StylePosition()->ISize(wm);
     if (styleISize->ConvertsToLength()) {
-<<<<<<< HEAD
-      result +=
-          colFrame->ComputeISizeValue(aRenderingContext, 0, 0, 0, *styleISize);
-    } else if (styleISize->GetUnit() == eStyleUnit_Percent) {
-||||||| merged common ancestors
-      result += colFrame->ComputeISizeValue(aRenderingContext,
-                                            0, 0, 0, *styleISize);
-    } else if (styleISize->GetUnit() == eStyleUnit_Percent) {
-=======
       result +=
           colFrame->ComputeISizeValue(aRenderingContext, 0, 0, 0, *styleISize);
     } else if (styleISize->ConvertsToPercentage()) {
->>>>>>> upstream-releases
       // do nothing
     } else {
-<<<<<<< HEAD
-      NS_ASSERTION(
-          styleISize->GetUnit() == eStyleUnit_Auto ||
-              styleISize->GetUnit() == eStyleUnit_Enumerated ||
-              (styleISize->IsCalcUnit() && styleISize->CalcHasPercent()),
-          "bad inline size");
-||||||| merged common ancestors
-      NS_ASSERTION(styleISize->GetUnit() == eStyleUnit_Auto ||
-                   styleISize->GetUnit() == eStyleUnit_Enumerated ||
-                   (styleISize->IsCalcUnit() && styleISize->CalcHasPercent()),
-                   "bad inline size");
-=======
       NS_ASSERTION(styleISize->IsAuto() || styleISize->IsExtremumLength() ||
                        styleISize->HasLengthAndPercentage(),
                    "bad inline size");
->>>>>>> upstream-releases
 
       // The 'table-layout: fixed' algorithm considers only cells in the
       // first row.
       bool originates;
       int32_t colSpan;
-<<<<<<< HEAD
-      nsTableCellFrame *cellFrame =
-          cellMap->GetCellInfoAt(0, col, &originates, &colSpan);
-||||||| merged common ancestors
-      nsTableCellFrame *cellFrame = cellMap->GetCellInfoAt(0, col, &originates,
-                                                           &colSpan);
-=======
       nsTableCellFrame* cellFrame =
           cellMap->GetCellInfoAt(0, col, &originates, &colSpan);
->>>>>>> upstream-releases
       if (cellFrame) {
         styleISize = &cellFrame->StylePosition()->ISize(wm);
         if (styleISize->ConvertsToLength() ||
-<<<<<<< HEAD
-            (styleISize->GetUnit() == eStyleUnit_Enumerated &&
-             (styleISize->GetIntValue() == NS_STYLE_WIDTH_MAX_CONTENT ||
-              styleISize->GetIntValue() == NS_STYLE_WIDTH_MIN_CONTENT))) {
-          nscoord cellISize = nsLayoutUtils::IntrinsicForContainer(
-              aRenderingContext, cellFrame, nsLayoutUtils::MIN_ISIZE);
-||||||| merged common ancestors
-            (styleISize->GetUnit() == eStyleUnit_Enumerated &&
-             (styleISize->GetIntValue() == NS_STYLE_WIDTH_MAX_CONTENT ||
-              styleISize->GetIntValue() == NS_STYLE_WIDTH_MIN_CONTENT))) {
-          nscoord cellISize =
-            nsLayoutUtils::IntrinsicForContainer(aRenderingContext, cellFrame,
-                                                 nsLayoutUtils::MIN_ISIZE);
-=======
             (styleISize->IsExtremumLength() &&
              (styleISize->AsExtremumLength() ==
                   StyleExtremumLength::MaxContent ||
@@ -161,7 +94,6 @@ nscoord FixedTableLayoutStrategy::GetMinISize(gfxContext* aRenderingContext) {
                   StyleExtremumLength::MinContent))) {
           nscoord cellISize = nsLayoutUtils::IntrinsicForContainer(
               aRenderingContext, cellFrame, nsLayoutUtils::MIN_ISIZE);
->>>>>>> upstream-releases
           if (colSpan > 1) {
             // If a column-spanning cell is in the first row, split up
             // the space evenly.  (XXX This isn't quite right if some of
@@ -185,19 +117,9 @@ nscoord FixedTableLayoutStrategy::GetMinISize(gfxContext* aRenderingContext) {
   return (mMinISize = result);
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord FixedTableLayoutStrategy::GetPrefISize(
-    gfxContext *aRenderingContext, bool aComputingSize) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-FixedTableLayoutStrategy::GetPrefISize(gfxContext* aRenderingContext,
-                                       bool aComputingSize)
-{
-=======
 /* virtual */
 nscoord FixedTableLayoutStrategy::GetPrefISize(gfxContext* aRenderingContext,
                                                bool aComputingSize) {
->>>>>>> upstream-releases
   // It's theoretically possible to do something much better here that
   // depends only on the columns and the first row (where we look at
   // intrinsic inline sizes inside the first row and then reverse the
@@ -209,19 +131,9 @@ nscoord FixedTableLayoutStrategy::GetPrefISize(gfxContext* aRenderingContext,
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ void FixedTableLayoutStrategy::MarkIntrinsicISizesDirty() {
-  mMinISize = NS_INTRINSIC_WIDTH_UNKNOWN;
-||||||| merged common ancestors
-/* virtual */ void
-FixedTableLayoutStrategy::MarkIntrinsicISizesDirty()
-{
-  mMinISize = NS_INTRINSIC_WIDTH_UNKNOWN;
-=======
 /* virtual */
 void FixedTableLayoutStrategy::MarkIntrinsicISizesDirty() {
   mMinISize = NS_INTRINSIC_ISIZE_UNKNOWN;
->>>>>>> upstream-releases
   mLastCalcISize = nscoord_MIN;
 }
 
@@ -236,18 +148,9 @@ static inline nscoord AllocateUnassigned(nscoord aUnassignedSpace,
   return NSToCoordRound(float(aUnassignedSpace) * aShare);
 }
 
-<<<<<<< HEAD
-/* virtual */ void FixedTableLayoutStrategy::ComputeColumnISizes(
-    const ReflowInput &aReflowInput) {
-||||||| merged common ancestors
-/* virtual */ void
-FixedTableLayoutStrategy::ComputeColumnISizes(const ReflowInput& aReflowInput)
-{
-=======
 /* virtual */
 void FixedTableLayoutStrategy::ComputeColumnISizes(
     const ReflowInput& aReflowInput) {
->>>>>>> upstream-releases
   nscoord tableISize = aReflowInput.ComputedISize();
 
   if (mLastCalcISize == tableISize) {
@@ -315,40 +218,19 @@ void FixedTableLayoutStrategy::ComputeColumnISizes(
       colFrame->AddPrefPercent(pct);
       pctTotal += pct;
     } else {
-<<<<<<< HEAD
-      NS_ASSERTION(
-          styleISize->GetUnit() == eStyleUnit_Auto ||
-              styleISize->GetUnit() == eStyleUnit_Enumerated ||
-              (styleISize->IsCalcUnit() && styleISize->CalcHasPercent()),
-          "bad inline size");
-||||||| merged common ancestors
-      NS_ASSERTION(styleISize->GetUnit() == eStyleUnit_Auto ||
-                   styleISize->GetUnit() == eStyleUnit_Enumerated ||
-                   (styleISize->IsCalcUnit() && styleISize->CalcHasPercent()),
-                   "bad inline size");
-=======
       NS_ASSERTION(styleISize->IsAuto() || styleISize->IsExtremumLength() ||
                        (styleISize->IsLengthPercentage() &&
                         !styleISize->ConvertsToLength()),
                    "bad inline size");
->>>>>>> upstream-releases
 
       // The 'table-layout: fixed' algorithm considers only cells in the
       // first row.
       bool originates;
       int32_t colSpan;
-<<<<<<< HEAD
-      nsTableCellFrame *cellFrame =
-          cellMap->GetCellInfoAt(0, col, &originates, &colSpan);
-||||||| merged common ancestors
-      nsTableCellFrame *cellFrame = cellMap->GetCellInfoAt(0, col, &originates,
-                                                           &colSpan);
-=======
       nsTableCellFrame* cellFrame =
           cellMap->GetCellInfoAt(0, col, &originates, &colSpan);
->>>>>>> upstream-releases
       if (cellFrame) {
-        const nsStylePosition *cellStylePos = cellFrame->StylePosition();
+        const nsStylePosition* cellStylePos = cellFrame->StylePosition();
         styleISize = &cellStylePos->ISize(wm);
         if (styleISize->ConvertsToLength() ||
             (styleISize->IsExtremumLength() &&
@@ -361,23 +243,10 @@ void FixedTableLayoutStrategy::ComputeColumnISizes(
           // shouldn't matter for any of these values of styleISize; use
           // MIN_ISIZE for symmetry with GetMinISize above, just in case
           // there is a difference.
-<<<<<<< HEAD
-          colISize = nsLayoutUtils::IntrinsicForContainer(
-              aReflowInput.mRenderingContext, cellFrame,
-              nsLayoutUtils::MIN_ISIZE);
-        } else if (styleISize->GetUnit() == eStyleUnit_Percent) {
-||||||| merged common ancestors
-          colISize =
-            nsLayoutUtils::IntrinsicForContainer(aReflowInput.mRenderingContext,
-                                                 cellFrame,
-                                                 nsLayoutUtils::MIN_ISIZE);
-        } else if (styleISize->GetUnit() == eStyleUnit_Percent) {
-=======
           colISize = nsLayoutUtils::IntrinsicForContainer(
               aReflowInput.mRenderingContext, cellFrame,
               nsLayoutUtils::MIN_ISIZE);
         } else if (styleISize->ConvertsToPercentage()) {
->>>>>>> upstream-releases
           // XXX This should use real percentage padding
           float pct = styleISize->ToPercentage();
           colISize = NSToCoordFloor(pct * float(tableISize));

@@ -68,142 +68,6 @@ let typeInSearchField = async function(browser, text, fieldName) {
   });
 };
 
-<<<<<<< HEAD
-
-/**
- * Clear and get the named histogram
- * @param {String} name
- *        The name of the histogram
- */
-function getAndClearHistogram(name) {
-  let histogram = Services.telemetry.getHistogramById(name);
-  histogram.clear();
-  return histogram;
-}
-
-
-/**
- * Clear and get the named keyed histogram
- * @param {String} name
- *        The name of the keyed histogram
- */
-function getAndClearKeyedHistogram(name) {
-  let histogram = Services.telemetry.getKeyedHistogramById(name);
-  histogram.clear();
-  return histogram;
-}
-
-
-/**
- * Check that the keyed histogram contains the right value.
- */
-function checkKeyedHistogram(h, key, expectedValue) {
-  const snapshot = h.snapshot();
-  if (expectedValue === undefined) {
-    Assert.ok(!(key in snapshot), `The histogram must not contain ${key}.`);
-    return;
-  }
-  Assert.ok(key in snapshot, `The histogram must contain ${key}.`);
-  Assert.equal(snapshot[key].sum, expectedValue, `The key ${key} must contain ${expectedValue}.`);
-}
-
-/**
- * Return the scalars from the parent-process.
- */
-function getParentProcessScalars(aChannel, aKeyed = false, aClear = false) {
-  const extended = aChannel == Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN;
-  const currentExtended = Services.telemetry.canRecordExtended;
-  Services.telemetry.canRecordExtended = extended;
-  const scalars = aKeyed ?
-    Services.telemetry.getSnapshotForKeyedScalars("main", aClear).parent :
-    Services.telemetry.getSnapshotForScalars("main", aClear).parent;
-  Services.telemetry.canRecordExtended = currentExtended;
-  return scalars || {};
-}
-
-function checkEvents(events, expectedEvents) {
-  if (!Services.telemetry.canRecordExtended) {
-    // Currently we only collect the tested events when extended Telemetry is enabled.
-    return;
-  }
-
-  Assert.equal(events.length, expectedEvents.length, "Should have matching amount of events.");
-
-  // Strip timestamps from the events for easier comparison.
-  events = events.map(e => e.slice(1));
-
-  for (let i = 0; i < events.length; ++i) {
-    Assert.deepEqual(events[i], expectedEvents[i], "Events should match.");
-  }
-}
-
-||||||| merged common ancestors
-
-/**
- * Clear and get the named histogram
- * @param {String} name
- *        The name of the histogram
- */
-function getAndClearHistogram(name) {
-  let histogram = Services.telemetry.getHistogramById(name);
-  histogram.clear();
-  return histogram;
-}
-
-
-/**
- * Clear and get the named keyed histogram
- * @param {String} name
- *        The name of the keyed histogram
- */
-function getAndClearKeyedHistogram(name) {
-  let histogram = Services.telemetry.getKeyedHistogramById(name);
-  histogram.clear();
-  return histogram;
-}
-
-
-/**
- * Check that the keyed histogram contains the right value.
- */
-function checkKeyedHistogram(h, key, expectedValue) {
-  const snapshot = h.snapshot();
-  if (expectedValue === undefined) {
-    Assert.ok(!(key in snapshot), `The histogram must not contain ${key}.`);
-    return;
-  }
-  Assert.ok(key in snapshot, `The histogram must contain ${key}.`);
-  Assert.equal(snapshot[key].sum, expectedValue, `The key ${key} must contain ${expectedValue}.`);
-}
-
-/**
- * Return the scalars from the parent-process.
- */
-function getParentProcessScalars(aChannel, aKeyed = false, aClear = false) {
-  const scalars = aKeyed ?
-    Services.telemetry.snapshotKeyedScalars(aChannel, aClear).parent :
-    Services.telemetry.snapshotScalars(aChannel, aClear).parent;
-  return scalars || {};
-}
-
-function checkEvents(events, expectedEvents) {
-  if (!Services.telemetry.canRecordExtended) {
-    // Currently we only collect the tested events when extended Telemetry is enabled.
-    return;
-  }
-
-  Assert.equal(events.length, expectedEvents.length, "Should have matching amount of events.");
-
-  // Strip timestamps from the events for easier comparison.
-  events = events.map(e => e.slice(1));
-
-  for (let i = 0; i < events.length; ++i) {
-    Assert.deepEqual(events[i], expectedEvents[i], "Events should match.");
-  }
-}
-
-=======
->>>>>>> upstream-releases
 /**
  * Given a <xul:browser> at some non-internal web page,
  * return something that resembles an nsIContentPermissionRequest,
@@ -339,18 +203,10 @@ function getPopupNotificationNode() {
  * @return void
  */
 async function disableNonReleaseActions() {
-<<<<<<< HEAD
-  if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
-    SpecialPowers.Services.prefs.setBoolPref("extensions.webcompat-reporter.enabled", false);
-||||||| merged common ancestors
-  if (AppConstants.MOZ_DEV_EDITION || AppConstants.NIGHTLY_BUILD) {
-    SpecialPowers.Services.prefs.setBoolPref("extensions.webcompat-reporter.enabled", false);
-=======
   if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
     SpecialPowers.Services.prefs.setBoolPref(
       "extensions.webcompat-reporter.enabled",
       false
     );
->>>>>>> upstream-releases
   }
 }

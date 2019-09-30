@@ -49,22 +49,9 @@ class FetchUtil final {
                             nsCString& aHeaderName, nsCString& aHeaderValue,
                             bool* aWasEmptyHeader);
 
-<<<<<<< HEAD
-  static nsresult SetRequestReferrer(nsIPrincipal* aPrincipal,
-                                     nsIDocument* aDoc,
-                                     nsIHttpChannel* aChannel,
-                                     InternalRequest* aRequest);
-||||||| merged common ancestors
-  static nsresult
-  SetRequestReferrer(nsIPrincipal* aPrincipal,
-                     nsIDocument* aDoc,
-                     nsIHttpChannel* aChannel,
-                     InternalRequest* aRequest);
-=======
   static nsresult SetRequestReferrer(nsIPrincipal* aPrincipal, Document* aDoc,
                                      nsIHttpChannel* aChannel,
                                      InternalRequest* aRequest);
->>>>>>> upstream-releases
 
   /**
    * Check that the given object is a Response and, if so, stream to the given

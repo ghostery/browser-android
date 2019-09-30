@@ -21,7 +21,6 @@
 #include "putilimp.h"
 #include "uinvchar.h"
 #include "ulocimp.h"
-#include "uvector.h"
 #include "uassert.h"
 
 
@@ -124,19 +123,6 @@ static const char* const GRANDFATHERED[] = {
     "zh-hakka",     "hak",
     "zh-min-nan",   "nan",
     "zh-xiang",     "hsn",
-<<<<<<< HEAD
-
-    // Grandfathered tags with no preferred value in the IANA
-    // registry. Kept for now for the backward compatibility
-    // because ICU has mapped them this way.
-    "cel-gaulish",  "xtg-x-cel-gaulish",
-    "i-default",    "en-x-i-default",
-    "i-enochian",   "und-x-i-enochian",
-    "i-mingo",      "see-x-i-mingo",
-    "zh-min",       "nan-x-zh-min",
-||||||| merged common ancestors
-    NULL,           NULL
-=======
 
     // Grandfathered tags with no preferred value in the IANA
     // registry. Kept for now for the backward compatibility
@@ -148,56 +134,6 @@ static const char* const GRANDFATHERED[] = {
     "zh-min",       "nan-x-zh-min",
 };
 
-/*
- Updated on 2018-09-12 from
- https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry .
-
- The table lists redundant tags with preferred value in the IANA languate tag registry.
- It's generated with the following command:
-
- curl  https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry |\
- grep 'Type: redundant' -A 5 | egrep '^(Tag:|Prefer)' | grep -B1 'Preferred' | \
- awk -n '/Tag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}' | \
- tr 'A-Z' 'a-z'
-
- In addition, ja-latn-hepburn-heploc is mapped to ja-latn-alalc97 because
- a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
-*/
-
-static const char* const REDUNDANT[] = {
-//  redundant       preferred
-    "sgn-br",       "bzs",
-    "sgn-co",       "csn",
-    "sgn-de",       "gsg",
-    "sgn-dk",       "dsl",
-    "sgn-es",       "ssp",
-    "sgn-fr",       "fsl",
-    "sgn-gb",       "bfi",
-    "sgn-gr",       "gss",
-    "sgn-ie",       "isg",
-    "sgn-it",       "ise",
-    "sgn-jp",       "jsl",
-    "sgn-mx",       "mfs",
-    "sgn-ni",       "ncs",
-    "sgn-nl",       "dse",
-    "sgn-no",       "nsl",
-    "sgn-pt",       "psr",
-    "sgn-se",       "swl",
-    "sgn-us",       "ase",
-    "sgn-za",       "sfs",
-    "zh-cmn",       "cmn",
-    "zh-cmn-hans",  "cmn-hans",
-    "zh-cmn-hant",  "cmn-hant",
-    "zh-gan",       "gan",
-    "zh-wuu",       "wuu",
-    "zh-yue",       "yue",
-
-    // variant tag with preferred value
-    "ja-latn-hepburn-heploc", "ja-latn-alalc97",
->>>>>>> upstream-releases
-};
-
-<<<<<<< HEAD
 /*
  Updated on 2018-09-12 from
  https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry .
@@ -256,19 +192,6 @@ static const char* const REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-||||||| merged common ancestors
-=======
-/*
-  Updated on 2018-09-12 from
-  https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry .
-
-  grep 'Type: language' -A 7 language-subtag-registry  | egrep 'Subtag|Prefe' | \
-  grep -B1 'Preferred' | grep -v '^--' | \
-  awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
-
-  Make sure that 2-letter language subtags come before 3-letter subtags.
-*/
->>>>>>> upstream-releases
 static const char DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
@@ -426,49 +349,6 @@ static const char*
 ultag_getGrandfathered(const ULanguageTag* langtag);
 #endif
 
-<<<<<<< HEAD
-namespace {
-
-// Helper class to memory manage CharString objects.
-// Only ever stack-allocated, does not need to inherit UMemory.
-class CharStringPool {
-public:
-    CharStringPool() : status(U_ZERO_ERROR), pool(&deleter, nullptr, status) {}
-    ~CharStringPool() = default;
-
-    CharStringPool(const CharStringPool&) = delete;
-    CharStringPool& operator=(const CharStringPool&) = delete;
-
-    icu::CharString* create() {
-        if (U_FAILURE(status)) {
-            return nullptr;
-        }
-        icu::CharString* const obj = new icu::CharString;
-        if (obj == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
-        }
-        pool.addElement(obj, status);
-        if (U_FAILURE(status)) {
-            delete obj;
-            return nullptr;
-        }
-        return obj;
-    }
-
-private:
-    static void U_CALLCONV deleter(void* obj) {
-        delete static_cast<icu::CharString*>(obj);
-    }
-
-    UErrorCode status;
-    icu::UVector pool;
-};
-
-}  // namespace
-
-||||||| merged common ancestors
-=======
 U_NAMESPACE_BEGIN
 
 /**
@@ -484,7 +364,6 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalULanguageTagPointer, ULanguageTag, ultag_close)
 
 U_NAMESPACE_END
 
->>>>>>> upstream-releases
 /*
 * -------------------------------------------------
 *
@@ -1185,29 +1064,8 @@ _appendScriptToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool stri
             }
             return;
         } else {
-<<<<<<< HEAD
-            if (reslen < capacity) {
-                *(appendAt + reslen) = SEP;
-            }
-            reslen++;
-            if (reslen < capacity) {
-                uprv_memcpy(appendAt + reslen, buf, uprv_min(len, capacity - reslen));
-            }
-            reslen += len;
-||||||| merged common ancestors
-            if (reslen < capacity) {
-                *(appendAt + reslen) = SEP;
-            }
-            reslen++;
-
-            if (reslen < capacity) {
-                uprv_memcpy(appendAt + reslen, buf, uprv_min(len, capacity - reslen));
-            }
-            reslen += len;
-=======
             sink.Append("-", 1);
             sink.Append(buf, len);
->>>>>>> upstream-releases
         }
     }
 }
@@ -1238,31 +1096,6 @@ _appendRegionToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool stri
             }
             return;
         } else {
-<<<<<<< HEAD
-            if (reslen < capacity) {
-                *(appendAt + reslen) = SEP;
-            }
-            reslen++;
-           /* resolve deprecated */
-            for (int i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf, DEPRECATEDREGIONS[i]) == 0) {
-                    uprv_strcpy(buf, DEPRECATEDREGIONS[i + 1]);
-                    len = (int32_t)uprv_strlen(buf);
-                    break;
-                }
-            }
-
-            if (reslen < capacity) {
-                uprv_memcpy(appendAt + reslen, buf, uprv_min(len, capacity - reslen));
-||||||| merged common ancestors
-            if (reslen < capacity) {
-                *(appendAt + reslen) = SEP;
-            }
-            reslen++;
-
-            if (reslen < capacity) {
-                uprv_memcpy(appendAt + reslen, buf, uprv_min(len, capacity - reslen));
-=======
             sink.Append("-", 1);
             /* resolve deprecated */
             for (int i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
@@ -1271,7 +1104,6 @@ _appendRegionToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool stri
                     len = (int32_t)uprv_strlen(buf);
                     break;
                 }
->>>>>>> upstream-releases
             }
             sink.Append(buf, len);
         }
@@ -1392,17 +1224,8 @@ _appendVariantsToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool st
     }
 }
 
-<<<<<<< HEAD
-static int32_t
-_appendKeywordsToLanguageTag(const char* localeID, char* appendAt, int32_t capacity, UBool strict, UBool hadPosix, UErrorCode* status) {
-||||||| merged common ancestors
-static int32_t
-_appendKeywordsToLanguageTag(const char* localeID, char* appendAt, int32_t capacity, UBool strict, UBool hadPosix, UErrorCode* status) {
-    char buf[ULOC_KEYWORD_AND_VALUES_CAPACITY];
-=======
 static void
 _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool strict, UBool hadPosix, UErrorCode* status) {
->>>>>>> upstream-releases
     char attrBuf[ULOC_KEYWORD_AND_VALUES_CAPACITY] = { 0 };
     int32_t attrBufLength = 0;
 
@@ -1422,32 +1245,15 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool st
         ExtensionListEntry *ext;
         AttributeListEntry *firstAttr = NULL;
         AttributeListEntry *attr;
-<<<<<<< HEAD
-        char *attrValue;
-        CharStringPool extBufPool;
-||||||| merged common ancestors
-        char *attrValue;
-        char extBuf[ULOC_KEYWORD_AND_VALUES_CAPACITY];
-        char *pExtBuf = extBuf;
-        int32_t extBufCapacity = sizeof(extBuf);
-=======
         icu::MemoryPool<icu::CharString> extBufPool;
->>>>>>> upstream-releases
         const char *bcpKey=nullptr, *bcpValue=nullptr;
         UErrorCode tmpStatus = U_ZERO_ERROR;
         int32_t keylen;
         UBool isBcpUExt;
 
         while (TRUE) {
-<<<<<<< HEAD
-            icu::CharString buf;
-            key = uenum_next(keywordEnum, NULL, status);
-||||||| merged common ancestors
-            key = uenum_next(keywordEnum, NULL, status);
-=======
             icu::CharString buf;
             key = uenum_next(keywordEnum.getAlias(), NULL, status);
->>>>>>> upstream-releases
             if (key == NULL) {
                 break;
             }
@@ -1603,13 +1409,7 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool st
                 }
             } else {
                 if (*key == PRIVATEUSE) {
-<<<<<<< HEAD
-                    if (!_isPrivateuseValueSubtags(buf.data(), len)) {
-||||||| merged common ancestors
-                    if (!_isPrivateuseValueSubtags(buf, len)) {
-=======
                     if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
->>>>>>> upstream-releases
                         if (strict) {
                             *status = U_ILLEGAL_ARGUMENT_ERROR;
                             break;
@@ -1617,13 +1417,7 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool st
                         continue;
                     }
                 } else {
-<<<<<<< HEAD
-                    if (!_isExtensionSingleton(key, keylen) || !_isExtensionSubtags(buf.data(), len)) {
-||||||| merged common ancestors
-                    if (!_isExtensionSingleton(key, keylen) || !_isExtensionSubtags(buf, len)) {
-=======
                     if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
->>>>>>> upstream-releases
                         if (strict) {
                             *status = U_ILLEGAL_ARGUMENT_ERROR;
                             break;
@@ -1632,46 +1426,17 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, UBool st
                     }
                 }
                 bcpKey = key;
-<<<<<<< HEAD
-                icu::CharString* extBuf = extBufPool.create();
-                if (extBuf == nullptr) {
-                    *status = U_MEMORY_ALLOCATION_ERROR;
-||||||| merged common ancestors
-                if ((len + 1) < extBufCapacity) {
-                    uprv_memcpy(pExtBuf, buf, len);
-                    bcpValue = pExtBuf;
-
-                    pExtBuf += len;
-
-                    *pExtBuf = 0;
-                    pExtBuf++;
-
-                    extBufCapacity -= (len + 1);
-                } else {
-                    *status = U_ILLEGAL_ARGUMENT_ERROR;
-=======
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
                 if (extBuf == nullptr) {
                     *status = U_MEMORY_ALLOCATION_ERROR;
->>>>>>> upstream-releases
                     break;
                 }
-<<<<<<< HEAD
-                extBuf->append(buf.data(), len, tmpStatus);
                 if (U_FAILURE(tmpStatus)) {
                     *status = tmpStatus;
                     break;
                 }
                 bcpValue = extBuf->data();
-||||||| merged common ancestors
-=======
-                if (U_FAILURE(tmpStatus)) {
-                    *status = tmpStatus;
-                    break;
-                }
-                bcpValue = extBuf->data();
->>>>>>> upstream-releases
             }
 
             /* create ExtensionListEntry */
@@ -1766,33 +1531,10 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
         icu::MemoryPool<AttributeListEntry> attrPool;
 
-<<<<<<< HEAD
-        if (len < (int32_t)sizeof(attrBuf) - attrBufIdx) {
-            uprv_memcpy(&attrBuf[attrBufIdx], pTag, len);
-            attrBuf[attrBufIdx + len] = 0;
-            attr->attribute = &attrBuf[attrBufIdx];
-            attrBufIdx += (len + 1);
-        } else {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            uprv_free(attr);
-            goto cleanup;
-        }
-||||||| merged common ancestors
-        if (len < (int32_t)sizeof(attrBuf) - attrBufIdx) {
-            uprv_memcpy(&attrBuf[attrBufIdx], pTag, len);
-            attrBuf[attrBufIdx + len] = 0;
-            attr->attribute = &attrBuf[attrBufIdx];
-            attrBufIdx += (len + 1);
-        } else {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            goto cleanup;
-        }
-=======
         /* Iterate through u extension attributes */
         while (*pTag) {
             /* locate next separator char */
             for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
->>>>>>> upstream-releases
 
             if (ultag_isUnicodeLocaleKey(pTag, len)) {
                 pKwds = pTag;
@@ -2013,18 +1755,8 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
                     kwd->value = pType;
 
                     if (!_addExtensionToList(&kwdFirst, kwd, FALSE)) {
-<<<<<<< HEAD
                         // duplicate keyword is allowed, Only the first
                         // is honored.
-                        uprv_free(kwd);
-||||||| merged common ancestors
-                        *status = U_ILLEGAL_ARGUMENT_ERROR;
-                        uprv_free(kwd);
-                        goto cleanup;
-=======
-                        // duplicate keyword is allowed, Only the first
-                        // is honored.
->>>>>>> upstream-releases
                     }
                 }
 
@@ -2336,13 +2068,6 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode* sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is grandfathered */
-<<<<<<< HEAD
-    for (i = 0; i < UPRV_LENGTHOF(GRANDFATHERED); i += 2) {
-        if (uprv_stricmp(GRANDFATHERED[i], tagBuf) == 0) {
-||||||| merged common ancestors
-    for (i = 0; GRANDFATHERED[i] != NULL; i += 2) {
-        if (uprv_stricmp(GRANDFATHERED[i], tagBuf) == 0) {
-=======
     for (i = 0; i < UPRV_LENGTHOF(GRANDFATHERED); i += 2) {
         int32_t checkGrandfatheredLen = static_cast<int32_t>(uprv_strlen(GRANDFATHERED[i]));
         if (tagLen < checkGrandfatheredLen) {
@@ -2353,7 +2078,6 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode* sta
             continue;
         }
         if (uprv_strnicmp(GRANDFATHERED[i], tagBuf, checkGrandfatheredLen) == 0) {
->>>>>>> upstream-releases
             int32_t newTagLength;
 
             grandfatheredLen = checkGrandfatheredLen;  /* back up for output parsedLen */
@@ -2378,8 +2102,6 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode* sta
         }
     }
 
-<<<<<<< HEAD
-    size_t parsedLenDelta = 0;
     if (grandfatheredLen == 0) {
         for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
             const char* redundantTag = REDUNDANT[i];
@@ -2410,39 +2132,6 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode* sta
         }
     }
 
-||||||| merged common ancestors
-=======
-    if (grandfatheredLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
-            size_t redundantTagLen = uprv_strlen(redundantTag);
-            // The preferred tag for a redundant tag is always shorter than redundant
-            // tag. A redundant tag may or may not be followed by other subtags.
-            // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
-                    size_t preferredTagLen = uprv_strlen(preferredTag);
-                    uprv_strncpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
-                        uprv_memmove(tagBuf + preferredTagLen,
-                                     redundantTagEnd,
-                                     tagLen - redundantTagLen + 1);
-                    } else {
-                        tagBuf[preferredTagLen] = '\0';
-                    }
-                    // parsedLen should be the length of the input
-                    // before redundantTag is replaced by preferredTag.
-                    // Save the delta to add it back later.
-                    parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
-                }
-            }
-        }
-    }
-
->>>>>>> upstream-releases
     /*
      * langtag      =   language
      *                  ["-" script]
@@ -2727,14 +2416,7 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode* sta
     }
 
     if (parsedLen != NULL) {
-<<<<<<< HEAD
-        *parsedLen = (grandfatheredLen > 0) ? grandfatheredLen :
-            (int32_t)(pLastGoodPosition - t->buf + parsedLenDelta);
-||||||| merged common ancestors
-        *parsedLen = (grandfatheredLen > 0) ? grandfatheredLen : (int32_t)(pLastGoodPosition - t->buf);
-=======
         *parsedLen = (int32_t)(pLastGoodPosition - t->buf + parsedLenDelta);
->>>>>>> upstream-releases
     }
 
     return t.orphan();
@@ -2927,14 +2609,6 @@ uloc_toLanguageTag(const char* localeID,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-<<<<<<< HEAD
-    icu::CharString canonical;
-    int32_t reslen;
-||||||| merged common ancestors
-    /* char canonical[ULOC_FULLNAME_CAPACITY]; */ /* See #6822 */
-    char canonical[256];
-    int32_t reslen = 0;
-=======
     if (U_FAILURE(*status)) {
         return 0;
     }
@@ -2965,47 +2639,11 @@ ulocimp_toLanguageTag(const char* localeID,
                       UErrorCode* status) {
     icu::CharString canonical;
     int32_t reslen;
->>>>>>> upstream-releases
     UErrorCode tmpStatus = U_ZERO_ERROR;
     UBool hadPosix = FALSE;
     const char* pKeywordStart;
 
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
-<<<<<<< HEAD
-    int32_t resultCapacity = static_cast<int32_t>(uprv_strlen(localeID));
-    if (resultCapacity > 0) {
-        char* buffer;
-
-        for (;;) {
-            buffer = canonical.getAppendBuffer(
-                    /*minCapacity=*/resultCapacity,
-                    /*desiredCapacityHint=*/resultCapacity,
-                    resultCapacity,
-                    tmpStatus);
-
-            if (U_FAILURE(tmpStatus)) {
-                *status = tmpStatus;
-                return 0;
-            }
-
-            reslen =
-                uloc_canonicalize(localeID, buffer, resultCapacity, &tmpStatus);
-
-            if (tmpStatus != U_BUFFER_OVERFLOW_ERROR) {
-                break;
-            }
-
-            resultCapacity = reslen;
-            tmpStatus = U_ZERO_ERROR;
-        }
-
-        if (U_FAILURE(tmpStatus)) {
-||||||| merged common ancestors
-    canonical[0] = 0;
-    if (uprv_strlen(localeID) > 0) {
-        uloc_canonicalize(localeID, canonical, sizeof(canonical), &tmpStatus);
-        if (tmpStatus != U_ZERO_ERROR) {
-=======
     int32_t resultCapacity = static_cast<int32_t>(uprv_strlen(localeID));
     if (resultCapacity > 0) {
         char* buffer;
@@ -3034,7 +2672,6 @@ ulocimp_toLanguageTag(const char* localeID,
         }
 
         if (U_FAILURE(tmpStatus)) {
->>>>>>> upstream-releases
             *status = U_ILLEGAL_ARGUMENT_ERROR;
             return;
         }
@@ -3048,49 +2685,17 @@ ulocimp_toLanguageTag(const char* localeID,
             *status = tmpStatus;
             return;
         }
-
-        canonical.append(buffer, reslen, tmpStatus);
-        if (tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-            tmpStatus = U_ZERO_ERROR;  // Terminators provided by CharString.
-        }
-
-        if (U_FAILURE(tmpStatus)) {
-            *status = tmpStatus;
-            return 0;
-        }
     }
 
-    reslen = 0;
-
     /* For handling special case - private use only tag */
-<<<<<<< HEAD
     pKeywordStart = locale_getKeywordsStart(canonical.data());
     if (pKeywordStart == canonical.data()) {
-        UEnumeration *kwdEnum;
-||||||| merged common ancestors
-    pKeywordStart = locale_getKeywordsStart(canonical);
-    if (pKeywordStart == canonical) {
-        UEnumeration *kwdEnum;
-=======
-    pKeywordStart = locale_getKeywordsStart(canonical.data());
-    if (pKeywordStart == canonical.data()) {
->>>>>>> upstream-releases
         int kwdCnt = 0;
         UBool done = FALSE;
 
-<<<<<<< HEAD
-        kwdEnum = uloc_openKeywords(canonical.data(), &tmpStatus);
-        if (kwdEnum != NULL) {
-            kwdCnt = uenum_count(kwdEnum, &tmpStatus);
-||||||| merged common ancestors
-        kwdEnum = uloc_openKeywords((const char*)canonical, &tmpStatus);
-        if (kwdEnum != NULL) {
-            kwdCnt = uenum_count(kwdEnum, &tmpStatus);
-=======
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
         if (U_SUCCESS(tmpStatus)) {
             kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
->>>>>>> upstream-releases
             if (kwdCnt == 1) {
                 const char *key;
                 int32_t len = 0;
@@ -3123,32 +2728,12 @@ ulocimp_toLanguageTag(const char* localeID,
         }
     }
 
-<<<<<<< HEAD
-    reslen += _appendLanguageToLanguageTag(canonical.data(), langtag, langtagCapacity, strict, status);
-    reslen += _appendScriptToLanguageTag(canonical.data(), langtag + reslen, langtagCapacity - reslen, strict, status);
-    reslen += _appendRegionToLanguageTag(canonical.data(), langtag + reslen, langtagCapacity - reslen, strict, status);
-    reslen += _appendVariantsToLanguageTag(canonical.data(), langtag + reslen, langtagCapacity - reslen, strict, &hadPosix, status);
-    reslen += _appendKeywordsToLanguageTag(canonical.data(), langtag + reslen, langtagCapacity - reslen, strict, hadPosix, status);
-    reslen += _appendPrivateuseToLanguageTag(canonical.data(), langtag + reslen, langtagCapacity - reslen, strict, hadPosix, status);
-
-    return reslen;
-||||||| merged common ancestors
-    reslen += _appendLanguageToLanguageTag(canonical, langtag, langtagCapacity, strict, status);
-    reslen += _appendScriptToLanguageTag(canonical, langtag + reslen, langtagCapacity - reslen, strict, status);
-    reslen += _appendRegionToLanguageTag(canonical, langtag + reslen, langtagCapacity - reslen, strict, status);
-    reslen += _appendVariantsToLanguageTag(canonical, langtag + reslen, langtagCapacity - reslen, strict, &hadPosix, status);
-    reslen += _appendKeywordsToLanguageTag(canonical, langtag + reslen, langtagCapacity - reslen, strict, hadPosix, status);
-    reslen += _appendPrivateuseToLanguageTag(canonical, langtag + reslen, langtagCapacity - reslen, strict, hadPosix, status);
-
-    return reslen;
-=======
     _appendLanguageToLanguageTag(canonical.data(), sink, strict, status);
     _appendScriptToLanguageTag(canonical.data(), sink, strict, status);
     _appendRegionToLanguageTag(canonical.data(), sink, strict, status);
     _appendVariantsToLanguageTag(canonical.data(), sink, strict, &hadPosix, status);
     _appendKeywordsToLanguageTag(canonical.data(), sink, strict, hadPosix, status);
     _appendPrivateuseToLanguageTag(canonical.data(), sink, strict, hadPosix, status);
->>>>>>> upstream-releases
 }
 
 
@@ -3158,30 +2743,6 @@ uloc_forLanguageTag(const char* langtag,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-<<<<<<< HEAD
-    return ulocimp_forLanguageTag(
-            langtag,
-            -1,
-            localeID,
-            localeIDCapacity,
-            parsedLength,
-            status);
-}
-
-
-U_CAPI int32_t U_EXPORT2
-ulocimp_forLanguageTag(const char* langtag,
-                       int32_t tagLen,
-                       char* localeID,
-                       int32_t localeIDCapacity,
-                       int32_t* parsedLength,
-                       UErrorCode* status) {
-    ULanguageTag *lt;
-    int32_t reslen = 0;
-||||||| merged common ancestors
-    ULanguageTag *lt;
-    int32_t reslen = 0;
-=======
     if (U_FAILURE(*status)) {
         return 0;
     }
@@ -3212,19 +2773,12 @@ ulocimp_forLanguageTag(const char* langtag,
                        int32_t* parsedLength,
                        UErrorCode* status) {
     UBool isEmpty = TRUE;
->>>>>>> upstream-releases
     const char *subtag, *p;
     int32_t len;
     int32_t i, n;
     UBool noRegion = TRUE;
 
-<<<<<<< HEAD
-    lt = ultag_parse(langtag, tagLen, parsedLength, status);
-||||||| merged common ancestors
-    lt = ultag_parse(langtag, -1, parsedLength, status);
-=======
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
->>>>>>> upstream-releases
     if (U_FAILURE(*status)) {
         return;
     }

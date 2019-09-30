@@ -10,21 +10,10 @@
 
 using namespace js;
 
-<<<<<<< HEAD
-void* TempAllocPolicy::onOutOfMemory(AllocFunction allocFunc, size_t nbytes,
-                                     void* reallocPtr) {
-  return cx_->onOutOfMemory(allocFunc, nbytes, reallocPtr);
-||||||| merged common ancestors
-void*
-TempAllocPolicy::onOutOfMemory(AllocFunction allocFunc, size_t nbytes, void* reallocPtr)
-{
-    return cx_->onOutOfMemory(allocFunc, nbytes, reallocPtr);
-=======
 void* TempAllocPolicy::onOutOfMemory(arena_id_t arenaId,
                                      AllocFunction allocFunc, size_t nbytes,
                                      void* reallocPtr) {
   return cx_->onOutOfMemory(allocFunc, arenaId, nbytes, reallocPtr);
->>>>>>> upstream-releases
 }
 
 void TempAllocPolicy::reportAllocOverflow() const {

@@ -22,14 +22,6 @@ VideoBridgeParent::VideoBridgeParent() : mClosed(false) {
   mCompositorThreadRef = CompositorThreadHolder::GetSingleton();
 }
 
-<<<<<<< HEAD
-VideoBridgeParent::~VideoBridgeParent() { sVideoBridgeSingleton = nullptr; }
-||||||| merged common ancestors
-VideoBridgeParent::~VideoBridgeParent()
-{
-  sVideoBridgeSingleton = nullptr;
-}
-=======
 VideoBridgeParent::~VideoBridgeParent() { sVideoBridgeSingleton = nullptr; }
 
 void VideoBridgeParent::Open(Endpoint<PVideoBridgeParent>&& aEndpoint) {
@@ -39,18 +31,9 @@ void VideoBridgeParent::Open(Endpoint<PVideoBridgeParent>&& aEndpoint) {
     MOZ_CRASH("Failed to bind RemoteDecoderManagerParent to endpoint");
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ VideoBridgeParent* VideoBridgeParent::GetSingleton() {
-||||||| merged common ancestors
-/* static */ VideoBridgeParent*
-VideoBridgeParent::GetSingleton()
-{
-=======
 /* static */
 VideoBridgeParent* VideoBridgeParent::GetSingleton() {
->>>>>>> upstream-releases
   return sVideoBridgeSingleton;
 }
 
@@ -63,15 +46,7 @@ void VideoBridgeParent::ActorDestroy(ActorDestroyReason aWhy) {
   mClosed = true;
 }
 
-<<<<<<< HEAD
-void VideoBridgeParent::DeallocPVideoBridgeParent() {
-||||||| merged common ancestors
-void
-VideoBridgeParent::DeallocPVideoBridgeParent()
-{
-=======
 void VideoBridgeParent::ActorDealloc() {
->>>>>>> upstream-releases
   mCompositorThreadRef = nullptr;
   mSelfRef = nullptr;
 }

@@ -40,18 +40,8 @@ gboolean WindowDeleted(GtkWidget* window, GdkEvent* event, gpointer userData);
 gboolean check_escape(GtkWidget* window, GdkEventKey* event, gpointer data);
 void SubmitReportChecked(GtkButton* sender, gpointer userData);
 void IncludeURLClicked(GtkButton* sender, gpointer userData);
-<<<<<<< HEAD
-void CloseClicked(GtkButton* button, gpointer userData);
-void RestartClicked(GtkButton* button, gpointer userData);
-||||||| merged common ancestors
-void CloseClicked(GtkButton* button,
-                  gpointer userData);
-void RestartClicked(GtkButton* button,
-                    gpointer userData);
-=======
 void CloseClicked(GtkButton* button, gpointer userData);
 void RestartClicked(GtkButton* button, gpointer userData);
 void SaveSettings(void);
->>>>>>> upstream-releases
 
 #endif  // CRASHREPORTER_GTK_COMMON_H__

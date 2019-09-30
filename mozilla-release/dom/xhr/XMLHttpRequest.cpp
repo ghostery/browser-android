@@ -13,22 +13,10 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<XMLHttpRequest> XMLHttpRequest::Constructor(
-    const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<XMLHttpRequest>
-XMLHttpRequest::Constructor(const GlobalObject& aGlobal,
-                            const MozXMLHttpRequestParameters& aParams,
-                            ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<XMLHttpRequest> XMLHttpRequest::Constructor(
     const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     nsCOMPtr<nsIGlobalObject> global =
         do_QueryInterface(aGlobal.GetAsSupports());

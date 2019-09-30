@@ -58,20 +58,6 @@ static int32_t GetPathFromFd(int32_t aFd, char* aBuf, size_t aBufSize) {
  * RAII class for timing the duration of an NSPR I/O call and reporting the
  * result to the IOInterposeObserver API.
  */
-<<<<<<< HEAD
-class NSPRIOAutoObservation : public IOInterposeObserver::Observation {
- public:
-  explicit NSPRIOAutoObservation(IOInterposeObserver::Operation aOp)
-      : IOInterposeObserver::Observation(aOp, "NSPRIOInterposer") {}
-||||||| merged common ancestors
-class NSPRIOAutoObservation : public IOInterposeObserver::Observation
-{
-public:
-  explicit NSPRIOAutoObservation(IOInterposeObserver::Operation aOp)
-    : IOInterposeObserver::Observation(aOp, "NSPRIOInterposer")
-  {
-  }
-=======
 class NSPRIOAutoObservation : public IOInterposeObserver::Observation {
  public:
   explicit NSPRIOAutoObservation(IOInterposeObserver::Operation aOp,
@@ -86,23 +72,13 @@ class NSPRIOAutoObservation : public IOInterposeObserver::Observation {
       mFilename.Truncate();
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ~NSPRIOAutoObservation() override { Report(); }
-||||||| merged common ancestors
-  ~NSPRIOAutoObservation() override
-  {
-    Report();
-  }
-=======
   void Filename(nsAString& aFilename) override { aFilename = mFilename; }
 
   ~NSPRIOAutoObservation() override { Report(); }
 
  private:
   nsString mFilename;
->>>>>>> upstream-releases
 };
 
 PRStatus PR_CALLBACK interposedClose(PRFileDesc* aFd) {

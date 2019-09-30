@@ -9,7 +9,6 @@
 
 #include "SkDashImpl.h"
 #include "SkDashPathPriv.h"
-#include "SkFlattenablePriv.h"
 #include "SkReadBuffer.h"
 #include "SkStrokeRec.h"
 #include "SkTo.h"
@@ -374,11 +373,6 @@ void SkDashImpl::flatten(SkWriteBuffer& buffer) const {
 }
 
 sk_sp<SkFlattenable> SkDashImpl::CreateProc(SkReadBuffer& buffer) {
-#ifdef SK_DISABLE_READBUFFER
-    // Should not be reachable by PathKit WebAssembly Code.
-    SkASSERT(false);
-    return nullptr;
-#else
     const SkScalar phase = buffer.readScalar();
     uint32_t count = buffer.getArrayCount();
 
@@ -392,31 +386,8 @@ sk_sp<SkFlattenable> SkDashImpl::CreateProc(SkReadBuffer& buffer) {
         return SkDashPathEffect::Make(intervals.get(), SkToInt(count), phase);
     }
     return nullptr;
-<<<<<<< HEAD
-#endif
 }
 
-||||||| merged common ancestors
-}
-
-#ifndef SK_IGNORE_TO_STRING
-void SkDashImpl::toString(SkString* str) const {
-    str->appendf("SkDashPathEffect: (");
-    str->appendf("count: %d phase %.2f intervals: (", fCount, fPhase);
-    for (int i = 0; i < fCount; ++i) {
-        str->appendf("%.2f", fIntervals[i]);
-        if (i < fCount-1) {
-            str->appendf(", ");
-        }
-    }
-    str->appendf("))");
-}
-#endif
-
-=======
-}
-
->>>>>>> upstream-releases
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 sk_sp<SkPathEffect> SkDashPathEffect::Make(const SkScalar intervals[], int count, SkScalar phase) {

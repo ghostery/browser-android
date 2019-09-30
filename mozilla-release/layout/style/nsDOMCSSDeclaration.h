@@ -33,28 +33,10 @@ class Rule;
 namespace dom {
 class Document;
 class Element;
-<<<<<<< HEAD
-}
-
-struct MutationClosureData {
-  MutationClosureData() : mClosure(nullptr), mElement(nullptr), mModType(0) {}
-||||||| merged common ancestors
-}
-
-struct MutationClosureData
-{
-  MutationClosureData()
-    : mClosure(nullptr)
-    , mElement(nullptr)
-    , mModType(0)
-  {
-  }
-=======
 }  // namespace dom
 
 struct MutationClosureData {
   MutationClosureData() : mClosure(nullptr), mElement(nullptr), mModType(0) {}
->>>>>>> upstream-releases
 
   // mClosure is non-null as long as the closure hasn't been called.
   // This is needed so that it can be guaranteed that

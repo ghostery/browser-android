@@ -35,67 +35,11 @@
 
 #include "mozilla/Logging.h"
 #include "mozilla/UniquePtr.h"
-<<<<<<< HEAD
-#include "mozilla/Unused.h"
-#include "PlatformMacros.h"
-#include <vector>
-
-// We need a definition of gettid(), but glibc doesn't provide a
-// wrapper for it.
-#if defined(__GLIBC__)
-#include <unistd.h>
-#include <sys/syscall.h>
-static inline pid_t gettid() { return (pid_t)syscall(SYS_gettid); }
-#elif defined(GP_OS_darwin)
-#include <unistd.h>
-#include <sys/syscall.h>
-static inline pid_t gettid() { return (pid_t)syscall(SYS_thread_selfid); }
-#elif defined(GP_OS_android)
-#include <unistd.h>
-#elif defined(GP_OS_windows)
-#include <windows.h>
-#include <process.h>
-#ifndef getpid
-#define getpid _getpid
-#endif
-#endif
-||||||| merged common ancestors
-#include "mozilla/Unused.h"
-#include "PlatformMacros.h"
-#include <vector>
-
-// We need a definition of gettid(), but glibc doesn't provide a
-// wrapper for it.
-#if defined(__GLIBC__)
-#include <unistd.h>
-#include <sys/syscall.h>
-static inline pid_t gettid()
-{
-  return (pid_t) syscall(SYS_gettid);
-}
-#elif defined(GP_OS_darwin)
-#include <unistd.h>
-#include <sys/syscall.h>
-static inline pid_t gettid()
-{
-  return (pid_t) syscall(SYS_thread_selfid);
-}
-#elif defined(GP_OS_android)
-#include <unistd.h>
-#elif defined(GP_OS_windows)
-#include <windows.h>
-#include <process.h>
-#ifndef getpid
-#define getpid _getpid
-#endif
-#endif
-=======
 #include "mozilla/Vector.h"
 #include "nsString.h"
 
 #include <functional>
 #include <stdint.h>
->>>>>>> upstream-releases
 
 extern mozilla::LazyLogModule gProfilerLog;
 
@@ -116,34 +60,6 @@ extern mozilla::LazyLogModule gProfilerLog;
 typedef uint8_t* Address;
 
 // ----------------------------------------------------------------------------
-<<<<<<< HEAD
-// Thread
-//
-// This class has static methods for the different platform specific
-// functions. Add methods here to cope with differences between the
-// supported platforms.
-
-class Thread {
- public:
-  static int GetCurrentId();
-};
-
-// ----------------------------------------------------------------------------
-||||||| merged common ancestors
-// Thread
-//
-// This class has static methods for the different platform specific
-// functions. Add methods here to cope with differences between the
-// supported platforms.
-
-class Thread {
-public:
-  static int GetCurrentId();
-};
-
-// ----------------------------------------------------------------------------
-=======
->>>>>>> upstream-releases
 // Miscellaneous
 
 class PlatformData;
@@ -186,12 +102,5 @@ void profiler_received_exit_profile(const nsCString& aExitProfile);
 // Extract all received exit profiles that have not yet expired (i.e., they
 // still intersect with this process' buffer range).
 mozilla::Vector<nsCString> profiler_move_exit_profiles();
-
-// Flags to conveniently track various JS features.
-enum class JSSamplingFlags {
-  StackSampling = 0x1,
-  TrackOptimizations = 0x2,
-  TraceLogging = 0x4
-};
 
 #endif /* ndef TOOLS_PLATFORM_H_ */

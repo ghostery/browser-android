@@ -111,33 +111,15 @@ struct Swizzle : public Expression {
                                                   const DefinitionMap& definitions) override {
         if (fBase->fKind == Expression::kConstructor_Kind && fBase->isConstant()) {
             // we're swizzling a constant vector, e.g. float4(1).x. Simplify it.
-<<<<<<< HEAD
-            SkASSERT(fBase->fKind == Expression::kConstructor_Kind);
-            if (fType == *irGenerator.fContext.fInt_Type) {
-                SkASSERT(fComponents.size() == 1);
-||||||| merged common ancestors
-            ASSERT(fBase->fKind == Expression::kConstructor_Kind);
-            if (fType == *irGenerator.fContext.fInt_Type) {
-                ASSERT(fComponents.size() == 1);
-=======
             SkASSERT(fBase->fKind == Expression::kConstructor_Kind);
             if (fType.isInteger()) {
                 SkASSERT(fComponents.size() == 1);
->>>>>>> upstream-releases
                 int64_t value = ((Constructor&) *fBase).getIVecComponent(fComponents[0]);
                 return std::unique_ptr<Expression>(new IntLiteral(irGenerator.fContext,
                                                                   -1,
                                                                   value));
-<<<<<<< HEAD
-            } else if (fType == *irGenerator.fContext.fFloat_Type) {
-                SkASSERT(fComponents.size() == 1);
-||||||| merged common ancestors
-            } else if (fType == *irGenerator.fContext.fFloat_Type) {
-                ASSERT(fComponents.size() == 1);
-=======
             } else if (fType.isFloat()) {
                 SkASSERT(fComponents.size() == 1);
->>>>>>> upstream-releases
                 double value = ((Constructor&) *fBase).getFVecComponent(fComponents[0]);
                 return std::unique_ptr<Expression>(new FloatLiteral(irGenerator.fContext,
                                                                     -1,

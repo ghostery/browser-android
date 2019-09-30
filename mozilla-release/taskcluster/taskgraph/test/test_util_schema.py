@@ -49,24 +49,6 @@ class TestCheckSchema(unittest.TestCase):
             Schema({"kebab-case": int}).extend({'more-kebab': int}).extend({"camelCase": int})
 
 
-class TestCheckSchema(unittest.TestCase):
-
-    def test_schema(self):
-        "Creating a schema applies taskgraph checks."
-        with self.assertRaises(Exception):
-            Schema({"camelCase": int})
-
-    def test_extend_schema(self):
-        "Extending a schema applies taskgraph checks."
-        with self.assertRaises(Exception):
-            Schema({"kebab-case": int}).extend({"camelCase": int})
-
-    def test_extend_schema_twice(self):
-        "Extending a schema twice applies taskgraph checks."
-        with self.assertRaises(Exception):
-            Schema({"kebab-case": int}).extend({'more-kebab': int}).extend({"camelCase": int})
-
-
 class TestResolveKeyedBy(unittest.TestCase):
 
     def test_no_by(self):

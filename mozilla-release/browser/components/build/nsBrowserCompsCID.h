@@ -5,23 +5,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#define NS_WINIEHISTORYENUMERATOR_CID                \
-  {                                                  \
-    0x93480624, 0x806e, 0x4756, {                    \
-      0xb7, 0xcb, 0x0f, 0xb7, 0xdd, 0x74, 0x6a, 0x8f \
-    }                                                \
-  }
-
-#define NS_IEHISTORYENUMERATOR_CONTRACTID \
-  "@mozilla.org/profile/migrator/iehistoryenumerator;1"
-||||||| merged common ancestors
-#define NS_WINIEHISTORYENUMERATOR_CID \
-{ 0x93480624, 0x806e, 0x4756, { 0xb7, 0xcb, 0x0f, 0xb7, 0xdd, 0x74, 0x6a, 0x8f } }
-
-#define NS_IEHISTORYENUMERATOR_CONTRACTID \
-  "@mozilla.org/profile/migrator/iehistoryenumerator;1"
-=======
 #  define NS_WINIEHISTORYENUMERATOR_CID                \
     {                                                  \
       0x93480624, 0x806e, 0x4756, {                    \
@@ -31,7 +14,6 @@
 
 #  define NS_IEHISTORYENUMERATOR_CONTRACTID \
     "@mozilla.org/profile/migrator/iehistoryenumerator;1"
->>>>>>> upstream-releases
 #endif
 
 #define NS_SHELLSERVICE_CID                         \
@@ -51,72 +33,17 @@
   }
 
 // 136e2c4d-c5a4-477c-b131-d93d7d704f64
-<<<<<<< HEAD
 #define NS_PRIVATE_BROWSING_SERVICE_WRAPPER_CID      \
   {                                                  \
     0x136e2c4d, 0xc5a4, 0x477c, {                    \
       0xb1, 0x31, 0xd9, 0x3d, 0x7d, 0x70, 0x4f, 0x64 \
     }                                                \
   }
-
-// 7e4bb6ad-2fc4-4dc6-89ef-23e8e5ccf980
-#define NS_BROWSER_ABOUT_REDIRECTOR_CID              \
-  {                                                  \
-    0x7e4bb6ad, 0x2fc4, 0x4dc6, {                    \
-      0x89, 0xef, 0x23, 0xe8, 0xe5, 0xcc, 0xf9, 0x80 \
-    }                                                \
-  }
-||||||| merged common ancestors
-#define NS_PRIVATE_BROWSING_SERVICE_WRAPPER_CID \
-{ 0x136e2c4d, 0xc5a4, 0x477c, { 0xb1, 0x31, 0xd9, 0x3d, 0x7d, 0x70, 0x4f, 0x64 } }
-
-// 7e4bb6ad-2fc4-4dc6-89ef-23e8e5ccf980
-#define NS_BROWSER_ABOUT_REDIRECTOR_CID \
-{ 0x7e4bb6ad, 0x2fc4, 0x4dc6, { 0x89, 0xef, 0x23, 0xe8, 0xe5, 0xcc, 0xf9, 0x80 } }
-=======
-#define NS_PRIVATE_BROWSING_SERVICE_WRAPPER_CID      \
-  {                                                  \
-    0x136e2c4d, 0xc5a4, 0x477c, {                    \
-      0xb1, 0x31, 0xd9, 0x3d, 0x7d, 0x70, 0x4f, 0x64 \
-    }                                                \
-  }
->>>>>>> upstream-releases
 
 // {6DEB193C-F87D-4078-BC78-5E64655B4D62}
-<<<<<<< HEAD
 #define NS_BROWSERDIRECTORYPROVIDER_CID              \
   {                                                  \
     0x6deb193c, 0xf87d, 0x4078, {                    \
       0xbc, 0x78, 0x5e, 0x64, 0x65, 0x5b, 0x4d, 0x62 \
     }                                                \
   }
-
-#if defined(MOZ_WIDGET_COCOA)
-#define NS_MACATTRIBUTIONSERVICE_CONTRACTID "@mozilla.org/mac-attribution;1"
-
-#define NS_MACATTRIBUTIONSERVICE_CID                 \
-  {                                                  \
-    0x6FC66A78, 0x6CBC, 0x4B3F, {                    \
-      0xB7, 0xBA, 0x37, 0x92, 0x89, 0xB2, 0x92, 0x76 \
-    }                                                \
-  }
-#endif
-||||||| merged common ancestors
-#define NS_BROWSERDIRECTORYPROVIDER_CID \
-{ 0x6deb193c, 0xf87d, 0x4078, { 0xbc, 0x78, 0x5e, 0x64, 0x65, 0x5b, 0x4d, 0x62 } }
-
-#if defined(MOZ_WIDGET_COCOA)
-#define NS_MACATTRIBUTIONSERVICE_CONTRACTID \
-  "@mozilla.org/mac-attribution;1"
-
-#define NS_MACATTRIBUTIONSERVICE_CID \
-{ 0x6FC66A78, 0x6CBC, 0x4B3F, { 0xB7, 0xBA, 0x37, 0x92, 0x89, 0xB2, 0x92, 0x76 } }
-#endif
-=======
-#define NS_BROWSERDIRECTORYPROVIDER_CID              \
-  {                                                  \
-    0x6deb193c, 0xf87d, 0x4078, {                    \
-      0xbc, 0x78, 0x5e, 0x64, 0x65, 0x5b, 0x4d, 0x62 \
-    }                                                \
-  }
->>>>>>> upstream-releases

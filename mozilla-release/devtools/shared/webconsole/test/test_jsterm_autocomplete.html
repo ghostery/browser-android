@@ -311,23 +311,6 @@
     checkObject(matches, ["foobarObject"]);
   }
 
-<<<<<<< HEAD
-  async function doAutocompleteBracketSurroundedBySpaces(client) {
-    const wrap = (arr, quote = `"`) => arr.map(x => `${quote}${x}${quote}`);
-    let matches = await getAutocompleteMatches(client, "window.foobarObject\n  [")
-    is(matches.length, 7);
-    checkObject(matches,
-      wrap(["foo", "foobar", "foobaz", "omg", "omgfoo", "omgstr", "strfoo"]));
-
-    matches = await getAutocompleteMatches(client, "window.foobarObject\n  ['o")
-    is(matches.length, 3);
-    checkObject(matches, wrap(["omg", "omgfoo", "omgstr"], "'"));
-
-    matches = await getAutocompleteMatches(client, "window.foobarObject\n  [\n  s");
-||||||| merged common ancestors
-    matches =
-      (await client.autocomplete("window.emojiObject  .  ")).matches;
-=======
   async function doAutocompleteBracketSurroundedBySpaces(client) {
     const wrap = (arr, quote = `"`) => arr.map(x => `${quote}${x}${quote}`);
     let matches = await getAutocompleteMatches(client, "window.foobarObject\n  [")
@@ -349,24 +332,8 @@
       wrap(["foo", "foobar", "foobaz", "omg", "omgfoo", "omgstr", "strfoo"]));
 
     matches = await getAutocompleteMatches(client, "window.emojiObject  [   '");
->>>>>>> upstream-releases
-    is(matches.length, 1);
-<<<<<<< HEAD
-    checkObject(matches, [`"strfoo"`]);
-
-    matches = await getAutocompleteMatches(client, "window.foobarObject\n  [  ");
-    is(matches.length, 7);
-    checkObject(matches,
-      wrap(["foo", "foobar", "foobaz", "omg", "omgfoo", "omgstr", "strfoo"]));
-
-    matches = await getAutocompleteMatches(client, "window.emojiObject  [   '");
     is(matches.length, 1);
     checkObject(matches, [`'😎'`]);
-||||||| merged common ancestors
-    checkObject(matches, ["😎"]);
-=======
-    checkObject(matches, [`'😎'`]);
->>>>>>> upstream-releases
   }
 
   async function doAutocompleteAfterOr(client) {

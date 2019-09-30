@@ -22,30 +22,12 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
 gfx::Matrix ComputeTransformForRotation(const nsIntRect& aBounds,
                                         ScreenRotation aRotation) {
   gfx::Matrix transform;
   static const gfx::Float floatPi = static_cast<gfx::Float>(M_PI);
 
   switch (aRotation) {
-||||||| merged common ancestors
-gfx::Matrix
-ComputeTransformForRotation(const nsIntRect& aBounds,
-                              ScreenRotation aRotation)
-{
-    gfx::Matrix transform;
-    static const gfx::Float floatPi = static_cast<gfx::Float>(M_PI);
-
-    switch (aRotation) {
-=======
-gfx::Matrix ComputeTransformForRotation(const nsIntRect& aBounds,
-                                        ScreenRotation aRotation) {
-  gfx::Matrix transform;
-  static const gfx::Float floatPi = static_cast<gfx::Float>(M_PI);
-
-  switch (aRotation) {
->>>>>>> upstream-releases
     case ROTATION_0:
       break;
     case ROTATION_90:

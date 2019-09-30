@@ -525,14 +525,8 @@ struct AllowedHourFormatsSink : public ResourceSink {
             for (int32_t j = 0; formatList.getKeyAndValue(j, key, value); ++j) {
                 if (uprv_strcmp(key, "allowed") == 0) {
                     if (value.getType() == URES_STRING) {
-<<<<<<< HEAD
-                        if (list.allocateInsteadAndReset(2) == nullptr) {
-||||||| merged common ancestors
-                        if (list.allocateInsteadAndReset(2) == NULL) {
-=======
                         length = 2; // 1 preferred to add later, 1 allowed to add now
                         if (list.allocateInsteadAndReset(length + 1) == nullptr) {
->>>>>>> upstream-releases
                             errorCode = U_MEMORY_ALLOCATION_ERROR;
                             return;
                         }
@@ -540,16 +534,8 @@ struct AllowedHourFormatsSink : public ResourceSink {
                     }
                     else {
                         ResourceArray allowedFormats = value.getArray(errorCode);
-<<<<<<< HEAD
-                        length = allowedFormats.getSize();
-                        if (list.allocateInsteadAndReset(length + 1) == nullptr) {
-||||||| merged common ancestors
-                        length = allowedFormats.getSize();
-                        if (list.allocateInsteadAndReset(length + 1) == NULL) {
-=======
                         length = allowedFormats.getSize() + 1; // 1 preferred, getSize allowed
                         if (list.allocateInsteadAndReset(length + 1) == nullptr) {
->>>>>>> upstream-releases
                             errorCode = U_MEMORY_ALLOCATION_ERROR;
                             return;
                         }
@@ -650,11 +636,6 @@ void DateTimePatternGenerator::getAllowedHourFormats(const Locale &locale, UErro
         allowedFormats = (int32_t *)uhash_get(localeToAllowedHourFormatsMap, const_cast<char *>(country));
     }
 
-<<<<<<< HEAD
-    if (allowedFormats != nullptr) {  // Lookup is successful
-||||||| merged common ancestors
-    if (allowedFormats != NULL) {  // Lookup is successful
-=======
     if (allowedFormats != nullptr) {  // Lookup is successful
         // Here allowedFormats points to a list consisting of key for preferredFormat,
         // followed by one or more keys for allowedFormats, then followed by ALLOWED_HOUR_FORMAT_UNKNOWN.
@@ -665,7 +646,6 @@ void DateTimePatternGenerator::getAllowedHourFormats(const Locale &locale, UErro
             case ALLOWED_HOUR_FORMAT_k: fDefaultHourFormatChar = LOW_K; break;
             default: fDefaultHourFormatChar = CAP_H; break;
         }
->>>>>>> upstream-releases
         for (int32_t i = 0; i < UPRV_LENGTHOF(fAllowedHourFormats); ++i) {
             fAllowedHourFormats[i] = allowedFormats[i + 1];
             if (fAllowedHourFormats[i] == ALLOWED_HOUR_FORMAT_UNKNOWN) {
@@ -841,40 +821,10 @@ DateTimePatternGenerator::getCalendarTypeToUse(const Locale& locale, CharString&
 void
 DateTimePatternGenerator::consumeShortTimePattern(const UnicodeString& shortTimePattern,
         UErrorCode& status) {
-<<<<<<< HEAD
-    if (U_FAILURE(status)) { return; }
-    // set fDefaultHourFormatChar to the hour format character from this pattern
-    int32_t tfIdx, tfLen = shortTimePattern.length();
-    UBool ignoreChars = FALSE;
-    for (tfIdx = 0; tfIdx < tfLen; tfIdx++) {
-        UChar tfChar = shortTimePattern.charAt(tfIdx);
-        if ( tfChar == SINGLE_QUOTE ) {
-            ignoreChars = !ignoreChars; // toggle (handle quoted literals & '' for single quote)
-        } else if ( !ignoreChars && u_strchr(hourFormatChars, tfChar) != nullptr ) {
-            fDefaultHourFormatChar = tfChar;
-            break;
-        }
-    }
-||||||| merged common ancestors
-
-    // set fDefaultHourFormatChar to the hour format character from this pattern
-    int32_t tfIdx, tfLen = shortTimePattern.length();
-    UBool ignoreChars = FALSE;
-    for (tfIdx = 0; tfIdx < tfLen; tfIdx++) {
-        UChar tfChar = shortTimePattern.charAt(tfIdx);
-        if ( tfChar == SINGLE_QUOTE ) {
-            ignoreChars = !ignoreChars; // toggle (handle quoted literals & '' for single quote)
-        } else if ( !ignoreChars && u_strchr(hourFormatChars, tfChar) != NULL ) {
-            fDefaultHourFormatChar = tfChar;
-            break;
-        }
-    }
-=======
     if (U_FAILURE(status)) { return; }
     // ICU-20383 No longer set fDefaultHourFormatChar to the hour format character from
     // this pattern; instead it is set from localeToAllowedHourFormatsMap which now
     // includes entries for both preferred and allowed formats.
->>>>>>> upstream-releases
 
     // HACK for hh:ss
     hackTimes(shortTimePattern, status);
@@ -1867,32 +1817,6 @@ PatternMap::copyFrom(const PatternMap& other, UErrorCode& status) {
             if (U_FAILURE(status)) {
                 return; // out of memory
             }
-<<<<<<< HEAD
-            newElem->skeletonWasSpecified = otherElem->skeletonWasSpecified;
-
-            // Release ownership from the LocalPointer of the PtnElem object.
-            // The PtnElem will now be owned by either the boot (for the first entry in the linked-list)
-            // or owned by the previous PtnElem object in the linked-list.
-            curElem = newElem.orphan();
-
-            if (this->boot[bootIndex] == nullptr) {
-                this->boot[bootIndex] = curElem;
-            } else {
-                if (prevElem != nullptr) {
-                    prevElem->next.adoptInstead(curElem);
-                } else {
-                    U_ASSERT(false);
-                }
-||||||| merged common ancestors
-            if ((curElem->skeleton=new PtnSkeleton(*(otherElem->skeleton))) == NULL ) {
-                // out of memory
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
-            }
-            curElem->skeletonWasSpecified = otherElem->skeletonWasSpecified;
-            if (prevElem!=NULL) {
-                prevElem->next=curElem;
-=======
             newElem->skeletonWasSpecified = otherElem->skeletonWasSpecified;
 
             // Release ownership from the LocalPointer of the PtnElem object.
@@ -1908,7 +1832,6 @@ PatternMap::copyFrom(const PatternMap& other, UErrorCode& status) {
                 } else {
                     UPRV_UNREACHABLE;
                 }
->>>>>>> upstream-releases
             }
             prevElem = curElem;
             otherElem = otherElem->next.getAlias();
@@ -1968,18 +1891,6 @@ PatternMap::add(const UnicodeString& basePattern,
          }
     }
 
-<<<<<<< HEAD
-    if (baseElem == nullptr) {
-        LocalPointer<PtnElem> newElem(new PtnElem(basePattern, value), status);
-        if (U_FAILURE(status)) {
-            return; // out of memory
-||||||| merged common ancestors
-    if (baseElem == NULL) {
-        if ((curElem = new PtnElem(basePattern, value)) == NULL ) {
-            // out of memory
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return;
-=======
     if (baseElem == nullptr) {
         LocalPointer<PtnElem> newElem(new PtnElem(basePattern, value), status);
         if (U_FAILURE(status)) {
@@ -1988,18 +1899,8 @@ PatternMap::add(const UnicodeString& basePattern,
         newElem->skeleton.adoptInsteadAndCheckErrorCode(new PtnSkeleton(skeleton), status);
         if (U_FAILURE(status)) {
             return; // out of memory
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        newElem->skeleton.adoptInsteadAndCheckErrorCode(new PtnSkeleton(skeleton), status);
-        if (U_FAILURE(status)) {
-            return; // out of memory
         }
         newElem->skeletonWasSpecified = skeletonWasSpecified;
-||||||| merged common ancestors
-=======
-        newElem->skeletonWasSpecified = skeletonWasSpecified;
->>>>>>> upstream-releases
         if (baseChar >= LOW_A) {
             boot[26 + (baseChar - LOW_A)] = newElem.orphan(); // the boot array now owns the PtnElem.
         }
@@ -2811,38 +2712,16 @@ DTRedundantEnumeration::add(const UnicodeString& pattern, UErrorCode& status) {
             return;
        }
     }
-<<<<<<< HEAD
     LocalPointer<UnicodeString> newElem(new UnicodeString(pattern), status);
     if (U_FAILURE(status)) {
         return;
     }
-    fPatterns->addElement(newElem.getAlias(), status);
-||||||| merged common ancestors
-    fPatterns->addElement(new UnicodeString(pattern), status);
-=======
-    LocalPointer<UnicodeString> newElem(new UnicodeString(pattern), status);
->>>>>>> upstream-releases
-    if (U_FAILURE(status)) {
-<<<<<<< HEAD
-        fPatterns.adoptInstead(nullptr);
-||||||| merged common ancestors
-        delete fPatterns;
-        fPatterns = NULL;
-=======
->>>>>>> upstream-releases
-        return;
-    }
-<<<<<<< HEAD
-    newElem.orphan(); // fPatterns now owns the string.
-||||||| merged common ancestors
-=======
     fPatterns->addElement(newElem.getAlias(), status);
     if (U_FAILURE(status)) {
         fPatterns.adoptInstead(nullptr);
         return;
     }
     newElem.orphan(); // fPatterns now owns the string.
->>>>>>> upstream-releases
 }
 
 const UnicodeString*

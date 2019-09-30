@@ -261,38 +261,15 @@ typedef TypedArray<double, js::UnwrapFloat64Array, JS_GetFloat64ArrayData,
 typedef ArrayBufferView_base<js::UnwrapArrayBufferView,
                              js::GetArrayBufferViewLengthAndData,
                              JS_GetArrayBufferViewType>
-<<<<<<< HEAD
-    ArrayBufferView;
-typedef TypedArray<uint8_t, js::UnwrapArrayBuffer, JS_GetArrayBufferData,
-                   js::GetArrayBufferLengthAndData, JS_NewArrayBuffer>
-    ArrayBuffer;
-||||||| merged common ancestors
-        ArrayBufferView;
-typedef TypedArray<uint8_t, js::UnwrapArrayBuffer, JS_GetArrayBufferData,
-                   js::GetArrayBufferLengthAndData, JS_NewArrayBuffer>
-        ArrayBuffer;
-=======
     ArrayBufferView;
 typedef TypedArray<uint8_t, JS::UnwrapArrayBuffer, JS::GetArrayBufferData,
                    JS::GetArrayBufferLengthAndData, JS::NewArrayBuffer>
     ArrayBuffer;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-typedef TypedArray<
-    uint8_t, js::UnwrapSharedArrayBuffer, JS_GetSharedArrayBufferData,
-    js::GetSharedArrayBufferLengthAndData, JS_NewSharedArrayBuffer>
-    SharedArrayBuffer;
-||||||| merged common ancestors
-typedef TypedArray<uint8_t, js::UnwrapSharedArrayBuffer, JS_GetSharedArrayBufferData,
-                   js::GetSharedArrayBufferLengthAndData, JS_NewSharedArrayBuffer>
-        SharedArrayBuffer;
-=======
 typedef TypedArray<
     uint8_t, JS::UnwrapSharedArrayBuffer, JS::GetSharedArrayBufferData,
     JS::GetSharedArrayBufferLengthAndData, JS::NewSharedArrayBuffer>
     SharedArrayBuffer;
->>>>>>> upstream-releases
 
 // A class for converting an nsTArray to a TypedArray
 // Note: A TypedArrayCreator must not outlive the nsTArray it was created from.

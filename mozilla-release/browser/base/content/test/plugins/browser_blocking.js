@@ -71,23 +71,6 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(overlay && overlay.classList.contains("visible"),
-      "Test 18a, Plugin overlay should exist, not be hidden");
-
-    let updateLink = plugin.openOrClosedShadowRoot.getElementById("checkForUpdatesLink");
-    Assert.ok(updateLink.style.visibility != "hidden",
-      "Test 18a, Plugin should have an update link");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(overlay && overlay.classList.contains("visible"),
-      "Test 18a, Plugin overlay should exist, not be hidden");
-
-    let updateLink = doc.getAnonymousElementByAttribute(plugin, "anonid", "checkForUpdatesLink");
-    Assert.ok(updateLink.style.visibility != "hidden",
-      "Test 18a, Plugin should have an update link");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       overlay && overlay.classList.contains("visible"),
@@ -101,7 +84,6 @@ add_task(async function() {
       updateLink.style.visibility != "hidden",
       "Test 18a, Plugin should have an update link"
     );
->>>>>>> upstream-releases
   });
 
   let promise = BrowserTestUtils.waitForEvent(
@@ -113,15 +95,9 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, {}, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let updateLink = plugin.openOrClosedShadowRoot.getElementById("checkForUpdatesLink");
-||||||| merged common ancestors
-    let updateLink = doc.getAnonymousElementByAttribute(plugin, "anonid", "checkForUpdatesLink");
-=======
     let updateLink = plugin.openOrClosedShadowRoot.getElementById(
       "checkForUpdatesLink"
     );
->>>>>>> upstream-releases
     let bounds = updateLink.getBoundingClientRect();
     let left = (bounds.left + bounds.right) / 2;
     let top = (bounds.top + bounds.bottom) / 2;
@@ -153,21 +129,11 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(overlay && overlay.classList.contains("visible"),
-      "Test 18b, Plugin overlay should exist, not be hidden");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(overlay && overlay.classList.contains("visible"),
-      "Test 18b, Plugin overlay should exist, not be hidden");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       overlay && overlay.classList.contains("visible"),
       "Test 18b, Plugin overlay should exist, not be hidden"
     );
->>>>>>> upstream-releases
   });
 });
 
@@ -205,23 +171,6 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(overlay && overlay.classList.contains("visible"),
-      "Test 18c, Plugin overlay should exist, not be hidden");
-
-    let updateLink = plugin.openOrClosedShadowRoot.getElementById("checkForUpdatesLink");
-    Assert.ok(updateLink && updateLink.style.display != "block",
-      "Test 18c, Plugin should not have an update link");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(overlay && overlay.classList.contains("visible"),
-      "Test 18c, Plugin overlay should exist, not be hidden");
-
-    let updateLink = doc.getAnonymousElementByAttribute(plugin, "anonid", "checkForUpdatesLink");
-    Assert.ok(updateLink && updateLink.style.display != "block",
-      "Test 18c, Plugin should not have an update link");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       overlay && overlay.classList.contains("visible"),
@@ -235,7 +184,6 @@ add_task(async function() {
       updateLink && updateLink.style.display != "block",
       "Test 18c, Plugin should not have an update link"
     );
->>>>>>> upstream-releases
   });
 
   // check that click "Allow" works with blocked plugins

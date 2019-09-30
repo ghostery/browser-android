@@ -479,17 +479,8 @@ void MessageLoop::ReloadWorkQueue() {
 
   // Acquire all we can from the inter-thread queue with one lock acquisition.
   {
-<<<<<<< HEAD
-    AutoLock lock(incoming_queue_lock_);
-    if (incoming_queue_.empty()) return;
-||||||| merged common ancestors
-    AutoLock lock(incoming_queue_lock_);
-    if (incoming_queue_.empty())
-      return;
-=======
     mozilla::MutexAutoLock lock(incoming_queue_lock_);
     if (incoming_queue_.empty()) return;
->>>>>>> upstream-releases
     std::swap(incoming_queue_, work_queue_);
     DCHECK(incoming_queue_.empty());
   }

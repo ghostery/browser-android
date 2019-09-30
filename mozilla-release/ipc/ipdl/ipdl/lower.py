@@ -264,17 +264,7 @@ def _uniqueptr(T):
     return Type('UniquePtr', T=T)
 
 
-<<<<<<< HEAD
-def _tuple(types, const=0, ref=0):
-||||||| merged common ancestors
-def _uniqueptrGet(expr):
-    return ExprCall(ExprSelect(expr, '.', 'get'))
-
-
-def _tuple(types, const=0, ref=0):
-=======
 def _tuple(types, const=False, ref=False):
->>>>>>> upstream-releases
     return Type('Tuple', T=types, const=const, ref=ref)
 
 
@@ -551,19 +541,12 @@ class _ConvertToCxxType(TypeVisitor):
     def visitEndpointType(self, s):
         return Type(self.typename(s))
 
-<<<<<<< HEAD
-    def visitUniquePtrType(self, s):
-        return Type(self.typename(s))
-
-||||||| merged common ancestors
-=======
     def visitManagedEndpointType(self, s):
         return Type(self.typename(s))
 
     def visitUniquePtrType(self, s):
         return Type(self.typename(s))
 
->>>>>>> upstream-releases
     def visitProtocolType(self, p): assert 0
 
     def visitMessageType(self, m): assert 0
@@ -605,22 +588,11 @@ def _cxxConstRefType(ipdltype, side):
         t = t.T
         t.ptr = True
         return t
-<<<<<<< HEAD
-    if ipdltype.isUniquePtr():
-        t.ref = 1
-        return t
-    t.const = 1
-    t.ref = 1
-||||||| merged common ancestors
-    t.const = 1
-    t.ref = 1
-=======
     if ipdltype.isUniquePtr():
         t.ref = True
         return t
     t.const = True
     t.ref = True
->>>>>>> upstream-releases
     return t
 
 
@@ -629,20 +601,6 @@ def _cxxTypeCanMoveSend(ipdltype):
 
 
 def _cxxTypeNeedsMove(ipdltype):
-<<<<<<< HEAD
-    return ((ipdltype.isIPDL() and (ipdltype.isArray() or
-                                    ipdltype.isShmem() or
-                                    ipdltype.isByteBuf() or
-                                    ipdltype.isEndpoint())) or
-            (ipdltype.isCxx() and ipdltype.isMoveonly())
-            or ipdltype.isUniquePtr())
-||||||| merged common ancestors
-    return ((ipdltype.isIPDL() and (ipdltype.isArray() or
-                                    ipdltype.isShmem() or
-                                    ipdltype.isByteBuf() or
-                                    ipdltype.isEndpoint())) or
-            (ipdltype.isCxx() and ipdltype.isMoveonly()))
-=======
     if _cxxTypeNeedsMoveForSend(ipdltype):
         return True
 
@@ -670,7 +628,6 @@ def _cxxTypeNeedsMoveForSend(ipdltype):
                 ipdltype.isManagedEndpoint())
 
     return False
->>>>>>> upstream-releases
 
 
 def _cxxTypeCanMove(ipdltype):
@@ -4252,13 +4209,6 @@ class _GenerateProtocolActorCode(ipdl.ast.Visitor):
 
         return (lbl, case)
 
-    @staticmethod
-    def hasMoveableParams(md):
-        for param in md.decl.type.params:
-            if _cxxTypeCanMoveSend(param):
-                return True
-        return False
-
     def genAsyncSendMethod(self, md):
         method = MethodDefn(self.makeSendMethodDecl(md))
         msgvar, stmts = self.makeMessage(md, errfnSend)
@@ -4271,23 +4221,8 @@ class _GenerateProtocolActorCode(ipdl.ast.Visitor):
                         + sendstmts
                         + [StmtReturn(retvar)])
 
-<<<<<<< HEAD
-        if self.hasMoveableParams(md):
-            movemethod = MethodDefn(self.makeSendMethodDecl(md, paramsems='move'))
-            movemethod.addstmts(stmts
-                                + [Whitespace.NL]
-                                + self.genVerifyMessage(md.decl.type.verify, md.params,
-                                                        errfnSend, ExprVar('msg__'))
-                                + sendstmts
-                                + [StmtReturn(retvar)])
-        else:
-            movemethod = None
-
-||||||| merged common ancestors
-=======
         movemethod = None
 
->>>>>>> upstream-releases
         # Add the promise overload if we need one.
         if md.returns:
             promisemethod = MethodDefn(self.makeSendMethodDecl(md, promise=True))
@@ -4325,31 +4260,9 @@ class _GenerateProtocolActorCode(ipdl.ast.Visitor):
             + [Whitespace.NL,
                 StmtReturn.TRUE])
 
-<<<<<<< HEAD
-        if self.hasMoveableParams(md):
-            movemethod = MethodDefn(self.makeSendMethodDecl(md, paramsems='move'))
-            movemethod.addstmts(
-                serstmts
-                + self.genVerifyMessage(md.decl.type.verify, md.params, errfnSend,
-                                        ExprVar('msg__'))
-                + [Whitespace.NL,
-                    StmtDecl(Decl(Type('Message'), replyvar.name))]
-                + sendstmts
-                + [failif]
-                + desstmts
-                + [Whitespace.NL,
-                    StmtReturn.TRUE])
-        else:
-            movemethod = None
-
-        return method, movemethod
-||||||| merged common ancestors
-        return method
-=======
         movemethod = None
 
         return method, movemethod
->>>>>>> upstream-releases
 
     def genCtorRecvCase(self, md):
         lbl = CaseLabel(md.pqMsgId())
@@ -4861,16 +4774,8 @@ class _GenerateProtocolActorCode(ipdl.ast.Visitor):
             returnsems = 'out'
             rettype = Type.BOOL
         decl = MethodDecl(
-<<<<<<< HEAD
-            md.sendMethod().name,
-            params=md.makeCxxParams(paramsems, returnsems=returnsems,
-||||||| merged common ancestors
-            md.sendMethod().name,
-            params=md.makeCxxParams(paramsems='in', returnsems=returnsems,
-=======
             md.sendMethod(),
             params=md.makeCxxParams(paramsems, returnsems=returnsems,
->>>>>>> upstream-releases
                                     side=self.side, implicit=implicit),
             warn_unused=((self.side == 'parent' and returnsems != 'callback') or
                          (md.decl.type.isCtor() and not md.decl.type.isAsync())),

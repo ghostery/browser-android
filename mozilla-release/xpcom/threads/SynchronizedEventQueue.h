@@ -54,23 +54,10 @@ class ThreadTargetSink {
   virtual ~ThreadTargetSink() {}
 };
 
-<<<<<<< HEAD
-class SynchronizedEventQueue : public ThreadTargetSink {
- public:
-  virtual already_AddRefed<nsIRunnable> GetEvent(bool aMayWait,
-                                                 EventPriority* aPriority) = 0;
-||||||| merged common ancestors
-class SynchronizedEventQueue : public ThreadTargetSink
-{
-public:
-  virtual already_AddRefed<nsIRunnable> GetEvent(bool aMayWait,
-                                                 EventPriority* aPriority) = 0;
-=======
 class SynchronizedEventQueue : public ThreadTargetSink {
  public:
   virtual already_AddRefed<nsIRunnable> GetEvent(
       bool aMayWait, EventQueuePriority* aPriority) = 0;
->>>>>>> upstream-releases
   virtual bool HasPendingEvent() = 0;
 
   virtual bool HasPendingHighPriorityEvents() = 0;
@@ -103,11 +90,6 @@ class SynchronizedEventQueue : public ThreadTargetSink {
     return mEventObservers.ShallowSizeOfExcludingThis(aMallocSizeOf);
   }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * This method causes any events currently enqueued on the thread to be
    * suppressed until PopEventQueue is called, and any event dispatched to this
@@ -131,7 +113,6 @@ protected:
   virtual void PopEventQueue(nsIEventTarget* aTarget) = 0;
 
  protected:
->>>>>>> upstream-releases
   virtual ~SynchronizedEventQueue() {}
 
  private:

@@ -14,31 +14,7 @@ const { ExtensionData } = ChromeUtils.import(
 );
 
 async function generateAddon(data) {
-<<<<<<< HEAD
-  let id = uuidGenerator.generateUUID().number;
-
-  data = Object.assign({}, data);
-  data.manifest = Object.assign({applications: {gecko: {id}}}, data.manifest || {});
-
-  let xpi = Extension.generateXPI(data);
-  registerCleanupFunction(() => {
-    Services.obs.notifyObservers(xpi, "flush-cache-entry");
-    xpi.remove(false);
-  });
-||||||| merged common ancestors
-  let id = uuidGenerator.generateUUID().number;
-
-  data = Object.assign({embedded: true}, data);
-  data.manifest = Object.assign({applications: {gecko: {id}}}, data.manifest);
-
-  let xpi = Extension.generateXPI(data);
-  registerCleanupFunction(() => {
-    Services.obs.notifyObservers(xpi, "flush-cache-entry");
-    xpi.remove(false);
-  });
-=======
   let xpi = AddonTestUtils.createTempWebExtensionFile(data);
->>>>>>> upstream-releases
 
   let fileURI = Services.io.newFileURI(xpi);
   let jarURI = NetUtil.newURI(`jar:${fileURI.spec}!/`);

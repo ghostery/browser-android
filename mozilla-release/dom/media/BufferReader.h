@@ -32,20 +32,6 @@ class MOZ_RAII BufferReader {
         mRemaining(aData.Length()),
         mLength(aData.Length()) {}
   explicit BufferReader(const mozilla::MediaByteBuffer* aData)
-<<<<<<< HEAD
-      : mPtr(aData->Elements()),
-        mRemaining(aData->Length()),
-        mLength(aData->Length()) {}
-
-  void SetData(const nsTArray<uint8_t>& aData) {
-||||||| merged common ancestors
-    : mPtr(aData->Elements()), mRemaining(aData->Length()), mLength(aData->Length())
-  {
-  }
-
-  void SetData(const nsTArray<uint8_t>& aData)
-  {
-=======
       : mPtr(aData->Elements()),
         mRemaining(aData->Length()),
         mLength(aData->Length()) {}
@@ -55,7 +41,6 @@ class MOZ_RAII BufferReader {
         mLength(aData.Length()) {}
 
   void SetData(const nsTArray<uint8_t>& aData) {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mPtr && !mRemaining);
     mPtr = aData.Elements();
     mRemaining = aData.Length();

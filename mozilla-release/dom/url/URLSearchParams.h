@@ -145,26 +145,12 @@ class URLSearchParams final : public nsISupports, public nsWrapperCache {
 
   void Stringify(nsString& aRetval) const { Serialize(aRetval); }
 
-<<<<<<< HEAD
-  bool ReadStructuredClone(JSStructuredCloneReader* aReader);
-||||||| merged common ancestors
-  bool
-  ReadStructuredClone(JSStructuredCloneReader* aReader);
-=======
   static already_AddRefed<URLSearchParams> ReadStructuredClone(
       JSContext* aCx, nsIGlobalObject* aGlobal,
       JSStructuredCloneReader* aReader);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool WriteStructuredClone(JSStructuredCloneWriter* aWriter) const;
-||||||| merged common ancestors
-  bool
-  WriteStructuredClone(JSStructuredCloneWriter* aWriter) const;
-=======
   bool WriteStructuredClone(JSContext* aCx,
                             JSStructuredCloneWriter* aWriter) const;
->>>>>>> upstream-releases
 
   nsresult GetSendInfo(nsIInputStream** aBody, uint64_t* aContentLength,
                        nsACString& aContentTypeWithCharset,

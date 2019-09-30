@@ -96,14 +96,9 @@ var gPluginHandler = {
   // Callback for user clicking on the link in a click-to-play plugin
   // (where the plugin has an update)
   async openPluginUpdatePage(pluginTag) {
-<<<<<<< HEAD
-    let { Blocklist } = ChromeUtils.import("resource://gre/modules/Blocklist.jsm", {});
-||||||| merged common ancestors
-=======
     let { Blocklist } = ChromeUtils.import(
       "resource://gre/modules/Blocklist.jsm"
     );
->>>>>>> upstream-releases
     let url = await Blocklist.getPluginBlockURL(pluginTag);
     openTrustedLinkIn(url, "tab");
   },
@@ -502,39 +497,6 @@ var gPluginHandler = {
 
     // Configure the notification bar
     let priority = notificationBox.PRIORITY_WARNING_MEDIUM;
-<<<<<<< HEAD
-    let iconURL = "chrome://global/skin/plugins/pluginGeneric.svg";
-    let reloadLabel = gNavigatorBundle.getString("crashedpluginsMessage.reloadButton.label");
-    let reloadKey   = gNavigatorBundle.getString("crashedpluginsMessage.reloadButton.accesskey");
-
-    let buttons = [{
-      label: reloadLabel,
-      accessKey: reloadKey,
-      popup: null,
-      callback() { browser.reload(); },
-    }];
-
-    if (AppConstants.MOZ_CRASHREPORTER &&
-        PluginCrashReporter.hasCrashReport(pluginID)) {
-      let submitLabel = gNavigatorBundle.getString("crashedpluginsMessage.submitButton.label");
-      let submitKey   = gNavigatorBundle.getString("crashedpluginsMessage.submitButton.accesskey");
-||||||| merged common ancestors
-    let iconURL = "chrome://mozapps/skin/plugins/pluginGeneric.svg";
-    let reloadLabel = gNavigatorBundle.getString("crashedpluginsMessage.reloadButton.label");
-    let reloadKey   = gNavigatorBundle.getString("crashedpluginsMessage.reloadButton.accesskey");
-
-    let buttons = [{
-      label: reloadLabel,
-      accessKey: reloadKey,
-      popup: null,
-      callback() { browser.reload(); },
-    }];
-
-    if (AppConstants.MOZ_CRASHREPORTER &&
-        PluginCrashReporter.hasCrashReport(pluginID)) {
-      let submitLabel = gNavigatorBundle.getString("crashedpluginsMessage.submitButton.label");
-      let submitKey   = gNavigatorBundle.getString("crashedpluginsMessage.submitButton.accesskey");
-=======
     let iconURL = "chrome://global/skin/plugins/pluginGeneric.svg";
     let reloadLabel = gNavigatorBundle.getString(
       "crashedpluginsMessage.reloadButton.label"
@@ -564,7 +526,6 @@ var gPluginHandler = {
       let submitKey = gNavigatorBundle.getString(
         "crashedpluginsMessage.submitButton.accesskey"
       );
->>>>>>> upstream-releases
       let submitButton = {
         label: submitLabel,
         accessKey: submitKey,

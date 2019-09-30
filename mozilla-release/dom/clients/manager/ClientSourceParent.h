@@ -10,13 +10,8 @@
 #include "ClientOpPromise.h"
 #include "mozilla/dom/PClientSourceParent.h"
 #include "mozilla/dom/ServiceWorkerDescriptor.h"
-<<<<<<< HEAD
-#include "mozilla/MozPromise.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/ipc/IdType.h"
 #include "mozilla/MozPromise.h"
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -60,17 +55,9 @@ class ClientSourceParent final : public PClientSourceParent {
 
   bool DeallocPClientSourceOpParent(PClientSourceOpParent* aActor) override;
 
-<<<<<<< HEAD
- public:
-  explicit ClientSourceParent(const ClientSourceConstructorArgs& aArgs);
-||||||| merged common ancestors
-public:
-  explicit ClientSourceParent(const ClientSourceConstructorArgs& aArgs);
-=======
  public:
   explicit ClientSourceParent(const ClientSourceConstructorArgs& aArgs,
                               const Maybe<ContentParentId>& aContentParentId);
->>>>>>> upstream-releases
   ~ClientSourceParent();
 
   void Init();
@@ -87,31 +74,15 @@ public:
 
   void ClearController();
 
-<<<<<<< HEAD
-  void AttachHandle(ClientHandleParent* aClientSource);
-||||||| merged common ancestors
-  void
-  DetachHandle(ClientHandleParent* aClientSource);
-=======
   bool IsOwnedByProcess(ContentParentId aContentParentId) const {
     return mContentParentId && mContentParentId.value() == aContentParentId;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void DetachHandle(ClientHandleParent* aClientSource);
-
-  RefPtr<ClientOpPromise> StartOp(const ClientOpConstructorArgs& aArgs);
-||||||| merged common ancestors
-  RefPtr<ClientOpPromise>
-  StartOp(const ClientOpConstructorArgs& aArgs);
-=======
   void AttachHandle(ClientHandleParent* aClientSource);
 
   void DetachHandle(ClientHandleParent* aClientSource);
 
   RefPtr<ClientOpPromise> StartOp(const ClientOpConstructorArgs& aArgs);
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

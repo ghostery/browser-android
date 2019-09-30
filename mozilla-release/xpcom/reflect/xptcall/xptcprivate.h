@@ -12,30 +12,13 @@
 #include "nsAutoPtr.h"
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-#if !defined(__ia64) || \
-    (!defined(__hpux) && !defined(__linux__) && !defined(__FreeBSD__))
-#define STUB_ENTRY(n) NS_IMETHOD Stub##n() = 0;
-||||||| merged common ancestors
-#if !defined(__ia64) || (!defined(__hpux) && !defined(__linux__) && !defined(__FreeBSD__))
-#define STUB_ENTRY(n) NS_IMETHOD Stub##n() = 0;
-=======
 #if !defined(__ia64) || \
     (!defined(__hpux) && !defined(__linux__) && !defined(__FreeBSD__))
 #  define STUB_ENTRY(n) NS_IMETHOD Stub##n() = 0;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define STUB_ENTRY(n)                                                  \
-  NS_IMETHOD Stub##n(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, \
-                     uint64_t, uint64_t, uint64_t) = 0;
-||||||| merged common ancestors
-#define STUB_ENTRY(n) NS_IMETHOD Stub##n(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t) = 0;
-=======
 #  define STUB_ENTRY(n)                                                  \
     NS_IMETHOD Stub##n(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, \
                        uint64_t, uint64_t, uint64_t) = 0;
->>>>>>> upstream-releases
 #endif
 
 #define SENTINEL_ENTRY(n) NS_IMETHOD Sentinel##n() = 0;
@@ -48,30 +31,13 @@ class nsIXPTCStubBase : public nsISupports {
 #undef STUB_ENTRY
 #undef SENTINEL_ENTRY
 
-<<<<<<< HEAD
-#if !defined(__ia64) || \
-    (!defined(__hpux) && !defined(__linux__) && !defined(__FreeBSD__))
-#define STUB_ENTRY(n) NS_IMETHOD Stub##n() override;
-||||||| merged common ancestors
-#if !defined(__ia64) || (!defined(__hpux) && !defined(__linux__) && !defined(__FreeBSD__))
-#define STUB_ENTRY(n) NS_IMETHOD Stub##n() override;
-=======
 #if !defined(__ia64) || \
     (!defined(__hpux) && !defined(__linux__) && !defined(__FreeBSD__))
 #  define STUB_ENTRY(n) NS_IMETHOD Stub##n() override;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define STUB_ENTRY(n)                                                  \
-  NS_IMETHOD Stub##n(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, \
-                     uint64_t, uint64_t, uint64_t) override;
-||||||| merged common ancestors
-#define STUB_ENTRY(n) NS_IMETHOD Stub##n(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t,uint64_t) override;
-=======
 #  define STUB_ENTRY(n)                                                  \
     NS_IMETHOD Stub##n(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, \
                        uint64_t, uint64_t, uint64_t) override;
->>>>>>> upstream-releases
 #endif
 
 #define SENTINEL_ENTRY(n) NS_IMETHOD Sentinel##n() override;
@@ -95,13 +61,7 @@ class nsXPTCStubBase final : public nsIXPTCStubBase {
 #undef SENTINEL_ENTRY
 
 #if defined(__clang__) || defined(__GNUC__)
-<<<<<<< HEAD
-#define ATTRIBUTE_USED __attribute__((__used__))
-||||||| merged common ancestors
-#define ATTRIBUTE_USED __attribute__ ((__used__))
-=======
 #  define ATTRIBUTE_USED __attribute__((__used__))
->>>>>>> upstream-releases
 #else
 #  define ATTRIBUTE_USED
 #endif

@@ -25,22 +25,9 @@ nsHtml5DocumentBuilder::nsHtml5DocumentBuilder(bool aRunsToCompletion)
   mRunsToCompletion = aRunsToCompletion;
 }
 
-<<<<<<< HEAD
-nsresult nsHtml5DocumentBuilder::Init(nsIDocument* aDoc, nsIURI* aURI,
-                                      nsISupports* aContainer,
-                                      nsIChannel* aChannel) {
-||||||| merged common ancestors
-nsresult
-nsHtml5DocumentBuilder::Init(nsIDocument* aDoc,
-                             nsIURI* aURI,
-                             nsISupports* aContainer,
-                             nsIChannel* aChannel)
-{
-=======
 nsresult nsHtml5DocumentBuilder::Init(mozilla::dom::Document* aDoc,
                                       nsIURI* aURI, nsISupports* aContainer,
                                       nsIChannel* aChannel) {
->>>>>>> upstream-releases
   return nsContentSink::Init(aDoc, aURI, aContainer, aChannel);
 }
 

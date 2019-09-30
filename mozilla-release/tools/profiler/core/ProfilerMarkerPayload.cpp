@@ -13,15 +13,10 @@
 #include "gfxASurface.h"
 #include "Layers.h"
 #include "mozilla/Maybe.h"
-<<<<<<< HEAD
-#include "mozilla/net/HttpBaseChannel.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/net/HttpBaseChannel.h"
 #include "mozilla/Sprintf.h"
 
 #include <inttypes.h>
->>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -75,25 +70,11 @@ void TracingMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
   }
 }
 
-<<<<<<< HEAD
-void IOMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
-                                    const TimeStamp& aProcessStartTime,
-                                    UniqueStacks& aUniqueStacks) {
-  StreamCommonProps("io", aWriter, aProcessStartTime, aUniqueStacks);
-||||||| merged common ancestors
-void
-IOMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
-                               const TimeStamp& aProcessStartTime,
-                               UniqueStacks& aUniqueStacks)
-{
-  StreamCommonProps("io", aWriter, aProcessStartTime, aUniqueStacks);
-=======
 void FileIOMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                         const TimeStamp& aProcessStartTime,
                                         UniqueStacks& aUniqueStacks) {
   StreamCommonProps("FileIO", aWriter, aProcessStartTime, aUniqueStacks);
   aWriter.StringProperty("operation", mOperation.get());
->>>>>>> upstream-releases
   aWriter.StringProperty("source", mSource);
   if (mFilename) {
     aWriter.StringProperty("filename", mFilename.get());
@@ -121,20 +102,6 @@ void UserTimingMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
   }
 }
 
-<<<<<<< HEAD
-void DOMEventMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
-                                          const TimeStamp& aProcessStartTime,
-                                          UniqueStacks& aUniqueStacks) {
-  TracingMarkerPayload::StreamPayload(aWriter, aProcessStartTime,
-                                      aUniqueStacks);
-||||||| merged common ancestors
-void
-DOMEventMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
-                                     const TimeStamp& aProcessStartTime,
-                                     UniqueStacks& aUniqueStacks)
-{
-  TracingMarkerPayload::StreamPayload(aWriter, aProcessStartTime, aUniqueStacks);
-=======
 void TextMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                       const TimeStamp& aProcessStartTime,
                                       UniqueStacks& aUniqueStacks) {
@@ -155,7 +122,6 @@ void DOMEventMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                           UniqueStacks& aUniqueStacks) {
   TracingMarkerPayload::StreamPayload(aWriter, aProcessStartTime,
                                       aUniqueStacks);
->>>>>>> upstream-releases
 
   WriteTime(aWriter, aProcessStartTime, mTimeStamp, "timeStamp");
   aWriter.StringProperty("eventType", NS_ConvertUTF16toUTF8(mEventType).get());
@@ -192,28 +158,6 @@ static const char* GetNetworkState(NetworkLoadType aType) {
   return "";
 }
 
-<<<<<<< HEAD
-static const char* GetCacheState(
-    mozilla::net::CacheDisposition aCacheDisposition) {
-  switch (aCacheDisposition) {
-    case mozilla::net::kCacheUnresolved:
-      return "Unresolved";
-    case mozilla::net::kCacheHit:
-      return "Hit";
-    case mozilla::net::kCacheHitViaReval:
-      return "HitViaReval";
-    case mozilla::net::kCacheMissedViaReval:
-      return "MissedViaReval";
-    case mozilla::net::kCacheMissed:
-      return "Missed";
-    case mozilla::net::kCacheUnknown:
-    default:
-      return nullptr;
-  }
-  return nullptr;
-}
-||||||| merged common ancestors
-=======
 static const char* GetCacheState(
     mozilla::net::CacheDisposition aCacheDisposition) {
   switch (aCacheDisposition) {
@@ -232,7 +176,6 @@ static const char* GetCacheState(
       return nullptr;
   }
 }
->>>>>>> upstream-releases
 
 void NetworkMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                          const TimeStamp& aProcessStartTime,

@@ -561,61 +561,6 @@ pub unsafe extern fn mp4parse_get_track_audio_info(parser: *mut Mp4parseParser, 
             _ => return Mp4parseStatus::Invalid,
         };
 
-<<<<<<< HEAD
-    match audio.codec_specific {
-        AudioCodecSpecific::ES_Descriptor(ref v) => {
-            if v.codec_esds.len() > std::u32::MAX as usize {
-                return Mp4parseStatus::Invalid;
-            }
-            (*info).extra_data.length = v.codec_esds.len() as u32;
-            (*info).extra_data.data = v.codec_esds.as_ptr();
-            (*info).codec_specific_config.length = v.decoder_specific_data.len() as u32;
-            (*info).codec_specific_config.data = v.decoder_specific_data.as_ptr();
-            if let Some(rate) = v.audio_sample_rate {
-                (*info).sample_rate = rate;
-            }
-            if let Some(channels) = v.audio_channel_count {
-                (*info).channels = channels;
-            }
-            if let Some(profile) = v.audio_object_type {
-                (*info).profile = profile;
-            }
-            (*info).extended_profile = match v.extended_audio_object_type {
-                Some(extended_profile) => extended_profile,
-                _ =>  (*info).profile
-            };
-        }
-        AudioCodecSpecific::FLACSpecificBox(ref flac) => {
-            // Return the STREAMINFO metadata block in the codec_specific.
-            let streaminfo = &flac.blocks[0];
-            if streaminfo.block_type != 0 || streaminfo.data.len() != 34 {
-                return Mp4parseStatus::Invalid;
-||||||| merged common ancestors
-    match audio.codec_specific {
-        AudioCodecSpecific::ES_Descriptor(ref v) => {
-            if v.codec_esds.len() > std::u32::MAX as usize {
-                return Mp4parseStatus::Invalid;
-            }
-            (*info).extra_data.length = v.codec_esds.len() as u32;
-            (*info).extra_data.data = v.codec_esds.as_ptr();
-            (*info).codec_specific_config.length = v.decoder_specific_data.len() as u32;
-            (*info).codec_specific_config.data = v.decoder_specific_data.as_ptr();
-            if let Some(rate) = v.audio_sample_rate {
-                (*info).sample_rate = rate;
-            }
-            if let Some(channels) = v.audio_channel_count {
-                (*info).channels = channels;
-            }
-            if let Some(profile) = v.audio_object_type {
-                (*info).profile = profile;
-            }
-        }
-        AudioCodecSpecific::FLACSpecificBox(ref flac) => {
-            // Return the STREAMINFO metadata block in the codec_specific.
-            let streaminfo = &flac.blocks[0];
-            if streaminfo.block_type != 0 || streaminfo.data.len() != 34 {
-                return Mp4parseStatus::Invalid;
-=======
         // UNKNOWN for unsupported format.
         sample_info.codec_type = match audio.codec_specific {
             AudioCodecSpecific::OpusSpecificBox(_) =>
@@ -660,7 +605,6 @@ pub unsafe extern fn mp4parse_get_track_audio_info(parser: *mut Mp4parseParser, 
                     Some(extended_profile) => extended_profile,
                     _ => sample_info.profile
                 };
->>>>>>> upstream-releases
             }
             AudioCodecSpecific::FLACSpecificBox(ref flac) => {
                 // Return the STREAMINFO metadata block in the codec_specific.

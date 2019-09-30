@@ -22,42 +22,16 @@ class SourceSurfaceD2D1 : public SourceSurface {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(SourceSurfaceD2D1, override)
 
-<<<<<<< HEAD
-  SourceSurfaceD2D1(ID2D1Image *aImage, ID2D1DeviceContext *aDC,
-                    SurfaceFormat aFormat, const IntSize &aSize,
-                    DrawTargetD2D1 *aDT = nullptr);
-||||||| merged common ancestors
-  SourceSurfaceD2D1(ID2D1Image* aImage, ID2D1DeviceContext *aDC,
-                    SurfaceFormat aFormat, const IntSize &aSize,
-                    DrawTargetD2D1 *aDT = nullptr);
-=======
   SourceSurfaceD2D1(ID2D1Image* aImage, ID2D1DeviceContext* aDC,
                     SurfaceFormat aFormat, const IntSize& aSize,
                     DrawTargetD2D1* aDT = nullptr);
->>>>>>> upstream-releases
   ~SourceSurfaceD2D1();
 
-<<<<<<< HEAD
-  virtual SurfaceType GetType() const override {
-    return SurfaceType::D2D1_1_IMAGE;
-  }
-  virtual IntSize GetSize() const override { return mSize; }
-  virtual SurfaceFormat GetFormat() const override { return mFormat; }
-  virtual bool IsValid() const override;
-  virtual already_AddRefed<DataSourceSurface> GetDataSurface() override;
-||||||| merged common ancestors
-  virtual SurfaceType GetType() const override { return SurfaceType::D2D1_1_IMAGE; }
-  virtual IntSize GetSize() const override { return mSize; }
-  virtual SurfaceFormat GetFormat() const override { return mFormat; }
-  virtual bool IsValid() const override;
-  virtual already_AddRefed<DataSourceSurface> GetDataSurface() override;
-=======
   SurfaceType GetType() const override { return SurfaceType::D2D1_1_IMAGE; }
   IntSize GetSize() const override { return mSize; }
   SurfaceFormat GetFormat() const override { return mFormat; }
   bool IsValid() const override;
   already_AddRefed<DataSourceSurface> GetDataSurface() override;
->>>>>>> upstream-releases
 
   ID2D1Image* GetImage() { return mImage; }
 
@@ -90,7 +64,7 @@ class SourceSurfaceD2D1 : public SourceSurface {
 
   SurfaceFormat mFormat;
   IntSize mSize;
-  DrawTargetD2D1 *mDrawTarget;
+  DrawTargetD2D1* mDrawTarget;
   std::shared_ptr<Mutex> mSnapshotLock;
 };
 
@@ -101,25 +75,6 @@ class DataSourceSurfaceD2D1 : public DataSourceSurface {
   DataSourceSurfaceD2D1(ID2D1Bitmap1* aMappableBitmap, SurfaceFormat aFormat);
   ~DataSourceSurfaceD2D1();
 
-<<<<<<< HEAD
-  virtual SurfaceType GetType() const override { return SurfaceType::DATA; }
-  virtual IntSize GetSize() const override;
-  virtual SurfaceFormat GetFormat() const override { return mFormat; }
-  virtual bool IsValid() const override { return !!mBitmap; }
-  virtual uint8_t *GetData() override;
-  virtual int32_t Stride() override;
-  virtual bool Map(MapType, MappedSurface *aMappedSurface) override;
-  virtual void Unmap() override;
-||||||| merged common ancestors
-  virtual SurfaceType GetType() const  override{ return SurfaceType::DATA; }
-  virtual IntSize GetSize() const override;
-  virtual SurfaceFormat GetFormat() const override { return mFormat; }
-  virtual bool IsValid() const override { return !!mBitmap; }
-  virtual uint8_t *GetData() override;
-  virtual int32_t Stride() override;
-  virtual bool Map(MapType, MappedSurface *aMappedSurface) override;
-  virtual void Unmap() override;
-=======
   SurfaceType GetType() const override { return SurfaceType::DATA; }
   IntSize GetSize() const override;
   SurfaceFormat GetFormat() const override { return mFormat; }
@@ -128,7 +83,6 @@ class DataSourceSurfaceD2D1 : public DataSourceSurface {
   int32_t Stride() override;
   bool Map(MapType, MappedSurface* aMappedSurface) override;
   void Unmap() override;
->>>>>>> upstream-releases
 
  private:
   friend class SourceSurfaceD2DTarget;

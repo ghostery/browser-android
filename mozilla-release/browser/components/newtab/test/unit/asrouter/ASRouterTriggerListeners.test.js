@@ -17,17 +17,6 @@ describe("ASRouterTriggerListeners", () => {
   }
 
   beforeEach(async () => {
-<<<<<<< HEAD
-    sandbox = sinon.createSandbox();
-    registerWindowNotificationStub = sandbox.stub(global.Services.ww, "registerNotification");
-    unregisterWindoNotificationStub = sandbox.stub(global.Services.ww, "unregisterNotification");
-    existingWindow = {gBrowser: {addTabsProgressListener: sandbox.stub(), removeTabsProgressListener: sandbox.stub()}};
-||||||| merged common ancestors
-    sandbox = sinon.sandbox.create();
-    registerWindowNotificationStub = sandbox.stub(global.Services.ww, "registerNotification");
-    unregisterWindoNotificationStub = sandbox.stub(global.Services.ww, "unregisterNotification");
-    existingWindow = {gBrowser: {addTabsProgressListener: sandbox.stub(), removeTabsProgressListener: sandbox.stub()}};
-=======
     sandbox = sinon.createSandbox();
     registerWindowNotificationStub = sandbox.stub(
       global.Services.ww,
@@ -47,7 +36,6 @@ describe("ASRouterTriggerListeners", () => {
       addEventListener: sinon.stub(),
       removeEventListener: sinon.stub(),
     };
->>>>>>> upstream-releases
     windowEnumeratorStub = sandbox.stub(global.Services.wm, "getEnumerator");
     resetEnumeratorStub([existingWindow]);
     sandbox.spy(openURLListener, "init");

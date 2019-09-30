@@ -915,23 +915,10 @@ impl<'a> Context<'a> {
             Table(jt, ebb) => {
                 let lr = &self.liveness[value];
                 !lr.is_local()
-<<<<<<< HEAD
-                    && (ebb.map_or(false, |ebb| lr.is_livein(ebb, ctx)) || self
-                        .cur
-                        .func
-                        .jump_tables[jt]
-                        .iter()
-                        .any(|ebb| lr.is_livein(*ebb, ctx)))
-||||||| merged common ancestors
-                    && self.cur.func.jump_tables[jt]
-                        .entries()
-                        .any(|(_, ebb)| lr.is_livein(ebb, ctx))
-=======
                     && (ebb.map_or(false, |ebb| lr.is_livein(ebb, ctx))
                         || self.cur.func.jump_tables[jt]
                             .iter()
                             .any(|ebb| lr.is_livein(*ebb, ctx)))
->>>>>>> upstream-releases
             }
         }
     }

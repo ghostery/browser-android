@@ -123,54 +123,18 @@ class nsWindow final : public nsWindowBase {
     }
   }
 
-<<<<<<< HEAD
-  virtual void Show(bool aState) override;
-  virtual bool IsVisible() const override;
-  virtual void ConstrainPosition(bool aAllowSlop, int32_t* aX,
-                                 int32_t* aY) override;
-  virtual void SetSizeConstraints(const SizeConstraints& aConstraints) override;
-||||||| merged common ancestors
-  virtual void            Show(bool aState) override;
-  virtual bool            IsVisible() const override;
-  virtual void            ConstrainPosition(bool aAllowSlop, int32_t *aX, int32_t *aY) override;
-  virtual void            SetSizeConstraints(const SizeConstraints& aConstraints) override;
-=======
   virtual void Show(bool aState) override;
   virtual bool IsVisible() const override;
   virtual void ConstrainPosition(bool aAllowSlop, int32_t* aX,
                                  int32_t* aY) override;
   virtual void SetSizeConstraints(const SizeConstraints& aConstraints) override;
   virtual void LockAspectRatio(bool aShouldLock) override;
->>>>>>> upstream-releases
   virtual const SizeConstraints GetSizeConstraints() override;
   virtual void Move(double aX, double aY) override;
   virtual void Resize(double aWidth, double aHeight, bool aRepaint) override;
   virtual void Resize(double aX, double aY, double aWidth, double aHeight,
                       bool aRepaint) override;
   virtual mozilla::Maybe<bool> IsResizingNativeWidget() override;
-<<<<<<< HEAD
-  virtual MOZ_MUST_USE nsresult BeginResizeDrag(mozilla::WidgetGUIEvent* aEvent,
-                                                int32_t aHorizontal,
-                                                int32_t aVertical) override;
-  virtual void PlaceBehind(nsTopLevelWidgetZPlacement aPlacement,
-                           nsIWidget* aWidget, bool aActivate) override;
-  virtual void SetSizeMode(nsSizeMode aMode) override;
-  virtual void SuppressAnimation(bool aSuppress) override;
-  virtual void Enable(bool aState) override;
-  virtual bool IsEnabled() const override;
-  virtual nsresult SetFocus(bool aRaise) override;
-||||||| merged common ancestors
-  virtual MOZ_MUST_USE nsresult
-                          BeginResizeDrag(mozilla::WidgetGUIEvent* aEvent,
-                                          int32_t aHorizontal,
-                                          int32_t aVertical) override;
-  virtual void            PlaceBehind(nsTopLevelWidgetZPlacement aPlacement, nsIWidget *aWidget, bool aActivate) override;
-  virtual void            SetSizeMode(nsSizeMode aMode) override;
-  virtual void            SuppressAnimation(bool aSuppress) override;
-  virtual void            Enable(bool aState) override;
-  virtual bool            IsEnabled() const override;
-  virtual nsresult        SetFocus(bool aRaise) override;
-=======
   virtual MOZ_MUST_USE nsresult BeginResizeDrag(mozilla::WidgetGUIEvent* aEvent,
                                                 int32_t aHorizontal,
                                                 int32_t aVertical) override;
@@ -181,33 +145,17 @@ class nsWindow final : public nsWindowBase {
   virtual void Enable(bool aState) override;
   virtual bool IsEnabled() const override;
   virtual void SetFocus(Raise) override;
->>>>>>> upstream-releases
   virtual LayoutDeviceIntRect GetBounds() override;
   virtual LayoutDeviceIntRect GetScreenBounds() override;
   virtual MOZ_MUST_USE nsresult
   GetRestoredBounds(LayoutDeviceIntRect& aRect) override;
   virtual LayoutDeviceIntRect GetClientBounds() override;
   virtual LayoutDeviceIntPoint GetClientOffset() override;
-<<<<<<< HEAD
-  void SetBackgroundColor(const nscolor& aColor) override;
-  virtual nsresult SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                             uint32_t aHotspotY) override;
-  virtual void SetCursor(nsCursor aCursor) override;
-  virtual nsresult ConfigureChildren(
-      const nsTArray<Configuration>& aConfigurations) override;
-||||||| merged common ancestors
-  void                    SetBackgroundColor(const nscolor& aColor) override;
-  virtual nsresult        SetCursor(imgIContainer* aCursor,
-                                    uint32_t aHotspotX, uint32_t aHotspotY) override;
-  virtual void            SetCursor(nsCursor aCursor) override;
-  virtual nsresult        ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override;
-=======
   void SetBackgroundColor(const nscolor& aColor) override;
   virtual void SetCursor(nsCursor aDefaultCursor, imgIContainer* aCursorImage,
                          uint32_t aHotspotX, uint32_t aHotspotY) override;
   virtual nsresult ConfigureChildren(
       const nsTArray<Configuration>& aConfigurations) override;
->>>>>>> upstream-releases
   virtual bool PrepareForFullscreenTransition(nsISupports** aData) override;
   virtual void PerformFullscreenTransition(FullscreenTransitionStage aStage,
                                            uint16_t aDuration,
@@ -287,44 +235,6 @@ class nsWindow final : public nsWindowBase {
   /**
    * Event helpers
    */
-<<<<<<< HEAD
-  virtual bool DispatchMouseEvent(
-      mozilla::EventMessage aEventMessage, WPARAM wParam, LPARAM lParam,
-      bool aIsContextMenuKey = false,
-      int16_t aButton = mozilla::WidgetMouseEvent::eLeftButton,
-      uint16_t aInputSource =
-          mozilla::dom::MouseEvent_Binding::MOZ_SOURCE_MOUSE,
-      WinPointerInfo* aPointerInfo = nullptr);
-  virtual bool DispatchWindowEvent(mozilla::WidgetGUIEvent* aEvent,
-                                   nsEventStatus& aStatus);
-  void DispatchPendingEvents();
-  bool DispatchPluginEvent(UINT aMessage, WPARAM aWParam, LPARAM aLParam,
-                           bool aDispatchPendingEvents);
-
-  void SuppressBlurEvents(bool aSuppress);  // Called from nsFilePicker
-  bool BlurEventsSuppressed();
-||||||| merged common ancestors
-  virtual bool            DispatchMouseEvent(
-                            mozilla::EventMessage aEventMessage,
-                            WPARAM wParam,
-                            LPARAM lParam,
-                            bool aIsContextMenuKey = false,
-                            int16_t aButton =
-                              mozilla::WidgetMouseEvent::eLeftButton,
-                            uint16_t aInputSource =
-                              mozilla::dom::MouseEvent_Binding::MOZ_SOURCE_MOUSE,
-                            WinPointerInfo* aPointerInfo = nullptr);
-  virtual bool            DispatchWindowEvent(mozilla::WidgetGUIEvent* aEvent,
-                                              nsEventStatus& aStatus);
-  void                    DispatchPendingEvents();
-  bool                    DispatchPluginEvent(UINT aMessage,
-                                              WPARAM aWParam,
-                                              LPARAM aLParam,
-                                              bool aDispatchPendingEvents);
-
-  void                    SuppressBlurEvents(bool aSuppress); // Called from nsFilePicker
-  bool                    BlurEventsSuppressed();
-=======
   virtual bool DispatchMouseEvent(
       mozilla::EventMessage aEventMessage, WPARAM wParam, LPARAM lParam,
       bool aIsContextMenuKey = false,
@@ -340,7 +250,6 @@ class nsWindow final : public nsWindowBase {
 
   void SuppressBlurEvents(bool aSuppress);  // Called from nsFilePicker
   bool BlurEventsSuppressed();
->>>>>>> upstream-releases
 #ifdef ACCESSIBILITY
   /**
    * Return an accessible associated with the window.
@@ -569,24 +478,6 @@ class nsWindow final : public nsWindowBase {
    * Window transparency helpers
    */
 #ifdef MOZ_XUL
-<<<<<<< HEAD
- private:
-  void SetWindowTranslucencyInner(nsTransparencyMode aMode);
-  nsTransparencyMode GetWindowTranslucencyInner() const {
-    return mTransparencyMode;
-  }
-  void UpdateGlass();
-
- protected:
-#endif  // MOZ_XUL
-||||||| merged common ancestors
-private:
-  void                    SetWindowTranslucencyInner(nsTransparencyMode aMode);
-  nsTransparencyMode      GetWindowTranslucencyInner() const { return mTransparencyMode; }
-  void                    UpdateGlass();
-protected:
-#endif // MOZ_XUL
-=======
  private:
   void SetWindowTranslucencyInner(nsTransparencyMode aMode);
   nsTransparencyMode GetWindowTranslucencyInner() const {
@@ -597,7 +488,6 @@ protected:
 
  protected:
 #endif  // MOZ_XUL
->>>>>>> upstream-releases
 
   static bool IsAsyncResponseEvent(UINT aMsg, LRESULT& aResult);
   void IPCWindowProcHandler(UINT& msg, WPARAM& wParam, LPARAM& lParam);
@@ -636,97 +526,6 @@ protected:
   ScrollSnapshot mPartialSnapshot;
   ScrollSnapshot* mCurrentSnapshot = nullptr;
 
-<<<<<<< HEAD
-  already_AddRefed<SourceSurface> GetFallbackScrollSnapshot(
-      const RECT& aRequiredClip);
-
- protected:
-  nsCOMPtr<nsIWidget> mParent;
-  nsIntSize mLastSize;
-  nsIntPoint mLastPoint;
-  HWND mWnd;
-  HWND mTransitionWnd;
-  WNDPROC mPrevWndProc;
-  HBRUSH mBrush;
-  IMEContext mDefaultIMC;
-  HDEVNOTIFY mDeviceNotifyHandle;
-  bool mIsTopWidgetWindow;
-  bool mInDtor;
-  bool mIsVisible;
-  bool mUnicodeWidget;
-  bool mPainting;
-  bool mTouchWindow;
-  bool mDisplayPanFeedback;
-  bool mHideChrome;
-  bool mIsRTL;
-  bool mFullscreenMode;
-  bool mMousePresent;
-  bool mDestroyCalled;
-  bool mOpeningAnimationSuppressed;
-  bool mIsEarlyBlankWindow;
-  uint32_t mBlurSuppressLevel;
-  DWORD_PTR mOldStyle;
-  DWORD_PTR mOldExStyle;
-  nsNativeDragTarget* mNativeDragTarget;
-  HKL mLastKeyboardLayout;
-  nsSizeMode mOldSizeMode;
-  nsSizeMode mLastSizeMode;
-  WindowHook mWindowHook;
-  uint32_t mPickerDisplayCount;
-  HICON mIconSmall;
-  HICON mIconBig;
-  static bool sDropShadowEnabled;
-  static uint32_t sInstanceCount;
-  static TriStateBool sCanQuit;
-  static nsWindow* sCurrentWindow;
-  static BOOL sIsOleInitialized;
-  static HCURSOR sHCursor;
-||||||| merged common ancestors
-  already_AddRefed<SourceSurface>
-    GetFallbackScrollSnapshot(const RECT& aRequiredClip);
-
-protected:
-  nsCOMPtr<nsIWidget>   mParent;
-  nsIntSize             mLastSize;
-  nsIntPoint            mLastPoint;
-  HWND                  mWnd;
-  HWND                  mTransitionWnd;
-  WNDPROC               mPrevWndProc;
-  HBRUSH                mBrush;
-  IMEContext            mDefaultIMC;
-  HDEVNOTIFY            mDeviceNotifyHandle;
-  bool                  mIsTopWidgetWindow;
-  bool                  mInDtor;
-  bool                  mIsVisible;
-  bool                  mUnicodeWidget;
-  bool                  mPainting;
-  bool                  mTouchWindow;
-  bool                  mDisplayPanFeedback;
-  bool                  mHideChrome;
-  bool                  mIsRTL;
-  bool                  mFullscreenMode;
-  bool                  mMousePresent;
-  bool                  mDestroyCalled;
-  bool                  mOpeningAnimationSuppressed;
-  bool                  mIsEarlyBlankWindow;
-  uint32_t              mBlurSuppressLevel;
-  DWORD_PTR             mOldStyle;
-  DWORD_PTR             mOldExStyle;
-  nsNativeDragTarget*   mNativeDragTarget;
-  HKL                   mLastKeyboardLayout;
-  nsSizeMode            mOldSizeMode;
-  nsSizeMode            mLastSizeMode;
-  WindowHook            mWindowHook;
-  uint32_t              mPickerDisplayCount;
-  HICON                 mIconSmall;
-  HICON                 mIconBig;
-  static bool           sDropShadowEnabled;
-  static uint32_t       sInstanceCount;
-  static TriStateBool   sCanQuit;
-  static nsWindow*      sCurrentWindow;
-  static BOOL           sIsOleInitialized;
-  static HCURSOR        sHCursor;
-=======
   already_AddRefed<SourceSurface> GetFallbackScrollSnapshot(
       const RECT& aRequiredClip);
 
@@ -773,7 +572,6 @@ protected:
   static nsWindow* sCurrentWindow;
   static BOOL sIsOleInitialized;
   static HCURSOR sHCursor;
->>>>>>> upstream-releases
   static imgIContainer* sCursorImgContainer;
   static bool sSwitchKeyboardLayout;
   static bool sJustGotDeactivate;
@@ -805,15 +603,9 @@ protected:
   // Height of the caption plus border
   int32_t mCaptionHeight;
 
-<<<<<<< HEAD
-  double mDefaultScale;
-||||||| merged common ancestors
-  double                mDefaultScale;
-=======
   double mDefaultScale;
 
   float mAspectRatio;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIIdleServiceInternal> mIdleService;
 
@@ -870,15 +662,9 @@ protected:
   bool mSendingSetText;
 
   // Whether we we're created as a child window (aka ChildWindow) or not.
-<<<<<<< HEAD
-  bool mIsChildWindow : 1;
-||||||| merged common ancestors
-  bool                  mIsChildWindow : 1;
-=======
   bool mIsChildWindow : 1;
 
   int32_t mCachedHitTestResult;
->>>>>>> upstream-releases
 
   // The point in time at which the last paint completed. We use this to avoid
   //  painting too rapidly in response to frequent input events.

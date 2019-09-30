@@ -63,520 +63,123 @@ extern bool math_pow(JSContext* cx, unsigned argc, js::Value* vp);
 extern bool minmax_impl(JSContext* cx, bool max, js::HandleValue a,
                         js::HandleValue b, js::MutableHandleValue res);
 
-<<<<<<< HEAD
-extern void math_sincos_impl(double x, double* sin, double* cos);
-||||||| merged common ancestors
-extern void
-math_sincos_impl(double x, double *sin, double *cos);
-=======
 extern bool math_imul_handle(JSContext* cx, HandleValue lhs, HandleValue rhs,
                              MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_imul_handle(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                             MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-math_imul_handle(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res);
-=======
 extern bool math_imul(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_imul(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_imul(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool RoundFloat32(JSContext* cx, HandleValue v, float* out);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool RoundFloat32(JSContext* cx, HandleValue v, float* out);
-||||||| merged common ancestors
-extern bool
-RoundFloat32(JSContext* cx, HandleValue v, float* out);
-=======
 extern bool RoundFloat32(JSContext* cx, HandleValue arg,
                          MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool RoundFloat32(JSContext* cx, HandleValue arg,
-                         MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-RoundFloat32(JSContext* cx, HandleValue arg, MutableHandleValue res);
-=======
 extern bool math_fround(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_fround(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_fround(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_log(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_log(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_log(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_log_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_log_impl(double x);
-||||||| merged common ancestors
-extern double
-math_log_impl(double x);
-=======
 extern bool math_log_handle(JSContext* cx, HandleValue val,
                             MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_log_handle(JSContext* cx, HandleValue val,
-                            MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-math_log_handle(JSContext* cx, HandleValue val, MutableHandleValue res);
-=======
 extern bool math_sin(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_sin(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_sin(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_sin_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_sin_impl(double x);
-||||||| merged common ancestors
-extern double
-math_sin_impl(double x);
-=======
 extern bool math_sin_handle(JSContext* cx, HandleValue val,
                             MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_sin_handle(JSContext* cx, HandleValue val,
-                            MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-math_sin_handle(JSContext* cx, HandleValue val, MutableHandleValue res);
-=======
 extern bool math_cos(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_cos(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_cos(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_cos_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_cos_impl(double x);
-||||||| merged common ancestors
-extern double
-math_cos_impl(double x);
-=======
 extern bool math_exp(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_exp(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_exp(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_exp_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_exp_impl(double x);
-||||||| merged common ancestors
-extern double
-math_exp_impl(double x);
-=======
 extern bool math_tan(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_tan(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_tan(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_tan_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_tan_impl(double x);
-||||||| merged common ancestors
-extern double
-math_tan_impl(double x);
-=======
 extern bool math_log10(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_log10(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_log10(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_log2(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_log2(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_log2(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_log1p(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_log1p(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_log1p(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_expm1(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_expm1(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_expm1(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_cosh(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_cosh(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_cosh(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_sinh(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_sinh(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_sinh(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_tanh(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_tanh(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_tanh(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_acosh(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_acosh(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_acosh(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_asinh(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_asinh(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_asinh(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_atanh(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_atanh(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_atanh(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double ecmaHypot(double x, double y);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double ecmaHypot(double x, double y);
-||||||| merged common ancestors
-extern double
-ecmaHypot(double x, double y);
-=======
 extern double hypot3(double x, double y, double z);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double hypot3(double x, double y, double z);
-||||||| merged common ancestors
-extern double
-hypot3(double x, double y, double z);
-=======
 extern double hypot4(double x, double y, double z, double w);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double hypot4(double x, double y, double z, double w);
-||||||| merged common ancestors
-extern double
-hypot4(double x, double y, double z, double w);
-=======
 extern bool math_hypot(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_hypot(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_hypot(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_hypot_handle(JSContext* cx, HandleValueArray args,
                               MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_hypot_handle(JSContext* cx, HandleValueArray args,
-                              MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-math_hypot_handle(JSContext* cx, HandleValueArray args, MutableHandleValue res);
-=======
 extern bool math_trunc(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_trunc(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_trunc(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_sign(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_sign(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_sign(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_cbrt(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_cbrt(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_cbrt(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_asin(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_asin(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_asin(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_acos(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_acos(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_acos(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_atan(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_atan(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_atan(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_atan2_handle(JSContext* cx, HandleValue y, HandleValue x,
                               MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_atan2_handle(JSContext* cx, HandleValue y, HandleValue x,
-                              MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-math_atan2_handle(JSContext* cx, HandleValue y, HandleValue x, MutableHandleValue res);
-=======
 extern bool math_atan2(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_atan2(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_atan2(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern double ecmaAtan2(double x, double y);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double ecmaAtan2(double x, double y);
-||||||| merged common ancestors
-extern double
-ecmaAtan2(double x, double y);
-=======
 extern double math_atan_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_atan_impl(double x);
-||||||| merged common ancestors
-extern double
-math_atan_impl(double x);
-=======
 extern bool math_atan(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_atan(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_atan(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_asin_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_asin_impl(double x);
-||||||| merged common ancestors
-extern double
-math_asin_impl(double x);
-=======
 extern bool math_asin(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_asin(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_asin(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern double math_acos_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_acos_impl(double x);
-||||||| merged common ancestors
-extern double
-math_acos_impl(double x);
-=======
 extern bool math_acos(JSContext* cx, unsigned argc, js::Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_acos(JSContext* cx, unsigned argc, js::Value* vp);
-||||||| merged common ancestors
-extern bool
-math_acos(JSContext* cx, unsigned argc, js::Value* vp);
-=======
 extern bool math_ceil_handle(JSContext* cx, HandleValue value,
                              MutableHandleValue res);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_ceil_handle(JSContext* cx, HandleValue value,
-                             MutableHandleValue res);
-||||||| merged common ancestors
-extern bool
-math_ceil_handle(JSContext* cx, HandleValue value, MutableHandleValue res);
-=======
 extern bool math_ceil(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_ceil(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_ceil(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern double math_ceil_impl(double x);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern double math_ceil_impl(double x);
-||||||| merged common ancestors
-extern double
-math_ceil_impl(double x);
-=======
 extern bool math_clz32(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_clz32(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_clz32(JSContext* cx, unsigned argc, Value* vp);
-=======
 extern bool math_floor_handle(JSContext* cx, HandleValue v,
                               MutableHandleValue r);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_floor_handle(JSContext* cx, HandleValue v,
-                              MutableHandleValue r);
-||||||| merged common ancestors
-extern bool
-math_floor_handle(JSContext* cx, HandleValue v, MutableHandleValue r);
-=======
 extern bool math_floor(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern bool math_floor(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-extern bool
-math_floor(JSContext* cx, unsigned argc, Value* vp);
-=======
-extern double math_floor_impl(double x);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 extern double math_floor_impl(double x);
 
 template <typename T>
-||||||| merged common ancestors
-extern double
-math_floor_impl(double x);
-
-template<typename T>
-=======
-template <typename T>
->>>>>>> upstream-releases
 extern T GetBiggestNumberLessThan(T x);
 
 extern bool math_round_handle(JSContext* cx, HandleValue arg,

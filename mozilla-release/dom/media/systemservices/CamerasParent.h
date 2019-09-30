@@ -70,17 +70,8 @@ class InputObserver : public webrtc::VideoInputFeedBack {
   RefPtr<CamerasParent> mParent;
 };
 
-<<<<<<< HEAD
-class CamerasParent final : public PCamerasParent, public nsIObserver {
-||||||| merged common ancestors
-class CamerasParent final
-  : public PCamerasParent
-  , public nsIObserver
-{
-=======
 class CamerasParent final : public PCamerasParent,
                             public nsIAsyncShutdownBlocker {
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
 
  public:

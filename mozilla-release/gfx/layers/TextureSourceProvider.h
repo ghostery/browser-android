@@ -83,17 +83,6 @@ class TextureSourceProvider {
 
   void FlushPendingNotifyNotUsed();
 
-<<<<<<< HEAD
-  // If this provider is also a Compositor, return the compositor. Otherwise
-  // return null.
-  virtual Compositor* AsCompositor() { return nullptr; }
-||||||| merged common ancestors
-  // If this provider is also a Compositor, return the compositor. Otherwise return
-  // null.
-  virtual Compositor* AsCompositor() {
-    return nullptr;
-  }
-=======
   // If this provider is also a Compositor, return the compositor. Otherwise
   // return null.
   virtual Compositor* AsCompositor() { return nullptr; }
@@ -105,7 +94,6 @@ class TextureSourceProvider {
   // If this provider is also a CompositorOGL, return the compositor. Otherwise
   // return nullptr.
   virtual CompositorOGL* AsCompositorOGL() { return nullptr; }
->>>>>>> upstream-releases
 
 #ifdef XP_WIN
   // On Windows, if this provides Direct3D textures, it must expose the device.
@@ -121,20 +109,9 @@ class TextureSourceProvider {
   // used to composite).
   virtual bool IsValid() const = 0;
 
-<<<<<<< HEAD
- public:
-  class MOZ_STACK_CLASS AutoReadUnlockTextures {
-   public:
-||||||| merged common ancestors
-public:
-  class MOZ_STACK_CLASS AutoReadUnlockTextures
-  {
-  public:
-=======
  public:
   class MOZ_STACK_CLASS AutoReadUnlockTextures final {
    public:
->>>>>>> upstream-releases
     explicit AutoReadUnlockTextures(TextureSourceProvider* aProvider)
         : mProvider(aProvider) {}
     ~AutoReadUnlockTextures() { mProvider->ReadUnlockTextures(); }

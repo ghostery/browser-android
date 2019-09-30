@@ -15,18 +15,6 @@
 #include "nsComponentManagerUtils.h"
 #include "nsIDocShellTreeItem.h"
 #include "nsIBaseWindow.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"
-#include "nsDocShell.h"
-
-#include "mozilla/dom/BrowsingContext.h"
-#include "mozilla/dom/Element.h"
-
-using mozilla::dom::BrowsingContext;
-using mozilla::dom::Element;
-||||||| merged common ancestors
-#include "nsIDocument.h"
-=======
 #include "nsDocShell.h"
 
 #include "mozilla/PresShell.h"
@@ -38,32 +26,10 @@ using mozilla::PresShell;
 using mozilla::dom::BrowsingContext;
 using mozilla::dom::Document;
 using mozilla::dom::Element;
->>>>>>> upstream-releases
 
 //---------------------------------------------------
 //-- nsPrintObject Class Impl
 //---------------------------------------------------
-<<<<<<< HEAD
-nsPrintObject::nsPrintObject()
-    : mContent(nullptr),
-      mFrameType(eFrame),
-      mParent(nullptr),
-      mHasBeenPrinted(false),
-      mDontPrint(true),
-      mPrintAsIs(false),
-      mInvisible(false),
-      mPrintPreview(false),
-      mDidCreateDocShell(false),
-      mShrinkRatio(1.0),
-      mZoomRatio(1.0) {
-||||||| merged common ancestors
-nsPrintObject::nsPrintObject() :
-  mContent(nullptr), mFrameType(eFrame), mParent(nullptr),
-  mHasBeenPrinted(false), mDontPrint(true), mPrintAsIs(false),
-  mInvisible(false), mPrintPreview(false), mDidCreateDocShell(false),
-  mShrinkRatio(1.0), mZoomRatio(1.0)
-{
-=======
 nsPrintObject::nsPrintObject()
     : mContent(nullptr),
       mFrameType(eFrame),
@@ -75,7 +41,6 @@ nsPrintObject::nsPrintObject()
       mDidCreateDocShell(false),
       mShrinkRatio(1.0),
       mZoomRatio(1.0) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsPrintObject);
 }
 
@@ -94,19 +59,9 @@ nsPrintObject::~nsPrintObject() {
 }
 
 //------------------------------------------------------------------
-<<<<<<< HEAD
-nsresult nsPrintObject::Init(nsIDocShell* aDocShell, nsIDocument* aDoc,
-                             bool aPrintPreview) {
-||||||| merged common ancestors
-nsresult
-nsPrintObject::Init(nsIDocShell* aDocShell, nsIDocument* aDoc,
-                    bool aPrintPreview)
-{
-=======
 nsresult nsPrintObject::InitAsRootObject(nsIDocShell* aDocShell, Document* aDoc,
                                          bool aForPrintPreview) {
   NS_ENSURE_STATE(aDocShell);
->>>>>>> upstream-releases
   NS_ENSURE_STATE(aDoc);
 
   if (aForPrintPreview) {
@@ -119,20 +74,6 @@ nsresult nsPrintObject::InitAsRootObject(nsIDocShell* aDocShell, Document* aDoc,
     }
     mDocShell = aDocShell;
   } else {
-<<<<<<< HEAD
-    mTreeOwner = do_GetInterface(aDocShell);
-
-    // Create a new BrowsingContext to create our DocShell in.
-    RefPtr<BrowsingContext> bc = BrowsingContext::Create(
-        /* aParent */ nullptr,
-        /* aOpener */ nullptr, EmptyString(),
-        aDocShell->ItemType() == nsIDocShellTreeItem::typeContent
-            ? BrowsingContext::Type::Content
-            : BrowsingContext::Type::Chrome);
-
-||||||| merged common ancestors
-    mTreeOwner = do_GetInterface(aDocShell);
-=======
     // When doing an actual print, we create a BrowsingContext/nsDocShell that
     // is detached from any browser window or tab.
 
@@ -144,21 +85,14 @@ nsresult nsPrintObject::InitAsRootObject(nsIDocShell* aDocShell, Document* aDoc,
             ? BrowsingContext::Type::Content
             : BrowsingContext::Type::Chrome);
 
->>>>>>> upstream-releases
     // Create a container docshell for printing.
     mDocShell = nsDocShell::Create(bc);
     NS_ENSURE_TRUE(mDocShell, NS_ERROR_OUT_OF_MEMORY);
 
     mDidCreateDocShell = true;
-<<<<<<< HEAD
-    MOZ_ASSERT(mDocShell->ItemType() == aDocShell->ItemType());
-||||||| merged common ancestors
-    mDocShell->SetItemType(aDocShell->ItemType());
-=======
     MOZ_ASSERT(mDocShell->ItemType() == aDocShell->ItemType());
 
     mTreeOwner = do_GetInterface(aDocShell);
->>>>>>> upstream-releases
     mDocShell->SetTreeOwner(mTreeOwner);
 
     // Make sure nsDocShell::EnsureContentViewer() is called:

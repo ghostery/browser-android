@@ -18,7 +18,6 @@
 #endif
 #define CRLF "\r\n"
 
-<<<<<<< HEAD
 namespace mozilla {
 
 RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(
@@ -27,27 +26,6 @@ RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(
     const RsdparsaSdpAttributeList* sessionLevel)
     : SdpMediaSection(level), mSession(std::move(session)), mSection(section) {
   switch (sdp_rust_get_media_type(section)) {
-||||||| merged common ancestors
-namespace mozilla
-{
-
-RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(size_t level,
-      RsdparsaSessionHandle session, const RustMediaSection* const section,
-      const RsdparsaSdpAttributeList* sessionLevel)
-  : SdpMediaSection(level), mSession(std::move(session)),
-    mSection(section)
-{
-  switch(sdp_rust_get_media_type(section)) {
-=======
-namespace mozilla {
-
-RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(
-    size_t level, RsdparsaSessionHandle session,
-    const RustMediaSection* const section,
-    const RsdparsaSdpAttributeList* sessionLevel)
-    : SdpMediaSection(level), mSession(std::move(session)), mSection(section) {
-  switch (sdp_rust_get_media_type(section)) {
->>>>>>> upstream-releases
     case RustSdpMediaValue::kRustAudio:
       mMediaType = kAudio;
       break;

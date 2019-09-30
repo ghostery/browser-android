@@ -34,91 +34,33 @@ class ServiceWorkerManagerParent final : public PServiceWorkerManagerParent {
   ServiceWorkerManagerParent();
   ~ServiceWorkerManagerParent();
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvRegister(
-      const ServiceWorkerRegistrationData& aData) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvRegister(
-    const ServiceWorkerRegistrationData& aData) override;
-=======
   mozilla::ipc::IPCResult RecvRegister(
       const ServiceWorkerRegistrationData& aData);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvUnregister(
-      const PrincipalInfo& aPrincipalInfo, const nsString& aScope) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvUnregister(const PrincipalInfo& aPrincipalInfo,
-                                                 const nsString& aScope) override;
-=======
   mozilla::ipc::IPCResult RecvUnregister(const PrincipalInfo& aPrincipalInfo,
                                          const nsString& aScope);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvPropagateSoftUpdate(
-      const OriginAttributes& aOriginAttributes,
-      const nsString& aScope) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvPropagateSoftUpdate(const OriginAttributes& aOriginAttributes,
-                                                          const nsString& aScope) override;
-=======
   mozilla::ipc::IPCResult RecvPropagateSoftUpdate(
       const OriginAttributes& aOriginAttributes, const nsString& aScope);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvPropagateUnregister(
-      const PrincipalInfo& aPrincipalInfo, const nsString& aScope) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvPropagateUnregister(const PrincipalInfo& aPrincipalInfo,
-                                                          const nsString& aScope) override;
-=======
   mozilla::ipc::IPCResult RecvPropagateUnregister(
       const PrincipalInfo& aPrincipalInfo, const nsString& aScope);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvPropagateRemove(
-      const nsCString& aHost) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvPropagateRemove(const nsCString& aHost) override;
-=======
   mozilla::ipc::IPCResult RecvPropagateRemove(const nsCString& aHost);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvPropagateRemoveAll();
 
   mozilla::ipc::IPCResult RecvShutdown();
 
-<<<<<<< HEAD
-  virtual PServiceWorkerUpdaterParent* AllocPServiceWorkerUpdaterParent(
-      const OriginAttributes& aOriginAttributes,
-      const nsCString& aScope) override;
-||||||| merged common ancestors
-  virtual PServiceWorkerUpdaterParent*
-  AllocPServiceWorkerUpdaterParent(const OriginAttributes& aOriginAttributes,
-                                   const nsCString& aScope) override;
-=======
   PServiceWorkerUpdaterParent* AllocPServiceWorkerUpdaterParent(
       const OriginAttributes& aOriginAttributes, const nsCString& aScope);
->>>>>>> upstream-releases
 
   virtual mozilla::ipc::IPCResult RecvPServiceWorkerUpdaterConstructor(
       PServiceWorkerUpdaterParent* aActor,
       const OriginAttributes& aOriginAttributes,
       const nsCString& aScope) override;
 
-<<<<<<< HEAD
-  virtual bool DeallocPServiceWorkerUpdaterParent(
-      PServiceWorkerUpdaterParent* aActor) override;
-||||||| merged common ancestors
-  virtual bool
-  DeallocPServiceWorkerUpdaterParent(PServiceWorkerUpdaterParent* aActor) override;
-=======
   bool DeallocPServiceWorkerUpdaterParent(PServiceWorkerUpdaterParent* aActor);
->>>>>>> upstream-releases
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 

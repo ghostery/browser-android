@@ -83,17 +83,6 @@ add_task(async function test_install_detection() {
 
   Assert.equal(1, Object.keys(reconciler.addons).length);
   Assert.ok(addon.id in reconciler.addons);
-<<<<<<< HEAD
-  let record = reconciler.addons[ADDON_ID];
-
-  const KEYS = ["id", "guid", "enabled", "installed", "modified", "type",
-                "scope", "foreignInstall"];
-||||||| merged common ancestors
-  let record = reconciler.addons[addon.id];
-
-  const KEYS = ["id", "guid", "enabled", "installed", "modified", "type",
-                "scope", "foreignInstall"];
-=======
   let record = reconciler.addons[ADDON_ID];
 
   const KEYS = [
@@ -106,7 +95,6 @@ add_task(async function test_install_detection() {
     "scope",
     "foreignInstall",
   ];
->>>>>>> upstream-releases
   for (let key of KEYS) {
     Assert.ok(key in record);
     Assert.notEqual(null, record[key]);

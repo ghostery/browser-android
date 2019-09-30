@@ -200,24 +200,6 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
         valueAlloc = useOrConstantAtStart(value);
       } else {
         valueAlloc = useRegisterAtStart(value);
-<<<<<<< HEAD
-      }
-      break;
-    case Scalar::Float32:
-    case Scalar::Float64:
-      valueAlloc = useRegisterAtStart(value);
-      break;
-    case Scalar::Uint8Clamped:
-    case Scalar::MaxTypedArrayViewType:
-      MOZ_CRASH("unexpected array type");
-  }
-||||||| merged common ancestors
-        break;
-      case Scalar::Uint8Clamped:
-      case Scalar::MaxTypedArrayViewType:
-        MOZ_CRASH("unexpected array type");
-    }
-=======
       }
       break;
     case Scalar::Float32:
@@ -230,7 +212,6 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
     case Scalar::MaxTypedArrayViewType:
       MOZ_CRASH("unexpected array type");
   }
->>>>>>> upstream-releases
 
   LAllocation baseAlloc = useRegisterOrZeroAtStart(base);
   auto* lir = new (alloc()) LWasmStore(baseAlloc, valueAlloc);

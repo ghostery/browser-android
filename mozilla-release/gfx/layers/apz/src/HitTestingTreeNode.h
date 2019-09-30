@@ -224,17 +224,8 @@ class HitTestingTreeNode {
  * Clear() being called, it unlocks the underlying node at which point it can
  * be recycled or freed.
  */
-<<<<<<< HEAD
-class MOZ_RAII HitTestingTreeNodeAutoLock {
- public:
-||||||| merged common ancestors
-class MOZ_RAII HitTestingTreeNodeAutoLock
-{
-public:
-=======
 class MOZ_RAII HitTestingTreeNodeAutoLock final {
  public:
->>>>>>> upstream-releases
   HitTestingTreeNodeAutoLock();
   HitTestingTreeNodeAutoLock(const HitTestingTreeNodeAutoLock&) = delete;
   HitTestingTreeNodeAutoLock& operator=(const HitTestingTreeNodeAutoLock&) =

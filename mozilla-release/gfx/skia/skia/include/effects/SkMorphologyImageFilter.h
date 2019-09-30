@@ -62,15 +62,6 @@ public:
                                      sk_sp<SkImageFilter> input,
                                      const CropRect* cropRect = nullptr);
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkDilateImageFilter)
-
-=======
->>>>>>> upstream-releases
 protected:
     Op op() const override { return kDilate_Op; }
 
@@ -81,8 +72,6 @@ private:
                         sk_sp<SkImageFilter> input,
                         const CropRect* cropRect)
         : INHERITED(radiusX, radiusY, input, cropRect) {}
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
 
     typedef SkMorphologyImageFilter INHERITED;
 };
@@ -94,15 +83,6 @@ public:
                                      sk_sp<SkImageFilter> input,
                                      const CropRect* cropRect = nullptr);
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkErodeImageFilter)
-
-=======
->>>>>>> upstream-releases
 protected:
     Op op() const override { return kErode_Op; }
 
@@ -112,8 +92,6 @@ private:
     SkErodeImageFilter(int radiusX, int radiusY,
                        sk_sp<SkImageFilter> input, const CropRect* cropRect)
         : INHERITED(radiusX, radiusY, input, cropRect) {}
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
 
     typedef SkMorphologyImageFilter INHERITED;
 };

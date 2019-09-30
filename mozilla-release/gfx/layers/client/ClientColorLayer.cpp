@@ -28,42 +28,16 @@ class ClientColorLayer : public ColorLayer, public ClientLayer {
  protected:
   virtual ~ClientColorLayer() { MOZ_COUNT_DTOR(ClientColorLayer); }
 
-<<<<<<< HEAD
- public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
-||||||| merged common ancestors
-public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
-  {
-=======
  public:
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(ClientManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ColorLayer::SetVisibleRegion(aRegion);
   }
 
-<<<<<<< HEAD
-  virtual void RenderLayer() override { RenderMaskLayers(this); }
-||||||| merged common ancestors
-  virtual void RenderLayer() override
-  {
-    RenderMaskLayers(this);
-  }
-=======
   void RenderLayer() override { RenderMaskLayers(this); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void FillSpecificAttributes(
-      SpecificLayerAttributes& aAttrs) override {
-||||||| merged common ancestors
-  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override
-  {
-=======
   void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override {
->>>>>>> upstream-releases
     aAttrs = ColorLayerAttributes(GetColor(), GetBounds());
   }
 

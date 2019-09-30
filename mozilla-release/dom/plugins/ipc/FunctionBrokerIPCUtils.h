@@ -29,75 +29,6 @@ namespace plugins {
  */
 enum FunctionHookId {
 #if defined(XP_WIN)
-<<<<<<< HEAD
-  ID_GetWindowInfo = 0,
-  ID_GetKeyState,
-  ID_SetCursorPos,
-  ID_GetSaveFileNameW,
-  ID_GetOpenFileNameW,
-  ID_InternetOpenA,
-  ID_InternetConnectA,
-  ID_InternetCloseHandle,
-  ID_InternetQueryDataAvailable,
-  ID_InternetReadFile,
-  ID_InternetWriteFile,
-  ID_InternetSetOptionA,
-  ID_HttpAddRequestHeadersA,
-  ID_HttpOpenRequestA,
-  ID_HttpQueryInfoA,
-  ID_HttpSendRequestA,
-  ID_HttpSendRequestExA,
-  ID_HttpEndRequestA,
-  ID_InternetQueryOptionA,
-  ID_InternetErrorDlg,
-  ID_AcquireCredentialsHandleA,
-  ID_QueryCredentialsAttributesA,
-  ID_FreeCredentialsHandle,
-  ID_PrintDlgW,
-  ID_CreateMutexW
-#if defined(MOZ_SANDBOX)
-  ,
-  ID_GetFileAttributesW
-#endif  // defined(MOZ_SANDBOX)
-  ,
-  ID_FunctionHookCount
-#else   // defined(XP_WIN)
-  ID_FunctionHookCount
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-    ID_GetWindowInfo = 0
-  , ID_GetKeyState
-  , ID_SetCursorPos
-  , ID_GetSaveFileNameW
-  , ID_GetOpenFileNameW
-  , ID_InternetOpenA
-  , ID_InternetConnectA
-  , ID_InternetCloseHandle
-  , ID_InternetQueryDataAvailable
-  , ID_InternetReadFile
-  , ID_InternetWriteFile
-  , ID_InternetSetOptionA
-  , ID_HttpAddRequestHeadersA
-  , ID_HttpOpenRequestA
-  , ID_HttpQueryInfoA
-  , ID_HttpSendRequestA
-  , ID_HttpSendRequestExA
-  , ID_HttpEndRequestA
-  , ID_InternetQueryOptionA
-  , ID_InternetErrorDlg
-  , ID_AcquireCredentialsHandleA
-  , ID_QueryCredentialsAttributesA
-  , ID_FreeCredentialsHandle
-  , ID_PrintDlgW
-  , ID_CreateMutexW
-#if defined(MOZ_SANDBOX)
-  , ID_GetFileAttributesW
-#endif // defined(MOZ_SANDBOX)
-  , ID_FunctionHookCount
-#else // defined(XP_WIN)
-    ID_FunctionHookCount
-#endif // defined(XP_WIN)
-=======
   ID_GetWindowInfo = 0,
   ID_GetKeyState,
   ID_SetCursorPos,
@@ -132,7 +63,6 @@ enum FunctionHookId {
 #else   // defined(XP_WIN)
   ID_FunctionHookCount
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 };
 
 // Max number of bytes to show when logging a blob of raw memory

@@ -186,29 +186,11 @@ class SummaryGraphPath extends Component {
       timeScale.getDuration() * Math.abs(animation.state.playbackRate);
     const durationPerPixel = totalDuration / thisEl.parentNode.clientWidth;
 
-<<<<<<< HEAD
-    this.setState(
-      {
-        durationPerPixel,
-        isStateUpdating: false,
-        keyframesList,
-      }
-    );
-||||||| merged common ancestors
-    this.setState(
-      {
-        durationPerPixel,
-        isStateUpdating: false,
-        keyframesList
-      }
-    );
-=======
     this.setState({
       durationPerPixel,
       isStateUpdating: false,
       keyframesList,
     });
->>>>>>> upstream-releases
 
     emitEventForTest("animation-summary-graph-rendered");
   }

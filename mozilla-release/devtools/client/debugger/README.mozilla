@@ -1,21 +1,9 @@
 This is the debugger.html project output.
 See https://github.com/devtools-html/debugger.html
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/README.mozilla
-Version 106
-||||||| merged common ancestors
-Version 92
-=======
 Version 128
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/README.mozilla
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/README.mozilla
-Comparison: https://github.com/devtools-html/debugger.html/compare/release-105...release-106
-||||||| merged common ancestors
-Comparison: https://github.com/devtools-html/debugger.html/compare/release-91...release-92
-=======
 Comparison: https://github.com/devtools-html/debugger.html/compare/release-127...release-128
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/README.mozilla
 
 Packages:
 - babel-plugin-transform-es2015-modules-commonjs @6.26.2

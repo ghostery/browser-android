@@ -46,17 +46,6 @@ describe("convertLinks", () => {
     assert.propertyVal(result.cta.props, "data-args", cta.args);
     assert.propertyVal(result.cta.props, "onClick", stub);
   });
-<<<<<<< HEAD
-  it("should follow openNewWindow prop", () => {
-    const cta = {url: "https://foo.com"};
-    const newWindow = convertLinks({cta}, sandbox.stub(), false, true);
-    const sameWindow = convertLinks({cta}, sandbox.stub(), false);
-
-    assert.propertyVal(newWindow.cta.props, "target", "_blank");
-    assert.propertyVal(sameWindow.cta.props, "target", "");
-  });
-||||||| merged common ancestors
-=======
   it("should follow openNewWindow prop", () => {
     const cta = { url: "https://foo.com" };
     const newWindow = convertLinks({ cta }, sandbox.stub(), false, true);
@@ -65,7 +54,6 @@ describe("convertLinks", () => {
     assert.propertyVal(newWindow.cta.props, "target", "_blank");
     assert.propertyVal(sameWindow.cta.props, "target", "");
   });
->>>>>>> upstream-releases
   it("should allow for custom elements & styles", () => {
     const wrapper = mount(
       <RichText

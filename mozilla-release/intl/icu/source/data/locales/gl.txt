@@ -209,13 +209,7 @@ gl{
         }
         minimumGroupingDigits{"1"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -1890,41 +1884,6 @@ gl{
         US{"estadounidense"}
         metric{"métrico decimal"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -1953,5 +1912,4 @@ gl{
             }
         }
     }
->>>>>>> upstream-releases
 }

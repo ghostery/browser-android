@@ -15,19 +15,9 @@ class nsIAsyncInputStream;
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class nsIContentChild;
-class nsIContentParent;
-}  // namespace dom
-||||||| merged common ancestors
-class nsIContentChild;
-class nsIContentParent;
-} // dom namespace
-=======
 class ContentChild;
 class ContentParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 namespace wr {
 struct ByteBuffer;
@@ -70,16 +60,8 @@ class IPCStreamSource {
   // Create a IPCStreamSource using a PContent IPC manager on the
   // main thread.  This can return nullptr if the provided stream is
   // blocking.
-<<<<<<< HEAD
-  static PChildToParentStreamChild* Create(nsIAsyncInputStream* aInputStream,
-                                           dom::nsIContentChild* aManager);
-||||||| merged common ancestors
-  static PChildToParentStreamChild*
-  Create(nsIAsyncInputStream* aInputStream, dom::nsIContentChild* aManager);
-=======
   static PChildToParentStreamChild* Create(nsIAsyncInputStream* aInputStream,
                                            dom::ContentChild* aManager);
->>>>>>> upstream-releases
 
   // Create a IPCStreamSource using a PBackground IPC manager on the
   // main thread or a Worker thread.  This can return nullptr if the provided
@@ -90,16 +72,8 @@ class IPCStreamSource {
   // Create a IPCStreamSource using a PContent IPC manager on the
   // main thread.  This can return nullptr if the provided stream is
   // blocking.
-<<<<<<< HEAD
-  static PParentToChildStreamParent* Create(nsIAsyncInputStream* aInputStream,
-                                            dom::nsIContentParent* aManager);
-||||||| merged common ancestors
-  static PParentToChildStreamParent*
-  Create(nsIAsyncInputStream* aInputStream, dom::nsIContentParent* aManager);
-=======
   static PParentToChildStreamParent* Create(nsIAsyncInputStream* aInputStream,
                                             dom::ContentParent* aManager);
->>>>>>> upstream-releases
 
   // Create a IPCStreamSource using a PBackground IPC manager on the
   // main thread or a Worker thread.  This can return nullptr if the provided

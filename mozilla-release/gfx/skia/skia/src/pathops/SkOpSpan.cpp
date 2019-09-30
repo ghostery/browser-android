@@ -169,19 +169,12 @@ SkOpSpanBase::Collapsed SkOpSpanBase::collapsed(double s, double e) const {
     const SkOpSegment* segment = this->segment();
     int safetyNet = 100000;
     while ((walk = walk->next()) != start) {
-<<<<<<< HEAD
-        if (walk == startNext) {
-            return Collapsed::kError;
-        }
-||||||| merged common ancestors
-=======
         if (!--safetyNet) {
             return Collapsed::kError;
         }
         if (walk == startNext) {
             return Collapsed::kError;
         }
->>>>>>> upstream-releases
         if (walk->segment() != segment) {
             continue;
         }

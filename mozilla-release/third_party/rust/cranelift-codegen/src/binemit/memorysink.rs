@@ -34,20 +34,10 @@ pub struct MemoryCodeSink<'a> {
     data: *mut u8,
     /// Offset is isize because its major consumer needs it in that form.
     offset: isize,
-<<<<<<< HEAD
-    /// Size of the machine code portion of output
-    pub code_size: isize,
-    relocs: &'a mut RelocSink,
-    traps: &'a mut TrapSink,
-||||||| merged common ancestors
-    relocs: &'a mut RelocSink,
-    traps: &'a mut TrapSink,
-=======
     relocs: &'a mut dyn RelocSink,
     traps: &'a mut dyn TrapSink,
     /// Information about the generated code and read-only data.
     pub info: CodeInfo,
->>>>>>> upstream-releases
 }
 
 impl<'a> MemoryCodeSink<'a> {
@@ -55,37 +45,20 @@ impl<'a> MemoryCodeSink<'a> {
     ///
     /// This function is unsafe since `MemoryCodeSink` does not perform bounds checking on the
     /// memory buffer, and it can't guarantee that the `data` pointer is valid.
-<<<<<<< HEAD
-    pub unsafe fn new(data: *mut u8, relocs: &'a mut RelocSink, traps: &'a mut TrapSink) -> Self {
-        Self {
-||||||| merged common ancestors
-    pub unsafe fn new<'sink>(
-        data: *mut u8,
-        relocs: &'sink mut RelocSink,
-        traps: &'sink mut TrapSink,
-    ) -> MemoryCodeSink<'sink> {
-        MemoryCodeSink {
-=======
     pub unsafe fn new(
         data: *mut u8,
         relocs: &'a mut dyn RelocSink,
         traps: &'a mut dyn TrapSink,
     ) -> Self {
         Self {
->>>>>>> upstream-releases
             data,
             offset: 0,
-<<<<<<< HEAD
-            code_size: 0,
-||||||| merged common ancestors
-=======
             info: CodeInfo {
                 code_size: 0,
                 jumptables_size: 0,
                 rodata_size: 0,
                 total_size: 0,
             },
->>>>>>> upstream-releases
             relocs,
             traps,
         }
@@ -163,13 +136,6 @@ impl<'a> CodeSink for MemoryCodeSink<'a> {
         let ofs = self.offset();
         self.traps.trap(ofs, srcloc, code);
     }
-<<<<<<< HEAD
-
-    fn begin_rodata(&mut self) {
-        self.code_size = self.offset;
-    }
-||||||| merged common ancestors
-=======
 
     fn begin_jumptables(&mut self) {
         self.info.code_size = self.offset();
@@ -183,7 +149,6 @@ impl<'a> CodeSink for MemoryCodeSink<'a> {
         self.info.rodata_size = self.offset() - (self.info.jumptables_size + self.info.code_size);
         self.info.total_size = self.offset();
     }
->>>>>>> upstream-releases
 }
 
 /// A `TrapSink` implementation that does nothing, which is convenient when

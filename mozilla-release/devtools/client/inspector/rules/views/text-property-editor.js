@@ -474,17 +474,9 @@ TextPropertyEditor.prototype = {
       flexClass: "ruleview-flex",
       gridClass: "ruleview-grid",
       shapeClass: "ruleview-shape",
-<<<<<<< HEAD
-      shapeSwatchClass: SHARED_SWATCH_CLASS + " " + SHAPE_SWATCH_CLASS,
-      // Only ask the parser to convert colors to the default color type specified by the
-      // user if the property hasn't been changed yet.
-||||||| merged common ancestors
-      shapeSwatchClass: SHARED_SWATCH_CLASS + " " + SHAPE_SWATCH_CLASS,
-=======
       shapeSwatchClass: SHAPE_SWATCH_CLASS,
       // Only ask the parser to convert colors to the default color type specified by the
       // user if the property hasn't been changed yet.
->>>>>>> upstream-releases
       defaultColorType: !propDirty,
       urlClass: "theme-link",
       fontFamilyClass: FONT_FAMILY_CLASS,
@@ -599,21 +591,6 @@ TextPropertyEditor.prototype = {
       if (span) {
         parserOptions.filterSwatch = true;
 
-<<<<<<< HEAD
-        this.ruleView.tooltips.getTooltip("filterEditor").addSwatch(span, {
-          onShow: this._onStartEditing,
-          onPreview: this._onSwatchPreview,
-          onCommit: this._onSwatchCommit,
-          onRevert: this._onSwatchRevert,
-        }, outputParser, parserOptions);
-||||||| merged common ancestors
-        this.ruleView.tooltips.getTooltip("filterEditor").addSwatch(span, {
-          onShow: this._onStartEditing,
-          onPreview: this._onSwatchPreview,
-          onCommit: this._onSwatchCommit,
-          onRevert: this._onSwatchRevert
-        }, outputParser, parserOptions);
-=======
         this.ruleView.tooltips.getTooltip("filterEditor").addSwatch(
           span,
           {
@@ -625,7 +602,6 @@ TextPropertyEditor.prototype = {
           outputParser,
           parserOptions
         );
->>>>>>> upstream-releases
         const title = l10n("rule.filterSwatch.tooltip");
         span.setAttribute("title", title);
       }
@@ -877,46 +853,18 @@ TextPropertyEditor.prototype = {
     });
 
     createChild(nameContainer, "span", {
-<<<<<<< HEAD
-      class: "ruleview-propertyname theme-fg-color5",
-      textContent: computed.name,
-||||||| merged common ancestors
-      class: "ruleview-propertyname theme-fg-color5",
-      textContent: computed.name
-=======
       class: "ruleview-propertyname theme-fg-color3",
       textContent: computed.name,
->>>>>>> upstream-releases
     });
     appendText(nameContainer, ": ");
 
     const outputParser = this.ruleView._outputParser;
-<<<<<<< HEAD
-    const frag = outputParser.parseCssProperty(
-      computed.name, computed.value, {
-        colorSwatchClass: "ruleview-swatch ruleview-colorswatch",
-        urlClass: "theme-link",
-        baseURI: this.sheetHref,
-        fontFamilyClass: "ruleview-font-family",
-      }
-    );
-||||||| merged common ancestors
-    const frag = outputParser.parseCssProperty(
-      computed.name, computed.value, {
-        colorSwatchClass: "ruleview-swatch ruleview-colorswatch",
-        urlClass: "theme-link",
-        baseURI: this.sheetHref,
-        fontFamilyClass: "ruleview-font-family"
-      }
-    );
-=======
     const frag = outputParser.parseCssProperty(computed.name, computed.value, {
       colorSwatchClass: "ruleview-swatch ruleview-colorswatch",
       urlClass: "theme-link",
       baseURI: this.sheetHref,
       fontFamilyClass: "ruleview-font-family",
     });
->>>>>>> upstream-releases
 
     // Store the computed property value that was parsed for output
     computed.parsedValue = frag.textContent;
@@ -947,13 +895,7 @@ TextPropertyEditor.prototype = {
     this.prop.setEnabled(!checked);
     event.stopPropagation();
     this.telemetry.recordEvent("edit_rule", "ruleview", null, {
-<<<<<<< HEAD
-      "session_id": this.toolbox.sessionId,
-||||||| merged common ancestors
-      "session_id": this.toolbox.sessionId
-=======
       session_id: this.toolbox.sessionId,
->>>>>>> upstream-releases
     });
   },
 
@@ -1028,13 +970,7 @@ TextPropertyEditor.prototype = {
     }
 
     this.telemetry.recordEvent("edit_rule", "ruleview", null, {
-<<<<<<< HEAD
-      "session_id": this.toolbox.sessionId,
-||||||| merged common ancestors
-      "session_id": this.toolbox.sessionId
-=======
       session_id: this.toolbox.sessionId,
->>>>>>> upstream-releases
     });
 
     // Remove a property if the name is empty
@@ -1134,13 +1070,7 @@ TextPropertyEditor.prototype = {
     }
 
     this.telemetry.recordEvent("edit_rule", "ruleview", null, {
-<<<<<<< HEAD
-      "session_id": this.toolbox.sessionId,
-||||||| merged common ancestors
-      "session_id": this.toolbox.sessionId
-=======
       session_id: this.toolbox.sessionId,
->>>>>>> upstream-releases
     });
 
     // Since the value was changed, check if the original property was a flex or grid

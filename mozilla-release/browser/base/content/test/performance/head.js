@@ -136,16 +136,6 @@ function reportUnexpectedReflows(reflows, expectedReflows = []) {
     };
   });
   let unexpectedReflows = new Map();
-<<<<<<< HEAD
-
-  if (knownReflows.some(r => r.path.includes("*"))) {
-    Assert.ok(false,
-              "Do not include async frames in the stack, as " +
-              "that feature is not available on all trees.");
-  }
-
-||||||| merged common ancestors
-=======
 
   if (knownReflows.some(r => r.path.includes("*"))) {
     Assert.ok(
@@ -155,7 +145,6 @@ function reportUnexpectedReflows(reflows, expectedReflows = []) {
     );
   }
 
->>>>>>> upstream-releases
   for (let stack of reflows) {
     let path = stack
       .split("\n")
@@ -172,17 +161,11 @@ function reportUnexpectedReflows(reflows, expectedReflows = []) {
     // Functions from EventUtils.js calculate coordinates and
     // dimensions, causing us to reflow. That's the test
     // harness and we don't care about that, so we'll filter that out.
-<<<<<<< HEAD
-    if (/^(synthesize|send|createDragEventObject).*?@chrome:\/\/mochikit.*?EventUtils\.js/.test(path)) {
-||||||| merged common ancestors
-    if (path.startsWith("synthesizeKey@chrome://mochikit/content/tests/SimpleTest/EventUtils.js")) {
-=======
     if (
       /^(synthesize|send|createDragEventObject).*?@chrome:\/\/mochikit.*?EventUtils\.js/.test(
         path
       )
     ) {
->>>>>>> upstream-releases
       continue;
     }
 

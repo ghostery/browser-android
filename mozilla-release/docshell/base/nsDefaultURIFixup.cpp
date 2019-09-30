@@ -60,28 +60,7 @@ nsDefaultURIFixup::CreateExposableURI(nsIURI* aURI, nsIURI** aReturn) {
   }
 
   // Rats, we have to massage the URI
-<<<<<<< HEAD
-  nsCOMPtr<nsIURI> uri;
-  if (isWyciwyg) {
-    nsresult rv =
-        nsContentUtils::RemoveWyciwygScheme(aURI, getter_AddRefs(uri));
-    NS_ENSURE_SUCCESS(rv, rv);
-  } else {
-    // No need to clone the URI as NS_MutateURI does that for us.
-    uri = aURI;
-  }
-||||||| merged common ancestors
-  nsCOMPtr<nsIURI> uri;
-  if (isWyciwyg) {
-    nsresult rv = nsContentUtils::RemoveWyciwygScheme(aURI, getter_AddRefs(uri));
-    NS_ENSURE_SUCCESS(rv, rv);
-  } else {
-    // No need to clone the URI as NS_MutateURI does that for us.
-    uri = aURI;
-  }
-=======
   nsCOMPtr<nsIURI> uri = aURI;
->>>>>>> upstream-releases
 
   Unused << NS_MutateURI(uri).SetUserPass(EmptyCString()).Finalize(uri);
 
@@ -470,16 +449,8 @@ nsDefaultURIFixup::KeywordToURI(const nsACString& aKeyword,
   }
 
   // Try falling back to the search service's default search engine
-<<<<<<< HEAD
-  nsCOMPtr<nsIBrowserSearchService> searchSvc =
-      do_GetService("@mozilla.org/browser/search-service;1");
-||||||| merged common ancestors
-  nsCOMPtr<nsIBrowserSearchService> searchSvc =
-    do_GetService("@mozilla.org/browser/search-service;1");
-=======
   nsCOMPtr<nsISearchService> searchSvc =
       do_GetService("@mozilla.org/browser/search-service;1");
->>>>>>> upstream-releases
   if (searchSvc) {
     nsCOMPtr<nsISearchEngine> defaultEngine;
     searchSvc->GetDefaultEngine(getter_AddRefs(defaultEngine));

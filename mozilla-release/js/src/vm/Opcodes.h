@@ -350,13 +350,7 @@
      *   Operands:
      *   Stack: val => (+val)
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_POS, 35, "pos", "+ ", 1, 1, 1, JOF_BYTE|JOF_IC) \
-||||||| merged common ancestors
-    macro(JSOP_POS,       35, "pos",        "+ ",         1,  1,  1, JOF_BYTE|JOF_ARITH) \
-=======
     MACRO(JSOP_POS, 35, "pos", "+ ", 1, 1, 1, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Looks up name on the environment chain and deletes it, pushes 'true'
      * onto the stack if succeeded (if the property was present and deleted or
@@ -625,13 +619,7 @@
      *   Operands: DoubleValue literal
      *   Stack: => val
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_DOUBLE, 60, "double", NULL, 5, 0, 1, JOF_DOUBLE) \
-||||||| merged common ancestors
-    macro(JSOP_DOUBLE,    60, "double",     NULL,         5,  0,  1, JOF_DOUBLE) \
-=======
     MACRO(JSOP_DOUBLE, 60, "double", NULL, 9, 0, 1, JOF_DOUBLE) \
->>>>>>> upstream-releases
     /*
      * Pushes string constant onto the stack.
      *
@@ -722,33 +710,8 @@
      */ \
     MACRO(JSOP_TABLESWITCH, 70, "tableswitch", NULL, 16, 1, 0, JOF_TABLESWITCH|JOF_DETECTING) \
     /*
-<<<<<<< HEAD
-     * Prologue emitted in scripts expected to run once, which deoptimizes code
-     * if it executes multiple times.
-     *
-     *   Category: Statements
-     *   Type: Function
-     *   Operands:
-     *   Stack: =>
-||||||| merged common ancestors
-     * Prologue emitted in scripts expected to run once, which deoptimizes code
-     * if it executes multiple times.
-     *   Category: Statements
-     *   Type: Function
-     *   Operands:
-     *   Stack: =>
-=======
->>>>>>> upstream-releases
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_RUNONCE, 71, "runonce", NULL, 1, 0, 0, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_RUNONCE,   71, "runonce",    NULL,         1,  0,  0,  JOF_BYTE) \
-    \
-    /* New, infallible/transitive identity ops. */ \
-=======
     MACRO(JSOP_UNUSED71, 71, "unused71", NULL, 1, 0, 0, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Pops the top two values from the stack, then pushes the result of
      * applying the operator to the two values.
@@ -790,13 +753,7 @@
      *   Operands:
      *   Stack: iter => iter, val
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_MOREITER, 76, "moreiter", NULL, 1, 1, 2, JOF_BYTE|JOF_IC) \
-||||||| merged common ancestors
-    macro(JSOP_MOREITER,  76, "moreiter",   NULL,         1,  1,  2,  JOF_BYTE) \
-=======
     MACRO(JSOP_MOREITER, 76, "moreiter", NULL, 1, 1, 2, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Pushes a boolean indicating whether the value on top of the stack is
      * MagicValue(JS_NO_ITER_VALUE).
@@ -816,14 +773,7 @@
      *   Operands:
      *   Stack: iter =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_ENDITER, 78, "enditer", NULL, 1, 1, 0, JOF_BYTE|JOF_IC) \
-||||||| merged common ancestors
-    macro(JSOP_ENDITER,   78, "enditer",    NULL,         1,  1,  0,  JOF_BYTE) \
-    \
-=======
     MACRO(JSOP_ENDITER, 78, "enditer", NULL, 1, 1, 0, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Invokes 'callee' with 'this' and 'args', pushes return value onto the
      * stack.
@@ -1136,14 +1086,7 @@
      *   Operands: int32_t offset
      *   Stack: =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_LABEL, 106, "label", NULL, 5, 0, 0, JOF_JUMP) \
-||||||| merged common ancestors
-    macro(JSOP_LABEL,     106,"label",     NULL,          5,  0,  0,  JOF_JUMP) \
-    \
-=======
     MACRO(JSOP_LABEL, 106, "label", NULL, 5, 0, 0, JOF_CODE_OFFSET) \
->>>>>>> upstream-releases
     /*
      * Pops the top three values on the stack as 'val', 'obj' and 'receiver',
      * and performs 'obj.prop = val', pushing 'val' back onto the stack.
@@ -1176,27 +1119,14 @@
      * Another no-op.
      *
      * This opcode is the target of the backwards jump for some loop.
-<<<<<<< HEAD
-     *
-||||||| merged common ancestors
-=======
      * See JSOP_JUMPTARGET for the icIndex operand.
      *
->>>>>>> upstream-releases
      *   Category: Statements
      *   Type: Jumps
      *   Operands: uint32_t icIndex
      *   Stack: =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_LOOPHEAD, 109, "loophead", NULL, 1, 0, 0, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_LOOPHEAD,  109,"loophead",   NULL,         1,  0,  0,  JOF_BYTE) \
-    \
-    /* ECMA-compliant assignment ops. */ \
-=======
     MACRO(JSOP_LOOPHEAD, 109, "loophead", NULL, 5, 0, 0, JOF_ICINDEX) \
->>>>>>> upstream-releases
     /*
      * Looks up name on the environment chain and pushes the environment which
      * contains the name onto the stack. If not found, pushes global lexical
@@ -1551,14 +1481,7 @@
      *   Operands: uint8_t hops, uint24_t slot
      *   Stack: v => v
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_SETALIASEDVAR, 137, "setaliasedvar", NULL, 5, 1, 1, JOF_ENVCOORD|JOF_NAME|JOF_PROPSET|JOF_DETECTING|JOF_IC) \
-||||||| merged common ancestors
-    macro(JSOP_SETALIASEDVAR, 137,"setaliasedvar",NULL,      5,  1,  1,  JOF_ENVCOORD|JOF_NAME|JOF_PROPSET|JOF_DETECTING) \
-    \
-=======
     MACRO(JSOP_SETALIASEDVAR, 137, "setaliasedvar", NULL, 5, 1, 1, JOF_ENVCOORD|JOF_NAME|JOF_PROPSET|JOF_DETECTING) \
->>>>>>> upstream-releases
     /*
      * Checks if the value of the local variable is the
      * JS_UNINITIALIZED_LEXICAL magic, throwing an error if so.
@@ -1598,13 +1521,7 @@
      *   Operands: uint8_t hops, uint24_t slot
      *   Stack: v => v
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_INITALIASEDLEXICAL, 141, "initaliasedlexical", NULL, 5, 1, 1, JOF_ENVCOORD|JOF_NAME|JOF_PROPINIT|JOF_DETECTING|JOF_IC) \
-||||||| merged common ancestors
-    macro(JSOP_INITALIASEDLEXICAL,  141, "initaliasedlexical",  NULL, 5,  1,  1, JOF_ENVCOORD|JOF_NAME|JOF_PROPINIT|JOF_DETECTING) \
-=======
     MACRO(JSOP_INITALIASEDLEXICAL, 141, "initaliasedlexical", NULL, 5, 1, 1, JOF_ENVCOORD|JOF_NAME|JOF_PROPINIT|JOF_DETECTING) \
->>>>>>> upstream-releases
     /*
      * Pushes a JS_UNINITIALIZED_LEXICAL value onto the stack, representing an
      * uninitialized lexical binding.
@@ -1687,31 +1604,8 @@
      */ \
     MACRO(JSOP_NEWTARGET, 148, "newtarget", NULL, 1, 0, 1, JOF_BYTE) \
     /*
-<<<<<<< HEAD
-     * Pops the top of stack value as 'unwrapped', converts it to async
-     * function 'wrapped', and pushes 'wrapped' back on the stack.
-     *
-     *   Category: Statements
-     *   Type: Function
-     *   Operands:
-     *   Stack: unwrapped => wrapped
-||||||| merged common ancestors
-     * Pops the top of stack value as 'unwrapped', converts it to async
-     * function 'wrapped', and pushes 'wrapped' back on the stack.
-     *   Category: Statements
-     *   Type: Function
-     *   Operands:
-     *   Stack: unwrapped => wrapped
-=======
->>>>>>> upstream-releases
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_TOASYNC, 149, "toasync", NULL, 1, 1, 1, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_TOASYNC,       149, "toasync", NULL,       1,  1,  1, JOF_BYTE) \
-=======
     MACRO(JSOP_UNUSED149, 149, "unused149", NULL, 1, 0, 0, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Pops the top two values 'lval' and 'rval' from the stack, then pushes
      * the result of 'Math.pow(lval, rval)'.
@@ -1723,17 +1617,6 @@
      */ \
     MACRO(JSOP_POW, 150, "pow", "**", 1, 2, 1, JOF_BYTE|JOF_IC) \
     /*
-<<<<<<< HEAD
-||||||| merged common ancestors
-     * Pops the top of stack value as 'v', sets pending exception as 'v',
-     * to trigger rethrow.
-     *
-     * This opcode is used in conditional catch clauses.
-     *   Category: Statements
-     *   Type: Exception Handling
-     *   Operands:
-     *   Stack: v =>
-=======
      * Pops the top two values 'value' and 'gen' from the stack, then starts
      * "awaiting" for 'value' to be resolved, which will then resume the
      * execution of 'gen'. Pushes the async function promise on the stack, so
@@ -1743,16 +1626,8 @@
      *   Type: Generator
      *   Operands:
      *   Stack: value, gen => promise
->>>>>>> upstream-releases
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_UNUSED151, 151, "unused151", NULL, 1, 0, 0, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_THROWING,      151,"throwing", NULL,       1,  1,  0,  JOF_BYTE) \
-    \
-=======
     MACRO(JSOP_ASYNCAWAIT, 151, "async-await", NULL, 1, 2, 1, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Pops the top of stack value as 'rval', sets the return value in stack
      * frame as 'rval'.
@@ -2104,13 +1979,8 @@
     MACRO(JSOP_SETFUNNAME, 182, "setfunname", NULL, 2, 2, 1, JOF_UINT8) \
     /*
      * Moves the top of the stack value under the nth element of the stack.
-<<<<<<< HEAD
-     *
-||||||| merged common ancestors
-=======
      * Note: n must NOT be 0.
      *
->>>>>>> upstream-releases
      *   Category: Operators
      *   Type: Stack Operations
      *   Operands: uint8_t n
@@ -2201,33 +2071,17 @@
      */ \
     MACRO(JSOP_CHECKTHISREINIT, 191, "checkthisreinit", NULL, 1, 1, 1, JOF_BYTE) \
     /*
-<<<<<<< HEAD
-     * Pops the top of stack value as 'unwrapped', converts it to async
-     * generator 'wrapped', and pushes 'wrapped' back on the stack.
-     *
-||||||| merged common ancestors
-     * Pops the top of stack value as 'unwrapped', converts it to async
-     * generator 'wrapped', and pushes 'wrapped' back on the stack.
-=======
      * Pops the top two values 'valueOrReason' and 'gen' from the stack, then
      * pushes the promise resolved with 'valueOrReason'. `gen` must be the
      * internal generator object created in async functions. The pushed promise
      * is the async function's result promise, which is stored in `gen`.
      *
->>>>>>> upstream-releases
      *   Category: Statements
      *   Type: Generator
      *   Operands: uint8_t fulfillOrReject
      *   Stack: valueOrReason, gen => promise
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_TOASYNCGEN, 192, "toasyncgen", NULL, 1, 1, 1, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_TOASYNCGEN,    192, "toasyncgen", NULL,    1,  1,  1, JOF_BYTE) \
-    \
-=======
     MACRO(JSOP_ASYNCRESOLVE, 192, "async-resolve", NULL, 2, 2, 1, JOF_UINT8) \
->>>>>>> upstream-releases
     /*
      * Pops the top two values on the stack as 'propval' and 'obj', pushes
      * 'propval' property of 'obj' onto the stack. Requires the value under
@@ -2369,14 +2223,6 @@
      *   Operands: resume kind (AbstractGeneratorObject::ResumeKind)
      *   Stack: gen, val => rval
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_RESUME, 205, "resume", NULL, 3, 2, 1, JOF_UINT16|JOF_INVOKE) \
-||||||| merged common ancestors
-    macro(JSOP_RESUME,        205,"resume",      NULL,    3,  2,  1,  JOF_UINT8|JOF_INVOKE) \
-    \
-    macro(JSOP_UNUSED206,     206,"unused206",   NULL,    1,  0,  0,  JOF_BYTE) \
-    \
-=======
     MACRO(JSOP_RESUME, 205, "resume", NULL, 2, 2, 1, JOF_UINT8|JOF_INVOKE) \
     /*
      * Load the callee stored in a CallObject on the environment chain. The
@@ -2389,30 +2235,10 @@
      *   Stack: => callee
      */ \
     MACRO(JSOP_ENVCALLEE, 206, "envcallee", NULL, 2, 0, 1, JOF_UINT8) \
->>>>>>> upstream-releases
     /*
-<<<<<<< HEAD
-     * Load the callee stored in a CallObject on the environment chain. The
-     * numHops operand is the number of environment objects to skip on the
-     * environment chain.
-     *
-     *   Category: Variables and Scopes
-     *   Type: Arguments
-     *   Operands: uint8_t numHops
-     *   Stack: => callee
-     */ \
-    MACRO(JSOP_ENVCALLEE, 206, "envcallee", NULL, 2, 0, 1, JOF_UINT8) \
-    /*
-     * No-op bytecode only emitted in some self-hosted functions. Not handled
-     * by the JITs so the script always runs in the interpreter.
-||||||| merged common ancestors
-     * No-op bytecode only emitted in some self-hosted functions. Not handled by
-     * the JITs so the script always runs in the interpreter.
-=======
      * No-op bytecode only emitted in some self-hosted functions. Not handled
      * by the JITs or Baseline Interpreter so the script always runs in the C++
      * interpreter.
->>>>>>> upstream-releases
      *
      *   Category: Other
      *   Operands:
@@ -2420,31 +2246,17 @@
      */ \
     MACRO(JSOP_FORCEINTERPRETER, 207, "forceinterpreter", NULL, 1, 0, 0, JOF_BYTE) \
     /*
-<<<<<<< HEAD
-     * Bytecode emitted after 'yield' expressions to help the Debugger fix up
-     * the frame in the JITs. No-op in the interpreter.
-||||||| merged common ancestors
-     * Bytecode emitted after 'yield' expressions to help the Debugger
-     * fix up the frame in the JITs. No-op in the interpreter.
-=======
      * Bytecode emitted after 'yield' expressions. This is useful for the
      * Debugger and AbstractGeneratorObject::isAfterYieldOrAwait. It's treated
      * as jump target op so that the Baseline Interpreter can efficiently
      * restore the frame's interpreterICEntry when resuming a generator.
->>>>>>> upstream-releases
      *
      *   Category: Statements
      *   Type: Generator
      *   Operands: uint32_t icIndex
      *   Stack: =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_DEBUGAFTERYIELD, 208, "debugafteryield", NULL, 1, 0, 0, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_DEBUGAFTERYIELD,  208, "debugafteryield",  NULL,  1,  0,  0,  JOF_BYTE) \
-=======
     MACRO(JSOP_AFTERYIELD, 208, "afteryield", NULL, 5, 0, 0, JOF_ICINDEX) \
->>>>>>> upstream-releases
     /*
      * Pops the generator and the return value 'promise', stops interpretation
      * and returns 'promise'. Pushes resolved value onto the stack.
@@ -2569,14 +2381,7 @@
      *   Operands:
      *   Stack: =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_TRY_DESTRUCTURING_ITERCLOSE, 220, "try-destructuring-iterclose", NULL, 1, 0, 0, JOF_BYTE) \
-||||||| merged common ancestors
-    macro(JSOP_TRY_DESTRUCTURING_ITERCLOSE, 220, "try-destructuring-iterclose", NULL, 1, 0, 0, JOF_BYTE) \
-    \
-=======
     MACRO(JSOP_TRY_DESTRUCTURING, 220, "try-destructuring", NULL, 1, 0, 0, JOF_BYTE) \
->>>>>>> upstream-releases
     /*
      * Pushes the current global's builtin prototype for a given proto key.
      *
@@ -2644,27 +2449,14 @@
      * loop depth. This value starts at 1 and is just a hint: deeply nested
      * loops all have the same value. The upper bit is set if Ion should be
      * able to OSR at this point, which is true unless there is non-loop state
-<<<<<<< HEAD
-     * on the stack.
-     *
-||||||| merged common ancestors
-     * on the stack.
-=======
      * on the stack. See JSOP_JUMPTARGET for the icIndex argument.
      *
->>>>>>> upstream-releases
      *   Category: Statements
      *   Type: Jumps
      *   Operands: uint32_t icIndex, uint8_t BITFIELD
      *   Stack: =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_LOOPENTRY, 227, "loopentry", NULL, 2, 0, 0, JOF_UINT8|JOF_IC) \
-||||||| merged common ancestors
-    macro(JSOP_LOOPENTRY,     227, "loopentry",    NULL,  2,  0,  0,  JOF_UINT8) \
-=======
     MACRO(JSOP_LOOPENTRY, 227, "loopentry", NULL, 6, 0, 0, JOF_LOOPENTRY|JOF_IC) \
->>>>>>> upstream-releases
     /*
      * Converts the value on the top of the stack to a String.
      *
@@ -2684,31 +2476,14 @@
     MACRO(JSOP_NOP_DESTRUCTURING, 229, "nop-destructuring", NULL, 1, 0, 0, JOF_BYTE) \
     /*
      * This opcode is a no-op and it indicates the location of a jump
-<<<<<<< HEAD
-     * instruction target. Some other opcodes act as jump targets, such as
-     * LOOPENTRY, as well as all which are matched by BytecodeIsJumpTarget
-     * function.
-     *
-||||||| merged common ancestors
-     * instruction target. Some other opcodes act as jump targets, such as
-     * LOOPENTRY, as well as all which are matched by BytecodeIsJumpTarget
-     * function.
-=======
      * instruction target. Some other opcodes act as jump targets as well, see
      * BytecodeIsJumpTarget. The IC index is used by the Baseline interpreter.
      *
->>>>>>> upstream-releases
      *   Category: Other
      *   Operands: uint32_t icIndex
      *   Stack: =>
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_JUMPTARGET, 230, "jumptarget", NULL, 1, 0, 0, JOF_BYTE)\
-||||||| merged common ancestors
-    macro(JSOP_JUMPTARGET,  230, "jumptarget",     NULL,  1,  0,  0,  JOF_BYTE)\
-=======
     MACRO(JSOP_JUMPTARGET, 230, "jumptarget", NULL, 5, 0, 0, JOF_ICINDEX) \
->>>>>>> upstream-releases
     /*
      * Like JSOP_CALL, but tells the function that the return value is ignored.
      * stack.
@@ -2728,30 +2503,6 @@
      *   Operands:
      *   Stack: => import.meta
      */ \
-<<<<<<< HEAD
-    MACRO(JSOP_IMPORTMETA, 232, "importmeta", NULL, 1, 0, 1, JOF_BYTE) \
-    /*
-     * Dynamic import of the module specified by the string value on the top of
-     * the stack.
-     *
-     *   Category: Variables and Scopes
-     *   Type: Modules
-     *   Operands:
-     *   Stack: arg => rval
-     */ \
-    MACRO(JSOP_DYNAMIC_IMPORT, 233, "call-import", NULL, 1, 1, 1, JOF_BYTE) \
-    /*
-     * Pushes a BigInt constant onto the stack.
-     *   Category: Literals
-     *   Type: Constants
-     *   Operands: uint32_t constIndex
-     *   Stack: => val
-     */ \
-    IF_BIGINT(MACRO(JSOP_BIGINT, 234, "bigint", NULL, 5, 0, 1, JOF_BIGINT),)
-// clang-format on
-||||||| merged common ancestors
-    macro(JSOP_IMPORTMETA,    232, "importmeta", NULL,      1,  0,  1,  JOF_BYTE)
-=======
     MACRO(JSOP_IMPORTMETA, 232, "importmeta", NULL, 1, 0, 1, JOF_BYTE) \
     /*
      * Dynamic import of the module specified by the string value on the top of
@@ -2798,62 +2549,11 @@
      */ \
     MACRO(JSOP_BIGINT, 237, "bigint", NULL, 5, 0, 1, JOF_BIGINT)
 // clang-format on
->>>>>>> upstream-releases
 
 /*
  * In certain circumstances it may be useful to "pad out" the opcode space to
  * a power of two.  Use this macro to do so.
  */
-<<<<<<< HEAD
-#define FOR_EACH_TRAILING_UNUSED_OPCODE(MACRO) \
-  IF_BIGINT(, MACRO(234))                      \
-  MACRO(235)                                   \
-  MACRO(236)                                   \
-  MACRO(237)                                   \
-  MACRO(238)                                   \
-  MACRO(239)                                   \
-  MACRO(240)                                   \
-  MACRO(241)                                   \
-  MACRO(242)                                   \
-  MACRO(243)                                   \
-  MACRO(244)                                   \
-  MACRO(245)                                   \
-  MACRO(246)                                   \
-  MACRO(247)                                   \
-  MACRO(248)                                   \
-  MACRO(249)                                   \
-  MACRO(250)                                   \
-  MACRO(251)                                   \
-  MACRO(252)                                   \
-  MACRO(253)                                   \
-  MACRO(254)                                   \
-  MACRO(255)
-||||||| merged common ancestors
-#define FOR_EACH_TRAILING_UNUSED_OPCODE(macro) \
-    macro(233) \
-    macro(234) \
-    macro(235) \
-    macro(236) \
-    macro(237) \
-    macro(238) \
-    macro(239) \
-    macro(240) \
-    macro(241) \
-    macro(242) \
-    macro(243) \
-    macro(244) \
-    macro(245) \
-    macro(246) \
-    macro(247) \
-    macro(248) \
-    macro(249) \
-    macro(250) \
-    macro(251) \
-    macro(252) \
-    macro(253) \
-    macro(254) \
-    macro(255)
-=======
 #define FOR_EACH_TRAILING_UNUSED_OPCODE(MACRO) \
   MACRO(238)                                   \
   MACRO(239)                                   \
@@ -2873,7 +2573,6 @@
   MACRO(253)                                   \
   MACRO(254)                                   \
   MACRO(255)
->>>>>>> upstream-releases
 
 namespace js {
 

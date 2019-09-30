@@ -60,98 +60,6 @@ ReverbConvolver::ReverbConvolver(const float* impulseResponseData,
                                  size_t impulseResponseLength,
                                  size_t maxFFTSize, size_t convolverRenderPhase,
                                  bool useBackgroundThreads)
-<<<<<<< HEAD
-    : m_impulseResponseLength(impulseResponseLength),
-      m_accumulationBuffer(impulseResponseLength + WEBAUDIO_BLOCK_SIZE),
-      m_inputBuffer(InputBufferSize),
-      m_backgroundThread("ConvolverWorker"),
-      m_backgroundThreadCondition(&m_backgroundThreadLock),
-      m_useBackgroundThreads(useBackgroundThreads),
-      m_wantsToExit(false),
-      m_moreInputBuffered(false) {
-  // For the moment, a good way to know if we have real-time constraint is to
-  // check if we're using background threads. Otherwise, assume we're being run
-  // from a command-line tool.
-  bool hasRealtimeConstraint = useBackgroundThreads;
-
-  const float* response = impulseResponseData;
-  size_t totalResponseLength = impulseResponseLength;
-
-  // The total latency is zero because the first FFT stage is small enough
-  // to return output in the first block.
-  size_t reverbTotalLatency = 0;
-
-  size_t stageOffset = 0;
-  size_t stagePhase = 0;
-  size_t fftSize = MinFFTSize;
-  while (stageOffset < totalResponseLength) {
-    size_t stageSize = fftSize / 2;
-
-    // For the last stage, it's possible that stageOffset is such that we're
-    // straddling the end of the impulse response buffer (if we use stageSize),
-    // so reduce the last stage's length...
-    if (stageSize + stageOffset > totalResponseLength) {
-      stageSize = totalResponseLength - stageOffset;
-      // Use smallest FFT that is large enough to cover the last stage.
-      fftSize = MinFFTSize;
-      while (stageSize * 2 > fftSize) {
-||||||| merged common ancestors
-    : m_impulseResponseLength(impulseResponseLength)
-    , m_accumulationBuffer(impulseResponseLength + WEBAUDIO_BLOCK_SIZE)
-    , m_inputBuffer(InputBufferSize)
-    , m_backgroundThread("ConvolverWorker")
-    , m_backgroundThreadCondition(&m_backgroundThreadLock)
-    , m_useBackgroundThreads(useBackgroundThreads)
-    , m_wantsToExit(false)
-    , m_moreInputBuffered(false)
-{
-    // For the moment, a good way to know if we have real-time constraint is to check if we're using background threads.
-    // Otherwise, assume we're being run from a command-line tool.
-    bool hasRealtimeConstraint = useBackgroundThreads;
-
-    const float* response = impulseResponseData;
-    size_t totalResponseLength = impulseResponseLength;
-
-    // The total latency is zero because the first FFT stage is small enough
-    // to return output in the first block.
-    size_t reverbTotalLatency = 0;
-
-    size_t stageOffset = 0;
-    size_t stagePhase = 0;
-    size_t fftSize = MinFFTSize;
-    while (stageOffset < totalResponseLength) {
-        size_t stageSize = fftSize / 2;
-
-        // For the last stage, it's possible that stageOffset is such that we're straddling the end
-        // of the impulse response buffer (if we use stageSize), so reduce the last stage's length...
-        if (stageSize + stageOffset > totalResponseLength) {
-            stageSize = totalResponseLength - stageOffset;
-            // Use smallest FFT that is large enough to cover the last stage.
-            fftSize = MinFFTSize;
-            while (stageSize * 2 > fftSize) {
-              fftSize *= 2;
-            }
-        }
-
-        // This "staggers" the time when each FFT happens so they don't all happen at the same time
-        int renderPhase = convolverRenderPhase + stagePhase;
-
-        nsAutoPtr<ReverbConvolverStage> stage
-          (new ReverbConvolverStage(response, totalResponseLength,
-                                    reverbTotalLatency, stageOffset, stageSize,
-                                    fftSize, renderPhase,
-                                    &m_accumulationBuffer));
-
-        bool isBackgroundStage = false;
-
-        if (this->useBackgroundThreads() && stageOffset > RealtimeFrameLimit) {
-            m_backgroundStages.AppendElement(stage.forget());
-            isBackgroundStage = true;
-        } else
-            m_stages.AppendElement(stage.forget());
-
-        // Figure out next FFT size
-=======
     : m_impulseResponseLength(impulseResponseLength),
       m_accumulationBuffer(impulseResponseLength + WEBAUDIO_BLOCK_SIZE),
       m_inputBuffer(InputBufferSize),
@@ -186,7 +94,6 @@ ReverbConvolver::ReverbConvolver(const float* impulseResponseData,
       // Use smallest FFT that is large enough to cover the last stage.
       fftSize = MinFFTSize;
       while (stageSize * 2 > fftSize) {
->>>>>>> upstream-releases
         fftSize *= 2;
       }
     }
@@ -257,21 +164,11 @@ ReverbConvolver::~ReverbConvolver() {
   if (useBackgroundThreads() && m_backgroundThread.IsRunning()) {
     m_wantsToExit = true;
 
-<<<<<<< HEAD
-    // Wake up thread so it can return
-    {
-      AutoLock locker(m_backgroundThreadLock);
-      m_moreInputBuffered = true;
-      m_backgroundThreadCondition.Signal();
-||||||| merged common ancestors
-        m_backgroundThread.Stop();
-=======
     // Wake up thread so it can return
     {
       MonitorAutoLock locker(m_backgroundThreadMonitor);
       m_moreInputBuffered = true;
       m_backgroundThreadMonitor.Notify();
->>>>>>> upstream-releases
     }
 
     m_backgroundThread.Stop();
@@ -293,7 +190,6 @@ size_t ReverbConvolver::sizeOfIncludingThis(
     if (m_backgroundStages[i]) {
       amount += m_backgroundStages[i]->sizeOfIncludingThis(aMallocSizeOf);
     }
-<<<<<<< HEAD
   }
 
   // NB: The buffer sizes are static, so even though they might be accessed
@@ -301,94 +197,12 @@ size_t ReverbConvolver::sizeOfIncludingThis(
   amount += m_accumulationBuffer.sizeOfExcludingThis(aMallocSizeOf);
   amount += m_inputBuffer.sizeOfExcludingThis(aMallocSizeOf);
 
-  // Possible future measurements:
-  // - m_backgroundThread
-  // - m_backgroundThreadLock
-  // - m_backgroundThreadCondition
-  return amount;
-}
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void ReverbConvolver::backgroundThreadEntry() {
-  while (!m_wantsToExit) {
-    // Wait for realtime thread to give us more input
-    m_moreInputBuffered = false;
-    {
-      AutoLock locker(m_backgroundThreadLock);
-      while (!m_moreInputBuffered && !m_wantsToExit)
-        m_backgroundThreadCondition.Wait();
-    }
-||||||| merged common ancestors
-    // NB: The buffer sizes are static, so even though they might be accessed
-    //     in another thread it's safe to measure them.
-    amount += m_accumulationBuffer.sizeOfExcludingThis(aMallocSizeOf);
-    amount += m_inputBuffer.sizeOfExcludingThis(aMallocSizeOf);
-=======
-  // NB: The buffer sizes are static, so even though they might be accessed
-  //     in another thread it's safe to measure them.
-  amount += m_accumulationBuffer.sizeOfExcludingThis(aMallocSizeOf);
-  amount += m_inputBuffer.sizeOfExcludingThis(aMallocSizeOf);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    // Process all of the stages until their read indices reach the input
-    // buffer's write index
-    int writeIndex = m_inputBuffer.writeIndex();
-||||||| merged common ancestors
-    // Possible future measurements:
-    // - m_backgroundThread
-    // - m_backgroundThreadLock
-    // - m_backgroundThreadCondition
-    return amount;
-}
-=======
   // Possible future measurements:
   // - m_backgroundThread
   // - m_backgroundThreadMonitor
   return amount;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Even though it doesn't seem like every stage needs to maintain its own
-    // version of readIndex we do this in case we want to run in more than one
-    // background thread.
-    int readIndex;
-
-    while ((readIndex = m_backgroundStages[0]->inputReadIndex()) !=
-           writeIndex) {  // FIXME: do better to detect buffer overrun...
-      // Accumulate contributions from each stage
-      for (size_t i = 0; i < m_backgroundStages.Length(); ++i)
-        m_backgroundStages[i]->processInBackground(this);
-||||||| merged common ancestors
-void ReverbConvolver::backgroundThreadEntry()
-{
-    while (!m_wantsToExit) {
-        // Wait for realtime thread to give us more input
-        m_moreInputBuffered = false;
-        {
-            AutoLock locker(m_backgroundThreadLock);
-            while (!m_moreInputBuffered && !m_wantsToExit)
-                m_backgroundThreadCondition.Wait();
-        }
-
-        // Process all of the stages until their read indices reach the input buffer's write index
-        int writeIndex = m_inputBuffer.writeIndex();
-
-        // Even though it doesn't seem like every stage needs to maintain its own version of readIndex
-        // we do this in case we want to run in more than one background thread.
-        int readIndex;
-
-        while ((readIndex = m_backgroundStages[0]->inputReadIndex()) != writeIndex) { // FIXME: do better to detect buffer overrun...
-            // Accumulate contributions from each stage
-            for (size_t i = 0; i < m_backgroundStages.Length(); ++i)
-                m_backgroundStages[i]->processInBackground(this);
-        }
-=======
 void ReverbConvolver::backgroundThreadEntry() {
   while (!m_wantsToExit) {
     // Wait for realtime thread to give us more input
@@ -397,12 +211,7 @@ void ReverbConvolver::backgroundThreadEntry() {
       MonitorAutoLock locker(m_backgroundThreadMonitor);
       while (!m_moreInputBuffered && !m_wantsToExit)
         m_backgroundThreadMonitor.Wait();
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
 
     // Process all of the stages until their read indices reach the input
     // buffer's write index
@@ -420,74 +229,9 @@ void ReverbConvolver::backgroundThreadEntry() {
         m_backgroundStages[i]->processInBackground(this);
     }
   }
->>>>>>> upstream-releases
 }
 
 void ReverbConvolver::process(const float* sourceChannelData,
-<<<<<<< HEAD
-                              float* destinationChannelData) {
-  const float* source = sourceChannelData;
-  float* destination = destinationChannelData;
-  bool isDataSafe = source && destination;
-  MOZ_ASSERT(isDataSafe);
-  if (!isDataSafe) return;
-
-  // Feed input buffer (read by all threads)
-  m_inputBuffer.write(source, WEBAUDIO_BLOCK_SIZE);
-
-  // Accumulate contributions from each stage
-  for (size_t i = 0; i < m_stages.Length(); ++i) m_stages[i]->process(source);
-
-  // Finally read from accumulation buffer
-  m_accumulationBuffer.readAndClear(destination, WEBAUDIO_BLOCK_SIZE);
-
-  // Now that we've buffered more input, wake up our background thread.
-
-  // Not using a MutexLocker looks strange, but we use a tryLock() instead
-  // because this is run on the real-time thread where it is a disaster for the
-  // lock to be contended (causes audio glitching).  It's OK if we fail to
-  // signal from time to time, since we'll get to it the next time we're called.
-  // We're called repeatedly and frequently (around every 3ms).  The background
-  // thread is processing well into the future and has a considerable amount of
-  // leeway here...
-  if (m_backgroundThreadLock.Try()) {
-    m_moreInputBuffered = true;
-    m_backgroundThreadCondition.Signal();
-    m_backgroundThreadLock.Release();
-  }
-||||||| merged common ancestors
-                              float* destinationChannelData)
-{
-    const float* source = sourceChannelData;
-    float* destination = destinationChannelData;
-    bool isDataSafe = source && destination;
-    MOZ_ASSERT(isDataSafe);
-    if (!isDataSafe)
-        return;
-
-    // Feed input buffer (read by all threads)
-    m_inputBuffer.write(source, WEBAUDIO_BLOCK_SIZE);
-
-    // Accumulate contributions from each stage
-    for (size_t i = 0; i < m_stages.Length(); ++i)
-        m_stages[i]->process(source);
-
-    // Finally read from accumulation buffer
-    m_accumulationBuffer.readAndClear(destination, WEBAUDIO_BLOCK_SIZE);
-
-    // Now that we've buffered more input, wake up our background thread.
-
-    // Not using a MutexLocker looks strange, but we use a tryLock() instead because this is run on the real-time
-    // thread where it is a disaster for the lock to be contended (causes audio glitching).  It's OK if we fail to
-    // signal from time to time, since we'll get to it the next time we're called.  We're called repeatedly
-    // and frequently (around every 3ms).  The background thread is processing well into the future and has a considerable amount of
-    // leeway here...
-    if (m_backgroundThreadLock.Try()) {
-        m_moreInputBuffered = true;
-        m_backgroundThreadCondition.Signal();
-        m_backgroundThreadLock.Release();
-    }
-=======
                               float* destinationChannelData) {
   const float* source = sourceChannelData;
   float* destination = destinationChannelData;
@@ -518,7 +262,6 @@ void ReverbConvolver::process(const float* sourceChannelData,
     m_backgroundThreadMonitor.Notify();
     m_backgroundThreadMonitor.Unlock();
   }
->>>>>>> upstream-releases
 }
 
 }  // namespace WebCore

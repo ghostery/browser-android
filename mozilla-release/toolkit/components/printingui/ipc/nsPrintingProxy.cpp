@@ -121,25 +121,6 @@ nsPrintingProxy::ShowPrintDialog(mozIDOMWindowProxy* parent,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPrintingProxy::ShowProgress(
-    mozIDOMWindowProxy* parent,
-    nsIWebBrowserPrint* webBrowserPrint,  // ok to be null
-    nsIPrintSettings* printSettings,      // ok to be null
-    nsIObserver* openDialogObserver,      // ok to be null
-    bool isForPrinting, nsIWebProgressListener** webProgressListener,
-    nsIPrintProgressParams** printProgressParams, bool* notifyOnOpen) {
-||||||| merged common ancestors
-nsPrintingProxy::ShowProgress(mozIDOMWindowProxy*      parent,
-                              nsIWebBrowserPrint*      webBrowserPrint,    // ok to be null
-                              nsIPrintSettings*        printSettings,      // ok to be null
-                              nsIObserver*             openDialogObserver, // ok to be null
-                              bool                     isForPrinting,
-                              nsIWebProgressListener** webProgressListener,
-                              nsIPrintProgressParams** printProgressParams,
-                              bool*                  notifyOnOpen)
-{
-=======
 nsPrintingProxy::ShowPrintProgressDialog(
     mozIDOMWindowProxy* parent,
     nsIWebBrowserPrint* webBrowserPrint,  // ok to be null
@@ -147,7 +128,6 @@ nsPrintingProxy::ShowPrintProgressDialog(
     nsIObserver* openDialogObserver,      // ok to be null
     bool isForPrinting, nsIWebProgressListener** webProgressListener,
     nsIPrintProgressParams** printProgressParams, bool* notifyOnOpen) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(parent);
   NS_ENSURE_ARG(webProgressListener);
   NS_ENSURE_ARG(printProgressParams);
@@ -196,17 +176,8 @@ nsPrintingProxy::ShowPrintProgressDialog(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPrintingProxy::ShowPageSetup(mozIDOMWindowProxy* parent,
-                               nsIPrintSettings* printSettings) {
-||||||| merged common ancestors
-nsPrintingProxy::ShowPageSetup(mozIDOMWindowProxy *parent,
-                               nsIPrintSettings *printSettings)
-{
-=======
 nsPrintingProxy::ShowPageSetupDialog(mozIDOMWindowProxy* parent,
                                      nsIPrintSettings* printSettings) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 

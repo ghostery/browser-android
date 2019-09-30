@@ -58,15 +58,8 @@ class nsHtml5StringParser : public nsParserBase {
  private:
   virtual ~nsHtml5StringParser();
 
-<<<<<<< HEAD
-  nsresult Tokenize(const nsAString& aSourceBuffer, nsIDocument* aDocument,
-||||||| merged common ancestors
-  nsresult Tokenize(const nsAString& aSourceBuffer,
-                    nsIDocument* aDocument,
-=======
   nsresult Tokenize(const nsAString& aSourceBuffer,
                     mozilla::dom::Document* aDocument,
->>>>>>> upstream-releases
                     bool aScriptingEnabledForNoscriptParsing);
 
   /**

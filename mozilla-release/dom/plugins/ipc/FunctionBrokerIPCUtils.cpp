@@ -304,16 +304,8 @@ void IPCInternetBuffers::CopyTo(LPINTERNET_BUFFERSA& aBufs) const {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void IPCInternetBuffers::FreeBuffers(LPINTERNET_BUFFERSA& aBufs) {
-||||||| merged common ancestors
-/* static */ void
-IPCInternetBuffers::FreeBuffers(LPINTERNET_BUFFERSA& aBufs)
-{
-=======
 /* static */
 void IPCInternetBuffers::FreeBuffers(LPINTERNET_BUFFERSA& aBufs) {
->>>>>>> upstream-releases
   if (!aBufs) {
     return;
   }

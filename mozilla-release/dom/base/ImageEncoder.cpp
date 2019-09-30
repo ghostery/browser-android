@@ -91,17 +91,10 @@ class EncodingCompleteEvent : public CancelableRunnable {
     }
   }
 
-<<<<<<< HEAD
-  NS_IMETHOD Run() override {
-||||||| merged common ancestors
-  NS_IMETHOD Run() override
-  {
-=======
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is MOZ_CAN_RUN_SCRIPT.  See
   // bug 1535398.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD Run() override {
->>>>>>> upstream-releases
     nsresult rv = NS_OK;
 
     // We want to null out mEncodeCompleteCallback no matter what.
@@ -288,30 +281,6 @@ nsresult ImageEncoder::ExtractDataAsync(
   return sThreadPool->Dispatch(event, NS_DISPATCH_NORMAL);
 }
 
-<<<<<<< HEAD
-/*static*/ nsresult ImageEncoder::GetInputStream(
-    int32_t aWidth, int32_t aHeight, uint8_t* aImageBuffer, int32_t aFormat,
-    imgIEncoder* aEncoder, const char16_t* aEncoderOptions,
-    nsIInputStream** aStream) {
-  nsresult rv = aEncoder->InitFromData(aImageBuffer, aWidth * aHeight * 4,
-                                       aWidth, aHeight, aWidth * 4, aFormat,
-                                       nsDependentString(aEncoderOptions));
-||||||| merged common ancestors
-/*static*/ nsresult
-ImageEncoder::GetInputStream(int32_t aWidth,
-                             int32_t aHeight,
-                             uint8_t* aImageBuffer,
-                             int32_t aFormat,
-                             imgIEncoder* aEncoder,
-                             const char16_t* aEncoderOptions,
-                             nsIInputStream** aStream)
-{
-  nsresult rv =
-    aEncoder->InitFromData(aImageBuffer,
-                           aWidth * aHeight * 4, aWidth, aHeight, aWidth * 4,
-                           aFormat,
-                           nsDependentString(aEncoderOptions));
-=======
 /*static*/
 nsresult ImageEncoder::GetInputStream(int32_t aWidth, int32_t aHeight,
                                       uint8_t* aImageBuffer, int32_t aFormat,
@@ -321,7 +290,6 @@ nsresult ImageEncoder::GetInputStream(int32_t aWidth, int32_t aHeight,
   nsresult rv =
       aEncoder->InitFromData(aImageBuffer, aWidth * aHeight * 4, aWidth,
                              aHeight, aWidth * 4, aFormat, aEncoderOptions);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsCOMPtr<imgIEncoder> encoder(aEncoder);
@@ -349,24 +317,9 @@ nsresult ImageEncoder::ExtractDataInternal(
       return NS_ERROR_INVALID_ARG;
     }
 
-<<<<<<< HEAD
-    rv = ImageEncoder::GetInputStream(
-        aSize.width, aSize.height, aImageBuffer, aFormat, aEncoder,
-        nsPromiseFlatString(aOptions).get(), getter_AddRefs(imgStream));
-||||||| merged common ancestors
-    rv = ImageEncoder::GetInputStream(
-      aSize.width,
-      aSize.height,
-      aImageBuffer,
-      aFormat,
-      aEncoder,
-      nsPromiseFlatString(aOptions).get(),
-      getter_AddRefs(imgStream));
-=======
     rv = ImageEncoder::GetInputStream(aSize.width, aSize.height, aImageBuffer,
                                       aFormat, aEncoder, aOptions,
                                       getter_AddRefs(imgStream));
->>>>>>> upstream-releases
   } else if (aContext && !aUsePlaceholder) {
     NS_ConvertUTF16toUTF8 encoderType(aType);
     rv = aContext->GetInputStream(encoderType.get(), aOptions,

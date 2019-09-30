@@ -22,74 +22,33 @@ add_task(async function test_tokenizer() {
         { value: "test4", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
       ],
     },
-<<<<<<< HEAD
-    { desc: "separate restriction char at beginning",
-      searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK} test`,
-||||||| merged common ancestors
-    { desc: "separate restriction char at beginning",
-      searchString: "* test",
-=======
     {
       desc: "separate restriction char at beginning",
       searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK} test`,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
         },
->>>>>>> upstream-releases
         { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
       ],
     },
-<<<<<<< HEAD
-    { desc: "separate restriction char at end",
-      searchString: `test ${UrlbarTokenizer.RESTRICT.BOOKMARK}`,
-||||||| merged common ancestors
-    { desc: "separate restriction char at end",
-      searchString: "test *",
-=======
     {
       desc: "separate restriction char at end",
       searchString: `test ${UrlbarTokenizer.RESTRICT.BOOKMARK}`,
->>>>>>> upstream-releases
       expectedTokens: [
         { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
         },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    { desc: "boundary restriction char at end",
-      searchString: `test${UrlbarTokenizer.RESTRICT.BOOKMARK}`,
-||||||| merged common ancestors
-    { desc: "boundary restriction char at end",
-      searchString: "test*",
-=======
     {
       desc: "boundary restriction char at end",
       searchString: `test${UrlbarTokenizer.RESTRICT.BOOKMARK}`,
->>>>>>> upstream-releases
       expectedTokens: [
         { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
@@ -127,30 +86,14 @@ add_task(async function test_tokenizer() {
           type: UrlbarTokenizer.TYPE.TEXT,
         },
         { value: `test`, type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    { desc: "double boundary restriction char",
-      searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK}test${UrlbarTokenizer.RESTRICT.TITLE}`,
-||||||| merged common ancestors
-    { desc: "double boundary restriction char",
-      searchString: "*test#",
-=======
     {
       desc: "double boundary restriction char",
       searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK}test${
         UrlbarTokenizer.RESTRICT.TITLE
       }`,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-        { value: `test${UrlbarTokenizer.RESTRICT.TITLE}`, type: UrlbarTokenizer.TYPE.TEXT },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-        { value: "test#", type: UrlbarTokenizer.TYPE.TEXT },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
@@ -159,30 +102,14 @@ add_task(async function test_tokenizer() {
           value: `test${UrlbarTokenizer.RESTRICT.TITLE}`,
           type: UrlbarTokenizer.TYPE.TEXT,
         },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    { desc: "double non-combinable restriction char, single char string",
-      searchString: `t${UrlbarTokenizer.RESTRICT.BOOKMARK}${UrlbarTokenizer.RESTRICT.SEARCH}`,
-||||||| merged common ancestors
-    { desc: "double non-combinable restriction char, single char string",
-      searchString: "t*?",
-=======
     {
       desc: "double non-combinable restriction char, single char string",
       searchString: `t${UrlbarTokenizer.RESTRICT.BOOKMARK}${
         UrlbarTokenizer.RESTRICT.SEARCH
       }`,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: `t${UrlbarTokenizer.RESTRICT.BOOKMARK}`, type: UrlbarTokenizer.TYPE.TEXT },
-        { value: UrlbarTokenizer.RESTRICT.SEARCH, type: UrlbarTokenizer.TYPE.RESTRICT_SEARCH },
-||||||| merged common ancestors
-        { value: "t*", type: UrlbarTokenizer.TYPE.TEXT },
-        { value: "?", type: UrlbarTokenizer.TYPE.RESTRICT_SEARCH },
-=======
         {
           value: `t${UrlbarTokenizer.RESTRICT.BOOKMARK}`,
           type: UrlbarTokenizer.TYPE.TEXT,
@@ -191,30 +118,14 @@ add_task(async function test_tokenizer() {
           value: UrlbarTokenizer.RESTRICT.SEARCH,
           type: UrlbarTokenizer.TYPE.RESTRICT_SEARCH,
         },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    { desc: "only boundary restriction chars",
-      searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK}${UrlbarTokenizer.RESTRICT.TITLE}`,
-||||||| merged common ancestors
-    { desc: "only boundary restriction chars",
-      searchString: "*#",
-=======
     {
       desc: "only boundary restriction chars",
       searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK}${
         UrlbarTokenizer.RESTRICT.TITLE
       }`,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-        { value: UrlbarTokenizer.RESTRICT.TITLE, type: UrlbarTokenizer.TYPE.RESTRICT_TITLE },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-        { value: "#", type: UrlbarTokenizer.TYPE.RESTRICT_TITLE },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
@@ -223,103 +134,40 @@ add_task(async function test_tokenizer() {
           value: UrlbarTokenizer.RESTRICT.TITLE,
           type: UrlbarTokenizer.TYPE.RESTRICT_TITLE,
         },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    { desc: "only the boundary restriction char",
-      searchString: UrlbarTokenizer.RESTRICT.BOOKMARK,
-||||||| merged common ancestors
-    { desc: "only the boundary restriction char",
-      searchString: "*",
-=======
     {
       desc: "only the boundary restriction char",
       searchString: UrlbarTokenizer.RESTRICT.BOOKMARK,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.TEXT },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.TEXT },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
         },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    // Some restriction chars may be # or ?, that are also valid path parts.
-    // The next 2 tests will check we consider those as part of url paths.
-    { desc: "boundary # char on path",
-||||||| merged common ancestors
-    { desc: "boundary restriction char on path",
-=======
     // Some restriction chars may be # or ?, that are also valid path parts.
     // The next 2 tests will check we consider those as part of url paths.
     {
       desc: "boundary # char on path",
->>>>>>> upstream-releases
       searchString: "test/#",
       expectedTokens: [
         { value: "test/#", type: UrlbarTokenizer.TYPE.POSSIBLE_URL },
       ],
     },
-<<<<<<< HEAD
-    { desc: "boundary ? char on path",
-      searchString: "test/?",
-      expectedTokens: [
-        { value: "test/?", type: UrlbarTokenizer.TYPE.POSSIBLE_URL },
-      ],
-    },
-    { desc: "multiple boundary restriction chars suffix",
-      searchString: `test ${UrlbarTokenizer.RESTRICT.HISTORY} ${UrlbarTokenizer.RESTRICT.TAG}`,
-||||||| merged common ancestors
-    { desc: "multiple boundary restriction chars suffix",
-      searchString: "test ^ ~",
-=======
     {
       desc: "boundary ? char on path",
       searchString: "test/?",
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
-        { value: UrlbarTokenizer.RESTRICT.HISTORY, type: UrlbarTokenizer.TYPE.RESTRICT_HISTORY },
-        { value: UrlbarTokenizer.RESTRICT.TAG, type: UrlbarTokenizer.TYPE.TEXT },
-||||||| merged common ancestors
-        { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
-        { value: "^", type: UrlbarTokenizer.TYPE.RESTRICT_HISTORY },
-        { value: "~", type: UrlbarTokenizer.TYPE.TEXT },
-=======
         { value: "test/?", type: UrlbarTokenizer.TYPE.POSSIBLE_URL },
->>>>>>> upstream-releases
       ],
     },
-<<<<<<< HEAD
-    { desc: "multiple boundary restriction chars prefix",
-      searchString: `${UrlbarTokenizer.RESTRICT.HISTORY} ${UrlbarTokenizer.RESTRICT.TAG} test`,
-||||||| merged common ancestors
-    { desc: "multiple boundary restriction chars prefix",
-      searchString: "^ ~ test",
-=======
     {
       desc: "multiple boundary restriction chars suffix",
       searchString: `test ${UrlbarTokenizer.RESTRICT.HISTORY} ${
         UrlbarTokenizer.RESTRICT.TAG
       }`,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.HISTORY, type: UrlbarTokenizer.TYPE.RESTRICT_HISTORY },
-        { value: UrlbarTokenizer.RESTRICT.TAG, type: UrlbarTokenizer.TYPE.TEXT },
-||||||| merged common ancestors
-        { value: "^", type: UrlbarTokenizer.TYPE.RESTRICT_HISTORY },
-        { value: "~", type: UrlbarTokenizer.TYPE.TEXT },
-=======
->>>>>>> upstream-releases
         { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
         {
           value: UrlbarTokenizer.RESTRICT.HISTORY,
@@ -348,13 +196,6 @@ add_task(async function test_tokenizer() {
         { value: "test", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
       ],
     },
-<<<<<<< HEAD
-    { desc: "ipv4 in bookmarks",
-      searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK} 192.168.1.1:8`,
-||||||| merged common ancestors
-    { desc: "ipv4 in bookmarks",
-      searchString: "* 192.168.1.1:8",
-=======
     {
       desc: "Math with division",
       searchString: "3.6/1.2",
@@ -363,18 +204,11 @@ add_task(async function test_tokenizer() {
     {
       desc: "ipv4 in bookmarks",
       searchString: `${UrlbarTokenizer.RESTRICT.BOOKMARK} 192.168.1.1:8`,
->>>>>>> upstream-releases
       expectedTokens: [
-<<<<<<< HEAD
-        { value: UrlbarTokenizer.RESTRICT.BOOKMARK, type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-||||||| merged common ancestors
-        { value: "*", type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK },
-=======
         {
           value: UrlbarTokenizer.RESTRICT.BOOKMARK,
           type: UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK,
         },
->>>>>>> upstream-releases
         { value: "192.168.1.1:8", type: UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN },
       ],
     },

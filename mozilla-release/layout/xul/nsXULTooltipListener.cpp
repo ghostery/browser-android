@@ -29,15 +29,7 @@
 #include "mozilla/Preferences.h"
 #include "mozilla/PresShell.h"
 #include "mozilla/dom/Element.h"
-<<<<<<< HEAD
 #include "mozilla/dom/Event.h"  // for Event
-#include "mozilla/dom/BoxObject.h"
-||||||| merged common ancestors
-#include "mozilla/dom/Event.h" // for Event
-#include "mozilla/dom/BoxObject.h"
-=======
-#include "mozilla/dom/Event.h"  // for Event
->>>>>>> upstream-releases
 #include "mozilla/dom/MouseEvent.h"
 #include "mozilla/dom/TreeColumnBinding.h"
 #include "mozilla/dom/XULTreeElementBinding.h"
@@ -410,18 +402,9 @@ nsresult nsXULTooltipListener::ShowTooltip() {
       currentTooltip->AddSystemEventListener(NS_LITERAL_STRING("popuphiding"),
                                              this, false, false);
 
-<<<<<<< HEAD
-      // listen for mousedown, mouseup, keydown, and DOMMouseScroll events at
-      // document level
-      nsIDocument* doc = sourceNode->GetComposedDoc();
-||||||| merged common ancestors
-      // listen for mousedown, mouseup, keydown, and DOMMouseScroll events at document level
-      nsIDocument* doc = sourceNode->GetComposedDoc();
-=======
       // listen for mousedown, mouseup, keydown, and DOMMouseScroll events at
       // document level
       Document* doc = sourceNode->GetComposedDoc();
->>>>>>> upstream-releases
       if (doc) {
         // Probably, we should listen to untrusted events for hiding tooltips
         // on content since tooltips might disturb something of web
@@ -445,75 +428,15 @@ nsresult nsXULTooltipListener::ShowTooltip() {
 }
 
 #ifdef MOZ_XUL
-<<<<<<< HEAD
-// XXX: "This stuff inside DEBUG_crap could be used to make tree tooltips work
-//       in the future."
-#ifdef DEBUG_crap
-static void GetTreeCellCoords(nsITreeBoxObject* aTreeBox,
-                              nsIContent* aSourceNode, int32_t aRow,
-                              nsTreeColumn* aCol, int32_t* aX, int32_t* aY) {
-  int32_t junk;
-  aTreeBox->GetCoordsForCellItem(aRow, aCol, EmptyCString(), aX, aY, &junk,
-                                 &junk);
-  RefPtr<nsXULElement> xulEl = nsXULElement::FromNode(aSourceNode);
-  nsCOMPtr<nsIBoxObject> bx = xulEl->GetBoxObject(IgnoreErrors());
-  int32_t myX, myY;
-  bx->GetX(&myX);
-  bx->GetY(&myY);
-  *aX += myX;
-  *aY += myY;
-}
-#endif
-
-static void SetTitletipLabel(nsITreeBoxObject* aTreeBox, Element* aTooltip,
-                             int32_t aRow, nsTreeColumn* aCol) {
-  nsCOMPtr<nsITreeView> view;
-  aTreeBox->GetView(getter_AddRefs(view));
-||||||| merged common ancestors
-// XXX: "This stuff inside DEBUG_crap could be used to make tree tooltips work
-//       in the future."
-#ifdef DEBUG_crap
-static void
-GetTreeCellCoords(nsITreeBoxObject* aTreeBox, nsIContent* aSourceNode,
-                  int32_t aRow, nsTreeColumn* aCol, int32_t* aX, int32_t* aY)
-{
-  int32_t junk;
-  aTreeBox->GetCoordsForCellItem(aRow, aCol, EmptyCString(), aX, aY, &junk, &junk);
-  RefPtr<nsXULElement> xulEl = nsXULElement::FromNode(aSourceNode);
-  nsCOMPtr<nsIBoxObject> bx = xulEl->GetBoxObject(IgnoreErrors());
-  int32_t myX, myY;
-  bx->GetX(&myX);
-  bx->GetY(&myY);
-  *aX += myX;
-  *aY += myY;
-}
-#endif
-
-static void
-SetTitletipLabel(nsITreeBoxObject* aTreeBox, Element* aTooltip,
-                 int32_t aRow, nsTreeColumn* aCol)
-{
-  nsCOMPtr<nsITreeView> view;
-  aTreeBox->GetView(getter_AddRefs(view));
-=======
 static void SetTitletipLabel(XULTreeElement* aTree, Element* aTooltip,
                              int32_t aRow, nsTreeColumn* aCol) {
   nsCOMPtr<nsITreeView> view = aTree->GetView();
->>>>>>> upstream-releases
   if (view) {
     nsAutoString label;
 #  ifdef DEBUG
     nsresult rv =
-<<<<<<< HEAD
-#endif
-        view->GetCellText(aRow, aCol, label);
-||||||| merged common ancestors
-#endif
-      view->GetCellText(aRow, aCol, label);
-=======
 #  endif
         view->GetCellText(aRow, aCol, label);
->>>>>>> upstream-releases
     NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Couldn't get the cell text!");
     aTooltip->SetAttr(kNameSpaceID_None, nsGkAtoms::label, label, true);
   }
@@ -585,13 +508,7 @@ nsresult nsXULTooltipListener::FindTooltip(nsIContent* aTarget,
   if (!aTarget) return NS_ERROR_NULL_POINTER;
 
   // before we go on, make sure that target node still has a window
-<<<<<<< HEAD
-  nsIDocument* document = aTarget->GetComposedDoc();
-||||||| merged common ancestors
-  nsIDocument *document = aTarget->GetComposedDoc();
-=======
   Document* document = aTarget->GetComposedDoc();
->>>>>>> upstream-releases
   if (!document) {
     NS_WARNING("Unable to retrieve the tooltip node document.");
     return NS_ERROR_FAILURE;
@@ -608,13 +525,7 @@ nsresult nsXULTooltipListener::FindTooltip(nsIContent* aTarget,
   // non-XUL elements should just use the default tooltip
   if (!aTarget->IsXULElement()) {
     nsIPopupContainer* popupContainer =
-<<<<<<< HEAD
-        nsIPopupContainer::GetPopupContainer(document->GetShell());
-||||||| merged common ancestors
-      nsIPopupContainer::GetPopupContainer(document->GetShell());
-=======
         nsIPopupContainer::GetPopupContainer(document->GetPresShell());
->>>>>>> upstream-releases
     NS_ENSURE_STATE(popupContainer);
     if (RefPtr<Element> tooltip = popupContainer->GetDefaultTooltip()) {
       tooltip.forget(aTooltip);
@@ -631,13 +542,7 @@ nsresult nsXULTooltipListener::FindTooltip(nsIContent* aTarget,
   if (!tooltipText.IsEmpty()) {
     // specifying tooltiptext means we will always use the default tooltip
     nsIPopupContainer* popupContainer =
-<<<<<<< HEAD
-        nsIPopupContainer::GetPopupContainer(document->GetShell());
-||||||| merged common ancestors
-      nsIPopupContainer::GetPopupContainer(document->GetShell());
-=======
         nsIPopupContainer::GetPopupContainer(document->GetPresShell());
->>>>>>> upstream-releases
     NS_ENSURE_STATE(popupContainer);
     if (RefPtr<Element> tooltip = popupContainer->GetDefaultTooltip()) {
       tooltip->SetAttr(kNameSpaceID_None, nsGkAtoms::label, tooltipText, true);
@@ -680,13 +585,7 @@ nsresult nsXULTooltipListener::FindTooltip(nsIContent* aTarget,
   // titletips should just use the default tooltip
   if (mIsSourceTree && mNeedTitletip) {
     nsIPopupContainer* popupContainer =
-<<<<<<< HEAD
-        nsIPopupContainer::GetPopupContainer(document->GetShell());
-||||||| merged common ancestors
-      nsIPopupContainer::GetPopupContainer(document->GetShell());
-=======
         nsIPopupContainer::GetPopupContainer(document->GetPresShell());
->>>>>>> upstream-releases
     NS_ENSURE_STATE(popupContainer);
     NS_IF_ADDREF(*aTooltip = popupContainer->GetDefaultTooltip());
   }
@@ -771,51 +670,12 @@ void nsXULTooltipListener::sTooltipCallback(nsITimer* aTimer, void* aListener) {
 }
 
 #ifdef MOZ_XUL
-<<<<<<< HEAD
-nsresult nsXULTooltipListener::GetSourceTreeBoxObject(
-    nsITreeBoxObject** aBoxObject) {
-  *aBoxObject = nullptr;
-
-||||||| merged common ancestors
-nsresult
-nsXULTooltipListener::GetSourceTreeBoxObject(nsITreeBoxObject** aBoxObject)
-{
-  *aBoxObject = nullptr;
-
-=======
 XULTreeElement* nsXULTooltipListener::GetSourceTree() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIContent> sourceNode = do_QueryReferent(mSourceNode);
   if (mIsSourceTree && sourceNode) {
-<<<<<<< HEAD
-    RefPtr<nsXULElement> xulEl =
-        nsXULElement::FromNodeOrNull(sourceNode->GetParent());
-    if (xulEl) {
-      nsCOMPtr<nsIBoxObject> bx = xulEl->GetBoxObject(IgnoreErrors());
-      nsCOMPtr<nsITreeBoxObject> obx(do_QueryInterface(bx));
-      if (obx) {
-        *aBoxObject = obx;
-        NS_ADDREF(*aBoxObject);
-        return NS_OK;
-      }
-    }
-||||||| merged common ancestors
-    RefPtr<nsXULElement> xulEl =
-      nsXULElement::FromNodeOrNull(sourceNode->GetParent());
-    if (xulEl) {
-      nsCOMPtr<nsIBoxObject> bx = xulEl->GetBoxObject(IgnoreErrors());
-      nsCOMPtr<nsITreeBoxObject> obx(do_QueryInterface(bx));
-      if (obx) {
-        *aBoxObject = obx;
-        NS_ADDREF(*aBoxObject);
-        return NS_OK;
-      }
-    }
-=======
     RefPtr<XULTreeElement> xulEl =
         XULTreeElement::FromNodeOrNull(sourceNode->GetParent());
     return xulEl;
->>>>>>> upstream-releases
   }
 
   return nullptr;

@@ -265,27 +265,11 @@ partial interface HTMLInputElement {
    BinaryName="getMaximumAsDouble"]
   double getMaximum();
 
-<<<<<<< HEAD
-  [Pref="dom.forms.datetime", Func="IsChromeOrXBLOrUAWidget"]
-  void openDateTimePicker(optional DateTimeValue initialValue);
-||||||| merged common ancestors
-  [Pref="dom.forms.datetime", Func="IsChromeOrXBL"]
-  void openDateTimePicker(optional DateTimeValue initialValue);
-=======
   [Pref="dom.forms.datetime", Func="IsChromeOrXBLOrUAWidget"]
   void openDateTimePicker(optional DateTimeValue initialValue = {});
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  [Pref="dom.forms.datetime", Func="IsChromeOrXBLOrUAWidget"]
-  void updateDateTimePicker(optional DateTimeValue value);
-||||||| merged common ancestors
-  [Pref="dom.forms.datetime", Func="IsChromeOrXBL"]
-  void updateDateTimePicker(optional DateTimeValue value);
-=======
   [Pref="dom.forms.datetime", Func="IsChromeOrXBLOrUAWidget"]
   void updateDateTimePicker(optional DateTimeValue value = {});
->>>>>>> upstream-releases
 
   [Pref="dom.forms.datetime", Func="IsChromeOrXBLOrUAWidget"]
   void closeDateTimePicker();

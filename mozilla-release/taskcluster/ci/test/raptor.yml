@@ -51,56 +51,15 @@ job-defaults:
                 default:
                     - raptor/linux_config.py
 
-<<<<<<< HEAD
-raptor-tp6-1-firefox:
-    description: "Raptor tp6-1 on Firefox"
-    try-name: raptor-tp6-1-firefox
-    treeherder-symbol: Rap(tp6-1)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-tp6-firefox:
-    description: "Raptor tp6 on Firefox"
-    try-name: raptor-tp6-firefox
-    treeherder-symbol: Rap(tp6)
-    run-on-projects: ['try', 'mozilla-central', 'mozilla-beta']
-    max-run-time: 1800
-=======
 raptor-tp6-1-firefox:
     description: "Raptor tp6-1 on Firefox"
     variants: ["fission"]
     try-name: raptor-tp6-1-firefox
     treeherder-symbol: Rap(tp6-1)
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-1
 
-<<<<<<< HEAD
-raptor-tp6-1-chrome:
-    description: "Raptor tp6-1 on Chrome"
-    try-name: raptor-tp6-1-chrome
-    treeherder-symbol: Rap-C(tp6-1)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    max-run-time: 1200
-||||||| merged common ancestors
-raptor-tp6-chrome:
-    description: "Raptor tp6 on Chrome"
-    try-name: raptor-tp6-chrome
-    treeherder-symbol: Rap-C(tp6)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    max-run-time: 1200
-=======
 raptor-tp6-1-firefox-profiling:
     description: "Raptor tp6-1 on Firefox with Gecko Profiling"
     try-name: raptor-tp6-1-firefox-profiling
@@ -108,159 +67,16 @@ raptor-tp6-1-firefox-profiling:
     run-on-projects: ['mozilla-central', 'try']
     max-run-time: 900
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
-<<<<<<< HEAD
-            - --test=raptor-tp6-1
-            - --app=chrome
-
-raptor-tp6-2-firefox:
-    description: "Raptor tp6-2 on Firefox"
-    try-name: raptor-tp6-2-firefox
-    treeherder-symbol: Rap(tp6-2)
-    run-on-projects: built-projects
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-2
-
-raptor-tp6-2-chrome:
-    description: "Raptor tp6-2 on Chrome"
-    try-name: raptor-tp6-2-chrome
-    treeherder-symbol: Rap-C(tp6-2)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-2
-            - --app=chrome
-
-raptor-tp6-3-firefox:
-    description: "Raptor tp6-3 on Firefox"
-    try-name: raptor-tp6-3-firefox
-    treeherder-symbol: Rap(tp6-3)
-    run-on-projects: built-projects
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-3
-
-raptor-tp6-3-chrome:
-    description: "Raptor tp6-3 on Chrome"
-    try-name: raptor-tp6-3-chrome
-    treeherder-symbol: Rap-C(tp6-3)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    max-run-time: 2400
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-3
-            - --app=chrome
-
-raptor-tp6-4-firefox:
-    description: "Raptor tp6-4 on Firefox"
-    try-name: raptor-tp6-4-firefox
-    treeherder-symbol: Rap(tp6-4)
-    run-on-projects: built-projects
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-4
-
-raptor-tp6-4-chrome:
-    description: "Raptor tp6-4 on Chrome"
-    try-name: raptor-tp6-4-chrome
-    treeherder-symbol: Rap-C(tp6-4)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-4
-            - --app=chrome
-
-raptor-tp6-5-firefox:
-    description: "Raptor tp6-5 on Firefox"
-    try-name: raptor-tp6-5-firefox
-    treeherder-symbol: Rap(tp6-5)
-    run-on-projects: built-projects
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-5
-
-raptor-tp6-5-chrome:
-    description: "Raptor tp6-5 on Chrome"
-    try-name: raptor-tp6-5-chrome
-    treeherder-symbol: Rap-C(tp6-5)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-5
-            - --app=chrome
-
-raptor-tp6-6-firefox:
-    description: "Raptor tp6-6 on Firefox"
-    try-name: raptor-tp6-6-firefox
-    treeherder-symbol: Rap(tp6-6)
-    run-on-projects: built-projects
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-6
-
-raptor-tp6-6-chrome:
-    description: "Raptor tp6-6 on Chrome"
-    try-name: raptor-tp6-6-chrome
-    treeherder-symbol: Rap-C(tp6-6)
-    run-on-projects: ['try', 'mozilla-central']
-    tier:
-        by-test-platform:
-            linux64.*: 3
-            default: 2
-    mozharness:
-        extra-options:
-            - --test=raptor-tp6-6
-            - --app=chrome
-||||||| merged common ancestors
-            - --test=raptor-tp6
-            - --app=chrome
-=======
             - --test=raptor-tp6-1
             - --gecko-profile
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-raptor-speedometer-firefox:
-    description: "Raptor Speedometer on Firefox"
-    try-name: raptor-speedometer-firefox
-    treeherder-symbol: Rap(sp)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-speedometer-firefox:
-    description: "Raptor Speedometer on Firefox"
-    try-name: raptor-speedometer-firefox
-    treeherder-symbol: Rap(sp)
-    run-on-projects: ['try', 'mozilla-central', 'mozilla-inbound', 'autoland']
-    max-run-time: 1500
-=======
 raptor-tp6-2-firefox:
     description: "Raptor tp6-2 on Firefox"
     variants: ["fission"]
     try-name: raptor-tp6-2-firefox
     treeherder-symbol: Rap(tp6-2)
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-2
@@ -284,11 +100,6 @@ raptor-tp6-3-firefox:
     treeherder-symbol: Rap(tp6-3)
     run-on-projects:
         by-test-platform:
-<<<<<<< HEAD
-            android-hw.*: built-projects
-||||||| merged common ancestors
-            android-hw.*: ['try', 'mozilla-central']
-=======
             # windows10-64-ref-hw-2017/opt: ['try', 'mozilla-central']
             windows10-64-ux/opt: ['try', 'mozilla-central']
             windows10-aarch64/opt: ['try', 'mozilla-central']
@@ -306,7 +117,6 @@ raptor-tp6-3-firefox-profiling:
     try-name: raptor-tp6-3-firefox-profiling
     treeherder-symbol: Rap-Prof(tp6-3)
     run-on-projects: ['mozilla-central', 'try']
->>>>>>> upstream-releases
     max-run-time: 900
     tier: 2
     mozharness:
@@ -314,49 +124,15 @@ raptor-tp6-3-firefox-profiling:
             - --test=raptor-tp6-3
             - --gecko-profile
 
-<<<<<<< HEAD
-raptor-speedometer-chrome:
-    description: "Raptor Speedometer on Chrome"
-    try-name: raptor-speedometer-chrome
-    treeherder-symbol: Rap-C(sp)
-    run-on-projects: ['try', 'mozilla-central']
-    tier: 2
-    max-run-time: 1500
-||||||| merged common ancestors
-raptor-speedometer-chrome:
-    description: "Raptor Speedometer on Chrome"
-    try-name: raptor-speedometer-chrome
-    treeherder-symbol: Rap-C(sp)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1500
-=======
 raptor-tp6-4-firefox:
     description: "Raptor tp6-4 on Firefox"
     variants: ["fission"]
     try-name: raptor-tp6-4-firefox
     treeherder-symbol: Rap(tp6-4)
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-4
 
-<<<<<<< HEAD
-raptor-stylebench-firefox:
-    description: "Raptor StyleBench on Firefox"
-    try-name: raptor-stylebench-firefox
-    treeherder-symbol: Rap(sb)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-stylebench-firefox:
-    description: "Raptor StyleBench on Firefox"
-    try-name: raptor-stylebench-firefox
-    treeherder-symbol: Rap(sb)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6-4-firefox-profiling:
     description: "Raptor tp6-4 on Firefox with Gecko Profiling"
     try-name: raptor-tp6-4-firefox-profiling
@@ -364,54 +140,20 @@ raptor-tp6-4-firefox-profiling:
     run-on-projects: ['mozilla-central', 'try']
     max-run-time: 900
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-4
             - --gecko-profile
 
-<<<<<<< HEAD
-raptor-stylebench-chrome:
-    description: "Raptor StyleBench on Chrome"
-    try-name: raptor-stylebench-chrome
-    treeherder-symbol: Rap-C(sb)
-    run-on-projects: ['try', 'mozilla-central']
-    tier: 2
-||||||| merged common ancestors
-raptor-stylebench-chrome:
-    description: "Raptor StyleBench on Chrome"
-    try-name: raptor-stylebench-chrome
-    treeherder-symbol: Rap-C(sb)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6-5-firefox:
     description: "Raptor tp6-5 on Firefox"
     variants: ["fission"]
     try-name: raptor-tp6-5-firefox
     treeherder-symbol: Rap(tp6-5)
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-5
 
-<<<<<<< HEAD
-raptor-motionmark-htmlsuite-firefox:
-    description: "Raptor MotionMark HtmlSuite on Firefox"
-    try-name: raptor-motionmark-htmlsuite-firefox
-    treeherder-symbol: Rap(mm-h)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-motionmark-htmlsuite-firefox:
-    description: "Raptor MotionMark HtmlSuite on Firefox"
-    try-name: raptor-motionmark-htmlsuite-firefox
-    treeherder-symbol: Rap(mm-h)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6-5-firefox-profiling:
     description: "Raptor tp6-5 on Firefox with Gecko Profiling"
     try-name: raptor-tp6-5-firefox-profiling
@@ -419,7 +161,6 @@ raptor-tp6-5-firefox-profiling:
     run-on-projects: ['mozilla-central', 'try']
     max-run-time: 900
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-5
@@ -473,33 +214,10 @@ raptor-tp6-8-firefox:
     try-name: raptor-tp6-8-firefox
     treeherder-symbol: Rap(tp6-8)
     run-on-projects: ['try', 'mozilla-central']
-<<<<<<< HEAD
-    tier: 2
-||||||| merged common ancestors
-    max-run-time: 1800
-=======
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-8
 
-<<<<<<< HEAD
-raptor-motionmark-animometer-firefox:
-    description: "Raptor MotionMark Animometer on Firefox"
-    try-name: raptor-motionmark-animometer-firefox
-    treeherder-symbol: Rap(mm-a)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-motionmark-animometer-firefox:
-    description: "Raptor MotionMark Animometer on Firefox"
-    try-name: raptor-motionmark-animometer-firefox
-    treeherder-symbol: Rap(mm-a)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6-8-firefox-profiling:
     description: "Raptor tp6-8 on Firefox with Gecko Profiling"
     try-name: raptor-tp6-8-firefox-profiling
@@ -518,7 +236,6 @@ raptor-tp6-9-firefox:
     try-name: raptor-tp6-9-firefox
     treeherder-symbol: Rap(tp6-9)
     run-on-projects: ['try', 'mozilla-central']
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-9
@@ -541,33 +258,10 @@ raptor-tp6-10-firefox:
     try-name: raptor-tp6-10-firefox
     treeherder-symbol: Rap(tp6-10)
     run-on-projects: ['try', 'mozilla-central']
-<<<<<<< HEAD
-    tier: 2
-||||||| merged common ancestors
-    max-run-time: 1800
-=======
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-10
 
-<<<<<<< HEAD
-raptor-webaudio-firefox:
-    description: "Raptor WebAudio on Firefox"
-    try-name: raptor-webaudio-firefox
-    treeherder-symbol: Rap(wa)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-webaudio-firefox:
-    description: "Raptor WebAudio on Firefox"
-    try-name: raptor-webaudio-firefox
-    treeherder-symbol: Rap(wa)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6-10-firefox-profiling:
     description: "Raptor tp6-10 on Firefox with Gecko Profiling"
     try-name: raptor-tp6-10-firefox-profiling
@@ -586,25 +280,10 @@ raptor-tp6-binast-1-firefox:
     try-name: raptor-tp6-binast-1
     treeherder-symbol: Rap(tp6-b-1)
     run-on-projects: ['try', 'mozilla-central']
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6-binast-1
 
-<<<<<<< HEAD
-raptor-webaudio-chrome:
-    description: "Raptor WebAudio on Chrome"
-    try-name: raptor-webaudio-chrome
-    treeherder-symbol: Rap-C(wa)
-    tier: 2
-||||||| merged common ancestors
-raptor-webaudio-chrome:
-    description: "Raptor WebAudio on Chrome"
-    try-name: raptor-webaudio-chrome
-    treeherder-symbol: Rap-C(wa)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6m-1-geckoview:
     description: "Raptor tp6m-1 on Geckoview"
     try-name: raptor-tp6m-1-geckoview
@@ -612,41 +291,8 @@ raptor-tp6m-1-geckoview:
     run-on-projects: ['try', 'mozilla-central']
     target: geckoview_example.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
-<<<<<<< HEAD
-            - --test=raptor-webaudio
-            - --app=chrome
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-            - --test=raptor-webaudio
-            - --app=chrome
-
-raptor-gdocs-firefox:
-    description: "Raptor gdocs on Firefox"
-    try-name: raptor-gdocs-firefox
-    treeherder-symbol: Rap(gdocs)
-    run-on-projects: ['try', 'mozilla-central', 'mozilla-inbound', 'autoland']
-    max-run-time: 1200
-    mozharness:
-        extra-options:
-            - --test=raptor-gdocs
-
-raptor-gdocs-chrome:
-    description: "Raptor gdocs on Chrome"
-    try-name: raptor-gdocs-chrome
-    treeherder-symbol: Rap-C(gdocs)
-    run-on-projects: ['try']
-    max-run-time: 1800
-    mozharness:
-        extra-options:
-            - --test=raptor-gdocs
-            - --app=chrome
-=======
             - --test=raptor-tp6m-1
             - --app=geckoview
             - --binary=org.mozilla.geckoview_example
@@ -693,25 +339,7 @@ raptor-tp6m-1-refbrow:
             - --app=refbrow
             - --binary-path=org.mozilla.reference.browser.raptor
             - --activity=org.mozilla.reference.browser.BrowserTestActivity
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-raptor-sunspider-firefox:
-    description: "Raptor SunSpider on Firefox"
-    try-name: raptor-sunspider-firefox
-    treeherder-symbol: Rap(ss)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-sunspider-firefox:
-    description: "Raptor SunSpider on Firefox"
-    try-name: raptor-sunspider-firefox
-    treeherder-symbol: Rap(ss)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6m-2-fenix:
     description: "Raptor tp6m-2 on Fenix"
     try-name: raptor-tp6m-2-fenix
@@ -727,7 +355,6 @@ raptor-tp6m-2-fenix:
                 index: project.mobile.fenix.v2.performance-test.latest.arm
                 name: target.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-2
@@ -749,23 +376,6 @@ raptor-tp6m-2-geckoview:
             - --binary=org.mozilla.geckoview_example
             - --activity=org.mozilla.geckoview_example.GeckoViewActivity
 
-<<<<<<< HEAD
-raptor-unity-webgl-firefox:
-    description: "Raptor Unity WebGL on Firefox"
-    try-name: raptor-unity-webgl-firefox
-    treeherder-symbol: Rap(ugl)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-unity-webgl-firefox:
-    description: "Raptor Unity WebGL on Firefox"
-    try-name: raptor-unity-webgl-firefox
-    treeherder-symbol: Rap(ugl)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 3600
-=======
 raptor-tp6m-2-refbrow:
     description: "Raptor tp6m-2 on the reference browser"
     treeherder-symbol: Rap-refbrow(tp6m-2)
@@ -779,7 +389,6 @@ raptor-tp6m-2-refbrow:
                 index: project.mobile.reference-browser.v2.raptor.latest.arm
                 name: target.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-2
@@ -792,41 +401,14 @@ raptor-tp6m-3-geckoview:
     try-name: raptor-tp6m-3-geckoview
     treeherder-symbol: Rap(tp6m-3)
     target: geckoview_example.apk
-<<<<<<< HEAD
-    run-on-projects:
-        by-test-platform:
-            android-hw.*: built-projects
-    max-run-time: 900
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            android-hw-.*arm7.*: ['try', 'mozilla-central']
-    max-run-time: 900
-=======
     run-on-projects: ['try', 'mozilla-central']
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-3
             - --app=geckoview
             - --binary=org.mozilla.geckoview_example
 
-<<<<<<< HEAD
-raptor-unity-webgl-chrome:
-    description: "Raptor Unity WebGL on Chrome"
-    try-name: raptor-unity-webgl-chrome
-    treeherder-symbol: Rap-C(ugl)
-    run-on-projects: ['try', 'mozilla-central']
-    tier: 2
-||||||| merged common ancestors
-raptor-unity-webgl-chrome:
-    description: "Raptor Unity WebGL on Chrome"
-    try-name: raptor-unity-webgl-chrome
-    treeherder-symbol: Rap-C(ugl)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 3600
-=======
 raptor-tp6m-3-refbrow:
     description: "Raptor tp6m-3 on the reference browser"
     treeherder-symbol: Rap-refbrow(tp6m-3)
@@ -840,7 +422,6 @@ raptor-tp6m-3-refbrow:
                 index: project.mobile.reference-browser.v2.raptor.latest.arm
                 name: target.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-3
@@ -848,23 +429,6 @@ raptor-tp6m-3-refbrow:
             - --binary-path=org.mozilla.reference.browser.raptor
             - --activity=org.mozilla.reference.browser.BrowserTestActivity
 
-<<<<<<< HEAD
-raptor-wasm-misc-firefox:
-    description: "Raptor WASM Misc on Firefox"
-    try-name: raptor-wasm-misc-firefox
-    treeherder-symbol: Rap(wm)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-wasm-misc-firefox:
-    description: "Raptor WASM Misc on Firefox"
-    try-name: raptor-wasm-misc-firefox
-    treeherder-symbol: Rap(wm)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6m-3-fenix:
     description: "Raptor tp6m-3 on Fenix"
     try-name: raptor-tp6m-3-fenix
@@ -880,7 +444,6 @@ raptor-tp6m-3-fenix:
                 index: project.mobile.fenix.v2.performance-test.latest.arm
                 name: target.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-3
@@ -888,23 +451,6 @@ raptor-tp6m-3-fenix:
             - --binary-path=org.mozilla.fenix.performancetest
             - --activity=org.mozilla.fenix.browser.BrowserPerformanceTestActivity
 
-<<<<<<< HEAD
-raptor-wasm-misc-baseline-firefox:
-    description: "Raptor WASM Misc on Firefox with baseline JIT"
-    try-name: raptor-wasm-misc-baseline-firefox
-    treeherder-symbol: Rap(wm-b)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-wasm-misc-baseline-firefox:
-    description: "Raptor WASM Misc on Firefox with baseline JIT"
-    try-name: raptor-wasm-misc-baseline-firefox
-    treeherder-symbol: Rap(wm-b)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6m-4-geckoview:
     description: "Raptor tp6m-4 on Geckoview"
     try-name: raptor-tp6m-4-geckoview
@@ -912,30 +458,12 @@ raptor-tp6m-4-geckoview:
     target: geckoview_example.apk
     run-on-projects: ['try', 'mozilla-central']
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-4
             - --app=geckoview
             - --binary=org.mozilla.geckoview_example
 
-<<<<<<< HEAD
-raptor-wasm-misc-ion-firefox:
-    description: "Raptor WASM Misc on Firefox with ION Monkey"
-    try-name: raptor-wasm-misc-ion-firefox
-    treeherder-symbol: Rap(wm-i)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-||||||| merged common ancestors
-raptor-wasm-misc-ion-firefox:
-    description: "Raptor WASM Misc on Firefox with ION Monkey"
-    try-name: raptor-wasm-misc-ion-firefox
-    treeherder-symbol: Rap(wm-i)
-    run-on-projects: ['try', 'mozilla-central']
-    max-run-time: 1800
-=======
 raptor-tp6m-4-refbrow:
     description: "Raptor tp6m-4 on the reference browser"
     treeherder-symbol: Rap-refbrow(tp6m-4)
@@ -949,7 +477,6 @@ raptor-tp6m-4-refbrow:
                 index: project.mobile.reference-browser.v2.raptor.latest.arm
                 name: target.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-4
@@ -984,14 +511,8 @@ raptor-tp6m-5-geckoview:
     try-name: raptor-tp6m-5-geckoview
     treeherder-symbol: Rap(tp6m-5)
     run-on-projects: ['try', 'mozilla-central']
-<<<<<<< HEAD
-    tier: 2
-||||||| merged common ancestors
-    max-run-time: 1800
-=======
     target: geckoview_example.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-5
@@ -999,29 +520,6 @@ raptor-tp6m-5-geckoview:
             - --binary=org.mozilla.geckoview_example
             - --activity=org.mozilla.geckoview_example.GeckoViewActivity
 
-<<<<<<< HEAD
-raptor-assorted-dom-firefox:
-    description: "Raptor Assorted-Dom on Firefox"
-    try-name: raptor-assorted-dom-firefox
-    treeherder-symbol: Rap(dom)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-    max-run-time:
-        by-test-platform:
-            .*-qr/.*: 2100
-            .*-ux/.*: 2100
-            default: 1500
-||||||| merged common ancestors
-raptor-assorted-dom-firefox:
-    description: "Raptor Assorted-Dom on Firefox"
-    try-name: raptor-assorted-dom-firefox
-    treeherder-symbol: Rap(dom)
-    run-on-projects: ['try', 'mozilla-central']
-    tier: 2
-    max-run-time: 1500
-=======
 raptor-tp6m-5-refbrow:
     description: "Raptor tp6m-5 on the reference browser"
     treeherder-symbol: Rap-refbrow(tp6m-5)
@@ -1071,7 +569,6 @@ raptor-tp6m-6-geckoview:
     run-on-projects: ['try', 'mozilla-central']
     target: geckoview_example.apk
     tier: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test=raptor-tp6m-6
@@ -2590,72 +2087,6 @@ raptor-assorted-dom-firefox:
     fetches:
         fetch:
             - assorted-dom
-<<<<<<< HEAD
-
-raptor-wasm-godot-firefox:
-    description: "Raptor Wasm Godot on Firefox"
-    try-name: raptor-wasm-godot-firefox
-    treeherder-symbol: Rap(godot)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-    max-run-time:
-        by-test-platform:
-            .*-qr/.*: 2100
-            .*-ux/.*: 2100
-            default: 1500
-    mozharness:
-        extra-options:
-            - --test=raptor-wasm-godot
-
-raptor-wasm-godot-chrome:
-    description: "Raptor Wasm Godot on Chrome"
-    try-name: raptor-wasm-godot-chrome
-    treeherder-symbol: Rap-C(godot)
-    run-on-projects: ['try', 'mozilla-central']
-    tier: 2
-    max-run-time: 1500
-    mozharness:
-        extra-options:
-            - --test=raptor-wasm-godot
-            - --app=chrome
-
-raptor-wasm-godot-baseline-firefox:
-    description: "Raptor Wasm Godot on Firefox with baseline JIT"
-    try-name: raptor-wasm-godot-baseline-firefox
-    treeherder-symbol: Rap(godot-b)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-    max-run-time:
-        by-test-platform:
-            .*-qr/.*: 2100
-            .*-ux/.*: 2100
-            default: 1500
-    mozharness:
-        extra-options:
-            - --test=raptor-wasm-godot-baseline
-
-raptor-wasm-godot-ion-firefox:
-    description: "Raptor WASM godot on Firefox with ION Monkey"
-    try-name: raptor-wasm-godot-ion-firefox
-    treeherder-symbol: Rap(godot-i)
-    run-on-projects:
-        by-test-platform:
-            windows10-64-ux: ['try', 'mozilla-central']
-            default: built-projects
-    max-run-time:
-        by-test-platform:
-            .*-qr/.*: 2100
-            .*-ux/.*: 2100
-            default: 1500
-    mozharness:
-        extra-options:
-            - --test=raptor-wasm-godot-ion
-||||||| merged common ancestors
-=======
 
 raptor-assorted-dom-firefox-profiling:
     description: "Raptor Assorted-Dom on Firefox with Gecko Profiling"
@@ -4875,4 +4306,3 @@ raptor-tp6m-26-refbrow-cold:
             - --app=refbrow
             - --binary-path=org.mozilla.reference.browser.raptor
             - --activity=org.mozilla.reference.browser.BrowserTestActivity
->>>>>>> upstream-releases

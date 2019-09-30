@@ -50,16 +50,8 @@ except ImportError:
 # Causes worker to purge caches on process exit and for task to retry.
 EXIT_PURGE_CACHE = 72
 
-<<<<<<< HEAD
-testedwith = '4.3 4.4 4.5 4.6 4.7 4.8'
-minimumhgversion = '4.3'
-||||||| merged common ancestors
-testedwith = '3.7 3.8 3.9 4.0 4.1 4.2 4.3 4.4 4.5 4.6 4.7'
-minimumhgversion = '3.7'
-=======
 testedwith = '4.3 4.4 4.5 4.6 4.7 4.8 4.9'
 minimumhgversion = '4.3'
->>>>>>> upstream-releases
 
 cmdtable = {}
 
@@ -298,55 +290,6 @@ def robustcheckout(ui, url, dest, upstream=None, revision=None, branch=None,
         # ``overall`` is always the total operation time.
         optimes.append(('overall', overall))
 
-<<<<<<< HEAD
-        def record_op(name):
-            # If special behaviors due to "corrupt" storage occur, we vary the
-            # name to convey that.
-            if 'remove-store' in behaviors:
-                name += '_rmstore'
-            if 'remove-wdir' in behaviors:
-                name += '_rmwdir'
-
-            optimes.append((name, overall))
-
-        # We break out overall operations primarily by their network interaction
-        # We have variants within for working directory operations.
-        if 'clone' in behaviors and 'create-store' in behaviors:
-            record_op('overall_clone')
-
-            if 'sparse-update' in behaviors:
-                record_op('overall_clone_sparsecheckout')
-            else:
-                record_op('overall_clone_fullcheckout')
-
-        elif 'pull' in behaviors or 'clone' in behaviors:
-            record_op('overall_pull')
-
-            if 'sparse-update' in behaviors:
-                record_op('overall_pull_sparsecheckout')
-            else:
-                record_op('overall_pull_fullcheckout')
-
-            if 'empty-wdir' in behaviors:
-                record_op('overall_pull_emptywdir')
-            else:
-                record_op('overall_pull_populatedwdir')
-
-        else:
-            record_op('overall_nopull')
-
-            if 'sparse-update' in behaviors:
-                record_op('overall_nopull_sparsecheckout')
-            else:
-                record_op('overall_nopull_fullcheckout')
-
-            if 'empty-wdir' in behaviors:
-                record_op('overall_nopull_emptywdir')
-            else:
-                record_op('overall_nopull_populatedwdir')
-
-||||||| merged common ancestors
-=======
         def record_op(name):
             # If special behaviors due to "corrupt" storage occur, we vary the
             # name to convey that.
@@ -395,7 +338,6 @@ def robustcheckout(ui, url, dest, upstream=None, revision=None, branch=None,
 
         server_url = urlparse.urlparse(url).netloc
 
->>>>>>> upstream-releases
         if 'TASKCLUSTER_INSTANCE_TYPE' in os.environ:
             perfherder = {
                 'framework': {

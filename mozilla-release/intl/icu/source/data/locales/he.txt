@@ -284,13 +284,7 @@ he{
         minimumGroupingDigits{"1"}
         traditional{"hebr"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.42"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             eras{
@@ -1791,12 +1785,7 @@ he{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
->>>>>>> upstream-releases
                 }
             }
         }

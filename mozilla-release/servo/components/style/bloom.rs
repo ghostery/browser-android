@@ -9,12 +9,6 @@
 
 use crate::dom::{SendElement, TElement};
 use atomic_refcell::{AtomicRefCell, AtomicRefMut};
-<<<<<<< HEAD
-use crate::dom::{SendElement, TElement};
-||||||| merged common ancestors
-use dom::{SendElement, TElement};
-=======
->>>>>>> upstream-releases
 use owning_ref::OwningHandle;
 use selectors::bloom::BloomFilter;
 use servo_arc::Arc;

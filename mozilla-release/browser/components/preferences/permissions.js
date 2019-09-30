@@ -133,14 +133,6 @@ var gPermissionManager = {
       this.buildPermissionsList();
     } else if (data == "changed") {
       let p = this._permissions.get(permission.principal.origin);
-<<<<<<< HEAD
-      p.capability = permission.capability;
-      this._handleCapabilityChange(p);
-||||||| merged common ancestors
-      p.capability = permission.capability;
-      p.l10nId = this._getCapabilityString(permission.capability);
-      this._handleCapabilityChange(p);
-=======
       // Maybe this item has been excluded before because it had an invalid capability.
       if (p) {
         p.capability = permission.capability;
@@ -148,7 +140,6 @@ var gPermissionManager = {
       } else {
         this._addPermissionToList(permission);
       }
->>>>>>> upstream-releases
       this.buildPermissionsList();
     } else if (data == "deleted") {
       this._removePermissionFromList(permission.principal.origin);
@@ -156,13 +147,6 @@ var gPermissionManager = {
   },
 
   _handleCapabilityChange(perm) {
-<<<<<<< HEAD
-    let permissionlistitem = document.getElementsByAttribute("origin", perm.origin)[0];
-    document.l10n.setAttributes(permissionlistitem.querySelector(".website-capability-value"), this._getCapabilityL10nId(perm.capability));
-||||||| merged common ancestors
-    let permissionlistitem = document.getElementsByAttribute("origin", perm.origin)[0];
-    permissionlistitem.querySelector(".website-capability-value").setAttribute("value", perm.capability);
-=======
     let permissionlistitem = document.getElementsByAttribute(
       "origin",
       perm.origin
@@ -171,14 +155,8 @@ var gPermissionManager = {
       permissionlistitem.querySelector(".website-capability-value"),
       this._getCapabilityL10nId(perm.capability)
     );
->>>>>>> upstream-releases
   },
 
-<<<<<<< HEAD
-  _getCapabilityL10nId(capability) {
-||||||| merged common ancestors
-  _getCapabilityString(capability) {
-=======
   _isCapabilitySupported(capability) {
     return (
       capability == Ci.nsIPermissionManager.ALLOW_ACTION ||
@@ -188,40 +166,8 @@ var gPermissionManager = {
   },
 
   _getCapabilityL10nId(capability) {
->>>>>>> upstream-releases
     let stringKey = null;
     switch (capability) {
-<<<<<<< HEAD
-    case Ci.nsIPermissionManager.ALLOW_ACTION:
-      stringKey = "permissions-capabilities-listitem-allow";
-      break;
-    case Ci.nsIPermissionManager.DENY_ACTION:
-      stringKey = "permissions-capabilities-listitem-block";
-      break;
-    case Ci.nsICookiePermission.ACCESS_ALLOW_FIRST_PARTY_ONLY:
-      stringKey = "permissions-capabilities-listitem-allow-first-party";
-      break;
-    case Ci.nsICookiePermission.ACCESS_SESSION:
-      stringKey = "permissions-capabilities-listitem-allow-session";
-      break;
-    default:
-      throw new Error(`Unknown capability: ${capability}`);
-||||||| merged common ancestors
-    case Ci.nsIPermissionManager.ALLOW_ACTION:
-      stringKey = "can";
-      break;
-    case Ci.nsIPermissionManager.DENY_ACTION:
-      stringKey = "cannot";
-      break;
-    case Ci.nsICookiePermission.ACCESS_ALLOW_FIRST_PARTY_ONLY:
-      stringKey = "canAccessFirstParty";
-      break;
-    case Ci.nsICookiePermission.ACCESS_SESSION:
-      stringKey = "canSession";
-      break;
-    default:
-      throw new Error(`Unknown capability: ${capability}`);
-=======
       case Ci.nsIPermissionManager.ALLOW_ACTION:
         stringKey = "permissions-capabilities-listitem-allow";
         break;
@@ -233,35 +179,19 @@ var gPermissionManager = {
         break;
       default:
         throw new Error(`Unknown capability: ${capability}`);
->>>>>>> upstream-releases
     }
     return stringKey;
   },
 
   _addPermissionToList(perm) {
-<<<<<<< HEAD
-    if (perm.type !== this._type)
-||||||| merged common ancestors
-    // Ignore unrelated permission types and excluded capabilities.
-    if (perm.type !== this._type ||
-        (this._manageCapability && perm.capability != this._manageCapability))
-=======
     if (perm.type !== this._type) {
       return;
     }
     if (!this._isCapabilitySupported(perm.capability)) {
->>>>>>> upstream-releases
       return;
-<<<<<<< HEAD
-    let p = new Permission(perm.principal, perm.type, perm.capability);
-||||||| merged common ancestors
-    let capabilityString = this._getCapabilityString(perm.capability);
-    let p = new Permission(perm.principal, perm.type, capabilityString);
-=======
     }
 
     let p = new Permission(perm.principal, perm.type, perm.capability);
->>>>>>> upstream-releases
     this._permissions.set(p.origin, p);
   },
 
@@ -330,36 +260,8 @@ var gPermissionManager = {
       return;
     }
 
-<<<<<<< HEAD
-    // check whether the permission already exists, if not, add it
-    let permissionParams = {principal, type: this._type, capability};
-    let existingPermission = this._permissions.get(principal.origin);
-    if (!existingPermission) {
-      this._permissionsToAdd.set(principal.origin, permissionParams);
-      this._addPermissionToList(permissionParams);
-      this.buildPermissionsList();
-    } else if (existingPermission.capability != capability) {
-      existingPermission.capability = capability;
-      this._permissionsToAdd.set(principal.origin, permissionParams);
-      this._handleCapabilityChange(existingPermission);
-||||||| merged common ancestors
-    let capabilityString = this._getCapabilityString(capability);
-
-    // check whether the permission already exists, if not, add it
-    let permissionParams = {principal, type: this._type, capability};
-    let existingPermission = this._permissions.get(principal.origin);
-    if (!existingPermission) {
-      this._permissionsToAdd.set(principal.origin, permissionParams);
-      this._addPermissionToList(permissionParams);
-      this.buildPermissionsList();
-    } else if (existingPermission.capability != capabilityString) {
-      existingPermission.capability = capabilityString;
-      this._permissionsToAdd.set(principal.origin, permissionParams);
-      this._handleCapabilityChange(existingPermission);
-=======
     for (let principal of principals) {
       this._addOrModifyPermission(principal, capability);
->>>>>>> upstream-releases
     }
 
     textbox.value = "";
@@ -421,16 +323,10 @@ var gPermissionManager = {
       hbox = document.createXULElement("hbox");
       let capability = document.createXULElement("label");
       capability.setAttribute("class", "website-capability-value");
-<<<<<<< HEAD
-      document.l10n.setAttributes(capability, this._getCapabilityL10nId(permission.capability));
-||||||| merged common ancestors
-      capability.setAttribute("value", permission.capability);
-=======
       document.l10n.setAttributes(
         capability,
         this._getCapabilityL10nId(permission.capability)
       );
->>>>>>> upstream-releases
       hbox.setAttribute("width", "0");
       hbox.setAttribute("class", "website-name");
       hbox.setAttribute("flex", "1");

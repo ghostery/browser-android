@@ -53,35 +53,12 @@ class nsDeviceSensors : public nsIDeviceSensors,
   void FireDOMUserProximityEvent(mozilla::dom::EventTarget* aTarget,
                                  bool aNear);
 
-<<<<<<< HEAD
-  void FireDOMOrientationEvent(mozilla::dom::EventTarget* target, double aAlpha,
-                               double aBeta, double aGamma, bool aIsAbsolute);
-
-  void FireDOMMotionEvent(nsIDocument* domDoc,
-                          mozilla::dom::EventTarget* target, uint32_t type,
-                          PRTime timestamp, double x, double y, double z);
-||||||| merged common ancestors
-  void FireDOMOrientationEvent(mozilla::dom::EventTarget* target,
-                               double aAlpha,
-                               double aBeta,
-                               double aGamma,
-                               bool aIsAbsolute);
-
-  void FireDOMMotionEvent(nsIDocument* domDoc,
-                          mozilla::dom::EventTarget* target,
-                          uint32_t type,
-                          PRTime timestamp,
-                          double x,
-                          double y,
-                          double z);
-=======
   void FireDOMOrientationEvent(mozilla::dom::EventTarget* target, double aAlpha,
                                double aBeta, double aGamma, bool aIsAbsolute);
 
   void FireDOMMotionEvent(mozilla::dom::Document* domDoc,
                           mozilla::dom::EventTarget* target, uint32_t type,
                           PRTime timestamp, double x, double y, double z);
->>>>>>> upstream-releases
 
   inline bool IsSensorEnabled(uint32_t aType) {
     return mWindowListeners[aType]->Length() > 0;

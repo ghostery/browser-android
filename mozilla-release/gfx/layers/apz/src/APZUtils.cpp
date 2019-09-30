@@ -12,78 +12,17 @@ namespace mozilla {
 namespace layers {
 namespace apz {
 
-<<<<<<< HEAD
-AutoApplyAsyncTestAttributes::AutoApplyAsyncTestAttributes(
-    AsyncPanZoomController* aApzc)
-    : mApzc(aApzc), mPrevFrameMetrics(aApzc->Metrics()) {
-  mApzc->ApplyAsyncTestAttributes();
-||||||| merged common ancestors
-AutoApplyAsyncTestAttributes::AutoApplyAsyncTestAttributes(AsyncPanZoomController* aApzc)
-  : mApzc(aApzc)
-  , mPrevFrameMetrics(aApzc->Metrics())
-{
-  mApzc->ApplyAsyncTestAttributes();
-=======
 /*static*/ void InitializeGlobalState() {
   MOZ_ASSERT(NS_IsMainThread());
   AsyncPanZoomController::InitializeGlobalState();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-AutoApplyAsyncTestAttributes::~AutoApplyAsyncTestAttributes() {
-  mApzc->UnapplyAsyncTestAttributes(mPrevFrameMetrics);
-||||||| merged common ancestors
-AutoApplyAsyncTestAttributes::~AutoApplyAsyncTestAttributes()
-{
-  mApzc->UnapplyAsyncTestAttributes(mPrevFrameMetrics);
-=======
 /*static*/ const ScreenMargin CalculatePendingDisplayPort(
     const FrameMetrics& aFrameMetrics, const ParentLayerPoint& aVelocity) {
   return AsyncPanZoomController::CalculatePendingDisplayPort(aFrameMetrics,
                                                              aVelocity);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-namespace apz {
-
-/*static*/ void InitializeGlobalState() {
-  MOZ_ASSERT(NS_IsMainThread());
-  AsyncPanZoomController::InitializeGlobalState();
-||||||| merged common ancestors
-namespace apz {
-
-/*static*/ void
-InitializeGlobalState()
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  AsyncPanZoomController::InitializeGlobalState();
-=======
-/*static*/ bool IsCloseToHorizontal(float aAngle, float aThreshold) {
-  return (aAngle < aThreshold || aAngle > (M_PI - aThreshold));
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-/*static*/ const ScreenMargin CalculatePendingDisplayPort(
-    const FrameMetrics& aFrameMetrics, const ParentLayerPoint& aVelocity) {
-  return AsyncPanZoomController::CalculatePendingDisplayPort(aFrameMetrics,
-                                                             aVelocity);
-||||||| merged common ancestors
-/*static*/ const ScreenMargin
-CalculatePendingDisplayPort(const FrameMetrics& aFrameMetrics,
-                            const ParentLayerPoint& aVelocity)
-{
-  return AsyncPanZoomController::CalculatePendingDisplayPort(
-      aFrameMetrics, aVelocity);
-=======
-/*static*/ bool IsCloseToVertical(float aAngle, float aThreshold) {
-  return (fabs(aAngle - (M_PI / 2)) < aThreshold);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 /*static*/ bool IsCloseToHorizontal(float aAngle, float aThreshold) {
   return (aAngle < aThreshold || aAngle > (M_PI - aThreshold));
 }
@@ -95,12 +34,3 @@ CalculatePendingDisplayPort(const FrameMetrics& aFrameMetrics,
 }  // namespace apz
 }  // namespace layers
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace apz
-} // namespace layers
-} // namespace mozilla
-=======
-}  // namespace apz
-}  // namespace layers
-}  // namespace mozilla
->>>>>>> upstream-releases

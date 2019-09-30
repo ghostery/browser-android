@@ -41,32 +41,6 @@ SUCCESS_STR = "Success"
 FAILURE_STR = "Failed"
 
 
-<<<<<<< HEAD
-# mandatory configuration options, without them, this script will not work
-# it's a list of values that are already known before starting a build
-configuration_tokens = ('branch', 'update_channel')
-
-# some other values such as "%(version)s", ...
-# are defined at run time and they cannot be enforced in the _pre_config_lock
-# phase
-runtime_config_tokens = ('version', 'locale', 'abs_objdir',
-                         'en_us_installer_binary_url')
-
-
-||||||| merged common ancestors
-# mandatory configuration options, without them, this script will not work
-# it's a list of values that are already known before starting a build
-configuration_tokens = ('branch', 'update_channel')
-
-# some other values such as "%(version)s", ...
-# are defined at run time and they cannot be enforced in the _pre_config_lock
-# phase
-runtime_config_tokens = ('version', 'locale', 'abs_objdir', 'revision',
-                         'en_us_installer_binary_url')
-
-
-=======
->>>>>>> upstream-releases
 # DesktopSingleLocale {{{1
 class DesktopSingleLocale(LocalesMixin, AutomationMixin,
                           VCSMixin, BaseScript):

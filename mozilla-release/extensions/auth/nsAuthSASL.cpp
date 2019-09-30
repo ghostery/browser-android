@@ -20,44 +20,6 @@ void nsAuthSASL::Reset() { mSASLReady = false; }
 NS_IMPL_ISUPPORTS(nsAuthSASL, nsIAuthModule)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAuthSASL::Init(const char *serviceName, uint32_t serviceFlags,
-                 const char16_t *domain, const char16_t *username,
-                 const char16_t *password) {
-  nsresult rv;
-
-  NS_ASSERTION(username, "SASL requires a username");
-  NS_ASSERTION(!domain && !password, "unexpected credentials");
-
-  mUsername = username;
-||||||| merged common ancestors
-nsAuthSASL::Init(const char *serviceName,
-                 uint32_t    serviceFlags,
-                 const char16_t *domain,
-                 const char16_t *username,
-                 const char16_t *password)
-{
-    nsresult rv;
-
-    NS_ASSERTION(username, "SASL requires a username");
-    NS_ASSERTION(!domain && !password, "unexpected credentials");
-
-    mUsername = username;
-
-    // If we're doing SASL, we should do mutual auth
-    serviceFlags |= REQ_MUTUAL_AUTH;
-
-    // Find out whether we should be trying SSPI or not
-    const char *contractID = NS_AUTH_MODULE_CONTRACTID_PREFIX "kerb-gss";
-
-    nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
-    if (prefs) {
-        bool val;
-        rv = prefs->GetBoolPref(kNegotiateAuthSSPI, &val);
-        if (NS_SUCCEEDED(rv) && val)
-            contractID = NS_AUTH_MODULE_CONTRACTID_PREFIX "kerb-sspi";
-    }
-=======
 nsAuthSASL::Init(const char* serviceName, uint32_t serviceFlags,
                  const char16_t* domain, const char16_t* username,
                  const char16_t* password) {
@@ -67,20 +29,12 @@ nsAuthSASL::Init(const char* serviceName, uint32_t serviceFlags,
   NS_ASSERTION(!domain && !password, "unexpected credentials");
 
   mUsername = username;
->>>>>>> upstream-releases
 
   // If we're doing SASL, we should do mutual auth
   serviceFlags |= REQ_MUTUAL_AUTH;
 
-<<<<<<< HEAD
-  // Find out whether we should be trying SSPI or not
-  const char *authType = "kerb-gss";
-||||||| merged common ancestors
-    mInnerModule->Init(serviceName, serviceFlags, nullptr, nullptr, nullptr);
-=======
   // Find out whether we should be trying SSPI or not
   const char* authType = "kerb-gss";
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
   if (prefs) {
@@ -97,81 +51,6 @@ nsAuthSASL::Init(const char* serviceName, uint32_t serviceFlags,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAuthSASL::GetNextToken(const void *inToken, uint32_t inTokenLen,
-                         void **outToken, uint32_t *outTokenLen) {
-  nsresult rv;
-  void *unwrappedToken;
-  char *message;
-  uint32_t unwrappedTokenLen, messageLen;
-  nsAutoCString userbuf;
-
-  if (!mInnerModule) return NS_ERROR_NOT_INITIALIZED;
-
-  if (mSASLReady) {
-    // If the server COMPLETEs with an empty token, Cyrus sends us that token.
-    // I don't think this is correct, but we need to handle that behaviour.
-    // Cyrus ignores the contents of our reply token.
-    if (inTokenLen == 0) {
-      *outToken = nullptr;
-      *outTokenLen = 0;
-      return NS_OK;
-||||||| merged common ancestors
-nsAuthSASL::GetNextToken(const void *inToken,
-                         uint32_t    inTokenLen,
-                         void      **outToken,
-                         uint32_t   *outTokenLen)
-{
-    nsresult rv;
-    void *unwrappedToken;
-    char *message;
-    uint32_t unwrappedTokenLen, messageLen;
-    nsAutoCString userbuf;
-
-    if (!mInnerModule)
-        return NS_ERROR_NOT_INITIALIZED;
-
-    if (mSASLReady) {
-        // If the server COMPLETEs with an empty token, Cyrus sends us that token.
-        // I don't think this is correct, but we need to handle that behaviour.
-        // Cyrus ignores the contents of our reply token.
-        if (inTokenLen == 0) {
-            *outToken = nullptr;
-            *outTokenLen = 0;
-            return NS_OK;
-        }
-        // We've completed the GSSAPI portion of the handshake, and are
-        // now ready to do the SASL security layer and authzid negotiation
-
-        // Input packet from the server needs to be unwrapped.
-        rv = mInnerModule->Unwrap(inToken, inTokenLen, &unwrappedToken,
-                                  &unwrappedTokenLen);
-        if (NS_FAILED(rv)) {
-            Reset();
-            return rv;
-        }
-
-        // If we were doing security layers then we'd care what the
-        // server had sent us. We're not, so all we had to do was make
-        // sure that the signature was correct with the above unwrap()
-        free(unwrappedToken);
-
-        NS_CopyUnicodeToNative(mUsername, userbuf);
-        messageLen = userbuf.Length() + 4 + 1;
-        message = (char *)moz_xmalloc(messageLen);
-        message[0] = 0x01; // No security layer
-        message[1] = 0x00;
-        message[2] = 0x00;
-        message[3] = 0x00; // Maxbuf must be zero if we've got no sec layer
-        strcpy(message+4, userbuf.get());
-        // Userbuf should not be nullptr terminated, so trim the trailing nullptr
-        // when wrapping the message
-        rv = mInnerModule->Wrap((void *) message, messageLen-1, false,
-                                outToken, outTokenLen);
-        free(message);
-        Reset(); // All done
-        return NS_SUCCEEDED(rv) ? NS_SUCCESS_AUTH_FINISHED : rv;
-=======
 nsAuthSASL::GetNextToken(const void* inToken, uint32_t inTokenLen,
                          void** outToken, uint32_t* outTokenLen) {
   nsresult rv;
@@ -190,7 +69,6 @@ nsAuthSASL::GetNextToken(const void* inToken, uint32_t inTokenLen,
       *outToken = nullptr;
       *outTokenLen = 0;
       return NS_OK;
->>>>>>> upstream-releases
     }
     // We've completed the GSSAPI portion of the handshake, and are
     // now ready to do the SASL security layer and authzid negotiation
@@ -202,38 +80,6 @@ nsAuthSASL::GetNextToken(const void* inToken, uint32_t inTokenLen,
       Reset();
       return rv;
     }
-<<<<<<< HEAD
-
-    // If we were doing security layers then we'd care what the
-    // server had sent us. We're not, so all we had to do was make
-    // sure that the signature was correct with the above unwrap()
-    free(unwrappedToken);
-
-    NS_CopyUnicodeToNative(mUsername, userbuf);
-    messageLen = userbuf.Length() + 4 + 1;
-    message = (char *)moz_xmalloc(messageLen);
-    message[0] = 0x01;  // No security layer
-    message[1] = 0x00;
-    message[2] = 0x00;
-    message[3] = 0x00;  // Maxbuf must be zero if we've got no sec layer
-    strcpy(message + 4, userbuf.get());
-    // Userbuf should not be nullptr terminated, so trim the trailing nullptr
-    // when wrapping the message
-    rv = mInnerModule->Wrap((void *)message, messageLen - 1, false, outToken,
-                            outTokenLen);
-    free(message);
-    Reset();  // All done
-    return NS_SUCCEEDED(rv) ? NS_SUCCESS_AUTH_FINISHED : rv;
-  }
-  rv = mInnerModule->GetNextToken(inToken, inTokenLen, outToken, outTokenLen);
-  if (rv == NS_SUCCESS_AUTH_FINISHED) {
-    mSASLReady = true;
-    rv = NS_OK;
-  }
-  return rv;
-||||||| merged common ancestors
-    return rv;
-=======
 
     // If we were doing security layers then we'd care what the
     // server had sent us. We're not, so all we had to do was make
@@ -262,44 +108,16 @@ nsAuthSASL::GetNextToken(const void* inToken, uint32_t inTokenLen,
     rv = NS_OK;
   }
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAuthSASL::Unwrap(const void *inToken, uint32_t inTokenLen, void **outToken,
-                   uint32_t *outTokenLen) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsAuthSASL::Unwrap(const void *inToken,
-                   uint32_t    inTokenLen,
-                   void      **outToken,
-                   uint32_t   *outTokenLen)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsAuthSASL::Unwrap(const void* inToken, uint32_t inTokenLen, void** outToken,
                    uint32_t* outTokenLen) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsAuthSASL::Wrap(const void *inToken, uint32_t inTokenLen, bool confidential,
-                 void **outToken, uint32_t *outTokenLen) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsAuthSASL::Wrap(const void *inToken,
-                 uint32_t    inTokenLen,
-                 bool        confidential,
-                 void      **outToken,
-                 uint32_t   *outTokenLen)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsAuthSASL::Wrap(const void* inToken, uint32_t inTokenLen, bool confidential,
                  void** outToken, uint32_t* outTokenLen) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }

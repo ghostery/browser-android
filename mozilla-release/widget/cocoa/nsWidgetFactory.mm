@@ -135,71 +135,6 @@ NS_DEFINE_NAMED_CID(NS_TOUCHBARUPDATER_CID);
 NS_DEFINE_NAMED_CID(NS_GFXINFO_CID);
 
 static const mozilla::Module::CIDEntry kWidgetCIDs[] = {
-<<<<<<< HEAD
-  { &kNS_FILEPICKER_CID, false, NULL, nsFilePickerConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_COLORPICKER_CID, false, NULL, nsColorPickerConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_APPSHELL_CID, false, NULL, nsAppShellConstructor, mozilla::Module::ALLOW_IN_GPU_AND_VR_PROCESS },
-  { &kNS_SOUND_CID, false, NULL, nsSoundConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_TRANSFERABLE_CID, false, NULL, nsTransferableConstructor },
-  { &kNS_HTMLFORMATCONVERTER_CID, false, NULL, nsHTMLFormatConverterConstructor },
-  { &kNS_CLIPBOARD_CID, false, NULL, nsClipboardConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_CLIPBOARDHELPER_CID, false, NULL, nsClipboardHelperConstructor },
-  { &kNS_DRAGSERVICE_CID, false, NULL, nsDragServiceConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_SCREENMANAGER_CID, false, NULL, ScreenManagerConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_DEVICE_CONTEXT_SPEC_CID, false, NULL, nsDeviceContextSpecXConstructor },
-  { &kNS_PRINTSESSION_CID, false, NULL, nsPrintSessionConstructor },
-  { &kNS_PRINTSETTINGSSERVICE_CID, false, NULL, nsPrintSettingsServiceXConstructor },
-  { &kNS_PRINTDIALOGSERVICE_CID, false, NULL, nsPrintDialogServiceXConstructor },
-  { &kNS_IDLE_SERVICE_CID, false, NULL, nsIdleServiceXConstructor },
-  { &kNS_SYSTEMALERTSSERVICE_CID, false, NULL, OSXNotificationCenterConstructor },
-  { &kNS_NATIVEMENUSERVICE_CID, false, NULL, nsNativeMenuServiceXConstructor },
-  { &kNS_MACDOCKSUPPORT_CID, false, NULL, nsMacDockSupportConstructor },
-  { &kNS_MACSHARINGSERVICE_CID, false, NULL, nsMacSharingServiceConstructor },
-  { &kNS_MACWEBAPPUTILS_CID, false, NULL, nsMacWebAppUtilsConstructor },
-  { &kNS_STANDALONENATIVEMENU_CID, false, NULL, nsStandaloneNativeMenuConstructor },
-  { &kNS_MACSYSTEMSTATUSBAR_CID, false, NULL, nsSystemStatusBarCocoaConstructor },
-  { &kNS_GFXINFO_CID, false, NULL, mozilla::widget::GfxInfoConstructor },
-  { NULL }
-};
-||||||| merged common ancestors
-  { &kNS_FILEPICKER_CID, false, NULL, nsFilePickerConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_COLORPICKER_CID, false, NULL, nsColorPickerConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_APPSHELL_CID, false, NULL, nsAppShellConstructor, mozilla::Module::ALLOW_IN_GPU_PROCESS },
-  { &kNS_SOUND_CID, false, NULL, nsSoundConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_TRANSFERABLE_CID, false, NULL, nsTransferableConstructor },
-  { &kNS_HTMLFORMATCONVERTER_CID, false, NULL, nsHTMLFormatConverterConstructor },
-  { &kNS_CLIPBOARD_CID, false, NULL, nsClipboardConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_CLIPBOARDHELPER_CID, false, NULL, nsClipboardHelperConstructor },
-  { &kNS_DRAGSERVICE_CID, false, NULL, nsDragServiceConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_SCREENMANAGER_CID, false, NULL, ScreenManagerConstructor,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { &kNS_DEVICE_CONTEXT_SPEC_CID, false, NULL, nsDeviceContextSpecXConstructor },
-  { &kNS_PRINTSESSION_CID, false, NULL, nsPrintSessionConstructor },
-  { &kNS_PRINTSETTINGSSERVICE_CID, false, NULL, nsPrintSettingsServiceXConstructor },
-  { &kNS_PRINTDIALOGSERVICE_CID, false, NULL, nsPrintDialogServiceXConstructor },
-  { &kNS_IDLE_SERVICE_CID, false, NULL, nsIdleServiceXConstructor },
-  { &kNS_SYSTEMALERTSSERVICE_CID, false, NULL, OSXNotificationCenterConstructor },
-  { &kNS_NATIVEMENUSERVICE_CID, false, NULL, nsNativeMenuServiceXConstructor },
-  { &kNS_MACDOCKSUPPORT_CID, false, NULL, nsMacDockSupportConstructor },
-  { &kNS_MACSHARINGSERVICE_CID, false, NULL, nsMacSharingServiceConstructor },
-  { &kNS_MACWEBAPPUTILS_CID, false, NULL, nsMacWebAppUtilsConstructor },
-  { &kNS_STANDALONENATIVEMENU_CID, false, NULL, nsStandaloneNativeMenuConstructor },
-  { &kNS_MACSYSTEMSTATUSBAR_CID, false, NULL, nsSystemStatusBarCocoaConstructor },
-  { &kNS_GFXINFO_CID, false, NULL, mozilla::widget::GfxInfoConstructor },
-  { NULL }
-};
-=======
     {&kNS_FILEPICKER_CID, false, NULL, nsFilePickerConstructor, mozilla::Module::MAIN_PROCESS_ONLY},
     {&kNS_COLORPICKER_CID, false, NULL, nsColorPickerConstructor,
      mozilla::Module::MAIN_PROCESS_ONLY},
@@ -230,82 +165,8 @@ static const mozilla::Module::CIDEntry kWidgetCIDs[] = {
     {&kNS_TOUCHBARUPDATER_CID, false, NULL, nsTouchBarUpdaterConstructor},
     {&kNS_GFXINFO_CID, false, NULL, mozilla::widget::GfxInfoConstructor},
     {NULL}};
->>>>>>> upstream-releases
 
 static const mozilla::Module::ContractIDEntry kWidgetContracts[] = {
-<<<<<<< HEAD
-  { "@mozilla.org/filepicker;1", &kNS_FILEPICKER_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/colorpicker;1", &kNS_COLORPICKER_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/widget/appshell/mac;1", &kNS_APPSHELL_CID, mozilla::Module::ALLOW_IN_GPU_AND_VR_PROCESS },
-  { "@mozilla.org/sound;1", &kNS_SOUND_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/widget/transferable;1", &kNS_TRANSFERABLE_CID },
-  { "@mozilla.org/widget/htmlformatconverter;1", &kNS_HTMLFORMATCONVERTER_CID },
-  { "@mozilla.org/widget/clipboard;1", &kNS_CLIPBOARD_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/widget/clipboardhelper;1", &kNS_CLIPBOARDHELPER_CID },
-  { "@mozilla.org/widget/dragservice;1", &kNS_DRAGSERVICE_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/gfx/screenmanager;1", &kNS_SCREENMANAGER_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/gfx/devicecontextspec;1", &kNS_DEVICE_CONTEXT_SPEC_CID },
-  { "@mozilla.org/gfx/printsession;1", &kNS_PRINTSESSION_CID },
-  { "@mozilla.org/gfx/printsettings-service;1", &kNS_PRINTSETTINGSSERVICE_CID },
-  { NS_PRINTDIALOGSERVICE_CONTRACTID, &kNS_PRINTDIALOGSERVICE_CID },
-  { "@mozilla.org/widget/idleservice;1", &kNS_IDLE_SERVICE_CID },
-  { "@mozilla.org/system-alerts-service;1", &kNS_SYSTEMALERTSSERVICE_CID },
-  { "@mozilla.org/widget/nativemenuservice;1", &kNS_NATIVEMENUSERVICE_CID },
-  { "@mozilla.org/widget/macdocksupport;1", &kNS_MACDOCKSUPPORT_CID },
-  { "@mozilla.org/widget/macsharingservice;1", &kNS_MACSHARINGSERVICE_CID },
-  { "@mozilla.org/widget/mac-web-app-utils;1", &kNS_MACWEBAPPUTILS_CID },
-  { "@mozilla.org/widget/standalonenativemenu;1", &kNS_STANDALONENATIVEMENU_CID },
-  { "@mozilla.org/widget/macsystemstatusbar;1", &kNS_MACSYSTEMSTATUSBAR_CID },
-  { "@mozilla.org/gfx/info;1", &kNS_GFXINFO_CID },
-  { NULL }
-};
-
-static void
-nsWidgetCocoaModuleDtor()
-{
-||||||| merged common ancestors
-  { "@mozilla.org/filepicker;1", &kNS_FILEPICKER_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/colorpicker;1", &kNS_COLORPICKER_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/widget/appshell/mac;1", &kNS_APPSHELL_CID, mozilla::Module::ALLOW_IN_GPU_PROCESS },
-  { "@mozilla.org/sound;1", &kNS_SOUND_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/widget/transferable;1", &kNS_TRANSFERABLE_CID },
-  { "@mozilla.org/widget/htmlformatconverter;1", &kNS_HTMLFORMATCONVERTER_CID },
-  { "@mozilla.org/widget/clipboard;1", &kNS_CLIPBOARD_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/widget/clipboardhelper;1", &kNS_CLIPBOARDHELPER_CID },
-  { "@mozilla.org/widget/dragservice;1", &kNS_DRAGSERVICE_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/gfx/screenmanager;1", &kNS_SCREENMANAGER_CID,
-    mozilla::Module::MAIN_PROCESS_ONLY },
-  { "@mozilla.org/gfx/devicecontextspec;1", &kNS_DEVICE_CONTEXT_SPEC_CID },
-  { "@mozilla.org/gfx/printsession;1", &kNS_PRINTSESSION_CID },
-  { "@mozilla.org/gfx/printsettings-service;1", &kNS_PRINTSETTINGSSERVICE_CID },
-  { NS_PRINTDIALOGSERVICE_CONTRACTID, &kNS_PRINTDIALOGSERVICE_CID },
-  { "@mozilla.org/widget/idleservice;1", &kNS_IDLE_SERVICE_CID },
-  { "@mozilla.org/system-alerts-service;1", &kNS_SYSTEMALERTSSERVICE_CID },
-  { "@mozilla.org/widget/nativemenuservice;1", &kNS_NATIVEMENUSERVICE_CID },
-  { "@mozilla.org/widget/macdocksupport;1", &kNS_MACDOCKSUPPORT_CID },
-  { "@mozilla.org/widget/macsharingservice;1", &kNS_MACSHARINGSERVICE_CID },
-  { "@mozilla.org/widget/mac-web-app-utils;1", &kNS_MACWEBAPPUTILS_CID },
-  { "@mozilla.org/widget/standalonenativemenu;1", &kNS_STANDALONENATIVEMENU_CID },
-  { "@mozilla.org/widget/macsystemstatusbar;1", &kNS_MACSYSTEMSTATUSBAR_CID },
-  { "@mozilla.org/gfx/info;1", &kNS_GFXINFO_CID },
-  { NULL }
-};
-
-static void
-nsWidgetCocoaModuleDtor()
-{
-=======
     {"@mozilla.org/filepicker;1", &kNS_FILEPICKER_CID, mozilla::Module::MAIN_PROCESS_ONLY},
     {"@mozilla.org/colorpicker;1", &kNS_COLORPICKER_CID, mozilla::Module::MAIN_PROCESS_ONLY},
     {"@mozilla.org/widget/appshell/mac;1", &kNS_APPSHELL_CID,
@@ -336,7 +197,6 @@ nsWidgetCocoaModuleDtor()
     {NULL}};
 
 static void nsWidgetCocoaModuleDtor() {
->>>>>>> upstream-releases
   // Shutdown all XP level widget classes.
   WidgetUtils::Shutdown();
 
@@ -346,33 +206,6 @@ static void nsWidgetCocoaModuleDtor() {
   nsAppShellShutdown();
 }
 
-<<<<<<< HEAD
-static const mozilla::Module kWidgetModule = {
-  mozilla::Module::kVersion,
-  kWidgetCIDs,
-  kWidgetContracts,
-  NULL,
-  NULL,
-  nsAppShellInit,
-  nsWidgetCocoaModuleDtor,
-  mozilla::Module::ALLOW_IN_GPU_AND_VR_PROCESS
-};
-
-NSMODULE_DEFN(nsWidgetMacModule) = &kWidgetModule;
-||||||| merged common ancestors
-static const mozilla::Module kWidgetModule = {
-  mozilla::Module::kVersion,
-  kWidgetCIDs,
-  kWidgetContracts,
-  NULL,
-  NULL,
-  nsAppShellInit,
-  nsWidgetCocoaModuleDtor,
-  mozilla::Module::ALLOW_IN_GPU_PROCESS
-};
-
-NSMODULE_DEFN(nsWidgetMacModule) = &kWidgetModule;
-=======
 extern const mozilla::Module kWidgetModule = {
     mozilla::Module::kVersion,
     kWidgetCIDs,
@@ -382,4 +215,3 @@ extern const mozilla::Module kWidgetModule = {
     nsAppShellInit,
     nsWidgetCocoaModuleDtor,
     mozilla::Module::ALLOW_IN_GPU_RDD_VR_AND_SOCKET_PROCESS};
->>>>>>> upstream-releases

@@ -368,15 +368,6 @@ public:
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkPerlinNoiseShaderImpl)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkPerlinNoiseShaderImpl)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
 #ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
@@ -662,14 +653,8 @@ SkPMColor SkPerlinNoiseShaderImpl::PerlinNoiseShaderContext::shade(
 
 #ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
 SkShaderBase::Context* SkPerlinNoiseShaderImpl::onMakeContext(const ContextRec& rec,
-<<<<<<< HEAD
-                                                              SkArenaAlloc* alloc) const {
-||||||| merged common ancestors
-                                                           SkArenaAlloc* alloc) const {
-=======
                                                               SkArenaAlloc* alloc) const {
     // should we pay attention to rec's device-colorspace?
->>>>>>> upstream-releases
     return alloc->make<PerlinNoiseShaderContext>(*this, rec);
 }
 #endif
@@ -786,17 +771,8 @@ private:
             , fPermutationsSampler(std::move(permutationsProxy))
             , fNoiseSampler(std::move(noiseProxy))
             , fPaintingData(std::move(paintingData)) {
-<<<<<<< HEAD
-        this->setTextureSamplerCnt(2);
-        fCoordTransform.reset(matrix);
-||||||| merged common ancestors
-        this->addTextureSampler(&fPermutationsSampler);
-        this->addTextureSampler(&fNoiseSampler);
-        fCoordTransform.reset(matrix);
-=======
         this->setTextureSamplerCnt(2);
         fCoordTransform = GrCoordTransform(matrix);
->>>>>>> upstream-releases
         this->addCoordTransform(&fCoordTransform);
     }
 
@@ -1218,17 +1194,8 @@ private:
             , fPermutationsSampler(std::move(permutationsProxy))
             , fGradientSampler(std::move(gradientProxy))
             , fPaintingData(std::move(paintingData)) {
-<<<<<<< HEAD
-        this->setTextureSamplerCnt(2);
-        fCoordTransform.reset(matrix);
-||||||| merged common ancestors
-        this->addTextureSampler(&fPermutationsSampler);
-        this->addTextureSampler(&fGradientSampler);
-        fCoordTransform.reset(matrix);
-=======
         this->setTextureSamplerCnt(2);
         fCoordTransform = GrCoordTransform(matrix);
->>>>>>> upstream-releases
         this->addCoordTransform(&fCoordTransform);
     }
 
@@ -1440,21 +1407,8 @@ std::unique_ptr<GrFragmentProcessor> SkPerlinNoiseShaderImpl::asFragmentProcesso
         const GrFPArgs& args) const {
     SkASSERT(args.fContext);
 
-<<<<<<< HEAD
-    const auto localMatrix = this->totalLocalMatrix(args.fPreLocalMatrix, args.fPostLocalMatrix);
-    const auto matrix = SkMatrix::Concat(*args.fViewMatrix, *localMatrix);
-||||||| merged common ancestors
-    SkMatrix localMatrix = this->getLocalMatrix();
-    if (args.fLocalMatrix) {
-        localMatrix.preConcat(*args.fLocalMatrix);
-    }
-
-    SkMatrix matrix = *args.fViewMatrix;
-    matrix.preConcat(localMatrix);
-=======
     const auto localMatrix = this->totalLocalMatrix(args.fPreLocalMatrix, args.fPostLocalMatrix);
     const auto paintMatrix = SkMatrix::Concat(*args.fViewMatrix, *localMatrix);
->>>>>>> upstream-releases
 
     // Either we don't stitch tiles, either we have a valid tile size
     SkASSERT(!fStitchTiles || !fTileSize.isEmpty());
@@ -1496,13 +1450,7 @@ std::unique_ptr<GrFragmentProcessor> SkPerlinNoiseShaderImpl::asFragmentProcesso
             // color space of the noise. Either way, this case (and the GLSL) need to convert to
             // the destination.
             auto inner =
-<<<<<<< HEAD
-                    GrConstColorProcessor::Make(GrColorToPMColor4f(0x80404040),
-||||||| merged common ancestors
-                    GrConstColorProcessor::Make(GrColor4f::FromGrColor(0x80404040),
-=======
                     GrConstColorProcessor::Make(SkPMColor4f::FromBytes_RGBA(0x80404040),
->>>>>>> upstream-releases
                                                 GrConstColorProcessor::InputMode::kModulateRGBA);
             return GrFragmentProcessor::MulChildByInputAlpha(std::move(inner));
         }

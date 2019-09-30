@@ -13,19 +13,9 @@
 namespace mozilla {
 namespace widget {
 
-<<<<<<< HEAD
-/* static */ LayoutDeviceIntRect HeadlessScreenHelper::GetScreenRect() {
-  char* ev = PR_GetEnv("MOZ_HEADLESS_WIDTH");
-||||||| merged common ancestors
-/* static */ LayoutDeviceIntRect
-HeadlessScreenHelper::GetScreenRect()
-{
-  char *ev = PR_GetEnv("MOZ_HEADLESS_WIDTH");
-=======
 /* static */
 LayoutDeviceIntRect HeadlessScreenHelper::GetScreenRect() {
   char* ev = PR_GetEnv("MOZ_HEADLESS_WIDTH");
->>>>>>> upstream-releases
   int width = 1366;
   if (ev) {
     width = atoi(ev);

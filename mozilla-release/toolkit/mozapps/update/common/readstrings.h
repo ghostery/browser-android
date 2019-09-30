@@ -10,16 +10,8 @@
 #define MAX_TEXT_LEN 600
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include <windows.h>
-typedef WCHAR NS_tchar;
-||||||| merged common ancestors
-# include <windows.h>
-  typedef WCHAR NS_tchar;
-=======
 #  include <windows.h>
 typedef WCHAR NS_tchar;
->>>>>>> upstream-releases
 #else
 typedef char NS_tchar;
 #endif
@@ -42,20 +34,8 @@ int ReadStrings(const NS_tchar* path, StringTable* results);
  * This function reads in localized strings corresponding to the keys from a
  * given .ini
  */
-<<<<<<< HEAD
-int ReadStrings(const NS_tchar *path, const char *keyList,
-                unsigned int numStrings, char results[][MAX_TEXT_LEN],
-                const char *section = nullptr);
-||||||| merged common ancestors
-int ReadStrings(const NS_tchar *path,
-                const char *keyList,
-                unsigned int numStrings,
-                char results[][MAX_TEXT_LEN],
-                const char *section = nullptr);
-=======
 int ReadStrings(const NS_tchar* path, const char* keyList,
                 unsigned int numStrings, char results[][MAX_TEXT_LEN],
                 const char* section = nullptr);
->>>>>>> upstream-releases
 
 #endif  // READSTRINGS_H__

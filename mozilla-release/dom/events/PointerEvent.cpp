@@ -140,15 +140,8 @@ void PointerEvent::GetPointerType(nsAString& aPointerType,
     return;
   }
 
-<<<<<<< HEAD
-  ConvertPointerTypeToString(mEvent->AsPointerEvent()->inputSource,
-                             aPointerType);
-||||||| merged common ancestors
-  ConvertPointerTypeToString(mEvent->AsPointerEvent()->inputSource, aPointerType);
-=======
   ConvertPointerTypeToString(mEvent->AsPointerEvent()->mInputSource,
                              aPointerType);
->>>>>>> upstream-releases
 }
 
 int32_t PointerEvent::PointerId(CallerType aCallerType) {
@@ -268,16 +261,8 @@ bool PointerEvent::ShouldResistFingerprinting(CallerType aCallerType) {
   //  dispatched to the system group.
   if (!mEvent->IsTrusted() || aCallerType == CallerType::System ||
       !nsContentUtils::ShouldResistFingerprinting() ||
-<<<<<<< HEAD
-      mEvent->AsPointerEvent()->inputSource ==
-          MouseEvent_Binding::MOZ_SOURCE_MOUSE) {
-||||||| merged common ancestors
-      mEvent->AsPointerEvent()->inputSource ==
-        MouseEvent_Binding::MOZ_SOURCE_MOUSE) {
-=======
       mEvent->AsPointerEvent()->mInputSource ==
           MouseEvent_Binding::MOZ_SOURCE_MOUSE) {
->>>>>>> upstream-releases
     return false;
   }
 

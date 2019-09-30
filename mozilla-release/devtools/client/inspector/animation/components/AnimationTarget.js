@@ -118,23 +118,9 @@ class AnimationTarget extends Component {
     const { nodeFront } = this.state;
 
     if (!nodeFront) {
-<<<<<<< HEAD
-      return dom.div(
-        {
-          className: "animation-target",
-        }
-      );
-||||||| merged common ancestors
-      return dom.div(
-        {
-          className: "animation-target"
-        }
-      );
-=======
       return dom.div({
         className: "animation-target",
       });
->>>>>>> upstream-releases
     }
 
     emitEventForTest("animation-target-rendered");
@@ -145,67 +131,6 @@ class AnimationTarget extends Component {
       {
         className: "animation-target" + (isHighlighted ? " highlighting" : ""),
       },
-<<<<<<< HEAD
-      Rep(
-        {
-          defaultRep: ElementNode,
-          mode: MODE.TINY,
-          inspectIconTitle: getInspectorStr("inspector.nodePreview.highlightNodeLabel"),
-          object: translateNodeFrontToGrip(nodeFront),
-          onDOMNodeClick: () => this.select(),
-          onDOMNodeMouseOut: () => {
-            if (!isHighlighted) {
-              onHideBoxModelHighlighter();
-            }
-          },
-          onDOMNodeMouseOver: () => {
-            if (!isHighlighted) {
-              this.highlight();
-            }
-          },
-          onInspectIconClick: (_, e) => {
-            e.stopPropagation();
-
-            if (!isHighlighted) {
-              // At first, hide highlighter which was created by onDOMNodeMouseOver.
-              onHideBoxModelHighlighter();
-            }
-
-            setHighlightedNode(isHighlighted ? null : nodeFront);
-          },
-        }
-      )
-||||||| merged common ancestors
-      Rep(
-        {
-          defaultRep: ElementNode,
-          mode: MODE.TINY,
-          inspectIconTitle: getInspectorStr("inspector.nodePreview.highlightNodeLabel"),
-          object: translateNodeFrontToGrip(nodeFront),
-          onDOMNodeClick: () => this.select(),
-          onDOMNodeMouseOut: () => {
-            if (!isHighlighted) {
-              onHideBoxModelHighlighter();
-            }
-          },
-          onDOMNodeMouseOver: () => {
-            if (!isHighlighted) {
-              this.highlight();
-            }
-          },
-          onInspectIconClick: (_, e) => {
-            e.stopPropagation();
-
-            if (!isHighlighted) {
-              // At first, hide highlighter which was created by onDOMNodeMouseOver.
-              onHideBoxModelHighlighter();
-            }
-
-            setHighlightedNode(isHighlighted ? null : nodeFront);
-          }
-        }
-      )
-=======
       Rep({
         defaultRep: ElementNode,
         mode: MODE.TINY,
@@ -235,7 +160,6 @@ class AnimationTarget extends Component {
           setHighlightedNode(isHighlighted ? null : nodeFront);
         },
       })
->>>>>>> upstream-releases
     );
   }
 }

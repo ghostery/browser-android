@@ -96,24 +96,6 @@ class TimingsPanel extends Component {
       );
     });
 
-<<<<<<< HEAD
-    return (
-      div({ className: "panel-container" },
-        timelines,
-        MDNLink({
-          url: getNetMonitorTimingsURL(),
-          title: L10N.getStr("netmonitor.timings.learnMore"),
-        }),
-      )
-||||||| merged common ancestors
-    return (
-      div({ className: "panel-container" },
-        timelines,
-        MDNLink({
-          url: getNetMonitorTimingsURL(),
-        }),
-      )
-=======
     return div(
       { className: "panel-container" },
       timelines,
@@ -121,7 +103,6 @@ class TimingsPanel extends Component {
         url: getNetMonitorTimingsURL(),
         title: L10N.getStr("netmonitor.timings.learnMore"),
       })
->>>>>>> upstream-releases
     );
   }
 }

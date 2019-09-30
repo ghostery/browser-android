@@ -4,21 +4,9 @@
 "use strict";
 const { combineReducers } = require("devtools/client/shared/vendor/redux");
 
-<<<<<<< HEAD
-const { recordingState: {
-  NOT_YET_KNOWN,
-}} = require("devtools/client/performance-new/utils");
-const { DEFAULT_WINDOW_LENGTH } = require("devtools/shared/performance-new/common");
-||||||| merged common ancestors
-const { recordingState: {
-  NOT_YET_KNOWN,
-}} = require("devtools/client/performance-new/utils");
-
-=======
 const {
   recordingState: { NOT_YET_KNOWN },
 } = require("devtools/client/performance-new/utils");
->>>>>>> upstream-releases
 /**
  * The current state of the recording.
  * @param state - A recordingState key.
@@ -96,21 +84,6 @@ function entries(state = 10000000, action) {
 }
 
 /**
- * The window length of profiler's circular buffer. Defaults to 20 sec.
- * @param {number} state
- */
-function duration(state = DEFAULT_WINDOW_LENGTH, action) {
-  switch (action.type) {
-    case "CHANGE_DURATION":
-      return action.duration;
-    case "INITIALIZE_STORE":
-      return action.recordingSettingsFromPreferences.duration;
-    default:
-      return state;
-  }
-}
-
-/**
  * The features that are enabled for the profiler.
  * @param {array} state
  */
@@ -179,29 +152,14 @@ function initializedValues(state = null, action) {
   }
 }
 
-/**
- * The current actor version
- * @param {number} state
- */
-function actorVersion(state = 0, action) {
-  switch (action.type) {
-    case "INITIALIZE_STORE":
-      return action.actorVersion;
-    default:
-      return state;
-  }
-}
-
 module.exports = combineReducers({
   recordingState,
   recordingUnexpectedlyStopped,
   isSupportedPlatform,
   interval,
   entries,
-  duration,
   features,
   threads,
   objdirs,
   initializedValues,
-  actorVersion,
 });

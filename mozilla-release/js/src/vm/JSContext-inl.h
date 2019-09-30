@@ -13,14 +13,7 @@
 #include "gc/Zone.h"
 #include "jit/JitFrames.h"
 #include "proxy/Proxy.h"
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
 #include "vm/BigIntType.h"
-#endif
-||||||| merged common ancestors
-=======
-#include "vm/BigIntType.h"
->>>>>>> upstream-releases
 #include "vm/HelperThreads.h"
 #include "vm/Interpreter.h"
 #include "vm/Iteration.h"
@@ -29,142 +22,6 @@
 
 namespace js {
 
-<<<<<<< HEAD
-class ContextChecks {
-  JSContext* cx;
-
-  JS::Realm* realm() const { return cx->realm(); }
-  JS::Compartment* compartment() const { return cx->compartment(); }
-  JS::Zone* zone() const { return cx->zone(); }
-
- public:
-  explicit ContextChecks(JSContext* cx) : cx(cx) {}
-
-  /*
-   * Set a breakpoint here (break js::ContextChecks::fail) to debug
-   * realm/compartment/zone mismatches.
-   */
-  static void fail(JS::Realm* r1, JS::Realm* r2, int argIndex) {
-    MOZ_CRASH_UNSAFE_PRINTF("*** Realm mismatch %p vs. %p at argument %d", r1,
-                            r2, argIndex);
-  }
-  static void fail(JS::Compartment* c1, JS::Compartment* c2, int argIndex) {
-    MOZ_CRASH_UNSAFE_PRINTF("*** Compartment mismatch %p vs. %p at argument %d",
-                            c1, c2, argIndex);
-  }
-  static void fail(JS::Zone* z1, JS::Zone* z2, int argIndex) {
-    MOZ_CRASH_UNSAFE_PRINTF("*** Zone mismatch %p vs. %p at argument %d", z1,
-                            z2, argIndex);
-  }
-
-  void check(JS::Realm* r, int argIndex) {
-    if (r && r != realm()) {
-      fail(realm(), r, argIndex);
-    }
-  }
-
-  void check(JS::Compartment* c, int argIndex) {
-    if (c && c != compartment()) {
-      fail(compartment(), c, argIndex);
-    }
-  }
-
-  void check(JS::Zone* z, int argIndex) {
-    if (zone() && z != zone()) {
-      fail(zone(), z, argIndex);
-    }
-  }
-
-  void check(JSObject* obj, int argIndex) {
-    if (obj) {
-      MOZ_ASSERT(JS::ObjectIsNotGray(obj));
-      MOZ_ASSERT(!js::gc::IsAboutToBeFinalizedUnbarriered(&obj));
-      check(obj->compartment(), argIndex);
-    }
-  }
-
-  template <typename T>
-  void checkAtom(T* thing, int argIndex) {
-    static_assert(mozilla::IsSame<T, JSAtom>::value ||
-                      mozilla::IsSame<T, JS::Symbol>::value,
-                  "Should only be called with JSAtom* or JS::Symbol* argument");
-
-#ifdef DEBUG
-    // Atoms which move across zone boundaries need to be marked in the new
-    // zone, see JS_MarkCrossZoneId.
-    if (zone()) {
-      if (!cx->runtime()->gc.atomMarking.atomIsMarked(zone(), thing)) {
-        MOZ_CRASH_UNSAFE_PRINTF(
-            "*** Atom not marked for zone %p at argument %d", zone(), argIndex);
-      }
-    }
-#endif
-  }
-
-  void check(JSString* str, int argIndex) {
-    MOZ_ASSERT(JS::CellIsNotGray(str));
-    if (str->isAtom()) {
-      checkAtom(&str->asAtom(), argIndex);
-    } else {
-      check(str->zone(), argIndex);
-    }
-  }
-
-  void check(JS::Symbol* symbol, int argIndex) { checkAtom(symbol, argIndex); }
-
-#ifdef ENABLE_BIGINT
-  void check(JS::BigInt* bi, int argIndex) { check(bi->zone(), argIndex); }
-#endif
-||||||| merged common ancestors
-class ContextChecks
-{
-    JSContext* cx;
-
-    JS::Realm* realm() const {
-        return cx->realm();
-    }
-    JS::Compartment* compartment() const {
-        return cx->compartment();
-    }
-    JS::Zone* zone() const {
-        return cx->zone();
-    }
-
-  public:
-    explicit ContextChecks(JSContext* cx)
-      : cx(cx)
-    {
-    }
-
-    /*
-     * Set a breakpoint here (break js::ContextChecks::fail) to debug
-     * realm/compartment/zone mismatches.
-     */
-    static void fail(JS::Realm* r1, JS::Realm* r2, int argIndex) {
-        MOZ_CRASH_UNSAFE_PRINTF("*** Realm mismatch %p vs. %p at argument %d",
-                                r1, r2, argIndex);
-    }
-    static void fail(JS::Compartment* c1, JS::Compartment* c2, int argIndex) {
-        MOZ_CRASH_UNSAFE_PRINTF("*** Compartment mismatch %p vs. %p at argument %d",
-                                c1, c2, argIndex);
-    }
-    static void fail(JS::Zone* z1, JS::Zone* z2, int argIndex) {
-        MOZ_CRASH_UNSAFE_PRINTF("*** Zone mismatch %p vs. %p at argument %d",
-                                z1, z2, argIndex);
-    }
-
-    void check(JS::Realm* r, int argIndex) {
-        if (r && r != realm()) {
-            fail(realm(), r, argIndex);
-        }
-    }
-
-    void check(JS::Compartment* c, int argIndex) {
-        if (c && c != compartment()) {
-            fail(compartment(), c, argIndex);
-        }
-    }
-=======
 class ContextChecks {
   JSContext* cx;
 
@@ -223,22 +80,7 @@ class ContextChecks {
     static_assert(mozilla::IsSame<T, JSAtom>::value ||
                       mozilla::IsSame<T, JS::Symbol>::value,
                   "Should only be called with JSAtom* or JS::Symbol* argument");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void check(const js::Value& v, int argIndex) {
-    if (v.isObject()) {
-      check(&v.toObject(), argIndex);
-    } else if (v.isString()) {
-      check(v.toString(), argIndex);
-    } else if (v.isSymbol()) {
-      check(v.toSymbol(), argIndex);
-||||||| merged common ancestors
-    void check(JS::Zone* z, int argIndex) {
-        if (zone() && z != zone()) {
-            fail(zone(), z, argIndex);
-        }
-=======
 #ifdef DEBUG
     // Atoms which move across zone boundaries need to be marked in the new
     // zone, see JS_MarkCrossZoneId.
@@ -247,21 +89,7 @@ class ContextChecks {
         MOZ_CRASH_UNSAFE_PRINTF(
             "*** Atom not marked for zone %p at argument %d", zone(), argIndex);
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
-    else if (v.isBigInt()) {
-      check(v.toBigInt(), argIndex);
-||||||| merged common ancestors
-
-    void check(JSObject* obj, int argIndex) {
-        if (obj) {
-            MOZ_ASSERT(JS::ObjectIsNotGray(obj));
-            MOZ_ASSERT(!js::gc::IsAboutToBeFinalizedUnbarriered(&obj));
-            check(obj->compartment(), argIndex);
-        }
-=======
 #endif
   }
 
@@ -271,40 +99,7 @@ class ContextChecks {
       checkAtom(&str->asAtom(), argIndex);
     } else {
       check(str->zone(), argIndex);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#endif
-  }
-||||||| merged common ancestors
-
-    template <typename T>
-    void checkAtom(T* thing, int argIndex) {
-        static_assert(mozilla::IsSame<T, JSAtom>::value ||
-                      mozilla::IsSame<T, JS::Symbol>::value,
-                      "Should only be called with JSAtom* or JS::Symbol* argument");
-
-#ifdef DEBUG
-        // Atoms which move across zone boundaries need to be marked in the new
-        // zone, see JS_MarkCrossZoneId.
-        if (zone()) {
-            if (!cx->runtime()->gc.atomMarking.atomIsMarked(zone(), thing)) {
-                MOZ_CRASH_UNSAFE_PRINTF("*** Atom not marked for zone %p at argument %d",
-                                        zone(), argIndex);
-            }
-        }
-#endif
-    }
-
-    void check(JSString* str, int argIndex) {
-        MOZ_ASSERT(JS::CellIsNotGray(str));
-        if (str->isAtom()) {
-            checkAtom(&str->asAtom(), argIndex);
-        } else {
-            check(str->zone(), argIndex);
-        }
-    }
-=======
   }
 
   void check(JS::Symbol* symbol, int argIndex) { checkAtom(symbol, argIndex); }
@@ -322,7 +117,6 @@ class ContextChecks {
       check(v.toBigInt(), argIndex);
     }
   }
->>>>>>> upstream-releases
 
   // Check the contents of any container class that supports the C++
   // iteration protocol, eg GCVector<jsid>.
@@ -358,22 +152,10 @@ class ContextChecks {
     }
   }
 
-<<<<<<< HEAD
-  void check(JSScript* script, int argIndex) {
-    MOZ_ASSERT(JS::CellIsNotGray(script));
-    if (script) {
-      check(script->realm(), argIndex);
-||||||| merged common ancestors
-    void check(const CallArgs& args, int argIndex) {
-        for (Value* p = args.base(); p != args.end(); ++p) {
-            check(*p, argIndex);
-        }
-=======
   void check(JSScript* script, int argIndex) {
     JS::AssertCellIsNotGray(script);
     if (script) {
       check(script->realm(), argIndex);
->>>>>>> upstream-releases
     }
   }
 
@@ -517,97 +299,13 @@ inline js::LifoAlloc& JSContext::typeLifoAlloc() {
 
 inline js::Nursery& JSContext::nursery() { return runtime()->gc.nursery(); }
 
-<<<<<<< HEAD
-inline void JSContext::minorGC(JS::gcreason::Reason reason) {
-  runtime()->gc.minorGC(reason);
-||||||| merged common ancestors
-inline void
-JSContext::minorGC(JS::gcreason::Reason reason)
-{
-    runtime()->gc.minorGC(reason);
-=======
 inline void JSContext::minorGC(JS::GCReason reason) {
   runtime()->gc.minorGC(reason);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JSContext::setPendingException(JS::HandleValue v) {
-||||||| merged common ancestors
-inline void
-JSContext::setPendingException(JS::HandleValue v)
-{
-=======
 inline void JSContext::setPendingException(JS::HandleValue v,
                                            js::HandleSavedFrame stack) {
->>>>>>> upstream-releases
 #if defined(NIGHTLY_BUILD)
-<<<<<<< HEAD
-  do {
-    // Do not intercept exceptions if we are already
-    // in the exception interceptor. That would lead
-    // to infinite recursion.
-    if (this->runtime()->errorInterception.isExecuting) {
-      break;
-    }
-
-    // Check whether we have an interceptor at all.
-    if (!this->runtime()->errorInterception.interceptor) {
-      break;
-    }
-
-    // Make sure that we do not call the interceptor from within
-    // the interceptor.
-    this->runtime()->errorInterception.isExecuting = true;
-
-    // The interceptor must be infallible.
-    const mozilla::DebugOnly<bool> wasExceptionPending =
-        this->isExceptionPending();
-    this->runtime()->errorInterception.interceptor->interceptError(this, v);
-    MOZ_ASSERT(wasExceptionPending == this->isExceptionPending());
-
-    this->runtime()->errorInterception.isExecuting = false;
-  } while (false);
-#endif  // defined(NIGHTLY_BUILD)
-
-  // overRecursed_ is set after the fact by ReportOverRecursed.
-  this->overRecursed_ = false;
-  this->throwing = true;
-  this->unwrappedException() = v;
-  check(v);
-||||||| merged common ancestors
-    do {
-        // Do not intercept exceptions if we are already
-        // in the exception interceptor. That would lead
-        // to infinite recursion.
-        if (this->runtime()->errorInterception.isExecuting) {
-            break;
-        }
-
-        // Check whether we have an interceptor at all.
-        if (!this->runtime()->errorInterception.interceptor) {
-            break;
-        }
-
-        // Make sure that we do not call the interceptor from within
-        // the interceptor.
-        this->runtime()->errorInterception.isExecuting = true;
-
-        // The interceptor must be infallible.
-        const mozilla::DebugOnly<bool> wasExceptionPending = this->isExceptionPending();
-        this->runtime()->errorInterception.interceptor->interceptError(this, v);
-        MOZ_ASSERT(wasExceptionPending == this->isExceptionPending());
-
-        this->runtime()->errorInterception.isExecuting = false;
-    } while (false);
-#endif // defined(NIGHTLY_BUILD)
-
-    // overRecursed_ is set after the fact by ReportOverRecursed.
-    this->overRecursed_ = false;
-    this->throwing = true;
-    this->unwrappedException() = v;
-    check(v);
-=======
   do {
     // Do not intercept exceptions if we are already
     // in the exception interceptor. That would lead
@@ -641,7 +339,6 @@ inline void JSContext::setPendingException(JS::HandleValue v,
   this->unwrappedException() = v;
   this->unwrappedExceptionStack() = stack;
   check(v);
->>>>>>> upstream-releases
 }
 
 inline bool JSContext::runningWithTrustedPrincipals() {
@@ -661,50 +358,6 @@ inline void JSContext::enterAtomsZone() {
   setZone(runtime_->unsafeAtomsZone(), AtomsZone);
 }
 
-<<<<<<< HEAD
-inline void JSContext::setZone(js::Zone* zone,
-                               JSContext::IsAtomsZone isAtomsZone) {
-  if (zone_) {
-    zone_->addTenuredAllocsSinceMinorGC(allocsThisZoneSinceMinorGC_);
-  }
-
-  allocsThisZoneSinceMinorGC_ = 0;
-
-  zone_ = zone;
-  if (zone == nullptr) {
-    freeLists_ = nullptr;
-    return;
-  }
-
-  if (isAtomsZone == AtomsZone && helperThread()) {
-    MOZ_ASSERT(!zone_->wasGCStarted());
-    freeLists_ = atomsZoneFreeLists_;
-  } else {
-    freeLists_ = &zone_->arenas.freeLists();
-  }
-||||||| merged common ancestors
-inline void
-JSContext::setZone(js::Zone *zone, JSContext::IsAtomsZone isAtomsZone)
-{
-    if (zone_) {
-        zone_->addTenuredAllocsSinceMinorGC(allocsThisZoneSinceMinorGC_);
-    }
-
-    allocsThisZoneSinceMinorGC_ = 0;
-
-    zone_ = zone;
-    if (zone == nullptr) {
-        freeLists_ = nullptr;
-        return;
-    }
-
-    if (isAtomsZone == AtomsZone && helperThread()) {
-        MOZ_ASSERT(!zone_->wasGCStarted());
-        freeLists_ = atomsZoneFreeLists_;
-    } else {
-        freeLists_ = &zone_->arenas.freeLists();
-    }
-=======
 inline void JSContext::setZone(js::Zone* zone,
                                JSContext::IsAtomsZone isAtomsZone) {
   if (zone_) {
@@ -725,58 +378,21 @@ inline void JSContext::setZone(js::Zone* zone,
   } else {
     freeLists_ = &zone_->arenas.freeLists();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JSContext::enterRealmOf(JSObject* target) {
-  MOZ_ASSERT(JS::CellIsNotGray(target));
-  enterRealm(target->nonCCWRealm());
-||||||| merged common ancestors
-inline void
-JSContext::enterRealmOf(JSObject* target)
-{
-    MOZ_ASSERT(JS::CellIsNotGray(target));
-    enterRealm(target->nonCCWRealm());
-=======
 inline void JSContext::enterRealmOf(JSObject* target) {
   JS::AssertCellIsNotGray(target);
   enterRealm(target->nonCCWRealm());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JSContext::enterRealmOf(JSScript* target) {
-  MOZ_ASSERT(JS::CellIsNotGray(target));
-  enterRealm(target->realm());
-||||||| merged common ancestors
-inline void
-JSContext::enterRealmOf(JSScript* target)
-{
-    MOZ_ASSERT(JS::CellIsNotGray(target));
-    enterRealm(target->realm());
-=======
 inline void JSContext::enterRealmOf(JSScript* target) {
   JS::AssertCellIsNotGray(target);
   enterRealm(target->realm());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void JSContext::enterRealmOf(js::ObjectGroup* target) {
-  MOZ_ASSERT(JS::CellIsNotGray(target));
-  enterRealm(target->realm());
-||||||| merged common ancestors
-inline void
-JSContext::enterRealmOf(js::ObjectGroup* target)
-{
-    MOZ_ASSERT(JS::CellIsNotGray(target));
-    enterRealm(target->realm());
-=======
 inline void JSContext::enterRealmOf(js::ObjectGroup* target) {
   JS::AssertCellIsNotGray(target);
   enterRealm(target->realm());
->>>>>>> upstream-releases
 }
 
 inline void JSContext::enterNullRealm() {

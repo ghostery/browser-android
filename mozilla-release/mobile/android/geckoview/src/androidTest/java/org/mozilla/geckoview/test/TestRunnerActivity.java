@@ -110,13 +110,6 @@ public class TestRunnerActivity extends Activity {
                 sRuntime.shutdown();
             }
         }
-<<<<<<< HEAD
-
-        @Override
-        public void onFirstComposite(final GeckoSession session) {
-        }
-||||||| merged common ancestors
-=======
 
         @Override
         public void onFirstComposite(final GeckoSession session) {
@@ -125,7 +118,6 @@ public class TestRunnerActivity extends Activity {
         @Override
         public void onWebAppManifest(final GeckoSession session, final JSONObject manifest) {
         }
->>>>>>> upstream-releases
     };
 
     private GeckoSession createSession() {

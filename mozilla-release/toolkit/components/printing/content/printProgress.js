@@ -141,22 +141,11 @@ var progressListener = {
     // we can ignore this notification
   },
 
-<<<<<<< HEAD
-    onSecurityChange(aWebProgress, aRequest, state) {
-      // we can ignore this notification
-    },
-||||||| merged common ancestors
-    onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                     aContentBlockingLogJSON) {
-      // we can ignore this notification
-    },
-=======
   onStatusChange(aWebProgress, aRequest, aStatus, aMessage) {
     if (aMessage != "") {
       dialog.title.setAttribute("value", aMessage);
     }
   },
->>>>>>> upstream-releases
 
   onSecurityChange(aWebProgress, aRequest, state) {
     // we can ignore this notification

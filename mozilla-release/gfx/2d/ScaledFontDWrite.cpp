@@ -125,38 +125,11 @@ static inline DWRITE_FONT_STRETCH DWriteFontStretchFromStretch(
 
 ScaledFontDWrite::ScaledFontDWrite(IDWriteFontFace* aFontFace,
                                    const RefPtr<UnscaledFont>& aUnscaledFont,
-<<<<<<< HEAD
-                                   Float aSize, bool aUseEmbeddedBitmap,
-                                   bool aForceGDIMode,
-||||||| merged common ancestors
-                                   Float aSize,
-                                   bool aUseEmbeddedBitmap,
-                                   bool aForceGDIMode,
-=======
                                    Float aSize, bool aUseEmbeddedBitmap,
                                    DWRITE_RENDERING_MODE aRenderingMode,
->>>>>>> upstream-releases
                                    IDWriteRenderingParams* aParams,
                                    Float aGamma, Float aContrast,
                                    const gfxFontStyle* aStyle)
-<<<<<<< HEAD
-    : ScaledFontBase(aUnscaledFont, aSize),
-      mFontFace(aFontFace),
-      mUseEmbeddedBitmap(aUseEmbeddedBitmap),
-      mForceGDIMode(aForceGDIMode),
-      mParams(aParams),
-      mGamma(aGamma),
-      mContrast(aContrast) {
-||||||| merged common ancestors
-    : ScaledFontBase(aUnscaledFont, aSize)
-    , mFontFace(aFontFace)
-    , mUseEmbeddedBitmap(aUseEmbeddedBitmap)
-    , mForceGDIMode(aForceGDIMode)
-    , mParams(aParams)
-    , mGamma(aGamma)
-    , mContrast(aContrast)
-{
-=======
     : ScaledFontBase(aUnscaledFont, aSize),
       mFontFace(aFontFace),
       mUseEmbeddedBitmap(aUseEmbeddedBitmap),
@@ -164,7 +137,6 @@ ScaledFontDWrite::ScaledFontDWrite(IDWriteFontFace* aFontFace,
       mParams(aParams),
       mGamma(aGamma),
       mContrast(aContrast) {
->>>>>>> upstream-releases
   if (aStyle) {
     mStyle = SkFontStyle(aStyle->weight.ToIntRounded(),
                          DWriteFontStretchFromStretch(aStyle->stretch),
@@ -175,34 +147,11 @@ ScaledFontDWrite::ScaledFontDWrite(IDWriteFontFace* aFontFace,
   }
 }
 
-<<<<<<< HEAD
 already_AddRefed<Path> ScaledFontDWrite::GetPathForGlyphs(
     const GlyphBuffer& aBuffer, const DrawTarget* aTarget) {
-  if (aTarget->GetBackendType() != BackendType::DIRECT2D &&
-      aTarget->GetBackendType() != BackendType::DIRECT2D1_1) {
-    return ScaledFontBase::GetPathForGlyphs(aBuffer, aTarget);
-  }
-||||||| merged common ancestors
-already_AddRefed<Path>
-ScaledFontDWrite::GetPathForGlyphs(const GlyphBuffer &aBuffer, const DrawTarget *aTarget)
-{
-  if (aTarget->GetBackendType() != BackendType::DIRECT2D && aTarget->GetBackendType() != BackendType::DIRECT2D1_1) {
-    return ScaledFontBase::GetPathForGlyphs(aBuffer, aTarget);
-  }
-=======
-already_AddRefed<Path> ScaledFontDWrite::GetPathForGlyphs(
-    const GlyphBuffer& aBuffer, const DrawTarget* aTarget) {
->>>>>>> upstream-releases
 
   RefPtr<PathBuilder> pathBuilder = aTarget->CreatePathBuilder();
 
-<<<<<<< HEAD
-  PathBuilderD2D* pathBuilderD2D =
-      static_cast<PathBuilderD2D*>(pathBuilder.get());
-||||||| merged common ancestors
-  PathBuilderD2D *pathBuilderD2D =
-    static_cast<PathBuilderD2D*>(pathBuilder.get());
-=======
   if (pathBuilder->GetBackendType() != BackendType::DIRECT2D &&
       pathBuilder->GetBackendType() != BackendType::DIRECT2D1_1) {
     return ScaledFontBase::GetPathForGlyphs(aBuffer, aTarget);
@@ -210,7 +159,6 @@ already_AddRefed<Path> ScaledFontDWrite::GetPathForGlyphs(
 
   PathBuilderD2D* pathBuilderD2D =
       static_cast<PathBuilderD2D*>(pathBuilder.get());
->>>>>>> upstream-releases
 
   CopyGlyphsToSink(aBuffer, pathBuilderD2D->GetSink());
 
@@ -236,15 +184,8 @@ SkTypeface* ScaledFontDWrite::CreateSkTypeface() {
     contrast = 1.0f;
   }
 
-<<<<<<< HEAD
-  return SkCreateTypefaceFromDWriteFont(factory, mFontFace, mStyle,
-                                        mForceGDIMode, gamma, contrast);
-||||||| merged common ancestors
-  return SkCreateTypefaceFromDWriteFont(factory, mFontFace, mStyle, mForceGDIMode, gamma, contrast);
-=======
   return SkCreateTypefaceFromDWriteFont(factory, mFontFace, mStyle,
                                         mRenderingMode, gamma, contrast);
->>>>>>> upstream-releases
 }
 #endif
 
@@ -252,12 +193,6 @@ void ScaledFontDWrite::CopyGlyphsToBuilder(const GlyphBuffer& aBuffer,
                                            PathBuilder* aBuilder,
                                            const Matrix* aTransformHint) {
   BackendType backendType = aBuilder->GetBackendType();
-<<<<<<< HEAD
-  if (backendType != BackendType::DIRECT2D &&
-      backendType != BackendType::DIRECT2D1_1) {
-||||||| merged common ancestors
-  if (backendType != BackendType::DIRECT2D && backendType != BackendType::DIRECT2D1_1) {
-=======
   if (backendType == BackendType::CAPTURE) {
     StreamingGeometrySink sink(aBuilder);
     CopyGlyphsToSink(aBuffer, &sink);
@@ -266,7 +201,6 @@ void ScaledFontDWrite::CopyGlyphsToBuilder(const GlyphBuffer& aBuffer,
 
   if (backendType != BackendType::DIRECT2D &&
       backendType != BackendType::DIRECT2D1_1) {
->>>>>>> upstream-releases
     ScaledFontBase::CopyGlyphsToBuilder(aBuffer, aBuilder, aTransformHint);
     return;
   }
@@ -309,17 +243,8 @@ void ScaledFontDWrite::GetGlyphDesignMetrics(const uint16_t* aGlyphs,
   }
 }
 
-<<<<<<< HEAD
-void ScaledFontDWrite::CopyGlyphsToSink(const GlyphBuffer& aBuffer,
-                                        ID2D1GeometrySink* aSink) {
-||||||| merged common ancestors
-void
-ScaledFontDWrite::CopyGlyphsToSink(const GlyphBuffer &aBuffer, ID2D1GeometrySink *aSink)
-{
-=======
 void ScaledFontDWrite::CopyGlyphsToSink(const GlyphBuffer& aBuffer,
                                         ID2D1SimplifiedGeometrySink* aSink) {
->>>>>>> upstream-releases
   std::vector<UINT16> indices;
   std::vector<FLOAT> advances;
   std::vector<DWRITE_GLYPH_OFFSET> offsets;
@@ -395,22 +320,12 @@ bool UnscaledFontDWrite::GetFontFileData(FontFileDataOutput aDataCallback,
   }
 
   uint32_t fileSize = static_cast<uint32_t>(fileSize64);
-<<<<<<< HEAD
-  const void* fragmentStart;
-  void* context;
-  stream->ReadFileFragment(&fragmentStart, 0, fileSize, &context);
-||||||| merged common ancestors
-  const void *fragmentStart;
-  void *context;
-  stream->ReadFileFragment(&fragmentStart, 0, fileSize, &context);
-=======
   const void* fragmentStart;
   void* context;
   hr = stream->ReadFileFragment(&fragmentStart, 0, fileSize, &context);
   if (FAILED(hr)) {
     return false;
   }
->>>>>>> upstream-releases
 
   aDataCallback((uint8_t*)fragmentStart, fileSize, mFontFace->GetIndex(),
                 aBaton);
@@ -420,25 +335,10 @@ bool UnscaledFontDWrite::GetFontFileData(FontFileDataOutput aDataCallback,
   return true;
 }
 
-<<<<<<< HEAD
-static bool GetDWriteName(RefPtr<IDWriteLocalizedStrings> aNames,
-                          std::vector<WCHAR>& aOutName) {
-  BOOL exists = false;
-  UINT32 index = 0;
-  HRESULT hr = aNames->FindLocaleName(L"en-us", &index, &exists);
-||||||| merged common ancestors
-static bool
-GetDWriteName(RefPtr<IDWriteLocalizedStrings> aNames, std::vector<WCHAR>& aOutName)
-{
-  BOOL exists = false;
-  UINT32 index = 0;
-  HRESULT hr = aNames->FindLocaleName(L"en-us", &index, &exists);
-=======
 static bool GetFontFileName(RefPtr<IDWriteFontFace> aFontFace,
                             std::vector<WCHAR>& aFileName) {
   UINT32 numFiles;
   HRESULT hr = aFontFace->GetFiles(&numFiles, nullptr);
->>>>>>> upstream-releases
   if (FAILED(hr)) {
     gfxDebug() << "Failed getting file count for WR font";
     return false;
@@ -454,47 +354,17 @@ static bool GetFontFileName(RefPtr<IDWriteFontFace> aFontFace,
     return false;
   }
 
-<<<<<<< HEAD
-static bool GetDWriteFamilyName(const RefPtr<IDWriteFontFamily>& aFamily,
-                                std::vector<WCHAR>& aOutName) {
-  RefPtr<IDWriteLocalizedStrings> names;
-  HRESULT hr = aFamily->GetFamilyNames(getter_AddRefs(names));
-||||||| merged common ancestors
-static bool
-GetDWriteFamilyName(const RefPtr<IDWriteFontFamily>& aFamily, std::vector<WCHAR>& aOutName)
-{
-  RefPtr<IDWriteLocalizedStrings> names;
-  HRESULT hr = aFamily->GetFamilyNames(getter_AddRefs(names));
-=======
   const void* key;
   UINT32 keySize;
   hr = file->GetReferenceKey(&key, &keySize);
->>>>>>> upstream-releases
   if (FAILED(hr)) {
     gfxDebug() << "Failed getting file ref key for WR font";
     return false;
   }
-<<<<<<< HEAD
-  return GetDWriteName(names, aOutName);
-}
-
-bool UnscaledFontDWrite::GetWRFontDescriptor(WRFontDescriptorOutput aCb,
-                                             void* aBaton) {
-  if (!mFont) {
-||||||| merged common ancestors
-  return GetDWriteName(names, aOutName);
-}
-
-bool
-UnscaledFontDWrite::GetWRFontDescriptor(WRFontDescriptorOutput aCb, void* aBaton)
-{
-  if (!mFont) {
-=======
   RefPtr<IDWriteFontFileLoader> loader;
   hr = file->GetLoader(getter_AddRefs(loader));
   if (FAILED(hr)) {
     gfxDebug() << "Failed getting file loader for WR font";
->>>>>>> upstream-releases
     return false;
   }
   RefPtr<IDWriteLocalFontFileLoader> localLoader;
@@ -526,32 +396,9 @@ UnscaledFontDWrite::GetWRFontDescriptor(WRFontDescriptorOutput aCb, void* aBaton
   return true;
 }
 
-<<<<<<< HEAD
-  DWRITE_FONT_WEIGHT weight = mFont->GetWeight();
-  DWRITE_FONT_STRETCH stretch = mFont->GetStretch();
-  DWRITE_FONT_STYLE style = mFont->GetStyle();
-
-  RefPtr<IDWriteFont> match;
-  hr = family->GetFirstMatchingFont(weight, stretch, style,
-                                    getter_AddRefs(match));
-  if (FAILED(hr) || match->GetWeight() != weight ||
-      match->GetStretch() != stretch || match->GetStyle() != style) {
-||||||| merged common ancestors
-  DWRITE_FONT_WEIGHT weight = mFont->GetWeight();
-  DWRITE_FONT_STRETCH stretch = mFont->GetStretch();
-  DWRITE_FONT_STYLE style = mFont->GetStyle();
-
-  RefPtr<IDWriteFont> match;
-  hr = family->GetFirstMatchingFont(weight, stretch, style, getter_AddRefs(match));
-  if (FAILED(hr) ||
-      match->GetWeight() != weight ||
-      match->GetStretch() != stretch ||
-      match->GetStyle() != style) {
-=======
 bool UnscaledFontDWrite::GetWRFontDescriptor(WRFontDescriptorOutput aCb,
                                              void* aBaton) {
   if (!mFont) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -561,61 +408,11 @@ bool UnscaledFontDWrite::GetWRFontDescriptor(WRFontDescriptorOutput aCb,
   }
   uint32_t index = mFontFace->GetIndex();
 
-<<<<<<< HEAD
-  RefPtr<IDWriteFontCollection> systemFonts = Factory::GetDWriteSystemFonts();
-  if (!systemFonts) {
-    return false;
-  }
-
-  UINT32 idx;
-  BOOL exists;
-  hr = systemFonts->FindFamilyName(familyName.data(), &idx, &exists);
-  if (FAILED(hr) || !exists) {
-    return false;
-  }
-
-  // The style information that identifies the font can be encoded easily in
-  // less than 32 bits. Since the index is needed for font descriptors, only
-  // the family name and style information, pass along the style in the index
-  // data to avoid requiring a more complicated structure packing for it in
-  // the data payload.
-  uint32_t index = weight | (stretch << 16) | (style << 24);
-  aCb(reinterpret_cast<const uint8_t*>(familyName.data()),
-      (familyName.size() - 1) * sizeof(WCHAR), index, aBaton);
-||||||| merged common ancestors
-  // The style information that identifies the font can be encoded easily in
-  // less than 32 bits. Since the index is needed for font descriptors, only
-  // the family name and style information, pass along the style in the index
-  // data to avoid requiring a more complicated structure packing for it in
-  // the data payload.
-  uint32_t index = weight | (stretch << 16) | (style << 24);
-  aCb(reinterpret_cast<const uint8_t*>(familyName.data()),
-      (familyName.size() - 1) * sizeof(WCHAR),
-      index, aBaton);
-=======
   aCb(reinterpret_cast<const uint8_t*>(fileName.data()),
       fileName.size() * sizeof(WCHAR), index, aBaton);
->>>>>>> upstream-releases
   return true;
 }
 
-<<<<<<< HEAD
-ScaledFontDWrite::InstanceData::InstanceData(
-    const wr::FontInstanceOptions* aOptions,
-    const wr::FontInstancePlatformOptions* aPlatformOptions)
-    : mUseEmbeddedBitmap(false),
-      mForceGDIMode(false),
-      mGamma(2.2f),
-      mContrast(1.0f) {
-||||||| merged common ancestors
-ScaledFontDWrite::InstanceData::InstanceData(const wr::FontInstanceOptions* aOptions,
-                                             const wr::FontInstancePlatformOptions* aPlatformOptions)
-  : mUseEmbeddedBitmap(false)
-  , mForceGDIMode(false)
-  , mGamma(2.2f)
-  , mContrast(1.0f)
-{
-=======
 ScaledFontDWrite::InstanceData::InstanceData(
     const wr::FontInstanceOptions* aOptions,
     const wr::FontInstancePlatformOptions* aPlatformOptions)
@@ -623,7 +420,6 @@ ScaledFontDWrite::InstanceData::InstanceData(
       mRenderingMode(DWRITE_RENDERING_MODE_DEFAULT),
       mGamma(2.2f),
       mContrast(1.0f) {
->>>>>>> upstream-releases
   if (aOptions) {
     if (aOptions->flags & wr::FontInstanceFlags_EMBEDDED_BITMAPS) {
       mUseEmbeddedBitmap = true;
@@ -811,25 +607,10 @@ already_AddRefed<ScaledFont> UnscaledFontDWrite::CreateScaledFont(
     }
   }
 
-<<<<<<< HEAD
-  RefPtr<ScaledFontBase> scaledFont = new ScaledFontDWrite(
-      face, this, aGlyphSize, instanceData.mUseEmbeddedBitmap,
-      instanceData.mForceGDIMode, nullptr, instanceData.mGamma,
-      instanceData.mContrast);
-||||||| merged common ancestors
-  RefPtr<ScaledFontBase> scaledFont =
-    new ScaledFontDWrite(face, this, aGlyphSize,
-                         instanceData.mUseEmbeddedBitmap,
-                         instanceData.mForceGDIMode,
-                         nullptr,
-                         instanceData.mGamma,
-                         instanceData.mContrast);
-=======
   RefPtr<ScaledFontBase> scaledFont = new ScaledFontDWrite(
       face, this, aGlyphSize, instanceData.mUseEmbeddedBitmap,
       instanceData.mRenderingMode, nullptr, instanceData.mGamma,
       instanceData.mContrast);
->>>>>>> upstream-releases
 
   if (mNeedsCairo && !scaledFont->PopulateCairoScaledFont()) {
     gfxWarning() << "Unable to create cairo scaled font DWrite font.";

@@ -160,14 +160,7 @@ class MarionetteTestharnessProtocolPart(TestharnessProtocolPart):
             try:
                 self.logger.info("Closing window %s" % handle)
                 self.marionette.switch_to_window(handle)
-<<<<<<< HEAD
-                self.logger.info("Closing window %s" % handle)
-                self.marionette.close()
-||||||| merged common ancestors
-                self.marionette.close()
-=======
                 self.dismiss_alert(lambda: self.marionette.close())
->>>>>>> upstream-releases
             except errors.NoSuchWindowException:
                 # We might have raced with the previous test to close this
                 # window, skip it.
@@ -669,20 +662,6 @@ class MarionetteTestharnessExecutor(TestharnessExecutor):
         TestharnessExecutor.__init__(self, browser, server_config,
                                      timeout_multiplier=timeout_multiplier,
                                      debug_info=debug_info)
-<<<<<<< HEAD
-        self.protocol = MarionetteProtocol(self,
-                                           browser,
-                                           capabilities,
-                                           timeout_multiplier,
-                                           kwargs["e10s"],
-                                           ccov)
-        self.script = open(os.path.join(here, "testharness_webdriver.js")).read()
-        self.script_resume = open(os.path.join(here, "testharness_webdriver_resume.js")).read()
-||||||| merged common ancestors
-        self.protocol = MarionetteProtocol(self, browser, capabilities, timeout_multiplier, kwargs["e10s"], ccov)
-        self.script = open(os.path.join(here, "testharness_webdriver.js")).read()
-        self.script_resume = open(os.path.join(here, "testharness_webdriver_resume.js")).read()
-=======
         self.protocol = MarionetteProtocol(self,
                                            browser,
                                            capabilities,
@@ -691,7 +670,6 @@ class MarionetteTestharnessExecutor(TestharnessExecutor):
                                            ccov)
         with open(os.path.join(here, "testharness_webdriver_resume.js")) as f:
             self.script_resume = f.read()
->>>>>>> upstream-releases
         self.close_after_done = close_after_done
         self.window_id = str(uuid.uuid4())
         self.debug = debug
@@ -747,33 +725,7 @@ class MarionetteTestharnessExecutor(TestharnessExecutor):
         if self.protocol.coverage.is_enabled:
             self.protocol.coverage.reset()
 
-<<<<<<< HEAD
-        format_map = {"abs_url": url,
-                      "url": strip_server(url),
-                      "window_id": self.window_id,
-                      "timeout_multiplier": self.timeout_multiplier,
-                      "timeout": timeout_ms,
-                      "explicit_timeout": timeout is None}
-
-        script = self.script % format_map
-
-        protocol.base.execute_script(script, async=True)
-        test_window = protocol.testharness.get_test_window(self.window_id, parent_window)
-||||||| merged common ancestors
-        format_map = {"abs_url": url,
-                      "url": strip_server(url),
-                      "window_id": self.window_id,
-                      "timeout_multiplier": self.timeout_multiplier,
-                      "timeout": timeout_ms,
-                      "explicit_timeout": timeout is None}
-
-        script = self.script % format_map
-
-        rv = protocol.base.execute_script(script)
-        test_window = protocol.testharness.get_test_window(self.window_id, parent_window)
-=======
         format_map = {"url": strip_server(url)}
->>>>>>> upstream-releases
 
         protocol.base.execute_script("window.open(undefined, '%s', 'noopener')" % self.window_id)
         test_window = protocol.testharness.get_test_window(self.window_id, parent_window,
@@ -782,7 +734,6 @@ class MarionetteTestharnessExecutor(TestharnessExecutor):
         handler = CallbackHandler(self.logger, protocol, test_window)
         protocol.marionette.navigate(url)
         while True:
-            self.protocol.base.set_window(test_window)
             result = protocol.base.execute_script(
                 self.script_resume % format_map, async=True)
             if result is None:
@@ -838,34 +789,18 @@ class MarionetteRefTestExecutor(RefTestExecutor):
     def teardown(self):
         try:
             self.implementation.teardown()
-<<<<<<< HEAD
-            handles = self.protocol.marionette.window_handles
-            if handles:
-                self.protocol.marionette.switch_to_window(handles[0])
-||||||| merged common ancestors
-            handle = self.protocol.marionette.window_handles[0]
-            self.protocol.marionette.switch_to_window(handle)
-=======
             if self.protocol.marionette and self.protocol.marionette.session_id:
                 handles = self.protocol.marionette.window_handles
                 if handles:
                     self.protocol.marionette.switch_to_window(handles[0])
->>>>>>> upstream-releases
             super(self.__class__, self).teardown()
         except Exception as e:
             # Ignore errors during teardown
-<<<<<<< HEAD
-            self.logger.warning("Exception during reftest teardown:\n%s" %
-                                traceback.format_exc(e))
-||||||| merged common ancestors
-            self.logger.warning(traceback.format_exc(e))
-=======
             self.logger.warning("Exception during reftest teardown:\n%s" %
                                 traceback.format_exc(e))
 
     def reset(self):
         self.implementation.reset(**self.implementation_kwargs)
->>>>>>> upstream-releases
 
     def is_alive(self):
         return self.protocol.is_alive

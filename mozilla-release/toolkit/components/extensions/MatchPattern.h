@@ -155,22 +155,9 @@ class URLInfo final {
 };
 
 // Similar to URLInfo, but for cookies.
-<<<<<<< HEAD
-class MOZ_STACK_CLASS CookieInfo final {
- public:
-  MOZ_IMPLICIT CookieInfo(nsICookie2* aCookie) : mCookie(aCookie) {}
-||||||| merged common ancestors
-class MOZ_STACK_CLASS CookieInfo final
-{
-public:
-  MOZ_IMPLICIT CookieInfo(nsICookie2* aCookie)
-    : mCookie(aCookie)
-  {}
-=======
 class MOZ_STACK_CLASS CookieInfo final {
  public:
   MOZ_IMPLICIT CookieInfo(nsICookie* aCookie) : mCookie(aCookie) {}
->>>>>>> upstream-releases
 
   bool IsSecure() const;
   bool IsDomain() const;
@@ -178,16 +165,8 @@ class MOZ_STACK_CLASS CookieInfo final {
   const nsCString& Host() const;
   const nsCString& RawHost() const;
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsICookie2> mCookie;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsICookie2> mCookie;
-=======
  private:
   nsCOMPtr<nsICookie> mCookie;
->>>>>>> upstream-releases
 
   mutable Maybe<bool> mIsSecure;
   mutable Maybe<bool> mIsDomain;
@@ -240,15 +219,6 @@ class MatchPattern final : public nsISupports, public nsWrapperCache {
   void Init(JSContext* aCx, const nsAString& aPattern, bool aIgnorePath,
             bool aRestrictSchemes, ErrorResult& aRv);
 
-<<<<<<< HEAD
-  bool SubsumesDomain(const MatchPattern& aPattern) const;
-
-||||||| merged common ancestors
-  bool SubsumesDomain(const MatchPattern& aPattern) const;
-
-
-=======
->>>>>>> upstream-releases
   nsCOMPtr<nsISupports> mParent;
 
   // The normalized match pattern string that this object represents.

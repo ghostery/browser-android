@@ -177,18 +177,6 @@ protected:
 
 class SkOpSpanBase {
 public:
-<<<<<<< HEAD
-    enum class Collapsed {
-        kNo,
-        kYes,
-        kError,
-    };
-
-    void addOpp(SkOpSpanBase* opp);
-||||||| merged common ancestors
-    SkOpSpanBase* active();
-    void addOpp(SkOpSpanBase* opp);
-=======
     enum class Collapsed {
         kNo,
         kYes,
@@ -196,7 +184,6 @@ public:
     };
 
     bool addOpp(SkOpSpanBase* opp);
->>>>>>> upstream-releases
 
     void bumpSpanAdds() {
         ++fSpanAdds;

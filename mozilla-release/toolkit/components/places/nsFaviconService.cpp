@@ -79,19 +79,9 @@ nsresult GetFramesInfoForContainer(imgIContainer* aContainer,
           continue;
         }
         // Check if it's one of the sizes we care about.
-<<<<<<< HEAD
-        auto end = std::end(sFaviconSizes);
-        uint16_t* matchingSize =
-            std::find(std::begin(sFaviconSizes), end, nativeSize.width);
-||||||| merged common ancestors
-        auto end = std::end(sFaviconSizes);
-        uint16_t* matchingSize = std::find(std::begin(sFaviconSizes), end,
-                                          nativeSize.width);
-=======
         auto end = std::end(gFaviconSizes);
         const uint16_t* matchingSize =
             std::find(std::begin(gFaviconSizes), end, nativeSize.width);
->>>>>>> upstream-releases
         if (matchingSize != end) {
           // We must avoid duped sizes, an image could contain multiple frames
           // of the same size, but we can only store one. We could use an
@@ -188,39 +178,18 @@ nsFaviconService::ExpireAllFavicons() {
       mDB->GetAsyncStatement("DELETE FROM moz_icons_to_pages");
   NS_ENSURE_STATE(unlinkIconsStmt);
 
-<<<<<<< HEAD
-  mozIStorageBaseStatement* stmts[] = {
-      removePagesStmt.get(), removeIconsStmt.get(), unlinkIconsStmt.get()};
-||||||| merged common ancestors
-  mozIStorageBaseStatement* stmts[] = {
-    removePagesStmt.get()
-  , removeIconsStmt.get()
-  , unlinkIconsStmt.get()
-  };
-=======
   nsTArray<RefPtr<mozIStorageBaseStatement>> stmts = {removePagesStmt.forget(),
 
                                                       removeIconsStmt.forget(),
                                                       unlinkIconsStmt.forget()};
->>>>>>> upstream-releases
   nsCOMPtr<mozIStorageConnection> conn = mDB->MainConn();
   if (!conn) {
     return NS_ERROR_UNEXPECTED;
   }
   nsCOMPtr<mozIStoragePendingStatement> ps;
   RefPtr<ExpireFaviconsStatementCallbackNotifier> callback =
-<<<<<<< HEAD
-      new ExpireFaviconsStatementCallbackNotifier();
-  return conn->ExecuteAsync(stmts, ArrayLength(stmts), callback,
-                            getter_AddRefs(ps));
-||||||| merged common ancestors
-    new ExpireFaviconsStatementCallbackNotifier();
-  return conn->ExecuteAsync(stmts, ArrayLength(stmts),
-                                        callback, getter_AddRefs(ps));
-=======
       new ExpireFaviconsStatementCallbackNotifier();
   return conn->ExecuteAsync(stmts, callback, getter_AddRefs(ps));
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -332,28 +301,6 @@ nsFaviconService::SetAndFetchFaviconForPage(
              "please provide aLoadingPrincipal for this favicon");
   if (!loadingPrincipal) {
     // Let's default to the nullPrincipal if no loadingPrincipal is provided.
-<<<<<<< HEAD
-    const char16_t* params[] = {
-        u"nsFaviconService::setAndFetchFaviconForPage()",
-        u"nsFaviconService::setAndFetchFaviconForPage(..., [optional "
-        u"aLoadingPrincipal])"};
-    nsContentUtils::ReportToConsole(
-        nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Security by Default"),
-        nullptr,  // aDocument
-        nsContentUtils::eNECKO_PROPERTIES, "APIDeprecationWarning", params,
-        ArrayLength(params));
-||||||| merged common ancestors
-    const char16_t* params[] = {
-      u"nsFaviconService::setAndFetchFaviconForPage()",
-      u"nsFaviconService::setAndFetchFaviconForPage(..., [optional aLoadingPrincipal])"
-    };
-    nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                    NS_LITERAL_CSTRING("Security by Default"),
-                                    nullptr, // aDocument
-                                    nsContentUtils::eNECKO_PROPERTIES,
-                                    "APIDeprecationWarning",
-                                    params, ArrayLength(params));
-=======
     AutoTArray<nsString, 2> params = {
         NS_LITERAL_STRING("nsFaviconService::setAndFetchFaviconForPage()"),
         NS_LITERAL_STRING("nsFaviconService::setAndFetchFaviconForPage(..., "
@@ -362,7 +309,6 @@ nsFaviconService::SetAndFetchFaviconForPage(
         nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Security by Default"),
         nullptr,  // aDocument
         nsContentUtils::eNECKO_PROPERTIES, "APIDeprecationWarning", params);
->>>>>>> upstream-releases
     loadingPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
   }
   NS_ENSURE_TRUE(loadingPrincipal, NS_ERROR_FAILURE);
@@ -439,24 +385,10 @@ nsFaviconService::SetAndFetchFaviconForPage(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFaviconService::ReplaceFaviconData(nsIURI* aFaviconURI, const uint8_t* aData,
-                                     uint32_t aDataLen,
-                                     const nsACString& aMimeType,
-                                     PRTime aExpiration) {
-||||||| merged common ancestors
-nsFaviconService::ReplaceFaviconData(nsIURI* aFaviconURI,
-                                    const uint8_t* aData,
-                                    uint32_t aDataLen,
-                                    const nsACString& aMimeType,
-                                    PRTime aExpiration)
-{
-=======
 nsFaviconService::ReplaceFaviconData(nsIURI* aFaviconURI,
                                      const nsTArray<uint8_t>& aData,
                                      const nsACString& aMimeType,
                                      PRTime aExpiration) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   NS_ENSURE_ARG(aFaviconURI);
   NS_ENSURE_ARG(aData.Length() > 0);
@@ -563,28 +495,6 @@ nsFaviconService::ReplaceFaviconDataFromDataURL(
              "please provide aLoadingPrincipal for this favicon");
   if (!loadingPrincipal) {
     // Let's default to the nullPrincipal if no loadingPrincipal is provided.
-<<<<<<< HEAD
-    const char16_t* params[] = {
-        u"nsFaviconService::ReplaceFaviconDataFromDataURL()",
-        u"nsFaviconService::ReplaceFaviconDataFromDataURL(..., [optional "
-        u"aLoadingPrincipal])"};
-    nsContentUtils::ReportToConsole(
-        nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Security by Default"),
-        nullptr,  // aDocument
-        nsContentUtils::eNECKO_PROPERTIES, "APIDeprecationWarning", params,
-        ArrayLength(params));
-||||||| merged common ancestors
-    const char16_t* params[] = {
-      u"nsFaviconService::ReplaceFaviconDataFromDataURL()",
-      u"nsFaviconService::ReplaceFaviconDataFromDataURL(..., [optional aLoadingPrincipal])"
-    };
-    nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                    NS_LITERAL_CSTRING("Security by Default"),
-                                    nullptr, // aDocument
-                                    nsContentUtils::eNECKO_PROPERTIES,
-                                    "APIDeprecationWarning",
-                                    params, ArrayLength(params));
-=======
     AutoTArray<nsString, 2> params = {
         NS_LITERAL_STRING("nsFaviconService::ReplaceFaviconDataFromDataURL()"),
         NS_LITERAL_STRING("nsFaviconService::ReplaceFaviconDataFromDataURL(...,"
@@ -593,7 +503,6 @@ nsFaviconService::ReplaceFaviconDataFromDataURL(
         nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Security by Default"),
         nullptr,  // aDocument
         nsContentUtils::eNECKO_PROPERTIES, "APIDeprecationWarning", params);
->>>>>>> upstream-releases
 
     loadingPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
   }
@@ -624,16 +533,8 @@ nsFaviconService::ReplaceFaviconDataFromDataURL(
   uint32_t available = (uint32_t)available64;
 
   // Read all the decoded data.
-<<<<<<< HEAD
-  uint8_t* buffer =
-      static_cast<uint8_t*>(moz_xmalloc(sizeof(uint8_t) * available));
-||||||| merged common ancestors
-  uint8_t* buffer = static_cast<uint8_t*>
-                               (moz_xmalloc(sizeof(uint8_t) * available));
-=======
   nsTArray<uint8_t> buffer;
   buffer.SetLength(available);
->>>>>>> upstream-releases
   uint32_t numRead;
   rv = stream->Read(TO_CHARBUFFER(buffer.Elements()), available, &numRead);
   if (NS_FAILED(rv) || numRead != available) {
@@ -647,16 +548,7 @@ nsFaviconService::ReplaceFaviconDataFromDataURL(
   }
 
   // ReplaceFaviconData can now do the dirty work.
-<<<<<<< HEAD
-  rv =
-      ReplaceFaviconData(aFaviconURI, buffer, available, mimeType, aExpiration);
-  free(buffer);
-||||||| merged common ancestors
-  rv = ReplaceFaviconData(aFaviconURI, buffer, available, mimeType, aExpiration);
-  free(buffer);
-=======
   rv = ReplaceFaviconData(aFaviconURI, buffer, mimeType, aExpiration);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   return NS_OK;

@@ -66,15 +66,9 @@ EXPORTS.mozilla.dom += [
     'TabMessageUtils.h',
     'URLClassifierChild.h',
     'URLClassifierParent.h',
-<<<<<<< HEAD
-    'WindowGlobalChild.h',
-    'WindowGlobalParent.h',
-||||||| merged common ancestors
-=======
     'WindowGlobalActor.h',
     'WindowGlobalChild.h',
     'WindowGlobalParent.h',
->>>>>>> upstream-releases
 ]
 
 EXPORTS.mozilla += [
@@ -120,15 +114,9 @@ UNIFIED_SOURCES += [
     'TabContext.cpp',
     'TabMessageUtils.cpp',
     'URLClassifierParent.cpp',
-<<<<<<< HEAD
-    'WindowGlobalChild.cpp',
-    'WindowGlobalParent.cpp',
-||||||| merged common ancestors
-=======
     'WindowGlobalActor.cpp',
     'WindowGlobalChild.cpp',
     'WindowGlobalParent.cpp',
->>>>>>> upstream-releases
 ]
 
 # ContentChild.cpp cannot be compiled in unified mode on  linux due to Time conflict

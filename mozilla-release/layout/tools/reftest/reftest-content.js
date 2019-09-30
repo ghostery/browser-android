@@ -1100,19 +1100,10 @@ function DoAssertionCheck()
 
 function LoadURI(uri)
 {
-<<<<<<< HEAD
-    var flags = webNavigation().LOAD_FLAGS_NONE;
-    var systemPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-    webNavigation().loadURI(uri, flags, null, null, null, systemPrincipal);
-||||||| merged common ancestors
-    var flags = webNavigation().LOAD_FLAGS_NONE;
-    webNavigation().loadURI(uri, flags, null, null, null);
-=======
     let loadURIOptions = {
       triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
     };
     webNavigation().loadURI(uri, loadURIOptions);
->>>>>>> upstream-releases
 }
 
 function LogWarning(str)

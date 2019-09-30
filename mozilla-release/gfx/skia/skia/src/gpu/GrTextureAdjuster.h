@@ -36,42 +36,20 @@ public:
 
 protected:
     SkAlphaType alphaType() const override { return fAlphaType; }
-<<<<<<< HEAD
-    void makeCopyKey(const CopyParams& params, GrUniqueKey* copyKey) override;
-    void didCacheCopy(const GrUniqueKey& copyKey, uint32_t contextUniqueID) override;
-||||||| merged common ancestors
-    void makeCopyKey(const CopyParams& params, GrUniqueKey* copyKey,
-                     SkColorSpace* dstColorSpace) override;
-    void didCacheCopy(const GrUniqueKey& copyKey) override;
-=======
     SkColorSpace* colorSpace() const override { return fColorSpace; }
     void makeCopyKey(const CopyParams& params, GrUniqueKey* copyKey) override;
     void didCacheCopy(const GrUniqueKey& copyKey, uint32_t contextUniqueID) override;
->>>>>>> upstream-releases
 
     GrTextureProxy* originalProxy() const { return fOriginal.get(); }
     sk_sp<GrTextureProxy> originalProxyRef() const { return fOriginal; }
 
 private:
-<<<<<<< HEAD
-    sk_sp<GrTextureProxy> onRefTextureProxyForParams(const GrSamplerState&,
-                                                     SkColorSpace* dstColorSpace,
-                                                     sk_sp<SkColorSpace>* proxyColorSpace,
-                                                     bool willBeMipped,
-                                                     SkScalar scaleAdjust[2]) override;
-
-    sk_sp<GrTextureProxy> refTextureProxyCopy(const CopyParams& copyParams, bool willBeMipped);
-
-||||||| merged common ancestors
-    GrContext*            fContext;
-=======
     sk_sp<GrTextureProxy> onRefTextureProxyForParams(const GrSamplerState&,
                                                      bool willBeMipped,
                                                      SkScalar scaleAdjust[2]) override;
 
     sk_sp<GrTextureProxy> refTextureProxyCopy(const CopyParams& copyParams, bool willBeMipped);
 
->>>>>>> upstream-releases
     sk_sp<GrTextureProxy> fOriginal;
     SkAlphaType           fAlphaType;
     SkColorSpace*         fColorSpace;

@@ -112,73 +112,6 @@ class nsXBLPrototypeBinding final
   void SetInitialAttributes(mozilla::dom::Element* aBoundElement,
                             nsIContent* aAnonymousContent);
 
-<<<<<<< HEAD
-  void AppendStyleSheet(mozilla::StyleSheet* aSheet);
-  void RemoveStyleSheet(mozilla::StyleSheet* aSheet);
-  void InsertStyleSheetAt(size_t aIndex, mozilla::StyleSheet* aSheet);
-  mozilla::StyleSheet* StyleSheetAt(size_t aIndex) const;
-  size_t SheetCount() const;
-  bool HasStyleSheets() const;
-  void AppendStyleSheetsTo(nsTArray<mozilla::StyleSheet*>& aResult) const;
-
-  const RawServoAuthorStyles* GetServoStyles() const {
-    return mResources ? mResources->GetServoStyles() : nullptr;
-  }
-
-  void SyncServoStyles() {
-    MOZ_ASSERT(mResources);
-    mResources->SyncServoStyles();
-  }
-
-  RawServoAuthorStyles* GetServoStyles() {
-    return mResources
-               ? const_cast<RawServoAuthorStyles*>(mResources->GetServoStyles())
-               : nullptr;
-  }
-
-  mozilla::ServoStyleRuleMap* GetServoStyleRuleMap() {
-    return mResources ? mResources->GetServoStyleRuleMap() : nullptr;
-  }
-
-  nsresult FlushSkinSheets();
-
-||||||| merged common ancestors
-  void AppendStyleSheet(mozilla::StyleSheet* aSheet);
-  void RemoveStyleSheet(mozilla::StyleSheet* aSheet);
-  void InsertStyleSheetAt(size_t aIndex, mozilla::StyleSheet* aSheet);
-  mozilla::StyleSheet* StyleSheetAt(size_t aIndex) const;
-  size_t SheetCount() const;
-  bool HasStyleSheets() const;
-  void AppendStyleSheetsTo(nsTArray<mozilla::StyleSheet*>& aResult) const;
-
-
-  const RawServoAuthorStyles* GetServoStyles() const
-  {
-    return mResources ? mResources->GetServoStyles() : nullptr;
-  }
-
-  void SyncServoStyles()
-  {
-    MOZ_ASSERT(mResources);
-    mResources->SyncServoStyles();
-  }
-
-  RawServoAuthorStyles* GetServoStyles()
-  {
-    return mResources
-      ? const_cast<RawServoAuthorStyles*>(mResources->GetServoStyles())
-      : nullptr;
-  }
-
-  mozilla::ServoStyleRuleMap* GetServoStyleRuleMap()
-  {
-    return mResources ? mResources->GetServoStyleRuleMap() : nullptr;
-  }
-
-  nsresult FlushSkinSheets();
-
-=======
->>>>>>> upstream-releases
   nsAtom* GetBaseTag(int32_t* aNamespaceID);
   void SetBaseTag(int32_t aNamespaceID, nsAtom* aTag);
 
@@ -197,21 +130,9 @@ class nsXBLPrototypeBinding final
     return &mKeyHandlers;
   }
 
-<<<<<<< HEAD
- private:
-  nsresult Read(nsIObjectInputStream* aStream, nsXBLDocumentInfo* aDocInfo,
-                nsIDocument* aDocument, uint8_t aFlags);
-||||||| merged common ancestors
-private:
-  nsresult Read(nsIObjectInputStream* aStream,
-                nsXBLDocumentInfo* aDocInfo,
-                nsIDocument* aDocument,
-                uint8_t aFlags);
-=======
  private:
   nsresult Read(nsIObjectInputStream* aStream, nsXBLDocumentInfo* aDocInfo,
                 mozilla::dom::Document* aDocument, uint8_t aFlags);
->>>>>>> upstream-releases
 
   /**
    * Read a new binding from the stream aStream into the xbl document aDocument.
@@ -225,15 +146,8 @@ private:
  public:
   static nsresult ReadNewBinding(nsIObjectInputStream* aStream,
                                  nsXBLDocumentInfo* aDocInfo,
-<<<<<<< HEAD
-                                 nsIDocument* aDocument, uint8_t aFlags);
-||||||| merged common ancestors
-                                 nsIDocument* aDocument,
-                                 uint8_t aFlags);
-=======
                                  mozilla::dom::Document* aDocument,
                                  uint8_t aFlags);
->>>>>>> upstream-releases
 
   /**
    * Write this binding to the stream.
@@ -246,17 +160,8 @@ private:
    * the child will be inserted into.
    */
   nsresult ReadContentNode(nsIObjectInputStream* aStream,
-<<<<<<< HEAD
-                           nsIDocument* aDocument, nsNodeInfoManager* aNim,
-                           nsIContent** aChild);
-||||||| merged common ancestors
-                           nsIDocument* aDocument,
-                           nsNodeInfoManager* aNim,
-                           nsIContent** aChild);
-=======
                            mozilla::dom::Document* aDocument,
                            nsNodeInfoManager* aNim, nsIContent** aChild);
->>>>>>> upstream-releases
 
   /**
    * Write the content node aNode to aStream.
@@ -342,22 +247,8 @@ private:
   void ConstructAttributeTable(mozilla::dom::Element* aElement);
   void CreateKeyHandlers();
 
-<<<<<<< HEAD
- private:
-  void EnsureResources();
-
   // MEMBER VARIABLES
  protected:
-||||||| merged common ancestors
-private:
-  void EnsureResources();
-
-// MEMBER VARIABLES
-protected:
-=======
-  // MEMBER VARIABLES
- protected:
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> mBindingURI;
   nsCOMPtr<nsIURI> mAlternateBindingURI;  // Alternate id-less URI that is only
                                           // non-null on the first binding.
@@ -385,20 +276,8 @@ protected:
   // FIXME(emilio): This is dead code now.
   bool mSimpleScopeChain;
 
-<<<<<<< HEAD
-  nsAutoPtr<nsXBLPrototypeResources>
-      mResources;  // If we have any resources, this will be non-null.
-
   nsXBLDocumentInfo* mXBLDocInfoWeak;  // A pointer back to our doc info.  Weak,
                                        // since it owns us.
-||||||| merged common ancestors
-  nsAutoPtr<nsXBLPrototypeResources> mResources; // If we have any resources, this will be non-null.
-
-  nsXBLDocumentInfo* mXBLDocInfoWeak; // A pointer back to our doc info.  Weak, since it owns us.
-=======
-  nsXBLDocumentInfo* mXBLDocInfoWeak;  // A pointer back to our doc info.  Weak,
-                                       // since it owns us.
->>>>>>> upstream-releases
 
   // A table for attribute containers. Namespace IDs are used as
   // keys in the table. Containers are InnerAttributeTables.
@@ -431,22 +310,8 @@ protected:
    private:
     nsIID mKey;
   };
-<<<<<<< HEAD
   nsInterfaceHashtable<IIDHashKey, nsIContent>
       mInterfaceTable;  // A table of cached interfaces that we support.
-
-  int32_t mBaseNameSpaceID;  // If we extend a tagname/namespace, then that
-                             // information will
-  RefPtr<nsAtom> mBaseTag;   // be stored in here.
-||||||| merged common ancestors
-  nsInterfaceHashtable<IIDHashKey, nsIContent> mInterfaceTable; // A table of cached interfaces that we support.
-
-  int32_t mBaseNameSpaceID;    // If we extend a tagname/namespace, then that information will
-  RefPtr<nsAtom> mBaseTag;  // be stored in here.
-=======
-  nsInterfaceHashtable<IIDHashKey, nsIContent>
-      mInterfaceTable;  // A table of cached interfaces that we support.
->>>>>>> upstream-releases
 
   nsCOMArray<nsXBLKeyEventHandler> mKeyHandlers;
 };

@@ -39,16 +39,8 @@ class FileDescriptorSetChild final : public PFileDescriptorSetChild {
   explicit FileDescriptorSetChild(const FileDescriptor& aFileDescriptor);
   ~FileDescriptorSetChild();
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvAddFileDescriptor(
-      const FileDescriptor& aFileDescriptor) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvAddFileDescriptor(const FileDescriptor& aFileDescriptor) override;
-=======
   mozilla::ipc::IPCResult RecvAddFileDescriptor(
       const FileDescriptor& aFileDescriptor);
->>>>>>> upstream-releases
 };
 
 }  // namespace ipc

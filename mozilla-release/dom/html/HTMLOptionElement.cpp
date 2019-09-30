@@ -243,24 +243,9 @@ void HTMLOptionElement::SetText(const nsAString& aText, ErrorResult& aRv) {
   aRv = nsContentUtils::SetNodeTextContent(this, aText, true);
 }
 
-<<<<<<< HEAD
-nsresult HTMLOptionElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLOptionElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLOptionElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Our new parent might change :disabled/:enabled state.
@@ -269,18 +254,8 @@ nsresult HTMLOptionElement::BindToTree(BindContext& aContext,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLOptionElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-HTMLOptionElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
-=======
 void HTMLOptionElement::UnbindFromTree(bool aNullParent) {
   nsGenericHTMLElement::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 
   // Our previous parent could have been involved in :disabled/:enabled state.
   UpdateDisabledState(false);

@@ -510,32 +510,6 @@ uint32_t HyperTextAccessible::FindOffset(uint32_t aOffset,
 
   nsIFrame* frameAtOffset = childFrame;
   int32_t unusedOffsetInFrame = 0;
-<<<<<<< HEAD
-  childFrame->GetChildFrameContainingOffset(
-      innerContentOffset, true, &unusedOffsetInFrame, &frameAtOffset);
-
-  const bool kIsJumpLinesOk = true;       // okay to jump lines
-  const bool kIsScrollViewAStop = false;  // do not stop at scroll views
-  const bool kIsKeyboardSelect = true;    // is keyboard selection
-  const bool kIsVisualBidi = false;       // use visual order for bidi text
-  nsPeekOffsetStruct pos(
-      aAmount, aDirection, innerContentOffset, nsPoint(0, 0), kIsJumpLinesOk,
-      kIsScrollViewAStop, kIsKeyboardSelect, kIsVisualBidi, false,
-      nsPeekOffsetStruct::ForceEditableRegion::No, aWordMovementType);
-||||||| merged common ancestors
-  childFrame->GetChildFrameContainingOffset(innerContentOffset, true,
-                                            &unusedOffsetInFrame,
-                                            &frameAtOffset);
-
-  const bool kIsJumpLinesOk = true; // okay to jump lines
-  const bool kIsScrollViewAStop = false; // do not stop at scroll views
-  const bool kIsKeyboardSelect = true; // is keyboard selection
-  const bool kIsVisualBidi = false; // use visual order for bidi text
-  nsPeekOffsetStruct pos(aAmount, aDirection, innerContentOffset,
-                         nsPoint(0, 0), kIsJumpLinesOk, kIsScrollViewAStop,
-                         kIsKeyboardSelect, kIsVisualBidi,
-                         false, aWordMovementType);
-=======
   childFrame->GetChildFrameContainingOffset(
       innerContentOffset, true, &unusedOffsetInFrame, &frameAtOffset);
 
@@ -547,7 +521,6 @@ uint32_t HyperTextAccessible::FindOffset(uint32_t aOffset,
       aAmount, aDirection, innerContentOffset, nsPoint(0, 0), kIsJumpLinesOk,
       kIsScrollViewAStop, kIsKeyboardSelect, kIsVisualBidi, false,
       nsPeekOffsetStruct::ForceEditableRegion::No, aWordMovementType, false);
->>>>>>> upstream-releases
   nsresult rv = frameAtOffset->PeekOffset(&pos);
 
   // PeekOffset fails on last/first lines of the text in certain cases.
@@ -1305,14 +1278,7 @@ nsresult HyperTextAccessible::SetSelectionRange(int32_t aStartPos,
 
   // Make sure it is visible
   domSel->ScrollIntoView(nsISelectionController::SELECTION_FOCUS_REGION,
-<<<<<<< HEAD
-                         nsIPresShell::ScrollAxis(), nsIPresShell::ScrollAxis(),
-||||||| merged common ancestors
-                         nsIPresShell::ScrollAxis(),
-                         nsIPresShell::ScrollAxis(),
-=======
                          ScrollAxis(), ScrollAxis(),
->>>>>>> upstream-releases
                          dom::Selection::SCROLL_FOR_CARET_MOVE |
                              dom::Selection::SCROLL_OVERFLOW_HIDDEN);
 
@@ -1682,22 +1648,9 @@ void HyperTextAccessible::ScrollSubstringToPoint(int32_t aStartOffset,
         int16_t hPercent = offsetPointX * 100 / size.width;
         int16_t vPercent = offsetPointY * 100 / size.height;
 
-<<<<<<< HEAD
-        nsresult rv = nsCoreUtils::ScrollSubstringTo(
-            frame, range, nsIPresShell::ScrollAxis(vPercent),
-            nsIPresShell::ScrollAxis(hPercent));
-        if (NS_FAILED(rv)) return;
-||||||| merged common ancestors
-        nsresult rv = nsCoreUtils::ScrollSubstringTo(frame, range,
-                                                     nsIPresShell::ScrollAxis(vPercent),
-                                                     nsIPresShell::ScrollAxis(hPercent));
-        if (NS_FAILED(rv))
-          return;
-=======
         nsresult rv = nsCoreUtils::ScrollSubstringTo(
             frame, range, ScrollAxis(vPercent), ScrollAxis(hPercent));
         if (NS_FAILED(rv)) return;
->>>>>>> upstream-releases
 
         initialScrolled = true;
       } else {
@@ -1897,21 +1850,10 @@ nsresult HyperTextAccessible::ContentToRenderedOffset(
   NS_ASSERTION(aFrame->GetPrevContinuation() == nullptr,
                "Call on primary frame only");
 
-<<<<<<< HEAD
-  nsIFrame::RenderedText text = aFrame->GetRenderedText(
-      aContentOffset, aContentOffset + 1,
-      nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
-      nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
-||||||| merged common ancestors
-  nsIFrame::RenderedText text = aFrame->GetRenderedText(aContentOffset,
-      aContentOffset + 1, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
-      nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
-=======
   nsIFrame::RenderedText text =
       aFrame->GetRenderedText(aContentOffset, aContentOffset + 1,
                               nsIFrame::TextOffsetType::OffsetsInContentText,
                               nsIFrame::TrailingWhitespace::DontTrim);
->>>>>>> upstream-releases
   *aRenderedOffset = text.mOffsetWithinNodeRenderedText;
 
   return NS_OK;
@@ -1931,21 +1873,10 @@ nsresult HyperTextAccessible::RenderedToContentOffset(
   NS_ASSERTION(aFrame->GetPrevContinuation() == nullptr,
                "Call on primary frame only");
 
-<<<<<<< HEAD
-  nsIFrame::RenderedText text = aFrame->GetRenderedText(
-      aRenderedOffset, aRenderedOffset + 1,
-      nsIFrame::TextOffsetType::OFFSETS_IN_RENDERED_TEXT,
-      nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
-||||||| merged common ancestors
-  nsIFrame::RenderedText text = aFrame->GetRenderedText(aRenderedOffset,
-      aRenderedOffset + 1, nsIFrame::TextOffsetType::OFFSETS_IN_RENDERED_TEXT,
-      nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
-=======
   nsIFrame::RenderedText text =
       aFrame->GetRenderedText(aRenderedOffset, aRenderedOffset + 1,
                               nsIFrame::TextOffsetType::OffsetsInRenderedText,
                               nsIFrame::TrailingWhitespace::DontTrim);
->>>>>>> upstream-releases
   *aContentOffset = text.mOffsetWithinNodeText;
 
   return NS_OK;

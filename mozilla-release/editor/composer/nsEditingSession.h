@@ -17,13 +17,7 @@
 #endif
 
 #ifndef __gen_nsIEditingSession_h__
-<<<<<<< HEAD
-#include "nsIEditingSession.h"  // for NS_DECL_NSIEDITINGSESSION, etc
-||||||| merged common ancestors
-#include "nsIEditingSession.h"          // for NS_DECL_NSIEDITINGSESSION, etc
-=======
 #  include "nsIEditingSession.h"  // for NS_DECL_NSIEDITINGSESSION, etc
->>>>>>> upstream-releases
 #endif
 
 #include "nsString.h"  // for nsCString
@@ -58,19 +52,11 @@ class nsEditingSession final : public nsIEditingSession,
   // nsIEditingSession
   NS_DECL_NSIEDITINGSESSION
 
-<<<<<<< HEAD
- protected:
-  virtual ~nsEditingSession();
-||||||| merged common ancestors
-protected:
-  virtual         ~nsEditingSession();
-=======
   /**
    * Removes all the editor's controllers/listeners etc and makes the window
    * uneditable.
    */
   nsresult DetachFromWindow(nsPIDOMWindowOuter* aWindow);
->>>>>>> upstream-releases
 
   /**
    * Undos DetachFromWindow(), reattaches this editing session/editor
@@ -78,115 +64,31 @@ protected:
    */
   nsresult ReattachToWindow(nsPIDOMWindowOuter* aWindow);
 
-<<<<<<< HEAD
-  nsresult SetupEditorCommandController(
-      ControllerCreatorFn aControllerCreatorFn, mozIDOMWindowProxy* aWindow,
-      nsISupports* aContext, uint32_t* aControllerId);
-||||||| merged common ancestors
-  nsresult        SetupEditorCommandController(ControllerCreatorFn aControllerCreatorFn,
-                                               mozIDOMWindowProxy* aWindow,
-                                               nsISupports* aContext,
-                                               uint32_t* aControllerId);
-=======
  protected:
   virtual ~nsEditingSession();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult SetContextOnControllerById(nsIControllers* aControllers,
-                                      nsISupports* aContext, uint32_t aID);
-||||||| merged common ancestors
-  nsresult        SetContextOnControllerById(nsIControllers* aControllers,
-                                            nsISupports* aContext,
-                                            uint32_t aID);
-=======
   typedef already_AddRefed<nsBaseCommandController> (*ControllerCreatorFn)();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult PrepareForEditing(nsPIDOMWindowOuter* aWindow);
-||||||| merged common ancestors
-  nsresult        PrepareForEditing(nsPIDOMWindowOuter* aWindow);
-=======
   nsresult SetupEditorCommandController(
       ControllerCreatorFn aControllerCreatorFn, mozIDOMWindowProxy* aWindow,
       nsISupports* aContext, uint32_t* aControllerId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static void TimerCallback(nsITimer* aTimer, void* aClosure);
-  nsCOMPtr<nsITimer> mLoadBlankDocTimer;
-||||||| merged common ancestors
-  static void     TimerCallback(nsITimer *aTimer, void *aClosure);
-  nsCOMPtr<nsITimer>  mLoadBlankDocTimer;
-=======
   nsresult SetContextOnControllerById(nsIControllers* aControllers,
                                       nsISupports* aContext, uint32_t aID);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // progress load stuff
-  nsresult StartDocumentLoad(nsIWebProgress* aWebProgress,
-                             bool isToBeMadeEditable);
-  nsresult EndDocumentLoad(nsIWebProgress* aWebProgress, nsIChannel* aChannel,
-                           nsresult aStatus, bool isToBeMadeEditable);
-  nsresult StartPageLoad(nsIChannel* aChannel);
-  nsresult EndPageLoad(nsIWebProgress* aWebProgress, nsIChannel* aChannel,
-                       nsresult aStatus);
-||||||| merged common ancestors
-  // progress load stuff
-  nsresult        StartDocumentLoad(nsIWebProgress *aWebProgress,
-                                    bool isToBeMadeEditable);
-  nsresult        EndDocumentLoad(nsIWebProgress *aWebProgress,
-                                  nsIChannel* aChannel, nsresult aStatus,
-                                  bool isToBeMadeEditable);
-  nsresult        StartPageLoad(nsIChannel *aChannel);
-  nsresult        EndPageLoad(nsIWebProgress *aWebProgress,
-                              nsIChannel* aChannel, nsresult aStatus);
-=======
   /**
    *  Set the editor on the controller(s) for this window
    */
   nsresult SetEditorOnControllers(nsPIDOMWindowOuter& aWindow,
                                   mozilla::HTMLEditor* aEditor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool IsProgressForTargetDocument(nsIWebProgress* aWebProgress);
-||||||| merged common ancestors
-  bool            IsProgressForTargetDocument(nsIWebProgress *aWebProgress);
-=======
   /**
    *  Setup editor and related support objects
    */
   MOZ_CAN_RUN_SCRIPT nsresult SetupEditorOnWindow(nsPIDOMWindowOuter& aWindow);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void RemoveEditorControllers(nsPIDOMWindowOuter* aWindow);
-  void RemoveWebProgressListener(nsPIDOMWindowOuter* aWindow);
-  void RestoreAnimationMode(nsPIDOMWindowOuter* aWindow);
-  void RemoveListenersAndControllers(nsPIDOMWindowOuter* aWindow,
-                                     mozilla::HTMLEditor* aHTMLEditor);
-||||||| merged common ancestors
-  void            RemoveEditorControllers(nsPIDOMWindowOuter* aWindow);
-  void            RemoveWebProgressListener(nsPIDOMWindowOuter* aWindow);
-  void            RestoreAnimationMode(nsPIDOMWindowOuter* aWindow);
-  void            RemoveListenersAndControllers(
-                    nsPIDOMWindowOuter* aWindow,
-                    mozilla::HTMLEditor* aHTMLEditor);
-=======
   nsresult PrepareForEditing(nsPIDOMWindowOuter* aWindow);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  bool mDoneSetup;  // have we prepared for editing yet?
-||||||| merged common ancestors
-protected:
-
-  bool            mDoneSetup;    // have we prepared for editing yet?
-=======
   static void TimerCallback(nsITimer* aTimer, void* aClosure);
   nsCOMPtr<nsITimer> mLoadBlankDocTimer;
 
@@ -221,7 +123,6 @@ protected:
 
  protected:
   bool mDoneSetup;  // have we prepared for editing yet?
->>>>>>> upstream-releases
 
   // Used to prevent double creation of editor because nsIWebProgressListener
   //  receives a STATE_STOP notification before the STATE_START

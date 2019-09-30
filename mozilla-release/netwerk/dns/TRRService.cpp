@@ -116,29 +116,13 @@ bool TRRService::Enabled() {
   return (mConfirmationState == CONFIRM_OK);
 }
 
-<<<<<<< HEAD
-void TRRService::GetPrefBranch(nsIPrefBranch **result) {
-||||||| merged common ancestors
-void
-TRRService::GetPrefBranch(nsIPrefBranch **result)
-{
-=======
 void TRRService::GetPrefBranch(nsIPrefBranch** result) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "wrong thread");
   *result = nullptr;
   CallGetService(NS_PREFSERVICE_CONTRACTID, result);
 }
 
-<<<<<<< HEAD
-nsresult TRRService::ReadPrefs(const char *name) {
-||||||| merged common ancestors
-nsresult
-TRRService::ReadPrefs(const char *name)
-{
-=======
 nsresult TRRService::ReadPrefs(const char* name) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "wrong thread");
   if (!name || !strcmp(name, TRR_PREF("mode"))) {
     // 0 - off, 1 - reserved, 2 - TRR first, 3 - TRR only, 4 - reserved,
@@ -186,7 +170,7 @@ nsresult TRRService::ReadPrefs(const char* name) {
           nsAutoCString prefix(openBrace.nextToken());
 
           // if there is an open brace, there's another token
-          const nsACString &endBrace = openBrace.nextToken();
+          const nsACString& endBrace = openBrace.nextToken();
           nsCCharSeparatedTokenizer closeBrace(endBrace, '}');
           if (closeBrace.hasMoreTokens()) {
             // there is a close brace as well, make a URI out of the prefix
@@ -318,29 +302,13 @@ nsresult TRRService::ReadPrefs(const char* name) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TRRService::GetURI(nsCString &result) {
-||||||| merged common ancestors
-nsresult
-TRRService::GetURI(nsCString &result)
-{
-=======
 nsresult TRRService::GetURI(nsCString& result) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   result = mPrivateURI;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TRRService::GetCredentials(nsCString &result) {
-||||||| merged common ancestors
-nsresult
-TRRService::GetCredentials(nsCString &result)
-{
-=======
 nsresult TRRService::GetCredentials(nsCString& result) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   result = mPrivateCred;
   return NS_OK;
@@ -361,35 +329,16 @@ TRRService::~TRRService() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRRService::Observe(nsISupports *aSubject, const char *aTopic,
-                    const char16_t *aData) {
-||||||| merged common ancestors
-TRRService::Observe(nsISupports *aSubject,
-                    const char * aTopic,
-                    const char16_t * aData)
-{
-=======
 TRRService::Observe(nsISupports* aSubject, const char* aTopic,
                     const char16_t* aData) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "wrong thread");
   LOG(("TRR::Observe() topic=%s\n", aTopic));
   if (!strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID)) {
     ReadPrefs(NS_ConvertUTF16toUTF8(aData).get());
 
-<<<<<<< HEAD
-    if (((mConfirmationState == CONFIRM_INIT) && !mBootstrapAddr.IsEmpty() &&
-         (mMode == MODE_TRRONLY)) ||
-||||||| merged common ancestors
-    if (((mConfirmationState == CONFIRM_INIT) &&
-         !mBootstrapAddr.IsEmpty() &&
-         (mMode == MODE_TRRONLY))  ||
-=======
     MutexAutoLock lock(mLock);
     if (((mConfirmationState == CONFIRM_INIT) && !mBootstrapAddr.IsEmpty() &&
          (mMode == MODE_TRRONLY)) ||
->>>>>>> upstream-releases
         (mConfirmationState == CONFIRM_FAILED)) {
       mConfirmationState = CONFIRM_TRYING;
       MaybeConfirm_locked();
@@ -440,13 +389,6 @@ TRRService::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void TRRService::MaybeConfirm() {
-||||||| merged common ancestors
-void
-TRRService::MaybeConfirm()
-{
-=======
 void TRRService::MaybeConfirm() {
   MutexAutoLock lock(mLock);
   MaybeConfirm_locked();
@@ -454,23 +396,12 @@ void TRRService::MaybeConfirm() {
 
 void TRRService::MaybeConfirm_locked() {
   mLock.AssertCurrentThreadOwns();
->>>>>>> upstream-releases
   if (TRR_DISABLED(mMode) || mConfirmer ||
       mConfirmationState != CONFIRM_TRYING) {
-<<<<<<< HEAD
-    LOG(
-        ("TRRService:MaybeConfirm mode=%d, mConfirmer=%p "
-         "mConfirmationState=%d\n",
-         (int)mMode, (void *)mConfirmer, (int)mConfirmationState));
-||||||| merged common ancestors
-    LOG(("TRRService:MaybeConfirm mode=%d, mConfirmer=%p mConfirmationState=%d\n",
-         (int)mMode, (void *)mConfirmer, (int)mConfirmationState));
-=======
     LOG(
         ("TRRService:MaybeConfirm mode=%d, mConfirmer=%p "
          "mConfirmationState=%d\n",
          (int)mMode, (void*)mConfirmer, (int)mConfirmationState));
->>>>>>> upstream-releases
     return;
   }
 
@@ -479,35 +410,16 @@ void TRRService::MaybeConfirm_locked() {
          mPrivateURI.get()));
     mConfirmationState = CONFIRM_OK;
   } else {
-<<<<<<< HEAD
-    LOG(("TRRService starting confirmation test %s %s\n", mPrivateURI.get(),
-         host.get()));
-    mConfirmer = new TRR(this, host, TRRTYPE_NS, EmptyCString(), false);
-||||||| merged common ancestors
-    LOG(("TRRService starting confirmation test %s %s\n",
-         mPrivateURI.get(), host.get()));
-    mConfirmer = new TRR(this, host, TRRTYPE_NS, false);
-=======
     LOG(("TRRService starting confirmation test %s %s\n", mPrivateURI.get(),
          mConfirmationNS.get()));
     mConfirmer =
         new TRR(this, mConfirmationNS, TRRTYPE_NS, EmptyCString(), false);
->>>>>>> upstream-releases
     NS_DispatchToMainThread(mConfirmer);
   }
 }
 
-<<<<<<< HEAD
-bool TRRService::MaybeBootstrap(const nsACString &aPossible,
-                                nsACString &aResult) {
-||||||| merged common ancestors
-bool
-TRRService::MaybeBootstrap(const nsACString &aPossible, nsACString &aResult)
-{
-=======
 bool TRRService::MaybeBootstrap(const nsACString& aPossible,
                                 nsACString& aResult) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   if (TRR_DISABLED(mMode) || mBootstrapAddr.IsEmpty()) {
     return false;
@@ -538,21 +450,10 @@ bool TRRService::MaybeBootstrap(const nsACString& aPossible,
 
 // When running in TRR-only mode, the blacklist is not used and it will also
 // try resolving the localhost / .local names.
-<<<<<<< HEAD
-bool TRRService::IsTRRBlacklisted(const nsACString &aHost,
-                                  const nsACString &aOriginSuffix,
-                                  bool aPrivateBrowsing,
-                                  bool aParentsToo)  // false if domain
-||||||| merged common ancestors
-bool
-TRRService::IsTRRBlacklisted(const nsACString &aHost, bool privateBrowsing,
-                             bool aParentsToo) // false if domain
-=======
 bool TRRService::IsTRRBlacklisted(const nsACString& aHost,
                                   const nsACString& aOriginSuffix,
                                   bool aPrivateBrowsing,
                                   bool aParentsToo)  // false if domain
->>>>>>> upstream-releases
 {
   // Only use the Storage API on the main thread
   MOZ_ASSERT(NS_IsMainThread(), "wrong thread");
@@ -573,20 +474,8 @@ bool TRRService::IsTRRBlacklisted(const nsACString& aHost,
     return true;
   }
 
-<<<<<<< HEAD
-  if (mClearTRRBLStorage) {
-    mTRRBLStorage->Clear();
-    mClearTRRBLStorage = false;
-    return false;  // just cleared!
-||||||| merged common ancestors
-  if (mClearTRRBLStorage) {
-    mTRRBLStorage->Clear();
-    mClearTRRBLStorage = false;
-    return false; // just cleared!
-=======
   if (!Enabled()) {
     return true;
->>>>>>> upstream-releases
   }
 
   int32_t dot = aHost.FindChar('.');
@@ -635,67 +524,12 @@ bool TRRService::IsTRRBlacklisted(const nsACString& aHost,
     }
 
     // the blacklisted entry has expired
-<<<<<<< HEAD
-    RefPtr<DataStorage> storage = mTRRBLStorage;
-    nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
-        "proxyStorageRemove", [storage, hashkey, aPrivateBrowsing]() {
-          storage->Remove(hashkey, aPrivateBrowsing ? DataStorage_Private
-                                                    : DataStorage_Persistent);
-        });
-    if (!NS_IsMainThread()) {
-      NS_DispatchToMainThread(runnable);
-    } else {
-      runnable->Run();
-    }
-||||||| merged common ancestors
-    RefPtr<DataStorage> storage = mTRRBLStorage;
-    nsCOMPtr<nsIRunnable> runnable =
-      NS_NewRunnableFunction("proxyStorageRemove",
-                              [storage, hashkey, privateBrowsing]() {
-                                storage->Remove(hashkey, privateBrowsing ?
-                                                DataStorage_Private :
-                                                DataStorage_Persistent);
-                              });
-    if (!NS_IsMainThread()) {
-      NS_DispatchToMainThread(runnable);
-    } else {
-      runnable->Run();
-    }
-=======
     mTRRBLStorage->Remove(hashkey, aPrivateBrowsing ? DataStorage_Private
                                                     : DataStorage_Persistent);
->>>>>>> upstream-releases
   }
   return false;
 }
 
-<<<<<<< HEAD
-class ProxyBlacklist : public Runnable {
- public:
-  ProxyBlacklist(TRRService *service, const nsACString &aHost,
-                 const nsACString &aOriginSuffix, bool pb, bool aParentsToo)
-      : mozilla::Runnable("proxyBlackList"),
-        mService(service),
-        mHost(aHost),
-        mOriginSuffix(aOriginSuffix),
-        mPB(pb),
-        mParentsToo(aParentsToo) {}
-
-  NS_IMETHOD Run() override {
-    mService->TRRBlacklist(mHost, mOriginSuffix, mPB, mParentsToo);
-||||||| merged common ancestors
-class ProxyBlacklist : public Runnable
-{
-public:
-  ProxyBlacklist(TRRService *service, const nsACString &aHost, bool pb, bool aParentsToo)
-    : mozilla::Runnable("proxyBlackList")
-    , mService(service), mHost(aHost), mPB(pb), mParentsToo(aParentsToo)
-  { }
-
-  NS_IMETHOD Run() override
-  {
-    mService->TRRBlacklist(mHost, mPB, mParentsToo);
-=======
 bool TRRService::IsExcludedFromTRR(const nsACString& aHost) {
   if (mExcludedDomains.GetEntry(aHost)) {
     LOG(("Host [%s] Is Excluded From TRR via pref\n", aHost.BeginReading()));
@@ -731,7 +565,6 @@ class ProxyBlacklist : public Runnable {
 
   NS_IMETHOD Run() override {
     mService->TRRBlacklist(mHost, mOriginSuffix, mPB, mParentsToo);
->>>>>>> upstream-releases
     mService = nullptr;
     return NS_OK;
   }
@@ -744,19 +577,6 @@ class ProxyBlacklist : public Runnable {
   bool mParentsToo;
 };
 
-<<<<<<< HEAD
-void TRRService::TRRBlacklist(const nsACString &aHost,
-                              const nsACString &aOriginSuffix,
-                              bool privateBrowsing, bool aParentsToo) {
-  if (!mTRRBLStorage) {
-    return;
-||||||| merged common ancestors
-void
-TRRService::TRRBlacklist(const nsACString &aHost, bool privateBrowsing, bool aParentsToo)
-{
-  if (!mTRRBLStorage) {
-    return;
-=======
 void TRRService::TRRBlacklist(const nsACString& aHost,
                               const nsACString& aOriginSuffix,
                               bool privateBrowsing, bool aParentsToo) {
@@ -765,7 +585,6 @@ void TRRService::TRRBlacklist(const nsACString& aHost,
     if (!mTRRBLStorage) {
       return;
     }
->>>>>>> upstream-releases
   }
 
   if (!NS_IsMainThread()) {
@@ -782,24 +601,9 @@ void TRRService::TRRBlacklist(const nsACString& aHost,
   val.AppendInt(NowInSeconds());  // creation time
 
   // this overwrites any existing entry
-<<<<<<< HEAD
-  {
-    MutexAutoLock lock(mLock);
-    mTRRBLStorage->Put(
-        hashkey, val,
-        privateBrowsing ? DataStorage_Private : DataStorage_Persistent);
-  }
-||||||| merged common ancestors
-  {
-    MutexAutoLock lock(mLock);
-    mTRRBLStorage->Put(hashkey, val, privateBrowsing ?
-                       DataStorage_Private : DataStorage_Persistent);
-  }
-=======
   mTRRBLStorage->Put(
       hashkey, val,
       privateBrowsing ? DataStorage_Private : DataStorage_Persistent);
->>>>>>> upstream-releases
 
   if (aParentsToo) {
     // when given a full host name, verify its domain as well
@@ -826,14 +630,7 @@ void TRRService::TRRBlacklist(const nsACString& aHost,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TRRService::Notify(nsITimer *aTimer) {
-||||||| merged common ancestors
-TRRService::Notify(nsITimer *aTimer)
-{
-=======
 TRRService::Notify(nsITimer* aTimer) {
->>>>>>> upstream-releases
   if (aTimer == mRetryConfirmTimer) {
     mRetryConfirmTimer = nullptr;
     if (mConfirmationState == CONFIRM_FAILED) {
@@ -848,24 +645,6 @@ TRRService::Notify(nsITimer* aTimer) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void TRRService::TRRIsOkay(enum TrrOkay aReason) {
-  Telemetry::AccumulateCategorical(
-      aReason == OKAY_NORMAL ? Telemetry::LABELS_DNS_TRR_SUCCESS::Fine
-                             : (aReason == OKAY_TIMEOUT
-                                    ? Telemetry::LABELS_DNS_TRR_SUCCESS::Timeout
-                                    : Telemetry::LABELS_DNS_TRR_SUCCESS::Bad));
-||||||| merged common ancestors
-
-void
-TRRService::TRRIsOkay(enum TrrOkay aReason)
-{
-  Telemetry::AccumulateCategorical(aReason == OKAY_NORMAL ?
-                                   Telemetry::LABELS_DNS_TRR_SUCCESS::Fine :
-                                   (aReason == OKAY_TIMEOUT ?
-                                    Telemetry::LABELS_DNS_TRR_SUCCESS::Timeout :
-                                    Telemetry::LABELS_DNS_TRR_SUCCESS::Bad));
-=======
 void TRRService::TRRIsOkay(enum TrrOkay aReason) {
   MOZ_ASSERT(NS_IsMainThread());
   Telemetry::AccumulateCategorical(
@@ -873,7 +652,6 @@ void TRRService::TRRIsOkay(enum TrrOkay aReason) {
                              : (aReason == OKAY_TIMEOUT
                                     ? Telemetry::LABELS_DNS_TRR_SUCCESS::Timeout
                                     : Telemetry::LABELS_DNS_TRR_SUCCESS::Bad));
->>>>>>> upstream-releases
   if (aReason == OKAY_NORMAL) {
     mTRRFailures = 0;
   } else if ((mMode == MODE_TRRFIRST) && (mConfirmationState == CONFIRM_OK)) {
@@ -890,19 +668,9 @@ void TRRService::TRRIsOkay(enum TrrOkay aReason) {
   }
 }
 
-<<<<<<< HEAD
-AHostResolver::LookupStatus TRRService::CompleteLookup(
-    nsHostRecord *rec, nsresult status, AddrInfo *aNewRRSet, bool pb,
-    const nsACString &aOriginSuffix) {
-||||||| merged common ancestors
-AHostResolver::LookupStatus
-TRRService::CompleteLookup(nsHostRecord *rec, nsresult status, AddrInfo *aNewRRSet, bool pb)
-{
-=======
 AHostResolver::LookupStatus TRRService::CompleteLookup(
     nsHostRecord* rec, nsresult status, AddrInfo* aNewRRSet, bool pb,
     const nsACString& aOriginSuffix) {
->>>>>>> upstream-releases
   // this is an NS check for the TRR blacklist or confirmationNS check
 
   MOZ_ASSERT(NS_IsMainThread());
@@ -918,19 +686,6 @@ AHostResolver::LookupStatus TRRService::CompleteLookup(
   }
 #endif
   if (mConfirmationState == CONFIRM_TRYING) {
-<<<<<<< HEAD
-    MOZ_ASSERT(mConfirmer);
-    mConfirmationState = NS_SUCCEEDED(status) ? CONFIRM_OK : CONFIRM_FAILED;
-    LOG(("TRRService finishing confirmation test %s %d %X\n", mPrivateURI.get(),
-         (int)mConfirmationState, (unsigned int)status));
-    mConfirmer = nullptr;
-||||||| merged common ancestors
-    MOZ_ASSERT(mConfirmer);
-    mConfirmationState = NS_SUCCEEDED(status) ? CONFIRM_OK : CONFIRM_FAILED;
-    LOG(("TRRService finishing confirmation test %s %d %X\n",
-         mPrivateURI.get(), (int)mConfirmationState, (unsigned int)status));
-    mConfirmer = nullptr;
-=======
     {
       MutexAutoLock lock(mLock);
       MOZ_ASSERT(mConfirmer);
@@ -939,7 +694,6 @@ AHostResolver::LookupStatus TRRService::CompleteLookup(
            mPrivateURI.get(), (int)mConfirmationState, (unsigned int)status));
       mConfirmer = nullptr;
     }
->>>>>>> upstream-releases
     if (mConfirmationState == CONFIRM_FAILED) {
       // retry failed NS confirmation
       NS_NewTimerWithCallback(getter_AddRefs(mRetryConfirmTimer), this,
@@ -971,22 +725,9 @@ AHostResolver::LookupStatus TRRService::CompleteLookup(
   return LOOKUP_OK;
 }
 
-<<<<<<< HEAD
-AHostResolver::LookupStatus TRRService::CompleteLookupByType(
-    nsHostRecord *, nsresult, const nsTArray<nsCString> *aResult, uint32_t aTtl,
-    bool aPb) {
-||||||| merged common ancestors
-AHostResolver::LookupStatus
-TRRService::CompleteLookupByType(nsHostRecord *, nsresult,
-                                 const nsTArray<nsCString> *aResult,
-                                 uint32_t aTtl,
-                                 bool aPb)
-{
-=======
 AHostResolver::LookupStatus TRRService::CompleteLookupByType(
     nsHostRecord*, nsresult, const nsTArray<nsCString>* aResult, uint32_t aTtl,
     bool aPb) {
->>>>>>> upstream-releases
   return LOOKUP_OK;
 }
 

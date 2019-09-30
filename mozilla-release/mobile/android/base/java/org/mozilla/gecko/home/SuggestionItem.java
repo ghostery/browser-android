@@ -39,15 +39,5 @@ public class SuggestionItem extends ThemedLinearLayout {
             suggestionText.setPrivateMode(isPrivate);
         }
     }
-
-    /* Cliqz Start */
-    @Override
-    public void setLightTheme(boolean isLightTheme) {
-        super.setLightTheme(isLightTheme);
-        if (suggestionText != null) {
-            suggestionText.setLightTheme(isLightTheme);
-        }
-    }
-    /* Cliqz End */
 }
 

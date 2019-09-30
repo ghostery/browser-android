@@ -20,10 +20,6 @@ const FieldPair = createFactory(require("./FieldPair"));
 
 const Types = require("../../types/index");
 
-const FieldPair = createFactory(require("./FieldPair"));
-
-const Types = require("../../types/index");
-
 /**
  * This component displays detail information for worker.
  */
@@ -38,71 +34,11 @@ class WorkerDetail extends PureComponent {
 
   renderFetch() {
     const { fetch } = this.props.target.details;
-<<<<<<< HEAD
-    const status = fetch === SERVICE_WORKER_FETCH_STATES.LISTENING
-                    ? "listening"
-                    : "not-listening";
-
-    return Localized(
-      {
-        id: "about-debugging-worker-fetch",
-        attrs: { label: true, value: true },
-        $status: status,
-      },
-      FieldPair(
-        {
-          slug: "fetch",
-          label: "Fetch",
-          value: status,
-        }
-      )
-    );
-  }
-||||||| merged common ancestors
-    const name = this.props.getString("about-debugging-worker-fetch");
-    const label = fetch === SERVICE_WORKER_FETCH_STATES.LISTENING
-                    ? this.props.getString("about-debugging-worker-fetch-listening")
-                    : this.props.getString("about-debugging-worker-fetch-not-listening");
-    return this.renderField("fetch", name, label);
-  }
-=======
     const isListening = fetch === SERVICE_WORKER_FETCH_STATES.LISTENING;
     const localizationId = isListening
       ? "about-debugging-worker-fetch-listening"
       : "about-debugging-worker-fetch-not-listening";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  renderScope() {
-    const { scope } = this.props.target.details;
-
-    return Localized(
-      {
-        id: "about-debugging-worker-scope",
-        attrs: { label: true },
-      },
-      FieldPair(
-        {
-          slug: "scope",
-          label: "Scope",
-          value: scope,
-        }
-      ),
-    );
-||||||| merged common ancestors
-  renderField(key, name, value) {
-    return [
-      dom.dt({ key: `${ key }-dt` }, name),
-      dom.dd(
-        {
-          className: "ellipsis-text",
-          key: `${ key }-dd`,
-          title: value,
-        },
-        value,
-      ),
-    ];
-=======
     return Localized(
       {
         id: localizationId,
@@ -120,46 +56,13 @@ class WorkerDetail extends PureComponent {
         value: "about-debugging-worker-fetch-value",
       })
     );
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  renderStatus() {
-    const status = this.props.target.details.status.toLowerCase();
-||||||| merged common ancestors
-  renderStatus() {
-    const status = this.props.target.details.status.toLowerCase();
-    const ftlId = this.getStatusFtlId(status);
-=======
   renderPushService() {
     const { pushServiceEndpoint } = this.props.target.details;
->>>>>>> upstream-releases
 
-    return FieldPair(
+    return Localized(
       {
-<<<<<<< HEAD
-        slug: "status",
-        label: Localized(
-          {
-            id: "about-debugging-worker-status",
-            $status: status,
-          },
-          dom.span(
-            { className: `badge ${status === "running" ? "badge--success" : ""}`},
-            status
-          )
-        ),
-      }
-||||||| merged common ancestors
-        id: ftlId,
-      },
-      dom.div(
-        {
-          className: `worker-detail__status worker-detail__status--${ status }`,
-        },
-        status
-      )
-=======
         id: "about-debugging-worker-push-service",
         attrs: { label: true },
       },
@@ -189,7 +92,6 @@ class WorkerDetail extends PureComponent {
         label: "Scope",
         value: scope,
       })
->>>>>>> upstream-releases
     );
   }
 
@@ -206,15 +108,7 @@ class WorkerDetail extends PureComponent {
       },
       pushServiceEndpoint ? this.renderPushService() : null,
       fetch ? this.renderFetch() : null,
-<<<<<<< HEAD
-      scope ? this.renderScope() : null,
-      status ? this.renderStatus() : null,
-||||||| merged common ancestors
-      scope ? this.renderField("scope", "Scope", scope) : null,
-      status ? this.renderStatus() : null,
-=======
       scope ? this.renderScope() : null
->>>>>>> upstream-releases
     );
   }
 }

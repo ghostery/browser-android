@@ -13,13 +13,7 @@ add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
   // Create and configure the HTTP server.
-<<<<<<< HEAD
-  testserver = createHttpServer({hosts: ["example.com"]});
-||||||| merged common ancestors
-  testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
-=======
   testserver = createHttpServer({ hosts: ["example.com"] });
->>>>>>> upstream-releases
   testserver.registerDirectory("/data/", do_get_file("data"));
 
   await promiseStartupManager();

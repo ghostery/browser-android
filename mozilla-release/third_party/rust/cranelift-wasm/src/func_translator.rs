@@ -12,15 +12,7 @@ use cranelift_codegen::entity::EntityRef;
 use cranelift_codegen::ir::{self, Ebb, InstBuilder, ValueLabel};
 use cranelift_codegen::timing;
 use cranelift_frontend::{FunctionBuilder, FunctionBuilderContext, Variable};
-<<<<<<< HEAD
-use environ::{FuncEnvironment, ReturnMode, WasmResult};
-use state::TranslationState;
-||||||| merged common ancestors
-use environ::{FuncEnvironment, WasmError, WasmResult};
-use state::TranslationState;
-=======
 use log::info;
->>>>>>> upstream-releases
 use wasmparser::{self, BinaryReader};
 
 /// WebAssembly to Cranelift IR function translator.
@@ -160,18 +152,8 @@ fn parse_local_decls(
     let mut locals_total = 0;
     for _ in 0..local_count {
         builder.set_srcloc(cur_srcloc(reader));
-<<<<<<< HEAD
-        let (count, ty) = reader.read_local_decl(&mut locals_total)?;
-        declare_locals(builder, count, ty, &mut next_local);
-||||||| merged common ancestors
-        let (count, ty) = reader
-            .read_local_decl(&mut locals_total)
-            .map_err(WasmError::from_binary_reader_error)?;
-        declare_locals(builder, count, ty, &mut next_local);
-=======
         let (count, ty) = reader.read_local_decl(&mut locals_total)?;
         declare_locals(builder, count, ty, &mut next_local)?;
->>>>>>> upstream-releases
     }
 
     Ok(())
@@ -260,28 +242,12 @@ fn cur_srcloc(reader: &BinaryReader) -> ir::SourceLoc {
 
 #[cfg(test)]
 mod tests {
-<<<<<<< HEAD
-    use super::{FuncTranslator, ReturnMode};
-||||||| merged common ancestors
-    use super::FuncTranslator;
-=======
     use super::{FuncTranslator, ReturnMode};
     use crate::environ::DummyEnvironment;
->>>>>>> upstream-releases
     use cranelift_codegen::ir::types::I32;
-<<<<<<< HEAD
-    use cranelift_codegen::{ir, isa, settings, Context};
-    use environ::DummyEnvironment;
-    use target_lexicon::PointerWidth;
-||||||| merged common ancestors
-    use cranelift_codegen::{ir, Context};
-    use environ::{DummyEnvironment, FuncEnvironment};
-    use target_lexicon::Triple;
-=======
     use cranelift_codegen::{ir, isa, settings, Context};
     use log::debug;
     use target_lexicon::PointerWidth;
->>>>>>> upstream-releases
 
     #[test]
     fn small1() {
@@ -299,19 +265,6 @@ mod tests {
         ];
 
         let mut trans = FuncTranslator::new();
-<<<<<<< HEAD
-        let flags = settings::Flags::new(settings::builder());
-        let runtime = DummyEnvironment::new(
-            isa::TargetFrontendConfig {
-                default_call_conv: isa::CallConv::Fast,
-                pointer_width: PointerWidth::U64,
-            },
-            ReturnMode::NormalReturns,
-        );
-
-||||||| merged common ancestors
-        let runtime = DummyEnvironment::with_triple(Triple::default());
-=======
         let flags = settings::Flags::new(settings::builder());
         let runtime = DummyEnvironment::new(
             isa::TargetFrontendConfig {
@@ -322,7 +275,6 @@ mod tests {
             false,
         );
 
->>>>>>> upstream-releases
         let mut ctx = Context::new();
 
         ctx.func.name = ir::ExternalName::testcase("small1");
@@ -353,18 +305,6 @@ mod tests {
         ];
 
         let mut trans = FuncTranslator::new();
-<<<<<<< HEAD
-        let flags = settings::Flags::new(settings::builder());
-        let runtime = DummyEnvironment::new(
-            isa::TargetFrontendConfig {
-                default_call_conv: isa::CallConv::Fast,
-                pointer_width: PointerWidth::U64,
-            },
-            ReturnMode::NormalReturns,
-        );
-||||||| merged common ancestors
-        let runtime = DummyEnvironment::with_triple(Triple::default());
-=======
         let flags = settings::Flags::new(settings::builder());
         let runtime = DummyEnvironment::new(
             isa::TargetFrontendConfig {
@@ -374,7 +314,6 @@ mod tests {
             ReturnMode::NormalReturns,
             false,
         );
->>>>>>> upstream-releases
         let mut ctx = Context::new();
 
         ctx.func.name = ir::ExternalName::testcase("small2");
@@ -414,18 +353,6 @@ mod tests {
         ];
 
         let mut trans = FuncTranslator::new();
-<<<<<<< HEAD
-        let flags = settings::Flags::new(settings::builder());
-        let runtime = DummyEnvironment::new(
-            isa::TargetFrontendConfig {
-                default_call_conv: isa::CallConv::Fast,
-                pointer_width: PointerWidth::U64,
-            },
-            ReturnMode::NormalReturns,
-        );
-||||||| merged common ancestors
-        let runtime = DummyEnvironment::with_triple(Triple::default());
-=======
         let flags = settings::Flags::new(settings::builder());
         let runtime = DummyEnvironment::new(
             isa::TargetFrontendConfig {
@@ -435,7 +362,6 @@ mod tests {
             ReturnMode::NormalReturns,
             false,
         );
->>>>>>> upstream-releases
         let mut ctx = Context::new();
 
         ctx.func.name = ir::ExternalName::testcase("infloop");

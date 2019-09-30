@@ -46,23 +46,9 @@ namespace mozilla {
 //
 // The serial number also means that every instance time has an unambiguous
 // position in the array so we can use RemoveElementSorted and the like.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::InstanceTimeComparator::Equals(
-    const nsSMILInstanceTime* aElem1, const nsSMILInstanceTime* aElem2) const {
-  MOZ_ASSERT(aElem1 && aElem2, "Trying to compare null instance time pointers");
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::InstanceTimeComparator::Equals(
-    const nsSMILInstanceTime* aElem1,
-    const nsSMILInstanceTime* aElem2) const
-{
-  MOZ_ASSERT(aElem1 && aElem2,
-             "Trying to compare null instance time pointers");
-=======
 bool SMILTimedElement::InstanceTimeComparator::Equals(
     const SMILInstanceTime* aElem1, const SMILInstanceTime* aElem2) const {
   MOZ_ASSERT(aElem1 && aElem2, "Trying to compare null instance time pointers");
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aElem1->Serial() && aElem2->Serial(),
              "Instance times have not been assigned serial numbers");
   MOZ_ASSERT(aElem1 == aElem2 || aElem1->Serial() != aElem2->Serial(),
@@ -71,23 +57,9 @@ bool SMILTimedElement::InstanceTimeComparator::Equals(
   return aElem1->Serial() == aElem2->Serial();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::InstanceTimeComparator::LessThan(
-    const nsSMILInstanceTime* aElem1, const nsSMILInstanceTime* aElem2) const {
-  MOZ_ASSERT(aElem1 && aElem2, "Trying to compare null instance time pointers");
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::InstanceTimeComparator::LessThan(
-    const nsSMILInstanceTime* aElem1,
-    const nsSMILInstanceTime* aElem2) const
-{
-  MOZ_ASSERT(aElem1 && aElem2,
-             "Trying to compare null instance time pointers");
-=======
 bool SMILTimedElement::InstanceTimeComparator::LessThan(
     const SMILInstanceTime* aElem1, const SMILInstanceTime* aElem2) const {
   MOZ_ASSERT(aElem1 && aElem2, "Trying to compare null instance time pointers");
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aElem1->Serial() && aElem2->Serial(),
              "Instance times have not been assigned serial numbers");
 
@@ -98,49 +70,6 @@ bool SMILTimedElement::InstanceTimeComparator::LessThan(
 //----------------------------------------------------------------------
 // Helper class: AsyncTimeEventRunner
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-class AsyncTimeEventRunner : public Runnable {
- protected:
-  RefPtr<nsIContent> mTarget;
-  EventMessage mMsg;
-  int32_t mDetail;
-
- public:
-  AsyncTimeEventRunner(nsIContent* aTarget, EventMessage aMsg, int32_t aDetail)
-      : mozilla::Runnable("AsyncTimeEventRunner"),
-        mTarget(aTarget),
-        mMsg(aMsg),
-        mDetail(aDetail) {}
-
-  NS_IMETHOD Run() override {
-    InternalSMILTimeEvent event(true, mMsg);
-    event.mDetail = mDetail;
-
-    nsPresContext* context = nullptr;
-    nsIDocument* doc = mTarget->GetComposedDoc();
-    if (doc) {
-      context = doc->GetPresContext();
-||||||| merged common ancestors
-namespace
-{
-  class AsyncTimeEventRunner : public Runnable
-  {
-  protected:
-    RefPtr<nsIContent> mTarget;
-    EventMessage         mMsg;
-    int32_t              mDetail;
-
-  public:
-    AsyncTimeEventRunner(nsIContent* aTarget,
-                         EventMessage aMsg,
-                         int32_t aDetail)
-      : mozilla::Runnable("AsyncTimeEventRunner")
-      , mTarget(aTarget)
-      , mMsg(aMsg)
-      , mDetail(aDetail)
-    {
-=======
 namespace {
 class AsyncTimeEventRunner : public Runnable {
  protected:
@@ -163,7 +92,6 @@ class AsyncTimeEventRunner : public Runnable {
     Document* doc = mTarget->GetComposedDoc();
     if (doc) {
       context = doc->GetPresContext();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     }
 
     return EventDispatcher::Dispatch(mTarget, context, &event);
@@ -181,27 +109,11 @@ class AsyncTimeEventRunner : public Runnable {
 // If several of these objects are allocated on the stack, the update will not
 // be performed until the last object for a given SMILTimedElement is
 // destroyed.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-class MOZ_STACK_CLASS nsSMILTimedElement::AutoIntervalUpdateBatcher {
- public:
-  explicit AutoIntervalUpdateBatcher(nsSMILTimedElement& aTimedElement)
-      : mTimedElement(aTimedElement),
-        mDidSetFlag(!aTimedElement.mDeferIntervalUpdates) {
-||||||| merged common ancestors
-class MOZ_STACK_CLASS nsSMILTimedElement::AutoIntervalUpdateBatcher
-{
-public:
-  explicit AutoIntervalUpdateBatcher(nsSMILTimedElement& aTimedElement)
-    : mTimedElement(aTimedElement),
-      mDidSetFlag(!aTimedElement.mDeferIntervalUpdates)
-  {
-=======
 class MOZ_STACK_CLASS SMILTimedElement::AutoIntervalUpdateBatcher {
  public:
   explicit AutoIntervalUpdateBatcher(SMILTimedElement& aTimedElement)
       : mTimedElement(aTimedElement),
         mDidSetFlag(!aTimedElement.mDeferIntervalUpdates) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     mTimedElement.mDeferIntervalUpdates = true;
   }
 
@@ -216,16 +128,8 @@ class MOZ_STACK_CLASS SMILTimedElement::AutoIntervalUpdateBatcher {
     }
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
- private:
-  nsSMILTimedElement& mTimedElement;
-||||||| merged common ancestors
-private:
-  nsSMILTimedElement& mTimedElement;
-=======
  private:
   SMILTimedElement& mTimedElement;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   bool mDidSetFlag;
 };
 
@@ -239,36 +143,15 @@ private:
 // This can be safely used in conjunction with AutoIntervalUpdateBatcher; any
 // calls to UpdateCurrentInterval made by this class will simply be deferred if
 // there is an AutoIntervalUpdateBatcher on the stack.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-class MOZ_STACK_CLASS nsSMILTimedElement::AutoIntervalUpdater {
- public:
-  explicit AutoIntervalUpdater(nsSMILTimedElement& aTimedElement)
-      : mTimedElement(aTimedElement) {}
-||||||| merged common ancestors
-class MOZ_STACK_CLASS nsSMILTimedElement::AutoIntervalUpdater
-{
-public:
-  explicit AutoIntervalUpdater(nsSMILTimedElement& aTimedElement)
-    : mTimedElement(aTimedElement) { }
-=======
 class MOZ_STACK_CLASS SMILTimedElement::AutoIntervalUpdater {
  public:
   explicit AutoIntervalUpdater(SMILTimedElement& aTimedElement)
       : mTimedElement(aTimedElement) {}
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   ~AutoIntervalUpdater() { mTimedElement.UpdateCurrentInterval(); }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
- private:
-  nsSMILTimedElement& mTimedElement;
-||||||| merged common ancestors
-private:
-  nsSMILTimedElement& mTimedElement;
-=======
  private:
   SMILTimedElement& mTimedElement;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 };
 
 //----------------------------------------------------------------------
@@ -277,18 +160,8 @@ private:
 // Selectively remove elements from an array of type
 // nsTArray<RefPtr<SMILInstanceTime> > with O(n) performance.
 template <class TestFunctor>
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::RemoveInstanceTimes(InstanceTimeList& aArray,
-                                             TestFunctor& aTest) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::RemoveInstanceTimes(InstanceTimeList& aArray,
-                                        TestFunctor& aTest)
-{
-=======
 void SMILTimedElement::RemoveInstanceTimes(InstanceTimeList& aArray,
                                            TestFunctor& aTest) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   InstanceTimeList newArray;
   for (uint32_t i = 0; i < aArray.Length(); ++i) {
     SMILInstanceTime* item = aArray[i].get();
@@ -316,51 +189,17 @@ void SMILTimedElement::RemoveInstanceTimes(InstanceTimeList& aArray,
 //----------------------------------------------------------------------
 // Static members
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-const nsAttrValue::EnumTable nsSMILTimedElement::sFillModeTable[] = {
-    {"remove", FILL_REMOVE}, {"freeze", FILL_FREEZE}, {nullptr, 0}};
-||||||| merged common ancestors
-const nsAttrValue::EnumTable nsSMILTimedElement::sFillModeTable[] = {
-      {"remove", FILL_REMOVE},
-      {"freeze", FILL_FREEZE},
-      {nullptr, 0}
-};
-=======
 const nsAttrValue::EnumTable SMILTimedElement::sFillModeTable[] = {
     {"remove", FILL_REMOVE}, {"freeze", FILL_FREEZE}, {nullptr, 0}};
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-const nsAttrValue::EnumTable nsSMILTimedElement::sRestartModeTable[] = {
-    {"always", RESTART_ALWAYS},
-    {"whenNotActive", RESTART_WHENNOTACTIVE},
-    {"never", RESTART_NEVER},
-    {nullptr, 0}};
-||||||| merged common ancestors
-const nsAttrValue::EnumTable nsSMILTimedElement::sRestartModeTable[] = {
-      {"always", RESTART_ALWAYS},
-      {"whenNotActive", RESTART_WHENNOTACTIVE},
-      {"never", RESTART_NEVER},
-      {nullptr, 0}
-};
-=======
 const nsAttrValue::EnumTable SMILTimedElement::sRestartModeTable[] = {
     {"always", RESTART_ALWAYS},
     {"whenNotActive", RESTART_WHENNOTACTIVE},
     {"never", RESTART_NEVER},
     {nullptr, 0}};
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-const nsSMILMilestone nsSMILTimedElement::sMaxMilestone(
-    std::numeric_limits<nsSMILTime>::max(), false);
-||||||| merged common ancestors
-const nsSMILMilestone nsSMILTimedElement::sMaxMilestone(
-  std::numeric_limits<nsSMILTime>::max(), false);
-=======
 const SMILMilestone SMILTimedElement::sMaxMilestone(
     std::numeric_limits<SMILTime>::max(), false);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
 // The thresholds at which point we start filtering intervals and instance times
 // indiscriminately.
@@ -375,43 +214,6 @@ const uint8_t SMILTimedElement::sMaxUpdateIntervalRecursionDepth = 20;
 //----------------------------------------------------------------------
 // Ctor, dtor
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimedElement::nsSMILTimedElement()
-    : mAnimationElement(nullptr),
-      mFillMode(FILL_REMOVE),
-      mRestartMode(RESTART_ALWAYS),
-      mInstanceSerialIndex(0),
-      mClient(nullptr),
-      mCurrentInterval(nullptr),
-      mCurrentRepeatIteration(0),
-      mPrevRegisteredMilestone(sMaxMilestone),
-      mElementState(STATE_STARTUP),
-      mSeekState(SEEK_NOT_SEEKING),
-      mDeferIntervalUpdates(false),
-      mDoDeferredUpdate(false),
-      mIsDisabled(false),
-      mDeleteCount(0),
-      mUpdateIntervalRecursionDepth(0) {
-||||||| merged common ancestors
-nsSMILTimedElement::nsSMILTimedElement()
-:
-  mAnimationElement(nullptr),
-  mFillMode(FILL_REMOVE),
-  mRestartMode(RESTART_ALWAYS),
-  mInstanceSerialIndex(0),
-  mClient(nullptr),
-  mCurrentInterval(nullptr),
-  mCurrentRepeatIteration(0),
-  mPrevRegisteredMilestone(sMaxMilestone),
-  mElementState(STATE_STARTUP),
-  mSeekState(SEEK_NOT_SEEKING),
-  mDeferIntervalUpdates(false),
-  mDoDeferredUpdate(false),
-  mIsDisabled(false),
-  mDeleteCount(0),
-  mUpdateIntervalRecursionDepth(0)
-{
-=======
 SMILTimedElement::SMILTimedElement()
     : mAnimationElement(nullptr),
       mFillMode(FILL_REMOVE),
@@ -428,20 +230,12 @@ SMILTimedElement::SMILTimedElement()
       mIsDisabled(false),
       mDeleteCount(0),
       mUpdateIntervalRecursionDepth(0) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mSimpleDur.SetIndefinite();
   mMin.SetMillis(0L);
   mMax.SetIndefinite();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimedElement::~nsSMILTimedElement() {
-||||||| merged common ancestors
-nsSMILTimedElement::~nsSMILTimedElement()
-{
-=======
 SMILTimedElement::~SMILTimedElement() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Unlink all instance times from dependent intervals
   for (uint32_t i = 0; i < mBeginInstances.Length(); ++i) {
     mBeginInstances[i]->Unlink();
@@ -469,48 +263,19 @@ SMILTimedElement::~SMILTimedElement() {
              "SMILTimedElement disappears");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::SetAnimationElement(SVGAnimationElement* aElement) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::SetAnimationElement(SVGAnimationElement* aElement)
-{
-=======
 void SMILTimedElement::SetAnimationElement(SVGAnimationElement* aElement) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aElement, "NULL owner element");
   MOZ_ASSERT(!mAnimationElement, "Re-setting owner");
   mAnimationElement = aElement;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimeContainer* nsSMILTimedElement::GetTimeContainer() {
-||||||| merged common ancestors
-nsSMILTimeContainer*
-nsSMILTimedElement::GetTimeContainer()
-{
-=======
 SMILTimeContainer* SMILTimedElement::GetTimeContainer() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   return mAnimationElement ? mAnimationElement->GetTimeContainer() : nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-dom::Element* nsSMILTimedElement::GetTargetElement() {
-  return mAnimationElement ? mAnimationElement->GetTargetElementContent()
-                           : nullptr;
-||||||| merged common ancestors
-dom::Element*
-nsSMILTimedElement::GetTargetElement()
-{
-  return mAnimationElement ?
-      mAnimationElement->GetTargetElementContent() :
-      nullptr;
-=======
 dom::Element* SMILTimedElement::GetTargetElement() {
   return mAnimationElement ? mAnimationElement->GetTargetElementContent()
                            : nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 }
 
 //----------------------------------------------------------------------
@@ -529,43 +294,17 @@ dom::Element* SMILTimedElement::GetTargetElement() {
 // which favours the definition in SMIL, i.e. instance times are just added
 // without first checking the restart mode.
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::BeginElementAt(double aOffsetSeconds) {
-  nsSMILTimeContainer* container = GetTimeContainer();
-  if (!container) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::BeginElementAt(double aOffsetSeconds)
-{
-  nsSMILTimeContainer* container = GetTimeContainer();
-  if (!container)
-    return NS_ERROR_FAILURE;
-=======
 nsresult SMILTimedElement::BeginElementAt(double aOffsetSeconds) {
   SMILTimeContainer* container = GetTimeContainer();
   if (!container) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   SMILTime currentTime = container->GetCurrentTimeAsSMILTime();
   return AddInstanceTimeFromCurrentTime(currentTime, aOffsetSeconds, true);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::EndElementAt(double aOffsetSeconds) {
-  nsSMILTimeContainer* container = GetTimeContainer();
-  if (!container) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::EndElementAt(double aOffsetSeconds)
-{
-  nsSMILTimeContainer* container = GetTimeContainer();
-  if (!container)
-    return NS_ERROR_FAILURE;
-=======
 nsresult SMILTimedElement::EndElementAt(double aOffsetSeconds) {
   SMILTimeContainer* container = GetTimeContainer();
   if (!container) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   SMILTime currentTime = container->GetCurrentTimeAsSMILTime();
   return AddInstanceTimeFromCurrentTime(currentTime, aOffsetSeconds, false);
@@ -574,43 +313,17 @@ nsresult SMILTimedElement::EndElementAt(double aOffsetSeconds) {
 //----------------------------------------------------------------------
 // nsSVGAnimationElement methods
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimeValue nsSMILTimedElement::GetStartTime() const {
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimedElement::GetStartTime() const
-{
-=======
 SMILTimeValue SMILTimedElement::GetStartTime() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   return mElementState == STATE_WAITING || mElementState == STATE_ACTIVE
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-             ? mCurrentInterval->Begin()->Time()
-             : nsSMILTimeValue();
-||||||| merged common ancestors
-         ? mCurrentInterval->Begin()->Time()
-         : nsSMILTimeValue();
-=======
              ? mCurrentInterval->Begin()->Time()
              : SMILTimeValue();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 }
 
 //----------------------------------------------------------------------
 // Hyperlinking support
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimeValue nsSMILTimedElement::GetHyperlinkTime() const {
-  nsSMILTimeValue hyperlinkTime;  // Default ctor creates unresolved time
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimedElement::GetHyperlinkTime() const
-{
-  nsSMILTimeValue hyperlinkTime; // Default ctor creates unresolved time
-=======
 SMILTimeValue SMILTimedElement::GetHyperlinkTime() const {
   SMILTimeValue hyperlinkTime;  // Default ctor creates unresolved time
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   if (mElementState == STATE_ACTIVE) {
     hyperlinkTime = mCurrentInterval->Begin()->Time();
@@ -624,18 +337,8 @@ SMILTimeValue SMILTimedElement::GetHyperlinkTime() const {
 //----------------------------------------------------------------------
 // SMILTimedElement
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::AddInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                                         bool aIsBegin) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::AddInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                                    bool aIsBegin)
-{
-=======
 void SMILTimedElement::AddInstanceTime(SMILInstanceTime* aInstanceTime,
                                        bool aIsBegin) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aInstanceTime, "Attempting to add null instance time");
 
   // Event-sensitivity: If an element is not active (but the parent time
@@ -652,16 +355,8 @@ void SMILTimedElement::AddInstanceTime(SMILInstanceTime* aInstanceTime,
 
   aInstanceTime->SetSerial(++mInstanceSerialIndex);
   InstanceTimeList& instanceList = aIsBegin ? mBeginInstances : mEndInstances;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  RefPtr<nsSMILInstanceTime>* inserted =
-      instanceList.InsertElementSorted(aInstanceTime, InstanceTimeComparator());
-||||||| merged common ancestors
-  RefPtr<nsSMILInstanceTime>* inserted =
-    instanceList.InsertElementSorted(aInstanceTime, InstanceTimeComparator());
-=======
   RefPtr<SMILInstanceTime>* inserted =
       instanceList.InsertElementSorted(aInstanceTime, InstanceTimeComparator());
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   if (!inserted) {
     NS_WARNING("Insufficient memory to insert instance time");
     return;
@@ -670,21 +365,9 @@ void SMILTimedElement::AddInstanceTime(SMILInstanceTime* aInstanceTime,
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UpdateInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                                            nsSMILTimeValue& aUpdatedTime,
-                                            bool aIsBegin) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UpdateInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                                       nsSMILTimeValue& aUpdatedTime,
-                                       bool aIsBegin)
-{
-=======
 void SMILTimedElement::UpdateInstanceTime(SMILInstanceTime* aInstanceTime,
                                           SMILTimeValue& aUpdatedTime,
                                           bool aIsBegin) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aInstanceTime, "Attempting to update null instance time");
 
   // The reason we update the time here and not in the SMILTimeValueSpec is
@@ -713,18 +396,8 @@ void SMILTimedElement::UpdateInstanceTime(SMILInstanceTime* aInstanceTime,
   UpdateCurrentInterval(changedCurrentInterval);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::RemoveInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                                            bool aIsBegin) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::RemoveInstanceTime(nsSMILInstanceTime* aInstanceTime,
-                                       bool aIsBegin)
-{
-=======
 void SMILTimedElement::RemoveInstanceTime(SMILInstanceTime* aInstanceTime,
                                           bool aIsBegin) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aInstanceTime, "Attempting to remove null instance time");
 
   // If the instance time should be kept (because it is or was the fixed end
@@ -742,36 +415,6 @@ void SMILTimedElement::RemoveInstanceTime(SMILInstanceTime* aInstanceTime,
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-class MOZ_STACK_CLASS RemoveByCreator {
- public:
-  explicit RemoveByCreator(const nsSMILTimeValueSpec* aCreator)
-      : mCreator(aCreator) {}
-
-  bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/) {
-    if (aInstanceTime->GetCreator() != mCreator) return false;
-||||||| merged common ancestors
-namespace
-{
-  class MOZ_STACK_CLASS RemoveByCreator
-  {
-  public:
-    explicit RemoveByCreator(const nsSMILTimeValueSpec* aCreator) : mCreator(aCreator)
-    { }
-
-    bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/)
-    {
-      if (aInstanceTime->GetCreator() != mCreator)
-        return false;
-
-      // If the instance time should be kept (because it is or was the fixed end
-      // point of an interval) then just disassociate it from the creator.
-      if (aInstanceTime->ShouldPreserve()) {
-        aInstanceTime->Unlink();
-        return false;
-      }
-=======
 namespace {
 class MOZ_STACK_CLASS RemoveByCreator {
  public:
@@ -780,7 +423,6 @@ class MOZ_STACK_CLASS RemoveByCreator {
 
   bool operator()(SMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/) {
     if (aInstanceTime->GetCreator() != mCreator) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
     // If the instance time should be kept (because it is or was the fixed end
     // point of an interval) then just disassociate it from the creator.
@@ -789,20 +431,6 @@ class MOZ_STACK_CLASS RemoveByCreator {
       return false;
     }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    return true;
-  }
-
- private:
-  const nsSMILTimeValueSpec* mCreator;
-};
-}  // namespace
-||||||| merged common ancestors
-  private:
-    const nsSMILTimeValueSpec* mCreator;
-  };
-} // namespace
-=======
     return true;
   }
 
@@ -810,20 +438,9 @@ class MOZ_STACK_CLASS RemoveByCreator {
   const SMILTimeValueSpec* mCreator;
 };
 }  // namespace
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::RemoveInstanceTimesForCreator(
-    const nsSMILTimeValueSpec* aCreator, bool aIsBegin) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::RemoveInstanceTimesForCreator(
-    const nsSMILTimeValueSpec* aCreator, bool aIsBegin)
-{
-=======
 void SMILTimedElement::RemoveInstanceTimesForCreator(
     const SMILTimeValueSpec* aCreator, bool aIsBegin) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aCreator, "Creator not set");
 
   InstanceTimeList& instances = aIsBegin ? mBeginInstances : mEndInstances;
@@ -833,15 +450,7 @@ void SMILTimedElement::RemoveInstanceTimesForCreator(
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::SetTimeClient(nsSMILAnimationFunction* aClient) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::SetTimeClient(nsSMILAnimationFunction* aClient)
-{
-=======
 void SMILTimedElement::SetTimeClient(SMILAnimationFunction* aClient) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   //
   // No need to check for nullptr. A nullptr parameter simply means to remove
   // the previous client which we do by setting to nullptr anyway.
@@ -850,19 +459,8 @@ void SMILTimedElement::SetTimeClient(SMILAnimationFunction* aClient) {
   mClient = aClient;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::SampleAt(nsSMILTime aContainerTime) {
-  if (mIsDisabled) return;
-||||||| merged common ancestors
-void
-nsSMILTimedElement::SampleAt(nsSMILTime aContainerTime)
-{
-  if (mIsDisabled)
-    return;
-=======
 void SMILTimedElement::SampleAt(SMILTime aContainerTime) {
   if (mIsDisabled) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   // Milestones are cleared before a sample
   mPrevRegisteredMilestone = sMaxMilestone;
@@ -870,19 +468,8 @@ void SMILTimedElement::SampleAt(SMILTime aContainerTime) {
   DoSampleAt(aContainerTime, false);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::SampleEndAt(nsSMILTime aContainerTime) {
-  if (mIsDisabled) return;
-||||||| merged common ancestors
-void
-nsSMILTimedElement::SampleEndAt(nsSMILTime aContainerTime)
-{
-  if (mIsDisabled)
-    return;
-=======
 void SMILTimedElement::SampleEndAt(SMILTime aContainerTime) {
   if (mIsDisabled) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   // Milestones are cleared before a sample
   mPrevRegisteredMilestone = sMaxMilestone;
@@ -905,15 +492,7 @@ void SMILTimedElement::SampleEndAt(SMILTime aContainerTime) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::DoSampleAt(nsSMILTime aContainerTime, bool aEndOnly) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::DoSampleAt(nsSMILTime aContainerTime, bool aEndOnly)
-{
-=======
 void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(mAnimationElement,
              "Got sample before being registered with an animation element");
   MOZ_ASSERT(GetTimeContainer(),
@@ -949,16 +528,8 @@ void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
     finishedSeek = true;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  bool stateChanged;
-  nsSMILTimeValue sampleTime(aContainerTime);
-||||||| merged common ancestors
-  bool            stateChanged;
-  nsSMILTimeValue sampleTime(aContainerTime);
-=======
   bool stateChanged;
   SMILTimeValue sampleTime(aContainerTime);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   do {
 #ifdef DEBUG
@@ -975,24 +546,6 @@ void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
 
     stateChanged = false;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    switch (mElementState) {
-      case STATE_STARTUP: {
-        nsSMILInterval firstInterval;
-        mElementState =
-            GetNextInterval(nullptr, nullptr, nullptr, firstInterval)
-                ? STATE_WAITING
-                : STATE_POSTACTIVE;
-||||||| merged common ancestors
-    switch (mElementState)
-    {
-    case STATE_STARTUP:
-      {
-        nsSMILInterval firstInterval;
-        mElementState = GetNextInterval(nullptr, nullptr, nullptr, firstInterval)
-         ? STATE_WAITING
-         : STATE_POSTACTIVE;
-=======
     switch (mElementState) {
       case STATE_STARTUP: {
         SMILInterval firstInterval;
@@ -1000,7 +553,6 @@ void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
             GetNextInterval(nullptr, nullptr, nullptr, firstInterval)
                 ? STATE_WAITING
                 : STATE_POSTACTIVE;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
         stateChanged = true;
         if (mElementState == STATE_WAITING) {
           mCurrentInterval = MakeUnique<SMILInterval>(firstInterval);
@@ -1040,25 +592,11 @@ void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
         bool didApplyEarlyEnd = ApplyEarlyEnd(sampleTime);
 
         if (mCurrentInterval->End()->Time() <= sampleTime) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-          nsSMILInterval newInterval;
-          mElementState = GetNextInterval(mCurrentInterval.get(), nullptr,
-                                          nullptr, newInterval)
-                              ? STATE_WAITING
-                              : STATE_POSTACTIVE;
-||||||| merged common ancestors
-          nsSMILInterval newInterval;
-          mElementState =
-            GetNextInterval(mCurrentInterval.get(), nullptr, nullptr, newInterval)
-            ? STATE_WAITING
-            : STATE_POSTACTIVE;
-=======
           SMILInterval newInterval;
           mElementState = GetNextInterval(mCurrentInterval.get(), nullptr,
                                           nullptr, newInterval)
                               ? STATE_WAITING
                               : STATE_POSTACTIVE;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
           if (mClient) {
             mClient->Inactivate(mFillMode == FILL_FREEZE);
           }
@@ -1083,20 +621,9 @@ void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
           FilterHistory();
           stateChanged = true;
         } else if (mCurrentInterval->Begin()->Time() <= sampleTime) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-          MOZ_ASSERT(!didApplyEarlyEnd, "We got an early end, but didn't end");
-          nsSMILTime beginTime = mCurrentInterval->Begin()->Time().GetMillis();
-          nsSMILTime activeTime = aContainerTime - beginTime;
-||||||| merged common ancestors
-          MOZ_ASSERT(!didApplyEarlyEnd,
-                     "We got an early end, but didn't end");
-          nsSMILTime beginTime = mCurrentInterval->Begin()->Time().GetMillis();
-          nsSMILTime activeTime = aContainerTime - beginTime;
-=======
           MOZ_ASSERT(!didApplyEarlyEnd, "We got an early end, but didn't end");
           SMILTime beginTime = mCurrentInterval->Begin()->Time().GetMillis();
           SMILTime activeTime = aContainerTime - beginTime;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
           // The 'min' attribute can cause the active interval to be longer than
           // the 'repeating interval'.
@@ -1150,15 +677,7 @@ void SMILTimedElement::DoSampleAt(SMILTime aContainerTime, bool aEndOnly) {
   RegisterMilestone();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::HandleContainerTimeChange() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::HandleContainerTimeChange()
-{
-=======
 void SMILTimedElement::HandleContainerTimeChange() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // In future we could possibly introduce a separate change notice for time
   // container changes and only notify those dependents who live in other time
   // containers. For now we don't bother because when we re-resolve the time in
@@ -1169,38 +688,6 @@ void SMILTimedElement::HandleContainerTimeChange() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-bool RemoveNonDynamic(nsSMILInstanceTime* aInstanceTime) {
-  // Generally dynamically-generated instance times (DOM calls, event-based
-  // times) are not associated with their creator nsSMILTimeValueSpec since
-  // they may outlive them.
-  MOZ_ASSERT(!aInstanceTime->IsDynamic() || !aInstanceTime->GetCreator(),
-             "Dynamic instance time should be unlinked from its creator");
-  return !aInstanceTime->IsDynamic() && !aInstanceTime->ShouldPreserve();
-}
-}  // namespace
-
-void nsSMILTimedElement::Rewind() {
-||||||| merged common ancestors
-namespace
-{
-  bool
-  RemoveNonDynamic(nsSMILInstanceTime* aInstanceTime)
-  {
-    // Generally dynamically-generated instance times (DOM calls, event-based
-    // times) are not associated with their creator nsSMILTimeValueSpec since
-    // they may outlive them.
-    MOZ_ASSERT(!aInstanceTime->IsDynamic() || !aInstanceTime->GetCreator(),
-               "Dynamic instance time should be unlinked from its creator");
-    return !aInstanceTime->IsDynamic() && !aInstanceTime->ShouldPreserve();
-  }
-} // namespace
-
-void
-nsSMILTimedElement::Rewind()
-{
-=======
 namespace {
 bool RemoveNonDynamic(SMILInstanceTime* aInstanceTime) {
   // Generally dynamically-generated instance times (DOM calls, event-based
@@ -1213,7 +700,6 @@ bool RemoveNonDynamic(SMILInstanceTime* aInstanceTime) {
 }  // namespace
 
 void SMILTimedElement::Rewind() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(mAnimationElement,
              "Got rewind request before being attached to an animation "
              "element");
@@ -1242,38 +728,12 @@ void SMILTimedElement::Rewind() {
   MOZ_ASSERT(!mCurrentInterval, "Current interval is set at end of rewind");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-bool RemoveAll(nsSMILInstanceTime* aInstanceTime) { return true; }
-}  // namespace
-||||||| merged common ancestors
-namespace
-{
-  bool
-  RemoveAll(nsSMILInstanceTime* aInstanceTime)
-  {
-    return true;
-  }
-} // namespace
-=======
 namespace {
 bool RemoveAll(SMILInstanceTime* aInstanceTime) { return true; }
 }  // namespace
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::SetIsDisabled(bool aIsDisabled) {
-  if (mIsDisabled == aIsDisabled) return false;
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::SetIsDisabled(bool aIsDisabled)
-{
-  if (mIsDisabled == aIsDisabled)
-    return false;
-=======
 bool SMILTimedElement::SetIsDisabled(bool aIsDisabled) {
   if (mIsDisabled == aIsDisabled) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   if (aIsDisabled) {
     mIsDisabled = true;
@@ -1285,46 +745,15 @@ bool SMILTimedElement::SetIsDisabled(bool aIsDisabled) {
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-bool RemoveNonDOM(nsSMILInstanceTime* aInstanceTime) {
-  return !aInstanceTime->FromDOM() && !aInstanceTime->ShouldPreserve();
-}
-}  // namespace
-||||||| merged common ancestors
-namespace
-{
-  bool
-  RemoveNonDOM(nsSMILInstanceTime* aInstanceTime)
-  {
-    return !aInstanceTime->FromDOM() && !aInstanceTime->ShouldPreserve();
-  }
-} // namespace
-=======
 namespace {
 bool RemoveNonDOM(SMILInstanceTime* aInstanceTime) {
   return !aInstanceTime->FromDOM() && !aInstanceTime->ShouldPreserve();
 }
 }  // namespace
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::SetAttr(nsAtom* aAttribute, const nsAString& aValue,
-                                 nsAttrValue& aResult, Element& aContextElement,
-                                 nsresult* aParseResult) {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::SetAttr(nsAtom* aAttribute,
-                            const nsAString& aValue,
-                            nsAttrValue& aResult,
-                            Element& aContextElement,
-                            nsresult* aParseResult)
-{
-=======
 bool SMILTimedElement::SetAttr(nsAtom* aAttribute, const nsAString& aValue,
                                nsAttrValue& aResult, Element& aContextElement,
                                nsresult* aParseResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   bool foundMatch = true;
   nsresult parseResult = NS_OK;
 
@@ -1360,15 +789,7 @@ bool SMILTimedElement::SetAttr(nsAtom* aAttribute, const nsAString& aValue,
   return foundMatch;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::UnsetAttr(nsAtom* aAttribute) {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::UnsetAttr(nsAtom* aAttribute)
-{
-=======
 bool SMILTimedElement::UnsetAttr(nsAtom* aAttribute) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   bool foundMatch = true;
 
   if (aAttribute == nsGkAtoms::begin) {
@@ -1399,79 +820,31 @@ bool SMILTimedElement::UnsetAttr(nsAtom* aAttribute) {
 //----------------------------------------------------------------------
 // Setters and unsetters
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetBeginSpec(const nsAString& aBeginSpec,
-                                          Element& aContextElement,
-                                          RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetBeginSpec(const nsAString& aBeginSpec,
-                                 Element& aContextElement,
-                                 RemovalTestFunction aRemove)
-{
-=======
 nsresult SMILTimedElement::SetBeginSpec(const nsAString& aBeginSpec,
                                         Element& aContextElement,
                                         RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   return SetBeginOrEndSpec(aBeginSpec, aContextElement, true /*isBegin*/,
                            aRemove);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetBeginSpec(RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetBeginSpec(RemovalTestFunction aRemove)
-{
-=======
 void SMILTimedElement::UnsetBeginSpec(RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   ClearSpecs(mBeginSpecs, mBeginInstances, aRemove);
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetEndSpec(const nsAString& aEndSpec,
-                                        Element& aContextElement,
-                                        RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetEndSpec(const nsAString& aEndSpec,
-                               Element& aContextElement,
-                               RemovalTestFunction aRemove)
-{
-=======
 nsresult SMILTimedElement::SetEndSpec(const nsAString& aEndSpec,
                                       Element& aContextElement,
                                       RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   return SetBeginOrEndSpec(aEndSpec, aContextElement, false /*!isBegin*/,
                            aRemove);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetEndSpec(RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetEndSpec(RemovalTestFunction aRemove)
-{
-=======
 void SMILTimedElement::UnsetEndSpec(RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   ClearSpecs(mEndSpecs, mEndInstances, aRemove);
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetSimpleDuration(const nsAString& aDurSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetSimpleDuration(const nsAString& aDurSpec)
-{
-=======
 nsresult SMILTimedElement::SetSimpleDuration(const nsAString& aDurSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Update the current interval before returning
   AutoIntervalUpdater updater(*this);
 
@@ -1498,28 +871,12 @@ nsresult SMILTimedElement::SetSimpleDuration(const nsAString& aDurSpec) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetSimpleDuration() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetSimpleDuration()
-{
-=======
 void SMILTimedElement::UnsetSimpleDuration() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mSimpleDur.SetIndefinite();
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetMin(const nsAString& aMinSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetMin(const nsAString& aMinSpec)
-{
-=======
 nsresult SMILTimedElement::SetMin(const nsAString& aMinSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Update the current interval before returning
   AutoIntervalUpdater updater(*this);
 
@@ -1542,28 +899,12 @@ nsresult SMILTimedElement::SetMin(const nsAString& aMinSpec) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetMin() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetMin()
-{
-=======
 void SMILTimedElement::UnsetMin() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mMin.SetMillis(0L);
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetMax(const nsAString& aMaxSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetMax(const nsAString& aMaxSpec)
-{
-=======
 nsresult SMILTimedElement::SetMax(const nsAString& aMaxSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Update the current interval before returning
   AutoIntervalUpdater updater(*this);
 
@@ -1586,70 +927,26 @@ nsresult SMILTimedElement::SetMax(const nsAString& aMaxSpec) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetMax() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetMax()
-{
-=======
 void SMILTimedElement::UnsetMax() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mMax.SetIndefinite();
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetRestart(const nsAString& aRestartSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetRestart(const nsAString& aRestartSpec)
-{
-=======
 nsresult SMILTimedElement::SetRestart(const nsAString& aRestartSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   nsAttrValue temp;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  bool parseResult = temp.ParseEnumValue(aRestartSpec, sRestartModeTable, true);
-  mRestartMode =
-      parseResult ? nsSMILRestartMode(temp.GetEnumValue()) : RESTART_ALWAYS;
-||||||| merged common ancestors
-  bool parseResult
-    = temp.ParseEnumValue(aRestartSpec, sRestartModeTable, true);
-  mRestartMode = parseResult
-               ? nsSMILRestartMode(temp.GetEnumValue())
-               : RESTART_ALWAYS;
-=======
   bool parseResult = temp.ParseEnumValue(aRestartSpec, sRestartModeTable, true);
   mRestartMode =
       parseResult ? SMILRestartMode(temp.GetEnumValue()) : RESTART_ALWAYS;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   UpdateCurrentInterval();
   return parseResult ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetRestart() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetRestart()
-{
-=======
 void SMILTimedElement::UnsetRestart() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mRestartMode = RESTART_ALWAYS;
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetRepeatCount(const nsAString& aRepeatCountSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetRepeatCount(const nsAString& aRepeatCountSpec)
-{
-=======
 nsresult SMILTimedElement::SetRepeatCount(const nsAString& aRepeatCountSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Update the current interval before returning
   AutoIntervalUpdater updater(*this);
 
@@ -1663,42 +960,18 @@ nsresult SMILTimedElement::SetRepeatCount(const nsAString& aRepeatCountSpec) {
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetRepeatCount() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetRepeatCount()
-{
-=======
 void SMILTimedElement::UnsetRepeatCount() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mRepeatCount.Unset();
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetRepeatDur(const nsAString& aRepeatDurSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetRepeatDur(const nsAString& aRepeatDurSpec)
-{
-=======
 nsresult SMILTimedElement::SetRepeatDur(const nsAString& aRepeatDurSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Update the current interval before returning
   AutoIntervalUpdater updater(*this);
 
   SMILTimeValue duration;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  const nsAString& repeatDur =
-      nsSMILParserUtils::TrimWhitespace(aRepeatDurSpec);
-||||||| merged common ancestors
-  const nsAString& repeatDur =
-    nsSMILParserUtils::TrimWhitespace(aRepeatDurSpec);
-=======
   const nsAString& repeatDur = SMILParserUtils::TrimWhitespace(aRepeatDurSpec);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   if (repeatDur.EqualsLiteral("indefinite")) {
     duration.SetIndefinite();
@@ -1714,44 +987,17 @@ nsresult SMILTimedElement::SetRepeatDur(const nsAString& aRepeatDurSpec) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetRepeatDur() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetRepeatDur()
-{
-=======
 void SMILTimedElement::UnsetRepeatDur() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mRepeatDur.SetUnresolved();
   UpdateCurrentInterval();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetFillMode(const nsAString& aFillModeSpec) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetFillMode(const nsAString& aFillModeSpec)
-{
-=======
 nsresult SMILTimedElement::SetFillMode(const nsAString& aFillModeSpec) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   uint16_t previousFillMode = mFillMode;
 
   nsAttrValue temp;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  bool parseResult = temp.ParseEnumValue(aFillModeSpec, sFillModeTable, true);
-  mFillMode = parseResult ? nsSMILFillMode(temp.GetEnumValue()) : FILL_REMOVE;
-||||||| merged common ancestors
-  bool parseResult =
-    temp.ParseEnumValue(aFillModeSpec, sFillModeTable, true);
-  mFillMode = parseResult
-            ? nsSMILFillMode(temp.GetEnumValue())
-            : FILL_REMOVE;
-=======
   bool parseResult = temp.ParseEnumValue(aFillModeSpec, sFillModeTable, true);
   mFillMode = parseResult ? SMILFillMode(temp.GetEnumValue()) : FILL_REMOVE;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   // Update fill mode of client
   if (mFillMode != previousFillMode && HasClientInFillRange()) {
@@ -1762,15 +1008,7 @@ nsresult SMILTimedElement::SetFillMode(const nsAString& aFillModeSpec) {
   return parseResult ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnsetFillMode() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnsetFillMode()
-{
-=======
 void SMILTimedElement::UnsetFillMode() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   uint16_t previousFillMode = mFillMode;
   mFillMode = FILL_REMOVE;
   if (previousFillMode == FILL_FREEZE && HasClientInFillRange()) {
@@ -1778,15 +1016,7 @@ void SMILTimedElement::UnsetFillMode() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::AddDependent(nsSMILTimeValueSpec& aDependent) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::AddDependent(nsSMILTimeValueSpec& aDependent)
-{
-=======
 void SMILTimedElement::AddDependent(SMILTimeValueSpec& aDependent) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // There's probably no harm in attempting to register a dependent
   // SMILTimeValueSpec twice, but we're not expecting it to happen.
   MOZ_ASSERT(!mTimeDependents.GetEntry(&aDependent),
@@ -1805,49 +1035,20 @@ void SMILTimedElement::AddDependent(SMILTimeValueSpec& aDependent) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::RemoveDependent(nsSMILTimeValueSpec& aDependent) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::RemoveDependent(nsSMILTimeValueSpec& aDependent)
-{
-=======
 void SMILTimedElement::RemoveDependent(SMILTimeValueSpec& aDependent) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mTimeDependents.RemoveEntry(&aDependent);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::IsTimeDependent(
-    const nsSMILTimedElement& aOther) const {
-  const nsSMILInstanceTime* thisBegin = GetEffectiveBeginInstance();
-  const nsSMILInstanceTime* otherBegin = aOther.GetEffectiveBeginInstance();
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::IsTimeDependent(const nsSMILTimedElement& aOther) const
-{
-  const nsSMILInstanceTime* thisBegin = GetEffectiveBeginInstance();
-  const nsSMILInstanceTime* otherBegin = aOther.GetEffectiveBeginInstance();
-=======
 bool SMILTimedElement::IsTimeDependent(const SMILTimedElement& aOther) const {
   const SMILInstanceTime* thisBegin = GetEffectiveBeginInstance();
   const SMILInstanceTime* otherBegin = aOther.GetEffectiveBeginInstance();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   if (!thisBegin || !otherBegin) return false;
 
   return thisBegin->IsDependentOn(*otherBegin);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::BindToTree(Element& aContextElement) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::BindToTree(Element& aContextElement)
-{
-=======
 void SMILTimedElement::BindToTree(Element& aContextElement) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Reset previously registered milestone since we may be registering with
   // a different time container now.
   mPrevRegisteredMilestone = sMaxMilestone;
@@ -1878,15 +1079,7 @@ void SMILTimedElement::BindToTree(Element& aContextElement) {
   RegisterMilestone();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::HandleTargetElementChange(Element* aNewTarget) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::HandleTargetElementChange(Element* aNewTarget)
-{
-=======
 void SMILTimedElement::HandleTargetElementChange(Element* aNewTarget) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   AutoIntervalUpdateBatcher updateBatcher(*this);
 
   uint32_t count = mBeginSpecs.Length();
@@ -1900,29 +1093,11 @@ void SMILTimedElement::HandleTargetElementChange(Element* aNewTarget) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::Traverse(
-    nsCycleCollectionTraversalCallback* aCallback) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::Traverse(nsCycleCollectionTraversalCallback* aCallback)
-{
-=======
 void SMILTimedElement::Traverse(nsCycleCollectionTraversalCallback* aCallback) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   uint32_t count = mBeginSpecs.Length();
   for (uint32_t i = 0; i < count; ++i) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    nsSMILTimeValueSpec* beginSpec = mBeginSpecs[i].get();
-    MOZ_ASSERT(beginSpec, "null nsSMILTimeValueSpec in list of begin specs");
-||||||| merged common ancestors
-    nsSMILTimeValueSpec* beginSpec = mBeginSpecs[i].get();
-    MOZ_ASSERT(beginSpec,
-               "null nsSMILTimeValueSpec in list of begin specs");
-=======
     SMILTimeValueSpec* beginSpec = mBeginSpecs[i].get();
     MOZ_ASSERT(beginSpec, "null SMILTimeValueSpec in list of begin specs");
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     beginSpec->Traverse(aCallback);
   }
 
@@ -1934,31 +1109,14 @@ void SMILTimedElement::Traverse(nsCycleCollectionTraversalCallback* aCallback) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::Unlink() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::Unlink()
-{
-=======
 void SMILTimedElement::Unlink() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   AutoIntervalUpdateBatcher updateBatcher(*this);
 
   // Remove dependencies on other elements
   uint32_t count = mBeginSpecs.Length();
   for (uint32_t i = 0; i < count; ++i) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    nsSMILTimeValueSpec* beginSpec = mBeginSpecs[i].get();
-    MOZ_ASSERT(beginSpec, "null nsSMILTimeValueSpec in list of begin specs");
-||||||| merged common ancestors
-    nsSMILTimeValueSpec* beginSpec = mBeginSpecs[i].get();
-    MOZ_ASSERT(beginSpec,
-               "null nsSMILTimeValueSpec in list of begin specs");
-=======
     SMILTimeValueSpec* beginSpec = mBeginSpecs[i].get();
     MOZ_ASSERT(beginSpec, "null SMILTimeValueSpec in list of begin specs");
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     beginSpec->Unlink();
   }
 
@@ -1978,24 +1136,10 @@ void SMILTimedElement::Unlink() {
 //----------------------------------------------------------------------
 // Implementation helpers
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::SetBeginOrEndSpec(const nsAString& aSpec,
-                                               Element& aContextElement,
-                                               bool aIsBegin,
-                                               RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::SetBeginOrEndSpec(const nsAString& aSpec,
-                                      Element& aContextElement,
-                                      bool aIsBegin,
-                                      RemovalTestFunction aRemove)
-{
-=======
 nsresult SMILTimedElement::SetBeginOrEndSpec(const nsAString& aSpec,
                                              Element& aContextElement,
                                              bool aIsBegin,
                                              RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   TimeValueSpecList& timeSpecsList = aIsBegin ? mBeginSpecs : mEndSpecs;
   InstanceTimeList& instances = aIsBegin ? mBeginInstances : mEndInstances;
 
@@ -2026,36 +1170,6 @@ nsresult SMILTimedElement::SetBeginOrEndSpec(const nsAString& aSpec,
   return hadFailure ? NS_ERROR_FAILURE : NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-// Adaptor functor for RemoveInstanceTimes that allows us to use function
-// pointers instead.
-// Without this we'd have to either templatize ClearSpecs and all its callers
-// or pass bool flags around to specify which removal function to use here.
-class MOZ_STACK_CLASS RemoveByFunction {
- public:
-  explicit RemoveByFunction(nsSMILTimedElement::RemovalTestFunction aFunction)
-      : mFunction(aFunction) {}
-  bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/) {
-    return mFunction(aInstanceTime);
-  }
-||||||| merged common ancestors
-namespace
-{
-  // Adaptor functor for RemoveInstanceTimes that allows us to use function
-  // pointers instead.
-  // Without this we'd have to either templatize ClearSpecs and all its callers
-  // or pass bool flags around to specify which removal function to use here.
-  class MOZ_STACK_CLASS RemoveByFunction
-  {
-  public:
-    explicit RemoveByFunction(nsSMILTimedElement::RemovalTestFunction aFunction)
-      : mFunction(aFunction) { }
-    bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/)
-    {
-      return mFunction(aInstanceTime);
-    }
-=======
 namespace {
 // Adaptor functor for RemoveInstanceTimes that allows us to use function
 // pointers instead.
@@ -2068,40 +1182,15 @@ class MOZ_STACK_CLASS RemoveByFunction {
   bool operator()(SMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/) {
     return mFunction(aInstanceTime);
   }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
- private:
-  nsSMILTimedElement::RemovalTestFunction mFunction;
-};
-}  // namespace
-||||||| merged common ancestors
-  private:
-    nsSMILTimedElement::RemovalTestFunction mFunction;
-  };
-} // namespace
-=======
  private:
   SMILTimedElement::RemovalTestFunction mFunction;
 };
 }  // namespace
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::ClearSpecs(TimeValueSpecList& aSpecs,
-                                    InstanceTimeList& aInstances,
-                                    RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::ClearSpecs(TimeValueSpecList& aSpecs,
-                               InstanceTimeList& aInstances,
-                               RemovalTestFunction aRemove)
-{
-=======
 void SMILTimedElement::ClearSpecs(TimeValueSpecList& aSpecs,
                                   InstanceTimeList& aInstances,
                                   RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   AutoIntervalUpdateBatcher updateBatcher(*this);
 
   for (uint32_t i = 0; i < aSpecs.Length(); ++i) {
@@ -2113,15 +1202,7 @@ void SMILTimedElement::ClearSpecs(TimeValueSpecList& aSpecs,
   RemoveInstanceTimes(aInstances, removeByFunction);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::ClearIntervals() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::ClearIntervals()
-{
-=======
 void SMILTimedElement::ClearIntervals() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   if (mElementState != STATE_STARTUP) {
     mElementState = STATE_POSTACTIVE;
   }
@@ -2135,15 +1216,7 @@ void SMILTimedElement::ClearIntervals() {
   mOldIntervals.Clear();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::ApplyEarlyEnd(const nsSMILTimeValue& aSampleTime) {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::ApplyEarlyEnd(const nsSMILTimeValue& aSampleTime)
-{
-=======
 bool SMILTimedElement::ApplyEarlyEnd(const SMILTimeValue& aSampleTime) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // This should only be called within DoSampleAt as a helper function
   MOZ_ASSERT(mElementState == STATE_ACTIVE,
              "Unexpected state to try to apply an early end");
@@ -2158,16 +1231,8 @@ bool SMILTimedElement::ApplyEarlyEnd(const SMILTimeValue& aSampleTime) {
         // Generate a new instance time for the early end since the
         // existing instance time is part of some dependency chain that we
         // don't want to participate in.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-        RefPtr<nsSMILInstanceTime> newEarlyEnd =
-            new nsSMILInstanceTime(earlyEnd->Time());
-||||||| merged common ancestors
-        RefPtr<nsSMILInstanceTime> newEarlyEnd =
-          new nsSMILInstanceTime(earlyEnd->Time());
-=======
         RefPtr<SMILInstanceTime> newEarlyEnd =
             new SMILInstanceTime(earlyEnd->Time());
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
         mCurrentInterval->SetEnd(*newEarlyEnd);
       } else {
         mCurrentInterval->SetEnd(*earlyEnd);
@@ -2178,53 +1243,6 @@ bool SMILTimedElement::ApplyEarlyEnd(const SMILTimeValue& aSampleTime) {
   return updated;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-class MOZ_STACK_CLASS RemoveReset {
- public:
-  explicit RemoveReset(const nsSMILInstanceTime* aCurrentIntervalBegin)
-      : mCurrentIntervalBegin(aCurrentIntervalBegin) {}
-  bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/) {
-    // SMIL 3.0 section 5.4.3, 'Resetting element state':
-    //   Any instance times associated with past Event-values, Repeat-values,
-    //   Accesskey-values or added via DOM method calls are removed from the
-    //   dependent begin and end instance times lists. In effect, all events
-    //   and DOM methods calls in the past are cleared. This does not apply to
-    //   an instance time that defines the begin of the current interval.
-    return aInstanceTime->IsDynamic() && !aInstanceTime->ShouldPreserve() &&
-           (!mCurrentIntervalBegin || aInstanceTime != mCurrentIntervalBegin);
-  }
-
- private:
-  const nsSMILInstanceTime* mCurrentIntervalBegin;
-};
-}  // namespace
-||||||| merged common ancestors
-namespace
-{
-  class MOZ_STACK_CLASS RemoveReset
-  {
-  public:
-    explicit RemoveReset(const nsSMILInstanceTime* aCurrentIntervalBegin)
-      : mCurrentIntervalBegin(aCurrentIntervalBegin) { }
-    bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/)
-    {
-      // SMIL 3.0 section 5.4.3, 'Resetting element state':
-      //   Any instance times associated with past Event-values, Repeat-values,
-      //   Accesskey-values or added via DOM method calls are removed from the
-      //   dependent begin and end instance times lists. In effect, all events
-      //   and DOM methods calls in the past are cleared. This does not apply to
-      //   an instance time that defines the begin of the current interval.
-      return aInstanceTime->IsDynamic() &&
-             !aInstanceTime->ShouldPreserve() &&
-             (!mCurrentIntervalBegin || aInstanceTime != mCurrentIntervalBegin);
-    }
-
-  private:
-    const nsSMILInstanceTime* mCurrentIntervalBegin;
-  };
-} // namespace
-=======
 namespace {
 class MOZ_STACK_CLASS RemoveReset {
  public:
@@ -2245,37 +1263,17 @@ class MOZ_STACK_CLASS RemoveReset {
   const SMILInstanceTime* mCurrentIntervalBegin;
 };
 }  // namespace
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::Reset() {
-  RemoveReset resetBegin(mCurrentInterval ? mCurrentInterval->Begin()
-                                          : nullptr);
-||||||| merged common ancestors
-void
-nsSMILTimedElement::Reset()
-{
-  RemoveReset resetBegin(mCurrentInterval ? mCurrentInterval->Begin() : nullptr);
-=======
 void SMILTimedElement::Reset() {
   RemoveReset resetBegin(mCurrentInterval ? mCurrentInterval->Begin()
                                           : nullptr);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   RemoveInstanceTimes(mBeginInstances, resetBegin);
 
   RemoveReset resetEnd(nullptr);
   RemoveInstanceTimes(mEndInstances, resetEnd);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::ClearTimingState(RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::ClearTimingState(RemovalTestFunction aRemove)
-{
-=======
 void SMILTimedElement::ClearTimingState(RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   mElementState = STATE_STARTUP;
   ClearIntervals();
 
@@ -2287,15 +1285,7 @@ void SMILTimedElement::ClearTimingState(RemovalTestFunction aRemove) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::RebuildTimingState(RemovalTestFunction aRemove) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::RebuildTimingState(RemovalTestFunction aRemove)
-{
-=======
 void SMILTimedElement::RebuildTimingState(RemovalTestFunction aRemove) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(mAnimationElement,
              "Attempting to enable a timed element not attached to an "
              "animation element");
@@ -2318,15 +1308,7 @@ void SMILTimedElement::RebuildTimingState(RemovalTestFunction aRemove) {
   RegisterMilestone();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::DoPostSeek() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::DoPostSeek()
-{
-=======
 void SMILTimedElement::DoPostSeek() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Finish backwards seek
   if (mSeekState == SEEK_BACKWARD_FROM_INACTIVE ||
       mSeekState == SEEK_BACKWARD_FROM_ACTIVE) {
@@ -2371,27 +1353,11 @@ void SMILTimedElement::DoPostSeek() {
   mSeekState = SEEK_NOT_SEEKING;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UnpreserveInstanceTimes(InstanceTimeList& aList) {
-  const nsSMILInterval* prevInterval = GetPreviousInterval();
-  const nsSMILInstanceTime* cutoff =
-      mCurrentInterval ? mCurrentInterval->Begin()
-                       : prevInterval ? prevInterval->Begin() : nullptr;
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UnpreserveInstanceTimes(InstanceTimeList& aList)
-{
-  const nsSMILInterval* prevInterval = GetPreviousInterval();
-  const nsSMILInstanceTime* cutoff = mCurrentInterval ?
-      mCurrentInterval->Begin() :
-      prevInterval ? prevInterval->Begin() : nullptr;
-=======
 void SMILTimedElement::UnpreserveInstanceTimes(InstanceTimeList& aList) {
   const SMILInterval* prevInterval = GetPreviousInterval();
   const SMILInstanceTime* cutoff =
       mCurrentInterval ? mCurrentInterval->Begin()
                        : prevInterval ? prevInterval->Begin() : nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   uint32_t count = aList.Length();
   for (uint32_t i = 0; i < count; ++i) {
     SMILInstanceTime* instance = aList[i].get();
@@ -2401,15 +1367,7 @@ void SMILTimedElement::UnpreserveInstanceTimes(InstanceTimeList& aList) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::FilterHistory() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::FilterHistory()
-{
-=======
 void SMILTimedElement::FilterHistory() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // We should filter the intervals first, since instance times still used in an
   // interval won't be filtered.
   FilterIntervals();
@@ -2417,15 +1375,7 @@ void SMILTimedElement::FilterHistory() {
   FilterInstanceTimes(mEndInstances);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::FilterIntervals() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::FilterIntervals()
-{
-=======
 void SMILTimedElement::FilterIntervals() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // We can filter old intervals that:
   //
   // a) are not the previous interval; AND
@@ -2458,20 +1408,9 @@ void SMILTimedElement::FilterIntervals() {
                            ? mOldIntervals.Length() - sMaxNumIntervals
                            : 0;
   IntervalList filteredList;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  for (uint32_t i = 0; i < mOldIntervals.Length(); ++i) {
-    nsSMILInterval* interval = mOldIntervals[i].get();
-    if (i != 0 &&                         /*skip first interval*/
-||||||| merged common ancestors
-  for (uint32_t i = 0; i < mOldIntervals.Length(); ++i)
-  {
-    nsSMILInterval* interval = mOldIntervals[i].get();
-    if (i != 0 && /*skip first interval*/
-=======
   for (uint32_t i = 0; i < mOldIntervals.Length(); ++i) {
     SMILInterval* interval = mOldIntervals[i].get();
     if (i != 0 &&                         /*skip first interval*/
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
         i + 1 < mOldIntervals.Length() && /*skip previous interval*/
         (i < threshold || !interval->IsDependencyChainLink())) {
       interval->Unlink(true /*filtered, not deleted*/);
@@ -2483,39 +1422,6 @@ void SMILTimedElement::FilterIntervals() {
   mOldIntervals.SwapElements(filteredList);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-namespace {
-class MOZ_STACK_CLASS RemoveFiltered {
- public:
-  explicit RemoveFiltered(nsSMILTimeValue aCutoff) : mCutoff(aCutoff) {}
-  bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/) {
-    // We can filter instance times that:
-    // a) Precede the end point of the previous interval; AND
-    // b) Are NOT syncbase times that might be updated to a time after the end
-    //    point of the previous interval; AND
-    // c) Are NOT fixed end points in any remaining interval.
-    return aInstanceTime->Time() < mCutoff && aInstanceTime->IsFixedTime() &&
-           !aInstanceTime->ShouldPreserve();
-  }
-||||||| merged common ancestors
-namespace
-{
-  class MOZ_STACK_CLASS RemoveFiltered
-  {
-  public:
-    explicit RemoveFiltered(nsSMILTimeValue aCutoff) : mCutoff(aCutoff) { }
-    bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t /*aIndex*/)
-    {
-      // We can filter instance times that:
-      // a) Precede the end point of the previous interval; AND
-      // b) Are NOT syncbase times that might be updated to a time after the end
-      //    point of the previous interval; AND
-      // c) Are NOT fixed end points in any remaining interval.
-      return aInstanceTime->Time() < mCutoff &&
-             aInstanceTime->IsFixedTime() &&
-             !aInstanceTime->ShouldPreserve();
-    }
-=======
 namespace {
 class MOZ_STACK_CLASS RemoveFiltered {
  public:
@@ -2529,44 +1435,11 @@ class MOZ_STACK_CLASS RemoveFiltered {
     return aInstanceTime->Time() < mCutoff && aInstanceTime->IsFixedTime() &&
            !aInstanceTime->ShouldPreserve();
   }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
- private:
-  nsSMILTimeValue mCutoff;
-};
-||||||| merged common ancestors
-  private:
-    nsSMILTimeValue mCutoff;
-  };
-=======
  private:
   SMILTimeValue mCutoff;
 };
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-class MOZ_STACK_CLASS RemoveBelowThreshold {
- public:
-  RemoveBelowThreshold(uint32_t aThreshold,
-                       nsTArray<const nsSMILInstanceTime*>& aTimesToKeep)
-      : mThreshold(aThreshold), mTimesToKeep(aTimesToKeep) {}
-  bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t aIndex) {
-    return aIndex < mThreshold && !mTimesToKeep.Contains(aInstanceTime);
-  }
-||||||| merged common ancestors
-  class MOZ_STACK_CLASS RemoveBelowThreshold
-  {
-  public:
-    RemoveBelowThreshold(uint32_t aThreshold,
-                         nsTArray<const nsSMILInstanceTime *>& aTimesToKeep)
-      : mThreshold(aThreshold),
-        mTimesToKeep(aTimesToKeep) { }
-    bool operator()(nsSMILInstanceTime* aInstanceTime, uint32_t aIndex)
-    {
-      return aIndex < mThreshold && !mTimesToKeep.Contains(aInstanceTime);
-    }
-=======
 class MOZ_STACK_CLASS RemoveBelowThreshold {
  public:
   RemoveBelowThreshold(uint32_t aThreshold,
@@ -2575,37 +1448,14 @@ class MOZ_STACK_CLASS RemoveBelowThreshold {
   bool operator()(SMILInstanceTime* aInstanceTime, uint32_t aIndex) {
     return aIndex < mThreshold && !mTimesToKeep.Contains(aInstanceTime);
   }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
- private:
-  uint32_t mThreshold;
-  nsTArray<const nsSMILInstanceTime*>& mTimesToKeep;
-};
-}  // namespace
-||||||| merged common ancestors
-  private:
-    uint32_t mThreshold;
-    nsTArray<const nsSMILInstanceTime *>& mTimesToKeep;
-  };
-} // namespace
-=======
  private:
   uint32_t mThreshold;
   nsTArray<const SMILInstanceTime*>& mTimesToKeep;
 };
 }  // namespace
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::FilterInstanceTimes(InstanceTimeList& aList) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::FilterInstanceTimes(InstanceTimeList& aList)
-{
-=======
 void SMILTimedElement::FilterInstanceTimes(InstanceTimeList& aList) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   if (GetPreviousInterval()) {
     RemoveFiltered removeFiltered(GetPreviousInterval()->End()->Time());
     RemoveInstanceTimes(aList, removeFiltered);
@@ -2623,13 +1473,7 @@ void SMILTimedElement::FilterInstanceTimes(InstanceTimeList& aList) {
     // - the current interval begin time,
     // - the previous interval end time (see note in RemoveInstanceTimes)
     // - the first interval begin time (see note in FilterIntervals)
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    nsTArray<const nsSMILInstanceTime*> timesToKeep;
-||||||| merged common ancestors
-    nsTArray<const nsSMILInstanceTime *> timesToKeep;
-=======
     nsTArray<const SMILInstanceTime*> timesToKeep;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     if (mCurrentInterval) {
       timesToKeep.AppendElement(mCurrentInterval->Begin());
     }
@@ -2651,24 +1495,10 @@ void SMILTimedElement::FilterInstanceTimes(InstanceTimeList& aList) {
 // See:
 // http://www.w3.org/TR/2001/REC-smil-animation-20010904/#Timing-BeginEnd-LC-Start
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::GetNextInterval(
-    const nsSMILInterval* aPrevInterval,
-    const nsSMILInterval* aReplacedInterval,
-    const nsSMILInstanceTime* aFixedBeginTime, nsSMILInterval& aResult) const {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::GetNextInterval(const nsSMILInterval* aPrevInterval,
-                                    const nsSMILInterval* aReplacedInterval,
-                                    const nsSMILInstanceTime* aFixedBeginTime,
-                                    nsSMILInterval& aResult) const
-{
-=======
 bool SMILTimedElement::GetNextInterval(const SMILInterval* aPrevInterval,
                                        const SMILInterval* aReplacedInterval,
                                        const SMILInstanceTime* aFixedBeginTime,
                                        SMILInterval& aResult) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(!aFixedBeginTime || aFixedBeginTime->Time().IsDefinite(),
              "Unresolved or indefinite begin time given for interval start");
   static const SMILTimeValue zeroTime(0L);
@@ -2775,18 +1605,8 @@ bool SMILTimedElement::GetNextInterval(const SMILInterval* aPrevInterval,
         }
       }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-      nsSMILTimeValue intervalEnd =
-          tempEnd ? tempEnd->Time() : nsSMILTimeValue();
-      nsSMILTimeValue activeEnd = CalcActiveEnd(tempBegin->Time(), intervalEnd);
-||||||| merged common ancestors
-      nsSMILTimeValue intervalEnd = tempEnd
-                                  ? tempEnd->Time() : nsSMILTimeValue();
-      nsSMILTimeValue activeEnd = CalcActiveEnd(tempBegin->Time(), intervalEnd);
-=======
       SMILTimeValue intervalEnd = tempEnd ? tempEnd->Time() : SMILTimeValue();
       SMILTimeValue activeEnd = CalcActiveEnd(tempBegin->Time(), intervalEnd);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
       if (!tempEnd || intervalEnd != activeEnd) {
         tempEnd = new SMILInstanceTime(activeEnd);
@@ -2829,48 +1649,20 @@ bool SMILTimedElement::GetNextInterval(const SMILInterval* aPrevInterval,
   return false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILInstanceTime* nsSMILTimedElement::GetNextGreater(
-    const InstanceTimeList& aList, const nsSMILTimeValue& aBase,
-    int32_t& aPosition) const {
-  nsSMILInstanceTime* result = nullptr;
-||||||| merged common ancestors
-nsSMILInstanceTime*
-nsSMILTimedElement::GetNextGreater(const InstanceTimeList& aList,
-                                   const nsSMILTimeValue& aBase,
-                                   int32_t& aPosition) const
-{
-  nsSMILInstanceTime* result = nullptr;
-=======
 SMILInstanceTime* SMILTimedElement::GetNextGreater(
     const InstanceTimeList& aList, const SMILTimeValue& aBase,
     int32_t& aPosition) const {
   SMILInstanceTime* result = nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   while ((result = GetNextGreaterOrEqual(aList, aBase, aPosition)) &&
          result->Time() == aBase) {
   }
   return result;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILInstanceTime* nsSMILTimedElement::GetNextGreaterOrEqual(
-    const InstanceTimeList& aList, const nsSMILTimeValue& aBase,
-    int32_t& aPosition) const {
-  nsSMILInstanceTime* result = nullptr;
-||||||| merged common ancestors
-nsSMILInstanceTime*
-nsSMILTimedElement::GetNextGreaterOrEqual(const InstanceTimeList& aList,
-                                          const nsSMILTimeValue& aBase,
-                                          int32_t& aPosition) const
-{
-  nsSMILInstanceTime* result = nullptr;
-=======
 SMILInstanceTime* SMILTimedElement::GetNextGreaterOrEqual(
     const InstanceTimeList& aList, const SMILTimeValue& aBase,
     int32_t& aPosition) const {
   SMILInstanceTime* result = nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   int32_t count = aList.Length();
 
   for (; aPosition < count && !result; ++aPosition) {
@@ -2887,21 +1679,9 @@ SMILInstanceTime* SMILTimedElement::GetNextGreaterOrEqual(
 /**
  * @see SMILANIM 3.3.4
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimeValue nsSMILTimedElement::CalcActiveEnd(
-    const nsSMILTimeValue& aBegin, const nsSMILTimeValue& aEnd) const {
-  nsSMILTimeValue result;
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimedElement::CalcActiveEnd(const nsSMILTimeValue& aBegin,
-                                  const nsSMILTimeValue& aEnd) const
-{
-  nsSMILTimeValue result;
-=======
 SMILTimeValue SMILTimedElement::CalcActiveEnd(const SMILTimeValue& aBegin,
                                               const SMILTimeValue& aEnd) const {
   SMILTimeValue result;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   MOZ_ASSERT(mSimpleDur.IsResolved(),
              "Unresolved simple duration in CalcActiveEnd");
@@ -2930,29 +1710,13 @@ SMILTimeValue SMILTimedElement::CalcActiveEnd(const SMILTimeValue& aBegin,
   return result;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimeValue nsSMILTimedElement::GetRepeatDuration() const {
-  nsSMILTimeValue multipliedDuration;
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimedElement::GetRepeatDuration() const
-{
-  nsSMILTimeValue multipliedDuration;
-=======
 SMILTimeValue SMILTimedElement::GetRepeatDuration() const {
   SMILTimeValue multipliedDuration;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   if (mRepeatCount.IsDefinite() && mSimpleDur.IsDefinite()) {
     if (mRepeatCount * double(mSimpleDur.GetMillis()) <
         std::numeric_limits<SMILTime>::max()) {
       multipliedDuration.SetMillis(
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-          nsSMILTime(mRepeatCount * mSimpleDur.GetMillis()));
-||||||| merged common ancestors
-        nsSMILTime(mRepeatCount * mSimpleDur.GetMillis()));
-=======
           SMILTime(mRepeatCount * mSimpleDur.GetMillis()));
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     }
   } else {
     multipliedDuration.SetIndefinite();
@@ -2971,17 +1735,8 @@ SMILTimeValue SMILTimedElement::GetRepeatDuration() const {
   return repeatDuration;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTimeValue nsSMILTimedElement::ApplyMinAndMax(
-    const nsSMILTimeValue& aDuration) const {
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimedElement::ApplyMinAndMax(const nsSMILTimeValue& aDuration) const
-{
-=======
 SMILTimeValue SMILTimedElement::ApplyMinAndMax(
     const SMILTimeValue& aDuration) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   if (!aDuration.IsResolved()) {
     return aDuration;
   }
@@ -3003,21 +1758,9 @@ SMILTimeValue SMILTimedElement::ApplyMinAndMax(
   return result;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILTime nsSMILTimedElement::ActiveTimeToSimpleTime(
-    nsSMILTime aActiveTime, uint32_t& aRepeatIteration) {
-  nsSMILTime result;
-||||||| merged common ancestors
-nsSMILTime
-nsSMILTimedElement::ActiveTimeToSimpleTime(nsSMILTime aActiveTime,
-                                           uint32_t& aRepeatIteration)
-{
-  nsSMILTime result;
-=======
 SMILTime SMILTimedElement::ActiveTimeToSimpleTime(SMILTime aActiveTime,
                                                   uint32_t& aRepeatIteration) {
   SMILTime result;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   MOZ_ASSERT(mSimpleDur.IsResolved(),
              "Unresolved simple duration in ActiveTimeToSimpleTime");
@@ -3048,34 +1791,15 @@ SMILTime SMILTimedElement::ActiveTimeToSimpleTime(SMILTime aActiveTime,
 // also send a changed time notice to all time dependents for the current
 // interval end.'
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsSMILInstanceTime* nsSMILTimedElement::CheckForEarlyEnd(
-    const nsSMILTimeValue& aContainerTime) const {
-||||||| merged common ancestors
-nsSMILInstanceTime*
-nsSMILTimedElement::CheckForEarlyEnd(
-    const nsSMILTimeValue& aContainerTime) const
-{
-=======
 SMILInstanceTime* SMILTimedElement::CheckForEarlyEnd(
     const SMILTimeValue& aContainerTime) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(mCurrentInterval,
              "Checking for an early end but the current interval is not set");
   if (mRestartMode != RESTART_ALWAYS) return nullptr;
 
   int32_t position = 0;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  nsSMILInstanceTime* nextBegin = GetNextGreater(
-      mBeginInstances, mCurrentInterval->Begin()->Time(), position);
-||||||| merged common ancestors
-  nsSMILInstanceTime* nextBegin =
-    GetNextGreater(mBeginInstances, mCurrentInterval->Begin()->Time(),
-                   position);
-=======
   SMILInstanceTime* nextBegin = GetNextGreater(
       mBeginInstances, mCurrentInterval->Begin()->Time(), position);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   if (nextBegin && nextBegin->Time() > mCurrentInterval->Begin()->Time() &&
       nextBegin->Time() < mCurrentInterval->End()->Time() &&
@@ -3086,15 +1810,7 @@ SMILInstanceTime* SMILTimedElement::CheckForEarlyEnd(
   return nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::UpdateCurrentInterval(bool aForceChangeNotice) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::UpdateCurrentInterval(bool aForceChangeNotice)
-{
-=======
 void SMILTimedElement::UpdateCurrentInterval(bool aForceChangeNotice) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Check if updates are currently blocked (batched)
   if (mDeferIntervalUpdates) {
     mDoDeferredUpdate = true;
@@ -3141,27 +1857,11 @@ void SMILTimedElement::UpdateCurrentInterval(bool aForceChangeNotice) {
   }
 
   // If the interval is active the begin time is fixed.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  const nsSMILInstanceTime* beginTime =
-      mElementState == STATE_ACTIVE ? mCurrentInterval->Begin() : nullptr;
-  nsSMILInterval updatedInterval;
-  if (GetNextInterval(GetPreviousInterval(), mCurrentInterval.get(), beginTime,
-                      updatedInterval)) {
-||||||| merged common ancestors
-  const nsSMILInstanceTime* beginTime = mElementState == STATE_ACTIVE
-                                      ? mCurrentInterval->Begin()
-                                      : nullptr;
-  nsSMILInterval updatedInterval;
-  if (GetNextInterval(GetPreviousInterval(), mCurrentInterval.get(),
-                      beginTime, updatedInterval)) {
-
-=======
   const SMILInstanceTime* beginTime =
       mElementState == STATE_ACTIVE ? mCurrentInterval->Begin() : nullptr;
   SMILInterval updatedInterval;
   if (GetNextInterval(GetPreviousInterval(), mCurrentInterval.get(), beginTime,
                       updatedInterval)) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     if (mElementState == STATE_POSTACTIVE) {
       MOZ_ASSERT(!mCurrentInterval,
                  "In postactive state but the interval has been set");
@@ -3214,43 +1914,16 @@ void SMILTimedElement::UpdateCurrentInterval(bool aForceChangeNotice) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::SampleSimpleTime(nsSMILTime aActiveTime) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::SampleSimpleTime(nsSMILTime aActiveTime)
-{
-=======
 void SMILTimedElement::SampleSimpleTime(SMILTime aActiveTime) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   if (mClient) {
     uint32_t repeatIteration;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    nsSMILTime simpleTime =
-        ActiveTimeToSimpleTime(aActiveTime, repeatIteration);
-||||||| merged common ancestors
-    nsSMILTime simpleTime =
-      ActiveTimeToSimpleTime(aActiveTime, repeatIteration);
-=======
     SMILTime simpleTime = ActiveTimeToSimpleTime(aActiveTime, repeatIteration);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
     mClient->SampleAt(simpleTime, mSimpleDur, repeatIteration);
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::SampleFillValue() {
-  if (mFillMode != FILL_FREEZE || !mClient) return;
-||||||| merged common ancestors
-void
-nsSMILTimedElement::SampleFillValue()
-{
-  if (mFillMode != FILL_FREEZE || !mClient)
-    return;
-=======
 void SMILTimedElement::SampleFillValue() {
   if (mFillMode != FILL_FREEZE || !mClient) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   SMILTime activeTime;
 
@@ -3289,14 +1962,7 @@ void SMILTimedElement::SampleFillValue() {
   }
 
   uint32_t repeatIteration;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  nsSMILTime simpleTime = ActiveTimeToSimpleTime(activeTime, repeatIteration);
-||||||| merged common ancestors
-  nsSMILTime simpleTime =
-    ActiveTimeToSimpleTime(activeTime, repeatIteration);
-=======
   SMILTime simpleTime = ActiveTimeToSimpleTime(activeTime, repeatIteration);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   if (simpleTime == 0L && repeatIteration) {
     mClient->SampleLastValue(--repeatIteration);
@@ -3305,19 +1971,9 @@ void SMILTimedElement::SampleFillValue() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-nsresult nsSMILTimedElement::AddInstanceTimeFromCurrentTime(
-    nsSMILTime aCurrentTime, double aOffsetSeconds, bool aIsBegin) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimedElement::AddInstanceTimeFromCurrentTime(nsSMILTime aCurrentTime,
-    double aOffsetSeconds, bool aIsBegin)
-{
-=======
 nsresult SMILTimedElement::AddInstanceTimeFromCurrentTime(SMILTime aCurrentTime,
                                                           double aOffsetSeconds,
                                                           bool aIsBegin) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   double offset = NS_round(aOffsetSeconds * PR_MSEC_PER_SEC);
 
   // Check we won't overflow the range of SMILTime
@@ -3326,52 +1982,22 @@ nsresult SMILTimedElement::AddInstanceTimeFromCurrentTime(SMILTime aCurrentTime,
 
   SMILTimeValue timeVal(aCurrentTime + int64_t(offset));
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  RefPtr<nsSMILInstanceTime> instanceTime =
-      new nsSMILInstanceTime(timeVal, nsSMILInstanceTime::SOURCE_DOM);
-||||||| merged common ancestors
-  RefPtr<nsSMILInstanceTime> instanceTime =
-    new nsSMILInstanceTime(timeVal, nsSMILInstanceTime::SOURCE_DOM);
-=======
   RefPtr<SMILInstanceTime> instanceTime =
       new SMILInstanceTime(timeVal, SMILInstanceTime::SOURCE_DOM);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   AddInstanceTime(instanceTime, aIsBegin);
 
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::RegisterMilestone() {
-  nsSMILTimeContainer* container = GetTimeContainer();
-  if (!container) return;
-||||||| merged common ancestors
-void
-nsSMILTimedElement::RegisterMilestone()
-{
-  nsSMILTimeContainer* container = GetTimeContainer();
-  if (!container)
-    return;
-=======
 void SMILTimedElement::RegisterMilestone() {
   SMILTimeContainer* container = GetTimeContainer();
   if (!container) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(mAnimationElement,
              "Got a time container without an owning animation element");
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-  nsSMILMilestone nextMilestone;
-  if (!GetNextMilestone(nextMilestone)) return;
-||||||| merged common ancestors
-  nsSMILMilestone nextMilestone;
-  if (!GetNextMilestone(nextMilestone))
-    return;
-=======
   SMILMilestone nextMilestone;
   if (!GetNextMilestone(nextMilestone)) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   // This method is called every time we might possibly have updated our
   // current interval, but since SMILTimeContainer makes no attempt to filter
@@ -3383,16 +2009,7 @@ void SMILTimedElement::RegisterMilestone() {
   mPrevRegisteredMilestone = nextMilestone;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::GetNextMilestone(
-    nsSMILMilestone& aNextMilestone) const {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::GetNextMilestone(nsSMILMilestone& aNextMilestone) const
-{
-=======
 bool SMILTimedElement::GetNextMilestone(SMILMilestone& aNextMilestone) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Return the next key moment in our lifetime.
   //
   // XXX It may be possible in future to optimise this so that we only register
@@ -3427,32 +2044,16 @@ bool SMILTimedElement::GetNextMilestone(SMILMilestone& aNextMilestone) const {
       // Work out what comes next: the interval end or the next repeat iteration
       SMILTimeValue nextRepeat;
       if (mSeekState == SEEK_NOT_SEEKING && mSimpleDur.IsDefinite()) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-        nsSMILTime nextRepeatActiveTime =
-            (mCurrentRepeatIteration + 1) * mSimpleDur.GetMillis();
-||||||| merged common ancestors
-        nsSMILTime nextRepeatActiveTime =
-          (mCurrentRepeatIteration + 1) * mSimpleDur.GetMillis();
-=======
         SMILTime nextRepeatActiveTime =
             (mCurrentRepeatIteration + 1) * mSimpleDur.GetMillis();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
         // Check that the repeat fits within the repeat duration
         if (SMILTimeValue(nextRepeatActiveTime) < GetRepeatDuration()) {
           nextRepeat.SetMillis(mCurrentInterval->Begin()->Time().GetMillis() +
                                nextRepeatActiveTime);
         }
       }
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-      nsSMILTimeValue nextMilestone =
-          std::min(mCurrentInterval->End()->Time(), nextRepeat);
-||||||| merged common ancestors
-      nsSMILTimeValue nextMilestone =
-        std::min(mCurrentInterval->End()->Time(), nextRepeat);
-=======
       SMILTimeValue nextMilestone =
           std::min(mCurrentInterval->End()->Time(), nextRepeat);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
       // Check for an early end before that time
       SMILInstanceTime* earlyEnd = CheckForEarlyEnd(nextMilestone);
@@ -3478,15 +2079,7 @@ bool SMILTimedElement::GetNextMilestone(SMILMilestone& aNextMilestone) const {
   MOZ_CRASH("Invalid element state");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::NotifyNewInterval() {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::NotifyNewInterval()
-{
-=======
 void SMILTimedElement::NotifyNewInterval() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(mCurrentInterval,
              "Attempting to notify dependents of a new interval but the "
              "interval is not set");
@@ -3510,21 +2103,9 @@ void SMILTimedElement::NotifyNewInterval() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::NotifyChangedInterval(nsSMILInterval* aInterval,
-                                               bool aBeginObjectChanged,
-                                               bool aEndObjectChanged) {
-||||||| merged common ancestors
-void
-nsSMILTimedElement::NotifyChangedInterval(nsSMILInterval* aInterval,
-                                          bool aBeginObjectChanged,
-                                          bool aEndObjectChanged)
-{
-=======
 void SMILTimedElement::NotifyChangedInterval(SMILInterval* aInterval,
                                              bool aBeginObjectChanged,
                                              bool aEndObjectChanged) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   MOZ_ASSERT(aInterval, "Null interval for change notification");
 
   SMILTimeContainer* container = GetTimeContainer();
@@ -3544,129 +2125,53 @@ void SMILTimedElement::NotifyChangedInterval(SMILInterval* aInterval,
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-void nsSMILTimedElement::FireTimeEventAsync(EventMessage aMsg,
-                                            int32_t aDetail) {
-  if (!mAnimationElement) return;
-||||||| merged common ancestors
-void
-nsSMILTimedElement::FireTimeEventAsync(EventMessage aMsg, int32_t aDetail)
-{
-  if (!mAnimationElement)
-    return;
-=======
 void SMILTimedElement::FireTimeEventAsync(EventMessage aMsg, int32_t aDetail) {
   if (!mAnimationElement) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   nsCOMPtr<nsIRunnable> event =
       new AsyncTimeEventRunner(mAnimationElement, aMsg, aDetail);
   mAnimationElement->OwnerDoc()->Dispatch(TaskCategory::Other, event.forget());
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-const nsSMILInstanceTime* nsSMILTimedElement::GetEffectiveBeginInstance()
-    const {
-  switch (mElementState) {
-    case STATE_STARTUP:
-      return nullptr;
-||||||| merged common ancestors
-const nsSMILInstanceTime*
-nsSMILTimedElement::GetEffectiveBeginInstance() const
-{
-  switch (mElementState)
-  {
-  case STATE_STARTUP:
-    return nullptr;
-=======
 const SMILInstanceTime* SMILTimedElement::GetEffectiveBeginInstance() const {
   switch (mElementState) {
     case STATE_STARTUP:
       return nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
     case STATE_ACTIVE:
       return mCurrentInterval->Begin();
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-    case STATE_WAITING:
-    case STATE_POSTACTIVE: {
-      const nsSMILInterval* prevInterval = GetPreviousInterval();
-||||||| merged common ancestors
-  case STATE_WAITING:
-  case STATE_POSTACTIVE:
-    {
-      const nsSMILInterval* prevInterval = GetPreviousInterval();
-=======
     case STATE_WAITING:
     case STATE_POSTACTIVE: {
       const SMILInterval* prevInterval = GetPreviousInterval();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
       return prevInterval ? prevInterval->Begin() : nullptr;
     }
   }
   MOZ_CRASH("Invalid element state");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-const nsSMILInterval* nsSMILTimedElement::GetPreviousInterval() const {
-||||||| merged common ancestors
-const nsSMILInterval*
-nsSMILTimedElement::GetPreviousInterval() const
-{
-=======
 const SMILInterval* SMILTimedElement::GetPreviousInterval() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   return mOldIntervals.IsEmpty()
              ? nullptr
              : mOldIntervals[mOldIntervals.Length() - 1].get();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::HasClientInFillRange() const {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::HasClientInFillRange() const
-{
-=======
 bool SMILTimedElement::HasClientInFillRange() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   // Returns true if we have a client that is in the range where it will fill
   return mClient && ((mElementState != STATE_ACTIVE && HasPlayed()) ||
                      (mElementState == STATE_ACTIVE && !mClient->IsActive()));
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::EndHasEventConditions() const {
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::EndHasEventConditions() const
-{
-=======
 bool SMILTimedElement::EndHasEventConditions() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
   for (uint32_t i = 0; i < mEndSpecs.Length(); ++i) {
     if (mEndSpecs[i]->IsEventBased()) return true;
   }
   return false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-bool nsSMILTimedElement::AreEndTimesDependentOn(
-    const nsSMILInstanceTime* aBase) const {
-  if (mEndInstances.IsEmpty()) return false;
-||||||| merged common ancestors
-bool
-nsSMILTimedElement::AreEndTimesDependentOn(
-  const nsSMILInstanceTime* aBase) const
-{
-  if (mEndInstances.IsEmpty())
-    return false;
-=======
 bool SMILTimedElement::AreEndTimesDependentOn(
     const SMILInstanceTime* aBase) const {
   if (mEndInstances.IsEmpty()) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp
 
   for (uint32_t i = 0; i < mEndInstances.Length(); ++i) {
     if (mEndInstances[i]->GetBaseTime() != aBase) {
@@ -3675,10 +2180,5 @@ bool SMILTimedElement::AreEndTimesDependentOn(
   }
   return true;
 }
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimedElement.cpp
-||||||| merged common ancestors
-
-=======
 
 }  // namespace mozilla
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimedElement.cpp

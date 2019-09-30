@@ -31,21 +31,9 @@ NS_QUERYFRAME_TAIL_INHERITING(nsInlineFrame)
 
 NS_IMPL_FRAMEARENA_HELPERS(nsRubyFrame)
 
-<<<<<<< HEAD
-nsContainerFrame* NS_NewRubyFrame(nsIPresShell* aPresShell,
-                                  ComputedStyle* aStyle) {
-  return new (aPresShell) nsRubyFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewRubyFrame(nsIPresShell* aPresShell,
-                ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsRubyFrame(aStyle);
-=======
 nsContainerFrame* NS_NewRubyFrame(PresShell* aPresShell,
                                   ComputedStyle* aStyle) {
   return new (aPresShell) nsRubyFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -53,16 +41,8 @@ nsContainerFrame* NS_NewRubyFrame(PresShell* aPresShell,
 // nsRubyFrame Method Implementations
 // ==================================
 
-<<<<<<< HEAD
-/* virtual */ bool nsRubyFrame::IsFrameOfType(uint32_t aFlags) const {
-||||||| merged common ancestors
-/* virtual */ bool
-nsRubyFrame::IsFrameOfType(uint32_t aFlags) const
-{
-=======
 /* virtual */
 bool nsRubyFrame::IsFrameOfType(uint32_t aFlags) const {
->>>>>>> upstream-releases
   if (aFlags & eBidiInlineContainer) {
     return false;
   }
@@ -75,19 +55,9 @@ nsresult nsRubyFrame::GetFrameName(nsAString& aResult) const {
 }
 #endif
 
-<<<<<<< HEAD
-/* virtual */ void nsRubyFrame::AddInlineMinISize(
-    gfxContext* aRenderingContext, nsIFrame::InlineMinISizeData* aData) {
-||||||| merged common ancestors
-/* virtual */ void
-nsRubyFrame::AddInlineMinISize(gfxContext *aRenderingContext,
-                               nsIFrame::InlineMinISizeData *aData)
-{
-=======
 /* virtual */
 void nsRubyFrame::AddInlineMinISize(gfxContext* aRenderingContext,
                                     nsIFrame::InlineMinISizeData* aData) {
->>>>>>> upstream-releases
   for (nsIFrame* frame = this; frame; frame = frame->GetNextInFlow()) {
     for (RubySegmentEnumerator e(static_cast<nsRubyFrame*>(frame)); !e.AtEnd();
          e.Next()) {
@@ -96,19 +66,9 @@ void nsRubyFrame::AddInlineMinISize(gfxContext* aRenderingContext,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsRubyFrame::AddInlinePrefISize(
-    gfxContext* aRenderingContext, nsIFrame::InlinePrefISizeData* aData) {
-||||||| merged common ancestors
-/* virtual */ void
-nsRubyFrame::AddInlinePrefISize(gfxContext *aRenderingContext,
-                                nsIFrame::InlinePrefISizeData *aData)
-{
-=======
 /* virtual */
 void nsRubyFrame::AddInlinePrefISize(gfxContext* aRenderingContext,
                                      nsIFrame::InlinePrefISizeData* aData) {
->>>>>>> upstream-releases
   for (nsIFrame* frame = this; frame; frame = frame->GetNextInFlow()) {
     for (RubySegmentEnumerator e(static_cast<nsRubyFrame*>(frame)); !e.AtEnd();
          e.Next()) {
@@ -130,25 +90,11 @@ static nsRubyBaseContainerFrame* FindRubyBaseContainerAncestor(
   return nullptr;
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsRubyFrame::Reflow(nsPresContext* aPresContext,
-                                       ReflowOutput& aDesiredSize,
-                                       const ReflowInput& aReflowInput,
-                                       nsReflowStatus& aStatus) {
-||||||| merged common ancestors
-/* virtual */ void
-nsRubyFrame::Reflow(nsPresContext* aPresContext,
-                    ReflowOutput& aDesiredSize,
-                    const ReflowInput& aReflowInput,
-                    nsReflowStatus& aStatus)
-{
-=======
 /* virtual */
 void nsRubyFrame::Reflow(nsPresContext* aPresContext,
                          ReflowOutput& aDesiredSize,
                          const ReflowInput& aReflowInput,
                          nsReflowStatus& aStatus) {
->>>>>>> upstream-releases
   MarkInReflow();
   DO_GLOBAL_REFLOW_COUNT("nsRubyFrame");
   DISPLAY_REFLOW(aPresContext, this, aReflowInput, aDesiredSize, aStatus);
@@ -440,13 +386,7 @@ nsRubyBaseContainerFrame* nsRubyFrame::PullOneSegment(
   }
 
   if (nsBlockFrame* newFloatCB =
-<<<<<<< HEAD
-          nsLayoutUtils::GetAsBlock(aLineLayout->LineContainerFrame())) {
-||||||| merged common ancestors
-      nsLayoutUtils::GetAsBlock(aLineLayout->LineContainerFrame())) {
-=======
           do_QueryFrame(aLineLayout->LineContainerFrame())) {
->>>>>>> upstream-releases
     if (oldFloatCB && oldFloatCB != newFloatCB) {
       newFloatCB->ReparentFloats(baseFrame, oldFloatCB, true);
     }

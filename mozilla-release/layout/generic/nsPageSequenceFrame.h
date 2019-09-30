@@ -55,26 +55,10 @@ class nsSharedPageData {
 };
 
 // Simple page sequence frame class. Used when we're in paginated mode
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.h
-class nsSimplePageSequenceFrame final : public nsContainerFrame,
-                                        public nsIPageSequenceFrame {
- public:
-  friend nsSimplePageSequenceFrame* NS_NewSimplePageSequenceFrame(
-      nsIPresShell* aPresShell, ComputedStyle* aStyle);
-||||||| merged common ancestors
-class nsSimplePageSequenceFrame final
-  : public nsContainerFrame
-  , public nsIPageSequenceFrame
-{
-public:
-  friend nsSimplePageSequenceFrame* NS_NewSimplePageSequenceFrame(nsIPresShell* aPresShell,
-                                                                  ComputedStyle* aStyle);
-=======
 class nsPageSequenceFrame final : public nsContainerFrame {
  public:
   friend nsPageSequenceFrame* NS_NewPageSequenceFrame(
       mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.h
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsPageSequenceFrame)
@@ -91,34 +75,6 @@ class nsPageSequenceFrame final : public nsContainerFrame {
   float GetSTFPercent() const { return mPageData->mShrinkToFitRatio; }
 
   // Async Printing
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.h
-  NS_IMETHOD StartPrint(nsPresContext* aPresContext,
-                        nsIPrintSettings* aPrintSettings,
-                        const nsAString& aDocTitle,
-                        const nsAString& aDocURL) override;
-  NS_IMETHOD PrePrintNextPage(nsITimerCallback* aCallback,
-                              bool* aDone) override;
-  NS_IMETHOD PrintNextPage() override;
-  NS_IMETHOD ResetPrintCanvasList() override;
-  NS_IMETHOD GetCurrentPageNum(int32_t* aPageNum) override;
-  NS_IMETHOD GetNumPages(int32_t* aNumPages) override;
-  NS_IMETHOD IsDoingPrintRange(bool* aDoing) override;
-  NS_IMETHOD GetPrintRange(int32_t* aFromPage, int32_t* aToPage) override;
-  NS_IMETHOD DoPageEnd() override;
-||||||| merged common ancestors
-  NS_IMETHOD StartPrint(nsPresContext*    aPresContext,
-                        nsIPrintSettings* aPrintSettings,
-                        const nsAString&  aDocTitle,
-                        const nsAString&  aDocURL) override;
-  NS_IMETHOD PrePrintNextPage(nsITimerCallback* aCallback, bool* aDone) override;
-  NS_IMETHOD PrintNextPage() override;
-  NS_IMETHOD ResetPrintCanvasList() override;
-  NS_IMETHOD GetCurrentPageNum(int32_t* aPageNum) override;
-  NS_IMETHOD GetNumPages(int32_t* aNumPages) override;
-  NS_IMETHOD IsDoingPrintRange(bool* aDoing) override;
-  NS_IMETHOD GetPrintRange(int32_t* aFromPage, int32_t* aToPage) override;
-  NS_IMETHOD DoPageEnd() override;
-=======
   nsresult StartPrint(nsPresContext* aPresContext,
                       nsIPrintSettings* aPrintSettings,
                       const nsAString& aDocTitle, const nsAString& aDocURL);
@@ -130,7 +86,6 @@ class nsPageSequenceFrame final : public nsContainerFrame {
   bool IsDoingPrintRange() const { return mDoingPageRange; }
   void GetPrintRange(int32_t* aFromPage, int32_t* aToPage) const;
   nsresult DoPageEnd();
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.h
 
   // We must allow Print Preview UI to have a background, no matter what the
   // user's settings
@@ -147,19 +102,9 @@ class nsPageSequenceFrame final : public nsContainerFrame {
   nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.h
- protected:
-  explicit nsSimplePageSequenceFrame(ComputedStyle* aStyle);
-  virtual ~nsSimplePageSequenceFrame();
-||||||| merged common ancestors
-protected:
-  explicit nsSimplePageSequenceFrame(ComputedStyle* aStyle);
-  virtual ~nsSimplePageSequenceFrame();
-=======
  protected:
   nsPageSequenceFrame(ComputedStyle*, nsPresContext*);
   virtual ~nsPageSequenceFrame();
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.h
 
   void SetPageNumberFormat(const char* aPropName, const char* aDefPropVal,
                            bool aPageNumOnly);
@@ -206,11 +151,4 @@ protected:
   bool mCurrentCanvasListSetup;
 };
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.h
-#endif /* nsSimplePageSequenceFrame_h___ */
-||||||| merged common ancestors
-#endif /* nsSimplePageSequenceFrame_h___ */
-
-=======
 #endif /* nsPageSequenceFrame_h___ */
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.h

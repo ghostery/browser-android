@@ -52,32 +52,15 @@
 #include "cairo.h"
 #include "skia/include/core/SkGraphics.h"
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include "mozilla/gfx/DeviceManagerDx.h"
-#include <process.h>
-#include <dwrite.h>
-||||||| merged common ancestors
-# include "mozilla/gfx/DeviceManagerDx.h"
-# include <process.h>
-# include <dwrite.h>
-=======
 #  include "mozilla/gfx/DeviceManagerDx.h"
 #  include "mozilla/widget/WinCompositorWindowThread.h"
 #  include "mozilla/WindowsVersion.h"
 #  include <process.h>
 #  include <dwrite.h>
->>>>>>> upstream-releases
 #endif
 #ifdef MOZ_WIDGET_GTK
-<<<<<<< HEAD
-#include <gtk/gtk.h>
-#include "skia/include/ports/SkTypeface_cairo.h"
-||||||| merged common ancestors
-# include <gtk/gtk.h>
-=======
 #  include <gtk/gtk.h>
 #  include "skia/include/ports/SkTypeface_cairo.h"
->>>>>>> upstream-releases
 #endif
 #ifdef MOZ_GECKO_PROFILER
 #  include "ChildProfilerController.h"
@@ -96,18 +79,8 @@ GPUParent::GPUParent() : mLaunchTime(TimeStamp::Now()) { sGPUParent = this; }
 
 GPUParent::~GPUParent() { sGPUParent = nullptr; }
 
-<<<<<<< HEAD
-/* static */ GPUParent* GPUParent::GetSingleton() { return sGPUParent; }
-||||||| merged common ancestors
-/* static */ GPUParent*
-GPUParent::GetSingleton()
-{
-  return sGPUParent;
-}
-=======
 /* static */
 GPUParent* GPUParent::GetSingleton() { return sGPUParent; }
->>>>>>> upstream-releases
 
 bool GPUParent::Init(base::ProcessId aParentPid, const char* aParentBuildID,
                      MessageLoop* aIOLoop, IPC::Channel* aChannel) {
@@ -199,32 +172,9 @@ bool GPUParent::DeallocPAPZInputBridgeParent(PAPZInputBridgeParent* aActor) {
   return true;
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvInit(
-    nsTArray<GfxPrefSetting>&& prefs, nsTArray<GfxVarUpdate>&& vars,
-    const DevicePrefs& devicePrefs, nsTArray<LayerTreeIdMapping>&& aMappings) {
-  const nsTArray<gfxPrefs::Pref*>& globalPrefs = gfxPrefs::all();
-  for (auto& setting : prefs) {
-    gfxPrefs::Pref* pref = globalPrefs[setting.index()];
-    pref->SetCachedValue(setting.value());
-  }
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvInit(nsTArray<GfxPrefSetting>&& prefs,
-                    nsTArray<GfxVarUpdate>&& vars,
-                    const DevicePrefs& devicePrefs,
-                    nsTArray<LayerTreeIdMapping>&& aMappings)
-{
-  const nsTArray<gfxPrefs::Pref*>& globalPrefs = gfxPrefs::all();
-  for (auto& setting : prefs) {
-    gfxPrefs::Pref* pref = globalPrefs[setting.index()];
-    pref->SetCachedValue(setting.value());
-  }
-=======
 mozilla::ipc::IPCResult GPUParent::RecvInit(
     nsTArray<GfxVarUpdate>&& vars, const DevicePrefs& devicePrefs,
     nsTArray<LayerTreeIdMapping>&& aMappings) {
->>>>>>> upstream-releases
   for (const auto& var : vars) {
     gfxVars::ApplyUpdate(var);
   }
@@ -333,20 +283,9 @@ mozilla::ipc::IPCResult GPUParent::RecvInit(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvInitCompositorManager(
-    Endpoint<PCompositorManagerParent>&& aEndpoint) {
-  CompositorManagerParent::Create(std::move(aEndpoint));
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvInitCompositorManager(Endpoint<PCompositorManagerParent>&& aEndpoint)
-{
-  CompositorManagerParent::Create(std::move(aEndpoint));
-=======
 mozilla::ipc::IPCResult GPUParent::RecvInitCompositorManager(
     Endpoint<PCompositorManagerParent>&& aEndpoint) {
   CompositorManagerParent::Create(std::move(aEndpoint), /* aIsRoot */ true);
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
@@ -389,48 +328,17 @@ mozilla::ipc::IPCResult GPUParent::RecvInitProfiler(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvUpdatePref(
-    const GfxPrefSetting& setting) {
-  gfxPrefs::Pref* pref = gfxPrefs::all()[setting.index()];
-  pref->SetCachedValue(setting.value());
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvUpdatePref(const GfxPrefSetting& setting)
-{
-  gfxPrefs::Pref* pref = gfxPrefs::all()[setting.index()];
-  pref->SetCachedValue(setting.value());
-=======
 mozilla::ipc::IPCResult GPUParent::RecvUpdateVar(const GfxVarUpdate& aUpdate) {
   gfxVars::ApplyUpdate(aUpdate);
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvUpdateVar(const GfxVarUpdate& aUpdate) {
-  gfxVars::ApplyUpdate(aUpdate);
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvUpdateVar(const GfxVarUpdate& aUpdate)
-{
-  gfxVars::ApplyUpdate(aUpdate);
-=======
 mozilla::ipc::IPCResult GPUParent::RecvPreferenceUpdate(const Pref& aPref) {
   Preferences::SetPreference(aPref);
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-static void CopyFeatureChange(Feature aFeature, FeatureChange* aOut) {
-||||||| merged common ancestors
-static void
-CopyFeatureChange(Feature aFeature, FeatureChange* aOut)
-{
-=======
 static void CopyFeatureChange(Feature aFeature, Maybe<FeatureFailure>* aOut) {
->>>>>>> upstream-releases
   FeatureState& feature = gfxConfig::GetFeature(aFeature);
   if (feature.DisabledByDefault() || feature.IsEnabled()) {
     // No change:
@@ -484,20 +392,9 @@ mozilla::ipc::IPCResult GPUParent::RecvSimulateDeviceReset(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvNewContentCompositorManager(
-    Endpoint<PCompositorManagerParent>&& aEndpoint) {
-  CompositorManagerParent::Create(std::move(aEndpoint));
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvNewContentCompositorManager(Endpoint<PCompositorManagerParent>&& aEndpoint)
-{
-  CompositorManagerParent::Create(std::move(aEndpoint));
-=======
 mozilla::ipc::IPCResult GPUParent::RecvNewContentCompositorManager(
     Endpoint<PCompositorManagerParent>&& aEndpoint) {
   CompositorManagerParent::Create(std::move(aEndpoint), /* aIsRoot */ false);
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
@@ -517,20 +414,9 @@ mozilla::ipc::IPCResult GPUParent::RecvNewContentVRManager(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvNewContentVideoDecoderManager(
-    Endpoint<PVideoDecoderManagerParent>&& aEndpoint) {
-  if (!dom::VideoDecoderManagerParent::CreateForContent(std::move(aEndpoint))) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvNewContentVideoDecoderManager(Endpoint<PVideoDecoderManagerParent>&& aEndpoint)
-{
-  if (!dom::VideoDecoderManagerParent::CreateForContent(std::move(aEndpoint))) {
-=======
 mozilla::ipc::IPCResult GPUParent::RecvNewContentRemoteDecoderManager(
     Endpoint<PRemoteDecoderManagerParent>&& aEndpoint) {
   if (!RemoteDecoderManagerParent::CreateForContent(std::move(aEndpoint))) {
->>>>>>> upstream-releases
     return IPC_FAIL_NO_REASON(this);
   }
   return IPC_OK();
@@ -559,16 +445,8 @@ mozilla::ipc::IPCResult GPUParent::RecvNotifyGpuObservers(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-/* static */ void GPUParent::GetGPUProcessName(nsACString& aStr) {
-||||||| merged common ancestors
-/* static */ void
-GPUParent::GetGPUProcessName(nsACString& aStr)
-{
-=======
 /* static */
 void GPUParent::GetGPUProcessName(nsACString& aStr) {
->>>>>>> upstream-releases
   auto processType = XRE_GetProcessType();
   unsigned pid = 0;
   if (processType == GeckoProcessType_GPU) {
@@ -582,31 +460,13 @@ void GPUParent::GetGPUProcessName(nsACString& aStr) {
   aStr.Assign(processName);
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvRequestMemoryReport(
-    const uint32_t& aGeneration, const bool& aAnonymize,
-    const bool& aMinimizeMemoryUsage, const MaybeFileDesc& aDMDFile) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvRequestMemoryReport(const uint32_t& aGeneration,
-                                   const bool& aAnonymize,
-                                   const bool& aMinimizeMemoryUsage,
-                                   const MaybeFileDesc& aDMDFile)
-{
-=======
 mozilla::ipc::IPCResult GPUParent::RecvRequestMemoryReport(
     const uint32_t& aGeneration, const bool& aAnonymize,
     const bool& aMinimizeMemoryUsage, const Maybe<FileDescriptor>& aDMDFile) {
->>>>>>> upstream-releases
   nsAutoCString processName;
   GetGPUProcessName(processName);
 
   mozilla::dom::MemoryReportRequestClient::Start(
-<<<<<<< HEAD
-      aGeneration, aAnonymize, aMinimizeMemoryUsage, aDMDFile, processName);
-||||||| merged common ancestors
-    aGeneration, aAnonymize, aMinimizeMemoryUsage, aDMDFile, processName);
-=======
       aGeneration, aAnonymize, aMinimizeMemoryUsage, aDMDFile, processName,
       [&](const MemoryReport& aReport) {
         Unused << GetSingleton()->SendAddMemoryReport(aReport);
@@ -614,36 +474,16 @@ mozilla::ipc::IPCResult GPUParent::RecvRequestMemoryReport(
       [&](const uint32_t& aGeneration) {
         return GetSingleton()->SendFinishMemoryReport(aGeneration);
       });
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult GPUParent::RecvShutdownVR() {
-  if (gfxPrefs::VRProcessEnabled()) {
-    VRGPUChild::ShutDown();
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-GPUParent::RecvShutdownVR()
-{
-  if (gfxPrefs::VRProcessEnabled()) {
-    VRGPUChild::ShutDown();
-=======
 mozilla::ipc::IPCResult GPUParent::RecvShutdownVR() {
   if (StaticPrefs::dom_vr_process_enabled()) {
     VRGPUChild::Shutdown();
->>>>>>> upstream-releases
   }
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void GPUParent::ActorDestroy(ActorDestroyReason aWhy) {
-||||||| merged common ancestors
-void
-GPUParent::ActorDestroy(ActorDestroyReason aWhy)
-{
-=======
 mozilla::ipc::IPCResult GPUParent::RecvUpdatePerfStatsCollectionMask(
     const uint64_t& aMask) {
   PerfStats::SetCollectionMask(static_cast<PerfStats::MetricMask>(aMask));
@@ -657,7 +497,6 @@ mozilla::ipc::IPCResult GPUParent::RecvCollectPerfStatsJSON(
 }
 
 void GPUParent::ActorDestroy(ActorDestroyReason aWhy) {
->>>>>>> upstream-releases
   if (AbnormalShutdown == aWhy) {
     NS_WARNING("Shutting down GPU process early due to a crash!");
     ProcessChild::QuickExit();

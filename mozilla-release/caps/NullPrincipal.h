@@ -21,20 +21,6 @@
 
 class nsIDocShell;
 class nsIURI;
-<<<<<<< HEAD
-
-#define NS_NULLPRINCIPAL_CID                         \
-  {                                                  \
-    0xbd066e5f, 0x146f, 0x4472, {                    \
-      0x83, 0x31, 0x7b, 0xfd, 0x05, 0xb1, 0xed, 0x90 \
-    }                                                \
-  }
-||||||| merged common ancestors
-
-#define NS_NULLPRINCIPAL_CID \
-{ 0xbd066e5f, 0x146f, 0x4472, \
-  { 0x83, 0x31, 0x7b, 0xfd, 0x05, 0xb1, 0xed, 0x90 } }
-=======
 namespace Json {
 class Value;
 }
@@ -45,7 +31,6 @@ class Value;
       0x83, 0x31, 0x7b, 0xfd, 0x05, 0xb1, 0xed, 0x90 \
     }                                                \
   }
->>>>>>> upstream-releases
 #define NS_NULLPRINCIPAL_CONTRACTID "@mozilla.org/nullprincipal;1"
 
 #define NS_NULLPRINCIPAL_SCHEME "moz-nullprincipal"
@@ -64,15 +49,7 @@ class NullPrincipal final : public BasePrincipal {
   NS_DECL_NSISERIALIZABLE
 
   NS_IMETHOD QueryInterface(REFNSIID aIID, void** aInstancePtr) override;
-<<<<<<< HEAD
   uint32_t GetHashValue() override;
-  NS_IMETHOD SetCsp(nsIContentSecurityPolicy* aCsp) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetHashValue(uint32_t* aHashValue) override;
-  NS_IMETHOD SetCsp(nsIContentSecurityPolicy* aCsp) override;
-=======
-  uint32_t GetHashValue() override;
->>>>>>> upstream-releases
   NS_IMETHOD GetURI(nsIURI** aURI) override;
   NS_IMETHOD GetDomain(nsIURI** aDomain) override;
   NS_IMETHOD SetDomain(nsIURI* aDomain) override;
@@ -124,20 +101,10 @@ class NullPrincipal final : public BasePrincipal {
  protected:
   virtual ~NullPrincipal() = default;
 
-<<<<<<< HEAD
-  bool SubsumesInternal(nsIPrincipal* aOther,
-                        DocumentDomainConsideration aConsideration) override {
-    return aOther == this;
-||||||| merged common ancestors
-  bool SubsumesInternal(nsIPrincipal* aOther, DocumentDomainConsideration aConsideration) override
-  {
-    return aOther == this;
-=======
   bool SubsumesInternal(nsIPrincipal* aOther,
                         DocumentDomainConsideration aConsideration) override {
     MOZ_ASSERT(aOther);
     return FastEquals(aOther);
->>>>>>> upstream-releases
   }
 
   bool MayLoadInternal(nsIURI* aURI) override;

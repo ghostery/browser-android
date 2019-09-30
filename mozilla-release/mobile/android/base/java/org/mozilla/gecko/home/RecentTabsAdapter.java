@@ -174,17 +174,6 @@ public class RecentTabsAdapter extends RecyclerView.Adapter<CombinedHistoryItem>
                             return;
                         }
 
-<<<<<<< HEAD
-                        try {
-                            parsedTabs.add(new ClosedTab(url, tab.getTitle(), tab.getTabObject().toString()));
-                        } catch (OutOfMemoryError oom) {
-                            // Stringifying may fail if the tab data is too large - let's hope that
-                            // this tab was an exception and that the next one will be smaller and
-                            // possibly succeed.
-                        }
-||||||| merged common ancestors
-                        parsedTabs.add(new ClosedTab(url, tab.getTitle(), tab.getTabObject().toString()));
-=======
                         final JSONObject tabObject = tab.getTabObject();
                         // The tab ID will be used to remove recently closed tabs that have been re-
                         // stored again. Because these tabs come from a different source that is
@@ -198,7 +187,6 @@ public class RecentTabsAdapter extends RecyclerView.Adapter<CombinedHistoryItem>
                             // this tab was an exception and that the next one will be smaller and
                             // possibly succeed.
                         }
->>>>>>> upstream-releases
                     }
                 }.parse(jsonString);
 

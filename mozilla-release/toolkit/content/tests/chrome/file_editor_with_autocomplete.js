@@ -17,22 +17,6 @@ async function waitForCondition(condition) {
   });
 }
 
-<<<<<<< HEAD
-function nsDoTestsForEditorWithAutoComplete(aDescription,
-                                                  aWindow,
-                                                  aTarget,
-                                                  aAutoCompleteController,
-                                                  aIsFunc,
-                                                  aTodoIsFunc,
-                                                  aGetTargetValueFunc) {
-||||||| merged common ancestors
-function nsDoTestsForEditorWithAutoComplete(aDescription,
-                                                  aWindow,
-                                                  aTarget,
-                                                  aAutoCompleteController,
-                                                  aIsFunc,
-                                                  aGetTargetValueFunc) {
-=======
 function nsDoTestsForEditorWithAutoComplete(
   aDescription,
   aWindow,
@@ -42,7 +26,6 @@ function nsDoTestsForEditorWithAutoComplete(
   aTodoIsFunc,
   aGetTargetValueFunc
 ) {
->>>>>>> upstream-releases
   this._description = aDescription;
   this._window = aWindow;
   this._target = aTarget;
@@ -100,42 +83,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
     this._controller.input.completeDefaultIndex = this._DefaultCompleteDefaultIndex;
   },
 
-<<<<<<< HEAD
-  _checkResult(aTest, aInputEvents) {
-    this._is(this._getTargetValue(), aTest.value,
-             this._description + ", " + aTest.description + ": value");
-    this._is(this._controller.searchString, aTest.searchString,
-             this._description + ", " + aTest.description + ": searchString");
-    this._is(this._controller.input.popupOpen, aTest.popup,
-             this._description + ", " + aTest.description + ": popupOpen");
-    this._is(this._controller.searchStatus, Ci.nsIAutoCompleteController.STATUS_COMPLETE_MATCH,
-             this._description + ", " + aTest.description + ": status");
-    this._is(aInputEvents.length, aTest.inputEvents.length,
-             this._description + ", " + aTest.description + ": number of input events wrong");
-    for (let i = 0; i < aInputEvents.length; i++) {
-      if (aTest.inputEvents[i] === undefined) {
-        this._is(true, false,
-                 this._description + ", " + aTest.description + ": \"input\" event shouldn't be dispatched anymore");
-        return;
-      }
-      this._is(aInputEvents[i] instanceof this._window.InputEvent, true,
-               this._description + ", " + aTest.description + ': "input" event should be dispatched with InputEvent interface');
-      this._is(aInputEvents[i].cancelable, false,
-               this._description + ", " + aTest.description + ': "input" event should be never cancelable');
-      this._is(aInputEvents[i].bubbles, true,
-               this._description + ", " + aTest.description + ': "input" event should always bubble');
-    }
-||||||| merged common ancestors
-  _checkResult(aTest) {
-    this._is(this._getTargetValue(), aTest.value,
-             this._description + ", " + aTest.description + ": value");
-    this._is(this._controller.searchString, aTest.searchString,
-             this._description + ", " + aTest.description + ": searchString");
-    this._is(this._controller.input.popupOpen, aTest.popup,
-             this._description + ", " + aTest.description + ": popupOpen");
-    this._is(this._controller.searchStatus, Ci.nsIAutoCompleteController.STATUS_COMPLETE_MATCH,
-             this._description + ", " + aTest.description + ": status");
-=======
   _checkResult(aTest, aInputEvents) {
     this._is(
       this._getTargetValue(),
@@ -226,7 +173,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
           ': dataTransfer of "input" event should be null'
       );
     }
->>>>>>> upstream-releases
   },
 
   _tests: [
@@ -238,15 +184,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("M", { shiftKey: true }, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mo", searchString: "Mo",
-      inputEvents: [
-        {inputType: "insertText"},
-        {inputType: "insertText"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mo", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mo",
@@ -255,7 +192,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         { inputType: "insertText", data: "M" },
         { inputType: "insertText", data: "o" },
       ],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -265,20 +201,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-      inputEvents: [
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-=======
       },
       popup: false,
       value: "Mozilla",
       searchString: "Mozilla",
       inputEvents: [{ inputType: "insertReplacementText", data: "Mozilla" }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -287,20 +214,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mo", searchString: "Mo",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mo", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mo",
       searchString: "Mo",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -309,20 +227,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -331,20 +240,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mo", searchString: "Mo",
-      inputEvents: [
-        {inputType: "historyRedo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mo", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mo",
       searchString: "Mo",
       inputEvents: [{ inputType: "historyRedo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -353,20 +253,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mozilla", searchString: "Mozilla",
-      inputEvents: [
-        {inputType: "historyRedo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mozilla", searchString: "Mozilla",
-=======
       },
       popup: true,
       value: "Mozilla",
       searchString: "Mozilla",
       inputEvents: [{ inputType: "historyRedo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -376,20 +267,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "deleteContentBackward"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "deleteContentBackward", data: null }],
->>>>>>> upstream-releases
     },
 
     {
@@ -400,15 +282,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("m", {}, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mo", searchString: "mo",
-      inputEvents: [
-        {inputType: "insertText"},
-        {inputType: "insertText"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mo", searchString: "mo",
-=======
       },
       popup: true,
       value: "mo",
@@ -417,7 +290,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         { inputType: "insertText", data: "m" },
         { inputType: "insertText", data: "o" },
       ],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -427,20 +299,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-      inputEvents: [
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-=======
       },
       popup: false,
       value: "Mozilla",
       searchString: "Mozilla",
       inputEvents: [{ inputType: "insertReplacementText", data: "Mozilla" }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -449,20 +312,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mo", searchString: "mo",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mo", searchString: "mo",
-=======
       },
       popup: true,
       value: "mo",
       searchString: "mo",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -471,20 +325,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -493,20 +338,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mo", searchString: "mo",
-      inputEvents: [
-        {inputType: "historyRedo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mo", searchString: "mo",
-=======
       },
       popup: true,
       value: "mo",
       searchString: "mo",
       inputEvents: [{ inputType: "historyRedo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -515,20 +351,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mozilla", searchString: "Mozilla",
-      inputEvents: [
-        {inputType: "historyRedo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mozilla", searchString: "Mozilla",
-=======
       },
       popup: true,
       value: "Mozilla",
       searchString: "Mozilla",
       inputEvents: [{ inputType: "historyRedo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -538,20 +365,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "deleteContentBackward"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "deleteContentBackward", data: null }],
->>>>>>> upstream-releases
     },
 
     // Testing for nsIAutoCompleteInput.completeDefaultIndex being true.
@@ -567,16 +385,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("M", { shiftKey: true }, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mozilla", searchString: "Mo",
-      inputEvents: [
-        {inputType: "insertText"},
-        {inputType: "insertText"},
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mozilla", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mozilla",
@@ -586,7 +394,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         { inputType: "insertText", data: "o" },
         { inputType: "insertReplacementText", data: "Mozilla" },
       ],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -600,19 +407,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-      inputEvents: [
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-=======
       },
       popup: false,
       value: "Mozilla",
       searchString: "Mozilla",
       inputEvents: [],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -625,20 +424,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mo", searchString: "Mo",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mo", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mo",
       searchString: "Mo",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -651,20 +441,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -677,15 +458,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mozilla", searchString: "Mo",
-      inputEvents: [
-        {inputType: "historyRedo"},
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mozilla", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mozilla",
@@ -694,7 +466,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         { inputType: "historyRedo", data: null },
         { inputType: "insertReplacementText", data: "Mozilla" },
       ],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -707,19 +478,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "Mozilla", searchString: "Mo",
-      inputEvents: [
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "Mozilla", searchString: "Mo",
-=======
       },
       popup: true,
       value: "Mozilla",
       searchString: "Mo",
       inputEvents: [],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -733,20 +496,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "deleteContentBackward"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "deleteContentBackward", data: null }],
->>>>>>> upstream-releases
     },
 
     {
@@ -761,16 +515,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("m", {}, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mozilla", searchString: "mo",
-      inputEvents: [
-        {inputType: "insertText"},
-        {inputType: "insertText"},
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mozilla", searchString: "mo",
-=======
       },
       popup: true,
       value: "mozilla",
@@ -780,7 +524,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         { inputType: "insertText", data: "o" },
         { inputType: "insertReplacementText", data: "mozilla" },
       ],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -794,20 +537,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-      inputEvents: [
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "Mozilla", searchString: "Mozilla",
-=======
       },
       popup: false,
       value: "Mozilla",
       searchString: "Mozilla",
       inputEvents: [{ inputType: "insertReplacementText", data: "Mozilla" }],
->>>>>>> upstream-releases
     },
     // Different from "exactly matches the case" case, modifying the case causes one additional transaction.
     // Although we could make this transaction ignored.
@@ -822,20 +556,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mozilla", searchString: "mozilla",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mozilla", searchString: "mozilla",
-=======
       },
       popup: true,
       value: "mozilla",
       searchString: "mozilla",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -848,20 +573,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mo", searchString: "mo",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mo", searchString: "mo",
-=======
       },
       popup: true,
       value: "mo",
       searchString: "mo",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -874,20 +590,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "historyUndo"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "historyUndo", data: null }],
->>>>>>> upstream-releases
     },
     // XXX This is odd case.  Consistency with undo behavior, this should restore "mo".
     //     However, looks like that autocomplete automatically restores "mozilla".
@@ -904,15 +611,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mozilla", searchString: "mo",
-      inputEvents: [
-        {inputType: "historyRedo"},
-        {inputType: "insertReplacementText"},
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mozilla", searchString: "mo",
-=======
       },
       popup: true,
       value: "mozilla",
@@ -921,7 +619,6 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         { inputType: "historyRedo", data: null },
         { inputType: "insertReplacementText", data: "mozilla" },
       ],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -934,19 +631,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mozilla", searchString: "mo",
-      inputEvents: [
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mozilla", searchString: "mo",
-=======
       },
       popup: true,
       value: "mozilla",
       searchString: "mo",
       inputEvents: [],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -959,19 +648,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: true, value: "mozilla", searchString: "mo",
-      inputEvents: [
-      ],
-||||||| merged common ancestors
-      }, popup: true, value: "mozilla", searchString: "mo",
-=======
       },
       popup: true,
       value: "mozilla",
       searchString: "mo",
       inputEvents: [],
->>>>>>> upstream-releases
     },
     {
       description:
@@ -985,20 +666,11 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
-<<<<<<< HEAD
-      }, popup: false, value: "", searchString: "",
-      inputEvents: [
-        {inputType: "deleteContentBackward"},
-      ],
-||||||| merged common ancestors
-      }, popup: false, value: "", searchString: "",
-=======
       },
       popup: false,
       value: "",
       searchString: "",
       inputEvents: [{ inputType: "deleteContentBackward", data: null }],
->>>>>>> upstream-releases
     },
   ],
 };

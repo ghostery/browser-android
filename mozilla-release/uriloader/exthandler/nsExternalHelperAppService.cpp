@@ -521,89 +521,6 @@ static const nsExtraMimeTypeEntry extraMimeEntries[] = {
 #ifdef MOZ_WIDGET_ANDROID
     {"application/vnd.android.package-archive", "apk", "Android Package"},
 #endif
-<<<<<<< HEAD
-    {IMAGE_ART, "art", "ART Image"},
-    {IMAGE_BMP, "bmp", "BMP Image"},
-    {IMAGE_GIF, "gif", "GIF Image"},
-    {IMAGE_ICO, "ico,cur", "ICO Image"},
-    {IMAGE_JPEG, "jpeg,jpg,jfif,pjpeg,pjp", "JPEG Image"},
-    {IMAGE_PNG, "png", "PNG Image"},
-    {IMAGE_APNG, "apng", "APNG Image"},
-    {IMAGE_TIFF, "tiff,tif", "TIFF Image"},
-    {IMAGE_XBM, "xbm", "XBM Image"},
-    {IMAGE_SVG_XML, "svg", "Scalable Vector Graphics"},
-    {IMAGE_WEBP, "webp", "WebP Image"},
-    {MESSAGE_RFC822, "eml", "RFC-822 data"},
-    {TEXT_PLAIN, "txt,text", "Text File"},
-    {APPLICATION_JSON, "json", "JavaScript Object Notation"},
-    {TEXT_VTT, "vtt", "Web Video Text Tracks"},
-    {TEXT_CACHE_MANIFEST, "appcache", "Application Cache Manifest"},
-    {TEXT_HTML, "html,htm,shtml,ehtml", "HyperText Markup Language"},
-    {"application/xhtml+xml", "xhtml,xht",
-     "Extensible HyperText Markup Language"},
-    {APPLICATION_MATHML_XML, "mml", "Mathematical Markup Language"},
-    {APPLICATION_RDF, "rdf", "Resource Description Framework"},
-    {TEXT_XUL, "xul", "XML-Based User Interface Language"},
-    {TEXT_XML, "xml,xsl,xbl", "Extensible Markup Language"},
-    {TEXT_CSS, "css", "Style Sheet"},
-    {TEXT_VCARD, "vcf,vcard", "Contact Information"},
-    {VIDEO_OGG, "ogv", "Ogg Video"},
-    {VIDEO_OGG, "ogg", "Ogg Video"},
-    {APPLICATION_OGG, "ogg", "Ogg Video"},
-    {AUDIO_OGG, "oga", "Ogg Audio"},
-    {AUDIO_OGG, "opus", "Opus Audio"},
-    {VIDEO_WEBM, "webm", "Web Media Video"},
-    {AUDIO_WEBM, "webm", "Web Media Audio"},
-    {AUDIO_MP3, "mp3", "MPEG Audio"},
-    {VIDEO_MP4, "mp4", "MPEG-4 Video"},
-    {AUDIO_MP4, "m4a", "MPEG-4 Audio"},
-    {VIDEO_RAW, "yuv", "Raw YUV Video"},
-    {AUDIO_WAV, "wav", "Waveform Audio"},
-    {VIDEO_3GPP, "3gpp,3gp", "3GPP Video"},
-    {VIDEO_3GPP2, "3g2", "3GPP2 Video"},
-    {AUDIO_MIDI, "mid", "Standard MIDI Audio"}};
-||||||| merged common ancestors
-  { IMAGE_ART, "art", "ART Image" },
-  { IMAGE_BMP, "bmp", "BMP Image" },
-  { IMAGE_GIF, "gif", "GIF Image" },
-  { IMAGE_ICO, "ico,cur", "ICO Image" },
-  { IMAGE_JPEG, "jpeg,jpg,jfif,pjpeg,pjp", "JPEG Image" },
-  { IMAGE_PNG, "png", "PNG Image" },
-  { IMAGE_APNG, "apng", "APNG Image" },
-  { IMAGE_TIFF, "tiff,tif", "TIFF Image" },
-  { IMAGE_XBM, "xbm", "XBM Image" },
-  { IMAGE_SVG_XML, "svg", "Scalable Vector Graphics" },
-  { IMAGE_WEBP, "webp", "WebP Image" },
-  { MESSAGE_RFC822, "eml", "RFC-822 data" },
-  { TEXT_PLAIN, "txt,text", "Text File" },
-  { APPLICATION_JSON, "json", "JavaScript Object Notation" },
-  { TEXT_VTT, "vtt", "Web Video Text Tracks" },
-  { TEXT_CACHE_MANIFEST, "appcache", "Application Cache Manifest" },
-  { TEXT_HTML, "html,htm,shtml,ehtml", "HyperText Markup Language" },
-  { "application/xhtml+xml", "xhtml,xht", "Extensible HyperText Markup Language" },
-  { APPLICATION_MATHML_XML, "mml", "Mathematical Markup Language" },
-  { APPLICATION_RDF, "rdf", "Resource Description Framework" },
-  { TEXT_XUL, "xul", "XML-Based User Interface Language" },
-  { TEXT_XML, "xml,xsl,xbl", "Extensible Markup Language" },
-  { TEXT_CSS, "css", "Style Sheet" },
-  { TEXT_VCARD, "vcf,vcard", "Contact Information" },
-  { VIDEO_OGG, "ogv", "Ogg Video" },
-  { VIDEO_OGG, "ogg", "Ogg Video" },
-  { APPLICATION_OGG, "ogg", "Ogg Video"},
-  { AUDIO_OGG, "oga", "Ogg Audio" },
-  { AUDIO_OGG, "opus", "Opus Audio" },
-  { VIDEO_WEBM, "webm", "Web Media Video" },
-  { AUDIO_WEBM, "webm", "Web Media Audio" },
-  { AUDIO_MP3, "mp3", "MPEG Audio" },
-  { VIDEO_MP4, "mp4", "MPEG-4 Video" },
-  { AUDIO_MP4, "m4a", "MPEG-4 Audio" },
-  { VIDEO_RAW, "yuv", "Raw YUV Video" },
-  { AUDIO_WAV, "wav", "Waveform Audio" },
-  { VIDEO_3GPP, "3gpp,3gp", "3GPP Video" },
-  { VIDEO_3GPP2,"3g2", "3GPP2 Video" },
-  { AUDIO_MIDI, "mid", "Standard MIDI Audio" }
-};
-=======
     {IMAGE_ART, "art", "ART Image"},
     {IMAGE_BMP, "bmp", "BMP Image"},
     {IMAGE_GIF, "gif", "GIF Image"},
@@ -645,7 +562,6 @@ static const nsExtraMimeTypeEntry extraMimeEntries[] = {
     {VIDEO_3GPP2, "3g2", "3GPP2 Video"},
     {AUDIO_MIDI, "mid", "Standard MIDI Audio"},
     {APPLICATION_WASM, "wasm", "WebAssembly Module"}};
->>>>>>> upstream-releases
 
 #undef MAC_TYPE
 
@@ -654,42 +570,6 @@ static const nsExtraMimeTypeEntry extraMimeEntries[] = {
  * NOTE: These MUST be lower-case and ASCII.
  */
 static const nsDefaultMimeTypeEntry nonDecodableExtensions[] = {
-<<<<<<< HEAD
-    {APPLICATION_GZIP, "gz"},
-    {APPLICATION_GZIP, "tgz"},
-    {APPLICATION_ZIP, "zip"},
-    {APPLICATION_COMPRESS, "z"},
-    {APPLICATION_GZIP, "svgz"}};
-
-NS_IMPL_ISUPPORTS(nsExternalHelperAppService, nsIExternalHelperAppService,
-                  nsPIExternalAppLauncher, nsIExternalProtocolService,
-                  nsIMIMEService, nsIObserver, nsISupportsWeakReference)
-
-nsExternalHelperAppService::nsExternalHelperAppService() {}
-nsresult nsExternalHelperAppService::Init() {
-||||||| merged common ancestors
-  { APPLICATION_GZIP, "gz" }, 
-  { APPLICATION_GZIP, "tgz" },
-  { APPLICATION_ZIP, "zip" },
-  { APPLICATION_COMPRESS, "z" },
-  { APPLICATION_GZIP, "svgz" }
-};
-
-NS_IMPL_ISUPPORTS(
-  nsExternalHelperAppService,
-  nsIExternalHelperAppService,
-  nsPIExternalAppLauncher,
-  nsIExternalProtocolService,
-  nsIMIMEService,
-  nsIObserver,
-  nsISupportsWeakReference)
-
-nsExternalHelperAppService::nsExternalHelperAppService()
-{
-}
-nsresult nsExternalHelperAppService::Init()
-{
-=======
     {APPLICATION_GZIP, "gz"},
     {APPLICATION_GZIP, "tgz"},
     {APPLICATION_ZIP, "zip"},
@@ -728,7 +608,6 @@ NS_IMPL_ISUPPORTS(nsExternalHelperAppService, nsIExternalHelperAppService,
 
 nsExternalHelperAppService::nsExternalHelperAppService() {}
 nsresult nsExternalHelperAppService::Init() {
->>>>>>> upstream-releases
   // Add an observer for profile change
   nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
   if (!obs) return NS_ERROR_FAILURE;
@@ -795,25 +674,6 @@ nsresult nsExternalHelperAppService::DoContentContentProcessHelper(
   // protocol will act as a listener on the child-side and create a "real"
   // helperAppService listener on the parent-side, via another call to
   // DoContent.
-<<<<<<< HEAD
-  mozilla::dom::PExternalHelperAppChild* pc =
-      child->SendPExternalHelperAppConstructor(
-          uriParams, nsCString(aMimeContentType), disp, contentDisposition,
-          fileName, aForceSave, contentLength, wasFileChannel, referrerParams,
-          mozilla::dom::TabChild::GetFrom(window));
-  ExternalHelperAppChild* childListener =
-      static_cast<ExternalHelperAppChild*>(pc);
-||||||| merged common ancestors
-  mozilla::dom::PExternalHelperAppChild *pc =
-    child->SendPExternalHelperAppConstructor(uriParams,
-                                              nsCString(aMimeContentType),
-                                              disp, contentDisposition,
-                                              fileName, aForceSave,
-                                              contentLength, wasFileChannel,
-                                              referrerParams,
-                                              mozilla::dom::TabChild::GetFrom(window));
-  ExternalHelperAppChild *childListener = static_cast<ExternalHelperAppChild *>(pc);
-=======
   mozilla::dom::PExternalHelperAppChild* pc =
       child->SendPExternalHelperAppConstructor(
           uriParams, loadInfoArgs, nsCString(aMimeContentType), disp,
@@ -822,7 +682,6 @@ nsresult nsExternalHelperAppService::DoContentContentProcessHelper(
           mozilla::dom::BrowserChild::GetFrom(window));
   ExternalHelperAppChild* childListener =
       static_cast<ExternalHelperAppChild*>(pc);
->>>>>>> upstream-releases
 
   NS_ADDREF(*aStreamListener = childListener);
 
@@ -1096,19 +955,9 @@ nsExternalHelperAppService::LoadURI(nsIURI* aURI,
     URIParams uri;
     SerializeURI(aURI, uri);
 
-<<<<<<< HEAD
-    nsCOMPtr<nsITabChild> tabChild(do_GetInterface(aWindowContext));
-    mozilla::dom::ContentChild::GetSingleton()->SendLoadURIExternal(
-        uri, static_cast<dom::TabChild*>(tabChild.get()));
-||||||| merged common ancestors
-    nsCOMPtr<nsITabChild> tabChild(do_GetInterface(aWindowContext));
-    mozilla::dom::ContentChild::GetSingleton()->
-      SendLoadURIExternal(uri, static_cast<dom::TabChild*>(tabChild.get()));
-=======
     nsCOMPtr<nsIBrowserChild> browserChild(do_GetInterface(aWindowContext));
     mozilla::dom::ContentChild::GetSingleton()->SendLoadURIExternal(
         uri, static_cast<dom::BrowserChild*>(browserChild.get()));
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -1682,15 +1531,7 @@ void nsExternalAppHandler::MaybeApplyDecodingForExtension(
   encChannel->SetApplyConversion(applyConversion);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsExternalAppHandler::OnStartRequest(nsIRequest* request,
-                                                   nsISupports* aCtxt) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsExternalAppHandler::OnStartRequest(nsIRequest *request, nsISupports * aCtxt)
-{
-=======
 NS_IMETHODIMP nsExternalAppHandler::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   MOZ_ASSERT(request, "OnStartRequest without request?");
 
   // Set mTimeDownloadStarted here as the download has already started and
@@ -1991,67 +1832,6 @@ void nsExternalAppHandler::SendStatusChange(ErrorType type, nsresult rv,
       break;
   }
 
-<<<<<<< HEAD
-  MOZ_LOG(
-      nsExternalHelperAppService::mLog, LogLevel::Error,
-      ("Error: %s, type=%i, listener=0x%p, transfer=0x%p, rv=0x%08" PRIX32 "\n",
-       msgId, type, mDialogProgressListener.get(), mTransfer.get(),
-       static_cast<uint32_t>(rv)));
-
-  MOZ_LOG(nsExternalHelperAppService::mLog, LogLevel::Error,
-          ("       path='%s'\n", NS_ConvertUTF16toUTF8(path).get()));
-
-  // Get properties file bundle and extract status string.
-  nsCOMPtr<nsIStringBundleService> stringService =
-      mozilla::services::GetStringBundleService();
-  if (stringService) {
-    nsCOMPtr<nsIStringBundle> bundle;
-    if (NS_SUCCEEDED(stringService->CreateBundle(
-            "chrome://global/locale/nsWebBrowserPersist.properties",
-            getter_AddRefs(bundle)))) {
-      nsAutoString msgText;
-      const char16_t* strings[] = {path.get()};
-      if (NS_SUCCEEDED(
-              bundle->FormatStringFromName(msgId, strings, 1, msgText))) {
-        if (mDialogProgressListener) {
-          // We have a listener, let it handle the error.
-          mDialogProgressListener->OnStatusChange(
-              nullptr, (type == kReadError) ? aRequest : nullptr, rv,
-              msgText.get());
-        } else if (mTransfer) {
-          mTransfer->OnStatusChange(nullptr,
-                                    (type == kReadError) ? aRequest : nullptr,
-                                    rv, msgText.get());
-        } else if (XRE_IsParentProcess()) {
-          // We don't have a listener.  Simply show the alert ourselves.
-          nsresult qiRv;
-          nsCOMPtr<nsIPrompt> prompter(
-              do_GetInterface(GetDialogParent(), &qiRv));
-          nsAutoString title;
-          bundle->FormatStringFromName("title", strings, 1, title);
-
-          MOZ_LOG(
-              nsExternalHelperAppService::mLog, LogLevel::Debug,
-              ("mContentContext=0x%p, prompter=0x%p, qi rv=0x%08" PRIX32
-               ", title='%s', msg='%s'",
-               mContentContext.get(), prompter.get(),
-               static_cast<uint32_t>(qiRv), NS_ConvertUTF16toUTF8(title).get(),
-               NS_ConvertUTF16toUTF8(msgText).get()));
-
-          // If we didn't have a prompter we will try and get a window
-          // instead, get it's docshell and use it to alert the user.
-          if (!prompter) {
-            nsCOMPtr<nsPIDOMWindowOuter> window(
-                do_GetInterface(GetDialogParent()));
-            if (!window || !window->GetDocShell()) {
-              return;
-            }
-||||||| merged common ancestors
-    MOZ_LOG(nsExternalHelperAppService::mLog, LogLevel::Error,
-        ("Error: %s, type=%i, listener=0x%p, transfer=0x%p, rv=0x%08" PRIX32 "\n",
-         msgId, type, mDialogProgressListener.get(), mTransfer.get(),
-         static_cast<uint32_t>(rv)));
-=======
   MOZ_LOG(
       nsExternalHelperAppService::mLog, LogLevel::Error,
       ("Error: %s, type=%i, listener=0x%p, transfer=0x%p, rv=0x%08" PRIX32 "\n",
@@ -2105,7 +1885,6 @@ void nsExternalAppHandler::SendStatusChange(ErrorType type, nsresult rv,
             if (!window || !window->GetDocShell()) {
               return;
             }
->>>>>>> upstream-releases
 
             prompter = do_GetInterface(window->GetDocShell(), &qiRv);
 
@@ -2134,20 +1913,9 @@ void nsExternalAppHandler::SendStatusChange(ErrorType type, nsresult rv,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsExternalAppHandler::OnDataAvailable(nsIRequest* request, nsISupports* aCtxt,
-                                      nsIInputStream* inStr,
-                                      uint64_t sourceOffset, uint32_t count) {
-||||||| merged common ancestors
-nsExternalAppHandler::OnDataAvailable(nsIRequest *request, nsISupports * aCtxt,
-                                      nsIInputStream * inStr,
-                                      uint64_t sourceOffset, uint32_t count)
-{
-=======
 nsExternalAppHandler::OnDataAvailable(nsIRequest* request,
                                       nsIInputStream* inStr,
                                       uint64_t sourceOffset, uint32_t count) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   // first, check to see if we've been canceled....
   if (mCanceled || !mSaver) {
@@ -2183,23 +1951,10 @@ nsExternalAppHandler::OnDataAvailable(nsIRequest* request,
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsExternalAppHandler::OnStopRequest(nsIRequest* request,
-                                                  nsISupports* aCtxt,
-                                                  nsresult aStatus) {
-  LOG(
-      ("nsExternalAppHandler::OnStopRequest\n"
-||||||| merged common ancestors
-NS_IMETHODIMP nsExternalAppHandler::OnStopRequest(nsIRequest *request, nsISupports *aCtxt,
-                                                  nsresult aStatus)
-{
-  LOG(("nsExternalAppHandler::OnStopRequest\n"
-=======
 NS_IMETHODIMP nsExternalAppHandler::OnStopRequest(nsIRequest* request,
                                                   nsresult aStatus) {
   LOG(
       ("nsExternalAppHandler::OnStopRequest\n"
->>>>>>> upstream-releases
        "  mCanceled=%d, mTransfer=0x%p, aStatus=0x%08" PRIX32 "\n",
        mCanceled, mTransfer.get(), static_cast<uint32_t>(aStatus)));
 
@@ -2249,33 +2004,6 @@ nsExternalAppHandler::OnSaveComplete(nsIBackgroundFileSaver* aSaver,
     // Save the redirect information.
     nsCOMPtr<nsIChannel> channel = do_QueryInterface(mRequest);
     if (channel) {
-<<<<<<< HEAD
-      nsCOMPtr<nsILoadInfo> loadInfo = channel->GetLoadInfo();
-      if (loadInfo) {
-        nsresult rv = NS_OK;
-        nsCOMPtr<nsIMutableArray> redirectChain =
-            do_CreateInstance(NS_ARRAY_CONTRACTID, &rv);
-        NS_ENSURE_SUCCESS(rv, rv);
-        LOG(("nsExternalAppHandler: Got %zu redirects\n",
-             loadInfo->RedirectChain().Length()));
-        for (nsIRedirectHistoryEntry* entry : loadInfo->RedirectChain()) {
-          redirectChain->AppendElement(entry);
-        }
-        mRedirects = redirectChain;
-||||||| merged common ancestors
-      nsCOMPtr<nsILoadInfo> loadInfo = channel->GetLoadInfo();
-      if (loadInfo) {
-        nsresult rv = NS_OK;
-        nsCOMPtr<nsIMutableArray> redirectChain =
-          do_CreateInstance(NS_ARRAY_CONTRACTID, &rv);
-        NS_ENSURE_SUCCESS(rv, rv);
-        LOG(("nsExternalAppHandler: Got %zu redirects\n",
-             loadInfo->RedirectChain().Length()));
-        for (nsIRedirectHistoryEntry* entry : loadInfo->RedirectChain()) {
-          redirectChain->AppendElement(entry);
-        }
-        mRedirects = redirectChain;
-=======
       nsCOMPtr<nsILoadInfo> loadInfo = channel->LoadInfo();
       nsresult rv = NS_OK;
       nsCOMPtr<nsIMutableArray> redirectChain =
@@ -2285,7 +2013,6 @@ nsExternalAppHandler::OnSaveComplete(nsIBackgroundFileSaver* aSaver,
            loadInfo->RedirectChain().Length()));
       for (nsIRedirectHistoryEntry* entry : loadInfo->RedirectChain()) {
         redirectChain->AppendElement(entry);
->>>>>>> upstream-releases
       }
       mRedirects = redirectChain;
     }
@@ -2796,17 +2523,8 @@ NS_IMETHODIMP nsExternalHelperAppService::GetFromTypeAndExtension(
   // (2) Now, let's see if we can find something in our datastore
   // This will not overwrite the OS information that interests us
   // (i.e. default application, default app. description)
-<<<<<<< HEAD
-  nsresult rv;
   nsCOMPtr<nsIHandlerService> handlerSvc =
       do_GetService(NS_HANDLERSERVICE_CONTRACTID);
-||||||| merged common ancestors
-  nsresult rv;
-  nsCOMPtr<nsIHandlerService> handlerSvc = do_GetService(NS_HANDLERSERVICE_CONTRACTID);
-=======
-  nsCOMPtr<nsIHandlerService> handlerSvc =
-      do_GetService(NS_HANDLERSERVICE_CONTRACTID);
->>>>>>> upstream-releases
   if (handlerSvc) {
     bool hasHandler = false;
     (void)handlerSvc->Exists(*_retval, &hasHandler);
@@ -3084,7 +2802,6 @@ bool nsExternalHelperAppService::GetTypeFromExtras(const nsACString& aExtension,
   // Look for default entry with matching extension.
   nsDependentCString::const_iterator start, end, iter;
   int32_t numEntries = ArrayLength(extraMimeEntries);
-<<<<<<< HEAD
   for (int32_t index = 0; index < numEntries; index++) {
     nsDependentCString extList(extraMimeEntries[index].mFileExtensions);
     extList.BeginReading(start);
@@ -3099,51 +2816,9 @@ bool nsExternalHelperAppService::GetTypeFromExtras(const nsACString& aExtension,
       }
       if (iter != end) {
         ++iter;
-||||||| merged common ancestors
-  for (int32_t index = 0; index < numEntries; index++)
-  {
-      nsDependentCString extList(extraMimeEntries[index].mFileExtensions);
-      extList.BeginReading(start);
-      extList.EndReading(end);
-      iter = start;
-      while (start != end)
-      {
-          FindCharInReadable(',', iter, end);
-          if (Substring(start, iter).Equals(aExtension,
-                                            nsCaseInsensitiveCStringComparator()))
-          {
-              aMIMEType = extraMimeEntries[index].mMimeType;
-              return true;
-          }
-          if (iter != end) {
-            ++iter;
-          }
-          start = iter;
-=======
-  for (int32_t index = 0; index < numEntries; index++) {
-    nsDependentCString extList(extraMimeEntries[index].mFileExtensions);
-    extList.BeginReading(start);
-    extList.EndReading(end);
-    iter = start;
-    while (start != end) {
-      FindCharInReadable(',', iter, end);
-      if (Substring(start, iter)
-              .Equals(aExtension, nsCaseInsensitiveCStringComparator())) {
-        aMIMEType = extraMimeEntries[index].mMimeType;
-        return true;
->>>>>>> upstream-releases
-      }
-<<<<<<< HEAD
-      start = iter;
-    }
-||||||| merged common ancestors
-=======
-      if (iter != end) {
-        ++iter;
       }
       start = iter;
     }
->>>>>>> upstream-releases
   }
 
   return false;
@@ -3152,14 +2827,6 @@ bool nsExternalHelperAppService::GetTypeFromExtras(const nsACString& aExtension,
 bool nsExternalHelperAppService::GetMIMETypeFromOSForExtension(
     const nsACString& aExtension, nsACString& aMIMEType) {
   bool found = false;
-<<<<<<< HEAD
-  nsCOMPtr<nsIMIMEInfo> mimeInfo =
-      GetMIMEInfoFromOS(EmptyCString(), aExtension, &found);
-  return found && mimeInfo && NS_SUCCEEDED(mimeInfo->GetMIMEType(aMIMEType));
-||||||| merged common ancestors
-  nsCOMPtr<nsIMIMEInfo> mimeInfo = GetMIMEInfoFromOS(EmptyCString(), aExtension, &found);
-  return found && mimeInfo && NS_SUCCEEDED(mimeInfo->GetMIMEType(aMIMEType));
-=======
   nsCOMPtr<nsIMIMEInfo> mimeInfo;
   nsresult rv = GetMIMEInfoFromOS(EmptyCString(), aExtension, &found,
                                   getter_AddRefs(mimeInfo));
@@ -3173,5 +2840,4 @@ nsresult nsExternalHelperAppService::GetMIMEInfoFromOS(
   *aMIMEInfo = nullptr;
   *aFound = false;
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }

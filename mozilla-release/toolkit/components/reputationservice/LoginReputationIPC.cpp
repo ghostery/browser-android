@@ -24,13 +24,7 @@ NS_IMPL_ISUPPORTS(LoginReputationParent, nsILoginReputationQueryCallback)
 mozilla::ipc::IPCResult LoginReputationParent::QueryReputation(nsIURI* aURI) {
   nsresult rv;
   nsCOMPtr<nsILoginReputationService> service =
-<<<<<<< HEAD
-      do_GetService(NS_LOGIN_REPUTATION_SERVICE_CONTRACTID, &rv);
-||||||| merged common ancestors
-    do_GetService(NS_LOGIN_REPUTATION_SERVICE_CONTRACTID, &rv);
-=======
       components::LoginReputation::Service(&rv);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     Unused << Send__delete__(this);
     return IPC_OK();

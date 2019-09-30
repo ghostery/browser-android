@@ -185,22 +185,10 @@ nsresult nsOSHelperAppService::GetMIMEInfoFromRegistry(const nsString& fileType,
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Looks up the type for the extension aExt and compares it to aType
-<<<<<<< HEAD
-/* static */ bool nsOSHelperAppService::typeFromExtEquals(const char16_t* aExt,
-                                                          const char* aType) {
-  if (!aType) return false;
-||||||| merged common ancestors
-/* static */ bool
-nsOSHelperAppService::typeFromExtEquals(const char16_t* aExt, const char *aType)
-{
-  if (!aType)
-    return false;
-=======
 /* static */
 bool nsOSHelperAppService::typeFromExtEquals(const char16_t* aExt,
                                              const char* aType) {
   if (!aType) return false;
->>>>>>> upstream-releases
   nsAutoString fileExtToUse;
   if (aExt[0] != char16_t('.')) fileExtToUse = char16_t('.');
 
@@ -388,18 +376,10 @@ already_AddRefed<nsMIMEInfoWin> nsOSHelperAppService::GetByExtension(
   return mimeInfo.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIMIMEInfo> nsOSHelperAppService::GetMIMEInfoFromOS(
-    const nsACString& aMIMEType, const nsACString& aFileExt, bool* aFound) {
-||||||| merged common ancestors
-already_AddRefed<nsIMIMEInfo> nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aMIMEType, const nsACString& aFileExt, bool *aFound)
-{
-=======
 NS_IMETHODIMP
 nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aMIMEType,
                                         const nsACString& aFileExt,
                                         bool* aFound, nsIMIMEInfo** aMIMEInfo) {
->>>>>>> upstream-releases
   *aFound = true;
 
   const nsCString& flatType = PromiseFlatCString(aMIMEType);
@@ -452,17 +432,10 @@ nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aMIMEType,
     RefPtr<nsMIMEInfoWin> miByExt =
         GetByExtension(NS_ConvertUTF8toUTF16(aFileExt), flatType.get());
     LOG(("Ext. lookup for '%s' found 0x%p\n", flatExt.get(), miByExt.get()));
-<<<<<<< HEAD
-    if (!miByExt && mi) return mi.forget();
-||||||| merged common ancestors
-    if (!miByExt && mi)
-      return mi.forget();
-=======
     if (!miByExt && mi) {
       mi.forget(aMIMEInfo);
       return NS_OK;
     }
->>>>>>> upstream-releases
     if (miByExt && !mi) {
       miByExt.forget(aMIMEInfo);
       return NS_OK;
@@ -473,17 +446,9 @@ nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aMIMEType,
       if (!aFileExt.IsEmpty()) {
         mi->AppendExtension(aFileExt);
       }
-<<<<<<< HEAD
-
-      return mi.forget();
-||||||| merged common ancestors
-      
-      return mi.forget();
-=======
 
       mi.forget(aMIMEInfo);
       return NS_OK;
->>>>>>> upstream-releases
     }
 
     // if we get here, mi has no default app. copy from extension lookup.

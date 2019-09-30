@@ -226,21 +226,6 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
     const undoMods = this.editor._startModifyingAttributes();
     this.editor._saveAttribute(attrName, undoMods);
     doMods.removeAttribute(attrName);
-<<<<<<< HEAD
-    this.undo.do(() => {
-      doMods.apply();
-    }, () => {
-      undoMods.apply();
-    });
-  },
-||||||| merged common ancestors
-    this.undo.do(() => {
-      doMods.apply();
-    }, () => {
-      undoMods.apply();
-    });
-  }
-=======
     this.undo.do(
       () => {
         doMods.apply();
@@ -250,7 +235,6 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
       }
     );
   },
->>>>>>> upstream-releases
 });
 
 module.exports = MarkupElementContainer;

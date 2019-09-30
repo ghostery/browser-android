@@ -432,18 +432,9 @@ int32_t WebrtcGmpVideoEncoder::RegisterEncodeCompleteCallback(
   return WEBRTC_VIDEO_CODEC_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void WebrtcGmpVideoEncoder::ReleaseGmp_g(
-    RefPtr<WebrtcGmpVideoEncoder>& aEncoder) {
-||||||| merged common ancestors
-/* static */ void
-WebrtcGmpVideoEncoder::ReleaseGmp_g(RefPtr<WebrtcGmpVideoEncoder>& aEncoder)
-{
-=======
 /* static */
 void WebrtcGmpVideoEncoder::ReleaseGmp_g(
     RefPtr<WebrtcGmpVideoEncoder>& aEncoder) {
->>>>>>> upstream-releases
   aEncoder->Close_g();
 }
 
@@ -476,22 +467,10 @@ int32_t WebrtcGmpVideoEncoder::SetRates(uint32_t aNewBitRate,
   return WEBRTC_VIDEO_CODEC_OK;
 }
 
-<<<<<<< HEAD
-/* static */ int32_t WebrtcGmpVideoEncoder::SetRates_g(
-    RefPtr<WebrtcGmpVideoEncoder> aThis, uint32_t aNewBitRate,
-    uint32_t aFrameRate) {
-||||||| merged common ancestors
-/* static */ int32_t
-WebrtcGmpVideoEncoder::SetRates_g(RefPtr<WebrtcGmpVideoEncoder> aThis,
-                                  uint32_t aNewBitRate,
-                                  uint32_t aFrameRate)
-{
-=======
 /* static */
 int32_t WebrtcGmpVideoEncoder::SetRates_g(RefPtr<WebrtcGmpVideoEncoder> aThis,
                                           uint32_t aNewBitRate,
                                           uint32_t aFrameRate) {
->>>>>>> upstream-releases
   if (!aThis->mGMP) {
     // destroyed via Terminate()
     return WEBRTC_VIDEO_CODEC_ERROR;
@@ -530,18 +509,6 @@ void WebrtcGmpVideoEncoder::Encoded(
           aEncodedFrame->Size()));
 
     // Right now makes one Encoded() callback per unit
-<<<<<<< HEAD
-    // XXX convert to FragmentationHeader format (array of offsets and sizes
-    // plus a buffer) in combination with H264 packetization changes in
-    // webrtc/trunk code
-    uint8_t* buffer = aEncodedFrame->Buffer();
-    uint8_t* end = aEncodedFrame->Buffer() + aEncodedFrame->Size();
-||||||| merged common ancestors
-    // XXX convert to FragmentationHeader format (array of offsets and sizes plus a buffer) in
-    // combination with H264 packetization changes in webrtc/trunk code
-    uint8_t *buffer = aEncodedFrame->Buffer();
-    uint8_t *end = aEncodedFrame->Buffer() + aEncodedFrame->Size();
-=======
     // XXX convert to FragmentationHeader format (array of offsets and sizes
     // plus a buffer) in combination with H264 packetization changes in
     // webrtc/trunk code
@@ -553,7 +520,6 @@ void WebrtcGmpVideoEncoder::Encoded(
     }
 
     uint8_t* end = aEncodedFrame->Buffer() + aEncodedFrame->Size();
->>>>>>> upstream-releases
     size_t size_bytes;
     switch (aEncodedFrame->BufferType()) {
       case GMP_BufferSingle:
@@ -724,15 +690,8 @@ int32_t WebrtcGmpVideoDecoder::InitDecode(
   return WEBRTC_VIDEO_CODEC_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void WebrtcGmpVideoDecoder::InitDecode_g(
-||||||| merged common ancestors
-/* static */ void
-WebrtcGmpVideoDecoder::InitDecode_g(
-=======
 /* static */
 void WebrtcGmpVideoDecoder::InitDecode_g(
->>>>>>> upstream-releases
     const RefPtr<WebrtcGmpVideoDecoder>& aThis,
     const webrtc::VideoCodec* aCodecSettings, int32_t aNumberOfCores,
     const RefPtr<GmpInitDoneRunnable>& aInitDone) {
@@ -962,19 +921,9 @@ int32_t WebrtcGmpVideoDecoder::RegisterDecodeCompleteCallback(
   return WEBRTC_VIDEO_CODEC_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void WebrtcGmpVideoDecoder::ReleaseGmp_g(
-    RefPtr<WebrtcGmpVideoDecoder>& aDecoder) {
-||||||| merged common ancestors
-
-/* static */ void
-WebrtcGmpVideoDecoder::ReleaseGmp_g(RefPtr<WebrtcGmpVideoDecoder>& aDecoder)
-{
-=======
 /* static */
 void WebrtcGmpVideoDecoder::ReleaseGmp_g(
     RefPtr<WebrtcGmpVideoDecoder>& aDecoder) {
->>>>>>> upstream-releases
   aDecoder->Close_g();
 }
 

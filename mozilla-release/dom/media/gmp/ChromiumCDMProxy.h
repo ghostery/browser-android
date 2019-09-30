@@ -22,17 +22,8 @@ class ChromiumCDMProxy : public CDMProxy {
 
   ChromiumCDMProxy(dom::MediaKeys* aKeys, const nsAString& aKeySystem,
                    GMPCrashHelper* aCrashHelper,
-<<<<<<< HEAD
-                   bool aAllowDistinctiveIdentifier, bool aAllowPersistentState,
-                   nsIEventTarget* aMainThread);
-||||||| merged common ancestors
-                   bool aAllowDistinctiveIdentifier,
-                   bool aAllowPersistentState,
-                   nsIEventTarget* aMainThread);
-=======
                    bool aAllowDistinctiveIdentifier, bool aAllowPersistentState,
                    nsISerialEventTarget* aMainThread);
->>>>>>> upstream-releases
 
   void Init(PromiseId aPromiseId, const nsAString& aOrigin,
             const nsAString& aTopLevelOrigin,

@@ -22,18 +22,8 @@ class CSSMozDocumentRule final : public css::ConditionRule {
 
   NS_DECL_ISUPPORTS_INHERITED
 
-<<<<<<< HEAD
-  static bool Match(nsIDocument* aDoc, nsIURI* aDocURI,
-                    const nsACString& aDocURISpec, const nsACString& aPattern,
-||||||| merged common ancestors
-  static bool Match(nsIDocument* aDoc,
-                    nsIURI* aDocURI,
-                    const nsACString& aDocURISpec,
-                    const nsACString& aPattern,
-=======
   static bool Match(const Document*, nsIURI* aDocURI,
                     const nsACString& aDocURISpec, const nsACString& aPattern,
->>>>>>> upstream-releases
                     css::DocumentMatchingFunction);
 
 #ifdef DEBUG

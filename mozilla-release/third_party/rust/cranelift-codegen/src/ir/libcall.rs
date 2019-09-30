@@ -4,20 +4,9 @@ use crate::ir::{
     types, AbiParam, ArgumentPurpose, ExtFuncData, ExternalName, FuncRef, Function, Inst, Opcode,
     Signature, Type,
 };
-<<<<<<< HEAD
-use isa::{CallConv, RegUnit, TargetIsa};
-use std::fmt;
-use std::str::FromStr;
-||||||| merged common ancestors
-use isa::{RegUnit, TargetIsa};
-use settings::CallConv;
-use std::fmt;
-use std::str::FromStr;
-=======
 use crate::isa::{CallConv, RegUnit, TargetIsa};
 use core::fmt;
 use core::str::FromStr;
->>>>>>> upstream-releases
 
 /// The name of a runtime library routine.
 ///

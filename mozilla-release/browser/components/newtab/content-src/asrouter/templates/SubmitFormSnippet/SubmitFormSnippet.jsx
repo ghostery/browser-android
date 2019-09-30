@@ -95,18 +95,12 @@ export class SubmitFormSnippet extends React.PureComponent {
   }
 
   expandSnippet() {
-<<<<<<< HEAD
-    this.props.sendUserActionTelemetry({event: "CLICK_BUTTON", value: "scene1-button-learn-more", id: this.props.UISurface});
-
-||||||| merged common ancestors
-=======
     this.props.sendUserActionTelemetry({
       event: "CLICK_BUTTON",
       value: "scene1-button-learn-more",
       id: this.props.UISurface,
     });
 
->>>>>>> upstream-releases
     this.setState({
       expanded: true,
       signupSuccess: false,
@@ -131,24 +125,6 @@ export class SubmitFormSnippet extends React.PureComponent {
     if (!content.scene2_disclaimer_html) {
       return null;
     }
-<<<<<<< HEAD
-    return (<p className="disclaimerText">
-      <RichText text={content.scene2_disclaimer_html}
-        localization_id="disclaimer_html"
-        links={content.links}
-        doNotAutoBlock={true}
-        openNewWindow={true}
-        sendClick={this.props.sendClick} />
-    </p>);
-||||||| merged common ancestors
-    return (<p className="disclaimerText">
-      <RichText text={content.scene2_disclaimer_html}
-        localization_id="disclaimer_html"
-        links={content.links}
-        doNotAutoBlock={true}
-        sendClick={this.props.sendClick} />
-    </p>);
-=======
     return (
       <p className="disclaimerText">
         <RichText
@@ -161,7 +137,6 @@ export class SubmitFormSnippet extends React.PureComponent {
         />
       </p>
     );
->>>>>>> upstream-releases
   }
 
   renderFormPrivacyNotice() {

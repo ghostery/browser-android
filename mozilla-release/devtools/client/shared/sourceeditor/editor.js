@@ -54,28 +54,11 @@ const L10N = new LocalizationHelper(
   "devtools/client/locales/sourceeditor.properties"
 );
 
-<<<<<<< HEAD:mozilla-release/devtools/client/sourceeditor/editor.js
-const {
-  getWasmText,
-  isWasm,
-  lineToWasmOffset,
-  wasmOffsetToLine,
-} = require("./wasm");
-||||||| merged common ancestors
-const {
-  getWasmText,
-  getWasmLineNumberFormatter,
-  isWasm,
-  lineToWasmOffset,
-  wasmOffsetToLine,
-} = require("./wasm");
-=======
 loader.lazyRequireGetter(
   this,
   "wasm",
   "devtools/client/shared/sourceeditor/wasm"
 );
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/sourceeditor/editor.js
 
 const { OS } = Services.appinfo;
 

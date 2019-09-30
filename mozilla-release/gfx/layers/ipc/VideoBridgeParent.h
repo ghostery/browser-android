@@ -17,19 +17,8 @@ class CompositorThreadHolder;
 
 class VideoBridgeParent final : public PVideoBridgeParent,
                                 public HostIPCAllocator,
-<<<<<<< HEAD
                                 public ShmemAllocator {
  public:
-  VideoBridgeParent();
-||||||| merged common ancestors
-                                public ShmemAllocator
-{
-public:
-  VideoBridgeParent();
-=======
-                                public ShmemAllocator {
- public:
->>>>>>> upstream-releases
   ~VideoBridgeParent();
 
   static VideoBridgeParent* GetSingleton();
@@ -65,20 +54,12 @@ public:
 
   void DeallocShmem(ipc::Shmem& aShmem) override;
 
-<<<<<<< HEAD
- private:
-  void DeallocPVideoBridgeParent() override;
-||||||| merged common ancestors
-private:
-  void DeallocPVideoBridgeParent() override;
-=======
   static void Open(Endpoint<PVideoBridgeParent>&& aEndpoint);
 
  private:
   VideoBridgeParent();
 
   void ActorDealloc() override;
->>>>>>> upstream-releases
 
   // This keeps us alive until ActorDestroy(), at which point we do a
   // deferred destruction of ourselves.

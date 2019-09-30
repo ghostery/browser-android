@@ -105,17 +105,8 @@ mozilla::ipc::IPCResult CacheOpChild::Recv__delete__(
   }
 
   switch (aResult.type()) {
-<<<<<<< HEAD
-    case CacheOpResult::TCacheMatchResult: {
-      HandleResponse(aResult.get_CacheMatchResult().responseOrVoid());
-||||||| merged common ancestors
-    case CacheOpResult::TCacheMatchResult:
-    {
-      HandleResponse(aResult.get_CacheMatchResult().responseOrVoid());
-=======
     case CacheOpResult::TCacheMatchResult: {
       HandleResponse(aResult.get_CacheMatchResult().maybeResponse());
->>>>>>> upstream-releases
       break;
     }
     case CacheOpResult::TCacheMatchAllResult: {
@@ -134,17 +125,8 @@ mozilla::ipc::IPCResult CacheOpChild::Recv__delete__(
       HandleRequestList(aResult.get_CacheKeysResult().requestList());
       break;
     }
-<<<<<<< HEAD
-    case CacheOpResult::TStorageMatchResult: {
-      HandleResponse(aResult.get_StorageMatchResult().responseOrVoid());
-||||||| merged common ancestors
-    case CacheOpResult::TStorageMatchResult:
-    {
-      HandleResponse(aResult.get_StorageMatchResult().responseOrVoid());
-=======
     case CacheOpResult::TStorageMatchResult: {
       HandleResponse(aResult.get_StorageMatchResult().maybeResponse());
->>>>>>> upstream-releases
       break;
     }
     case CacheOpResult::TStorageHasResult: {
@@ -210,18 +192,8 @@ PBackgroundChild* CacheOpChild::GetIPCManager() {
   MOZ_CRASH("CacheOpChild does not implement TypeUtils::GetIPCManager()");
 }
 
-<<<<<<< HEAD
-void CacheOpChild::HandleResponse(const CacheResponseOrVoid& aResponseOrVoid) {
-  if (aResponseOrVoid.type() == CacheResponseOrVoid::Tvoid_t) {
-||||||| merged common ancestors
-void
-CacheOpChild::HandleResponse(const CacheResponseOrVoid& aResponseOrVoid)
-{
-  if (aResponseOrVoid.type() == CacheResponseOrVoid::Tvoid_t) {
-=======
 void CacheOpChild::HandleResponse(const Maybe<CacheResponse>& aMaybeResponse) {
   if (aMaybeResponse.isNothing()) {
->>>>>>> upstream-releases
     mPromise->MaybeResolveWithUndefined();
     return;
   }

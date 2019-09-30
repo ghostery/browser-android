@@ -1,35 +1,8 @@
 "use strict";
 
 (function() {
-<<<<<<< HEAD
-
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-function startProfiler(settings) {
-  Services.profiler.StartProfiler(
-    settings.entries,
-    settings.interval,
-    settings.features,
-    settings.features.length,
-    settings.threads,
-    settings.threads.length,
-    settings.duration
-||||||| merged common ancestors
-
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-function startProfiler(settings) {
-  Services.profiler.StartProfiler(
-    settings.entries,
-    settings.interval,
-    settings.features,
-    settings.features.length,
-    settings.threads,
-    settings.threads.length
-=======
   const { Services } = ChromeUtils.import(
     "resource://gre/modules/Services.jsm"
->>>>>>> upstream-releases
   );
 
   function startProfiler(settings) {

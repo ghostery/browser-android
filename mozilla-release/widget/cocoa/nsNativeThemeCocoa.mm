@@ -2732,22 +2732,8 @@ static bool IsHiDPIContext(nsDeviceContext* aContext) {
   return AppUnitsPerCSSPixel() >= 2 * aContext->AppUnitsPerDevPixelAtUnitFullZoom();
 }
 
-<<<<<<< HEAD
-Maybe<nsNativeThemeCocoa::WidgetInfo>
-nsNativeThemeCocoa::ComputeWidgetInfo(nsIFrame* aFrame,
-                                      StyleAppearance aAppearance,
-                                      const nsRect& aRect)
-{
-||||||| merged common ancestors
-Maybe<nsNativeThemeCocoa::WidgetInfo>
-nsNativeThemeCocoa::ComputeWidgetInfo(nsIFrame* aFrame,
-                                      WidgetType aWidgetType,
-                                      const nsRect& aRect)
-{
-=======
 Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
     nsIFrame* aFrame, StyleAppearance aAppearance, const nsRect& aRect) {
->>>>>>> upstream-releases
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_RETURN;
 
   if (aAppearance == StyleAppearance::MenulistButton &&
@@ -2795,42 +2781,18 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
 
     case StyleAppearance::Menuitem:
     case StyleAppearance::Checkmenuitem:
-<<<<<<< HEAD
-      return Some(WidgetInfo::MenuItem(
-        ComputeMenuItemParams(aFrame, eventState,
-                              aAppearance == StyleAppearance::Checkmenuitem)));
-||||||| merged common ancestors
-      return Some(WidgetInfo::MenuItem(
-        ComputeMenuItemParams(aFrame, eventState,
-                              aWidgetType == StyleAppearance::Checkmenuitem)));
-=======
       return Some(WidgetInfo::MenuItem(ComputeMenuItemParams(
           aFrame, eventState, aAppearance == StyleAppearance::Checkmenuitem)));
->>>>>>> upstream-releases
 
     case StyleAppearance::Menuseparator:
       return Some(WidgetInfo::MenuSeparator(ComputeMenuItemParams(aFrame, eventState, false)));
 
     case StyleAppearance::ButtonArrowUp:
     case StyleAppearance::ButtonArrowDown: {
-<<<<<<< HEAD
-      MenuIcon icon =
-        aAppearance == StyleAppearance::ButtonArrowUp ? MenuIcon::eMenuUpScrollArrow
-                                                : MenuIcon::eMenuDownScrollArrow;
-      return Some(WidgetInfo::MenuIcon(
-        ComputeMenuIconParams(aFrame, eventState, icon)));
-||||||| merged common ancestors
-      MenuIcon icon =
-        aWidgetType == StyleAppearance::ButtonArrowUp ? MenuIcon::eMenuUpScrollArrow
-                                                : MenuIcon::eMenuDownScrollArrow;
-      return Some(WidgetInfo::MenuIcon(
-        ComputeMenuIconParams(aFrame, eventState, icon)));
-=======
       MenuIcon icon = aAppearance == StyleAppearance::ButtonArrowUp
                           ? MenuIcon::eMenuUpScrollArrow
                           : MenuIcon::eMenuDownScrollArrow;
       return Some(WidgetInfo::MenuIcon(ComputeMenuIconParams(aFrame, eventState, icon)));
->>>>>>> upstream-releases
     }
 
     case StyleAppearance::Tooltip:
@@ -2915,25 +2877,11 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
 
     case StyleAppearance::MozMacDisclosureButtonOpen:
     case StyleAppearance::MozMacDisclosureButtonClosed: {
-<<<<<<< HEAD
-      ButtonType buttonType = (aAppearance == StyleAppearance::MozMacDisclosureButtonClosed)
-        ? ButtonType::eDisclosureButtonClosed : ButtonType::eDisclosureButtonOpen;
-      return Some(WidgetInfo::Button(
-        ButtonParams{ComputeControlParams(aFrame, eventState),
-                     buttonType}));
-||||||| merged common ancestors
-      ButtonType buttonType = (aWidgetType == StyleAppearance::MozMacDisclosureButtonClosed)
-        ? ButtonType::eDisclosureButtonClosed : ButtonType::eDisclosureButtonOpen;
-      return Some(WidgetInfo::Button(
-        ButtonParams{ComputeControlParams(aFrame, eventState),
-                     buttonType}));
-=======
       ButtonType buttonType = (aAppearance == StyleAppearance::MozMacDisclosureButtonClosed)
                                   ? ButtonType::eDisclosureButtonClosed
                                   : ButtonType::eDisclosureButtonOpen;
       return Some(
           WidgetInfo::Button(ButtonParams{ComputeControlParams(aFrame, eventState), buttonType}));
->>>>>>> upstream-releases
     }
 
     case StyleAppearance::ButtonBevel: {
@@ -2945,43 +2893,6 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
     }
 
     case StyleAppearance::InnerSpinButton: {
-<<<<<<< HEAD
-    case StyleAppearance::Spinner:
-      bool isSpinner = (aAppearance == StyleAppearance::Spinner);
-      nsIContent* content = aFrame->GetContent();
-      if (isSpinner && content->IsHTMLElement()) {
-        // In HTML the theming for the spin buttons is drawn individually into
-        // their own backgrounds instead of being drawn into the background of
-        // their spinner parent as it is for XUL.
-        break;
-      }
-      SpinButtonParams params;
-      if (content->IsElement()) {
-        if (content->AsElement()->AttrValueIs(kNameSpaceID_None, nsGkAtoms::state,
-                                              NS_LITERAL_STRING("up"), eCaseMatters)) {
-          params.pressedButton = Some(SpinButton::eUp);
-        } else if (content->AsElement()->AttrValueIs(kNameSpaceID_None, nsGkAtoms::state,
-                                                     NS_LITERAL_STRING("down"), eCaseMatters)) {
-          params.pressedButton = Some(SpinButton::eDown);
-||||||| merged common ancestors
-    case StyleAppearance::Spinner:
-      bool isSpinner = (aWidgetType == StyleAppearance::Spinner);
-      nsIContent* content = aFrame->GetContent();
-      if (isSpinner && content->IsHTMLElement()) {
-        // In HTML the theming for the spin buttons is drawn individually into
-        // their own backgrounds instead of being drawn into the background of
-        // their spinner parent as it is for XUL.
-        break;
-      }
-      SpinButtonParams params;
-      if (content->IsElement()) {
-        if (content->AsElement()->AttrValueIs(kNameSpaceID_None, nsGkAtoms::state,
-                                              NS_LITERAL_STRING("up"), eCaseMatters)) {
-          params.pressedButton = Some(SpinButton::eUp);
-        } else if (content->AsElement()->AttrValueIs(kNameSpaceID_None, nsGkAtoms::state,
-                                                     NS_LITERAL_STRING("down"), eCaseMatters)) {
-          params.pressedButton = Some(SpinButton::eDown);
-=======
       case StyleAppearance::Spinner:
         bool isSpinner = (aAppearance == StyleAppearance::Spinner);
         nsIContent* content = aFrame->GetContent();
@@ -2990,7 +2901,6 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
           // their own backgrounds instead of being drawn into the background of
           // their spinner parent as it is for XUL.
           break;
->>>>>>> upstream-releases
         }
         SpinButtonParams params;
         if (content->IsElement()) {
@@ -3093,34 +3003,14 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
       }
 
       bool isDisabled = IsDisabled(aFrame, eventState) || IsReadOnly(aFrame);
-<<<<<<< HEAD
-      bool borderless =
-        (aAppearance == StyleAppearance::MenulistTextfield && !isFocused);
-      return Some(WidgetInfo::TextBox(TextBoxParams{isDisabled, isFocused,
-                                                    borderless}));
-||||||| merged common ancestors
-      bool borderless =
-        (aWidgetType == StyleAppearance::MenulistTextfield && !isFocused);
-      return Some(WidgetInfo::TextBox(TextBoxParams{isDisabled, isFocused,
-                                                    borderless}));
-=======
       bool borderless = (aAppearance == StyleAppearance::MenulistTextfield && !isFocused);
       return Some(WidgetInfo::TextBox(TextBoxParams{isDisabled, isFocused, borderless}));
->>>>>>> upstream-releases
     }
 
     case StyleAppearance::Searchfield:
       return Some(WidgetInfo::SearchField(ComputeSearchFieldParams(aFrame, eventState)));
 
-<<<<<<< HEAD
-    case StyleAppearance::ProgressBar:
-    {
-||||||| merged common ancestors
-    case StyleAppearance::Progressbar:
-    {
-=======
     case StyleAppearance::ProgressBar: {
->>>>>>> upstream-releases
       // Don't request repaints for scrollbars at 100% because those don't animate.
       if (GetProgressValue(aFrame) < GetProgressMaxValue(aFrame)) {
         if (!QueueAnimatedContentForRefresh(aFrame->GetContent(), 30)) {
@@ -3167,18 +3057,8 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
 
     case StyleAppearance::ScaleHorizontal:
     case StyleAppearance::ScaleVertical:
-<<<<<<< HEAD
-      return Some(WidgetInfo::Scale(
-        ComputeXULScaleParams(aFrame, eventState,
-                              aAppearance == StyleAppearance::ScaleHorizontal)));
-||||||| merged common ancestors
-      return Some(WidgetInfo::Scale(
-        ComputeXULScaleParams(aFrame, eventState,
-                              aWidgetType == StyleAppearance::ScaleHorizontal)));
-=======
       return Some(WidgetInfo::Scale(ComputeXULScaleParams(
           aFrame, eventState, aAppearance == StyleAppearance::ScaleHorizontal)));
->>>>>>> upstream-releases
 
     case StyleAppearance::ScalethumbHorizontal:
     case StyleAppearance::ScalethumbVertical:
@@ -3198,18 +3078,8 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
       break;
     case StyleAppearance::ScrollbarthumbVertical:
     case StyleAppearance::ScrollbarthumbHorizontal:
-<<<<<<< HEAD
-      return Some(WidgetInfo::ScrollbarThumb(
-        ComputeScrollbarParams(
-          aFrame, aAppearance == StyleAppearance::ScrollbarthumbHorizontal)));
-||||||| merged common ancestors
-      return Some(WidgetInfo::ScrollbarThumb(
-        ComputeScrollbarParams(
-          aFrame, aWidgetType == StyleAppearance::ScrollbarthumbHorizontal)));
-=======
       return Some(WidgetInfo::ScrollbarThumb(ComputeScrollbarParams(
           aFrame, aAppearance == StyleAppearance::ScrollbarthumbHorizontal)));
->>>>>>> upstream-releases
 
     case StyleAppearance::ScrollbarbuttonUp:
     case StyleAppearance::ScrollbarbuttonLeft:
@@ -3219,34 +3089,14 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
 
     case StyleAppearance::ScrollbartrackHorizontal:
     case StyleAppearance::ScrollbartrackVertical:
-<<<<<<< HEAD
-      return Some(WidgetInfo::ScrollbarTrack(
-        ComputeScrollbarParams(
-          aFrame, aAppearance == StyleAppearance::ScrollbartrackHorizontal)));
-||||||| merged common ancestors
-      return Some(WidgetInfo::ScrollbarTrack(
-        ComputeScrollbarParams(
-          aFrame, aWidgetType == StyleAppearance::ScrollbartrackHorizontal)));
-=======
       return Some(WidgetInfo::ScrollbarTrack(ComputeScrollbarParams(
           aFrame, aAppearance == StyleAppearance::ScrollbartrackHorizontal)));
->>>>>>> upstream-releases
 
     case StyleAppearance::Scrollcorner:
       return Some(WidgetInfo::ScrollCorner(ComputeScrollbarParams(aFrame, false)));
 
-<<<<<<< HEAD
-    case StyleAppearance::Textarea:
-      return Some(WidgetInfo::MultilineTextField(
-        eventState.HasState(NS_EVENT_STATE_FOCUS)));
-||||||| merged common ancestors
-    case StyleAppearance::TextfieldMultiline:
-      return Some(WidgetInfo::MultilineTextField(
-        eventState.HasState(NS_EVENT_STATE_FOCUS)));
-=======
     case StyleAppearance::Textarea:
       return Some(WidgetInfo::MultilineTextField(eventState.HasState(NS_EVENT_STATE_FOCUS)));
->>>>>>> upstream-releases
 
     case StyleAppearance::Listbox:
       return Some(WidgetInfo::ListBox());
@@ -3306,25 +3156,9 @@ Maybe<nsNativeThemeCocoa::WidgetInfo> nsNativeThemeCocoa::ComputeWidgetInfo(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNativeThemeCocoa::DrawWidgetBackground(gfxContext* aContext,
-                                         nsIFrame* aFrame,
-                                         StyleAppearance aAppearance,
-                                         const nsRect& aRect,
-                                         const nsRect& aDirtyRect)
-{
-||||||| merged common ancestors
-nsNativeThemeCocoa::DrawWidgetBackground(gfxContext* aContext,
-                                         nsIFrame* aFrame,
-                                         WidgetType aWidgetType,
-                                         const nsRect& aRect,
-                                         const nsRect& aDirtyRect)
-{
-=======
 nsNativeThemeCocoa::DrawWidgetBackground(gfxContext* aContext, nsIFrame* aFrame,
                                          StyleAppearance aAppearance, const nsRect& aRect,
                                          const nsRect& aDirtyRect) {
->>>>>>> upstream-releases
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT;
 
   Maybe<WidgetInfo> widgetInfo = ComputeWidgetInfo(aFrame, aAppearance, aRect);
@@ -3596,33 +3430,11 @@ void nsNativeThemeCocoa::RenderWidget(const WidgetInfo& aWidgetInfo, DrawTarget&
   nativeDrawing.EndNativeDrawing();
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(mozilla::wr::DisplayListBuilder& aBuilder,
-                                                     mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                                     const mozilla::layers::StackingContextHelper& aSc,
-                                                     mozilla::layers::WebRenderLayerManager* aManager,
-                                                     nsIFrame* aFrame,
-                                                     StyleAppearance aAppearance,
-                                                     const nsRect& aRect)
-{
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(mozilla::wr::DisplayListBuilder& aBuilder,
-                                                     mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                                     const mozilla::layers::StackingContextHelper& aSc,
-                                                     mozilla::layers::WebRenderLayerManager* aManager,
-                                                     nsIFrame* aFrame,
-                                                     WidgetType aWidgetType,
-                                                     const nsRect& aRect)
-{
-=======
 bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
     mozilla::wr::DisplayListBuilder& aBuilder, mozilla::wr::IpcResourceUpdateQueue& aResources,
     const mozilla::layers::StackingContextHelper& aSc,
     mozilla::layers::RenderRootStateManager* aManager, nsIFrame* aFrame,
     StyleAppearance aAppearance, const nsRect& aRect) {
->>>>>>> upstream-releases
   nsPresContext* presContext = aFrame->PresContext();
   wr::LayoutRect bounds = wr::ToRoundedLayoutRect(
       LayoutDeviceRect::FromAppUnits(aRect, presContext->AppUnitsPerDevPixel()));
@@ -3641,18 +3453,8 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
   switch (aAppearance) {
     case StyleAppearance::Dialog:
       if (IsWindowSheet(aFrame) && VibrancyManager::SystemSupportsVibrancy()) {
-<<<<<<< HEAD
-        ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
-        aBuilder.PushRect(bounds, bounds, true,
-                          wr::ToColorF(VibrancyFillColor(aFrame, type)));
-||||||| merged common ancestors
-        ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aWidgetType);
-        aBuilder.PushRect(bounds, bounds, true,
-                          wr::ToColorF(VibrancyFillColor(aFrame, type)));
-=======
         ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
         aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(VibrancyFillColor(aFrame, type)));
->>>>>>> upstream-releases
         return true;
       }
       return false;
@@ -3668,18 +3470,8 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
 
     case StyleAppearance::Tooltip:
       if (VibrancyManager::SystemSupportsVibrancy()) {
-<<<<<<< HEAD
-        ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
-        aBuilder.PushRect(bounds, bounds, true,
-                          wr::ToColorF(VibrancyFillColor(aFrame, type)));
-||||||| merged common ancestors
-        ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aWidgetType);
-        aBuilder.PushRect(bounds, bounds, true,
-                          wr::ToColorF(VibrancyFillColor(aFrame, type)));
-=======
         ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
         aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(VibrancyFillColor(aFrame, type)));
->>>>>>> upstream-releases
       } else {
         aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(kTooltipBackgroundColor));
       }
@@ -3749,22 +3541,10 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
       aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(Color(1.0, 1.0, 1.0, 1.0)));
 
       wr::BorderSide side[4] = {
-<<<<<<< HEAD
-        wr::ToBorderSide(kMultilineTextFieldTopBorderColor, StyleBorderStyle::Solid),
-        wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, StyleBorderStyle::Solid),
-        wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, StyleBorderStyle::Solid),
-        wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, StyleBorderStyle::Solid),
-||||||| merged common ancestors
-        wr::ToBorderSide(kMultilineTextFieldTopBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-        wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-        wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-        wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-=======
           wr::ToBorderSide(kMultilineTextFieldTopBorderColor, StyleBorderStyle::Solid),
           wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, StyleBorderStyle::Solid),
           wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, StyleBorderStyle::Solid),
           wr::ToBorderSide(kMultilineTextFieldSidesAndBottomBorderColor, StyleBorderStyle::Solid),
->>>>>>> upstream-releases
       };
 
       wr::BorderRadius borderRadius = wr::EmptyBorderRadius();
@@ -3783,22 +3563,10 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
       aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(Color(1.0, 1.0, 1.0, 1.0)));
 
       wr::BorderSide side[4] = {
-<<<<<<< HEAD
-        wr::ToBorderSide(kListboxTopBorderColor, StyleBorderStyle::Solid),
-        wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, StyleBorderStyle::Solid),
-        wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, StyleBorderStyle::Solid),
-        wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, StyleBorderStyle::Solid),
-||||||| merged common ancestors
-        wr::ToBorderSide(kListboxTopBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-        wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-        wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-        wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, NS_STYLE_BORDER_STYLE_SOLID),
-=======
           wr::ToBorderSide(kListboxTopBorderColor, StyleBorderStyle::Solid),
           wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, StyleBorderStyle::Solid),
           wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, StyleBorderStyle::Solid),
           wr::ToBorderSide(kListBoxSidesAndBottomBorderColor, StyleBorderStyle::Solid),
->>>>>>> upstream-releases
       };
 
       wr::BorderRadius borderRadius = wr::EmptyBorderRadius();
@@ -3813,18 +3581,8 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
 
     case StyleAppearance::MozMacSourceList:
       if (VibrancyManager::SystemSupportsVibrancy()) {
-<<<<<<< HEAD
-        ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
-        aBuilder.PushRect(bounds, bounds, true,
-                          wr::ToColorF(VibrancyFillColor(aFrame, type)));
-||||||| merged common ancestors
-        ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aWidgetType);
-        aBuilder.PushRect(bounds, bounds, true,
-                          wr::ToColorF(VibrancyFillColor(aFrame, type)));
-=======
         ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
         aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(VibrancyFillColor(aFrame, type)));
->>>>>>> upstream-releases
         return true;
       }
       return false;
@@ -3833,18 +3591,8 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
     case StyleAppearance::MozMacVibrancyDark:
     case StyleAppearance::MozMacVibrantTitlebarLight:
     case StyleAppearance::MozMacVibrantTitlebarDark: {
-<<<<<<< HEAD
-      ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
-      aBuilder.PushRect(bounds, bounds, true,
-                        wr::ToColorF(VibrancyFillColor(aFrame, type)));
-||||||| merged common ancestors
-      ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aWidgetType);
-      aBuilder.PushRect(bounds, bounds, true,
-                        wr::ToColorF(VibrancyFillColor(aFrame, type)));
-=======
       ThemeGeometryType type = ThemeGeometryTypeForWidget(aFrame, aAppearance);
       aBuilder.PushRect(bounds, bounds, true, wr::ToColorF(VibrancyFillColor(aFrame, type)));
->>>>>>> upstream-releases
       return true;
     }
 
@@ -3858,45 +3606,8 @@ bool nsNativeThemeCocoa::CreateWebRenderCommandsForWidget(
   }
 }
 
-<<<<<<< HEAD
-LayoutDeviceIntMargin
-nsNativeThemeCocoa::DirectionAwareMargin(const LayoutDeviceIntMargin& aMargin,
-                                         nsIFrame* aFrame)
-{
-||||||| merged common ancestors
-
-nscolor
-nsNativeThemeCocoa::GetWidgetAutoColor(mozilla::ComputedStyle* aStyle,
-                                       WidgetType aWidgetType)
-{
-  switch (aWidgetType) {
-    case StyleAppearance::Scrollbar:
-    case StyleAppearance::ScrollbarSmall:
-    case StyleAppearance::ScrollbarVertical:
-    case StyleAppearance::ScrollbarHorizontal:
-    case StyleAppearance::ScrollbarbuttonUp:
-    case StyleAppearance::ScrollbarbuttonDown:
-    case StyleAppearance::ScrollbarbuttonLeft:
-    case StyleAppearance::ScrollbarbuttonRight:
-      return NS_RGB(0xFA, 0xFA, 0xFA);
-
-    case StyleAppearance::ScrollbarthumbVertical:
-    case StyleAppearance::ScrollbarthumbHorizontal:
-      return NS_RGB(0xC1, 0xC1, 0xC1);
-
-    default:
-      return nsITheme::GetWidgetAutoColor(aStyle, aWidgetType);
-  }
-}
-
-LayoutDeviceIntMargin
-nsNativeThemeCocoa::DirectionAwareMargin(const LayoutDeviceIntMargin& aMargin,
-                                         nsIFrame* aFrame)
-{
-=======
 LayoutDeviceIntMargin nsNativeThemeCocoa::DirectionAwareMargin(const LayoutDeviceIntMargin& aMargin,
                                                                nsIFrame* aFrame) {
->>>>>>> upstream-releases
   // Assuming aMargin was originally specified for a horizontal LTR context,
   // reinterpret the values as logical, and then map to physical coords
   // according to aFrame's actual writing mode.
@@ -3910,39 +3621,15 @@ static const LayoutDeviceIntMargin kAquaDropdownBorder(1, 22, 2, 5);
 static const LayoutDeviceIntMargin kAquaComboboxBorder(3, 20, 3, 4);
 static const LayoutDeviceIntMargin kAquaSearchfieldBorder(3, 5, 2, 19);
 
-<<<<<<< HEAD
-LayoutDeviceIntMargin
-nsNativeThemeCocoa::GetWidgetBorder(nsDeviceContext* aContext,
-                                    nsIFrame* aFrame,
-                                    StyleAppearance aAppearance)
-{
-||||||| merged common ancestors
-LayoutDeviceIntMargin
-nsNativeThemeCocoa::GetWidgetBorder(nsDeviceContext* aContext,
-                                    nsIFrame* aFrame,
-                                    WidgetType aWidgetType)
-{
-=======
 LayoutDeviceIntMargin nsNativeThemeCocoa::GetWidgetBorder(nsDeviceContext* aContext,
                                                           nsIFrame* aFrame,
                                                           StyleAppearance aAppearance) {
->>>>>>> upstream-releases
   LayoutDeviceIntMargin result;
 
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_RETURN;
 
-<<<<<<< HEAD
-  switch (aAppearance) {
-    case StyleAppearance::Button:
-    {
-||||||| merged common ancestors
-  switch (aWidgetType) {
-    case StyleAppearance::Button:
-    {
-=======
   switch (aAppearance) {
     case StyleAppearance::Button: {
->>>>>>> upstream-releases
       if (IsButtonTypeMenu(aFrame)) {
         result = DirectionAwareMargin(kAquaDropdownBorder, aFrame);
       } else {
@@ -4003,18 +3690,8 @@ LayoutDeviceIntMargin nsNativeThemeCocoa::GetWidgetBorder(nsDeviceContext* aCont
     }
 
     case StyleAppearance::ScrollbartrackHorizontal:
-<<<<<<< HEAD
-    case StyleAppearance::ScrollbartrackVertical:
-    {
-      bool isHorizontal = (aAppearance == StyleAppearance::ScrollbartrackHorizontal);
-||||||| merged common ancestors
-    case StyleAppearance::ScrollbartrackVertical:
-    {
-      bool isHorizontal = (aWidgetType == StyleAppearance::ScrollbartrackHorizontal);
-=======
     case StyleAppearance::ScrollbartrackVertical: {
       bool isHorizontal = (aAppearance == StyleAppearance::ScrollbartrackHorizontal);
->>>>>>> upstream-releases
       if (nsLookAndFeel::UseOverlayScrollbars()) {
         if (!nsCocoaFeatures::OnYosemiteOrLater()) {
           // Pre-10.10, we have to center the thumb rect in the middle of the
@@ -4060,25 +3737,9 @@ LayoutDeviceIntMargin nsNativeThemeCocoa::GetWidgetBorder(nsDeviceContext* aCont
 // no reason to make a distinction between padding and border values, just specify
 // whatever values you want in GetWidgetBorder and only use this to return true
 // if you want to override CSS padding values.
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::GetWidgetPadding(nsDeviceContext* aContext,
-                                     nsIFrame* aFrame,
-                                     StyleAppearance aAppearance,
-                                     LayoutDeviceIntMargin* aResult)
-{
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::GetWidgetPadding(nsDeviceContext* aContext,
-                                     nsIFrame* aFrame,
-                                     WidgetType aWidgetType,
-                                     LayoutDeviceIntMargin* aResult)
-{
-=======
 bool nsNativeThemeCocoa::GetWidgetPadding(nsDeviceContext* aContext, nsIFrame* aFrame,
                                           StyleAppearance aAppearance,
                                           LayoutDeviceIntMargin* aResult) {
->>>>>>> upstream-releases
   // We don't want CSS padding being used for certain widgets.
   // See bug 381639 for an example of why.
   switch (aAppearance) {
@@ -4095,22 +3756,8 @@ bool nsNativeThemeCocoa::GetWidgetPadding(nsDeviceContext* aContext, nsIFrame* a
   return false;
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::GetWidgetOverflow(nsDeviceContext* aContext,
-                                      nsIFrame* aFrame,
-                                      StyleAppearance aAppearance,
-                                      nsRect* aOverflowRect)
-{
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::GetWidgetOverflow(nsDeviceContext* aContext, nsIFrame* aFrame,
-                                      WidgetType aWidgetType, nsRect* aOverflowRect)
-{
-=======
 bool nsNativeThemeCocoa::GetWidgetOverflow(nsDeviceContext* aContext, nsIFrame* aFrame,
                                            StyleAppearance aAppearance, nsRect* aOverflowRect) {
->>>>>>> upstream-releases
   nsIntMargin overflow;
   switch (aAppearance) {
     case StyleAppearance::Button:
@@ -4137,28 +3784,12 @@ bool nsNativeThemeCocoa::GetWidgetOverflow(nsDeviceContext* aContext, nsIFrame* 
                       kMaxFocusRingWidth);
       break;
     }
-<<<<<<< HEAD
-    case StyleAppearance::ProgressBar:
-    {
-||||||| merged common ancestors
-    case StyleAppearance::Progressbar:
-    {
-=======
     case StyleAppearance::ProgressBar: {
->>>>>>> upstream-releases
       // Progress bars draw a 2 pixel white shadow under their progress indicators.
       overflow.bottom = 2;
       break;
     }
-<<<<<<< HEAD
-    case StyleAppearance::Meter:
-    {
-||||||| merged common ancestors
-    case StyleAppearance::Meterbar:
-    {
-=======
     case StyleAppearance::Meter: {
->>>>>>> upstream-releases
       // Meter bars overflow their boxes by about 2 pixels.
       overflow.SizeTo(2, 2, 2, 2);
       break;
@@ -4187,42 +3818,16 @@ static const int32_t kRegularScrollbarThumbMinSize = 26;
 static const int32_t kSmallScrollbarThumbMinSize = 26;
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext,
-                                         nsIFrame* aFrame,
-                                         StyleAppearance aAppearance,
-                                         LayoutDeviceIntSize* aResult,
-                                         bool* aIsOverridable)
-{
-||||||| merged common ancestors
-nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext,
-                                         nsIFrame* aFrame,
-                                         WidgetType aWidgetType,
-                                         LayoutDeviceIntSize* aResult,
-                                         bool* aIsOverridable)
-{
-=======
 nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext, nsIFrame* aFrame,
                                          StyleAppearance aAppearance, LayoutDeviceIntSize* aResult,
                                          bool* aIsOverridable) {
->>>>>>> upstream-releases
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT;
 
   aResult->SizeTo(0, 0);
   *aIsOverridable = true;
 
-<<<<<<< HEAD
-  switch (aAppearance) {
-    case StyleAppearance::Button:
-    {
-||||||| merged common ancestors
-  switch (aWidgetType) {
-    case StyleAppearance::Button:
-    {
-=======
   switch (aAppearance) {
     case StyleAppearance::Button: {
->>>>>>> upstream-releases
       aResult->SizeTo(pushButtonSettings.minimumSizes[miniControlSize].width,
                       pushButtonSettings.naturalSizes[miniControlSize].height);
       break;
@@ -4295,18 +3900,8 @@ nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext, nsIFrame* 
     case StyleAppearance::MenulistTextfield:
     case StyleAppearance::NumberInput:
     case StyleAppearance::Textfield:
-<<<<<<< HEAD
-    case StyleAppearance::Textarea:
-    case StyleAppearance::Searchfield:
-    {
-||||||| merged common ancestors
-    case StyleAppearance::TextfieldMultiline:
-    case StyleAppearance::Searchfield:
-    {
-=======
     case StyleAppearance::Textarea:
     case StyleAppearance::Searchfield: {
->>>>>>> upstream-releases
       // at minimum, we should be tall enough for 9pt text.
       // I'm using hardcoded values here because the appearance manager
       // values for the frame size are incorrect.
@@ -4332,15 +3927,7 @@ nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext, nsIFrame* 
       break;
     }
 
-<<<<<<< HEAD
-    case StyleAppearance::ProgressBar:
-    {
-||||||| merged common ancestors
-    case StyleAppearance::Progressbar:
-    {
-=======
     case StyleAppearance::ProgressBar: {
->>>>>>> upstream-releases
       SInt32 barHeight = 0;
       ::GetThemeMetric(kThemeMetricNormalProgressBarThickness, &barHeight);
       aResult->SizeTo(0, barHeight);
@@ -4375,33 +3962,7 @@ nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext, nsIFrame* 
       break;
     }
 
-<<<<<<< HEAD
-    case StyleAppearance::RangeThumb:
-    {
-||||||| merged common ancestors
-    case StyleAppearance::Range:
-    {
-      // The Mac Appearance Manager API (the old API we're currently using)
-      // doesn't define constants to obtain a minimum size for sliders. We use
-      // the "thickness" of a slider that has default dimensions for both the
-      // minimum width and height to get something sane and so that paint
-      // invalidation works.
-      SInt32 size = 0;
-      if (IsRangeHorizontal(aFrame)) {
-        ::GetThemeMetric(kThemeMetricHSliderHeight, &size);
-      } else {
-        ::GetThemeMetric(kThemeMetricVSliderWidth, &size);
-      }
-      aResult->SizeTo(size, size);
-      *aIsOverridable = true;
-      break;
-    }
-
-    case StyleAppearance::RangeThumb:
-    {
-=======
     case StyleAppearance::RangeThumb: {
->>>>>>> upstream-releases
       SInt32 width = 0;
       SInt32 height = 0;
       ::GetThemeMetric(kThemeMetricSliderMinThumbWidth, &width);
@@ -4493,18 +4054,9 @@ nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext, nsIFrame* 
       ::GetThemeMetric(themeMetric, &scrollbarWidth);
 
       // It seems that for both sizes of scrollbar, the buttons are one pixel "longer".
-<<<<<<< HEAD
-      if (aAppearance == StyleAppearance::ScrollbarbuttonLeft ||
-          aAppearance == StyleAppearance::ScrollbarbuttonRight)
-        aResult->SizeTo(scrollbarWidth+1, scrollbarWidth);
-||||||| merged common ancestors
-      if (aWidgetType == StyleAppearance::ScrollbarbuttonLeft || aWidgetType == StyleAppearance::ScrollbarbuttonRight)
-        aResult->SizeTo(scrollbarWidth+1, scrollbarWidth);
-=======
       if (aAppearance == StyleAppearance::ScrollbarbuttonLeft ||
           aAppearance == StyleAppearance::ScrollbarbuttonRight)
         aResult->SizeTo(scrollbarWidth + 1, scrollbarWidth);
->>>>>>> upstream-releases
       else
         aResult->SizeTo(scrollbarWidth, scrollbarWidth + 1);
 
@@ -4538,23 +4090,9 @@ nsNativeThemeCocoa::GetMinimumWidgetSize(nsPresContext* aPresContext, nsIFrame* 
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNativeThemeCocoa::WidgetStateChanged(nsIFrame* aFrame,
-                                       StyleAppearance aAppearance,
-                                       nsAtom* aAttribute,
-                                       bool* aShouldRepaint,
-                                       const nsAttrValue* aOldValue)
-{
-||||||| merged common ancestors
-nsNativeThemeCocoa::WidgetStateChanged(nsIFrame* aFrame, WidgetType aWidgetType,
-                                       nsAtom* aAttribute, bool* aShouldRepaint,
-                                       const nsAttrValue* aOldValue)
-{
-=======
 nsNativeThemeCocoa::WidgetStateChanged(nsIFrame* aFrame, StyleAppearance aAppearance,
                                        nsAtom* aAttribute, bool* aShouldRepaint,
                                        const nsAttrValue* aOldValue) {
->>>>>>> upstream-releases
   // Some widget types just never change state.
   switch (aAppearance) {
     case StyleAppearance::MozWindowTitlebar:
@@ -4613,23 +4151,9 @@ nsNativeThemeCocoa::ThemeChanged() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::ThemeSupportsWidget(nsPresContext* aPresContext, nsIFrame* aFrame,
-                                      StyleAppearance aAppearance)
-{
-  if (aAppearance == StyleAppearance::MenulistButton &&
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::ThemeSupportsWidget(nsPresContext* aPresContext, nsIFrame* aFrame,
-                                      WidgetType aWidgetType)
-{
-  if (aWidgetType == StyleAppearance::MenulistButton &&
-=======
 bool nsNativeThemeCocoa::ThemeSupportsWidget(nsPresContext* aPresContext, nsIFrame* aFrame,
                                              StyleAppearance aAppearance) {
   if (aAppearance == StyleAppearance::MenulistButton &&
->>>>>>> upstream-releases
       StaticPrefs::layout_css_webkit_appearance_enabled()) {
     aAppearance = StyleAppearance::Menulist;
   }
@@ -4690,16 +4214,8 @@ bool nsNativeThemeCocoa::ThemeSupportsWidget(nsPresContext* aPresContext, nsIFra
     case StyleAppearance::Textarea:
     case StyleAppearance::Searchfield:
     case StyleAppearance::Toolbox:
-<<<<<<< HEAD
-    //case StyleAppearance::Toolbarbutton:
-    case StyleAppearance::ProgressBar:
-||||||| merged common ancestors
-    //case StyleAppearance::Toolbarbutton:
-    case StyleAppearance::Progressbar:
-=======
     // case StyleAppearance::Toolbarbutton:
     case StyleAppearance::ProgressBar:
->>>>>>> upstream-releases
     case StyleAppearance::ProgressbarVertical:
     case StyleAppearance::Progresschunk:
     case StyleAppearance::Meter:
@@ -4774,56 +4290,13 @@ bool nsNativeThemeCocoa::ThemeSupportsWidget(nsPresContext* aPresContext, nsIFra
   return false;
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::WidgetIsContainer(StyleAppearance aAppearance)
-{
-  if (aAppearance == StyleAppearance::MenulistButton &&
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::WidgetIsContainer(WidgetType aWidgetType)
-{
-  if (aWidgetType == StyleAppearance::MenulistButton &&
-=======
 bool nsNativeThemeCocoa::WidgetIsContainer(StyleAppearance aAppearance) {
   if (aAppearance == StyleAppearance::MenulistButton &&
->>>>>>> upstream-releases
       StaticPrefs::layout_css_webkit_appearance_enabled()) {
     aAppearance = StyleAppearance::Menulist;
   }
 
   // flesh this out at some point
-<<<<<<< HEAD
-  switch (aAppearance) {
-   case StyleAppearance::MenulistButton:
-   case StyleAppearance::MozMenulistButton:
-   case StyleAppearance::Radio:
-   case StyleAppearance::Checkbox:
-   case StyleAppearance::ProgressBar:
-   case StyleAppearance::Meter:
-   case StyleAppearance::Range:
-   case StyleAppearance::MozMacHelpButton:
-   case StyleAppearance::MozMacDisclosureButtonOpen:
-   case StyleAppearance::MozMacDisclosureButtonClosed:
-    return false;
-   default:
-    break;
-||||||| merged common ancestors
-  switch (aWidgetType) {
-   case StyleAppearance::MenulistButton:
-   case StyleAppearance::MozMenulistButton:
-   case StyleAppearance::Radio:
-   case StyleAppearance::Checkbox:
-   case StyleAppearance::Progressbar:
-   case StyleAppearance::Meterbar:
-   case StyleAppearance::Range:
-   case StyleAppearance::MozMacHelpButton:
-   case StyleAppearance::MozMacDisclosureButtonOpen:
-   case StyleAppearance::MozMacDisclosureButtonClosed:
-    return false;
-   default:
-    break;
-=======
   switch (aAppearance) {
     case StyleAppearance::MenulistButton:
     case StyleAppearance::MozMenulistButton:
@@ -4838,55 +4311,22 @@ bool nsNativeThemeCocoa::WidgetIsContainer(StyleAppearance aAppearance) {
       return false;
     default:
       break;
->>>>>>> upstream-releases
   }
   return true;
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::ThemeDrawsFocusForWidget(StyleAppearance aAppearance)
-{
-  if (aAppearance == StyleAppearance::MenulistButton &&
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::ThemeDrawsFocusForWidget(WidgetType aWidgetType)
-{
-  if (aWidgetType == StyleAppearance::MenulistButton &&
-=======
 bool nsNativeThemeCocoa::ThemeDrawsFocusForWidget(StyleAppearance aAppearance) {
   if (aAppearance == StyleAppearance::MenulistButton &&
->>>>>>> upstream-releases
       StaticPrefs::layout_css_webkit_appearance_enabled()) {
     aAppearance = StyleAppearance::Menulist;
   }
 
-<<<<<<< HEAD
-  if (aAppearance == StyleAppearance::Menulist ||
-      aAppearance == StyleAppearance::Button ||
-      aAppearance == StyleAppearance::MozMacHelpButton ||
-      aAppearance == StyleAppearance::MozMacDisclosureButtonOpen ||
-      aAppearance == StyleAppearance::MozMacDisclosureButtonClosed ||
-      aAppearance == StyleAppearance::Radio ||
-      aAppearance == StyleAppearance::Range ||
-      aAppearance == StyleAppearance::Checkbox)
-||||||| merged common ancestors
-  if (aWidgetType == StyleAppearance::Menulist ||
-      aWidgetType == StyleAppearance::Button ||
-      aWidgetType == StyleAppearance::MozMacHelpButton ||
-      aWidgetType == StyleAppearance::MozMacDisclosureButtonOpen ||
-      aWidgetType == StyleAppearance::MozMacDisclosureButtonClosed ||
-      aWidgetType == StyleAppearance::Radio ||
-      aWidgetType == StyleAppearance::Range ||
-      aWidgetType == StyleAppearance::Checkbox)
-=======
   if (aAppearance == StyleAppearance::Menulist || aAppearance == StyleAppearance::Button ||
       aAppearance == StyleAppearance::MozMacHelpButton ||
       aAppearance == StyleAppearance::MozMacDisclosureButtonOpen ||
       aAppearance == StyleAppearance::MozMacDisclosureButtonClosed ||
       aAppearance == StyleAppearance::Radio || aAppearance == StyleAppearance::Range ||
       aAppearance == StyleAppearance::Checkbox)
->>>>>>> upstream-releases
     return true;
 
   return false;
@@ -4894,20 +4334,8 @@ bool nsNativeThemeCocoa::ThemeDrawsFocusForWidget(StyleAppearance aAppearance) {
 
 bool nsNativeThemeCocoa::ThemeNeedsComboboxDropmarker() { return false; }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::WidgetAppearanceDependsOnWindowFocus(StyleAppearance aAppearance)
-{
-  switch (aAppearance) {
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::WidgetAppearanceDependsOnWindowFocus(WidgetType aWidgetType)
-{
-  switch (aWidgetType) {
-=======
 bool nsNativeThemeCocoa::WidgetAppearanceDependsOnWindowFocus(StyleAppearance aAppearance) {
   switch (aAppearance) {
->>>>>>> upstream-releases
     case StyleAppearance::Dialog:
     case StyleAppearance::Groupbox:
     case StyleAppearance::Tabpanels:
@@ -4949,23 +4377,9 @@ bool nsNativeThemeCocoa::IsWindowSheet(nsIFrame* aFrame) {
   return (widget->WindowType() == eWindowType_sheet);
 }
 
-<<<<<<< HEAD
-bool
-nsNativeThemeCocoa::NeedToClearBackgroundBehindWidget(nsIFrame* aFrame,
-                                                      StyleAppearance aAppearance)
-{
-  switch (aAppearance) {
-||||||| merged common ancestors
-bool
-nsNativeThemeCocoa::NeedToClearBackgroundBehindWidget(nsIFrame* aFrame,
-                                                      WidgetType aWidgetType)
-{
-  switch (aWidgetType) {
-=======
 bool nsNativeThemeCocoa::NeedToClearBackgroundBehindWidget(nsIFrame* aFrame,
                                                            StyleAppearance aAppearance) {
   switch (aAppearance) {
->>>>>>> upstream-releases
     case StyleAppearance::MozMacSourceList:
     // If we're in a XUL tree, we don't want to clear the background behind the
     // selections below, since that would make our source list to not pick up
@@ -4989,22 +4403,9 @@ bool nsNativeThemeCocoa::NeedToClearBackgroundBehindWidget(nsIFrame* aFrame,
   }
 }
 
-<<<<<<< HEAD
-nsITheme::ThemeGeometryType
-nsNativeThemeCocoa::ThemeGeometryTypeForWidget(nsIFrame* aFrame,
-                                               StyleAppearance aAppearance)
-{
-  switch (aAppearance) {
-||||||| merged common ancestors
-nsITheme::ThemeGeometryType
-nsNativeThemeCocoa::ThemeGeometryTypeForWidget(nsIFrame* aFrame, WidgetType aWidgetType)
-{
-  switch (aWidgetType) {
-=======
 nsITheme::ThemeGeometryType nsNativeThemeCocoa::ThemeGeometryTypeForWidget(
     nsIFrame* aFrame, StyleAppearance aAppearance) {
   switch (aAppearance) {
->>>>>>> upstream-releases
     case StyleAppearance::MozWindowTitlebar:
       return eThemeGeometryTypeTitlebar;
     case StyleAppearance::Toolbar:
@@ -5049,31 +4450,12 @@ nsITheme::ThemeGeometryType nsNativeThemeCocoa::ThemeGeometryTypeForWidget(
   }
 }
 
-<<<<<<< HEAD
-nsITheme::Transparency
-nsNativeThemeCocoa::GetWidgetTransparency(nsIFrame* aFrame,
-                                          StyleAppearance aAppearance)
-{
-  switch (aAppearance) {
-  case StyleAppearance::Menupopup:
-  case StyleAppearance::Tooltip:
-    return eTransparent;
-||||||| merged common ancestors
-nsITheme::Transparency
-nsNativeThemeCocoa::GetWidgetTransparency(nsIFrame* aFrame, WidgetType aWidgetType)
-{
-  switch (aWidgetType) {
-  case StyleAppearance::Menupopup:
-  case StyleAppearance::Tooltip:
-    return eTransparent;
-=======
 nsITheme::Transparency nsNativeThemeCocoa::GetWidgetTransparency(nsIFrame* aFrame,
                                                                  StyleAppearance aAppearance) {
   switch (aAppearance) {
     case StyleAppearance::Menupopup:
     case StyleAppearance::Tooltip:
       return eTransparent;
->>>>>>> upstream-releases
 
     case StyleAppearance::Dialog:
       return IsWindowSheet(aFrame) ? eTransparent : eOpaque;

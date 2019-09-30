@@ -25,41 +25,6 @@ function setUpCode(debuggee) {
   /* eslint-enable */
 }
 
-<<<<<<< HEAD
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  const source = await getSource(threadClient, URL);
-  const [response ] = await setBreakpoint(source, {line: 2});
-  ok(!response.error);
-
-  const actor = response.actor;
-  ok(actor);
-
-  await executeOnNextTickAndWaitForPause(() => setUpCode(debuggee), client);
-  await resume(threadClient);
-
-  const packet = await executeOnNextTickAndWaitForPause(debuggee.test, client);
-  equal(packet.why.type, "breakpoint");
-  notEqual(packet.why.actors.indexOf(actor), -1);
-}));
-||||||| merged common ancestors
-const testBreakpoint = async function() {
-  const source = await getSource(gThreadClient, URL);
-  const [response ] = await setBreakpoint(source, {line: 2});
-  ok(!response.error);
-
-  const actor = response.actor;
-  ok(actor);
-
-  await executeOnNextTickAndWaitForPause(setUpCode, gClient);
-  await resume(gThreadClient);
-
-  const packet = await executeOnNextTickAndWaitForPause(gDebuggee.test, gClient);
-  equal(packet.why.type, "breakpoint");
-  notEqual(packet.why.actors.indexOf(actor), -1);
-
-  finishClient(gClient);
-};
-=======
 add_task(
   threadClientTest(async ({ threadClient, debuggee }) => {
     setBreakpoint(threadClient, { sourceUrl: URL, line: 2 });
@@ -77,4 +42,3 @@ add_task(
     equal(packet.why.type, "breakpoint");
   })
 );
->>>>>>> upstream-releases

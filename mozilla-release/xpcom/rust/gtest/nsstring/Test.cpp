@@ -8,24 +8,6 @@ extern "C" {
 void GTest_ExpectFailure(const char* aMessage) { EXPECT_STREQ(aMessage, ""); }
 }
 
-<<<<<<< HEAD
-#define SIZE_ALIGN_CHECK(Clazz)                                   \
-  extern "C" void Rust_Test_ReprSizeAlign_##Clazz(size_t* size,   \
-                                                  size_t* align); \
-  TEST(RustNsString, ReprSizeAlign_##Clazz) {                     \
-    size_t size, align;                                           \
-    Rust_Test_ReprSizeAlign_##Clazz(&size, &align);               \
-    EXPECT_EQ(size, sizeof(Clazz));                               \
-    EXPECT_EQ(align, alignof(Clazz));                             \
-||||||| merged common ancestors
-#define SIZE_ALIGN_CHECK(Clazz)                                         \
-  extern "C" void Rust_Test_ReprSizeAlign_##Clazz(size_t* size, size_t* align); \
-  TEST(RustNsString, ReprSizeAlign_##Clazz) {                           \
-    size_t size, align;                                                 \
-    Rust_Test_ReprSizeAlign_##Clazz(&size, &align);                     \
-    EXPECT_EQ(size, sizeof(Clazz));                                     \
-    EXPECT_EQ(align, alignof(Clazz));                                   \
-=======
 #define SIZE_ALIGN_CHECK(Clazz)                                   \
   extern "C" void Rust_Test_ReprSizeAlign_##Clazz(size_t* size,   \
                                                   size_t* align); \
@@ -35,36 +17,11 @@ void GTest_ExpectFailure(const char* aMessage) { EXPECT_STREQ(aMessage, ""); }
     Rust_Test_ReprSizeAlign_##Clazz(&size, &align);               \
     EXPECT_EQ(size, sizeof(Clazz));                               \
     EXPECT_EQ(align, alignof(Clazz));                             \
->>>>>>> upstream-releases
   }
 
 SIZE_ALIGN_CHECK(nsString)
 SIZE_ALIGN_CHECK(nsCString)
 
-<<<<<<< HEAD
-#define MEMBER_CHECK(Clazz, Member)                                           \
-  extern "C" void Rust_Test_Member_##Clazz##_##Member(                        \
-      size_t* size, size_t* align, size_t* offset);                           \
-  TEST(RustNsString, ReprMember_##Clazz##_##Member) {                         \
-    class Hack : public Clazz {                                               \
-     public:                                                                  \
-      static void RunTest() {                                                 \
-        size_t size, align, offset;                                           \
-        Rust_Test_Member_##Clazz##_##Member(&size, &align, &offset);          \
-        EXPECT_EQ(size, sizeof(mozilla::DeclVal<Hack>().Member));             \
-||||||| merged common ancestors
-#define MEMBER_CHECK(Clazz, Member)                                     \
-  extern "C" void Rust_Test_Member_##Clazz##_##Member(size_t* size,     \
-                                                      size_t* align,    \
-                                                      size_t* offset);  \
-  TEST(RustNsString, ReprMember_##Clazz##_##Member) {                   \
-    class Hack : public Clazz {                                         \
-    public:                                                             \
-      static void RunTest() {                                           \
-        size_t size, align, offset;                                     \
-        Rust_Test_Member_##Clazz##_##Member(&size, &align, &offset);    \
-        EXPECT_EQ(size, sizeof(mozilla::DeclVal<Hack>().Member));       \
-=======
 #define MEMBER_CHECK(Clazz, Member)                                           \
   extern "C" void Rust_Test_Member_##Clazz##_##Member(                        \
       size_t* size, size_t* align, size_t* offset);                           \
@@ -76,7 +33,6 @@ SIZE_ALIGN_CHECK(nsCString)
         size_t size, align, offset;                                           \
         Rust_Test_Member_##Clazz##_##Member(&size, &align, &offset);          \
         EXPECT_EQ(size, sizeof(mozilla::DeclVal<Hack>().Member));             \
->>>>>>> upstream-releases
         EXPECT_EQ(align, alignof(decltype(mozilla::DeclVal<Hack>().Member))); \
         EXPECT_EQ(offset, offsetof(Hack, Member));                            \
       }                                                                       \
@@ -94,30 +50,12 @@ MEMBER_CHECK(nsCString, mLength)
 MEMBER_CHECK(nsCString, mDataFlags)
 MEMBER_CHECK(nsCString, mClassFlags)
 
-<<<<<<< HEAD
-extern "C" void Rust_Test_NsStringFlags(
-    uint16_t* f_terminated, uint16_t* f_voided, uint16_t* f_refcounted,
-    uint16_t* f_owned, uint16_t* f_inline, uint16_t* f_literal,
-    uint16_t* f_class_inline, uint16_t* f_class_null_terminated);
-TEST(RustNsString, NsStringFlags) {
-||||||| merged common ancestors
-extern "C" void Rust_Test_NsStringFlags(uint16_t* f_terminated,
-                                        uint16_t* f_voided,
-                                        uint16_t* f_refcounted,
-                                        uint16_t* f_owned,
-                                        uint16_t* f_inline,
-                                        uint16_t* f_literal,
-                                        uint16_t* f_class_inline,
-                                        uint16_t* f_class_null_terminated);
-TEST(RustNsString, NsStringFlags) {
-=======
 extern "C" void Rust_Test_NsStringFlags(
     uint16_t* f_terminated, uint16_t* f_voided, uint16_t* f_refcounted,
     uint16_t* f_owned, uint16_t* f_inline, uint16_t* f_literal,
     uint16_t* f_class_inline, uint16_t* f_class_null_terminated);
 TEST(RustNsString, NsStringFlags)
 {
->>>>>>> upstream-releases
   uint16_t f_terminated, f_voided, f_refcounted, f_owned, f_inline, f_literal,
       f_class_inline, f_class_null_terminated;
   Rust_Test_NsStringFlags(&f_terminated, &f_voided, &f_refcounted, &f_owned,
@@ -143,19 +81,10 @@ TEST(RustNsString, NsStringFlags)
             uint16_t(nsACString::ClassFlags::NULL_TERMINATED));
 }
 
-<<<<<<< HEAD
-extern "C" void Rust_StringFromCpp(const nsACString* aCStr,
-                                   const nsAString* aStr);
-TEST(RustNsString, StringFromCpp) {
-||||||| merged common ancestors
-extern "C" void Rust_StringFromCpp(const nsACString* aCStr, const nsAString* aStr);
-TEST(RustNsString, StringFromCpp) {
-=======
 extern "C" void Rust_StringFromCpp(const nsACString* aCStr,
                                    const nsAString* aStr);
 TEST(RustNsString, StringFromCpp)
 {
->>>>>>> upstream-releases
   nsAutoCString foo;
   foo.AssignASCII("Hello, World!");
 
@@ -181,44 +110,15 @@ void Cpp_AssignFromCpp(nsACString* aCStr, nsAString* aStr) {
   aStr->AssignASCII("Hello, World!");
 }
 }
-<<<<<<< HEAD
-extern "C" void Rust_AssignFromCpp();
-TEST(RustNsString, AssignFromCpp) { Rust_AssignFromCpp(); }
-||||||| merged common ancestors
-=======
 extern "C" void Rust_AssignFromCpp();
 TEST(RustNsString, AssignFromCpp)
 { Rust_AssignFromCpp(); }
->>>>>>> upstream-releases
 
 extern "C" void Rust_StringWrite();
-<<<<<<< HEAD
-TEST(RustNsString, StringWrite) { Rust_StringWrite(); }
-||||||| merged common ancestors
-TEST(RustNsString, StringWrite) {
-  Rust_StringWrite();
-}
-=======
 TEST(RustNsString, StringWrite)
 { Rust_StringWrite(); }
->>>>>>> upstream-releases
 
 extern "C" void Rust_FromEmptyRustString();
-<<<<<<< HEAD
-TEST(RustNsString, FromEmptyRustString) { Rust_FromEmptyRustString(); }
-
-extern "C" void Rust_WriteToBufferFromRust(nsACString* aCStr, nsAString* aStr,
-                                           nsACString* aFallibleCStr,
-                                           nsAString* aFallibleStr);
-TEST(RustNsString, WriteToBufferFromRust) {
-||||||| merged common ancestors
-TEST(RustNsString, FromEmptyRustString) {
-  Rust_FromEmptyRustString();
-}
-
-extern "C" void Rust_WriteToBufferFromRust(nsACString* aCStr, nsAString* aStr, nsACString* aFallibleCStr, nsAString* aFallibleStr);
-TEST(RustNsString, WriteToBufferFromRust) {
-=======
 TEST(RustNsString, FromEmptyRustString)
 { Rust_FromEmptyRustString(); }
 
@@ -227,7 +127,6 @@ extern "C" void Rust_WriteToBufferFromRust(nsACString* aCStr, nsAString* aStr,
                                            nsAString* aFallibleStr);
 TEST(RustNsString, WriteToBufferFromRust)
 {
->>>>>>> upstream-releases
   nsAutoCString cStr;
   nsAutoString str;
   nsAutoCString fallibleCStr;
@@ -246,23 +145,12 @@ TEST(RustNsString, WriteToBufferFromRust)
   EXPECT_TRUE(fallibleStr.EqualsASCII("ABC"));
 }
 
-<<<<<<< HEAD
-extern "C" void Rust_InlineCapacityFromRust(const nsACString* aCStr,
-                                            const nsAString* aStr,
-                                            size_t* aCStrCapacity,
-                                            size_t* aStrCapacity);
-TEST(RustNsString, InlineCapacityFromRust) {
-||||||| merged common ancestors
-extern "C" void Rust_InlineCapacityFromRust(const nsACString* aCStr, const nsAString* aStr, size_t* aCStrCapacity, size_t* aStrCapacity);
-TEST(RustNsString, InlineCapacityFromRust) {
-=======
 extern "C" void Rust_InlineCapacityFromRust(const nsACString* aCStr,
                                             const nsAString* aStr,
                                             size_t* aCStrCapacity,
                                             size_t* aStrCapacity);
 TEST(RustNsString, InlineCapacityFromRust)
 {
->>>>>>> upstream-releases
   size_t cStrCapacity;
   size_t strCapacity;
   nsAutoCStringN<93> cs;

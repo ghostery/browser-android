@@ -61,9 +61,6 @@ child:
   // Tell the child that cookies are allowed for this load.
   async NotifyCookieAllowed();
 
-  // Tell the child that cookies are allowed for this load.
-  async NotifyCookieAllowed();
-
   // Tell the child that tracking cookies are blocked for this load.
   async NotifyCookieBlocked(uint32_t aRejectedReason);
 

@@ -33,16 +33,8 @@ static size_t ParseVarLenInt(const uint8_t* aBuf, size_t aBufSize,
   return i;
 }
 
-<<<<<<< HEAD
-/* static */ bool XZStream::IsXZ(const void* aBuf, size_t aBufSize) {
-||||||| merged common ancestors
-/* static */ bool
-XZStream::IsXZ(const void* aBuf, size_t aBufSize)
-{
-=======
 /* static */
 bool XZStream::IsXZ(const void* aBuf, size_t aBufSize) {
->>>>>>> upstream-releases
   static const uint8_t kXzMagic[] = {0xfd, '7', 'z', 'X', 'Z', 0x0};
   MOZ_ASSERT(aBuf);
   return aBufSize > sizeof(kXzMagic) &&

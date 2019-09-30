@@ -27,12 +27,7 @@ job-defaults:
                 macosx.*:
                     - web_platform_tests/prod_config_mac.py
                 android-em.*:
-<<<<<<< HEAD
-                    - android/androidx86_7_0.py
-||||||| merged common ancestors
-=======
                     - android/androidx86_7_0-old.py
->>>>>>> upstream-releases
                     - web_platform_tests/prod_config_android.py
                 default:
                     - web_platform_tests/prod_config.py
@@ -51,48 +46,20 @@ web-platform-tests:
         by-test-platform:
             android.*: 18
             linux.*/debug: 18
-<<<<<<< HEAD
-            macosx64.*/opt: 8
-            macosx64/debug: 16
-            windows10.*/debug: 18
-            macosx64-ccov/debug: 24
-||||||| merged common ancestors
-            macosx64.*/opt: 8
-            macosx64/debug: 16
-            windows10-64-ccov/debug: 15
-            macosx64-ccov/debug: 24
-=======
             macosx*/opt: 8
             macosx.*/debug: 16
             windows10.*/debug: 18
             windows10-aarch64/opt: 12
->>>>>>> upstream-releases
             default: 12
     max-run-time:
         by-test-platform:
-<<<<<<< HEAD
-            linux64-ccov/debug: 10800
-            windows10-64-ccov/debug: 10800
-||||||| merged common ancestors
-            windows10-64-ccov/debug: 10800
-            macosx64-ccov/debug: 7200
-=======
             .*-ccov/debug: 10800
->>>>>>> upstream-releases
             default: 7200
     e10s: true
     run-on-projects:
         by-test-platform:
-<<<<<<< HEAD
-            android.*: ['mozilla-central', 'try']
-            linux64-qr/.*: ['release', 'try']  # skip on integration branches due to high load
-||||||| merged common ancestors
-            android-em-7.0-x86/opt: ['mozilla-central']
-            linux64-qr/.*: ['release', 'try']  # skip on integration branches due to high load
-=======
             windows10-aarch64/opt: ['try', 'mozilla-central']
             .*-qr/.*: ['release', 'try']  # skip on integration branches due to high load
->>>>>>> upstream-releases
             default: built-projects
     tier:
         by-test-platform:
@@ -114,22 +81,6 @@ web-platform-tests-reftests:
     treeherder-symbol: W(Wr)
     chunks:
         by-test-platform:
-<<<<<<< HEAD
-            android.*: 12
-            default: 6
-    e10s:
-        by-test-platform:
-            linux32/debug: both
-            default: true
-||||||| merged common ancestors
-            macosx.*: 1
-            default: 6
-
-    e10s:
-        by-test-platform:
-            linux32/debug: both
-            default: true
-=======
             .*-ccov/debug: 8
             linux64(-qr|-asan)/.*: 6
             linux64(-shippable|-devedition)?/opt: 3
@@ -138,18 +89,9 @@ web-platform-tests-reftests:
             android.*: 6
             default: 4
     e10s: true
->>>>>>> upstream-releases
     run-on-projects:
         by-test-platform:
-<<<<<<< HEAD
-            android.*: ['mozilla-central', 'try']
-            linux64-qr/.*: ['release', 'try']  # skip on integration branches due to high load
-||||||| merged common ancestors
-            android-em-7.0-x86/opt: ['mozilla-central']
-            linux64-qr/.*: ['release', 'try']  # skip on integration branches due to high load
-=======
             windows10-aarch64/opt: ['try', 'mozilla-central']
->>>>>>> upstream-releases
             default: built-projects
     tier:
         by-test-platform:
@@ -161,90 +103,23 @@ web-platform-tests-reftests:
         extra-options:
             - --test-type=reftest
 
-<<<<<<< HEAD
-web-platform-tests-reftests-headless:
-    description: "Web platform reftest headless run"
-    suite: web-platform-tests-reftests
-    treeherder-symbol: W(WrH)
-    chunks: 6
-    e10s:
-        by-test-platform:
-            linux32/debug: both
-            default: true
-    run-on-projects: []  # disabled pending releng approval
-    mozharness:
-        extra-options:
-            by-test-platform:
-                windows.*:
-                    - --test-type=reftest
-                    - --headless
-                    - --headless-width=1024
-                    - --headless-height=768
-                default:
-                    - --test-type=reftest
-
-||||||| merged common ancestors
-web-platform-tests-reftests-headless:
-    description: "Web platform reftest headless run"
-    suite: web-platform-tests-reftests
-    treeherder-symbol: W(WrH)
-    chunks:
-        by-test-platform:
-            macosx.*: 1
-            default: 6
-    e10s:
-        by-test-platform:
-            linux32/debug: both
-            default: true
-    run-on-projects: []  # disabled pending releng approval
-    mozharness:
-        extra-options:
-            by-test-platform:
-                windows.*:
-                    - --test-type=reftest
-                    - --headless
-                    - --headless-width=1024
-                    - --headless-height=768
-                default:
-                    - --test-type=reftest
-
-=======
->>>>>>> upstream-releases
 web-platform-tests-wdspec:
     description: "Web platform webdriver-spec run"
     suite:
         name: web-platform-tests-wdspec
     schedules-component: web-platform-tests-wdspec
     treeherder-symbol: W(Wd)
-<<<<<<< HEAD
-    chunks:
-        by-test-platform:
-            linux64-ccov/debug: 4
-            windows10-64-ccov/debug: 4
-            default: 2
-||||||| merged common ancestors
-    chunks: 2
-=======
     chunks:
         by-test-platform:
             .*-ccov/debug: 4
             default: 2
->>>>>>> upstream-releases
     mozharness:
         extra-options:
             - --test-type=wdspec
     run-on-projects:
         by-test-platform:
-<<<<<<< HEAD
-            android.*: ['mozilla-central', 'try']
-            linux64-qr/.*: ['release', 'try']  # skip on integration branches due to high load
-||||||| merged common ancestors
-            android-em-7.0-x86/opt: ['mozilla-central']
-            linux64-qr/.*: ['release', 'try']  # skip on integration branches due to high load
-=======
             windows10-aarch64/opt: ['try', 'mozilla-central']
             .*-qr/.*: ['release', 'try']
->>>>>>> upstream-releases
             default: built-projects
     tier:
         by-test-platform:

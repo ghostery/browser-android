@@ -41,16 +41,9 @@ static ScrollAnimationBezierPhysicsSettings SettingsForType(
   }
 
   // The pref is 100-based int percentage, while mIntervalRatio is 1-based ratio
-<<<<<<< HEAD
-  double intervalRatio =
-      ((double)gfxPrefs::SmoothScrollDurationToIntervalRatio()) / 100.0;
-||||||| merged common ancestors
-  double intervalRatio = ((double)gfxPrefs::SmoothScrollDurationToIntervalRatio()) / 100.0;
-=======
   double intervalRatio =
       ((double)StaticPrefs::general_smoothScroll_durationToIntervalRatio()) /
       100.0;
->>>>>>> upstream-releases
   intervalRatio = std::max(1.0, intervalRatio);
   return ScrollAnimationBezierPhysicsSettings{minMS, maxMS, intervalRatio};
 }

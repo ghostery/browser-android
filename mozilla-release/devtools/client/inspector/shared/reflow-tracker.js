@@ -37,16 +37,8 @@ ReflowTracker.prototype = {
 
   async startTracking() {
     // Initialize reflow front if necessary.
-<<<<<<< HEAD
-    if (!this.reflowFront && this.target.form.reflowActor) {
-      this.reflowFront = await this.target.getFront("reflow");
-||||||| merged common ancestors
-    if (!this.reflowFront && this.target.form.reflowActor) {
-      this.reflowFront = this.target.getFront("reflow");
-=======
     if (!this.reflowFront) {
       this.reflowFront = await this.target.getFront("reflow");
->>>>>>> upstream-releases
     }
 
     if (this.reflowFront) {

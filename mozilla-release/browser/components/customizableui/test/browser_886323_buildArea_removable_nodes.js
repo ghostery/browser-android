@@ -34,15 +34,6 @@ add_task(async function() {
   btn.setAttribute("removable", "false");
   gLazyArea._customizationTarget = gLazyArea;
   CustomizableUI.registerToolbarNode(gLazyArea, []);
-<<<<<<< HEAD
-  assertAreaPlacements(kLazyAreaId, [], "Placements should no longer include widget.");
-  is(btn.parentNode.id, CustomizableUI.getCustomizationTarget(gNavBar).id,
-     "Button shouldn't actually have moved as it's not removable");
-||||||| merged common ancestors
-  assertAreaPlacements(kLazyAreaId, [], "Placements should no longer include widget.");
-  is(btn.parentNode.id, gNavBar.customizationTarget.id,
-     "Button shouldn't actually have moved as it's not removable");
-=======
   assertAreaPlacements(
     kLazyAreaId,
     [],
@@ -53,7 +44,6 @@ add_task(async function() {
     CustomizableUI.getCustomizationTarget(gNavBar).id,
     "Button shouldn't actually have moved as it's not removable"
   );
->>>>>>> upstream-releases
   btn = document.getElementById(kButtonId);
   if (btn) {
     btn.remove();

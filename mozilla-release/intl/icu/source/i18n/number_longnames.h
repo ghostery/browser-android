@@ -16,11 +16,6 @@ namespace impl {
 
 class LongNameHandler : public MicroPropsGenerator, public ModifierStore, public UMemory {
   public:
-<<<<<<< HEAD
-    static LongNameHandler*
-||||||| merged common ancestors
-    static LongNameHandler
-=======
     static UnicodeString getUnitDisplayName(
         const Locale& loc,
         const MeasureUnit& unit,
@@ -28,7 +23,6 @@ class LongNameHandler : public MicroPropsGenerator, public ModifierStore, public
         UErrorCode& status);
 
     static LongNameHandler*
->>>>>>> upstream-releases
     forCurrencyLongNames(const Locale &loc, const CurrencyUnit &currency, const PluralRules *rules,
                          const MicroPropsGenerator *parent, UErrorCode &status);
 

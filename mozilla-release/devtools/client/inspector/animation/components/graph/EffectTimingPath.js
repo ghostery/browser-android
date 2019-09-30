@@ -74,13 +74,7 @@ class EffectTimingPath extends TimingPath {
     return dom.g(
       {
         className: "animation-effect-timing-path",
-<<<<<<< HEAD
-        transform: `translate(${ offset })`,
-||||||| merged common ancestors
-        transform: `translate(${ offset })`
-=======
         transform: `translate(${offset})`,
->>>>>>> upstream-releases
       },
       super.renderGraph(state, helper)
     );

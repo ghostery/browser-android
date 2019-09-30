@@ -28,14 +28,7 @@ class nsStreamLoader final : public nsIStreamLoader,
 
   nsStreamLoader();
 
-<<<<<<< HEAD
-  static nsresult Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-||||||| merged common ancestors
-  static nsresult
-  Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-=======
   static nsresult Create(nsISupports* aOuter, REFNSIID aIID, void** aResult);
->>>>>>> upstream-releases
 
  protected:
   ~nsStreamLoader() = default;

@@ -287,99 +287,6 @@ static_assert(DEFAULT_NAMESPACE == 0 && CHROME_ONLY_NAMESPACE == 1 &&
 // stored in the DOM Cache.  You would need to update the Cache database schema
 // accordingly and adjust the failing static_assert.
 static_assert(nsIContentPolicy::TYPE_INVALID == 0 &&
-<<<<<<< HEAD
-                  nsIContentPolicy::TYPE_OTHER == 1 &&
-                  nsIContentPolicy::TYPE_SCRIPT == 2 &&
-                  nsIContentPolicy::TYPE_IMAGE == 3 &&
-                  nsIContentPolicy::TYPE_STYLESHEET == 4 &&
-                  nsIContentPolicy::TYPE_OBJECT == 5 &&
-                  nsIContentPolicy::TYPE_DOCUMENT == 6 &&
-                  nsIContentPolicy::TYPE_SUBDOCUMENT == 7 &&
-                  nsIContentPolicy::TYPE_REFRESH == 8 &&
-                  nsIContentPolicy::TYPE_XBL == 9 &&
-                  nsIContentPolicy::TYPE_PING == 10 &&
-                  nsIContentPolicy::TYPE_XMLHTTPREQUEST == 11 &&
-                  nsIContentPolicy::TYPE_DATAREQUEST == 11 &&
-                  nsIContentPolicy::TYPE_OBJECT_SUBREQUEST == 12 &&
-                  nsIContentPolicy::TYPE_DTD == 13 &&
-                  nsIContentPolicy::TYPE_FONT == 14 &&
-                  nsIContentPolicy::TYPE_MEDIA == 15 &&
-                  nsIContentPolicy::TYPE_WEBSOCKET == 16 &&
-                  nsIContentPolicy::TYPE_CSP_REPORT == 17 &&
-                  nsIContentPolicy::TYPE_XSLT == 18 &&
-                  nsIContentPolicy::TYPE_BEACON == 19 &&
-                  nsIContentPolicy::TYPE_FETCH == 20 &&
-                  nsIContentPolicy::TYPE_IMAGESET == 21 &&
-                  nsIContentPolicy::TYPE_WEB_MANIFEST == 22 &&
-                  nsIContentPolicy::TYPE_INTERNAL_SCRIPT == 23 &&
-                  nsIContentPolicy::TYPE_INTERNAL_WORKER == 24 &&
-                  nsIContentPolicy::TYPE_INTERNAL_SHARED_WORKER == 25 &&
-                  nsIContentPolicy::TYPE_INTERNAL_EMBED == 26 &&
-                  nsIContentPolicy::TYPE_INTERNAL_OBJECT == 27 &&
-                  nsIContentPolicy::TYPE_INTERNAL_FRAME == 28 &&
-                  nsIContentPolicy::TYPE_INTERNAL_IFRAME == 29 &&
-                  nsIContentPolicy::TYPE_INTERNAL_AUDIO == 30 &&
-                  nsIContentPolicy::TYPE_INTERNAL_VIDEO == 31 &&
-                  nsIContentPolicy::TYPE_INTERNAL_TRACK == 32 &&
-                  nsIContentPolicy::TYPE_INTERNAL_XMLHTTPREQUEST == 33 &&
-                  nsIContentPolicy::TYPE_INTERNAL_EVENTSOURCE == 34 &&
-                  nsIContentPolicy::TYPE_INTERNAL_SERVICE_WORKER == 35 &&
-                  nsIContentPolicy::TYPE_INTERNAL_SCRIPT_PRELOAD == 36 &&
-                  nsIContentPolicy::TYPE_INTERNAL_IMAGE == 37 &&
-                  nsIContentPolicy::TYPE_INTERNAL_IMAGE_PRELOAD == 38 &&
-                  nsIContentPolicy::TYPE_INTERNAL_STYLESHEET == 39 &&
-                  nsIContentPolicy::TYPE_INTERNAL_STYLESHEET_PRELOAD == 40 &&
-                  nsIContentPolicy::TYPE_INTERNAL_IMAGE_FAVICON == 41 &&
-                  nsIContentPolicy::TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS == 42 &&
-                  nsIContentPolicy::TYPE_SAVEAS_DOWNLOAD == 43 &&
-                  nsIContentPolicy::TYPE_SPECULATIVE == 44,
-||||||| merged common ancestors
-              nsIContentPolicy::TYPE_OTHER == 1 &&
-              nsIContentPolicy::TYPE_SCRIPT == 2 &&
-              nsIContentPolicy::TYPE_IMAGE == 3 &&
-              nsIContentPolicy::TYPE_STYLESHEET == 4 &&
-              nsIContentPolicy::TYPE_OBJECT == 5 &&
-              nsIContentPolicy::TYPE_DOCUMENT == 6 &&
-              nsIContentPolicy::TYPE_SUBDOCUMENT == 7 &&
-              nsIContentPolicy::TYPE_REFRESH == 8 &&
-              nsIContentPolicy::TYPE_XBL == 9 &&
-              nsIContentPolicy::TYPE_PING == 10 &&
-              nsIContentPolicy::TYPE_XMLHTTPREQUEST == 11 &&
-              nsIContentPolicy::TYPE_DATAREQUEST == 11 &&
-              nsIContentPolicy::TYPE_OBJECT_SUBREQUEST == 12 &&
-              nsIContentPolicy::TYPE_DTD == 13 &&
-              nsIContentPolicy::TYPE_FONT == 14 &&
-              nsIContentPolicy::TYPE_MEDIA == 15 &&
-              nsIContentPolicy::TYPE_WEBSOCKET == 16 &&
-              nsIContentPolicy::TYPE_CSP_REPORT == 17 &&
-              nsIContentPolicy::TYPE_XSLT == 18 &&
-              nsIContentPolicy::TYPE_BEACON == 19 &&
-              nsIContentPolicy::TYPE_FETCH == 20 &&
-              nsIContentPolicy::TYPE_IMAGESET == 21 &&
-              nsIContentPolicy::TYPE_WEB_MANIFEST == 22 &&
-              nsIContentPolicy::TYPE_INTERNAL_SCRIPT == 23 &&
-              nsIContentPolicy::TYPE_INTERNAL_WORKER == 24 &&
-              nsIContentPolicy::TYPE_INTERNAL_SHARED_WORKER == 25 &&
-              nsIContentPolicy::TYPE_INTERNAL_EMBED == 26 &&
-              nsIContentPolicy::TYPE_INTERNAL_OBJECT == 27 &&
-              nsIContentPolicy::TYPE_INTERNAL_FRAME == 28 &&
-              nsIContentPolicy::TYPE_INTERNAL_IFRAME == 29 &&
-              nsIContentPolicy::TYPE_INTERNAL_AUDIO == 30 &&
-              nsIContentPolicy::TYPE_INTERNAL_VIDEO == 31 &&
-              nsIContentPolicy::TYPE_INTERNAL_TRACK == 32 &&
-              nsIContentPolicy::TYPE_INTERNAL_XMLHTTPREQUEST == 33 &&
-              nsIContentPolicy::TYPE_INTERNAL_EVENTSOURCE == 34 &&
-              nsIContentPolicy::TYPE_INTERNAL_SERVICE_WORKER == 35 &&
-              nsIContentPolicy::TYPE_INTERNAL_SCRIPT_PRELOAD == 36 &&
-              nsIContentPolicy::TYPE_INTERNAL_IMAGE == 37 &&
-              nsIContentPolicy::TYPE_INTERNAL_IMAGE_PRELOAD == 38 &&
-              nsIContentPolicy::TYPE_INTERNAL_STYLESHEET == 39 &&
-              nsIContentPolicy::TYPE_INTERNAL_STYLESHEET_PRELOAD == 40 &&
-              nsIContentPolicy::TYPE_INTERNAL_IMAGE_FAVICON == 41 &&
-              nsIContentPolicy::TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS == 42 &&
-              nsIContentPolicy::TYPE_SAVEAS_DOWNLOAD == 43 &&
-              nsIContentPolicy::TYPE_SPECULATIVE == 44,
-=======
                   nsIContentPolicy::TYPE_OTHER == 1 &&
                   nsIContentPolicy::TYPE_SCRIPT == 2 &&
                   nsIContentPolicy::TYPE_IMAGE == 3 &&
@@ -427,7 +334,6 @@ static_assert(nsIContentPolicy::TYPE_INVALID == 0 &&
                   nsIContentPolicy::TYPE_SPECULATIVE == 44 &&
                   nsIContentPolicy::TYPE_INTERNAL_MODULE == 45 &&
                   nsIContentPolicy::TYPE_INTERNAL_MODULE_PRELOAD == 46,
->>>>>>> upstream-releases
               "nsContentPolicyType values are as expected");
 
 namespace {
@@ -1009,24 +915,10 @@ nsresult CacheMatch(mozIStorageConnection* aConn, CacheId aCacheId,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult CacheMatchAll(mozIStorageConnection* aConn, CacheId aCacheId,
-                       const CacheRequestOrVoid& aRequestOrVoid,
-                       const CacheQueryParams& aParams,
-                       nsTArray<SavedResponse>& aSavedResponsesOut) {
-||||||| merged common ancestors
-nsresult
-CacheMatchAll(mozIStorageConnection* aConn, CacheId aCacheId,
-              const CacheRequestOrVoid& aRequestOrVoid,
-              const CacheQueryParams& aParams,
-              nsTArray<SavedResponse>& aSavedResponsesOut)
-{
-=======
 nsresult CacheMatchAll(mozIStorageConnection* aConn, CacheId aCacheId,
                        const Maybe<CacheRequest>& aMaybeRequest,
                        const CacheQueryParams& aParams,
                        nsTArray<SavedResponse>& aSavedResponsesOut) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
   MOZ_DIAGNOSTIC_ASSERT(aConn);
   nsresult rv;
@@ -1038,20 +930,10 @@ nsresult CacheMatchAll(mozIStorageConnection* aConn, CacheId aCacheId,
       return rv;
     }
   } else {
-<<<<<<< HEAD
-    rv = QueryCache(aConn, aCacheId, aRequestOrVoid, aParams, matches);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-    }
-||||||| merged common ancestors
-    rv = QueryCache(aConn, aCacheId, aRequestOrVoid, aParams, matches);
-    if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-=======
     rv = QueryCache(aConn, aCacheId, aMaybeRequest.ref(), aParams, matches);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
->>>>>>> upstream-releases
   }
 
   // TODO: replace this with a bulk load using SQL IN clause (bug 1110458)
@@ -1152,24 +1034,10 @@ nsresult CacheDelete(mozIStorageConnection* aConn, CacheId aCacheId,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult CacheKeys(mozIStorageConnection* aConn, CacheId aCacheId,
-                   const CacheRequestOrVoid& aRequestOrVoid,
-                   const CacheQueryParams& aParams,
-                   nsTArray<SavedRequest>& aSavedRequestsOut) {
-||||||| merged common ancestors
-nsresult
-CacheKeys(mozIStorageConnection* aConn, CacheId aCacheId,
-          const CacheRequestOrVoid& aRequestOrVoid,
-          const CacheQueryParams& aParams,
-          nsTArray<SavedRequest>& aSavedRequestsOut)
-{
-=======
 nsresult CacheKeys(mozIStorageConnection* aConn, CacheId aCacheId,
                    const Maybe<CacheRequest>& aMaybeRequest,
                    const CacheQueryParams& aParams,
                    nsTArray<SavedRequest>& aSavedRequestsOut) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
   MOZ_DIAGNOSTIC_ASSERT(aConn);
   nsresult rv;
@@ -1181,20 +1049,10 @@ nsresult CacheKeys(mozIStorageConnection* aConn, CacheId aCacheId,
       return rv;
     }
   } else {
-<<<<<<< HEAD
-    rv = QueryCache(aConn, aCacheId, aRequestOrVoid, aParams, matches);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-    }
-||||||| merged common ancestors
-    rv = QueryCache(aConn, aCacheId, aRequestOrVoid, aParams, matches);
-    if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-=======
     rv = QueryCache(aConn, aCacheId, aMaybeRequest.ref(), aParams, matches);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
->>>>>>> upstream-releases
   }
 
   // TODO: replace this with a bulk load using SQL IN clause (bug 1110458)
@@ -1490,23 +1348,6 @@ nsresult QueryCache(mozIStorageConnection* aConn, CacheId aCacheId,
   }
 
   nsAutoCString query(
-<<<<<<< HEAD
-      "SELECT id, COUNT(response_headers.name) AS vary_count "
-      "FROM entries "
-      "LEFT OUTER JOIN response_headers ON "
-      "entries.id=response_headers.entry_id "
-      "AND response_headers.name='vary' "
-      "WHERE entries.cache_id=:cache_id "
-      "AND entries.request_url_no_query_hash=:url_no_query_hash ");
-||||||| merged common ancestors
-    "SELECT id, COUNT(response_headers.name) AS vary_count "
-    "FROM entries "
-    "LEFT OUTER JOIN response_headers ON entries.id=response_headers.entry_id "
-                                    "AND response_headers.name='vary' "
-    "WHERE entries.cache_id=:cache_id "
-      "AND entries.request_url_no_query_hash=:url_no_query_hash "
-  );
-=======
       "SELECT id, COUNT(response_headers.name) AS vary_count "
       "FROM entries "
       "LEFT OUTER JOIN response_headers ON "
@@ -1514,7 +1355,6 @@ nsresult QueryCache(mozIStorageConnection* aConn, CacheId aCacheId,
       "AND response_headers.name='vary' COLLATE NOCASE "
       "WHERE entries.cache_id=:cache_id "
       "AND entries.request_url_no_query_hash=:url_no_query_hash ");
->>>>>>> upstream-releases
 
   if (!aParams.ignoreSearch()) {
     query.AppendLiteral("AND entries.request_url_query_hash=:url_query_hash ");
@@ -1630,21 +1470,6 @@ nsresult MatchByVaryHeader(mozIStorageConnection* aConn,
   *aSuccessOut = false;
 
   nsCOMPtr<mozIStorageStatement> state;
-<<<<<<< HEAD
-  nsresult rv = aConn->CreateStatement(
-      NS_LITERAL_CSTRING("SELECT value FROM response_headers "
-                         "WHERE name='vary' AND entry_id=:entry_id;"),
-      getter_AddRefs(state));
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-||||||| merged common ancestors
-  nsresult rv = aConn->CreateStatement(NS_LITERAL_CSTRING(
-    "SELECT value FROM response_headers "
-    "WHERE name='vary' AND entry_id=:entry_id;"
-  ), getter_AddRefs(state));
-  if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
-=======
   nsresult rv = aConn->CreateStatement(
       NS_LITERAL_CSTRING("SELECT value FROM response_headers "
                          "WHERE name='vary' COLLATE NOCASE "
@@ -1653,7 +1478,6 @@ nsresult MatchByVaryHeader(mozIStorageConnection* aConn,
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
 
   rv = state->BindInt32ByName(NS_LITERAL_CSTRING("entry_id"), entryId);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -2393,27 +2217,11 @@ nsresult InsertEntry(mozIStorageConnection* aConn, CacheId aCacheId,
 
   nsAutoCString serializedInfo;
   // We only allow content serviceworkers right now.
-<<<<<<< HEAD
-  if (aResponse.principalInfo().type() ==
-      mozilla::ipc::OptionalPrincipalInfo::TPrincipalInfo) {
-||||||| merged common ancestors
-  if (aResponse.principalInfo().type() == mozilla::ipc::OptionalPrincipalInfo::TPrincipalInfo) {
-=======
   if (aResponse.principalInfo().isSome()) {
->>>>>>> upstream-releases
     const mozilla::ipc::PrincipalInfo& principalInfo =
-<<<<<<< HEAD
-        aResponse.principalInfo().get_PrincipalInfo();
-    MOZ_DIAGNOSTIC_ASSERT(principalInfo.type() ==
-                          mozilla::ipc::PrincipalInfo::TContentPrincipalInfo);
-||||||| merged common ancestors
-      aResponse.principalInfo().get_PrincipalInfo();
-    MOZ_DIAGNOSTIC_ASSERT(principalInfo.type() == mozilla::ipc::PrincipalInfo::TContentPrincipalInfo);
-=======
         aResponse.principalInfo().ref();
     MOZ_DIAGNOSTIC_ASSERT(principalInfo.type() ==
                           mozilla::ipc::PrincipalInfo::TContentPrincipalInfo);
->>>>>>> upstream-releases
     const mozilla::ipc::ContentPrincipalInfo& cInfo =
         principalInfo.get_ContentPrincipalInfo();
 
@@ -2691,14 +2499,8 @@ nsresult ReadResponse(mozIStorageConnection* aConn, EntryId aEntryId,
     }
 
     aSavedResponseOut->mValue.principalInfo() =
-<<<<<<< HEAD
-        mozilla::ipc::ContentPrincipalInfo(attrs, origin, specNoSuffix);
-||||||| merged common ancestors
-      mozilla::ipc::ContentPrincipalInfo(attrs, origin, specNoSuffix);
-=======
         Some(mozilla::ipc::ContentPrincipalInfo(attrs, origin, specNoSuffix,
                                                 Nothing(), baseDomain));
->>>>>>> upstream-releases
   }
 
   bool nullPadding = false;

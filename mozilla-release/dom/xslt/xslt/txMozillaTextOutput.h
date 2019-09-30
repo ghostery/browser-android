@@ -19,56 +19,6 @@ namespace dom {
 class Document;
 class DocumentFragment;
 class Element;
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-
-class txMozillaTextOutput : public txAOutputXMLEventHandler {
- public:
-  explicit txMozillaTextOutput(nsITransformObserver* aObserver);
-  explicit txMozillaTextOutput(mozilla::dom::DocumentFragment* aDest);
-  virtual ~txMozillaTextOutput();
-
-  TX_DECL_TXAXMLEVENTHANDLER
-  TX_DECL_TXAOUTPUTXMLEVENTHANDLER
-
-  nsresult createResultDocument(nsIDocument* aSourceDocument,
-                                bool aLoadedAsData);
-
- private:
-  nsresult createXHTMLElement(nsAtom* aName, mozilla::dom::Element** aResult);
-
-  nsCOMPtr<nsIContent> mTextParent;
-  nsWeakPtr mObserver;
-  nsCOMPtr<nsIDocument> mDocument;
-  txOutputFormat mOutputFormat;
-  nsString mText;
-||||||| merged common ancestors
-}
-}
-
-class txMozillaTextOutput : public txAOutputXMLEventHandler
-{
-public:
-    explicit txMozillaTextOutput(nsITransformObserver* aObserver);
-    explicit txMozillaTextOutput(mozilla::dom::DocumentFragment* aDest);
-    virtual ~txMozillaTextOutput();
-
-    TX_DECL_TXAXMLEVENTHANDLER
-    TX_DECL_TXAOUTPUTXMLEVENTHANDLER
-
-    nsresult createResultDocument(nsIDocument* aSourceDocument,
-                                  bool aLoadedAsData);
-
-private:
-    nsresult createXHTMLElement(nsAtom* aName, mozilla::dom::Element** aResult);
-
-    nsCOMPtr<nsIContent> mTextParent;
-    nsWeakPtr mObserver;
-    nsCOMPtr<nsIDocument> mDocument;
-    txOutputFormat mOutputFormat;
-    nsString mText;
-=======
 }  // namespace dom
 }  // namespace mozilla
 
@@ -92,7 +42,6 @@ class txMozillaTextOutput : public txAOutputXMLEventHandler {
   RefPtr<mozilla::dom::Document> mDocument;
   txOutputFormat mOutputFormat;
   nsString mText;
->>>>>>> upstream-releases
 };
 
 #endif

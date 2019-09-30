@@ -42,9 +42,7 @@ mr{
         }
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}–{1}"}
             }
             patterns{
@@ -233,13 +231,7 @@ mr{
         minimumGroupingDigits{"1"}
         native{"deva"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.42"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             eras{

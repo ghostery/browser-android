@@ -27,13 +27,6 @@ TEST_F(APZCSnappingTester, Bug1265510) {
   SetScrollHandoff(layers[1], root);
 
   ScrollSnapInfo snap;
-<<<<<<< HEAD
-  snap.mScrollSnapTypeY = StyleScrollSnapType::Mandatory;
-  snap.mScrollSnapIntervalY = Some(100 * AppUnitsPerCSSPixel());
-||||||| merged common ancestors
-  snap.mScrollSnapTypeY = NS_STYLE_SCROLL_SNAP_TYPE_MANDATORY;
-  snap.mScrollSnapIntervalY = Some(100 * AppUnitsPerCSSPixel());
-=======
   snap.mScrollSnapStrictnessY = StyleScrollSnapStrictness::Mandatory;
   if (StaticPrefs::layout_css_scroll_snap_v1_enabled()) {
     snap.mSnapPositionY.AppendElement(0 * AppUnitsPerCSSPixel());
@@ -41,24 +34,14 @@ TEST_F(APZCSnappingTester, Bug1265510) {
   } else {
     snap.mScrollSnapIntervalY = Some(100 * AppUnitsPerCSSPixel());
   }
->>>>>>> upstream-releases
 
   ScrollMetadata metadata = root->GetScrollMetadata(0);
   metadata.SetSnapInfo(ScrollSnapInfo(snap));
   root->SetScrollMetadata(metadata);
 
-<<<<<<< HEAD
-  UniquePtr<ScopedLayerTreeRegistration> registration =
-      MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-  UniquePtr<ScopedLayerTreeRegistration> registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
   UniquePtr<ScopedLayerTreeRegistration> registration =
       MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
   manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
 
   TestAsyncPanZoomController* outer = ApzcOf(layers[0]);
   TestAsyncPanZoomController* inner = ApzcOf(layers[1]);
@@ -80,22 +63,11 @@ TEST_F(APZCSnappingTester, Bug1265510) {
   }
   // Now do another wheel in a new transaction. This should start scrolling the
   // inner frame; we verify that it does by checking the inner scroll position.
-<<<<<<< HEAD
-  TimeStamp newTransactionTime =
-      now + TimeDuration::FromMilliseconds(
-                gfxPrefs::MouseWheelTransactionTimeoutMs() + 100);
-  SmoothWheel(manager, ScreenIntPoint(50, 80), ScreenPoint(0, 6),
-              newTransactionTime);
-||||||| merged common ancestors
-  TimeStamp newTransactionTime = now + TimeDuration::FromMilliseconds(gfxPrefs::MouseWheelTransactionTimeoutMs() + 100);
-  SmoothWheel(manager, ScreenIntPoint(50, 80), ScreenPoint(0, 6), newTransactionTime);
-=======
   TimeStamp newTransactionTime =
       now + TimeDuration::FromMilliseconds(
                 StaticPrefs::mousewheel_transaction_timeout() + 100);
   SmoothWheel(manager, ScreenIntPoint(50, 80), ScreenPoint(0, 6),
               newTransactionTime);
->>>>>>> upstream-releases
   inner->AdvanceAnimationsUntilEnd();
   EXPECT_LT(
       0.0f,
@@ -130,13 +102,6 @@ TEST_F(APZCSnappingTester, Snap_After_Pinch) {
 
   // Set up some basic scroll snapping
   ScrollSnapInfo snap;
-<<<<<<< HEAD
-  snap.mScrollSnapTypeY = StyleScrollSnapType::Mandatory;
-  snap.mScrollSnapIntervalY = Some(100 * AppUnitsPerCSSPixel());
-||||||| merged common ancestors
-  snap.mScrollSnapTypeY = NS_STYLE_SCROLL_SNAP_TYPE_MANDATORY;
-  snap.mScrollSnapIntervalY = Some(100 * AppUnitsPerCSSPixel());
-=======
   snap.mScrollSnapStrictnessY = StyleScrollSnapStrictness::Mandatory;
 
   if (StaticPrefs::layout_css_scroll_snap_v1_enabled()) {
@@ -145,7 +110,6 @@ TEST_F(APZCSnappingTester, Snap_After_Pinch) {
   } else {
     snap.mScrollSnapIntervalY = Some(100 * AppUnitsPerCSSPixel());
   }
->>>>>>> upstream-releases
 
   // Save the scroll snap info on the root APZC.
   // Also mark the root APZC as "root content", since APZC only allows
@@ -155,18 +119,9 @@ TEST_F(APZCSnappingTester, Snap_After_Pinch) {
   metadata.GetMetrics().SetIsRootContent(true);
   root->SetScrollMetadata(metadata);
 
-<<<<<<< HEAD
-  UniquePtr<ScopedLayerTreeRegistration> registration =
-      MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-  UniquePtr<ScopedLayerTreeRegistration> registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
   UniquePtr<ScopedLayerTreeRegistration> registration =
       MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
   manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
 
   RefPtr<TestAsyncPanZoomController> apzc = ApzcOf(root);
 

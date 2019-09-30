@@ -27,26 +27,11 @@ class PrintTargetSkPDF final : public PrintTarget {
   static already_AddRefed<PrintTargetSkPDF> CreateOrNull(
       UniquePtr<SkWStream> aStream, const IntSize& aSizeInPoints);
 
-<<<<<<< HEAD
-  virtual nsresult BeginPrinting(const nsAString& aTitle,
-                                 const nsAString& aPrintToFileName,
-                                 int32_t aStartPage, int32_t aEndPage) override;
-  virtual nsresult EndPrinting() override;
-  virtual void Finish() override;
-||||||| merged common ancestors
-  virtual nsresult BeginPrinting(const nsAString& aTitle,
-                                 const nsAString& aPrintToFileName,
-                                 int32_t aStartPage,
-                                 int32_t aEndPage) override;
-  virtual nsresult EndPrinting() override;
-  virtual void Finish() override;
-=======
   nsresult BeginPrinting(const nsAString& aTitle,
                          const nsAString& aPrintToFileName, int32_t aStartPage,
                          int32_t aEndPage) override;
   nsresult EndPrinting() override;
   void Finish() override;
->>>>>>> upstream-releases
 
   nsresult BeginPage() override;
   nsresult EndPage() override;

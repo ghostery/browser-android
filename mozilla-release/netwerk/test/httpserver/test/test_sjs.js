@@ -20,48 +20,23 @@ const BASE = "http://localhost:" + PORT;
 var test;
 var tests = [];
 
-<<<<<<< HEAD
-
 /** *******************
-||||||| merged common ancestors
-
-/*********************
-=======
-/** *******************
->>>>>>> upstream-releases
  * UTILITY FUNCTIONS *
  *********************/
 
-<<<<<<< HEAD
-function bytesToString(bytes) {
-  return bytes.map(function(v) { return String.fromCharCode(v); }).join("");
-||||||| merged common ancestors
-function bytesToString(bytes)
-{
-  return bytes.map(function(v) { return String.fromCharCode(v); }).join("");
-=======
 function bytesToString(bytes) {
   return bytes
     .map(function(v) {
       return String.fromCharCode(v);
     })
     .join("");
->>>>>>> upstream-releases
 }
 
 function skipCache(ch) {
   ch.loadFlags |= Ci.nsIRequest.LOAD_BYPASS_CACHE;
 }
 
-<<<<<<< HEAD
-
 /** ******************
-||||||| merged common ancestors
-
-/********************
-=======
-/** ******************
->>>>>>> upstream-releases
  * DEFINE THE TESTS *
  ********************/
 
@@ -80,14 +55,7 @@ function setupTests(throwing) {
     skipCache(ch);
   }
 
-<<<<<<< HEAD
-  function verifyRawText(channel, cx, status, bytes) {
-||||||| merged common ancestors
-  function verifyRawText(channel, cx, status, bytes)
-  {
-=======
   function verifyRawText(channel, status, bytes) {
->>>>>>> upstream-releases
     dumpn(channel.originalURI.spec);
     Assert.equal(bytesToString(bytes), fileContents(sjs));
   }
@@ -102,18 +70,8 @@ function setupTests(throwing) {
     skipCache(ch);
   }
 
-<<<<<<< HEAD
-  function checkType(ch, cx) {
-    if (throwing) {
-||||||| merged common ancestors
-  function checkType(ch, cx)
-  {
-    if (throwing)
-    {
-=======
   function checkType(ch) {
     if (throwing) {
->>>>>>> upstream-releases
       Assert.ok(!ch.requestSucceeded);
       Assert.equal(ch.responseStatus, 500);
     } else {
@@ -121,17 +79,8 @@ function setupTests(throwing) {
     }
   }
 
-<<<<<<< HEAD
-  function checkContents(ch, cx, status, data) {
-    if (!throwing)
-||||||| merged common ancestors
-  function checkContents(ch, cx, status, data)
-  {
-    if (!throwing)
-=======
   function checkContents(ch, status, data) {
     if (!throwing) {
->>>>>>> upstream-releases
       Assert.equal("PASS", bytesToString(data));
     }
   }
@@ -153,20 +102,9 @@ function setupTests(throwing) {
   tests.push(test);
 
   //   add mapping, => interpreted
-<<<<<<< HEAD
-
-  function contentAndCleanup(ch, cx, status, data) {
-    checkContents(ch, cx, status, data);
-||||||| merged common ancestors
-  
-  function contentAndCleanup(ch, cx, status, data)
-  {
-    checkContents(ch, cx, status, data);
-=======
 
   function contentAndCleanup(ch, status, data) {
     checkContents(ch, status, data);
->>>>>>> upstream-releases
 
     // clean up state we've set up
     srv.registerDirectory("/", null);
@@ -181,15 +119,7 @@ function setupTests(throwing) {
   //     after the two sets will almost certainly fail.
 }
 
-<<<<<<< HEAD
-
 /** ***************
-||||||| merged common ancestors
-
-/*****************
-=======
-/** ***************
->>>>>>> upstream-releases
  * ADD THE TESTS *
  *****************/
 
@@ -207,14 +137,7 @@ function init(ch) {
   skipCache(ch);
 }
 
-<<<<<<< HEAD
-function checkNotSJS(ch, cx, status, data) {
-||||||| merged common ancestors
-function checkNotSJS(ch, cx, status, data)
-{
-=======
 function checkNotSJS(ch, status, data) {
->>>>>>> upstream-releases
   Assert.notEqual("FAIL", bytesToString(data));
 }
 
@@ -230,32 +153,9 @@ function rangeInit(expectedRangeHeader) {
   };
 }
 
-<<<<<<< HEAD
-function checkRangeResult(ch, cx) {
-  try {
-||||||| merged common ancestors
-function checkRangeResult(ch, cx)
-{
-  try
-  {
-=======
 function checkRangeResult(ch) {
   try {
->>>>>>> upstream-releases
     var val = ch.getResponseHeader("Content-Range");
-<<<<<<< HEAD
-  } catch (e) { /* IDL doesn't specify a particular exception to require */ }
-  if (val !== undefined) {
-    do_throw("should not have gotten a Content-Range header, but got one " +
-             "with this value: " + val);
-||||||| merged common ancestors
-  }
-  catch (e) { /* IDL doesn't specify a particular exception to require */ }
-  if (val !== undefined)
-  {
-    do_throw("should not have gotten a Content-Range header, but got one " +
-             "with this value: " + val);
-=======
   } catch (e) {
     /* IDL doesn't specify a particular exception to require */
   }
@@ -265,7 +165,6 @@ function checkRangeResult(ch) {
         "with this value: " +
         val
     );
->>>>>>> upstream-releases
   }
   Assert.equal(200, ch.responseStatus);
   Assert.equal("OK", ch.responseStatusText);
@@ -315,40 +214,18 @@ function setupFileMapping(ch) {
   srv.registerFile("/script.html", sjs);
 }
 
-<<<<<<< HEAD
-function onStart(ch, cx) {
-||||||| merged common ancestors
-function onStart(ch, cx)
-{
-=======
 function onStart(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.contentType, "text/plain");
 }
 
-<<<<<<< HEAD
-function onStop(ch, cx, status, data) {
-||||||| merged common ancestors
-function onStop(ch, cx, status, data)
-{
-=======
 function onStop(ch, status, data) {
->>>>>>> upstream-releases
   Assert.equal("PASS", bytesToString(data));
 }
 
 test = new Test(BASE + "/script.html", setupFileMapping, onStart, onStop);
 tests.push(test);
 
-<<<<<<< HEAD
-
 /** ***************
-||||||| merged common ancestors
-
-/*****************
-=======
-/** ***************
->>>>>>> upstream-releases
  * RUN THE TESTS *
  *****************/
 
@@ -356,20 +233,10 @@ function run_test() {
   // Test for a content-type which isn't a field-value
   try {
     srv.registerContentType("foo", "bar\nbaz");
-<<<<<<< HEAD
-    throw "this server throws on content-types which aren't field-values";
-  } catch (e) {
-||||||| merged common ancestors
-    throw "this server throws on content-types which aren't field-values";
-  }
-  catch (e)
-  {
-=======
     throw new Error(
       "this server throws on content-types which aren't field-values"
     );
   } catch (e) {
->>>>>>> upstream-releases
     isException(e, Cr.NS_ERROR_INVALID_ARG);
   }
   runHttpTests(tests, testComplete(srv));

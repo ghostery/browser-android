@@ -19,24 +19,10 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class GeneratedImageContent final : public nsGenericHTMLElement {
- public:
-  static already_AddRefed<GeneratedImageContent> Create(nsIDocument&,
-                                                        uint32_t aContentIndex);
-||||||| merged common ancestors
-class GeneratedImageContent final
-  : public nsGenericHTMLElement
-{
-public:
-  static already_AddRefed<GeneratedImageContent>
-    Create(nsIDocument&, uint32_t aContentIndex);
-=======
 class GeneratedImageContent final : public nsGenericHTMLElement {
  public:
   static already_AddRefed<GeneratedImageContent> Create(Document&,
                                                         uint32_t aContentIndex);
->>>>>>> upstream-releases
 
   explicit GeneratedImageContent(already_AddRefed<dom::NodeInfo>&& aNodeInfo)
       : nsGenericHTMLElement(std::move(aNodeInfo)) {

@@ -7,11 +7,5 @@ ti_ER{
             "ERN",
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.82"}
->>>>>>> upstream-releases
 }

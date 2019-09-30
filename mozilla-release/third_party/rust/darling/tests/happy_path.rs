@@ -33,25 +33,11 @@ struct TraitCore {
 
 #[test]
 fn simple() {
-<<<<<<< HEAD
-    let di = syn::parse_str(
-        r#"
-||||||| merged common ancestors
-    let di = syn::parse_str(r#"
-=======
     let di = parse_quote! {
->>>>>>> upstream-releases
         #[derive(Foo)]
         #[darling_demo(lorem(ipsum))]
         pub struct Bar;
-<<<<<<< HEAD
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    "#).unwrap();
-=======
     };
->>>>>>> upstream-releases
 
     assert_eq!(
         Core::from_derive_input(&di).unwrap(),
@@ -69,25 +55,11 @@ fn simple() {
 
 #[test]
 fn trait_type() {
-<<<<<<< HEAD
-    let di = syn::parse_str(
-        r#"
-||||||| merged common ancestors
-    let di = syn::parse_str(r#"
-=======
     let di = parse_quote! {
->>>>>>> upstream-releases
         #[derive(Foo)]
         #[darling_demo(lorem(dolor = "hello"))]
         pub struct Bar;
-<<<<<<< HEAD
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    "#).unwrap();
-=======
     };
->>>>>>> upstream-releases
 
     assert_eq!(
         TraitCore::from_derive_input(&di).unwrap(),

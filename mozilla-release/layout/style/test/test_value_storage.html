@@ -198,17 +198,6 @@ function test_property(property)
     var expected_serialization = "";
     if (step1val != "") {
       if ("alias_for" in info) {
-<<<<<<< HEAD
-        let value = info.legacy_mapping && info.legacy_mapping[step1val]
-          ? info.legacy_mapping[step1val] : step1val;
-        // FIXME(emilio): This is a bit unfortunate:
-        // https://github.com/w3c/csswg-drafts/issues/3332
-        if (info.type == CSS_TYPE_LEGACY_SHORTHAND && value_has_variable_reference)
-          value = "";
-        expected_serialization = info.alias_for + colon + value + ";";
-||||||| merged common ancestors
-        expected_serialization = info.alias_for + colon + step1val + ";";
-=======
         let newValue = info.legacy_mapping && info.legacy_mapping[step1val]
           ? info.legacy_mapping[step1val] : step1val;
         // FIXME(emilio): This is a bit unfortunate:
@@ -216,7 +205,6 @@ function test_property(property)
         if (info.type == CSS_TYPE_LEGACY_SHORTHAND && value_has_variable_reference)
           newValue = "";
         expected_serialization = info.alias_for + colon + newValue + ";";
->>>>>>> upstream-releases
       } else {
         expected_serialization = property + colon + step1val + ";";
       }

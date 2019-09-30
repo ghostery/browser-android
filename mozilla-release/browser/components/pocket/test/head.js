@@ -37,20 +37,6 @@ function promisePocketDisabled() {
   Services.prefs.setBoolPref("extensions.pocket.enabled", false);
   return BrowserTestUtils.waitForCondition(() => {
     return !PageActions.actionForID("pocket");
-<<<<<<< HEAD
-  }).then(() => {
-    // wait for a full unload of pocket
-    return BrowserTestUtils.waitForCondition(() => {
-      return !window.hasOwnProperty("pktUI") || !window.pktUI;
-    });
-||||||| merged common ancestors
-  }).then(() => {
-    // wait for a full unload of pocket
-    return BrowserTestUtils.waitForCondition(() => {
-      return !window.hasOwnProperty("pktUI");
-    });
-=======
->>>>>>> upstream-releases
   });
 }
 
@@ -62,22 +48,6 @@ function promisePocketReset() {
   info("reset is disabling pocket addon");
   return promisePocketDisabled();
 }
-<<<<<<< HEAD
-
-function checkWindowProperties(expectPresent, l) {
-  for (let name of l) {
-    is(window.hasOwnProperty(name) && !!window[name], expectPresent, "property " + name + (expectPresent ? " is" : " is not") + " present");
-  }
-}
-
-function checkElements(expectPresent, l) {
-  for (let id of l) {
-    let el = document.getElementById(id) || gNavToolbox.palette.querySelector("#" + id);
-    is(!!el, expectPresent, "element " + id + (expectPresent ? " is" : " is not") + " present");
-  }
-}
-||||||| merged common ancestors
-=======
 
 function checkElements(expectPresent, l, win = window) {
   for (let id of l) {
@@ -91,4 +61,3 @@ function checkElements(expectPresent, l, win = window) {
     );
   }
 }
->>>>>>> upstream-releases

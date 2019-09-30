@@ -45,54 +45,17 @@ void XULSelectControlAccessible::Shutdown() {
 void XULSelectControlAccessible::SelectedItems(nsTArray<Accessible*>* aItems) {
   // For XUL multi-select control
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> xulMultiSelect =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-=======
       mSelectControl->AsXULMultiSelectControl();
->>>>>>> upstream-releases
   if (xulMultiSelect) {
     int32_t length = 0;
     xulMultiSelect->GetSelectedCount(&length);
     for (int32_t index = 0; index < length; index++) {
-<<<<<<< HEAD
-      nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm;
-      xulMultiSelect->MultiGetSelectedItem(index, getter_AddRefs(itemElm));
-      nsCOMPtr<nsINode> itemNode(do_QueryInterface(itemElm));
-      Accessible* item = mDoc->GetAccessible(itemNode);
-      if (item) aItems->AppendElement(item);
-||||||| merged common ancestors
-      nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm;
-      xulMultiSelect->MultiGetSelectedItem(index, getter_AddRefs(itemElm));
-      nsCOMPtr<nsINode> itemNode(do_QueryInterface(itemElm));
-      Accessible* item = mDoc->GetAccessible(itemNode);
-      if (item)
-        aItems->AppendElement(item);
-=======
       RefPtr<Element> element;
       xulMultiSelect->MultiGetSelectedItem(index, getter_AddRefs(element));
       Accessible* item = mDoc->GetAccessible(element);
       if (item) aItems->AppendElement(item);
->>>>>>> upstream-releases
     }
   } else {  // Single select?
-<<<<<<< HEAD
-    nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm;
-    mSelectControl->GetSelectedItem(getter_AddRefs(itemElm));
-    nsCOMPtr<nsINode> itemNode(do_QueryInterface(itemElm));
-    if (itemNode) {
-      Accessible* item = mDoc->GetAccessible(itemNode);
-      if (item) aItems->AppendElement(item);
-||||||| merged common ancestors
-    nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm;
-    mSelectControl->GetSelectedItem(getter_AddRefs(itemElm));
-    nsCOMPtr<nsINode> itemNode(do_QueryInterface(itemElm));
-    if (itemNode) {
-      Accessible* item = mDoc->GetAccessible(itemNode);
-      if (item)
-        aItems->AppendElement(item);
-=======
     nsCOMPtr<nsIDOMXULSelectControlElement> selectControl =
         mSelectControl->AsXULSelectControl();
     RefPtr<Element> element;
@@ -100,20 +63,13 @@ void XULSelectControlAccessible::SelectedItems(nsTArray<Accessible*>* aItems) {
     if (element) {
       Accessible* item = mDoc->GetAccessible(element);
       if (item) aItems->AppendElement(item);
->>>>>>> upstream-releases
     }
   }
 }
 
 Accessible* XULSelectControlAccessible::GetSelectedItem(uint32_t aIndex) {
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-=======
       mSelectControl->AsXULMultiSelectControl();
->>>>>>> upstream-releases
 
   RefPtr<Element> element;
   if (multiSelectControl) {
@@ -132,13 +88,7 @@ Accessible* XULSelectControlAccessible::GetSelectedItem(uint32_t aIndex) {
 uint32_t XULSelectControlAccessible::SelectedItemCount() {
   // For XUL multi-select control
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-=======
       mSelectControl->AsXULMultiSelectControl();
->>>>>>> upstream-releases
   if (multiSelectControl) {
     int32_t count = 0;
     multiSelectControl->GetSelectedCount(&count);
@@ -159,40 +109,18 @@ uint32_t XULSelectControlAccessible::SelectedItemCount() {
 
 bool XULSelectControlAccessible::AddItemToSelection(uint32_t aIndex) {
   Accessible* item = GetChildAt(aIndex);
-<<<<<<< HEAD
-  if (!item) return false;
-||||||| merged common ancestors
-  if (!item)
-    return false;
-=======
   if (!item || !item->GetContent()) return false;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm =
-<<<<<<< HEAD
-      do_QueryInterface(item->GetContent());
-  if (!itemElm) return false;
-||||||| merged common ancestors
-    do_QueryInterface(item->GetContent());
-  if (!itemElm)
-    return false;
-=======
       item->GetContent()->AsElement()->AsXULSelectControlItem();
   if (!itemElm) return false;
->>>>>>> upstream-releases
 
   bool isItemSelected = false;
   itemElm->GetSelected(&isItemSelected);
   if (isItemSelected) return true;
 
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-=======
       mSelectControl->AsXULMultiSelectControl();
->>>>>>> upstream-releases
 
   if (multiSelectControl) {
     multiSelectControl->AddItemToSelection(itemElm);
@@ -209,40 +137,18 @@ bool XULSelectControlAccessible::AddItemToSelection(uint32_t aIndex) {
 
 bool XULSelectControlAccessible::RemoveItemFromSelection(uint32_t aIndex) {
   Accessible* item = GetChildAt(aIndex);
-<<<<<<< HEAD
-  if (!item) return false;
-||||||| merged common ancestors
-  if (!item)
-    return false;
-=======
   if (!item || !item->GetContent()) return false;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm =
-<<<<<<< HEAD
-      do_QueryInterface(item->GetContent());
-  if (!itemElm) return false;
-||||||| merged common ancestors
-      do_QueryInterface(item->GetContent());
-  if (!itemElm)
-    return false;
-=======
       item->GetContent()->AsElement()->AsXULSelectControlItem();
   if (!itemElm) return false;
->>>>>>> upstream-releases
 
   bool isItemSelected = false;
   itemElm->GetSelected(&isItemSelected);
   if (!isItemSelected) return true;
 
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-=======
       mSelectControl->AsXULMultiSelectControl();
->>>>>>> upstream-releases
 
   if (multiSelectControl) {
     multiSelectControl->RemoveItemFromSelection(itemElm);
@@ -259,27 +165,11 @@ bool XULSelectControlAccessible::RemoveItemFromSelection(uint32_t aIndex) {
 
 bool XULSelectControlAccessible::IsItemSelected(uint32_t aIndex) {
   Accessible* item = GetChildAt(aIndex);
-<<<<<<< HEAD
-  if (!item) return false;
-||||||| merged common ancestors
-  if (!item)
-    return false;
-=======
   if (!item || !item->GetContent()) return false;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm =
-<<<<<<< HEAD
-      do_QueryInterface(item->GetContent());
-  if (!itemElm) return false;
-||||||| merged common ancestors
-    do_QueryInterface(item->GetContent());
-  if (!itemElm)
-    return false;
-=======
       item->GetContent()->AsElement()->AsXULSelectControlItem();
   if (!itemElm) return false;
->>>>>>> upstream-releases
 
   bool isItemSelected = false;
   itemElm->GetSelected(&isItemSelected);
@@ -288,15 +178,6 @@ bool XULSelectControlAccessible::IsItemSelected(uint32_t aIndex) {
 
 bool XULSelectControlAccessible::UnselectAll() {
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-  multiSelectControl ? multiSelectControl->ClearSelection()
-                     : mSelectControl->SetSelectedIndex(-1);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-  multiSelectControl ?
-    multiSelectControl->ClearSelection() : mSelectControl->SetSelectedIndex(-1);
-=======
       mSelectControl->AsXULMultiSelectControl();
   if (multiSelectControl) {
     multiSelectControl->ClearSelection();
@@ -307,20 +188,13 @@ bool XULSelectControlAccessible::UnselectAll() {
       selectControl->SetSelectedIndex(-1);
     }
   }
->>>>>>> upstream-releases
 
   return true;
 }
 
 bool XULSelectControlAccessible::SelectAll() {
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-=======
       mSelectControl->AsXULMultiSelectControl();
->>>>>>> upstream-releases
   if (multiSelectControl) {
     multiSelectControl->SelectAll();
     return true;
@@ -338,31 +212,9 @@ Accessible* XULSelectControlAccessible::CurrentItem() const {
 
   RefPtr<Element> currentItemElm;
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-  if (multiSelectControl)
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-  if (multiSelectControl)
-=======
       mSelectControl->AsXULMultiSelectControl();
   if (multiSelectControl) {
->>>>>>> upstream-releases
     multiSelectControl->GetCurrentItem(getter_AddRefs(currentItemElm));
-<<<<<<< HEAD
-  else
-    mSelectControl->GetSelectedItem(getter_AddRefs(currentItemElm));
-
-  nsCOMPtr<nsINode> DOMNode;
-  if (currentItemElm) DOMNode = do_QueryInterface(currentItemElm);
-||||||| merged common ancestors
-  else
-    mSelectControl->GetSelectedItem(getter_AddRefs(currentItemElm));
-
-  nsCOMPtr<nsINode> DOMNode;
-  if (currentItemElm)
-    DOMNode = do_QueryInterface(currentItemElm);
-=======
   } else {
     nsCOMPtr<nsIDOMXULSelectControlElement> selectControl =
         mSelectControl->AsXULSelectControl();
@@ -370,18 +222,10 @@ Accessible* XULSelectControlAccessible::CurrentItem() const {
       selectControl->GetSelectedItem(getter_AddRefs(currentItemElm));
     }
   }
->>>>>>> upstream-releases
 
   if (currentItemElm) {
     DocAccessible* document = Document();
-<<<<<<< HEAD
-    if (document) return document->GetAccessible(DOMNode);
-||||||| merged common ancestors
-    if (document)
-      return document->GetAccessible(DOMNode);
-=======
     if (document) return document->GetAccessible(currentItemElm);
->>>>>>> upstream-releases
   }
 
   return nullptr;
@@ -390,26 +234,10 @@ Accessible* XULSelectControlAccessible::CurrentItem() const {
 void XULSelectControlAccessible::SetCurrentItem(const Accessible* aItem) {
   if (!mSelectControl) return;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm =
-      do_QueryInterface(aItem->GetContent());
-||||||| merged common ancestors
-  nsCOMPtr<nsIDOMXULSelectControlItemElement> itemElm =
-    do_QueryInterface(aItem->GetContent());
-=======
   nsCOMPtr<Element> itemElm = aItem->Elm();
->>>>>>> upstream-releases
   nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelectControl =
-<<<<<<< HEAD
-      do_QueryInterface(mSelectControl);
-  if (multiSelectControl)
-||||||| merged common ancestors
-    do_QueryInterface(mSelectControl);
-  if (multiSelectControl)
-=======
       itemElm->AsXULMultiSelectControl();
   if (multiSelectControl) {
->>>>>>> upstream-releases
     multiSelectControl->SetCurrentItem(itemElm);
   } else {
     nsCOMPtr<nsIDOMXULSelectControlElement> selectControl =

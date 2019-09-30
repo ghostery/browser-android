@@ -31,91 +31,6 @@ class AutoAccessAtomsZone;
 
 namespace JS {
 
-<<<<<<< HEAD
-class Symbol : public js::gc::TenuredCell {
- private:
-  // User description of symbol. Also meets gc::Cell requirements.
-  JSAtom* description_;
-
-  SymbolCode code_;
-
-  // Each Symbol gets its own hash code so that we don't have to use
-  // addresses as hash codes (a security hazard).
-  js::HashNumber hash_;
-
-  Symbol(SymbolCode code, js::HashNumber hash, JSAtom* desc)
-      : description_(desc), code_(code), hash_(hash) {}
-
-  Symbol(const Symbol&) = delete;
-  void operator=(const Symbol&) = delete;
-
-  static Symbol* newInternal(JSContext* cx, SymbolCode code,
-                             js::HashNumber hash, JSAtom* description);
-
-  static void staticAsserts() {
-    static_assert(uint32_t(SymbolCode::WellKnownAPILimit) ==
-                      JS::shadow::Symbol::WellKnownAPILimit,
-                  "JS::shadow::Symbol::WellKnownAPILimit must match "
-                  "SymbolCode::WellKnownAPILimit");
-    static_assert(
-        offsetof(Symbol, code_) == offsetof(JS::shadow::Symbol, code_),
-        "JS::shadow::Symbol::code_ offset must match SymbolCode::code_");
-  }
-
- public:
-  static Symbol* new_(JSContext* cx, SymbolCode code, JSString* description);
-  static Symbol* for_(JSContext* cx, js::HandleString description);
-
-  JSAtom* description() const { return description_; }
-  SymbolCode code() const { return code_; }
-  js::HashNumber hash() const { return hash_; }
-
-  bool isWellKnownSymbol() const {
-    return uint32_t(code_) < WellKnownSymbolLimit;
-  }
-
-  // An "interesting symbol" is a well-known symbol, like @@toStringTag,
-  // that's often looked up on random objects but is usually not present. We
-  // optimize this by setting a flag on the object's BaseShape when such
-  // symbol properties are added, so we can optimize lookups on objects that
-  // don't have the BaseShape flag.
-  bool isInterestingSymbol() const {
-    return code_ == SymbolCode::toStringTag || code_ == SymbolCode::toPrimitive;
-  }
-
-  static const JS::TraceKind TraceKind = JS::TraceKind::Symbol;
-  inline void traceChildren(JSTracer* trc) {
-    if (description_) {
-      js::TraceManuallyBarrieredEdge(trc, &description_, "description");
-||||||| merged common ancestors
-class Symbol : public js::gc::TenuredCell
-{
-  private:
-    // User description of symbol. Also meets gc::Cell requirements.
-    JSAtom* description_;
-
-    SymbolCode code_;
-
-    // Each Symbol gets its own hash code so that we don't have to use
-    // addresses as hash codes (a security hazard).
-    js::HashNumber hash_;
-
-
-    Symbol(SymbolCode code, js::HashNumber hash, JSAtom* desc)
-        : description_(desc), code_(code), hash_(hash) { }
-
-    Symbol(const Symbol&) = delete;
-    void operator=(const Symbol&) = delete;
-
-    static Symbol*
-    newInternal(JSContext* cx, SymbolCode code, js::HashNumber hash, JSAtom* description);
-
-    static void staticAsserts() {
-        static_assert(uint32_t(SymbolCode::WellKnownAPILimit) == JS::shadow::Symbol::WellKnownAPILimit,
-                      "JS::shadow::Symbol::WellKnownAPILimit must match SymbolCode::WellKnownAPILimit");
-        static_assert(offsetof(Symbol, code_) == offsetof(JS::shadow::Symbol, code_),
-                      "JS::shadow::Symbol::code_ offset must match SymbolCode::code_");
-=======
 class Symbol : public js::gc::TenuredCell {
  private:
   // User description of symbol. Also meets gc::Cell requirements.
@@ -172,7 +87,6 @@ class Symbol : public js::gc::TenuredCell {
   inline void traceChildren(JSTracer* trc) {
     if (description_) {
       js::TraceManuallyBarrieredEdge(trc, &description_, "description");
->>>>>>> upstream-releases
     }
   }
   inline void finalize(js::FreeOp*) {}
@@ -223,26 +137,11 @@ struct HashSymbolsByDescription {
  * nondeterminism is exposed to scripts, because there is no API for
  * enumerating the symbol registry, querying its size, etc.
  */
-<<<<<<< HEAD
-class SymbolRegistry
-    : public GCHashSet<ReadBarrieredSymbol, HashSymbolsByDescription,
-                       SystemAllocPolicy> {
- public:
-  SymbolRegistry() {}
-||||||| merged common ancestors
-class SymbolRegistry : public GCHashSet<ReadBarrieredSymbol,
-                                        HashSymbolsByDescription,
-                                        SystemAllocPolicy>
-{
-  public:
-    SymbolRegistry() {}
-=======
 class SymbolRegistry
     : public GCHashSet<WeakHeapPtrSymbol, HashSymbolsByDescription,
                        SystemAllocPolicy> {
  public:
   SymbolRegistry() {}
->>>>>>> upstream-releases
 };
 
 // ES6 rev 27 (2014 Aug 24) 19.4.3.3

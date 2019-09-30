@@ -35,14 +35,7 @@ class WriteRecordClient : public FileIOClient {
 
   void OnWriteComplete(Status aStatus) override { Done(aStatus); }
 
-<<<<<<< HEAD
-  void Do(const string& aName, Host_9* aHost) {
-||||||| merged common ancestors
-  void Do(const string& aName, Host_9* aHost)
-  {
-=======
   void Do(const string& aName, Host_10* aHost) {
->>>>>>> upstream-releases
     // Initialize the FileIO.
     mFileIO = aHost->CreateFileIO(this);
     mFileIO->Open(aName.c_str(), aName.size());
@@ -75,57 +68,20 @@ class WriteRecordClient : public FileIOClient {
   std::vector<uint8_t> mData;
 };
 
-<<<<<<< HEAD
-void WriteRecord(Host_9* aHost, const std::string& aRecordName,
-                 const uint8_t* aData, uint32_t aNumBytes,
-                 function<void()>&& aOnSuccess, function<void()>&& aOnFailure) {
-||||||| merged common ancestors
-void
-WriteRecord(Host_9* aHost,
-            const std::string& aRecordName,
-            const uint8_t* aData,
-            uint32_t aNumBytes,
-            function<void()>&& aOnSuccess,
-            function<void()>&& aOnFailure)
-{
-=======
 void WriteRecord(Host_10* aHost, const std::string& aRecordName,
                  const uint8_t* aData, uint32_t aNumBytes,
                  function<void()>&& aOnSuccess, function<void()>&& aOnFailure) {
->>>>>>> upstream-releases
   // client will be delete in WriteRecordClient::Done
   WriteRecordClient* client = new WriteRecordClient(
       move(aOnSuccess), move(aOnFailure), aData, aNumBytes);
   client->Do(aRecordName, aHost);
 }
 
-<<<<<<< HEAD
-void WriteRecord(Host_9* aHost, const std::string& aRecordName,
-                 const std::string& aData, function<void()>&& aOnSuccess,
-                 function<void()>&& aOnFailure) {
-  return WriteRecord(aHost, aRecordName, (const uint8_t*)aData.c_str(),
-                     aData.size(), move(aOnSuccess), move(aOnFailure));
-||||||| merged common ancestors
-void
-WriteRecord(Host_9* aHost,
-            const std::string& aRecordName,
-            const std::string& aData,
-            function<void()> &&aOnSuccess,
-            function<void()>&& aOnFailure)
-{
-  return WriteRecord(aHost,
-                     aRecordName,
-                     (const uint8_t*)aData.c_str(),
-                     aData.size(),
-                     move(aOnSuccess),
-                     move(aOnFailure));
-=======
 void WriteRecord(Host_10* aHost, const std::string& aRecordName,
                  const std::string& aData, function<void()>&& aOnSuccess,
                  function<void()>&& aOnFailure) {
   return WriteRecord(aHost, aRecordName, (const uint8_t*)aData.c_str(),
                      aData.size(), move(aOnSuccess), move(aOnFailure));
->>>>>>> upstream-releases
 }
 
 class ReadRecordClient : public FileIOClient {
@@ -150,14 +106,7 @@ class ReadRecordClient : public FileIOClient {
 
   void OnWriteComplete(Status aStatus) override {}
 
-<<<<<<< HEAD
-  void Do(const string& aName, Host_9* aHost) {
-||||||| merged common ancestors
-  void Do(const string& aName, Host_9* aHost)
-  {
-=======
   void Do(const string& aName, Host_10* aHost) {
->>>>>>> upstream-releases
     mFileIO = aHost->CreateFileIO(this);
     mFileIO->Open(aName.c_str(), aName.size());
   }
@@ -188,21 +137,9 @@ class ReadRecordClient : public FileIOClient {
   function<void(bool, const uint8_t*, uint32_t)> mOnReadComplete;
 };
 
-<<<<<<< HEAD
-void ReadRecord(
-    Host_9* aHost, const std::string& aRecordName,
-    function<void(bool, const uint8_t*, uint32_t)>&& aOnReadComplete) {
-||||||| merged common ancestors
-void
-ReadRecord(Host_9* aHost,
-           const std::string& aRecordName,
-           function<void(bool, const uint8_t*, uint32_t)>&& aOnReadComplete)
-{
-=======
 void ReadRecord(
     Host_10* aHost, const std::string& aRecordName,
     function<void(bool, const uint8_t*, uint32_t)>&& aOnReadComplete) {
->>>>>>> upstream-releases
   // client will be delete in ReadRecordClient::Done
   ReadRecordClient* client = new ReadRecordClient(move(aOnReadComplete));
   client->Do(aRecordName, aHost);
@@ -220,14 +157,7 @@ class OpenRecordClient : public FileIOClient {
 
   void OnWriteComplete(Status aStatus) override {}
 
-<<<<<<< HEAD
-  void Do(const string& aName, Host_9* aHost) {
-||||||| merged common ancestors
-  void Do(const string& aName, Host_9* aHost)
-  {
-=======
   void Do(const string& aName, Host_10* aHost) {
->>>>>>> upstream-releases
     // Initialize the FileIO.
     mFileIO = aHost->CreateFileIO(this);
     mFileIO->Open(aName.c_str(), aName.size());
@@ -259,19 +189,8 @@ class OpenRecordClient : public FileIOClient {
   ;
 };
 
-<<<<<<< HEAD
-void OpenRecord(Host_9* aHost, const std::string& aRecordName,
-                function<void(bool)>&& aOpenComplete) {
-||||||| merged common ancestors
-void
-OpenRecord(Host_9* aHost,
-           const std::string& aRecordName,
-           function<void(bool)>&& aOpenComplete)
-{
-=======
 void OpenRecord(Host_10* aHost, const std::string& aRecordName,
                 function<void(bool)>&& aOpenComplete) {
->>>>>>> upstream-releases
   // client will be delete in OpenRecordClient::Done
   OpenRecordClient* client = new OpenRecordClient(move(aOpenComplete));
   client->Do(aRecordName, aHost);

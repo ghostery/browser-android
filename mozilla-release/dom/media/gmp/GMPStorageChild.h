@@ -46,19 +46,10 @@ class GMPRecordImpl : public GMPRecord {
   GMPStorageChild* const mOwner;
 };
 
-<<<<<<< HEAD
-class GMPStorageChild : public PGMPStorageChild {
- public:
-||||||| merged common ancestors
-class GMPStorageChild : public PGMPStorageChild
-{
-public:
-=======
 class GMPStorageChild : public PGMPStorageChild {
   friend class PGMPStorageChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GMPStorageChild)
 
   explicit GMPStorageChild(GMPChild* aPlugin);
@@ -84,22 +75,10 @@ class GMPStorageChild : public PGMPStorageChild {
 
   // PGMPStorageChild
   mozilla::ipc::IPCResult RecvOpenComplete(const nsCString& aRecordName,
-<<<<<<< HEAD
-                                           const GMPErr& aStatus) override;
-  mozilla::ipc::IPCResult RecvReadComplete(
-      const nsCString& aRecordName, const GMPErr& aStatus,
-      InfallibleTArray<uint8_t>&& aBytes) override;
-||||||| merged common ancestors
-                                           const GMPErr& aStatus) override;
-  mozilla::ipc::IPCResult RecvReadComplete(const nsCString& aRecordName,
-                                           const GMPErr& aStatus,
-                                           InfallibleTArray<uint8_t>&& aBytes) override;
-=======
                                            const GMPErr& aStatus);
   mozilla::ipc::IPCResult RecvReadComplete(const nsCString& aRecordName,
                                            const GMPErr& aStatus,
                                            InfallibleTArray<uint8_t>&& aBytes);
->>>>>>> upstream-releases
   mozilla::ipc::IPCResult RecvWriteComplete(const nsCString& aRecordName,
                                             const GMPErr& aStatus);
   mozilla::ipc::IPCResult RecvShutdown();

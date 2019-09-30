@@ -54,29 +54,10 @@ class nsNSSASN1PrintableItem : public nsIASN1PrintableItem {
   nsString mValue;
   uint32_t mType;
   uint32_t mTag;
-<<<<<<< HEAD
-  unsigned char *mData;
-  uint32_t mLen;
-||||||| merged common ancestors
-  unsigned char *mData;
-  uint32_t       mLen;
-=======
   unsigned char* mData;
   uint32_t mLen;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-nsresult CreateFromDER(unsigned char *data, unsigned int len,
-                       nsIASN1Object **retval);
-#endif  //_NSSASN_H_
-||||||| merged common ancestors
-nsresult CreateFromDER(unsigned char *data,
-                       unsigned int   len,
-                       nsIASN1Object **retval);
-#endif //_NSSASN_H_
-=======
 nsresult CreateFromDER(unsigned char* data, unsigned int len,
                        nsIASN1Object** retval);
 #endif  //_NSSASN_H_
->>>>>>> upstream-releases

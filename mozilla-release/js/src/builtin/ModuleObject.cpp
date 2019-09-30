@@ -81,21 +81,8 @@ static bool ModuleValueGetter(JSContext* cx, unsigned argc, Value* vp) {
 ///////////////////////////////////////////////////////////////////////////
 // ImportEntryObject
 
-<<<<<<< HEAD
-/* static */ const Class ImportEntryObject::class_ = {
-    "ImportEntry", JSCLASS_HAS_RESERVED_SLOTS(ImportEntryObject::SlotCount) |
-                       JSCLASS_IS_ANONYMOUS};
-||||||| merged common ancestors
-/* static */ const Class
-ImportEntryObject::class_ = {
-    "ImportEntry",
-    JSCLASS_HAS_RESERVED_SLOTS(ImportEntryObject::SlotCount) |
-    JSCLASS_IS_ANONYMOUS
-};
-=======
 /* static */ const Class ImportEntryObject::class_ = {
     "ImportEntry", JSCLASS_HAS_RESERVED_SLOTS(ImportEntryObject::SlotCount)};
->>>>>>> upstream-releases
 
 DEFINE_GETTER_FUNCTIONS(ImportEntryObject, moduleRequest, ModuleRequestSlot)
 DEFINE_GETTER_FUNCTIONS(ImportEntryObject, importName, ImportNameSlot)
@@ -109,88 +96,6 @@ DEFINE_ATOM_ACCESSOR_METHOD(ImportEntryObject, localName)
 DEFINE_UINT32_ACCESSOR_METHOD(ImportEntryObject, lineNumber)
 DEFINE_UINT32_ACCESSOR_METHOD(ImportEntryObject, columnNumber)
 
-<<<<<<< HEAD
-/* static */ bool ImportEntryObject::isInstance(HandleValue value) {
-  return value.isObject() && value.toObject().is<ImportEntryObject>();
-}
-
-/* static */ bool GlobalObject::initImportEntryProto(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  static const JSPropertySpec protoAccessors[] = {
-      JS_PSG("moduleRequest", ImportEntryObject_moduleRequestGetter, 0),
-      JS_PSG("importName", ImportEntryObject_importNameGetter, 0),
-      JS_PSG("localName", ImportEntryObject_localNameGetter, 0),
-      JS_PSG("lineNumber", ImportEntryObject_lineNumberGetter, 0),
-      JS_PSG("columnNumber", ImportEntryObject_columnNumberGetter, 0),
-      JS_PS_END};
-
-  RootedObject proto(
-      cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-  if (!proto) {
-    return false;
-  }
-
-  if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors, nullptr)) {
-    return false;
-  }
-
-  global->initReservedSlot(IMPORT_ENTRY_PROTO, ObjectValue(*proto));
-  return true;
-}
-
-/* static */ ImportEntryObject* ImportEntryObject::create(
-    JSContext* cx, HandleAtom moduleRequest, HandleAtom importName,
-    HandleAtom localName, uint32_t lineNumber, uint32_t columnNumber) {
-  RootedObject proto(
-      cx, GlobalObject::getOrCreateImportEntryPrototype(cx, cx->global()));
-  if (!proto) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-/* static */ bool
-ImportEntryObject::isInstance(HandleValue value)
-{
-    return value.isObject() && value.toObject().is<ImportEntryObject>();
-}
-
-/* static */ bool
-GlobalObject::initImportEntryProto(JSContext* cx, Handle<GlobalObject*> global)
-{
-    static const JSPropertySpec protoAccessors[] = {
-        JS_PSG("moduleRequest", ImportEntryObject_moduleRequestGetter, 0),
-        JS_PSG("importName", ImportEntryObject_importNameGetter, 0),
-        JS_PSG("localName", ImportEntryObject_localNameGetter, 0),
-        JS_PSG("lineNumber", ImportEntryObject_lineNumberGetter, 0),
-        JS_PSG("columnNumber", ImportEntryObject_columnNumberGetter, 0),
-        JS_PS_END
-    };
-
-    RootedObject proto(cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-    if (!proto) {
-        return false;
-    }
-
-    if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors, nullptr)) {
-        return false;
-    }
-
-    global->initReservedSlot(IMPORT_ENTRY_PROTO, ObjectValue(*proto));
-    return true;
-}
-
-/* static */ ImportEntryObject*
-ImportEntryObject::create(JSContext* cx,
-                          HandleAtom moduleRequest,
-                          HandleAtom importName,
-                          HandleAtom localName,
-                          uint32_t lineNumber,
-                          uint32_t columnNumber)
-{
-    RootedObject proto(cx, GlobalObject::getOrCreateImportEntryPrototype(cx, cx->global()));
-    if (!proto) {
-        return nullptr;
-    }
-=======
 /* static */
 bool ImportEntryObject::isInstance(HandleValue value) {
   return value.isObject() && value.toObject().is<ImportEntryObject>();
@@ -230,7 +135,6 @@ ImportEntryObject* ImportEntryObject::create(
   if (!proto) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   ImportEntryObject* self =
       NewObjectWithGivenProto<ImportEntryObject>(cx, proto);
@@ -249,21 +153,8 @@ ImportEntryObject* ImportEntryObject::create(
 ///////////////////////////////////////////////////////////////////////////
 // ExportEntryObject
 
-<<<<<<< HEAD
-/* static */ const Class ExportEntryObject::class_ = {
-    "ExportEntry", JSCLASS_HAS_RESERVED_SLOTS(ExportEntryObject::SlotCount) |
-                       JSCLASS_IS_ANONYMOUS};
-||||||| merged common ancestors
-/* static */ const Class
-ExportEntryObject::class_ = {
-    "ExportEntry",
-    JSCLASS_HAS_RESERVED_SLOTS(ExportEntryObject::SlotCount) |
-    JSCLASS_IS_ANONYMOUS
-};
-=======
 /* static */ const Class ExportEntryObject::class_ = {
     "ExportEntry", JSCLASS_HAS_RESERVED_SLOTS(ExportEntryObject::SlotCount)};
->>>>>>> upstream-releases
 
 DEFINE_GETTER_FUNCTIONS(ExportEntryObject, exportName, ExportNameSlot)
 DEFINE_GETTER_FUNCTIONS(ExportEntryObject, moduleRequest, ModuleRequestSlot)
@@ -279,57 +170,11 @@ DEFINE_ATOM_OR_NULL_ACCESSOR_METHOD(ExportEntryObject, localName)
 DEFINE_UINT32_ACCESSOR_METHOD(ExportEntryObject, lineNumber)
 DEFINE_UINT32_ACCESSOR_METHOD(ExportEntryObject, columnNumber)
 
-<<<<<<< HEAD
-/* static */ bool ExportEntryObject::isInstance(HandleValue value) {
-  return value.isObject() && value.toObject().is<ExportEntryObject>();
-}
-||||||| merged common ancestors
-/* static */ bool
-ExportEntryObject::isInstance(HandleValue value)
-{
-    return value.isObject() && value.toObject().is<ExportEntryObject>();
-}
-
-/* static */ bool
-GlobalObject::initExportEntryProto(JSContext* cx, Handle<GlobalObject*> global)
-{
-    static const JSPropertySpec protoAccessors[] = {
-        JS_PSG("exportName", ExportEntryObject_exportNameGetter, 0),
-        JS_PSG("moduleRequest", ExportEntryObject_moduleRequestGetter, 0),
-        JS_PSG("importName", ExportEntryObject_importNameGetter, 0),
-        JS_PSG("localName", ExportEntryObject_localNameGetter, 0),
-        JS_PSG("lineNumber", ExportEntryObject_lineNumberGetter, 0),
-        JS_PSG("columnNumber", ExportEntryObject_columnNumberGetter, 0),
-        JS_PS_END
-    };
-
-    RootedObject proto(cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-    if (!proto) {
-        return false;
-    }
-=======
 /* static */
 bool ExportEntryObject::isInstance(HandleValue value) {
   return value.isObject() && value.toObject().is<ExportEntryObject>();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initExportEntryProto(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  static const JSPropertySpec protoAccessors[] = {
-      JS_PSG("exportName", ExportEntryObject_exportNameGetter, 0),
-      JS_PSG("moduleRequest", ExportEntryObject_moduleRequestGetter, 0),
-      JS_PSG("importName", ExportEntryObject_importNameGetter, 0),
-      JS_PSG("localName", ExportEntryObject_localNameGetter, 0),
-      JS_PSG("lineNumber", ExportEntryObject_lineNumberGetter, 0),
-      JS_PSG("columnNumber", ExportEntryObject_columnNumberGetter, 0),
-      JS_PS_END};
-||||||| merged common ancestors
-    if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors, nullptr)) {
-        return false;
-    }
-=======
 /* static */
 bool GlobalObject::initExportEntryProto(JSContext* cx,
                                         Handle<GlobalObject*> global) {
@@ -341,7 +186,6 @@ bool GlobalObject::initExportEntryProto(JSContext* cx,
       JS_PSG("lineNumber", ExportEntryObject_lineNumberGetter, 0),
       JS_PSG("columnNumber", ExportEntryObject_columnNumberGetter, 0),
       JS_PS_END};
->>>>>>> upstream-releases
 
   RootedObject proto(
       cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
@@ -361,26 +205,6 @@ static Value StringOrNullValue(JSString* maybeString) {
   return maybeString ? StringValue(maybeString) : NullValue();
 }
 
-<<<<<<< HEAD
-/* static */ ExportEntryObject* ExportEntryObject::create(
-    JSContext* cx, HandleAtom maybeExportName, HandleAtom maybeModuleRequest,
-    HandleAtom maybeImportName, HandleAtom maybeLocalName, uint32_t lineNumber,
-    uint32_t columnNumber) {
-  // Line and column numbers are optional for export entries since direct
-  // entries are checked at parse time.
-||||||| merged common ancestors
-/* static */ ExportEntryObject*
-ExportEntryObject::create(JSContext* cx,
-                          HandleAtom maybeExportName,
-                          HandleAtom maybeModuleRequest,
-                          HandleAtom maybeImportName,
-                          HandleAtom maybeLocalName,
-                          uint32_t lineNumber,
-                          uint32_t columnNumber)
-{
-    // Line and column numbers are optional for export entries since direct
-    // entries are checked at parse time.
-=======
 /* static */
 ExportEntryObject* ExportEntryObject::create(
     JSContext* cx, HandleAtom maybeExportName, HandleAtom maybeModuleRequest,
@@ -388,7 +212,6 @@ ExportEntryObject* ExportEntryObject::create(
     uint32_t columnNumber) {
   // Line and column numbers are optional for export entries since direct
   // entries are checked at parse time.
->>>>>>> upstream-releases
 
   RootedObject proto(
       cx, GlobalObject::getOrCreateExportEntryPrototype(cx, cx->global()));
@@ -417,16 +240,7 @@ ExportEntryObject* ExportEntryObject::create(
 
 /* static */ const Class RequestedModuleObject::class_ = {
     "RequestedModule",
-<<<<<<< HEAD
-    JSCLASS_HAS_RESERVED_SLOTS(RequestedModuleObject::SlotCount) |
-        JSCLASS_IS_ANONYMOUS};
-||||||| merged common ancestors
-    JSCLASS_HAS_RESERVED_SLOTS(RequestedModuleObject::SlotCount) |
-    JSCLASS_IS_ANONYMOUS
-};
-=======
     JSCLASS_HAS_RESERVED_SLOTS(RequestedModuleObject::SlotCount)};
->>>>>>> upstream-releases
 
 DEFINE_GETTER_FUNCTIONS(RequestedModuleObject, moduleSpecifier,
                         ModuleSpecifierSlot)
@@ -437,82 +251,6 @@ DEFINE_ATOM_ACCESSOR_METHOD(RequestedModuleObject, moduleSpecifier)
 DEFINE_UINT32_ACCESSOR_METHOD(RequestedModuleObject, lineNumber)
 DEFINE_UINT32_ACCESSOR_METHOD(RequestedModuleObject, columnNumber)
 
-<<<<<<< HEAD
-/* static */ bool RequestedModuleObject::isInstance(HandleValue value) {
-  return value.isObject() && value.toObject().is<RequestedModuleObject>();
-}
-
-/* static */ bool GlobalObject::initRequestedModuleProto(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  static const JSPropertySpec protoAccessors[] = {
-      JS_PSG("moduleSpecifier", RequestedModuleObject_moduleSpecifierGetter, 0),
-      JS_PSG("lineNumber", RequestedModuleObject_lineNumberGetter, 0),
-      JS_PSG("columnNumber", RequestedModuleObject_columnNumberGetter, 0),
-      JS_PS_END};
-
-  RootedObject proto(
-      cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-  if (!proto) {
-    return false;
-  }
-
-  if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors, nullptr)) {
-    return false;
-  }
-
-  global->initReservedSlot(REQUESTED_MODULE_PROTO, ObjectValue(*proto));
-  return true;
-}
-
-/* static */ RequestedModuleObject* RequestedModuleObject::create(
-    JSContext* cx, HandleAtom moduleSpecifier, uint32_t lineNumber,
-    uint32_t columnNumber) {
-  RootedObject proto(
-      cx, GlobalObject::getOrCreateRequestedModulePrototype(cx, cx->global()));
-  if (!proto) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-/* static */ bool
-RequestedModuleObject::isInstance(HandleValue value)
-{
-    return value.isObject() && value.toObject().is<RequestedModuleObject>();
-}
-
-/* static */ bool
-GlobalObject::initRequestedModuleProto(JSContext* cx, Handle<GlobalObject*> global)
-{
-    static const JSPropertySpec protoAccessors[] = {
-        JS_PSG("moduleSpecifier", RequestedModuleObject_moduleSpecifierGetter, 0),
-        JS_PSG("lineNumber", RequestedModuleObject_lineNumberGetter, 0),
-        JS_PSG("columnNumber", RequestedModuleObject_columnNumberGetter, 0),
-        JS_PS_END
-    };
-
-    RootedObject proto(cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-    if (!proto) {
-        return false;
-    }
-
-    if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors, nullptr)) {
-        return false;
-    }
-
-    global->initReservedSlot(REQUESTED_MODULE_PROTO, ObjectValue(*proto));
-    return true;
-}
-
-/* static */ RequestedModuleObject*
-RequestedModuleObject::create(JSContext* cx,
-                              HandleAtom moduleSpecifier,
-                              uint32_t lineNumber,
-                              uint32_t columnNumber)
-{
-    RootedObject proto(cx, GlobalObject::getOrCreateRequestedModulePrototype(cx, cx->global()));
-    if (!proto) {
-        return nullptr;
-    }
-=======
 /* static */
 bool RequestedModuleObject::isInstance(HandleValue value) {
   return value.isObject() && value.toObject().is<RequestedModuleObject>();
@@ -551,7 +289,6 @@ RequestedModuleObject* RequestedModuleObject::create(JSContext* cx,
   if (!proto) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   RequestedModuleObject* self =
       NewObjectWithGivenProto<RequestedModuleObject>(cx, proto);
@@ -568,140 +305,6 @@ RequestedModuleObject* RequestedModuleObject::create(JSContext* cx,
 ///////////////////////////////////////////////////////////////////////////
 // IndirectBindingMap
 
-<<<<<<< HEAD
-IndirectBindingMap::Binding::Binding(ModuleEnvironmentObject* environment,
-                                     Shape* shape)
-    : environment(environment), shape(shape) {}
-
-void IndirectBindingMap::trace(JSTracer* trc) {
-  if (!map_) {
-    return;
-  }
-
-  for (Map::Enum e(*map_); !e.empty(); e.popFront()) {
-    Binding& b = e.front().value();
-    TraceEdge(trc, &b.environment, "module bindings environment");
-    TraceEdge(trc, &b.shape, "module bindings shape");
-    jsid bindingName = e.front().key();
-    TraceManuallyBarrieredEdge(trc, &bindingName,
-                               "module bindings binding name");
-    MOZ_ASSERT(bindingName == e.front().key());
-  }
-}
-
-bool IndirectBindingMap::put(JSContext* cx, HandleId name,
-                             HandleModuleEnvironmentObject environment,
-                             HandleId localName) {
-  // This object might have been allocated on the background parsing thread in
-  // different zone to the final module. Lazily allocate the map so we don't
-  // have to switch its zone when merging compartments.
-  if (!map_) {
-    MOZ_ASSERT(!cx->zone()->createdForHelperThread());
-    map_.emplace(cx->zone());
-  }
-
-  RootedShape shape(cx, environment->lookup(cx, localName));
-  MOZ_ASSERT(shape);
-  if (!map_->put(name, Binding(environment, shape))) {
-    ReportOutOfMemory(cx);
-    return false;
-  }
-
-  return true;
-}
-
-bool IndirectBindingMap::lookup(jsid name, ModuleEnvironmentObject** envOut,
-                                Shape** shapeOut) const {
-  if (!map_) {
-    return false;
-  }
-
-  auto ptr = map_->lookup(name);
-  if (!ptr) {
-    return false;
-  }
-
-  const Binding& binding = ptr->value();
-  MOZ_ASSERT(binding.environment);
-  MOZ_ASSERT(!binding.environment->inDictionaryMode());
-  MOZ_ASSERT(binding.environment->containsPure(binding.shape));
-  *envOut = binding.environment;
-  *shapeOut = binding.shape;
-  return true;
-}
-
-///////////////////////////////////////////////////////////////////////////
-// ModuleNamespaceObject
-
-/* static */ const ModuleNamespaceObject::ProxyHandler
-    ModuleNamespaceObject::proxyHandler;
-
-/* static */ bool ModuleNamespaceObject::isInstance(HandleValue value) {
-  return value.isObject() && value.toObject().is<ModuleNamespaceObject>();
-||||||| merged common ancestors
-IndirectBindingMap::Binding::Binding(ModuleEnvironmentObject* environment, Shape* shape)
-  : environment(environment), shape(shape)
-{}
-
-void
-IndirectBindingMap::trace(JSTracer* trc)
-{
-    if (!map_) {
-        return;
-    }
-
-    for (Map::Enum e(*map_); !e.empty(); e.popFront()) {
-        Binding& b = e.front().value();
-        TraceEdge(trc, &b.environment, "module bindings environment");
-        TraceEdge(trc, &b.shape, "module bindings shape");
-        jsid bindingName = e.front().key();
-        TraceManuallyBarrieredEdge(trc, &bindingName, "module bindings binding name");
-        MOZ_ASSERT(bindingName == e.front().key());
-    }
-}
-
-bool
-IndirectBindingMap::put(JSContext* cx, HandleId name,
-                        HandleModuleEnvironmentObject environment, HandleId localName)
-{
-    // This object might have been allocated on the background parsing thread in
-    // different zone to the final module. Lazily allocate the map so we don't
-    // have to switch its zone when merging compartments.
-    if (!map_) {
-        MOZ_ASSERT(!cx->zone()->createdForHelperThread());
-        map_.emplace(cx->zone());
-    }
-
-    RootedShape shape(cx, environment->lookup(cx, localName));
-    MOZ_ASSERT(shape);
-    if (!map_->put(name, Binding(environment, shape))) {
-        ReportOutOfMemory(cx);
-        return false;
-    }
-
-    return true;
-}
-
-bool
-IndirectBindingMap::lookup(jsid name, ModuleEnvironmentObject** envOut, Shape** shapeOut) const
-{
-    if (!map_) {
-        return false;
-    }
-
-    auto ptr = map_->lookup(name);
-    if (!ptr) {
-        return false;
-    }
-
-    const Binding& binding = ptr->value();
-    MOZ_ASSERT(binding.environment);
-    MOZ_ASSERT(!binding.environment->inDictionaryMode());
-    MOZ_ASSERT(binding.environment->containsPure(binding.shape));
-    *envOut = binding.environment;
-    *shapeOut = binding.shape;
-    return true;
-=======
 IndirectBindingMap::Binding::Binding(ModuleEnvironmentObject* environment,
                                      Shape* shape)
     : environment(environment), shape(shape) {}
@@ -761,47 +364,8 @@ bool IndirectBindingMap::lookup(jsid name, ModuleEnvironmentObject** envOut,
   *envOut = binding.environment;
   *shapeOut = binding.shape;
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ ModuleNamespaceObject* ModuleNamespaceObject::create(
-    JSContext* cx, HandleModuleObject module, HandleObject exports,
-    UniquePtr<IndirectBindingMap> bindings) {
-  RootedValue priv(cx, ObjectValue(*module));
-  ProxyOptions options;
-  options.setLazyProto(true);
-  options.setSingleton(true);
-  RootedObject object(
-      cx, NewProxyObject(cx, &proxyHandler, priv, nullptr, options));
-  if (!object) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-///////////////////////////////////////////////////////////////////////////
-// ModuleNamespaceObject
-
-/* static */ const ModuleNamespaceObject::ProxyHandler ModuleNamespaceObject::proxyHandler;
-
-/* static */ bool
-ModuleNamespaceObject::isInstance(HandleValue value)
-{
-    return value.isObject() && value.toObject().is<ModuleNamespaceObject>();
-}
-
-/* static */ ModuleNamespaceObject*
-ModuleNamespaceObject::create(JSContext* cx, HandleModuleObject module, HandleObject exports,
-                              UniquePtr<IndirectBindingMap> bindings)
-{
-    RootedValue priv(cx, ObjectValue(*module));
-    ProxyOptions options;
-    options.setLazyProto(true);
-    options.setSingleton(true);
-    RootedObject object(cx, NewProxyObject(cx, &proxyHandler, priv, nullptr, options));
-    if (!object) {
-        return nullptr;
-    }
-=======
 ///////////////////////////////////////////////////////////////////////////
 // ModuleNamespaceObject
 
@@ -827,15 +391,7 @@ ModuleNamespaceObject* ModuleNamespaceObject::create(
   if (!object) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  SetProxyReservedSlot(object, ExportsSlot, ObjectValue(*exports));
-  SetProxyReservedSlot(object, BindingsSlot, PrivateValue(bindings.release()));
-||||||| merged common ancestors
-    SetProxyReservedSlot(object, ExportsSlot, ObjectValue(*exports));
-    SetProxyReservedSlot(object, BindingsSlot, PrivateValue(bindings.release()));
-=======
   SetProxyReservedSlot(object, ExportsSlot, ObjectValue(*exports));
   SetProxyReservedSlot(object, BindingsSlot,
                        PrivateValue(rootedBindings.release()));
@@ -844,68 +400,25 @@ ModuleNamespaceObject* ModuleNamespaceObject::create(
 
   return &object->as<ModuleNamespaceObject>();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return &object->as<ModuleNamespaceObject>();
-||||||| merged common ancestors
-    return &object->as<ModuleNamespaceObject>();
-=======
 ModuleObject& ModuleNamespaceObject::module() {
   return GetProxyPrivate(this).toObject().as<ModuleObject>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-ModuleObject& ModuleNamespaceObject::module() {
-  return GetProxyPrivate(this).toObject().as<ModuleObject>();
-||||||| merged common ancestors
-ModuleObject&
-ModuleNamespaceObject::module()
-{
-    return GetProxyPrivate(this).toObject().as<ModuleObject>();
-=======
 JSObject& ModuleNamespaceObject::exports() {
   return GetProxyReservedSlot(this, ExportsSlot).toObject();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JSObject& ModuleNamespaceObject::exports() {
-  return GetProxyReservedSlot(this, ExportsSlot).toObject();
-||||||| merged common ancestors
-JSObject&
-ModuleNamespaceObject::exports()
-{
-    return GetProxyReservedSlot(this, ExportsSlot).toObject();
-=======
 IndirectBindingMap& ModuleNamespaceObject::bindings() {
   Value value = GetProxyReservedSlot(this, BindingsSlot);
   auto bindings = static_cast<IndirectBindingMap*>(value.toPrivate());
   MOZ_ASSERT(bindings);
   return *bindings;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-IndirectBindingMap& ModuleNamespaceObject::bindings() {
-  Value value = GetProxyReservedSlot(this, BindingsSlot);
-  auto bindings = static_cast<IndirectBindingMap*>(value.toPrivate());
-  MOZ_ASSERT(bindings);
-  return *bindings;
-||||||| merged common ancestors
-IndirectBindingMap&
-ModuleNamespaceObject::bindings()
-{
-    Value value = GetProxyReservedSlot(this, BindingsSlot);
-    auto bindings = static_cast<IndirectBindingMap*>(value.toPrivate());
-    MOZ_ASSERT(bindings);
-    return *bindings;
-=======
 bool ModuleNamespaceObject::hasBindings() const {
   // Import bindings may not be present if we hit OOM in initialization.
   return !GetProxyReservedSlot(this, BindingsSlot).isUndefined();
->>>>>>> upstream-releases
 }
 
 bool ModuleNamespaceObject::addBinding(JSContext* cx, HandleAtom exportedName,
@@ -921,7 +434,6 @@ bool ModuleNamespaceObject::addBinding(JSContext* cx, HandleAtom exportedName,
 const char ModuleNamespaceObject::ProxyHandler::family = 0;
 
 ModuleNamespaceObject::ProxyHandler::ProxyHandler()
-<<<<<<< HEAD
     : BaseProxyHandler(&family, false) {}
 
 bool ModuleNamespaceObject::ProxyHandler::getPrototype(
@@ -929,32 +441,7 @@ bool ModuleNamespaceObject::ProxyHandler::getPrototype(
   protop.set(nullptr);
   return true;
 }
-||||||| merged common ancestors
-  : BaseProxyHandler(&family, false)
-{}
 
-bool
-ModuleNamespaceObject::ProxyHandler::getPrototype(JSContext* cx, HandleObject proxy,
-                                                  MutableHandleObject protop) const
-{
-    protop.set(nullptr);
-    return true;
-}
-
-bool
-ModuleNamespaceObject::ProxyHandler::setPrototype(JSContext* cx, HandleObject proxy,
-                                                  HandleObject proto, ObjectOpResult& result) const
-{
-    if (!proto) {
-        return result.succeed();
-    }
-    return result.failCantSetProto();
-}
-=======
-    : BaseProxyHandler(&family, false) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 bool ModuleNamespaceObject::ProxyHandler::setPrototype(
     JSContext* cx, HandleObject proxy, HandleObject proto,
     ObjectOpResult& result) const {
@@ -962,168 +449,21 @@ bool ModuleNamespaceObject::ProxyHandler::setPrototype(
     return result.succeed();
   }
   return result.failCantSetProto();
-||||||| merged common ancestors
-bool
-ModuleNamespaceObject::ProxyHandler::getPrototypeIfOrdinary(JSContext* cx, HandleObject proxy,
-                                                            bool* isOrdinary,
-                                                            MutableHandleObject protop) const
-{
-    *isOrdinary = false;
-    return true;
-=======
-bool ModuleNamespaceObject::ProxyHandler::getPrototype(
-    JSContext* cx, HandleObject proxy, MutableHandleObject protop) const {
-  protop.set(nullptr);
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 bool ModuleNamespaceObject::ProxyHandler::getPrototypeIfOrdinary(
     JSContext* cx, HandleObject proxy, bool* isOrdinary,
     MutableHandleObject protop) const {
   *isOrdinary = false;
   return true;
-||||||| merged common ancestors
-bool
-ModuleNamespaceObject::ProxyHandler::setImmutablePrototype(JSContext* cx, HandleObject proxy,
-                                                           bool* succeeded) const
-{
-    *succeeded = true;
-    return true;
-=======
-bool ModuleNamespaceObject::ProxyHandler::setPrototype(
-    JSContext* cx, HandleObject proxy, HandleObject proto,
-    ObjectOpResult& result) const {
-  if (!proto) {
-    return result.succeed();
-  }
-  return result.failCantSetProto();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 bool ModuleNamespaceObject::ProxyHandler::setImmutablePrototype(
     JSContext* cx, HandleObject proxy, bool* succeeded) const {
   *succeeded = true;
   return true;
-||||||| merged common ancestors
-bool
-ModuleNamespaceObject::ProxyHandler::isExtensible(JSContext* cx, HandleObject proxy,
-                                                  bool* extensible) const
-{
-    *extensible = false;
-    return true;
-=======
-bool ModuleNamespaceObject::ProxyHandler::getPrototypeIfOrdinary(
-    JSContext* cx, HandleObject proxy, bool* isOrdinary,
-    MutableHandleObject protop) const {
-  *isOrdinary = false;
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool ModuleNamespaceObject::ProxyHandler::isExtensible(JSContext* cx,
-                                                       HandleObject proxy,
-                                                       bool* extensible) const {
-  *extensible = false;
-  return true;
-||||||| merged common ancestors
-bool
-ModuleNamespaceObject::ProxyHandler::preventExtensions(JSContext* cx, HandleObject proxy,
-                                                 ObjectOpResult& result) const
-{
-    result.succeed();
-    return true;
-=======
-bool ModuleNamespaceObject::ProxyHandler::setImmutablePrototype(
-    JSContext* cx, HandleObject proxy, bool* succeeded) const {
-  *succeeded = true;
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool ModuleNamespaceObject::ProxyHandler::preventExtensions(
-    JSContext* cx, HandleObject proxy, ObjectOpResult& result) const {
-  result.succeed();
-  return true;
-||||||| merged common ancestors
-bool
-ModuleNamespaceObject::ProxyHandler::getOwnPropertyDescriptor(JSContext* cx, HandleObject proxy,
-                                                              HandleId id,
-                                                              MutableHandle<PropertyDescriptor> desc) const
-{
-    Rooted<ModuleNamespaceObject*> ns(cx, &proxy->as<ModuleNamespaceObject>());
-    if (JSID_IS_SYMBOL(id)) {
-        if (JSID_TO_SYMBOL(id) == cx->wellKnownSymbols().toStringTag) {
-            RootedValue value(cx, StringValue(cx->names().Module));
-            desc.object().set(proxy);
-            desc.setWritable(false);
-            desc.setEnumerable(false);
-            desc.setConfigurable(false);
-            desc.setValue(value);
-            return true;
-        }
-
-        return true;
-    }
-
-    const IndirectBindingMap& bindings = ns->bindings();
-    ModuleEnvironmentObject* env;
-    Shape* shape;
-    if (!bindings.lookup(id, &env, &shape)) {
-        return true;
-    }
-
-    RootedValue value(cx, env->getSlot(shape->slot()));
-    if (value.isMagic(JS_UNINITIALIZED_LEXICAL)) {
-        ReportRuntimeLexicalError(cx, JSMSG_UNINITIALIZED_LEXICAL, id);
-        return false;
-    }
-
-    desc.object().set(env);
-    desc.setConfigurable(false);
-    desc.setEnumerable(true);
-    desc.setValue(value);
-    return true;
-}
-
-static bool
-ValidatePropertyDescriptor(JSContext* cx, Handle<PropertyDescriptor> desc,
-                           bool expectedWritable, bool expectedEnumerable,
-                           bool expectedConfigurable, HandleValue expectedValue,
-                           ObjectOpResult& result)
-{
-    if (desc.isAccessorDescriptor()) {
-        return result.fail(JSMSG_CANT_REDEFINE_PROP);
-    }
-
-    if (desc.hasWritable() && desc.writable() != expectedWritable) {
-        return result.fail(JSMSG_CANT_REDEFINE_PROP);
-    }
-
-    if (desc.hasEnumerable() && desc.enumerable() != expectedEnumerable) {
-        return result.fail(JSMSG_CANT_REDEFINE_PROP);
-    }
-
-    if (desc.hasConfigurable() && desc.configurable() != expectedConfigurable) {
-        return result.fail(JSMSG_CANT_REDEFINE_PROP);
-    }
-
-    if (desc.hasValue()) {
-        bool same;
-        if (!SameValue(cx, desc.value(), expectedValue, &same)) {
-            return false;
-        }
-        if (!same) {
-            return result.fail(JSMSG_CANT_REDEFINE_PROP);
-        }
-    }
-
-    return result.succeed();
-=======
 bool ModuleNamespaceObject::ProxyHandler::isExtensible(JSContext* cx,
                                                        HandleObject proxy,
                                                        bool* extensible) const {
@@ -1135,7 +475,6 @@ bool ModuleNamespaceObject::ProxyHandler::preventExtensions(
     JSContext* cx, HandleObject proxy, ObjectOpResult& result) const {
   result.succeed();
   return true;
->>>>>>> upstream-releases
 }
 
 bool ModuleNamespaceObject::ProxyHandler::getOwnPropertyDescriptor(
@@ -1262,7 +601,6 @@ bool ModuleNamespaceObject::ProxyHandler::get(JSContext* cx, HandleObject proxy,
 
     vp.setUndefined();
     return true;
-<<<<<<< HEAD
   }
 
   ModuleEnvironmentObject* env;
@@ -1271,40 +609,6 @@ bool ModuleNamespaceObject::ProxyHandler::get(JSContext* cx, HandleObject proxy,
     vp.setUndefined();
     return true;
   }
-||||||| merged common ancestors
-}
-
-bool
-ModuleNamespaceObject::ProxyHandler::get(JSContext* cx, HandleObject proxy, HandleValue receiver,
-                                         HandleId id, MutableHandleValue vp) const
-{
-    Rooted<ModuleNamespaceObject*> ns(cx, &proxy->as<ModuleNamespaceObject>());
-    if (JSID_IS_SYMBOL(id)) {
-        if (JSID_TO_SYMBOL(id) == cx->wellKnownSymbols().toStringTag) {
-            vp.setString(cx->names().Module);
-            return true;
-        }
-
-        vp.setUndefined();
-        return true;
-    }
-
-    ModuleEnvironmentObject* env;
-    Shape* shape;
-    if (!ns->bindings().lookup(id, &env, &shape)) {
-        vp.setUndefined();
-        return true;
-    }
-=======
-  }
-
-  ModuleEnvironmentObject* env;
-  Shape* shape;
-  if (!ns->bindings().lookup(id, &env, &shape)) {
-    vp.setUndefined();
-    return true;
-  }
->>>>>>> upstream-releases
 
   RootedValue value(cx, env->getSlot(shape->slot()));
   if (value.isMagic(JS_UNINITIALIZED_LEXICAL)) {
@@ -1342,28 +646,6 @@ bool ModuleNamespaceObject::ProxyHandler::delete_(
   return result.succeed();
 }
 
-<<<<<<< HEAD
-bool ModuleNamespaceObject::ProxyHandler::ownPropertyKeys(
-    JSContext* cx, HandleObject proxy, AutoIdVector& props) const {
-  Rooted<ModuleNamespaceObject*> ns(cx, &proxy->as<ModuleNamespaceObject>());
-  RootedObject exports(cx, &ns->exports());
-  uint32_t count;
-  if (!GetLengthProperty(cx, exports, &count) ||
-      !props.reserve(props.length() + count + 1)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-ModuleNamespaceObject::ProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
-                                                     AutoIdVector& props) const
-{
-    Rooted<ModuleNamespaceObject*> ns(cx, &proxy->as<ModuleNamespaceObject>());
-    RootedObject exports(cx, &ns->exports());
-    uint32_t count;
-    if (!GetLengthProperty(cx, exports, &count) || !props.reserve(props.length() + count + 1)) {
-        return false;
-    }
-=======
 bool ModuleNamespaceObject::ProxyHandler::ownPropertyKeys(
     JSContext* cx, HandleObject proxy, MutableHandleIdVector props) const {
   Rooted<ModuleNamespaceObject*> ns(cx, &proxy->as<ModuleNamespaceObject>());
@@ -1373,7 +655,6 @@ bool ModuleNamespaceObject::ProxyHandler::ownPropertyKeys(
       !props.reserve(props.length() + count + 1)) {
     return false;
   }
->>>>>>> upstream-releases
 
   Rooted<ValueVector> names(cx, ValueVector(cx));
   if (!names.resize(count) || !GetElements(cx, exports, count, names.begin())) {
@@ -1389,18 +670,6 @@ bool ModuleNamespaceObject::ProxyHandler::ownPropertyKeys(
   return true;
 }
 
-<<<<<<< HEAD
-void ModuleNamespaceObject::ProxyHandler::trace(JSTracer* trc,
-                                                JSObject* proxy) const {
-  auto& self = proxy->as<ModuleNamespaceObject>();
-  self.bindings().trace(trc);
-||||||| merged common ancestors
-void
-ModuleNamespaceObject::ProxyHandler::trace(JSTracer* trc, JSObject* proxy) const
-{
-    auto& self = proxy->as<ModuleNamespaceObject>();
-    self.bindings().trace(trc);
-=======
 void ModuleNamespaceObject::ProxyHandler::trace(JSTracer* trc,
                                                 JSObject* proxy) const {
   auto& self = proxy->as<ModuleNamespaceObject>();
@@ -1408,20 +677,8 @@ void ModuleNamespaceObject::ProxyHandler::trace(JSTracer* trc,
   if (self.hasBindings()) {
     self.bindings().trace(trc);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ModuleNamespaceObject::ProxyHandler::finalize(JSFreeOp* fop,
-                                                   JSObject* proxy) const {
-  auto& self = proxy->as<ModuleNamespaceObject>();
-  js_delete(&self.bindings());
-||||||| merged common ancestors
-void ModuleNamespaceObject::ProxyHandler::finalize(JSFreeOp* fop, JSObject* proxy) const
-{
-    auto& self = proxy->as<ModuleNamespaceObject>();
-    js_delete(&self.bindings());
-=======
 void ModuleNamespaceObject::ProxyHandler::finalize(JSFreeOp* fopArg,
                                                    JSObject* proxy) const {
   FreeOp* fop = FreeOp::get(fopArg);
@@ -1430,7 +687,6 @@ void ModuleNamespaceObject::ProxyHandler::finalize(JSFreeOp* fopArg,
   if (self.hasBindings()) {
     fop->delete_(proxy, &self.bindings(), MemoryUse::ModuleBindingMap);
   }
->>>>>>> upstream-releases
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1462,29 +718,6 @@ void FunctionDeclaration::trace(JSTracer* trc) {
 
 /* static */ const Class ModuleObject::class_ = {
     "Module",
-<<<<<<< HEAD
-    JSCLASS_HAS_RESERVED_SLOTS(ModuleObject::SlotCount) | JSCLASS_IS_ANONYMOUS |
-        JSCLASS_BACKGROUND_FINALIZE,
-    &ModuleObject::classOps_};
-
-#define DEFINE_ARRAY_SLOT_ACCESSOR(cls, name, slot)                 \
-  ArrayObject& cls::name() const {                                  \
-    return getReservedSlot(cls::slot).toObject().as<ArrayObject>(); \
-  }
-||||||| merged common ancestors
-    JSCLASS_HAS_RESERVED_SLOTS(ModuleObject::SlotCount) |
-    JSCLASS_IS_ANONYMOUS |
-    JSCLASS_BACKGROUND_FINALIZE,
-    &ModuleObject::classOps_
-};
-
-#define DEFINE_ARRAY_SLOT_ACCESSOR(cls, name, slot)                           \
-    ArrayObject&                                                              \
-    cls::name() const                                                         \
-    {                                                                         \
-        return getReservedSlot(cls::slot).toObject().as<ArrayObject>();       \
-    }
-=======
     JSCLASS_HAS_RESERVED_SLOTS(ModuleObject::SlotCount) |
         JSCLASS_BACKGROUND_FINALIZE,
     &ModuleObject::classOps_};
@@ -1493,36 +726,9 @@ void FunctionDeclaration::trace(JSTracer* trc) {
   ArrayObject& cls::name() const {                                  \
     return getReservedSlot(cls::slot).toObject().as<ArrayObject>(); \
   }
->>>>>>> upstream-releases
 
 DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, requestedModules, RequestedModulesSlot)
 DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, importEntries, ImportEntriesSlot)
-<<<<<<< HEAD
-DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, localExportEntries,
-                           LocalExportEntriesSlot)
-DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, indirectExportEntries,
-                           IndirectExportEntriesSlot)
-DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, starExportEntries,
-                           StarExportEntriesSlot)
-||||||| merged common ancestors
-DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, localExportEntries, LocalExportEntriesSlot)
-DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, indirectExportEntries, IndirectExportEntriesSlot)
-DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, starExportEntries, StarExportEntriesSlot)
-
-/* static */ bool
-ModuleObject::isInstance(HandleValue value)
-{
-    return value.isObject() && value.toObject().is<ModuleObject>();
-}
-
-/* static */ ModuleObject*
-ModuleObject::create(JSContext* cx)
-{
-    RootedObject proto(cx, GlobalObject::getOrCreateModulePrototype(cx, cx->global()));
-    if (!proto) {
-        return nullptr;
-    }
-=======
 DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, localExportEntries,
                            LocalExportEntriesSlot)
 DEFINE_ARRAY_SLOT_ACCESSOR(ModuleObject, indirectExportEntries,
@@ -1542,115 +748,29 @@ ModuleObject* ModuleObject::create(JSContext* cx) {
   if (!proto) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ bool ModuleObject::isInstance(HandleValue value) {
-  return value.isObject() && value.toObject().is<ModuleObject>();
-}
-||||||| merged common ancestors
-    RootedModuleObject self(cx, NewObjectWithGivenProto<ModuleObject>(cx, proto));
-    if (!self) {
-        return nullptr;
-    }
-=======
   RootedModuleObject self(cx, NewObjectWithGivenProto<ModuleObject>(cx, proto));
   if (!self) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ ModuleObject* ModuleObject::create(JSContext* cx) {
-  RootedObject proto(
-      cx, GlobalObject::getOrCreateModulePrototype(cx, cx->global()));
-  if (!proto) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    IndirectBindingMap* bindings = cx->new_<IndirectBindingMap>();
-    if (!bindings) {
-        return nullptr;
-    }
-=======
   IndirectBindingMap* bindings = cx->new_<IndirectBindingMap>();
   if (!bindings) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedModuleObject self(cx, NewObjectWithGivenProto<ModuleObject>(cx, proto));
-  if (!self) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    self->initReservedSlot(ImportBindingsSlot, PrivateValue(bindings));
-=======
   InitReservedSlot(self, ImportBindingsSlot, bindings,
                    MemoryUse::ModuleBindingMap);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  IndirectBindingMap* bindings = cx->new_<IndirectBindingMap>();
-  if (!bindings) {
-    return nullptr;
-  }
-
-  self->initReservedSlot(ImportBindingsSlot, PrivateValue(bindings));
-||||||| merged common ancestors
-    FunctionDeclarationVector* funDecls = cx->new_<FunctionDeclarationVector>(cx->zone());
-    if (!funDecls) {
-        return nullptr;
-    }
-=======
   FunctionDeclarationVector* funDecls = cx->new_<FunctionDeclarationVector>();
   if (!funDecls) {
     return nullptr;
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  FunctionDeclarationVector* funDecls =
-      cx->new_<FunctionDeclarationVector>(cx->zone());
-  if (!funDecls) {
-    return nullptr;
-  }
 
   self->initReservedSlot(FunctionDeclarationsSlot, PrivateValue(funDecls));
   return self;
-||||||| merged common ancestors
-    self->initReservedSlot(FunctionDeclarationsSlot, PrivateValue(funDecls));
-    return self;
-=======
-  self->initReservedSlot(FunctionDeclarationsSlot, PrivateValue(funDecls));
-  return self;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void ModuleObject::finalize(js::FreeOp* fop, JSObject* obj) {
-  MOZ_ASSERT(fop->maybeOnHelperThread());
-  ModuleObject* self = &obj->as<ModuleObject>();
-  if (self->hasImportBindings()) {
-    fop->delete_(&self->importBindings());
-  }
-  if (FunctionDeclarationVector* funDecls = self->functionDeclarations()) {
-    fop->delete_(funDecls);
-  }
-||||||| merged common ancestors
-/* static */ void
-ModuleObject::finalize(js::FreeOp* fop, JSObject* obj)
-{
-    MOZ_ASSERT(fop->maybeOnHelperThread());
-    ModuleObject* self = &obj->as<ModuleObject>();
-    if (self->hasImportBindings()) {
-        fop->delete_(&self->importBindings());
-    }
-    if (FunctionDeclarationVector* funDecls = self->functionDeclarations()) {
-        fop->delete_(funDecls);
-    }
-=======
 /* static */
 void ModuleObject::finalize(js::FreeOp* fop, JSObject* obj) {
   MOZ_ASSERT(fop->maybeOnHelperThread());
@@ -1662,7 +782,6 @@ void ModuleObject::finalize(js::FreeOp* fop, JSObject* obj) {
     // Not tracked as these may move between zones on merge.
     fop->delete_(funDecls);
   }
->>>>>>> upstream-releases
 }
 
 ModuleEnvironmentObject& ModuleObject::initialEnvironment() const {
@@ -1716,29 +835,12 @@ FunctionDeclarationVector* ModuleObject::functionDeclarations() {
   return static_cast<FunctionDeclarationVector*>(value.toPrivate());
 }
 
-<<<<<<< HEAD
-void ModuleObject::init(HandleScript script) {
-  MOZ_ASSERT(script);
-  initReservedSlot(ScriptSlot, PrivateGCThingValue(script));
-  initReservedSlot(StatusSlot, Int32Value(MODULE_STATUS_UNINSTANTIATED));
-  initReservedSlot(ScriptSourceObjectSlot,
-                   ObjectValue(script->scriptSourceUnwrap()));
-||||||| merged common ancestors
-void
-ModuleObject::init(HandleScript script)
-{
-    MOZ_ASSERT(script);
-    initReservedSlot(ScriptSlot, PrivateGCThingValue(script));
-    initReservedSlot(StatusSlot, Int32Value(MODULE_STATUS_UNINSTANTIATED));
-    initReservedSlot(ScriptSourceObjectSlot, ObjectValue(script->scriptSourceUnwrap()));
-=======
 void ModuleObject::init(HandleScript script) {
   MOZ_ASSERT(script);
   initReservedSlot(ScriptSlot, PrivateGCThingValue(script));
   initReservedSlot(StatusSlot, Int32Value(MODULE_STATUS_UNINSTANTIATED));
   initReservedSlot(ScriptSourceObjectSlot,
                    ObjectValue(*script->sourceObject()));
->>>>>>> upstream-releases
 }
 
 void ModuleObject::setInitialEnvironment(
@@ -1766,25 +868,6 @@ static bool FreezeObjectProperty(JSContext* cx, HandleNativeObject obj,
   return FreezeObject(cx, property);
 }
 
-<<<<<<< HEAD
-/* static */ bool ModuleObject::Freeze(JSContext* cx, HandleModuleObject self) {
-  return FreezeObjectProperty(cx, self, RequestedModulesSlot) &&
-         FreezeObjectProperty(cx, self, ImportEntriesSlot) &&
-         FreezeObjectProperty(cx, self, LocalExportEntriesSlot) &&
-         FreezeObjectProperty(cx, self, IndirectExportEntriesSlot) &&
-         FreezeObjectProperty(cx, self, StarExportEntriesSlot) &&
-         FreezeObject(cx, self);
-||||||| merged common ancestors
-/* static */ bool
-ModuleObject::Freeze(JSContext* cx, HandleModuleObject self)
-{
-    return FreezeObjectProperty(cx, self, RequestedModulesSlot) &&
-           FreezeObjectProperty(cx, self, ImportEntriesSlot) &&
-           FreezeObjectProperty(cx, self, LocalExportEntriesSlot) &&
-           FreezeObjectProperty(cx, self, IndirectExportEntriesSlot) &&
-           FreezeObjectProperty(cx, self, StarExportEntriesSlot) &&
-           FreezeObject(cx, self);
-=======
 /* static */
 bool ModuleObject::Freeze(JSContext* cx, HandleModuleObject self) {
   return FreezeObjectProperty(cx, self, RequestedModulesSlot) &&
@@ -1793,7 +876,6 @@ bool ModuleObject::Freeze(JSContext* cx, HandleModuleObject self) {
          FreezeObjectProperty(cx, self, IndirectExportEntriesSlot) &&
          FreezeObjectProperty(cx, self, StarExportEntriesSlot) &&
          FreezeObject(cx, self);
->>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
@@ -1840,26 +922,11 @@ inline static void AssertModuleScopesMatch(ModuleObject* module) {
       &module->initialEnvironment().enclosingEnvironment()));
 }
 
-<<<<<<< HEAD
-void ModuleObject::fixEnvironmentsAfterCompartmentMerge() {
-  AssertModuleScopesMatch(this);
-  initialEnvironment().fixEnclosingEnvironmentAfterCompartmentMerge(
-      script()->global());
-  AssertModuleScopesMatch(this);
-||||||| merged common ancestors
-void
-ModuleObject::fixEnvironmentsAfterCompartmentMerge()
-{
-    AssertModuleScopesMatch(this);
-    initialEnvironment().fixEnclosingEnvironmentAfterCompartmentMerge(script()->global());
-    AssertModuleScopesMatch(this);
-=======
 void ModuleObject::fixEnvironmentsAfterRealmMerge() {
   AssertModuleScopesMatch(this);
   initialEnvironment().fixEnclosingEnvironmentAfterRealmMerge(
       script()->global());
   AssertModuleScopesMatch(this);
->>>>>>> upstream-releases
 }
 
 JSScript* ModuleObject::maybeScript() const {
@@ -1915,19 +982,9 @@ Scope* ModuleObject::enclosingScope() const {
   return script()->enclosingScope();
 }
 
-<<<<<<< HEAD
-/* static */ void ModuleObject::trace(JSTracer* trc, JSObject* obj) {
-  ModuleObject& module = obj->as<ModuleObject>();
-||||||| merged common ancestors
-/* static */ void
-ModuleObject::trace(JSTracer* trc, JSObject* obj)
-{
-    ModuleObject& module = obj->as<ModuleObject>();
-=======
 /* static */
 void ModuleObject::trace(JSTracer* trc, JSObject* obj) {
   ModuleObject& module = obj->as<ModuleObject>();
->>>>>>> upstream-releases
 
   if (module.hasImportBindings()) {
     module.importBindings().trace(trc);
@@ -1949,18 +1006,9 @@ bool ModuleObject::noteFunctionDeclaration(JSContext* cx, HandleAtom name,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool ModuleObject::instantiateFunctionDeclarations(
-    JSContext* cx, HandleModuleObject self) {
-||||||| merged common ancestors
-/* static */ bool
-ModuleObject::instantiateFunctionDeclarations(JSContext* cx, HandleModuleObject self)
-{
-=======
 /* static */
 bool ModuleObject::instantiateFunctionDeclarations(JSContext* cx,
                                                    HandleModuleObject self) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   MOZ_ASSERT(self->status() == MODULE_STATUS_INSTANTIATING);
   if (!AssertFrozen(cx, self)) {
@@ -1968,7 +1016,6 @@ bool ModuleObject::instantiateFunctionDeclarations(JSContext* cx,
   }
 #endif
 
-<<<<<<< HEAD
   FunctionDeclarationVector* funDecls = self->functionDeclarations();
   if (!funDecls) {
     JS_ReportErrorASCII(
@@ -1987,70 +1034,6 @@ bool ModuleObject::instantiateFunctionDeclarations(JSContext* cx,
     if (!obj) {
       return false;
     }
-
-    if (fun->isAsync()) {
-      if (fun->isGenerator()) {
-        obj = WrapAsyncGenerator(cx, obj.as<JSFunction>());
-      } else {
-        obj = WrapAsyncFunction(cx, obj.as<JSFunction>());
-      }
-    }
-||||||| merged common ancestors
-    FunctionDeclarationVector* funDecls = self->functionDeclarations();
-    if (!funDecls) {
-        JS_ReportErrorASCII(cx, "Module function declarations have already been instantiated");
-        return false;
-    }
-=======
-  FunctionDeclarationVector* funDecls = self->functionDeclarations();
-  if (!funDecls) {
-    JS_ReportErrorASCII(
-        cx, "Module function declarations have already been instantiated");
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (!obj) {
-      return false;
-    }
-||||||| merged common ancestors
-    RootedModuleEnvironmentObject env(cx, &self->initialEnvironment());
-    RootedFunction fun(cx);
-    RootedObject obj(cx);
-    RootedValue value(cx);
-
-    for (const auto& funDecl : *funDecls) {
-        fun = funDecl.fun;
-        obj = Lambda(cx, fun, env);
-        if (!obj) {
-            return false;
-        }
-
-        if (fun->isAsync()) {
-            if (fun->isGenerator()) {
-                obj = WrapAsyncGenerator(cx, obj.as<JSFunction>());
-            } else {
-                obj = WrapAsyncFunction(cx, obj.as<JSFunction>());
-            }
-        }
-
-        if (!obj) {
-            return false;
-        }
-=======
-  RootedModuleEnvironmentObject env(cx, &self->initialEnvironment());
-  RootedFunction fun(cx);
-  RootedObject obj(cx);
-  RootedValue value(cx);
-
-  for (const auto& funDecl : *funDecls) {
-    fun = funDecl.fun;
-    obj = Lambda(cx, fun, env);
-    if (!obj) {
-      return false;
-    }
->>>>>>> upstream-releases
 
     value = ObjectValue(*obj);
     if (!SetProperty(cx, env, funDecl.name->asPropertyName(), value)) {
@@ -2063,18 +1046,9 @@ bool ModuleObject::instantiateFunctionDeclarations(JSContext* cx,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool ModuleObject::execute(JSContext* cx, HandleModuleObject self,
-                                        MutableHandleValue rval) {
-||||||| merged common ancestors
-/* static */ bool
-ModuleObject::execute(JSContext* cx, HandleModuleObject self, MutableHandleValue rval)
-{
-=======
 /* static */
 bool ModuleObject::execute(JSContext* cx, HandleModuleObject self,
                            MutableHandleValue rval) {
->>>>>>> upstream-releases
 #ifdef DEBUG
   MOZ_ASSERT(self->status() == MODULE_STATUS_EVALUATING);
   if (!AssertFrozen(cx, self)) {
@@ -2084,21 +1058,11 @@ bool ModuleObject::execute(JSContext* cx, HandleModuleObject self,
 
   RootedScript script(cx, self->script());
 
-<<<<<<< HEAD
-  // The top-level script if a module is only ever executed once. Clear the
-  // reference to prevent us keeping this alive unnecessarily.
-  self->setReservedSlot(ScriptSlot, UndefinedValue());
-||||||| merged common ancestors
-    // The top-level script if a module is only ever executed once. Clear the
-    // reference to prevent us keeping this alive unnecessarily.
-    self->setReservedSlot(ScriptSlot, UndefinedValue());
-=======
   // The top-level script if a module is only ever executed once. Clear the
   // reference at exit to prevent us keeping this alive unnecessarily. This is
   // kept while executing so it is available to the debugger.
   auto guardA = mozilla::MakeScopeExit(
       [&] { self->setReservedSlot(ScriptSlot, UndefinedValue()); });
->>>>>>> upstream-releases
 
   RootedModuleEnvironmentObject scope(cx, self->environment());
   if (!scope) {
@@ -2110,25 +1074,12 @@ bool ModuleObject::execute(JSContext* cx, HandleModuleObject self,
   return Execute(cx, script, *scope, rval.address());
 }
 
-<<<<<<< HEAD
-/* static */ ModuleNamespaceObject* ModuleObject::createNamespace(
-    JSContext* cx, HandleModuleObject self, HandleObject exports) {
-  MOZ_ASSERT(!self->namespace_());
-  MOZ_ASSERT(exports->is<ArrayObject>());
-||||||| merged common ancestors
-/* static */ ModuleNamespaceObject*
-ModuleObject::createNamespace(JSContext* cx, HandleModuleObject self, HandleObject exports)
-{
-    MOZ_ASSERT(!self->namespace_());
-    MOZ_ASSERT(exports->is<ArrayObject>());
-=======
 /* static */
 ModuleNamespaceObject* ModuleObject::createNamespace(JSContext* cx,
                                                      HandleModuleObject self,
                                                      HandleObject exports) {
   MOZ_ASSERT(!self->namespace_());
   MOZ_ASSERT(exports->is<ArrayObject>());
->>>>>>> upstream-releases
 
   auto bindings = cx->make_unique<IndirectBindingMap>();
   if (!bindings) {
@@ -2154,56 +1105,21 @@ static bool InvokeSelfHostedMethod(JSContext* cx, HandleModuleObject self,
   return CallSelfHostedFunction(cx, name, thisv, args, &ignored);
 }
 
-<<<<<<< HEAD
-/* static */ bool ModuleObject::Instantiate(JSContext* cx,
-                                            HandleModuleObject self) {
-  return InvokeSelfHostedMethod(cx, self, cx->names().ModuleInstantiate);
-||||||| merged common ancestors
-/* static */ bool
-ModuleObject::Instantiate(JSContext* cx, HandleModuleObject self)
-{
-    return InvokeSelfHostedMethod(cx, self, cx->names().ModuleInstantiate);
-=======
 /* static */
 bool ModuleObject::Instantiate(JSContext* cx, HandleModuleObject self) {
   return InvokeSelfHostedMethod(cx, self, cx->names().ModuleInstantiate);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool ModuleObject::Evaluate(JSContext* cx,
-                                         HandleModuleObject self) {
-  return InvokeSelfHostedMethod(cx, self, cx->names().ModuleEvaluate);
-||||||| merged common ancestors
-/* static */ bool
-ModuleObject::Evaluate(JSContext* cx, HandleModuleObject self)
-{
-    return InvokeSelfHostedMethod(cx, self, cx->names().ModuleEvaluate);
-=======
 /* static */
 bool ModuleObject::Evaluate(JSContext* cx, HandleModuleObject self) {
   return InvokeSelfHostedMethod(cx, self, cx->names().ModuleEvaluate);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ ModuleNamespaceObject* ModuleObject::GetOrCreateModuleNamespace(
-    JSContext* cx, HandleModuleObject self) {
-  FixedInvokeArgs<1> args(cx);
-  args[0].setObject(*self);
-||||||| merged common ancestors
-/* static */ ModuleNamespaceObject*
-ModuleObject::GetOrCreateModuleNamespace(JSContext* cx, HandleModuleObject self)
-{
-    FixedInvokeArgs<1> args(cx);
-    args[0].setObject(*self);
-=======
 /* static */
 ModuleNamespaceObject* ModuleObject::GetOrCreateModuleNamespace(
     JSContext* cx, HandleModuleObject self) {
   FixedInvokeArgs<1> args(cx);
   args[0].setObject(*self);
->>>>>>> upstream-releases
 
   RootedValue result(cx);
   if (!CallSelfHostedFunction(cx, cx->names().GetModuleNamespace,
@@ -2227,80 +1143,6 @@ DEFINE_GETTER_FUNCTIONS(ModuleObject, starExportEntries, StarExportEntriesSlot)
 DEFINE_GETTER_FUNCTIONS(ModuleObject, dfsIndex, DFSIndexSlot)
 DEFINE_GETTER_FUNCTIONS(ModuleObject, dfsAncestorIndex, DFSAncestorIndexSlot)
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initModuleProto(JSContext* cx,
-                                                Handle<GlobalObject*> global) {
-  static const JSPropertySpec protoAccessors[] = {
-      JS_PSG("namespace", ModuleObject_namespace_Getter, 0),
-      JS_PSG("status", ModuleObject_statusGetter, 0),
-      JS_PSG("evaluationError", ModuleObject_evaluationErrorGetter, 0),
-      JS_PSG("requestedModules", ModuleObject_requestedModulesGetter, 0),
-      JS_PSG("importEntries", ModuleObject_importEntriesGetter, 0),
-      JS_PSG("localExportEntries", ModuleObject_localExportEntriesGetter, 0),
-      JS_PSG("indirectExportEntries", ModuleObject_indirectExportEntriesGetter,
-             0),
-      JS_PSG("starExportEntries", ModuleObject_starExportEntriesGetter, 0),
-      JS_PSG("dfsIndex", ModuleObject_dfsIndexGetter, 0),
-      JS_PSG("dfsAncestorIndex", ModuleObject_dfsAncestorIndexGetter, 0),
-      JS_PS_END};
-
-  static const JSFunctionSpec protoFunctions[] = {
-      JS_SELF_HOSTED_FN("getExportedNames", "ModuleGetExportedNames", 1, 0),
-      JS_SELF_HOSTED_FN("resolveExport", "ModuleResolveExport", 2, 0),
-      JS_SELF_HOSTED_FN("declarationInstantiation", "ModuleInstantiate", 0, 0),
-      JS_SELF_HOSTED_FN("evaluation", "ModuleEvaluate", 0, 0), JS_FS_END};
-
-  RootedObject proto(
-      cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-  if (!proto) {
-    return false;
-  }
-
-  if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors,
-                                    protoFunctions)) {
-    return false;
-  }
-
-  global->setReservedSlot(MODULE_PROTO, ObjectValue(*proto));
-  return true;
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::initModuleProto(JSContext* cx, Handle<GlobalObject*> global)
-{
-    static const JSPropertySpec protoAccessors[] = {
-        JS_PSG("namespace", ModuleObject_namespace_Getter, 0),
-        JS_PSG("status", ModuleObject_statusGetter, 0),
-        JS_PSG("evaluationError", ModuleObject_evaluationErrorGetter, 0),
-        JS_PSG("requestedModules", ModuleObject_requestedModulesGetter, 0),
-        JS_PSG("importEntries", ModuleObject_importEntriesGetter, 0),
-        JS_PSG("localExportEntries", ModuleObject_localExportEntriesGetter, 0),
-        JS_PSG("indirectExportEntries", ModuleObject_indirectExportEntriesGetter, 0),
-        JS_PSG("starExportEntries", ModuleObject_starExportEntriesGetter, 0),
-        JS_PSG("dfsIndex", ModuleObject_dfsIndexGetter, 0),
-        JS_PSG("dfsAncestorIndex", ModuleObject_dfsAncestorIndexGetter, 0),
-        JS_PS_END
-    };
-
-    static const JSFunctionSpec protoFunctions[] = {
-        JS_SELF_HOSTED_FN("getExportedNames", "ModuleGetExportedNames", 1, 0),
-        JS_SELF_HOSTED_FN("resolveExport", "ModuleResolveExport", 2, 0),
-        JS_SELF_HOSTED_FN("declarationInstantiation", "ModuleInstantiate", 0, 0),
-        JS_SELF_HOSTED_FN("evaluation", "ModuleEvaluate", 0, 0),
-        JS_FS_END
-    };
-
-    RootedObject proto(cx, GlobalObject::createBlankPrototype<PlainObject>(cx, global));
-    if (!proto) {
-        return false;
-    }
-
-    if (!DefinePropertiesAndFunctions(cx, proto, protoAccessors, protoFunctions)) {
-        return false;
-    }
-
-    global->setReservedSlot(MODULE_PROTO, ObjectValue(*proto));
-    return true;
-=======
 /* static */
 bool GlobalObject::initModuleProto(JSContext* cx,
                                    Handle<GlobalObject*> global) {
@@ -2337,7 +1179,6 @@ bool GlobalObject::initModuleProto(JSContext* cx,
 
   global->setReservedSlot(MODULE_PROTO, ObjectValue(*proto));
   return true;
->>>>>>> upstream-releases
 }
 
 #undef DEFINE_GETTER_FUNCTIONS
@@ -2440,27 +1281,13 @@ bool ModuleBuilder::initModule() {
 bool ModuleBuilder::processImport(frontend::BinaryNode* importNode) {
   using namespace js::frontend;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(importNode->isKind(ParseNodeKind::Import));
-||||||| merged common ancestors
-    MOZ_ASSERT(importNode->isKind(ParseNodeKind::Import));
-=======
   MOZ_ASSERT(importNode->isKind(ParseNodeKind::ImportDecl));
->>>>>>> upstream-releases
 
   ListNode* specList = &importNode->left()->as<ListNode>();
   MOZ_ASSERT(specList->isKind(ParseNodeKind::ImportSpecList));
 
-<<<<<<< HEAD
-  NameNode* moduleSpec = &importNode->right()->as<NameNode>();
-  MOZ_ASSERT(moduleSpec->isKind(ParseNodeKind::String));
-||||||| merged common ancestors
-    NameNode* moduleSpec = &importNode->right()->as<NameNode>();
-    MOZ_ASSERT(moduleSpec->isKind(ParseNodeKind::String));
-=======
   NameNode* moduleSpec = &importNode->right()->as<NameNode>();
   MOZ_ASSERT(moduleSpec->isKind(ParseNodeKind::StringExpr));
->>>>>>> upstream-releases
 
   RootedAtom module(cx_, moduleSpec->atom());
   if (!maybeAppendRequestedModule(module, moduleSpec)) {
@@ -2505,47 +1332,13 @@ bool ModuleBuilder::appendImportEntryObject(
 bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
   using namespace js::frontend;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(exportNode->isKind(ParseNodeKind::Export) ||
-             exportNode->isKind(ParseNodeKind::ExportDefault));
-||||||| merged common ancestors
-    MOZ_ASSERT(exportNode->isKind(ParseNodeKind::Export) ||
-               exportNode->isKind(ParseNodeKind::ExportDefault));
-=======
   MOZ_ASSERT(exportNode->isKind(ParseNodeKind::ExportStmt) ||
              exportNode->isKind(ParseNodeKind::ExportDefaultStmt));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool isDefault = exportNode->isKind(ParseNodeKind::ExportDefault);
-  ParseNode* kid = isDefault ? exportNode->as<BinaryNode>().left()
-                             : exportNode->as<UnaryNode>().kid();
-||||||| merged common ancestors
-    bool isDefault = exportNode->isKind(ParseNodeKind::ExportDefault);
-    ParseNode* kid = isDefault
-                     ? exportNode->as<BinaryNode>().left()
-                     : exportNode->as<UnaryNode>().kid();
-=======
   bool isDefault = exportNode->isKind(ParseNodeKind::ExportDefaultStmt);
   ParseNode* kid = isDefault ? exportNode->as<BinaryNode>().left()
                              : exportNode->as<UnaryNode>().kid();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (isDefault && exportNode->as<BinaryNode>().right()) {
-    // This is an export default containing an expression.
-    HandlePropertyName localName = cx_->names().default_;
-    HandlePropertyName exportName = cx_->names().default_;
-    return appendExportEntry(exportName, localName);
-  }
-||||||| merged common ancestors
-    if (isDefault && exportNode->as<BinaryNode>().right()) {
-        // This is an export default containing an expression.
-        HandlePropertyName localName = cx_->names().default_;
-        HandlePropertyName exportName = cx_->names().default_;
-        return appendExportEntry(exportName, localName);
-    }
-=======
   if (isDefault && exportNode->as<BinaryNode>().right()) {
     // This is an export default containing an expression.
     HandlePropertyName localName = cx_->names().default_;
@@ -2561,17 +1354,6 @@ bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
       for (ParseNode* item : kid->as<ListNode>().contents()) {
         BinaryNode* spec = &item->as<BinaryNode>();
         MOZ_ASSERT(spec->isKind(ParseNodeKind::ExportSpec));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  switch (kid->getKind()) {
-    case ParseNodeKind::ExportSpecList: {
-      MOZ_ASSERT(!isDefault);
-      RootedAtom localName(cx_);
-      RootedAtom exportName(cx_);
-      for (ParseNode* item : kid->as<ListNode>().contents()) {
-        BinaryNode* spec = &item->as<BinaryNode>();
-        MOZ_ASSERT(spec->isKind(ParseNodeKind::ExportSpec));
 
         NameNode* localNameNode = &spec->left()->as<NameNode>();
         NameNode* exportNameNode = &spec->right()->as<NameNode>();
@@ -2579,56 +1361,11 @@ bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
         exportName = exportNameNode->atom();
         if (!appendExportEntry(exportName, localName, spec)) {
           return false;
-||||||| merged common ancestors
-    switch (kid->getKind()) {
-      case ParseNodeKind::ExportSpecList: {
-        MOZ_ASSERT(!isDefault);
-        RootedAtom localName(cx_);
-        RootedAtom exportName(cx_);
-        for (ParseNode* item : kid->as<ListNode>().contents()) {
-            BinaryNode* spec = &item->as<BinaryNode>();
-            MOZ_ASSERT(spec->isKind(ParseNodeKind::ExportSpec));
-
-            NameNode* localNameNode = &spec->left()->as<NameNode>();
-            NameNode* exportNameNode = &spec->right()->as<NameNode>();
-            localName = localNameNode->atom();
-            exportName = exportNameNode->atom();
-            if (!appendExportEntry(exportName, localName, spec)) {
-                return false;
-            }
-=======
-        NameNode* localNameNode = &spec->left()->as<NameNode>();
-        NameNode* exportNameNode = &spec->right()->as<NameNode>();
-        localName = localNameNode->atom();
-        exportName = exportNameNode->atom();
-        if (!appendExportEntry(exportName, localName, spec)) {
-          return false;
->>>>>>> upstream-releases
         }
       }
       break;
     }
 
-<<<<<<< HEAD
-    case ParseNodeKind::Class: {
-      const ClassNode& cls = kid->as<ClassNode>();
-      MOZ_ASSERT(cls.names());
-      RootedAtom localName(cx_, cls.names()->innerBinding()->atom());
-      RootedAtom exportName(
-          cx_, isDefault ? cx_->names().default_ : localName.get());
-      if (!appendExportEntry(exportName, localName)) {
-        return false;
-||||||| merged common ancestors
-      case ParseNodeKind::Class: {
-        const ClassNode& cls = kid->as<ClassNode>();
-        MOZ_ASSERT(cls.names());
-        RootedAtom localName(cx_, cls.names()->innerBinding()->atom());
-        RootedAtom exportName(cx_, isDefault ? cx_->names().default_ : localName.get());
-        if (!appendExportEntry(exportName, localName)) {
-            return false;
-        }
-        break;
-=======
     case ParseNodeKind::ClassDecl: {
       const ClassNode& cls = kid->as<ClassNode>();
       MOZ_ASSERT(cls.names());
@@ -2637,52 +1374,10 @@ bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
           cx_, isDefault ? cx_->names().default_ : localName.get());
       if (!appendExportEntry(exportName, localName)) {
         return false;
->>>>>>> upstream-releases
       }
       break;
     }
 
-<<<<<<< HEAD
-    case ParseNodeKind::Var:
-    case ParseNodeKind::Const:
-    case ParseNodeKind::Let: {
-      RootedAtom localName(cx_);
-      RootedAtom exportName(cx_);
-      for (ParseNode* binding : kid->as<ListNode>().contents()) {
-        if (binding->isKind(ParseNodeKind::Assign)) {
-          binding = binding->as<AssignmentNode>().left();
-        } else {
-          MOZ_ASSERT(binding->isKind(ParseNodeKind::Name));
-||||||| merged common ancestors
-      case ParseNodeKind::Var:
-      case ParseNodeKind::Const:
-      case ParseNodeKind::Let: {
-        RootedAtom localName(cx_);
-        RootedAtom exportName(cx_);
-        for (ParseNode* binding : kid->as<ListNode>().contents()) {
-            if (binding->isKind(ParseNodeKind::Assign)) {
-                binding = binding->as<AssignmentNode>().left();
-            } else {
-                MOZ_ASSERT(binding->isKind(ParseNodeKind::Name));
-            }
-
-            if (binding->isKind(ParseNodeKind::Name)) {
-                localName = binding->as<NameNode>().atom();
-                exportName = isDefault ? cx_->names().default_ : localName.get();
-                if (!appendExportEntry(exportName, localName)) {
-                    return false;
-                }
-            } else if (binding->isKind(ParseNodeKind::Array)) {
-                if (!processExportArrayBinding(&binding->as<ListNode>())) {
-                    return false;
-                }
-            } else {
-                MOZ_ASSERT(binding->isKind(ParseNodeKind::Object));
-                if (!processExportObjectBinding(&binding->as<ListNode>())) {
-                    return false;
-                }
-            }
-=======
     case ParseNodeKind::VarStmt:
     case ParseNodeKind::ConstDecl:
     case ParseNodeKind::LetDecl: {
@@ -2693,32 +1388,8 @@ bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
           binding = binding->as<AssignmentNode>().left();
         } else {
           MOZ_ASSERT(binding->isKind(ParseNodeKind::Name));
->>>>>>> upstream-releases
         }
 
-<<<<<<< HEAD
-        if (binding->isKind(ParseNodeKind::Name)) {
-          localName = binding->as<NameNode>().atom();
-          exportName = isDefault ? cx_->names().default_ : localName.get();
-          if (!appendExportEntry(exportName, localName)) {
-            return false;
-          }
-        } else if (binding->isKind(ParseNodeKind::Array)) {
-          if (!processExportArrayBinding(&binding->as<ListNode>())) {
-            return false;
-          }
-        } else {
-          MOZ_ASSERT(binding->isKind(ParseNodeKind::Object));
-          if (!processExportObjectBinding(&binding->as<ListNode>())) {
-||||||| merged common ancestors
-      case ParseNodeKind::Function: {
-        RootedFunction func(cx_, kid->as<CodeNode>().funbox()->function());
-        MOZ_ASSERT(!func->isArrow());
-        RootedAtom localName(cx_, func->explicitName());
-        RootedAtom exportName(cx_, isDefault ? cx_->names().default_ : localName.get());
-        MOZ_ASSERT_IF(isDefault, localName);
-        if (!appendExportEntry(exportName, localName)) {
-=======
         if (binding->isKind(ParseNodeKind::Name)) {
           localName = binding->as<NameNode>().atom();
           exportName = isDefault ? cx_->names().default_ : localName.get();
@@ -2727,40 +1398,18 @@ bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
           }
         } else if (binding->isKind(ParseNodeKind::ArrayExpr)) {
           if (!processExportArrayBinding(&binding->as<ListNode>())) {
->>>>>>> upstream-releases
             return false;
-<<<<<<< HEAD
-          }
-||||||| merged common ancestors
-=======
           }
         } else {
           MOZ_ASSERT(binding->isKind(ParseNodeKind::ObjectExpr));
           if (!processExportObjectBinding(&binding->as<ListNode>())) {
             return false;
           }
->>>>>>> upstream-releases
         }
       }
       break;
     }
 
-<<<<<<< HEAD
-    case ParseNodeKind::Function: {
-      RootedFunction func(cx_, kid->as<CodeNode>().funbox()->function());
-      MOZ_ASSERT(!func->isArrow());
-      RootedAtom localName(cx_, func->explicitName());
-      RootedAtom exportName(
-          cx_, isDefault ? cx_->names().default_ : localName.get());
-      MOZ_ASSERT_IF(isDefault, localName);
-      if (!appendExportEntry(exportName, localName)) {
-        return false;
-      }
-      break;
-||||||| merged common ancestors
-      default:
-        MOZ_CRASH("Unexpected parse node");
-=======
     case ParseNodeKind::Function: {
       FunctionBox* box = kid->as<FunctionNode>().funbox();
       MOZ_ASSERT(!box->isArrow());
@@ -2772,7 +1421,6 @@ bool ModuleBuilder::processExport(frontend::ParseNode* exportNode) {
         return false;
       }
       break;
->>>>>>> upstream-releases
     }
 
     default:
@@ -2790,67 +1438,29 @@ bool ModuleBuilder::processExportBinding(frontend::ParseNode* binding) {
     return appendExportEntry(name, name);
   }
 
-<<<<<<< HEAD
-  if (binding->isKind(ParseNodeKind::Array)) {
-    return processExportArrayBinding(&binding->as<ListNode>());
-  }
-||||||| merged common ancestors
-    if (binding->isKind(ParseNodeKind::Array)) {
-        return processExportArrayBinding(&binding->as<ListNode>());
-    }
-=======
   if (binding->isKind(ParseNodeKind::ArrayExpr)) {
     return processExportArrayBinding(&binding->as<ListNode>());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(binding->isKind(ParseNodeKind::Object));
-  return processExportObjectBinding(&binding->as<ListNode>());
-||||||| merged common ancestors
-    MOZ_ASSERT(binding->isKind(ParseNodeKind::Object));
-    return processExportObjectBinding(&binding->as<ListNode>());
-=======
   MOZ_ASSERT(binding->isKind(ParseNodeKind::ObjectExpr));
   return processExportObjectBinding(&binding->as<ListNode>());
->>>>>>> upstream-releases
 }
 
 bool ModuleBuilder::processExportArrayBinding(frontend::ListNode* array) {
   using namespace js::frontend;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(array->isKind(ParseNodeKind::Array));
-||||||| merged common ancestors
-    MOZ_ASSERT(array->isKind(ParseNodeKind::Array));
-=======
   MOZ_ASSERT(array->isKind(ParseNodeKind::ArrayExpr));
->>>>>>> upstream-releases
 
   for (ParseNode* node : array->contents()) {
     if (node->isKind(ParseNodeKind::Elision)) {
       continue;
     }
 
-<<<<<<< HEAD
-    if (node->isKind(ParseNodeKind::Spread)) {
-      node = node->as<UnaryNode>().kid();
-    } else if (node->isKind(ParseNodeKind::Assign)) {
-      node = node->as<AssignmentNode>().left();
-    }
-||||||| merged common ancestors
-        if (node->isKind(ParseNodeKind::Spread)) {
-            node = node->as<UnaryNode>().kid();
-        } else if (node->isKind(ParseNodeKind::Assign)) {
-            node = node->as<AssignmentNode>().left();
-        }
-=======
     if (node->isKind(ParseNodeKind::Spread)) {
       node = node->as<UnaryNode>().kid();
     } else if (node->isKind(ParseNodeKind::AssignExpr)) {
       node = node->as<AssignmentNode>().left();
     }
->>>>>>> upstream-releases
 
     if (!processExportBinding(node)) {
       return false;
@@ -2863,33 +1473,13 @@ bool ModuleBuilder::processExportArrayBinding(frontend::ListNode* array) {
 bool ModuleBuilder::processExportObjectBinding(frontend::ListNode* obj) {
   using namespace js::frontend;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(obj->isKind(ParseNodeKind::Object));
-||||||| merged common ancestors
-    MOZ_ASSERT(obj->isKind(ParseNodeKind::Object));
-=======
   MOZ_ASSERT(obj->isKind(ParseNodeKind::ObjectExpr));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (ParseNode* node : obj->contents()) {
-    MOZ_ASSERT(node->isKind(ParseNodeKind::MutateProto) ||
-               node->isKind(ParseNodeKind::Colon) ||
-               node->isKind(ParseNodeKind::Shorthand) ||
-               node->isKind(ParseNodeKind::Spread));
-||||||| merged common ancestors
-    for (ParseNode* node : obj->contents()) {
-        MOZ_ASSERT(node->isKind(ParseNodeKind::MutateProto) ||
-                   node->isKind(ParseNodeKind::Colon) ||
-                   node->isKind(ParseNodeKind::Shorthand) ||
-                   node->isKind(ParseNodeKind::Spread));
-=======
   for (ParseNode* node : obj->contents()) {
     MOZ_ASSERT(node->isKind(ParseNodeKind::MutateProto) ||
                node->isKind(ParseNodeKind::PropertyDefinition) ||
                node->isKind(ParseNodeKind::Shorthand) ||
                node->isKind(ParseNodeKind::Spread));
->>>>>>> upstream-releases
 
     ParseNode* target;
     if (node->isKind(ParseNodeKind::Spread)) {
@@ -2901,19 +1491,9 @@ bool ModuleBuilder::processExportObjectBinding(frontend::ListNode* obj) {
         target = node->as<BinaryNode>().right();
       }
 
-<<<<<<< HEAD
-      if (target->isKind(ParseNodeKind::Assign)) {
-        target = target->as<AssignmentNode>().left();
-      }
-||||||| merged common ancestors
-        if (!processExportBinding(target)) {
-            return false;
-        }
-=======
       if (target->isKind(ParseNodeKind::AssignExpr)) {
         target = target->as<AssignmentNode>().left();
       }
->>>>>>> upstream-releases
     }
 
     if (!processExportBinding(target)) {
@@ -2927,73 +1507,19 @@ bool ModuleBuilder::processExportObjectBinding(frontend::ListNode* obj) {
 bool ModuleBuilder::processExportFrom(frontend::BinaryNode* exportNode) {
   using namespace js::frontend;
 
-<<<<<<< HEAD
-  MOZ_ASSERT(exportNode->isKind(ParseNodeKind::ExportFrom));
-||||||| merged common ancestors
-    MOZ_ASSERT(exportNode->isKind(ParseNodeKind::ExportFrom));
-=======
   MOZ_ASSERT(exportNode->isKind(ParseNodeKind::ExportFromStmt));
->>>>>>> upstream-releases
 
   ListNode* specList = &exportNode->left()->as<ListNode>();
   MOZ_ASSERT(specList->isKind(ParseNodeKind::ExportSpecList));
 
-<<<<<<< HEAD
-  NameNode* moduleSpec = &exportNode->right()->as<NameNode>();
-  MOZ_ASSERT(moduleSpec->isKind(ParseNodeKind::String));
-||||||| merged common ancestors
-    NameNode* moduleSpec = &exportNode->right()->as<NameNode>();
-    MOZ_ASSERT(moduleSpec->isKind(ParseNodeKind::String));
-=======
   NameNode* moduleSpec = &exportNode->right()->as<NameNode>();
   MOZ_ASSERT(moduleSpec->isKind(ParseNodeKind::StringExpr));
->>>>>>> upstream-releases
 
   RootedAtom module(cx_, moduleSpec->atom());
   if (!maybeAppendRequestedModule(module, moduleSpec)) {
     return false;
   }
 
-<<<<<<< HEAD
-  RootedAtom bindingName(cx_);
-  RootedAtom exportName(cx_);
-  for (ParseNode* spec : specList->contents()) {
-    if (spec->isKind(ParseNodeKind::ExportSpec)) {
-      NameNode* localNameNode = &spec->as<BinaryNode>().left()->as<NameNode>();
-      NameNode* exportNameNode =
-          &spec->as<BinaryNode>().right()->as<NameNode>();
-      bindingName = localNameNode->atom();
-      exportName = exportNameNode->atom();
-      if (!appendExportFromEntry(exportName, module, bindingName,
-                                 localNameNode)) {
-        return false;
-      }
-    } else {
-      MOZ_ASSERT(spec->isKind(ParseNodeKind::ExportBatchSpec));
-      exportName = cx_->names().star;
-      if (!appendExportFromEntry(nullptr, module, exportName, spec)) {
-        return false;
-      }
-||||||| merged common ancestors
-    RootedAtom bindingName(cx_);
-    RootedAtom exportName(cx_);
-    for (ParseNode* spec : specList->contents()) {
-        if (spec->isKind(ParseNodeKind::ExportSpec)) {
-            NameNode* localNameNode = &spec->as<BinaryNode>().left()->as<NameNode>();
-            NameNode* exportNameNode = &spec->as<BinaryNode>().right()->as<NameNode>();
-            bindingName = localNameNode->atom();
-            exportName = exportNameNode->atom();
-            if (!appendExportFromEntry(exportName, module, bindingName, localNameNode)) {
-                return false;
-            }
-        } else {
-            MOZ_ASSERT(spec->isKind(ParseNodeKind::ExportBatchSpec));
-            exportName = cx_->names().star;
-            if (!appendExportFromEntry(nullptr, module, exportName, spec)) {
-                return false;
-            }
-        }
-=======
   RootedAtom bindingName(cx_);
   RootedAtom exportName(cx_);
   for (ParseNode* spec : specList->contents()) {
@@ -3013,7 +1539,6 @@ bool ModuleBuilder::processExportFrom(frontend::BinaryNode* exportNode) {
       if (!appendExportFromEntry(nullptr, module, exportName, spec)) {
         return false;
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -3130,22 +1655,6 @@ ArrayObject* ModuleBuilder::createArray(
   return array;
 }
 
-<<<<<<< HEAD
-JSObject* js::GetOrCreateModuleMetaObject(JSContext* cx,
-                                          HandleObject moduleArg) {
-  HandleModuleObject module = moduleArg.as<ModuleObject>();
-  if (JSObject* obj = module->metaObject()) {
-    return obj;
-  }
-||||||| merged common ancestors
-JSObject*
-js::GetOrCreateModuleMetaObject(JSContext* cx, HandleObject moduleArg)
-{
-    HandleModuleObject module = moduleArg.as<ModuleObject>();
-    if (JSObject* obj = module->metaObject()) {
-        return obj;
-    }
-=======
 JSObject* js::GetOrCreateModuleMetaObject(JSContext* cx,
                                           HandleObject moduleArg) {
   HandleModuleObject module = moduleArg.as<ModuleObject>();
@@ -3208,20 +1717,7 @@ JSObject* js::StartDynamicModuleImport(JSContext* cx, HandleScript script,
   if (!promiseObject) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedObject metaObject(cx,
-                          NewObjectWithGivenProto<PlainObject>(cx, nullptr));
-  if (!metaObject) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    RootedObject metaObject(cx, NewObjectWithGivenProto<PlainObject>(cx, nullptr));
-    if (!metaObject) {
-        return nullptr;
-    }
-=======
   Handle<PromiseObject*> promise = promiseObject.as<PromiseObject>();
 
   JS::ModuleDynamicImportHook importHook =
@@ -3233,21 +1729,7 @@ JSObject* js::StartDynamicModuleImport(JSContext* cx, HandleScript script,
     }
     return promise;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::ModuleMetadataHook func = cx->runtime()->moduleMetadataHook;
-  if (!func) {
-    JS_ReportErrorASCII(cx, "Module metadata hook not set");
-    return nullptr;
-  }
-||||||| merged common ancestors
-    JS::ModuleMetadataHook func = cx->runtime()->moduleMetadataHook;
-    if (!func) {
-        JS_ReportErrorASCII(cx, "Module metadata hook not set");
-        return nullptr;
-    }
-=======
   RootedString specifier(cx, ToString(cx, specifierArg));
   if (!specifier) {
     if (!RejectPromiseWithPendingError(cx, promise)) {
@@ -3262,21 +1744,7 @@ JSObject* js::StartDynamicModuleImport(JSContext* cx, HandleScript script,
 
   if (!importHook(cx, referencingPrivate, specifier, promise)) {
     cx->runtime()->releaseScriptPrivate(referencingPrivate);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedValue modulePrivate(cx, JS::GetModulePrivate(module));
-  if (!func(cx, modulePrivate, metaObject)) {
-    return nullptr;
-  }
-
-  module->setMetaObject(metaObject);
-||||||| merged common ancestors
-    RootedValue modulePrivate(cx, JS::GetModulePrivate(module));
-    if (!func(cx, modulePrivate, metaObject)) {
-        return nullptr;
-    }
-=======
     // If there's no exception pending then the script is terminating
     // anyway, so just return nullptr.
     if (!cx->isExceptionPending() ||
@@ -3314,111 +1782,6 @@ bool js::FinishDynamicModuleImport(JSContext* cx,
         cx, "Unevaluated or errored module returned by module resolve hook");
     return RejectPromiseWithPendingError(cx, promise);
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return metaObject;
-}
-
-JSObject* js::CallModuleResolveHook(JSContext* cx,
-                                    HandleValue referencingPrivate,
-                                    HandleString specifier) {
-  JS::ModuleResolveHook moduleResolveHook = cx->runtime()->moduleResolveHook;
-  if (!moduleResolveHook) {
-    JS_ReportErrorASCII(cx, "Module resolve hook not set");
-    return nullptr;
-  }
-||||||| merged common ancestors
-    module->setMetaObject(metaObject);
-=======
-  RootedObject ns(cx, ModuleObject::GetOrCreateModuleNamespace(cx, module));
-  if (!ns) {
-    return RejectPromiseWithPendingError(cx, promise);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  RootedObject result(cx, moduleResolveHook(cx, referencingPrivate, specifier));
-  if (!result) {
-    return nullptr;
-  }
-
-  if (!result->is<ModuleObject>()) {
-    JS_ReportErrorASCII(cx, "Module resolve hook did not return Module object");
-    return nullptr;
-  }
-
-  return result;
-}
-
-JSObject* js::StartDynamicModuleImport(JSContext* cx,
-                                       HandleValue referencingPrivate,
-                                       HandleValue specifierArg) {
-  RootedObject promiseConstructor(cx, JS::GetPromiseConstructor(cx));
-  if (!promiseConstructor) {
-    return nullptr;
-  }
-
-  RootedObject promiseObject(cx, JS::NewPromiseObject(cx, nullptr));
-  if (!promiseObject) {
-    return nullptr;
-  }
-
-  Handle<PromiseObject*> promise = promiseObject.as<PromiseObject>();
-
-  JS::ModuleDynamicImportHook importHook =
-      cx->runtime()->moduleDynamicImportHook;
-  if (!importHook) {
-    JS_ReportErrorASCII(cx, "Dynamic module import is disabled");
-    if (!RejectPromiseWithPendingError(cx, promise)) {
-      return nullptr;
-    }
-    return promise;
-  }
-
-  RootedString specifier(cx, ToString(cx, specifierArg));
-  if (!specifier) {
-    if (!RejectPromiseWithPendingError(cx, promise)) {
-      return nullptr;
-    }
-    return promise;
-  }
-
-  if (!importHook(cx, referencingPrivate, specifier, promise)) {
-    // If there's no exception pending then the script is terminating
-    // anyway, so just return nullptr.
-    if (!cx->isExceptionPending() ||
-        !RejectPromiseWithPendingError(cx, promise)) {
-      return nullptr;
-    }
-    return promise;
-  }
-
-  return promise;
-}
-
-bool js::FinishDynamicModuleImport(JSContext* cx,
-                                   HandleValue referencingPrivate,
-                                   HandleString specifier,
-                                   HandleObject promiseArg) {
-  Handle<PromiseObject*> promise = promiseArg.as<PromiseObject>();
-
-  if (cx->isExceptionPending()) {
-    return RejectPromiseWithPendingError(cx, promise);
-  }
-
-  RootedObject result(cx,
-                      CallModuleResolveHook(cx, referencingPrivate, specifier));
-  if (!result) {
-    return RejectPromiseWithPendingError(cx, promise);
-  }
-
-  RootedModuleObject module(cx, &result->as<ModuleObject>());
-  if (module->status() != MODULE_STATUS_EVALUATED) {
-    JS_ReportErrorASCII(
-        cx, "Unevaluated or errored module returned by module resolve hook");
-    return RejectPromiseWithPendingError(cx, promise);
-  }
 
   RootedObject ns(cx, ModuleObject::GetOrCreateModuleNamespace(cx, module));
   if (!ns) {
@@ -3427,10 +1790,4 @@ bool js::FinishDynamicModuleImport(JSContext* cx,
 
   RootedValue value(cx, ObjectValue(*ns));
   return PromiseObject::resolve(cx, promise, value);
-||||||| merged common ancestors
-    return metaObject;
-=======
-  RootedValue value(cx, ObjectValue(*ns));
-  return PromiseObject::resolve(cx, promise, value);
->>>>>>> upstream-releases
 }

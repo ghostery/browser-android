@@ -170,16 +170,6 @@ struct VariantImplementation<Tag, N, T> {
     aV.template as<N>().~T();
   }
 
-<<<<<<< HEAD
-  template <typename Variant>
-  static bool equal(const Variant& aLhs, const Variant& aRhs) {
-    return aLhs.template as<N>() == aRhs.template as<N>();
-||||||| merged common ancestors
-  template<typename Variant>
-  static bool
-  equal(const Variant& aLhs, const Variant& aRhs) {
-      return aLhs.template as<N>() == aRhs.template as<N>();
-=======
   template <typename Variant>
   static bool equal(const Variant& aLhs, const Variant& aRhs) {
     return aLhs.template as<N>() == aRhs.template as<N>();
@@ -188,26 +178,11 @@ struct VariantImplementation<Tag, N, T> {
   template <typename Matcher, typename ConcreteVariant>
   static decltype(auto) match(Matcher&& aMatcher, ConcreteVariant& aV) {
     return aMatcher(aV.template as<N>());
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  template <typename Matcher, typename ConcreteVariant>
-  static auto match(Matcher&& aMatcher, ConcreteVariant& aV)
-      -> decltype(aMatcher.match(aV.template as<N>())) {
-    return aMatcher.match(aV.template as<N>());
-||||||| merged common ancestors
-  template<typename Matcher, typename ConcreteVariant>
-  static auto
-  match(Matcher&& aMatcher, ConcreteVariant& aV)
-    -> decltype(aMatcher.match(aV.template as<N>()))
-  {
-    return aMatcher.match(aV.template as<N>());
-=======
   template <typename ConcreteVariant, typename Matcher>
   static decltype(auto) matchN(ConcreteVariant& aV, Matcher&& aMatcher) {
     return aMatcher(aV.template as<N>());
->>>>>>> upstream-releases
   }
 };
 
@@ -259,20 +234,8 @@ struct VariantImplementation<Tag, N, T, Ts...> {
     }
   }
 
-<<<<<<< HEAD
-  template <typename Matcher, typename ConcreteVariant>
-  static auto match(Matcher&& aMatcher, ConcreteVariant& aV)
-      -> decltype(aMatcher.match(aV.template as<N>())) {
-||||||| merged common ancestors
-  template<typename Matcher, typename ConcreteVariant>
-  static auto
-  match(Matcher&& aMatcher, ConcreteVariant& aV)
-    -> decltype(aMatcher.match(aV.template as<N>()))
-  {
-=======
   template <typename Matcher, typename ConcreteVariant>
   static decltype(auto) match(Matcher&& aMatcher, ConcreteVariant& aV) {
->>>>>>> upstream-releases
     if (aV.template is<N>()) {
       return aMatcher(aV.template as<N>());
     } else {
@@ -753,19 +716,6 @@ class MOZ_INHERIT_TYPE_ANNOTATIONS_FROM_TEMPLATE_ARGS MOZ_NON_PARAM Variant {
   // Exhaustive matching of all variant types on the contained value.
 
   /** Match on an immutable const reference. */
-<<<<<<< HEAD
-  template <typename Matcher>
-  auto match(Matcher&& aMatcher) const
-      -> decltype(Impl::match(aMatcher, *this)) {
-    return Impl::match(aMatcher, *this);
-||||||| merged common ancestors
-  template<typename Matcher>
-  auto
-  match(Matcher&& aMatcher) const
-    -> decltype(Impl::match(aMatcher, *this))
-  {
-    return Impl::match(aMatcher, *this);
-=======
   template <typename Matcher>
   decltype(auto) match(Matcher&& aMatcher) const {
     return Impl::match(std::forward<Matcher>(aMatcher), *this);
@@ -786,22 +736,9 @@ class MOZ_INHERIT_TYPE_ANNOTATIONS_FROM_TEMPLATE_ARGS MOZ_NON_PARAM Variant {
         "all matchers must have the same return type");
     return Impl::matchN(*this, std::forward<M0>(aM0), std::forward<M1>(aM1),
                         std::forward<Ms>(aMs)...);
->>>>>>> upstream-releases
   }
 
   /** Match on a mutable non-const reference. */
-<<<<<<< HEAD
-  template <typename Matcher>
-  auto match(Matcher&& aMatcher) -> decltype(Impl::match(aMatcher, *this)) {
-    return Impl::match(aMatcher, *this);
-||||||| merged common ancestors
-  template<typename Matcher>
-  auto
-  match(Matcher&& aMatcher)
-    -> decltype(Impl::match(aMatcher, *this))
-  {
-    return Impl::match(aMatcher, *this);
-=======
   template <typename Matcher>
   decltype(auto) match(Matcher&& aMatcher) {
     return Impl::match(std::forward<Matcher>(aMatcher), *this);
@@ -831,7 +768,6 @@ class MOZ_INHERIT_TYPE_ANNOTATIONS_FROM_TEMPLATE_ARGS MOZ_NON_PARAM Variant {
    */
   mozilla::HashNumber addTagToHash(mozilla::HashNumber hashValue) const {
     return mozilla::AddToHash(hashValue, tag);
->>>>>>> upstream-releases
   }
 };
 

@@ -21,16 +21,6 @@ namespace dom {
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(ModuleLoadRequest)
 NS_INTERFACE_MAP_END_INHERITING(ScriptLoadRequest)
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION_INHERITED(ModuleLoadRequest, ScriptLoadRequest,
-                                   mBaseURL, mLoader, mModuleScript, mImports)
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION_INHERITED(ModuleLoadRequest, ScriptLoadRequest,
-                                   mBaseURL,
-                                   mLoader,
-                                   mModuleScript,
-                                   mImports)
-=======
 NS_IMPL_CYCLE_COLLECTION_CLASS(ModuleLoadRequest)
 
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(ModuleLoadRequest,
@@ -50,39 +40,10 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN_INHERITED(ModuleLoadRequest,
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mDynamicSpecifier)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mDynamicPromise)
 NS_IMPL_CYCLE_COLLECTION_TRACE_END
->>>>>>> upstream-releases
 
 NS_IMPL_ADDREF_INHERITED(ModuleLoadRequest, ScriptLoadRequest)
 NS_IMPL_RELEASE_INHERITED(ModuleLoadRequest, ScriptLoadRequest)
 
-<<<<<<< HEAD
-ModuleLoadRequest::ModuleLoadRequest(nsIURI* aURI,
-                                     ScriptFetchOptions* aFetchOptions,
-                                     const SRIMetadata& aIntegrity,
-                                     nsIURI* aReferrer, ScriptLoader* aLoader)
-    : ScriptLoadRequest(ScriptKind::eModule, aURI, aFetchOptions, aIntegrity,
-                        aReferrer),
-      mIsTopLevel(true),
-      mLoader(aLoader),
-      mVisitedSet(new VisitedURLSet()) {
-  mVisitedSet->PutEntry(aURI);
-||||||| merged common ancestors
-ModuleLoadRequest::ModuleLoadRequest(nsIURI* aURI,
-                                     ScriptFetchOptions* aFetchOptions,
-                                     const SRIMetadata& aIntegrity,
-                                     nsIURI* aReferrer,
-                                     ScriptLoader* aLoader)
-  : ScriptLoadRequest(ScriptKind::eModule,
-                      aURI,
-                      aFetchOptions,
-                      aIntegrity,
-                      aReferrer),
-    mIsTopLevel(true),
-    mLoader(aLoader),
-    mVisitedSet(new VisitedURLSet())
-{
-  mVisitedSet->PutEntry(aURI);
-=======
 static VisitedURLSet* NewVisitedSetForTopLevelImport(nsIURI* aURI) {
   auto set = new VisitedURLSet();
   set->PutEntry(aURI);
@@ -97,37 +58,8 @@ ModuleLoadRequest* ModuleLoadRequest::CreateTopLevel(
                                true,  /* is top level */
                                false, /* is dynamic import */
                                aLoader, NewVisitedSetForTopLevelImport(aURI));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-ModuleLoadRequest::ModuleLoadRequest(nsIURI* aURI, ModuleLoadRequest* aParent)
-    : ScriptLoadRequest(ScriptKind::eModule, aURI, aParent->mFetchOptions,
-                        SRIMetadata(), aParent->mURI),
-      mIsTopLevel(false),
-      mLoader(aParent->mLoader),
-      mVisitedSet(aParent->mVisitedSet) {
-  MOZ_ASSERT(mVisitedSet->Contains(aURI));
-
-  mIsInline = false;
-  mScriptMode = aParent->mScriptMode;
-||||||| merged common ancestors
-ModuleLoadRequest::ModuleLoadRequest(nsIURI* aURI,
-                                     ModuleLoadRequest* aParent)
-  : ScriptLoadRequest(ScriptKind::eModule,
-                      aURI,
-                      aParent->mFetchOptions,
-                      SRIMetadata(),
-                      aParent->mURI),
-    mIsTopLevel(false),
-    mLoader(aParent->mLoader),
-    mVisitedSet(aParent->mVisitedSet)
-{
-  MOZ_ASSERT(mVisitedSet->Contains(aURI));
-
-  mIsInline = false;
-  mScriptMode = aParent->mScriptMode;
-=======
 /* static */
 ModuleLoadRequest* ModuleLoadRequest::CreateStaticImport(
     nsIURI* aURI, ModuleLoadRequest* aParent) {
@@ -141,16 +73,8 @@ ModuleLoadRequest* ModuleLoadRequest::CreateStaticImport(
   request->mScriptMode = aParent->mScriptMode;
 
   return request;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void ModuleLoadRequest::Cancel() {
-||||||| merged common ancestors
-void
-ModuleLoadRequest::Cancel()
-{
-=======
 /* static */
 ModuleLoadRequest* ModuleLoadRequest::CreateDynamicImport(
     nsIURI* aURI, ScriptFetchOptions* aFetchOptions, nsIURI* aBaseURL,
@@ -187,7 +111,6 @@ ModuleLoadRequest::ModuleLoadRequest(
       mVisitedSet(aVisitedSet) {}
 
 void ModuleLoadRequest::Cancel() {
->>>>>>> upstream-releases
   ScriptLoadRequest::Cancel();
   mModuleScript = nullptr;
   mProgress = ScriptLoadRequest::Progress::eReady;
@@ -235,19 +158,11 @@ void ModuleLoadRequest::ModuleLoaded() {
   mLoader->StartFetchingModuleDependencies(this);
 }
 
-<<<<<<< HEAD
-void ModuleLoadRequest::ModuleErrored() {
-||||||| merged common ancestors
-void
-ModuleLoadRequest::ModuleErrored()
-{
-=======
 void ModuleLoadRequest::ModuleErrored() {
   if (IsCanceled()) {
     return;
   }
 
->>>>>>> upstream-releases
   LOG(("ScriptLoadRequest (%p): Module errored", this));
 
   mLoader->CheckModuleDependenciesLoaded(this);
@@ -258,19 +173,11 @@ void ModuleLoadRequest::ModuleErrored() {
   LoadFinished();
 }
 
-<<<<<<< HEAD
-void ModuleLoadRequest::DependenciesLoaded() {
-||||||| merged common ancestors
-void
-ModuleLoadRequest::DependenciesLoaded()
-{
-=======
 void ModuleLoadRequest::DependenciesLoaded() {
   if (IsCanceled()) {
     return;
   }
 
->>>>>>> upstream-releases
   // The module and all of its dependencies have been successfully fetched and
   // compiled.
 
@@ -301,13 +208,6 @@ void ModuleLoadRequest::LoadFinished() {
   mLoader = nullptr;
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // dom namespace
-} // mozilla namespace
-=======
 void ModuleLoadRequest::ClearDynamicImport() {
   mDynamicReferencingPrivate = JS::UndefinedValue();
   mDynamicSpecifier = nullptr;
@@ -316,4 +216,3 @@ void ModuleLoadRequest::ClearDynamicImport() {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

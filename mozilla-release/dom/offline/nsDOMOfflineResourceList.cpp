@@ -69,50 +69,6 @@ NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 NS_IMPL_ADDREF_INHERITED(nsDOMOfflineResourceList, DOMEventTargetHelper)
 NS_IMPL_RELEASE_INHERITED(nsDOMOfflineResourceList, DOMEventTargetHelper)
 
-<<<<<<< HEAD
-nsDOMOfflineResourceList::nsDOMOfflineResourceList(
-    nsIURI* aManifestURI, nsIURI* aDocumentURI, nsIPrincipal* aLoadingPrincipal,
-    nsPIDOMWindowInner* aWindow)
-    : DOMEventTargetHelper(aWindow),
-      mInitialized(false),
-      mManifestURI(aManifestURI),
-      mDocumentURI(aDocumentURI),
-      mLoadingPrincipal(aLoadingPrincipal),
-      mExposeCacheUpdateStatus(true),
-      mStatus(OfflineResourceList_Binding::IDLE),
-      mCachedKeys(nullptr),
-      mCachedKeysCount(0) {}
-
-nsDOMOfflineResourceList::~nsDOMOfflineResourceList() { ClearCachedKeys(); }
-
-JSObject* nsDOMOfflineResourceList::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-nsDOMOfflineResourceList::nsDOMOfflineResourceList(nsIURI *aManifestURI,
-                                                   nsIURI *aDocumentURI,
-                                                   nsIPrincipal *aLoadingPrincipal,
-                                                   nsPIDOMWindowInner *aWindow)
-  : DOMEventTargetHelper(aWindow)
-  , mInitialized(false)
-  , mManifestURI(aManifestURI)
-  , mDocumentURI(aDocumentURI)
-  , mLoadingPrincipal(aLoadingPrincipal)
-  , mExposeCacheUpdateStatus(true)
-  , mStatus(OfflineResourceList_Binding::IDLE)
-  , mCachedKeys(nullptr)
-  , mCachedKeysCount(0)
-{
-}
-
-nsDOMOfflineResourceList::~nsDOMOfflineResourceList()
-{
-  ClearCachedKeys();
-}
-
-JSObject*
-nsDOMOfflineResourceList::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 nsDOMOfflineResourceList::nsDOMOfflineResourceList(
     nsIURI* aManifestURI, nsIURI* aDocumentURI, nsIPrincipal* aLoadingPrincipal,
     nsPIDOMWindowInner* aWindow)
@@ -128,7 +84,6 @@ nsDOMOfflineResourceList::~nsDOMOfflineResourceList() { ClearCachedKeys(); }
 
 JSObject* nsDOMOfflineResourceList::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return OfflineResourceList_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -163,16 +118,8 @@ nsresult nsDOMOfflineResourceList::Init() {
 
     // Check for in-progress cache updates
     nsCOMPtr<nsIOfflineCacheUpdateService> cacheUpdateService =
-<<<<<<< HEAD
-        do_GetService(NS_OFFLINECACHEUPDATESERVICE_CONTRACTID, &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-      do_GetService(NS_OFFLINECACHEUPDATESERVICE_CONTRACTID, &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
         components::OfflineCacheUpdate::Service();
     NS_ENSURE_TRUE(cacheUpdateService, NS_ERROR_UNEXPECTED);
->>>>>>> upstream-releases
 
     uint32_t numUpdates;
     rv = cacheUpdateService->GetNumUpdates(&numUpdates);
@@ -234,20 +181,8 @@ already_AddRefed<DOMStringList> nsDOMOfflineResourceList::GetMozItems(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  uint32_t length;
-  char** keys;
-  aRv = appCache->GatherEntries(nsIApplicationCache::ITEM_DYNAMIC, &length,
-                                &keys);
-||||||| merged common ancestors
-  uint32_t length;
-  char **keys;
-  aRv = appCache->GatherEntries(nsIApplicationCache::ITEM_DYNAMIC,
-                                &length, &keys);
-=======
   nsTArray<nsCString> keys;
   aRv = appCache->GatherEntries(nsIApplicationCache::ITEM_DYNAMIC, keys);
->>>>>>> upstream-releases
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -556,19 +491,9 @@ void nsDOMOfflineResourceList::Update(ErrorResult& aRv) {
   }
 
   nsCOMPtr<nsIOfflineCacheUpdateService> updateService =
-<<<<<<< HEAD
-      do_GetService(NS_OFFLINECACHEUPDATESERVICE_CONTRACTID, &rv);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    aRv.Throw(rv);
-||||||| merged common ancestors
-    do_GetService(NS_OFFLINECACHEUPDATESERVICE_CONTRACTID, &rv);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    aRv.Throw(rv);
-=======
       components::OfflineCacheUpdate::Service();
   if (NS_WARN_IF(!updateService)) {
     aRv.Throw(NS_ERROR_UNEXPECTED);
->>>>>>> upstream-releases
     return;
   }
 
@@ -919,35 +844,11 @@ nsresult nsDOMOfflineResourceList::CacheKeys() {
     return NS_ERROR_DOM_INVALID_STATE_ERR;
   }
 
-<<<<<<< HEAD
-  return appCache->GatherEntries(nsIApplicationCache::ITEM_DYNAMIC,
-                                 &mCachedKeysCount, &mCachedKeys);
-}
-
-void nsDOMOfflineResourceList::ClearCachedKeys() {
-  if (mCachedKeys) {
-    NS_FREE_XPCOM_ALLOCATED_POINTER_ARRAY(mCachedKeysCount, mCachedKeys);
-    mCachedKeys = nullptr;
-    mCachedKeysCount = 0;
-||||||| merged common ancestors
-  return appCache->GatherEntries(nsIApplicationCache::ITEM_DYNAMIC,
-                                 &mCachedKeysCount, &mCachedKeys);
-}
-
-void
-nsDOMOfflineResourceList::ClearCachedKeys()
-{
-  if (mCachedKeys) {
-    NS_FREE_XPCOM_ALLOCATED_POINTER_ARRAY(mCachedKeysCount, mCachedKeys);
-    mCachedKeys = nullptr;
-    mCachedKeysCount = 0;
-=======
   mCachedKeys.emplace();
   nsresult rv =
       appCache->GatherEntries(nsIApplicationCache::ITEM_DYNAMIC, *mCachedKeys);
   if (NS_FAILED(rv)) {
     mCachedKeys.reset();
->>>>>>> upstream-releases
   }
 
   return rv;

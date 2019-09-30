@@ -58,18 +58,12 @@ struct URLExtraData {
   static void InitDummy();
   static void ReleaseDummy();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // URLExtraData objects that shared style sheets use a sheet ID index to
   // refer to.
   static StaticRefPtr<URLExtraData>
       sShared[size_t(UserAgentStyleSheetID::Count)];
 
  private:
->>>>>>> upstream-releases
   ~URLExtraData();
 
   nsCOMPtr<nsIURI> mBaseURI;

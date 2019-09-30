@@ -7,19 +7,6 @@ use crate::targets::{
 use core::fmt;
 use core::str::FromStr;
 use std::borrow::ToOwned;
-<<<<<<< HEAD
-use std::fmt;
-use std::str::FromStr;
-use targets::{
-    default_binary_format, Architecture, BinaryFormat, Environment, OperatingSystem, Vendor,
-};
-||||||| merged common ancestors
-use std::fmt;
-use std::str::FromStr;
-use targets::{default_binary_format, Architecture, BinaryFormat, Environment, OperatingSystem,
-              Vendor};
-=======
->>>>>>> upstream-releases
 
 /// The target memory endianness.
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
@@ -167,28 +154,6 @@ impl fmt::Display for Triple {
         let implied_binary_format = default_binary_format(&self);
 
         write!(f, "{}", self.architecture)?;
-<<<<<<< HEAD
-        if self.vendor == Vendor::Unknown
-            && self.operating_system == OperatingSystem::Unknown
-            && (self.environment != Environment::Unknown
-                || self.binary_format != implied_binary_format)
-        {
-            // "none" is special-case shorthand for unknown vendor and unknown operating system.
-            f.write_str("-none")?;
-        } else if self.operating_system == OperatingSystem::Linux
-            && (self.environment == Environment::Android
-                || self.environment == Environment::Androideabi)
-||||||| merged common ancestors
-        if self.vendor == Vendor::Unknown && self.operating_system == OperatingSystem::Unknown
-            && (self.environment != Environment::Unknown
-                || self.binary_format != implied_binary_format)
-        {
-            // "none" is special-case shorthand for unknown vendor and unknown operating system.
-            f.write_str("-none")?;
-        } else if self.operating_system == OperatingSystem::Linux
-            && (self.environment == Environment::Android
-                || self.environment == Environment::Androideabi)
-=======
         if self.vendor == Vendor::Unknown
             && ((self.operating_system == OperatingSystem::Linux
                 && (self.environment == Environment::Android
@@ -203,7 +168,6 @@ impl fmt::Display for Triple {
                         || self.architecture == Architecture::Thumbv8mBase
                         || self.architecture == Architecture::Thumbv8mMain
                         || self.architecture == Architecture::Msp430)))
->>>>>>> upstream-releases
         {
             // As a special case, omit the vendor for Android, Fuchsia, and sometimes
             // None_, depending on the hardware architecture. This logic is entirely

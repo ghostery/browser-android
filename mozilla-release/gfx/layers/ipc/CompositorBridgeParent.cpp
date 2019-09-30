@@ -22,42 +22,8 @@
 #include "gfxPlatform.h"              // for gfxPlatform
 #include "TreeTraversal.h"            // for ForEachNode
 #ifdef MOZ_WIDGET_GTK
-<<<<<<< HEAD
-#include "gfxPlatformGtk.h"  // for gfxPlatform
-||||||| merged common ancestors
-#include "gfxPlatformGtk.h"             // for gfxPlatform
-=======
 #  include "gfxPlatformGtk.h"  // for gfxPlatform
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-#include "gfxPrefs.h"                 // for gfxPrefs
-#include "mozilla/AutoRestore.h"      // for AutoRestore
-#include "mozilla/ClearOnShutdown.h"  // for ClearOnShutdown
-#include "mozilla/DebugOnly.h"        // for DebugOnly
-#include "mozilla/dom/TabParent.h"
-#include "mozilla/gfx/2D.h"         // for DrawTarget
-#include "mozilla/gfx/GPUChild.h"   // for GfxPrefValue
-#include "mozilla/gfx/Point.h"      // for IntSize
-#include "mozilla/gfx/Rect.h"       // for IntSize
-#include "mozilla/gfx/gfxVars.h"    // for gfxVars
-#include "VRManager.h"              // for VRManager
-#include "mozilla/ipc/Transport.h"  // for Transport
-||||||| merged common ancestors
-#include "gfxPrefs.h"                   // for gfxPrefs
-#include "mozilla/AutoRestore.h"        // for AutoRestore
-#include "mozilla/ClearOnShutdown.h"    // for ClearOnShutdown
-#include "mozilla/DebugOnly.h"          // for DebugOnly
-#include "mozilla/dom/ContentParent.h"
-#include "mozilla/dom/TabParent.h"
-#include "mozilla/gfx/2D.h"          // for DrawTarget
-#include "mozilla/gfx/GPUChild.h"       // for GfxPrefValue
-#include "mozilla/gfx/Point.h"          // for IntSize
-#include "mozilla/gfx/Rect.h"          // for IntSize
-#include "mozilla/gfx/gfxVars.h"        // for gfxVars
-#include "VRManager.h"                  // for VRManager
-#include "mozilla/ipc/Transport.h"      // for Transport
-=======
 #include "mozilla/AutoRestore.h"      // for AutoRestore
 #include "mozilla/ClearOnShutdown.h"  // for ClearOnShutdown
 #include "mozilla/DebugOnly.h"        // for DebugOnly
@@ -69,7 +35,6 @@
 #include "mozilla/gfx/gfxVars.h"    // for gfxVars
 #include "VRManager.h"              // for VRManager
 #include "mozilla/ipc/Transport.h"  // for Transport
->>>>>>> upstream-releases
 #include "mozilla/gfx/gfxVars.h"
 #include "mozilla/gfx/GPUParent.h"
 #include "mozilla/layers/AnimationHelper.h"  // for CompositorAnimationStorage
@@ -78,23 +43,11 @@
 #include "mozilla/layers/APZThreadUtils.h"         // for APZThreadUtils
 #include "mozilla/layers/APZUpdater.h"             // for APZUpdater
 #include "mozilla/layers/AsyncCompositionManager.h"
-<<<<<<< HEAD
-#include "mozilla/layers/BasicCompositor.h"          // for BasicCompositor
-#include "mozilla/layers/Compositor.h"               // for Compositor
-#include "mozilla/layers/CompositorManagerParent.h"  // for CompositorManagerParent
-#include "mozilla/layers/CompositorOGL.h"            // for CompositorOGL
-||||||| merged common ancestors
-#include "mozilla/layers/BasicCompositor.h"  // for BasicCompositor
-#include "mozilla/layers/Compositor.h"  // for Compositor
-#include "mozilla/layers/CompositorManagerParent.h" // for CompositorManagerParent
-#include "mozilla/layers/CompositorOGL.h"  // for CompositorOGL
-=======
 #include "mozilla/layers/BasicCompositor.h"          // for BasicCompositor
 #include "mozilla/layers/CompositionRecorder.h"      // for CompositionRecorder
 #include "mozilla/layers/Compositor.h"               // for Compositor
 #include "mozilla/layers/CompositorManagerParent.h"  // for CompositorManagerParent
 #include "mozilla/layers/CompositorOGL.h"            // for CompositorOGL
->>>>>>> upstream-releases
 #include "mozilla/layers/CompositorThread.h"
 #include "mozilla/layers/CompositorTypes.h"
 #include "mozilla/layers/CompositorVsyncScheduler.h"
@@ -110,26 +63,12 @@
 #include "mozilla/layers/WebRenderBridgeParent.h"
 #include "mozilla/layers/AsyncImagePipelineManager.h"
 #include "mozilla/webrender/WebRenderAPI.h"
-<<<<<<< HEAD
-#include "mozilla/media/MediaSystemResourceService.h"  // for MediaSystemResourceService
-#include "mozilla/mozalloc.h"                          // for operator new, etc
-||||||| merged common ancestors
-#include "mozilla/media/MediaSystemResourceService.h" // for MediaSystemResourceService
-#include "mozilla/mozalloc.h"           // for operator new, etc
-=======
 #include "mozilla/media/MediaSystemResourceService.h"  // for MediaSystemResourceService
 #include "mozilla/mozalloc.h"                          // for operator new, etc
 #include "mozilla/PerfStats.h"
->>>>>>> upstream-releases
 #include "mozilla/Telemetry.h"
 #ifdef MOZ_WIDGET_GTK
-<<<<<<< HEAD
-#include "basic/X11BasicCompositor.h"  // for X11BasicCompositor
-||||||| merged common ancestors
-#include "basic/X11BasicCompositor.h" // for X11BasicCompositor
-=======
 #  include "basic/X11BasicCompositor.h"  // for X11BasicCompositor
->>>>>>> upstream-releases
 #endif
 #include "nsCOMPtr.h"         // for already_AddRefed
 #include "nsDebug.h"          // for NS_ASSERTION, etc
@@ -151,42 +90,18 @@
 #include "mozilla/StaticPtr.h"
 #include "mozilla/Telemetry.h"
 #ifdef MOZ_GECKO_PROFILER
-<<<<<<< HEAD
-#include "ProfilerMarkerPayload.h"
-||||||| merged common ancestors
-# include "ProfilerMarkerPayload.h"
-=======
 #  include "ProfilerMarkerPayload.h"
->>>>>>> upstream-releases
 #endif
 #include "mozilla/VsyncDispatcher.h"
 #if defined(XP_WIN) || defined(MOZ_WIDGET_GTK)
-<<<<<<< HEAD
-#include "VsyncSource.h"
-||||||| merged common ancestors
-# include "VsyncSource.h"
-=======
 #  include "VsyncSource.h"
->>>>>>> upstream-releases
 #endif
 #include "mozilla/widget/CompositorWidget.h"
 #ifdef MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING
-<<<<<<< HEAD
-#include "mozilla/widget/CompositorWidgetParent.h"
-||||||| merged common ancestors
-# include "mozilla/widget/CompositorWidgetParent.h"
-=======
 #  include "mozilla/widget/CompositorWidgetParent.h"
->>>>>>> upstream-releases
 #endif
 #ifdef XP_WIN
-<<<<<<< HEAD
-#include "mozilla/gfx/DeviceManagerDx.h"
-||||||| merged common ancestors
-# include "mozilla/gfx/DeviceManagerDx.h"
-=======
 #  include "mozilla/gfx/DeviceManagerDx.h"
->>>>>>> upstream-releases
 #endif
 
 #include "LayerScope.h"
@@ -202,26 +117,12 @@ using namespace std;
 using base::ProcessId;
 using base::Thread;
 
-<<<<<<< HEAD
-/// Equivalent to asserting CompositorThreadHolder::IsInCompositorThread with
-/// the addition that it doesn't assert if the compositor thread holder is
-/// already gone during late shutdown.
-static void AssertIsInCompositorThread() {
-||||||| merged common ancestors
-
-/// Equivalent to asserting CompositorThreadHolder::IsInCompositorThread with the
-/// addition that it doesn't assert if the compositor thread holder is already gone
-/// during late shutdown.
-static void AssertIsInCompositorThread()
-{
-=======
 using mozilla::Telemetry::LABELS_CONTENT_FRAME_TIME_REASON;
 
 /// Equivalent to asserting CompositorThreadHolder::IsInCompositorThread with
 /// the addition that it doesn't assert if the compositor thread holder is
 /// already gone during late shutdown.
 static void AssertIsInCompositorThread() {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(!CompositorThread() ||
                      CompositorThreadHolder::IsInCompositorThread());
 }
@@ -320,28 +221,6 @@ bool CompositorBridgeParentBase::StopSharingMetrics(
 }
 
 CompositorBridgeParent::LayerTreeState::LayerTreeState()
-<<<<<<< HEAD
-    : mApzcTreeManagerParent(nullptr),
-      mParent(nullptr),
-      mLayerManager(nullptr),
-      mCrossProcessParent(nullptr),
-      mLayerTree(nullptr),
-      mUpdatedPluginDataAvailable(false) {}
-
-CompositorBridgeParent::LayerTreeState::~LayerTreeState() {
-||||||| merged common ancestors
-  : mApzcTreeManagerParent(nullptr)
-  , mParent(nullptr)
-  , mLayerManager(nullptr)
-  , mCrossProcessParent(nullptr)
-  , mLayerTree(nullptr)
-  , mUpdatedPluginDataAvailable(false)
-{
-}
-
-CompositorBridgeParent::LayerTreeState::~LayerTreeState()
-{
-=======
     : mApzcTreeManagerParent(nullptr),
       mParent(nullptr),
       mLayerManager(nullptr),
@@ -350,7 +229,6 @@ CompositorBridgeParent::LayerTreeState::~LayerTreeState()
       mUpdatedPluginDataAvailable(false) {}
 
 CompositorBridgeParent::LayerTreeState::~LayerTreeState() {
->>>>>>> upstream-releases
   if (mController) {
     mController->Destroy();
   }
@@ -505,24 +383,10 @@ void CompositorBridgeParent::Initialize() {
   // can destroy this instance is initialized on the compositor thread after
   // this task has been processed.
   MOZ_ASSERT(CompositorLoop());
-<<<<<<< HEAD
   CompositorLoop()->PostTask(NewRunnableFunction(
       "AddCompositorRunnable", &AddCompositor, this, &mCompositorBridgeID));
 
   {  // scope lock
-||||||| merged common ancestors
-  CompositorLoop()->PostTask(NewRunnableFunction("AddCompositorRunnable",
-                                                 &AddCompositor,
-                                                 this, &mCompositorBridgeID));
-
-
-  { // scope lock
-=======
-  CompositorLoop()->PostTask(NewRunnableFunction(
-      "AddCompositorRunnable", &AddCompositor, this, &mCompositorBridgeID));
-
-  {  // scope lock
->>>>>>> upstream-releases
     MonitorAutoLock lock(*sIndirectLayerTreesLock);
     sIndirectLayerTrees[mRootLayerTreeID].mParent = this;
   }
@@ -787,31 +651,12 @@ void CompositorBridgeParent::ActorDestroy(ActorDestroyReason why) {
                         &CompositorBridgeParent::DeferredDestroy));
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::ScheduleRenderOnCompositorThread() {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::ScheduleRenderOnCompositorThread()
-{
-=======
 void CompositorBridgeParent::ScheduleRenderOnCompositorThread(
     const wr::RenderRootSet& aRenderRoots) {
->>>>>>> upstream-releases
   MOZ_ASSERT(CompositorLoop());
-<<<<<<< HEAD
-  CompositorLoop()->PostTask(
-      NewRunnableMethod("layers::CompositorBridgeParent::ScheduleComposition",
-                        this, &CompositorBridgeParent::ScheduleComposition));
-||||||| merged common ancestors
-  CompositorLoop()->PostTask(
-    NewRunnableMethod("layers::CompositorBridgeParent::ScheduleComposition",
-                      this,
-                      &CompositorBridgeParent::ScheduleComposition));
-=======
   CompositorLoop()->PostTask(NewRunnableMethod<wr::RenderRootSet>(
       "layers::CompositorBridgeParent::ScheduleComposition", this,
       &CompositorBridgeParent::ScheduleComposition, aRenderRoots));
->>>>>>> upstream-releases
 }
 
 void CompositorBridgeParent::InvalidateOnCompositorThread() {
@@ -973,14 +818,6 @@ void CompositorBridgeParent::UpdatePaintTime(LayerTransactionParent* aLayerTree,
   mLayerManager->SetPaintTime(aPaintTime);
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::NotifyShadowTreeTransaction(
-    LayersId aId, bool aIsFirstPaint, const FocusTarget& aFocusTarget,
-||||||| merged common ancestors
-void
-CompositorBridgeParent::NotifyShadowTreeTransaction(LayersId aId, bool aIsFirstPaint,
-    const FocusTarget& aFocusTarget,
-=======
 void CompositorBridgeParent::RegisterPayloads(
     LayerTransactionParent* aLayerTree,
     const nsTArray<CompositionPayload>& aPayload) {
@@ -994,7 +831,6 @@ void CompositorBridgeParent::RegisterPayloads(
 
 void CompositorBridgeParent::NotifyShadowTreeTransaction(
     LayersId aId, bool aIsFirstPaint, const FocusTarget& aFocusTarget,
->>>>>>> upstream-releases
     bool aScheduleComposite, uint32_t aPaintSequenceNumber,
     bool aIsRepeatTransaction, bool aHitTestUpdate) {
   if (!aIsRepeatTransaction && mLayerManager && mLayerManager->GetRoot()) {
@@ -1016,17 +852,8 @@ void CompositorBridgeParent::NotifyShadowTreeTransaction(
       mApzUpdater->UpdateFocusState(mRootLayerTreeID,
                                     WRRootId::NonWebRender(aId), aFocusTarget);
       if (aHitTestUpdate) {
-<<<<<<< HEAD
-        mApzUpdater->UpdateHitTestingTree(
-            mRootLayerTreeID, mLayerManager->GetRoot(), aIsFirstPaint, aId,
-            aPaintSequenceNumber);
-||||||| merged common ancestors
-        mApzUpdater->UpdateHitTestingTree(mRootLayerTreeID,
-            mLayerManager->GetRoot(), aIsFirstPaint, aId, aPaintSequenceNumber);
-=======
         mApzUpdater->UpdateHitTestingTree(
             mLayerManager->GetRoot(), aIsFirstPaint, aId, aPaintSequenceNumber);
->>>>>>> upstream-releases
       }
     }
 
@@ -1037,16 +864,8 @@ void CompositorBridgeParent::NotifyShadowTreeTransaction(
   }
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::ScheduleComposition() {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::ScheduleComposition()
-{
-=======
 void CompositorBridgeParent::ScheduleComposition(
     const wr::RenderRootSet& aRenderRoots) {
->>>>>>> upstream-releases
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   if (mPaused) {
     return;
@@ -1061,30 +880,6 @@ void CompositorBridgeParent::ScheduleComposition(
 
 // Go down the composite layer tree, setting properties to match their
 // content-side counterparts.
-<<<<<<< HEAD
-/* static */ void CompositorBridgeParent::SetShadowProperties(Layer* aLayer) {
-  ForEachNode<ForwardIterator>(aLayer, [](Layer* layer) {
-    if (Layer* maskLayer = layer->GetMaskLayer()) {
-      SetShadowProperties(maskLayer);
-    }
-    for (size_t i = 0; i < layer->GetAncestorMaskLayerCount(); i++) {
-      SetShadowProperties(layer->GetAncestorMaskLayerAt(i));
-    }
-||||||| merged common ancestors
-/* static */ void
-CompositorBridgeParent::SetShadowProperties(Layer* aLayer)
-{
-  ForEachNode<ForwardIterator>(
-      aLayer,
-      [] (Layer *layer)
-      {
-        if (Layer* maskLayer = layer->GetMaskLayer()) {
-          SetShadowProperties(maskLayer);
-        }
-        for (size_t i = 0; i < layer->GetAncestorMaskLayerCount(); i++) {
-          SetShadowProperties(layer->GetAncestorMaskLayerAt(i));
-        }
-=======
 /* static */
 void CompositorBridgeParent::SetShadowProperties(Layer* aLayer) {
   ForEachNode<ForwardIterator>(aLayer, [](Layer* layer) {
@@ -1094,45 +889,7 @@ void CompositorBridgeParent::SetShadowProperties(Layer* aLayer) {
     for (size_t i = 0; i < layer->GetAncestorMaskLayerCount(); i++) {
       SetShadowProperties(layer->GetAncestorMaskLayerAt(i));
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // FIXME: Bug 717688 -- Do these updates in
-    // LayerTransactionParent::RecvUpdate.
-    HostLayer* layerCompositor = layer->AsHostLayer();
-    // Set the layerComposite's base transform to the layer's base transform.
-    AnimationArray& animations = layer->GetAnimations();
-    // If there is any animation, the animation value will override
-    // non-animated value later, so we don't need to set the non-animated
-    // value here.
-    if (animations.IsEmpty()) {
-      layerCompositor->SetShadowBaseTransform(layer->GetBaseTransform());
-      layerCompositor->SetShadowTransformSetByAnimation(false);
-      layerCompositor->SetShadowOpacity(layer->GetOpacity());
-      layerCompositor->SetShadowOpacitySetByAnimation(false);
-    }
-    layerCompositor->SetShadowVisibleRegion(layer->GetVisibleRegion());
-    layerCompositor->SetShadowClipRect(layer->GetClipRect());
-  });
-||||||| merged common ancestors
-        // FIXME: Bug 717688 -- Do these updates in LayerTransactionParent::RecvUpdate.
-        HostLayer* layerCompositor = layer->AsHostLayer();
-        // Set the layerComposite's base transform to the layer's base transform.
-        AnimationArray& animations = layer->GetAnimations();
-        // If there is any animation, the animation value will override
-        // non-animated value later, so we don't need to set the non-animated
-        // value here.
-        if (animations.IsEmpty()) {
-          layerCompositor->SetShadowBaseTransform(layer->GetBaseTransform());
-          layerCompositor->SetShadowTransformSetByAnimation(false);
-          layerCompositor->SetShadowOpacity(layer->GetOpacity());
-          layerCompositor->SetShadowOpacitySetByAnimation(false);
-        }
-        layerCompositor->SetShadowVisibleRegion(layer->GetVisibleRegion());
-        layerCompositor->SetShadowClipRect(layer->GetClipRect());
-      }
-    );
-=======
     // FIXME: Bug 717688 -- Do these updates in
     // LayerTransactionParent::RecvUpdate.
     HostLayer* layerCompositor = layer->AsHostLayer();
@@ -1150,23 +907,11 @@ void CompositorBridgeParent::SetShadowProperties(Layer* aLayer) {
     layerCompositor->SetShadowVisibleRegion(layer->GetVisibleRegion());
     layerCompositor->SetShadowClipRect(layer->GetClipRect());
   });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::CompositeToTarget(VsyncId aId, DrawTarget* aTarget,
-                                               const gfx::IntRect* aRect) {
-  AUTO_PROFILER_TRACING("Paint", "Composite");
-||||||| merged common ancestors
-void
-CompositorBridgeParent::CompositeToTarget(DrawTarget* aTarget, const gfx::IntRect* aRect)
-{
-  AUTO_PROFILER_TRACING("Paint", "Composite");
-=======
 void CompositorBridgeParent::CompositeToTarget(VsyncId aId, DrawTarget* aTarget,
                                                const gfx::IntRect* aRect) {
   AUTO_PROFILER_TRACING("Paint", "Composite", GRAPHICS);
->>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("CompositorBridgeParent::CompositeToTarget", GRAPHICS);
   PerfStats::AutoMetricRecording<PerfStats::Metric::Compositing> autoRecording;
 
@@ -1298,17 +1043,8 @@ void CompositorBridgeParent::CompositeToTarget(VsyncId aId, DrawTarget* aTarget,
 #endif
 
   // 0 -> Full-tilt composite
-<<<<<<< HEAD
-  if (gfxPrefs::LayersCompositionFrameRate() == 0 ||
-      mLayerManager->AlwaysScheduleComposite()) {
-||||||| merged common ancestors
-  if (gfxPrefs::LayersCompositionFrameRate() == 0 ||
-      mLayerManager->AlwaysScheduleComposite())
-  {
-=======
   if (StaticPrefs::layers_offmainthreadcomposition_frame_rate() == 0 ||
       mLayerManager->AlwaysScheduleComposite()) {
->>>>>>> upstream-releases
     // Special full-tilt composite mode for performance testing
     ScheduleComposition();
   }
@@ -1365,16 +1101,9 @@ PAPZCTreeManagerParent* CompositorBridgeParent::AllocPAPZCTreeManagerParent(
       sIndirectLayerTrees[mRootLayerTreeID];
   MOZ_ASSERT(state.mParent.get() == this);
   MOZ_ASSERT(!state.mApzcTreeManagerParent);
-<<<<<<< HEAD
-  state.mApzcTreeManagerParent = new APZCTreeManagerParent(
-      mRootLayerTreeID, mApzcTreeManager, mApzUpdater);
-||||||| merged common ancestors
-  state.mApzcTreeManagerParent = new APZCTreeManagerParent(mRootLayerTreeID, mApzcTreeManager, mApzUpdater);
-=======
   state.mApzcTreeManagerParent = new APZCTreeManagerParent(
       WRRootId(mRootLayerTreeID, wr::RenderRoot::Default), mApzcTreeManager,
       mApzUpdater);
->>>>>>> upstream-releases
 
   return state.mApzcTreeManagerParent;
 }
@@ -1385,34 +1114,15 @@ bool CompositorBridgeParent::DeallocPAPZCTreeManagerParent(
   return true;
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::AllocateAPZCTreeManagerParent(
-    const MonitorAutoLock& aProofOfLayerTreeStateLock,
-    const LayersId& aLayersId, LayerTreeState& aState) {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::AllocateAPZCTreeManagerParent(const MonitorAutoLock& aProofOfLayerTreeStateLock,
-                                                      const LayersId& aLayersId,
-                                                      LayerTreeState& aState)
-{
-=======
 void CompositorBridgeParent::AllocateAPZCTreeManagerParent(
     const MonitorAutoLock& aProofOfLayerTreeStateLock,
     const WRRootId& aWrRootId, LayerTreeState& aState) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aState.mParent == this);
   MOZ_ASSERT(mApzcTreeManager);
   MOZ_ASSERT(mApzUpdater);
   MOZ_ASSERT(!aState.mApzcTreeManagerParent);
-<<<<<<< HEAD
-  aState.mApzcTreeManagerParent =
-      new APZCTreeManagerParent(aLayersId, mApzcTreeManager, mApzUpdater);
-||||||| merged common ancestors
-  aState.mApzcTreeManagerParent = new APZCTreeManagerParent(aLayersId, mApzcTreeManager, mApzUpdater);
-=======
   aState.mApzcTreeManagerParent =
       new APZCTreeManagerParent(aWrRootId, mApzcTreeManager, mApzUpdater);
->>>>>>> upstream-releases
 }
 
 PAPZParent* CompositorBridgeParent::AllocPAPZParent(const LayersId& aLayersId) {
@@ -1464,20 +1174,10 @@ CompositorBridgeParent::GetCompositorBridgeParentFromLayersId(
   return sIndirectLayerTrees[aLayersId].mParent;
 }
 
-<<<<<<< HEAD
-/*static*/ RefPtr<CompositorBridgeParent>
-CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(
-    const wr::WindowId& aWindowId) {
-||||||| merged common ancestors
-/*static*/ RefPtr<CompositorBridgeParent>
-CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(const wr::WindowId& aWindowId)
-{
-=======
 /*static*/
 RefPtr<CompositorBridgeParent>
 CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(
     const wr::WindowId& aWindowId) {
->>>>>>> upstream-releases
   MonitorAutoLock lock(*sIndirectLayerTreesLock);
   for (auto it = sIndirectLayerTrees.begin(); it != sIndirectLayerTrees.end();
        it++) {
@@ -1485,23 +1185,11 @@ CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(
     if (!state->mWrBridge) {
       continue;
     }
-<<<<<<< HEAD
-    // state->mWrBridge might be a root WebRenderBridgeParent or one of a
-    // content process, but in either case the state->mParent will be the same.
-    // So we don't need to distinguish between the two.
-    if (RefPtr<wr::WebRenderAPI> api = state->mWrBridge->GetWebRenderAPI()) {
-||||||| merged common ancestors
-    // state->mWrBridge might be a root WebRenderBridgeParent or one of a content
-    // process, but in either case the state->mParent will be the same. So we
-    // don't need to distinguish between the two.
-    if (RefPtr<wr::WebRenderAPI> api = state->mWrBridge->GetWebRenderAPI()) {
-=======
     // state->mWrBridge might be a root WebRenderBridgeParent or one of a
     // content process, but in either case the state->mParent will be the same.
     // So we don't need to distinguish between the two.
     if (RefPtr<wr::WebRenderAPI> api =
             state->mWrBridge->GetWebRenderAPI(wr::RenderRoot::Default)) {
->>>>>>> upstream-releases
       if (api->GetId() == aWindowId) {
         return state->mParent;
       }
@@ -1552,33 +1240,16 @@ void CompositorBridgeParent::ShadowLayersUpdated(
   mLayerManager->SetRoot(root);
 
   if (mApzUpdater && !aInfo.isRepeatTransaction()) {
-<<<<<<< HEAD
-    mApzUpdater->UpdateFocusState(mRootLayerTreeID, mRootLayerTreeID,
-||||||| merged common ancestors
-    mApzUpdater->UpdateFocusState(mRootLayerTreeID,
-                                  mRootLayerTreeID,
-=======
     mApzUpdater->UpdateFocusState(mRootLayerTreeID,
                                   WRRootId::NonWebRender(mRootLayerTreeID),
->>>>>>> upstream-releases
                                   aInfo.focusTarget());
 
     if (aHitTestUpdate) {
       AutoResolveRefLayers resolve(mCompositionManager);
 
-<<<<<<< HEAD
-      mApzUpdater->UpdateHitTestingTree(mRootLayerTreeID, root,
-                                        aInfo.isFirstPaint(), mRootLayerTreeID,
-                                        aInfo.paintSequenceNumber());
-||||||| merged common ancestors
-      mApzUpdater->UpdateHitTestingTree(
-        mRootLayerTreeID, root, aInfo.isFirstPaint(),
-        mRootLayerTreeID, aInfo.paintSequenceNumber());
-=======
       mApzUpdater->UpdateHitTestingTree(root, aInfo.isFirstPaint(),
                                         mRootLayerTreeID,
                                         aInfo.paintSequenceNumber());
->>>>>>> upstream-releases
     }
   }
 
@@ -1692,161 +1363,61 @@ mozilla::ipc::IPCResult CompositorBridgeParent::RecvGetFrameUniformity(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::SetTestAsyncScrollOffset(
-    const LayersId& aLayersId, const ScrollableLayerGuid::ViewID& aScrollId,
-    const CSSPoint& aPoint) {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::SetTestAsyncScrollOffset(
-    const LayersId& aLayersId,
-    const FrameMetrics::ViewID& aScrollId,
-    const CSSPoint& aPoint)
-{
-=======
 void CompositorBridgeParent::SetTestAsyncScrollOffset(
     const WRRootId& aWrRootId, const ScrollableLayerGuid::ViewID& aScrollId,
     const CSSPoint& aPoint) {
->>>>>>> upstream-releases
   if (mApzUpdater) {
     MOZ_ASSERT(aWrRootId.IsValid());
     mApzUpdater->SetTestAsyncScrollOffset(aWrRootId, aScrollId, aPoint);
   }
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::SetTestAsyncZoom(
-    const LayersId& aLayersId, const ScrollableLayerGuid::ViewID& aScrollId,
-    const LayerToParentLayerScale& aZoom) {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::SetTestAsyncZoom(
-    const LayersId& aLayersId,
-    const FrameMetrics::ViewID& aScrollId,
-    const LayerToParentLayerScale& aZoom)
-{
-=======
 void CompositorBridgeParent::SetTestAsyncZoom(
     const WRRootId& aWrRootId, const ScrollableLayerGuid::ViewID& aScrollId,
     const LayerToParentLayerScale& aZoom) {
->>>>>>> upstream-releases
   if (mApzUpdater) {
     MOZ_ASSERT(aWrRootId.IsValid());
     mApzUpdater->SetTestAsyncZoom(aWrRootId, aScrollId, aZoom);
   }
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::FlushApzRepaints(const LayersId& aLayersId) {
-  MOZ_ASSERT(mApzcTreeManager);
-||||||| merged common ancestors
-void
-CompositorBridgeParent::FlushApzRepaints(const LayersId& aLayersId)
-{
-  MOZ_ASSERT(mApzcTreeManager);
-=======
 void CompositorBridgeParent::FlushApzRepaints(const WRRootId& aWrRootId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mApzUpdater);
-<<<<<<< HEAD
-  MOZ_ASSERT(aLayersId.IsValid());
-  RefPtr<CompositorBridgeParent> self = this;
-  mApzUpdater->RunOnControllerThread(
-      aLayersId, NS_NewRunnableFunction(
-                     "layers::CompositorBridgeParent::FlushApzRepaints", [=]() {
-                       self->mApzcTreeManager->FlushApzRepaints(aLayersId);
-                     }));
-||||||| merged common ancestors
-  MOZ_ASSERT(aLayersId.IsValid());
-  RefPtr<CompositorBridgeParent> self = this;
-  mApzUpdater->RunOnControllerThread(aLayersId, NS_NewRunnableFunction(
-    "layers::CompositorBridgeParent::FlushApzRepaints",
-    [=]() { self->mApzcTreeManager->FlushApzRepaints(aLayersId); }));
-=======
   MOZ_ASSERT(aWrRootId.IsValid());
   mApzUpdater->RunOnControllerThread(
       UpdaterQueueSelector(aWrRootId),
       NS_NewRunnableFunction(
           "layers::CompositorBridgeParent::FlushApzRepaints",
           [=]() { APZCTreeManager::FlushApzRepaints(aWrRootId.mLayersId); }));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::GetAPZTestData(const LayersId& aLayersId,
-                                            APZTestData* aOutData) {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::GetAPZTestData(const LayersId& aLayersId,
-                                       APZTestData* aOutData)
-{
-=======
 void CompositorBridgeParent::GetAPZTestData(const WRRootId& aWrRootId,
                                             APZTestData* aOutData) {
->>>>>>> upstream-releases
   if (mApzUpdater) {
     MOZ_ASSERT(aWrRootId.IsValid());
     mApzUpdater->GetAPZTestData(aWrRootId, aOutData);
   }
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::SetConfirmedTargetAPZC(
-    const LayersId& aLayersId, const uint64_t& aInputBlockId,
-    const nsTArray<ScrollableLayerGuid>& aTargets) {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::SetConfirmedTargetAPZC(const LayersId& aLayersId,
-                                               const uint64_t& aInputBlockId,
-                                               const nsTArray<ScrollableLayerGuid>& aTargets)
-{
-=======
 void CompositorBridgeParent::SetConfirmedTargetAPZC(
     const LayersId& aLayersId, const uint64_t& aInputBlockId,
     const nsTArray<SLGuidAndRenderRoot>& aTargets) {
->>>>>>> upstream-releases
   if (!mApzcTreeManager || !mApzUpdater) {
     return;
   }
   // Need to specifically bind this since it's overloaded.
-<<<<<<< HEAD
-  void (APZCTreeManager::*setTargetApzcFunc)(
-      uint64_t, const nsTArray<ScrollableLayerGuid>&) =
-      &APZCTreeManager::SetTargetAPZC;
-  RefPtr<Runnable> task = NewRunnableMethod<
-      uint64_t, StoreCopyPassByConstLRef<nsTArray<ScrollableLayerGuid>>>(
-||||||| merged common ancestors
-  void (APZCTreeManager::*setTargetApzcFunc)
-        (uint64_t, const nsTArray<ScrollableLayerGuid>&) =
-        &APZCTreeManager::SetTargetAPZC;
-  RefPtr<Runnable> task =
-    NewRunnableMethod<uint64_t,
-                      StoreCopyPassByConstLRef<nsTArray<ScrollableLayerGuid>>>(
-=======
   void (APZCTreeManager::*setTargetApzcFunc)(
       uint64_t, const nsTArray<SLGuidAndRenderRoot>&) =
       &APZCTreeManager::SetTargetAPZC;
   RefPtr<Runnable> task = NewRunnableMethod<
       uint64_t, StoreCopyPassByConstLRef<nsTArray<SLGuidAndRenderRoot>>>(
->>>>>>> upstream-releases
       "layers::CompositorBridgeParent::SetConfirmedTargetAPZC",
-<<<<<<< HEAD
-      mApzcTreeManager.get(), setTargetApzcFunc, aInputBlockId, aTargets);
-  mApzUpdater->RunOnControllerThread(aLayersId, task.forget());
-||||||| merged common ancestors
-      mApzcTreeManager.get(),
-      setTargetApzcFunc,
-      aInputBlockId,
-      aTargets);
-  mApzUpdater->RunOnControllerThread(aLayersId, task.forget());
-=======
       mApzcTreeManager.get(), setTargetApzcFunc, aInputBlockId, aTargets);
   UpdaterQueueSelector selector(aLayersId);
   for (size_t i = 0; i < aTargets.Length(); i++) {
     selector.mRenderRoots += aTargets[i].mRenderRoot;
   }
   mApzUpdater->RunOnControllerThread(selector, task.forget());
->>>>>>> upstream-releases
 }
 
 void CompositorBridgeParent::InitializeLayerManager(
@@ -2147,21 +1718,6 @@ mozilla::ipc::IPCResult CompositorBridgeParent::RecvAdoptChild(
 
   if (childWrBridge) {
     MOZ_ASSERT(mWrBridge);
-<<<<<<< HEAD
-    RefPtr<wr::WebRenderAPI> api = mWrBridge->GetWebRenderAPI();
-    api = api->Clone();
-    wr::Epoch newEpoch = childWrBridge->UpdateWebRender(
-        mWrBridge->CompositorScheduler(), api, mWrBridge->AsyncImageManager(),
-        GetAnimationStorage(), mWrBridge->GetTextureFactoryIdentifier());
-||||||| merged common ancestors
-    RefPtr<wr::WebRenderAPI> api = mWrBridge->GetWebRenderAPI();
-    api = api->Clone();
-    wr::Epoch newEpoch = childWrBridge->UpdateWebRender(mWrBridge->CompositorScheduler(),
-                                   api,
-                                   mWrBridge->AsyncImageManager(),
-                                   GetAnimationStorage(),
-                                   mWrBridge->GetTextureFactoryIdentifier());
-=======
     nsTArray<RefPtr<wr::WebRenderAPI>> apis;
     DebugOnly<bool> cloneSuccess = mWrBridge->CloneWebRenderAPIs(apis);
     MOZ_ASSERT(cloneSuccess);
@@ -2169,7 +1725,6 @@ mozilla::ipc::IPCResult CompositorBridgeParent::RecvAdoptChild(
         mWrBridge->CompositorScheduler(), std::move(apis),
         mWrBridge->AsyncImageManager(), GetAnimationStorage(),
         mWrBridge->GetTextureFactoryIdentifier());
->>>>>>> upstream-releases
     // Pretend we composited, since parent CompositorBridgeParent was replaced.
     TimeStamp now = TimeStamp::Now();
     NotifyPipelineRendered(childWrBridge->PipelineId(), newEpoch, VsyncId(),
@@ -2196,28 +1751,8 @@ mozilla::ipc::IPCResult CompositorBridgeParent::RecvAdoptChild(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
 PWebRenderBridgeParent* CompositorBridgeParent::AllocPWebRenderBridgeParent(
     const wr::PipelineId& aPipelineId, const LayoutDeviceIntSize& aSize) {
-#ifndef MOZ_BUILD_WEBRENDER
-  // Extra guard since this in the parent process and we don't want a malicious
-  // child process invoking this codepath before it's ready
-  MOZ_RELEASE_ASSERT(false);
-#endif
-||||||| merged common ancestors
-PWebRenderBridgeParent*
-CompositorBridgeParent::AllocPWebRenderBridgeParent(const wr::PipelineId& aPipelineId,
-                                                    const LayoutDeviceIntSize& aSize)
-{
-#ifndef MOZ_BUILD_WEBRENDER
-  // Extra guard since this in the parent process and we don't want a malicious
-  // child process invoking this codepath before it's ready
-  MOZ_RELEASE_ASSERT(false);
-#endif
-=======
-PWebRenderBridgeParent* CompositorBridgeParent::AllocPWebRenderBridgeParent(
-    const wr::PipelineId& aPipelineId, const LayoutDeviceIntSize& aSize) {
->>>>>>> upstream-releases
   MOZ_ASSERT(wr::AsLayersId(aPipelineId) == mRootLayerTreeID);
   MOZ_ASSERT(!mWrBridge);
   MOZ_ASSERT(!mCompositor);
@@ -2242,19 +1777,10 @@ PWebRenderBridgeParent* CompositorBridgeParent::AllocPWebRenderBridgeParent(
     // Same as for mApzUpdater, but for the sampler thread.
     mApzSampler->SetWebRenderWindowId(windowId);
   }
-<<<<<<< HEAD
-  RefPtr<wr::WebRenderAPI> api =
-      wr::WebRenderAPI::Create(this, std::move(widget), windowId, aSize);
-  if (!api) {
-||||||| merged common ancestors
-  RefPtr<wr::WebRenderAPI> api = wr::WebRenderAPI::Create(this, std::move(widget), windowId, aSize);
-  if (!api) {
-=======
   InfallibleTArray<RefPtr<wr::WebRenderAPI>> apis;
   apis.AppendElement(
       wr::WebRenderAPI::Create(this, std::move(widget), windowId, aSize));
   if (!apis[0]) {
->>>>>>> upstream-releases
     mWrBridge = WebRenderBridgeParent::CreateDestroyed(aPipelineId);
     mWrBridge.get()->AddRef();  // IPDL reference
     return mWrBridge;
@@ -2278,20 +1804,10 @@ PWebRenderBridgeParent* CompositorBridgeParent::AllocPWebRenderBridgeParent(
   mAsyncImageManager = new AsyncImagePipelineManager(std::move(clonedApis));
   RefPtr<AsyncImagePipelineManager> asyncMgr = mAsyncImageManager;
   RefPtr<CompositorAnimationStorage> animStorage = GetAnimationStorage();
-<<<<<<< HEAD
-  mWrBridge = new WebRenderBridgeParent(this, aPipelineId, mWidget, nullptr,
-                                        std::move(api), std::move(asyncMgr),
-                                        std::move(animStorage), mVsyncRate);
-  mWrBridge.get()->AddRef();  // IPDL reference
-||||||| merged common ancestors
-  mWrBridge = new WebRenderBridgeParent(this, aPipelineId, mWidget, nullptr, std::move(api), std::move(asyncMgr), std::move(animStorage), mVsyncRate);
-  mWrBridge.get()->AddRef(); // IPDL reference
-=======
   mWrBridge = new WebRenderBridgeParent(this, aPipelineId, mWidget, nullptr,
                                         std::move(apis), std::move(asyncMgr),
                                         std::move(animStorage), mVsyncRate);
   mWrBridge.get()->AddRef();  // IPDL reference
->>>>>>> upstream-releases
 
   mCompositorScheduler = mWrBridge->CompositorScheduler();
   MOZ_ASSERT(mCompositorScheduler);
@@ -2303,27 +1819,8 @@ PWebRenderBridgeParent* CompositorBridgeParent::AllocPWebRenderBridgeParent(
   return mWrBridge;
 }
 
-<<<<<<< HEAD
 bool CompositorBridgeParent::DeallocPWebRenderBridgeParent(
     PWebRenderBridgeParent* aActor) {
-#ifndef MOZ_BUILD_WEBRENDER
-  // Extra guard since this in the parent process and we don't want a malicious
-  // child process invoking this codepath before it's ready
-  MOZ_RELEASE_ASSERT(false);
-#endif
-||||||| merged common ancestors
-bool
-CompositorBridgeParent::DeallocPWebRenderBridgeParent(PWebRenderBridgeParent* aActor)
-{
-#ifndef MOZ_BUILD_WEBRENDER
-  // Extra guard since this in the parent process and we don't want a malicious
-  // child process invoking this codepath before it's ready
-  MOZ_RELEASE_ASSERT(false);
-#endif
-=======
-bool CompositorBridgeParent::DeallocPWebRenderBridgeParent(
-    PWebRenderBridgeParent* aActor) {
->>>>>>> upstream-releases
   WebRenderBridgeParent* parent = static_cast<WebRenderBridgeParent*>(aActor);
   {
     MonitorAutoLock lock(*sIndirectLayerTreesLock);
@@ -2386,16 +1883,8 @@ void EraseLayerState(LayersId aId) {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void CompositorBridgeParent::DeallocateLayerTreeId(LayersId aId) {
-||||||| merged common ancestors
-/*static*/ void
-CompositorBridgeParent::DeallocateLayerTreeId(LayersId aId)
-{
-=======
 /*static*/
 void CompositorBridgeParent::DeallocateLayerTreeId(LayersId aId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Here main thread notifies compositor to remove an element from
   // sIndirectLayerTrees. This removed element might be queried soon.
@@ -2431,19 +1920,9 @@ ScopedLayerTreeRegistration::~ScopedLayerTreeRegistration() {
   sIndirectLayerTrees.erase(mLayersId);
 }
 
-<<<<<<< HEAD
-/*static*/ void CompositorBridgeParent::SetControllerForLayerTree(
-    LayersId aLayersId, GeckoContentController* aController) {
-||||||| merged common ancestors
-/*static*/ void
-CompositorBridgeParent::SetControllerForLayerTree(LayersId aLayersId,
-                                                  GeckoContentController* aController)
-{
-=======
 /*static*/
 void CompositorBridgeParent::SetControllerForLayerTree(
     LayersId aLayersId, GeckoContentController* aController) {
->>>>>>> upstream-releases
   // This ref is adopted by UpdateControllerForLayersId().
   aController->AddRef();
   CompositorLoop()->PostTask(NewRunnableFunction(
@@ -2451,18 +1930,9 @@ void CompositorBridgeParent::SetControllerForLayerTree(
       aLayersId, aController));
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<IAPZCTreeManager>
-CompositorBridgeParent::GetAPZCTreeManager(LayersId aLayersId) {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<IAPZCTreeManager>
-CompositorBridgeParent::GetAPZCTreeManager(LayersId aLayersId)
-{
-=======
 /*static*/
 already_AddRefed<IAPZCTreeManager> CompositorBridgeParent::GetAPZCTreeManager(
     LayersId aLayersId) {
->>>>>>> upstream-releases
   EnsureLayerTreeMapReady();
   MonitorAutoLock lock(*sIndirectLayerTreesLock);
   LayerTreeMap::iterator cit = sIndirectLayerTrees.find(aLayersId);
@@ -2479,36 +1949,16 @@ already_AddRefed<IAPZCTreeManager> CompositorBridgeParent::GetAPZCTreeManager(
 #if defined(MOZ_GECKO_PROFILER)
 static void InsertVsyncProfilerMarker(TimeStamp aVsyncTimestamp) {
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
-<<<<<<< HEAD
-  if (profiler_thread_is_being_profiled()) {
-    profiler_add_marker("VsyncTimestamp",
-                        MakeUnique<VsyncMarkerPayload>(aVsyncTimestamp));
-  }
-||||||| merged common ancestors
-  profiler_add_marker(
-    "VsyncTimestamp",
-    MakeUnique<VsyncMarkerPayload>(aVsyncTimestamp));
-=======
   if (profiler_thread_is_being_profiled()) {
     profiler_add_marker("VsyncTimestamp", JS::ProfilingCategoryPair::GRAPHICS,
                         MakeUnique<VsyncMarkerPayload>(aVsyncTimestamp));
   }
->>>>>>> upstream-releases
 }
 #endif
 
-<<<<<<< HEAD
-/*static */ void CompositorBridgeParent::PostInsertVsyncProfilerMarker(
-    TimeStamp aVsyncTimestamp) {
-||||||| merged common ancestors
-/*static */ void
-CompositorBridgeParent::PostInsertVsyncProfilerMarker(TimeStamp aVsyncTimestamp)
-{
-=======
 /*static */
 void CompositorBridgeParent::PostInsertVsyncProfilerMarker(
     TimeStamp aVsyncTimestamp) {
->>>>>>> upstream-releases
 #if defined(MOZ_GECKO_PROFILER)
   // Called in the vsync thread
   if (profiler_is_active() && CompositorThreadHolder::IsActive()) {
@@ -2572,17 +2022,8 @@ CompositorBridgeParent::LayerTreeState::GetCompositorController() const {
 }
 
 MetricsSharingController*
-<<<<<<< HEAD
-CompositorBridgeParent::LayerTreeState::CrossProcessSharingController() const {
-  return mCrossProcessParent;
-||||||| merged common ancestors
-CompositorBridgeParent::LayerTreeState::CrossProcessSharingController() const
-{
-  return mCrossProcessParent;
-=======
 CompositorBridgeParent::LayerTreeState::CrossProcessSharingController() const {
   return mContentCompositorBridgeParent;
->>>>>>> upstream-releases
 }
 
 MetricsSharingController*
@@ -2624,22 +2065,6 @@ void CompositorBridgeParent::DidComposite(const VsyncId& aId,
   }
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::NotifyPipelineRendered(
-    const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch,
-    const VsyncId& aCompositeStartId, TimeStamp& aCompositeStart,
-    TimeStamp& aRenderStart, TimeStamp& aCompositeEnd,
-    wr::RendererStats* aStats) {
-  if (!mWrBridge || !mAsyncImageManager) {
-||||||| merged common ancestors
-void
-CompositorBridgeParent::NotifyPipelineRendered(const wr::PipelineId& aPipelineId,
-                                               const wr::Epoch& aEpoch,
-                                               TimeStamp& aCompositeStart,
-                                               TimeStamp& aCompositeEnd)
-{
-  if (!mWrBridge) {
-=======
 void CompositorBridgeParent::NotifyDidSceneBuild(
     const nsTArray<wr::RenderRoot>& aRenderRoots,
     RefPtr<wr::WebRenderPipelineInfo> aInfo) {
@@ -2661,7 +2086,6 @@ void CompositorBridgeParent::NotifyPipelineRendered(
     TimeStamp& aRenderStart, TimeStamp& aCompositeEnd,
     wr::RendererStats* aStats) {
   if (!mWrBridge || !mAsyncImageManager) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -2732,24 +2156,11 @@ void CompositorBridgeParent::NotifyDidComposite(TransactionId aTransactionId,
   }
 
   MonitorAutoLock lock(*sIndirectLayerTreesLock);
-<<<<<<< HEAD
-  ForEachIndirectLayerTree([&](LayerTreeState* lts,
-                               const LayersId& aLayersId) -> void {
-    if (lts->mCrossProcessParent && lts->mParent == this) {
-      CrossProcessCompositorBridgeParent* cpcp = lts->mCrossProcessParent;
-      cpcp->DidCompositeLocked(aLayersId, aId, aCompositeStart, aCompositeEnd);
-||||||| merged common ancestors
-  ForEachIndirectLayerTree([&] (LayerTreeState* lts, const LayersId& aLayersId) -> void {
-    if (lts->mCrossProcessParent && lts->mParent == this) {
-      CrossProcessCompositorBridgeParent* cpcp = lts->mCrossProcessParent;
-      cpcp->DidCompositeLocked(aLayersId, aCompositeStart, aCompositeEnd);
-=======
   ForEachIndirectLayerTree([&](LayerTreeState* lts,
                                const LayersId& aLayersId) -> void {
     if (lts->mContentCompositorBridgeParent && lts->mParent == this) {
       ContentCompositorBridgeParent* cpcp = lts->mContentCompositorBridgeParent;
       cpcp->DidCompositeLocked(aLayersId, aId, aCompositeStart, aCompositeEnd);
->>>>>>> upstream-releases
     }
   });
 }
@@ -2760,22 +2171,6 @@ void CompositorBridgeParent::InvalidateRemoteLayers() {
   Unused << PCompositorBridgeParent::SendInvalidateLayers(LayersId{0});
 
   MonitorAutoLock lock(*sIndirectLayerTreesLock);
-<<<<<<< HEAD
-  ForEachIndirectLayerTree(
-      [](LayerTreeState* lts, const LayersId& aLayersId) -> void {
-        if (lts->mCrossProcessParent) {
-          CrossProcessCompositorBridgeParent* cpcp = lts->mCrossProcessParent;
-          Unused << cpcp->SendInvalidateLayers(aLayersId);
-        }
-      });
-||||||| merged common ancestors
-  ForEachIndirectLayerTree([] (LayerTreeState* lts, const LayersId& aLayersId) -> void {
-    if (lts->mCrossProcessParent) {
-      CrossProcessCompositorBridgeParent* cpcp = lts->mCrossProcessParent;
-      Unused << cpcp->SendInvalidateLayers(aLayersId);
-    }
-  });
-=======
   ForEachIndirectLayerTree([](LayerTreeState* lts,
                               const LayersId& aLayersId) -> void {
     if (lts->mContentCompositorBridgeParent) {
@@ -2783,7 +2178,6 @@ void CompositorBridgeParent::InvalidateRemoteLayers() {
       Unused << cpcp->SendInvalidateLayers(aLayersId);
     }
   });
->>>>>>> upstream-releases
 }
 
 void UpdateIndirectTree(LayersId aId, Layer* aRoot,
@@ -2806,21 +2200,10 @@ CompositorBridgeParent::GetIndirectShadowTree(LayersId aId) {
   return &cit->second;
 }
 
-<<<<<<< HEAD
-/* static */ bool CompositorBridgeParent::CallWithIndirectShadowTree(
-    LayersId aId,
-    const std::function<void(CompositorBridgeParent::LayerTreeState&)>& aFunc) {
-||||||| merged common ancestors
-/* static */ bool
-CompositorBridgeParent::CallWithIndirectShadowTree(LayersId aId,
-                                                   const std::function<void(CompositorBridgeParent::LayerTreeState&)>& aFunc)
-{
-=======
 /* static */
 bool CompositorBridgeParent::CallWithIndirectShadowTree(
     LayersId aId,
     const std::function<void(CompositorBridgeParent::LayerTreeState&)>& aFunc) {
->>>>>>> upstream-releases
   // Note that this does not make things universally threadsafe just because the
   // sIndirectLayerTreesLock mutex is held. This is because the compositor
   // thread can mutate the LayerTreeState outside the lock. It does however
@@ -2858,39 +2241,19 @@ static CompositorBridgeParent::LayerTreeState* GetStateForRoot(
   return state;
 }
 
-<<<<<<< HEAD
-/* static */ APZCTreeManagerParent*
-CompositorBridgeParent::GetApzcTreeManagerParentForRoot(
-    LayersId aContentLayersId) {
-||||||| merged common ancestors
-/* static */ APZCTreeManagerParent*
-CompositorBridgeParent::GetApzcTreeManagerParentForRoot(LayersId aContentLayersId)
-{
-=======
 /* static */
 APZCTreeManagerParent* CompositorBridgeParent::GetApzcTreeManagerParentForRoot(
     LayersId aContentLayersId) {
->>>>>>> upstream-releases
   MonitorAutoLock lock(*sIndirectLayerTreesLock);
   CompositorBridgeParent::LayerTreeState* state =
       GetStateForRoot(aContentLayersId, lock);
   return state ? state->mApzcTreeManagerParent : nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ GeckoContentController*
-CompositorBridgeParent::GetGeckoContentControllerForRoot(
-    LayersId aContentLayersId) {
-||||||| merged common ancestors
-/* static */ GeckoContentController*
-CompositorBridgeParent::GetGeckoContentControllerForRoot(LayersId aContentLayersId)
-{
-=======
 /* static */
 GeckoContentController*
 CompositorBridgeParent::GetGeckoContentControllerForRoot(
     LayersId aContentLayersId) {
->>>>>>> upstream-releases
   MonitorAutoLock lock(*sIndirectLayerTreesLock);
   CompositorBridgeParent::LayerTreeState* state =
       GetStateForRoot(aContentLayersId, lock);
@@ -2911,35 +2274,13 @@ bool CompositorBridgeParent::DeallocPTextureParent(PTextureParent* actor) {
   return TextureHost::DestroyIPDLActor(actor);
 }
 
-<<<<<<< HEAD
-bool CompositorBridgeParent::IsSameProcess() const {
-  return OtherPid() == base::GetCurrentProcId();
-||||||| merged common ancestors
-bool
-CompositorBridgeParent::IsSameProcess() const
-{
-  return OtherPid() == base::GetCurrentProcId();
-=======
 mozilla::ipc::IPCResult CompositorBridgeParent::RecvInitPCanvasParent(
     Endpoint<PCanvasParent>&& aEndpoint) {
   MOZ_CRASH("PCanvasParent shouldn't be created via CompositorBridgeParent.");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CompositorBridgeParent::NotifyWebRenderError(wr::WebRenderError aError) {
-  MOZ_ASSERT(CompositorLoop() == MessageLoop::current());
-  Unused << SendNotifyWebRenderError(aError);
-||||||| merged common ancestors
-void
-CompositorBridgeParent::NotifyWebRenderError(wr::WebRenderError aError)
-{
-  MOZ_ASSERT(CompositorLoop() == MessageLoop::current());
-  Unused << SendNotifyWebRenderError(aError);
-=======
 bool CompositorBridgeParent::IsSameProcess() const {
   return OtherPid() == base::GetCurrentProcId();
->>>>>>> upstream-releases
 }
 
 void CompositorBridgeParent::NotifyWebRenderContextPurge() {
@@ -3132,13 +2473,6 @@ mozilla::ipc::IPCResult CompositorBridgeParent::RecvAllPluginsCaptured() {
 #endif
 }
 
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 int32_t RecordContentFrameTime(
     const VsyncId& aTxnId, const TimeStamp& aVsyncStart,
     const TimeStamp& aTxnStart, const VsyncId& aCompositeId,
@@ -3301,4 +2635,3 @@ mozilla::ipc::IPCResult CompositorBridgeParent::RecvEndRecording() {
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases

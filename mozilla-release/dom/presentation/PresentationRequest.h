@@ -61,18 +61,9 @@ class PresentationRequest final : public DOMEventTargetHelper {
 
   void FindOrCreatePresentationAvailability(RefPtr<Promise>& aPromise);
 
-<<<<<<< HEAD
-  // Implement
-  // https://w3c.github.io/webappsec-mixed-content/#categorize-settings-object
-  bool IsProhibitMixedSecurityContexts(nsIDocument* aDocument);
-||||||| merged common ancestors
-  // Implement https://w3c.github.io/webappsec-mixed-content/#categorize-settings-object
-  bool IsProhibitMixedSecurityContexts(nsIDocument* aDocument);
-=======
   // Implement
   // https://w3c.github.io/webappsec-mixed-content/#categorize-settings-object
   bool IsProhibitMixedSecurityContexts(Document* aDocument);
->>>>>>> upstream-releases
 
   // Implement
   // https://w3c.github.io/webappsec-mixed-content/#a-priori-authenticated-url

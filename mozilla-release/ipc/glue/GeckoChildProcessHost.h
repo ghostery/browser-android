@@ -38,18 +38,9 @@ typedef _MacSandboxInfo MacSandboxInfo;
 namespace mozilla {
 namespace ipc {
 
-<<<<<<< HEAD
-class GeckoChildProcessHost : public ChildProcessHost {
- protected:
-||||||| merged common ancestors
-class GeckoChildProcessHost : public ChildProcessHost
-{
-protected:
-=======
 class GeckoChildProcessHost : public ChildProcessHost,
                               public LinkedListElement<GeckoChildProcessHost> {
  protected:
->>>>>>> upstream-releases
   typedef mozilla::Monitor Monitor;
   typedef std::vector<std::string> StringVector;
 
@@ -73,17 +64,8 @@ class GeckoChildProcessHost : public ChildProcessHost,
 
   // Does not block.  The IPC channel may not be initialized yet, and
   // the child process may or may not have been created when this
-<<<<<<< HEAD
-  // method returns.  This GeckoChildProcessHost must not be destroyed
-  // while the launch is in progress.
-  bool AsyncLaunch(StringVector aExtraOpts = StringVector());
-||||||| merged common ancestors
-  // method returns.
-  bool AsyncLaunch(StringVector aExtraOpts=StringVector());
-=======
   // method returns.
   bool AsyncLaunch(StringVector aExtraOpts = StringVector());
->>>>>>> upstream-releases
 
   virtual bool WaitUntilConnected(int32_t aTimeoutMs = 0);
 
@@ -156,13 +138,6 @@ class GeckoChildProcessHost : public ChildProcessHost,
   // For bug 943174: Skip the EnsureProcessTerminated call in the destructor.
   void SetAlreadyDead();
 
-<<<<<<< HEAD
-  static void EnableSameExecutableForContentProc() {
-    sRunSelfAsContentProc = true;
-  }
-||||||| merged common ancestors
-  static void EnableSameExecutableForContentProc() { sRunSelfAsContentProc = true; }
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
   // To allow filling a MacSandboxInfo from the child
   // process without an instance of RDDProcessHost.
@@ -186,16 +161,9 @@ class GeckoChildProcessHost : public ChildProcessHost,
   // This method will lock any addition/removal of new processes
   // so you need to make sure the callback is as fast as possible.
   static void GetAll(const GeckoProcessCallback& aCallback);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
  protected:
   ~GeckoChildProcessHost();
->>>>>>> upstream-releases
   GeckoProcessType mProcessType;
   bool mIsFileContent;
   Monitor mMonitor;
@@ -236,16 +204,8 @@ protected:
   std::vector<std::wstring> mAllowedFilesRead;
   bool mEnableSandboxLogging;
   int32_t mSandboxLevel;
-<<<<<<< HEAD
-#endif
-#endif  // XP_WIN
-||||||| merged common ancestors
-#endif
-#endif // XP_WIN
-=======
 #  endif
 #endif  // XP_WIN
->>>>>>> upstream-releases
 
   ProcessHandle mChildProcessHandle;
 #if defined(OS_MACOSX)
@@ -255,11 +215,6 @@ protected:
 
   bool OpenPrivilegedHandle(base::ProcessId aPid);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
   // Override this method to return true to launch the child process
   // using the Mac utility (by default) sandbox. Override
@@ -276,7 +231,6 @@ private:
 #endif
 
  private:
->>>>>>> upstream-releases
   DISALLOW_EVIL_CONSTRUCTORS(GeckoChildProcessHost);
 
   // Does the actual work for AsyncLaunch; run in a thread pool
@@ -287,35 +241,15 @@ private:
   // PerformAsyncLaunch, and consolidates error handling.
   void RunPerformAsyncLaunch(StringVector aExtraOpts);
 
-<<<<<<< HEAD
-  enum class BinaryPathType { Self, PluginContainer };
-
-  static BinaryPathType GetPathToBinary(FilePath& exePath,
-                                        GeckoProcessType processType);
-||||||| merged common ancestors
-  enum class BinaryPathType {
-    Self,
-    PluginContainer
-  };
-
-  static BinaryPathType GetPathToBinary(FilePath& exePath, GeckoProcessType processType);
-=======
   static BinPathType GetPathToBinary(FilePath& exePath,
                                      GeckoProcessType processType);
->>>>>>> upstream-releases
 
   // The buffer is passed to preserve its lifetime until we are done
   // with launching the sub-process.
-<<<<<<< HEAD
-  void GetChildLogName(const char* origLogName, nsACString& buffer);
-||||||| merged common ancestors
-  void GetChildLogName(const char* origLogName, nsACString &buffer);
-=======
   void GetChildLogName(const char* origLogName, nsACString& buffer);
 
   // Removes the instance from sGeckoChildProcessHosts
   void RemoveFromProcessList();
->>>>>>> upstream-releases
 
   // In between launching the subprocess and handing off its IPC
   // channel, there's a small window of time in which *we* might still

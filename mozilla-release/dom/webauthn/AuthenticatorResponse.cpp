@@ -42,30 +42,8 @@ AuthenticatorResponse::~AuthenticatorResponse() {
   mozilla::DropJSObjects(this);
 }
 
-<<<<<<< HEAD
-JSObject* AuthenticatorResponse::WrapObject(JSContext* aCx,
-                                            JS::Handle<JSObject*> aGivenProto) {
-  return AuthenticatorResponse_Binding::Wrap(aCx, this, aGivenProto);
-}
-
 void AuthenticatorResponse::GetClientDataJSON(
     JSContext* aCx, JS::MutableHandle<JSObject*> aRetVal) {
-||||||| merged common ancestors
-JSObject*
-AuthenticatorResponse::WrapObject(JSContext* aCx,
-                                  JS::Handle<JSObject*> aGivenProto)
-{
-  return AuthenticatorResponse_Binding::Wrap(aCx, this, aGivenProto);
-}
-
-void
-AuthenticatorResponse::GetClientDataJSON(JSContext* aCx,
-                                         JS::MutableHandle<JSObject*> aRetVal)
-{
-=======
-void AuthenticatorResponse::GetClientDataJSON(
-    JSContext* aCx, JS::MutableHandle<JSObject*> aRetVal) {
->>>>>>> upstream-releases
   if (!mClientDataJSONCachedObj) {
     mClientDataJSONCachedObj = mClientDataJSON.ToArrayBuffer(aCx);
   }

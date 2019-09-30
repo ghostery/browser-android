@@ -549,15 +549,9 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
     return uspoof_check2UnicodeString(sc, id, NULL, status);
 }
 
-<<<<<<< HEAD
-static int32_t checkImpl(const SpoofImpl* This, const UnicodeString& id, CheckResult* checkResult, UErrorCode* status) {
-||||||| merged common ancestors
-int32_t checkImpl(const SpoofImpl* This, const UnicodeString& id, CheckResult* checkResult, UErrorCode* status) {
-=======
 namespace {
 
 int32_t checkImpl(const SpoofImpl* This, const UnicodeString& id, CheckResult* checkResult, UErrorCode* status) {
->>>>>>> upstream-releases
     U_ASSERT(This != NULL);
     U_ASSERT(checkResult != NULL);
     checkResult->clear();

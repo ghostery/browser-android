@@ -38,31 +38,9 @@ class nsAttrChildContentList : public nsINodeList {
   uint32_t Length() override;
   nsINode* GetParentObject() final { return mNode; }
 
-<<<<<<< HEAD
-  virtual void DropReference() { mNode = nullptr; }
-||||||| merged common ancestors
-  virtual void DropReference()
-  {
-    mNode = nullptr;
-  }
-=======
   virtual void InvalidateCacheIfAvailable() {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual nsINode* GetParentObject() override { return mNode; }
 
  protected:
-||||||| merged common ancestors
-  virtual nsINode* GetParentObject() override
-  {
-    return mNode;
-  }
-
-protected:
-=======
- protected:
->>>>>>> upstream-releases
   virtual ~nsAttrChildContentList() {}
 
  private:
@@ -82,20 +60,7 @@ class nsParentNodeChildContentList final : public nsAttrChildContentList {
   virtual nsIContent* Item(uint32_t aIndex) override;
   uint32_t Length() override;
 
-<<<<<<< HEAD
-  void DropReference() override {
-    InvalidateCache();
-    nsAttrChildContentList::DropReference();
-  }
-||||||| merged common ancestors
-  void DropReference() override
-  {
-    InvalidateCache();
-    nsAttrChildContentList::DropReference();
-  }
-=======
   void InvalidateCacheIfAvailable() final { InvalidateCache(); }
->>>>>>> upstream-releases
 
   void InvalidateCache() {
     mIsCacheValid = false;

@@ -422,14 +422,6 @@ class OSXBootstrapper(BaseBootstrapper):
         packages = [
             'nasm',
             'yasm',
-<<<<<<< HEAD
-            'llvm-7.0',
-            'clang-7.0',
-||||||| merged common ancestors
-            'llvm-4.0',
-            'clang-4.0',
-=======
->>>>>>> upstream-releases
         ]
 
         self._ensure_macports_packages(packages)
@@ -511,12 +503,6 @@ class OSXBootstrapper(BaseBootstrapper):
 
         return active_name.lower()
 
-<<<<<<< HEAD
-    def ensure_clang_static_analysis_package(self, checkout_root):
-        self.install_toolchain_static_analysis(checkout_root)
-
-||||||| merged common ancestors
-=======
     def ensure_clang_static_analysis_package(self, state_dir, checkout_root):
         from mozboot import static_analysis
         self.install_toolchain_static_analysis(
@@ -527,17 +513,7 @@ class OSXBootstrapper(BaseBootstrapper):
 
         self.install_toolchain_artifact(state_dir, checkout_root, sccache.MACOS_SCCACHE)
 
->>>>>>> upstream-releases
     def ensure_stylo_packages(self, state_dir, checkout_root):
-<<<<<<< HEAD
-        from mozboot import stylo
-        # We installed clang via homebrew earlier.
-        self.install_toolchain_artifact(state_dir, checkout_root, stylo.MACOS_CBINDGEN)
-||||||| merged common ancestors
-        cbindgen_min_version = '0.6.4'
-        # We installed clang via homebrew earlier.
-        self.ensure_rust_package('cbindgen', cbindgen_min_version)
-=======
         from mozboot import stylo
         self.install_toolchain_artifact(state_dir, checkout_root, stylo.MACOS_CLANG)
         self.install_toolchain_artifact(state_dir, checkout_root, stylo.MACOS_CBINDGEN)
@@ -545,7 +521,6 @@ class OSXBootstrapper(BaseBootstrapper):
     def ensure_nasm_packages(self, state_dir, checkout_root):
         # installed via ensure_browser_packages
         pass
->>>>>>> upstream-releases
 
     def ensure_node_packages(self, state_dir, checkout_root):
         # XXX from necessary?

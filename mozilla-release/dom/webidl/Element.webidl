@@ -245,13 +245,7 @@ partial interface Element {
   [BinaryName="shadowRootByMode"]
   readonly attribute ShadowRoot? shadowRoot;
 
-<<<<<<< HEAD
-  [Func="nsDocument::IsCallerChromeOrAddon", BinaryName="shadowRoot"]
-||||||| merged common ancestors
-  [Func="nsDocument::IsShadowDOMEnabledAndCallerIsChromeOrAddon", BinaryName="shadowRoot"]
-=======
   [Func="Document::IsCallerChromeOrAddon", BinaryName="shadowRoot"]
->>>>>>> upstream-releases
   readonly attribute ShadowRoot? openOrClosedShadowRoot;
 
   [BinaryName="assignedSlotByMode"]

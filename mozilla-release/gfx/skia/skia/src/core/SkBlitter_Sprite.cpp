@@ -119,24 +119,6 @@ public:
             p.append_set_rgb(fAlloc, fPaintColor);
             p.append(SkRasterPipeline::premul);
         }
-<<<<<<< HEAD
-        if (auto dstCS = fDst.colorSpace()) {
-            auto srcCS = fSource.colorSpace();
-            if (!srcCS || fSource.colorType() == kAlpha_8_SkColorType) {
-                // We treat untagged images as sRGB.
-                // A8 images get their r,g,b from the paint color, so they're also sRGB.
-                srcCS = sk_srgb_singleton();
-            }
-            auto srcAT = fSource.isOpaque() ? kOpaque_SkAlphaType
-                                            : kPremul_SkAlphaType;
-            fAlloc->make<SkColorSpaceXformSteps>(srcCS, srcAT,
-                                                 dstCS, kPremul_SkAlphaType)
-                ->apply(&p);
-        }
-||||||| merged common ancestors
-        append_gamut_transform(&p, fAlloc,
-                               fSource.colorSpace(), fDst.colorSpace(), kPremul_SkAlphaType);
-=======
         if (auto dstCS = fDst.colorSpace()) {
             auto srcCS = fSource.colorSpace();
             if (!srcCS || fSource.colorType() == kAlpha_8_SkColorType) {
@@ -150,7 +132,6 @@ public:
                                                  dstCS, kPremul_SkAlphaType)
                 ->apply(&p, fSource.colorType());
         }
->>>>>>> upstream-releases
         if (fPaintColor.fA != 1.0f) {
             p.append(SkRasterPipeline::scale_1_float, &fPaintColor.fA);
         }

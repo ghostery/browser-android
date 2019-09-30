@@ -34,29 +34,6 @@
 struct UListFormatter;
 typedef struct UListFormatter UListFormatter;  /**< C typedef for struct UListFormatter. @stable ICU 55 */
 
-<<<<<<< HEAD:mozilla-release/intl/icu/source/i18n/unicode/ulistformatter.h
-#ifndef U_HIDE_DRAFT_API
-/**
- * FieldPosition and UFieldPosition selectors for format fields
- * defined by ListFormatter.
- * @draft ICU 63
- */
-typedef enum UListFormatterField {
-    /**
-     * The literal text in the result which came from the resources.
-     * @draft ICU 63
-     */
-    ULISTFMT_LITERAL_FIELD,
-    /**
-     * The element text in the result which came from the input strings.
-     * @draft ICU 63
-     */
-    ULISTFMT_ELEMENT_FIELD
-} UListFormatterField;
-#endif // U_HIDE_DRAFT_API
-
-||||||| merged common ancestors
-=======
 #ifndef U_HIDE_DRAFT_API
 struct UFormattedList;
 /**
@@ -86,7 +63,6 @@ typedef enum UListFormatterField {
 } UListFormatterField;
 #endif // U_HIDE_DRAFT_API
 
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/i18n/unicode/ulistformatter.h
 /**
  * Open a new UListFormatter object using the rules for a given locale.
  * @param locale

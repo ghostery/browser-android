@@ -6,27 +6,6 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
-<<<<<<< HEAD
-<dialog id="removemp"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        style="width: 35em;" 
-        ondialogaccept="gRemovePasswordDialog.removePassword();" 
-        onload="gRemovePasswordDialog.init()"
-        data-l10n-id="remove-password">
-||||||| merged common ancestors
-<!DOCTYPE dialog [
-<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd" >
-<!ENTITY % removempDTD SYSTEM "chrome://mozapps/locale/preferences/removemp.dtd" >
-%brandDTD;
-%removempDTD;
-]>
-
-<dialog id="removemp" title="&removePassword.title;"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
-        style="width: 35em;" 
-        ondialogaccept="gRemovePasswordDialog.removePassword();" 
-        onload="gRemovePasswordDialog.init()">
-=======
 <dialog id="removemp"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         xmlns:html="http://www.w3.org/1999/xhtml"
@@ -35,23 +14,10 @@
         data-l10n-id="remove-password">
 
   <script src="chrome://mozapps/content/preferences/removemp.js"/>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  <script type="application/javascript" src="chrome://mozapps/content/preferences/removemp.js"/>
-
-  <linkset>
-    <link rel="localization" href="toolkit/preferences/preferences.ftl"/>
-  </linkset>
-||||||| merged common ancestors
-  <script type="application/javascript" src="chrome://mozapps/content/preferences/removemp.js"/>
-
-  <stringbundle id="bundlePreferences" src="chrome://mozapps/locale/preferences/preferences.properties"/>
-=======
   <linkset>
     <html:link rel="localization" href="toolkit/preferences/preferences.ftl"/>
   </linkset>
->>>>>>> upstream-releases
 
   <vbox id="warnings">
     <description data-l10n-id="remove-warning1"></description>
@@ -64,22 +30,10 @@
     <label data-l10n-id="remove-info"/>
 
     <hbox align="center">
-<<<<<<< HEAD
-      <label control="password" data-l10n-id="remove-password-old-password"/> 
-      <textbox id="password" type="password"
-               oninput="gRemovePasswordDialog.validateInput();"
-               aria-describedby="warnings"/>
-||||||| merged common ancestors
-      <label control="password" value="&setPassword.oldPassword.label;"/> 
-      <textbox id="password" type="password"
-               oninput="gRemovePasswordDialog.validateInput();"
-               aria-describedby="warnings"/>
-=======
       <label control="password" data-l10n-id="remove-password-old-password"/> 
       <html:input id="password" type="password"
                   oninput="gRemovePasswordDialog.validateInput();"
                   aria-describedby="warnings"/>
->>>>>>> upstream-releases
     </hbox>
   </groupbox>
   

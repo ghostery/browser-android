@@ -82,27 +82,6 @@
   list-style-image: url(chrome://browser/skin/notification-icons/autoplay-media-blocked.svg);
 }
 
-<<<<<<< HEAD
-.storage-access-notification-content {
-  color: var(--panel-disabled-color);
-  font-style: italic;
-  margin-top: 15px;
-}
-
-.storage-access-notification-content .text-link {
-  color: -moz-nativehyperlinktext;
-}
-
-.storage-access-notification-content .text-link:hover {
-  text-decoration: underline;
-}
-
-#storage-access-notification .popup-notification-body-container {
-  padding: 20px;
-}
-
-||||||| merged common ancestors
-=======
 .image-icon {
   list-style-image: url(chrome://browser/skin/notification-icons/images.svg);
 }
@@ -129,7 +108,6 @@
   padding: 20px;
 }
 
->>>>>>> upstream-releases
 .popup-notification-icon[popupid="indexedDB-permissions-prompt"],
 .indexedDB-icon {
   list-style-image: url(chrome://browser/skin/notification-icons/indexedDB.svg);
@@ -319,18 +297,6 @@ html|*#webRTC-previewVideo {
   transition: fill 1.5s;
 }
 
-<<<<<<< HEAD
-.plugin-icon.blocked-permission-icon {
-  list-style-image: url(chrome://global/skin/plugins/plugin-blocked.svg);
-}
-
-||||||| merged common ancestors
-.plugin-icon.blocked-permission-icon {
-  list-style-image: url(chrome://mozapps/skin/plugins/plugin-blocked.svg);
-}
-
-=======
->>>>>>> upstream-releases
 #plugin-icon-badge {
   list-style-image: url(chrome://browser/skin/notification-icons/plugin-badge.svg);
   opacity: 0;

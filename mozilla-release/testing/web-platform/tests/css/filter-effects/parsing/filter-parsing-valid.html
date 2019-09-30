@@ -16,30 +16,15 @@ test_valid_value("filter", "none");
 
 test_valid_value("filter", "blur(100px)");
 test_valid_value("filter", "blur(0)", "blur(0px)");
-<<<<<<< HEAD
-test_valid_value("filter", "blur()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "blur()", ["blur()", "blur(0px)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "brightness(0)");
 test_valid_value("filter", "brightness(300%)");
-<<<<<<< HEAD
-test_valid_value("filter", "brightness()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "brightness()", ["brightness()", "brightness(1)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "contrast(0)");
 test_valid_value("filter", "contrast(300%)");
-<<<<<<< HEAD
-test_valid_value("filter", "contrast()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "contrast()", ["contrast()", "contrast(1)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "drop-shadow(1px 2px)");
 test_valid_value("filter", "drop-shadow(1px 2px 3px)");
@@ -51,57 +36,27 @@ test_valid_value("filter", "drop-shadow(rgba(4, 5, 6, 0.75) 1px 2px 3px)");
 
 test_valid_value("filter", "grayscale(0)");
 test_valid_value("filter", "grayscale(300%)", "grayscale(100%)");
-<<<<<<< HEAD
-test_valid_value("filter", "grayscale()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "grayscale()", ["grayscale()", "grayscale(1)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "hue-rotate(90deg)");
 test_valid_value("filter", "hue-rotate(0)", "hue-rotate(0deg)"); // https://github.com/w3c/fxtf-drafts/issues/228
-<<<<<<< HEAD
-test_valid_value("filter", "hue-rotate()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "hue-rotate()", ["hue-rotate()", "hue-rotate(0deg)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "invert(0)");
 test_valid_value("filter", "invert(300%)", "invert(100%)");
-<<<<<<< HEAD
-test_valid_value("filter", "invert()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "invert()", ["invert()", "invert(1)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "opacity(0)");
 test_valid_value("filter", "opacity(300%)", "opacity(100%)");
-<<<<<<< HEAD
-test_valid_value("filter", "opacity()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "opacity()", ["opacity()", "opacity(1)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "saturate(0)");
 test_valid_value("filter", "saturate(300%)");
-<<<<<<< HEAD
-test_valid_value("filter", "saturate()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "saturate()", ["saturate()", "saturate(1)"]);
->>>>>>> upstream-releases
 
 test_valid_value("filter", "sepia(0)");
 test_valid_value("filter", "sepia(300%)", "sepia(100%)");
-<<<<<<< HEAD
-test_valid_value("filter", "sepia()");
-||||||| merged common ancestors
-=======
 test_valid_value("filter", "sepia()", ["sepia()", "sepia(1)"]);
->>>>>>> upstream-releases
 
 // Edge serializes url(...) without quotes. Blink/WebKit and Firefox use quotes.
 test_valid_value("filter", "url(picture.svg#f)", ['url("picture.svg#f")', 'url(picture.svg#f)']);

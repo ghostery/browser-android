@@ -133,33 +133,15 @@ void DOMEventTargetHelper::DisconnectFromOwner() {
   MaybeDontKeepAlive();
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowInner* DOMEventTargetHelper::GetWindowIfCurrent() const {
-  if (NS_FAILED(CheckInnerWindowCorrectness())) {
-||||||| merged common ancestors
-nsPIDOMWindowInner*
-DOMEventTargetHelper::GetWindowIfCurrent() const
-{
-  if (NS_FAILED(CheckInnerWindowCorrectness())) {
-=======
 nsPIDOMWindowInner* DOMEventTargetHelper::GetWindowIfCurrent() const {
   if (NS_FAILED(CheckCurrentGlobalCorrectness())) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
   return GetOwner();
 }
 
-<<<<<<< HEAD
-nsIDocument* DOMEventTargetHelper::GetDocumentIfCurrent() const {
-||||||| merged common ancestors
-nsIDocument*
-DOMEventTargetHelper::GetDocumentIfCurrent() const
-{
-=======
 Document* DOMEventTargetHelper::GetDocumentIfCurrent() const {
->>>>>>> upstream-releases
   nsPIDOMWindowInner* win = GetWindowIfCurrent();
   if (!win) {
     return nullptr;
@@ -229,18 +211,8 @@ EventListenerManager* DOMEventTargetHelper::GetExistingListenerManager() const {
   return mListenerManager;
 }
 
-<<<<<<< HEAD
-nsresult DOMEventTargetHelper::WantsUntrusted(bool* aRetVal) {
-  nsresult rv = CheckInnerWindowCorrectness();
-||||||| merged common ancestors
-nsresult
-DOMEventTargetHelper::WantsUntrusted(bool* aRetVal)
-{
-  nsresult rv = CheckInnerWindowCorrectness();
-=======
 nsresult DOMEventTargetHelper::WantsUntrusted(bool* aRetVal) {
   nsresult rv = CheckCurrentGlobalCorrectness();
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsCOMPtr<Document> doc = GetDocumentIfCurrent();
@@ -342,11 +314,6 @@ void DOMEventTargetHelper::BindToOwnerInternal(nsIGlobalObject* aOwner) {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 nsresult DOMEventTargetHelper::CheckCurrentGlobalCorrectness() const {
   NS_ENSURE_STATE(!mHasOrHasHadOwnerWindow || mOwnerWindow);
 
@@ -367,4 +334,3 @@ nsresult DOMEventTargetHelper::CheckCurrentGlobalCorrectness() const {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -13,18 +13,8 @@ nsExternalURLHandlerService::nsExternalURLHandlerService() {}
 nsExternalURLHandlerService::~nsExternalURLHandlerService() {}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsExternalURLHandlerService::GetURLHandlerInfoFromOS(nsIURI *aURL, bool *found,
-                                                     nsIHandlerInfo **info) {
-||||||| merged common ancestors
-nsExternalURLHandlerService::GetURLHandlerInfoFromOS(nsIURI *aURL,
-                                                     bool *found,
-                                                     nsIHandlerInfo **info)
-{
-=======
 nsExternalURLHandlerService::GetURLHandlerInfoFromOS(nsIURI* aURL, bool* found,
                                                      nsIHandlerInfo** info) {
->>>>>>> upstream-releases
   nsCString uriSpec;
   aURL->GetSpec(uriSpec);
   return nsMIMEInfoAndroid::GetMimeInfoForURL(uriSpec, found, info);

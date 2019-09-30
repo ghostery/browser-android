@@ -595,17 +595,6 @@ RefPtr<U2FRegisterPromise> U2FSoftTokenManager::Register(
 
     // The U2F softtoken neither supports resident keys or
     // user verification, nor is it a platform authenticator.
-<<<<<<< HEAD
-    if (sel.requireResidentKey() || sel.requireUserVerification() ||
-        sel.requirePlatformAttachment()) {
-      return U2FRegisterPromise::CreateAndReject(NS_ERROR_DOM_NOT_ALLOWED_ERR,
-                                                 __func__);
-||||||| merged common ancestors
-    if (sel.requireResidentKey() ||
-        sel.requireUserVerification() ||
-        sel.requirePlatformAttachment()) {
-      return U2FRegisterPromise::CreateAndReject(NS_ERROR_DOM_NOT_ALLOWED_ERR, __func__);
-=======
     if (sel.requireResidentKey() || requireUserVerification ||
         requirePlatformAttachment) {
       return U2FRegisterPromise::CreateAndReject(NS_ERROR_DOM_NOT_ALLOWED_ERR,
@@ -634,7 +623,6 @@ RefPtr<U2FRegisterPromise> U2FSoftTokenManager::Register(
     if (coseAlgos.IsEmpty()) {
       return U2FRegisterPromise::CreateAndReject(NS_ERROR_DOM_NOT_SUPPORTED_ERR,
                                                  __func__);
->>>>>>> upstream-releases
     }
   }
 
@@ -834,18 +822,9 @@ RefPtr<U2FSignPromise> U2FSoftTokenManager::Sign(
         extra.userVerificationRequirement();
 
     // The U2F softtoken doesn't support user verification.
-<<<<<<< HEAD
-    if (extra.RequireUserVerification()) {
-      return U2FSignPromise::CreateAndReject(NS_ERROR_DOM_NOT_ALLOWED_ERR,
-                                             __func__);
-||||||| merged common ancestors
-    if (extra.RequireUserVerification()) {
-      return U2FSignPromise::CreateAndReject(NS_ERROR_DOM_NOT_ALLOWED_ERR, __func__);
-=======
     if (userVerificaitonReq == UserVerificationRequirement::Required) {
       return U2FSignPromise::CreateAndReject(NS_ERROR_DOM_NOT_ALLOWED_ERR,
                                              __func__);
->>>>>>> upstream-releases
     }
 
     // Process extensions.
@@ -990,16 +969,8 @@ RefPtr<U2FSignPromise> U2FSoftTokenManager::Sign(
   nsTArray<uint8_t> userHandle;
 
   WebAuthnGetAssertionResult result(aInfo.ClientDataJSON(), keyHandle,
-<<<<<<< HEAD
-                                    signatureBuf, authenticatorData, extensions,
-                                    signatureDataBuf);
-||||||| merged common ancestors
-                                    signatureBuf, authenticatorData,
-                                    extensions, signatureDataBuf);
-=======
                                     signatureBuf, authenticatorData, extensions,
                                     signatureDataBuf, userHandle);
->>>>>>> upstream-releases
   return U2FSignPromise::CreateAndResolve(std::move(result), __func__);
 }
 

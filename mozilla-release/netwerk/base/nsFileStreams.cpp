@@ -535,17 +535,6 @@ nsFileInputStream::Available(uint64_t* aResult) {
   return nsFileStreamBase::Available(aResult);
 }
 
-<<<<<<< HEAD
-void nsFileInputStream::Serialize(InputStreamParams& aParams,
-                                  FileDescriptorArray& aFileDescriptors) {
-  FileInputStreamParams params;
-||||||| merged common ancestors
-void
-nsFileInputStream::Serialize(InputStreamParams& aParams,
-                             FileDescriptorArray& aFileDescriptors)
-{
-    FileInputStreamParams params;
-=======
 void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   FileDescriptorArray& aFileDescriptors,
                                   bool aDelayedStart, uint32_t aMaxSize,
@@ -553,30 +542,10 @@ void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   mozilla::dom::ContentChild* aManager) {
   MOZ_ASSERT(aSizeUsed);
   *aSizeUsed = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (NS_SUCCEEDED(DoPendingOpen())) {
-    MOZ_ASSERT(mFD);
-    FileHandleType fd = FileHandleType(PR_FileDesc2NativeHandle(mFD));
-    NS_ASSERTION(fd, "This should never be null!");
-||||||| merged common ancestors
-    if (NS_SUCCEEDED(DoPendingOpen())) {
-        MOZ_ASSERT(mFD);
-        FileHandleType fd = FileHandleType(PR_FileDesc2NativeHandle(mFD));
-        NS_ASSERTION(fd, "This should never be null!");
-=======
   SerializeInternal(aParams, aFileDescriptors);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    DebugOnly<FileDescriptor*> dbgFD = aFileDescriptors.AppendElement(fd);
-    NS_ASSERTION(dbgFD->IsValid(), "Sending an invalid file descriptor!");
-||||||| merged common ancestors
-        DebugOnly<FileDescriptor*> dbgFD = aFileDescriptors.AppendElement(fd);
-        NS_ASSERTION(dbgFD->IsValid(), "Sending an invalid file descriptor!");
-=======
 void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   FileDescriptorArray& aFileDescriptors,
                                   bool aDelayedStart, uint32_t aMaxSize,
@@ -584,29 +553,10 @@ void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   PBackgroundChild* aManager) {
   MOZ_ASSERT(aSizeUsed);
   *aSizeUsed = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    params.fileDescriptorIndex() = aFileDescriptors.Length() - 1;
-||||||| merged common ancestors
-        params.fileDescriptorIndex() = aFileDescriptors.Length() - 1;
-=======
   SerializeInternal(aParams, aFileDescriptors);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    Close();
-  } else {
-    NS_WARNING(
-        "This file has not been opened (or could not be opened). "
-        "Sending an invalid file descriptor to the other process!");
-||||||| merged common ancestors
-        Close();
-    } else {
-        NS_WARNING("This file has not been opened (or could not be opened). "
-                   "Sending an invalid file descriptor to the other process!");
-=======
 void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   FileDescriptorArray& aFileDescriptors,
                                   bool aDelayedStart, uint32_t aMaxSize,
@@ -614,24 +564,10 @@ void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   mozilla::dom::ContentParent* aManager) {
   MOZ_ASSERT(aSizeUsed);
   *aSizeUsed = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    params.fileDescriptorIndex() = UINT32_MAX;
-  }
-||||||| merged common ancestors
-        params.fileDescriptorIndex() = UINT32_MAX;
-    }
-=======
   SerializeInternal(aParams, aFileDescriptors);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int32_t behaviorFlags = mBehaviorFlags;
-||||||| merged common ancestors
-    int32_t behaviorFlags = mBehaviorFlags;
-=======
 void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   FileDescriptorArray& aFileDescriptors,
                                   bool aDelayedStart, uint32_t aMaxSize,
@@ -639,166 +575,42 @@ void nsFileInputStream::Serialize(InputStreamParams& aParams,
                                   PBackgroundParent* aManager) {
   MOZ_ASSERT(aSizeUsed);
   *aSizeUsed = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The receiving process (or thread) is going to have an open file
-  // descriptor automatically so transferring this flag is meaningless.
-  behaviorFlags &= ~nsIFileInputStream::DEFER_OPEN;
-||||||| merged common ancestors
-    // The receiving process (or thread) is going to have an open file
-    // descriptor automatically so transferring this flag is meaningless.
-    behaviorFlags &= ~nsIFileInputStream::DEFER_OPEN;
-=======
   SerializeInternal(aParams, aFileDescriptors);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  params.behaviorFlags() = behaviorFlags;
-  params.ioFlags() = mIOFlags;
-||||||| merged common ancestors
-    params.behaviorFlags() = behaviorFlags;
-    params.ioFlags() = mIOFlags;
-=======
 void nsFileInputStream::SerializeInternal(
     InputStreamParams& aParams, FileDescriptorArray& aFileDescriptors) {
   FileInputStreamParams params;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  aParams = params;
-}
-||||||| merged common ancestors
-    aParams = params;
-}
-=======
   if (NS_SUCCEEDED(DoPendingOpen())) {
     MOZ_ASSERT(mFD);
     FileHandleType fd = FileHandleType(PR_FileDesc2NativeHandle(mFD));
     NS_ASSERTION(fd, "This should never be null!");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool nsFileInputStream::Deserialize(
-    const InputStreamParams& aParams,
-    const FileDescriptorArray& aFileDescriptors) {
-  NS_ASSERTION(!mFD, "Already have a file descriptor?!");
-  NS_ASSERTION(mState == nsFileStreamBase::eUnitialized, "Deferring open?!");
-  NS_ASSERTION(!mFile, "Should never have a file here!");
-  NS_ASSERTION(!mPerm, "This should always be 0!");
-||||||| merged common ancestors
-bool
-nsFileInputStream::Deserialize(const InputStreamParams& aParams,
-                               const FileDescriptorArray& aFileDescriptors)
-{
-    NS_ASSERTION(!mFD, "Already have a file descriptor?!");
-    NS_ASSERTION(mState == nsFileStreamBase::eUnitialized, "Deferring open?!");
-    NS_ASSERTION(!mFile, "Should never have a file here!");
-    NS_ASSERTION(!mPerm, "This should always be 0!");
-=======
     DebugOnly<FileDescriptor*> dbgFD = aFileDescriptors.AppendElement(fd);
     NS_ASSERTION(dbgFD->IsValid(), "Sending an invalid file descriptor!");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (aParams.type() != InputStreamParams::TFileInputStreamParams) {
-    NS_WARNING("Received unknown parameters from the other process!");
-    return false;
-  }
-||||||| merged common ancestors
-    if (aParams.type() != InputStreamParams::TFileInputStreamParams) {
-        NS_WARNING("Received unknown parameters from the other process!");
-        return false;
-    }
-=======
     params.fileDescriptorIndex() = aFileDescriptors.Length() - 1;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const FileInputStreamParams& params = aParams.get_FileInputStreamParams();
-||||||| merged common ancestors
-    const FileInputStreamParams& params = aParams.get_FileInputStreamParams();
-=======
     Close();
   } else {
     NS_WARNING(
         "This file has not been opened (or could not be opened). "
         "Sending an invalid file descriptor to the other process!");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t fileDescriptorIndex = params.fileDescriptorIndex();
-||||||| merged common ancestors
-    uint32_t fileDescriptorIndex = params.fileDescriptorIndex();
-=======
     params.fileDescriptorIndex() = UINT32_MAX;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  FileDescriptor fd;
-  if (fileDescriptorIndex < aFileDescriptors.Length()) {
-    fd = aFileDescriptors[fileDescriptorIndex];
-    NS_WARNING_ASSERTION(fd.IsValid(), "Received an invalid file descriptor!");
-  } else {
-    NS_WARNING("Received a bad file descriptor index!");
-  }
-||||||| merged common ancestors
-    FileDescriptor fd;
-    if (fileDescriptorIndex < aFileDescriptors.Length()) {
-        fd = aFileDescriptors[fileDescriptorIndex];
-        NS_WARNING_ASSERTION(fd.IsValid(),
-                             "Received an invalid file descriptor!");
-    } else {
-        NS_WARNING("Received a bad file descriptor index!");
-    }
-=======
   int32_t behaviorFlags = mBehaviorFlags;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (fd.IsValid()) {
-    auto rawFD = fd.ClonePlatformHandle();
-    PRFileDesc* fileDesc = PR_ImportFile(PROsfd(rawFD.release()));
-    if (!fileDesc) {
-      NS_WARNING("Failed to import file handle!");
-      return false;
-    }
-    mFD = fileDesc;
-    mState = eOpened;
-  } else {
-    mState = eError;
-    mErrorValue = NS_ERROR_FILE_NOT_FOUND;
-  }
-||||||| merged common ancestors
-    if (fd.IsValid()) {
-        auto rawFD = fd.ClonePlatformHandle();
-        PRFileDesc* fileDesc = PR_ImportFile(PROsfd(rawFD.release()));
-        if (!fileDesc) {
-            NS_WARNING("Failed to import file handle!");
-            return false;
-        }
-        mFD = fileDesc;
-        mState = eOpened;
-    } else {
-      mState = eError;
-      mErrorValue = NS_ERROR_FILE_NOT_FOUND;
-    }
-=======
   // The receiving process (or thread) is going to have an open file
   // descriptor automatically so transferring this flag is meaningless.
   behaviorFlags &= ~nsIFileInputStream::DEFER_OPEN;
 
   params.behaviorFlags() = behaviorFlags;
   params.ioFlags() = mIOFlags;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mBehaviorFlags = params.behaviorFlags();
-||||||| merged common ancestors
-    mBehaviorFlags = params.behaviorFlags();
-=======
   aParams = params;
 }
 
@@ -818,19 +630,7 @@ bool nsFileInputStream::Deserialize(
   const FileInputStreamParams& params = aParams.get_FileInputStreamParams();
 
   uint32_t fileDescriptorIndex = params.fileDescriptorIndex();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!XRE_IsParentProcess()) {
-    // A child process shouldn't close when it reads the end because it will
-    // not be able to reopen the file later.
-    mBehaviorFlags &= ~nsIFileInputStream::CLOSE_ON_EOF;
-||||||| merged common ancestors
-    if (!XRE_IsParentProcess()) {
-        // A child process shouldn't close when it reads the end because it will
-        // not be able to reopen the file later.
-        mBehaviorFlags &= ~nsIFileInputStream::CLOSE_ON_EOF;
-=======
   FileDescriptor fd;
   if (fileDescriptorIndex < aFileDescriptors.Length()) {
     fd = aFileDescriptors[fileDescriptorIndex];
@@ -838,19 +638,7 @@ bool nsFileInputStream::Deserialize(
   } else {
     NS_WARNING("Received a bad file descriptor index!");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // A child process will not be able to reopen the file so this flag is
-    // meaningless.
-    mBehaviorFlags &= ~nsIFileInputStream::REOPEN_ON_REWIND;
-  }
-||||||| merged common ancestors
-        // A child process will not be able to reopen the file so this flag is
-        // meaningless.
-        mBehaviorFlags &= ~nsIFileInputStream::REOPEN_ON_REWIND;
-    }
-=======
   if (fd.IsValid()) {
     auto rawFD = fd.ClonePlatformHandle();
     PRFileDesc* fileDesc = PR_ImportFile(PROsfd(rawFD.release()));
@@ -864,23 +652,9 @@ bool nsFileInputStream::Deserialize(
     mState = eError;
     mErrorValue = NS_ERROR_FILE_NOT_FOUND;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mIOFlags = params.ioFlags();
-||||||| merged common ancestors
-    mIOFlags = params.ioFlags();
-=======
   mBehaviorFlags = params.behaviorFlags();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-}
-||||||| merged common ancestors
-    return true;
-}
-=======
   if (!XRE_IsParentProcess()) {
     // A child process shouldn't close when it reads the end because it will
     // not be able to reopen the file later.
@@ -890,21 +664,10 @@ bool nsFileInputStream::Deserialize(
     // meaningless.
     mBehaviorFlags &= ~nsIFileInputStream::REOPEN_ON_REWIND;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Maybe<uint64_t> nsFileInputStream::ExpectedSerializedLength() {
-  return Nothing();
-||||||| merged common ancestors
-Maybe<uint64_t>
-nsFileInputStream::ExpectedSerializedLength()
-{
-    return Nothing();
-=======
   mIOFlags = params.ioFlags();
 
   return true;
->>>>>>> upstream-releases
 }
 
 bool nsFileInputStream::IsCloneable() const {

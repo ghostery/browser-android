@@ -19,11 +19,4 @@
 # remain unchanged across different versions (Nightly, Beta, etc.).
 -brand-product-name = Firefox
 -vendor-short-name = Mozilla
-<<<<<<< HEAD
--brand-full-name = Nightly
--brand-shorter-name = Nightly
-trademarkInfo = { " " } 
-||||||| merged common ancestors
-=======
 trademarkInfo = { " " }
->>>>>>> upstream-releases

@@ -14,17 +14,8 @@ class SkConvolutionFilter1D;
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-class ConvolutionFilter {
- public:
-||||||| merged common ancestors
-class ConvolutionFilter
-{
-public:
-=======
 class ConvolutionFilter final {
  public:
->>>>>>> upstream-releases
   ConvolutionFilter();
   ~ConvolutionFilter();
 

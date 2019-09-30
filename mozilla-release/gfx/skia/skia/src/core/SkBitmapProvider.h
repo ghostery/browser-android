@@ -21,26 +21,6 @@ public:
         : fImage(other.fImage)
     {}
 
-<<<<<<< HEAD
-    int width() const;
-    int height() const;
-    uint32_t getID() const;
-
-    SkImageInfo info() const;
-    bool isVolatile() const;
-
-||||||| merged common ancestors
-    int width() const;
-    int height() const;
-    uint32_t getID() const;
-    SkColorSpace* dstColorSpace() const { return fDstColorSpace; }
-
-    SkImageInfo info() const;
-    bool isVolatile() const;
-
-    SkBitmapCacheDesc makeCacheDesc(int w, int h) const;
-=======
->>>>>>> upstream-releases
     SkBitmapCacheDesc makeCacheDesc() const;
     void notifyAddedToCache() const;
 

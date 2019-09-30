@@ -584,16 +584,8 @@ trait PrivateMatchMethods: TElement {
         &self,
         context: &SharedStyleContext,
         style: &mut Arc<ComputedValues>,
-<<<<<<< HEAD
-        possibly_expired_animations: &mut Vec<crate::animation::PropertyAnimation>,
-        font_metrics: &crate::font_metrics::FontMetricsProvider,
-||||||| merged common ancestors
-        possibly_expired_animations: &mut Vec<::animation::PropertyAnimation>,
-        font_metrics: &::font_metrics::FontMetricsProvider,
-=======
         possibly_expired_animations: &mut Vec<crate::animation::PropertyAnimation>,
         font_metrics: &dyn crate::font_metrics::FontMetricsProvider,
->>>>>>> upstream-releases
     ) {
         use crate::animation::{self, Animation, AnimationUpdate};
         use crate::dom::TNode;

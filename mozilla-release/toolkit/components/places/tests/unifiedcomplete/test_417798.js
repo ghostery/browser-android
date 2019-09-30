@@ -32,13 +32,7 @@ add_task(async function test_javascript_match() {
   info("Match non-javascript with 'javascript:'");
   await check_autocomplete({
     search: "javascript:",
-<<<<<<< HEAD
-    matches: [ { uri: uri1, title: "Title with javascript:" } ],
-||||||| merged common ancestors
-    matches: [],
-=======
     matches: [{ uri: uri1, title: "Title with javascript:" }],
->>>>>>> upstream-releases
   });
 
   info("Match nothing with '5 javascript:'");

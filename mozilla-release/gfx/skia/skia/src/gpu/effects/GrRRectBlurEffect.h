@@ -56,21 +56,10 @@ public:
             GrBackendFormat format =
                     context->priv().caps()->getBackendFormatFromColorType(kAlpha_8_SkColorType);
             // TODO: this could be approx but the texture coords will need to be updated
-<<<<<<< HEAD
-            sk_sp<GrRenderTargetContext> rtc(
-                    context->contextPriv().makeDeferredRenderTargetContextWithFallback(
-                            SkBackingFit::kExact, size.fWidth, size.fHeight, kAlpha_8_GrPixelConfig,
-                            nullptr));
-||||||| merged common ancestors
-            sk_sp<GrRenderTargetContext> rtc(context->makeDeferredRenderTargetContextWithFallback(
-                    SkBackingFit::kExact, size.fWidth, size.fHeight, kAlpha_8_GrPixelConfig,
-                    nullptr));
-=======
             sk_sp<GrRenderTargetContext> rtc(
                     context->priv().makeDeferredRenderTargetContextWithFallback(
                             format, SkBackingFit::kExact, size.fWidth, size.fHeight,
                             kAlpha_8_GrPixelConfig, nullptr));
->>>>>>> upstream-releases
             if (!rtc) {
                 return nullptr;
             }

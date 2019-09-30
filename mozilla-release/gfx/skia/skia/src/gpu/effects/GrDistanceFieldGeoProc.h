@@ -80,19 +80,9 @@ public:
 
     const char* name() const override { return "DistanceFieldA8Text"; }
 
-<<<<<<< HEAD
-    const Attribute& inPosition() const { return fInPosition; }
-    const Attribute& inColor() const { return kInColor; }
-    const Attribute& inTextureCoords() const { return fInTextureCoords; }
-||||||| merged common ancestors
-    const Attribute* inPosition() const { return fInPosition; }
-    const Attribute* inColor() const { return fInColor; }
-    const Attribute* inTextureCoords() const { return fInTextureCoords; }
-=======
     const Attribute& inPosition() const { return fInPosition; }
     const Attribute& inColor() const { return fInColor; }
     const Attribute& inTextureCoords() const { return fInTextureCoords; }
->>>>>>> upstream-releases
     const SkMatrix& localMatrix() const { return fLocalMatrix; }
 #ifdef SK_GAMMA_APPLY_TO_A8
     float getDistanceAdjust() const { return fDistanceAdjust; }
@@ -116,49 +106,18 @@ private:
 #endif
                                  uint32_t flags, const SkMatrix& localMatrix);
 
-<<<<<<< HEAD
-    const Attribute& onVertexAttribute(int i) const override {
-        return IthAttribute(i, fInPosition, kInColor, fInTextureCoords);
-    }
-
     const TextureSampler& onTextureSampler(int i) const override { return fTextureSamplers[i]; }
 
-||||||| merged common ancestors
-=======
-    const TextureSampler& onTextureSampler(int i) const override { return fTextureSamplers[i]; }
-
->>>>>>> upstream-releases
     TextureSampler   fTextureSamplers[kMaxTextures];
-<<<<<<< HEAD
-    SkISize          fAtlasSize;  // size for all textures used with fTextureSamplers[].
-    SkMatrix         fLocalMatrix;
-    Attribute        fInPosition;
-    Attribute        fInTextureCoords;
-    uint32_t         fFlags;
-||||||| merged common ancestors
-=======
     SkISize          fAtlasSize;  // size for all textures used with fTextureSamplers[].
     SkMatrix         fLocalMatrix;
     Attribute        fInPosition;
     Attribute        fInColor;
     Attribute        fInTextureCoords;
     uint32_t         fFlags;
->>>>>>> upstream-releases
 #ifdef SK_GAMMA_APPLY_TO_A8
     float            fDistanceAdjust;
 #endif
-<<<<<<< HEAD
-
-    static constexpr Attribute kInColor =
-            {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType};
-||||||| merged common ancestors
-    uint32_t         fFlags;
-    const Attribute* fInPosition;
-    const Attribute* fInColor;
-    const Attribute* fInTextureCoords;
-    SkMatrix         fLocalMatrix;
-=======
->>>>>>> upstream-releases
 
     GR_DECLARE_GEOMETRY_PROCESSOR_TEST
 
@@ -176,50 +135,24 @@ public:
     static constexpr int kMaxTextures = 4;
 
     /** The local matrix should be identity if local coords are not required by the GrPipeline. */
-<<<<<<< HEAD
-    static sk_sp<GrGeometryProcessor> Make(const GrShaderCaps& caps,
-                                           const SkMatrix& matrix,
-                                           const sk_sp<GrTextureProxy>* proxies,
-                                           int numActiveProxies,
-||||||| merged common ancestors
-    static sk_sp<GrGeometryProcessor> Make(const SkMatrix& matrix,
-                                           const sk_sp<GrTextureProxy> proxies[kMaxTextures],
-=======
     static sk_sp<GrGeometryProcessor> Make(const GrShaderCaps& caps,
                                            const SkMatrix& matrix,
                                            bool wideColor,
                                            const sk_sp<GrTextureProxy>* proxies,
                                            int numActiveProxies,
->>>>>>> upstream-releases
                                            const GrSamplerState& params, uint32_t flags) {
         return sk_sp<GrGeometryProcessor>(
-<<<<<<< HEAD
-            new GrDistanceFieldPathGeoProc(caps, matrix, proxies, numActiveProxies, params, flags));
-||||||| merged common ancestors
-            new GrDistanceFieldPathGeoProc(matrix, proxies, params, flags));
-=======
             new GrDistanceFieldPathGeoProc(caps, matrix, wideColor, proxies, numActiveProxies,
                                            params, flags));
->>>>>>> upstream-releases
     }
 
     ~GrDistanceFieldPathGeoProc() override {}
 
     const char* name() const override { return "DistanceFieldPath"; }
 
-<<<<<<< HEAD
-    const Attribute& inPosition() const { return kInPosition; }
-    const Attribute& inColor() const { return kInColor; }
-    const Attribute& inTextureCoords() const { return fInTextureCoords; }
-||||||| merged common ancestors
-    const Attribute* inPosition() const { return fInPosition; }
-    const Attribute* inColor() const { return fInColor; }
-    const Attribute* inTextureCoords() const { return fInTextureCoords; }
-=======
     const Attribute& inPosition() const { return fInPosition; }
     const Attribute& inColor() const { return fInColor; }
     const Attribute& inTextureCoords() const { return fInTextureCoords; }
->>>>>>> upstream-releases
     const SkMatrix& matrix() const { return fMatrix; }
     uint32_t getFlags() const { return fFlags; }
     const SkISize& atlasSize() const { return fAtlasSize; }
@@ -231,58 +164,22 @@ public:
     GrGLSLPrimitiveProcessor* createGLSLInstance(const GrShaderCaps&) const override;
 
 private:
-<<<<<<< HEAD
-    GrDistanceFieldPathGeoProc(const GrShaderCaps& caps,
-                               const SkMatrix& matrix,
-                               const sk_sp<GrTextureProxy>* proxies,
-                               int numActiveProxies,
-||||||| merged common ancestors
-    GrDistanceFieldPathGeoProc(const SkMatrix& matrix,
-                               const sk_sp<GrTextureProxy> proxies[kMaxTextures],
-=======
     GrDistanceFieldPathGeoProc(const GrShaderCaps& caps,
                                const SkMatrix& matrix,
                                bool wideColor,
                                const sk_sp<GrTextureProxy>* proxies,
                                int numActiveProxies,
->>>>>>> upstream-releases
                                const GrSamplerState&, uint32_t flags);
 
-<<<<<<< HEAD
-    const Attribute& onVertexAttribute(int i) const override;
     const TextureSampler& onTextureSampler(int i) const override { return fTextureSamplers[i]; }
 
     SkMatrix         fMatrix;     // view matrix if perspective, local matrix otherwise
-||||||| merged common ancestors
-    SkMatrix         fMatrix;      // view matrix if perspective, local matrix otherwise
-=======
-    const TextureSampler& onTextureSampler(int i) const override { return fTextureSamplers[i]; }
-
-    SkMatrix         fMatrix;     // view matrix if perspective, local matrix otherwise
->>>>>>> upstream-releases
     TextureSampler   fTextureSamplers[kMaxTextures];
-<<<<<<< HEAD
-    SkISize          fAtlasSize;  // size for all textures used with fTextureSamplers[].
-    Attribute        fInTextureCoords;
-||||||| merged common ancestors
-=======
     SkISize          fAtlasSize;  // size for all textures used with fTextureSamplers[].
     Attribute        fInPosition;
     Attribute        fInColor;
     Attribute        fInTextureCoords;
->>>>>>> upstream-releases
     uint32_t         fFlags;
-<<<<<<< HEAD
-    static constexpr Attribute kInPosition =
-            {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
-    static constexpr Attribute kInColor =
-            {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType};
-||||||| merged common ancestors
-    const Attribute* fInPosition;
-    const Attribute* fInColor;
-    const Attribute* fInTextureCoords;
-=======
->>>>>>> upstream-releases
 
     GR_DECLARE_GEOMETRY_PROCESSOR_TEST
 
@@ -330,19 +227,9 @@ public:
 
     const char* name() const override { return "DistanceFieldLCDText"; }
 
-<<<<<<< HEAD
-    const Attribute& inPosition() const { return fInPosition; }
-    const Attribute& inColor() const { return kInColor; }
-    const Attribute& inTextureCoords() const { return fInTextureCoords; }
-||||||| merged common ancestors
-    const Attribute* inPosition() const { return fInPosition; }
-    const Attribute* inColor() const { return fInColor; }
-    const Attribute* inTextureCoords() const { return fInTextureCoords; }
-=======
     const Attribute& inPosition() const { return fInPosition; }
     const Attribute& inColor() const { return fInColor; }
     const Attribute& inTextureCoords() const { return fInTextureCoords; }
->>>>>>> upstream-releases
     DistanceAdjust getDistanceAdjust() const { return fDistanceAdjust; }
     uint32_t getFlags() const { return fFlags; }
     const SkMatrix& localMatrix() const { return fLocalMatrix; }
@@ -355,50 +242,20 @@ public:
     GrGLSLPrimitiveProcessor* createGLSLInstance(const GrShaderCaps&) const override;
 
 private:
-<<<<<<< HEAD
-    GrDistanceFieldLCDTextGeoProc(const GrShaderCaps& caps, const sk_sp<GrTextureProxy>* proxies,
-                                  int numActiveProxies, const GrSamplerState& params,
-                                  DistanceAdjust wa, uint32_t flags, const SkMatrix& localMatrix);
-
-    const Attribute& onVertexAttribute(int) const override;
-    const TextureSampler& onTextureSampler(int i) const override { return fTextureSamplers[i]; }
-||||||| merged common ancestors
-    GrDistanceFieldLCDTextGeoProc(const sk_sp<GrTextureProxy> proxies[kMaxTextures],
-                                  const GrSamplerState& params, DistanceAdjust wa, uint32_t flags,
-                                  const SkMatrix& localMatrix);
-=======
     GrDistanceFieldLCDTextGeoProc(const GrShaderCaps& caps, const sk_sp<GrTextureProxy>* proxies,
                                   int numActiveProxies, const GrSamplerState& params,
                                   DistanceAdjust wa, uint32_t flags, const SkMatrix& localMatrix);
 
     const TextureSampler& onTextureSampler(int i) const override { return fTextureSamplers[i]; }
->>>>>>> upstream-releases
 
     TextureSampler   fTextureSamplers[kMaxTextures];
     SkISize          fAtlasSize;  // size for all textures used with fTextureSamplers[].
     const SkMatrix   fLocalMatrix;
     DistanceAdjust   fDistanceAdjust;
-<<<<<<< HEAD
-    Attribute        fInPosition;
-    Attribute        fInTextureCoords;
-||||||| merged common ancestors
-=======
     Attribute        fInPosition;
     Attribute        fInColor;
     Attribute        fInTextureCoords;
->>>>>>> upstream-releases
     uint32_t         fFlags;
-<<<<<<< HEAD
-
-    static constexpr Attribute kInColor =
-            {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType};
-||||||| merged common ancestors
-    const Attribute* fInPosition;
-    const Attribute* fInColor;
-    const Attribute* fInTextureCoords;
-    const SkMatrix   fLocalMatrix;
-=======
->>>>>>> upstream-releases
 
     GR_DECLARE_GEOMETRY_PROCESSOR_TEST
 

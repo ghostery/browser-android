@@ -35,106 +35,11 @@ add_task(async function no_request_if_prefed_off() {
     Assert.equal(typeof metadata.searchDefault, "undefined");
     Assert.equal(typeof metadata.searchDefaultHash, "undefined");
 
-<<<<<<< HEAD
-add_task(async function no_request_if_prefed_off() {
-  // Disable geoSpecificDefaults and check no HTTP request is made.
-  Services.prefs.setBoolPref("browser.search.geoSpecificDefaults", false);
-  await asyncInit();
-  checkNoRequest();
-  await promiseAfterCache();
-
-  // Install kTestEngineName and wait for it to reach the disk.
-  await installTestEngine();
-  await promiseAfterCache();
-
-  // The default engine should be set based on the prefs.
-  Assert.equal(Services.search.defaultEngine.name, getDefaultEngineName(false));
-
-  // Ensure nothing related to geoSpecificDefaults has been written in the metadata.
-  let metadata = await promiseGlobalMetadata();
-  Assert.equal(typeof metadata.searchDefaultExpir, "undefined");
-  Assert.equal(typeof metadata.searchDefault, "undefined");
-  Assert.equal(typeof metadata.searchDefaultHash, "undefined");
-
-  Services.prefs.setBoolPref("browser.search.geoSpecificDefaults", true);
-||||||| merged common ancestors
-add_task(async function no_request_if_prefed_off() {
-  // Disable geoSpecificDefaults and check no HTTP request is made.
-  Services.prefs.setBoolPref("browser.search.geoSpecificDefaults", false);
-  await asyncInit();
-  checkNoRequest();
-  await promiseAfterCache();
-
-  // Install kTestEngineName and wait for it to reach the disk.
-  await installTestEngine();
-  await promiseAfterCache();
-
-  // The default engine should be set based on the prefs.
-  Assert.equal(Services.search.currentEngine.name, getDefaultEngineName(false));
-
-  // Ensure nothing related to geoSpecificDefaults has been written in the metadata.
-  let metadata = await promiseGlobalMetadata();
-  Assert.equal(typeof metadata.searchDefaultExpir, "undefined");
-  Assert.equal(typeof metadata.searchDefault, "undefined");
-  Assert.equal(typeof metadata.searchDefaultHash, "undefined");
-
-  Services.prefs.setBoolPref("browser.search.geoSpecificDefaults", true);
-=======
     Services.prefs.setBoolPref("browser.search.geoSpecificDefaults", true);
   });
->>>>>>> upstream-releases
 });
 
 add_task(async function should_get_geo_defaults_only_once() {
-<<<<<<< HEAD
-  // (Re)initializing the search service should trigger a request,
-  // and set the default engine based on it.
-  // Due to the previous initialization, we expect the region to already be set.
-  Assert.ok(Services.prefs.prefHasUserValue("browser.search.region"));
-  Assert.equal(Services.prefs.getCharPref("browser.search.region"), "FR");
-  await asyncReInit();
-  checkRequest();
-  Assert.equal(Services.search.defaultEngine.name, kTestEngineName);
-  await promiseAfterCache();
-
-  // Verify the metadata was written correctly.
-  let metadata = await promiseGlobalMetadata();
-  Assert.equal(typeof metadata.searchDefaultExpir, "number");
-  Assert.ok(metadata.searchDefaultExpir > Date.now());
-  Assert.equal(typeof metadata.searchDefault, "string");
-  Assert.equal(metadata.searchDefault, "Test search engine");
-  Assert.equal(typeof metadata.searchDefaultHash, "string");
-  Assert.equal(metadata.searchDefaultHash.length, 44);
-
-  // The next restart shouldn't trigger a request.
-  await asyncReInit();
-  checkNoRequest();
-  Assert.equal(Services.search.defaultEngine.name, kTestEngineName);
-||||||| merged common ancestors
-  // (Re)initializing the search service should trigger a request,
-  // and set the default engine based on it.
-  // Due to the previous initialization, we expect the region to already be set.
-  Assert.ok(Services.prefs.prefHasUserValue("browser.search.region"));
-  Assert.equal(Services.prefs.getCharPref("browser.search.region"), "FR");
-  await asyncReInit();
-  checkRequest();
-  Assert.equal(Services.search.currentEngine.name, kTestEngineName);
-  await promiseAfterCache();
-
-  // Verify the metadata was written correctly.
-  let metadata = await promiseGlobalMetadata();
-  Assert.equal(typeof metadata.searchDefaultExpir, "number");
-  Assert.ok(metadata.searchDefaultExpir > Date.now());
-  Assert.equal(typeof metadata.searchDefault, "string");
-  Assert.equal(metadata.searchDefault, "Test search engine");
-  Assert.equal(typeof metadata.searchDefaultHash, "string");
-  Assert.equal(metadata.searchDefaultHash.length, 44);
-
-  // The next restart shouldn't trigger a request.
-  await asyncReInit();
-  checkNoRequest();
-  Assert.equal(Services.search.currentEngine.name, kTestEngineName);
-=======
   await withGeoServer(async function cont(requests) {
     // (Re)initializing the search service should trigger a request,
     // and set the default engine based on it.
@@ -162,7 +67,6 @@ add_task(async function should_get_geo_defaults_only_once() {
     checkNoRequest(requests);
     Assert.equal((await Services.search.getDefault()).name, kTestEngineName);
   });
->>>>>>> upstream-releases
 });
 
 add_task(async function should_request_when_region_not_set() {
@@ -220,81 +124,6 @@ add_task(async function should_recheck_if_appversion_changed() {
 });
 
 add_task(async function should_recheck_when_broken_hash() {
-<<<<<<< HEAD
-  // This test verifies both that we ignore saved geo-defaults if the
-  // hash is invalid, and that we keep the local preferences-based
-  // default for all of the session in case a synchronous
-  // initialization was triggered before our HTTP request completed.
-
-  let metadata = await promiseGlobalMetadata();
-
-  // Break the hash.
-  let hash = metadata.searchDefaultHash;
-  metadata.searchDefaultHash = "broken";
-  await promiseSaveGlobalMetadata(metadata);
-
-  let commitPromise = promiseAfterCache();
-  let unInitPromise = waitForSearchNotification("uninit-complete");
-  let reInitPromise = asyncReInit();
-  await unInitPromise;
-
-  // Synchronously check the current default engine, to force a sync init.
-  // The hash is wrong, so we should fallback to the default engine from prefs.
-  Assert.ok(!Services.search.isInitialized);
-  Assert.equal(Services.search.defaultEngine.name, getDefaultEngineName(false));
-  Assert.ok(Services.search.isInitialized);
-
-  await reInitPromise;
-  checkRequest();
-  await commitPromise;
-
-  // Check that the hash is back to its previous value.
-  metadata = await promiseGlobalMetadata();
-  Assert.equal(typeof metadata.searchDefaultHash, "string");
-  if (metadata.searchDefaultHash == "broken") {
-    // If the server takes more than 1000ms to return the result,
-    // the commitPromise was resolved by a first save of the cache
-    // that saved the engines, but not the request's results.
-    info("waiting for the cache to be saved a second time");
-    await promiseAfterCache();
-||||||| merged common ancestors
-  // This test verifies both that we ignore saved geo-defaults if the
-  // hash is invalid, and that we keep the local preferences-based
-  // default for all of the session in case a synchronous
-  // initialization was triggered before our HTTP request completed.
-
-  let metadata = await promiseGlobalMetadata();
-
-  // Break the hash.
-  let hash = metadata.searchDefaultHash;
-  metadata.searchDefaultHash = "broken";
-  await promiseSaveGlobalMetadata(metadata);
-
-  let commitPromise = promiseAfterCache();
-  let unInitPromise = waitForSearchNotification("uninit-complete");
-  let reInitPromise = asyncReInit();
-  await unInitPromise;
-
-  // Synchronously check the current default engine, to force a sync init.
-  // The hash is wrong, so we should fallback to the default engine from prefs.
-  Assert.ok(!Services.search.isInitialized);
-  Assert.equal(Services.search.currentEngine.name, getDefaultEngineName(false));
-  Assert.ok(Services.search.isInitialized);
-
-  await reInitPromise;
-  checkRequest();
-  await commitPromise;
-
-  // Check that the hash is back to its previous value.
-  metadata = await promiseGlobalMetadata();
-  Assert.equal(typeof metadata.searchDefaultHash, "string");
-  if (metadata.searchDefaultHash == "broken") {
-    // If the server takes more than 1000ms to return the result,
-    // the commitPromise was resolved by a first save of the cache
-    // that saved the engines, but not the request's results.
-    info("waiting for the cache to be saved a second time");
-    await promiseAfterCache();
-=======
   await withGeoServer(async function cont(requests) {
     // This test verifies both that we ignore saved geo-defaults if the
     // hash is invalid, and that we keep the local preferences-based
@@ -319,33 +148,7 @@ add_task(async function should_recheck_when_broken_hash() {
     await commitPromise;
 
     // Check that the hash is back to its previous value.
->>>>>>> upstream-releases
     metadata = await promiseGlobalMetadata();
-<<<<<<< HEAD
-  }
-  Assert.equal(metadata.searchDefaultHash, hash);
-
-  // The current default engine shouldn't change during a session.
-  Assert.equal(Services.search.defaultEngine.name, getDefaultEngineName(false));
-
-  // After another restart, the current engine should be back to the geo default,
-  // without doing yet another request.
-  await asyncReInit();
-  checkNoRequest();
-  Assert.equal(Services.search.defaultEngine.name, kTestEngineName);
-||||||| merged common ancestors
-  }
-  Assert.equal(metadata.searchDefaultHash, hash);
-
-  // The current default engine shouldn't change during a session.
-  Assert.equal(Services.search.currentEngine.name, getDefaultEngineName(false));
-
-  // After another restart, the current engine should be back to the geo default,
-  // without doing yet another request.
-  await asyncReInit();
-  checkNoRequest();
-  Assert.equal(Services.search.currentEngine.name, kTestEngineName);
-=======
     Assert.equal(typeof metadata.searchDefaultHash, "string");
     if (metadata.searchDefaultHash == "broken") {
       // If the server takes more than 1000ms to return the result,
@@ -363,7 +166,6 @@ add_task(async function should_recheck_when_broken_hash() {
     checkNoRequest(requests);
     Assert.equal((await Services.search.getDefault()).name, kTestEngineName);
   });
->>>>>>> upstream-releases
 });
 
 add_task(async function should_remember_cohort_id() {

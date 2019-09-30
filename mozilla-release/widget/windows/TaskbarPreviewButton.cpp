@@ -19,20 +19,9 @@ namespace widget {
 NS_IMPL_ISUPPORTS(TaskbarPreviewButton, nsITaskbarPreviewButton,
                   nsISupportsWeakReference)
 
-<<<<<<< HEAD
-TaskbarPreviewButton::TaskbarPreviewButton(TaskbarWindowPreview *preview,
-                                           uint32_t index)
-    : mPreview(preview), mIndex(index) {}
-||||||| merged common ancestors
-TaskbarPreviewButton::TaskbarPreviewButton(TaskbarWindowPreview* preview, uint32_t index)
-  : mPreview(preview), mIndex(index)
-{
-}
-=======
 TaskbarPreviewButton::TaskbarPreviewButton(TaskbarWindowPreview* preview,
                                            uint32_t index)
     : mPreview(preview), mIndex(index) {}
->>>>>>> upstream-releases
 
 TaskbarPreviewButton::~TaskbarPreviewButton() { SetVisible(false); }
 
@@ -46,19 +35,8 @@ NS_IMETHODIMP
 TaskbarPreviewButton::SetTooltip(const nsAString& aTooltip) {
   mTooltip = aTooltip;
   size_t destLength = sizeof Button().szTip / (sizeof Button().szTip[0]);
-<<<<<<< HEAD
-  wchar_t *tooltip = &(Button().szTip[0]);
-  StringCchCopyNW(tooltip, destLength, mTooltip.get(), mTooltip.Length());
-||||||| merged common ancestors
-  wchar_t *tooltip = &(Button().szTip[0]);
-  StringCchCopyNW(tooltip,
-                  destLength,
-                  mTooltip.get(),
-                  mTooltip.Length());
-=======
   wchar_t* tooltip = &(Button().szTip[0]);
   StringCchCopyNW(tooltip, destLength, mTooltip.get(), mTooltip.Length());
->>>>>>> upstream-releases
   return Update();
 }
 
@@ -117,34 +95,14 @@ TaskbarPreviewButton::GetImage(imgIContainer** img) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TaskbarPreviewButton::SetImage(imgIContainer *img) {
-  if (Button().hIcon) ::DestroyIcon(Button().hIcon);
-||||||| merged common ancestors
-TaskbarPreviewButton::SetImage(imgIContainer *img) {
-  if (Button().hIcon)
-    ::DestroyIcon(Button().hIcon);
-=======
 TaskbarPreviewButton::SetImage(imgIContainer* img) {
   if (Button().hIcon) ::DestroyIcon(Button().hIcon);
->>>>>>> upstream-releases
   if (img) {
     nsresult rv;
-<<<<<<< HEAD
-    rv = nsWindowGfx::CreateIcon(
-        img, false, 0, 0,
-        nsWindowGfx::GetIconMetrics(nsWindowGfx::kRegularIcon),
-        &Button().hIcon);
-||||||| merged common ancestors
-    rv = nsWindowGfx::CreateIcon(img, false, 0, 0,
-                                 nsWindowGfx::GetIconMetrics(nsWindowGfx::kRegularIcon),
-                                 &Button().hIcon);
-=======
     rv = nsWindowGfx::CreateIcon(
         img, false, LayoutDeviceIntPoint(),
         nsWindowGfx::GetIconMetrics(nsWindowGfx::kRegularIcon),
         &Button().hIcon);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   } else {
     Button().hIcon = nullptr;
@@ -167,14 +125,7 @@ TaskbarPreviewButton::SetVisible(bool visible) {
   return Update();
 }
 
-<<<<<<< HEAD
-THUMBBUTTON &TaskbarPreviewButton::Button() {
-||||||| merged common ancestors
-THUMBBUTTON&
-TaskbarPreviewButton::Button() {
-=======
 THUMBBUTTON& TaskbarPreviewButton::Button() {
->>>>>>> upstream-releases
   return mPreview->mThumbButtons[mIndex];
 }
 

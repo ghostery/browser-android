@@ -21,15 +21,6 @@ const kAllowedPrefs = new Set([
   "narrate.rate",
   "narrate.voice",
 
-<<<<<<< HEAD
-  "privacy.trackingprotection.pbmode.enabled",
-
-||||||| merged common ancestors
-  "browser.contentblocking.enabled",
-  "privacy.trackingprotection.pbmode.enabled",
-
-=======
->>>>>>> upstream-releases
   "reader.font_size",
   "reader.font_type",
   "reader.color_scheme",

@@ -188,13 +188,7 @@ kok{
         minimumGroupingDigits{"1"}
         native{"deva"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.69"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -395,16 +389,6 @@ kok{
                 yMd{"y-MM-dd"}
                 yQQQ{"y QQQ"}
                 yQQQQ{"y QQQQ"}
-<<<<<<< HEAD
-                yw{
-                    other{"'week' w 'of' Y"}
-                }
-||||||| merged common ancestors
-                yw{
-                    other{"'week' w 'of' y"}
-                }
-=======
->>>>>>> upstream-releases
             }
             dayNames{
                 format{

@@ -19,14 +19,9 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.support.annotation.UiThread;
-||||||| merged common ancestors
-=======
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
->>>>>>> upstream-releases
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.InputDevice;
@@ -162,99 +157,6 @@ public class SessionAccessibility {
                             sendEvent(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED, virtualViewId, CLASSNAME_UNKNOWN, null);
                         }
                     }
-<<<<<<< HEAD
-                return true;
-            case AccessibilityNodeInfo.ACTION_CLICK:
-                nativeProvider.click(virtualViewId);
-                GeckoBundle nodeInfo = nativeProvider.getNodeInfo(virtualViewId);
-                final int flags = nodeInfo != null ? nodeInfo.getInt("flags") : 0;
-                if ((flags & (FLAG_SELECTABLE | FLAG_CHECKABLE)) == 0) {
-                    final int className = nodeInfo != null ? nodeInfo.getInt("className") : CLASSNAME_VIEW;
-                    sendEvent(AccessibilityEvent.TYPE_VIEW_CLICKED, virtualViewId, className, null);
-                }
-                return true;
-            case AccessibilityNodeInfo.ACTION_LONG_CLICK:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityLongPress", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_SCROLL_FORWARD:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityScrollForward", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityScrollBackward", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_SELECT:
-                nativeProvider.click(virtualViewId);
-                return true;
-            case AccessibilityNodeInfo.ACTION_NEXT_HTML_ELEMENT:
-            case AccessibilityNodeInfo.ACTION_PREVIOUS_HTML_ELEMENT:
-                if (arguments != null) {
-                    data = new GeckoBundle(1);
-                    data.putString("rule", arguments.getString(AccessibilityNodeInfo.ACTION_ARGUMENT_HTML_ELEMENT_STRING));
-                } else {
-                    data = null;
-                }
-                mSession.getEventDispatcher().dispatch(action == AccessibilityNodeInfo.ACTION_NEXT_HTML_ELEMENT ?
-                                                       "GeckoView:AccessibilityNext" : "GeckoView:AccessibilityPrevious", data);
-                return true;
-            case AccessibilityNodeInfo.ACTION_NEXT_AT_MOVEMENT_GRANULARITY:
-            case AccessibilityNodeInfo.ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY:
-                // XXX: Self brailling gives this action with a bogus argument instead of an actual click action;
-                // the argument value is the BRAILLE_CLICK_BASE_INDEX - the index of the routing key that was hit.
-                // Other negative values are used by ChromeVox, but we don't support them.
-                // FAKE_GRANULARITY_READ_CURRENT = -1
-                // FAKE_GRANULARITY_READ_TITLE = -2
-                // FAKE_GRANULARITY_STOP_SPEECH = -3
-                // FAKE_GRANULARITY_CHANGE_SHIFTER = -4
-                int granularity = arguments.getInt(AccessibilityNodeInfo.ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT);
-                if (granularity <= BRAILLE_CLICK_BASE_INDEX) {
-                    int keyIndex = BRAILLE_CLICK_BASE_INDEX - granularity;
-||||||| merged common ancestors
-                return true;
-            case AccessibilityNodeInfo.ACTION_CLICK:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityActivate", null);
-                GeckoBundle nodeInfo = nativeProvider.getNodeInfo(virtualViewId);
-                final int flags = nodeInfo != null ? nodeInfo.getInt("flags") : 0;
-                if ((flags & (FLAG_SELECTABLE | FLAG_CHECKABLE)) == 0) {
-                    final int className = nodeInfo != null ? nodeInfo.getInt("className") : CLASSNAME_VIEW;
-                    sendEvent(AccessibilityEvent.TYPE_VIEW_CLICKED, virtualViewId, className, null);
-                }
-                return true;
-            case AccessibilityNodeInfo.ACTION_LONG_CLICK:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityLongPress", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_SCROLL_FORWARD:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityScrollForward", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityScrollBackward", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_SELECT:
-                mSession.getEventDispatcher().dispatch("GeckoView:AccessibilitySelect", null);
-                return true;
-            case AccessibilityNodeInfo.ACTION_NEXT_HTML_ELEMENT:
-            case AccessibilityNodeInfo.ACTION_PREVIOUS_HTML_ELEMENT:
-                if (arguments != null) {
-                    data = new GeckoBundle(1);
-                    data.putString("rule", arguments.getString(AccessibilityNodeInfo.ACTION_ARGUMENT_HTML_ELEMENT_STRING));
-                } else {
-                    data = null;
-                }
-                mSession.getEventDispatcher().dispatch(action == AccessibilityNodeInfo.ACTION_NEXT_HTML_ELEMENT ?
-                                                       "GeckoView:AccessibilityNext" : "GeckoView:AccessibilityPrevious", data);
-                return true;
-            case AccessibilityNodeInfo.ACTION_NEXT_AT_MOVEMENT_GRANULARITY:
-            case AccessibilityNodeInfo.ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY:
-                // XXX: Self brailling gives this action with a bogus argument instead of an actual click action;
-                // the argument value is the BRAILLE_CLICK_BASE_INDEX - the index of the routing key that was hit.
-                // Other negative values are used by ChromeVox, but we don't support them.
-                // FAKE_GRANULARITY_READ_CURRENT = -1
-                // FAKE_GRANULARITY_READ_TITLE = -2
-                // FAKE_GRANULARITY_STOP_SPEECH = -3
-                // FAKE_GRANULARITY_CHANGE_SHIFTER = -4
-                int granularity = arguments.getInt(AccessibilityNodeInfo.ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT);
-                if (granularity <= BRAILLE_CLICK_BASE_INDEX) {
-                    int keyIndex = BRAILLE_CLICK_BASE_INDEX - granularity;
-=======
                     return true;
                 case AccessibilityNodeInfo.ACTION_CLICK:
                     nativeProvider.click(virtualViewId);
@@ -341,7 +243,6 @@ public class SessionAccessibility {
                 case AccessibilityNodeInfo.ACTION_CUT:
                 case AccessibilityNodeInfo.ACTION_COPY:
                 case AccessibilityNodeInfo.ACTION_PASTE:
->>>>>>> upstream-releases
                     data = new GeckoBundle(1);
                     data.putInt("action", action);
                     mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityClipboard", data);
@@ -633,19 +534,10 @@ public class SessionAccessibility {
       *
       * @param view View instance.
       */
-<<<<<<< HEAD
-    @UiThread
-    public void setView(final View view) {
-        ThreadUtils.assertOnUiThread();
-
-||||||| merged common ancestors
-    public void setView(final View view) {
-=======
     @UiThread
     public void setView(final @Nullable View view) {
         ThreadUtils.assertOnUiThread();
 
->>>>>>> upstream-releases
         if (mView != null) {
             mView.setAccessibilityDelegate(null);
         }
@@ -785,14 +677,8 @@ public class SessionAccessibility {
             return false;
         }
 
-<<<<<<< HEAD
-        mView.requestFocus();
-
-||||||| merged common ancestors
-=======
         requestViewFocus();
 
->>>>>>> upstream-releases
         final GeckoBundle data = new GeckoBundle(2);
         data.putDoubleArray("coordinates", new double[] {event.getRawX(), event.getRawY()});
         mSession.getEventDispatcher().dispatch("GeckoView:AccessibilityExploreByTouch", data);

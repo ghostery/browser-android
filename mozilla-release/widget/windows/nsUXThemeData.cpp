@@ -60,16 +60,8 @@ nsUXThemeData::GetTheme(nsUXThemeClass cls) {
   return sThemes[cls];
 }
 
-<<<<<<< HEAD
-const wchar_t *nsUXThemeData::GetClassName(nsUXThemeClass cls) {
-  switch (cls) {
-||||||| merged common ancestors
-const wchar_t *nsUXThemeData::GetClassName(nsUXThemeClass cls) {
-  switch(cls) {
-=======
 const wchar_t* nsUXThemeData::GetClassName(nsUXThemeClass cls) {
   switch (cls) {
->>>>>>> upstream-releases
     case eUXButton:
       return L"Button";
     case eUXEdit:

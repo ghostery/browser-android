@@ -134,38 +134,19 @@ class psm_TrustOverrideTest : public ::testing::Test {
     << "couldn't set pref 'intl.locale.matchOS'";
 
     nsCOMPtr<nsIX509CertDB> certdb(do_GetService(NS_X509CERTDB_CONTRACTID));
-<<<<<<< HEAD
-    ASSERT_TRUE(certdb != nullptr) << "couldn't get certdb";
-  }
-||||||| merged common ancestors
-    ASSERT_TRUE(certdb != nullptr) << "couldn't get certdb";
- }
-=======
     ASSERT_TRUE(certdb != nullptr)
     << "couldn't get certdb";
   }
->>>>>>> upstream-releases
 };
 
 TEST_F(psm_TrustOverrideTest, CheckCertDNIsInList) {
   mozilla::UniqueCERTCertificate caObj = CertFromString(kOverrideCaPem);
-<<<<<<< HEAD
-  ASSERT_TRUE(caObj != nullptr) << "Should have parsed";
-  mozilla::UniqueCERTCertificate intObj =
-      CertFromString(kOverrideCaIntermediatePem);
-  ASSERT_TRUE(intObj != nullptr) << "Should have parsed";
-||||||| merged common ancestors
-  ASSERT_TRUE(caObj != nullptr) << "Should have parsed";
-  mozilla::UniqueCERTCertificate intObj = CertFromString(kOverrideCaIntermediatePem);
-  ASSERT_TRUE(intObj != nullptr) << "Should have parsed";
-=======
   ASSERT_TRUE(caObj != nullptr)
   << "Should have parsed";
   mozilla::UniqueCERTCertificate intObj =
       CertFromString(kOverrideCaIntermediatePem);
   ASSERT_TRUE(intObj != nullptr)
   << "Should have parsed";
->>>>>>> upstream-releases
 
   EXPECT_TRUE(CertDNIsInList(caObj.get(), OverrideCaDNs))
       << "CA should be in the DN list";
@@ -175,23 +156,12 @@ TEST_F(psm_TrustOverrideTest, CheckCertDNIsInList) {
 
 TEST_F(psm_TrustOverrideTest, CheckCertSPKIIsInList) {
   mozilla::UniqueCERTCertificate caObj = CertFromString(kOverrideCaPem);
-<<<<<<< HEAD
-  ASSERT_TRUE(caObj != nullptr) << "Should have parsed";
-  mozilla::UniqueCERTCertificate intObj =
-      CertFromString(kOverrideCaIntermediatePem);
-  ASSERT_TRUE(intObj != nullptr) << "Should have parsed";
-||||||| merged common ancestors
-  ASSERT_TRUE(caObj != nullptr) << "Should have parsed";
-  mozilla::UniqueCERTCertificate intObj = CertFromString(kOverrideCaIntermediatePem);
-  ASSERT_TRUE(intObj != nullptr) << "Should have parsed";
-=======
   ASSERT_TRUE(caObj != nullptr)
   << "Should have parsed";
   mozilla::UniqueCERTCertificate intObj =
       CertFromString(kOverrideCaIntermediatePem);
   ASSERT_TRUE(intObj != nullptr)
   << "Should have parsed";
->>>>>>> upstream-releases
 
   EXPECT_TRUE(CertSPKIIsInList(caObj.get(), OverrideCaSPKIs))
       << "CA should be in the SPKI list";

@@ -7,14 +7,7 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/ast/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
     'index.js',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/ast/moz.build
     'setInScopeLines.js',
-    'setPausePoints.js',
 )

@@ -17,54 +17,10 @@ class VRService;
 class VRSystemManagerExternal;
 
 class VRParent final : public PVRParent {
-<<<<<<< HEAD
- public:
-  VRParent();
-  bool Init(base::ProcessId aParentPid, const char* aParentBuildID,
-            MessageLoop* aIOLoop, IPC::Channel* aChannel);
-  virtual void ActorDestroy(ActorDestroyReason aWhy) override;
-||||||| merged common ancestors
-
-public:
-  VRParent();
-  bool Init(base::ProcessId aParentPid,
-            const char* aParentBuildID,
-            MessageLoop* aIOLoop,
-            IPC::Channel* aChannel);
-  virtual void ActorDestroy(ActorDestroyReason aWhy) override;
-=======
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VRParent);
 
   friend class PVRParent;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  virtual mozilla::ipc::IPCResult RecvNewGPUVRManager(
-      Endpoint<PVRGPUParent>&& aEndpoint) override;
-  virtual mozilla::ipc::IPCResult RecvInit(
-      nsTArray<GfxPrefSetting>&& prefs, nsTArray<GfxVarUpdate>&& vars,
-      const DevicePrefs& devicePrefs) override;
-  virtual mozilla::ipc::IPCResult RecvNotifyVsync(
-      const TimeStamp& vsyncTimestamp) override;
-  virtual mozilla::ipc::IPCResult RecvUpdatePref(
-      const GfxPrefSetting& setting) override;
-  virtual mozilla::ipc::IPCResult RecvUpdateVar(
-      const GfxVarUpdate& pref) override;
-
- private:
-||||||| merged common ancestors
-protected:
-  virtual mozilla::ipc::IPCResult RecvNewGPUVRManager(Endpoint<PVRGPUParent>&& aEndpoint) override;
-  virtual mozilla::ipc::IPCResult RecvInit(nsTArray<GfxPrefSetting>&& prefs,
-                                           nsTArray<GfxVarUpdate>&& vars,
-                                           const DevicePrefs& devicePrefs) override;
-  virtual mozilla::ipc::IPCResult RecvNotifyVsync(const TimeStamp& vsyncTimestamp) override;
-  virtual mozilla::ipc::IPCResult RecvUpdatePref(const GfxPrefSetting& setting) override;
-  virtual mozilla::ipc::IPCResult RecvUpdateVar(const GfxVarUpdate& pref) override;
-
-private:
-=======
  public:
   explicit VRParent();
 
@@ -97,7 +53,6 @@ private:
  private:
   nsCString mOpenVRControllerAction;
   nsDataHashtable<nsUint32HashKey, nsCString> mOpenVRControllerManifest;
->>>>>>> upstream-releases
   RefPtr<VRGPUParent> mVRGPUParent;
   DISALLOW_COPY_AND_ASSIGN(VRParent);
 };
@@ -105,10 +60,4 @@ private:
 }  // namespace gfx
 }  // namespace mozilla
 
-<<<<<<< HEAD
 #endif  // GFX_VR_PARENT_H
-||||||| merged common ancestors
-#endif // GFX_VR_PARENT_H
-=======
-#endif  // GFX_VR_PARENT_H
->>>>>>> upstream-releases

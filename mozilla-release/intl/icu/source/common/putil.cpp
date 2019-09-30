@@ -103,32 +103,6 @@
 #   include <windows.h>
 #   include "unicode/uloc.h"
 #   include "wintz.h"
-<<<<<<< HEAD
-#if U_PLATFORM_HAS_WINUWP_API
-typedef PVOID LPMSG; // TODO: figure out how to get rid of this typedef
-#include <Windows.Globalization.h>
-#include <windows.system.userprofile.h>
-#include <wrl/wrappers/corewrappers.h>
-#include <wrl/client.h>
-
-using namespace ABI::Windows::Foundation;
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
-#endif
-||||||| merged common ancestors
-#else // U_PLATFORM_HAS_WINUWP_API
-typedef PVOID LPMSG; // TODO: figure out how to get rid of this typedef
-#include <Windows.Globalization.h>
-#include <windows.system.userprofile.h>
-#include <wrl/wrappers/corewrappers.h>
-#include <wrl/client.h>
-
-using namespace ABI::Windows::Foundation;
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
-#endif
-=======
->>>>>>> upstream-releases
 #elif U_PLATFORM == U_PF_OS400
 #   include <float.h>
 #   include <qusec.h>       /* error code structure */
@@ -1673,33 +1647,8 @@ The leftmost codepage (.xxx) wins.
     }
 
     /* Note that we scan the *uncorrected* ID. */
-<<<<<<< HEAD
-    if ((p = uprv_strrchr(posixID, '@')) != NULL) {
-        if (correctedPOSIXLocale == NULL) {
-            /* new locale can be 1 char longer than old one if @ -> __ */
-            correctedPOSIXLocale = static_cast<char *>(uprv_malloc(uprv_strlen(posixID)+2));
-            /* Exit on memory allocation error. */
-            if (correctedPOSIXLocale == NULL) {
-                return NULL;
-            }
-            uprv_strncpy(correctedPOSIXLocale, posixID, p-posixID);
-            correctedPOSIXLocale[p-posixID] = 0;
-        }
-||||||| merged common ancestors
-    if ((p = uprv_strrchr(posixID, '@')) != NULL) {
-        if (correctedPOSIXLocale == NULL) {
-            correctedPOSIXLocale = static_cast<char *>(uprv_malloc(uprv_strlen(posixID)+1));
-            /* Exit on memory allocation error. */
-            if (correctedPOSIXLocale == NULL) {
-                return NULL;
-            }
-            uprv_strncpy(correctedPOSIXLocale, posixID, p-posixID);
-            correctedPOSIXLocale[p-posixID] = 0;
-        }
-=======
     const char *p;
     if ((p = uprv_strrchr(posixID, '@')) != nullptr) {
->>>>>>> upstream-releases
         p++;
 
         /* Take care of any special cases here.. */
@@ -1708,16 +1657,8 @@ The leftmost codepage (.xxx) wins.
             /* Don't worry about no__NY. In practice, it won't appear. */
         }
 
-<<<<<<< HEAD
-        if (uprv_strchr(correctedPOSIXLocale,'_') == NULL) {
-            uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b (note this can make the new locale 1 char longer) */
-||||||| merged common ancestors
-        if (uprv_strchr(correctedPOSIXLocale,'_') == NULL) {
-            uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b */
-=======
         if (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
             uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b (note this can make the new locale 1 char longer) */
->>>>>>> upstream-releases
         }
         else {
             uprv_strcat(correctedPOSIXLocale, "_"); /* aa_CC@b -> aa_CC_b */
@@ -1767,73 +1708,11 @@ The leftmost codepage (.xxx) wins.
     }
 
     // No cached value, need to determine the current value
-<<<<<<< HEAD
     static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
     int length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
 
     // Now we should have a Windows locale name that needs converted to the POSIX style.
     if (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
-||||||| merged common ancestors
-    static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH];
-#if U_PLATFORM_HAS_WINUWP_API == 0 
-    // If not a Universal Windows App, we'll need user default language.
-    // Vista and above should use Locale Names instead of LCIDs
-    int length = GetUserDefaultLocaleName(windowsLocale, UPRV_LENGTHOF(windowsLocale));
-#else
-    // In a UWP app, we want the top language that the application and user agreed upon
-    ComPtr<ABI::Windows::Foundation::Collections::IVectorView<HSTRING>> languageList;
-
-    ComPtr<ABI::Windows::Globalization::IApplicationLanguagesStatics> applicationLanguagesStatics;
-    HRESULT hr = GetActivationFactory(
-        HStringReference(RuntimeClass_Windows_Globalization_ApplicationLanguages).Get(),
-        &applicationLanguagesStatics);
-    if (SUCCEEDED(hr))
-    {
-        hr = applicationLanguagesStatics->get_Languages(&languageList);
-    }
-
-    if (FAILED(hr))
-    {
-        // If there is no application context, then use the top language from the user language profile
-        ComPtr<ABI::Windows::System::UserProfile::IGlobalizationPreferencesStatics> globalizationPreferencesStatics;
-        hr = GetActivationFactory(
-            HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
-            &globalizationPreferencesStatics);
-        if (SUCCEEDED(hr))
-        {
-            hr = globalizationPreferencesStatics->get_Languages(&languageList);
-        }
-    }
-
-    // We have a list of languages, ICU knows one, so use the top one for our locale
-    HString topLanguage;
-    if (SUCCEEDED(hr))
-    {
-        hr = languageList->GetAt(0, topLanguage.GetAddressOf());
-    }
-
-    if (FAILED(hr))
-    {
-        // Unexpected, use en-US by default
-        if (gCorrectedPOSIXLocale == NULL) {
-            gCorrectedPOSIXLocale = "en_US";
-        }
-
-        return gCorrectedPOSIXLocale;
-    }
-
-    // ResolveLocaleName will get a likely subtags form consistent with Windows behavior.
-    int length = ResolveLocaleName(topLanguage.GetRawBuffer(NULL), windowsLocale, UPRV_LENGTHOF(windowsLocale));
-#endif
-    // Now we should have a Windows locale name that needs converted to the POSIX style,
-    if (length > 0)
-=======
-    static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
-    int length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
-
-    // Now we should have a Windows locale name that needs converted to the POSIX style.
-    if (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
->>>>>>> upstream-releases
     {
         // First we need to go from UTF-16 to char (and also convert from _ to - while we're at it.)
         char modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};

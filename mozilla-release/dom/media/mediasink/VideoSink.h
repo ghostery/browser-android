@@ -24,18 +24,7 @@ class VideoFrameContainer;
 template <class T>
 class MediaQueue;
 
-<<<<<<< HEAD
-namespace media {
-
 class VideoSink : public MediaSink {
-||||||| merged common ancestors
-namespace media {
-
-class VideoSink : public MediaSink
-{
-=======
-class VideoSink : public MediaSink {
->>>>>>> upstream-releases
   typedef mozilla::layers::ImageContainer::ProducerID ProducerID;
 
  public:
@@ -78,15 +67,9 @@ class VideoSink : public MediaSink {
   void SetSecondaryVideoContainer(VideoFrameContainer* aSecondary) override;
   void ClearSecondaryVideoContainer() override;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   void GetDebugInfo(dom::MediaSinkDebugInfo& aInfo) override;
 
  private:
->>>>>>> upstream-releases
   virtual ~VideoSink();
 
   // VideoQueue listener related.
@@ -184,14 +167,6 @@ private:
   bool InitializeBlankImage();
 };
 
-<<<<<<< HEAD
-}  // namespace media
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace media
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif

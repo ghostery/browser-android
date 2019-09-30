@@ -123,16 +123,8 @@ class nsInlineFrame : public nsContainerFrame {
   void UpdateStyleOfOwnedAnonBoxesForIBSplit(
       mozilla::ServoRestyleState& aRestyleState);
 
-<<<<<<< HEAD
- protected:
-  // Additional reflow state used during our reflow methods
-||||||| merged common ancestors
-protected:
-  // Additional reflow state used during our reflow methods
-=======
  protected:
   // Additional reflow input used during our reflow methods
->>>>>>> upstream-releases
   struct InlineReflowInput {
     nsIFrame* mPrevFrame;
     nsInlineFrame* mNextInFlow;
@@ -150,19 +142,9 @@ protected:
     }
   };
 
-<<<<<<< HEAD
-  nsInlineFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsContainerFrame(aStyle, aID), mBaseline(NS_INTRINSIC_WIDTH_UNKNOWN) {}
-||||||| merged common ancestors
-  nsInlineFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsContainerFrame(aStyle, aID)
-    , mBaseline(NS_INTRINSIC_WIDTH_UNKNOWN)
-  {}
-=======
   nsInlineFrame(ComputedStyle* aStyle, nsPresContext* aPresContext, ClassID aID)
       : nsContainerFrame(aStyle, aPresContext, aID),
         mBaseline(NS_INTRINSIC_ISIZE_UNKNOWN) {}
->>>>>>> upstream-releases
 
   virtual LogicalSides GetLogicalSkipSides(
       const ReflowInput* aReflowInput = nullptr) const override;
@@ -184,20 +166,9 @@ protected:
   virtual void PushFrames(nsPresContext* aPresContext, nsIFrame* aFromChild,
                           nsIFrame* aPrevSibling, InlineReflowInput& aState);
 
-<<<<<<< HEAD
- private:
-  explicit nsInlineFrame(ComputedStyle* aStyle)
-      : nsInlineFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-private:
-  explicit nsInlineFrame(ComputedStyle* aStyle)
-    : nsInlineFrame(aStyle, kClassID)
-  {}
-=======
  private:
   explicit nsInlineFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsInlineFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   /**
    * Move any frames on our overflow list to the end of our principal list.
@@ -235,20 +206,9 @@ class nsFirstLineFrame final : public nsInlineFrame {
   virtual void PullOverflowsFromPrevInFlow() override;
   virtual bool DrainSelfOverflowList() override;
 
-<<<<<<< HEAD
- protected:
-  explicit nsFirstLineFrame(ComputedStyle* aStyle)
-      : nsInlineFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-protected:
-  explicit nsFirstLineFrame(ComputedStyle* aStyle)
-    : nsInlineFrame(aStyle, kClassID)
-  {}
-=======
  protected:
   explicit nsFirstLineFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsInlineFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   nsIFrame* PullOneFrame(nsPresContext*, InlineReflowInput&) override;
 };

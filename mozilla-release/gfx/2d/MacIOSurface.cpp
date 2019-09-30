@@ -280,25 +280,12 @@ void MacIOSurfaceLib::CloseLibrary() {
 }
 
 MacIOSurface::MacIOSurface(IOSurfacePtr aIOSurfacePtr,
-<<<<<<< HEAD
-                           double aContentsScaleFactor, bool aHasAlpha)
-    : mIOSurfacePtr(aIOSurfacePtr),
-      mContentsScaleFactor(aContentsScaleFactor),
-      mHasAlpha(aHasAlpha) {
-||||||| merged common ancestors
-                           double aContentsScaleFactor, bool aHasAlpha)
-  : mIOSurfacePtr(aIOSurfacePtr)
-  , mContentsScaleFactor(aContentsScaleFactor)
-  , mHasAlpha(aHasAlpha)
-{
-=======
                            double aContentsScaleFactor, bool aHasAlpha,
                            gfx::YUVColorSpace aColorSpace)
     : mIOSurfacePtr(aIOSurfacePtr),
       mContentsScaleFactor(aContentsScaleFactor),
       mHasAlpha(aHasAlpha),
       mColorSpace(aColorSpace) {
->>>>>>> upstream-releases
   CFRetain(mIOSurfacePtr);
   IncrementUseCount();
 }
@@ -343,23 +330,8 @@ already_AddRefed<MacIOSurface> MacIOSurface::CreateIOSurface(
 
   if (!surfaceRef) return nullptr;
 
-<<<<<<< HEAD
   RefPtr<MacIOSurface> ioSurface =
       new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
-  if (!ioSurface) {
-    ::CFRelease(surfaceRef);
-    return nullptr;
-  }
-||||||| merged common ancestors
-  RefPtr<MacIOSurface> ioSurface = new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
-  if (!ioSurface) {
-    ::CFRelease(surfaceRef);
-    return nullptr;
-  }
-=======
-  RefPtr<MacIOSurface> ioSurface =
-      new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
->>>>>>> upstream-releases
 
   // Release the IOSurface because MacIOSurface retained it
   CFRelease(surfaceRef);
@@ -367,43 +339,16 @@ already_AddRefed<MacIOSurface> MacIOSurface::CreateIOSurface(
   return ioSurface.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<MacIOSurface> MacIOSurface::LookupSurface(
-    IOSurfaceID aIOSurfaceID, double aContentsScaleFactor, bool aHasAlpha) {
-  if (!MacIOSurfaceLib::isInit() || aContentsScaleFactor <= 0) return nullptr;
-||||||| merged common ancestors
-already_AddRefed<MacIOSurface> MacIOSurface::LookupSurface(IOSurfaceID aIOSurfaceID,
-                                                       double aContentsScaleFactor,
-                                                       bool aHasAlpha) {
-  if (!MacIOSurfaceLib::isInit() || aContentsScaleFactor <= 0)
-    return nullptr;
-=======
 already_AddRefed<MacIOSurface> MacIOSurface::LookupSurface(
     IOSurfaceID aIOSurfaceID, double aContentsScaleFactor, bool aHasAlpha,
     gfx::YUVColorSpace aColorSpace) {
   if (!MacIOSurfaceLib::isInit() || aContentsScaleFactor <= 0) return nullptr;
->>>>>>> upstream-releases
 
   IOSurfacePtr surfaceRef = MacIOSurfaceLib::IOSurfaceLookup(aIOSurfaceID);
   if (!surfaceRef) return nullptr;
 
-<<<<<<< HEAD
-  RefPtr<MacIOSurface> ioSurface =
-      new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
-  if (!ioSurface) {
-    ::CFRelease(surfaceRef);
-    return nullptr;
-  }
-||||||| merged common ancestors
-  RefPtr<MacIOSurface> ioSurface = new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
-  if (!ioSurface) {
-    ::CFRelease(surfaceRef);
-    return nullptr;
-  }
-=======
   RefPtr<MacIOSurface> ioSurface = new MacIOSurface(
       surfaceRef, aContentsScaleFactor, aHasAlpha, aColorSpace);
->>>>>>> upstream-releases
 
   // Release the IOSurface because MacIOSurface retained it
   CFRelease(surfaceRef);
@@ -438,42 +383,18 @@ size_t MacIOSurface::GetPlaneCount() {
   return MacIOSurfaceLib::IOSurfaceGetPlaneCount(mIOSurfacePtr);
 }
 
-<<<<<<< HEAD
-/*static*/ size_t MacIOSurface::GetMaxWidth() {
-  if (!MacIOSurfaceLib::isInit()) return -1;
-  return MacIOSurfaceLib::IOSurfaceGetPropertyMaximum(
-      MacIOSurfaceLib::kPropWidth);
-||||||| merged common ancestors
-/*static*/ size_t MacIOSurface::GetMaxWidth() {
-  if (!MacIOSurfaceLib::isInit())
-    return -1;
-  return MacIOSurfaceLib::IOSurfaceGetPropertyMaximum(MacIOSurfaceLib::kPropWidth);
-=======
 /*static*/
 size_t MacIOSurface::GetMaxWidth() {
   if (!MacIOSurfaceLib::isInit()) return -1;
   return MacIOSurfaceLib::IOSurfaceGetPropertyMaximum(
       MacIOSurfaceLib::kPropWidth);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/*static*/ size_t MacIOSurface::GetMaxHeight() {
-  if (!MacIOSurfaceLib::isInit()) return -1;
-  return MacIOSurfaceLib::IOSurfaceGetPropertyMaximum(
-      MacIOSurfaceLib::kPropHeight);
-||||||| merged common ancestors
-/*static*/ size_t MacIOSurface::GetMaxHeight() {
-  if (!MacIOSurfaceLib::isInit())
-    return -1;
-  return MacIOSurfaceLib::IOSurfaceGetPropertyMaximum(MacIOSurfaceLib::kPropHeight);
-=======
 /*static*/
 size_t MacIOSurface::GetMaxHeight() {
   if (!MacIOSurfaceLib::isInit()) return -1;
   return MacIOSurfaceLib::IOSurfaceGetPropertyMaximum(
       MacIOSurfaceLib::kPropHeight);
->>>>>>> upstream-releases
 }
 
 size_t MacIOSurface::GetDevicePixelWidth(size_t plane) {
@@ -515,15 +436,7 @@ using mozilla::gfx::IntSize;
 using mozilla::gfx::SourceSurface;
 using mozilla::gfx::SurfaceFormat;
 
-<<<<<<< HEAD
-void MacIOSurfaceBufferDeallocator(void* aClosure) {
-||||||| merged common ancestors
-void
-MacIOSurfaceBufferDeallocator(void* aClosure)
-{
-=======
 static void MacIOSurfaceBufferDeallocator(void* aClosure) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aClosure);
 
   delete[] static_cast<unsigned char*>(aClosure);
@@ -689,23 +602,8 @@ already_AddRefed<MacIOSurface> MacIOSurface::IOSurfaceContextGetSurface(
       MacIOSurfaceLib::IOSurfaceContextGetSurface(aContext);
   if (!surfaceRef) return nullptr;
 
-<<<<<<< HEAD
   RefPtr<MacIOSurface> ioSurface =
       new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
-  if (!ioSurface) {
-    ::CFRelease(surfaceRef);
-    return nullptr;
-  }
-||||||| merged common ancestors
-  RefPtr<MacIOSurface> ioSurface = new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
-  if (!ioSurface) {
-    ::CFRelease(surfaceRef);
-    return nullptr;
-  }
-=======
-  RefPtr<MacIOSurface> ioSurface =
-      new MacIOSurface(surfaceRef, aContentsScaleFactor, aHasAlpha);
->>>>>>> upstream-releases
   return ioSurface.forget();
 }
 

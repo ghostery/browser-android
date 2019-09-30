@@ -92,23 +92,6 @@ class MacIOSurface final
   // of the MacIOSurface instance.
   // MacIOSurface holds a reference to the corresponding IOSurface.
 
-<<<<<<< HEAD
-  static already_AddRefed<MacIOSurface> CreateIOSurface(
-      int aWidth, int aHeight, double aContentsScaleFactor = 1.0,
-      bool aHasAlpha = true);
-  static void ReleaseIOSurface(MacIOSurface* aIOSurface);
-  static already_AddRefed<MacIOSurface> LookupSurface(
-      IOSurfaceID aSurfaceID, double aContentsScaleFactor = 1.0,
-      bool aHasAlpha = true);
-||||||| merged common ancestors
-  static already_AddRefed<MacIOSurface> CreateIOSurface(int aWidth, int aHeight,
-                                                             double aContentsScaleFactor = 1.0,
-                                                             bool aHasAlpha = true);
-  static void ReleaseIOSurface(MacIOSurface *aIOSurface);
-  static already_AddRefed<MacIOSurface> LookupSurface(IOSurfaceID aSurfaceID,
-                                                           double aContentsScaleFactor = 1.0,
-                                                           bool aHasAlpha = true);
-=======
   static already_AddRefed<MacIOSurface> CreateIOSurface(
       int aWidth, int aHeight, double aContentsScaleFactor = 1.0,
       bool aHasAlpha = true);
@@ -118,7 +101,6 @@ class MacIOSurface final
       bool aHasAlpha = true,
       mozilla::gfx::YUVColorSpace aColorSpace =
           mozilla::gfx::YUVColorSpace::UNKNOWN);
->>>>>>> upstream-releases
 
   explicit MacIOSurface(IOSurfacePtr aIOSurfacePtr,
                         double aContentsScaleFactor = 1.0,

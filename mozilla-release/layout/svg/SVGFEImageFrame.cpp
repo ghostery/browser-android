@@ -18,23 +18,6 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-class SVGFEImageFrame final : public nsFrame {
-  friend nsIFrame* NS_NewSVGFEImageFrame(nsIPresShell* aPresShell,
-                                         ComputedStyle* aStyle);
-
- protected:
-  explicit SVGFEImageFrame(ComputedStyle* aStyle) : nsFrame(aStyle, kClassID) {
-||||||| merged common ancestors
-class SVGFEImageFrame final : public nsFrame
-{
-  friend nsIFrame*
-  NS_NewSVGFEImageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit SVGFEImageFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, kClassID)
-  {
-=======
 class SVGFEImageFrame final : public nsFrame {
   friend nsIFrame* NS_NewSVGFEImageFrame(mozilla::PresShell* aPresShell,
                                          ComputedStyle* aStyle);
@@ -42,7 +25,6 @@ class SVGFEImageFrame final : public nsFrame {
  protected:
   explicit SVGFEImageFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsFrame(aStyle, aPresContext, kClassID) {
->>>>>>> upstream-releases
     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
 
     // This frame isn't actually displayed, but it contains an image and we want
@@ -87,35 +69,15 @@ class SVGFEImageFrame final : public nsFrame {
   }
 };
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGFEImageFrame(nsIPresShell* aPresShell,
-                                ComputedStyle* aStyle) {
-  return new (aPresShell) SVGFEImageFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGFEImageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) SVGFEImageFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGFEImageFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) SVGFEImageFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(SVGFEImageFrame)
 
-<<<<<<< HEAD
-/* virtual */ void SVGFEImageFrame::DestroyFrom(
-    nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData) {
-||||||| merged common ancestors
-/* virtual */ void
-SVGFEImageFrame::DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData)
-{
-=======
 /* virtual */
 void SVGFEImageFrame::DestroyFrom(nsIFrame* aDestructRoot,
                                   PostDestroyData& aPostDestroyData) {
->>>>>>> upstream-releases
   DecApproximateVisibleCount();
 
   nsCOMPtr<nsIImageLoadingContent> imageLoader =

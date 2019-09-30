@@ -25,31 +25,11 @@ const TEST_URL =
 var TEST_DATA = [
   {
     key: "d",
-<<<<<<< HEAD
-    suggestions: [
-      {label: "div"},
-      {label: "#d1"},
-      {label: "#d2"},
-    ],
-||||||| merged common ancestors
-    suggestions: [
-      {label: "div"},
-      {label: "#d1"},
-      {label: "#d2"}
-    ]
-=======
     suggestions: [{ label: "div" }, { label: "#d1" }, { label: "#d2" }],
->>>>>>> upstream-releases
   },
   {
     key: "i",
-<<<<<<< HEAD
-    suggestions: [{label: "div"}],
-||||||| merged common ancestors
-    suggestions: [{label: "div"}]
-=======
     suggestions: [{ label: "div" }],
->>>>>>> upstream-releases
   },
   {
     key: "v",
@@ -57,31 +37,11 @@ var TEST_DATA = [
   },
   {
     key: "VK_BACK_SPACE",
-<<<<<<< HEAD
-    suggestions: [{label: "div"}],
-||||||| merged common ancestors
-    suggestions: [{label: "div"}]
-=======
     suggestions: [{ label: "div" }],
->>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
-<<<<<<< HEAD
-    suggestions: [
-      {label: "div"},
-      {label: "#d1"},
-      {label: "#d2"},
-    ],
-||||||| merged common ancestors
-    suggestions: [
-      {label: "div"},
-      {label: "#d1"},
-      {label: "#d2"}
-    ]
-=======
     suggestions: [{ label: "div" }, { label: "#d1" }, { label: "#d2" }],
->>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
@@ -89,19 +49,7 @@ var TEST_DATA = [
   },
   {
     key: ".",
-<<<<<<< HEAD
-    suggestions: [
-      {label: ".c1"},
-      {label: ".c2"},
-    ],
-||||||| merged common ancestors
-    suggestions: [
-      {label: ".c1"},
-      {label: ".c2"}
-    ]
-=======
     suggestions: [{ label: ".c1" }, { label: ".c2" }],
->>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
@@ -110,27 +58,6 @@ var TEST_DATA = [
   {
     key: "#",
     suggestions: [
-<<<<<<< HEAD
-      {label: "#b1"},
-      {label: "#d1"},
-      {label: "#d2"},
-      {label: "#p1"},
-      {label: "#p2"},
-      {label: "#p3"},
-      {label: "#s1"},
-      {label: "#s2"},
-    ],
-||||||| merged common ancestors
-      {label: "#b1"},
-      {label: "#d1"},
-      {label: "#d2"},
-      {label: "#p1"},
-      {label: "#p2"},
-      {label: "#p3"},
-      {label: "#s1"},
-      {label: "#s2"}
-    ]
-=======
       { label: "#b1" },
       { label: "#d1" },
       { label: "#d2" },
@@ -140,7 +67,6 @@ var TEST_DATA = [
       { label: "#s1" },
       { label: "#s2" },
     ],
->>>>>>> upstream-releases
   },
 ];
 

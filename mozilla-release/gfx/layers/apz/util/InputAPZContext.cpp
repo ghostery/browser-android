@@ -15,74 +15,20 @@ nsEventStatus InputAPZContext::sApzResponse = nsEventStatus_eIgnore;
 bool InputAPZContext::sPendingLayerization = false;
 bool InputAPZContext::sRoutedToChildProcess = false;
 
-<<<<<<< HEAD
-/*static*/ ScrollableLayerGuid InputAPZContext::GetTargetLayerGuid() {
-  return sGuid;
-}
-||||||| merged common ancestors
-/*static*/ ScrollableLayerGuid
-InputAPZContext::GetTargetLayerGuid()
-{
-  return sGuid;
-}
-=======
 /*static*/
 ScrollableLayerGuid InputAPZContext::GetTargetLayerGuid() { return sGuid; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ uint64_t InputAPZContext::GetInputBlockId() { return sBlockId; }
-||||||| merged common ancestors
-/*static*/ uint64_t
-InputAPZContext::GetInputBlockId()
-{
-  return sBlockId;
-}
-=======
 /*static*/
 uint64_t InputAPZContext::GetInputBlockId() { return sBlockId; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ nsEventStatus InputAPZContext::GetApzResponse() {
-  return sApzResponse;
-}
-||||||| merged common ancestors
-/*static*/ nsEventStatus
-InputAPZContext::GetApzResponse()
-{
-  return sApzResponse;
-}
-=======
 /*static*/
 nsEventStatus InputAPZContext::GetApzResponse() { return sApzResponse; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ bool InputAPZContext::HavePendingLayerization() {
-  return sPendingLayerization;
-}
-||||||| merged common ancestors
-/*static*/ bool
-InputAPZContext::HavePendingLayerization()
-{
-  return sPendingLayerization;
-}
-=======
 /*static*/
 bool InputAPZContext::HavePendingLayerization() { return sPendingLayerization; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ bool InputAPZContext::WasRoutedToChildProcess() {
-||||||| merged common ancestors
-/*static*/ bool
-InputAPZContext::WasRoutedToChildProcess()
-{
-=======
 /*static*/
 bool InputAPZContext::WasRoutedToChildProcess() {
->>>>>>> upstream-releases
   return sRoutedToChildProcess;
 }
 
@@ -110,16 +56,8 @@ InputAPZContext::~InputAPZContext() {
   sRoutedToChildProcess = mOldRoutedToChildProcess;
 }
 
-<<<<<<< HEAD
-/*static*/ void InputAPZContext::SetRoutedToChildProcess() {
-||||||| merged common ancestors
-/*static*/ void
-InputAPZContext::SetRoutedToChildProcess()
-{
-=======
 /*static*/
 void InputAPZContext::SetRoutedToChildProcess() {
->>>>>>> upstream-releases
   sRoutedToChildProcess = true;
 }
 

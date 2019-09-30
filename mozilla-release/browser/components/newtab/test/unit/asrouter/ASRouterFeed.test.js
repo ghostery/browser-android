@@ -14,13 +14,6 @@ describe("ASRouterFeed", () => {
   let FakeBookmarkPanelHub;
   let FakeToolbarBadgeHub;
   beforeEach(() => {
-<<<<<<< HEAD
-    Router = new _ASRouter({providers: [FAKE_LOCAL_PROVIDER]});
-    sandbox = sinon.createSandbox();
-||||||| merged common ancestors
-    Router = new _ASRouter({providers: [FAKE_LOCAL_PROVIDER]});
-    sandbox = sinon.sandbox.create();
-=======
     sandbox = sinon.createSandbox();
     globals = new GlobalOverrider();
     FakeBookmarkPanelHub = {
@@ -35,7 +28,6 @@ describe("ASRouterFeed", () => {
 
     Router = new _ASRouter({ providers: [FAKE_LOCAL_PROVIDER] });
 
->>>>>>> upstream-releases
     storage = {
       get: sandbox.stub().returns(Promise.resolve([])),
       set: sandbox.stub().returns(Promise.resolve()),

@@ -51,13 +51,7 @@ public:
     static sk_sp<SkShader> MakeImprovedNoise(SkScalar baseFrequencyX, SkScalar baseFrequencyY,
                                              int numOctaves, SkScalar z);
 
-<<<<<<< HEAD
-    static void InitializeFlattenables();
-||||||| merged common ancestors
-    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
-=======
     static void RegisterFlattenables();
->>>>>>> upstream-releases
 
 private:
     SkPerlinNoiseShader() = delete;

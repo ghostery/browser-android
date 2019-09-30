@@ -58,52 +58,6 @@ class PrivateBrowsingChannel : public nsIPrivateBrowsingChannel {
   }
 
   // Must be called every time the channel's callbacks or loadGroup is updated
-<<<<<<< HEAD
-  void UpdatePrivateBrowsing() {
-    // once marked as private we never go un-private
-    if (mPrivateBrowsing) {
-      return;
-    }
-
-    auto channel = static_cast<Channel*>(this);
-
-    nsCOMPtr<nsILoadContext> loadContext;
-    NS_QueryNotificationCallbacks(channel, loadContext);
-    if (loadContext) {
-      mPrivateBrowsing = loadContext->UsePrivateBrowsing();
-      return;
-    }
-
-    nsCOMPtr<nsILoadInfo> loadInfo;
-    Unused << channel->GetLoadInfo(getter_AddRefs(loadInfo));
-    if (loadInfo) {
-      OriginAttributes attrs = loadInfo->GetOriginAttributes();
-      mPrivateBrowsing = attrs.mPrivateBrowsingId > 0;
-    }
-||||||| merged common ancestors
-  void UpdatePrivateBrowsing()
-  {
-      // once marked as private we never go un-private
-      if (mPrivateBrowsing) {
-          return;
-      }
-
-      auto channel = static_cast<Channel*>(this);
-
-      nsCOMPtr<nsILoadContext> loadContext;
-      NS_QueryNotificationCallbacks(channel, loadContext);
-      if (loadContext) {
-          mPrivateBrowsing = loadContext->UsePrivateBrowsing();
-          return;
-      }
-
-      nsCOMPtr<nsILoadInfo> loadInfo;
-      Unused << channel->GetLoadInfo(getter_AddRefs(loadInfo));
-      if (loadInfo) {
-          OriginAttributes attrs = loadInfo->GetOriginAttributes();
-          mPrivateBrowsing = attrs.mPrivateBrowsingId > 0;
-      }
-=======
   void UpdatePrivateBrowsing() {
     // once marked as private we never go un-private
     if (mPrivateBrowsing) {
@@ -122,7 +76,6 @@ class PrivateBrowsingChannel : public nsIPrivateBrowsingChannel {
     nsCOMPtr<nsILoadInfo> loadInfo = channel->LoadInfo();
     OriginAttributes attrs = loadInfo->GetOriginAttributes();
     mPrivateBrowsing = attrs.mPrivateBrowsingId > 0;
->>>>>>> upstream-releases
   }
 
   bool CanSetCallbacks(nsIInterfaceRequestor* aCallbacks) const {

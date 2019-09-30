@@ -7,13 +7,7 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/PrimaryPanes/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/PrimaryPanes/moz.build
     'index.js',
     'Outline.js',
     'OutlineFilter.js',

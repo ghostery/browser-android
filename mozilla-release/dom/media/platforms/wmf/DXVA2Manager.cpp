@@ -28,7 +28,6 @@
 #include "nsPrintfCString.h"
 #include "nsThreadUtils.h"
 
-<<<<<<< HEAD
 const CLSID CLSID_VideoProcessorMFT = {
     0x88753b26,
     0x5b24,
@@ -46,47 +45,6 @@ DEFINE_GUID(MF_LOW_LATENCY, 0x9c27891a, 0xed7a, 0x40e1, 0x88, 0xe8, 0xb2, 0x27,
 
 // R600, R700, Evergreen and Cayman AMD cards. These support DXVA via UVD3 or
 // earlier, and don't handle 1080p60 well.
-||||||| merged common ancestors
-const CLSID CLSID_VideoProcessorMFT =
-{
-  0x88753b26,
-  0x5b24,
-  0x49bd,
-  { 0xb2, 0xe7, 0xc, 0x44, 0x5c, 0x78, 0xc9, 0x82 }
-};
-
-const GUID MF_XVP_PLAYBACK_MODE =
-{
-  0x3c5d293f,
-  0xad67,
-  0x4e29,
-  { 0xaf, 0x12, 0xcf, 0x3e, 0x23, 0x8a, 0xcc, 0xe9 }
-};
-
-DEFINE_GUID(MF_LOW_LATENCY,
-  0x9c27891a, 0xed7a, 0x40e1, 0x88, 0xe8, 0xb2, 0x27, 0x27, 0xa0, 0x24, 0xee);
-
-// R600, R700, Evergreen and Cayman AMD cards. These support DXVA via UVD3 or earlier, and don't
-// handle 1080p60 well.
-=======
-const CLSID CLSID_VideoProcessorMFT = {
-    0x88753b26,
-    0x5b24,
-    0x49bd,
-    {0xb2, 0xe7, 0xc, 0x44, 0x5c, 0x78, 0xc9, 0x82}};
-
-const GUID MF_XVP_PLAYBACK_MODE = {
-    0x3c5d293f,
-    0xad67,
-    0x4e29,
-    {0xaf, 0x12, 0xcf, 0x3e, 0x23, 0x8a, 0xcc, 0xe9}};
-
-DEFINE_GUID(MF_LOW_LATENCY, 0x9c27891a, 0xed7a, 0x40e1, 0x88, 0xe8, 0xb2, 0x27,
-            0x27, 0xa0, 0x24, 0xee);
-
-// R600, R700, Evergreen and Cayman AMD cards. These support DXVA via UVD3 or
-// earlier, and don't handle 1080p60 well.
->>>>>>> upstream-releases
 static const DWORD sAMDPreUVD4[] = {
     // clang-format off
   0x9400, 0x9401, 0x9402, 0x9403, 0x9405, 0x940a, 0x940b, 0x940f, 0x94c0, 0x94c1, 0x94c3, 0x94c4, 0x94c5,
@@ -457,16 +415,8 @@ D3D9DXVA2Manager::Init(layers::KnowsCompositor* aKnowsCompositor,
     return hr;
   }
 
-<<<<<<< HEAD
-  if ((adapter.VendorId == 0x1022 || adapter.VendorId == 0x1002) &&
-      !gfxPrefs::PDMWMFSkipBlacklist()) {
-||||||| merged common ancestors
-  if ((adapter.VendorId == 0x1022  || adapter.VendorId == 0x1002) &&
-      !gfxPrefs::PDMWMFSkipBlacklist()) {
-=======
   if ((adapter.VendorId == 0x1022 || adapter.VendorId == 0x1002) &&
       !StaticPrefs::media_wmf_skip_blacklist()) {
->>>>>>> upstream-releases
     for (const auto& model : sAMDPreUVD4) {
       if (adapter.DeviceId == model) {
         mIsAMDPreUVD4 = true;
@@ -639,25 +589,11 @@ class D3D11DXVA2Manager : public DXVA2Manager {
   HRESULT CopyToImage(IMFSample* aVideoSample, const gfx::IntRect& aRegion,
                       Image** aOutImage) override;
 
-<<<<<<< HEAD
-  HRESULT CopyToBGRATexture(ID3D11Texture2D* aInTexture, const GUID& aSubType,
-||||||| merged common ancestors
   HRESULT CopyToBGRATexture(ID3D11Texture2D* aInTexture,
-                            const GUID& aSubType,
-=======
-  HRESULT CopyToBGRATexture(ID3D11Texture2D* aInTexture,
->>>>>>> upstream-releases
                             ID3D11Texture2D** aOutTexture) override;
 
-<<<<<<< HEAD
-  HRESULT ConfigureForSize(IMFMediaType* aInputType, uint32_t aWidth,
-||||||| merged common ancestors
-  HRESULT ConfigureForSize(IMFMediaType* aInputType,
-                           uint32_t aWidth,
-=======
   HRESULT ConfigureForSize(IMFMediaType* aInputType,
                            gfx::YUVColorSpace aColorSpace, uint32_t aWidth,
->>>>>>> upstream-releases
                            uint32_t aHeight) override;
 
   bool IsD3D11() override { return true; }
@@ -740,14 +676,8 @@ D3D11DXVA2Manager::Init(layers::KnowsCompositor* aKnowsCompositor,
     // There's no proper KnowsCompositor for ImageBridge currently (and it
     // implements the interface), so just use that if it's available.
     mTextureClientAllocator = new D3D11RecycleAllocator(
-<<<<<<< HEAD
-        layers::ImageBridgeChild::GetSingleton().get(), mDevice);
-||||||| merged common ancestors
-      layers::ImageBridgeChild::GetSingleton().get(), mDevice);
-=======
         layers::ImageBridgeChild::GetSingleton().get(), mDevice,
         gfx::SurfaceFormat::NV12);
->>>>>>> upstream-releases
 
     if (ImageBridgeChild::GetSingleton() &&
         StaticPrefs::media_wmf_use_sync_texture() &&
@@ -763,28 +693,6 @@ D3D11DXVA2Manager::Init(layers::KnowsCompositor* aKnowsCompositor,
           mDevice);
     }
   } else {
-<<<<<<< HEAD
-    mTextureClientAllocator =
-        new D3D11RecycleAllocator(aKnowsCompositor, mDevice);
-    if (gfxPrefs::PDMWMFUseSyncTexture()) {
-      // We use a syncobject to avoid the cost of the mutex lock when
-      // compositing, and because it allows color conversion ocurring directly
-      // from this texture DXVA does not seem to accept IDXGIKeyedMutex textures
-      // as input.
-      mSyncObject = layers::SyncObjectClient::CreateSyncObjectClient(
-          aKnowsCompositor->GetTextureFactoryIdentifier().mSyncHandle, mDevice);
-||||||| merged common ancestors
-    mTextureClientAllocator =
-      new D3D11RecycleAllocator(aKnowsCompositor, mDevice);
-    if (gfxPrefs::PDMWMFUseSyncTexture()) {
-      // We use a syncobject to avoid the cost of the mutex lock when compositing,
-      // and because it allows color conversion ocurring directly from this texture
-      // DXVA does not seem to accept IDXGIKeyedMutex textures as input.
-      mSyncObject =
-        layers::SyncObjectClient::CreateSyncObjectClient(
-            aKnowsCompositor->GetTextureFactoryIdentifier().mSyncHandle,
-            mDevice);
-=======
     mTextureClientAllocator = new D3D11RecycleAllocator(
         aKnowsCompositor, mDevice, gfx::SurfaceFormat::NV12);
     if (StaticPrefs::media_wmf_use_sync_texture()) {
@@ -794,7 +702,6 @@ D3D11DXVA2Manager::Init(layers::KnowsCompositor* aKnowsCompositor,
       // as input.
       mSyncObject = layers::SyncObjectClient::CreateSyncObjectClient(
           aKnowsCompositor->GetTextureFactoryIdentifier().mSyncHandle, mDevice);
->>>>>>> upstream-releases
     }
   }
   mTextureClientAllocator->SetMaxPoolSize(5);
@@ -981,13 +888,7 @@ D3D11DXVA2Manager::CopyToImage(IMFSample* aVideoSample,
   MOZ_ASSERT(mTextureClientAllocator);
 
   RefPtr<D3D11ShareHandleImage> image = new D3D11ShareHandleImage(
-<<<<<<< HEAD
-      gfx::IntSize(mWidth, mHeight), aRegion, mInputSubType);
-||||||| merged common ancestors
-    gfx::IntSize(mWidth, mHeight), aRegion, mInputSubType);
-=======
       gfx::IntSize(mWidth, mHeight), aRegion, mYUVColorSpace);
->>>>>>> upstream-releases
 
   // Retrieve the DXGI_FORMAT for the current video sample.
   RefPtr<IMFMediaBuffer> buffer;
@@ -1077,16 +978,7 @@ D3D11DXVA2Manager::CopyToImage(IMFSample* aVideoSample,
 
 HRESULT
 D3D11DXVA2Manager::CopyToBGRATexture(ID3D11Texture2D* aInTexture,
-<<<<<<< HEAD
-                                     const GUID& aSubType,
                                      ID3D11Texture2D** aOutTexture) {
-||||||| merged common ancestors
-                                     const GUID& aSubType,
-                                     ID3D11Texture2D** aOutTexture)
-{
-=======
-                                     ID3D11Texture2D** aOutTexture) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(aInTexture, E_POINTER);
   NS_ENSURE_TRUE(aOutTexture, E_POINTER);
 
@@ -1195,22 +1087,10 @@ D3D11DXVA2Manager::CopyToBGRATexture(ID3D11Texture2D* aInTexture,
 }
 
 HRESULT
-<<<<<<< HEAD
-D3D11DXVA2Manager::ConfigureForSize(IMFMediaType* aInputType, uint32_t aWidth,
-                                    uint32_t aHeight) {
-  GUID subType = {0};
-||||||| merged common ancestors
-D3D11DXVA2Manager::ConfigureForSize(IMFMediaType* aInputType,
-                                    uint32_t aWidth,
-                                    uint32_t aHeight)
-{
-  GUID subType = { 0 };
-=======
 D3D11DXVA2Manager::ConfigureForSize(IMFMediaType* aInputType,
                                     gfx::YUVColorSpace aColorSpace,
                                     uint32_t aWidth, uint32_t aHeight) {
   GUID subType = {0};
->>>>>>> upstream-releases
   HRESULT hr = aInputType->GetGUID(MF_MT_SUBTYPE, &subType);
   NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
 
@@ -1371,34 +1251,13 @@ bool DXVA2Manager::IsUnsupportedResolution(const uint32_t& aWidth,
   // AMD cards with UVD3 or earlier perform poorly trying to decode 1080p60 in
   // hardware, so use software instead. Pick 45 as an arbitrary upper bound for
   // the framerate we can handle.
-<<<<<<< HEAD
-  return !gfxPrefs::PDMWMFAMDHighResEnabled() && mIsAMDPreUVD4 &&
-         (aWidth >= 1920 || aHeight >= 1088) && aFramerate > 45;
-||||||| merged common ancestors
-  return !gfxPrefs::PDMWMFAMDHighResEnabled() && mIsAMDPreUVD4 &&
-         (aWidth >= 1920 || aHeight >= 1088) &&
-         aFramerate > 45;
-=======
   return !StaticPrefs::media_wmf_amd_highres_enabled() && mIsAMDPreUVD4 &&
          (aWidth >= 1920 || aHeight >= 1088) && aFramerate > 45;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool DXVA2Manager::IsNV12Supported(
-    uint32_t aVendorID, uint32_t aDeviceID,
-    const nsAString& aDriverVersionString) {
-||||||| merged common ancestors
-/* static */ bool
-DXVA2Manager::IsNV12Supported(uint32_t aVendorID,
-                              uint32_t aDeviceID,
-                              const nsAString& aDriverVersionString)
-{
-=======
 /* static */
 bool DXVA2Manager::IsNV12Supported(uint32_t aVendorID, uint32_t aDeviceID,
                                    const nsAString& aDriverVersionString) {
->>>>>>> upstream-releases
   if (aVendorID == 0x1022 || aVendorID == 0x1002) {
     // AMD
     // Block old cards regardless of driver version.

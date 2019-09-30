@@ -30,38 +30,6 @@
  */
 function startOfUnicodeExtensions(locale) {
     assert(typeof locale === "string", "locale is a string");
-<<<<<<< HEAD
-
-    #define HYPHEN 0x2D
-    assert(std_String_fromCharCode(HYPHEN) === "-",
-           "code unit constant should match the expected character");
-
-    // A wholly-privateuse or grandfathered locale has no extension sequences.
-    if (callFunction(std_String_charCodeAt, locale, 1) === HYPHEN) {
-        assert(locale[0] === "x" || locale[0] === "i",
-               "locale[1] === '-' implies a privateuse-only or grandfathered locale");
-        return -1;
-    }
-
-    #undef HYPHEN
-||||||| merged common ancestors
-    assert(IsStructurallyValidLanguageTag(locale), "locale is a language tag");
-    assert(CanonicalizeLanguageTag(locale) === locale, "locale is a canonicalized language tag");
-
-    #define HYPHEN 0x2D
-    assert(std_String_fromCharCode(HYPHEN) === "-",
-           "code unit constant should match the expected character");
-
-    // A wholly-privateuse or grandfathered locale has no extension sequences.
-    if (callFunction(std_String_charCodeAt, locale, 1) === HYPHEN) {
-        assert(locale[0] === "x" || locale[0] === "i",
-               "locale[1] === '-' implies a privateuse-only or grandfathered locale");
-        return -1;
-    }
-
-    #undef HYPHEN
-=======
->>>>>>> upstream-releases
 
     // Search for "-u-" marking the start of a Unicode extension sequence.
     var start = callFunction(std_String_indexOf, locale, "-u-");

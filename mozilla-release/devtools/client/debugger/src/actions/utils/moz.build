@@ -7,12 +7,6 @@ DIRS += [
     'middleware',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/utils/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/utils/moz.build
     'create-store.js',
 )

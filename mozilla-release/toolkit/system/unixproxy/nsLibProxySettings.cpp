@@ -34,61 +34,22 @@ class nsUnixSystemProxySettings : public nsISystemProxySettings {
 NS_IMPL_ISUPPORTS(nsUnixSystemProxySettings, nsISystemProxySettings)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsUnixSystemProxySettings::GetMainThreadOnly(bool *aMainThreadOnly) {
-||||||| merged common ancestors
-nsUnixSystemProxySettings::GetMainThreadOnly(bool *aMainThreadOnly)
-{
-=======
 nsUnixSystemProxySettings::GetMainThreadOnly(bool* aMainThreadOnly) {
->>>>>>> upstream-releases
   *aMainThreadOnly = false;
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsUnixSystemProxySettings::Init() { return NS_OK; }
-
-nsresult nsUnixSystemProxySettings::GetPACURI(nsACString &aResult) {
-||||||| merged common ancestors
-nsresult
-nsUnixSystemProxySettings::Init()
-{
-  return NS_OK;
-}
-
-nsresult
-nsUnixSystemProxySettings::GetPACURI(nsACString& aResult)
-{
-=======
 nsresult nsUnixSystemProxySettings::GetPACURI(nsACString& aResult) {
->>>>>>> upstream-releases
   // Make sure we return an empty result.
   aResult.Truncate();
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsUnixSystemProxySettings::GetProxyForURI(const nsACString &aSpec,
-                                                   const nsACString &aScheme,
-                                                   const nsACString &aHost,
-                                                   const int32_t aPort,
-                                                   nsACString &aResult) {
-||||||| merged common ancestors
-nsresult
-nsUnixSystemProxySettings::GetProxyForURI(const nsACString & aSpec,
-                                          const nsACString & aScheme,
-                                          const nsACString & aHost,
-                                          const int32_t      aPort,
-                                          nsACString & aResult)
-{
-=======
 nsresult nsUnixSystemProxySettings::GetProxyForURI(const nsACString& aSpec,
                                                    const nsACString& aScheme,
                                                    const nsACString& aHost,
                                                    const int32_t aPort,
                                                    nsACString& aResult) {
->>>>>>> upstream-releases
   nsresult rv;
 
   if (!mProxyFactory) {
@@ -119,13 +80,7 @@ nsresult nsUnixSystemProxySettings::GetProxyForURI(const nsACString& aSpec,
 
     // figure out the scheme, and we can't use nsIIOService::NewURI because
     // this is not the main thread.
-<<<<<<< HEAD
-    char *colon = strchr(proxyArray[c], ':');
-||||||| merged common ancestors
-    char *colon = strchr (proxyArray[c], ':');
-=======
     char* colon = strchr(proxyArray[c], ':');
->>>>>>> upstream-releases
     uint32_t schemelen = colon ? colon - proxyArray[c] : 0;
     if (schemelen < 1) {
       c++;
@@ -146,59 +101,6 @@ nsresult nsUnixSystemProxySettings::GetProxyForURI(const nsACString& aSpec,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* 0fa3158c-d5a7-43de-9181-a285e74cf1d4 */
-#define NS_UNIXSYSTEMPROXYSERVICE_CID                \
-  {                                                  \
-    0x0fa3158c, 0xd5a7, 0x43de, {                    \
-      0x91, 0x81, 0xa2, 0x85, 0xe7, 0x4c, 0xf1, 0xd4 \
-    }                                                \
-  }
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsUnixSystemProxySettings, Init)
-NS_DEFINE_NAMED_CID(NS_UNIXSYSTEMPROXYSERVICE_CID);
-
-static const mozilla::Module::CIDEntry kUnixProxyCIDs[] = {
-    {&kNS_UNIXSYSTEMPROXYSERVICE_CID, false, nullptr,
-     nsUnixSystemProxySettingsConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kUnixProxyContracts[] = {
-    {NS_SYSTEMPROXYSETTINGS_CONTRACTID, &kNS_UNIXSYSTEMPROXYSERVICE_CID},
-    {nullptr}};
-
-static const mozilla::Module kUnixProxyModule = {
-    mozilla::Module::kVersion, kUnixProxyCIDs, kUnixProxyContracts};
-
-NSMODULE_DEFN(nsUnixProxyModule) = &kUnixProxyModule;
-||||||| merged common ancestors
-#define NS_UNIXSYSTEMPROXYSERVICE_CID  /* 0fa3158c-d5a7-43de-9181-a285e74cf1d4 */\
-     { 0x0fa3158c, 0xd5a7, 0x43de, \
-       {0x91, 0x81, 0xa2, 0x85, 0xe7, 0x4c, 0xf1, 0xd4 } }
-
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsUnixSystemProxySettings, Init)
-NS_DEFINE_NAMED_CID(NS_UNIXSYSTEMPROXYSERVICE_CID);
-
-static const mozilla::Module::CIDEntry kUnixProxyCIDs[] = {
-  { &kNS_UNIXSYSTEMPROXYSERVICE_CID, false, nullptr, nsUnixSystemProxySettingsConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kUnixProxyContracts[] = {
-  { NS_SYSTEMPROXYSETTINGS_CONTRACTID, &kNS_UNIXSYSTEMPROXYSERVICE_CID },
-  { nullptr }
-};
-
-static const mozilla::Module kUnixProxyModule = {
-  mozilla::Module::kVersion,
-  kUnixProxyCIDs,
-  kUnixProxyContracts
-};
-
-NSMODULE_DEFN(nsUnixProxyModule) = &kUnixProxyModule;
-
-=======
 NS_IMPL_COMPONENT_FACTORY(nsUnixSystemProxySettings) {
   return do_AddRef(new nsUnixSystemProxySettings()).downcast<nsISupports>();
 }
->>>>>>> upstream-releases

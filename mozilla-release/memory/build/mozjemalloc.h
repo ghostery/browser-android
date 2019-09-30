@@ -34,26 +34,11 @@
 // Generic interface exposing the whole public allocator API
 // This facilitates the implementation of things like replace-malloc.
 // Note: compilers are expected to be able to optimize out `this`.
-<<<<<<< HEAD
-template <typename T>
-struct Allocator : public T {
-#define MALLOC_DECL(name, return_type, ...) \
-  static return_type name(__VA_ARGS__);
-#include "malloc_decls.h"
-||||||| merged common ancestors
-template<typename T>
-struct Allocator : public T
-{
-#define MALLOC_DECL(name, return_type, ...)                                    \
-  static return_type name(__VA_ARGS__);
-#include "malloc_decls.h"
-=======
 template <typename T>
 struct Allocator : public T {
 #  define MALLOC_DECL(name, return_type, ...) \
     static return_type name(__VA_ARGS__);
 #  include "malloc_decls.h"
->>>>>>> upstream-releases
 };
 
 // The MozJemalloc allocator

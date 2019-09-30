@@ -7,25 +7,6 @@ mod registers;
 pub mod settings;
 
 use super::super::settings as shared_settings;
-<<<<<<< HEAD
-#[cfg(feature = "testing_hooks")]
-use binemit::CodeSink;
-use binemit::{emit_function, MemoryCodeSink};
-use ir;
-use isa::enc_tables::{self as shared_enc_tables, lookup_enclist, Encodings};
-use isa::Builder as IsaBuilder;
-use isa::{EncInfo, RegClass, RegInfo, TargetIsa};
-use regalloc;
-use result::CodegenResult;
-||||||| merged common ancestors
-use binemit::{emit_function, CodeSink, MemoryCodeSink};
-use ir;
-use isa::enc_tables::{self as shared_enc_tables, lookup_enclist, Encodings};
-use isa::Builder as IsaBuilder;
-use isa::{EncInfo, RegClass, RegInfo, TargetIsa};
-use regalloc;
-use result::CodegenResult;
-=======
 #[cfg(feature = "testing_hooks")]
 use crate::binemit::CodeSink;
 use crate::binemit::{emit_function, MemoryCodeSink};
@@ -37,7 +18,6 @@ use crate::regalloc;
 use crate::result::CodegenResult;
 use crate::timing;
 use core::fmt;
->>>>>>> upstream-releases
 use std::boxed::Box;
 use target_lexicon::{PointerWidth, Triple};
 

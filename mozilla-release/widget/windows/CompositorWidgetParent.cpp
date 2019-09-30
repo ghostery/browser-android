@@ -58,31 +58,14 @@ RefPtr<VsyncObserver> CompositorWidgetParent::GetVsyncObserver() const {
   return mVsyncObserver;
 }
 
-<<<<<<< HEAD
-void CompositorWidgetParent::ActorDestroy(ActorDestroyReason aWhy) {}
-||||||| merged common ancestors
-void
-CompositorWidgetParent::ActorDestroy(ActorDestroyReason aWhy)
-{
-}
-=======
 void CompositorWidgetParent::UpdateCompositorWnd(const HWND aCompositorWnd,
                                                  const HWND aParentWnd) {
   Unused << SendUpdateCompositorWnd(
       reinterpret_cast<WindowsHandle>(aCompositorWnd),
       reinterpret_cast<WindowsHandle>(aParentWnd));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-}  // namespace widget
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace widget
-} // namespace mozilla
-=======
 void CompositorWidgetParent::ActorDestroy(ActorDestroyReason aWhy) {}
 
 }  // namespace widget
 }  // namespace mozilla
->>>>>>> upstream-releases

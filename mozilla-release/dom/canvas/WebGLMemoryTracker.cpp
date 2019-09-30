@@ -124,28 +124,6 @@ int64_t WebGLMemoryTracker::GetShaderSize() {
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetTextureMemoryUsed() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLTexture* texture = contexts[i]->mTextures.getFirst();
-         texture; texture = texture->getNext()) {
-      result += texture->MemoryUsage();
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetTextureMemoryUsed()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLTexture* texture = contexts[i]->mTextures.getFirst();
-             texture;
-             texture = texture->getNext())
-        {
-            result += texture->MemoryUsage();
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetTextureMemoryUsed() {
   const ContextsArrayType& contexts = Contexts();
@@ -154,34 +132,11 @@ int64_t WebGLMemoryTracker::GetTextureMemoryUsed() {
     for (const WebGLTexture* texture = contexts[i]->mTextures.getFirst();
          texture; texture = texture->getNext()) {
       result += texture->MemoryUsage();
->>>>>>> upstream-releases
     }
   }
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetTextureCount() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLTexture* texture = contexts[i]->mTextures.getFirst();
-         texture; texture = texture->getNext()) {
-      result++;
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetTextureCount()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLTexture* texture = contexts[i]->mTextures.getFirst();
-             texture;
-             texture = texture->getNext())
-        {
-            result++;
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetTextureCount() {
   const ContextsArrayType& contexts = Contexts();
@@ -190,34 +145,11 @@ int64_t WebGLMemoryTracker::GetTextureCount() {
     for (const WebGLTexture* texture = contexts[i]->mTextures.getFirst();
          texture; texture = texture->getNext()) {
       result++;
->>>>>>> upstream-releases
     }
   }
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetBufferMemoryUsed() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLBuffer* buffer = contexts[i]->mBuffers.getFirst(); buffer;
-         buffer = buffer->getNext()) {
-      result += buffer->ByteLength();
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetBufferMemoryUsed()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLBuffer* buffer = contexts[i]->mBuffers.getFirst();
-             buffer;
-             buffer = buffer->getNext())
-        {
-            result += buffer->ByteLength();
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetBufferMemoryUsed() {
   const ContextsArrayType& contexts = Contexts();
@@ -226,34 +158,11 @@ int64_t WebGLMemoryTracker::GetBufferMemoryUsed() {
     for (const WebGLBuffer* buffer = contexts[i]->mBuffers.getFirst(); buffer;
          buffer = buffer->getNext()) {
       result += buffer->ByteLength();
->>>>>>> upstream-releases
     }
   }
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetBufferCount() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLBuffer* buffer = contexts[i]->mBuffers.getFirst(); buffer;
-         buffer = buffer->getNext()) {
-      result++;
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetBufferCount()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLBuffer* buffer = contexts[i]->mBuffers.getFirst();
-             buffer;
-             buffer = buffer->getNext())
-        {
-            result++;
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetBufferCount() {
   const ContextsArrayType& contexts = Contexts();
@@ -262,34 +171,11 @@ int64_t WebGLMemoryTracker::GetBufferCount() {
     for (const WebGLBuffer* buffer = contexts[i]->mBuffers.getFirst(); buffer;
          buffer = buffer->getNext()) {
       result++;
->>>>>>> upstream-releases
     }
   }
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetRenderbufferMemoryUsed() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLRenderbuffer* rb = contexts[i]->mRenderbuffers.getFirst();
-         rb; rb = rb->getNext()) {
-      result += rb->MemoryUsage();
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetRenderbufferMemoryUsed()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLRenderbuffer* rb = contexts[i]->mRenderbuffers.getFirst();
-             rb;
-             rb = rb->getNext())
-        {
-            result += rb->MemoryUsage();
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetRenderbufferMemoryUsed() {
   const ContextsArrayType& contexts = Contexts();
@@ -298,34 +184,11 @@ int64_t WebGLMemoryTracker::GetRenderbufferMemoryUsed() {
     for (const WebGLRenderbuffer* rb = contexts[i]->mRenderbuffers.getFirst();
          rb; rb = rb->getNext()) {
       result += rb->MemoryUsage();
->>>>>>> upstream-releases
     }
   }
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetRenderbufferCount() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLRenderbuffer* rb = contexts[i]->mRenderbuffers.getFirst();
-         rb; rb = rb->getNext()) {
-      result++;
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetRenderbufferCount()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLRenderbuffer* rb = contexts[i]->mRenderbuffers.getFirst();
-             rb;
-             rb = rb->getNext())
-        {
-            result++;
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetRenderbufferCount() {
   const ContextsArrayType& contexts = Contexts();
@@ -334,34 +197,11 @@ int64_t WebGLMemoryTracker::GetRenderbufferCount() {
     for (const WebGLRenderbuffer* rb = contexts[i]->mRenderbuffers.getFirst();
          rb; rb = rb->getNext()) {
       result++;
->>>>>>> upstream-releases
     }
   }
   return result;
 }
 
-<<<<<<< HEAD
-/*static*/ int64_t WebGLMemoryTracker::GetShaderCount() {
-  const ContextsArrayType& contexts = Contexts();
-  int64_t result = 0;
-  for (size_t i = 0; i < contexts.Length(); ++i) {
-    for (const WebGLShader* shader = contexts[i]->mShaders.getFirst(); shader;
-         shader = shader->getNext()) {
-      result++;
-||||||| merged common ancestors
-/*static*/ int64_t
-WebGLMemoryTracker::GetShaderCount()
-{
-    const ContextsArrayType & contexts = Contexts();
-    int64_t result = 0;
-    for(size_t i = 0; i < contexts.Length(); ++i) {
-        for (const WebGLShader* shader = contexts[i]->mShaders.getFirst();
-             shader;
-             shader = shader->getNext())
-        {
-            result++;
-        }
-=======
 /*static*/
 int64_t WebGLMemoryTracker::GetShaderCount() {
   const ContextsArrayType& contexts = Contexts();
@@ -370,7 +210,6 @@ int64_t WebGLMemoryTracker::GetShaderCount() {
     for (const WebGLShader* shader = contexts[i]->mShaders.getFirst(); shader;
          shader = shader->getNext()) {
       result++;
->>>>>>> upstream-releases
     }
   }
   return result;

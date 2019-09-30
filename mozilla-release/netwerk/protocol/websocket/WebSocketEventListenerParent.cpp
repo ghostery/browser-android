@@ -65,15 +65,8 @@ NS_IMETHODIMP
 WebSocketEventListenerParent::WebSocketOpened(uint32_t aWebSocketSerialID,
                                               const nsAString& aEffectiveURI,
                                               const nsACString& aProtocols,
-<<<<<<< HEAD
-                                              const nsACString& aExtensions) {
-||||||| merged common ancestors
-                                              const nsACString& aExtensions)
-{
-=======
                                               const nsACString& aExtensions,
                                               uint64_t aHttpChannelId) {
->>>>>>> upstream-releases
   Unused << SendWebSocketOpened(aWebSocketSerialID, nsString(aEffectiveURI),
                                 nsCString(aProtocols), nsCString(aExtensions),
                                 aHttpChannelId);

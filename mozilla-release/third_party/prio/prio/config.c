@@ -22,13 +22,6 @@ PrioConfig_maxDataFields(void)
   return (n_roots >> 1) - 1;
 }
 
-int
-PrioConfig_maxDataFields(void)
-{
-  const int n_roots = 1 << Generator2Order;
-  return (n_roots >> 1) - 1;
-}
-
 PrioConfig
 PrioConfig_new(int n_fields, PublicKey server_a, PublicKey server_b,
                const unsigned char* batch_id, unsigned int batch_id_len)

@@ -53,7 +53,7 @@
 
 // Undo the damage done by X11
 #ifdef Status
-#undef Status
+#  undef Status
 #endif
 // Protocol buffer (generated automatically)
 #include "protobuf/LayerScopePacket.pb.h"
@@ -74,37 +74,13 @@ class DebugGLData;
  * Manage Websocket connections
  */
 class LayerScopeWebSocketManager {
-<<<<<<< HEAD
- public:
-  LayerScopeWebSocketManager();
-  ~LayerScopeWebSocketManager();
-||||||| merged common ancestors
-public:
-    LayerScopeWebSocketManager();
-    ~LayerScopeWebSocketManager();
-=======
  public:
   LayerScopeWebSocketManager();
   ~LayerScopeWebSocketManager();
 
   void RemoveAllConnections() {
     MOZ_ASSERT(NS_IsMainThread());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void RemoveAllConnections() {
-    MOZ_ASSERT(NS_IsMainThread());
-||||||| merged common ancestors
-    void RemoveAllConnections()
-    {
-        MOZ_ASSERT(NS_IsMainThread());
-=======
-    MutexAutoLock lock(mHandlerMutex);
-    mHandlers.Clear();
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     MutexAutoLock lock(mHandlerMutex);
     mHandlers.Clear();
   }
@@ -115,17 +91,6 @@ public:
         // Send failed, remove this handler
         RemoveConnection(i);
       }
-||||||| merged common ancestors
-        MutexAutoLock lock(mHandlerMutex);
-        mHandlers.Clear();
-=======
-  bool WriteAll(void* ptr, uint32_t size) {
-    for (int32_t i = mHandlers.Length() - 1; i >= 0; --i) {
-      if (!mHandlers[i]->WriteToStream(ptr, size)) {
-        // Send failed, remove this handler
-        RemoveConnection(i);
-      }
->>>>>>> upstream-releases
     }
 
     return true;
@@ -137,7 +102,6 @@ public:
     return (mHandlers.Length() != 0) ? true : false;
   }
 
-<<<<<<< HEAD
   void AppendDebugData(DebugGLData* aDebugData);
   void CleanDebugData();
   void DispatchDebugData();
@@ -146,121 +110,27 @@ public:
   void AddConnection(nsISocketTransport* aTransport) {
     MOZ_ASSERT(NS_IsMainThread());
     MOZ_ASSERT(aTransport);
-||||||| merged common ancestors
-    bool IsConnected()
-    {
-        // This funtion can be called in both main thread and compositor thread.
-        MutexAutoLock lock(mHandlerMutex);
-        return (mHandlers.Length() != 0) ? true : false;
-    }
-=======
-  void AppendDebugData(DebugGLData* aDebugData);
-  void CleanDebugData();
-  void DispatchDebugData();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     MutexAutoLock lock(mHandlerMutex);
-||||||| merged common ancestors
-    void AppendDebugData(DebugGLData *aDebugData);
-    void CleanDebugData();
-    void DispatchDebugData();
-=======
- private:
-  void AddConnection(nsISocketTransport* aTransport) {
-    MOZ_ASSERT(NS_IsMainThread());
-    MOZ_ASSERT(aTransport);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     RefPtr<SocketHandler> temp = new SocketHandler();
     temp->OpenStream(aTransport);
     mHandlers.AppendElement(temp.get());
   }
-||||||| merged common ancestors
-private:
-    void AddConnection(nsISocketTransport *aTransport)
-    {
-        MOZ_ASSERT(NS_IsMainThread());
-        MOZ_ASSERT(aTransport);
-=======
-    MutexAutoLock lock(mHandlerMutex);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   void RemoveConnection(uint32_t aIndex) {
     // TBD: RemoveConnection is executed on the compositor thread and
     // AddConntection is executed on the main thread, which might be
     // a problem if a user disconnect and connect readlly quickly at
     // viewer side.
-||||||| merged common ancestors
-        MutexAutoLock lock(mHandlerMutex);
-=======
-    RefPtr<SocketHandler> temp = new SocketHandler();
-    temp->OpenStream(aTransport);
-    mHandlers.AppendElement(temp.get());
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     // We should dispatch RemoveConnection onto main thead.
     MOZ_ASSERT(aIndex < mHandlers.Length());
-||||||| merged common ancestors
-        RefPtr<SocketHandler> temp = new SocketHandler();
-        temp->OpenStream(aTransport);
-        mHandlers.AppendElement(temp.get());
-    }
-=======
-  void RemoveConnection(uint32_t aIndex) {
-    // TBD: RemoveConnection is executed on the compositor thread and
-    // AddConntection is executed on the main thread, which might be
-    // a problem if a user disconnect and connect readlly quickly at
-    // viewer side.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     MutexAutoLock lock(mHandlerMutex);
     mHandlers.RemoveElementAt(aIndex);
   }
-||||||| merged common ancestors
-    void RemoveConnection(uint32_t aIndex)
-    {
-        // TBD: RemoveConnection is executed on the compositor thread and
-        // AddConntection is executed on the main thread, which might be
-        // a problem if a user disconnect and connect readlly quickly at
-        // viewer side.
-=======
-    // We should dispatch RemoveConnection onto main thead.
-    MOZ_ASSERT(aIndex < mHandlers.Length());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  friend class SocketListener;
-  class SocketListener : public nsIServerSocketListener {
-   public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-||||||| merged common ancestors
-        // We should dispatch RemoveConnection onto main thead.
-        MOZ_ASSERT(aIndex < mHandlers.Length());
-=======
-    MutexAutoLock lock(mHandlerMutex);
-    mHandlers.RemoveElementAt(aIndex);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    SocketListener() {}
-
-    /* nsIServerSocketListener */
-    NS_IMETHOD OnSocketAccepted(nsIServerSocket* aServ,
-                                nsISocketTransport* aTransport) override;
-    NS_IMETHOD OnStopListening(nsIServerSocket* aServ,
-                               nsresult aStatus) override {
-      return NS_OK;
-||||||| merged common ancestors
-        MutexAutoLock lock(mHandlerMutex);
-        mHandlers.RemoveElementAt(aIndex);
-=======
   friend class SocketListener;
   class SocketListener : public nsIServerSocketListener {
    public:
@@ -274,133 +144,8 @@ private:
     NS_IMETHOD OnStopListening(nsIServerSocket* aServ,
                                nsresult aStatus) override {
       return NS_OK;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-   private:
-    virtual ~SocketListener() {}
-  };
-
-  /*
-   * This class handle websocket protocol which included
-   * handshake and data frame's header
-   */
-  class SocketHandler : public nsIInputStreamCallback {
-   public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-
-    SocketHandler() : mState(NoHandshake), mConnected(false) {}
-
-    void OpenStream(nsISocketTransport* aTransport);
-    bool WriteToStream(void* aPtr, uint32_t aSize);
-
-    // nsIInputStreamCallback
-    NS_IMETHOD OnInputStreamReady(nsIAsyncInputStream* aStream) override;
-
-   private:
-    virtual ~SocketHandler() { CloseConnection(); }
-
-    void ReadInputStreamData(nsTArray<nsCString>& aProtocolString);
-    bool WebSocketHandshake(nsTArray<nsCString>& aProtocolString);
-    void ApplyMask(uint32_t aMask, uint8_t* aData, uint64_t aLen);
-    bool HandleDataFrame(uint8_t* aData, uint32_t aSize);
-    void CloseConnection();
-
-    nsresult HandleSocketMessage(nsIAsyncInputStream* aStream);
-    nsresult ProcessInput(uint8_t* aBuffer, uint32_t aCount);
-
-   private:
-    enum SocketStateType { NoHandshake, HandshakeSuccess, HandshakeFailed };
-    SocketStateType mState;
-
-    nsCOMPtr<nsIOutputStream> mOutputStream;
-    nsCOMPtr<nsIAsyncInputStream> mInputStream;
-    nsCOMPtr<nsISocketTransport> mTransport;
-    bool mConnected;
-  };
-
-  nsTArray<RefPtr<SocketHandler> > mHandlers;
-  nsCOMPtr<nsIThread> mDebugSenderThread;
-  RefPtr<DebugDataSender> mCurrentSender;
-  nsCOMPtr<nsIServerSocket> mServerSocket;
-
-  // Keep mHandlers accessing thread safe.
-  Mutex mHandlerMutex;
-||||||| merged common ancestors
-    friend class SocketListener;
-    class SocketListener : public nsIServerSocketListener
-    {
-    public:
-       NS_DECL_THREADSAFE_ISUPPORTS
-
-       SocketListener() { }
-
-       /* nsIServerSocketListener */
-       NS_IMETHOD OnSocketAccepted(nsIServerSocket *aServ,
-                                   nsISocketTransport *aTransport) override;
-       NS_IMETHOD OnStopListening(nsIServerSocket *aServ,
-                                  nsresult aStatus) override
-       {
-           return NS_OK;
-       }
-    private:
-       virtual ~SocketListener() { }
-    };
-
-    /*
-     * This class handle websocket protocol which included
-     * handshake and data frame's header
-     */
-    class SocketHandler : public nsIInputStreamCallback {
-    public:
-        NS_DECL_THREADSAFE_ISUPPORTS
-
-        SocketHandler()
-            : mState(NoHandshake)
-            , mConnected(false)
-        { }
-
-        void OpenStream(nsISocketTransport* aTransport);
-        bool WriteToStream(void *aPtr, uint32_t aSize);
-
-        // nsIInputStreamCallback
-        NS_IMETHOD OnInputStreamReady(nsIAsyncInputStream *aStream) override;
-
-    private:
-        virtual ~SocketHandler() { CloseConnection(); }
-
-        void ReadInputStreamData(nsTArray<nsCString>& aProtocolString);
-        bool WebSocketHandshake(nsTArray<nsCString>& aProtocolString);
-        void ApplyMask(uint32_t aMask, uint8_t *aData, uint64_t aLen);
-        bool HandleDataFrame(uint8_t *aData, uint32_t aSize);
-        void CloseConnection();
-
-        nsresult HandleSocketMessage(nsIAsyncInputStream *aStream);
-        nsresult ProcessInput(uint8_t *aBuffer, uint32_t aCount);
-
-    private:
-        enum SocketStateType {
-            NoHandshake,
-            HandshakeSuccess,
-            HandshakeFailed
-        };
-        SocketStateType               mState;
-
-        nsCOMPtr<nsIOutputStream>     mOutputStream;
-        nsCOMPtr<nsIAsyncInputStream> mInputStream;
-        nsCOMPtr<nsISocketTransport>  mTransport;
-        bool                          mConnected;
-    };
-
-    nsTArray<RefPtr<SocketHandler> > mHandlers;
-    nsCOMPtr<nsIThread>                   mDebugSenderThread;
-    RefPtr<DebugDataSender>             mCurrentSender;
-    nsCOMPtr<nsIServerSocket>             mServerSocket;
-
-    // Keep mHandlers accessing thread safe.
-    Mutex mHandlerMutex;
-=======
    private:
     virtual ~SocketListener() = default;
   };
@@ -450,7 +195,6 @@ private:
 
   // Keep mHandlers accessing thread safe.
   Mutex mHandlerMutex;
->>>>>>> upstream-releases
 };
 
 NS_IMPL_ISUPPORTS(LayerScopeWebSocketManager::SocketListener,
@@ -561,19 +305,8 @@ class LayerScopeManager {
 
   DrawSession& CurrentSession() { return *mSession; }
 
-<<<<<<< HEAD
-  void SetPixelScale(double scale) { mScale = scale; }
-||||||| merged common ancestors
-    double GetPixelScale() const {
-        return mScale;
-    }
-=======
   void SetPixelScale(double scale) { mScale = scale; }
 
-  double GetPixelScale() const { return mScale; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   double GetPixelScale() const { return mScale; }
 
   LayerScopeManager() : mScale(1.0) {}
@@ -589,25 +322,6 @@ class LayerScopeManager {
       mLayerScopeManager->mWebSocketManager =
           mozilla::MakeUnique<LayerScopeWebSocketManager>();
       return NS_OK;
-||||||| merged common ancestors
-    LayerScopeManager()
-        : mScale(1.0)
-    {
-=======
-  LayerScopeManager() : mScale(1.0) {}
-
- private:
-  friend class CreateServerSocketRunnable;
-  class CreateServerSocketRunnable : public Runnable {
-   public:
-    explicit CreateServerSocketRunnable(LayerScopeManager* aLayerScopeManager)
-        : Runnable("layers::LayerScopeManager::CreateServerSocketRunnable"),
-          mLayerScopeManager(aLayerScopeManager) {}
-    NS_IMETHOD Run() override {
-      mLayerScopeManager->mWebSocketManager =
-          mozilla::MakeUnique<LayerScopeWebSocketManager>();
-      return NS_OK;
->>>>>>> upstream-releases
     }
 
    private:
@@ -666,13 +380,7 @@ class DebugGLData : public LinkedListElement<DebugGLData> {
  public:
   explicit DebugGLData(Packet::DataType aDataType) : mDataType(aDataType) {}
 
-<<<<<<< HEAD
-  virtual ~DebugGLData() {}
-||||||| merged common ancestors
-    virtual ~DebugGLData() { }
-=======
   virtual ~DebugGLData() = default;
->>>>>>> upstream-releases
 
   virtual bool Write() = 0;
 
@@ -697,19 +405,9 @@ class DebugGLFrameStatusData final : public DebugGLData {
   explicit DebugGLFrameStatusData(Packet::DataType aDataType)
       : DebugGLData(aDataType), mFrameStamp(0) {}
 
-<<<<<<< HEAD
-  virtual bool Write() override {
-    Packet packet;
-    packet.set_type(mDataType);
-||||||| merged common ancestors
-    virtual bool Write() override {
-        Packet packet;
-        packet.set_type(mDataType);
-=======
   bool Write() override {
     Packet packet;
     packet.set_type(mDataType);
->>>>>>> upstream-releases
 
     FramePacket* fp = packet.mutable_frame();
     fp->set_value(static_cast<uint64_t>(mFrameStamp));
@@ -723,126 +421,6 @@ class DebugGLFrameStatusData final : public DebugGLData {
   int64_t mFrameStamp;
 };
 
-<<<<<<< HEAD
-class DebugGLTextureData final : public DebugGLData {
- public:
-  DebugGLTextureData(GLContext* cx, void* layerRef, GLenum target, GLuint name,
-                     DataSourceSurface* img, bool aIsMask,
-                     UniquePtr<Packet> aPacket)
-      : DebugGLData(Packet::TEXTURE),
-        mLayerRef(reinterpret_cast<uint64_t>(layerRef)),
-        mTarget(target),
-        mName(name),
-        mContextAddress(reinterpret_cast<intptr_t>(cx)),
-        mDatasize(0),
-        mIsMask(aIsMask),
-        mPacket(std::move(aPacket)) {
-    // pre-packing
-    // DataSourceSurface may have locked buffer,
-    // so we should compress now, and then it could
-    // be unlocked outside.
-    pack(img);
-  }
-
-  virtual bool Write() override { return WriteToStream(*mPacket); }
-
- private:
-  void pack(DataSourceSurface* aImage) {
-    mPacket->set_type(mDataType);
-
-    TexturePacket* tp = mPacket->mutable_texture();
-    tp->set_layerref(mLayerRef);
-    tp->set_name(mName);
-    tp->set_target(mTarget);
-    tp->set_dataformat(LOCAL_GL_RGBA);
-    tp->set_glcontext(static_cast<uint64_t>(mContextAddress));
-    tp->set_ismask(mIsMask);
-
-    if (aImage) {
-      DataSourceSurface::ScopedMap map(aImage, DataSourceSurface::READ);
-      tp->set_width(aImage->GetSize().width);
-      tp->set_height(aImage->GetSize().height);
-      tp->set_stride(map.GetStride());
-
-      mDatasize = aImage->GetSize().height * map.GetStride();
-
-      auto compresseddata =
-          MakeUnique<char[]>(LZ4::maxCompressedSize(mDatasize));
-      if (compresseddata) {
-        int ndatasize = LZ4::compress((char*)map.GetData(), mDatasize,
-                                      compresseddata.get());
-        if (ndatasize > 0) {
-          mDatasize = ndatasize;
-          tp->set_dataformat((1 << 16 | tp->dataformat()));
-          tp->set_data(compresseddata.get(), mDatasize);
-||||||| merged common ancestors
-class DebugGLTextureData final: public DebugGLData {
-public:
-    DebugGLTextureData(GLContext* cx,
-                       void* layerRef,
-                       GLenum target,
-                       GLuint name,
-                       DataSourceSurface* img,
-                       bool aIsMask,
-                       UniquePtr<Packet> aPacket)
-        : DebugGLData(Packet::TEXTURE),
-          mLayerRef(reinterpret_cast<uint64_t>(layerRef)),
-          mTarget(target),
-          mName(name),
-          mContextAddress(reinterpret_cast<intptr_t>(cx)),
-          mDatasize(0),
-          mIsMask(aIsMask),
-          mPacket(std::move(aPacket))
-    {
-        // pre-packing
-        // DataSourceSurface may have locked buffer,
-        // so we should compress now, and then it could
-        // be unlocked outside.
-        pack(img);
-    }
-
-    virtual bool Write() override {
-        return WriteToStream(*mPacket);
-    }
-
-private:
-    void pack(DataSourceSurface* aImage) {
-        mPacket->set_type(mDataType);
-
-        TexturePacket* tp = mPacket->mutable_texture();
-        tp->set_layerref(mLayerRef);
-        tp->set_name(mName);
-        tp->set_target(mTarget);
-        tp->set_dataformat(LOCAL_GL_RGBA);
-        tp->set_glcontext(static_cast<uint64_t>(mContextAddress));
-        tp->set_ismask(mIsMask);
-
-        if (aImage) {
-            DataSourceSurface::ScopedMap map(aImage, DataSourceSurface::READ);
-            tp->set_width(aImage->GetSize().width);
-            tp->set_height(aImage->GetSize().height);
-            tp->set_stride(map.GetStride());
-
-            mDatasize = aImage->GetSize().height * map.GetStride();
-
-            auto compresseddata = MakeUnique<char[]>(LZ4::maxCompressedSize(mDatasize));
-            if (compresseddata) {
-                int ndatasize = LZ4::compress((char*)map.GetData(),
-                                              mDatasize,
-                                              compresseddata.get());
-                if (ndatasize > 0) {
-                    mDatasize = ndatasize;
-                    tp->set_dataformat((1 << 16 | tp->dataformat()));
-                    tp->set_data(compresseddata.get(), mDatasize);
-                } else {
-                    NS_WARNING("Compress data failed");
-                    tp->set_data(map.GetData(), mDatasize);
-                }
-            } else {
-                NS_WARNING("Couldn't new compressed data.");
-                tp->set_data(map.GetData(), mDatasize);
-            }
-=======
 class DebugGLTextureData final : public DebugGLData {
  public:
   DebugGLTextureData(GLContext* cx, void* layerRef, GLenum target, GLuint name,
@@ -894,7 +472,6 @@ class DebugGLTextureData final : public DebugGLData {
           mDatasize = ndatasize;
           tp->set_dataformat((1 << 16 | tp->dataformat()));
           tp->set_data(compresseddata.get(), mDatasize);
->>>>>>> upstream-releases
         } else {
           NS_WARNING("Compress data failed");
           tp->set_data(map.GetData(), mDatasize);
@@ -922,36 +499,6 @@ class DebugGLTextureData final : public DebugGLData {
   UniquePtr<Packet> mPacket;
 };
 
-<<<<<<< HEAD
-class DebugGLColorData final : public DebugGLData {
- public:
-  DebugGLColorData(void* layerRef, const Color& color, int width, int height)
-      : DebugGLData(Packet::COLOR),
-        mLayerRef(reinterpret_cast<uint64_t>(layerRef)),
-        mColor(color.ToABGR()),
-        mSize(width, height) {}
-
-  virtual bool Write() override {
-    Packet packet;
-    packet.set_type(mDataType);
-
-    ColorPacket* cp = packet.mutable_color();
-    cp->set_layerref(mLayerRef);
-    cp->set_color(mColor);
-    cp->set_width(mSize.width);
-    cp->set_height(mSize.height);
-
-    return WriteToStream(packet);
-  }
-
- protected:
-  uint64_t mLayerRef;
-  uint32_t mColor;
-  IntSize mSize;
-||||||| merged common ancestors
-    // Packet data
-    UniquePtr<Packet> mPacket;
-=======
 class DebugGLColorData final : public DebugGLData {
  public:
   DebugGLColorData(void* layerRef, const Color& color, int width, int height)
@@ -977,40 +524,8 @@ class DebugGLColorData final : public DebugGLData {
   uint64_t mLayerRef;
   uint32_t mColor;
   IntSize mSize;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-class DebugGLLayersData final : public DebugGLData {
- public:
-  explicit DebugGLLayersData(UniquePtr<Packet> aPacket)
-      : DebugGLData(Packet::LAYERS), mPacket(std::move(aPacket)) {}
-||||||| merged common ancestors
-class DebugGLColorData final: public DebugGLData {
-public:
-    DebugGLColorData(void* layerRef,
-                     const Color& color,
-                     int width,
-                     int height)
-        : DebugGLData(Packet::COLOR),
-          mLayerRef(reinterpret_cast<uint64_t>(layerRef)),
-          mColor(color.ToABGR()),
-          mSize(width, height)
-    { }
-
-    virtual bool Write() override {
-        Packet packet;
-        packet.set_type(mDataType);
-
-        ColorPacket* cp = packet.mutable_color();
-        cp->set_layerref(mLayerRef);
-        cp->set_color(mColor);
-        cp->set_width(mSize.width);
-        cp->set_height(mSize.height);
-
-        return WriteToStream(packet);
-    }
-=======
 class DebugGLLayersData final : public DebugGLData {
  public:
   explicit DebugGLLayersData(UniquePtr<Packet> aPacket)
@@ -1020,25 +535,9 @@ class DebugGLLayersData final : public DebugGLData {
     mPacket->set_type(mDataType);
     return WriteToStream(*mPacket);
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual bool Write() override {
-    mPacket->set_type(mDataType);
-    return WriteToStream(*mPacket);
-  }
 
  protected:
   UniquePtr<Packet> mPacket;
-||||||| merged common ancestors
-protected:
-    uint64_t mLayerRef;
-    uint32_t mColor;
-    IntSize mSize;
-=======
- protected:
-  UniquePtr<Packet> mPacket;
->>>>>>> upstream-releases
 };
 
 class DebugGLMetaData final : public DebugGLData {
@@ -1049,111 +548,20 @@ class DebugGLMetaData final : public DebugGLData {
   explicit DebugGLMetaData(Packet::DataType aDataType)
       : DebugGLData(aDataType), mComposedByHwc(false) {}
 
-<<<<<<< HEAD
-  virtual bool Write() override {
-    Packet packet;
-    packet.set_type(mDataType);
-
-    MetaPacket* mp = packet.mutable_meta();
-    mp->set_composedbyhwc(mComposedByHwc);
-||||||| merged common ancestors
-protected:
-    UniquePtr<Packet> mPacket;
-};
-=======
   bool Write() override {
     Packet packet;
     packet.set_type(mDataType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    return WriteToStream(packet);
-  }
-||||||| merged common ancestors
-class DebugGLMetaData final: public DebugGLData
-{
-public:
-    DebugGLMetaData(Packet::DataType aDataType,
-                    bool aValue)
-        : DebugGLData(aDataType),
-          mComposedByHwc(aValue)
-    { }
-=======
     MetaPacket* mp = packet.mutable_meta();
     mp->set_composedbyhwc(mComposedByHwc);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  bool mComposedByHwc;
-};
-||||||| merged common ancestors
-    explicit DebugGLMetaData(Packet::DataType aDataType)
-        : DebugGLData(aDataType),
-          mComposedByHwc(false)
-    { }
-=======
     return WriteToStream(packet);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class DebugGLDrawData final : public DebugGLData {
- public:
-  DebugGLDrawData(float aOffsetX, float aOffsetY,
-                  const gfx::Matrix4x4& aMVMatrix, size_t aRects,
-                  const gfx::Rect* aLayerRects, const gfx::Rect* aTextureRects,
-                  const std::list<GLuint>& aTexIDs, void* aLayerRef)
-      : DebugGLData(Packet::DRAW),
-        mOffsetX(aOffsetX),
-        mOffsetY(aOffsetY),
-        mMVMatrix(aMVMatrix),
-        mRects(aRects),
-        mTexIDs(aTexIDs),
-        mLayerRef(reinterpret_cast<uint64_t>(aLayerRef)) {
-    for (size_t i = 0; i < mRects; i++) {
-      mLayerRects[i] = aLayerRects[i];
-      mTextureRects[i] = aTextureRects[i];
-    }
-  }
-
-  virtual bool Write() override {
-    Packet packet;
-    packet.set_type(mDataType);
-
-    DrawPacket* dp = packet.mutable_draw();
-    dp->set_layerref(mLayerRef);
-
-    dp->set_offsetx(mOffsetX);
-    dp->set_offsety(mOffsetY);
-
-    auto element = reinterpret_cast<Float*>(&mMVMatrix);
-    for (int i = 0; i < 16; i++) {
-      dp->add_mvmatrix(*element++);
-    }
-    dp->set_totalrects(mRects);
-||||||| merged common ancestors
-    virtual bool Write() override {
-        Packet packet;
-        packet.set_type(mDataType);
-=======
  protected:
   bool mComposedByHwc;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_ASSERT(mRects > 0 && mRects < 4);
-    for (size_t i = 0; i < mRects; i++) {
-      // Vertex
-      DumpRect(dp->add_layerrect(), mLayerRects[i]);
-      // UV
-      DumpRect(dp->add_texturerect(), mTextureRects[i]);
-    }
-||||||| merged common ancestors
-        MetaPacket* mp = packet.mutable_meta();
-        mp->set_composedbyhwc(mComposedByHwc);
-=======
 class DebugGLDrawData final : public DebugGLData {
  public:
   DebugGLDrawData(float aOffsetX, float aOffsetY,
@@ -1196,7 +604,6 @@ class DebugGLDrawData final : public DebugGLData {
       // UV
       DumpRect(dp->add_texturerect(), mTextureRects[i]);
     }
->>>>>>> upstream-releases
 
     for (GLuint texId : mTexIDs) {
       dp->add_texids(texId);
@@ -1232,27 +639,8 @@ class DebugDataSender {
       return NS_OK;
     }
 
-<<<<<<< HEAD
-   private:
-    virtual ~AppendTask() {}
-||||||| merged common ancestors
-        auto element = reinterpret_cast<Float *>(&mMVMatrix);
-        for (int i = 0; i < 16; i++) {
-          dp->add_mvmatrix(*element++);
-        }
-        dp->set_totalrects(mRects);
-
-        MOZ_ASSERT(mRects > 0 && mRects < 4);
-        for (size_t i = 0; i < mRects; i++) {
-            // Vertex
-            DumpRect(dp->add_layerrect(), mLayerRects[i]);
-            // UV
-            DumpRect(dp->add_texturerect(), mTextureRects[i]);
-        }
-=======
    private:
     virtual ~AppendTask() = default;
->>>>>>> upstream-releases
 
     DebugGLData* mData;
     // Keep a strong reference to DebugDataSender to prevent this object
@@ -1272,24 +660,8 @@ class DebugDataSender {
       return NS_OK;
     }
 
-<<<<<<< HEAD
-   private:
-    virtual ~ClearTask() {}
-||||||| merged common ancestors
-protected:
-    float mOffsetX;
-    float mOffsetY;
-    gfx::Matrix4x4 mMVMatrix;
-    size_t mRects;
-    gfx::Rect mLayerRects[4];
-    gfx::Rect mTextureRects[4];
-    std::list<GLuint> mTexIDs;
-    uint64_t mLayerRef;
-};
-=======
    private:
     virtual ~ClearTask() = default;
->>>>>>> upstream-releases
 
     RefPtr<DebugDataSender> mHost;
   };
@@ -1318,16 +690,8 @@ protected:
       return NS_OK;
     }
 
-<<<<<<< HEAD
-   private:
-    virtual ~SendTask() {}
-||||||| merged common ancestors
-        RefPtr<DebugDataSender> mHost;
-    };
-=======
    private:
     virtual ~SendTask() = default;
->>>>>>> upstream-releases
 
     RefPtr<DebugDataSender> mHost;
   };
@@ -1342,22 +706,6 @@ protected:
 
   void Send() { mThread->Dispatch(new SendTask(this), NS_DISPATCH_NORMAL); }
 
-<<<<<<< HEAD
- protected:
-  virtual ~DebugDataSender() {}
-  void RemoveData() {
-    MOZ_ASSERT(mThread->SerialEventTarget()->IsOnCurrentThread());
-    if (mList.isEmpty()) return;
-
-    DebugGLData* d;
-    while ((d = mList.popFirst()) != nullptr) delete d;
-  }
-||||||| merged common ancestors
-        DebugGLData *d;
-        while ((d = mList.popFirst()) != nullptr)
-            delete d;
-    }
-=======
  protected:
   virtual ~DebugDataSender() = default;
   void RemoveData() {
@@ -1367,7 +715,6 @@ protected:
     DebugGLData* d;
     while ((d = mList.popFirst()) != nullptr) delete d;
   }
->>>>>>> upstream-releases
 
   // We can only modify or aceess mList on mThread.
   LinkedList<DebugGLData> mList;
@@ -2069,24 +1416,6 @@ void LayerScopeWebSocketManager::SocketHandler::CloseConnection() {
 // LayerScopeWebSocketManager implementation
 // ----------------------------------------------
 LayerScopeWebSocketManager::LayerScopeWebSocketManager()
-<<<<<<< HEAD
-    : mHandlerMutex("LayerScopeWebSocketManager::mHandlerMutex") {
-  NS_NewNamedThread("LayerScope", getter_AddRefs(mDebugSenderThread));
-
-  mServerSocket = do_CreateInstance(NS_SERVERSOCKET_CONTRACTID);
-  int port = gfxPrefs::LayerScopePort();
-  mServerSocket->Init(port, false, -1);
-  mServerSocket->AsyncListen(new SocketListener);
-||||||| merged common ancestors
-    : mHandlerMutex("LayerScopeWebSocketManager::mHandlerMutex")
-{
-    NS_NewNamedThread("LayerScope", getter_AddRefs(mDebugSenderThread));
-
-    mServerSocket = do_CreateInstance(NS_SERVERSOCKET_CONTRACTID);
-    int port = gfxPrefs::LayerScopePort();
-    mServerSocket->Init(port, false, -1);
-    mServerSocket->AsyncListen(new SocketListener);
-=======
     : mHandlerMutex("LayerScopeWebSocketManager::mHandlerMutex") {
   NS_NewNamedThread("LayerScope", getter_AddRefs(mDebugSenderThread));
 
@@ -2094,7 +1423,6 @@ LayerScopeWebSocketManager::LayerScopeWebSocketManager()
   int port = StaticPrefs::gfx_layerscope_port();
   mServerSocket->Init(port, false, -1);
   mServerSocket->AsyncListen(new SocketListener);
->>>>>>> upstream-releases
 }
 
 LayerScopeWebSocketManager::~LayerScopeWebSocketManager() {
@@ -2136,24 +1464,10 @@ NS_IMETHODIMP LayerScopeWebSocketManager::SocketListener::OnSocketAccepted(
 // LayerScope implementation
 // ----------------------------------------------
 /*static*/
-<<<<<<< HEAD
-void LayerScope::Init() {
-  if (!gfxPrefs::LayerScopeEnabled() || XRE_IsGPUProcess()) {
-    return;
-  }
-||||||| merged common ancestors
-void
-LayerScope::Init()
-{
-    if (!gfxPrefs::LayerScopeEnabled() || XRE_IsGPUProcess()) {
-        return;
-    }
-=======
 void LayerScope::Init() {
   if (!StaticPrefs::gfx_layerscope_enabled() || XRE_IsGPUProcess()) {
     return;
   }
->>>>>>> upstream-releases
 
   gLayerScopeManager.CreateServerSocket();
 }
@@ -2245,41 +1559,6 @@ void LayerScope::SendLayerDump(UniquePtr<Packet> aPacket) {
 }
 
 /*static*/
-<<<<<<< HEAD
-bool LayerScope::CheckSendable() {
-  // Only compositor threads check LayerScope status
-  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() || gIsGtest);
-
-  if (!gfxPrefs::LayerScopeEnabled()) {
-    return false;
-  }
-  if (!gLayerScopeManager.GetSocketManager()) {
-    Init();
-    return false;
-  }
-  if (!gLayerScopeManager.GetSocketManager()->IsConnected()) {
-    return false;
-  }
-  return true;
-||||||| merged common ancestors
-bool
-LayerScope::CheckSendable()
-{
-    // Only compositor threads check LayerScope status
-    MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() || gIsGtest);
-
-    if (!gfxPrefs::LayerScopeEnabled()) {
-        return false;
-    }
-    if (!gLayerScopeManager.GetSocketManager()) {
-        Init();
-        return false;
-    }
-    if (!gLayerScopeManager.GetSocketManager()->IsConnected()) {
-        return false;
-    }
-    return true;
-=======
 bool LayerScope::CheckSendable() {
   // Only compositor threads check LayerScope status
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() || gIsGtest);
@@ -2295,7 +1574,6 @@ bool LayerScope::CheckSendable() {
     return false;
   }
   return true;
->>>>>>> upstream-releases
 }
 
 /*static*/

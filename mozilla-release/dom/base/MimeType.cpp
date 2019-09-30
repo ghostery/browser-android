@@ -8,23 +8,6 @@
 #include "nsUnicharUtils.h"
 
 namespace {
-<<<<<<< HEAD
-template <typename char_type>
-static inline bool IsHTTPTokenPoint(const char_type c) {
-  return c == '!' || c == '#' || c == '$' || c == '%' || c == '&' ||
-         c == '\'' || c == '*' || c == '+' || c == '-' || c == '.' ||
-         c == '^' || c == '_' || c == '`' || c == '|' || c == '~' ||
-         mozilla::IsAsciiAlphanumeric(c);
-}
-||||||| merged common ancestors
-  template<typename char_type>
-  static inline bool IsHTTPTokenPoint(const char_type c) {
-    return c == '!' || c == '#' || c == '$' || c == '%' || c == '&' ||
-           c == '\'' || c == '*' || c == '+' || c == '-' || c == '.' ||
-           c == '^' || c == '_' || c == '`' || c == '|' || c == '~' ||
-           mozilla::IsAsciiAlphanumeric(c);
-  }
-=======
 template <typename Char>
 constexpr bool IsHTTPTokenPoint(Char aChar) {
   using UnsignedChar = typename mozilla::detail::MakeUnsignedChar<Char>::Type;
@@ -34,32 +17,14 @@ constexpr bool IsHTTPTokenPoint(Char aChar) {
          c == '^' || c == '_' || c == '`' || c == '|' || c == '~' ||
          mozilla::IsAsciiAlphanumeric(c);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename char_type>
-static inline bool IsHTTPQuotedStringTokenPoint(const char_type c) {
-  return c == 0x9 || (c >= ' ' && c <= '~') || mozilla::IsNonAsciiLatin1(c);
-||||||| merged common ancestors
-  template<typename char_type>
-  static inline bool IsHTTPQuotedStringTokenPoint(const char_type c) {
-    return c == 0x9 || (c >= ' ' && c <= '~') || mozilla::IsNonAsciiLatin1(c);
-  }
-=======
 template <typename Char>
 constexpr bool IsHTTPQuotedStringTokenPoint(Char aChar) {
   using UnsignedChar = typename mozilla::detail::MakeUnsignedChar<Char>::Type;
   auto c = static_cast<UnsignedChar>(aChar);
   return c == 0x9 || (c >= ' ' && c <= '~') || mozilla::IsNonAsciiLatin1(c);
->>>>>>> upstream-releases
 }
-}  // namespace
 
-<<<<<<< HEAD
-template <typename char_type>
-||||||| merged common ancestors
-template<typename char_type>
-=======
 template <typename Char>
 constexpr bool IsHTTPWhitespace(Char aChar) {
   using UnsignedChar = typename mozilla::detail::MakeUnsignedChar<Char>::Type;
@@ -69,7 +34,6 @@ constexpr bool IsHTTPWhitespace(Char aChar) {
 }  // namespace
 
 template <typename char_type>
->>>>>>> upstream-releases
 /* static */ mozilla::UniquePtr<TMimeType<char_type>>
 TMimeType<char_type>::Parse(const nsTSubstring<char_type>& aMimeType) {
   // See https://mimesniff.spec.whatwg.org/#parsing-a-mime-type

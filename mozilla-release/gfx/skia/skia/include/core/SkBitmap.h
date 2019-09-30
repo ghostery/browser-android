@@ -760,13 +760,7 @@ public:
     void notifyPixelsChanged() const;
 
     /** Replaces pixel values with c. All pixels contained by bounds() are affected.
-<<<<<<< HEAD
-        If the colorType() is kGray_8_SkColorType or k565_SkColorType, then alpha
-||||||| merged common ancestors
-        If the colorType() is kGray_8_SkColorType or k565_SkColorType, then color alpha
-=======
         If the colorType() is kGray_8_SkColorType or kRGB_565_SkColorType, then alpha
->>>>>>> upstream-releases
         is ignored; RGB is treated as opaque. If colorType() is kAlpha_8_SkColorType,
         then RGB is ignored.
 
@@ -792,13 +786,7 @@ public:
     /** Replaces pixel values inside area with c. If area does not intersect bounds(),
         call has no effect.
 
-<<<<<<< HEAD
-        If the colorType() is kGray_8_SkColorType or k565_SkColorType, then alpha
-||||||| merged common ancestors
-        If the colorType() is kGray_8_SkColorType or k565_SkColorType, then color alpha
-=======
         If the colorType() is kGray_8_SkColorType or kRGB_565_SkColorType, then alpha
->>>>>>> upstream-releases
         is ignored; RGB is treated as opaque. If colorType() is kAlpha_8_SkColorType,
         then RGB is ignored.
 
@@ -1057,86 +1045,6 @@ public:
         return this->writePixels(src, 0, 0);
     }
 
-<<<<<<< HEAD
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    /** For use by Android framework only.
-
-        @return  true if setHasHardwareMipMap() has been called with true
-    */
-    bool hasHardwareMipMap() const {
-        return (fFlags & kHasHardwareMipMap_Flag) != 0;
-    }
-
-    /** For use by Android framework only.
-
-        @param hasHardwareMipMap  sets state
-    */
-    void setHasHardwareMipMap(bool hasHardwareMipMap) {
-        if (hasHardwareMipMap) {
-            fFlags |= kHasHardwareMipMap_Flag;
-        } else {
-            fFlags &= ~kHasHardwareMipMap_Flag;
-        }
-    }
-#endif
-
-||||||| merged common ancestors
-    /** Copies a SkRect of pixels from src. Copy starts at (0, 0), and does not exceed
-        (src.width(), src.height()).
-
-        src specifies width, height, SkColorType, SkAlphaType, SkColorSpace, pixel storage,
-        and row bytes of source. src.rowBytes() specifics the gap from one source
-        row to the next. Returns true if pixels are copied. Returns false if:
-        - src pixel storage equals nullptr
-        - src.rowBytes is less than SkImageInfo::minRowBytes
-        - SkPixelRef is nullptr
-
-        Pixels are copied only if pixel conversion is possible. If SkBitmap colorType() is
-        kGray_8_SkColorType, or kAlpha_8_SkColorType; src SkColorType must match.
-        If SkBitmap colorType() is kGray_8_SkColorType, src SkColorSpace must match.
-        If SkBitmap alphaType() is kOpaque_SkAlphaType, src SkAlphaType must
-        match. If SkBitmap colorSpace() is nullptr, src SkColorSpace must match. Returns
-        false if pixel conversion is not possible. Returns false if width() or height()
-        is zero or negative.
-
-        If behavior is SkTransferFunctionBehavior::kRespect: converts src
-        pixels to a linear space before converting to SkImageInfo.
-        If behavior is SkTransferFunctionBehavior::kIgnore: src
-        pixels are treated as if they are linear, regardless of how they are encoded.
-
-        @param src       source SkPixmap: SkImageInfo, pixels, row bytes
-        @param x         column index whose absolute value is less than width()
-        @param y         row index whose absolute value is less than height()
-        @param behavior  one of: SkTransferFunctionBehavior::kRespect,
-                         SkTransferFunctionBehavior::kIgnore
-        @return          true if src pixels are copied to SkBitmap
-    */
-    bool writePixels(const SkPixmap& src, int x, int y, SkTransferFunctionBehavior behavior);
-
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    /** Android framework only.
-
-        @return  true if setHasHardwareMipMap() has been called with true
-    */
-    bool hasHardwareMipMap() const {
-        return (fFlags & kHasHardwareMipMap_Flag) != 0;
-    }
-
-    /** Android framework only.
-
-        @param hasHardwareMipMap  sets state
-    */
-    void setHasHardwareMipMap(bool hasHardwareMipMap) {
-        if (hasHardwareMipMap) {
-            fFlags |= kHasHardwareMipMap_Flag;
-        } else {
-            fFlags &= ~kHasHardwareMipMap_Flag;
-        }
-    }
-#endif
-
-=======
->>>>>>> upstream-releases
     /** Sets dst to alpha described by pixels. Returns false if dst cannot be written to
         or dst pixels cannot be allocated.
 

@@ -144,16 +144,8 @@ add_task(async function test_upgrade_default_position_engine() {
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
   let engine = Services.search.getEngineByName("MozSearch");
-<<<<<<< HEAD
-  Services.search.defaultEngine = engine;
-  Services.search.moveEngine(engine, 1);
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-  Services.search.moveEngine(engine, 1);
-=======
   await Services.search.setDefault(engine);
   await Services.search.moveEngine(engine, 1);
->>>>>>> upstream-releases
 
   await ext1.upgrade({
     manifest: {
@@ -176,13 +168,6 @@ add_task(async function test_upgrade_default_position_engine() {
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
   engine = Services.search.getEngineByName("MozSearch");
-<<<<<<< HEAD
-  equal(Services.search.defaultEngine, engine, "Default engine should still be MozSearch");
-  equal(Services.search.getEngines().indexOf(engine), 1, "Engine is in position 1");
-||||||| merged common ancestors
-  equal(Services.search.currentEngine, engine, "Default engine should still be MozSearch");
-  equal(Services.search.getEngines().indexOf(engine), 1, "Engine is in position 1");
-=======
   equal(
     Services.search.defaultEngine,
     engine,
@@ -193,7 +178,6 @@ add_task(async function test_upgrade_default_position_engine() {
     1,
     "Engine is in position 1"
   );
->>>>>>> upstream-releases
 
   await ext1.unload();
   await delay();

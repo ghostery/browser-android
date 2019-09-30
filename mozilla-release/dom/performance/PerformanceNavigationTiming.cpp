@@ -21,31 +21,6 @@ JSObject* PerformanceNavigationTiming::WrapObject(
   return PerformanceNavigationTiming_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-#define REDUCE_TIME_PRECISION                      \
-  if (mPerformance->IsSystemPrincipal()) {         \
-    return rawValue;                               \
-  }                                                \
-  return nsRFPService::ReduceTimePrecisionAsMSecs( \
-      rawValue, mPerformance->GetRandomTimelineSeed())
-
-DOMHighResTimeStamp PerformanceNavigationTiming::UnloadEventStart() const {
-  DOMHighResTimeStamp rawValue =
-      mPerformance->GetDOMTiming()->GetUnloadEventStartHighRes();
-||||||| merged common ancestors
-#define REDUCE_TIME_PRECISION                               \
-  if (mPerformance->IsSystemPrincipal()) {                  \
-    return rawValue;                                        \
-  }                                                         \
-  return nsRFPService::ReduceTimePrecisionAsMSecs(rawValue, \
-    mPerformance->GetRandomTimelineSeed())
-
-DOMHighResTimeStamp
-PerformanceNavigationTiming::UnloadEventStart() const
-{
-  DOMHighResTimeStamp rawValue =
-    mPerformance->GetDOMTiming()->GetUnloadEventStartHighRes();
-=======
 #define REDUCE_TIME_PRECISION                      \
   if (mPerformance->IsSystemPrincipal()) {         \
     return rawValue;                               \
@@ -78,22 +53,10 @@ DOMHighResTimeStamp PerformanceNavigationTiming::UnloadEventStart() const {
      */
     rawValue = mPerformance->GetDOMTiming()->GetUnloadEventStartHighRes();
   }
->>>>>>> upstream-releases
 
   REDUCE_TIME_PRECISION;
 }
 
-<<<<<<< HEAD
-DOMHighResTimeStamp PerformanceNavigationTiming::UnloadEventEnd() const {
-  DOMHighResTimeStamp rawValue =
-      mPerformance->GetDOMTiming()->GetUnloadEventEndHighRes();
-||||||| merged common ancestors
-DOMHighResTimeStamp
-PerformanceNavigationTiming::UnloadEventEnd() const
-{
-  DOMHighResTimeStamp rawValue =
-    mPerformance->GetDOMTiming()->GetUnloadEventEndHighRes();
-=======
 DOMHighResTimeStamp PerformanceNavigationTiming::UnloadEventEnd() const {
   DOMHighResTimeStamp rawValue = 0;
 
@@ -101,7 +64,6 @@ DOMHighResTimeStamp PerformanceNavigationTiming::UnloadEventEnd() const {
   if (mTimingData->AllRedirectsSameOrigin()) {
     rawValue = mPerformance->GetDOMTiming()->GetUnloadEventEndHighRes();
   }
->>>>>>> upstream-releases
 
   REDUCE_TIME_PRECISION;
 }

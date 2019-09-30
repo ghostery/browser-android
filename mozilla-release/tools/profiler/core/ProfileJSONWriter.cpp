@@ -5,17 +5,9 @@
 
 #include "ProfileJSONWriter.h"
 
-<<<<<<< HEAD
-void ChunkedJSONWriteFunc::Write(const char* aStr) {
-||||||| merged common ancestors
-void
-ChunkedJSONWriteFunc::Write(const char* aStr)
-{
-=======
 #include "mozilla/HashFunctions.h"
 
 void ChunkedJSONWriteFunc::Write(const char* aStr) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mChunkPtr >= mChunkList.back().get() && mChunkPtr <= mChunkEnd);
   MOZ_ASSERT(mChunkEnd >= mChunkList.back().get() + mChunkLengths.back());
   MOZ_ASSERT(*mChunkPtr == '\0');

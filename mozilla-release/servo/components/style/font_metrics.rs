@@ -6,27 +6,9 @@
 
 #![deny(missing_docs)]
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use Atom;
-=======
 use crate::context::SharedStyleContext;
 use crate::Atom;
->>>>>>> upstream-releases
 use app_units::Au;
-<<<<<<< HEAD
-use crate::context::SharedStyleContext;
-use crate::logical_geometry::WritingMode;
-use crate::media_queries::Device;
-use crate::properties::style_structs::Font;
-use crate::Atom;
-||||||| merged common ancestors
-use context::SharedStyleContext;
-use logical_geometry::WritingMode;
-use media_queries::Device;
-use properties::style_structs::Font;
-=======
->>>>>>> upstream-releases
 
 /// Represents the font metrics that style needs from a font to compute the
 /// value of certain CSS units like `ex`.

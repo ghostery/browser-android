@@ -444,19 +444,8 @@ class ConsoleRunnable : public StructuredCloneHolderBase {
     return true;
   }
 
-<<<<<<< HEAD
-  void ProcessProfileData(JSContext* aCx, Console* aConsole,
-                          Console::MethodName aMethodName,
-                          const nsAString& aAction) {
-||||||| merged common ancestors
-  void
-  ProcessProfileData(JSContext* aCx, Console* aConsole,
-                     Console::MethodName aMethodName, const nsAString& aAction)
-  {
-=======
   void ProcessProfileData(JSContext* aCx, Console::MethodName aMethodName,
                           const nsAString& aAction) {
->>>>>>> upstream-releases
     AssertIsOnMainThread();
 
     ConsoleCommon::ClearException ce(aCx);
@@ -719,16 +708,9 @@ class ConsoleWorkerRunnable : public WorkerProxyToMainThreadRunnable,
                           nsPIDOMWindowInner* aInnerWindow) = 0;
 
   // This method is called in the owning thread of the Console object.
-<<<<<<< HEAD
-  virtual void ReleaseData() = 0;
-||||||| merged common ancestors
-  virtual void
-  ReleaseData() = 0;
-=======
   virtual void ReleaseData() = 0;
 
   bool ForMessaging() const override { return true; }
->>>>>>> upstream-releases
 
   // This must be released on the worker thread.
   RefPtr<Console> mConsole;
@@ -940,19 +922,10 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Console)
   NS_INTERFACE_MAP_ENTRY(nsISupportsWeakReference)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Console> Console::Create(
-    JSContext* aCx, nsPIDOMWindowInner* aWindow, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Console>
-Console::Create(JSContext* aCx, nsPIDOMWindowInner* aWindow, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Console> Console::Create(JSContext* aCx,
                                           nsPIDOMWindowInner* aWindow,
                                           ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT_IF(NS_IsMainThread(), aWindow);
 
   uint64_t outerWindowID = 0;
@@ -980,24 +953,12 @@ already_AddRefed<Console> Console::Create(JSContext* aCx,
   return console.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Console> Console::CreateForWorklet(
-    JSContext* aCx, nsIGlobalObject* aGlobal, uint64_t aOuterWindowID,
-    uint64_t aInnerWindowID, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Console>
-Console::CreateForWorklet(JSContext* aCx, nsIGlobalObject* aGlobal,
-                          uint64_t aOuterWindowID, uint64_t aInnerWindowID,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Console> Console::CreateForWorklet(JSContext* aCx,
                                                     nsIGlobalObject* aGlobal,
                                                     uint64_t aOuterWindowID,
                                                     uint64_t aInnerWindowID,
                                                     ErrorResult& aRv) {
->>>>>>> upstream-releases
   WorkletThread::AssertIsOnWorkletThread();
 
   RefPtr<Console> console =
@@ -1144,101 +1105,42 @@ METHOD(GroupCollapsed, "groupCollapsed")
 
 #undef METHOD
 
-<<<<<<< HEAD
-/* static */ void Console::Clear(const GlobalObject& aGlobal) {
-||||||| merged common ancestors
-/* static */ void
-Console::Clear(const GlobalObject& aGlobal)
-{
-=======
 /* static */
 void Console::Clear(const GlobalObject& aGlobal) {
->>>>>>> upstream-releases
   const Sequence<JS::Value> data;
   Method(aGlobal, MethodClear, NS_LITERAL_STRING("clear"), data);
 }
 
-<<<<<<< HEAD
-/* static */ void Console::GroupEnd(const GlobalObject& aGlobal) {
-||||||| merged common ancestors
-/* static */ void
-Console::GroupEnd(const GlobalObject& aGlobal)
-{
-=======
 /* static */
 void Console::GroupEnd(const GlobalObject& aGlobal) {
->>>>>>> upstream-releases
   const Sequence<JS::Value> data;
   Method(aGlobal, MethodGroupEnd, NS_LITERAL_STRING("groupEnd"), data);
 }
 
-<<<<<<< HEAD
-/* static */ void Console::Time(const GlobalObject& aGlobal,
-                                const nsAString& aLabel) {
-||||||| merged common ancestors
-/* static */ void
-Console::Time(const GlobalObject& aGlobal, const nsAString& aLabel)
-{
-=======
 /* static */
 void Console::Time(const GlobalObject& aGlobal, const nsAString& aLabel) {
->>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodTime,
                NS_LITERAL_STRING("time"));
 }
 
-<<<<<<< HEAD
-/* static */ void Console::TimeEnd(const GlobalObject& aGlobal,
-                                   const nsAString& aLabel) {
-||||||| merged common ancestors
-/* static */ void
-Console::TimeEnd(const GlobalObject& aGlobal, const nsAString& aLabel)
-{
-=======
 /* static */
 void Console::TimeEnd(const GlobalObject& aGlobal, const nsAString& aLabel) {
->>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodTimeEnd,
                NS_LITERAL_STRING("timeEnd"));
 }
 
-<<<<<<< HEAD
-/* static */ void Console::TimeLog(const GlobalObject& aGlobal,
-                                   const nsAString& aLabel,
-                                   const Sequence<JS::Value>& aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::TimeLog(const GlobalObject& aGlobal, const nsAString& aLabel,
-                 const Sequence<JS::Value>& aData)
-{
-=======
 /* static */
 void Console::TimeLog(const GlobalObject& aGlobal, const nsAString& aLabel,
                       const Sequence<JS::Value>& aData) {
->>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, aData, MethodTimeLog,
                NS_LITERAL_STRING("timeLog"));
 }
 
-<<<<<<< HEAD
-/* static */ void Console::StringMethod(const GlobalObject& aGlobal,
-                                        const nsAString& aLabel,
-                                        const Sequence<JS::Value>& aData,
-                                        MethodName aMethodName,
-                                        const nsAString& aMethodString) {
-||||||| merged common ancestors
-/* static */ void
-Console::StringMethod(const GlobalObject& aGlobal, const nsAString& aLabel,
-                      const Sequence<JS::Value>& aData, MethodName aMethodName,
-                      const nsAString& aMethodString)
-{
-=======
 /* static */
 void Console::StringMethod(const GlobalObject& aGlobal, const nsAString& aLabel,
                            const Sequence<JS::Value>& aData,
                            MethodName aMethodName,
                            const nsAString& aMethodString) {
->>>>>>> upstream-releases
   RefPtr<Console> console = GetConsole(aGlobal);
   if (!console) {
     return;
@@ -1275,19 +1177,9 @@ void Console::StringMethodInternal(JSContext* aCx, const nsAString& aLabel,
   MethodInternal(aCx, aMethodName, aMethodString, data);
 }
 
-<<<<<<< HEAD
-/* static */ void Console::TimeStamp(const GlobalObject& aGlobal,
-                                     const JS::Handle<JS::Value> aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::TimeStamp(const GlobalObject& aGlobal,
-                   const JS::Handle<JS::Value> aData)
-{
-=======
 /* static */
 void Console::TimeStamp(const GlobalObject& aGlobal,
                         const JS::Handle<JS::Value> aData) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   ConsoleCommon::ClearException ce(cx);
@@ -1302,55 +1194,23 @@ void Console::TimeStamp(const GlobalObject& aGlobal,
   Method(aGlobal, MethodTimeStamp, NS_LITERAL_STRING("timeStamp"), data);
 }
 
-<<<<<<< HEAD
-/* static */ void Console::Profile(const GlobalObject& aGlobal,
-                                   const Sequence<JS::Value>& aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::Profile(const GlobalObject& aGlobal, const Sequence<JS::Value>& aData)
-{
-=======
 /* static */
 void Console::Profile(const GlobalObject& aGlobal,
                       const Sequence<JS::Value>& aData) {
->>>>>>> upstream-releases
   ProfileMethod(aGlobal, MethodProfile, NS_LITERAL_STRING("profile"), aData);
 }
 
-<<<<<<< HEAD
-/* static */ void Console::ProfileEnd(const GlobalObject& aGlobal,
-                                      const Sequence<JS::Value>& aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::ProfileEnd(const GlobalObject& aGlobal,
-                    const Sequence<JS::Value>& aData)
-{
-=======
 /* static */
 void Console::ProfileEnd(const GlobalObject& aGlobal,
                          const Sequence<JS::Value>& aData) {
->>>>>>> upstream-releases
   ProfileMethod(aGlobal, MethodProfileEnd, NS_LITERAL_STRING("profileEnd"),
                 aData);
 }
 
-<<<<<<< HEAD
-/* static */ void Console::ProfileMethod(const GlobalObject& aGlobal,
-                                         MethodName aName,
-                                         const nsAString& aAction,
-                                         const Sequence<JS::Value>& aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::ProfileMethod(const GlobalObject& aGlobal, MethodName aName,
-                       const nsAString& aAction,
-                       const Sequence<JS::Value>& aData)
-{
-=======
 /* static */
 void Console::ProfileMethod(const GlobalObject& aGlobal, MethodName aName,
                             const nsAString& aAction,
                             const Sequence<JS::Value>& aData) {
->>>>>>> upstream-releases
   RefPtr<Console> console = GetConsole(aGlobal);
   if (!console) {
     return;
@@ -1453,50 +1313,22 @@ void Console::ProfileMethodMainthread(JSContext* aCx, const nsAString& aAction,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void Console::Assert(const GlobalObject& aGlobal, bool aCondition,
-                                  const Sequence<JS::Value>& aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::Assert(const GlobalObject& aGlobal, bool aCondition,
-                const Sequence<JS::Value>& aData)
-{
-=======
 /* static */
 void Console::Assert(const GlobalObject& aGlobal, bool aCondition,
                      const Sequence<JS::Value>& aData) {
->>>>>>> upstream-releases
   if (!aCondition) {
     Method(aGlobal, MethodAssert, NS_LITERAL_STRING("assert"), aData);
   }
 }
 
-<<<<<<< HEAD
-/* static */ void Console::Count(const GlobalObject& aGlobal,
-                                 const nsAString& aLabel) {
-||||||| merged common ancestors
-/* static */ void
-Console::Count(const GlobalObject& aGlobal, const nsAString& aLabel)
-{
-=======
 /* static */
 void Console::Count(const GlobalObject& aGlobal, const nsAString& aLabel) {
->>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodCount,
                NS_LITERAL_STRING("count"));
 }
 
-<<<<<<< HEAD
-/* static */ void Console::CountReset(const GlobalObject& aGlobal,
-                                      const nsAString& aLabel) {
-||||||| merged common ancestors
-/* static */ void
-Console::CountReset(const GlobalObject& aGlobal, const nsAString& aLabel)
-{
-=======
 /* static */
 void Console::CountReset(const GlobalObject& aGlobal, const nsAString& aLabel) {
->>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodCountReset,
                NS_LITERAL_STRING("countReset"));
 }
@@ -1542,23 +1374,10 @@ void ReifyStack(JSContext* aCx, nsIStackFrame* aStack,
 }  // anonymous namespace
 
 // Queue a call to a console method. See the CALL_DELAY constant.
-<<<<<<< HEAD
-/* static */ void Console::Method(const GlobalObject& aGlobal,
-                                  MethodName aMethodName,
-                                  const nsAString& aMethodString,
-                                  const Sequence<JS::Value>& aData) {
-||||||| merged common ancestors
-/* static */ void
-Console::Method(const GlobalObject& aGlobal, MethodName aMethodName,
-                const nsAString& aMethodString,
-                const Sequence<JS::Value>& aData)
-{
-=======
 /* static */
 void Console::Method(const GlobalObject& aGlobal, MethodName aMethodName,
                      const nsAString& aMethodString,
                      const Sequence<JS::Value>& aData) {
->>>>>>> upstream-releases
   RefPtr<Console> console = GetConsole(aGlobal);
   if (!console) {
     return;
@@ -2764,17 +2583,8 @@ bool Console::IsShuttingDown() const {
   return mStatus == eShuttingDown;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Console> Console::GetConsole(
-    const GlobalObject& aGlobal) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Console>
-Console::GetConsole(const GlobalObject& aGlobal)
-{
-=======
 /* static */
 already_AddRefed<Console> Console::GetConsole(const GlobalObject& aGlobal) {
->>>>>>> upstream-releases
   ErrorResult rv;
   RefPtr<Console> console = GetConsoleInternal(aGlobal, rv);
   if (NS_WARN_IF(rv.Failed()) || !console) {
@@ -2791,18 +2601,9 @@ already_AddRefed<Console> Console::GetConsole(const GlobalObject& aGlobal) {
   return console.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Console> Console::GetConsoleInternal(
-    const GlobalObject& aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Console>
-Console::GetConsoleInternal(const GlobalObject& aGlobal, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Console> Console::GetConsoleInternal(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   // Window
   if (NS_IsMainThread()) {
     nsCOMPtr<nsPIDOMWindowInner> innerWindow =
@@ -2938,19 +2739,9 @@ bool Console::MonotonicTimer(JSContext* aCx, MethodName aMethodName,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ConsoleInstance> Console::CreateInstance(
-    const GlobalObject& aGlobal, const ConsoleInstanceOptions& aOptions) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ConsoleInstance>
-Console::CreateInstance(const GlobalObject& aGlobal,
-                        const ConsoleInstanceOptions& aOptions)
-{
-=======
 /* static */
 already_AddRefed<ConsoleInstance> Console::CreateInstance(
     const GlobalObject& aGlobal, const ConsoleInstanceOptions& aOptions) {
->>>>>>> upstream-releases
   RefPtr<ConsoleInstance> console =
       new ConsoleInstance(aGlobal.Context(), aOptions);
   return console.forget();

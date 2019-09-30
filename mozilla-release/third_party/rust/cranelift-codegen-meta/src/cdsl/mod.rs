@@ -3,11 +3,6 @@
 //! This module defines the classes that are used to define Cranelift
 //! instructions and other entities.
 
-<<<<<<< HEAD
-pub mod isa;
-pub mod regs;
-||||||| merged common ancestors
-=======
 #[macro_use]
 pub mod ast;
 pub mod cpu_modes;
@@ -18,7 +13,6 @@ pub mod operands;
 pub mod regs;
 pub mod settings;
 pub mod type_inference;
->>>>>>> upstream-releases
 pub mod types;
 pub mod typevar;
 pub mod xform;

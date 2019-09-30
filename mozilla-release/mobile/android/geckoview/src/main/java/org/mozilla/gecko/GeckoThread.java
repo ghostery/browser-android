@@ -5,7 +5,6 @@
 
 package org.mozilla.gecko;
 
-import org.mozilla.gecko.TelemetryUtils;
 import org.mozilla.gecko.annotation.RobocopTarget;
 import org.mozilla.gecko.annotation.WrapForJNI;
 import org.mozilla.gecko.mozglue.GeckoLoader;
@@ -170,37 +169,15 @@ public class GeckoThread extends Thread {
 
     @WrapForJNI
     private static boolean isChildProcess() {
-<<<<<<< HEAD
-        final InitInfo info = INSTANCE.mInitInfo;
-        return info != null && info.extras.getInt(EXTRA_IPC_FD, -1) != -1;
-||||||| merged common ancestors
-        return INSTANCE.mExtras.getInt(EXTRA_IPC_FD, -1) != -1;
-=======
         final InitInfo info = INSTANCE.mInitInfo;
         return info != null && info.extras.getInt(EXTRA_IPC_FD, -1) != -1;
     }
 
     public static boolean init(final InitInfo info) {
         return INSTANCE.initInternal(info);
->>>>>>> upstream-releases
-    }
-
-<<<<<<< HEAD
-    public static boolean init(final InitInfo info) {
-        return INSTANCE.initInternal(info);
     }
 
     private synchronized boolean initInternal(final InitInfo info) {
-||||||| merged common ancestors
-    private synchronized boolean init(final GeckoProfile profile, final String[] args,
-                                      final Bundle extras, final int flags,
-                                      final int prefsFd, final int prefMapFd,
-                                      final int ipcFd,
-                                      final int crashFd,
-                                      final int crashAnnotationFd) {
-=======
-    private synchronized boolean initInternal(final InitInfo info) {
->>>>>>> upstream-releases
         ThreadUtils.assertOnUiThread();
         uiThreadId = Process.myTid();
 
@@ -470,17 +447,6 @@ public class GeckoThread extends Thread {
 
         initGeckoEnvironment();
 
-<<<<<<< HEAD
-        // Wait until initialization before calling Gecko entry point.
-        synchronized (this) {
-            while (!mInitialized || !isState(State.LIBS_READY)) {
-                try {
-                    wait();
-                } catch (final InterruptedException e) {
-                }
-            }
-        }
-
         if ((mInitInfo.flags & FLAG_PRELOAD_CHILD) != 0) {
             ThreadUtils.postToBackgroundThread(new Runnable() {
                 @Override
@@ -492,41 +458,6 @@ public class GeckoThread extends Thread {
         }
 
         if ((mInitInfo.flags & FLAG_DEBUGGING) != 0) {
-||||||| merged common ancestors
-        if ((mFlags & FLAG_PRELOAD_CHILD) != 0) {
-            ThreadUtils.postToBackgroundThread(new Runnable() {
-                @Override
-                public void run() {
-                    // Preload the content ("tab") child process.
-                    GeckoProcessManager.getInstance().preload("tab");
-                }
-            });
-        }
-
-        // Wait until initialization before calling Gecko entry point.
-        synchronized (this) {
-            while (!mInitialized || !isState(State.LIBS_READY)) {
-                try {
-                    wait();
-                } catch (final InterruptedException e) {
-                }
-            }
-        }
-
-        if ((mFlags & FLAG_DEBUGGING) != 0) {
-=======
-        if ((mInitInfo.flags & FLAG_PRELOAD_CHILD) != 0) {
-            ThreadUtils.postToBackgroundThread(new Runnable() {
-                @Override
-                public void run() {
-                    // Preload the content ("tab") child process.
-                    GeckoProcessManager.getInstance().preload("tab");
-                }
-            });
-        }
-
-        if ((mInitInfo.flags & FLAG_DEBUGGING) != 0) {
->>>>>>> upstream-releases
             try {
                 Thread.sleep(5 * 1000 /* 5 seconds */);
             } catch (final InterruptedException e) {
@@ -535,48 +466,12 @@ public class GeckoThread extends Thread {
 
         Log.w(LOGTAG, "zerdatime " + SystemClock.elapsedRealtime() + " - runGecko");
 
-<<<<<<< HEAD
-        final Context context = GeckoAppShell.getApplicationContext();
         final String[] args = isChildProcess() ? mInitInfo.args : getMainProcessArgs();
-||||||| merged common ancestors
-        final Context context = GeckoAppShell.getApplicationContext();
-        final String[] args = isChildProcess() ? mArgs : getMainProcessArgs();
-=======
-        final String[] args = isChildProcess() ? mInitInfo.args : getMainProcessArgs();
->>>>>>> upstream-releases
 
         if ((mInitInfo.flags & FLAG_DEBUGGING) != 0) {
             Log.i(LOGTAG, "RunGecko - args = " + TextUtils.join(" ", args));
         }
 
-<<<<<<< HEAD
-        final List<String> env = getEnvFromExtras(mInitInfo.extras);
-
-        // In Gecko, the native crash reporter is enabled by default in opt builds, and
-        // disabled by default in debug builds.
-        if ((mInitInfo.flags & FLAG_ENABLE_NATIVE_CRASHREPORTER) == 0 && !BuildConfig.DEBUG_BUILD) {
-            env.add(0, "MOZ_CRASHREPORTER_DISABLE=1");
-        } else if ((mInitInfo.flags & FLAG_ENABLE_NATIVE_CRASHREPORTER) != 0 && BuildConfig.DEBUG_BUILD) {
-            env.add(0, "MOZ_CRASHREPORTER=1");
-        }
-
-        GeckoLoader.setupGeckoEnvironment(context, context.getFilesDir().getPath(), env, mInitInfo.prefs);
-
-||||||| merged common ancestors
-        final List<String> env = getEnvFromExtras(mExtras);
-
-        // In Gecko, the native crash reporter is enabled by default in opt builds, and
-        // disabled by default in debug builds.
-        if ((mFlags & FLAG_ENABLE_NATIVE_CRASHREPORTER) == 0 && !BuildConfig.DEBUG_BUILD) {
-            env.add(0, "MOZ_CRASHREPORTER_DISABLE=1");
-        } else if ((mFlags & FLAG_ENABLE_NATIVE_CRASHREPORTER) != 0 && BuildConfig.DEBUG_BUILD) {
-            env.add(0, "MOZ_CRASHREPORTER=1");
-        }
-
-        GeckoLoader.setupGeckoEnvironment(context, context.getFilesDir().getPath(), env);
-
-=======
->>>>>>> upstream-releases
         // And go.
         GeckoLoader.nativeRun(args,
                               mInitInfo.extras.getInt(EXTRA_PREFS_FD, -1),

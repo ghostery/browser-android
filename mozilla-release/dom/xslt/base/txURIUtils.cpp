@@ -43,22 +43,10 @@ void URIUtils::resolveHref(const nsAString& href, const nsAString& base,
 }  //-- resolveHref
 
 // static
-<<<<<<< HEAD
-void URIUtils::ResetWithSource(nsIDocument* aNewDoc, nsINode* aSourceNode) {
-  nsCOMPtr<nsIDocument> sourceDoc = aSourceNode->OwnerDoc();
-  nsIPrincipal* sourcePrincipal = sourceDoc->NodePrincipal();
-||||||| merged common ancestors
-void
-URIUtils::ResetWithSource(nsIDocument *aNewDoc, nsINode *aSourceNode)
-{
-    nsCOMPtr<nsIDocument> sourceDoc = aSourceNode->OwnerDoc();
-    nsIPrincipal* sourcePrincipal = sourceDoc->NodePrincipal();
-=======
 void URIUtils::ResetWithSource(Document* aNewDoc, nsINode* aSourceNode) {
   nsCOMPtr<Document> sourceDoc = aSourceNode->OwnerDoc();
   nsIPrincipal* sourcePrincipal = sourceDoc->NodePrincipal();
   nsIPrincipal* sourceStoragePrincipal = sourceDoc->EffectiveStoragePrincipal();
->>>>>>> upstream-releases
 
   // Copy the channel and loadgroup from the source document.
   nsCOMPtr<nsILoadGroup> loadGroup = sourceDoc->GetDocumentLoadGroup();
@@ -78,19 +66,9 @@ void URIUtils::ResetWithSource(Document* aNewDoc, nsINode* aSourceNode) {
     }
   }
 
-<<<<<<< HEAD
-  aNewDoc->Reset(channel, loadGroup);
-  aNewDoc->SetPrincipal(sourcePrincipal);
-  aNewDoc->SetBaseURI(sourceDoc->GetDocBaseURI());
-||||||| merged common ancestors
-    aNewDoc->Reset(channel, loadGroup);
-    aNewDoc->SetPrincipal(sourcePrincipal);
-    aNewDoc->SetBaseURI(sourceDoc->GetDocBaseURI());
-=======
   aNewDoc->Reset(channel, loadGroup);
   aNewDoc->SetPrincipals(sourcePrincipal, sourceStoragePrincipal);
   aNewDoc->SetBaseURI(sourceDoc->GetDocBaseURI());
->>>>>>> upstream-releases
 
   // Copy charset
   aNewDoc->SetDocumentCharacterSetSource(

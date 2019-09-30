@@ -89,34 +89,6 @@ bool ConstantAffixModifier::isStrong() const {
     return fStrong;
 }
 
-<<<<<<< HEAD
-bool ConstantAffixModifier::containsField(UNumberFormatFields field) const {
-    (void)field;
-    // This method is not currently used.
-    U_ASSERT(false);
-    return false;
-}
-
-void ConstantAffixModifier::getParameters(Parameters& output) const {
-    (void)output;
-    // This method is not currently used.
-    U_ASSERT(false);
-}
-
-bool ConstantAffixModifier::semanticallyEquivalent(const Modifier& other) const {
-    auto* _other = dynamic_cast<const ConstantAffixModifier*>(&other);
-    if (_other == nullptr) {
-        return false;
-    }
-    return fPrefix == _other->fPrefix
-        && fSuffix == _other->fSuffix
-        && fField == _other->fField
-        && fStrong == _other->fStrong;
-}
-
-
-||||||| merged common ancestors
-=======
 bool ConstantAffixModifier::containsField(UNumberFormatFields field) const {
     (void)field;
     // This method is not currently used.
@@ -141,7 +113,6 @@ bool ConstantAffixModifier::semanticallyEquivalent(const Modifier& other) const 
 }
 
 
->>>>>>> upstream-releases
 SimpleModifier::SimpleModifier(const SimpleFormatter &simpleFormatter, Field field, bool strong)
         : SimpleModifier(simpleFormatter, field, strong, {}) {}
 
@@ -207,34 +178,6 @@ bool SimpleModifier::isStrong() const {
     return fStrong;
 }
 
-<<<<<<< HEAD
-bool SimpleModifier::containsField(UNumberFormatFields field) const {
-    (void)field;
-    // This method is not currently used.
-    U_ASSERT(false);
-    return false;
-}
-
-void SimpleModifier::getParameters(Parameters& output) const {
-    output = fParameters;
-}
-
-bool SimpleModifier::semanticallyEquivalent(const Modifier& other) const {
-    auto* _other = dynamic_cast<const SimpleModifier*>(&other);
-    if (_other == nullptr) {
-        return false;
-    }
-    if (fParameters.obj != nullptr) {
-        return fParameters.obj == _other->fParameters.obj;
-    }
-    return fCompiledPattern == _other->fCompiledPattern
-        && fField == _other->fField
-        && fStrong == _other->fStrong;
-}
-
-
-||||||| merged common ancestors
-=======
 bool SimpleModifier::containsField(UNumberFormatFields field) const {
     (void)field;
     // This method is not currently used.
@@ -259,19 +202,10 @@ bool SimpleModifier::semanticallyEquivalent(const Modifier& other) const {
 }
 
 
->>>>>>> upstream-releases
 int32_t
 SimpleModifier::formatAsPrefixSuffix(NumberStringBuilder &result, int32_t startIndex, int32_t endIndex,
-<<<<<<< HEAD
-                                     Field field, UErrorCode &status) const {
-    if (fSuffixOffset == -1 && fPrefixLength + fSuffixLength > 0) {
-||||||| merged common ancestors
-                                     Field field, UErrorCode &status) const {
-    if (fSuffixOffset == -1) {
-=======
                                      UErrorCode &status) const {
     if (fSuffixOffset == -1 && fPrefixLength + fSuffixLength > 0) {
->>>>>>> upstream-releases
         // There is no argument for the inner number; overwrite the entire segment with our string.
         return result.splice(startIndex, endIndex, fCompiledPattern, 2, 2 + fPrefixLength, fField, status);
     } else {

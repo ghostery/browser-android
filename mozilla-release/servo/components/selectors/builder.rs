@@ -23,12 +23,6 @@ use servo_arc::{Arc, HeaderWithLength, ThinArc};
 use smallvec::{self, SmallVec};
 use std::cmp;
 use std::iter;
-<<<<<<< HEAD
-use std::ops::{Add, AddAssign};
-||||||| merged common ancestors
-use std::ops::{AddAssign, Add};
-=======
->>>>>>> upstream-releases
 use std::ptr;
 use std::slice;
 
@@ -105,14 +99,8 @@ impl<Impl: SelectorImpl> SelectorBuilder<Impl> {
         parsed_part: bool,
     ) -> ThinArc<SpecificityAndFlags, Component<Impl>> {
         // Compute the specificity and flags.
-<<<<<<< HEAD
-        let mut spec = SpecificityAndFlags(specificity(self.simple_selectors.iter()));
-||||||| merged common ancestors
-        let mut spec = SpecificityAndFlags(specificity(&*self, self.simple_selectors.iter()));
-=======
         let specificity = specificity(self.simple_selectors.iter());
         let mut flags = SelectorFlags::empty();
->>>>>>> upstream-releases
         if parsed_pseudo {
             flags |= SelectorFlags::HAS_PSEUDO;
         }

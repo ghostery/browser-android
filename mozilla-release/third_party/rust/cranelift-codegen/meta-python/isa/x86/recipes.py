@@ -293,11 +293,6 @@ def valid_scale(iform):
 
 # A null unary instruction that takes a GPR register. Can be used for identity
 # copies and no-op conversions.
-<<<<<<< HEAD
-null = EncRecipe('null', Unary, base_size=0, ins=GPR, outs=0, emit='')
-||||||| merged common ancestors
-null = EncRecipe('null', Unary, size=0, ins=GPR, outs=0, emit='')
-=======
 null = EncRecipe('null', Unary, base_size=0, ins=GPR, outs=0, emit='')
 
 stacknull = EncRecipe('stacknull', Unary, base_size=0, ins=StackGPR32,
@@ -307,7 +302,6 @@ debugtrap = EncRecipe('debugtrap', NullAry, base_size=1, ins=(), outs=(),
                       emit='''
                       sink.put1(0xcc);
                       ''')
->>>>>>> upstream-releases
 
 # XX opcode, no ModR/M.
 trap = TailRecipe(

@@ -324,26 +324,12 @@ function checkCoords(element, type, left, top, width, height, testname) {
   }
 }
 
-<<<<<<< HEAD
-function gcs(element, prop)
-{
-  var propVal = (element instanceof SVGElement && (prop == "width" || prop == "height")) ?
-                   element.getAttribute(prop) : getComputedStyle(element, "")[prop];
-  if (propVal == "auto" || element.id == "nonappended")
-||||||| merged common ancestors
-function gcs(element, prop)
-{
-  var propVal = (element instanceof SVGElement && (prop == "width" || prop == "height")) ?
-                   element.getAttribute(prop) : getComputedStyle(element, "")[prop];
-  if (propVal == "auto")
-=======
 function gcs(element, prop) {
   var propVal =
     usesSVGLayout(element) && (prop == "width" || prop == "height")
       ? element.getAttribute(prop)
       : getComputedStyle(element, "")[prop];
   if (propVal == "auto" || element.id == "nonappended") {
->>>>>>> upstream-releases
     return 0;
   }
   return parseFloat(propVal);

@@ -13,13 +13,8 @@ import os
 import slugid
 
 from taskgraph.util.time import current_json_time
-<<<<<<< HEAD
-from taskgraph.util.hg import find_hg_revision_push_info
-||||||| merged common ancestors
-=======
 from taskgraph.util.hg import find_hg_revision_push_info
 from taskgraph.util.yaml import load_yaml
->>>>>>> upstream-releases
 
 
 def run_decision_task(job, params, root):
@@ -48,36 +43,9 @@ def make_decision_task(params, root, symbol, arguments=[]):
     """Generate a basic decision task, based on the root .taskcluster.yml"""
     taskcluster_yml = load_yaml(root, '.taskcluster.yml')
 
-<<<<<<< HEAD
     push_info = find_hg_revision_push_info(
         params['repository_url'],
         params['head_rev'])
-
-    slugids = {}
-
-    def as_slugid(name):
-        # https://github.com/taskcluster/json-e/issues/164
-        name = name[0]
-        if name not in slugids:
-            slugids[name] = slugid.nice()
-        return slugids[name]
-||||||| merged common ancestors
-    if not head_rev:
-        head_rev = params['head_rev']
-
-    slugids = {}
-
-    def as_slugid(name):
-        # https://github.com/taskcluster/json-e/issues/164
-        name = name[0]
-        if name not in slugids:
-            slugids[name] = slugid.nice()
-        return slugids[name]
-=======
-    push_info = find_hg_revision_push_info(
-        params['repository_url'],
-        params['head_rev'])
->>>>>>> upstream-releases
 
     # provide a similar JSON-e context to what mozilla-taskcluster provides:
     # https://docs.taskcluster.net/reference/integrations/mozilla-taskcluster/docs/taskcluster-yml

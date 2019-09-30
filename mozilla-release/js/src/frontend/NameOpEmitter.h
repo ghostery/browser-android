@@ -79,13 +79,7 @@ class MOZ_STACK_CLASS NameOpEmitter {
 
   bool emittedBindOp_ = false;
 
-<<<<<<< HEAD
-  RootedAtom name_;
-||||||| merged common ancestors
-    RootedAtom name_;
-=======
   Handle<JSAtom*> name_;
->>>>>>> upstream-releases
 
   uint32_t atomIndex_;
 
@@ -137,103 +131,6 @@ class MOZ_STACK_CLASS NameOpEmitter {
   State state_ = State::Start;
 #endif
 
-<<<<<<< HEAD
- public:
-  NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, Kind kind);
-  NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, const NameLocation& loc,
-                Kind kind);
-
- private:
-  MOZ_MUST_USE bool isCall() const { return kind_ == Kind::Call; }
-
-  MOZ_MUST_USE bool isSimpleAssignment() const {
-    return kind_ == Kind::SimpleAssignment;
-  }
-
-  MOZ_MUST_USE bool isCompoundAssignment() const {
-    return kind_ == Kind::CompoundAssignment;
-  }
-
-  MOZ_MUST_USE bool isIncDec() const { return isPostIncDec() || isPreIncDec(); }
-
-  MOZ_MUST_USE bool isPostIncDec() const {
-    return kind_ == Kind::PostIncrement || kind_ == Kind::PostDecrement;
-  }
-
-  MOZ_MUST_USE bool isPreIncDec() const {
-    return kind_ == Kind::PreIncrement || kind_ == Kind::PreDecrement;
-  }
-
-  MOZ_MUST_USE bool isInc() const {
-    return kind_ == Kind::PostIncrement || kind_ == Kind::PreIncrement;
-  }
-
-  MOZ_MUST_USE bool isInitialize() const { return kind_ == Kind::Initialize; }
-
- public:
-  MOZ_MUST_USE bool emittedBindOp() const { return emittedBindOp_; }
-
-  MOZ_MUST_USE const NameLocation& loc() const { return loc_; }
-
-  MOZ_MUST_USE bool emitGet();
-  MOZ_MUST_USE bool prepareForRhs();
-  MOZ_MUST_USE bool emitAssignment();
-  MOZ_MUST_USE bool emitIncDec();
-||||||| merged common ancestors
-  public:
-    NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, Kind kind);
-    NameOpEmitter(BytecodeEmitter* bce, JSAtom* name, const NameLocation& loc, Kind kind);
-
-  private:
-    MOZ_MUST_USE bool isCall() const {
-        return kind_ == Kind::Call;
-    }
-
-    MOZ_MUST_USE bool isSimpleAssignment() const {
-        return kind_ == Kind::SimpleAssignment;
-    }
-
-    MOZ_MUST_USE bool isCompoundAssignment() const {
-        return kind_ == Kind::CompoundAssignment;
-    }
-
-    MOZ_MUST_USE bool isIncDec() const {
-        return isPostIncDec() || isPreIncDec();
-    }
-
-    MOZ_MUST_USE bool isPostIncDec() const {
-        return kind_ == Kind::PostIncrement ||
-               kind_ == Kind::PostDecrement;
-    }
-
-    MOZ_MUST_USE bool isPreIncDec() const {
-        return kind_ == Kind::PreIncrement ||
-               kind_ == Kind::PreDecrement;
-    }
-
-    MOZ_MUST_USE bool isInc() const {
-        return kind_ == Kind::PostIncrement ||
-               kind_ == Kind::PreIncrement;
-    }
-
-    MOZ_MUST_USE bool isInitialize() const {
-        return kind_ == Kind::Initialize;
-    }
-
-  public:
-    MOZ_MUST_USE bool emittedBindOp() const {
-        return emittedBindOp_;
-    }
-
-    MOZ_MUST_USE const NameLocation& loc() const {
-        return loc_;
-    }
-
-    MOZ_MUST_USE bool emitGet();
-    MOZ_MUST_USE bool prepareForRhs();
-    MOZ_MUST_USE bool emitAssignment();
-    MOZ_MUST_USE bool emitIncDec();
-=======
  public:
   NameOpEmitter(BytecodeEmitter* bce, Handle<JSAtom*> name, Kind kind);
   NameOpEmitter(BytecodeEmitter* bce, Handle<JSAtom*> name,
@@ -275,7 +172,6 @@ class MOZ_STACK_CLASS NameOpEmitter {
   MOZ_MUST_USE bool prepareForRhs();
   MOZ_MUST_USE bool emitAssignment();
   MOZ_MUST_USE bool emitIncDec();
->>>>>>> upstream-releases
 };
 
 } /* namespace frontend */

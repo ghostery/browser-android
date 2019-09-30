@@ -82,18 +82,8 @@ interface AddonManager : EventTarget {
   readonly attribute boolean permissionPromptsEnabled;
 };
 
-<<<<<<< HEAD
-[ChromeOnly,Exposed=Window,HeaderFile="mozilla/AddonManagerWebAPI.h"]
-interface AddonManagerPermissions {
-  static boolean isHostPermitted(DOMString host);
-||||||| merged common ancestors
-[ChromeOnly,Exposed=System,HeaderFile="mozilla/AddonManagerWebAPI.h"]
-interface AddonManagerPermissions {
-  static boolean isHostPermitted(DOMString host);
-=======
 [ChromeOnly,Exposed=Window,HeaderFile="mozilla/AddonManagerWebAPI.h"]
 namespace AddonManagerPermissions {
   boolean isHostPermitted(DOMString host);
->>>>>>> upstream-releases
 };
 

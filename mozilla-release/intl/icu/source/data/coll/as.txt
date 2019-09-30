@@ -11,13 +11,7 @@ as{
                 "&[before 1]ত<ৎ=ত্\u200D"
                 "&হ<ক্ষ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

@@ -32,18 +32,9 @@ void SingleTiledContentClient::UpdatedBuffer(TiledBufferType aType) {
                                   mTiledBuffer->GetSurfaceDescriptorTiles());
 }
 
-<<<<<<< HEAD
-/* static */ bool SingleTiledContentClient::ClientSupportsLayerSize(
-    const gfx::IntSize& aSize, ClientLayerManager* aManager) {
-||||||| merged common ancestors
-/* static */ bool
-SingleTiledContentClient::ClientSupportsLayerSize(const gfx::IntSize& aSize, ClientLayerManager* aManager)
-{
-=======
 /* static */
 bool SingleTiledContentClient::ClientSupportsLayerSize(
     const gfx::IntSize& aSize, ClientLayerManager* aManager) {
->>>>>>> upstream-releases
   int32_t maxTextureSize = aManager->GetMaxTextureSize();
   return aSize.width <= maxTextureSize && aSize.height <= maxTextureSize;
 }

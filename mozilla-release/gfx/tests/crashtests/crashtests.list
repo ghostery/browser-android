@@ -170,15 +170,6 @@ load 1468020.html
 load 1470437.html
 load 1470440.html
 load 1478035.html
-<<<<<<< HEAD
-load 1490704-1.html
-load 1501518.html
-load 1503986-1.html
-load 1505426-1.html
-load 1508811.html
-load 1508822.html
-||||||| merged common ancestors
-=======
 load 1490704-1.html
 load 1501518.html
 load 1503986-1.html
@@ -195,4 +186,3 @@ load texture-allocator-zero-region.html
 load 1524418.html
 load 1541113.html
 load 1535657.html
->>>>>>> upstream-releases

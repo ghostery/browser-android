@@ -73,10 +73,6 @@
   --theme-highlight-pink: #b82ee5;
   --theme-highlight-gray: #dde1e4;
 
-  /* Twisty (expand) icon colors */
-  --theme-twisty-fill: hsla(0,0%,50%,.70);
-  --theme-twisty-selected-fill: white;
-
   /* For accessibility purposes we want to enhance the focus styling. This
    * should improve keyboard navigation usability. */
   --theme-focus-outline-color: #000000;
@@ -180,10 +176,6 @@
   --theme-highlight-pink: #df80ff;
   --theme-highlight-gray: #e9f4fe;
 
-  /* Twisty (expand) icon colors */
-  --theme-twisty-fill: var(--grey-45);
-  --theme-twisty-selected-fill: white;
-
   /* For accessibility purposes we want to enhance the focus styling. This
    * should improve keyboard navigation usability. */
   --theme-focus-outline-color: #ced3d9;
@@ -242,26 +234,6 @@
   /* The photon animation curve */
   --animation-curve: cubic-bezier(.07,.95,0,1);
 
-<<<<<<< HEAD
-  /* Images */
-  --select-arrow-image: url(chrome://devtools/skin/images/select-arrow.svg);
-  --theme-pane-collapse-image: url(chrome://devtools/skin/images/pane-collapse.svg);
-  --theme-pane-expand-image: url(chrome://devtools/skin/images/pane-expand.svg);
-
-||||||| merged common ancestors
-  /* Images */
-  --select-arrow-image: url(chrome://devtools/skin/images/select-arrow.svg);
-  --theme-pane-collapse-image: url(chrome://devtools/skin/images/pane-collapse.svg);
-  --theme-pane-expand-image: url(chrome://devtools/skin/images/pane-expand.svg);
-  --theme-console-alert-image: url(chrome://devtools/skin/images/webconsole/alert.svg);
-  --theme-console-navigation-image: url(chrome://devtools/skin/images/webconsole/globe.svg);
-  --theme-console-info-image: url(chrome://devtools/skin/images/webconsole/info.svg);
-  --theme-console-input-image: url(chrome://devtools/skin/images/webconsole/input.svg);
-  --theme-console-return-image: url(chrome://devtools/skin/images/webconsole/return.svg);
-  --theme-console-jump-image: url(chrome://devtools/skin/images/webconsole/jump.svg);
-
-=======
->>>>>>> upstream-releases
   /* Firefox Colors CSS Variables v1.0.3
    * Colors are taken from: https://github.com/FirefoxUX/design-tokens
    * Some intermediate colors were added (names ending in '5').
@@ -296,13 +268,8 @@
 
   --yellow-50: #ffe900;
   --yellow-60: #d7b600;
-<<<<<<< HEAD
-  --yellow-65: #be9b00;
-||||||| merged common ancestors
-=======
   --yellow-65: #be9b00;
   --yellow-70: #a47f00;
->>>>>>> upstream-releases
   --yellow-80: #715100;
 
   --grey-10: #f9f9fa;
@@ -323,16 +290,9 @@
   --grey-80: #2a2a2e;
   --grey-85: #1b1b1d;
   --grey-90: #0c0c0d;
-<<<<<<< HEAD
-  --grey-90-a80: rgba(12, 12, 13, 0.8);
-||||||| merged common ancestors
-  --grey-90-a10: rgba(12, 12, 13, 0.1);
-  --grey-90-a80: rgba(12, 12, 13, 0.8);
-=======
   --grey-90-a05: rgba(12, 12, 13, 0.05);
   --grey-90-a10: rgba(12, 12, 13, 0.1);
   --grey-90-a15: rgba(12, 12, 13, 0.15);
   --grey-90-a20: rgba(12, 12, 13, 0.2);
   --grey-90-a30: rgba(12, 12, 13, 0.3);
->>>>>>> upstream-releases
 }

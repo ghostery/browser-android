@@ -523,98 +523,21 @@ namespace mozilla {
 
 using RestyleHint = StyleRestyleHint;
 
-<<<<<<< HEAD
-inline constexpr nsRestyleHint operator|(nsRestyleHint aLeft,
-                                         nsRestyleHint aRight) {
-  return nsRestyleHint(nsRestyleHint_size_t(aLeft) |
-                       nsRestyleHint_size_t(aRight));
-||||||| merged common ancestors
-inline constexpr nsRestyleHint operator|(nsRestyleHint aLeft,
-                                             nsRestyleHint aRight)
-{
-  return nsRestyleHint(nsRestyleHint_size_t(aLeft) |
-                       nsRestyleHint_size_t(aRight));
-=======
 inline RestyleHint RestyleHint::RestyleSubtree() {
   return StyleRestyleHint_RESTYLE_SELF | StyleRestyleHint_RESTYLE_DESCENDANTS;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline constexpr nsRestyleHint operator&(nsRestyleHint aLeft,
-                                         nsRestyleHint aRight) {
-  return nsRestyleHint(nsRestyleHint_size_t(aLeft) &
-                       nsRestyleHint_size_t(aRight));
-||||||| merged common ancestors
-inline constexpr nsRestyleHint operator&(nsRestyleHint aLeft,
-                                             nsRestyleHint aRight)
-{
-  return nsRestyleHint(nsRestyleHint_size_t(aLeft) &
-                       nsRestyleHint_size_t(aRight));
-=======
 inline RestyleHint RestyleHint::RecascadeSubtree() {
   return StyleRestyleHint_RECASCADE_SELF |
          StyleRestyleHint_RECASCADE_DESCENDANTS;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline nsRestyleHint& operator|=(nsRestyleHint& aLeft, nsRestyleHint aRight) {
-  return aLeft = aLeft | aRight;
-||||||| merged common ancestors
-inline nsRestyleHint& operator|=(nsRestyleHint& aLeft, nsRestyleHint aRight)
-{
-  return aLeft = aLeft | aRight;
-=======
 inline RestyleHint RestyleHint::ForAnimations() {
   return StyleRestyleHint_RESTYLE_CSS_TRANSITIONS |
          StyleRestyleHint_RESTYLE_CSS_ANIMATIONS |
          StyleRestyleHint_RESTYLE_SMIL;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline nsRestyleHint& operator&=(nsRestyleHint& aLeft, nsRestyleHint aRight) {
-  return aLeft = aLeft & aRight;
-}
-
-inline constexpr nsRestyleHint operator~(nsRestyleHint aArg) {
-  return nsRestyleHint(~nsRestyleHint_size_t(aArg));
-}
-
-inline constexpr nsRestyleHint operator^(nsRestyleHint aLeft,
-                                         nsRestyleHint aRight) {
-  return nsRestyleHint(nsRestyleHint_size_t(aLeft) ^
-                       nsRestyleHint_size_t(aRight));
-}
-
-inline nsRestyleHint operator^=(nsRestyleHint& aLeft, nsRestyleHint aRight) {
-  return aLeft = aLeft ^ aRight;
-}
-||||||| merged common ancestors
-inline nsRestyleHint& operator&=(nsRestyleHint& aLeft, nsRestyleHint aRight)
-{
-  return aLeft = aLeft & aRight;
-}
-
-inline constexpr nsRestyleHint operator~(nsRestyleHint aArg)
-{
-  return nsRestyleHint(~nsRestyleHint_size_t(aArg));
-}
-
-inline constexpr nsRestyleHint operator^(nsRestyleHint aLeft,
-                                             nsRestyleHint aRight)
-{
-  return nsRestyleHint(nsRestyleHint_size_t(aLeft) ^
-                       nsRestyleHint_size_t(aRight));
-}
-
-inline nsRestyleHint operator^=(nsRestyleHint& aLeft, nsRestyleHint aRight)
-{
-  return aLeft = aLeft ^ aRight;
-}
-=======
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* nsChangeHint_h___ */

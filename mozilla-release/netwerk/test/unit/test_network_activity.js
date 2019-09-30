@@ -30,23 +30,10 @@ async function checkValueAndTrigger(request, data) {
 }
 
 function doTest() {
-<<<<<<< HEAD
-    ok(results.length > 0);
-    ok(results[0].host == "127.0.0.1");
-    ok(results[0].rx > 0 || results[0].tx > 0);
-    httpserver.stop(do_test_finished);
-||||||| merged common ancestors
-    prefs.clearUserPref("network.activity.intervalMilliseconds");
-    ok(results.length > 0);
-    ok(results[0].host == "127.0.0.1");
-    ok(results[0].rx > 0 || results[0].tx > 0);
-    httpserver.stop(do_test_finished);
-=======
   ok(results.length > 0);
   ok(results[0].host == "127.0.0.1");
   ok(results[0].rx > 0 || results[0].tx > 0);
   httpserver.stop(do_test_finished);
->>>>>>> upstream-releases
 }
 
 function run_test() {
@@ -58,19 +45,8 @@ function run_test() {
     }
   };
 
-<<<<<<< HEAD
-  Services.obs.addObserver(networkActivity, 'network-activity');
-
-||||||| merged common ancestors
-  Services.obs.addObserver(networkActivity, 'network-activity');
-
-  // send events every 100ms
-  prefs.setIntPref("network.activity.intervalMilliseconds", 100);
-
-=======
   Services.obs.addObserver(networkActivity, "network-activity");
 
->>>>>>> upstream-releases
   // why do I have to do this ??
   Services.obs.notifyObservers(null, "profile-initial-state");
 

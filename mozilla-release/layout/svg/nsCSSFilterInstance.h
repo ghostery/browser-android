@@ -20,15 +20,8 @@
  * filter function (e.g. blur(3px)) from the style system into a
  * FilterPrimitiveDescription connected to the filter graph.
  */
-<<<<<<< HEAD
-class nsCSSFilterInstance {
-||||||| merged common ancestors
-class nsCSSFilterInstance
-{
-=======
 class nsCSSFilterInstance {
   using StyleFilter = mozilla::StyleFilter;
->>>>>>> upstream-releases
   typedef mozilla::gfx::Color Color;
   typedef mozilla::gfx::FilterPrimitiveDescription FilterPrimitiveDescription;
   typedef mozilla::gfx::IntPoint IntPoint;
@@ -46,22 +39,10 @@ class nsCSSFilterInstance {
    * @param aFrameSpaceInCSSPxToFilterSpaceTransform The transformation from
    *   the filtered element's frame space in CSS pixels to filter space.
    */
-<<<<<<< HEAD
-  nsCSSFilterInstance(
-      const nsStyleFilter& aFilter, nscolor aShadowFallbackColor,
-      const nsIntRect& aTargetBoundsInFilterSpace,
-      const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform);
-||||||| merged common ancestors
-  nsCSSFilterInstance(const nsStyleFilter& aFilter,
-                      nscolor aShadowFallbackColor,
-                      const nsIntRect& aTargetBoundsInFilterSpace,
-                      const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform);
-=======
   nsCSSFilterInstance(
       const StyleFilter& aFilter, nscolor aShadowFallbackColor,
       const nsIntRect& aTargetBoundsInFilterSpace,
       const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform);
->>>>>>> upstream-releases
 
   /**
    * Creates at least one new FilterPrimitiveDescription based on the filter

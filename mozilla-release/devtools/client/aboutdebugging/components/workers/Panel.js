@@ -72,54 +72,6 @@ class WorkersPanel extends Component {
 
   componentDidMount() {
     const client = this.props.client;
-<<<<<<< HEAD
-    // When calling RootFront.listAllWorkers, ContentProcessTargetActor are created
-    // for each content process, which sends `workerListChanged` events.
-    client.mainRoot.onFront("contentProcessTarget", front => {
-      front.on("workerListChanged", this.updateWorkers);
-      this.state.contentProcessFronts.push(front);
-    });
-    client.mainRoot.on("workerListChanged", this.updateWorkers);
-
-    client.mainRoot.on("serviceWorkerRegistrationListChanged", this.updateWorkers);
-    client.mainRoot.on("processListChanged", this.updateWorkers);
-    client.addListener("registration-changed", this.updateWorkers);
-
-    // Some notes about these observers:
-    // - nsIPrefBranch.addObserver observes prefixes. In reality, watching
-    //   PROCESS_COUNT_PREF watches two separate prefs:
-    //   dom.ipc.processCount *and* dom.ipc.processCount.web. Because these
-    //   are the two ways that we control the number of content processes,
-    //   that works perfectly fine.
-    // - The user might opt in or out of multi by setting the multi opt out
-    //   pref. That affects whether we need to show our warning, so we need to
-    //   update our state when that pref changes.
-    // - In all cases, we don't have to manually check which pref changed to
-    //   what. The platform code in nsIXULRuntime.maxWebProcessCount does all
-    //   of that for us.
-    Services.prefs.addObserver(PROCESS_COUNT_PREF, this.updateMultiE10S);
-    Services.prefs.addObserver(MULTI_OPTOUT_PREF, this.updateMultiE10S);
-||||||| merged common ancestors
-    client.addListener("workerListChanged", this.updateWorkers);
-    client.addListener("serviceWorkerRegistrationListChanged", this.updateWorkers);
-    client.addListener("processListChanged", this.updateWorkers);
-    client.addListener("registration-changed", this.updateWorkers);
-
-    // Some notes about these observers:
-    // - nsIPrefBranch.addObserver observes prefixes. In reality, watching
-    //   PROCESS_COUNT_PREF watches two separate prefs:
-    //   dom.ipc.processCount *and* dom.ipc.processCount.web. Because these
-    //   are the two ways that we control the number of content processes,
-    //   that works perfectly fine.
-    // - The user might opt in or out of multi by setting the multi opt out
-    //   pref. That affects whether we need to show our warning, so we need to
-    //   update our state when that pref changes.
-    // - In all cases, we don't have to manually check which pref changed to
-    //   what. The platform code in nsIXULRuntime.maxWebProcessCount does all
-    //   of that for us.
-    Services.prefs.addObserver(PROCESS_COUNT_PREF, this.updateMultiE10S);
-    Services.prefs.addObserver(MULTI_OPTOUT_PREF, this.updateMultiE10S);
-=======
     // When calling RootFront.listAllWorkers, ContentProcessTargetActor are created
     // for each content process, which sends `workerListChanged` events.
     client.mainRoot.onFront("contentProcessTarget", front => {
@@ -140,7 +92,6 @@ class WorkersPanel extends Component {
     client.mainRoot.on("processListChanged", this.updateWorkers);
 
     addMultiE10sListener(this.updateMultiE10S);
->>>>>>> upstream-releases
 
     this.updateMultiE10S();
     this.updateWorkers();
@@ -148,20 +99,6 @@ class WorkersPanel extends Component {
 
   componentWillUnmount() {
     const client = this.props.client;
-<<<<<<< HEAD
-    client.mainRoot.off("processListChanged", this.updateWorkers);
-    client.mainRoot.off("serviceWorkerRegistrationListChanged", this.updateWorkers);
-    client.mainRoot.off("workerListChanged", this.updateWorkers);
-    for (const front of this.state.contentProcessFronts) {
-      front.off("workerListChanged", this.updateWorkers);
-    }
-    client.removeListener("registration-changed", this.updateWorkers);
-||||||| merged common ancestors
-    client.removeListener("processListChanged", this.updateWorkers);
-    client.removeListener("serviceWorkerRegistrationListChanged", this.updateWorkers);
-    client.removeListener("workerListChanged", this.updateWorkers);
-    client.removeListener("registration-changed", this.updateWorkers);
-=======
     client.mainRoot.off("processListChanged", this.updateWorkers);
     client.mainRoot.off(
       "serviceWorkerRegistrationListChanged",
@@ -175,7 +112,6 @@ class WorkersPanel extends Component {
       front.off("push-subscription-modified", this.updateWorkers);
       front.off("registration-changed", this.updateWorkers);
     }
->>>>>>> upstream-releases
 
     removeMultiE10sListener(this.updateMultiE10S);
   }
@@ -187,22 +123,12 @@ class WorkersPanel extends Component {
         shared: [],
         other: [],
       },
-<<<<<<< HEAD
-      processCount: 1,
-
-      // List of ContentProcessTargetFront registered from componentWillMount
-      // from which we listen for worker list changes
-      contentProcessFronts: [],
-||||||| merged common ancestors
-      processCount: 1,
-=======
       isMultiE10S: isMultiE10s(),
 
       // List of ContentProcessTargetFront registered from componentWillMount
       // from which we listen for worker list changes
       contentProcessFronts: [],
       serviceWorkerRegistrationFronts: [],
->>>>>>> upstream-releases
     };
   }
 

@@ -29,34 +29,6 @@ class BlockReflowInput {
   // Block reflow input flags.
   struct Flags {
     Flags()
-<<<<<<< HEAD
-        : mHasUnconstrainedBSize(false),
-          mIsBStartMarginRoot(false),
-          mIsBEndMarginRoot(false),
-          mShouldApplyBStartMargin(false),
-          mIsFirstInflow(false),
-          mHasLineAdjacentToTop(false),
-          mBlockNeedsFloatManager(false),
-          mIsLineLayoutEmpty(false),
-          mIsOverflowContainer(false),
-          mIsFloatListInBlockPropertyTable(false),
-          mFloatFragmentsInsideColumnEnabled(false),
-          mCanHaveTextOverflow(false) {}
-||||||| merged common ancestors
-      : mHasUnconstrainedBSize(false)
-      , mIsBStartMarginRoot(false)
-      , mIsBEndMarginRoot(false)
-      , mShouldApplyBStartMargin(false)
-      , mIsFirstInflow(false)
-      , mHasLineAdjacentToTop(false)
-      , mBlockNeedsFloatManager(false)
-      , mIsLineLayoutEmpty(false)
-      , mIsOverflowContainer(false)
-      , mIsFloatListInBlockPropertyTable(false)
-      , mFloatFragmentsInsideColumnEnabled(false)
-      , mCanHaveTextOverflow(false)
-    {}
-=======
         : mHasUnconstrainedBSize(false),
           mIsBStartMarginRoot(false),
           mIsBEndMarginRoot(false),
@@ -69,7 +41,6 @@ class BlockReflowInput {
           mIsFloatListInBlockPropertyTable(false),
           mFloatFragmentsInsideColumnEnabled(false),
           mCanHaveOverflowMarkers(false) {}
->>>>>>> upstream-releases
 
     // Set in the BlockReflowInput constructor when the frame being reflowed has
     // been given NS_UNCONSTRAINEDSIZE as its available BSize in the
@@ -137,27 +108,11 @@ class BlockReflowInput {
     bool mCanHaveOverflowMarkers : 1;
   };
 
-<<<<<<< HEAD
- public:
-  BlockReflowInput(const ReflowInput& aReflowInput, nsPresContext* aPresContext,
-                   nsBlockFrame* aFrame, bool aBStartMarginRoot,
-                   bool aBEndMarginRoot, bool aBlockNeedsFloatManager,
-                   nscoord aConsumedBSize = NS_INTRINSICSIZE);
-||||||| merged common ancestors
-public:
-  BlockReflowInput(const ReflowInput& aReflowInput,
-                     nsPresContext* aPresContext,
-                     nsBlockFrame* aFrame,
-                     bool aBStartMarginRoot, bool aBEndMarginRoot,
-                     bool aBlockNeedsFloatManager,
-                     nscoord aConsumedBSize = NS_INTRINSICSIZE);
-=======
  public:
   BlockReflowInput(const ReflowInput& aReflowInput, nsPresContext* aPresContext,
                    nsBlockFrame* aFrame, bool aBStartMarginRoot,
                    bool aBEndMarginRoot, bool aBlockNeedsFloatManager,
                    nscoord aConsumedBSize = NS_UNCONSTRAINEDSIZE);
->>>>>>> upstream-releases
 
   /**
    * Get the available reflow space (the area not occupied by floats)

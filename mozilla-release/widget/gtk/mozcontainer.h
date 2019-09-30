@@ -68,37 +68,11 @@ struct wl_surface;
 struct wl_subsurface;
 #endif
 
-<<<<<<< HEAD
-struct _MozContainer {
-  GtkContainer container;
-  GList *children;
-||||||| merged common ancestors
-struct _MozContainer
-{
-    GtkContainer   container;
-    GList         *children;
-=======
 struct _MozContainer {
   GtkContainer container;
   GList* children;
->>>>>>> upstream-releases
 
 #ifdef MOZ_WAYLAND
-<<<<<<< HEAD
-  struct wl_surface *surface;
-  struct wl_subsurface *subsurface;
-  struct wl_egl_window *eglwindow;
-  struct wl_callback *frame_callback_handler;
-  gboolean surface_needs_clear;
-  gboolean ready_to_draw;
-||||||| merged common ancestors
-    struct wl_subcompositor *subcompositor;
-    struct wl_surface       *surface;
-    struct wl_subsurface    *subsurface;
-    struct wl_egl_window    *eglwindow;
-    gboolean                 parent_surface_committed;
-    gulong                   parent_surface_committed_handler;
-=======
   struct wl_surface* surface;
   struct wl_subsurface* subsurface;
   struct wl_egl_window* eglwindow;
@@ -107,7 +81,6 @@ struct _MozContainer {
   gboolean surface_needs_clear;
   gboolean ready_to_draw;
   std::function<void(void)> inital_draw_cb;
->>>>>>> upstream-releases
 #endif
   gboolean force_default_visual;
 };
@@ -116,44 +89,13 @@ struct _MozContainerClass {
   GtkContainerClass parent_class;
 };
 
-<<<<<<< HEAD
-GType moz_container_get_type(void);
-GtkWidget *moz_container_new(void);
-void moz_container_put(MozContainer *container, GtkWidget *child_widget, gint x,
-                       gint y);
-||||||| merged common ancestors
-GType      moz_container_get_type (void);
-GtkWidget *moz_container_new      (void);
-void       moz_container_put      (MozContainer *container,
-                                   GtkWidget    *child_widget,
-                                   gint          x,
-                                   gint          y);
-void       moz_container_move          (MozContainer *container,
-                                        GtkWidget    *child_widget,
-                                        gint          x,
-                                        gint          y,
-                                        gint          width,
-                                        gint          height);
-=======
 GType moz_container_get_type(void);
 GtkWidget* moz_container_new(void);
 void moz_container_put(MozContainer* container, GtkWidget* child_widget, gint x,
                        gint y);
 void moz_container_force_default_visual(MozContainer* container);
->>>>>>> upstream-releases
 
 #ifdef MOZ_WAYLAND
-<<<<<<< HEAD
-struct wl_surface *moz_container_get_wl_surface(MozContainer *container);
-struct wl_egl_window *moz_container_get_wl_egl_window(MozContainer *container);
-
-gboolean moz_container_has_wl_egl_window(MozContainer *container);
-gboolean moz_container_surface_needs_clear(MozContainer *container);
-||||||| merged common ancestors
-struct wl_surface* moz_container_get_wl_surface(MozContainer *container);
-struct wl_egl_window* moz_container_get_wl_egl_window(MozContainer *container);
-gboolean moz_container_has_wl_egl_window(MozContainer *container);
-=======
 struct wl_surface* moz_container_get_wl_surface(MozContainer* container);
 struct wl_egl_window* moz_container_get_wl_egl_window(MozContainer* container);
 
@@ -163,7 +105,6 @@ void moz_container_scale_changed(MozContainer* container,
                                  GtkAllocation* aAllocation);
 void moz_container_set_initial_draw_callback(
     MozContainer* container, std::function<void(void)> inital_draw_cb);
->>>>>>> upstream-releases
 #endif
 
 #endif /* __MOZ_CONTAINER_H__ */

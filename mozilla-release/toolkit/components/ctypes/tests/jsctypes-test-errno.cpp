@@ -6,16 +6,8 @@
 #include <stdio.h>
 #include <errno.h>
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include <windows.h>
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#include <windows.h>
-#endif // defined(XP_WIN)
-=======
 #  include <windows.h>
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
 #include "jsctypes-test-errno.h"
 

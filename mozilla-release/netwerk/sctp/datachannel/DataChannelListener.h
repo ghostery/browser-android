@@ -20,28 +20,12 @@ class DataChannelListener {
   virtual ~DataChannelListener() = default;
 
   // Called when a DOMString message is received.
-<<<<<<< HEAD
-  virtual nsresult OnMessageAvailable(nsISupports *aContext,
-                                      const nsACString &message) = 0;
-||||||| merged common ancestors
-  virtual nsresult OnMessageAvailable(nsISupports *aContext,
-                                      const nsACString& message) = 0;
-=======
   virtual nsresult OnMessageAvailable(nsISupports* aContext,
                                       const nsACString& message) = 0;
->>>>>>> upstream-releases
 
   // Called when a binary message is received.
-<<<<<<< HEAD
-  virtual nsresult OnBinaryMessageAvailable(nsISupports *aContext,
-                                            const nsACString &message) = 0;
-||||||| merged common ancestors
-  virtual nsresult OnBinaryMessageAvailable(nsISupports *aContext,
-                                            const nsACString& message) = 0;
-=======
   virtual nsresult OnBinaryMessageAvailable(nsISupports* aContext,
                                             const nsACString& message) = 0;
->>>>>>> upstream-releases
 
   // Called when the channel is connected
   virtual nsresult OnChannelConnected(nsISupports* aContext) = 0;

@@ -78,43 +78,11 @@ inline ReferrerPolicy ReferrerPolicyFromString(const nsAString& content) {
 
   nsString lowerContent(content);
   ToLowerCase(lowerContent);
-<<<<<<< HEAD
-  // This is implemented step by step as described in the Referrer Policy
-  // specification, section "Determine token's Policy".
-
-  uint16_t numStr =
-      (sizeof(kReferrerPolicyString) / sizeof(kReferrerPolicyString[0]));
-  for (uint16_t i = 0; i < numStr; i++) {
-    if (lowerContent.EqualsASCII(kReferrerPolicyString[i])) {
-      return static_cast<ReferrerPolicy>(i);
-    }
-||||||| merged common ancestors
-  // This is implemented step by step as described in the Referrer Policy
-  // specification, section "Determine token's Policy".
-  if (lowerContent.EqualsLiteral(kRPS_Never) ||
-      lowerContent.EqualsLiteral(kRPS_No_Referrer)) {
-    return RP_No_Referrer;
-=======
-
-  if (lowerContent.EqualsLiteral(kRPS_Never)) {
-    return RP_No_Referrer;
->>>>>>> upstream-releases
-  }
-<<<<<<< HEAD
 
   if (lowerContent.EqualsLiteral(kRPS_Never)) {
     return RP_No_Referrer;
   }
   if (lowerContent.EqualsLiteral(kRPS_Default)) {
-||||||| merged common ancestors
-  if (lowerContent.EqualsLiteral(kRPS_Origin)) {
-    return RP_Origin;
-  }
-  if (lowerContent.EqualsLiteral(kRPS_Default) ||
-      lowerContent.EqualsLiteral(kRPS_No_Referrer_When_Downgrade)) {
-=======
-  if (lowerContent.EqualsLiteral(kRPS_Default)) {
->>>>>>> upstream-releases
     return RP_No_Referrer_When_Downgrade;
   }
   if (lowerContent.EqualsLiteral(kRPS_Origin_When_Crossorigin)) {

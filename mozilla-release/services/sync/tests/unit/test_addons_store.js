@@ -44,10 +44,6 @@ Services.prefs.setCharPref("extensions.minCompatibleAppVersion", "0");
 Services.prefs.setCharPref("extensions.minCompatiblePlatformVersion", "0");
 Services.prefs.setBoolPref("extensions.legacy.enabled", true);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-loadSystemAddon();
-=======
 const SYSTEM_ADDON_ID = "system1@tests.mozilla.org";
 add_task(async function setupSystemAddon() {
   const distroDir = FileUtils.getDir("ProfD", ["sysfeatures", "app0"], true);
@@ -64,37 +60,10 @@ add_task(async function setupSystemAddon() {
   await AddonTestUtils.overrideBuiltIns({ system: [SYSTEM_ADDON_ID] });
   await AddonTestUtils.promiseStartupManager();
 });
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-const SYSTEM_ADDON_ID = "system1@tests.mozilla.org";
-add_task(async function setupSystemAddon() {
-  const distroDir = FileUtils.getDir("ProfD", ["sysfeatures", "app0"], true);
-  AddonTestUtils.registerDirectory("XREAppFeat", distroDir);
-
-  let xpi = await AddonTestUtils.createTempWebExtensionFile({
-    manifest: {
-      applications: {gecko: {id: SYSTEM_ADDON_ID}},
-    },
-  });
-
-  xpi.copyTo(distroDir, `${SYSTEM_ADDON_ID}.xpi`);
-
-  await AddonTestUtils.overrideBuiltIns({system: [SYSTEM_ADDON_ID]});
-  await AddonTestUtils.promiseStartupManager();
-});
 
 const ID1 = "addon1@tests.mozilla.org";
 const ID2 = "addon2@tests.mozilla.org";
 const ID3 = "addon3@tests.mozilla.org";
-||||||| merged common ancestors
-AddonTestUtils.awaitPromise(AddonTestUtils.overrideBuiltIns({ "system": [SYSTEM_ADDON_ID] }));
-AddonTestUtils.awaitPromise(AddonTestUtils.promiseStartupManager());
-=======
-const ID1 = "addon1@tests.mozilla.org";
-const ID2 = "addon2@tests.mozilla.org";
-const ID3 = "addon3@tests.mozilla.org";
->>>>>>> upstream-releases
 
 const ADDONS = {
   test_addon1: {
@@ -107,32 +76,10 @@ const ADDONS = {
       },
     },
   },
-<<<<<<< HEAD
-
-  test_addon2: {
-    manifest: {
-      applications: {gecko: {id: ID2}},
-||||||| merged common ancestors
-  test_install3: {
-    "install.rdf": {
-      id: "addon3@tests.mozilla.org",
-      version: "1.0",
-      name: "Real Test 4",
-      description: "Test Description",
-      bootstrap: true,
-
-      updateURL: "http://example.com/data/test_install.rdf",
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "0",
-          maxVersion: "0"}],
-=======
 
   test_addon2: {
     manifest: {
       applications: { gecko: { id: ID2 } },
->>>>>>> upstream-releases
     },
   },
 
@@ -254,28 +201,6 @@ function createAndStartHTTPServer(port) {
   try {
     let server = new HttpServer();
 
-<<<<<<< HEAD
-    server.registerPathHandler("/search/guid:addon1%40tests.mozilla.org", (req, resp) => {
-      resp.setHeader("Content-type", "application/json", true);
-      resp.write(JSON.stringify(SEARCH_RESULT));
-    });
-    server.registerPathHandler("/search/guid:missing-xpi%40tests.mozilla.org", (req, resp) => {
-      resp.setHeader("Content-type", "application/json", true);
-      resp.write(JSON.stringify(MISSING_SEARCH_RESULT));
-    });
-    server.registerFile("/addon1.xpi", XPIS.test_addon1);
-||||||| merged common ancestors
-    server.registerFile("/search/guid:bootstrap1%40tests.mozilla.org",
-                        do_get_file("bootstrap1-search.json"));
-    server.registerFile("/bootstrap1.xpi", XPIS.test_bootstrap1_1);
-
-    server.registerFile("/search/guid:missing-xpi%40tests.mozilla.org",
-                        do_get_file("missing-xpi-search.json"));
-
-    server.registerFile("/search/guid:system1%40tests.mozilla.org",
-                        do_get_file("systemaddon-search.json"));
-    server.registerFile("/system.xpi", systemAddonFile);
-=======
     server.registerPathHandler(
       "/search/guid:addon1%40tests.mozilla.org",
       (req, resp) => {
@@ -291,7 +216,6 @@ function createAndStartHTTPServer(port) {
       }
     );
     server.registerFile("/addon1.xpi", XPIS.test_addon1);
->>>>>>> upstream-releases
 
     server.start(port);
 
@@ -422,18 +346,10 @@ add_task(async function test_apply_enabled_appDisabled() {
   await uninstallAddon(addon, reconciler);
 });
 
-<<<<<<< HEAD
- add_task(async function test_ignore_different_appid() {
-   _("Ensure that incoming records with a different application ID are ignored.");
-||||||| merged common ancestors
-add_task(async function test_ignore_different_appid() {
-  _("Ensure that incoming records with a different application ID are ignored.");
-=======
 add_task(async function test_ignore_different_appid() {
   _(
     "Ensure that incoming records with a different application ID are ignored."
   );
->>>>>>> upstream-releases
 
   // We test by creating a record that should result in an update.
   let addon = await installAddon(XPIS.test_addon1, reconciler);
@@ -492,16 +408,8 @@ add_task(async function test_addon_syncability() {
 
   Assert.ok(!(await store.isAddonSyncable(null)));
 
-<<<<<<< HEAD
-  let addon = await installAddon(XPIS.test_addon1, reconciler);
-  Assert.ok((await store.isAddonSyncable(addon)));
-||||||| merged common ancestors
-  let addon = await installAddon(XPIS.test_bootstrap1_1, reconciler);
-  Assert.ok((await store.isAddonSyncable(addon)));
-=======
   let addon = await installAddon(XPIS.test_addon1, reconciler);
   Assert.ok(await store.isAddonSyncable(addon));
->>>>>>> upstream-releases
 
   let dummy = {};
   const KEYS = [
@@ -795,16 +703,8 @@ add_task(async function test_incoming_reconciled_but_not_cached() {
 
   Services.prefs.setBoolPref("extensions.getAddons.cache.enabled", false);
 
-<<<<<<< HEAD
-  addon = await installAddon(XPIS.test_addon1, reconciler);
-  Assert.notEqual((await AddonManager.getAddonByID(ID1)), null);
-||||||| merged common ancestors
-  addon = await installAddon(XPIS.test_bootstrap1_1, reconciler);
-  Assert.notEqual((await AddonManager.getAddonByID(addonid)), null);
-=======
   addon = await installAddon(XPIS.test_addon1, reconciler);
   Assert.notEqual(await AddonManager.getAddonByID(ID1), null);
->>>>>>> upstream-releases
   await uninstallAddon(addon, reconciler);
 
   Services.prefs.setBoolPref("extensions.getAddons.cache.enabled", true);
@@ -817,13 +717,7 @@ add_task(async function test_incoming_reconciled_but_not_cached() {
   let failed = await store.applyIncomingBatch([record]);
   Assert.equal(0, failed.length);
 
-<<<<<<< HEAD
-  Assert.notEqual((await AddonManager.getAddonByID(ID1)), null);
-||||||| merged common ancestors
-  Assert.notEqual((await AddonManager.getAddonByID(addonid)), null);
-=======
   Assert.notEqual(await AddonManager.getAddonByID(ID1), null);
->>>>>>> upstream-releases
 
   await promiseStopServer(server);
 });

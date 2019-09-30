@@ -520,29 +520,9 @@ checkbox:-moz-focusring {
 .devtools-searchinput:dir(rtl),
 .devtools-filterinput:-moz-locale-dir(rtl),
 .devtools-filterinput:dir(rtl) {
-<<<<<<< HEAD
-  background-position: calc(100% - 8px) center;
-}
-
-||||||| merged common ancestors
-  background-position: calc(100% - 8px) center;
-}
-
-/* This is needed to remove the default search icon on windows. See bug 1400615. */
-.devtools-filterinput > .textbox-input-box > .textbox-search-sign {
-  display: none;
-}
-
-.devtools-searchinput > .textbox-input-box > .textbox-search-icons > .textbox-search-icon,
-.devtools-filterinput > .textbox-input-box > .textbox-search-icons > .textbox-search-icon {
-  visibility: hidden;
-}
-
-=======
   background-position-x: right 7px;
 }
 
->>>>>>> upstream-releases
 .devtools-searchinput .textbox-input::placeholder,
 .devtools-filterinput .textbox-input::placeholder {
   font-style: normal;
@@ -605,31 +585,6 @@ checkbox:-moz-focusring {
   fill-opacity: 1;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-.theme-dark .devtools-searchinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear,
-.theme-dark .devtools-filterinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear {
-  list-style-image: url("chrome://devtools/skin/images/search-clear-dark.svg");
-  -moz-image-region: rect(0, 16px, 16px, 0);
-}
-
-.theme-light .devtools-searchinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear,
-.theme-light .devtools-filterinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear {
-  list-style-image: url("chrome://devtools/skin/images/search-clear-light.svg");
-  -moz-image-region: rect(0, 16px, 16px, 0);
-}
-
-.devtools-searchinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear,
-.devtools-filterinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear {
-  margin-bottom: 0;
-}
-
-.devtools-searchinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear:hover,
-.devtools-filterinput > .textbox-input-box > .textbox-search-icons > .textbox-search-clear:hover {
-  -moz-image-region: rect(0, 32px, 16px, 16px);
-}
-
-=======
 /* MDN link within the searchbox */
 .devtools-searchbox .learn-more-link::before {
   opacity: 0.6;
@@ -659,7 +614,6 @@ checkbox:-moz-focusring {
   z-index: 1001;
 }
 
->>>>>>> upstream-releases
 /* Twisty and checkbox controls */
 
 .theme-twisty {
@@ -669,20 +623,10 @@ checkbox:-moz-focusring {
   background-image: url("chrome://devtools/skin/images/arrow.svg");
   background-position: center;
   background-repeat: no-repeat;
-<<<<<<< HEAD
-  background-size: 10px;
-  -moz-context-properties: fill;
-  fill: var(--theme-twisty-fill);
-  transform: rotate(-90deg);
-||||||| merged common ancestors
-  background-image: url("chrome://devtools/skin/images/controls.png");
-  background-size: 56px 28px;
-=======
   background-size: 10px;
   -moz-context-properties: fill;
   fill: var(--theme-icon-dimmed-color);
   transform: rotate(-90deg);
->>>>>>> upstream-releases
 }
 
 /* Mirror the twisty for rtl direction */
@@ -691,17 +635,8 @@ checkbox:-moz-focusring {
   transform: rotate(90deg);
 }
 
-<<<<<<< HEAD
-.theme-selected ~ .theme-twisty {
-  fill: var(--theme-twisty-selected-fill);
-||||||| merged common ancestors
-.theme-selected ~ .theme-twisty,
-.theme-dark .theme-twisty {
-  background-position: -28px -14px;
-=======
 .theme-selected ~ .theme-twisty {
   fill: var(--theme-selection-color);
->>>>>>> upstream-releases
 }
 
 .theme-twisty:-moz-focusring {

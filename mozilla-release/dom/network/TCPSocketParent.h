@@ -34,15 +34,9 @@ class TCPSocketParentBase : public nsISupports {
   void AddIPDLReference();
   void ReleaseIPDLReference();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   bool IPCOpen() const { return mIPCOpen; }
 
  protected:
->>>>>>> upstream-releases
   TCPSocketParentBase();
   virtual ~TCPSocketParentBase();
 
@@ -57,50 +51,6 @@ class TCPSocketParent : public mozilla::net::PTCPSocketParent,
 
   TCPSocketParent() {}
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvOpen(
-      const nsString& aHost, const uint16_t& aPort, const bool& useSSL,
-      const bool& aUseArrayBuffers) override;
-
-  virtual mozilla::ipc::IPCResult RecvOpenBind(
-      const nsCString& aRemoteHost, const uint16_t& aRemotePort,
-      const nsCString& aLocalAddr, const uint16_t& aLocalPort,
-      const bool& aUseSSL, const bool& aReuseAddrPort,
-      const bool& aUseArrayBuffers, const nsCString& aFilter) override;
-
-  virtual mozilla::ipc::IPCResult RecvStartTLS() override;
-  virtual mozilla::ipc::IPCResult RecvSuspend() override;
-  virtual mozilla::ipc::IPCResult RecvResume() override;
-  virtual mozilla::ipc::IPCResult RecvClose() override;
-  virtual mozilla::ipc::IPCResult RecvData(
-      const SendableData& aData, const uint32_t& aTrackingNumber) override;
-  virtual mozilla::ipc::IPCResult RecvRequestDelete() override;
-
-  void FireErrorEvent(const nsAString& aName, const nsAString& aType,
-                      TCPReadyState aReadyState);
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvOpen(const nsString& aHost, const uint16_t& aPort,
-                                           const bool& useSSL, const bool& aUseArrayBuffers) override;
-
-  virtual mozilla::ipc::IPCResult RecvOpenBind(const nsCString& aRemoteHost,
-                                               const uint16_t& aRemotePort,
-                                               const nsCString& aLocalAddr,
-                                               const uint16_t& aLocalPort,
-                                               const bool&     aUseSSL,
-                                               const bool&     aReuseAddrPort,
-                                               const bool& aUseArrayBuffers,
-                                               const nsCString& aFilter) override;
-
-  virtual mozilla::ipc::IPCResult RecvStartTLS() override;
-  virtual mozilla::ipc::IPCResult RecvSuspend() override;
-  virtual mozilla::ipc::IPCResult RecvResume() override;
-  virtual mozilla::ipc::IPCResult RecvClose() override;
-  virtual mozilla::ipc::IPCResult RecvData(const SendableData& aData,
-                                           const uint32_t& aTrackingNumber) override;
-  virtual mozilla::ipc::IPCResult RecvRequestDelete() override;
-
-  void FireErrorEvent(const nsAString& aName, const nsAString& aType, TCPReadyState aReadyState);
-=======
   mozilla::ipc::IPCResult RecvOpen(const nsString& aHost, const uint16_t& aPort,
                                    const bool& useSSL,
                                    const bool& aUseArrayBuffers);
@@ -121,7 +71,6 @@ class TCPSocketParent : public mozilla::net::PTCPSocketParent,
 
   void FireErrorEvent(const nsAString& aName, const nsAString& aType,
                       TCPReadyState aReadyState);
->>>>>>> upstream-releases
   void FireEvent(const nsAString& aType, TCPReadyState aReadyState);
   void FireArrayBufferDataEvent(nsTArray<uint8_t>& aBuffer,
                                 TCPReadyState aReadyState);

@@ -12,38 +12,15 @@ class nsILoadContextInfo;
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-class CacheIndexContextIterator : public CacheIndexIterator {
- public:
-  CacheIndexContextIterator(CacheIndex *aIndex, bool aAddNew,
-                            nsILoadContextInfo *aInfo);
-||||||| merged common ancestors
-class CacheIndexContextIterator : public CacheIndexIterator
-{
-public:
-  CacheIndexContextIterator(CacheIndex *aIndex, bool aAddNew,
-                            nsILoadContextInfo *aInfo);
-=======
 class CacheIndexContextIterator : public CacheIndexIterator {
  public:
   CacheIndexContextIterator(CacheIndex* aIndex, bool aAddNew,
                             nsILoadContextInfo* aInfo);
->>>>>>> upstream-releases
   virtual ~CacheIndexContextIterator() = default;
 
-<<<<<<< HEAD
- private:
-  virtual void AddRecord(CacheIndexRecord *aRecord) override;
-  virtual void AddRecords(const nsTArray<CacheIndexRecord *> &aRecords);
-||||||| merged common ancestors
-private:
-  virtual void AddRecord(CacheIndexRecord *aRecord) override;
-  virtual void AddRecords(const nsTArray<CacheIndexRecord *> &aRecords);
-=======
  private:
   virtual void AddRecord(CacheIndexRecord* aRecord) override;
   virtual void AddRecords(const nsTArray<CacheIndexRecord*>& aRecords);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsILoadContextInfo> mInfo;
 };

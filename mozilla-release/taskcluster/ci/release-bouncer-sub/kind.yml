@@ -34,28 +34,12 @@ job-defaults:
         tier: 1
 
 jobs:
-<<<<<<< HEAD
-   devedition:
-      bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64']
-      bouncer-products: ['complete-mar', 'installer', 'installer-ssl', 'partial-mar', 'stub-installer', 'msi']
-      shipping-product: devedition
-      treeherder:
-         platform: devedition-release/opt
-||||||| merged common ancestors
-   devedition:
-      bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64']
-      bouncer-products: ['complete-mar', 'installer', 'installer-ssl', 'partial-mar', 'stub-installer']
-      shipping-product: devedition
-      treeherder:
-         platform: devedition-release/opt
-=======
     devedition:
         bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64', 'win64-aarch64']
         bouncer-products: ['complete-mar', 'installer', 'installer-ssl', 'partial-mar', 'stub-installer', 'msi']
         shipping-product: devedition
         treeherder:
             platform: devedition-release/opt
->>>>>>> upstream-releases
 
     fennec:
         bouncer-platforms: ['android', 'android-x86']
@@ -65,31 +49,6 @@ jobs:
         treeherder:
             platform: fennec-release/opt
 
-<<<<<<< HEAD
-   firefox:
-      bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64']
-      bouncer-products:
-         by-project:
-            default: ['complete-mar', 'installer', 'installer-ssl', 'partial-mar', 'stub-installer', 'msi']
-            # No stub installer in esr60
-            mozilla-esr60: ['complete-mar', 'complete-mar-bz2', 'installer', 'installer-ssl', 'partial-mar']
-            jamun: ['complete-mar', 'complete-mar-bz2', 'installer', 'installer-ssl', 'partial-mar']
-      shipping-product: firefox
-      treeherder:
-         platform: firefox-release/opt
-||||||| merged common ancestors
-   firefox:
-      bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64']
-      bouncer-products:
-         by-project:
-            default: ['complete-mar', 'installer', 'installer-ssl', 'partial-mar', 'stub-installer']
-            # No stub installer in esr60
-            mozilla-esr60: ['complete-mar', 'complete-mar-bz2', 'installer', 'installer-ssl', 'partial-mar']
-            jamun: ['complete-mar', 'complete-mar-bz2', 'installer', 'installer-ssl', 'partial-mar']
-      shipping-product: firefox
-      treeherder:
-         platform: firefox-release/opt
-=======
     firefox:
         bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64', 'win64-aarch64']
         bouncer-products:
@@ -101,7 +60,6 @@ jobs:
         shipping-product: firefox
         treeherder:
             platform: firefox-release/opt
->>>>>>> upstream-releases
 
     firefox-rc:
         bouncer-platforms: ['linux', 'linux64', 'osx', 'win', 'win64', 'win64-aarch64']

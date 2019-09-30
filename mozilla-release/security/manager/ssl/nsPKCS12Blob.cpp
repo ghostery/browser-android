@@ -109,22 +109,10 @@ static bool isExtractable(UniqueSECKEYPrivateKey& privKey) {
 
 // Having already loaded the certs, form them into a blob (loading the keys
 // also), encode the blob, and stuff it into the file.
-<<<<<<< HEAD
-nsresult nsPKCS12Blob::ExportToFile(nsIFile* aFile, nsIX509Cert** aCerts,
-                                    int aNumCerts, const nsAString& aPassword,
-                                    uint32_t& aError) {
-||||||| merged common ancestors
-nsresult
-nsPKCS12Blob::ExportToFile(nsIFile* aFile, nsIX509Cert** aCerts, int aNumCerts,
-                           const nsAString& aPassword, uint32_t& aError)
-{
-
-=======
 nsresult nsPKCS12Blob::ExportToFile(nsIFile* aFile,
                                     const nsTArray<RefPtr<nsIX509Cert>>& aCerts,
                                     const nsAString& aPassword,
                                     uint32_t& aError) {
->>>>>>> upstream-releases
   // get file password (unicode)
   uint32_t passwordBufferLength;
   UniquePtr<uint8_t[]> passwordBuffer;

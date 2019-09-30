@@ -61,14 +61,6 @@ BasePrincipal::GetSiteOrigin(nsACString& aSiteOrigin) {
   return GetOrigin(aSiteOrigin);
 }
 
-<<<<<<< HEAD
-bool BasePrincipal::Subsumes(nsIPrincipal* aOther,
-                             DocumentDomainConsideration aConsideration) {
-||||||| merged common ancestors
-bool
-BasePrincipal::Subsumes(nsIPrincipal* aOther, DocumentDomainConsideration aConsideration)
-{
-=======
 // Returns the inner Json::value of the serialized principal
 // Example input and return values:
 // Null principal:
@@ -283,7 +275,6 @@ nsresult BasePrincipal::ToJSON(nsACString& aResult) {
 
 bool BasePrincipal::Subsumes(nsIPrincipal* aOther,
                              DocumentDomainConsideration aConsideration) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOther);
   MOZ_ASSERT_IF(Kind() == eCodebasePrincipal, mOriginSuffix);
 
@@ -388,184 +379,7 @@ BasePrincipal::CheckMayLoad(nsIURI* aURI, bool aReport,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BasePrincipal::GetCsp(nsIContentSecurityPolicy** aCsp) {
-  NS_IF_ADDREF(*aCsp = mCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::SetCsp(nsIContentSecurityPolicy* aCsp) {
-  // Never destroy an existing CSP on the principal.
-  // This method should only be called in rare cases.
-
-  MOZ_ASSERT(!mCSP, "do not destroy an existing CSP");
-  if (mCSP) {
-    return NS_ERROR_ALREADY_INITIALIZED;
-  }
-
-  mCSP = aCsp;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::EnsureCSP(nsIDocument* aDocument,
-                         nsIContentSecurityPolicy** aCSP) {
-  if (mCSP) {
-    // if there is a CSP already associated with this principal
-    // then just return that - do not overwrite it!!!
-    NS_IF_ADDREF(*aCSP = mCSP);
-    return NS_OK;
-  }
-
-  nsresult rv = NS_OK;
-  mCSP = do_CreateInstance("@mozilla.org/cspcontext;1", &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Store the request context for violation reports
-  rv = aDocument ? mCSP->SetRequestContext(aDocument, nullptr)
-                 : mCSP->SetRequestContext(nullptr, this);
-  NS_ENSURE_SUCCESS(rv, rv);
-  NS_IF_ADDREF(*aCSP = mCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP) {
-  NS_IF_ADDREF(*aPreloadCSP = mPreloadCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::EnsurePreloadCSP(nsIDocument* aDocument,
-                                nsIContentSecurityPolicy** aPreloadCSP) {
-  if (mPreloadCSP) {
-    // if there is a speculative CSP already associated with this principal
-    // then just return that - do not overwrite it!!!
-    NS_IF_ADDREF(*aPreloadCSP = mPreloadCSP);
-    return NS_OK;
-  }
-
-  nsresult rv = NS_OK;
-  mPreloadCSP = do_CreateInstance("@mozilla.org/cspcontext;1", &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Store the request context for violation reports
-  rv = aDocument ? mPreloadCSP->SetRequestContext(aDocument, nullptr)
-                 : mPreloadCSP->SetRequestContext(nullptr, this);
-  NS_ENSURE_SUCCESS(rv, rv);
-  NS_IF_ADDREF(*aPreloadCSP = mPreloadCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::GetCspJSON(nsAString& outCSPinJSON) {
-  outCSPinJSON.Truncate();
-  dom::CSPPolicies jsonPolicies;
-
-  if (!mCSP) {
-    jsonPolicies.ToJSON(outCSPinJSON);
-    return NS_OK;
-  }
-  return mCSP->ToJSON(outCSPinJSON);
-}
-
-NS_IMETHODIMP
 BasePrincipal::GetIsNullPrincipal(bool* aResult) {
-||||||| merged common ancestors
-BasePrincipal::GetCsp(nsIContentSecurityPolicy** aCsp)
-{
-  NS_IF_ADDREF(*aCsp = mCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::SetCsp(nsIContentSecurityPolicy* aCsp)
-{
-  // Never destroy an existing CSP on the principal.
-  // This method should only be called in rare cases.
-
-  MOZ_ASSERT(!mCSP, "do not destroy an existing CSP");
-  if (mCSP) {
-    return NS_ERROR_ALREADY_INITIALIZED;
-  }
-
-  mCSP = aCsp;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::EnsureCSP(nsIDocument* aDocument,
-                         nsIContentSecurityPolicy** aCSP)
-{
-  if (mCSP) {
-    // if there is a CSP already associated with this principal
-    // then just return that - do not overwrite it!!!
-    NS_IF_ADDREF(*aCSP = mCSP);
-    return NS_OK;
-  }
-
-  nsresult rv = NS_OK;
-  mCSP = do_CreateInstance("@mozilla.org/cspcontext;1", &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Store the request context for violation reports
-  rv = aDocument ? mCSP->SetRequestContext(aDocument, nullptr)
-                 : mCSP->SetRequestContext(nullptr, this);
-  NS_ENSURE_SUCCESS(rv, rv);
-  NS_IF_ADDREF(*aCSP = mCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP)
-{
-  NS_IF_ADDREF(*aPreloadCSP = mPreloadCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::EnsurePreloadCSP(nsIDocument* aDocument,
-                                nsIContentSecurityPolicy** aPreloadCSP)
-{
-  if (mPreloadCSP) {
-    // if there is a speculative CSP already associated with this principal
-    // then just return that - do not overwrite it!!!
-    NS_IF_ADDREF(*aPreloadCSP = mPreloadCSP);
-    return NS_OK;
-  }
-
-  nsresult rv = NS_OK;
-  mPreloadCSP = do_CreateInstance("@mozilla.org/cspcontext;1", &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Store the request context for violation reports
-  rv = aDocument ? mPreloadCSP->SetRequestContext(aDocument, nullptr)
-                 : mPreloadCSP->SetRequestContext(nullptr, this);
-  NS_ENSURE_SUCCESS(rv, rv);
-  NS_IF_ADDREF(*aPreloadCSP = mPreloadCSP);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::GetCspJSON(nsAString& outCSPinJSON)
-{
-  outCSPinJSON.Truncate();
-  dom::CSPPolicies jsonPolicies;
-
-  if (!mCSP) {
-    jsonPolicies.ToJSON(outCSPinJSON);
-    return NS_OK;
-  }
-  return mCSP->ToJSON(outCSPinJSON);
-}
-
-NS_IMETHODIMP
-BasePrincipal::GetIsNullPrincipal(bool* aResult)
-{
-=======
-BasePrincipal::GetIsNullPrincipal(bool* aResult) {
->>>>>>> upstream-releases
   *aResult = Kind() == eNullPrincipal;
   return NS_OK;
 }
@@ -583,17 +397,8 @@ BasePrincipal::GetIsExpandedPrincipal(bool* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BasePrincipal::GetIsSystemPrincipal(bool* aResult) {
-  *aResult = Kind() == eSystemPrincipal;
-||||||| merged common ancestors
-BasePrincipal::GetIsSystemPrincipal(bool* aResult)
-{
-  *aResult = Kind() == eSystemPrincipal;
-=======
 BasePrincipal::GetIsSystemPrincipal(bool* aResult) {
   *aResult = IsSystemPrincipal();
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -620,39 +425,7 @@ BasePrincipal::GetOriginSuffix(nsACString& aOriginAttributes) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BasePrincipal::GetAppId(uint32_t* aAppId) {
-  if (AppId() == nsIScriptSecurityManager::UNKNOWN_APP_ID) {
-    MOZ_ASSERT(false);
-    *aAppId = nsIScriptSecurityManager::NO_APP_ID;
-    return NS_OK;
-  }
-
-  *aAppId = AppId();
-  return NS_OK;
-}
-
-NS_IMETHODIMP
 BasePrincipal::GetUserContextId(uint32_t* aUserContextId) {
-||||||| merged common ancestors
-BasePrincipal::GetAppId(uint32_t* aAppId)
-{
-  if (AppId() == nsIScriptSecurityManager::UNKNOWN_APP_ID) {
-    MOZ_ASSERT(false);
-    *aAppId = nsIScriptSecurityManager::NO_APP_ID;
-    return NS_OK;
-  }
-
-  *aAppId = AppId();
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-BasePrincipal::GetUserContextId(uint32_t* aUserContextId)
-{
-=======
-BasePrincipal::GetUserContextId(uint32_t* aUserContextId) {
->>>>>>> upstream-releases
   *aUserContextId = UserContextId();
   return NS_OK;
 }
@@ -784,26 +557,11 @@ already_AddRefed<BasePrincipal> BasePrincipal::CreateCodebasePrincipal(
   return BasePrincipal::CreateCodebasePrincipal(uri, attrs);
 }
 
-<<<<<<< HEAD
-already_AddRefed<BasePrincipal>
-BasePrincipal::CloneStrippingUserContextIdAndFirstPartyDomain() {
-  OriginAttributes attrs = OriginAttributesRef();
-  attrs.StripAttributes(OriginAttributes::STRIP_USER_CONTEXT_ID |
-                        OriginAttributes::STRIP_FIRST_PARTY_DOMAIN);
-||||||| merged common ancestors
-already_AddRefed<BasePrincipal>
-BasePrincipal::CloneStrippingUserContextIdAndFirstPartyDomain()
-{
-  OriginAttributes attrs = OriginAttributesRef();
-  attrs.StripAttributes(OriginAttributes::STRIP_USER_CONTEXT_ID |
-                        OriginAttributes::STRIP_FIRST_PARTY_DOMAIN);
-=======
 already_AddRefed<BasePrincipal> BasePrincipal::CloneForcingOriginAttributes(
     const OriginAttributes& aOriginAttributes) {
   if (NS_WARN_IF(!IsCodebasePrincipal())) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   nsAutoCString originNoSuffix;
   nsresult rv = GetOriginNoSuffix(originNoSuffix);
@@ -857,13 +615,6 @@ void BasePrincipal::FinishInit(const nsACString& aOriginNoSuffix,
   mOriginNoSuffix = NS_Atomize(aOriginNoSuffix);
 }
 
-<<<<<<< HEAD
-bool SiteIdentifier::Equals(const SiteIdentifier& aOther) const {
-||||||| merged common ancestors
-bool
-SiteIdentifier::Equals(const SiteIdentifier& aOther) const
-{
-=======
 void BasePrincipal::FinishInit(BasePrincipal* aOther,
                                const OriginAttributes& aOriginAttributes) {
   mInitialized = true;
@@ -879,7 +630,6 @@ void BasePrincipal::FinishInit(BasePrincipal* aOther,
 }
 
 bool SiteIdentifier::Equals(const SiteIdentifier& aOther) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsInitialized());
   MOZ_ASSERT(aOther.IsInitialized());
   return mPrincipal->FastEquals(aOther.mPrincipal);

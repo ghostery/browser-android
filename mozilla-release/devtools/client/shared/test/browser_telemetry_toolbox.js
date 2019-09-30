@@ -23,13 +23,6 @@ add_task(async function() {
 function checkResults() {
   // For help generating these tests use generateTelemetryTests("DEVTOOLS_TOOLBOX_")
   // here.
-<<<<<<< HEAD
-  checkTelemetry("DEVTOOLS_TOOLBOX_OPENED_COUNT", "", {0: 3, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_TOOLBOX_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-||||||| merged common ancestors
-  checkTelemetry("DEVTOOLS_TOOLBOX_OPENED_COUNT", "", [3, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_TOOLBOX_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-=======
   checkTelemetry("DEVTOOLS_TOOLBOX_OPENED_COUNT", "", { 0: 3, 1: 0 }, "array");
   checkTelemetry(
     "DEVTOOLS_TOOLBOX_TIME_ACTIVE_SECONDS",
@@ -37,6 +30,5 @@ function checkResults() {
     null,
     "hasentries"
   );
->>>>>>> upstream-releases
   checkTelemetry("DEVTOOLS_TOOLBOX_HOST", "", null, "hasentries");
 }

@@ -42,25 +42,6 @@ add_task(async function() {
 });
 
 async function testCopySome(view) {
-<<<<<<< HEAD
-  const expectedPattern = "font-family: helvetica, sans-serif;[\\r\\n]+" +
-                        "font-size: 16px;[\\r\\n]+" +
-                        "font-variant-caps: small-caps;[\\r\\n]*";
-
-  await copySomeTextAndCheckClipboard(view, {
-    start: {prop: 1, offset: 0},
-    end: {prop: 3, offset: 2},
-  }, expectedPattern);
-||||||| merged common ancestors
-  const expectedPattern = "font-family: helvetica, sans-serif;[\\r\\n]+" +
-                        "font-size: 16px;[\\r\\n]+" +
-                        "font-variant-caps: small-caps;[\\r\\n]*";
-
-  await copySomeTextAndCheckClipboard(view, {
-    start: {prop: 1, offset: 0},
-    end: {prop: 3, offset: 2}
-  }, expectedPattern);
-=======
   const expectedPattern =
     "font-family: helvetica, sans-serif;[\\r\\n]+" +
     "font-size: 16px;[\\r\\n]+" +
@@ -74,7 +55,6 @@ async function testCopySome(view) {
     },
     expectedPattern
   );
->>>>>>> upstream-releases
 }
 
 async function testCopyAll(view) {

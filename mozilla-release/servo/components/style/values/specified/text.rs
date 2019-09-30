@@ -4,24 +4,6 @@
 
 //! Specified types for text properties.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::properties::longhands::writing_mode::computed_value::T as SpecifiedWritingMode;
-use crate::values::computed::text::LineHeight as ComputedLineHeight;
-use crate::values::computed::text::TextEmphasisKeywordValue as ComputedTextEmphasisKeywordValue;
-use crate::values::computed::text::TextEmphasisStyle as ComputedTextEmphasisStyle;
-use crate::values::computed::text::TextOverflow as ComputedTextOverflow;
-use crate::values::computed::{Context, ToComputedValue};
-use crate::values::generics::text::InitialLetter as GenericInitialLetter;
-use crate::values::generics::text::LineHeight as GenericLineHeight;
-use crate::values::generics::text::MozTabSize as GenericMozTabSize;
-use crate::values::generics::text::Spacing;
-use crate::values::specified::length::{FontRelativeLength, Length};
-use crate::values::specified::length::{LengthOrPercentage, NoCalcLength};
-use crate::values::specified::length::{NonNegativeLength, NonNegativeLengthOrPercentage};
-use crate::values::specified::{AllowQuirks, Integer, NonNegativeNumber, Number};
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::properties::longhands::writing_mode::computed_value::T as SpecifiedWritingMode;
 use crate::values::computed::text::LineHeight as ComputedLineHeight;
@@ -36,22 +18,11 @@ use crate::values::specified::length::NonNegativeLengthPercentage;
 use crate::values::specified::length::{FontRelativeLength, Length};
 use crate::values::specified::length::{LengthPercentage, NoCalcLength};
 use crate::values::specified::{AllowQuirks, Integer, NonNegativeNumber, Number};
->>>>>>> upstream-releases
 use cssparser::{Parser, Token};
 use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use style_traits::values::SequenceWriter;
-use style_traits::{CssWriter, KeywordsCollectFn, ParseError};
-use style_traits::{SpecifiedValueInfo, StyleParseErrorKind, ToCss};
-||||||| merged common ancestors
-use style_traits::{CssWriter, KeywordsCollectFn, ParseError};
-use style_traits::{SpecifiedValueInfo, StyleParseErrorKind, ToCss};
-use style_traits::values::SequenceWriter;
-=======
 use style_traits::values::SequenceWriter;
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
->>>>>>> upstream-releases
 use unicode_segmentation::UnicodeSegmentation;
 
 /// A specified type for the `initial-letter` property.
@@ -382,112 +353,6 @@ impl TextDecorationLine {
     }
 }
 
-<<<<<<< HEAD
-/// Specified value of text-align keyword value.
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    FromPrimitive,
-    Hash,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToComputedValue,
-    ToCss,
-)]
-#[allow(missing_docs)]
-pub enum TextAlignKeyword {
-    Start,
-    End,
-    Left,
-    Right,
-    Center,
-    Justify,
-    #[cfg(feature = "gecko")]
-    MozCenter,
-    #[cfg(feature = "gecko")]
-    MozLeft,
-    #[cfg(feature = "gecko")]
-    MozRight,
-    #[cfg(feature = "servo")]
-    ServoCenter,
-    #[cfg(feature = "servo")]
-    ServoLeft,
-    #[cfg(feature = "servo")]
-    ServoRight,
-    #[css(skip)]
-    #[cfg(feature = "gecko")]
-    Char,
-||||||| merged common ancestors
-macro_rules! define_text_align_keyword {
-    ($(
-        $(#[$($meta:tt)+])*
-        $name: ident => $discriminant: expr,
-    )+) => {
-        /// Specified value of text-align keyword value.
-        #[derive(Clone, Copy, Debug, Eq, Hash, MallocSizeOf, Parse, PartialEq,
-                 SpecifiedValueInfo, ToComputedValue, ToCss)]
-        #[allow(missing_docs)]
-        pub enum TextAlignKeyword {
-            $(
-                $(#[$($meta)+])*
-                $name = $discriminant,
-            )+
-        }
-
-        impl TextAlignKeyword {
-            /// Construct a TextAlignKeyword from u32.
-            pub fn from_u32(discriminant: u32) -> Option<TextAlignKeyword> {
-                match discriminant {
-                    $(
-                        $discriminant => Some(TextAlignKeyword::$name),
-                    )+
-                    _ => None
-                }
-            }
-        }
-    }
-}
-
-// FIXME(emilio): Why reinventing the world?
-#[cfg(feature = "gecko")]
-define_text_align_keyword! {
-    Start => 0,
-    End => 1,
-    Left => 2,
-    Right => 3,
-    Center => 4,
-    Justify => 5,
-    MozCenter => 6,
-    MozLeft => 7,
-    MozRight => 8,
-    #[css(skip)]
-    Char => 10,
-}
-
-#[cfg(feature = "servo")]
-define_text_align_keyword! {
-    Start => 0,
-    End => 1,
-    Left => 2,
-    Right => 3,
-    Center => 4,
-    Justify => 5,
-    ServoCenter => 6,
-    ServoLeft => 7,
-    ServoRight => 8,
-}
-
-impl TextAlignKeyword {
-    /// Return the initial value of TextAlignKeyword.
-    #[inline]
-    pub fn start() -> TextAlignKeyword {
-        TextAlignKeyword::Start
-    }
-=======
 #[derive(
     Clone,
     Copy,
@@ -657,7 +522,6 @@ impl ToCss for TextTransformOther {
 
         Ok(())
     }
->>>>>>> upstream-releases
 }
 
 /// Specified value of text-align keyword value.
@@ -1214,25 +1078,4 @@ pub enum OverflowWrap {
 pub enum TextDecorationSkipInk {
     Auto,
     None,
-}
-
-/// Values for the `overflow-wrap` property.
-#[repr(u8)]
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToComputedValue,
-    ToCss,
-)]
-#[allow(missing_docs)]
-pub enum OverflowWrap {
-    Normal,
-    BreakWord,
-    Anywhere,
 }

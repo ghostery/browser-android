@@ -4,23 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-#include <string.h>  // for nullptr, strcmp
-
-#include "imgIContainer.h"                    // for imgIContainer, etc
-#include "mozilla/ComposerCommandsUpdater.h"  // for ComposerCommandsUpdater
-#include "mozilla/FlushType.h"                // for FlushType::Frames
-#include "mozilla/HTMLEditor.h"               // for HTMLEditor
-#include "mozilla/mozalloc.h"                 // for operator new
-||||||| merged common ancestors
-#include <string.h>                     // for nullptr, strcmp
-
-#include "imgIContainer.h"              // for imgIContainer, etc
-#include "mozilla/ComposerCommandsUpdater.h" // for ComposerCommandsUpdater
-#include "mozilla/FlushType.h"          // for FlushType::Frames
-#include "mozilla/HTMLEditor.h"         // for HTMLEditor
-#include "mozilla/mozalloc.h"           // for operator new
-=======
 #include <string.h>  // for nullptr, strcmp
 
 #include "imgIContainer.h"                    // for imgIContainer, etc
@@ -29,47 +12,13 @@
 #include "mozilla/HTMLEditor.h"               // for HTMLEditor
 #include "mozilla/mozalloc.h"                 // for operator new
 #include "mozilla/PresShell.h"                // for PresShell
->>>>>>> upstream-releases
 #include "nsAString.h"
-<<<<<<< HEAD
-#include "nsComponentManagerUtils.h"  // for do_CreateInstance
-||||||| merged common ancestors
-#include "nsComponentManagerUtils.h"    // for do_CreateInstance
-=======
 #include "nsBaseCommandController.h"  // for nsBaseCommandController
 #include "nsCommandManager.h"         // for nsCommandManager
 #include "nsComponentManagerUtils.h"  // for do_CreateInstance
->>>>>>> upstream-releases
 #include "nsContentUtils.h"
 #include "nsDebug.h"  // for NS_ENSURE_SUCCESS, etc
 #include "nsEditingSession.h"
-<<<<<<< HEAD
-#include "nsError.h"               // for NS_ERROR_FAILURE, NS_OK, etc
-#include "nsIChannel.h"            // for nsIChannel
-#include "nsICommandManager.h"     // for nsICommandManager
-#include "nsIContentViewer.h"      // for nsIContentViewer
-#include "nsIController.h"         // for nsIController
-#include "nsIControllerContext.h"  // for nsIControllerContext
-#include "nsIControllers.h"        // for nsIControllers
-#include "nsID.h"                  // for NS_GET_IID, etc
-#include "nsHTMLDocument.h"        // for nsHTMLDocument
-#include "nsIDOMWindow.h"          // for nsIDOMWindow
-#include "nsIDocShell.h"           // for nsIDocShell
-#include "nsIDocument.h"           // for nsIDocument
-||||||| merged common ancestors
-#include "nsError.h"                    // for NS_ERROR_FAILURE, NS_OK, etc
-#include "nsIChannel.h"                 // for nsIChannel
-#include "nsICommandManager.h"          // for nsICommandManager
-#include "nsIContentViewer.h"           // for nsIContentViewer
-#include "nsIController.h"              // for nsIController
-#include "nsIControllerContext.h"       // for nsIControllerContext
-#include "nsIControllers.h"             // for nsIControllers
-#include "nsID.h"                       // for NS_GET_IID, etc
-#include "nsHTMLDocument.h"             // for nsHTMLDocument
-#include "nsIDOMWindow.h"               // for nsIDOMWindow
-#include "nsIDocShell.h"                // for nsIDocShell
-#include "nsIDocument.h"                // for nsIDocument
-=======
 #include "nsError.h"               // for NS_ERROR_FAILURE, NS_OK, etc
 #include "nsIChannel.h"            // for nsIChannel
 #include "nsIContentViewer.h"      // for nsIContentViewer
@@ -79,57 +28,9 @@
 #include "nsIDOMWindow.h"          // for nsIDOMWindow
 #include "nsIDocShell.h"           // for nsIDocShell
 #include "mozilla/dom/Document.h"  // for Document
->>>>>>> upstream-releases
 #include "nsIDocumentStateListener.h"
-<<<<<<< HEAD
 #include "nsIEditor.h"                   // for nsIEditor
-#include "nsIHTMLDocument.h"             // for nsIHTMLDocument, etc
-||||||| merged common ancestors
-#include "nsIEditor.h"                  // for nsIEditor
-#include "nsIHTMLDocument.h"            // for nsIHTMLDocument, etc
-=======
-#include "nsIEditor.h"                   // for nsIEditor
->>>>>>> upstream-releases
 #include "nsIInterfaceRequestorUtils.h"  // for do_GetInterface
-<<<<<<< HEAD
-#include "nsIPlaintextEditor.h"          // for nsIPlaintextEditor, etc
-#include "nsIPresShell.h"                // for nsIPresShell
-#include "nsIRefreshURI.h"               // for nsIRefreshURI
-#include "nsIRequest.h"                  // for nsIRequest
-#include "nsITimer.h"                    // for nsITimer, etc
-#include "nsITransactionManager.h"       // for nsITransactionManager
-#include "nsIWeakReference.h"            // for nsISupportsWeakReference, etc
-#include "nsIWebNavigation.h"            // for nsIWebNavigation
-#include "nsIWebProgress.h"              // for nsIWebProgress, etc
-#include "nsLiteralString.h"             // for NS_LITERAL_STRING
-#include "nsPICommandUpdater.h"          // for nsPICommandUpdater
-#include "nsPIDOMWindow.h"               // for nsPIDOMWindow
-#include "nsPresContext.h"               // for nsPresContext
-#include "nsReadableUtils.h"             // for AppendUTF16toUTF8
-#include "nsStringFwd.h"                 // for nsString
-#include "mozilla/dom/Selection.h"       // for AutoHideSelectionChanges, etc
-#include "nsFrameSelection.h"            // for nsFrameSelection
-#include "nsBaseCommandController.h"     // for nsBaseCommandController
-||||||| merged common ancestors
-#include "nsIPlaintextEditor.h"         // for nsIPlaintextEditor, etc
-#include "nsIPresShell.h"               // for nsIPresShell
-#include "nsIRefreshURI.h"              // for nsIRefreshURI
-#include "nsIRequest.h"                 // for nsIRequest
-#include "nsITimer.h"                   // for nsITimer, etc
-#include "nsITransactionManager.h"      // for nsITransactionManager
-#include "nsIWeakReference.h"           // for nsISupportsWeakReference, etc
-#include "nsIWebNavigation.h"           // for nsIWebNavigation
-#include "nsIWebProgress.h"             // for nsIWebProgress, etc
-#include "nsLiteralString.h"            // for NS_LITERAL_STRING
-#include "nsPICommandUpdater.h"         // for nsPICommandUpdater
-#include "nsPIDOMWindow.h"              // for nsPIDOMWindow
-#include "nsPresContext.h"              // for nsPresContext
-#include "nsReadableUtils.h"            // for AppendUTF16toUTF8
-#include "nsStringFwd.h"                // for nsString
-#include "mozilla/dom/Selection.h"      // for AutoHideSelectionChanges, etc
-#include "nsFrameSelection.h"           // for nsFrameSelection
-#include "nsBaseCommandController.h"    // for nsBaseCommandController
-=======
 #include "nsIPlaintextEditor.h"          // for nsIPlaintextEditor, etc
 #include "nsIRefreshURI.h"               // for nsIRefreshURI
 #include "nsIRequest.h"                  // for nsIRequest
@@ -147,7 +48,6 @@
 #include "nsFrameSelection.h"            // for nsFrameSelection
 #include "nsBaseCommandController.h"     // for nsBaseCommandController
 #include "mozilla/dom/LoadURIOptionsBinding.h"
->>>>>>> upstream-releases
 
 class nsISupports;
 class nsIURI;
@@ -275,24 +175,7 @@ nsEditingSession::MakeWindowEditable(mozIDOMWindowProxy* aWindow,
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsEditingSession::DisableJSAndPlugins(mozIDOMWindowProxy* aWindow) {
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
-  nsIDocShell* docShell = nsPIDOMWindowOuter::From(aWindow)->GetDocShell();
-  NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsEditingSession::DisableJSAndPlugins(mozIDOMWindowProxy* aWindow)
-{
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
-  nsIDocShell *docShell = nsPIDOMWindowOuter::From(aWindow)->GetDocShell();
-  NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);
-
-=======
 nsresult nsEditingSession::DisableJSAndPlugins(nsIDocShell& aDocShell) {
->>>>>>> upstream-releases
   bool tmp;
   nsresult rv = aDocShell.GetAllowJavascript(&tmp);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -313,35 +196,18 @@ nsresult nsEditingSession::DisableJSAndPlugins(nsIDocShell& aDocShell) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsEditingSession::RestoreJSAndPlugins(mozIDOMWindowProxy* aWindow) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsEditingSession::RestoreJSAndPlugins(mozIDOMWindowProxy* aWindow)
-{
-=======
 nsresult nsEditingSession::RestoreJSAndPlugins(nsPIDOMWindowOuter* aWindow) {
->>>>>>> upstream-releases
   if (!mDisabledJSAndPlugins) {
     return NS_OK;
   }
 
   mDisabledJSAndPlugins = false;
 
-<<<<<<< HEAD
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
-  nsIDocShell* docShell = nsPIDOMWindowOuter::From(aWindow)->GetDocShell();
-||||||| merged common ancestors
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
-  nsIDocShell *docShell = nsPIDOMWindowOuter::From(aWindow)->GetDocShell();
-=======
   if (NS_WARN_IF(!aWindow)) {
     // DetachFromWindow may call this method with nullptr.
     return NS_ERROR_FAILURE;
   }
   nsIDocShell* docShell = aWindow->GetDocShell();
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);
 
   nsresult rv = docShell->SetAllowJavascript(mScriptsEnabled);
@@ -351,25 +217,6 @@ nsresult nsEditingSession::RestoreJSAndPlugins(nsPIDOMWindowOuter* aWindow) {
   return docShell->SetAllowPlugins(mPluginsEnabled);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsEditingSession::GetJsAndPluginsDisabled(bool* aResult) {
-  NS_ENSURE_ARG_POINTER(aResult);
-  *aResult = mDisabledJSAndPlugins;
-  return NS_OK;
-}
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsEditingSession::GetJsAndPluginsDisabled(bool *aResult)
-{
-  NS_ENSURE_ARG_POINTER(aResult);
-  *aResult = mDisabledJSAndPlugins;
-  return NS_OK;
-}
-
-=======
->>>>>>> upstream-releases
 /*---------------------------------------------------------------------------
 
   WindowIsEditable
@@ -419,64 +266,17 @@ bool IsSupportedTextType(const char* aMIMEType) {
   return false;
 }
 
-<<<<<<< HEAD
-/*---------------------------------------------------------------------------
-
-  SetupEditorOnWindow
-
-  nsIEditor setupEditorOnWindow (in nsIDOMWindow aWindow);
-----------------------------------------------------------------------------*/
-NS_IMETHODIMP
-nsEditingSession::SetupEditorOnWindow(mozIDOMWindowProxy* aWindow) {
-||||||| merged common ancestors
-/*---------------------------------------------------------------------------
-
-  SetupEditorOnWindow
-
-  nsIEditor setupEditorOnWindow (in nsIDOMWindow aWindow);
-----------------------------------------------------------------------------*/
-NS_IMETHODIMP
-nsEditingSession::SetupEditorOnWindow(mozIDOMWindowProxy* aWindow)
-{
-=======
 nsresult nsEditingSession::SetupEditorOnWindow(nsPIDOMWindowOuter& aWindow) {
->>>>>>> upstream-releases
   mDoneSetup = true;
 
-<<<<<<< HEAD
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
-  auto* window = nsPIDOMWindowOuter::From(aWindow);
-
-  nsresult rv;
-
   // MIME CHECKING
   // must get the content type
-||||||| merged common ancestors
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
-  auto* window = nsPIDOMWindowOuter::From(aWindow);
-
-  nsresult rv;
-
-  //MIME CHECKING
-  //must get the content type
-=======
-  // MIME CHECKING
-  // must get the content type
->>>>>>> upstream-releases
   // Note: the doc gets this from the network channel during StartPageLoad,
   //    so we don't have to get it from there ourselves
   nsAutoCString mimeCType;
 
-<<<<<<< HEAD
-  // then lets check the mime type
-  if (nsCOMPtr<nsIDocument> doc = window->GetDoc()) {
-||||||| merged common ancestors
-  //then lets check the mime type
-  if (nsCOMPtr<nsIDocument> doc = window->GetDoc()) {
-=======
   // then lets check the mime type
   if (RefPtr<Document> doc = aWindow.GetDoc()) {
->>>>>>> upstream-releases
     nsAutoString mimeType;
     doc->GetContentType(mimeType);
     AppendUTF16toUTF8(mimeType, mimeCType);
@@ -594,20 +394,9 @@ nsresult nsEditingSession::SetupEditorOnWindow(nsPIDOMWindowOuter& aWindow) {
   // setup the HTML editor command controller
   if (needHTMLController) {
     // The third controller takes an nsIEditor as the context
-<<<<<<< HEAD
-    rv = SetupEditorCommandController(
-        nsBaseCommandController::CreateHTMLEditorController, aWindow,
-        static_cast<nsIEditor*>(htmlEditor), &mHTMLCommandControllerId);
-||||||| merged common ancestors
-    rv = SetupEditorCommandController(nsBaseCommandController::CreateHTMLEditorController,
-                                      aWindow,
-                                      static_cast<nsIEditor*>(htmlEditor),
-                                      &mHTMLCommandControllerId);
-=======
     rv = SetupEditorCommandController(
         nsBaseCommandController::CreateHTMLEditorController, &aWindow,
         static_cast<nsIEditor*>(htmlEditor), &mHTMLCommandControllerId);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -826,22 +615,10 @@ nsEditingSession::OnStateChange(nsIWebProgress* aWebProgress,
         aWebProgress->GetDOMWindow(getter_AddRefs(window));
 
         auto* piWindow = nsPIDOMWindowOuter::From(window);
-<<<<<<< HEAD
-        nsCOMPtr<nsIDocument> doc = piWindow->GetDoc();
-        nsHTMLDocument* htmlDoc =
-            doc && doc->IsHTMLOrXHTML() ? doc->AsHTMLDocument() : nullptr;
-        if (htmlDoc && htmlDoc->IsWriting()) {
-||||||| merged common ancestors
-        nsCOMPtr<nsIDocument> doc = piWindow->GetDoc();
-        nsHTMLDocument* htmlDoc = doc && doc->IsHTMLOrXHTML()
-          ? doc->AsHTMLDocument() : nullptr;
-        if (htmlDoc && htmlDoc->IsWriting()) {
-=======
         RefPtr<Document> doc = piWindow->GetDoc();
         nsHTMLDocument* htmlDoc =
             doc && doc->IsHTMLOrXHTML() ? doc->AsHTMLDocument() : nullptr;
         if (htmlDoc && doc->IsWriting()) {
->>>>>>> upstream-releases
           nsAutoString designMode;
           htmlDoc->GetDesignMode(designMode);
 
@@ -960,24 +737,8 @@ nsEditingSession::OnLocationChange(nsIWebProgress* aWebProgress,
   nsIDocShell* docShell = piWindow->GetDocShell();
   NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsICommandManager> commandManager = docShell->GetCommandManager();
-  nsCOMPtr<nsPICommandUpdater> commandUpdater =
-      do_QueryInterface(commandManager);
-  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
-
-  return commandUpdater->CommandStatusChanged("obs_documentLocationChanged");
-||||||| merged common ancestors
-  nsCOMPtr<nsICommandManager> commandManager = docShell->GetCommandManager();
-  nsCOMPtr<nsPICommandUpdater> commandUpdater =
-                                  do_QueryInterface(commandManager);
-  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
-
-  return commandUpdater->CommandStatusChanged("obs_documentLocationChanged");
-=======
   RefPtr<nsCommandManager> commandManager = docShell->GetCommandManager();
   return commandManager->CommandStatusChanged("obs_documentLocationChanged");
->>>>>>> upstream-releases
 }
 
 /*---------------------------------------------------------------------------
@@ -999,32 +760,12 @@ nsEditingSession::OnStatusChange(nsIWebProgress* aWebProgress,
 
 ----------------------------------------------------------------------------*/
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsEditingSession::OnSecurityChange(nsIWebProgress* aWebProgress,
-                                   nsIRequest* aRequest, uint32_t state) {
-  MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
-  return NS_OK;
-||||||| merged common ancestors
-nsEditingSession::OnSecurityChange(nsIWebProgress *aWebProgress,
-                                   nsIRequest *aRequest,
-                                   uint32_t aOldState,
-                                   uint32_t aState,
-                                   const nsAString& aContentBlockingLogJSON)
-{
-    MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
-    return NS_OK;
-=======
 nsEditingSession::OnSecurityChange(nsIWebProgress* aWebProgress,
                                    nsIRequest* aRequest, uint32_t aState) {
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 /*---------------------------------------------------------------------------
 
   OnContentBlockingEvent
@@ -1038,7 +779,6 @@ nsEditingSession::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
   return NS_OK;
 }
 
->>>>>>> upstream-releases
 /*---------------------------------------------------------------------------
 
   IsProgressForTargetDocument
@@ -1126,17 +866,9 @@ nsresult nsEditingSession::EndDocumentLoad(nsIWebProgress* aWebProgress,
     mEditorStatus = eEditorErrorFileNotFound;
   }
 
-<<<<<<< HEAD
-  nsIDocShell* docShell = nsPIDOMWindowOuter::From(domWindow)->GetDocShell();
-  NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);  // better error handling?
-||||||| merged common ancestors
-  nsIDocShell *docShell = nsPIDOMWindowOuter::From(domWindow)->GetDocShell();
-  NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);       // better error handling?
-=======
   auto* window = nsPIDOMWindowOuter::From(domWindow);
   nsIDocShell* docShell = window->GetDocShell();
   NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);  // better error handling?
->>>>>>> upstream-releases
 
   // cancel refresh from meta tags
   // we need to make sure that all pages in editor (whether editable or not)
@@ -1343,39 +1075,8 @@ nsresult nsEditingSession::SetupEditorCommandController(
   return SetContextOnControllerById(controllers, aContext, *aControllerId);
 }
 
-<<<<<<< HEAD
-/*---------------------------------------------------------------------------
-
-  SetEditorOnControllers
-
-  Set the editor on the controller(s) for this window
-----------------------------------------------------------------------------*/
-NS_IMETHODIMP
-nsEditingSession::SetEditorOnControllers(mozIDOMWindowProxy* aWindow,
-                                         nsIEditor* aEditor) {
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_NULL_POINTER);
-
-  auto* piWindow = nsPIDOMWindowOuter::From(aWindow);
-
-||||||| merged common ancestors
-/*---------------------------------------------------------------------------
-
-  SetEditorOnControllers
-
-  Set the editor on the controller(s) for this window
-----------------------------------------------------------------------------*/
-NS_IMETHODIMP
-nsEditingSession::SetEditorOnControllers(mozIDOMWindowProxy* aWindow,
-                                         nsIEditor* aEditor)
-{
-  NS_ENSURE_TRUE(aWindow, NS_ERROR_NULL_POINTER);
-
-  auto* piWindow = nsPIDOMWindowOuter::From(aWindow);
-
-=======
 nsresult nsEditingSession::SetEditorOnControllers(nsPIDOMWindowOuter& aWindow,
                                                   HTMLEditor* aEditor) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIControllers> controllers;
   nsresult rv = aWindow.GetControllers(getter_AddRefs(controllers));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1485,15 +1186,7 @@ void nsEditingSession::RestoreAnimationMode(nsPIDOMWindowOuter* aWindow) {
   presContext->SetImageAnimationMode(mImageAnimationMode);
 }
 
-<<<<<<< HEAD
-nsresult nsEditingSession::DetachFromWindow(mozIDOMWindowProxy* aWindow) {
-||||||| merged common ancestors
-nsresult
-nsEditingSession::DetachFromWindow(mozIDOMWindowProxy* aWindow)
-{
-=======
 nsresult nsEditingSession::DetachFromWindow(nsPIDOMWindowOuter* aWindow) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mDoneSetup, NS_OK);
 
   NS_ASSERTION(mComposerCommandsUpdater,
@@ -1519,15 +1212,7 @@ nsresult nsEditingSession::DetachFromWindow(nsPIDOMWindowOuter* aWindow) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsEditingSession::ReattachToWindow(mozIDOMWindowProxy* aWindow) {
-||||||| merged common ancestors
-nsresult
-nsEditingSession::ReattachToWindow(mozIDOMWindowProxy* aWindow)
-{
-=======
 nsresult nsEditingSession::ReattachToWindow(nsPIDOMWindowOuter* aWindow) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mDoneSetup, NS_OK);
   NS_ENSURE_TRUE(aWindow, NS_ERROR_FAILURE);
 
@@ -1538,15 +1223,7 @@ nsresult nsEditingSession::ReattachToWindow(nsPIDOMWindowOuter* aWindow) {
   // old editor ot the window.
   nsresult rv;
 
-<<<<<<< HEAD
-  auto* window = nsPIDOMWindowOuter::From(aWindow);
-  nsIDocShell* docShell = window->GetDocShell();
-||||||| merged common ancestors
-  auto* window = nsPIDOMWindowOuter::From(aWindow);
-  nsIDocShell *docShell = window->GetDocShell();
-=======
   nsIDocShell* docShell = aWindow->GetDocShell();
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(docShell, NS_ERROR_FAILURE);
   mDocShell = do_GetWeakReference(docShell);
 

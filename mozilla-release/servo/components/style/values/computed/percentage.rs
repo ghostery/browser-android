@@ -4,17 +4,10 @@
 
 //! Computed percentages.
 
-<<<<<<< HEAD
-use crate::values::animated::ToAnimatedValue;
-use crate::values::generics::NonNegative;
-use crate::values::{serialize_percentage, CSSFloat};
-||||||| merged common ancestors
-=======
 use crate::values::animated::ToAnimatedValue;
 use crate::values::generics::NonNegative;
 use crate::values::{serialize_percentage, CSSFloat};
 use crate::Zero;
->>>>>>> upstream-releases
 use std::fmt;
 use style_traits::{CssWriter, ToCss};
 

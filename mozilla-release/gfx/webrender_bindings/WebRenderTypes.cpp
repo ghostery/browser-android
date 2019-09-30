@@ -28,29 +28,13 @@ void Assign_WrVecU8(wr::WrVecU8& aVec, mozilla::ipc::ByteBuf&& aOther) {
   aOther.mCapacity = 0;
 }
 
-<<<<<<< HEAD
-/*static*/ WrClipId RootScrollNode() {
-  return WrClipId{wr_root_scroll_node_id()};
-||||||| merged common ancestors
-/*static*/ WrClipId
-WrClipId::RootScrollNode() {
-  return WrClipId { wr_root_scroll_node_id() };
-=======
 WrSpaceAndClip RootScrollNode() {
   WrSpaceAndClip sac;
   sac.clip = wr_root_clip_id();
   sac.space = wr_root_scroll_node_id();
   return sac;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace wr
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace wr
-} // namespace mozilla
-=======
 WrSpaceAndClipChain RootScrollNodeWithChain() {
   WrSpaceAndClipChain sacc;
   sacc.clip_chain = wr::ROOT_CLIP_CHAIN;
@@ -65,4 +49,3 @@ RenderRoot RenderRootFromId(DocumentId id) {
 
 }  // namespace wr
 }  // namespace mozilla
->>>>>>> upstream-releases

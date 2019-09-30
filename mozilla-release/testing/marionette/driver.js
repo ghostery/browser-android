@@ -28,26 +28,6 @@ const { capture } = ChromeUtils.import(
 const {
   CertificateOverrideManager,
   InsecureSweepingOverride,
-<<<<<<< HEAD
-} = ChromeUtils.import("chrome://marionette/content/cert.js", {});
-ChromeUtils.import("chrome://marionette/content/cookie.js");
-const {
-  WebElementEventTarget,
-} = ChromeUtils.import("chrome://marionette/content/dom.js", {});
-const {
-  ChromeWebElement,
-  element,
-  WebElement,
-} = ChromeUtils.import("chrome://marionette/content/element.js", {});
-||||||| merged common ancestors
-} = ChromeUtils.import("chrome://marionette/content/cert.js", {});
-ChromeUtils.import("chrome://marionette/content/cookie.js");
-const {
-  ChromeWebElement,
-  element,
-  WebElement,
-} = ChromeUtils.import("chrome://marionette/content/element.js", {});
-=======
 } = ChromeUtils.import("chrome://marionette/content/cert.js");
 const { cookie } = ChromeUtils.import("chrome://marionette/content/cookie.js");
 const { WebElementEventTarget } = ChromeUtils.import(
@@ -56,7 +36,6 @@ const { WebElementEventTarget } = ChromeUtils.import(
 const { ChromeWebElement, element, WebElement } = ChromeUtils.import(
   "chrome://marionette/content/element.js"
 );
->>>>>>> upstream-releases
 const {
   ElementNotInteractableError,
   InsecureCertificateError,
@@ -776,20 +755,6 @@ GeckoDriver.prototype.newSession = async function(cmd) {
   let browserListening = this.listeningPromise();
 
   let waitForWindow = function() {
-<<<<<<< HEAD
-    let windowType;
-    switch (this.appId) {
-      case APP_ID_THUNDERBIRD:
-        windowType = "mail:3pane";
-        break;
-      default:
-        windowType = "navigator:browser";
-        break;
-    }
-    let win = Services.wm.getMostRecentWindow(windowType);
-||||||| merged common ancestors
-    let win = Services.wm.getMostRecentWindow("navigator:browser");
-=======
     let windowTypes;
     switch (this.appId) {
       case APP_ID_THUNDERBIRD:
@@ -808,7 +773,6 @@ GeckoDriver.prototype.newSession = async function(cmd) {
         break;
       }
     }
->>>>>>> upstream-releases
     if (!win) {
       // if the window isn't even created, just poll wait for it
       let checkTimer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
@@ -1541,50 +1505,7 @@ GeckoDriver.prototype.setWindowRect = async function(cmd) {
   const win = assert.open(this.getCurrentWindow());
   await this._handleUserPrompts();
 
-<<<<<<< HEAD
-  let {x, y, width, height} = cmd.parameters;
-||||||| merged common ancestors
-  let {x, y, width, height} = cmd.parameters;
-  let origRect = this.curBrowser.rect;
-
-  // Synchronous resize to |width| and |height| dimensions.
-  async function resizeWindow(width, height) {
-    await new Promise(resolve => {
-      win.addEventListener("resize", resolve, {once: true});
-      win.resizeTo(width, height);
-    });
-    await new IdlePromise(win);
-  }
-
-  // Wait until window size has changed.  We can't wait for the
-  // user-requested window size as this may not be achievable on the
-  // current system.
-  const windowResizeChange = async () => {
-    return new PollPromise((resolve, reject) => {
-      let curRect = this.curBrowser.rect;
-      if (curRect.width != origRect.width &&
-          curRect.height != origRect.height) {
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  };
-
-  // Wait for the window position to change.
-  async function windowPosition(x, y) {
-    return new PollPromise((resolve, reject) => {
-      if ((x == win.screenX && y == win.screenY) ||
-          (win.screenX != origRect.x || win.screenY != origRect.y)) {
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  }
-=======
   let { x, y, width, height } = cmd.parameters;
->>>>>>> upstream-releases
 
   switch (WindowState.from(win.windowState)) {
     case WindowState.Fullscreen:
@@ -2701,16 +2622,9 @@ GeckoDriver.prototype.sendKeysToElement = async function(cmd) {
   switch (this.context) {
     case Context.Chrome:
       let el = this.curBrowser.seenEls.get(webEl);
-<<<<<<< HEAD
-      await interaction.sendKeysToElement(el, text,
-          {accessibilityChecks: this.a11yChecks});
-||||||| merged common ancestors
-      await interaction.sendKeysToElement(el, text, this.a11yChecks);
-=======
       await interaction.sendKeysToElement(el, text, {
         accessibilityChecks: this.a11yChecks,
       });
->>>>>>> upstream-releases
       break;
 
     case Context.Content:
@@ -3228,13 +3142,6 @@ GeckoDriver.prototype.minimizeWindow = async function() {
   const win = assert.open(this.getCurrentWindow());
   await this._handleUserPrompts();
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  if (WindowState.from(win.windowState) == WindowState.Fullscreen) {
-    await exitFullscreen(win);
-  }
-
-=======
   switch (WindowState.from(win.windowState)) {
     case WindowState.Fullscreen:
       await exitFullscreen(win);
@@ -3245,29 +3152,7 @@ GeckoDriver.prototype.minimizeWindow = async function() {
       break;
   }
 
->>>>>>> upstream-releases
   if (WindowState.from(win.windowState) != WindowState.Minimized) {
-<<<<<<< HEAD
-    if (WindowState.from(win.windowState) == WindowState.Fullscreen) {
-      await exitFullscreen(win);
-    }
-
-    let cb;
-    let observer = new WebElementEventTarget(this.curBrowser.messageManager);
-    // Use a timed promise to abort if no window manager is present
-    await new TimedPromise(resolve => {
-      cb = new DebounceCallback(resolve);
-      observer.addEventListener("visibilitychange", cb);
-      win.minimize();
-    }, {throws: null, timeout: TIMEOUT_NO_WINDOW_MANAGER});
-    observer.removeEventListener("visibilitychange", cb);
-    await new IdlePromise(win);
-||||||| merged common ancestors
-    await new Promise(resolve => {
-      this.curBrowser.eventObserver.addEventListener("visibilitychange", resolve, {once: true});
-      win.minimize();
-    });
-=======
     let cb;
     let observer = new WebElementEventTarget(this.curBrowser.messageManager);
     // Use a timed promise to abort if no window manager is present
@@ -3281,7 +3166,6 @@ GeckoDriver.prototype.minimizeWindow = async function() {
     );
     observer.removeEventListener("visibilitychange", cb);
     await new IdlePromise(win);
->>>>>>> upstream-releases
   }
 
   return this.curBrowser.rect;
@@ -3320,67 +3204,6 @@ GeckoDriver.prototype.maximizeWindow = async function() {
       break;
   }
 
-<<<<<<< HEAD
-  if (WindowState.from(win.windowState) != WindowState.Maximized) {
-    let cb;
-    // Use a timed promise to abort if no window manager is present
-    await new TimedPromise(resolve => {
-      cb = new DebounceCallback(resolve);
-      win.addEventListener("sizemodechange", cb);
-      win.maximize();
-    }, {throws: null, timeout: TIMEOUT_NO_WINDOW_MANAGER});
-    win.removeEventListener("sizemodechange", cb);
-    await new IdlePromise(win);
-||||||| merged common ancestors
-  const origSize = {
-    outerWidth: win.outerWidth,
-    outerHeight: win.outerHeight,
-  };
-
-  // Wait for the window size to change.
-  async function windowSizeChange() {
-    return new PollPromise((resolve, reject) => {
-      let curSize = {
-        outerWidth: win.outerWidth,
-        outerHeight: win.outerHeight,
-      };
-      if (curSize.outerWidth != origSize.outerWidth ||
-          curSize.outerHeight != origSize.outerHeight) {
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  }
-
-  if (WindowState.from(win.windowState) != win.Maximized) {
-    await new TimedPromise(resolve => {
-      win.addEventListener("sizemodechange", resolve, {once: true});
-      win.maximize();
-    }, {throws: null});
-
-    // Transitioning into a window state is asynchronous on Linux,
-    // and we cannot rely on sizemodechange to accurately tell us when
-    // the transition has completed.
-    //
-    // To counter for this we wait for the window size to change, which
-    // it usually will.  On platforms where the transition is synchronous,
-    // the wait will have the cost of one iteration because the size
-    // will have changed as part of the transition.  Where the platform is
-    // asynchronous, the cost may be greater as we have to poll
-    // continuously until we see a change, but it ensures conformity in
-    // behaviour.
-    //
-    // Certain window managers, however, do not have a concept of
-    // maximised windows and here sizemodechange may never fire.  Indeed,
-    // if the window covers the maximum available screen real estate,
-    // the window size may also not change.  In this circumstance,
-    // which admittedly is a somewhat bizarre edge case, we assume that
-    // the timeout of waiting for sizemodechange to fire is sufficient
-    // to give the window enough time to transition itself into whatever
-    // form or shape the WM is programmed to give it.
-    await windowSizeChange();
-=======
   if (WindowState.from(win.windowState) != WindowState.Maximized) {
     let cb;
     // Use a timed promise to abort if no window manager is present
@@ -3394,7 +3217,6 @@ GeckoDriver.prototype.maximizeWindow = async function() {
     );
     win.removeEventListener("sizemodechange", cb);
     await new IdlePromise(win);
->>>>>>> upstream-releases
   }
 
   return this.curBrowser.rect;
@@ -3423,40 +3245,14 @@ GeckoDriver.prototype.fullscreenWindow = async function() {
   const win = assert.open(this.getCurrentWindow());
   await this._handleUserPrompts();
 
-<<<<<<< HEAD
-  if (WindowState.from(win.windowState) == WindowState.Minimized) {
-    await restoreWindow(win);
-||||||| merged common ancestors
-  if (WindowState.from(win.windowState) == WindowState.Minimized) {
-    await restoreWindow(win, this.curBrowser.eventObserver);
-=======
   switch (WindowState.from(win.windowState)) {
     case WindowState.Maximized:
     case WindowState.Minimized:
       await restoreWindow(win);
       break;
->>>>>>> upstream-releases
   }
 
   if (WindowState.from(win.windowState) != WindowState.Fullscreen) {
-<<<<<<< HEAD
-    let cb;
-    // Use a timed promise to abort if no window manager is present
-    await new TimedPromise(resolve => {
-      cb = new DebounceCallback(resolve);
-      win.addEventListener("sizemodechange", cb);
-      win.fullScreen = true;
-    }, {throws: null, timeout: TIMEOUT_NO_WINDOW_MANAGER});
-    win.removeEventListener("sizemodechange", cb);
-  }
-  await new IdlePromise(win);
-||||||| merged common ancestors
-    await new Promise(resolve => {
-      win.addEventListener("sizemodechange", resolve, {once: true});
-      win.fullScreen = true;
-    });
-  }
-=======
     let cb;
     // Use a timed promise to abort if no window manager is present
     await new TimedPromise(
@@ -3470,7 +3266,6 @@ GeckoDriver.prototype.fullscreenWindow = async function() {
     win.removeEventListener("sizemodechange", cb);
   }
   await new IdlePromise(win);
->>>>>>> upstream-releases
 
   return this.curBrowser.rect;
 };
@@ -3576,14 +3371,8 @@ GeckoDriver.prototype._handleUserPrompts = async function() {
     return;
   }
 
-<<<<<<< HEAD
-  let {textContent} = this.dialog.ui.infoBody;
-
-||||||| merged common ancestors
-=======
   let { textContent } = this.dialog.ui.infoBody;
 
->>>>>>> upstream-releases
   let behavior = this.capabilities.get("unhandledPromptBehavior");
   switch (behavior) {
     case UnhandledPromptBehavior.Accept:
@@ -3592,16 +3381,9 @@ GeckoDriver.prototype._handleUserPrompts = async function() {
 
     case UnhandledPromptBehavior.AcceptAndNotify:
       await this.acceptDialog();
-<<<<<<< HEAD
-      throw new UnexpectedAlertOpenError(
-          `Accepted user prompt dialog: ${textContent}`);
-||||||| merged common ancestors
-      throw new UnexpectedAlertOpenError();
-=======
       throw new UnexpectedAlertOpenError(
         `Accepted user prompt dialog: ${textContent}`
       );
->>>>>>> upstream-releases
 
     case UnhandledPromptBehavior.Dismiss:
       await this.dismissDialog();
@@ -3609,28 +3391,14 @@ GeckoDriver.prototype._handleUserPrompts = async function() {
 
     case UnhandledPromptBehavior.DismissAndNotify:
       await this.dismissDialog();
-<<<<<<< HEAD
-      throw new UnexpectedAlertOpenError(
-          `Dismissed user prompt dialog: ${textContent}`);
-||||||| merged common ancestors
-      throw new UnexpectedAlertOpenError();
-=======
       throw new UnexpectedAlertOpenError(
         `Dismissed user prompt dialog: ${textContent}`
       );
->>>>>>> upstream-releases
 
     case UnhandledPromptBehavior.Ignore:
-<<<<<<< HEAD
-      throw new UnexpectedAlertOpenError(
-          "Encountered unhandled user prompt dialog");
-||||||| merged common ancestors
-      throw new UnexpectedAlertOpenError();
-=======
       throw new UnexpectedAlertOpenError(
         "Encountered unhandled user prompt dialog"
       );
->>>>>>> upstream-releases
 
     default:
       throw new TypeError(`Unknown unhandledPromptBehavior "${behavior}"`);
@@ -3939,17 +3707,8 @@ GeckoDriver.prototype.commands = {
   "Marionette:Quit": GeckoDriver.prototype.quit,
   "Marionette:SetContext": GeckoDriver.prototype.setContext,
   "Marionette:SetScreenOrientation": GeckoDriver.prototype.setScreenOrientation,
-<<<<<<< HEAD
-  "Marionette:ActionChain": GeckoDriver.prototype.actionChain,  // bug 1354578, legacy actions
-  "Marionette:MultiAction": GeckoDriver.prototype.multiAction,  // bug 1354578, legacy actions
-||||||| merged common ancestors
-  // Bug 1354578 - Remove legacy action commands
-  "Marionette:ActionChain": GeckoDriver.prototype.actionChain,
-  "Marionette:MultiAction": GeckoDriver.prototype.multiAction,
-=======
   "Marionette:ActionChain": GeckoDriver.prototype.actionChain, // bug 1354578, legacy actions
   "Marionette:MultiAction": GeckoDriver.prototype.multiAction, // bug 1354578, legacy actions
->>>>>>> upstream-releases
   "Marionette:SingleTap": GeckoDriver.prototype.singleTap,
 
   // Addon service
@@ -3967,13 +3726,7 @@ GeckoDriver.prototype.commands = {
 
   // WebDriver service
   "WebDriver:AcceptAlert": GeckoDriver.prototype.acceptDialog,
-<<<<<<< HEAD
-  "WebDriver:AcceptDialog": GeckoDriver.prototype.acceptDialog,  // deprecated, but used in geckodriver (see also bug 1495063)
-||||||| merged common ancestors
-  "WebDriver:AcceptDialog": GeckoDriver.prototype.acceptDialog,  // deprecated, remove in Firefox 63
-=======
   "WebDriver:AcceptDialog": GeckoDriver.prototype.acceptDialog, // deprecated, but used in geckodriver (see also bug 1495063)
->>>>>>> upstream-releases
   "WebDriver:AddCookie": GeckoDriver.prototype.addCookie,
   "WebDriver:Back": GeckoDriver.prototype.goBack,
   "WebDriver:CloseChromeWindow": GeckoDriver.prototype.closeChromeWindow,
@@ -4041,30 +3794,6 @@ function getOuterWindowId(win) {
   return win.windowUtils.outerWindowID;
 }
 
-<<<<<<< HEAD
-async function exitFullscreen(window) {
-  let cb;
-  // Use a timed promise to abort if no window manager is present
-  await new TimedPromise(resolve => {
-    cb = new DebounceCallback(resolve);
-    window.addEventListener("sizemodechange", cb);
-    window.fullScreen = false;
-  }, {throws: null, timeout: TIMEOUT_NO_WINDOW_MANAGER});
-  window.removeEventListener("sizemodechange", cb);
-||||||| merged common ancestors
-/**
- * Exit fullscreen and wait for `window` to resize.
- *
- * @param {ChromeWindow} window
- *     Window to exit fullscreen.
- */
-async function exitFullscreen(window) {
-  await new Promise(resolve => {
-    window.addEventListener("sizemodechange", () => resolve(), {once: true});
-    window.fullScreen = false;
-  });
-  await new IdlePromise(window);
-=======
 async function exitFullscreen(win) {
   let cb;
   // Use a timed promise to abort if no window manager is present
@@ -4077,35 +3806,8 @@ async function exitFullscreen(win) {
     { throws: null, timeout: TIMEOUT_NO_WINDOW_MANAGER }
   );
   win.removeEventListener("sizemodechange", cb);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-async function restoreWindow(window) {
-  window.restore();
-  // Use a poll promise to abort if no window manager is present
-  await new PollPromise((resolve, reject) => {
-    if (WindowState.from(window.windowState) != WindowState.Minimized) {
-      resolve();
-    } else {
-      reject();
-    }
-  }, {timeout: TIMEOUT_NO_WINDOW_MANAGER});
-||||||| merged common ancestors
-/**
- * Restore window and wait for the window state to change.
- *
- * @param {ChromeWindow} chromWindow
- *     Window to restore.
- * @param {WebElementEventTarget} contentWindow
- *     Content window to listen for events in.
- */
-async function restoreWindow(chromeWindow, contentWindow) {
-  return new Promise(resolve => {
-    contentWindow.addEventListener("visibilitychange", resolve, {once: true});
-    chromeWindow.restore();
-  });
-=======
 async function restoreWindow(win) {
   win.restore();
   // Use a poll promise to abort if no window manager is present
@@ -4119,5 +3821,4 @@ async function restoreWindow(win) {
     },
     { timeout: TIMEOUT_NO_WINDOW_MANAGER }
   );
->>>>>>> upstream-releases
 }

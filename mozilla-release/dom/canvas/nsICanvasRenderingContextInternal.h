@@ -58,13 +58,7 @@ class nsICanvasRenderingContextInternal : public nsISupports,
     AddPostRefreshObserverIfNecessary();
   }
 
-<<<<<<< HEAD
-  virtual nsIPresShell* GetPresShell() {
-||||||| merged common ancestors
-  virtual nsIPresShell *GetPresShell() {
-=======
   virtual mozilla::PresShell* GetPresShell() {
->>>>>>> upstream-releases
     if (mCanvasElement) {
       return mCanvasElement->OwnerDoc()->GetPresShell();
     }
@@ -118,19 +112,9 @@ class nsICanvasRenderingContextInternal : public nsISupports,
   // If the image format does not support transparency or includeTransparency
   // is false, alpha will be discarded and the result will be the image
   // composited on black.
-<<<<<<< HEAD
-  NS_IMETHOD GetInputStream(const char* mimeType,
-                            const char16_t* encoderOptions,
-                            nsIInputStream** stream) = 0;
-||||||| merged common ancestors
-  NS_IMETHOD GetInputStream(const char *mimeType,
-                            const char16_t *encoderOptions,
-                            nsIInputStream **stream) = 0;
-=======
   NS_IMETHOD GetInputStream(const char* mimeType,
                             const nsAString& encoderOptions,
                             nsIInputStream** stream) = 0;
->>>>>>> upstream-releases
 
   // This gets an Azure SourceSurface for the canvas, this will be a snapshot
   // of the canvas at the time it was called.

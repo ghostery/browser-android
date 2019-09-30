@@ -473,28 +473,12 @@
 .network-monitor .security-warning-icon {
   width: 12px;
   height: 12px;
-<<<<<<< HEAD
-  vertical-align: -1px;
-  margin-inline-start: 5px;
-  background-image: url(chrome://devtools/skin/images/alert.svg);
-  background-size: cover;
-  -moz-context-properties: fill;
-  fill: var(--yellow-60);
-||||||| merged common ancestors
-}
-
-@media (min-resolution: 1.1dppx) {
-  .network-monitor .security-warning-icon {
-    background-image: url(chrome://devtools/skin/images/alerticon-warning@2x.png);
-  }
-=======
   vertical-align: -1px;
   margin-inline-start: 5px;
   background-image: url(chrome://devtools/skin/images/alert-small.svg);
   background-size: cover;
   -moz-context-properties: fill;
   fill: var(--yellow-60);
->>>>>>> upstream-releases
 }
 
 /* Custom request panel */

@@ -119,31 +119,13 @@ extern nsresult NS_DelayedDispatchToCurrentThread(
  * @param aEvent The event to dispatch.
  * @param aQueue The event queue for the thread to use
  *
-<<<<<<< HEAD
- * @param aEvent
- *   The event to dispatch.
- *
-||||||| merged common ancestors
- * @param aEvent
- *   The event to dispatch.
-  *
-=======
->>>>>>> upstream-releases
  * @returns NS_ERROR_INVALID_ARG
  *   If event is null.
  * @returns NS_ERROR_UNEXPECTED
  *   If the thread is shutting down.
  */
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToCurrentThread(
-    already_AddRefed<nsIRunnable>&& aEvent);
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToCurrentThread(already_AddRefed<nsIRunnable>&& aEvent);
-=======
 extern nsresult NS_DispatchToCurrentThreadQueue(
     already_AddRefed<nsIRunnable>&& aEvent, mozilla::EventQueuePriority aQueue);
->>>>>>> upstream-releases
 
 /**
  * Dispatch the given event to the specified queue of the main thread.
@@ -156,16 +138,8 @@ extern nsresult NS_DispatchToCurrentThreadQueue(
  * @returns NS_ERROR_UNEXPECTED
  *   If the thread is shutting down.
  */
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToMainThread(
-    already_AddRefed<nsIRunnable>&& aEvent);
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToMainThread(already_AddRefed<nsIRunnable>&& aEvent);
-=======
 extern nsresult NS_DispatchToMainThreadQueue(
     already_AddRefed<nsIRunnable>&& aEvent, mozilla::EventQueuePriority aQueue);
->>>>>>> upstream-releases
 
 /**
  * Dispatch the given event to an idle queue of the current thread.
@@ -190,17 +164,9 @@ extern nsresult NS_DispatchToMainThreadQueue(
  * @returns NS_ERROR_UNEXPECTED
  *   If the thread is shutting down.
  */
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToCurrentThread(
-    already_AddRefed<nsIRunnable>&& aEvent, uint32_t aTimeout);
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToCurrentThread(already_AddRefed<nsIRunnable>&& aEvent, uint32_t aTimeout);
-=======
 extern nsresult NS_DispatchToCurrentThreadQueue(
     already_AddRefed<nsIRunnable>&& aEvent, uint32_t aTimeout,
     mozilla::EventQueuePriority aQueue);
->>>>>>> upstream-releases
 
 /**
  * Dispatch the given event to a queue of a thread.
@@ -214,18 +180,9 @@ extern nsresult NS_DispatchToCurrentThreadQueue(
  * @returns NS_ERROR_UNEXPECTED
  *   If the thread is shutting down.
  */
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                                        nsIThread* aThread);
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                        nsIThread* aThread);
-=======
 extern nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
                                          nsIThread* aThread,
                                          mozilla::EventQueuePriority aQueue);
->>>>>>> upstream-releases
 
 /**
  * Dispatch the given event to an idle queue of a thread.
@@ -252,19 +209,9 @@ extern nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
  * @returns NS_ERROR_UNEXPECTED
  *   If the thread is shutting down.
  */
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                                        uint32_t aTimeout, nsIThread* aThread);
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                        uint32_t aTimeout,
-                        nsIThread* aThread);
-=======
 extern nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
                                          uint32_t aTimeout, nsIThread* aThread,
                                          mozilla::EventQueuePriority aQueue);
->>>>>>> upstream-releases
 
 #ifndef XPCOM_GLUE_AVOID_NSPR
 /**
@@ -503,25 +450,11 @@ enum class RunnableKind { Standard, Cancelable, Idle, IdleWithTimer };
 #  endif
 
 // This class is designed to be subclassed.
-<<<<<<< HEAD
-class Runnable : public nsIRunnable
-#ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
-    ,
-                 public nsINamed
-#endif
-||||||| merged common ancestors
-class Runnable
-  : public nsIRunnable
-#ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
-  , public nsINamed
-#endif
-=======
 class Runnable : public nsIRunnable
 #  ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
     ,
                  public nsINamed
 #  endif
->>>>>>> upstream-releases
 {
  public:
   // Runnable refcount changes are preserved when recording/replaying to ensure
@@ -856,24 +789,11 @@ struct nsRunnableMethodTraits<PtrType, R (C::*)(As...) const, Owning, Kind> {
   static const bool can_cancel = Kind == mozilla::RunnableKind::Cancelable;
 };
 
-<<<<<<< HEAD
-#ifdef NS_HAVE_STDCALL
-template <typename PtrType, class C, typename R, bool Owning,
-          mozilla::RunnableKind Kind, typename... As>
-struct nsRunnableMethodTraits<PtrType, R (__stdcall C::*)(As...), Owning,
-                              Kind> {
-||||||| merged common ancestors
-#ifdef NS_HAVE_STDCALL
-template<typename PtrType, class C, typename R, bool Owning, mozilla::RunnableKind Kind, typename... As>
-struct nsRunnableMethodTraits<PtrType, R(__stdcall C::*)(As...), Owning, Kind>
-{
-=======
 #  ifdef NS_HAVE_STDCALL
 template <typename PtrType, class C, typename R, bool Owning,
           mozilla::RunnableKind Kind, typename... As>
 struct nsRunnableMethodTraits<PtrType, R (__stdcall C::*)(As...), Owning,
                               Kind> {
->>>>>>> upstream-releases
   typedef typename mozilla::RemoveRawOrSmartPointer<PtrType>::Type class_type;
   static_assert(mozilla::IsBaseOf<C, class_type>::value,
                 "Stored class must inherit from method's class");
@@ -918,17 +838,8 @@ struct nsRunnableMethodTraits<PtrType, R (NS_STDCALL C::*)() const, Owning,
   typedef nsRunnableMethod<C, R, Owning, Kind> base_type;
   static const bool can_cancel = Kind == mozilla::RunnableKind::Cancelable;
 };
-<<<<<<< HEAD
-#endif
-
-||||||| merged common ancestors
-#endif
-
-
-=======
 #  endif
 
->>>>>>> upstream-releases
 // IsParameterStorageClass<T>::value is true if T is a parameter-storage class
 // that will be recognized by NS_New[NonOwning]RunnableMethodWithArg[s] to
 // force a specific storage&passing strategy (instead of inferring one,
@@ -1842,30 +1753,16 @@ nsIEventTarget* GetMainThreadEventTarget();
 // serial event target (i.e., that it's not part of a thread pool) and returns
 // that.
 
-<<<<<<< HEAD
-nsISerialEventTarget* GetCurrentThreadSerialEventTarget();
-||||||| merged common ancestors
-nsISerialEventTarget*
-GetCurrentThreadSerialEventTarget();
-=======
 nsISerialEventTarget* GetCurrentThreadSerialEventTarget();
 
 nsISerialEventTarget* GetMainThreadSerialEventTarget();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsISerialEventTarget* GetMainThreadSerialEventTarget();
-||||||| merged common ancestors
-nsISerialEventTarget*
-GetMainThreadSerialEventTarget();
-=======
 // Returns the number of CPUs, like PR_GetNumberOfProcessors, except
 // that it can return a cached value on platforms where sandboxing
 // would prevent reading the current value (currently Linux).  CPU
 // hotplugging is uncommon, so this is unlikely to make a difference
 // in practice.
 size_t GetNumberOfProcessors();
->>>>>>> upstream-releases
 
 }  // namespace mozilla
 

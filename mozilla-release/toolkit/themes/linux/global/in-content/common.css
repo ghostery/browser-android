@@ -10,18 +10,8 @@ xul|tab[visuallyselected] {
   margin-bottom: 0;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-*|button.primary:focus,
-xul|button:-moz-focusring {
-  outline: 1px dotted;
-  outline-offset: -2px;
-}
-
-=======
 /* Overriding appearance also avoids incorrect selection background color with
    light text. */
->>>>>>> upstream-releases
 xul|button > xul|*.button-box,
 xul|menulist > xul|*.menulist-label-box,
 xul|*.radio-label-box,

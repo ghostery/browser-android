@@ -66,7 +66,6 @@ bool MResumePoint::writeRecoverData(CompactBufferWriter& writer) const {
   uint32_t exprStack = stackDepth() - bb->info().ninvoke();
 
 #ifdef DEBUG
-<<<<<<< HEAD
   // Ensure that all snapshot which are encoded can safely be used for
   // bailouts.
   if (GetJitContext()->cx) {
@@ -77,88 +76,6 @@ bool MResumePoint::writeRecoverData(CompactBufferWriter& writer) const {
     if (mode() == MResumePoint::ResumeAfter) {
       bailPC = GetNextPc(pc());
     }
-
-    if (!ReconstructStackDepth(GetJitContext()->cx, script, bailPC, &stackDepth,
-                               &reachablePC)) {
-      return false;
-    }
-
-    if (reachablePC) {
-      if (JSOp(*bailPC) == JSOP_FUNCALL) {
-        // For fun.call(this, ...); the reconstructStackDepth will
-        // include the this. When inlining that is not included.  So the
-        // exprStackSlots will be one less.
-        MOZ_ASSERT(stackDepth - exprStack <= 1);
-      } else if (JSOp(*bailPC) != JSOP_FUNAPPLY && !IsGetPropPC(bailPC) &&
-                 !IsSetPropPC(bailPC)) {
-        // For fun.apply({}, arguments) the reconstructStackDepth will
-        // have stackdepth 4, but it could be that we inlined the
-        // funapply. In that case exprStackSlots, will have the real
-        // arguments in the slots and not be 4.
-
-        // With accessors, we have different stack depths depending on
-        // whether or not we inlined the accessor, as the inlined stack
-        // contains a callee function that should never have been there
-        // and we might just be capturing an uneventful property site,
-        // in which case there won't have been any violence.
-        MOZ_ASSERT(exprStack == stackDepth);
-      }
-||||||| merged common ancestors
-    // Ensure that all snapshot which are encoded can safely be used for
-    // bailouts.
-    if (GetJitContext()->cx) {
-        uint32_t stackDepth;
-        bool reachablePC;
-        jsbytecode* bailPC = pc();
-
-        if (mode() == MResumePoint::ResumeAfter) {
-            bailPC = GetNextPc(pc());
-        }
-
-        if (!ReconstructStackDepth(GetJitContext()->cx, script,
-                                   bailPC, &stackDepth, &reachablePC))
-        {
-            return false;
-        }
-
-        if (reachablePC) {
-            if (JSOp(*bailPC) == JSOP_FUNCALL) {
-                // For fun.call(this, ...); the reconstructStackDepth will
-                // include the this. When inlining that is not included.  So the
-                // exprStackSlots will be one less.
-                MOZ_ASSERT(stackDepth - exprStack <= 1);
-            } else if (JSOp(*bailPC) != JSOP_FUNAPPLY &&
-                       !IsGetPropPC(bailPC) && !IsSetPropPC(bailPC))
-            {
-                // For fun.apply({}, arguments) the reconstructStackDepth will
-                // have stackdepth 4, but it could be that we inlined the
-                // funapply. In that case exprStackSlots, will have the real
-                // arguments in the slots and not be 4.
-
-                // With accessors, we have different stack depths depending on
-                // whether or not we inlined the accessor, as the inlined stack
-                // contains a callee function that should never have been there
-                // and we might just be capturing an uneventful property site,
-                // in which case there won't have been any violence.
-                MOZ_ASSERT(exprStack == stackDepth);
-            }
-        }
-=======
-  // Ensure that all snapshot which are encoded can safely be used for
-  // bailouts.
-  if (GetJitContext()->cx) {
-    uint32_t stackDepth;
-    bool reachablePC;
-    jsbytecode* bailPC = pc();
-
-    if (mode() == MResumePoint::ResumeAfter) {
-      bailPC = GetNextPc(pc());
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
 
     if (!ReconstructStackDepth(GetJitContext()->cx, script, bailPC, &stackDepth,
                                &reachablePC)) {
@@ -187,7 +104,6 @@ bool MResumePoint::writeRecoverData(CompactBufferWriter& writer) const {
       }
     }
   }
->>>>>>> upstream-releases
 #endif
 
   // Test if we honor the maximum of arguments at all times.  This is a sanity
@@ -346,7 +262,6 @@ bool RRsh::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue result(cx);
   MOZ_ASSERT(!lhs.isObject() && !rhs.isObject());
 
-<<<<<<< HEAD
   if (!js::BitRsh(cx, &lhs, &rhs, &result)) {
     return false;
   }
@@ -368,83 +283,6 @@ bool RUrsh::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue rhs(cx, iter.read());
   MOZ_ASSERT(!lhs.isObject() && !rhs.isObject());
 
-  RootedValue result(cx);
-  if (!js::UrshOperation(cx, &lhs, &rhs, &result)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!js::BitRsh(cx, &lhs, &rhs, &result)) {
-        return false;
-    }
-=======
-  if (!js::BitRsh(cx, &lhs, &rhs, &result)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-  iter.storeInstructionResult(result);
-  return true;
-}
-
-<<<<<<< HEAD
-bool MSignExtendInt32::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_SignExtendInt32));
-  MOZ_ASSERT(Mode(uint8_t(mode_)) == mode_);
-  writer.writeByte(uint8_t(mode_));
-  return true;
-||||||| merged common ancestors
-bool
-MUrsh::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_Ursh));
-    return true;
-=======
-bool MUrsh::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_Ursh));
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-RSignExtendInt32::RSignExtendInt32(CompactBufferReader& reader) {
-  mode_ = reader.readByte();
-}
-||||||| merged common ancestors
-RUrsh::RUrsh(CompactBufferReader& reader)
-{ }
-=======
-RUrsh::RUrsh(CompactBufferReader& reader) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool RSignExtendInt32::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue operand(cx, iter.read());
-||||||| merged common ancestors
-bool
-RUrsh::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue lhs(cx, iter.read());
-    RootedValue rhs(cx, iter.read());
-    MOZ_ASSERT(!lhs.isObject() && !rhs.isObject());
-=======
-bool RUrsh::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue lhs(cx, iter.read());
-  RootedValue rhs(cx, iter.read());
-  MOZ_ASSERT(!lhs.isObject() && !rhs.isObject());
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  int32_t result;
-  switch (MSignExtendInt32::Mode(mode_)) {
-    case MSignExtendInt32::Byte:
-      if (!js::SignExtendOperation<int8_t>(cx, operand, &result)) {
-||||||| merged common ancestors
-    RootedValue result(cx);
-    if (!js::UrshOperation(cx, &lhs, &rhs, &result)) {
-=======
   RootedValue result(cx);
   if (!js::UrshOperation(cx, &lhs, &rhs, &result)) {
     return false;
@@ -473,7 +311,6 @@ bool RSignExtendInt32::recover(JSContext* cx, SnapshotIterator& iter) const {
   switch (MSignExtendInt32::Mode(mode_)) {
     case MSignExtendInt32::Byte:
       if (!js::SignExtendOperation<int8_t>(cx, operand, &result)) {
->>>>>>> upstream-releases
         return false;
       }
       break;
@@ -531,30 +368,11 @@ RSub::RSub(CompactBufferReader& reader) {
   isFloatOperation_ = reader.readByte();
 }
 
-<<<<<<< HEAD
-bool RSub::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue lhs(cx, iter.read());
-  RootedValue rhs(cx, iter.read());
-  RootedValue result(cx);
-||||||| merged common ancestors
-    // MIRType::Float32 is a specialization embedding the fact that the result is
-    // rounded to a Float32.
-    if (isFloatOperation_ && !RoundFloat32(cx, result, &result)) {
-        return false;
-    }
-=======
 bool RSub::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue lhs(cx, iter.read());
   RootedValue rhs(cx, iter.read());
   RootedValue result(cx);
 
-  MOZ_ASSERT(!lhs.isObject() && !rhs.isObject());
-  if (!js::SubValues(cx, &lhs, &rhs, &result)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   MOZ_ASSERT(!lhs.isObject() && !rhs.isObject());
   if (!js::SubValues(cx, &lhs, &rhs, &result)) {
     return false;
@@ -568,19 +386,6 @@ bool RSub::recover(JSContext* cx, SnapshotIterator& iter) const {
 
   iter.storeInstructionResult(result);
   return true;
-||||||| merged common ancestors
-    iter.storeInstructionResult(result);
-    return true;
-=======
-  // MIRType::Float32 is a specialization embedding the fact that the result is
-  // rounded to a Float32.
-  if (isFloatOperation_ && !RoundFloat32(cx, result, &result)) {
-    return false;
-  }
-
-  iter.storeInstructionResult(result);
-  return true;
->>>>>>> upstream-releases
 }
 
 bool MMul::writeRecoverData(CompactBufferWriter& writer) const {
@@ -785,34 +590,12 @@ bool RCeil::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue v(cx, iter.read());
   RootedValue result(cx);
 
-<<<<<<< HEAD
   if (!js::math_ceil_handle(cx, v, &result)) {
     return false;
   }
 
   iter.storeInstructionResult(result);
   return true;
-||||||| merged common ancestors
-bool
-RCeil::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue v(cx, iter.read());
-    RootedValue result(cx);
-
-    if (!js::math_ceil_handle(cx, v, &result)) {
-        return false;
-    }
-
-    iter.storeInstructionResult(result);
-    return true;
-=======
-  if (!js::math_ceil_handle(cx, v, &result)) {
-    return false;
-  }
-
-  iter.storeInstructionResult(result);
-  return true;
->>>>>>> upstream-releases
 }
 
 bool MRound::writeRecoverData(CompactBufferWriter& writer) const {
@@ -1041,18 +824,8 @@ bool MHypot::writeRecoverData(CompactBufferWriter& writer) const {
 RHypot::RHypot(CompactBufferReader& reader)
     : numOperands_(reader.readUnsigned()) {}
 
-<<<<<<< HEAD
-bool RHypot::recover(JSContext* cx, SnapshotIterator& iter) const {
-  JS::AutoValueVector vec(cx);
-||||||| merged common ancestors
-bool
-RHypot::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    JS::AutoValueVector vec(cx);
-=======
 bool RHypot::recover(JSContext* cx, SnapshotIterator& iter) const {
   JS::RootedValueVector vec(cx);
->>>>>>> upstream-releases
 
   if (!vec.reserve(numOperands_)) {
     return false;
@@ -1066,7 +839,6 @@ bool RHypot::recover(JSContext* cx, SnapshotIterator& iter) const {
 
   if (!js::math_hypot_handle(cx, vec, &result)) return false;
 
-<<<<<<< HEAD
   iter.storeInstructionResult(result);
   return true;
 }
@@ -1086,172 +858,33 @@ bool MNearbyInt::writeRecoverData(CompactBufferWriter& writer) const {
     default:
       MOZ_CRASH("Unsupported rounding mode.");
   }
-||||||| merged common ancestors
-    iter.storeInstructionResult(result);
-    return true;
 }
 
-bool
-MNearbyInt::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    switch (roundingMode_) {
-      case RoundingMode::Up:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Ceil));
-        return true;
-      case RoundingMode::Down:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Floor));
-        return true;
-      case RoundingMode::TowardsZero:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Trunc));
-        return true;
-      default:
-        MOZ_CRASH("Unsupported rounding mode.");
-    }
-=======
-  iter.storeInstructionResult(result);
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 RNearbyInt::RNearbyInt(CompactBufferReader& reader) {
   roundingMode_ = reader.readByte();
-||||||| merged common ancestors
-RNearbyInt::RNearbyInt(CompactBufferReader& reader)
-{
-    roundingMode_ = reader.readByte();
-=======
-bool MNearbyInt::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  switch (roundingMode_) {
-    case RoundingMode::Up:
-      writer.writeUnsigned(uint32_t(RInstruction::Recover_Ceil));
-      return true;
-    case RoundingMode::Down:
-      writer.writeUnsigned(uint32_t(RInstruction::Recover_Floor));
-      return true;
-    case RoundingMode::TowardsZero:
-      writer.writeUnsigned(uint32_t(RInstruction::Recover_Trunc));
-      return true;
-    default:
-      MOZ_CRASH("Unsupported rounding mode.");
-  }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 bool RNearbyInt::recover(JSContext* cx, SnapshotIterator& iter) const {
   MOZ_CRASH("Unsupported rounding mode.");
-||||||| merged common ancestors
-bool
-RNearbyInt::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    MOZ_CRASH("Unsupported rounding mode.");
-=======
-RNearbyInt::RNearbyInt(CompactBufferReader& reader) {
-  roundingMode_ = reader.readByte();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MSign::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_Sign));
-  return true;
-||||||| merged common ancestors
-bool
-MSign::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_Sign));
-    return true;
-=======
-bool RNearbyInt::recover(JSContext* cx, SnapshotIterator& iter) const {
-  MOZ_CRASH("Unsupported rounding mode.");
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-RSign::RSign(CompactBufferReader& reader) {}
-||||||| merged common ancestors
-RSign::RSign(CompactBufferReader& reader)
-{ }
-=======
 bool MSign::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_Sign));
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool RSign::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue arg(cx, iter.read());
-  RootedValue result(cx);
-||||||| merged common ancestors
-bool
-RSign::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue arg(cx, iter.read());
-    RootedValue result(cx);
-=======
 RSign::RSign(CompactBufferReader& reader) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(!arg.isObject());
-  if (!js::math_sign_handle(cx, arg, &result)) return false;
-||||||| merged common ancestors
-    MOZ_ASSERT(!arg.isObject());
-    if(!js::math_sign_handle(cx, arg, &result))
-        return false;
-=======
 bool RSign::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue arg(cx, iter.read());
   RootedValue result(cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-    iter.storeInstructionResult(result);
-    return true;
-}
-
-bool
-MMathFunction::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    switch (function_) {
-      case Ceil:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Ceil));
-        return true;
-      case Floor:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Floor));
-        return true;
-      case Round:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Round));
-        return true;
-      case Trunc:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_Trunc));
-        return true;
-      case Sin:
-      case Log:
-        writer.writeUnsigned(uint32_t(RInstruction::Recover_MathFunction));
-        writer.writeByte(function_);
-        return true;
-      default:
-        MOZ_CRASH("Unknown math function.");
-    }
-=======
   MOZ_ASSERT(!arg.isObject());
   if (!js::math_sign_handle(cx, arg, &result)) return false;
 
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
 bool MMathFunction::writeRecoverData(CompactBufferWriter& writer) const {
@@ -1342,22 +975,10 @@ bool RStringSplit::recover(JSContext* cx, SnapshotIterator& iter) const {
   }
   RootedValue result(cx);
 
-<<<<<<< HEAD
-  JSObject* res = str_split_string(cx, group, str, sep, INT32_MAX);
-  if (!res) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSObject* res = str_split_string(cx, group, str, sep, INT32_MAX);
-    if (!res) {
-        return false;
-    }
-=======
   JSObject* res = StringSplitString(cx, group, str, sep, INT32_MAX);
   if (!res) {
     return false;
   }
->>>>>>> upstream-releases
 
   result.setObject(*res);
   iter.storeInstructionResult(result);
@@ -1370,56 +991,13 @@ bool MNaNToZero::writeRecoverData(CompactBufferWriter& writer) const {
   return true;
 }
 
-<<<<<<< HEAD
 RNaNToZero::RNaNToZero(CompactBufferReader& reader) {}
 
 bool RNaNToZero::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue v(cx, iter.read());
   RootedValue result(cx);
   MOZ_ASSERT(v.isDouble() || v.isInt32());
-||||||| merged common ancestors
-RNaNToZero::RNaNToZero(CompactBufferReader& reader)
-{ }
 
-=======
-RNaNToZero::RNaNToZero(CompactBufferReader& reader) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // x ? x : 0.0
-  if (ToBoolean(v)) {
-    result = v;
-  } else {
-    result.setDouble(0.0);
-  }
-||||||| merged common ancestors
-bool
-RNaNToZero::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue v(cx, iter.read());
-    RootedValue result(cx);
-    MOZ_ASSERT(v.isDouble() || v.isInt32());
-=======
-bool RNaNToZero::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue v(cx, iter.read());
-  RootedValue result(cx);
-  MOZ_ASSERT(v.isDouble() || v.isInt32());
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-    // x ? x : 0.0
-    if (ToBoolean(v)) {
-        result = v;
-    } else {
-        result.setDouble(0.0);
-    }
-
-    iter.storeInstructionResult(result);
-    return true;
-=======
   // x ? x : 0.0
   if (ToBoolean(v)) {
     result = v;
@@ -1429,7 +1007,6 @@ bool RNaNToZero::recover(JSContext* cx, SnapshotIterator& iter) const {
 
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
 bool MRegExpMatcher::writeRecoverData(CompactBufferWriter& writer) const {
@@ -1631,38 +1208,10 @@ bool MNewTypedArray::writeRecoverData(CompactBufferWriter& writer) const {
 
 RNewTypedArray::RNewTypedArray(CompactBufferReader& reader) {}
 
-<<<<<<< HEAD
 bool RNewTypedArray::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedObject templateObject(cx, &iter.read().toObject());
   RootedValue result(cx);
 
-  uint32_t length = templateObject.as<TypedArrayObject>()->length();
-  JSObject* resultObject =
-      TypedArrayCreateWithTemplate(cx, templateObject, length);
-  if (!resultObject) {
-    return false;
-  }
-||||||| merged common ancestors
-    uint32_t length = templateObject.as<TypedArrayObject>()->length();
-    JSObject* resultObject = TypedArrayCreateWithTemplate(cx, templateObject, length);
-    if (!resultObject) {
-        return false;
-    }
-=======
-bool RNewTypedArray::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedObject templateObject(cx, &iter.read().toObject());
-  RootedValue result(cx);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  result.setObject(*resultObject);
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-    result.setObject(*resultObject);
-    iter.storeInstructionResult(result);
-    return true;
-=======
   uint32_t length = templateObject.as<TypedArrayObject>()->length();
   JSObject* resultObject =
       NewTypedArrayWithTemplateAndLength(cx, templateObject, length);
@@ -1673,45 +1222,19 @@ bool RNewTypedArray::recover(JSContext* cx, SnapshotIterator& iter) const {
   result.setObject(*resultObject);
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MNewArray::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_NewArray));
-  writer.writeUnsigned(length());
-  return true;
-||||||| merged common ancestors
-bool
-MNewArray::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_NewArray));
-    writer.writeUnsigned(length());
-    return true;
-=======
 bool MNewArray::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_NewArray));
   writer.writeUnsigned(length());
   writer.writeByte(uint8_t(convertDoubleElements()));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RNewArray::RNewArray(CompactBufferReader& reader) {
-  count_ = reader.readUnsigned();
-||||||| merged common ancestors
-RNewArray::RNewArray(CompactBufferReader& reader)
-{
-    count_ = reader.readUnsigned();
-=======
 RNewArray::RNewArray(CompactBufferReader& reader) {
   count_ = reader.readUnsigned();
   convertDoubleElements_ = reader.readByte();
->>>>>>> upstream-releases
 }
 
 bool RNewArray::recover(JSContext* cx, SnapshotIterator& iter) const {
@@ -1719,64 +1242,24 @@ bool RNewArray::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue result(cx);
   RootedObjectGroup group(cx, templateObject->group());
 
-<<<<<<< HEAD
-  ArrayObject* resultObject =
-      NewFullyAllocatedArrayTryUseGroup(cx, group, count_);
-  if (!resultObject) {
-    return false;
-  }
-||||||| merged common ancestors
-    ArrayObject* resultObject = NewFullyAllocatedArrayTryUseGroup(cx, group, count_);
-    if (!resultObject) {
-        return false;
-    }
-=======
   ArrayObject* resultObject =
       NewArrayWithGroup(cx, count_, group, convertDoubleElements_);
   if (!resultObject) {
     return false;
   }
->>>>>>> upstream-releases
 
   result.setObject(*resultObject);
   iter.storeInstructionResult(result);
   return true;
 }
 
-<<<<<<< HEAD
-bool MNewArrayCopyOnWrite::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_NewArrayCopyOnWrite));
-  writer.writeByte(initialHeap());
-  return true;
-||||||| merged common ancestors
-bool
-MNewArrayCopyOnWrite::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_NewArrayCopyOnWrite));
-    writer.writeByte(initialHeap());
-    return true;
-=======
 bool MNewArrayCopyOnWrite::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_NewArrayCopyOnWrite));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RNewArrayCopyOnWrite::RNewArrayCopyOnWrite(CompactBufferReader& reader) {
-  initialHeap_ = gc::InitialHeap(reader.readByte());
-}
-||||||| merged common ancestors
-RNewArrayCopyOnWrite::RNewArrayCopyOnWrite(CompactBufferReader& reader)
-{
-    initialHeap_ = gc::InitialHeap(reader.readByte());
-}
-=======
 RNewArrayCopyOnWrite::RNewArrayCopyOnWrite(CompactBufferReader& reader) {}
->>>>>>> upstream-releases
 
 bool RNewArrayCopyOnWrite::recover(JSContext* cx,
                                    SnapshotIterator& iter) const {
@@ -1784,23 +1267,10 @@ bool RNewArrayCopyOnWrite::recover(JSContext* cx,
                                    &iter.read().toObject().as<ArrayObject>());
   RootedValue result(cx);
 
-<<<<<<< HEAD
-  ArrayObject* resultObject =
-      NewDenseCopyOnWriteArray(cx, templateObject, initialHeap_);
-  if (!resultObject) {
-    return false;
-  }
-||||||| merged common ancestors
-    ArrayObject* resultObject = NewDenseCopyOnWriteArray(cx, templateObject, initialHeap_);
-    if (!resultObject) {
-        return false;
-    }
-=======
   ArrayObject* resultObject = NewDenseCopyOnWriteArray(cx, templateObject);
   if (!resultObject) {
     return false;
   }
->>>>>>> upstream-releases
 
   result.setObject(*resultObject);
   iter.storeInstructionResult(result);
@@ -1822,27 +1292,6 @@ bool RNewIterator::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedObject templateObject(cx, &iter.read().toObject());
   RootedValue result(cx);
 
-<<<<<<< HEAD
-  JSObject* resultObject = nullptr;
-  switch (MNewIterator::Type(type_)) {
-    case MNewIterator::ArrayIterator:
-      resultObject = NewArrayIteratorObject(cx);
-      break;
-    case MNewIterator::StringIterator:
-      resultObject = NewStringIteratorObject(cx);
-      break;
-  }
-||||||| merged common ancestors
-    JSObject* resultObject = nullptr;
-    switch (MNewIterator::Type(type_)) {
-      case MNewIterator::ArrayIterator:
-        resultObject = NewArrayIteratorObject(cx);
-        break;
-      case MNewIterator::StringIterator:
-        resultObject = NewStringIteratorObject(cx);
-        break;
-    }
-=======
   JSObject* resultObject = nullptr;
   switch (MNewIterator::Type(type_)) {
     case MNewIterator::ArrayIterator:
@@ -1855,7 +1304,6 @@ bool RNewIterator::recover(JSContext* cx, SnapshotIterator& iter) const {
       resultObject = NewRegExpStringIteratorObject(cx);
       break;
   }
->>>>>>> upstream-releases
 
   if (!resultObject) {
     return false;
@@ -1881,17 +1329,6 @@ bool RNewDerivedTypedObject::recover(JSContext* cx,
   Rooted<TypedObject*> owner(cx, &iter.read().toObject().as<TypedObject>());
   int32_t offset = iter.read().toInt32();
 
-<<<<<<< HEAD
-  JSObject* obj = OutlineTypedObject::createDerived(cx, descr, owner, offset);
-  if (!obj) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSObject* obj = OutlineTypedObject::createDerived(cx, descr, owner, offset);
-    if (!obj) {
-        return false;
-    }
-=======
   JSObject* obj = OutlineTypedObject::createDerived(cx, descr, owner, offset);
   if (!obj) {
     return false;
@@ -1901,39 +1338,14 @@ bool RNewDerivedTypedObject::recover(JSContext* cx,
   iter.storeInstructionResult(result);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedValue result(cx, ObjectValue(*obj));
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-    RootedValue result(cx, ObjectValue(*obj));
-    iter.storeInstructionResult(result);
-    return true;
-=======
 bool MCreateThisWithTemplate::writeRecoverData(
     CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_CreateThisWithTemplate));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MCreateThisWithTemplate::writeRecoverData(
-    CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_CreateThisWithTemplate));
-  return true;
-||||||| merged common ancestors
-bool
-MCreateThisWithTemplate::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_CreateThisWithTemplate));
-    return true;
-=======
 RCreateThisWithTemplate::RCreateThisWithTemplate(CompactBufferReader& reader) {}
 
 bool RCreateThisWithTemplate::recover(JSContext* cx,
@@ -1950,49 +1362,16 @@ bool RCreateThisWithTemplate::recover(JSContext* cx,
   result.setObject(*resultObject);
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RCreateThisWithTemplate::RCreateThisWithTemplate(CompactBufferReader& reader) {}
-||||||| merged common ancestors
-RCreateThisWithTemplate::RCreateThisWithTemplate(CompactBufferReader& reader)
-{
-}
-=======
 bool MLambda::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_Lambda));
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool RCreateThisWithTemplate::recover(JSContext* cx,
-                                      SnapshotIterator& iter) const {
-  RootedObject templateObject(cx, &iter.read().toObject());
-||||||| merged common ancestors
-bool
-RCreateThisWithTemplate::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedObject templateObject(cx, &iter.read().toObject());
-=======
 RLambda::RLambda(CompactBufferReader& reader) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // See CodeGenerator::visitCreateThisWithTemplate
-  JSObject* resultObject = NewObjectOperationWithTemplate(cx, templateObject);
-  if (!resultObject) {
-    return false;
-  }
-||||||| merged common ancestors
-    // See CodeGenerator::visitCreateThisWithTemplate
-    JSObject* resultObject = NewObjectOperationWithTemplate(cx, templateObject);
-    if (!resultObject) {
-        return false;
-    }
-=======
 bool RLambda::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedObject scopeChain(cx, &iter.read().toObject());
   RootedFunction fun(cx, &iter.read().toObject().as<JSFunction>());
@@ -2001,7 +1380,6 @@ bool RLambda::recover(JSContext* cx, SnapshotIterator& iter) const {
   if (!resultObject) {
     return false;
   }
->>>>>>> upstream-releases
 
   RootedValue result(cx);
   result.setObject(*resultObject);
@@ -2009,33 +1387,12 @@ bool RLambda::recover(JSContext* cx, SnapshotIterator& iter) const {
   return true;
 }
 
-<<<<<<< HEAD
-bool MLambda::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_Lambda));
-  return true;
-||||||| merged common ancestors
-bool
-MLambda::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_Lambda));
-    return true;
-=======
 bool MLambdaArrow::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_LambdaArrow));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RLambda::RLambda(CompactBufferReader& reader) {}
-||||||| merged common ancestors
-RLambda::RLambda(CompactBufferReader& reader)
-{
-}
-=======
 RLambdaArrow::RLambdaArrow(CompactBufferReader& reader) {}
 
 bool RLambdaArrow::recover(JSContext* cx, SnapshotIterator& iter) const {
@@ -2053,37 +1410,13 @@ bool RLambdaArrow::recover(JSContext* cx, SnapshotIterator& iter) const {
   iter.storeInstructionResult(result);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool RLambda::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedObject scopeChain(cx, &iter.read().toObject());
-  RootedFunction fun(cx, &iter.read().toObject().as<JSFunction>());
-||||||| merged common ancestors
-bool
-RLambda::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedObject scopeChain(cx, &iter.read().toObject());
-    RootedFunction fun(cx, &iter.read().toObject().as<JSFunction>());
-=======
 bool MNewCallObject::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_NewCallObject));
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSObject* resultObject = js::Lambda(cx, fun, scopeChain);
-  if (!resultObject) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSObject* resultObject = js::Lambda(cx, fun, scopeChain);
-    if (!resultObject) {
-        return false;
-    }
-=======
 RNewCallObject::RNewCallObject(CompactBufferReader& reader) {}
 
 bool RNewCallObject::recover(JSContext* cx, SnapshotIterator& iter) const {
@@ -2095,7 +1428,6 @@ bool RNewCallObject::recover(JSContext* cx, SnapshotIterator& iter) const {
   if (!resultObject) {
     return false;
   }
->>>>>>> upstream-releases
 
   RootedValue result(cx);
   result.setObject(*resultObject);
@@ -2103,349 +1435,64 @@ bool RNewCallObject::recover(JSContext* cx, SnapshotIterator& iter) const {
   return true;
 }
 
-<<<<<<< HEAD
-bool MLambdaArrow::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_LambdaArrow));
-  return true;
-||||||| merged common ancestors
-bool
-MLambdaArrow::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_LambdaArrow));
-    return true;
-=======
 bool MObjectState::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_ObjectState));
   writer.writeUnsigned(numSlots());
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RLambdaArrow::RLambdaArrow(CompactBufferReader& reader) {}
-
-bool RLambdaArrow::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedObject scopeChain(cx, &iter.read().toObject());
-  RootedValue newTarget(cx, iter.read());
-  RootedFunction fun(cx, &iter.read().toObject().as<JSFunction>());
-
-  JSObject* resultObject = js::LambdaArrow(cx, fun, scopeChain, newTarget);
-  if (!resultObject) {
-    return false;
-  }
-
-  RootedValue result(cx);
-  result.setObject(*resultObject);
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-RLambdaArrow::RLambdaArrow(CompactBufferReader& reader)
-{
-=======
 RObjectState::RObjectState(CompactBufferReader& reader) {
   numSlots_ = reader.readUnsigned();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MNewCallObject::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_NewCallObject));
-  return true;
-}
-||||||| merged common ancestors
-bool
-RLambdaArrow::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedObject scopeChain(cx, &iter.read().toObject());
-    RootedValue newTarget(cx, iter.read());
-    RootedFunction fun(cx, &iter.read().toObject().as<JSFunction>());
-=======
 bool RObjectState::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedObject object(cx, &iter.read().toObject());
   RootedValue val(cx);
   RootedNativeObject nativeObject(cx, &object->as<NativeObject>());
   MOZ_ASSERT(nativeObject->slotSpan() == numSlots());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-RNewCallObject::RNewCallObject(CompactBufferReader& reader) {}
-
-bool RNewCallObject::recover(JSContext* cx, SnapshotIterator& iter) const {
-  Rooted<CallObject*> templateObj(cx, &iter.read().toObject().as<CallObject>());
-
-  RootedShape shape(cx, templateObj->lastProperty());
-  RootedObjectGroup group(cx, templateObj->group());
-  JSObject* resultObject = NewCallObject(cx, shape, group);
-  if (!resultObject) {
-    return false;
-  }
-||||||| merged common ancestors
-    JSObject* resultObject = js::LambdaArrow(cx, fun, scopeChain, newTarget);
-    if (!resultObject) {
-        return false;
-    }
-=======
   for (size_t i = 0; i < numSlots(); i++) {
     val = iter.read();
     nativeObject->setSlot(i, val);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedValue result(cx);
-  result.setObject(*resultObject);
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-    RootedValue result(cx);
-    result.setObject(*resultObject);
-    iter.storeInstructionResult(result);
-    return true;
-=======
   val.setObject(*object);
   iter.storeInstructionResult(val);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MObjectState::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_ObjectState));
-  writer.writeUnsigned(numSlots());
-  return true;
-||||||| merged common ancestors
-bool
-MNewCallObject::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_NewCallObject));
-    return true;
-=======
 bool MArrayState::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_ArrayState));
   writer.writeUnsigned(numElements());
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RObjectState::RObjectState(CompactBufferReader& reader) {
-  numSlots_ = reader.readUnsigned();
-||||||| merged common ancestors
-RNewCallObject::RNewCallObject(CompactBufferReader& reader)
-{
-=======
 RArrayState::RArrayState(CompactBufferReader& reader) {
   numElements_ = reader.readUnsigned();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool RObjectState::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedObject object(cx, &iter.read().toObject());
-  RootedValue val(cx);
-||||||| merged common ancestors
-bool
-RNewCallObject::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    Rooted<CallObject*> templateObj(cx, &iter.read().toObject().as<CallObject>());
-=======
 bool RArrayState::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue result(cx);
   ArrayObject* object = &iter.read().toObject().as<ArrayObject>();
   uint32_t initLength = iter.read().toInt32();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (object->is<UnboxedPlainObject>()) {
-    const UnboxedLayout& layout = object->as<UnboxedPlainObject>().layout();
-
-    RootedId id(cx);
-    RootedValue receiver(cx, ObjectValue(*object));
-    const UnboxedLayout::PropertyVector& properties = layout.properties();
-    for (size_t i = 0; i < properties.length(); i++) {
-      val = iter.read();
-
-      // This is the default placeholder value of MObjectState, when no
-      // properties are defined yet.
-      if (val.isUndefined()) {
-        continue;
-      }
-||||||| merged common ancestors
-    RootedShape shape(cx, templateObj->lastProperty());
-    RootedObjectGroup group(cx, templateObj->group());
-    JSObject* resultObject = NewCallObject(cx, shape, group);
-    if (!resultObject) {
-        return false;
-    }
-=======
   if (!object->denseElementsAreCopyOnWrite()) {
     MOZ_ASSERT(object->getDenseInitializedLength() == 0,
                "initDenseElement call below relies on this");
     object->setDenseInitializedLength(initLength);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      id = NameToId(properties[i].name);
-      ObjectOpResult result;
-
-      // SetProperty can only fail due to OOM.
-      if (!SetProperty(cx, object, id, val, receiver, result)) {
-        return false;
-      }
-      if (!result) {
-        return result.reportError(cx, object, id);
-      }
-    }
-  } else {
-    RootedNativeObject nativeObject(cx, &object->as<NativeObject>());
-    MOZ_ASSERT(nativeObject->slotSpan() == numSlots());
-||||||| merged common ancestors
-    RootedValue result(cx);
-    result.setObject(*resultObject);
-    iter.storeInstructionResult(result);
-    return true;
-}
-
-bool
-MObjectState::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_ObjectState));
-    writer.writeUnsigned(numSlots());
-    return true;
-}
-
-RObjectState::RObjectState(CompactBufferReader& reader)
-{
-    numSlots_ = reader.readUnsigned();
-}
-
-bool
-RObjectState::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedObject object(cx, &iter.read().toObject());
-    RootedValue val(cx);
-
-    if (object->is<UnboxedPlainObject>()) {
-        const UnboxedLayout& layout = object->as<UnboxedPlainObject>().layout();
-
-        RootedId id(cx);
-        RootedValue receiver(cx, ObjectValue(*object));
-        const UnboxedLayout::PropertyVector& properties = layout.properties();
-        for (size_t i = 0; i < properties.length(); i++) {
-            val = iter.read();
-
-            // This is the default placeholder value of MObjectState, when no
-            // properties are defined yet.
-            if (val.isUndefined()) {
-                continue;
-            }
-
-            id = NameToId(properties[i].name);
-            ObjectOpResult result;
-
-            // SetProperty can only fail due to OOM.
-            if (!SetProperty(cx, object, id, val, receiver, result)) {
-                return false;
-            }
-            if (!result) {
-                return result.reportError(cx, object, id);
-            }
-        }
-    } else {
-        RootedNativeObject nativeObject(cx, &object->as<NativeObject>());
-        MOZ_ASSERT(nativeObject->slotSpan() == numSlots());
-
-        for (size_t i = 0; i < numSlots(); i++) {
-            val = iter.read();
-            nativeObject->setSlot(i, val);
-        }
-    }
-=======
     for (size_t index = 0; index < numElements(); index++) {
       Value val = iter.read();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    for (size_t i = 0; i < numSlots(); i++) {
-      val = iter.read();
-      nativeObject->setSlot(i, val);
-||||||| merged common ancestors
-    val.setObject(*object);
-    iter.storeInstructionResult(val);
-    return true;
-}
-
-bool
-MArrayState::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_ArrayState));
-    writer.writeUnsigned(numElements());
-    return true;
-}
-
-RArrayState::RArrayState(CompactBufferReader& reader)
-{
-    numElements_ = reader.readUnsigned();
-}
-
-bool
-RArrayState::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue result(cx);
-    ArrayObject* object = &iter.read().toObject().as<ArrayObject>();
-    uint32_t initLength = iter.read().toInt32();
-
-    if (!object->denseElementsAreCopyOnWrite()) {
-        MOZ_ASSERT(object->getDenseInitializedLength() == 0,
-                   "initDenseElement call below relies on this");
-        object->setDenseInitializedLength(initLength);
-
-        for (size_t index = 0; index < numElements(); index++) {
-            Value val = iter.read();
-
-            if (index >= initLength) {
-                MOZ_ASSERT(val.isUndefined());
-                continue;
-            }
-
-            object->initDenseElement(index, val);
-        }
-    } else {
-        MOZ_RELEASE_ASSERT(object->getDenseInitializedLength() == numElements());
-        MOZ_RELEASE_ASSERT(initLength == numElements());
-
-        for (size_t index = 0; index < numElements(); index++) {
-            Value val = iter.read();
-            if (object->getDenseElement(index) == val) {
-                continue;
-            }
-            if (!object->maybeCopyElementsForWrite(cx)) {
-                return false;
-            }
-            object->setDenseElement(index, val);
-        }
-=======
       if (index >= initLength) {
         MOZ_ASSERT(val.isUndefined());
         continue;
       }
 
       object->initDenseElement(index, val);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   } else {
     MOZ_RELEASE_ASSERT(object->getDenseInitializedLength() == numElements());
     MOZ_RELEASE_ASSERT(initLength == numElements());
@@ -2461,40 +1508,12 @@ RArrayState::recover(JSContext* cx, SnapshotIterator& iter) const
       object->setDenseElement(index, val);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  val.setObject(*object);
-  iter.storeInstructionResult(val);
-  return true;
-||||||| merged common ancestors
-    result.setObject(*object);
-    iter.storeInstructionResult(result);
-    return true;
-=======
   result.setObject(*object);
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MArrayState::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_ArrayState));
-  writer.writeUnsigned(numElements());
-  return true;
-||||||| merged common ancestors
-bool
-MSetArrayLength::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    // For simplicity, we capture directly the object instead of the elements
-    // pointer.
-    MOZ_ASSERT(elements()->type() != MIRType::Elements);
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_SetArrayLength));
-    return true;
-=======
 bool MSetArrayLength::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   // For simplicity, we capture directly the object instead of the elements
@@ -2502,118 +1521,26 @@ bool MSetArrayLength::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(elements()->type() != MIRType::Elements);
   writer.writeUnsigned(uint32_t(RInstruction::Recover_SetArrayLength));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RArrayState::RArrayState(CompactBufferReader& reader) {
-  numElements_ = reader.readUnsigned();
-}
-||||||| merged common ancestors
-RSetArrayLength::RSetArrayLength(CompactBufferReader& reader)
-{
-}
-=======
 RSetArrayLength::RSetArrayLength(CompactBufferReader& reader) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool RArrayState::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue result(cx);
-  ArrayObject* object = &iter.read().toObject().as<ArrayObject>();
-  uint32_t initLength = iter.read().toInt32();
-
-  if (!object->denseElementsAreCopyOnWrite()) {
-    MOZ_ASSERT(object->getDenseInitializedLength() == 0,
-               "initDenseElement call below relies on this");
-    object->setDenseInitializedLength(initLength);
-
-    for (size_t index = 0; index < numElements(); index++) {
-      Value val = iter.read();
-||||||| merged common ancestors
-bool
-RSetArrayLength::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue result(cx);
-    RootedArrayObject obj(cx, &iter.read().toObject().as<ArrayObject>());
-    RootedValue len(cx, iter.read());
-=======
 bool RSetArrayLength::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedValue result(cx);
   RootedArrayObject obj(cx, &iter.read().toObject().as<ArrayObject>());
   RootedValue len(cx, iter.read());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (index >= initLength) {
-        MOZ_ASSERT(val.isUndefined());
-        continue;
-      }
-
-      object->initDenseElement(index, val);
-    }
-  } else {
-    MOZ_RELEASE_ASSERT(object->getDenseInitializedLength() == numElements());
-    MOZ_RELEASE_ASSERT(initLength == numElements());
-
-    for (size_t index = 0; index < numElements(); index++) {
-      Value val = iter.read();
-      if (object->getDenseElement(index) == val) {
-        continue;
-      }
-      if (!object->maybeCopyElementsForWrite(cx)) {
-        return false;
-      }
-      object->setDenseElement(index, val);
-    }
-  }
-||||||| merged common ancestors
-    RootedId id(cx, NameToId(cx->names().length));
-    ObjectOpResult error;
-    if (!ArraySetLength(cx, obj, id, JSPROP_PERMANENT, len, error)) {
-        return false;
-    }
-=======
   RootedId id(cx, NameToId(cx->names().length));
   ObjectOpResult error;
   if (!ArraySetLength(cx, obj, id, JSPROP_PERMANENT, len, error)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  result.setObject(*object);
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-    result.setObject(*obj);
-    iter.storeInstructionResult(result);
-    return true;
-=======
   result.setObject(*obj);
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MSetArrayLength::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  // For simplicity, we capture directly the object instead of the elements
-  // pointer.
-  MOZ_ASSERT(elements()->type() != MIRType::Elements);
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_SetArrayLength));
-  return true;
-||||||| merged common ancestors
-bool
-MAssertRecoveredOnBailout::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    MOZ_RELEASE_ASSERT(input()->isRecoveredOnBailout() == mustBeRecovered_,
-        "assertRecoveredOnBailout failed during compilation");
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_AssertRecoveredOnBailout));
-    return true;
-=======
 bool MAssertRecoveredOnBailout::writeRecoverData(
     CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
@@ -2622,43 +1549,11 @@ bool MAssertRecoveredOnBailout::writeRecoverData(
   writer.writeUnsigned(
       uint32_t(RInstruction::Recover_AssertRecoveredOnBailout));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RSetArrayLength::RSetArrayLength(CompactBufferReader& reader) {}
-||||||| merged common ancestors
-RAssertRecoveredOnBailout::RAssertRecoveredOnBailout(CompactBufferReader& reader)
-{ }
-=======
 RAssertRecoveredOnBailout::RAssertRecoveredOnBailout(
     CompactBufferReader& reader) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool RSetArrayLength::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedValue result(cx);
-  RootedArrayObject obj(cx, &iter.read().toObject().as<ArrayObject>());
-  RootedValue len(cx, iter.read());
-
-  RootedId id(cx, NameToId(cx->names().length));
-  ObjectOpResult error;
-  if (!ArraySetLength(cx, obj, id, JSPROP_PERMANENT, len, error)) {
-    return false;
-  }
-
-  result.setObject(*obj);
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-bool RAssertRecoveredOnBailout::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedValue result(cx);
-    iter.read(); // skip the unused operand.
-    result.setUndefined();
-    iter.storeInstructionResult(result);
-    return true;
-=======
 bool RAssertRecoveredOnBailout::recover(JSContext* cx,
                                         SnapshotIterator& iter) const {
   RootedValue result(cx);
@@ -2666,113 +1561,32 @@ bool RAssertRecoveredOnBailout::recover(JSContext* cx,
   result.setUndefined();
   iter.storeInstructionResult(result);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MAssertRecoveredOnBailout::writeRecoverData(
-    CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  MOZ_RELEASE_ASSERT(input()->isRecoveredOnBailout() == mustBeRecovered_,
-                     "assertRecoveredOnBailout failed during compilation");
-  writer.writeUnsigned(
-      uint32_t(RInstruction::Recover_AssertRecoveredOnBailout));
-  return true;
-||||||| merged common ancestors
-bool
-MStringReplace::writeRecoverData(CompactBufferWriter& writer) const
-{
-    MOZ_ASSERT(canRecoverOnBailout());
-    writer.writeUnsigned(uint32_t(RInstruction::Recover_StringReplace));
-    writer.writeByte(isFlatReplacement_);
-    return true;
-=======
 bool MStringReplace::writeRecoverData(CompactBufferWriter& writer) const {
   MOZ_ASSERT(canRecoverOnBailout());
   writer.writeUnsigned(uint32_t(RInstruction::Recover_StringReplace));
   writer.writeByte(isFlatReplacement_);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RAssertRecoveredOnBailout::RAssertRecoveredOnBailout(
-    CompactBufferReader& reader) {}
-
-bool RAssertRecoveredOnBailout::recover(JSContext* cx,
-                                        SnapshotIterator& iter) const {
-  RootedValue result(cx);
-  iter.read();  // skip the unused operand.
-  result.setUndefined();
-  iter.storeInstructionResult(result);
-  return true;
-||||||| merged common ancestors
-RStringReplace::RStringReplace(CompactBufferReader& reader)
-{
-    isFlatReplacement_ = reader.readByte();
-=======
 RStringReplace::RStringReplace(CompactBufferReader& reader) {
   isFlatReplacement_ = reader.readByte();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MStringReplace::writeRecoverData(CompactBufferWriter& writer) const {
-  MOZ_ASSERT(canRecoverOnBailout());
-  writer.writeUnsigned(uint32_t(RInstruction::Recover_StringReplace));
-  writer.writeByte(isFlatReplacement_);
-  return true;
-}
-||||||| merged common ancestors
-bool RStringReplace::recover(JSContext* cx, SnapshotIterator& iter) const
-{
-    RootedString string(cx, iter.read().toString());
-    RootedString pattern(cx, iter.read().toString());
-    RootedString replace(cx, iter.read().toString());
-=======
 bool RStringReplace::recover(JSContext* cx, SnapshotIterator& iter) const {
   RootedString string(cx, iter.read().toString());
   RootedString pattern(cx, iter.read().toString());
   RootedString replace(cx, iter.read().toString());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-RStringReplace::RStringReplace(CompactBufferReader& reader) {
-  isFlatReplacement_ = reader.readByte();
-}
-||||||| merged common ancestors
-    JSString* result = isFlatReplacement_ ? js::str_flat_replace_string(cx, string, pattern, replace) :
-                                            js::str_replace_string_raw(cx, string, pattern, replace);
-=======
   JSString* result =
       isFlatReplacement_
           ? js::StringFlatReplaceString(cx, string, pattern, replace)
           : js::str_replace_string_raw(cx, string, pattern, replace);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool RStringReplace::recover(JSContext* cx, SnapshotIterator& iter) const {
-  RootedString string(cx, iter.read().toString());
-  RootedString pattern(cx, iter.read().toString());
-  RootedString replace(cx, iter.read().toString());
-
-  JSString* result =
-      isFlatReplacement_
-          ? js::str_flat_replace_string(cx, string, pattern, replace)
-          : js::str_replace_string_raw(cx, string, pattern, replace);
 
   if (!result) {
     return false;
   }
-||||||| merged common ancestors
-    if (!result) {
-        return false;
-    }
-=======
-  if (!result) {
-    return false;
-  }
->>>>>>> upstream-releases
 
   iter.storeInstructionResult(StringValue(result));
   return true;

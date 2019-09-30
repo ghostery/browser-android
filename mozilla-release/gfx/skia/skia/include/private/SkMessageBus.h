@@ -15,14 +15,6 @@
 #include "SkTDArray.h"
 #include "SkTypes.h"
 
-<<<<<<< HEAD
-/**
- * Message must implement bool Message::shouldSend(uint32_t inboxID) const. Perhaps someday we
- * can use std::experimental::is_detected to avoid this requirement by sending to all inboxes when
- * the method is not detected on Message.
- */
-||||||| merged common ancestors
-=======
 /**
  * The following method must have a specialization for type 'Message':
  *
@@ -31,24 +23,12 @@
  * We may want to consider providing a default template implementation, to avoid this requirement by
  * sending to all inboxes when the specialization for type 'Message' is not present.
  */
->>>>>>> upstream-releases
 template <typename Message>
 class SkMessageBus : SkNoncopyable {
 public:
-<<<<<<< HEAD
-    // Post a message to be received by Inboxes for this Message type. Checks
-    // Message::shouldSend() for each inbox. Threadsafe.
-    static void Post(const Message& m);
-||||||| merged common ancestors
-    // Post a message to be received by Inboxes for this Message type.  Threadsafe.
-    // If id is SK_InvalidUniqueID then it will be sent to all inboxes.
-    // Otherwise it will be sent to the inbox with that id.
-    static void Post(const Message& m, uint32_t destID = SK_InvalidUniqueID);
-=======
     // Post a message to be received by Inboxes for this Message type. Checks
     // SkShouldPostMessageToBus() for each inbox. Threadsafe.
     static void Post(const Message& m);
->>>>>>> upstream-releases
 
     class Inbox {
     public:
@@ -136,13 +116,7 @@ template <typename Message>
     SkMessageBus<Message>* bus = SkMessageBus<Message>::Get();
     SkAutoMutexAcquire lock(bus->fInboxesMutex);
     for (int i = 0; i < bus->fInboxes.count(); i++) {
-<<<<<<< HEAD
-        if (m.shouldSend(bus->fInboxes[i]->fUniqueID)) {
-||||||| merged common ancestors
-        if (SK_InvalidUniqueID == destID || bus->fInboxes[i]->fUniqueID == destID) {
-=======
         if (SkShouldPostMessageToBus(m, bus->fInboxes[i]->fUniqueID)) {
->>>>>>> upstream-releases
             bus->fInboxes[i]->receive(m);
         }
     }

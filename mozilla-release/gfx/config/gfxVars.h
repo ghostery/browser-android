@@ -21,71 +21,6 @@ namespace gfx {
 class gfxVarReceiver;
 
 // Generator for graphics vars.
-<<<<<<< HEAD
-#define GFX_VARS_LIST(_)                                           \
-  /* C++ Name,                  Data Type,        Default Value */ \
-  _(BrowserTabsRemoteAutostart, bool, false)                       \
-  _(ContentBackend, BackendType, BackendType::NONE)                \
-  _(SoftwareBackend, BackendType, BackendType::NONE)               \
-  _(TileSize, IntSize, IntSize(-1, -1))                            \
-  _(UseXRender, bool, false)                                       \
-  _(OffscreenFormat, gfxImageFormat,                               \
-    mozilla::gfx::SurfaceFormat::X8R8G8B8_UINT32)                  \
-  _(RequiresAcceleratedGLContextForCompositorOGL, bool, false)     \
-  _(CanUseHardwareVideoDecoding, bool, false)                      \
-  _(PDMWMFDisableD3D11Dlls, nsCString, nsCString())                \
-  _(PDMWMFDisableD3D9Dlls, nsCString, nsCString())                 \
-  _(DXInterop2Blocked, bool, false)                                \
-  _(DXNV12Blocked, bool, false)                                    \
-  _(DXP010Blocked, bool, false)                                    \
-  _(DXP016Blocked, bool, false)                                    \
-  _(UseWebRender, bool, false)                                     \
-  _(UseWebRenderANGLE, bool, false)                                \
-  _(UseWebRenderDCompWin, bool, false)                             \
-  _(UseWebRenderDCompWinTripleBuffering, bool, false)              \
-  _(UseWebRenderProgramBinary, bool, false)                        \
-  _(UseWebRenderProgramBinaryDisk, bool, false)                    \
-  _(WebRenderDebugFlags, int32_t, 0)                               \
-  _(ScreenDepth, int32_t, 0)                                       \
-  _(GREDirectory, nsString, nsString())                            \
-  _(ProfDirectory, nsString, nsString())                           \
-  _(UseOMTP, bool, false)                                          \
-  _(AllowD3D11KeyedMutex, bool, false)                             \
-  _(SystemTextQuality, int32_t, 5 /* CLEARTYPE_QUALITY */)
-
-/* Add new entries above this line. */
-||||||| merged common ancestors
-#define GFX_VARS_LIST(_)                                                \
-  /* C++ Name,                  Data Type,        Default Value */      \
-  _(BrowserTabsRemoteAutostart, bool,             false)                \
-  _(ContentBackend,             BackendType,      BackendType::NONE)    \
-  _(SoftwareBackend,            BackendType,      BackendType::NONE)    \
-  _(TileSize,                   IntSize,          IntSize(-1, -1))      \
-  _(UseXRender,                 bool,             false)                \
-  _(OffscreenFormat,            gfxImageFormat,   mozilla::gfx::SurfaceFormat::X8R8G8B8_UINT32) \
-  _(RequiresAcceleratedGLContextForCompositorOGL, bool, false)          \
-  _(CanUseHardwareVideoDecoding, bool,            false)                \
-  _(PDMWMFDisableD3D11Dlls,     nsCString,        nsCString())          \
-  _(PDMWMFDisableD3D9Dlls,      nsCString,        nsCString())          \
-  _(DXInterop2Blocked,          bool,             false)                \
-  _(DXNV12Blocked,              bool,             false)                \
-  _(DXP010Blocked,              bool,             false)                \
-  _(DXP016Blocked,              bool,             false)                \
-  _(UseWebRender,               bool,             false)                \
-  _(UseWebRenderANGLE,          bool,             false)                \
-  _(UseWebRenderDCompWin,       bool,             false)                \
-  _(UseWebRenderProgramBinary,  bool,             false)                \
-  _(UseWebRenderProgramBinaryDisk, bool,          false)                \
-  _(WebRenderDebugFlags,        int32_t,          0)                    \
-  _(ScreenDepth,                int32_t,          0)                    \
-  _(GREDirectory,               nsString,         nsString())           \
-  _(ProfDirectory,              nsString,         nsString())           \
-  _(UseOMTP,                    bool,             false)                \
-  _(AllowD3D11KeyedMutex,       bool,             false)                \
-  _(SystemTextQuality,          int32_t,          5 /* CLEARTYPE_QUALITY */) \
-
-  /* Add new entries above this line. */
-=======
 #define GFX_VARS_LIST(_)                                           \
   /* C++ Name,                  Data Type,        Default Value */ \
   _(BrowserTabsRemoteAutostart, bool, false)                       \
@@ -120,7 +55,6 @@ class gfxVarReceiver;
   _(UseDoubleBufferingWithCompositor, bool, false)
 
 /* Add new entries above this line. */
->>>>>>> upstream-releases
 
 // Some graphics settings are computed on the UI process and must be
 // communicated to content and GPU processes. gfxVars helps facilitate

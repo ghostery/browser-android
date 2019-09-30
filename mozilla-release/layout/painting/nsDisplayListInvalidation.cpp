@@ -104,7 +104,6 @@ void nsDisplaySVGEffectGeometry::MoveBy(const nsPoint& aOffset) {
 }
 
 nsDisplayMasksAndClipPathsGeometry::nsDisplayMasksAndClipPathsGeometry(
-<<<<<<< HEAD
     nsDisplayMasksAndClipPaths* aItem, nsDisplayListBuilder* aBuilder)
     : nsDisplaySVGEffectGeometry(aItem, aBuilder),
       nsImageGeometryMixin(aItem, aBuilder),
@@ -114,48 +113,6 @@ nsDisplayFiltersGeometry::nsDisplayFiltersGeometry(
     nsDisplayFilters* aItem, nsDisplayListBuilder* aBuilder)
     : nsDisplaySVGEffectGeometry(aItem, aBuilder),
       nsImageGeometryMixin(aItem, aBuilder) {}
-||||||| merged common ancestors
-                                      nsDisplayMasksAndClipPaths* aItem,
-                                      nsDisplayListBuilder* aBuilder)
-  : nsDisplaySVGEffectGeometry(aItem, aBuilder)
-  , nsImageGeometryMixin(aItem, aBuilder)
-  , mDestRects(aItem->GetDestRects())
-{
-}
-
-nsDisplayFiltersGeometry::nsDisplayFiltersGeometry(nsDisplayFilters* aItem,
-                                                   nsDisplayListBuilder* aBuilder)
-  : nsDisplaySVGEffectGeometry(aItem, aBuilder)
-  , nsImageGeometryMixin(aItem, aBuilder)
-{
-}
-=======
-    nsDisplayMasksAndClipPaths* aItem, nsDisplayListBuilder* aBuilder)
-    : nsDisplaySVGEffectGeometry(aItem, aBuilder),
-      nsImageGeometryMixin(aItem, aBuilder),
-      mDestRects(aItem->GetDestRects()) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-nsCharClipGeometry::nsCharClipGeometry(nsCharClipDisplayItem* aItem,
-                                       nsDisplayListBuilder* aBuilder)
-    : nsDisplayItemGenericGeometry(aItem, aBuilder),
-      mVisIStartEdge(aItem->mVisIStartEdge),
-      mVisIEndEdge(aItem->mVisIEndEdge) {}
-||||||| merged common ancestors
-nsCharClipGeometry::nsCharClipGeometry(nsCharClipDisplayItem* aItem,
-                                       nsDisplayListBuilder* aBuilder)
-  : nsDisplayItemGenericGeometry(aItem, aBuilder)
-  , mVisIStartEdge(aItem->mVisIStartEdge)
-  , mVisIEndEdge(aItem->mVisIEndEdge)
-{
-}
-=======
-nsDisplayFiltersGeometry::nsDisplayFiltersGeometry(
-    nsDisplayFilters* aItem, nsDisplayListBuilder* aBuilder)
-    : nsDisplaySVGEffectGeometry(aItem, aBuilder),
-      nsImageGeometryMixin(aItem, aBuilder) {}
->>>>>>> upstream-releases
 
 nsDisplayTableItemGeometry::nsDisplayTableItemGeometry(
     nsDisplayTableItem* aItem, nsDisplayListBuilder* aBuilder,

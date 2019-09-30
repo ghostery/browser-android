@@ -75,43 +75,19 @@
   test(t => {
     const candidate = new RTCIceCandidate({ sdpMid: 'audio' });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, 'audio', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, null, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, `new RTCIceCandidate({ sdpMid: 'audio' })`);
 
   test(t => {
     const candidate = new RTCIceCandidate({ sdpMLineIndex: 0 });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, null);
-    assert_equals(candidate.sdpMLineIndex, 0);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, null);
-    assert_equals(candidate.sdpMLineIndex, 0);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, null, 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, 0, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, 'new RTCIceCandidate({ sdpMLineIndex: 0 })');
 
   test(t => {
@@ -120,22 +96,10 @@
       sdpMLineIndex: 0
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, 0);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, 0);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, 'audio', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, 0, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, `new RTCIceCandidate({ sdpMid: 'audio', sdpMLineIndex: 0 })`);
 
   test(t => {
@@ -144,22 +108,10 @@
       sdpMid: 'audio'
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, 'audio', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, null, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, `new RTCIceCandidate({ candidate: '', sdpMid: 'audio' }`);
 
   test(t => {
@@ -168,22 +120,10 @@
       sdpMLineIndex: 0
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, null);
-    assert_equals(candidate.sdpMLineIndex, 0);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, null);
-    assert_equals(candidate.sdpMLineIndex, 0);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, null, 'sdpMid', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, 0, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, `new RTCIceCandidate({ candidate: '', sdpMLineIndex: 0 }`);
 
   test(t => {
@@ -192,22 +132,10 @@
       sdpMid: 'audio'
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, candidateString);
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, candidateString);
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, candidateString, 'candidate');
     assert_equals(candidate.sdpMid, 'audio', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, null, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, 'new RTCIceCandidate({ ... }) with valid candidate string and sdpMid');
 
   test(t =>{
@@ -217,22 +145,10 @@
       sdpMid: 'audio'
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, arbitraryString);
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, arbitraryString);
-    assert_equals(candidate.sdpMid, 'audio');
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, arbitraryString, 'candidate');
     assert_equals(candidate.sdpMid, 'audio', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, null, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, 'new RTCIceCandidate({ ... }) with invalid candidate string and sdpMid');
 
   test(t => {
@@ -243,19 +159,6 @@
       usernameFragment: 'test'
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, candidateString);
-    assert_equals(candidate.sdpMid, 'video');
-    assert_equals(candidate.sdpMLineIndex, 1);
-    assert_equals(candidate.usernameFragment, 'test');
-  }, 'new RTCIceCandidate({ ... }) with non default value for all fields');
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, candidateString);
-    assert_equals(candidate.sdpMid, 'video');
-    assert_equals(candidate.sdpMLineIndex, 1);
-    assert_equals(candidate.ufrag, 'test');
-  }, 'new RTCIceCandidate({ ... }) with non default value for all fields');
-=======
     assert_equals(candidate.candidate, candidateString, 'candidate');
     assert_equals(candidate.sdpMid, 'video', 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, 1, 'sdpMLineIndex');
@@ -273,7 +176,6 @@
     assert_equals(candidate.relatedAddress, null, 'relatedAddress');
     assert_equals(candidate.relatedPort, null, 'relatedPort');
   }, 'new RTCIceCandidate({ ... }) with nondefault values for all fields');
->>>>>>> upstream-releases
 
   test(t => {
     const candidate = new RTCIceCandidate({
@@ -307,22 +209,10 @@
       sdpMid: arbitraryString
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, arbitraryString);
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, arbitraryString);
-    assert_equals(candidate.sdpMLineIndex, null);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, arbitraryString, 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, null, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, 'new RTCIceCandidate({ ... }) with invalid sdpMid');
 
 
@@ -335,22 +225,10 @@
       sdpMLineIndex: 65535
     });
 
-<<<<<<< HEAD
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, null);
-    assert_equals(candidate.sdpMLineIndex, 65535);
-    assert_equals(candidate.usernameFragment, null);
-||||||| merged common ancestors
-    assert_equals(candidate.candidate, '');
-    assert_equals(candidate.sdpMid, null);
-    assert_equals(candidate.sdpMLineIndex, 65535);
-    assert_equals(candidate.ufrag, null);
-=======
     assert_equals(candidate.candidate, '', 'candidate');
     assert_equals(candidate.sdpMid, null, 'sdpMid');
     assert_equals(candidate.sdpMLineIndex, 65535, 'sdpMLineIndex');
     assert_equals(candidate.usernameFragment, null, 'usernameFragment');
->>>>>>> upstream-releases
   }, 'new RTCIceCandidate({ ... }) with invalid sdpMLineIndex');
 
 </script>

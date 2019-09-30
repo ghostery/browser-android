@@ -19,38 +19,18 @@ namespace gfx {
 
 using namespace std;
 
-<<<<<<< HEAD
-RecordedEvent *RecordedEvent::LoadEventFromStream(std::istream &aStream,
-                                                  EventType aType) {
-  return LoadEvent(aStream, aType);
-||||||| merged common ancestors
-RecordedEvent *
-RecordedEvent::LoadEventFromStream(std::istream &aStream, EventType aType) {
-  return LoadEvent(aStream, aType);
-=======
 /* static */
 bool RecordedEvent::DoWithEventFromStream(
     EventStream& aStream, EventType aType,
     const std::function<bool(RecordedEvent*)>& aAction) {
   return DoWithEvent(aStream, aType, aAction);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-RecordedEvent *RecordedEvent::LoadEventFromStream(EventStream &aStream,
-                                                  EventType aType) {
-  return LoadEvent(aStream, aType);
-||||||| merged common ancestors
-RecordedEvent *
-RecordedEvent::LoadEventFromStream(EventStream& aStream, EventType aType) {
-  return LoadEvent(aStream, aType);
-=======
 /* static */
 bool RecordedEvent::DoWithEventFromStream(
     EventRingBuffer& aStream, EventType aType,
     const std::function<bool(RecordedEvent*)>& aAction) {
   return DoWithEvent(aStream, aType, aAction);
->>>>>>> upstream-releases
 }
 
 string RecordedEvent::GetEventName(EventType aType) {
@@ -142,18 +122,9 @@ string RecordedEvent::GetEventName(EventType aType) {
   }
 }
 
-<<<<<<< HEAD
-template <class S>
-void RecordedEvent::RecordUnscaledFontImpl(UnscaledFont *aUnscaledFont,
-                                           S &aOutput) {
-||||||| merged common ancestors
-template<class S>
-void RecordedEvent::RecordUnscaledFontImpl(UnscaledFont *aUnscaledFont, S& aOutput) {
-=======
 template <class S>
 void RecordedEvent::RecordUnscaledFontImpl(UnscaledFont* aUnscaledFont,
                                            S& aOutput) {
->>>>>>> upstream-releases
   RecordedFontData fontData(aUnscaledFont);
   RecordedFontDetails fontDetails;
   if (fontData.GetFontDetails(fontDetails)) {
@@ -179,42 +150,18 @@ void RecordedEvent::RecordUnscaledFontImpl(UnscaledFont* aUnscaledFont,
   }
 }
 
-<<<<<<< HEAD
-void RecordedEvent::RecordUnscaledFont(UnscaledFont *aUnscaledFont,
-                                       std::ostream *aOutput) {
-||||||| merged common ancestors
-void RecordedEvent::RecordUnscaledFont(UnscaledFont *aUnscaledFont, std::ostream *aOutput) {
-=======
 void RecordedEvent::RecordUnscaledFont(UnscaledFont* aUnscaledFont,
                                        std::ostream* aOutput) {
->>>>>>> upstream-releases
   RecordUnscaledFontImpl(aUnscaledFont, *aOutput);
 }
 
-<<<<<<< HEAD
-void RecordedEvent::RecordUnscaledFont(UnscaledFont *aUnscaledFont,
-                                       MemStream &aOutput) {
-||||||| merged common ancestors
-void RecordedEvent::RecordUnscaledFont(UnscaledFont *aUnscaledFont, MemStream &aOutput) {
-=======
 void RecordedEvent::RecordUnscaledFont(UnscaledFont* aUnscaledFont,
                                        MemStream& aOutput) {
->>>>>>> upstream-releases
   RecordUnscaledFontImpl(aUnscaledFont, aOutput);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DrawTarget> Translator::CreateDrawTarget(
-    ReferencePtr aRefPtr, const IntSize &aSize, SurfaceFormat aFormat) {
-||||||| merged common ancestors
-already_AddRefed<DrawTarget>
-Translator::CreateDrawTarget(ReferencePtr aRefPtr, const IntSize &aSize,
-                             SurfaceFormat aFormat)
-{
-=======
 already_AddRefed<DrawTarget> Translator::CreateDrawTarget(
     ReferencePtr aRefPtr, const IntSize& aSize, SurfaceFormat aFormat) {
->>>>>>> upstream-releases
   RefPtr<DrawTarget> newDT =
       GetReferenceDrawTarget()->CreateSimilarDrawTarget(aSize, aFormat);
   AddDrawTarget(aRefPtr, newDT);

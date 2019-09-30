@@ -668,34 +668,17 @@ def p_Type(p):
 
 def p_BasicType(p):
     """BasicType : CxxID
-<<<<<<< HEAD
-                 | CxxID '[' ']'
-                 | CxxUniquePtrInst"""
-||||||| merged common ancestors
-                 | CxxID '[' ']'"""
-=======
                  | CxxID '[' ']'
                  | CxxID '?'
                  | CxxUniquePtrInst"""
->>>>>>> upstream-releases
     # ID == CxxType; we forbid qnames here,
     # in favor of the |using| declaration
     if not isinstance(p[1], TypeSpec):
-<<<<<<< HEAD
-        assert (len(p[1]) == 2) or (len(p[1]) == 3)
-        if 2 == len(p[1]):
-            # p[1] is CxxID. isunique = 0
-            p[1] = p[1] + (0,)
-        loc, id, isunique = p[1]
-||||||| merged common ancestors
-        loc, id = p[1]
-=======
         assert (len(p[1]) == 2) or (len(p[1]) == 3)
         if 2 == len(p[1]):
             # p[1] is CxxID. isunique = False
             p[1] = p[1] + (False,)
         loc, id, isunique = p[1]
->>>>>>> upstream-releases
         p[1] = TypeSpec(loc, QualifiedId(loc, id))
         p[1].uniqueptr = isunique
     if 4 == len(p):
@@ -751,20 +734,11 @@ def p_CxxTemplateInst(p):
     p[0] = (locFromTok(p, 1), str(p[1]) + '<' + str(p[3]) + '>')
 
 
-<<<<<<< HEAD
-def p_CxxUniquePtrInst(p):
-    """CxxUniquePtrInst : UNIQUEPTR '<' ID '>'"""
-    p[0] = (locFromTok(p, 1), str(p[3]), 1)
-
-
-||||||| merged common ancestors
-=======
 def p_CxxUniquePtrInst(p):
     """CxxUniquePtrInst : UNIQUEPTR '<' ID '>'"""
     p[0] = (locFromTok(p, 1), str(p[3]), True)
 
 
->>>>>>> upstream-releases
 def p_error(t):
     lineno, value = _safeLinenoValue(t)
     _error(Loc(Parser.current.filename, lineno),

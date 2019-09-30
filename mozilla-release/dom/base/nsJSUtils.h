@@ -109,12 +109,6 @@ class nsJSUtils {
     bool mScriptUsed;
 #endif
 
-<<<<<<< HEAD
-   public:
-||||||| merged common ancestors
-   public:
-
-=======
    private:
     // Compile a script contained in a SourceText.
     template <typename Unit>
@@ -122,7 +116,6 @@ class nsJSUtils {
                              JS::SourceText<Unit>& aSrcBuf);
 
    public:
->>>>>>> upstream-releases
     // Enter compartment in which the code would be executed.  The JSContext
     // must come from an AutoEntryScript.
     ExecutionContext(JSContext* aCx, JS::Handle<JSObject*> aGlobal);
@@ -163,23 +156,11 @@ class nsJSUtils {
     // thread.
     MOZ_MUST_USE nsresult JoinCompile(JS::OffThreadToken** aOffThreadToken);
 
-<<<<<<< HEAD
-    // Compile a script contained in a SourceText, and execute it.
-    nsresult CompileAndExec(JS::CompileOptions& aCompileOptions,
-                            JS::SourceText<char16_t>& aSrcBuf,
-                            JS::MutableHandle<JSScript*> aScript);
-||||||| merged common ancestors
-    // Compile a script contained in a SourceBuffer, and execute it.
-    nsresult CompileAndExec(JS::CompileOptions& aCompileOptions,
-                            JS::SourceBufferHolder& aSrcBuf,
-                            JS::MutableHandle<JSScript*> aScript);
-=======
     // Compile a script contained in a SourceText.
     nsresult Compile(JS::CompileOptions& aCompileOptions,
                      JS::SourceText<char16_t>& aSrcBuf);
     nsresult Compile(JS::CompileOptions& aCompileOptions,
                      JS::SourceText<mozilla::Utf8Unit>& aSrcBuf);
->>>>>>> upstream-releases
 
     // Compile a script contained in a string.
     nsresult Compile(JS::CompileOptions& aCompileOptions,
@@ -191,16 +172,6 @@ class nsJSUtils {
                     size_t aBytecodeIndex);
 
     // After getting a notification that an off-thread decoding terminated, this
-<<<<<<< HEAD
-    // function will get the result of the decoder by moving it to the main
-    // thread before starting the execution of the script.
-    MOZ_MUST_USE nsresult
-    DecodeJoinAndExec(JS::OffThreadToken** aOffThreadToken);
-||||||| merged common ancestors
-    // function will get the result of the decoder by moving it to the main
-    // thread before starting the execution of the script.
-    MOZ_MUST_USE nsresult DecodeJoinAndExec(JS::OffThreadToken** aOffThreadToken);
-=======
     // function will get the result of the decoder and move it to the main
     // thread.
     nsresult JoinDecode(JS::OffThreadToken** aOffThreadToken);
@@ -216,19 +187,9 @@ class nsJSUtils {
 
     // Get the compiled script if present, or nullptr.
     JSScript* MaybeGetScript();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_MUST_USE nsresult
-    DecodeBinASTJoinAndExec(JS::OffThreadToken** aOffThreadToken,
-                            JS::MutableHandle<JSScript*> aScript);
-||||||| merged common ancestors
-    MOZ_MUST_USE nsresult DecodeBinASTJoinAndExec(JS::OffThreadToken** aOffThreadToken,
-                                                  JS::MutableHandle<JSScript*> aScript);
-=======
     // Execute the compiled script and ignore the return value.
     MOZ_MUST_USE nsresult ExecScript();
->>>>>>> upstream-releases
 
     // Execute the compiled script a get the return value.
     //
@@ -259,13 +220,7 @@ class nsJSUtils {
                                 JS::MutableHandle<JSObject*> aModule);
 
   static nsresult CompileModule(JSContext* aCx,
-<<<<<<< HEAD
-                                JS::SourceText<char16_t>& aSrcBuf,
-||||||| merged common ancestors
-                                JS::SourceBufferHolder& aSrcBuf,
-=======
                                 JS::SourceText<mozilla::Utf8Unit>& aSrcBuf,
->>>>>>> upstream-releases
                                 JS::Handle<JSObject*> aEvaluationGlobal,
                                 JS::CompileOptions& aCompileOptions,
                                 JS::MutableHandle<JSObject*> aModule);

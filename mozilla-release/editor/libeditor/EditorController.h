@@ -19,22 +19,10 @@ namespace mozilla {
 class EditorController final {
  public:
   static nsresult RegisterEditorCommands(
-<<<<<<< HEAD
-      nsIControllerCommandTable* aCommandTable);
-||||||| merged common ancestors
-                    nsIControllerCommandTable* aCommandTable);
-=======
       nsControllerCommandTable* aCommandTable);
->>>>>>> upstream-releases
   static nsresult RegisterEditingCommands(
-<<<<<<< HEAD
-      nsIControllerCommandTable* aCommandTable);
-||||||| merged common ancestors
-                    nsIControllerCommandTable* aCommandTable);
-=======
       nsControllerCommandTable* aCommandTable);
   static void Shutdown();
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

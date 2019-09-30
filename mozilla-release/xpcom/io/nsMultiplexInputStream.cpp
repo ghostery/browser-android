@@ -990,15 +990,6 @@ nsresult nsMultiplexInputStreamConstructor(nsISupports* aOuter, REFNSIID aIID,
   return inst->QueryInterface(aIID, aResult);
 }
 
-<<<<<<< HEAD
-void nsMultiplexInputStream::Serialize(InputStreamParams& aParams,
-                                       FileDescriptorArray& aFileDescriptors) {
-||||||| merged common ancestors
-void
-nsMultiplexInputStream::Serialize(InputStreamParams& aParams,
-                                  FileDescriptorArray& aFileDescriptors)
-{
-=======
 void nsMultiplexInputStream::Serialize(InputStreamParams& aParams,
                                        FileDescriptorArray& aFileDescriptors,
                                        bool aDelayedStart, uint32_t aMaxSize,
@@ -1039,7 +1030,6 @@ template <typename M>
 void nsMultiplexInputStream::SerializeInternal(
     InputStreamParams& aParams, FileDescriptorArray& aFileDescriptors,
     bool aDelayedStart, uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   MultiplexInputStreamParams params;
@@ -1055,20 +1045,9 @@ void nsMultiplexInputStream::SerializeInternal(
     for (uint32_t index = 0; index < streamCount; index++) {
       uint32_t sizeUsed = 0;
       InputStreamParams childStreamParams;
-<<<<<<< HEAD
-      InputStreamHelper::SerializeInputStream(
-          mStreams[index].mStream, childStreamParams, aFileDescriptors);
-
-||||||| merged common ancestors
-      InputStreamHelper::SerializeInputStream(mStreams[index].mStream,
-                                              childStreamParams,
-                                              aFileDescriptors);
-
-=======
       InputStreamHelper::SerializeInputStream(
           mStreams[index].mStream, childStreamParams, aFileDescriptors,
           aDelayedStart, maxSize.value(), &sizeUsed, aManager);
->>>>>>> upstream-releases
       streams.AppendElement(childStreamParams);
 
       MOZ_ASSERT(maxSize.value() >= sizeUsed);
@@ -1126,56 +1105,6 @@ bool nsMultiplexInputStream::Deserialize(
   return true;
 }
 
-<<<<<<< HEAD
-Maybe<uint64_t> nsMultiplexInputStream::ExpectedSerializedLength() {
-  MutexAutoLock lock(mLock);
-
-  bool lengthValueExists = false;
-  uint64_t expectedLength = 0;
-  uint32_t streamCount = mStreams.Length();
-  for (uint32_t index = 0; index < streamCount; index++) {
-    nsCOMPtr<nsIIPCSerializableInputStream> stream =
-        do_QueryInterface(mStreams[index].mStream);
-    if (!stream) {
-      continue;
-    }
-    Maybe<uint64_t> length = stream->ExpectedSerializedLength();
-    if (length.isNothing()) {
-      continue;
-    }
-    lengthValueExists = true;
-    expectedLength += length.value();
-  }
-  return lengthValueExists ? Some(expectedLength) : Nothing();
-}
-
-||||||| merged common ancestors
-Maybe<uint64_t>
-nsMultiplexInputStream::ExpectedSerializedLength()
-{
-  MutexAutoLock lock(mLock);
-
-  bool lengthValueExists = false;
-  uint64_t expectedLength = 0;
-  uint32_t streamCount = mStreams.Length();
-  for (uint32_t index = 0; index < streamCount; index++) {
-    nsCOMPtr<nsIIPCSerializableInputStream> stream =
-      do_QueryInterface(mStreams[index].mStream);
-    if (!stream) {
-      continue;
-    }
-    Maybe<uint64_t> length = stream->ExpectedSerializedLength();
-    if (length.isNothing()) {
-      continue;
-    }
-    lengthValueExists = true;
-    expectedLength += length.value();
-  }
-  return lengthValueExists ? Some(expectedLength) : Nothing();
-}
-
-=======
->>>>>>> upstream-releases
 NS_IMETHODIMP
 nsMultiplexInputStream::GetCloneable(bool* aCloneable) {
   MutexAutoLock lock(mLock);

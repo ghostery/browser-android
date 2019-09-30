@@ -103,42 +103,16 @@
 // At present, all sandboxed content processes use the same directory for
 // NS_APP_CONTENT_PROCESS_TEMP_DIR, but that should not be relied upon.
 //
-<<<<<<< HEAD
-#define NS_APP_CONTENT_PROCESS_TEMP_DIR "ContentTmpD"
-||||||| merged common ancestors
-#define NS_APP_CONTENT_PROCESS_TEMP_DIR         "ContentTmpD"
-=======
 #  define NS_APP_CONTENT_PROCESS_TEMP_DIR "ContentTmpD"
->>>>>>> upstream-releases
 #else
 // Otherwise NS_APP_CONTENT_PROCESS_TEMP_DIR must match NS_OS_TEMP_DIR.
-<<<<<<< HEAD
-#define NS_APP_CONTENT_PROCESS_TEMP_DIR "TmpD"
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#define NS_APP_CONTENT_PROCESS_TEMP_DIR         "TmpD"
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #  define NS_APP_CONTENT_PROCESS_TEMP_DIR "TmpD"
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 
 #if defined(MOZ_SANDBOX)
-<<<<<<< HEAD
-#define NS_APP_PLUGIN_PROCESS_TEMP_DIR "PluginTmpD"
-||||||| merged common ancestors
-#define NS_APP_PLUGIN_PROCESS_TEMP_DIR          "PluginTmpD"
-=======
 #  define NS_APP_PLUGIN_PROCESS_TEMP_DIR "PluginTmpD"
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define NS_APP_PLUGIN_PROCESS_TEMP_DIR "TmpD"
-||||||| merged common ancestors
-#define NS_APP_PLUGIN_PROCESS_TEMP_DIR          "TmpD"
-=======
 #  define NS_APP_PLUGIN_PROCESS_TEMP_DIR "TmpD"
->>>>>>> upstream-releases
 #endif
 
 #endif  // nsAppDirectoryServiceDefs_h___

@@ -62,59 +62,6 @@ function checkTestModuleExists() {
   return testModule;
 }
 
-<<<<<<< HEAD
-function checkModuleTelemetry(additionalExpectedModule = undefined) {
-  let expectedModules = [
-    "NSS Internal PKCS #11 Module",
-  ];
-  if (additionalExpectedModule) {
-    expectedModules.push(additionalExpectedModule);
-  }
-  expectedModules.sort();
-  let telemetry = Services.telemetry.getSnapshotForKeyedScalars("main", false).parent;
-  let moduleTelemetry = telemetry["security.pkcs11_modules_loaded"];
-  let actualModules = [];
-  Object.keys(moduleTelemetry).forEach((key) => {
-    ok(moduleTelemetry[key], "each keyed scalar should be true");
-    actualModules.push(key);
-  });
-  actualModules.sort();
-  equal(actualModules.length, expectedModules.length,
-        "the number of actual and expected loaded modules should be the same");
-  for (let i in actualModules) {
-    equal(actualModules[i], expectedModules[i],
-          "actual and expected module names should match");
-  }
-}
-
-||||||| merged common ancestors
-function checkModuleTelemetry(additionalExpectedModule = undefined) {
-  let expectedModules = [
-    "NSS Internal PKCS #11 Module",
-  ];
-  if (additionalExpectedModule) {
-    expectedModules.push(additionalExpectedModule);
-  }
-  expectedModules.sort();
-  let telemetry = Services.telemetry.snapshotKeyedScalars(
-    Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTOUT).parent;
-  let moduleTelemetry = telemetry["security.pkcs11_modules_loaded"];
-  let actualModules = [];
-  Object.keys(moduleTelemetry).forEach((key) => {
-    ok(moduleTelemetry[key], "each keyed scalar should be true");
-    actualModules.push(key);
-  });
-  actualModules.sort();
-  equal(actualModules.length, expectedModules.length,
-        "the number of actual and expected loaded modules should be the same");
-  for (let i in actualModules) {
-    equal(actualModules[i], expectedModules[i],
-          "actual and expected module names should match");
-  }
-}
-
-=======
->>>>>>> upstream-releases
 function run_test() {
   // Check that if we have never added the test module, that we don't find it
   // in the module list.

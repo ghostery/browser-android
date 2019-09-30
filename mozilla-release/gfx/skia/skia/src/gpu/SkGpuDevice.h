@@ -80,17 +80,7 @@ public:
     void drawOval(const SkRect& oval, const SkPaint& paint) override;
     void drawArc(const SkRect& oval, SkScalar startAngle, SkScalar sweepAngle,
                  bool useCenter, const SkPaint& paint) override;
-<<<<<<< HEAD
     void drawPath(const SkPath& path, const SkPaint& paint, bool pathIsMutable) override;
-    void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y, const SkPaint&) override;
-||||||| merged common ancestors
-    void drawPath(const SkPath& path, const SkPaint& paint,
-                  const SkMatrix* prePathMatrix, bool pathIsMutable) override;
-    void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y,
-                    const SkPaint&) override;
-=======
-    void drawPath(const SkPath& path, const SkPaint& paint, bool pathIsMutable) override;
->>>>>>> upstream-releases
     void drawBitmapRect(const SkBitmap&, const SkRect* srcOrNull, const SkRect& dst,
                         const SkPaint& paint, SkCanvas::SrcRectConstraint) override;
     void drawSprite(const SkBitmap& bitmap, int x, int y,
@@ -180,14 +170,8 @@ private:
 
     GrClipStackClip clip() const { return GrClipStackClip(&this->cs()); }
 
-<<<<<<< HEAD
-    const GrCaps* caps() const { return fContext->contextPriv().caps(); }
-
-||||||| merged common ancestors
-=======
     const GrCaps* caps() const;
 
->>>>>>> upstream-releases
     /**
      * Helper functions called by drawBitmapCommon. By the time these are called the SkDraw's
      * matrix, clip, and the device's render target has already been set on GrContext.
@@ -250,45 +234,11 @@ private:
                              const SkRect* dstRect,
                              SkCanvas::SrcRectConstraint,
                              const SkMatrix& viewMatrix,
-<<<<<<< HEAD
-                             const SkPaint&);
-
-    void drawTextureProducerImpl(GrTextureProducer*,
-                                 const SkRect& clippedSrcRect,
-                                 const SkRect& clippedDstRect,
-                                 SkCanvas::SrcRectConstraint,
-                                 const SkMatrix& viewMatrix,
-                                 const SkMatrix& srcToDstMatrix,
-                                 const SkPaint&);
-
-    void drawProducerLattice(GrTextureProducer*, std::unique_ptr<SkLatticeIter>, const SkRect& dst,
-                             const SkPaint&);
-||||||| merged common ancestors
-                             const SkPaint&);
-
-    void drawTextureProducerImpl(GrTextureProducer*,
-                                 const SkRect& clippedSrcRect,
-                                 const SkRect& clippedDstRect,
-                                 SkCanvas::SrcRectConstraint,
-                                 const SkMatrix& viewMatrix,
-                                 const SkMatrix& srcToDstMatrix,
-                                 const SkPaint&);
-
-    bool drawFilledDRRect(const SkMatrix& viewMatrix, const SkRRect& outer,
-                          const SkRRect& inner, const SkPaint& paint);
-
-    void drawProducerNine(GrTextureProducer*, const SkIRect& center,
-                          const SkRect& dst, const SkPaint&);
-
-    void drawProducerLattice(GrTextureProducer*, const SkCanvas::Lattice& lattice,
-                             const SkRect& dst, const SkPaint&);
-=======
                              const SkPaint&,
                              bool attemptDrawTexture);
 
     void drawProducerLattice(GrTextureProducer*, std::unique_ptr<SkLatticeIter>, const SkRect& dst,
                              const SkPaint&);
->>>>>>> upstream-releases
 
     void drawStrokedLine(const SkPoint pts[2], const SkPaint&);
 

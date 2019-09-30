@@ -34,15 +34,9 @@ def main(argv):
         help="Maximum length of time to sleep between attempts (limits backoff length).",
     )
     parser.add_argument("-v", "--verbose", action="store_true", default=False)
-<<<<<<< HEAD
-    parser.add_argument("cmd", nargs=REMAINDER, help="Command to run. Eg: wget http://blah")
-||||||| merged common ancestors
-    parser.add_argument("cmd", nargs="+", help="Command to run. Eg: wget http://blah")
-=======
     parser.add_argument(
         "cmd", nargs=REMAINDER, help="Command to run. Eg: wget http://blah"
     )
->>>>>>> upstream-releases
 
     args = parser.parse_args(argv[1:])
 

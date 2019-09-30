@@ -162,44 +162,9 @@ static float compute_t_from_x(float A, float B, float C, float x) {
     return answer2;
 }
 
-<<<<<<< HEAD
-float SkCubicMap::computeYFromX(float x) const {
-    SkASSERT(valid(x));
-||||||| merged common ancestors
-    const float dx = 1.0f / kTableCount;
-    float x = dx;
-=======
 float SkCubicMap::computeYFromX(float x) const {
     x = SkScalarPin(x, 0, 1);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (nearly_zero(x) || nearly_zero(1 - x)) {
-        return x;
-    }
-    if (fType == kLine_Type) {
-        return x;
-    }
-    float t;
-    if (fType == kCubeRoot_Type) {
-        t = sk_float_pow(x / fCoeff[0].fX, 1.0f / 3);
-    } else {
-        t = compute_t_from_x(fCoeff[0].fX, fCoeff[1].fX, fCoeff[2].fX, x);
-    }
-    float a = fCoeff[0].fY;
-    float b = fCoeff[1].fY;
-    float c = fCoeff[2].fY;
-    float y = ((a * t + b) * t + c) * t;
-    SkASSERT(y >= 0);
-    return std::min(y, 1.0f);
-}
-||||||| merged common ancestors
-    fXTable[0].fT0 = 0;
-    fXTable[0].fY0 = 0;
-    for (int i = 1; i < kTableCount; ++i) {
-        float t = compute_t_from_x(fCoeff[0].fX, fCoeff[1].fX, fCoeff[2].fX, x);
-        SkASSERT(t > prevT);
-=======
     if (nearly_zero(x) || nearly_zero(1 - x)) {
         return x;
     }
@@ -227,35 +192,7 @@ static inline bool coeff_nearly_zero(float delta) {
 SkCubicMap::SkCubicMap(SkPoint p1, SkPoint p2) {
     Sk2s s1 = Sk2s::Load(&p1) * 3;
     Sk2s s2 = Sk2s::Load(&p2) * 3;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static inline bool coeff_nearly_zero(float delta) {
-    return sk_float_abs(delta) <= 0.0000001f;
-}
-||||||| merged common ancestors
-        fXTable[i - 1].fDT = t - prevT;
-        fXTable[i].fT0 = t;
-=======
-    s1 = Sk2s::Min(Sk2s::Max(s1, 0), 3);
-    s2 = Sk2s::Min(Sk2s::Max(s2, 0), 3);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void SkCubicMap::setPts(SkPoint p1, SkPoint p2) {
-    Sk2s s1 = Sk2s::Load(&p1) * 3;
-    Sk2s s2 = Sk2s::Load(&p2) * 3;
-||||||| merged common ancestors
-        SkPoint p = this->computeFromT(t);
-        fXTable[i - 1].fDY = p.fY - fXTable[i - 1].fY0;
-        fXTable[i].fY0 = p.fY;
-=======
-    (Sk2s(1) + s1 - s2).store(&fCoeff[0]);
-    (s2 - s1 - s1).store(&fCoeff[1]);
-    s1.store(&fCoeff[2]);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     s1 = Sk2s::Min(Sk2s::Max(s1, 0), 3);
     s2 = Sk2s::Min(Sk2s::Max(s2, 0), 3);
 
@@ -268,16 +205,6 @@ void SkCubicMap::setPts(SkPoint p1, SkPoint p2) {
         fType = kLine_Type;
     } else if (coeff_nearly_zero(fCoeff[1].fX) && coeff_nearly_zero(fCoeff[2].fX)) {
         fType = kCubeRoot_Type;
-||||||| merged common ancestors
-        prevT = t;
-        x += dx;
-=======
-    fType = kSolver_Type;
-    if (SkScalarNearlyEqual(p1.fX, p1.fY) && SkScalarNearlyEqual(p2.fX, p2.fY)) {
-        fType = kLine_Type;
-    } else if (coeff_nearly_zero(fCoeff[1].fX) && coeff_nearly_zero(fCoeff[2].fX)) {
-        fType = kCubeRoot_Type;
->>>>>>> upstream-releases
     }
 }
 

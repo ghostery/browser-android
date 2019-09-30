@@ -307,13 +307,7 @@ def parse_args():
     return (options, prefix, requested_paths, excluded_paths)
 
 
-<<<<<<< HEAD
-def load_wpt_tests(xul_tester, requested_paths, excluded_paths):
-||||||| merged common ancestors
-def load_wpt_tests(requested_paths, excluded_paths, debug, wasm):
-=======
 def load_wpt_tests(xul_tester, requested_paths, excluded_paths, update_manifest=True):
->>>>>>> upstream-releases
     """Return a list of `RefTestCase` objects for the jsshell testharness.js
     tests filtered by the given paths and debug-ness."""
     repo_root = abspath(os.path.join(here, "..", "..", ".."))
@@ -332,13 +326,8 @@ def load_wpt_tests(xul_tester, requested_paths, excluded_paths, update_manifest=
         "testing/mozbase/mozprocess",
         "testing/mozbase/mozprofile",
         "testing/mozbase/mozrunner",
-<<<<<<< HEAD
-        "testing/web-platform/",
-||||||| merged common ancestors
-=======
         "testing/mozbase/mozversion",
         "testing/web-platform/",
->>>>>>> upstream-releases
         "testing/web-platform/tests/tools",
         "testing/web-platform/tests/tools/third_party/html5lib",
         "testing/web-platform/tests/tools/third_party/webencodings",
@@ -361,29 +350,6 @@ def load_wpt_tests(xul_tester, requested_paths, excluded_paths, update_manifest=
     import manifestupdate
     from wptrunner import products, testloader, wptcommandline, wpttest, wptlogging
 
-<<<<<<< HEAD
-    manifest_root = tempfile.gettempdir()
-    path_split = os.path.dirname(xul_tester.js_bin).split(os.path.sep)
-    if path_split[-2:] == ["dist", "bin"]:
-        maybe_root = os.path.join(*path_split[:-2])
-        if os.path.exists(os.path.join(maybe_root, "_tests")):
-            # Assume this is a gecko objdir.
-            manifest_root = maybe_root
-
-    logger = wptlogging.setup({}, {})
-
-    manifestupdate.run(repo_root, manifest_root, logger)
-
-    kwargs = vars(wptcommandline.create_parser().parse_args([]))
-    kwargs.update({
-        "config": os.path.join(manifest_root, "_tests", "web-platform", "wptrunner.local.ini"),
-||||||| merged common ancestors
-    wptlogging.setup({}, {})
-    kwargs = {
-        "config": None,
-        "tests_root": wpt,
-        "metadata_root": os.path.join(wp, "meta"),
-=======
     manifest_root = tempfile.gettempdir()
     path_split = os.path.dirname(xul_tester.js_bin).split(os.path.sep)
     if path_split[-2:] == ["dist", "bin"]:
@@ -400,7 +366,6 @@ def load_wpt_tests(xul_tester, requested_paths, excluded_paths, update_manifest=
     kwargs = vars(wptcommandline.create_parser().parse_args([]))
     kwargs.update({
         "config": os.path.join(manifest_root, "_tests", "web-platform", "wptrunner.local.ini"),
->>>>>>> upstream-releases
         "gecko_e10s": False,
         "verify": False,
         "wasm": xul_tester.test("wasmIsSupported()"),
@@ -414,21 +379,11 @@ def load_wpt_tests(xul_tester, requested_paths, excluded_paths, update_manifest=
                 yield item_type, path, tests
 
     run_info_extras = products.load_product(kwargs["config"], "firefox")[-1](**kwargs)
-<<<<<<< HEAD
-    run_info = wpttest.get_run_info(kwargs["test_paths"]["/"]["metadata_path"],
-                                    "firefox",
-                                    debug=xul_tester.test("isDebugBuild"),
-                                    extras=run_info_extras)
-||||||| merged common ancestors
-    run_info = wpttest.get_run_info(kwargs["metadata_root"], "firefox",
-                                    debug=debug, extras=run_info_extras)
-=======
     run_info = wpttest.get_run_info(kwargs["test_paths"]["/"]["metadata_path"],
                                     "firefox",
                                     debug=xul_tester.test("isDebugBuild"),
                                     extras=run_info_extras)
     run_info["release_or_beta"] = xul_tester.test("getBuildConfiguration().release_or_beta")
->>>>>>> upstream-releases
 
     path_filter = testloader.TestFilter(test_manifests,
                                         include=requested_paths,
@@ -501,17 +456,6 @@ def load_tests(options, requested_paths, excluded_paths):
     test_gen = manifest.load_reftests(test_dir, path_options, xul_tester)
 
     # WPT tests are already run in the browser in their own harness.
-<<<<<<< HEAD
-    if not options.make_manifests:
-        wpt_tests = load_wpt_tests(xul_tester,
-                                   requested_paths,
-                                   excluded_paths)
-||||||| merged common ancestors
-    if not options.make_manifests:
-        wpt_tests = load_wpt_tests(requested_paths, excluded_paths,
-                                   debug=xul_tester.test("isDebugBuild"),
-                                   wasm=xul_tester.test("wasmIsSupported()"))
-=======
     wpt_enabled = (options.wpt == 'enabled' or
                    (options.wpt == 'if-running-everything' and
                     len(requested_paths) == 0 and
@@ -520,7 +464,6 @@ def load_tests(options, requested_paths, excluded_paths):
         wpt_tests = load_wpt_tests(xul_tester,
                                    requested_paths,
                                    excluded_paths)
->>>>>>> upstream-releases
         test_count += len(wpt_tests)
         test_gen = chain(test_gen, wpt_tests)
 

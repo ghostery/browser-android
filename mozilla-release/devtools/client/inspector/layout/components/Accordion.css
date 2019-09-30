@@ -53,13 +53,6 @@
   text-overflow: ellipsis;
 }
 
-.accordion ._header .truncate {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .accordion ._content {
   border-bottom: 1px solid var(--theme-splitter-color);
   font-size: 11px;

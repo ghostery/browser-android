@@ -18,39 +18,6 @@ namespace gfx {
  * output, send it over to the parent process, and replay it on a DrawTarget
  * there for printing.
  */
-<<<<<<< HEAD
-class PrintTargetRecording final : public PrintTarget {
- public:
-  static already_AddRefed<PrintTargetRecording> CreateOrNull(
-      const IntSize& aSize);
-
-  virtual already_AddRefed<DrawTarget> MakeDrawTarget(
-      const IntSize& aSize, DrawEventRecorder* aRecorder = nullptr) override;
-
- private:
-  PrintTargetRecording(cairo_surface_t* aCairoSurface, const IntSize& aSize);
-
-  already_AddRefed<DrawTarget> CreateWrapAndRecordDrawTarget(
-      DrawEventRecorder* aRecorder, DrawTarget* aDrawTarget);
-||||||| merged common ancestors
-class PrintTargetRecording final : public PrintTarget
-{
-public:
-  static already_AddRefed<PrintTargetRecording>
-  CreateOrNull(const IntSize& aSize);
-
-  virtual already_AddRefed<DrawTarget>
-  MakeDrawTarget(const IntSize& aSize,
-                 DrawEventRecorder* aRecorder = nullptr) override;
-
-private:
-  PrintTargetRecording(cairo_surface_t* aCairoSurface,
-                       const IntSize& aSize);
-
-  already_AddRefed<DrawTarget>
-  CreateWrapAndRecordDrawTarget(DrawEventRecorder* aRecorder,
-                                DrawTarget* aDrawTarget);
-=======
 class PrintTargetRecording final : public PrintTarget {
  public:
   static already_AddRefed<PrintTargetRecording> CreateOrNull(
@@ -64,7 +31,6 @@ class PrintTargetRecording final : public PrintTarget {
 
   already_AddRefed<DrawTarget> CreateWrapAndRecordDrawTarget(
       DrawEventRecorder* aRecorder, DrawTarget* aDrawTarget);
->>>>>>> upstream-releases
 };
 
 }  // namespace gfx

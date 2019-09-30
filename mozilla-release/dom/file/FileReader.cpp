@@ -118,18 +118,9 @@ FileReader::~FileReader() {
   DropJSObjects(this);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<FileReader> FileReader::Constructor(
-    const GlobalObject& aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<FileReader>
-FileReader::Constructor(const GlobalObject& aGlobal, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<FileReader> FileReader::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<WeakWorkerRef> workerRef;
 
@@ -481,18 +472,9 @@ nsresult FileReader::GetAsDataURL(Blob* aBlob, const char* aFileData,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* FileReader::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-FileReader::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* FileReader::WrapObject(JSContext* aCx,
                                  JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return FileReader_Binding::Wrap(aCx, this, aGivenProto);
 }
 

@@ -46,9 +46,7 @@ kn{
         }
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}–{1}"}
             }
             patterns{
@@ -233,13 +231,7 @@ kn{
         minimumGroupingDigits{"1"}
         native{"knda"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         coptic{
             monthNames{
@@ -627,18 +619,6 @@ kn{
                 yMd{"d/M/y"}
                 yQQQ{"QQQ y"}
                 yQQQQ{"QQQQ y"}
-<<<<<<< HEAD
-                yw{
-                    one{"'week' w 'of' Y"}
-                    other{"'week' w 'of' Y"}
-                }
-||||||| merged common ancestors
-                yw{
-                    one{"'week' w 'of' y"}
-                    other{"'week' w 'of' y"}
-                }
-=======
->>>>>>> upstream-releases
             }
             dayNames{
                 format{

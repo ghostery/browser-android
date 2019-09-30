@@ -37,64 +37,29 @@ mozilla::LazyLogModule gLayoutPrintingLog("printing-layout");
 
 #define PR_PL(_p1) MOZ_LOG(gLayoutPrintingLog, mozilla::LogLevel::Debug, _p1)
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-nsSimplePageSequenceFrame* NS_NewSimplePageSequenceFrame(
-    nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsSimplePageSequenceFrame(aStyle);
-||||||| merged common ancestors
-nsSimplePageSequenceFrame*
-NS_NewSimplePageSequenceFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSimplePageSequenceFrame(aStyle);
-=======
 nsPageSequenceFrame* NS_NewPageSequenceFrame(PresShell* aPresShell,
                                              ComputedStyle* aStyle) {
   return new (aPresShell)
       nsPageSequenceFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsPageSequenceFrame)
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-nsSimplePageSequenceFrame::nsSimplePageSequenceFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID),
-      mTotalPages(-1),
-      mCalledBeginPage(false),
-      mCurrentCanvasListSetup(false) {
-||||||| merged common ancestors
-nsSimplePageSequenceFrame::nsSimplePageSequenceFrame(ComputedStyle* aStyle)
-  : nsContainerFrame(aStyle, kClassID)
-  , mTotalPages(-1)
-  , mCalledBeginPage(false)
-  , mCurrentCanvasListSetup(false)
-{
-=======
 nsPageSequenceFrame::nsPageSequenceFrame(ComputedStyle* aStyle,
                                          nsPresContext* aPresContext)
     : nsContainerFrame(aStyle, aPresContext, kClassID),
       mTotalPages(-1),
       mCalledBeginPage(false),
       mCurrentCanvasListSetup(false) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   nscoord halfInch = PresContext()->CSSTwipsToAppUnits(NS_INCHES_TO_TWIPS(0.5));
   mMargin.SizeTo(halfInch, halfInch, halfInch, halfInch);
 
   mPageData = new nsSharedPageData();
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-  mPageData->mHeadFootFont = *PresContext()->GetDefaultFont(
-      kGenericFont_serif, aStyle->StyleFont()->mLanguage);
-||||||| merged common ancestors
-  mPageData->mHeadFootFont =
-    *PresContext()->GetDefaultFont(kGenericFont_serif,
-                                   aStyle->StyleFont()->mLanguage);
-=======
   mPageData->mHeadFootFont =
       *PresContext()
            ->Document()
            ->GetFontPrefsForLang(aStyle->StyleFont()->mLanguage)
            ->GetDefaultFont(StyleGenericFontFamily::Serif);
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   mPageData->mHeadFootFont.size = nsPresContext::CSSPointsToAppUnits(10);
 
   // Doing this here so we only have to go get these formats once
@@ -102,14 +67,7 @@ nsPageSequenceFrame::nsPageSequenceFrame(ComputedStyle* aStyle,
   SetPageNumberFormat("pageofpages", "%1$d of %2$d", false);
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-nsSimplePageSequenceFrame::~nsSimplePageSequenceFrame() {
-||||||| merged common ancestors
-nsSimplePageSequenceFrame::~nsSimplePageSequenceFrame()
-{
-=======
 nsPageSequenceFrame::~nsPageSequenceFrame() {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   delete mPageData;
   ResetPrintCanvasList();
 }
@@ -120,23 +78,9 @@ NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::SetDesiredSize(ReflowOutput& aDesiredSize,
-                                               const ReflowInput& aReflowInput,
-                                               nscoord aWidth,
-                                               nscoord aHeight) {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::SetDesiredSize(ReflowOutput& aDesiredSize,
-                                          const ReflowInput& aReflowInput,
-                                          nscoord aWidth,
-                                          nscoord aHeight)
-{
-=======
 void nsPageSequenceFrame::SetDesiredSize(ReflowOutput& aDesiredSize,
                                          const ReflowInput& aReflowInput,
                                          nscoord aWidth, nscoord aHeight) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   // Aim to fill the whole size of the document, not only so we
   // can act as a background in print preview but also handle overflow
   // in child page frames correctly.
@@ -154,22 +98,9 @@ void nsPageSequenceFrame::SetDesiredSize(ReflowOutput& aDesiredSize,
 
 // Helper function to compute the offset needed to center a child
 // page-frame's margin-box inside our content-box.
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-nscoord nsSimplePageSequenceFrame::ComputeCenteringMargin(
-    nscoord aContainerContentBoxWidth, nscoord aChildPaddingBoxWidth,
-    const nsMargin& aChildPhysicalMargin) {
-||||||| merged common ancestors
-nscoord
-nsSimplePageSequenceFrame::ComputeCenteringMargin(
-  nscoord aContainerContentBoxWidth,
-  nscoord aChildPaddingBoxWidth,
-  const nsMargin& aChildPhysicalMargin)
-{
-=======
 nscoord nsPageSequenceFrame::ComputeCenteringMargin(
     nscoord aContainerContentBoxWidth, nscoord aChildPaddingBoxWidth,
     const nsMargin& aChildPhysicalMargin) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   // We'll be centering our child's margin-box, so get the size of that:
   nscoord childMarginBoxWidth =
       aChildPaddingBoxWidth + aChildPhysicalMargin.LeftRight();
@@ -204,24 +135,10 @@ nscoord nsPageSequenceFrame::ComputeCenteringMargin(
  * \*physical\* x/y/width/height values, because the print preview UI is always
  * arranged in the same orientation, regardless of writing mode.
  */
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::Reflow(nsPresContext* aPresContext,
-                                       ReflowOutput& aDesiredSize,
-                                       const ReflowInput& aReflowInput,
-                                       nsReflowStatus& aStatus) {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::Reflow(nsPresContext*     aPresContext,
-                                  ReflowOutput&      aDesiredSize,
-                                  const ReflowInput& aReflowInput,
-                                  nsReflowStatus&    aStatus)
-{
-=======
 void nsPageSequenceFrame::Reflow(nsPresContext* aPresContext,
                                  ReflowOutput& aDesiredSize,
                                  const ReflowInput& aReflowInput,
                                  nsReflowStatus& aStatus) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   MarkInReflow();
   MOZ_ASSERT(aPresContext->IsRootPaginatedDocument(),
              "A Page Sequence is only for real pages");
@@ -406,118 +323,24 @@ void nsPageSequenceFrame::Reflow(nsPresContext* aPresContext,
 //----------------------------------------------------------------------
 
 #ifdef DEBUG_FRAME_DUMP
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-nsresult nsSimplePageSequenceFrame::GetFrameName(nsAString& aResult) const {
-  return MakeFrameName(NS_LITERAL_STRING("SimplePageSequence"), aResult);
-||||||| merged common ancestors
-nsresult
-nsSimplePageSequenceFrame::GetFrameName(nsAString& aResult) const
-{
-  return MakeFrameName(NS_LITERAL_STRING("SimplePageSequence"), aResult);
-=======
 nsresult nsPageSequenceFrame::GetFrameName(nsAString& aResult) const {
   return MakeFrameName(NS_LITERAL_STRING("PageSequence"), aResult);
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
 }
 #endif
 
 //====================================================================
 //== Asynch Printing
 //====================================================================
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetCurrentPageNum(int32_t* aPageNum) {
-  NS_ENSURE_ARG_POINTER(aPageNum);
-
-  *aPageNum = mPageNum;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetNumPages(int32_t* aNumPages) {
-  NS_ENSURE_ARG_POINTER(aNumPages);
-
-  *aNumPages = mTotalPages;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::IsDoingPrintRange(bool* aDoing) {
-  NS_ENSURE_ARG_POINTER(aDoing);
-
-  *aDoing = mDoingPageRange;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetPrintRange(int32_t* aFromPage, int32_t* aToPage) {
-  NS_ENSURE_ARG_POINTER(aFromPage);
-  NS_ENSURE_ARG_POINTER(aToPage);
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetCurrentPageNum(int32_t* aPageNum)
-{
-  NS_ENSURE_ARG_POINTER(aPageNum);
-
-  *aPageNum = mPageNum;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetNumPages(int32_t* aNumPages)
-{
-  NS_ENSURE_ARG_POINTER(aNumPages);
-
-  *aNumPages = mTotalPages;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::IsDoingPrintRange(bool* aDoing)
-{
-  NS_ENSURE_ARG_POINTER(aDoing);
-
-  *aDoing = mDoingPageRange;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetPrintRange(int32_t* aFromPage, int32_t* aToPage)
-{
-  NS_ENSURE_ARG_POINTER(aFromPage);
-  NS_ENSURE_ARG_POINTER(aToPage);
-
-=======
 void nsPageSequenceFrame::GetPrintRange(int32_t* aFromPage,
                                         int32_t* aToPage) const {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   *aFromPage = mFromPageNum;
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
   *aToPage = mToPageNum;
-  return NS_OK;
-||||||| merged common ancestors
-  *aToPage   = mToPageNum;
-  return NS_OK;
-=======
-  *aToPage = mToPageNum;
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
 }
 
 // Helper Function
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::SetPageNumberFormat(const char* aPropName,
-                                                    const char* aDefPropVal,
-                                                    bool aPageNumOnly) {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::SetPageNumberFormat(const char* aPropName, const char* aDefPropVal, bool aPageNumOnly)
-{
-=======
 void nsPageSequenceFrame::SetPageNumberFormat(const char* aPropName,
                                               const char* aDefPropVal,
                                               bool aPageNumOnly) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   // Doing this here so we only have to go get these formats once
   nsAutoString pageNumberFormat;
   // Now go get the Localized Page Formating String
@@ -530,25 +353,10 @@ void nsPageSequenceFrame::SetPageNumberFormat(const char* aPropName,
   SetPageNumberFormat(pageNumberFormat, aPageNumOnly);
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::StartPrint(nsPresContext* aPresContext,
-                                      nsIPrintSettings* aPrintSettings,
-                                      const nsAString& aDocTitle,
-                                      const nsAString& aDocURL) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::StartPrint(nsPresContext*    aPresContext,
-                                      nsIPrintSettings* aPrintSettings,
-                                      const nsAString&  aDocTitle,
-                                      const nsAString&  aDocURL)
-{
-=======
 nsresult nsPageSequenceFrame::StartPrint(nsPresContext* aPresContext,
                                          nsIPrintSettings* aPrintSettings,
                                          const nsAString& aDocTitle,
                                          const nsAString& aDocURL) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   NS_ENSURE_ARG_POINTER(aPresContext);
   NS_ENSURE_ARG_POINTER(aPrintSettings);
 
@@ -628,15 +436,7 @@ static void GetPrintCanvasElementsInFrame(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::DetermineWhetherToPrintPage() {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::DetermineWhetherToPrintPage()
-{
-=======
 void nsPageSequenceFrame::DetermineWhetherToPrintPage() {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   // See whether we should print this page
   mPrintThisPage = true;
   bool printEvenPages, printOddPages;
@@ -684,15 +484,7 @@ void nsPageSequenceFrame::DetermineWhetherToPrintPage() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-nsIFrame* nsSimplePageSequenceFrame::GetCurrentPageFrame() {
-||||||| merged common ancestors
-nsIFrame*
-nsSimplePageSequenceFrame::GetCurrentPageFrame()
-{
-=======
 nsIFrame* nsPageSequenceFrame::GetCurrentPageFrame() {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   int32_t i = 1;
   for (nsFrameList::Enumerator childFrames(mFrames); !childFrames.AtEnd();
        childFrames.Next()) {
@@ -704,18 +496,8 @@ nsIFrame* nsPageSequenceFrame::GetCurrentPageFrame() {
   return nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::PrePrintNextPage(nsITimerCallback* aCallback,
-                                            bool* aDone) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::PrePrintNextPage(nsITimerCallback* aCallback, bool* aDone)
-{
-=======
 nsresult nsPageSequenceFrame::PrePrintNextPage(nsITimerCallback* aCallback,
                                                bool* aDone) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   nsIFrame* currentPage = GetCurrentPageFrame();
   if (!currentPage) {
     *aDone = true;
@@ -804,19 +586,8 @@ nsresult nsPageSequenceFrame::PrePrintNextPage(nsITimerCallback* aCallback,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::ResetPrintCanvasList() {
-  for (int32_t i = mCurrentCanvasList.Length() - 1; i >= 0; i--) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::ResetPrintCanvasList()
-{
-  for (int32_t i = mCurrentCanvasList.Length() - 1; i >= 0 ; i--) {
-=======
 void nsPageSequenceFrame::ResetPrintCanvasList() {
   for (int32_t i = mCurrentCanvasList.Length() - 1; i >= 0; i--) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
     HTMLCanvasElement* canvas = mCurrentCanvasList[i];
     canvas->ResetPrintCallback();
   }
@@ -825,16 +596,7 @@ void nsPageSequenceFrame::ResetPrintCanvasList() {
   mCurrentCanvasListSetup = false;
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::PrintNextPage() {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::PrintNextPage()
-{
-=======
 nsresult nsPageSequenceFrame::PrintNextPage() {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   // Note: When print al the pages or a page range the printed page shows the
   // actual page number, when printing selection it prints the page number
   // starting with the first page of the selection. For example if the user has
@@ -875,36 +637,15 @@ nsresult nsPageSequenceFrame::PrintNextPage() {
 
     nsRect drawingRect(nsPoint(0, 0), currentPageFrame->GetSize());
     nsRegion drawingRegion(drawingRect);
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-    nsLayoutUtils::PaintFrame(
-        gCtx, currentPageFrame, drawingRegion, NS_RGBA(0, 0, 0, 0),
-        nsDisplayListBuilderMode::PAINTING,
-        nsLayoutUtils::PaintFrameFlags::PAINT_SYNC_DECODE_IMAGES);
-||||||| merged common ancestors
-    nsLayoutUtils::PaintFrame(gCtx, currentPageFrame,
-                              drawingRegion, NS_RGBA(0,0,0,0),
-                              nsDisplayListBuilderMode::PAINTING,
-                              nsLayoutUtils::PaintFrameFlags::PAINT_SYNC_DECODE_IMAGES);
-=======
     nsLayoutUtils::PaintFrame(gCtx, currentPageFrame, drawingRegion,
                               NS_RGBA(0, 0, 0, 0),
                               nsDisplayListBuilderMode::Painting,
                               nsLayoutUtils::PaintFrameFlags::SyncDecodeImages);
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   }
   return rv;
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::DoPageEnd() {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::DoPageEnd()
-{
-=======
 nsresult nsPageSequenceFrame::DoPageEnd() {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   nsresult rv = NS_OK;
   if (PresContext()->IsRootPaginatedDocument() && mPrintThisPage) {
     PR_PL(("***************** End Page (DoPageEnd) *****************\n"));
@@ -926,18 +667,8 @@ inline gfx::Matrix4x4 ComputePageSequenceTransform(nsIFrame* aFrame,
   return gfx::Matrix4x4::Scaling(scale, scale, 1);
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::BuildDisplayList(
-    nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
-                                            const nsDisplayListSet& aLists)
-{
-=======
 void nsPageSequenceFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                            const nsDisplayListSet& aLists) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   aBuilder->SetInPageSequence(true);
   aBuilder->SetDisablePartialUpdates(true);
   DisplayBorderBackgroundOutline(aBuilder, aLists);
@@ -956,22 +687,9 @@ void nsPageSequenceFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
 
     while (child) {
       if (child->GetVisualOverflowRectRelativeToParent().Intersects(visible)) {
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-        nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
-            aBuilder, child, visible - child->GetPosition(),
-            visible - child->GetPosition(),
-            aBuilder->IsAtRootOfPseudoStackingContext());
-||||||| merged common ancestors
-        nsDisplayListBuilder::AutoBuildingDisplayList
-          buildingForChild(aBuilder, child,
-                           visible - child->GetPosition(),
-                           visible - child->GetPosition(),
-                           aBuilder->IsAtRootOfPseudoStackingContext());
-=======
         nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
             aBuilder, child, visible - child->GetPosition(),
             visible - child->GetPosition());
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
         child->BuildDisplayListForStackingContext(aBuilder, &content);
         aBuilder->ResetMarkedFramesForDisplayList(this);
       }
@@ -979,36 +697,17 @@ void nsPageSequenceFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     }
   }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-  content.AppendToTop(MakeDisplayItem<nsDisplayTransform>(
-      aBuilder, this, &content, content.GetBuildingRect(),
-      ::ComputePageSequenceTransform));
-||||||| merged common ancestors
-  content.AppendToTop(
-      MakeDisplayItem<nsDisplayTransform>(aBuilder, this, &content, content.GetBuildingRect(),
-                                          ::ComputePageSequenceTransform));
-=======
   content.AppendNewToTop<nsDisplayTransform>(aBuilder, this, &content,
                                              content.GetBuildingRect(), 0,
                                              ::ComputePageSequenceTransform);
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
 
   aLists.Content()->AppendToTop(&content);
   aBuilder->SetInPageSequence(false);
 }
 
 //------------------------------------------------------------------------------
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::SetPageNumberFormat(const nsAString& aFormatStr,
-                                                    bool aForPageNumOnly) {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::SetPageNumberFormat(const nsAString& aFormatStr, bool aForPageNumOnly)
-{
-=======
 void nsPageSequenceFrame::SetPageNumberFormat(const nsAString& aFormatStr,
                                               bool aForPageNumOnly) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   NS_ASSERTION(mPageData != nullptr, "mPageData string cannot be null!");
 
   if (aForPageNumOnly) {
@@ -1019,57 +718,14 @@ void nsPageSequenceFrame::SetPageNumberFormat(const nsAString& aFormatStr,
 }
 
 //------------------------------------------------------------------------------
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-void nsSimplePageSequenceFrame::SetDateTimeStr(const nsAString& aDateTimeStr) {
-||||||| merged common ancestors
-void
-nsSimplePageSequenceFrame::SetDateTimeStr(const nsAString& aDateTimeStr)
-{
-=======
 void nsPageSequenceFrame::SetDateTimeStr(const nsAString& aDateTimeStr) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   NS_ASSERTION(mPageData != nullptr, "mPageData string cannot be null!");
 
   mPageData->mDateTimeStr = aDateTimeStr;
 }
 
-<<<<<<< HEAD:mozilla-release/layout/generic/nsSimplePageSequenceFrame.cpp
-//------------------------------------------------------------------------------
-// For Shrink To Fit
-//
-// Return the percentage that the page needs to shrink to
-//
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetSTFPercent(float& aSTFPercent) {
-  NS_ENSURE_TRUE(mPageData, NS_ERROR_UNEXPECTED);
-  aSTFPercent = mPageData->mShrinkToFitRatio;
-  return NS_OK;
-}
-
-void nsSimplePageSequenceFrame::AppendDirectlyOwnedAnonBoxes(
-    nsTArray<OwnedAnonBox>& aResult) {
-||||||| merged common ancestors
-//------------------------------------------------------------------------------
-// For Shrink To Fit
-//
-// Return the percentage that the page needs to shrink to
-//
-NS_IMETHODIMP
-nsSimplePageSequenceFrame::GetSTFPercent(float& aSTFPercent)
-{
-  NS_ENSURE_TRUE(mPageData, NS_ERROR_UNEXPECTED);
-  aSTFPercent = mPageData->mShrinkToFitRatio;
-  return NS_OK;
-}
-
-void
-nsSimplePageSequenceFrame::AppendDirectlyOwnedAnonBoxes(
-  nsTArray<OwnedAnonBox>& aResult)
-{
-=======
 void nsPageSequenceFrame::AppendDirectlyOwnedAnonBoxes(
     nsTArray<OwnedAnonBox>& aResult) {
->>>>>>> upstream-releases:mozilla-release/layout/generic/nsPageSequenceFrame.cpp
   if (mFrames.NotEmpty()) {
     aResult.AppendElement(mFrames.FirstChild());
   }

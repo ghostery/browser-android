@@ -25,19 +25,10 @@
 
 #include "nsCommandManager.h"
 
-<<<<<<< HEAD
-nsCommandManager::nsCommandManager() : mWindow(nullptr) {}
-||||||| merged common ancestors
-nsCommandManager::nsCommandManager()
-  : mWindow(nullptr)
-{
-}
-=======
 nsCommandManager::nsCommandManager(mozIDOMWindowProxy* aWindow)
     : mWindow(aWindow) {
   MOZ_DIAGNOSTIC_ASSERT(mWindow);
 }
->>>>>>> upstream-releases
 
 nsCommandManager::~nsCommandManager() {}
 
@@ -65,33 +56,7 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsCommandManager)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsICommandManager)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsCommandManager::Init(mozIDOMWindowProxy* aWindow) {
-  NS_ENSURE_ARG_POINTER(aWindow);
-
-  mWindow = aWindow;  // weak ptr
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCommandManager::CommandStatusChanged(const char* aCommandName) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsCommandManager::Init(mozIDOMWindowProxy* aWindow)
-{
-  NS_ENSURE_ARG_POINTER(aWindow);
-
-  mWindow = aWindow; // weak ptr
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCommandManager::CommandStatusChanged(const char* aCommandName)
-{
-=======
 nsresult nsCommandManager::CommandStatusChanged(const char* aCommandName) {
->>>>>>> upstream-releases
   ObserverList* commandObservers;
   mObserversTable.Get(aCommandName, &commandObservers);
 

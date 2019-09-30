@@ -47,15 +47,7 @@ class DatabaseSpec;
 class PBackgroundIDBDatabaseFileChild;
 }  // namespace indexedDB
 
-<<<<<<< HEAD
-class IDBDatabase final : public IDBWrapperCache {
-||||||| merged common ancestors
-class IDBDatabase final
-  : public IDBWrapperCache
-{
-=======
 class IDBDatabase final : public DOMEventTargetHelper {
->>>>>>> upstream-releases
   typedef mozilla::dom::indexedDB::DatabaseSpec DatabaseSpec;
   typedef mozilla::dom::StorageType StorageType;
   typedef mozilla::dom::quota::PersistenceType PersistenceType;
@@ -120,14 +112,7 @@ class IDBDatabase final : public DOMEventTargetHelper {
 
   uint64_t Version() const;
 
-<<<<<<< HEAD
-  already_AddRefed<nsIDocument> GetOwnerDocument() const;
-||||||| merged common ancestors
-  already_AddRefed<nsIDocument>
-  GetOwnerDocument() const;
-=======
   already_AddRefed<Document> GetOwnerDocument() const;
->>>>>>> upstream-releases
 
   void Close() {
     AssertIsOnOwningThread();
@@ -187,40 +172,11 @@ class IDBDatabase final : public DOMEventTargetHelper {
   //     serialization and should be removed or fixed someday.
   nsresult GetQuotaInfo(nsACString& aOrigin, PersistenceType* aPersistenceType);
 
-<<<<<<< HEAD
   bool IsFileHandleDisabled() const { return mFileHandleDisabled; }
 
   void NoteLiveMutableFile(IDBMutableFile* aMutableFile);
-||||||| merged common ancestors
-  bool
-  IsFileHandleDisabled() const
-  {
-    return mFileHandleDisabled;
-  }
 
-  void
-  NoteLiveMutableFile(IDBMutableFile* aMutableFile);
-=======
-  bool IsFileHandleDisabled() const { return mFileHandleDisabled; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   void NoteFinishedMutableFile(IDBMutableFile* aMutableFile);
-||||||| merged common ancestors
-  void
-  NoteFinishedMutableFile(IDBMutableFile* aMutableFile);
-=======
-  void NoteLiveMutableFile(IDBMutableFile* aMutableFile);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsPIDOMWindowInner* GetParentObject() const;
-||||||| merged common ancestors
-  nsPIDOMWindowInner*
-  GetParentObject() const;
-=======
-  void NoteFinishedMutableFile(IDBMutableFile* aMutableFile);
->>>>>>> upstream-releases
 
   already_AddRefed<DOMStringList> ObjectStoreNames() const;
 

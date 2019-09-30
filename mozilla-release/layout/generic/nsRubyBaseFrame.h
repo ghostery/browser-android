@@ -31,28 +31,11 @@ class nsRubyBaseFrame final : public nsRubyContentFrame {
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
-<<<<<<< HEAD
- protected:
-  friend nsContainerFrame* NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-protected:
-  friend nsContainerFrame* NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
-=======
  protected:
   friend nsContainerFrame* NS_NewRubyBaseFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                                ComputedStyle* aStyle);
-<<<<<<< HEAD
-  explicit nsRubyBaseFrame(ComputedStyle* aStyle)
-      : nsRubyContentFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-  explicit nsRubyBaseFrame(ComputedStyle* aStyle)
-    : nsRubyContentFrame(aStyle, kClassID)
-  {}
-=======
   explicit nsRubyBaseFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsRubyContentFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 };
 
 #endif /* nsRubyBaseFrame_h___ */

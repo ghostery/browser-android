@@ -16,58 +16,6 @@ class nsIDivertableChannel;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class TabChild;
-
-class ExternalHelperAppChild : public PExternalHelperAppChild,
-                               public nsIStreamListener {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSISTREAMLISTENER
-  NS_DECL_NSIREQUESTOBSERVER
-
-  ExternalHelperAppChild();
-
-  // Give the listener a real nsExternalAppHandler to complete processing on
-  // the child.
-  void SetHandler(nsExternalAppHandler *handler) { mHandler = handler; }
-
-  virtual mozilla::ipc::IPCResult RecvCancel(const nsresult &aStatus) override;
-
- private:
-  virtual ~ExternalHelperAppChild();
-  MOZ_MUST_USE nsresult DivertToParent(nsIDivertableChannel *divertable,
-                                       nsIRequest *request, TabChild *tabChild);
-
-  RefPtr<nsExternalAppHandler> mHandler;
-  nsresult mStatus;
-||||||| merged common ancestors
-class TabChild;
-
-class ExternalHelperAppChild : public PExternalHelperAppChild
-                             , public nsIStreamListener
-{
-public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSISTREAMLISTENER
-    NS_DECL_NSIREQUESTOBSERVER
-
-    ExternalHelperAppChild();
-
-    // Give the listener a real nsExternalAppHandler to complete processing on
-    // the child.
-    void SetHandler(nsExternalAppHandler *handler) { mHandler = handler; }
-
-    virtual mozilla::ipc::IPCResult RecvCancel(const nsresult& aStatus) override;
-private:
-    virtual ~ExternalHelperAppChild();
-    MOZ_MUST_USE nsresult DivertToParent(nsIDivertableChannel *divertable,
-                                         nsIRequest *request,
-                                         TabChild *tabChild);
-
-    RefPtr<nsExternalAppHandler> mHandler;
-    nsresult mStatus;
-=======
 class BrowserChild;
 
 class ExternalHelperAppChild : public PExternalHelperAppChild,
@@ -93,7 +41,6 @@ class ExternalHelperAppChild : public PExternalHelperAppChild,
 
   RefPtr<nsExternalAppHandler> mHandler;
   nsresult mStatus;
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

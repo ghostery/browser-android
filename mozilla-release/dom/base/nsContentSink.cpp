@@ -97,52 +97,6 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(nsContentSink)
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
 nsContentSink::nsContentSink()
-<<<<<<< HEAD
-    : mBackoffCount(0),
-      mLastNotificationTime(0),
-      mBeganUpdate(0),
-      mLayoutStarted(0),
-      mDynamicLowerValue(0),
-      mParsing(0),
-      mDroppedTimer(0),
-      mDeferredLayoutStart(0),
-      mDeferredFlushTags(0),
-      mIsDocumentObserver(0),
-      mRunsToCompletion(0),
-      mIsBlockingOnload(false),
-      mDeflectedCount(0),
-      mHasPendingEvent(false),
-      mCurrentParseEndTime(0),
-      mBeginLoadTime(0),
-      mLastSampledUserEventTime(0),
-      mInMonolithicContainer(0),
-      mInNotification(0),
-      mUpdatesInNotification(0),
-      mPendingSheetCount(0) {
-||||||| merged common ancestors
-  : mBackoffCount(0)
-  , mLastNotificationTime(0)
-  , mBeganUpdate(0)
-  , mLayoutStarted(0)
-  , mDynamicLowerValue(0)
-  , mParsing(0)
-  , mDroppedTimer(0)
-  , mDeferredLayoutStart(0)
-  , mDeferredFlushTags(0)
-  , mIsDocumentObserver(0)
-  , mRunsToCompletion(0)
-  , mIsBlockingOnload(false)
-  , mDeflectedCount(0)
-  , mHasPendingEvent(false)
-  , mCurrentParseEndTime(0)
-  , mBeginLoadTime(0)
-  , mLastSampledUserEventTime(0)
-  , mInMonolithicContainer(0)
-  , mInNotification(0)
-  , mUpdatesInNotification(0)
-  , mPendingSheetCount(0)
-{
-=======
     : mBackoffCount(0),
       mLastNotificationTime(0),
       mLayoutStarted(0),
@@ -163,7 +117,6 @@ nsContentSink::nsContentSink()
       mInNotification(0),
       mUpdatesInNotification(0),
       mPendingSheetCount(0) {
->>>>>>> upstream-releases
   NS_ASSERTION(!mLayoutStarted, "What?");
   NS_ASSERTION(!mDynamicLowerValue, "What?");
   NS_ASSERTION(!mParsing, "What?");
@@ -230,20 +183,8 @@ void nsContentSink::InitializeStatics() {
                               0);
 }
 
-<<<<<<< HEAD
-nsresult nsContentSink::Init(nsIDocument* aDoc, nsIURI* aURI,
-                             nsISupports* aContainer, nsIChannel* aChannel) {
-||||||| merged common ancestors
-nsresult
-nsContentSink::Init(nsIDocument* aDoc,
-                    nsIURI* aURI,
-                    nsISupports* aContainer,
-                    nsIChannel* aChannel)
-{
-=======
 nsresult nsContentSink::Init(Document* aDoc, nsIURI* aURI,
                              nsISupports* aContainer, nsIChannel* aChannel) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDoc, "null ptr");
   MOZ_ASSERT(aURI, "null ptr");
 
@@ -383,18 +324,8 @@ nsresult nsContentSink::ProcessHeaderData(nsAtom* aHeader,
       mParser->GetChannel(getter_AddRefs(channel));
     }
 
-<<<<<<< HEAD
-    rv = cookieServ->SetCookieString(
-        codebaseURI, nullptr, NS_ConvertUTF16toUTF8(aValue).get(), channel);
-||||||| merged common ancestors
-    rv = cookieServ->SetCookieString(codebaseURI,
-                                     nullptr,
-                                     NS_ConvertUTF16toUTF8(aValue).get(),
-                                     channel);
-=======
     rv = cookieServ->SetCookieString(codebaseURI, nullptr,
                                      NS_ConvertUTF16toUTF8(aValue), channel);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }
@@ -817,32 +748,6 @@ nsresult nsContentSink::ProcessStyleLinkFromHeader(
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  Loader::SheetInfo info{
-      *mDocument,
-      nullptr,
-      url.forget(),
-      nullptr,
-      net::AttributeReferrerPolicyFromString(aReferrerPolicy),
-      CORS_NONE,
-      aTitle,
-      aMedia,
-      aAlternate ? Loader::HasAlternateRel::Yes : Loader::HasAlternateRel::No,
-      Loader::IsInline::No,
-||||||| merged common ancestors
-
-  Loader::SheetInfo info {
-    *mDocument,
-    nullptr,
-    url.forget(),
-    nullptr,
-    net::AttributeReferrerPolicyFromString(aReferrerPolicy),
-    CORS_NONE,
-    aTitle,
-    aMedia,
-    aAlternate ? Loader::HasAlternateRel::Yes : Loader::HasAlternateRel::No,
-    Loader::IsInline::No,
-=======
   Loader::SheetInfo info{
       *mDocument,
       nullptr,
@@ -855,7 +760,6 @@ nsresult nsContentSink::ProcessStyleLinkFromHeader(
       aAlternate ? Loader::HasAlternateRel::Yes : Loader::HasAlternateRel::No,
       Loader::IsInline::No,
       Loader::IsExplicitlyEnabled::No,
->>>>>>> upstream-releases
   };
 
   auto loadResultOrErr =
@@ -920,33 +824,12 @@ nsresult nsContentSink::ProcessMETATag(nsIContent* aContent) {
   return rv;
 }
 
-<<<<<<< HEAD
-void nsContentSink::PrefetchPreloadHref(const nsAString& aHref,
-                                        nsINode* aSource, uint32_t aLinkTypes,
-                                        const nsAString& aAs,
-                                        const nsAString& aType,
-                                        const nsAString& aMedia) {
-  nsCOMPtr<nsIPrefetchService> prefetchService(
-      do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
-||||||| merged common ancestors
-
-void
-nsContentSink::PrefetchPreloadHref(const nsAString &aHref,
-                                   nsINode *aSource,
-                                   uint32_t aLinkTypes,
-                                   const nsAString& aAs,
-                                   const nsAString& aType,
-                                   const nsAString& aMedia)
-{
-  nsCOMPtr<nsIPrefetchService> prefetchService(do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
-=======
 void nsContentSink::PrefetchPreloadHref(const nsAString& aHref,
                                         nsINode* aSource, uint32_t aLinkTypes,
                                         const nsAString& aAs,
                                         const nsAString& aType,
                                         const nsAString& aMedia) {
   nsCOMPtr<nsIPrefetchService> prefetchService(components::Prefetch::Service());
->>>>>>> upstream-releases
   if (prefetchService) {
     // construct URI using document charset
     auto encoding = mDocument->GetDocumentCharacterSet();
@@ -1031,20 +914,6 @@ nsresult nsContentSink::SelectDocAppCache(
 
   *aAction = CACHE_SELECTION_NONE;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIApplicationCacheContainer> applicationCacheDocument =
-      do_QueryInterface(mDocument);
-  NS_ASSERTION(applicationCacheDocument,
-               "mDocument must implement nsIApplicationCacheContainer.");
-
-||||||| merged common ancestors
-  nsCOMPtr<nsIApplicationCacheContainer> applicationCacheDocument =
-    do_QueryInterface(mDocument);
-  NS_ASSERTION(applicationCacheDocument,
-               "mDocument must implement nsIApplicationCacheContainer.");
-
-=======
->>>>>>> upstream-releases
   if (aLoadApplicationCache) {
     nsCOMPtr<nsIURI> groupURI;
     rv = aLoadApplicationCache->GetManifestURI(getter_AddRefs(groupURI));
@@ -1110,20 +979,6 @@ nsresult nsContentSink::SelectDocAppCacheNoManifest(
   if (aLoadApplicationCache) {
     // The document was loaded from an application cache, use that
     // application cache as the document's application cache.
-<<<<<<< HEAD
-    nsCOMPtr<nsIApplicationCacheContainer> applicationCacheDocument =
-        do_QueryInterface(mDocument);
-    NS_ASSERTION(applicationCacheDocument,
-                 "mDocument must implement nsIApplicationCacheContainer.");
-
-||||||| merged common ancestors
-    nsCOMPtr<nsIApplicationCacheContainer> applicationCacheDocument =
-      do_QueryInterface(mDocument);
-    NS_ASSERTION(applicationCacheDocument,
-                 "mDocument must implement nsIApplicationCacheContainer.");
-
-=======
->>>>>>> upstream-releases
 #ifdef DEBUG
     nsAutoCString docURISpec, clientID;
     mDocumentURI->GetAsciiSpec(docURISpec);
@@ -1269,32 +1124,6 @@ void nsContentSink::ProcessOfflineManifest(const nsAString& aManifestSpec) {
     }
   }
 
-<<<<<<< HEAD
-  switch (action) {
-    case CACHE_SELECTION_NONE:
-      break;
-    case CACHE_SELECTION_UPDATE: {
-      nsCOMPtr<nsIOfflineCacheUpdateService> updateService =
-          do_GetService(NS_OFFLINECACHEUPDATESERVICE_CONTRACTID);
-
-      if (updateService) {
-        updateService->ScheduleOnDocumentStop(
-            manifestURI, mDocumentURI, mDocument->NodePrincipal(), mDocument);
-      }
-      break;
-||||||| merged common ancestors
-  switch (action)
-  {
-  case CACHE_SELECTION_NONE:
-    break;
-  case CACHE_SELECTION_UPDATE: {
-    nsCOMPtr<nsIOfflineCacheUpdateService> updateService =
-      do_GetService(NS_OFFLINECACHEUPDATESERVICE_CONTRACTID);
-
-    if (updateService) {
-      updateService->ScheduleOnDocumentStop(manifestURI, mDocumentURI,
-                                            mDocument->NodePrincipal(), mDocument);
-=======
   switch (action) {
     case CACHE_SELECTION_NONE:
       break;
@@ -1307,7 +1136,6 @@ void nsContentSink::ProcessOfflineManifest(const nsAString& aManifestSpec) {
             manifestURI, mDocumentURI, mDocument->NodePrincipal(), mDocument);
       }
       break;
->>>>>>> upstream-releases
     }
     case CACHE_SELECTION_RELOAD: {
       // This situation occurs only for toplevel documents, see bottom
@@ -1332,20 +1160,10 @@ void nsContentSink::ProcessOfflineManifest(const nsAString& aManifestSpec) {
   }
 }
 
-<<<<<<< HEAD
-void nsContentSink::ScrollToRef() { mDocument->ScrollToRef(); }
-||||||| merged common ancestors
-void
-nsContentSink::ScrollToRef()
-{
-  mDocument->ScrollToRef();
-}
-=======
 void nsContentSink::ScrollToRef() {
   RefPtr<Document> document = mDocument;
   document->ScrollToRef();
 }
->>>>>>> upstream-releases
 
 void nsContentSink::StartLayout(bool aIgnorePendingSheets) {
   AUTO_PROFILER_LABEL_DYNAMIC_NSCSTRING("nsContentSink::StartLayout", LAYOUT,
@@ -1397,46 +1215,16 @@ void nsContentSink::StartLayout(bool aIgnorePendingSheets) {
   mDocument->SetScrollToRef(mDocument->GetDocumentURI());
 }
 
-<<<<<<< HEAD
 void nsContentSink::NotifyAppend(nsIContent* aContainer, uint32_t aStartIndex) {
-  if (aContainer->GetUncomposedDoc() != mDocument) {
-    // aContainer is not actually in our document anymore.... Just bail out of
-    // here; notifying on our document for this append would be wrong.
-    return;
-  }
-
-||||||| merged common ancestors
-void
-nsContentSink::NotifyAppend(nsIContent* aContainer, uint32_t aStartIndex)
-{
-  if (aContainer->GetUncomposedDoc() != mDocument) {
-    // aContainer is not actually in our document anymore.... Just bail out of
-    // here; notifying on our document for this append would be wrong.
-    return;
-  }
-
-=======
-void nsContentSink::NotifyAppend(nsIContent* aContainer, uint32_t aStartIndex) {
->>>>>>> upstream-releases
   mInNotification++;
 
   {
     // Scope so we call EndUpdate before we decrease mInNotification
-<<<<<<< HEAD
-    MOZ_AUTO_DOC_UPDATE(mDocument, !mBeganUpdate);
-    nsNodeUtils::ContentAppended(
-        aContainer, aContainer->GetChildAt_Deprecated(aStartIndex));
-||||||| merged common ancestors
-    MOZ_AUTO_DOC_UPDATE(mDocument, !mBeganUpdate);
-    nsNodeUtils::ContentAppended(aContainer,
-                                 aContainer->GetChildAt_Deprecated(aStartIndex));
-=======
     //
     // Note that aContainer->OwnerDoc() may not be mDocument.
     MOZ_AUTO_DOC_UPDATE(aContainer->OwnerDoc(), true);
     nsNodeUtils::ContentAppended(
         aContainer, aContainer->GetChildAt_Deprecated(aStartIndex));
->>>>>>> upstream-releases
     mLastNotificationTime = PR_Now();
   }
 
@@ -1563,16 +1351,8 @@ nsresult nsContentSink::DidProcessATokenImpl() {
   }
 
   // Get the current user event time
-<<<<<<< HEAD
-  nsIPresShell* shell = mDocument->GetShell();
-  if (!shell) {
-||||||| merged common ancestors
-  nsIPresShell *shell = mDocument->GetShell();
-  if (!shell) {
-=======
   PresShell* presShell = mDocument->GetPresShell();
   if (!presShell) {
->>>>>>> upstream-releases
     // If there's no pres shell in the document, return early since
     // we're not laying anything out here.
     return NS_OK;
@@ -1622,15 +1402,7 @@ void nsContentSink::FavorPerformanceHint(bool perfOverStarvation,
     appShell->FavorPerformanceHint(perfOverStarvation, starvationDelay);
 }
 
-<<<<<<< HEAD
-void nsContentSink::BeginUpdate(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-nsContentSink::BeginUpdate(nsIDocument* aDocument)
-{
-=======
 void nsContentSink::BeginUpdate(Document* aDocument) {
->>>>>>> upstream-releases
   // Remember nested updates from updates that we started.
   if (mInNotification > 0 && mUpdatesInNotification < 2) {
     ++mUpdatesInNotification;
@@ -1647,15 +1419,7 @@ void nsContentSink::BeginUpdate(Document* aDocument) {
   }
 }
 
-<<<<<<< HEAD
-void nsContentSink::EndUpdate(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-nsContentSink::EndUpdate(nsIDocument* aDocument)
-{
-=======
 void nsContentSink::EndUpdate(Document* aDocument) {
->>>>>>> upstream-releases
   // If we're in a script and we didn't do the notification,
   // something else in the script processing caused the
   // notification to occur. Update our notion of how much
@@ -1668,22 +1432,10 @@ void nsContentSink::EndUpdate(Document* aDocument) {
 
 void nsContentSink::DidBuildModelImpl(bool aTerminated) {
   if (mDocument) {
-<<<<<<< HEAD
-    MOZ_ASSERT(aTerminated || mDocument->GetReadyStateEnum() ==
-                                  nsIDocument::READYSTATE_LOADING,
-               "Bad readyState");
-    mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
-||||||| merged common ancestors
-    MOZ_ASSERT(aTerminated ||
-               mDocument->GetReadyStateEnum() ==
-               nsIDocument::READYSTATE_LOADING, "Bad readyState");
-    mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
-=======
     MOZ_ASSERT(aTerminated || mDocument->GetReadyStateEnum() ==
                                   Document::READYSTATE_LOADING,
                "Bad readyState");
     mDocument->SetReadyStateInternal(Document::READYSTATE_INTERACTIVE);
->>>>>>> upstream-releases
   }
 
   if (mScriptLoader) {
@@ -1746,16 +1498,8 @@ nsresult nsContentSink::WillParseImpl(void) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsIPresShell* shell = mDocument->GetShell();
-  if (!shell) {
-||||||| merged common ancestors
-  nsIPresShell *shell = mDocument->GetShell();
-  if (!shell) {
-=======
   PresShell* presShell = mDocument->GetPresShell();
   if (!presShell) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -1806,30 +1550,10 @@ void nsContentSink::WillBuildModelImpl() {
 }
 
 /* static */
-<<<<<<< HEAD
-void nsContentSink::NotifyDocElementCreated(nsIDocument* aDoc) {
-||||||| merged common ancestors
-void
-nsContentSink::NotifyDocElementCreated(nsIDocument* aDoc)
-{
-=======
 void nsContentSink::NotifyDocElementCreated(Document* aDoc) {
->>>>>>> upstream-releases
   MOZ_ASSERT(nsContentUtils::IsSafeToRunScript());
 
   nsCOMPtr<nsIObserverService> observerService =
-<<<<<<< HEAD
-      mozilla::services::GetObserverService();
-  if (observerService) {
-    observerService->NotifyObservers(aDoc, "document-element-inserted",
-                                     EmptyString().get());
-||||||| merged common ancestors
-    mozilla::services::GetObserverService();
-  if (observerService) {
-    observerService->
-      NotifyObservers(aDoc, "document-element-inserted",
-                      EmptyString().get());
-=======
       mozilla::services::GetObserverService();
   MOZ_ASSERT(observerService);
 
@@ -1842,24 +1566,13 @@ void nsContentSink::NotifyDocElementCreated(Document* aDoc) {
     observerService->NotifyObservers(ToSupports(aDoc),
                                      "initial-document-element-inserted",
                                      EmptyString().get());
->>>>>>> upstream-releases
   }
   observerService->NotifyObservers(
       ToSupports(aDoc), "document-element-inserted", EmptyString().get());
 
-<<<<<<< HEAD
-  nsContentUtils::DispatchChromeEvent(
-      aDoc, aDoc, NS_LITERAL_STRING("DOMDocElementInserted"), CanBubble::eYes,
-      Cancelable::eNo);
-||||||| merged common ancestors
-  nsContentUtils::DispatchChromeEvent(aDoc, aDoc,
-                                      NS_LITERAL_STRING("DOMDocElementInserted"),
-                                      CanBubble::eYes, Cancelable::eNo);
-=======
   nsContentUtils::DispatchChromeEvent(
       aDoc, ToSupports(aDoc), NS_LITERAL_STRING("DOMDocElementInserted"),
       CanBubble::eYes, Cancelable::eNo);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

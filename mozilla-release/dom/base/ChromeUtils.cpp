@@ -22,27 +22,17 @@
 #include "mozilla/ResultExtensions.h"
 #include "mozilla/TimeStamp.h"
 #include "mozilla/dom/BrowsingContext.h"
+#include "mozilla/dom/ContentParent.h"
 #include "mozilla/dom/IdleDeadline.h"
-<<<<<<< HEAD
-#include "mozilla/dom/ReportingHeader.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/JSWindowActorService.h"
 #include "mozilla/dom/Promise.h"
 #include "mozilla/dom/ReportingHeader.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/UnionTypes.h"
-<<<<<<< HEAD
-#include "mozilla/dom/WindowBinding.h"  // For IdleRequestCallback/Options
-||||||| merged common ancestors
-#include "mozilla/dom/WindowBinding.h" // For IdleRequestCallback/Options
-=======
 #include "mozilla/dom/WindowBinding.h"  // For IdleRequestCallback/Options
 #include "mozilla/gfx/GPUProcessManager.h"
 #include "mozilla/ipc/GeckoChildProcessHost.h"
 #include "mozilla/net/UrlClassifierFeatureFactory.h"
 #include "mozilla/net/SocketProcessHost.h"
->>>>>>> upstream-releases
 #include "IOActivityMonitor.h"
 #include "nsIOService.h"
 #include "nsThreadUtils.h"
@@ -53,23 +43,10 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::NondeterministicGetWeakMapKeys(
-    GlobalObject& aGlobal, JS::Handle<JS::Value> aMap,
-    JS::MutableHandle<JS::Value> aRetval, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::NondeterministicGetWeakMapKeys(GlobalObject& aGlobal,
-                                            JS::Handle<JS::Value> aMap,
-                                            JS::MutableHandle<JS::Value> aRetval,
-                                            ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::NondeterministicGetWeakMapKeys(
     GlobalObject& aGlobal, JS::Handle<JS::Value> aMap,
     JS::MutableHandle<JS::Value> aRetval, ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!aMap.isObject()) {
     aRetval.setUndefined();
   } else {
@@ -84,23 +61,10 @@ void ChromeUtils::NondeterministicGetWeakMapKeys(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::NondeterministicGetWeakSetKeys(
-    GlobalObject& aGlobal, JS::Handle<JS::Value> aSet,
-    JS::MutableHandle<JS::Value> aRetval, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::NondeterministicGetWeakSetKeys(GlobalObject& aGlobal,
-                                            JS::Handle<JS::Value> aSet,
-                                            JS::MutableHandle<JS::Value> aRetval,
-                                            ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::NondeterministicGetWeakSetKeys(
     GlobalObject& aGlobal, JS::Handle<JS::Value> aSet,
     JS::MutableHandle<JS::Value> aRetval, ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!aSet.isObject()) {
     aRetval.setUndefined();
   } else {
@@ -115,26 +79,11 @@ void ChromeUtils::NondeterministicGetWeakSetKeys(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::Base64URLEncode(
-    GlobalObject& aGlobal, const ArrayBufferViewOrArrayBuffer& aSource,
-    const Base64URLEncodeOptions& aOptions, nsACString& aResult,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::Base64URLEncode(GlobalObject& aGlobal,
-                             const ArrayBufferViewOrArrayBuffer& aSource,
-                             const Base64URLEncodeOptions& aOptions,
-                             nsACString& aResult,
-                             ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::Base64URLEncode(GlobalObject& aGlobal,
                                   const ArrayBufferViewOrArrayBuffer& aSource,
                                   const Base64URLEncodeOptions& aOptions,
                                   nsACString& aResult, ErrorResult& aRv) {
->>>>>>> upstream-releases
   size_t length = 0;
   uint8_t* data = nullptr;
   if (aSource.IsArrayBuffer()) {
@@ -160,27 +109,12 @@ void ChromeUtils::Base64URLEncode(GlobalObject& aGlobal,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::Base64URLDecode(
-    GlobalObject& aGlobal, const nsACString& aString,
-    const Base64URLDecodeOptions& aOptions,
-    JS::MutableHandle<JSObject*> aRetval, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::Base64URLDecode(GlobalObject& aGlobal,
-                             const nsACString& aString,
-                             const Base64URLDecodeOptions& aOptions,
-                             JS::MutableHandle<JSObject*> aRetval,
-                             ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::Base64URLDecode(GlobalObject& aGlobal,
                                   const nsACString& aString,
                                   const Base64URLDecodeOptions& aOptions,
                                   JS::MutableHandle<JSObject*> aRetval,
                                   ErrorResult& aRv) {
->>>>>>> upstream-releases
   Base64URLDecodePaddingPolicy paddingPolicy;
   switch (aOptions.mPadding) {
     case Base64URLDecodePadding::Require:
@@ -216,19 +150,6 @@ void ChromeUtils::Base64URLDecode(GlobalObject& aGlobal,
   aRetval.set(buffer);
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::WaiveXrays(GlobalObject& aGlobal,
-                                          JS::HandleValue aVal,
-                                          JS::MutableHandleValue aRetval,
-                                          ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::WaiveXrays(GlobalObject& aGlobal,
-                        JS::HandleValue aVal,
-                        JS::MutableHandleValue aRetval,
-                        ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::ReleaseAssert(GlobalObject& aGlobal, bool aCondition,
                                 const nsAString& aMessage) {
@@ -260,7 +181,6 @@ void ChromeUtils::ReleaseAssert(GlobalObject& aGlobal, bool aCondition,
 /* static */
 void ChromeUtils::WaiveXrays(GlobalObject& aGlobal, JS::HandleValue aVal,
                              JS::MutableHandleValue aRetval, ErrorResult& aRv) {
->>>>>>> upstream-releases
   JS::RootedValue value(aGlobal.Context(), aVal);
   if (!xpc::WrapperFactory::WaiveXrayAndWrap(aGlobal.Context(), &value)) {
     aRv.NoteJSContextException(aGlobal.Context());
@@ -269,24 +189,10 @@ void ChromeUtils::WaiveXrays(GlobalObject& aGlobal, JS::HandleValue aVal,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::UnwaiveXrays(GlobalObject& aGlobal,
-                                            JS::HandleValue aVal,
-                                            JS::MutableHandleValue aRetval,
-                                            ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::UnwaiveXrays(GlobalObject& aGlobal,
-                          JS::HandleValue aVal,
-                          JS::MutableHandleValue aRetval,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::UnwaiveXrays(GlobalObject& aGlobal, JS::HandleValue aVal,
                                JS::MutableHandleValue aRetval,
                                ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!aVal.isObject()) {
     aRetval.set(aVal);
     return;
@@ -301,22 +207,9 @@ void ChromeUtils::UnwaiveXrays(GlobalObject& aGlobal, JS::HandleValue aVal,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::GetClassName(GlobalObject& aGlobal,
-                                            JS::HandleObject aObj, bool aUnwrap,
-                                            nsAString& aRetval) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::GetClassName(GlobalObject& aGlobal,
-                          JS::HandleObject aObj,
-                          bool aUnwrap,
-                          nsAString& aRetval)
-{
-=======
 /* static */
 void ChromeUtils::GetClassName(GlobalObject& aGlobal, JS::HandleObject aObj,
                                bool aUnwrap, nsAString& aRetval) {
->>>>>>> upstream-releases
   JS::RootedObject obj(aGlobal.Context(), aObj);
   if (aUnwrap) {
     obj = js::UncheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
@@ -326,27 +219,11 @@ void ChromeUtils::GetClassName(GlobalObject& aGlobal, JS::HandleObject aObj,
       NS_ConvertUTF8toUTF16(nsDependentCString(js::GetObjectClass(obj)->name));
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::ShallowClone(GlobalObject& aGlobal,
-                                            JS::HandleObject aObj,
-                                            JS::HandleObject aTarget,
-                                            JS::MutableHandleObject aRetval,
-                                            ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::ShallowClone(GlobalObject& aGlobal,
-                          JS::HandleObject aObj,
-                          JS::HandleObject aTarget,
-                          JS::MutableHandleObject aRetval,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::ShallowClone(GlobalObject& aGlobal, JS::HandleObject aObj,
                                JS::HandleObject aTarget,
                                JS::MutableHandleObject aRetval,
                                ErrorResult& aRv) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   auto cleanup = MakeScopeExit([&]() { aRv.NoteJSContextException(cx); });
@@ -372,15 +249,8 @@ void ChromeUtils::ShallowClone(GlobalObject& aGlobal, JS::HandleObject aObj,
 
     JSAutoRealm ar(cx, obj);
 
-<<<<<<< HEAD
-    if (!JS_Enumerate(cx, obj, &ids) || !values.reserve(ids.length())) {
-||||||| merged common ancestors
-    if (!JS_Enumerate(cx, obj, &ids) ||
-        !values.reserve(ids.length())) {
-=======
     if (!JS_Enumerate(cx, obj, &ids) || !values.reserve(ids.length()) ||
         !valuesIds.reserve(ids.length())) {
->>>>>>> upstream-releases
       return;
     }
 
@@ -442,39 +312,6 @@ void ChromeUtils::ShallowClone(GlobalObject& aGlobal, JS::HandleObject aObj,
 }
 
 namespace {
-<<<<<<< HEAD
-class IdleDispatchRunnable final : public IdleRunnable,
-                                   public nsITimerCallback {
- public:
-  NS_DECL_ISUPPORTS_INHERITED
-
-  IdleDispatchRunnable(nsIGlobalObject* aParent, IdleRequestCallback& aCallback)
-      : IdleRunnable("ChromeUtils::IdleDispatch"),
-        mCallback(&aCallback),
-        mParent(aParent) {}
-
-  NS_IMETHOD Run() override {
-    if (mCallback) {
-      CancelTimer();
-||||||| merged common ancestors
-  class IdleDispatchRunnable final : public IdleRunnable
-                                   , public nsITimerCallback
-  {
-  public:
-    NS_DECL_ISUPPORTS_INHERITED
-
-    IdleDispatchRunnable(nsIGlobalObject* aParent,
-                         IdleRequestCallback& aCallback)
-      : IdleRunnable("ChromeUtils::IdleDispatch")
-      , mCallback(&aCallback)
-      , mParent(aParent)
-    {}
-
-    NS_IMETHOD Run() override
-    {
-      if (mCallback) {
-        CancelTimer();
-=======
 class IdleDispatchRunnable final : public IdleRunnable,
                                    public nsITimerCallback {
  public:
@@ -490,7 +327,6 @@ class IdleDispatchRunnable final : public IdleRunnable,
   MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override {
     if (mCallback) {
       CancelTimer();
->>>>>>> upstream-releases
 
       auto deadline = mDeadline - TimeStamp::ProcessCreation();
 
@@ -498,28 +334,10 @@ class IdleDispatchRunnable final : public IdleRunnable,
       RefPtr<IdleDeadline> idleDeadline =
           new IdleDeadline(mParent, mTimedOut, deadline.ToMilliseconds());
 
-<<<<<<< HEAD
-      mCallback->Call(*idleDeadline, rv, "ChromeUtils::IdleDispatch handler");
-      mCallback = nullptr;
-      mParent = nullptr;
-
-      rv.SuppressException();
-      return rv.StealNSResult();
-||||||| merged common ancestors
-        mCallback->Call(*idleDeadline, rv, "ChromeUtils::IdleDispatch handler");
-        mCallback = nullptr;
-        mParent = nullptr;
-
-        rv.SuppressException();
-        return rv.StealNSResult();
-      }
-      return NS_OK;
-=======
       RefPtr<IdleRequestCallback> callback(mCallback.forget());
       MOZ_ASSERT(!mCallback);
       callback->Call(*idleDeadline, "ChromeUtils::IdleDispatch handler");
       mParent = nullptr;
->>>>>>> upstream-releases
     }
     return NS_OK;
   }
@@ -563,68 +381,31 @@ NS_IMPL_ISUPPORTS_INHERITED(IdleDispatchRunnable, IdleRunnable,
                             nsITimerCallback)
 }  // anonymous namespace
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::IdleDispatch(const GlobalObject& aGlobal,
-                                            IdleRequestCallback& aCallback,
-                                            const IdleRequestOptions& aOptions,
-                                            ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::IdleDispatch(const GlobalObject& aGlobal,
-                          IdleRequestCallback& aCallback,
-                          const IdleRequestOptions& aOptions,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::IdleDispatch(const GlobalObject& aGlobal,
                                IdleRequestCallback& aCallback,
                                const IdleRequestOptions& aOptions,
                                ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   MOZ_ASSERT(global);
 
   auto runnable = MakeRefPtr<IdleDispatchRunnable>(global, aCallback);
 
   if (aOptions.mTimeout.WasPassed()) {
-<<<<<<< HEAD
-    aRv = NS_IdleDispatchToCurrentThread(runnable.forget(),
-                                         aOptions.mTimeout.Value());
-||||||| merged common ancestors
-    aRv = NS_IdleDispatchToCurrentThread(runnable.forget(), aOptions.mTimeout.Value());
-=======
     aRv = NS_DispatchToCurrentThreadQueue(
         runnable.forget(), aOptions.mTimeout.Value(), EventQueuePriority::Idle);
->>>>>>> upstream-releases
   } else {
     aRv = NS_DispatchToCurrentThreadQueue(runnable.forget(),
                                           EventQueuePriority::Idle);
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::Import(
-    const GlobalObject& aGlobal, const nsAString& aResourceURI,
-    const Optional<JS::Handle<JSObject*>>& aTargetObj,
-    JS::MutableHandle<JSObject*> aRetval, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::Import(const GlobalObject& aGlobal,
-                    const nsAString& aResourceURI,
-                    const Optional<JS::Handle<JSObject*>>& aTargetObj,
-                    JS::MutableHandle<JSObject*> aRetval,
-                    ErrorResult& aRv)
-{
-
-=======
 /* static */
 void ChromeUtils::Import(const GlobalObject& aGlobal,
                          const nsAString& aResourceURI,
                          const Optional<JS::Handle<JSObject*>>& aTargetObj,
                          JS::MutableHandle<JSObject*> aRetval,
                          ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<mozJSComponentLoader> moduleloader = mozJSComponentLoader::Get();
   MOZ_ASSERT(moduleloader);
 
@@ -653,51 +434,6 @@ void ChromeUtils::Import(const GlobalObject& aGlobal,
     return;
   }
 
-<<<<<<< HEAD
-  // Now we better have an object.
-  MOZ_ASSERT(retval.isObject());
-  aRetval.set(&retval.toObject());
-}
-
-namespace module_getter {
-static const size_t SLOT_ID = 0;
-static const size_t SLOT_URI = 1;
-
-static bool ExtractArgs(JSContext* aCx, JS::CallArgs& aArgs,
-                        JS::MutableHandle<JSObject*> aCallee,
-                        JS::MutableHandle<JSObject*> aThisObj,
-                        JS::MutableHandle<jsid> aId) {
-  aCallee.set(&aArgs.callee());
-
-  JS::Handle<JS::Value> thisv = aArgs.thisv();
-  if (!thisv.isObject()) {
-    JS_ReportErrorASCII(aCx, "Invalid target object");
-    return false;
-  }
-||||||| merged common ancestors
-  // Now we better have an object.
-  MOZ_ASSERT(retval.isObject());
-  aRetval.set(&retval.toObject());
-}
-
-namespace module_getter {
-  static const size_t SLOT_ID = 0;
-  static const size_t SLOT_URI = 1;
-
-  static bool
-  ExtractArgs(JSContext* aCx, JS::CallArgs& aArgs,
-              JS::MutableHandle<JSObject*> aCallee,
-              JS::MutableHandle<JSObject*> aThisObj,
-              JS::MutableHandle<jsid> aId)
-  {
-    aCallee.set(&aArgs.callee());
-
-    JS::Handle<JS::Value> thisv = aArgs.thisv();
-    if (!thisv.isObject()) {
-      JS_ReportErrorASCII(aCx, "Invalid target object");
-      return false;
-    }
-=======
   if (ignoreExports) {
     // Since we're ignoring exported symbols, return the module global rather
     // than an exports object.
@@ -718,33 +454,14 @@ namespace module_getter {
       return;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  aThisObj.set(&thisv.toObject());
-||||||| merged common ancestors
-    aThisObj.set(&thisv.toObject());
-=======
   if (!JS_WrapObject(cx, &exports)) {
     aRv.Throw(NS_ERROR_FAILURE);
     return;
   }
   aRetval.set(exports);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::Rooted<JS::Value> id(aCx,
-                           js::GetFunctionNativeReserved(aCallee, SLOT_ID));
-  MOZ_ALWAYS_TRUE(JS_ValueToId(aCx, id, aId));
-  return true;
-}
-||||||| merged common ancestors
-    JS::Rooted<JS::Value> id(aCx, js::GetFunctionNativeReserved(aCallee, SLOT_ID));
-    MOZ_ALWAYS_TRUE(JS_ValueToId(aCx, id, aId));
-    return true;
-  }
-=======
 namespace module_getter {
 static const size_t SLOT_ID = 0;
 static const size_t SLOT_URI = 1;
@@ -760,62 +477,15 @@ static bool ExtractArgs(JSContext* aCx, JS::CallArgs& aArgs,
     JS_ReportErrorASCII(aCx, "Invalid target object");
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool ModuleGetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
-  JS::CallArgs args = JS::CallArgsFromVp(aArgc, aVp);
-||||||| merged common ancestors
-  static bool
-  ModuleGetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp)
-  {
-    JS::CallArgs args = JS::CallArgsFromVp(aArgc, aVp);
-=======
   aThisObj.set(&thisv.toObject());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::Rooted<JSObject*> callee(aCx);
-  JS::Rooted<JSObject*> thisObj(aCx);
-  JS::Rooted<jsid> id(aCx);
-  if (!ExtractArgs(aCx, args, &callee, &thisObj, &id)) {
-    return false;
-  }
-||||||| merged common ancestors
-    JS::Rooted<JSObject*> callee(aCx);
-    JS::Rooted<JSObject*> thisObj(aCx);
-    JS::Rooted<jsid> id(aCx);
-    if (!ExtractArgs(aCx, args, &callee, &thisObj, &id)) {
-      return false;
-    }
-=======
   JS::Rooted<JS::Value> id(aCx,
                            js::GetFunctionNativeReserved(aCallee, SLOT_ID));
   MOZ_ALWAYS_TRUE(JS_ValueToId(aCx, id, aId));
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::Rooted<JSString*> moduleURI(
-      aCx, js::GetFunctionNativeReserved(callee, SLOT_URI).toString());
-  JS::UniqueChars bytes = JS_EncodeStringToUTF8(aCx, moduleURI);
-  if (!bytes) {
-    return false;
-  }
-  nsDependentCString uri(bytes.get());
-||||||| merged common ancestors
-    JS::Rooted<JSString*> moduleURI(
-      aCx, js::GetFunctionNativeReserved(callee, SLOT_URI).toString());
-    JS::UniqueChars bytes = JS_EncodeStringToUTF8(aCx, moduleURI);
-    if (!bytes) {
-      return false;
-    }
-    nsDependentCString uri(bytes.get());
-
-    RefPtr<mozJSComponentLoader> moduleloader = mozJSComponentLoader::Get();
-    MOZ_ASSERT(moduleloader);
-=======
 static bool ModuleGetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
   JS::CallArgs args = JS::CallArgsFromVp(aArgc, aVp);
 
@@ -825,20 +495,7 @@ static bool ModuleGetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
   if (!ExtractArgs(aCx, args, &callee, &thisObj, &id)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<mozJSComponentLoader> moduleloader = mozJSComponentLoader::Get();
-  MOZ_ASSERT(moduleloader);
-||||||| merged common ancestors
-    JS::Rooted<JSObject*> moduleGlobal(aCx);
-    JS::Rooted<JSObject*> moduleExports(aCx);
-    nsresult rv = moduleloader->Import(aCx, uri, &moduleGlobal, &moduleExports);
-    if (NS_FAILED(rv)) {
-      Throw(aCx, rv);
-      return false;
-    }
-=======
   JS::Rooted<JSString*> moduleURI(
       aCx, js::GetFunctionNativeReserved(callee, SLOT_URI).toString());
   JS::UniqueChars bytes = JS_EncodeStringToUTF8(aCx, moduleURI);
@@ -846,37 +503,10 @@ static bool ModuleGetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
     return false;
   }
   nsDependentCString uri(bytes.get());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::Rooted<JSObject*> moduleGlobal(aCx);
-  JS::Rooted<JSObject*> moduleExports(aCx);
-  nsresult rv = moduleloader->Import(aCx, uri, &moduleGlobal, &moduleExports);
-  if (NS_FAILED(rv)) {
-    Throw(aCx, rv);
-    return false;
-  }
-||||||| merged common ancestors
-    JS::RootedValue value(aCx);
-    if (!JS_GetPropertyById(aCx, moduleExports, id, &value)) {
-      return false;
-    }
-=======
   RefPtr<mozJSComponentLoader> moduleloader = mozJSComponentLoader::Get();
   MOZ_ASSERT(moduleloader);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::RootedValue value(aCx);
-  if (!JS_GetPropertyById(aCx, moduleExports, id, &value)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!JS_DefinePropertyById(aCx, thisObj, id, value,
-                               JSPROP_ENUMERATE)) {
-      return false;
-    }
-=======
   JS::Rooted<JSObject*> moduleGlobal(aCx);
   JS::Rooted<JSObject*> moduleExports(aCx);
   nsresult rv = moduleloader->Import(aCx, uri, &moduleGlobal, &moduleExports);
@@ -884,54 +514,22 @@ static bool ModuleGetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
     Throw(aCx, rv);
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!JS_DefinePropertyById(aCx, thisObj, id, value, JSPROP_ENUMERATE)) {
-    return false;
-||||||| merged common ancestors
-    args.rval().set(value);
-    return true;
-=======
   JS::RootedValue value(aCx);
   if (!JS_GetPropertyById(aCx, moduleExports, id, &value)) {
     return false;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  args.rval().set(value);
-  return true;
-}
-||||||| merged common ancestors
-  static bool
-  ModuleSetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp)
-  {
-    JS::CallArgs args = JS::CallArgsFromVp(aArgc, aVp);
-=======
   if (!JS_DefinePropertyById(aCx, thisObj, id, value, JSPROP_ENUMERATE)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool ModuleSetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
-  JS::CallArgs args = JS::CallArgsFromVp(aArgc, aVp);
-||||||| merged common ancestors
-    JS::Rooted<JSObject*> callee(aCx);
-    JS::Rooted<JSObject*> thisObj(aCx);
-    JS::Rooted<jsid> id(aCx);
-    if (!ExtractArgs(aCx, args, &callee, &thisObj, &id)) {
-      return false;
-    }
-=======
   args.rval().set(value);
   return true;
 }
 
 static bool ModuleSetter(JSContext* aCx, unsigned aArgc, JS::Value* aVp) {
   JS::CallArgs args = JS::CallArgsFromVp(aArgc, aVp);
->>>>>>> upstream-releases
 
   JS::Rooted<JSObject*> callee(aCx);
   JS::Rooted<JSObject*> thisObj(aCx);
@@ -979,92 +577,40 @@ static bool DefineGetter(JSContext* aCx, JS::Handle<JSObject*> aTarget,
 }
 }  // namespace module_getter
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::DefineModuleGetter(const GlobalObject& global,
-                                                  JS::Handle<JSObject*> target,
-                                                  const nsAString& id,
-                                                  const nsAString& resourceURI,
-                                                  ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::DefineModuleGetter(const GlobalObject& global,
-                                JS::Handle<JSObject*> target,
-                                const nsAString& id,
-                                const nsAString& resourceURI,
-                                ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::DefineModuleGetter(const GlobalObject& global,
                                      JS::Handle<JSObject*> target,
                                      const nsAString& id,
                                      const nsAString& resourceURI,
                                      ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!module_getter::DefineGetter(global.Context(), target, id, resourceURI)) {
     aRv.NoteJSContextException(global.Context());
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::OriginAttributesToSuffix(
-    dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
-    nsCString& aSuffix)
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::OriginAttributesToSuffix(dom::GlobalObject& aGlobal,
-                                      const dom::OriginAttributesDictionary& aAttrs,
-                                      nsCString& aSuffix)
-=======
 /* static */
 void ChromeUtils::OriginAttributesToSuffix(
     dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
     nsCString& aSuffix)
->>>>>>> upstream-releases
 
 {
   OriginAttributes attrs(aAttrs);
   attrs.CreateSuffix(aSuffix);
 }
 
-<<<<<<< HEAD
-/* static */ bool ChromeUtils::OriginAttributesMatchPattern(
-    dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
-    const dom::OriginAttributesPatternDictionary& aPattern) {
-||||||| merged common ancestors
-/* static */ bool
-ChromeUtils::OriginAttributesMatchPattern(dom::GlobalObject& aGlobal,
-                                          const dom::OriginAttributesDictionary& aAttrs,
-                                          const dom::OriginAttributesPatternDictionary& aPattern)
-{
-=======
 /* static */
 bool ChromeUtils::OriginAttributesMatchPattern(
     dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
     const dom::OriginAttributesPatternDictionary& aPattern) {
->>>>>>> upstream-releases
   OriginAttributes attrs(aAttrs);
   OriginAttributesPattern pattern(aPattern);
   return pattern.Matches(attrs);
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::CreateOriginAttributesFromOrigin(
-    dom::GlobalObject& aGlobal, const nsAString& aOrigin,
-    dom::OriginAttributesDictionary& aAttrs, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::CreateOriginAttributesFromOrigin(dom::GlobalObject& aGlobal,
-                                       const nsAString& aOrigin,
-                                       dom::OriginAttributesDictionary& aAttrs,
-                                       ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::CreateOriginAttributesFromOrigin(
     dom::GlobalObject& aGlobal, const nsAString& aOrigin,
     dom::OriginAttributesDictionary& aAttrs, ErrorResult& aRv) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
   nsAutoCString suffix;
   if (!attrs.PopulateFromOrigin(NS_ConvertUTF16toUTF8(aOrigin), suffix)) {
@@ -1074,84 +620,32 @@ void ChromeUtils::CreateOriginAttributesFromOrigin(
   aAttrs = attrs;
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::FillNonDefaultOriginAttributes(
-    dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
-    dom::OriginAttributesDictionary& aNewAttrs) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::FillNonDefaultOriginAttributes(dom::GlobalObject& aGlobal,
-                                 const dom::OriginAttributesDictionary& aAttrs,
-                                 dom::OriginAttributesDictionary& aNewAttrs)
-{
-=======
 /* static */
 void ChromeUtils::FillNonDefaultOriginAttributes(
     dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aAttrs,
     dom::OriginAttributesDictionary& aNewAttrs) {
->>>>>>> upstream-releases
   aNewAttrs = aAttrs;
 }
 
-<<<<<<< HEAD
-/* static */ bool ChromeUtils::IsOriginAttributesEqual(
-    dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aA,
-    const dom::OriginAttributesDictionary& aB) {
-||||||| merged common ancestors
-
-/* static */ bool
-ChromeUtils::IsOriginAttributesEqual(dom::GlobalObject& aGlobal,
-                                     const dom::OriginAttributesDictionary& aA,
-                                     const dom::OriginAttributesDictionary& aB)
-{
-=======
 /* static */
 bool ChromeUtils::IsOriginAttributesEqual(
     dom::GlobalObject& aGlobal, const dom::OriginAttributesDictionary& aA,
     const dom::OriginAttributesDictionary& aB) {
->>>>>>> upstream-releases
   return IsOriginAttributesEqual(aA, aB);
 }
 
-<<<<<<< HEAD
-/* static */ bool ChromeUtils::IsOriginAttributesEqual(
-    const dom::OriginAttributesDictionary& aA,
-    const dom::OriginAttributesDictionary& aB) {
-  return aA == aB;
-||||||| merged common ancestors
-/* static */ bool
-ChromeUtils::IsOriginAttributesEqual(const dom::OriginAttributesDictionary& aA,
-                                     const dom::OriginAttributesDictionary& aB)
-{
-  return aA.mAppId == aB.mAppId &&
-         aA.mInIsolatedMozBrowser == aB.mInIsolatedMozBrowser &&
-         aA.mUserContextId == aB.mUserContextId &&
-         aA.mPrivateBrowsingId == aB.mPrivateBrowsingId;
-=======
 /* static */
 bool ChromeUtils::IsOriginAttributesEqual(
     const dom::OriginAttributesDictionary& aA,
     const dom::OriginAttributesDictionary& aB) {
   return aA == aB;
->>>>>>> upstream-releases
 }
 
 #ifdef NIGHTLY_BUILD
-<<<<<<< HEAD
-/* static */ void ChromeUtils::GetRecentJSDevError(
-    GlobalObject& aGlobal, JS::MutableHandleValue aRetval, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::GetRecentJSDevError(GlobalObject& aGlobal,
-                                JS::MutableHandleValue aRetval,
-                                ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::GetRecentJSDevError(GlobalObject& aGlobal,
                                       JS::MutableHandleValue aRetval,
                                       ErrorResult& aRv) {
->>>>>>> upstream-releases
   aRetval.setUndefined();
   auto runtime = CycleCollectedJSRuntime::Get();
   MOZ_ASSERT(runtime);
@@ -1163,16 +657,8 @@ void ChromeUtils::GetRecentJSDevError(GlobalObject& aGlobal,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::ClearRecentJSDevError(GlobalObject&) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::ClearRecentJSDevError(GlobalObject&)
-{
-=======
 /* static */
 void ChromeUtils::ClearRecentJSDevError(GlobalObject&) {
->>>>>>> upstream-releases
   auto runtime = CycleCollectedJSRuntime::Get();
   MOZ_ASSERT(runtime);
 
@@ -1181,15 +667,6 @@ void ChromeUtils::ClearRecentJSDevError(GlobalObject&) {
 #endif  // NIGHTLY_BUILD
 
 /* static */
-<<<<<<< HEAD
-already_AddRefed<Promise> ChromeUtils::RequestPerformanceMetrics(
-    GlobalObject& aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-ChromeUtils::RequestPerformanceMetrics(GlobalObject& aGlobal,
-                                       ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> ChromeUtils::RequestProcInfo(GlobalObject& aGlobal,
                                                        ErrorResult& aRv) {
   // This function will use IPDL to enable threads info on macOS
@@ -1390,7 +867,6 @@ already_AddRefed<Promise> ChromeUtils::RequestProcInfo(GlobalObject& aGlobal,
 /* static */
 already_AddRefed<Promise> ChromeUtils::RequestPerformanceMetrics(
     GlobalObject& aGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   // Creating a JS promise
@@ -1448,21 +924,10 @@ already_AddRefed<Promise> ChromeUtils::CollectPerfStats(GlobalObject& aGlobal,
 
 constexpr auto kSkipSelfHosted = JS::SavedFrameSelfHosted::Exclude;
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::GetCallerLocation(
-    const GlobalObject& aGlobal, nsIPrincipal* aPrincipal,
-    JS::MutableHandle<JSObject*> aRetval) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::GetCallerLocation(const GlobalObject& aGlobal, nsIPrincipal* aPrincipal,
-                               JS::MutableHandle<JSObject*> aRetval)
-{
-=======
 /* static */
 void ChromeUtils::GetCallerLocation(const GlobalObject& aGlobal,
                                     nsIPrincipal* aPrincipal,
                                     JS::MutableHandle<JSObject*> aRetval) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   auto* principals = nsJSPrincipals::get(aPrincipal);
@@ -1484,26 +949,12 @@ void ChromeUtils::GetCallerLocation(const GlobalObject& aGlobal,
       js::GetFirstSubsumedSavedFrame(cx, principals, frame, kSkipSelfHosted));
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::CreateError(const GlobalObject& aGlobal,
-                                           const nsAString& aMessage,
-                                           JS::Handle<JSObject*> aStack,
-                                           JS::MutableHandle<JSObject*> aRetVal,
-                                           ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::CreateError(const GlobalObject& aGlobal, const nsAString& aMessage,
-                         JS::Handle<JSObject*> aStack,
-                         JS::MutableHandle<JSObject*> aRetVal, ErrorResult& aRv)
-{
-=======
 /* static */
 void ChromeUtils::CreateError(const GlobalObject& aGlobal,
                               const nsAString& aMessage,
                               JS::Handle<JSObject*> aStack,
                               JS::MutableHandle<JSObject*> aRetVal,
                               ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (aStack && !JS::IsMaybeWrappedSavedFrame(aStack)) {
     aRv.Throw(NS_ERROR_INVALID_ARG);
     return;
@@ -1564,18 +1015,9 @@ void ChromeUtils::CreateError(const GlobalObject& aGlobal,
   aRetVal.set(retVal);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Promise> ChromeUtils::RequestIOActivity(
-    GlobalObject& aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Promise>
-ChromeUtils::RequestIOActivity(GlobalObject& aGlobal, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Promise> ChromeUtils::RequestIOActivity(GlobalObject& aGlobal,
                                                          ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(Preferences::GetBool(IO_ACTIVITY_ENABLED_PREF, false));
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
@@ -1589,23 +1031,6 @@ already_AddRefed<Promise> ChromeUtils::RequestIOActivity(GlobalObject& aGlobal,
   return domPromise.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<BrowsingContext> ChromeUtils::GetBrowsingContext(
-    GlobalObject& aGlobal, uint64_t id) {
-  return BrowsingContext::Get(id);
-}
-
-/* static */ void ChromeUtils::GetRootBrowsingContexts(
-    GlobalObject& aGlobal,
-    nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts) {
-  BrowsingContext::GetRootBrowsingContexts(aBrowsingContexts);
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::GetRootBrowsingContexts(GlobalObject& aGlobal,
-                                     nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts)
-{
-  BrowsingContext::GetRootBrowsingContexts(aBrowsingContexts);
-=======
 /* static */
 bool ChromeUtils::HasReportingHeaderForOrigin(GlobalObject& global,
                                               const nsAString& aOrigin,
@@ -1691,27 +1116,7 @@ bool ChromeUtils::IsClassifierBlockingErrorCode(GlobalObject& aGlobal,
                                                 uint32_t aError) {
   return net::UrlClassifierFeatureFactory::IsClassifierBlockingErrorCode(
       static_cast<nsresult>(aError));
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-/* static */ bool ChromeUtils::HasReportingHeaderForOrigin(
-    GlobalObject& global, const nsAString& aOrigin, ErrorResult& aRv) {
-  if (!XRE_IsParentProcess()) {
-    aRv.Throw(NS_ERROR_FAILURE);
-    return false;
-  }
-
-  return ReportingHeader::HasReportingHeaderForOrigin(
-      NS_ConvertUTF16toUTF8(aOrigin));
 }
 
 }  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace dom
-}  // namespace mozilla
->>>>>>> upstream-releases

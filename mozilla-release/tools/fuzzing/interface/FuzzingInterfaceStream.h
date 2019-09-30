@@ -37,42 +37,6 @@ typedef int (*FuzzingTestFuncStream)(nsCOMPtr<nsIInputStream>);
 #ifdef __AFL_COMPILER
 void afl_interface_stream(const char* testFile, FuzzingTestFuncStream testFunc);
 
-<<<<<<< HEAD
-#define MOZ_AFL_INTERFACE_COMMON(initFunc)                                     \
-  if (initFunc) initFunc(NULL, NULL);                                          \
-  char* testFilePtr = getenv("MOZ_FUZZ_TESTFILE");                             \
-  if (!testFilePtr) {                                                          \
-    fprintf(                                                                   \
-        stderr,                                                                \
-        "Must specify testfile in MOZ_FUZZ_TESTFILE environment variable.\n"); \
-    return;                                                                    \
-  }                                                                            \
-  /* Make a copy of testFilePtr so the testing function can safely call getenv \
-   */                                                                          \
-  std::string testFile(testFilePtr);
-
-#define MOZ_AFL_INTERFACE_STREAM(initFunc, testFunc, moduleName) \
-  TEST(AFL, moduleName) {                                        \
-    MOZ_AFL_INTERFACE_COMMON(initFunc);                          \
-    ::mozilla::afl_interface_stream(testFile.c_str(), testFunc); \
-  }
-||||||| merged common ancestors
-#define MOZ_AFL_INTERFACE_COMMON(initFunc)                                                    \
-  if (initFunc) initFunc(NULL, NULL);                                                         \
-  char* testFilePtr = getenv("MOZ_FUZZ_TESTFILE");                                            \
-  if (!testFilePtr) {                                                                         \
-    fprintf(stderr, "Must specify testfile in MOZ_FUZZ_TESTFILE environment variable.\n");    \
-    return;                                                                                   \
-  }                                                                                           \
-  /* Make a copy of testFilePtr so the testing function can safely call getenv */             \
-  std::string testFile(testFilePtr);
-
-#define MOZ_AFL_INTERFACE_STREAM(initFunc, testFunc, moduleName) \
-  TEST(AFL, moduleName) {                                        \
-    MOZ_AFL_INTERFACE_COMMON(initFunc);                          \
-    ::mozilla::afl_interface_stream(testFile.c_str(), testFunc); \
-  }
-=======
 #  define MOZ_AFL_INTERFACE_COMMON(initFunc)                              \
     if (initFunc) initFunc(NULL, NULL);                                   \
     char* testFilePtr = getenv("MOZ_FUZZ_TESTFILE");                      \
@@ -93,47 +57,12 @@ void afl_interface_stream(const char* testFile, FuzzingTestFuncStream testFunc);
       MOZ_AFL_INTERFACE_COMMON(initFunc);                          \
       ::mozilla::afl_interface_stream(testFile.c_str(), testFunc); \
     }
->>>>>>> upstream-releases
 #else
 #  define MOZ_AFL_INTERFACE_STREAM(initFunc, testFunc, moduleName) /* Nothing \
                                                                     */
 #endif
 
 #ifdef LIBFUZZER
-<<<<<<< HEAD
-#define MOZ_LIBFUZZER_INTERFACE_STREAM(initFunc, testFunc, moduleName)         \
-  static int LibFuzzerTest##moduleName(const uint8_t* data, size_t size) {     \
-    if (size > INT32_MAX) return 0;                                            \
-    nsCOMPtr<nsIInputStream> stream;                                           \
-    nsresult rv =                                                              \
-        NS_NewByteInputStream(getter_AddRefs(stream), (const char*)data, size, \
-                              NS_ASSIGNMENT_DEPEND);                           \
-    MOZ_RELEASE_ASSERT(NS_SUCCEEDED(rv));                                      \
-    testFunc(stream.forget());                                                 \
-    return 0;                                                                  \
-  }                                                                            \
-  static void __attribute__((constructor)) LibFuzzerRegister() {               \
-    ::mozilla::FuzzerRegistry::getInstance().registerModule(                   \
-        #moduleName, initFunc, LibFuzzerTest##moduleName);                     \
-  }
-||||||| merged common ancestors
-#define MOZ_LIBFUZZER_INTERFACE_STREAM(initFunc, testFunc, moduleName)      \
-  static int LibFuzzerTest##moduleName (const uint8_t *data, size_t size) { \
-    if (size > INT32_MAX)                                                   \
-      return 0;                                                             \
-    nsCOMPtr<nsIInputStream> stream;                                        \
-    nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),             \
-      (const char*)data, size, NS_ASSIGNMENT_DEPEND);                       \
-    MOZ_RELEASE_ASSERT(NS_SUCCEEDED(rv));                                   \
-    testFunc(stream.forget());                                              \
-    return 0;                                                               \
-  }                                                                         \
-  static void __attribute__ ((constructor)) LibFuzzerRegister() {           \
-    ::mozilla::FuzzerRegistry::getInstance().registerModule(                \
-      #moduleName, initFunc, LibFuzzerTest##moduleName                      \
-    );                                                                      \
-  }
-=======
 #  define MOZ_LIBFUZZER_INTERFACE_STREAM(initFunc, testFunc, moduleName)       \
     static int LibFuzzerTest##moduleName(const uint8_t* data, size_t size) {   \
       if (size > INT32_MAX) return 0;                                          \
@@ -149,17 +78,9 @@ void afl_interface_stream(const char* testFile, FuzzingTestFuncStream testFunc);
       ::mozilla::FuzzerRegistry::getInstance().registerModule(                 \
           #moduleName, initFunc, LibFuzzerTest##moduleName);                   \
     }
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_LIBFUZZER_INTERFACE_STREAM(initFunc, testFunc, \
-                                       moduleName) /* Nothing */
-||||||| merged common ancestors
-#define MOZ_LIBFUZZER_INTERFACE_STREAM(initFunc, testFunc, moduleName) /* Nothing */
-=======
 #  define MOZ_LIBFUZZER_INTERFACE_STREAM(initFunc, testFunc, \
                                          moduleName) /* Nothing */
->>>>>>> upstream-releases
 #endif
 
 #define MOZ_FUZZING_INTERFACE_STREAM(initFunc, testFunc, moduleName) \

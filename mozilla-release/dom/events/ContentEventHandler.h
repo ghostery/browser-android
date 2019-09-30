@@ -126,16 +126,8 @@ class MOZ_STACK_CLASS ContentEventHandler {
   MOZ_CAN_RUN_SCRIPT
   nsresult OnSelectionEvent(WidgetSelectionEvent* aEvent);
 
-<<<<<<< HEAD
- protected:
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-protected:
-  nsCOMPtr<nsIDocument> mDocument;
-=======
  protected:
   RefPtr<dom::Document> mDocument;
->>>>>>> upstream-releases
   // mSelection is typically normal selection but if OnQuerySelectedText()
   // is called, i.e., handling eQuerySelectedText, it's the specified selection
   // by WidgetQueryContentEvent::mInput::mSelectionType.

@@ -39,75 +39,26 @@ static already_AddRefed<nsIContentViewer> doc_viewer(nsIDocShell* aDocShell) {
   return result.forget();
 }
 
-<<<<<<< HEAD
-static nsIPresShell* pres_shell(nsIDocShell* aDocShell) {
-  nsCOMPtr<nsIContentViewer> cv = doc_viewer(aDocShell);
-  if (!cv) return nullptr;
-  return cv->GetPresShell();
-||||||| merged common ancestors
-static already_AddRefed<nsIPresShell>
-pres_shell(nsIDocShell *aDocShell)
-{
-    nsCOMPtr<nsIContentViewer> cv = doc_viewer(aDocShell);
-    if (!cv)
-        return nullptr;
-    nsCOMPtr<nsIPresShell> result;
-    cv->GetPresShell(getter_AddRefs(result));
-    return result.forget();
-=======
 static PresShell* GetPresShell(nsIDocShell* aDocShell) {
   nsCOMPtr<nsIContentViewer> cv = doc_viewer(aDocShell);
   if (!cv) return nullptr;
   return cv->GetPresShell();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static nsViewManager* view_manager(nsIDocShell* aDocShell) {
-  nsCOMPtr<nsIPresShell> shell(pres_shell(aDocShell));
-  if (!shell) return nullptr;
-  return shell->GetViewManager();
-||||||| merged common ancestors
-static nsViewManager*
-view_manager(nsIDocShell *aDocShell)
-{
-    nsCOMPtr<nsIPresShell> shell(pres_shell(aDocShell));
-    if (!shell)
-        return nullptr;
-    return shell->GetViewManager();
-=======
 static nsViewManager* view_manager(nsIDocShell* aDocShell) {
   PresShell* presShell = GetPresShell(aDocShell);
   if (!presShell) {
     return nullptr;
   }
   return presShell->GetViewManager();
->>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-static already_AddRefed<nsIDocument> document(nsIDocShell* aDocShell) {
-  nsCOMPtr<nsIContentViewer> cv(doc_viewer(aDocShell));
-  if (!cv) return nullptr;
-  nsCOMPtr<nsIDocument> result = cv->GetDocument();
-  return result.forget();
-||||||| merged common ancestors
-static already_AddRefed<nsIDocument>
-document(nsIDocShell *aDocShell)
-{
-    nsCOMPtr<nsIContentViewer> cv(doc_viewer(aDocShell));
-    if (!cv)
-        return nullptr;
-    nsCOMPtr<nsIDocument> result = cv->GetDocument();
-    return result.forget();
-=======
 static already_AddRefed<Document> document(nsIDocShell* aDocShell) {
   nsCOMPtr<nsIContentViewer> cv(doc_viewer(aDocShell));
   if (!cv) return nullptr;
   RefPtr<Document> result = cv->GetDocument();
   return result.forget();
->>>>>>> upstream-releases
 }
 #endif
 
@@ -295,36 +246,13 @@ nsLayoutDebuggingTools::GetReflowCounts(bool* aShow) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsLayoutDebuggingTools::SetReflowCounts(bool aShow) {
-  NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
-  nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-  if (shell) {
-||||||| merged common ancestors
-nsLayoutDebuggingTools::SetReflowCounts(bool aShow)
-{
-    NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
-    nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-    if (shell) {
-=======
 nsLayoutDebuggingTools::SetReflowCounts(bool aShow) {
   NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
   if (PresShell* presShell = GetPresShell(mDocShell)) {
->>>>>>> upstream-releases
 #ifdef MOZ_REFLOW_PERF
-<<<<<<< HEAD
-    shell->SetPaintFrameCount(aShow);
-    SetBoolPrefAndRefresh("layout.reflow.showframecounts", aShow);
-    mReflowCounts = aShow;
-||||||| merged common ancestors
-        shell->SetPaintFrameCount(aShow);
-        SetBoolPrefAndRefresh("layout.reflow.showframecounts", aShow);
-        mReflowCounts = aShow;
-=======
     presShell->SetPaintFrameCount(aShow);
     SetBoolPrefAndRefresh("layout.reflow.showframecounts", aShow);
     mReflowCounts = aShow;
->>>>>>> upstream-releases
 #else
     printf("************************************************\n");
     printf("Sorry, you have not built with MOZ_REFLOW_PERF=1\n");
@@ -371,53 +299,6 @@ nsLayoutDebuggingTools::DumpWebShells() {
 
 static void DumpContentRecur(nsIDocShell* aDocShell, FILE* out) {
 #ifdef DEBUG
-<<<<<<< HEAD
-  if (nullptr != aDocShell) {
-    fprintf(out, "docshell=%p \n", static_cast<void*>(aDocShell));
-    nsCOMPtr<nsIDocument> doc(document(aDocShell));
-    if (doc) {
-      dom::Element* root = doc->GetRootElement();
-      if (root) {
-        root->List(out);
-      }
-    } else {
-      fputs("no document\n", out);
-    }
-    // dump the frames of the sub documents
-    int32_t i, n;
-    aDocShell->GetChildCount(&n);
-    for (i = 0; i < n; ++i) {
-      nsCOMPtr<nsIDocShellTreeItem> child;
-      aDocShell->GetChildAt(i, getter_AddRefs(child));
-      nsCOMPtr<nsIDocShell> childAsShell(do_QueryInterface(child));
-      if (child) {
-        DumpContentRecur(childAsShell, out);
-      }
-||||||| merged common ancestors
-    if (nullptr != aDocShell) {
-        fprintf(out, "docshell=%p \n", static_cast<void*>(aDocShell));
-        nsCOMPtr<nsIDocument> doc(document(aDocShell));
-        if (doc) {
-            dom::Element *root = doc->GetRootElement();
-            if (root) {
-                root->List(out);
-            }
-        }
-        else {
-            fputs("no document\n", out);
-        }
-        // dump the frames of the sub documents
-        int32_t i, n;
-        aDocShell->GetChildCount(&n);
-        for (i = 0; i < n; ++i) {
-            nsCOMPtr<nsIDocShellTreeItem> child;
-            aDocShell->GetChildAt(i, getter_AddRefs(child));
-            nsCOMPtr<nsIDocShell> childAsShell(do_QueryInterface(child));
-            if (child) {
-                DumpContentRecur(childAsShell, out);
-            }
-        }
-=======
   if (nullptr != aDocShell) {
     fprintf(out, "docshell=%p \n", static_cast<void*>(aDocShell));
     RefPtr<Document> doc(document(aDocShell));
@@ -428,12 +309,7 @@ static void DumpContentRecur(nsIDocShell* aDocShell, FILE* out) {
       }
     } else {
       fputs("no document\n", out);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
     // dump the frames of the sub documents
     int32_t i, n;
     aDocShell->GetChildCount(&n);
@@ -446,7 +322,6 @@ static void DumpContentRecur(nsIDocShell* aDocShell, FILE* out) {
       }
     }
   }
->>>>>>> upstream-releases
 #endif
 }
 
@@ -457,28 +332,6 @@ nsLayoutDebuggingTools::DumpContent() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static void DumpFramesRecur(nsIDocShell* aDocShell, FILE* out) {
-#ifdef DEBUG
-  fprintf(out, "webshell=%p \n", static_cast<void*>(aDocShell));
-  nsCOMPtr<nsIPresShell> shell(pres_shell(aDocShell));
-  if (shell) {
-    nsIFrame* root = shell->GetRootFrame();
-    if (root) {
-      root->List(out);
-||||||| merged common ancestors
-static void
-DumpFramesRecur(nsIDocShell* aDocShell, FILE* out)
-{
-#ifdef DEBUG
-    fprintf(out, "webshell=%p \n", static_cast<void*>(aDocShell));
-    nsCOMPtr<nsIPresShell> shell(pres_shell(aDocShell));
-    if (shell) {
-        nsIFrame* root = shell->GetRootFrame();
-        if (root) {
-            root->List(out);
-        }
-=======
 static void DumpFramesRecur(nsIDocShell* aDocShell, FILE* out) {
 #ifdef DEBUG_FRAME_DUMP
   fprintf(out, "webshell=%p \n", static_cast<void*>(aDocShell));
@@ -486,7 +339,6 @@ static void DumpFramesRecur(nsIDocShell* aDocShell, FILE* out) {
     nsIFrame* root = presShell->GetRootFrame();
     if (root) {
       root->List(out);
->>>>>>> upstream-releases
     }
   } else {
     fputs("null pres shell\n", out);
@@ -551,58 +403,16 @@ NS_IMETHODIMP
 nsLayoutDebuggingTools::DumpStyleSheets() {
   NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
 #ifdef DEBUG
-<<<<<<< HEAD
-  FILE* out = stdout;
-  nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-  if (shell)
-    shell->ListStyleSheets(out);
-  else
-    fputs("null pres shell\n", out);
-||||||| merged common ancestors
-    FILE *out = stdout;
-    nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-    if (shell)
-        shell->ListStyleSheets(out);
-    else
-        fputs("null pres shell\n", out);
-=======
   FILE* out = stdout;
   if (PresShell* presShell = GetPresShell(mDocShell)) {
     presShell->ListStyleSheets(out);
   } else {
     fputs("null pres shell\n", out);
   }
->>>>>>> upstream-releases
 #endif
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsLayoutDebuggingTools::DumpComputedStyles() {
-  NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
-#ifdef DEBUG
-  FILE* out = stdout;
-  nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-  if (shell) {
-    shell->ListComputedStyles(out);
-  } else {
-    fputs("null pres shell\n", out);
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsLayoutDebuggingTools::DumpComputedStyles()
-{
-    NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
-#ifdef DEBUG
-    FILE *out = stdout;
-    nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-    if (shell) {
-        shell->ListComputedStyles(out);
-    } else {
-        fputs("null pres shell\n", out);
-    }
-=======
 NS_IMETHODIMP nsLayoutDebuggingTools::DumpMatchedRules() {
   NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
 #ifdef DEBUG_FRAME_DUMP
@@ -615,56 +425,21 @@ NS_IMETHODIMP nsLayoutDebuggingTools::DumpMatchedRules() {
   } else {
     fputs("null pres shell\n", out);
   }
->>>>>>> upstream-releases
 #endif
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsLayoutDebuggingTools::DumpReflowStats() {
-  NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
-||||||| merged common ancestors
-nsLayoutDebuggingTools::DumpReflowStats()
-{
-    NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
-=======
 nsLayoutDebuggingTools::DumpComputedStyles() {
   NS_ENSURE_TRUE(mDocShell, NS_ERROR_NOT_INITIALIZED);
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-  nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-  if (shell) {
-#ifdef MOZ_REFLOW_PERF
-    shell->DumpReflows();
-#else
-    printf("************************************************\n");
-    printf("Sorry, you have not built with MOZ_REFLOW_PERF=1\n");
-    printf("************************************************\n");
-||||||| merged common ancestors
-    nsCOMPtr<nsIPresShell> shell(pres_shell(mDocShell));
-    if (shell) {
-#ifdef MOZ_REFLOW_PERF
-        shell->DumpReflows();
-#else
-        printf("************************************************\n");
-        printf("Sorry, you have not built with MOZ_REFLOW_PERF=1\n");
-        printf("************************************************\n");
-=======
   FILE* out = stdout;
   if (PresShell* presShell = GetPresShell(mDocShell)) {
     presShell->ListComputedStyles(out);
   } else {
     fputs("null pres shell\n", out);
   }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-    }
-=======
   return NS_OK;
 }
 
@@ -681,7 +456,6 @@ nsLayoutDebuggingTools::DumpReflowStats() {
     printf("************************************************\n");
 #  endif
   }
->>>>>>> upstream-releases
 #endif
   return NS_OK;
 }

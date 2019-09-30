@@ -121,77 +121,6 @@ class GuardObjectNotificationReceiver {
 } /* namespace detail */
 } /* namespace mozilla */
 
-<<<<<<< HEAD
-#undef MOZ_POISON
-
-#endif /* DEBUG */
-
-#ifdef DEBUG
-#define MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER \
-  ::mozilla::detail::GuardObjectNotificationReceiver _mCheckNotUsedAsTemporary;
-#define MOZ_GUARD_OBJECT_NOTIFIER_PARAM                  \
-  , ::mozilla::detail::GuardObjectNotifier&& _notifier = \
-        ::mozilla::detail::GuardObjectNotifier()
-#define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM           \
-  ::mozilla::detail::GuardObjectNotifier&& _notifier = \
-      ::mozilla::detail::GuardObjectNotifier()
-#define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL \
-  , ::mozilla::detail::GuardObjectNotifier&& _notifier
-#define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL \
-  ::mozilla::detail::GuardObjectNotifier&& _notifier
-#define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT , ::std::move(_notifier)
-#define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT ::std::move(_notifier)
-#define MOZ_GUARD_OBJECT_NOTIFIER_INIT         \
-  do {                                         \
-    _mCheckNotUsedAsTemporary.init(_notifier); \
-  } while (0)
-#else
-#define MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-#define MOZ_GUARD_OBJECT_NOTIFIER_PARAM
-#define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM
-#define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL
-#define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL
-#define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT
-#define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT
-#define MOZ_GUARD_OBJECT_NOTIFIER_INIT \
-  do {                                 \
-  } while (0)
-#endif
-||||||| merged common ancestors
-#undef MOZ_POISON
-
-#endif /* DEBUG */
-
-#ifdef DEBUG
-#  define MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER \
-     ::mozilla::detail::GuardObjectNotificationReceiver _mCheckNotUsedAsTemporary;
-#  define MOZ_GUARD_OBJECT_NOTIFIER_PARAM \
-     , ::mozilla::detail::GuardObjectNotifier&& _notifier = \
-         ::mozilla::detail::GuardObjectNotifier()
-#  define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM \
-     ::mozilla::detail::GuardObjectNotifier&& _notifier = \
-         ::mozilla::detail::GuardObjectNotifier()
-#  define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL \
-     , ::mozilla::detail::GuardObjectNotifier&& _notifier
-#  define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL \
-     ::mozilla::detail::GuardObjectNotifier&& _notifier
-#  define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT \
-     , ::std::move(_notifier)
-#  define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT \
-       ::std::move(_notifier)
-#  define MOZ_GUARD_OBJECT_NOTIFIER_INIT \
-     do { _mCheckNotUsedAsTemporary.init(_notifier); } while (0)
-#else
-#  define MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-#  define MOZ_GUARD_OBJECT_NOTIFIER_PARAM
-#  define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM
-#  define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL
-#  define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL
-#  define MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_TO_PARENT
-#  define MOZ_GUARD_OBJECT_NOTIFIER_PARAM_TO_PARENT
-#  define MOZ_GUARD_OBJECT_NOTIFIER_INIT do { } while (0)
-#endif
-=======
 #    undef MOZ_POISON
 
 #  endif /* DEBUG */
@@ -229,7 +158,6 @@ class GuardObjectNotificationReceiver {
       do {                                 \
       } while (0)
 #  endif
->>>>>>> upstream-releases
 
 #endif /* __cplusplus */
 

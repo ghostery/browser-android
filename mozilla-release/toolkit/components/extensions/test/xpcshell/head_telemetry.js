@@ -22,30 +22,16 @@ function clearHistograms() {
 }
 
 function getSnapshots(process) {
-<<<<<<< HEAD
-  return Services.telemetry.getSnapshotForHistograms("main", false /* clear */)[process];
-||||||| merged common ancestors
-  return Services.telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
-                                               false /* clear */)[process];
-=======
   return Services.telemetry.getSnapshotForHistograms("main", false /* clear */)[
     process
   ];
->>>>>>> upstream-releases
 }
 
 function getKeyedSnapshots(process) {
-<<<<<<< HEAD
-  return Services.telemetry.getSnapshotForKeyedHistograms("main", false /* clear */)[process];
-||||||| merged common ancestors
-  return Services.telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
-                                                    false /* clear */)[process];
-=======
   return Services.telemetry.getSnapshotForKeyedHistograms(
     "main",
     false /* clear */
   )[process];
->>>>>>> upstream-releases
 }
 
 // TODO Bug 1357509: There is no good way to make sure that the parent received
@@ -53,21 +39,11 @@ function getKeyedSnapshots(process) {
 // to the ugly, spinning the event loop until we have a good approach.
 function promiseTelemetryRecorded(id, process, expectedCount) {
   let condition = () => {
-<<<<<<< HEAD
-    let snapshot = Services.telemetry.getSnapshotForHistograms("main",
-                                                               false /* clear */)[process][id];
-    return snapshot && valueSum(snapshot.values) >= expectedCount;
-||||||| merged common ancestors
-    let snapshot = Services.telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
-                                                         false /* clear */)[process][id];
-    return snapshot && arraySum(snapshot.counts) >= expectedCount;
-=======
     let snapshot = Services.telemetry.getSnapshotForHistograms(
       "main",
       false /* clear */
     )[process][id];
     return snapshot && valueSum(snapshot.values) >= expectedCount;
->>>>>>> upstream-releases
   };
   return ContentTaskUtils.waitForCondition(condition);
 }
@@ -79,15 +55,6 @@ function promiseKeyedTelemetryRecorded(
   expectedCount
 ) {
   let condition = () => {
-<<<<<<< HEAD
-    let snapshot = Services.telemetry.getSnapshotForKeyedHistograms("main",
-                                                                    false /* clear */)[process][id];
-    return snapshot && snapshot[expectedKey] && valueSum(snapshot[expectedKey].values) >= expectedCount;
-||||||| merged common ancestors
-    let snapshot = Services.telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
-                                                              false /* clear */)[process][id];
-    return snapshot && snapshot[expectedKey] && arraySum(snapshot[expectedKey].counts) >= expectedCount;
-=======
     let snapshot = Services.telemetry.getSnapshotForKeyedHistograms(
       "main",
       false /* clear */
@@ -97,7 +64,6 @@ function promiseKeyedTelemetryRecorded(
       snapshot[expectedKey] &&
       valueSum(snapshot[expectedKey].values) >= expectedCount
     );
->>>>>>> upstream-releases
   };
   return ContentTaskUtils.waitForCondition(condition);
 }

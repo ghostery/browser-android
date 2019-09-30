@@ -121,16 +121,6 @@ const nsCString ToString(CodeNameIndex aCodeNameIndex);
 
 #define NS_DEFINE_INPUTTYPE(aCPPName, aDOMName) e##aCPPName,
 
-<<<<<<< HEAD
-typedef int8_t CommandInt;
-enum Command : CommandInt {
-  CommandDoNothing
-||||||| merged common ancestors
-typedef int8_t CommandInt;
-enum Command : CommandInt
-{
-  CommandDoNothing
-=======
 typedef uint8_t EditorInputTypeType;
 enum class EditorInputType : EditorInputTypeType {
 #include "mozilla/InputTypeList.h"
@@ -221,7 +211,6 @@ inline bool IsDataTransferAvailableOnHTMLEditor(EditorInputType aInputType) {
 typedef uint8_t CommandInt;
 enum class Command : CommandInt {
   DoNothing
->>>>>>> upstream-releases
 
 #include "mozilla/CommandList.h"
 };
@@ -231,11 +220,6 @@ enum class Command : CommandInt {
 
 const char* ToChar(Command aCommand);
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 /**
  * Return a command value for aCommandName.
  * XXX: Is there a better place to put `Command` related methods instead of
@@ -252,7 +236,6 @@ Command GetInternalCommand(const char* aCommandName,
                            const nsCommandParams* aCommandParams = nullptr);
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 /**
  * All header files should include this header instead of *Events.h.
@@ -298,11 +281,6 @@ class TextRangeArray;
 // FontRange.h
 struct FontRange;
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 enum MouseButton { eNotPressed = -1, eLeft = 0, eMiddle = 1, eRight = 2 };
 
 enum MouseButtonsFlag {
@@ -319,6 +297,5 @@ enum MouseButtonsFlag {
 };
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_EventForwards_h__

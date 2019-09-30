@@ -232,59 +232,6 @@ var SaveToPocket = {
       );
       Services.prefs.clearUserPref("browser.pocket.enabled");
     }
-<<<<<<< HEAD
-  },
-  shutdown() {
-    Services.ppmm.broadcastAsyncMessage("PocketShuttingDown");
-    Services.obs.removeObserver(this, "browser-delayed-startup-finished");
-    // Although the ppmm loads the scripts into the chrome process as well,
-    // we need to manually unregister here anyway to ensure these aren't part
-    // of the chrome process and avoid errors.
-    AboutPocket.aboutSaved.unregister();
-    AboutPocket.aboutSignup.unregister();
-
-    PocketPageAction.shutdown();
-
-    for (let window of browserWindows()) {
-      for (let id of ["appMenu-library-pocket-button"]) {
-        let element = window.document.getElementById(id) ||
-                      window.gNavToolbox.palette.querySelector("#" + id);
-        if (element)
-          element.remove();
-      }
-      this.removeStyles(window);
-      // remove script getters/objects
-      window.Pocket = undefined;
-      window.pktApi = undefined;
-      window.pktUI = undefined;
-      window.pktUIMessaging = undefined;
-||||||| merged common ancestors
-  },
-  shutdown() {
-    Services.ppmm.broadcastAsyncMessage("PocketShuttingDown");
-    Services.obs.removeObserver(this, "browser-delayed-startup-finished");
-    // Although the ppmm loads the scripts into the chrome process as well,
-    // we need to manually unregister here anyway to ensure these aren't part
-    // of the chrome process and avoid errors.
-    AboutPocket.aboutSaved.unregister();
-    AboutPocket.aboutSignup.unregister();
-
-    PocketPageAction.shutdown();
-
-    for (let window of browserWindows()) {
-      for (let id of ["appMenu-library-pocket-button"]) {
-        let element = window.document.getElementById(id) ||
-                      window.gNavToolbox.palette.querySelector("#" + id);
-        if (element)
-          element.remove();
-      }
-      this.removeStyles(window);
-      // remove script getters/objects
-      delete window.Pocket;
-      delete window.pktApi;
-      delete window.pktUI;
-      delete window.pktUIMessaging;
-=======
     // Only define the pref getter now, so we don't get notified for the
     // migrated pref above.
     XPCOMUtils.defineLazyPreferenceGetter(
@@ -301,7 +248,6 @@ var SaveToPocket = {
       // shut down things that haven't started up, or broadcast unnecessary messages.
       this.updateElements(false);
       Services.obs.addObserver(this, "browser-delayed-startup-finished");
->>>>>>> upstream-releases
     }
     Services.mm.addMessageListener("Reader:OnSetup", this);
     Services.mm.addMessageListener("Reader:Clicked-pocket-button", this);

@@ -80,30 +80,6 @@ jittest:
         by-test-platform:
             android-em.*: xlarge
             default: default
-<<<<<<< HEAD
-    run-on-projects:
-        by-test-platform:
-            android-hw.*: ['try']
-            # Turn off for all linux and windows platforms, since it is
-            # redundant with SM(...) jobs -- except for code coverage builds,
-            # which are still needed since ccov doesn't yet work with
-            # spidermonkey jobs.
-            #
-            # The regex is essentially /linux.*/ but with a negative match for
-            # the last 5 characters being "-ccov". The terminal ..... is needed
-            # because otherwise the .* could match the full string and the
-            # empty string would fail to match /(?!-ccov)/ so the whole thing
-            # would succeed. The beginning /?=linux/ is needed because the
-            # platform "linux64" doesn't have enough characters for both the
-            # beginning /linux/ and the final /...../.
-            #
-            # Additionally, platforms contain suffixes like "/opt" or "/debug".
-            (?=linux).*(?!-ccov)...../.*: []  # redundant with SM(...)
-            (?=windows).*(?!-ccov)...../.*: []  # redundant with SM(p)
-            default: built-projects
-||||||| merged common ancestors
-    run-on-projects: built-projects
-=======
     run-on-projects:
         by-test-platform:
             # Turn off for all linux and windows platforms, since it is
@@ -125,7 +101,6 @@ jittest:
             android-hw-.*-aarch64/.*: []  # redundant with SM(p)
             android-hw-.*-api-16/debug: ['try', 'mozilla-central']
             default: built-projects
->>>>>>> upstream-releases
     chunks:
         by-test-platform:
             windows.*: 1
@@ -148,12 +123,6 @@ jittest:
                 default: true
     tier:
         by-test-platform:
-<<<<<<< HEAD
-            android-hw.*: 2
-||||||| merged common ancestors
-            android-hw.*: 3
-=======
             android-hw.*: 2
             windows10-aarch64.*: 2
->>>>>>> upstream-releases
             default: default

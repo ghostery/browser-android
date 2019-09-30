@@ -134,19 +134,11 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1378010
     // Test other variations of the "window-size" argument.
     await testWindowSizePositive(800, 600);
     await testWindowSizePositive(1234);
-<<<<<<< HEAD
-    await testFileCreationNegative(["-url", "http://mochi.test:8888/chrome/browser/components/shell/test/headless.html", "-screenshot", "-window-size", "hello"], "screenshot.png");
-    await testFileCreationNegative(["-url", "http://mochi.test:8888/chrome/browser/components/shell/test/headless.html", "-screenshot", "-window-size", "800,"], "screenshot.png");
-||||||| merged common ancestors
-    await testFileCreationNegative(["-url", "http://mochi.test:8888/headless.html", "-screenshot", "-window-size", "hello"], "screenshot.png");
-    await testFileCreationNegative(["-url", "http://mochi.test:8888/headless.html", "-screenshot", "-window-size", "800,"], "screenshot.png");
-=======
     await testFileCreationNegative(["-url", "http://mochi.test:8888/chrome/browser/components/shell/test/headless.html", "-screenshot", "-window-size", "hello"], "screenshot.png");
     await testFileCreationNegative(["-url", "http://mochi.test:8888/chrome/browser/components/shell/test/headless.html", "-screenshot", "-window-size", "800,"], "screenshot.png");
 
     // Test when the requested URL redirects
     await testFileCreationPositive(["-url", "http://mochi.test:8888/chrome/browser/components/shell/test/headless_redirect.html", "-screenshot", screenshotPath], screenshotPath);
->>>>>>> upstream-releases
 
     SimpleTest.finish();
   })();

@@ -1780,11 +1780,6 @@ void ssl_Trace(const char *format, ...);
 void ssl_CacheExternalToken(sslSocket *ss);
 SECStatus ssl_DecodeResumptionToken(sslSessionID *sid, const PRUint8 *encodedTicket,
                                     PRUint32 encodedTicketLen);
-<<<<<<< HEAD
-PRBool ssl_IsResumptionTokenUsable(sslSocket *ss, sslSessionID *sid);
-||||||| merged common ancestors
-PRBool ssl_IsResumptionTokenValid(sslSocket *ss);
-=======
 PRBool ssl_IsResumptionTokenUsable(sslSocket *ss, sslSessionID *sid);
 
 /* unwrap helper function to handle the case where the wrapKey doesn't wind
@@ -1794,7 +1789,6 @@ PK11SymKey *ssl_unwrapSymKey(PK11SymKey *wrapKey,
                              SECItem *wrappedKey,
                              CK_MECHANISM_TYPE target, CK_ATTRIBUTE_TYPE operation,
                              int keySize, CK_FLAGS keyFlags, void *pinArg);
->>>>>>> upstream-releases
 
 /* Experimental APIs. Remove when stable. */
 

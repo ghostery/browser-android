@@ -2,13 +2,7 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 es_US{
     %%Parent{"es_419"}
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
     zoneStrings{
         "Africa:Accra"{
             ec{"Acra"}

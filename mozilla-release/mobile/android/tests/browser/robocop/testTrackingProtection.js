@@ -5,17 +5,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-Cu.import("resource://gre/modules/Services.jsm");
-Cu.import("resource://gre/modules/Messaging.jsm");
-=======
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { EventDispatcher } = ChromeUtils.import(
@@ -23,7 +12,6 @@ const { EventDispatcher } = ChromeUtils.import(
 );
 
 const DTSCBN_PREF = "dom.testing.sync-content-blocking-notifications";
->>>>>>> upstream-releases
 
 function promiseLoadEvent(browser, url, eventType = "load", runBeforeLoad) {
   return new Promise((resolve, reject) => {
@@ -72,85 +60,8 @@ function promiseLoadEvent(browser, url, eventType = "load", runBeforeLoad) {
 
 var TABLE = "urlclassifier.trackingTable";
 
-<<<<<<< HEAD
-// Update tracking database
-function doUpdate() {
-  // Add some URLs to the tracking database (to be blocked)
-  var testData = "tracking.example.com/";
-  var testUpdate =
-    "n:1000\ni:test-track-simple\nad:1\n" +
-    "a:524:32:" + testData.length + "\n" +
-    testData;
-
-  let dbService = Cc["@mozilla.org/url-classifier/dbservice;1"].getService(Ci.nsIUrlClassifierDBService);
-
-  return new Promise((resolve, reject) => {
-    let listener = {
-      QueryInterface: ChromeUtils.generateQI([Ci.nsIUrlClassifierUpdateObserver]),
-      updateUrlRequested: function(url) { },
-      streamFinished: function(status) { },
-      updateError: function(errorCode) {
-        ok(false, "Couldn't update classifier.");
-        resolve();
-      },
-      updateSuccess: function(requestedTimeout) {
-        resolve();
-      },
-    };
-
-    dbService.beginUpdate(listener, "test-track-simple", "");
-    dbService.beginStream("", "");
-    dbService.updateStream(testUpdate);
-    dbService.finishStream();
-    dbService.finishUpdate();
-  });
-}
-
-var BrowserApp = Services.wm.getMostRecentWindow("navigator:browser").BrowserApp;
-||||||| merged common ancestors
-// Update tracking database
-function doUpdate() {
-  // Add some URLs to the tracking database (to be blocked)
-  var testData = "tracking.example.com/";
-  var testUpdate =
-    "n:1000\ni:test-track-simple\nad:1\n" +
-    "a:524:32:" + testData.length + "\n" +
-    testData;
-
-  let dbService = Cc["@mozilla.org/url-classifier/dbservice;1"].getService(Ci.nsIUrlClassifierDBService);
-
-  return new Promise((resolve, reject) => {
-    let listener = {
-      QueryInterface: function(iid) {
-        if (iid.equals(Ci.nsISupports) || iid.equals(Ci.nsIUrlClassifierUpdateObserver))
-          return this;
-
-        throw Cr.NS_ERROR_NO_INTERFACE;
-      },
-      updateUrlRequested: function(url) { },
-      streamFinished: function(status) { },
-      updateError: function(errorCode) {
-        ok(false, "Couldn't update classifier.");
-        resolve();
-      },
-      updateSuccess: function(requestedTimeout) {
-        resolve();
-      },
-    };
-
-    dbService.beginUpdate(listener, "test-track-simple", "");
-    dbService.beginStream("", "");
-    dbService.updateStream(testUpdate);
-    dbService.finishStream();
-    dbService.finishUpdate();
-  });
-}
-
-var BrowserApp = Services.wm.getMostRecentWindow("navigator:browser").BrowserApp;
-=======
 var BrowserApp = Services.wm.getMostRecentWindow("navigator:browser")
   .BrowserApp;
->>>>>>> upstream-releases
 
 // Tests the tracking protection UI in private browsing. By default, tracking protection is
 // enabled in private browsing ("privacy.trackingprotection.pbmode.enabled").

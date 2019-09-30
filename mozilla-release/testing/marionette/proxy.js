@@ -150,16 +150,8 @@ proxy.AsyncMessageChannel = class {
 
       // The currently selected tab or window is closing. Make sure to wait
       // until it's fully gone.
-<<<<<<< HEAD
-      this.closeHandler = async ({type, target}) => {
-        log.trace(`Received DOM event ${type} for ${target}`);
-||||||| merged common ancestors
-      this.closeHandler = async ({type, target}) => {
-        log.debug(`Received DOM event ${type} for ${target}`);
-=======
       this.closeHandler = async ({ type, target }) => {
         log.trace(`Received DOM event ${type} for ${target}`);
->>>>>>> upstream-releases
 
         let messageManager;
         switch (type) {
@@ -179,19 +171,11 @@ proxy.AsyncMessageChannel = class {
       // A modal or tab modal dialog has been opened. To be able to handle it,
       // the active command has to be aborted. Therefore remove all handlers,
       // and cancel any ongoing requests in the listener.
-<<<<<<< HEAD
-      this.dialogueObserver_ = (subject, topic) => {
-        log.trace(`Received observer notification ${topic}`);
-||||||| merged common ancestors
-      this.dialogueObserver_ = (subject, topic) => {
-        log.debug(`Received observer notification ${topic}`);
-=======
       this.dialogHandler = (action, dialogRef, win) => {
         // Only care about modals of the currently selected window.
         if (win !== this.browser.window) {
           return;
         }
->>>>>>> upstream-releases
 
         this.removeAllListeners_();
         // TODO(ato): It's not ideal to have listener specific behaviour here:

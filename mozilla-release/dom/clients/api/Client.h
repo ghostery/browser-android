@@ -45,14 +45,7 @@ class Client final : public nsISupports, public nsWrapperCache {
 
   TimeStamp LastFocusTime() const;
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess GetStorageAccess() const;
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess
-  GetStorageAccess() const;
-=======
   StorageAccess GetStorageAccess() const;
->>>>>>> upstream-releases
 
   // nsWrapperCache interface methods
   JSObject* WrapObject(JSContext* aCx,

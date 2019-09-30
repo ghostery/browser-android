@@ -43,38 +43,7 @@ class WMFVideoMFTManager : public MFTManager {
 
   nsCString GetDescriptionName() const override;
 
-<<<<<<< HEAD
-  void Flush() override {
-    MFTManager::Flush();
-    mDraining = false;
-    mSamplesCount = 0;
-  }
-
-  void Drain() override {
-    MFTManager::Drain();
-    mDraining = true;
-  }
-
   MediaDataDecoder::ConversionRequired NeedsConversion() const override {
-||||||| merged common ancestors
-  void Flush() override
-  {
-    MFTManager::Flush();
-    mDraining = false;
-    mSamplesCount = 0;
-  }
-
-  void Drain() override
-  {
-    MFTManager::Drain();
-    mDraining = true;
-  }
-
-  MediaDataDecoder::ConversionRequired NeedsConversion() const override
-  {
-=======
-  MediaDataDecoder::ConversionRequired NeedsConversion() const override {
->>>>>>> upstream-releases
     return mStreamType == H264
                ? MediaDataDecoder::ConversionRequired::kNeedAnnexB
                : MediaDataDecoder::ConversionRequired::kNeedNone;

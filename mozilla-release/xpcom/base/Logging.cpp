@@ -48,43 +48,6 @@ const uint32_t kRotateFilesNumber = 4;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-LazyLogModule::operator LogModule*() {
-  // NB: The use of an atomic makes the reading and assignment of mLog
-  //     thread-safe. There is a small chance that mLog will be set more
-  //     than once, but that's okay as it will be set to the same LogModule
-  //     instance each time. Also note LogModule::Get is thread-safe.
-  LogModule* tmp = mLog;
-  if (MOZ_UNLIKELY(!tmp)) {
-    tmp = LogModule::Get(mLogName);
-    mLog = tmp;
-  }
-
-  mCanary.Check();
-
-  return tmp;
-}
-
-||||||| merged common ancestors
-LazyLogModule::operator LogModule*()
-{
-  // NB: The use of an atomic makes the reading and assignment of mLog
-  //     thread-safe. There is a small chance that mLog will be set more
-  //     than once, but that's okay as it will be set to the same LogModule
-  //     instance each time. Also note LogModule::Get is thread-safe.
-  LogModule* tmp = mLog;
-  if (MOZ_UNLIKELY(!tmp)) {
-    tmp = LogModule::Get(mLogName);
-    mLog = tmp;
-  }
-
-  mCanary.Check();
-
-  return tmp;
-}
-
-=======
->>>>>>> upstream-releases
 namespace detail {
 
 void log_print(const LogModule* aModule, LogLevel aLevel, const char* aFmt,
@@ -103,14 +66,7 @@ LogLevel ToLogLevel(int32_t aLevel) {
   return static_cast<LogLevel>(aLevel);
 }
 
-<<<<<<< HEAD
-const char* ToLogStr(LogLevel aLevel) {
-||||||| merged common ancestors
-const char*
-ToLogStr(LogLevel aLevel) {
-=======
 static const char* ToLogStr(LogLevel aLevel) {
->>>>>>> upstream-releases
   switch (aLevel) {
     case LogLevel::Error:
       return "E";
@@ -157,16 +113,8 @@ class LogFile {
   LogFile* mNextToRelease;
 };
 
-<<<<<<< HEAD
-const char* ExpandPIDMarker(const char* aFilename, char (&buffer)[2048]) {
-||||||| merged common ancestors
-const char*
-ExpandPIDMarker(const char* aFilename, char (&buffer)[2048])
-{
-=======
 static const char* ExpandPIDMarker(const char* aFilename,
                                    char (&buffer)[2048]) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFilename);
   static const char kPIDToken[] = "%PID";
   const char* pidTokenPtr = strstr(aFilename, kPIDToken);
@@ -196,44 +144,6 @@ class LogModuleManager {
   LogModuleManager()
       // As for logging atomics, don't preserve behavior for this lock when
       // recording/replaying.
-<<<<<<< HEAD
-      : mModulesLock("logmodules", recordreplay::Behavior::DontPreserve),
-        mModules(kInitialModuleCount),
-        mPrintEntryCount(0),
-        mOutFile(nullptr),
-        mToReleaseFile(nullptr),
-        mOutFileNum(0),
-        mOutFilePath(strdup("")),
-        mMainThread(PR_GetCurrentThread()),
-        mSetFromEnv(false),
-        mAddTimestamp(false),
-        mIsRaw(false),
-        mIsSync(false),
-        mRotate(0),
-        mInitialized(false) {}
-
-  ~LogModuleManager() {
-||||||| merged common ancestors
-    : mModulesLock("logmodules", recordreplay::Behavior::DontPreserve)
-    , mModules(kInitialModuleCount)
-    , mPrintEntryCount(0)
-    , mOutFile(nullptr)
-    , mToReleaseFile(nullptr)
-    , mOutFileNum(0)
-    , mOutFilePath(strdup(""))
-    , mMainThread(PR_GetCurrentThread())
-    , mSetFromEnv(false)
-    , mAddTimestamp(false)
-    , mIsRaw(false)
-    , mIsSync(false)
-    , mRotate(0)
-    , mInitialized(false)
-  {
-  }
-
-  ~LogModuleManager()
-  {
-=======
       : mModulesLock("logmodules", recordreplay::Behavior::DontPreserve),
         mModules(kInitialModuleCount),
         mPrintEntryCount(0),
@@ -251,7 +161,6 @@ class LogModuleManager {
         mInitialized(false) {}
 
   ~LogModuleManager() {
->>>>>>> upstream-releases
     detail::LogFile* logFile = mOutFile.exchange(nullptr);
     delete logFile;
   }
@@ -310,21 +219,10 @@ class LogModuleManager {
 
     // Need to capture `this` since `sLogModuleManager` is not set until after
     // initialization is complete.
-<<<<<<< HEAD
-    NSPRLogModulesParser(
-        modules,
-        [this, &shouldAppend, &addTimestamp, &isSync, &isRaw, &rotate](
-            const char* aName, LogLevel aLevel, int32_t aValue) mutable {
-||||||| merged common ancestors
-    NSPRLogModulesParser(modules,
-        [this, &shouldAppend, &addTimestamp, &isSync, &isRaw, &rotate]
-            (const char* aName, LogLevel aLevel, int32_t aValue) mutable {
-=======
     NSPRLogModulesParser(
         modules, [this, &shouldAppend, &addTimestamp, &isSync, &isRaw, &rotate,
                   &isMarkers](const char* aName, LogLevel aLevel,
                               int32_t aValue) mutable {
->>>>>>> upstream-releases
           if (strcmp(aName, "append") == 0) {
             shouldAppend = true;
           } else if (strcmp(aName, "timestamp") == 0) {

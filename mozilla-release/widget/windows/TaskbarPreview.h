@@ -25,24 +25,11 @@ namespace widget {
 
 class TaskbarPreviewCallback;
 
-<<<<<<< HEAD
-class TaskbarPreview : public nsITaskbarPreview {
- public:
-  TaskbarPreview(ITaskbarList4 *aTaskbar,
-                 nsITaskbarPreviewController *aController, HWND aHWND,
-                 nsIDocShell *aShell);
-||||||| merged common ancestors
-class TaskbarPreview : public nsITaskbarPreview
-{
-public:
-  TaskbarPreview(ITaskbarList4 *aTaskbar, nsITaskbarPreviewController *aController, HWND aHWND, nsIDocShell *aShell);
-=======
 class TaskbarPreview : public nsITaskbarPreview {
  public:
   TaskbarPreview(ITaskbarList4* aTaskbar,
                  nsITaskbarPreviewController* aController, HWND aHWND,
                  nsIDocShell* aShell);
->>>>>>> upstream-releases
 
   friend class TaskbarPreviewCallback;
 
@@ -68,7 +55,7 @@ class TaskbarPreview : public nsITaskbarPreview {
   // Marks this preview as being active
   virtual nsresult ShowActive(bool active) = 0;
   // Gets a reference to the window used to handle the preview messages
-  virtual HWND &PreviewWindow() = 0;
+  virtual HWND& PreviewWindow() = 0;
 
   // Window procedure for the PreviewWindow (hooked for window previews)
   virtual LRESULT WndProc(UINT nMsg, WPARAM wParam, LPARAM lParam);
@@ -102,18 +89,8 @@ class TaskbarPreview : public nsITaskbarPreview {
   void DrawBitmap(uint32_t width, uint32_t height, bool isPreview);
 
   // WindowHook procedure for hooking mWnd
-<<<<<<< HEAD
-  static bool MainWindowHook(void *aContext, HWND hWnd, UINT nMsg,
-                             WPARAM wParam, LPARAM lParam, LRESULT *aResult);
-||||||| merged common ancestors
-  static bool MainWindowHook(void *aContext,
-                               HWND hWnd, UINT nMsg,
-                               WPARAM wParam, LPARAM lParam,
-                               LRESULT *aResult);
-=======
   static bool MainWindowHook(void* aContext, HWND hWnd, UINT nMsg,
                              WPARAM wParam, LPARAM lParam, LRESULT* aResult);
->>>>>>> upstream-releases
 
   // Docshell corresponding to the <window> the nsWindow contains
   nsWeakPtr mDocShell;
@@ -121,13 +98,7 @@ class TaskbarPreview : public nsITaskbarPreview {
 
   // The preview currently marked as active in the taskbar. nullptr if no
   // preview is active (some other window is).
-<<<<<<< HEAD
-  static TaskbarPreview *sActivePreview;
-||||||| merged common ancestors
-  static TaskbarPreview  *sActivePreview;
-=======
   static TaskbarPreview* sActivePreview;
->>>>>>> upstream-releases
 };
 
 /*
@@ -142,15 +113,7 @@ class TaskbarPreviewCallback : public nsITaskbarPreviewCallback {
   NS_DECL_ISUPPORTS
   NS_DECL_NSITASKBARPREVIEWCALLBACK
 
-<<<<<<< HEAD
-  void SetPreview(TaskbarPreview *aPreview) { mPreview = aPreview; }
-||||||| merged common ancestors
-  void SetPreview(TaskbarPreview* aPreview) {
-    mPreview = aPreview;
-  }
-=======
   void SetPreview(TaskbarPreview* aPreview) { mPreview = aPreview; }
->>>>>>> upstream-releases
 
   void SetIsPreview() { mIsThumbnail = false; }
 

@@ -39,90 +39,24 @@ class DOMSVGTransform;
  * DOMSVGAnimatedTransformList::InternalBaseValListWillChangeTo) so that their
  * consumers don't need to concern themselves with that.
  */
-<<<<<<< HEAD
-class SVGAnimatedTransformList final : public nsWrapperCache {
-  friend class mozilla::DOMSVGTransformList;
-||||||| merged common ancestors
-class SVGAnimatedTransformList final : public nsWrapperCache
-{
-  friend class mozilla::DOMSVGTransformList;
-=======
 class SVGAnimatedTransformList {
   // friends so that they can get write access to mBaseVal
   friend class dom::DOMSVGTransform;
   friend class DOMSVGTransformList;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(SVGAnimatedTransformList)
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(SVGAnimatedTransformList)
-||||||| merged common ancestors
-public:
-  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(SVGAnimatedTransformList)
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(SVGAnimatedTransformList)
-=======
  public:
   SVGAnimatedTransformList()
       : mIsAttrSet(false), mRequiresFrameReconstruction(true) {}
->>>>>>> upstream-releases
 
   /**
-<<<<<<< HEAD
-   * Factory method to create and return a SVGAnimatedTransformList wrapper
-   * for a given internal nsSVGAnimatedTransformList object. The factory takes
-   * care of caching the object that it returns so that the same object can be
-   * returned for the given nsSVGAnimatedTransformList each time it is
-   * requested. The cached object is only removed from the cache when it is
-   * destroyed due to there being no more references to it or to any of its
-   * descendant objects. If that happens, any subsequent call requesting the DOM
-   * wrapper for the nsSVGAnimatedTransformList will naturally result in a new
-   * SVGAnimatedTransformList being returned.
-||||||| merged common ancestors
-   * Factory method to create and return a SVGAnimatedTransformList wrapper
-   * for a given internal nsSVGAnimatedTransformList object. The factory takes
-   * care of caching the object that it returns so that the same object can be
-   * returned for the given nsSVGAnimatedTransformList each time it is requested.
-   * The cached object is only removed from the cache when it is destroyed due
-   * to there being no more references to it or to any of its descendant
-   * objects. If that happens, any subsequent call requesting the DOM wrapper
-   * for the nsSVGAnimatedTransformList will naturally result in a new
-   * SVGAnimatedTransformList being returned.
-=======
    * Because it's so important that mBaseVal and its DOMSVGTransformList wrapper
    * (if any) be kept in sync (see the comment in
    * DOMSVGAnimatedTransformList::InternalBaseValListWillChangeTo), this method
    * returns a const reference. Only our friend classes may get mutable
    * references to mBaseVal.
->>>>>>> upstream-releases
    */
-<<<<<<< HEAD
-  static already_AddRefed<SVGAnimatedTransformList> GetDOMWrapper(
-      nsSVGAnimatedTransformList* aList, nsSVGElement* aElement);
-||||||| merged common ancestors
-  static already_AddRefed<SVGAnimatedTransformList>
-    GetDOMWrapper(nsSVGAnimatedTransformList *aList, nsSVGElement *aElement);
-=======
   const SVGTransformList& GetBaseValue() const { return mBaseVal; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /**
-   * This method returns the SVGAnimatedTransformList wrapper for an internal
-   * nsSVGAnimatedTransformList object if it currently has a wrapper. If it does
-   * not, then nullptr is returned.
-   */
-  static SVGAnimatedTransformList* GetDOMWrapperIfExists(
-      nsSVGAnimatedTransformList* aList);
-||||||| merged common ancestors
-  /**
-   * This method returns the SVGAnimatedTransformList wrapper for an internal
-   * nsSVGAnimatedTransformList object if it currently has a wrapper. If it does
-   * not, then nullptr is returned.
-   */
-  static SVGAnimatedTransformList*
-    GetDOMWrapperIfExists(nsSVGAnimatedTransformList *aList);
-=======
   nsresult SetBaseValue(const SVGTransformList& aValue,
                         dom::SVGElement* aSVGElement);
 
@@ -139,7 +73,6 @@ public:
                         dom::SVGElement* aElement);
 
   void ClearAnimValue(dom::SVGElement* aElement);
->>>>>>> upstream-releases
 
   /**
    * Returns true if the corresponding transform attribute is set (or animated)
@@ -154,40 +87,12 @@ public:
    * Returns false otherwise (e.g. if the transform attribute is missing or
    * empty or invalid).
    */
-<<<<<<< HEAD
-  bool IsAnimating() const;
-
-  // WebIDL
-  nsSVGElement* GetParentObject() const { return mElement; }
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-  // These aren't weak refs because mBaseVal and mAnimVal are weak
-  already_AddRefed<DOMSVGTransformList> BaseVal();
-  already_AddRefed<DOMSVGTransformList> AnimVal();
-||||||| merged common ancestors
-  bool IsAnimating() const;
-
-  // WebIDL
-  nsSVGElement* GetParentObject() const { return mElement; }
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-  // These aren't weak refs because mBaseVal and mAnimVal are weak
-  already_AddRefed<DOMSVGTransformList> BaseVal();
-  already_AddRefed<DOMSVGTransformList> AnimVal();
-=======
   bool HasTransform() const {
     return (mAnimVal && !mAnimVal->IsEmpty()) || !mBaseVal.IsEmpty();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-
-=======
   bool IsAnimating() const { return !!mAnimVal; }
 
->>>>>>> upstream-releases
   /**
    * Returns true if we need to reconstruct the frame of the element associated
    * with this transform list because the stacking context has changed.
@@ -199,55 +104,10 @@ private:
    * a transform where we previously had none. These cases require a more
    * thorough nsChangeHint.)
    */
-<<<<<<< HEAD
-  explicit SVGAnimatedTransformList(nsSVGElement* aElement)
-      : mBaseVal(nullptr), mAnimVal(nullptr), mElement(aElement) {}
-||||||| merged common ancestors
-  explicit SVGAnimatedTransformList(nsSVGElement *aElement)
-    : mBaseVal(nullptr)
-    , mAnimVal(nullptr)
-    , mElement(aElement)
-  {
-  }
-=======
   bool RequiresFrameReconstruction() const {
     return mRequiresFrameReconstruction;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ~SVGAnimatedTransformList();
-
-  /// Get a reference to this DOM wrapper object's internal counterpart.
-  nsSVGAnimatedTransformList& InternalAList();
-  const nsSVGAnimatedTransformList& InternalAList() const;
-
-  // Weak refs to our DOMSVGTransformList baseVal/animVal objects. These objects
-  // are friends and take care of clearing these pointers when they die, making
-  // these true weak references.
-  DOMSVGTransformList* mBaseVal;
-  DOMSVGTransformList* mAnimVal;
-
-  // Strong ref to our element to keep it alive. We hold this not only for
-  // ourself, but also for our base/animVal and all of their items.
-  RefPtr<nsSVGElement> mElement;
-||||||| merged common ancestors
-  ~SVGAnimatedTransformList();
-
-  /// Get a reference to this DOM wrapper object's internal counterpart.
-  nsSVGAnimatedTransformList& InternalAList();
-  const nsSVGAnimatedTransformList& InternalAList() const;
-
-  // Weak refs to our DOMSVGTransformList baseVal/animVal objects. These objects
-  // are friends and take care of clearing these pointers when they die, making
-  // these true weak references.
-  DOMSVGTransformList *mBaseVal;
-  DOMSVGTransformList *mAnimVal;
-
-  // Strong ref to our element to keep it alive. We hold this not only for
-  // ourself, but also for our base/animVal and all of their items.
-  RefPtr<nsSVGElement> mElement;
-=======
   mozilla::UniquePtr<SMILAttr> ToSMILAttr(dom::SVGElement* aSVGElement);
 
  private:
@@ -288,23 +148,8 @@ private:
     SVGAnimatedTransformList* mVal;
     dom::SVGElement* mElement;
   };
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_SVGAnimatedTransformList_h
-||||||| merged common ancestors
-#endif // mozilla_dom_SVGAnimatedTransformList_h
-=======
 #endif  // MOZILLA_SVGANIMATEDTRANSFORMLIST_H__
->>>>>>> upstream-releases

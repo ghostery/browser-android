@@ -28,53 +28,6 @@ class nsPresContext;
 namespace mozilla {
 class PresShell;
 namespace layout {
-<<<<<<< HEAD
-class FrameChildList;
-enum FrameChildListID {
-  // The individual concrete child lists.
-  kPrincipalList = 0x1,
-  kPopupList = 0x2,
-  kCaptionList = 0x4,
-  kColGroupList = 0x8,
-  kSelectPopupList = 0x10,
-  kAbsoluteList = 0x20,
-  kFixedList = 0x40,
-  kOverflowList = 0x80,
-  kOverflowContainersList = 0x100,
-  kExcessOverflowContainersList = 0x200,
-  kOverflowOutOfFlowList = 0x400,
-  kFloatList = 0x800,
-  kBulletList = 0x1000,
-  kPushedFloatsList = 0x2000,
-  kBackdropList = 0x4000,
-  // A special alias for kPrincipalList that suppress the reflow request that
-  // is normally done when manipulating child lists.
-  kNoReflowPrincipalList = 0x8000
-};
-||||||| merged common ancestors
-  class FrameChildList;
-  enum FrameChildListID {
-      // The individual concrete child lists.
-      kPrincipalList                = 0x1,
-      kPopupList                    = 0x2,
-      kCaptionList                  = 0x4,
-      kColGroupList                 = 0x8,
-      kSelectPopupList              = 0x10,
-      kAbsoluteList                 = 0x20,
-      kFixedList                    = 0x40,
-      kOverflowList                 = 0x80,
-      kOverflowContainersList       = 0x100,
-      kExcessOverflowContainersList = 0x200,
-      kOverflowOutOfFlowList        = 0x400,
-      kFloatList                    = 0x800,
-      kBulletList                   = 0x1000,
-      kPushedFloatsList             = 0x2000,
-      kBackdropList                 = 0x4000,
-      // A special alias for kPrincipalList that suppress the reflow request that
-      // is normally done when manipulating child lists.
-      kNoReflowPrincipalList        = 0x8000
-  };
-=======
 class FrameChildList;
 enum FrameChildListID {
   // The individual concrete child lists.
@@ -97,7 +50,6 @@ enum FrameChildListID {
   // is normally done when manipulating child lists.
   kNoReflowPrincipalList,
 };
->>>>>>> upstream-releases
 
 // A helper class for nsIFrame::Destroy[From].  It's defined here because
 // nsFrameList needs it and we can't use nsIFrame here.

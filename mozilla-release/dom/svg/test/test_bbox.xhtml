@@ -23,20 +23,9 @@ SimpleTest.waitForExplicitFinish();
 function run() {
   var doc = $("svg").contentDocument;
 
-<<<<<<< HEAD
-  function isFuzzy(a, b, error, name)
-  {
-    ok(!(Math.abs(a - b) > error),
-      name + " - got " + a + ", expected " + b + " (within " + error + ")");
-||||||| merged common ancestors
-  function isFuzzy(a, b, error, name)
-  {
-    ok(!(Math.abs(a - b) > error), name, "got " + a + ", expected " + b + " (within " + error + ")");
-=======
   function isFuzzy(a, b, error, name) {
     ok(!(Math.abs(a - b) > error),
       name + " - got " + a + ", expected " + b + " (within " + error + ")");
->>>>>>> upstream-releases
   }
 
   function getBBox(id) {

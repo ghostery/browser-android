@@ -387,16 +387,6 @@ class TrySelect(MachCommandBase):
         return self.run(**kwargs)
 
     @SubCommand('try',
-                'coverage',
-                description='Select tasks on try using coverage data',
-                parser=get_parser('coverage'))
-    def try_coverage(self, **kwargs):
-        """Select which tasks to use using coverage data.
-        """
-        from tryselect.selectors.coverage import run_coverage_try
-        return run_coverage_try(**kwargs)
-
-    @SubCommand('try',
                 'release',
                 description='Push the current tree to try, configured for a staging release.',
                 parser=get_parser('release'))

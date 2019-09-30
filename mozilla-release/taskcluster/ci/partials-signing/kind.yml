@@ -5,36 +5,16 @@
 loader: taskgraph.loader.single_dep:loader
 
 transforms:
-<<<<<<< HEAD
-  - taskgraph.transforms.name_sanity:transforms
-  - taskgraph.transforms.mar_signing:transforms
-  - taskgraph.transforms.task:transforms
-||||||| merged common ancestors
-  - taskgraph.transforms.name_sanity:transforms
-  - taskgraph.transforms.partials_signing:transforms
-  - taskgraph.transforms.task:transforms
-=======
     - taskgraph.transforms.name_sanity:transforms
     - taskgraph.transforms.mar_signing:transforms
     - taskgraph.transforms.task:transforms
->>>>>>> upstream-releases
 
 kind-dependencies:
     - partials
 
 job-template:
-<<<<<<< HEAD
-  shipping-phase: promote
-  treeherder-group: ps
-  description-suffix: 'partial signing'
-  required_signoffs:
-    - mar-signing
-||||||| merged common ancestors
-  shipping-phase: promote
-=======
     shipping-phase: promote
     treeherder-group: ps
     description-suffix: 'partial signing'
     required_signoffs:
         - mar-signing
->>>>>>> upstream-releases

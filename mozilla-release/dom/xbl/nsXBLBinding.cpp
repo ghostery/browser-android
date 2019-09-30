@@ -93,22 +93,9 @@ static const JSClass gPrototypeJSClass = {
 
 // Constructors/Destructors
 nsXBLBinding::nsXBLBinding(nsXBLPrototypeBinding* aBinding)
-<<<<<<< HEAD
-    : mMarkedForDeath(false),
-      mUsingContentXBLScope(false),
-      mPrototypeBinding(aBinding),
-      mBoundElement(nullptr) {
-||||||| merged common ancestors
-  : mMarkedForDeath(false)
-  , mUsingContentXBLScope(false)
-  , mPrototypeBinding(aBinding)
-  , mBoundElement(nullptr)
-{
-=======
     : mMarkedForDeath(false),
       mPrototypeBinding(aBinding),
       mBoundElement(nullptr) {
->>>>>>> upstream-releases
   NS_ASSERTION(mPrototypeBinding, "Must have a prototype binding!");
   // Grab a ref to the document info so the prototype binding won't die
   NS_ADDREF(mPrototypeBinding->XBLDocumentInfo());
@@ -167,20 +154,8 @@ nsXBLBinding* nsXBLBinding::GetBindingWithContent() {
   return mNextBinding ? mNextBinding->GetBindingWithContent() : nullptr;
 }
 
-<<<<<<< HEAD
-void nsXBLBinding::BindAnonymousContent(nsIContent* aAnonParent,
-                                        nsIContent* aElement,
-                                        bool aChromeOnlyContent) {
-||||||| merged common ancestors
-void
-nsXBLBinding::BindAnonymousContent(nsIContent* aAnonParent,
-                                   nsIContent* aElement,
-                                   bool aChromeOnlyContent)
-{
-=======
 void nsXBLBinding::BindAnonymousContent(nsIContent* aAnonParent,
                                         nsIContent* aElement) {
->>>>>>> upstream-releases
   // We need to ensure two things.
   // (1) The anonymous content should be fooled into thinking it's in the bound
   // element's document, assuming that the bound element is in a document
@@ -194,26 +169,12 @@ void nsXBLBinding::BindAnonymousContent(nsIContent* aAnonParent,
   Element* element = aElement->AsElement();
 
   nsAutoScriptBlocker scriptBlocker;
-<<<<<<< HEAD
-  for (nsIContent* child = aAnonParent->GetFirstChild(); child;
-||||||| merged common ancestors
-  for (nsIContent* child = aAnonParent->GetFirstChild();
-       child;
-=======
   BindContext context(*this, *element);
   for (nsIContent* child = aAnonParent->GetFirstChild(); child;
->>>>>>> upstream-releases
        child = child->GetNextSibling()) {
     child->UnbindFromTree();
     child->SetFlags(NODE_IS_ANONYMOUS_ROOT);
-<<<<<<< HEAD
-    nsresult rv = child->BindToTree(doc, aElement, mBoundElement);
-||||||| merged common ancestors
-    nsresult rv =
-      child->BindToTree(doc, aElement, mBoundElement);
-=======
     nsresult rv = child->BindToTree(context, *element);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       // Oh, well... Just give up.
       // XXXbz This really shouldn't be a void method!
@@ -235,110 +196,24 @@ void nsXBLBinding::BindAnonymousContent(nsIContent* aAnonParent,
   }
 }
 
-<<<<<<< HEAD
-void nsXBLBinding::UnbindAnonymousContent(nsIDocument* aDocument,
-                                          nsIContent* aAnonParent,
-                                          bool aNullParent) {
-||||||| merged common ancestors
-void
-nsXBLBinding::UnbindAnonymousContent(nsIDocument* aDocument,
-                                     nsIContent* aAnonParent,
-                                     bool aNullParent)
-{
-=======
 void nsXBLBinding::UnbindAnonymousContent(Document* aDocument,
                                           nsIContent* aAnonParent,
                                           bool aNullParent) {
->>>>>>> upstream-releases
   nsAutoScriptBlocker scriptBlocker;
   // Hold a strong ref while doing this, just in case.
   nsCOMPtr<nsIContent> anonParent = aAnonParent;
   for (nsIContent* child = aAnonParent->GetFirstChild(); child;
        child = child->GetNextSibling()) {
-<<<<<<< HEAD
-    child->UnbindFromTree(true, aNullParent);
-||||||| merged common ancestors
-    child->UnbindFromTree(true, aNullParent);
-#ifdef MOZ_XUL
-    if (isXULDocument) {
-      aDocument->AsXULDocument()->RemoveSubtreeFromDocument(child);
-    }
-#endif
-=======
     child->UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
   }
 }
 
 void nsXBLBinding::SetBoundElement(Element* aElement) {
   mBoundElement = aElement;
-<<<<<<< HEAD
   if (mNextBinding) mNextBinding->SetBoundElement(aElement);
-
-  if (!mBoundElement) {
-    return;
-  }
-
-  // Compute whether we're using an XBL scope.
-  //
-  // We disable XBL scopes for remote XUL, where we care about compat more
-  // than security. So we need to know whether we're using an XBL scope so that
-  // we can decide what to do about untrusted events when "allowuntrusted"
-  // is not given in the handler declaration.
-  nsCOMPtr<nsIGlobalObject> go = mBoundElement->OwnerDoc()->GetScopeObject();
-  NS_ENSURE_TRUE_VOID(go && go->GetGlobalJSObject());
-  mUsingContentXBLScope = xpc::UseContentXBLScope(
-      JS::GetObjectRealmOrNull(go->GetGlobalJSObject()));
-||||||| merged common ancestors
-  if (mNextBinding)
-    mNextBinding->SetBoundElement(aElement);
-
-  if (!mBoundElement) {
-    return;
-  }
-
-  // Compute whether we're using an XBL scope.
-  //
-  // We disable XBL scopes for remote XUL, where we care about compat more
-  // than security. So we need to know whether we're using an XBL scope so that
-  // we can decide what to do about untrusted events when "allowuntrusted"
-  // is not given in the handler declaration.
-  nsCOMPtr<nsIGlobalObject> go = mBoundElement->OwnerDoc()->GetScopeObject();
-  NS_ENSURE_TRUE_VOID(go && go->GetGlobalJSObject());
-  mUsingContentXBLScope = xpc::UseContentXBLScope(JS::GetObjectRealmOrNull(go->GetGlobalJSObject()));
-=======
-  if (mNextBinding) mNextBinding->SetBoundElement(aElement);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool nsXBLBinding::HasStyleSheets() const {
-  // Find out if we need to re-resolve style.  We'll need to do this
-  // if we have additional stylesheets in our binding document.
-  if (mPrototypeBinding->HasStyleSheets()) return true;
-
-  return mNextBinding ? mNextBinding->HasStyleSheets() : false;
 }
 
 void nsXBLBinding::GenerateAnonymousContent() {
-||||||| merged common ancestors
-bool
-nsXBLBinding::HasStyleSheets() const
-{
-  // Find out if we need to re-resolve style.  We'll need to do this
-  // if we have additional stylesheets in our binding document.
-  if (mPrototypeBinding->HasStyleSheets())
-    return true;
-
-  return mNextBinding ? mNextBinding->HasStyleSheets() : false;
-}
-
-void
-nsXBLBinding::GenerateAnonymousContent()
-{
-=======
-void nsXBLBinding::GenerateAnonymousContent() {
->>>>>>> upstream-releases
   NS_ASSERTION(!nsContentUtils::IsSafeToRunScript(),
                "Someone forgot a script blocker");
 
@@ -562,14 +437,7 @@ void nsXBLBinding::InstallEventHandlers() {
 
           bool hasAllowUntrustedAttr = curr->HasAllowUntrustedAttr();
           if ((hasAllowUntrustedAttr && curr->AllowUntrustedEvents()) ||
-<<<<<<< HEAD
-              (!hasAllowUntrustedAttr && !isChromeDoc &&
-               !mUsingContentXBLScope)) {
-||||||| merged common ancestors
-              (!hasAllowUntrustedAttr && !isChromeDoc && !mUsingContentXBLScope)) {
-=======
               (!hasAllowUntrustedAttr && !isChromeDoc)) {
->>>>>>> upstream-releases
             flags.mAllowUntrustedEvents = true;
           }
 
@@ -630,40 +498,10 @@ nsresult nsXBLBinding::InstallImplementation() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsAtom* nsXBLBinding::GetBaseTag(int32_t* aNameSpaceID) {
-  nsAtom* tag = mPrototypeBinding->GetBaseTag(aNameSpaceID);
-  if (!tag && mNextBinding) return mNextBinding->GetBaseTag(aNameSpaceID);
-
-  return tag;
-}
-
 void nsXBLBinding::AttributeChanged(nsAtom* aAttribute, int32_t aNameSpaceID,
                                     bool aRemoveFlag, bool aNotify) {
   // XXX Change if we ever allow multiple bindings in a chain to contribute
   // anonymous content
-||||||| merged common ancestors
-nsAtom*
-nsXBLBinding::GetBaseTag(int32_t* aNameSpaceID)
-{
-  nsAtom *tag = mPrototypeBinding->GetBaseTag(aNameSpaceID);
-  if (!tag && mNextBinding)
-    return mNextBinding->GetBaseTag(aNameSpaceID);
-
-  return tag;
-}
-
-void
-nsXBLBinding::AttributeChanged(nsAtom* aAttribute, int32_t aNameSpaceID,
-                               bool aRemoveFlag, bool aNotify)
-{
-  // XXX Change if we ever allow multiple bindings in a chain to contribute anonymous content
-=======
-void nsXBLBinding::AttributeChanged(nsAtom* aAttribute, int32_t aNameSpaceID,
-                                    bool aRemoveFlag, bool aNotify) {
-  // XXX Change if we ever allow multiple bindings in a chain to contribute
-  // anonymous content
->>>>>>> upstream-releases
   if (!mContent) {
     if (mNextBinding)
       mNextBinding->AttributeChanged(aAttribute, aNameSpaceID, aRemoveFlag,
@@ -753,21 +591,9 @@ void nsXBLBinding::UnhookEventHandlers() {
   }
 }
 
-<<<<<<< HEAD
-void nsXBLBinding::ChangeDocument(nsIDocument* aOldDocument,
-                                  nsIDocument* aNewDocument) {
-  if (aOldDocument == aNewDocument) return;
-||||||| merged common ancestors
-void
-nsXBLBinding::ChangeDocument(nsIDocument* aOldDocument, nsIDocument* aNewDocument)
-{
-  if (aOldDocument == aNewDocument)
-    return;
-=======
 void nsXBLBinding::ChangeDocument(Document* aOldDocument,
                                   Document* aNewDocument) {
   if (aOldDocument == aNewDocument) return;
->>>>>>> upstream-releases
 
   // Now the binding dies.  Unhook our prototypes.
   if (mPrototypeBinding->HasImplementation()) {
@@ -860,54 +686,7 @@ void nsXBLBinding::ChangeDocument(Document* aOldDocument,
   }
 }
 
-<<<<<<< HEAD
-bool nsXBLBinding::InheritsStyle() const {
-  // XXX Will have to change if we ever allow multiple bindings to contribute
-  // anonymous content. Most derived binding with anonymous content determines
-  // style inheritance for now.
-
-  // XXX What about bindings with <content> but no kids, e.g., my treecell-text
-  // binding?
-  if (mContent) return mPrototypeBinding->InheritsStyle();
-
-  if (mNextBinding) return mNextBinding->InheritsStyle();
-
-  return true;
-}
-
-const RawServoAuthorStyles* nsXBLBinding::GetServoStyles() const {
-  return mPrototypeBinding->GetServoStyles();
-}
-
 // Internal helper methods /////////////////////////////////////////////////////
-||||||| merged common ancestors
-bool
-nsXBLBinding::InheritsStyle() const
-{
-  // XXX Will have to change if we ever allow multiple bindings to contribute anonymous content.
-  // Most derived binding with anonymous content determines style inheritance for now.
-
-  // XXX What about bindings with <content> but no kids, e.g., my treecell-text binding?
-  if (mContent)
-    return mPrototypeBinding->InheritsStyle();
-
-  if (mNextBinding)
-    return mNextBinding->InheritsStyle();
-
-  return true;
-}
-
-
-const RawServoAuthorStyles*
-nsXBLBinding::GetServoStyles() const
-{
-  return mPrototypeBinding->GetServoStyles();
-}
-
-// Internal helper methods ////////////////////////////////////////////////////////////////
-=======
-// Internal helper methods /////////////////////////////////////////////////////
->>>>>>> upstream-releases
 
 // Get or create a WeakMap object on a given XBL-hosting global.
 //

@@ -54,43 +54,6 @@ Time KeymapWrapper::sLastRepeatableKeyTime = 0;
 KeymapWrapper::RepeatState KeymapWrapper::sRepeatState =
     KeymapWrapper::NOT_PRESSED;
 
-<<<<<<< HEAD
-static const char* GetBoolName(bool aBool) { return aBool ? "TRUE" : "FALSE"; }
-
-/* static */ const char* KeymapWrapper::GetModifierName(Modifier aModifier) {
-  switch (aModifier) {
-    case CAPS_LOCK:
-      return "CapsLock";
-    case NUM_LOCK:
-      return "NumLock";
-    case SCROLL_LOCK:
-      return "ScrollLock";
-    case SHIFT:
-      return "Shift";
-    case CTRL:
-      return "Ctrl";
-    case ALT:
-      return "Alt";
-    case SUPER:
-      return "Super";
-    case HYPER:
-      return "Hyper";
-    case META:
-      return "Meta";
-    case LEVEL3:
-      return "Level3";
-    case LEVEL5:
-      return "Level5";
-    case NOT_MODIFIER:
-      return "NotModifier";
-    default:
-      return "InvalidValue";
-  }
-||||||| merged common ancestors
-static const char* GetBoolName(bool aBool)
-{
-    return aBool ? "TRUE" : "FALSE";
-=======
 static const char* GetBoolName(bool aBool) { return aBool ? "TRUE" : "FALSE"; }
 
 static const char* GetStatusName(nsEventStatus aStatus) {
@@ -106,66 +69,8 @@ static const char* GetStatusName(nsEventStatus aStatus) {
     default:
       return "Illegal value";
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ KeymapWrapper::Modifier KeymapWrapper::GetModifierForGDKKeyval(
-    guint aGdkKeyval) {
-  switch (aGdkKeyval) {
-    case GDK_Caps_Lock:
-      return CAPS_LOCK;
-    case GDK_Num_Lock:
-      return NUM_LOCK;
-    case GDK_Scroll_Lock:
-      return SCROLL_LOCK;
-    case GDK_Shift_Lock:
-    case GDK_Shift_L:
-    case GDK_Shift_R:
-      return SHIFT;
-    case GDK_Control_L:
-    case GDK_Control_R:
-      return CTRL;
-    case GDK_Alt_L:
-    case GDK_Alt_R:
-      return ALT;
-    case GDK_Super_L:
-    case GDK_Super_R:
-      return SUPER;
-    case GDK_Hyper_L:
-    case GDK_Hyper_R:
-      return HYPER;
-    case GDK_Meta_L:
-    case GDK_Meta_R:
-      return META;
-    case GDK_ISO_Level3_Shift:
-    case GDK_Mode_switch:
-      return LEVEL3;
-    case GDK_ISO_Level5_Shift:
-      return LEVEL5;
-    default:
-      return NOT_MODIFIER;
-  }
-||||||| merged common ancestors
-/* static */ const char*
-KeymapWrapper::GetModifierName(Modifier aModifier)
-{
-    switch (aModifier) {
-        case CAPS_LOCK:    return "CapsLock";
-        case NUM_LOCK:     return "NumLock";
-        case SCROLL_LOCK:  return "ScrollLock";
-        case SHIFT:        return "Shift";
-        case CTRL:         return "Ctrl";
-        case ALT:          return "Alt";
-        case SUPER:        return "Super";
-        case HYPER:        return "Hyper";
-        case META:         return "Meta";
-        case LEVEL3:       return "Level3";
-        case LEVEL5:       return "Level5";
-        case NOT_MODIFIER: return "NotModifier";
-        default:           return "InvalidValue";
-    }
-=======
 static const nsCString GetKeyLocationName(uint32_t aLocation) {
   switch (aLocation) {
     case eKeyLocationLeft:
@@ -179,64 +84,8 @@ static const nsCString GetKeyLocationName(uint32_t aLocation) {
     default:
       return nsPrintfCString("Unknown (0x%04X)", aLocation);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-guint KeymapWrapper::GetModifierMask(Modifier aModifier) const {
-  switch (aModifier) {
-    case CAPS_LOCK:
-      return GDK_LOCK_MASK;
-    case NUM_LOCK:
-      return mModifierMasks[INDEX_NUM_LOCK];
-    case SCROLL_LOCK:
-      return mModifierMasks[INDEX_SCROLL_LOCK];
-    case SHIFT:
-      return GDK_SHIFT_MASK;
-    case CTRL:
-      return GDK_CONTROL_MASK;
-    case ALT:
-      return mModifierMasks[INDEX_ALT];
-    case SUPER:
-      return mModifierMasks[INDEX_SUPER];
-    case HYPER:
-      return mModifierMasks[INDEX_HYPER];
-    case META:
-      return mModifierMasks[INDEX_META];
-    case LEVEL3:
-      return mModifierMasks[INDEX_LEVEL3];
-    case LEVEL5:
-      return mModifierMasks[INDEX_LEVEL5];
-    default:
-      return 0;
-  }
-||||||| merged common ancestors
-/* static */ KeymapWrapper::Modifier
-KeymapWrapper::GetModifierForGDKKeyval(guint aGdkKeyval)
-{
-    switch (aGdkKeyval) {
-        case GDK_Caps_Lock:        return CAPS_LOCK;
-        case GDK_Num_Lock:         return NUM_LOCK;
-        case GDK_Scroll_Lock:      return SCROLL_LOCK;
-        case GDK_Shift_Lock:
-        case GDK_Shift_L:
-        case GDK_Shift_R:          return SHIFT;
-        case GDK_Control_L:
-        case GDK_Control_R:        return CTRL;
-        case GDK_Alt_L:
-        case GDK_Alt_R:            return ALT;
-        case GDK_Super_L:
-        case GDK_Super_R:          return SUPER;
-        case GDK_Hyper_L:
-        case GDK_Hyper_R:          return HYPER;
-        case GDK_Meta_L:
-        case GDK_Meta_R:           return META;
-        case GDK_ISO_Level3_Shift:
-        case GDK_Mode_switch:      return LEVEL3;
-        case GDK_ISO_Level5_Shift: return LEVEL5;
-        default:                   return NOT_MODIFIER;
-    }
-=======
 static const nsCString GetCharacterCodeName(char16_t aChar) {
   switch (aChar) {
     case 0x0000:
@@ -336,46 +185,8 @@ static const nsCString GetCharacterCodeName(char16_t aChar) {
                              aChar);
     }
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-KeymapWrapper::ModifierKey* KeymapWrapper::GetModifierKey(
-    guint aHardwareKeycode) {
-  for (uint32_t i = 0; i < mModifierKeys.Length(); i++) {
-    ModifierKey& key = mModifierKeys[i];
-    if (key.mHardwareKeycode == aHardwareKeycode) {
-      return &key;
-||||||| merged common ancestors
-guint
-KeymapWrapper::GetModifierMask(Modifier aModifier) const
-{
-    switch (aModifier) {
-        case CAPS_LOCK:
-            return GDK_LOCK_MASK;
-        case NUM_LOCK:
-            return mModifierMasks[INDEX_NUM_LOCK];
-        case SCROLL_LOCK:
-            return mModifierMasks[INDEX_SCROLL_LOCK];
-        case SHIFT:
-            return GDK_SHIFT_MASK;
-        case CTRL:
-            return GDK_CONTROL_MASK;
-        case ALT:
-            return mModifierMasks[INDEX_ALT];
-        case SUPER:
-            return mModifierMasks[INDEX_SUPER];
-        case HYPER:
-            return mModifierMasks[INDEX_HYPER];
-        case META:
-            return mModifierMasks[INDEX_META];
-        case LEVEL3:
-            return mModifierMasks[INDEX_LEVEL3];
-        case LEVEL5:
-            return mModifierMasks[INDEX_LEVEL5];
-        default:
-            return 0;
-=======
 static const nsCString GetCharacterCodeNames(const char16_t* aChars,
                                              uint32_t aLength) {
   if (!aLength) {
@@ -387,47 +198,13 @@ static const nsCString GetCharacterCodeNames(const char16_t* aChars,
       result.AppendLiteral(", ");
     } else {
       result.AssignLiteral("\"");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-  return nullptr;
-||||||| merged common ancestors
-=======
     result.Append(GetCharacterCodeName(aChars[i]));
   }
   result.AppendLiteral("\"");
   return result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ KeymapWrapper* KeymapWrapper::GetInstance() {
-  if (sInstance) {
-    sInstance->Init();
-||||||| merged common ancestors
-KeymapWrapper::ModifierKey*
-KeymapWrapper::GetModifierKey(guint aHardwareKeycode)
-{
-    for (uint32_t i = 0; i < mModifierKeys.Length(); i++) {
-        ModifierKey& key = mModifierKeys[i];
-        if (key.mHardwareKeycode == aHardwareKeycode) {
-            return &key;
-        }
-    }
-    return nullptr;
-}
-
-/* static */ KeymapWrapper*
-KeymapWrapper::GetInstance()
-{
-    if (sInstance) {
-        sInstance->Init();
-        return sInstance;
-    }
-
-    sInstance = new KeymapWrapper();
-=======
 static const nsCString GetCharacterCodeNames(const nsAString& aString) {
   return GetCharacterCodeNames(aString.BeginReading(), aString.Length());
 }
@@ -545,7 +322,6 @@ KeymapWrapper::ModifierKey* KeymapWrapper::GetModifierKey(
 KeymapWrapper* KeymapWrapper::GetInstance() {
   if (sInstance) {
     sInstance->Init();
->>>>>>> upstream-releases
     return sInstance;
   }
 
@@ -553,28 +329,12 @@ KeymapWrapper* KeymapWrapper::GetInstance() {
   return sInstance;
 }
 
-<<<<<<< HEAD
-/* static */ void KeymapWrapper::Shutdown() {
-  if (sInstance) {
-    delete sInstance;
-    sInstance = nullptr;
-  }
-||||||| merged common ancestors
-/* static */ void
-KeymapWrapper::Shutdown()
-{
-    if (sInstance) {
-        delete sInstance;
-        sInstance = nullptr;
-    }
-=======
 /* static */
 void KeymapWrapper::Shutdown() {
   if (sInstance) {
     delete sInstance;
     sInstance = nullptr;
   }
->>>>>>> upstream-releases
 }
 
 KeymapWrapper::KeymapWrapper()
@@ -584,20 +344,7 @@ KeymapWrapper::KeymapWrapper()
   MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
           ("%p Constructor, mGdkKeymap=%p", this, mGdkKeymap));
 
-<<<<<<< HEAD
   g_object_ref(mGdkKeymap);
-  g_signal_connect(mGdkKeymap, "keys-changed", (GCallback)OnKeysChanged, this);
-  g_signal_connect(mGdkKeymap, "direction-changed",
-                   (GCallback)OnDirectionChanged, this);
-||||||| merged common ancestors
-    g_object_ref(mGdkKeymap);
-    g_signal_connect(mGdkKeymap, "keys-changed",
-                     (GCallback)OnKeysChanged, this);
-    g_signal_connect(mGdkKeymap, "direction-changed",
-                     (GCallback)OnDirectionChanged, this);
-=======
-  g_object_ref(mGdkKeymap);
->>>>>>> upstream-releases
 
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) InitXKBExtension();
 
@@ -700,44 +447,12 @@ void KeymapWrapper::InitBySystemSettingsX11() {
   MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
           ("%p InitBySystemSettingsX11, mGdkKeymap=%p", this, mGdkKeymap));
 
-<<<<<<< HEAD
-  Display* display = gdk_x11_display_get_xdisplay(gdk_display_get_default());
-||||||| merged common ancestors
-    Display* display =
-        gdk_x11_display_get_xdisplay(gdk_display_get_default());
-=======
   g_signal_connect(mGdkKeymap, "keys-changed", (GCallback)OnKeysChanged, this);
   g_signal_connect(mGdkKeymap, "direction-changed",
                    (GCallback)OnDirectionChanged, this);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int min_keycode = 0;
-  int max_keycode = 0;
-  XDisplayKeycodes(display, &min_keycode, &max_keycode);
-||||||| merged common ancestors
-    int min_keycode = 0;
-    int max_keycode = 0;
-    XDisplayKeycodes(display, &min_keycode, &max_keycode);
-=======
   Display* display = gdk_x11_display_get_xdisplay(gdk_display_get_default());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int keysyms_per_keycode = 0;
-  KeySym* xkeymap =
-      XGetKeyboardMapping(display, min_keycode, max_keycode - min_keycode + 1,
-                          &keysyms_per_keycode);
-  if (!xkeymap) {
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-||||||| merged common ancestors
-    int keysyms_per_keycode = 0;
-    KeySym* xkeymap = XGetKeyboardMapping(display, min_keycode,
-                                          max_keycode - min_keycode + 1,
-                                          &keysyms_per_keycode);
-    if (!xkeymap) {
-        MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-=======
   int min_keycode = 0;
   int max_keycode = 0;
   XDisplayKeycodes(display, &min_keycode, &max_keycode);
@@ -748,7 +463,6 @@ void KeymapWrapper::InitBySystemSettingsX11() {
                           &keysyms_per_keycode);
   if (!xkeymap) {
     MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
->>>>>>> upstream-releases
             ("%p InitBySystemSettings, "
              "Failed due to null xkeymap",
              this));
@@ -942,51 +656,12 @@ void KeymapWrapper::SetModifierMasks(xkb_keymap* aKeymap) {
 }
 
 /* This keymap routine is derived from weston-2.0.0/clients/simple-im.c
-<<<<<<< HEAD
- */
-static void keyboard_handle_keymap(void* data, struct wl_keyboard* wl_keyboard,
-                                   uint32_t format, int fd, uint32_t size) {
-  if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
-||||||| merged common ancestors
-*/
-static void
-keyboard_handle_keymap(void *data, struct wl_keyboard *wl_keyboard,
-                       uint32_t format, int fd, uint32_t size)
-{
-    if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
-        close(fd);
-        return;
-    }
-
-    char *mapString = (char *)mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
-    if (mapString == MAP_FAILED) {
-        close(fd);
-        return;
-    }
-
-    static auto sXkbContextNew =
-        (struct xkb_context *(*)(enum xkb_context_flags))
-        dlsym(RTLD_DEFAULT, "xkb_context_new");
-    static auto sXkbKeymapNewFromString =
-        (struct xkb_keymap *(*)(struct xkb_context *, const char *,
-         enum xkb_keymap_format, enum xkb_keymap_compile_flags))
-        dlsym(RTLD_DEFAULT, "xkb_keymap_new_from_string");
-
-    struct xkb_context *xkb_context = sXkbContextNew(XKB_CONTEXT_NO_FLAGS);
-    struct xkb_keymap *keymap =
-        sXkbKeymapNewFromString(xkb_context, mapString,
-            XKB_KEYMAP_FORMAT_TEXT_V1,
-            XKB_KEYMAP_COMPILE_NO_FLAGS);
-
-    munmap(mapString, size);
-=======
  */
 static void keyboard_handle_keymap(void* data, struct wl_keyboard* wl_keyboard,
                                    uint32_t format, int fd, uint32_t size) {
   KeymapWrapper::ResetKeyboard();
 
   if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
->>>>>>> upstream-releases
     close(fd);
     return;
   }
@@ -1081,71 +756,15 @@ static void gdk_registry_handle_global_remove(void* data,
                                               uint32_t id) {}
 
 static const struct wl_registry_listener keyboard_registry_listener = {
-<<<<<<< HEAD
-    gdk_registry_handle_global, gdk_registry_handle_global_remove};
-
-void KeymapWrapper::InitBySystemSettingsWayland() {
-  // Available as of GTK 3.8+
-  static auto sGdkWaylandDisplayGetWlDisplay = (wl_display * (*)(GdkDisplay*))
-      dlsym(RTLD_DEFAULT, "gdk_wayland_display_get_wl_display");
-  wl_display* display =
-      sGdkWaylandDisplayGetWlDisplay(gdk_display_get_default());
-  wl_registry_add_listener(wl_display_get_registry(display),
-                           &keyboard_registry_listener, this);
-||||||| merged common ancestors
-    gdk_registry_handle_global,
-    gdk_registry_handle_global_remove
-};
-
-void
-KeymapWrapper::InitBySystemSettingsWayland()
-{
-    // Available as of GTK 3.8+
-    static auto sGdkWaylandDisplayGetWlDisplay =
-        (wl_display *(*)(GdkDisplay *))
-        dlsym(RTLD_DEFAULT, "gdk_wayland_display_get_wl_display");
-
-    wl_display *display =
-        sGdkWaylandDisplayGetWlDisplay(gdk_display_get_default());
-    wl_registry_add_listener(wl_display_get_registry(display),
-                             &keyboard_registry_listener, this);
-
-    // Call wl_display_roundtrip() twice to make sure all
-    // callbacks are processed.
-    wl_display_roundtrip(display);
-    wl_display_roundtrip(display);
-=======
     gdk_registry_handle_global, gdk_registry_handle_global_remove};
 
 void KeymapWrapper::InitBySystemSettingsWayland() {
   wl_display* display = WaylandDisplayGetWLDisplay();
   wl_registry_add_listener(wl_display_get_registry(display),
                            &keyboard_registry_listener, this);
->>>>>>> upstream-releases
 }
 #endif
 
-<<<<<<< HEAD
-KeymapWrapper::~KeymapWrapper() {
-  gdk_window_remove_filter(nullptr, FilterEvents, this);
-  g_signal_handlers_disconnect_by_func(mGdkKeymap,
-                                       FuncToGpointer(OnKeysChanged), this);
-  g_signal_handlers_disconnect_by_func(
-      mGdkKeymap, FuncToGpointer(OnDirectionChanged), this);
-  g_object_unref(mGdkKeymap);
-  MOZ_LOG(gKeymapWrapperLog, LogLevel::Info, ("%p Destructor", this));
-||||||| merged common ancestors
-KeymapWrapper::~KeymapWrapper()
-{
-    gdk_window_remove_filter(nullptr, FilterEvents, this);
-    g_signal_handlers_disconnect_by_func(mGdkKeymap,
-                                         FuncToGpointer(OnKeysChanged), this);
-    g_signal_handlers_disconnect_by_func(mGdkKeymap,
-                                         FuncToGpointer(OnDirectionChanged), this);
-    g_object_unref(mGdkKeymap);
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-        ("%p Destructor", this));
-=======
 KeymapWrapper::~KeymapWrapper() {
   gdk_window_remove_filter(nullptr, FilterEvents, this);
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
@@ -1156,101 +775,8 @@ KeymapWrapper::~KeymapWrapper() {
   }
   g_object_unref(mGdkKeymap);
   MOZ_LOG(gKeymapWrapperLog, LogLevel::Info, ("%p Destructor", this));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ GdkFilterReturn KeymapWrapper::FilterEvents(GdkXEvent* aXEvent,
-                                                         GdkEvent* aGdkEvent,
-                                                         gpointer aData) {
-  XEvent* xEvent = static_cast<XEvent*>(aXEvent);
-  switch (xEvent->type) {
-    case KeyPress: {
-      // If the key doesn't support auto repeat, ignore the event because
-      // even if such key (e.g., Shift) is pressed during auto repeat of
-      // anoter key, it doesn't stop the auto repeat.
-      KeymapWrapper* self = static_cast<KeymapWrapper*>(aData);
-      if (!self->IsAutoRepeatableKey(xEvent->xkey.keycode)) {
-        break;
-      }
-      if (sRepeatState == NOT_PRESSED) {
-        sRepeatState = FIRST_PRESS;
-      } else if (sLastRepeatableHardwareKeyCode == xEvent->xkey.keycode) {
-        if (sLastRepeatableKeyTime == xEvent->xkey.time &&
-            sLastRepeatableHardwareKeyCode ==
-                IMContextWrapper::
-                    GetWaitingSynthesizedKeyPressHardwareKeyCode()) {
-          // On some environment, IM may generate duplicated KeyPress event
-          // without any special state flags.  In such case, we shouldn't
-          // treat the event as "repeated".
-          break;
-||||||| merged common ancestors
-/* static */ GdkFilterReturn
-KeymapWrapper::FilterEvents(GdkXEvent* aXEvent,
-                            GdkEvent* aGdkEvent,
-                            gpointer aData)
-{
-    XEvent* xEvent = static_cast<XEvent*>(aXEvent);
-    switch (xEvent->type) {
-        case KeyPress: {
-            // If the key doesn't support auto repeat, ignore the event because
-            // even if such key (e.g., Shift) is pressed during auto repeat of
-            // anoter key, it doesn't stop the auto repeat.
-            KeymapWrapper* self = static_cast<KeymapWrapper*>(aData);
-            if (!self->IsAutoRepeatableKey(xEvent->xkey.keycode)) {
-                break;
-            }
-            if (sRepeatState == NOT_PRESSED) {
-                sRepeatState = FIRST_PRESS;
-            } else if (sLastRepeatableHardwareKeyCode == xEvent->xkey.keycode) {
-                sRepeatState = REPEATING;
-            } else {
-                // If a different key is pressed while another key is pressed,
-                // auto repeat system repeats only the last pressed key.
-                // So, setting new keycode and setting repeat state as first key
-                // press should work fine.
-                sRepeatState = FIRST_PRESS;
-            }
-            sLastRepeatableHardwareKeyCode = xEvent->xkey.keycode;
-            break;
-        }
-        case KeyRelease: {
-            if (sLastRepeatableHardwareKeyCode != xEvent->xkey.keycode) {
-                // This case means the key release event is caused by
-                // a non-repeatable key such as Shift or a repeatable key that
-                // was pressed before sLastRepeatableHardwareKeyCode was
-                // pressed.
-                break;
-            }
-            sRepeatState = NOT_PRESSED;
-            break;
-        }
-        case FocusOut: {
-            // At moving focus, we should reset keyboard repeat state.
-            // Strictly, this causes incorrect behavior.  However, this
-            // correctness must be enough for web applications.
-            sRepeatState = NOT_PRESSED;
-            break;
-        }
-        default: {
-            KeymapWrapper* self = static_cast<KeymapWrapper*>(aData);
-            if (xEvent->type != self->mXKBBaseEventCode) {
-                break;
-            }
-            XkbEvent* xkbEvent = (XkbEvent*)xEvent;
-            if (xkbEvent->any.xkb_type != XkbControlsNotify ||
-                !(xkbEvent->ctrls.changed_ctrls & XkbPerKeyRepeatMask)) {
-                break;
-            }
-            if (!XGetKeyboardControl(xkbEvent->any.display,
-                                     &self->mKeyboardState)) {
-                MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-                    ("%p FilterEvents failed due to failure "
-                     "of XGetKeyboardControl(), display=0x%p",
-                     self, xkbEvent->any.display));
-            }
-            break;
-=======
 /* static */
 GdkFilterReturn KeymapWrapper::FilterEvents(GdkXEvent* aXEvent,
                                             GdkEvent* aGdkEvent,
@@ -1290,58 +816,7 @@ GdkFilterReturn KeymapWrapper::FilterEvents(GdkXEvent* aXEvent,
                    xEvent->xkey.keycode, xEvent->xkey.state, xEvent->xkey.time,
                    reinterpret_cast<GdkEventKey*>(aGdkEvent)->state));
           break;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        sRepeatState = REPEATING;
-      } else {
-        // If a different key is pressed while another key is pressed,
-        // auto repeat system repeats only the last pressed key.
-        // So, setting new keycode and setting repeat state as first key
-        // press should work fine.
-        sRepeatState = FIRST_PRESS;
-      }
-      sLastRepeatableHardwareKeyCode = xEvent->xkey.keycode;
-      sLastRepeatableKeyTime = xEvent->xkey.time;
-      break;
-    }
-    case KeyRelease: {
-      if (sLastRepeatableHardwareKeyCode != xEvent->xkey.keycode) {
-        // This case means the key release event is caused by
-        // a non-repeatable key such as Shift or a repeatable key that
-        // was pressed before sLastRepeatableHardwareKeyCode was
-        // pressed.
-        break;
-      }
-      sRepeatState = NOT_PRESSED;
-      break;
-    }
-    case FocusOut: {
-      // At moving focus, we should reset keyboard repeat state.
-      // Strictly, this causes incorrect behavior.  However, this
-      // correctness must be enough for web applications.
-      sRepeatState = NOT_PRESSED;
-      break;
-    }
-    default: {
-      KeymapWrapper* self = static_cast<KeymapWrapper*>(aData);
-      if (xEvent->type != self->mXKBBaseEventCode) {
-        break;
-      }
-      XkbEvent* xkbEvent = (XkbEvent*)xEvent;
-      if (xkbEvent->any.xkb_type != XkbControlsNotify ||
-          !(xkbEvent->ctrls.changed_ctrls & XkbPerKeyRepeatMask)) {
-        break;
-      }
-      if (!XGetKeyboardControl(xkbEvent->any.display, &self->mKeyboardState)) {
-        MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-                ("%p FilterEvents failed due to failure "
-                 "of XGetKeyboardControl(), display=0x%p",
-                 self, xkbEvent->any.display));
-      }
-      break;
-||||||| merged common ancestors
-=======
         sRepeatState = REPEATING;
         MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
                 ("FilterEvents(aXEvent={ type=KeyPress, "
@@ -1410,7 +885,6 @@ GdkFilterReturn KeymapWrapper::FilterEvents(GdkXEvent* aXEvent,
                  self, xkbEvent->any.display));
       }
       break;
->>>>>>> upstream-releases
     }
   }
 
@@ -1426,97 +900,12 @@ static void ResetBidiKeyboard() {
   WidgetUtils::SendBidiKeyboardInfoToContent();
 }
 
-<<<<<<< HEAD
-/* static */ void KeymapWrapper::OnKeysChanged(GdkKeymap* aGdkKeymap,
-                                               KeymapWrapper* aKeymapWrapper) {
-  MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-          ("OnKeysChanged, aGdkKeymap=%p, aKeymapWrapper=%p", aGdkKeymap,
-           aKeymapWrapper));
-
-  MOZ_ASSERT(sInstance == aKeymapWrapper,
-             "This instance must be the singleton instance");
-
-  // We cannot reintialize here becasue we don't have GdkWindow which is using
-  // the GdkKeymap.  We'll reinitialize it when next GetInstance() is called.
-  sInstance->mInitialized = false;
-  ResetBidiKeyboard();
-||||||| merged common ancestors
-/* static */ void
-KeymapWrapper::OnKeysChanged(GdkKeymap *aGdkKeymap,
-                             KeymapWrapper* aKeymapWrapper)
-{
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-        ("OnKeysChanged, aGdkKeymap=%p, aKeymapWrapper=%p",
-         aGdkKeymap, aKeymapWrapper));
-
-    MOZ_ASSERT(sInstance == aKeymapWrapper,
-               "This instance must be the singleton instance");
-
-    // We cannot reintialize here becasue we don't have GdkWindow which is using
-    // the GdkKeymap.  We'll reinitialize it when next GetInstance() is called.
-    sInstance->mInitialized = false;
-    ResetBidiKeyboard();
-=======
 /* static */
 void KeymapWrapper::ResetKeyboard() {
   sInstance->mInitialized = false;
   ResetBidiKeyboard();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// static
-void KeymapWrapper::OnDirectionChanged(GdkKeymap* aGdkKeymap,
-                                       KeymapWrapper* aKeymapWrapper) {
-  // XXX
-  // A lot of diretion-changed signal might be fired on switching bidi
-  // keyboard when using both ibus (with arabic layout) and fcitx (with IME).
-  // See https://github.com/fcitx/fcitx/issues/257
-  //
-  // Also, when using ibus, switching to IM might not cause this signal.
-  // See https://github.com/ibus/ibus/issues/1848
-
-  MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-          ("OnDirectionChanged, aGdkKeymap=%p, aKeymapWrapper=%p", aGdkKeymap,
-           aKeymapWrapper));
-
-  ResetBidiKeyboard();
-||||||| merged common ancestors
-// static
-void
-KeymapWrapper::OnDirectionChanged(GdkKeymap *aGdkKeymap,
-                                  KeymapWrapper* aKeymapWrapper)
-{
-    // XXX
-    // A lot of diretion-changed signal might be fired on switching bidi
-    // keyboard when using both ibus (with arabic layout) and fcitx (with IME).
-    // See https://github.com/fcitx/fcitx/issues/257
-    //
-    // Also, when using ibus, switching to IM might not cause this signal.
-    // See https://github.com/ibus/ibus/issues/1848
-
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-        ("OnDirectionChanged, aGdkKeymap=%p, aKeymapWrapper=%p",
-         aGdkKeymap, aKeymapWrapper));
-
-    ResetBidiKeyboard();
-}
-
-/* static */ guint
-KeymapWrapper::GetCurrentModifierState()
-{
-    GdkModifierType modifiers;
-    gdk_display_get_pointer(gdk_display_get_default(),
-                            nullptr, nullptr, nullptr, &modifiers);
-    return static_cast<guint>(modifiers);
-}
-
-/* static */ bool
-KeymapWrapper::AreModifiersCurrentlyActive(Modifiers aModifiers)
-{
-    guint modifierState = GetCurrentModifierState();
-    return AreModifiersActive(aModifiers, modifierState);
-=======
 /* static */
 void KeymapWrapper::OnKeysChanged(GdkKeymap* aGdkKeymap,
                                   KeymapWrapper* aKeymapWrapper) {
@@ -1556,65 +945,18 @@ guint KeymapWrapper::GetCurrentModifierState() {
   gdk_display_get_pointer(gdk_display_get_default(), nullptr, nullptr, nullptr,
                           &modifiers);
   return static_cast<guint>(modifiers);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ guint KeymapWrapper::GetCurrentModifierState() {
-  GdkModifierType modifiers;
-  gdk_display_get_pointer(gdk_display_get_default(), nullptr, nullptr, nullptr,
-                          &modifiers);
-  return static_cast<guint>(modifiers);
-||||||| merged common ancestors
-/* static */ bool
-KeymapWrapper::AreModifiersActive(Modifiers aModifiers,
-                                  guint aModifierState)
-{
-    NS_ENSURE_TRUE(aModifiers, false);
-
-    KeymapWrapper* keymapWrapper = GetInstance();
-    for (uint32_t i = 0; i < sizeof(Modifier) * 8 && aModifiers; i++) {
-        Modifier modifier = static_cast<Modifier>(1 << i);
-        if (!(aModifiers & modifier)) {
-            continue;
-        }
-        if (!(aModifierState & keymapWrapper->GetModifierMask(modifier))) {
-            return false;
-        }
-        aModifiers &= ~modifier;
-    }
-    return true;
-=======
 /* static */
 bool KeymapWrapper::AreModifiersCurrentlyActive(Modifiers aModifiers) {
   guint modifierState = GetCurrentModifierState();
   return AreModifiersActive(aModifiers, modifierState);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool KeymapWrapper::AreModifiersCurrentlyActive(
-    Modifiers aModifiers) {
-  guint modifierState = GetCurrentModifierState();
-  return AreModifiersActive(aModifiers, modifierState);
-}
-||||||| merged common ancestors
-/* static */ uint32_t
-KeymapWrapper::ComputeCurrentKeyModifiers()
-{
-    return ComputeKeyModifiers(GetCurrentModifierState());
-}
-=======
 /* static */
 bool KeymapWrapper::AreModifiersActive(Modifiers aModifiers,
                                        guint aModifierState) {
   NS_ENSURE_TRUE(aModifiers, false);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-/* static */ bool KeymapWrapper::AreModifiersActive(Modifiers aModifiers,
-                                                    guint aModifierState) {
-  NS_ENSURE_TRUE(aModifiers, false);
 
   KeymapWrapper* keymapWrapper = GetInstance();
   for (uint32_t i = 0; i < sizeof(Modifier) * 8 && aModifiers; i++) {
@@ -1628,123 +970,8 @@ bool KeymapWrapper::AreModifiersActive(Modifiers aModifiers,
     aModifiers &= ~modifier;
   }
   return true;
-||||||| merged common ancestors
-/* static */ uint32_t
-KeymapWrapper::ComputeKeyModifiers(guint aModifierState)
-{
-    KeymapWrapper* keymapWrapper = GetInstance();
-
-    uint32_t keyModifiers = 0;
-    // DOM Meta key should be TRUE only on Mac.  We need to discuss this
-    // issue later.
-    if (keymapWrapper->AreModifiersActive(SHIFT, aModifierState)) {
-        keyModifiers |= MODIFIER_SHIFT;
-    }
-    if (keymapWrapper->AreModifiersActive(CTRL, aModifierState)) {
-        keyModifiers |= MODIFIER_CONTROL;
-    }
-    if (keymapWrapper->AreModifiersActive(ALT, aModifierState)) {
-        keyModifiers |= MODIFIER_ALT;
-    }
-    if (keymapWrapper->AreModifiersActive(META, aModifierState)) {
-        keyModifiers |= MODIFIER_META;
-    }
-    if (keymapWrapper->AreModifiersActive(SUPER, aModifierState) ||
-        keymapWrapper->AreModifiersActive(HYPER, aModifierState)) {
-        keyModifiers |= MODIFIER_OS;
-    }
-    if (keymapWrapper->AreModifiersActive(LEVEL3, aModifierState) ||
-        keymapWrapper->AreModifiersActive(LEVEL5, aModifierState)) {
-        keyModifiers |= MODIFIER_ALTGRAPH;
-    }
-    if (keymapWrapper->AreModifiersActive(CAPS_LOCK, aModifierState)) {
-        keyModifiers |= MODIFIER_CAPSLOCK;
-    }
-    if (keymapWrapper->AreModifiersActive(NUM_LOCK, aModifierState)) {
-        keyModifiers |= MODIFIER_NUMLOCK;
-    }
-    if (keymapWrapper->AreModifiersActive(SCROLL_LOCK, aModifierState)) {
-        keyModifiers |= MODIFIER_SCROLLLOCK;
-    }
-    return keyModifiers;
-=======
-  KeymapWrapper* keymapWrapper = GetInstance();
-  for (uint32_t i = 0; i < sizeof(Modifier) * 8 && aModifiers; i++) {
-    Modifier modifier = static_cast<Modifier>(1 << i);
-    if (!(aModifiers & modifier)) {
-      continue;
-    }
-    if (!(aModifierState & keymapWrapper->GetModifierMask(modifier))) {
-      return false;
-    }
-    aModifiers &= ~modifier;
-  }
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t KeymapWrapper::ComputeCurrentKeyModifiers() {
-  return ComputeKeyModifiers(GetCurrentModifierState());
-||||||| merged common ancestors
-/* static */ void
-KeymapWrapper::InitInputEvent(WidgetInputEvent& aInputEvent,
-                              guint aModifierState)
-{
-    KeymapWrapper* keymapWrapper = GetInstance();
-
-    aInputEvent.mModifiers = ComputeKeyModifiers(aModifierState);
-
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Debug,
-        ("%p InitInputEvent, aModifierState=0x%08X, "
-         "aInputEvent.mModifiers=0x%04X (Shift: %s, Control: %s, Alt: %s, "
-         "Meta: %s, OS: %s, AltGr: %s, "
-         "CapsLock: %s, NumLock: %s, ScrollLock: %s)",
-         keymapWrapper, aModifierState, aInputEvent.mModifiers,
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_SHIFT),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_CONTROL),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_ALT),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_META),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_OS),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_ALTGRAPH),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_CAPSLOCK),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_NUMLOCK),
-         GetBoolName(aInputEvent.mModifiers & MODIFIER_SCROLLLOCK)));
-
-    switch(aInputEvent.mClass) {
-        case eMouseEventClass:
-        case eMouseScrollEventClass:
-        case eWheelEventClass:
-        case eDragEventClass:
-        case eSimpleGestureEventClass:
-            break;
-        default:
-            return;
-    }
-
-    WidgetMouseEventBase& mouseEvent = *aInputEvent.AsMouseEventBase();
-    mouseEvent.buttons = 0;
-    if (aModifierState & GDK_BUTTON1_MASK) {
-        mouseEvent.buttons |= WidgetMouseEvent::eLeftButtonFlag;
-    }
-    if (aModifierState & GDK_BUTTON3_MASK) {
-        mouseEvent.buttons |= WidgetMouseEvent::eRightButtonFlag;
-    }
-    if (aModifierState & GDK_BUTTON2_MASK) {
-        mouseEvent.buttons |= WidgetMouseEvent::eMiddleButtonFlag;
-    }
-
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Debug,
-        ("%p InitInputEvent, aInputEvent has buttons, "
-         "aInputEvent.buttons=0x%04X (Left: %s, Right: %s, Middle: %s, "
-         "4th (BACK): %s, 5th (FORWARD): %s)",
-         keymapWrapper, mouseEvent.buttons,
-         GetBoolName(mouseEvent.buttons & WidgetMouseEvent::eLeftButtonFlag),
-         GetBoolName(mouseEvent.buttons & WidgetMouseEvent::eRightButtonFlag),
-         GetBoolName(mouseEvent.buttons & WidgetMouseEvent::eMiddleButtonFlag),
-         GetBoolName(mouseEvent.buttons & WidgetMouseEvent::e4thButtonFlag),
-         GetBoolName(mouseEvent.buttons & WidgetMouseEvent::e5thButtonFlag)));
-=======
 /* static */
 uint32_t KeymapWrapper::ComputeCurrentKeyModifiers() {
   return ComputeKeyModifiers(GetCurrentModifierState());
@@ -1854,284 +1081,8 @@ void KeymapWrapper::InitInputEvent(WidgetInputEvent& aInputEvent,
              GetBoolName(mouseEvent.mButtons & MouseButtonsFlag::e4thFlag),
              GetBoolName(mouseEvent.mButtons & MouseButtonsFlag::e5thFlag)));
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t KeymapWrapper::ComputeKeyModifiers(guint aModifierState) {
-  KeymapWrapper* keymapWrapper = GetInstance();
-
-  uint32_t keyModifiers = 0;
-  // DOM Meta key should be TRUE only on Mac.  We need to discuss this
-  // issue later.
-  if (keymapWrapper->AreModifiersActive(SHIFT, aModifierState)) {
-    keyModifiers |= MODIFIER_SHIFT;
-  }
-  if (keymapWrapper->AreModifiersActive(CTRL, aModifierState)) {
-    keyModifiers |= MODIFIER_CONTROL;
-  }
-  if (keymapWrapper->AreModifiersActive(ALT, aModifierState)) {
-    keyModifiers |= MODIFIER_ALT;
-  }
-  if (keymapWrapper->AreModifiersActive(META, aModifierState)) {
-    keyModifiers |= MODIFIER_META;
-  }
-  if (keymapWrapper->AreModifiersActive(SUPER, aModifierState) ||
-      keymapWrapper->AreModifiersActive(HYPER, aModifierState)) {
-    keyModifiers |= MODIFIER_OS;
-  }
-  if (keymapWrapper->AreModifiersActive(LEVEL3, aModifierState) ||
-      keymapWrapper->AreModifiersActive(LEVEL5, aModifierState)) {
-    keyModifiers |= MODIFIER_ALTGRAPH;
-  }
-  if (keymapWrapper->AreModifiersActive(CAPS_LOCK, aModifierState)) {
-    keyModifiers |= MODIFIER_CAPSLOCK;
-  }
-  if (keymapWrapper->AreModifiersActive(NUM_LOCK, aModifierState)) {
-    keyModifiers |= MODIFIER_NUMLOCK;
-  }
-  if (keymapWrapper->AreModifiersActive(SCROLL_LOCK, aModifierState)) {
-    keyModifiers |= MODIFIER_SCROLLLOCK;
-  }
-  return keyModifiers;
-}
-
-/* static */ void KeymapWrapper::InitInputEvent(WidgetInputEvent& aInputEvent,
-                                                guint aModifierState) {
-  KeymapWrapper* keymapWrapper = GetInstance();
-
-  aInputEvent.mModifiers = ComputeKeyModifiers(aModifierState);
-
-  MOZ_LOG(gKeymapWrapperLog, LogLevel::Debug,
-          ("%p InitInputEvent, aModifierState=0x%08X, "
-           "aInputEvent.mModifiers=0x%04X (Shift: %s, Control: %s, Alt: %s, "
-           "Meta: %s, OS: %s, AltGr: %s, "
-           "CapsLock: %s, NumLock: %s, ScrollLock: %s)",
-           keymapWrapper, aModifierState, aInputEvent.mModifiers,
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_SHIFT),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_CONTROL),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_ALT),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_META),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_OS),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_ALTGRAPH),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_CAPSLOCK),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_NUMLOCK),
-           GetBoolName(aInputEvent.mModifiers & MODIFIER_SCROLLLOCK)));
-
-  switch (aInputEvent.mClass) {
-    case eMouseEventClass:
-    case eMouseScrollEventClass:
-    case eWheelEventClass:
-    case eDragEventClass:
-    case eSimpleGestureEventClass:
-      break;
-    default:
-      return;
-  }
-
-  WidgetMouseEventBase& mouseEvent = *aInputEvent.AsMouseEventBase();
-  mouseEvent.buttons = 0;
-  if (aModifierState & GDK_BUTTON1_MASK) {
-    mouseEvent.buttons |= WidgetMouseEvent::eLeftButtonFlag;
-  }
-  if (aModifierState & GDK_BUTTON3_MASK) {
-    mouseEvent.buttons |= WidgetMouseEvent::eRightButtonFlag;
-  }
-  if (aModifierState & GDK_BUTTON2_MASK) {
-    mouseEvent.buttons |= WidgetMouseEvent::eMiddleButtonFlag;
-  }
-
-  MOZ_LOG(
-      gKeymapWrapperLog, LogLevel::Debug,
-      ("%p InitInputEvent, aInputEvent has buttons, "
-       "aInputEvent.buttons=0x%04X (Left: %s, Right: %s, Middle: %s, "
-       "4th (BACK): %s, 5th (FORWARD): %s)",
-       keymapWrapper, mouseEvent.buttons,
-       GetBoolName(mouseEvent.buttons & WidgetMouseEvent::eLeftButtonFlag),
-       GetBoolName(mouseEvent.buttons & WidgetMouseEvent::eRightButtonFlag),
-       GetBoolName(mouseEvent.buttons & WidgetMouseEvent::eMiddleButtonFlag),
-       GetBoolName(mouseEvent.buttons & WidgetMouseEvent::e4thButtonFlag),
-       GetBoolName(mouseEvent.buttons & WidgetMouseEvent::e5thButtonFlag)));
-||||||| merged common ancestors
-/* static */ uint32_t
-KeymapWrapper::ComputeDOMKeyCode(const GdkEventKey* aGdkKeyEvent)
-{
-    // If the keyval indicates it's a modifier key, we should use unshifted
-    // key's modifier keyval.
-    guint keyval = aGdkKeyEvent->keyval;
-    if (GetModifierForGDKKeyval(keyval)) {
-        // But if the keyval without modifiers isn't a modifier key, we
-        // shouldn't use it.  E.g., Japanese keyboard layout's
-        // Shift + Eisu-Toggle key is CapsLock.  This is an actual rare case,
-        // Windows uses different keycode for a physical key for different
-        // shift key state.
-        guint keyvalWithoutModifier = GetGDKKeyvalWithoutModifier(aGdkKeyEvent);
-        if (GetModifierForGDKKeyval(keyvalWithoutModifier)) {
-            keyval = keyvalWithoutModifier;
-        }
-        // Note that the modifier keycode and activating or deactivating
-        // modifier flag may be mismatched, but it's okay.  If a DOM key
-        // event handler is testing a keydown event, it's more likely being
-        // used to test which key is being pressed than to test which
-        // modifier will become active.  So, if we computed DOM keycode
-        // from modifier flag which were changing by the physical key, then
-        // there would be no other way for the user to generate the original
-        // keycode.
-        uint32_t DOMKeyCode = GetDOMKeyCodeFromKeyPairs(keyval);
-        NS_ASSERTION(DOMKeyCode, "All modifier keys must have a DOM keycode");
-        return DOMKeyCode;
-    }
-
-    // If the key isn't printable, let's look at the key pairs.
-    uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
-    if (!charCode) {
-        // Always use unshifted keycode for the non-printable key.
-        // XXX It might be better to decide DOM keycode from all keyvals of
-        //     the hardware keycode.  However, I think that it's too excessive.
-        guint keyvalWithoutModifier = GetGDKKeyvalWithoutModifier(aGdkKeyEvent);
-        uint32_t DOMKeyCode = GetDOMKeyCodeFromKeyPairs(keyvalWithoutModifier);
-        if (!DOMKeyCode) {
-            // If the unshifted keyval couldn't be mapped to a DOM keycode,
-            // we should fallback to legacy logic, so, we should recompute with
-            // the keyval with aGdkKeyEvent.
-            DOMKeyCode = GetDOMKeyCodeFromKeyPairs(keyval);
-        }
-        return DOMKeyCode;
-    }
-
-    // printable numpad keys should be resolved here.
-    switch (keyval) {
-        case GDK_KP_Multiply:  return NS_VK_MULTIPLY;
-        case GDK_KP_Add:       return NS_VK_ADD;
-        case GDK_KP_Separator: return NS_VK_SEPARATOR;
-        case GDK_KP_Subtract:  return NS_VK_SUBTRACT;
-        case GDK_KP_Decimal:   return NS_VK_DECIMAL;
-        case GDK_KP_Divide:    return NS_VK_DIVIDE;
-        case GDK_KP_0:         return NS_VK_NUMPAD0;
-        case GDK_KP_1:         return NS_VK_NUMPAD1;
-        case GDK_KP_2:         return NS_VK_NUMPAD2;
-        case GDK_KP_3:         return NS_VK_NUMPAD3;
-        case GDK_KP_4:         return NS_VK_NUMPAD4;
-        case GDK_KP_5:         return NS_VK_NUMPAD5;
-        case GDK_KP_6:         return NS_VK_NUMPAD6;
-        case GDK_KP_7:         return NS_VK_NUMPAD7;
-        case GDK_KP_8:         return NS_VK_NUMPAD8;
-        case GDK_KP_9:         return NS_VK_NUMPAD9;
-    }
-
-    KeymapWrapper* keymapWrapper = GetInstance();
-
-    // Ignore all modifier state except NumLock.
-    guint baseState =
-        (aGdkKeyEvent->state & keymapWrapper->GetModifierMask(NUM_LOCK));
-
-    // Basically, we should use unmodified character for deciding our keyCode.
-    uint32_t unmodifiedChar =
-        keymapWrapper->GetCharCodeFor(aGdkKeyEvent, baseState,
-                                      aGdkKeyEvent->group);
-    if (IsBasicLatinLetterOrNumeral(unmodifiedChar)) {
-        // If the unmodified character is an ASCII alphabet or an ASCII
-        // numeric, it's the best hint for deciding our keyCode.
-        return WidgetUtils::ComputeKeyCodeFromChar(unmodifiedChar);
-    }
-
-    // If the unmodified character is not an ASCII character, that means we
-    // couldn't find the hint. We should reset it.
-    if (!IsPrintableASCIICharacter(unmodifiedChar)) {
-        unmodifiedChar = 0;
-    }
-
-    // Retry with shifted keycode.
-    guint shiftState = (baseState | keymapWrapper->GetModifierMask(SHIFT));
-    uint32_t shiftedChar =
-        keymapWrapper->GetCharCodeFor(aGdkKeyEvent, shiftState,
-                                      aGdkKeyEvent->group);
-    if (IsBasicLatinLetterOrNumeral(shiftedChar)) {
-        // A shifted character can be an ASCII alphabet on Hebrew keyboard
-        // layout. And also shifted character can be an ASCII numeric on
-        // AZERTY keyboad layout.  Then, it's a good hint for deciding our
-        // keyCode.
-        return WidgetUtils::ComputeKeyCodeFromChar(shiftedChar);
-    }
-
-    // If the shifted unmodified character isn't an ASCII character, we should
-    // discard it too.
-    if (!IsPrintableASCIICharacter(shiftedChar)) {
-        shiftedChar = 0;
-    }
-
-    // If current keyboard layout isn't ASCII alphabet inputtable layout,
-    // look for ASCII alphabet inputtable keyboard layout.  If the key
-    // inputs an ASCII alphabet or an ASCII numeric, we should use it
-    // for deciding our keyCode.
-    uint32_t unmodCharLatin = 0;
-    uint32_t shiftedCharLatin = 0;
-    if (!keymapWrapper->IsLatinGroup(aGdkKeyEvent->group)) {
-        gint minGroup = keymapWrapper->GetFirstLatinGroup();
-        if (minGroup >= 0) {
-            unmodCharLatin =
-                keymapWrapper->GetCharCodeFor(aGdkKeyEvent, baseState,
-                                              minGroup);
-            if (IsBasicLatinLetterOrNumeral(unmodCharLatin)) {
-                // If the unmodified character is an ASCII alphabet or
-                // an ASCII numeric, we should use it for the keyCode.
-                return WidgetUtils::ComputeKeyCodeFromChar(unmodCharLatin);
-            }
-            // If the unmodified character in the alternative ASCII capable
-            // keyboard layout isn't an ASCII character, that means we couldn't
-            // find the hint. We should reset it.
-            if (!IsPrintableASCIICharacter(unmodCharLatin)) {
-                unmodCharLatin = 0;
-            }
-            shiftedCharLatin =
-                keymapWrapper->GetCharCodeFor(aGdkKeyEvent, shiftState,
-                                              minGroup);
-            if (IsBasicLatinLetterOrNumeral(shiftedCharLatin)) {
-                // If the shifted character is an ASCII alphabet or an ASCII
-                // numeric, we should use it for the keyCode.
-                return WidgetUtils::ComputeKeyCodeFromChar(shiftedCharLatin);
-            }
-            // If the shifted unmodified character in the alternative ASCII
-            // capable keyboard layout isn't an ASCII character, we should
-            // discard it too.
-            if (!IsPrintableASCIICharacter(shiftedCharLatin)) {
-                shiftedCharLatin = 0;
-            }
-        }
-    }
-
-    // If the key itself or with Shift state on active keyboard layout produces
-    // an ASCII punctuation character, we should decide keyCode value with it.
-    if (unmodifiedChar || shiftedChar) {
-        return WidgetUtils::ComputeKeyCodeFromChar(
-                   unmodifiedChar ? unmodifiedChar : shiftedChar);
-    }
-
-    // If the key itself or with Shift state on alternative ASCII capable
-    // keyboard layout produces an ASCII punctuation character, we should
-    // decide keyCode value with it.  Note that We've returned 0 for long
-    // time if keyCode isn't for an alphabet keys or a numeric key even in
-    // alternative ASCII capable keyboard layout because we decided that we
-    // should avoid setting same keyCode value to 2 or more keys since active
-    // keyboard layout may have a key to input the punctuation with different
-    // key.  However, setting keyCode to 0 makes some web applications which
-    // are aware of neither KeyboardEvent.key nor KeyboardEvent.code not work
-    // with Firefox when user selects non-ASCII capable keyboard layout such
-    // as Russian and Thai.  So, if alternative ASCII capable keyboard layout
-    // has keyCode value for the key, we should use it.  In other words, this
-    // behavior means that non-ASCII capable keyboard layout overrides some
-    // keys' keyCode value only if the key produces ASCII character by itself
-    // or with Shift key.
-    if (unmodCharLatin || shiftedCharLatin) {
-        return WidgetUtils::ComputeKeyCodeFromChar(
-                   unmodCharLatin ? unmodCharLatin : shiftedCharLatin);
-    }
-
-    // Otherwise, let's decide keyCode value from the hardware_keycode
-    // value on major keyboard layout.
-    CodeNameIndex code = ComputeDOMCodeNameIndex(aGdkKeyEvent);
-    return WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(code);
-=======
 /* static */
 uint32_t KeymapWrapper::ComputeDOMKeyCode(const GdkEventKey* aGdkKeyEvent) {
   // If the keyval indicates it's a modifier key, we should use unshifted
@@ -2334,215 +1285,11 @@ uint32_t KeymapWrapper::ComputeDOMKeyCode(const GdkEventKey* aGdkKeyEvent) {
   // value on major keyboard layout.
   CodeNameIndex code = ComputeDOMCodeNameIndex(aGdkKeyEvent);
   return WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(code);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-/* static */ uint32_t KeymapWrapper::ComputeDOMKeyCode(
-    const GdkEventKey* aGdkKeyEvent) {
-  // If the keyval indicates it's a modifier key, we should use unshifted
-  // key's modifier keyval.
-  guint keyval = aGdkKeyEvent->keyval;
-  if (GetModifierForGDKKeyval(keyval)) {
-    // But if the keyval without modifiers isn't a modifier key, we
-    // shouldn't use it.  E.g., Japanese keyboard layout's
-    // Shift + Eisu-Toggle key is CapsLock.  This is an actual rare case,
-    // Windows uses different keycode for a physical key for different
-    // shift key state.
-    guint keyvalWithoutModifier = GetGDKKeyvalWithoutModifier(aGdkKeyEvent);
-    if (GetModifierForGDKKeyval(keyvalWithoutModifier)) {
-      keyval = keyvalWithoutModifier;
-    }
-    // Note that the modifier keycode and activating or deactivating
-    // modifier flag may be mismatched, but it's okay.  If a DOM key
-    // event handler is testing a keydown event, it's more likely being
-    // used to test which key is being pressed than to test which
-    // modifier will become active.  So, if we computed DOM keycode
-    // from modifier flag which were changing by the physical key, then
-    // there would be no other way for the user to generate the original
-    // keycode.
-    uint32_t DOMKeyCode = GetDOMKeyCodeFromKeyPairs(keyval);
-    NS_ASSERTION(DOMKeyCode, "All modifier keys must have a DOM keycode");
-    return DOMKeyCode;
-  }
-
-  // If the key isn't printable, let's look at the key pairs.
-  uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
-  if (!charCode) {
-    // Always use unshifted keycode for the non-printable key.
-    // XXX It might be better to decide DOM keycode from all keyvals of
-    //     the hardware keycode.  However, I think that it's too excessive.
-    guint keyvalWithoutModifier = GetGDKKeyvalWithoutModifier(aGdkKeyEvent);
-    uint32_t DOMKeyCode = GetDOMKeyCodeFromKeyPairs(keyvalWithoutModifier);
-    if (!DOMKeyCode) {
-      // If the unshifted keyval couldn't be mapped to a DOM keycode,
-      // we should fallback to legacy logic, so, we should recompute with
-      // the keyval with aGdkKeyEvent.
-      DOMKeyCode = GetDOMKeyCodeFromKeyPairs(keyval);
-    }
-    return DOMKeyCode;
-  }
-
-  // printable numpad keys should be resolved here.
-  switch (keyval) {
-    case GDK_KP_Multiply:
-      return NS_VK_MULTIPLY;
-    case GDK_KP_Add:
-      return NS_VK_ADD;
-    case GDK_KP_Separator:
-      return NS_VK_SEPARATOR;
-    case GDK_KP_Subtract:
-      return NS_VK_SUBTRACT;
-    case GDK_KP_Decimal:
-      return NS_VK_DECIMAL;
-    case GDK_KP_Divide:
-      return NS_VK_DIVIDE;
-    case GDK_KP_0:
-      return NS_VK_NUMPAD0;
-    case GDK_KP_1:
-      return NS_VK_NUMPAD1;
-    case GDK_KP_2:
-      return NS_VK_NUMPAD2;
-    case GDK_KP_3:
-      return NS_VK_NUMPAD3;
-    case GDK_KP_4:
-      return NS_VK_NUMPAD4;
-    case GDK_KP_5:
-      return NS_VK_NUMPAD5;
-    case GDK_KP_6:
-      return NS_VK_NUMPAD6;
-    case GDK_KP_7:
-      return NS_VK_NUMPAD7;
-    case GDK_KP_8:
-      return NS_VK_NUMPAD8;
-    case GDK_KP_9:
-      return NS_VK_NUMPAD9;
-  }
-
-  KeymapWrapper* keymapWrapper = GetInstance();
-
-  // Ignore all modifier state except NumLock.
-  guint baseState =
-      (aGdkKeyEvent->state & keymapWrapper->GetModifierMask(NUM_LOCK));
-
-  // Basically, we should use unmodified character for deciding our keyCode.
-  uint32_t unmodifiedChar = keymapWrapper->GetCharCodeFor(
-      aGdkKeyEvent, baseState, aGdkKeyEvent->group);
-  if (IsBasicLatinLetterOrNumeral(unmodifiedChar)) {
-    // If the unmodified character is an ASCII alphabet or an ASCII
-    // numeric, it's the best hint for deciding our keyCode.
-    return WidgetUtils::ComputeKeyCodeFromChar(unmodifiedChar);
-  }
-
-  // If the unmodified character is not an ASCII character, that means we
-  // couldn't find the hint. We should reset it.
-  if (!IsPrintableASCIICharacter(unmodifiedChar)) {
-    unmodifiedChar = 0;
-  }
-
-  // Retry with shifted keycode.
-  guint shiftState = (baseState | keymapWrapper->GetModifierMask(SHIFT));
-  uint32_t shiftedChar = keymapWrapper->GetCharCodeFor(aGdkKeyEvent, shiftState,
-                                                       aGdkKeyEvent->group);
-  if (IsBasicLatinLetterOrNumeral(shiftedChar)) {
-    // A shifted character can be an ASCII alphabet on Hebrew keyboard
-    // layout. And also shifted character can be an ASCII numeric on
-    // AZERTY keyboad layout.  Then, it's a good hint for deciding our
-    // keyCode.
-    return WidgetUtils::ComputeKeyCodeFromChar(shiftedChar);
-  }
-
-  // If the shifted unmodified character isn't an ASCII character, we should
-  // discard it too.
-  if (!IsPrintableASCIICharacter(shiftedChar)) {
-    shiftedChar = 0;
-  }
-
-  // If current keyboard layout isn't ASCII alphabet inputtable layout,
-  // look for ASCII alphabet inputtable keyboard layout.  If the key
-  // inputs an ASCII alphabet or an ASCII numeric, we should use it
-  // for deciding our keyCode.
-  uint32_t unmodCharLatin = 0;
-  uint32_t shiftedCharLatin = 0;
-  if (!keymapWrapper->IsLatinGroup(aGdkKeyEvent->group)) {
-    gint minGroup = keymapWrapper->GetFirstLatinGroup();
-    if (minGroup >= 0) {
-      unmodCharLatin =
-          keymapWrapper->GetCharCodeFor(aGdkKeyEvent, baseState, minGroup);
-      if (IsBasicLatinLetterOrNumeral(unmodCharLatin)) {
-        // If the unmodified character is an ASCII alphabet or
-        // an ASCII numeric, we should use it for the keyCode.
-        return WidgetUtils::ComputeKeyCodeFromChar(unmodCharLatin);
-      }
-      // If the unmodified character in the alternative ASCII capable
-      // keyboard layout isn't an ASCII character, that means we couldn't
-      // find the hint. We should reset it.
-      if (!IsPrintableASCIICharacter(unmodCharLatin)) {
-        unmodCharLatin = 0;
-      }
-      shiftedCharLatin =
-          keymapWrapper->GetCharCodeFor(aGdkKeyEvent, shiftState, minGroup);
-      if (IsBasicLatinLetterOrNumeral(shiftedCharLatin)) {
-        // If the shifted character is an ASCII alphabet or an ASCII
-        // numeric, we should use it for the keyCode.
-        return WidgetUtils::ComputeKeyCodeFromChar(shiftedCharLatin);
-      }
-      // If the shifted unmodified character in the alternative ASCII
-      // capable keyboard layout isn't an ASCII character, we should
-      // discard it too.
-      if (!IsPrintableASCIICharacter(shiftedCharLatin)) {
-        shiftedCharLatin = 0;
-      }
-    }
-  }
-
-  // If the key itself or with Shift state on active keyboard layout produces
-  // an ASCII punctuation character, we should decide keyCode value with it.
-  if (unmodifiedChar || shiftedChar) {
-    return WidgetUtils::ComputeKeyCodeFromChar(unmodifiedChar ? unmodifiedChar
-                                                              : shiftedChar);
-  }
-
-  // If the key itself or with Shift state on alternative ASCII capable
-  // keyboard layout produces an ASCII punctuation character, we should
-  // decide keyCode value with it.  Note that We've returned 0 for long
-  // time if keyCode isn't for an alphabet keys or a numeric key even in
-  // alternative ASCII capable keyboard layout because we decided that we
-  // should avoid setting same keyCode value to 2 or more keys since active
-  // keyboard layout may have a key to input the punctuation with different
-  // key.  However, setting keyCode to 0 makes some web applications which
-  // are aware of neither KeyboardEvent.key nor KeyboardEvent.code not work
-  // with Firefox when user selects non-ASCII capable keyboard layout such
-  // as Russian and Thai.  So, if alternative ASCII capable keyboard layout
-  // has keyCode value for the key, we should use it.  In other words, this
-  // behavior means that non-ASCII capable keyboard layout overrides some
-  // keys' keyCode value only if the key produces ASCII character by itself
-  // or with Shift key.
-  if (unmodCharLatin || shiftedCharLatin) {
-    return WidgetUtils::ComputeKeyCodeFromChar(
-        unmodCharLatin ? unmodCharLatin : shiftedCharLatin);
-  }
-
-  // Otherwise, let's decide keyCode value from the hardware_keycode
-  // value on major keyboard layout.
-  CodeNameIndex code = ComputeDOMCodeNameIndex(aGdkKeyEvent);
-  return WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(code);
 }
 
 KeyNameIndex KeymapWrapper::ComputeDOMKeyNameIndex(
     const GdkEventKey* aGdkKeyEvent) {
   switch (aGdkKeyEvent->keyval) {
-||||||| merged common ancestors
-KeyNameIndex
-KeymapWrapper::ComputeDOMKeyNameIndex(const GdkEventKey* aGdkKeyEvent)
-{
-    switch (aGdkKeyEvent->keyval) {
-
-=======
-KeyNameIndex KeymapWrapper::ComputeDOMKeyNameIndex(
-    const GdkEventKey* aGdkKeyEvent) {
-  switch (aGdkKeyEvent->keyval) {
->>>>>>> upstream-releases
 #define NS_NATIVE_KEY_TO_DOM_KEY_NAME_INDEX(aNativeKey, aKeyNameIndex) \
   case aNativeKey:                                                     \
     return aKeyNameIndex;
@@ -2558,22 +1305,10 @@ KeyNameIndex KeymapWrapper::ComputeDOMKeyNameIndex(
   return KEY_NAME_INDEX_Unidentified;
 }
 
-<<<<<<< HEAD
-/* static */ CodeNameIndex KeymapWrapper::ComputeDOMCodeNameIndex(
-    const GdkEventKey* aGdkKeyEvent) {
-  switch (aGdkKeyEvent->hardware_keycode) {
-||||||| merged common ancestors
-/* static */ CodeNameIndex
-KeymapWrapper::ComputeDOMCodeNameIndex(const GdkEventKey* aGdkKeyEvent)
-{
-    switch (aGdkKeyEvent->hardware_keycode) {
-
-=======
 /* static */
 CodeNameIndex KeymapWrapper::ComputeDOMCodeNameIndex(
     const GdkEventKey* aGdkKeyEvent) {
   switch (aGdkKeyEvent->hardware_keycode) {
->>>>>>> upstream-releases
 #define NS_NATIVE_KEY_TO_DOM_CODE_NAME_INDEX(aNativeKey, aCodeNameIndex) \
   case aNativeKey:                                                       \
     return aCodeNameIndex;
@@ -2589,387 +1324,13 @@ CodeNameIndex KeymapWrapper::ComputeDOMCodeNameIndex(
   return CODE_NAME_INDEX_UNKNOWN;
 }
 
-<<<<<<< HEAD
-/* static */ void KeymapWrapper::InitKeyEvent(WidgetKeyboardEvent& aKeyEvent,
-                                              GdkEventKey* aGdkKeyEvent,
-                                              bool aIsProcessedByIME) {
-  MOZ_ASSERT(
-      !aIsProcessedByIME || aKeyEvent.mMessage != eKeyPress,
-      "If the key event is handled by IME, keypress event shouldn't be fired");
-
-  KeymapWrapper* keymapWrapper = GetInstance();
-||||||| merged common ancestors
-/* static */ void
-KeymapWrapper::InitKeyEvent(WidgetKeyboardEvent& aKeyEvent,
-                            GdkEventKey* aGdkKeyEvent,
-                            bool aIsProcessedByIME)
-{
-    MOZ_ASSERT(!aIsProcessedByIME || aKeyEvent.mMessage != eKeyPress,
-      "If the key event is handled by IME, keypress event shouldn't be fired");
-
-    KeymapWrapper* keymapWrapper = GetInstance();
-
-    aKeyEvent.mCodeNameIndex = ComputeDOMCodeNameIndex(aGdkKeyEvent);
-    MOZ_ASSERT(aKeyEvent.mCodeNameIndex != CODE_NAME_INDEX_USE_STRING);
-    aKeyEvent.mKeyNameIndex =
-        aIsProcessedByIME ? KEY_NAME_INDEX_Process :
-                            keymapWrapper->ComputeDOMKeyNameIndex(aGdkKeyEvent);
-    if (aKeyEvent.mKeyNameIndex == KEY_NAME_INDEX_Unidentified) {
-        uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
-        if (!charCode) {
-            charCode = keymapWrapper->GetUnmodifiedCharCodeFor(aGdkKeyEvent);
-        }
-        if (charCode) {
-            aKeyEvent.mKeyNameIndex = KEY_NAME_INDEX_USE_STRING;
-            MOZ_ASSERT(aKeyEvent.mKeyValue.IsEmpty(),
-                       "Uninitialized mKeyValue must be empty");
-            AppendUCS4ToUTF16(charCode, aKeyEvent.mKeyValue);
-        }
-    }
-=======
 /* static */
 bool KeymapWrapper::DispatchKeyDownOrKeyUpEvent(nsWindow* aWindow,
                                                 GdkEventKey* aGdkKeyEvent,
                                                 bool aIsProcessedByIME,
                                                 bool* aIsCancelled) {
   MOZ_ASSERT(aIsCancelled, "aIsCancelled must not be nullptr");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  aKeyEvent.mCodeNameIndex = ComputeDOMCodeNameIndex(aGdkKeyEvent);
-  MOZ_ASSERT(aKeyEvent.mCodeNameIndex != CODE_NAME_INDEX_USE_STRING);
-  aKeyEvent.mKeyNameIndex =
-      aIsProcessedByIME ? KEY_NAME_INDEX_Process
-                        : keymapWrapper->ComputeDOMKeyNameIndex(aGdkKeyEvent);
-  if (aKeyEvent.mKeyNameIndex == KEY_NAME_INDEX_Unidentified) {
-    uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
-    if (!charCode) {
-      charCode = keymapWrapper->GetUnmodifiedCharCodeFor(aGdkKeyEvent);
-    }
-    if (charCode) {
-      aKeyEvent.mKeyNameIndex = KEY_NAME_INDEX_USE_STRING;
-      MOZ_ASSERT(aKeyEvent.mKeyValue.IsEmpty(),
-                 "Uninitialized mKeyValue must be empty");
-      AppendUCS4ToUTF16(charCode, aKeyEvent.mKeyValue);
-    }
-  }
-
-  if (aIsProcessedByIME) {
-    aKeyEvent.mKeyCode = NS_VK_PROCESSKEY;
-  } else if (aKeyEvent.mKeyNameIndex != KEY_NAME_INDEX_USE_STRING ||
-             aKeyEvent.mMessage != eKeyPress) {
-    aKeyEvent.mKeyCode = ComputeDOMKeyCode(aGdkKeyEvent);
-  } else {
-    aKeyEvent.mKeyCode = 0;
-  }
-
-  // NOTE: The state of given key event indicates adjacent state of
-  // modifier keys.  E.g., even if the event is Shift key press event,
-  // the bit for Shift is still false.  By the same token, even if the
-  // event is Shift key release event, the bit for Shift is still true.
-  // Unfortunately, gdk_keyboard_get_modifiers() returns current modifier
-  // state.  It means if there're some pending modifier key press or
-  // key release events, the result isn't what we want.
-  guint modifierState = aGdkKeyEvent->state;
-  GdkDisplay* gdkDisplay = gdk_display_get_default();
-  if (aGdkKeyEvent->is_modifier && GDK_IS_X11_DISPLAY(gdkDisplay)) {
-    Display* display = gdk_x11_display_get_xdisplay(gdkDisplay);
-    if (XEventsQueued(display, QueuedAfterReading)) {
-      XEvent nextEvent;
-      XPeekEvent(display, &nextEvent);
-      if (nextEvent.type == keymapWrapper->mXKBBaseEventCode) {
-        XkbEvent* XKBEvent = (XkbEvent*)&nextEvent;
-        if (XKBEvent->any.xkb_type == XkbStateNotify) {
-          XkbStateNotifyEvent* stateNotifyEvent =
-              (XkbStateNotifyEvent*)XKBEvent;
-          modifierState &= ~0xFF;
-          modifierState |= stateNotifyEvent->lookup_mods;
-        }
-      }
-    }
-  }
-  InitInputEvent(aKeyEvent, modifierState);
-
-  switch (aGdkKeyEvent->keyval) {
-    case GDK_Shift_L:
-    case GDK_Control_L:
-    case GDK_Alt_L:
-    case GDK_Super_L:
-    case GDK_Hyper_L:
-    case GDK_Meta_L:
-      aKeyEvent.mLocation = eKeyLocationLeft;
-      break;
-
-    case GDK_Shift_R:
-    case GDK_Control_R:
-    case GDK_Alt_R:
-    case GDK_Super_R:
-    case GDK_Hyper_R:
-    case GDK_Meta_R:
-      aKeyEvent.mLocation = eKeyLocationRight;
-      break;
-
-    case GDK_KP_0:
-    case GDK_KP_1:
-    case GDK_KP_2:
-    case GDK_KP_3:
-    case GDK_KP_4:
-    case GDK_KP_5:
-    case GDK_KP_6:
-    case GDK_KP_7:
-    case GDK_KP_8:
-    case GDK_KP_9:
-    case GDK_KP_Space:
-    case GDK_KP_Tab:
-    case GDK_KP_Enter:
-    case GDK_KP_F1:
-    case GDK_KP_F2:
-    case GDK_KP_F3:
-    case GDK_KP_F4:
-    case GDK_KP_Home:
-    case GDK_KP_Left:
-    case GDK_KP_Up:
-    case GDK_KP_Right:
-    case GDK_KP_Down:
-    case GDK_KP_Prior:  // same as GDK_KP_Page_Up
-    case GDK_KP_Next:   // same as GDK_KP_Page_Down
-    case GDK_KP_End:
-    case GDK_KP_Begin:
-    case GDK_KP_Insert:
-    case GDK_KP_Delete:
-    case GDK_KP_Equal:
-    case GDK_KP_Multiply:
-    case GDK_KP_Add:
-    case GDK_KP_Separator:
-    case GDK_KP_Subtract:
-    case GDK_KP_Decimal:
-    case GDK_KP_Divide:
-      aKeyEvent.mLocation = eKeyLocationNumpad;
-      break;
-
-    default:
-      aKeyEvent.mLocation = eKeyLocationStandard;
-      break;
-  }
-
-  MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-          ("%p InitKeyEvent, modifierState=0x%08X "
-           "aGdkKeyEvent={ type=%s, keyval=%s(0x%X), state=0x%08X, "
-           "hardware_keycode=0x%08X, is_modifier=%s } "
-           "aKeyEvent={ message=%s, isShift=%s, isControl=%s, "
-           "isAlt=%s, isMeta=%s }",
-           keymapWrapper, modifierState,
-           ((aGdkKeyEvent->type == GDK_KEY_PRESS) ? "GDK_KEY_PRESS"
-                                                  : "GDK_KEY_RELEASE"),
-           gdk_keyval_name(aGdkKeyEvent->keyval), aGdkKeyEvent->keyval,
-           aGdkKeyEvent->state, aGdkKeyEvent->hardware_keycode,
-           GetBoolName(aGdkKeyEvent->is_modifier),
-           ((aKeyEvent.mMessage == eKeyDown)
-                ? "eKeyDown"
-                : (aKeyEvent.mMessage == eKeyPress) ? "eKeyPress" : "eKeyUp"),
-           GetBoolName(aKeyEvent.IsShift()), GetBoolName(aKeyEvent.IsControl()),
-           GetBoolName(aKeyEvent.IsAlt()), GetBoolName(aKeyEvent.IsMeta())));
-
-  // The transformations above and in gdk for the keyval are not invertible
-  // so link to the GdkEvent (which will vanish soon after return from the
-  // event callback) to give plugins access to hardware_keycode and state.
-  // (An XEvent would be nice but the GdkEvent is good enough.)
-  aKeyEvent.mPluginEvent.Copy(*aGdkKeyEvent);
-  aKeyEvent.mTime = aGdkKeyEvent->time;
-  aKeyEvent.mNativeKeyEvent = static_cast<void*>(aGdkKeyEvent);
-  aKeyEvent.mIsRepeat =
-      sRepeatState == REPEATING &&
-      aGdkKeyEvent->hardware_keycode == sLastRepeatableHardwareKeyCode;
-}
-
-/* static */ uint32_t KeymapWrapper::GetCharCodeFor(
-    const GdkEventKey* aGdkKeyEvent) {
-  // Anything above 0xf000 is considered a non-printable
-  // Exception: directly encoded UCS characters
-  if (aGdkKeyEvent->keyval > 0xf000 &&
-      (aGdkKeyEvent->keyval & 0xff000000) != 0x01000000) {
-    // Keypad keys are an exception: they return a value different
-    // from their non-keypad equivalents, but mozilla doesn't distinguish.
-    switch (aGdkKeyEvent->keyval) {
-      case GDK_KP_Space:
-        return ' ';
-      case GDK_KP_Equal:
-        return '=';
-      case GDK_KP_Multiply:
-        return '*';
-      case GDK_KP_Add:
-        return '+';
-      case GDK_KP_Separator:
-        return ',';
-      case GDK_KP_Subtract:
-        return '-';
-      case GDK_KP_Decimal:
-        return '.';
-      case GDK_KP_Divide:
-        return '/';
-      case GDK_KP_0:
-        return '0';
-      case GDK_KP_1:
-        return '1';
-      case GDK_KP_2:
-        return '2';
-      case GDK_KP_3:
-        return '3';
-      case GDK_KP_4:
-        return '4';
-      case GDK_KP_5:
-        return '5';
-      case GDK_KP_6:
-        return '6';
-      case GDK_KP_7:
-        return '7';
-      case GDK_KP_8:
-        return '8';
-      case GDK_KP_9:
-        return '9';
-      default:
-        return 0;  // non-printables
-    }
-  }
-
-  static const long MAX_UNICODE = 0x10FFFF;
-
-  // we're supposedly printable, let's try to convert
-  long ucs = keysym2ucs(aGdkKeyEvent->keyval);
-  if ((ucs != -1) && (ucs < MAX_UNICODE)) {
-    return ucs;
-  }
-
-  // I guess we couldn't convert
-  return 0;
-||||||| merged common ancestors
-    if (aIsProcessedByIME) {
-        aKeyEvent.mKeyCode = NS_VK_PROCESSKEY;
-    } else if (aKeyEvent.mKeyNameIndex != KEY_NAME_INDEX_USE_STRING ||
-               aKeyEvent.mMessage != eKeyPress) {
-        aKeyEvent.mKeyCode = ComputeDOMKeyCode(aGdkKeyEvent);
-    } else {
-        aKeyEvent.mKeyCode = 0;
-    }
-
-    // NOTE: The state of given key event indicates adjacent state of
-    // modifier keys.  E.g., even if the event is Shift key press event,
-    // the bit for Shift is still false.  By the same token, even if the
-    // event is Shift key release event, the bit for Shift is still true.
-    // Unfortunately, gdk_keyboard_get_modifiers() returns current modifier
-    // state.  It means if there're some pending modifier key press or
-    // key release events, the result isn't what we want.
-    guint modifierState = aGdkKeyEvent->state;
-    GdkDisplay* gdkDisplay = gdk_display_get_default();
-    if (aGdkKeyEvent->is_modifier && GDK_IS_X11_DISPLAY(gdkDisplay)) {
-        Display* display =
-            gdk_x11_display_get_xdisplay(gdkDisplay);
-        if (XEventsQueued(display, QueuedAfterReading)) {
-            XEvent nextEvent;
-            XPeekEvent(display, &nextEvent);
-            if (nextEvent.type == keymapWrapper->mXKBBaseEventCode) {
-                XkbEvent* XKBEvent = (XkbEvent*)&nextEvent;
-                if (XKBEvent->any.xkb_type == XkbStateNotify) {
-                    XkbStateNotifyEvent* stateNotifyEvent =
-                        (XkbStateNotifyEvent*)XKBEvent;
-                    modifierState &= ~0xFF;
-                    modifierState |= stateNotifyEvent->lookup_mods;
-                }
-            }
-        }
-    }
-    InitInputEvent(aKeyEvent, modifierState);
-
-    switch (aGdkKeyEvent->keyval) {
-        case GDK_Shift_L:
-        case GDK_Control_L:
-        case GDK_Alt_L:
-        case GDK_Super_L:
-        case GDK_Hyper_L:
-        case GDK_Meta_L:
-            aKeyEvent.mLocation = eKeyLocationLeft;
-            break;
-
-        case GDK_Shift_R:
-        case GDK_Control_R:
-        case GDK_Alt_R:
-        case GDK_Super_R:
-        case GDK_Hyper_R:
-        case GDK_Meta_R:
-            aKeyEvent.mLocation = eKeyLocationRight;
-            break;
-
-        case GDK_KP_0:
-        case GDK_KP_1:
-        case GDK_KP_2:
-        case GDK_KP_3:
-        case GDK_KP_4:
-        case GDK_KP_5:
-        case GDK_KP_6:
-        case GDK_KP_7:
-        case GDK_KP_8:
-        case GDK_KP_9:
-        case GDK_KP_Space:
-        case GDK_KP_Tab:
-        case GDK_KP_Enter:
-        case GDK_KP_F1:
-        case GDK_KP_F2:
-        case GDK_KP_F3:
-        case GDK_KP_F4:
-        case GDK_KP_Home:
-        case GDK_KP_Left:
-        case GDK_KP_Up:
-        case GDK_KP_Right:
-        case GDK_KP_Down:
-        case GDK_KP_Prior: // same as GDK_KP_Page_Up
-        case GDK_KP_Next:  // same as GDK_KP_Page_Down
-        case GDK_KP_End:
-        case GDK_KP_Begin:
-        case GDK_KP_Insert:
-        case GDK_KP_Delete:
-        case GDK_KP_Equal:
-        case GDK_KP_Multiply:
-        case GDK_KP_Add:
-        case GDK_KP_Separator:
-        case GDK_KP_Subtract:
-        case GDK_KP_Decimal:
-        case GDK_KP_Divide:
-            aKeyEvent.mLocation = eKeyLocationNumpad;
-            break;
-
-        default:
-            aKeyEvent.mLocation = eKeyLocationStandard;
-            break;
-    }
-
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-        ("%p InitKeyEvent, modifierState=0x%08X "
-         "aGdkKeyEvent={ type=%s, keyval=%s(0x%X), state=0x%08X, "
-         "hardware_keycode=0x%08X, is_modifier=%s } "
-         "aKeyEvent={ message=%s, isShift=%s, isControl=%s, "
-         "isAlt=%s, isMeta=%s }",
-         keymapWrapper, modifierState,
-         ((aGdkKeyEvent->type == GDK_KEY_PRESS) ?
-               "GDK_KEY_PRESS" : "GDK_KEY_RELEASE"),
-         gdk_keyval_name(aGdkKeyEvent->keyval),
-         aGdkKeyEvent->keyval, aGdkKeyEvent->state,
-         aGdkKeyEvent->hardware_keycode,
-         GetBoolName(aGdkKeyEvent->is_modifier),
-         ((aKeyEvent.mMessage == eKeyDown) ? "eKeyDown" :
-              (aKeyEvent.mMessage == eKeyPress) ? "eKeyPress" : "eKeyUp"),
-         GetBoolName(aKeyEvent.IsShift()), GetBoolName(aKeyEvent.IsControl()),
-         GetBoolName(aKeyEvent.IsAlt()), GetBoolName(aKeyEvent.IsMeta())));
-
-    // The transformations above and in gdk for the keyval are not invertible
-    // so link to the GdkEvent (which will vanish soon after return from the
-    // event callback) to give plugins access to hardware_keycode and state.
-    // (An XEvent would be nice but the GdkEvent is good enough.)
-    aKeyEvent.mPluginEvent.Copy(*aGdkKeyEvent);
-    aKeyEvent.mTime = aGdkKeyEvent->time;
-    aKeyEvent.mNativeKeyEvent = static_cast<void*>(aGdkKeyEvent);
-    aKeyEvent.mIsRepeat = sRepeatState == REPEATING &&
-        aGdkKeyEvent->hardware_keycode == sLastRepeatableHardwareKeyCode;
-=======
   *aIsCancelled = false;
 
   if (aGdkKeyEvent->type == GDK_KEY_PRESS && aGdkKeyEvent->keyval == GDK_Tab &&
@@ -3264,68 +1625,8 @@ void KeymapWrapper::HandleKeyPressEvent(nsWindow* aWindow,
             ("  HandleKeyPressEvent(), dispatched a set of composition "
              "events"));
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint32_t KeymapWrapper::GetCharCodeFor(const GdkEventKey* aGdkKeyEvent,
-                                       guint aModifierState, gint aGroup) {
-  guint keyval;
-  if (!gdk_keymap_translate_keyboard_state(
-          mGdkKeymap, aGdkKeyEvent->hardware_keycode,
-          GdkModifierType(aModifierState), aGroup, &keyval, nullptr, nullptr,
-          nullptr)) {
-    return 0;
-  }
-  GdkEventKey tmpEvent = *aGdkKeyEvent;
-  tmpEvent.state = aModifierState;
-  tmpEvent.keyval = keyval;
-  tmpEvent.group = aGroup;
-  return GetCharCodeFor(&tmpEvent);
-||||||| merged common ancestors
-/* static */ uint32_t
-KeymapWrapper::GetCharCodeFor(const GdkEventKey *aGdkKeyEvent)
-{
-    // Anything above 0xf000 is considered a non-printable
-    // Exception: directly encoded UCS characters
-    if (aGdkKeyEvent->keyval > 0xf000 &&
-        (aGdkKeyEvent->keyval & 0xff000000) != 0x01000000) {
-        // Keypad keys are an exception: they return a value different
-        // from their non-keypad equivalents, but mozilla doesn't distinguish.
-        switch (aGdkKeyEvent->keyval) {
-            case GDK_KP_Space:              return ' ';
-            case GDK_KP_Equal:              return '=';
-            case GDK_KP_Multiply:           return '*';
-            case GDK_KP_Add:                return '+';
-            case GDK_KP_Separator:          return ',';
-            case GDK_KP_Subtract:           return '-';
-            case GDK_KP_Decimal:            return '.';
-            case GDK_KP_Divide:             return '/';
-            case GDK_KP_0:                  return '0';
-            case GDK_KP_1:                  return '1';
-            case GDK_KP_2:                  return '2';
-            case GDK_KP_3:                  return '3';
-            case GDK_KP_4:                  return '4';
-            case GDK_KP_5:                  return '5';
-            case GDK_KP_6:                  return '6';
-            case GDK_KP_7:                  return '7';
-            case GDK_KP_8:                  return '8';
-            case GDK_KP_9:                  return '9';
-            default:                        return 0; // non-printables
-        }
-    }
-
-    static const long MAX_UNICODE = 0x10FFFF;
-
-    // we're supposedly printable, let's try to convert
-    long ucs = keysym2ucs(aGdkKeyEvent->keyval);
-    if ((ucs != -1) && (ucs < MAX_UNICODE)) {
-         return ucs;
-    }
-
-    // I guess we couldn't convert
-    return 0;
-=======
 /* static */
 bool KeymapWrapper::HandleKeyReleaseEvent(nsWindow* aWindow,
                                           GdkEventKey* aGdkKeyEvent) {
@@ -3522,74 +1823,8 @@ void KeymapWrapper::InitKeyEvent(WidgetKeyboardEvent& aKeyEvent,
        GetCharacterCodeNames(aKeyEvent.mCodeValue).get(),
        GetKeyLocationName(aKeyEvent.mLocation).get(),
        GetBoolName(aKeyEvent.mIsRepeat)));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint32_t KeymapWrapper::GetUnmodifiedCharCodeFor(
-    const GdkEventKey* aGdkKeyEvent) {
-  guint state = aGdkKeyEvent->state &
-                (GetModifierMask(SHIFT) | GetModifierMask(CAPS_LOCK) |
-                 GetModifierMask(NUM_LOCK) | GetModifierMask(SCROLL_LOCK) |
-                 GetModifierMask(LEVEL3) | GetModifierMask(LEVEL5));
-  uint32_t charCode =
-      GetCharCodeFor(aGdkKeyEvent, GdkModifierType(state), aGdkKeyEvent->group);
-  if (charCode) {
-    return charCode;
-  }
-  // If no character is mapped to the key when Level3 Shift or Level5 Shift
-  // is active, let's return a character which is inputted by the key without
-  // Level3 nor Level5 Shift.
-  guint stateWithoutAltGraph =
-      state & ~(GetModifierMask(LEVEL3) | GetModifierMask(LEVEL5));
-  if (state == stateWithoutAltGraph) {
-    return 0;
-  }
-  return GetCharCodeFor(aGdkKeyEvent, GdkModifierType(stateWithoutAltGraph),
-                        aGdkKeyEvent->group);
-||||||| merged common ancestors
-uint32_t
-KeymapWrapper::GetCharCodeFor(const GdkEventKey *aGdkKeyEvent,
-                              guint aModifierState,
-                              gint aGroup)
-{
-    guint keyval;
-    if (!gdk_keymap_translate_keyboard_state(mGdkKeymap,
-             aGdkKeyEvent->hardware_keycode,
-             GdkModifierType(aModifierState),
-             aGroup, &keyval, nullptr, nullptr, nullptr)) {
-        return 0;
-    }
-    GdkEventKey tmpEvent = *aGdkKeyEvent;
-    tmpEvent.state = aModifierState;
-    tmpEvent.keyval = keyval;
-    tmpEvent.group = aGroup;
-    return GetCharCodeFor(&tmpEvent);
-}
-
-uint32_t
-KeymapWrapper::GetUnmodifiedCharCodeFor(const GdkEventKey* aGdkKeyEvent)
-{
-    guint state = aGdkKeyEvent->state &
-        (GetModifierMask(SHIFT) | GetModifierMask(CAPS_LOCK) |
-         GetModifierMask(NUM_LOCK) | GetModifierMask(SCROLL_LOCK) |
-         GetModifierMask(LEVEL3) | GetModifierMask(LEVEL5));
-    uint32_t charCode = GetCharCodeFor(aGdkKeyEvent, GdkModifierType(state),
-                                       aGdkKeyEvent->group);
-    if (charCode) {
-        return charCode;
-    }
-    // If no character is mapped to the key when Level3 Shift or Level5 Shift
-    // is active, let's return a character which is inputted by the key without
-    // Level3 nor Level5 Shift.
-    guint stateWithoutAltGraph =
-        state & ~(GetModifierMask(LEVEL3) | GetModifierMask(LEVEL5));
-    if (state == stateWithoutAltGraph) {
-        return 0;
-    }
-    return GetCharCodeFor(aGdkKeyEvent, GdkModifierType(stateWithoutAltGraph),
-                          aGdkKeyEvent->group);
-=======
 /* static */
 uint32_t KeymapWrapper::GetCharCodeFor(const GdkEventKey* aGdkKeyEvent) {
   // Anything above 0xf000 is considered a non-printable
@@ -3666,32 +1901,8 @@ uint32_t KeymapWrapper::GetCharCodeFor(const GdkEventKey* aGdkKeyEvent,
   tmpEvent.keyval = keyval;
   tmpEvent.group = aGroup;
   return GetCharCodeFor(&tmpEvent);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-gint KeymapWrapper::GetKeyLevel(GdkEventKey* aGdkKeyEvent) {
-  gint level;
-  if (!gdk_keymap_translate_keyboard_state(
-          mGdkKeymap, aGdkKeyEvent->hardware_keycode,
-          GdkModifierType(aGdkKeyEvent->state), aGdkKeyEvent->group, nullptr,
-          nullptr, &level, nullptr)) {
-    return -1;
-  }
-  return level;
-||||||| merged common ancestors
-gint
-KeymapWrapper::GetKeyLevel(GdkEventKey *aGdkKeyEvent)
-{
-    gint level;
-    if (!gdk_keymap_translate_keyboard_state(mGdkKeymap,
-             aGdkKeyEvent->hardware_keycode,
-             GdkModifierType(aGdkKeyEvent->state),
-             aGdkKeyEvent->group, nullptr, nullptr, &level, nullptr)) {
-        return -1;
-    }
-    return level;
-=======
 uint32_t KeymapWrapper::GetUnmodifiedCharCodeFor(
     const GdkEventKey* aGdkKeyEvent) {
   guint state = aGdkKeyEvent->state &
@@ -3713,50 +1924,8 @@ uint32_t KeymapWrapper::GetUnmodifiedCharCodeFor(
   }
   return GetCharCodeFor(aGdkKeyEvent, GdkModifierType(stateWithoutAltGraph),
                         aGdkKeyEvent->group);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-gint KeymapWrapper::GetFirstLatinGroup() {
-  GdkKeymapKey* keys;
-  gint count;
-  gint minGroup = -1;
-  if (gdk_keymap_get_entries_for_keyval(mGdkKeymap, GDK_a, &keys, &count)) {
-    // find the minimum number group for latin inputtable layout
-    for (gint i = 0; i < count && minGroup != 0; ++i) {
-      if (keys[i].level != 0 && keys[i].level != 1) {
-        continue;
-      }
-      if (minGroup >= 0 && keys[i].group > minGroup) {
-        continue;
-      }
-      minGroup = keys[i].group;
-    }
-    g_free(keys);
-  }
-  return minGroup;
-||||||| merged common ancestors
-gint
-KeymapWrapper::GetFirstLatinGroup()
-{
-    GdkKeymapKey *keys;
-    gint count;
-    gint minGroup = -1;
-    if (gdk_keymap_get_entries_for_keyval(mGdkKeymap, GDK_a, &keys, &count)) {
-        // find the minimum number group for latin inputtable layout
-        for (gint i = 0; i < count && minGroup != 0; ++i) {
-            if (keys[i].level != 0 && keys[i].level != 1) {
-                continue;
-            }
-            if (minGroup >= 0 && keys[i].group > minGroup) {
-                continue;
-            }
-            minGroup = keys[i].group;
-        }
-        g_free(keys);
-    }
-    return minGroup;
-=======
 gint KeymapWrapper::GetKeyLevel(GdkEventKey* aGdkKeyEvent) {
   gint level;
   if (!gdk_keymap_translate_keyboard_state(
@@ -3766,48 +1935,8 @@ gint KeymapWrapper::GetKeyLevel(GdkEventKey* aGdkKeyEvent) {
     return -1;
   }
   return level;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool KeymapWrapper::IsLatinGroup(guint8 aGroup) {
-  GdkKeymapKey* keys;
-  gint count;
-  bool result = false;
-  if (gdk_keymap_get_entries_for_keyval(mGdkKeymap, GDK_a, &keys, &count)) {
-    for (gint i = 0; i < count; ++i) {
-      if (keys[i].level != 0 && keys[i].level != 1) {
-        continue;
-      }
-      if (keys[i].group == aGroup) {
-        result = true;
-        break;
-      }
-    }
-    g_free(keys);
-  }
-  return result;
-||||||| merged common ancestors
-bool
-KeymapWrapper::IsLatinGroup(guint8 aGroup)
-{
-    GdkKeymapKey *keys;
-    gint count;
-    bool result = false;
-    if (gdk_keymap_get_entries_for_keyval(mGdkKeymap, GDK_a, &keys, &count)) {
-        for (gint i = 0; i < count; ++i) {
-            if (keys[i].level != 0 && keys[i].level != 1) {
-                continue;
-            }
-            if (keys[i].group == aGroup) {
-                result = true;
-                break;
-            }
-        }
-        g_free(keys);
-    }
-    return result;
-=======
 gint KeymapWrapper::GetFirstLatinGroup() {
   GdkKeymapKey* keys;
   gint count;
@@ -3826,26 +1955,8 @@ gint KeymapWrapper::GetFirstLatinGroup() {
     g_free(keys);
   }
   return minGroup;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool KeymapWrapper::IsAutoRepeatableKey(guint aHardwareKeyCode) {
-  uint8_t indexOfArray = aHardwareKeyCode / 8;
-  MOZ_ASSERT(indexOfArray < ArrayLength(mKeyboardState.auto_repeats),
-             "invalid index");
-  char bitMask = 1 << (aHardwareKeyCode % 8);
-  return (mKeyboardState.auto_repeats[indexOfArray] & bitMask) != 0;
-||||||| merged common ancestors
-bool
-KeymapWrapper::IsAutoRepeatableKey(guint aHardwareKeyCode)
-{
-    uint8_t indexOfArray = aHardwareKeyCode / 8;
-    MOZ_ASSERT(indexOfArray < ArrayLength(mKeyboardState.auto_repeats),
-               "invalid index");
-    char bitMask = 1 << (aHardwareKeyCode % 8);
-    return (mKeyboardState.auto_repeats[indexOfArray] & bitMask) != 0;
-=======
 bool KeymapWrapper::IsLatinGroup(guint8 aGroup) {
   GdkKeymapKey* keys;
   gint count;
@@ -3863,428 +1974,23 @@ bool KeymapWrapper::IsLatinGroup(guint8 aGroup) {
     g_free(keys);
   }
   return result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool KeymapWrapper::IsBasicLatinLetterOrNumeral(
-    uint32_t aCharCode) {
-  return (aCharCode >= 'a' && aCharCode <= 'z') ||
-         (aCharCode >= 'A' && aCharCode <= 'Z') ||
-         (aCharCode >= '0' && aCharCode <= '9');
-||||||| merged common ancestors
-/* static */ bool
-KeymapWrapper::IsBasicLatinLetterOrNumeral(uint32_t aCharCode)
-{
-    return (aCharCode >= 'a' && aCharCode <= 'z') ||
-           (aCharCode >= 'A' && aCharCode <= 'Z') ||
-           (aCharCode >= '0' && aCharCode <= '9');
-=======
 bool KeymapWrapper::IsAutoRepeatableKey(guint aHardwareKeyCode) {
   uint8_t indexOfArray = aHardwareKeyCode / 8;
   MOZ_ASSERT(indexOfArray < ArrayLength(mKeyboardState.auto_repeats),
              "invalid index");
   char bitMask = 1 << (aHardwareKeyCode % 8);
   return (mKeyboardState.auto_repeats[indexOfArray] & bitMask) != 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ guint KeymapWrapper::GetGDKKeyvalWithoutModifier(
-    const GdkEventKey* aGdkKeyEvent) {
-  KeymapWrapper* keymapWrapper = GetInstance();
-  guint state =
-      (aGdkKeyEvent->state & keymapWrapper->GetModifierMask(NUM_LOCK));
-  guint keyval;
-  if (!gdk_keymap_translate_keyboard_state(
-          keymapWrapper->mGdkKeymap, aGdkKeyEvent->hardware_keycode,
-          GdkModifierType(state), aGdkKeyEvent->group, &keyval, nullptr,
-          nullptr, nullptr)) {
-    return 0;
-  }
-  return keyval;
-||||||| merged common ancestors
-/* static */ guint
-KeymapWrapper::GetGDKKeyvalWithoutModifier(const GdkEventKey *aGdkKeyEvent)
-{
-    KeymapWrapper* keymapWrapper = GetInstance();
-    guint state =
-        (aGdkKeyEvent->state & keymapWrapper->GetModifierMask(NUM_LOCK));
-    guint keyval;
-    if (!gdk_keymap_translate_keyboard_state(keymapWrapper->mGdkKeymap,
-             aGdkKeyEvent->hardware_keycode, GdkModifierType(state),
-             aGdkKeyEvent->group, &keyval, nullptr, nullptr, nullptr)) {
-        return 0;
-    }
-    return keyval;
-=======
 /* static */
 bool KeymapWrapper::IsBasicLatinLetterOrNumeral(uint32_t aCharCode) {
   return (aCharCode >= 'a' && aCharCode <= 'z') ||
          (aCharCode >= 'A' && aCharCode <= 'Z') ||
          (aCharCode >= '0' && aCharCode <= '9');
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t KeymapWrapper::GetDOMKeyCodeFromKeyPairs(
-    guint aGdkKeyval) {
-  switch (aGdkKeyval) {
-    case GDK_Cancel:
-      return NS_VK_CANCEL;
-    case GDK_BackSpace:
-      return NS_VK_BACK;
-    case GDK_Tab:
-    case GDK_ISO_Left_Tab:
-      return NS_VK_TAB;
-    case GDK_Clear:
-      return NS_VK_CLEAR;
-    case GDK_Return:
-      return NS_VK_RETURN;
-    case GDK_Shift_L:
-    case GDK_Shift_R:
-    case GDK_Shift_Lock:
-      return NS_VK_SHIFT;
-    case GDK_Control_L:
-    case GDK_Control_R:
-      return NS_VK_CONTROL;
-    case GDK_Alt_L:
-    case GDK_Alt_R:
-      return NS_VK_ALT;
-    case GDK_Meta_L:
-    case GDK_Meta_R:
-      return NS_VK_META;
-
-    // Assume that Super or Hyper is always mapped to physical Win key.
-    case GDK_Super_L:
-    case GDK_Super_R:
-    case GDK_Hyper_L:
-    case GDK_Hyper_R:
-      return NS_VK_WIN;
-
-    // GTK's AltGraph key is similar to Mac's Option (Alt) key.  However,
-    // unfortunately, browsers on Mac are using NS_VK_ALT for it even though
-    // it's really different from Alt key on Windows.
-    // On the other hand, GTK's AltGrapsh keys are really different from
-    // Alt key.  However, there is no AltGrapsh key on Windows.  On Windows,
-    // both Ctrl and Alt keys are pressed internally when AltGr key is
-    // pressed.  For some languages' users, AltGraph key is important, so,
-    // web applications on such locale may want to know AltGraph key press.
-    // Therefore, we should map AltGr keycode for them only on GTK.
-    case GDK_ISO_Level3_Shift:
-    case GDK_ISO_Level5_Shift:
-    // We assume that Mode_switch is always used for level3 shift.
-    case GDK_Mode_switch:
-      return NS_VK_ALTGR;
-
-    case GDK_Pause:
-      return NS_VK_PAUSE;
-    case GDK_Caps_Lock:
-      return NS_VK_CAPS_LOCK;
-    case GDK_Kana_Lock:
-    case GDK_Kana_Shift:
-      return NS_VK_KANA;
-    case GDK_Hangul:
-      return NS_VK_HANGUL;
-    // case GDK_XXX:                   return NS_VK_JUNJA;
-    // case GDK_XXX:                   return NS_VK_FINAL;
-    case GDK_Hangul_Hanja:
-      return NS_VK_HANJA;
-    case GDK_Kanji:
-      return NS_VK_KANJI;
-    case GDK_Escape:
-      return NS_VK_ESCAPE;
-    case GDK_Henkan:
-      return NS_VK_CONVERT;
-    case GDK_Muhenkan:
-      return NS_VK_NONCONVERT;
-    // case GDK_XXX:                   return NS_VK_ACCEPT;
-    // case GDK_XXX:                   return NS_VK_MODECHANGE;
-    case GDK_Page_Up:
-      return NS_VK_PAGE_UP;
-    case GDK_Page_Down:
-      return NS_VK_PAGE_DOWN;
-    case GDK_End:
-      return NS_VK_END;
-    case GDK_Home:
-      return NS_VK_HOME;
-    case GDK_Left:
-      return NS_VK_LEFT;
-    case GDK_Up:
-      return NS_VK_UP;
-    case GDK_Right:
-      return NS_VK_RIGHT;
-    case GDK_Down:
-      return NS_VK_DOWN;
-    case GDK_Select:
-      return NS_VK_SELECT;
-    case GDK_Print:
-      return NS_VK_PRINT;
-    case GDK_Execute:
-      return NS_VK_EXECUTE;
-    case GDK_Insert:
-      return NS_VK_INSERT;
-    case GDK_Delete:
-      return NS_VK_DELETE;
-    case GDK_Help:
-      return NS_VK_HELP;
-
-    // keypad keys
-    case GDK_KP_Left:
-      return NS_VK_LEFT;
-    case GDK_KP_Right:
-      return NS_VK_RIGHT;
-    case GDK_KP_Up:
-      return NS_VK_UP;
-    case GDK_KP_Down:
-      return NS_VK_DOWN;
-    case GDK_KP_Page_Up:
-      return NS_VK_PAGE_UP;
-    // Not sure what these are
-    // case GDK_KP_Prior:              return NS_VK_;
-    // case GDK_KP_Next:               return NS_VK_;
-    case GDK_KP_Begin:
-      return NS_VK_CLEAR;  // Num-unlocked 5
-    case GDK_KP_Page_Down:
-      return NS_VK_PAGE_DOWN;
-    case GDK_KP_Home:
-      return NS_VK_HOME;
-    case GDK_KP_End:
-      return NS_VK_END;
-    case GDK_KP_Insert:
-      return NS_VK_INSERT;
-    case GDK_KP_Delete:
-      return NS_VK_DELETE;
-    case GDK_KP_Enter:
-      return NS_VK_RETURN;
-
-    case GDK_Num_Lock:
-      return NS_VK_NUM_LOCK;
-    case GDK_Scroll_Lock:
-      return NS_VK_SCROLL_LOCK;
-
-    // Function keys
-    case GDK_F1:
-      return NS_VK_F1;
-    case GDK_F2:
-      return NS_VK_F2;
-    case GDK_F3:
-      return NS_VK_F3;
-    case GDK_F4:
-      return NS_VK_F4;
-    case GDK_F5:
-      return NS_VK_F5;
-    case GDK_F6:
-      return NS_VK_F6;
-    case GDK_F7:
-      return NS_VK_F7;
-    case GDK_F8:
-      return NS_VK_F8;
-    case GDK_F9:
-      return NS_VK_F9;
-    case GDK_F10:
-      return NS_VK_F10;
-    case GDK_F11:
-      return NS_VK_F11;
-    case GDK_F12:
-      return NS_VK_F12;
-    case GDK_F13:
-      return NS_VK_F13;
-    case GDK_F14:
-      return NS_VK_F14;
-    case GDK_F15:
-      return NS_VK_F15;
-    case GDK_F16:
-      return NS_VK_F16;
-    case GDK_F17:
-      return NS_VK_F17;
-    case GDK_F18:
-      return NS_VK_F18;
-    case GDK_F19:
-      return NS_VK_F19;
-    case GDK_F20:
-      return NS_VK_F20;
-    case GDK_F21:
-      return NS_VK_F21;
-    case GDK_F22:
-      return NS_VK_F22;
-    case GDK_F23:
-      return NS_VK_F23;
-    case GDK_F24:
-      return NS_VK_F24;
-
-    // context menu key, keysym 0xff67, typically keycode 117 on 105-key
-    // (Microsoft) x86 keyboards, located between right 'Windows' key and
-    // right Ctrl key
-    case GDK_Menu:
-      return NS_VK_CONTEXT_MENU;
-    case GDK_Sleep:
-      return NS_VK_SLEEP;
-
-    case GDK_3270_Attn:
-      return NS_VK_ATTN;
-    case GDK_3270_CursorSelect:
-      return NS_VK_CRSEL;
-    case GDK_3270_ExSelect:
-      return NS_VK_EXSEL;
-    case GDK_3270_EraseEOF:
-      return NS_VK_EREOF;
-    case GDK_3270_Play:
-      return NS_VK_PLAY;
-    // case GDK_XXX:                   return NS_VK_ZOOM;
-    case GDK_3270_PA1:
-      return NS_VK_PA1;
-
-    // map Sun Keyboard special keysyms on to NS_VK keys
-
-    // Sun F11 key generates SunF36(0x1005ff10) keysym
-    case 0x1005ff10:
-      return NS_VK_F11;
-    // Sun F12 key generates SunF37(0x1005ff11) keysym
-    case 0x1005ff11:
-      return NS_VK_F12;
-    default:
-      return 0;
-  }
-||||||| merged common ancestors
-/* static */ uint32_t
-KeymapWrapper::GetDOMKeyCodeFromKeyPairs(guint aGdkKeyval)
-{
-    switch (aGdkKeyval) {
-        case GDK_Cancel:                return NS_VK_CANCEL;
-        case GDK_BackSpace:             return NS_VK_BACK;
-        case GDK_Tab:
-        case GDK_ISO_Left_Tab:          return NS_VK_TAB;
-        case GDK_Clear:                 return NS_VK_CLEAR;
-        case GDK_Return:                return NS_VK_RETURN;
-        case GDK_Shift_L:
-        case GDK_Shift_R:
-        case GDK_Shift_Lock:            return NS_VK_SHIFT;
-        case GDK_Control_L:
-        case GDK_Control_R:             return NS_VK_CONTROL;
-        case GDK_Alt_L:
-        case GDK_Alt_R:                 return NS_VK_ALT;
-        case GDK_Meta_L:
-        case GDK_Meta_R:                return NS_VK_META;
-
-        // Assume that Super or Hyper is always mapped to physical Win key.
-        case GDK_Super_L:
-        case GDK_Super_R:
-        case GDK_Hyper_L:
-        case GDK_Hyper_R:               return NS_VK_WIN;
-
-        // GTK's AltGraph key is similar to Mac's Option (Alt) key.  However,
-        // unfortunately, browsers on Mac are using NS_VK_ALT for it even though
-        // it's really different from Alt key on Windows.
-        // On the other hand, GTK's AltGrapsh keys are really different from
-        // Alt key.  However, there is no AltGrapsh key on Windows.  On Windows,
-        // both Ctrl and Alt keys are pressed internally when AltGr key is
-        // pressed.  For some languages' users, AltGraph key is important, so,
-        // web applications on such locale may want to know AltGraph key press.
-        // Therefore, we should map AltGr keycode for them only on GTK.
-        case GDK_ISO_Level3_Shift:
-        case GDK_ISO_Level5_Shift:
-        // We assume that Mode_switch is always used for level3 shift.
-        case GDK_Mode_switch:           return NS_VK_ALTGR;
-
-        case GDK_Pause:                 return NS_VK_PAUSE;
-        case GDK_Caps_Lock:             return NS_VK_CAPS_LOCK;
-        case GDK_Kana_Lock:
-        case GDK_Kana_Shift:            return NS_VK_KANA;
-        case GDK_Hangul:                return NS_VK_HANGUL;
-        // case GDK_XXX:                   return NS_VK_JUNJA;
-        // case GDK_XXX:                   return NS_VK_FINAL;
-        case GDK_Hangul_Hanja:          return NS_VK_HANJA;
-        case GDK_Kanji:                 return NS_VK_KANJI;
-        case GDK_Escape:                return NS_VK_ESCAPE;
-        case GDK_Henkan:                return NS_VK_CONVERT;
-        case GDK_Muhenkan:              return NS_VK_NONCONVERT;
-        // case GDK_XXX:                   return NS_VK_ACCEPT;
-        // case GDK_XXX:                   return NS_VK_MODECHANGE;
-        case GDK_Page_Up:               return NS_VK_PAGE_UP;
-        case GDK_Page_Down:             return NS_VK_PAGE_DOWN;
-        case GDK_End:                   return NS_VK_END;
-        case GDK_Home:                  return NS_VK_HOME;
-        case GDK_Left:                  return NS_VK_LEFT;
-        case GDK_Up:                    return NS_VK_UP;
-        case GDK_Right:                 return NS_VK_RIGHT;
-        case GDK_Down:                  return NS_VK_DOWN;
-        case GDK_Select:                return NS_VK_SELECT;
-        case GDK_Print:                 return NS_VK_PRINT;
-        case GDK_Execute:               return NS_VK_EXECUTE;
-        case GDK_Insert:                return NS_VK_INSERT;
-        case GDK_Delete:                return NS_VK_DELETE;
-        case GDK_Help:                  return NS_VK_HELP;
-
-        // keypad keys
-        case GDK_KP_Left:               return NS_VK_LEFT;
-        case GDK_KP_Right:              return NS_VK_RIGHT;
-        case GDK_KP_Up:                 return NS_VK_UP;
-        case GDK_KP_Down:               return NS_VK_DOWN;
-        case GDK_KP_Page_Up:            return NS_VK_PAGE_UP;
-        // Not sure what these are
-        // case GDK_KP_Prior:              return NS_VK_;
-        // case GDK_KP_Next:               return NS_VK_;
-        case GDK_KP_Begin:              return NS_VK_CLEAR; // Num-unlocked 5
-        case GDK_KP_Page_Down:          return NS_VK_PAGE_DOWN;
-        case GDK_KP_Home:               return NS_VK_HOME;
-        case GDK_KP_End:                return NS_VK_END;
-        case GDK_KP_Insert:             return NS_VK_INSERT;
-        case GDK_KP_Delete:             return NS_VK_DELETE;
-        case GDK_KP_Enter:              return NS_VK_RETURN;
-
-        case GDK_Num_Lock:              return NS_VK_NUM_LOCK;
-        case GDK_Scroll_Lock:           return NS_VK_SCROLL_LOCK;
-
-        // Function keys
-        case GDK_F1:                    return NS_VK_F1;
-        case GDK_F2:                    return NS_VK_F2;
-        case GDK_F3:                    return NS_VK_F3;
-        case GDK_F4:                    return NS_VK_F4;
-        case GDK_F5:                    return NS_VK_F5;
-        case GDK_F6:                    return NS_VK_F6;
-        case GDK_F7:                    return NS_VK_F7;
-        case GDK_F8:                    return NS_VK_F8;
-        case GDK_F9:                    return NS_VK_F9;
-        case GDK_F10:                   return NS_VK_F10;
-        case GDK_F11:                   return NS_VK_F11;
-        case GDK_F12:                   return NS_VK_F12;
-        case GDK_F13:                   return NS_VK_F13;
-        case GDK_F14:                   return NS_VK_F14;
-        case GDK_F15:                   return NS_VK_F15;
-        case GDK_F16:                   return NS_VK_F16;
-        case GDK_F17:                   return NS_VK_F17;
-        case GDK_F18:                   return NS_VK_F18;
-        case GDK_F19:                   return NS_VK_F19;
-        case GDK_F20:                   return NS_VK_F20;
-        case GDK_F21:                   return NS_VK_F21;
-        case GDK_F22:                   return NS_VK_F22;
-        case GDK_F23:                   return NS_VK_F23;
-        case GDK_F24:                   return NS_VK_F24;
-
-        // context menu key, keysym 0xff67, typically keycode 117 on 105-key
-        // (Microsoft) x86 keyboards, located between right 'Windows' key and
-        // right Ctrl key
-        case GDK_Menu:                  return NS_VK_CONTEXT_MENU;
-        case GDK_Sleep:                 return NS_VK_SLEEP;
-
-        case GDK_3270_Attn:             return NS_VK_ATTN;
-        case GDK_3270_CursorSelect:     return NS_VK_CRSEL;
-        case GDK_3270_ExSelect:         return NS_VK_EXSEL;
-        case GDK_3270_EraseEOF:         return NS_VK_EREOF;
-        case GDK_3270_Play:             return NS_VK_PLAY;
-        // case GDK_XXX:                   return NS_VK_ZOOM;
-        case GDK_3270_PA1:              return NS_VK_PA1;
-
-        // map Sun Keyboard special keysyms on to NS_VK keys
-
-        // Sun F11 key generates SunF36(0x1005ff10) keysym
-        case 0x1005ff10:                return NS_VK_F11;
-        // Sun F12 key generates SunF37(0x1005ff11) keysym
-        case 0x1005ff11:                return NS_VK_F12;
-        default:                        return 0;
-    }
-=======
 /* static */
 guint KeymapWrapper::GetGDKKeyvalWithoutModifier(
     const GdkEventKey* aGdkKeyEvent) {
@@ -4299,20 +2005,8 @@ guint KeymapWrapper::GetGDKKeyvalWithoutModifier(
     return 0;
   }
   return keyval;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void KeymapWrapper::WillDispatchKeyboardEvent(WidgetKeyboardEvent& aKeyEvent,
-                                              GdkEventKey* aGdkKeyEvent) {
-  GetInstance()->WillDispatchKeyboardEventInternal(aKeyEvent, aGdkKeyEvent);
-||||||| merged common ancestors
-void
-KeymapWrapper::WillDispatchKeyboardEvent(WidgetKeyboardEvent& aKeyEvent,
-                                         GdkEventKey* aGdkKeyEvent)
-{
-    GetInstance()->WillDispatchKeyboardEventInternal(aKeyEvent, aGdkKeyEvent);
-=======
 /* static */
 uint32_t KeymapWrapper::GetDOMKeyCodeFromKeyPairs(guint aGdkKeyval) {
   switch (aGdkKeyval) {
@@ -4532,40 +2226,8 @@ uint32_t KeymapWrapper::GetDOMKeyCodeFromKeyPairs(guint aGdkKeyval) {
     default:
       return 0;
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void KeymapWrapper::WillDispatchKeyboardEventInternal(
-    WidgetKeyboardEvent& aKeyEvent, GdkEventKey* aGdkKeyEvent) {
-  if (!aGdkKeyEvent) {
-    // If aGdkKeyEvent is nullptr, we're trying to dispatch a fake keyboard
-    // event in such case, we don't need to set alternative char codes.
-    // So, we don't need to do nothing here.  This case is typically we're
-    // dispatching eKeyDown or eKeyUp event during composition.
-    return;
-  }
-
-  uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
-  if (!charCode) {
-    MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-||||||| merged common ancestors
-void
-KeymapWrapper::WillDispatchKeyboardEventInternal(WidgetKeyboardEvent& aKeyEvent,
-                                                 GdkEventKey* aGdkKeyEvent)
-{
-    if (!aGdkKeyEvent) {
-        // If aGdkKeyEvent is nullptr, we're trying to dispatch a fake keyboard
-        // event in such case, we don't need to set alternative char codes.
-        // So, we don't need to do nothing here.  This case is typically we're
-        // dispatching eKeyDown or eKeyUp event during composition.
-        return;
-    }
-
-    uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
-    if (!charCode) {
-        MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
-=======
 void KeymapWrapper::WillDispatchKeyboardEvent(WidgetKeyboardEvent& aKeyEvent,
                                               GdkEventKey* aGdkKeyEvent) {
   GetInstance()->WillDispatchKeyboardEventInternal(aKeyEvent, aGdkKeyEvent);
@@ -4584,7 +2246,6 @@ void KeymapWrapper::WillDispatchKeyboardEventInternal(
   uint32_t charCode = GetCharCodeFor(aGdkKeyEvent);
   if (!charCode) {
     MOZ_LOG(gKeymapWrapperLog, LogLevel::Info,
->>>>>>> upstream-releases
             ("%p WillDispatchKeyboardEventInternal, "
              "mKeyCode=0x%02X, charCode=0x%08X",
              this, aKeyEvent.mKeyCode, aKeyEvent.mCharCode));

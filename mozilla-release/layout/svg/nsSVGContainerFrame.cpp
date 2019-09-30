@@ -30,24 +30,10 @@ NS_QUERYFRAME_HEAD(nsSVGDisplayContainerFrame)
   NS_QUERYFRAME_ENTRY(nsSVGDisplayableFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsSVGContainerFrame)
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGContainerFrame(nsIPresShell* aPresShell,
-                                  ComputedStyle* aStyle) {
-  nsIFrame* frame = new (aPresShell)
-      nsSVGContainerFrame(aStyle, nsSVGContainerFrame::kClassID);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGContainerFrame(nsIPresShell* aPresShell,
-                        ComputedStyle* aStyle)
-{
-  nsIFrame* frame =
-    new (aPresShell) nsSVGContainerFrame(aStyle, nsSVGContainerFrame::kClassID);
-=======
 nsIFrame* NS_NewSVGContainerFrame(PresShell* aPresShell,
                                   ComputedStyle* aStyle) {
   nsIFrame* frame = new (aPresShell) nsSVGContainerFrame(
       aStyle, aPresShell->GetPresContext(), nsSVGContainerFrame::kClassID);
->>>>>>> upstream-releases
   // If we were called directly, then the frame is for a <defs> or
   // an unknown element type. In both cases we prevent the content
   // from displaying directly.
@@ -112,17 +98,8 @@ bool nsSVGContainerFrame::ComputeCustomOverflow(
  * frames and marks them NS_FRAME_IS_DIRTY so that the next time that they
  * are painted their anonymous kid will first get the necessary reflow.
  */
-<<<<<<< HEAD
-/* static */ void nsSVGContainerFrame::ReflowSVGNonDisplayText(
-    nsIFrame* aContainer) {
-||||||| merged common ancestors
-/* static */ void
-nsSVGContainerFrame::ReflowSVGNonDisplayText(nsIFrame* aContainer)
-{
-=======
 /* static */
 void nsSVGContainerFrame::ReflowSVGNonDisplayText(nsIFrame* aContainer) {
->>>>>>> upstream-releases
   if (!(aContainer->GetStateBits() & NS_FRAME_IS_DIRTY)) {
     return;
   }
@@ -144,24 +121,10 @@ void nsSVGContainerFrame::ReflowSVGNonDisplayText(nsIFrame* aContainer) {
   }
 }
 
-<<<<<<< HEAD
-void nsSVGDisplayContainerFrame::Init(nsIContent* aContent,
-                                      nsContainerFrame* aParent,
-                                      nsIFrame* aPrevInFlow) {
-  if (!(GetStateBits() & NS_STATE_IS_OUTER_SVG)) {
-||||||| merged common ancestors
-void
-nsSVGDisplayContainerFrame::Init(nsIContent*       aContent,
-                                 nsContainerFrame* aParent,
-                                 nsIFrame*         aPrevInFlow)
-{
-  if (!(GetStateBits() & NS_STATE_IS_OUTER_SVG)) {
-=======
 void nsSVGDisplayContainerFrame::Init(nsIContent* aContent,
                                       nsContainerFrame* aParent,
                                       nsIFrame* aPrevInFlow) {
   if (!IsSVGOuterSVGFrame()) {
->>>>>>> upstream-releases
     AddStateBits(aParent->GetStateBits() & NS_STATE_SVG_CLIPPATH_CHILD);
   }
   nsSVGContainerFrame::Init(aContent, aParent, aPrevInFlow);
@@ -226,13 +189,7 @@ void nsSVGDisplayContainerFrame::RemoveFrame(ChildListID aListID,
   // need to schedule a repaint and schedule an update to our overflow rects.
   SchedulePaint();
   PresContext()->RestyleManager()->PostRestyleEvent(
-<<<<<<< HEAD
-      mContent->AsElement(), nsRestyleHint(0), nsChangeHint_UpdateOverflow);
-||||||| merged common ancestors
-    mContent->AsElement(), nsRestyleHint(0), nsChangeHint_UpdateOverflow);
-=======
       mContent->AsElement(), RestyleHint{0}, nsChangeHint_UpdateOverflow);
->>>>>>> upstream-releases
 
   nsSVGContainerFrame::RemoveFrame(aListID, aOldFrame);
 }
@@ -252,19 +209,9 @@ bool nsSVGDisplayContainerFrame::IsSVGTransformed(
 
   // mContent could be a XUL element so check for an SVG element before casting
   if (mContent->IsSVGElement()) {
-<<<<<<< HEAD
-    nsSVGElement* content = static_cast<nsSVGElement*>(GetContent());
-    nsSVGAnimatedTransformList* transformList =
-        content->GetAnimatedTransformList();
-||||||| merged common ancestors
-    nsSVGElement *content = static_cast<nsSVGElement*>(GetContent());
-    nsSVGAnimatedTransformList* transformList =
-      content->GetAnimatedTransformList();
-=======
     SVGElement* content = static_cast<SVGElement*>(GetContent());
     SVGAnimatedTransformList* transformList =
         content->GetAnimatedTransformList();
->>>>>>> upstream-releases
     if ((transformList && transformList->HasTransform()) ||
         content->GetAnimateMotionTransform()) {
       if (aOwnTransform) {
@@ -295,19 +242,9 @@ void nsSVGDisplayContainerFrame::PaintSVG(gfxContext& aContext,
   }
 
   gfxMatrix matrix = aTransform;
-<<<<<<< HEAD
-  if (GetContent()->IsSVGElement()) {  // must check before cast
-    matrix = static_cast<const nsSVGElement*>(GetContent())
-                 ->PrependLocalTransformsTo(matrix, eChildToUserSpace);
-||||||| merged common ancestors
-  if (GetContent()->IsSVGElement()) { // must check before cast
-    matrix = static_cast<const nsSVGElement*>(GetContent())->
-               PrependLocalTransformsTo(matrix, eChildToUserSpace);
-=======
   if (GetContent()->IsSVGElement()) {  // must check before cast
     matrix = static_cast<const SVGElement*>(GetContent())
                  ->PrependLocalTransformsTo(matrix, eChildToUserSpace);
->>>>>>> upstream-releases
     if (matrix.IsSingular()) {
       return;
     }
@@ -318,16 +255,8 @@ void nsSVGDisplayContainerFrame::PaintSVG(gfxContext& aContext,
     // PaintFrameWithEffects() expects the transform that is passed to it to
     // include the transform to the passed frame's user space, so add it:
     const nsIContent* content = kid->GetContent();
-<<<<<<< HEAD
-    if (content->IsSVGElement()) {  // must check before cast
-      const nsSVGElement* element = static_cast<const nsSVGElement*>(content);
-||||||| merged common ancestors
-    if (content->IsSVGElement()) { // must check before cast
-      const nsSVGElement* element = static_cast<const nsSVGElement*>(content);
-=======
     if (content->IsSVGElement()) {  // must check before cast
       const SVGElement* element = static_cast<const SVGElement*>(content);
->>>>>>> upstream-releases
       if (!element->HasValidDimensions()) {
         continue;  // nothing to paint for kid
       }
@@ -455,33 +384,14 @@ SVGBBox nsSVGDisplayContainerFrame::GetBBoxContribution(
     nsIContent* content = kid->GetContent();
     nsSVGDisplayableFrame* svgKid = do_QueryFrame(kid);
     // content could be a XUL element so check for an SVG element before casting
-<<<<<<< HEAD
-    if (svgKid &&
-        (!content->IsSVGElement() ||
-         static_cast<const nsSVGElement*>(content)->HasValidDimensions())) {
-||||||| merged common ancestors
-    if (svgKid && (!content->IsSVGElement() ||
-                   static_cast<const nsSVGElement*>(content)->HasValidDimensions())) {
-
-=======
     if (svgKid &&
         (!content->IsSVGElement() ||
          static_cast<const SVGElement*>(content)->HasValidDimensions())) {
->>>>>>> upstream-releases
       gfxMatrix transform = gfx::ThebesMatrix(aToBBoxUserspace);
       if (content->IsSVGElement()) {
-<<<<<<< HEAD
-        transform =
-            static_cast<nsSVGElement*>(content)->PrependLocalTransformsTo(
-                transform);
-||||||| merged common ancestors
-        transform = static_cast<nsSVGElement*>(content)->
-                      PrependLocalTransformsTo(transform);
-=======
         transform = static_cast<SVGElement*>(content)->PrependLocalTransformsTo(
                         {}, eChildToUserSpace) *
                     nsSVGUtils::GetTransformMatrixInUserSpace(kid) * transform;
->>>>>>> upstream-releases
       }
       // We need to include zero width/height vertical/horizontal lines, so we
       // have to use UnionEdges.
@@ -498,18 +408,9 @@ gfxMatrix nsSVGDisplayContainerFrame::GetCanvasTM() {
   if (!mCanvasTM) {
     NS_ASSERTION(GetParent(), "null parent");
 
-<<<<<<< HEAD
-    nsSVGContainerFrame* parent =
-        static_cast<nsSVGContainerFrame*>(GetParent());
-    nsSVGElement* content = static_cast<nsSVGElement*>(GetContent());
-||||||| merged common ancestors
-    nsSVGContainerFrame *parent = static_cast<nsSVGContainerFrame*>(GetParent());
-    nsSVGElement *content = static_cast<nsSVGElement*>(GetContent());
-=======
     nsSVGContainerFrame* parent =
         static_cast<nsSVGContainerFrame*>(GetParent());
     SVGElement* content = static_cast<SVGElement*>(GetContent());
->>>>>>> upstream-releases
 
     gfxMatrix tm = content->PrependLocalTransformsTo(parent->GetCanvasTM());
 

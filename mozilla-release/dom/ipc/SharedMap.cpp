@@ -44,17 +44,8 @@ SharedMap::SharedMap(nsIGlobalObject* aGlobal, const FileDescriptor& aMapFile,
   mMapSize = aMapSize;
 }
 
-<<<<<<< HEAD
-bool SharedMap::Has(const nsACString& aName) {
-||||||| merged common ancestors
-
-bool
-SharedMap::Has(const nsACString& aName)
-{
-=======
 bool SharedMap::Has(const nsACString& aName) {
   Unused << MaybeRebuild();
->>>>>>> upstream-releases
   return mEntries.Contains(aName);
 }
 
@@ -425,23 +416,11 @@ nsresult WritableSharedMap::KeyChanged(const nsACString& aName) {
   mEntryArray.reset();
 
   if (!mPendingFlush) {
-<<<<<<< HEAD
-    MOZ_TRY(NS_IdleDispatchToCurrentThread(NewRunnableMethod(
-        "WritableSharedMap::IdleFlush", this, &WritableSharedMap::IdleFlush)));
-    mPendingFlush = true;
-||||||| merged common ancestors
-      MOZ_TRY(NS_IdleDispatchToCurrentThread(
-        NewRunnableMethod("WritableSharedMap::IdleFlush",
-                          this,
-                          &WritableSharedMap::IdleFlush)));
-      mPendingFlush = true;
-=======
     MOZ_TRY(NS_DispatchToCurrentThreadQueue(
         NewRunnableMethod("WritableSharedMap::IdleFlush", this,
                           &WritableSharedMap::IdleFlush),
         EventQueuePriority::Idle));
     mPendingFlush = true;
->>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -455,23 +434,10 @@ JSObject* WritableSharedMap::WrapObject(JSContext* aCx,
   return MozWritableSharedMap_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<SharedMapChangeEvent>
-SharedMapChangeEvent::Constructor(EventTarget* aEventTarget,
-                                  const nsAString& aType,
-                                  const MozSharedMapChangeEventInit& aInit) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<SharedMapChangeEvent>
-SharedMapChangeEvent::Constructor(EventTarget* aEventTarget,
-                                  const nsAString& aType,
-                                  const MozSharedMapChangeEventInit& aInit)
-{
-=======
 /* static */
 already_AddRefed<SharedMapChangeEvent> SharedMapChangeEvent::Constructor(
     EventTarget* aEventTarget, const nsAString& aType,
     const MozSharedMapChangeEventInit& aInit) {
->>>>>>> upstream-releases
   RefPtr<SharedMapChangeEvent> event = new SharedMapChangeEvent(aEventTarget);
 
   bool trusted = event->Init(aEventTarget);

@@ -4,36 +4,11 @@
 
 //! Helper to iterate over `OriginFlags` bits.
 
-<<<<<<< HEAD
-use crate::gecko_bindings::structs::OriginFlags;
-use crate::gecko_bindings::structs::OriginFlags_Author;
-use crate::gecko_bindings::structs::OriginFlags_User;
-use crate::gecko_bindings::structs::OriginFlags_UserAgent;
-use crate::stylesheets::OriginSet;
-||||||| merged common ancestors
-use gecko_bindings::structs::OriginFlags;
-use gecko_bindings::structs::OriginFlags_Author;
-use gecko_bindings::structs::OriginFlags_User;
-use gecko_bindings::structs::OriginFlags_UserAgent;
-use stylesheets::OriginSet;
-=======
 use crate::gecko_bindings::structs::OriginFlags;
 use crate::stylesheets::OriginSet;
->>>>>>> upstream-releases
 
 /// Checks that the values for OriginFlags are the ones we expect.
 pub fn assert_flags_match() {
-<<<<<<< HEAD
-    use crate::stylesheets::origin::*;
-    debug_assert_eq!(OriginFlags_UserAgent.0, OriginSet::ORIGIN_USER_AGENT.bits());
-    debug_assert_eq!(OriginFlags_Author.0, OriginSet::ORIGIN_AUTHOR.bits());
-    debug_assert_eq!(OriginFlags_User.0, OriginSet::ORIGIN_USER.bits());
-||||||| merged common ancestors
-    use stylesheets::origin::*;
-    debug_assert_eq!(OriginFlags_UserAgent.0, OriginSet::ORIGIN_USER_AGENT.bits());
-    debug_assert_eq!(OriginFlags_Author.0, OriginSet::ORIGIN_AUTHOR.bits());
-    debug_assert_eq!(OriginFlags_User.0, OriginSet::ORIGIN_USER.bits());
-=======
     use crate::stylesheets::origin::*;
     debug_assert_eq!(
         OriginFlags::UserAgent.0,
@@ -41,7 +16,6 @@ pub fn assert_flags_match() {
     );
     debug_assert_eq!(OriginFlags::Author.0, OriginSet::ORIGIN_AUTHOR.bits());
     debug_assert_eq!(OriginFlags::User.0, OriginSet::ORIGIN_USER.bits());
->>>>>>> upstream-releases
 }
 
 impl From<OriginFlags> for OriginSet {

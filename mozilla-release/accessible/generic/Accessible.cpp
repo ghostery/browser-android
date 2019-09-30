@@ -266,17 +266,8 @@ KeyBinding Accessible::AccessKey() const {
   }
 
   // Determine the access modifier used in this context.
-<<<<<<< HEAD
-  nsIDocument* document = mContent->GetUncomposedDoc();
-  if (!document) return KeyBinding();
-||||||| merged common ancestors
-  nsIDocument* document = mContent->GetUncomposedDoc();
-  if (!document)
-    return KeyBinding();
-=======
   dom::Document* document = mContent->GetUncomposedDoc();
   if (!document) return KeyBinding();
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIDocShellTreeItem> treeItem(document->GetDocShell());
   if (!treeItem) return KeyBinding();
@@ -325,16 +316,6 @@ uint64_t Accessible::VisibilityState() const {
     return states::INVISIBLE;
   }
 
-<<<<<<< HEAD
-  // Walk the parent frame chain to see if there's invisible parent or the frame
-  // is in background tab.
-  if (!frame->StyleVisibility()->IsVisible()) return states::INVISIBLE;
-||||||| merged common ancestors
-  // Walk the parent frame chain to see if there's invisible parent or the frame
-  // is in background tab.
-  if (!frame->StyleVisibility()->IsVisible())
-    return states::INVISIBLE;
-=======
   if (!frame->StyleVisibility()->IsVisible()) return states::INVISIBLE;
 
   // It's invisible if the presshell is hidden by a visibility:hidden element in
@@ -342,7 +323,6 @@ uint64_t Accessible::VisibilityState() const {
   if (frame->PresShell()->IsUnderHiddenEmbedderElement()) {
     return states::INVISIBLE;
   }
->>>>>>> upstream-releases
 
   // Offscreen state if the document's visibility state is not visible.
   if (Document()->IsHidden()) return states::OFFSCREEN;
@@ -405,19 +385,9 @@ uint64_t Accessible::VisibilityState() const {
   // text invisible?
   if (frame->IsTextFrame() && !(frame->GetStateBits() & NS_FRAME_OUT_OF_FLOW) &&
       frame->GetRect().IsEmpty()) {
-<<<<<<< HEAD
-    nsIFrame::RenderedText text = frame->GetRenderedText(
-        0, UINT32_MAX, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
-        nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
-||||||| merged common ancestors
-    nsIFrame::RenderedText text = frame->GetRenderedText(0,
-        UINT32_MAX, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
-        nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
-=======
     nsIFrame::RenderedText text = frame->GetRenderedText(
         0, UINT32_MAX, nsIFrame::TextOffsetType::OffsetsInContentText,
         nsIFrame::TrailingWhitespace::DontTrim);
->>>>>>> upstream-releases
     if (text.mString.IsEmpty()) {
       return states::INVISIBLE;
     }
@@ -702,14 +672,7 @@ nsRect Accessible::BoundsInAppUnits() const {
   // We need to take into account a non-1 resolution set on the presshell.
   // This happens in mobile platforms with async pinch zooming. Here we
   // scale the bounds before adding the screen-relative offset.
-<<<<<<< HEAD
-  unionRectTwips.ScaleRoundOut(
-      mDoc->PresContext()->PresShell()->GetResolution());
-||||||| merged common ancestors
-  unionRectTwips.ScaleRoundOut(mDoc->PresContext()->PresShell()->GetResolution());
-=======
   unionRectTwips.ScaleRoundOut(presShell->GetResolution());
->>>>>>> upstream-releases
   // We have the union of the rectangle, now we need to put it in absolute
   // screen coords.
   nsRect orgRectPixels = boundingFrame->GetScreenRectInAppUnits();
@@ -780,14 +743,7 @@ void Accessible::TakeFocus() const {
 
   nsFocusManager* fm = nsFocusManager::GetFocusManager();
   if (fm) {
-<<<<<<< HEAD
-    AutoHandlingUserInputStatePusher inputStatePusher(true, nullptr,
-                                                      focusContent->OwnerDoc());
-||||||| merged common ancestors
-    AutoHandlingUserInputStatePusher inputStatePusher(true, nullptr, focusContent->OwnerDoc());
-=======
     AutoHandlingUserInputStatePusher inputStatePusher(true);
->>>>>>> upstream-releases
     // XXXbz: Can we actually have a non-element content here?
     RefPtr<Element> element =
         focusContent->IsElement() ? focusContent->AsElement() : nullptr;
@@ -923,18 +879,6 @@ nsresult Accessible::HandleAccEvent(AccEvent* aEvent) {
         case nsIAccessibleEvent::EVENT_TEXT_INSERTED:
         case nsIAccessibleEvent::EVENT_TEXT_REMOVED: {
           AccTextChangeEvent* event = downcast_accEvent(aEvent);
-<<<<<<< HEAD
-          ipcDoc->SendTextChangeEvent(
-              id, event->ModifiedText(), event->GetStartOffset(),
-              event->GetLength(), event->IsTextInserted(),
-              event->IsFromUserInput());
-||||||| merged common ancestors
-          ipcDoc->SendTextChangeEvent(id, event->ModifiedText(),
-                                      event->GetStartOffset(),
-                                      event->GetLength(),
-                                      event->IsTextInserted(),
-                                      event->IsFromUserInput());
-=======
           const nsString& text = event->ModifiedText();
 #if defined(XP_WIN)
           // On Windows, events for live region updates containing embedded
@@ -952,7 +896,6 @@ nsresult Accessible::HandleAccEvent(AccEvent* aEvent) {
                                       sync
 #endif
           );
->>>>>>> upstream-releases
           break;
         }
         case nsIAccessibleEvent::EVENT_SELECTION:
@@ -990,16 +933,6 @@ nsresult Accessible::HandleAccEvent(AccEvent* aEvent) {
         case nsIAccessibleEvent::EVENT_SCROLLING_END:
         case nsIAccessibleEvent::EVENT_SCROLLING: {
           AccScrollingEvent* scrollingEvent = downcast_accEvent(aEvent);
-<<<<<<< HEAD
-          ipcDoc->SendScrollingEvent(
-              id, aEvent->GetEventType(), scrollingEvent->ScrollX(),
-              scrollingEvent->ScrollY(), scrollingEvent->MaxScrollX(),
-              scrollingEvent->MaxScrollY());
-||||||| merged common ancestors
-          ipcDoc->SendScrollingEvent(id, aEvent->GetEventType(),
-            scrollingEvent->ScrollX(), scrollingEvent->ScrollY(),
-            scrollingEvent->MaxScrollX(), scrollingEvent->MaxScrollY());
-=======
           ipcDoc->SendScrollingEvent(
               id, aEvent->GetEventType(), scrollingEvent->ScrollX(),
               scrollingEvent->ScrollY(), scrollingEvent->MaxScrollX(),
@@ -1011,7 +944,6 @@ nsresult Accessible::HandleAccEvent(AccEvent* aEvent) {
           AccAnnouncementEvent* announcementEvent = downcast_accEvent(aEvent);
           ipcDoc->SendAnnouncementEvent(id, announcementEvent->Announcement(),
                                         announcementEvent->Priority());
->>>>>>> upstream-releases
           break;
         }
 #endif
@@ -1134,17 +1066,8 @@ already_AddRefed<nsIPersistentProperties> Accessible::NativeAttributes() {
   // override properties on a widget they used in an iframe.
   nsIContent* startContent = mContent;
   while (startContent) {
-<<<<<<< HEAD
-    nsIDocument* doc = startContent->GetComposedDoc();
-    if (!doc) break;
-||||||| merged common ancestors
-    nsIDocument* doc = startContent->GetComposedDoc();
-    if (!doc)
-      break;
-=======
     dom::Document* doc = startContent->GetComposedDoc();
     if (!doc) break;
->>>>>>> upstream-releases
 
     nsAccUtils::SetLiveContainerAttributes(attributes, startContent,
                                            doc->GetRootElement());
@@ -1157,17 +1080,8 @@ already_AddRefed<nsIPersistentProperties> Accessible::NativeAttributes() {
     docShellTreeItem->GetSameTypeParent(getter_AddRefs(sameTypeParent));
     if (!sameTypeParent || sameTypeParent == docShellTreeItem) break;
 
-<<<<<<< HEAD
-    nsIDocument* parentDoc = doc->GetParentDocument();
-    if (!parentDoc) break;
-||||||| merged common ancestors
-    nsIDocument* parentDoc = doc->GetParentDocument();
-    if (!parentDoc)
-      break;
-=======
     dom::Document* parentDoc = doc->GetParentDocument();
     if (!parentDoc) break;
->>>>>>> upstream-releases
 
     startContent = parentDoc->FindContentForSubDocument(doc);
   }
@@ -1829,26 +1743,11 @@ Relation Accessible::RelationByType(RelationType aType) const {
         nsIContent* buttonEl = nullptr;
         if (doc->AllowXULXBL()) {
           nsCOMPtr<nsIHTMLCollection> possibleDefaultButtons =
-<<<<<<< HEAD
-              xulDoc->GetElementsByAttribute(NS_LITERAL_STRING("default"),
-                                             NS_LITERAL_STRING("true"));
-||||||| merged common ancestors
-            xulDoc->GetElementsByAttribute(NS_LITERAL_STRING("default"),
-                                           NS_LITERAL_STRING("true"));
-=======
               doc->GetElementsByAttribute(NS_LITERAL_STRING("default"),
                                           NS_LITERAL_STRING("true"));
->>>>>>> upstream-releases
           if (possibleDefaultButtons) {
             uint32_t length = possibleDefaultButtons->Length();
             // Check for button in list of default="true" elements
-<<<<<<< HEAD
-            for (uint32_t count = 0; count < length && !buttonEl; count++) {
-              buttonEl = do_QueryInterface(possibleDefaultButtons->Item(count));
-||||||| merged common ancestors
-            for (uint32_t count = 0; count < length && !buttonEl; count ++) {
-              buttonEl = do_QueryInterface(possibleDefaultButtons->Item(count));
-=======
             for (uint32_t count = 0; count < length && !buttonEl; count++) {
               nsIContent* item = possibleDefaultButtons->Item(count);
               RefPtr<nsIDOMXULButtonElement> button =
@@ -1857,23 +1756,11 @@ Relation Accessible::RelationByType(RelationType aType) const {
               if (button) {
                 buttonEl = item;
               }
->>>>>>> upstream-releases
             }
           }
           if (!buttonEl) {  // Check for anonymous accept button in <dialog>
             dom::Element* rootElm = mContent->OwnerDoc()->GetRootElement();
             if (rootElm) {
-<<<<<<< HEAD
-              nsIContent* possibleButtonEl =
-                  rootElm->OwnerDoc()->GetAnonymousElementByAttribute(
-                      rootElm, nsGkAtoms::_default, NS_LITERAL_STRING("true"));
-              buttonEl = do_QueryInterface(possibleButtonEl);
-||||||| merged common ancestors
-              nsIContent* possibleButtonEl = rootElm->OwnerDoc()->
-                GetAnonymousElementByAttribute(rootElm, nsGkAtoms::_default,
-                                               NS_LITERAL_STRING("true"));
-              buttonEl = do_QueryInterface(possibleButtonEl);
-=======
               nsIContent* possibleButtonEl =
                   rootElm->OwnerDoc()->GetAnonymousElementByAttribute(
                       rootElm, nsGkAtoms::_default, NS_LITERAL_STRING("true"));
@@ -1884,7 +1771,6 @@ Relation Accessible::RelationByType(RelationType aType) const {
                   buttonEl = possibleButtonEl;
                 }
               }
->>>>>>> upstream-releases
             }
           }
           return Relation(mDoc, buttonEl);
@@ -1945,29 +1831,6 @@ void Accessible::DoCommand(nsIContent* aContent, uint32_t aActionIndex) const {
   class Runnable final : public mozilla::Runnable {
    public:
     Runnable(const Accessible* aAcc, nsIContent* aContent, uint32_t aIdx)
-<<<<<<< HEAD
-        : mozilla::Runnable("Runnable"),
-          mAcc(aAcc),
-          mContent(aContent),
-          mIdx(aIdx) {}
-
-    NS_IMETHOD Run() override {
-      if (mAcc) mAcc->DispatchClickEvent(mContent, mIdx);
-
-||||||| merged common ancestors
-      : mozilla::Runnable("Runnable")
-      , mAcc(aAcc)
-      , mContent(aContent)
-      , mIdx(aIdx)
-    {
-    }
-
-    NS_IMETHOD Run() override
-    {
-      if (mAcc)
-        mAcc->DispatchClickEvent(mContent, mIdx);
-
-=======
         : mozilla::Runnable("Runnable"),
           mAcc(aAcc),
           mContent(aContent),
@@ -1979,7 +1842,6 @@ void Accessible::DoCommand(nsIContent* aContent, uint32_t aActionIndex) const {
       if (mAcc) {
         MOZ_KnownLive(mAcc)->DispatchClickEvent(MOZ_KnownLive(mContent), mIdx);
       }
->>>>>>> upstream-releases
       return NS_OK;
     }
 
@@ -2006,19 +1868,8 @@ void Accessible::DispatchClickEvent(nsIContent* aContent,
   RefPtr<PresShell> presShell = mDoc->PresShellPtr();
 
   // Scroll into view.
-<<<<<<< HEAD
-  presShell->ScrollContentIntoView(aContent, nsIPresShell::ScrollAxis(),
-                                   nsIPresShell::ScrollAxis(),
-                                   nsIPresShell::SCROLL_OVERFLOW_HIDDEN);
-||||||| merged common ancestors
-  presShell->ScrollContentIntoView(aContent,
-                                   nsIPresShell::ScrollAxis(),
-                                   nsIPresShell::ScrollAxis(),
-                                   nsIPresShell::SCROLL_OVERFLOW_HIDDEN);
-=======
   presShell->ScrollContentIntoView(aContent, ScrollAxis(), ScrollAxis(),
                                    ScrollFlags::ScrollOverflowHidden);
->>>>>>> upstream-releases
 
   AutoWeakFrame frame = aContent->GetPrimaryFrame();
   if (!frame) return;

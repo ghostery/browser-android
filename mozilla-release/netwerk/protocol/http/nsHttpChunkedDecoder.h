@@ -25,63 +25,21 @@ class nsHttpChunkedDecoder {
 
   bool ReachedEOF() { return mReachedEOF; }
 
-<<<<<<< HEAD
-  // called by the transaction to handle chunked content.
-  MOZ_MUST_USE nsresult HandleChunkedContent(char *buf, uint32_t count,
-                                             uint32_t *contentRead,
-                                             uint32_t *contentRemaining);
-||||||| merged common ancestors
-    // called by the transaction to handle chunked content.
-    MOZ_MUST_USE nsresult HandleChunkedContent(char *buf,
-                                               uint32_t count,
-                                               uint32_t *contentRead,
-                                               uint32_t *contentRemaining);
-=======
   // called by the transaction to handle chunked content.
   MOZ_MUST_USE nsresult HandleChunkedContent(char* buf, uint32_t count,
                                              uint32_t* contentRead,
                                              uint32_t* contentRemaining);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsHttpHeaderArray *Trailers() { return mTrailers.get(); }
-||||||| merged common ancestors
-    nsHttpHeaderArray *Trailers() { return mTrailers.get(); }
-=======
   nsHttpHeaderArray* Trailers() { return mTrailers.get(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsHttpHeaderArray *TakeTrailers() { return mTrailers.forget(); }
-||||||| merged common ancestors
-    nsHttpHeaderArray *TakeTrailers() { return mTrailers.forget(); }
-=======
   nsHttpHeaderArray* TakeTrailers() { return mTrailers.forget(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t GetChunkRemaining() { return mChunkRemaining; }
-||||||| merged common ancestors
-    uint32_t GetChunkRemaining() { return mChunkRemaining; }
-=======
   // How mush data is still missing(needs to arrive) from the current chunk.
   uint32_t GetChunkRemaining() { return mChunkRemaining; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  MOZ_MUST_USE nsresult ParseChunkRemaining(char *buf, uint32_t count,
-                                            uint32_t *countRead);
-||||||| merged common ancestors
-private:
-    MOZ_MUST_USE nsresult ParseChunkRemaining(char *buf,
-                                              uint32_t count,
-                                              uint32_t *countRead);
-=======
  private:
   MOZ_MUST_USE nsresult ParseChunkRemaining(char* buf, uint32_t count,
                                             uint32_t* countRead);
->>>>>>> upstream-releases
 
  private:
   nsAutoPtr<nsHttpHeaderArray> mTrailers;

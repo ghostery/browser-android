@@ -191,14 +191,8 @@ class XULTreeItemAccessibleBase : public AccessibleWrap {
   enum { eAction_Click = 0, eAction_Expand = 1 };
 
   // Accessible
-<<<<<<< HEAD
-  virtual void DispatchClickEvent(nsIContent* aContent,
-||||||| merged common ancestors
-  virtual void DispatchClickEvent(nsIContent *aContent,
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void DispatchClickEvent(nsIContent* aContent,
->>>>>>> upstream-releases
                                   uint32_t aActionIndex) const override;
   virtual Accessible* GetSiblingAtOffset(
       int32_t aOffset, nsresult* aError = nullptr) const override;

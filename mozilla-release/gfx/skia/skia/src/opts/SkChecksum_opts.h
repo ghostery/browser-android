@@ -17,18 +17,8 @@
     #include <arm_acle.h>
 #endif
 
-#include "../jumper/SkJumper_misc.h"
-
-<<<<<<< HEAD
 namespace SK_OPTS_NS {
-||||||| merged common ancestors
-template <typename T>
-static inline T unaligned_load(const uint8_t* src) {
-    T val;
-    memcpy(&val, src, sizeof(val));
-    return val;
-}
-=======
+
 #define unaligned_load checksum_unaligned_load
 template <typename T, typename P>
 static inline T unaligned_load(const P* p) {
@@ -36,7 +26,6 @@ static inline T unaligned_load(const P* p) {
     memcpy(&v, p, sizeof(v));
     return v;
 }
->>>>>>> upstream-releases
 
 #if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE42 && (defined(__x86_64__) || defined(_M_X64))
     // This is not a CRC32.  It's Just A Hash that uses those instructions because they're fast.

@@ -9,13 +9,6 @@ include protocol PColorPicker;
 include protocol PContent;
 include protocol PDocAccessible;
 include protocol PFilePicker;
-<<<<<<< HEAD
-include protocol PIndexedDBPermissionRequest;
-||||||| merged common ancestors
-include protocol PIndexedDBPermissionRequest;
-include protocol PRenderFrame;
-=======
->>>>>>> upstream-releases
 include protocol PPluginWidget;
 include protocol PRemotePrintJob;
 include protocol PChildToParentStream;
@@ -23,13 +16,8 @@ include protocol PParentToChildStream;
 include protocol PFileDescriptorSet;
 include protocol PIPCBlobInputStream;
 include protocol PPaymentRequest;
-<<<<<<< HEAD
-include protocol PWindowGlobal;
-||||||| merged common ancestors
-=======
 include protocol PWindowGlobal;
 include protocol PBrowserBridge;
->>>>>>> upstream-releases
 
 include DOMTypes;
 include IPCBlob;
@@ -98,14 +86,9 @@ using class mozilla::NativeEventData from "ipc/nsGUIEventIPC.h";
 using mozilla::FontRange from "ipc/nsGUIEventIPC.h";
 using mozilla::a11y::IAccessibleHolder from "mozilla/a11y/IPCTypes.h";
 using mozilla::OriginAttributes from "mozilla/ipc/BackgroundUtils.h";
-<<<<<<< HEAD
-using mozilla::dom::BrowsingContextId from "mozilla/dom/ipc/IdType.h";
-||||||| merged common ancestors
-=======
 using refcounted class mozilla::dom::BrowsingContext from "mozilla/dom/BrowsingContext.h";
 using mozilla::dom::EffectsInfo from "mozilla/dom/TabMessageUtils.h";
 using mozilla::dom::TabId from "mozilla/dom/ipc/IdType.h";
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -182,41 +165,15 @@ nested(upto inside_cpow) sync protocol PBrowser
     manages PColorPicker;
     manages PDocAccessible;
     manages PFilePicker;
-<<<<<<< HEAD
-    manages PIndexedDBPermissionRequest;
-||||||| merged common ancestors
-    manages PIndexedDBPermissionRequest;
-    manages PRenderFrame;
-=======
->>>>>>> upstream-releases
     manages PPluginWidget;
     manages PPaymentRequest;
-<<<<<<< HEAD
-    manages PWindowGlobal;
-||||||| merged common ancestors
-=======
     manages PWindowGlobal;
     manages PBrowserBridge;
->>>>>>> upstream-releases
 
 both:
     async AsyncMessage(nsString aMessage, CpowEntry[] aCpows,
-<<<<<<< HEAD
-                       Principal aPrincipal, ClonedMessageData aData);
-
-||||||| merged common ancestors
-                       Principal aPrincipal, ClonedMessageData aData);
-
-    /**
-     * Create a layout frame (encapsulating a remote layer tree) for
-     * the page that is currently loaded in the <browser>.
-     */
-    async PRenderFrame();
-
-=======
                        nsIPrincipal aPrincipal, ClonedMessageData aData);
 
->>>>>>> upstream-releases
 parent:
     /**
      * Tell the parent process a new accessible document has been created.
@@ -239,15 +196,6 @@ parent:
     async PPaymentRequest();
 
     /**
-<<<<<<< HEAD
-     * Construct a new WindowGlobal actor for a window global in the given
-     * BrowsingContext and with the given principal.
-     */
-    async PWindowGlobal(WindowGlobalInit init);
-
-    /**
-||||||| merged common ancestors
-=======
      * Construct a new WindowGlobal actor for a window global in the given
      * BrowsingContext and with the given principal.
      */
@@ -261,7 +209,6 @@ parent:
                          TabId tabId);
 
     /**
->>>>>>> upstream-releases
      * Sends an NS_NATIVE_CHILD_OF_SHAREABLE_WINDOW to be adopted by the
      * widget's shareable window on the chrome side. Only used on Windows.
      */
@@ -546,17 +493,9 @@ parent:
      *
      * @param opener the PBrowser whose content called window.open.
      */
-<<<<<<< HEAD
-    async BrowserFrameOpenWindow(PBrowser opener,
-                                 nsString aURL, nsString aName, nsString aFeatures)
-||||||| merged common ancestors
-    async BrowserFrameOpenWindow(PBrowser opener, PRenderFrame renderFrame,
-                                 nsString aURL, nsString aName, nsString aFeatures)
-=======
     async BrowserFrameOpenWindow(PBrowser opener,
                                  nsString aURL, nsString aName,
                                  bool aForceNoReferrer, nsString aFeatures)
->>>>>>> upstream-releases
         returns (CreatedWindowInfo window);
 
     /**
@@ -749,17 +688,11 @@ parent:
     sync SetPrefersReducedMotionOverrideForTest(bool aValue);
     sync ResetPrefersReducedMotionOverrideForTest();
 
-<<<<<<< HEAD
-    async RootBrowsingContext(BrowsingContextId aId);
-
-||||||| merged common ancestors
-=======
     /**
      * Fire a `load` event on this PBrowser's embedding frame element.
      */
     async FireFrameLoadEvent(bool aIsTrusted);
 
->>>>>>> upstream-releases
 child:
     /**
      * Notify the remote browser that it has been Show()n on this
@@ -1071,22 +1004,6 @@ child:
      */
     async SetWidgetNativeData(WindowsHandle aHandle);
 
-<<<<<<< HEAD
-    /**
-     * Requests the content blocking log, which is sent back in response.
-     */
-    async GetContentBlockingLog() returns(nsString log, bool success);
-
-parent:
-    /** Records a history visit. */
-    async VisitURI(URIParams aURI, OptionalURIParams aLastVisitedURI,
-                   uint32_t aFlags);
-
-    /** Fetches the visited status for an array of URIs (Android-only). */
-    async QueryVisitedState(URIParams[] aURIs);
-
-||||||| merged common ancestors
-=======
     /**
      * Requests the content blocking log, which is sent back in response.
      */
@@ -1101,7 +1018,6 @@ parent:
     /** Fetches the visited status for an array of URIs (Android-only). */
     async QueryVisitedState(URIParams[] aURIs);
 
->>>>>>> upstream-releases
 /*
  * FIXME: write protocol!
 

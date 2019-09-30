@@ -10,13 +10,7 @@
       class="subcategory"
       hidden="true"
       data-category="paneSync">
-<<<<<<< HEAD
-  <html:h1 data-l10n-id="pane-sync-title"/>
-||||||| merged common ancestors
-  <label class="header-name" flex="1" data-l10n-id="pane-sync-title" />
-=======
   <html:h1 data-l10n-id="pane-sync-title2"/>
->>>>>>> upstream-releases
 </hbox>
 
 <deck id="weavePrefsDeck" data-category="paneSync" hidden="true"
@@ -76,13 +70,7 @@
     <hbox>
       <vbox id="fxaContentWrapper" flex="1">
         <groupbox id="fxaGroup">
-<<<<<<< HEAD
-          <label class="search-header" hidden="true"><html:h2 data-l10n-id="pane-sync-title"/></label>
-||||||| merged common ancestors
-          <caption class="search-header" hidden="true"><label data-l10n-id="pane-sync-title"/></caption>
-=======
           <label class="search-header" hidden="true"><html:h2 data-l10n-id="pane-sync-title2"/></label>
->>>>>>> upstream-releases
 
           <deck id="fxaLoginStatus" flex="1">
 

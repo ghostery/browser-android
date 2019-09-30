@@ -61,37 +61,6 @@ class nsTypeAheadFind : public nsITypeAheadFind,
                     mozilla::dom::Selection** aDomSel);
   // *aNewRange may not be collapsed.  If you want to collapse it in a
   // particular way, you need to do it yourself.
-<<<<<<< HEAD
-  bool IsRangeVisible(nsIPresShell *aPresShell, nsPresContext *aPresContext,
-                      nsRange *aRange, bool aMustBeVisible,
-                      bool aGetTopVisibleLeaf, nsRange **aNewRange,
-                      bool *aUsesIndependentSelection);
-  bool IsRangeRendered(nsIPresShell *aPresShell, nsPresContext *aPresContext,
-                       nsRange *aRange);
-  nsresult FindItNow(nsIPresShell *aPresShell, bool aIsLinksOnly,
-                     bool aIsFirstVisiblePreferred, bool aFindPrev,
-                     uint16_t *aResult);
-  nsresult GetSearchContainers(nsISupports *aContainer,
-                               nsISelectionController *aSelectionController,
-                               bool aIsFirstVisiblePreferred, bool aFindPrev,
-                               nsIPresShell **aPresShell,
-                               nsPresContext **aPresContext);
-||||||| merged common ancestors
-  bool IsRangeVisible(nsIPresShell *aPresShell, nsPresContext *aPresContext,
-                      nsRange *aRange, bool aMustBeVisible,
-                      bool aGetTopVisibleLeaf, nsRange **aNewRange,
-                      bool *aUsesIndependentSelection);
-  bool IsRangeRendered(nsIPresShell *aPresShell, nsPresContext *aPresContext,
-                       nsRange *aRange);
-  nsresult FindItNow(nsIPresShell *aPresShell, bool aIsLinksOnly,
-                     bool aIsFirstVisiblePreferred, bool aFindPrev,
-                     uint16_t* aResult);
-  nsresult GetSearchContainers(nsISupports *aContainer,
-                               nsISelectionController *aSelectionController,
-                               bool aIsFirstVisiblePreferred,
-                               bool aFindPrev, nsIPresShell **aPresShell,
-                               nsPresContext **aPresContext);
-=======
   bool IsRangeVisible(mozilla::PresShell* aPresShell,
                       nsPresContext* aPresContext, nsRange* aRange,
                       bool aMustBeVisible, bool aGetTopVisibleLeaf,
@@ -106,7 +75,6 @@ class nsTypeAheadFind : public nsITypeAheadFind,
                                bool aIsFirstVisiblePreferred, bool aFindPrev,
                                mozilla::PresShell** aPresShell,
                                nsPresContext** aPresContext);
->>>>>>> upstream-releases
 
   // Get the pres shell from mPresShell and return it only if it is still
   // attached to the DOM window.

@@ -1,24 +1,3 @@
-<<<<<<< HEAD
----
-root:
-  items:
-    - type: stacking-context
-      bounds: [0, 0, 500, 500]
-      items:
-        - type: border
-          bounds: [ 100, 100, 192, 192 ]
-          width: 32
-          border-type: image
-          image-source: "border-image-src.png"
-          image-width: 32
-          image-height: 32
-          slice: [ 3, 0, 1, 36 ]
-          outset: 0
-          repeat-vertical: stretch
-          repeat-horizontal: stretch
-          fill: true
-||||||| merged common ancestors
-=======
 ---
 root:
   items:
@@ -40,4 +19,3 @@ root:
         - type: rect
           bounds: [ 100, 100, 192, 192 ]
           color: white
->>>>>>> upstream-releases

@@ -132,18 +132,8 @@ void GMPLoader::Shutdown() {
   }
 }
 
-<<<<<<< HEAD
-#if defined(XP_MACOSX) && defined(MOZ_GMP_SANDBOX)
-void GMPLoader::SetSandboxInfo(MacSandboxInfo* aSandboxInfo) {
-||||||| merged common ancestors
-#if defined(XP_MACOSX) && defined(MOZ_GMP_SANDBOX)
-void
-GMPLoader::SetSandboxInfo(MacSandboxInfo* aSandboxInfo)
-{
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
 void GMPLoader::SetSandboxInfo(MacSandboxInfo* aSandboxInfo) {
->>>>>>> upstream-releases
   if (mSandboxStarter) {
     mSandboxStarter->SetSandboxInfo(aSandboxInfo);
   }
@@ -166,19 +156,6 @@ class WinSandboxStarter : public mozilla::gmp::SandboxStarter {
 };
 #endif
 
-<<<<<<< HEAD
-#if defined(XP_MACOSX) && defined(MOZ_GMP_SANDBOX)
-class MacSandboxStarter : public mozilla::gmp::SandboxStarter {
- public:
-  bool Start(const char* aLibPath) override {
-||||||| merged common ancestors
-#if defined(XP_MACOSX) && defined(MOZ_GMP_SANDBOX)
-class MacSandboxStarter : public mozilla::gmp::SandboxStarter
-{
-public:
-  bool Start(const char *aLibPath) override
-  {
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
 class MacSandboxStarter : public mozilla::gmp::SandboxStarter {
  public:
@@ -189,7 +166,6 @@ class MacSandboxStarter : public mozilla::gmp::SandboxStarter {
       return true;
     }
 
->>>>>>> upstream-releases
     std::string err;
     bool rv = mozilla::StartMacSandbox(mInfo, err);
     if (!rv) {
@@ -206,13 +182,7 @@ class MacSandboxStarter : public mozilla::gmp::SandboxStarter {
 };
 #endif
 
-<<<<<<< HEAD
-#if defined(XP_LINUX) && defined(MOZ_GMP_SANDBOX)
-||||||| merged common ancestors
-#if defined (XP_LINUX) && defined(MOZ_GMP_SANDBOX)
-=======
 #if defined(XP_LINUX) && defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 namespace {
 class LinuxSandboxStarter : public mozilla::gmp::SandboxStarter {
  private:
@@ -234,16 +204,8 @@ class LinuxSandboxStarter : public mozilla::gmp::SandboxStarter {
     return true;
   }
 };
-<<<<<<< HEAD
-}  // anonymous namespace
-#endif  // XP_LINUX && MOZ_GMP_SANDBOX
-||||||| merged common ancestors
-} // anonymous namespace
-#endif // XP_LINUX && MOZ_GMP_SANDBOX
-=======
 }  // anonymous namespace
 #endif  // XP_LINUX && MOZ_SANDBOX
->>>>>>> upstream-releases
 
 static UniquePtr<SandboxStarter> MakeSandboxStarter() {
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)

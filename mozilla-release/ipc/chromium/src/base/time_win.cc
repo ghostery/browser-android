@@ -216,17 +216,6 @@ DWORD (*tick_function)(void) = &timeGetTimeWrapper;
 // 49 days.
 class NowSingleton {
  public:
-<<<<<<< HEAD
-  NowSingleton() : rollover_(TimeDelta::FromMilliseconds(0)), last_seen_(0) {}
-
-||||||| merged common ancestors
-  NowSingleton()
-    : rollover_(TimeDelta::FromMilliseconds(0)),
-      last_seen_(0) {
-  }
-
-=======
->>>>>>> upstream-releases
   TimeDelta Now() {
     mozilla::StaticMutexAutoLock locked(lock_);
     // We should hold the lock while calling tick_function to make sure that
@@ -253,13 +242,6 @@ class NowSingleton {
   }
 
  private:
-<<<<<<< HEAD
-  Lock lock_;           // To protected last_seen_ and rollover_.
-  TimeDelta rollover_;  // Accumulation of time lost due to rollover.
-||||||| merged common ancestors
-  Lock lock_;  // To protected last_seen_ and rollover_.
-  TimeDelta rollover_;  // Accumulation of time lost due to rollover.
-=======
   explicit NowSingleton(mozilla::StaticMutex& aMutex)
       : lock_(aMutex),
         rollover_(TimeDelta::FromMilliseconds(0)),
@@ -268,7 +250,6 @@ class NowSingleton {
 
   mozilla::StaticMutex& lock_;  // To protected last_seen_ and rollover_.
   TimeDelta rollover_;          // Accumulation of time lost due to rollover.
->>>>>>> upstream-releases
   DWORD last_seen_;  // The last timeGetTime value we saw, to detect rollover.
 
   DISALLOW_COPY_AND_ASSIGN(NowSingleton);

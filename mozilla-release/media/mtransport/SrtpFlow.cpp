@@ -36,18 +36,8 @@ unsigned int SrtpFlow::SaltSize(int cipher_suite) {
   return srtp_profile_get_master_salt_length(profile);
 }
 
-<<<<<<< HEAD
-RefPtr<SrtpFlow> SrtpFlow::Create(int cipher_suite, bool inbound,
-                                  const void *key, size_t key_len) {
-||||||| merged common ancestors
-RefPtr<SrtpFlow> SrtpFlow::Create(int cipher_suite,
-                                           bool inbound,
-                                           const void *key,
-                                           size_t key_len) {
-=======
 RefPtr<SrtpFlow> SrtpFlow::Create(int cipher_suite, bool inbound,
                                   const void* key, size_t key_len) {
->>>>>>> upstream-releases
   nsresult res = Init();
   if (!NS_SUCCEEDED(res)) return nullptr;
 
@@ -98,16 +88,8 @@ RefPtr<SrtpFlow> SrtpFlow::Create(int cipher_suite, bool inbound,
   }
   // This key is copied into the srtp_t object, so we don't
   // need to keep it.
-<<<<<<< HEAD
-  policy.key =
-      const_cast<unsigned char *>(static_cast<const unsigned char *>(key));
-||||||| merged common ancestors
-  policy.key = const_cast<unsigned char *>(
-      static_cast<const unsigned char *>(key));
-=======
   policy.key =
       const_cast<unsigned char*>(static_cast<const unsigned char*>(key));
->>>>>>> upstream-releases
   policy.ssrc.type = inbound ? ssrc_any_inbound : ssrc_any_outbound;
   policy.ssrc.value = 0;
   policy.ekt = nullptr;
@@ -126,17 +108,8 @@ RefPtr<SrtpFlow> SrtpFlow::Create(int cipher_suite, bool inbound,
   return flow;
 }
 
-<<<<<<< HEAD
-nsresult SrtpFlow::CheckInputs(bool protect, void *in, int in_len, int max_len,
-                               int *out_len) {
-||||||| merged common ancestors
-
-nsresult SrtpFlow::CheckInputs(bool protect, void *in, int in_len,
-                               int max_len, int *out_len) {
-=======
 nsresult SrtpFlow::CheckInputs(bool protect, void* in, int in_len, int max_len,
                                int* out_len) {
->>>>>>> upstream-releases
   MOZ_ASSERT(in);
   if (!in) {
     MOZ_MTLOG(ML_ERROR, "NULL input value");
@@ -169,14 +142,7 @@ nsresult SrtpFlow::CheckInputs(bool protect, void* in, int in_len, int max_len,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SrtpFlow::ProtectRtp(void *in, int in_len, int max_len, int *out_len) {
-||||||| merged common ancestors
-nsresult SrtpFlow::ProtectRtp(void *in, int in_len,
-                              int max_len, int *out_len) {
-=======
 nsresult SrtpFlow::ProtectRtp(void* in, int in_len, int max_len, int* out_len) {
->>>>>>> upstream-releases
   nsresult res = CheckInputs(true, in, in_len, max_len, out_len);
   if (NS_FAILED(res)) return res;
 
@@ -197,16 +163,8 @@ nsresult SrtpFlow::ProtectRtp(void* in, int in_len, int max_len, int* out_len) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SrtpFlow::UnprotectRtp(void *in, int in_len, int max_len,
-                                int *out_len) {
-||||||| merged common ancestors
-nsresult SrtpFlow::UnprotectRtp(void *in, int in_len,
-                                int max_len, int *out_len) {
-=======
 nsresult SrtpFlow::UnprotectRtp(void* in, int in_len, int max_len,
                                 int* out_len) {
->>>>>>> upstream-releases
   nsresult res = CheckInputs(false, in, in_len, max_len, out_len);
   if (NS_FAILED(res)) return res;
 
@@ -227,16 +185,8 @@ nsresult SrtpFlow::UnprotectRtp(void* in, int in_len, int max_len,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SrtpFlow::ProtectRtcp(void *in, int in_len, int max_len,
-                               int *out_len) {
-||||||| merged common ancestors
-nsresult SrtpFlow::ProtectRtcp(void *in, int in_len,
-                               int max_len, int *out_len) {
-=======
 nsresult SrtpFlow::ProtectRtcp(void* in, int in_len, int max_len,
                                int* out_len) {
->>>>>>> upstream-releases
   nsresult res = CheckInputs(true, in, in_len, max_len, out_len);
   if (NS_FAILED(res)) return res;
 
@@ -257,16 +207,8 @@ nsresult SrtpFlow::ProtectRtcp(void* in, int in_len, int max_len,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SrtpFlow::UnprotectRtcp(void *in, int in_len, int max_len,
-                                 int *out_len) {
-||||||| merged common ancestors
-nsresult SrtpFlow::UnprotectRtcp(void *in, int in_len,
-                                 int max_len, int *out_len) {
-=======
 nsresult SrtpFlow::UnprotectRtcp(void* in, int in_len, int max_len,
                                  int* out_len) {
->>>>>>> upstream-releases
   nsresult res = CheckInputs(false, in, in_len, max_len, out_len);
   if (NS_FAILED(res)) return res;
 

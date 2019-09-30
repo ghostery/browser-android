@@ -65,19 +65,6 @@ namespace SkRecords {
     M(DrawPatch)                                                    \
     M(DrawPicture)                                                  \
     M(DrawPoints)                                                   \
-<<<<<<< HEAD
-    M(DrawPosText)                                                  \
-    M(DrawPosTextH)                                                 \
-    M(DrawText)                                                     \
-    M(DrawTextRSXform)                                              \
-||||||| merged common ancestors
-    M(DrawPosText)                                                  \
-    M(DrawPosTextH)                                                 \
-    M(DrawText)                                                     \
-    M(DrawTextOnPath)                                               \
-    M(DrawTextRSXform)                                              \
-=======
->>>>>>> upstream-releases
     M(DrawRRect)                                                    \
     M(DrawRect)                                                     \
     M(DrawEdgeAARect)                                               \
@@ -313,28 +300,6 @@ RECORD(DrawTextBlob, kDraw_Tag|kHasText_Tag|kHasPaint_Tag,
         sk_sp<const SkTextBlob> blob;
         SkScalar x;
         SkScalar y);
-<<<<<<< HEAD
-RECORD(DrawTextRSXform, kDraw_Tag|kHasText_Tag|kHasPaint_Tag,
-        SkPaint paint;
-        PODArray<char> text;
-        size_t byteLength;
-        PODArray<SkRSXform> xforms;
-        Optional<SkRect> cull);
-||||||| merged common ancestors
-RECORD(DrawTextOnPath, kDraw_Tag|kHasText_Tag|kHasPaint_Tag,
-        SkPaint paint;
-        PODArray<char> text;
-        size_t byteLength;
-        PreCachedPath path;
-        TypedMatrix matrix);
-RECORD(DrawTextRSXform, kDraw_Tag|kHasText_Tag|kHasPaint_Tag,
-        SkPaint paint;
-        PODArray<char> text;
-        size_t byteLength;
-        PODArray<SkRSXform> xforms;
-        Optional<SkRect> cull);
-=======
->>>>>>> upstream-releases
 RECORD(DrawPatch, kDraw_Tag|kHasPaint_Tag,
         SkPaint paint;
         PODArray<SkPoint> cubics;

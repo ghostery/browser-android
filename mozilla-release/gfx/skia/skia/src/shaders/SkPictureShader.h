@@ -28,15 +28,6 @@ public:
     static sk_sp<SkShader> Make(sk_sp<SkPicture>, TileMode, TileMode, const SkMatrix*,
                                 const SkRect*);
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkPictureShader)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkPictureShader)
-
-=======
->>>>>>> upstream-releases
 #if SK_SUPPORT_GPU
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif
@@ -56,17 +47,8 @@ private:
     SkPictureShader(sk_sp<SkPicture>, TileMode, TileMode, const SkMatrix*, const SkRect*,
                     sk_sp<SkColorSpace>);
 
-<<<<<<< HEAD
-    sk_sp<SkShader> refBitmapShader(const SkMatrix&, SkTCopyOnFirstWrite<SkMatrix>* localMatrix,
-                                    SkColorSpace* dstColorSpace,
-||||||| merged common ancestors
-    sk_sp<SkShader> refBitmapShader(const SkMatrix&, const SkMatrix* localMatrix,
-                                    SkColorSpace* dstColorSpace,
-                                    SkMatrix* compositeLocalMatrix,
-=======
     sk_sp<SkShader> refBitmapShader(const SkMatrix&, SkTCopyOnFirstWrite<SkMatrix>* localMatrix,
                                     SkColorType dstColorType, SkColorSpace* dstColorSpace,
->>>>>>> upstream-releases
                                     const int maxTextureSize = 0) const;
 
     class PictureShaderContext : public Context {

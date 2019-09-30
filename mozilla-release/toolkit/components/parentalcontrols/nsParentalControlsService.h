@@ -30,16 +30,8 @@ class nsParentalControlsService : public nsIParentalControlsService {
   bool mEnabled;
 #if defined(XP_WIN)
   REGHANDLE mProvider;
-<<<<<<< HEAD
-  IWindowsParentalControls *mPC;
-  void LogFileDownload(bool blocked, nsIURI *aSource, nsIFile *aTarget);
-||||||| merged common ancestors
-  IWindowsParentalControls * mPC;
-  void LogFileDownload(bool blocked, nsIURI *aSource, nsIFile *aTarget);
-=======
   IWindowsParentalControls* mPC;
   void LogFileDownload(bool blocked, nsIURI* aSource, nsIFile* aTarget);
->>>>>>> upstream-releases
 #endif
 };
 

@@ -25,35 +25,13 @@ namespace dom {
 class SVGAnimationElement;
 }  // namespace dom
 
-<<<<<<< HEAD
-class SVGAnimatedEnumeration : public nsISupports, public nsWrapperCache {
- public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(SVGAnimatedEnumeration)
-||||||| merged common ancestors
-class SVGAnimatedEnumeration : public nsISupports
-                             , public nsWrapperCache
-{
-public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(SVGAnimatedEnumeration)
-=======
 typedef uint8_t SVGEnumValue;
 
 struct SVGEnumMapping {
   nsStaticAtom* const mKey;
   const SVGEnumValue mVal;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsSVGElement* GetParentObject() const { return mSVGElement; }
-||||||| merged common ancestors
-  nsSVGElement* GetParentObject() const
-  {
-    return mSVGElement;
-  }
-=======
 class SVGAnimatedEnumeration {
  public:
   typedef mozilla::dom::SVGElement SVGElement;
@@ -64,37 +42,16 @@ class SVGAnimatedEnumeration {
     mIsAnimated = false;
     mIsBaseSet = false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) final;
-||||||| merged common ancestors
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-    final;
-=======
   nsresult SetBaseValueAtom(const nsAtom* aValue, SVGElement* aSVGElement);
   nsAtom* GetBaseValueAtom(SVGElement* aSVGElement);
   nsresult SetBaseValue(uint16_t aValue, SVGElement* aSVGElement);
   uint16_t GetBaseValue() const { return mBaseVal; }
->>>>>>> upstream-releases
 
   void SetAnimValue(uint16_t aValue, SVGElement* aSVGElement);
   uint16_t GetAnimValue() const { return mAnimVal; }
   bool IsExplicitlySet() const { return mIsAnimated || mIsBaseSet; }
 
-<<<<<<< HEAD
- protected:
-  explicit SVGAnimatedEnumeration(nsSVGElement* aSVGElement)
-      : mSVGElement(aSVGElement) {}
-  virtual ~SVGAnimatedEnumeration(){};
-||||||| merged common ancestors
-protected:
-  explicit SVGAnimatedEnumeration(nsSVGElement* aSVGElement)
-    : mSVGElement(aSVGElement)
-  {
-  }
-  virtual ~SVGAnimatedEnumeration() {};
-=======
   already_AddRefed<mozilla::dom::DOMSVGAnimatedEnumeration> ToDOMAnimatedEnum(
       SVGElement* aSVGElement);
 
@@ -145,7 +102,6 @@ protected:
     // die during that.
     SVGAnimatedEnumeration* mVal;
     SVGElement* mSVGElement;
->>>>>>> upstream-releases
 
     // SMILAttr methods
     virtual nsresult ValueFromString(
@@ -158,20 +114,6 @@ protected:
   };
 };
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_SVGAnimatedEnumeration_h
-||||||| merged common ancestors
-#endif // mozilla_dom_SVGAnimatedEnumeration_h
-=======
 #endif  //__NS_SVGENUM_H__
->>>>>>> upstream-releases

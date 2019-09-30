@@ -19,24 +19,6 @@ SimpleTest.waitForFocus(function() {
   let editor = document.getElementById("content");
   let selection = document.getSelection();
 
-<<<<<<< HEAD
-  function checkInputEvent(aEvent, aDescription) {
-    ok(aEvent instanceof InputEvent,
-       `"input" event should be dispatched with InputEvent interface ${aDescription}`);
-    is(aEvent.cancelable, false,
-       `"input" event should be never cancelable ${aDescription}`);
-    is(aEvent.bubbles, true,
-       `"input" event should always bubble ${aDescription}`);
-  }
-
-  let inputEvents = [];
-  function onInput(aEvent) {
-    inputEvents.push(aEvent);
-  }
-  editor.addEventListener("input", onInput);
-
-||||||| merged common ancestors
-=======
   function checkInputEvent(aEvent, aDescription) {
     ok(aEvent instanceof InputEvent,
        `"input" event should be dispatched with InputEvent interface ${aDescription}`);
@@ -58,7 +40,6 @@ SimpleTest.waitForFocus(function() {
   }
   editor.addEventListener("input", onInput);
 
->>>>>>> upstream-releases
   selection.collapse(editor.firstChild, 0);
   inputEvents = [];
   getTableEditor().deleteTableCellContents();

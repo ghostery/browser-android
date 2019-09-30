@@ -348,16 +348,8 @@ impl FirefoxOptions {
             let profile_zip = &*base64::decode(profile_base64)?;
 
             // Create an emtpy profile directory
-<<<<<<< HEAD
-            let profile = Profile::new(None)?;
-            unzip_buffer(
-||||||| merged common ancestors
-            let profile = try!(Profile::new(None));
-            try!(unzip_buffer(
-=======
             let profile = Profile::new()?;
             unzip_buffer(
->>>>>>> upstream-releases
                 profile_zip,
                 profile
                     .temp_dir

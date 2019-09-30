@@ -251,27 +251,10 @@ void ClientManagerService::RemoveManager(ClientManagerParent* aManager) {
   MOZ_ASSERT(removed);
 }
 
-<<<<<<< HEAD
-RefPtr<ClientOpPromise> ClientManagerService::Navigate(
-    const ClientNavigateArgs& aArgs) {
-  RefPtr<ClientOpPromise> ref;
-
-  ClientSourceParent* source =
-      FindSource(aArgs.target().id(), aArgs.target().principalInfo());
-||||||| merged common ancestors
-RefPtr<ClientOpPromise>
-ClientManagerService::Navigate(const ClientNavigateArgs& aArgs)
-{
-  RefPtr<ClientOpPromise> ref;
-
-  ClientSourceParent* source = FindSource(aArgs.target().id(),
-                                          aArgs.target().principalInfo());
-=======
 RefPtr<ClientOpPromise> ClientManagerService::Navigate(
     const ClientNavigateArgs& aArgs) {
   ClientSourceParent* source =
       FindSource(aArgs.target().id(), aArgs.target().principalInfo());
->>>>>>> upstream-releases
   if (!source) {
     return ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
   }
@@ -328,38 +311,13 @@ class PromiseListHolder final {
       : mResultPromise(new ClientOpPromise::Private(__func__)),
         mOutstandingPromiseCount(0) {}
 
-<<<<<<< HEAD
-  already_AddRefed<ClientOpPromise> GetResultPromise() {
-||||||| merged common ancestors
-  already_AddRefed<ClientOpPromise>
-  GetResultPromise()
-  {
-=======
   RefPtr<ClientOpPromise> GetResultPromise() {
->>>>>>> upstream-releases
     RefPtr<PromiseListHolder> kungFuDeathGrip = this;
-<<<<<<< HEAD
-    mResultPromise->Then(GetCurrentThreadSerialEventTarget(), __func__,
-                         [kungFuDeathGrip](const ClientOpResult& aResult) {},
-                         [kungFuDeathGrip](nsresult aResult) {});
-
-    RefPtr<ClientOpPromise> ref = mResultPromise;
-    return ref.forget();
-||||||| merged common ancestors
-    mResultPromise->Then(
-      GetCurrentThreadSerialEventTarget(), __func__,
-      [kungFuDeathGrip] (const ClientOpResult& aResult) { },
-      [kungFuDeathGrip] (nsresult aResult) { });
-
-    RefPtr<ClientOpPromise> ref = mResultPromise;
-    return ref.forget();
-=======
     return mResultPromise->Then(
         GetCurrentThreadSerialEventTarget(), __func__,
         [kungFuDeathGrip](const ClientOpPromise::ResolveOrRejectValue& aValue) {
           return ClientOpPromise::CreateAndResolveOrReject(aValue, __func__);
         });
->>>>>>> upstream-releases
   }
 
   void AddPromise(RefPtr<ClientOpPromise>&& aPromise) {
@@ -532,39 +490,6 @@ RefPtr<ClientOpPromise> ClientManagerService::Claim(
 RefPtr<ClientOpPromise> ClientManagerService::GetInfoAndState(
     const ClientGetInfoAndStateArgs& aArgs) {
   ClientSourceParent* source = FindSource(aArgs.id(), aArgs.principalInfo());
-<<<<<<< HEAD
-
-  if (!source) {
-    RefPtr<ClientOpPromise> ref =
-        ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
-    return ref.forget();
-  }
-
-  if (!source->ExecutionReady()) {
-    RefPtr<ClientManagerService> self = this;
-
-    // rejection ultimately converted to `undefined` in Clients::Get
-    RefPtr<ClientOpPromise> ref = source->ExecutionReadyPromise()->Then(
-        GetCurrentThreadSerialEventTarget(), __func__,
-        [self, aArgs]() -> RefPtr<ClientOpPromise> {
-          ClientSourceParent* source =
-              self->FindSource(aArgs.id(), aArgs.principalInfo());
-
-          if (!source) {
-            RefPtr<ClientOpPromise> ref =
-                ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
-            return ref.forget();
-          }
-
-          return source->StartOp(aArgs);
-        });
-
-    return ref.forget();
-||||||| merged common ancestors
-  if (!source || !source->ExecutionReady()) {
-    ref = ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
-    return ref.forget();
-=======
 
   if (!source) {
     return ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
@@ -586,7 +511,6 @@ RefPtr<ClientOpPromise> ClientManagerService::GetInfoAndState(
 
           return source->StartOp(aArgs);
         });
->>>>>>> upstream-releases
   }
 
   return source->StartOp(aArgs);
@@ -652,11 +576,6 @@ class OpenWindowRunnable final : public Runnable {
     }
 
     ClientOpenWindowOpParent* actor =
-<<<<<<< HEAD
-        new ClientOpenWindowOpParent(mArgs, mPromise);
-||||||| merged common ancestors
-      new ClientOpenWindowOpParent(mArgs, mPromise);
-=======
         new ClientOpenWindowOpParent(mArgs, mPromise);
 
     // Normally, we call TransmitPermissionsForPrincipal for the first http
@@ -668,7 +587,6 @@ class OpenWindowRunnable final : public Runnable {
         PrincipalInfoToPrincipal(mArgs.principalInfo());
     nsresult rv = targetProcess->TransmitPermissionsForPrincipal(principal);
     Unused << NS_WARN_IF(NS_FAILED(rv));
->>>>>>> upstream-releases
 
     // If this fails the actor will be automatically destroyed which will
     // reject the promise.

@@ -16,15 +16,6 @@
   buttons="accept"
   onload="setWindowName();">
 
-<<<<<<< HEAD
-
-<linkset>
-  <link rel="localization" href="security/certificates/certManager.ftl"/>
-</linkset>
-||||||| merged common ancestors
-<stringbundle id="pippki_bundle" src="chrome://pippki/locale/pippki.properties"/>
-=======
->>>>>>> upstream-releases
 
 <linkset>
   <html:link rel="localization" href="security/certificates/certManager.ftl"/>
@@ -62,181 +53,6 @@
           <label class="header" id="verified"/>
         </vbox>
         <separator class="groove"/>
-<<<<<<< HEAD
-        <vbox flex="1">
-          <grid>
-            <columns>
-              <column/>
-              <column flex="1"/>
-            </columns>
-            <rows>
-              <row>
-                <label class="header" data-l10n-id="certmgr-subject-info-label"/>
-                <spacer/>
-                <spacer/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-cn"/>
-                <textbox id="commonname" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-o"/>
-                <textbox id="organization" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-ou"/>
-                <textbox id="orgunit" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-serialnumber"/>
-                <textbox id="serialnumber" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <separator class="thin"/>
-                <spacer/>
-              </row>
-              <row>
-                <label class="header" data-l10n-id="certmgr-issuer-info-label"/>
-                <spacer/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-cn"/>
-                <textbox id="issuercommonname" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-o"/>
-                <textbox id="issuerorganization" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-ou"/>
-                <textbox id="issuerorgunit" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <separator class="thin"/>
-                <spacer/>
-              </row>
-              <row>
-                <label class ="header" data-l10n-id="certmgr-period-of-validity-label"/>
-                <spacer/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-begins-value"/>
-                <textbox id="validitystart" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-expires-value"/>
-                <textbox id="validityend" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <separator class="thin"/>
-                <spacer/>
-              </row>
-              <row>
-                <label class="header" data-l10n-id="certmgr-fingerprints-label"/>
-                <spacer/>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-sha256-fingerprint"/>
-                <hbox>
-                  <textbox id="sha256fingerprint" class="plain" readonly="true" multiline="true"
-                           style="height: 6ex; width: 48ch; font-family: monospace;"/>
-                </hbox>
-              </row>
-              <row>
-                <label data-l10n-id="certmgr-cert-detail-sha1-fingerprint"/>
-                <textbox id="sha1fingerprint" class="plain" readonly="true" style="min-width:34em;"/>
-              </row>
-            </rows>
-          </grid>
-        </vbox>
-||||||| merged common ancestors
-        <vbox flex="1">
-          <grid>
-            <columns>
-              <column/>
-              <column flex="1"/>
-            </columns>
-            <rows>
-              <row>
-                <label class="header" value="&certmgr.subjectinfo.label;"/>
-                <spacer/>
-                <spacer/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.cn;"/>
-                <textbox id="commonname" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.o;"/>
-                <textbox id="organization" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.ou;"/>
-                <textbox id="orgunit" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.serialnumber;"/>
-                <textbox id="serialnumber" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <separator class="thin"/>
-                <spacer/>
-              </row>
-              <row>
-                <label class="header" value="&certmgr.issuerinfo.label;"/>
-                <spacer/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.cn;"/>
-                <textbox id="issuercommonname" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.o;"/>
-                <textbox id="issuerorganization" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.ou;"/>
-                <textbox id="issuerorgunit" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <separator class="thin"/>
-                <spacer/>
-              </row>
-              <row>
-                <label class ="header" value="&certmgr.periodofvalidity.label;"/>
-                <spacer/>
-              </row>
-              <row>
-                <label value="&certmgr.begins;"/>
-                <textbox id="validitystart" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <label value="&certmgr.expires;"/>
-                <textbox id="validityend" class="plain" readonly="true"/>
-              </row>
-              <row>
-                <separator class="thin"/>
-                <spacer/>
-              </row>
-              <row>
-                <label class="header" value="&certmgr.fingerprints.label;"/>
-                <spacer/>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.sha256fingerprint;"/>
-                <hbox>
-                  <textbox id="sha256fingerprint" class="plain" readonly="true" multiline="true"
-                           style="height: 6ex; width: 48ch; font-family: monospace;"/>
-                </hbox>
-              </row>
-              <row>
-                <label value="&certmgr.certdetail.sha1fingerprint;"/>
-                <textbox id="sha1fingerprint" class="plain" readonly="true" style="min-width:34em;"/>
-              </row>
-            </rows>
-          </grid>
-        </vbox>
-=======
         <table xmlns="http://www.w3.org/1999/xhtml">
           <tr>
             <th colspan="2" scope="rowgroup" data-l10n-id="certmgr-subject-label"></th>
@@ -307,7 +123,6 @@
             <td><xul:textbox id="sha1fingerprint" class="plain" readonly="true" style="min-width:34em;"/></td>
           </tr>
         </table>
->>>>>>> upstream-releases
       </vbox>
       <vbox class="box-padded" id="certPrettyPrint" flex="1">
         <label class="header" data-l10n-id="certmgr-hierarchy" control="treesetDump"/>
@@ -327,22 +142,9 @@
           <treechildren/>
         </tree>
 
-<<<<<<< HEAD
-        <label class="header" data-l10n-id="certmgr-fields" control="certDumpVal"/>
-        <textbox id="certDumpVal" multiline="true" flex="1"
-                 readonly="true" style="height: 11em; font-family: -moz-fixed;"/>
-
-||||||| merged common ancestors
-        <label class="header" value="&certmgr.fields.label;"
-               control="certDumpVal" accesskey="&certmgr.fields.accesskey;"/>
-        <textbox id="certDumpVal" multiline="true" flex="1"
-                 readonly="true" style="height: 11em; font-family: -moz-fixed;"/>
-
-=======
         <label class="header" data-l10n-id="certmgr-fields" control="certDumpVal"/>
         <html:textarea id="certDumpVal" flex="1" readonly="readonly"
                        style="height: 11em; font-family: -moz-fixed;"/>
->>>>>>> upstream-releases
         <separator class="thin"/>
         <hbox>
           <button id="export_cert" class="normal" data-l10n-id="certmgr-export"

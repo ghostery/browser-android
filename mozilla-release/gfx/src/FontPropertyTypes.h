@@ -98,14 +98,7 @@ class FontPropertyValue {
     MOZ_ASSERT(aValue >= kMin && aValue <= kMax);
   }
   explicit constexpr FontPropertyValue(int aValue)
-<<<<<<< HEAD
-      : mValue(aValue << kFractionBits) {
-||||||| merged common ancestors
-    : mValue(aValue << kFractionBits)
-  {
-=======
       : mValue(static_cast<InternalType>(aValue * kScale)) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aValue >= Min && aValue <= Max);
   }
 

@@ -4,34 +4,17 @@
 
 package org.mozilla.geckoview.test
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-import org.mozilla.gecko.util.GeckoBundle
-=======
 import android.os.Handler
 import android.os.Looper
 import android.support.test.InstrumentationRegistry
->>>>>>> upstream-releases
 import org.mozilla.geckoview.AllowOrDeny
 import org.mozilla.geckoview.ContentBlocking
 import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoSession
-<<<<<<< HEAD
-import org.mozilla.geckoview.GeckoSession.NavigationDelegate.LoadRequest;
-import org.mozilla.geckoview.GeckoSession.TrackingProtectionDelegate;
-import org.mozilla.geckoview.GeckoSessionSettings
-import org.mozilla.geckoview.WebRequestError
-
-||||||| merged common ancestors
-import org.mozilla.geckoview.GeckoSessionSettings
-import org.mozilla.geckoview.GeckoSession.NavigationDelegate.LoadRequest
-import org.mozilla.geckoview.GeckoSession.TrackingProtectionDelegate;
-=======
 import org.mozilla.geckoview.GeckoSession.NavigationDelegate.LoadRequest
 import org.mozilla.geckoview.GeckoSessionSettings
 import org.mozilla.geckoview.WebRequestError
 
->>>>>>> upstream-releases
 import org.mozilla.geckoview.test.rule.GeckoSessionTestRule.AssertCalled
 import org.mozilla.geckoview.test.rule.GeckoSessionTestRule.NullDelegate
 import org.mozilla.geckoview.test.rule.GeckoSessionTestRule.ReuseSession
@@ -43,15 +26,8 @@ import org.mozilla.geckoview.test.util.Callbacks
 import android.support.test.filters.MediumTest
 import android.support.test.runner.AndroidJUnit4
 import org.hamcrest.Matchers.*
-<<<<<<< HEAD
-import org.junit.Ignore
-||||||| merged common ancestors
-import org.junit.Assume.assumeThat
-import org.junit.Ignore
-=======
 import org.junit.After
 import org.junit.Before
->>>>>>> upstream-releases
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mozilla.geckoview.test.util.HttpBin
@@ -214,16 +190,8 @@ class NavigationDelegateTest : BaseSessionTest() {
             "https://expired.badssl.com/"
         }
         testLoadExpectError(uri,
-<<<<<<< HEAD
-                WebRequestError.ERROR_CATEGORY_SECURITY,
-                WebRequestError.ERROR_SECURITY_BAD_CERT);
-||||||| merged common ancestors
-                GeckoSession.NavigationDelegate.ERROR_CATEGORY_SECURITY,
-                GeckoSession.NavigationDelegate.ERROR_SECURITY_BAD_CERT);
-=======
                 WebRequestError.ERROR_CATEGORY_SECURITY,
                 WebRequestError.ERROR_SECURITY_BAD_CERT)
->>>>>>> upstream-releases
     }
 
     @Setting(key = Setting.Key.USE_TRACKING_PROTECTION, value = "true")
@@ -288,30 +256,6 @@ class NavigationDelegateTest : BaseSessionTest() {
                 assertThat("Target should not be null", request.target, notNullValue())
                 assertThat("Target should match", request.target,
                         equalTo(GeckoSession.NavigationDelegate.TARGET_WINDOW_CURRENT))
-<<<<<<< HEAD
-                assertThat("Redirect flag is set", request.isRedirect,
-                        equalTo(forEachCall(false, true)))
-                return null
-            }
-        })
-    }
-
-    @Test fun bypassClassifier() {
-        val phishingUri = "https://www.itisatrap.org/firefox/its-a-trap.html"
-
-        sessionRule.runtime.settings.blockPhishing = true
-
-        sessionRule.session.loadUri(phishingUri + "?bypass=true",
-                                    GeckoSession.LOAD_FLAGS_BYPASS_CLASSIFIER)
-        sessionRule.session.waitForPageStop()
-
-        sessionRule.forCallbacksDuringWait(
-                object : Callbacks.NavigationDelegate {
-            @AssertCalled(false)
-            override fun onLoadError(session: GeckoSession, uri: String?,
-                                     error: WebRequestError): GeckoResult<String>? {
-||||||| merged common ancestors
-=======
                 assertThat("Redirect flag is set", request.isRedirect,
                         equalTo(forEachCall(false, true)))
                 return null
@@ -358,7 +302,6 @@ class NavigationDelegateTest : BaseSessionTest() {
             @AssertCalled(false)
             override fun onLoadError(session: GeckoSession, uri: String?,
                                      error: WebRequestError): GeckoResult<String>? {
->>>>>>> upstream-releases
                 return null
             }
         })
@@ -534,93 +477,6 @@ class NavigationDelegateTest : BaseSessionTest() {
         assertThat("User agent should be reported as VR",
                 userAgent, containsString(vrSubStr))
 
-        val vrSubStr = "Mobile VR"
-        sessionRule.session.settings.setInt(
-                GeckoSessionSettings.USER_AGENT_MODE, GeckoSessionSettings.USER_AGENT_MODE_VR)
-
-        sessionRule.session.reload()
-        sessionRule.session.waitForPageStop()
-
-        assertThat("User agent should be set to VR",
-                sessionRule.session.evaluateJS(userAgentJs) as String,
-                containsString(vrSubStr))
-
-        userAgent = sessionRule.waitForResult(sessionRule.session.getUserAgent())
-        assertThat("User agent should be reported as VR",
-                userAgent, containsString(vrSubStr))
-
-    }
-
-    @WithDevToolsAPI
-    @Test fun uaOverride() {
-        sessionRule.session.loadUri("https://example.com")
-        sessionRule.waitForPageStop()
-
-        val userAgentJs = "window.navigator.userAgent"
-        val mobileSubStr = "Mobile"
-        val vrSubStr = "Mobile VR"
-        val overrideUserAgent = "This is the override user agent"
-
-        var userAgent = sessionRule.session.evaluateJS(userAgentJs) as String
-        assertThat("User agent should be reported as mobile",
-                userAgent, containsString(mobileSubStr))
-
-        sessionRule.session.settings.setString(GeckoSessionSettings.USER_AGENT_OVERRIDE, overrideUserAgent)
-
-        sessionRule.session.reload()
-        sessionRule.session.waitForPageStop()
-
-        userAgent = sessionRule.session.evaluateJS(userAgentJs) as String
-
-        assertThat("User agent should be reported as override",
-                userAgent, equalTo(overrideUserAgent))
-
-        sessionRule.session.settings.setInt(
-                GeckoSessionSettings.USER_AGENT_MODE, GeckoSessionSettings.USER_AGENT_MODE_VR)
-
-        sessionRule.session.reload()
-        sessionRule.session.waitForPageStop()
-
-        assertThat("User agent should still be reported as override even when USER_AGENT_MODE is set",
-                userAgent, equalTo(overrideUserAgent))
-
-        sessionRule.session.settings.setString(GeckoSessionSettings.USER_AGENT_OVERRIDE, null)
-
-        sessionRule.session.reload()
-        sessionRule.session.waitForPageStop()
-
-        userAgent = sessionRule.session.evaluateJS(userAgentJs) as String
-        assertThat("User agent should now be reported as VR",
-                userAgent, containsString(vrSubStr))
-
-        sessionRule.delegateDuringNextWait(object : Callbacks.NavigationDelegate {
-            override fun onLoadRequest(session: GeckoSession, request: LoadRequest): GeckoResult<AllowOrDeny>? {
-                sessionRule.session.settings.setString(GeckoSessionSettings.USER_AGENT_OVERRIDE, overrideUserAgent)
-                return null
-            }
-        })
-
-        sessionRule.session.reload()
-        sessionRule.session.waitForPageStop()
-
-        userAgent = sessionRule.session.evaluateJS(userAgentJs) as String
-
-        assertThat("User agent should be reported as override after being set in onLoadRequest",
-                userAgent, equalTo(overrideUserAgent))
-
-        sessionRule.delegateDuringNextWait(object : Callbacks.NavigationDelegate {
-            override fun onLoadRequest(session: GeckoSession, request: LoadRequest): GeckoResult<AllowOrDeny>? {
-                sessionRule.session.settings.setString(GeckoSessionSettings.USER_AGENT_OVERRIDE, null)
-                return null
-            }
-        })
-
-        sessionRule.session.reload()
-        sessionRule.session.waitForPageStop()
-
-        userAgent = sessionRule.session.evaluateJS(userAgentJs) as String
-        assertThat("User agent should again be reported as VR after disabling override in onLoadRequest",
-                userAgent, containsString(vrSubStr))
     }
 
     @WithDevToolsAPI
@@ -1222,31 +1078,6 @@ class NavigationDelegateTest : BaseSessionTest() {
                    equalTo(NEW_SESSION_HTML_PATH))
     }
 
-<<<<<<< HEAD
-    @Setting(key = Setting.Key.USE_MULTIPROCESS, value = "false")
-    @WithDevToolsAPI
-    @Test fun onNewSession_openRemoteFromNonRemote() {
-        // Disable popup blocker.
-        sessionRule.setPrefsUntilTestEnd(mapOf("dom.disable_open_during_load" to false))
-
-        // Ensure a non-remote page can open a remote page, as needed by some tests.
-        assertThat("Opening session should be non-remote",
-                   mainSession.settings.getBoolean(GeckoSessionSettings.USE_MULTIPROCESS),
-                   equalTo(false))
-
-        val newSession = delegateNewSession(
-                GeckoSessionSettings(mainSession.settings).apply {
-                    setBoolean(GeckoSessionSettings.USE_MULTIPROCESS, true)
-                })
-        mainSession.evaluateJS("window.open('http://example.com')")
-        newSession.waitForPageStop()
-
-        assertThat("window.opener should be set",
-                   newSession.evaluateJS("window.opener"), notNullValue())
-    }
-
-||||||| merged common ancestors
-=======
     @Setting(key = Setting.Key.USE_MULTIPROCESS, value = "false")
     @WithDevToolsAPI
     @Test fun onNewSession_openRemoteFromNonRemote() {
@@ -1269,7 +1100,6 @@ class NavigationDelegateTest : BaseSessionTest() {
                    newSession.evaluateJS("window.opener"), notNullValue())
     }
 
->>>>>>> upstream-releases
     @WithDevToolsAPI
     @Test fun onNewSession_supportNoOpener() {
         // Disable popup blocker.

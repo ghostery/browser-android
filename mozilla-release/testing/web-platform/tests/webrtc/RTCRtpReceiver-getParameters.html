@@ -35,18 +35,10 @@
    */
   promise_test(async t => {
     const pc = new RTCPeerConnection();
-<<<<<<< HEAD
-    const { receiver } = pc.addTransceiver('audio');
-    const param = receiver.getParameters();
-||||||| merged common ancestors
-    const { receiver } = pc.addTransceiver('audio');
-    const param = pc.getParameters();
-=======
     t.add_cleanup(() => pc.close());
     pc.addTransceiver('audio');
     const callee = await doOfferAnswerExchange(t, pc);
     const param = callee.getReceivers()[0].getParameters();
->>>>>>> upstream-releases
     validateReceiverRtpParameters(param);
 
     assert_greater_than(param.headerExtensions.length, 0);

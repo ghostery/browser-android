@@ -466,58 +466,20 @@ nsresult SVGAnimatedLength::SMILLength::ValueFromString(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedLength::WrapObject(JSContext* aCx,
-                                        JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedLength_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedLength::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedLength_Binding::Wrap(aCx, this, aGivenProto);
-=======
 SMILValue SVGAnimatedLength::SMILLength::GetBaseValue() const {
   SMILValue val(SMILFloatType::Singleton());
   val.mU.mDouble = mVal->GetBaseValue(mSVGElement);
   return val;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMSVGLength> SVGAnimatedLength::BaseVal() {
-  RefPtr<DOMSVGLength> angle;
-  mVal->ToDOMBaseVal(getter_AddRefs(angle), mSVGElement);
-  return angle.forget();
-||||||| merged common ancestors
-already_AddRefed<DOMSVGLength>
-SVGAnimatedLength::BaseVal()
-{
-  RefPtr<DOMSVGLength> angle;
-  mVal->ToDOMBaseVal(getter_AddRefs(angle), mSVGElement);
-  return angle.forget();
-=======
 void SVGAnimatedLength::SMILLength::ClearAnimValue() {
   if (mVal->mIsAnimated) {
     mVal->mIsAnimated = false;
     mVal->mAnimVal = mVal->mBaseVal;
     mSVGElement->DidAnimateLength(mVal->mAttrEnum);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMSVGLength> SVGAnimatedLength::AnimVal() {
-  RefPtr<DOMSVGLength> angle;
-  mVal->ToDOMAnimVal(getter_AddRefs(angle), mSVGElement);
-  return angle.forget();
-||||||| merged common ancestors
-already_AddRefed<DOMSVGLength>
-SVGAnimatedLength::AnimVal()
-{
-  RefPtr<DOMSVGLength> angle;
-  mVal->ToDOMAnimVal(getter_AddRefs(angle), mSVGElement);
-  return angle.forget();
-=======
 nsresult SVGAnimatedLength::SMILLength::SetAnimValue(const SMILValue& aValue) {
   NS_ASSERTION(aValue.mType == SMILFloatType::Singleton(),
                "Unexpected type to assign animated value");
@@ -525,15 +487,6 @@ nsresult SVGAnimatedLength::SMILLength::SetAnimValue(const SMILValue& aValue) {
     return mVal->SetAnimValue(float(aValue.mU.mDouble), mSVGElement);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

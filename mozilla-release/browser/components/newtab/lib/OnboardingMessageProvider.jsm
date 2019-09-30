@@ -2,28 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Localization.jsm");
-ChromeUtils.import("resource://gre/modules/FxAccountsConfig.jsm");
-ChromeUtils.import("resource:///modules/AttributionCode.jsm");
-ChromeUtils.import("resource://gre/modules/addons/AddonRepository.jsm");
-
-async function getAddonName() {
-  try {
-    const {content} = await AttributionCode.getAttrDataAsync();
-    if (!content) {
-      return null;
-    }
-    const addons = await AddonRepository.getAddonsByIDs([content]);
-    return addons[0].name;
-  } catch (e) {
-    return null;
-  }
-}
-
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Localization.jsm");
-=======
 /* globals Localization */
 const { AttributionCode } = ChromeUtils.import(
   "resource:///modules/AttributionCode.jsm"
@@ -33,24 +11,13 @@ const { AddonRepository } = ChromeUtils.import(
 );
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
->>>>>>> upstream-releases
 const L10N = new Localization([
   "branding/brand.ftl",
-<<<<<<< HEAD
-  "browser/branding/sync-brand.ftl",
-||||||| merged common ancestors
-=======
   "browser/branding/brandings.ftl",
   "browser/branding/sync-brand.ftl",
->>>>>>> upstream-releases
   "browser/newtab/onboarding.ftl",
 ]);
 
-<<<<<<< HEAD
-const ONBOARDING_MESSAGES = async () => ([
-||||||| merged common ancestors
-const ONBOARDING_MESSAGES = () => ([
-=======
 const ONBOARDING_MESSAGES = () => [
   {
     id: "TRAILHEAD_1",
@@ -125,7 +92,6 @@ const ONBOARDING_MESSAGES = () => [
     },
     utm_term: "trailhead-cards",
   },
->>>>>>> upstream-releases
   {
     id: "TRAILHEAD_4",
     template: "trailhead",
@@ -152,21 +118,6 @@ const ONBOARDING_MESSAGES = () => [
     bundled: 3,
     order: 2,
     content: {
-<<<<<<< HEAD
-      title: {string_id: "onboarding-private-browsing-title"},
-      text: {string_id: "onboarding-private-browsing-text"},
-      icon: "privatebrowsing",
-      primary_button: {
-        label: {string_id: "onboarding-button-label-try-now"},
-        action: {type: "OPEN_PRIVATE_BROWSER_WINDOW"},
-      },
-||||||| merged common ancestors
-      title: {string_id: "onboarding-private-browsing-title"},
-      text: {string_id: "onboarding-private-browsing-text"},
-      icon: "privatebrowsing",
-      button_label: {string_id: "onboarding-button-label-try-now"},
-      button_action: {type: "OPEN_PRIVATE_BROWSER_WINDOW"},
-=======
       title: { string_id: "onboarding-tracking-protection-title2" },
       text: { string_id: "onboarding-tracking-protection-text2" },
       icon: "tracking",
@@ -186,16 +137,9 @@ const ONBOARDING_MESSAGES = () => [
                 data: { category: "privacy-trackingprotection" },
               },
       },
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-    trigger: {id: "showOnboarding"},
-||||||| merged common ancestors
-    trigger: {id: "firstRun"},
-=======
     targeting: "trailheadTriplet == 'privacy'",
     trigger: { id: "showOnboarding" },
->>>>>>> upstream-releases
   },
   {
     id: "TRAILHEAD_CARD_2",
@@ -203,25 +147,6 @@ const ONBOARDING_MESSAGES = () => [
     bundled: 3,
     order: 1,
     content: {
-<<<<<<< HEAD
-      title: {string_id: "onboarding-screenshots-title"},
-      text: {string_id: "onboarding-screenshots-text"},
-      icon: "screenshots",
-      primary_button: {
-        label: {string_id: "onboarding-button-label-try-now"},
-        action: {
-          type: "OPEN_URL",
-          data: {args: "https://screenshots.firefox.com/#tour", where: "tabshifted"},
-        },
-||||||| merged common ancestors
-      title: {string_id: "onboarding-screenshots-title"},
-      text: {string_id: "onboarding-screenshots-text"},
-      icon: "screenshots",
-      button_label: {string_id: "onboarding-button-label-try-now"},
-      button_action: {
-        type: "OPEN_URL",
-        data: {args: "https://screenshots.firefox.com/#tour"},
-=======
       title: { string_id: "onboarding-data-sync-title" },
       text: { string_id: "onboarding-data-sync-text2" },
       icon: "devices",
@@ -236,17 +161,10 @@ const ONBOARDING_MESSAGES = () => [
             where: "tabshifted",
           },
         },
->>>>>>> upstream-releases
       },
     },
-<<<<<<< HEAD
-    trigger: {id: "showOnboarding"},
-||||||| merged common ancestors
-    trigger: {id: "firstRun"},
-=======
     targeting: "trailheadTriplet == 'supercharge'",
     trigger: { id: "showOnboarding" },
->>>>>>> upstream-releases
   },
   {
     id: "TRAILHEAD_CARD_3",
@@ -254,25 +172,6 @@ const ONBOARDING_MESSAGES = () => [
     bundled: 3,
     order: 2,
     content: {
-<<<<<<< HEAD
-      title: {string_id: "onboarding-addons-title"},
-      text: {string_id: "onboarding-addons-text"},
-      icon: "addons",
-      primary_button: {
-        label: {string_id: "onboarding-button-label-try-now"},
-        action: {
-          type: "OPEN_ABOUT_PAGE",
-          data: {args: "addons"},
-        },
-||||||| merged common ancestors
-      title: {string_id: "onboarding-addons-title"},
-      text: {string_id: "onboarding-addons-text"},
-      icon: "addons",
-      button_label: {string_id: "onboarding-button-label-try-now"},
-      button_action: {
-        type: "OPEN_ABOUT_PAGE",
-        data: {args: "addons"},
-=======
       title: { string_id: "onboarding-firefox-monitor-title" },
       text: { string_id: "onboarding-firefox-monitor-text" },
       icon: "ffmonitor",
@@ -282,18 +181,10 @@ const ONBOARDING_MESSAGES = () => [
           type: "OPEN_URL",
           data: { args: "https://monitor.firefox.com/", where: "tabshifted" },
         },
->>>>>>> upstream-releases
       },
     },
-<<<<<<< HEAD
-    targeting: "attributionData.campaign != 'non-fx-button' && attributionData.source != 'addons.mozilla.org'",
-    trigger: {id: "showOnboarding"},
-||||||| merged common ancestors
-    trigger: {id: "firstRun"},
-=======
     targeting: "trailheadTriplet in ['payoff', 'supercharge']",
     trigger: { id: "showOnboarding" },
->>>>>>> upstream-releases
   },
   {
     id: "TRAILHEAD_CARD_4",
@@ -301,92 +192,16 @@ const ONBOARDING_MESSAGES = () => [
     bundled: 3,
     order: 1,
     content: {
-<<<<<<< HEAD
-      title: {string_id: "onboarding-ghostery-title"},
-      text: {string_id: "onboarding-ghostery-text"},
-      icon: "gift",
-      primary_button: {
-        label: {string_id: "onboarding-button-label-try-now"},
-        action: {
-          type: "OPEN_URL",
-          data: {args: "https://addons.mozilla.org/en-US/firefox/addon/ghostery/", where: "tabshifted"},
-        },
-||||||| merged common ancestors
-      title: {string_id: "onboarding-ghostery-title"},
-      text: {string_id: "onboarding-ghostery-text"},
-      icon: "gift",
-      button_label: {string_id: "onboarding-button-label-try-now"},
-      button_action: {
-        type: "OPEN_URL",
-        data: {args: "https://addons.mozilla.org/en-US/firefox/addon/ghostery/"},
-=======
       title: { string_id: "onboarding-browse-privately-title" },
       text: { string_id: "onboarding-browse-privately-text" },
       icon: "private",
       primary_button: {
         label: { string_id: "onboarding-browse-privately-button" },
         action: { type: "OPEN_PRIVATE_BROWSER_WINDOW" },
->>>>>>> upstream-releases
       },
     },
-<<<<<<< HEAD
-    targeting: "providerCohorts.onboarding == 'ghostery'",
-    trigger: {id: "showOnboarding"},
-  },
-  {
-    id: "ONBOARDING_5",
-    template: "onboarding",
-    bundled: 3,
-    order: 4,
-    content: {
-      title: {string_id: "onboarding-fxa-title"},
-      text: {string_id: "onboarding-fxa-text"},
-      icon: "sync",
-      primary_button: {
-        label: {string_id: "onboarding-button-label-get-started"},
-        action: {
-          type: "OPEN_URL",
-          data: {args: await FxAccountsConfig.promiseEmailFirstURI("onboarding"), where: "tabshifted"},
-        },
-      },
-    },
-    targeting: "attributionData.campaign == 'non-fx-button' && attributionData.source == 'addons.mozilla.org'",
-    trigger: {id: "showOnboarding"},
-  },
-  {
-    id: "FXA_1",
-    template: "fxa_overlay",
-    trigger: {id: "firstRun"},
-  },
-  {
-    id: "RETURN_TO_AMO_1",
-    template: "return_to_amo_overlay",
-    content: {
-      header: {string_id: "onboarding-welcome-header"},
-      title: {string_id: "return-to-amo-sub-header"},
-      addon_icon: null, // to be dynamically filled in, in ASRouter.jsm
-      icon: "gift-extension",
-      text: {string_id: "return-to-amo-addon-header", args: {"addon-name": await getAddonName()}},
-      primary_button: {
-        label: {string_id: "return-to-amo-extension-button"},
-        action: {
-          type: "INSTALL_ADDON_FROM_URL",
-          data: {url: null}, // to be dynamically filled in, in ASRouter.jsm
-        },
-      },
-      secondary_button: {
-        label: {string_id: "return-to-amo-get-started-button"},
-      },
-    },
-    targeting: "attributionData.campaign == 'non-fx-button' && attributionData.source == 'addons.mozilla.org'",
-    trigger: {id: "firstRun"},
-||||||| merged common ancestors
-    targeting: "providerCohorts.onboarding == 'ghostery'",
-    trigger: {id: "firstRun"},
-=======
     targeting: "trailheadTriplet == 'privacy'",
     trigger: { id: "showOnboarding" },
->>>>>>> upstream-releases
   },
   {
     id: "TRAILHEAD_CARD_5",
@@ -587,44 +402,6 @@ const OnboardingMessageProvider = {
   async translateMessages(messages) {
     let translatedMessages = [];
     for (const msg of messages) {
-<<<<<<< HEAD
-      let translatedMessage = {...msg};
-
-      // If the message has no content, do not attempt to translate it
-      if (!translatedMessage.content) {
-        translatedMessages.push(translatedMessage);
-        continue;
-      }
-
-      const [primary_button_string, title_string, text_string] = await L10N.formatMessages([
-        {id: msg.content.primary_button.label.string_id},
-        {id: msg.content.title.string_id},
-        {id: msg.content.text.string_id, args: msg.content.text.args},
-      ]);
-      translatedMessage.content.primary_button.label = primary_button_string.value;
-      translatedMessage.content.title = title_string.value;
-      translatedMessage.content.text = text_string.value;
-
-      // Translate any secondary buttons separately
-      if (msg.content.secondary_button) {
-        const [secondary_button_string] = await L10N.formatMessages([{id: msg.content.secondary_button.label.string_id}]);
-        translatedMessage.content.secondary_button.label = secondary_button_string.value;
-      }
-      if (msg.content.header) {
-        const [header_string] = await L10N.formatMessages([{id: msg.content.header.string_id}]);
-        translatedMessage.content.header = header_string.value;
-      }
-||||||| merged common ancestors
-      let translatedMessage = msg;
-      const [button_string, title_string, text_string] = await L10N.formatMessages([
-        {id: msg.content.button_label.string_id},
-        {id: msg.content.title.string_id},
-        {id: msg.content.text.string_id},
-      ]);
-      translatedMessage.content.button_label = button_string.value;
-      translatedMessage.content.title = title_string.value;
-      translatedMessage.content.text = text_string.value;
-=======
       let translatedMessage = { ...msg };
 
       // If the message has no content, do not attempt to translate it
@@ -681,7 +458,6 @@ const OnboardingMessageProvider = {
         ]);
         translatedMessage.content.header = header_string.value;
       }
->>>>>>> upstream-releases
       translatedMessages.push(translatedMessage);
     }
     return translatedMessages;

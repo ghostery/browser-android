@@ -20,65 +20,6 @@ class LoadSubScriptOptions;
 
 class nsIIOService;
 
-<<<<<<< HEAD
-class mozJSSubScriptLoader : public mozIJSSubScriptLoader {
- public:
-  mozJSSubScriptLoader();
-
-  // all the interface method declarations...
-  NS_DECL_ISUPPORTS
-  NS_DECL_MOZIJSSUBSCRIPTLOADER
-
- private:
-  virtual ~mozJSSubScriptLoader();
-
-  bool ReadScript(nsIURI* uri, JSContext* cx, JS::HandleObject targetObj,
-                  const nsAString& charset, const char* uriStr,
-                  nsIIOService* serv, bool wantReturnValue,
-                  bool useCompilationScope, JS::MutableHandleScript script);
-
-  nsresult ReadScriptAsync(nsIURI* uri, JS::HandleObject targetObj,
-                           JS::HandleObject loadScope, const nsAString& charset,
-                           nsIIOService* serv, bool wantReturnValue, bool cache,
-                           JS::MutableHandleValue retval);
-
-  nsresult DoLoadSubScriptWithOptions(const nsAString& url,
-                                      LoadSubScriptOptions& options,
-                                      JSContext* cx,
-                                      JS::MutableHandleValue retval);
-||||||| merged common ancestors
-class mozJSSubScriptLoader : public mozIJSSubScriptLoader
-{
-public:
-    mozJSSubScriptLoader();
-
-    // all the interface method declarations...
-    NS_DECL_ISUPPORTS
-    NS_DECL_MOZIJSSUBSCRIPTLOADER
-
-private:
-    virtual ~mozJSSubScriptLoader();
-
-    bool ReadScript(nsIURI* uri, JSContext* cx, JS::HandleObject targetObj,
-                    const nsAString& charset, const char* uriStr,
-                    nsIIOService* serv,
-                    bool wantReturnValue, bool useCompilationScope,
-                    JS::MutableHandleScript script);
-
-    nsresult ReadScriptAsync(nsIURI* uri,
-                             JS::HandleObject targetObj,
-                             JS::HandleObject loadScope,
-                             const nsAString& charset,
-                             nsIIOService* serv,
-                             bool wantReturnValue,
-                             bool cache,
-                             JS::MutableHandleValue retval);
-
-    nsresult DoLoadSubScriptWithOptions(const nsAString& url,
-                                        LoadSubScriptOptions& options,
-                                        JSContext* cx,
-                                        JS::MutableHandleValue retval);
-=======
 class mozJSSubScriptLoader : public mozIJSSubScriptLoader {
  public:
   mozJSSubScriptLoader();
@@ -103,5 +44,4 @@ class mozJSSubScriptLoader : public mozIJSSubScriptLoader {
                                       LoadSubScriptOptions& options,
                                       JSContext* cx,
                                       JS::MutableHandleValue retval);
->>>>>>> upstream-releases
 };

@@ -9,14 +9,8 @@
 <meta name="assert" content="Percentages in text-indent refer to width of the element's content box, when used in a calc expression">
 <link rel="stylesheet" type="text/css" href="/fonts/ahem.css" />
 <style>
-<<<<<<< HEAD
-body { background: white; }
-||||||| merged common ancestors
-section { position: absolute; }
-=======
 body { background: white; }
 section { position: absolute; }
->>>>>>> upstream-releases
 section, div {
   border-right: 10px solid white;
   margin-right: 10px;
@@ -27,12 +21,6 @@ div {
   box-sizing: border-box;
   width: 120px;
 }
-<<<<<<< HEAD
-.test div { text-indent: calc(25px + 25%); }
-||||||| merged common ancestors
-.test div { text-indent: calc(25px + 25%); color: red; }
-.ref div { text-indent: 50px; }
-=======
 span {
   display: inline-block;
   width: 10px;
@@ -47,17 +35,8 @@ span {
 }
 .test div { text-indent: calc(25px + 25%); }
 .ref div { text-indent: 50px; }
->>>>>>> upstream-releases
 </style>
 
-<<<<<<< HEAD
-<section class=test><div>X</div></section>
-||||||| merged common ancestors
-<p>Test passes if there is a single black X below and no red.
-<section class=test><div>X</div></section>
-<section class=ref><div>X</div></section>
-=======
 <p>Test passes if there is a green square below and no red.
 <section class=ref><div><span></span></div></section>
 <section class=test><div><span></span></div></section>
->>>>>>> upstream-releases

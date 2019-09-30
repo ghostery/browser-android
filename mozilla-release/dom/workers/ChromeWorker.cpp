@@ -13,22 +13,10 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ChromeWorker> ChromeWorker::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aScriptURL,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ChromeWorker>
-ChromeWorker::Constructor(const GlobalObject& aGlobal,
-                          const nsAString& aScriptURL,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ChromeWorker> ChromeWorker::Constructor(
     const GlobalObject& aGlobal, const nsAString& aScriptURL,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   RefPtr<WorkerPrivate> workerPrivate = WorkerPrivate::Constructor(
@@ -46,17 +34,8 @@ already_AddRefed<ChromeWorker> ChromeWorker::Constructor(
   return worker.forget();
 }
 
-<<<<<<< HEAD
-/* static */ bool ChromeWorker::WorkerAvailable(JSContext* aCx,
-                                                JSObject* /* unused */) {
-||||||| merged common ancestors
-/* static */ bool
-ChromeWorker::WorkerAvailable(JSContext* aCx, JSObject* /* unused */)
-{
-=======
 /* static */
 bool ChromeWorker::WorkerAvailable(JSContext* aCx, JSObject* /* unused */) {
->>>>>>> upstream-releases
   // Chrome is always allowed to use workers, and content is never
   // allowed to use ChromeWorker, so all we have to check is the
   // caller.  However, chrome workers apparently might not have a

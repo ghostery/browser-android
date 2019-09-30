@@ -1288,11 +1288,5 @@ as{
             other{"জাম্বিয়ান কোৱাচা"}
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
 }

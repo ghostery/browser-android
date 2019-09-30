@@ -111,24 +111,11 @@ namespace mozilla {
 /*static*/
 BrowserElementParent::OpenWindowResult
 BrowserElementParent::DispatchOpenWindowEvent(Element* aOpenerFrameElement,
-<<<<<<< HEAD
-                                              Element* aPopupFrameElement,
-                                              const nsAString& aURL,
-                                              const nsAString& aName,
-                                              const nsAString& aFeatures) {
-||||||| merged common ancestors
-                        Element* aPopupFrameElement,
-                        const nsAString& aURL,
-                        const nsAString& aName,
-                        const nsAString& aFeatures)
-{
-=======
                                               Element* aPopupFrameElement,
                                               const nsAString& aURL,
                                               const nsAString& aName,
                                               bool aForceNoReferrer,
                                               const nsAString& aFeatures) {
->>>>>>> upstream-releases
   // Dispatch a CustomEvent at aOpenerFrameElement with a detail object
   // (OpenWindowEventDetail) containing aPopupFrameElement, aURL, aName, and
   // aFeatures.
@@ -186,40 +173,14 @@ BrowserElementParent::DispatchOpenWindowEvent(Element* aOpenerFrameElement,
 }
 
 /*static*/
-<<<<<<< HEAD
-BrowserElementParent::OpenWindowResult BrowserElementParent::OpenWindowOOP(
-    TabParent* aOpenerTabParent, TabParent* aPopupTabParent,
-    const nsAString& aURL, const nsAString& aName, const nsAString& aFeatures) {
-||||||| merged common ancestors
-BrowserElementParent::OpenWindowResult
-BrowserElementParent::OpenWindowOOP(TabParent* aOpenerTabParent,
-                                    TabParent* aPopupTabParent,
-                                    PRenderFrameParent* aRenderFrame,
-                                    const nsAString& aURL,
-                                    const nsAString& aName,
-                                    const nsAString& aFeatures,
-                                    TextureFactoryIdentifier* aTextureFactoryIdentifier,
-                                    layers::LayersId* aLayersId)
-{
-=======
 BrowserElementParent::OpenWindowResult BrowserElementParent::OpenWindowOOP(
     BrowserParent* aOpenerBrowserParent, BrowserParent* aPopupBrowserParent,
     const nsAString& aURL, const nsAString& aName, bool aForceNoReferrer,
     const nsAString& aFeatures) {
->>>>>>> upstream-releases
   // Create an iframe owned by the same document which owns openerFrameElement.
-<<<<<<< HEAD
-  nsCOMPtr<Element> openerFrameElement = aOpenerTabParent->GetOwnerElement();
-  NS_ENSURE_TRUE(openerFrameElement, BrowserElementParent::OPEN_WINDOW_IGNORED);
-||||||| merged common ancestors
-  nsCOMPtr<Element> openerFrameElement = aOpenerTabParent->GetOwnerElement();
-  NS_ENSURE_TRUE(openerFrameElement,
-                 BrowserElementParent::OPEN_WINDOW_IGNORED);
-=======
   nsCOMPtr<Element> openerFrameElement =
       aOpenerBrowserParent->GetOwnerElement();
   NS_ENSURE_TRUE(openerFrameElement, BrowserElementParent::OPEN_WINDOW_IGNORED);
->>>>>>> upstream-releases
   RefPtr<HTMLIFrameElement> popupFrameElement =
       CreateIframe(openerFrameElement, aName, /* aRemote = */ true);
 
@@ -235,18 +196,9 @@ BrowserElementParent::OpenWindowResult BrowserElementParent::OpenWindowOOP(
   // allowed.
   popupFrameElement->DisallowCreateFrameLoader();
 
-<<<<<<< HEAD
-  OpenWindowResult opened = DispatchOpenWindowEvent(
-      openerFrameElement, popupFrameElement, aURL, aName, aFeatures);
-||||||| merged common ancestors
-  OpenWindowResult opened =
-    DispatchOpenWindowEvent(openerFrameElement, popupFrameElement,
-                            aURL, aName, aFeatures);
-=======
   OpenWindowResult opened =
       DispatchOpenWindowEvent(openerFrameElement, popupFrameElement, aURL,
                               aName, aForceNoReferrer, aFeatures);
->>>>>>> upstream-releases
 
   if (opened != BrowserElementParent::OPEN_WINDOW_ADDED) {
     return opened;
@@ -256,38 +208,15 @@ BrowserElementParent::OpenWindowResult BrowserElementParent::OpenWindowOOP(
   // parent, and return success.
   aPopupBrowserParent->SetOwnerElement(popupFrameElement);
   popupFrameElement->AllowCreateFrameLoader();
-<<<<<<< HEAD
-  popupFrameElement->CreateRemoteFrameLoader(aPopupTabParent);
-
-||||||| merged common ancestors
-  popupFrameElement->CreateRemoteFrameLoader(aPopupTabParent);
-
-  RenderFrameParent* rfp = static_cast<RenderFrameParent*>(aRenderFrame);
-  if (!aPopupTabParent->SetRenderFrame(rfp) ||
-      !aPopupTabParent->GetRenderFrameInfo(aTextureFactoryIdentifier, aLayersId)) {
-    return BrowserElementParent::OPEN_WINDOW_IGNORED;
-  }
-
-=======
   popupFrameElement->CreateRemoteFrameLoader(aPopupBrowserParent);
 
->>>>>>> upstream-releases
   return opened;
 }
 
 /* static */
 BrowserElementParent::OpenWindowResult
-<<<<<<< HEAD
-BrowserElementParent::OpenWindowInProcess(nsPIDOMWindowOuter* aOpenerWindow,
-                                          nsIURI* aURI, const nsAString& aName,
-||||||| merged common ancestors
-BrowserElementParent::OpenWindowInProcess(nsPIDOMWindowOuter* aOpenerWindow,
-                                          nsIURI* aURI,
-                                          const nsAString& aName,
-=======
 BrowserElementParent::OpenWindowInProcess(BrowsingContext* aOpenerWindow,
                                           nsIURI* aURI, const nsAString& aName,
->>>>>>> upstream-releases
                                           const nsACString& aFeatures,
                                           bool aForceNoOpener,
                                           mozIDOMWindowProxy** aReturnWindow) {
@@ -323,21 +252,9 @@ BrowserElementParent::OpenWindowInProcess(BrowsingContext* aOpenerWindow,
     MOZ_ASSERT(!res.Failed());
   }
 
-<<<<<<< HEAD
-  OpenWindowResult opened = DispatchOpenWindowEvent(
-      openerFrameElement, popupFrameElement, NS_ConvertUTF8toUTF16(spec), aName,
-      NS_ConvertUTF8toUTF16(aFeatures));
-||||||| merged common ancestors
-  OpenWindowResult opened =
-    DispatchOpenWindowEvent(openerFrameElement, popupFrameElement,
-                            NS_ConvertUTF8toUTF16(spec),
-                            aName,
-                            NS_ConvertUTF8toUTF16(aFeatures));
-=======
   OpenWindowResult opened = DispatchOpenWindowEvent(
       openerFrameElement, popupFrameElement, NS_ConvertUTF8toUTF16(spec), aName,
       false, NS_ConvertUTF8toUTF16(aFeatures));
->>>>>>> upstream-releases
 
   if (opened != BrowserElementParent::OPEN_WINDOW_ADDED) {
     return opened;

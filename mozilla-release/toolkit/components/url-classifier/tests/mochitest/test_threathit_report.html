@@ -194,14 +194,7 @@ function testOnWindow(aTestData) {
       let browser = win.gBrowser.selectedBrowser;
       let wp = win.gBrowser.contentWindow.docShell.QueryInterface(Ci.nsIWebProgress);
       let progressListener = {
-<<<<<<< HEAD
-        onSecurityChange(aWebProgress, aRequest, aState) {
-||||||| merged common ancestors
-        onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                         aContentBlockingLogJSON) {
-=======
         onContentBlockingEvent(aWebProgress, aRequest, aEvent) {
->>>>>>> upstream-releases
           expected = aTestData.reportUrl;
         },
         QueryInterface: ChromeUtils.generateQI(["nsISupportsWeakReference"]),

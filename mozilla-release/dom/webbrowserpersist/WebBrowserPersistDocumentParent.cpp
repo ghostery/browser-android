@@ -52,36 +52,6 @@ WebBrowserPersistDocumentParent::~WebBrowserPersistDocumentParent() {
   MOZ_ASSERT(!mOnReady);
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult WebBrowserPersistDocumentParent::RecvAttributes(
-    const Attrs& aAttrs, const OptionalIPCStream& aPostStream) {
-  // Deserialize the postData unconditionally so that fds aren't leaked.
-  nsCOMPtr<nsIInputStream> postData =
-      mozilla::ipc::DeserializeIPCStream(aPostStream);
-  if (!mOnReady || mReflection) {
-    return IPC_FAIL_NO_REASON(this);
-  }
-  mReflection = new WebBrowserPersistRemoteDocument(this, aAttrs, postData);
-  RefPtr<WebBrowserPersistRemoteDocument> reflection = mReflection;
-  mOnReady->OnDocumentReady(reflection);
-  mOnReady = nullptr;
-  return IPC_OK();
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-WebBrowserPersistDocumentParent::RecvAttributes(const Attrs& aAttrs,
-                                                const OptionalIPCStream& aPostStream)
-{
-    // Deserialize the postData unconditionally so that fds aren't leaked.
-    nsCOMPtr<nsIInputStream> postData = mozilla::ipc::DeserializeIPCStream(aPostStream);
-    if (!mOnReady || mReflection) {
-        return IPC_FAIL_NO_REASON(this);
-    }
-    mReflection = new WebBrowserPersistRemoteDocument(this, aAttrs, postData);
-    RefPtr<WebBrowserPersistRemoteDocument> reflection = mReflection;
-    mOnReady->OnDocumentReady(reflection);
-    mOnReady = nullptr;
-    return IPC_OK();
-=======
 mozilla::ipc::IPCResult WebBrowserPersistDocumentParent::RecvAttributes(
     const Attrs& aAttrs, const Maybe<IPCStream>& aPostStream) {
   // Deserialize the postData unconditionally so that fds aren't leaked.
@@ -95,7 +65,6 @@ mozilla::ipc::IPCResult WebBrowserPersistDocumentParent::RecvAttributes(
   mOnReady->OnDocumentReady(reflection);
   mOnReady = nullptr;
   return IPC_OK();
->>>>>>> upstream-releases
 }
 
 mozilla::ipc::IPCResult WebBrowserPersistDocumentParent::RecvInitFailure(

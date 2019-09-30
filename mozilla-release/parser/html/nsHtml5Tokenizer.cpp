@@ -160,42 +160,10 @@ void nsHtml5Tokenizer::initLocation(nsHtml5String newPublicId,
 
 bool nsHtml5Tokenizer::isViewingXmlSource() { return viewingXmlSource; }
 
-<<<<<<< HEAD
-void nsHtml5Tokenizer::setStateAndEndTagExpectation(
-    int32_t specialTokenizerState, nsAtom* endTagExpectation) {
-||||||| merged common ancestors
-void
-nsHtml5Tokenizer::setStateAndEndTagExpectation(int32_t specialTokenizerState,
-                                               nsAtom* endTagExpectation)
-{
-=======
 void nsHtml5Tokenizer::setState(int32_t specialTokenizerState) {
->>>>>>> upstream-releases
   this->stateSave = specialTokenizerState;
-<<<<<<< HEAD
-  if (specialTokenizerState == nsHtml5Tokenizer::DATA) {
-    return;
-  }
-  autoJArray<char16_t, int32_t> asArray =
-      nsHtml5Portability::newCharArrayFromLocal(endTagExpectation);
-  this->endTagExpectation = nsHtml5ElementName::elementNameByBuffer(
-      asArray, asArray.length, interner);
-  MOZ_ASSERT(!!this->endTagExpectation);
-  endTagExpectationToArray();
-||||||| merged common ancestors
-  if (specialTokenizerState == nsHtml5Tokenizer::DATA) {
-    return;
-  }
-  autoJArray<char16_t, int32_t> asArray =
-    nsHtml5Portability::newCharArrayFromLocal(endTagExpectation);
-  this->endTagExpectation =
-    nsHtml5ElementName::elementNameByBuffer(asArray, asArray.length, interner);
-  MOZ_ASSERT(!!this->endTagExpectation);
-  endTagExpectationToArray();
-=======
   this->endTagExpectation = nullptr;
   this->endTagExpectationAsArray = nullptr;
->>>>>>> upstream-releases
 }
 
 void nsHtml5Tokenizer::setStateAndEndTagExpectation(
@@ -531,7 +499,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       dataloop_end:;
@@ -1588,7 +1558,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       cdatasectionloop_end:;
@@ -2125,7 +2097,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       }
@@ -2238,7 +2212,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       }
@@ -2273,7 +2249,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       rawtextloop_end:;
@@ -2508,7 +2486,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       scriptdataloop_end:;
@@ -2687,7 +2667,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       scriptdataescapedloop_end:;
@@ -2877,7 +2859,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       scriptdatadoubleescapedloop_end:;
@@ -3737,7 +3721,9 @@ stateloop:
               silentLineFeed();
               MOZ_FALLTHROUGH;
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       }
@@ -4008,7 +3994,9 @@ stateloop:
                   reconsume, pos);
               NS_HTML5_BREAK(processinginstructionloop);
             }
-            default: { continue; }
+            default: {
+              continue;
+            }
           }
         }
       processinginstructionloop_end:;
@@ -4421,7 +4409,9 @@ eofloop:
         NS_HTML5_BREAK(eofloop);
       }
       case DATA:
-      default: { NS_HTML5_BREAK(eofloop); }
+      default: {
+        NS_HTML5_BREAK(eofloop);
+      }
     }
   }
 eofloop_end:;

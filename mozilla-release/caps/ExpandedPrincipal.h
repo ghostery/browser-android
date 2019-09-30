@@ -12,22 +12,6 @@
 #include "nsNetUtil.h"
 #include "mozilla/BasePrincipal.h"
 
-<<<<<<< HEAD
-class ExpandedPrincipal : public nsIExpandedPrincipal,
-                          public mozilla::BasePrincipal {
- public:
-  static already_AddRefed<ExpandedPrincipal> Create(
-      nsTArray<nsCOMPtr<nsIPrincipal>>& aAllowList,
-      const mozilla::OriginAttributes& aAttrs);
-||||||| merged common ancestors
-class ExpandedPrincipal : public nsIExpandedPrincipal
-                        , public mozilla::BasePrincipal
-{
-public:
-  static already_AddRefed<ExpandedPrincipal>
-  Create(nsTArray<nsCOMPtr<nsIPrincipal>>& aWhiteList,
-         const mozilla::OriginAttributes& aAttrs);
-=======
 class nsIContentSecurityPolicy;
 
 namespace Json {
@@ -40,7 +24,6 @@ class ExpandedPrincipal : public nsIExpandedPrincipal,
   static already_AddRefed<ExpandedPrincipal> Create(
       nsTArray<nsCOMPtr<nsIPrincipal>>& aAllowList,
       const mozilla::OriginAttributes& aAttrs);
->>>>>>> upstream-releases
 
   static PrincipalKind Kind() { return eExpandedPrincipal; }
 
@@ -77,13 +60,6 @@ class ExpandedPrincipal : public nsIExpandedPrincipal,
 
   nsresult GetSiteIdentifier(mozilla::SiteIdentifier& aSite) override;
 
-<<<<<<< HEAD
- protected:
-  explicit ExpandedPrincipal(nsTArray<nsCOMPtr<nsIPrincipal>>& aAllowList);
-||||||| merged common ancestors
-protected:
-  explicit ExpandedPrincipal(nsTArray<nsCOMPtr<nsIPrincipal>> &aWhiteList);
-=======
   virtual nsresult PopulateJSONObject(Json::Value& aObject) override;
   // Serializable keys are the valid enum fields the serialization supports
   enum SerializableKeys { eSpecs = 0, eSuffix, eMax = eSuffix };
@@ -100,7 +76,6 @@ protected:
 
  protected:
   explicit ExpandedPrincipal(nsTArray<nsCOMPtr<nsIPrincipal>>& aAllowList);
->>>>>>> upstream-releases
 
   virtual ~ExpandedPrincipal();
 
@@ -109,17 +84,9 @@ protected:
 
   bool MayLoadInternal(nsIURI* aURI) override;
 
-<<<<<<< HEAD
- private:
-  nsTArray<nsCOMPtr<nsIPrincipal>> mPrincipals;
-||||||| merged common ancestors
-private:
-  nsTArray< nsCOMPtr<nsIPrincipal> > mPrincipals;
-=======
  private:
   nsTArray<nsCOMPtr<nsIPrincipal>> mPrincipals;
   nsCOMPtr<nsIContentSecurityPolicy> mCSP;
->>>>>>> upstream-releases
 };
 
 #define NS_EXPANDEDPRINCIPAL_CONTRACTID "@mozilla.org/expandedprincipal;1"

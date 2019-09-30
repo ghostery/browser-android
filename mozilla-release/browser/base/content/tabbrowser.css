@@ -11,14 +11,7 @@
 .tab-icon-image:not([src]):not([pinned]):not([crashed]):not([sharing]),
 .tab-icon-image[busy],
 .tab-throbber:not([busy]),
-<<<<<<< HEAD
-.tab-icon-sound:not([soundplaying]):not([muted]):not([activemedia-blocked]),
-||||||| merged common ancestors
-.tab-throbber-fallback:not([busy]),
-.tab-icon-sound:not([soundplaying]):not([muted]):not([activemedia-blocked]),
-=======
 .tab-icon-sound:not([soundplaying]):not([muted]):not([activemedia-blocked]):not([pictureinpicture]),
->>>>>>> upstream-releases
 .tab-icon-sound[pinned],
 .tab-sharing-icon-overlay,
 .tab-icon-overlay {

@@ -2,89 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-/* Shared code for xpcshell and mochitests-chrome */
-/* eslint-disable no-undef */
-
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "UpdateUtils",
-                               "resource://gre/modules/UpdateUtils.jsm");
-
-const PREF_APP_UPDATE_AUTO                       = "app.update.auto";
-const PREF_APP_UPDATE_BACKGROUNDERRORS           = "app.update.backgroundErrors";
-const PREF_APP_UPDATE_BACKGROUNDMAXERRORS        = "app.update.backgroundMaxErrors";
-const PREF_APP_UPDATE_CANCELATIONS               = "app.update.cancelations";
-const PREF_APP_UPDATE_CHANNEL                    = "app.update.channel";
-const PREF_APP_UPDATE_DOORHANGER                 = "app.update.doorhanger";
-const PREF_APP_UPDATE_DOWNLOADPROMPTATTEMPTS     = "app.update.download.attempts";
-const PREF_APP_UPDATE_DOWNLOADPROMPTMAXATTEMPTS  = "app.update.download.maxAttempts";
-const PREF_APP_UPDATE_DOWNLOADBACKGROUNDINTERVAL = "app.update.download.backgroundInterval";
-const PREF_APP_UPDATE_DISABLEDFORTESTING         = "app.update.disabledForTesting";
-const PREF_APP_UPDATE_IDLETIME                   = "app.update.idletime";
-const PREF_APP_UPDATE_LOG                        = "app.update.log";
-const PREF_APP_UPDATE_NOTIFIEDUNSUPPORTED        = "app.update.notifiedUnsupported";
-const PREF_APP_UPDATE_PROMPTWAITTIME             = "app.update.promptWaitTime";
-const PREF_APP_UPDATE_RETRYTIMEOUT               = "app.update.socket.retryTimeout";
-const PREF_APP_UPDATE_SERVICE_ENABLED            = "app.update.service.enabled";
-const PREF_APP_UPDATE_SILENT                     = "app.update.silent";
-const PREF_APP_UPDATE_SOCKET_MAXERRORS           = "app.update.socket.maxErrors";
-const PREF_APP_UPDATE_STAGING_ENABLED            = "app.update.staging.enabled";
-const PREF_APP_UPDATE_URL                        = "app.update.url";
-const PREF_APP_UPDATE_URL_DETAILS                = "app.update.url.details";
-const PREF_APP_UPDATE_URL_MANUAL                 = "app.update.url.manual";
-
-const PREFBRANCH_APP_PARTNER         = "app.partner.";
-const PREF_DISTRIBUTION_ID           = "distribution.id";
-const PREF_DISTRIBUTION_VERSION      = "distribution.version";
-const PREF_DISABLE_SECURITY          = "security.turn_off_all_security_so_that_viruses_can_take_over_this_computer";
-
-const CONFIG_APP_UPDATE_AUTO         = "app.update.auto";
-
-const NS_APP_PROFILE_DIR_STARTUP   = "ProfDS";
-const NS_APP_USER_PROFILE_50_DIR   = "ProfD";
-const NS_GRE_BIN_DIR               = "GreBinD";
-const NS_GRE_DIR                   = "GreD";
-||||||| merged common ancestors
-/* Shared code for xpcshell and mochitests-chrome */
-/* eslint-disable no-undef */
-
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-const PREF_APP_UPDATE_AUTO                       = "app.update.auto";
-const PREF_APP_UPDATE_BACKGROUNDERRORS           = "app.update.backgroundErrors";
-const PREF_APP_UPDATE_BACKGROUNDMAXERRORS        = "app.update.backgroundMaxErrors";
-const PREF_APP_UPDATE_CANCELATIONS               = "app.update.cancelations";
-const PREF_APP_UPDATE_CHANNEL                    = "app.update.channel";
-const PREF_APP_UPDATE_DOORHANGER                 = "app.update.doorhanger";
-const PREF_APP_UPDATE_DOWNLOADPROMPTATTEMPTS     = "app.update.download.attempts";
-const PREF_APP_UPDATE_DOWNLOADPROMPTMAXATTEMPTS  = "app.update.download.maxAttempts";
-const PREF_APP_UPDATE_DOWNLOADBACKGROUNDINTERVAL = "app.update.download.backgroundInterval";
-const PREF_APP_UPDATE_DISABLEDFORTESTING         = "app.update.disabledForTesting";
-const PREF_APP_UPDATE_IDLETIME                   = "app.update.idletime";
-const PREF_APP_UPDATE_LOG                        = "app.update.log";
-const PREF_APP_UPDATE_NOTIFIEDUNSUPPORTED        = "app.update.notifiedUnsupported";
-const PREF_APP_UPDATE_PROMPTWAITTIME             = "app.update.promptWaitTime";
-const PREF_APP_UPDATE_RETRYTIMEOUT               = "app.update.socket.retryTimeout";
-const PREF_APP_UPDATE_SERVICE_ENABLED            = "app.update.service.enabled";
-const PREF_APP_UPDATE_SILENT                     = "app.update.silent";
-const PREF_APP_UPDATE_SOCKET_MAXERRORS           = "app.update.socket.maxErrors";
-const PREF_APP_UPDATE_STAGING_ENABLED            = "app.update.staging.enabled";
-const PREF_APP_UPDATE_URL                        = "app.update.url";
-const PREF_APP_UPDATE_URL_DETAILS                = "app.update.url.details";
-const PREF_APP_UPDATE_URL_MANUAL                 = "app.update.url.manual";
-
-const PREFBRANCH_APP_PARTNER         = "app.partner.";
-const PREF_DISTRIBUTION_ID           = "distribution.id";
-const PREF_DISTRIBUTION_VERSION      = "distribution.version";
-const PREF_DISABLE_SECURITY          = "security.turn_off_all_security_so_that_viruses_can_take_over_this_computer";
-
-const NS_APP_PROFILE_DIR_STARTUP   = "ProfDS";
-const NS_APP_USER_PROFILE_50_DIR   = "ProfD";
-const NS_GRE_DIR                   = "GreD";
-const NS_GRE_BIN_DIR               = "GreBinD";
-=======
 /* Shared code for xpcshell, mochitests-chrome, and mochitest-browser-chrome. */
 
 // Definitions needed to run eslint on this file.
@@ -146,66 +63,7 @@ const NS_APP_PROFILE_DIR_STARTUP = "ProfDS";
 const NS_APP_USER_PROFILE_50_DIR = "ProfD";
 const NS_GRE_BIN_DIR = "GreBinD";
 const NS_GRE_DIR = "GreD";
->>>>>>> upstream-releases
 const NS_XPCOM_CURRENT_PROCESS_DIR = "XCurProcD";
-<<<<<<< HEAD
-const XRE_EXECUTABLE_FILE          = "XREExeF";
-const XRE_OLD_UPDATE_ROOT_DIR      = "OldUpdRootD";
-const XRE_UPDATE_ROOT_DIR          = "UpdRootD";
-
-const DIR_PATCH        = "0";
-const DIR_TOBEDELETED  = "tobedeleted";
-const DIR_UPDATES      = "updates";
-const DIR_UPDATED      = IS_MACOSX ? "Updated.app" : "updated";
-
-const FILE_ACTIVE_UPDATE_XML         = "active-update.xml";
-const FILE_APPLICATION_INI           = "application.ini";
-const FILE_BACKUP_UPDATE_LOG         = "backup-update.log";
-const FILE_BT_RESULT                 = "update.bt";
-const FILE_LAST_UPDATE_LOG           = "last-update.log";
-const FILE_UPDATE_SETTINGS_INI       = "update-settings.ini";
-const FILE_UPDATE_SETTINGS_INI_BAK   = "update-settings.ini.bak";
-const FILE_UPDATER_INI               = "updater.ini";
-const FILE_UPDATES_XML               = "updates.xml";
-const FILE_UPDATE_CONFIG             = "update-config.json";
-const FILE_UPDATE_LOG                = "update.log";
-const FILE_UPDATE_MAR                = "update.mar";
-const FILE_UPDATE_STATUS             = "update.status";
-const FILE_UPDATE_TEST               = "update.test";
-const FILE_UPDATE_VERSION            = "update.version";
-
-const UPDATE_SETTINGS_CONTENTS = "[Settings]\n" +
-                                 "ACCEPTED_MAR_CHANNEL_IDS=xpcshell-test\n";
-
-const PR_RDWR        = 0x04;
-||||||| merged common ancestors
-const XRE_EXECUTABLE_FILE          = "XREExeF";
-const XRE_UPDATE_ROOT_DIR          = "UpdRootD";
-
-const DIR_PATCH        = "0";
-const DIR_TOBEDELETED  = "tobedeleted";
-const DIR_UPDATES      = "updates";
-const DIR_UPDATED      = IS_MACOSX ? "Updated.app" : "updated";
-
-const FILE_ACTIVE_UPDATE_XML         = "active-update.xml";
-const FILE_APPLICATION_INI           = "application.ini";
-const FILE_BACKUP_UPDATE_LOG         = "backup-update.log";
-const FILE_LAST_UPDATE_LOG           = "last-update.log";
-const FILE_UPDATE_SETTINGS_INI       = "update-settings.ini";
-const FILE_UPDATE_SETTINGS_INI_BAK   = "update-settings.ini.bak";
-const FILE_UPDATER_INI               = "updater.ini";
-const FILE_UPDATES_XML               = "updates.xml";
-const FILE_UPDATE_LOG                = "update.log";
-const FILE_UPDATE_MAR                = "update.mar";
-const FILE_UPDATE_STATUS             = "update.status";
-const FILE_UPDATE_TEST               = "update.test";
-const FILE_UPDATE_VERSION            = "update.version";
-
-const UPDATE_SETTINGS_CONTENTS = "[Settings]\n" +
-                                 "ACCEPTED_MAR_CHANNEL_IDS=xpcshell-test\n";
-
-const PR_RDWR        = 0x04;
-=======
 const XRE_EXECUTABLE_FILE = "XREExeF";
 const XRE_OLD_UPDATE_ROOT_DIR = "OldUpdRootD";
 const XRE_UPDATE_ROOT_DIR = "UpdRootD";
@@ -242,7 +100,6 @@ const UPDATE_SETTINGS_CONTENTS =
 const PRECOMPLETE_CONTENTS = 'rmdir "nonexistent_dir/"\n';
 
 const PR_RDWR = 0x04;
->>>>>>> upstream-releases
 const PR_CREATE_FILE = 0x08;
 const PR_TRUNCATE = 0x20;
 
@@ -345,22 +202,11 @@ function initUpdateServiceStub() {
 }
 
 /* Reloads the update metadata from disk */
-<<<<<<< HEAD
-function reloadUpdateManagerData(skipFiles = false) {
-  let observeData = skipFiles ? "skip-files" : "";
-  gUpdateManager.QueryInterface(Ci.nsIObserver).
-  observe(null, "um-reload-update-data", observeData);
-||||||| merged common ancestors
-function reloadUpdateManagerData() {
-  gUpdateManager.QueryInterface(Ci.nsIObserver).
-  observe(null, "um-reload-update-data", "");
-=======
 function reloadUpdateManagerData(skipFiles = false) {
   let observeData = skipFiles ? "skip-files" : "";
   gUpdateManager
     .QueryInterface(Ci.nsIObserver)
     .observe(null, "um-reload-update-data", observeData);
->>>>>>> upstream-releases
 }
 
 const observer = {
@@ -447,106 +293,6 @@ function writeVersionFile(aVersion) {
 }
 
 /**
-<<<<<<< HEAD
- * Synchronously writes the value of the app.update.auto setting to the update
- * configuration file on Windows or to a user preference on other platforms.
- * When the value passed to this function is null or undefined it will remove
- * the configuration file on Windows or the user preference on other platforms.
- *
- * @param  aEnabled
- *         Possible values are true, false, null, and undefined. When true or
- *         false this value will be written for app.update.auto in the update
- *         configuration file on Windows or to the user preference on other
- *         platforms. When null or undefined the update configuration file will
- *         be removed on Windows or the user preference will be removed on other
- *         platforms.
- */
-function setAppUpdateAutoSync(aEnabled) {
-  if (IS_WIN) {
-    let file = getUpdateConfigFile();
-    if (aEnabled === undefined || aEnabled === null) {
-      if (file.exists()) {
-        file.remove(false);
-      }
-    } else {
-      writeFile(file, "{\"" + CONFIG_APP_UPDATE_AUTO + "\":" +
-                      aEnabled.toString() + "}");
-    }
-  } else if (aEnabled === undefined || aEnabled === null) {
-    if (Services.prefs.prefHasUserValue(PREF_APP_UPDATE_AUTO)) {
-      Services.prefs.clearUserPref(PREF_APP_UPDATE_AUTO);
-    }
-  } else {
-    Services.prefs.setBoolPref(PREF_APP_UPDATE_AUTO, aEnabled);
-  }
-}
-
-/**
- * Gets the root directory for the updates directory.
- *
- * @return nsIFile for the updates root directory.
- */
-function getUpdatesRootDir() {
-  return Services.dirsvc.get(XRE_UPDATE_ROOT_DIR, Ci.nsIFile);
-}
-
-/**
- * Gets the updates directory.
- *
- * @return nsIFile for the updates directory.
- */
-function getUpdatesDir() {
-  let dir = getUpdatesRootDir();
-  dir.append(DIR_UPDATES);
-  return dir;
-}
-
-/**
- * Gets the directory for update patches.
- *
- * @return nsIFile for the updates directory.
- */
-function getUpdatesPatchDir() {
-  let dir = getUpdatesDir();
-  dir.append(DIR_PATCH);
-  return dir;
-}
-
-/**
-||||||| merged common ancestors
- * Gets the root directory for the updates directory.
- *
- * @return nsIFile for the updates root directory.
- */
-function getUpdatesRootDir() {
-  return Services.dirsvc.get(XRE_UPDATE_ROOT_DIR, Ci.nsIFile);
-}
-
-/**
- * Gets the updates directory.
- *
- * @return nsIFile for the updates directory.
- */
-function getUpdatesDir() {
-  let dir = getUpdatesRootDir();
-  dir.append(DIR_UPDATES);
-  return dir;
-}
-
-/**
- * Gets the directory for update patches.
- *
- * @return nsIFile for the updates directory.
- */
-function getUpdatesPatchDir() {
-  let dir = getUpdatesDir();
-  dir.append(DIR_PATCH);
-  return dir;
-}
-
-/**
-=======
->>>>>>> upstream-releases
  * Writes text to a file. This will replace existing text if the file exists
  * and create the file if it doesn't exist.
  *
@@ -604,22 +350,6 @@ function readStatusFailedCode() {
 }
 
 /**
-<<<<<<< HEAD
- * Returns whether or not applying the current update resulted in an error
- * verifying binary transparency information.
- *
- * @return true if there was an error result and false otherwise
- */
-function updateHasBinaryTransparencyErrorResult() {
-  let file = getUpdatesPatchDir();
-  file.append(FILE_BT_RESULT);
-
-  return file.exists();
-}
-
-/**
-||||||| merged common ancestors
-=======
  * Returns whether or not applying the current update resulted in an error
  * verifying binary transparency information.
  *
@@ -631,7 +361,6 @@ function updateHasBinaryTransparencyErrorResult() {
 }
 
 /**
->>>>>>> upstream-releases
  * Reads text from a file and returns the string.
  *
  * @param  aFile
@@ -907,18 +636,6 @@ function getGREBinDir() {
 }
 
 /**
-<<<<<<< HEAD
- * Returns the file containing update configuration
- */
-function getUpdateConfigFile() {
-  let configFile = getUpdatesRootDir();
-  configFile.append(FILE_UPDATE_CONFIG);
-  return configFile;
-}
-
-/**
-||||||| merged common ancestors
-=======
  * Gets the unique mutex name for the installation.
  *
  * @return Global mutex path.
@@ -1045,7 +762,6 @@ function setAppUpdateAutoSync(aEnabled) {
 }
 
 /**
->>>>>>> upstream-releases
  * Logs TEST-INFO messages.
  *
  * @param  aText

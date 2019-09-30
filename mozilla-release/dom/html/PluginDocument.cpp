@@ -40,35 +40,15 @@ class PluginDocument final : public MediaDocument, public nsIPluginDocument {
                              bool aReset = true,
                              nsIContentSink* aSink = nullptr) override;
 
-<<<<<<< HEAD
-  void SetScriptGlobalObject(
-      nsIScriptGlobalObject* aScriptGlobalObject) override;
-  bool CanSavePresentation(nsIRequest* aNewRequest) override;
-||||||| merged common ancestors
-  void SetScriptGlobalObject(nsIScriptGlobalObject* aScriptGlobalObject) override;
-  bool CanSavePresentation(nsIRequest *aNewRequest) override;
-=======
   void SetScriptGlobalObject(
       nsIScriptGlobalObject* aScriptGlobalObject) override;
   bool CanSavePresentation(nsIRequest* aNewRequest,
                            uint16_t& aBFCacheStatus) override;
->>>>>>> upstream-releases
 
   const nsCString& GetType() const { return mMimeType; }
   Element* GetPluginContent() { return mPluginContent; }
 
-<<<<<<< HEAD
-  void StartLayout() { MediaDocument::StartLayout(); }
-
   virtual void Destroy() override {
-||||||| merged common ancestors
-  void StartLayout() { MediaDocument::StartLayout(); }
-
-  virtual void Destroy() override
-  {
-=======
-  virtual void Destroy() override {
->>>>>>> upstream-releases
     if (mStreamListener) {
       mStreamListener->DropDocumentRef();
     }
@@ -89,35 +69,15 @@ class PluginDocument final : public MediaDocument, public nsIPluginDocument {
 class PluginStreamListener : public MediaDocumentStreamListener {
  public:
   explicit PluginStreamListener(PluginDocument* aDoc)
-<<<<<<< HEAD
-      : MediaDocumentStreamListener(aDoc), mPluginDoc(aDoc) {}
-  NS_IMETHOD OnStartRequest(nsIRequest* request, nsISupports* ctxt) override;
-
- private:
-||||||| merged common ancestors
-    : MediaDocumentStreamListener(aDoc)
-    , mPluginDoc(aDoc)
-  {}
-  NS_IMETHOD OnStartRequest(nsIRequest* request, nsISupports *ctxt) override;
-private:
-=======
       : MediaDocumentStreamListener(aDoc), mPluginDoc(aDoc) {}
   NS_IMETHOD OnStartRequest(nsIRequest* request) override;
 
  private:
->>>>>>> upstream-releases
   RefPtr<PluginDocument> mPluginDoc;
 };
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PluginStreamListener::OnStartRequest(nsIRequest* request, nsISupports* ctxt) {
-||||||| merged common ancestors
-PluginStreamListener::OnStartRequest(nsIRequest* request, nsISupports *ctxt)
-{
-=======
 PluginStreamListener::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("PluginStreamListener::OnStartRequest", NETWORK);
 
   nsCOMPtr<nsIContent> embed = mPluginDoc->GetPluginContent();
@@ -177,17 +137,8 @@ void PluginDocument::SetScriptGlobalObject(
   }
 }
 
-<<<<<<< HEAD
-bool PluginDocument::CanSavePresentation(nsIRequest* aNewRequest) {
-||||||| merged common ancestors
-
-bool
-PluginDocument::CanSavePresentation(nsIRequest* aNewRequest)
-{
-=======
 bool PluginDocument::CanSavePresentation(nsIRequest* aNewRequest,
                                          uint16_t& aBFCacheStatus) {
->>>>>>> upstream-releases
   // Full-page plugins cannot be cached, currently, because we don't have
   // the stream listener data to feed to the plugin instance.
   return false;
@@ -230,18 +181,8 @@ nsresult PluginDocument::StartDocumentLoad(const char* aCommand,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult PluginDocument::CreateSyntheticPluginDocument() {
-  NS_ASSERTION(!GetShell() || !GetShell()->DidInitialize(),
-||||||| merged common ancestors
-nsresult
-PluginDocument::CreateSyntheticPluginDocument()
-{
-  NS_ASSERTION(!GetShell() || !GetShell()->DidInitialize(),
-=======
 nsresult PluginDocument::CreateSyntheticPluginDocument() {
   NS_ASSERTION(!GetPresShell() || !GetPresShell()->DidInitialize(),
->>>>>>> upstream-releases
                "Creating synthetic plugin document content too late");
 
   // make our generic document
@@ -321,15 +262,7 @@ PluginDocument::Print() {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-nsresult NS_NewPluginDocument(nsIDocument** aResult) {
-||||||| merged common ancestors
-nsresult
-NS_NewPluginDocument(nsIDocument** aResult)
-{
-=======
 nsresult NS_NewPluginDocument(mozilla::dom::Document** aResult) {
->>>>>>> upstream-releases
   auto* doc = new mozilla::dom::PluginDocument();
 
   NS_ADDREF(doc);

@@ -34,12 +34,7 @@ use nodrop::NoDrop;
 #[cfg(feature = "servo")]
 use serde::{Deserialize, Serialize};
 use stable_deref_trait::{CloneStableDeref, StableDeref};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use std::{isize, usize};
-=======
 use std::alloc::Layout;
->>>>>>> upstream-releases
 use std::borrow;
 use std::cmp::Ordering;
 use std::convert::From;

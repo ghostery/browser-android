@@ -34,16 +34,8 @@ using namespace mozilla;
 #define MISC_STR_PTR(_cont) \
   reinterpret_cast<void*>((_cont)->mStringBits & NS_ATTRVALUE_POINTERVALUE_MASK)
 
-<<<<<<< HEAD
-/* static */ MiscContainer* nsAttrValue::AllocMiscContainer() {
-||||||| merged common ancestors
-/* static */ MiscContainer*
-nsAttrValue::AllocMiscContainer()
-{
-=======
 /* static */
 MiscContainer* nsAttrValue::AllocMiscContainer() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MiscContainer* cont = nullptr;
   Swap(cont, sMiscContainerCache);
@@ -55,16 +47,8 @@ MiscContainer* nsAttrValue::AllocMiscContainer() {
   return new MiscContainer;
 }
 
-<<<<<<< HEAD
-/* static */ void nsAttrValue::DeallocMiscContainer(MiscContainer* aCont) {
-||||||| merged common ancestors
-/* static */ void
-nsAttrValue::DeallocMiscContainer(MiscContainer* aCont)
-{
-=======
 /* static */
 void nsAttrValue::DeallocMiscContainer(MiscContainer* aCont) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!aCont) {
     return;
@@ -288,17 +272,8 @@ void nsAttrValue::SetTo(const nsAttrValue& aOther) {
       cont->mValue.mEnumValue = otherCont->mValue.mEnumValue;
       break;
     }
-<<<<<<< HEAD
-    case ePercent: {
-      cont->mValue.mPercent = otherCont->mValue.mPercent;
-||||||| merged common ancestors
-    case ePercent:
-    {
-      cont->mValue.mPercent = otherCont->mValue.mPercent;
-=======
     case ePercent: {
       cont->mDoubleValue = otherCont->mDoubleValue;
->>>>>>> upstream-releases
       break;
     }
     case eColor: {
@@ -425,47 +400,18 @@ void nsAttrValue::SetToSerialized(const nsAttrValue& aOther) {
   }
 }
 
-<<<<<<< HEAD
-void nsAttrValue::SetTo(const nsSVGAngle& aValue,
-                        const nsAString* aSerialized) {
-  SetSVGType(eSVGAngle, &aValue, aSerialized);
-||||||| merged common ancestors
-void
-nsAttrValue::SetTo(const nsSVGAngle& aValue, const nsAString* aSerialized)
-{
-  SetSVGType(eSVGAngle, &aValue, aSerialized);
-=======
 void nsAttrValue::SetTo(const SVGAnimatedOrient& aValue,
                         const nsAString* aSerialized) {
   SetSVGType(eSVGOrient, &aValue, aSerialized);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsAttrValue::SetTo(const nsSVGIntegerPair& aValue,
-                        const nsAString* aSerialized) {
-||||||| merged common ancestors
-void
-nsAttrValue::SetTo(const nsSVGIntegerPair& aValue, const nsAString* aSerialized)
-{
-=======
 void nsAttrValue::SetTo(const SVGAnimatedIntegerPair& aValue,
                         const nsAString* aSerialized) {
->>>>>>> upstream-releases
   SetSVGType(eSVGIntegerPair, &aValue, aSerialized);
 }
 
-<<<<<<< HEAD
-void nsAttrValue::SetTo(const nsSVGLength2& aValue,
-                        const nsAString* aSerialized) {
-||||||| merged common ancestors
-void
-nsAttrValue::SetTo(const nsSVGLength2& aValue, const nsAString* aSerialized)
-{
-=======
 void nsAttrValue::SetTo(const SVGAnimatedLength& aValue,
                         const nsAString* aSerialized) {
->>>>>>> upstream-releases
   SetSVGType(eSVGLength, &aValue, aSerialized);
 }
 
@@ -489,17 +435,8 @@ void nsAttrValue::SetTo(const SVGNumberList& aValue,
   SetSVGType(eSVGNumberList, &aValue, aSerialized);
 }
 
-<<<<<<< HEAD
-void nsAttrValue::SetTo(const nsSVGNumberPair& aValue,
-                        const nsAString* aSerialized) {
-||||||| merged common ancestors
-void
-nsAttrValue::SetTo(const nsSVGNumberPair& aValue, const nsAString* aSerialized)
-{
-=======
 void nsAttrValue::SetTo(const SVGAnimatedNumberPair& aValue,
                         const nsAString* aSerialized) {
->>>>>>> upstream-releases
   SetSVGType(eSVGNumberPair, &aValue, aSerialized);
 }
 
@@ -548,17 +485,8 @@ void nsAttrValue::SetTo(const SVGTransformList& aValue,
   SetSVGType(eSVGTransformList, &aValue, aSerialized);
 }
 
-<<<<<<< HEAD
-void nsAttrValue::SetTo(const nsSVGViewBox& aValue,
-                        const nsAString* aSerialized) {
-||||||| merged common ancestors
-void
-nsAttrValue::SetTo(const nsSVGViewBox& aValue, const nsAString* aSerialized)
-{
-=======
 void nsAttrValue::SetTo(const SVGAnimatedViewBox& aValue,
                         const nsAString* aSerialized) {
->>>>>>> upstream-releases
   SetSVGType(eSVGViewBox, &aValue, aSerialized);
 }
 
@@ -612,18 +540,6 @@ void nsAttrValue::ToString(nsAString& aResult) const {
       GetEnumString(aResult, false);
       break;
     }
-<<<<<<< HEAD
-    case ePercent: {
-      nsAutoString intStr;
-      intStr.AppendInt(cont ? cont->mValue.mPercent : GetIntInternal());
-      aResult = intStr + NS_LITERAL_STRING("%");
-||||||| merged common ancestors
-    case ePercent:
-    {
-      nsAutoString intStr;
-      intStr.AppendInt(cont ? cont->mValue.mPercent : GetIntInternal());
-      aResult = intStr + NS_LITERAL_STRING("%");
-=======
     case ePercent: {
       nsAutoString str;
       if (cont) {
@@ -632,7 +548,6 @@ void nsAttrValue::ToString(nsAString& aResult) const {
         str.AppendInt(GetIntInternal());
       }
       aResult = str + NS_LITERAL_STRING("%");
->>>>>>> upstream-releases
 
       break;
     }
@@ -655,36 +570,14 @@ void nsAttrValue::ToString(nsAString& aResult) const {
       aResult.AppendFloat(GetDoubleValue());
       break;
     }
-<<<<<<< HEAD
-    case eSVGAngle: {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGAngle,
-                                    aResult);
-||||||| merged common ancestors
-    case eSVGAngle:
-    {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGAngle,
-                                    aResult);
-=======
     case eSVGIntegerPair: {
       SVGAttrValueWrapper::ToString(
           GetMiscContainer()->mValue.mSVGAnimatedIntegerPair, aResult);
->>>>>>> upstream-releases
       break;
     }
-<<<<<<< HEAD
-    case eSVGIntegerPair: {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGIntegerPair,
-                                    aResult);
-||||||| merged common ancestors
-    case eSVGIntegerPair:
-    {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGIntegerPair,
-                                    aResult);
-=======
     case eSVGOrient: {
       SVGAttrValueWrapper::ToString(
           GetMiscContainer()->mValue.mSVGAnimatedOrient, aResult);
->>>>>>> upstream-releases
       break;
     }
     case eSVGLength: {
@@ -702,20 +595,9 @@ void nsAttrValue::ToString(nsAString& aResult) const {
                                     aResult);
       break;
     }
-<<<<<<< HEAD
-    case eSVGNumberPair: {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGNumberPair,
-                                    aResult);
-||||||| merged common ancestors
-    case eSVGNumberPair:
-    {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGNumberPair,
-                                    aResult);
-=======
     case eSVGNumberPair: {
       SVGAttrValueWrapper::ToString(
           GetMiscContainer()->mValue.mSVGAnimatedNumberPair, aResult);
->>>>>>> upstream-releases
       break;
     }
     case eSVGPathData: {
@@ -728,20 +610,9 @@ void nsAttrValue::ToString(nsAString& aResult) const {
                                     aResult);
       break;
     }
-<<<<<<< HEAD
-    case eSVGPreserveAspectRatio: {
-      SVGAttrValueWrapper::ToString(
-          GetMiscContainer()->mValue.mSVGPreserveAspectRatio, aResult);
-||||||| merged common ancestors
-    case eSVGPreserveAspectRatio:
-    {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGPreserveAspectRatio,
-                                    aResult);
-=======
     case eSVGPreserveAspectRatio: {
       SVGAttrValueWrapper::ToString(
           GetMiscContainer()->mValue.mSVGAnimatedPreserveAspectRatio, aResult);
->>>>>>> upstream-releases
       break;
     }
     case eSVGStringList: {
@@ -754,20 +625,9 @@ void nsAttrValue::ToString(nsAString& aResult) const {
           GetMiscContainer()->mValue.mSVGTransformList, aResult);
       break;
     }
-<<<<<<< HEAD
-    case eSVGViewBox: {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGViewBox,
-                                    aResult);
-||||||| merged common ancestors
-    case eSVGViewBox:
-    {
-      SVGAttrValueWrapper::ToString(GetMiscContainer()->mValue.mSVGViewBox,
-                                    aResult);
-=======
     case eSVGViewBox: {
       SVGAttrValueWrapper::ToString(
           GetMiscContainer()->mValue.mSVGAnimatedViewBox, aResult);
->>>>>>> upstream-releases
       break;
     }
     default: {
@@ -900,17 +760,8 @@ uint32_t nsAttrValue::HashValue() const {
     case eEnum: {
       return cont->mValue.mEnumValue;
     }
-<<<<<<< HEAD
-    case ePercent: {
-      return cont->mValue.mPercent;
-||||||| merged common ancestors
-    case ePercent:
-    {
-      return cont->mValue.mPercent;
-=======
     case ePercent: {
       return cont->mDoubleValue;
->>>>>>> upstream-releases
     }
     case eColor: {
       return cont->mValue.mColor;
@@ -994,17 +845,8 @@ bool nsAttrValue::Equals(const nsAttrValue& aOther) const {
       }
       break;
     }
-<<<<<<< HEAD
-    case ePercent: {
-      if (thisCont->mValue.mPercent == otherCont->mValue.mPercent) {
-||||||| merged common ancestors
-    case ePercent:
-    {
-      if (thisCont->mValue.mPercent == otherCont->mValue.mPercent) {
-=======
     case ePercent: {
       if (thisCont->mDoubleValue == otherCont->mDoubleValue) {
->>>>>>> upstream-releases
         needsStringComparison = true;
       }
       break;
@@ -1330,17 +1172,8 @@ void nsAttrValue::SetIntValueAndType(int32_t aValue, ValueType aType,
         cont->mValue.mInteger = aValue;
         break;
       }
-<<<<<<< HEAD
-      case ePercent: {
-        cont->mValue.mPercent = aValue;
-||||||| merged common ancestors
-      case ePercent:
-      {
-        cont->mValue.mPercent = aValue;
-=======
       case ePercent: {
         cont->mDoubleValue = aValue;
->>>>>>> upstream-releases
         break;
       }
       case eEnum: {
@@ -1360,13 +1193,6 @@ void nsAttrValue::SetIntValueAndType(int32_t aValue, ValueType aType,
   }
 }
 
-<<<<<<< HEAD
-int16_t nsAttrValue::GetEnumTableIndex(const EnumTable* aTable) {
-||||||| merged common ancestors
-int16_t
-nsAttrValue::GetEnumTableIndex(const EnumTable* aTable)
-{
-=======
 void nsAttrValue::SetDoubleValueAndType(double aValue, ValueType aType,
                                         const nsAString* aStringValue) {
   MOZ_ASSERT(aType == eDoubleValue || aType == ePercent, "Unexpected type");
@@ -1377,7 +1203,6 @@ void nsAttrValue::SetDoubleValueAndType(double aValue, ValueType aType,
 }
 
 int16_t nsAttrValue::GetEnumTableIndex(const EnumTable* aTable) {
->>>>>>> upstream-releases
   int16_t index = sEnumTableArray->IndexOf(aTable);
   if (index < 0) {
     index = sEnumTableArray->Length();
@@ -1437,16 +1262,8 @@ bool nsAttrValue::ParseEnumValue(const nsAString& aValue,
   return false;
 }
 
-<<<<<<< HEAD
-bool nsAttrValue::ParseSpecialIntValue(const nsAString& aString) {
-||||||| merged common ancestors
-bool
-nsAttrValue::ParseSpecialIntValue(const nsAString& aString)
-{
-=======
 bool nsAttrValue::DoParseHTMLDimension(const nsAString& aInput,
                                        bool aEnsureNonzero) {
->>>>>>> upstream-releases
   ResetIfSet();
 
   // We don't use nsContentUtils::ParseHTMLInteger here because we
@@ -1537,20 +1354,6 @@ bool nsAttrValue::DoParseHTMLDimension(const nsAString& aInput,
     return false;
   }
 
-<<<<<<< HEAD
-  bool isPercent = result & nsContentUtils::eParseHTMLInteger_IsPercent;
-  int32_t val = std::max(originalVal, 0);
-  bool nonStrict =
-      val != originalVal ||
-      (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-      (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-||||||| merged common ancestors
-  bool isPercent = result & nsContentUtils::eParseHTMLInteger_IsPercent;
-  int32_t val = std::max(originalVal, 0);
-  bool nonStrict = val != originalVal ||
-                   (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-                   (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-=======
   // Step 8 and the spec's early return from step 7.2.
   ValueType type;
   if (position != end && *position == char16_t('%')) {
@@ -1565,7 +1368,6 @@ bool nsAttrValue::DoParseHTMLDimension(const nsAString& aInput,
   if (position != end) {
     canonical = false;
   }
->>>>>>> upstream-releases
 
   if (doubleValue) {
     MOZ_ASSERT(!canonical, "We set it false above!");
@@ -1597,23 +1399,10 @@ bool nsAttrValue::ParseIntWithBounds(const nsAString& aString, int32_t aMin,
 
   int32_t val = std::max(originalVal, aMin);
   val = std::min(val, aMax);
-<<<<<<< HEAD
-  bool nonStrict =
-      (val != originalVal) ||
-      (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-      (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-      (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-||||||| merged common ancestors
-  bool nonStrict = (val != originalVal) ||
-                   (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-                   (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-                   (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-=======
   bool nonStrict =
       (val != originalVal) ||
       (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
       (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
->>>>>>> upstream-releases
 
   SetIntValueAndType(val, eInteger, nonStrict ? &aString : nullptr);
 
@@ -1652,20 +1441,9 @@ void nsAttrValue::ParseClampedNonNegativeInt(const nsAString& aString,
 
   nsContentUtils::ParseHTMLIntegerResultFlags result;
   int32_t val = nsContentUtils::ParseHTMLInteger(aString, &result);
-<<<<<<< HEAD
-  bool nonStrict =
-      (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-      (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-      (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-||||||| merged common ancestors
-  bool nonStrict = (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-                   (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-                   (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-=======
   bool nonStrict =
       (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
       (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
->>>>>>> upstream-releases
 
   if (result & nsContentUtils::eParseHTMLInteger_ErrorOverflow) {
     if (result & nsContentUtils::eParseHTMLInteger_Negative) {
@@ -1697,20 +1475,9 @@ bool nsAttrValue::ParseNonNegativeIntValue(const nsAString& aString) {
     return false;
   }
 
-<<<<<<< HEAD
-  bool nonStrict =
-      (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-      (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-      (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-||||||| merged common ancestors
-  bool nonStrict = (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-                   (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-                   (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-=======
   bool nonStrict =
       (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
       (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
->>>>>>> upstream-releases
 
   SetIntValueAndType(originalVal, eInteger, nonStrict ? &aString : nullptr);
 
@@ -1726,20 +1493,9 @@ bool nsAttrValue::ParsePositiveIntValue(const nsAString& aString) {
     return false;
   }
 
-<<<<<<< HEAD
-  bool nonStrict =
-      (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-      (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-      (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-||||||| merged common ancestors
-  bool nonStrict = (result & nsContentUtils::eParseHTMLInteger_IsPercent) ||
-                   (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
-                   (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
-=======
   bool nonStrict =
       (result & nsContentUtils::eParseHTMLInteger_NonStandard) ||
       (result & nsContentUtils::eParseHTMLInteger_DidNotConsumeAllInput);
->>>>>>> upstream-releases
 
   SetIntValueAndType(originalVal, eInteger, nonStrict ? &aString : nullptr);
 
@@ -1834,24 +1590,10 @@ bool nsAttrValue::ParseIntMarginValue(const nsAString& aString) {
   return true;
 }
 
-<<<<<<< HEAD
-bool nsAttrValue::ParseStyleAttribute(const nsAString& aString,
-                                      nsIPrincipal* aMaybeScriptedPrincipal,
-                                      nsStyledElement* aElement) {
-  nsIDocument* ownerDoc = aElement->OwnerDoc();
-||||||| merged common ancestors
-bool
-nsAttrValue::ParseStyleAttribute(const nsAString& aString,
-                                 nsIPrincipal* aMaybeScriptedPrincipal,
-                                 nsStyledElement* aElement)
-{
-  nsIDocument* ownerDoc = aElement->OwnerDoc();
-=======
 bool nsAttrValue::ParseStyleAttribute(const nsAString& aString,
                                       nsIPrincipal* aMaybeScriptedPrincipal,
                                       nsStyledElement* aElement) {
   dom::Document* ownerDoc = aElement->OwnerDoc();
->>>>>>> upstream-releases
   nsHTMLCSSStyleSheet* sheet = ownerDoc->GetInlineStyleSheet();
   nsIURI* baseURI = aElement->GetBaseURIForStyleAttr();
   nsIURI* docURI = ownerDoc->GetDocumentURI();
@@ -2007,18 +1749,9 @@ MiscContainer* nsAttrValue::ClearMiscContainer() {
           delete cont->mValue.mIntMargin;
           break;
         }
-<<<<<<< HEAD
-        default: { break; }
-||||||| merged common ancestors
-        default:
-        {
-          break;
-        }
-=======
         default: {
           break;
         }
->>>>>>> upstream-releases
       }
     }
     ResetMiscAtomOrString();

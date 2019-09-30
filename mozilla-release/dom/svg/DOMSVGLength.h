@@ -82,15 +82,8 @@ class DOMSVGLength final : public nsISupports, public nsWrapperCache {
   friend class AutoChangeLengthNotifier;
 
   /**
-<<<<<<< HEAD
-   * Ctor for creating the object returned by
-   * nsSVGLength2::ToDOMBaseVal/ToDOMAnimVal
-||||||| merged common ancestors
-   * Ctor for creating the object returned by nsSVGLength2::ToDOMBaseVal/ToDOMAnimVal
-=======
    * Ctor for creating the object returned by
    * SVGAnimatedLength::ToDOMBaseVal/ToDOMAnimVal
->>>>>>> upstream-releases
    */
   DOMSVGLength(SVGAnimatedLength* aVal, dom::SVGElement* aSVGElement,
                bool aAnimVal);
@@ -188,15 +181,8 @@ class DOMSVGLength final : public nsISupports, public nsWrapperCache {
   JSObject* WrapObject(JSContext* aCx,
                        JS::Handle<JSObject*> aGivenProto) override;
 
-<<<<<<< HEAD
- private:
-  nsSVGElement* Element() const { return mList->Element(); }
-||||||| merged common ancestors
-private:
-=======
  private:
   dom::SVGElement* Element() const { return mList->Element(); }
->>>>>>> upstream-releases
 
   uint8_t AttrEnum() const { return mAttrEnum; }
 
@@ -242,31 +228,15 @@ private:
                        // vh, wm, calc + future additions)
   float mValue;
 
-<<<<<<< HEAD
-  // The following members are only used when we have an nsSVGLength2
-  nsSVGLength2* mVal;  // kept alive because it belongs to mSVGElement
-  RefPtr<nsSVGElement> mSVGElement;
-||||||| merged common ancestors
-  // The following members are only used when we have an nsSVGLength2
-  nsSVGLength2* mVal; // kept alive because it belongs to mSVGElement
-  RefPtr<nsSVGElement> mSVGElement;
-=======
   // The following members are only used when we have an SVGAnimatedLength
   SVGAnimatedLength* mVal;  // kept alive because it belongs to mSVGElement
   RefPtr<dom::SVGElement> mSVGElement;
->>>>>>> upstream-releases
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(DOMSVGLength, MOZILLA_DOMSVGLENGTH_IID)
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #undef MOZ_SVG_LIST_INDEX_BIT_COUNT
 

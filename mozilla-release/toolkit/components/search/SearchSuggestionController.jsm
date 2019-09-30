@@ -23,13 +23,6 @@ const BROWSER_SUGGEST_PREF = "browser.search.suggest.enabled";
 const REMOTE_TIMEOUT_PREF = "browser.search.suggest.timeout";
 const REMOTE_TIMEOUT_DEFAULT = 500; // maximum time (ms) to wait before giving up on a remote suggestions
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyServiceGetter(this, "UUIDGenerator",
-                                   "@mozilla.org/uuid-generator;1",
-                                   "nsIUUIDGenerator");
-
-||||||| merged common ancestors
-=======
 XPCOMUtils.defineLazyServiceGetter(
   this,
   "UUIDGenerator",
@@ -37,7 +30,6 @@ XPCOMUtils.defineLazyServiceGetter(
   "nsIUUIDGenerator"
 );
 
->>>>>>> upstream-releases
 /**
  * Remote search suggestions will be shown if gRemoteSuggestionsEnabled
  * is true. Global because only one pref observer is needed for all instances.
@@ -54,23 +46,6 @@ Services.prefs.addObserver(BROWSER_SUGGEST_PREF, function(
 });
 
 /**
-<<<<<<< HEAD
- * Generates an UUID.
- * @returns an UUID string, without leading or trailing braces.
- */
-function uuid() {
-  let uuid = UUIDGenerator.generateUUID().toString();
-  return uuid.slice(1, uuid.length - 1);
-}
-
-// Maps each engine name to a unique firstPartyDomain, so that requests to
-// different engines are isolated from each other and from normal browsing.
-// This is the same for all the controllers.
-var gFirstPartyDomains = new Map();
-
-/**
-||||||| merged common ancestors
-=======
  * Generates an UUID.
  *
  * @returns {string}
@@ -87,7 +62,6 @@ function uuid() {
 var gFirstPartyDomains = new Map();
 
 /**
->>>>>>> upstream-releases
  * SearchSuggestionController.jsm exists as a helper module to allow multiple consumers to request and display
  * search suggestions from a given engine, regardless of the base implementation. Much of this
  * code was originally in nsSearchSuggestions.js until it was refactored to separate it from the
@@ -337,24 +311,6 @@ this.SearchSuggestionController.prototype = {
     );
     let method = submission.postData ? "POST" : "GET";
     this._request.open(method, submission.uri.spec, true);
-<<<<<<< HEAD
-    // Don't set or store cookies or on-disk cache.
-    this._request.channel.loadFlags = Ci.nsIChannel.LOAD_ANONYMOUS |
-                                      Ci.nsIChannel.INHIBIT_PERSISTENT_CACHING;
-    // Use a unique first-party domain for each engine, to isolate the
-    // suggestions requests.
-    if (!gFirstPartyDomains.has(engine.name)) {
-      // Use the engine identifier, or an uuid when not available, because the
-      // domain cannot contain invalid chars and the engine name may not be
-      // suitable. When using an uuid the firstPartyDomain of the same engine
-      // will differ across restarts, but that's acceptable for now.
-      // TODO (Bug 1511339): use a persistent unique identifier per engine.
-      gFirstPartyDomains.set(engine.name,
-        `${engine.identifier || uuid()}.search.suggestions.mozilla`);
-    }
-    let firstPartyDomain = gFirstPartyDomains.get(engine.name);
-||||||| merged common ancestors
-=======
     // Don't set or store cookies or on-disk cache.
     this._request.channel.loadFlags =
       Ci.nsIChannel.LOAD_ANONYMOUS | Ci.nsIChannel.INHIBIT_PERSISTENT_CACHING;
@@ -372,7 +328,6 @@ this.SearchSuggestionController.prototype = {
       );
     }
     let firstPartyDomain = gFirstPartyDomains.get(engine.name);
->>>>>>> upstream-releases
 
     this._request.setOriginAttributes({
       userContextId,

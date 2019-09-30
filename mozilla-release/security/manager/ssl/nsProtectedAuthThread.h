@@ -23,24 +23,10 @@ class nsProtectedAuthThread : public nsIProtectedAuthThread {
   bool mIAmRunning;
   bool mLoginReady;
 
-<<<<<<< HEAD
-  PRThread *mThreadHandle;
-||||||| merged common ancestors
-    PRThread    *mThreadHandle;
-=======
   PRThread* mThreadHandle;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Slot to do authentication on
-  PK11SlotInfo *mSlot;
-||||||| merged common ancestors
-    // Slot to do authentication on
-    PK11SlotInfo*   mSlot;
-=======
   // Slot to do authentication on
   PK11SlotInfo* mSlot;
->>>>>>> upstream-releases
 
   // Result of the authentication
   SECStatus mLoginResult;
@@ -51,16 +37,8 @@ class nsProtectedAuthThread : public nsIProtectedAuthThread {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIPROTECTEDAUTHTHREAD
 
-<<<<<<< HEAD
-  // Sets parameters for the thread
-  void SetParams(PK11SlotInfo *slot);
-||||||| merged common ancestors
-    NS_DECL_THREADSAFE_ISUPPORTS
-    NS_DECL_NSIPROTECTEDAUTHTHREAD
-=======
   // Sets parameters for the thread
   void SetParams(PK11SlotInfo* slot);
->>>>>>> upstream-releases
 
   // Gets result of the protected authentication operation
   SECStatus GetResult();

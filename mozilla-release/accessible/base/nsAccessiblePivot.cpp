@@ -14,47 +14,16 @@
 #include "mozilla/Maybe.h"
 
 using namespace mozilla::a11y;
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
 using mozilla::Maybe;
 
->>>>>>> upstream-releases
 /**
  * An object that stores a given traversal rule during the pivot movement.
  */
-<<<<<<< HEAD
-class RuleCache {
- public:
-  explicit RuleCache(nsIAccessibleTraversalRule* aRule)
-      : mRule(aRule),
-        mAcceptRoles(nullptr),
-        mAcceptRolesLength{0},
-        mPreFilter{0} {}
-  ~RuleCache() {
-    if (mAcceptRoles) free(mAcceptRoles);
-  }
-||||||| merged common ancestors
-class RuleCache
-{
-public:
-  explicit RuleCache(nsIAccessibleTraversalRule* aRule) :
-    mRule(aRule), mAcceptRoles(nullptr),
-    mAcceptRolesLength{0}, mPreFilter{0} { }
-  ~RuleCache () {
-    if (mAcceptRoles)
-      free(mAcceptRoles);
-  }
-=======
 class RuleCache {
  public:
   explicit RuleCache(nsIAccessibleTraversalRule* aRule)
       : mRule(aRule), mPreFilter{0} {}
   ~RuleCache() {}
->>>>>>> upstream-releases
 
   nsresult ApplyFilter(Accessible* aAccessible, uint16_t* aResult);
 
@@ -849,18 +818,9 @@ bool nsAccessiblePivot::NotifyOfPivotChange(Accessible* aOldPosition,
       aOldEnd == mEndOffset)
     return false;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIAccessible> xpcOldPos = ToXPC(aOldPosition);  // death grip
-  nsTObserverArray<nsCOMPtr<nsIAccessiblePivotObserver> >::ForwardIterator iter(
-      mObservers);
-||||||| merged common ancestors
-  nsCOMPtr<nsIAccessible> xpcOldPos = ToXPC(aOldPosition); // death grip
-  nsTObserverArray<nsCOMPtr<nsIAccessiblePivotObserver> >::ForwardIterator iter(mObservers);
-=======
   nsCOMPtr<nsIAccessible> xpcOldPos = ToXPC(aOldPosition);  // death grip
   nsTObserverArray<nsCOMPtr<nsIAccessiblePivotObserver>>::ForwardIterator iter(
       mObservers);
->>>>>>> upstream-releases
   while (iter.HasMore()) {
     nsIAccessiblePivotObserver* obs = iter.GetNext();
     obs->OnPivotChanged(this, xpcOldPos, aOldStart, aOldEnd, ToXPC(mPosition),
@@ -915,20 +875,9 @@ nsresult RuleCache::ApplyFilter(Accessible* aAccessible, uint16_t* aResult) {
   if (mAcceptRoles->Length() > 0) {
     uint32_t accessibleRole = aAccessible->Role();
     bool matchesRole = false;
-<<<<<<< HEAD
-    for (uint32_t idx = 0; idx < mAcceptRolesLength; idx++) {
-      matchesRole = mAcceptRoles[idx] == accessibleRole;
-      if (matchesRole) break;
-||||||| merged common ancestors
-    for (uint32_t idx = 0; idx < mAcceptRolesLength; idx++) {
-      matchesRole = mAcceptRoles[idx] == accessibleRole;
-      if (matchesRole)
-        break;
-=======
     for (uint32_t idx = 0; idx < mAcceptRoles->Length(); idx++) {
       matchesRole = mAcceptRoles->ElementAt(idx) == accessibleRole;
       if (matchesRole) break;
->>>>>>> upstream-releases
     }
     if (!matchesRole) return NS_OK;
   }

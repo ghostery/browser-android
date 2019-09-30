@@ -132,12 +132,6 @@ class nsIGlobalObject : public nsISupports,
 
   virtual bool IsInSyncOperation() { return false; }
 
-<<<<<<< HEAD
-  virtual mozilla::Maybe<mozilla::dom::ClientInfo> GetClientInfo() const;
-||||||| merged common ancestors
-  virtual mozilla::Maybe<mozilla::dom::ClientInfo>
-  GetClientInfo() const;
-=======
   virtual mozilla::dom::DebuggerNotificationManager*
   GetOrCreateDebuggerNotificationManager() {
     return nullptr;
@@ -149,7 +143,6 @@ class nsIGlobalObject : public nsISupports,
   }
 
   virtual mozilla::Maybe<mozilla::dom::ClientInfo> GetClientInfo() const;
->>>>>>> upstream-releases
 
   virtual mozilla::Maybe<mozilla::dom::ServiceWorkerDescriptor> GetController()
       const;
@@ -175,17 +168,10 @@ class nsIGlobalObject : public nsISupports,
   // Returns a pointer to this object as an inner window if this is one or
   // nullptr otherwise.
   nsPIDOMWindowInner* AsInnerWindow();
-<<<<<<< HEAD
-
- protected:
-||||||| merged common ancestors
-protected:
-=======
 
   void QueueMicrotask(mozilla::dom::VoidFunction& aCallback);
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsIGlobalObject();
 
   void StartDying() { mIsDying = true; }

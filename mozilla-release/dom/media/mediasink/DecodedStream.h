@@ -65,58 +65,19 @@ class DecodedStream : public MediaSink {
   void Stop() override;
   bool IsStarted() const override;
   bool IsPlaying() const override;
-<<<<<<< HEAD
-  void Shutdown() override;
-||||||| merged common ancestors
-=======
   void Shutdown() override;
   void GetDebugInfo(dom::MediaSinkDebugInfo& aInfo) override;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsCString GetDebugInfo() override;
 
  protected:
-||||||| merged common ancestors
-  nsCString GetDebugInfo() override;
-
-protected:
-=======
- protected:
->>>>>>> upstream-releases
   virtual ~DecodedStream();
 
-<<<<<<< HEAD
- private:
-  media::TimeUnit FromMicroseconds(int64_t aTime) {
-    return media::TimeUnit::FromMicroseconds(aTime);
-  }
-  void DestroyData(UniquePtr<DecodedStreamData>&& aData);
-  void SendAudio(double aVolume, bool aIsSameOrigin,
-                 const PrincipalHandle& aPrincipalHandle);
-||||||| merged common ancestors
-private:
-  media::TimeUnit FromMicroseconds(int64_t aTime)
-  {
-    return media::TimeUnit::FromMicroseconds(aTime);
-  }
-  void DestroyData(UniquePtr<DecodedStreamData> aData);
-  void AdvanceTracks();
-  void SendAudio(double aVolume, bool aIsSameOrigin, const PrincipalHandle& aPrincipalHandle);
-=======
  private:
   void DestroyData(UniquePtr<DecodedStreamData>&& aData);
   void SendAudio(double aVolume, bool aIsSameOrigin,
                  const PrincipalHandle& aPrincipalHandle);
->>>>>>> upstream-releases
   void SendVideo(bool aIsSameOrigin, const PrincipalHandle& aPrincipalHandle);
-<<<<<<< HEAD
-  StreamTime SentDuration();
-||||||| merged common ancestors
-=======
   void ResetVideo(const PrincipalHandle& aPrincipalHandle);
   StreamTime SentDuration();
->>>>>>> upstream-releases
   void SendData();
   void NotifyOutput(int64_t aTime);
 
@@ -144,15 +105,8 @@ private:
    */
   WatchManager<DecodedStream> mWatchManager;
   UniquePtr<DecodedStreamData> mData;
-<<<<<<< HEAD
-  RefPtr<GenericPromise> mAudioEndPromise;
-  RefPtr<GenericPromise> mVideoEndPromise;
-||||||| merged common ancestors
-  RefPtr<GenericPromise> mFinishPromise;
-=======
   RefPtr<EndedPromise> mAudioEndedPromise;
   RefPtr<EndedPromise> mVideoEndedPromise;
->>>>>>> upstream-releases
 
   Watchable<bool> mPlaying;
   const bool& mSameOrigin;  // valid until Shutdown() is called.

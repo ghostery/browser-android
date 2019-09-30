@@ -4,22 +4,10 @@
 
 //! Computed values for counter properties
 
-<<<<<<< HEAD
-use crate::values::computed::url::ComputedImageUrl;
-use crate::values::generics::counters as generics;
-use crate::values::generics::counters::CounterIncrement as GenericCounterIncrement;
-use crate::values::generics::counters::CounterReset as GenericCounterReset;
-||||||| merged common ancestors
-use values::computed::url::ComputedImageUrl;
-use values::generics::counters as generics;
-use values::generics::counters::CounterIncrement as GenericCounterIncrement;
-use values::generics::counters::CounterReset as GenericCounterReset;
-=======
 use crate::values::computed::url::ComputedImageUrl;
 use crate::values::generics::counters as generics;
 use crate::values::generics::counters::CounterIncrement as GenericCounterIncrement;
 use crate::values::generics::counters::CounterSetOrReset as GenericCounterSetOrReset;
->>>>>>> upstream-releases
 
 /// A computed value for the `counter-increment` property.
 pub type CounterIncrement = GenericCounterIncrement<i32>;

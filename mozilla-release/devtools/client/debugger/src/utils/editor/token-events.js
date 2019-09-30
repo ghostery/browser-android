@@ -1,30 +1,6 @@
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/token-events.js
-import { getTokenLocation } from ".";
-import { isEqual } from "lodash";
-
-||||||| merged common ancestors
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.onMouseOver = onMouseOver;
-
-var _ = require("./index");
-
-var _lodash = require("devtools/client/shared/vendor/lodash");
-
-=======
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/token-events.js
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/token-events.js
-
-function isInvalidTarget(target: HTMLElement) {
-||||||| merged common ancestors
-function isInvalidTarget(target) {
-=======
 
 // @flow
 
@@ -32,7 +8,6 @@ import { getTokenLocation } from ".";
 import { isEqual } from "lodash";
 
 function isInvalidTarget(target: HTMLElement) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/token-events.js
   if (!target || !target.innerText) {
     return true;
   }
@@ -77,13 +52,7 @@ function invalidLeaveTarget(target: ?HTMLElement) {
   return false;
 }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/token-events.js
-export function onMouseOver(codeMirror) {
-||||||| merged common ancestors
-function onMouseOver(codeMirror) {
-=======
 export function onMouseOver(codeMirror: any) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/token-events.js
   let prevTokenPos = null;
 
   function onMouseLeave(event) {
@@ -102,18 +71,8 @@ export function onMouseOver(codeMirror: any) {
     });
   }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/token-events.js
-  return enterEvent => {
-    const { target } = enterEvent;
-||||||| merged common ancestors
-  return enterEvent => {
-    const {
-      target
-    } = enterEvent;
-=======
   return (enterEvent: any) => {
     const { target } = enterEvent;
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/token-events.js
 
     if (isInvalidTarget(target)) {
       return;

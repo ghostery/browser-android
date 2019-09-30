@@ -38,20 +38,12 @@ export class OnboardingCard extends React.PureComponent {
               data-l10n-id={content.text.string_id}
             />
           </span>
-<<<<<<< HEAD
-          <span>
-            <button tabIndex="1" className="button onboardingButton" onClick={this.onClick}> {content.primary_button.label} </button>
-||||||| merged common ancestors
-          <span>
-            <button tabIndex="1" className="button onboardingButton" onClick={this.onClick}> {content.button_label} </button>
-=======
           <span className="onboardingButtonContainer">
             <button
               data-l10n-id={content.primary_button.label.string_id}
               className="button onboardingButton"
               onClick={this.onClick}
             />
->>>>>>> upstream-releases
           </span>
         </div>
       </div>

@@ -58,18 +58,10 @@ class RendererOGL {
   void Update();
 
   /// This can be called on the render thread only.
-<<<<<<< HEAD
-  bool UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize,
-                       const Maybe<Range<uint8_t>>& aReadbackBuffer,
-                       bool aHadSlowFrame, RendererStats* aOutStats);
-||||||| merged common ancestors
-  bool UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize, const Maybe<Range<uint8_t>>& aReadbackBuffer);
-=======
   bool UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize,
                        const Maybe<wr::ImageFormat>& aReadbackFormat,
                        const Maybe<Range<uint8_t>>& aReadbackBuffer,
                        bool aHadSlowFrame, RendererStats* aOutStats);
->>>>>>> upstream-releases
 
   /// This can be called on the render thread only.
   void WaitForGPU();
@@ -111,30 +103,15 @@ class RendererOGL {
 
   gl::GLContext* gl() const;
 
-<<<<<<< HEAD
  protected:
-  void NotifyWebRenderError(WebRenderError aError);
-
-||||||| merged common ancestors
-protected:
-  void NotifyWebRenderError(WebRenderError aError);
-
-=======
- protected:
->>>>>>> upstream-releases
   RefPtr<RenderThread> mThread;
   UniquePtr<RenderCompositor> mCompositor;
   wr::Renderer* mRenderer;
   layers::CompositorBridgeParent* mBridge;
   wr::WindowId mWindowId;
   TimeStamp mFrameStartTime;
-<<<<<<< HEAD
-||||||| merged common ancestors
-  wr::DebugFlags mDebugFlags;
-=======
 
   RendererScreenshotGrabber mScreenshotGrabber;
->>>>>>> upstream-releases
 };
 
 }  // namespace wr

@@ -16,7 +16,7 @@ namespace a11y {
 class ia2AccessibleComponent : public IAccessibleComponent {
  public:
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleComponent
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_locationInParent(

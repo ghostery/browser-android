@@ -1990,16 +1990,8 @@ static bool
 ParsePatternSyntax(frontend::TokenStreamAnyChars& ts, LifoAlloc& alloc,
                    const CharT* chars, size_t length, bool unicode)
 {
-<<<<<<< HEAD
-    RegExpParser<CharT> parser(ts, &alloc, chars, chars + length, false, unicode, false);
-||||||| merged common ancestors
-    LifoAllocScope scope(&alloc);
-
-    RegExpParser<CharT> parser(ts, &alloc, chars, chars + length, false, unicode, false);
-=======
     RegExpParser<CharT> parser(ts, &alloc, unicode ? RegExpFlag::Unicode : 0,
                                chars, chars + length);
->>>>>>> upstream-releases
     return parser.ParsePattern() != nullptr;
 }
 

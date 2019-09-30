@@ -6,18 +6,10 @@
 
 #include "SMILTimeValue.h"
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeValue.cpp
-const nsSMILTime nsSMILTimeValue::kUnresolvedMillis =
-    std::numeric_limits<nsSMILTime>::max();
-||||||| merged common ancestors
-const nsSMILTime nsSMILTimeValue::kUnresolvedMillis =
-  std::numeric_limits<nsSMILTime>::max();
-=======
 namespace mozilla {
 
 const SMILTime SMILTimeValue::kUnresolvedMillis =
     std::numeric_limits<SMILTime>::max();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeValue.cpp
 
 //----------------------------------------------------------------------
 // SMILTimeValue methods:
@@ -26,15 +18,7 @@ static inline int8_t Cmp(int64_t aA, int64_t aB) {
   return aA == aB ? 0 : (aA > aB ? 1 : -1);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeValue.cpp
-int8_t nsSMILTimeValue::CompareTo(const nsSMILTimeValue& aOther) const {
-||||||| merged common ancestors
-int8_t
-nsSMILTimeValue::CompareTo(const nsSMILTimeValue& aOther) const
-{
-=======
 int8_t SMILTimeValue::CompareTo(const SMILTimeValue& aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeValue.cpp
   int8_t result;
 
   if (mState == STATE_DEFINITE) {

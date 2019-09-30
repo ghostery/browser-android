@@ -5562,16 +5562,7 @@ static gfx::IntPoint GetIntegerDeltaForEvent(NSEvent* aEvent) {
           // Now request the kFilePromiseMime data, which will invoke the data
           // provider. If successful, the file will have been created.
           nsCOMPtr<nsISupports> fileDataPrimitive;
-<<<<<<< HEAD
-          item->GetTransferData(kFilePromiseMime,
-                                getter_AddRefs(fileDataPrimitive));
-||||||| merged common ancestors
-          uint32_t dataSize = 0;
-          item->GetTransferData(kFilePromiseMime,
-                                getter_AddRefs(fileDataPrimitive), &dataSize);
-=======
           Unused << item->GetTransferData(kFilePromiseMime, getter_AddRefs(fileDataPrimitive));
->>>>>>> upstream-releases
         }
         CFRelease(urlRef);
         CFRelease(pboardRef);

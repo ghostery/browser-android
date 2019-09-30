@@ -33,39 +33,17 @@ class nsPreloadedStream final : public nsIAsyncInputStream {
   NS_DECL_NSIINPUTSTREAM
   NS_DECL_NSIASYNCINPUTSTREAM
 
-<<<<<<< HEAD
-  nsPreloadedStream(nsIAsyncInputStream *aStream, const char *data,
-                    uint32_t datalen);
-||||||| merged common ancestors
-    nsPreloadedStream(nsIAsyncInputStream *aStream,
-                      const char *data, uint32_t datalen);
-private:
-    ~nsPreloadedStream();
-=======
   nsPreloadedStream(nsIAsyncInputStream* aStream, const char* data,
                     uint32_t datalen);
->>>>>>> upstream-releases
 
  private:
   ~nsPreloadedStream();
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIAsyncInputStream> mStream;
-
-  char *mBuf;
-  uint32_t mOffset;
-  uint32_t mLen;
-||||||| merged common ancestors
-    char *mBuf;
-    uint32_t mOffset;
-    uint32_t mLen;
-=======
   nsCOMPtr<nsIAsyncInputStream> mStream;
 
   char* mBuf;
   uint32_t mOffset;
   uint32_t mLen;
->>>>>>> upstream-releases
 };
 
 }  // namespace net

@@ -1786,7 +1786,6 @@ class TSFPrefs final {
   DECL_AND_IMPL_BOOL_PREF("intl.ime.hack.set_input_scope_of_url_bar_to_default",
                           ShouldSetInputScopeOfURLBarToDefault, true)
   DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
       "intl.tsf.hack.allow_to_stop_hacking_on_build_17643_or_later",
       AllowToStopHackingOnBuild17643OrLater, false)
   DECL_AND_IMPL_BOOL_PREF("intl.tsf.hack.atok.create_native_caret",
@@ -1798,105 +1797,20 @@ class TSFPrefs final {
       "intl.tsf.hack.japanist10."
       "do_not_return_no_layout_error_of_composition_string",
       DoNotReturnNoLayoutErrorToJapanist10OfCompositionString, true)
-||||||| merged common ancestors
-    "intl.ime.hack.set_input_scope_of_url_bar_to_default",
-    ShouldSetInputScopeOfURLBarToDefault, true)
   DECL_AND_IMPL_BOOL_PREF(
-    "intl.tsf.hack.allow_to_stop_hacking_on_build_17643_or_later",
-    AllowToStopHackingOnBuild17643OrLater, false)
-  DECL_AND_IMPL_BOOL_PREF(
-    "intl.tsf.hack.atok.create_native_caret",
-    NeedToCreateNativeCaretForLegacyATOK, true)
-=======
-      "intl.tsf.hack.allow_to_stop_hacking_on_build_17643_or_later",
-      AllowToStopHackingOnBuild17643OrLater, false)
-  DECL_AND_IMPL_BOOL_PREF("intl.tsf.hack.atok.create_native_caret",
-                          NeedToCreateNativeCaretForLegacyATOK, true)
->>>>>>> upstream-releases
-  DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
       "intl.tsf.hack.ms_simplified_chinese.do_not_return_no_layout_error",
       DoNotReturnNoLayoutErrorToMSSimplifiedTIP, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.atok.do_not_return_no_layout_error_of_composition_string",
-    DoNotReturnNoLayoutErrorToATOKOfCompositionString, true)
-=======
-      "intl.tsf.hack.atok.do_not_return_no_layout_error_of_composition_string",
-      DoNotReturnNoLayoutErrorToATOKOfCompositionString, true)
->>>>>>> upstream-releases
   DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
       "intl.tsf.hack.ms_traditional_chinese.do_not_return_no_layout_error",
       DoNotReturnNoLayoutErrorToMSTraditionalTIP, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.japanist10."
-    "do_not_return_no_layout_error_of_composition_string",
-    DoNotReturnNoLayoutErrorToJapanist10OfCompositionString, true)
-=======
-      "intl.tsf.hack.japanist10."
-      "do_not_return_no_layout_error_of_composition_string",
-      DoNotReturnNoLayoutErrorToJapanist10OfCompositionString, true)
->>>>>>> upstream-releases
   DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
       "intl.tsf.hack.free_chang_jie.do_not_return_no_layout_error",
       DoNotReturnNoLayoutErrorToFreeChangJie, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.ms_simplified_chinese.do_not_return_no_layout_error",
-    DoNotReturnNoLayoutErrorToMSSimplifiedTIP, true)
-=======
-      "intl.tsf.hack.ms_simplified_chinese.do_not_return_no_layout_error",
-      DoNotReturnNoLayoutErrorToMSSimplifiedTIP, true)
->>>>>>> upstream-releases
   DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
       "intl.tsf.hack.ms_japanese_ime.do_not_return_no_layout_error_at_first_"
       "char",
       DoNotReturnNoLayoutErrorToMSJapaneseIMEAtFirstChar, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.ms_traditional_chinese.do_not_return_no_layout_error",
-    DoNotReturnNoLayoutErrorToMSTraditionalTIP, true)
-=======
-      "intl.tsf.hack.ms_traditional_chinese.do_not_return_no_layout_error",
-      DoNotReturnNoLayoutErrorToMSTraditionalTIP, true)
->>>>>>> upstream-releases
   DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
-      "intl.tsf.hack.ms_japanese_ime.do_not_return_no_layout_error_at_caret",
-      DoNotReturnNoLayoutErrorToMSJapaneseIMEAtCaret, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.free_chang_jie.do_not_return_no_layout_error",
-    DoNotReturnNoLayoutErrorToFreeChangJie, true)
-=======
-      "intl.tsf.hack.free_chang_jie.do_not_return_no_layout_error",
-      DoNotReturnNoLayoutErrorToFreeChangJie, true)
->>>>>>> upstream-releases
-  DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
-      "intl.tsf.hack.ms_simplified_chinese.query_insert_result",
-      NeedToHackQueryInsertForMSSimplifiedTIP, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.ms_japanese_ime.do_not_return_no_layout_error_at_first_char",
-    DoNotReturnNoLayoutErrorToMSJapaneseIMEAtFirstChar, true)
-=======
-      "intl.tsf.hack.ms_japanese_ime.do_not_return_no_layout_error_at_first_"
-      "char",
-      DoNotReturnNoLayoutErrorToMSJapaneseIMEAtFirstChar, true)
->>>>>>> upstream-releases
-  DECL_AND_IMPL_BOOL_PREF(
-<<<<<<< HEAD
-      "intl.tsf.hack.ms_traditional_chinese.query_insert_result",
-      NeedToHackQueryInsertForMSTraditionalTIP, true)
-||||||| merged common ancestors
-    "intl.tsf.hack.ms_japanese_ime.do_not_return_no_layout_error_at_caret",
-    DoNotReturnNoLayoutErrorToMSJapaneseIMEAtCaret, true)
-  DECL_AND_IMPL_BOOL_PREF(
-    "intl.tsf.hack.ms_simplified_chinese.query_insert_result",
-    NeedToHackQueryInsertForMSSimplifiedTIP, true)
-  DECL_AND_IMPL_BOOL_PREF(
-    "intl.tsf.hack.ms_traditional_chinese.query_insert_result",
-    NeedToHackQueryInsertForMSTraditionalTIP, true)
-=======
       "intl.tsf.hack.ms_japanese_ime.do_not_return_no_layout_error_at_caret",
       DoNotReturnNoLayoutErrorToMSJapaneseIMEAtCaret, true)
   DECL_AND_IMPL_BOOL_PREF(
@@ -1905,7 +1819,6 @@ class TSFPrefs final {
   DECL_AND_IMPL_BOOL_PREF(
       "intl.tsf.hack.ms_traditional_chinese.query_insert_result",
       NeedToHackQueryInsertForMSTraditionalTIP, true)
->>>>>>> upstream-releases
 
 #undef DECL_AND_IMPL_BOOL_PREF
 };
@@ -1931,46 +1844,6 @@ bool TSFTextStore::sIsKeyboardEventDispatched = false;
 #define TEXTSTORE_DEFAULT_VIEW (1)
 
 TSFTextStore::TSFTextStore()
-<<<<<<< HEAD
-    : mEditCookie(0),
-      mSinkMask(0),
-      mLock(0),
-      mLockQueued(0),
-      mHandlingKeyMessage(0),
-      mContentForTSF(mComposition, mSelectionForTSF),
-      mRequestedAttrValues(false),
-      mIsRecordingActionsWithoutLock(false),
-      mHasReturnedNoLayoutError(false),
-      mWaitingQueryLayout(false),
-      mPendingDestroy(false),
-      mDeferClearingContentForTSF(false),
-      mNativeCaretIsCreated(false),
-      mDeferNotifyingTSF(false),
-      mDeferCommittingComposition(false),
-      mDeferCancellingComposition(false),
-      mDestroyed(false),
-      mBeingDestroyed(false) {
-||||||| merged common ancestors
-  : mEditCookie(0)
-  , mSinkMask(0)
-  , mLock(0)
-  , mLockQueued(0)
-  , mHandlingKeyMessage(0)
-  , mContentForTSF(mComposition, mSelectionForTSF)
-  , mRequestedAttrValues(false)
-  , mIsRecordingActionsWithoutLock(false)
-  , mHasReturnedNoLayoutError(false)
-  , mWaitingQueryLayout(false)
-  , mPendingDestroy(false)
-  , mDeferClearingContentForTSF(false)
-  , mNativeCaretIsCreated(false)
-  , mDeferNotifyingTSF(false)
-  , mDeferCommittingComposition(false)
-  , mDeferCancellingComposition(false)
-  , mDestroyed(false)
-  , mBeingDestroyed(false)
-{
-=======
     : mEditCookie(0),
       mSinkMask(0),
       mLock(0),
@@ -1988,7 +1861,6 @@ TSFTextStore::TSFTextStore()
       mDeferCancellingComposition(false),
       mDestroyed(false),
       mBeingDestroyed(false) {
->>>>>>> upstream-releases
   for (int32_t i = 0; i < NUM_OF_SUPPORTED_ATTRS; i++) {
     mRequestedAttrs[i] = false;
   }
@@ -4329,34 +4201,20 @@ TSFTextStore::RetrieveRequestedAttrs(ULONG ulCount, TS_ATTRVAL* paAttrVals,
           Selection& selectionForTSF = SelectionForTSFRef();
           paAttrVals[count].varValue.vt = VT_BOOL;
           paAttrVals[count].varValue.boolVal =
-<<<<<<< HEAD
-              selectionForTSF.GetWritingMode().IsVertical() ? VARIANT_TRUE
-                                                            : VARIANT_FALSE;
-||||||| merged common ancestors
-            selectionForTSF.GetWritingMode().IsVertical() ? VARIANT_TRUE :
-                                                            VARIANT_FALSE;
-=======
               !selectionForTSF.IsDirty() &&
                       selectionForTSF.GetWritingMode().IsVertical()
                   ? VARIANT_TRUE
                   : VARIANT_FALSE;
->>>>>>> upstream-releases
           break;
         }
         case eTextOrientation: {
           Selection& selectionForTSF = SelectionForTSFRef();
           paAttrVals[count].varValue.vt = VT_I4;
           paAttrVals[count].varValue.lVal =
-<<<<<<< HEAD
-              selectionForTSF.GetWritingMode().IsVertical() ? 2700 : 0;
-||||||| merged common ancestors
-            selectionForTSF.GetWritingMode().IsVertical() ? 2700 : 0;
-=======
               !selectionForTSF.IsDirty() &&
                       selectionForTSF.GetWritingMode().IsVertical()
                   ? 2700
                   : 0;
->>>>>>> upstream-releases
           break;
         }
         default:
@@ -4601,56 +4459,6 @@ TSFTextStore::GetACPFromPoint(TsViewCookie vcView, const POINT* pt,
 }
 
 STDMETHODIMP
-<<<<<<< HEAD
-TSFTextStore::GetTextExt(TsViewCookie vcView, LONG acpStart, LONG acpEnd,
-                         RECT* prc, BOOL* pfClipped) {
-  MOZ_LOG(
-      sTextStoreLog, LogLevel::Info,
-      ("0x%p TSFTextStore::GetTextExt(vcView=%ld, "
-       "acpStart=%ld, acpEnd=%ld, prc=0x%p, pfClipped=0x%p), "
-       "IsHandlingComposition()=%s, "
-       "mContentForTSF={ MinOffsetOfLayoutChanged()=%u, "
-       "LatestCompositionStartOffset()=%d, LatestCompositionEndOffset()=%d }, "
-       "mComposition= { IsComposing()=%s, mStart=%d, EndOffset()=%d }, "
-       "mDeferNotifyingTSF=%s, mWaitingQueryLayout=%s",
-       this, vcView, acpStart, acpEnd, prc, pfClipped,
-       GetBoolName(IsHandlingComposition()),
-       mContentForTSF.MinOffsetOfLayoutChanged(),
-       mContentForTSF.HasOrHadComposition()
-           ? mContentForTSF.LatestCompositionStartOffset()
-           : -1,
-       mContentForTSF.HasOrHadComposition()
-           ? mContentForTSF.LatestCompositionEndOffset()
-           : -1,
-       GetBoolName(mComposition.IsComposing()), mComposition.mStart,
-       mComposition.EndOffset(), GetBoolName(mDeferNotifyingTSF),
-       GetBoolName(mWaitingQueryLayout)));
-||||||| merged common ancestors
-TSFTextStore::GetTextExt(TsViewCookie vcView,
-                         LONG acpStart,
-                         LONG acpEnd,
-                         RECT* prc,
-                         BOOL* pfClipped)
-{
-  MOZ_LOG(sTextStoreLog, LogLevel::Info,
-    ("0x%p TSFTextStore::GetTextExt(vcView=%ld, "
-     "acpStart=%ld, acpEnd=%ld, prc=0x%p, pfClipped=0x%p), "
-     "IsHandlingComposition()=%s, "
-     "mContentForTSF={ MinOffsetOfLayoutChanged()=%u, "
-     "LatestCompositionStartOffset()=%d, LatestCompositionEndOffset()=%d }, "
-     "mComposition= { IsComposing()=%s, mStart=%d, EndOffset()=%d }, "
-     "mDeferNotifyingTSF=%s, mWaitingQueryLayout=%s",
-     this, vcView, acpStart, acpEnd, prc, pfClipped,
-     GetBoolName(IsHandlingComposition()),
-     mContentForTSF.MinOffsetOfLayoutChanged(),
-     mContentForTSF.HasOrHadComposition() ?
-       mContentForTSF.LatestCompositionStartOffset() : -1,
-     mContentForTSF.HasOrHadComposition() ?
-       mContentForTSF.LatestCompositionEndOffset() : -1,
-     GetBoolName(mComposition.IsComposing()),
-     mComposition.mStart, mComposition.EndOffset(),
-     GetBoolName(mDeferNotifyingTSF), GetBoolName(mWaitingQueryLayout)));
-=======
 TSFTextStore::GetTextExt(TsViewCookie vcView, LONG acpStart, LONG acpEnd,
                          RECT* prc, BOOL* pfClipped) {
   MOZ_LOG(
@@ -4676,7 +4484,6 @@ TSFTextStore::GetTextExt(TsViewCookie vcView, LONG acpStart, LONG acpEnd,
        mComposition.EndOffset(), GetBoolName(mDeferNotifyingTSF),
        GetBoolName(mWaitingQueryLayout),
        GetBoolName(IMEHandler::IsA11yHandlingNativeCaret())));
->>>>>>> upstream-releases
 
   if (!IsReadLocked()) {
     MOZ_LOG(sTextStoreLog, LogLevel::Error,
@@ -6663,20 +6470,10 @@ nsresult TSFTextStore::OnMouseButtonEventInternal(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void TSFTextStore::CreateNativeCaret() {
-  MaybeDestroyNativeCaret();
-||||||| merged common ancestors
-void
-TSFTextStore::CreateNativeCaret()
-{
-  MaybeDestroyNativeCaret();
-=======
 void TSFTextStore::CreateNativeCaret() {
   MOZ_ASSERT(!IMEHandler::IsA11yHandlingNativeCaret());
 
   IMEHandler::MaybeDestroyNativeCaret();
->>>>>>> upstream-releases
 
   // Don't create native caret after destroyed.
   if (mDestroyed) {
@@ -6723,106 +6520,20 @@ void TSFTextStore::CreateNativeCaret() {
   DispatchEvent(queryCaretRect);
   if (NS_WARN_IF(!queryCaretRect.mSucceeded)) {
     MOZ_LOG(sTextStoreLog, LogLevel::Error,
-<<<<<<< HEAD
             ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
              "eQueryCaretRect failure (offset=%d)",
              this, caretOffset));
-    return;
-  }
-
-  LayoutDeviceIntRect& caretRect = queryCaretRect.mReply.mRect;
-  mNativeCaretIsCreated = ::CreateCaret(mWidget->GetWindowHandle(), nullptr,
-                                        caretRect.Width(), caretRect.Height());
-  if (!mNativeCaretIsCreated) {
-    MOZ_LOG(sTextStoreLog, LogLevel::Error,
-            ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
-             "CreateCaret() failure",
-             this));
-||||||| merged common ancestors
-      ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
-       "eQueryCaretRect failure (offset=%d)", this, caretOffset));
-    return;
-  }
-
-  LayoutDeviceIntRect& caretRect = queryCaretRect.mReply.mRect;
-  mNativeCaretIsCreated = ::CreateCaret(mWidget->GetWindowHandle(), nullptr,
-                                        caretRect.Width(), caretRect.Height());
-  if (!mNativeCaretIsCreated) {
-    MOZ_LOG(sTextStoreLog, LogLevel::Error,
-      ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
-       "CreateCaret() failure", this));
-=======
-            ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
-             "eQueryCaretRect failure (offset=%d)",
-             this, caretOffset));
->>>>>>> upstream-releases
     return;
   }
 
   if (!IMEHandler::CreateNativeCaret(static_cast<nsWindow*>(mWidget.get()),
                                      queryCaretRect.mReply.mRect)) {
     MOZ_LOG(sTextStoreLog, LogLevel::Error,
-<<<<<<< HEAD
-            ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
-             "no top level window",
-             this));
-    return;
-  }
-
-  if (toplevelWindow != window) {
-    caretRect.MoveBy(toplevelWindow->WidgetToScreenOffset());
-    caretRect.MoveBy(-window->WidgetToScreenOffset());
-  }
-
-  ::SetCaretPos(caretRect.X(), caretRect.Y());
-}
-
-void TSFTextStore::MaybeDestroyNativeCaret() {
-  if (!mNativeCaretIsCreated) {
-||||||| merged common ancestors
-      ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
-       "no top level window", this));
-    return;
-  }
-
-  if (toplevelWindow != window) {
-    caretRect.MoveBy(toplevelWindow->WidgetToScreenOffset());
-    caretRect.MoveBy(-window->WidgetToScreenOffset());
-  }
-
-  ::SetCaretPos(caretRect.X(), caretRect.Y());
-}
-
-void
-TSFTextStore::MaybeDestroyNativeCaret()
-{
-  if (!mNativeCaretIsCreated) {
-=======
             ("0x%p   TSFTextStore::CreateNativeCaret() FAILED due to "
              "IMEHandler::CreateNativeCaret() failure",
              this));
->>>>>>> upstream-releases
     return;
   }
-<<<<<<< HEAD
-
-  MOZ_LOG(sTextStoreLog, LogLevel::Debug,
-          ("0x%p   TSFTextStore::MaybeDestroyNativeCaret(), "
-           "destroying native caret",
-           this));
-
-  ::DestroyCaret();
-  mNativeCaretIsCreated = false;
-||||||| merged common ancestors
-
-  MOZ_LOG(sTextStoreLog, LogLevel::Debug,
-    ("0x%p   TSFTextStore::MaybeDestroyNativeCaret(), "
-     "destroying native caret", this));
-
-  ::DestroyCaret();
-  mNativeCaretIsCreated = false;
-=======
->>>>>>> upstream-releases
 }
 
 void TSFTextStore::CommitCompositionInternal(bool aDiscard) {

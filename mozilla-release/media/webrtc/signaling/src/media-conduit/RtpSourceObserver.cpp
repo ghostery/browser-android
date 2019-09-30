@@ -19,23 +19,9 @@ double RtpSourceObserver::RtpSourceEntry::ToLinearAudioLevel() const {
 RtpSourceObserver::RtpSourceObserver()
     : mMaxJitterWindow(0), mLevelGuard("RtpSourceObserver::mLevelGuard") {}
 
-<<<<<<< HEAD
-void RtpSourceObserver::OnRtpPacket(const webrtc::WebRtcRTPHeader* aHeader,
-                                    const int64_t aTimestamp,
-                                    const uint32_t aJitter) {
-  auto& header = aHeader->header;
-||||||| merged common ancestors
-void
-RtpSourceObserver::OnRtpPacket(const webrtc::WebRtcRTPHeader* aHeader,
-                                     const int64_t aTimestamp,
-                                     const uint32_t aJitter)
-{
-  auto& header = aHeader->header;
-=======
 void RtpSourceObserver::OnRtpPacket(const webrtc::RTPHeader& aHeader,
                                     const int64_t aTimestamp,
                                     const uint32_t aJitter) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLevelGuard);
   {
     mMaxJitterWindow =
@@ -44,17 +30,8 @@ void RtpSourceObserver::OnRtpPacket(const webrtc::RTPHeader& aHeader,
     auto& hist = mRtpSources[GetKey(aHeader.ssrc, EntryType::Synchronization)];
     hist.Prune(aTimestamp);
     // ssrc-audio-level handling
-<<<<<<< HEAD
-    hist.Insert(aTimestamp, jitterAdjusted, header.extension.hasAudioLevel,
-                header.extension.audioLevel);
-||||||| merged common ancestors
-    hist.Insert(aTimestamp, jitterAdjusted,
-                header.extension.hasAudioLevel,
-                header.extension.audioLevel);
-=======
     hist.Insert(aTimestamp, jitterAdjusted, aHeader.extension.hasAudioLevel,
                 aHeader.extension.audioLevel);
->>>>>>> upstream-releases
 
     // csrc-audio-level handling
     const auto& list = aHeader.extension.csrcAudioLevels;

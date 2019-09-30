@@ -42,16 +42,7 @@ class Client {
 
   enum Type {
     IDB = 0,
-<<<<<<< HEAD
     // APPCACHE,
-    ASMJS,
-||||||| merged common ancestors
-    //LS,
-    //APPCACHE,
-    ASMJS,
-=======
-    // APPCACHE,
->>>>>>> upstream-releases
     DOMCACHE,
     SDB,
     LS,
@@ -100,19 +91,7 @@ class Client {
   static nsresult TypeFromText(const nsAString& aText, Type& aType) {
     if (aText.EqualsLiteral(IDB_DIRECTORY_NAME)) {
       aType = IDB;
-<<<<<<< HEAD
-    } else if (aText.EqualsLiteral(ASMJSCACHE_DIRECTORY_NAME)) {
-      aType = ASMJS;
     } else if (aText.EqualsLiteral(DOMCACHE_DIRECTORY_NAME)) {
-||||||| merged common ancestors
-    }
-    else if (aText.EqualsLiteral(ASMJSCACHE_DIRECTORY_NAME)) {
-      aType = ASMJS;
-    }
-    else if (aText.EqualsLiteral(DOMCACHE_DIRECTORY_NAME)) {
-=======
-    } else if (aText.EqualsLiteral(DOMCACHE_DIRECTORY_NAME)) {
->>>>>>> upstream-releases
       aType = DOMCACHE;
     } else if (aText.EqualsLiteral(SDB_DIRECTORY_NAME)) {
       aType = SDB;
@@ -143,21 +122,12 @@ class Client {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  // Methods which are called on the IO thread.
-  virtual nsresult UpgradeStorageFrom1_0To2_0(nsIFile* aDirectory) {
-||||||| merged common ancestors
-  virtual nsresult
-  UpgradeStorageFrom2_0To2_1(nsIFile* aDirectory)
-  {
-=======
   static bool IsDeprecatedClient(const nsAString& aText) {
     return aText.EqualsLiteral(ASMJSCACHE_DIRECTORY_NAME);
   }
 
   // Methods which are called on the IO thread.
   virtual nsresult UpgradeStorageFrom1_0To2_0(nsIFile* aDirectory) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -165,47 +135,10 @@ class Client {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  virtual nsresult InitOrigin(PersistenceType aPersistenceType,
-                              const nsACString& aGroup,
-                              const nsACString& aOrigin,
-                              const AtomicBool& aCanceled,
-                              UsageInfo* aUsageInfo) = 0;
-
-  virtual nsresult GetUsageForOrigin(PersistenceType aPersistenceType,
-                                     const nsACString& aGroup,
-                                     const nsACString& aOrigin,
-                                     const AtomicBool& aCanceled,
-                                     UsageInfo* aUsageInfo) = 0;
-
-  // This method is called when origins are about to be cleared
-  // (except the case when clearing is triggered by the origin eviction).
-  virtual nsresult AboutToClearOrigins(
-      const Nullable<PersistenceType>& aPersistenceType,
-      const OriginScope& aOriginScope) {
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  virtual nsresult
-  GetUsageForOrigin(PersistenceType aPersistenceType,
-                    const nsACString& aGroup,
-                    const nsACString& aOrigin,
-                    const AtomicBool& aCanceled,
-                    UsageInfo* aUsageInfo) = 0;
-=======
   virtual nsresult UpgradeStorageFrom2_1To2_2(nsIFile* aDirectory) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void OnOriginClearCompleted(PersistenceType aPersistenceType,
-                                      const nsACString& aOrigin) = 0;
-||||||| merged common ancestors
-  virtual void
-  OnOriginClearCompleted(PersistenceType aPersistenceType,
-                         const nsACString& aOrigin) = 0;
-=======
   virtual nsresult InitOrigin(PersistenceType aPersistenceType,
                               const nsACString& aGroup,
                               const nsACString& aOrigin,
@@ -225,87 +158,24 @@ class Client {
       const OriginScope& aOriginScope) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void ReleaseIOThreadObjects() = 0;
-||||||| merged common ancestors
-  virtual void
-  ReleaseIOThreadObjects() = 0;
-=======
   virtual void OnOriginClearCompleted(PersistenceType aPersistenceType,
                                       const nsACString& aOrigin) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Methods which are called on the background thread.
-  virtual void AbortOperations(const nsACString& aOrigin) = 0;
-||||||| merged common ancestors
-  // Methods which are called on the background thread.
-  virtual void
-  AbortOperations(const nsACString& aOrigin) = 0;
-=======
   virtual void ReleaseIOThreadObjects() = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void AbortOperationsForProcess(ContentParentId aContentParentId) = 0;
-||||||| merged common ancestors
-  virtual void
-  AbortOperationsForProcess(ContentParentId aContentParentId) = 0;
-=======
   virtual void OnStorageInitFailed(){};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void StartIdleMaintenance() = 0;
-||||||| merged common ancestors
-  virtual void
-  StartIdleMaintenance() = 0;
-=======
   // Methods which are called on the background thread.
   virtual void AbortOperations(const nsACString& aOrigin) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void StopIdleMaintenance() = 0;
-||||||| merged common ancestors
-  virtual void
-  StopIdleMaintenance() = 0;
-=======
   virtual void AbortOperationsForProcess(ContentParentId aContentParentId) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void ShutdownWorkThreads() = 0;
-||||||| merged common ancestors
-  virtual void
-  ShutdownWorkThreads() = 0;
-=======
   virtual void StartIdleMaintenance() = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Methods which are called on the main thread.
-  virtual void DidInitialize(QuotaManager* aQuotaManager) {}
-||||||| merged common ancestors
-  // Methods which are called on the main thread.
-  virtual void
-  DidInitialize(QuotaManager* aQuotaManager)
-  { }
-=======
   virtual void StopIdleMaintenance() = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void WillShutdown() {}
-||||||| merged common ancestors
-  virtual void
-  WillShutdown()
-  { }
-=======
   virtual void ShutdownWorkThreads() = 0;
->>>>>>> upstream-releases
 
  protected:
   virtual ~Client() {}

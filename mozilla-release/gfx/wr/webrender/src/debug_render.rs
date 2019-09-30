@@ -2,24 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/debug_render.rs
-use api::{ColorU, ImageFormat, TextureTarget};
-use api::{DeviceIntRect, DeviceRect, DevicePoint, DeviceSize, DeviceIntSize};
-use debug_font_data;
-use device::{Device, Program, Texture, TextureSlot, VertexDescriptor, ShaderError, VAO};
-use device::{TextureFilter, VertexAttribute, VertexAttributeKind, VertexUsageHint};
-||||||| merged common ancestors
-use api::{ColorU, DeviceIntRect, DeviceUintSize, ImageFormat, TextureTarget};
-use debug_font_data;
-use device::{Device, Program, Texture, TextureSlot, VertexDescriptor, ShaderError, VAO};
-use device::{TextureFilter, VertexAttribute, VertexAttributeKind, VertexUsageHint};
-=======
 use api::{ColorU, ColorF, ImageFormat, TextureTarget};
 use api::units::*;
 use crate::debug_font_data;
 use crate::device::{Device, Program, Texture, TextureSlot, VertexDescriptor, ShaderError, VAO};
 use crate::device::{TextureFilter, VertexAttribute, VertexAttributeKind, VertexUsageHint};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/debug_render.rs
 use euclid::{Point2D, Rect, Size2D, Transform3D};
 use crate::internal_types::{ORTHO_FAR_PLANE, ORTHO_NEAR_PLANE};
 use std::f32;
@@ -325,14 +312,8 @@ impl DebugRenderer {
     pub fn render(
         &mut self,
         device: &mut Device,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/debug_render.rs
-        viewport_size: Option<DeviceIntSize>,
-||||||| merged common ancestors
-        viewport_size: Option<DeviceUintSize>,
-=======
         viewport_size: Option<DeviceIntSize>,
         scale: f32,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/debug_render.rs
     ) {
         if let Some(viewport_size) = viewport_size {
             device.disable_depth();

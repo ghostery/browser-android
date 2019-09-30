@@ -16,33 +16,11 @@
         buttons="accept,cancel,help"
         persist="lastSelected screenX screenY"
         role="dialog"
-<<<<<<< HEAD
-        ondialoghelp="openPrefsHelp()"
         data-l10n-id="sanitize-prefs"
         data-l10n-attrs="style"
-||||||| merged common ancestors
-        ondialoghelp="openPrefsHelp()"
-        style="width: &sanitizePrefs2.modal.width;"
-        title="&sanitizePrefs2.title;"
-=======
-        data-l10n-id="sanitize-prefs"
-        data-l10n-attrs="style"
->>>>>>> upstream-releases
         helpTopic="prefs-clear-private-data"
         onload="gSanitizeDialog.init();">
 
-<<<<<<< HEAD
-  <linkset>
-    <link rel="localization" href="browser/sanitize.ftl"/>
-    <link rel="localization" href="branding/brand.ftl"/>
-  </linkset>
-
-  <script type="application/javascript" src="chrome://browser/content/utilityOverlay.js"/>
-  <script type="application/javascript" src="chrome://global/content/preferencesBindings.js"/>
-||||||| merged common ancestors
-  <script type="application/javascript" src="chrome://browser/content/utilityOverlay.js"/>
-  <script type="application/javascript" src="chrome://global/content/preferencesBindings.js"/>
-=======
   <linkset>
     <html:link rel="localization" href="browser/sanitize.ftl"/>
     <html:link rel="localization" href="branding/brand.ftl"/>
@@ -50,123 +28,15 @@
 
   <script src="chrome://browser/content/utilityOverlay.js"/>
   <script src="chrome://global/content/preferencesBindings.js"/>
->>>>>>> upstream-releases
 
   <keyset>
     <key data-l10n-id="window-close" modifiers="accel" oncommand="Preferences.close(event)"/>
   </keyset>
 
-<<<<<<< HEAD
-  <script type="application/javascript" src="chrome://browser/content/preferences/sanitize.js"/>
-||||||| merged common ancestors
-  <vbox id="SanitizeDialogPane" class="prefpane">
-
-    <script type="application/javascript" src="chrome://browser/content/preferences/sanitize.js"/>
-=======
   <script src="chrome://browser/content/preferences/sanitize.js"/>
->>>>>>> upstream-releases
 
   <description data-l10n-id="clear-data-settings-label"></description>
 
-<<<<<<< HEAD
-  <groupbox>
-    <label><html:h2 data-l10n-id="history-section-label"/></label>
-    <grid flex="1">
-      <columns>
-        <column data-l10n-id="sanitize-prefs-style" data-l10n-attrs="style"/>
-        <column flex="1"/>
-      </columns>
-      <rows>
-        <row>
-          <checkbox data-l10n-id="item-history-and-downloads"
-                    preference="privacy.clearOnShutdown.history"/>
-          <checkbox data-l10n-id="item-cookies"
-                    preference="privacy.clearOnShutdown.cookies"/>
-        </row>
-        <row>
-          <checkbox data-l10n-id="item-active-logins"
-                    preference="privacy.clearOnShutdown.sessions"/>
-          <checkbox data-l10n-id="item-cache"
-                    preference="privacy.clearOnShutdown.cache"/>
-        </row>
-        <row>
-          <checkbox data-l10n-id="item-form-search-history"
-                    preference="privacy.clearOnShutdown.formdata"/>
-        </row>
-      </rows>
-    </grid>
-  </groupbox>
-  <groupbox>
-    <label><html:h2 data-l10n-id="data-section-label"/></label>
-    <grid flex="1">
-      <columns>
-        <column data-l10n-id="sanitize-prefs-style" data-l10n-attrs="style"/>
-        <column flex="1"/>
-      </columns>
-      <rows>
-        <row>
-          <checkbox data-l10n-id="item-site-preferences"
-                    preference="privacy.clearOnShutdown.siteSettings"/>
-          <checkbox data-l10n-id="item-offline-apps"
-                    preference="privacy.clearOnShutdown.offlineApps"/>
-        </row>
-      </rows>
-    </grid>
-  </groupbox>
-||||||| merged common ancestors
-    <groupbox orient="horizontal">
-      <caption><label>&historySection.label;</label></caption>
-      <grid flex="1">
-        <columns>
-          <column style="width: &sanitizePrefs2.column.width;"/>
-          <column flex="1"/>
-        </columns>
-        <rows>
-          <row>
-            <checkbox label="&itemHistoryAndDownloads.label;"
-                      accesskey="&itemHistoryAndDownloads.accesskey;"
-                      preference="privacy.clearOnShutdown.history"/>
-            <checkbox label="&itemCookies.label;"
-                      accesskey="&itemCookies.accesskey;"
-                      preference="privacy.clearOnShutdown.cookies"/>
-          </row>
-          <row>
-            <checkbox label="&itemActiveLogins.label;"
-                      accesskey="&itemActiveLogins.accesskey;"
-                      preference="privacy.clearOnShutdown.sessions"/>
-            <checkbox label="&itemCache.label;"
-                      accesskey="&itemCache.accesskey;"
-                      preference="privacy.clearOnShutdown.cache"/>
-          </row>
-          <row>
-            <checkbox label="&itemFormSearchHistory.label;"
-                      accesskey="&itemFormSearchHistory.accesskey;"
-                      preference="privacy.clearOnShutdown.formdata"/>
-          </row>
-        </rows>
-      </grid>
-    </groupbox>
-    <groupbox orient="horizontal">
-      <caption><label>&dataSection.label;</label></caption>
-      <grid flex="1">
-        <columns>
-          <column style="width: &sanitizePrefs2.column.width;"/>
-          <column flex="1"/>
-        </columns>
-        <rows>
-          <row>
-            <checkbox label="&itemSitePreferences.label;"
-                      accesskey="&itemSitePreferences.accesskey;"
-                      preference="privacy.clearOnShutdown.siteSettings"/>
-            <checkbox label="&itemOfflineApps.label;"
-                      accesskey="&itemOfflineApps.accesskey;"
-                      preference="privacy.clearOnShutdown.offlineApps"/>
-          </row>
-        </rows>
-      </grid>
-    </groupbox>
-  </vbox>
-=======
   <groupbox>
     <label><html:h2 data-l10n-id="history-section-label"/></label>
     <hbox>
@@ -199,5 +69,4 @@
       </vbox>
     </hbox>
   </groupbox>
->>>>>>> upstream-releases
 </dialog>

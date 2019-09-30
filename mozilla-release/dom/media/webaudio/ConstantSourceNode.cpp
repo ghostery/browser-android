@@ -154,32 +154,12 @@ class ConstantSourceNodeEngine final : public AudioNodeEngine {
 };
 
 ConstantSourceNode::ConstantSourceNode(AudioContext* aContext)
-<<<<<<< HEAD
-    : AudioScheduledSourceNode(aContext, 2, ChannelCountMode::Max,
-                               ChannelInterpretation::Speakers),
-      mOffset(new AudioParam(this, ConstantSourceNodeEngine::OFFSET, "offset",
-                             1.0f)),
-      mStartCalled(false) {
-  ConstantSourceNodeEngine* engine =
-      new ConstantSourceNodeEngine(this, aContext->Destination());
-||||||| merged common ancestors
-  : AudioScheduledSourceNode(aContext,
-                             2,
-                             ChannelCountMode::Max,
-                             ChannelInterpretation::Speakers)
-  , mOffset(new AudioParam(this, ConstantSourceNodeEngine::OFFSET,
-                           "offset", 1.0f))
-  , mStartCalled(false)
-{
-  ConstantSourceNodeEngine* engine = new ConstantSourceNodeEngine(this, aContext->Destination());
-=======
     : AudioScheduledSourceNode(aContext, 2, ChannelCountMode::Max,
                                ChannelInterpretation::Speakers),
       mStartCalled(false) {
   CreateAudioParam(mOffset, ConstantSourceNodeEngine::OFFSET, "offset", 1.0f);
   ConstantSourceNodeEngine* engine =
       new ConstantSourceNodeEngine(this, aContext->Destination());
->>>>>>> upstream-releases
   mStream = AudioNodeStream::Create(aContext, engine,
                                     AudioNodeStream::NEED_MAIN_THREAD_FINISHED,
                                     aContext->Graph());
@@ -243,12 +223,7 @@ void ConstantSourceNode::Start(double aWhen, ErrorResult& aRv) {
                                   aWhen);
 
   MarkActive();
-<<<<<<< HEAD
-  Context()->NotifyScheduledSourceNodeStarted();
-||||||| merged common ancestors
-=======
   Context()->StartBlockedAudioContextIfAllowed();
->>>>>>> upstream-releases
 }
 
 void ConstantSourceNode::Stop(double aWhen, ErrorResult& aRv) {

@@ -19,11 +19,6 @@ class BlobImpl;
 class ContentChild;
 class ContentParent;
 
-<<<<<<< HEAD
-}  // namespace dom
-||||||| merged common ancestors
-} // namespace dom
-=======
 }  // namespace dom
 
 namespace net {
@@ -31,7 +26,6 @@ namespace net {
 class SocketProcessImpl;
 
 }  // namespace net
->>>>>>> upstream-releases
 
 namespace ipc {
 
@@ -66,48 +60,20 @@ class BackgroundChild final {
 
   typedef mozilla::ipc::Transport Transport;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
  public:
   // See above.
   static PBackgroundChild* GetForCurrentThread();
 
->>>>>>> upstream-releases
   // See above.
-<<<<<<< HEAD
-  static PBackgroundChild* GetForCurrentThread();
-||||||| merged common ancestors
-  static PBackgroundChild*
-  GetForCurrentThread();
-=======
   static PBackgroundChild* GetOrCreateForCurrentThread(
       nsIEventTarget* aMainEventTarget = nullptr);
->>>>>>> upstream-releases
 
   // See above.
-<<<<<<< HEAD
-  static PBackgroundChild* GetOrCreateForCurrentThread(
-      nsIEventTarget* aMainEventTarget = nullptr);
-||||||| merged common ancestors
-  static PBackgroundChild*
-  GetOrCreateForCurrentThread();
-=======
   static void CloseForCurrentThread();
->>>>>>> upstream-releases
 
   // See above.
-<<<<<<< HEAD
-  static void CloseForCurrentThread();
-||||||| merged common ancestors
-  static void
-  CloseForCurrentThread();
-=======
   static PBackgroundChild* GetOrCreateSocketActorForCurrentThread(
       nsIEventTarget* aMainEventTarget = nullptr);
->>>>>>> upstream-releases
 
  private:
   // Only called by ContentChild or ContentParent.

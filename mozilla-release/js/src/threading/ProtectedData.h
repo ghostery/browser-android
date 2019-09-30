@@ -188,12 +188,6 @@ class ProtectedDataZoneArg : public ProtectedData<Check, T> {
   using Base::operator=;
 };
 
-<<<<<<< HEAD
-class CheckUnprotected {
-||||||| merged common ancestors
-class CheckUnprotected
-{
-=======
 // Intermediate class for protected data whose checks take a JSContext.
 template <typename Check, typename T>
 class ProtectedDataContextArg : public ProtectedData<Check, T> {
@@ -208,7 +202,6 @@ class ProtectedDataContextArg : public ProtectedData<Check, T> {
 };
 
 class CheckUnprotected {
->>>>>>> upstream-releases
 #ifdef JS_HAS_PROTECTED_DATA_CHECKS
  public:
   inline void check() const {}
@@ -221,12 +214,6 @@ class CheckUnprotected {
 template <typename T>
 using UnprotectedData = ProtectedDataNoCheckArgs<CheckUnprotected, T>;
 
-<<<<<<< HEAD
-class CheckThreadLocal {
-||||||| merged common ancestors
-class CheckThreadLocal
-{
-=======
 class CheckThreadLocal {
 #ifdef JS_HAS_PROTECTED_DATA_CHECKS
   Thread::Id id;
@@ -239,39 +226,16 @@ class CheckThreadLocal {
 };
 
 class CheckContextLocal {
->>>>>>> upstream-releases
 #ifdef JS_HAS_PROTECTED_DATA_CHECKS
-<<<<<<< HEAD
-  Thread::Id id;
-||||||| merged common ancestors
-    Thread::Id id;
-=======
   JSContext* cx_;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  CheckThreadLocal() : id(ThisThread::GetId()) {}
-||||||| merged common ancestors
-  public:
-    CheckThreadLocal()
-      : id(ThisThread::GetId())
-    {}
-=======
  public:
   explicit CheckContextLocal(JSContext* cx) : cx_(cx) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void check() const;
-||||||| merged common ancestors
-    void check() const;
-=======
   void check() const;
 #else
  public:
   explicit CheckContextLocal(JSContext* cx) {}
->>>>>>> upstream-releases
 #endif
 };
 

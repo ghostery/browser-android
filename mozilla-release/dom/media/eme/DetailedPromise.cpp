@@ -54,42 +54,14 @@ void DetailedPromise::MaybeReject(ErrorResult&, const nsACString& aReason) {
   MOZ_ASSERT_UNREACHABLE("nsresult expected in MaybeReject()");
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DetailedPromise> DetailedPromise::Create(
-    nsIGlobalObject* aGlobal, ErrorResult& aRv, const nsACString& aName) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<DetailedPromise>
-DetailedPromise::Create(nsIGlobalObject* aGlobal,
-                        ErrorResult& aRv,
-                        const nsACString& aName)
-{
-=======
 /* static */
 already_AddRefed<DetailedPromise> DetailedPromise::Create(
     nsIGlobalObject* aGlobal, ErrorResult& aRv, const nsACString& aName) {
->>>>>>> upstream-releases
   RefPtr<DetailedPromise> promise = new DetailedPromise(aGlobal, aName);
   promise->CreateWrapper(nullptr, aRv);
   return aRv.Failed() ? nullptr : promise.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DetailedPromise> DetailedPromise::Create(
-    nsIGlobalObject* aGlobal, ErrorResult& aRv, const nsACString& aName,
-    Telemetry::HistogramID aSuccessLatencyProbe,
-    Telemetry::HistogramID aFailureLatencyProbe) {
-  RefPtr<DetailedPromise> promise = new DetailedPromise(
-      aGlobal, aName, aSuccessLatencyProbe, aFailureLatencyProbe);
-||||||| merged common ancestors
-/* static */ already_AddRefed<DetailedPromise>
-DetailedPromise::Create(nsIGlobalObject* aGlobal,
-                        ErrorResult& aRv,
-                        const nsACString& aName,
-                        Telemetry::HistogramID aSuccessLatencyProbe,
-                        Telemetry::HistogramID aFailureLatencyProbe)
-{
-  RefPtr<DetailedPromise> promise = new DetailedPromise(aGlobal, aName, aSuccessLatencyProbe, aFailureLatencyProbe);
-=======
 /* static */
 already_AddRefed<DetailedPromise> DetailedPromise::Create(
     nsIGlobalObject* aGlobal, ErrorResult& aRv, const nsACString& aName,
@@ -97,7 +69,6 @@ already_AddRefed<DetailedPromise> DetailedPromise::Create(
     Telemetry::HistogramID aFailureLatencyProbe) {
   RefPtr<DetailedPromise> promise = new DetailedPromise(
       aGlobal, aName, aSuccessLatencyProbe, aFailureLatencyProbe);
->>>>>>> upstream-releases
   promise->CreateWrapper(nullptr, aRv);
   return aRv.Failed() ? nullptr : promise.forget();
 }

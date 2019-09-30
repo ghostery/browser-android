@@ -125,72 +125,6 @@ class IntoTranforms(FTL.Transformer):
                     type(node).__name__))
 
 
-<<<<<<< HEAD
-        if isinstance(node, FTL.Junk):
-            anno = node.annotations[0]
-            raise InvalidTransformError(
-                "Transform contains parse error: {}, at {}".format(
-                    anno.message, anno.span.start))
-        if isinstance(node, FTL.CallExpression):
-            name = node.callee.name
-            if name == "COPY":
-                args = (into_argument(arg) for arg in node.positional)
-                kwargs = {
-                    arg.name.name: into_argument(arg.value)
-                    for arg in node.named}
-                return COPY(*args, **kwargs)
-            if name in IMPLICIT_TRANSFORMS:
-                raise NotSupportedError(
-                    "{} may not be used with transforms_from(). It runs "
-                    "implicitly on all Patterns anyways.".format(name))
-            if name in FORBIDDEN_TRANSFORMS:
-                raise NotSupportedError(
-                    "{} may not be used with transforms_from(). It requires "
-                    "additional logic in Python code.".format(name))
-        if (isinstance(node, FTL.Placeable)
-                and isinstance(node.expression, Transform)):
-            # Replace the placeable with the transform it's holding.
-            # Transforms evaluate to Patterns which aren't valid Placeable
-            # expressions.
-            return node.expression
-        if isinstance(node, FTL.Pattern):
-            # Replace the Pattern with CONCAT which is more accepting of its
-            # elements. CONCAT takes PatternElements, Expressions and other
-            # Patterns (e.g. returned from evaluating transforms).
-            return CONCAT(*node.elements)
-        return node
-||||||| merged common ancestors
-        if isinstance(node, FTL.Junk):
-            anno = node.annotations[0]
-            raise InvalidTransformError(
-                "Transform contains parse error: {}, at {}".format(
-                    anno.message, anno.span.start))
-        if isinstance(node, FTL.CallExpression):
-            name = node.callee.name
-            if name == "COPY":
-                args = (into_argument(arg) for arg in node.positional)
-                return COPY(*args)
-            if name in IMPLICIT_TRANSFORMS:
-                raise NotSupportedError(
-                    "{} may not be used with transforms_from(). It runs "
-                    "implicitly on all Patterns anyways.".format(name))
-            if name in FORBIDDEN_TRANSFORMS:
-                raise NotSupportedError(
-                    "{} may not be used with transforms_from(). It requires "
-                    "additional logic in Python code.".format(name))
-        if (isinstance(node, FTL.Placeable)
-                and isinstance(node.expression, Transform)):
-            # Replace the placeable with the transform it's holding.
-            # Transforms evaluate to Patterns which aren't valid Placeable
-            # expressions.
-            return node.expression
-        if isinstance(node, FTL.Pattern):
-            # Replace the Pattern with CONCAT which is more accepting of its
-            # elements. CONCAT takes PatternElements, Expressions and other
-            # Patterns (e.g. returned from evaluating transforms).
-            return CONCAT(*node.elements)
-        return node
-=======
 def transforms_from(ftl, **substitutions):
     """Parse FTL code into a list of Message nodes with Transforms.
 
@@ -207,7 +141,6 @@ def transforms_from(ftl, **substitutions):
         \""", file_dtd="very/long/path/to/a/file.dtd")
 
     """
->>>>>>> upstream-releases
 
     parser = FluentParser(with_spans=False)
     resource = parser.parse(ftl)

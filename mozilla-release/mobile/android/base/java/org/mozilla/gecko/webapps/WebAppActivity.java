@@ -44,13 +44,8 @@ import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoSessionSettings;
 import org.mozilla.geckoview.GeckoView;
-<<<<<<< HEAD
-import org.mozilla.geckoview.WebRequestError;
-||||||| merged common ancestors
-=======
 import org.mozilla.geckoview.GeckoViewBridge;
 import org.mozilla.geckoview.WebRequestError;
->>>>>>> upstream-releases
 
 public class WebAppActivity extends AppCompatActivity
                             implements ActionModePresenter,
@@ -344,35 +339,12 @@ public class WebAppActivity extends AppCompatActivity
     }
 
     @Override // GeckoSession.ContentDelegate
-<<<<<<< HEAD
-    public void onCloseRequest(GeckoSession session) {
-        // Ignore
-    }
-
-    @Override // GeckoSession.ContentDelegate
     public void onContextMenu(final GeckoSession session,
                               int screenX, int screenY,
                               final ContextElement element) {
         final String content = element.linkUri != null
                                ? element.linkUri
                                : element.srcUri != null ? element.srcUri : "";
-||||||| merged common ancestors
-    public void onCloseRequest(GeckoSession session) {
-        // Ignore
-    }
-
-    @Override // GeckoSession.ContentDelegate
-    public void onContextMenu(GeckoSession session, int screenX, int screenY,
-                              String uri, int elementType, String elementSrc) {
-        final String content = uri != null ? uri : elementSrc != null ? elementSrc : "";
-=======
-    public void onContextMenu(final GeckoSession session,
-                              int screenX, int screenY,
-                              final ContextElement element) {
-        final String content = element.linkUri != null
-                               ? element.linkUri
-                               : element.srcUri != null ? element.srcUri : "";
->>>>>>> upstream-releases
         final Uri validUri = WebApps.getValidURL(content);
         if (validUri == null) {
             return;
@@ -382,34 +354,6 @@ public class WebAppActivity extends AppCompatActivity
     }
 
     @Override // GeckoSession.ContentDelegate
-<<<<<<< HEAD
-    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
-        // Won't happen, as we don't use the GeckoView download support in Fennec
-    }
-
-    @Override // GeckoSession.ContentDelegate
-    public void onCrash(final GeckoSession session) {
-        // Won't happen, as we don't use e10s in Fennec
-    }
-
-    @Override
-    public void onFirstComposite(final GeckoSession session) {
-    }
-
-    @Override // GeckoSession.ContentDelegate
-||||||| merged common ancestors
-    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
-        // Won't happen, as we don't use the GeckoView download support in Fennec
-    }
-
-    @Override // GeckoSession.ContentDelegate
-    public void onCrash(final GeckoSession session) {
-        // Won't happen, as we don't use e10s in Fennec
-    }
-
-    @Override // GeckoSession.ContentDelegate
-=======
->>>>>>> upstream-releases
     public void onFullScreen(GeckoSession session, boolean fullScreen) {
         updateFullScreenContent(fullScreen);
     }

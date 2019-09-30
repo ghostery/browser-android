@@ -41,27 +41,6 @@ sk_sp<GrTextureProxy> GrTextureProducer::CopyOnGpu(GrRecordingContext* context,
         needsDomain = resizing && !GrProxyProvider::IsFunctionallyExact(inputProxy.get());
     }
 
-<<<<<<< HEAD
-    if (copyParams.fFilter == GrSamplerState::Filter::kNearest && !needsDomain && !resizing &&
-        dstWillRequireMipMaps) {
-        sk_sp<GrTextureProxy> proxy = GrCopyBaseMipMapToTextureProxy(context, inputProxy.get());
-        if (proxy) {
-            return proxy;
-        }
-    }
-
-    sk_sp<GrRenderTargetContext> copyRTC =
-        context->contextPriv().makeDeferredRenderTargetContextWithFallback(
-            SkBackingFit::kExact, dstRect.width(), dstRect.height(), inputProxy->config(),
-            nullptr, 1, mipMapped, inputProxy->origin());
-    if (!copyRTC) {
-        return nullptr;
-    }
-
-    GrPaint paint;
-
-||||||| merged common ancestors
-=======
     if (copyParams.fFilter == GrSamplerState::Filter::kNearest && !needsDomain && !resizing &&
         dstWillRequireMipMaps) {
         sk_sp<GrTextureProxy> proxy = GrCopyBaseMipMapToTextureProxy(context, inputProxy.get());
@@ -85,7 +64,6 @@ sk_sp<GrTextureProxy> GrTextureProducer::CopyOnGpu(GrRecordingContext* context,
 
     GrPaint paint;
 
->>>>>>> upstream-releases
     if (needsDomain) {
         const SkRect domain = localRect.makeInset(0.5f, 0.5f);
         // This would cause us to read values from outside the subset. Surely, the caller knows
@@ -322,65 +300,6 @@ sk_sp<GrTextureProxy> GrTextureProducer::refTextureProxy(GrMipMapped willNeedMip
     // maps, unless the config is not copyable.
     SkASSERT(!result || !willBeMipped || result->mipMapped() == GrMipMapped::kYes ||
              !this->context()->priv().caps()->isConfigCopyable(result->config()));
-
-    // Check that no scaling occured and we returned a proxy of the same size as the producer.
-    SkASSERT(!result || (result->width() == this->width() && result->height() == this->height()));
-    return result;
-}
-
-sk_sp<GrTextureProxy> GrTextureProducer::refTextureProxyForParams(
-        const GrSamplerState& sampler,
-        SkColorSpace* dstColorSpace,
-        sk_sp<SkColorSpace>* proxyColorSpace,
-        SkScalar scaleAdjust[2]) {
-    // Check that the caller pre-initialized scaleAdjust
-    SkASSERT(!scaleAdjust || (scaleAdjust[0] == 1 && scaleAdjust[1] == 1));
-    // Check that if the caller passed nullptr for scaleAdjust that we're in the case where there
-    // can be no scaling.
-    SkDEBUGCODE(bool expectNoScale = (sampler.filter() != GrSamplerState::Filter::kMipMap &&
-                                      !sampler.isRepeated()));
-    SkASSERT(scaleAdjust || expectNoScale);
-
-    int mipCount = SkMipMap::ComputeLevelCount(this->width(), this->height());
-    bool willBeMipped = GrSamplerState::Filter::kMipMap == sampler.filter() && mipCount &&
-                        fContext->contextPriv().caps()->mipMapSupport();
-
-    auto result =
-            this->onRefTextureProxyForParams(sampler, dstColorSpace, proxyColorSpace, willBeMipped,
-                                             scaleAdjust);
-
-    // Check to make sure that if we say the texture willBeMipped that the returned texture has mip
-    // maps, unless the config is not copyable.
-    SkASSERT(!result || !willBeMipped || result->mipMapped() == GrMipMapped::kYes ||
-             !fContext->contextPriv().caps()->isConfigCopyable(result->config()));
-
-    // Check that the "no scaling expected" case always returns a proxy of the same size as the
-    // producer.
-    SkASSERT(!result || !expectNoScale ||
-             (result->width() == this->width() && result->height() == this->height()));
-    return result;
-}
-
-sk_sp<GrTextureProxy> GrTextureProducer::refTextureProxy(GrMipMapped willNeedMips,
-                                                         SkColorSpace* dstColorSpace,
-                                                         sk_sp<SkColorSpace>* proxyColorSpace) {
-    GrSamplerState::Filter filter =
-            GrMipMapped::kNo == willNeedMips ? GrSamplerState::Filter::kNearest
-                                             : GrSamplerState::Filter::kMipMap;
-    GrSamplerState sampler(GrSamplerState::WrapMode::kClamp, filter);
-
-    int mipCount = SkMipMap::ComputeLevelCount(this->width(), this->height());
-    bool willBeMipped = GrSamplerState::Filter::kMipMap == sampler.filter() && mipCount &&
-                        fContext->contextPriv().caps()->mipMapSupport();
-
-    auto result =
-            this->onRefTextureProxyForParams(sampler, dstColorSpace, proxyColorSpace,
-                                             willBeMipped, nullptr);
-
-    // Check to make sure that if we say the texture willBeMipped that the returned texture has mip
-    // maps, unless the config is not copyable.
-    SkASSERT(!result || !willBeMipped || result->mipMapped() == GrMipMapped::kYes ||
-             !fContext->contextPriv().caps()->isConfigCopyable(result->config()));
 
     // Check that no scaling occured and we returned a proxy of the same size as the producer.
     SkASSERT(!result || (result->width() == this->width() && result->height() == this->height()));

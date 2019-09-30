@@ -117,42 +117,16 @@ static constexpr js::jit::FloatRegister double14(
 static constexpr js::jit::FloatRegister double15(
     30, js::jit::FloatRegister::Double);
 
-<<<<<<< HEAD
-static js::jit::JitCode* linkAndAllocate(JSContext* cx,
-                                         js::jit::MacroAssembler* masm) {
-  using namespace js;
-  using namespace js::jit;
-  AutoFlushICache afc("test");
-  Linker l(*masm);
-  return l.newCode(cx, CodeKind::Ion);
-||||||| merged common ancestors
-static js::jit::JitCode*
-linkAndAllocate(JSContext* cx, js::jit::MacroAssembler* masm)
-{
-    using namespace js;
-    using namespace js::jit;
-    AutoFlushICache afc("test");
-    Linker l(*masm);
-    return l.newCode(cx, CodeKind::Ion);
-=======
 static js::jit::JitCode* linkAndAllocate(JSContext* cx,
                                          js::jit::MacroAssembler* masm) {
   using namespace js;
   using namespace js::jit;
   Linker l(*masm, "test");
   return l.newCode(cx, CodeKind::Ion);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#define TRY(x) \
-  if (!(x)) return false;
-||||||| merged common ancestors
-#define TRY(x) if (!(x)) return false;
-=======
 #  define TRY(x) \
     if (!(x)) return false;
->>>>>>> upstream-releases
 
 BEGIN_TEST(testJitMoveEmitterCycles_simple) {
   using namespace js;

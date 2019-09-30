@@ -36,29 +36,11 @@ class WriteRecordClient : public FileIOClient {
    * This function will take the memory ownership of the parameters and
    * delete them when done.
    */
-<<<<<<< HEAD
-  static void Write(Host_9* aHost, string& aRecordName,
-                    const vector<uint8_t>& aData, function<void()>&& aOnSuccess,
-                    function<void()>&& aOnFailure) {
-    WriteRecordClient* client =
-        new WriteRecordClient(aData, move(aOnSuccess), move(aOnFailure));
-||||||| merged common ancestors
-  static void Write(Host_9* aHost,
-                    string& aRecordName,
-                    const vector<uint8_t>& aData,
-                    function<void()>&& aOnSuccess,
-                    function<void()>&& aOnFailure)
-{
-    WriteRecordClient* client = new WriteRecordClient(aData,
-                                                      move(aOnSuccess),
-                                                      move(aOnFailure));
-=======
   static void Write(Host_10* aHost, string& aRecordName,
                     const vector<uint8_t>& aData, function<void()>&& aOnSuccess,
                     function<void()>&& aOnFailure) {
     WriteRecordClient* client =
         new WriteRecordClient(aData, move(aOnSuccess), move(aOnFailure));
->>>>>>> upstream-releases
     client->Do(aRecordName, aHost);
   }
 
@@ -89,14 +71,7 @@ class WriteRecordClient : public FileIOClient {
         mOnFailure(move(aOnFailure)),
         mData(aData) {}
 
-<<<<<<< HEAD
-  void Do(const string& aName, Host_9* aHost) {
-||||||| merged common ancestors
-  void Do(const string& aName, Host_9* aHost)
-  {
-=======
   void Do(const string& aName, Host_10* aHost) {
->>>>>>> upstream-releases
     // Initialize the FileIO.
     mFileIO = aHost->CreateFileIO(this);
     mFileIO->Open(aName.c_str(), aName.size());
@@ -129,28 +104,10 @@ class WriteRecordClient : public FileIOClient {
   const vector<uint8_t> mData;
 };
 
-<<<<<<< HEAD
-void WriteData(Host_9* aHost, string& aRecordName, const vector<uint8_t>& aData,
-               function<void()>&& aOnSuccess, function<void()>&& aOnFailure) {
-  WriteRecordClient::Write(aHost, aRecordName, aData, move(aOnSuccess),
-||||||| merged common ancestors
-void
-WriteData(Host_9* aHost,
-          string& aRecordName,
-          const vector<uint8_t>& aData,
-          function<void()>&& aOnSuccess,
-          function<void()>&& aOnFailure)
-{
-  WriteRecordClient::Write(aHost,
-                           aRecordName,
-                           aData,
-                           move(aOnSuccess),
-=======
 void WriteData(Host_10* aHost, string& aRecordName,
                const vector<uint8_t>& aData, function<void()>&& aOnSuccess,
                function<void()>&& aOnFailure) {
   WriteRecordClient::Write(aHost, aRecordName, aData, move(aOnSuccess),
->>>>>>> upstream-releases
                            move(aOnFailure));
 }
 
@@ -160,14 +117,7 @@ class ReadRecordClient : public FileIOClient {
    * This function will take the memory ownership of the parameters and
    * delete them when done.
    */
-<<<<<<< HEAD
-  static void Read(Host_9* aHost, string& aRecordName,
-||||||| merged common ancestors
-  static void Read(Host_9* aHost,
-                   string& aRecordName,
-=======
   static void Read(Host_10* aHost, string& aRecordName,
->>>>>>> upstream-releases
                    function<void(const uint8_t*, uint32_t)>&& aOnSuccess,
                    function<void()>&& aOnFailure) {
     (new ReadRecordClient(move(aOnSuccess), move(aOnFailure)))
@@ -201,14 +151,7 @@ class ReadRecordClient : public FileIOClient {
         mOnSuccess(move(aOnSuccess)),
         mOnFailure(move(aOnFailure)) {}
 
-<<<<<<< HEAD
-  void Do(const string& aName, Host_9* aHost) {
-||||||| merged common ancestors
-  void Do(const string& aName, Host_9* aHost)
-  {
-=======
   void Do(const string& aName, Host_10* aHost) {
->>>>>>> upstream-releases
     mFileIO = aHost->CreateFileIO(this);
     mFileIO->Open(aName.c_str(), aName.size());
   }
@@ -239,26 +182,9 @@ class ReadRecordClient : public FileIOClient {
   function<void()> mOnFailure;
 };
 
-<<<<<<< HEAD
-void ReadData(Host_9* mHost, string& aRecordName,
-              function<void(const uint8_t*, uint32_t)>&& aOnSuccess,
-              function<void()>&& aOnFailure) {
-  ReadRecordClient::Read(mHost, aRecordName, move(aOnSuccess),
-||||||| merged common ancestors
-void
-ReadData(Host_9* mHost,
-         string& aRecordName,
-         function<void(const uint8_t*, uint32_t)>&& aOnSuccess,
-         function<void()>&& aOnFailure)
-{
-  ReadRecordClient::Read(mHost,
-                         aRecordName,
-                         move(aOnSuccess),
-=======
 void ReadData(Host_10* aHost, string& aRecordName,
               function<void(const uint8_t*, uint32_t)>&& aOnSuccess,
               function<void()>&& aOnFailure) {
   ReadRecordClient::Read(aHost, aRecordName, move(aOnSuccess),
->>>>>>> upstream-releases
                          move(aOnFailure));
 }

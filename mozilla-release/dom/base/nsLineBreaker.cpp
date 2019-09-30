@@ -17,25 +17,6 @@ using mozilla::intl::LineBreaker;
 using mozilla::intl::Locale;
 
 nsLineBreaker::nsLineBreaker()
-<<<<<<< HEAD
-    : mCurrentWordLanguage(nullptr),
-      mCurrentWordContainsMixedLang(false),
-      mCurrentWordContainsComplexChar(false),
-      mAfterBreakableSpace(false),
-      mBreakHere(false),
-      mWordBreak(LineBreaker::kWordBreak_Normal) {}
-
-nsLineBreaker::~nsLineBreaker() {
-  NS_ASSERTION(mCurrentWord.Length() == 0,
-               "Should have Reset() before destruction!");
-||||||| merged common ancestors
-  : mCurrentWordLanguage(nullptr),
-    mCurrentWordContainsMixedLang(false),
-    mCurrentWordContainsComplexChar(false),
-    mAfterBreakableSpace(false), mBreakHere(false),
-    mWordBreak(LineBreaker::kWordBreak_Normal)
-{
-=======
     : mCurrentWordLanguage(nullptr),
       mCurrentWordContainsMixedLang(false),
       mCurrentWordContainsComplexChar(false),
@@ -49,7 +30,6 @@ nsLineBreaker::~nsLineBreaker() {
 nsLineBreaker::~nsLineBreaker() {
   NS_ASSERTION(mCurrentWord.Length() == 0,
                "Should have Reset() before destruction!");
->>>>>>> upstream-releases
 }
 
 static void SetupCapitalization(const char16_t* aWord, uint32_t aLength,
@@ -81,19 +61,10 @@ static void SetupCapitalization(const char16_t* aWord, uint32_t aLength,
 
 nsresult nsLineBreaker::FlushCurrentWord() {
   uint32_t length = mCurrentWord.Length();
-<<<<<<< HEAD
-  AutoTArray<uint8_t, 4000> breakState;
-  if (!breakState.AppendElements(length)) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-  AutoTArray<uint8_t,4000> breakState;
-  if (!breakState.AppendElements(length))
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
   AutoTArray<uint8_t, 4000> breakState;
   if (!breakState.AppendElements(length)) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
->>>>>>> upstream-releases
 
   nsTArray<bool> capitalizationState;
 
@@ -105,35 +76,14 @@ nsresult nsLineBreaker::FlushCurrentWord() {
     // For break-strict set everything internal to "break", otherwise
     // to "no break"!
     memset(breakState.Elements(),
-<<<<<<< HEAD
-           mWordBreak == LineBreaker::kWordBreak_BreakAll
-               ? gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL
-               : gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE,
-           length * sizeof(uint8_t));
-||||||| merged common ancestors
-           mWordBreak == LineBreaker::kWordBreak_BreakAll ?
-             gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL :
-             gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE,
-           length*sizeof(uint8_t));
-=======
            mWordBreak == LineBreaker::WordBreak::BreakAll
                ? gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL
                : gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE,
            length * sizeof(uint8_t));
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    nsContentUtils::LineBreaker()->GetJISx4051Breaks(
-        mCurrentWord.Elements(), length, mWordBreak, breakState.Elements());
-||||||| merged common ancestors
-    nsContentUtils::LineBreaker()->
-      GetJISx4051Breaks(mCurrentWord.Elements(), length, mWordBreak,
-                        breakState.Elements());
-=======
     nsContentUtils::LineBreaker()->GetJISx4051Breaks(
         mCurrentWord.Elements(), length, mWordBreak, mStrictness,
         mScriptIsChineseOrJapanese, breakState.Elements());
->>>>>>> upstream-releases
   }
 
   bool autoHyphenate = mCurrentWordLanguage && !mCurrentWordContainsMixedLang;
@@ -287,23 +237,11 @@ nsresult nsLineBreaker::AppendText(nsAtom* aHyphenationLanguage,
 
     if (aSink && !noBreaksNeeded) {
       breakState[offset] =
-<<<<<<< HEAD
-          mBreakHere || (mAfterBreakableSpace && !isBreakableSpace) ||
-                  (mWordBreak == LineBreaker::kWordBreak_BreakAll)
-              ? gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL
-              : gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE;
-||||||| merged common ancestors
-        mBreakHere || (mAfterBreakableSpace && !isBreakableSpace) ||
-        (mWordBreak == LineBreaker::kWordBreak_BreakAll)  ?
-          gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL :
-          gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE;
-=======
           mBreakHere || (mAfterBreakableSpace && !isBreakableSpace) ||
                   mWordBreak == LineBreaker::WordBreak::BreakAll ||
                   mStrictness == LineBreaker::Strictness::Anywhere
               ? gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL
               : gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE;
->>>>>>> upstream-releases
     }
     mBreakHere = false;
     mAfterBreakableSpace = isBreakableSpace;
@@ -319,20 +257,9 @@ nsresult nsLineBreaker::AppendText(nsAtom* aHyphenationLanguage,
             // Save current start-of-word state because GetJISx4051Breaks will
             // set it to false
             uint8_t currentStart = breakState[wordStart];
-<<<<<<< HEAD
-            nsContentUtils::LineBreaker()->GetJISx4051Breaks(
-                aText + wordStart, offset - wordStart, mWordBreak,
-                breakState.Elements() + wordStart);
-||||||| merged common ancestors
-            nsContentUtils::LineBreaker()->
-              GetJISx4051Breaks(aText + wordStart, offset - wordStart,
-                                mWordBreak,
-                                breakState.Elements() + wordStart);
-=======
             nsContentUtils::LineBreaker()->GetJISx4051Breaks(
                 aText + wordStart, offset - wordStart, mWordBreak, mStrictness,
                 mScriptIsChineseOrJapanese, breakState.Elements() + wordStart);
->>>>>>> upstream-releases
             breakState[wordStart] = currentStart;
           }
           if (hyphenator) {
@@ -474,23 +401,11 @@ nsresult nsLineBreaker::AppendText(nsAtom* aHyphenationLanguage,
       // Consider word-break style.  Since the break position of CJK scripts
       // will be set by nsILineBreaker, we don't consider CJK at this point.
       breakState[offset] =
-<<<<<<< HEAD
-          mBreakHere || (mAfterBreakableSpace && !isBreakableSpace) ||
-                  (mWordBreak == LineBreaker::kWordBreak_BreakAll)
-              ? gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL
-              : gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE;
-||||||| merged common ancestors
-        mBreakHere || (mAfterBreakableSpace && !isBreakableSpace) ||
-        (mWordBreak == LineBreaker::kWordBreak_BreakAll) ?
-          gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL :
-          gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE;
-=======
           mBreakHere || (mAfterBreakableSpace && !isBreakableSpace) ||
                   mWordBreak == LineBreaker::WordBreak::BreakAll ||
                   mStrictness == LineBreaker::Strictness::Anywhere
               ? gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NORMAL
               : gfxTextRun::CompressedGlyph::FLAG_BREAK_TYPE_NONE;
->>>>>>> upstream-releases
     }
     mBreakHere = false;
     mAfterBreakableSpace = isBreakableSpace;
@@ -505,20 +420,9 @@ nsresult nsLineBreaker::AppendText(nsAtom* aHyphenationLanguage,
           // Save current start-of-word state because GetJISx4051Breaks will
           // set it to false
           uint8_t currentStart = breakState[wordStart];
-<<<<<<< HEAD
-          nsContentUtils::LineBreaker()->GetJISx4051Breaks(
-              aText + wordStart, offset - wordStart, mWordBreak,
-              breakState.Elements() + wordStart);
-||||||| merged common ancestors
-          nsContentUtils::LineBreaker()->
-            GetJISx4051Breaks(aText + wordStart, offset - wordStart,
-                              mWordBreak,
-                              breakState.Elements() + wordStart);
-=======
           nsContentUtils::LineBreaker()->GetJISx4051Breaks(
               aText + wordStart, offset - wordStart, mWordBreak, mStrictness,
               mScriptIsChineseOrJapanese, breakState.Elements() + wordStart);
->>>>>>> upstream-releases
           breakState[wordStart] = currentStart;
         }
       }

@@ -171,21 +171,6 @@ class AccessibleCaretEventHubTester : public ::testing::Test {
   MOZ_CAN_RUN_SCRIPT_BOUNDARY void TestAsyncPanZoomScroll();
 
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
-<<<<<<< HEAD
-  void HandleEventAndCheckState(
-      UniquePtr<WidgetEvent> aEvent,
-      MockAccessibleCaretEventHub::State* aExpectedState,
-      nsEventStatus aExpectedEventStatus) {
-    nsEventStatus rv = mHub->HandleEvent(aEvent.get());
-    EXPECT_EQ(mHub->GetState(), aExpectedState);
-||||||| merged common ancestors
-  void HandleEventAndCheckState(UniquePtr<WidgetEvent> aEvent,
-                                MockAccessibleCaretEventHub::State* aExpectedState,
-                                nsEventStatus aExpectedEventStatus)
-  {
-    nsEventStatus rv = mHub->HandleEvent(aEvent.get());
-    EXPECT_EQ(mHub->GetState(), aExpectedState);
-=======
   void HandleEventAndCheckState(
       UniquePtr<WidgetEvent> aEvent,
       MockAccessibleCaretEventHub::State* aExpectedState,
@@ -193,7 +178,6 @@ class AccessibleCaretEventHubTester : public ::testing::Test {
     RefPtr<MockAccessibleCaretEventHub> hub(mHub);
     nsEventStatus rv = hub->HandleEvent(aEvent.get());
     EXPECT_EQ(hub->GetState(), aExpectedState);
->>>>>>> upstream-releases
     EXPECT_EQ(rv, aExpectedEventStatus);
   }
 

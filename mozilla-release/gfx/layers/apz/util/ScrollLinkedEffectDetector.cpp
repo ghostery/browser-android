@@ -15,16 +15,8 @@ namespace layers {
 uint32_t ScrollLinkedEffectDetector::sDepth = 0;
 bool ScrollLinkedEffectDetector::sFoundScrollLinkedEffect = false;
 
-<<<<<<< HEAD
-/* static */ void ScrollLinkedEffectDetector::PositioningPropertyMutated() {
-||||||| merged common ancestors
-/* static */ void
-ScrollLinkedEffectDetector::PositioningPropertyMutated()
-{
-=======
 /* static */
 void ScrollLinkedEffectDetector::PositioningPropertyMutated() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (sDepth > 0) {
@@ -33,17 +25,8 @@ void ScrollLinkedEffectDetector::PositioningPropertyMutated() {
   }
 }
 
-<<<<<<< HEAD
-ScrollLinkedEffectDetector::ScrollLinkedEffectDetector(nsIDocument* aDoc)
-    : mDocument(aDoc) {
-||||||| merged common ancestors
-ScrollLinkedEffectDetector::ScrollLinkedEffectDetector(nsIDocument* aDoc)
-  : mDocument(aDoc)
-{
-=======
 ScrollLinkedEffectDetector::ScrollLinkedEffectDetector(dom::Document* aDoc)
     : mDocument(aDoc) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   sDepth++;
 }

@@ -135,14 +135,6 @@ static char* ParseVP(char* aPart, VersionPart& aResult) {
  * @returns A pointer to the next versionpart, or null if none.
  */
 #ifdef XP_WIN
-<<<<<<< HEAD
-static wchar_t* ParseVP(wchar_t* aPart, VersionPartW& aResult) {
-||||||| merged common ancestors
-static wchar_t*
-ParseVP(wchar_t* aPart, VersionPartW& aResult)
-{
-
-=======
 
 static int32_t ns_wcstol(const wchar_t* aPart, wchar_t** aNext) {
   errno = 0;
@@ -162,7 +154,6 @@ static int32_t ns_wcstol(const wchar_t* aPart, wchar_t** aNext) {
 }
 
 static wchar_t* ParseVP(wchar_t* aPart, VersionPartW& aResult) {
->>>>>>> upstream-releases
   wchar_t* dot;
 
   aResult.numA = 0;

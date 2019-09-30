@@ -15,15 +15,7 @@
 #include "SkImage.h"
 #include "SkImageShader.h"
 #include "SkMatrixUtils.h"
-<<<<<<< HEAD
 #include "SkPicturePriv.h"
-#include "SkPictureImageGenerator.h"
-||||||| merged common ancestors
-#include "SkPicture.h"
-#include "SkPictureImageGenerator.h"
-=======
-#include "SkPicturePriv.h"
->>>>>>> upstream-releases
 #include "SkReadBuffer.h"
 #include "SkResourceCache.h"
 #include <atomic>
@@ -31,13 +23,6 @@
 #if SK_SUPPORT_GPU
 #include "GrCaps.h"
 #include "GrColorSpaceInfo.h"
-<<<<<<< HEAD
-#include "GrContext.h"
-#include "GrContextPriv.h"
-||||||| merged common ancestors
-#include "GrContext.h"
-=======
->>>>>>> upstream-releases
 #include "GrFragmentProcessor.h"
 #include "GrRecordingContext.h"
 #include "GrRecordingContextPriv.h"
@@ -52,43 +37,6 @@ public:
     BitmapShaderKey(SkColorSpace* colorSpace,
                     SkImage::BitDepth bitDepth,
                     uint32_t shaderID,
-<<<<<<< HEAD
-                    const SkRect& tile,
-                    SkShader::TileMode tmx,
-                    SkShader::TileMode tmy,
-                    const SkSize& scale,
-                    bool hasDstColorSpace)
-        : fColorSpace(std::move(colorSpace))
-        , fTile(tile)
-        , fTmx(tmx)
-        , fTmy(tmy)
-        , fScale(scale)
-        , fHasDstColorSpace(hasDstColorSpace ? 1 : 0) {
-
-        static const size_t keySize = sizeof(fColorSpace) +
-                                      sizeof(fTile) +
-                                      sizeof(fTmx) + sizeof(fTmy) +
-                                      sizeof(fScale) +
-                                      sizeof(fHasDstColorSpace);
-||||||| merged common ancestors
-                    const SkRect& tile,
-                    SkShader::TileMode tmx,
-                    SkShader::TileMode tmy,
-                    const SkSize& scale,
-                    SkTransferFunctionBehavior blendBehavior)
-        : fColorSpace(std::move(colorSpace))
-        , fTile(tile)
-        , fTmx(tmx)
-        , fTmy(tmy)
-        , fScale(scale)
-        , fBlendBehavior(blendBehavior) {
-
-        static const size_t keySize = sizeof(fColorSpace) +
-                                      sizeof(fTile) +
-                                      sizeof(fTmx) + sizeof(fTmy) +
-                                      sizeof(fScale) +
-                                      sizeof(fBlendBehavior);
-=======
                     const SkSize& scale)
         : fColorSpaceXYZHash(colorSpace->toXYZD50Hash())
         , fColorSpaceTransferFnHash(colorSpace->transferFnHash())
@@ -99,7 +47,6 @@ public:
                                       sizeof(fColorSpaceTransferFnHash) +
                                       sizeof(fBitDepth) +
                                       sizeof(fScale);
->>>>>>> upstream-releases
         // This better be packed.
         SkASSERT(sizeof(uint32_t) * (&fEndOfStruct - &fColorSpaceXYZHash) == keySize);
         this->init(&gBitmapShaderKeyNamespaceLabel, MakeSharedID(shaderID), keySize);
@@ -115,12 +62,6 @@ private:
     uint32_t                   fColorSpaceTransferFnHash;
     SkImage::BitDepth          fBitDepth;
     SkSize                     fScale;
-<<<<<<< HEAD
-    uint32_t                   fHasDstColorSpace;
-||||||| merged common ancestors
-    SkTransferFunctionBehavior fBlendBehavior;
-=======
->>>>>>> upstream-releases
 
     SkDEBUGCODE(uint32_t fEndOfStruct;)
 };
@@ -222,14 +163,8 @@ void SkPictureShader::flatten(SkWriteBuffer& buffer) const {
 // Returns a cached image shader, which wraps a single picture tile at the given
 // CTM/local matrix.  Also adjusts the local matrix for tile scaling.
 sk_sp<SkShader> SkPictureShader::refBitmapShader(const SkMatrix& viewMatrix,
-<<<<<<< HEAD
-                                                 SkTCopyOnFirstWrite<SkMatrix>* localMatrix,
-||||||| merged common ancestors
-                                                 const SkMatrix* outerLocalMatrix,
-=======
                                                  SkTCopyOnFirstWrite<SkMatrix>* localMatrix,
                                                  SkColorType dstColorType,
->>>>>>> upstream-releases
                                                  SkColorSpace* dstColorSpace,
                                                  const int maxTextureSize) const {
     SkASSERT(fPicture && !fPicture->cullRect().isEmpty());
@@ -284,42 +219,13 @@ sk_sp<SkShader> SkPictureShader::refBitmapShader(const SkMatrix& viewMatrix,
 
     // With SkColorSpaceXformCanvas, the surface should never have a color space attached.
     SkASSERT(!fColorSpace || !dstColorSpace);
-<<<<<<< HEAD
-    sk_sp<SkColorSpace> keyCS = dstColorSpace ? sk_ref_sp(dstColorSpace) : fColorSpace;
-    bool hasDstColorSpace = SkToBool(dstColorSpace);
-||||||| merged common ancestors
-    sk_sp<SkColorSpace> keyCS = dstColorSpace ? sk_ref_sp(dstColorSpace) : fColorSpace;
-    SkTransferFunctionBehavior blendBehavior = dstColorSpace ? SkTransferFunctionBehavior::kRespect
-                                                             : SkTransferFunctionBehavior::kIgnore;
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    sk_sp<SkShader> tileShader;
-    BitmapShaderKey key(std::move(keyCS),
-                        fUniqueID,
-                        fTile,
-                        fTmx,
-                        fTmy,
-                        tileScale,
-                        hasDstColorSpace);
-||||||| merged common ancestors
-    sk_sp<SkShader> tileShader;
-    BitmapShaderKey key(std::move(keyCS),
-                        fUniqueID,
-                        fTile,
-                        fTmx,
-                        fTmy,
-                        tileScale,
-                        blendBehavior);
-=======
     sk_sp<SkColorSpace> imgCS = dstColorSpace ? sk_ref_sp(dstColorSpace)
                                               : fColorSpace ? fColorSpace
                                                             : SkColorSpace::MakeSRGB();
     SkImage::BitDepth bitDepth =
             kRGBA_F16_SkColorType == dstColorType || kRGBA_F32_SkColorType == dstColorType
             ? SkImage::BitDepth::kF16 : SkImage::BitDepth::kU8;
->>>>>>> upstream-releases
 
     BitmapShaderKey key(imgCS.get(), bitDepth, fUniqueID, tileScale);
 
@@ -335,18 +241,6 @@ sk_sp<SkShader> SkPictureShader::refBitmapShader(const SkMatrix& viewMatrix,
             return nullptr;
         }
 
-<<<<<<< HEAD
-        if (fColorSpace) {
-            tileImage = tileImage->makeColorSpace(fColorSpace);
-        }
-
-||||||| merged common ancestors
-        if (fColorSpace) {
-            tileImage = tileImage->makeColorSpace(fColorSpace, SkTransferFunctionBehavior::kIgnore);
-        }
-
-=======
->>>>>>> upstream-releases
         tileShader = tileImage->makeShader(fTmx, fTmy);
 
         SkResourceCache::Add(new BitmapShaderRec(key, tileShader.get()));
@@ -365,22 +259,11 @@ bool SkPictureShader::onAppendStages(const StageRec& rec) const {
 
     // Keep bitmapShader alive by using alloc instead of stack memory
     auto& bitmapShader = *rec.fAlloc->make<sk_sp<SkShader>>();
-<<<<<<< HEAD
-    bitmapShader = this->refBitmapShader(rec.fCTM, &lm, rec.fDstCS);
-
-    if (!bitmapShader) {
-        return false;
-    }
-||||||| merged common ancestors
-    SkMatrix compositeLocalMatrix;
-    bitmapShader = this->refBitmapShader(rec.fCTM, rec.fLocalM, rec.fDstCS, &compositeLocalMatrix);
-=======
     bitmapShader = this->refBitmapShader(rec.fCTM, &lm, rec.fDstColorType, rec.fDstCS);
 
     if (!bitmapShader) {
         return false;
     }
->>>>>>> upstream-releases
 
     StageRec localRec = rec;
     localRec.fLocalM = lm->isIdentity() ? nullptr : lm.get();
@@ -393,20 +276,9 @@ bool SkPictureShader::onAppendStages(const StageRec& rec) const {
 #ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
 SkShaderBase::Context* SkPictureShader::onMakeContext(const ContextRec& rec, SkArenaAlloc* alloc)
 const {
-<<<<<<< HEAD
-    auto lm = this->totalLocalMatrix(rec.fLocalMatrix);
-    sk_sp<SkShader> bitmapShader = this->refBitmapShader(*rec.fMatrix, &lm, rec.fDstColorSpace);
-||||||| merged common ancestors
-    SkMatrix compositeLocalMatrix;
-    sk_sp<SkShader> bitmapShader = this->refBitmapShader(*rec.fMatrix,
-                                                         rec.fLocalMatrix,
-                                                         rec.fDstColorSpace,
-                                                         &compositeLocalMatrix);
-=======
     auto lm = this->totalLocalMatrix(rec.fLocalMatrix);
     sk_sp<SkShader> bitmapShader = this->refBitmapShader(*rec.fMatrix, &lm, rec.fDstColorType,
                                                          rec.fDstColorSpace);
->>>>>>> upstream-releases
     if (!bitmapShader) {
         return nullptr;
     }
@@ -463,28 +335,13 @@ std::unique_ptr<GrFragmentProcessor> SkPictureShader::asFragmentProcessor(
         const GrFPArgs& args) const {
     int maxTextureSize = 0;
     if (args.fContext) {
-<<<<<<< HEAD
-        maxTextureSize = args.fContext->contextPriv().caps()->maxTextureSize();
-||||||| merged common ancestors
-        maxTextureSize = args.fContext->caps()->maxTextureSize();
-=======
         maxTextureSize = args.fContext->priv().caps()->maxTextureSize();
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    auto lm = this->totalLocalMatrix(args.fPreLocalMatrix, args.fPostLocalMatrix);
-    sk_sp<SkShader> bitmapShader(this->refBitmapShader(*args.fViewMatrix, &lm,
-||||||| merged common ancestors
-    SkMatrix compositeLocalMatrix;
-    sk_sp<SkShader> bitmapShader(this->refBitmapShader(*args.fViewMatrix, args.fLocalMatrix,
-=======
 
     auto lm = this->totalLocalMatrix(args.fPreLocalMatrix, args.fPostLocalMatrix);
     SkColorType dstColorType = kN32_SkColorType;
     GrPixelConfigToColorType(args.fDstColorSpaceInfo->config(), &dstColorType);
     sk_sp<SkShader> bitmapShader(this->refBitmapShader(*args.fViewMatrix, &lm, dstColorType,
->>>>>>> upstream-releases
                                                        args.fDstColorSpaceInfo->colorSpace(),
                                                        maxTextureSize));
     if (!bitmapShader) {

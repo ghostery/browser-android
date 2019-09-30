@@ -119,13 +119,7 @@ mod screen_capture;
 mod segment;
 mod shade;
 mod spatial_node;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/lib.rs
 mod storage;
-mod surface;
-||||||| merged common ancestors
-=======
-mod storage;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/lib.rs
 mod texture_allocator;
 mod texture_cache;
 mod tiling;
@@ -176,12 +170,7 @@ extern crate dwrote;
 
 extern crate bincode;
 extern crate byteorder;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/lib.rs
-||||||| merged common ancestors
-extern crate euclid;
-=======
 pub extern crate euclid;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/lib.rs
 extern crate fxhash;
 extern crate gleam;
 extern crate num_traits;
@@ -199,13 +188,8 @@ extern crate rayon;
 extern crate ron;
 #[cfg(feature = "debugger")]
 extern crate serde_json;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/lib.rs
-extern crate sha2;
-||||||| merged common ancestors
-=======
 extern crate sha2;
 #[macro_use]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/lib.rs
 extern crate smallvec;
 extern crate time;
 #[cfg(feature = "debugger")]
@@ -224,33 +208,6 @@ pub extern crate api;
 extern crate webrender_build;
 
 #[doc(hidden)]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/lib.rs
-pub use device::{build_shader_strings, ReadPixelsFormat, UploadMethod, VertexUsageHint};
-pub use device::{ProgramBinary, ProgramCache, ProgramCacheObserver};
-pub use device::Device;
-pub use frame_builder::ChasePrimitive;
-pub use renderer::{AsyncPropertySampler, CpuProfile, DebugFlags, OutputImageHandler, RendererKind};
-pub use renderer::{ExternalImage, ExternalImageHandler, ExternalImageSource, GpuProfile};
-pub use renderer::{GraphicsApi, GraphicsApiInfo, PipelineInfo, Renderer, RendererOptions};
-pub use renderer::{RendererStats, SceneBuilderHooks, ThreadListener, ShaderPrecacheFlags};
-pub use renderer::MAX_VERTEX_TEXTURE_WIDTH;
-pub use shade::{Shaders, WrShaders};
-pub use webrender_api as api;
-pub use webrender_api::euclid;
-||||||| merged common ancestors
-pub use device::{build_shader_strings, ReadPixelsFormat, UploadMethod, VertexUsageHint};
-pub use device::{ProgramBinary, ProgramCache, ProgramCacheObserver, ProgramSources};
-pub use device::{Device};
-pub use frame_builder::ChasePrimitive;
-pub use renderer::{AsyncPropertySampler, CpuProfile, DebugFlags, OutputImageHandler, RendererKind};
-pub use renderer::{ExternalImage, ExternalImageHandler, ExternalImageSource, GpuProfile};
-pub use renderer::{GraphicsApi, GraphicsApiInfo, PipelineInfo, Renderer, RendererOptions};
-pub use renderer::{RendererStats, SceneBuilderHooks, ThreadListener, ShaderPrecacheFlags};
-pub use renderer::MAX_VERTEX_TEXTURE_WIDTH;
-pub use shade::{Shaders, WrShaders};
-pub use webrender_api as api;
-pub use resource_cache::intersect_for_tile;
-=======
 pub use crate::device::{build_shader_strings, UploadMethod, VertexUsageHint};
 pub use crate::device::{ProgramBinary, ProgramCache, ProgramCacheObserver};
 pub use crate::device::Device;
@@ -265,4 +222,3 @@ pub use crate::renderer::{
 pub use crate::screen_capture::{AsyncScreenshotHandle, RecordedFrameHandle};
 pub use crate::shade::{Shaders, WrShaders};
 pub use api as webrender_api;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/lib.rs

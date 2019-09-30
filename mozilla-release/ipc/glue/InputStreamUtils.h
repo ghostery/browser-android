@@ -18,29 +18,6 @@ namespace ipc {
 class FileDescriptor;
 
 // If you want to serialize an inputStream, please use AutoIPCStream.
-<<<<<<< HEAD
-class InputStreamHelper {
- public:
-  static void SerializeInputStream(nsIInputStream* aInputStream,
-                                   InputStreamParams& aParams,
-                                   nsTArray<FileDescriptor>& aFileDescriptors);
-
-  static already_AddRefed<nsIInputStream> DeserializeInputStream(
-      const InputStreamParams& aParams,
-      const nsTArray<FileDescriptor>& aFileDescriptors);
-||||||| merged common ancestors
-class InputStreamHelper
-{
-public:
-  static void
-  SerializeInputStream(nsIInputStream* aInputStream,
-                       InputStreamParams& aParams,
-                       nsTArray<FileDescriptor>& aFileDescriptors);
-
-  static already_AddRefed<nsIInputStream>
-  DeserializeInputStream(const InputStreamParams& aParams,
-                         const nsTArray<FileDescriptor>& aFileDescriptors);
-=======
 class InputStreamHelper {
  public:
   // These 4 methods allow to serialize an inputStream into InputStreamParams.
@@ -116,7 +93,6 @@ class InputStreamHelper {
   static already_AddRefed<nsIInputStream> DeserializeInputStream(
       const InputStreamParams& aParams,
       const nsTArray<FileDescriptor>& aFileDescriptors);
->>>>>>> upstream-releases
 };
 
 }  // namespace ipc

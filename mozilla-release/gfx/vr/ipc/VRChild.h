@@ -24,22 +24,11 @@ namespace gfx {
 class VRProcessParent;
 class VRChild;
 
-<<<<<<< HEAD
-class VRChild final : public PVRChild, public gfxVarReceiver {
- public:
-||||||| merged common ancestors
-class VRChild final
- : public PVRChild,
-   public gfxVarReceiver {
-
-public:
-=======
 class VRChild final : public PVRChild, public gfxVarReceiver {
   typedef mozilla::dom::MemoryReportRequestHost MemoryReportRequestHost;
   friend class PVRChild;
 
  public:
->>>>>>> upstream-releases
   explicit VRChild(VRProcessParent* aHost);
   ~VRChild() = default;
 
@@ -62,16 +51,10 @@ class VRChild final : public PVRChild, public gfxVarReceiver {
   mozilla::ipc::IPCResult RecvInitCrashReporter(
       Shmem&& shmem, const NativeThreadId& aThreadId);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   mozilla::ipc::IPCResult RecvAddMemoryReport(const MemoryReport& aReport);
   mozilla::ipc::IPCResult RecvFinishMemoryReport(const uint32_t& aGeneration);
 
  private:
->>>>>>> upstream-releases
   VRProcessParent* mHost;
   UniquePtr<ipc::CrashReporterHost> mCrashReporter;
   UniquePtr<MemoryReportRequestHost> mMemoryReportRequest;

@@ -45,18 +45,8 @@ class TokenBucketCancelable : public nsICancelable {
 
 NS_IMPL_ISUPPORTS(TokenBucketCancelable, nsICancelable)
 
-<<<<<<< HEAD
-TokenBucketCancelable::TokenBucketCancelable(ATokenBucketEvent *event)
-    : mEvent(event) {}
-||||||| merged common ancestors
-TokenBucketCancelable::TokenBucketCancelable(ATokenBucketEvent *event)
-  : mEvent(event)
-{
-}
-=======
 TokenBucketCancelable::TokenBucketCancelable(ATokenBucketEvent* event)
     : mEvent(event) {}
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 TokenBucketCancelable::Cancel(nsresult reason) {
@@ -115,13 +105,7 @@ EventTokenBucket::~EventTokenBucket() {
   // Complete any queued events to prevent hangs
   while (mEvents.GetSize()) {
     RefPtr<TokenBucketCancelable> cancelable =
-<<<<<<< HEAD
-        dont_AddRef(static_cast<TokenBucketCancelable *>(mEvents.PopFront()));
-||||||| merged common ancestors
-      dont_AddRef(static_cast<TokenBucketCancelable *>(mEvents.PopFront()));
-=======
         dont_AddRef(static_cast<TokenBucketCancelable*>(mEvents.PopFront()));
->>>>>>> upstream-releases
     cancelable->Fire();
   }
 }
@@ -214,28 +198,13 @@ void EventTokenBucket::Stop() {
   // Complete any queued events to prevent hangs
   while (mEvents.GetSize()) {
     RefPtr<TokenBucketCancelable> cancelable =
-<<<<<<< HEAD
-        dont_AddRef(static_cast<TokenBucketCancelable *>(mEvents.PopFront()));
-||||||| merged common ancestors
-      dont_AddRef(static_cast<TokenBucketCancelable *>(mEvents.PopFront()));
-=======
         dont_AddRef(static_cast<TokenBucketCancelable*>(mEvents.PopFront()));
->>>>>>> upstream-releases
     cancelable->Fire();
   }
 }
 
-<<<<<<< HEAD
-nsresult EventTokenBucket::SubmitEvent(ATokenBucketEvent *event,
-                                       nsICancelable **cancelable) {
-||||||| merged common ancestors
-nsresult
-EventTokenBucket::SubmitEvent(ATokenBucketEvent *event, nsICancelable **cancelable)
-{
-=======
 nsresult EventTokenBucket::SubmitEvent(ATokenBucketEvent* event,
                                        nsICancelable** cancelable) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
   SOCKET_LOG(("EventTokenBucket::SubmitEvent %p\n", this));
 
@@ -261,19 +230,8 @@ nsresult EventTokenBucket::SubmitEvent(ATokenBucketEvent* event,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool EventTokenBucket::TryImmediateDispatch(TokenBucketCancelable *cancelable) {
-  if (mCredit < mUnitCost) return false;
-||||||| merged common ancestors
-bool
-EventTokenBucket::TryImmediateDispatch(TokenBucketCancelable *cancelable)
-{
-  if (mCredit < mUnitCost)
-    return false;
-=======
 bool EventTokenBucket::TryImmediateDispatch(TokenBucketCancelable* cancelable) {
   if (mCredit < mUnitCost) return false;
->>>>>>> upstream-releases
 
   mCredit -= mUnitCost;
   cancelable->Fire();
@@ -287,13 +245,7 @@ void EventTokenBucket::DispatchEvents() {
 
   while (mEvents.GetSize() && mUnitCost <= mCredit) {
     RefPtr<TokenBucketCancelable> cancelable =
-<<<<<<< HEAD
-        dont_AddRef(static_cast<TokenBucketCancelable *>(mEvents.PopFront()));
-||||||| merged common ancestors
-      dont_AddRef(static_cast<TokenBucketCancelable *>(mEvents.PopFront()));
-=======
         dont_AddRef(static_cast<TokenBucketCancelable*>(mEvents.PopFront()));
->>>>>>> upstream-releases
     if (cancelable->mEvent) {
       SOCKET_LOG(
           ("EventTokenBucket::DispachEvents [%p] "
@@ -341,14 +293,7 @@ void EventTokenBucket::UpdateTimer() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventTokenBucket::Notify(nsITimer *timer) {
-||||||| merged common ancestors
-EventTokenBucket::Notify(nsITimer *timer)
-{
-=======
 EventTokenBucket::Notify(nsITimer* timer) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
 #ifdef XP_WIN
@@ -370,14 +315,7 @@ EventTokenBucket::Notify(nsITimer* timer) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventTokenBucket::GetName(nsACString &aName) {
-||||||| merged common ancestors
-EventTokenBucket::GetName(nsACString& aName)
-{
-=======
 EventTokenBucket::GetName(nsACString& aName) {
->>>>>>> upstream-releases
   aName.AssignLiteral("EventTokenBucket");
   return NS_OK;
 }

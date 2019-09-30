@@ -13,21 +13,12 @@
 #include "nsTableColGroupFrame.h"
 #include "mozilla/WritingModes.h"
 
-<<<<<<< HEAD
-class nsTableColFrame final : public nsSplittableFrame {
- public:
-||||||| merged common ancestors
-class nsTableColFrame final : public nsSplittableFrame
-{
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsTableColFrame final : public nsSplittableFrame {
  public:
->>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsTableColFrame)
 
   enum {
@@ -40,25 +31,6 @@ class nsTableColFrame final : public nsSplittableFrame {
   nsTableColType GetColType() const;
   void SetColType(nsTableColType aType);
 
-<<<<<<< HEAD
-  /**
-   * instantiate a new instance of nsTableRowFrame.
-   *
-   * @param aPresShell the pres shell for this frame
-   *
-   * @return           the frame that was created
-   */
-  friend nsTableColFrame* NS_NewTableColFrame(nsIPresShell* aPresShell,
-                                              ComputedStyle* aContext);
-||||||| merged common ancestors
-  /** instantiate a new instance of nsTableRowFrame.
-    * @param aPresShell the pres shell for this frame
-    *
-    * @return           the frame that was created
-    */
-  friend nsTableColFrame* NS_NewTableColFrame(nsIPresShell* aPresShell,
-                                              ComputedStyle*  aContext);
-=======
   /**
    * instantiate a new instance of nsTableRowFrame.
    *
@@ -68,7 +40,6 @@ class nsTableColFrame final : public nsSplittableFrame {
    */
   friend nsTableColFrame* NS_NewTableColFrame(mozilla::PresShell* aPresShell,
                                               ComputedStyle* aContext);
->>>>>>> upstream-releases
 
   // nsIFrame overrides
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
@@ -306,15 +277,8 @@ class nsTableColFrame final : public nsSplittableFrame {
     InvalidateFrameSubtree();
   }
 
-<<<<<<< HEAD
- protected:
-  explicit nsTableColFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-  explicit nsTableColFrame(ComputedStyle* aStyle);
-=======
  protected:
   explicit nsTableColFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
->>>>>>> upstream-releases
   ~nsTableColFrame();
 
   nscoord mMinCoord;

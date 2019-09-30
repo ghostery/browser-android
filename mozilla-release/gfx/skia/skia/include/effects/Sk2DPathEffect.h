@@ -59,17 +59,6 @@ public:
         return sk_sp<SkPathEffect>(new SkLine2DPathEffect(width, matrix));
     }
 
-<<<<<<< HEAD
-
-    Factory getFactory() const override { return CreateProc; }
-||||||| merged common ancestors
-    virtual bool filterPath(SkPath* dst, const SkPath& src,
-                            SkStrokeRec*, const SkRect*) const override;
-
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkLine2DPathEffect)
-=======
->>>>>>> upstream-releases
 
 protected:
     SkLine2DPathEffect(SkScalar width, const SkMatrix& matrix)
@@ -82,15 +71,8 @@ protected:
     void nextSpan(int u, int v, int ucount, SkPath*) const override;
 
 private:
-<<<<<<< HEAD
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
-
-||||||| merged common ancestors
-=======
     SK_FLATTENABLE_HOOKS(SkLine2DPathEffect)
 
->>>>>>> upstream-releases
     SkScalar fWidth;
 
     typedef Sk2DPathEffect INHERITED;
@@ -106,15 +88,6 @@ public:
         return sk_sp<SkPathEffect>(new SkPath2DPathEffect(matrix, path));
     }
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkPath2DPathEffect)
-
-=======
->>>>>>> upstream-releases
 protected:
     SkPath2DPathEffect(const SkMatrix&, const SkPath&);
     void flatten(SkWriteBuffer&) const override;
@@ -122,15 +95,8 @@ protected:
     void next(const SkPoint&, int u, int v, SkPath*) const override;
 
 private:
-<<<<<<< HEAD
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
-
-||||||| merged common ancestors
-=======
     SK_FLATTENABLE_HOOKS(SkPath2DPathEffect)
 
->>>>>>> upstream-releases
     SkPath  fPath;
 
     typedef Sk2DPathEffect INHERITED;

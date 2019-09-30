@@ -64,33 +64,6 @@ function run_test() {
   let rootFront;
 
   client.connect().then(([applicationType, traits]) => {
-<<<<<<< HEAD
-    rootFront = RootFront(client);
-
-    rootFront.simpleReturn().then(() => {
-      ok(false, "Connection was aborted, request shouldn't resolve");
-      do_test_finished();
-    }, e => {
-      const error = e.toString();
-      ok(true, "Connection was aborted, request rejected correctly");
-      ok(error.includes("Request stack:"), "Error includes request stack");
-      ok(error.includes("test_protocol_abort.js"), "Stack includes this test");
-      do_test_finished();
-    });
-||||||| merged common ancestors
-    rootClient = RootFront(client);
-
-    rootClient.simpleReturn().then(() => {
-      ok(false, "Connection was aborted, request shouldn't resolve");
-      do_test_finished();
-    }, e => {
-      const error = e.toString();
-      ok(true, "Connection was aborted, request rejected correctly");
-      ok(error.includes("Request stack:"), "Error includes request stack");
-      ok(error.includes("test_protocol_abort.js"), "Stack includes this test");
-      do_test_finished();
-    });
-=======
     rootFront = new RootFront(client);
 
     rootFront.simpleReturn().then(
@@ -109,7 +82,6 @@ function run_test() {
         do_test_finished();
       }
     );
->>>>>>> upstream-releases
 
     trace.close();
   });

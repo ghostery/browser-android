@@ -106,59 +106,6 @@ def clear_all_cookies(session):
     session.transport.send("DELETE", "session/%s/cookie" % session.session_id)
 
 
-<<<<<<< HEAD
-def document_dimensions(session):
-    return tuple(session.execute_script("""
-        let rect = document.documentElement.getBoundingClientRect();
-        return [rect.width, rect.height];
-        """))
-
-
-def center_point(element):
-    """Calculates the in-view center point of a web element."""
-    inner_width, inner_height = element.session.execute_script(
-        "return [window.innerWidth, window.innerHeight]")
-    rect = element.rect
-
-    # calculate the intersection of the rect that is inside the viewport
-    visible = {
-        "left": max(0, min(rect["x"], rect["x"] + rect["width"])),
-        "right": min(inner_width, max(rect["x"], rect["x"] + rect["width"])),
-        "top": max(0, min(rect["y"], rect["y"] + rect["height"])),
-        "bottom": min(inner_height, max(rect["y"], rect["y"] + rect["height"])),
-    }
-
-    # arrive at the centre point of the visible rectangle
-    x = (visible["left"] + visible["right"]) / 2.0
-    y = (visible["top"] + visible["bottom"]) / 2.0
-
-    # convert to CSS pixels, as centre point can be float
-    return (math.floor(x), math.floor(y))
-
-
-def document_hidden(session):
-    """Polls for the document to become hidden."""
-    def hidden(session):
-        return session.execute_script("return document.hidden")
-    return Poll(session, timeout=3, raises=None).until(hidden)
-
-
-def element_rect(session, element):
-    return session.execute_script("""
-        let element = arguments[0];
-        let rect = element.getBoundingClientRect();
-
-        return {
-            x: rect.left + window.pageXOffset,
-            y: rect.top + window.pageYOffset,
-            width: rect.width,
-            height: rect.height,
-        };
-        """, args=(element,))
-
-
-||||||| merged common ancestors
-=======
 def document_dimensions(session):
     return tuple(session.execute_script("""
         let rect = document.documentElement.getBoundingClientRect();
@@ -218,7 +165,6 @@ def element_rect(session, element):
         """, args=(element,))
 
 
->>>>>>> upstream-releases
 def is_element_in_viewport(session, element):
     """Check if element is outside of the viewport"""
     return session.execute_script("""

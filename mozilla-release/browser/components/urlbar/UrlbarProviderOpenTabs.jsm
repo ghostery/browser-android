@@ -98,19 +98,6 @@ class ProviderOpenTabs extends UrlbarProvider {
   }
 
   /**
-<<<<<<< HEAD
-   * Returns the sources returned by this provider.
-   * @returns {array} one or multiple types from UrlbarUtils.MATCH_SOURCE.*
-   */
-  get sources() {
-    return [
-      UrlbarUtils.MATCH_SOURCE.TABS,
-    ];
-  }
-
-  /**
-||||||| merged common ancestors
-=======
    * Whether this provider should be invoked for the given context.
    * If this method returns false, the providers manager won't start a query
    * with this provider, to save on resources.
@@ -135,7 +122,6 @@ class ProviderOpenTabs extends UrlbarProvider {
   }
 
   /**
->>>>>>> upstream-releases
    * Registers a tab as open.
    * @param {string} url Address of the tab
    * @param {integer} userContextId Containers user context id
@@ -208,22 +194,7 @@ class ProviderOpenTabs extends UrlbarProvider {
           )
         );
       }
-<<<<<<< HEAD
-      addCallback(this, new UrlbarMatch(UrlbarUtils.MATCH_TYPE.TAB_SWITCH,
-                                        UrlbarUtils.MATCH_SOURCE.TABS, {
-        url: row.getResultByName("url"),
-        userContextId: row.getResultByName("userContextId"),
-      }));
-    });
-||||||| merged common ancestors
-      addCallback(this, new UrlbarMatch(UrlbarUtils.MATCH_TYPE.TAB_SWITCH, {
-        url: row.getResultByName("url"),
-        userContextId: row.getResultByName("userContextId"),
-      }));
-    });
-=======
     );
->>>>>>> upstream-releases
     // We are done.
     this.queries.delete(queryContext);
   }

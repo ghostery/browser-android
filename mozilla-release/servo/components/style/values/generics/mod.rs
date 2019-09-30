@@ -5,25 +5,12 @@
 //! Generic types that share their serialization implementations
 //! for both specified and computed values.
 
-<<<<<<< HEAD
-use super::CustomIdent;
-use crate::counter_style::{parse_counter_style_name, Symbols};
-use crate::parser::{Parse, ParserContext};
-||||||| merged common ancestors
-use counter_style::{parse_counter_style_name, Symbols};
-=======
 use super::CustomIdent;
 use crate::counter_style::{parse_counter_style_name, Symbols};
 use crate::parser::{Parse, ParserContext};
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::Parser;
-<<<<<<< HEAD
-||||||| merged common ancestors
-use parser::{Parse, ParserContext};
-=======
 use std::ops::Add;
->>>>>>> upstream-releases
 use style_traits::{KeywordsCollectFn, ParseError};
 use style_traits::{SpecifiedValueInfo, StyleParseErrorKind};
 

@@ -73,20 +73,12 @@ class Frame extends Component {
   componentWillMount() {
     if (this.props.sourceMapService) {
       const { source, line, column } = this.props.frame;
-<<<<<<< HEAD
-      this.unsubscribeSourceMapService = this.props.sourceMapService.subscribe(
-        source, line, column, this._locationChanged);
-||||||| merged common ancestors
-      this.props.sourceMapService.subscribe(source, line, column,
-                                            this._locationChanged);
-=======
       this.unsubscribeSourceMapService = this.props.sourceMapService.subscribe(
         source,
         line,
         column,
         this._locationChanged
       );
->>>>>>> upstream-releases
     }
   }
 
@@ -148,19 +140,8 @@ class Frame extends Component {
       frame = this.props.frame;
     }
 
-<<<<<<< HEAD
-    const source = frame.source || "";
-||||||| merged common ancestors
-    // If the resource was loaded by browser-loader.js, `frame.source` looks like:
-    // resource://devtools/shared/base-loader.js -> resource://devtools/path/to/file.js .
-    // What's needed is only the last part after " -> ".
-    const source = frame.source
-      ? String(frame.source).split(" -> ").pop()
-      : "";
-=======
     const source = frame.source || "";
     const sourceId = frame.sourceId;
->>>>>>> upstream-releases
     const line = frame.line != void 0 ? Number(frame.line) : null;
     const column = frame.column != void 0 ? Number(frame.column) : null;
 

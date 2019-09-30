@@ -73,15 +73,7 @@ NS_INTERFACE_MAP_END
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-HttpChannelParentListener::OnStartRequest(nsIRequest* aRequest,
-                                          nsISupports* aContext) {
-||||||| merged common ancestors
-HttpChannelParentListener::OnStartRequest(nsIRequest *aRequest, nsISupports *aContext)
-{
-=======
 HttpChannelParentListener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(!mSuspendedForDiversion,
                      "Cannot call OnStartRequest if suspended for diversion!");
 
@@ -92,19 +84,8 @@ HttpChannelParentListener::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-HttpChannelParentListener::OnStopRequest(nsIRequest* aRequest,
-                                         nsISupports* aContext,
-                                         nsresult aStatusCode) {
-||||||| merged common ancestors
-HttpChannelParentListener::OnStopRequest(nsIRequest *aRequest,
-                                         nsISupports *aContext,
-                                         nsresult aStatusCode)
-{
-=======
 HttpChannelParentListener::OnStopRequest(nsIRequest* aRequest,
                                          nsresult aStatusCode) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(!mSuspendedForDiversion,
                      "Cannot call OnStopRequest if suspended for diversion!");
 
@@ -124,38 +105,17 @@ HttpChannelParentListener::OnStopRequest(nsIRequest* aRequest,
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-HttpChannelParentListener::OnDataAvailable(nsIRequest* aRequest,
-                                           nsISupports* aContext,
-                                           nsIInputStream* aInputStream,
-                                           uint64_t aOffset, uint32_t aCount) {
-||||||| merged common ancestors
-HttpChannelParentListener::OnDataAvailable(nsIRequest *aRequest,
-                                           nsISupports *aContext,
-                                           nsIInputStream *aInputStream,
-                                           uint64_t aOffset,
-                                           uint32_t aCount)
-{
-=======
 HttpChannelParentListener::OnDataAvailable(nsIRequest* aRequest,
                                            nsIInputStream* aInputStream,
                                            uint64_t aOffset, uint32_t aCount) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(!mSuspendedForDiversion,
                      "Cannot call OnDataAvailable if suspended for diversion!");
 
   if (!mNextListener) return NS_ERROR_UNEXPECTED;
 
   LOG(("HttpChannelParentListener::OnDataAvailable [this=%p]\n", this));
-<<<<<<< HEAD
-  return mNextListener->OnDataAvailable(aRequest, aContext, aInputStream,
-                                        aOffset, aCount);
-||||||| merged common ancestors
-  return mNextListener->OnDataAvailable(aRequest, aContext, aInputStream, aOffset, aCount);
-=======
   return mNextListener->OnDataAvailable(aRequest, aInputStream, aOffset,
                                         aCount);
->>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -205,113 +165,6 @@ nsresult HttpChannelParentListener::TriggerCrossProcessRedirect(
   nsCOMPtr<nsILoadInfo> loadInfo = aLoadInfo;
 
   RefPtr<HttpChannelParentListener> self = this;
-<<<<<<< HEAD
-  p->Then(
-      GetMainThreadSerialEventTarget(), __func__,
-      [=](nsCOMPtr<nsITabParent> tp) {
-        nsresult rv;
-
-        // Register the new channel and obtain id for it
-        nsCOMPtr<nsIRedirectChannelRegistrar> registrar =
-            RedirectChannelRegistrar::GetOrCreate();
-        MOZ_ASSERT(registrar);
-        rv = registrar->RegisterChannel(channel, &self->mRedirectChannelId);
-        NS_ENSURE_SUCCESS(rv, rv);
-
-        LOG(("Registered %p channel under id=%d", channel.get(),
-             self->mRedirectChannelId));
-
-        OptionalLoadInfoArgs loadInfoArgs;
-        MOZ_ALWAYS_SUCCEEDS(LoadInfoToLoadInfoArgs(loadInfo, &loadInfoArgs));
-
-        uint32_t newLoadFlags = nsIRequest::LOAD_NORMAL;
-        MOZ_ALWAYS_SUCCEEDS(channel->GetLoadFlags(&newLoadFlags));
-
-        nsCOMPtr<nsIURI> uri;
-        channel->GetURI(getter_AddRefs(uri));
-
-        nsCOMPtr<nsIURI> originalURI;
-        channel->GetOriginalURI(getter_AddRefs(originalURI));
-
-        uint64_t channelId;
-        MOZ_ALWAYS_SUCCEEDS(httpChannel->GetChannelId(&channelId));
-
-        dom::TabParent* tabParent = dom::TabParent::GetFrom(tp);
-        ContentParent* cp = tabParent->Manager()->AsContentParent();
-        PNeckoParent* neckoParent =
-            SingleManagedOrNull(cp->ManagedPNeckoParent());
-
-        RefPtr<HttpChannelParent> channelParent =
-            do_QueryObject(self->mNextListener);
-        MOZ_ASSERT(channelParent);
-        channelParent->SetCrossProcessRedirect();
-
-        auto result = neckoParent->SendCrossProcessRedirect(
-            self->mRedirectChannelId, uri, newLoadFlags, loadInfoArgs,
-            channelId, originalURI, aIdentifier);
-
-        MOZ_ASSERT(result, "SendCrossProcessRedirect failed");
-
-        return result ? NS_OK : NS_ERROR_UNEXPECTED;
-      },
-      [httpChannel](nsresult aStatus) {
-        MOZ_ASSERT(NS_FAILED(aStatus), "Status should be error");
-        httpChannel->OnRedirectVerifyCallback(aStatus);
-      });
-||||||| merged common ancestors
-  p->Then(GetMainThreadSerialEventTarget(), __func__,
-          [=](nsCOMPtr<nsITabParent> tp) {
-            nsresult rv;
-
-            // Register the new channel and obtain id for it
-            nsCOMPtr<nsIRedirectChannelRegistrar> registrar =
-              RedirectChannelRegistrar::GetOrCreate();
-            MOZ_ASSERT(registrar);
-            rv = registrar->RegisterChannel(channel, &self->mRedirectChannelId);
-            NS_ENSURE_SUCCESS(rv, rv);
-
-            LOG(("Registered %p channel under id=%d", channel.get(), self->mRedirectChannelId));
-
-            OptionalLoadInfoArgs loadInfoArgs;
-            MOZ_ALWAYS_SUCCEEDS(LoadInfoToLoadInfoArgs(loadInfo, &loadInfoArgs));
-
-            uint32_t newLoadFlags = nsIRequest::LOAD_NORMAL;
-            MOZ_ALWAYS_SUCCEEDS(channel->GetLoadFlags(&newLoadFlags));
-
-            nsCOMPtr<nsIURI> uri;
-            channel->GetURI(getter_AddRefs(uri));
-
-            nsCOMPtr<nsIURI> originalURI;
-            channel->GetOriginalURI(getter_AddRefs(originalURI));
-
-            uint64_t channelId;
-            MOZ_ALWAYS_SUCCEEDS(httpChannel->GetChannelId(&channelId));
-
-            dom::TabParent* tabParent = dom::TabParent::GetFrom(tp);
-            ContentParent* cp = tabParent->Manager()->AsContentParent();
-            PNeckoParent* neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
-
-            RefPtr<HttpChannelParent> channelParent = do_QueryObject(self->mNextListener);
-            MOZ_ASSERT(channelParent);
-            channelParent->SetCrossProcessRedirect();
-
-            auto result = neckoParent->SendCrossProcessRedirect(self->mRedirectChannelId,
-                                                                uri,
-                                                                newLoadFlags,
-                                                                loadInfoArgs,
-                                                                channelId,
-                                                                originalURI,
-                                                                aIdentifier);
-
-            MOZ_ASSERT(result, "SendCrossProcessRedirect failed");
-
-            return result ? NS_OK : NS_ERROR_UNEXPECTED;
-          },
-          [httpChannel](nsresult aStatus) {
-            MOZ_ASSERT(NS_FAILED(aStatus), "Status should be error");
-            httpChannel->OnRedirectVerifyCallback(aStatus);
-          });
-=======
   p->Then(
       GetMainThreadSerialEventTarget(), __func__,
       [=](uint64_t cpId) {
@@ -367,7 +220,6 @@ nsresult HttpChannelParentListener::TriggerCrossProcessRedirect(
         MOZ_ASSERT(NS_FAILED(aStatus), "Status should be error");
         httpChannel->OnRedirectVerifyCallback(aStatus);
       });
->>>>>>> upstream-releases
 
   return NS_OK;
 }

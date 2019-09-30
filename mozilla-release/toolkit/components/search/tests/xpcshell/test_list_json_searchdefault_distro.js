@@ -22,21 +22,11 @@ add_task(async function test_defaultEngineNamePref() {
   // Set the browser.search.defaultenginename pref.
   Services.prefs.setCharPref(kDefaultenginenamePref, "Bing");
 
-<<<<<<< HEAD
-  await asyncInit();
-  Assert.equal(Services.search.defaultEngine.name,
-               defaultEngineName, "expected default search engine after pref set");
-||||||| merged common ancestors
-  await asyncInit();
-  Assert.equal(Services.search.currentEngine.name,
-               defaultEngineName, "expected default search engine after pref set");
-=======
   Assert.equal(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     "expected default search engine after pref set"
   );
->>>>>>> upstream-releases
 
   Services.prefs.clearUserPref(kDefaultenginenamePref);
 });
@@ -51,22 +41,12 @@ add_task(async function test_defaultEngineNameUserPrefUS() {
   // Set the browser.search.defaultenginename pref.
   Services.prefs.setCharPref(kDefaultenginenamePref, "Bing");
 
-<<<<<<< HEAD
-  await asyncReInit();
-  Assert.equal(Services.search.defaultEngine.name,
-               defaultEngineName, "expected US default search engine after pref set");
-||||||| merged common ancestors
-  await asyncReInit();
-  Assert.equal(Services.search.currentEngine.name,
-               defaultEngineName, "expected US default search engine after pref set");
-=======
   await asyncReInit({ skipReset: true });
   Assert.equal(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     "expected US default search engine after pref set"
   );
->>>>>>> upstream-releases
 
   Services.prefs.clearUserPref(kDefaultenginenamePref);
   Services.prefs.clearUserPref("browser.search.region");
@@ -81,21 +61,6 @@ add_task(async function test_defaultEngineNameDefaultPrefUS() {
 
   // Set the browser.search.defaultenginename pref.
   let defaultBranch = Services.prefs.getDefaultBranch(null);
-<<<<<<< HEAD
-  defaultBranch.setCharPref(kDefaultenginenamePref,
-                            "data:text/plain,browser.search.defaultenginename=Bing");
-
-  await asyncReInit();
-  Assert.equal(Services.search.defaultEngine.name,
-               "Bing", "expected new default search engine after pref set");
-||||||| merged common ancestors
-  defaultBranch.setCharPref(kDefaultenginenamePref,
-                            "data:text/plain,browser.search.defaultenginename=Bing");
-
-  await asyncReInit();
-  Assert.equal(Services.search.currentEngine.name,
-               "Bing", "expected new default search engine after pref set");
-=======
   defaultBranch.setCharPref(
     kDefaultenginenamePref,
     "data:text/plain,browser.search.defaultenginename=Bing"
@@ -107,7 +72,6 @@ add_task(async function test_defaultEngineNameDefaultPrefUS() {
     "Bing",
     "expected new default search engine after pref set"
   );
->>>>>>> upstream-releases
 
   Services.prefs.clearUserPref("browser.search.region");
 });

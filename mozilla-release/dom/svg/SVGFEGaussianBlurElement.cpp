@@ -21,34 +21,12 @@ JSObject* SVGFEGaussianBlurElement::WrapNode(
   return SVGFEGaussianBlurElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::NumberPairInfo SVGFEGaussianBlurElement::sNumberPairInfo[1] = {
-    {nsGkAtoms::stdDeviation, 0, 0}};
-||||||| merged common ancestors
-nsSVGElement::NumberPairInfo SVGFEGaussianBlurElement::sNumberPairInfo[1] =
-{
-  { nsGkAtoms::stdDeviation, 0, 0 }
-};
-=======
 SVGElement::NumberPairInfo SVGFEGaussianBlurElement::sNumberPairInfo[1] = {
     {nsGkAtoms::stdDeviation, 0, 0}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsSVGElement::StringInfo SVGFEGaussianBlurElement::sStringInfo[2] = {
-    {nsGkAtoms::result, kNameSpaceID_None, true},
-    {nsGkAtoms::in, kNameSpaceID_None, true}};
-||||||| merged common ancestors
-nsSVGElement::StringInfo SVGFEGaussianBlurElement::sStringInfo[2] =
-{
-  { nsGkAtoms::result, kNameSpaceID_None, true },
-  { nsGkAtoms::in, kNameSpaceID_None, true }
-};
-=======
 SVGElement::StringInfo SVGFEGaussianBlurElement::sStringInfo[2] = {
     {nsGkAtoms::result, kNameSpaceID_None, true},
     {nsGkAtoms::in, kNameSpaceID_None, true}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -57,50 +35,20 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEGaussianBlurElement)
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedString> SVGFEGaussianBlurElement::In1() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedString>
-SVGFEGaussianBlurElement::In1()
-{
-=======
 already_AddRefed<DOMSVGAnimatedString> SVGFEGaussianBlurElement::In1() {
->>>>>>> upstream-releases
   return mStringAttributes[IN1].ToDOMAnimatedString(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedNumber> SVGFEGaussianBlurElement::StdDeviationX() {
-  return mNumberPairAttributes[STD_DEV].ToDOMAnimatedNumber(
-      nsSVGNumberPair::eFirst, this);
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedNumber>
-SVGFEGaussianBlurElement::StdDeviationX()
-{
-  return mNumberPairAttributes[STD_DEV].ToDOMAnimatedNumber(nsSVGNumberPair::eFirst, this);
-=======
 already_AddRefed<DOMSVGAnimatedNumber>
 SVGFEGaussianBlurElement::StdDeviationX() {
   return mNumberPairAttributes[STD_DEV].ToDOMAnimatedNumber(
       SVGAnimatedNumberPair::eFirst, this);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedNumber> SVGFEGaussianBlurElement::StdDeviationY() {
-  return mNumberPairAttributes[STD_DEV].ToDOMAnimatedNumber(
-      nsSVGNumberPair::eSecond, this);
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedNumber>
-SVGFEGaussianBlurElement::StdDeviationY()
-{
-  return mNumberPairAttributes[STD_DEV].ToDOMAnimatedNumber(nsSVGNumberPair::eSecond, this);
-=======
 already_AddRefed<DOMSVGAnimatedNumber>
 SVGFEGaussianBlurElement::StdDeviationY() {
   return mNumberPairAttributes[STD_DEV].ToDOMAnimatedNumber(
       SVGAnimatedNumberPair::eSecond, this);
->>>>>>> upstream-releases
 }
 
 void SVGFEGaussianBlurElement::SetStdDeviation(float stdDeviationX,
@@ -137,49 +85,21 @@ bool SVGFEGaussianBlurElement::AttributeAffectsRendering(
            aAttribute == nsGkAtoms::stdDeviation));
 }
 
-<<<<<<< HEAD
-void SVGFEGaussianBlurElement::GetSourceImageNames(
-    nsTArray<nsSVGStringInfo>& aSources) {
-  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN1], this));
-||||||| merged common ancestors
-void
-SVGFEGaussianBlurElement::GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources)
-{
-  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN1], this));
-=======
 void SVGFEGaussianBlurElement::GetSourceImageNames(
     nsTArray<SVGStringInfo>& aSources) {
   aSources.AppendElement(SVGStringInfo(&mStringAttributes[IN1], this));
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::NumberPairAttributesInfo
-SVGFEGaussianBlurElement::GetNumberPairInfo() {
-||||||| merged common ancestors
-nsSVGElement::NumberPairAttributesInfo
-SVGFEGaussianBlurElement::GetNumberPairInfo()
-{
-=======
 SVGElement::NumberPairAttributesInfo
 SVGFEGaussianBlurElement::GetNumberPairInfo() {
->>>>>>> upstream-releases
   return NumberPairAttributesInfo(mNumberPairAttributes, sNumberPairInfo,
                                   ArrayLength(sNumberPairInfo));
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGFEGaussianBlurElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGFEGaussianBlurElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGFEGaussianBlurElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

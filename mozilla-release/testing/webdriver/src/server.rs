@@ -5,50 +5,16 @@ use std::sync::mpsc::{channel, Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-<<<<<<< HEAD
-use futures::{future, Future, Stream};
-use http;
-use hyper::server::conn::Http;
-use hyper::service::Service;
-use hyper::{self, Body, Method, Request, Response, StatusCode};
-||||||| merged common ancestors
-use futures::{future, Future, Stream};
-use hyper::{self, Body, Method, Request, Response, StatusCode};
-use hyper::service::Service;
-use hyper::server::conn::Http;
-use http;
-use tokio::runtime::current_thread::Runtime;
-use tokio::reactor::Handle;
-=======
 use http::{self, Method, StatusCode};
->>>>>>> upstream-releases
 use tokio::net::TcpListener;
-<<<<<<< HEAD
-use tokio::reactor::Handle;
-use tokio::runtime::current_thread::Runtime;
-||||||| merged common ancestors
-=======
 use tokio::reactor::Handle;
 use warp::{self, Buf, Filter, Rejection};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-use crate::command::{WebDriverCommand, WebDriverMessage};
-use crate::error::{ErrorStatus, WebDriverError, WebDriverResult};
-use crate::httpapi::{VoidWebDriverExtensionRoute, WebDriverExtensionRoute, WebDriverHttpApi};
-use crate::response::{CloseWindowResponse, WebDriverResponse};
-||||||| merged common ancestors
-use command::{WebDriverCommand, WebDriverMessage};
-use error::{ErrorStatus, WebDriverError, WebDriverResult};
-use httpapi::{VoidWebDriverExtensionRoute, WebDriverExtensionRoute, WebDriverHttpApi};
-use response::{CloseWindowResponse, WebDriverResponse};
-=======
 use crate::Parameters;
 use crate::command::{WebDriverCommand, WebDriverMessage};
 use crate::error::{ErrorStatus, WebDriverError, WebDriverResult};
 use crate::httpapi::{standard_routes, Route, VoidWebDriverExtensionRoute, WebDriverExtensionRoute};
 use crate::response::{CloseWindowResponse, WebDriverResponse};
->>>>>>> upstream-releases
 
 // Silence warning about Quit being unused for now.
 #[allow(dead_code)]
@@ -323,143 +289,9 @@ fn build_route<U: 'static + WebDriverExtensionRoute + Send + Sync>(method: Metho
             };
 
             debug!("<- {} {}", status, resp_body);
-<<<<<<< HEAD
-
-            let response = Response::builder()
-                .status(status)
-                .header(http::header::CONTENT_TYPE, "application/json; charset=utf-8")
-                .header(http::header::CACHE_CONTROL, "no-cache")
-                .body(resp_body.into())
-                .unwrap();
-
-            Ok(response)
-        }))
-    }
-}
-
-pub struct Listener {
-    _guard: Option<thread::JoinHandle<()>>,
-    pub socket: SocketAddr,
-}
-
-impl Drop for Listener {
-    fn drop(&mut self) {
-        let _ = self._guard.take().map(|j| j.join());
-    }
-}
-
-pub fn start<T, U>(
-    address: SocketAddr,
-    handler: T,
-    extension_routes: &[(Method, &str, U)],
-) -> ::std::io::Result<Listener>
-where
-    T: 'static + WebDriverHandler<U>,
-    U: 'static + WebDriverExtensionRoute,
-{
-    let listener = StdTcpListener::bind(address)?;
-    let addr = listener.local_addr()?;
-    let (msg_send, msg_recv) = channel();
-
-    let api = Arc::new(Mutex::new(WebDriverHttpApi::new(extension_routes)));
-
-    let builder = thread::Builder::new().name("webdriver server".to_string());
-    let handle = builder.spawn(move || {
-        let mut rt = Runtime::new().unwrap();
-        let listener = TcpListener::from_std(listener, &Handle::default()).unwrap();
-
-        let http_handler = HttpHandler::new(api, msg_send.clone());
-        let http = Http::new();
-        let handle = rt.handle();
-
-        let fut = listener.incoming()
-            .for_each(move |socket| {
-                let fut = http.serve_connection(socket, http_handler.clone()).map_err(|_| ());
-                handle.spawn(fut).unwrap();
-                Ok(())
-            });
-
-        rt.block_on(fut).unwrap();
-    })?;
-
-    let builder = thread::Builder::new().name("webdriver dispatcher".to_string());
-    builder.spawn(move || {
-        let mut dispatcher = Dispatcher::new(handler);
-        dispatcher.run(&msg_recv);
-    })?;
-
-    Ok(Listener { _guard: Some(handle), socket: addr })
-||||||| merged common ancestors
-
-            let response = Response::builder()
-                .status(status)
-                .header(http::header::CONTENT_TYPE, "application/json; charset=utf8")
-                .header(http::header::CACHE_CONTROL, "no-cache")
-                .body(resp_body.into())
-                .unwrap();
-
-            Ok(response)
-        }))
-    }
-}
-
-pub struct Listener {
-    _guard: Option<thread::JoinHandle<()>>,
-    pub socket: SocketAddr,
-}
-
-impl Drop for Listener {
-    fn drop(&mut self) {
-        let _ = self._guard.take().map(|j| j.join());
-    }
-}
-
-pub fn start<T, U>(
-    address: SocketAddr,
-    handler: T,
-    extension_routes: &[(Method, &str, U)],
-) -> ::std::io::Result<Listener>
-where
-    T: 'static + WebDriverHandler<U>,
-    U: 'static + WebDriverExtensionRoute,
-{
-    let listener = StdTcpListener::bind(address)?;
-    let addr = listener.local_addr()?;
-    let (msg_send, msg_recv) = channel();
-
-    let api = Arc::new(Mutex::new(WebDriverHttpApi::new(extension_routes)));
-
-    let builder = thread::Builder::new().name("webdriver server".to_string());
-    let handle = builder.spawn(move || {
-        let mut rt = Runtime::new().unwrap();
-        let listener = TcpListener::from_std(listener, &Handle::default()).unwrap();
-
-        let http_handler = HttpHandler::new(api, msg_send.clone());
-        let http = Http::new();
-        let handle = rt.handle();
-
-        let fut = listener.incoming()
-            .for_each(move |socket| {
-                let fut = http.serve_connection(socket, http_handler.clone()).map_err(|_| ());
-                handle.spawn(fut).unwrap();
-                Ok(())
-            });
-
-        rt.block_on(fut).unwrap();
-    })?;
-
-    let builder = thread::Builder::new().name("webdriver dispatcher".to_string());
-    builder.spawn(move || {
-        let mut dispatcher = Dispatcher::new(handler);
-        dispatcher.run(&msg_recv);
-    })?;
-
-    Ok(Listener { _guard: Some(handle), socket: addr })
-=======
             warp::reply::with_status(resp_body, status)
         })
         .with(warp::reply::with::header(http::header::CONTENT_TYPE, "application/json; charset=utf-8"))
         .with(warp::reply::with::header(http::header::CACHE_CONTROL, "no-cache"))
         .boxed()
->>>>>>> upstream-releases
 }

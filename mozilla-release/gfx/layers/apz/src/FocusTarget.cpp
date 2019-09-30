@@ -6,23 +6,6 @@
 
 #include "mozilla/layers/FocusTarget.h"
 
-<<<<<<< HEAD
-#include "mozilla/dom/EventTarget.h"     // for EventTarget
-#include "mozilla/dom/TabParent.h"       // for TabParent
-#include "mozilla/EventDispatcher.h"     // for EventDispatcher
-#include "mozilla/layout/RenderFrame.h"  // For RenderFrame
-#include "nsIContentInlines.h"           // for nsINode::IsEditable()
-#include "nsIPresShell.h"                // for nsIPresShell
-#include "nsLayoutUtils.h"               // for nsLayoutUtils
-||||||| merged common ancestors
-#include "mozilla/dom/EventTarget.h" // for EventTarget
-#include "mozilla/dom/TabParent.h"   // for TabParent
-#include "mozilla/EventDispatcher.h" // for EventDispatcher
-#include "mozilla/layout/RenderFrameParent.h" // For RenderFrameParent
-#include "nsIContentInlines.h" // for nsINode::IsEditable()
-#include "nsIPresShell.h"  // for nsIPresShell
-#include "nsLayoutUtils.h" // for nsLayoutUtils
-=======
 #include "mozilla/dom/BrowserBridgeChild.h"  // for BrowserBridgeChild
 #include "mozilla/dom/EventTarget.h"         // for EventTarget
 #include "mozilla/dom/RemoteBrowser.h"       // For RemoteBrowser
@@ -30,27 +13,16 @@
 #include "mozilla/PresShell.h"               // For PresShell
 #include "nsIContentInlines.h"               // for nsINode::IsEditable()
 #include "nsLayoutUtils.h"                   // for nsLayoutUtils
->>>>>>> upstream-releases
 
 #define ENABLE_FT_LOGGING 0
 // #define ENABLE_FT_LOGGING 1
 
 #if ENABLE_FT_LOGGING
-<<<<<<< HEAD
-#define FT_LOG(FMT, ...)                                                       \
-  printf_stderr("FT (%s): " FMT, XRE_IsParentProcess() ? "chrome" : "content", \
-                __VA_ARGS__)
-||||||| merged common ancestors
-#  define FT_LOG(FMT, ...) printf_stderr("FT (%s): " FMT, \
-                                         XRE_IsParentProcess() ? "chrome" : "content", \
-                                         __VA_ARGS__)
-=======
 #  define FT_LOG(FMT, ...)         \
     printf_stderr("FT (%s): " FMT, \
                   XRE_IsParentProcess() ? "chrome" : "content", __VA_ARGS__)
->>>>>>> upstream-releases
 #else
-#define FT_LOG(...)
+#  define FT_LOG(...)
 #endif
 
 using namespace mozilla::dom;
@@ -59,16 +31,7 @@ using namespace mozilla::layout;
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-static already_AddRefed<nsIPresShell> GetRetargetEventPresShell(
-    nsIPresShell* aRootPresShell) {
-||||||| merged common ancestors
-static already_AddRefed<nsIPresShell>
-GetRetargetEventPresShell(nsIPresShell* aRootPresShell)
-{
-=======
 static PresShell* GetRetargetEventPresShell(PresShell* aRootPresShell) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRootPresShell);
 
   // Use the last focused window in this PresShell and its
@@ -175,18 +138,9 @@ FocusTarget::FocusTarget(PresShell* aRootPresShell,
 
   // Check if there are key event listeners that could prevent default or change
   // the focus or selection of the page.
-<<<<<<< HEAD
-  if (gfxPrefs::APZKeyboardPassiveListeners()) {
-    mFocusHasKeyEventListeners =
-        HasListenersForNonPassiveKeyEvents(keyEventTarget.get());
-||||||| merged common ancestors
-  if (gfxPrefs::APZKeyboardPassiveListeners()) {
-    mFocusHasKeyEventListeners = HasListenersForNonPassiveKeyEvents(keyEventTarget.get());
-=======
   if (StaticPrefs::apz_keyboard_passive_listeners()) {
     mFocusHasKeyEventListeners =
         HasListenersForNonPassiveKeyEvents(keyEventTarget.get());
->>>>>>> upstream-releases
   } else {
     mFocusHasKeyEventListeners = HasListenersForKeyEvents(keyEventTarget.get());
   }
@@ -202,44 +156,16 @@ FocusTarget::FocusTarget(PresShell* aRootPresShell,
   }
 
   // Check if the key event target is a remote browser
-<<<<<<< HEAD
-  if (TabParent* browserParent = TabParent::GetFrom(keyEventTarget)) {
-    RenderFrame* rf = browserParent->GetRenderFrame();
-||||||| merged common ancestors
-  if (TabParent* browserParent = TabParent::GetFrom(keyEventTarget)) {
-    RenderFrameParent* rfp = browserParent->GetRenderFrame();
-=======
   if (RemoteBrowser* remoteBrowser = RemoteBrowser::GetFrom(keyEventTarget)) {
     LayersId layersId = remoteBrowser->GetLayersId();
->>>>>>> upstream-releases
 
     // The globally focused element for scrolling is in a remote layer tree
-<<<<<<< HEAD
-    if (rf) {
-      FT_LOG("Creating reflayer target with seq=%" PRIu64 ", kl=%d, lt=%" PRIu64
-             "\n",
-             aFocusSequenceNumber, mFocusHasKeyEventListeners,
-             rf->GetLayersId());
-||||||| merged common ancestors
-    if (rfp) {
-      FT_LOG("Creating reflayer target with seq=%" PRIu64 ", kl=%d, lt=%" PRIu64 "\n",
-             aFocusSequenceNumber,
-             mFocusHasKeyEventListeners,
-             rfp->GetLayersId());
-=======
     if (layersId.IsValid()) {
       FT_LOG("Creating reflayer target with seq=%" PRIu64 ", kl=%d, lt=%" PRIu64
              "\n",
              aFocusSequenceNumber, mFocusHasKeyEventListeners, layersId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      mData = AsVariant<LayersId>(rf->GetLayersId());
-||||||| merged common ancestors
-      mData = AsVariant<LayersId>(rfp->GetLayersId());
-=======
       mData = AsVariant<LayersId>(std::move(layersId));
->>>>>>> upstream-releases
       return;
     }
 
@@ -269,27 +195,11 @@ FocusTarget::FocusTarget(PresShell* aRootPresShell,
   // Gather the scrollable frames that would be scrolled in each direction
   // for this scroll target
   nsIScrollableFrame* horizontal =
-<<<<<<< HEAD
-      presShell->GetScrollableFrameToScrollForContent(
-          selectedContent.get(), nsIPresShell::eHorizontal);
-||||||| merged common ancestors
-    presShell->GetScrollableFrameToScrollForContent(selectedContent.get(),
-                                                    nsIPresShell::eHorizontal);
-=======
       presShell->GetScrollableFrameToScrollForContent(
           selectedContent.get(), ScrollableDirection::Horizontal);
->>>>>>> upstream-releases
   nsIScrollableFrame* vertical =
-<<<<<<< HEAD
-      presShell->GetScrollableFrameToScrollForContent(selectedContent.get(),
-                                                      nsIPresShell::eVertical);
-||||||| merged common ancestors
-    presShell->GetScrollableFrameToScrollForContent(selectedContent.get(),
-                                                    nsIPresShell::eVertical);
-=======
       presShell->GetScrollableFrameToScrollForContent(
           selectedContent.get(), ScrollableDirection::Vertical);
->>>>>>> upstream-releases
 
   // We might have the globally focused element for scrolling. Gather a ViewID
   // for the horizontal and vertical scroll targets of this element.

@@ -156,25 +156,9 @@ nsresult nsGenericHTMLElement::CopyInnerTo(Element* aDst) {
 }
 
 static const nsAttrValue::EnumTable kDirTable[] = {
-<<<<<<< HEAD
     {"ltr", eDir_LTR}, {"rtl", eDir_RTL}, {"auto", eDir_Auto}, {nullptr, 0}};
 
 void nsGenericHTMLElement::AddToNameTable(nsAtom* aName) {
-||||||| merged common ancestors
-  { "ltr", eDir_LTR },
-  { "rtl", eDir_RTL },
-  { "auto", eDir_Auto },
-  { nullptr, 0 }
-};
-
-void
-nsGenericHTMLElement::AddToNameTable(nsAtom* aName)
-{
-=======
-    {"ltr", eDir_LTR}, {"rtl", eDir_RTL}, {"auto", eDir_Auto}, {nullptr, 0}};
-
-void nsGenericHTMLElement::AddToNameTable(nsAtom* aName) {
->>>>>>> upstream-releases
   MOZ_ASSERT(HasName(), "Node doesn't have name?");
   Document* doc = GetUncomposedDoc();
   if (doc && !IsInAnonymousSubtree()) {
@@ -221,20 +205,10 @@ static bool IsOffsetParent(nsIFrame* aFrame) {
   return false;
 }
 
-<<<<<<< HEAD
-Element* nsGenericHTMLElement::GetOffsetRect(CSSIntRect& aRect) {
-  aRect = CSSIntRect();
-||||||| merged common ancestors
-Element*
-nsGenericHTMLElement::GetOffsetRect(CSSIntRect& aRect)
-{
-  aRect = CSSIntRect();
-=======
 struct OffsetResult {
   Element* mParent = nullptr;
   CSSIntRect mRect;
 };
->>>>>>> upstream-releases
 
 static OffsetResult GetUnretargetedOffsetsFor(const Element& aElement) {
   nsIFrame* frame = aElement.GetPrimaryFrame();
@@ -340,13 +314,6 @@ static bool ShouldBeRetargeted(const Element& aReferenceElement,
   return true;
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLElement::Spellcheck() {
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::Spellcheck()
-{
-=======
 Element* nsGenericHTMLElement::GetOffsetRect(CSSIntRect& aRect) {
   aRect = CSSIntRect();
 
@@ -368,7 +335,6 @@ Element* nsGenericHTMLElement::GetOffsetRect(CSSIntRect& aRect) {
 }
 
 bool nsGenericHTMLElement::Spellcheck() {
->>>>>>> upstream-releases
   // Has the state has been explicitly set?
   nsIContent* node;
   for (node = this; node; node = node->GetParent()) {
@@ -421,15 +387,7 @@ bool nsGenericHTMLElement::Spellcheck() {
   return spellcheckLevel == 2;  // "Spellcheck multi- and single-line"
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLElement::InNavQuirksMode(nsIDocument* aDoc) {
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::InNavQuirksMode(nsIDocument* aDoc)
-{
-=======
 bool nsGenericHTMLElement::InNavQuirksMode(Document* aDoc) {
->>>>>>> upstream-releases
   return aDoc && aDoc->GetCompatibilityMode() == eCompatibility_NavQuirks;
 }
 
@@ -460,67 +418,22 @@ EventStates nsGenericHTMLElement::IntrinsicState() const {
   return state;
 }
 
-<<<<<<< HEAD
-nsresult nsGenericHTMLElement::BindToTree(nsIDocument* aDocument,
-                                          nsIContent* aParent,
-                                          nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElementBase::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-uint32_t
-nsGenericHTMLElement::EditableInclusiveDescendantCount()
-{
-  bool isEditable = IsInComposedDoc() && HasFlag(NODE_IS_EDITABLE) &&
-    GetContentEditableValue() == eTrue;
-  return EditableDescendantCount() + isEditable;
-}
-
-nsresult
-nsGenericHTMLElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                 nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElementBase::BindToTree(aDocument, aParent,
-                                                     aBindingParent);
-=======
 nsresult nsGenericHTMLElement::BindToTree(BindContext& aContext,
                                           nsINode& aParent) {
   nsresult rv = nsGenericHTMLElementBase::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (IsInUncomposedDoc()) {
     RegAccessKey();
     if (HasName() && CanHaveName(NodeInfo()->NameAtom())) {
-<<<<<<< HEAD
-      aDocument->AddToNameTable(this,
-                                GetParsedAttr(nsGkAtoms::name)->GetAtomValue());
-||||||| merged common ancestors
-      aDocument->
-        AddToNameTable(this, GetParsedAttr(nsGkAtoms::name)->GetAtomValue());
-=======
       aContext.OwnerDoc().AddToNameTable(
           this, GetParsedAttr(nsGkAtoms::name)->GetAtomValue());
->>>>>>> upstream-releases
     }
   }
 
   if (HasFlag(NODE_IS_EDITABLE) && GetContentEditableValue() == eTrue &&
       IsInComposedDoc()) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIHTMLDocument> htmlDocument =
-        do_QueryInterface(GetComposedDoc());
-    if (htmlDocument) {
-      htmlDocument->ChangeContentEditableCount(this, +1);
-    }
-||||||| merged common ancestors
-    nsCOMPtr<nsIHTMLDocument> htmlDocument =
-      do_QueryInterface(GetComposedDoc());
-    if (htmlDocument) {
-      htmlDocument->ChangeContentEditableCount(this, +1);
-    }
-=======
     aContext.OwnerDoc().ChangeContentEditableCount(this, +1);
->>>>>>> upstream-releases
   }
 
   // We need to consider a labels element is moved to another subtree
@@ -534,15 +447,7 @@ nsresult nsGenericHTMLElement::BindToTree(BindContext& aContext,
   return rv;
 }
 
-<<<<<<< HEAD
-void nsGenericHTMLElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-nsGenericHTMLElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void nsGenericHTMLElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   if (IsInUncomposedDoc()) {
     UnregAccessKey();
   }
@@ -550,20 +455,9 @@ void nsGenericHTMLElement::UnbindFromTree(bool aNullParent) {
   RemoveFromNameTable();
 
   if (GetContentEditableValue() == eTrue) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIHTMLDocument> htmlDocument =
-        do_QueryInterface(GetComposedDoc());
-    if (htmlDocument) {
-      htmlDocument->ChangeContentEditableCount(this, -1);
-||||||| merged common ancestors
-    nsCOMPtr<nsIHTMLDocument> htmlDocument = do_QueryInterface(GetComposedDoc());
-    if (htmlDocument) {
-      htmlDocument->ChangeContentEditableCount(this, -1);
-=======
     Document* doc = GetComposedDoc();
     if (doc) {
       doc->ChangeContentEditableCount(this, -1);
->>>>>>> upstream-releases
     }
   }
 
@@ -842,13 +736,7 @@ EventListenerManager* nsGenericHTMLElement::GetEventListenerManagerForAttr(
     // normal.
     // XXXbz sXBL/XBL2 issue: should we instead use GetComposedDoc() here,
     // override BindToTree for those classes and munge event listeners there?
-<<<<<<< HEAD
-    nsIDocument* document = OwnerDoc();
-||||||| merged common ancestors
-    nsIDocument *document = OwnerDoc();
-=======
     Document* document = OwnerDoc();
->>>>>>> upstream-releases
 
     *aDefer = false;
     if ((win = document->GetInnerWindow())) {
@@ -1043,16 +931,8 @@ nsIFormControlFrame* nsGenericHTMLElement::GetFormControlFrame(
 
 nsPresContext* nsGenericHTMLElement::GetPresContext(PresContextFor aFor) {
   // Get the document
-<<<<<<< HEAD
-  nsIDocument* doc =
-      (aFor == eForComposedDoc) ? GetComposedDoc() : GetUncomposedDoc();
-||||||| merged common ancestors
-  nsIDocument* doc = (aFor == eForComposedDoc) ?
-    GetComposedDoc() : GetUncomposedDoc();
-=======
   Document* doc =
       (aFor == eForComposedDoc) ? GetComposedDoc() : GetUncomposedDoc();
->>>>>>> upstream-releases
   if (doc) {
     return doc->GetPresContext();
   }
@@ -1082,28 +962,6 @@ static const nsAttrValue::EnumTable kScrollingTable[] = {
     {"auto", NS_STYLE_FRAME_AUTO},     {nullptr, 0}};
 
 static const nsAttrValue::EnumTable kTableVAlignTable[] = {
-<<<<<<< HEAD
-    {"top", NS_STYLE_VERTICAL_ALIGN_TOP},
-    {"middle", NS_STYLE_VERTICAL_ALIGN_MIDDLE},
-    {"bottom", NS_STYLE_VERTICAL_ALIGN_BOTTOM},
-    {"baseline", NS_STYLE_VERTICAL_ALIGN_BASELINE},
-    {nullptr, 0}};
-
-bool nsGenericHTMLElement::ParseAlignValue(const nsAString& aString,
-                                           nsAttrValue& aResult) {
-||||||| merged common ancestors
-  { "top",     NS_STYLE_VERTICAL_ALIGN_TOP },
-  { "middle",  NS_STYLE_VERTICAL_ALIGN_MIDDLE },
-  { "bottom",  NS_STYLE_VERTICAL_ALIGN_BOTTOM },
-  { "baseline",NS_STYLE_VERTICAL_ALIGN_BASELINE },
-  { nullptr,   0 }
-};
-
-bool
-nsGenericHTMLElement::ParseAlignValue(const nsAString& aString,
-                                      nsAttrValue& aResult)
-{
-=======
     {"top", StyleVerticalAlignKeyword::Top},
     {"middle", StyleVerticalAlignKeyword::Middle},
     {"bottom", StyleVerticalAlignKeyword::Bottom},
@@ -1112,56 +970,22 @@ nsGenericHTMLElement::ParseAlignValue(const nsAString& aString,
 
 bool nsGenericHTMLElement::ParseAlignValue(const nsAString& aString,
                                            nsAttrValue& aResult) {
->>>>>>> upstream-releases
   static const nsAttrValue::EnumTable kAlignTable[] = {
       {"left", NS_STYLE_TEXT_ALIGN_LEFT},
       {"right", NS_STYLE_TEXT_ALIGN_RIGHT},
 
-<<<<<<< HEAD
-      {"top", NS_STYLE_VERTICAL_ALIGN_TOP},
-      {"middle", NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE},
-      {"bottom", NS_STYLE_VERTICAL_ALIGN_BASELINE},
-||||||| merged common ancestors
-    { "top",       NS_STYLE_VERTICAL_ALIGN_TOP },
-    { "middle",    NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE },
-    { "bottom",    NS_STYLE_VERTICAL_ALIGN_BASELINE },
-=======
       {"top", StyleVerticalAlignKeyword::Top},
       {"middle", StyleVerticalAlignKeyword::MozMiddleWithBaseline},
       {"bottom", StyleVerticalAlignKeyword::Bottom},
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      {"center", NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE},
-      {"baseline", NS_STYLE_VERTICAL_ALIGN_BASELINE},
-||||||| merged common ancestors
-    { "center",    NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE },
-    { "baseline",  NS_STYLE_VERTICAL_ALIGN_BASELINE },
-=======
       {"center", StyleVerticalAlignKeyword::MozMiddleWithBaseline},
       {"baseline", StyleVerticalAlignKeyword::Baseline},
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      {"texttop", NS_STYLE_VERTICAL_ALIGN_TEXT_TOP},
-      {"absmiddle", NS_STYLE_VERTICAL_ALIGN_MIDDLE},
-      {"abscenter", NS_STYLE_VERTICAL_ALIGN_MIDDLE},
-      {"absbottom", NS_STYLE_VERTICAL_ALIGN_BOTTOM},
-      {nullptr, 0}};
-||||||| merged common ancestors
-    { "texttop",   NS_STYLE_VERTICAL_ALIGN_TEXT_TOP },
-    { "absmiddle", NS_STYLE_VERTICAL_ALIGN_MIDDLE },
-    { "abscenter", NS_STYLE_VERTICAL_ALIGN_MIDDLE },
-    { "absbottom", NS_STYLE_VERTICAL_ALIGN_BOTTOM },
-    { nullptr,     0 }
-  };
-=======
       {"texttop", StyleVerticalAlignKeyword::TextTop},
       {"absmiddle", StyleVerticalAlignKeyword::Middle},
       {"abscenter", StyleVerticalAlignKeyword::Middle},
       {"absbottom", StyleVerticalAlignKeyword::Bottom},
       {nullptr, 0}};
->>>>>>> upstream-releases
 
   return aResult.ParseEnumValue(aString, kAlignTable, false);
 }
@@ -1211,43 +1035,15 @@ bool nsGenericHTMLElement::ParseDivAlignValue(const nsAString& aString,
   return aResult.ParseEnumValue(aString, kDivAlignTable, false);
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLElement::ParseImageAttribute(nsAtom* aAttribute,
-                                               const nsAString& aString,
-                                               nsAttrValue& aResult) {
-  if ((aAttribute == nsGkAtoms::width) || (aAttribute == nsGkAtoms::height)) {
-    return aResult.ParseSpecialIntValue(aString);
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::ParseImageAttribute(nsAtom* aAttribute,
-                                          const nsAString& aString,
-                                          nsAttrValue& aResult)
-{
-  if ((aAttribute == nsGkAtoms::width) ||
-      (aAttribute == nsGkAtoms::height)) {
-    return aResult.ParseSpecialIntValue(aString);
-=======
 bool nsGenericHTMLElement::ParseImageAttribute(nsAtom* aAttribute,
                                                const nsAString& aString,
                                                nsAttrValue& aResult) {
   if (aAttribute == nsGkAtoms::width || aAttribute == nsGkAtoms::height ||
       aAttribute == nsGkAtoms::hspace || aAttribute == nsGkAtoms::vspace) {
     return aResult.ParseHTMLDimension(aString);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  if ((aAttribute == nsGkAtoms::hspace) || (aAttribute == nsGkAtoms::vspace) ||
-      (aAttribute == nsGkAtoms::border)) {
-    return aResult.ParseIntWithBounds(aString, 0);
-||||||| merged common ancestors
-  if ((aAttribute == nsGkAtoms::hspace) ||
-      (aAttribute == nsGkAtoms::vspace) ||
-      (aAttribute == nsGkAtoms::border)) {
-    return aResult.ParseIntWithBounds(aString, 0);
-=======
   if (aAttribute == nsGkAtoms::border) {
     return aResult.ParseNonNegativeIntValue(aString);
->>>>>>> upstream-releases
   }
   return false;
 }
@@ -1342,46 +1138,13 @@ void nsGenericHTMLElement::MapCommonAttributesInto(
   }
 }
 
-<<<<<<< HEAD
-/* static */ const nsGenericHTMLElement::MappedAttributeEntry
-    nsGenericHTMLElement::sCommonAttributeMap[] = {{nsGkAtoms::contenteditable},
-                                                   {nsGkAtoms::lang},
-                                                   {nsGkAtoms::hidden},
-                                                   {nullptr}};
-||||||| merged common ancestors
-/* static */ const nsGenericHTMLElement::MappedAttributeEntry
-nsGenericHTMLElement::sCommonAttributeMap[] = {
-  { nsGkAtoms::contenteditable },
-  { nsGkAtoms::lang },
-  { nsGkAtoms::hidden },
-  { nullptr }
-};
-=======
 /* static */
 const nsGenericHTMLElement::MappedAttributeEntry
     nsGenericHTMLElement::sCommonAttributeMap[] = {{nsGkAtoms::contenteditable},
                                                    {nsGkAtoms::lang},
                                                    {nsGkAtoms::hidden},
                                                    {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ const Element::MappedAttributeEntry
-    nsGenericHTMLElement::sImageMarginSizeAttributeMap[] = {{nsGkAtoms::width},
-                                                            {nsGkAtoms::height},
-                                                            {nsGkAtoms::hspace},
-                                                            {nsGkAtoms::vspace},
-                                                            {nullptr}};
-||||||| merged common ancestors
-/* static */ const Element::MappedAttributeEntry
-nsGenericHTMLElement::sImageMarginSizeAttributeMap[] = {
-  { nsGkAtoms::width },
-  { nsGkAtoms::height },
-  { nsGkAtoms::hspace },
-  { nsGkAtoms::vspace },
-  { nullptr }
-};
-=======
 /* static */
 const Element::MappedAttributeEntry
     nsGenericHTMLElement::sImageMarginSizeAttributeMap[] = {{nsGkAtoms::width},
@@ -1389,96 +1152,27 @@ const Element::MappedAttributeEntry
                                                             {nsGkAtoms::hspace},
                                                             {nsGkAtoms::vspace},
                                                             {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ const Element::MappedAttributeEntry
-    nsGenericHTMLElement::sImageAlignAttributeMap[] = {{nsGkAtoms::align},
-                                                       {nullptr}};
-||||||| merged common ancestors
-/* static */ const Element::MappedAttributeEntry
-nsGenericHTMLElement::sImageAlignAttributeMap[] = {
-  { nsGkAtoms::align },
-  { nullptr }
-};
-=======
 /* static */
 const Element::MappedAttributeEntry
     nsGenericHTMLElement::sImageAlignAttributeMap[] = {{nsGkAtoms::align},
                                                        {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ const Element::MappedAttributeEntry
-    nsGenericHTMLElement::sDivAlignAttributeMap[] = {{nsGkAtoms::align},
-                                                     {nullptr}};
-||||||| merged common ancestors
-/* static */ const Element::MappedAttributeEntry
-nsGenericHTMLElement::sDivAlignAttributeMap[] = {
-  { nsGkAtoms::align },
-  { nullptr }
-};
-=======
 /* static */
 const Element::MappedAttributeEntry
     nsGenericHTMLElement::sDivAlignAttributeMap[] = {{nsGkAtoms::align},
                                                      {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ const Element::MappedAttributeEntry
-    nsGenericHTMLElement::sImageBorderAttributeMap[] = {{nsGkAtoms::border},
-                                                        {nullptr}};
-||||||| merged common ancestors
-/* static */ const Element::MappedAttributeEntry
-nsGenericHTMLElement::sImageBorderAttributeMap[] = {
-  { nsGkAtoms::border },
-  { nullptr }
-};
-=======
 /* static */
 const Element::MappedAttributeEntry
     nsGenericHTMLElement::sImageBorderAttributeMap[] = {{nsGkAtoms::border},
                                                         {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ const Element::MappedAttributeEntry
-    nsGenericHTMLElement::sBackgroundAttributeMap[] = {
-        {nsGkAtoms::background}, {nsGkAtoms::bgcolor}, {nullptr}};
-||||||| merged common ancestors
-/* static */ const Element::MappedAttributeEntry
-nsGenericHTMLElement::sBackgroundAttributeMap[] = {
-  { nsGkAtoms::background },
-  { nsGkAtoms::bgcolor },
-  { nullptr }
-};
-=======
 /* static */
 const Element::MappedAttributeEntry
     nsGenericHTMLElement::sBackgroundAttributeMap[] = {
         {nsGkAtoms::background}, {nsGkAtoms::bgcolor}, {nullptr}};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ const Element::MappedAttributeEntry
-    nsGenericHTMLElement::sBackgroundColorAttributeMap[] = {
-        {nsGkAtoms::bgcolor}, {nullptr}};
-
-void nsGenericHTMLElement::MapImageAlignAttributeInto(
-    const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
-||||||| merged common ancestors
-/* static */ const Element::MappedAttributeEntry
-nsGenericHTMLElement::sBackgroundColorAttributeMap[] = {
-  { nsGkAtoms::bgcolor },
-  { nullptr }
-};
-
-void
-nsGenericHTMLElement::MapImageAlignAttributeInto(const nsMappedAttributes* aAttributes,
-                                                 MappedDeclarations& aDecls)
-{
-=======
 /* static */
 const Element::MappedAttributeEntry
     nsGenericHTMLElement::sBackgroundColorAttributeMap[] = {
@@ -1486,7 +1180,6 @@ const Element::MappedAttributeEntry
 
 void nsGenericHTMLElement::MapImageAlignAttributeInto(
     const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
->>>>>>> upstream-releases
   const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::align);
   if (value && value->Type() == nsAttrValue::eEnum) {
     int32_t align = value->GetEnumValue();
@@ -1526,12 +1219,6 @@ void nsGenericHTMLElement::MapVAlignAttributeInto(
     // align: enum
     const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::valign);
     if (value && value->Type() == nsAttrValue::eEnum)
-<<<<<<< HEAD
-      aDecls.SetKeywordValue(eCSSProperty_vertical_align,
-                             value->GetEnumValue());
-||||||| merged common ancestors
-      aDecls.SetKeywordValue(eCSSProperty_vertical_align, value->GetEnumValue());
-=======
       aDecls.SetKeywordValue(eCSSProperty_vertical_align,
                              value->GetEnumValue());
   }
@@ -1550,7 +1237,6 @@ static void MapDimensionAttributeInto(MappedDeclarations& aDecls,
   }
   if (aValue.Type() == nsAttrValue::eDoubleValue) {
     return aDecls.SetPixelValue(aProp, aValue.GetDoubleValue());
->>>>>>> upstream-releases
   }
 }
 
@@ -1568,118 +1254,6 @@ void nsGenericHTMLElement::MapImageMarginAttributeInto(
   // vspace: value
   value = aAttributes->GetAttr(nsGkAtoms::vspace);
   if (value) {
-<<<<<<< HEAD
-    if (value->Type() == nsAttrValue::eInteger) {
-      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_top,
-                                  (float)value->GetIntegerValue());
-      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_bottom,
-                                  (float)value->GetIntegerValue());
-    } else if (value->Type() == nsAttrValue::ePercent) {
-      aDecls.SetPercentValueIfUnset(eCSSProperty_margin_top,
-                                    value->GetPercentValue());
-      aDecls.SetPercentValueIfUnset(eCSSProperty_margin_bottom,
-                                    value->GetPercentValue());
-    }
-  }
-}
-
-void nsGenericHTMLElement::MapWidthAttributeInto(
-    const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
-  // width: value
-  if (!aDecls.PropertyIsSet(eCSSProperty_width)) {
-    const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::width);
-    if (value && value->Type() == nsAttrValue::eInteger) {
-      aDecls.SetPixelValue(eCSSProperty_width, (float)value->GetIntegerValue());
-    } else if (value && value->Type() == nsAttrValue::ePercent) {
-      aDecls.SetPercentValue(eCSSProperty_width, value->GetPercentValue());
-    }
-  }
-}
-
-void nsGenericHTMLElement::MapHeightAttributeInto(
-    const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
-  // height: value
-  if (!aDecls.PropertyIsSet(eCSSProperty_height)) {
-    const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::height);
-    if (value && value->Type() == nsAttrValue::eInteger) {
-      aDecls.SetPixelValue(eCSSProperty_height,
-                           (float)value->GetIntegerValue());
-    } else if (value && value->Type() == nsAttrValue::ePercent) {
-      aDecls.SetPercentValue(eCSSProperty_height, value->GetPercentValue());
-    }
-  }
-}
-
-void nsGenericHTMLElement::MapImageSizeAttributesInto(
-    const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
-  nsGenericHTMLElement::MapWidthAttributeInto(aAttributes, aDecls);
-  nsGenericHTMLElement::MapHeightAttributeInto(aAttributes, aDecls);
-}
-
-void nsGenericHTMLElement::MapImageBorderAttributeInto(
-    const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
-||||||| merged common ancestors
-    if (value->Type() == nsAttrValue::eInteger) {
-      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_top,
-                                  (float)value->GetIntegerValue());
-      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_bottom,
-                                  (float)value->GetIntegerValue());
-    } else if (value->Type() == nsAttrValue::ePercent) {
-      aDecls.SetPercentValueIfUnset(eCSSProperty_margin_top,
-                                    value->GetPercentValue());
-      aDecls.SetPercentValueIfUnset(eCSSProperty_margin_bottom,
-                                    value->GetPercentValue());
-    }
-  }
-}
-
-void
-nsGenericHTMLElement::MapWidthAttributeInto(const nsMappedAttributes* aAttributes,
-                                            MappedDeclarations& aDecls)
-{
-  // width: value
-  if (!aDecls.PropertyIsSet(eCSSProperty_width)) {
-    const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::width);
-    if (value && value->Type() == nsAttrValue::eInteger) {
-      aDecls.SetPixelValue(eCSSProperty_width,
-                           (float)value->GetIntegerValue());
-    } else if (value && value->Type() == nsAttrValue::ePercent) {
-      aDecls.SetPercentValue(eCSSProperty_width,
-                             value->GetPercentValue());
-    }
-  }
-}
-
-void
-nsGenericHTMLElement::MapHeightAttributeInto(const nsMappedAttributes* aAttributes,
-                                             MappedDeclarations& aDecls)
-{
-  // height: value
-  if (!aDecls.PropertyIsSet(eCSSProperty_height)) {
-    const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::height);
-    if (value && value->Type() == nsAttrValue::eInteger) {
-      aDecls.SetPixelValue(eCSSProperty_height,
-                           (float)value->GetIntegerValue());
-    } else if (value && value->Type() == nsAttrValue::ePercent) {
-      aDecls.SetPercentValue(eCSSProperty_height,
-                             value->GetPercentValue());
-    }
-  }
-}
-
-void
-nsGenericHTMLElement::MapImageSizeAttributesInto(const nsMappedAttributes* aAttributes,
-                                                 MappedDeclarations& aDecls)
-{
-  nsGenericHTMLElement::MapWidthAttributeInto(aAttributes, aDecls);
-  nsGenericHTMLElement::MapHeightAttributeInto(aAttributes, aDecls);
-}
-
-void
-nsGenericHTMLElement::MapImageBorderAttributeInto(const nsMappedAttributes* aAttributes,
-                                                  MappedDeclarations& aDecls)
-{
-=======
     MapDimensionAttributeInto(aDecls, eCSSProperty_margin_top, *value);
     MapDimensionAttributeInto(aDecls, eCSSProperty_margin_bottom, *value);
   }
@@ -1736,7 +1310,6 @@ void nsGenericHTMLElement::MapImageSizeAttributesInto(
 
 void nsGenericHTMLElement::MapImageBorderAttributeInto(
     const nsMappedAttributes* aAttributes, MappedDeclarations& aDecls) {
->>>>>>> upstream-releases
   // border: pixels
   const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::border);
   if (!value) return;
@@ -1821,15 +1394,6 @@ uint32_t nsGenericHTMLElement::GetUnsignedIntAttr(nsAtom* aAttr,
   return attrVal->GetIntegerValue();
 }
 
-<<<<<<< HEAD
-void nsGenericHTMLElement::GetURIAttr(nsAtom* aAttr, nsAtom* aBaseAttr,
-                                      nsAString& aResult) const {
-||||||| merged common ancestors
-void
-nsGenericHTMLElement::GetURIAttr(nsAtom* aAttr, nsAtom* aBaseAttr,
-                                 nsAString& aResult) const
-{
-=======
 uint32_t nsGenericHTMLElement::GetDimensionAttrAsUnsignedInt(
     nsAtom* aAttr, uint32_t aDefault) const {
   const nsAttrValue* attrVal = mAttrs.GetAttr(aAttr);
@@ -1873,7 +1437,6 @@ uint32_t nsGenericHTMLElement::GetDimensionAttrAsUnsignedInt(
 
 void nsGenericHTMLElement::GetURIAttr(nsAtom* aAttr, nsAtom* aBaseAttr,
                                       nsAString& aResult) const {
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri;
   bool hadAttr = GetURIAttr(aAttr, aBaseAttr, getter_AddRefs(uri));
   if (!hadAttr) {
@@ -1927,16 +1490,8 @@ HTMLMenuElement* nsGenericHTMLElement::GetContextMenu() const {
   nsAutoString value;
   GetHTMLAttr(nsGkAtoms::contextmenu, value);
   if (!value.IsEmpty()) {
-<<<<<<< HEAD
-    // XXXsmaug How should this work in Shadow DOM?
-    nsIDocument* doc = GetUncomposedDoc();
-||||||| merged common ancestors
-    //XXXsmaug How should this work in Shadow DOM?
-    nsIDocument* doc = GetUncomposedDoc();
-=======
     // XXXsmaug How should this work in Shadow DOM?
     Document* doc = GetUncomposedDoc();
->>>>>>> upstream-releases
     if (doc) {
       return HTMLMenuElement::FromNodeOrNull(doc->GetElementById(value));
     }
@@ -1948,22 +1503,10 @@ bool nsGenericHTMLElement::IsLabelable() const {
   return IsAnyOfHTMLElements(nsGkAtoms::progress, nsGkAtoms::meter);
 }
 
-<<<<<<< HEAD
-/* static */ bool nsGenericHTMLElement::MatchLabelsElement(Element* aElement,
-                                                           int32_t aNamespaceID,
-                                                           nsAtom* aAtom,
-                                                           void* aData) {
-||||||| merged common ancestors
-/* static */ bool
-nsGenericHTMLElement::MatchLabelsElement(Element* aElement, int32_t aNamespaceID,
-                                         nsAtom* aAtom, void* aData)
-{
-=======
 /* static */
 bool nsGenericHTMLElement::MatchLabelsElement(Element* aElement,
                                               int32_t aNamespaceID,
                                               nsAtom* aAtom, void* aData) {
->>>>>>> upstream-releases
   HTMLLabelElement* element = HTMLLabelElement::FromNode(aElement);
   return element && element->GetControl() == aData;
 }
@@ -1982,40 +1525,16 @@ already_AddRefed<nsINodeList> nsGenericHTMLElement::Labels() {
   return labels.forget();
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLElement::IsInteractiveHTMLContent(
-    bool aIgnoreTabindex) const {
-  return IsAnyOfHTMLElements(nsGkAtoms::details, nsGkAtoms::embed,
-                             nsGkAtoms::keygen) ||
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::IsInteractiveHTMLContent(bool aIgnoreTabindex) const
-{
-  return IsAnyOfHTMLElements(nsGkAtoms::details, nsGkAtoms::embed,
-                             nsGkAtoms::keygen) ||
-=======
 bool nsGenericHTMLElement::IsInteractiveHTMLContent(
     bool aIgnoreTabindex) const {
   return IsAnyOfHTMLElements(nsGkAtoms::embed) ||
->>>>>>> upstream-releases
          (!aIgnoreTabindex && HasAttr(kNameSpaceID_None, nsGkAtoms::tabindex));
 }
 
 // static
-<<<<<<< HEAD
-bool nsGenericHTMLElement::TouchEventsEnabled(JSContext* aCx,
-                                              JSObject* aGlobal) {
-  return TouchEvent::PrefEnabled(aCx, aGlobal);
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::TouchEventsEnabled(JSContext* aCx, JSObject* aGlobal)
-{
-  return TouchEvent::PrefEnabled(aCx, aGlobal);
-=======
 bool nsGenericHTMLElement::LegacyTouchAPIEnabled(JSContext* aCx,
                                                  JSObject* aGlobal) {
   return TouchEvent::LegacyAPIEnabled(aCx, aGlobal);
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -2106,17 +1625,7 @@ void nsGenericHTMLFormElement::ClearForm(bool aRemoveFromForm,
   AfterClearForm(aUnbindOrDelete);
 }
 
-<<<<<<< HEAD
-Element* nsGenericHTMLFormElement::GetFormElement() { return mForm; }
-||||||| merged common ancestors
-Element*
-nsGenericHTMLFormElement::GetFormElement()
-{
-  return mForm;
-}
-=======
 HTMLFormElement* nsGenericHTMLFormElement::GetFormElement() { return mForm; }
->>>>>>> upstream-releases
 
 HTMLFieldSetElement* nsGenericHTMLFormElement::GetFieldSet() {
   return mFieldSet;
@@ -2135,25 +1644,9 @@ nsIContent::IMEState nsGenericHTMLFormElement::GetDesiredIMEState() {
   return state;
 }
 
-<<<<<<< HEAD
-nsresult nsGenericHTMLFormElement::BindToTree(nsIDocument* aDocument,
-                                              nsIContent* aParent,
-                                              nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-nsGenericHTMLFormElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult nsGenericHTMLFormElement::BindToTree(BindContext& aContext,
                                               nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // An autofocus event has to be launched if the autofocus attribute is
@@ -2182,15 +1675,7 @@ nsresult nsGenericHTMLFormElement::BindToTree(BindContext& aContext,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsGenericHTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-nsGenericHTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void nsGenericHTMLFormElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   // Save state before doing anything
   SaveState();
 
@@ -2462,17 +1947,8 @@ EventStates nsGenericHTMLFormElement::IntrinsicState() const {
 
 nsGenericHTMLFormElement::FocusTristate nsGenericHTMLFormElement::FocusState() {
   // We can't be focused if we aren't in a (composed) document
-<<<<<<< HEAD
-  nsIDocument* doc = GetComposedDoc();
-  if (!doc) return eUnfocusable;
-||||||| merged common ancestors
-  nsIDocument* doc = GetComposedDoc();
-  if (!doc)
-    return eUnfocusable;
-=======
   Document* doc = GetComposedDoc();
   if (!doc) return eUnfocusable;
->>>>>>> upstream-releases
 
   // first see if we are disabled or not. If disabled then do nothing.
   if (IsDisabled()) {
@@ -2538,24 +2014,6 @@ bool nsGenericHTMLFormElement::FormIdUpdated(Element* aOldElement,
   return true;
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLFormElement::IsElementDisabledForEvents(WidgetEvent* aEvent,
-                                                          nsIFrame* aFrame) {
-  MOZ_ASSERT(aEvent);
-
-  // Allow dispatch of CustomEvent and untrusted Events.
-  if (!aEvent->IsTrusted()) {
-    return false;
-  }
-
-  switch (aEvent->mMessage) {
-||||||| merged common ancestors
-bool
-nsGenericHTMLFormElement::IsElementDisabledForEvents(EventMessage aMessage,
-                                                     nsIFrame* aFrame)
-{
-  switch (aMessage) {
-=======
 bool nsGenericHTMLFormElement::IsElementDisabledForEvents(WidgetEvent* aEvent,
                                                           nsIFrame* aFrame) {
   MOZ_ASSERT(aEvent);
@@ -2570,7 +2028,6 @@ bool nsGenericHTMLFormElement::IsElementDisabledForEvents(WidgetEvent* aEvent,
     case eAnimationEnd:
     case eAnimationIteration:
     case eAnimationCancel:
->>>>>>> upstream-releases
     case eMouseMove:
     case eMouseOver:
     case eMouseOut:
@@ -2775,34 +2232,11 @@ void nsGenericHTMLFormElement::FieldSetDisabledChanged(bool aNotify) {
   UpdateDisabledState(aNotify);
 }
 
-<<<<<<< HEAD
 bool nsGenericHTMLFormElement::IsLabelable() const {
-  // TODO: keygen should be in that list, see bug 101019.
-||||||| merged common ancestors
-bool
-nsGenericHTMLFormElement::IsLabelable() const
-{
-  // TODO: keygen should be in that list, see bug 101019.
-=======
-bool nsGenericHTMLFormElement::IsLabelable() const {
->>>>>>> upstream-releases
   uint32_t type = ControlType();
   return (type & NS_FORM_INPUT_ELEMENT && type != NS_FORM_INPUT_HIDDEN) ||
-<<<<<<< HEAD
-         type & NS_FORM_BUTTON_ELEMENT ||
-         // type == NS_FORM_KEYGEN ||
-         type == NS_FORM_OUTPUT || type == NS_FORM_SELECT ||
-         type == NS_FORM_TEXTAREA;
-||||||| merged common ancestors
-         type & NS_FORM_BUTTON_ELEMENT ||
-         // type == NS_FORM_KEYGEN ||
-         type == NS_FORM_OUTPUT ||
-         type == NS_FORM_SELECT ||
-         type == NS_FORM_TEXTAREA;
-=======
          type & NS_FORM_BUTTON_ELEMENT || type == NS_FORM_OUTPUT ||
          type == NS_FORM_SELECT || type == NS_FORM_TEXTAREA;
->>>>>>> upstream-releases
 }
 
 void nsGenericHTMLFormElement::GetFormAction(nsString& aValue) {
@@ -2857,22 +2291,9 @@ void nsGenericHTMLElement::Click(CallerType aCallerType) {
   ClearHandlingClick();
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLElement::IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
-                                           int32_t* aTabIndex) {
-  nsIDocument* doc = GetComposedDoc();
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::IsHTMLFocusable(bool aWithMouse,
-                                      bool *aIsFocusable,
-                                      int32_t *aTabIndex)
-{
-  nsIDocument* doc = GetComposedDoc();
-=======
 bool nsGenericHTMLElement::IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
                                            int32_t* aTabIndex) {
   Document* doc = GetComposedDoc();
->>>>>>> upstream-releases
   if (!doc || doc->HasFlag(NODE_IS_EDITABLE)) {
     // In designMode documents we only allow focusing the document.
     if (aTabIndex) {
@@ -2966,16 +2387,8 @@ bool nsGenericHTMLElement::PerformAccesskey(bool aKeyCausesActivation,
 
   if (aKeyCausesActivation) {
     // Click on it if the users prefs indicate to do so.
-<<<<<<< HEAD
-    nsAutoPopupStatePusher popupStatePusher(aIsTrustedEvent ? openAllowed
-                                                            : openAbused);
-||||||| merged common ancestors
-    nsAutoPopupStatePusher popupStatePusher(aIsTrustedEvent ?
-                                            openAllowed : openAbused);
-=======
     AutoPopupStatePusher popupStatePusher(
         aIsTrustedEvent ? PopupBlocker::openAllowed : PopupBlocker::openAbused);
->>>>>>> upstream-releases
     DispatchSimulatedClick(this, aIsTrustedEvent, presContext);
   }
 
@@ -3039,18 +2452,8 @@ void nsGenericHTMLElement::RecompileScriptEventListeners() {
   }
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLElement::IsEditableRoot() const {
-  nsIDocument* document = GetComposedDoc();
-||||||| merged common ancestors
-bool
-nsGenericHTMLElement::IsEditableRoot() const
-{
-  nsIDocument *document = GetComposedDoc();
-=======
 bool nsGenericHTMLElement::IsEditableRoot() const {
   Document* document = GetComposedDoc();
->>>>>>> upstream-releases
   if (!document) {
     return false;
   }
@@ -3068,17 +2471,8 @@ bool nsGenericHTMLElement::IsEditableRoot() const {
   return !parent || !parent->HasFlag(NODE_IS_EDITABLE);
 }
 
-<<<<<<< HEAD
-static void MakeContentDescendantsEditable(nsIContent* aContent,
-                                           nsIDocument* aDocument) {
-||||||| merged common ancestors
-static void
-MakeContentDescendantsEditable(nsIContent *aContent, nsIDocument *aDocument)
-{
-=======
 static void MakeContentDescendantsEditable(nsIContent* aContent,
                                            Document* aDocument) {
->>>>>>> upstream-releases
   // If aContent is not an element, we just need to update its
   // internal editable state and don't need to notify anyone about
   // that.  For elements, we need to send a ContentStateChanged
@@ -3102,45 +2496,16 @@ static void MakeContentDescendantsEditable(nsIContent* aContent,
   }
 }
 
-<<<<<<< HEAD
-void nsGenericHTMLElement::ChangeEditableState(int32_t aChange) {
-  nsIDocument* document = GetComposedDoc();
-||||||| merged common ancestors
-void
-nsGenericHTMLElement::ChangeEditableState(int32_t aChange)
-{
-  nsIDocument* document = GetComposedDoc();
-=======
 void nsGenericHTMLElement::ChangeEditableState(int32_t aChange) {
   Document* document = GetComposedDoc();
->>>>>>> upstream-releases
   if (!document) {
     return;
   }
 
   Document::EditingState previousEditingState = Document::EditingState::eOff;
   if (aChange != 0) {
-<<<<<<< HEAD
-    if (nsCOMPtr<nsIHTMLDocument> htmlDocument = do_QueryInterface(document)) {
-      htmlDocument->ChangeContentEditableCount(this, aChange);
-    }
-||||||| merged common ancestors
-    nsCOMPtr<nsIHTMLDocument> htmlDocument =
-      do_QueryInterface(document);
-    if (htmlDocument) {
-      htmlDocument->ChangeContentEditableCount(this, aChange);
-    }
-
-    nsIContent* parent = GetParent();
-    // Don't update across Shadow DOM boundary.
-    while (parent && parent->IsElement()) {
-      parent->ChangeEditableDescendantCount(aChange);
-      parent = parent->GetParent();
-    }
-=======
     document->ChangeContentEditableCount(this, aChange);
     previousEditingState = document->GetEditingState();
->>>>>>> upstream-releases
   }
 
   if (document->HasFlag(NODE_IS_EDITABLE)) {
@@ -3153,10 +2518,6 @@ void nsGenericHTMLElement::ChangeEditableState(int32_t aChange) {
   nsAutoScriptBlocker scriptBlocker;
   MakeContentDescendantsEditable(this, document);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
   // If the document already had contenteditable and JS adds new
   // contenteditable, that might cause changing editing host to current editing
   // host's ancestor.  In such case, HTMLEditor needs to know that
@@ -3170,38 +2531,19 @@ void nsGenericHTMLElement::ChangeEditableState(int32_t aChange) {
   }
 }
 
->>>>>>> upstream-releases
 //----------------------------------------------------------------------
 
 nsGenericHTMLFormElementWithState::nsGenericHTMLFormElementWithState(
-<<<<<<< HEAD
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo, uint8_t aType)
-    : nsGenericHTMLFormElement(std::move(aNodeInfo), aType) {
-||||||| merged common ancestors
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo, uint8_t aType
-  )
-  : nsGenericHTMLFormElement(std::move(aNodeInfo), aType)
-{
-=======
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     FromParser aFromParser, uint8_t aType)
     : nsGenericHTMLFormElement(std::move(aNodeInfo), aType),
       mControlNumber(!!(aFromParser & FROM_PARSER_NETWORK)
                          ? OwnerDoc()->GetNextControlNumber()
                          : -1) {
->>>>>>> upstream-releases
   mStateKey.SetIsVoid(true);
 }
 
-<<<<<<< HEAD
-nsresult nsGenericHTMLFormElementWithState::GenerateStateKey() {
-||||||| merged common ancestors
-nsresult
-nsGenericHTMLFormElementWithState::GenerateStateKey()
-{
-=======
 void nsGenericHTMLFormElementWithState::GenerateStateKey() {
->>>>>>> upstream-releases
   // Keep the key if already computed
   if (!mStateKey.IsVoid()) {
     return;
@@ -3247,17 +2589,8 @@ PresState* nsGenericHTMLFormElementWithState::GetPrimaryPresState() {
 }
 
 already_AddRefed<nsILayoutHistoryState>
-<<<<<<< HEAD
-nsGenericHTMLFormElementWithState::GetLayoutHistory(bool aRead) {
-  nsCOMPtr<nsIDocument> doc = GetUncomposedDoc();
-||||||| merged common ancestors
-nsGenericHTMLFormElementWithState::GetLayoutHistory(bool aRead)
-{
-  nsCOMPtr<nsIDocument> doc = GetUncomposedDoc();
-=======
 nsGenericHTMLFormElementWithState::GetLayoutHistory(bool aRead) {
   nsCOMPtr<Document> doc = GetUncomposedDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return nullptr;
   }
@@ -3277,18 +2610,10 @@ nsGenericHTMLFormElementWithState::GetLayoutHistory(bool aRead) {
   return history.forget();
 }
 
-<<<<<<< HEAD
-bool nsGenericHTMLFormElementWithState::RestoreFormControlState() {
-||||||| merged common ancestors
-bool
-nsGenericHTMLFormElementWithState::RestoreFormControlState()
-{
-=======
 bool nsGenericHTMLFormElementWithState::RestoreFormControlState() {
   MOZ_ASSERT(!mStateKey.IsVoid(),
              "GenerateStateKey must already have been called");
 
->>>>>>> upstream-releases
   if (mStateKey.IsEmpty()) {
     return false;
   }
@@ -3309,15 +2634,7 @@ bool nsGenericHTMLFormElementWithState::RestoreFormControlState() {
   return false;
 }
 
-<<<<<<< HEAD
-void nsGenericHTMLFormElementWithState::NodeInfoChanged(nsIDocument* aOldDoc) {
-||||||| merged common ancestors
-void
-nsGenericHTMLFormElementWithState::NodeInfoChanged(nsIDocument* aOldDoc)
-{
-=======
 void nsGenericHTMLFormElementWithState::NodeInfoChanged(Document* aOldDoc) {
->>>>>>> upstream-releases
   nsGenericHTMLElement::NodeInfoChanged(aOldDoc);
 
   // We need to regenerate the state key now we're in a new document.  Clearing
@@ -3400,35 +2717,8 @@ nsresult nsGenericHTMLElement::NewURIFromString(const nsAString& aURISpec,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// https://html.spec.whatwg.org/#being-rendered
-//
-// With a gotcha for display contents:
-//   https://github.com/whatwg/html/issues/3947
-static bool IsRendered(const Element& aElement) {
-  return aElement.GetPrimaryFrame() || aElement.IsDisplayContents();
-}
-
 void nsGenericHTMLElement::GetInnerText(mozilla::dom::DOMString& aValue,
                                         mozilla::ErrorResult& aError) {
-||||||| merged common ancestors
-// https://html.spec.whatwg.org/#being-rendered
-//
-// With a gotcha for display contents:
-//   https://github.com/whatwg/html/issues/3947
-static bool IsRendered(const Element& aElement)
-{
-  return aElement.GetPrimaryFrame() || aElement.IsDisplayContents();
-}
-
-void
-nsGenericHTMLElement::GetInnerText(mozilla::dom::DOMString& aValue,
-                                   mozilla::ErrorResult& aError)
-{
-=======
-void nsGenericHTMLElement::GetInnerText(mozilla::dom::DOMString& aValue,
-                                        mozilla::ErrorResult& aError) {
->>>>>>> upstream-releases
   // innerText depends on layout. For example, white space processing is
   // something that happens during reflow and which must be reflected by
   // innerText.  So for:

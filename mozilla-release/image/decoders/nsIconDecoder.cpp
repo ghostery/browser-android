@@ -66,21 +66,9 @@ LexerTransition<nsIconDecoder::State> nsIconDecoder::ReadHeader(
   }
 
   MOZ_ASSERT(!mImageData, "Already have a buffer allocated?");
-<<<<<<< HEAD
-  Maybe<SurfacePipe> pipe = SurfacePipeFactory::CreateSurfacePipe(
-      this, Size(), OutputSize(), FullFrame(), SurfaceFormat::B8G8R8A8,
-      /* aAnimParams */ Nothing(), SurfacePipeFlags());
-||||||| merged common ancestors
-  Maybe<SurfacePipe> pipe =
-    SurfacePipeFactory::CreateSurfacePipe(this, Size(), OutputSize(),
-                                          FullFrame(), SurfaceFormat::B8G8R8A8,
-                                          /* aAnimParams */ Nothing(),
-                                          SurfacePipeFlags());
-=======
   Maybe<SurfacePipe> pipe = SurfacePipeFactory::CreateSurfacePipe(
       this, Size(), OutputSize(), FullFrame(), SurfaceFormat::B8G8R8A8,
       /* aAnimParams */ Nothing(), mTransform, SurfacePipeFlags());
->>>>>>> upstream-releases
   if (!pipe) {
     return Transition::TerminateFailure();
   }

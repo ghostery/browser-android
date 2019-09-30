@@ -13,27 +13,6 @@ namespace mozilla {
 namespace dom {
 
 Timeout::Timeout()
-<<<<<<< HEAD
-    : mTimeoutId(0),
-      mFiringId(TimeoutManager::InvalidFiringId),
-      mPopupState(openAllowed),
-      mReason(Reason::eTimeoutOrInterval),
-      mNestingLevel(0),
-      mCleared(false),
-      mRunning(false),
-      mIsInterval(false) {}
-||||||| merged common ancestors
-  : mTimeoutId(0),
-    mFiringId(TimeoutManager::InvalidFiringId),
-    mPopupState(openAllowed),
-    mReason(Reason::eTimeoutOrInterval),
-    mNestingLevel(0),
-    mCleared(false),
-    mRunning(false),
-    mIsInterval(false)
-{
-}
-=======
     : mTimeoutId(0),
       mFiringId(TimeoutManager::InvalidFiringId),
 #ifdef DEBUG
@@ -46,7 +25,6 @@ Timeout::Timeout()
       mRunning(false),
       mIsInterval(false) {
 }
->>>>>>> upstream-releases
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(Timeout)
 
@@ -95,17 +73,9 @@ const TimeStamp& Timeout::When() const {
   return mWhen;
 }
 
-<<<<<<< HEAD
-const TimeDuration& Timeout::TimeRemaining() const {
-||||||| merged common ancestors
-const TimeDuration&
-Timeout::TimeRemaining() const
-{
-=======
 const TimeStamp& Timeout::SubmitTime() const { return mSubmitTime; }
 
 const TimeDuration& Timeout::TimeRemaining() const {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(mWhen.IsNull());
   // Note, mWindow->IsFrozen() can be false here.  The Thaw() method calls
   // TimeRemaining() to calculate the new When() value.

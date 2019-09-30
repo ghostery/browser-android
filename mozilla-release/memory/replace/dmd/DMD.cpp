@@ -134,17 +134,8 @@ class InfallibleAllocPolicy {
     return p;
   }
 
-<<<<<<< HEAD
-  static void* calloc_(size_t aSize) {
-    void* p = gMallocTable.calloc(1, aSize);
-||||||| merged common ancestors
-  static void* calloc_(size_t aSize)
-  {
-    void* p = gMallocTable.calloc(1, aSize);
-=======
   static void* calloc_(size_t aCount, size_t aSize) {
     void* p = gMallocTable.calloc(aCount, aSize);
->>>>>>> upstream-releases
     ExitOnFailure(p);
     return p;
   }
@@ -193,14 +184,7 @@ class InfallibleAllocPolicy {
   }
 
   template <class T, typename P1>
-<<<<<<< HEAD
-  static T* new_(P1 aP1) {
-||||||| merged common ancestors
-  static T* new_(P1 aP1)
-  {
-=======
   static T* new_(const P1& aP1) {
->>>>>>> upstream-releases
     void* mem = malloc_(sizeof(T));
     return new (mem) T(aP1);
   }
@@ -234,16 +218,8 @@ void DMDFuncs::StatusMsg(const char* aFmt, va_list aAp) {
 #endif
 }
 
-<<<<<<< HEAD
-/* static */ void InfallibleAllocPolicy::ExitOnFailure(const void* aP) {
-||||||| merged common ancestors
-/* static */ void
-InfallibleAllocPolicy::ExitOnFailure(const void* aP)
-{
-=======
 /* static */
 void InfallibleAllocPolicy::ExitOnFailure(const void* aP) {
->>>>>>> upstream-releases
   if (!aP) {
     MOZ_CRASH("DMD out of memory; aborting");
   }
@@ -463,71 +439,17 @@ class AutoUnlockState {
 // Per-thread blocking of intercepts
 //---------------------------------------------------------------------------
 
-<<<<<<< HEAD
-#ifdef XP_WIN
-
-#define DMD_TLS_INDEX_TYPE DWORD
-#define DMD_CREATE_TLS_INDEX(i_) \
-  do {                           \
-    (i_) = TlsAlloc();           \
-  } while (0)
-#define DMD_DESTROY_TLS_INDEX(i_) TlsFree((i_))
-#define DMD_GET_TLS_DATA(i_) TlsGetValue((i_))
-#define DMD_SET_TLS_DATA(i_, v_) TlsSetValue((i_), (v_))
-
-||||||| merged common ancestors
-#ifdef XP_WIN
-
-#define DMD_TLS_INDEX_TYPE              DWORD
-#define DMD_CREATE_TLS_INDEX(i_)        do {                                  \
-                                          (i_) = TlsAlloc();                  \
-                                        } while (0)
-#define DMD_DESTROY_TLS_INDEX(i_)       TlsFree((i_))
-#define DMD_GET_TLS_DATA(i_)            TlsGetValue((i_))
-#define DMD_SET_TLS_DATA(i_, v_)        TlsSetValue((i_), (v_))
-
-=======
 // On MacOS, the first __thread/thread_local access calls malloc, which leads
 // to an infinite loop. So we use pthread-based TLS instead, which somehow
 // doesn't have this problem.
 #if !defined(XP_DARWIN)
 #  define DMD_THREAD_LOCAL(T) MOZ_THREAD_LOCAL(T)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-
-#define DMD_TLS_INDEX_TYPE pthread_key_t
-#define DMD_CREATE_TLS_INDEX(i_) pthread_key_create(&(i_), nullptr)
-#define DMD_DESTROY_TLS_INDEX(i_) pthread_key_delete((i_))
-#define DMD_GET_TLS_DATA(i_) pthread_getspecific((i_))
-#define DMD_SET_TLS_DATA(i_, v_) pthread_setspecific((i_), (v_))
-
-||||||| merged common ancestors
-
-#define DMD_TLS_INDEX_TYPE               pthread_key_t
-#define DMD_CREATE_TLS_INDEX(i_)         pthread_key_create(&(i_), nullptr)
-#define DMD_DESTROY_TLS_INDEX(i_)        pthread_key_delete((i_))
-#define DMD_GET_TLS_DATA(i_)             pthread_getspecific((i_))
-#define DMD_SET_TLS_DATA(i_, v_)         pthread_setspecific((i_), (v_))
-
-=======
 #  define DMD_THREAD_LOCAL(T) \
     detail::ThreadLocal<T, detail::ThreadLocalKeyStorage>
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-static DMD_TLS_INDEX_TYPE gTlsIndex;
-
 class Thread {
-||||||| merged common ancestors
-static DMD_TLS_INDEX_TYPE gTlsIndex;
-
-class Thread
-{
-=======
-class Thread {
->>>>>>> upstream-releases
   // Required for allocation via InfallibleAllocPolicy::new_.
   friend class InfallibleAllocPolicy;
 
@@ -541,22 +463,8 @@ class Thread {
 
   DISALLOW_COPY_AND_ASSIGN(Thread);
 
-<<<<<<< HEAD
- public:
-  static Thread* Fetch();
-||||||| merged common ancestors
-public:
-  static Thread* Fetch();
-=======
   static DMD_THREAD_LOCAL(Thread*) tlsThread;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool BlockIntercepts() {
-||||||| merged common ancestors
-  bool BlockIntercepts()
-  {
-=======
  public:
   static void Init() {
     if (!tlsThread.init()) {
@@ -577,7 +485,6 @@ public:
   }
 
   bool BlockIntercepts() {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mBlockIntercepts);
     return mBlockIntercepts = true;
   }
@@ -590,37 +497,7 @@ public:
   bool InterceptsAreBlocked() const { return mBlockIntercepts; }
 };
 
-<<<<<<< HEAD
-/* static */ Thread* Thread::Fetch() {
-  Thread* t = static_cast<Thread*>(DMD_GET_TLS_DATA(gTlsIndex));
-
-  if (MOZ_UNLIKELY(!t)) {
-    // This memory is never freed, even if the thread dies.  It's a leak, but
-    // only a tiny one.
-    t = InfallibleAllocPolicy::new_<Thread>();
-    DMD_SET_TLS_DATA(gTlsIndex, t);
-  }
-
-  return t;
-}
-||||||| merged common ancestors
-/* static */ Thread*
-Thread::Fetch()
-{
-  Thread* t = static_cast<Thread*>(DMD_GET_TLS_DATA(gTlsIndex));
-
-  if (MOZ_UNLIKELY(!t)) {
-    // This memory is never freed, even if the thread dies.  It's a leak, but
-    // only a tiny one.
-    t = InfallibleAllocPolicy::new_<Thread>();
-    DMD_SET_TLS_DATA(gTlsIndex, t);
-  }
-
-  return t;
-}
-=======
 DMD_THREAD_LOCAL(Thread*) Thread::tlsThread;
->>>>>>> upstream-releases
 
 // An object of this class must be created (on the stack) before running any
 // code that might allocate.
@@ -1476,16 +1353,8 @@ const char* Options::ModeString() const {
 // DMD start-up
 //---------------------------------------------------------------------------
 
-<<<<<<< HEAD
-static void prefork() {
-||||||| merged common ancestors
-static void
-prefork()
-{
-=======
 #ifndef XP_WIN
 static void prefork() {
->>>>>>> upstream-releases
   if (gStateLock) {
     gStateLock->Lock();
   }

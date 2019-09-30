@@ -25,15 +25,7 @@ SpeechRecognitionAlternative::SpeechRecognitionAlternative(
     SpeechRecognition* aParent)
     : mConfidence(0), mParent(aParent) {}
 
-<<<<<<< HEAD
-SpeechRecognitionAlternative::~SpeechRecognitionAlternative() {}
-||||||| merged common ancestors
-SpeechRecognitionAlternative::~SpeechRecognitionAlternative()
-{
-}
-=======
 SpeechRecognitionAlternative::~SpeechRecognitionAlternative() = default;
->>>>>>> upstream-releases
 
 JSObject* SpeechRecognitionAlternative::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {

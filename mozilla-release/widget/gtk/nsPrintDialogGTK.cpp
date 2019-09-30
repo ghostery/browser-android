@@ -126,81 +126,6 @@ static void ShowCustomDialog(GtkComboBox* changed_box, gpointer user_data) {
 }
 
 class nsPrintDialogWidgetGTK {
-<<<<<<< HEAD
- public:
-  nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
-                         nsIPrintSettings* aPrintSettings);
-  ~nsPrintDialogWidgetGTK() { gtk_widget_destroy(dialog); }
-  NS_ConvertUTF16toUTF8 GetUTF8FromBundle(const char* aKey);
-  gint Run();
-
-  nsresult ImportSettings(nsIPrintSettings* aNSSettings);
-  nsresult ExportSettings(nsIPrintSettings* aNSSettings);
-
- private:
-  GtkWidget* dialog;
-  GtkWidget* radio_as_laid_out;
-  GtkWidget* radio_selected_frame;
-  GtkWidget* radio_separate_frames;
-  GtkWidget* shrink_to_fit_toggle;
-  GtkWidget* print_bg_colors_toggle;
-  GtkWidget* print_bg_images_toggle;
-  GtkWidget* selection_only_toggle;
-  GtkWidget* header_dropdown[3];  // {left, center, right}
-  GtkWidget* footer_dropdown[3];
-
-  nsCOMPtr<nsIStringBundle> printBundle;
-
-  bool useNativeSelection;
-
-  GtkWidget* ConstructHeaderFooterDropdown(const char16_t* currentString);
-  const char* OptionWidgetToString(GtkWidget* dropdown);
-
-  /* Code to copy between GTK and NS print settings structures.
-   * In the following,
-   *   "Import" means to copy from NS to GTK
-   *   "Export" means to copy from GTK to NS
-   */
-  void ExportFramePrinting(nsIPrintSettings* aNS, GtkPrintSettings* aSettings);
-  void ExportHeaderFooter(nsIPrintSettings* aNS);
-||||||| merged common ancestors
-  public:
-    nsPrintDialogWidgetGTK(nsPIDOMWindowOuter *aParent,
-                           nsIPrintSettings *aPrintSettings);
-    ~nsPrintDialogWidgetGTK() { gtk_widget_destroy(dialog); }
-    NS_ConvertUTF16toUTF8 GetUTF8FromBundle(const char* aKey);
-    gint Run();
-
-    nsresult ImportSettings(nsIPrintSettings *aNSSettings);
-    nsresult ExportSettings(nsIPrintSettings *aNSSettings);
-
-  private:
-    GtkWidget* dialog;
-    GtkWidget* radio_as_laid_out;
-    GtkWidget* radio_selected_frame;
-    GtkWidget* radio_separate_frames;
-    GtkWidget* shrink_to_fit_toggle;
-    GtkWidget* print_bg_colors_toggle;
-    GtkWidget* print_bg_images_toggle;
-    GtkWidget* selection_only_toggle;
-    GtkWidget* header_dropdown[3];  // {left, center, right}
-    GtkWidget* footer_dropdown[3];
-
-    nsCOMPtr<nsIStringBundle> printBundle;
-
-    bool useNativeSelection;
-
-    GtkWidget* ConstructHeaderFooterDropdown(const char16_t *currentString);
-    const char* OptionWidgetToString(GtkWidget *dropdown);
-
-    /* Code to copy between GTK and NS print settings structures.
-     * In the following,
-     *   "Import" means to copy from NS to GTK
-     *   "Export" means to copy from GTK to NS
-     */
-    void ExportFramePrinting(nsIPrintSettings *aNS, GtkPrintSettings *aSettings);
-    void ExportHeaderFooter(nsIPrintSettings *aNS);
-=======
  public:
   nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
                          nsIPrintSettings* aPrintSettings);
@@ -233,7 +158,6 @@ class nsPrintDialogWidgetGTK {
    *   "Export" means to copy from GTK to NS
    */
   void ExportHeaderFooter(nsIPrintSettings* aNS);
->>>>>>> upstream-releases
 };
 
 nsPrintDialogWidgetGTK::nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
@@ -263,93 +187,8 @@ nsPrintDialogWidgetGTK::nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
   // other window.
   GtkWidget* custom_options_tab = gtk_vbox_new(FALSE, 0);
   gtk_container_set_border_width(GTK_CONTAINER(custom_options_tab), 12);
-<<<<<<< HEAD
   GtkWidget* tab_label =
       gtk_label_new(GetUTF8FromBundle("optionsTabLabelGTK").get());
-
-  int16_t frameUIFlag;
-  aSettings->GetHowToEnableFrameUI(&frameUIFlag);
-  radio_as_laid_out = gtk_radio_button_new_with_mnemonic(
-      nullptr, GetUTF8FromBundle("asLaidOut").get());
-  if (frameUIFlag == nsIPrintSettings::kFrameEnableNone)
-    gtk_widget_set_sensitive(radio_as_laid_out, FALSE);
-
-  radio_selected_frame = gtk_radio_button_new_with_mnemonic_from_widget(
-      GTK_RADIO_BUTTON(radio_as_laid_out),
-      GetUTF8FromBundle("selectedFrame").get());
-  if (frameUIFlag == nsIPrintSettings::kFrameEnableNone ||
-      frameUIFlag == nsIPrintSettings::kFrameEnableAsIsAndEach)
-    gtk_widget_set_sensitive(radio_selected_frame, FALSE);
-
-  radio_separate_frames = gtk_radio_button_new_with_mnemonic_from_widget(
-      GTK_RADIO_BUTTON(radio_as_laid_out),
-      GetUTF8FromBundle("separateFrames").get());
-  if (frameUIFlag == nsIPrintSettings::kFrameEnableNone)
-    gtk_widget_set_sensitive(radio_separate_frames, FALSE);
-
-  // "Print Frames" options label, bold and center-aligned
-  GtkWidget* print_frames_label = gtk_label_new(nullptr);
-  char* pangoMarkup = g_markup_printf_escaped(
-      "<b>%s</b>", GetUTF8FromBundle("printFramesTitleGTK").get());
-  gtk_label_set_markup(GTK_LABEL(print_frames_label), pangoMarkup);
-  g_free(pangoMarkup);
-  gtk_misc_set_alignment(GTK_MISC(print_frames_label), 0, 0);
-
-  // Align the radio buttons slightly so they appear to fall under the
-  // aforementioned label as per the GNOME HIG
-  GtkWidget* frames_radio_container = gtk_alignment_new(0, 0, 0, 0);
-  gtk_alignment_set_padding(GTK_ALIGNMENT(frames_radio_container), 8, 0, 12, 0);
-
-  // Radio buttons for the print frames options
-  GtkWidget* frames_radio_list = gtk_vbox_new(TRUE, 2);
-  gtk_box_pack_start(GTK_BOX(frames_radio_list), radio_as_laid_out, FALSE,
-                     FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(frames_radio_list), radio_selected_frame, FALSE,
-                     FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(frames_radio_list), radio_separate_frames, FALSE,
-                     FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(frames_radio_container), frames_radio_list);
-||||||| merged common ancestors
-  GtkWidget* tab_label = gtk_label_new(GetUTF8FromBundle("optionsTabLabelGTK").get());
-
-  int16_t frameUIFlag;
-  aSettings->GetHowToEnableFrameUI(&frameUIFlag);
-  radio_as_laid_out = gtk_radio_button_new_with_mnemonic(nullptr, GetUTF8FromBundle("asLaidOut").get());
-  if (frameUIFlag == nsIPrintSettings::kFrameEnableNone)
-    gtk_widget_set_sensitive(radio_as_laid_out, FALSE);
-
-  radio_selected_frame = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(radio_as_laid_out),
-                                                                        GetUTF8FromBundle("selectedFrame").get());
-  if (frameUIFlag == nsIPrintSettings::kFrameEnableNone ||
-      frameUIFlag == nsIPrintSettings::kFrameEnableAsIsAndEach)
-    gtk_widget_set_sensitive(radio_selected_frame, FALSE);
-
-  radio_separate_frames = gtk_radio_button_new_with_mnemonic_from_widget(GTK_RADIO_BUTTON(radio_as_laid_out),
-                                                                         GetUTF8FromBundle("separateFrames").get());
-  if (frameUIFlag == nsIPrintSettings::kFrameEnableNone)
-    gtk_widget_set_sensitive(radio_separate_frames, FALSE);
-
-  // "Print Frames" options label, bold and center-aligned
-  GtkWidget* print_frames_label = gtk_label_new(nullptr);
-  char* pangoMarkup = g_markup_printf_escaped("<b>%s</b>", GetUTF8FromBundle("printFramesTitleGTK").get());
-  gtk_label_set_markup(GTK_LABEL(print_frames_label), pangoMarkup);
-  g_free(pangoMarkup);
-  gtk_misc_set_alignment(GTK_MISC(print_frames_label), 0, 0);
-
-  // Align the radio buttons slightly so they appear to fall under the aforementioned label as per the GNOME HIG
-  GtkWidget* frames_radio_container = gtk_alignment_new(0, 0, 0, 0);
-  gtk_alignment_set_padding(GTK_ALIGNMENT(frames_radio_container), 8, 0, 12, 0);
-
-  // Radio buttons for the print frames options
-  GtkWidget* frames_radio_list = gtk_vbox_new(TRUE, 2);
-  gtk_box_pack_start(GTK_BOX(frames_radio_list), radio_as_laid_out, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(frames_radio_list), radio_selected_frame, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(frames_radio_list), radio_separate_frames, FALSE, FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(frames_radio_container), frames_radio_list);
-=======
-  GtkWidget* tab_label =
-      gtk_label_new(GetUTF8FromBundle("optionsTabLabelGTK").get());
->>>>>>> upstream-releases
 
   // Check buttons for shrink-to-fit and print selection
   GtkWidget* check_buttons_container = gtk_vbox_new(TRUE, 2);
@@ -391,15 +230,8 @@ nsPrintDialogWidgetGTK::nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
 
   // "Appearance" options label, bold and center-aligned
   GtkWidget* appearance_label = gtk_label_new(nullptr);
-<<<<<<< HEAD
-  pangoMarkup = g_markup_printf_escaped(
-      "<b>%s</b>", GetUTF8FromBundle("printBGOptions").get());
-||||||| merged common ancestors
-  pangoMarkup = g_markup_printf_escaped("<b>%s</b>", GetUTF8FromBundle("printBGOptions").get());
-=======
   char* pangoMarkup = g_markup_printf_escaped(
       "<b>%s</b>", GetUTF8FromBundle("printBGOptions").get());
->>>>>>> upstream-releases
   gtk_label_set_markup(GTK_LABEL(appearance_label), pangoMarkup);
   g_free(pangoMarkup);
   gtk_misc_set_alignment(GTK_MISC(appearance_label), 0, 0);
@@ -476,11 +308,6 @@ nsPrintDialogWidgetGTK::nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
                      header_footer_container, FALSE, FALSE, 0);
 
   // Construction of everything
-<<<<<<< HEAD
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), print_frames_label, FALSE,
-                     FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), frames_radio_container, FALSE,
-                     FALSE, 0);
   gtk_box_pack_start(GTK_BOX(custom_options_tab), check_buttons_container,
                      FALSE, FALSE, 10);  // 10px padding
   gtk_box_pack_start(GTK_BOX(custom_options_tab), appearance_vertical_squasher,
@@ -490,25 +317,6 @@ nsPrintDialogWidgetGTK::nsPrintDialogWidgetGTK(nsPIDOMWindowOuter* aParent,
 
   gtk_print_unix_dialog_add_custom_tab(GTK_PRINT_UNIX_DIALOG(dialog),
                                        custom_options_tab, tab_label);
-||||||| merged common ancestors
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), print_frames_label, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), frames_radio_container, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), check_buttons_container, FALSE, FALSE, 10); // 10px padding
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), appearance_vertical_squasher, FALSE, FALSE, 10);
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), header_footer_vertical_squasher, FALSE, FALSE, 0);
-
-  gtk_print_unix_dialog_add_custom_tab(GTK_PRINT_UNIX_DIALOG(dialog), custom_options_tab, tab_label);
-=======
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), check_buttons_container,
-                     FALSE, FALSE, 10);  // 10px padding
-  gtk_box_pack_start(GTK_BOX(custom_options_tab), appearance_vertical_squasher,
-                     FALSE, FALSE, 10);
-  gtk_box_pack_start(GTK_BOX(custom_options_tab),
-                     header_footer_vertical_squasher, FALSE, FALSE, 0);
-
-  gtk_print_unix_dialog_add_custom_tab(GTK_PRINT_UNIX_DIALOG(dialog),
-                                       custom_options_tab, tab_label);
->>>>>>> upstream-releases
   gtk_widget_show_all(custom_options_tab);
 }
 
@@ -538,42 +346,7 @@ gint nsPrintDialogWidgetGTK::Run() {
   return response;
 }
 
-<<<<<<< HEAD
-void nsPrintDialogWidgetGTK::ExportFramePrinting(nsIPrintSettings* aNS,
-                                                 GtkPrintSettings* aSettings) {
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_as_laid_out)))
-    aNS->SetPrintFrameType(nsIPrintSettings::kFramesAsIs);
-  else if (gtk_toggle_button_get_active(
-               GTK_TOGGLE_BUTTON(radio_selected_frame)))
-    aNS->SetPrintFrameType(nsIPrintSettings::kSelectedFrame);
-  else if (gtk_toggle_button_get_active(
-               GTK_TOGGLE_BUTTON(radio_separate_frames)))
-    aNS->SetPrintFrameType(nsIPrintSettings::kEachFrameSep);
-  else
-    aNS->SetPrintFrameType(nsIPrintSettings::kNoFrames);
-}
-
 void nsPrintDialogWidgetGTK::ExportHeaderFooter(nsIPrintSettings* aNS) {
-||||||| merged common ancestors
-void
-nsPrintDialogWidgetGTK::ExportFramePrinting(nsIPrintSettings *aNS, GtkPrintSettings *aSettings)
-{
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_as_laid_out)))
-    aNS->SetPrintFrameType(nsIPrintSettings::kFramesAsIs);
-  else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_selected_frame)))
-    aNS->SetPrintFrameType(nsIPrintSettings::kSelectedFrame);
-  else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_separate_frames)))
-    aNS->SetPrintFrameType(nsIPrintSettings::kEachFrameSep);
-  else
-    aNS->SetPrintFrameType(nsIPrintSettings::kNoFrames);
-}
-
-void
-nsPrintDialogWidgetGTK::ExportHeaderFooter(nsIPrintSettings *aNS)
-{
-=======
-void nsPrintDialogWidgetGTK::ExportHeaderFooter(nsIPrintSettings* aNS) {
->>>>>>> upstream-releases
   const char* header_footer_str;
   header_footer_str = OptionWidgetToString(header_dropdown[0]);
   aNS->SetHeaderStrLeft(NS_ConvertUTF8toUTF16(header_footer_str));
@@ -731,20 +504,11 @@ typedef void (*WindowHandleExported)(GtkWindow* window, const char* handle,
 typedef void (*GtkWindowHandleExported)(GtkWindow* window, const char* handle,
                                         gpointer user_data);
 #ifdef MOZ_WAYLAND
-<<<<<<< HEAD
-#if !GTK_CHECK_VERSION(3, 22, 0)
-typedef void (*GdkWaylandWindowExported)(GdkWindow* window, const char* handle,
-                                         gpointer user_data);
-#endif
-
-||||||| merged common ancestors
-=======
 #  if !GTK_CHECK_VERSION(3, 22, 0)
 typedef void (*GdkWaylandWindowExported)(GdkWindow* window, const char* handle,
                                          gpointer user_data);
 #  endif
 
->>>>>>> upstream-releases
 typedef struct {
   GtkWindow* window;
   WindowHandleExported callback;

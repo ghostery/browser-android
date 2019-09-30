@@ -38,45 +38,6 @@ static const int32_t gOffsets[] = {
     0,
     2,
     7,
-<<<<<<< HEAD
-    16,
-    22,
-    26,
-    325,
-    336,
-    347,
-    351,
-    357,
-    361,
-    381,
-    382,
-    393,
-    396,
-    402,
-    408,
-    412,
-    416,
-    441
-||||||| merged common ancestors
-    16,
-    20,
-    24,
-    321,
-    331,
-    342,
-    346,
-    352,
-    356,
-    376,
-    377,
-    388,
-    391,
-    397,
-    402,
-    406,
-    410,
-    435
-=======
     17,
     25,
     29,
@@ -97,39 +58,12 @@ static const int32_t gOffsets[] = {
     434,
     436,
     463
->>>>>>> upstream-releases
 };
 
 static const int32_t gIndexes[] = {
     0,
     2,
     7,
-<<<<<<< HEAD
-    16,
-    22,
-    26,
-    26,
-    37,
-    48,
-    52,
-    58,
-    62,
-    82,
-    83,
-||||||| merged common ancestors
-    16,
-    20,
-    24,
-    24,
-    34,
-    45,
-    49,
-    55,
-    59,
-    79,
-    80,
-    91,
-=======
     17,
     25,
     29,
@@ -140,34 +74,16 @@ static const int32_t gIndexes[] = {
     67,
     69,
     73,
->>>>>>> upstream-releases
     94,
-<<<<<<< HEAD
-    97,
-    103,
-    109,
-||||||| merged common ancestors
-    100,
-    105,
-    109,
-=======
     96,
     110,
->>>>>>> upstream-releases
     113,
-<<<<<<< HEAD
-    117,
-    142
-||||||| merged common ancestors
-    138
-=======
     119,
     127,
     131,
     135,
     137,
     164
->>>>>>> upstream-releases
 };
 
 // Must be sorted alphabetically.
@@ -220,15 +136,9 @@ static const char * const gSubTypes[] = {
     "millimole-per-liter",
     "mole",
     "part-per-million",
-<<<<<<< HEAD
-    "percent",
-    "permille",
-||||||| merged common ancestors
-=======
     "percent",
     "permille",
     "permyriad",
->>>>>>> upstream-releases
     "liter-per-100kilometers",
     "liter-per-kilometer",
     "mile-per-gallon",
@@ -671,25 +581,6 @@ static const char * const gSubTypes[] = {
 
 // Must be sorted by first value and then second value.
 static int32_t unitPerUnitToSingleUnit[][4] = {
-<<<<<<< HEAD
-        {368, 338, 17, 0},
-        {370, 344, 17, 2},
-        {372, 338, 17, 3},
-        {372, 430, 4, 2},
-        {372, 431, 4, 3},
-        {387, 428, 3, 1},
-        {390, 11, 16, 5},
-        {433, 368, 4, 1}
-||||||| merged common ancestors
-        {363, 333, 17, 0},
-        {365, 339, 17, 2},
-        {367, 333, 17, 3},
-        {367, 424, 4, 2},
-        {367, 425, 4, 3},
-        {382, 422, 3, 1},
-        {385, 11, 16, 4},
-        {427, 363, 4, 1}
-=======
         {379, 342, 18, 0},
         {381, 349, 18, 2},
         {383, 342, 18, 3},
@@ -698,7 +589,6 @@ static int32_t unitPerUnitToSingleUnit[][4] = {
         {402, 449, 3, 1},
         {405, 12, 17, 7},
         {455, 379, 4, 1}
->>>>>>> upstream-releases
 };
 
 // Shortcuts to the base unit in order to make the default constructor fast
@@ -869,17 +759,6 @@ MeasureUnit *MeasureUnit::createMole(UErrorCode &status) {
     return MeasureUnit::create(3, 3, status);
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createPercent(UErrorCode &status) {
-    return MeasureUnit::create(3, 4, status);
-}
-
-MeasureUnit *MeasureUnit::createPermille(UErrorCode &status) {
-    return MeasureUnit::create(3, 5, status);
-}
-
-||||||| merged common ancestors
-=======
 MeasureUnit MeasureUnit::getMole() {
     return MeasureUnit(3, 3);
 }
@@ -916,7 +795,6 @@ MeasureUnit MeasureUnit::getPermyriad() {
     return MeasureUnit(3, 7);
 }
 
->>>>>>> upstream-releases
 MeasureUnit *MeasureUnit::createLiterPer100Kilometers(UErrorCode &status) {
     return MeasureUnit::create(4, 0, status);
 }
@@ -1009,41 +887,22 @@ MeasureUnit *MeasureUnit::createMegabyte(UErrorCode &status) {
     return MeasureUnit::create(6, 7, status);
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createPetabyte(UErrorCode &status) {
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createTerabit(UErrorCode &status) {
-=======
 MeasureUnit MeasureUnit::getMegabyte() {
     return MeasureUnit(6, 7);
 }
 
 MeasureUnit *MeasureUnit::createPetabyte(UErrorCode &status) {
->>>>>>> upstream-releases
     return MeasureUnit::create(6, 8, status);
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createTerabit(UErrorCode &status) {
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createTerabyte(UErrorCode &status) {
-=======
 MeasureUnit MeasureUnit::getPetabyte() {
     return MeasureUnit(6, 8);
 }
 
 MeasureUnit *MeasureUnit::createTerabit(UErrorCode &status) {
->>>>>>> upstream-releases
     return MeasureUnit::create(6, 9, status);
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createTerabyte(UErrorCode &status) {
-    return MeasureUnit::create(6, 10, status);
-}
-
-||||||| merged common ancestors
-=======
 MeasureUnit MeasureUnit::getTerabit() {
     return MeasureUnit(6, 9);
 }
@@ -1056,7 +915,6 @@ MeasureUnit MeasureUnit::getTerabyte() {
     return MeasureUnit(6, 10);
 }
 
->>>>>>> upstream-releases
 MeasureUnit *MeasureUnit::createCentury(UErrorCode &status) {
     return MeasureUnit::create(7, 0, status);
 }
@@ -1673,29 +1531,14 @@ MeasureUnit MeasureUnit::getAtmosphere() {
     return MeasureUnit(17, 0);
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createAtmosphere(UErrorCode &status) {
-    return MeasureUnit::create(16, 0, status);
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createHectopascal(UErrorCode &status) {
-    return MeasureUnit::create(16, 0, status);
-=======
 MeasureUnit *MeasureUnit::createHectopascal(UErrorCode &status) {
     return MeasureUnit::create(17, 1, status);
 }
 
 MeasureUnit MeasureUnit::getHectopascal() {
     return MeasureUnit(17, 1);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createHectopascal(UErrorCode &status) {
-    return MeasureUnit::create(16, 1, status);
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createInchHg(UErrorCode &status) {
-    return MeasureUnit::create(16, 1, status);
-=======
 MeasureUnit *MeasureUnit::createInchHg(UErrorCode &status) {
     return MeasureUnit::create(17, 2, status);
 }
@@ -1718,59 +1561,30 @@ MeasureUnit *MeasureUnit::createMegapascal(UErrorCode &status) {
 
 MeasureUnit MeasureUnit::getMegapascal() {
     return MeasureUnit(17, 4);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createInchHg(UErrorCode &status) {
-    return MeasureUnit::create(16, 2, status);
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createMillibar(UErrorCode &status) {
-    return MeasureUnit::create(16, 2, status);
-=======
 MeasureUnit *MeasureUnit::createMillibar(UErrorCode &status) {
     return MeasureUnit::create(17, 5, status);
 }
 
 MeasureUnit MeasureUnit::getMillibar() {
     return MeasureUnit(17, 5);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createMillibar(UErrorCode &status) {
-    return MeasureUnit::create(16, 3, status);
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createMillimeterOfMercury(UErrorCode &status) {
-    return MeasureUnit::create(16, 3, status);
-=======
 MeasureUnit *MeasureUnit::createMillimeterOfMercury(UErrorCode &status) {
     return MeasureUnit::create(17, 6, status);
 }
 
 MeasureUnit MeasureUnit::getMillimeterOfMercury() {
     return MeasureUnit(17, 6);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MeasureUnit *MeasureUnit::createMillimeterOfMercury(UErrorCode &status) {
-    return MeasureUnit::create(16, 4, status);
-||||||| merged common ancestors
-MeasureUnit *MeasureUnit::createPoundPerSquareInch(UErrorCode &status) {
-    return MeasureUnit::create(16, 4, status);
-=======
 MeasureUnit *MeasureUnit::createPoundPerSquareInch(UErrorCode &status) {
     return MeasureUnit::create(17, 7, status);
 }
 
 MeasureUnit MeasureUnit::getPoundPerSquareInch() {
     return MeasureUnit(17, 7);
->>>>>>> upstream-releases
-}
-
-MeasureUnit *MeasureUnit::createPoundPerSquareInch(UErrorCode &status) {
-    return MeasureUnit::create(16, 5, status);
 }
 
 MeasureUnit *MeasureUnit::createKilometerPerHour(UErrorCode &status) {

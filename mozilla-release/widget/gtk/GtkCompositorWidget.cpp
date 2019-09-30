@@ -85,15 +85,6 @@ void GtkCompositorWidget::NotifyClientSizeChanged(
   mClientSize = aClientSize;
 }
 
-<<<<<<< HEAD
-LayoutDeviceIntSize GtkCompositorWidget::GetClientSize() { return mClientSize; }
-||||||| merged common ancestors
-LayoutDeviceIntSize
-GtkCompositorWidget::GetClientSize()
-{
-  return mClientSize;
-}
-=======
 #ifdef MOZ_WAYLAND
 void GtkCompositorWidget::RequestsUpdatingEGLSurface() {
   mWaylandRequestsUpdatingEGLSurface = true;
@@ -107,23 +98,14 @@ bool GtkCompositorWidget::WaylandRequestsUpdatingEGLSurface() {
 #endif
 
 LayoutDeviceIntSize GtkCompositorWidget::GetClientSize() { return mClientSize; }
->>>>>>> upstream-releases
 
 uintptr_t GtkCompositorWidget::GetWidgetKey() {
   return reinterpret_cast<uintptr_t>(mWidget);
 }
 
-<<<<<<< HEAD
-}  // namespace widget
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace widget
-} // namespace mozilla
-=======
 EGLNativeWindowType GtkCompositorWidget::GetEGLNativeWindow() {
   return (EGLNativeWindowType)mWidget->GetNativeData(NS_NATIVE_EGL_WINDOW);
 }
 
 }  // namespace widget
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -83,22 +83,6 @@ const webpackConfig = {
       "devtools/client/shared/vendor/reselect": "reselect",
       "devtools/client/shared/vendor/jszip": "jszip",
 
-<<<<<<< HEAD
-      "devtools/client/sourceeditor/editor": "devtools-source-editor/src/source-editor",
-
-      "devtools/shared/event-emitter": "devtools-modules/src/utils/event-emitter",
-      "devtools/shared/platform/clipboard": path.join(__dirname, "../../client/shared/webpack/shims/platform-clipboard-stub"),
-      "devtools/client/netmonitor/src/utils/firefox/open-request-in-tab": path.join(__dirname, "src/utils/open-request-in-tab"),
-      "devtools/client/shared/unicode-url": "./node_modules/devtools-modules/src/unicode-url",
-||||||| merged common ancestors
-      "devtools/client/sourceeditor/editor": "devtools-source-editor/src/source-editor",
-
-      "devtools/shared/event-emitter": "devtools-modules/src/utils/event-emitter",
-      "devtools/shared/fronts/timeline": path.join(__dirname, "../../client/shared/webpack/shims/fronts-timeline-shim"),
-      "devtools/shared/platform/clipboard": path.join(__dirname, "../../client/shared/webpack/shims/platform-clipboard-stub"),
-      "devtools/client/netmonitor/src/utils/firefox/open-request-in-tab": path.join(__dirname, "src/utils/open-request-in-tab"),
-      "devtools/client/shared/unicode-url": "./node_modules/devtools-modules/src/unicode-url",
-=======
       "devtools/client/shared/sourceeditor/editor":
         "devtools-source-editor/src/source-editor",
 
@@ -114,7 +98,6 @@ const webpackConfig = {
       ),
       "devtools/client/shared/unicode-url":
         "./node_modules/devtools-modules/src/unicode-url",
->>>>>>> upstream-releases
 
       // Locales need to be explicitly mapped to the en-US subfolder
       "devtools/client/locales": path.join(

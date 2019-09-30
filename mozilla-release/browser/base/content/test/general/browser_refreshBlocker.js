@@ -98,65 +98,6 @@ add_task(async function test_can_enable_and_block() {
  * @returns Promise
  */
 async function testRealRefresh(refreshPage, delay) {
-<<<<<<< HEAD
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: "about:blank",
-  }, async function(browser) {
-    await pushPrefs(["accessibility.blockautorefresh", true]);
-
-    BrowserTestUtils.loadURI(browser, refreshPage + "?p=" + TARGET_PAGE + "&d=" + delay);
-    await BrowserTestUtils.browserLoaded(browser);
-
-    // Once browserLoaded resolves, all nsIWebProgressListener callbacks
-    // should have fired, so the notification should be visible.
-    let notificationBox = gBrowser.getNotificationBox(browser);
-    let notification = notificationBox.currentNotification;
-
-    ok(notification, "Notification should be visible");
-    is(notification.getAttribute("value"), "refresh-blocked",
-       "Should be showing the right notification");
-
-    // Then click the button to allow the refresh.
-    let buttons = notification.querySelectorAll(".notification-button");
-    is(buttons.length, 1, "Should have one button.");
-
-    // Prepare a Promise that should resolve when the refresh goes through
-    let refreshPromise = BrowserTestUtils.browserLoaded(browser);
-    buttons[0].click();
-
-    await refreshPromise;
-  });
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: "about:blank",
-  }, async function(browser) {
-    await pushPrefs(["accessibility.blockautorefresh", true]);
-
-    BrowserTestUtils.loadURI(browser, refreshPage + "?p=" + TARGET_PAGE + "&d=" + delay);
-    await BrowserTestUtils.browserLoaded(browser);
-
-    // Once browserLoaded resolves, all nsIWebProgressListener callbacks
-    // should have fired, so the notification should be visible.
-    let notificationBox = gBrowser.getNotificationBox(browser);
-    let notification = notificationBox.currentNotification;
-
-    ok(notification, "Notification should be visible");
-    is(notification.value, "refresh-blocked",
-       "Should be showing the right notification");
-
-    // Then click the button to allow the refresh.
-    let buttons = notification.querySelectorAll(".notification-button");
-    is(buttons.length, 1, "Should have one button.");
-
-    // Prepare a Promise that should resolve when the refresh goes through
-    let refreshPromise = BrowserTestUtils.browserLoaded(browser);
-    buttons[0].click();
-
-    await refreshPromise;
-  });
-=======
   await BrowserTestUtils.withNewTab(
     {
       gBrowser,
@@ -194,7 +135,6 @@ async function testRealRefresh(refreshPage, delay) {
       await refreshPromise;
     }
   );
->>>>>>> upstream-releases
 }
 
 /**

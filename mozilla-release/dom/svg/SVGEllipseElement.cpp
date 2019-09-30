@@ -25,24 +25,6 @@ JSObject* SVGEllipseElement::WrapNode(JSContext* aCx,
   return SVGEllipseElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthInfo SVGEllipseElement::sLengthInfo[4] = {
-    {nsGkAtoms::cx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::X},
-    {nsGkAtoms::cy, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::Y},
-    {nsGkAtoms::rx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::X},
-    {nsGkAtoms::ry, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
-     SVGContentUtils::Y},
-||||||| merged common ancestors
-nsSVGElement::LengthInfo SVGEllipseElement::sLengthInfo[4] =
-{
-  { nsGkAtoms::cx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
-  { nsGkAtoms::cy, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
-  { nsGkAtoms::rx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
-  { nsGkAtoms::ry, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
-=======
 SVGElement::LengthInfo SVGEllipseElement::sLengthInfo[4] = {
     {nsGkAtoms::cx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::X},
@@ -52,22 +34,11 @@ SVGElement::LengthInfo SVGEllipseElement::sLengthInfo[4] = {
      SVGContentUtils::X},
     {nsGkAtoms::ry, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::Y},
->>>>>>> upstream-releases
 };
 
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-SVGEllipseElement::SVGEllipseElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGEllipseElementBase(std::move(aNodeInfo)) {}
-||||||| merged common ancestors
-SVGEllipseElement::SVGEllipseElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-  : SVGEllipseElementBase(std::move(aNodeInfo))
-{
-}
-=======
 SVGEllipseElement::SVGEllipseElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGEllipseElementBase(std::move(aNodeInfo)) {}
@@ -76,7 +47,6 @@ bool SVGEllipseElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   return IsInLengthInfo(aAttribute, sLengthInfo) ||
          SVGEllipseElementBase::IsAttributeMapped(aAttribute);
 }
->>>>>>> upstream-releases
 
 namespace SVGT = SVGGeometryProperty::Tags;
 
@@ -88,74 +58,23 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGEllipseElement)
 //----------------------------------------------------------------------
 // nsIDOMSVGEllipseElement methods
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGEllipseElement::Cx() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGEllipseElement::Cx()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGEllipseElement::Cx() {
->>>>>>> upstream-releases
   return mLengthAttributes[CX].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGEllipseElement::Cy() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGEllipseElement::Cy()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGEllipseElement::Cy() {
->>>>>>> upstream-releases
   return mLengthAttributes[CY].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGEllipseElement::Rx() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGEllipseElement::Rx()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGEllipseElement::Rx() {
->>>>>>> upstream-releases
   return mLengthAttributes[RX].ToDOMAnimatedLength(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedLength> SVGEllipseElement::Ry() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedLength>
-SVGEllipseElement::Ry()
-{
-=======
 already_AddRefed<DOMSVGAnimatedLength> SVGEllipseElement::Ry() {
->>>>>>> upstream-releases
   return mLengthAttributes[RY].ToDOMAnimatedLength(this);
 }
 
 //----------------------------------------------------------------------
-<<<<<<< HEAD
-// nsSVGElement methods
-
-/* virtual */ bool SVGEllipseElement::HasValidDimensions() const {
-  return mLengthAttributes[RX].IsExplicitlySet() &&
-         mLengthAttributes[RX].GetAnimValInSpecifiedUnits() > 0 &&
-         mLengthAttributes[RY].IsExplicitlySet() &&
-         mLengthAttributes[RY].GetAnimValInSpecifiedUnits() > 0;
-||||||| merged common ancestors
-// nsSVGElement methods
-
-/* virtual */ bool
-SVGEllipseElement::HasValidDimensions() const
-{
-  return mLengthAttributes[RX].IsExplicitlySet() &&
-         mLengthAttributes[RX].GetAnimValInSpecifiedUnits() > 0 &&
-         mLengthAttributes[RY].IsExplicitlySet() &&
-         mLengthAttributes[RY].GetAnimValInSpecifiedUnits() > 0;
-=======
 // SVGElement methods
 
 /* virtual */
@@ -166,18 +85,9 @@ bool SVGEllipseElement::HasValidDimensions() const {
   SVGGeometryProperty::ResolveAll<SVGT::Rx, SVGT::Ry>(this, &rx, &ry);
 
   return rx > 0 && ry > 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGElement::LengthAttributesInfo SVGEllipseElement::GetLengthInfo() {
-||||||| merged common ancestors
-nsSVGElement::LengthAttributesInfo
-SVGEllipseElement::GetLengthInfo()
-{
-=======
 SVGElement::LengthAttributesInfo SVGEllipseElement::GetLengthInfo() {
->>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
@@ -242,13 +152,6 @@ already_AddRefed<Path> SVGEllipseElement::BuildPath(PathBuilder* aBuilder) {
   return aBuilder->Finish();
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 bool SVGEllipseElement::IsLengthChangedViaCSS(const ComputedStyle& aNewStyle,
                                               const ComputedStyle& aOldStyle) {
   auto *newSVGReset = aNewStyle.StyleSVGReset(),
@@ -279,4 +182,3 @@ nsCSSPropertyID SVGEllipseElement::GetCSSPropertyIdForAttrEnum(
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

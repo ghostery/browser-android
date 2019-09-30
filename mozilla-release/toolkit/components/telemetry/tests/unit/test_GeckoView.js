@@ -65,41 +65,6 @@ add_task(async function test_persistContentHistograms() {
   await loadPromise;
 
   // Validate the snapshot data.
-<<<<<<< HEAD
-  const snapshot = Telemetry.getSnapshotForHistograms("main", false /* clear */);
-  Assert.ok("parent" in snapshot, "The snapshot object must have a 'parent' entry.");
-  Assert.ok("content" in snapshot, "The snapshot object must have a 'content' entry.");
-  Assert.ok("TELEMETRY_TEST_MULTIPRODUCT" in snapshot.parent,
-            "The TELEMETRY_TEST_MULTIPRODUCT histogram must exist in the parent section.");
-  Assert.equal(snapshot.parent.TELEMETRY_TEST_MULTIPRODUCT.sum, 37,
-               "The TELEMETRY_TEST_MULTIPRODUCT must have the expected value in the parent section.");
-  Assert.ok("TELEMETRY_TEST_MULTIPRODUCT" in snapshot.content,
-            "The TELEMETRY_TEST_MULTIPRODUCT histogram must exist in the content section.");
-  Assert.equal(snapshot.content.TELEMETRY_TEST_MULTIPRODUCT.sum, 73,
-               "The TELEMETRY_TEST_MULTIPRODUCT must have the expected value in the content section.");
-
-  const keyedSnapshot = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */);
-  Assert.ok("parent" in keyedSnapshot, "The keyed snapshot object must have a 'parent' entry.");
-  Assert.ok("content" in keyedSnapshot, "The keyed snapshot object must have a 'content' entry.");
-||||||| merged common ancestors
-  const snapshot =
-    Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false /* clear */);
-  Assert.ok("parent" in snapshot, "The snapshot object must have a 'parent' entry.");
-  Assert.ok("content" in snapshot, "The snapshot object must have a 'content' entry.");
-  Assert.ok("TELEMETRY_TEST_MULTIPRODUCT" in snapshot.parent,
-            "The TELEMETRY_TEST_MULTIPRODUCT histogram must exist in the parent section.");
-  Assert.equal(snapshot.parent.TELEMETRY_TEST_MULTIPRODUCT.sum, 37,
-               "The TELEMETRY_TEST_MULTIPRODUCT must have the expected value in the parent section.");
-  Assert.ok("TELEMETRY_TEST_MULTIPRODUCT" in snapshot.content,
-            "The TELEMETRY_TEST_MULTIPRODUCT histogram must exist in the content section.");
-  Assert.equal(snapshot.content.TELEMETRY_TEST_MULTIPRODUCT.sum, 73,
-               "The TELEMETRY_TEST_MULTIPRODUCT must have the expected value in the content section.");
-
-  const keyedSnapshot =
-    Telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false /* clear */);
-  Assert.ok("parent" in keyedSnapshot, "The keyed snapshot object must have a 'parent' entry.");
-  Assert.ok("content" in keyedSnapshot, "The keyed snapshot object must have a 'content' entry.");
-=======
   const snapshot = Telemetry.getSnapshotForHistograms(
     "main",
     false /* clear */
@@ -143,7 +108,6 @@ add_task(async function test_persistContentHistograms() {
     "content" in keyedSnapshot,
     "The keyed snapshot object must have a 'content' entry."
   );
->>>>>>> upstream-releases
   const parentData = keyedSnapshot.parent;
   Assert.ok(
     "TELEMETRY_TEST_KEYED_COUNT" in parentData,

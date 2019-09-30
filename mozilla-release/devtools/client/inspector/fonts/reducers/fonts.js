@@ -12,18 +12,8 @@ const INITIAL_FONT_DATA = {
 };
 
 const reducers = {
-<<<<<<< HEAD
-
   [UPDATE_FONTS](_, { allFonts }) {
     return { allFonts };
-||||||| merged common ancestors
-
-  [UPDATE_FONTS](_, { fonts, otherFonts, allFonts }) {
-    return { fonts, otherFonts, allFonts };
-=======
-  [UPDATE_FONTS](_, { allFonts }) {
-    return { allFonts };
->>>>>>> upstream-releases
   },
 };
 

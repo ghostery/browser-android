@@ -107,32 +107,6 @@ static inline T* AllocateObjectBuffer(JSContext* cx, uint32_t count) {
 }
 
 template <typename T>
-<<<<<<< HEAD
-static inline T* AllocateObjectBuffer(JSContext* cx, JSObject* obj,
-                                      uint32_t count) {
-  if (cx->helperThread()) {
-    return cx->pod_malloc<T>(count);
-  }
-  size_t nbytes = JS_ROUNDUP(count * sizeof(T), sizeof(Value));
-  T* buffer = static_cast<T*>(cx->nursery().allocateBuffer(obj, nbytes));
-  if (!buffer) {
-    ReportOutOfMemory(cx);
-  }
-  return buffer;
-||||||| merged common ancestors
-static inline T*
-AllocateObjectBuffer(JSContext* cx, JSObject* obj, uint32_t count)
-{
-    if (cx->helperThread()) {
-        return cx->pod_malloc<T>(count);
-    }
-    size_t nbytes = JS_ROUNDUP(count * sizeof(T), sizeof(Value));
-    T* buffer = static_cast<T*>(cx->nursery().allocateBuffer(obj, nbytes));
-    if (!buffer) {
-        ReportOutOfMemory(cx);
-    }
-    return buffer;
-=======
 static inline T* AllocateObjectBuffer(JSContext* cx, JSObject* obj,
                                       uint32_t count) {
   if (cx->isHelperThreadContext()) {
@@ -144,40 +118,10 @@ static inline T* AllocateObjectBuffer(JSContext* cx, JSObject* obj,
     ReportOutOfMemory(cx);
   }
   return buffer;
->>>>>>> upstream-releases
 }
 
 // If this returns null then the old buffer will be left alone.
 template <typename T>
-<<<<<<< HEAD
-static inline T* ReallocateObjectBuffer(JSContext* cx, JSObject* obj,
-                                        T* oldBuffer, uint32_t oldCount,
-                                        uint32_t newCount) {
-  if (cx->helperThread()) {
-    return obj->zone()->pod_realloc<T>(oldBuffer, oldCount, newCount);
-  }
-  T* buffer = static_cast<T*>(cx->nursery().reallocateBuffer(
-      obj, oldBuffer, oldCount * sizeof(T), newCount * sizeof(T)));
-  if (!buffer) {
-    ReportOutOfMemory(cx);
-  }
-  return buffer;
-||||||| merged common ancestors
-static inline T*
-ReallocateObjectBuffer(JSContext* cx, JSObject* obj, T* oldBuffer,
-                       uint32_t oldCount, uint32_t newCount)
-{
-    if (cx->helperThread()) {
-        return obj->zone()->pod_realloc<T>(oldBuffer, oldCount, newCount);
-    }
-    T* buffer =  static_cast<T*>(cx->nursery().reallocateBuffer(obj, oldBuffer,
-                                                                oldCount * sizeof(T),
-                                                                newCount * sizeof(T)));
-    if (!buffer) {
-        ReportOutOfMemory(cx);
-    }
-    return buffer;
-=======
 static inline T* ReallocateObjectBuffer(JSContext* cx, JSObject* obj,
                                         T* oldBuffer, uint32_t oldCount,
                                         uint32_t newCount) {
@@ -190,7 +134,6 @@ static inline T* ReallocateObjectBuffer(JSContext* cx, JSObject* obj,
     ReportOutOfMemory(cx);
   }
   return buffer;
->>>>>>> upstream-releases
 }
 
 }  // namespace js

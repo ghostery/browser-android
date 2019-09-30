@@ -13,13 +13,7 @@
 #define READTYPE int32_t
 #include "zlib.h"
 #ifdef MOZ_JAR_BROTLI
-<<<<<<< HEAD
-#include "brotli/decode.h"  // brotli
-||||||| merged common ancestors
-#include "brotli/decode.h" // brotli
-=======
 #  include "brotli/decode.h"  // brotli
->>>>>>> upstream-releases
 #endif
 #include "nsISupportsUtils.h"
 #include "prio.h"
@@ -44,69 +38,20 @@
 #define ZIP_ARENABLOCKSIZE (1 * 1024)
 
 #ifdef XP_UNIX
-<<<<<<< HEAD
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <limits.h>
-#include <unistd.h>
-||||||| merged common ancestors
-    #include <sys/mman.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    #include <limits.h>
-    #include <unistd.h>
-=======
 #  include <sys/mman.h>
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #  include <limits.h>
 #  include <unistd.h>
->>>>>>> upstream-releases
 #elif defined(XP_WIN)
-<<<<<<< HEAD
-#include <io.h>
-||||||| merged common ancestors
-    #include <io.h>
-=======
 #  include <io.h>
->>>>>>> upstream-releases
 #endif
 
 #ifdef __SYMBIAN32__
-<<<<<<< HEAD
-#include <sys/syslimits.h>
-||||||| merged common ancestors
-    #include <sys/syslimits.h>
-=======
 #  include <sys/syslimits.h>
->>>>>>> upstream-releases
 #endif /*__SYMBIAN32__*/
 
 #ifndef XP_UNIX /* we need some constants defined in limits.h and unistd.h */
-<<<<<<< HEAD
-#ifndef S_IFMT
-#define S_IFMT 0170000
-#endif
-#ifndef S_IFLNK
-#define S_IFLNK 0120000
-#endif
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
-#endif /* XP_UNIX */
-||||||| merged common ancestors
-#  ifndef S_IFMT
-#    define S_IFMT 0170000
-#  endif
-#  ifndef S_IFLNK
-#    define S_IFLNK  0120000
-#  endif
-#  ifndef PATH_MAX
-#    define PATH_MAX 1024
-#  endif
-#endif  /* XP_UNIX */
-=======
 #  ifndef S_IFMT
 #    define S_IFMT 0170000
 #  endif
@@ -117,7 +62,6 @@
 #    define PATH_MAX 1024
 #  endif
 #endif /* XP_UNIX */
->>>>>>> upstream-releases
 
 #ifdef XP_WIN
 #  include "private/pprio.h"  // To get PR_ImportFile
@@ -130,43 +74,14 @@ static const uint32_t kMaxNameLength = PATH_MAX; /* Maximum name length */
 static const uint16_t kSyntheticTime = 0;
 static const uint16_t kSyntheticDate = (1 + (1 << 5) + (0 << 9));
 
-<<<<<<< HEAD
-static uint16_t xtoint(const uint8_t *ii);
-static uint32_t xtolong(const uint8_t *ll);
-static uint32_t HashName(const char *aName, uint16_t nameLen);
-||||||| merged common ancestors
-static uint16_t xtoint(const uint8_t *ii);
-static uint32_t xtolong(const uint8_t *ll);
-static uint32_t HashName(const char* aName, uint16_t nameLen);
-=======
 static uint16_t xtoint(const uint8_t* ii);
 static uint32_t xtolong(const uint8_t* ll);
 static uint32_t HashName(const char* aName, uint16_t nameLen);
->>>>>>> upstream-releases
 
 class ZipArchiveLogger {
-<<<<<<< HEAD
- public:
-  void Write(const nsACString &zip, const char *entry) const {
-||||||| merged common ancestors
-public:
-  void Write(const nsACString &zip, const char *entry) const {
-=======
  public:
   void Init(const char* env) {
->>>>>>> upstream-releases
     if (!fd) {
-<<<<<<< HEAD
-      char *env = PR_GetEnv("MOZ_JAR_LOG_FILE");
-      if (!env) return;
-
-||||||| merged common ancestors
-      char *env = PR_GetEnv("MOZ_JAR_LOG_FILE");
-      if (!env)
-        return;
-
-=======
->>>>>>> upstream-releases
       nsCOMPtr<nsIFile> logFile;
       nsresult rv = NS_NewLocalFile(NS_ConvertUTF8toUTF16(env), false,
                                     getter_AddRefs(logFile));
@@ -176,7 +91,7 @@ public:
       rv = logFile->Create(nsIFile::NORMAL_FILE_TYPE, 0644);
       if (NS_FAILED(rv)) return;
 
-      PRFileDesc *file;
+      PRFileDesc* file;
 #ifdef XP_WIN
       // PR_APPEND is racy on Windows, so open a handle ourselves with flags
       // that will work, and use PR_ImportFile to make it a PRFileDesc. This can
@@ -235,14 +150,7 @@ static ZipArchiveLogger zipLog;
 // malloc(32768 * 1)
 //***********************************************************
 
-<<<<<<< HEAD
-nsresult gZlibInit(z_stream *zs) {
-||||||| merged common ancestors
-nsresult gZlibInit(z_stream *zs)
-{
-=======
 nsresult gZlibInit(z_stream* zs) {
->>>>>>> upstream-releases
   memset(zs, 0, sizeof(z_stream));
   int zerr = inflateInit2(zs, -MAX_WBITS);
   if (zerr != Z_OK) return NS_ERROR_OUT_OF_MEMORY;
@@ -261,15 +169,7 @@ nsZipHandle::nsZipHandle()
 NS_IMPL_ADDREF(nsZipHandle)
 NS_IMPL_RELEASE(nsZipHandle)
 
-<<<<<<< HEAD
-nsresult nsZipHandle::Init(nsIFile *file, nsZipHandle **ret, PRFileDesc **aFd) {
-||||||| merged common ancestors
-nsresult nsZipHandle::Init(nsIFile *file, nsZipHandle **ret,
-                           PRFileDesc **aFd)
-{
-=======
 nsresult nsZipHandle::Init(nsIFile* file, nsZipHandle** ret, PRFileDesc** aFd) {
->>>>>>> upstream-releases
   mozilla::AutoFDClose fd;
   int32_t flags = PR_RDONLY;
 #if defined(XP_WIN)
@@ -281,30 +181,12 @@ nsresult nsZipHandle::Init(nsIFile* file, nsZipHandle** ret, PRFileDesc** aFd) {
   int64_t size = PR_Available64(fd);
   if (size >= INT32_MAX) return NS_ERROR_FILE_TOO_BIG;
 
-<<<<<<< HEAD
-  PRFileMap *map = PR_CreateFileMap(fd, size, PR_PROT_READONLY);
-  if (!map) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  PRFileMap *map = PR_CreateFileMap(fd, size, PR_PROT_READONLY);
-  if (!map)
-    return NS_ERROR_FAILURE;
-=======
   PRFileMap* map = PR_CreateFileMap(fd, size, PR_PROT_READONLY);
   if (!map) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t *buf = (uint8_t *)PR_MemMap(map, 0, (uint32_t)size);
-  // Bug 525755: PR_MemMap fails when fd points at something other than a normal
-  // file.
-||||||| merged common ancestors
-  uint8_t *buf = (uint8_t*) PR_MemMap(map, 0, (uint32_t) size);
-  // Bug 525755: PR_MemMap fails when fd points at something other than a normal file.
-=======
   uint8_t* buf = (uint8_t*)PR_MemMap(map, 0, (uint32_t)size);
   // Bug 525755: PR_MemMap fails when fd points at something other than a normal
   // file.
->>>>>>> upstream-releases
   if (!buf) {
     PR_CloseFileMap(map);
     return NS_ERROR_FAILURE;
@@ -338,17 +220,8 @@ nsresult nsZipHandle::Init(nsIFile* file, nsZipHandle** ret, PRFileDesc** aFd) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsZipHandle::Init(nsZipArchive *zip, const char *entry,
-                           nsZipHandle **ret) {
-||||||| merged common ancestors
-nsresult nsZipHandle::Init(nsZipArchive *zip, const char *entry,
-                           nsZipHandle **ret)
-{
-=======
 nsresult nsZipHandle::Init(nsZipArchive* zip, const char* entry,
                            nsZipHandle** ret) {
->>>>>>> upstream-releases
   RefPtr<nsZipHandle> handle = new nsZipHandle();
   if (!handle) return NS_ERROR_OUT_OF_MEMORY;
 
@@ -369,17 +242,8 @@ nsresult nsZipHandle::Init(nsZipArchive* zip, const char* entry,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsZipHandle::Init(const uint8_t *aData, uint32_t aLen,
-                           nsZipHandle **aRet) {
-||||||| merged common ancestors
-nsresult nsZipHandle::Init(const uint8_t* aData, uint32_t aLen,
-                           nsZipHandle **aRet)
-{
-=======
 nsresult nsZipHandle::Init(const uint8_t* aData, uint32_t aLen,
                            nsZipHandle** aRet) {
->>>>>>> upstream-releases
   RefPtr<nsZipHandle> handle = new nsZipHandle();
 
   handle->mFileStart = aData;
@@ -416,16 +280,8 @@ nsresult nsZipHandle::findDataStart() {
 
   MOZ_WIN_MEM_TRY_BEGIN
   if (mTotalLen > CRXIntSize * 4 && xtolong(mFileStart) == kCRXMagic) {
-<<<<<<< HEAD
-    const uint8_t *headerData = mFileStart;
-    headerData += CRXIntSize * 2;  // Skip magic number and version number
-||||||| merged common ancestors
-    const uint8_t* headerData = mFileStart;
-    headerData += CRXIntSize * 2; // Skip magic number and version number
-=======
     const uint8_t* headerData = mFileStart;
     headerData += CRXIntSize * 2;  // Skip magic number and version number
->>>>>>> upstream-releases
     uint32_t pubKeyLength = xtolong(headerData);
     headerData += CRXIntSize;
     uint32_t sigLength = xtolong(headerData);
@@ -444,14 +300,7 @@ nsresult nsZipHandle::findDataStart() {
 
 int64_t nsZipHandle::SizeOfMapping() { return mTotalLen; }
 
-<<<<<<< HEAD
-nsresult nsZipHandle::GetNSPRFileDesc(PRFileDesc **aNSPRFileDesc) {
-||||||| merged common ancestors
-nsresult nsZipHandle::GetNSPRFileDesc(PRFileDesc** aNSPRFileDesc)
-{
-=======
 nsresult nsZipHandle::GetNSPRFileDesc(PRFileDesc** aNSPRFileDesc) {
->>>>>>> upstream-releases
   if (!aNSPRFileDesc) {
     return NS_ERROR_ILLEGAL_VALUE;
   }
@@ -482,25 +331,12 @@ nsZipHandle::~nsZipHandle() {
 //---------------------------------------------
 //  nsZipArchive::OpenArchive
 //---------------------------------------------
-<<<<<<< HEAD
-nsresult nsZipArchive::OpenArchive(nsZipHandle *aZipHandle, PRFileDesc *aFd) {
-||||||| merged common ancestors
-nsresult nsZipArchive::OpenArchive(nsZipHandle *aZipHandle, PRFileDesc *aFd)
-{
-=======
 nsresult nsZipArchive::OpenArchive(nsZipHandle* aZipHandle, PRFileDesc* aFd) {
->>>>>>> upstream-releases
   mFd = aZipHandle;
 
   //-- get table of contents for archive
   nsresult rv = BuildFileList(aFd);
   if (NS_SUCCEEDED(rv)) {
-<<<<<<< HEAD
-    if (aZipHandle->mFile) aZipHandle->mFile.GetURIString(mURI);
-||||||| merged common ancestors
-    if (aZipHandle->mFile)
-      aZipHandle->mFile.GetURIString(mURI);
-=======
     if (aZipHandle->mFile && XRE_IsParentProcess()) {
       static char* env = PR_GetEnv("MOZ_JAR_LOG_FILE");
       if (env) {
@@ -547,19 +383,11 @@ nsresult nsZipArchive::OpenArchive(nsZipHandle* aZipHandle, PRFileDesc* aFd) {
         }
       }
     }
->>>>>>> upstream-releases
   }
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsZipArchive::OpenArchive(nsIFile *aFile) {
-||||||| merged common ancestors
-nsresult nsZipArchive::OpenArchive(nsIFile *aFile)
-{
-=======
 nsresult nsZipArchive::OpenArchive(nsIFile* aFile) {
->>>>>>> upstream-releases
   RefPtr<nsZipHandle> handle;
 #if defined(XP_WIN)
   mozilla::AutoFDClose fd;
@@ -579,17 +407,8 @@ nsresult nsZipArchive::OpenArchive(nsIFile* aFile) {
 //---------------------------------------------
 //  nsZipArchive::Test
 //---------------------------------------------
-<<<<<<< HEAD
-nsresult nsZipArchive::Test(const char *aEntryName) {
-  nsZipItem *currItem;
-||||||| merged common ancestors
-nsresult nsZipArchive::Test(const char *aEntryName)
-{
-  nsZipItem* currItem;
-=======
 nsresult nsZipArchive::Test(const char* aEntryName) {
   nsZipItem* currItem;
->>>>>>> upstream-releases
 
   if (aEntryName)  // only test specified item
   {
@@ -601,7 +420,7 @@ nsresult nsZipArchive::Test(const char* aEntryName) {
   }
 
   // test all items in archive
-  for (auto *item : mFiles) {
+  for (auto* item : mFiles) {
     for (currItem = item; currItem; currItem = currItem->next) {
       //-- don't test (synthetic) directory items
       if (currItem->IsDirectory()) continue;
@@ -637,14 +456,7 @@ nsresult nsZipArchive::CloseArchive() {
 //---------------------------------------------
 // nsZipArchive::GetItem
 //---------------------------------------------
-<<<<<<< HEAD
-nsZipItem *nsZipArchive::GetItem(const char *aEntryName) {
-||||||| merged common ancestors
-nsZipItem*  nsZipArchive::GetItem(const char * aEntryName)
-{
-=======
 nsZipItem* nsZipArchive::GetItem(const char* aEntryName) {
->>>>>>> upstream-releases
   if (aEntryName) {
     uint32_t len = strlen(aEntryName);
     //-- If the request is for a directory, make sure that synthetic entries
@@ -654,37 +466,17 @@ nsZipItem* nsZipArchive::GetItem(const char* aEntryName) {
         if (BuildSynthetics() != NS_OK) return 0;
       }
     }
-<<<<<<< HEAD
-    MOZ_WIN_MEM_TRY_BEGIN
-    nsZipItem *item = mFiles[HashName(aEntryName, len)];
-||||||| merged common ancestors
-MOZ_WIN_MEM_TRY_BEGIN
-    nsZipItem* item = mFiles[ HashName(aEntryName, len) ];
-=======
     MOZ_WIN_MEM_TRY_BEGIN
     nsZipItem* item = mFiles[HashName(aEntryName, len)];
->>>>>>> upstream-releases
     while (item) {
       if ((len == item->nameLength) &&
           (!memcmp(aEntryName, item->Name(), len))) {
-<<<<<<< HEAD
-        // Successful GetItem() is a good indicator that the file is about to be
-        // read
-        zipLog.Write(mURI, aEntryName);
-        return item;  //-- found it
-||||||| merged common ancestors
-
-        // Successful GetItem() is a good indicator that the file is about to be read
-        zipLog.Write(mURI, aEntryName);
-        return item; //-- found it
-=======
         // Successful GetItem() is a good indicator that the file is about to be
         // read
         if (mURI.Length()) {
           zipLog.Write(mURI, aEntryName);
         }
         return item;  //-- found it
->>>>>>> upstream-releases
       }
       item = item->next;
     }
@@ -699,25 +491,10 @@ MOZ_WIN_MEM_TRY_BEGIN
 // If 'aFd' is null, it only tests the extraction.
 // On extraction error(s) it removes the file.
 //---------------------------------------------
-<<<<<<< HEAD
-nsresult nsZipArchive::ExtractFile(nsZipItem *item, nsIFile *outFile,
-                                   PRFileDesc *aFd) {
-  if (!item) return NS_ERROR_ILLEGAL_VALUE;
-  if (!mFd) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsresult nsZipArchive::ExtractFile(nsZipItem *item, nsIFile* outFile,
-                                   PRFileDesc* aFd)
-{
-  if (!item)
-    return NS_ERROR_ILLEGAL_VALUE;
-  if (!mFd)
-    return NS_ERROR_FAILURE;
-=======
 nsresult nsZipArchive::ExtractFile(nsZipItem* item, nsIFile* outFile,
                                    PRFileDesc* aFd) {
   if (!item) return NS_ERROR_ILLEGAL_VALUE;
   if (!mFd) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
   // Directory extraction is handled in nsJAR::Extract,
   // so the item to be extracted should never be a directory
@@ -731,15 +508,8 @@ nsresult nsZipArchive::ExtractFile(nsZipItem* item, nsIFile* outFile,
 
   while (true) {
     uint32_t count = 0;
-    uint8_t *buf = cursor.Read(&count);
+    uint8_t* buf = cursor.Read(&count);
     if (!buf) {
-<<<<<<< HEAD
-      nsZipArchive::sFileCorruptedReason =
-          "nsZipArchive: Read() failed to return a buffer";
-||||||| merged common ancestors
-      nsZipArchive::sFileCorruptedReason = "nsZipArchive: Read() failed to return a buffer";
-=======
->>>>>>> upstream-releases
       rv = NS_ERROR_FILE_CORRUPTED;
       break;
     }
@@ -767,51 +537,22 @@ nsresult nsZipArchive::ExtractFile(nsZipItem* item, nsIFile* outFile,
 //---------------------------------------------
 // nsZipArchive::FindInit
 //---------------------------------------------
-<<<<<<< HEAD
-nsresult nsZipArchive::FindInit(const char *aPattern, nsZipFind **aFind) {
-  if (!aFind) return NS_ERROR_ILLEGAL_VALUE;
-||||||| merged common ancestors
-nsresult
-nsZipArchive::FindInit(const char * aPattern, nsZipFind **aFind)
-{
-  if (!aFind)
-    return NS_ERROR_ILLEGAL_VALUE;
-=======
 nsresult nsZipArchive::FindInit(const char* aPattern, nsZipFind** aFind) {
   if (!aFind) return NS_ERROR_ILLEGAL_VALUE;
->>>>>>> upstream-releases
 
   // null out param in case an error happens
   *aFind = nullptr;
 
-<<<<<<< HEAD
-  bool regExp = false;
-  char *pattern = 0;
-||||||| merged common ancestors
-  bool    regExp = false;
-  char*   pattern = 0;
-=======
   bool regExp = false;
   char* pattern = 0;
->>>>>>> upstream-releases
 
   // Create synthetic directory entries on demand
   nsresult rv = BuildSynthetics();
   if (rv != NS_OK) return rv;
 
   // validate the pattern
-<<<<<<< HEAD
-  if (aPattern) {
-    switch (NS_WildCardValid((char *)aPattern)) {
-||||||| merged common ancestors
-  if (aPattern)
-  {
-    switch (NS_WildCardValid((char*)aPattern))
-    {
-=======
   if (aPattern) {
     switch (NS_WildCardValid((char*)aPattern)) {
->>>>>>> upstream-releases
       case INVALID_SXP:
         return NS_ERROR_ILLEGAL_VALUE;
 
@@ -845,18 +586,8 @@ nsresult nsZipArchive::FindInit(const char* aPattern, nsZipFind** aFind) {
 //---------------------------------------------
 // nsZipFind::FindNext
 //---------------------------------------------
-<<<<<<< HEAD
-nsresult nsZipFind::FindNext(const char **aResult, uint16_t *aNameLen) {
-  if (!mArchive || !aResult || !aNameLen) return NS_ERROR_ILLEGAL_VALUE;
-||||||| merged common ancestors
-nsresult nsZipFind::FindNext(const char ** aResult, uint16_t *aNameLen)
-{
-  if (!mArchive || !aResult || !aNameLen)
-    return NS_ERROR_ILLEGAL_VALUE;
-=======
 nsresult nsZipFind::FindNext(const char** aResult, uint16_t* aNameLen) {
   if (!mArchive || !aResult || !aNameLen) return NS_ERROR_ILLEGAL_VALUE;
->>>>>>> upstream-releases
 
   *aResult = 0;
   *aNameLen = 0;
@@ -897,111 +628,35 @@ nsresult nsZipFind::FindNext(const char** aResult, uint16_t* aNameLen) {
 //---------------------------------------------
 //  nsZipArchive::CreateZipItem
 //---------------------------------------------
-<<<<<<< HEAD
-nsZipItem *nsZipArchive::CreateZipItem() {
-||||||| merged common ancestors
-nsZipItem* nsZipArchive::CreateZipItem()
-{
-=======
 nsZipItem* nsZipArchive::CreateZipItem() {
->>>>>>> upstream-releases
   // Arena allocate the nsZipItem
-  return (nsZipItem *)mArena.Allocate(sizeof(nsZipItem));
+  return (nsZipItem*)mArena.Allocate(sizeof(nsZipItem));
 }
 
 //---------------------------------------------
 //  nsZipArchive::BuildFileList
 //---------------------------------------------
-<<<<<<< HEAD
-nsresult nsZipArchive::BuildFileList(PRFileDesc *aFd) {
-||||||| merged common ancestors
-nsresult nsZipArchive::BuildFileList(PRFileDesc *aFd)
-{
-=======
 nsresult nsZipArchive::BuildFileList(PRFileDesc* aFd) {
->>>>>>> upstream-releases
   // Get archive size using end pos
-<<<<<<< HEAD
-  const uint8_t *buf;
-  const uint8_t *startp = mFd->mFileData;
-  const uint8_t *endp = startp + mFd->mLen;
-  MOZ_WIN_MEM_TRY_BEGIN
-||||||| merged common ancestors
-  const uint8_t* buf;
-  const uint8_t* startp = mFd->mFileData;
-  const uint8_t* endp = startp + mFd->mLen;
-MOZ_WIN_MEM_TRY_BEGIN
-=======
   const uint8_t* buf;
   const uint8_t* startp = mFd->mFileData;
   const uint8_t* endp = startp + mFd->mLen;
   MOZ_WIN_MEM_TRY_BEGIN
->>>>>>> upstream-releases
   uint32_t centralOffset = 4;
-<<<<<<< HEAD
-  if (mFd->mLen > ZIPCENTRAL_SIZE &&
-      xtolong(startp + centralOffset) == CENTRALSIG) {
-||||||| merged common ancestors
-  if (mFd->mLen > ZIPCENTRAL_SIZE && xtolong(startp + centralOffset) == CENTRALSIG) {
-=======
   // Only perform readahead in the parent process. Children processes
   // don't need readahead when the file has already been readahead by
   // the parent process, and readahead only really happens for omni.ja,
   // which is used in the parent process.
   if (XRE_IsParentProcess() && mFd->mLen > ZIPCENTRAL_SIZE &&
       xtolong(startp + centralOffset) == CENTRALSIG) {
->>>>>>> upstream-releases
     // Success means optimized jar layout from bug 559961 is in effect
     uint32_t readaheadLength = xtolong(startp);
-<<<<<<< HEAD
-    if (readaheadLength) {
-#if defined(XP_SOLARIS)
-      posix_madvise(const_cast<uint8_t *>(startp), readaheadLength,
-                    POSIX_MADV_WILLNEED);
-#elif defined(XP_UNIX)
-      madvise(const_cast<uint8_t *>(startp), readaheadLength, MADV_WILLNEED);
-#elif defined(XP_WIN)
-      if (aFd) {
-        HANDLE hFile = (HANDLE)PR_FileDesc2NativeHandle(aFd);
-        mozilla::ReadAhead(hFile, 0, readaheadLength);
-      }
-#endif
-    }
-||||||| merged common ancestors
-    if (readaheadLength) {
-#if defined(XP_SOLARIS)
-      posix_madvise(const_cast<uint8_t*>(startp), readaheadLength, POSIX_MADV_WILLNEED);
-#elif defined(XP_UNIX)
-      madvise(const_cast<uint8_t*>(startp), readaheadLength, MADV_WILLNEED);
-#elif defined(XP_WIN)
-      if (aFd) {
-        HANDLE hFile = (HANDLE) PR_FileDesc2NativeHandle(aFd);
-        mozilla::ReadAhead(hFile, 0, readaheadLength);
-      }
-#endif
-    }
-=======
     mozilla::PrefetchMemory(const_cast<uint8_t*>(startp), readaheadLength);
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    for (buf = endp - ZIPEND_SIZE; buf > startp; buf--) {
-      if (xtolong(buf) == ENDSIG) {
-        centralOffset = xtolong(((ZipEnd *)buf)->offset_central_dir);
-        break;
-||||||| merged common ancestors
-    for (buf = endp - ZIPEND_SIZE; buf > startp; buf--)
-      {
-        if (xtolong(buf) == ENDSIG) {
-          centralOffset = xtolong(((ZipEnd *)buf)->offset_central_dir);
-          break;
-        }
-=======
     for (buf = endp - ZIPEND_SIZE; buf > startp; buf--) {
       if (xtolong(buf) == ENDSIG) {
         centralOffset = xtolong(((ZipEnd*)buf)->offset_central_dir);
         break;
->>>>>>> upstream-releases
       }
     }
   }
@@ -1014,13 +669,6 @@ MOZ_WIN_MEM_TRY_BEGIN
 
   // avoid overflow of startp + centralOffset.
   if (buf < startp) {
-<<<<<<< HEAD
-    nsZipArchive::sFileCorruptedReason =
-        "nsZipArchive: overflow looking for central directory";
-||||||| merged common ancestors
-    nsZipArchive::sFileCorruptedReason = "nsZipArchive: overflow looking for central directory";
-=======
->>>>>>> upstream-releases
     return NS_ERROR_FILE_CORRUPTED;
   }
 
@@ -1031,18 +679,11 @@ MOZ_WIN_MEM_TRY_BEGIN
          ((sig = xtolong(buf)) == CENTRALSIG)) {
     // Make sure there is enough data available.
     if ((buf > endp) || (endp - buf < ZIPCENTRAL_SIZE)) {
-<<<<<<< HEAD
-      nsZipArchive::sFileCorruptedReason =
-          "nsZipArchive: central directory too small";
-||||||| merged common ancestors
-      nsZipArchive::sFileCorruptedReason = "nsZipArchive: central directory too small";
-=======
->>>>>>> upstream-releases
       return NS_ERROR_FILE_CORRUPTED;
     }
 
     // Read the fixed-size data.
-    ZipCentral *central = (ZipCentral *)buf;
+    ZipCentral* central = (ZipCentral*)buf;
 
     uint16_t namelen = xtoint(central->filename_len);
     uint16_t extralen = xtoint(central->extrafield_len);
@@ -1051,44 +692,19 @@ MOZ_WIN_MEM_TRY_BEGIN
 
     // Sanity check variable sizes and refuse to deal with
     // anything too big: it's likely a corrupt archive.
-<<<<<<< HEAD
     if (namelen < 1 || namelen > kMaxNameLength) {
-      nsZipArchive::sFileCorruptedReason = "nsZipArchive: namelen out of range";
-||||||| merged common ancestors
-    if (namelen < 1 ||
-        namelen > kMaxNameLength) {
-      nsZipArchive::sFileCorruptedReason = "nsZipArchive: namelen out of range";
-=======
-    if (namelen < 1 || namelen > kMaxNameLength) {
->>>>>>> upstream-releases
       return NS_ERROR_FILE_CORRUPTED;
     }
     if (buf >= buf + diff ||  // No overflow
         buf >= endp - diff) {
-<<<<<<< HEAD
-      nsZipArchive::sFileCorruptedReason =
-          "nsZipArchive: overflow looking for next item";
-||||||| merged common ancestors
-      nsZipArchive::sFileCorruptedReason = "nsZipArchive: overflow looking for next item";
-=======
->>>>>>> upstream-releases
       return NS_ERROR_FILE_CORRUPTED;
     }
 
     // Point to the next item at the top of loop
     buf += diff;
 
-<<<<<<< HEAD
-    nsZipItem *item = CreateZipItem();
-    if (!item) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-    nsZipItem* item = CreateZipItem();
-    if (!item)
-      return NS_ERROR_OUT_OF_MEMORY;
-=======
     nsZipItem* item = CreateZipItem();
     if (!item) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
 
     item->central = central;
     item->nameLength = namelen;
@@ -1132,22 +748,9 @@ nsresult nsZipArchive::BuildSynthetics() {
   MOZ_WIN_MEM_TRY_BEGIN
   // Create synthetic entries for any missing directories.
   // Do this when all ziptable has scanned to prevent double entries.
-<<<<<<< HEAD
-  for (auto *item : mFiles) {
-    for (; item != nullptr; item = item->next) {
-      if (item->isSynthetic) continue;
-||||||| merged common ancestors
-  for (auto* item : mFiles)
-  {
-    for (; item != nullptr; item = item->next)
-    {
-      if (item->isSynthetic)
-        continue;
-=======
   for (auto* item : mFiles) {
     for (; item != nullptr; item = item->next) {
       if (item->isSynthetic) continue;
->>>>>>> upstream-releases
 
       //-- add entries for directories in the current item's path
       //-- go from end to beginning, because then we can stop trying
@@ -1156,26 +759,11 @@ nsresult nsZipArchive::BuildSynthetics() {
       //-- start just before the last char so as to not add the item
       //-- twice if it's a directory
       uint16_t namelen = item->nameLength;
-<<<<<<< HEAD
-      MOZ_ASSERT(namelen > 0,
-                 "Attempt to build synthetic for zero-length entry name!");
-      const char *name = item->Name();
-      for (uint16_t dirlen = namelen - 1; dirlen > 0; dirlen--) {
-        if (name[dirlen - 1] != '/') continue;
-||||||| merged common ancestors
-      MOZ_ASSERT(namelen > 0, "Attempt to build synthetic for zero-length entry name!");
-      const char *name = item->Name();
-      for (uint16_t dirlen = namelen - 1; dirlen > 0; dirlen--)
-      {
-        if (name[dirlen-1] != '/')
-          continue;
-=======
       MOZ_ASSERT(namelen > 0,
                  "Attempt to build synthetic for zero-length entry name!");
       const char* name = item->Name();
       for (uint16_t dirlen = namelen - 1; dirlen > 0; dirlen--) {
         if (name[dirlen - 1] != '/') continue;
->>>>>>> upstream-releases
 
         // The character before this is '/', so if this is also '/' then we
         // have an empty path component. Skip it.
@@ -1184,14 +772,7 @@ nsresult nsZipArchive::BuildSynthetics() {
         // Is the directory already in the file table?
         uint32_t hash = HashName(item->Name(), dirlen);
         bool found = false;
-<<<<<<< HEAD
-        for (nsZipItem *zi = mFiles[hash]; zi != nullptr; zi = zi->next) {
-||||||| merged common ancestors
-        for (nsZipItem* zi = mFiles[hash]; zi != nullptr; zi = zi->next)
-        {
-=======
         for (nsZipItem* zi = mFiles[hash]; zi != nullptr; zi = zi->next) {
->>>>>>> upstream-releases
           if ((dirlen == zi->nameLength) &&
               (0 == memcmp(item->Name(), zi->Name(), dirlen))) {
             // we've already added this dir and all its parents
@@ -1204,17 +785,8 @@ nsresult nsZipArchive::BuildSynthetics() {
         // are there -- otherwise, start creating the zip item
         if (found) break;
 
-<<<<<<< HEAD
-        nsZipItem *diritem = CreateZipItem();
-        if (!diritem) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-        nsZipItem* diritem = CreateZipItem();
-        if (!diritem)
-          return NS_ERROR_OUT_OF_MEMORY;
-=======
         nsZipItem* diritem = CreateZipItem();
         if (!diritem) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
 
         // Point to the central record of the original item for the name part.
         diritem->central = item->central;
@@ -1231,57 +803,28 @@ nsresult nsZipArchive::BuildSynthetics() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsZipHandle *nsZipArchive::GetFD() {
-  if (!mFd) return nullptr;
-||||||| merged common ancestors
-nsZipHandle* nsZipArchive::GetFD()
-{
-  if (!mFd)
-    return nullptr;
-=======
 nsZipHandle* nsZipArchive::GetFD() {
   if (!mFd) return nullptr;
->>>>>>> upstream-releases
   return mFd.get();
 }
 
 //---------------------------------------------
 // nsZipArchive::GetDataOffset
 //---------------------------------------------
-<<<<<<< HEAD
-uint32_t nsZipArchive::GetDataOffset(nsZipItem *aItem) {
-||||||| merged common ancestors
-uint32_t nsZipArchive::GetDataOffset(nsZipItem* aItem)
-{
-=======
 uint32_t nsZipArchive::GetDataOffset(nsZipItem* aItem) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aItem);
   MOZ_WIN_MEM_TRY_BEGIN
   //-- read local header to get variable length values and calculate
   //-- the real data offset
   uint32_t len = mFd->mLen;
-  const uint8_t *data = mFd->mFileData;
+  const uint8_t* data = mFd->mFileData;
   uint32_t offset = aItem->LocalOffset();
   if (len < ZIPLOCAL_SIZE || offset > len - ZIPLOCAL_SIZE) return 0;
 
-<<<<<<< HEAD
-  // -- check signature before using the structure, in case the zip file is
-  // corrupt
-  ZipLocal *Local = (ZipLocal *)(data + offset);
-  if ((xtolong(Local->signature) != LOCALSIG)) return 0;
-||||||| merged common ancestors
-  // -- check signature before using the structure, in case the zip file is corrupt
-  ZipLocal* Local = (ZipLocal*)(data + offset);
-  if ((xtolong(Local->signature) != LOCALSIG))
-    return 0;
-=======
   // -- check signature before using the structure, in case the zip file is
   // corrupt
   ZipLocal* Local = (ZipLocal*)(data + offset);
   if ((xtolong(Local->signature) != LOCALSIG)) return 0;
->>>>>>> upstream-releases
 
   //-- NOTE: extralen is different in central header and local header
   //--       for archives created using the Unix "zip" utility. To set
@@ -1296,14 +839,7 @@ uint32_t nsZipArchive::GetDataOffset(nsZipItem* aItem) {
 //---------------------------------------------
 // nsZipArchive::GetData
 //---------------------------------------------
-<<<<<<< HEAD
-const uint8_t *nsZipArchive::GetData(nsZipItem *aItem) {
-||||||| merged common ancestors
-const uint8_t* nsZipArchive::GetData(nsZipItem* aItem)
-{
-=======
 const uint8_t* nsZipArchive::GetData(nsZipItem* aItem) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aItem);
   MOZ_WIN_MEM_TRY_BEGIN
   uint32_t offset = GetDataOffset(aItem);
@@ -1320,17 +856,8 @@ const uint8_t* nsZipArchive::GetData(nsZipItem* aItem) {
 }
 
 // nsZipArchive::GetComment
-<<<<<<< HEAD
-bool nsZipArchive::GetComment(nsACString &aComment) {
-  MOZ_WIN_MEM_TRY_BEGIN
-||||||| merged common ancestors
-bool nsZipArchive::GetComment(nsACString &aComment)
-{
-MOZ_WIN_MEM_TRY_BEGIN
-=======
 bool nsZipArchive::GetComment(nsACString& aComment) {
   MOZ_WIN_MEM_TRY_BEGIN
->>>>>>> upstream-releases
   aComment.Assign(mCommentPtr, mCommentLen);
   MOZ_WIN_MEM_TRY_CATCH(return false)
   return true;
@@ -1369,29 +896,12 @@ nsZipArchive::~nsZipArchive() {
 // nsZipFind constructor and destructor
 //------------------------------------------
 
-<<<<<<< HEAD
-nsZipFind::nsZipFind(nsZipArchive *aZip, char *aPattern, bool aRegExp)
-    : mArchive(aZip),
-      mPattern(aPattern),
-      mItem(nullptr),
-      mSlot(0),
-      mRegExp(aRegExp) {
-||||||| merged common ancestors
-nsZipFind::nsZipFind(nsZipArchive* aZip, char* aPattern, bool aRegExp)
-  : mArchive(aZip)
-  , mPattern(aPattern)
-  , mItem(nullptr)
-  , mSlot(0)
-  , mRegExp(aRegExp)
-{
-=======
 nsZipFind::nsZipFind(nsZipArchive* aZip, char* aPattern, bool aRegExp)
     : mArchive(aZip),
       mPattern(aPattern),
       mItem(nullptr),
       mSlot(0),
       mRegExp(aRegExp) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsZipFind);
 }
 
@@ -1411,18 +921,11 @@ nsZipFind::~nsZipFind() {
  * returns a hash key for the entry name
  */
 MOZ_NO_SANITIZE_UNSIGNED_OVERFLOW
-<<<<<<< HEAD
-static uint32_t HashName(const char *aName, uint16_t len) {
-||||||| merged common ancestors
-static uint32_t HashName(const char* aName, uint16_t len)
-{
-=======
 static uint32_t HashName(const char* aName, uint16_t len) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aName != 0);
 
-  const uint8_t *p = (const uint8_t *)aName;
-  const uint8_t *endp = p + len;
+  const uint8_t* p = (const uint8_t*)aName;
+  const uint8_t* endp = p + len;
   uint32_t val = 0;
   while (p != endp) {
     val = val * 37 + *p++;
@@ -1437,17 +940,8 @@ static uint32_t HashName(const char* aName, uint16_t len) {
  *  Converts a two byte ugly endianed integer
  *  to our platform's integer.
  */
-<<<<<<< HEAD
-static uint16_t xtoint(const uint8_t *ii) {
-  return (uint16_t)((ii[0]) | (ii[1] << 8));
-||||||| merged common ancestors
-static uint16_t xtoint (const uint8_t *ii)
-{
-  return (uint16_t) ((ii [0]) | (ii [1] << 8));
-=======
 static uint16_t xtoint(const uint8_t* ii) {
   return (uint16_t)((ii[0]) | (ii[1] << 8));
->>>>>>> upstream-releases
 }
 
 /*
@@ -1456,22 +950,9 @@ static uint16_t xtoint(const uint8_t* ii) {
  *  Converts a four byte ugly endianed integer
  *  to our platform's integer.
  */
-<<<<<<< HEAD
-static uint32_t xtolong(const uint8_t *ll) {
-  return (uint32_t)((ll[0] << 0) | (ll[1] << 8) | (ll[2] << 16) |
-                    (ll[3] << 24));
-||||||| merged common ancestors
-static uint32_t xtolong (const uint8_t *ll)
-{
-  return (uint32_t)( (ll [0] <<  0) |
-                     (ll [1] <<  8) |
-                     (ll [2] << 16) |
-                     (ll [3] << 24) );
-=======
 static uint32_t xtolong(const uint8_t* ll) {
   return (uint32_t)((ll[0] << 0) | (ll[1] << 8) | (ll[2] << 16) |
                     (ll[3] << 24));
->>>>>>> upstream-releases
 }
 
 /*
@@ -1508,29 +989,11 @@ static PRTime GetModTime(uint16_t aDate, uint16_t aTime) {
 nsZipItem::nsZipItem()
     : next(nullptr), central(nullptr), nameLength(0), isSynthetic(false) {}
 
-<<<<<<< HEAD
 uint32_t nsZipItem::LocalOffset() { return xtolong(central->localhdr_offset); }
 
 uint32_t nsZipItem::Size() { return isSynthetic ? 0 : xtolong(central->size); }
-||||||| merged common ancestors
-uint32_t nsZipItem::Size()
-{
-  return isSynthetic ? 0 : xtolong(central->size);
-}
-=======
-uint32_t nsZipItem::LocalOffset() { return xtolong(central->localhdr_offset); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-uint32_t nsZipItem::RealSize() {
-||||||| merged common ancestors
-uint32_t nsZipItem::RealSize()
-{
-=======
-uint32_t nsZipItem::Size() { return isSynthetic ? 0 : xtolong(central->size); }
 
 uint32_t nsZipItem::RealSize() {
->>>>>>> upstream-releases
   return isSynthetic ? 0 : xtolong(central->orglen);
 }
 
@@ -1559,28 +1022,11 @@ uint16_t nsZipItem::Mode() {
   return ((uint16_t)(central->external_attributes[2]) | 0x100);
 }
 
-<<<<<<< HEAD
-const uint8_t *nsZipItem::GetExtraField(uint16_t aTag, uint16_t *aBlockSize) {
-||||||| merged common ancestors
-const uint8_t * nsZipItem::GetExtraField(uint16_t aTag, uint16_t *aBlockSize)
-{
-=======
 const uint8_t* nsZipItem::GetExtraField(uint16_t aTag, uint16_t* aBlockSize) {
->>>>>>> upstream-releases
   if (isSynthetic) return nullptr;
-<<<<<<< HEAD
-  MOZ_WIN_MEM_TRY_BEGIN
-  const unsigned char *buf =
-      ((const unsigned char *)central) + ZIPCENTRAL_SIZE + nameLength;
-||||||| merged common ancestors
-MOZ_WIN_MEM_TRY_BEGIN
-  const unsigned char *buf = ((const unsigned char*)central) + ZIPCENTRAL_SIZE +
-                             nameLength;
-=======
   MOZ_WIN_MEM_TRY_BEGIN
   const unsigned char* buf =
       ((const unsigned char*)central) + ZIPCENTRAL_SIZE + nameLength;
->>>>>>> upstream-releases
   uint32_t buflen = (uint32_t)xtoint(central->extrafield_len);
   uint32_t pos = 0;
   uint16_t tag, blocksize;
@@ -1614,13 +1060,7 @@ PRTime nsZipItem::LastModTime() {
   return GetModTime(Date(), Time());
 }
 
-<<<<<<< HEAD
-nsZipCursor::nsZipCursor(nsZipItem *item, nsZipArchive *aZip, uint8_t *aBuf,
-||||||| merged common ancestors
-nsZipCursor::nsZipCursor(nsZipItem *item, nsZipArchive *aZip, uint8_t* aBuf,
-=======
 nsZipCursor::nsZipCursor(nsZipItem* item, nsZipArchive* aZip, uint8_t* aBuf,
->>>>>>> upstream-releases
                          uint32_t aBufSize, bool doCRC)
     : mItem(item),
       mBuf(aBuf),
@@ -1643,7 +1083,7 @@ nsZipCursor::nsZipCursor(nsZipItem* item, nsZipArchive* aZip, uint8_t* aBuf,
   }
 
   mZs.avail_in = item->Size();
-  mZs.next_in = (Bytef *)aZip->GetData(item);
+  mZs.next_in = (Bytef*)aZip->GetData(item);
 
 #ifdef MOZ_JAR_BROTLI
   if (mItem->Compression() == MOZ_JAR_BROTLI) {
@@ -1665,13 +1105,7 @@ nsZipCursor::~nsZipCursor() {
 #endif
 }
 
-<<<<<<< HEAD
-uint8_t *nsZipCursor::ReadOrCopy(uint32_t *aBytesRead, bool aCopy) {
-||||||| merged common ancestors
-uint8_t* nsZipCursor::ReadOrCopy(uint32_t *aBytesRead, bool aCopy) {
-=======
 uint8_t* nsZipCursor::ReadOrCopy(uint32_t* aBytesRead, bool aCopy) {
->>>>>>> upstream-releases
   int zerr;
   uint8_t* buf = nullptr;
   bool verifyCRC = true;
@@ -1704,45 +1138,6 @@ uint8_t* nsZipCursor::ReadOrCopy(uint32_t* aBytesRead, bool aCopy) {
       verifyCRC = (zerr == Z_STREAM_END);
       break;
 #ifdef MOZ_JAR_BROTLI
-<<<<<<< HEAD
-    case MOZ_JAR_BROTLI: {
-      buf = mBuf;
-      mZs.next_out = buf;
-      /* The brotli library wants size_t, but z_stream only contains
-       * unsigned int for avail_*. So use temporary stack values. */
-      size_t avail_out = mBufSize;
-      size_t avail_in = mZs.avail_in;
-      BrotliDecoderResult result = BrotliDecoderDecompressStream(
-          mBrotliState, &avail_in,
-          const_cast<const unsigned char **>(&mZs.next_in), &avail_out,
-          &mZs.next_out, nullptr);
-      /* We don't need to update avail_out, it's not used outside this
-       * function. */
-      mZs.avail_in = avail_in;
-
-      if (result == BROTLI_DECODER_RESULT_ERROR) {
-        return nullptr;
-      }
-||||||| merged common ancestors
-  case MOZ_JAR_BROTLI: {
-    buf = mBuf;
-    mZs.next_out = buf;
-    /* The brotli library wants size_t, but z_stream only contains
-     * unsigned int for avail_*. So use temporary stack values. */
-    size_t avail_out = mBufSize;
-    size_t avail_in = mZs.avail_in;
-    BrotliDecoderResult result = BrotliDecoderDecompressStream(
-      mBrotliState,
-      &avail_in, const_cast<const unsigned char**>(&mZs.next_in),
-      &avail_out, &mZs.next_out, nullptr);
-    /* We don't need to update avail_out, it's not used outside this
-     * function. */
-    mZs.avail_in = avail_in;
-
-    if (result == BROTLI_DECODER_RESULT_ERROR) {
-      return nullptr;
-    }
-=======
     case MOZ_JAR_BROTLI: {
       buf = mBuf;
       mZs.next_out = buf;
@@ -1761,7 +1156,6 @@ uint8_t* nsZipCursor::ReadOrCopy(uint32_t* aBytesRead, bool aCopy) {
       if (result == BROTLI_DECODER_RESULT_ERROR) {
         return nullptr;
       }
->>>>>>> upstream-releases
 
       *aBytesRead = mZs.next_out - buf;
       verifyCRC = (result == BROTLI_DECODER_RESULT_SUCCESS);
@@ -1773,51 +1167,21 @@ uint8_t* nsZipCursor::ReadOrCopy(uint32_t* aBytesRead, bool aCopy) {
   }
 
   if (mDoCRC) {
-<<<<<<< HEAD
-    mCRC = crc32(mCRC, (const unsigned char *)buf, *aBytesRead);
-    if (verifyCRC && mCRC != mItem->CRC32()) return nullptr;
-||||||| merged common ancestors
-    mCRC = crc32(mCRC, (const unsigned char*)buf, *aBytesRead);
-    if (verifyCRC && mCRC != mItem->CRC32())
-      return nullptr;
-=======
     mCRC = crc32(mCRC, (const unsigned char*)buf, *aBytesRead);
     if (verifyCRC && mCRC != mItem->CRC32()) return nullptr;
->>>>>>> upstream-releases
   }
   MOZ_WIN_MEM_TRY_CATCH(return nullptr)
   return buf;
 }
 
-<<<<<<< HEAD
-nsZipItemPtr_base::nsZipItemPtr_base(nsZipArchive *aZip, const char *aEntryName,
-                                     bool doCRC)
-    : mReturnBuf(nullptr), mReadlen(0) {
-||||||| merged common ancestors
-nsZipItemPtr_base::nsZipItemPtr_base(nsZipArchive *aZip,
-                                     const char * aEntryName, bool doCRC)
-  : mReturnBuf(nullptr)
-  , mReadlen(0)
-{
-=======
 nsZipItemPtr_base::nsZipItemPtr_base(nsZipArchive* aZip, const char* aEntryName,
                                      bool doCRC)
     : mReturnBuf(nullptr), mReadlen(0) {
->>>>>>> upstream-releases
   // make sure the ziparchive hangs around
   mZipHandle = aZip->GetFD();
 
-<<<<<<< HEAD
-  nsZipItem *item = aZip->GetItem(aEntryName);
-  if (!item) return;
-||||||| merged common ancestors
-  nsZipItem* item = aZip->GetItem(aEntryName);
-  if (!item)
-    return;
-=======
   nsZipItem* item = aZip->GetItem(aEntryName);
   if (!item) return;
->>>>>>> upstream-releases
 
   uint32_t size = 0;
   bool compressed = (item->Compression() == DEFLATED);
@@ -1844,12 +1208,3 @@ nsZipItemPtr_base::nsZipItemPtr_base(nsZipArchive* aZip, const char* aEntryName,
     return;
   }
 }
-<<<<<<< HEAD
-
-/* static */ const char *nsZipArchive::sFileCorruptedReason = nullptr;
-||||||| merged common ancestors
-
-/* static */ const char*
-nsZipArchive::sFileCorruptedReason = nullptr;
-=======
->>>>>>> upstream-releases

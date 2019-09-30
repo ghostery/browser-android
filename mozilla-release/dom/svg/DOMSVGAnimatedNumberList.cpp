@@ -18,26 +18,11 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-static inline nsSVGAttrTearoffTable<SVGAnimatedNumberList,
-                                    DOMSVGAnimatedNumberList>&
-SVGAnimatedNumberListTearoffTable() {
-  static nsSVGAttrTearoffTable<SVGAnimatedNumberList, DOMSVGAnimatedNumberList>
-      sSVGAnimatedNumberListTearoffTable;
-||||||| merged common ancestors
-  static inline
-nsSVGAttrTearoffTable<SVGAnimatedNumberList, DOMSVGAnimatedNumberList>&
-SVGAnimatedNumberListTearoffTable()
-{
-  static nsSVGAttrTearoffTable<SVGAnimatedNumberList, DOMSVGAnimatedNumberList>
-    sSVGAnimatedNumberListTearoffTable;
-=======
 static inline SVGAttrTearoffTable<SVGAnimatedNumberList,
                                   DOMSVGAnimatedNumberList>&
 SVGAnimatedNumberListTearoffTable() {
   static SVGAttrTearoffTable<SVGAnimatedNumberList, DOMSVGAnimatedNumberList>
       sSVGAnimatedNumberListTearoffTable;
->>>>>>> upstream-releases
   return sSVGAnimatedNumberListTearoffTable;
 }
 
@@ -74,24 +59,11 @@ already_AddRefed<DOMSVGNumberList> DOMSVGAnimatedNumberList::AnimVal() {
   return animVal.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DOMSVGAnimatedNumberList>
-DOMSVGAnimatedNumberList::GetDOMWrapper(SVGAnimatedNumberList* aList,
-                                        nsSVGElement* aElement,
-                                        uint8_t aAttrEnum) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<DOMSVGAnimatedNumberList>
-DOMSVGAnimatedNumberList::GetDOMWrapper(SVGAnimatedNumberList *aList,
-                                        nsSVGElement *aElement,
-                                        uint8_t aAttrEnum)
-{
-=======
 /* static */
 already_AddRefed<DOMSVGAnimatedNumberList>
 DOMSVGAnimatedNumberList::GetDOMWrapper(SVGAnimatedNumberList* aList,
                                         dom::SVGElement* aElement,
                                         uint8_t aAttrEnum) {
->>>>>>> upstream-releases
   RefPtr<DOMSVGAnimatedNumberList> wrapper =
       SVGAnimatedNumberListTearoffTable().GetTearoff(aList);
   if (!wrapper) {
@@ -101,18 +73,9 @@ DOMSVGAnimatedNumberList::GetDOMWrapper(SVGAnimatedNumberList* aList,
   return wrapper.forget();
 }
 
-<<<<<<< HEAD
-/* static */ DOMSVGAnimatedNumberList*
-DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(SVGAnimatedNumberList* aList) {
-||||||| merged common ancestors
-/* static */ DOMSVGAnimatedNumberList*
-DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(SVGAnimatedNumberList *aList)
-{
-=======
 /* static */
 DOMSVGAnimatedNumberList* DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(
     SVGAnimatedNumberList* aList) {
->>>>>>> upstream-releases
   return SVGAnimatedNumberListTearoffTable().GetTearoff(aList);
 }
 
@@ -170,11 +133,5 @@ const SVGAnimatedNumberList& DOMSVGAnimatedNumberList::InternalAList() const {
   return *mElement->GetAnimatedNumberList(mAttrEnum);
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

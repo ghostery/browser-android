@@ -25,34 +25,14 @@ namespace mozilla {
  * destructor of the token will restore the decoder count so it is available
  * for next calls of Alloc().
  */
-<<<<<<< HEAD
-class GlobalAllocPolicy {
- public:
-  class Token {
-||||||| merged common ancestors
-class GlobalAllocPolicy
-{
-public:
-  class Token
-  {
-=======
 class AllocPolicy {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(AllocPolicy)
 
  public:
   class Token {
->>>>>>> upstream-releases
     NS_INLINE_DECL_THREADSAFE_REFCOUNTING(Token)
-<<<<<<< HEAD
-   protected:
-    virtual ~Token() {}
-||||||| merged common ancestors
-  protected:
-    virtual ~Token() {}
-=======
    protected:
     virtual ~Token() = default;
->>>>>>> upstream-releases
   };
   using Promise = MozPromise<RefPtr<Token>, bool, true>;
 
@@ -79,11 +59,6 @@ class GlobalAllocPolicy {
   static StaticMutex sMutex;
 };
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
 /** This the actual base implementation underneath all AllocPolicy objects and
  * control how many decoders can be created concurrently.
  * Alloc() must be called to get a token object as a permission to perform an
@@ -102,7 +77,6 @@ class AllocPolicyImpl : public AllocPolicy {
   int MaxDecoderLimit() const { return mMaxDecoderLimit; }
 
  private:
->>>>>>> upstream-releases
   class AutoDeallocToken;
   using PromisePrivate = Promise::Private;
   // Called by the destructor of TokenImpl to restore the decoder limit.
@@ -118,14 +92,6 @@ class AllocPolicyImpl : public AllocPolicy {
   std::queue<RefPtr<PromisePrivate>> mPromises;
 };
 
-<<<<<<< HEAD
-class AllocationWrapper : public MediaDataDecoder {
-  using Token = GlobalAllocPolicy::Token;
-||||||| merged common ancestors
-class AllocationWrapper : public MediaDataDecoder
-{
-  using Token = GlobalAllocPolicy::Token;
-=======
 /**
  * This class allows to track and serialise a single decoder allocation at a
  * time
@@ -155,7 +121,6 @@ class SingleAllocPolicy : public AllocPolicyImpl {
 
 class AllocationWrapper : public MediaDataDecoder {
   using Token = AllocPolicy::Token;
->>>>>>> upstream-releases
 
  public:
   AllocationWrapper(already_AddRefed<MediaDataDecoder> aDecoder,
@@ -190,13 +155,7 @@ class AllocationWrapper : public MediaDataDecoder {
   // Warning: all aParams members must be valid until the promise has been
   // resolved, as some contains raw pointers to objects.
   static RefPtr<AllocateDecoderPromise> CreateDecoder(
-<<<<<<< HEAD
-      const CreateDecoderParams& aParams);
-||||||| merged common ancestors
-    const CreateDecoderParams& aParams);
-=======
       const CreateDecoderParams& aParams, AllocPolicy* aPolicy = nullptr);
->>>>>>> upstream-releases
 
  private:
   RefPtr<MediaDataDecoder> mDecoder;

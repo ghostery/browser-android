@@ -21,26 +21,6 @@ StaticMutex FFmpegDataDecoder<LIBAV_VER>::sMonitor;
 FFmpegDataDecoder<LIBAV_VER>::FFmpegDataDecoder(FFmpegLibWrapper* aLib,
                                                 TaskQueue* aTaskQueue,
                                                 AVCodecID aCodecID)
-<<<<<<< HEAD
-    : mLib(aLib),
-      mCodecContext(nullptr),
-      mCodecParser(nullptr),
-      mFrame(NULL),
-      mExtraData(nullptr),
-      mCodecID(aCodecID),
-      mTaskQueue(aTaskQueue),
-      mLastInputDts(media::TimeUnit::FromMicroseconds(INT64_MIN)) {
-||||||| merged common ancestors
-  : mLib(aLib)
-  , mCodecContext(nullptr)
-  , mCodecParser(nullptr)
-  , mFrame(NULL)
-  , mExtraData(nullptr)
-  , mCodecID(aCodecID)
-  , mTaskQueue(aTaskQueue)
-  , mLastInputDts(media::TimeUnit::FromMicroseconds(INT64_MIN))
-{
-=======
     : mLib(aLib),
       mCodecContext(nullptr),
       mCodecParser(nullptr),
@@ -49,7 +29,6 @@ FFmpegDataDecoder<LIBAV_VER>::FFmpegDataDecoder(FFmpegLibWrapper* aLib,
       mCodecID(aCodecID),
       mTaskQueue(aTaskQueue),
       mLastInputDts(media::TimeUnit::FromNegativeInfinity()) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLib);
   MOZ_COUNT_CTOR(FFmpegDataDecoder);
 }

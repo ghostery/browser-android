@@ -35,13 +35,6 @@ cron_yml_schema = Schema({
             Required('treeherder-symbol'): basestring,
 
             # --target-tasks-method './mach taskgraph decision' argument
-<<<<<<< HEAD
-            'target-tasks-method': basestring,
-        },
-||||||| merged common ancestors
-            'target-tasks-method': basestring,
-        }),
-=======
             Required('target-tasks-method'): basestring,
 
             Optional(
@@ -60,7 +53,6 @@ cron_yml_schema = Schema({
                 description='Kinds that should not be re-used from the on-push graph.',
             ): [basestring],
         },
->>>>>>> upstream-releases
 
         # when to run it
 

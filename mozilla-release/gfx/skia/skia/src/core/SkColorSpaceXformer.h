@@ -14,7 +14,6 @@
 #include "SkRasterPipeline.h"
 #include "SkRefCnt.h"
 #include "SkTHash.h"
-#include "../jumper/SkJumper.h"
 
 class SkBitmap;
 class SkColorFilter;
@@ -56,24 +55,12 @@ private:
 
     class AutoCachePurge;
 
-<<<<<<< HEAD
-    sk_sp<SkColorSpace>                                 fDst;
-    SkSTArenaAlloc<256>                                 fAlloc;
-    std::function<void(size_t, size_t, size_t, size_t)> fFromSRGB;
-    SkColorSpaceXformSteps                              fFromSRGBSteps;
-    SkJumper_MemoryCtx                                  fFromSRGBSrc{nullptr,0};
-    SkJumper_MemoryCtx                                  fFromSRGBDst{nullptr,0};
-||||||| merged common ancestors
-    sk_sp<SkColorSpace>                fDst;
-    std::unique_ptr<SkColorSpaceXform> fFromSRGB;
-=======
     sk_sp<SkColorSpace>                                 fDst;
     SkSTArenaAlloc<256>                                 fAlloc;
     std::function<void(size_t, size_t, size_t, size_t)> fFromSRGB;
     SkColorSpaceXformSteps                              fFromSRGBSteps;
     SkRasterPipeline_MemoryCtx                          fFromSRGBSrc{nullptr,0};
     SkRasterPipeline_MemoryCtx                          fFromSRGBDst{nullptr,0};
->>>>>>> upstream-releases
 
     size_t fReentryCount; // tracks the number of nested apply() calls for cache purging.
 

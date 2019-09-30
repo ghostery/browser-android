@@ -15,13 +15,8 @@
 #include "SkCanvas.h"
 #include "SkColorFilter.h"
 #include "SkData.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "SkDocument.h"
-=======
 #include "SkFont.h"
 #include "SkFontMetrics.h"
->>>>>>> upstream-releases
 #include "SkFontStyle.h"
 #include "SkGradientShader.h"
 #include "SkImage.h"
@@ -1807,13 +1802,7 @@ static int lsk_newDocumentPDF(lua_State* L) {
     if (!file->isValid()) {
         return 0;
     }
-<<<<<<< HEAD
-    sk_sp<SkDocument> doc = SkPDF::MakeDocument(file.get());
-||||||| merged common ancestors
-    sk_sp<SkDocument> doc = SkDocument::MakePDF(file.get());
-=======
     auto doc = SkPDF::MakeDocument(file.get());
->>>>>>> upstream-releases
     if (!doc) {
         return 0;
     }
@@ -1884,14 +1873,6 @@ static int lsk_newTextBlob(lua_State* L) {
     SkRect bounds;
     lua2rect(L, 2, &bounds);
 
-<<<<<<< HEAD
-    SkShaper shaper(nullptr);
-||||||| merged common ancestors
-    SkTextBox box;
-    box.setMode(SkTextBox::kLineBreak_Mode);
-    box.setBox(bounds);
-    box.setText(text, strlen(text), paint);
-=======
     std::unique_ptr<SkShaper> shaper = SkShaper::Make();
 
     // TODO: restore this logic based on SkFont instead of SkPaint
@@ -1904,23 +1885,9 @@ static int lsk_newTextBlob(lua_State* L) {
     SkTextBlobBuilderRunHandler builder(text);
     SkPoint end = shaper->shape(&builder, font, text, strlen(text), true,
                                 { bounds.left(), bounds.top() }, bounds.width());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    SkTextBlobBuilder builder;
-    SkPoint end = shaper.shape(&builder, paint, text, strlen(text), true,
-                               { bounds.left(), bounds.top() }, bounds.width());
-
-    push_ref<SkTextBlob>(L, builder.make());
-    SkLua(L).pushScalar(end.fY);
-||||||| merged common ancestors
-    SkScalar newBottom;
-    push_ref<SkTextBlob>(L, box.snapshotTextBlob(&newBottom));
-    SkLua(L).pushScalar(newBottom);
-=======
     push_ref<SkTextBlob>(L, builder.makeBlob());
     SkLua(L).pushScalar(end.fY);
->>>>>>> upstream-releases
     return 2;
 }
 

@@ -1274,22 +1274,6 @@ impl YamlFrameWriter {
                     yaml_node(&mut v, "previously-applied-offset", Yaml::Array(applied));
                 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/yaml_frame_writer.rs
-                PopCacheMarker => return,
-                PushCacheMarker(_) => {
-                    str_node(&mut v, "type", "cache-marker");
-                }
-
-                PopStackingContext => return,
-                PopReferenceFrame => return,
-                SetGradientStops => panic!("dummy item yielded?"),
-                PushShadow(shadow) => {
-||||||| merged common ancestors
-                PopStackingContext => return,
-                PopReferenceFrame => return,
-                SetGradientStops => panic!("dummy item yielded?"),
-                PushShadow(shadow) => {
-=======
                 DisplayItem::PopReferenceFrame |
                 DisplayItem::PopStackingContext => return,
 
@@ -1297,7 +1281,6 @@ impl YamlFrameWriter {
                 DisplayItem::SetFilterOps => panic!("dummy item yielded?"),
                 DisplayItem::SetFilterData => panic!("dummy item yielded?"),
                 DisplayItem::PushShadow(item) => {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/yaml_frame_writer.rs
                     str_node(&mut v, "type", "shadow");
                     vector_node(&mut v, "offset", &item.shadow.offset);
                     color_node(&mut v, "color", item.shadow.color);

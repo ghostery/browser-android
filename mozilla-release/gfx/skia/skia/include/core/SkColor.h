@@ -228,34 +228,11 @@ SK_API SkPMColor SkPreMultiplyARGB(U8CPU a, U8CPU r, U8CPU g, U8CPU b);
 */
 SK_API SkPMColor SkPreMultiplyColor(SkColor c);
 
-<<<<<<< HEAD
-template <SkAlphaType kAT>
-struct SkRGBA4f {
-    float fR;
-    float fG;
-    float fB;
-    float fA;
-||||||| merged common ancestors
-/*
- *  The float values are 0...1 unpremultiplied
- */
-struct SK_API SkColor4f {
-    float fR;
-    float fG;
-    float fB;
-    float fA;
-=======
 /** \struct SkRGBA4f
     RGBA color value, holding four floating point components. Color components are always in
     a known order. kAT determines if the SkRGBA4f's R, G, and B components are premultiplied
     by alpha or not.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    bool operator==(const SkRGBA4f& other) const {
-||||||| merged common ancestors
-    bool operator==(const SkColor4f& other) const {
-=======
     Skia's public API always uses unpremultiplied colors, which can be stored as
     SkRGBA4f<kUnpremul_SkAlphaType>. For convenience, this type can also be referred to
     as SkColor4f.
@@ -273,14 +250,8 @@ struct SkRGBA4f {
         @return       true if SkRGBA4f equals other
     */
     bool operator==(const SkRGBA4f& other) const {
->>>>>>> upstream-releases
         return fA == other.fA && fR == other.fR && fG == other.fG && fB == other.fB;
     }
-<<<<<<< HEAD
-    bool operator!=(const SkRGBA4f& other) const {
-||||||| merged common ancestors
-    bool operator!=(const SkColor4f& other) const {
-=======
 
     /** Compares SkRGBA4f with other, and returns true if not all components are equal.
 
@@ -288,21 +259,9 @@ struct SkRGBA4f {
         @return       true if SkRGBA4f is not equal to other
     */
     bool operator!=(const SkRGBA4f& other) const {
->>>>>>> upstream-releases
         return !(*this == other);
     }
 
-<<<<<<< HEAD
-    SkRGBA4f operator*(float scale) const {
-        return { fR * scale, fG * scale, fB * scale, fA * scale };
-    }
-
-    SkRGBA4f operator*(const SkRGBA4f& scale) const {
-        return { fR * scale.fR, fG * scale.fG, fB * scale.fB, fA * scale.fA };
-    }
-
-||||||| merged common ancestors
-=======
     /** Returns SkRGBA4f multiplied by scale.
 
         @param scale  value to multiply by
@@ -325,42 +284,16 @@ struct SkRGBA4f {
 
         @return       pointer to array [fR, fG, fB, fA]
     */
->>>>>>> upstream-releases
     const float* vec() const { return &fR; }
-<<<<<<< HEAD
-          float* vec()       { return &fR; }
-||||||| merged common ancestors
-    float* vec() { return &fR; }
-=======
 
     /** Returns a pointer to components of SkRGBA4f, for array access.
 
         @return       pointer to array [fR, fG, fB, fA]
     */
     float* vec() { return &fR; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    float operator[](int index) const {
-        SkASSERT(index >= 0 && index < 4);
-        return this->vec()[index];
-    }
-||||||| merged common ancestors
-    static SkColor4f Pin(float r, float g, float b, float a);
-    /** Convert to SkColor4f, assuming SkColor is sRGB */
-    static SkColor4f FromColor(SkColor);
-=======
     /** Returns one component. Asserts if index is out of range and SK_DEBUG is defined.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    float& operator[](int index) {
-        SkASSERT(index >= 0 && index < 4);
-        return this->vec()[index];
-    }
-||||||| merged common ancestors
-    SkColor toSkColor() const;
-=======
         @param index  one of: 0 (fR), 1 (fG), 2 (fB), 3 (fA)
         @return       value corresponding to index
     */
@@ -370,52 +303,15 @@ struct SkRGBA4f {
     }
 
     /** Returns one component. Asserts if index is out of range and SK_DEBUG is defined.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    bool isOpaque() const {
-        SkASSERT(fA <= 1.0f && fA >= 0.0f);
-        return fA == 1.0f;
-||||||| merged common ancestors
-    SkColor4f pin() const {
-        return Pin(fR, fG, fB, fA);
-=======
         @param index  one of: 0 (fR), 1 (fG), 2 (fB), 3 (fA)
         @return       value corresponding to index
     */
     float& operator[](int index) {
         SkASSERT(index >= 0 && index < 4);
         return this->vec()[index];
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    static SkRGBA4f Pin(float r, float g, float b, float a);  // impl. depends on kAT
-    SkRGBA4f pin() const { return Pin(fR, fG, fB, fA); }
-
-    static SkRGBA4f FromColor(SkColor);  // impl. depends on kAT
-    SkColor toSkColor() const;  // impl. depends on kAT
-
-    static SkRGBA4f FromPMColor(SkPMColor);  // impl. depends on kAT
-
-    SkRGBA4f<kPremul_SkAlphaType> premul() const {
-        static_assert(kAT == kUnpremul_SkAlphaType, "");
-        return { fR * fA, fG * fA, fB * fA, fA };
-    }
-
-    SkRGBA4f<kUnpremul_SkAlphaType> unpremul() const {
-        static_assert(kAT == kPremul_SkAlphaType, "");
-
-        if (fA == 0.0f) {
-            return { 0, 0, 0, 0 };
-        } else {
-            float invAlpha = 1 / fA;
-            return { fR * invAlpha, fG * invAlpha, fB * invAlpha, fA };
-        }
-    }
-||||||| merged common ancestors
-    SkPM4f premul() const;
-=======
     /** Returns true if SkRGBA4f is an opaque color. Asserts if fA is out of range and
         SK_DEBUG is defined.
 
@@ -486,16 +382,8 @@ struct SkRGBA4f {
     SkRGBA4f makeOpaque() const {
         return { fR, fG, fB, 1.0f };
     }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-using SkColor4f = SkRGBA4f<kUnpremul_SkAlphaType>;
-template <> SK_API SkColor4f SkColor4f::FromColor(SkColor);
-template <> SK_API SkColor   SkColor4f::toSkColor() const;
-
-||||||| merged common ancestors
-=======
 /** \struct SkColor4f
     RGBA color value, holding four floating point components. Color components are always in
     a known order, and are unpremultiplied.
@@ -507,5 +395,4 @@ using SkColor4f = SkRGBA4f<kUnpremul_SkAlphaType>;
 template <> SK_API SkColor4f SkColor4f::FromColor(SkColor);
 template <> SK_API SkColor   SkColor4f::toSkColor() const;
 
->>>>>>> upstream-releases
 #endif

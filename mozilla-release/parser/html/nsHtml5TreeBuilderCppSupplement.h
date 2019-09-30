@@ -11,69 +11,6 @@
 #include "mozilla/UniquePtr.h"
 
 nsHtml5TreeBuilder::nsHtml5TreeBuilder(nsHtml5OplessBuilder* aBuilder)
-<<<<<<< HEAD
-    : mode(0),
-      originalMode(0),
-      framesetOk(false),
-      tokenizer(nullptr),
-      scriptingEnabled(false),
-      needToDropLF(false),
-      fragment(false),
-      contextName(nullptr),
-      contextNamespace(kNameSpaceID_None),
-      contextNode(nullptr),
-      templateModePtr(0),
-      stackNodesIdx(0),
-      numStackNodes(0),
-      currentPtr(0),
-      listPtr(0),
-      formPointer(nullptr),
-      headPointer(nullptr),
-      deepTreeSurrogateParent(nullptr),
-      charBufferLen(0),
-      quirks(false),
-      isSrcdocDocument(false),
-      mBuilder(aBuilder),
-      mViewSource(nullptr),
-      mOpSink(nullptr),
-      mHandles(nullptr),
-      mHandlesUsed(0),
-      mSpeculativeLoadStage(nullptr),
-      mBroken(NS_OK),
-      mCurrentHtmlScriptIsAsyncOrDefer(false),
-      mPreventScriptExecution(false)
-||||||| merged common ancestors
-  : mode(0)
-  , originalMode(0)
-  , framesetOk(false)
-  , tokenizer(nullptr)
-  , scriptingEnabled(false)
-  , needToDropLF(false)
-  , fragment(false)
-  , contextName(nullptr)
-  , contextNamespace(kNameSpaceID_None)
-  , contextNode(nullptr)
-  , templateModePtr(0)
-  , stackNodesIdx(0)
-  , numStackNodes(0)
-  , currentPtr(0)
-  , listPtr(0)
-  , formPointer(nullptr)
-  , headPointer(nullptr)
-  , deepTreeSurrogateParent(nullptr)
-  , charBufferLen(0)
-  , quirks(false)
-  , isSrcdocDocument(false)
-  , mBuilder(aBuilder)
-  , mViewSource(nullptr)
-  , mOpSink(nullptr)
-  , mHandles(nullptr)
-  , mHandlesUsed(0)
-  , mSpeculativeLoadStage(nullptr)
-  , mBroken(NS_OK)
-  , mCurrentHtmlScriptIsAsyncOrDefer(false)
-  , mPreventScriptExecution(false)
-=======
     : mode(0),
       originalMode(0),
       framesetOk(false),
@@ -103,7 +40,6 @@ nsHtml5TreeBuilder::nsHtml5TreeBuilder(nsHtml5OplessBuilder* aBuilder)
       mBroken(NS_OK),
       mCurrentHtmlScriptIsAsyncOrDefer(false),
       mPreventScriptExecution(false)
->>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mActive(false)
@@ -114,69 +50,6 @@ nsHtml5TreeBuilder::nsHtml5TreeBuilder(nsHtml5OplessBuilder* aBuilder)
 
 nsHtml5TreeBuilder::nsHtml5TreeBuilder(nsAHtml5TreeOpSink* aOpSink,
                                        nsHtml5TreeOpStage* aStage)
-<<<<<<< HEAD
-    : mode(0),
-      originalMode(0),
-      framesetOk(false),
-      tokenizer(nullptr),
-      scriptingEnabled(false),
-      needToDropLF(false),
-      fragment(false),
-      contextName(nullptr),
-      contextNamespace(kNameSpaceID_None),
-      contextNode(nullptr),
-      templateModePtr(0),
-      stackNodesIdx(0),
-      numStackNodes(0),
-      currentPtr(0),
-      listPtr(0),
-      formPointer(nullptr),
-      headPointer(nullptr),
-      deepTreeSurrogateParent(nullptr),
-      charBufferLen(0),
-      quirks(false),
-      isSrcdocDocument(false),
-      mBuilder(nullptr),
-      mViewSource(nullptr),
-      mOpSink(aOpSink),
-      mHandles(new nsIContent*[NS_HTML5_TREE_BUILDER_HANDLE_ARRAY_LENGTH]),
-      mHandlesUsed(0),
-      mSpeculativeLoadStage(aStage),
-      mBroken(NS_OK),
-      mCurrentHtmlScriptIsAsyncOrDefer(false),
-      mPreventScriptExecution(false)
-||||||| merged common ancestors
-  : mode(0)
-  , originalMode(0)
-  , framesetOk(false)
-  , tokenizer(nullptr)
-  , scriptingEnabled(false)
-  , needToDropLF(false)
-  , fragment(false)
-  , contextName(nullptr)
-  , contextNamespace(kNameSpaceID_None)
-  , contextNode(nullptr)
-  , templateModePtr(0)
-  , stackNodesIdx(0)
-  , numStackNodes(0)
-  , currentPtr(0)
-  , listPtr(0)
-  , formPointer(nullptr)
-  , headPointer(nullptr)
-  , deepTreeSurrogateParent(nullptr)
-  , charBufferLen(0)
-  , quirks(false)
-  , isSrcdocDocument(false)
-  , mBuilder(nullptr)
-  , mViewSource(nullptr)
-  , mOpSink(aOpSink)
-  , mHandles(new nsIContent*[NS_HTML5_TREE_BUILDER_HANDLE_ARRAY_LENGTH])
-  , mHandlesUsed(0)
-  , mSpeculativeLoadStage(aStage)
-  , mBroken(NS_OK)
-  , mCurrentHtmlScriptIsAsyncOrDefer(false)
-  , mPreventScriptExecution(false)
-=======
     : mode(0),
       originalMode(0),
       framesetOk(false),
@@ -206,7 +79,6 @@ nsHtml5TreeBuilder::nsHtml5TreeBuilder(nsAHtml5TreeOpSink* aOpSink,
       mBroken(NS_OK),
       mCurrentHtmlScriptIsAsyncOrDefer(false),
       mPreventScriptExecution(false)
->>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mActive(false)
@@ -768,22 +640,8 @@ void nsHtml5TreeBuilder::appendCharacters(nsIContentHandle* aParent,
 
   if (mBuilder) {
     nsresult rv = nsHtml5TreeOperation::AppendText(
-<<<<<<< HEAD
-        aBuffer,  // XXX aStart always ignored???
-        aLength,
-        static_cast<nsIContent*>(
-            deepTreeSurrogateParent ? deepTreeSurrogateParent : aParent),
-        mBuilder);
-||||||| merged common ancestors
-      aBuffer, // XXX aStart always ignored???
-      aLength,
-      static_cast<nsIContent*>(deepTreeSurrogateParent ? deepTreeSurrogateParent
-                                                       : aParent),
-      mBuilder);
-=======
         aBuffer,  // XXX aStart always ignored???
         aLength, static_cast<nsIContent*>(aParent), mBuilder);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       MarkAsBrokenAndRequestSuspensionWithBuilder(rv);
     }
@@ -806,17 +664,7 @@ void nsHtml5TreeBuilder::appendCharacters(nsIContentHandle* aParent,
     MarkAsBrokenAndRequestSuspensionWithoutBuilder(NS_ERROR_OUT_OF_MEMORY);
     return;
   }
-<<<<<<< HEAD
-  treeOp->Init(eTreeOpAppendText, bufferCopy.release(), aLength,
-               deepTreeSurrogateParent ? deepTreeSurrogateParent : aParent);
-||||||| merged common ancestors
-  treeOp->Init(eTreeOpAppendText,
-               bufferCopy.release(),
-               aLength,
-               deepTreeSurrogateParent ? deepTreeSurrogateParent : aParent);
-=======
   treeOp->Init(eTreeOpAppendText, bufferCopy.release(), aLength, aParent);
->>>>>>> upstream-releases
 }
 
 void nsHtml5TreeBuilder::appendComment(nsIContentHandle* aParent,
@@ -1426,17 +1274,10 @@ void nsHtml5TreeBuilder::StartPlainTextViewSource(const nsAutoString& aTitle) {
 void nsHtml5TreeBuilder::StartPlainText() {
   MOZ_ASSERT(!mBuilder, "Must not view source with builder.");
   startTag(nsHtml5ElementName::ELT_LINK,
-<<<<<<< HEAD
-           nsHtml5PlainTextUtils::NewLinkAttributes(), false);
-||||||| merged common ancestors
-           nsHtml5PlainTextUtils::NewLinkAttributes(),
-           false);
-=======
            nsHtml5PlainTextUtils::NewLinkAttributes(), false);
 
   startTag(nsHtml5ElementName::ELT_BODY,
            nsHtml5PlainTextUtils::NewBodyAttributes(), false);
->>>>>>> upstream-releases
 
   StartPlainTextBody();
 }
@@ -1521,13 +1362,6 @@ void nsHtml5TreeBuilder::EnableViewSource(nsHtml5Highlighter* aHighlighter) {
   mViewSource = aHighlighter;
 }
 
-<<<<<<< HEAD
-void nsHtml5TreeBuilder::errStrayStartTag(nsAtom* aName) {
-||||||| merged common ancestors
-void
-nsHtml5TreeBuilder::errStrayStartTag(nsAtom* aName)
-{
-=======
 void nsHtml5TreeBuilder::errDeepTree() {
   if (MOZ_UNLIKELY(mViewSource)) {
     mViewSource->AddErrorToCurrentRun("errDeepTree");
@@ -1539,7 +1373,6 @@ void nsHtml5TreeBuilder::errDeepTree() {
 }
 
 void nsHtml5TreeBuilder::errStrayStartTag(nsAtom* aName) {
->>>>>>> upstream-releases
   if (MOZ_UNLIKELY(mViewSource)) {
     mViewSource->AddErrorToCurrentRun("errStrayStartTag2", aName);
   }

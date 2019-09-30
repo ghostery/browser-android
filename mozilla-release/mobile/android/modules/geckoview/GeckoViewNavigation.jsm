@@ -14,12 +14,7 @@ const { XPCOMUtils } = ChromeUtils.import(
 );
 
 XPCOMUtils.defineLazyModuleGetters(this, {
-<<<<<<< HEAD
-  Utils: "resource://gre/modules/sessionstore/Utils.jsm",
-||||||| merged common ancestors
-=======
   E10SUtils: "resource://gre/modules/E10SUtils.jsm",
->>>>>>> upstream-releases
   LoadURIDelegate: "resource://gre/modules/LoadURIDelegate.jsm",
   Services: "resource://gre/modules/Services.jsm",
 });
@@ -111,34 +106,6 @@ class GeckoViewNavigation extends GeckoViewModule {
           navFlags |= Ci.nsIWebNavigation.LOAD_FLAGS_ALLOW_POPUPS;
         }
 
-<<<<<<< HEAD
-        if (flags & (1 << 4)) {
-          navFlags |= Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CLASSIFIER;
-        }
-
-        if (this.settings.useMultiprocess) {
-          this.moduleManager.updateRemoteTypeForURI(uri);
-        }
-
-        let parsedUri;
-        let triggeringPrincipal;
-        try {
-            parsedUri = Services.io.newURI(uri);
-            if (parsedUri.schemeIs("about") || parsedUri.schemeIs("data") ||
-                parsedUri.schemeIs("file") || parsedUri.schemeIs("resource")) {
-              // Only allow privileged loading for certain URIs.
-              triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-            }
-        } catch (ignored) {
-        }
-        if (!triggeringPrincipal) {
-          triggeringPrincipal = Services.scriptSecurityManager.createNullPrincipal({});
-        }
-
-        this.browser.loadURI(parsedUri ? parsedUri.spec : uri, {
-||||||| merged common ancestors
-        this.browser.loadURI(uri, {
-=======
         if (flags & (1 << 4)) {
           navFlags |= Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CLASSIFIER;
         }
@@ -172,17 +139,9 @@ class GeckoViewNavigation extends GeckoViewModule {
         }
 
         this.browser.loadURI(parsedUri ? parsedUri.spec : uri, {
->>>>>>> upstream-releases
           flags: navFlags,
-<<<<<<< HEAD
-          referrerURI: referrer,
-          triggeringPrincipal,
-||||||| merged common ancestors
-          referrerURI: referrer,
-=======
           referrerInfo: createReferrerInfo(referrer),
           triggeringPrincipal,
->>>>>>> upstream-releases
         });
         break;
       case "GeckoView:Reload":
@@ -201,28 +160,6 @@ class GeckoViewNavigation extends GeckoViewModule {
 
   // Message manager event handler.
   receiveMessage(aMsg) {
-<<<<<<< HEAD
-    debug `receiveMessage: ${aMsg.name}`;
-
-    switch (aMsg.name) {
-      case "Browser:LoadURI":
-        // This is triggered by E10SUtils.redirectLoad(), and means
-        // we may need to change the remoteness of our browser and
-        // load the URI.
-        const { uri, flags, referrer, triggeringPrincipal } = aMsg.data.loadOptions;
-
-        this.moduleManager.updateRemoteTypeForURI(uri);
-
-        this.browser.loadURI(uri, {
-          flags,
-          referrerURI: referrer,
-          triggeringPrincipal: Utils.deserializePrincipal(triggeringPrincipal),
-        });
-        break;
-    }
-||||||| merged common ancestors
-    debug `receiveMessage: ${aMsg.name}`;
-=======
     debug`receiveMessage: ${aMsg.name}`;
 
     switch (aMsg.name) {
@@ -248,7 +185,6 @@ class GeckoViewNavigation extends GeckoViewModule {
         });
         break;
     }
->>>>>>> upstream-releases
   }
 
   waitAndSetupWindow(aSessionId, { opener, nextRemoteTabId }) {

@@ -650,18 +650,10 @@ add_task(async function testExtensionControlledDefaultSearch() {
     "#search should be in the URI for about:preferences"
   );
 
-<<<<<<< HEAD
-  let controlledContent = doc.getElementById("browserDefaultSearchExtensionContent");
-  let initialEngine = Services.search.defaultEngine;
-||||||| merged common ancestors
-  let controlledContent = doc.getElementById("browserDefaultSearchExtensionContent");
-  let initialEngine = Services.search.currentEngine;
-=======
   let controlledContent = doc.getElementById(
     "browserDefaultSearchExtensionContent"
   );
   let initialEngine = Services.search.defaultEngine;
->>>>>>> upstream-releases
 
   // Ensure the controlled content is hidden when not controlled.
   is(controlledContent.hidden, true, "The extension controlled row is hidden");
@@ -702,34 +694,15 @@ add_task(async function testExtensionControlledDefaultSearch() {
   setEngine(initialEngine);
   await waitForMessageHidden(controlledContent.id);
 
-<<<<<<< HEAD
-  is(initialEngine, Services.search.defaultEngine,
-     "default search engine is set back to default");
-||||||| merged common ancestors
-  is(initialEngine, Services.search.currentEngine,
-     "default search engine is set back to default");
-=======
   is(
     initialEngine,
     Services.search.defaultEngine,
     "default search engine is set back to default"
   );
->>>>>>> upstream-releases
   is(controlledContent.hidden, true, "The extension controlled row is hidden");
 
   // Setting the engine back to the extension's engine does not show the message.
   setEngine(extensionEngine);
-<<<<<<< HEAD
-
-  is(extensionEngine, Services.search.defaultEngine,
-     "default search engine is set back to extension");
-  is(controlledContent.hidden, true, "The extension controlled row is still hidden");
-||||||| merged common ancestors
-
-  is(extensionEngine, Services.search.currentEngine,
-     "default search engine is set back to extension");
-  is(controlledContent.hidden, true, "The extension controlled row is still hidden");
-=======
   // Wait a tick for the Search Service's promises to resolve.
   await new Promise(resolve => executeSoon(resolve));
 
@@ -743,7 +716,6 @@ add_task(async function testExtensionControlledDefaultSearch() {
     true,
     "The extension controlled row is still hidden"
   );
->>>>>>> upstream-releases
 
   // Set the engine to the initial one and verify an upgrade doesn't change it.
   setEngine(initialEngine);
@@ -760,15 +732,6 @@ add_task(async function testExtensionControlledDefaultSearch() {
 
   // Verify the extension is updated and search engine didn't change.
   is(addon.version, "2.0", "The updated addon has the expected version");
-<<<<<<< HEAD
-  is(controlledContent.hidden, true, "The extension controlled row is hidden after update");
-  is(initialEngine, Services.search.defaultEngine,
-     "default search engine is still the initial engine after update");
-||||||| merged common ancestors
-  is(controlledContent.hidden, true, "The extension controlled row is hidden after update");
-  is(initialEngine, Services.search.currentEngine,
-     "default search engine is still the initial engine after update");
-=======
   is(
     controlledContent.hidden,
     true,
@@ -779,7 +742,6 @@ add_task(async function testExtensionControlledDefaultSearch() {
     Services.search.defaultEngine,
     "default search engine is still the initial engine after update"
   );
->>>>>>> upstream-releases
 
   await originalExtension.unload();
   await updatedExtension.unload();
@@ -876,42 +838,15 @@ add_task(async function testExtensionControlledTrackingProtection() {
   const TP_PREF = "privacy.trackingprotection.enabled";
   const TP_DEFAULT = false;
   const EXTENSION_ID = "@set_tp";
-<<<<<<< HEAD
-  const CONTROLLED_LABEL_ID = "contentBlockingTrackingProtectionExtensionContentLabel";
-  const CONTROLLED_BUTTON_ID = "contentBlockingDisableTrackingProtectionExtension";
-  const DISABLE_BUTTON_ID = "contentBlockingDisableTrackingProtectionExtension";
-||||||| merged common ancestors
-  const CONTROLLED_LABEL_ID = {
-    old: "trackingProtectionExtensionContentLabel",
-    new: "contentBlockingTrackingProtectionExtensionContentLabel",
-  };
-  const CONTROLLED_BUTTON_ID = {
-    old: "trackingProtectionExtensionContentButton",
-    new: "contentBlockingDisableTrackingProtectionExtension",
-  };
-  const DISABLE_BUTTON_ID = {
-    old: "disableTrackingProtectionExtension",
-    new: "contentBlockingDisableTrackingProtectionExtension",
-  };
-=======
   const CONTROLLED_LABEL_ID =
     "contentBlockingTrackingProtectionExtensionContentLabel";
   const CONTROLLED_BUTTON_ID =
     "contentBlockingDisableTrackingProtectionExtension";
   const DISABLE_BUTTON_ID = "contentBlockingDisableTrackingProtectionExtension";
->>>>>>> upstream-releases
 
   let tpEnabledPref = () => Services.prefs.getBoolPref(TP_PREF);
 
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv(
-    {"set": [[TP_PREF, TP_DEFAULT]]});
-||||||| merged common ancestors
-  await SpecialPowers.pushPrefEnv(
-    {"set": [[TP_PREF, TP_DEFAULT], [CB_UI_PREF, true]]});
-=======
   await SpecialPowers.pushPrefEnv({ set: [[TP_PREF, TP_DEFAULT]] });
->>>>>>> upstream-releases
 
   function background() {
     browser.privacy.websites.trackingProtectionMode.set({ value: "always" });
@@ -935,18 +870,6 @@ add_task(async function testExtensionControlledTrackingProtection() {
     );
     if (isControlled) {
       let controlledDesc = controlledLabel.querySelector("description");
-<<<<<<< HEAD
-      Assert.deepEqual(doc.l10n.getAttributes(controlledDesc), {
-        id: "extension-controlled-websites-content-blocking-all-trackers",
-        args: {
-          name: "set_tp",
-||||||| merged common ancestors
-      Assert.deepEqual(doc.l10n.getAttributes(controlledDesc), {
-        id: cbUIEnabledPref() ? "extension-controlled-websites-content-blocking-all-trackers" :
-                                "extension-controlled-websites-tracking-protection-mode",
-        args: {
-          name: "set_tp",
-=======
       Assert.deepEqual(
         doc.l10n.getAttributes(controlledDesc),
         {
@@ -954,36 +877,16 @@ add_task(async function testExtensionControlledTrackingProtection() {
           args: {
             name: "set_tp",
           },
->>>>>>> upstream-releases
         },
         "The user is notified that an extension is controlling TP."
       );
     }
 
-<<<<<<< HEAD
-    is(doc.getElementById("trackingProtectionMenu").disabled,
-       isControlled,
-       "TP control is enabled.");
-||||||| merged common ancestors
-    if (uiType === "old") {
-      for (let element of doc.querySelectorAll("#trackingProtectionRadioGroup > radio")) {
-        is(element.disabled, isControlled, "TP controls are enabled.");
-      }
-      is(doc.querySelector("#trackingProtectionDesc > label").disabled,
-         isControlled,
-         "TP control label is enabled.");
-    } else {
-      is(doc.getElementById("trackingProtectionMenu").disabled,
-         isControlled,
-         "TP control is enabled.");
-    }
-=======
     is(
       doc.getElementById("trackingProtectionMenu").disabled,
       isControlled,
       "TP control is enabled."
     );
->>>>>>> upstream-releases
   }
 
   async function disableViaClick() {
@@ -1015,17 +918,9 @@ add_task(async function testExtensionControlledTrackingProtection() {
     await controlledMessageShown;
   }
 
-<<<<<<< HEAD
-  await openPreferencesViaOpenPreferencesAPI("panePrivacy", {leaveOpen: true});
-||||||| merged common ancestors
-  let uiType = "new";
-
-  await openPreferencesViaOpenPreferencesAPI("panePrivacy", {leaveOpen: true});
-=======
   await openPreferencesViaOpenPreferencesAPI("panePrivacy", {
     leaveOpen: true,
   });
->>>>>>> upstream-releases
   let doc = gBrowser.contentDocument;
 
   is(
@@ -1138,31 +1033,17 @@ add_task(async function testExtensionControlledProxyConfig() {
         let manualControlContainer = controlGroup.querySelector("grid");
         return {
           manualControls: [
-<<<<<<< HEAD
-            ...manualControlContainer.querySelectorAll("label:not([control=networkProxyNone])"),
-            ...manualControlContainer.querySelectorAll("textbox:not(#networkProxyNone)"),
-||||||| merged common ancestors
-            ...manualControlContainer.querySelectorAll("label"),
-            ...manualControlContainer.querySelectorAll("textbox"),
-=======
             ...manualControlContainer.querySelectorAll(
               "label[data-l10n-id]:not([control=networkProxyNone])"
             ),
             ...manualControlContainer.querySelectorAll("textbox"),
->>>>>>> upstream-releases
             ...manualControlContainer.querySelectorAll("checkbox"),
             ...doc.querySelectorAll("#networkProxySOCKSVersion > radio"),
           ],
           pacControls: [doc.getElementById("networkProxyAutoconfigURL")],
           otherControls: [
-<<<<<<< HEAD
-            manualControlContainer.querySelector("label[control=networkProxyNone]"),
-            doc.getElementById("networkProxyNone"),
-||||||| merged common ancestors
-=======
             doc.querySelector("label[control=networkProxyNone]"),
             doc.getElementById("networkProxyNone"),
->>>>>>> upstream-releases
             ...controlGroup.querySelectorAll(":scope > radio"),
             ...doc.querySelectorAll("#ConnectionsDialogPane > checkbox"),
           ],
@@ -1171,13 +1052,6 @@ add_task(async function testExtensionControlledProxyConfig() {
       let controlState = isControlled ? "disabled" : "enabled";
       let controls = getProxyControls();
       for (let element of controls.manualControls) {
-<<<<<<< HEAD
-        let disabled = isControlled || proxyType !== proxySvc.PROXYCONFIG_MANUAL;
-        is(element.disabled, disabled, `Manual proxy controls should be ${controlState} - control: ${element.outerHTML}.`);
-||||||| merged common ancestors
-        let disabled = isControlled || proxyType !== proxySvc.PROXYCONFIG_MANUAL;
-        is(element.disabled, disabled, `Proxy controls are ${controlState}.`);
-=======
         let disabled =
           isControlled || proxyType !== proxySvc.PROXYCONFIG_MANUAL;
         is(
@@ -1187,15 +1061,9 @@ add_task(async function testExtensionControlledProxyConfig() {
             element.outerHTML
           }.`
         );
->>>>>>> upstream-releases
       }
       for (let element of controls.pacControls) {
         let disabled = isControlled || proxyType !== proxySvc.PROXYCONFIG_PAC;
-<<<<<<< HEAD
-        is(element.disabled, disabled, `PAC proxy controls should be ${controlState} - control: ${element.outerHTML}.`);
-||||||| merged common ancestors
-        is(element.disabled, disabled, `Proxy controls are ${controlState}.`);
-=======
         is(
           element.disabled,
           disabled,
@@ -1203,14 +1071,8 @@ add_task(async function testExtensionControlledProxyConfig() {
             element.outerHTML
           }.`
         );
->>>>>>> upstream-releases
       }
       for (let element of controls.otherControls) {
-<<<<<<< HEAD
-        is(element.disabled, isControlled, `Other proxy controls should be ${controlState} - control: ${element.outerHTML}.`);
-||||||| merged common ancestors
-        is(element.disabled, isControlled, `Proxy controls are ${controlState}.`);
-=======
         is(
           element.disabled,
           isControlled,
@@ -1218,7 +1080,6 @@ add_task(async function testExtensionControlledProxyConfig() {
             element.outerHTML
           }.`
         );
->>>>>>> upstream-releases
       }
     } else {
       let elem = doc.getElementById(CONNECTION_SETTINGS_DESC_ID);

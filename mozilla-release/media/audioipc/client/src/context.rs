@@ -4,27 +4,8 @@
 // accompanying file LICENSE for details
 
 use assert_not_in_callback;
-<<<<<<< HEAD
-||||||| merged common ancestors
-use audioipc::{messages, ClientMessage, ServerMessage};
-use audioipc::{core, rpc};
-=======
 use audio_thread_priority::promote_current_thread_to_real_time;
->>>>>>> upstream-releases
 use audioipc::codec::LengthDelimitedCodec;
-<<<<<<< HEAD
-use audioipc::fd_passing::{framed_with_fds, FramedWithFds};
-use audioipc::{core, rpc};
-use audioipc::{messages, ClientMessage, ServerMessage};
-use cubeb_backend::{
-    ffi, Context, ContextOps, DeviceCollectionRef, DeviceId, DeviceType, Error, Ops, Result,
-    Stream, StreamParams, StreamParamsRef,
-};
-||||||| merged common ancestors
-use audioipc::fd_passing::{framed_with_fds, FramedWithFds};
-use cubeb_backend::{ffi, Context, ContextOps, DeviceCollectionRef, DeviceId, DeviceType, Error,
-                    Ops, Result, Stream, StreamParams, StreamParamsRef};
-=======
 use audioipc::platformhandle_passing::{framed_with_platformhandles, FramedWithPlatformHandles};
 use audioipc::{core, rpc};
 use audioipc::{messages, ClientMessage, ServerMessage};
@@ -32,18 +13,8 @@ use cubeb_backend::{
     ffi, Context, ContextOps, DeviceCollectionRef, DeviceId, DeviceType, Error, Ops, Result,
     Stream, StreamParams, StreamParamsRef,
 };
->>>>>>> upstream-releases
 use futures::Future;
-<<<<<<< HEAD
-use futures_cpupool::{self, CpuPool};
-use libc;
-||||||| merged common ancestors
-use futures_cpupool::{self, CpuPool};
-use libc;
-use std::{fmt, io, mem, ptr};
-=======
 use futures_cpupool::CpuPool;
->>>>>>> upstream-releases
 use std::ffi::{CStr, CString};
 use std::os::raw::c_void;
 use std::sync::mpsc;
@@ -51,19 +22,12 @@ use std::thread;
 use std::{fmt, io, mem, ptr};
 use stream;
 use tokio_core::reactor::{Handle, Remote};
-<<<<<<< HEAD
-use tokio_uds::UnixStream;
-use {ClientStream, CPUPOOL_INIT_PARAMS, G_SERVER_FD};
-||||||| merged common ancestors
-use tokio_uds::UnixStream;
-=======
 use {ClientStream, CpuPoolInitParams, CPUPOOL_INIT_PARAMS, G_SERVER_FD};
 cfg_if! {
     if #[cfg(target_os = "linux")] {
         use {G_THREAD_POOL};
     }
 }
->>>>>>> upstream-releases
 
 struct CubebClient;
 
@@ -184,35 +148,7 @@ impl ContextOps for ClientContext {
 
         let (tx_rpc, rx_rpc) = mpsc::channel();
 
-<<<<<<< HEAD
         let params = CPUPOOL_INIT_PARAMS.with(|p| p.replace(None).unwrap());
-
-        let thread_create_callback = params.thread_create_callback;
-
-        let register_thread = move || {
-            if let Some(func) = thread_create_callback {
-                let thr = thread::current();
-                let name = CString::new(thr.name().unwrap()).unwrap();
-                func(name.as_ptr());
-            }
-        };
-||||||| merged common ancestors
-        let params = CPUPOOL_INIT_PARAMS.with(|p| {
-            p.replace(None).unwrap()
-        });
-
-        let thread_create_callback = params.thread_create_callback;
-
-        let register_thread = move || {
-            if let Some(func) = thread_create_callback {
-                let thr = thread::current();
-                let name = CString::new(thr.name().unwrap()).unwrap();
-                func(name.as_ptr());
-            }
-        };
-=======
-        let params = CPUPOOL_INIT_PARAMS.with(|p| p.replace(None).unwrap());
->>>>>>> upstream-releases
 
         let core = t!(core::spawn_thread("AudioIPC Client RPC", move || {
             let handle = core::handle();
@@ -233,27 +169,11 @@ impl ContextOps for ClientContext {
 
         let rpc = t!(rx_rpc.recv());
 
-<<<<<<< HEAD
-        let cpupool = futures_cpupool::Builder::new()
-            .name_prefix("AudioIPC")
-            .after_start(register_thread)
-            .pool_size(params.pool_size)
-            .stack_size(params.stack_size)
-            .create();
-||||||| merged common ancestors
-        let cpupool = futures_cpupool::Builder::new()
-                .name_prefix("AudioIPC")
-                .after_start(register_thread)
-                .pool_size(params.pool_size)
-                .stack_size(params.stack_size)
-                .create();
-=======
         // Don't let errors bubble from here.  Later calls against this context
         // will return errors the caller expects to handle.
         let _ = send_recv!(rpc, ClientConnect(std::process::id()) => ClientConnected);
 
         let pool = get_thread_pool(params);
->>>>>>> upstream-releases
 
         let ctx = Box::new(ClientContext {
             _ops: &CLIENT_OPS as *const _,

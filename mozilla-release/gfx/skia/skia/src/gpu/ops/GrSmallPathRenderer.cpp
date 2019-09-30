@@ -230,19 +230,6 @@ public:
     using ShapeCache = SkTDynamicHash<ShapeData, ShapeDataKey>;
     using ShapeDataList = GrSmallPathRenderer::ShapeDataList;
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-                                          const GrShape& shape,
-                                          const SkMatrix& viewMatrix,
-                                          GrDrawOpAtlas* atlas,
-                                          ShapeCache* shapeCache,
-                                          ShapeDataList* shapeList,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint, const GrShape& shape,
-                                          const SkMatrix& viewMatrix, GrDrawOpAtlas* atlas,
-                                          ShapeCache* shapeCache, ShapeDataList* shapeList,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
                                           const GrShape& shape,
@@ -250,7 +237,6 @@ public:
                                           GrDrawOpAtlas* atlas,
                                           ShapeCache* shapeCache,
                                           ShapeDataList* shapeList,
->>>>>>> upstream-releases
                                           bool gammaCorrect,
                                           const GrUserStencilSettings* stencilSettings) {
         return Helper::FactoryHelper<SmallPathOp>(context, std::move(paint), shape, viewMatrix,
@@ -312,23 +298,11 @@ public:
 
     FixedFunctionFlags fixedFunctionFlags() const override { return fHelper.fixedFunctionFlags(); }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fShapes.front().fColor);
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped,
-                                            GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fShapes.front().fColor);
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
         return fHelper.finalizeProcessors(
                 caps, clip, fsaaType, GrProcessorAnalysisCoverage::kSingleChannel,
                 &fShapes.front().fColor);
->>>>>>> upstream-releases
     }
 
 private:
@@ -336,14 +310,7 @@ private:
         sk_sp<const GrBuffer> fVertexBuffer;
         sk_sp<const GrBuffer> fIndexBuffer;
         sk_sp<GrGeometryProcessor>   fGeometryProcessor;
-<<<<<<< HEAD
-        const GrPipeline* fPipeline;
         GrPipeline::FixedDynamicState* fFixedDynamicState;
-||||||| merged common ancestors
-        const GrPipeline* fPipeline;
-=======
-        GrPipeline::FixedDynamicState* fFixedDynamicState;
->>>>>>> upstream-releases
         int fVertexOffset;
         int fInstancesToFlush;
     };
@@ -351,38 +318,10 @@ private:
     void onPrepareDraws(Target* target) override {
         int instanceCount = fShapes.count();
 
-<<<<<<< HEAD
         static constexpr int kMaxTextures = GrDistanceFieldPathGeoProc::kMaxTextures;
         GR_STATIC_ASSERT(GrBitmapTextGeoProc::kMaxTextures == kMaxTextures);
 
-        auto pipe = fHelper.makePipeline(target, kMaxTextures);
-        int numActiveProxies = fAtlas->numActivePages();
-        const auto proxies = fAtlas->getProxies();
-        for (int i = 0; i < numActiveProxies; ++i) {
-            pipe.fFixedDynamicState->fPrimitiveProcessorTextures[i] = proxies[i].get();
-        }
-
-||||||| merged common ancestors
-=======
-        static constexpr int kMaxTextures = GrDistanceFieldPathGeoProc::kMaxTextures;
-        GR_STATIC_ASSERT(GrBitmapTextGeoProc::kMaxTextures == kMaxTextures);
-
->>>>>>> upstream-releases
         FlushInfo flushInfo;
-<<<<<<< HEAD
-        flushInfo.fPipeline = pipe.fPipeline;
-        flushInfo.fFixedDynamicState = pipe.fFixedDynamicState;
-
-        // Setup GrGeometryProcessor
-||||||| merged common ancestors
-        flushInfo.fPipeline = fHelper.makePipeline(target);
-        // Setup GrGeometryProcessor
-        GrDrawOpAtlas* atlas = fAtlas;
-        uint32_t atlasPageCount = atlas->pageCount();
-        if (!atlasPageCount) {
-            return;
-        }
-=======
         flushInfo.fFixedDynamicState = target->makeFixedDynamicState(kMaxTextures);
         int numActiveProxies = fAtlas->numActivePages();
         const auto proxies = fAtlas->getProxies();
@@ -391,7 +330,6 @@ private:
         }
 
         // Setup GrGeometryProcessor
->>>>>>> upstream-releases
         const SkMatrix& ctm = fShapes[0].fViewMatrix;
         if (fUsesDistanceField) {
             uint32_t flags = 0;
@@ -413,15 +351,8 @@ private:
                 matrix = &SkMatrix::I();
             }
             flushInfo.fGeometryProcessor = GrDistanceFieldPathGeoProc::Make(
-<<<<<<< HEAD
-                    *target->caps().shaderCaps(), *matrix, fAtlas->getProxies(),
-                    fAtlas->numActivePages(), GrSamplerState::ClampBilerp(), flags);
-||||||| merged common ancestors
-                    *matrix, atlas->getProxies(), GrSamplerState::ClampBilerp(), flags);
-=======
                     *target->caps().shaderCaps(), *matrix, fWideColor, fAtlas->getProxies(),
                     fAtlas->numActivePages(), GrSamplerState::ClampBilerp(), flags);
->>>>>>> upstream-releases
         } else {
             SkMatrix invert;
             if (fHelper.usesLocalCoords()) {
@@ -431,59 +362,23 @@ private:
             }
 
             flushInfo.fGeometryProcessor = GrBitmapTextGeoProc::Make(
-<<<<<<< HEAD
-                    *target->caps().shaderCaps(), this->color(), fAtlas->getProxies(),
-                    fAtlas->numActivePages(), GrSamplerState::ClampNearest(), kA8_GrMaskFormat,
-                    invert, false);
-||||||| merged common ancestors
-                    this->color(), atlas->getProxies(), GrSamplerState::ClampNearest(),
-                    kA8_GrMaskFormat, invert, fHelper.usesLocalCoords());
-=======
                     *target->caps().shaderCaps(), this->color(), fWideColor, fAtlas->getProxies(),
                     fAtlas->numActivePages(), GrSamplerState::ClampNearest(), kA8_GrMaskFormat,
                     invert, false);
->>>>>>> upstream-releases
         }
 
         // allocate vertices
-<<<<<<< HEAD
-        static constexpr size_t kVertexStride =
-                sizeof(SkPoint) + sizeof(GrColor) + 2 * sizeof(uint16_t);
-        SkASSERT(kVertexStride == flushInfo.fGeometryProcessor->debugOnly_vertexStride());
-
-        const GrBuffer* vertexBuffer;
-||||||| merged common ancestors
-        size_t vertexStride = flushInfo.fGeometryProcessor->getVertexStride();
-        SkASSERT(vertexStride == sizeof(SkPoint) + sizeof(GrColor) + 2*sizeof(uint16_t));
-
-        const GrBuffer* vertexBuffer;
-=======
         const size_t kVertexStride = flushInfo.fGeometryProcessor->vertexStride();
->>>>>>> upstream-releases
 
         // We need to make sure we don't overflow a 32 bit int when we request space in the
         // makeVertexSpace call below.
         if (instanceCount > SK_MaxS32 / kVerticesPerQuad) {
             return;
         }
-<<<<<<< HEAD
-        void* vertices = target->makeVertexSpace(kVertexStride,
-                                                 kVerticesPerQuad * instanceCount,
-                                                 &vertexBuffer,
-                                                 &flushInfo.fVertexOffset);
-        flushInfo.fVertexBuffer.reset(SkRef(vertexBuffer));
-||||||| merged common ancestors
-        void* vertices = target->makeVertexSpace(vertexStride,
-                                                 kVerticesPerQuad * instanceCount,
-                                                 &vertexBuffer,
-                                                 &flushInfo.fVertexOffset);
-        flushInfo.fVertexBuffer.reset(SkRef(vertexBuffer));
-=======
         GrVertexWriter vertices{target->makeVertexSpace(kVertexStride,
                                                         kVerticesPerQuad * instanceCount,
                                                         &flushInfo.fVertexBuffer,
                                                         &flushInfo.fVertexOffset)};
->>>>>>> upstream-releases
         flushInfo.fIndexBuffer = target->resourceProvider()->refQuadIndexBuffer();
         if (!vertices.fPtr || !flushInfo.fIndexBuffer) {
             SkDebugf("Could not allocate vertices\n");
@@ -590,28 +485,10 @@ private:
             }
 
             auto uploadTarget = target->deferredUploadTarget();
-<<<<<<< HEAD
-            fAtlas->setLastUseToken(shapeData->fID, uploadTarget->tokenTracker()->nextDrawToken());
-
-            this->writePathVertices(
-                    fAtlas, offset, args.fColor, kVertexStride, args.fViewMatrix, shapeData);
-            offset += kVerticesPerQuad * kVertexStride;
-||||||| merged common ancestors
-            atlas->setLastUseToken(shapeData->fID, uploadTarget->tokenTracker()->nextDrawToken());
-
-            this->writePathVertices(atlas,
-                                    offset,
-                                    args.fColor,
-                                    vertexStride,
-                                    args.fViewMatrix,
-                                    shapeData);
-            offset += kVerticesPerQuad * vertexStride;
-=======
             fAtlas->setLastUseToken(shapeData->fID, uploadTarget->tokenTracker()->nextDrawToken());
 
             this->writePathVertices(fAtlas, vertices, GrVertexColor(args.fColor, fWideColor),
                                     args.fViewMatrix, shapeData);
->>>>>>> upstream-releases
             flushInfo.fInstancesToFlush++;
         }
 
@@ -883,55 +760,13 @@ private:
         };
 
         if (fUsesDistanceField && !ctm.hasPerspective()) {
-<<<<<<< HEAD
-            GrQuad quad(translatedBounds, ctm);
-            intptr_t positionOffset = offset;
-            SkPoint* position = (SkPoint*)positionOffset;
-            *position = quad.point(0);
-            positionOffset += vertexStride;
-            position = (SkPoint*)positionOffset;
-            *position = quad.point(1);
-            positionOffset += vertexStride;
-            position = (SkPoint*)positionOffset;
-            *position = quad.point(2);
-            positionOffset += vertexStride;
-            position = (SkPoint*)positionOffset;
-            *position = quad.point(3);
-||||||| merged common ancestors
-            GrQuad quad;
-            quad.setFromMappedRect(translatedBounds, ctm);
-            intptr_t positionOffset = offset;
-            SkPoint* position = (SkPoint*)positionOffset;
-            *position = quad.point(0);
-            positionOffset += vertexStride;
-            position = (SkPoint*)positionOffset;
-            *position = quad.point(1);
-            positionOffset += vertexStride;
-            position = (SkPoint*)positionOffset;
-            *position = quad.point(2);
-            positionOffset += vertexStride;
-            position = (SkPoint*)positionOffset;
-            *position = quad.point(3);
-=======
             vertices.writeQuad(GrQuad::MakeFromRect(translatedBounds, ctm),
                                color,
                                texCoords);
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-            SkPointPriv::SetRectTriStrip(positions, translatedBounds, vertexStride);
-||||||| merged common ancestors
-            SkPointPriv::SetRectTriStrip(positions,
-                                         translatedBounds.left(),
-                                         translatedBounds.top(),
-                                         translatedBounds.right(),
-                                         translatedBounds.bottom(),
-                                         vertexStride);
-=======
             vertices.writeQuad(GrVertexWriter::TriStripFromRect(translatedBounds),
                                color,
                                texCoords);
->>>>>>> upstream-releases
         }
     }
 
@@ -957,29 +792,12 @@ private:
         if (flushInfo->fInstancesToFlush) {
             GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
             int maxInstancesPerDraw =
-<<<<<<< HEAD
-                static_cast<int>(flushInfo->fIndexBuffer->gpuMemorySize() / sizeof(uint16_t) / 6);
-            mesh->setIndexedPatterned(flushInfo->fIndexBuffer.get(), kIndicesPerQuad,
-                                      kVerticesPerQuad, flushInfo->fInstancesToFlush,
-                                      maxInstancesPerDraw);
-            mesh->setVertexData(flushInfo->fVertexBuffer.get(), flushInfo->fVertexOffset);
-            target->draw(flushInfo->fGeometryProcessor, flushInfo->fPipeline,
-                         flushInfo->fFixedDynamicState, mesh);
-||||||| merged common ancestors
-                static_cast<int>(flushInfo->fIndexBuffer->gpuMemorySize() / sizeof(uint16_t) / 6);
-            mesh.setIndexedPatterned(flushInfo->fIndexBuffer.get(), kIndicesPerQuad,
-                                     kVerticesPerQuad, flushInfo->fInstancesToFlush,
-                                     maxInstancesPerDraw);
-            mesh.setVertexData(flushInfo->fVertexBuffer.get(), flushInfo->fVertexOffset);
-            target->draw(flushInfo->fGeometryProcessor.get(), flushInfo->fPipeline, mesh);
-=======
                     static_cast<int>(flushInfo->fIndexBuffer->size() / sizeof(uint16_t) / 6);
             mesh->setIndexedPatterned(flushInfo->fIndexBuffer, kIndicesPerQuad, kVerticesPerQuad,
                                       flushInfo->fInstancesToFlush, maxInstancesPerDraw);
             mesh->setVertexData(flushInfo->fVertexBuffer, flushInfo->fVertexOffset);
             target->recordDraw(
                     flushInfo->fGeometryProcessor, mesh, 1, flushInfo->fFixedDynamicState, nullptr);
->>>>>>> upstream-releases
             flushInfo->fVertexOffset += kVerticesPerQuad * flushInfo->fInstancesToFlush;
             flushInfo->fInstancesToFlush = 0;
         }
@@ -1025,16 +843,8 @@ private:
         }
 
         fShapes.push_back_n(that->fShapes.count(), that->fShapes.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
-        return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
         fWideColor |= that->fWideColor;
         return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     bool fUsesDistanceField;
@@ -1064,17 +874,11 @@ bool GrSmallPathRenderer::onDrawPath(const DrawPathArgs& args) {
     SkASSERT(!args.fShape->isEmpty());
     SkASSERT(args.fShape->hasUnstyledKey());
     if (!fAtlas) {
-<<<<<<< HEAD
-        fAtlas = GrDrawOpAtlas::Make(args.fContext->contextPriv().proxyProvider(),
-||||||| merged common ancestors
-        fAtlas = GrDrawOpAtlas::Make(args.fContext,
-=======
         const GrBackendFormat format =
                 args.fContext->priv().caps()->getBackendFormatFromColorType(
                         kAlpha_8_SkColorType);
         fAtlas = GrDrawOpAtlas::Make(args.fContext->priv().proxyProvider(),
                                      format,
->>>>>>> upstream-releases
                                      kAlpha_8_GrPixelConfig,
                                      ATLAS_TEXTURE_WIDTH, ATLAS_TEXTURE_HEIGHT,
                                      PLOT_WIDTH, PLOT_HEIGHT,
@@ -1137,26 +941,6 @@ struct GrSmallPathRenderer::PathTestStruct {
     ShapeDataList fShapeList;
 };
 
-<<<<<<< HEAD
-std::unique_ptr<GrDrawOp> GrSmallPathRenderer::createOp_TestingOnly(
-                                                        GrContext* context,
-                                                        GrPaint&& paint,
-                                                        const GrShape& shape,
-                                                        const SkMatrix& viewMatrix,
-                                                        GrDrawOpAtlas* atlas,
-                                                        ShapeCache* shapeCache,
-                                                        ShapeDataList* shapeList,
-                                                        bool gammaCorrect,
-                                                        const GrUserStencilSettings* stencil) {
-
-    return GrSmallPathRenderer::SmallPathOp::Make(context, std::move(paint), shape, viewMatrix,
-                                                  atlas, shapeCache, shapeList, gammaCorrect,
-                                                  stencil);
-
-}
-
-||||||| merged common ancestors
-=======
 std::unique_ptr<GrDrawOp> GrSmallPathRenderer::createOp_TestingOnly(
                                                         GrRecordingContext* context,
                                                         GrPaint&& paint,
@@ -1174,7 +958,6 @@ std::unique_ptr<GrDrawOp> GrSmallPathRenderer::createOp_TestingOnly(
 
 }
 
->>>>>>> upstream-releases
 GR_DRAW_OP_TEST_DEFINE(SmallPathOp) {
     using PathTestStruct = GrSmallPathRenderer::PathTestStruct;
     static PathTestStruct gTestStruct;
@@ -1182,17 +965,10 @@ GR_DRAW_OP_TEST_DEFINE(SmallPathOp) {
     if (context->priv().contextID() != gTestStruct.fContextID) {
         gTestStruct.fContextID = context->priv().contextID();
         gTestStruct.reset();
-<<<<<<< HEAD
-        gTestStruct.fAtlas = GrDrawOpAtlas::Make(context->contextPriv().proxyProvider(),
-                                                 kAlpha_8_GrPixelConfig,
-||||||| merged common ancestors
-        gTestStruct.fAtlas = GrDrawOpAtlas::Make(context, kAlpha_8_GrPixelConfig,
-=======
         const GrBackendFormat format =
                 context->priv().caps()->getBackendFormatFromColorType(kAlpha_8_SkColorType);
         gTestStruct.fAtlas = GrDrawOpAtlas::Make(context->priv().proxyProvider(),
                                                  format, kAlpha_8_GrPixelConfig,
->>>>>>> upstream-releases
                                                  ATLAS_TEXTURE_WIDTH, ATLAS_TEXTURE_HEIGHT,
                                                  PLOT_WIDTH, PLOT_HEIGHT,
                                                  GrDrawOpAtlas::AllowMultitexturing::kYes,

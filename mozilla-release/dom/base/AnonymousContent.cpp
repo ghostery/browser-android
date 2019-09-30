@@ -197,13 +197,6 @@ void AnonymousContent::GetComputedStylePropertyValue(
   aRv = cs->GetPropertyValue(aPropertyName, aResult);
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 void AnonymousContent::GetTargetIdForEvent(Event& aEvent, DOMString& aResult) {
   nsCOMPtr<Element> el = do_QueryInterface(aEvent.GetOriginalTarget());
   if (el && el->IsInNativeAnonymousSubtree() && mContentNode->Contains(el)) {
@@ -216,4 +209,3 @@ void AnonymousContent::GetTargetIdForEvent(Event& aEvent, DOMString& aResult) {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

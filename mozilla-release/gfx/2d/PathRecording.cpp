@@ -17,21 +17,6 @@ namespace gfx {
 
 using namespace std;
 
-<<<<<<< HEAD
-void PathBuilderRecording::MoveTo(const Point &aPoint) {
-  PathOp op;
-  op.mType = PathOp::OP_MOVETO;
-  op.mP1 = aPoint;
-  mPathOps.push_back(op);
-||||||| merged common ancestors
-void
-PathBuilderRecording::MoveTo(const Point &aPoint)
-{
-  PathOp op;
-  op.mType = PathOp::OP_MOVETO;
-  op.mP1 = aPoint;
-  mPathOps.push_back(op);
-=======
 bool PathOps::StreamToSink(PathSink& aPathSink) const {
   if (mPathData.empty()) {
     return true;
@@ -167,117 +152,36 @@ size_t PathOps::NumberOfOps() const {
 
 void PathBuilderRecording::MoveTo(const Point& aPoint) {
   mPathOps.MoveTo(aPoint);
->>>>>>> upstream-releases
   mPathBuilder->MoveTo(aPoint);
 }
 
-<<<<<<< HEAD
-void PathBuilderRecording::LineTo(const Point &aPoint) {
-  PathOp op;
-  op.mType = PathOp::OP_LINETO;
-  op.mP1 = aPoint;
-  mPathOps.push_back(op);
-||||||| merged common ancestors
-void
-PathBuilderRecording::LineTo(const Point &aPoint)
-{
-  PathOp op;
-  op.mType = PathOp::OP_LINETO;
-  op.mP1 = aPoint;
-  mPathOps.push_back(op);
-=======
 void PathBuilderRecording::LineTo(const Point& aPoint) {
   mPathOps.LineTo(aPoint);
->>>>>>> upstream-releases
   mPathBuilder->LineTo(aPoint);
 }
 
-<<<<<<< HEAD
-void PathBuilderRecording::BezierTo(const Point &aCP1, const Point &aCP2,
-                                    const Point &aCP3) {
-  PathOp op;
-  op.mType = PathOp::OP_BEZIERTO;
-  op.mP1 = aCP1;
-  op.mP2 = aCP2;
-  op.mP3 = aCP3;
-  mPathOps.push_back(op);
-||||||| merged common ancestors
-void
-PathBuilderRecording::BezierTo(const Point &aCP1, const Point &aCP2, const Point &aCP3)
-{
-  PathOp op;
-  op.mType = PathOp::OP_BEZIERTO;
-  op.mP1 = aCP1;
-  op.mP2 = aCP2;
-  op.mP3 = aCP3;
-  mPathOps.push_back(op);
-=======
 void PathBuilderRecording::BezierTo(const Point& aCP1, const Point& aCP2,
                                     const Point& aCP3) {
   mPathOps.BezierTo(aCP1, aCP2, aCP3);
->>>>>>> upstream-releases
   mPathBuilder->BezierTo(aCP1, aCP2, aCP3);
 }
 
-<<<<<<< HEAD
-void PathBuilderRecording::QuadraticBezierTo(const Point &aCP1,
-                                             const Point &aCP2) {
-  PathOp op;
-  op.mType = PathOp::OP_QUADRATICBEZIERTO;
-  op.mP1 = aCP1;
-  op.mP2 = aCP2;
-  mPathOps.push_back(op);
-||||||| merged common ancestors
-void
-PathBuilderRecording::QuadraticBezierTo(const Point &aCP1, const Point &aCP2)
-{
-  PathOp op;
-  op.mType = PathOp::OP_QUADRATICBEZIERTO;
-  op.mP1 = aCP1;
-  op.mP2 = aCP2;
-  mPathOps.push_back(op);
-=======
 void PathBuilderRecording::QuadraticBezierTo(const Point& aCP1,
                                              const Point& aCP2) {
   mPathOps.QuadraticBezierTo(aCP1, aCP2);
->>>>>>> upstream-releases
   mPathBuilder->QuadraticBezierTo(aCP1, aCP2);
 }
 
-<<<<<<< HEAD
-void PathBuilderRecording::Close() {
-  PathOp op;
-  op.mType = PathOp::OP_CLOSE;
-  mPathOps.push_back(op);
-||||||| merged common ancestors
-void
-PathBuilderRecording::Close()
-{
-  PathOp op;
-  op.mType = PathOp::OP_CLOSE;
-  mPathOps.push_back(op);
-=======
 void PathBuilderRecording::Close() {
   mPathOps.Close();
->>>>>>> upstream-releases
   mPathBuilder->Close();
 }
 
-<<<<<<< HEAD
-Point PathBuilderRecording::CurrentPoint() const {
-  return mPathBuilder->CurrentPoint();
-||||||| merged common ancestors
-Point
-PathBuilderRecording::CurrentPoint() const
-{
-  return mPathBuilder->CurrentPoint();
-=======
 void PathBuilderRecording::Arc(const Point& aOrigin, float aRadius,
                                float aStartAngle, float aEndAngle,
                                bool aAntiClockwise) {
   mPathOps.Arc(aOrigin, aRadius, aStartAngle, aEndAngle, aAntiClockwise);
   mPathBuilder->Arc(aOrigin, aRadius, aStartAngle, aEndAngle, aAntiClockwise);
->>>>>>> upstream-releases
 }
 
 already_AddRefed<Path> PathBuilderRecording::Finish() {
@@ -296,67 +200,13 @@ PathRecording::~PathRecording() {
 already_AddRefed<PathBuilder> PathRecording::CopyToBuilder(
     FillRule aFillRule) const {
   RefPtr<PathBuilder> pathBuilder = mPath->CopyToBuilder(aFillRule);
-<<<<<<< HEAD
-  RefPtr<PathBuilderRecording> recording =
-      new PathBuilderRecording(pathBuilder, aFillRule);
-  recording->mPathOps = mPathOps;
-||||||| merged common ancestors
-  RefPtr<PathBuilderRecording> recording = new PathBuilderRecording(pathBuilder, aFillRule);
-  recording->mPathOps = mPathOps;
-=======
   RefPtr<PathBuilderRecording> recording =
       new PathBuilderRecording(pathBuilder, mPathOps, aFillRule);
   recording->SetCurrentPoint(mCurrentPoint);
   recording->SetBeginPoint(mBeginPoint);
->>>>>>> upstream-releases
   return recording.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<PathBuilder> PathRecording::TransformedCopyToBuilder(
-    const Matrix &aTransform, FillRule aFillRule) const {
-  RefPtr<PathBuilder> pathBuilder =
-      mPath->TransformedCopyToBuilder(aTransform, aFillRule);
-  RefPtr<PathBuilderRecording> recording =
-      new PathBuilderRecording(pathBuilder, aFillRule);
-  typedef std::vector<PathOp> pathOpVec;
-  for (pathOpVec::const_iterator iter = mPathOps.begin();
-       iter != mPathOps.end(); iter++) {
-    PathOp newPathOp;
-    newPathOp.mType = iter->mType;
-    if (sPointCount[newPathOp.mType] >= 1) {
-      newPathOp.mP1 = aTransform.TransformPoint(iter->mP1);
-    }
-    if (sPointCount[newPathOp.mType] >= 2) {
-      newPathOp.mP2 = aTransform.TransformPoint(iter->mP2);
-    }
-    if (sPointCount[newPathOp.mType] >= 3) {
-      newPathOp.mP3 = aTransform.TransformPoint(iter->mP3);
-    }
-    recording->mPathOps.push_back(newPathOp);
-  }
-||||||| merged common ancestors
-already_AddRefed<PathBuilder>
-PathRecording::TransformedCopyToBuilder(const Matrix &aTransform, FillRule aFillRule) const
-{
-  RefPtr<PathBuilder> pathBuilder = mPath->TransformedCopyToBuilder(aTransform, aFillRule);
-  RefPtr<PathBuilderRecording> recording = new PathBuilderRecording(pathBuilder, aFillRule);
-  typedef std::vector<PathOp> pathOpVec;
-  for (pathOpVec::const_iterator iter = mPathOps.begin(); iter != mPathOps.end(); iter++) {
-    PathOp newPathOp;
-    newPathOp.mType = iter->mType;
-    if (sPointCount[newPathOp.mType] >= 1) {
-      newPathOp.mP1 = aTransform.TransformPoint(iter->mP1);
-    }
-    if (sPointCount[newPathOp.mType] >= 2) {
-      newPathOp.mP2 = aTransform.TransformPoint(iter->mP2);
-    }
-    if (sPointCount[newPathOp.mType] >= 3) {
-      newPathOp.mP3 = aTransform.TransformPoint(iter->mP3);
-    }
-    recording->mPathOps.push_back(newPathOp);
-  }
-=======
 already_AddRefed<PathBuilder> PathRecording::TransformedCopyToBuilder(
     const Matrix& aTransform, FillRule aFillRule) const {
   RefPtr<PathBuilder> pathBuilder =
@@ -367,7 +217,6 @@ already_AddRefed<PathBuilder> PathRecording::TransformedCopyToBuilder(
   recording->SetCurrentPoint(aTransform.TransformPoint(mCurrentPoint));
   recording->SetBeginPoint(aTransform.TransformPoint(mBeginPoint));
 
->>>>>>> upstream-releases
   return recording.forget();
 }
 

@@ -51,35 +51,14 @@ class NS_NO_VTABLE nsPACManCallback : public nsISupports {
    *        before the query is evaluated again. At least one of pacString and
    *        newPACURL should be 0 length.
    */
-<<<<<<< HEAD
-  virtual void OnQueryComplete(nsresult status, const nsACString &pacString,
-                               const nsACString &newPACURL) = 0;
-||||||| merged common ancestors
-  virtual void OnQueryComplete(nsresult status,
-                               const nsACString &pacString,
-                               const nsACString &newPACURL) = 0;
-=======
   virtual void OnQueryComplete(nsresult status, const nsACString& pacString,
                                const nsACString& newPACURL) = 0;
->>>>>>> upstream-releases
 };
 
 class PendingPACQuery final : public Runnable,
-<<<<<<< HEAD
-                              public LinkedListElement<PendingPACQuery> {
- public:
-  PendingPACQuery(nsPACMan *pacMan, nsIURI *uri, nsPACManCallback *callback,
-||||||| merged common ancestors
-                              public LinkedListElement<PendingPACQuery>
-{
-public:
-  PendingPACQuery(nsPACMan *pacMan, nsIURI *uri,
-                  nsPACManCallback *callback,
-=======
                               public LinkedListElement<PendingPACQuery> {
  public:
   PendingPACQuery(nsPACMan* pacMan, nsIURI* uri, nsPACManCallback* callback,
->>>>>>> upstream-releases
                   bool mainThreadResponse);
 
   // can be called from either thread
@@ -93,16 +72,8 @@ public:
 
   NS_IMETHOD Run(void) override; /* Runnable */
 
-<<<<<<< HEAD
- private:
-  nsPACMan *mPACMan;  // weak reference
-||||||| merged common ancestors
-private:
-  nsPACMan                  *mPACMan;  // weak reference
-=======
  private:
   nsPACMan* mPACMan;  // weak reference
->>>>>>> upstream-releases
 
  private:
   RefPtr<nsPACManCallback> mCallback;
@@ -143,14 +114,7 @@ class nsPACMan final : public nsIStreamLoaderObserver,
    * @param mustCallbackOnMainThread
    *        If set to false the callback can be made from the PAC thread
    */
-<<<<<<< HEAD
-  nsresult AsyncGetProxyForURI(nsIURI *uri, nsPACManCallback *callback,
-||||||| merged common ancestors
-  nsresult AsyncGetProxyForURI(nsIURI *uri,
-                               nsPACManCallback *callback,
-=======
   nsresult AsyncGetProxyForURI(nsIURI* uri, nsPACManCallback* callback,
->>>>>>> upstream-releases
                                bool mustCallbackOnMainThread);
 
   /**
@@ -177,14 +141,7 @@ class nsPACMan final : public nsIStreamLoaderObserver,
    * should bypass the proxy (to fetch the pac file) or if the pac
    * configuration has changed (and we should reload the pac file)
    */
-<<<<<<< HEAD
-  bool IsPACURI(const nsACString &spec) {
-||||||| merged common ancestors
-  bool IsPACURI(const nsACString &spec)
-  {
-=======
   bool IsPACURI(const nsACString& spec) {
->>>>>>> upstream-releases
     return mPACURISpec.Equals(spec) || mPACURIRedirectSpec.Equals(spec) ||
            mNormalPACURISpec.Equals(spec);
   }

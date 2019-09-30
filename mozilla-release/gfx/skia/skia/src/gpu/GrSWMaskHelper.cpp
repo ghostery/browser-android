@@ -7,18 +7,9 @@
 
 #include "GrSWMaskHelper.h"
 
-<<<<<<< HEAD
-#include "GrContext.h"
-#include "GrContextPriv.h"
-#include "GrProxyProvider.h"
-||||||| merged common ancestors
-#include "GrContext.h"
-#include "GrContextPriv.h"
-=======
 #include "GrProxyProvider.h"
 #include "GrRecordingContext.h"
 #include "GrRecordingContextPriv.h"
->>>>>>> upstream-releases
 #include "GrShape.h"
 #include "GrSurfaceContext.h"
 #include "GrTextureProxy.h"
@@ -100,28 +91,6 @@ bool GrSWMaskHelper::init(const SkIRect& resultBounds) {
     return true;
 }
 
-<<<<<<< HEAD
-sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrContext* context, SkBackingFit fit) {
-    SkImageInfo ii = SkImageInfo::MakeA8(fPixels->width(), fPixels->height());
-    size_t rowBytes = fPixels->rowBytes();
-
-    sk_sp<SkData> data = fPixels->detachPixelsAsData();
-    if (!data) {
-||||||| merged common ancestors
-sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrContext* context, SkBackingFit fit) {
-    GrSurfaceDesc desc;
-    desc.fOrigin = kTopLeft_GrSurfaceOrigin;
-    desc.fWidth = fPixels->width();
-    desc.fHeight = fPixels->height();
-    desc.fConfig = kAlpha_8_GrPixelConfig;
-
-    sk_sp<GrSurfaceContext> sContext = context->contextPriv().makeDeferredSurfaceContext(
-                                                                                desc,
-                                                                                GrMipMapped::kNo,
-                                                                                fit,
-                                                                                SkBudgeted::kYes);
-    if (!sContext || !sContext->asTextureProxy()) {
-=======
 sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrRecordingContext* context,
                                                      SkBackingFit fit) {
     SkImageInfo ii = SkImageInfo::MakeA8(fPixels->width(), fPixels->height());
@@ -129,7 +98,6 @@ sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrRecordingContext* context
 
     sk_sp<SkData> data = fPixels->detachPixelsAsData();
     if (!data) {
->>>>>>> upstream-releases
         return nullptr;
     }
 
@@ -138,21 +106,6 @@ sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrRecordingContext* context
         return nullptr;
     }
 
-<<<<<<< HEAD
-    // TODO: http://skbug.com/8422: Although this fixes http://skbug.com/8351, it seems like these
-    // should just participate in the normal allocation process and not need the pending IO flag.
-    auto surfaceFlags = GrInternalSurfaceFlags::kNone;
-    if (!context->contextPriv().resourceProvider()) {
-        // In DDL mode, this texture proxy will be instantiated at flush time, therfore it cannot
-        // have pending IO.
-        surfaceFlags |= GrInternalSurfaceFlags::kNoPendingIO;
-    }
-
-    return context->contextPriv().proxyProvider()->createTextureProxy(
-            std::move(img), kNone_GrSurfaceFlags, 1, SkBudgeted::kYes, fit, surfaceFlags);
-||||||| merged common ancestors
-    return sContext->asTextureProxyRef();
-=======
     // TODO: http://skbug.com/8422: Although this fixes http://skbug.com/8351, it seems like these
     // should just participate in the normal allocation process and not need the pending IO flag.
     auto surfaceFlags = GrInternalSurfaceFlags::kNone;
@@ -173,5 +126,4 @@ sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrRecordingContext* context
 #endif
     return context->priv().proxyProvider()->createTextureProxy(
             std::move(img), clearFlag, 1, SkBudgeted::kYes, fit, surfaceFlags);
->>>>>>> upstream-releases
 }

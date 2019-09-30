@@ -51,18 +51,9 @@ add_task(async function test_loaded_scripts() {
     "No extra APIs should be loaded at startup for a simple extension"
   );
 
-<<<<<<< HEAD
-  let loadedModules = Cu.loadedModules
-                        .filter(url => url.startsWith("resource://gre/modules/Extension"));
-||||||| merged common ancestors
-  const loader = Cc["@mozilla.org/moz/jsloader;1"].getService(Ci.xpcIJSModuleLoader);
-  let loadedModules = loader.loadedModules()
-                            .filter(url => url.startsWith("resource://gre/modules/Extension"));
-=======
   let loadedModules = Cu.loadedModules.filter(url =>
     url.startsWith("resource://gre/modules/Extension")
   );
->>>>>>> upstream-releases
 
   deepEqual(
     loadedModules.sort(),

@@ -67,44 +67,6 @@ enum class ParseGoal : uint8_t { Script, Module };
 
 // A detailed kind used for tracking declarations in the Parser. Used for
 // specific early error semantics and better error messages.
-<<<<<<< HEAD
-enum class DeclarationKind : uint8_t {
-  PositionalFormalParameter,
-  FormalParameter,
-  CoverArrowParameter,
-  Var,
-  ForOfVar,
-  Let,
-  Const,
-  Class,  // Handled as same as `let` after parsing.
-  Import,
-  BodyLevelFunction,
-  ModuleBodyLevelFunction,
-  LexicalFunction,
-  SloppyLexicalFunction,
-  VarForAnnexBLexicalFunction,
-  SimpleCatchParameter,
-  CatchParameter
-||||||| merged common ancestors
-enum class DeclarationKind : uint8_t
-{
-    PositionalFormalParameter,
-    FormalParameter,
-    CoverArrowParameter,
-    Var,
-    ForOfVar,
-    Let,
-    Const,
-    Class, // Handled as same as `let` after parsing.
-    Import,
-    BodyLevelFunction,
-    ModuleBodyLevelFunction,
-    LexicalFunction,
-    SloppyLexicalFunction,
-    VarForAnnexBLexicalFunction,
-    SimpleCatchParameter,
-    CatchParameter
-=======
 enum class DeclarationKind : uint8_t {
   PositionalFormalParameter,
   FormalParameter,
@@ -121,74 +83,8 @@ enum class DeclarationKind : uint8_t {
   VarForAnnexBLexicalFunction,
   SimpleCatchParameter,
   CatchParameter
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-static inline BindingKind DeclarationKindToBindingKind(DeclarationKind kind) {
-  switch (kind) {
-    case DeclarationKind::PositionalFormalParameter:
-    case DeclarationKind::FormalParameter:
-    case DeclarationKind::CoverArrowParameter:
-      return BindingKind::FormalParameter;
-
-    case DeclarationKind::Var:
-    case DeclarationKind::BodyLevelFunction:
-    case DeclarationKind::ModuleBodyLevelFunction:
-    case DeclarationKind::VarForAnnexBLexicalFunction:
-    case DeclarationKind::ForOfVar:
-      return BindingKind::Var;
-
-    case DeclarationKind::Let:
-    case DeclarationKind::Class:
-    case DeclarationKind::LexicalFunction:
-    case DeclarationKind::SloppyLexicalFunction:
-    case DeclarationKind::SimpleCatchParameter:
-    case DeclarationKind::CatchParameter:
-      return BindingKind::Let;
-
-    case DeclarationKind::Const:
-      return BindingKind::Const;
-
-    case DeclarationKind::Import:
-      return BindingKind::Import;
-  }
-
-  MOZ_CRASH("Bad DeclarationKind");
-||||||| merged common ancestors
-static inline BindingKind
-DeclarationKindToBindingKind(DeclarationKind kind)
-{
-    switch (kind) {
-      case DeclarationKind::PositionalFormalParameter:
-      case DeclarationKind::FormalParameter:
-      case DeclarationKind::CoverArrowParameter:
-        return BindingKind::FormalParameter;
-
-      case DeclarationKind::Var:
-      case DeclarationKind::BodyLevelFunction:
-      case DeclarationKind::ModuleBodyLevelFunction:
-      case DeclarationKind::VarForAnnexBLexicalFunction:
-      case DeclarationKind::ForOfVar:
-        return BindingKind::Var;
-
-      case DeclarationKind::Let:
-      case DeclarationKind::Class:
-      case DeclarationKind::LexicalFunction:
-      case DeclarationKind::SloppyLexicalFunction:
-      case DeclarationKind::SimpleCatchParameter:
-      case DeclarationKind::CatchParameter:
-        return BindingKind::Let;
-
-      case DeclarationKind::Const:
-        return BindingKind::Const;
-
-      case DeclarationKind::Import:
-        return BindingKind::Import;
-    }
-
-    MOZ_CRASH("Bad DeclarationKind");
-=======
 static inline BindingKind DeclarationKindToBindingKind(DeclarationKind kind) {
   switch (kind) {
     case DeclarationKind::PositionalFormalParameter:
@@ -218,7 +114,6 @@ static inline BindingKind DeclarationKindToBindingKind(DeclarationKind kind) {
   }
 
   MOZ_CRASH("Bad DeclarationKind");
->>>>>>> upstream-releases
 }
 
 static inline bool DeclarationKindIsLexical(DeclarationKind kind) {

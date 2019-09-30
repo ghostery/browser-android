@@ -21,21 +21,10 @@ enum MediaDrmSessionType {
 };
 
 #ifndef MDRMN_LOG
-<<<<<<< HEAD
-LogModule* GetMDRMNLog();
-#define MDRMN_LOG(x, ...)                          \
-  MOZ_LOG(GetMDRMNLog(), mozilla::LogLevel::Debug, \
-          ("[MediaDrmProxySupport][%s]" x, __FUNCTION__, ##__VA_ARGS__))
-||||||| merged common ancestors
-  LogModule* GetMDRMNLog();
-  #define MDRMN_LOG(x, ...) MOZ_LOG(GetMDRMNLog(), mozilla::LogLevel::Debug,\
-    ("[MediaDrmProxySupport][%s]" x, __FUNCTION__, ##__VA_ARGS__))
-=======
 LogModule* GetMDRMNLog();
 #  define MDRMN_LOG(x, ...)                          \
     MOZ_LOG(GetMDRMNLog(), mozilla::LogLevel::Debug, \
             ("[MediaDrmProxySupport][%s]" x, __FUNCTION__, ##__VA_ARGS__))
->>>>>>> upstream-releases
 #endif
 
 class MediaDrmProxySupport final {

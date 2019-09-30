@@ -135,17 +135,8 @@ AudioConfig::ChannelLayout::SMPTEDefault(const ChannelLayout& aChannelLayout) {
   return SMPTEDefault(aChannelLayout.Map());
 }
 
-<<<<<<< HEAD
-/* static */ ChannelLayout AudioConfig::ChannelLayout::SMPTEDefault(
-    ChannelMap aMap) {
-||||||| merged common ancestors
-/* static */ ChannelLayout
-AudioConfig::ChannelLayout::SMPTEDefault(ChannelMap aMap)
-{
-=======
 /* static */
 ChannelLayout AudioConfig::ChannelLayout::SMPTEDefault(ChannelMap aMap) {
->>>>>>> upstream-releases
   // First handle the most common cases.
   switch (aMap) {
     case LMONO_MAP:
@@ -281,17 +272,8 @@ bool AudioConfig::ChannelLayout::MappingTable(const ChannelLayout& aOther,
       return "unknown";
   }
 }
-<<<<<<< HEAD
-/* static */ uint32_t AudioConfig::SampleSize(
-    AudioConfig::SampleFormat aFormat) {
-||||||| merged common ancestors
-/* static */ uint32_t
-AudioConfig::SampleSize(AudioConfig::SampleFormat aFormat)
-{
-=======
 /* static */
 uint32_t AudioConfig::SampleSize(AudioConfig::SampleFormat aFormat) {
->>>>>>> upstream-releases
   switch (aFormat) {
     case FORMAT_U8:
       return 1;
@@ -311,17 +293,8 @@ uint32_t AudioConfig::SampleSize(AudioConfig::SampleFormat aFormat) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t AudioConfig::FormatToBits(
-    AudioConfig::SampleFormat aFormat) {
-||||||| merged common ancestors
-/* static */ uint32_t
-AudioConfig::FormatToBits(AudioConfig::SampleFormat aFormat)
-{
-=======
 /* static */
 uint32_t AudioConfig::FormatToBits(AudioConfig::SampleFormat aFormat) {
->>>>>>> upstream-releases
   switch (aFormat) {
     case FORMAT_U8:
       return 8;

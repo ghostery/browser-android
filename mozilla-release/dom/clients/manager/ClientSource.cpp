@@ -76,19 +76,8 @@ nsresult ClientSource::SnapshotWindowState(ClientState* aStateOut) {
   nsPIDOMWindowInner* window = GetInnerWindow();
   if (!window || !window->IsCurrentInnerWindow() ||
       !window->HasActiveDocument()) {
-<<<<<<< HEAD
-    *aStateOut = ClientState(
-        ClientWindowState(VisibilityState::Hidden, TimeStamp(),
-                          nsContentUtils::StorageAccess::eDeny, false));
-||||||| merged common ancestors
-    *aStateOut = ClientState(ClientWindowState(VisibilityState::Hidden,
-                                               TimeStamp(),
-                                               nsContentUtils::StorageAccess::eDeny,
-                                               false));
-=======
     *aStateOut = ClientState(ClientWindowState(
         VisibilityState::Hidden, TimeStamp(), StorageAccess::eDeny, false));
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -104,15 +93,7 @@ nsresult ClientSource::SnapshotWindowState(ClientState* aStateOut) {
     return rv.StealNSResult();
   }
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess storage =
-      nsContentUtils::StorageAllowedForDocument(doc);
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess storage =
-    nsContentUtils::StorageAllowedForDocument(doc);
-=======
   StorageAccess storage = StorageAllowedForDocument(doc);
->>>>>>> upstream-releases
 
   *aStateOut = ClientState(ClientWindowState(
       doc->VisibilityState(), doc->LastFocusTime(), storage, focused));
@@ -280,23 +261,10 @@ nsresult ClientSource::WindowExecutionReady(nsPIDOMWindowInner* aInnerWindow) {
   // continue to inherit the SW as well.  We need to avoid triggering the
   // assertion in this corner case.
   if (mController.isSome()) {
-<<<<<<< HEAD
-    MOZ_DIAGNOSTIC_ASSERT(
-        spec.LowerCaseEqualsLiteral("about:blank") ||
-        StringBeginsWith(spec, NS_LITERAL_CSTRING("blob:")) ||
-        nsContentUtils::StorageAllowedForWindow(aInnerWindow) ==
-            nsContentUtils::StorageAccess::eAllow);
-||||||| merged common ancestors
-    MOZ_DIAGNOSTIC_ASSERT(spec.LowerCaseEqualsLiteral("about:blank") ||
-                          StringBeginsWith(spec, NS_LITERAL_CSTRING("blob:")) ||
-                          nsContentUtils::StorageAllowedForWindow(aInnerWindow) ==
-                          nsContentUtils::StorageAccess::eAllow);
-=======
     MOZ_DIAGNOSTIC_ASSERT(spec.LowerCaseEqualsLiteral("about:blank") ||
                           StringBeginsWith(spec, NS_LITERAL_CSTRING("blob:")) ||
                           StorageAllowedForWindow(aInnerWindow) ==
                               StorageAccess::eAllow);
->>>>>>> upstream-releases
   }
 
   nsPIDOMWindowOuter* outer = aInnerWindow->GetOuterWindow();
@@ -411,23 +379,10 @@ void ClientSource::SetController(
   // service workers from their parent.  This basically means blob: URLs
   // and about:blank windows.
   if (GetInnerWindow()) {
-<<<<<<< HEAD
-    MOZ_DIAGNOSTIC_ASSERT(
-        Info().URL().LowerCaseEqualsLiteral("about:blank") ||
-        StringBeginsWith(Info().URL(), NS_LITERAL_CSTRING("blob:")) ||
-        nsContentUtils::StorageAllowedForWindow(GetInnerWindow()) ==
-            nsContentUtils::StorageAccess::eAllow);
-||||||| merged common ancestors
-    MOZ_DIAGNOSTIC_ASSERT(Info().URL().LowerCaseEqualsLiteral("about:blank") ||
-                          StringBeginsWith(Info().URL(), NS_LITERAL_CSTRING("blob:")) ||
-                          nsContentUtils::StorageAllowedForWindow(GetInnerWindow()) ==
-                          nsContentUtils::StorageAccess::eAllow);
-=======
     MOZ_DIAGNOSTIC_ASSERT(
         Info().URL().LowerCaseEqualsLiteral("about:blank") ||
         StringBeginsWith(Info().URL(), NS_LITERAL_CSTRING("blob:")) ||
         StorageAllowedForWindow(GetInnerWindow()) == StorageAccess::eAllow);
->>>>>>> upstream-releases
   } else if (GetWorkerPrivate()) {
     MOZ_DIAGNOSTIC_ASSERT(GetWorkerPrivate()->StorageAccess() >
                               StorageAccess::ePrivateBrowsing ||
@@ -478,23 +433,10 @@ RefPtr<ClientOpPromise> ClientSource::Control(
   bool controlAllowed = true;
   if (GetInnerWindow()) {
     // Local URL windows and windows with access to storage can be controlled.
-<<<<<<< HEAD
-    controlAllowed =
-        Info().URL().LowerCaseEqualsLiteral("about:blank") ||
-        StringBeginsWith(Info().URL(), NS_LITERAL_CSTRING("blob:")) ||
-        nsContentUtils::StorageAllowedForWindow(GetInnerWindow()) ==
-            nsContentUtils::StorageAccess::eAllow;
-||||||| merged common ancestors
-    controlAllowed = Info().URL().LowerCaseEqualsLiteral("about:blank") ||
-                     StringBeginsWith(Info().URL(), NS_LITERAL_CSTRING("blob:")) ||
-                     nsContentUtils::StorageAllowedForWindow(GetInnerWindow()) ==
-                      nsContentUtils::StorageAccess::eAllow;
-=======
     controlAllowed =
         Info().URL().LowerCaseEqualsLiteral("about:blank") ||
         StringBeginsWith(Info().URL(), NS_LITERAL_CSTRING("blob:")) ||
         StorageAllowedForWindow(GetInnerWindow()) == StorageAccess::eAllow;
->>>>>>> upstream-releases
   } else if (GetWorkerPrivate()) {
     // Local URL workers and workers with access to storage cna be controlled.
     controlAllowed =
@@ -612,14 +554,7 @@ RefPtr<ClientOpPromise> ClientSource::PostMessage(
     return ClientOpPromise::CreateAndResolve(NS_OK, __func__);
   }
 
-<<<<<<< HEAD
-  return ClientOpPromise::CreateAndReject(NS_ERROR_NOT_IMPLEMENTED, __func__)
-      .forget();
-||||||| merged common ancestors
-  return ClientOpPromise::CreateAndReject(NS_ERROR_NOT_IMPLEMENTED, __func__).forget();
-=======
   return ClientOpPromise::CreateAndReject(NS_ERROR_NOT_IMPLEMENTED, __func__);
->>>>>>> upstream-releases
 }
 
 RefPtr<ClientOpPromise> ClientSource::Claim(const ClientClaimArgs& aArgs) {
@@ -668,28 +603,6 @@ RefPtr<ClientOpPromise> ClientSource::Claim(const ClientClaimArgs& aArgs) {
 
   auto holder = MakeRefPtr<DOMMozPromiseRequestHolder<GenericPromise>>(global);
 
-<<<<<<< HEAD
-  innerPromise
-      ->Then(mEventTarget, __func__,
-             [outerPromise, holder](bool aResult) {
-               holder->Complete();
-               outerPromise->Resolve(NS_OK, __func__);
-             },
-             [outerPromise, holder](nsresult aResult) {
-               holder->Complete();
-               outerPromise->Reject(aResult, __func__);
-             })
-      ->Track(*holder);
-||||||| merged common ancestors
-  innerPromise->Then(mEventTarget, __func__,
-    [outerPromise, holder] (bool aResult) {
-      holder->Complete();
-      outerPromise->Resolve(NS_OK, __func__);
-    }, [outerPromise, holder] (nsresult aResult) {
-      holder->Complete();
-      outerPromise->Reject(aResult, __func__);
-    })->Track(*holder);
-=======
   innerPromise
       ->Then(
           mEventTarget, __func__,
@@ -702,44 +615,20 @@ RefPtr<ClientOpPromise> ClientSource::Claim(const ClientClaimArgs& aArgs) {
             outerPromise->Reject(aResult, __func__);
           })
       ->Track(*holder);
->>>>>>> upstream-releases
 
   return outerPromise.forget();
 }
 
-<<<<<<< HEAD
 RefPtr<ClientOpPromise> ClientSource::GetInfoAndState(
     const ClientGetInfoAndStateArgs& aArgs) {
-  RefPtr<ClientOpPromise> ref;
-
-||||||| merged common ancestors
-RefPtr<ClientOpPromise>
-ClientSource::GetInfoAndState(const ClientGetInfoAndStateArgs& aArgs)
-{
-  RefPtr<ClientOpPromise> ref;
-
-=======
-RefPtr<ClientOpPromise> ClientSource::GetInfoAndState(
-    const ClientGetInfoAndStateArgs& aArgs) {
->>>>>>> upstream-releases
   ClientState state;
   nsresult rv = SnapshotState(&state);
   if (NS_FAILED(rv)) {
     return ClientOpPromise::CreateAndReject(rv, __func__);
   }
 
-<<<<<<< HEAD
-  ref = ClientOpPromise::CreateAndResolve(
-      ClientInfoAndState(mClientInfo.ToIPC(), state.ToIPC()), __func__);
-  return ref.forget();
-||||||| merged common ancestors
-  ref = ClientOpPromise::CreateAndResolve(ClientInfoAndState(mClientInfo.ToIPC(),
-                                                             state.ToIPC()), __func__);
-  return ref.forget();
-=======
   return ClientOpPromise::CreateAndResolve(
       ClientInfoAndState(mClientInfo.ToIPC(), state.ToIPC()), __func__);
->>>>>>> upstream-releases
 }
 
 nsresult ClientSource::SnapshotState(ClientState* aStateOut) {
@@ -760,37 +649,10 @@ nsresult ClientSource::SnapshotState(ClientState* aStateOut) {
     return NS_ERROR_DOM_INVALID_STATE_ERR;
   }
 
-<<<<<<< HEAD
-  // Workers only keep a boolean for storage access at the moment.
-  // Map this back to eAllow or eDeny for now.
-  nsContentUtils::StorageAccess storage =
-      workerPrivate->IsStorageAllowed() ? nsContentUtils::StorageAccess::eAllow
-                                        : nsContentUtils::StorageAccess::eDeny;
-
-  *aStateOut = ClientState(ClientWorkerState(storage));
-||||||| merged common ancestors
-  // Workers only keep a boolean for storage access at the moment.
-  // Map this back to eAllow or eDeny for now.
-  nsContentUtils::StorageAccess storage =
-    workerPrivate->IsStorageAllowed() ? nsContentUtils::StorageAccess::eAllow
-                                      : nsContentUtils::StorageAccess::eDeny;
-
-  *aStateOut = ClientState(ClientWorkerState(storage));
-=======
   *aStateOut = ClientState(ClientWorkerState(workerPrivate->StorageAccess()));
->>>>>>> upstream-releases
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsISerialEventTarget* ClientSource::EventTarget() const { return mEventTarget; }
-||||||| merged common ancestors
-nsISerialEventTarget*
-ClientSource::EventTarget() const
-{
-  return mEventTarget;
-}
-=======
 nsISerialEventTarget* ClientSource::EventTarget() const { return mEventTarget; }
 
 void ClientSource::SetCsp(nsIContentSecurityPolicy* aCsp) {
@@ -825,18 +687,7 @@ void ClientSource::SetCspInfo(const CSPInfo& aCSPInfo) {
   NS_ASSERT_OWNINGTHREAD(ClientSource);
   mClientInfo.SetCspInfo(aCSPInfo);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void ClientSource::Traverse(nsCycleCollectionTraversalCallback& aCallback,
-                            const char* aName, uint32_t aFlags) {
-||||||| merged common ancestors
-void
-ClientSource::Traverse(nsCycleCollectionTraversalCallback& aCallback,
-                       const char* aName,
-                       uint32_t aFlags)
-{
-=======
 const Maybe<mozilla::ipc::CSPInfo>& ClientSource::GetCspInfo() {
   NS_ASSERT_OWNINGTHREAD(ClientSource);
   return mClientInfo.GetCspInfo();
@@ -844,7 +695,6 @@ const Maybe<mozilla::ipc::CSPInfo>& ClientSource::GetCspInfo() {
 
 void ClientSource::Traverse(nsCycleCollectionTraversalCallback& aCallback,
                             const char* aName, uint32_t aFlags) {
->>>>>>> upstream-releases
   if (mOwner.is<RefPtr<nsPIDOMWindowInner>>()) {
     ImplCycleCollectionTraverse(
         aCallback, mOwner.as<RefPtr<nsPIDOMWindowInner>>(), aName, aFlags);

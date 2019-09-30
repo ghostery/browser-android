@@ -8,12 +8,7 @@
 #define mozilla_LaunchUnelevated_h
 
 #include "LauncherProcessWin.h"
-<<<<<<< HEAD
-#include "LauncherResult.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/LauncherResult.h"
->>>>>>> upstream-releases
 #include "mozilla/Maybe.h"
 #include "nsWindowsHelpers.h"
 

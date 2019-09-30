@@ -211,13 +211,7 @@ el{
         minimumGroupingDigits{"1"}
         traditional{"grek"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -2447,41 +2441,6 @@ el{
         US{"Αμερικανικό"}
         metric{"Μετρικό"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -2510,5 +2469,4 @@ el{
             }
         }
     }
->>>>>>> upstream-releases
 }

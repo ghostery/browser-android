@@ -132,36 +132,10 @@ dictionary RTCIceCandidateStats : RTCStats {
   RTCIceCandidateType candidateType;
   long priority;
   DOMString relayProtocol;
-<<<<<<< HEAD
   // Because we use this internally but don't support RTCIceCandidateStats,
   // we need to keep the field as ChromeOnly. Bug 1225723
   [ChromeOnly]
   DOMString transportId;
-};
-
-dictionary RTCCodecStats : RTCStats {
-  unsigned long payloadType;       // As used in RTP encoding.
-  DOMString codec;                 // video/vp8 or equivalent
-  unsigned long clockRate;
-  unsigned long channels;          // 2=stereo, missing for most other cases.
-  DOMString parameters;            // From SDP description line
-||||||| merged common ancestors
-  long portNumber;
-  RTCStatsIceCandidateType candidateType;
-};
-
-dictionary RTCCodecStats : RTCStats {
-  unsigned long payloadType;       // As used in RTP encoding.
-  DOMString codec;                 // video/vp8 or equivalent
-  unsigned long clockRate;
-  unsigned long channels;          // 2=stereo, missing for most other cases.
-  DOMString parameters;            // From SDP description line
-=======
-  // Because we use this internally but don't support RTCIceCandidateStats,
-  // we need to keep the field as ChromeOnly. Bug 1225723
-  [ChromeOnly]
-  DOMString transportId;
->>>>>>> upstream-releases
 };
 
 // This is the internal representation of the report in this implementation

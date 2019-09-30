@@ -29,26 +29,11 @@
 
 #if 0
 void CK_Log(const char* aFmt, ...);
-<<<<<<< HEAD
-#define CK_LOGE(...) CK_Log(__VA_ARGS__)
-#define CK_LOGD(...) CK_Log(__VA_ARGS__)
-#define CK_LOGW(...) CK_Log(__VA_ARGS__)
-#define CK_LOGARRAY(APREPEND, ADATA, ADATA_SIZE) \
-  CK_LogArray(APREPEND, ADATA, ADATA_SIZE)
-||||||| merged common ancestors
-#define CK_LOGE(...) CK_Log(__VA_ARGS__)
-#define CK_LOGD(...) CK_Log(__VA_ARGS__)
-#define CK_LOGW(...) CK_Log(__VA_ARGS__)
-#define CK_LOGARRAY(APREPEND, ADATA, ADATA_SIZE) CK_LogArray(APREPEND, \
-  ADATA, \
-  ADATA_SIZE)
-=======
 #  define CK_LOGE(...) CK_Log(__VA_ARGS__)
 #  define CK_LOGD(...) CK_Log(__VA_ARGS__)
 #  define CK_LOGW(...) CK_Log(__VA_ARGS__)
 #  define CK_LOGARRAY(APREPEND, ADATA, ADATA_SIZE) \
     CK_LogArray(APREPEND, ADATA, ADATA_SIZE)
->>>>>>> upstream-releases
 #else
 // Note: Enabling logging slows things down a LOT, especially when logging to
 // a file.

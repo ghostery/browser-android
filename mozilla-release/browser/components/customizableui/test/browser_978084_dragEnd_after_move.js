@@ -37,22 +37,12 @@ add_task(async function() {
   let navbar = document.getElementById("nav-bar");
   CustomizableUI.getCustomizationTarget(navbar).appendChild(draggedItem);
   await startCustomizing();
-<<<<<<< HEAD
-  simulateItemDrag(draggedItem, CustomizableUI.getCustomizationTarget(dest));
-  is(document.documentElement.hasAttribute("customizing-movingItem"), false,
-     "Make sure customizing-movingItem is removed");
-||||||| merged common ancestors
-  simulateItemDrag(draggedItem, dest.customizationTarget);
-  is(document.documentElement.hasAttribute("customizing-movingItem"), false,
-     "Make sure customizing-movingItem is removed");
-=======
   simulateItemDrag(draggedItem, CustomizableUI.getCustomizationTarget(dest));
   is(
     document.documentElement.hasAttribute("customizing-movingItem"),
     false,
     "Make sure customizing-movingItem is removed"
   );
->>>>>>> upstream-releases
   await endCustomizing();
 });
 

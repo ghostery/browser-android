@@ -20,15 +20,8 @@
 #  include "prinrval.h"
 #endif
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-using mozilla::IsAsciiAlpha;
-using mozilla::IsAsciiDigit;
-
-=======
 using mozilla::IsAscii;
 
->>>>>>> upstream-releases
 const double growthRate = 1.2;
 
 // Bug 183111, editor now replaces multiple spaces with leading
@@ -210,65 +203,6 @@ bool mozTXTToHTMLConv::FindURLStart(const char16_t* aInString,
       }
       return false;
     }
-<<<<<<< HEAD
-    case abbreviated: {
-      int32_t i = pos - 1;
-      // This disallows non-ascii-characters for email.
-      // Currently correct, but revisit later after standards changed.
-      bool isEmail = aInString[pos] == (char16_t)'@';
-      // These chars mark the start of the URL
-      for (; i >= 0 && aInString[uint32_t(i)] != '>' &&
-             aInString[uint32_t(i)] != '<' && aInString[uint32_t(i)] != '"' &&
-             aInString[uint32_t(i)] != '\'' && aInString[uint32_t(i)] != '`' &&
-             aInString[uint32_t(i)] != ',' && aInString[uint32_t(i)] != '{' &&
-             aInString[uint32_t(i)] != '[' && aInString[uint32_t(i)] != '(' &&
-             aInString[uint32_t(i)] != '|' && aInString[uint32_t(i)] != '\\' &&
-             !IsSpace(aInString[uint32_t(i)]) &&
-             (!isEmail || nsCRT::IsAscii(aInString[uint32_t(i)])) &&
-             (!isEmail || aInString[uint32_t(i)] != ')');
-           i--)
-        ;
-      if (++i >= 0 && uint32_t(i) < pos &&
-          (IsAsciiAlpha(aInString[uint32_t(i)]) ||
-           IsAsciiDigit(aInString[uint32_t(i)]))) {
-        start = uint32_t(i);
-        return true;
-      }
-      return false;
-||||||| merged common ancestors
-    return false;
-  }
-  case abbreviated:
-  {
-    int32_t i = pos - 1;
-    // This disallows non-ascii-characters for email.
-    // Currently correct, but revisit later after standards changed.
-    bool isEmail = aInString[pos] == (char16_t)'@';
-    // These chars mark the start of the URL
-    for (; i >= 0
-             && aInString[uint32_t(i)] != '>' && aInString[uint32_t(i)] != '<'
-             && aInString[uint32_t(i)] != '"' && aInString[uint32_t(i)] != '\''
-             && aInString[uint32_t(i)] != '`' && aInString[uint32_t(i)] != ','
-             && aInString[uint32_t(i)] != '{' && aInString[uint32_t(i)] != '['
-             && aInString[uint32_t(i)] != '(' && aInString[uint32_t(i)] != '|'
-             && aInString[uint32_t(i)] != '\\'
-             && !IsSpace(aInString[uint32_t(i)])
-             && (!isEmail || nsCRT::IsAscii(aInString[uint32_t(i)]))
-         ; i--)
-      ;
-    if
-      (
-        ++i >= 0 && uint32_t(i) < pos
-          &&
-          (
-            IsAsciiAlpha(aInString[uint32_t(i)]) ||
-            IsAsciiDigit(aInString[uint32_t(i)])
-          )
-      )
-    {
-      start = uint32_t(i);
-      return true;
-=======
     case abbreviated: {
       int32_t i = pos - 1;
       // This disallows non-ascii-characters for email.
@@ -293,7 +227,6 @@ bool mozTXTToHTMLConv::FindURLStart(const char16_t* aInString,
         return true;
       }
       return false;
->>>>>>> upstream-releases
     }
     default:
       return false;
@@ -336,23 +269,10 @@ bool mozTXTToHTMLConv::FindURLEnd(const char16_t* aInString,
              (aInString[i - 1] != '/' || aInString[i - 2] != '/')) ||
             IsSpace(aInString[i]))
           break;
-<<<<<<< HEAD
-        // Disallow non-ascii-characters for email.
-        // Currently correct, but revisit later after standards changed.
-        if (isEmail && (aInString[i] == '(' || aInString[i] == '\'' ||
-                        !nsCRT::IsAscii(aInString[i])))
-||||||| merged common ancestors
-      // Disallow non-ascii-characters for email.
-      // Currently correct, but revisit later after standards changed.
-      if (isEmail && (
-            aInString[i] == '(' || aInString[i] == '\'' ||
-            !nsCRT::IsAscii(aInString[i])))
-=======
         // Disallow non-ascii-characters for email.
         // Currently correct, but revisit later after standards changed.
         if (isEmail && (aInString[i] == '(' || aInString[i] == '\'' ||
                         !IsAscii(aInString[i])))
->>>>>>> upstream-releases
           break;
         if (aInString[i] == '(') seenOpeningParenthesis = true;
         if (aInString[i] == '[') seenOpeningSquareBracket = true;
@@ -618,57 +538,6 @@ bool mozTXTToHTMLConv::ItMatchesDelimited(const char16_t* aInString,
        textLen < aRepLen + 2))
     return false;
 
-<<<<<<< HEAD
-  uint32_t text0 = aInString[0];
-  uint32_t textAfterPos = aInString[aRepLen + (before == LT_IGNORE ? 0 : 1)];
-
-  if ((before == LT_ALPHA && !IsAlpha(text0)) ||
-      (before == LT_DIGIT && !IsDigit(text0)) ||
-      (before == LT_DELIMITER &&
-       (IsAlpha(text0) || IsDigit(text0) || text0 == *rep)) ||
-      (after == LT_ALPHA && !IsAlpha(textAfterPos)) ||
-      (after == LT_DIGIT && !IsDigit(textAfterPos)) ||
-      (after == LT_DELIMITER &&
-       (IsAlpha(textAfterPos) || IsDigit(textAfterPos) ||
-        textAfterPos == *rep)) ||
-      !Substring(Substring(aInString, aInString + aInLength),
-                 (before == LT_IGNORE ? 0 : 1), aRepLen)
-           .Equals(Substring(rep, rep + aRepLen),
-                   nsCaseInsensitiveStringComparator()))
-||||||| merged common ancestors
-  char16_t text0 = aInString[0];
-  char16_t textAfterPos = aInString[aRepLen + (before == LT_IGNORE ? 0 : 1)];
-
-  if
-    (
-      (before == LT_ALPHA
-        && !IsAsciiAlpha(text0)) ||
-      (before == LT_DIGIT
-        && !IsAsciiDigit(text0)) ||
-      (before == LT_DELIMITER
-        &&
-        (
-          IsAsciiAlpha(text0) ||
-          IsAsciiDigit(text0) ||
-          text0 == *rep
-        )) ||
-      (after == LT_ALPHA
-        && !IsAsciiAlpha(textAfterPos)) ||
-      (after == LT_DIGIT
-        && !IsAsciiDigit(textAfterPos)) ||
-      (after == LT_DELIMITER
-        &&
-        (
-          IsAsciiAlpha(textAfterPos) ||
-          IsAsciiDigit(textAfterPos) ||
-          textAfterPos == *rep
-        )) ||
-        !Substring(Substring(aInString, aInString+aInLength),
-                   (before == LT_IGNORE ? 0 : 1),
-                   aRepLen).Equals(Substring(rep, rep+aRepLen),
-                                   nsCaseInsensitiveStringComparator())
-    )
-=======
   uint32_t text0 = aInString[0];
   if (NS_IS_HIGH_SURROGATE(text0) && aInLength > 1 &&
       NS_IS_LOW_SURROGATE(aInString[1])) {
@@ -702,7 +571,6 @@ bool mozTXTToHTMLConv::ItMatchesDelimited(const char16_t* aInString,
                  aRepLen)
            .Equals(Substring(rep, rep + aRepLen),
                    nsCaseInsensitiveStringComparator()))
->>>>>>> upstream-releases
     return false;
 
   return true;
@@ -714,22 +582,10 @@ uint32_t mozTXTToHTMLConv::NumberOfMatches(const char16_t* aInString,
                                            LIMTYPE before, LIMTYPE after) {
   uint32_t result = 0;
 
-<<<<<<< HEAD
-  for (int32_t i = 0; i < aInStringLength; i++) {
-    const char16_t* indexIntoString = &aInString[i];
-    if (ItMatchesDelimited(indexIntoString, aInStringLength - i, rep, aRepLen,
-                           before, after))
-||||||| merged common ancestors
-  for (int32_t i = 0; i < aInStringLength; i++)
-  {
-    const char16_t * indexIntoString = &aInString[i];
-    if (ItMatchesDelimited(indexIntoString, aInStringLength - i, rep, aRepLen, before, after))
-=======
   const char16_t* end = aInString + aInStringLength;
   for (mozilla::unicode::ClusterIterator ci(aInString, aInStringLength);
        !ci.AtEnd(); ci.Next()) {
     if (ItMatchesDelimited(ci, end - ci, rep, aRepLen, before, after)) {
->>>>>>> upstream-releases
       result++;
     }
   }
@@ -1117,17 +973,6 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
 
   nsAutoString outputHTML;  // moved here for performance increase
 
-<<<<<<< HEAD
-  const char16_t* rawInputString = aInString.BeginReading();
-
-  for (uint32_t i = 0; i < aInString.Length();) {
-    if (doGlyphSubstitution) {
-||||||| merged common ancestors
-  for(uint32_t i = 0; int32_t(i) < aInStringLength;)
-  {
-    if (doGlyphSubstitution)
-    {
-=======
   const char16_t* rawInputString = aInString.BeginReading();
   uint32_t inLength = aInString.Length();
 
@@ -1135,18 +980,9 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
        !ci.AtEnd();) {
     uint32_t i = ci - rawInputString;
     if (doGlyphSubstitution) {
->>>>>>> upstream-releases
       int32_t glyphTextLen;
-<<<<<<< HEAD
-      if (GlyphHit(&rawInputString[i], aInString.Length() - i, i == 0,
-                   aOutString, glyphTextLen)) {
-||||||| merged common ancestors
-      if (GlyphHit(&aInString[i], aInStringLength - i, i == 0, aOutString, glyphTextLen))
-      {
-=======
       if (GlyphHit(&rawInputString[i], inLength - i, i == 0, aOutString,
                    glyphTextLen)) {
->>>>>>> upstream-releases
         i += glyphTextLen;
         while (ci < rawInputString + i) {
           ci.Next();
@@ -1160,99 +996,14 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
       int32_t newLength = aInString.Length();
       if (i > 0)  // skip the first element?
       {
-<<<<<<< HEAD
-        newOffset = &rawInputString[i - 1];
-        newLength = aInString.Length() - i + 1;
-||||||| merged common ancestors
-        newOffset = &aInString[i-1];
-        newLength = aInStringLength - i + 1;
-=======
         mozilla::unicode::ClusterReverseIterator ri(rawInputString, i);
         ri.Next();
         newOffset = ri;
         newLength = aInString.Length() - (ri - rawInputString);
->>>>>>> upstream-releases
       }
 
       switch (aInString[i])  // Performance increase
       {
-<<<<<<< HEAD
-        case '*':
-          if (StructPhraseHit(newOffset, newLength, i == 0, u"*", 1, "b",
-                              "class=\"moz-txt-star\"", aOutString,
-                              structPhrase_strong)) {
-            i++;
-            continue;
-          }
-          break;
-        case '/':
-          if (StructPhraseHit(newOffset, newLength, i == 0, u"/", 1, "i",
-                              "class=\"moz-txt-slash\"", aOutString,
-                              structPhrase_italic)) {
-            i++;
-            continue;
-          }
-          break;
-        case '_':
-          if (StructPhraseHit(newOffset, newLength, i == 0, u"_", 1,
-                              "span" /* <u> is deprecated */,
-                              "class=\"moz-txt-underscore\"", aOutString,
-                              structPhrase_underline)) {
-            i++;
-            continue;
-          }
-          break;
-        case '|':
-          if (StructPhraseHit(newOffset, newLength, i == 0, u"|", 1, "code",
-                              "class=\"moz-txt-verticalline\"", aOutString,
-                              structPhrase_code)) {
-            i++;
-            continue;
-          }
-          break;
-||||||| merged common ancestors
-      case '*':
-        if (StructPhraseHit(newOffset, newLength, i == 0,
-                            u"*", 1,
-                            "b", "class=\"moz-txt-star\"",
-                            aOutString, structPhrase_strong))
-        {
-          i++;
-          continue;
-        }
-        break;
-      case '/':
-        if (StructPhraseHit(newOffset, newLength, i == 0,
-                            u"/", 1,
-                            "i", "class=\"moz-txt-slash\"",
-                            aOutString, structPhrase_italic))
-        {
-          i++;
-          continue;
-        }
-        break;
-      case '_':
-        if (StructPhraseHit(newOffset, newLength, i == 0,
-                            u"_", 1,
-                            "span" /* <u> is deprecated */,
-                            "class=\"moz-txt-underscore\"",
-                            aOutString, structPhrase_underline))
-        {
-          i++;
-          continue;
-        }
-        break;
-      case '|':
-        if (StructPhraseHit(newOffset, newLength, i == 0,
-                            u"|", 1,
-                            "code", "class=\"moz-txt-verticalline\"",
-                            aOutString, structPhrase_code))
-        {
-          i++;
-          continue;
-        }
-        break;
-=======
         case '*':
           if (StructPhraseHit(newOffset, newLength, i == 0, u"*", 1, "b",
                               "class=\"moz-txt-star\"", aOutString,
@@ -1286,7 +1037,6 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
             continue;
           }
           break;
->>>>>>> upstream-releases
       }
     }
 
@@ -1299,32 +1049,6 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
               ((i == aInString.Length() - 1) ||
                (aInString[i + 1] != ' ')))  // Performance increase
           {
-<<<<<<< HEAD
-            int32_t replaceBefore;
-            int32_t replaceAfter;
-            if (FindURL(rawInputString, aInString.Length(), i, whattodo,
-                        outputHTML, replaceBefore, replaceAfter) &&
-                structPhrase_strong + structPhrase_italic +
-                        structPhrase_underline + structPhrase_code ==
-                    0
-                /* workaround for bug #19445 */) {
-              // Don't cut into previously inserted HTML (bug 1509493)
-              if (aOutString.Length() - replaceBefore < endOfLastURLOutput) {
-                break;
-              }
-              aOutString.Cut(aOutString.Length() - replaceBefore,
-                             replaceBefore);
-              aOutString += outputHTML;
-              endOfLastURLOutput = aOutString.Length();
-              i += replaceAfter + 1;
-              continue;
-            }
-||||||| merged common ancestors
-            aOutString.Cut(aOutString.Length() - replaceBefore, replaceBefore);
-            aOutString += outputHTML;
-            i += replaceAfter + 1;
-            continue;
-=======
             int32_t replaceBefore;
             int32_t replaceAfter;
             if (FindURL(rawInputString, aInString.Length(), i, whattodo,
@@ -1347,42 +1071,11 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
               }
               continue;
             }
->>>>>>> upstream-releases
           }
           break;
       }  // switch
     }
 
-<<<<<<< HEAD
-    switch (aInString[i]) {
-      // Special symbols
-      case '<':
-      case '>':
-      case '&':
-        EscapeChar(aInString[i], aOutString, false);
-        i++;
-        break;
-      // Normal characters
-      default:
-        aOutString += aInString[i];
-        i++;
-        break;
-||||||| merged common ancestors
-    switch (aInString[i])
-    {
-    // Special symbols
-    case '<':
-    case '>':
-    case '&':
-      EscapeChar(aInString[i], aOutString, false);
-      i++;
-      break;
-    // Normal characters
-    default:
-      aOutString += aInString[i];
-      i++;
-      break;
-=======
     switch (aInString[i]) {
       // Special symbols
       case '<':
@@ -1398,7 +1091,6 @@ mozTXTToHTMLConv::ScanTXT(const nsAString& aInString, uint32_t whattodo,
         aOutString += Substring(start, (const char16_t*)ci);
         break;
       }
->>>>>>> upstream-releases
     }
   }
   return NS_OK;
@@ -1528,45 +1220,18 @@ mozTXTToHTMLConv::AsyncConvertData(const char* aFromType, const char* aToType,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-mozTXTToHTMLConv::OnDataAvailable(nsIRequest* request, nsISupports* ctxt,
-                                  nsIInputStream* inStr, uint64_t sourceOffset,
-                                  uint32_t count) {
-||||||| merged common ancestors
-mozTXTToHTMLConv::OnDataAvailable(nsIRequest* request, nsISupports *ctxt,
-                                 nsIInputStream *inStr, uint64_t sourceOffset,
-                                 uint32_t count)
-{
-=======
 mozTXTToHTMLConv::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
                                   uint64_t sourceOffset, uint32_t count) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-mozTXTToHTMLConv::OnStartRequest(nsIRequest* request, nsISupports* ctxt) {
-||||||| merged common ancestors
-mozTXTToHTMLConv::OnStartRequest(nsIRequest* request, nsISupports *ctxt)
-{
-=======
 mozTXTToHTMLConv::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-mozTXTToHTMLConv::OnStopRequest(nsIRequest* request, nsISupports* ctxt,
-                                nsresult aStatus) {
-||||||| merged common ancestors
-mozTXTToHTMLConv::OnStopRequest(nsIRequest* request, nsISupports *ctxt,
-                                nsresult aStatus)
-{
-=======
 mozTXTToHTMLConv::OnStopRequest(nsIRequest* request, nsresult aStatus) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 

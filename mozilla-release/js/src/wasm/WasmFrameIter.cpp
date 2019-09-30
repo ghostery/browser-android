@@ -34,64 +34,6 @@ using mozilla::Maybe;
 // WasmFrameIter implementation
 
 WasmFrameIter::WasmFrameIter(JitActivation* activation, wasm::Frame* fp)
-<<<<<<< HEAD
-    : activation_(activation),
-      code_(nullptr),
-      codeRange_(nullptr),
-      lineOrBytecode_(0),
-      fp_(fp ? fp : activation->wasmExitFP()),
-      unwoundIonCallerFP_(nullptr),
-      unwoundIonFrameType_(jit::FrameType(-1)),
-      unwind_(Unwind::False),
-      unwoundAddressOfReturnAddress_(nullptr) {
-  MOZ_ASSERT(fp_);
-
-  // When the stack is captured during a trap (viz., to create the .stack
-  // for an Error object), use the pc/bytecode information captured by the
-  // signal handler in the runtime.
-
-  if (activation->isWasmTrapping()) {
-    const TrapData& trapData = activation->wasmTrapData();
-    void* unwoundPC = trapData.unwoundPC;
-
-    code_ = &fp_->tls->instance->code();
-    MOZ_ASSERT(code_ == LookupCode(unwoundPC));
-
-    codeRange_ = code_->lookupFuncRange(unwoundPC);
-    MOZ_ASSERT(codeRange_);
-||||||| merged common ancestors
-  : activation_(activation),
-    code_(nullptr),
-    codeRange_(nullptr),
-    lineOrBytecode_(0),
-    fp_(fp ? fp : activation->wasmExitFP()),
-    unwoundIonCallerFP_(nullptr),
-    unwoundIonFrameType_(jit::FrameType(-1)),
-    unwind_(Unwind::False),
-    unwoundAddressOfReturnAddress_(nullptr)
-{
-    MOZ_ASSERT(fp_);
-
-    // When the stack is captured during a trap (viz., to create the .stack
-    // for an Error object), use the pc/bytecode information captured by the
-    // signal handler in the runtime.
-
-    if (activation->isWasmTrapping()) {
-        const TrapData& trapData = activation->wasmTrapData();
-        void* unwoundPC = trapData.unwoundPC;
-
-        code_ = &fp_->tls->instance->code();
-        MOZ_ASSERT(code_ == LookupCode(unwoundPC));
-
-        codeRange_ = code_->lookupFuncRange(unwoundPC);
-        MOZ_ASSERT(codeRange_);
-
-        lineOrBytecode_ = trapData.bytecodeOffset;
-
-        MOZ_ASSERT(!done());
-        return;
-    }
-=======
     : activation_(activation),
       code_(nullptr),
       codeRange_(nullptr),
@@ -119,7 +61,6 @@ WasmFrameIter::WasmFrameIter(JitActivation* activation, wasm::Frame* fp)
 
     codeRange_ = code_->lookupFuncRange(unwoundPC);
     MOZ_ASSERT(codeRange_);
->>>>>>> upstream-releases
 
     lineOrBytecode_ = trapData.bytecodeOffset;
 
@@ -166,70 +107,11 @@ void WasmFrameIter::operator++() {
   popFrame();
 }
 
-<<<<<<< HEAD
-void WasmFrameIter::popFrame() {
-  Frame* prevFP = fp_;
-  fp_ = prevFP->callerFP;
-||||||| merged common ancestors
-void
-WasmFrameIter::popFrame()
-{
-    Frame* prevFP = fp_;
-    fp_ = prevFP->callerFP;
-=======
 void WasmFrameIter::popFrame() {
   Frame* prevFP = fp_;
   fp_ = prevFP->callerFP;
   resumePCinCurrentFrame_ = (uint8_t*)prevFP->returnAddress;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (uintptr_t(fp_) & ExitOrJitEntryFPTag) {
-    // We just unwound a frame pointer which has the low bit set,
-    // indicating this is a direct call from the jit into the wasm
-    // function's body. The call stack resembles this at this point:
-    //
-    // |---------------------|
-    // |      JIT FRAME      |
-    // | JIT FAKE EXIT FRAME | <-- tagged fp_
-    // |      WASM FRAME     | <-- prevFP (already unwound)
-    // |---------------------|
-    //
-    // fp_ points to the fake exit frame set up by the jit caller, and the
-    // return-address-to-fp is in JIT code, thus doesn't belong to any wasm
-    // instance's code (in particular, there's no associated CodeRange).
-    // Mark the frame as such and untag FP.
-    MOZ_ASSERT(!LookupCode(prevFP->returnAddress));
-||||||| merged common ancestors
-    if (uintptr_t(fp_) & ExitOrJitEntryFPTag) {
-        // We just unwound a frame pointer which has the low bit set,
-        // indicating this is a direct call from the jit into the wasm
-        // function's body. The call stack resembles this at this point:
-        //
-        // |---------------------|
-        // |      JIT FRAME      |
-        // | JIT FAKE EXIT FRAME | <-- tagged fp_
-        // |      WASM FRAME     | <-- prevFP (already unwound)
-        // |---------------------|
-        //
-        // fp_ points to the fake exit frame set up by the jit caller, and the
-        // return-address-to-fp is in JIT code, thus doesn't belong to any wasm
-        // instance's code (in particular, there's no associated CodeRange).
-        // Mark the frame as such and untag FP.
-        MOZ_ASSERT(!LookupCode(prevFP->returnAddress));
-
-        unwoundIonCallerFP_ = (uint8_t*)(uintptr_t(fp_) & ~uintptr_t(ExitOrJitEntryFPTag));
-        unwoundIonFrameType_ = FrameType::Exit;
-
-        fp_ = nullptr;
-        code_ = nullptr;
-        codeRange_ = nullptr;
-
-        if (unwind_ == Unwind::True) {
-            activation_->setJSExitFP(unwoundIonCallerFP_);
-            unwoundAddressOfReturnAddress_ = &prevFP->returnAddress;
-        }
-=======
   if (uintptr_t(fp_) & ExitOrJitEntryFPTag) {
     // We just unwound a frame pointer which has the low bit set,
     // indicating this is a direct call from the jit into the wasm
@@ -254,28 +136,10 @@ void WasmFrameIter::popFrame() {
     fp_ = nullptr;
     code_ = nullptr;
     codeRange_ = nullptr;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    unwoundIonCallerFP_ =
-        (uint8_t*)(uintptr_t(fp_) & ~uintptr_t(ExitOrJitEntryFPTag));
-    unwoundIonFrameType_ = FrameType::Exit;
-
-    fp_ = nullptr;
-    code_ = nullptr;
-    codeRange_ = nullptr;
 
     if (unwind_ == Unwind::True) {
       activation_->setJSExitFP(unwoundIonCallerFP_);
       unwoundAddressOfReturnAddress_ = &prevFP->returnAddress;
-||||||| merged common ancestors
-        MOZ_ASSERT(done());
-        return;
-=======
-    if (unwind_ == Unwind::True) {
-      activation_->setJSExitFP(unwoundIonCallerFP_);
-      unwoundAddressOfReturnAddress_ = &prevFP->returnAddress;
->>>>>>> upstream-releases
     }
 
     MOZ_ASSERT(done());
@@ -293,79 +157,15 @@ void WasmFrameIter::popFrame() {
       unwoundAddressOfReturnAddress_ = &prevFP->returnAddress;
     }
 
-<<<<<<< HEAD
-    MOZ_ASSERT(done());
-    return;
-  }
-||||||| merged common ancestors
-    void* returnAddress = prevFP->returnAddress;
-=======
     MOZ_ASSERT(done());
     return;
   }
 
   void* returnAddress = prevFP->returnAddress;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void* returnAddress = prevFP->returnAddress;
-||||||| merged common ancestors
-    code_ = LookupCode(returnAddress, &codeRange_);
-    MOZ_ASSERT(codeRange_);
-=======
-  code_ = LookupCode(returnAddress, &codeRange_);
-  MOZ_ASSERT(codeRange_);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   code_ = LookupCode(returnAddress, &codeRange_);
   MOZ_ASSERT(codeRange_);
 
-  if (codeRange_->isJitEntry()) {
-    // This wasm function has been called through the generic JIT entry by
-    // a JIT caller, so the call stack resembles this:
-    //
-    // |---------------------|
-    // |      JIT FRAME      |
-    // |  JSJIT TO WASM EXIT | <-- fp_
-    // |    WASM JIT ENTRY   | <-- prevFP (already unwound)
-    // |      WASM FRAME     | (already unwound)
-    // |---------------------|
-    //
-    // The next value of FP is just a regular jit frame used marked to
-    // know that we should transition to a JSJit frame iterator.
-    unwoundIonCallerFP_ = (uint8_t*)fp_;
-    unwoundIonFrameType_ = FrameType::JSJitToWasm;
-
-    fp_ = nullptr;
-    code_ = nullptr;
-    codeRange_ = nullptr;
-||||||| merged common ancestors
-    if (codeRange_->isJitEntry()) {
-        // This wasm function has been called through the generic JIT entry by
-        // a JIT caller, so the call stack resembles this:
-        //
-        // |---------------------|
-        // |      JIT FRAME      |
-        // |  JSJIT TO WASM EXIT | <-- fp_
-        // |    WASM JIT ENTRY   | <-- prevFP (already unwound)
-        // |      WASM FRAME     | (already unwound)
-        // |---------------------|
-        //
-        // The next value of FP is just a regular jit frame used marked to
-        // know that we should transition to a JSJit frame iterator.
-        unwoundIonCallerFP_ = (uint8_t*) fp_;
-        unwoundIonFrameType_ = FrameType::JSJitToWasm;
-
-        fp_ = nullptr;
-        code_ = nullptr;
-        codeRange_ = nullptr;
-
-        if (unwind_ == Unwind::True) {
-            activation_->setJSExitFP(unwoundIonCallerFP_);
-            unwoundAddressOfReturnAddress_ = &prevFP->returnAddress;
-        }
-=======
   if (codeRange_->isJitEntry()) {
     // This wasm function has been called through the generic JIT entry by
     // a JIT caller, so the call stack resembles this:
@@ -385,7 +185,6 @@ void WasmFrameIter::popFrame() {
     fp_ = nullptr;
     code_ = nullptr;
     codeRange_ = nullptr;
->>>>>>> upstream-releases
 
     if (unwind_ == Unwind::True) {
       activation_->setJSExitFP(unwoundIonCallerFP_);
@@ -484,32 +283,6 @@ void** WasmFrameIter::unwoundAddressOfReturnAddress() const {
   return unwoundAddressOfReturnAddress_;
 }
 
-<<<<<<< HEAD
-bool WasmFrameIter::debugEnabled() const {
-  MOZ_ASSERT(!done());
-
-  // Only non-imported functions can have debug frames.
-  //
-  // Metadata::debugEnabled is only set if debugging is actually enabled (both
-  // requested, and available via baseline compilation), and Tier::Debug code
-  // will be available.
-  return code_->metadata().debugEnabled &&
-         codeRange_->funcIndex() >=
-             code_->metadata(Tier::Debug).funcImports.length();
-||||||| merged common ancestors
-bool
-WasmFrameIter::debugEnabled() const
-{
-    MOZ_ASSERT(!done());
-
-    // Only non-imported functions can have debug frames.
-    //
-    // Metadata::debugEnabled is only set if debugging is actually enabled (both
-    // requested, and available via baseline compilation), and Tier::Debug code
-    // will be available.
-    return code_->metadata().debugEnabled &&
-           codeRange_->funcIndex() >= code_->metadata(Tier::Debug).funcImports.length();
-=======
 bool WasmFrameIter::debugEnabled() const {
   MOZ_ASSERT(!done());
 
@@ -526,40 +299,14 @@ bool WasmFrameIter::debugEnabled() const {
 DebugFrame* WasmFrameIter::debugFrame() const {
   MOZ_ASSERT(!done());
   return DebugFrame::from(fp_);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-DebugFrame* WasmFrameIter::debugFrame() const {
-  MOZ_ASSERT(!done());
-  return DebugFrame::from(fp_);
-||||||| merged common ancestors
-DebugFrame*
-WasmFrameIter::debugFrame() const
-{
-    MOZ_ASSERT(!done());
-    return DebugFrame::from(fp_);
-=======
 jit::FrameType WasmFrameIter::unwoundIonFrameType() const {
   MOZ_ASSERT(unwoundIonCallerFP_);
   MOZ_ASSERT(unwoundIonFrameType_ != jit::FrameType(-1));
   return unwoundIonFrameType_;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-jit::FrameType WasmFrameIter::unwoundIonFrameType() const {
-  MOZ_ASSERT(unwoundIonCallerFP_);
-  MOZ_ASSERT(unwoundIonFrameType_ != jit::FrameType(-1));
-  return unwoundIonFrameType_;
-||||||| merged common ancestors
-jit::FrameType
-WasmFrameIter::unwoundIonFrameType() const
-{
-    MOZ_ASSERT(unwoundIonCallerFP_);
-    MOZ_ASSERT(unwoundIonFrameType_ != jit::FrameType(-1));
-    return unwoundIonFrameType_;
-=======
 uint8_t* WasmFrameIter::resumePCinCurrentFrame() const {
   if (resumePCinCurrentFrame_) {
     return resumePCinCurrentFrame_;
@@ -567,7 +314,6 @@ uint8_t* WasmFrameIter::resumePCinCurrentFrame() const {
   MOZ_ASSERT(activation_->isWasmTrapping());
   // The next instruction is the instruction following the trap instruction.
   return (uint8_t*)activation_->wasmTrapData().resumePC;
->>>>>>> upstream-releases
 }
 
 /*****************************************************************************/
@@ -630,13 +376,7 @@ static const unsigned SetFP = 3;
 static const unsigned PoppedFP = 4;
 static const unsigned PoppedTLSReg = 5;
 #else
-<<<<<<< HEAD
-#error "Unknown architecture!"
-||||||| merged common ancestors
-# error "Unknown architecture!"
-=======
 #  error "Unknown architecture!"
->>>>>>> upstream-releases
 #endif
 static constexpr unsigned SetJitEntryFP = PushedRetAddr + SetFP - PushedFP;
 
@@ -674,25 +414,11 @@ void wasm::ClearExitFP(MacroAssembler& masm, Register scratch) {
 static void GenerateCallablePrologue(MacroAssembler& masm, uint32_t* entry) {
   masm.setFramePushed(0);
 
-<<<<<<< HEAD
-  // ProfilingFrameIterator needs to know the offsets of several key
-  // instructions from entry. To save space, we make these offsets static
-  // constants and assert that they match the actual codegen below. On ARM,
-  // this requires AutoForbidPools to prevent a constant pool from being
-  // randomly inserted between two instructions.
-||||||| merged common ancestors
-    // ProfilingFrameIterator needs to know the offsets of several key
-    // instructions from entry. To save space, we make these offsets static
-    // constants and assert that they match the actual codegen below. On ARM,
-    // this requires AutoForbidPools to prevent a constant pool from being
-    // randomly inserted between two instructions.
-=======
   // ProfilingFrameIterator needs to know the offsets of several key
   // instructions from entry. To save space, we make these offsets static
   // constants and assert that they match the actual codegen below. On ARM,
   // this requires AutoForbidPoolsAndNops to prevent a constant pool from being
   // randomly inserted between two instructions.
->>>>>>> upstream-releases
 #if defined(JS_CODEGEN_MIPS32) || defined(JS_CODEGEN_MIPS64)
   {
     *entry = masm.currentOffset();
@@ -709,47 +435,6 @@ static void GenerateCallablePrologue(MacroAssembler& masm, uint32_t* entry) {
     MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
   }
 #elif defined(JS_CODEGEN_ARM64)
-<<<<<<< HEAD
-  {
-    // We do not use the PseudoStackPointer.
-    MOZ_ASSERT(masm.GetStackPointer64().code() == sp.code());
-
-    AutoForbidPools afp(&masm, /* number of instructions in scope = */ 5);
-
-    *entry = masm.currentOffset();
-
-    masm.Sub(sp, sp, sizeof(Frame));
-    masm.Str(ARMRegister(lr, 64),
-             MemOperand(sp, offsetof(Frame, returnAddress)));
-    MOZ_ASSERT_IF(!masm.oom(), PushedRetAddr == masm.currentOffset() - *entry);
-    masm.Str(ARMRegister(WasmTlsReg, 64), MemOperand(sp, offsetof(Frame, tls)));
-    MOZ_ASSERT_IF(!masm.oom(), PushedTLS == masm.currentOffset() - *entry);
-    masm.Str(ARMRegister(FramePointer, 64),
-             MemOperand(sp, offsetof(Frame, callerFP)));
-    MOZ_ASSERT_IF(!masm.oom(), PushedFP == masm.currentOffset() - *entry);
-    masm.Mov(ARMRegister(FramePointer, 64), sp);
-    MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
-  }
-||||||| merged common ancestors
-    {
-        // We do not use the PseudoStackPointer.
-        MOZ_ASSERT(masm.GetStackPointer64().code() == sp.code());
-
-        AutoForbidPools afp(&masm, /* number of instructions in scope = */ 5);
-
-        *entry = masm.currentOffset();
-
-        masm.Sub(sp, sp, sizeof(Frame));
-        masm.Str(ARMRegister(lr, 64), MemOperand(sp, offsetof(Frame, returnAddress)));
-        MOZ_ASSERT_IF(!masm.oom(), PushedRetAddr == masm.currentOffset() - *entry);
-        masm.Str(ARMRegister(WasmTlsReg, 64), MemOperand(sp, offsetof(Frame, tls)));
-        MOZ_ASSERT_IF(!masm.oom(), PushedTLS == masm.currentOffset() - *entry);
-        masm.Str(ARMRegister(FramePointer, 64), MemOperand(sp, offsetof(Frame, callerFP)));
-        MOZ_ASSERT_IF(!masm.oom(), PushedFP == masm.currentOffset() - *entry);
-        masm.Mov(ARMRegister(FramePointer, 64), sp);
-        MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
-    }
-=======
   {
     // We do not use the PseudoStackPointer.
     MOZ_ASSERT(masm.GetStackPointer64().code() == sp.code());
@@ -771,53 +456,7 @@ static void GenerateCallablePrologue(MacroAssembler& masm, uint32_t* entry) {
     masm.Mov(ARMRegister(FramePointer, 64), sp);
     MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
   }
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-  {
-#if defined(JS_CODEGEN_ARM)
-    AutoForbidPools afp(&masm, /* number of instructions in scope = */ 7);
-
-    *entry = masm.currentOffset();
-
-    MOZ_ASSERT(BeforePushRetAddr == 0);
-    masm.push(lr);
-#else
-    *entry = masm.currentOffset();
-    // The x86/x64 call instruction pushes the return address.
-#endif
-
-    MOZ_ASSERT_IF(!masm.oom(), PushedRetAddr == masm.currentOffset() - *entry);
-    masm.push(WasmTlsReg);
-    MOZ_ASSERT_IF(!masm.oom(), PushedTLS == masm.currentOffset() - *entry);
-    masm.push(FramePointer);
-    MOZ_ASSERT_IF(!masm.oom(), PushedFP == masm.currentOffset() - *entry);
-    masm.moveStackPtrTo(FramePointer);
-    MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
-  }
-||||||| merged common ancestors
-    {
-# if defined(JS_CODEGEN_ARM)
-        AutoForbidPools afp(&masm, /* number of instructions in scope = */ 7);
-
-        *entry = masm.currentOffset();
-
-        MOZ_ASSERT(BeforePushRetAddr == 0);
-        masm.push(lr);
-# else
-        *entry = masm.currentOffset();
-        // The x86/x64 call instruction pushes the return address.
-# endif
-
-        MOZ_ASSERT_IF(!masm.oom(), PushedRetAddr == masm.currentOffset() - *entry);
-        masm.push(WasmTlsReg);
-        MOZ_ASSERT_IF(!masm.oom(), PushedTLS == masm.currentOffset() - *entry);
-        masm.push(FramePointer);
-        MOZ_ASSERT_IF(!masm.oom(), PushedFP == masm.currentOffset() - *entry);
-        masm.moveStackPtrTo(FramePointer);
-        MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
-    }
-=======
   {
 #  if defined(JS_CODEGEN_ARM)
     AutoForbidPoolsAndNops afp(&masm,
@@ -840,7 +479,6 @@ static void GenerateCallablePrologue(MacroAssembler& masm, uint32_t* entry) {
     masm.moveStackPtrTo(FramePointer);
     MOZ_ASSERT_IF(!masm.oom(), SetFP == masm.currentOffset() - *entry);
   }
->>>>>>> upstream-releases
 #endif
 }
 
@@ -874,13 +512,7 @@ static void GenerateCallableEpilogue(MacroAssembler& masm, unsigned framePushed,
   // We do not use the PseudoStackPointer.
   MOZ_ASSERT(masm.GetStackPointer64().code() == sp.code());
 
-<<<<<<< HEAD
-  AutoForbidPools afp(&masm, /* number of instructions in scope = */ 5);
-||||||| merged common ancestors
-    AutoForbidPools afp(&masm, /* number of instructions in scope = */ 5);
-=======
   AutoForbidPoolsAndNops afp(&masm, /* number of instructions in scope = */ 5);
->>>>>>> upstream-releases
 
   masm.Ldr(ARMRegister(FramePointer, 64),
            MemOperand(sp, offsetof(Frame, callerFP)));
@@ -896,22 +528,10 @@ static void GenerateCallableEpilogue(MacroAssembler& masm, unsigned framePushed,
   masm.Ret(ARMRegister(lr, 64));
 
 #else
-<<<<<<< HEAD
-  // Forbid pools for the same reason as described in GenerateCallablePrologue.
-#if defined(JS_CODEGEN_ARM)
-  AutoForbidPools afp(&masm, /* number of instructions in scope = */ 7);
-#endif
-||||||| merged common ancestors
-    // Forbid pools for the same reason as described in GenerateCallablePrologue.
-# if defined(JS_CODEGEN_ARM)
-    AutoForbidPools afp(&masm, /* number of instructions in scope = */ 7);
-# endif
-=======
   // Forbid pools for the same reason as described in GenerateCallablePrologue.
 #  if defined(JS_CODEGEN_ARM)
   AutoForbidPoolsAndNops afp(&masm, /* number of instructions in scope = */ 7);
 #  endif
->>>>>>> upstream-releases
 
   // There is an important ordering constraint here: fp must be repointed to
   // the caller's frame before any field of the frame currently pointed to by
@@ -1079,44 +699,15 @@ void wasm::GenerateJitEntryPrologue(MacroAssembler& masm, Offsets* offsets) {
 
   {
 #if defined(JS_CODEGEN_ARM)
-<<<<<<< HEAD
-    AutoForbidPools afp(&masm, /* number of instructions in scope = */ 2);
-    offsets->begin = masm.currentOffset();
-    MOZ_ASSERT(BeforePushRetAddr == 0);
-    masm.push(lr);
-||||||| merged common ancestors
-        AutoForbidPools afp(&masm, /* number of instructions in scope = */ 2);
-        offsets->begin = masm.currentOffset();
-        MOZ_ASSERT(BeforePushRetAddr == 0);
-        masm.push(lr);
-=======
     AutoForbidPoolsAndNops afp(&masm,
                                /* number of instructions in scope = */ 2);
     offsets->begin = masm.currentOffset();
     MOZ_ASSERT(BeforePushRetAddr == 0);
     masm.push(lr);
->>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_MIPS32) || defined(JS_CODEGEN_MIPS64)
     offsets->begin = masm.currentOffset();
     masm.push(ra);
 #elif defined(JS_CODEGEN_ARM64)
-<<<<<<< HEAD
-    AutoForbidPools afp(&masm, /* number of instructions in scope = */ 3);
-    offsets->begin = masm.currentOffset();
-    MOZ_ASSERT(BeforePushRetAddr == 0);
-    // Subtract from SP first as SP must be aligned before offsetting.
-    masm.Sub(sp, sp, 8);
-    masm.storePtr(lr, Address(masm.getStackPointer(), 0));
-    masm.adjustFrame(8);
-||||||| merged common ancestors
-        AutoForbidPools afp(&masm, /* number of instructions in scope = */ 3);
-        offsets->begin = masm.currentOffset();
-        MOZ_ASSERT(BeforePushRetAddr == 0);
-        // Subtract from SP first as SP must be aligned before offsetting.
-        masm.Sub(sp, sp, 8);
-        masm.storePtr(lr, Address(masm.getStackPointer(), 0));
-        masm.adjustFrame(8);
-=======
     AutoForbidPoolsAndNops afp(&masm,
                                /* number of instructions in scope = */ 3);
     offsets->begin = masm.currentOffset();
@@ -1125,7 +716,6 @@ void wasm::GenerateJitEntryPrologue(MacroAssembler& masm, Offsets* offsets) {
     masm.Sub(sp, sp, 8);
     masm.storePtr(lr, Address(masm.getStackPointer(), 0));
     masm.adjustFrame(8);
->>>>>>> upstream-releases
 #else
     // The x86/x64 call instruction pushes the return address.
     offsets->begin = masm.currentOffset();
@@ -1218,27 +808,6 @@ static inline void AssertMatchesCallSite(void* callerPC, Frame* callerFP) {
 #endif
 }
 
-<<<<<<< HEAD
-void ProfilingFrameIterator::initFromExitFP(const Frame* fp) {
-  MOZ_ASSERT(fp);
-  stackAddress_ = (void*)fp;
-||||||| merged common ancestors
-void
-ProfilingFrameIterator::initFromExitFP(const Frame* fp)
-{
-    MOZ_ASSERT(fp);
-    stackAddress_ = (void*)fp;
-
-    void* pc = fp->returnAddress;
-
-    code_ = LookupCode(pc, &codeRange_);
-
-    if (!code_) {
-        // This is a direct call from the JIT, the caller FP is pointing to a
-        // tagged JIT caller's frame.
-        MOZ_ASSERT(uintptr_t(fp->callerFP) & ExitOrJitEntryFPTag);
-        AssertDirectJitCall(fp->callerFP);
-=======
 void ProfilingFrameIterator::initFromExitFP(const Frame* fp) {
   MOZ_ASSERT(fp);
   stackAddress_ = (void*)fp;
@@ -1246,28 +815,7 @@ void ProfilingFrameIterator::initFromExitFP(const Frame* fp) {
   void* pc = fp->returnAddress;
 
   code_ = LookupCode(pc, &codeRange_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void* pc = fp->returnAddress;
-
-  code_ = LookupCode(pc, &codeRange_);
-||||||| merged common ancestors
-        unwoundIonCallerFP_ = (uint8_t*)(uintptr_t(fp->callerFP) & ~ExitOrJitEntryFPTag);
-        MOZ_ASSERT(done());
-        return;
-    }
-
-    MOZ_ASSERT(codeRange_);
-=======
-  if (!code_) {
-    // This is a direct call from the JIT, the caller FP is pointing to a
-    // tagged JIT caller's frame.
-    MOZ_ASSERT(uintptr_t(fp->callerFP) & ExitOrJitEntryFPTag);
-    AssertDirectJitCall(fp->callerFP);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (!code_) {
     // This is a direct call from the JIT, the caller FP is pointing to a
     // tagged JIT caller's frame.
@@ -1317,87 +865,6 @@ void ProfilingFrameIterator::initFromExitFP(const Frame* fp) {
   }
 
   MOZ_ASSERT(!done());
-||||||| merged common ancestors
-    // Since we don't have the pc for fp, start unwinding at the caller of fp.
-    // This means that the innermost frame is skipped. This is fine because:
-    //  - for import exit calls, the innermost frame is a thunk, so the first
-    //    frame that shows up is the function calling the import;
-    //  - for Math and other builtin calls, we note the absence of an exit
-    //    reason and inject a fake "builtin" frame; and
-    switch (codeRange_->kind()) {
-      case CodeRange::InterpEntry:
-        callerPC_ = nullptr;
-        callerFP_ = nullptr;
-        codeRange_ = nullptr;
-        exitReason_ = ExitReason(ExitReason::Fixed::FakeInterpEntry);
-        break;
-      case CodeRange::JitEntry:
-        callerPC_ = nullptr;
-        callerFP_ = nullptr;
-        unwoundIonCallerFP_ = (uint8_t*) fp->callerFP;
-        break;
-      case CodeRange::Function:
-        fp = fp->callerFP;
-        callerPC_ = fp->returnAddress;
-        callerFP_ = fp->callerFP;
-        AssertMatchesCallSite(callerPC_, callerFP_);
-        break;
-      case CodeRange::ImportJitExit:
-      case CodeRange::ImportInterpExit:
-      case CodeRange::BuiltinThunk:
-      case CodeRange::TrapExit:
-      case CodeRange::DebugTrap:
-      case CodeRange::Throw:
-      case CodeRange::FarJumpIsland:
-        MOZ_CRASH("Unexpected CodeRange kind");
-    }
-
-    MOZ_ASSERT(!done());
-=======
-    unwoundIonCallerFP_ =
-        (uint8_t*)(uintptr_t(fp->callerFP) & ~ExitOrJitEntryFPTag);
-    MOZ_ASSERT(done());
-    return;
-  }
-
-  MOZ_ASSERT(codeRange_);
-
-  // Since we don't have the pc for fp, start unwinding at the caller of fp.
-  // This means that the innermost frame is skipped. This is fine because:
-  //  - for import exit calls, the innermost frame is a thunk, so the first
-  //    frame that shows up is the function calling the import;
-  //  - for Math and other builtin calls, we note the absence of an exit
-  //    reason and inject a fake "builtin" frame; and
-  switch (codeRange_->kind()) {
-    case CodeRange::InterpEntry:
-      callerPC_ = nullptr;
-      callerFP_ = nullptr;
-      codeRange_ = nullptr;
-      exitReason_ = ExitReason(ExitReason::Fixed::FakeInterpEntry);
-      break;
-    case CodeRange::JitEntry:
-      callerPC_ = nullptr;
-      callerFP_ = nullptr;
-      unwoundIonCallerFP_ = (uint8_t*)fp->callerFP;
-      break;
-    case CodeRange::Function:
-      fp = fp->callerFP;
-      callerPC_ = fp->returnAddress;
-      callerFP_ = fp->callerFP;
-      AssertMatchesCallSite(callerPC_, callerFP_);
-      break;
-    case CodeRange::ImportJitExit:
-    case CodeRange::ImportInterpExit:
-    case CodeRange::BuiltinThunk:
-    case CodeRange::TrapExit:
-    case CodeRange::DebugTrap:
-    case CodeRange::Throw:
-    case CodeRange::FarJumpIsland:
-      MOZ_CRASH("Unexpected CodeRange kind");
-  }
-
-  MOZ_ASSERT(!done());
->>>>>>> upstream-releases
 }
 
 static void AssertCallerFP(DebugOnly<bool> fpWasTagged, Frame* const fp,
@@ -1637,105 +1104,6 @@ bool js::wasm::StartUnwinding(const RegisterState& registers,
 
 ProfilingFrameIterator::ProfilingFrameIterator(const JitActivation& activation,
                                                const RegisterState& state)
-<<<<<<< HEAD
-    : code_(nullptr),
-      codeRange_(nullptr),
-      callerFP_(nullptr),
-      callerPC_(nullptr),
-      stackAddress_(nullptr),
-      unwoundIonCallerFP_(nullptr),
-      exitReason_(ExitReason::Fixed::None) {
-  // Let wasmExitFP take precedence to StartUnwinding when it is set since
-  // during the body of an exit stub, the register state may not be valid
-  // causing StartUnwinding() to abandon unwinding this activation.
-  if (activation.hasWasmExitFP()) {
-    exitReason_ = activation.wasmExitReason();
-    initFromExitFP(activation.wasmExitFP());
-    return;
-  }
-
-  bool unwoundCaller;
-  UnwindState unwindState;
-  if (!StartUnwinding(state, &unwindState, &unwoundCaller)) {
-    MOZ_ASSERT(done());
-    return;
-  }
-
-  if (unwoundCaller) {
-    callerFP_ = unwindState.fp;
-    callerPC_ = unwindState.pc;
-    // In the case of a function call, if the original FP value is tagged,
-    // then we're being called through a direct JIT call (the interpreter
-    // and the jit entry don't set FP's low bit). We can't observe
-    // transient tagged values of FP (during wasm::SetExitFP) here because
-    // StartUnwinding would not have unwound then.
-    if (unwindState.codeRange && unwindState.codeRange->isFunction() &&
-        (uintptr_t(state.fp) & ExitOrJitEntryFPTag)) {
-      unwoundIonCallerFP_ = (uint8_t*)callerFP_;
-    }
-  } else {
-    callerFP_ = unwindState.fp->callerFP;
-    callerPC_ = unwindState.fp->returnAddress;
-    // See comment above. The only way to get a tagged FP here means that
-    // the caller is a fast JIT caller which called into a wasm function.
-    if ((uintptr_t(callerFP_) & ExitOrJitEntryFPTag)) {
-      MOZ_ASSERT(unwindState.codeRange->isFunction());
-      unwoundIonCallerFP_ =
-          (uint8_t*)(uintptr_t(callerFP_) & ~ExitOrJitEntryFPTag);
-||||||| merged common ancestors
-  : code_(nullptr),
-    codeRange_(nullptr),
-    callerFP_(nullptr),
-    callerPC_(nullptr),
-    stackAddress_(nullptr),
-    unwoundIonCallerFP_(nullptr),
-    exitReason_(ExitReason::Fixed::None)
-{
-    // Let wasmExitFP take precedence to StartUnwinding when it is set since
-    // during the body of an exit stub, the register state may not be valid
-    // causing StartUnwinding() to abandon unwinding this activation.
-    if (activation.hasWasmExitFP()) {
-        exitReason_ = activation.wasmExitReason();
-        initFromExitFP(activation.wasmExitFP());
-        return;
-    }
-
-    bool unwoundCaller;
-    UnwindState unwindState;
-    if (!StartUnwinding(state, &unwindState, &unwoundCaller)) {
-        MOZ_ASSERT(done());
-        return;
-    }
-
-    if (unwoundCaller) {
-        callerFP_ = unwindState.fp;
-        callerPC_ = unwindState.pc;
-        // In the case of a function call, if the original FP value is tagged,
-        // then we're being called through a direct JIT call (the interpreter
-        // and the jit entry don't set FP's low bit). We can't observe
-        // transient tagged values of FP (during wasm::SetExitFP) here because
-        // StartUnwinding would not have unwound then.
-        if (unwindState.codeRange &&
-            unwindState.codeRange->isFunction() &&
-            (uintptr_t(state.fp) & ExitOrJitEntryFPTag))
-        {
-            unwoundIonCallerFP_ = (uint8_t*) callerFP_;
-        }
-    } else {
-        callerFP_ = unwindState.fp->callerFP;
-        callerPC_ = unwindState.fp->returnAddress;
-        // See comment above. The only way to get a tagged FP here means that
-        // the caller is a fast JIT caller which called into a wasm function.
-        if ((uintptr_t(callerFP_) & ExitOrJitEntryFPTag)) {
-            MOZ_ASSERT(unwindState.codeRange->isFunction());
-            unwoundIonCallerFP_ = (uint8_t*)(uintptr_t(callerFP_) & ~ExitOrJitEntryFPTag);
-        }
-    }
-
-    if (unwindState.codeRange->isJitEntry()) {
-        MOZ_ASSERT(!unwoundIonCallerFP_);
-        unwoundIonCallerFP_ = (uint8_t*) callerFP_;
-=======
     : code_(nullptr),
       codeRange_(nullptr),
       callerFP_(nullptr),
@@ -1772,37 +1140,7 @@ ProfilingFrameIterator::ProfilingFrameIterator(const JitActivation& activation,
     if (unwindState.codeRange->isFunction() &&
         (uintptr_t(state.fp) & ExitOrJitEntryFPTag)) {
       unwoundIonCallerFP_ = (uint8_t*)callerFP_;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  if (unwindState.codeRange->isJitEntry()) {
-    MOZ_ASSERT(!unwoundIonCallerFP_);
-    unwoundIonCallerFP_ = (uint8_t*)callerFP_;
-  }
-
-  if (unwindState.codeRange->isInterpEntry()) {
-    unwindState.codeRange = nullptr;
-    exitReason_ = ExitReason(ExitReason::Fixed::FakeInterpEntry);
-  }
-
-  code_ = unwindState.code;
-  codeRange_ = unwindState.codeRange;
-  stackAddress_ = state.sp;
-  MOZ_ASSERT(!done());
-||||||| merged common ancestors
-
-    if (unwindState.codeRange->isInterpEntry()) {
-        unwindState.codeRange = nullptr;
-        exitReason_ = ExitReason(ExitReason::Fixed::FakeInterpEntry);
-    }
-
-    code_ = unwindState.code;
-    codeRange_ = unwindState.codeRange;
-    stackAddress_ = state.sp;
-    MOZ_ASSERT(!done());
-=======
   } else {
     callerFP_ = unwindState.fp->callerFP;
     callerPC_ = unwindState.fp->returnAddress;
@@ -1829,7 +1167,6 @@ ProfilingFrameIterator::ProfilingFrameIterator(const JitActivation& activation,
   codeRange_ = unwindState.codeRange;
   stackAddress_ = state.sp;
   MOZ_ASSERT(!done());
->>>>>>> upstream-releases
 }
 
 void ProfilingFrameIterator::operator++() {
@@ -1914,94 +1251,6 @@ void ProfilingFrameIterator::operator++() {
   MOZ_ASSERT(!done());
 }
 
-<<<<<<< HEAD
-static const char* ThunkedNativeToDescription(SymbolicAddress func) {
-  MOZ_ASSERT(NeedsBuiltinThunk(func));
-  switch (func) {
-    case SymbolicAddress::HandleDebugTrap:
-    case SymbolicAddress::HandleThrow:
-    case SymbolicAddress::HandleTrap:
-    case SymbolicAddress::CallImport_Void:
-    case SymbolicAddress::CallImport_I32:
-    case SymbolicAddress::CallImport_I64:
-    case SymbolicAddress::CallImport_F64:
-    case SymbolicAddress::CallImport_Ref:
-    case SymbolicAddress::CoerceInPlace_ToInt32:
-    case SymbolicAddress::CoerceInPlace_ToNumber:
-      MOZ_ASSERT(!NeedsBuiltinThunk(func),
-                 "not in sync with NeedsBuiltinThunk");
-      break;
-    case SymbolicAddress::ToInt32:
-      return "call to asm.js native ToInt32 coercion (in wasm)";
-    case SymbolicAddress::DivI64:
-      return "call to native i64.div_s (in wasm)";
-    case SymbolicAddress::UDivI64:
-      return "call to native i64.div_u (in wasm)";
-    case SymbolicAddress::ModI64:
-      return "call to native i64.rem_s (in wasm)";
-    case SymbolicAddress::UModI64:
-      return "call to native i64.rem_u (in wasm)";
-    case SymbolicAddress::TruncateDoubleToUint64:
-      return "call to native i64.trunc_u/f64 (in wasm)";
-    case SymbolicAddress::TruncateDoubleToInt64:
-      return "call to native i64.trunc_s/f64 (in wasm)";
-    case SymbolicAddress::SaturatingTruncateDoubleToUint64:
-      return "call to native i64.trunc_u:sat/f64 (in wasm)";
-    case SymbolicAddress::SaturatingTruncateDoubleToInt64:
-      return "call to native i64.trunc_s:sat/f64 (in wasm)";
-    case SymbolicAddress::Uint64ToDouble:
-      return "call to native f64.convert_u/i64 (in wasm)";
-    case SymbolicAddress::Uint64ToFloat32:
-      return "call to native f32.convert_u/i64 (in wasm)";
-    case SymbolicAddress::Int64ToDouble:
-      return "call to native f64.convert_s/i64 (in wasm)";
-    case SymbolicAddress::Int64ToFloat32:
-      return "call to native f32.convert_s/i64 (in wasm)";
-||||||| merged common ancestors
-static const char*
-ThunkedNativeToDescription(SymbolicAddress func)
-{
-    MOZ_ASSERT(NeedsBuiltinThunk(func));
-    switch (func) {
-      case SymbolicAddress::HandleDebugTrap:
-      case SymbolicAddress::HandleThrow:
-      case SymbolicAddress::HandleTrap:
-      case SymbolicAddress::CallImport_Void:
-      case SymbolicAddress::CallImport_I32:
-      case SymbolicAddress::CallImport_I64:
-      case SymbolicAddress::CallImport_F64:
-      case SymbolicAddress::CallImport_Ref:
-      case SymbolicAddress::CoerceInPlace_ToInt32:
-      case SymbolicAddress::CoerceInPlace_ToNumber:
-        MOZ_ASSERT(!NeedsBuiltinThunk(func), "not in sync with NeedsBuiltinThunk");
-        break;
-      case SymbolicAddress::ToInt32:
-        return "call to asm.js native ToInt32 coercion (in wasm)";
-      case SymbolicAddress::DivI64:
-        return "call to native i64.div_s (in wasm)";
-      case SymbolicAddress::UDivI64:
-        return "call to native i64.div_u (in wasm)";
-      case SymbolicAddress::ModI64:
-        return "call to native i64.rem_s (in wasm)";
-      case SymbolicAddress::UModI64:
-        return "call to native i64.rem_u (in wasm)";
-      case SymbolicAddress::TruncateDoubleToUint64:
-        return "call to native i64.trunc_u/f64 (in wasm)";
-      case SymbolicAddress::TruncateDoubleToInt64:
-        return "call to native i64.trunc_s/f64 (in wasm)";
-      case SymbolicAddress::SaturatingTruncateDoubleToUint64:
-        return "call to native i64.trunc_u:sat/f64 (in wasm)";
-      case SymbolicAddress::SaturatingTruncateDoubleToInt64:
-        return "call to native i64.trunc_s:sat/f64 (in wasm)";
-      case SymbolicAddress::Uint64ToDouble:
-        return "call to native f64.convert_u/i64 (in wasm)";
-      case SymbolicAddress::Uint64ToFloat32:
-        return "call to native f32.convert_u/i64 (in wasm)";
-      case SymbolicAddress::Int64ToDouble:
-        return "call to native f64.convert_s/i64 (in wasm)";
-      case SymbolicAddress::Int64ToFloat32:
-        return "call to native f32.convert_s/i64 (in wasm)";
-=======
 static const char* ThunkedNativeToDescription(SymbolicAddress func) {
   MOZ_ASSERT(NeedsBuiltinThunk(func));
   switch (func) {
@@ -2045,168 +1294,12 @@ static const char* ThunkedNativeToDescription(SymbolicAddress func) {
       return "call to native f64.convert_s/i64 (in wasm)";
     case SymbolicAddress::Int64ToFloat32:
       return "call to native f32.convert_s/i64 (in wasm)";
->>>>>>> upstream-releases
 #if defined(JS_CODEGEN_ARM)
     case SymbolicAddress::aeabi_idivmod:
       return "call to native i32.div_s (in wasm)";
     case SymbolicAddress::aeabi_uidivmod:
       return "call to native i32.div_u (in wasm)";
 #endif
-<<<<<<< HEAD
-    case SymbolicAddress::ModD:
-      return "call to asm.js native f64 % (mod)";
-    case SymbolicAddress::SinD:
-      return "call to asm.js native f64 Math.sin";
-    case SymbolicAddress::CosD:
-      return "call to asm.js native f64 Math.cos";
-    case SymbolicAddress::TanD:
-      return "call to asm.js native f64 Math.tan";
-    case SymbolicAddress::ASinD:
-      return "call to asm.js native f64 Math.asin";
-    case SymbolicAddress::ACosD:
-      return "call to asm.js native f64 Math.acos";
-    case SymbolicAddress::ATanD:
-      return "call to asm.js native f64 Math.atan";
-    case SymbolicAddress::CeilD:
-      return "call to native f64.ceil (in wasm)";
-    case SymbolicAddress::CeilF:
-      return "call to native f32.ceil (in wasm)";
-    case SymbolicAddress::FloorD:
-      return "call to native f64.floor (in wasm)";
-    case SymbolicAddress::FloorF:
-      return "call to native f32.floor (in wasm)";
-    case SymbolicAddress::TruncD:
-      return "call to native f64.trunc (in wasm)";
-    case SymbolicAddress::TruncF:
-      return "call to native f32.trunc (in wasm)";
-    case SymbolicAddress::NearbyIntD:
-      return "call to native f64.nearest (in wasm)";
-    case SymbolicAddress::NearbyIntF:
-      return "call to native f32.nearest (in wasm)";
-    case SymbolicAddress::ExpD:
-      return "call to asm.js native f64 Math.exp";
-    case SymbolicAddress::LogD:
-      return "call to asm.js native f64 Math.log";
-    case SymbolicAddress::PowD:
-      return "call to asm.js native f64 Math.pow";
-    case SymbolicAddress::ATan2D:
-      return "call to asm.js native f64 Math.atan2";
-    case SymbolicAddress::GrowMemory:
-      return "call to native grow_memory (in wasm)";
-    case SymbolicAddress::CurrentMemory:
-      return "call to native current_memory (in wasm)";
-    case SymbolicAddress::WaitI32:
-      return "call to native i32.wait (in wasm)";
-    case SymbolicAddress::WaitI64:
-      return "call to native i64.wait (in wasm)";
-    case SymbolicAddress::Wake:
-      return "call to native wake (in wasm)";
-    case SymbolicAddress::CoerceInPlace_JitEntry:
-      return "out-of-line coercion for jit entry arguments (in wasm)";
-    case SymbolicAddress::ReportInt64JSCall:
-      return "jit call to int64 wasm function";
-    case SymbolicAddress::MemCopy:
-      return "call to native memory.copy function";
-    case SymbolicAddress::MemDrop:
-      return "call to native memory.drop function";
-    case SymbolicAddress::MemFill:
-      return "call to native memory.fill function";
-    case SymbolicAddress::MemInit:
-      return "call to native memory.init function";
-    case SymbolicAddress::TableCopy:
-      return "call to native table.copy function";
-    case SymbolicAddress::TableDrop:
-      return "call to native table.drop function";
-    case SymbolicAddress::TableGet:
-      return "call to native table.get function";
-    case SymbolicAddress::TableGrow:
-      return "call to native table.grow function";
-    case SymbolicAddress::TableInit:
-      return "call to native table.init function";
-    case SymbolicAddress::TableSet:
-      return "call to native table.set function";
-    case SymbolicAddress::TableSize:
-      return "call to native table.size function";
-    case SymbolicAddress::PostBarrier:
-      return "call to native GC postbarrier (in wasm)";
-    case SymbolicAddress::StructNew:
-      return "call to native struct.new (in wasm)";
-    case SymbolicAddress::StructNarrow:
-      return "call to native struct.narrow (in wasm)";
-||||||| merged common ancestors
-      case SymbolicAddress::ModD:
-        return "call to asm.js native f64 % (mod)";
-      case SymbolicAddress::SinD:
-        return "call to asm.js native f64 Math.sin";
-      case SymbolicAddress::CosD:
-        return "call to asm.js native f64 Math.cos";
-      case SymbolicAddress::TanD:
-        return "call to asm.js native f64 Math.tan";
-      case SymbolicAddress::ASinD:
-        return "call to asm.js native f64 Math.asin";
-      case SymbolicAddress::ACosD:
-        return "call to asm.js native f64 Math.acos";
-      case SymbolicAddress::ATanD:
-        return "call to asm.js native f64 Math.atan";
-      case SymbolicAddress::CeilD:
-        return "call to native f64.ceil (in wasm)";
-      case SymbolicAddress::CeilF:
-        return "call to native f32.ceil (in wasm)";
-      case SymbolicAddress::FloorD:
-        return "call to native f64.floor (in wasm)";
-      case SymbolicAddress::FloorF:
-        return "call to native f32.floor (in wasm)";
-      case SymbolicAddress::TruncD:
-        return "call to native f64.trunc (in wasm)";
-      case SymbolicAddress::TruncF:
-        return "call to native f32.trunc (in wasm)";
-      case SymbolicAddress::NearbyIntD:
-        return "call to native f64.nearest (in wasm)";
-      case SymbolicAddress::NearbyIntF:
-        return "call to native f32.nearest (in wasm)";
-      case SymbolicAddress::ExpD:
-        return "call to asm.js native f64 Math.exp";
-      case SymbolicAddress::LogD:
-        return "call to asm.js native f64 Math.log";
-      case SymbolicAddress::PowD:
-        return "call to asm.js native f64 Math.pow";
-      case SymbolicAddress::ATan2D:
-        return "call to asm.js native f64 Math.atan2";
-      case SymbolicAddress::GrowMemory:
-        return "call to native grow_memory (in wasm)";
-      case SymbolicAddress::CurrentMemory:
-        return "call to native current_memory (in wasm)";
-      case SymbolicAddress::WaitI32:
-        return "call to native i32.wait (in wasm)";
-      case SymbolicAddress::WaitI64:
-        return "call to native i64.wait (in wasm)";
-      case SymbolicAddress::Wake:
-        return "call to native wake (in wasm)";
-      case SymbolicAddress::CoerceInPlace_JitEntry:
-        return "out-of-line coercion for jit entry arguments (in wasm)";
-      case SymbolicAddress::ReportInt64JSCall:
-        return "jit call to int64 wasm function";
-      case SymbolicAddress::MemCopy:
-        return "call to native memory.copy function";
-      case SymbolicAddress::MemDrop:
-        return "call to native memory.drop function";
-      case SymbolicAddress::MemFill:
-        return "call to native memory.fill function";
-      case SymbolicAddress::MemInit:
-        return "call to native memory.init function";
-      case SymbolicAddress::TableCopy:
-        return "call to native table.copy function";
-      case SymbolicAddress::TableDrop:
-        return "call to native table.drop function";
-      case SymbolicAddress::TableInit:
-        return "call to native table.init function";
-      case SymbolicAddress::PostBarrier:
-        return "call to native GC postbarrier (in wasm)";
-      case SymbolicAddress::StructNew:
-        return "call to native struct.new (in wasm)";
-      case SymbolicAddress::StructNarrow:
-        return "call to native struct.narrow (in wasm)";
-=======
     case SymbolicAddress::ModD:
       return "call to asm.js native f64 % (mod)";
     case SymbolicAddress::SinD:
@@ -2291,22 +1384,10 @@ static const char* ThunkedNativeToDescription(SymbolicAddress func) {
       return "call to native struct.new (in wasm)";
     case SymbolicAddress::StructNarrow:
       return "call to native struct.narrow (in wasm)";
->>>>>>> upstream-releases
 #if defined(JS_CODEGEN_MIPS32)
     case SymbolicAddress::js_jit_gAtomic64Lock:
       MOZ_CRASH();
 #endif
-<<<<<<< HEAD
-    case SymbolicAddress::Limit:
-      break;
-  }
-  return "?";
-||||||| merged common ancestors
-      case SymbolicAddress::Limit:
-        break;
-    }
-    return "?";
-=======
 #ifdef WASM_CODEGEN_DEBUG
     case SymbolicAddress::PrintI32:
     case SymbolicAddress::PrintPtr:
@@ -2318,7 +1399,6 @@ static const char* ThunkedNativeToDescription(SymbolicAddress func) {
       break;
   }
   return "?";
->>>>>>> upstream-releases
 }
 
 const char* ProfilingFrameIterator::label() const {

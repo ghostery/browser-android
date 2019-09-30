@@ -30,25 +30,6 @@ add_task(async function() {
         browser
       );
 
-<<<<<<< HEAD
-    let notificationBox = gBrowser.getNotificationBox(browser);
-    ok(notification, "Infobar was shown.");
-    is(notification.priority, notificationBox.PRIORITY_WARNING_MEDIUM,
-       "Correct priority.");
-    is(notification.messageText.textContent,
-       "The GlobalTestPlugin plugin has crashed.",
-       "Correct message.");
-  });
-||||||| merged common ancestors
-    let notificationBox = gBrowser.getNotificationBox(browser);
-    ok(notification, "Infobar was shown.");
-    is(notification.priority, notificationBox.PRIORITY_WARNING_MEDIUM,
-       "Correct priority.");
-    is(notification.getAttribute("label"),
-       "The GlobalTestPlugin plugin has crashed.",
-       "Correct message.");
-  });
-=======
       let notificationBox = gBrowser.getNotificationBox(browser);
       ok(notification, "Infobar was shown.");
       is(
@@ -63,5 +44,4 @@ add_task(async function() {
       );
     }
   );
->>>>>>> upstream-releases
 });

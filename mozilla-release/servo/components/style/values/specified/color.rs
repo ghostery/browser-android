@@ -4,18 +4,6 @@
 
 //! Specified color values.
 
-<<<<<<< HEAD
-use super::AllowQuirks;
-#[cfg(feature = "gecko")]
-use crate::gecko_bindings::structs::nscolor;
-use crate::parser::{Parse, ParserContext};
-#[cfg(feature = "gecko")]
-use crate::properties::longhands::system_colors::SystemColor;
-use crate::values::computed::{Color as ComputedColor, Context, ToComputedValue};
-use crate::values::generics::color::Color as GenericColor;
-use crate::values::specified::calc::CalcNode;
-||||||| merged common ancestors
-=======
 use super::AllowQuirks;
 #[cfg(feature = "gecko")]
 use crate::gecko_bindings::structs::nscolor;
@@ -23,7 +11,6 @@ use crate::parser::{Parse, ParserContext};
 use crate::values::computed::{Color as ComputedColor, Context, ToComputedValue};
 use crate::values::generics::color::{Color as GenericColor, ColorOrAuto as GenericColorOrAuto};
 use crate::values::specified::calc::CalcNode;
->>>>>>> upstream-releases
 use cssparser::{AngleOrNumber, Color as CSSParserColor, Parser, Token, RGBA};
 use cssparser::{BasicParseErrorKind, NumberOrPercentage, ParseErrorKind};
 use itoa;

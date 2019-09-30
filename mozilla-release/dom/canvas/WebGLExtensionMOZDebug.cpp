@@ -17,31 +17,12 @@ WebGLExtensionMOZDebug::WebGLExtensionMOZDebug(WebGLContext* webgl)
 
 WebGLExtensionMOZDebug::~WebGLExtensionMOZDebug() {}
 
-<<<<<<< HEAD
-void WebGLExtensionMOZDebug::GetParameter(JSContext* cx, GLenum pname,
-                                          JS::MutableHandle<JS::Value> retval,
-                                          ErrorResult& er) const {
-  if (mIsLost) return;
-  const WebGLContext::FuncScope funcScope(*mContext, "MOZ_debug.getParameter");
-  MOZ_ASSERT(!mContext->IsContextLost());
-||||||| merged common ancestors
-void
-WebGLExtensionMOZDebug::GetParameter(JSContext* cx, GLenum pname,
-                                     JS::MutableHandle<JS::Value> retval,
-                                     ErrorResult& er) const
-{
-    if (mIsLost)
-        return;
-    const WebGLContext::FuncScope funcScope(*mContext, "MOZ_debug.getParameter");
-    MOZ_ASSERT(!mContext->IsContextLost());
-=======
 void WebGLExtensionMOZDebug::GetParameter(JSContext* cx, GLenum pname,
                                           JS::MutableHandle<JS::Value> retval,
                                           ErrorResult& er) const {
   if (mIsLost || !mContext) return;
   const WebGLContext::FuncScope funcScope(*mContext, "MOZ_debug.getParameter");
   MOZ_ASSERT(!mContext->IsContextLost());
->>>>>>> upstream-releases
 
   const auto& gl = mContext->gl;
 

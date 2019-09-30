@@ -141,36 +141,16 @@ class nsMenuAttributeChangedEvent : public Runnable {
 //
 // Wrappers for creating a new menu popup container
 //
-<<<<<<< HEAD
-nsIFrame* NS_NewMenuFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  nsMenuFrame* it = new (aPresShell) nsMenuFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMenuFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  nsMenuFrame* it = new (aPresShell) nsMenuFrame(aStyle);
-=======
 nsIFrame* NS_NewMenuFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   nsMenuFrame* it =
       new (aPresShell) nsMenuFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
   it->SetIsMenu(true);
   return it;
 }
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMenuItemFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  nsMenuFrame* it = new (aPresShell) nsMenuFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMenuItemFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  nsMenuFrame* it = new (aPresShell) nsMenuFrame(aStyle);
-=======
 nsIFrame* NS_NewMenuItemFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   nsMenuFrame* it =
       new (aPresShell) nsMenuFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
   it->SetIsMenu(false);
   return it;
 }
@@ -181,33 +161,6 @@ NS_QUERYFRAME_HEAD(nsMenuFrame)
   NS_QUERYFRAME_ENTRY(nsMenuFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsBoxFrame)
 
-<<<<<<< HEAD
-nsMenuFrame::nsMenuFrame(ComputedStyle* aStyle)
-    : nsBoxFrame(aStyle, kClassID),
-      mIsMenu(false),
-      mChecked(false),
-      mIgnoreAccelTextChange(false),
-      mReflowCallbackPosted(false),
-      mType(eMenuType_Normal),
-      mBlinkState(0) {}
-
-nsMenuParent* nsMenuFrame::GetMenuParent() const {
-||||||| merged common ancestors
-nsMenuFrame::nsMenuFrame(ComputedStyle* aStyle)
-  : nsBoxFrame(aStyle, kClassID)
-  , mIsMenu(false)
-  , mChecked(false)
-  , mIgnoreAccelTextChange(false)
-  , mReflowCallbackPosted(false)
-  , mType(eMenuType_Normal)
-  , mBlinkState(0)
-{
-}
-
-nsMenuParent*
-nsMenuFrame::GetMenuParent() const
-{
-=======
 nsMenuFrame::nsMenuFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
     : nsBoxFrame(aStyle, aPresContext, kClassID),
       mIsMenu(false),
@@ -218,7 +171,6 @@ nsMenuFrame::nsMenuFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       mBlinkState(0) {}
 
 nsMenuParent* nsMenuFrame::GetMenuParent() const {
->>>>>>> upstream-releases
   nsContainerFrame* parent = GetParent();
   for (; parent; parent = parent->GetParent()) {
     nsMenuPopupFrame* popup = do_QueryFrame(parent);
@@ -433,20 +385,9 @@ nsresult nsMenuFrame::HandleEvent(nsPresContext* aPresContext,
       ToggleMenuState();
     }
 #endif
-<<<<<<< HEAD
-  } else if (aEvent->mMessage == eMouseDown &&
-             aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton &&
-             !IsDisabled() && IsMenu()) {
-||||||| merged common ancestors
-  }
-  else if (aEvent->mMessage == eMouseDown &&
-           aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton &&
-           !IsDisabled() && IsMenu()) {
-=======
   } else if (aEvent->mMessage == eMouseDown &&
              aEvent->AsMouseEvent()->mButton == MouseButton::eLeft &&
              !IsDisabled() && IsMenu()) {
->>>>>>> upstream-releases
     // The menu item was selected. Bring up the menu.
     // We have children.
     // Don't prevent the default action here, since that will also cancel
@@ -461,16 +402,8 @@ nsresult nsMenuFrame::HandleEvent(nsPresContext* aPresContext,
     }
   } else if (
 #ifndef NSCONTEXTMENUISMOUSEUP
-<<<<<<< HEAD
-      (aEvent->mMessage == eMouseUp &&
-       aEvent->AsMouseEvent()->button == WidgetMouseEvent::eRightButton) &&
-||||||| merged common ancestors
-           (aEvent->mMessage == eMouseUp &&
-            aEvent->AsMouseEvent()->button == WidgetMouseEvent::eRightButton) &&
-=======
       (aEvent->mMessage == eMouseUp &&
        aEvent->AsMouseEvent()->mButton == MouseButton::eRight) &&
->>>>>>> upstream-releases
 #else
       aEvent->mMessage == eContextMenu &&
 #endif
@@ -489,20 +422,9 @@ nsresult nsMenuFrame::HandleEvent(nsPresContext* aPresContext,
       *aEventStatus = nsEventStatus_eConsumeNoDefault;
       Execute(aEvent);
     }
-<<<<<<< HEAD
-  } else if (aEvent->mMessage == eMouseUp &&
-             aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton &&
-             !IsMenu() && !IsDisabled()) {
-||||||| merged common ancestors
-  }
-  else if (aEvent->mMessage == eMouseUp &&
-           aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton &&
-           !IsMenu() && !IsDisabled()) {
-=======
   } else if (aEvent->mMessage == eMouseUp &&
              aEvent->AsMouseEvent()->mButton == MouseButton::eLeft &&
              !IsMenu() && !IsDisabled()) {
->>>>>>> upstream-releases
     // Execute the execute event handler.
     *aEventStatus = nsEventStatus_eConsumeNoDefault;
     Execute(aEvent);
@@ -703,59 +625,8 @@ nsresult nsMenuFrame::AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsIContent* nsMenuFrame::GetAnchor() {
-  mozilla::dom::Element* anchor = nullptr;
-
-  nsAutoString id;
-  mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::anchor, id);
-  if (!id.IsEmpty()) {
-    nsIDocument* doc = mContent->OwnerDoc();
-
-    anchor =
-        doc->GetAnonymousElementByAttribute(mContent, nsGkAtoms::anonid, id);
-    if (!anchor) {
-      anchor = doc->GetElementById(id);
-    }
-  }
-
-  // Always return the menu's content if the anchor wasn't set or wasn't found.
-  return anchor && anchor->GetPrimaryFrame() ? anchor : GetContent();
-}
-
 void nsMenuFrame::OpenMenu(bool aSelectFirstItem) {
   if (!mContent) return;
-||||||| merged common ancestors
-nsIContent*
-nsMenuFrame::GetAnchor()
-{
-  mozilla::dom::Element* anchor = nullptr;
-
-  nsAutoString id;
-  mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::anchor, id);
-  if (!id.IsEmpty()) {
-    nsIDocument* doc = mContent->OwnerDoc();
-
-    anchor =
-      doc->GetAnonymousElementByAttribute(mContent, nsGkAtoms::anonid, id);
-    if (!anchor) {
-      anchor = doc->GetElementById(id);
-    }
-  }
-
-  // Always return the menu's content if the anchor wasn't set or wasn't found.
-  return anchor && anchor->GetPrimaryFrame() ? anchor : GetContent();
-}
-
-void
-nsMenuFrame::OpenMenu(bool aSelectFirstItem)
-{
-  if (!mContent)
-    return;
-=======
-void nsMenuFrame::OpenMenu(bool aSelectFirstItem) {
-  if (!mContent) return;
->>>>>>> upstream-releases
 
   nsXULPopupManager* pm = nsXULPopupManager::GetInstance();
   if (pm) {
@@ -803,14 +674,7 @@ nsMenuFrame::DoXULLayout(nsBoxLayoutState& aState) {
   nsMenuPopupFrame* popupFrame = GetPopup();
   if (popupFrame) {
     bool sizeToPopup = IsSizedToPopup(mContent, false);
-<<<<<<< HEAD
-    popupFrame->LayoutPopup(aState, this, GetAnchor()->GetPrimaryFrame(),
-                            sizeToPopup);
-||||||| merged common ancestors
-    popupFrame->LayoutPopup(aState, this, GetAnchor()->GetPrimaryFrame(), sizeToPopup);
-=======
     popupFrame->LayoutPopup(aState, this, sizeToPopup);
->>>>>>> upstream-releases
   }
 
   return rv;
@@ -1041,17 +905,8 @@ void nsMenuFrame::BuildAcceleratorText(bool aNotify) {
   if (keyValue.IsEmpty()) return;
 
   // Turn the document into a DOM document so we can use getElementById
-<<<<<<< HEAD
-  nsIDocument* document = mContent->GetUncomposedDoc();
-  if (!document) return;
-||||||| merged common ancestors
-  nsIDocument *document = mContent->GetUncomposedDoc();
-  if (!document)
-    return;
-=======
   Document* document = mContent->GetUncomposedDoc();
   if (!document) return;
->>>>>>> upstream-releases
 
   // XXXsmaug If mContent is in shadow dom, should we use
   //         ShadowRoot::GetElementById()?
@@ -1282,17 +1137,8 @@ void nsMenuFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
     popupList->RemoveFirstChild();
     aOldFrame->Destroy();
     DestroyPopupList();
-<<<<<<< HEAD
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                                  NS_FRAME_HAS_DIRTY_CHILDREN);
-||||||| merged common ancestors
-    PresShell()->
-      FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                       NS_FRAME_HAS_DIRTY_CHILDREN);
-=======
     PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
->>>>>>> upstream-releases
     return;
   }
   nsBoxFrame::RemoveFrame(aListID, aOldFrame);
@@ -1303,17 +1149,8 @@ void nsMenuFrame::InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
   if (!HasPopup() && (aListID == kPrincipalList || aListID == kPopupList)) {
     SetPopupFrame(aFrameList);
     if (HasPopup()) {
-<<<<<<< HEAD
-      PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                                    NS_FRAME_HAS_DIRTY_CHILDREN);
-||||||| merged common ancestors
-      PresShell()->
-        FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                         NS_FRAME_HAS_DIRTY_CHILDREN);
-=======
       PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                     NS_FRAME_HAS_DIRTY_CHILDREN);
->>>>>>> upstream-releases
     }
   }
 
@@ -1330,17 +1167,8 @@ void nsMenuFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
   if (!HasPopup() && (aListID == kPrincipalList || aListID == kPopupList)) {
     SetPopupFrame(aFrameList);
     if (HasPopup()) {
-<<<<<<< HEAD
-      PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                                    NS_FRAME_HAS_DIRTY_CHILDREN);
-||||||| merged common ancestors
-      PresShell()->
-        FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                         NS_FRAME_HAS_DIRTY_CHILDREN);
-=======
       PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                     NS_FRAME_HAS_DIRTY_CHILDREN);
->>>>>>> upstream-releases
     }
   }
 
@@ -1368,19 +1196,9 @@ bool nsMenuFrame::SizeToPopup(nsBoxLayoutState& aState, nsSize& aSize) {
       nsMargin borderPadding;
       GetXULBorderAndPadding(borderPadding);
 
-<<<<<<< HEAD
-      // if there is a scroll frame, add the desired width of the scrollbar as
-      // well
-      nsIScrollableFrame* scrollFrame =
-          do_QueryFrame(popupFrame->PrincipalChildList().FirstChild());
-||||||| merged common ancestors
-      // if there is a scroll frame, add the desired width of the scrollbar as well
-      nsIScrollableFrame* scrollFrame = do_QueryFrame(popupFrame->PrincipalChildList().FirstChild());
-=======
       // if there is a scroll frame, add the desired width of the scrollbar as
       // well
       nsIScrollableFrame* scrollFrame = popupFrame->GetScrollFrame(popupFrame);
->>>>>>> upstream-releases
       nscoord scrollbarWidth = 0;
       if (scrollFrame) {
         scrollbarWidth =
@@ -1433,12 +1251,6 @@ nsMenuFrame::GetActiveChild(dom::Element** aResult) {
 NS_IMETHODIMP
 nsMenuFrame::SetActiveChild(dom::Element* aChild) {
   nsMenuPopupFrame* popupFrame = GetPopup();
-<<<<<<< HEAD
-  if (!popupFrame) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  if (!popupFrame)
-    return NS_ERROR_FAILURE;
-=======
   if (!popupFrame) return NS_ERROR_FAILURE;
 
   // Force the child frames within the popup to be generated.
@@ -1447,7 +1259,6 @@ nsMenuFrame::SetActiveChild(dom::Element* aChild) {
   if (!weakFrame.IsAlive()) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   if (!aChild) {
     // Remove the current selection

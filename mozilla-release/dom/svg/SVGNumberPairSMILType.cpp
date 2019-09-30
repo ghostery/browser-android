@@ -15,15 +15,7 @@ namespace mozilla {
 /*static*/
 SVGNumberPairSMILType SVGNumberPairSMILType::sSingleton;
 
-<<<<<<< HEAD
-void SVGNumberPairSMILType::Init(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGNumberPairSMILType::Init(nsSMILValue& aValue) const
-{
-=======
 void SVGNumberPairSMILType::Init(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.IsNull(), "Unexpected value type");
 
   aValue.mU.mNumberPair[0] = 0;
@@ -31,32 +23,15 @@ void SVGNumberPairSMILType::Init(SMILValue& aValue) const {
   aValue.mType = this;
 }
 
-<<<<<<< HEAD
-void SVGNumberPairSMILType::Destroy(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGNumberPairSMILType::Destroy(nsSMILValue& aValue) const
-{
-=======
 void SVGNumberPairSMILType::Destroy(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == this, "Unexpected SMIL value");
   aValue.mU.mNumberPair[0] = 0;
   aValue.mU.mNumberPair[1] = 0;
   aValue.mType = SMILNullType::Singleton();
 }
 
-<<<<<<< HEAD
-nsresult SVGNumberPairSMILType::Assign(nsSMILValue& aDest,
-                                       const nsSMILValue& aSrc) const {
-||||||| merged common ancestors
-nsresult
-SVGNumberPairSMILType::Assign(nsSMILValue& aDest, const nsSMILValue& aSrc) const
-{
-=======
 nsresult SVGNumberPairSMILType::Assign(SMILValue& aDest,
                                        const SMILValue& aSrc) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == aSrc.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL value");
 
@@ -65,18 +40,8 @@ nsresult SVGNumberPairSMILType::Assign(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool SVGNumberPairSMILType::IsEqual(const nsSMILValue& aLeft,
-                                    const nsSMILValue& aRight) const {
-||||||| merged common ancestors
-bool
-SVGNumberPairSMILType::IsEqual(const nsSMILValue& aLeft,
-                               const nsSMILValue& aRight) const
-{
-=======
 bool SVGNumberPairSMILType::IsEqual(const SMILValue& aLeft,
                                     const SMILValue& aRight) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLeft.mType == aRight.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aLeft.mType == this, "Unexpected type for SMIL value");
 
@@ -84,24 +49,10 @@ bool SVGNumberPairSMILType::IsEqual(const SMILValue& aLeft,
          aLeft.mU.mNumberPair[1] == aRight.mU.mNumberPair[1];
 }
 
-<<<<<<< HEAD
-nsresult SVGNumberPairSMILType::Add(nsSMILValue& aDest,
-                                    const nsSMILValue& aValueToAdd,
-                                    uint32_t aCount) const {
-  MOZ_ASSERT(aValueToAdd.mType == aDest.mType, "Trying to add invalid types");
-||||||| merged common ancestors
-nsresult
-SVGNumberPairSMILType::Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-                           uint32_t aCount) const
-{
-  MOZ_ASSERT(aValueToAdd.mType == aDest.mType,
-                  "Trying to add invalid types");
-=======
 nsresult SVGNumberPairSMILType::Add(SMILValue& aDest,
                                     const SMILValue& aValueToAdd,
                                     uint32_t aCount) const {
   MOZ_ASSERT(aValueToAdd.mType == aDest.mType, "Trying to add invalid types");
->>>>>>> upstream-releases
   MOZ_ASSERT(aValueToAdd.mType == this, "Unexpected source type");
 
   aDest.mU.mNumberPair[0] += aValueToAdd.mU.mNumberPair[0] * aCount;
@@ -110,24 +61,10 @@ nsresult SVGNumberPairSMILType::Add(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGNumberPairSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                                const nsSMILValue& aTo,
-                                                double& aDistance) const {
-  MOZ_ASSERT(aFrom.mType == aTo.mType, "Trying to compare different types");
-||||||| merged common ancestors
-nsresult
-SVGNumberPairSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                       const nsSMILValue& aTo,
-                                       double& aDistance) const
-{
-  MOZ_ASSERT(aFrom.mType == aTo.mType,"Trying to compare different types");
-=======
 nsresult SVGNumberPairSMILType::ComputeDistance(const SMILValue& aFrom,
                                                 const SMILValue& aTo,
                                                 double& aDistance) const {
   MOZ_ASSERT(aFrom.mType == aTo.mType, "Trying to compare different types");
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrom.mType == this, "Unexpected source type");
 
   double delta[2];
@@ -138,24 +75,10 @@ nsresult SVGNumberPairSMILType::ComputeDistance(const SMILValue& aFrom,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGNumberPairSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                            const nsSMILValue& aEndVal,
-                                            double aUnitDistance,
-                                            nsSMILValue& aResult) const {
-||||||| merged common ancestors
-nsresult
-SVGNumberPairSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                   const nsSMILValue& aEndVal,
-                                   double aUnitDistance,
-                                   nsSMILValue& aResult) const
-{
-=======
 nsresult SVGNumberPairSMILType::Interpolate(const SMILValue& aStartVal,
                                             const SMILValue& aEndVal,
                                             double aUnitDistance,
                                             SMILValue& aResult) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartVal.mType == aEndVal.mType,
              "Trying to interpolate different types");
   MOZ_ASSERT(aStartVal.mType == this, "Unexpected types for interpolation");

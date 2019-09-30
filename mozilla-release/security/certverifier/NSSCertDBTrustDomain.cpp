@@ -53,89 +53,6 @@ extern LazyLogModule gCertVerifierLog;
 
 static const uint64_t ServerFailureDelaySeconds = 5 * 60;
 
-<<<<<<< HEAD
-namespace mozilla {
-namespace psm {
-
-NSSCertDBTrustDomain::NSSCertDBTrustDomain(
-    SECTrustType certDBTrustType, OCSPFetching ocspFetching,
-    OCSPCache& ocspCache,
-    /*optional but shouldn't be*/ void* pinArg, TimeDuration ocspTimeoutSoft,
-    TimeDuration ocspTimeoutHard, uint32_t certShortLifetimeInDays,
-    CertVerifier::PinningMode pinningMode, unsigned int minRSABits,
-    ValidityCheckingMode validityCheckingMode, CertVerifier::SHA1Mode sha1Mode,
-    NetscapeStepUpPolicy netscapeStepUpPolicy,
-    DistrustedCAPolicy distrustedCAPolicy,
-    const OriginAttributes& originAttributes, UniqueCERTCertList& builtChain,
-    /*optional*/ PinningTelemetryInfo* pinningTelemetryInfo,
-    /*optional*/ const char* hostname)
-    : mCertDBTrustType(certDBTrustType),
-      mOCSPFetching(ocspFetching),
-      mOCSPCache(ocspCache),
-      mPinArg(pinArg),
-      mOCSPTimeoutSoft(ocspTimeoutSoft),
-      mOCSPTimeoutHard(ocspTimeoutHard),
-      mCertShortLifetimeInDays(certShortLifetimeInDays),
-      mPinningMode(pinningMode),
-      mMinRSABits(minRSABits),
-      mValidityCheckingMode(validityCheckingMode),
-      mSHA1Mode(sha1Mode),
-      mNetscapeStepUpPolicy(netscapeStepUpPolicy),
-      mDistrustedCAPolicy(distrustedCAPolicy),
-      mSawDistrustedCAByPolicyError(false),
-      mOriginAttributes(originAttributes),
-      mBuiltChain(builtChain),
-      mPinningTelemetryInfo(pinningTelemetryInfo),
-      mHostname(hostname),
-      mCertBlocklist(do_GetService(NS_CERTBLOCKLIST_CONTRACTID)),
-      mOCSPStaplingStatus(CertVerifier::OCSP_STAPLING_NEVER_CHECKED),
-      mSCTListFromCertificate(),
-      mSCTListFromOCSPStapling() {}
-||||||| merged common ancestors
-namespace mozilla { namespace psm {
-
-NSSCertDBTrustDomain::NSSCertDBTrustDomain(SECTrustType certDBTrustType,
-                                           OCSPFetching ocspFetching,
-                                           OCSPCache& ocspCache,
-             /*optional but shouldn't be*/ void* pinArg,
-                                           TimeDuration ocspTimeoutSoft,
-                                           TimeDuration ocspTimeoutHard,
-                                           uint32_t certShortLifetimeInDays,
-                                           CertVerifier::PinningMode pinningMode,
-                                           unsigned int minRSABits,
-                                           ValidityCheckingMode validityCheckingMode,
-                                           CertVerifier::SHA1Mode sha1Mode,
-                                           NetscapeStepUpPolicy netscapeStepUpPolicy,
-                                           DistrustedCAPolicy distrustedCAPolicy,
-                                           const OriginAttributes& originAttributes,
-                                           UniqueCERTCertList& builtChain,
-                              /*optional*/ PinningTelemetryInfo* pinningTelemetryInfo,
-                              /*optional*/ const char* hostname)
-  : mCertDBTrustType(certDBTrustType)
-  , mOCSPFetching(ocspFetching)
-  , mOCSPCache(ocspCache)
-  , mPinArg(pinArg)
-  , mOCSPTimeoutSoft(ocspTimeoutSoft)
-  , mOCSPTimeoutHard(ocspTimeoutHard)
-  , mCertShortLifetimeInDays(certShortLifetimeInDays)
-  , mPinningMode(pinningMode)
-  , mMinRSABits(minRSABits)
-  , mValidityCheckingMode(validityCheckingMode)
-  , mSHA1Mode(sha1Mode)
-  , mNetscapeStepUpPolicy(netscapeStepUpPolicy)
-  , mDistrustedCAPolicy(distrustedCAPolicy)
-  , mSawDistrustedCAByPolicyError(false)
-  , mOriginAttributes(originAttributes)
-  , mBuiltChain(builtChain)
-  , mPinningTelemetryInfo(pinningTelemetryInfo)
-  , mHostname(hostname)
-  , mCertBlocklist(do_GetService(NS_CERTBLOCKLIST_CONTRACTID))
-  , mOCSPStaplingStatus(CertVerifier::OCSP_STAPLING_NEVER_CHECKED)
-  , mSCTListFromCertificate()
-  , mSCTListFromOCSPStapling()
-{
-}
-=======
 namespace mozilla {
 namespace psm {
 
@@ -184,34 +101,7 @@ NSSCertDBTrustDomain::NSSCertDBTrustDomain(
       mSCTListFromOCSPStapling(),
       mBuiltInRootsModule(SECMOD_FindModule(kRootModuleName)) {
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// If useRoots is true, we only use root certificates in the candidate list.
-// If useRoots is false, we only use non-root certificates in the list.
-static Result FindIssuerInner(const UniqueCERTCertList& candidates,
-                              bool useRoots, Input encodedIssuerName,
-                              TrustDomain::IssuerChecker& checker,
-                              /*out*/ bool& keepGoing) {
-  keepGoing = true;
-  for (CERTCertListNode* n = CERT_LIST_HEAD(candidates);
-       !CERT_LIST_END(n, candidates); n = CERT_LIST_NEXT(n)) {
-    bool candidateIsRoot = !!n->cert->isRoot;
-    if (candidateIsRoot != useRoots) {
-||||||| merged common ancestors
-// If useRoots is true, we only use root certificates in the candidate list.
-// If useRoots is false, we only use non-root certificates in the list.
-static Result
-FindIssuerInner(const UniqueCERTCertList& candidates, bool useRoots,
-                Input encodedIssuerName, TrustDomain::IssuerChecker& checker,
-                /*out*/ bool& keepGoing)
-{
-  keepGoing = true;
-  for (CERTCertListNode* n = CERT_LIST_HEAD(candidates);
-       !CERT_LIST_END(n, candidates); n = CERT_LIST_NEXT(n)) {
-    bool candidateIsRoot = !!n->cert->isRoot;
-    if (candidateIsRoot != useRoots) {
-=======
 static Result FindRootsWithSubject(UniqueSECMODModule& rootsModule,
                                    SECItem subject,
                                    /*out*/ Vector<Vector<uint8_t>>& roots) {
@@ -224,20 +114,8 @@ static Result FindRootsWithSubject(UniqueSECMODModule& rootsModule,
     }
     // rawResults == nullptr means we didn't find any matching certificates
     if (!rawResults) {
->>>>>>> upstream-releases
       continue;
     }
-<<<<<<< HEAD
-    Input certDER;
-    Result rv = certDER.Init(n->cert->derCert.data, n->cert->derCert.len);
-    if (rv != Success) {
-      continue;  // probably too big
-||||||| merged common ancestors
-    Input certDER;
-    Result rv = certDER.Init(n->cert->derCert.data, n->cert->derCert.len);
-    if (rv != Success) {
-      continue; // probably too big
-=======
     UniqueCERTCertificateList results(rawResults);
     for (int certIndex = 0; certIndex < results->len; certIndex++) {
       Vector<uint8_t> root;
@@ -248,37 +126,11 @@ static Result FindRootsWithSubject(UniqueSECMODModule& rootsModule,
       if (!roots.append(std::move(root))) {
         return Result::FATAL_ERROR_NO_MEMORY;
       }
->>>>>>> upstream-releases
     }
   }
   return Success;
 }
 
-<<<<<<< HEAD
-    const SECItem encodedIssuerNameItem = {
-        siBuffer, const_cast<unsigned char*>(encodedIssuerName.UnsafeGetData()),
-        encodedIssuerName.GetLength()};
-    ScopedAutoSECItem nameConstraints;
-    SECStatus srv = CERT_GetImposedNameConstraints(&encodedIssuerNameItem,
-                                                   &nameConstraints);
-    if (srv != SECSuccess) {
-      if (PR_GetError() != SEC_ERROR_EXTENSION_NOT_FOUND) {
-        return Result::FATAL_ERROR_LIBRARY_FAILURE;
-      }
-||||||| merged common ancestors
-    const SECItem encodedIssuerNameItem = {
-      siBuffer,
-      const_cast<unsigned char*>(encodedIssuerName.UnsafeGetData()),
-      encodedIssuerName.GetLength()
-    };
-    ScopedAutoSECItem nameConstraints;
-    SECStatus srv = CERT_GetImposedNameConstraints(&encodedIssuerNameItem,
-                                                   &nameConstraints);
-    if (srv != SECSuccess) {
-      if (PR_GetError() != SEC_ERROR_EXTENSION_NOT_FOUND) {
-        return Result::FATAL_ERROR_LIBRARY_FAILURE;
-      }
-=======
 // A self-signed issuer certificate should never be necessary in order to build
 // a trusted certificate chain unless it is a trust anchor. This is because if
 // it were necessary, there would exist another certificate with the same
@@ -323,31 +175,7 @@ static bool ShouldSkipSelfSignedNonTrustAnchor(TrustDomain& trustDomain,
   // for path building. See bug 1056341.
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // If no imposed name constraints were found, continue without them
-      rv = checker.Check(certDER, nullptr, keepGoing);
-    } else {
-      // Otherwise apply the constraints
-      Input nameConstraintsInput;
-      if (nameConstraintsInput.Init(nameConstraints.data,
-                                    nameConstraints.len) != Success) {
-        return Result::FATAL_ERROR_LIBRARY_FAILURE;
-      }
-      rv = checker.Check(certDER, &nameConstraintsInput, keepGoing);
-||||||| merged common ancestors
-      // If no imposed name constraints were found, continue without them
-      rv = checker.Check(certDER, nullptr, keepGoing);
-    } else {
-      // Otherwise apply the constraints
-      Input nameConstraintsInput;
-      if (nameConstraintsInput.Init(nameConstraints.data, nameConstraints.len)
-            != Success) {
-        return Result::FATAL_ERROR_LIBRARY_FAILURE;
-      }
-      rv = checker.Check(certDER, &nameConstraintsInput, keepGoing);
-=======
 static Result CheckCandidates(TrustDomain& trustDomain,
                               TrustDomain::IssuerChecker& checker,
                               Vector<Input>& candidates,
@@ -355,7 +183,6 @@ static Result CheckCandidates(TrustDomain& trustDomain,
   for (Input candidate : candidates) {
     if (ShouldSkipSelfSignedNonTrustAnchor(trustDomain, candidate)) {
       continue;
->>>>>>> upstream-releases
     }
     Result rv = checker.Check(candidate, nameConstraintsInputPtr, keepGoing);
     if (rv != Success) {
@@ -369,42 +196,9 @@ static Result CheckCandidates(TrustDomain& trustDomain,
   return Success;
 }
 
-<<<<<<< HEAD
 Result NSSCertDBTrustDomain::FindIssuer(Input encodedIssuerName,
                                         IssuerChecker& checker, Time) {
-  // TODO: NSS seems to be ambiguous between "no potential issuers found" and
-  // "there was an error trying to retrieve the potential issuers."
-||||||| merged common ancestors
-Result
-NSSCertDBTrustDomain::FindIssuer(Input encodedIssuerName,
-                                 IssuerChecker& checker, Time)
-{
-  // TODO: NSS seems to be ambiguous between "no potential issuers found" and
-  // "there was an error trying to retrieve the potential issuers."
-=======
-Result NSSCertDBTrustDomain::FindIssuer(Input encodedIssuerName,
-                                        IssuerChecker& checker, Time) {
->>>>>>> upstream-releases
   SECItem encodedIssuerNameItem = UnsafeMapInputToSECItem(encodedIssuerName);
-<<<<<<< HEAD
-  UniqueCERTCertList candidates(CERT_CreateSubjectCertList(
-      nullptr, CERT_GetDefaultCertDB(), &encodedIssuerNameItem, 0, false));
-  if (candidates) {
-    // First, try all the root certs; then try all the non-root certs.
-    bool keepGoing;
-    Result rv = FindIssuerInner(candidates, true, encodedIssuerName, checker,
-                                keepGoing);
-||||||| merged common ancestors
-  UniqueCERTCertList
-    candidates(CERT_CreateSubjectCertList(nullptr, CERT_GetDefaultCertDB(),
-                                          &encodedIssuerNameItem, 0,
-                                          false));
-  if (candidates) {
-    // First, try all the root certs; then try all the non-root certs.
-    bool keepGoing;
-    Result rv = FindIssuerInner(candidates, true, encodedIssuerName, checker,
-                                keepGoing);
-=======
   // Handle imposed name constraints, if any.
   ScopedAutoSECItem nameConstraints;
   Input nameConstraintsInput;
@@ -459,7 +253,6 @@ Result NSSCertDBTrustDomain::FindIssuer(Input encodedIssuerName,
   if (mBuiltInRootsModule) {
     Result rv = FindRootsWithSubject(mBuiltInRootsModule, encodedIssuerNameItem,
                                      builtInRoots);
->>>>>>> upstream-releases
     if (rv != Success) {
       return rv;
     }
@@ -587,28 +380,14 @@ Result NSSCertDBTrustDomain::GetCertTrust(EndEntityOrCA endEntityOrCA,
     nsAutoCString encSubject;
     nsAutoCString encPubKey;
 
-<<<<<<< HEAD
-    nsresult nsrv = BuildRevocationCheckStrings(
-        candidateCert.get(), encIssuer, encSerial, encSubject, encPubKey);
-||||||| merged common ancestors
-    nsresult nsrv = BuildRevocationCheckStrings(candidateCert.get(), encIssuer, encSerial, encSubject, encPubKey);
-=======
     nsresult nsrv = BuildRevocationCheckStrings(
         candidateCert.get(), encIssuer, encSerial, encSubject, encPubKey);
 #endif
->>>>>>> upstream-releases
 
     if (NS_FAILED(nsrv)) {
       return Result::FATAL_ERROR_LIBRARY_FAILURE;
     }
 
-<<<<<<< HEAD
-    nsrv = mCertBlocklist->IsCertRevoked(encIssuer, encSerial, encSubject,
-                                         encPubKey, &isCertRevoked);
-||||||| merged common ancestors
-    nsrv = mCertBlocklist->IsCertRevoked(
-      encIssuer, encSerial, encSubject, encPubKey, &isCertRevoked);
-=======
 #ifdef MOZ_NEW_CERT_STORAGE
     nsrv = mCertStorage->GetRevocationState(
         issuerBytes, serialBytes, subjectBytes, pubKeyBytes, &revocationState);
@@ -616,7 +395,6 @@ Result NSSCertDBTrustDomain::GetCertTrust(EndEntityOrCA endEntityOrCA,
     nsrv = mCertBlocklist->IsCertRevoked(encIssuer, encSerial, encSubject,
                                          encPubKey, &isCertRevoked);
 #endif
->>>>>>> upstream-releases
     if (NS_FAILED(nsrv)) {
       return Result::FATAL_ERROR_LIBRARY_FAILURE;
     }
@@ -958,115 +736,14 @@ Result NSSCertDBTrustDomain::CheckRevocation(
   if (cachedResponseResult == Success ||
       cachedResponseResult == Result::ERROR_OCSP_UNKNOWN_CERT ||
       cachedResponseResult == Result::ERROR_OCSP_OLD_RESPONSE) {
-<<<<<<< HEAD
-    uint8_t ocspRequestBytes[OCSP_REQUEST_MAX_LENGTH];
-    size_t ocspRequestLength;
-    rv = CreateEncodedOCSPRequest(*this, certID, ocspRequestBytes,
-                                  ocspRequestLength);
-    if (rv != Success) {
-      return rv;
-    }
-    Vector<uint8_t> ocspRequest;
-    if (!ocspRequest.append(ocspRequestBytes, ocspRequestLength)) {
-      return Result::FATAL_ERROR_NO_MEMORY;
-    }
-    Result tempRV =
-        DoOCSPRequest(aiaLocation, mOriginAttributes, std::move(ocspRequest),
-                      GetOCSPTimeout(), ocspResponse);
-    if (tempRV != Success) {
-      rv = tempRV;
-    } else if (response.Init(ocspResponse.begin(), ocspResponse.length()) !=
-               Success) {
-      rv = Result::ERROR_OCSP_MALFORMED_RESPONSE;  // too big
-    }
-    attemptedRequest = true;
-  } else {
-    rv = cachedResponseResult;
-    attemptedRequest = false;
-||||||| merged common ancestors
-    uint8_t ocspRequestBytes[OCSP_REQUEST_MAX_LENGTH];
-    size_t ocspRequestLength;
-    rv = CreateEncodedOCSPRequest(*this, certID, ocspRequestBytes,
-                                  ocspRequestLength);
-    if (rv != Success) {
-      return rv;
-    }
-    Vector<uint8_t> ocspRequest;
-    if (!ocspRequest.append(ocspRequestBytes, ocspRequestLength)) {
-      return Result::FATAL_ERROR_NO_MEMORY;
-    }
-    Result tempRV = DoOCSPRequest(aiaLocation, mOriginAttributes,
-                                  std::move(ocspRequest), GetOCSPTimeout(),
-                                  ocspResponse);
-    if (tempRV != Success) {
-      rv = tempRV;
-    } else if (response.Init(ocspResponse.begin(), ocspResponse.length())
-                 != Success) {
-      rv = Result::ERROR_OCSP_MALFORMED_RESPONSE; // too big
-    }
-    attemptedRequest = true;
-  } else {
-    rv = cachedResponseResult;
-    attemptedRequest = false;
-=======
     // Only send a request to, and process a response from, the server if we
     // didn't have a cached indication of failure.  Also, ddon't keep requesting
     // responses from a failing server.
     return SynchronousCheckRevocationWithServer(
         certID, aiaLocation, time, maxOCSPLifetimeInDays, cachedResponseResult,
         stapledOCSPResponseResult);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (response.GetLength() == 0) {
-    Result error = rv;
-    if (attemptedRequest) {
-      Time timeout(time);
-      if (timeout.AddSeconds(ServerFailureDelaySeconds) != Success) {
-        return Result::FATAL_ERROR_LIBRARY_FAILURE;  // integer overflow
-      }
-      rv = mOCSPCache.Put(certID, mOriginAttributes, error, time, timeout);
-      if (rv != Success) {
-        return rv;
-      }
-    }
-    if (mOCSPFetching != FetchOCSPForDVSoftFail) {
-      MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-              ("NSSCertDBTrustDomain: returning SECFailure after "
-               "OCSP request failure"));
-      return error;
-    }
-    if (cachedResponseResult == Result::ERROR_OCSP_UNKNOWN_CERT) {
-      MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-              ("NSSCertDBTrustDomain: returning SECFailure from cached "
-               "response after OCSP request failure"));
-      return cachedResponseResult;
-||||||| merged common ancestors
-  if (response.GetLength() == 0) {
-    Result error = rv;
-    if (attemptedRequest) {
-      Time timeout(time);
-      if (timeout.AddSeconds(ServerFailureDelaySeconds) != Success) {
-        return Result::FATAL_ERROR_LIBRARY_FAILURE; // integer overflow
-      }
-      rv = mOCSPCache.Put(certID, mOriginAttributes, error, time, timeout);
-      if (rv != Success) {
-        return rv;
-      }
-    }
-    if (mOCSPFetching != FetchOCSPForDVSoftFail) {
-      MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-             ("NSSCertDBTrustDomain: returning SECFailure after "
-              "OCSP request failure"));
-      return error;
-    }
-    if (cachedResponseResult == Result::ERROR_OCSP_UNKNOWN_CERT) {
-      MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-             ("NSSCertDBTrustDomain: returning SECFailure from cached "
-              "response after OCSP request failure"));
-      return cachedResponseResult;
-=======
   return HandleOCSPFailure(cachedResponseResult, stapledOCSPResponseResult,
                            cachedResponseResult);
 }
@@ -1097,44 +774,16 @@ Result NSSCertDBTrustDomain::SynchronousCheckRevocationWithServer(
     Time timeout(time);
     if (timeout.AddSeconds(ServerFailureDelaySeconds) != Success) {
       return Result::FATAL_ERROR_LIBRARY_FAILURE;  // integer overflow
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (stapledOCSPResponseResult != Success) {
-      MOZ_LOG(
-          gCertVerifierLog, LogLevel::Debug,
-          ("NSSCertDBTrustDomain: returning SECFailure from expired/invalid "
-           "stapled response after OCSP request failure"));
-      return stapledOCSPResponseResult;
-||||||| merged common ancestors
-    if (stapledOCSPResponseResult != Success) {
-      MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-             ("NSSCertDBTrustDomain: returning SECFailure from expired/invalid "
-              "stapled response after OCSP request failure"));
-      return stapledOCSPResponseResult;
-=======
 
     Result cacheRV =
         mOCSPCache.Put(certID, mOriginAttributes, rv, time, timeout);
     if (cacheRV != Success) {
       return cacheRV;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-            ("NSSCertDBTrustDomain: returning SECSuccess after "
-             "OCSP request failure"));
-    return Success;  // Soft fail -> success :(
-||||||| merged common ancestors
-    MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-           ("NSSCertDBTrustDomain: returning SECSuccess after "
-            "OCSP request failure"));
-    return Success; // Soft fail -> success :(
-=======
     return HandleOCSPFailure(cachedResponseResult, stapledOCSPResponseResult,
                              rv);
->>>>>>> upstream-releases
   }
 
   // If the response from the network has expired but indicates a revoked
@@ -1145,18 +794,9 @@ Result NSSCertDBTrustDomain::SynchronousCheckRevocationWithServer(
                                               maxOCSPLifetimeInDays, response,
                                               ResponseIsFromNetwork, expired);
   if (rv == Success || mOCSPFetching != FetchOCSPForDVSoftFail) {
-<<<<<<< HEAD
-    MOZ_LOG(
-        gCertVerifierLog, LogLevel::Debug,
-        ("NSSCertDBTrustDomain: returning after VerifyEncodedOCSPResponse"));
-||||||| merged common ancestors
-    MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-      ("NSSCertDBTrustDomain: returning after VerifyEncodedOCSPResponse"));
-=======
     MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
             ("NSSCertDBTrustDomain: returning after "
              "VerifyEncodedOCSPResponse"));
->>>>>>> upstream-releases
     return rv;
   }
 
@@ -1178,19 +818,6 @@ Result NSSCertDBTrustDomain::SynchronousCheckRevocationWithServer(
   return Success;  // Soft fail -> success :(
 }
 
-<<<<<<< HEAD
-Result NSSCertDBTrustDomain::VerifyAndMaybeCacheEncodedOCSPResponse(
-    const CertID& certID, Time time, uint16_t maxLifetimeInDays,
-    Input encodedResponse, EncodedResponseSource responseSource,
-    /*out*/ bool& expired) {
-||||||| merged common ancestors
-Result
-NSSCertDBTrustDomain::VerifyAndMaybeCacheEncodedOCSPResponse(
-  const CertID& certID, Time time, uint16_t maxLifetimeInDays,
-  Input encodedResponse, EncodedResponseSource responseSource,
-  /*out*/ bool& expired)
-{
-=======
 Result NSSCertDBTrustDomain::HandleOCSPFailure(
     const Result cachedResponseResult, const Result stapledOCSPResponseResult,
     const Result error) {
@@ -1225,7 +852,6 @@ Result NSSCertDBTrustDomain::VerifyAndMaybeCacheEncodedOCSPResponse(
     const CertID& certID, Time time, uint16_t maxLifetimeInDays,
     Input encodedResponse, EncodedResponseSource responseSource,
     /*out*/ bool& expired) {
->>>>>>> upstream-releases
   Time thisUpdate(Time::uninitialized);
   Time validThrough(Time::uninitialized);
 
@@ -1811,21 +1437,6 @@ nsresult DefaultServerNicknameForCert(const CERTCertificate* cert,
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-nsresult BuildRevocationCheckStrings(const CERTCertificate* cert,
-                                     /*out*/ nsCString& encIssuer,
-                                     /*out*/ nsCString& encSerial,
-                                     /*out*/ nsCString& encSubject,
-                                     /*out*/ nsCString& encPubKey) {
-||||||| merged common ancestors
-nsresult
-BuildRevocationCheckStrings(const CERTCertificate* cert,
-                    /*out*/ nsCString& encIssuer,
-                    /*out*/ nsCString& encSerial,
-                    /*out*/ nsCString& encSubject,
-                    /*out*/ nsCString& encPubKey)
-{
-=======
 #ifdef MOZ_NEW_CERT_STORAGE
 nsresult BuildRevocationCheckArrays(const UniqueCERTCertificate& cert,
                                     /*out*/ nsTArray<uint8_t>& issuerBytes,
@@ -1864,7 +1475,6 @@ nsresult BuildRevocationCheckStrings(const CERTCertificate* cert,
                                      /*out*/ nsCString& encSerial,
                                      /*out*/ nsCString& encSubject,
                                      /*out*/ nsCString& encPubKey) {
->>>>>>> upstream-releases
   // Convert issuer, serial, subject and pubKey data to Base64 encoded DER
   nsDependentCSubstring issuerString(
       BitwiseCast<char*, uint8_t*>(cert->derIssuer.data), cert->derIssuer.len);

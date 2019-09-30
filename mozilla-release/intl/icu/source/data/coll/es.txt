@@ -8,23 +8,11 @@ es{
                 "[import und-u-co-search]"
                 "&N<ñ<<<Ñ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{"&N<ñ<<<Ñ"}
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         traditional{
             Sequence{
@@ -32,13 +20,7 @@ es{
                 "&C<ch<<<Ch<<<CH"
                 "&l<ll<<<Ll<<<LL"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

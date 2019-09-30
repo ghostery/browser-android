@@ -34,14 +34,6 @@ class nsFileChannel : public nsBaseChannel,
                                             nsCOMPtr<nsIInputStream>& stream,
                                             nsCString& contentType, bool async);
 
-<<<<<<< HEAD
-  virtual MOZ_MUST_USE nsresult OpenContentStream(
-      bool async, nsIInputStream **result, nsIChannel **channel) override;
-||||||| merged common ancestors
-  virtual MOZ_MUST_USE nsresult OpenContentStream(bool async,
-                                                  nsIInputStream **result,
-                                                  nsIChannel** channel) override;
-=======
   virtual MOZ_MUST_USE nsresult OpenContentStream(
       bool async, nsIInputStream** result, nsIChannel** channel) override;
 
@@ -51,14 +43,7 @@ class nsFileChannel : public nsBaseChannel,
 
  private:
   nsresult FixupContentLength(bool async);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   nsCOMPtr<nsIInputStream> mUploadStream;
   int64_t mUploadLength;
   nsCOMPtr<nsIURI> mFileURI;

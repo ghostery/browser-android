@@ -40,22 +40,6 @@ JSObject* DOMMatrixReadOnly::WrapObject(JSContext* aCx,
   return DOMMatrixReadOnly_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrixReadOnly> DOMMatrixReadOnly::Constructor(
-    const GlobalObject& aGlobal,
-    const Optional<StringOrUnrestrictedDoubleSequence>& aArg,
-    ErrorResult& aRv) {
-  RefPtr<DOMMatrixReadOnly> rval =
-      new DOMMatrixReadOnly(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-already_AddRefed<DOMMatrixReadOnly>
-DOMMatrixReadOnly::Constructor(
-  const GlobalObject& aGlobal,
-  const Optional<StringOrUnrestrictedDoubleSequence>& aArg,
-  ErrorResult& aRv)
-{
-  RefPtr<DOMMatrixReadOnly> rval = new DOMMatrixReadOnly(aGlobal.GetAsSupports());
-=======
 // https://drafts.fxtf.org/geometry/#matrix-validate-and-fixup-2d
 static bool ValidateAndFixupMatrix2DInit(DOMMatrix2DInit& aMatrixInit,
                                          ErrorResult& aRv) {
@@ -215,7 +199,6 @@ already_AddRefed<DOMMatrixReadOnly> DOMMatrixReadOnly::Constructor(
     const GlobalObject& aGlobal,
     const Optional<StringOrUnrestrictedDoubleSequence>& aArg,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!aArg.WasPassed()) {
     RefPtr<DOMMatrixReadOnly> rval =
         new DOMMatrixReadOnly(aGlobal.GetAsSupports());
@@ -271,21 +254,9 @@ already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Translate(double aTx, double aTy,
   return retval.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Scale(double aScale,
-                                                     double aOriginX,
-                                                     double aOriginY) const {
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrixReadOnly::Scale(double aScale,
-                         double aOriginX,
-                         double aOriginY) const
-{
-=======
 already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Scale(
     double aScaleX, const Optional<double>& aScaleY, double aScaleZ,
     double aOriginX, double aOriginY, double aOriginZ) const {
->>>>>>> upstream-releases
   RefPtr<DOMMatrix> retval = new DOMMatrix(mParent, *this);
   retval->ScaleSelf(aScaleX, aScaleY, aScaleZ, aOriginX, aOriginY, aOriginZ);
 
@@ -302,51 +273,17 @@ already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Scale3d(double aScale,
   return retval.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrixReadOnly::ScaleNonUniform(
-    double aScaleX, double aScaleY, double aScaleZ, double aOriginX,
-    double aOriginY, double aOriginZ) const {
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrixReadOnly::ScaleNonUniform(double aScaleX,
-                                   double aScaleY,
-                                   double aScaleZ,
-                                   double aOriginX,
-                                   double aOriginY,
-                                   double aOriginZ) const
-{
-=======
 already_AddRefed<DOMMatrix> DOMMatrixReadOnly::ScaleNonUniform(
     double aScaleX, double aScaleY) const {
->>>>>>> upstream-releases
   RefPtr<DOMMatrix> retval = new DOMMatrix(mParent, *this);
-<<<<<<< HEAD
-  retval->ScaleNonUniformSelf(aScaleX, aScaleY, aScaleZ, aOriginX, aOriginY,
-                              aOriginZ);
-||||||| merged common ancestors
-  retval->ScaleNonUniformSelf(aScaleX, aScaleY, aScaleZ, aOriginX, aOriginY, aOriginZ);
-=======
   retval->ScaleSelf(aScaleX, Optional<double>(aScaleY), 1, 0, 0, 0);
->>>>>>> upstream-releases
 
   return retval.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Rotate(double aAngle,
-                                                      double aOriginX,
-                                                      double aOriginY) const {
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrixReadOnly::Rotate(double aAngle,
-                          double aOriginX ,
-                          double aOriginY) const
-{
-=======
 already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Rotate(
     double aRotX, const Optional<double>& aRotY,
     const Optional<double>& aRotZ) const {
->>>>>>> upstream-releases
   RefPtr<DOMMatrix> retval = new DOMMatrix(mParent, *this);
   retval->RotateSelf(aRotX, aRotY, aRotZ);
 
@@ -383,17 +320,8 @@ already_AddRefed<DOMMatrix> DOMMatrixReadOnly::SkewY(double aSy) const {
   return retval.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Multiply(
-    const DOMMatrix& other) const {
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrixReadOnly::Multiply(const DOMMatrix& other) const
-{
-=======
 already_AddRefed<DOMMatrix> DOMMatrixReadOnly::Multiply(
     const DOMMatrixInit& other, ErrorResult& aRv) const {
->>>>>>> upstream-releases
   RefPtr<DOMMatrix> retval = new DOMMatrix(mParent, *this);
   retval->MultiplySelf(other, aRv);
 
@@ -607,14 +535,6 @@ void DOMMatrixReadOnly::Stringify(nsAString& aResult) {
   aResult = matrixStr;
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
-                                                   ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrix::Constructor(const GlobalObject& aGlobal, ErrorResult& aRv)
-{
-=======
 // https://drafts.fxtf.org/geometry/#structured-serialization
 bool DOMMatrixReadOnly::WriteStructuredClone(
     JSContext* aCx, JSStructuredCloneWriter* aWriter) const {
@@ -736,20 +656,10 @@ already_AddRefed<DOMMatrix> DOMMatrix::FromFloat64Array(
 
 already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
                                                    ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
   return obj.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrix::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aTransformList,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrix::Constructor(const GlobalObject& aGlobal, const nsAString& aTransformList, ErrorResult& aRv)
-{
-=======
 already_AddRefed<DOMMatrix> DOMMatrix::Constructor(
     const GlobalObject& aGlobal, const nsAString& aTransformList,
     ErrorResult& aRv) {
@@ -758,7 +668,6 @@ already_AddRefed<DOMMatrix> DOMMatrix::Constructor(
     aRv.ThrowTypeError<MSG_ILLEGAL_CONSTRUCTOR>();
     return nullptr;
   }
->>>>>>> upstream-releases
   RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
   obj = obj->SetMatrixValue(aTransformList, aRv);
   return obj.forget();
@@ -805,27 +714,11 @@ static void SetDataInMatrix(DOMMatrixReadOnly* aMatrix, const T* aData,
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
-                                                   const Float32Array& aArray32,
-                                                   ErrorResult& aRv) {
-  RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
-  aArray32.ComputeLengthAndData();
-  SetDataInMatrix(obj, aArray32.Data(), aArray32.Length(), aRv);
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrix::Constructor(const GlobalObject& aGlobal, const Float32Array& aArray32, ErrorResult& aRv)
-{
-  RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
-  aArray32.ComputeLengthAndData();
-  SetDataInMatrix(obj, aArray32.Data(), aArray32.Length(), aRv);
-=======
 already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
                                                    const Float32Array& aArray32,
                                                    ErrorResult& aRv) {
   return FromFloat32Array(aGlobal, aArray32, aRv);
 }
->>>>>>> upstream-releases
 
 already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
                                                    const Float64Array& aArray64,
@@ -833,21 +726,6 @@ already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
   return FromFloat64Array(aGlobal, aArray64, aRv);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrix::Constructor(const GlobalObject& aGlobal,
-                                                   const Float64Array& aArray64,
-                                                   ErrorResult& aRv) {
-  RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
-  aArray64.ComputeLengthAndData();
-  SetDataInMatrix(obj, aArray64.Data(), aArray64.Length(), aRv);
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrix::Constructor(const GlobalObject& aGlobal, const Float64Array& aArray64, ErrorResult& aRv)
-{
-  RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
-  aArray64.ComputeLengthAndData();
-  SetDataInMatrix(obj, aArray64.Data(), aArray64.Length(), aRv);
-=======
 already_AddRefed<DOMMatrix> DOMMatrix::Constructor(
     const GlobalObject& aGlobal, const Sequence<double>& aNumberSequence,
     ErrorResult& aRv) {
@@ -855,30 +733,14 @@ already_AddRefed<DOMMatrix> DOMMatrix::Constructor(
   const bool is2D = length == 6;
   RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports(), is2D);
   SetDataInMatrix(obj, aNumberSequence.Elements(), length, aRv);
->>>>>>> upstream-releases
 
   return obj.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DOMMatrix> DOMMatrix::Constructor(
-    const GlobalObject& aGlobal, const Sequence<double>& aNumberSequence,
-    ErrorResult& aRv) {
-  RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
-  SetDataInMatrix(obj, aNumberSequence.Elements(), aNumberSequence.Length(),
-                  aRv);
-||||||| merged common ancestors
-already_AddRefed<DOMMatrix>
-DOMMatrix::Constructor(const GlobalObject& aGlobal, const Sequence<double>& aNumberSequence, ErrorResult& aRv)
-{
-  RefPtr<DOMMatrix> obj = new DOMMatrix(aGlobal.GetAsSupports());
-  SetDataInMatrix(obj, aNumberSequence.Elements(), aNumberSequence.Length(), aRv);
-=======
 already_AddRefed<DOMMatrix> DOMMatrix::ReadStructuredClone(
     JSContext* aCx, nsIGlobalObject* aGlobal,
     JSStructuredCloneReader* aReader) {
   uint8_t is2D;
->>>>>>> upstream-releases
 
   if (!JS_ReadBytes(aReader, &is2D, 1)) {
     return nullptr;
@@ -901,20 +763,10 @@ void DOMMatrixReadOnly::Ensure3DMatrix() {
   }
 }
 
-<<<<<<< HEAD
-DOMMatrix* DOMMatrix::MultiplySelf(const DOMMatrix& aOther) {
-  if (aOther.IsIdentity()) {
-||||||| merged common ancestors
-DOMMatrix*
-DOMMatrix::MultiplySelf(const DOMMatrix& aOther)
-{
-  if (aOther.IsIdentity()) {
-=======
 DOMMatrix* DOMMatrix::MultiplySelf(const DOMMatrixInit& aOtherInit,
                                    ErrorResult& aRv) {
   RefPtr<DOMMatrix> other = FromMatrix(mParent, aOtherInit, aRv);
   if (other->IsIdentity()) {
->>>>>>> upstream-releases
     return this;
   }
 
@@ -932,20 +784,10 @@ DOMMatrix* DOMMatrix::MultiplySelf(const DOMMatrixInit& aOtherInit,
   return this;
 }
 
-<<<<<<< HEAD
-DOMMatrix* DOMMatrix::PreMultiplySelf(const DOMMatrix& aOther) {
-  if (aOther.IsIdentity()) {
-||||||| merged common ancestors
-DOMMatrix*
-DOMMatrix::PreMultiplySelf(const DOMMatrix& aOther)
-{
-  if (aOther.IsIdentity()) {
-=======
 DOMMatrix* DOMMatrix::PreMultiplySelf(const DOMMatrixInit& aOtherInit,
                                       ErrorResult& aRv) {
   RefPtr<DOMMatrix> other = FromMatrix(mParent, aOtherInit, aRv);
   if (other->IsIdentity()) {
->>>>>>> upstream-releases
     return this;
   }
 
@@ -978,62 +820,10 @@ DOMMatrix* DOMMatrix::TranslateSelf(double aTx, double aTy, double aTz) {
   return this;
 }
 
-<<<<<<< HEAD
-DOMMatrix* DOMMatrix::ScaleSelf(double aScale, double aOriginX,
-                                double aOriginY) {
-  ScaleNonUniformSelf(aScale, aScale, 1.0, aOriginX, aOriginY, 0);
-
-  return this;
-}
-
-DOMMatrix* DOMMatrix::Scale3dSelf(double aScale, double aOriginX,
-                                  double aOriginY, double aOriginZ) {
-  ScaleNonUniformSelf(aScale, aScale, aScale, aOriginX, aOriginY, aOriginZ);
-
-  return this;
-}
-
-DOMMatrix* DOMMatrix::ScaleNonUniformSelf(double aScaleX, double aScaleY,
-                                          double aScaleZ, double aOriginX,
-                                          double aOriginY, double aOriginZ) {
-  if (aScaleX == 1.0 && aScaleY == 1.0 && aScaleZ == 1.0) {
-    return this;
-  }
-||||||| merged common ancestors
-DOMMatrix*
-DOMMatrix::ScaleSelf(double aScale, double aOriginX, double aOriginY)
-{
-  ScaleNonUniformSelf(aScale, aScale, 1.0, aOriginX, aOriginY, 0);
-
-  return this;
-}
-
-DOMMatrix*
-DOMMatrix::Scale3dSelf(double aScale, double aOriginX,
-                       double aOriginY, double aOriginZ)
-{
-  ScaleNonUniformSelf(aScale, aScale, aScale, aOriginX, aOriginY, aOriginZ);
-
-  return this;
-}
-
-DOMMatrix*
-DOMMatrix::ScaleNonUniformSelf(double aScaleX,
-                               double aScaleY,
-                               double aScaleZ,
-                               double aOriginX,
-                               double aOriginY,
-                               double aOriginZ)
-{
-  if (aScaleX == 1.0 && aScaleY == 1.0 && aScaleZ == 1.0) {
-    return this;
-  }
-=======
 DOMMatrix* DOMMatrix::ScaleSelf(double aScaleX, const Optional<double>& aScaleY,
                                 double aScaleZ, double aOriginX,
                                 double aOriginY, double aOriginZ) {
   const double scaleY = aScaleY.WasPassed() ? aScaleY.Value() : aScaleX;
->>>>>>> upstream-releases
 
   TranslateSelf(aOriginX, aOriginY, aOriginZ);
 
@@ -1056,15 +846,6 @@ DOMMatrix* DOMMatrix::ScaleSelf(double aScaleX, const Optional<double>& aScaleY,
   return this;
 }
 
-<<<<<<< HEAD
-DOMMatrix* DOMMatrix::RotateFromVectorSelf(double aX, double aY) {
-  if (aX == 0.0 || aY == 0.0) {
-||||||| merged common ancestors
-DOMMatrix*
-DOMMatrix::RotateFromVectorSelf(double aX, double aY)
-{
-  if (aX == 0.0 || aY == 0.0) {
-=======
 DOMMatrix* DOMMatrix::Scale3dSelf(double aScale, double aOriginX,
                                   double aOriginY, double aOriginZ) {
   ScaleSelf(aScale, Optional<double>(aScale), aScale, aOriginX, aOriginY,
@@ -1077,7 +858,6 @@ DOMMatrix* DOMMatrix::RotateFromVectorSelf(double aX, double aY) {
   const double angle = (aX == 0.0 && aY == 0.0) ? 0 : atan2(aY, aX);
 
   if (fmod(angle, 2 * M_PI) == 0) {
->>>>>>> upstream-releases
     return this;
   }
 
@@ -1090,18 +870,6 @@ DOMMatrix* DOMMatrix::RotateFromVectorSelf(double aX, double aY) {
   return this;
 }
 
-<<<<<<< HEAD
-DOMMatrix* DOMMatrix::RotateSelf(double aAngle, double aOriginX,
-                                 double aOriginY) {
-  if (fmod(aAngle, 360) == 0) {
-    return this;
-||||||| merged common ancestors
-DOMMatrix*
-DOMMatrix::RotateSelf(double aAngle, double aOriginX, double aOriginY)
-{
-  if (fmod(aAngle, 360) == 0) {
-    return this;
-=======
 DOMMatrix* DOMMatrix::RotateSelf(double aRotX, const Optional<double>& aRotY,
                                  const Optional<double>& aRotZ) {
   double rotY;
@@ -1113,7 +881,6 @@ DOMMatrix* DOMMatrix::RotateSelf(double aRotX, const Optional<double>& aRotY,
   } else {
     rotY = aRotY.WasPassed() ? aRotY.Value() : 0;
     rotZ = aRotZ.WasPassed() ? aRotZ.Value() : 0;
->>>>>>> upstream-releases
   }
 
   if (aRotX != 0 || rotY != 0) {
@@ -1214,17 +981,8 @@ DOMMatrixReadOnly* DOMMatrixReadOnly::SetMatrixValue(
 
   gfx::Matrix4x4 transform;
   bool contains3dTransform = false;
-<<<<<<< HEAD
-  if (!ServoCSSParser::ParseTransformIntoMatrix(
-          aTransformList, contains3dTransform, transform.components)) {
-||||||| merged common ancestors
-  if (!ServoCSSParser::ParseTransformIntoMatrix(aTransformList,
-                                                contains3dTransform,
-                                                transform.components)) {
-=======
   if (!ServoCSSParser::ParseTransformIntoMatrix(
           aTransformList, contains3dTransform, transform)) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_SYNTAX_ERR);
     return nullptr;
   }

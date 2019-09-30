@@ -9,12 +9,6 @@
 #include "SkPaintPriv.h"
 #include "SkPaint.h"
 #include "SkShaderBase.h"
-<<<<<<< HEAD
-#include "SkUTF.h"
-||||||| merged common ancestors
-#include "SkUtils.h"
-=======
->>>>>>> upstream-releases
 #include "SkXfermodePriv.h"
 
 static bool changes_alpha(const SkPaint& paint) {
@@ -65,32 +59,6 @@ bool SkPaintPriv::ShouldDither(const SkPaint& p, SkColorType dstCT) {
         || !p.getShader() || !as_SB(p.getShader())->isConstant();
 }
 
-<<<<<<< HEAD
-int SkPaintPriv::ValidCountText(const void* text, size_t length, SkPaint::TextEncoding encoding) {
-    switch (encoding) {
-        case SkPaint::kUTF8_TextEncoding: return SkUTF::CountUTF8((const char*)text, length);
-        case SkPaint::kUTF16_TextEncoding: return SkUTF::CountUTF16((const uint16_t*)text, length);
-        case SkPaint::kUTF32_TextEncoding: return SkUTF::CountUTF32((const int32_t*)text, length);
-        case SkPaint::kGlyphID_TextEncoding:
-            if (!SkIsAlign2(intptr_t(text)) || !SkIsAlign2(length)) {
-                return -1;
-            }
-            return length >> 1;
-||||||| merged common ancestors
-int SkPaintPriv::ValidCountText(const void* text, size_t length, SkPaint::TextEncoding encoding) {
-    if (length == 0) {
-        return 0;
-    }
-    switch (encoding) {
-        case SkPaint::kUTF8_TextEncoding: return SkUTF8_CountUnichars(text, length);
-        case SkPaint::kUTF16_TextEncoding: return SkUTF16_CountUnichars(text, length);
-        case SkPaint::kUTF32_TextEncoding: return SkUTF32_CountUnichars(text, length);
-        case SkPaint::kGlyphID_TextEncoding:
-            if (SkIsAlign2(intptr_t(text)) && SkIsAlign2(length)) {
-                return length >> 1;
-            }
-            break;
-=======
 // return true if the paint is just a single color (i.e. not a shader). If its
 // a shader, then we can't compute a const luminance for it :(
 static bool just_a_color(const SkPaint& paint, SkColor* color) {
@@ -102,18 +70,11 @@ static bool just_a_color(const SkPaint& paint, SkColor* color) {
     }
     if (paint.getColorFilter()) {
         c = paint.getColorFilter()->filterColor(c);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return -1;
-||||||| merged common ancestors
-    return 0;
-=======
     if (color) {
         *color = c;
     }
     return true;
->>>>>>> upstream-releases
 }
 
 SkColor SkPaintPriv::ComputeLuminanceColor(const SkPaint& paint) {

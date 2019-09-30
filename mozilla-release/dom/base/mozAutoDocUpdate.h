@@ -7,16 +7,8 @@
 #ifndef mozAutoDocUpdate_h_
 #define mozAutoDocUpdate_h_
 
-<<<<<<< HEAD
-#include "nsContentUtils.h"  // For AddScriptBlocker() and RemoveScriptBlocker().
-#include "nsIDocument.h"
-||||||| merged common ancestors
-#include "nsContentUtils.h" // For AddScriptBlocker() and RemoveScriptBlocker().
-#include "nsIDocument.h"
-=======
 #include "nsContentUtils.h"  // For AddScriptBlocker() and RemoveScriptBlocker().
 #include "mozilla/dom/Document.h"
->>>>>>> upstream-releases
 #include "nsIDocumentObserver.h"
 
 /**
@@ -26,24 +18,10 @@
  * in which case no updates will be called.  The constructor also takes a
  * boolean that can be set to false to prevent notifications.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS mozAutoDocUpdate {
- public:
-  mozAutoDocUpdate(nsIDocument* aDocument, bool aNotify)
-      : mDocument(aNotify ? aDocument : nullptr) {
-||||||| merged common ancestors
-class MOZ_STACK_CLASS mozAutoDocUpdate
-{
-public:
-  mozAutoDocUpdate(nsIDocument* aDocument, bool aNotify)
-    : mDocument(aNotify ? aDocument : nullptr)
-  {
-=======
 class MOZ_STACK_CLASS mozAutoDocUpdate {
  public:
   mozAutoDocUpdate(mozilla::dom::Document* aDocument, bool aNotify)
       : mDocument(aNotify ? aDocument : nullptr) {
->>>>>>> upstream-releases
     if (mDocument) {
       mDocument->BeginUpdate();
     } else {
@@ -59,16 +37,8 @@ class MOZ_STACK_CLASS mozAutoDocUpdate {
     }
   }
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsIDocument> mDocument;
-=======
  private:
   RefPtr<mozilla::dom::Document> mDocument;
->>>>>>> upstream-releases
 };
 
 #define MOZ_AUTO_DOC_UPDATE_PASTE2(tok, line) tok##line

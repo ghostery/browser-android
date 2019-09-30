@@ -118,22 +118,9 @@ GMPErr ChromiumCDMAdapter::GMPGetAPI(const char* aAPIName, void* aHostAPI,
 
     int version = isCDM9 ? cdm::ContentDecryptionModule_9::kVersion
                          : cdm::ContentDecryptionModule_10::kVersion;
-<<<<<<< HEAD
-    void* cdm =
-        create(version, kEMEKeySystemWidevine.get(),
-               kEMEKeySystemWidevine.Length(), &ChromiumCdmHost, aHostAPI);
-||||||| merged common ancestors
-    void* cdm =
-      create(version,
-             kEMEKeySystemWidevine.get(),
-             kEMEKeySystemWidevine.Length(),
-             &ChromiumCdmHost,
-             aHostAPI);
-=======
     void* cdm = create(version, EME_KEY_SYSTEM_WIDEVINE,
                        mozilla::ArrayLength(EME_KEY_SYSTEM_WIDEVINE) - 1,
                        &ChromiumCdmHost, aHostAPI);
->>>>>>> upstream-releases
     if (!cdm) {
       GMP_LOG(
           "ChromiumCDMAdapter::GMPGetAPI(%s, 0x%p, 0x%p, %u) this=0x%p "

@@ -47,20 +47,10 @@ class WorkletGlobalScope : public nsIGlobalObject, public nsWrapperCache {
   virtual bool WrapGlobalObject(JSContext* aCx,
                                 JS::MutableHandle<JSObject*> aReflector) = 0;
 
-<<<<<<< HEAD
-  virtual JSObject* GetGlobalJSObject() override { return GetWrapper(); }
-||||||| merged common ancestors
-  virtual JSObject*
-  GetGlobalJSObject() override
-  {
-    return GetWrapper();
-  }
-=======
   JSObject* GetGlobalJSObject() override { return GetWrapper(); }
   JSObject* GetGlobalJSObjectPreserveColor() const override {
     return GetWrapperPreserveColor();
   }
->>>>>>> upstream-releases
 
   already_AddRefed<Console> GetConsole(JSContext* aCx, ErrorResult& aRv);
 

@@ -17,97 +17,12 @@ namespace mozilla {
 using layers::ScrollSnapInfo;
 
 /**
-<<<<<<< HEAD
- * Stores candidate snapping edges.
- */
-class SnappingEdgeCallback {
- public:
-  virtual void AddHorizontalEdge(nscoord aEdge) = 0;
-  virtual void AddVerticalEdge(nscoord aEdge) = 0;
-  virtual void AddHorizontalEdgeInterval(const nsRect& aScrollRange,
-                                         nscoord aInterval,
-                                         nscoord aOffset) = 0;
-  virtual void AddVerticalEdgeInterval(const nsRect& aScrollRange,
-                                       nscoord aInterval, nscoord aOffset) = 0;
-};
-
-/**
-||||||| merged common ancestors
- * Stores candidate snapping edges.
- */
-class SnappingEdgeCallback {
-public:
-  virtual void AddHorizontalEdge(nscoord aEdge) = 0;
-  virtual void AddVerticalEdge(nscoord aEdge) = 0;
-  virtual void AddHorizontalEdgeInterval(const nsRect &aScrollRange,
-                                         nscoord aInterval,
-                                         nscoord aOffset) = 0;
-  virtual void AddVerticalEdgeInterval(const nsRect &aScrollRange,
-                                       nscoord aInterval,
-                                       nscoord aOffset) = 0;
-};
-
-/**
-=======
->>>>>>> upstream-releases
  * Keeps track of the current best edge to snap to. The criteria for
  * adding an edge depends on the scrolling unit.
  */
-<<<<<<< HEAD
-class CalcSnapPoints : public SnappingEdgeCallback {
- public:
-||||||| merged common ancestors
-class CalcSnapPoints : public SnappingEdgeCallback {
-public:
-=======
 class CalcSnapPoints final {
  public:
->>>>>>> upstream-releases
   CalcSnapPoints(nsIScrollableFrame::ScrollUnit aUnit,
-<<<<<<< HEAD
-                 const nsPoint& aDestination, const nsPoint& aStartPos);
-  virtual void AddHorizontalEdge(nscoord aEdge) override;
-  virtual void AddVerticalEdge(nscoord aEdge) override;
-  virtual void AddHorizontalEdgeInterval(const nsRect& aScrollRange,
-                                         nscoord aInterval,
-                                         nscoord aOffset) override;
-  virtual void AddVerticalEdgeInterval(const nsRect& aScrollRange,
-                                       nscoord aInterval,
-                                       nscoord aOffset) override;
-  void AddEdge(nscoord aEdge, nscoord aDestination, nscoord aStartPos,
-               nscoord aScrollingDirection, nscoord* aBestEdge,
-               bool* aEdgeFound);
-  void AddEdgeInterval(nscoord aInterval, nscoord aMinPos, nscoord aMaxPos,
-                       nscoord aOffset, nscoord aDestination, nscoord aStartPos,
-                       nscoord aScrollingDirection, nscoord* aBestEdge,
-                       bool* aEdgeFound);
-||||||| merged common ancestors
-                 const nsPoint& aDestination,
-                 const nsPoint& aStartPos);
-  virtual void AddHorizontalEdge(nscoord aEdge) override;
-  virtual void AddVerticalEdge(nscoord aEdge) override;
-  virtual void AddHorizontalEdgeInterval(const nsRect &aScrollRange,
-                                         nscoord aInterval, nscoord aOffset)
-                                         override;
-  virtual void AddVerticalEdgeInterval(const nsRect &aScrollRange,
-                                       nscoord aInterval, nscoord aOffset)
-                                       override;
-  void AddEdge(nscoord aEdge,
-               nscoord aDestination,
-               nscoord aStartPos,
-               nscoord aScrollingDirection,
-               nscoord* aBestEdge,
-               bool* aEdgeFound);
-  void AddEdgeInterval(nscoord aInterval,
-                       nscoord aMinPos,
-                       nscoord aMaxPos,
-                       nscoord aOffset,
-                       nscoord aDestination,
-                       nscoord aStartPos,
-                       nscoord aScrollingDirection,
-                       nscoord* aBestEdge,
-                       bool* aEdgeFound);
-=======
                  const nsPoint& aDestination, const nsPoint& aStartPos);
   void AddHorizontalEdge(nscoord aEdge);
   void AddVerticalEdge(nscoord aEdge);
@@ -122,14 +37,7 @@ class CalcSnapPoints final {
                        nscoord aOffset, nscoord aDestination, nscoord aStartPos,
                        nscoord aScrollingDirection, nscoord* aBestEdge,
                        nscoord* aSecondBestEdge, bool* aEdgeFound);
->>>>>>> upstream-releases
   nsPoint GetBestEdge() const;
-<<<<<<< HEAD
-
- protected:
-||||||| merged common ancestors
-protected:
-=======
   nscoord XDistanceBetweenBestAndSecondEdge() const {
     return std::abs(mBestEdge.x - mSecondBestEdge.x);
   }
@@ -138,23 +46,11 @@ protected:
   }
 
  protected:
->>>>>>> upstream-releases
   nsIScrollableFrame::ScrollUnit mUnit;
   nsPoint mDestination;  // gives the position after scrolling but before
                          // snapping
   nsPoint mStartPos;     // gives the position before scrolling
   nsIntPoint mScrollingDirection;  // always -1, 0, or 1
-<<<<<<< HEAD
-  nsPoint mBestEdge;  // keeps track of the position of the current best edge
-  bool mHorizontalEdgeFound;  // true if mBestEdge.x is storing a valid
-                              // horizontal edge
-  bool mVerticalEdgeFound;    // true if mBestEdge.y is storing a valid vertical
-                              // edge
-||||||| merged common ancestors
-  nsPoint mBestEdge;               // keeps track of the position of the current best edge
-  bool mHorizontalEdgeFound;       // true if mBestEdge.x is storing a valid horizontal edge
-  bool mVerticalEdgeFound;         // true if mBestEdge.y is storing a valid vertical edge
-=======
   nsPoint mBestEdge;  // keeps track of the position of the current best edge
   nsPoint mSecondBestEdge;    // keeps track of the position of the current
                               // second best edge
@@ -162,7 +58,6 @@ protected:
                               // horizontal edge
   bool mVerticalEdgeFound;    // true if mBestEdge.y is storing a valid vertical
                               // edge
->>>>>>> upstream-releases
 };
 
 CalcSnapPoints::CalcSnapPoints(nsIScrollableFrame::ScrollUnit aUnit,
@@ -197,38 +92,14 @@ nsPoint CalcSnapPoints::GetBestEdge() const {
                  mHorizontalEdgeFound ? mBestEdge.y : mStartPos.y);
 }
 
-<<<<<<< HEAD
-void CalcSnapPoints::AddHorizontalEdge(nscoord aEdge) {
-  AddEdge(aEdge, mDestination.y, mStartPos.y, mScrollingDirection.y,
-          &mBestEdge.y, &mHorizontalEdgeFound);
-||||||| merged common ancestors
-void
-CalcSnapPoints::AddHorizontalEdge(nscoord aEdge)
-{
-  AddEdge(aEdge, mDestination.y, mStartPos.y, mScrollingDirection.y, &mBestEdge.y,
-          &mHorizontalEdgeFound);
-=======
 void CalcSnapPoints::AddHorizontalEdge(nscoord aEdge) {
   AddEdge(aEdge, mDestination.y, mStartPos.y, mScrollingDirection.y,
           &mBestEdge.y, &mSecondBestEdge.y, &mHorizontalEdgeFound);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CalcSnapPoints::AddVerticalEdge(nscoord aEdge) {
-  AddEdge(aEdge, mDestination.x, mStartPos.x, mScrollingDirection.x,
-          &mBestEdge.x, &mVerticalEdgeFound);
-||||||| merged common ancestors
-void
-CalcSnapPoints::AddVerticalEdge(nscoord aEdge)
-{
-  AddEdge(aEdge, mDestination.x, mStartPos.x, mScrollingDirection.x, &mBestEdge.x,
-          &mVerticalEdgeFound);
-=======
 void CalcSnapPoints::AddVerticalEdge(nscoord aEdge) {
   AddEdge(aEdge, mDestination.x, mStartPos.x, mScrollingDirection.x,
           &mBestEdge.x, &mSecondBestEdge.x, &mVerticalEdgeFound);
->>>>>>> upstream-releases
 }
 
 void CalcSnapPoints::AddHorizontalEdgeInterval(const nsRect& aScrollRange,
@@ -247,22 +118,10 @@ void CalcSnapPoints::AddVerticalEdgeInterval(const nsRect& aScrollRange,
                   &mBestEdge.x, &mSecondBestEdge.x, &mVerticalEdgeFound);
 }
 
-<<<<<<< HEAD
-void CalcSnapPoints::AddEdge(nscoord aEdge, nscoord aDestination,
-                             nscoord aStartPos, nscoord aScrollingDirection,
-                             nscoord* aBestEdge, bool* aEdgeFound) {
-||||||| merged common ancestors
-void
-CalcSnapPoints::AddEdge(nscoord aEdge, nscoord aDestination, nscoord aStartPos,
-                        nscoord aScrollingDirection, nscoord* aBestEdge,
-                        bool *aEdgeFound)
-{
-=======
 void CalcSnapPoints::AddEdge(nscoord aEdge, nscoord aDestination,
                              nscoord aStartPos, nscoord aScrollingDirection,
                              nscoord* aBestEdge, nscoord* aSecondBestEdge,
                              bool* aEdgeFound) {
->>>>>>> upstream-releases
   // nsIScrollableFrame::DEVICE_PIXELS indicates that we are releasing a drag
   // gesture or any other user input event that sets an absolute scroll
   // position.  In this case, scroll snapping is expected to travel in any
@@ -324,17 +183,6 @@ void CalcSnapPoints::AddEdge(nscoord aEdge, nscoord aDestination,
     // direction of scrolling
     nscoord curOvershoot = (*aBestEdge - aDestination) * aScrollingDirection;
 
-<<<<<<< HEAD
-    // edges between the current position and the scrolling destination are
-    // favoured to preserve context
-    if (overshoot < 0 && (overshoot > curOvershoot || curOvershoot >= 0)) {
-      *aBestEdge = aEdge;
-||||||| merged common ancestors
-    // edges between the current position and the scrolling destination are favoured
-    // to preserve context
-    if (overshoot < 0 && (overshoot > curOvershoot || curOvershoot >= 0)) {
-      *aBestEdge = aEdge;
-=======
     nscoord secondOvershoot =
         (*aSecondBestEdge - aDestination) * aScrollingDirection;
 
@@ -343,47 +191,19 @@ void CalcSnapPoints::AddEdge(nscoord aEdge, nscoord aDestination,
     if (overshoot < 0) {
       updateBestEdges(overshoot > curOvershoot || curOvershoot >= 0,
                       overshoot > secondOvershoot || secondOvershoot >= 0);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    // if there are no edges between the current position and the scrolling
-    // destination the closest edge beyond the destination is used
-    if (overshoot > 0 && overshoot < curOvershoot) {
-      *aBestEdge = aEdge;
-||||||| merged common ancestors
-    // if there are no edges between the current position and the scrolling destination
-    // the closest edge beyond the destination is used
-    if (overshoot > 0 && overshoot < curOvershoot) {
-      *aBestEdge = aEdge;
-=======
     // if there are no edges between the current position and the scrolling
     // destination the closest edge beyond the destination is used
     if (overshoot > 0) {
       updateBestEdges(overshoot < curOvershoot, overshoot < secondOvershoot);
->>>>>>> upstream-releases
     }
   } else if (mUnit == nsIScrollableFrame::WHOLE) {
-<<<<<<< HEAD
-    // the edge closest to the top/bottom/left/right is used, depending on
-    // scrolling direction
-    if (aScrollingDirection > 0 && aEdge > *aBestEdge) {
-      *aBestEdge = aEdge;
-    } else if (aScrollingDirection < 0 && aEdge < *aBestEdge) {
-      *aBestEdge = aEdge;
-||||||| merged common ancestors
-    // the edge closest to the top/bottom/left/right is used, depending on scrolling direction
-    if (aScrollingDirection > 0 && aEdge > *aBestEdge) {
-      *aBestEdge = aEdge;
-    } else if (aScrollingDirection < 0 && aEdge < *aBestEdge) {
-      *aBestEdge = aEdge;
-=======
     // the edge closest to the top/bottom/left/right is used, depending on
     // scrolling direction
     if (aScrollingDirection > 0) {
       updateBestEdges(aEdge > *aBestEdge, aEdge > *aSecondBestEdge);
     } else if (aScrollingDirection < 0) {
       updateBestEdges(aEdge < *aBestEdge, aEdge < *aSecondBestEdge);
->>>>>>> upstream-releases
     }
   } else {
     NS_ERROR("Invalid scroll mode");
@@ -391,26 +211,10 @@ void CalcSnapPoints::AddEdge(nscoord aEdge, nscoord aDestination,
   }
 }
 
-<<<<<<< HEAD
-void CalcSnapPoints::AddEdgeInterval(nscoord aInterval, nscoord aMinPos,
-                                     nscoord aMaxPos, nscoord aOffset,
-                                     nscoord aDestination, nscoord aStartPos,
-                                     nscoord aScrollingDirection,
-                                     nscoord* aBestEdge, bool* aEdgeFound) {
-||||||| merged common ancestors
-void
-CalcSnapPoints::AddEdgeInterval(nscoord aInterval, nscoord aMinPos,
-                                nscoord aMaxPos, nscoord aOffset,
-                                nscoord aDestination, nscoord aStartPos,
-                                nscoord aScrollingDirection,
-                                nscoord* aBestEdge, bool *aEdgeFound)
-{
-=======
 void CalcSnapPoints::AddEdgeInterval(
     nscoord aInterval, nscoord aMinPos, nscoord aMaxPos, nscoord aOffset,
     nscoord aDestination, nscoord aStartPos, nscoord aScrollingDirection,
     nscoord* aBestEdge, nscoord* aSecondBestEdge, bool* aEdgeFound) {
->>>>>>> upstream-releases
   if (aInterval == 0) {
     // When interval is 0, there are no scroll snap points.
     // Avoid division by zero and bail.
@@ -454,22 +258,10 @@ static void ProcessSnapPositions(CalcSnapPoints& aCalcSnapPoints,
   }
 }
 
-<<<<<<< HEAD
-static void ProcessScrollSnapCoordinates(
-    SnappingEdgeCallback& aCallback,
-    const nsTArray<nsPoint>& aScrollSnapCoordinates,
-    const nsPoint& aScrollSnapDestination) {
-||||||| merged common ancestors
-static void
-ProcessScrollSnapCoordinates(SnappingEdgeCallback& aCallback,
-                             const nsTArray<nsPoint>& aScrollSnapCoordinates,
-                             const nsPoint& aScrollSnapDestination) {
-=======
 static void ProcessScrollSnapCoordinates(
     CalcSnapPoints& aCalcSnapPoint,
     const nsTArray<nsPoint>& aScrollSnapCoordinates,
     const nsPoint& aScrollSnapDestination) {
->>>>>>> upstream-releases
   for (nsPoint snapCoords : aScrollSnapCoordinates) {
     // Make them relative to the scroll snap destination.
     snapCoords -= aScrollSnapDestination;
@@ -480,29 +272,11 @@ static void ProcessScrollSnapCoordinates(
 }
 
 Maybe<nsPoint> ScrollSnapUtils::GetSnapPointForDestination(
-<<<<<<< HEAD
-    const ScrollSnapInfo& aSnapInfo, nsIScrollableFrame::ScrollUnit aUnit,
-    const nsSize& aScrollPortSize, const nsRect& aScrollRange,
-    const nsPoint& aStartPos, const nsPoint& aDestination) {
-  if (aSnapInfo.mScrollSnapTypeY == StyleScrollSnapType::None &&
-      aSnapInfo.mScrollSnapTypeX == StyleScrollSnapType::None) {
-||||||| merged common ancestors
-    const ScrollSnapInfo& aSnapInfo,
-    nsIScrollableFrame::ScrollUnit aUnit,
-    const nsSize& aScrollPortSize,
-    const nsRect& aScrollRange,
-    const nsPoint& aStartPos,
-    const nsPoint& aDestination)
-{
-  if (aSnapInfo.mScrollSnapTypeY == NS_STYLE_SCROLL_SNAP_TYPE_NONE &&
-      aSnapInfo.mScrollSnapTypeX == NS_STYLE_SCROLL_SNAP_TYPE_NONE) {
-=======
     const ScrollSnapInfo& aSnapInfo, nsIScrollableFrame::ScrollUnit aUnit,
     const nsRect& aScrollRange, const nsPoint& aStartPos,
     const nsPoint& aDestination) {
   if (aSnapInfo.mScrollSnapStrictnessY == StyleScrollSnapStrictness::None &&
       aSnapInfo.mScrollSnapStrictnessX == StyleScrollSnapStrictness::None) {
->>>>>>> upstream-releases
     return Nothing();
   }
 
@@ -557,39 +331,20 @@ Maybe<nsPoint> ScrollSnapUtils::GetSnapPointForDestination(
                                  aSnapInfo.mScrollSnapCoordinates, destPos);
   }
 
-<<<<<<< HEAD
-  ProcessScrollSnapCoordinates(calcSnapPoints, aSnapInfo.mScrollSnapCoordinates,
-                               destPos);
-||||||| merged common ancestors
-  ProcessScrollSnapCoordinates(calcSnapPoints, aSnapInfo.mScrollSnapCoordinates, destPos);
-=======
->>>>>>> upstream-releases
   bool snapped = false;
   nsPoint finalPos = calcSnapPoints.GetBestEdge();
   nscoord proximityThreshold =
       StaticPrefs::layout_css_scroll_snap_proximity_threshold();
   proximityThreshold = nsPresContext::CSSPixelsToAppUnits(proximityThreshold);
-<<<<<<< HEAD
-  if (aSnapInfo.mScrollSnapTypeY == StyleScrollSnapType::Proximity &&
-||||||| merged common ancestors
-  if (aSnapInfo.mScrollSnapTypeY == NS_STYLE_SCROLL_SNAP_TYPE_PROXIMITY &&
-=======
   if (aSnapInfo.mScrollSnapStrictnessY ==
           StyleScrollSnapStrictness::Proximity &&
->>>>>>> upstream-releases
       std::abs(aDestination.y - finalPos.y) > proximityThreshold) {
     finalPos.y = aDestination.y;
   } else {
     snapped = true;
   }
-<<<<<<< HEAD
-  if (aSnapInfo.mScrollSnapTypeX == StyleScrollSnapType::Proximity &&
-||||||| merged common ancestors
-  if (aSnapInfo.mScrollSnapTypeX == NS_STYLE_SCROLL_SNAP_TYPE_PROXIMITY &&
-=======
   if (aSnapInfo.mScrollSnapStrictnessX ==
           StyleScrollSnapStrictness::Proximity &&
->>>>>>> upstream-releases
       std::abs(aDestination.x - finalPos.x) > proximityThreshold) {
     finalPos.x = aDestination.x;
   } else {

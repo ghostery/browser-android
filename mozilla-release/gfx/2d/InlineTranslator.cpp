@@ -18,41 +18,14 @@ using namespace mozilla::gfx;
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-InlineTranslator::InlineTranslator(DrawTarget *aDT, void *aFontContext)
-    : mBaseDT(aDT), mFontContext(aFontContext) {}
-||||||| merged common ancestors
-InlineTranslator::InlineTranslator(DrawTarget* aDT, void* aFontContext)
-  : mBaseDT(aDT)
-  , mFontContext(aFontContext)
-{
-}
-=======
 InlineTranslator::InlineTranslator(DrawTarget* aDT, void* aFontContext)
     : mBaseDT(aDT), mFontContext(aFontContext) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool InlineTranslator::TranslateRecording(char *aData, size_t aLen) {
-||||||| merged common ancestors
-bool
-InlineTranslator::TranslateRecording(char *aData, size_t aLen)
-{
-=======
 bool InlineTranslator::TranslateRecording(char* aData, size_t aLen) {
->>>>>>> upstream-releases
   // an istream like class for reading from memory
   struct MemReader {
-<<<<<<< HEAD
-    MemReader(char *aData, size_t aLen) : mData(aData), mEnd(aData + aLen) {}
-    void read(char *s, std::streamsize n) {
-||||||| merged common ancestors
-    MemReader(char *aData, size_t aLen) : mData(aData), mEnd(aData + aLen) {}
-    void read(char* s, std::streamsize n) {
-=======
     MemReader(char* aData, size_t aLen) : mData(aData), mEnd(aData + aLen) {}
     void read(char* s, std::streamsize n) {
->>>>>>> upstream-releases
       if (n <= (mEnd - mData)) {
         memcpy(s, mData, n);
         mData += n;
@@ -62,21 +35,9 @@ bool InlineTranslator::TranslateRecording(char* aData, size_t aLen) {
         SetIsBad();
       }
     }
-<<<<<<< HEAD
-    bool eof() { return mData > mEnd; }
-    bool good() { return !eof(); }
-||||||| merged common ancestors
-    bool eof() {
-      return mData > mEnd;
-    }
-    bool good() {
-      return !eof();
-    }
-=======
     bool eof() { return mData > mEnd; }
     bool good() { return !eof(); }
     void SetIsBad() { mData = mEnd + 1; }
->>>>>>> upstream-releases
 
     char* mData;
     char* mEnd;
@@ -107,39 +68,6 @@ bool InlineTranslator::TranslateRecording(char* aData, size_t aLen) {
   int32_t eventType;
   ReadElement(reader, eventType);
   while (reader.good()) {
-<<<<<<< HEAD
-    bool success = RecordedEvent::DoWithEvent(
-        reader, static_cast<RecordedEvent::EventType>(eventType),
-        [&](RecordedEvent *recordedEvent) {
-          // Make sure that the whole event was read from the stream
-          // successfully.
-          if (!reader.good()) {
-            mError = " READ";
-            return false;
-          }
-
-          if (!recordedEvent->PlayEvent(this)) {
-            mError = " PLAY";
-            return false;
-          }
-
-          return true;
-        });
-||||||| merged common ancestors
-    bool success = RecordedEvent::DoWithEvent(reader, static_cast<RecordedEvent::EventType>(eventType),
-                               [&] (RecordedEvent *recordedEvent) {
-                                 // Make sure that the whole event was read from the stream successfully.
-                                 if (!reader.good()) {
-                                     return false;
-                                 }
-
-                                 if (!recordedEvent->PlayEvent(this)) {
-                                     return false;
-                                 }
-
-                                 return true;
-                              });
-=======
     bool success = RecordedEvent::DoWithEvent(
         reader, static_cast<RecordedEvent::EventType>(eventType),
         [&](RecordedEvent* recordedEvent) -> bool {
@@ -157,7 +85,6 @@ bool InlineTranslator::TranslateRecording(char* aData, size_t aLen) {
 
           return true;
         });
->>>>>>> upstream-releases
     if (!success) {
       mError = RecordedEvent::GetEventName(
                    static_cast<RecordedEvent::EventType>(eventType)) +
@@ -171,21 +98,9 @@ bool InlineTranslator::TranslateRecording(char* aData, size_t aLen) {
   return true;
 }
 
-<<<<<<< HEAD
-already_AddRefed<DrawTarget> InlineTranslator::CreateDrawTarget(
-    ReferencePtr aRefPtr, const gfx::IntSize &aSize,
-    gfx::SurfaceFormat aFormat) {
-||||||| merged common ancestors
-already_AddRefed<DrawTarget>
-InlineTranslator::CreateDrawTarget(ReferencePtr aRefPtr,
-                                  const gfx::IntSize &aSize,
-                                  gfx::SurfaceFormat aFormat)
-{
-=======
 already_AddRefed<DrawTarget> InlineTranslator::CreateDrawTarget(
     ReferencePtr aRefPtr, const gfx::IntSize& aSize,
     gfx::SurfaceFormat aFormat) {
->>>>>>> upstream-releases
   RefPtr<DrawTarget> drawTarget = mBaseDT;
   AddDrawTarget(aRefPtr, drawTarget);
   return drawTarget.forget();

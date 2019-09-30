@@ -33,20 +33,8 @@ class VRDisplayClient {
   virtual const VRHMDSensorState& GetSensorState() const;
   void GetSubmitFrameResult(VRSubmitFrameResultInfo& aResult);
 
-<<<<<<< HEAD
-  virtual void ZeroSensor();
-
   already_AddRefed<VRDisplayPresentation> BeginPresentation(
       const nsTArray<dom::VRLayer>& aLayers, uint32_t aGroup);
-||||||| merged common ancestors
-  virtual void ZeroSensor();
-
-  already_AddRefed<VRDisplayPresentation> BeginPresentation(const nsTArray<dom::VRLayer>& aLayers,
-                                                            uint32_t aGroup);
-=======
-  already_AddRefed<VRDisplayPresentation> BeginPresentation(
-      const nsTArray<dom::VRLayer>& aLayers, uint32_t aGroup);
->>>>>>> upstream-releases
   void PresentationDestroyed();
 
   bool GetIsConnected() const;

@@ -106,13 +106,7 @@ interface nsIWindowProvider : nsISupports
                                    in AString aName,
                                    in AUTF8String aFeatures,
                                    in boolean aForceNoOpener,
-<<<<<<< HEAD
-                                   in nsDocShellLoadStatePtr aLoadState,
-||||||| merged common ancestors
-                                   in nsDocShellLoadInfoPtr aLoadInfo,
-=======
                                    in boolean aForceNoReferrer,
                                    in nsDocShellLoadStatePtr aLoadState,
->>>>>>> upstream-releases
                                    out boolean aWindowIsNew);
 };

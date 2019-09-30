@@ -26,19 +26,12 @@ var postStartupDelay;
 // delay (ms) between pageload cycles
 var pageCycleDelay = 1000;
 
-<<<<<<< HEAD
-var newTabDelay = 1000;
-var reuseTab = false;
-
-||||||| merged common ancestors
-=======
 var newTabDelay = 1000;
 var reuseTab = false;
 
 // delay (ms) for foregrounding app
 var foregroundDelay = 5000;
 
->>>>>>> upstream-releases
 var browserName;
 var ext;
 var testName = null;
@@ -71,28 +64,6 @@ var isScenarioPending = false;
 var isBenchmarkPending = false;
 var isBackgroundTest = false;
 var pageTimeout = 10000; // default pageload timeout
-<<<<<<< HEAD
-var geckoProfiling = false;
-var geckoInterval = 1;
-var geckoEntries = 1000000;
-var webRenderEnabled = false;
-var debugMode = 0;
-
-var results = {"name": "",
-               "page": "",
-               "type": "",
-               "lower_is_better": true,
-               "alert_threshold": 2.0,
-               "measurements": {}};
-||||||| merged common ancestors
-
-var results = {"name": "",
-               "page": "",
-               "type": "",
-               "lower_is_better": true,
-               "alert_threshold": 2.0,
-               "measurements": {}};
-=======
 var geckoProfiling = false;
 var geckoInterval = 1;
 var geckoEntries = 1000000;
@@ -112,7 +83,6 @@ var results = {
   alert_threshold: 2.0,
   measurements: {},
 };
->>>>>>> upstream-releases
 
 function getTestSettings() {
   raptorLog("getting test settings from control server");
@@ -138,16 +108,6 @@ function getTestSettings() {
           testURL = testURL.replace("<port>", benchmarkPort);
         }
 
-<<<<<<< HEAD
-        if (host) {
-          // just replace the '<host>' keyword in the URL with actual host
-          testURL = testURL.replace("<host>", host);
-        }
-
-        console.log("testURL: " + testURL);
-
-||||||| merged common ancestors
-=======
         if (host) {
           // just replace the '<host>' keyword in the URL with actual host
           testURL = testURL.replace("<host>", host);
@@ -162,7 +122,6 @@ function getTestSettings() {
         results.expected_browser_cycles = settings.expected_browser_cycles;
         results.lower_is_better = settings.lower_is_better === true;
         results.name = testName;
->>>>>>> upstream-releases
         results.page = testURL;
         results.type = testType;
         results.unit = settings.unit;
@@ -181,26 +140,6 @@ function getTestSettings() {
 
         if (settings.screen_capture !== undefined) {
           screenCapture = settings.screen_capture;
-        }
-
-        if (settings.newtab_per_cycle !== undefined) {
-          reuseTab = settings.newtab_per_cycle;
-        }
-
-        if (settings.gecko_profile !== undefined) {
-          if (settings.gecko_profile === true) {
-            geckoProfiling = true;
-            results.extra_options = ["gecko_profile"];
-            if (settings.gecko_interval !== undefined) {
-              geckoInterval = settings.gecko_interval;
-            }
-            if (settings.gecko_entries !== undefined) {
-              geckoEntries = settings.gecko_entries;
-            }
-            if (settings.webrender_enabled !== undefined) {
-              webRenderEnabled = settings.webrender_enabled;
-            }
-          }
         }
 
         if (settings.newtab_per_cycle !== undefined) {
@@ -300,19 +239,6 @@ function scenarioTimer() {
 
 function testTabCreated(tab) {
   testTabID = tab.id;
-<<<<<<< HEAD
-  postToControlServer("status", "opened new empty tab " + testTabID);
-  // update raptor browser toolbar icon text, for a visual indicator when debugging
-  ext.browserAction.setTitle({title: "Raptor RUNNING"});
-}
-
-function testTabRemoved(tab) {
-  postToControlServer("status", "Removed tab " + testTabID);
-  testTabID = 0;
-||||||| merged common ancestors
-  console.log("opened new empty tab " + testTabID);
-  nextCycle();
-=======
   postToControlServer("status", `opened new empty tab: ${testTabID}`);
   // update raptor browser toolbar icon text, for a visual indicator when debugging
   ext.browserAction.setTitle({ title: "Raptor RUNNING" });
@@ -321,16 +247,8 @@ function testTabRemoved(tab) {
 function testTabRemoved(tab) {
   postToControlServer("status", `Removed tab: ${testTabID}`);
   testTabID = 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-async function testTabUpdated(tab) {
-  postToControlServer("status", "test tab updated " + testTabID);
-||||||| merged common ancestors
-async function testTabUpdated(tab) {
-  console.log("test tab updated");
-=======
 function testTabUpdated(tab) {
   postToControlServer("status", `test tab updated: ${testTabID}`);
   // for benchmark or scenario type tests we can proceed directly to waitForResult;
@@ -346,60 +264,12 @@ async function collectResults() {
   // now we can set the page timeout timer and wait for pageload test result from content
   raptorLog("ready to poll for results; turning on page-timeout timer");
   setTimeoutAlarm("raptor-page-timeout", pageTimeout);
->>>>>>> upstream-releases
   // wait for pageload test result from content
   await waitForResult();
   // move on to next cycle (or test complete)
   nextCycle();
 }
 
-<<<<<<< HEAD
-function waitForResult() {
-  console.log("awaiting results...");
-  return new Promise(resolve => {
-    async function checkForResult() {
-      if (testType == "pageload") {
-        if (!isHeroPending && !isFNBPaintPending && !isFCPPending && !isDCFPending && !isTTFIPending) {
-          cancelTimeoutAlarm("raptor-page-timeout");
-          postToControlServer("status", "results received");
-          if (geckoProfiling) {
-            await getGeckoProfile();
-          }
-          resolve();
-        } else {
-          setTimeout(checkForResult, 5);
-        }
-      } else if (testType == "benchmark") {
-        if (!isBenchmarkPending) {
-          cancelTimeoutAlarm("raptor-page-timeout");
-          postToControlServer("status", "results received");
-          if (geckoProfiling) {
-            await getGeckoProfile();
-          }
-          resolve();
-        } else {
-          setTimeout(checkForResult, 5);
-        }
-||||||| merged common ancestors
-function waitForResult() {
-  console.log("awaiting results...");
-  return new Promise(resolve => {
-    function checkForResult() {
-      if (testType == "pageload") {
-        if (!isHeroPending && !isFNBPaintPending && !isFCPPending && !isDCFPending && !isTTFIPending) {
-          cancelTimeoutAlarm("raptor-page-timeout");
-          resolve();
-        } else {
-          setTimeout(checkForResult, 5);
-        }
-      } else if (testType == "benchmark") {
-        if (!isBenchmarkPending) {
-          cancelTimeoutAlarm("raptor-page-timeout");
-          resolve();
-        } else {
-          setTimeout(checkForResult, 5);
-        }
-=======
 async function waitForResult() {
   let results = await new Promise(resolve => {
     function checkForResult() {
@@ -439,7 +309,6 @@ async function waitForResult() {
             setTimeout(checkForResult, 5);
           }
           break;
->>>>>>> upstream-releases
       }
     }
 
@@ -514,50 +383,7 @@ async function getGeckoProfile() {
   }
 }
 
-<<<<<<< HEAD
-async function startGeckoProfiling() {
-  var _threads;
-  if (webRenderEnabled) {
-    _threads = ["GeckoMain", "Compositor", "WR,Renderer"];
-  } else {
-    _threads = ["GeckoMain", "Compositor"];
-  }
-  postToControlServer("status", "starting gecko profiling");
-  await browser.geckoProfiler.start({
-    bufferSize: geckoEntries,
-    interval: geckoInterval,
-    features: ["js", "leaf", "stackwalk", "threads", "responsiveness"],
-    threads: _threads,
-  });
-}
-
-async function stopGeckoProfiling() {
-  postToControlServer("status", "stopping gecko profiling");
-  await browser.geckoProfiler.stop();
-}
-
-async function getGeckoProfile() {
-  // get the profile and send to control server
-  postToControlServer("status", "retrieving gecko profile");
-  let arrayBuffer = await browser.geckoProfiler.getProfileAsArrayBuffer();
-  let textDecoder = new TextDecoder();
-  let profile = JSON.parse(textDecoder.decode(arrayBuffer));
-  console.log(profile);
-  postToControlServer("gecko_profile", [testName, pageCycle, profile]);
-  // stop the profiler; must stop so it clears before next cycle
-  await stopGeckoProfiling();
-  // resume if we have more pagecycles left
-  if (pageCycle + 1 <= pageCycles) {
-    await startGeckoProfiling();
-  }
-}
-
 async function nextCycle() {
-||||||| merged common ancestors
-function nextCycle() {
-=======
-async function nextCycle() {
->>>>>>> upstream-releases
   pageCycle++;
   if (isBackgroundTest) {
     postToControlServer(
@@ -570,13 +396,7 @@ async function nextCycle() {
     await new Promise(resolve => setTimeout(resolve, foregroundDelay));
   }
   if (pageCycle == 1) {
-<<<<<<< HEAD
-    let text = "running " + pageCycles + " pagecycles of " + testURL;
-||||||| merged common ancestors
-    var text = "running " + pageCycles + " pagecycles of " + testURL;
-=======
     let text = `running ${pageCycles} pagecycles of ${testURL}`;
->>>>>>> upstream-releases
     postToControlServer("status", text);
     // start the profiler if enabled
     if (geckoProfiling) {
@@ -588,15 +408,7 @@ async function nextCycle() {
       postToControlServer("start_background", `bringing app to background`);
     }
     setTimeout(function() {
-<<<<<<< HEAD
-
       let text = "begin pagecycle " + pageCycle;
-||||||| merged common ancestors
-      var text = "begin pagecycle " + pageCycle;
-      console.log("\n" + text);
-=======
-      let text = "begin pagecycle " + pageCycle;
->>>>>>> upstream-releases
       postToControlServer("status", text);
 
       switch (testType) {
@@ -630,34 +442,6 @@ async function nextCycle() {
           isScenarioPending = true;
           break;
       }
-<<<<<<< HEAD
-
-      if (reuseTab && testTabID != 0) {
-        // close previous test tab
-        ext.tabs.remove(testTabID);
-        postToControlServer("status", "closing Tab " + testTabID);
-
-        // open new tab
-        ext.tabs.create({url: "about:blank"});
-        postToControlServer("status", "Open new tab");
-      }
-      setTimeout(function() {
-        postToControlServer("status", "update tab " + testTabID);
-        // update the test page - browse to our test URL
-        ext.tabs.update(testTabID, {url: testURL}, testTabUpdated);
-        }, newTabDelay);
-      }, pageCycleDelay);
-    } else {
-      verifyResults();
-    }
-||||||| merged common ancestors
-      // update the test page - browse to our test URL
-      ext.tabs.update(testTabID, {url: testURL}, testTabUpdated);
-    }, pageCycleDelay);
-  } else {
-    verifyResults();
-  }
-=======
 
       if (reuseTab && testTabID != 0) {
         // close previous test tab
@@ -682,7 +466,6 @@ async function nextCycle() {
   } else {
     verifyResults();
   }
->>>>>>> upstream-releases
 }
 
 async function timeoutAlarmListener() {
@@ -825,29 +608,13 @@ function verifyResults() {
   postToControlServer("results", results);
 }
 
-<<<<<<< HEAD
-function postToControlServer(msgType, msgData) {
-  // if posting a status message, log it to console also
-  if (msgType == "status") {
-    console.log("\n" + msgData);
-  }
-||||||| merged common ancestors
-function postToControlServer(msgType, msgData) {
-=======
 function postToControlServer(msgType, msgData = "") {
   // if posting a status message, log it to console also
   if (msgType == "status") {
     raptorLog(msgData);
   }
->>>>>>> upstream-releases
   // requires 'control server' running at port 8000 to receive results
-<<<<<<< HEAD
-  var url = "http://" + host + ":" + csPort + "/";
-||||||| merged common ancestors
-  var url = "http://127.0.0.1:" + csPort + "/";
-=======
   var url = `http://${host}:${csPort}/`;
->>>>>>> upstream-releases
   var client = new XMLHttpRequest();
   client.onreadystatechange = function() {
     if (client.readyState == XMLHttpRequest.DONE && client.status == 200) {
@@ -873,21 +640,6 @@ function postToControlServer(msgType, msgData = "") {
 }
 
 function cleanUp() {
-<<<<<<< HEAD
-  // close tab unless raptor debug-mode is enabled
-  if (debugMode != 1) {
-    ext.tabs.remove(testTabID);
-    console.log("closed tab " + testTabID);
-  } else {
-    console.log("raptor debug-mode enabled, leaving tab open");
-  }
-  if (testType == "pageload") {
-||||||| merged common ancestors
-  // close tab
-  ext.tabs.remove(testTabID);
-  console.log("closed tab " + testTabID);
-  if (testType == "pageload") {
-=======
   // close tab unless raptor debug-mode is enabled
   if (debugMode != 1) {
     ext.tabs.remove(testTabID);
@@ -897,23 +649,11 @@ function cleanUp() {
   }
 
   if (testType == TEST_PAGE_LOAD) {
->>>>>>> upstream-releases
     // remove listeners
     ext.alarms.onAlarm.removeListener(timeoutAlarmListener);
     ext.runtime.onMessage.removeListener(resultListener);
     ext.tabs.onCreated.removeListener(testTabCreated);
   }
-<<<<<<< HEAD
-  // if profiling was enabled, stop the profiler - may have already
-  // been stopped but stop again here in cleanup in case of timeout
-  if (geckoProfiling) {
-    stopGeckoProfiling();
-  }
-
-  window.onload = null;
-||||||| merged common ancestors
-  window.onload = null;
-=======
   raptorLog(`${testType} test finished`);
 
   // if profiling was enabled, stop the profiler - may have already
@@ -922,20 +662,12 @@ function cleanUp() {
     stopGeckoProfiling();
   }
 
->>>>>>> upstream-releases
   // tell the control server we are done and the browser can be shutdown
   postToControlServer("shutdownBrowser");
 }
 
-<<<<<<< HEAD
-function runner() {
-||||||| merged common ancestors
-function runner() {
-  console.log("Welcome to Jurassic Park!");
-=======
 function raptorRunner() {
   raptorLog("starting raptorRunner");
->>>>>>> upstream-releases
   let config = getTestConfig();
   raptorLog(`test name is: ${config.test_name}`);
   raptorLog(`test settings url is: ${config.test_settings_url}`);
@@ -944,14 +676,6 @@ function raptorRunner() {
   csPort = config.cs_port;
   browserName = config.browser;
   benchmarkPort = config.benchmark_port;
-<<<<<<< HEAD
-  postStartupDelay = config.post_startup_delay;
-  host = config.host;
-  debugMode = config.debug_mode;
-
-  postToControlServer("status", "raptor runner.js is loaded!");
-||||||| merged common ancestors
-=======
   postStartupDelay = config.post_startup_delay;
   host = config.host;
   debugMode = config.debug_mode;
@@ -962,7 +686,6 @@ function raptorRunner() {
   if (isBackgroundTest) {
     postToControlServer("status", "raptor test will be backgrounding the app");
   }
->>>>>>> upstream-releases
 
   getBrowserInfo().then(function() {
     getTestSettings().then(function() {
@@ -976,35 +699,16 @@ function raptorRunner() {
 
       // tab creation listener
       ext.tabs.onCreated.addListener(testTabCreated);
-<<<<<<< HEAD
 
       // tab remove listener
       ext.tabs.onRemoved.addListener(testTabRemoved);
-
-      // timeout alarm listener
-      ext.alarms.onAlarm.addListener(timeoutAlarmListener);
-||||||| merged common ancestors
-      // timeout alarm listener
-      ext.alarms.onAlarm.addListener(timeoutAlarmListener);
-=======
-
-      // tab remove listener
-      ext.tabs.onRemoved.addListener(testTabRemoved);
->>>>>>> upstream-releases
 
       // create new empty tab, which starts the test; we want to
       // wait some time for the browser to settle before beginning
-<<<<<<< HEAD
-      let text = "* pausing " + postStartupDelay / 1000 + " seconds to let browser settle... *";
-||||||| merged common ancestors
-      var text = "* pausing " + postStartupDelay / 1000 + " seconds to let browser settle... *";
-=======
       let text = `* pausing ${postStartupDelay /
         1000} seconds to let browser settle... *`;
->>>>>>> upstream-releases
       postToControlServer("status", text);
 
-      // setTimeout(function() { nextCycle(); }, postStartupDelay);
       // on geckoview you can't create a new tab; only using existing tab - set it blank first
       if (
         config.browser == "geckoview" ||
@@ -1015,19 +719,10 @@ function raptorRunner() {
           nextCycle();
         }, postStartupDelay);
       } else {
-<<<<<<< HEAD
-        setTimeout(function() {
-          ext.tabs.create({url: "about:blank"});
-          nextCycle();
-        }, postStartupDelay);
-||||||| merged common ancestors
-        setTimeout(function() { ext.tabs.create({url: "about:blank"}); }, postStartupDelay);
-=======
         setTimeout(function() {
           ext.tabs.create({ url: "about:blank" });
           nextCycle();
         }, postStartupDelay);
->>>>>>> upstream-releases
       }
     });
   });

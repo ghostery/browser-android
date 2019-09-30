@@ -179,13 +179,7 @@ ha{
         }
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.2"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Version{"2.1.48.45"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

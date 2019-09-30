@@ -54,27 +54,11 @@ MFBT_API void* MozTaggedAnonymousMmap(void* aAddr, size_t aLength, int aProt,
 
 MFBT_API int MozTaggedMemoryIsSupported(void);
 
-<<<<<<< HEAD
-#ifdef __cplusplus
-}  // extern "C"
-#endif
-||||||| merged common ancestors
-#ifdef __cplusplus
-} // extern "C"
-#endif
-=======
 #    ifdef __cplusplus
 }  // extern "C"
 #    endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#else  // ANDROID
-||||||| merged common ancestors
-#else // ANDROID
-=======
 #  else  // ANDROID
->>>>>>> upstream-releases
 
 static inline void MozTagAnonymousMemory(const void* aPtr, size_t aLength,
                                          const char* aTag) {}
@@ -87,13 +71,7 @@ static inline void* MozTaggedAnonymousMmap(void* aAddr, size_t aLength,
 
 static inline int MozTaggedMemoryIsSupported(void) { return 0; }
 
-<<<<<<< HEAD
-#endif  // ANDROID
-||||||| merged common ancestors
-#endif // ANDROID
-=======
 #  endif  // ANDROID
->>>>>>> upstream-releases
 
 #endif  // !XP_WIN
 

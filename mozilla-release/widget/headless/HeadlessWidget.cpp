@@ -38,16 +38,8 @@ static mozilla::LazyLogModule sWidgetFocusLog("WidgetFocus");
 
 #endif /* MOZ_LOGGING */
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<nsIWidget> nsIWidget::CreateHeadlessWidget() {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<nsIWidget>
-nsIWidget::CreateHeadlessWidget()
-{
-=======
 /*static*/
 already_AddRefed<nsIWidget> nsIWidget::CreateHeadlessWidget() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIWidget> widget = new mozilla::widget::HeadlessWidget();
   return widget.forget();
 }
@@ -55,32 +47,6 @@ already_AddRefed<nsIWidget> nsIWidget::CreateHeadlessWidget() {
 namespace mozilla {
 namespace widget {
 
-<<<<<<< HEAD
-already_AddRefed<gfxContext> CreateDefaultTarget(IntSize aSize) {
-  // Always use at least a 1x1 draw target to avoid gfx issues
-  // with 0x0 targets.
-  IntSize size =
-      (aSize.width <= 0 || aSize.height <= 0) ? gfx::IntSize(1, 1) : aSize;
-  RefPtr<DrawTarget> target = Factory::CreateDrawTarget(
-      gfxVars::ContentBackend(), size, SurfaceFormat::B8G8R8A8);
-  RefPtr<gfxContext> ctx = gfxContext::CreatePreservingTransformOrNull(target);
-  return ctx.forget();
-}
-
-||||||| merged common ancestors
-already_AddRefed<gfxContext>
-CreateDefaultTarget(IntSize aSize)
-{
-  // Always use at least a 1x1 draw target to avoid gfx issues
-  // with 0x0 targets.
-  IntSize size = (aSize.width <= 0 || aSize.height <= 0) ? gfx::IntSize(1, 1) : aSize;
-  RefPtr<DrawTarget> target = Factory::CreateDrawTarget(gfxVars::ContentBackend(), size, SurfaceFormat::B8G8R8A8);
-  RefPtr<gfxContext> ctx = gfxContext::CreatePreservingTransformOrNull(target);
-  return ctx.forget();
-}
-
-=======
->>>>>>> upstream-releases
 StaticAutoPtr<nsTArray<HeadlessWidget*>> HeadlessWidget::sActiveWindows;
 
 already_AddRefed<HeadlessWidget> HeadlessWidget::GetActiveWindow() {
@@ -234,32 +200,12 @@ void HeadlessWidget::Show(bool aState) {
 
 bool HeadlessWidget::IsVisible() const { return mVisible; }
 
-<<<<<<< HEAD
-nsresult HeadlessWidget::SetFocus(bool aRaise) {
-  LOGFOCUS(("  SetFocus %d [%p]\n", aRaise, (void*)this));
-||||||| merged common ancestors
-nsresult
-HeadlessWidget::SetFocus(bool aRaise)
-{
-  LOGFOCUS(("  SetFocus %d [%p]\n", aRaise, (void *)this));
-=======
 void HeadlessWidget::SetFocus(Raise aRaise) {
   LOGFOCUS(("  SetFocus %d [%p]\n", aRaise == Raise::Yes, (void*)this));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // aRaise == true means we request activation of our toplevel window.
-  if (aRaise) {
-    HeadlessWidget* topLevel = (HeadlessWidget*)GetTopLevelWidget();
-||||||| merged common ancestors
-  // aRaise == true means we request activation of our toplevel window.
-  if (aRaise) {
-    HeadlessWidget* topLevel = (HeadlessWidget*) GetTopLevelWidget();
-=======
   // This means we request activation of our toplevel window.
   if (aRaise == Raise::Yes) {
     HeadlessWidget* topLevel = (HeadlessWidget*)GetTopLevelWidget();
->>>>>>> upstream-releases
 
     // The toplevel only becomes active if it's currently visible; otherwise, it
     // will be activated anyway when it's shown.

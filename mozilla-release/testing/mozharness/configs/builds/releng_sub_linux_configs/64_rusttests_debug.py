@@ -17,14 +17,6 @@ config = {
         'LD_LIBRARY_PATH': '%(abs_obj_dir)s/dist/bin',
         'TINDERBOX_OUTPUT': '1',
     },
-<<<<<<< HEAD
-    'build_targets': ['pre-export', 'export', 'recurse_rusttests'],
-    'artifact_flag_build_variant_in_try': None,
-    'disable_package_metrics': True,
-||||||| merged common ancestors
-    'artifact_flag_build_variant_in_try': None,
-=======
     'build_targets': ['pre-export', 'export', 'recurse_rusttests'],
     'disable_package_metrics': True,
->>>>>>> upstream-releases
 }

@@ -65,15 +65,7 @@ GetDefaultStride(IMFMediaType* aType, uint32_t aWidth, uint32_t* aOutStride) {
   return hr;
 }
 
-<<<<<<< HEAD
-YUVColorSpace GetYUVColorSpace(IMFMediaType* aType) {
-||||||| merged common ancestors
-YUVColorSpace
-GetYUVColorSpace(IMFMediaType* aType)
-{
-=======
 gfx::YUVColorSpace GetYUVColorSpace(IMFMediaType* aType) {
->>>>>>> upstream-releases
   UINT32 yuvColorMatrix;
   HRESULT hr = aType->GetUINT32(MF_MT_YUV_MATRIX, &yuvColorMatrix);
   NS_ENSURE_TRUE(SUCCEEDED(hr), gfx::YUVColorSpace::BT601);

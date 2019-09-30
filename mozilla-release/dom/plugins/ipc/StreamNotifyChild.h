@@ -33,15 +33,8 @@ class StreamNotifyChild : public PStreamNotifyChild {
   virtual mozilla::ipc::IPCResult Recv__delete__(
       const NPReason& reason) override;
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvRedirectNotify(const nsCString& url,
-                                             const int32_t& status) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvRedirectNotify(const nsCString& url, const int32_t& status) override;
-=======
   mozilla::ipc::IPCResult RecvRedirectNotify(const nsCString& url,
                                              const int32_t& status);
->>>>>>> upstream-releases
 
   /**
    * If a stream is created for this this URLNotify, we associate the objects

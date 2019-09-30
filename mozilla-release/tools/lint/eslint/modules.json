@@ -26,15 +26,8 @@
   "browser-loader.js": ["BrowserLoader"],
   "browser.js": ["browser", "Context", "WindowState"],
   "browserid_identity.js": ["BrowserIDManager", "AuthenticationError"],
-<<<<<<< HEAD
-  "CanonicalJSON.jsm": ["CanonicalJSON"],
-  "CertUtils.jsm": ["CertUtils"],
-||||||| merged common ancestors
-  "CertUtils.jsm": ["CertUtils"],
-=======
   "capabilities.js": ["Capabilities", "PageLoadStrategy", "Proxy", "Timeouts", "UnhandledPromptBehavior"],
   "cert.js": ["CertificateOverrideManager", "InsecureSweepingOverride"],
->>>>>>> upstream-releases
   "clients.js": ["ClientEngine", "ClientsRec"],
   "collection_repair.js": ["getRepairRequestor", "getAllRepairRequestors", "CollectionRepairRequestor", "getRepairResponder", "CollectionRepairResponder"],
   "collection_validator.js": ["CollectionValidator", "CollectionProblemData"],
@@ -114,17 +107,8 @@
   "import_module.jsm": ["MODULE_IMPORTED", "MODULE_URI", "SUBMODULE_IMPORTED", "same_scope", "SUBMODULE_IMPORTED_TO_SCOPE"],
   "import_sub_module.jsm": ["SUBMODULE_IMPORTED", "test_obj"],
   "InlineSpellChecker.jsm": ["InlineSpellChecker", "SpellCheckHelper"],
-<<<<<<< HEAD
-  "JSDOMParser.js": ["JSDOMParser"],
-  "jsdebugger.jsm": ["addDebuggerToGlobal"],
-  "jsesc.js": ["jsesc"],
-||||||| merged common ancestors
-  "JSDOMParser.js": ["JSDOMParser"],
-  "jsdebugger.jsm": ["addDebuggerToGlobal"],
-=======
   "jsdebugger.jsm": ["addDebuggerToGlobal", "addSandboxedDebuggerToGlobal"],
   "jsesc.js": ["jsesc"],
->>>>>>> upstream-releases
   "json2.js": ["JSON"],
   "keys.js": ["BulkKeyBundle", "SyncKeyBundle"],
   "KeyValueParser.jsm": ["parseKeyValuePairsFromLines", "parseKeyValuePairs", "parseKeyValuePairsFromFile", "parseKeyValuePairsFromFileAsync"],

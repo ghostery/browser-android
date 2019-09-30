@@ -74,18 +74,8 @@ static int32_t GetCSSFloatValue(nsComputedDOMStyle* aComputedStyle,
 class ElementDeletionObserver final : public nsStubMutationObserver {
  public:
   ElementDeletionObserver(nsIContent* aNativeAnonNode,
-<<<<<<< HEAD
-                          nsIContent* aObservedNode)
-      : mNativeAnonNode(aNativeAnonNode), mObservedNode(aObservedNode) {}
-||||||| merged common ancestors
-                          nsIContent* aObservedNode)
-    : mNativeAnonNode(aNativeAnonNode)
-    , mObservedNode(aObservedNode)
-  {}
-=======
                           Element* aObservedElement)
       : mNativeAnonNode(aNativeAnonNode), mObservedElement(aObservedElement) {}
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSIMUTATIONOBSERVER_PARENTCHAINCHANGED
@@ -102,54 +92,9 @@ NS_IMPL_ISUPPORTS(ElementDeletionObserver, nsIMutationObserver)
 void ElementDeletionObserver::ParentChainChanged(nsIContent* aContent) {
   // If the native anonymous content has been unbound already in
   // DeleteRefToAnonymousNode, mNativeAnonNode's parentNode is null.
-<<<<<<< HEAD
-  if (aContent == mObservedNode && mNativeAnonNode &&
-      mNativeAnonNode->GetParentNode() == aContent) {
-    // If the observed node has been moved to another document, there isn't much
-    // we can do easily. But at least be safe and unbind the native anonymous
-    // content and stop observing changes.
-    if (mNativeAnonNode->OwnerDoc() != mObservedNode->OwnerDoc()) {
-      mObservedNode->RemoveMutationObserver(this);
-      mObservedNode = nullptr;
-      mNativeAnonNode->RemoveMutationObserver(this);
-      mNativeAnonNode->UnbindFromTree();
-      mNativeAnonNode = nullptr;
-      NS_RELEASE_THIS();
-      return;
-    }
-
-    // We're staying in the same document, just rebind the native anonymous
-    // node so that the subtree root points to the right object etc.
-    mNativeAnonNode->UnbindFromTree();
-    mNativeAnonNode->BindToTree(mObservedNode->GetUncomposedDoc(),
-                                mObservedNode, mObservedNode);
-||||||| merged common ancestors
-  if (aContent == mObservedNode && mNativeAnonNode &&
-      mNativeAnonNode->GetParentNode() == aContent) {
-    // If the observed node has been moved to another document, there isn't much
-    // we can do easily. But at least be safe and unbind the native anonymous
-    // content and stop observing changes.
-    if (mNativeAnonNode->OwnerDoc() != mObservedNode->OwnerDoc()) {
-      mObservedNode->RemoveMutationObserver(this);
-      mObservedNode = nullptr;
-      mNativeAnonNode->RemoveMutationObserver(this);
-      mNativeAnonNode->UnbindFromTree();
-      mNativeAnonNode = nullptr;
-      NS_RELEASE_THIS();
-      return;
-    }
-
-    // We're staying in the same document, just rebind the native anonymous
-    // node so that the subtree root points to the right object etc.
-    mNativeAnonNode->UnbindFromTree();
-    mNativeAnonNode->BindToTree(mObservedNode->GetUncomposedDoc(),
-                                mObservedNode,
-                                mObservedNode);
-=======
   if (aContent != mObservedElement || !mNativeAnonNode ||
       mNativeAnonNode->GetParent() != aContent) {
     return;
->>>>>>> upstream-releases
   }
 
   ManualNACPtr::RemoveContentFromNACArray(mNativeAnonNode);
@@ -161,18 +106,8 @@ void ElementDeletionObserver::ParentChainChanged(nsIContent* aContent) {
   NS_RELEASE_THIS();
 }
 
-<<<<<<< HEAD
-void ElementDeletionObserver::NodeWillBeDestroyed(const nsINode* aNode) {
-  NS_ASSERTION(aNode == mNativeAnonNode || aNode == mObservedNode,
-||||||| merged common ancestors
-void
-ElementDeletionObserver::NodeWillBeDestroyed(const nsINode* aNode)
-{
-  NS_ASSERTION(aNode == mNativeAnonNode || aNode == mObservedNode,
-=======
 void ElementDeletionObserver::NodeWillBeDestroyed(const nsINode* aNode) {
   NS_ASSERTION(aNode == mNativeAnonNode || aNode == mObservedElement,
->>>>>>> upstream-releases
                "Wrong aNode!");
   if (aNode == mNativeAnonNode) {
     mObservedElement->RemoveMutationObserver(this);
@@ -238,17 +173,9 @@ ManualNACPtr HTMLEditor::CreateAnonymousElement(nsAtom* aTag,
 
     // establish parenthood of the element
     newContentRaw->SetIsNativeAnonymousRoot();
-<<<<<<< HEAD
-    nsresult rv =
-        newContentRaw->BindToTree(doc, &aParentContent, &aParentContent);
-||||||| merged common ancestors
-    nsresult rv =
-      newContentRaw->BindToTree(doc, &aParentContent, &aParentContent);
-=======
     BindContext context(*aParentContent.AsElement(),
                         BindContext::ForNativeAnonymous);
     nsresult rv = newContentRaw->BindToTree(context, aParentContent);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       newContentRaw->UnbindFromTree();
       return nullptr;
@@ -267,16 +194,8 @@ ManualNACPtr HTMLEditor::CreateAnonymousElement(nsAtom* aTag,
   }
 
   ElementDeletionObserver* observer =
-<<<<<<< HEAD
-      new ElementDeletionObserver(newContent, &aParentContent);
-  NS_ADDREF(observer);  // NodeWillBeDestroyed releases.
-||||||| merged common ancestors
-    new ElementDeletionObserver(newContent, &aParentContent);
-  NS_ADDREF(observer); // NodeWillBeDestroyed releases.
-=======
       new ElementDeletionObserver(newContent, aParentContent.AsElement());
   NS_ADDREF(observer);  // NodeWillBeDestroyed releases.
->>>>>>> upstream-releases
   aParentContent.AddMutationObserver(observer);
   newContent->AddMutationObserver(observer);
 
@@ -296,27 +215,11 @@ ManualNACPtr HTMLEditor::CreateAnonymousElement(nsAtom* aTag,
 }
 
 // Removes event listener and calls DeleteRefToAnonymousNode.
-<<<<<<< HEAD
-void HTMLEditor::RemoveListenerAndDeleteRef(const nsAString& aEvent,
-                                            nsIDOMEventListener* aListener,
-                                            bool aUseCapture,
-                                            ManualNACPtr aElement,
-                                            nsIPresShell* aShell) {
-||||||| merged common ancestors
-void
-HTMLEditor::RemoveListenerAndDeleteRef(const nsAString& aEvent,
-                                       nsIDOMEventListener* aListener,
-                                       bool aUseCapture,
-                                       ManualNACPtr aElement,
-                                       nsIPresShell* aShell)
-{
-=======
 void HTMLEditor::RemoveListenerAndDeleteRef(const nsAString& aEvent,
                                             nsIDOMEventListener* aListener,
                                             bool aUseCapture,
                                             ManualNACPtr aElement,
                                             PresShell* aPresShell) {
->>>>>>> upstream-releases
   if (aElement) {
     aElement->RemoveEventListener(aEvent, aListener, aUseCapture);
   }
@@ -324,18 +227,8 @@ void HTMLEditor::RemoveListenerAndDeleteRef(const nsAString& aEvent,
 }
 
 // Deletes all references to an anonymous element
-<<<<<<< HEAD
-void HTMLEditor::DeleteRefToAnonymousNode(ManualNACPtr aContent,
-                                          nsIPresShell* aShell) {
-||||||| merged common ancestors
-void
-HTMLEditor::DeleteRefToAnonymousNode(ManualNACPtr aContent,
-                                     nsIPresShell* aShell)
-{
-=======
 void HTMLEditor::DeleteRefToAnonymousNode(ManualNACPtr aContent,
                                           PresShell* aPresShell) {
->>>>>>> upstream-releases
   // call ContentRemoved() for the anonymous content
   // node so its references get removed from the frame manager's
   // undisplay map, and its layout frames get destroyed!
@@ -413,34 +306,17 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons() {
   if (NS_WARN_IF(!editActionData.CanHandle())) {
     return NS_ERROR_NOT_INITIALIZED;
   }
-<<<<<<< HEAD
-
-  nsresult rv = RefereshEditingUI();
-||||||| merged common ancestors
-  nsresult rv = RefereshEditingUI(*aSelection);
-=======
 
   nsresult rv = RefreshEditingUI();
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult HTMLEditor::RefereshEditingUI() {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-||||||| merged common ancestors
-nsresult
-HTMLEditor::RefereshEditingUI(Selection& aSelection)
-{
-=======
 nsresult HTMLEditor::RefreshEditingUI() {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
->>>>>>> upstream-releases
   // First, we need to remove unnecessary editing UI now since some of them
   // may be disabled while them are visible.
   HideAnonymousEditingUIsIfUnnecessary();

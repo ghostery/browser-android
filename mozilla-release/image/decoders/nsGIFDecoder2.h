@@ -56,16 +56,10 @@ class nsGIFDecoder2 : public Decoder {
   void EndImageFrame();
 
   /// Called when we finish decoding the entire image.
-<<<<<<< HEAD
-  void FlushImageData();
-||||||| merged common ancestors
-  void      FlushImageData();
-=======
   void FlushImageData();
 
   /// Convert color map to BGRA, applying any necessary CMS tranforms.
   void ConvertColormap(uint32_t* aColormap, uint32_t aColors);
->>>>>>> upstream-releases
 
   /// Transforms a palette index into a pixel.
   template <typename PixelSize>

@@ -58,49 +58,12 @@ static inline GrColor SkColorToUnpremulGrColor(SkColor c) {
     return GrColorPackRGBA(r, g, b, a);
 }
 
-<<<<<<< HEAD
-/** Transform an SkColor (sRGB bytes) or SkColor4f (sRGB floats) to GrColor4f
-    for the specified color space info. */
-GrColor4f SkColor4fToUnpremulGrColor4f(SkColor4f, const GrColorSpaceInfo&);
-||||||| merged common ancestors
-/** Transform an SkColor (sRGB bytes) to GrColor4f for the specified color space info. */
-GrColor4f SkColorToPremulGrColor4f(SkColor, const GrColorSpaceInfo&);
-GrColor4f SkColorToPremulGrColor4fLegacy(SkColor);
-GrColor4f SkColorToUnpremulGrColor4f(SkColor, const GrColorSpaceInfo&);
-=======
 /** Similar, but using SkPMColor4f. */
 SkPMColor4f SkColorToPMColor4f(SkColor, const GrColorSpaceInfo&);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/** Similar, but using SkPMColor4f. */
-SkPMColor4f SkColorToPMColor4f(SkColor, const GrColorSpaceInfo&);
-||||||| merged common ancestors
-/** Replicates the SkColor's alpha to all four channels of the GrColor. */
-static inline GrColor SkColorAlphaToGrColor(SkColor c) {
-    U8CPU a = SkColorGetA(c);
-    return GrColorPackRGBA(a, a, a, a);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-static inline SkPM4f GrColor4fToSkPM4f(const GrColor4f& c) {
-    SkPM4f pm4f;
-    pm4f.fVec[SkPM4f::R] = c.fRGBA[0];
-    pm4f.fVec[SkPM4f::G] = c.fRGBA[1];
-    pm4f.fVec[SkPM4f::B] = c.fRGBA[2];
-    pm4f.fVec[SkPM4f::A] = c.fRGBA[3];
-    return pm4f;
-}
-
-static inline GrColor4f SkPM4fToGrColor4f(const SkPM4f& c) {
-    return GrColor4f{c.r(), c.g(), c.b(), c.a()};
-}
-=======
 /** Converts an SkColor4f to the destination color space. Pins the color if the destination is
     normalized, or the device does not support half-float vertex attributes. */
 SkColor4f SkColor4fPrepForDst(SkColor4f, const GrColorSpaceInfo&, const GrCaps&);
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 // Paint conversion
@@ -260,22 +223,7 @@ void GrMakeKeyFromImageID(GrUniqueKey* key, uint32_t imageID, const SkIRect& ima
 
 /** Call this after installing a GrUniqueKey on texture. It will cause the texture's key to be
     removed should the bitmap's contents change or be destroyed. */
-<<<<<<< HEAD
-void GrInstallBitmapUniqueKeyInvalidator(const GrUniqueKey& key, uint32_t contextUniqueID,
-                                         SkPixelRef* pixelRef);
-||||||| merged common ancestors
-void GrInstallBitmapUniqueKeyInvalidator(const GrUniqueKey& key, SkPixelRef* pixelRef);
-
-//////////////////////////////////////////////////////////////////////////////
-
-/** When image filter code needs to construct a render target context to do intermediate rendering,
-    we need a renderable pixel config. The source (SkSpecialImage) may not be in a renderable
-    format, but we want to preserve the color space of that source. This picks an appropriate format
-    to use. */
-GrPixelConfig GrRenderableConfigForColorSpace(const SkColorSpace*);
-=======
 void GrInstallBitmapUniqueKeyInvalidator(const GrUniqueKey& key, uint32_t contextID,
                                          SkPixelRef* pixelRef);
->>>>>>> upstream-releases
 
 #endif

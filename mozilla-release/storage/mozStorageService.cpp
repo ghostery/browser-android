@@ -81,30 +81,11 @@ static int64_t StorageSQLiteDistinguishedAmount() {
  * @param aTotal
  *        The accumulator for the measurement.
  */
-<<<<<<< HEAD
-static void ReportConn(nsIHandleReportCallback *aHandleReport,
-                       nsISupports *aData, Connection *aConn,
-                       const nsACString &aPathHead, const nsACString &aKind,
-                       const nsACString &aDesc, int32_t aOption,
-                       size_t *aTotal) {
-||||||| merged common ancestors
-static void
-ReportConn(nsIHandleReportCallback *aHandleReport,
-           nsISupports *aData,
-           Connection *aConn,
-           const nsACString &aPathHead,
-           const nsACString &aKind,
-           const nsACString &aDesc,
-           int32_t aOption,
-           size_t *aTotal)
-{
-=======
 static void ReportConn(nsIHandleReportCallback* aHandleReport,
                        nsISupports* aData, Connection* aConn,
                        const nsACString& aPathHead, const nsACString& aKind,
                        const nsACString& aDesc, int32_t aOption,
                        size_t* aTotal) {
->>>>>>> upstream-releases
   nsCString path(aPathHead);
   path.Append(aKind);
   path.AppendLiteral("-used");
@@ -123,17 +104,8 @@ static void ReportConn(nsIHandleReportCallback* aHandleReport,
 // about:memory is loaded (not, for example, when telemetry pings occur) and
 // any delays in that case aren't so bad.
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::CollectReports(nsIHandleReportCallback *aHandleReport,
-                        nsISupports *aData, bool aAnonymize) {
-||||||| merged common ancestors
-Service::CollectReports(nsIHandleReportCallback *aHandleReport,
-                        nsISupports *aData, bool aAnonymize)
-{
-=======
 Service::CollectReports(nsIHandleReportCallback* aHandleReport,
                         nsISupports* aData, bool aAnonymize) {
->>>>>>> upstream-releases
   size_t totalConnSize = 0;
   {
     nsTArray<RefPtr<Connection>> connections;
@@ -225,20 +197,6 @@ already_AddRefed<Service> Service::getSingleton() {
     if (ps) {
       nsAutoString title, message;
       title.AppendLiteral("SQLite Version Error");
-<<<<<<< HEAD
-      message.AppendLiteral(
-          "The application has been updated, but the SQLite "
-          "library wasn't updated properly and the application "
-          "cannot run. Please try to launch the application again. "
-          "If that should still fail, please try reinstalling "
-          "it, or visit https://support.mozilla.org/.");
-||||||| merged common ancestors
-      message.AppendLiteral("The application has been updated, but the SQLite "
-                            "library wasn't updated properly and the application "
-                            "cannot run. Please try to launch the application again. "
-                            "If that should still fail, please try reinstalling "
-                            "it, or visit https://support.mozilla.org/.");
-=======
       message.AppendLiteral(
           "The application has been updated, but the SQLite "
           "library wasn't updated properly and the application "
@@ -246,7 +204,6 @@ already_AddRefed<Service> Service::getSingleton() {
           "If that should still fail, please try reinstalling "
           "it, or contact the support of where you got the "
           "application from.");
->>>>>>> upstream-releases
       (void)ps->Alert(nullptr, title.get(), message.get());
     }
     MOZ_CRASH("SQLite Version Error");
@@ -290,29 +247,13 @@ Service::~Service() {
   mSqliteVFS = nullptr;
 }
 
-<<<<<<< HEAD
-void Service::registerConnection(Connection *aConnection) {
-||||||| merged common ancestors
-void
-Service::registerConnection(Connection *aConnection)
-{
-=======
 void Service::registerConnection(Connection* aConnection) {
->>>>>>> upstream-releases
   mRegistrationMutex.AssertNotCurrentThreadOwns();
   MutexAutoLock mutex(mRegistrationMutex);
   (void)mConnections.AppendElement(aConnection);
 }
 
-<<<<<<< HEAD
-void Service::unregisterConnection(Connection *aConnection) {
-||||||| merged common ancestors
-void
-Service::unregisterConnection(Connection *aConnection)
-{
-=======
 void Service::unregisterConnection(Connection* aConnection) {
->>>>>>> upstream-releases
   // If this is the last Connection it might be the only thing keeping Service
   // alive.  So ensure that Service is destroyed only after the Connection is
   // cleanly unregistered and destroyed.
@@ -346,17 +287,8 @@ void Service::unregisterConnection(Connection* aConnection) {
   // it doesn't actually matter what thread our reference drops on.)
 }
 
-<<<<<<< HEAD
-void Service::getConnections(
-    /* inout */ nsTArray<RefPtr<Connection>> &aConnections) {
-||||||| merged common ancestors
-void
-Service::getConnections(/* inout */ nsTArray<RefPtr<Connection> >& aConnections)
-{
-=======
 void Service::getConnections(
     /* inout */ nsTArray<RefPtr<Connection>>& aConnections) {
->>>>>>> upstream-releases
   mRegistrationMutex.AssertNotCurrentThreadOwns();
   MutexAutoLock mutex(mRegistrationMutex);
   aConnections.Clear();
@@ -371,26 +303,11 @@ void Service::minimizeMemory() {
     RefPtr<Connection> conn = connections[i];
     // For non-main-thread owning/opening threads, we may be racing against them
     // closing their connection or their thread.  That's okay, see below.
-<<<<<<< HEAD
-    if (!conn->connectionReady()) continue;
-||||||| merged common ancestors
-    if (!conn->connectionReady())
-      continue;
-=======
     if (!conn->connectionReady()) {
       continue;
     }
->>>>>>> upstream-releases
 
     NS_NAMED_LITERAL_CSTRING(shrinkPragma, "PRAGMA shrink_memory");
-<<<<<<< HEAD
-    nsCOMPtr<mozIStorageConnection> syncConn = do_QueryInterface(
-        NS_ISUPPORTS_CAST(mozIStorageAsyncConnection *, conn));
-||||||| merged common ancestors
-    nsCOMPtr<mozIStorageConnection> syncConn = do_QueryInterface(
-      NS_ISUPPORTS_CAST(mozIStorageAsyncConnection*, conn));
-=======
->>>>>>> upstream-releases
     bool onOpenedThread = false;
 
     if (!conn->operationSupported(Connection::SYNCHRONOUS)) {
@@ -429,18 +346,8 @@ void Service::minimizeMemory() {
 sqlite3_vfs* ConstructTelemetryVFS();
 const char* GetVFSName();
 
-<<<<<<< HEAD
-static const char *sObserverTopics[] = {"memory-pressure",
-                                        "xpcom-shutdown-threads"};
-||||||| merged common ancestors
-static const char* sObserverTopics[] = {
-  "memory-pressure",
-  "xpcom-shutdown-threads"
-};
-=======
 static const char* sObserverTopics[] = {"memory-pressure",
                                         "xpcom-shutdown-threads"};
->>>>>>> upstream-releases
 
 nsresult Service::initialize() {
   MOZ_ASSERT(NS_IsMainThread(), "Must be initialized on the main thread");
@@ -485,21 +392,9 @@ nsresult Service::initialize() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-int Service::localeCompareStrings(const nsAString &aStr1,
-                                  const nsAString &aStr2,
-                                  int32_t aComparisonStrength) {
-||||||| merged common ancestors
-int
-Service::localeCompareStrings(const nsAString &aStr1,
-                              const nsAString &aStr2,
-                              int32_t aComparisonStrength)
-{
-=======
 int Service::localeCompareStrings(const nsAString& aStr1,
                                   const nsAString& aStr2,
                                   int32_t aComparisonStrength) {
->>>>>>> upstream-releases
   // The implementation of nsICollation.CompareString() is platform-dependent.
   // On Linux it's not thread-safe.  It may not be on Windows and OS X either,
   // but it's more difficult to tell.  We therefore synchronize this method.
@@ -521,15 +416,7 @@ int Service::localeCompareStrings(const nsAString& aStr1,
   return res;
 }
 
-<<<<<<< HEAD
-nsICollation *Service::getLocaleCollation() {
-||||||| merged common ancestors
-nsICollation *
-Service::getLocaleCollation()
-{
-=======
 nsICollation* Service::getLocaleCollation() {
->>>>>>> upstream-releases
   mMutex.AssertCurrentThreadOwns();
 
   if (mLocaleCollation) return mLocaleCollation;
@@ -554,17 +441,8 @@ nsICollation* Service::getLocaleCollation() {
 //// mozIStorageService
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::OpenSpecialDatabase(const char *aStorageKey,
-                             mozIStorageConnection **_connection) {
-||||||| merged common ancestors
-Service::OpenSpecialDatabase(const char *aStorageKey,
-                             mozIStorageConnection **_connection)
-{
-=======
 Service::OpenSpecialDatabase(const char* aStorageKey,
                              mozIStorageConnection** _connection) {
->>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIFile> storageFile;
@@ -587,45 +465,16 @@ Service::OpenSpecialDatabase(const char* aStorageKey,
 
 namespace {
 
-<<<<<<< HEAD
-class AsyncInitDatabase final : public Runnable {
- public:
-  AsyncInitDatabase(Connection *aConnection, nsIFile *aStorageFile,
-||||||| merged common ancestors
-class AsyncInitDatabase final : public Runnable
-{
-public:
-  AsyncInitDatabase(Connection* aConnection,
-                    nsIFile* aStorageFile,
-=======
 class AsyncInitDatabase final : public Runnable {
  public:
   AsyncInitDatabase(Connection* aConnection, nsIFile* aStorageFile,
->>>>>>> upstream-releases
                     int32_t aGrowthIncrement,
-<<<<<<< HEAD
-                    mozIStorageCompletionCallback *aCallback)
-      : Runnable("storage::AsyncInitDatabase"),
-        mConnection(aConnection),
-        mStorageFile(aStorageFile),
-        mGrowthIncrement(aGrowthIncrement),
-        mCallback(aCallback) {
-||||||| merged common ancestors
-                    mozIStorageCompletionCallback* aCallback)
-    : Runnable("storage::AsyncInitDatabase")
-    , mConnection(aConnection)
-    , mStorageFile(aStorageFile)
-    , mGrowthIncrement(aGrowthIncrement)
-    , mCallback(aCallback)
-  {
-=======
                     mozIStorageCompletionCallback* aCallback)
       : Runnable("storage::AsyncInitDatabase"),
         mConnection(aConnection),
         mStorageFile(aStorageFile),
         mGrowthIncrement(aGrowthIncrement),
         mCallback(aCallback) {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
   }
 
@@ -641,28 +490,12 @@ class AsyncInitDatabase final : public Runnable {
       (void)mConnection->SetGrowthIncrement(mGrowthIncrement, EmptyCString());
     }
 
-<<<<<<< HEAD
-    return DispatchResult(
-        NS_OK, NS_ISUPPORTS_CAST(mozIStorageAsyncConnection *, mConnection));
-||||||| merged common ancestors
-    return DispatchResult(NS_OK, NS_ISUPPORTS_CAST(mozIStorageAsyncConnection*,
-                          mConnection));
-=======
     return DispatchResult(
         NS_OK, NS_ISUPPORTS_CAST(mozIStorageAsyncConnection*, mConnection));
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
- private:
-  nsresult DispatchResult(nsresult aStatus, nsISupports *aValue) {
-||||||| merged common ancestors
-private:
-  nsresult DispatchResult(nsresult aStatus, nsISupports* aValue) {
-=======
  private:
   nsresult DispatchResult(nsresult aStatus, nsISupports* aValue) {
->>>>>>> upstream-releases
     RefPtr<CallbackComplete> event =
         new CallbackComplete(aStatus, aValue, mCallback.forget());
     return NS_DispatchToMainThread(event);
@@ -690,20 +523,9 @@ private:
 }  // namespace
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::OpenAsyncDatabase(nsIVariant *aDatabaseStore,
-                           nsIPropertyBag2 *aOptions,
-                           mozIStorageCompletionCallback *aCallback) {
-||||||| merged common ancestors
-Service::OpenAsyncDatabase(nsIVariant *aDatabaseStore,
-                           nsIPropertyBag2 *aOptions,
-                           mozIStorageCompletionCallback *aCallback)
-{
-=======
 Service::OpenAsyncDatabase(nsIVariant* aDatabaseStore,
                            nsIPropertyBag2* aOptions,
                            mozIStorageCompletionCallback* aCallback) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return NS_ERROR_NOT_SAME_THREAD;
   }
@@ -783,15 +605,8 @@ Service::OpenAsyncDatabase(nsIVariant* aDatabaseStore,
   }
 
   // Create connection on this thread, but initialize it on its helper thread.
-<<<<<<< HEAD
-  RefPtr<Connection> msc = new Connection(this, flags, true, ignoreLockingMode);
-||||||| merged common ancestors
-  RefPtr<Connection> msc = new Connection(this, flags, true,
-                                          ignoreLockingMode);
-=======
   RefPtr<Connection> msc =
       new Connection(this, flags, Connection::ASYNCHRONOUS, ignoreLockingMode);
->>>>>>> upstream-releases
   nsCOMPtr<nsIEventTarget> target = msc->getAsyncExecutionTarget();
   MOZ_ASSERT(target,
              "Cannot initialize a connection that has been closed already");
@@ -802,34 +617,15 @@ Service::OpenAsyncDatabase(nsIVariant* aDatabaseStore,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::OpenDatabase(nsIFile *aDatabaseFile,
-                      mozIStorageConnection **_connection) {
-||||||| merged common ancestors
-Service::OpenDatabase(nsIFile *aDatabaseFile,
-                      mozIStorageConnection **_connection)
-{
-=======
 Service::OpenDatabase(nsIFile* aDatabaseFile,
                       mozIStorageConnection** _connection) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aDatabaseFile);
 
   // Always ensure that SQLITE_OPEN_CREATE is passed in for compatibility
   // reasons.
-<<<<<<< HEAD
-  int flags =
-      SQLITE_OPEN_READWRITE | SQLITE_OPEN_SHAREDCACHE | SQLITE_OPEN_CREATE;
-  RefPtr<Connection> msc = new Connection(this, flags, false);
-||||||| merged common ancestors
-  int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_SHAREDCACHE |
-              SQLITE_OPEN_CREATE;
-  RefPtr<Connection> msc = new Connection(this, flags, false);
-=======
   int flags =
       SQLITE_OPEN_READWRITE | SQLITE_OPEN_SHAREDCACHE | SQLITE_OPEN_CREATE;
   RefPtr<Connection> msc = new Connection(this, flags, Connection::SYNCHRONOUS);
->>>>>>> upstream-releases
 
   nsresult rv = msc->initialize(aDatabaseFile);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -839,34 +635,15 @@ Service::OpenDatabase(nsIFile* aDatabaseFile,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::OpenUnsharedDatabase(nsIFile *aDatabaseFile,
-                              mozIStorageConnection **_connection) {
-||||||| merged common ancestors
-Service::OpenUnsharedDatabase(nsIFile *aDatabaseFile,
-                              mozIStorageConnection **_connection)
-{
-=======
 Service::OpenUnsharedDatabase(nsIFile* aDatabaseFile,
                               mozIStorageConnection** _connection) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aDatabaseFile);
 
   // Always ensure that SQLITE_OPEN_CREATE is passed in for compatibility
   // reasons.
-<<<<<<< HEAD
-  int flags =
-      SQLITE_OPEN_READWRITE | SQLITE_OPEN_PRIVATECACHE | SQLITE_OPEN_CREATE;
-  RefPtr<Connection> msc = new Connection(this, flags, false);
-||||||| merged common ancestors
-  int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_PRIVATECACHE |
-              SQLITE_OPEN_CREATE;
-  RefPtr<Connection> msc = new Connection(this, flags, false);
-=======
   int flags =
       SQLITE_OPEN_READWRITE | SQLITE_OPEN_PRIVATECACHE | SQLITE_OPEN_CREATE;
   RefPtr<Connection> msc = new Connection(this, flags, Connection::SYNCHRONOUS);
->>>>>>> upstream-releases
 
   nsresult rv = msc->initialize(aDatabaseFile);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -876,17 +653,8 @@ Service::OpenUnsharedDatabase(nsIFile* aDatabaseFile,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::OpenDatabaseWithFileURL(nsIFileURL *aFileURL,
-                                 mozIStorageConnection **_connection) {
-||||||| merged common ancestors
-Service::OpenDatabaseWithFileURL(nsIFileURL *aFileURL,
-                                 mozIStorageConnection **_connection)
-{
-=======
 Service::OpenDatabaseWithFileURL(nsIFileURL* aFileURL,
                                  mozIStorageConnection** _connection) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aFileURL);
 
   // Always ensure that SQLITE_OPEN_CREATE is passed in for compatibility
@@ -903,19 +671,8 @@ Service::OpenDatabaseWithFileURL(nsIFileURL* aFileURL,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::BackupDatabaseFile(nsIFile *aDBFile, const nsAString &aBackupFileName,
-                            nsIFile *aBackupParentDirectory, nsIFile **backup) {
-||||||| merged common ancestors
-Service::BackupDatabaseFile(nsIFile *aDBFile,
-                            const nsAString &aBackupFileName,
-                            nsIFile *aBackupParentDirectory,
-                            nsIFile **backup)
-{
-=======
 Service::BackupDatabaseFile(nsIFile* aDBFile, const nsAString& aBackupFileName,
                             nsIFile* aBackupParentDirectory, nsIFile** backup) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> parentDir = aBackupParentDirectory;
   if (!parentDir) {
@@ -951,14 +708,7 @@ Service::BackupDatabaseFile(nsIFile* aDBFile, const nsAString& aBackupFileName,
 //// nsIObserver
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Service::Observe(nsISupports *, const char *aTopic, const char16_t *) {
-||||||| merged common ancestors
-Service::Observe(nsISupports *, const char *aTopic, const char16_t *)
-{
-=======
 Service::Observe(nsISupports*, const char* aTopic, const char16_t*) {
->>>>>>> upstream-releases
   if (strcmp(aTopic, "memory-pressure") == 0) {
     minimizeMemory();
   } else if (strcmp(aTopic, "xpcom-shutdown-threads") == 0) {
@@ -979,7 +729,7 @@ Service::Observe(nsISupports*, const char* aTopic, const char16_t*) {
       // We must wait until all the closing connections are closed.
       nsTArray<RefPtr<Connection>> connections;
       getConnections(connections);
-      for (auto &conn : connections) {
+      for (auto& conn : connections) {
         if (conn->isClosing()) {
           return false;
         }

@@ -195,46 +195,17 @@ add_task(async function searchWith() {
   let result = await UrlbarTestUtils.getDetailsOfResultAt(window, 0);
   assertState(0, -1, typedValue);
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarOneOffs.js
-  let item = gURLBar.popup.richlistbox.firstElementChild;
-  Assert.equal(item._actionText.textContent,
-               "Search with " + Services.search.defaultEngine.name,
-               "Sanity check: first result's action text");
-||||||| merged common ancestors
-  let item = gURLBar.popup.richlistbox.firstElementChild;
-  Assert.equal(item._actionText.textContent,
-               "Search with " + Services.search.currentEngine.name,
-               "Sanity check: first result's action text");
-=======
   Assert.equal(
     result.displayed.action,
     "Search with " + (await Services.search.getDefault()).name,
     "Sanity check: first result's action text"
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarOneOffs.js
 
   // Alt+Down to the first one-off.  Now the first result and the first one-off
   // should both be selected.
   EventUtils.synthesizeKey("KEY_ArrowDown", { altKey: true });
   assertState(0, 0, typedValue);
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarOneOffs.js
-  let engineName = gURLBar.popup.oneOffSearchButtons.selectedButton.engine.name;
-  Assert.notEqual(engineName, Services.search.defaultEngine.name,
-                  "Sanity check: First one-off engine should not be " +
-                  "the current engine");
-  Assert.equal(item._actionText.textContent,
-               "Search with " + engineName,
-               "First result's action text should be updated");
-||||||| merged common ancestors
-  let engineName = gURLBar.popup.oneOffSearchButtons.selectedButton.engine.name;
-  Assert.notEqual(engineName, Services.search.currentEngine.name,
-                  "Sanity check: First one-off engine should not be " +
-                  "the current engine");
-  Assert.equal(item._actionText.textContent,
-               "Search with " + engineName,
-               "First result's action text should be updated");
-=======
   let engineName = oneOffSearchButtons.selectedButton.engine.name;
   Assert.notEqual(
     engineName,
@@ -247,7 +218,6 @@ add_task(async function searchWith() {
     "Search with " + engineName,
     "First result's action text should be updated"
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarOneOffs.js
 
   await hidePopup();
 });
@@ -304,19 +274,6 @@ add_task(async function oneOffReturn() {
 add_task(async function collapsedOneOffs() {
   // Disable all the engines but the current one, check the oneoffs are
   // collapsed and that moving up selects the last match.
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarOneOffs.js
-  let engines = Services.search.getVisibleEngines()
-                               .filter(e => e.name != Services.search.defaultEngine.name);
-  await SpecialPowers.pushPrefEnv({"set": [
-    [ "browser.search.hiddenOneOffs", engines.map(e => e.name).join(",") ],
-  ]});
-||||||| merged common ancestors
-  let engines = Services.search.getVisibleEngines()
-                               .filter(e => e.name != Services.search.currentEngine.name);
-  await SpecialPowers.pushPrefEnv({"set": [
-    [ "browser.search.hiddenOneOffs", engines.map(e => e.name).join(",") ],
-  ]});
-=======
   let defaultEngine = await Services.search.getDefault();
   let engines = (await Services.search.getVisibleEngines()).filter(
     e => e.name != defaultEngine.name
@@ -324,7 +281,6 @@ add_task(async function collapsedOneOffs() {
   await SpecialPowers.pushPrefEnv({
     set: [["browser.search.hiddenOneOffs", engines.map(e => e.name).join(",")]],
   });
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarOneOffs.js
 
   let typedValue = "foo";
   await promiseAutocompleteResultPopup(typedValue, window, true);
@@ -346,17 +302,9 @@ add_task(async function hiddenWhenUsingSearchAlias() {
   await promiseAutocompleteResultPopup(typedValue, window, true);
   await UrlbarTestUtils.getDetailsOfResultAt(window, 0);
   Assert.equal(
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarOneOffs.js
-    window.getComputedStyle(gURLBar.popup.oneOffSearchButtons.container).display,
-    "none"
-||||||| merged common ancestors
-    window.getComputedStyle(gURLBar.popup.oneOffSearchButtons).display,
-    "none"
-=======
     UrlbarTestUtils.getOneOffSearchButtonsVisible(window),
     false,
     "Should not be showing the one-off buttons"
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarOneOffs.js
   );
   await hidePopup();
 
@@ -364,17 +312,9 @@ add_task(async function hiddenWhenUsingSearchAlias() {
   await promiseAutocompleteResultPopup(typedValue, window, true);
   await UrlbarTestUtils.getDetailsOfResultAt(window, 0);
   Assert.equal(
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarOneOffs.js
-    window.getComputedStyle(gURLBar.popup.oneOffSearchButtons.container).display,
-    "-moz-box"
-||||||| merged common ancestors
-    window.getComputedStyle(gURLBar.popup.oneOffSearchButtons).display,
-    "-moz-box"
-=======
     UrlbarTestUtils.getOneOffSearchButtonsVisible(window),
     true,
     "Should be showing the one-off buttons"
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/browser/browser_urlbarOneOffs.js
   );
   await hidePopup();
 });

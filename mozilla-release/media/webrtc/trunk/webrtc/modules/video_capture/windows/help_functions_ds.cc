@@ -12,16 +12,10 @@
                        // that DEFINE_GUID() entries will be defined in this
                        // object file.
 
-<<<<<<< HEAD
-#include "modules/video_capture/windows/help_functions_ds.h"
-||||||| merged common ancestors
-#include "webrtc/modules/video_capture/windows/help_functions_ds.h"
-=======
 #include "modules/video_capture/windows/help_functions_ds.h"
 
 #include "rtc_base/checks.h"
 #include "rtc_base/logging.h"
->>>>>>> upstream-releases
 
 #include <cguid.h>
 

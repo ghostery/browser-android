@@ -32,25 +32,11 @@ class CryptoMetaData {
  public:
   CryptoMetaData() {}
 
-<<<<<<< HEAD
-  explicit CryptoMetaData(const cdm::InputBuffer_1* aInputBuffer) {
-||||||| merged common ancestors
-  explicit CryptoMetaData(const cdm::InputBuffer_1* aInputBuffer)
-  {
-=======
   explicit CryptoMetaData(const cdm::InputBuffer_2* aInputBuffer) {
->>>>>>> upstream-releases
     Init(aInputBuffer);
   }
 
-<<<<<<< HEAD
-  void Init(const cdm::InputBuffer_1* aInputBuffer) {
-||||||| merged common ancestors
-  void Init(const cdm::InputBuffer_1* aInputBuffer)
-  {
-=======
   void Init(const cdm::InputBuffer_2* aInputBuffer) {
->>>>>>> upstream-releases
     if (!aInputBuffer) {
       assert(!IsValid());
       return;

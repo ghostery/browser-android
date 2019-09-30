@@ -16,16 +16,6 @@
 #include "nsString.h"
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-class nsAnnotationService final : public nsIAnnotationService,
-                                  public nsSupportsWeakReference {
- public:
-||||||| merged common ancestors
-class nsAnnotationService final : public nsIAnnotationService
-                                , public nsSupportsWeakReference
-{
-public:
-=======
 namespace mozilla {
 namespace places {
 
@@ -39,7 +29,6 @@ class nsAnnotationService final : public nsIAnnotationService,
   using BookmarkData = mozilla::places::BookmarkData;
 
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_DECL_NSIANNOTATIONSERVICE
 
@@ -116,17 +105,7 @@ class nsAnnotationService final : public nsIAnnotationService,
   nsresult GetValueFromStatement(nsCOMPtr<mozIStorageStatement>& aStatement,
                                  nsIVariant** _retval);
 
-<<<<<<< HEAD
  public:
-  nsresult GetItemAnnotationNamesTArray(int64_t aItemId,
-                                        nsTArray<nsCString>* _result);
-||||||| merged common ancestors
-public:
-  nsresult GetItemAnnotationNamesTArray(int64_t aItemId,
-                                        nsTArray<nsCString>* _result);
-=======
- public:
->>>>>>> upstream-releases
   nsresult RemoveItemAnnotations(int64_t aItemId);
 };
 

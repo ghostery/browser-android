@@ -118,15 +118,6 @@ already_AddRefed<nsIPrincipal> FileMediaResource::GetCurrentPrincipal() {
   return principal.forget();
 }
 
-<<<<<<< HEAD
-nsresult FileMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
-                                          uint32_t aCount) {
-||||||| merged common ancestors
-nsresult
-FileMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
-                                 uint32_t aCount)
-{
-=======
 bool FileMediaResource::HadCrossOriginRedirects() {
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -143,7 +134,6 @@ bool FileMediaResource::HadCrossOriginRedirects() {
 
 nsresult FileMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
                                           uint32_t aCount) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   EnsureSizeInitialized();

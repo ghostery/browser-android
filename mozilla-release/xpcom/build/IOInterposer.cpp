@@ -18,16 +18,8 @@
 #include "mozilla/ThreadLocal.h"
 #include "nscore.h"  // for NS_FREE_PERMANENT_DATA
 #if !defined(XP_WIN)
-<<<<<<< HEAD
-#include "NSPRInterposer.h"
-#endif  // !defined(XP_WIN)
-||||||| merged common ancestors
-#include "NSPRInterposer.h"
-#endif // !defined(XP_WIN)
-=======
 #  include "NSPRInterposer.h"
 #endif  // !defined(XP_WIN)
->>>>>>> upstream-releases
 #include "nsXULAppAPI.h"
 #include "PoisonIOInterposer.h"
 #include "prenv.h"

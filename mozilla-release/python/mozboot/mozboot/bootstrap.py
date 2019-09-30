@@ -186,45 +186,6 @@ lines:
 Then restart your shell.
 '''
 
-<<<<<<< HEAD
-TELEMETRY_OPT_IN_PROMPT = '''
-Would you like to enable build system telemetry?
-
-Mozilla collects data about local builds in order to make builds faster and
-improve developer tooling. To learn more about the data we intend to collect
-read here:
-https://firefox-source-docs.mozilla.org/build/buildsystem/telemetry.html.
-
-If you have questions, please ask in #build in irc.mozilla.org. If you would
-like to opt out of data collection, select (N) at the prompt.
-
-Your choice'''
-
-
-def update_or_create_build_telemetry_config(path):
-    """Write a mach config file enabling build telemetry to `path`. If the file does not exist,
-    create it. If it exists, add the new setting to the existing data.
-
-    This is standalone from mach's `ConfigSettings` so we can use it during bootstrap
-    without a source checkout.
-    """
-    config = RawConfigParser()
-    if os.path.exists(path):
-        try:
-            config.read([path])
-        except ConfigParserError as e:
-            print('Your mach configuration file at `{path}` is not parseable:\n{error}'.format(
-                path=path, error=e))
-            return False
-    if not config.has_section('build'):
-        config.add_section('build')
-    config.set('build', 'telemetry', 'true')
-    with open(path, 'wb') as f:
-        config.write(f)
-    return True
-
-||||||| merged common ancestors
-=======
 TELEMETRY_OPT_IN_PROMPT = '''
 Build system telemetry
 
@@ -261,32 +222,20 @@ def update_or_create_build_telemetry_config(path):
         config.write(f)
     return True
 
->>>>>>> upstream-releases
 
 class Bootstrapper(object):
     """Main class that performs system bootstrap."""
 
     def __init__(self, finished=FINISHED, choice=None, no_interactive=False,
-<<<<<<< HEAD
-                 hg_configure=False, no_system_changes=False, mach_context=None):
-||||||| merged common ancestors
-                 hg_configure=False, no_system_changes=False):
-=======
                  hg_configure=False, no_system_changes=False, mach_context=None,
                  vcs=None):
->>>>>>> upstream-releases
         self.instance = None
         self.finished = finished
         self.choice = choice
         self.hg_configure = hg_configure
         self.no_system_changes = no_system_changes
-<<<<<<< HEAD
-        self.mach_context = mach_context
-||||||| merged common ancestors
-=======
         self.mach_context = mach_context
         self.vcs = vcs
->>>>>>> upstream-releases
         cls = None
         args = {'no_interactive': no_interactive,
                 'no_system_changes': no_system_changes}
@@ -420,24 +369,6 @@ class Bootstrapper(object):
 
         self.instance.state_dir = state_dir
         self.instance.ensure_node_packages(state_dir, checkout_root)
-<<<<<<< HEAD
-        self.instance.ensure_clang_static_analysis_package(checkout_root)
-
-    def check_telemetry_opt_in(self, state_dir):
-        # We can't prompt the user.
-        if self.instance.no_interactive:
-            return
-        # Don't prompt if the user already has a setting for this value.
-        if self.mach_context is not None and 'telemetry' in self.mach_context.settings.build:
-            return
-        choice = self.instance.prompt_yesno(prompt=TELEMETRY_OPT_IN_PROMPT)
-        if choice:
-            cfg_file = os.path.join(state_dir, 'machrc')
-            if update_or_create_build_telemetry_config(cfg_file):
-                print('\nThanks for enabling build telemetry! You can change this setting at ' +
-                      'any time by editing the config file `{}`\n'.format(cfg_file))
-||||||| merged common ancestors
-=======
         if not self.instance.artifact_mode:
             self.instance.ensure_stylo_packages(state_dir, checkout_root)
             self.instance.ensure_clang_static_analysis_package(state_dir, checkout_root)
@@ -457,7 +388,6 @@ class Bootstrapper(object):
             if update_or_create_build_telemetry_config(cfg_file):
                 print('\nThanks for enabling build telemetry! You can change this setting at ' +
                       'any time by editing the config file `{}`\n'.format(cfg_file))
->>>>>>> upstream-releases
 
     def bootstrap(self):
         if self.choice is None:
@@ -736,26 +666,6 @@ def current_firefox_checkout(check_output, env, hg=None):
     return (None, None)
 
 
-<<<<<<< HEAD
-def update_git_tools(git, root_state_dir, top_src_dir):
-    """Update git tools, hooks and extensions"""
-    # Bug 1481425 - delete the git-mozreview
-    # commit message hook in .git/hooks dir
-    mozreview_commit_hook = os.path.join(top_src_dir, '.git/hooks/commit-msg')
-    if os.path.exists(mozreview_commit_hook):
-        with open(mozreview_commit_hook, 'rb') as f:
-            contents = f.read()
-
-        if b'MozReview' in contents:
-            print('removing git-mozreview commit message hook...')
-            os.remove(mozreview_commit_hook)
-            print('git-mozreview commit message hook removed.')
-
-    # Ensure git-cinnabar is up to date.
-||||||| merged common ancestors
-def update_git_tools(git, root_state_dir):
-    """Ensure git-cinnabar is up to date."""
-=======
 def update_git_tools(git, root_state_dir, top_src_dir):
     """Update git tools, hooks and extensions"""
     # Bug 1481425 - delete the git-mozreview
@@ -772,7 +682,6 @@ def update_git_tools(git, root_state_dir, top_src_dir):
                 print('git-mozreview commit message hook removed.')
 
     # Ensure git-cinnabar is up to date.
->>>>>>> upstream-releases
     cinnabar_dir = os.path.join(root_state_dir, 'git-cinnabar')
 
     # Ensure the latest revision of git-cinnabar is present.

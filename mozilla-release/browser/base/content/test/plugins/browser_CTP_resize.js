@@ -58,21 +58,11 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(!overlay || overlay.getAttribute("sizing") == "blank",
-      "Test 2, overlay should be blank.");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(!overlay || overlay.getAttribute("sizing") == "blank",
-      "Test 2, overlay should be blank.");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       !overlay || overlay.getAttribute("sizing") == "blank",
       "Test 2, overlay should be blank."
     );
->>>>>>> upstream-releases
   });
 });
 
@@ -88,21 +78,11 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(!overlay || overlay.getAttribute("sizing") == "blank",
-      "Test 3, overlay should be blank.");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(!overlay || overlay.getAttribute("sizing") == "blank",
-      "Test 3, overlay should be blank.");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       !overlay || overlay.getAttribute("sizing") == "blank",
       "Test 3, overlay should be blank."
     );
->>>>>>> upstream-releases
   });
 });
 
@@ -119,21 +99,11 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(overlay && overlay.getAttribute("sizing") != "blank",
-      "Test 4, overlay should be visible.");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(overlay && overlay.getAttribute("sizing") != "blank",
-      "Test 4, overlay should be visible.");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       overlay && overlay.getAttribute("sizing") != "blank",
       "Test 4, overlay should be visible."
     );
->>>>>>> upstream-releases
   });
 });
 
@@ -151,21 +121,11 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(!overlay || overlay.getAttribute("sizing") == "blank",
-      "Test 5, overlay should be blank.");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(!overlay || overlay.getAttribute("sizing") == "blank",
-      "Test 5, overlay should be blank.");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       !overlay || overlay.getAttribute("sizing") == "blank",
       "Test 5, overlay should be blank."
     );
->>>>>>> upstream-releases
   });
 });
 
@@ -183,20 +143,10 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(overlay && overlay.getAttribute("sizing") != "blank",
-      "Test 6, overlay should be visible.");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(overlay && overlay.getAttribute("sizing") != "blank",
-      "Test 6, overlay should be visible.");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       overlay && overlay.getAttribute("sizing") != "blank",
       "Test 6, overlay should be visible."
     );
->>>>>>> upstream-releases
   });
 });

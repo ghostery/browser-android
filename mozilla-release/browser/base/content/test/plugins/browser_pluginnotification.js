@@ -115,15 +115,9 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let bounds = plugin.openOrClosedShadowRoot.getElementById("main").getBoundingClientRect();
-||||||| merged common ancestors
-    let bounds = doc.getAnonymousElementByAttribute(plugin, "anonid", "main").getBoundingClientRect();
-=======
     let bounds = plugin.openOrClosedShadowRoot
       .getElementById("main")
       .getBoundingClientRect();
->>>>>>> upstream-releases
     let left = (bounds.left + bounds.right) / 2;
     let top = (bounds.top + bounds.bottom) / 2;
     let utils = content.windowUtils;
@@ -489,19 +483,10 @@ add_task(async function() {
   await ContentTask.spawn(gTestBrowser, null, async function() {
     let doc = content.document;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    Assert.ok(!plugin.openOrClosedShadowRoot,
-      "Test 20c, CTP UA Widget Shadow Root is removed");
-||||||| merged common ancestors
-    let overlayRect = doc.getAnonymousElementByAttribute(plugin, "anonid", "main").getBoundingClientRect();
-    Assert.ok(overlayRect.width == 0 && overlayRect.height == 0,
-      "Test 20c, plugin should have overlay dims of 0px");
-=======
     Assert.ok(
       !plugin.openOrClosedShadowRoot,
       "Test 20c, CTP UA Widget Shadow Root is removed"
     );
->>>>>>> upstream-releases
   });
 
   clearAllPluginPermissions();

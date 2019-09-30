@@ -176,17 +176,8 @@ void NS_NotifyPluginCall(NSPluginCallReentry aReentryState) {
   nsNPAPIPluginInstance::EndPluginCall(aReentryState);
 }
 
-<<<<<<< HEAD
-nsNPAPIPlugin::nsNPAPIPlugin() {
-  memset((void *)&mPluginFuncs, 0, sizeof(mPluginFuncs));
-||||||| merged common ancestors
-nsNPAPIPlugin::nsNPAPIPlugin()
-{
-  memset((void*)&mPluginFuncs, 0, sizeof(mPluginFuncs));
-=======
 nsNPAPIPlugin::nsNPAPIPlugin() {
   memset((void*)&mPluginFuncs, 0, sizeof(mPluginFuncs));
->>>>>>> upstream-releases
   mPluginFuncs.size = sizeof(mPluginFuncs);
   mPluginFuncs.version = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
 
@@ -198,31 +189,13 @@ nsNPAPIPlugin::~nsNPAPIPlugin() {
   mLibrary = nullptr;
 }
 
-<<<<<<< HEAD
-void nsNPAPIPlugin::PluginCrashed(const nsAString &pluginDumpID,
-                                  const nsAString &browserDumpID) {
-||||||| merged common ancestors
-void
-nsNPAPIPlugin::PluginCrashed(const nsAString& pluginDumpID,
-                             const nsAString& browserDumpID)
-{
-=======
 void nsNPAPIPlugin::PluginCrashed(const nsAString& pluginDumpID,
                                   const nsAString& browserDumpID) {
->>>>>>> upstream-releases
   RefPtr<nsPluginHost> host = nsPluginHost::GetInst();
   host->PluginCrashed(this, pluginDumpID, browserDumpID);
 }
 
-<<<<<<< HEAD
-inline PluginLibrary *GetNewPluginLibrary(nsPluginTag *aPluginTag) {
-||||||| merged common ancestors
-inline PluginLibrary*
-GetNewPluginLibrary(nsPluginTag *aPluginTag)
-{
-=======
 inline PluginLibrary* GetNewPluginLibrary(nsPluginTag* aPluginTag) {
->>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("GetNewPluginLibrary", OTHER);
 
   if (!aPluginTag) {
@@ -237,22 +210,10 @@ inline PluginLibrary* GetNewPluginLibrary(nsPluginTag* aPluginTag) {
                                               aPluginTag->mId, aPluginTag);
 }
 
-<<<<<<< HEAD
-// Creates an nsNPAPIPlugin object. One nsNPAPIPlugin object exists per plugin
-// (not instance).
-nsresult nsNPAPIPlugin::CreatePlugin(nsPluginTag *aPluginTag,
-                                     nsNPAPIPlugin **aResult) {
-||||||| merged common ancestors
-// Creates an nsNPAPIPlugin object. One nsNPAPIPlugin object exists per plugin (not instance).
-nsresult
-nsNPAPIPlugin::CreatePlugin(nsPluginTag *aPluginTag, nsNPAPIPlugin** aResult)
-{
-=======
 // Creates an nsNPAPIPlugin object. One nsNPAPIPlugin object exists per plugin
 // (not instance).
 nsresult nsNPAPIPlugin::CreatePlugin(nsPluginTag* aPluginTag,
                                      nsNPAPIPlugin** aResult) {
->>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("nsNPAPIPlugin::CreatePlugin", OTHER);
   *aResult = nullptr;
 
@@ -262,7 +223,7 @@ nsresult nsNPAPIPlugin::CreatePlugin(nsPluginTag* aPluginTag,
 
   RefPtr<nsNPAPIPlugin> plugin = new nsNPAPIPlugin();
 
-  PluginLibrary *pluginLib = GetNewPluginLibrary(aPluginTag);
+  PluginLibrary* pluginLib = GetNewPluginLibrary(aPluginTag);
   if (!pluginLib) {
     return NS_ERROR_FAILURE;
   }
@@ -320,29 +281,9 @@ nsresult nsNPAPIPlugin::CreatePlugin(nsPluginTag* aPluginTag,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-PluginLibrary *nsNPAPIPlugin::GetLibrary() { return mLibrary; }
-||||||| merged common ancestors
-PluginLibrary*
-nsNPAPIPlugin::GetLibrary()
-{
-  return mLibrary;
-}
-=======
 PluginLibrary* nsNPAPIPlugin::GetLibrary() { return mLibrary; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NPPluginFuncs *nsNPAPIPlugin::PluginFuncs() { return &mPluginFuncs; }
-||||||| merged common ancestors
-NPPluginFuncs*
-nsNPAPIPlugin::PluginFuncs()
-{
-  return &mPluginFuncs;
-}
-=======
 NPPluginFuncs* nsNPAPIPlugin::PluginFuncs() { return &mPluginFuncs; }
->>>>>>> upstream-releases
 
 nsresult nsNPAPIPlugin::Shutdown() {
   NPP_PLUGIN_LOG(PLUGIN_LOG_BASIC,
@@ -354,43 +295,22 @@ nsresult nsNPAPIPlugin::Shutdown() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsNPAPIPlugin::RetainStream(NPStream *pstream,
-                                     nsISupports **aRetainedPeer) {
-  if (!aRetainedPeer) return NS_ERROR_NULL_POINTER;
-||||||| merged common ancestors
-nsresult
-nsNPAPIPlugin::RetainStream(NPStream *pstream, nsISupports **aRetainedPeer)
-{
-  if (!aRetainedPeer)
-    return NS_ERROR_NULL_POINTER;
-=======
 nsresult nsNPAPIPlugin::RetainStream(NPStream* pstream,
                                      nsISupports** aRetainedPeer) {
   if (!aRetainedPeer) return NS_ERROR_NULL_POINTER;
->>>>>>> upstream-releases
 
   *aRetainedPeer = nullptr;
 
   if (!pstream || !pstream->ndata) return NS_ERROR_NULL_POINTER;
 
-<<<<<<< HEAD
-  nsNPAPIStreamWrapper *streamWrapper =
-      static_cast<nsNPAPIStreamWrapper *>(pstream->ndata);
-  nsNPAPIPluginStreamListener *listener = streamWrapper->GetStreamListener();
-||||||| merged common ancestors
-  nsNPAPIStreamWrapper* streamWrapper = static_cast<nsNPAPIStreamWrapper*>(pstream->ndata);
-  nsNPAPIPluginStreamListener* listener = streamWrapper->GetStreamListener();
-=======
   nsNPAPIStreamWrapper* streamWrapper =
       static_cast<nsNPAPIStreamWrapper*>(pstream->ndata);
   nsNPAPIPluginStreamListener* listener = streamWrapper->GetStreamListener();
->>>>>>> upstream-releases
   if (!listener) {
     return NS_ERROR_NULL_POINTER;
   }
 
-  nsIStreamListener *streamListener = listener->GetStreamListenerPeer();
+  nsIStreamListener* streamListener = listener->GetStreamListenerPeer();
   if (!streamListener) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -402,25 +322,6 @@ nsresult nsNPAPIPlugin::RetainStream(NPStream* pstream,
 
 // Create a new NPP GET or POST (given in the type argument) url
 // stream that may have a notify callback
-<<<<<<< HEAD
-NPError MakeNewNPAPIStreamInternal(NPP npp, const char *relativeURL,
-                                   const char *target,
-                                   eNPPStreamTypeInternal type,
-                                   bool bDoNotify = false,
-                                   void *notifyData = nullptr, uint32_t len = 0,
-                                   const char *buf = nullptr) {
-  if (!npp) return NPERR_INVALID_INSTANCE_ERROR;
-||||||| merged common ancestors
-NPError
-MakeNewNPAPIStreamInternal(NPP npp, const char *relativeURL, const char *target,
-                          eNPPStreamTypeInternal type,
-                          bool bDoNotify = false,
-                          void *notifyData = nullptr, uint32_t len = 0,
-                          const char *buf = nullptr)
-{
-  if (!npp)
-    return NPERR_INVALID_INSTANCE_ERROR;
-=======
 NPError MakeNewNPAPIStreamInternal(NPP npp, const char* relativeURL,
                                    const char* target,
                                    eNPPStreamTypeInternal type,
@@ -428,34 +329,15 @@ NPError MakeNewNPAPIStreamInternal(NPP npp, const char* relativeURL,
                                    void* notifyData = nullptr, uint32_t len = 0,
                                    const char* buf = nullptr) {
   if (!npp) return NPERR_INVALID_INSTANCE_ERROR;
->>>>>>> upstream-releases
 
   PluginDestructionGuard guard(npp);
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-  if (!inst || !inst->IsRunning()) return NPERR_INVALID_INSTANCE_ERROR;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *) npp->ndata;
-  if (!inst || !inst->IsRunning())
-    return NPERR_INVALID_INSTANCE_ERROR;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
   if (!inst || !inst->IsRunning()) return NPERR_INVALID_INSTANCE_ERROR;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPluginHost> pluginHostCOM =
-      do_GetService(MOZ_PLUGIN_HOST_CONTRACTID);
-  nsPluginHost *pluginHost = static_cast<nsPluginHost *>(pluginHostCOM.get());
-||||||| merged common ancestors
-  nsCOMPtr<nsIPluginHost> pluginHostCOM = do_GetService(MOZ_PLUGIN_HOST_CONTRACTID);
-  nsPluginHost *pluginHost = static_cast<nsPluginHost*>(pluginHostCOM.get());
-=======
   nsCOMPtr<nsIPluginHost> pluginHostCOM =
       do_GetService(MOZ_PLUGIN_HOST_CONTRACTID);
   nsPluginHost* pluginHost = static_cast<nsPluginHost*>(pluginHostCOM.get());
->>>>>>> upstream-releases
   if (!pluginHost) {
     return NPERR_GENERIC_ERROR;
   }
@@ -507,15 +389,7 @@ namespace {
 
 static char* gNPPException;
 
-<<<<<<< HEAD
-static nsIDocument *GetDocumentFromNPP(NPP npp) {
-||||||| merged common ancestors
-static nsIDocument *
-GetDocumentFromNPP(NPP npp)
-{
-=======
 static Document* GetDocumentFromNPP(NPP npp) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(npp, nullptr);
 
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
@@ -532,26 +406,11 @@ static Document* GetDocumentFromNPP(NPP npp) {
   return doc;
 }
 
-<<<<<<< HEAD
-static NPIdentifier doGetIdentifier(JSContext *cx, const NPUTF8 *name) {
-||||||| merged common ancestors
-static NPIdentifier
-doGetIdentifier(JSContext *cx, const NPUTF8* name)
-{
-=======
 static NPIdentifier doGetIdentifier(JSContext* cx, const NPUTF8* name) {
->>>>>>> upstream-releases
   NS_ConvertUTF8toUTF16 utf16name(name);
 
-<<<<<<< HEAD
-  JSString *str =
-      ::JS_AtomizeAndPinUCStringN(cx, utf16name.get(), utf16name.Length());
-||||||| merged common ancestors
-  JSString *str = ::JS_AtomizeAndPinUCStringN(cx, utf16name.get(), utf16name.Length());
-=======
   JSString* str =
       ::JS_AtomizeAndPinUCStringN(cx, utf16name.get(), utf16name.Length());
->>>>>>> upstream-releases
 
   if (!str) return nullptr;
 
@@ -589,17 +448,7 @@ NPPExceptionAutoHolder::~NPPExceptionAutoHolder() {
 
 NPP NPPStack::sCurrentNPP = nullptr;
 
-<<<<<<< HEAD
-const char *PeekException() { return gNPPException; }
-||||||| merged common ancestors
-const char *
-PeekException()
-{
-  return gNPPException;
-}
-=======
 const char* PeekException() { return gNPPException; }
->>>>>>> upstream-releases
 
 void PopException() {
   NS_ASSERTION(gNPPException, "Uh, no NPP exception to pop!");
@@ -619,32 +468,15 @@ namespace mozilla {
 namespace plugins {
 namespace parent {
 
-<<<<<<< HEAD
-NPError _geturl(NPP npp, const char *relativeURL, const char *target) {
-||||||| merged common ancestors
-NPError
-_geturl(NPP npp, const char* relativeURL, const char* target)
-{
-=======
 NPError _geturl(NPP npp, const char* relativeURL, const char* target) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_geturl called from the wrong thread\n"));
     return NPERR_INVALID_PARAM;
   }
 
-<<<<<<< HEAD
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetURL: npp=%p, target=%s, url=%s\n",
-                                     (void *)npp, target, relativeURL));
-||||||| merged common ancestors
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
-  ("NPN_GetURL: npp=%p, target=%s, url=%s\n", (void *)npp, target,
-   relativeURL));
-=======
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetURL: npp=%p, target=%s, url=%s\n",
                                      (void*)npp, target, relativeURL));
->>>>>>> upstream-releases
 
   PluginDestructionGuard guard(npp);
 
@@ -652,18 +484,8 @@ NPError _geturl(NPP npp, const char* relativeURL, const char* target) {
                                     eNPPStreamTypeInternal_Get);
 }
 
-<<<<<<< HEAD
-NPError _geturlnotify(NPP npp, const char *relativeURL, const char *target,
-                      void *notifyData) {
-||||||| merged common ancestors
-NPError
-_geturlnotify(NPP npp, const char* relativeURL, const char* target,
-              void* notifyData)
-{
-=======
 NPError _geturlnotify(NPP npp, const char* relativeURL, const char* target,
                       void* notifyData) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_geturlnotify called from the wrong thread\n"));
@@ -671,16 +493,8 @@ NPError _geturlnotify(NPP npp, const char* relativeURL, const char* target,
   }
 
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
-<<<<<<< HEAD
-                 ("NPN_GetURLNotify: npp=%p, target=%s, notify=%p, url=%s\n",
-                  (void *)npp, target, notifyData, relativeURL));
-||||||| merged common ancestors
-    ("NPN_GetURLNotify: npp=%p, target=%s, notify=%p, url=%s\n", (void*)npp,
-     target, notifyData, relativeURL));
-=======
                  ("NPN_GetURLNotify: npp=%p, target=%s, notify=%p, url=%s\n",
                   (void*)npp, target, notifyData, relativeURL));
->>>>>>> upstream-releases
 
   PluginDestructionGuard guard(npp);
 
@@ -688,20 +502,9 @@ NPError _geturlnotify(NPP npp, const char* relativeURL, const char* target,
       npp, relativeURL, target, eNPPStreamTypeInternal_Get, true, notifyData);
 }
 
-<<<<<<< HEAD
-NPError _posturlnotify(NPP npp, const char *relativeURL, const char *target,
-                       uint32_t len, const char *buf, NPBool file,
-                       void *notifyData) {
-||||||| merged common ancestors
-NPError
-_posturlnotify(NPP npp, const char *relativeURL, const char *target,
-               uint32_t len, const char *buf, NPBool file, void *notifyData)
-{
-=======
 NPError _posturlnotify(NPP npp, const char* relativeURL, const char* target,
                        uint32_t len, const char* buf, NPBool file,
                        void* notifyData) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_posturlnotify called from the wrong thread\n"));
@@ -709,24 +512,10 @@ NPError _posturlnotify(NPP npp, const char* relativeURL, const char* target,
   }
   if (!buf) return NPERR_INVALID_PARAM;
 
-<<<<<<< HEAD
-  NPN_PLUGIN_LOG(
-      PLUGIN_LOG_NORMAL,
-      ("NPN_PostURLNotify: npp=%p, target=%s, len=%d, file=%d, "
-       "notify=%p, url=%s, buf=%s\n",
-       (void *)npp, target, len, file, notifyData, relativeURL, buf));
-||||||| merged common ancestors
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
-                 ("NPN_PostURLNotify: npp=%p, target=%s, len=%d, file=%d, "
-                  "notify=%p, url=%s, buf=%s\n",
-                  (void*)npp, target, len, file, notifyData, relativeURL,
-                  buf));
-=======
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                  ("NPN_PostURLNotify: npp=%p, target=%s, len=%d, file=%d, "
                   "notify=%p, url=%s, buf=%s\n",
                   (void*)npp, target, len, file, notifyData, relativeURL, buf));
->>>>>>> upstream-releases
 
   PluginDestructionGuard guard(npp);
 
@@ -735,18 +524,8 @@ NPError _posturlnotify(NPP npp, const char* relativeURL, const char* target,
                                     notifyData, len, buf);
 }
 
-<<<<<<< HEAD
-NPError _posturl(NPP npp, const char *relativeURL, const char *target,
-                 uint32_t len, const char *buf, NPBool file) {
-||||||| merged common ancestors
-NPError
-_posturl(NPP npp, const char *relativeURL, const char *target,
-         uint32_t len, const char *buf, NPBool file)
-{
-=======
 NPError _posturl(NPP npp, const char* relativeURL, const char* target,
                  uint32_t len, const char* buf, NPBool file) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_posturl called from the wrong thread\n"));
@@ -755,7 +534,7 @@ NPError _posturl(NPP npp, const char* relativeURL, const char* target,
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                  ("NPN_PostURL: npp=%p, target=%s, file=%d, len=%d, url=%s, "
                   "buf=%s\n",
-                  (void *)npp, target, file, len, relativeURL, buf));
+                  (void*)npp, target, file, len, relativeURL, buf));
 
   PluginDestructionGuard guard(npp);
 
@@ -764,27 +543,11 @@ NPError _posturl(NPP npp, const char* relativeURL, const char* target,
                                     len, buf);
 }
 
-<<<<<<< HEAD
-void _status(NPP npp, const char *message) {
-||||||| merged common ancestors
-void
-_status(NPP npp, const char *message)
-{
-=======
 void _status(NPP npp, const char* message) {
->>>>>>> upstream-releases
   // NPN_Status is no longer supported.
 }
 
-<<<<<<< HEAD
-void _memfree(void *ptr) {
-||||||| merged common ancestors
-void
-_memfree (void *ptr)
-{
-=======
 void _memfree(void* ptr) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_memfree called from the wrong thread\n"));
@@ -820,15 +583,7 @@ void _reloadplugins(NPBool reloadPages) {
   pluginHost->ReloadPlugins();
 }
 
-<<<<<<< HEAD
-void _invalidaterect(NPP npp, NPRect *invalidRect) {
-||||||| merged common ancestors
-void
-_invalidaterect(NPP npp, NPRect *invalidRect)
-{
-=======
 void _invalidaterect(NPP npp, NPRect* invalidRect) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_invalidaterect called from the wrong thread\n"));
@@ -836,31 +591,16 @@ void _invalidaterect(NPP npp, NPRect* invalidRect) {
   }
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                  ("NPN_InvalidateRect: npp=%p, top=%d, left=%d, bottom=%d, "
-<<<<<<< HEAD
-                  "right=%d\n",
-                  (void *)npp, invalidRect->top, invalidRect->left,
-                  invalidRect->bottom, invalidRect->right));
-||||||| merged common ancestors
-                  "right=%d\n", (void *)npp, invalidRect->top,
-                  invalidRect->left, invalidRect->bottom, invalidRect->right));
-=======
                   "right=%d\n",
                   (void*)npp, invalidRect->top, invalidRect->left,
                   invalidRect->bottom, invalidRect->right));
->>>>>>> upstream-releases
 
   if (!npp || !npp->ndata) {
     NS_WARNING("_invalidaterect: npp or npp->ndata == 0");
     return;
   }
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance*)npp->ndata;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
->>>>>>> upstream-releases
 
   PluginDestructionGuard guard(inst);
 
@@ -874,21 +614,15 @@ void _invalidateregion(NPP npp, NPRegion invalidRegion) {
     return;
   }
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
-                 ("NPN_InvalidateRegion: npp=%p, region=%p\n", (void *)npp,
-                  (void *)invalidRegion));
+                 ("NPN_InvalidateRegion: npp=%p, region=%p\n", (void*)npp,
+                  (void*)invalidRegion));
 
   if (!npp || !npp->ndata) {
     NS_WARNING("_invalidateregion: npp or npp->ndata == 0");
     return;
   }
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance*)npp->ndata;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
->>>>>>> upstream-releases
 
   PluginDestructionGuard guard(inst);
 
@@ -897,15 +631,7 @@ void _invalidateregion(NPP npp, NPRegion invalidRegion) {
 
 void _forceredraw(NPP npp) {}
 
-<<<<<<< HEAD
-NPObject *_getwindowobject(NPP npp) {
-||||||| merged common ancestors
-NPObject*
-_getwindowobject(NPP npp)
-{
-=======
 NPObject* _getwindowobject(NPP npp) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getwindowobject called from the wrong thread\n"));
@@ -914,63 +640,27 @@ NPObject* _getwindowobject(NPP npp) {
 
   // The window want to return here is the outer window, *not* the inner (since
   // we don't know what the plugin will do with it).
-<<<<<<< HEAD
-  nsIDocument *doc = GetDocumentFromNPP(npp);
-||||||| merged common ancestors
-  nsIDocument* doc = GetDocumentFromNPP(npp);
-=======
   Document* doc = GetDocumentFromNPP(npp);
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(doc, nullptr);
   nsCOMPtr<nsPIDOMWindowOuter> outer = doc->GetWindow();
   NS_ENSURE_TRUE(outer, nullptr);
 
-<<<<<<< HEAD
-  JS::Rooted<JSObject *> windowProxy(
-      dom::RootingCx(), nsGlobalWindowOuter::Cast(outer)->GetGlobalJSObject());
-  JS::Rooted<JSObject *> global(dom::RootingCx(),
-                                JS::GetNonCCWObjectGlobal(windowProxy));
-||||||| merged common ancestors
-  JS::Rooted<JSObject*> windowProxy(dom::RootingCx(),
-                                    nsGlobalWindowOuter::Cast(outer)->GetGlobalJSObject());
-  JS::Rooted<JSObject*> global(dom::RootingCx(),
-                               JS::GetNonCCWObjectGlobal(windowProxy));
-=======
   JS::Rooted<JSObject*> windowProxy(
       dom::RootingCx(), nsGlobalWindowOuter::Cast(outer)->GetGlobalJSObject());
   JS::Rooted<JSObject*> global(dom::RootingCx(),
                                JS::GetNonCCWObjectGlobal(windowProxy));
->>>>>>> upstream-releases
   return nsJSObjWrapper::GetNewOrUsed(npp, windowProxy, global);
 }
 
-<<<<<<< HEAD
-NPObject *_getpluginelement(NPP npp) {
-||||||| merged common ancestors
-NPObject*
-_getpluginelement(NPP npp)
-{
-=======
 NPObject* _getpluginelement(NPP npp) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getpluginelement called from the wrong thread\n"));
     return nullptr;
   }
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst =
-      static_cast<nsNPAPIPluginInstance *>(npp->ndata);
-  if (!inst) return nullptr;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance* inst = static_cast<nsNPAPIPluginInstance*>(npp->ndata);
-  if (!inst)
-    return nullptr;
-=======
   nsNPAPIPluginInstance* inst = static_cast<nsNPAPIPluginInstance*>(npp->ndata);
   if (!inst) return nullptr;
->>>>>>> upstream-releases
 
   RefPtr<dom::Element> element;
   inst->GetDOMElement(getter_AddRefs(element));
@@ -986,7 +676,7 @@ NPObject* _getpluginelement(NPP npp) {
   if (NS_WARN_IF(!jsapi.Init(doc->GetInnerWindow()))) {
     return nullptr;
   }
-  JSContext *cx = jsapi.cx();
+  JSContext* cx = jsapi.cx();
 
   nsCOMPtr<nsIXPConnect> xpc(nsIXPConnect::XPConnect());
   NS_ENSURE_TRUE(xpc, nullptr);
@@ -1005,15 +695,7 @@ NPObject* _getpluginelement(NPP npp) {
   return nsJSObjWrapper::GetNewOrUsed(npp, obj, global);
 }
 
-<<<<<<< HEAD
-NPIdentifier _getstringidentifier(const NPUTF8 *name) {
-||||||| merged common ancestors
-NPIdentifier
-_getstringidentifier(const NPUTF8* name)
-{
-=======
 NPIdentifier _getstringidentifier(const NPUTF8* name) {
->>>>>>> upstream-releases
   if (!name) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getstringidentifier: passed null name"));
@@ -1028,18 +710,8 @@ NPIdentifier _getstringidentifier(const NPUTF8* name) {
   return doGetIdentifier(cx, name);
 }
 
-<<<<<<< HEAD
-void _getstringidentifiers(const NPUTF8 **names, int32_t nameCount,
-                           NPIdentifier *identifiers) {
-||||||| merged common ancestors
-void
-_getstringidentifiers(const NPUTF8** names, int32_t nameCount,
-                      NPIdentifier *identifiers)
-{
-=======
 void _getstringidentifiers(const NPUTF8** names, int32_t nameCount,
                            NPIdentifier* identifiers) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getstringidentifiers called from the wrong thread\n"));
@@ -1066,15 +738,7 @@ NPIdentifier _getintidentifier(int32_t intid) {
   return IntToNPIdentifier(intid);
 }
 
-<<<<<<< HEAD
-NPUTF8 *_utf8fromidentifier(NPIdentifier id) {
-||||||| merged common ancestors
-NPUTF8*
-_utf8fromidentifier(NPIdentifier id)
-{
-=======
 NPUTF8* _utf8fromidentifier(NPIdentifier id) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_utf8fromidentifier called from the wrong thread\n"));
@@ -1114,15 +778,7 @@ bool _identifierisstring(NPIdentifier id) {
   return NPIdentifierIsString(id);
 }
 
-<<<<<<< HEAD
-NPObject *_createobject(NPP npp, NPClass *aClass) {
-||||||| merged common ancestors
-NPObject*
-_createobject(NPP npp, NPClass* aClass)
-{
-=======
 NPObject* _createobject(NPP npp, NPClass* aClass) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_createobject called from the wrong thread\n"));
@@ -1149,13 +805,7 @@ NPObject* _createobject(NPP npp, NPClass* aClass) {
   if (aClass->allocate) {
     npobj = aClass->allocate(npp, aClass);
   } else {
-<<<<<<< HEAD
-    npobj = (NPObject *)malloc(sizeof(NPObject));
-||||||| merged common ancestors
-    npobj = (NPObject*) malloc(sizeof(NPObject));
-=======
     npobj = (NPObject*)malloc(sizeof(NPObject));
->>>>>>> upstream-releases
   }
 
   if (npobj) {
@@ -1170,15 +820,7 @@ NPObject* _createobject(NPP npp, NPClass* aClass) {
   return npobj;
 }
 
-<<<<<<< HEAD
-NPObject *_retainobject(NPObject *npobj) {
-||||||| merged common ancestors
-NPObject*
-_retainobject(NPObject* npobj)
-{
-=======
 NPObject* _retainobject(NPObject* npobj) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_retainobject called from the wrong thread\n"));
@@ -1187,34 +829,20 @@ NPObject* _retainobject(NPObject* npobj) {
 #ifdef NS_BUILD_REFCNT_LOGGING
     int32_t refCnt =
 #endif
-<<<<<<< HEAD
-        PR_ATOMIC_INCREMENT((int32_t *)&npobj->referenceCount);
-||||||| merged common ancestors
-      PR_ATOMIC_INCREMENT((int32_t*)&npobj->referenceCount);
-=======
         PR_ATOMIC_INCREMENT((int32_t*)&npobj->referenceCount);
->>>>>>> upstream-releases
     NS_LOG_ADDREF(npobj, refCnt, "BrowserNPObject", sizeof(NPObject));
   }
 
   return npobj;
 }
 
-<<<<<<< HEAD
-void _releaseobject(NPObject *npobj) {
-||||||| merged common ancestors
-void
-_releaseobject(NPObject* npobj)
-{
-=======
 void _releaseobject(NPObject* npobj) {
->>>>>>> upstream-releases
   // If nothing is passed, just return, even if we're on the wrong thread.
   if (!npobj) {
     return;
   }
 
-  int32_t refCnt = PR_ATOMIC_DECREMENT((int32_t *)&npobj->referenceCount);
+  int32_t refCnt = PR_ATOMIC_DECREMENT((int32_t*)&npobj->referenceCount);
   NS_LOG_RELEASE(npobj, refCnt, "BrowserNPObject");
 
   if (refCnt == 0) {
@@ -1231,18 +859,8 @@ void _releaseobject(NPObject* npobj) {
   }
 }
 
-<<<<<<< HEAD
-bool _invoke(NPP npp, NPObject *npobj, NPIdentifier method,
-             const NPVariant *args, uint32_t argCount, NPVariant *result) {
-||||||| merged common ancestors
-bool
-_invoke(NPP npp, NPObject* npobj, NPIdentifier method, const NPVariant *args,
-        uint32_t argCount, NPVariant *result)
-{
-=======
 bool _invoke(NPP npp, NPObject* npobj, NPIdentifier method,
              const NPVariant* args, uint32_t argCount, NPVariant* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_invoke called from the wrong thread\n"));
@@ -1262,18 +880,8 @@ bool _invoke(NPP npp, NPObject* npobj, NPIdentifier method,
   return npobj->_class->invoke(npobj, method, args, argCount, result);
 }
 
-<<<<<<< HEAD
-bool _invokeDefault(NPP npp, NPObject *npobj, const NPVariant *args,
-                    uint32_t argCount, NPVariant *result) {
-||||||| merged common ancestors
-bool
-_invokeDefault(NPP npp, NPObject* npobj, const NPVariant *args,
-               uint32_t argCount, NPVariant *result)
-{
-=======
 bool _invokeDefault(NPP npp, NPObject* npobj, const NPVariant* args,
                     uint32_t argCount, NPVariant* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_invokedefault called from the wrong thread\n"));
@@ -1292,15 +900,7 @@ bool _invokeDefault(NPP npp, NPObject* npobj, const NPVariant* args,
   return npobj->_class->invokeDefault(npobj, args, argCount, result);
 }
 
-<<<<<<< HEAD
-bool _evaluate(NPP npp, NPObject *npobj, NPString *script, NPVariant *result) {
-||||||| merged common ancestors
-bool
-_evaluate(NPP npp, NPObject* npobj, NPString *script, NPVariant *result)
-{
-=======
 bool _evaluate(NPP npp, NPObject* npobj, NPString* script, NPVariant* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_evaluate called from the wrong thread\n"));
@@ -1313,24 +913,16 @@ bool _evaluate(NPP npp, NPObject* npobj, NPString* script, NPVariant* result) {
   Document* doc = GetDocumentFromNPP(npp);
   NS_ENSURE_TRUE(doc, false);
 
-<<<<<<< HEAD
-  nsGlobalWindowInner *win = nsGlobalWindowInner::Cast(doc->GetInnerWindow());
-  if (NS_WARN_IF(!win || !win->FastGetGlobalJSObject())) {
-||||||| merged common ancestors
-  nsGlobalWindowInner* win = nsGlobalWindowInner::Cast(doc->GetInnerWindow());
-  if (NS_WARN_IF(!win || !win->FastGetGlobalJSObject())) {
-=======
   nsGlobalWindowInner* win = nsGlobalWindowInner::Cast(doc->GetInnerWindow());
   if (NS_WARN_IF(!win || !win->HasJSGlobal())) {
->>>>>>> upstream-releases
     return false;
   }
 
   nsAutoMicroTask mt;
   dom::AutoEntryScript aes(win, "NPAPI NPN_evaluate");
-  JSContext *cx = aes.cx();
+  JSContext* cx = aes.cx();
 
-  JS::Rooted<JSObject *> obj(cx, nsNPObjWrapper::GetNewOrUsed(npp, cx, npobj));
+  JS::Rooted<JSObject*> obj(cx, nsNPObjWrapper::GetNewOrUsed(npp, cx, npobj));
 
   if (!obj) {
     return false;
@@ -1417,18 +1009,8 @@ bool _evaluate(NPP npp, NPObject* npobj, NPString* script, NPVariant* result) {
          (!result || JSValToNPVariant(npp, cx, rval, result));
 }
 
-<<<<<<< HEAD
-bool _getproperty(NPP npp, NPObject *npobj, NPIdentifier property,
-                  NPVariant *result) {
-||||||| merged common ancestors
-bool
-_getproperty(NPP npp, NPObject* npobj, NPIdentifier property,
-             NPVariant *result)
-{
-=======
 bool _getproperty(NPP npp, NPObject* npobj, NPIdentifier property,
                   NPVariant* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getproperty called from the wrong thread\n"));
@@ -1449,18 +1031,8 @@ bool _getproperty(NPP npp, NPObject* npobj, NPIdentifier property,
   return true;
 }
 
-<<<<<<< HEAD
-bool _setproperty(NPP npp, NPObject *npobj, NPIdentifier property,
-                  const NPVariant *value) {
-||||||| merged common ancestors
-bool
-_setproperty(NPP npp, NPObject* npobj, NPIdentifier property,
-             const NPVariant *value)
-{
-=======
 bool _setproperty(NPP npp, NPObject* npobj, NPIdentifier property,
                   const NPVariant* value) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_setproperty called from the wrong thread\n"));
@@ -1479,15 +1051,7 @@ bool _setproperty(NPP npp, NPObject* npobj, NPIdentifier property,
   return npobj->_class->setProperty(npobj, property, value);
 }
 
-<<<<<<< HEAD
-bool _removeproperty(NPP npp, NPObject *npobj, NPIdentifier property) {
-||||||| merged common ancestors
-bool
-_removeproperty(NPP npp, NPObject* npobj, NPIdentifier property)
-{
-=======
 bool _removeproperty(NPP npp, NPObject* npobj, NPIdentifier property) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_removeproperty called from the wrong thread\n"));
@@ -1506,15 +1070,7 @@ bool _removeproperty(NPP npp, NPObject* npobj, NPIdentifier property) {
   return npobj->_class->removeProperty(npobj, property);
 }
 
-<<<<<<< HEAD
-bool _hasproperty(NPP npp, NPObject *npobj, NPIdentifier propertyName) {
-||||||| merged common ancestors
-bool
-_hasproperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
-{
-=======
 bool _hasproperty(NPP npp, NPObject* npobj, NPIdentifier propertyName) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_hasproperty called from the wrong thread\n"));
@@ -1533,15 +1089,7 @@ bool _hasproperty(NPP npp, NPObject* npobj, NPIdentifier propertyName) {
   return npobj->_class->hasProperty(npobj, propertyName);
 }
 
-<<<<<<< HEAD
-bool _hasmethod(NPP npp, NPObject *npobj, NPIdentifier methodName) {
-||||||| merged common ancestors
-bool
-_hasmethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
-{
-=======
 bool _hasmethod(NPP npp, NPObject* npobj, NPIdentifier methodName) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_hasmethod called from the wrong thread\n"));
@@ -1560,18 +1108,8 @@ bool _hasmethod(NPP npp, NPObject* npobj, NPIdentifier methodName) {
   return npobj->_class->hasMethod(npobj, methodName);
 }
 
-<<<<<<< HEAD
-bool _enumerate(NPP npp, NPObject *npobj, NPIdentifier **identifier,
-                uint32_t *count) {
-||||||| merged common ancestors
-bool
-_enumerate(NPP npp, NPObject *npobj, NPIdentifier **identifier,
-           uint32_t *count)
-{
-=======
 bool _enumerate(NPP npp, NPObject* npobj, NPIdentifier** identifier,
                 uint32_t* count) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_enumerate called from the wrong thread\n"));
@@ -1595,18 +1133,8 @@ bool _enumerate(NPP npp, NPObject* npobj, NPIdentifier** identifier,
   return npobj->_class->enumerate(npobj, identifier, count);
 }
 
-<<<<<<< HEAD
-bool _construct(NPP npp, NPObject *npobj, const NPVariant *args,
-                uint32_t argCount, NPVariant *result) {
-||||||| merged common ancestors
-bool
-_construct(NPP npp, NPObject* npobj, const NPVariant *args,
-               uint32_t argCount, NPVariant *result)
-{
-=======
 bool _construct(NPP npp, NPObject* npobj, const NPVariant* args,
                 uint32_t argCount, NPVariant* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_construct called from the wrong thread\n"));
@@ -1624,40 +1152,12 @@ bool _construct(NPP npp, NPObject* npobj, const NPVariant* args,
   return npobj->_class->construct(npobj, args, argCount, result);
 }
 
-<<<<<<< HEAD
-void _releasevariantvalue(NPVariant *variant) {
-||||||| merged common ancestors
-void
-_releasevariantvalue(NPVariant* variant)
-{
-=======
 void _releasevariantvalue(NPVariant* variant) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_releasevariantvalue called from the wrong thread\n"));
   }
   switch (variant->type) {
-<<<<<<< HEAD
-    case NPVariantType_Void:
-    case NPVariantType_Null:
-    case NPVariantType_Bool:
-    case NPVariantType_Int32:
-    case NPVariantType_Double:
-      break;
-    case NPVariantType_String: {
-      const NPString *s = &NPVARIANT_TO_STRING(*variant);
-||||||| merged common ancestors
-  case NPVariantType_Void :
-  case NPVariantType_Null :
-  case NPVariantType_Bool :
-  case NPVariantType_Int32 :
-  case NPVariantType_Double :
-    break;
-  case NPVariantType_String :
-    {
-      const NPString *s = &NPVARIANT_TO_STRING(*variant);
-=======
     case NPVariantType_Void:
     case NPVariantType_Null:
     case NPVariantType_Bool:
@@ -1666,20 +1166,11 @@ void _releasevariantvalue(NPVariant* variant) {
       break;
     case NPVariantType_String: {
       const NPString* s = &NPVARIANT_TO_STRING(*variant);
->>>>>>> upstream-releases
 
       if (s->UTF8Characters) {
 #if defined(MOZ_MEMORY) && defined(XP_WIN)
-<<<<<<< HEAD
-        if (malloc_usable_size((void *)s->UTF8Characters) != 0) {
-          free((void *)s->UTF8Characters);
-||||||| merged common ancestors
-        if (malloc_usable_size((void *)s->UTF8Characters) != 0) {
-          free((void*)s->UTF8Characters);
-=======
         if (malloc_usable_size((void*)s->UTF8Characters) != 0) {
           free((void*)s->UTF8Characters);
->>>>>>> upstream-releases
         } else {
           void* p = (void*)s->UTF8Characters;
           DWORD nheaps = 0;
@@ -1700,17 +1191,8 @@ void _releasevariantvalue(NPVariant* variant) {
       }
       break;
     }
-<<<<<<< HEAD
-    case NPVariantType_Object: {
-      NPObject *npobj = NPVARIANT_TO_OBJECT(*variant);
-||||||| merged common ancestors
-  case NPVariantType_Object:
-    {
-      NPObject *npobj = NPVARIANT_TO_OBJECT(*variant);
-=======
     case NPVariantType_Object: {
       NPObject* npobj = NPVARIANT_TO_OBJECT(*variant);
->>>>>>> upstream-releases
 
       if (npobj) _releaseobject(npobj);
 
@@ -1723,15 +1205,7 @@ void _releasevariantvalue(NPVariant* variant) {
   VOID_TO_NPVARIANT(*variant);
 }
 
-<<<<<<< HEAD
-void _setexception(NPObject *npobj, const NPUTF8 *message) {
-||||||| merged common ancestors
-void
-_setexception(NPObject* npobj, const NPUTF8 *message)
-{
-=======
 void _setexception(NPObject* npobj, const NPUTF8* message) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_setexception called from the wrong thread\n"));
@@ -1749,30 +1223,14 @@ void _setexception(NPObject* npobj, const NPUTF8* message) {
   gNPPException = strdup(message);
 }
 
-<<<<<<< HEAD
-NPError _getvalue(NPP npp, NPNVariable variable, void *result) {
-||||||| merged common ancestors
-NPError
-_getvalue(NPP npp, NPNVariable variable, void *result)
-{
-=======
 NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getvalue called from the wrong thread\n"));
     return NPERR_INVALID_PARAM;
   }
-<<<<<<< HEAD
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetValue: npp=%p, var=%d\n",
-                                     (void *)npp, (int)variable));
-||||||| merged common ancestors
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetValue: npp=%p, var=%d\n",
-                                     (void*)npp, (int)variable));
-=======
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                  ("NPN_GetValue: npp=%p, var=%d\n", (void*)npp, (int)variable));
->>>>>>> upstream-releases
 
   nsresult res;
 
@@ -1782,53 +1240,6 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
   // cases for android_npapi.h's non-standard ANPInterface values.
   switch (static_cast<int>(variable)) {
 #if defined(XP_UNIX) && !defined(XP_MACOSX)
-<<<<<<< HEAD
-    case NPNVxDisplay: {
-#if defined(MOZ_X11)
-      if (npp) {
-        nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-        bool windowless = false;
-        inst->IsWindowless(&windowless);
-        // The documentation on the types for many variables in NP(N|P)_GetValue
-        // is vague.  Often boolean values are NPBool (1 byte), but
-        // https://developer.mozilla.org/en/XEmbed_Extension_for_Mozilla_Plugins
-        // treats NPPVpluginNeedsXEmbed as PRBool (int), and
-        // on x86/32-bit, flash stores to this using |movl 0x1,&needsXEmbed|.
-        // thus we can't use NPBool for needsXEmbed, or the three bytes above
-        // it on the stack would get clobbered. so protect with the larger bool.
-        int needsXEmbed = 0;
-        if (!windowless) {
-          res = inst->GetValueFromPlugin(NPPVpluginNeedsXEmbed, &needsXEmbed);
-          // If the call returned an error code make sure we still use our
-          // default value.
-          if (NS_FAILED(res)) {
-            needsXEmbed = 0;
-          }
-        }
-        if (windowless || needsXEmbed) {
-          (*(Display **)result) = mozilla::DefaultXDisplay();
-          return NPERR_NO_ERROR;
-||||||| merged common ancestors
-  case NPNVxDisplay : {
-#if defined(MOZ_X11)
-    if (npp) {
-      nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *) npp->ndata;
-      bool windowless = false;
-      inst->IsWindowless(&windowless);
-      // The documentation on the types for many variables in NP(N|P)_GetValue
-      // is vague.  Often boolean values are NPBool (1 byte), but
-      // https://developer.mozilla.org/en/XEmbed_Extension_for_Mozilla_Plugins
-      // treats NPPVpluginNeedsXEmbed as PRBool (int), and
-      // on x86/32-bit, flash stores to this using |movl 0x1,&needsXEmbed|.
-      // thus we can't use NPBool for needsXEmbed, or the three bytes above
-      // it on the stack would get clobbered. so protect with the larger bool.
-      int needsXEmbed = 0;
-      if (!windowless) {
-        res = inst->GetValueFromPlugin(NPPVpluginNeedsXEmbed, &needsXEmbed);
-        // If the call returned an error code make sure we still use our default value.
-        if (NS_FAILED(res)) {
-          needsXEmbed = 0;
-=======
     case NPNVxDisplay: {
 #  if defined(MOZ_X11)
       if (npp) {
@@ -1854,27 +1265,11 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
         if (windowless || needsXEmbed) {
           (*(Display**)result) = mozilla::DefaultXDisplay();
           return NPERR_NO_ERROR;
->>>>>>> upstream-releases
         }
       }
-<<<<<<< HEAD
-#endif
-      return NPERR_GENERIC_ERROR;
-    }
-||||||| merged common ancestors
-      if (windowless || needsXEmbed) {
-        (*(Display **)result) = mozilla::DefaultXDisplay();
-        return NPERR_NO_ERROR;
-      }
-    }
-#endif
-    return NPERR_GENERIC_ERROR;
-  }
-=======
 #  endif
       return NPERR_GENERIC_ERROR;
     }
->>>>>>> upstream-releases
 
     case NPNVxtAppContext:
       return NPERR_GENERIC_ERROR;
@@ -1884,13 +1279,7 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
     case NPNVnetscapeWindow: {
       if (!npp || !npp->ndata) return NPERR_INVALID_INSTANCE_ERROR;
 
-<<<<<<< HEAD
-      nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-||||||| merged common ancestors
-    nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *) npp->ndata;
-=======
       nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
->>>>>>> upstream-releases
 
       RefPtr<nsPluginInstanceOwner> owner = inst->GetOwner();
       NS_ENSURE_TRUE(owner, NPERR_NO_ERROR);
@@ -1902,23 +1291,6 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
     }
 #endif
 
-<<<<<<< HEAD
-    case NPNVjavascriptEnabledBool: {
-      *(NPBool *)result = false;
-      bool js = false;
-      res = Preferences::GetBool("javascript.enabled", &js);
-      if (NS_SUCCEEDED(res)) {
-        *(NPBool *)result = js;
-      }
-      return NPERR_NO_ERROR;
-||||||| merged common ancestors
-  case NPNVjavascriptEnabledBool: {
-    *(NPBool*)result = false;
-    bool js = false;
-    res = Preferences::GetBool("javascript.enabled", &js);
-    if (NS_SUCCEEDED(res)) {
-      *(NPBool*)result = js;
-=======
     case NPNVjavascriptEnabledBool: {
       *(NPBool*)result = false;
       bool js = false;
@@ -1927,22 +1299,11 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
         *(NPBool*)result = js;
       }
       return NPERR_NO_ERROR;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    case NPNVasdEnabledBool:
-      *(NPBool *)result = false;
-      return NPERR_NO_ERROR;
-||||||| merged common ancestors
-  case NPNVasdEnabledBool:
-    *(NPBool*)result = false;
-    return NPERR_NO_ERROR;
-=======
     case NPNVasdEnabledBool:
       *(NPBool*)result = false;
       return NPERR_NO_ERROR;
->>>>>>> upstream-releases
 
     case NPNVisOfflineBool: {
       bool offline = false;
@@ -1951,188 +1312,68 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
       if (NS_SUCCEEDED(res)) res = ioservice->GetOffline(&offline);
       if (NS_FAILED(res)) return NPERR_GENERIC_ERROR;
 
-<<<<<<< HEAD
-      *(NPBool *)result = offline;
-      return NPERR_NO_ERROR;
-    }
-||||||| merged common ancestors
-    *(NPBool*)result = offline;
-    return NPERR_NO_ERROR;
-  }
-=======
       *(NPBool*)result = offline;
       return NPERR_NO_ERROR;
     }
->>>>>>> upstream-releases
 
     case NPNVToolkit: {
 #ifdef MOZ_WIDGET_GTK
-<<<<<<< HEAD
-      *((NPNToolkitType *)result) = NPNVGtk2;
-||||||| merged common ancestors
-    *((NPNToolkitType*)result) = NPNVGtk2;
-=======
       *((NPNToolkitType*)result) = NPNVGtk2;
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-      if (*(NPNToolkitType *)result) return NPERR_NO_ERROR;
-||||||| merged common ancestors
-    if (*(NPNToolkitType*)result)
-        return NPERR_NO_ERROR;
-=======
       if (*(NPNToolkitType*)result) return NPERR_NO_ERROR;
->>>>>>> upstream-releases
 
       return NPERR_GENERIC_ERROR;
     }
 
     case NPNVSupportsXEmbedBool: {
 #ifdef MOZ_WIDGET_GTK
-<<<<<<< HEAD
-      *(NPBool *)result = true;
-||||||| merged common ancestors
-    *(NPBool*)result = true;
-=======
       *(NPBool*)result = true;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-      *(NPBool *)result = false;
-||||||| merged common ancestors
-    *(NPBool*)result = false;
-=======
       *(NPBool*)result = false;
->>>>>>> upstream-releases
 #endif
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-    case NPNVWindowNPObject: {
-      *(NPObject **)result = _getwindowobject(npp);
-||||||| merged common ancestors
-  case NPNVWindowNPObject: {
-    *(NPObject **)result = _getwindowobject(npp);
-=======
     case NPNVWindowNPObject: {
       *(NPObject**)result = _getwindowobject(npp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return *(NPObject **)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
-    }
-||||||| merged common ancestors
-    return *(NPObject **)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
-  }
-=======
       return *(NPObject**)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case NPNVPluginElementNPObject: {
-      *(NPObject **)result = _getpluginelement(npp);
-||||||| merged common ancestors
-  case NPNVPluginElementNPObject: {
-    *(NPObject **)result = _getpluginelement(npp);
-=======
     case NPNVPluginElementNPObject: {
       *(NPObject**)result = _getpluginelement(npp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return *(NPObject **)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
-    }
-||||||| merged common ancestors
-    return *(NPObject **)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
-  }
-=======
       return *(NPObject**)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
     }
->>>>>>> upstream-releases
 
     case NPNVSupportsWindowless: {
 #if defined(XP_WIN) || defined(XP_MACOSX) || \
     (defined(MOZ_X11) && defined(MOZ_WIDGET_GTK))
-<<<<<<< HEAD
-      *(NPBool *)result = true;
-||||||| merged common ancestors
-    *(NPBool*)result = true;
-=======
       *(NPBool*)result = true;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-      *(NPBool *)result = false;
-||||||| merged common ancestors
-    *(NPBool*)result = false;
-=======
       *(NPBool*)result = false;
->>>>>>> upstream-releases
 #endif
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-    case NPNVprivateModeBool: {
-      bool privacy;
-      nsNPAPIPluginInstance *inst =
-          static_cast<nsNPAPIPluginInstance *>(npp->ndata);
-      if (!inst) return NPERR_GENERIC_ERROR;
-||||||| merged common ancestors
-    nsresult rv = inst->IsPrivateBrowsing(&privacy);
-    if (NS_FAILED(rv))
-      return NPERR_GENERIC_ERROR;
-    *(NPBool*)result = (NPBool)privacy;
-    return NPERR_NO_ERROR;
-  }
-=======
     case NPNVprivateModeBool: {
       bool privacy;
       nsNPAPIPluginInstance* inst =
           static_cast<nsNPAPIPluginInstance*>(npp->ndata);
       if (!inst) return NPERR_GENERIC_ERROR;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      nsresult rv = inst->IsPrivateBrowsing(&privacy);
-      if (NS_FAILED(rv)) return NPERR_GENERIC_ERROR;
-      *(NPBool *)result = (NPBool)privacy;
-      return NPERR_NO_ERROR;
-||||||| merged common ancestors
-  case NPNVdocumentOrigin: {
-    nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-    if (!inst) {
-      return NPERR_GENERIC_ERROR;
-=======
       nsresult rv = inst->IsPrivateBrowsing(&privacy);
       if (NS_FAILED(rv)) return NPERR_GENERIC_ERROR;
       *(NPBool*)result = (NPBool)privacy;
       return NPERR_NO_ERROR;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    case NPNVdocumentOrigin: {
-      nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-      if (!inst) {
-        return NPERR_GENERIC_ERROR;
-      }
-||||||| merged common ancestors
-    RefPtr<dom::Element> element;
-    inst->GetDOMElement(getter_AddRefs(element));
-    if (!element) {
-      return NPERR_GENERIC_ERROR;
-    }
-=======
     case NPNVdocumentOrigin: {
       nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
       if (!inst) {
         return NPERR_GENERIC_ERROR;
       }
->>>>>>> upstream-releases
 
       RefPtr<dom::Element> element;
       inst->GetDOMElement(getter_AddRefs(element));
@@ -2140,17 +1381,7 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
         return NPERR_GENERIC_ERROR;
       }
 
-<<<<<<< HEAD
-      nsIPrincipal *principal = element->NodePrincipal();
-||||||| merged common ancestors
-    nsAutoString utf16Origin;
-    res = nsContentUtils::GetUTFOrigin(principal, utf16Origin);
-    if (NS_FAILED(res)) {
-      return NPERR_GENERIC_ERROR;
-    }
-=======
       nsIPrincipal* principal = element->NodePrincipal();
->>>>>>> upstream-releases
 
       nsAutoString utf16Origin;
       res = nsContentUtils::GetUTFOrigin(principal, utf16Origin);
@@ -2164,28 +1395,6 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
         return NPERR_GENERIC_ERROR;
       }
 
-<<<<<<< HEAD
-      // This is a bit messy: we convert to UTF-8 here, but then
-      // nsIDNService::Normalize will convert back to UTF-16 for processing,
-      // and back to UTF-8 again to return the result.
-      // Alternative: perhaps we should add a NormalizeUTF16 version of the API,
-      // and just convert to UTF-8 for the final return (resulting in one
-      // encoding form conversion instead of three).
-      NS_ConvertUTF16toUTF8 utf8Origin(utf16Origin);
-      nsAutoCString normalizedUTF8Origin;
-      res = idnService->Normalize(utf8Origin, normalizedUTF8Origin);
-      if (NS_FAILED(res)) {
-        return NPERR_GENERIC_ERROR;
-      }
-
-      *(char **)result = ToNewCString(normalizedUTF8Origin);
-      return *(char **)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
-    }
-||||||| merged common ancestors
-    *(char**)result = ToNewCString(normalizedUTF8Origin);
-    return *(char**)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
-  }
-=======
       // This is a bit messy: we convert to UTF-8 here, but then
       // nsIDNService::Normalize will convert back to UTF-16 for processing,
       // and back to UTF-8 again to return the result.
@@ -2202,29 +1411,8 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
       *(char**)result = ToNewCString(normalizedUTF8Origin);
       return *(char**)result ? NPERR_NO_ERROR : NPERR_GENERIC_ERROR;
     }
->>>>>>> upstream-releases
 
 #ifdef XP_MACOSX
-<<<<<<< HEAD
-    case NPNVpluginDrawingModel: {
-      if (npp) {
-        nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-        if (inst) {
-          NPDrawingModel drawingModel;
-          inst->GetDrawingModel((int32_t *)&drawingModel);
-          *(NPDrawingModel *)result = drawingModel;
-          return NPERR_NO_ERROR;
-        }
-||||||| merged common ancestors
-  case NPNVpluginDrawingModel: {
-    if (npp) {
-      nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance*)npp->ndata;
-      if (inst) {
-        NPDrawingModel drawingModel;
-        inst->GetDrawingModel((int32_t*)&drawingModel);
-        *(NPDrawingModel*)result = drawingModel;
-        return NPERR_NO_ERROR;
-=======
     case NPNVpluginDrawingModel: {
       if (npp) {
         nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
@@ -2234,168 +1422,62 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
           *(NPDrawingModel*)result = drawingModel;
           return NPERR_NO_ERROR;
         }
->>>>>>> upstream-releases
       }
       return NPERR_GENERIC_ERROR;
     }
 
-<<<<<<< HEAD
-#ifndef NP_NO_QUICKDRAW
-    case NPNVsupportsQuickDrawBool: {
-      *(NPBool *)result = false;
-||||||| merged common ancestors
-#ifndef NP_NO_QUICKDRAW
-  case NPNVsupportsQuickDrawBool: {
-    *(NPBool*)result = false;
-=======
 #  ifndef NP_NO_QUICKDRAW
     case NPNVsupportsQuickDrawBool: {
       *(NPBool*)result = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return NPERR_NO_ERROR;
-    }
-#endif
-||||||| merged common ancestors
-    return NPERR_NO_ERROR;
-  }
-#endif
-=======
       return NPERR_NO_ERROR;
     }
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case NPNVsupportsCoreGraphicsBool: {
-      *(NPBool *)result = true;
-||||||| merged common ancestors
-  case NPNVsupportsCoreGraphicsBool: {
-    *(NPBool*)result = true;
-=======
     case NPNVsupportsCoreGraphicsBool: {
       *(NPBool*)result = true;
->>>>>>> upstream-releases
 
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-    case NPNVsupportsCoreAnimationBool: {
-      *(NPBool *)result = true;
-||||||| merged common ancestors
-  case NPNVsupportsCoreAnimationBool: {
-    *(NPBool*)result = true;
-=======
     case NPNVsupportsCoreAnimationBool: {
       *(NPBool*)result = true;
->>>>>>> upstream-releases
 
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-    case NPNVsupportsInvalidatingCoreAnimationBool: {
-      *(NPBool *)result = true;
-||||||| merged common ancestors
-  case NPNVsupportsInvalidatingCoreAnimationBool: {
-    *(NPBool*)result = true;
-=======
     case NPNVsupportsInvalidatingCoreAnimationBool: {
       *(NPBool*)result = true;
->>>>>>> upstream-releases
 
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-    case NPNVsupportsCompositingCoreAnimationPluginsBool: {
-      *(NPBool *)result = PR_TRUE;
-||||||| merged common ancestors
-  case NPNVsupportsCompositingCoreAnimationPluginsBool: {
-    *(NPBool*)result = PR_TRUE;
-=======
     case NPNVsupportsCompositingCoreAnimationPluginsBool: {
       *(NPBool*)result = PR_TRUE;
->>>>>>> upstream-releases
 
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-#ifndef NP_NO_CARBON
-    case NPNVsupportsCarbonBool: {
-      *(NPBool *)result = false;
-||||||| merged common ancestors
-#ifndef NP_NO_CARBON
-  case NPNVsupportsCarbonBool: {
-    *(NPBool*)result = false;
-=======
 #  ifndef NP_NO_CARBON
     case NPNVsupportsCarbonBool: {
       *(NPBool*)result = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return NPERR_NO_ERROR;
-    }
-#endif
-    case NPNVsupportsCocoaBool: {
-      *(NPBool *)result = true;
-||||||| merged common ancestors
-    return NPERR_NO_ERROR;
-  }
-#endif
-  case NPNVsupportsCocoaBool: {
-    *(NPBool*)result = true;
-=======
       return NPERR_NO_ERROR;
     }
 #  endif
     case NPNVsupportsCocoaBool: {
       *(NPBool*)result = true;
->>>>>>> upstream-releases
 
       return NPERR_NO_ERROR;
     }
 
-<<<<<<< HEAD
-    case NPNVsupportsUpdatedCocoaTextInputBool: {
-      *(NPBool *)result = true;
-      return NPERR_NO_ERROR;
-    }
-||||||| merged common ancestors
-  case NPNVsupportsUpdatedCocoaTextInputBool: {
-    *(NPBool*)result = true;
-    return NPERR_NO_ERROR;
-  }
-=======
     case NPNVsupportsUpdatedCocoaTextInputBool: {
       *(NPBool*)result = true;
       return NPERR_NO_ERROR;
     }
->>>>>>> upstream-releases
 #endif
 
 #if defined(XP_MACOSX) || defined(XP_WIN)
-<<<<<<< HEAD
-    case NPNVcontentsScaleFactor: {
-      nsNPAPIPluginInstance *inst =
-          (nsNPAPIPluginInstance *)(npp ? npp->ndata : nullptr);
-      double scaleFactor = inst ? inst->GetContentsScaleFactor() : 1.0;
-      *(double *)result = scaleFactor;
-      return NPERR_NO_ERROR;
-    }
-||||||| merged common ancestors
-  case NPNVcontentsScaleFactor: {
-    nsNPAPIPluginInstance *inst =
-      (nsNPAPIPluginInstance *) (npp ? npp->ndata : nullptr);
-    double scaleFactor = inst ? inst->GetContentsScaleFactor() : 1.0;
-    *(double*)result = scaleFactor;
-    return NPERR_NO_ERROR;
-  }
-=======
     case NPNVcontentsScaleFactor: {
       nsNPAPIPluginInstance* inst =
           (nsNPAPIPluginInstance*)(npp ? npp->ndata : nullptr);
@@ -2403,53 +1485,8 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
       *(double*)result = scaleFactor;
       return NPERR_NO_ERROR;
     }
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-    case NPNVCSSZoomFactor: {
-      nsNPAPIPluginInstance *inst =
-          (nsNPAPIPluginInstance *)(npp ? npp->ndata : nullptr);
-      double scaleFactor = inst ? inst->GetCSSZoomFactor() : 1.0;
-      *(double *)result = scaleFactor;
-      return NPERR_NO_ERROR;
-    }
-
-    // we no longer hand out any XPCOM objects
-    case NPNVDOMElement:
-    case NPNVDOMWindow:
-    case NPNVserviceManager:
-      // old XPCOM objects, no longer supported, but null out the out
-      // param to avoid crashing plugins that still try to use this.
-      *(nsISupports **)result = nullptr;
-      MOZ_FALLTHROUGH;
-
-    default:
-      NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
-                     ("NPN_getvalue unhandled get value: %d\n", variable));
-      return NPERR_GENERIC_ERROR;
-||||||| merged common ancestors
-  case NPNVCSSZoomFactor: {
-    nsNPAPIPluginInstance *inst =
-      (nsNPAPIPluginInstance *) (npp ? npp->ndata : nullptr);
-    double scaleFactor = inst ? inst->GetCSSZoomFactor() : 1.0;
-    *(double*)result = scaleFactor;
-    return NPERR_NO_ERROR;
-  }
-
-  // we no longer hand out any XPCOM objects
-  case NPNVDOMElement:
-  case NPNVDOMWindow:
-  case NPNVserviceManager:
-    // old XPCOM objects, no longer supported, but null out the out
-    // param to avoid crashing plugins that still try to use this.
-    *(nsISupports**)result = nullptr;
-    MOZ_FALLTHROUGH;
-
-  default:
-    NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_getvalue unhandled get value: %d\n", variable));
-    return NPERR_GENERIC_ERROR;
-=======
     case NPNVCSSZoomFactor: {
       nsNPAPIPluginInstance* inst =
           (nsNPAPIPluginInstance*)(npp ? npp->ndata : nullptr);
@@ -2471,44 +1508,21 @@ NPError _getvalue(NPP npp, NPNVariable variable, void* result) {
       NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                      ("NPN_getvalue unhandled get value: %d\n", variable));
       return NPERR_GENERIC_ERROR;
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-NPError _setvalue(NPP npp, NPPVariable variable, void *result) {
-||||||| merged common ancestors
-NPError
-_setvalue(NPP npp, NPPVariable variable, void *result)
-{
-=======
 NPError _setvalue(NPP npp, NPPVariable variable, void* result) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_setvalue called from the wrong thread\n"));
     return NPERR_INVALID_PARAM;
   }
-<<<<<<< HEAD
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_SetValue: npp=%p, var=%d\n",
-                                     (void *)npp, (int)variable));
-||||||| merged common ancestors
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_SetValue: npp=%p, var=%d\n",
-                                     (void*)npp, (int)variable));
-=======
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                  ("NPN_SetValue: npp=%p, var=%d\n", (void*)npp, (int)variable));
->>>>>>> upstream-releases
 
   if (!npp) return NPERR_INVALID_INSTANCE_ERROR;
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *) npp->ndata;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
->>>>>>> upstream-releases
 
   NS_ASSERTION(inst, "null instance");
 
@@ -2557,13 +1571,7 @@ NPError _setvalue(NPP npp, NPPVariable variable, void* result) {
     case NPPVpluginIsPlayingAudio: {
       const bool isPlaying = result;
 
-<<<<<<< HEAD
-      nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)npp->ndata;
-||||||| merged common ancestors
-      nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*) npp->ndata;
-=======
       nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)npp->ndata;
->>>>>>> upstream-releases
       MOZ_ASSERT(inst);
 
       if (!isPlaying && !inst->HasAudioChannelAgent()) {
@@ -2602,62 +1610,28 @@ NPError _setvalue(NPP npp, NPPVariable variable, void* result) {
   }
 }
 
-<<<<<<< HEAD
-NPError _requestread(NPStream *pstream, NPByteRange *rangeList) {
-||||||| merged common ancestors
-NPError
-_requestread(NPStream *pstream, NPByteRange *rangeList)
-{
-=======
 NPError _requestread(NPStream* pstream, NPByteRange* rangeList) {
->>>>>>> upstream-releases
   return NPERR_STREAM_NOT_SEEKABLE;
 }
 
 // Deprecated, only stubbed out
-<<<<<<< HEAD
-void * /* OJI type: JRIEnv* */
-_getJavaEnv() {
-||||||| merged common ancestors
-void* /* OJI type: JRIEnv* */
-_getJavaEnv()
-{
-=======
 void* /* OJI type: JRIEnv* */
 _getJavaEnv() {
->>>>>>> upstream-releases
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetJavaEnv\n"));
   return nullptr;
 }
 
-<<<<<<< HEAD
-const char *_useragent(NPP npp) {
-||||||| merged common ancestors
-const char *
-_useragent(NPP npp)
-{
-=======
 const char* _useragent(NPP npp) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_useragent called from the wrong thread\n"));
     return nullptr;
   }
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_UserAgent: npp=%p\n", (void *)npp));
+  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_UserAgent: npp=%p\n", (void*)npp));
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPluginHost> pluginHostCOM(
-      do_GetService(MOZ_PLUGIN_HOST_CONTRACTID));
-  nsPluginHost *pluginHost = static_cast<nsPluginHost *>(pluginHostCOM.get());
-||||||| merged common ancestors
-  nsCOMPtr<nsIPluginHost> pluginHostCOM(do_GetService(MOZ_PLUGIN_HOST_CONTRACTID));
-  nsPluginHost *pluginHost = static_cast<nsPluginHost*>(pluginHostCOM.get());
-=======
   nsCOMPtr<nsIPluginHost> pluginHostCOM(
       do_GetService(MOZ_PLUGIN_HOST_CONTRACTID));
   nsPluginHost* pluginHost = static_cast<nsPluginHost*>(pluginHostCOM.get());
->>>>>>> upstream-releases
   if (!pluginHost) {
     return nullptr;
   }
@@ -2669,15 +1643,7 @@ const char* _useragent(NPP npp) {
   return retstr;
 }
 
-<<<<<<< HEAD
-void *_memalloc(uint32_t size) {
-||||||| merged common ancestors
-void *
-_memalloc (uint32_t size)
-{
-=======
 void* _memalloc(uint32_t size) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL,
                    ("NPN_memalloc called from the wrong thread\n"));
@@ -2687,20 +1653,9 @@ void* _memalloc(uint32_t size) {
 }
 
 // Deprecated, only stubbed out
-<<<<<<< HEAD
-void * /* OJI type: jref */
-_getJavaPeer(NPP npp) {
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetJavaPeer: npp=%p\n", (void *)npp));
-||||||| merged common ancestors
-void* /* OJI type: jref */
-_getJavaPeer(NPP npp)
-{
-  NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetJavaPeer: npp=%p\n", (void*)npp));
-=======
 void* /* OJI type: jref */
 _getJavaPeer(NPP npp) {
   NPN_PLUGIN_LOG(PLUGIN_LOG_NORMAL, ("NPN_GetJavaPeer: npp=%p\n", (void*)npp));
->>>>>>> upstream-releases
   return nullptr;
 }
 
@@ -2711,19 +1666,9 @@ void _pushpopupsenabledstate(NPP npp, NPBool enabled) {
         ("NPN_pushpopupsenabledstate called from the wrong thread\n"));
     return;
   }
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst =
-      npp ? (nsNPAPIPluginInstance *)npp->ndata : nullptr;
-  if (!inst) return;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = npp ? (nsNPAPIPluginInstance *)npp->ndata : nullptr;
-  if (!inst)
-    return;
-=======
   nsNPAPIPluginInstance* inst =
       npp ? (nsNPAPIPluginInstance*)npp->ndata : nullptr;
   if (!inst) return;
->>>>>>> upstream-releases
 
   inst->PushPopupsEnabledState(enabled);
 }
@@ -2735,35 +1680,15 @@ void _poppopupsenabledstate(NPP npp) {
         ("NPN_poppopupsenabledstate called from the wrong thread\n"));
     return;
   }
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst =
-      npp ? (nsNPAPIPluginInstance *)npp->ndata : nullptr;
-  if (!inst) return;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = npp ? (nsNPAPIPluginInstance *)npp->ndata : nullptr;
-  if (!inst)
-    return;
-=======
   nsNPAPIPluginInstance* inst =
       npp ? (nsNPAPIPluginInstance*)npp->ndata : nullptr;
   if (!inst) return;
->>>>>>> upstream-releases
 
   inst->PopPopupsEnabledState();
 }
 
-<<<<<<< HEAD
-NPError _getvalueforurl(NPP instance, NPNURLVariable variable, const char *url,
-                        char **value, uint32_t *len) {
-||||||| merged common ancestors
-NPError
-_getvalueforurl(NPP instance, NPNURLVariable variable, const char *url,
-                char **value, uint32_t *len)
-{
-=======
 NPError _getvalueforurl(NPP instance, NPNURLVariable variable, const char* url,
                         char** value, uint32_t* len) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_getvalueforurl called from the wrong thread\n"));
@@ -2799,18 +1724,8 @@ NPError _getvalueforurl(NPP instance, NPNURLVariable variable, const char* url,
   return NPERR_GENERIC_ERROR;
 }
 
-<<<<<<< HEAD
-NPError _setvalueforurl(NPP instance, NPNURLVariable variable, const char *url,
-                        const char *value, uint32_t len) {
-||||||| merged common ancestors
-NPError
-_setvalueforurl(NPP instance, NPNURLVariable variable, const char *url,
-                const char *value, uint32_t len)
-{
-=======
 NPError _setvalueforurl(NPP instance, NPNURLVariable variable, const char* url,
                         const char* value, uint32_t len) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_setvalueforurl called from the wrong thread\n"));
@@ -2848,17 +1763,8 @@ uint32_t _scheduletimer(NPP instance, uint32_t interval, NPBool repeat,
     return 0;
   }
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-  if (!inst) return 0;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-  if (!inst)
-    return 0;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)instance->ndata;
   if (!inst) return 0;
->>>>>>> upstream-releases
 
   return inst->ScheduleTimer(interval, repeat, timerFunc);
 }
@@ -2870,30 +1776,13 @@ void _unscheduletimer(NPP instance, uint32_t timerID) {
     return;
   }
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-  if (!inst) return;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-  if (!inst)
-    return;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)instance->ndata;
   if (!inst) return;
->>>>>>> upstream-releases
 
   inst->UnscheduleTimer(timerID);
 }
 
-<<<<<<< HEAD
-NPError _popupcontextmenu(NPP instance, NPMenu *menu) {
-||||||| merged common ancestors
-NPError
-_popupcontextmenu(NPP instance, NPMenu* menu)
-{
-=======
 NPError _popupcontextmenu(NPP instance, NPMenu* menu) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_popupcontextmenu called from the wrong thread\n"));
@@ -2906,15 +1795,8 @@ NPError _popupcontextmenu(NPP instance, NPMenu* menu) {
   double pluginX, pluginY;
   double screenX, screenY;
 
-<<<<<<< HEAD
-  const NPCocoaEvent *currentEvent =
-      static_cast<NPCocoaEvent *>(inst->GetCurrentEvent());
-||||||| merged common ancestors
-  const NPCocoaEvent* currentEvent = static_cast<NPCocoaEvent*>(inst->GetCurrentEvent());
-=======
   const NPCocoaEvent* currentEvent =
       static_cast<NPCocoaEvent*>(inst->GetCurrentEvent());
->>>>>>> upstream-releases
   if (!currentEvent) {
     return NPERR_GENERIC_ERROR;
   }
@@ -2951,50 +1833,23 @@ NPError _popupcontextmenu(NPP instance, NPMenu* menu) {
 #endif
 }
 
-<<<<<<< HEAD
-NPBool _convertpoint(NPP instance, double sourceX, double sourceY,
-                     NPCoordinateSpace sourceSpace, double *destX,
-                     double *destY, NPCoordinateSpace destSpace) {
-||||||| merged common ancestors
-NPBool
-_convertpoint(NPP instance, double sourceX, double sourceY, NPCoordinateSpace sourceSpace, double *destX, double *destY, NPCoordinateSpace destSpace)
-{
-=======
 NPBool _convertpoint(NPP instance, double sourceX, double sourceY,
                      NPCoordinateSpace sourceSpace, double* destX,
                      double* destY, NPCoordinateSpace destSpace) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_convertpoint called from the wrong thread\n"));
     return 0;
   }
 
-<<<<<<< HEAD
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-  if (!inst) return false;
-||||||| merged common ancestors
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-  if (!inst)
-    return false;
-=======
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)instance->ndata;
   if (!inst) return false;
->>>>>>> upstream-releases
 
   return inst->ConvertPoint(sourceX, sourceY, sourceSpace, destX, destY,
                             destSpace);
 }
 
-<<<<<<< HEAD
-void _urlredirectresponse(NPP instance, void *notifyData, NPBool allow) {
-||||||| merged common ancestors
-void
-_urlredirectresponse(NPP instance, void* notifyData, NPBool allow)
-{
-=======
 void _urlredirectresponse(NPP instance, void* notifyData, NPBool allow) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     NPN_PLUGIN_LOG(PLUGIN_LOG_ALWAYS,
                    ("NPN_convertpoint called from the wrong thread\n"));
@@ -3009,20 +1864,9 @@ void _urlredirectresponse(NPP instance, void* notifyData, NPBool allow) {
   inst->URLRedirectResponse(notifyData, allow);
 }
 
-<<<<<<< HEAD
-NPError _initasyncsurface(NPP instance, NPSize *size, NPImageFormat format,
-                          void *initData, NPAsyncSurface *surface) {
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-||||||| merged common ancestors
-NPError
-_initasyncsurface(NPP instance, NPSize *size, NPImageFormat format, void *initData, NPAsyncSurface *surface)
-{
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-=======
 NPError _initasyncsurface(NPP instance, NPSize* size, NPImageFormat format,
                           void* initData, NPAsyncSurface* surface) {
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)instance->ndata;
->>>>>>> upstream-releases
   if (!inst) {
     return NPERR_GENERIC_ERROR;
   }
@@ -3030,18 +1874,8 @@ NPError _initasyncsurface(NPP instance, NPSize* size, NPImageFormat format,
   return inst->InitAsyncSurface(size, format, initData, surface);
 }
 
-<<<<<<< HEAD
-NPError _finalizeasyncsurface(NPP instance, NPAsyncSurface *surface) {
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-||||||| merged common ancestors
-NPError
-_finalizeasyncsurface(NPP instance, NPAsyncSurface *surface)
-{
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-=======
 NPError _finalizeasyncsurface(NPP instance, NPAsyncSurface* surface) {
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)instance->ndata;
->>>>>>> upstream-releases
   if (!inst) {
     return NPERR_GENERIC_ERROR;
   }
@@ -3049,20 +1883,9 @@ NPError _finalizeasyncsurface(NPP instance, NPAsyncSurface* surface) {
   return inst->FinalizeAsyncSurface(surface);
 }
 
-<<<<<<< HEAD
-void _setcurrentasyncsurface(NPP instance, NPAsyncSurface *surface,
-                             NPRect *changed) {
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-||||||| merged common ancestors
-void
-_setcurrentasyncsurface(NPP instance, NPAsyncSurface *surface, NPRect *changed)
-{
-  nsNPAPIPluginInstance *inst = (nsNPAPIPluginInstance *)instance->ndata;
-=======
 void _setcurrentasyncsurface(NPP instance, NPAsyncSurface* surface,
                              NPRect* changed) {
   nsNPAPIPluginInstance* inst = (nsNPAPIPluginInstance*)instance->ndata;
->>>>>>> upstream-releases
   if (!inst) {
     return;
   }

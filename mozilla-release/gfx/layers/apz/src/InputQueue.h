@@ -145,16 +145,8 @@ class InputQueue {
 
   // RAII class for automatically running a timeout task that may
   // need to be run immediately after an event has been queued.
-<<<<<<< HEAD
-  class AutoRunImmediateTimeout {
-   public:
-||||||| merged common ancestors
-  class AutoRunImmediateTimeout {
-  public:
-=======
   class AutoRunImmediateTimeout final {
    public:
->>>>>>> upstream-releases
     explicit AutoRunImmediateTimeout(InputQueue* aQueue);
     ~AutoRunImmediateTimeout();
 

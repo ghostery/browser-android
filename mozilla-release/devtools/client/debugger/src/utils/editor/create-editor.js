@@ -1,17 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/create-editor.js
-
-// @flow
-
-import SourceEditor from "./source-editor";
-import { features } from "../prefs";
-
-export function createEditor() {
-||||||| merged common ancestors
-function createEditor() {
-=======
 
 // @flow
 
@@ -19,7 +8,6 @@ import SourceEditor from "./source-editor";
 import { features, prefs } from "../prefs";
 
 export function createEditor() {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/create-editor.js
   const gutters = ["breakpoints", "hit-markers", "CodeMirror-linenumbers"];
 
   if (features.codeFolding) {
@@ -48,11 +36,6 @@ export function createEditor() {
       "Ctrl-G": false,
     },
   });
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/create-editor.js
-}
-||||||| merged common ancestors
-}
-=======
 }
 
 export function createHeadlessEditor() {
@@ -60,4 +43,3 @@ export function createHeadlessEditor() {
   editor.appendToLocalElement(document.createElement("div"));
   return editor;
 }
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/create-editor.js

@@ -96,10 +96,4 @@ class DeviceInfoDS : public DeviceInfoImpl {
 };
 }  // namespace videocapturemodule
 }  // namespace webrtc
-<<<<<<< HEAD
-#endif // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_DEVICE_INFO_DS_H_
-||||||| merged common ancestors
-#endif // WEBRTC_MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_DEVICE_INFO_DS_H_
-=======
 #endif  // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_WINDOWS_DEVICE_INFO_DS_H_
->>>>>>> upstream-releases

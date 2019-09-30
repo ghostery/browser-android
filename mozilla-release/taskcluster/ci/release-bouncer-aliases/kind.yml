@@ -36,26 +36,6 @@ job-defaults:
         tier: 1
 
 jobs:
-<<<<<<< HEAD
-   devedition:
-      bouncer-products-per-alias:
-         firefox-devedition-latest-ssl: installer-ssl
-         firefox-devedition-latest: installer
-         firefox-devedition-stub: stub-installer
-         firefox-devedition-msi-latest-ssl: msi
-      shipping-product: devedition
-      treeherder:
-         platform: devedition-release/opt
-||||||| merged common ancestors
-   devedition:
-      bouncer-products-per-alias:
-         firefox-devedition-latest-ssl: installer-ssl
-         firefox-devedition-latest: installer
-         firefox-devedition-stub: stub-installer
-      shipping-product: devedition
-      treeherder:
-         platform: devedition-release/opt
-=======
     devedition:
         bouncer-products-per-alias:
             firefox-devedition-latest-ssl: installer-ssl
@@ -65,7 +45,6 @@ jobs:
         shipping-product: devedition
         treeherder:
             platform: devedition-release/opt
->>>>>>> upstream-releases
 
     fennec:
         bouncer-products-per-alias:
@@ -83,70 +62,6 @@ jobs:
         treeherder:
             platform: fennec-release/opt
 
-<<<<<<< HEAD
-   firefox:
-      bouncer-products-per-alias:
-         by-project:
-            mozilla-beta:
-               firefox-beta-latest-ssl: installer-ssl
-               firefox-beta-latest: installer
-               firefox-beta-stub: stub-installer
-               firefox-beta-msi-latest-ssl: msi
-            mozilla-release:
-               firefox-latest-ssl: installer-ssl
-               firefox-latest: installer
-               firefox-stub: stub-installer
-               firefox-msi-latest-ssl: msi
-            mozilla-esr60:
-               firefox-esr-latest-ssl: installer-ssl
-               firefox-esr-latest: installer
-               firefox-esr-msi-latest-ssl: msi
-            birch:
-               firefox-latest-ssl: installer-ssl
-               firefox-latest: installer
-               firefox-stub: stub-installer
-            jamun:
-               firefox-esr-latest-ssl: installer-ssl
-               firefox-esr-latest: installer
-            maple:
-               firefox-beta-latest-ssl: installer-ssl
-               firefox-beta-latest: installer
-               firefox-beta-stub: stub-installer
-            default: {}
-      shipping-product: firefox
-      treeherder:
-         platform: firefox-release/opt
-||||||| merged common ancestors
-   firefox:
-      bouncer-products-per-alias:
-         by-project:
-            mozilla-beta:
-               firefox-beta-latest-ssl: installer-ssl
-               firefox-beta-latest: installer
-               firefox-beta-stub: stub-installer
-            mozilla-release:
-               firefox-latest-ssl: installer-ssl
-               firefox-latest: installer
-               firefox-stub: stub-installer
-            mozilla-esr60:
-               firefox-esr-latest-ssl: installer-ssl
-               firefox-esr-latest: installer
-            birch:
-               firefox-latest-ssl: installer-ssl
-               firefox-latest: installer
-               firefox-stub: stub-installer
-            jamun:
-               firefox-esr-latest-ssl: installer-ssl
-               firefox-esr-latest: installer
-            maple:
-               firefox-beta-latest-ssl: installer-ssl
-               firefox-beta-latest: installer
-               firefox-beta-stub: stub-installer
-            default: {}
-      shipping-product: firefox
-      treeherder:
-         platform: firefox-release/opt
-=======
     firefox:
         bouncer-products-per-alias:
             by-project:
@@ -192,4 +107,3 @@ jobs:
         shipping-product: firefox
         treeherder:
             platform: firefox-release/opt
->>>>>>> upstream-releases

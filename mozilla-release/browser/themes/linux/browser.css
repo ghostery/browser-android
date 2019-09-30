@@ -71,16 +71,8 @@
   border-style: none;
 }
 
-<<<<<<< HEAD
-#nav-bar:not([tabs-hidden="true"]) {
-  box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
-||||||| merged common ancestors
-#TabsToolbar:not([collapsed="true"]) + #nav-bar {
-  box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
-=======
 #nav-bar:not([tabs-hidden="true"]) {
   box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
->>>>>>> upstream-releases
   /* This is needed for some toolbar button animations. Gross :( */
   position: relative;
 }
@@ -393,37 +385,16 @@ notification[value="translation"] menulist > .menulist-dropmarker {
 }
 
 .browserContainer > findbar {
-<<<<<<< HEAD
-  background-color: var(--toolbar-bgcolor);
-  color: var(--toolbar-color);
-||||||| merged common ancestors
-  background-color: -moz-dialog;
-  color: -moz-DialogText;
-  text-shadow: none;
-=======
   background-color: var(--toolbar-non-lwt-bgcolor);
   color: var(--toolbar-non-lwt-textcolor);
   text-shadow: none;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.browserContainer > findbar:-moz-lwtheme {
-  background-color: var(--lwt-accent-color);
-  background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
-  border-top-color: var(--chrome-content-separator-color);
-  text-shadow: none;
-||||||| merged common ancestors
-.browserContainer > findbar:-moz-lwtheme {
-  background-color: var(--toolbar-bgcolor);
-  color: var(--toolbar-color, -moz-DialogText);
-=======
 :root:not([lwtheme-image]) .browserContainer > findbar:-moz-lwtheme {
   background-color: var(--lwt-accent-color);
   background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
   border-top-color: var(--chrome-content-separator-color);
   color: var(--toolbar-color);
->>>>>>> upstream-releases
 }
 
 /* Tabstrip */
@@ -445,24 +416,12 @@ notification[value="translation"] menulist > .menulist-dropmarker {
 }
 
 #nav-bar {
-<<<<<<< HEAD
-  -moz-binding: url("chrome://global/content/bindings/toolbar.xml#toolbar-drag");
-||||||| merged common ancestors
-  -moz-binding: url("chrome://browser/content/customizableui/toolbar.xml#toolbar-drag");
-=======
   -moz-window-dragging: drag;
->>>>>>> upstream-releases
 }
 
 @media (-moz-menubar-drag) {
   #TabsToolbar {
-<<<<<<< HEAD
-    -moz-binding: url("chrome://global/content/bindings/toolbar.xml#toolbar-drag");
-||||||| merged common ancestors
-    -moz-binding: url("chrome://browser/content/customizableui/toolbar.xml#toolbar-drag");
-=======
     -moz-window-dragging: drag;
->>>>>>> upstream-releases
   }
 }
 

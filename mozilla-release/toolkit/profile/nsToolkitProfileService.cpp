@@ -50,82 +50,29 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-class nsToolkitProfile final : public nsIToolkitProfile {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSITOOLKITPROFILE
-||||||| merged common ancestors
-class nsToolkitProfile final : public nsIToolkitProfile
-{
-public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSITOOLKITPROFILE
-=======
 #define DEV_EDITION_NAME "dev-edition-default"
 #define DEFAULT_NAME "default"
 #define COMPAT_FILE NS_LITERAL_STRING("compatibility.ini")
 #define PROFILE_DB_VERSION "2"
 #define INSTALL_PREFIX "Install"
 #define INSTALL_PREFIX_LENGTH 7
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  friend class nsToolkitProfileService;
-  RefPtr<nsToolkitProfile> mNext;
-  nsToolkitProfile* mPrev;
-||||||| merged common ancestors
-    friend class nsToolkitProfileService;
-    RefPtr<nsToolkitProfile> mNext;
-    nsToolkitProfile          *mPrev;
-=======
 struct KeyValue {
   KeyValue(const char* aKey, const char* aValue) : key(aKey), value(aValue) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  ~nsToolkitProfile() {}
-||||||| merged common ancestors
-private:
-    ~nsToolkitProfile() { }
-=======
   nsCString key;
   nsCString value;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
-                   nsIFile* aLocalDir, nsToolkitProfile* aPrev);
-||||||| merged common ancestors
-    nsToolkitProfile(const nsACString& aName,
-                     nsIFile* aRootDir,
-                     nsIFile* aLocalDir,
-                     nsToolkitProfile* aPrev);
-=======
 static bool GetStrings(const char* aString, const char* aValue,
                        void* aClosure) {
   nsTArray<UniquePtr<KeyValue>>* array =
       static_cast<nsTArray<UniquePtr<KeyValue>>*>(aClosure);
   array->AppendElement(MakeUnique<KeyValue>(aString, aValue));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult RemoveInternal(bool aRemoveFiles, bool aInBackground);
-||||||| merged common ancestors
-    nsresult
-    RemoveInternal(bool aRemoveFiles, bool aInBackground);
-=======
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  friend class nsToolkitProfileLock;
-||||||| merged common ancestors
-    friend class nsToolkitProfileLock;
-=======
 /**
  * Returns an array of the strings inside a section of an ini file.
  */
@@ -135,21 +82,7 @@ nsTArray<UniquePtr<KeyValue>> GetSectionStrings(nsINIParser* aParser,
   aParser->GetStrings(aSection, &GetStrings, &result);
   return result;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCString mName;
-  nsCOMPtr<nsIFile> mRootDir;
-  nsCOMPtr<nsIFile> mLocalDir;
-  nsIProfileLock* mLock;
-};
-||||||| merged common ancestors
-    nsCString                  mName;
-    nsCOMPtr<nsIFile>          mRootDir;
-    nsCOMPtr<nsIFile>          mLocalDir;
-    nsIProfileLock*            mLock;
-};
-=======
 void RemoveProfileFiles(nsIToolkitProfile* aProfile, bool aInBackground) {
   nsCOMPtr<nsIFile> rootDir;
   aProfile->GetRootDir(getter_AddRefs(rootDir));
@@ -174,20 +107,7 @@ void RemoveProfileFiles(nsIToolkitProfile* aProfile, bool aInBackground) {
         if (NS_SUCCEEDED(rv) && !equals) {
           localDir->Remove(true);
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsToolkitProfileLock final : public nsIProfileLock {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIPROFILELOCK
-||||||| merged common ancestors
-class nsToolkitProfileLock final : public nsIProfileLock
-{
-public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSIPROFILELOCK
-=======
         // Ideally we'd unlock after deleting but since the lock is a file
         // in the profile we must unlock before removing.
         lock->Unlock();
@@ -208,17 +128,7 @@ public:
     runnable->Run();
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult Init(nsToolkitProfile* aProfile, nsIProfileUnlocker** aUnlocker);
-  nsresult Init(nsIFile* aDirectory, nsIFile* aLocalDirectory,
-                nsIProfileUnlocker** aUnlocker);
-||||||| merged common ancestors
-    nsresult Init(nsToolkitProfile* aProfile, nsIProfileUnlocker* *aUnlocker);
-    nsresult Init(nsIFile* aDirectory, nsIFile* aLocalDirectory,
-                  nsIProfileUnlocker* *aUnlocker);
-=======
 nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
                                    nsIFile* aLocalDir, bool aFromDB)
     : mName(aName),
@@ -252,109 +162,31 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
     db->SetString(mSection.get(), "Path", descriptor.get());
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsToolkitProfileLock() {}
-||||||| merged common ancestors
-    nsToolkitProfileLock() { }
-=======
 NS_IMPL_ISUPPORTS(nsToolkitProfile, nsIToolkitProfile)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  ~nsToolkitProfileLock();
-||||||| merged common ancestors
-private:
-    ~nsToolkitProfileLock();
-=======
 NS_IMETHODIMP
 nsToolkitProfile::GetRootDir(nsIFile** aResult) {
   NS_ADDREF(*aResult = mRootDir);
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<nsToolkitProfile> mProfile;
-  nsCOMPtr<nsIFile> mDirectory;
-  nsCOMPtr<nsIFile> mLocalDirectory;
-||||||| merged common ancestors
-    RefPtr<nsToolkitProfile> mProfile;
-    nsCOMPtr<nsIFile> mDirectory;
-    nsCOMPtr<nsIFile> mLocalDirectory;
-=======
 NS_IMETHODIMP
 nsToolkitProfile::GetLocalDir(nsIFile** aResult) {
   NS_ADDREF(*aResult = mLocalDir);
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsProfileLock mLock;
-};
-||||||| merged common ancestors
-    nsProfileLock mLock;
-};
-=======
 NS_IMETHODIMP
 nsToolkitProfile::GetName(nsACString& aResult) {
   aResult = mName;
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsToolkitProfileFactory final : public nsIFactory {
-  ~nsToolkitProfileFactory() {}
-
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIFACTORY
-};
-||||||| merged common ancestors
-class nsToolkitProfileFactory final : public nsIFactory
-{
-    ~nsToolkitProfileFactory() {}
-public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSIFACTORY
-};
-=======
 NS_IMETHODIMP
 nsToolkitProfile::SetName(const nsACString& aName) {
   NS_ASSERTION(nsToolkitProfileService::gService, "Where did my service go?");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsToolkitProfileService final : public nsIToolkitProfileService {
- public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSITOOLKITPROFILESERVICE
-||||||| merged common ancestors
-class nsToolkitProfileService final : public nsIToolkitProfileService
-{
-public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSITOOLKITPROFILESERVICE
-
-private:
-    friend class nsToolkitProfile;
-    friend class nsToolkitProfileFactory;
-    friend nsresult NS_NewToolkitProfileService(nsIToolkitProfileService**);
-
-    nsToolkitProfileService() :
-        mStartWithLast(true)
-    {
-        gService = this;
-    }
-    ~nsToolkitProfileService()
-    {
-        gService = nullptr;
-    }
-=======
   if (mName.Equals(aName)) {
     return NS_OK;
   }
@@ -367,55 +199,21 @@ private:
   }
 
   mName = aName;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  friend class nsToolkitProfile;
-  friend class nsToolkitProfileFactory;
-  friend nsresult NS_NewToolkitProfileService(nsIToolkitProfileService**);
-||||||| merged common ancestors
-    nsresult Init();
-=======
   nsresult rv = nsToolkitProfileService::gService->mProfileDB.SetString(
       mSection.get(), "Name", mName.get());
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsToolkitProfileService() : mStartWithLast(true) { gService = this; }
-  ~nsToolkitProfileService() { gService = nullptr; }
-||||||| merged common ancestors
-    nsresult CreateTimesInternal(nsIFile *profileDir);
-=======
   // Setting the name to the dev-edition default profile name will cause this
   // profile to become the dev-edition default.
   if (aName.EqualsLiteral(DEV_EDITION_NAME) &&
       !nsToolkitProfileService::gService->mDevEditionDefault) {
     nsToolkitProfileService::gService->mDevEditionDefault = this;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult Init();
-||||||| merged common ancestors
-    RefPtr<nsToolkitProfile>  mFirst;
-    nsCOMPtr<nsIToolkitProfile> mChosen;
-    nsCOMPtr<nsIToolkitProfile> mDefault;
-    nsCOMPtr<nsIFile>           mAppData;
-    nsCOMPtr<nsIFile>           mTempData;
-    nsCOMPtr<nsIFile>           mListFile;
-    bool mStartWithLast;
-=======
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult CreateTimesInternal(nsIFile* profileDir);
-||||||| merged common ancestors
-    static nsToolkitProfileService *gService;
-=======
 nsresult nsToolkitProfile::RemoveInternal(bool aRemoveFiles,
                                           bool aInBackground) {
   NS_ASSERTION(nsToolkitProfileService::gService, "Whoa, my service is gone.");
@@ -451,33 +249,9 @@ nsresult nsToolkitProfile::RemoveInternal(bool aRemoveFiles,
       setNext(last);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<nsToolkitProfile> mFirst;
-  nsCOMPtr<nsIToolkitProfile> mChosen;
-  nsCOMPtr<nsIToolkitProfile> mDefault;
-  nsCOMPtr<nsIFile> mAppData;
-  nsCOMPtr<nsIFile> mTempData;
-  nsCOMPtr<nsIFile> mListFile;
-  bool mStartWithLast;
-||||||| merged common ancestors
-    class ProfileEnumerator final : public nsSimpleEnumerator
-    {
-    public:
-        NS_DECL_NSISIMPLEENUMERATOR
-=======
   remove();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static nsToolkitProfileService* gService;
-||||||| merged common ancestors
-        const nsID& DefaultInterface() override
-        {
-          return NS_GET_IID(nsIToolkitProfile);
-        }
-=======
   if (nsToolkitProfileService::gService->mNormalDefault == this) {
     nsToolkitProfileService::gService->mNormalDefault = nullptr;
   }
@@ -487,249 +261,38 @@ nsresult nsToolkitProfile::RemoveInternal(bool aRemoveFiles,
   if (nsToolkitProfileService::gService->mDedicatedProfile == this) {
     nsToolkitProfileService::gService->SetDefaultProfile(nullptr);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  class ProfileEnumerator final : public nsSimpleEnumerator {
-   public:
-    NS_DECL_NSISIMPLEENUMERATOR
-
-    const nsID& DefaultInterface() override {
-      return NS_GET_IID(nsIToolkitProfile);
-    }
-
-    explicit ProfileEnumerator(nsToolkitProfile* first) { mCurrent = first; }
-
-   private:
-    RefPtr<nsToolkitProfile> mCurrent;
-  };
-};
-
-nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
-                                   nsIFile* aLocalDir, nsToolkitProfile* aPrev)
-    : mPrev(aPrev),
-      mName(aName),
-      mRootDir(aRootDir),
-      mLocalDir(aLocalDir),
-      mLock(nullptr) {
-  NS_ASSERTION(aRootDir, "No file!");
-
-  if (aPrev) {
-    aPrev->mNext = this;
-  } else {
-    nsToolkitProfileService::gService->mFirst = this;
-  }
-||||||| merged common ancestors
-        explicit ProfileEnumerator(nsToolkitProfile *first)
-          { mCurrent = first; }
-    private:
-        RefPtr<nsToolkitProfile> mCurrent;
-    };
-};
-
-nsToolkitProfile::nsToolkitProfile(const nsACString& aName,
-                                   nsIFile* aRootDir,
-                                   nsIFile* aLocalDir,
-                                   nsToolkitProfile* aPrev) :
-    mPrev(aPrev),
-    mName(aName),
-    mRootDir(aRootDir),
-    mLocalDir(aLocalDir),
-    mLock(nullptr)
-{
-    NS_ASSERTION(aRootDir, "No file!");
-
-    if (aPrev) {
-        aPrev->mNext = this;
-    } else {
-        nsToolkitProfileService::gService->mFirst = this;
-    }
-=======
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfile::GetRootDir(nsIFile** aResult) {
-  NS_ADDREF(*aResult = mRootDir);
-  return NS_OK;
-||||||| merged common ancestors
-nsToolkitProfile::GetRootDir(nsIFile* *aResult)
-{
-    NS_ADDREF(*aResult = mRootDir);
-    return NS_OK;
-=======
 nsToolkitProfile::Remove(bool removeFiles) {
   return RemoveInternal(removeFiles, false /* in background */);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfile::GetLocalDir(nsIFile** aResult) {
-  NS_ADDREF(*aResult = mLocalDir);
-  return NS_OK;
-||||||| merged common ancestors
-nsToolkitProfile::GetLocalDir(nsIFile* *aResult)
-{
-    NS_ADDREF(*aResult = mLocalDir);
-    return NS_OK;
-=======
 nsToolkitProfile::RemoveInBackground(bool removeFiles) {
   return RemoveInternal(removeFiles, true /* in background */);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfile::GetName(nsACString& aResult) {
-  aResult = mName;
-  return NS_OK;
-}
-||||||| merged common ancestors
-nsToolkitProfile::GetName(nsACString& aResult)
-{
-    aResult = mName;
-    return NS_OK;
-}
-=======
 nsToolkitProfile::Lock(nsIProfileUnlocker** aUnlocker,
                        nsIProfileLock** aResult) {
   if (mLock) {
     NS_ADDREF(*aResult = mLock);
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfile::SetName(const nsACString& aName) {
-  NS_ASSERTION(nsToolkitProfileService::gService, "Where did my service go?");
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfile::SetName(const nsACString& aName)
-{
-    NS_ASSERTION(nsToolkitProfileService::gService,
-                 "Where did my service go?");
-=======
   RefPtr<nsToolkitProfileLock> lock = new nsToolkitProfileLock();
   if (!lock) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mName = aName;
-||||||| merged common ancestors
-    mName = aName;
-=======
   nsresult rv = lock->Init(this, aUnlocker);
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
   NS_ADDREF(*aResult = lock);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsToolkitProfile::RemoveInternal(bool aRemoveFiles,
-                                          bool aInBackground) {
-  NS_ASSERTION(nsToolkitProfileService::gService, "Whoa, my service is gone.");
-
-  if (mLock) return NS_ERROR_FILE_IS_LOCKED;
-
-  if (!mPrev && !mNext && nsToolkitProfileService::gService->mFirst != this)
-    return NS_ERROR_NOT_INITIALIZED;
-
-  if (aRemoveFiles) {
-    // Check if another instance is using this profile.
-    nsCOMPtr<nsIProfileLock> lock;
-    nsresult rv = Lock(nullptr, getter_AddRefs(lock));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsCOMPtr<nsIFile> rootDir(mRootDir);
-    nsCOMPtr<nsIFile> localDir(mLocalDir);
-
-    nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
-        "nsToolkitProfile::RemoveInternal", [rootDir, localDir, lock]() {
-          bool equals;
-          nsresult rv = rootDir->Equals(localDir, &equals);
-          // The root dir might contain the temp dir, so remove
-          // the temp dir first.
-          if (NS_SUCCEEDED(rv) && !equals) {
-            localDir->Remove(true);
-          }
-
-          // Ideally we'd unlock after deleting but since the lock is a file
-          // in the profile we must unlock before removing.
-          lock->Unlock();
-
-          rootDir->Remove(true);
-        });
-
-    if (aInBackground) {
-      nsCOMPtr<nsIEventTarget> target =
-          do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID);
-      target->Dispatch(runnable, NS_DISPATCH_NORMAL);
-    } else {
-      runnable->Run();
-    }
-  }
-||||||| merged common ancestors
-nsresult
-nsToolkitProfile::RemoveInternal(bool aRemoveFiles, bool aInBackground)
-{
-    NS_ASSERTION(nsToolkitProfileService::gService,
-                 "Whoa, my service is gone.");
-
-    if (mLock)
-        return NS_ERROR_FILE_IS_LOCKED;
-
-    if (!mPrev && !mNext && nsToolkitProfileService::gService->mFirst != this)
-        return NS_ERROR_NOT_INITIALIZED;
-
-    if (aRemoveFiles) {
-        // Check if another instance is using this profile.
-        nsCOMPtr<nsIProfileLock> lock;
-        nsresult rv = Lock(nullptr, getter_AddRefs(lock));
-        NS_ENSURE_SUCCESS(rv, rv);
-
-        nsCOMPtr<nsIFile> rootDir(mRootDir);
-        nsCOMPtr<nsIFile> localDir(mLocalDir);
-
-        nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
-          "nsToolkitProfile::RemoveInternal",
-          [rootDir, localDir, lock]() {
-              bool equals;
-              nsresult rv = rootDir->Equals(localDir, &equals);
-              // The root dir might contain the temp dir, so remove
-              // the temp dir first.
-              if (NS_SUCCEEDED(rv) && !equals) {
-                  localDir->Remove(true);
-              }
-
-              // Ideally we'd unlock after deleting but since the lock is a file
-              // in the profile we must unlock before removing.
-              lock->Unlock();
-
-              rootDir->Remove(true);
-            }
-        );
-
-        if (aInBackground) {
-            nsCOMPtr<nsIEventTarget> target =
-                do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID);
-             target->Dispatch(runnable, NS_DISPATCH_NORMAL);
-        } else {
-          runnable->Run();
-        }
-    }
-=======
 NS_IMPL_ISUPPORTS(nsToolkitProfileLock, nsIProfileLock)
 
 nsresult nsToolkitProfileLock::Init(nsToolkitProfile* aProfile,
@@ -740,63 +303,22 @@ nsresult nsToolkitProfileLock::Init(nsToolkitProfile* aProfile,
 
   return rv;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mPrev)
-    mPrev->mNext = mNext;
-  else
-    nsToolkitProfileService::gService->mFirst = mNext;
-||||||| merged common ancestors
-    if (mPrev)
-        mPrev->mNext = mNext;
-    else
-        nsToolkitProfileService::gService->mFirst = mNext;
-=======
 nsresult nsToolkitProfileLock::Init(nsIFile* aDirectory,
                                     nsIFile* aLocalDirectory,
                                     nsIProfileUnlocker** aUnlocker) {
   nsresult rv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mNext) mNext->mPrev = mPrev;
-||||||| merged common ancestors
-    if (mNext)
-        mNext->mPrev = mPrev;
-=======
   rv = mLock.Lock(aDirectory, aUnlocker);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mPrev = nullptr;
-  mNext = nullptr;
-||||||| merged common ancestors
-    mPrev = nullptr;
-    mNext = nullptr;
-=======
   if (NS_SUCCEEDED(rv)) {
     mDirectory = aDirectory;
     mLocalDirectory = aLocalDirectory;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (nsToolkitProfileService::gService->mChosen == this)
-    nsToolkitProfileService::gService->mChosen = nullptr;
-||||||| merged common ancestors
-    if (nsToolkitProfileService::gService->mChosen == this)
-        nsToolkitProfileService::gService->mChosen = nullptr;
-=======
   return rv;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
 NS_IMETHODIMP
 nsToolkitProfileLock::GetDirectory(nsIFile** aResult) {
   if (!mDirectory) {
@@ -806,18 +328,9 @@ nsToolkitProfileLock::GetDirectory(nsIFile** aResult) {
 
   NS_ADDREF(*aResult = mDirectory);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfile::Remove(bool removeFiles) {
-  return RemoveInternal(removeFiles, false /* in background */);
-||||||| merged common ancestors
-nsToolkitProfile::Remove(bool removeFiles)
-{
-    return RemoveInternal(removeFiles, false /* in background */);
-=======
 nsToolkitProfileLock::GetLocalDirectory(nsIFile** aResult) {
   if (!mLocalDirectory) {
     NS_ERROR("Not initialized, or unlocked!");
@@ -826,18 +339,9 @@ nsToolkitProfileLock::GetLocalDirectory(nsIFile** aResult) {
 
   NS_ADDREF(*aResult = mLocalDirectory);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfile::RemoveInBackground(bool removeFiles) {
-  return RemoveInternal(removeFiles, true /* in background */);
-||||||| merged common ancestors
-nsToolkitProfile::RemoveInBackground(bool removeFiles)
-{
-    return RemoveInternal(removeFiles, true /* in background */);
-=======
 nsToolkitProfileLock::Unlock() {
   if (!mDirectory) {
     NS_ERROR("Unlocking a never-locked nsToolkitProfileLock!");
@@ -854,62 +358,22 @@ nsToolkitProfileLock::Unlock() {
   mLocalDirectory = nullptr;
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfile::Lock(nsIProfileUnlocker** aUnlocker,
-                       nsIProfileLock** aResult) {
-  if (mLock) {
-    NS_ADDREF(*aResult = mLock);
-    return NS_OK;
-  }
-||||||| merged common ancestors
-nsToolkitProfile::Lock(nsIProfileUnlocker* *aUnlocker, nsIProfileLock* *aResult)
-{
-    if (mLock) {
-        NS_ADDREF(*aResult = mLock);
-        return NS_OK;
-    }
-=======
 nsToolkitProfileLock::GetReplacedLockTime(PRTime* aResult) {
   mLock.GetReplacedLockTime(aResult);
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<nsToolkitProfileLock> lock = new nsToolkitProfileLock();
-  if (!lock) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-    RefPtr<nsToolkitProfileLock> lock = new nsToolkitProfileLock();
-    if (!lock) return NS_ERROR_OUT_OF_MEMORY;
-=======
 nsToolkitProfileLock::~nsToolkitProfileLock() {
   if (mDirectory) {
     Unlock();
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv = lock->Init(this, aUnlocker);
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    nsresult rv = lock->Init(this, aUnlocker);
-    if (NS_FAILED(rv)) return rv;
-=======
 nsToolkitProfileService* nsToolkitProfileService::gService = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ADDREF(*aResult = lock);
-  return NS_OK;
-||||||| merged common ancestors
-    NS_ADDREF(*aResult = lock);
-    return NS_OK;
-=======
 NS_IMPL_ISUPPORTS(nsToolkitProfileService, nsIToolkitProfileService)
 
 nsToolkitProfileService::nsToolkitProfileService()
@@ -936,7 +400,6 @@ nsToolkitProfileService::nsToolkitProfileService()
   mUseDevEditionProfile = true;
 #endif
   gService = this;
->>>>>>> upstream-releases
 }
 
 nsToolkitProfileService::~nsToolkitProfileService() {
@@ -944,79 +407,25 @@ nsToolkitProfileService::~nsToolkitProfileService() {
   mProfiles.clear();
 }
 
-<<<<<<< HEAD
-nsresult nsToolkitProfileLock::Init(nsToolkitProfile* aProfile,
-                                    nsIProfileUnlocker** aUnlocker) {
-  nsresult rv;
-  rv = Init(aProfile->mRootDir, aProfile->mLocalDir, aUnlocker);
-  if (NS_SUCCEEDED(rv)) mProfile = aProfile;
-||||||| merged common ancestors
-nsresult
-nsToolkitProfileLock::Init(nsToolkitProfile* aProfile, nsIProfileUnlocker* *aUnlocker)
-{
-    nsresult rv;
-    rv = Init(aProfile->mRootDir, aProfile->mLocalDir, aUnlocker);
-    if (NS_SUCCEEDED(rv))
-        mProfile = aProfile;
-=======
 void nsToolkitProfileService::CompleteStartup() {
   if (!mStartupProfileSelected) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return rv;
-}
-||||||| merged common ancestors
-    return rv;
-}
-=======
   ScalarSet(mozilla::Telemetry::ScalarID::STARTUP_PROFILE_SELECTION_REASON,
             mStartupReason);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult nsToolkitProfileLock::Init(nsIFile* aDirectory,
-                                    nsIFile* aLocalDirectory,
-                                    nsIProfileUnlocker** aUnlocker) {
-  nsresult rv;
-||||||| merged common ancestors
-nsresult
-nsToolkitProfileLock::Init(nsIFile* aDirectory, nsIFile* aLocalDirectory,
-                           nsIProfileUnlocker* *aUnlocker)
-{
-    nsresult rv;
-=======
   if (mMaybeLockProfile) {
     nsCOMPtr<nsIToolkitShellService> shell =
         do_GetService(NS_TOOLKITSHELLSERVICE_CONTRACTID);
     if (!shell) {
       return;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = mLock.Lock(aDirectory, aUnlocker);
-||||||| merged common ancestors
-    rv = mLock.Lock(aDirectory, aUnlocker);
-=======
     bool isDefaultApp;
     nsresult rv = shell->IsDefaultApplication(&isDefaultApp);
     NS_ENSURE_SUCCESS_VOID(rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (NS_SUCCEEDED(rv)) {
-    mDirectory = aDirectory;
-    mLocalDirectory = aLocalDirectory;
-  }
-||||||| merged common ancestors
-    if (NS_SUCCEEDED(rv)) {
-        mDirectory = aDirectory;
-        mLocalDirectory = aLocalDirectory;
-    }
-=======
     if (isDefaultApp) {
       mProfileDB.SetString(mInstallSection.get(), "Locked", "1");
 
@@ -1029,13 +438,7 @@ nsToolkitProfileLock::Init(nsIFile* aDirectory, nsIFile* aLocalDirectory,
     }
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return rv;
-||||||| merged common ancestors
-    return rv;
-=======
 // Tests whether the passed profile was last used by this install.
 bool nsToolkitProfileService::IsProfileForCurrentInstall(
     nsIToolkitProfile* aProfile) {
@@ -1090,25 +493,8 @@ bool nsToolkitProfileService::IsProfileForCurrentInstall(
   NS_ENSURE_SUCCESS(rv, false);
 
   return equal;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileLock::GetDirectory(nsIFile** aResult) {
-  if (!mDirectory) {
-    NS_ERROR("Not initialized, or unlocked!");
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileLock::GetDirectory(nsIFile* *aResult)
-{
-    if (!mDirectory) {
-        NS_ERROR("Not initialized, or unlocked!");
-        return NS_ERROR_NOT_INITIALIZED;
-    }
-=======
 /**
  * Used the first time an install with dedicated profile support runs. Decides
  * whether to mark the passed profile as the default for this install.
@@ -1158,54 +544,19 @@ nsresult nsToolkitProfileService::MaybeMakeDefaultDedicatedProfile(
     if (NS_FAILED(rv)) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ADDREF(*aResult = mDirectory);
-  return NS_OK;
-}
-||||||| merged common ancestors
-    NS_ADDREF(*aResult = mDirectory);
-    return NS_OK;
-}
-=======
     // Is this install using the profile we care about?
     if (!descriptor.Equals(path)) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileLock::GetLocalDirectory(nsIFile** aResult) {
-  if (!mLocalDirectory) {
-    NS_ERROR("Not initialized, or unlocked!");
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileLock::GetLocalDirectory(nsIFile* *aResult)
-{
-    if (!mLocalDirectory) {
-        NS_ERROR("Not initialized, or unlocked!");
-        return NS_ERROR_NOT_INITIALIZED;
-    }
-=======
     // Is this profile locked to this other install?
     nsCString isLocked;
     rv = mProfileDB.GetString(install.get(), "Locked", isLocked);
     if (NS_SUCCEEDED(rv) && isLocked.Equals("1")) {
       return NS_OK;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ADDREF(*aResult = mLocalDirectory);
-  return NS_OK;
-||||||| merged common ancestors
-    NS_ADDREF(*aResult = mLocalDirectory);
-    return NS_OK;
-=======
     inUseInstalls.AppendElement(install);
   }
 
@@ -1235,25 +586,8 @@ nsToolkitProfileLock::GetLocalDirectory(nsIFile* *aResult)
   *aResult = true;
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileLock::Unlock() {
-  if (!mDirectory) {
-    NS_ERROR("Unlocking a never-locked nsToolkitProfileLock!");
-    return NS_ERROR_UNEXPECTED;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileLock::Unlock()
-{
-    if (!mDirectory) {
-        NS_ERROR("Unlocking a never-locked nsToolkitProfileLock!");
-        return NS_ERROR_UNEXPECTED;
-    }
-=======
 bool IsFileOutdated(nsIFile* aFile, bool aExists, PRTime aLastModified,
                     int64_t aLastSize) {
   nsCOMPtr<nsIFile> file;
@@ -1286,44 +620,16 @@ bool IsFileOutdated(nsIFile* aFile, bool aExists, PRTime aLastModified,
 
   return false;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mLock.Unlock();
-||||||| merged common ancestors
-    mLock.Unlock();
-=======
 nsresult UpdateFileStats(nsIFile* aFile, bool* aExists, PRTime* aLastModified,
                          int64_t* aLastSize) {
   nsCOMPtr<nsIFile> file;
   nsresult rv = aFile->Clone(getter_AddRefs(file));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (mProfile) {
-    mProfile->mLock = nullptr;
-    mProfile = nullptr;
-  }
-  mDirectory = nullptr;
-  mLocalDirectory = nullptr;
-||||||| merged common ancestors
-    if (mProfile) {
-        mProfile->mLock = nullptr;
-        mProfile = nullptr;
-    }
-    mDirectory = nullptr;
-    mLocalDirectory = nullptr;
-=======
   rv = file->Exists(aExists);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
   if (!(*aExists)) {
     *aLastModified = 0;
     *aLastSize = 0;
@@ -1337,20 +643,9 @@ nsresult UpdateFileStats(nsIFile* aFile, bool* aExists, PRTime* aLastModified,
   NS_ENSURE_SUCCESS(rv, rv);
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileLock::GetReplacedLockTime(PRTime* aResult) {
-  mLock.GetReplacedLockTime(aResult);
-  return NS_OK;
-||||||| merged common ancestors
-nsToolkitProfileLock::GetReplacedLockTime(PRTime *aResult)
-{
-    mLock.GetReplacedLockTime(aResult);
-    return NS_OK;
-=======
 nsToolkitProfileService::GetIsListOutdated(bool* aResult) {
   if (IsFileOutdated(mProfileDBFile, mProfileDBExists, mProfileDBModifiedTime,
                      mProfileDBFileSize)) {
@@ -1366,21 +661,8 @@ nsToolkitProfileService::GetIsListOutdated(bool* aResult) {
 
   *aResult = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsToolkitProfileLock::~nsToolkitProfileLock() {
-  if (mDirectory) {
-    Unlock();
-  }
-||||||| merged common ancestors
-nsToolkitProfileLock::~nsToolkitProfileLock()
-{
-    if (mDirectory) {
-        Unlock();
-    }
-=======
 struct ImportInstallsClosure {
   nsINIParser* backupData;
   nsINIParser* profileDB;
@@ -1406,120 +688,34 @@ static bool ImportInstalls(const char* aSection, void* aClosure) {
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsToolkitProfileService* nsToolkitProfileService::gService = nullptr;
-||||||| merged common ancestors
-nsToolkitProfileService*
-nsToolkitProfileService::gService = nullptr;
-=======
 nsresult nsToolkitProfileService::Init() {
   NS_ASSERTION(gDirServiceProvider, "No dirserviceprovider!");
   nsresult rv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsToolkitProfileService, nsIToolkitProfileService)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(nsToolkitProfileService,
-                  nsIToolkitProfileService)
-=======
   rv = nsXREDirProvider::GetUserAppDataDirectory(getter_AddRefs(mAppData));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult nsToolkitProfileService::Init() {
-  NS_ASSERTION(gDirServiceProvider, "No dirserviceprovider!");
-  nsresult rv;
-||||||| merged common ancestors
-nsresult
-nsToolkitProfileService::Init()
-{
-    NS_ASSERTION(gDirServiceProvider, "No dirserviceprovider!");
-    nsresult rv;
-=======
   rv = nsXREDirProvider::GetUserLocalDataDirectory(getter_AddRefs(mTempData));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = nsXREDirProvider::GetUserAppDataDirectory(getter_AddRefs(mAppData));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = nsXREDirProvider::GetUserAppDataDirectory(getter_AddRefs(mAppData));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   rv = mAppData->Clone(getter_AddRefs(mProfileDBFile));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = nsXREDirProvider::GetUserLocalDataDirectory(getter_AddRefs(mTempData));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = nsXREDirProvider::GetUserLocalDataDirectory(getter_AddRefs(mTempData));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   rv = mProfileDBFile->AppendNative(NS_LITERAL_CSTRING("profiles.ini"));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = mAppData->Clone(getter_AddRefs(mListFile));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = mAppData->Clone(getter_AddRefs(mListFile));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   rv = mAppData->Clone(getter_AddRefs(mInstallDBFile));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = mListFile->AppendNative(NS_LITERAL_CSTRING("profiles.ini"));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = mListFile->AppendNative(NS_LITERAL_CSTRING("profiles.ini"));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   rv = mInstallDBFile->AppendNative(NS_LITERAL_CSTRING("installs.ini"));
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool exists;
-  rv = mListFile->IsFile(&exists);
-  if (NS_FAILED(rv) || !exists) {
-    return NS_OK;
-  }
-||||||| merged common ancestors
-    bool exists;
-    rv = mListFile->IsFile(&exists);
-    if (NS_FAILED(rv) || !exists) {
-        return NS_OK;
-    }
-=======
   rv = UpdateFileStats(mInstallDBFile, &mInstallDBExists,
                        &mInstallDBModifiedTime, &mInstallDBFileSize);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int64_t size;
-  rv = mListFile->GetFileSize(&size);
-  if (NS_FAILED(rv) || !size) {
-    return NS_OK;
-  }
-||||||| merged common ancestors
-    int64_t size;
-    rv = mListFile->GetFileSize(&size);
-    if (NS_FAILED(rv) || !size) {
-        return NS_OK;
-    }
-=======
   nsAutoCString buffer;
 
   rv = UpdateFileStats(mProfileDBFile, &mProfileDBExists,
@@ -1527,51 +723,19 @@ nsToolkitProfileService::Init()
   if (NS_SUCCEEDED(rv) && mProfileDBExists) {
     mProfileDBFile->GetFileSize(&mProfileDBFileSize);
     mProfileDBFile->GetLastModifiedTime(&mProfileDBModifiedTime);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsINIParser parser;
-  rv = parser.Init(mListFile);
-  // Init does not fail on parsing errors, only on OOM/really unexpected
-  // conditions.
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    nsINIParser parser;
-    rv = parser.Init(mListFile);
-    // Init does not fail on parsing errors, only on OOM/really unexpected
-    // conditions.
-    if (NS_FAILED(rv))
-        return rv;
-=======
     rv = mProfileDB.Init(mProfileDBFile);
     // Init does not fail on parsing errors, only on OOM/really unexpected
     // conditions.
     if (NS_FAILED(rv)) {
       return rv;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsAutoCString buffer;
-  rv = parser.GetString("General", "StartWithLastProfile", buffer);
-  if (NS_SUCCEEDED(rv) && buffer.EqualsLiteral("0")) mStartWithLast = false;
-||||||| merged common ancestors
-    nsAutoCString buffer;
-    rv = parser.GetString("General", "StartWithLastProfile", buffer);
-    if (NS_SUCCEEDED(rv) && buffer.EqualsLiteral("0"))
-        mStartWithLast = false;
-=======
     rv = mProfileDB.GetString("General", "StartWithLastProfile", buffer);
     if (NS_SUCCEEDED(rv)) {
       mStartWithLast = !buffer.EqualsLiteral("0");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsToolkitProfile* currentProfile = nullptr;
-||||||| merged common ancestors
-    nsToolkitProfile* currentProfile = nullptr;
-=======
     rv = mProfileDB.GetString("General", "Version", buffer);
     if (NS_FAILED(rv)) {
       // This is a profiles.ini written by an older version. We must restore
@@ -1626,29 +790,8 @@ nsToolkitProfileService::Init()
   }
 
   nsToolkitProfile* currentProfile = nullptr;
->>>>>>> upstream-releases
 
 #ifdef MOZ_DEV_EDITION
-<<<<<<< HEAD
-  nsCOMPtr<nsIFile> ignoreSeparateProfile;
-  rv = mAppData->Clone(getter_AddRefs(ignoreSeparateProfile));
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    nsCOMPtr<nsIFile> ignoreSeparateProfile;
-    rv = mAppData->Clone(getter_AddRefs(ignoreSeparateProfile));
-    if (NS_FAILED(rv))
-        return rv;
-
-    rv = ignoreSeparateProfile->AppendNative(NS_LITERAL_CSTRING("ignore-dev-edition-profile"));
-    if (NS_FAILED(rv))
-        return rv;
-
-    bool shouldIgnoreSeparateProfile;
-    rv = ignoreSeparateProfile->Exists(&shouldIgnoreSeparateProfile);
-    if (NS_FAILED(rv))
-        return rv;
-#endif
-=======
   nsCOMPtr<nsIFile> ignoreDevEditionProfile;
   rv = mAppData->Clone(getter_AddRefs(ignoreDevEditionProfile));
   if (NS_FAILED(rv)) {
@@ -1667,105 +810,7 @@ nsToolkitProfileService::Init()
 
   mUseDevEditionProfile = !shouldIgnoreSeparateProfile;
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = ignoreSeparateProfile->AppendNative(
-      NS_LITERAL_CSTRING("ignore-dev-edition-profile"));
-  if (NS_FAILED(rv)) return rv;
-
-  bool shouldIgnoreSeparateProfile;
-  rv = ignoreSeparateProfile->Exists(&shouldIgnoreSeparateProfile);
-  if (NS_FAILED(rv)) return rv;
-#endif
-
-  unsigned int c = 0;
-  bool foundAuroraDefault = false;
-  for (c = 0; true; ++c) {
-    nsAutoCString profileID("Profile");
-    profileID.AppendInt(c);
-
-    rv = parser.GetString(profileID.get(), "IsRelative", buffer);
-    if (NS_FAILED(rv)) break;
-
-    bool isRelative = buffer.EqualsLiteral("1");
-
-    nsAutoCString filePath;
-
-    rv = parser.GetString(profileID.get(), "Path", filePath);
-    if (NS_FAILED(rv)) {
-      NS_ERROR("Malformed profiles.ini: Path= not found");
-      continue;
-||||||| merged common ancestors
-    unsigned int c = 0;
-    bool foundAuroraDefault = false;
-    for (c = 0; true; ++c) {
-        nsAutoCString profileID("Profile");
-        profileID.AppendInt(c);
-
-        rv = parser.GetString(profileID.get(), "IsRelative", buffer);
-        if (NS_FAILED(rv)) break;
-
-        bool isRelative = buffer.EqualsLiteral("1");
-
-        nsAutoCString filePath;
-
-        rv = parser.GetString(profileID.get(), "Path", filePath);
-        if (NS_FAILED(rv)) {
-            NS_ERROR("Malformed profiles.ini: Path= not found");
-            continue;
-        }
-
-        nsAutoCString name;
-
-        rv = parser.GetString(profileID.get(), "Name", name);
-        if (NS_FAILED(rv)) {
-            NS_ERROR("Malformed profiles.ini: Name= not found");
-            continue;
-        }
-
-        nsCOMPtr<nsIFile> rootDir;
-        rv = NS_NewNativeLocalFile(EmptyCString(), true,
-                                   getter_AddRefs(rootDir));
-        NS_ENSURE_SUCCESS(rv, rv);
-
-        if (isRelative) {
-            rv = rootDir->SetRelativeDescriptor(mAppData, filePath);
-        } else {
-            rv = rootDir->SetPersistentDescriptor(filePath);
-        }
-        if (NS_FAILED(rv)) continue;
-
-        nsCOMPtr<nsIFile> localDir;
-        if (isRelative) {
-            rv = NS_NewNativeLocalFile(EmptyCString(), true,
-                                       getter_AddRefs(localDir));
-            NS_ENSURE_SUCCESS(rv, rv);
-
-            rv = localDir->SetRelativeDescriptor(mTempData, filePath);
-        } else {
-            localDir = rootDir;
-        }
-
-        currentProfile = new nsToolkitProfile(name,
-                                              rootDir, localDir,
-                                              currentProfile);
-        NS_ENSURE_TRUE(currentProfile, NS_ERROR_OUT_OF_MEMORY);
-
-        rv = parser.GetString(profileID.get(), "Default", buffer);
-        if (NS_SUCCEEDED(rv) && buffer.EqualsLiteral("1") && !foundAuroraDefault) {
-            mChosen = currentProfile;
-            this->SetDefaultProfile(currentProfile);
-        }
-#ifdef MOZ_DEV_EDITION
-        // Use the dev-edition-default profile if this is an Aurora build and
-        // ignore-dev-edition-profile is not present.
-        if (name.EqualsLiteral("dev-edition-default") && !shouldIgnoreSeparateProfile) {
-            mChosen = currentProfile;
-            foundAuroraDefault = true;
-        }
-#endif
-=======
   nsCOMPtr<nsIToolkitProfile> autoSelectProfile;
 
   unsigned int nonDevEditionProfiles = 0;
@@ -1836,114 +881,13 @@ nsToolkitProfileService::Init()
       // Should we flush now? It costs some startup time and we will fix it on
       // the next startup anyway. If something else causes a flush then it will
       // be fixed in the ini file then.
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    nsAutoCString name;
-
-    rv = parser.GetString(profileID.get(), "Name", name);
-    if (NS_FAILED(rv)) {
-      NS_ERROR("Malformed profiles.ini: Name= not found");
-      continue;
-    }
-
-    nsCOMPtr<nsIFile> rootDir;
-    rv = NS_NewNativeLocalFile(EmptyCString(), true, getter_AddRefs(rootDir));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    if (isRelative) {
-      rv = rootDir->SetRelativeDescriptor(mAppData, filePath);
-    } else {
-      rv = rootDir->SetPersistentDescriptor(filePath);
-    }
-    if (NS_FAILED(rv)) continue;
-
-    nsCOMPtr<nsIFile> localDir;
-    if (isRelative) {
-      rv =
-          NS_NewNativeLocalFile(EmptyCString(), true, getter_AddRefs(localDir));
-      NS_ENSURE_SUCCESS(rv, rv);
-
-      rv = localDir->SetRelativeDescriptor(mTempData, filePath);
-    } else {
-      localDir = rootDir;
-    }
-
-    currentProfile =
-        new nsToolkitProfile(name, rootDir, localDir, currentProfile);
-    NS_ENSURE_TRUE(currentProfile, NS_ERROR_OUT_OF_MEMORY);
-
-    rv = parser.GetString(profileID.get(), "Default", buffer);
-    if (NS_SUCCEEDED(rv) && buffer.EqualsLiteral("1") && !foundAuroraDefault) {
-      mChosen = currentProfile;
-      this->SetDefaultProfile(currentProfile);
-    }
-#ifdef MOZ_DEV_EDITION
-    // Use the dev-edition-default profile if this is an Aurora build and
-    // ignore-dev-edition-profile is not present.
-    if (name.EqualsLiteral("dev-edition-default") &&
-        !shouldIgnoreSeparateProfile) {
-      mChosen = currentProfile;
-      foundAuroraDefault = true;
-||||||| merged common ancestors
-#ifdef MOZ_DEV_EDITION
-    if (!foundAuroraDefault && !shouldIgnoreSeparateProfile) {
-        // If a single profile exists, it may not be already marked as default.
-        // Do it now to avoid problems when we create the dev-edition-default profile.
-        if (!mChosen && mFirst && !mFirst->mNext)
-            this->SetDefaultProfile(mFirst);
-
-        // Create a default profile for aurora, if none was found.
-        nsCOMPtr<nsIToolkitProfile> profile;
-        rv = CreateProfile(nullptr,
-                           NS_LITERAL_CSTRING("dev-edition-default"),
-                           getter_AddRefs(profile));
-        if (NS_FAILED(rv)) return rv;
-        mChosen = profile;
-        rv = Flush();
-        if (NS_FAILED(rv)) return rv;
-=======
     rv = mProfileDB.GetString(profileID.get(), "Default", buffer);
     if (NS_SUCCEEDED(rv) && buffer.EqualsLiteral("1")) {
       mNormalDefault = currentProfile;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#endif
-  }
-||||||| merged common ancestors
-#endif
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef MOZ_DEV_EDITION
-  if (!foundAuroraDefault && !shouldIgnoreSeparateProfile) {
-    // If a single profile exists, it may not be already marked as default.
-    // Do it now to avoid problems when we create the dev-edition-default
-    // profile.
-    if (!mChosen && mFirst && !mFirst->mNext) this->SetDefaultProfile(mFirst);
-
-    // Create a default profile for aurora, if none was found.
-    nsCOMPtr<nsIToolkitProfile> profile;
-    rv = CreateProfile(nullptr, NS_LITERAL_CSTRING("dev-edition-default"),
-                       getter_AddRefs(profile));
-    if (NS_FAILED(rv)) return rv;
-    mChosen = profile;
-    rv = Flush();
-    if (NS_FAILED(rv)) return rv;
-  }
-#endif
-
-  if (!mChosen && mFirst && !mFirst->mNext)  // only one profile
-    mChosen = mFirst;
-  return NS_OK;
-||||||| merged common ancestors
-    if (!mChosen && mFirst && !mFirst->mNext) // only one profile
-        mChosen = mFirst;
-    return NS_OK;
-=======
     // Is this the default profile for this install?
     if (mUseDedicatedProfile && !mDedicatedProfile &&
         installProfilePath.Equals(descriptor)) {
@@ -1976,24 +920,9 @@ nsToolkitProfileService::Init()
   }
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileService::SetStartWithLastProfile(bool aValue) {
-  if (mStartWithLast != aValue) {
-    mStartWithLast = aValue;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-nsToolkitProfileService::SetStartWithLastProfile(bool aValue)
-{
-    if (mStartWithLast != aValue) {
-        mStartWithLast = aValue;
-    }
-    return NS_OK;
-=======
 nsToolkitProfileService::SetStartWithLastProfile(bool aValue) {
   if (mStartWithLast != aValue) {
     nsresult rv = mProfileDB.SetString("General", "StartWithLastProfile",
@@ -2002,7 +931,6 @@ nsToolkitProfileService::SetStartWithLastProfile(bool aValue) {
     mStartWithLast = aValue;
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2012,21 +940,9 @@ nsToolkitProfileService::GetStartWithLastProfile(bool* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileService::GetProfiles(nsISimpleEnumerator** aResult) {
-  *aResult = new ProfileEnumerator(this->mFirst);
-  if (!*aResult) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-nsToolkitProfileService::GetProfiles(nsISimpleEnumerator* *aResult)
-{
-    *aResult = new ProfileEnumerator(this->mFirst);
-    if (!*aResult)
-        return NS_ERROR_OUT_OF_MEMORY;
-=======
 nsToolkitProfileService::GetProfiles(nsISimpleEnumerator** aResult) {
   *aResult = new ProfileEnumerator(mProfiles.getFirst());
   if (!*aResult) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
 
   NS_ADDREF(*aResult);
   return NS_OK;
@@ -2044,55 +960,23 @@ nsToolkitProfileService::ProfileEnumerator::GetNext(nsISupports** aResult) {
 
   NS_ADDREF(*aResult = mCurrent);
 
-<<<<<<< HEAD
-  mCurrent = mCurrent->mNext;
-  return NS_OK;
-||||||| merged common ancestors
-    mCurrent = mCurrent->mNext;
-    return NS_OK;
-=======
   mCurrent = mCurrent->getNext();
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileService::GetSelectedProfile(nsIToolkitProfile** aResult) {
-  if (!mChosen && mFirst && !mFirst->mNext)  // only one profile
-    mChosen = mFirst;
-||||||| merged common ancestors
-nsToolkitProfileService::GetSelectedProfile(nsIToolkitProfile* *aResult)
-{
-    if (!mChosen && mFirst && !mFirst->mNext) // only one profile
-        mChosen = mFirst;
-=======
 nsToolkitProfileService::GetCurrentProfile(nsIToolkitProfile** aResult) {
   NS_IF_ADDREF(*aResult = mCurrent);
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!mChosen) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-    if (!mChosen) return NS_ERROR_FAILURE;
-=======
 NS_IMETHODIMP
 nsToolkitProfileService::GetDefaultProfile(nsIToolkitProfile** aResult) {
   if (mUseDedicatedProfile) {
     NS_IF_ADDREF(*aResult = mDedicatedProfile);
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ADDREF(*aResult = mChosen);
-  return NS_OK;
-||||||| merged common ancestors
-    NS_ADDREF(*aResult = mChosen);
-    return NS_OK;
-=======
   if (mUseDevEditionProfile) {
     NS_IF_ADDREF(*aResult = mDevEditionDefault);
     return NS_OK;
@@ -2120,24 +1004,9 @@ void nsToolkitProfileService::SetNormalDefault(nsIToolkitProfile* aProfile) {
         static_cast<nsToolkitProfile*>(mNormalDefault.get());
     mProfileDB.SetString(profile->mSection.get(), "Default", "1");
   }
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileService::SetSelectedProfile(nsIToolkitProfile* aProfile) {
-  if (mChosen != aProfile) {
-    mChosen = aProfile;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-nsToolkitProfileService::SetSelectedProfile(nsIToolkitProfile* aProfile)
-{
-    if (mChosen != aProfile) {
-        mChosen = aProfile;
-    }
-    return NS_OK;
-=======
 nsToolkitProfileService::SetDefaultProfile(nsIToolkitProfile* aProfile) {
   if (mUseDedicatedProfile) {
     if (mDedicatedProfile != aProfile) {
@@ -2171,31 +1040,14 @@ nsToolkitProfileService::SetDefaultProfile(nsIToolkitProfile* aProfile) {
   SetNormalDefault(aProfile);
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileService::GetDefaultProfile(nsIToolkitProfile** aResult) {
-  if (!mDefault) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsToolkitProfileService::GetDefaultProfile(nsIToolkitProfile* *aResult)
-{
-    if (!mDefault) return NS_ERROR_FAILURE;
-=======
 nsToolkitProfileService::GetCreatedAlternateProfile(bool* aResult) {
   *aResult = mCreatedAlternateProfile;
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ADDREF(*aResult = mDefault);
-  return NS_OK;
-||||||| merged common ancestors
-    NS_ADDREF(*aResult = mDefault);
-    return NS_OK;
-=======
 // Gets the profile root directory descriptor for storing in profiles.ini or
 // installs.ini.
 nsresult nsToolkitProfileService::GetProfileDescriptor(
@@ -2224,25 +1076,8 @@ nsresult nsToolkitProfileService::GetProfileDescriptor(
   }
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileService::SetDefaultProfile(nsIToolkitProfile* aProfile) {
-  if (mDefault != aProfile) {
-    mDefault = aProfile;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileService::SetDefaultProfile(nsIToolkitProfile* aProfile)
-{
-    if (mDefault != aProfile) {
-        mDefault = aProfile;
-    }
-    return NS_OK;
-=======
 nsresult nsToolkitProfileService::CreateDefaultProfile(
     nsIToolkitProfile** aResult) {
   // Create a new default profile
@@ -2267,7 +1102,6 @@ nsresult nsToolkitProfileService::CreateDefaultProfile(
   }
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 /**
@@ -2275,26 +1109,6 @@ nsresult nsToolkitProfileService::CreateDefaultProfile(
  * See nsIToolkitProfileService.idl.
  */
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsToolkitProfileService::GetProfileByName(const nsACString& aName,
-                                          nsIToolkitProfile** aResult) {
-  nsToolkitProfile* curP = mFirst;
-  while (curP) {
-    if (curP->mName.Equals(aName)) {
-      NS_ADDREF(*aResult = curP);
-      return NS_OK;
-||||||| merged common ancestors
-nsToolkitProfileService::GetProfileByName(const nsACString& aName,
-                                          nsIToolkitProfile* *aResult)
-{
-    nsToolkitProfile* curP = mFirst;
-    while (curP) {
-        if (curP->mName.Equals(aName)) {
-            NS_ADDREF(*aResult = curP);
-            return NS_OK;
-        }
-        curP = curP->mNext;
-=======
 nsToolkitProfileService::SelectStartupProfile(
     const nsTArray<nsCString>& aArgv, bool aIsResetting,
     const nsACString& aUpdateChannel, const nsACString& aLegacyInstallHash,
@@ -2421,18 +1235,8 @@ nsresult nsToolkitProfileService::SelectStartupProfile(
 
         return NS_OK;
       }
->>>>>>> upstream-releases
     }
-    curP = curP->mNext;
-  }
 
-<<<<<<< HEAD
-  return NS_ERROR_FAILURE;
-}
-||||||| merged common ancestors
-    return NS_ERROR_FAILURE;
-}
-=======
     if (EnvHasValue("XRE_RESTARTED_BY_PROFILE_MANAGER")) {
       mStartupReason = NS_LITERAL_STRING("profile-manager");
     } else if (aIsResetting) {
@@ -2440,46 +1244,14 @@ nsresult nsToolkitProfileService::SelectStartupProfile(
     } else {
       mStartupReason = NS_LITERAL_STRING("restart");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileService::LockProfilePath(nsIFile* aDirectory,
-                                         nsIFile* aLocalDirectory,
-                                         nsIProfileLock** aResult) {
-  return NS_LockProfilePath(aDirectory, aLocalDirectory, nullptr, aResult);
-}
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileService::LockProfilePath(nsIFile* aDirectory,
-                                         nsIFile* aLocalDirectory,
-                                         nsIProfileLock* *aResult)
-{
-    return NS_LockProfilePath(aDirectory, aLocalDirectory, nullptr, aResult);
-}
-=======
     mCurrent = profile;
     lf.forget(aRootDir);
     localDir.forget(aLocalDir);
     NS_IF_ADDREF(*aProfile = profile);
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult NS_LockProfilePath(nsIFile* aPath, nsIFile* aTempPath,
-                            nsIProfileUnlocker** aUnlocker,
-                            nsIProfileLock** aResult) {
-  RefPtr<nsToolkitProfileLock> lock = new nsToolkitProfileLock();
-  if (!lock) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-nsresult
-NS_LockProfilePath(nsIFile* aPath, nsIFile* aTempPath,
-                   nsIProfileUnlocker* *aUnlocker, nsIProfileLock* *aResult)
-{
-    RefPtr<nsToolkitProfileLock> lock = new nsToolkitProfileLock();
-    if (!lock) return NS_ERROR_OUT_OF_MEMORY;
-=======
   // Check the -profile command line argument. It accepts a single argument that
   // gives the path to use for the profile.
   ArgResult ar = CheckArg(*aArgc, aArgv, "profile", &arg);
@@ -2491,15 +1263,7 @@ NS_LockProfilePath(nsIFile* aPath, nsIFile* aTempPath,
     nsCOMPtr<nsIFile> lf;
     rv = XRE_GetFileFromPath(arg, getter_AddRefs(lf));
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv = lock->Init(aPath, aTempPath, aUnlocker);
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    nsresult rv = lock->Init(aPath, aTempPath, aUnlocker);
-    if (NS_FAILED(rv)) return rv;
-=======
     // Make sure that the profile path exists and it's a directory.
     bool exists;
     rv = lf->Exists(&exists);
@@ -2518,17 +1282,7 @@ NS_LockProfilePath(nsIFile* aPath, nsIFile* aTempPath,
         return NS_ERROR_FAILURE;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  lock.forget(aResult);
-  return NS_OK;
-}
-||||||| merged common ancestors
-    lock.forget(aResult);
-    return NS_OK;
-}
-=======
     mStartupReason = NS_LITERAL_STRING("argument-profile");
 
     // If a profile path is specified directly on the command line, then
@@ -2560,20 +1314,7 @@ NS_LockProfilePath(nsIFile* aPath, nsIFile* aTempPath,
         PR_fprintf(PR_STDERR, "Error: profile path not valid.\n");
         return rv;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void SaltProfileName(nsACString& aName) {
-  char salt[9];
-  NS_MakeRandomString(salt, 8);
-  salt[8] = '.';
-||||||| merged common ancestors
-static void SaltProfileName(nsACString& aName)
-{
-    char salt[9];
-    NS_MakeRandomString(salt, 8);
-    salt[8] = '.';
-=======
       // As with --profile, assume that the given path will be used for the
       // main profile directory.
       rv = CreateProfile(lf, nsDependentCSubstring(arg, delim),
@@ -2600,15 +1341,7 @@ static void SaltProfileName(nsACString& aName)
           "Error: argument -p is invalid when argument --osint is specified\n");
       return NS_ERROR_FAILURE;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  aName.Insert(salt, 0, 9);
-}
-||||||| merged common ancestors
-    aName.Insert(salt, 0, 9);
-}
-=======
     return NS_ERROR_SHOW_PROFILE_MANAGER;
   }
   if (ar) {
@@ -2619,28 +1352,7 @@ static void SaltProfileName(nsACString& aName)
           "Error: argument -p is invalid when argument --osint is specified\n");
       return NS_ERROR_FAILURE;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
-                                       const nsACString& aName,
-                                       nsIToolkitProfile** aResult) {
-  nsresult rv = GetProfileByName(aName, aResult);
-  if (NS_SUCCEEDED(rv)) {
-    return rv;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
-                                       const nsACString& aName,
-                                       nsIToolkitProfile** aResult)
-{
-    nsresult rv = GetProfileByName(aName, aResult);
-    if (NS_SUCCEEDED(rv)) {
-        return rv;
-    }
-=======
     rv = GetProfileByName(nsDependentCString(arg), getter_AddRefs(mCurrent));
     if (NS_SUCCEEDED(rv)) {
       mStartupReason = NS_LITERAL_STRING("argument-p");
@@ -2651,41 +1363,15 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
       NS_ADDREF(*aProfile = mCurrent);
       return NS_OK;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIFile> rootDir(aRootDir);
-||||||| merged common ancestors
-    nsCOMPtr<nsIFile> rootDir (aRootDir);
-=======
     return NS_ERROR_SHOW_PROFILE_MANAGER;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsAutoCString dirName;
-  if (!rootDir) {
-    rv = gDirServiceProvider->GetUserProfilesRootDir(getter_AddRefs(rootDir));
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    nsAutoCString dirName;
-    if (!rootDir) {
-        rv = gDirServiceProvider->GetUserProfilesRootDir(getter_AddRefs(rootDir));
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
   ar = CheckArg(*aArgc, aArgv, "profilemanager");
   if (ar == ARG_FOUND) {
     return NS_ERROR_SHOW_PROFILE_MANAGER;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    dirName = aName;
-    SaltProfileName(dirName);
-||||||| merged common ancestors
-        dirName = aName;
-        SaltProfileName(dirName);
-=======
   if (mIsFirstRun && mUseDedicatedProfile &&
       !mInstallSection.Equals(mLegacyInstallSection)) {
     // The default profile could be assigned to a hash generated from an
@@ -2695,20 +1381,7 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
     nsCString defaultDescriptor;
     rv = mProfileDB.GetString(mLegacyInstallSection.get(), "Default",
                               defaultDescriptor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (NS_IsNativeUTF8()) {
-      rootDir->AppendNative(dirName);
-    } else {
-      rootDir->Append(NS_ConvertUTF8toUTF16(dirName));
-||||||| merged common ancestors
-        if (NS_IsNativeUTF8()) {
-            rootDir->AppendNative(dirName);
-        } else {
-            rootDir->Append(NS_ConvertUTF8toUTF16(dirName));
-        }
-=======
     if (NS_SUCCEEDED(rv)) {
       // There is a default here, need to see if it matches any profiles.
       bool isRelative;
@@ -2748,39 +1421,13 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
     // a new profile to use.
     if (!mStartWithLast) {
       return NS_ERROR_SHOW_PROFILE_MANAGER;
->>>>>>> upstream-releases
     }
-  }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIFile> localDir;
-||||||| merged common ancestors
-    nsCOMPtr<nsIFile> localDir;
-=======
     if (mUseDedicatedProfile) {
       // This is the first run of a dedicated profile install. We have to decide
       // whether to use the default profile used by non-dedicated-profile
       // installs or to create a new profile.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool isRelative;
-  rv = mAppData->Contains(rootDir, &isRelative);
-  if (NS_SUCCEEDED(rv) && isRelative) {
-    nsAutoCString path;
-    rv = rootDir->GetRelativeDescriptor(mAppData, path);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    rv = NS_NewNativeLocalFile(EmptyCString(), true, getter_AddRefs(localDir));
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    bool isRelative;
-    rv = mAppData->Contains(rootDir, &isRelative);
-    if (NS_SUCCEEDED(rv) && isRelative) {
-        nsAutoCString path;
-        rv = rootDir->GetRelativeDescriptor(mAppData, path);
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
       // Find what would have been the default profile for old installs.
       nsCOMPtr<nsIToolkitProfile> profile = mNormalDefault;
       if (mUseDevEditionProfile) {
@@ -2790,18 +1437,7 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
       if (profile) {
         nsCOMPtr<nsIFile> rootDir;
         profile->GetRootDir(getter_AddRefs(rootDir));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    rv = localDir->SetRelativeDescriptor(mTempData, path);
-  } else {
-    localDir = rootDir;
-  }
-||||||| merged common ancestors
-        rv = NS_NewNativeLocalFile(EmptyCString(), true,
-                                   getter_AddRefs(localDir));
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
         nsCOMPtr<nsIFile> compat;
         rootDir->Clone(getter_AddRefs(compat));
         compat->Append(COMPAT_FILE);
@@ -2809,18 +1445,7 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
         bool exists;
         rv = compat->Exists(&exists);
         NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool exists;
-  rv = rootDir->Exists(&exists);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-        rv = localDir->SetRelativeDescriptor(mTempData, path);
-    } else {
-        localDir = rootDir;
-    }
-=======
         // If the file is missing then either this is an empty profile (likely
         // generated by bug 1518591) or it is from an ancient version. We'll opt
         // to leave it for older versions in this case.
@@ -2846,17 +1471,7 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
         }
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (exists) {
-    rv = rootDir->IsDirectory(&exists);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    bool exists;
-    rv = rootDir->Exists(&exists);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     rv = CreateDefaultProfile(getter_AddRefs(mCurrent));
     if (NS_SUCCEEDED(rv)) {
       // If there is only one profile and it isn't meant to be the profile that
@@ -2889,25 +1504,7 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
       return NS_OK;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (!exists) return NS_ERROR_FILE_NOT_DIRECTORY;
-  } else {
-    nsCOMPtr<nsIFile> profileDirParent;
-    nsAutoString profileDirName;
-||||||| merged common ancestors
-    if (exists) {
-        rv = rootDir->IsDirectory(&exists);
-        NS_ENSURE_SUCCESS(rv, rv);
-
-        if (!exists)
-            return NS_ERROR_FILE_NOT_DIRECTORY;
-    }
-    else {
-        nsCOMPtr<nsIFile> profileDirParent;
-        nsAutoString profileDirName;
-=======
   GetDefaultProfile(getter_AddRefs(mCurrent));
 
   // None of the profiles was marked as default (generally only happens if the
@@ -2979,56 +1576,15 @@ nsresult nsToolkitProfileService::ApplyResetProfile(
             mProfileDB.GetString(mInstallSection.get(), "Locked", val))) {
       wasLocked = val.Equals("1");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    rv = rootDir->GetParent(getter_AddRefs(profileDirParent));
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-        rv = rootDir->GetParent(getter_AddRefs(profileDirParent));
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
     SetDefaultProfile(mCurrent);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    rv = rootDir->GetLeafName(profileDirName);
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-        rv = rootDir->GetLeafName(profileDirName);
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
     // Make the locked state match if necessary.
     if (!wasLocked) {
       mProfileDB.DeleteString(mInstallSection.get(), "Locked");
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // let's ensure that the profile directory exists.
-    rv = rootDir->Create(nsIFile::DIRECTORY_TYPE, 0700);
-    NS_ENSURE_SUCCESS(rv, rv);
-    rv = rootDir->SetPermissions(0700);
-#ifndef ANDROID
-    // If the profile is on the sdcard, this will fail but its non-fatal
-    NS_ENSURE_SUCCESS(rv, rv);
-#endif
-  }
-||||||| merged common ancestors
-        // let's ensure that the profile directory exists.
-        rv = rootDir->Create(nsIFile::DIRECTORY_TYPE, 0700);
-        NS_ENSURE_SUCCESS(rv, rv);
-        rv = rootDir->SetPermissions(0700);
-#ifndef ANDROID
-        // If the profile is on the sdcard, this will fail but its non-fatal
-        NS_ENSURE_SUCCESS(rv, rv);
-#endif
-    }
-
-    rv = localDir->Exists(&exists);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   nsCString name;
   nsresult rv = aOldProfile->GetName(name);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -3066,17 +1622,7 @@ nsToolkitProfileService::GetProfileByName(const nsACString& aName,
 
   return NS_ERROR_FAILURE;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = localDir->Exists(&exists);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    if (!exists) {
-        rv = localDir->Create(nsIFile::DIRECTORY_TYPE, 0700);
-        NS_ENSURE_SUCCESS(rv, rv);
-    }
-=======
 /**
  * Finds a profile from the database that uses the given root and local
  * directories.
@@ -3096,17 +1642,7 @@ void nsToolkitProfileService::GetProfileByDir(nsIFile* aRootDir,
     }
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!exists) {
-    rv = localDir->Create(nsIFile::DIRECTORY_TYPE, 0700);
-||||||| merged common ancestors
-    // We created a new profile dir. Let's store a creation timestamp.
-    // Note that this code path does not apply if the profile dir was
-    // created prior to launching.
-    rv = CreateTimesInternal(rootDir);
-=======
 nsresult NS_LockProfilePath(nsIFile* aPath, nsIFile* aTempPath,
                             nsIProfileUnlocker** aUnlocker,
                             nsIProfileLock** aResult) {
@@ -3164,23 +1700,8 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
   nsAutoCString dirName;
   if (!rootDir) {
     rv = gDirServiceProvider->GetUserProfilesRootDir(getter_AddRefs(rootDir));
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
-  }
 
-<<<<<<< HEAD
-  // We created a new profile dir. Let's store a creation timestamp.
-  // Note that this code path does not apply if the profile dir was
-  // created prior to launching.
-  rv = CreateTimesInternal(rootDir);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    nsToolkitProfile* last = mFirst.get();
-    if (last) {
-        while (last->mNext)
-            last = last->mNext;
-    }
-=======
     dirName = aName;
     SaltProfileName(dirName);
 
@@ -3190,68 +1711,19 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
       rootDir->Append(NS_ConvertUTF8toUTF16(dirName));
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsToolkitProfile* last = mFirst.get();
-  if (last) {
-    while (last->mNext) last = last->mNext;
-  }
-||||||| merged common ancestors
-    nsCOMPtr<nsIToolkitProfile> profile =
-        new nsToolkitProfile(aName, rootDir, localDir, last);
-    if (!profile) return NS_ERROR_OUT_OF_MEMORY;
-=======
   nsCOMPtr<nsIFile> localDir;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIToolkitProfile> profile =
-      new nsToolkitProfile(aName, rootDir, localDir, last);
-  if (!profile) return NS_ERROR_OUT_OF_MEMORY;
-
-  profile.forget(aResult);
-  return NS_OK;
-}
-||||||| merged common ancestors
-    profile.forget(aResult);
-    return NS_OK;
-}
-=======
   bool isRelative;
   rv = mAppData->Contains(rootDir, &isRelative);
   if (NS_SUCCEEDED(rv) && isRelative) {
     nsAutoCString path;
     rv = rootDir->GetRelativeDescriptor(mAppData, path);
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult nsToolkitProfileService::CreateTimesInternal(nsIFile* aProfileDir) {
-  nsresult rv = NS_ERROR_FAILURE;
-  nsCOMPtr<nsIFile> creationLog;
-  rv = aProfileDir->Clone(getter_AddRefs(creationLog));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsresult
-nsToolkitProfileService::CreateTimesInternal(nsIFile* aProfileDir)
-{
-    nsresult rv = NS_ERROR_FAILURE;
-    nsCOMPtr<nsIFile> creationLog;
-    rv = aProfileDir->Clone(getter_AddRefs(creationLog));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     rv = NS_NewNativeLocalFile(EmptyCString(), true, getter_AddRefs(localDir));
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = creationLog->AppendNative(NS_LITERAL_CSTRING("times.json"));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = creationLog->AppendNative(NS_LITERAL_CSTRING("times.json"));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     rv = localDir->SetRelativeDescriptor(mTempData, path);
   } else {
     localDir = rootDir;
@@ -3264,60 +1736,18 @@ nsToolkitProfileService::CreateTimesInternal(nsIFile* aProfileDir)
   if (exists) {
     rv = rootDir->IsDirectory(&exists);
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool exists = false;
-  creationLog->Exists(&exists);
-  if (exists) {
-    return NS_OK;
-  }
-||||||| merged common ancestors
-    bool exists = false;
-    creationLog->Exists(&exists);
-    if (exists) {
-      return NS_OK;
-    }
-=======
     if (!exists) return NS_ERROR_FILE_NOT_DIRECTORY;
   } else {
     nsCOMPtr<nsIFile> profileDirParent;
     nsAutoString profileDirName;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = creationLog->Create(nsIFile::NORMAL_FILE_TYPE, 0700);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = creationLog->Create(nsIFile::NORMAL_FILE_TYPE, 0700);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     rv = rootDir->GetParent(getter_AddRefs(profileDirParent));
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // We don't care about microsecond resolution.
-  int64_t msec = PR_Now() / PR_USEC_PER_MSEC;
-||||||| merged common ancestors
-    // We don't care about microsecond resolution.
-    int64_t msec = PR_Now() / PR_USEC_PER_MSEC;
-=======
     rv = rootDir->GetLeafName(profileDirName);
     NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Write it out.
-  PRFileDesc* writeFile;
-  rv = creationLog->OpenNSPRFileDesc(PR_WRONLY, 0700, &writeFile);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    // Write it out.
-    PRFileDesc *writeFile;
-    rv = creationLog->OpenNSPRFileDesc(PR_WRONLY, 0700, &writeFile);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     // let's ensure that the profile directory exists.
     rv = rootDir->Create(nsIFile::DIRECTORY_TYPE, 0700);
     NS_ENSURE_SUCCESS(rv, rv);
@@ -3327,17 +1757,7 @@ nsToolkitProfileService::CreateTimesInternal(nsIFile* aProfileDir)
     NS_ENSURE_SUCCESS(rv, rv);
 #endif
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PR_fprintf(writeFile, "{\n\"created\": %lld,\n\"firstUse\": null\n}\n", msec);
-  PR_Close(writeFile);
-  return NS_OK;
-||||||| merged common ancestors
-    PR_fprintf(writeFile, "{\n\"created\": %lld,\n\"firstUse\": null\n}\n", msec);
-    PR_Close(writeFile);
-    return NS_OK;
-=======
   rv = localDir->Exists(&exists);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -3362,29 +1782,8 @@ nsToolkitProfileService::CreateTimesInternal(nsIFile* aProfileDir)
 
   profile.forget(aResult);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileService::GetProfileCount(uint32_t* aResult) {
-  *aResult = 0;
-  nsToolkitProfile* profile = mFirst;
-  while (profile) {
-    (*aResult)++;
-    profile = profile->mNext;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileService::GetProfileCount(uint32_t *aResult)
-{
-    *aResult = 0;
-    nsToolkitProfile* profile = mFirst;
-    while (profile) {
-        (*aResult)++;
-        profile = profile->mNext;
-    }
-=======
 /**
  * Snaps (https://snapcraft.io/) use a different installation directory for
  * every version of an application. Since dedicated profiles uses the
@@ -3404,13 +1803,7 @@ nsToolkitProfileService::GetProfileCount(uint32_t *aResult)
 bool nsToolkitProfileService::IsSnapEnvironment() {
   return !!PR_GetEnv("SNAP_NAME");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
 /**
  * In some situations dedicated profile support does not work well. This
  * includes a handful of linux distributions which always install different
@@ -3420,136 +1813,31 @@ bool nsToolkitProfileService::IsSnapEnvironment() {
  */
 bool nsToolkitProfileService::UseLegacyProfiles() {
   return !!PR_GetEnv("MOZ_LEGACY_PROFILES");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsToolkitProfileService::Flush() {
-  // Errors during writing might cause unhappy semi-written files.
-  // To avoid this, write the entire thing to a buffer, then write
-  // that buffer to disk.
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsToolkitProfileService::Flush()
-{
-    // Errors during writing might cause unhappy semi-written files.
-    // To avoid this, write the entire thing to a buffer, then write
-    // that buffer to disk.
-=======
 struct FindInstallsClosure {
   nsINIParser* installData;
   nsTArray<nsCString>* installs;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv;
-  uint32_t pCount = 0;
-  nsToolkitProfile* cur;
-||||||| merged common ancestors
-    nsresult rv;
-    uint32_t pCount = 0;
-    nsToolkitProfile *cur;
-=======
 static bool FindInstalls(const char* aSection, void* aClosure) {
   FindInstallsClosure* closure = static_cast<FindInstallsClosure*>(aClosure);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (cur = mFirst; cur != nullptr; cur = cur->mNext) ++pCount;
-||||||| merged common ancestors
-    for (cur = mFirst; cur != nullptr; cur = cur->mNext)
-        ++pCount;
-=======
   // Check if the section starts with "Install"
   if (strncmp(aSection, INSTALL_PREFIX, INSTALL_PREFIX_LENGTH) != 0) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t length;
-  const int bufsize = 100 + MAXPATHLEN * pCount;
-  auto buffer = MakeUnique<char[]>(bufsize);
-||||||| merged common ancestors
-    uint32_t length;
-    const int bufsize = 100+MAXPATHLEN*pCount;
-    auto buffer = MakeUnique<char[]>(bufsize);
-=======
   nsCString install(aSection);
   closure->installs->AppendElement(install);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  char* pos = buffer.get();
-  char* end = pos + bufsize;
-||||||| merged common ancestors
-    char *pos = buffer.get();
-    char *end = pos + bufsize;
-=======
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  pos += snprintf(pos, end - pos,
-                  "[General]\n"
-                  "StartWithLastProfile=%s\n\n",
-                  mStartWithLast ? "1" : "0");
-||||||| merged common ancestors
-    pos += snprintf(pos, end - pos,
-                    "[General]\n"
-                    "StartWithLastProfile=%s\n\n",
-                    mStartWithLast ? "1" : "0");
-=======
 nsTArray<nsCString> nsToolkitProfileService::GetKnownInstalls() {
   nsTArray<nsCString> result;
   FindInstallsClosure closure = {&mProfileDB, &result};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsAutoCString path;
-  cur = mFirst;
-  pCount = 0;
-||||||| merged common ancestors
-    nsAutoCString path;
-    cur = mFirst;
-    pCount = 0;
-
-    while (cur) {
-        // if the profile dir is relative to appdir...
-        bool isRelative;
-        rv = mAppData->Contains(cur->mRootDir, &isRelative);
-        if (NS_SUCCEEDED(rv) && isRelative) {
-            // we use a relative descriptor
-            rv = cur->mRootDir->GetRelativeDescriptor(mAppData, path);
-        } else {
-            // otherwise, a persistent descriptor
-            rv = cur->mRootDir->GetPersistentDescriptor(path);
-            NS_ENSURE_SUCCESS(rv, rv);
-        }
-
-        pos += snprintf(pos, end - pos,
-                        "[Profile%u]\n"
-                        "Name=%s\n"
-                        "IsRelative=%s\n"
-                        "Path=%s\n",
-                        pCount, cur->mName.get(),
-                        isRelative ? "1" : "0", path.get());
-
-        nsCOMPtr<nsIToolkitProfile> profile;
-        rv = this->GetDefaultProfile(getter_AddRefs(profile));
-        if (NS_SUCCEEDED(rv) && profile == cur) {
-            pos += snprintf(pos, end - pos, "Default=1\n");
-        }
-
-        pos += snprintf(pos, end - pos, "\n");
-
-        cur = cur->mNext;
-        ++pCount;
-    }
-=======
   mProfileDB.GetSections(&FindInstalls, &closure);
 
   return result;
@@ -3631,56 +1919,14 @@ nsToolkitProfileService::Flush() {
           data.AppendPrintf("%s=%s\n", strings[j]->key.get(),
                             strings[j]->value.get());
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  while (cur) {
-    // if the profile dir is relative to appdir...
-    bool isRelative;
-    rv = mAppData->Contains(cur->mRootDir, &isRelative);
-    if (NS_SUCCEEDED(rv) && isRelative) {
-      // we use a relative descriptor
-      rv = cur->mRootDir->GetRelativeDescriptor(mAppData, path);
-    } else {
-      // otherwise, a persistent descriptor
-      rv = cur->mRootDir->GetPersistentDescriptor(path);
-      NS_ENSURE_SUCCESS(rv, rv);
-    }
-||||||| merged common ancestors
-    FILE* writeFile;
-    rv = mListFile->OpenANSIFileDesc("w", &writeFile);
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
         data.Append("\n");
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    pos +=
-        snprintf(pos, end - pos,
-                 "[Profile%u]\n"
-                 "Name=%s\n"
-                 "IsRelative=%s\n"
-                 "Path=%s\n",
-                 pCount, cur->mName.get(), isRelative ? "1" : "0", path.get());
-||||||| merged common ancestors
-    length = pos - buffer.get();
-=======
       FILE* writeFile;
       rv = mInstallDBFile->OpenANSIFileDesc("w", &writeFile);
       NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIToolkitProfile> profile;
-    rv = this->GetDefaultProfile(getter_AddRefs(profile));
-    if (NS_SUCCEEDED(rv) && profile == cur) {
-      pos += snprintf(pos, end - pos, "Default=1\n");
-||||||| merged common ancestors
-    if (fwrite(buffer.get(), sizeof(char), length, writeFile) != length) {
-        fclose(writeFile);
-        return NS_ERROR_UNEXPECTED;
-=======
       uint32_t length = data.Length();
       if (fwrite(data.get(), sizeof(char), length, writeFile) != length) {
         fclose(writeFile);
@@ -3699,34 +1945,9 @@ nsToolkitProfileService::Flush() {
         return rv;
       }
       mInstallDBExists = false;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-    pos += snprintf(pos, end - pos, "\n");
-
-    cur = cur->mNext;
-    ++pCount;
-  }
-
-  FILE* writeFile;
-  rv = mListFile->OpenANSIFileDesc("w", &writeFile);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  length = pos - buffer.get();
-
-  if (fwrite(buffer.get(), sizeof(char), length, writeFile) != length) {
-    fclose(writeFile);
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  fclose(writeFile);
-  return NS_OK;
-||||||| merged common ancestors
-    fclose(writeFile);
-    return NS_OK;
-=======
   rv = mProfileDB.WriteToFile(mProfileDBFile);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -3735,39 +1956,12 @@ nsToolkitProfileService::Flush() {
   NS_ENSURE_SUCCESS(rv, rv);
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMPL_ISUPPORTS(nsToolkitProfileFactory, nsIFactory)
 
 NS_IMETHODIMP
 nsToolkitProfileFactory::CreateInstance(nsISupports* aOuter, const nsID& aIID,
-<<<<<<< HEAD
-                                        void** aResult) {
-  if (aOuter) return NS_ERROR_NO_AGGREGATION;
-
-  nsCOMPtr<nsIToolkitProfileService> profileService =
-      nsToolkitProfileService::gService;
-  if (!profileService) {
-    nsresult rv = NS_NewToolkitProfileService(getter_AddRefs(profileService));
-    if (NS_FAILED(rv)) return rv;
-  }
-  return profileService->QueryInterface(aIID, aResult);
-||||||| merged common ancestors
-                                        void** aResult)
-{
-    if (aOuter)
-        return NS_ERROR_NO_AGGREGATION;
-
-    nsCOMPtr<nsIToolkitProfileService> profileService =
-        nsToolkitProfileService::gService;
-    if (!profileService) {
-        nsresult rv = NS_NewToolkitProfileService(getter_AddRefs(profileService));
-        if (NS_FAILED(rv))
-            return rv;
-    }
-    return profileService->QueryInterface(aIID, aResult);
-=======
                                         void** aResult) {
   if (aOuter) return NS_ERROR_NO_AGGREGATION;
 
@@ -3778,7 +1972,6 @@ nsToolkitProfileFactory::CreateInstance(nsISupports* aOuter, const nsID& aIID,
     if (NS_FAILED(rv)) return rv;
   }
   return profileService->QueryInterface(aIID, aResult);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -3792,30 +1985,6 @@ nsresult NS_NewToolkitProfileFactory(nsIFactory** aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult NS_NewToolkitProfileService(nsIToolkitProfileService** aResult) {
-  nsToolkitProfileService* profileService = new nsToolkitProfileService();
-  if (!profileService) return NS_ERROR_OUT_OF_MEMORY;
-  nsresult rv = profileService->Init();
-  if (NS_FAILED(rv)) {
-    NS_ERROR("nsToolkitProfileService::Init failed!");
-    delete profileService;
-    return rv;
-  }
-||||||| merged common ancestors
-nsresult
-NS_NewToolkitProfileService(nsIToolkitProfileService* *aResult)
-{
-    nsToolkitProfileService* profileService = new nsToolkitProfileService();
-    if (!profileService)
-        return NS_ERROR_OUT_OF_MEMORY;
-    nsresult rv = profileService->Init();
-    if (NS_FAILED(rv)) {
-        NS_ERROR("nsToolkitProfileService::Init failed!");
-        delete profileService;
-        return rv;
-    }
-=======
 nsresult NS_NewToolkitProfileService(nsToolkitProfileService** aResult) {
   nsToolkitProfileService* profileService = new nsToolkitProfileService();
   if (!profileService) return NS_ERROR_OUT_OF_MEMORY;
@@ -3825,7 +1994,6 @@ nsresult NS_NewToolkitProfileService(nsToolkitProfileService** aResult) {
     delete profileService;
     return rv;
   }
->>>>>>> upstream-releases
 
   NS_ADDREF(*aResult = profileService);
   return NS_OK;
@@ -3833,7 +2001,6 @@ nsresult NS_NewToolkitProfileService(nsToolkitProfileService** aResult) {
 
 nsresult XRE_GetFileFromPath(const char* aPath, nsIFile** aResult) {
 #if defined(XP_MACOSX)
-<<<<<<< HEAD
   int32_t pathLen = strlen(aPath);
   if (pathLen > MAXPATHLEN) return NS_ERROR_INVALID_ARG;
 
@@ -3845,33 +2012,6 @@ nsresult XRE_GetFileFromPath(const char* aPath, nsIFile** aResult) {
   nsresult rv = NS_NewNativeLocalFile(EmptyCString(), true, getter_AddRefs(lf));
   if (NS_SUCCEEDED(rv)) {
     nsCOMPtr<nsILocalFileMac> lfMac = do_QueryInterface(lf, &rv);
-||||||| merged common ancestors
-    int32_t pathLen = strlen(aPath);
-    if (pathLen > MAXPATHLEN)
-        return NS_ERROR_INVALID_ARG;
-
-    CFURLRef fullPath =
-        CFURLCreateFromFileSystemRepresentation(nullptr, (const UInt8 *) aPath,
-                                                pathLen, true);
-    if (!fullPath)
-        return NS_ERROR_FAILURE;
-
-    nsCOMPtr<nsIFile> lf;
-    nsresult rv = NS_NewNativeLocalFile(EmptyCString(), true,
-                                        getter_AddRefs(lf));
-=======
-  int32_t pathLen = strlen(aPath);
-  if (pathLen > MAXPATHLEN) return NS_ERROR_INVALID_ARG;
-
-  CFURLRef fullPath = CFURLCreateFromFileSystemRepresentation(
-      nullptr, (const UInt8*)aPath, pathLen, true);
-  if (!fullPath) return NS_ERROR_FAILURE;
-
-  nsCOMPtr<nsIFile> lf;
-  nsresult rv = NS_NewNativeLocalFile(EmptyCString(), true, getter_AddRefs(lf));
-  if (NS_SUCCEEDED(rv)) {
-    nsCOMPtr<nsILocalFileMac> lfMac = do_QueryInterface(lf, &rv);
->>>>>>> upstream-releases
     if (NS_SUCCEEDED(rv)) {
       rv = lfMac->InitWithCFURL(fullPath);
       if (NS_SUCCEEDED(rv)) {

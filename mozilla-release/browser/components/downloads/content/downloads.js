@@ -902,37 +902,6 @@ var DownloadsView = {
   },
 
   onDownloadMouseOut(aEvent) {
-<<<<<<< HEAD
-    let item = aEvent.target.closest("richlistitem,richlistbox");
-    if (item.localName != "richlistitem") {
-      return;
-    }
-
-    if (aEvent.target.classList.contains("downloadButton")) {
-      item.classList.remove("downloadHoveringButton");
-    }
-
-    // If the destination element is outside of the richlistitem, clear the
-    // selection.
-    if (!this.contextMenuOpen && !this.subViewOpen &&
-        !item.contains(aEvent.relatedTarget)) {
-      this.richListBox.selectedIndex = -1;
-||||||| merged common ancestors
-    if (aEvent.originalTarget.classList.contains("downloadButton")) {
-      aEvent.target.classList.remove("downloadHoveringButton");
-    }
-    if (!(this.contextMenuOpen || this.subViewOpen) &&
-        aEvent.target.parentNode == this.richListBox) {
-      // If the destination element is outside of the richlistitem, clear the
-      // selection.
-      let element = aEvent.relatedTarget;
-      while (element && element != aEvent.target) {
-        element = element.parentNode;
-      }
-      if (!element) {
-        this.richListBox.selectedIndex = -1;
-      }
-=======
     let item = aEvent.target.closest("richlistitem,richlistbox");
     if (item.localName != "richlistitem") {
       return;
@@ -950,7 +919,6 @@ var DownloadsView = {
       !item.contains(aEvent.relatedTarget)
     ) {
       this.richListBox.selectedIndex = -1;
->>>>>>> upstream-releases
     }
   },
 

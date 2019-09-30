@@ -25,41 +25,11 @@ JSObject* nsXMLElement::WrapNode(JSContext* aCx,
   return Element_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-void nsXMLElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  CSSPseudoElementType pseudoType = GetPseudoElementType();
-  bool isBefore = pseudoType == CSSPseudoElementType::before;
-  nsAtom* property = isBefore ? nsGkAtoms::beforePseudoProperty
-                              : nsGkAtoms::afterPseudoProperty;
-
-  switch (pseudoType) {
-    case CSSPseudoElementType::before:
-    case CSSPseudoElementType::after: {
-      MOZ_ASSERT(GetParent());
-      MOZ_ASSERT(GetParent()->IsElement());
-      GetParent()->DeleteProperty(property);
-||||||| merged common ancestors
-void
-nsXMLElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  CSSPseudoElementType pseudoType = GetPseudoElementType();
-  bool isBefore = pseudoType == CSSPseudoElementType::before;
-  nsAtom* property = isBefore
-    ? nsGkAtoms::beforePseudoProperty : nsGkAtoms::afterPseudoProperty;
-
-  switch (pseudoType) {
-    case CSSPseudoElementType::before:
-    case CSSPseudoElementType::after: {
-      MOZ_ASSERT(GetParent());
-      MOZ_ASSERT(GetParent()->IsElement());
-      GetParent()->DeleteProperty(property);
-=======
 void nsXMLElement::UnbindFromTree(bool aNullParent) {
   nsAtom* property;
   switch (GetPseudoElementType()) {
     case PseudoStyleType::marker:
       property = nsGkAtoms::markerPseudoProperty;
->>>>>>> upstream-releases
       break;
     case PseudoStyleType::before:
       property = nsGkAtoms::beforePseudoProperty;

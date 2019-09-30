@@ -59,15 +59,6 @@ add_task(async function test_theme_install() {
 
     Assert.equal(updates.length, 1, "Got a single theme update");
     let parsed = JSON.parse(updates[0]);
-<<<<<<< HEAD
-    ok(parsed.theme.headerURL.endsWith("/testImage.png"),
-       "Theme update has the expected headerURL");
-    is(parsed.theme.id, "theme@tests.mozilla.org", "Theme update includes the theme ID");
-    is(parsed.theme.version, "1.0", "Theme update includes the theme's version");
-||||||| merged common ancestors
-    ok(parsed.theme.headerURL.endsWith("/testImage.png"),
-       "Theme update has the expected headerURL");
-=======
     ok(
       parsed.theme.headerURL.endsWith("/testImage.png"),
       "Theme update has the expected headerURL"
@@ -85,6 +76,5 @@ add_task(async function test_theme_install() {
 
     let addon = await AddonManager.getAddonByID(parsed.theme.id);
     await addon.uninstall();
->>>>>>> upstream-releases
   });
 });

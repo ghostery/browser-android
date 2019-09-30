@@ -48,39 +48,10 @@ add_task(async function test_popup_url() {
   // Load extension with brighttext not set
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-=======
       theme: {
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "popup": POPUP_COLOR,
-          "popup_border": POPUP_BORDER_COLOR,
-          "popup_text": POPUP_TEXT_COLOR_DARK,
-          "popup_highlight": POPUP_SELECTED_COLOR,
-          "popup_highlight_text": POPUP_SELECTED_TEXT_COLOR,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "popup": POPUP_COLOR,
-          "popup_border": POPUP_BORDER_COLOR,
-          "popup_text": POPUP_TEXT_COLOR_DARK,
-          "popup_highlight": POPUP_SELECTED_COLOR,
-          "popup_highlight_text": POPUP_SELECTED_TEXT_COLOR,
-=======
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
@@ -90,7 +61,6 @@ add_task(async function test_popup_url() {
           popup_text: POPUP_TEXT_COLOR_DARK,
           popup_highlight: POPUP_SELECTED_COLOR,
           popup_highlight_text: POPUP_SELECTED_TEXT_COLOR,
->>>>>>> upstream-releases
         },
       },
     },
@@ -215,37 +185,10 @@ add_task(async function test_popup_url() {
   // Load a manifest with popup_text being bright. Test for bright text properties.
   extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-=======
       theme: {
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "popup": POPUP_COLOR,
-          "popup_text": POPUP_TEXT_COLOR_BRIGHT,
-          "popup_highlight": POPUP_SELECTED_COLOR,
-          "popup_highlight_text": POPUP_SELECTED_TEXT_COLOR,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "popup": POPUP_COLOR,
-          "popup_text": POPUP_TEXT_COLOR_BRIGHT,
-          "popup_highlight": POPUP_SELECTED_COLOR,
-          "popup_highlight_text": POPUP_SELECTED_TEXT_COLOR,
-=======
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
@@ -253,7 +196,6 @@ add_task(async function test_popup_url() {
           popup_text: POPUP_TEXT_COLOR_BRIGHT,
           popup_highlight: POPUP_SELECTED_COLOR,
           popup_highlight_text: POPUP_SELECTED_TEXT_COLOR,
->>>>>>> upstream-releases
         },
       },
     },
@@ -325,20 +267,6 @@ add_task(async function test_popup_url() {
   span.style.color = "GrayText";
   document.documentElement.appendChild(span);
   let GRAY_TEXT = window.getComputedStyle(span).color;
-<<<<<<< HEAD
-  span.remove();
-
-  separator = document.getAnonymousElementByAttribute(results[1], "anonid", "separator");
-  Assert.equal(window.getComputedStyle(separator).color,
-               GRAY_TEXT,
-               `Urlbar popup separator color should be set to ${GRAY_TEXT}`);
-||||||| merged common ancestors
-
-  separator = document.getAnonymousElementByAttribute(results[1], "anonid", "separator");
-  Assert.equal(window.getComputedStyle(separator).color,
-               GRAY_TEXT,
-               `Urlbar popup separator color should be set to ${GRAY_TEXT}`);
-=======
   span.remove();
 
   Assert.equal(
@@ -349,5 +277,4 @@ add_task(async function test_popup_url() {
     GRAY_TEXT,
     `Urlbar popup separator color should be set to ${GRAY_TEXT}`
   );
->>>>>>> upstream-releases
 });

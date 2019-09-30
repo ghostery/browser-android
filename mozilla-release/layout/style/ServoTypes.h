@@ -16,29 +16,12 @@
 struct RawServoFontFaceRule;
 
 namespace mozilla {
-<<<<<<< HEAD
-struct LangGroupFontPrefs;
-}
-||||||| merged common ancestors
-  struct LangGroupFontPrefs;
-}
-=======
 enum class StyleOrigin : uint8_t;
 struct LangGroupFontPrefs;
 }  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// used for associating sheet type with specific @font-face rules
-struct nsFontFaceRuleContainer {
-||||||| merged common ancestors
-// used for associating sheet type with specific @font-face rules
-struct nsFontFaceRuleContainer
-{
-=======
 // used for associating origin with specific @font-face rules
 struct nsFontFaceRuleContainer {
->>>>>>> upstream-releases
   RefPtr<RawServoFontFaceRule> mRule;
   mozilla::StyleOrigin mOrigin;
 };
@@ -60,35 +43,9 @@ enum class ServoTraversalFlags : uint32_t {
   AnimationOnly = 1 << 0,
   // Traverses as normal mode but tries to update all CSS animations.
   ForCSSRuleChanges = 1 << 1,
-<<<<<<< HEAD
-  // A forgetful traversal ignores the previous state of the frame tree, and
-  // thus does not compute damage or maintain other state describing the styles
-  // pre-traversal. A forgetful traversal is usually the right thing if you
-  // aren't going to do a post-traversal.
-  Forgetful = 1 << 3,
-  // Clears all the dirty bits (dirty descendants, animation-only
-  // dirty-descendants, needs frame, descendants need frames) on the elements
-  // traversed. in the subtree.
-  ClearDirtyBits = 1 << 5,
-  // Clears only the animation-only dirty descendants bit in the subtree.
-  ClearAnimationOnlyDirtyDescendants = 1 << 6,
-||||||| merged common ancestors
-  // A forgetful traversal ignores the previous state of the frame tree, and
-  // thus does not compute damage or maintain other state describing the styles
-  // pre-traversal. A forgetful traversal is usually the right thing if you
-  // aren't going to do a post-traversal.
-  Forgetful = 1 << 3,
-  // Clears all the dirty bits (dirty descendants, animation-only dirty-descendants,
-  // needs frame, descendants need frames) on the elements traversed.
-  // in the subtree.
-  ClearDirtyBits = 1 << 5,
-  // Clears only the animation-only dirty descendants bit in the subtree.
-  ClearAnimationOnlyDirtyDescendants = 1 << 6,
-=======
   // The final animation-only traversal, which shouldn't really care about other
   // style changes anymore.
   FinalAnimationTraversal = 1 << 2,
->>>>>>> upstream-releases
   // Allows the traversal to run in parallel if there are sufficient cores on
   // the machine.
   ParallelTraversal = 1 << 7,

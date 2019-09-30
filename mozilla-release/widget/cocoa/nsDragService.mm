@@ -352,16 +352,8 @@ nsDragService::GetData(nsITransferable* aTransferable, uint32_t aItemIndex) {
         nsCOMPtr<nsISupports> dataSupports;
         rv = currentTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(dataSupports));
         if (NS_SUCCEEDED(rv)) {
-<<<<<<< HEAD
-          aTransferable->SetTransferData(flavorStr.get(), dataSupports);
-          return NS_OK; // maybe try to fill in more types? Is there a point?
-||||||| merged common ancestors
-          aTransferable->SetTransferData(flavorStr.get(), dataSupports, dataSize);
-          return NS_OK; // maybe try to fill in more types? Is there a point?
-=======
           aTransferable->SetTransferData(flavorStr.get(), dataSupports);
           return NS_OK;  // maybe try to fill in more types? Is there a point?
->>>>>>> upstream-releases
         }
       }
     }
@@ -407,14 +399,6 @@ nsDragService::GetData(nsITransferable* aTransferable, uint32_t aItemIndex) {
 
       aTransferable->SetTransferData(flavorStr.get(), file);
 
-<<<<<<< HEAD
-      aTransferable->SetTransferData(flavorStr.get(), file);
-      
-||||||| merged common ancestors
-      aTransferable->SetTransferData(flavorStr.get(), file, dataLength);
-      
-=======
->>>>>>> upstream-releases
       break;
     } else if (flavorStr.EqualsLiteral(kCustomTypesMime)) {
       NSString* availableType =

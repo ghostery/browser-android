@@ -17,12 +17,6 @@ using namespace mozilla::dom;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(SVGAnimatedNumber, mSVGElement)
-||||||| merged common ancestors
-NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(SVGAnimatedNumber,
-                                               mSVGElement)
-=======
 /* Implementation */
 
 static SVGAttrTearoffTable<SVGAnimatedNumber,
@@ -79,7 +73,6 @@ nsresult SVGAnimatedNumber::SetBaseValueString(const nsAString& aValueAsString,
   // which takes care of notifying.
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 void SVGAnimatedNumber::GetBaseValueString(nsAString& aValueAsString) {
   aValueAsString.Truncate();
@@ -164,16 +157,6 @@ void SVGAnimatedNumber::SMILNumber::ClearAnimValue() {
   }
 }
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedNumber::WrapObject(JSContext* aCx,
-                                        JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedNumber_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedNumber::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedNumber_Binding::Wrap(aCx, this, aGivenProto);
-=======
 nsresult SVGAnimatedNumber::SMILNumber::SetAnimValue(const SMILValue& aValue) {
   NS_ASSERTION(aValue.mType == SMILFloatType::Singleton(),
                "Unexpected type to assign animated value");
@@ -181,15 +164,6 @@ nsresult SVGAnimatedNumber::SMILNumber::SetAnimValue(const SMILValue& aValue) {
     mVal->SetAnimValue(float(aValue.mU.mDouble), mSVGElement);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

@@ -1,31 +1,11 @@
-<<<<<<< HEAD
-/* eslint-env mozilla/frame-script */
-||||||| merged common ancestors
-=======
 /* eslint-env mozilla/frame-script */
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
->>>>>>> upstream-releases
 Cu.importGlobalProperties(["File"]);
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 function createProfDFile() {
-<<<<<<< HEAD
-  return Services.dirsvc.QueryInterface(Ci.nsIProperties).get("ProfD", Ci.nsIFile);
-||||||| merged common ancestors
-  return Cc["@mozilla.org/file/directory_service;1"]
-           .getService(Ci.nsIDirectoryService)
-           .QueryInterface(Ci.nsIProperties)
-           .get('ProfD', Ci.nsIFile);
-=======
   return Services.dirsvc
     .QueryInterface(Ci.nsIProperties)
     .get("ProfD", Ci.nsIFile);
->>>>>>> upstream-releases
 }
 
 // Creates a parametric arity directory hierarchy as a function of depth.
@@ -44,21 +24,10 @@ function createProfDFile() {
 // Returns the parent directory of the subtree.
 function createTreeFile(depth, parent) {
   if (!parent) {
-<<<<<<< HEAD
-    parent = Services.dirsvc.QueryInterface(Ci.nsIProperties).get("TmpD", Ci.nsIFile);
-    parent.append("dir-tree-test");
-||||||| merged common ancestors
-    parent = Cc["@mozilla.org/file/directory_service;1"]
-                .getService(Ci.nsIDirectoryService)
-                .QueryInterface(Ci.nsIProperties)
-                .get('TmpD', Ci.nsIFile);
-    parent.append('dir-tree-test');
-=======
     parent = Services.dirsvc
       .QueryInterface(Ci.nsIProperties)
       .get("TmpD", Ci.nsIFile);
     parent.append("dir-tree-test");
->>>>>>> upstream-releases
     parent.createUnique(Ci.nsIFile.DIRECTORY_TYPE, 0o700);
   }
 
@@ -95,21 +64,10 @@ function createRootFile() {
 }
 
 function createTestFile() {
-<<<<<<< HEAD
-  var tmpFile = Services.dirsvc.QueryInterface(Ci.nsIProperties).get("TmpD", Ci.nsIFile);
-  tmpFile.append("dir-test");
-||||||| merged common ancestors
-  var tmpFile = Cc["@mozilla.org/file/directory_service;1"]
-                  .getService(Ci.nsIDirectoryService)
-                  .QueryInterface(Ci.nsIProperties)
-                  .get('TmpD', Ci.nsIFile)
-  tmpFile.append('dir-test');
-=======
   var tmpFile = Services.dirsvc
     .QueryInterface(Ci.nsIProperties)
     .get("TmpD", Ci.nsIFile);
   tmpFile.append("dir-test");
->>>>>>> upstream-releases
   tmpFile.createUnique(Ci.nsIFile.DIRECTORY_TYPE, 0o700);
 
   var file1 = tmpFile.clone();
@@ -156,21 +114,10 @@ addMessageListener("dir.open", function(e) {
   });
 });
 
-<<<<<<< HEAD
-addMessageListener("file.open", function(e) {
-  var testFile = Services.dirsvc.QueryInterface(Ci.nsIProperties).get("ProfD", Ci.nsIFile);
-||||||| merged common ancestors
-addMessageListener("file.open", function (e) {
-  var testFile = Cc["@mozilla.org/file/directory_service;1"]
-                   .getService(Ci.nsIDirectoryService)
-                   .QueryInterface(Ci.nsIProperties)
-                   .get("ProfD", Ci.nsIFile);
-=======
 addMessageListener("file.open", function(e) {
   var testFile = Services.dirsvc
     .QueryInterface(Ci.nsIProperties)
     .get("ProfD", Ci.nsIFile);
->>>>>>> upstream-releases
   testFile.append("prefs.js");
 
   File.createFromNsIFile(testFile).then(function(file) {

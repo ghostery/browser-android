@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-Feature-Policy: midi-report-only 'none'
-||||||| merged common ancestors
-=======
 Feature-Policy-Report-Only: midi 'none'
->>>>>>> upstream-releases

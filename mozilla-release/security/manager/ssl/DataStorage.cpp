@@ -49,36 +49,6 @@ namespace {
 // instance. The shared thread is initialized when the first DataStorage
 // instance is initialized (Initialize is idempotent, so it's safe to call
 // multiple times in any case).
-<<<<<<< HEAD
-// When Gecko shuts down, it will send a "profile-change-teardown" notification
-// followed by "profile-before-change". As a result of the first event, all
-// DataStorage instances will dispatch an event to write out their backing data.
-// As a result of the second event, the shared thread will be shut down, which
-// ensures that these events actually run (this has to happen in two phases to
-// ensure that all DataStorage instances get a chance to dispatch their event
-// before the background thread gets shut down) (again Shutdown is idempotent,
-// so it's safe to call multiple times).
-// In some cases (e.g. xpcshell), no profile notifications will be sent, so
-// instead we rely on the notifications "xpcom-shutdown" and
-// "xpcom-shutdown-threads", respectively.
-class DataStorageSharedThread final {
- public:
-||||||| merged common ancestors
-// When Gecko shuts down, it will send a "profile-change-teardown" notification
-// followed by "profile-before-change". As a result of the first event, all
-// DataStorage instances will dispatch an event to write out their backing data.
-// As a result of the second event, the shared thread will be shut down, which
-// ensures that these events actually run (this has to happen in two phases to
-// ensure that all DataStorage instances get a chance to dispatch their event
-// before the background thread gets shut down) (again Shutdown is idempotent,
-// so it's safe to call multiple times).
-// In some cases (e.g. xpcshell), no profile notifications will be sent, so
-// instead we rely on the notifications "xpcom-shutdown" and
-// "xpcom-shutdown-threads", respectively.
-class DataStorageSharedThread final
-{
-public:
-=======
 // When Gecko shuts down, it will send a "profile-before-change" notification.
 // The first DataStorage instance to observe the notification will dispatch an
 // event for each known DataStorage (as tracked by sDataStorages) to write out
@@ -90,32 +60,14 @@ public:
 // instead we rely on the notification "xpcom-shutdown-threads".
 class DataStorageSharedThread final {
  public:
->>>>>>> upstream-releases
   static nsresult Initialize();
   static nsresult Shutdown();
   static nsresult Dispatch(nsIRunnable* event);
 
-<<<<<<< HEAD
- private:
-  DataStorageSharedThread() : mThread(nullptr) {}
-||||||| merged common ancestors
-private:
-  DataStorageSharedThread()
-    : mThread(nullptr)
-  { }
-=======
   virtual ~DataStorageSharedThread() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual ~DataStorageSharedThread() {}
-||||||| merged common ancestors
-  virtual ~DataStorageSharedThread()
-  { }
-=======
  private:
   DataStorageSharedThread() : mThread(nullptr) {}
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIThread> mThread;
 };
@@ -269,66 +221,7 @@ already_AddRefed<DataStorage> DataStorage::GetFromRawFileName(
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<DataStorage> DataStorage::GetIfExists(
-    DataStorageClass aFilename) {
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!sDataStorages) {
-    sDataStorages = new DataStorages();
-  }
-  nsString name;
-  switch (aFilename) {
-#define DATA_STORAGE(_)            \
-  case DataStorageClass::_:        \
-    name.AssignLiteral(#_ ".txt"); \
-    break;
-#include "mozilla/DataStorageList.h"
-#undef DATA_STORAGE
-    default:
-      MOZ_ASSERT_UNREACHABLE("Invalid DataStorages type passed?");
-  }
-  RefPtr<DataStorage> storage;
-  if (!name.IsEmpty()) {
-    sDataStorages->Get(name, getter_AddRefs(storage));
-  }
-  return storage.forget();
-}
-
-// static
 void DataStorage::GetAllFileNames(nsTArray<nsString>& aItems) {
-||||||| merged common ancestors
-already_AddRefed<DataStorage>
-DataStorage::GetIfExists(DataStorageClass aFilename)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  if (!sDataStorages) {
-    sDataStorages = new DataStorages();
-  }
-  nsString name;
-  switch (aFilename) {
-#define DATA_STORAGE(_)              \
-    case DataStorageClass::_:        \
-      name.AssignLiteral(#_ ".txt"); \
-      break;
-#include "mozilla/DataStorageList.h"
-#undef DATA_STORAGE
-    default:
-      MOZ_ASSERT_UNREACHABLE("Invalid DataStorages type passed?");
-  }
-  RefPtr<DataStorage> storage;
-  if (!name.IsEmpty()) {
-    sDataStorages->Get(name, getter_AddRefs(storage));
-  }
-  return storage.forget();
-}
-
-// static
-void
-DataStorage::GetAllFileNames(nsTArray<nsString>& aItems)
-{
-=======
-void DataStorage::GetAllFileNames(nsTArray<nsString>& aItems) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!sDataStorages) {
     return;
@@ -391,18 +284,8 @@ void DataStorage::SetCachedStorageEntries(
 
   for (auto& entry : entries) {
     RefPtr<DataStorage> storage =
-<<<<<<< HEAD
-        DataStorage::GetFromRawFileName(entry.filename());
-    bool dataWillPersist = false;
-    storage->Init(dataWillPersist, &entry.items());
-||||||| merged common ancestors
-      DataStorage::GetFromRawFileName(entry.filename());
-    bool dataWillPersist = false;
-    storage->Init(dataWillPersist, &entry.items());
-=======
         DataStorage::GetFromRawFileName(entry.filename());
     storage->Init(&entry.items());
->>>>>>> upstream-releases
   }
 }
 
@@ -416,19 +299,8 @@ size_t DataStorage::SizeOfIncludingThis(
   return aMallocSizeOf(this) + sizeOfExcludingThis;
 }
 
-<<<<<<< HEAD
-nsresult DataStorage::Init(
-    bool& aDataWillPersist,
-    const InfallibleTArray<mozilla::dom::DataStorageItem>* aItems) {
-||||||| merged common ancestors
-nsresult
-DataStorage::Init(bool& aDataWillPersist,
-                  const InfallibleTArray<mozilla::dom::DataStorageItem>* aItems)
-{
-=======
 nsresult DataStorage::Init(
     const InfallibleTArray<mozilla::dom::DataStorageItem>* aItems) {
->>>>>>> upstream-releases
   // Don't access the observer service or preferences off the main thread.
   if (!NS_IsMainThread()) {
     MOZ_ASSERT_UNREACHABLE("DataStorage::Init called off main thread");
@@ -725,17 +597,7 @@ nsresult DataStorage::Reader::ParseLine(nsDependentCSubstring& aLine,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult DataStorage::AsyncReadData(bool& aHaveProfileDir,
-                                    const MutexAutoLock& /*aProofOfLock*/) {
-||||||| merged common ancestors
-nsresult
-DataStorage::AsyncReadData(bool& aHaveProfileDir,
-                           const MutexAutoLock& /*aProofOfLock*/)
-{
-=======
 nsresult DataStorage::AsyncReadData(const MutexAutoLock& /*aProofOfLock*/) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   // Allocate a Reader so that even if it isn't dispatched,
   // the data-storage-ready notification will be fired and Get

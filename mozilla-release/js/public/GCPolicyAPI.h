@@ -51,23 +51,6 @@
 
 // Expand the given macro D for each public GC pointer.
 #define FOR_EACH_PUBLIC_GC_POINTER_TYPE(D) \
-<<<<<<< HEAD
-  D(JS::Symbol*)                           \
-  IF_BIGINT(D(JS::BigInt*), )              \
-  D(JSAtom*)                               \
-  D(JSFunction*)                           \
-  D(JSObject*)                             \
-  D(JSScript*)                             \
-  D(JSString*)
-||||||| merged common ancestors
-    D(JS::Symbol*) \
-    IF_BIGINT(D(JS::BigInt*),) \
-    D(JSAtom*) \
-    D(JSFunction*) \
-    D(JSObject*) \
-    D(JSScript*) \
-    D(JSString*)
-=======
   D(JS::Symbol*)                           \
   D(JS::BigInt*)                           \
   D(JSAtom*)                               \
@@ -75,7 +58,6 @@
   D(JSObject*)                             \
   D(JSScript*)                             \
   D(JSString*)
->>>>>>> upstream-releases
 
 // Expand the given macro D for each public tagged GC pointer type.
 #define FOR_EACH_PUBLIC_TAGGED_GC_POINTER_TYPE(D) \

@@ -34,43 +34,15 @@ using mozilla::LogLevel;
 
 static mozilla::LazyLogModule gWin32SoundLog("nsSound");
 
-<<<<<<< HEAD
-class nsSoundPlayer : public mozilla::Runnable {
- public:
-  explicit nsSoundPlayer(const nsAString &aSoundName)
-      : mozilla::Runnable("nsSoundPlayer"),
-        mSoundName(aSoundName),
-        mSoundData(nullptr) {}
-||||||| merged common ancestors
-class nsSoundPlayer: public mozilla::Runnable {
-public:
-  explicit nsSoundPlayer(const nsAString& aSoundName)
-    : mozilla::Runnable("nsSoundPlayer")
-    , mSoundName(aSoundName)
-    , mSoundData(nullptr)
-  {
-  }
-=======
 class nsSoundPlayer : public mozilla::Runnable {
  public:
   explicit nsSoundPlayer(const nsAString& aSoundName)
       : mozilla::Runnable("nsSoundPlayer"),
         mSoundName(aSoundName),
         mSoundData(nullptr) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsSoundPlayer(const uint8_t *aData, size_t aSize)
-      : mozilla::Runnable("nsSoundPlayer"), mSoundName(EmptyString()) {
-||||||| merged common ancestors
-  nsSoundPlayer(const uint8_t *aData, size_t aSize)
-    : mozilla::Runnable("nsSoundPlayer")
-    , mSoundName(EmptyString())
-  {
-=======
   nsSoundPlayer(const uint8_t* aData, size_t aSize)
       : mozilla::Runnable("nsSoundPlayer"), mSoundName(EmptyString()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aSize > 0, "Size should not be zero");
     MOZ_ASSERT(aData, "Data shoud not be null");
 
@@ -85,7 +57,7 @@ class nsSoundPlayer : public mozilla::Runnable {
   ~nsSoundPlayer();
 
   nsString mSoundName;
-  uint8_t *mSoundData;
+  uint8_t* mSoundData;
 };
 
 NS_IMETHODIMP
@@ -108,16 +80,8 @@ nsSoundPlayer::~nsSoundPlayer() { delete[] mSoundData; }
 
 mozilla::StaticRefPtr<nsISound> nsSound::sInstance;
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsISound> nsSound::GetInstance() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsISound>
-nsSound::GetInstance()
-{
-=======
 /* static */
 already_AddRefed<nsISound> nsSound::GetInstance() {
->>>>>>> upstream-releases
   if (!sInstance) {
     if (gfxPlatform::IsHeadless()) {
       sInstance = new mozilla::widget::HeadlessSound();
@@ -150,24 +114,6 @@ nsSound::~nsSound() {}
 
 void nsSound::PurgeLastSound() {
   // Halt any currently playing sound.
-<<<<<<< HEAD
-  if (mSoundPlayer) {
-    if (mPlayerThread) {
-      mPlayerThread->Dispatch(NS_NewRunnableFunction(
-        "nsSound::PurgeLastSound", [player = std::move(mSoundPlayer)]() {
-          // Capture move mSoundPlayer to lambda then
-          // PlaySoundW(nullptr, nullptr, SND_PURGE) will be called before
-          // freeing the nsSoundPlayer.
-          ::PlaySoundW(nullptr, nullptr, SND_PURGE);
-        }), NS_DISPATCH_NORMAL);
-    }
-||||||| merged common ancestors
-  if (mPlayerThread) {
-    mPlayerThread->Dispatch(NS_NewRunnableFunction("nsSound::PurgeLastSound",
-                                                   []() {
-      ::PlaySound(nullptr, nullptr, SND_PURGE);
-    }), NS_DISPATCH_NORMAL);
-=======
   if (mSoundPlayer) {
     if (mPlayerThread) {
       mPlayerThread->Dispatch(
@@ -181,7 +127,6 @@ void nsSound::PurgeLastSound() {
                                  }),
           NS_DISPATCH_NORMAL);
     }
->>>>>>> upstream-releases
   }
 }
 
@@ -191,22 +136,9 @@ NS_IMETHODIMP nsSound::Beep() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader *aLoader,
-                                        nsISupports *context, nsresult aStatus,
-                                        uint32_t dataLen, const uint8_t *data) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader *aLoader,
-                                        nsISupports *context,
-                                        nsresult aStatus,
-                                        uint32_t dataLen,
-                                        const uint8_t *data)
-{
-=======
 NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
                                         nsISupports* context, nsresult aStatus,
                                         uint32_t dataLen, const uint8_t* data) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mPlayerThread, "player thread should not be null ");
   // print a load error on bad status
   if (NS_FAILED(aStatus)) {
@@ -247,14 +179,7 @@ NS_IMETHODIMP nsSound::OnStreamComplete(nsIStreamLoader* aLoader,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsSound::Play(nsIURL *aURL) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsSound::Play(nsIURL *aURL)
-{
-=======
 NS_IMETHODIMP nsSound::Play(nsIURL* aURL) {
->>>>>>> upstream-releases
   nsresult rv;
 
 #ifdef DEBUG_SOUND
@@ -293,17 +218,8 @@ nsresult nsSound::CreatePlayerThread() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsSound::Observe(nsISupports *aSubject, const char *aTopic,
-                 const char16_t *aData) {
-||||||| merged common ancestors
-nsSound::Observe(nsISupports *aSubject, const char *aTopic,
-                 const char16_t *aData)
-{
-=======
 nsSound::Observe(nsISupports* aSubject, const char* aTopic,
                  const char16_t* aData) {
->>>>>>> upstream-releases
   if (!strcmp(aTopic, "xpcom-shutdown-threads")) {
     PurgeLastSound();
 

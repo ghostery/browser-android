@@ -20,14 +20,6 @@ class nsIThreadObserver;
 namespace mozilla {
 
 class EventQueue;
-<<<<<<< HEAD
-
-template <typename InnerQueueT>
-||||||| merged common ancestors
-
-template<typename InnerQueueT>
-=======
->>>>>>> upstream-releases
 class PrioritizedEventQueue;
 class ThreadEventTarget;
 
@@ -76,14 +68,7 @@ class ThreadEventQueue final : public SynchronizedEventQueue {
   virtual ~ThreadEventQueue();
 
   bool PutEventInternal(already_AddRefed<nsIRunnable>&& aEvent,
-<<<<<<< HEAD
-                        EventPriority aPriority, NestedSink* aQueue);
-||||||| merged common ancestors
-                        EventPriority aPriority,
-                        NestedSink* aQueue);
-=======
                         EventQueuePriority aPriority, NestedSink* aQueue);
->>>>>>> upstream-releases
 
   UniquePtr<InnerQueueT> mBaseQueue;
 
@@ -106,16 +91,7 @@ class ThreadEventQueue final : public SynchronizedEventQueue {
 };
 
 extern template class ThreadEventQueue<EventQueue>;
-<<<<<<< HEAD
-extern template class ThreadEventQueue<PrioritizedEventQueue<EventQueue>>;
-extern template class ThreadEventQueue<
-    PrioritizedEventQueue<LabeledEventQueue>>;
-||||||| merged common ancestors
-extern template class ThreadEventQueue<PrioritizedEventQueue<EventQueue>>;
-extern template class ThreadEventQueue<PrioritizedEventQueue<LabeledEventQueue>>;
-=======
 extern template class ThreadEventQueue<PrioritizedEventQueue>;
->>>>>>> upstream-releases
 
 };  // namespace mozilla
 

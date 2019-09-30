@@ -45,12 +45,7 @@
 #  include "nsString.h"
 #endif
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-using mozilla::dom::Selection;
-=======
 using mozilla::dom::Document;
->>>>>>> upstream-releases
 using mozilla::dom::Element;
 using mozilla::dom::Selection;
 
@@ -322,49 +317,9 @@ nsWebBrowserFind::SetMatchCase(bool aMatchCase) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static bool IsInNativeAnonymousSubtree(nsIContent* aContent) {
-  while (aContent) {
-    nsIContent* bindingParent = aContent->GetBindingParent();
-    if (bindingParent == aContent) {
-      return true;
-    }
-
-    aContent = bindingParent;
-  }
-
-  return false;
-}
-
-void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
-                                             nsRange* aRange) {
-  nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
-||||||| merged common ancestors
-static bool
-IsInNativeAnonymousSubtree(nsIContent* aContent)
-{
-  while (aContent) {
-    nsIContent* bindingParent = aContent->GetBindingParent();
-    if (bindingParent == aContent) {
-      return true;
-    }
-
-    aContent = bindingParent;
-  }
-
-  return false;
-}
-
-void
-nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
-                                        nsRange* aRange)
-{
-  nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
-=======
 void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
                                              nsRange* aRange) {
   RefPtr<Document> doc = aWindow->GetDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -432,15 +387,7 @@ void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
 }
 
 // Adapted from TextServicesDocument::GetDocumentContentRootNode
-<<<<<<< HEAD
-nsresult nsWebBrowserFind::GetRootNode(nsIDocument* aDoc, Element** aNode) {
-||||||| merged common ancestors
-nsresult
-nsWebBrowserFind::GetRootNode(nsIDocument* aDoc, Element** aNode)
-{
-=======
 nsresult nsWebBrowserFind::GetRootNode(Document* aDoc, Element** aNode) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aDoc);
   NS_ENSURE_ARG_POINTER(aNode);
   *aNode = 0;
@@ -459,24 +406,10 @@ nsresult nsWebBrowserFind::GetRootNode(Document* aDoc, Element** aNode) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
-                                                  nsRange* aStartPt,
-                                                  nsRange* aEndPt,
-                                                  nsIDocument* aDoc) {
-||||||| merged common ancestors
-nsresult
-nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
-                                         nsRange* aStartPt,
-                                         nsRange* aEndPt,
-                                         nsIDocument* aDoc)
-{
-=======
 nsresult nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
                                                   nsRange* aStartPt,
                                                   nsRange* aEndPt,
                                                   Document* aDoc) {
->>>>>>> upstream-releases
   RefPtr<Element> bodyContent;
   nsresult rv = GetRootNode(aDoc, getter_AddRefs(bodyContent));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -505,24 +438,10 @@ nsresult nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
 // Set the range to go from the end of the current selection to the end of the
 // document (forward), or beginning to beginning (reverse). or around the whole
 // document if there's no selection.
-<<<<<<< HEAD
-nsresult nsWebBrowserFind::GetSearchLimits(nsRange* aSearchRange,
-                                           nsRange* aStartPt, nsRange* aEndPt,
-                                           nsIDocument* aDoc, Selection* aSel,
-                                           bool aWrap) {
-||||||| merged common ancestors
-nsresult
-nsWebBrowserFind::GetSearchLimits(nsRange* aSearchRange,
-                                  nsRange* aStartPt, nsRange* aEndPt,
-                                  nsIDocument* aDoc, Selection* aSel,
-                                  bool aWrap)
-{
-=======
 nsresult nsWebBrowserFind::GetSearchLimits(nsRange* aSearchRange,
                                            nsRange* aStartPt, nsRange* aEndPt,
                                            Document* aDoc, Selection* aSel,
                                            bool aWrap) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aSel);
 
   // There is a selection.
@@ -782,20 +701,9 @@ nsresult nsWebBrowserFind::OnEndSearchFrame(nsPIDOMWindowOuter* aWindow) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Selection> nsWebBrowserFind::GetFrameSelection(
-    nsPIDOMWindowOuter* aWindow) {
-  nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
-||||||| merged common ancestors
-already_AddRefed<Selection>
-nsWebBrowserFind::GetFrameSelection(nsPIDOMWindowOuter* aWindow)
-{
-  nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
-=======
 already_AddRefed<Selection> nsWebBrowserFind::GetFrameSelection(
     nsPIDOMWindowOuter* aWindow) {
   RefPtr<Document> doc = aWindow->GetDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return nullptr;
   }

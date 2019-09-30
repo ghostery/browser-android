@@ -10,44 +10,24 @@
 // Keep others in (case-insensitive) order:
 #include "mozilla/css/ImageLoader.h"
 #include "mozilla/dom/CanvasRenderingContext2D.h"
-<<<<<<< HEAD
-#include "mozilla/net/ReferrerPolicy.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/net/ReferrerPolicy.h"
 #include "mozilla/PresShell.h"
->>>>>>> upstream-releases
 #include "mozilla/RestyleManager.h"
 #include "nsCSSFrameConstructor.h"
-<<<<<<< HEAD
-#include "nsCycleCollectionParticipant.h"
-#include "nsIContent.h"
-#include "nsIContentInlines.h"
-#include "nsIReflowCallback.h"
-||||||| merged common ancestors
-=======
 #include "nsCycleCollectionParticipant.h"
 #include "nsHashKeys.h"
 #include "nsIContent.h"
 #include "nsIContentInlines.h"
 #include "nsInterfaceHashtable.h"
 #include "nsIReflowCallback.h"
->>>>>>> upstream-releases
 #include "nsISupportsImpl.h"
 #include "nsSVGClipPathFrame.h"
 #include "nsSVGFilterFrame.h"
 #include "nsSVGMarkerFrame.h"
 #include "nsSVGMaskFrame.h"
-<<<<<<< HEAD
-#include "nsSVGPaintServerFrame.h"
-||||||| merged common ancestors
-#include "nsIReflowCallback.h"
-#include "nsCycleCollectionParticipant.h"
-=======
 #include "nsSVGPaintServerFrame.h"
 #include "nsTHashtable.h"
 #include "nsURIHashKey.h"
->>>>>>> upstream-releases
 #include "SVGGeometryElement.h"
 #include "SVGTextPathElement.h"
 #include "SVGUseElement.h"
@@ -55,21 +35,10 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-static already_AddRefed<URLAndReferrerInfo> ResolveURLUsingLocalRef(
-    nsIFrame* aFrame, const css::URLValue* aURL) {
-  MOZ_ASSERT(aFrame);
-||||||| merged common ancestors
-static already_AddRefed<URLAndReferrerInfo>
-ResolveURLUsingLocalRef(nsIFrame* aFrame, const css::URLValue* aURL)
-{
-  MOZ_ASSERT(aFrame);
-=======
 bool URLAndReferrerInfo::operator==(const URLAndReferrerInfo& aRHS) const {
   bool uriEqual = false, referrerEqual = false;
   this->mURI->Equals(aRHS.mURI, &uriEqual);
   this->mReferrer->Equals(aRHS.mReferrer, &referrerEqual);
->>>>>>> upstream-releases
 
   return uriEqual && referrerEqual &&
          this->mReferrerPolicy == aRHS.mReferrerPolicy;
@@ -139,13 +108,7 @@ static already_AddRefed<URLAndReferrerInfo> ResolveURLUsingLocalRef(
   }
 
   RefPtr<URLAndReferrerInfo> info =
-<<<<<<< HEAD
-      new URLAndReferrerInfo(uri, aURL->ExtraData());
-||||||| merged common ancestors
-    new URLAndReferrerInfo(uri, aURL->ExtraData());
-=======
       new URLAndReferrerInfo(uri, aURL.ExtraData());
->>>>>>> upstream-releases
   return info.forget();
 }
 
@@ -231,16 +194,9 @@ nsIFrame* SVGRenderingObserver::GetAndObserveReferencedFrame(
     LayoutFrameType aFrameType, bool* aOK) {
   nsIFrame* frame = GetAndObserveReferencedFrame();
   if (frame) {
-<<<<<<< HEAD
-    if (frame->Type() == aFrameType) return frame;
-||||||| merged common ancestors
-    if (frame->Type() == aFrameType)
-      return frame;
-=======
     if (frame->Type() == aFrameType) {
       return frame;
     }
->>>>>>> upstream-releases
     if (aOK) {
       *aOK = false;
     }
@@ -248,36 +204,14 @@ nsIFrame* SVGRenderingObserver::GetAndObserveReferencedFrame(
   return nullptr;
 }
 
-<<<<<<< HEAD
-void SVGRenderingObserver::OnNonDOMMutationRenderingChange() {
-  mInObserverList = false;
-||||||| merged common ancestors
-void
-SVGRenderingObserver::OnNonDOMMutationRenderingChange()
-{
-  mInObserverList = false;
-=======
 void SVGRenderingObserver::OnNonDOMMutationRenderingChange() {
   mInObserverSet = false;
->>>>>>> upstream-releases
   OnRenderingChange();
 }
 
-<<<<<<< HEAD
-void SVGRenderingObserver::NotifyEvictedFromRenderingObserverSet() {
-  mInObserverList = false;  // We've been removed from rendering-obs. list.
-  StopObserving();          // Remove ourselves from mutation-obs. list.
-||||||| merged common ancestors
-void
-SVGRenderingObserver::NotifyEvictedFromRenderingObserverSet()
-{
-  mInObserverList = false; // We've been removed from rendering-obs. list.
-  StopObserving();            // Remove ourselves from mutation-obs. list.
-=======
 void SVGRenderingObserver::NotifyEvictedFromRenderingObserverSet() {
   mInObserverSet = false;  // We've been removed from rendering-obs. set.
   StopObserving();         // Stop observing mutations too.
->>>>>>> upstream-releases
 }
 
 void SVGRenderingObserver::AttributeChanged(dom::Element* aElement,
@@ -407,26 +341,11 @@ SVGIDRenderingObserver::SVGIDRenderingObserver(URLAndReferrerInfo* aURI,
   StartObserving();
 }
 
-<<<<<<< HEAD
-void SVGIDRenderingObserver::OnRenderingChange() {
-  if (mObservedElementTracker.get() && mInObserverList) {
-    SVGObserverUtils::RemoveRenderingObserver(mObservedElementTracker.get(),
-                                              this);
-    mInObserverList = false;
-||||||| merged common ancestors
-void
-SVGIDRenderingObserver::OnRenderingChange()
-{
-  if (mObservedElementTracker.get() && mInObserverList) {
-    SVGObserverUtils::RemoveRenderingObserver(mObservedElementTracker.get(), this);
-    mInObserverList = false;
-=======
 void SVGIDRenderingObserver::OnRenderingChange() {
   if (mObservedElementTracker.get() && mInObserverSet) {
     SVGObserverUtils::RemoveRenderingObserver(mObservedElementTracker.get(),
                                               this);
     mInObserverSet = false;
->>>>>>> upstream-releases
   }
 }
 
@@ -460,19 +379,9 @@ void nsSVGRenderingObserverProperty::OnRenderingChange() {
     // Since walking the parent chain checking for observers is expensive we
     // do that using a change hint (multiple change hints of the same type are
     // coalesced).
-<<<<<<< HEAD
-    nsLayoutUtils::PostRestyleEvent(frame->GetContent()->AsElement(),
-                                    nsRestyleHint(0),
-                                    nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-    nsLayoutUtils::PostRestyleEvent(
-      frame->GetContent()->AsElement(), nsRestyleHint(0),
-      nsChangeHint_InvalidateRenderingObservers);
-=======
     nsLayoutUtils::PostRestyleEvent(frame->GetContent()->AsElement(),
                                     RestyleHint{0},
                                     nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
   }
 }
 
@@ -532,13 +441,7 @@ void SVGTextPathObserver::OnRenderingChange() {
   nsChangeHint changeHint =
       nsChangeHint(nsChangeHint_RepaintFrame | nsChangeHint_UpdateTextPath);
   frame->PresContext()->RestyleManager()->PostRestyleEvent(
-<<<<<<< HEAD
-      frame->GetContent()->AsElement(), nsRestyleHint(0), changeHint);
-||||||| merged common ancestors
-    frame->GetContent()->AsElement(), nsRestyleHint(0), changeHint);
-=======
       frame->GetContent()->AsElement(), RestyleHint{0}, changeHint);
->>>>>>> upstream-releases
 }
 
 class SVGMarkerObserver final : public nsSVGRenderingObserverProperty {
@@ -569,16 +472,8 @@ void SVGMarkerObserver::OnRenderingChange() {
     nsSVGUtils::ScheduleReflowSVG(frame);
   }
   frame->PresContext()->RestyleManager()->PostRestyleEvent(
-<<<<<<< HEAD
-      frame->GetContent()->AsElement(), nsRestyleHint(0),
-      nsChangeHint_RepaintFrame);
-||||||| merged common ancestors
-    frame->GetContent()->AsElement(), nsRestyleHint(0),
-    nsChangeHint_RepaintFrame);
-=======
       frame->GetContent()->AsElement(), RestyleHint{0},
       nsChangeHint_RepaintFrame);
->>>>>>> upstream-releases
 }
 
 class nsSVGPaintingProperty : public nsSVGRenderingObserverProperty {
@@ -609,21 +504,6 @@ void nsSVGPaintingProperty::OnRenderingChange() {
   }
 }
 
-<<<<<<< HEAD
-class SVGMozElementObserver final : public nsSVGPaintingProperty {
- public:
-  SVGMozElementObserver(URLAndReferrerInfo* aURI, nsIFrame* aFrame,
-                        bool aReferenceImage)
-      : nsSVGPaintingProperty(aURI, aFrame, aReferenceImage) {}
-
-  // We only return true here because GetAndObserveBackgroundImage uses us
-  // to implement observing of arbitrary elements (including HTML elements)
-  // that may require us to repaint if the referenced element is reflowed.
-  // Bug 1496065 has been filed to remove that support though.
-  bool ObservesReflow() override { return true; }
-};
-||||||| merged common ancestors
-=======
 class SVGMozElementObserver final : public nsSVGPaintingProperty {
  public:
   SVGMozElementObserver(URLAndReferrerInfo* aURI, nsIFrame* aFrame,
@@ -688,7 +568,6 @@ void BackgroundClipRenderingObserver::OnRenderingChange() {
     f->InvalidateFrame();
   }
 }
->>>>>>> upstream-releases
 
 /**
  * In a filter chain, there can be multiple SVG reference filters.
@@ -771,20 +650,9 @@ nsSVGFilterFrame* SVGFilterObserver::GetAndObserveFilterFrame() {
  * need an SVGFilterObserver.  The style system invalidates changes to CSS
  * filters.
  */
-<<<<<<< HEAD
-class SVGFilterObserverList : public nsISupports {
- public:
-  SVGFilterObserverList(const nsTArray<nsStyleFilter>& aFilters,
-||||||| merged common ancestors
-class SVGFilterObserverList : public nsISupports
-{
-public:
-  SVGFilterObserverList(const nsTArray<nsStyleFilter>& aFilters,
-=======
 class SVGFilterObserverList : public nsISupports {
  public:
   SVGFilterObserverList(Span<const StyleFilter> aFilters,
->>>>>>> upstream-releases
                         nsIContent* aFilteredElement,
                         nsIFrame* aFilteredFrame = nullptr);
 
@@ -840,26 +708,11 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(SVGFilterObserverList)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-SVGFilterObserverList::SVGFilterObserverList(
-    const nsTArray<nsStyleFilter>& aFilters, nsIContent* aFilteredElement,
-    nsIFrame* aFilteredFrame) {
-  for (uint32_t i = 0; i < aFilters.Length(); i++) {
-    if (aFilters[i].GetType() != NS_STYLE_FILTER_URL) {
-||||||| merged common ancestors
-SVGFilterObserverList::SVGFilterObserverList(const nsTArray<nsStyleFilter>& aFilters,
-                                             nsIContent* aFilteredElement,
-                                             nsIFrame* aFilteredFrame)
-{
-  for (uint32_t i = 0; i < aFilters.Length(); i++) {
-    if (aFilters[i].GetType() != NS_STYLE_FILTER_URL) {
-=======
 SVGFilterObserverList::SVGFilterObserverList(Span<const StyleFilter> aFilters,
                                              nsIContent* aFilteredElement,
                                              nsIFrame* aFilteredFrame) {
   for (const auto& filter : aFilters) {
     if (!filter.IsUrl()) {
->>>>>>> upstream-releases
       continue;
     }
 
@@ -871,26 +724,9 @@ SVGFilterObserverList::SVGFilterObserverList(Span<const StyleFilter> aFilters,
     if (aFilteredFrame) {
       filterURL = ResolveURLUsingLocalRef(aFilteredFrame, url);
     } else {
-<<<<<<< HEAD
-      nsCOMPtr<nsIURI> resolvedURI =
-          aFilters[i].GetURL()->ResolveLocalRef(aFilteredElement);
-||||||| merged common ancestors
-      nsCOMPtr<nsIURI> resolvedURI =
-        aFilters[i].GetURL()->ResolveLocalRef(aFilteredElement);
-=======
       nsCOMPtr<nsIURI> resolvedURI = url.ResolveLocalRef(aFilteredElement);
->>>>>>> upstream-releases
       if (resolvedURI) {
-<<<<<<< HEAD
-        filterURL = new URLAndReferrerInfo(resolvedURI,
-                                           aFilters[i].GetURL()->ExtraData());
-||||||| merged common ancestors
-        filterURL = new URLAndReferrerInfo(
-          resolvedURI,
-          aFilters[i].GetURL()->ExtraData());
-=======
         filterURL = new URLAndReferrerInfo(resolvedURI, url.ExtraData());
->>>>>>> upstream-releases
       }
     }
 
@@ -911,21 +747,9 @@ bool SVGFilterObserverList::ReferencesValidResources() {
   return true;
 }
 
-<<<<<<< HEAD
-class SVGFilterObserverListForCSSProp final : public SVGFilterObserverList {
- public:
-  SVGFilterObserverListForCSSProp(const nsTArray<nsStyleFilter>& aFilters,
-||||||| merged common ancestors
-
-class SVGFilterObserverListForCSSProp final : public SVGFilterObserverList
-{
-public:
-  SVGFilterObserverListForCSSProp(const nsTArray<nsStyleFilter>& aFilters,
-=======
 class SVGFilterObserverListForCSSProp final : public SVGFilterObserverList {
  public:
   SVGFilterObserverListForCSSProp(Span<const StyleFilter> aFilters,
->>>>>>> upstream-releases
                                   nsIFrame* aFilteredFrame)
       : SVGFilterObserverList(aFilters, aFilteredFrame->GetContent(),
                               aFilteredFrame),
@@ -941,16 +765,9 @@ class SVGFilterObserverListForCSSProp final : public SVGFilterObserverList {
 
 void SVGFilterObserverListForCSSProp::OnRenderingChange() {
   nsIFrame* frame = mFrameReference.Get();
-<<<<<<< HEAD
-  if (!frame) return;
-||||||| merged common ancestors
-  if (!frame)
-    return;
-=======
   if (!frame) {
     return;
   }
->>>>>>> upstream-releases
 
   // Repaint asynchronously in case the filter frame is being torn down
   nsChangeHint changeHint = nsChangeHint(nsChangeHint_RepaintFrame);
@@ -968,13 +785,7 @@ void SVGFilterObserverListForCSSProp::OnRenderingChange() {
     changeHint |= nsChangeHint_UpdateOverflow;
   }
   frame->PresContext()->RestyleManager()->PostRestyleEvent(
-<<<<<<< HEAD
-      frame->GetContent()->AsElement(), nsRestyleHint(0), changeHint);
-||||||| merged common ancestors
-    frame->GetContent()->AsElement(), nsRestyleHint(0), changeHint);
-=======
       frame->GetContent()->AsElement(), RestyleHint{0}, changeHint);
->>>>>>> upstream-releases
 }
 
 class SVGFilterObserverListForCanvasContext final
@@ -982,18 +793,8 @@ class SVGFilterObserverListForCanvasContext final
  public:
   SVGFilterObserverListForCanvasContext(CanvasRenderingContext2D* aContext,
                                         Element* aCanvasElement,
-<<<<<<< HEAD
-                                        nsTArray<nsStyleFilter>& aFilters)
-      : SVGFilterObserverList(aFilters, aCanvasElement), mContext(aContext) {}
-||||||| merged common ancestors
-                                        nsTArray<nsStyleFilter>& aFilters)
-    : SVGFilterObserverList(aFilters, aCanvasElement)
-    , mContext(aContext)
-  {}
-=======
                                         Span<const StyleFilter> aFilters)
       : SVGFilterObserverList(aFilters, aCanvasElement), mContext(aContext) {}
->>>>>>> upstream-releases
 
   void OnRenderingChange() override;
   void DetachFromContext() { mContext = nullptr; }
@@ -1039,20 +840,12 @@ SVGMaskObserverList::SVGMaskObserverList(nsIFrame* aFrame) : mFrame(aFrame) {
   const nsStyleSVGReset* svgReset = aFrame->StyleSVGReset();
 
   for (uint32_t i = 0; i < svgReset->mMask.mImageCount; i++) {
-<<<<<<< HEAD
-    const css::URLValue* data = svgReset->mMask.mLayers[i].mImage.GetURLValue();
-    RefPtr<URLAndReferrerInfo> maskUri = ResolveURLUsingLocalRef(aFrame, data);
-||||||| merged common ancestors
-    css::URLValue* data = svgReset->mMask.mLayers[i].mImage.GetURLValue();
-    RefPtr<URLAndReferrerInfo> maskUri = ResolveURLUsingLocalRef(aFrame, data);
-=======
     const StyleComputedImageUrl* data =
         svgReset->mMask.mLayers[i].mImage.GetURLValue();
     RefPtr<URLAndReferrerInfo> maskUri;
     if (data) {
       maskUri = ResolveURLUsingLocalRef(aFrame, *data);
     }
->>>>>>> upstream-releases
 
     bool hasRef = false;
     if (maskUri) {
@@ -1271,48 +1064,22 @@ void SVGRenderingObserver::DebugObserverSet() {
   if (referencedElement) {
     SVGRenderingObserverSet* observers = GetObserverSet(referencedElement);
     bool inObserverSet = observers && observers->Contains(this);
-<<<<<<< HEAD
-    MOZ_ASSERT(inObserverSet == mInObserverList,
-               "failed to track whether we're in our referenced element's "
-               "observer set!");
-||||||| merged common ancestors
-    MOZ_ASSERT(inObserverSet == mInObserverList,
-      "failed to track whether we're in our referenced element's observer set!");
-=======
     MOZ_ASSERT(inObserverSet == mInObserverSet,
                "failed to track whether we're in our referenced element's "
                "observer set!");
->>>>>>> upstream-releases
   } else {
     MOZ_ASSERT(!mInObserverSet, "In whose observer set are we, then?");
   }
 }
 #endif
 
-<<<<<<< HEAD
-typedef nsInterfaceHashtable<nsRefPtrHashKey<URLAndReferrerInfo>,
-                             nsIMutationObserver>
-    URIObserverHashtable;
-||||||| merged common ancestors
-
-typedef nsInterfaceHashtable<nsRefPtrHashKey<URLAndReferrerInfo>,
-                             nsIMutationObserver> URIObserverHashtable;
-=======
 typedef nsInterfaceHashtable<URLAndReferrerInfoHashKey, nsIMutationObserver>
     URIObserverHashtable;
->>>>>>> upstream-releases
 
 using PaintingPropertyDescriptor =
     const mozilla::FramePropertyDescriptor<nsSVGPaintingProperty>*;
 
-<<<<<<< HEAD
-void DestroyFilterProperty(SVGFilterObserverListForCSSProp* aProp) {
-||||||| merged common ancestors
-void DestroyFilterProperty(SVGFilterObserverListForCSSProp* aProp)
-{
-=======
 static void DestroyFilterProperty(SVGFilterObserverListForCSSProp* aProp) {
->>>>>>> upstream-releases
   // SVGFilterObserverListForCSSProp is cycle-collected, so dropping the last
   // reference doesn't necessarily destroy it. We need to tell it that the
   // frame has now become invalid.
@@ -1337,23 +1104,6 @@ NS_DECLARE_FRAME_PROPERTY_RELEASABLE(HrefAsTextPathProperty,
                                      SVGTextPathObserver)
 NS_DECLARE_FRAME_PROPERTY_DELETABLE(BackgroundImageProperty,
                                     URIObserverHashtable)
-<<<<<<< HEAD
-
-template <class T>
-static T* GetEffectProperty(
-    URLAndReferrerInfo* aURI, nsIFrame* aFrame,
-    const mozilla::FramePropertyDescriptor<T>* aProperty) {
-  if (!aURI) return nullptr;
-||||||| merged common ancestors
-
-template<class T>
-static T*
-GetEffectProperty(URLAndReferrerInfo* aURI, nsIFrame* aFrame,
-  const mozilla::FramePropertyDescriptor<T>* aProperty)
-{
-  if (!aURI)
-    return nullptr;
-=======
 NS_DECLARE_FRAME_PROPERTY_RELEASABLE(BackgroundClipObserverProperty,
                                      BackgroundClipRenderingObserver)
 
@@ -1364,23 +1114,13 @@ static T* GetEffectProperty(
   if (!aURI) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  T* prop = aFrame->GetProperty(aProperty);
-  if (prop) return prop;
-||||||| merged common ancestors
-  T* prop = aFrame->GetProperty(aProperty);
-  if (prop)
-    return prop;
-=======
   bool found;
   T* prop = aFrame->GetProperty(aProperty, &found);
   if (found) {
     MOZ_ASSERT(prop, "this property should only store non-null values");
     return prop;
   }
->>>>>>> upstream-releases
   prop = new T(aURI, aFrame, false);
   NS_ADDREF(prop);
   aFrame->AddProperty(aProperty, prop);
@@ -1393,17 +1133,6 @@ static nsSVGPaintingProperty* GetPaintingProperty(
   return GetEffectProperty(aURI, aFrame, aProperty);
 }
 
-<<<<<<< HEAD
-static already_AddRefed<URLAndReferrerInfo> GetMarkerURI(
-    nsIFrame* aFrame, RefPtr<css::URLValue> nsStyleSVG::*aMarker) {
-  return ResolveURLUsingLocalRef(aFrame, aFrame->StyleSVG()->*aMarker);
-||||||| merged common ancestors
-
-static already_AddRefed<URLAndReferrerInfo>
-GetMarkerURI(nsIFrame* aFrame, RefPtr<css::URLValue> nsStyleSVG::* aMarker)
-{
-  return ResolveURLUsingLocalRef(aFrame, aFrame->StyleSVG()->*aMarker);
-=======
 static already_AddRefed<URLAndReferrerInfo> GetMarkerURI(
     nsIFrame* aFrame, const StyleUrlOrNone nsStyleSVG::*aMarker) {
   const StyleUrlOrNone& url = aFrame->StyleSVG()->*aMarker;
@@ -1411,7 +1140,6 @@ static already_AddRefed<URLAndReferrerInfo> GetMarkerURI(
     return nullptr;
   }
   return ResolveURLUsingLocalRef(aFrame, url.AsUrl());
->>>>>>> upstream-releases
 }
 
 bool SVGObserverUtils::GetAndObserveMarkers(nsIFrame* aMarkedFrame,
@@ -1427,28 +1155,6 @@ bool SVGObserverUtils::GetAndObserveMarkers(nsIFrame* aMarkedFrame,
   SVGMarkerObserver* observer;
   nsIFrame* marker;
 
-<<<<<<< HEAD
-#define GET_MARKER(type)                                                    \
-  markerURL = GetMarkerURI(aMarkedFrame, &nsStyleSVG::mMarker##type);       \
-  observer =                                                                \
-      GetEffectProperty(markerURL, aMarkedFrame, Marker##type##Property()); \
-  marker = observer ? observer->GetAndObserveReferencedFrame(               \
-                          LayoutFrameType::SVGMarker, nullptr)              \
-                    : nullptr;                                              \
-  foundMarker = foundMarker || bool(marker);                                \
-  (*aFrames)[nsSVGMark::e##type] = static_cast<nsSVGMarkerFrame*>(marker);
-||||||| merged common ancestors
-#define GET_MARKER(type)                                                      \
-  markerURL = GetMarkerURI(aMarkedFrame, &nsStyleSVG::mMarker##type);         \
-  observer = GetEffectProperty(markerURL, aMarkedFrame,                       \
-                               Marker##type##Property());                     \
-  marker = observer ?                                                         \
-           observer->GetAndObserveReferencedFrame(LayoutFrameType::SVGMarker, \
-                                                  nullptr) :                  \
-           nullptr;                                                           \
-  foundMarker = foundMarker || bool(marker);                                  \
-  (*aFrames)[nsSVGMark::e##type] = static_cast<nsSVGMarkerFrame*>(marker);
-=======
 #define GET_MARKER(type)                                                    \
   markerURL = GetMarkerURI(aMarkedFrame, &nsStyleSVG::mMarker##type);       \
   observer =                                                                \
@@ -1458,7 +1164,6 @@ bool SVGObserverUtils::GetAndObserveMarkers(nsIFrame* aMarkedFrame,
                     : nullptr;                                              \
   foundMarker = foundMarker || bool(marker);                                \
   (*aFrames)[SVGMark::e##type] = static_cast<nsSVGMarkerFrame*>(marker);
->>>>>>> upstream-releases
 
   GET_MARKER(Start)
   GET_MARKER(Mid)
@@ -1482,17 +1187,9 @@ static SVGFilterObserverListForCSSProp* GetOrCreateFilterObserverListForCSS(
 
   bool found;
   SVGFilterObserverListForCSSProp* observers =
-<<<<<<< HEAD
-      aFrame->GetProperty(FilterProperty());
-  if (observers) {
-||||||| merged common ancestors
-    aFrame->GetProperty(FilterProperty());
-  if (observers) {
-=======
       aFrame->GetProperty(FilterProperty(), &found);
   if (found) {
     MOZ_ASSERT(observers, "this property should only store non-null values");
->>>>>>> upstream-releases
     return observers;
   }
   observers =
@@ -1545,28 +1242,11 @@ SVGObserverUtils::ReferenceState SVGObserverUtils::GetFiltersIfObserving(
   return ::GetAndObserveFilters(observerList, aFilterFrames);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsISupports> SVGObserverUtils::ObserveFiltersForCanvasContext(
-    CanvasRenderingContext2D* aContext, Element* aCanvasElement,
-    nsTArray<nsStyleFilter>& aFilters) {
-  return do_AddRef(new SVGFilterObserverListForCanvasContext(
-      aContext, aCanvasElement, aFilters));
-||||||| merged common ancestors
-already_AddRefed<nsISupports>
-SVGObserverUtils::ObserveFiltersForCanvasContext(CanvasRenderingContext2D* aContext,
-                                                 Element* aCanvasElement,
-                                                 nsTArray<nsStyleFilter>& aFilters)
-{
-  return do_AddRef(new SVGFilterObserverListForCanvasContext(aContext,
-                                                             aCanvasElement,
-                                                             aFilters));
-=======
 already_AddRefed<nsISupports> SVGObserverUtils::ObserveFiltersForCanvasContext(
     CanvasRenderingContext2D* aContext, Element* aCanvasElement,
     const Span<const StyleFilter> aFilters) {
   return do_AddRef(new SVGFilterObserverListForCanvasContext(
       aContext, aCanvasElement, aFilters));
->>>>>>> upstream-releases
 }
 
 void SVGObserverUtils::DetachFromCanvasContext(nsISupports* aAutoObserver) {
@@ -1583,19 +1263,10 @@ static nsSVGPaintingProperty* GetOrCreateClipPathObserver(
   if (svgStyleReset->mClipPath.GetType() != StyleShapeSourceType::Image) {
     return nullptr;
   }
-<<<<<<< HEAD
-  const css::URLValue& url = svgStyleReset->mClipPath.URL();
-  RefPtr<URLAndReferrerInfo> pathURI =
-      ResolveURLUsingLocalRef(aClippedFrame, &url);
-||||||| merged common ancestors
-  css::URLValue* url = svgStyleReset->mClipPath.GetURL();
-  RefPtr<URLAndReferrerInfo> pathURI = ResolveURLUsingLocalRef(aClippedFrame, url);
-=======
   const auto* url = svgStyleReset->mClipPath.ShapeImage().GetURLValue();
   MOZ_ASSERT(url);
   RefPtr<URLAndReferrerInfo> pathURI =
       ResolveURLUsingLocalRef(aClippedFrame, *url);
->>>>>>> upstream-releases
   return GetPaintingProperty(pathURI, aClippedFrame, ClipPathProperty());
 }
 
@@ -1635,19 +1306,10 @@ static SVGMaskObserverList* GetOrCreateMaskObserverList(
 
   MOZ_ASSERT(style->mMask.mImageCount > 0);
 
-<<<<<<< HEAD
-  SVGMaskObserverList* prop = aMaskedFrame->GetProperty(MaskProperty());
-  if (prop) {
-||||||| merged common ancestors
-  SVGMaskObserverList* prop =
-    aMaskedFrame->GetProperty(MaskProperty());
-  if (prop) {
-=======
   bool found;
   SVGMaskObserverList* prop = aMaskedFrame->GetProperty(MaskProperty(), &found);
   if (found) {
     MOZ_ASSERT(prop, "this property should only store non-null values");
->>>>>>> upstream-releases
     return prop;
   }
   prop = new SVGMaskObserverList(aMaskedFrame);
@@ -1780,28 +1442,12 @@ void SVGObserverUtils::RemoveTemplateObserver(nsIFrame* aFrame) {
   aFrame->DeleteProperty(HrefToTemplateProperty());
 }
 
-<<<<<<< HEAD
-Element* SVGObserverUtils::GetAndObserveBackgroundImage(nsIFrame* aFrame,
-                                                        const nsAtom* aHref) {
-  URIObserverHashtable* hashtable =
-      aFrame->GetProperty(BackgroundImageProperty());
-  if (!hashtable) {
-||||||| merged common ancestors
-Element*
-SVGObserverUtils::GetAndObserveBackgroundImage(nsIFrame* aFrame,
-                                               const nsAtom* aHref)
-{
-  URIObserverHashtable *hashtable =
-    aFrame->GetProperty(BackgroundImageProperty());
-  if (!hashtable) {
-=======
 Element* SVGObserverUtils::GetAndObserveBackgroundImage(nsIFrame* aFrame,
                                                         const nsAtom* aHref) {
   bool found;
   URIObserverHashtable* hashtable =
       aFrame->GetProperty(BackgroundImageProperty(), &found);
   if (!found) {
->>>>>>> upstream-releases
     hashtable = new URIObserverHashtable();
     aFrame->AddProperty(BackgroundImageProperty(), hashtable);
   } else {
@@ -1816,30 +1462,11 @@ Element* SVGObserverUtils::GetAndObserveBackgroundImage(nsIFrame* aFrame,
       getter_AddRefs(targetURI), elementId,
       aFrame->GetContent()->GetUncomposedDoc(), base);
   RefPtr<URLAndReferrerInfo> url = new URLAndReferrerInfo(
-<<<<<<< HEAD
-      targetURI, aFrame->GetContent()->OwnerDoc()->GetDocumentURI(),
-      aFrame->GetContent()->OwnerDoc()->GetReferrerPolicy());
-
-  // XXXjwatt: this is broken - we're using the address of a new
-  // URLAndReferrerInfo as the hash key every time!
-  SVGMozElementObserver* observer =
-      static_cast<SVGMozElementObserver*>(hashtable->GetWeak(url));
-||||||| merged common ancestors
-    targetURI,
-    aFrame->GetContent()->OwnerDoc()->GetDocumentURI(),
-    aFrame->GetContent()->OwnerDoc()->GetReferrerPolicy());
-
-  // XXXjwatt: this is broken - we're using the address of a new
-  // URLAndReferrerInfo as the hash key every time!
-  nsSVGPaintingProperty* observer =
-    static_cast<nsSVGPaintingProperty*>(hashtable->GetWeak(url));
-=======
       targetURI, aFrame->GetContent()->OwnerDoc()->GetDocumentURI(),
       aFrame->GetContent()->OwnerDoc()->GetReferrerPolicy());
 
   SVGMozElementObserver* observer =
       static_cast<SVGMozElementObserver*>(hashtable->GetWeak(url));
->>>>>>> upstream-releases
   if (!observer) {
     observer = new SVGMozElementObserver(url, aFrame, /* aWatchImage */ true);
     hashtable->Put(url, observer);
@@ -1847,15 +1474,6 @@ Element* SVGObserverUtils::GetAndObserveBackgroundImage(nsIFrame* aFrame,
   return observer->GetAndObserveReferencedElement();
 }
 
-<<<<<<< HEAD
-nsSVGPaintServerFrame* SVGObserverUtils::GetAndObservePaintServer(
-    nsIFrame* aTargetFrame, nsStyleSVGPaint nsStyleSVG::*aPaint) {
-||||||| merged common ancestors
-nsSVGPaintServerFrame *
-SVGObserverUtils::GetAndObservePaintServer(nsIFrame* aTargetFrame,
-                                           nsStyleSVGPaint nsStyleSVG::* aPaint)
-{
-=======
 Element* SVGObserverUtils::GetAndObserveBackgroundClip(nsIFrame* aFrame) {
   bool found;
   BackgroundClipRenderingObserver* obs =
@@ -1871,7 +1489,6 @@ Element* SVGObserverUtils::GetAndObserveBackgroundClip(nsIFrame* aFrame) {
 
 nsSVGPaintServerFrame* SVGObserverUtils::GetAndObservePaintServer(
     nsIFrame* aPaintedFrame, mozilla::StyleSVGPaint nsStyleSVG::*aPaint) {
->>>>>>> upstream-releases
   // If we're looking at a frame within SVG text, then we need to look up
   // to find the right frame to get the painting property off.  We should at
   // least look up past a text frame, and if the text frame's parent is the
@@ -1885,47 +1502,15 @@ nsSVGPaintServerFrame* SVGObserverUtils::GetAndObservePaintServer(
     }
   }
 
-<<<<<<< HEAD
-  const nsStyleSVG* svgStyle = frame->StyleSVG();
-  if ((svgStyle->*aPaint).Type() != eStyleSVGPaintType_Server) return nullptr;
-||||||| merged common ancestors
-  const nsStyleSVG* svgStyle = frame->StyleSVG();
-  if ((svgStyle->*aPaint).Type() != eStyleSVGPaintType_Server)
-    return nullptr;
-=======
   const nsStyleSVG* svgStyle = paintedFrame->StyleSVG();
   if (!(svgStyle->*aPaint).kind.IsPaintServer()) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<URLAndReferrerInfo> paintServerURL =
-      ResolveURLUsingLocalRef(frame, (svgStyle->*aPaint).GetPaintServer());
-||||||| merged common ancestors
-  RefPtr<URLAndReferrerInfo> paintServerURL =
-    ResolveURLUsingLocalRef(frame,
-                            (svgStyle->*aPaint).GetPaintServer());
-=======
   RefPtr<URLAndReferrerInfo> paintServerURL = ResolveURLUsingLocalRef(
       paintedFrame, (svgStyle->*aPaint).kind.AsPaintServer());
->>>>>>> upstream-releases
 
   MOZ_ASSERT(aPaint == &nsStyleSVG::mFill || aPaint == &nsStyleSVG::mStroke);
-<<<<<<< HEAD
-  PaintingPropertyDescriptor propDesc =
-      (aPaint == &nsStyleSVG::mFill) ? FillProperty() : StrokeProperty();
-  nsSVGPaintingProperty* property =
-      GetPaintingProperty(paintServerURL, frame, propDesc);
-  if (!property) return nullptr;
-||||||| merged common ancestors
-  PaintingPropertyDescriptor propDesc = (aPaint == &nsStyleSVG::mFill) ?
-                                        FillProperty() : StrokeProperty();
-  nsSVGPaintingProperty *property =
-    GetPaintingProperty(paintServerURL, frame, propDesc);
-  if (!property)
-    return nullptr;
-=======
   PaintingPropertyDescriptor propDesc =
       (aPaint == &nsStyleSVG::mFill) ? FillProperty() : StrokeProperty();
   nsSVGPaintingProperty* property =
@@ -1933,18 +1518,10 @@ nsSVGPaintServerFrame* SVGObserverUtils::GetAndObservePaintServer(
   if (!property) {
     return nullptr;
   }
->>>>>>> upstream-releases
   nsIFrame* result = property->GetAndObserveReferencedFrame();
-<<<<<<< HEAD
-  if (!result) return nullptr;
-||||||| merged common ancestors
-  if (!result)
-    return nullptr;
-=======
   if (!result) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   LayoutFrameType type = result->Type();
   if (type != LayoutFrameType::SVGLinearGradient &&
@@ -2029,16 +1606,9 @@ void SVGObserverUtils::InvalidateRenderingObservers(nsIFrame* aFrame) {
                "aFrame must be first continuation");
 
   nsIContent* content = aFrame->GetContent();
-<<<<<<< HEAD
-  if (!content || !content->IsElement()) return;
-||||||| merged common ancestors
-  if (!content || !content->IsElement())
-    return;
-=======
   if (!content || !content->IsElement()) {
     return;
   }
->>>>>>> upstream-releases
 
   // If the rendering has changed, the bounds may well have changed too:
   aFrame->DeleteProperty(nsSVGUtils::ObjectBoundingBoxProperty());
@@ -2134,28 +1704,11 @@ already_AddRefed<nsIURI> SVGObserverUtils::GetBaseURLForLocalRef(
   return baseURI.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<URLAndReferrerInfo> SVGObserverUtils::GetFilterURI(
-    nsIFrame* aFrame, const nsStyleFilter& aFilter) {
-  MOZ_ASSERT(aFrame->StyleEffects()->mFilters.Length());
-  MOZ_ASSERT(aFilter.GetType() == NS_STYLE_FILTER_URL);
-
-  return ResolveURLUsingLocalRef(aFrame, aFilter.GetURL());
-||||||| merged common ancestors
-already_AddRefed<URLAndReferrerInfo>
-SVGObserverUtils::GetFilterURI(nsIFrame* aFrame, const nsStyleFilter& aFilter)
-{
-  MOZ_ASSERT(aFrame->StyleEffects()->mFilters.Length());
-  MOZ_ASSERT(aFilter.GetType() == NS_STYLE_FILTER_URL);
-
-  return ResolveURLUsingLocalRef(aFrame, aFilter.GetURL());
-=======
 already_AddRefed<URLAndReferrerInfo> SVGObserverUtils::GetFilterURI(
     nsIFrame* aFrame, const StyleFilter& aFilter) {
   MOZ_ASSERT(!aFrame->StyleEffects()->mFilters.IsEmpty());
   MOZ_ASSERT(aFilter.IsUrl());
   return ResolveURLUsingLocalRef(aFrame, aFilter.AsUrl());
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

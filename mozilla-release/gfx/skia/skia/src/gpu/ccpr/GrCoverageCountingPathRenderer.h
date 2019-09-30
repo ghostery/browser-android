@@ -34,15 +34,8 @@ public:
         kYes = true
     };
 
-<<<<<<< HEAD
-    static sk_sp<GrCoverageCountingPathRenderer> CreateIfSupported(const GrCaps&, AllowCaching);
-||||||| merged common ancestors
-        int setupResources(GrOnFlushResourceProvider*,
-                           GrCCPathProcessor::Instance* pathInstanceData, int pathInstanceIdx);
-=======
     static sk_sp<GrCoverageCountingPathRenderer> CreateIfSupported(const GrCaps&, AllowCaching,
                                                                    uint32_t contextUniqueID);
->>>>>>> upstream-releases
 
     using PendingPathsMap = std::map<uint32_t, sk_sp<GrCCPerOpListPaths>>;
 
@@ -73,17 +66,7 @@ public:
                   SkTArray<sk_sp<GrRenderTargetContext>>* out) override;
     void postFlush(GrDeferredUploadToken, const uint32_t* opListIDs, int numOpListIDs) override;
 
-<<<<<<< HEAD
-    void testingOnly_drawPathDirectly(const DrawPathArgs&);
-    const GrUniqueKey& testingOnly_getStashedAtlasKey() const;
-||||||| merged common ancestors
-        const GrCCAtlas* fAtlas = nullptr;
-        int16_t fAtlasOffsetX;
-        int16_t fAtlasOffsetY;
-        SkDEBUGCODE(bool fHasAtlas = false);
-=======
     void purgeCacheEntriesOlderThan(GrProxyProvider*, const GrStdSteadyClock::time_point&);
->>>>>>> upstream-releases
 
     // If a path spans more pixels than this, we need to crop it or else analytic AA can run out of
     // fp32 precision.
@@ -99,19 +82,6 @@ public:
                                    float* inflationRadius = nullptr);
 
 private:
-<<<<<<< HEAD
-    GrCoverageCountingPathRenderer(AllowCaching);
-
-    // GrPathRenderer overrides.
-    StencilSupport onGetStencilSupport(const GrShape&) const override {
-        return GrPathRenderer::kNoSupport_StencilSupport;
-    }
-    CanDrawPath onCanDrawPath(const CanDrawPathArgs&) const override;
-    bool onDrawPath(const DrawPathArgs&) override;
-||||||| merged common ancestors
-    GrCoverageCountingPathRenderer(bool drawCachablePaths)
-            : fDrawCachablePaths(drawCachablePaths) {}
-=======
     GrCoverageCountingPathRenderer(AllowCaching, uint32_t contextUniqueID);
 
     // GrPathRenderer overrides.
@@ -120,7 +90,6 @@ private:
     }
     CanDrawPath onCanDrawPath(const CanDrawPathArgs&) const override;
     bool onDrawPath(const DrawPathArgs&) override;
->>>>>>> upstream-releases
 
     GrCCPerOpListPaths* lookupPendingPaths(uint32_t opListID);
     void recordOp(std::unique_ptr<GrCCDrawPathsOp>, const DrawPathArgs&);
@@ -134,29 +103,14 @@ private:
     // (It will only contain elements when fFlushing is true.)
     SkSTArray<4, sk_sp<GrCCPerOpListPaths>> fFlushingPaths;
 
-<<<<<<< HEAD
     std::unique_ptr<GrCCPathCache> fPathCache;
-    GrUniqueKey fStashedAtlasKey;
-||||||| merged common ancestors
-    // A map from render target ID to the individual render target's pending paths.
-    std::map<uint32_t, RTPendingPaths> fRTPendingPathsMap;
-    SkDEBUGCODE(int fPendingDrawOpsCount = 0);
-=======
-    std::unique_ptr<GrCCPathCache> fPathCache;
->>>>>>> upstream-releases
 
     SkDEBUGCODE(bool fFlushing = false);
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-    const bool fDrawCachablePaths;
-=======
 
 public:
     void testingOnly_drawPathDirectly(const DrawPathArgs&);
     const GrCCPerFlushResources* testingOnly_getCurrentFlushResources();
     const GrCCPathCache* testingOnly_getPathCache() const;
->>>>>>> upstream-releases
 };
 
 #endif

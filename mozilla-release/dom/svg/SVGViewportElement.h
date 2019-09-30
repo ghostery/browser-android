@@ -46,28 +46,12 @@ class SVGViewportElement : public SVGGraphicsElement {
   friend class ::nsSVGOuterSVGFrame;
   friend class ::nsSVGViewportFrame;
 
-<<<<<<< HEAD
- protected:
-  SVGViewportElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGViewportElement();
-
- public:
-||||||| merged common ancestors
-protected:
-
-  SVGViewportElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGViewportElement();
-
-public:
-
-=======
  protected:
   explicit SVGViewportElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
   ~SVGViewportElement() = default;
 
  public:
->>>>>>> upstream-releases
   // nsIContent interface
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
@@ -96,15 +80,7 @@ public:
    * Note also that this method does not pay attention to whether the width or
    * height values of the viewBox rect are positive!
    */
-<<<<<<< HEAD
-  bool HasViewBoxRect() const { return GetViewBoxInternal().HasRect(); }
-||||||| merged common ancestors
-  bool HasViewBoxRect() const {
-    return GetViewBoxInternal().HasRect();
-  }
-=======
   bool HasViewBox() const { return GetViewBoxInternal().HasRect(); }
->>>>>>> upstream-releases
 
   /**
    * Returns true if we should synthesize a viewBox for ourselves (that is, if
@@ -162,20 +138,9 @@ public:
   // WebIDL
   already_AddRefed<SVGAnimatedRect> ViewBox();
   already_AddRefed<DOMSVGAnimatedPreserveAspectRatio> PreserveAspectRatio();
-<<<<<<< HEAD
-  virtual nsSVGViewBox* GetViewBox() override;
-
- protected:
-||||||| merged common ancestors
-  virtual nsSVGViewBox* GetViewBox() override;
-
-protected:
-
-=======
   virtual SVGAnimatedViewBox* GetAnimatedViewBox() override;
 
  protected:
->>>>>>> upstream-releases
   // implementation helpers:
 
   bool IsRoot() const {
@@ -186,32 +151,6 @@ protected:
   }
 
   /**
-<<<<<<< HEAD
-   * Returns true if either this is an SVG <svg> element that is the child of
-   * another non-foreignObject SVG element, or this is a SVG <symbol> element
-   * this is the root of a use-element shadow tree.
-   */
-  bool IsInner() const {
-    const nsIContent* parent = GetFlattenedTreeParent();
-    return parent && parent->IsSVGElement() &&
-           !parent->IsSVGElement(nsGkAtoms::foreignObject);
-  }
-
-  /**
-||||||| merged common ancestors
-   * Returns true if either this is an SVG <svg> element that is the child of
-   * another non-foreignObject SVG element, or this is a SVG <symbol> element
-   * this is the root of a use-element shadow tree.
-   */
-  bool IsInner() const {
-    const nsIContent *parent = GetFlattenedTreeParent();
-    return parent && parent->IsSVGElement() &&
-           !parent->IsSVGElement(nsGkAtoms::foreignObject);
-  }
-
-  /**
-=======
->>>>>>> upstream-releases
    * Returns the explicit or default preserveAspectRatio, unless we're
    * synthesizing a viewBox, in which case it returns the "none" value.
    */
@@ -224,16 +163,8 @@ protected:
    * viewBox, if appropriate, or else a viewBox matching the dimensions of the
    * SVG viewport.
    */
-<<<<<<< HEAD
-  nsSVGViewBoxRect GetViewBoxWithSynthesis(float aViewportWidth,
-                                           float aViewportHeight) const;
-||||||| merged common ancestors
-  nsSVGViewBoxRect GetViewBoxWithSynthesis(
-      float aViewportWidth, float aViewportHeight) const;
-=======
   SVGViewBox GetViewBoxWithSynthesis(float aViewportWidth,
                                      float aViewportHeight) const;
->>>>>>> upstream-releases
 
   /**
    * Retrieve the value of currentScale and currentTranslate.
@@ -246,14 +177,8 @@ protected:
   static LengthInfo sLengthInfo[4];
   virtual LengthAttributesInfo GetLengthInfo() override;
 
-<<<<<<< HEAD
-  virtual SVGAnimatedPreserveAspectRatio* GetPreserveAspectRatio() override;
-||||||| merged common ancestors
-  virtual SVGAnimatedPreserveAspectRatio *GetPreserveAspectRatio() override;
-=======
   virtual SVGAnimatedPreserveAspectRatio* GetAnimatedPreserveAspectRatio()
       override;
->>>>>>> upstream-releases
 
   virtual const SVGAnimatedViewBox& GetViewBoxInternal() const {
     return mViewBox;
@@ -261,13 +186,7 @@ protected:
   virtual SVGAnimatedTransformList* GetTransformInternal() const {
     return mTransforms;
   }
-<<<<<<< HEAD
-  nsSVGViewBox mViewBox;
-||||||| merged common ancestors
-  nsSVGViewBox                   mViewBox;
-=======
   SVGAnimatedViewBox mViewBox;
->>>>>>> upstream-releases
   SVGAnimatedPreserveAspectRatio mPreserveAspectRatio;
 
   // The size of the rectangular SVG viewport into which we render. This is

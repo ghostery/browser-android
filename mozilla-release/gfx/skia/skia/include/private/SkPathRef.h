@@ -8,13 +8,6 @@
 #ifndef SkPathRef_DEFINED
 #define SkPathRef_DEFINED
 
-<<<<<<< HEAD
-#include "SkAtomics.h"
-||||||| merged common ancestors
-#include "../private/SkAtomics.h"
-#include "../private/SkTDArray.h"
-=======
->>>>>>> upstream-releases
 #include "SkMatrix.h"
 #include "SkMutex.h"
 #include "SkPoint.h"
@@ -23,16 +16,9 @@
 #include "SkRefCnt.h"
 #include "SkTDArray.h"
 #include "SkTemplates.h"
-<<<<<<< HEAD
-#include "SkTo.h"
-
-#include <limits>
-||||||| merged common ancestors
-=======
 #include "SkTo.h"
 #include <atomic>
 #include <limits>
->>>>>>> upstream-releases
 
 class SkRBuffer;
 class SkWBuffer;
@@ -322,15 +308,9 @@ public:
      */
     uint32_t genID() const;
 
-<<<<<<< HEAD
-    struct GenIDChangeListener : SkRefCnt {
-||||||| merged common ancestors
-    struct GenIDChangeListener {
-=======
     class GenIDChangeListener : public SkRefCnt {
     public:
         GenIDChangeListener() : fShouldUnregisterFromPath(false) {}
->>>>>>> upstream-releases
         virtual ~GenIDChangeListener() {}
 
         virtual void onChange() = 0;
@@ -595,13 +575,8 @@ private:
 
     friend class PathRefTest_Private;
     friend class ForceIsRRect_Private; // unit test isRRect
-<<<<<<< HEAD
-    friend class SkPath;
-||||||| merged common ancestors
-=======
     friend class SkPath;
     friend class SkPathPriv;
->>>>>>> upstream-releases
 };
 
 #endif

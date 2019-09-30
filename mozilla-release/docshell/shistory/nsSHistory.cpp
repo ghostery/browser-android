@@ -162,64 +162,13 @@ nsSHistoryObserver::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-namespace {
-
-already_AddRefed<nsIContentViewer> GetContentViewerForEntry(
-    nsISHEntry* aEntry) {
-  nsCOMPtr<nsISHEntry> ownerEntry;
-  nsCOMPtr<nsIContentViewer> viewer;
-  aEntry->GetAnyContentViewer(getter_AddRefs(ownerEntry),
-                              getter_AddRefs(viewer));
-  return viewer.forget();
-}
-
-}  // namespace
-
-void nsSHistory::EvictContentViewerForEntry(nsISHEntry* aEntry) {
-  nsCOMPtr<nsIContentViewer> viewer;
-  nsCOMPtr<nsISHEntry> ownerEntry;
-  aEntry->GetAnyContentViewer(getter_AddRefs(ownerEntry),
-                              getter_AddRefs(viewer));
-||||||| merged common ancestors
-namespace {
-
-already_AddRefed<nsIContentViewer>
-GetContentViewerForEntry(nsISHEntry* aEntry)
-{
-  nsCOMPtr<nsISHEntry> ownerEntry;
-  nsCOMPtr<nsIContentViewer> viewer;
-  aEntry->GetAnyContentViewer(getter_AddRefs(ownerEntry),
-                              getter_AddRefs(viewer));
-  return viewer.forget();
-}
-
-} // namespace
-
-void
-nsSHistory::EvictContentViewerForEntry(nsISHEntry* aEntry)
-{
-  nsCOMPtr<nsIContentViewer> viewer;
-  nsCOMPtr<nsISHEntry> ownerEntry;
-  aEntry->GetAnyContentViewer(getter_AddRefs(ownerEntry),
-                              getter_AddRefs(viewer));
-=======
 void nsSHistory::EvictContentViewerForEntry(nsISHEntry* aEntry) {
   nsCOMPtr<nsIContentViewer> viewer = aEntry->GetContentViewer();
->>>>>>> upstream-releases
   if (viewer) {
     LOG_SHENTRY_SPEC(("Evicting content viewer 0x%p for "
                       "owning SHEntry 0x%p at %s.",
-<<<<<<< HEAD
-                      viewer.get(), ownerEntry.get(), _spec),
-                     ownerEntry);
-||||||| merged common ancestors
-                      viewer.get(), ownerEntry.get(), _spec),
-                      ownerEntry);
-=======
                       viewer.get(), aEntry, _spec),
                      aEntry);
->>>>>>> upstream-releases
 
     // Drop the presentation state before destroying the viewer, so that
     // document teardown is able to correctly persist the state.
@@ -236,29 +185,11 @@ void nsSHistory::EvictContentViewerForEntry(nsISHEntry* aEntry) {
   }
 }
 
-<<<<<<< HEAD
-nsSHistory::nsSHistory()
-    : mIndex(-1), mRequestedIndex(-1), mRootDocShell(nullptr) {
-||||||| merged common ancestors
-nsSHistory::nsSHistory()
-  : mIndex(-1)
-  , mRequestedIndex(-1)
-  , mRootDocShell(nullptr)
-{
-=======
 nsSHistory::nsSHistory(nsDocShell* aRootDocShell)
     : mIndex(-1), mRequestedIndex(-1), mRootDocShell(aRootDocShell) {
->>>>>>> upstream-releases
   // Add this new SHistory object to the list
   gSHistoryList.insertBack(this);
 
-<<<<<<< HEAD
-nsSHistory::~nsSHistory() {}
-||||||| merged common ancestors
-nsSHistory::~nsSHistory()
-{
-}
-=======
   // Init mHistoryTracker on setting mRootDocShell so we can bind its event
   // target to the tabGroup.
   nsCOMPtr<nsPIDOMWindowOuter> win = mRootDocShell->GetWindow();
@@ -281,7 +212,6 @@ nsSHistory::~nsSHistory()
         global->EventTargetFor(mozilla::TaskCategory::Other));
   }
 }
->>>>>>> upstream-releases
 
 nsSHistory::~nsSHistory() {}
 
@@ -295,27 +225,6 @@ NS_INTERFACE_MAP_BEGIN(nsSHistory)
 NS_INTERFACE_MAP_END
 
 // static
-<<<<<<< HEAD
-uint32_t nsSHistory::CalcMaxTotalViewers() {
-// This value allows tweaking how fast the allowed amount of content viewers
-// grows with increasing amounts of memory. Larger values mean slower growth.
-#ifdef ANDROID
-#define MAX_TOTAL_VIEWERS_BIAS 15.9
-#else
-#define MAX_TOTAL_VIEWERS_BIAS 14
-#endif
-||||||| merged common ancestors
-uint32_t
-nsSHistory::CalcMaxTotalViewers()
-{
-  // This value allows tweaking how fast the allowed amount of content viewers
-  // grows with increasing amounts of memory. Larger values mean slower growth.
-  #ifdef ANDROID
-  #define MAX_TOTAL_VIEWERS_BIAS 15.9
-  #else
-  #define MAX_TOTAL_VIEWERS_BIAS 14
-  #endif
-=======
 uint32_t nsSHistory::CalcMaxTotalViewers() {
 // This value allows tweaking how fast the allowed amount of content viewers
 // grows with increasing amounts of memory. Larger values mean slower growth.
@@ -324,7 +233,6 @@ uint32_t nsSHistory::CalcMaxTotalViewers() {
 #else
 #  define MAX_TOTAL_VIEWERS_BIAS 14
 #endif
->>>>>>> upstream-releases
 
   // Calculate an estimate of how many ContentViewers we should cache based
   // on RAM.  This assumes that the average ContentViewer is 4MB (conservative)
@@ -871,21 +779,8 @@ nsSHistory::ReplaceEntry(int32_t aIndex, nsISHEntry* aReplaceEntry) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsSHistory::NotifyOnHistoryReload(nsIURI* aReloadURI, uint32_t aReloadFlags,
-                                  bool* aCanReload) {
-  NOTIFY_LISTENERS_CANCELABLE(OnHistoryReload, *aCanReload,
-                              (aReloadURI, aReloadFlags, aCanReload));
-||||||| merged common ancestors
-nsSHistory::NotifyOnHistoryReload(nsIURI* aReloadURI, uint32_t aReloadFlags,
-                                  bool* aCanReload)
-{
-  NOTIFY_LISTENERS_CANCELABLE(OnHistoryReload, *aCanReload,
-                              (aReloadURI, aReloadFlags, aCanReload));
-=======
 nsSHistory::NotifyOnHistoryReload(bool* aCanReload) {
   NOTIFY_LISTENERS_CANCELABLE(OnHistoryReload, *aCanReload, (aCanReload));
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1020,26 +915,11 @@ namespace {
 class EntryAndDistance {
  public:
   EntryAndDistance(nsSHistory* aSHistory, nsISHEntry* aEntry, uint32_t aDist)
-<<<<<<< HEAD
-      : mSHistory(aSHistory),
-        mEntry(aEntry),
-        mLastTouched(0),
-        mDistance(aDist) {
-    mViewer = GetContentViewerForEntry(aEntry);
-||||||| merged common ancestors
-    : mSHistory(aSHistory)
-    , mEntry(aEntry)
-    , mLastTouched(0)
-    , mDistance(aDist)
-  {
-    mViewer = GetContentViewerForEntry(aEntry);
-=======
       : mSHistory(aSHistory),
         mEntry(aEntry),
         mViewer(aEntry->GetContentViewer()),
         mLastTouched(mEntry->GetLastTouched()),
         mDistance(aDist) {
->>>>>>> upstream-releases
     NS_ASSERTION(mViewer, "Entry should have a content viewer");
   }
 
@@ -1100,15 +980,7 @@ void nsSHistory::GloballyEvictContentViewers() {
     shist->WindowIndices(shist->mIndex, &startIndex, &endIndex);
     for (int32_t i = startIndex; i <= endIndex; i++) {
       nsCOMPtr<nsISHEntry> entry = shist->mEntries[i];
-<<<<<<< HEAD
-      nsCOMPtr<nsIContentViewer> contentViewer =
-          GetContentViewerForEntry(entry);
-||||||| merged common ancestors
-      nsCOMPtr<nsIContentViewer> contentViewer =
-        GetContentViewerForEntry(entry);
-=======
       nsCOMPtr<nsIContentViewer> contentViewer = entry->GetContentViewer();
->>>>>>> upstream-releases
 
       if (contentViewer) {
         // Because one content viewer might belong to multiple SHEntries, we
@@ -1234,18 +1106,7 @@ void nsSHistory::GloballyEvictAllContentViewers() {
   sHistoryMaxTotalViewers = maxViewers;
 }
 
-<<<<<<< HEAD
-void GetDynamicChildren(nsISHEntry* aEntry, nsTArray<nsID>& aDocshellIDs,
-                        bool aOnlyTopLevelDynamic) {
-||||||| merged common ancestors
-void
-GetDynamicChildren(nsISHEntry* aEntry,
-                   nsTArray<nsID>& aDocshellIDs,
-                   bool aOnlyTopLevelDynamic)
-{
-=======
 void GetDynamicChildren(nsISHEntry* aEntry, nsTArray<nsID>& aDocshellIDs) {
->>>>>>> upstream-releases
   int32_t count = aEntry->GetChildCount();
   for (int32_t i = 0; i < count; ++i) {
     nsCOMPtr<nsISHEntry> child;
@@ -1431,40 +1292,6 @@ nsSHistory::UpdateIndex() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsSHistory::GetCurrentURI(nsIURI** aResultURI) {
-  NS_ENSURE_ARG_POINTER(aResultURI);
-  nsresult rv;
-
-  nsCOMPtr<nsISHEntry> currentEntry;
-  rv = GetEntryAtIndex(mIndex, getter_AddRefs(currentEntry));
-  if (NS_FAILED(rv) && !currentEntry) {
-    return rv;
-  }
-  nsCOMPtr<nsIURI> uri = currentEntry->GetURI();
-  uri.forget(aResultURI);
-  return rv;
-}
-
-||||||| merged common ancestors
-nsresult
-nsSHistory::GetCurrentURI(nsIURI** aResultURI)
-{
-  NS_ENSURE_ARG_POINTER(aResultURI);
-  nsresult rv;
-
-  nsCOMPtr<nsISHEntry> currentEntry;
-  rv = GetEntryAtIndex(mIndex, getter_AddRefs(currentEntry));
-  if (NS_FAILED(rv) && !currentEntry) {
-    return rv;
-  }
-  nsCOMPtr<nsIURI> uri = currentEntry->GetURI();
-  uri.forget(aResultURI);
-  return rv;
-}
-
-=======
->>>>>>> upstream-releases
 NS_IMETHODIMP
 nsSHistory::GotoIndex(int32_t aIndex) {
   return LoadEntry(aIndex, LOAD_HISTORY, HIST_CMD_GOTOINDEX);
@@ -1629,14 +1456,8 @@ nsresult nsSHistory::InitiateLoad(nsISHEntry* aFrameEntry,
                                   nsIDocShell* aFrameDS, long aLoadType) {
   NS_ENSURE_STATE(aFrameDS && aFrameEntry);
 
-<<<<<<< HEAD
-  RefPtr<nsDocShellLoadState> loadState = new nsDocShellLoadState();
-||||||| merged common ancestors
-  RefPtr<nsDocShellLoadInfo> loadInfo = new nsDocShellLoadInfo();
-=======
   nsCOMPtr<nsIURI> newURI = aFrameEntry->GetURI();
   RefPtr<nsDocShellLoadState> loadState = new nsDocShellLoadState(newURI);
->>>>>>> upstream-releases
 
   /* Set the loadType in the SHEntry too to  what was passed on.
    * This will be passed on to child subframes later in nsDocShell,
@@ -1648,50 +1469,10 @@ nsresult nsSHistory::InitiateLoad(nsISHEntry* aFrameEntry,
   loadState->SetSHEntry(aFrameEntry);
 
   nsCOMPtr<nsIURI> originalURI = aFrameEntry->GetOriginalURI();
-<<<<<<< HEAD
   loadState->SetOriginalURI(originalURI);
 
   loadState->SetLoadReplace(aFrameEntry->GetLoadReplace());
-||||||| merged common ancestors
-  loadInfo->SetOriginalURI(originalURI);
 
-  loadInfo->SetLoadReplace(aFrameEntry->GetLoadReplace());
-=======
-  loadState->SetOriginalURI(originalURI);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsCOMPtr<nsIURI> newURI = aFrameEntry->GetURI();
-  loadState->SetURI(newURI);
-  loadState->SetLoadFlags(nsIWebNavigation::LOAD_FLAGS_NONE);
-  // TODO fix principal here in Bug 1508642
-  loadState->SetTriggeringPrincipal(nsContentUtils::GetSystemPrincipal());
-  loadState->SetFirstParty(false);
-
-  // Time to initiate a document load
-  return aFrameDS->LoadURI(loadState);
-}
-||||||| merged common ancestors
-  nsCOMPtr<nsIURI> nextURI = aFrameEntry->GetURI();
-  // Time to initiate a document load
-  return aFrameDS->LoadURI(nextURI, loadInfo,
-                           nsIWebNavigation::LOAD_FLAGS_NONE, false);
-
-}
-=======
-  loadState->SetLoadReplace(aFrameEntry->GetLoadReplace());
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-NS_IMETHODIMP_(void)
-nsSHistory::SetRootDocShell(nsIDocShell* aDocShell) {
-  mRootDocShell = aDocShell;
-||||||| merged common ancestors
-NS_IMETHODIMP_(void)
-nsSHistory::SetRootDocShell(nsIDocShell* aDocShell)
-{
-  mRootDocShell = aDocShell;
-=======
   loadState->SetLoadFlags(nsIWebNavigation::LOAD_FLAGS_NONE);
   nsCOMPtr<nsIPrincipal> triggeringPrincipal =
       aFrameEntry->GetTriggeringPrincipal();
@@ -1699,61 +1480,7 @@ nsSHistory::SetRootDocShell(nsIDocShell* aDocShell)
   loadState->SetFirstParty(false);
   nsCOMPtr<nsIContentSecurityPolicy> csp = aFrameEntry->GetCsp();
   loadState->SetCsp(csp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Init mHistoryTracker on setting mRootDocShell so we can bind its event
-  // target to the tabGroup.
-  if (mRootDocShell) {
-    nsCOMPtr<nsPIDOMWindowOuter> win = mRootDocShell->GetWindow();
-    if (!win) {
-      return;
-    }
-
-    // Seamonkey moves shistory between <xul:browser>s when restoring a tab.
-    // Let's try not to break our friend too badly...
-    if (mHistoryTracker) {
-      NS_WARNING(
-          "Change the root docshell of a shistory is unsafe and "
-          "potentially problematic.");
-      mHistoryTracker->AgeAllGenerations();
-    }
-
-    nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(win);
-
-    mHistoryTracker = mozilla::MakeUnique<HistoryTracker>(
-        this,
-        mozilla::Preferences::GetUint(CONTENT_VIEWER_TIMEOUT_SECONDS,
-                                      CONTENT_VIEWER_TIMEOUT_SECONDS_DEFAULT),
-        global->EventTargetFor(mozilla::TaskCategory::Other));
-  }
-||||||| merged common ancestors
-  // Init mHistoryTracker on setting mRootDocShell so we can bind its event
-  // target to the tabGroup.
-  if (mRootDocShell) {
-    nsCOMPtr<nsPIDOMWindowOuter> win = mRootDocShell->GetWindow();
-    if (!win) {
-      return;
-    }
-
-    // Seamonkey moves shistory between <xul:browser>s when restoring a tab.
-    // Let's try not to break our friend too badly...
-    if (mHistoryTracker) {
-      NS_WARNING("Change the root docshell of a shistory is unsafe and "
-                 "potentially problematic.");
-      mHistoryTracker->AgeAllGenerations();
-    }
-
-    nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(win);
-
-    mHistoryTracker = mozilla::MakeUnique<HistoryTracker>(
-      this,
-      mozilla::Preferences::GetUint(CONTENT_VIEWER_TIMEOUT_SECONDS,
-                                    CONTENT_VIEWER_TIMEOUT_SECONDS_DEFAULT),
-      global->EventTargetFor(mozilla::TaskCategory::Other));
-  }
-=======
   // Time to initiate a document load
   return aFrameDS->LoadURI(loadState);
->>>>>>> upstream-releases
 }

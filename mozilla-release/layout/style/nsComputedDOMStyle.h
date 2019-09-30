@@ -29,14 +29,8 @@ namespace mozilla {
 namespace dom {
 class DocGroup;
 class Element;
-<<<<<<< HEAD
-}  // namespace dom
-||||||| merged common ancestors
-} // namespace dom
-=======
 }  // namespace dom
 class PresShell;
->>>>>>> upstream-releases
 struct ComputedGridTrackInfo;
 }  // namespace mozilla
 
@@ -48,31 +42,11 @@ struct nsMargin;
 class nsROCSSPrimitiveValue;
 class nsStyleGradient;
 struct nsStyleImage;
-<<<<<<< HEAD
-class nsStyleSides;
-||||||| merged common ancestors
-class nsStyleSides;
-struct nsTimingFunction;
-=======
->>>>>>> upstream-releases
 
 class nsComputedDOMStyle final : public nsDOMCSSDeclaration,
                                  public nsStubMutationObserver {
  private:
   // Convenience typedefs:
-<<<<<<< HEAD
-  typedef nsCSSKTableEntry KTableEntry;
-  typedef mozilla::dom::CSSValue CSSValue;
-  typedef mozilla::StyleGeometryBox StyleGeometryBox;
-
- public:
-||||||| merged common ancestors
-  typedef nsCSSKTableEntry KTableEntry;
-  typedef mozilla::dom::CSSValue CSSValue;
-  typedef mozilla::StyleGeometryBox StyleGeometryBox;
-
-public:
-=======
   using KTableEntry = nsCSSKTableEntry;
   using CSSValue = mozilla::dom::CSSValue;
   using StyleGeometryBox = mozilla::StyleGeometryBox;
@@ -87,7 +61,6 @@ public:
   using ComputedStyle = mozilla::ComputedStyle;
 
  public:
->>>>>>> upstream-releases
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SKIPPABLE_SCRIPT_HOLDER_CLASS_AMBIGUOUS(
       nsComputedDOMStyle, nsICSSDeclaration)
@@ -106,48 +79,11 @@ public:
     eAll           // Includes all stylesheets
   };
 
-<<<<<<< HEAD
-  nsComputedDOMStyle(mozilla::dom::Element* aElement,
-                     const nsAString& aPseudoElt, nsIDocument* aDocument,
-                     StyleType aStyleType);
-||||||| merged common ancestors
-  nsComputedDOMStyle(mozilla::dom::Element* aElement,
-                     const nsAString& aPseudoElt,
-                     nsIDocument* aDocument,
-                     StyleType aStyleType);
-=======
   nsComputedDOMStyle(Element* aElement, const nsAString& aPseudoElt,
                      Document* aDocument, StyleType aStyleType);
->>>>>>> upstream-releases
 
   nsINode* GetParentObject() override { return mElement; }
 
-<<<<<<< HEAD
-  static already_AddRefed<mozilla::ComputedStyle> GetComputedStyle(
-      mozilla::dom::Element* aElement, nsAtom* aPseudo,
-      StyleType aStyleType = eAll);
-
-  static already_AddRefed<mozilla::ComputedStyle> GetComputedStyleNoFlush(
-      mozilla::dom::Element* aElement, nsAtom* aPseudo,
-      StyleType aStyleType = eAll) {
-    return DoGetComputedStyleNoFlush(
-        aElement, aPseudo, nsContentUtils::GetPresShellForContent(aElement),
-        aStyleType);
-||||||| merged common ancestors
-  static already_AddRefed<mozilla::ComputedStyle>
-  GetComputedStyle(mozilla::dom::Element* aElement, nsAtom* aPseudo,
-                   StyleType aStyleType = eAll);
-
-  static already_AddRefed<mozilla::ComputedStyle>
-  GetComputedStyleNoFlush(mozilla::dom::Element* aElement,
-                          nsAtom* aPseudo,
-                          StyleType aStyleType = eAll)
-  {
-    return DoGetComputedStyleNoFlush(aElement,
-                                     aPseudo,
-                                     nsContentUtils::GetPresShellForContent(aElement),
-                                     aStyleType);
-=======
   static already_AddRefed<ComputedStyle> GetComputedStyle(
       Element* aElement, nsAtom* aPseudo, StyleType aStyleType = eAll);
 
@@ -156,7 +92,6 @@ public:
     return DoGetComputedStyleNoFlush(
         aElement, aPseudo, nsContentUtils::GetPresShellForContent(aElement),
         aStyleType);
->>>>>>> upstream-releases
   }
 
   static already_AddRefed<ComputedStyle> GetUnanimatedComputedStyleNoFlush(
@@ -212,34 +147,8 @@ public:
   void ClearComputedStyle();
   void SetResolvedComputedStyle(RefPtr<ComputedStyle>&& aContext,
                                 uint64_t aGeneration);
-<<<<<<< HEAD
-  void SetFrameComputedStyle(mozilla::ComputedStyle* aStyle,
-                             uint64_t aGeneration);
-||||||| merged common ancestors
-  void SetFrameComputedStyle(mozilla::ComputedStyle* aStyle, uint64_t aGeneration);
-=======
   void SetFrameComputedStyle(ComputedStyle* aStyle, uint64_t aGeneration);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static already_AddRefed<mozilla::ComputedStyle> DoGetComputedStyleNoFlush(
-      mozilla::dom::Element* aElement, nsAtom* aPseudo,
-      nsIPresShell* aPresShell, StyleType aStyleType);
-
-#define STYLE_STRUCT(name_)                \
-  const nsStyle##name_* Style##name_() {   \
-    return mComputedStyle->Style##name_(); \
-||||||| merged common ancestors
-  static already_AddRefed<mozilla::ComputedStyle>
-  DoGetComputedStyleNoFlush(mozilla::dom::Element* aElement,
-                            nsAtom* aPseudo,
-                            nsIPresShell* aPresShell,
-                            StyleType aStyleType);
-
-#define STYLE_STRUCT(name_)                 \
-  const nsStyle##name_ * Style##name_() {   \
-    return mComputedStyle->Style##name_();  \
-=======
   static already_AddRefed<ComputedStyle> DoGetComputedStyleNoFlush(
       Element* aElement, nsAtom* aPseudo, mozilla::PresShell* aPresShell,
       StyleType aStyleType);
@@ -247,7 +156,6 @@ public:
 #define STYLE_STRUCT(name_)                \
   const nsStyle##name_* Style##name_() {   \
     return mComputedStyle->Style##name_(); \
->>>>>>> upstream-releases
   }
 #include "nsStyleStructList.h"
 #undef STYLE_STRUCT
@@ -277,22 +185,7 @@ public:
 
   already_AddRefed<CSSValue> GetMarginWidthFor(mozilla::Side aSide);
 
-<<<<<<< HEAD
-  already_AddRefed<CSSValue> GetFallbackValue(const nsStyleSVGPaint* aPaint);
-
-  already_AddRefed<CSSValue> GetSVGPaintFor(bool aFill);
-
-  already_AddRefed<CSSValue> GetTransformValue(
-      nsCSSValueSharedList* aSpecifiedTransform);
-||||||| merged common ancestors
-  already_AddRefed<CSSValue> GetFallbackValue(const nsStyleSVGPaint* aPaint);
-
-  already_AddRefed<CSSValue> GetSVGPaintFor(bool aFill);
-
-  already_AddRefed<CSSValue> GetTransformValue(nsCSSValueSharedList* aSpecifiedTransform);
-=======
   already_AddRefed<CSSValue> GetTransformValue(const mozilla::StyleTransform&);
->>>>>>> upstream-releases
 
   // Appends all aLineNames (may be empty) space-separated to aResult.
   void AppendGridLineNames(nsString& aResult,
@@ -310,46 +203,11 @@ public:
   already_AddRefed<nsROCSSPrimitiveValue> GetGridTrackBreadth(const mozilla::StyleTrackBreadth&);
   void SetValueToTrackBreadth(nsROCSSPrimitiveValue*, const mozilla::StyleTrackBreadth&);
   already_AddRefed<CSSValue> GetGridTemplateColumnsRows(
-<<<<<<< HEAD
       const nsStyleGridTemplate& aTrackList,
       const mozilla::ComputedGridTrackInfo* aTrackInfo);
-  already_AddRefed<CSSValue> GetGridLine(const nsStyleGridLine& aGridLine);
-||||||| merged common ancestors
-    const nsStyleGridTemplate& aTrackList,
-    const mozilla::ComputedGridTrackInfo* aTrackInfo);
-  already_AddRefed<CSSValue> GetGridLine(const nsStyleGridLine& aGridLine);
-=======
-      const nsStyleGridTemplate& aTrackList,
-      const mozilla::ComputedGridTrackInfo* aTrackInfo);
->>>>>>> upstream-releases
 
   bool GetLineHeightCoord(nscoord& aCoord);
 
-<<<<<<< HEAD
-  already_AddRefed<CSSValue> GetCSSShadowArray(nsCSSShadowArray* aArray,
-                                               bool aIsBoxShadow);
-
-  void GetCSSGradientString(const nsStyleGradient* aGradient,
-                            nsAString& aString);
-  void GetImageRectString(nsIURI* aURI, const nsStyleSides& aCropRect,
-                          nsString& aString);
-  already_AddRefed<CSSValue> GetScrollSnapPoints(const nsStyleCoord& aCoord);
-
-||||||| merged common ancestors
-  already_AddRefed<CSSValue> GetCSSShadowArray(nsCSSShadowArray* aArray,
-                                               bool aIsBoxShadow);
-
-  void GetCSSGradientString(const nsStyleGradient* aGradient,
-                            nsAString& aString);
-  void GetImageRectString(nsIURI* aURI,
-                          const nsStyleSides& aCropRect,
-                          nsString& aString);
-  already_AddRefed<CSSValue> GetScrollSnapPoints(const nsStyleCoord& aCoord);
-  void AppendTimingFunction(nsDOMCSSValueList *aValueList,
-                            const nsTimingFunction& aTimingFunction);
-
-=======
->>>>>>> upstream-releases
   bool ShouldHonorMinSizeAutoInAxis(mozilla::PhysicalAxis aAxis);
 
   /* Properties queryable as CSSValues.
@@ -398,281 +256,34 @@ public:
   already_AddRefed<CSSValue> DoGetBorderBottomWidth();
   already_AddRefed<CSSValue> DoGetBorderLeftWidth();
   already_AddRefed<CSSValue> DoGetBorderRightWidth();
-<<<<<<< HEAD
-  already_AddRefed<CSSValue> DoGetBorderBottomLeftRadius();
-  already_AddRefed<CSSValue> DoGetBorderBottomRightRadius();
-  already_AddRefed<CSSValue> DoGetBorderTopLeftRadius();
-  already_AddRefed<CSSValue> DoGetBorderTopRightRadius();
 
-  /* Border Image */
-  already_AddRefed<CSSValue> DoGetBorderImageSlice();
-  already_AddRefed<CSSValue> DoGetBorderImageWidth();
-  already_AddRefed<CSSValue> DoGetBorderImageOutset();
-
-  /* Box Shadow */
-  already_AddRefed<CSSValue> DoGetBoxShadow();
-
-||||||| merged common ancestors
-  already_AddRefed<CSSValue> DoGetBorderBottomLeftRadius();
-  already_AddRefed<CSSValue> DoGetBorderBottomRightRadius();
-  already_AddRefed<CSSValue> DoGetBorderTopLeftRadius();
-  already_AddRefed<CSSValue> DoGetBorderTopRightRadius();
-
-  /* Border Image */
-  already_AddRefed<CSSValue> DoGetBorderImageSlice();
-  already_AddRefed<CSSValue> DoGetBorderImageWidth();
-  already_AddRefed<CSSValue> DoGetBorderImageOutset();
-  already_AddRefed<CSSValue> DoGetBorderImageRepeat();
-
-  /* Box Shadow */
-  already_AddRefed<CSSValue> DoGetBoxShadow();
-
-  /* Window Shadow */
-
-=======
-
->>>>>>> upstream-releases
   /* Margin Properties */
   already_AddRefed<CSSValue> DoGetMarginTopWidth();
   already_AddRefed<CSSValue> DoGetMarginBottomWidth();
   already_AddRefed<CSSValue> DoGetMarginLeftWidth();
   already_AddRefed<CSSValue> DoGetMarginRightWidth();
 
-<<<<<<< HEAD
-  /* Outline Properties */
-  already_AddRefed<CSSValue> DoGetOutlineWidth();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusBottomLeft();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusBottomRight();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusTopLeft();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusTopRight();
-
-  /* z-index */
-  already_AddRefed<CSSValue> DoGetZIndex();
-
-||||||| merged common ancestors
-  /* Outline Properties */
-  already_AddRefed<CSSValue> DoGetOutlineWidth();
-  already_AddRefed<CSSValue> DoGetOutlineStyle();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusBottomLeft();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusBottomRight();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusTopLeft();
-  already_AddRefed<CSSValue> DoGetOutlineRadiusTopRight();
-
-  /* Quotes Properties */
-  already_AddRefed<CSSValue> DoGetQuotes();
-
-  /* z-index */
-  already_AddRefed<CSSValue> DoGetZIndex();
-
-=======
->>>>>>> upstream-releases
   /* Text Properties */
   already_AddRefed<CSSValue> DoGetLineHeight();
   already_AddRefed<CSSValue> DoGetTextDecoration();
   already_AddRefed<CSSValue> DoGetTextDecorationColor();
   already_AddRefed<CSSValue> DoGetTextDecorationStyle();
-<<<<<<< HEAD
-  already_AddRefed<CSSValue> DoGetTextEmphasisPosition();
-  already_AddRefed<CSSValue> DoGetTextEmphasisStyle();
-  already_AddRefed<CSSValue> DoGetTextOverflow();
-  already_AddRefed<CSSValue> DoGetTextShadow();
-  already_AddRefed<CSSValue> DoGetLetterSpacing();
-  already_AddRefed<CSSValue> DoGetWordSpacing();
-  already_AddRefed<CSSValue> DoGetTabSize();
-  already_AddRefed<CSSValue> DoGetWebkitTextStrokeWidth();
 
-||||||| merged common ancestors
-  already_AddRefed<CSSValue> DoGetTextEmphasisPosition();
-  already_AddRefed<CSSValue> DoGetTextEmphasisStyle();
-  already_AddRefed<CSSValue> DoGetTextOverflow();
-  already_AddRefed<CSSValue> DoGetTextShadow();
-  already_AddRefed<CSSValue> DoGetLetterSpacing();
-  already_AddRefed<CSSValue> DoGetWordSpacing();
-  already_AddRefed<CSSValue> DoGetTabSize();
-  already_AddRefed<CSSValue> DoGetWebkitTextStrokeWidth();
-
-  /* Visibility properties */
-
-  /* Direction properties */
-
-=======
-
->>>>>>> upstream-releases
   /* Display properties */
-<<<<<<< HEAD
-  already_AddRefed<CSSValue> DoGetBinding();
-  already_AddRefed<CSSValue> DoGetDisplay();
-  already_AddRefed<CSSValue> DoGetContain();
-  already_AddRefed<CSSValue> DoGetWillChange();
-  already_AddRefed<CSSValue> DoGetOverflowY();
-  already_AddRefed<CSSValue> DoGetTouchAction();
-||||||| merged common ancestors
-  already_AddRefed<CSSValue> DoGetBinding();
-  already_AddRefed<CSSValue> DoGetDisplay();
-  already_AddRefed<CSSValue> DoGetContain();
-  already_AddRefed<CSSValue> DoGetWillChange();
-  already_AddRefed<CSSValue> DoGetOverflow();
-  already_AddRefed<CSSValue> DoGetOverflowY();
-  already_AddRefed<CSSValue> DoGetOverflowClipBoxBlock();
-  already_AddRefed<CSSValue> DoGetOverflowClipBoxInline();
-  already_AddRefed<CSSValue> DoGetTouchAction();
-=======
->>>>>>> upstream-releases
   already_AddRefed<CSSValue> DoGetTransform();
   already_AddRefed<CSSValue> DoGetTransformOrigin();
   already_AddRefed<CSSValue> DoGetPerspectiveOrigin();
-<<<<<<< HEAD
-  already_AddRefed<CSSValue> DoGetScrollSnapPointsX();
-  already_AddRefed<CSSValue> DoGetScrollSnapPointsY();
-  already_AddRefed<CSSValue> DoGetScrollbarColor();
-
-  /* User interface properties */
-  already_AddRefed<CSSValue> DoGetCaretColor();
-  already_AddRefed<CSSValue> DoGetCursor();
-  already_AddRefed<CSSValue> DoGetForceBrokenImageIcon();
-||||||| merged common ancestors
-  already_AddRefed<CSSValue> DoGetOverscrollBehaviorX();
-  already_AddRefed<CSSValue> DoGetOverscrollBehaviorY();
-  already_AddRefed<CSSValue> DoGetScrollSnapTypeX();
-  already_AddRefed<CSSValue> DoGetScrollSnapTypeY();
-  already_AddRefed<CSSValue> DoGetScrollSnapPointsX();
-  already_AddRefed<CSSValue> DoGetScrollSnapPointsY();
-  already_AddRefed<CSSValue> DoGetScrollSnapDestination();
-  already_AddRefed<CSSValue> DoGetScrollSnapCoordinate();
-  already_AddRefed<CSSValue> DoGetScrollbarColor();
-
-  /* User interface properties */
-  already_AddRefed<CSSValue> DoGetCaretColor();
-  already_AddRefed<CSSValue> DoGetCursor();
-  already_AddRefed<CSSValue> DoGetForceBrokenImageIcon();
-=======
->>>>>>> upstream-releases
 
   /* Column properties */
   already_AddRefed<CSSValue> DoGetColumnRuleWidth();
 
-<<<<<<< HEAD
-  /* CSS Transitions */
-  already_AddRefed<CSSValue> DoGetTransitionProperty();
-  already_AddRefed<CSSValue> DoGetTransitionDuration();
-  already_AddRefed<CSSValue> DoGetTransitionDelay();
-
-  /* CSS Animations */
-  already_AddRefed<CSSValue> DoGetAnimationName();
-  already_AddRefed<CSSValue> DoGetAnimationDuration();
-  already_AddRefed<CSSValue> DoGetAnimationDelay();
-  already_AddRefed<CSSValue> DoGetAnimationIterationCount();
-
-  /* CSS Flexbox properties */
-  already_AddRefed<CSSValue> DoGetFlexBasis();
-  already_AddRefed<CSSValue> DoGetFlexGrow();
-  already_AddRefed<CSSValue> DoGetFlexShrink();
-
-  /* CSS Flexbox/Grid properties */
-
-  /* CSS Box Alignment properties */
-  already_AddRefed<CSSValue> DoGetAlignContent();
-  already_AddRefed<CSSValue> DoGetAlignItems();
-  already_AddRefed<CSSValue> DoGetAlignSelf();
-  already_AddRefed<CSSValue> DoGetJustifyContent();
-  already_AddRefed<CSSValue> DoGetJustifyItems();
-  already_AddRefed<CSSValue> DoGetJustifySelf();
-  already_AddRefed<CSSValue> DoGetColumnGap();
-  already_AddRefed<CSSValue> DoGetRowGap();
-
-  /* SVG properties */
-  already_AddRefed<CSSValue> DoGetFill();
-  already_AddRefed<CSSValue> DoGetStroke();
-  already_AddRefed<CSSValue> DoGetMarkerEnd();
-  already_AddRefed<CSSValue> DoGetMarkerMid();
-  already_AddRefed<CSSValue> DoGetMarkerStart();
-  already_AddRefed<CSSValue> DoGetStrokeDasharray();
-
-  already_AddRefed<CSSValue> DoGetStrokeDashoffset();
-  already_AddRefed<CSSValue> DoGetStrokeWidth();
-
-  already_AddRefed<CSSValue> DoGetFillOpacity();
-  already_AddRefed<CSSValue> DoGetStrokeMiterlimit();
-  already_AddRefed<CSSValue> DoGetStrokeOpacity();
-
-  already_AddRefed<CSSValue> DoGetFilter();
-  already_AddRefed<CSSValue> DoGetPaintOrder();
-
-||||||| merged common ancestors
-  /* CSS Transitions */
-  already_AddRefed<CSSValue> DoGetTransitionProperty();
-  already_AddRefed<CSSValue> DoGetTransitionDuration();
-  already_AddRefed<CSSValue> DoGetTransitionDelay();
-  already_AddRefed<CSSValue> DoGetTransitionTimingFunction();
-
-  /* CSS Animations */
-  already_AddRefed<CSSValue> DoGetAnimationName();
-  already_AddRefed<CSSValue> DoGetAnimationDuration();
-  already_AddRefed<CSSValue> DoGetAnimationDelay();
-  already_AddRefed<CSSValue> DoGetAnimationTimingFunction();
-  already_AddRefed<CSSValue> DoGetAnimationIterationCount();
-
-  /* CSS Flexbox properties */
-  already_AddRefed<CSSValue> DoGetFlexBasis();
-  already_AddRefed<CSSValue> DoGetFlexGrow();
-  already_AddRefed<CSSValue> DoGetFlexShrink();
-
-  /* CSS Flexbox/Grid properties */
-
-  /* CSS Box Alignment properties */
-  already_AddRefed<CSSValue> DoGetAlignContent();
-  already_AddRefed<CSSValue> DoGetAlignItems();
-  already_AddRefed<CSSValue> DoGetAlignSelf();
-  already_AddRefed<CSSValue> DoGetJustifyContent();
-  already_AddRefed<CSSValue> DoGetJustifyItems();
-  already_AddRefed<CSSValue> DoGetJustifySelf();
-  already_AddRefed<CSSValue> DoGetColumnGap();
-  already_AddRefed<CSSValue> DoGetRowGap();
-
-  /* SVG properties */
-  already_AddRefed<CSSValue> DoGetFill();
-  already_AddRefed<CSSValue> DoGetStroke();
-  already_AddRefed<CSSValue> DoGetMarkerEnd();
-  already_AddRefed<CSSValue> DoGetMarkerMid();
-  already_AddRefed<CSSValue> DoGetMarkerStart();
-  already_AddRefed<CSSValue> DoGetStrokeDasharray();
-
-  already_AddRefed<CSSValue> DoGetStrokeDashoffset();
-  already_AddRefed<CSSValue> DoGetStrokeWidth();
-
-  already_AddRefed<CSSValue> DoGetFillOpacity();
-  already_AddRefed<CSSValue> DoGetStrokeMiterlimit();
-  already_AddRefed<CSSValue> DoGetStrokeOpacity();
-
-
-
-
-  already_AddRefed<CSSValue> DoGetFilter();
-  already_AddRefed<CSSValue> DoGetPaintOrder();
-
-
-=======
->>>>>>> upstream-releases
   // For working around a MSVC bug. See related comment in
   // GenerateComputedDOMStyleGenerated.py.
   already_AddRefed<CSSValue> DummyGetter();
 
   /* Helper functions */
   void SetValueFromComplexColor(nsROCSSPrimitiveValue* aValue,
-<<<<<<< HEAD
-                                const mozilla::StyleComplexColor& aColor);
-  void SetValueToPositionCoord(const mozilla::Position::Coord& aCoord,
-                               nsROCSSPrimitiveValue* aValue);
-||||||| merged common ancestors
-                                const mozilla::StyleComplexColor& aColor);
-  void SetValueForWidgetColor(nsROCSSPrimitiveValue* aValue,
-                              const mozilla::StyleComplexColor& aColor,
-                              mozilla::StyleAppearance aWidgetType);
-  void SetValueToPositionCoord(const mozilla::Position::Coord& aCoord,
-                               nsROCSSPrimitiveValue* aValue);
-=======
                                 const mozilla::StyleColor& aColor);
->>>>>>> upstream-releases
   void SetValueToPosition(const mozilla::Position& aPosition,
                           nsDOMCSSValueList* aValueList);
   void SetValueToURLValue(const mozilla::StyleComputedUrl* aURL,
@@ -680,50 +291,6 @@ public:
 
   void SetValueToSize(nsROCSSPrimitiveValue* aValue, const mozilla::StyleSize&);
 
-<<<<<<< HEAD
-  /**
-   * Method to set aValue to aCoord.  If aCoord is a percentage value and
-   * aPercentageBaseGetter is not null, aPercentageBaseGetter is called.  If it
-   * returns true, the percentage base it outputs in its out param is used
-   * to compute an nscoord value.  If the getter is null or returns false,
-   * the percent value of aCoord is set as a percent value on aValue.  aTable,
-   * if not null, is the keyword table to handle eStyleUnit_Enumerated.  When
-   * calling SetAppUnits on aValue (for coord or percent values), the value
-   * passed in will be clamped to be no less than aMinAppUnits and no more than
-   * aMaxAppUnits.
-   *
-   * XXXbz should caller pass in some sort of bitfield indicating which units
-   * can be expected or something?
-   */
-  void SetValueToCoord(nsROCSSPrimitiveValue* aValue,
-                       const nsStyleCoord& aCoord, bool aClampNegativeCalc,
-                       PercentageBaseGetter aPercentageBaseGetter = nullptr,
-                       const KTableEntry aTable[] = nullptr,
-                       nscoord aMinAppUnits = nscoord_MIN,
-                       nscoord aMaxAppUnits = nscoord_MAX);
-||||||| merged common ancestors
-  /**
-   * Method to set aValue to aCoord.  If aCoord is a percentage value and
-   * aPercentageBaseGetter is not null, aPercentageBaseGetter is called.  If it
-   * returns true, the percentage base it outputs in its out param is used
-   * to compute an nscoord value.  If the getter is null or returns false,
-   * the percent value of aCoord is set as a percent value on aValue.  aTable,
-   * if not null, is the keyword table to handle eStyleUnit_Enumerated.  When
-   * calling SetAppUnits on aValue (for coord or percent values), the value
-   * passed in will be clamped to be no less than aMinAppUnits and no more than
-   * aMaxAppUnits.
-   *
-   * XXXbz should caller pass in some sort of bitfield indicating which units
-   * can be expected or something?
-   */
-  void SetValueToCoord(nsROCSSPrimitiveValue* aValue,
-                       const nsStyleCoord& aCoord,
-                       bool aClampNegativeCalc,
-                       PercentageBaseGetter aPercentageBaseGetter = nullptr,
-                       const KTableEntry aTable[] = nullptr,
-                       nscoord aMinAppUnits = nscoord_MIN,
-                       nscoord aMaxAppUnits = nscoord_MAX);
-=======
   void SetValueToLengthPercentageOrAuto(nsROCSSPrimitiveValue* aValue,
                                         const LengthPercentageOrAuto&,
                                         bool aClampNegativeCalc);
@@ -736,7 +303,6 @@ public:
 
   void SetValueToExtremumLength(nsROCSSPrimitiveValue* aValue,
                                 StyleExtremumLength);
->>>>>>> upstream-releases
 
   /**
    * If aCoord is a eStyleUnit_Coord returns the nscoord.  If it's
@@ -746,24 +312,6 @@ public:
    */
   nscoord StyleCoordToNSCoord(const LengthPercentage& aCoord,
                               PercentageBaseGetter aPercentageBaseGetter,
-<<<<<<< HEAD
-                              nscoord aDefaultValue, bool aClampNegativeCalc);
-
-  /**
-   * Append coord values from four sides. It omits values when possible.
-   */
-  void AppendFourSideCoordValues(nsDOMCSSValueList* aList,
-                                 const nsStyleSides& aValues);
-||||||| merged common ancestors
-                              nscoord aDefaultValue,
-                              bool aClampNegativeCalc);
-
-  /**
-   * Append coord values from four sides. It omits values when possible.
-   */
-  void AppendFourSideCoordValues(nsDOMCSSValueList* aList,
-                                 const nsStyleSides& aValues);
-=======
                               nscoord aDefaultValue, bool aClampNegativeCalc);
   template <typename LengthPercentageLike>
   nscoord StyleCoordToNSCoord(const LengthPercentageLike& aCoord,
@@ -776,7 +324,6 @@ public:
     }
     return aDefaultValue;
   }
->>>>>>> upstream-releases
 
   bool GetCBContentWidth(nscoord& aWidth);
   bool GetCBContentHeight(nscoord& aHeight);
@@ -784,76 +331,13 @@ public:
   bool GetCBPaddingRectHeight(nscoord& aHeight);
   bool GetScrollFrameContentWidth(nscoord& aWidth);
   bool GetScrollFrameContentHeight(nscoord& aHeight);
-<<<<<<< HEAD
-  bool GetFrameBoundsWidthForTransform(nscoord& aWidth);
-  bool GetFrameBoundsHeightForTransform(nscoord& aHeight);
-||||||| merged common ancestors
-  bool GetFrameBoundsWidthForTransform(nscoord &aWidth);
-  bool GetFrameBoundsHeightForTransform(nscoord &aHeight);
-=======
->>>>>>> upstream-releases
   bool GetFrameBorderRectWidth(nscoord& aWidth);
   bool GetFrameBorderRectHeight(nscoord& aHeight);
 
-<<<<<<< HEAD
-  /* Helper functions for computing and serializing a nsStyleCoord. */
-  void SetCssTextToCoord(nsAString& aCssText, const nsStyleCoord& aCoord,
-                         bool aClampNegativeCalc);
-  already_AddRefed<CSSValue> CreatePrimitiveValueForStyleFilter(
-      const nsStyleFilter& aStyleFilter);
-
-  template <typename ReferenceBox>
-  already_AddRefed<CSSValue> CreatePrimitiveValueForShapeSource(
-      const mozilla::UniquePtr<mozilla::StyleBasicShape>& aStyleBasicShape,
-      ReferenceBox aReferenceBox, const KTableEntry aBoxKeywordTable[]);
-
-  // Helper function for computing basic shape styles.
-  already_AddRefed<CSSValue> CreatePrimitiveValueForBasicShape(
-      const mozilla::UniquePtr<mozilla::StyleBasicShape>& aStyleBasicShape);
-  void BoxValuesToString(nsAString& aString,
-                         const nsTArray<nsStyleCoord>& aBoxValues,
-                         bool aClampNegativeCalc);
-  void BasicShapeRadiiToString(nsAString& aCssText,
-                               const nsStyleCorners& aCorners);
-
-  // Find out if we can safely skip flushing for aDocument (i.e. pending
-  // restyles does not affect mContent).
-  bool NeedsToFlush(nsIDocument* aDocument) const;
-
-||||||| merged common ancestors
-  /* Helper functions for computing and serializing a nsStyleCoord. */
-  void SetCssTextToCoord(nsAString& aCssText, const nsStyleCoord& aCoord,
-                         bool aClampNegativeCalc);
-  already_AddRefed<CSSValue> CreatePrimitiveValueForStyleFilter(
-    const nsStyleFilter& aStyleFilter);
-
-  template<typename ReferenceBox>
-  already_AddRefed<CSSValue>
-  CreatePrimitiveValueForShapeSource(
-    const mozilla::UniquePtr<mozilla::StyleBasicShape>& aStyleBasicShape,
-    ReferenceBox aReferenceBox,
-    const KTableEntry aBoxKeywordTable[]);
-
-  // Helper function for computing basic shape styles.
-  already_AddRefed<CSSValue> CreatePrimitiveValueForBasicShape(
-    const mozilla::UniquePtr<mozilla::StyleBasicShape>& aStyleBasicShape);
-  void BoxValuesToString(nsAString& aString,
-                         const nsTArray<nsStyleCoord>& aBoxValues,
-                         bool aClampNegativeCalc);
-  void BasicShapeRadiiToString(nsAString& aCssText,
-                               const nsStyleCorners& aCorners);
-
-  // Find out if we can safely skip flushing for aDocument (i.e. pending
-  // restyles does not affect mContent).
-  bool NeedsToFlush(nsIDocument* aDocument) const;
-
-
-=======
   // Find out if we can safely skip flushing (i.e. pending restyles do not
   // affect mElement).
   bool NeedsToFlush() const;
 
->>>>>>> upstream-releases
   static ComputedStyleMap* GetComputedStyleMap();
 
   // We don't really have a good immutable representation of "presentation".
@@ -925,23 +409,9 @@ public:
   friend struct ComputedStyleMap;
 };
 
-<<<<<<< HEAD
-already_AddRefed<nsComputedDOMStyle> NS_NewComputedDOMStyle(
-    mozilla::dom::Element* aElement, const nsAString& aPseudoElt,
-    nsIDocument* aDocument,
-    nsComputedDOMStyle::StyleType aStyleType = nsComputedDOMStyle::eAll);
-||||||| merged common ancestors
-already_AddRefed<nsComputedDOMStyle>
-NS_NewComputedDOMStyle(mozilla::dom::Element* aElement,
-                       const nsAString& aPseudoElt,
-                       nsIDocument* aDocument,
-                       nsComputedDOMStyle::StyleType aStyleType =
-                         nsComputedDOMStyle::eAll);
-=======
 already_AddRefed<nsComputedDOMStyle> NS_NewComputedDOMStyle(
     mozilla::dom::Element* aElement, const nsAString& aPseudoElt,
     mozilla::dom::Document* aDocument,
     nsComputedDOMStyle::StyleType aStyleType = nsComputedDOMStyle::eAll);
->>>>>>> upstream-releases
 
 #endif /* nsComputedDOMStyle_h__ */

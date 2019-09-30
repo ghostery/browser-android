@@ -83,15 +83,6 @@ addMessageListener("BrowserElement:CreateAboutBlank", message => {
 
 // We may not get any responses to Browser:Init if the browser element
 // is torn down too quickly.
-<<<<<<< HEAD
-var outerWindowID = docShell.outerWindowID;
-var browsingContextId = docShell.browsingContext.id;
-sendAsyncMessage("Browser:Init", {outerWindowID, browsingContextId});
-||||||| merged common ancestors
-var outerWindowID = content.windowUtils.outerWindowID;
-sendAsyncMessage("Browser:Init", {outerWindowID});
-=======
 var outerWindowID = docShell.outerWindowID;
 var browsingContextId = docShell.browsingContext.id;
 sendAsyncMessage("Browser:Init", { outerWindowID, browsingContextId });
->>>>>>> upstream-releases

@@ -39,13 +39,7 @@ yo{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -167,16 +161,6 @@ yo{
                 yMd{"d/M/y"}
                 yQQQ{"QQQ y"}
                 yQQQQ{"QQQQ y"}
-<<<<<<< HEAD
-                yw{
-                    other{"'week' w 'of' Y"}
-                }
-||||||| merged common ancestors
-                yw{
-                    other{"'week' w 'of' y"}
-                }
-=======
->>>>>>> upstream-releases
             }
             dayNames{
                 format{

@@ -27,17 +27,8 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-static nsresult FreeBSDGetAccessPointData(
-    nsCOMArray<nsWifiAccessPoint> &accessPoints) {
-||||||| merged common ancestors
-static nsresult
-FreeBSDGetAccessPointData(nsCOMArray<nsWifiAccessPoint> &accessPoints)
-{
-=======
 static nsresult FreeBSDGetAccessPointData(
     nsCOMArray<nsWifiAccessPoint>& accessPoints) {
->>>>>>> upstream-releases
   // get list of interfaces
   struct ifaddrs* ifal;
   if (getifaddrs(&ifal) < 0) {
@@ -101,25 +92,11 @@ static nsresult FreeBSDGetAccessPointData(
     close(s);
 
     // loop through WiFi networks and build geoloc-lookup structure
-<<<<<<< HEAD
-    char *vsr = (char *)i802r.i_data;
-||||||| merged common ancestors
-    char *vsr = (char *) i802r.i_data;
-=======
     char* vsr = (char*)i802r.i_data;
->>>>>>> upstream-releases
     unsigned len = i802r.i_len;
     while (len >= sizeof(struct ieee80211req_scan_result)) {
-<<<<<<< HEAD
-      struct ieee80211req_scan_result *isr =
-          (struct ieee80211req_scan_result *)vsr;
-||||||| merged common ancestors
-      struct ieee80211req_scan_result *isr =
-        (struct ieee80211req_scan_result *) vsr;
-=======
       struct ieee80211req_scan_result* isr =
           (struct ieee80211req_scan_result*)vsr;
->>>>>>> upstream-releases
 
       // determine size of this entry
       char* id;

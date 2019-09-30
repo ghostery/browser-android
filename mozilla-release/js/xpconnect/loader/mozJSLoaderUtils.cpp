@@ -43,23 +43,10 @@ nsresult ReadCachedScript(StartupCache* cache, nsACString& uri, JSContext* cx,
   return NS_ERROR_OUT_OF_MEMORY;
 }
 
-<<<<<<< HEAD
-nsresult WriteCachedScript(StartupCache* cache, nsACString& uri, JSContext* cx,
-                           HandleScript script) {
-  MOZ_ASSERT(nsJSPrincipals::get(JS_GetScriptPrincipals(script))
-                 ->GetIsSystemPrincipal());
-||||||| merged common ancestors
-nsresult
-WriteCachedScript(StartupCache* cache, nsACString& uri, JSContext* cx,
-                  HandleScript script)
-{
-    MOZ_ASSERT(nsJSPrincipals::get(JS_GetScriptPrincipals(script))->GetIsSystemPrincipal());
-=======
 nsresult WriteCachedScript(StartupCache* cache, nsACString& uri, JSContext* cx,
                            HandleScript script) {
   MOZ_ASSERT(
       nsJSPrincipals::get(JS_GetScriptPrincipals(script))->IsSystemPrincipal());
->>>>>>> upstream-releases
 
   JS::TranscodeBuffer buffer;
   JS::TranscodeResult code = JS::EncodeScript(cx, buffer, script);

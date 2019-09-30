@@ -7,19 +7,6 @@
 #include "AutoSQLiteLifetime.h"
 #include "sqlite3.h"
 
-<<<<<<< HEAD
-#ifdef MOZ_STORAGE_MEMORY
-#include "mozmemory.h"
-#ifdef MOZ_DMD
-#include "DMD.h"
-#endif
-||||||| merged common ancestors
-#ifdef MOZ_STORAGE_MEMORY
-#  include "mozmemory.h"
-#  ifdef MOZ_DMD
-#    include "DMD.h"
-#  endif
-=======
 #ifdef MOZ_MEMORY
 #  include "mozmemory.h"
 #  ifdef MOZ_DMD
@@ -35,7 +22,6 @@ extern mozilla::Atomic<size_t> gSqliteMemoryUsed;
 using mozilla::storage::gSqliteMemoryUsed;
 
 #  endif
->>>>>>> upstream-releases
 
 namespace {
 
@@ -77,52 +63,23 @@ MOZ_DEFINE_MALLOC_SIZE_OF_ON_FREE(SqliteMallocSizeOfOnFree)
 
 #  endif
 
-<<<<<<< HEAD
-static void *sqliteMemMalloc(int n) {
-  void *p = ::malloc(n);
-#ifdef MOZ_DMD
-||||||| merged common ancestors
-static void *sqliteMemMalloc(int n)
-{
-  void* p = ::malloc(n);
-#ifdef MOZ_DMD
-=======
 static void* sqliteMemMalloc(int n) {
   void* p = ::malloc(n);
 #  ifdef MOZ_DMD
->>>>>>> upstream-releases
   gSqliteMemoryUsed += SqliteMallocSizeOfOnAlloc(p);
 #  endif
   return p;
 }
 
-<<<<<<< HEAD
-static void sqliteMemFree(void *p) {
-#ifdef MOZ_DMD
-||||||| merged common ancestors
-static void sqliteMemFree(void *p)
-{
-#ifdef MOZ_DMD
-=======
 static void sqliteMemFree(void* p) {
 #  ifdef MOZ_DMD
->>>>>>> upstream-releases
   gSqliteMemoryUsed -= SqliteMallocSizeOfOnFree(p);
 #  endif
   ::free(p);
 }
 
-<<<<<<< HEAD
-static void *sqliteMemRealloc(void *p, int n) {
-#ifdef MOZ_DMD
-||||||| merged common ancestors
-static void *sqliteMemRealloc(void *p, int n)
-{
-#ifdef MOZ_DMD
-=======
 static void* sqliteMemRealloc(void* p, int n) {
 #  ifdef MOZ_DMD
->>>>>>> upstream-releases
   gSqliteMemoryUsed -= SqliteMallocSizeOfOnFree(p);
   void* pnew = ::realloc(p, n);
   if (pnew) {
@@ -137,16 +94,7 @@ static void* sqliteMemRealloc(void* p, int n) {
 #  endif
 }
 
-<<<<<<< HEAD
-static int sqliteMemSize(void *p) { return ::moz_malloc_usable_size(p); }
-||||||| merged common ancestors
-static int sqliteMemSize(void *p)
-{
-  return ::moz_malloc_usable_size(p);
-}
-=======
 static int sqliteMemSize(void* p) { return ::moz_malloc_usable_size(p); }
->>>>>>> upstream-releases
 
 static int sqliteMemRoundup(int n) {
   n = malloc_good_size(n);
@@ -157,51 +105,15 @@ static int sqliteMemRoundup(int n) {
   return n <= 8 ? 8 : n;
 }
 
-<<<<<<< HEAD
-static int sqliteMemInit(void *p) { return 0; }
-||||||| merged common ancestors
-static int sqliteMemInit(void *p)
-{
-  return 0;
-}
-=======
 static int sqliteMemInit(void* p) { return 0; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void sqliteMemShutdown(void *p) {}
-||||||| merged common ancestors
-static void sqliteMemShutdown(void *p)
-{
-}
-=======
 static void sqliteMemShutdown(void* p) {}
->>>>>>> upstream-releases
 
 const sqlite3_mem_methods memMethods = {
-<<<<<<< HEAD
     &sqliteMemMalloc,  &sqliteMemFree, &sqliteMemRealloc,  &sqliteMemSize,
     &sqliteMemRoundup, &sqliteMemInit, &sqliteMemShutdown, nullptr};
 
 }  // namespace
-||||||| merged common ancestors
-  &sqliteMemMalloc,
-  &sqliteMemFree,
-  &sqliteMemRealloc,
-  &sqliteMemSize,
-  &sqliteMemRoundup,
-  &sqliteMemInit,
-  &sqliteMemShutdown,
-  nullptr
-};
-
-} // namespace
-=======
-    &sqliteMemMalloc,  &sqliteMemFree, &sqliteMemRealloc,  &sqliteMemSize,
-    &sqliteMemRoundup, &sqliteMemInit, &sqliteMemShutdown, nullptr};
-
-}  // namespace
->>>>>>> upstream-releases
 
 #endif  // MOZ_MEMORY
 

@@ -20,17 +20,6 @@ public:
     SkPictureImageGenerator(const SkImageInfo& info, sk_sp<SkPicture>, const SkMatrix*,
                             const SkPaint*);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    if (SkImage::BitDepth::kF16 == bitDepth && (!colorSpace || !colorSpace->gammaIsLinear())) {
-        return nullptr;
-    }
-
-    if (colorSpace && (!colorSpace->gammaCloseToSRGB() && !colorSpace->gammaIsLinear())) {
-        return nullptr;
-    }
-
-=======
 protected:
     bool onGetPixels(const SkImageInfo& info, void* pixels, size_t rowBytes, const Options& opts)
         override;
@@ -59,7 +48,6 @@ SkImageGenerator::MakeFromPicture(const SkISize& size, sk_sp<SkPicture> picture,
         return nullptr;
     }
 
->>>>>>> upstream-releases
     SkColorType colorType = kN32_SkColorType;
     if (SkImage::BitDepth::kF16 == bitDepth) {
         colorType = kRGBA_F16_SkColorType;
@@ -91,16 +79,6 @@ SkPictureImageGenerator::SkPictureImageGenerator(const SkImageInfo& info, sk_sp<
 
 bool SkPictureImageGenerator::onGetPixels(const SkImageInfo& info, void* pixels, size_t rowBytes,
                                           const Options& opts) {
-<<<<<<< HEAD
-    // TODO: Stop using xform canvas and simplify this code once rasterization works the same way
-    bool useXformCanvas = /* kIgnore == behavior && */ info.colorSpace();
-
-||||||| merged common ancestors
-    bool useXformCanvas =
-            SkTransferFunctionBehavior::kIgnore == opts.fBehavior && info.colorSpace();
-
-=======
->>>>>>> upstream-releases
     SkSurfaceProps props(0, kUnknown_SkPixelGeometry);
     std::unique_ptr<SkCanvas> canvas = SkCanvas::MakeRasterDirect(info, pixels, rowBytes, &props);
     if (!canvas) {
@@ -118,23 +96,9 @@ bool SkPictureImageGenerator::onGetPixels(const SkImageInfo& info, void* pixels,
 #include "GrRecordingContextPriv.h"
 
 sk_sp<GrTextureProxy> SkPictureImageGenerator::onGenerateTexture(
-<<<<<<< HEAD
-        GrContext* ctx, const SkImageInfo& info, const SkIPoint& origin, bool willNeedMipMaps) {
-||||||| merged common ancestors
-        GrContext* ctx, const SkImageInfo& info, const SkIPoint& origin,
-        SkTransferFunctionBehavior behavior, bool willNeedMipMaps) {
-=======
         GrRecordingContext* ctx, const SkImageInfo& info,
         const SkIPoint& origin, bool willNeedMipMaps) {
->>>>>>> upstream-releases
     SkASSERT(ctx);
-<<<<<<< HEAD
-    // TODO: Stop using xform canvas and simplify this code once rasterization works the same way
-    bool useXformCanvas = /* behavior == kIgnore && */ info.colorSpace();
-||||||| merged common ancestors
-    bool useXformCanvas = SkTransferFunctionBehavior::kIgnore == behavior && info.colorSpace();
-=======
->>>>>>> upstream-releases
 
     SkSurfaceProps props(0, kUnknown_SkPixelGeometry);
 

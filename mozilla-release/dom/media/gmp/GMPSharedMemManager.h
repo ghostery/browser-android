@@ -63,26 +63,12 @@ class GMPSharedMemManager {
   // crashed
   virtual uint32_t NumInUse(GMPSharedMem::GMPMemoryClasses aClass);
 
-<<<<<<< HEAD
-  // These have to be implemented using the AllocShmem/etc provided by the
-  // IPDL-generated interfaces, so have the Parent/Child implement them.
-  virtual bool Alloc(size_t aSize,
-                     ipc::Shmem::SharedMemory::SharedMemoryType aType,
-                     ipc::Shmem* aMem) = 0;
-  virtual void Dealloc(ipc::Shmem& aMem) = 0;
-||||||| merged common ancestors
-  // These have to be implemented using the AllocShmem/etc provided by the IPDL-generated interfaces,
-  // so have the Parent/Child implement them.
-  virtual bool Alloc(size_t aSize, ipc::Shmem::SharedMemory::SharedMemoryType aType, ipc::Shmem* aMem) = 0;
-  virtual void Dealloc(ipc::Shmem& aMem) = 0;
-=======
   // These have to be implemented using the AllocShmem/etc provided by the
   // IPDL-generated interfaces, so have the Parent/Child implement them.
   virtual bool Alloc(size_t aSize,
                      ipc::Shmem::SharedMemory::SharedMemoryType aType,
                      ipc::Shmem* aMem) = 0;
   virtual void Dealloc(ipc::Shmem&& aMem) = 0;
->>>>>>> upstream-releases
 
  private:
   nsTArray<ipc::Shmem>& GetGmpFreelist(GMPSharedMem::GMPMemoryClasses aTypes) {

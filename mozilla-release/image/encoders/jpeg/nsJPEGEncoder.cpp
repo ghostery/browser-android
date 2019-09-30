@@ -414,21 +414,12 @@ void nsJPEGEncoder::NotifyListener() {
     mCallbackTarget = nullptr;
     mNotifyThreshold = 0;
 
-<<<<<<< HEAD
-void  // static
-nsJPEGEncoder::initDestination(jpeg_compress_struct* cinfo) {
-||||||| merged common ancestors
-void // static
-nsJPEGEncoder::initDestination(jpeg_compress_struct* cinfo)
-{
-=======
     callback->OnInputStreamReady(this);
   }
 }
 
 /* static */
 void nsJPEGEncoderInternal::initDestination(jpeg_compress_struct* cinfo) {
->>>>>>> upstream-releases
   nsJPEGEncoder* that = static_cast<nsJPEGEncoder*>(cinfo->client_data);
   NS_ASSERTION(!that->mImageBuffer, "Image buffer already initialized");
 
@@ -440,40 +431,8 @@ void nsJPEGEncoderInternal::initDestination(jpeg_compress_struct* cinfo) {
   cinfo->dest->free_in_buffer = that->mImageBufferSize;
 }
 
-<<<<<<< HEAD
-// nsJPEGEncoder::emptyOutputBuffer
-//
-//    This is called whenever the buffer has filled (free_in_buffer reaches
-//    zero).  In typical applications, it should write out the *entire* buffer
-//    (use the saved start address and buffer length; ignore the current state
-//    of next_output_byte and free_in_buffer).  Then reset the pointer & count
-//    to the start of the buffer, and return TRUE indicating that the buffer
-//    has been dumped.  free_in_buffer must be set to a positive value when
-//    TRUE is returned.  A FALSE return should only be used when I/O suspension
-//    is desired (this operating mode is discussed in the next section).
-
-boolean  // static
-nsJPEGEncoder::emptyOutputBuffer(jpeg_compress_struct* cinfo) {
-||||||| merged common ancestors
-
-// nsJPEGEncoder::emptyOutputBuffer
-//
-//    This is called whenever the buffer has filled (free_in_buffer reaches
-//    zero).  In typical applications, it should write out the *entire* buffer
-//    (use the saved start address and buffer length; ignore the current state
-//    of next_output_byte and free_in_buffer).  Then reset the pointer & count
-//    to the start of the buffer, and return TRUE indicating that the buffer
-//    has been dumped.  free_in_buffer must be set to a positive value when
-//    TRUE is returned.  A FALSE return should only be used when I/O suspension
-//    is desired (this operating mode is discussed in the next section).
-
-boolean // static
-nsJPEGEncoder::emptyOutputBuffer(jpeg_compress_struct* cinfo)
-{
-=======
 /* static */
 boolean nsJPEGEncoderInternal::emptyOutputBuffer(jpeg_compress_struct* cinfo) {
->>>>>>> upstream-releases
   nsJPEGEncoder* that = static_cast<nsJPEGEncoder*>(cinfo->client_data);
   NS_ASSERTION(that->mImageBuffer, "No buffer to empty!");
 
@@ -508,32 +467,8 @@ boolean nsJPEGEncoderInternal::emptyOutputBuffer(jpeg_compress_struct* cinfo) {
   return 1;
 }
 
-<<<<<<< HEAD
-// nsJPEGEncoder::termDestination
-//
-//    Terminate destination --- called by jpeg_finish_compress() after all data
-//    has been written.  In most applications, this must flush any data
-//    remaining in the buffer.  Use either next_output_byte or free_in_buffer
-//    to determine how much data is in the buffer.
-
-void  // static
-nsJPEGEncoder::termDestination(jpeg_compress_struct* cinfo) {
-||||||| merged common ancestors
-
-// nsJPEGEncoder::termDestination
-//
-//    Terminate destination --- called by jpeg_finish_compress() after all data
-//    has been written.  In most applications, this must flush any data
-//    remaining in the buffer.  Use either next_output_byte or free_in_buffer
-//    to determine how much data is in the buffer.
-
-void // static
-nsJPEGEncoder::termDestination(jpeg_compress_struct* cinfo)
-{
-=======
 /* static */
 void nsJPEGEncoderInternal::termDestination(jpeg_compress_struct* cinfo) {
->>>>>>> upstream-releases
   nsJPEGEncoder* that = static_cast<nsJPEGEncoder*>(cinfo->client_data);
   if (!that->mImageBuffer) {
     return;
@@ -544,28 +479,8 @@ void nsJPEGEncoderInternal::termDestination(jpeg_compress_struct* cinfo) {
   that->NotifyListener();
 }
 
-<<<<<<< HEAD
-// nsJPEGEncoder::errorExit
-//
-//    Override the standard error method in the IJG JPEG decoder code. This
-//    was mostly copied from nsJPEGDecoder.cpp
-
-void  // static
-nsJPEGEncoder::errorExit(jpeg_common_struct* cinfo) {
-||||||| merged common ancestors
-
-// nsJPEGEncoder::errorExit
-//
-//    Override the standard error method in the IJG JPEG decoder code. This
-//    was mostly copied from nsJPEGDecoder.cpp
-
-void // static
-nsJPEGEncoder::errorExit(jpeg_common_struct* cinfo)
-{
-=======
 /* static */
 void nsJPEGEncoderInternal::errorExit(jpeg_common_struct* cinfo) {
->>>>>>> upstream-releases
   nsresult error_code;
   encoder_error_mgr* err = (encoder_error_mgr*)cinfo->err;
 
@@ -581,70 +496,4 @@ void nsJPEGEncoderInternal::errorExit(jpeg_common_struct* cinfo) {
   // Return control to the setjmp point.  We pass an nsresult masquerading as
   // an int, which works because the setjmp() caller casts it back.
   longjmp(err->setjmp_buffer, static_cast<int>(error_code));
-<<<<<<< HEAD
 }
-
-void nsJPEGEncoder::NotifyListener() {
-  // We might call this function on multiple threads (any threads that call
-  // AsyncWait and any that do encoding) so we lock to avoid notifying the
-  // listener twice about the same data (which generally leads to a truncated
-  // image).
-  ReentrantMonitorAutoEnter autoEnter(mReentrantMonitor);
-
-  if (mCallback &&
-      (mImageBufferUsed - mImageBufferReadPoint >= mNotifyThreshold ||
-       mFinished)) {
-    nsCOMPtr<nsIInputStreamCallback> callback;
-    if (mCallbackTarget) {
-      callback = NS_NewInputStreamReadyEvent("nsJPEGEncoder::NotifyListener",
-                                             mCallback, mCallbackTarget);
-    } else {
-      callback = mCallback;
-    }
-
-    NS_ASSERTION(callback, "Shouldn't fail to make the callback");
-    // Null the callback first because OnInputStreamReady could reenter
-    // AsyncWait
-    mCallback = nullptr;
-    mCallbackTarget = nullptr;
-    mNotifyThreshold = 0;
-
-    callback->OnInputStreamReady(this);
-  }
-}
-||||||| merged common ancestors
-}
-
-void
-nsJPEGEncoder::NotifyListener()
-{
-  // We might call this function on multiple threads (any threads that call
-  // AsyncWait and any that do encoding) so we lock to avoid notifying the
-  // listener twice about the same data (which generally leads to a truncated
-  // image).
-  ReentrantMonitorAutoEnter autoEnter(mReentrantMonitor);
-
-  if (mCallback &&
-      (mImageBufferUsed - mImageBufferReadPoint >= mNotifyThreshold ||
-       mFinished)) {
-    nsCOMPtr<nsIInputStreamCallback> callback;
-    if (mCallbackTarget) {
-      callback = NS_NewInputStreamReadyEvent("nsJPEGEncoder::NotifyListener",
-                                             mCallback, mCallbackTarget);
-    } else {
-      callback = mCallback;
-    }
-
-    NS_ASSERTION(callback, "Shouldn't fail to make the callback");
-    // Null the callback first because OnInputStreamReady could reenter
-    // AsyncWait
-    mCallback = nullptr;
-    mCallbackTarget = nullptr;
-    mNotifyThreshold = 0;
-
-    callback->OnInputStreamReady(this);
-  }
-}
-=======
-}
->>>>>>> upstream-releases

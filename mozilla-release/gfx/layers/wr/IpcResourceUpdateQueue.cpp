@@ -248,29 +248,6 @@ bool ShmSegmentsReader::Read(const layers::OffsetRange& aRange,
   return aInto.Length() - initialLength == aRange.length();
 }
 
-<<<<<<< HEAD
-IpcResourceUpdateQueue::IpcResourceUpdateQueue(
-    layers::WebRenderBridgeChild* aAllocator, size_t aChunkSize)
-    : mWriter(aAllocator, aChunkSize) {}
-
-IpcResourceUpdateQueue::IpcResourceUpdateQueue(
-    IpcResourceUpdateQueue&& aOther) noexcept
-    : mWriter(std::move(aOther.mWriter)),
-      mUpdates(std::move(aOther.mUpdates)) {}
-
-IpcResourceUpdateQueue& IpcResourceUpdateQueue::operator=(
-    IpcResourceUpdateQueue&& aOther) noexcept {
-  MOZ_ASSERT(IsEmpty(), "Will forget existing updates!");
-  mWriter = std::move(aOther.mWriter);
-  mUpdates = std::move(aOther.mUpdates);
-  return *this;
-}
-||||||| merged common ancestors
-IpcResourceUpdateQueue::IpcResourceUpdateQueue(layers::WebRenderBridgeChild* aAllocator,
-                                               size_t aChunkSize)
-: mWriter(std::move(aAllocator), aChunkSize)
-{}
-=======
 IpcResourceUpdateQueue::IpcResourceUpdateQueue(
     layers::WebRenderBridgeChild* aAllocator, wr::RenderRoot aRenderRoot,
     size_t aChunkSize)
@@ -306,7 +283,6 @@ void IpcResourceUpdateQueue::ReplaceResources(IpcResourceUpdateQueue&& aOther) {
   mUpdates = std::move(aOther.mUpdates);
   mRenderRoot = aOther.mRenderRoot;
 }
->>>>>>> upstream-releases
 
 bool IpcResourceUpdateQueue::AddImage(ImageKey key,
                                       const ImageDescriptor& aDescriptor,

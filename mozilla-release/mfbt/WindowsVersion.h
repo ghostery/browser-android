@@ -154,13 +154,6 @@ MOZ_ALWAYS_INLINE bool IsWin10April2018UpdateOrLater() {
   return IsWindows10BuildOrLater(17134);
 }
 
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE bool IsNotWin7PreRTM() {
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE bool
-IsNotWin7PreRTM()
-{
-=======
 MOZ_ALWAYS_INLINE bool IsWin10Sep2018UpdateOrLater() {
   return IsWindows10BuildOrLater(17763);
 }
@@ -170,7 +163,6 @@ MOZ_ALWAYS_INLINE bool IsWin10May2019UpdateOrLater() {
 }
 
 MOZ_ALWAYS_INLINE bool IsNotWin7PreRTM() {
->>>>>>> upstream-releases
   return IsWin7SP1OrLater() || IsWindowsBuildOrLater(7600);
 }
 

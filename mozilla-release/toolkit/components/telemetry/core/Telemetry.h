@@ -572,12 +572,6 @@ void ScalarSet(mozilla::Telemetry::ScalarID aId, const nsAString& aKey,
  * @param aValue The value the scalar is set to if its greater
  *        than the current value.
  */
-<<<<<<< HEAD
-void ScalarSetMaximum(mozilla::Telemetry::ScalarID aId, const nsAString& aKey,
-                      uint32_t aValue);
-||||||| merged common ancestors
-void ScalarSetMaximum(mozilla::Telemetry::ScalarID aId, const nsAString& aKey, uint32_t aValue);
-=======
 void ScalarSetMaximum(mozilla::Telemetry::ScalarID aId, const nsAString& aKey,
                       uint32_t aValue);
 
@@ -614,7 +608,6 @@ void SetEventRecordingEnabled(const nsACString& aCategory, bool aEnabled);
  */
 void RecordOrigin(mozilla::Telemetry::OriginMetricID aId,
                   const nsACString& aOrigin);
->>>>>>> upstream-releases
 
 }  // namespace Telemetry
 }  // namespace mozilla

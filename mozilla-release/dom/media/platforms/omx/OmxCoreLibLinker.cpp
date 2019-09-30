@@ -54,16 +54,8 @@ bool OmxCoreLibLinker::TryLinkingLibrary(const char* libName) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ bool OmxCoreLibLinker::Link() {
-||||||| merged common ancestors
-/* static */ bool
-OmxCoreLibLinker::Link()
-{
-=======
 /* static */
 bool OmxCoreLibLinker::Link() {
->>>>>>> upstream-releases
   LOG("");
 
   if (sLinkStatus) {
@@ -92,25 +84,6 @@ bool OmxCoreLibLinker::Link() {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ bool OmxCoreLibLinker::Bind(const char* aLibName) {
-#define OMX_FUNC(func)                                              \
-  {                                                                 \
-    if (!(func = (typeof(func))PR_FindSymbol(sLinkedLib, #func))) { \
-      LOG("Couldn't load function " #func " from %s.", aLibName);   \
-      return false;                                                 \
-    }                                                               \
-||||||| merged common ancestors
-/* static */ bool
-OmxCoreLibLinker::Bind(const char* aLibName)
-{
-#define OMX_FUNC(func)                                                  \
-  {                                                                     \
-    if (!(func = (typeof(func))PR_FindSymbol(sLinkedLib, #func))) {     \
-      LOG("Couldn't load function " #func " from %s.", aLibName);       \
-      return false;                                                     \
-    }                                                                   \
-=======
 /* static */
 bool OmxCoreLibLinker::Bind(const char* aLibName) {
 #define OMX_FUNC(func)                                              \
@@ -119,23 +92,14 @@ bool OmxCoreLibLinker::Bind(const char* aLibName) {
       LOG("Couldn't load function " #func " from %s.", aLibName);   \
       return false;                                                 \
     }                                                               \
->>>>>>> upstream-releases
   }
 #include "OmxFunctionList.h"
 #undef OMX_FUNC
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void OmxCoreLibLinker::Unlink() {
-||||||| merged common ancestors
-/* static */ void
-OmxCoreLibLinker::Unlink()
-{
-=======
 /* static */
 void OmxCoreLibLinker::Unlink() {
->>>>>>> upstream-releases
   LOG("");
 
   if (sLinkedLib) {

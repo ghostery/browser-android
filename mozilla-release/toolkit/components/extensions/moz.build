@@ -27,12 +27,7 @@ EXTRA_JS_MODULES += [
     'ExtensionTelemetry.jsm',
     'ExtensionUtils.jsm',
     'FindContent.jsm',
-<<<<<<< HEAD
-||||||| merged common ancestors
-    'LegacyExtensionsUtils.jsm',
-=======
     'MatchURLFilters.jsm',
->>>>>>> upstream-releases
     'MessageChannel.jsm',
     'MessageManagerProxy.jsm',
     'NativeManifests.jsm',

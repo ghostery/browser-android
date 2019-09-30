@@ -30,72 +30,6 @@ namespace net {
 // and close-when-done semantics while utilizing NS_AsyncCopy.
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-class nsInputStreamTransport : public nsITransport, public nsIInputStream {
- public:
-  // Record refcount changes to ensure that stream transports are destroyed
-  // on consistent threads when recording/replaying.
-  NS_DECL_THREADSAFE_ISUPPORTS_WITH_RECORDING(recordreplay::Behavior::Preserve)
-  NS_DECL_NSITRANSPORT
-  NS_DECL_NSIINPUTSTREAM
-
-  nsInputStreamTransport(nsIInputStream *source, bool closeWhenDone)
-      : mSource(source),
-        mOffset(0),
-        mCloseWhenDone(closeWhenDone),
-        mInProgress(false) {}
-
- private:
-  virtual ~nsInputStreamTransport() = default;
-
-  nsCOMPtr<nsIAsyncInputStream> mPipeIn;
-
-  // while the copy is active, these members may only be accessed from the
-  // nsIInputStream implementation.
-  nsCOMPtr<nsITransportEventSink> mEventSink;
-  nsCOMPtr<nsIInputStream> mSource;
-  int64_t mOffset;
-  bool mCloseWhenDone;
-
-  // this variable serves as a lock to prevent the state of the transport
-  // from being modified once the copy is in progress.
-  bool mInProgress;
-||||||| merged common ancestors
-class nsInputStreamTransport : public nsITransport
-                             , public nsIInputStream
-{
-public:
-    // Record refcount changes to ensure that stream transports are destroyed
-    // on consistent threads when recording/replaying.
-    NS_DECL_THREADSAFE_ISUPPORTS_WITH_RECORDING(recordreplay::Behavior::Preserve)
-    NS_DECL_NSITRANSPORT
-    NS_DECL_NSIINPUTSTREAM
-
-    nsInputStreamTransport(nsIInputStream *source,
-                           bool closeWhenDone)
-        : mSource(source)
-        , mOffset(0)
-        , mCloseWhenDone(closeWhenDone)
-        , mInProgress(false)
-    {
-    }
-
-private:
-    virtual ~nsInputStreamTransport() = default;
-
-    nsCOMPtr<nsIAsyncInputStream>   mPipeIn;
-
-    // while the copy is active, these members may only be accessed from the
-    // nsIInputStream implementation.
-    nsCOMPtr<nsITransportEventSink> mEventSink;
-    nsCOMPtr<nsIInputStream>        mSource;
-    int64_t                         mOffset;
-    bool                            mCloseWhenDone;
-
-    // this variable serves as a lock to prevent the state of the transport
-    // from being modified once the copy is in progress.
-    bool                            mInProgress;
-=======
 class nsInputStreamTransport : public nsITransport, public nsIInputStream {
  public:
   // Record refcount changes to ensure that stream transports are destroyed
@@ -125,7 +59,6 @@ class nsInputStreamTransport : public nsITransport, public nsIInputStream {
   // this variable serves as a lock to prevent the state of the transport
   // from being modified once the copy is in progress.
   bool mInProgress;
->>>>>>> upstream-releases
 };
 
 NS_IMPL_ISUPPORTS(nsInputStreamTransport, nsITransport, nsIInputStream)
@@ -135,17 +68,8 @@ NS_IMPL_ISUPPORTS(nsInputStreamTransport, nsITransport, nsIInputStream)
 NS_IMETHODIMP
 nsInputStreamTransport::OpenInputStream(uint32_t flags, uint32_t segsize,
                                         uint32_t segcount,
-<<<<<<< HEAD
-                                        nsIInputStream **result) {
-  NS_ENSURE_TRUE(!mInProgress, NS_ERROR_IN_PROGRESS);
-||||||| merged common ancestors
-                                        nsIInputStream **result)
-{
-    NS_ENSURE_TRUE(!mInProgress, NS_ERROR_IN_PROGRESS);
-=======
                                         nsIInputStream** result) {
   NS_ENSURE_TRUE(!mInProgress, NS_ERROR_IN_PROGRESS);
->>>>>>> upstream-releases
 
   nsresult rv;
   nsCOMPtr<nsIEventTarget> target =
@@ -178,23 +102,10 @@ nsInputStreamTransport::OpenInputStream(uint32_t flags, uint32_t segsize,
 NS_IMETHODIMP
 nsInputStreamTransport::OpenOutputStream(uint32_t flags, uint32_t segsize,
                                          uint32_t segcount,
-<<<<<<< HEAD
-                                         nsIOutputStream **result) {
-  // this transport only supports reading!
-  MOZ_ASSERT_UNREACHABLE("nsInputStreamTransport::OpenOutputStream");
-  return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-                                         nsIOutputStream **result)
-{
-    // this transport only supports reading!
-    MOZ_ASSERT_UNREACHABLE("nsInputStreamTransport::OpenOutputStream");
-    return NS_ERROR_UNEXPECTED;
-=======
                                          nsIOutputStream** result) {
   // this transport only supports reading!
   MOZ_ASSERT_UNREACHABLE("nsInputStreamTransport::OpenOutputStream");
   return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -205,20 +116,9 @@ nsInputStreamTransport::Close(nsresult reason) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsInputStreamTransport::SetEventSink(nsITransportEventSink *sink,
-                                     nsIEventTarget *target) {
-  NS_ENSURE_TRUE(!mInProgress, NS_ERROR_IN_PROGRESS);
-||||||| merged common ancestors
-nsInputStreamTransport::SetEventSink(nsITransportEventSink *sink,
-                                     nsIEventTarget *target)
-{
-    NS_ENSURE_TRUE(!mInProgress, NS_ERROR_IN_PROGRESS);
-=======
 nsInputStreamTransport::SetEventSink(nsITransportEventSink* sink,
                                      nsIEventTarget* target) {
   NS_ENSURE_TRUE(!mInProgress, NS_ERROR_IN_PROGRESS);
->>>>>>> upstream-releases
 
   if (target)
     return net_NewTransportEventSinkProxy(getter_AddRefs(mEventSink), sink,
@@ -240,43 +140,11 @@ nsInputStreamTransport::Close() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsInputStreamTransport::Available(uint64_t *result) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsInputStreamTransport::Available(uint64_t *result)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsInputStreamTransport::Available(uint64_t* result) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsInputStreamTransport::Read(char *buf, uint32_t count, uint32_t *result) {
-  nsresult rv = mSource->Read(buf, count, result);
-
-  if (NS_SUCCEEDED(rv)) {
-    mOffset += *result;
-    if (mEventSink)
-      mEventSink->OnTransportStatus(this, NS_NET_STATUS_READING, mOffset, -1);
-  }
-  return rv;
-||||||| merged common ancestors
-nsInputStreamTransport::Read(char *buf, uint32_t count, uint32_t *result)
-{
-    nsresult rv = mSource->Read(buf, count, result);
-
-    if (NS_SUCCEEDED(rv)) {
-        mOffset += *result;
-        if (mEventSink)
-            mEventSink->OnTransportStatus(this, NS_NET_STATUS_READING, mOffset,
-                                          -1);
-    }
-    return rv;
-=======
 nsInputStreamTransport::Read(char* buf, uint32_t count, uint32_t* result) {
   nsresult rv = mSource->Read(buf, count, result);
 
@@ -286,41 +154,18 @@ nsInputStreamTransport::Read(char* buf, uint32_t count, uint32_t* result) {
       mEventSink->OnTransportStatus(this, NS_NET_STATUS_READING, mOffset, -1);
   }
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsInputStreamTransport::ReadSegments(nsWriteSegmentFun writer, void *closure,
-                                     uint32_t count, uint32_t *result) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsInputStreamTransport::ReadSegments(nsWriteSegmentFun writer, void *closure,
-                                     uint32_t count, uint32_t *result)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsInputStreamTransport::ReadSegments(nsWriteSegmentFun writer, void* closure,
                                      uint32_t count, uint32_t* result) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsInputStreamTransport::IsNonBlocking(bool *result) {
-  *result = false;
-  return NS_OK;
-||||||| merged common ancestors
-nsInputStreamTransport::IsNonBlocking(bool *result)
-{
-    *result = false;
-    return NS_OK;
-=======
 nsInputStreamTransport::IsNonBlocking(bool* result) {
   *result = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -331,37 +176,6 @@ nsStreamTransportService::~nsStreamTransportService() {
   NS_ASSERTION(!mPool, "thread pool wasn't shutdown");
 }
 
-<<<<<<< HEAD
-nsresult nsStreamTransportService::Init() {
-  mPool = new nsThreadPool();
-
-  // Configure the pool
-  mPool->SetName(NS_LITERAL_CSTRING("StreamTrans"));
-  mPool->SetThreadLimit(25);
-  mPool->SetIdleThreadLimit(1);
-  mPool->SetIdleThreadTimeout(PR_SecondsToInterval(30));
-
-  nsCOMPtr<nsIObserverService> obsSvc = mozilla::services::GetObserverService();
-  if (obsSvc) obsSvc->AddObserver(this, "xpcom-shutdown-threads", false);
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsStreamTransportService::Init()
-{
-    mPool = new nsThreadPool();
-
-    // Configure the pool
-    mPool->SetName(NS_LITERAL_CSTRING("StreamTrans"));
-    mPool->SetThreadLimit(25);
-    mPool->SetIdleThreadLimit(1);
-    mPool->SetIdleThreadTimeout(PR_SecondsToInterval(30));
-
-    nsCOMPtr<nsIObserverService> obsSvc =
-        mozilla::services::GetObserverService();
-    if (obsSvc)
-        obsSvc->AddObserver(this, "xpcom-shutdown-threads", false);
-    return NS_OK;
-=======
 nsresult nsStreamTransportService::Init() {
   mPool = new nsThreadPool();
 
@@ -375,23 +189,14 @@ nsresult nsStreamTransportService::Init() {
   nsCOMPtr<nsIObserverService> obsSvc = mozilla::services::GetObserverService();
   if (obsSvc) obsSvc->AddObserver(this, "xpcom-shutdown-threads", false);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMPL_ISUPPORTS(nsStreamTransportService, nsIStreamTransportService,
                   nsIEventTarget, nsIObserver)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStreamTransportService::DispatchFromScript(nsIRunnable *task,
-                                             uint32_t flags) {
-||||||| merged common ancestors
-nsStreamTransportService::DispatchFromScript(nsIRunnable *task, uint32_t flags)
-{
-=======
 nsStreamTransportService::DispatchFromScript(nsIRunnable* task,
                                              uint32_t flags) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIRunnable> event(task);
   return Dispatch(event.forget(), flags);
 }
@@ -432,31 +237,12 @@ nsStreamTransportService::IsOnCurrentThreadInfallible() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStreamTransportService::IsOnCurrentThread(bool *result) {
-  nsCOMPtr<nsIThreadPool> pool;
-  {
-    mozilla::MutexAutoLock lock(mShutdownLock);
-    if (mIsShutdown) {
-      return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-nsStreamTransportService::IsOnCurrentThread(bool *result)
-{
-    nsCOMPtr<nsIThreadPool> pool;
-    {
-        mozilla::MutexAutoLock lock(mShutdownLock);
-        if (mIsShutdown) {
-            return NS_ERROR_NOT_INITIALIZED;
-        }
-        pool = mPool;
-=======
 nsStreamTransportService::IsOnCurrentThread(bool* result) {
   nsCOMPtr<nsIThreadPool> pool;
   {
     mozilla::MutexAutoLock lock(mShutdownLock);
     if (mIsShutdown) {
       return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
     }
     pool = mPool;
   }
@@ -467,44 +253,17 @@ nsStreamTransportService::IsOnCurrentThread(bool* result) {
 NS_IMETHODIMP
 nsStreamTransportService::CreateInputTransport(nsIInputStream* stream,
                                                bool closeWhenDone,
-<<<<<<< HEAD
-                                               nsITransport **result) {
-  nsInputStreamTransport *trans =
-      new nsInputStreamTransport(stream, closeWhenDone);
-  if (!trans) return NS_ERROR_OUT_OF_MEMORY;
-  NS_ADDREF(*result = trans);
-  return NS_OK;
-||||||| merged common ancestors
-                                               nsITransport **result)
-{
-    nsInputStreamTransport *trans =
-        new nsInputStreamTransport(stream, closeWhenDone);
-    if (!trans)
-        return NS_ERROR_OUT_OF_MEMORY;
-    NS_ADDREF(*result = trans);
-    return NS_OK;
-=======
                                                nsITransport** result) {
   nsInputStreamTransport* trans =
       new nsInputStreamTransport(stream, closeWhenDone);
   if (!trans) return NS_ERROR_OUT_OF_MEMORY;
   NS_ADDREF(*result = trans);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStreamTransportService::Observe(nsISupports *subject, const char *topic,
-                                  const char16_t *data) {
-||||||| merged common ancestors
-nsStreamTransportService::Observe(nsISupports *subject, const char *topic,
-                                  const char16_t *data)
-{
-=======
 nsStreamTransportService::Observe(nsISupports* subject, const char* topic,
                                   const char16_t* data) {
->>>>>>> upstream-releases
   NS_ASSERTION(strcmp(topic, "xpcom-shutdown-threads") == 0, "oops");
 
   {
@@ -519,30 +278,6 @@ nsStreamTransportService::Observe(nsISupports* subject, const char* topic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-class AvailableEvent final : public Runnable {
- public:
-  AvailableEvent(nsIInputStream *stream, nsIInputAvailableCallback *callback)
-      : Runnable("net::AvailableEvent"),
-        mStream(stream),
-        mCallback(callback),
-        mDoingCallback(false),
-        mSize(0),
-        mResultForCallback(NS_OK) {
-||||||| merged common ancestors
-class AvailableEvent final : public Runnable
-{
-public:
-  AvailableEvent(nsIInputStream* stream,
-                 nsIInputAvailableCallback* callback)
-    : Runnable("net::AvailableEvent")
-    , mStream(stream)
-    , mCallback(callback)
-    , mDoingCallback(false)
-    , mSize(0)
-    , mResultForCallback(NS_OK)
-  {
-=======
 class AvailableEvent final : public Runnable {
  public:
   AvailableEvent(nsIInputStream* stream, nsIInputAvailableCallback* callback)
@@ -552,7 +287,6 @@ class AvailableEvent final : public Runnable {
         mDoingCallback(false),
         mSize(0),
         mResultForCallback(NS_OK) {
->>>>>>> upstream-releases
     mCallbackTarget = GetCurrentThreadEventTarget();
   }
 
@@ -586,26 +320,6 @@ class AvailableEvent final : public Runnable {
 };
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsStreamTransportService::InputAvailable(nsIInputStream *stream,
-                                         nsIInputAvailableCallback *callback) {
-  nsCOMPtr<nsIThreadPool> pool;
-  {
-    mozilla::MutexAutoLock lock(mShutdownLock);
-    if (mIsShutdown) {
-      return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-nsStreamTransportService::InputAvailable(nsIInputStream *stream,
-                                         nsIInputAvailableCallback *callback)
-{
-    nsCOMPtr<nsIThreadPool> pool;
-    {
-        mozilla::MutexAutoLock lock(mShutdownLock);
-        if (mIsShutdown) {
-            return NS_ERROR_NOT_INITIALIZED;
-        }
-        pool = mPool;
-=======
 nsStreamTransportService::InputAvailable(nsIInputStream* stream,
                                          nsIInputAvailableCallback* callback) {
   nsCOMPtr<nsIThreadPool> pool;
@@ -613,7 +327,6 @@ nsStreamTransportService::InputAvailable(nsIInputStream* stream,
     mozilla::MutexAutoLock lock(mShutdownLock);
     if (mIsShutdown) {
       return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
     }
     pool = mPool;
   }

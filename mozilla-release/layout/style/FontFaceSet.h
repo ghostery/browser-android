@@ -199,15 +199,9 @@ class FontFaceSet final : public DOMEventTargetHelper,
   // For ServoStyleSet to know ahead of time whether a font is loadable.
   void CacheFontLoadability();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   void MarkUserFontSetDirty();
 
  private:
->>>>>>> upstream-releases
   ~FontFaceSet();
 
   /**
@@ -265,21 +259,9 @@ private:
     bool mLoadEventShouldFire;
   };
 
-<<<<<<< HEAD
-  static already_AddRefed<gfxUserFontEntry>
-  FindOrCreateUserFontEntryFromFontFace(const nsACString& aFamilyName,
-                                        FontFace* aFontFace,
-                                        SheetType aSheetType);
-||||||| merged common ancestors
-  static already_AddRefed<gfxUserFontEntry> FindOrCreateUserFontEntryFromFontFace(
-                                                   const nsACString& aFamilyName,
-                                                   FontFace* aFontFace,
-                                                   SheetType aSheetType);
-=======
   static already_AddRefed<gfxUserFontEntry>
   FindOrCreateUserFontEntryFromFontFace(const nsACString& aFamilyName,
                                         FontFace* aFontFace, StyleOrigin);
->>>>>>> upstream-releases
 
   // search for @font-face rule that matches a userfont font entry
   RawServoFontFaceRule* FindRuleForUserFontEntry(
@@ -295,24 +277,9 @@ private:
   void DispatchFontLoadViolations(nsTArray<nsCOMPtr<nsIRunnable>>& aViolations);
   nsresult SyncLoadFontData(gfxUserFontEntry* aFontToLoad,
                             const gfxFontFaceSrc* aFontFaceSrc,
-<<<<<<< HEAD
                             uint8_t*& aBuffer, uint32_t& aBufferLength);
   nsresult LogMessage(gfxUserFontEntry* aUserFontEntry, const char* aMessage,
                       uint32_t aFlags, nsresult aStatus);
-  void MarkUserFontSetDirty();
-||||||| merged common ancestors
-                            uint8_t*& aBuffer,
-                            uint32_t& aBufferLength);
-  nsresult LogMessage(gfxUserFontEntry* aUserFontEntry,
-                      const char* aMessage,
-                      uint32_t aFlags,
-                      nsresult aStatus);
-  void MarkUserFontSetDirty();
-=======
-                            uint8_t*& aBuffer, uint32_t& aBufferLength);
-  nsresult LogMessage(gfxUserFontEntry* aUserFontEntry, const char* aMessage,
-                      uint32_t aFlags, nsresult aStatus);
->>>>>>> upstream-releases
 
   void InsertRuleFontFace(FontFace* aFontFace, StyleOrigin aOrigin,
                           nsTArray<FontFaceRecord>& aOldRecords,

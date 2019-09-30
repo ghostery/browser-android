@@ -337,20 +337,12 @@ class BaseWindow(BaseLib):
         if callable(callback):
             with self.marionette.using_context('chrome'):
                 callback(self)
-<<<<<<< HEAD
-            else:
-                self.marionette.execute_script(""" OpenBrowserWindow(); """)
-||||||| merged common ancestors
-            else:
-                self.marionette.execute_script(""" window.open(); """)
-=======
         else:
             result = self.marionette.open(type="window", focus=focus)
             if result["type"] != "window":
                 raise Exception(
                     "Newly opened browsing context is of type {} and not window.".format(
                         result["type"]))
->>>>>>> upstream-releases
 
         # TODO: Needs to be replaced with observer handling code (bug 1121698)
         Wait(self.marionette).until(

@@ -345,13 +345,7 @@ br{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.86"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -3906,12 +3900,7 @@ br{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
->>>>>>> upstream-releases
                 }
                 narrow{
                     "Taika (645–650)",
@@ -4150,12 +4139,7 @@ br{
                     "T",
                     "S",
                     "H",
-<<<<<<< HEAD
-                    "Q",
-||||||| merged common ancestors
-=======
                     "R",
->>>>>>> upstream-releases
                 }
                 wide{
                     "Taika (645–650)",
@@ -4394,12 +4378,7 @@ br{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
->>>>>>> upstream-releases
                 }
             }
             intervalFormats{

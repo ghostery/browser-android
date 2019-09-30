@@ -24,21 +24,6 @@
 //! address in the GPU cache of a given resource slot
 //! for this frame.
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
-use api::{PremultipliedColorF, TexelRect};
-use api::{VoidPtrToSizeFn};
-use euclid::TypedRect;
-use profiler::GpuCacheProfileCounters;
-use render_backend::FrameId;
-use renderer::MAX_VERTEX_TEXTURE_WIDTH;
-||||||| merged common ancestors
-use api::{PremultipliedColorF, TexelRect};
-use api::{VoidPtrToSizeFn};
-use device::FrameId;
-use euclid::TypedRect;
-use profiler::GpuCacheProfileCounters;
-use renderer::MAX_VERTEX_TEXTURE_WIDTH;
-=======
 use api::{DebugFlags, DocumentId, PremultipliedColorF};
 #[cfg(test)]
 use api::IdNamespace;
@@ -48,18 +33,12 @@ use crate::internal_types::{FastHashMap, FastHashSet};
 use crate::profiler::GpuCacheProfileCounters;
 use crate::render_backend::{FrameStamp, FrameId};
 use crate::renderer::MAX_VERTEX_TEXTURE_WIDTH;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
 use std::{mem, u16, u32};
 use std::num::NonZeroU32;
 use std::ops::Add;
 use std::time::{Duration, Instant};
 
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
-pub const GPU_CACHE_INITIAL_HEIGHT: i32 = 512;
-||||||| merged common ancestors
-pub const GPU_CACHE_INITIAL_HEIGHT: u32 = 512;
-=======
 /// At the time of this writing, Firefox uses about 15 GPU cache rows on
 /// startup, and then gradually works its way up to the mid-30s with normal
 /// browsing.
@@ -67,14 +46,7 @@ pub const GPU_CACHE_INITIAL_HEIGHT: i32 = 20;
 const NEW_ROWS_PER_RESIZE: i32 = 10;
 
 /// The number of frames an entry can go unused before being evicted.
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
 const FRAMES_BEFORE_EVICTION: usize = 10;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
-const NEW_ROWS_PER_RESIZE: i32 = 512;
-||||||| merged common ancestors
-const NEW_ROWS_PER_RESIZE: u32 = 512;
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
 
 /// The ratio of utilized blocks to total blocks for which we start the clock
 /// on reclaiming memory.
@@ -735,16 +707,8 @@ impl GpuCache {
     pub fn new() -> Self {
         let debug_flags = DebugFlags::empty();
         GpuCache {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
-            frame_id: FrameId::INVALID,
-            texture: Texture::new(),
-||||||| merged common ancestors
-            frame_id: FrameId::new(0),
-            texture: Texture::new(),
-=======
             now: FrameStamp::INVALID,
             texture: Texture::new(Epoch(0), debug_flags),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
             saved_block_count: 0,
             debug_flags,
             pending_clear: false,
@@ -802,25 +766,11 @@ impl GpuCache {
     }
 
     /// Begin a new frame.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
-    pub fn begin_frame(&mut self, frame_id: FrameId) {
-||||||| merged common ancestors
-    pub fn begin_frame(&mut self) {
-=======
     pub fn begin_frame(&mut self, stamp: FrameStamp) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
         debug_assert!(self.texture.pending_blocks.is_empty());
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
-        self.frame_id = frame_id;
-        self.texture.evict_old_blocks(self.frame_id);
-||||||| merged common ancestors
-        self.frame_id = self.frame_id + 1;
-        self.texture.evict_old_blocks(self.frame_id);
-=======
         assert!(self.prepared_for_frames);
         self.now = stamp;
         self.texture.evict_old_blocks(self.now);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_cache.rs
         self.saved_block_count = 0;
     }
 

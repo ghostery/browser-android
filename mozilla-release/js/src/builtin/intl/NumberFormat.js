@@ -422,23 +422,12 @@ function numberFormatFormatToBind(value) {
 // to store the original name in `_SetCanonicalName`.
 function $Intl_NumberFormat_format_get() {
     // Steps 1-3.
-<<<<<<< HEAD
-    var thisArg = UnwrapNumberFormat(this);
-    var nf = thisArg;
-    if (!IsObject(nf) || (nf = GuardToNumberFormat(nf)) === null) {
-        return callFunction(CallNumberFormatMethodIfWrapped, thisArg,
-                            "Intl_NumberFormat_format_get");
-    }
-||||||| merged common ancestors
-    var nf = UnwrapNumberFormat(this, "format");
-=======
     var thisArg = UnwrapNumberFormat(this);
     var nf = thisArg;
     if (!IsObject(nf) || (nf = GuardToNumberFormat(nf)) === null) {
         return callFunction(CallNumberFormatMethodIfWrapped, thisArg,
                             "$Intl_NumberFormat_format_get");
     }
->>>>>>> upstream-releases
 
     var internals = getNumberFormatInternals(nf);
 

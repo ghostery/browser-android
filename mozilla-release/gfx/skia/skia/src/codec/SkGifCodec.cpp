@@ -343,21 +343,8 @@ SkCodec::Result SkGifCodec::decodeFrame(bool firstAttempt, const Options& opts, 
             //   draw anything, so we need to fill.
             if (frameContext->frameRect() != this->bounds()
                     || frameContext->interlaced() || !fCurrColorTableIsReal) {
-<<<<<<< HEAD
-                // fill ignores the width (replaces it with the actual, scaled width).
-                // But we need to scale in Y.
-                auto fillInfo = dstInfo.makeWH(0, scaledHeight);
-                fSwizzler->fill(fillInfo, fDst, fDstRowBytes, opts.fZeroInitialized);
-||||||| merged common ancestors
-                // fill ignores the width (replaces it with the actual, scaled width).
-                // But we need to scale in Y.
-                auto fillInfo = dstInfo.makeWH(0, scaledHeight);
-                fSwizzler->fill(fillInfo, fDst, fDstRowBytes, this->getFillValue(dstInfo),
-                                opts.fZeroInitialized);
-=======
                 auto fillInfo = dstInfo.makeWH(fSwizzler->fillWidth(), scaledHeight);
                 SkSampler::Fill(fillInfo, fDst, fDstRowBytes, opts.fZeroInitialized);
->>>>>>> upstream-releases
                 filledBackground = true;
             }
         } else {

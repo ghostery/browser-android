@@ -16,20 +16,9 @@ namespace a11y {
 
 class DocProxyAccessibleWrap;
 
-<<<<<<< HEAD
-class RootAccessibleWrap : public RootAccessible {
- public:
-  RootAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
-||||||| merged common ancestors
-class RootAccessibleWrap : public RootAccessible
-{
-public:
-  RootAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
-=======
 class RootAccessibleWrap : public RootAccessible {
  public:
   RootAccessibleWrap(dom::Document* aDocument, PresShell* aPresShell);
->>>>>>> upstream-releases
   virtual ~RootAccessibleWrap();
 
   AccessibleWrap* GetContentAccessible();

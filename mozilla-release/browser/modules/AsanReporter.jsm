@@ -142,76 +142,6 @@ function submitToServer(data) {
       client = "unknown";
     }
 
-<<<<<<< HEAD
-      let versionArr = [
-        Services.appinfo.version,
-        Services.appinfo.appBuildID,
-        (AppConstants.SOURCE_REVISION_URL || "unknown"),
-      ];
-
-      // Concatenate all relevant information as our server only
-      // has one field available for version information.
-      let product_version = versionArr.join("-");
-      let os = AppConstants.platform;
-
-      let reportObj = {
-        rawStdout: "",
-        rawStderr: "",
-        rawCrashData: decoder.decode(data),
-        // Hardcode platform as there is no other reasonable platform for ASan
-        platform: "x86-64",
-        product: "mozilla-central-asan-nightly",
-        product_version,
-        os,
-        client,
-        tool: "asan-nightly-program",
-      };
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", api_url, true);
-      xhr.setRequestHeader("Content-Type", "application/json");
-
-      // For internal testing purposes, an auth_token can be specified
-      if (auth_token) {
-        xhr.setRequestHeader("Authorization", "Token " + auth_token);
-      } else {
-        // Prevent privacy leaks
-        xhr.channel.loadFlags |= Ci.nsIRequest.LOAD_ANONYMOUS;
-      }
-||||||| merged common ancestors
-      let versionArr = [
-        Services.appinfo.version,
-        Services.appinfo.appBuildID,
-        (AppConstants.SOURCE_REVISION_URL || "unknown"),
-      ];
-
-      // Concatenate all relevant information as our server only
-      // has one field available for version information.
-      let product_version = versionArr.join("-");
-      let os = AppConstants.platform;
-
-      let reportObj = {
-        rawStdout: "",
-        rawStderr: "",
-        rawCrashData: decoder.decode(data),
-        // Hardcode platform as there is no other reasonable platform for ASan
-        platform: "x86-64",
-        product: "mozilla-central-asan-nightly",
-        product_version,
-        os,
-        client,
-        tool: "asan-nightly-program",
-      };
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", api_url, true);
-      xhr.setRequestHeader("Content-Type", "application/json");
-
-      // For internal testing purposes, an auth_token can be specified
-      if (auth_token) {
-        xhr.setRequestHeader("Authorization", "Token " + auth_token);
-      }
-=======
     let versionArr = [
       Services.appinfo.version,
       Services.appinfo.appBuildID,
@@ -247,7 +177,6 @@ function submitToServer(data) {
       // Prevent privacy leaks
       xhr.channel.loadFlags |= Ci.nsIRequest.LOAD_ANONYMOUS;
     }
->>>>>>> upstream-releases
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {

@@ -26,21 +26,9 @@ using namespace mozilla::a11y;
 // DocAccessibleWrap
 ////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-DocAccessibleWrap::DocAccessibleWrap(nsIDocument* aDocument,
-                                     nsIPresShell* aPresShell)
-    : DocAccessible(aDocument, aPresShell), mHWND(nullptr) {}
-||||||| merged common ancestors
-DocAccessibleWrap::
-  DocAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell) :
-  DocAccessible(aDocument, aPresShell), mHWND(nullptr)
-{
-}
-=======
 DocAccessibleWrap::DocAccessibleWrap(dom::Document* aDocument,
                                      PresShell* aPresShell)
     : DocAccessible(aDocument, aPresShell), mHWND(nullptr) {}
->>>>>>> upstream-releases
 
 DocAccessibleWrap::~DocAccessibleWrap() {}
 

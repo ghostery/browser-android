@@ -43,49 +43,17 @@ class SVGLength {
     NS_ASSERTION(IsValid(), "Constructed an invalid length");
   }
 
-<<<<<<< HEAD
-  SVGLength(const SVGLength &aOther)
-      : mValue(aOther.mValue), mUnit(aOther.mUnit) {}
-
-  SVGLength &operator=(const SVGLength &rhs) {
-    mValue = rhs.mValue;
-    mUnit = rhs.mUnit;
-    return *this;
-  }
-
-  bool operator==(const SVGLength &rhs) const {
-||||||| merged common ancestors
-  SVGLength(const SVGLength &aOther)
-    : mValue(aOther.mValue)
-    , mUnit(aOther.mUnit)
-  {}
-
-  SVGLength& operator=(const SVGLength &rhs) {
-    mValue = rhs.mValue;
-    mUnit = rhs.mUnit;
-    return *this;
-  }
-
-  bool operator==(const SVGLength &rhs) const {
-=======
   bool operator==(const SVGLength& rhs) const {
->>>>>>> upstream-releases
     return mValue == rhs.mValue && mUnit == rhs.mUnit;
   }
 
-  void GetValueAsString(nsAString &aValue) const;
+  void GetValueAsString(nsAString& aValue) const;
 
   /**
    * This method returns true, unless there was a parse failure, in which
    * case it returns false (and the length is left unchanged).
    */
-<<<<<<< HEAD
-  bool SetValueFromString(const nsAString &aValue);
-||||||| merged common ancestors
-  bool SetValueFromString(const nsAString& aValue);
-=======
   bool SetValueFromString(const nsAString& aString);
->>>>>>> upstream-releases
 
   /**
    * This will usually return a valid, finite number. There is one exception
@@ -130,14 +98,7 @@ class SVGLength {
    * This method returns numeric_limits<float>::quiet_NaN() if it is not
    * possible to convert the value to the specified unit.
    */
-<<<<<<< HEAD
-  float GetValueInSpecifiedUnit(uint8_t aUnit, const nsSVGElement *aElement,
-||||||| merged common ancestors
-  float GetValueInSpecifiedUnit(uint8_t aUnit,
-                                const nsSVGElement *aElement,
-=======
   float GetValueInSpecifiedUnit(uint8_t aUnit, const dom::SVGElement* aElement,
->>>>>>> upstream-releases
                                 uint8_t aAxis) const;
 
   bool IsPercentage() const {
@@ -156,21 +117,10 @@ class SVGLength {
    * factor between the length's current unit and user units is undefined (see
    * the comments for GetUserUnitsPerInch and GetUserUnitsPerPercent).
    */
-<<<<<<< HEAD
-  float GetUserUnitsPerUnit(const nsSVGElement *aElement, uint8_t aAxis) const;
-
- private:
-||||||| merged common ancestors
-  float GetUserUnitsPerUnit(const nsSVGElement *aElement, uint8_t aAxis) const;
-
-private:
-
-=======
   float GetUserUnitsPerUnit(const dom::SVGElement* aElement,
                             uint8_t aAxis) const;
 
  private:
->>>>>>> upstream-releases
 #ifdef DEBUG
   bool IsValid() const { return IsFinite(mValue) && IsValidUnitType(mUnit); }
 #endif
@@ -190,15 +140,8 @@ private:
    * This function returns a non-negative value if the conversion factor is
    * defined, otherwise it returns numeric_limits<float>::quiet_NaN().
    */
-<<<<<<< HEAD
-  static float GetUserUnitsPerPercent(const nsSVGElement *aElement,
-                                      uint8_t aAxis);
-||||||| merged common ancestors
-  static float GetUserUnitsPerPercent(const nsSVGElement *aElement, uint8_t aAxis);
-=======
   static float GetUserUnitsPerPercent(const dom::SVGElement* aElement,
                                       uint8_t aAxis);
->>>>>>> upstream-releases
 
   float mValue;
   uint8_t mUnit;

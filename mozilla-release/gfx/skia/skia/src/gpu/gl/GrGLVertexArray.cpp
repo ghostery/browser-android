@@ -90,14 +90,6 @@ void GrGLAttribArrayState::set(GrGLGpu* gpu,
     SkASSERT(index >= 0 && index < fAttribArrayStates.count());
     SkASSERT(0 == divisor || gpu->caps()->instanceAttribSupport());
     AttribArrayState* array = &fAttribArrayStates[index];
-<<<<<<< HEAD
-    if (array->fVertexBufferUniqueID != vertexBuffer->uniqueID() ||
-        array->fCPUType != cpuType ||
-        array->fGPUType != gpuType ||
-||||||| merged common ancestors
-    if (array->fVertexBufferUniqueID != vertexBuffer->uniqueID() ||
-        array->fType != type ||
-=======
     const char* offsetAsPtr;
     bool bufferChanged = false;
     if (vertexBuffer->isCpuBuffer()) {
@@ -117,21 +109,7 @@ void GrGLAttribArrayState::set(GrGLGpu* gpu,
     if (bufferChanged ||
         array->fCPUType != cpuType ||
         array->fGPUType != gpuType ||
->>>>>>> upstream-releases
         array->fStride != stride ||
-<<<<<<< HEAD
-        array->fOffset != offsetInBytes) {
-        gpu->bindBuffer(kVertex_GrBufferType, vertexBuffer);
-        const AttribLayout& layout = attrib_layout(cpuType);
-        const GrGLvoid* offsetAsPtr = reinterpret_cast<const GrGLvoid*>(offsetInBytes);
-        if (GrSLTypeIsFloatType(gpuType)) {
-||||||| merged common ancestors
-        array->fOffset != offsetInBytes) {
-        gpu->bindBuffer(kVertex_GrBufferType, vertexBuffer);
-        const AttribLayout& layout = attrib_layout(type);
-        const GrGLvoid* offsetAsPtr = reinterpret_cast<const GrGLvoid*>(offsetInBytes);
-        if (!GrVertexAttribTypeIsIntType(gpu->caps()->shaderCaps(), type)) {
-=======
         array->fOffset != offsetAsPtr) {
         // We always have to call this if we're going to change the array pointer. 'array' is
         // tracking the last buffer used to setup attrib pointers, not the last buffer bound.
@@ -139,7 +117,6 @@ void GrGLAttribArrayState::set(GrGLGpu* gpu,
         gpu->bindBuffer(GrGpuBufferType::kVertex, vertexBuffer);
         const AttribLayout& layout = attrib_layout(cpuType);
         if (GrSLTypeIsFloatType(gpuType)) {
->>>>>>> upstream-releases
             GR_GL_CALL(gpu->glInterface(), VertexAttribPointer(index,
                                                                layout.fCount,
                                                                layout.fType,
@@ -155,17 +132,8 @@ void GrGLAttribArrayState::set(GrGLGpu* gpu,
                                                                 stride,
                                                                 offsetAsPtr));
         }
-<<<<<<< HEAD
-        array->fVertexBufferUniqueID = vertexBuffer->uniqueID();
         array->fCPUType = cpuType;
         array->fGPUType = gpuType;
-||||||| merged common ancestors
-        array->fVertexBufferUniqueID = vertexBuffer->uniqueID();
-        array->fType = type;
-=======
-        array->fCPUType = cpuType;
-        array->fGPUType = gpuType;
->>>>>>> upstream-releases
         array->fStride = stride;
         array->fOffset = offsetAsPtr;
     }

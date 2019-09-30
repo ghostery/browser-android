@@ -11,28 +11,6 @@
 #include "nsStyleStruct.h"
 
 namespace mozilla {
-<<<<<<< HEAD
-#define STYLE_STRUCT(name_) \
-  struct Gecko##name_ {     \
-    nsStyle##name_ gecko;   \
-  };
-#include "nsStyleStructList.h"
-#undef STYLE_STRUCT
-}  // namespace mozilla
-
-#define STYLE_STRUCT(name_)                                          \
-  const nsStyle##name_* ServoComputedData::GetStyle##name_() const { \
-    return &name_.mPtr->gecko;                                       \
-  }
-||||||| merged common ancestors
-  #define STYLE_STRUCT(name_) struct Gecko##name_ {nsStyle##name_ gecko;};
-  #include "nsStyleStructList.h"
-  #undef STYLE_STRUCT
-}
-
-#define STYLE_STRUCT(name_) \
-  const nsStyle##name_* ServoComputedData::GetStyle##name_() const { return &name_.mPtr->gecko; }
-=======
 #define STYLE_STRUCT(name_)                  \
   struct Gecko##name_ {                      \
     ServoManuallyDrop<nsStyle##name_> gecko; \
@@ -45,7 +23,6 @@ namespace mozilla {
   const nsStyle##name_* ServoComputedData::GetStyle##name_() const { \
     return &name_.mPtr->gecko.mInner;                                \
   }
->>>>>>> upstream-releases
 #include "nsStyleStructList.h"
 #undef STYLE_STRUCT
 

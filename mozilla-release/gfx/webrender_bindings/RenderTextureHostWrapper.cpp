@@ -47,20 +47,9 @@ void RenderTextureHostWrapper::ClearCachedResources() {
   }
 }
 
-<<<<<<< HEAD
-void RenderTextureHostWrapper::UpdateRenderTextureHost(
-    RenderTextureHost* aTextureHost) {
-  MOZ_ASSERT(!mInited || RenderThread::IsInRenderThread());
-||||||| merged common ancestors
-void
-RenderTextureHostWrapper::UpdateRenderTextureHost(RenderTextureHost* aTextureHost)
-{
-  MOZ_ASSERT(!mInited || RenderThread::IsInRenderThread());
-=======
 void RenderTextureHostWrapper::UpdateRenderTextureHost(
     RenderTextureHost* aTextureHost) {
   MOZ_ASSERT(RenderThread::IsInRenderThread());
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(!mLocked);
 
   mInited = true;

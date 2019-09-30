@@ -119,15 +119,7 @@ void SetIncludeContextHeap(bool aValue);
 
 // Functions for working with minidumps and .extras
 typedef mozilla::EnumeratedArray<Annotation, Annotation::Count, nsCString>
-<<<<<<< HEAD
     AnnotationTable;
-
-||||||| merged common ancestors
-        AnnotationTable;
-
-=======
-    AnnotationTable;
->>>>>>> upstream-releases
 void DeleteMinidumpFilesForID(const nsAString& id);
 bool GetMinidumpForID(const nsAString& id, nsIFile** minidump);
 bool GetIDFromMinidump(nsIFile* minidump, nsAString& id);
@@ -139,27 +131,10 @@ bool WriteExtraFile(const nsAString& id, const AnnotationTable& annotations);
  * Copies the non-empty annotations in the source table to the destination
  * overwriting the corresponding entries.
  */
-<<<<<<< HEAD
-void RenameAdditionalHangMinidump(nsIFile* aDumpFile,
-                                  const nsIFile* aOwnerDumpFile,
-                                  const nsACString& aDumpFileProcessType);
-||||||| merged common ancestors
-void RenameAdditionalHangMinidump(nsIFile* aDumpFile, const nsIFile* aOwnerDumpFile,
-                                  const nsACString& aDumpFileProcessType);
-=======
 void MergeCrashAnnotations(AnnotationTable& aDst, const AnnotationTable& aSrc);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef XP_WIN32
-nsresult WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo);
-||||||| merged common ancestors
-#ifdef XP_WIN32
-  nsresult WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo);
-=======
 #ifdef XP_WIN
 nsresult WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo);
->>>>>>> upstream-releases
 #endif
 #ifdef XP_LINUX
 bool WriteMinidumpForSigInfo(int signo, siginfo_t* info, void* uc);
@@ -194,15 +169,8 @@ bool TakeMinidump(nsIFile** aResult, bool aMoveToPending = false);
 // is non-nullptr. The annotations for the crash will be stored in
 // |aAnnotations|. The sequence parameter will be filled with an ordinal
 // indicating which remote process crashed first.
-<<<<<<< HEAD
-bool TakeMinidumpForChild(uint32_t childPid, nsIFile** dump,
-||||||| merged common ancestors
-bool TakeMinidumpForChild(uint32_t childPid,
-                          nsIFile** dump,
-=======
 bool TakeMinidumpForChild(uint32_t childPid, nsIFile** dump,
                           AnnotationTable& aAnnotations,
->>>>>>> upstream-releases
                           uint32_t* aSequence = nullptr);
 
 /**
@@ -286,21 +254,7 @@ bool CreateAdditionalChildMinidump(ProcessHandle childPid,
                                    nsIFile* parentMinidump,
                                    const nsACString& name);
 
-<<<<<<< HEAD
-// Parent-side API, returns the tmp dir for child processes to use, accounting
-// for sandbox considerations.
-void GetChildProcessTmpDir(nsIFile** aOutTmpDir);
-
-#if defined(XP_WIN32) || defined(XP_MACOSX)
-||||||| merged common ancestors
-// Parent-side API, returns the tmp dir for child processes to use, accounting
-// for sandbox considerations.
-void GetChildProcessTmpDir(nsIFile** aOutTmpDir);
-
-#  if defined(XP_WIN32) || defined(XP_MACOSX)
-=======
 #if defined(XP_WIN) || defined(XP_MACOSX)
->>>>>>> upstream-releases
 // Parent-side API for children
 const char* GetChildNotificationPipe();
 
@@ -328,23 +282,10 @@ void UnregisterInjectorCallback(DWORD processID);
 #  endif
 
 // Child-side API
-<<<<<<< HEAD
-#if defined(XP_WIN32)
-bool SetRemoteExceptionHandler(const nsACString& crashPipe,
-                               uintptr_t aCrashTimeAnnotationFile);
-#else
-||||||| merged common ancestors
-#if defined(XP_WIN32)
-bool
-SetRemoteExceptionHandler(const nsACString& crashPipe,
-                          uintptr_t aCrashTimeAnnotationFile);
-#else
-=======
 #  if defined(XP_WIN)
 bool SetRemoteExceptionHandler(const nsACString& crashPipe,
                                uintptr_t aCrashTimeAnnotationFile);
 #  else
->>>>>>> upstream-releases
 bool SetRemoteExceptionHandler(const nsACString& crashPipe);
 #  endif
 

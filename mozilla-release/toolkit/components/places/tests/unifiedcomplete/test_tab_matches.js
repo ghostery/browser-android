@@ -221,14 +221,6 @@ add_task(async function test_tab_matches() {
   await check_autocomplete({
     search: UrlbarTokenizer.RESTRICT.OPENPAGE + " abc",
     searchParam: "enable-actions",
-<<<<<<< HEAD
-    matches: [ makeSearchMatch(UrlbarTokenizer.RESTRICT.OPENPAGE + " abc",
-                               { heuristic: true, searchQuery: "abc" }),
-               makeSwitchToTabMatch("http://abc.com/", { title: "ABC rocks" }) ],
-||||||| merged common ancestors
-    matches: [ makeSearchMatch(gTabRestrictChar + " abc", { heuristic: true }),
-               makeSwitchToTabMatch("http://abc.com/", { title: "ABC rocks" }) ],
-=======
     matches: [
       makeSearchMatch(UrlbarTokenizer.RESTRICT.OPENPAGE + " abc", {
         heuristic: true,
@@ -236,7 +228,6 @@ add_task(async function test_tab_matches() {
       }),
       makeSwitchToTabMatch("http://abc.com/", { title: "ABC rocks" }),
     ],
->>>>>>> upstream-releases
   });
 
   info("tab match with not-addable pages");
@@ -253,14 +244,6 @@ add_task(async function test_tab_matches() {
   await check_autocomplete({
     search: UrlbarTokenizer.RESTRICT.OPENPAGE + " mozilla",
     searchParam: "enable-actions",
-<<<<<<< HEAD
-    matches: [ makeSearchMatch(UrlbarTokenizer.RESTRICT.OPENPAGE + " mozilla",
-                               { heuristic: true, searchQuery: "mozilla" }),
-               makeSwitchToTabMatch("about:mozilla") ],
-||||||| merged common ancestors
-    matches: [ makeSearchMatch(gTabRestrictChar + " mozilla", { heuristic: true }),
-               makeSwitchToTabMatch("about:mozilla") ],
-=======
     matches: [
       makeSearchMatch(UrlbarTokenizer.RESTRICT.OPENPAGE + " mozilla", {
         heuristic: true,
@@ -268,16 +251,10 @@ add_task(async function test_tab_matches() {
       }),
       makeSwitchToTabMatch("about:mozilla"),
     ],
->>>>>>> upstream-releases
   });
 
   info("tab match with not-addable pages and only restriction character");
   await check_autocomplete({
-<<<<<<< HEAD
-    search: UrlbarTokenizer.RESTRICT.OPENPAGE,
-||||||| merged common ancestors
-    search: gTabRestrictChar,
-=======
     search: UrlbarTokenizer.RESTRICT.OPENPAGE,
     searchParam: "enable-actions",
     matches: [
@@ -298,25 +275,12 @@ add_task(async function test_tab_matches() {
   PlacesUtils.tagging.tagURI(uri1, ["test-tag"]);
   await check_autocomplete({
     search: "abc.com",
->>>>>>> upstream-releases
     searchParam: "enable-actions",
-<<<<<<< HEAD
-    matches: [ makeSearchMatch(UrlbarTokenizer.RESTRICT.OPENPAGE, { heuristic: true }),
-               makeSwitchToTabMatch("http://abc.com/", { title: "ABC rocks" }),
-               makeSwitchToTabMatch("about:mozilla"),
-               makeSwitchToTabMatch("data:text/html,test") ],
-||||||| merged common ancestors
-    matches: [ makeSearchMatch(gTabRestrictChar, { heuristic: true }),
-               makeSwitchToTabMatch("http://abc.com/", { title: "ABC rocks" }),
-               makeSwitchToTabMatch("about:mozilla"),
-               makeSwitchToTabMatch("data:text/html,test") ],
-=======
     matches: [
       makeVisitMatch("abc.com", "http://abc.com/", { heuristic: true }),
       makeSwitchToTabMatch("http://abc.com/", { title: "ABC rocks" }),
       makeSearchMatch("abc.com", { heuristic: false }),
     ],
->>>>>>> upstream-releases
   });
   await PlacesUtils.bookmarks.remove(bm);
 

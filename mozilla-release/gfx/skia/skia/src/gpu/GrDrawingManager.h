@@ -23,14 +23,7 @@ class GrOpFlushState;
 class GrRecordingContext;
 class GrRenderTargetContext;
 class GrRenderTargetProxy;
-<<<<<<< HEAD
-class GrSingleOWner;
 class GrRenderTargetOpList;
-||||||| merged common ancestors
-class GrSingleOWner;
-=======
-class GrRenderTargetOpList;
->>>>>>> upstream-releases
 class GrSoftwarePathRenderer;
 class GrTextureContext;
 class GrTextureOpList;
@@ -95,64 +88,6 @@ public:
     void copyOpListsFromDDL(const SkDeferredDisplayList*, GrRenderTargetProxy* newDest);
 
 private:
-<<<<<<< HEAD
-    // This class encapsulates maintenance and manipulation of the drawing manager's DAG of opLists.
-    class OpListDAG {
-    public:
-        OpListDAG(bool explicitlyAllocating, GrContextOptions::Enable sortOpLists);
-        ~OpListDAG();
-
-        // Currently, when explicitly allocating resources, this call will topologically sort the
-        // opLists.
-        // MDB TODO: remove once incremental opList sorting is enabled
-        void prepForFlush();
-
-        void closeAll(const GrCaps* caps);
-
-        // A yucky combination of closeAll and reset
-        void cleanup(const GrCaps* caps);
-
-        void gatherIDs(SkSTArray<8, uint32_t, true>* idArray) const;
-
-        void reset();
-
-        // These calls forceably remove an opList from the DAG. They are problematic bc they just
-        // remove the opList but don't cleanup any refering pointers (i.e., dependency pointers
-        // in the DAG). They work right now bc they are only called at flush time, after the
-        // topological sort is complete (so the dangling pointers aren't used).
-        void removeOpList(int index);
-        void removeOpLists(int startIndex, int stopIndex);
-
-        bool empty() const { return fOpLists.empty(); }
-        int numOpLists() const { return fOpLists.count(); }
-
-        GrOpList* opList(int index) { return fOpLists[index].get(); }
-        const GrOpList* opList(int index) const { return fOpLists[index].get(); }
-
-        GrOpList* back() { return fOpLists.back().get(); }
-        const GrOpList* back() const { return fOpLists.back().get(); }
-
-        void add(sk_sp<GrOpList>);
-        void add(const SkTArray<sk_sp<GrOpList>>&);
-
-        void swap(SkTArray<sk_sp<GrOpList>>* opLists);
-
-        bool sortingOpLists() const { return fSortOpLists; }
-
-    private:
-        SkTArray<sk_sp<GrOpList>> fOpLists;
-        bool                      fSortOpLists;
-    };
-
-    GrDrawingManager(GrContext*, const GrPathRendererChain::Options&,
-                     const GrTextContext::Options&, GrSingleOwner*,
-                     bool explicitlyAllocating, GrContextOptions::Enable sortRenderTargets,
-                     GrContextOptions::Enable reduceOpListSplitting);
-||||||| merged common ancestors
-    GrDrawingManager(GrContext*, const GrPathRendererChain::Options&,
-                     const GrAtlasTextContext::Options&, GrSingleOwner*,
-                     GrContextOptions::Enable sortRenderTargets);
-=======
     // This class encapsulates maintenance and manipulation of the drawing manager's DAG of opLists.
     class OpListDAG {
     public:
@@ -207,7 +142,6 @@ private:
                      GrContextOptions::Enable reduceOpListSplitting);
 
     bool wasAbandoned() const;
->>>>>>> upstream-releases
 
     void cleanup();
 
@@ -215,26 +149,6 @@ private:
     bool executeOpLists(int startIndex, int stopIndex, GrOpFlushState*, int* numOpListsExecuted);
 
     GrSemaphoresSubmitted flush(GrSurfaceProxy* proxy,
-<<<<<<< HEAD
-                                int numSemaphores = 0,
-                                GrBackendSemaphore backendSemaphores[] = nullptr);
-
-    SkDEBUGCODE(void validate() const);
-
-    friend class GrContext;  // for access to: ctor, abandon, reset & flush
-||||||| merged common ancestors
-                                int numSemaphores = 0,
-                                GrBackendSemaphore backendSemaphores[] = nullptr) {
-        return this->internalFlush(proxy, GrResourceCache::FlushType::kExternal,
-                                   numSemaphores, backendSemaphores);
-    }
-    GrSemaphoresSubmitted internalFlush(GrSurfaceProxy*,
-                                        GrResourceCache::FlushType,
-                                        int numSemaphores,
-                                        GrBackendSemaphore backendSemaphores[]);
-
-    friend class GrContext;  // for access to: ctor, abandon, reset & flush
-=======
                                 SkSurface::BackendSurfaceAccess access,
                                 SkSurface::FlushFlags flags,
                                 int numSemaphores,
@@ -243,7 +157,6 @@ private:
     SkDEBUGCODE(void validate() const);
 
     friend class GrContext; // access to: flush & cleanup
->>>>>>> upstream-releases
     friend class GrContextPriv; // access to: flush
     friend class GrOnFlushResourceProvider; // this is just a shallow wrapper around this class
     friend class GrRecordingContext;  // access to: ctor
@@ -254,34 +167,13 @@ private:
 
     GrRecordingContext*               fContext;
     GrPathRendererChain::Options      fOptionsForPathRendererChain;
-<<<<<<< HEAD
-    GrTextContext::Options            fOptionsForTextContext;
-
-    // In debug builds we guard against improper thread handling
-    GrSingleOwner*                    fSingleOwner;
-||||||| merged common ancestors
-    GrAtlasTextContext::Options       fOptionsForAtlasTextContext;
-
-    // In debug builds we guard against improper thread handling
-    GrSingleOwner*                    fSingleOwner;
-=======
     GrTextContext::Options            fOptionsForTextContext;
     // This cache is used by both the vertex and index pools. It reuses memory across multiple
     // flushes.
     sk_sp<GrBufferAllocPool::CpuBufferCache> fCpuBufferCache;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    bool                              fAbandoned;
     OpListDAG                         fDAG;
     GrOpList*                         fActiveOpList = nullptr;
-||||||| merged common ancestors
-    bool                              fAbandoned;
-    SkTArray<sk_sp<GrOpList>>         fOpLists;
-=======
-    OpListDAG                         fDAG;
-    GrOpList*                         fActiveOpList = nullptr;
->>>>>>> upstream-releases
     // These are the IDs of the opLists currently being flushed (in internalFlush)
     SkSTArray<8, uint32_t, true>      fFlushingOpListIDs;
     // These are the new opLists generated by the onFlush CBs

@@ -3,13 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-<<<<<<< HEAD
-const {Option, Arg, RetVal, generateActorSpec} = require("devtools/shared/protocol");
-||||||| merged common ancestors
-const {Arg, RetVal, generateActorSpec} = require("devtools/shared/protocol");
-=======
 const { Arg, RetVal, generateActorSpec } = require("devtools/shared/protocol");
->>>>>>> upstream-releases
 
 const workerTargetSpec = generateActorSpec({
   typeName: "workerTarget",
@@ -50,7 +44,6 @@ const workerTargetSpec = generateActorSpec({
     // We can remove that once FF66 is no longer supported.
     newSource: {
       type: "newSource",
-      source: Option(0, "json"),
     },
   },
 });

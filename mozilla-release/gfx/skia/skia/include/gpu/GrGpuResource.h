@@ -10,14 +10,7 @@
 
 #include "../private/GrResourceKey.h"
 #include "../private/GrTypesPriv.h"
-<<<<<<< HEAD
 #include "../private/SkNoncopyable.h"
-#include "GrResourceKey.h"
-||||||| merged common ancestors
-#include "GrResourceKey.h"
-=======
-#include "../private/SkNoncopyable.h"
->>>>>>> upstream-releases
 
 class GrContext;
 class GrGpu;
@@ -150,13 +143,7 @@ private:
     mutable int32_t fPendingReads;
     mutable int32_t fPendingWrites;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    // This class is used to manage conversion of refs to pending reads/writes.
-    friend class GrGpuResourceRef;
-=======
     friend class GrIORefProxy;    // needs to forward on wrapped IO calls
->>>>>>> upstream-releases
     friend class GrResourceCache; // to check IO ref counts.
 
     template <typename, GrIOType> friend class GrPendingIOResource;

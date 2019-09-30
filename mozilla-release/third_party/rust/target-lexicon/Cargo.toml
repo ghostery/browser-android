@@ -13,13 +13,7 @@
 [package]
 edition = "2018"
 name = "target-lexicon"
-<<<<<<< HEAD
-version = "0.2.0"
-||||||| merged common ancestors
-version = "0.0.3"
-=======
 version = "0.4.0"
->>>>>>> upstream-releases
 authors = ["Dan Gohman <sunfish@mozilla.com>"]
 description = "Targeting utilities for compilers and related tools"
 documentation = "https://docs.rs/target-lexicon/"

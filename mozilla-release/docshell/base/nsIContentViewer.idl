@@ -42,16 +42,8 @@ interface nsIContentViewer : nsISupports
   attribute nsIDocShell container;
 
   [noscript,notxpcom,nostdcall] void loadStart(in Document aDoc);
-<<<<<<< HEAD
-  void loadComplete(in nsresult aStatus);
-  [notxpcom,nostdcall] readonly attribute boolean loadCompleted;
-||||||| merged common ancestors
-  void loadComplete(in nsresult aStatus);
-  [noscript] readonly attribute boolean loadCompleted;
-=======
   [can_run_script] void loadComplete(in nsresult aStatus);
   [notxpcom,nostdcall] readonly attribute boolean loadCompleted;
->>>>>>> upstream-releases
 
   [notxpcom,nostdcall] readonly attribute boolean isStopped;
 
@@ -223,20 +215,10 @@ interface nsIContentViewer : nsISupports
    */
   attribute boolean isHidden;
 
-<<<<<<< HEAD
-  // presShell can be null.
-  [notxpcom,nostdcall] readonly attribute nsIPresShellPtr presShell;
-  // presContext can be null.
-  [notxpcom,nostdcall] readonly attribute nsPresContextPtr presContext;
-||||||| merged common ancestors
-  [noscript] readonly attribute nsIPresShellPtr presShell;
-  [noscript] readonly attribute nsPresContextPtr presContext;
-=======
   // presShell can be null.
   [notxpcom,nostdcall] readonly attribute PresShellPtr presShell;
   // presContext can be null.
   [notxpcom,nostdcall] readonly attribute nsPresContextPtr presContext;
->>>>>>> upstream-releases
   // aDocument must not be null.
   [noscript] void setDocumentInternal(in Document aDocument,
                                       in boolean aForceReuseInnerWindow);

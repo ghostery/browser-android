@@ -389,28 +389,10 @@ bool ConfigureSSLServerSocket(PRFileDesc* socket, server_info_t* si,
   SSLVersionRange range = {SSL_LIBRARY_VERSION_TLS_1_3,
                            SSL_LIBRARY_VERSION_3_0};
   if (flags & USE_SSL3) {
-<<<<<<< HEAD
-    SSLVersionRange range = {SSL_LIBRARY_VERSION_3_0, SSL_LIBRARY_VERSION_3_0};
-    SSL_VersionRangeSet(ssl_socket, &range);
-||||||| merged common ancestors
-    SSLVersionRange range = { SSL_LIBRARY_VERSION_3_0,
-                              SSL_LIBRARY_VERSION_3_0 };
-    SSL_VersionRangeSet(ssl_socket, &range);
-=======
     range.min = PR_MIN(range.min, SSL_LIBRARY_VERSION_3_0);
     range.max = PR_MAX(range.max, SSL_LIBRARY_VERSION_3_0);
->>>>>>> upstream-releases
   }
   if (flags & USE_TLS1) {
-<<<<<<< HEAD
-    SSLVersionRange range = {SSL_LIBRARY_VERSION_TLS_1_0,
-                             SSL_LIBRARY_VERSION_TLS_1_0};
-    SSL_VersionRangeSet(ssl_socket, &range);
-||||||| merged common ancestors
-    SSLVersionRange range = { SSL_LIBRARY_VERSION_TLS_1_0,
-                              SSL_LIBRARY_VERSION_TLS_1_0 };
-    SSL_VersionRangeSet(ssl_socket, &range);
-=======
     range.min = PR_MIN(range.min, SSL_LIBRARY_VERSION_TLS_1_0);
     range.max = PR_MAX(range.max, SSL_LIBRARY_VERSION_TLS_1_0);
   }
@@ -432,7 +414,6 @@ bool ConfigureSSLServerSocket(PRFileDesc* socket, server_info_t* si,
       SSL_VersionRangeSet(ssl_socket, &range) != SECSuccess) {
     LOG_ERROR(("Error configuring SSL socket version range\n"));
     return false;
->>>>>>> upstream-releases
   }
 
   if (flags & USE_RC4) {
@@ -756,12 +737,6 @@ void HandleConnection(void* data) {
                 PL_HashTableEnumerateEntries(ci->server_info->host_ssl3_table,
                                              match_hostname, &match);
                 PL_HashTableEnumerateEntries(ci->server_info->host_tls1_table,
-<<<<<<< HEAD
-                                             match_hostname, &match);
-||||||| merged common ancestors
-                                             match_hostname,
-                                             &match);
-=======
                                              match_hostname, &match);
                 PL_HashTableEnumerateEntries(ci->server_info->host_tls11_table,
                                              match_hostname, &match);
@@ -769,7 +744,6 @@ void HandleConnection(void* data) {
                                              match_hostname, &match);
                 PL_HashTableEnumerateEntries(ci->server_info->host_tls13_table,
                                              match_hostname, &match);
->>>>>>> upstream-releases
                 PL_HashTableEnumerateEntries(ci->server_info->host_rc4_table,
                                              match_hostname, &match);
                 PL_HashTableEnumerateEntries(
@@ -1029,12 +1003,6 @@ PLHashTable* get_tls1_table(server_info_t* server) {
   return server->host_tls1_table;
 }
 
-<<<<<<< HEAD
-PLHashTable* get_rc4_table(server_info_t* server) {
-||||||| merged common ancestors
-PLHashTable* get_rc4_table(server_info_t* server)
-{
-=======
 PLHashTable* get_tls11_table(server_info_t* server) {
   return server->host_tls11_table;
 }
@@ -1048,7 +1016,6 @@ PLHashTable* get_tls13_table(server_info_t* server) {
 }
 
 PLHashTable* get_rc4_table(server_info_t* server) {
->>>>>>> upstream-releases
   return server->host_rc4_table;
 }
 
@@ -1146,14 +1113,6 @@ int processConfigLine(char* configLine) {
     return 0;
   }
 
-<<<<<<< HEAD
-  // Configure all listen sockets and port+certificate bindings
-  if (!strcmp(keyword, "listen")) {
-||||||| merged common ancestors
-  // Configure all listen sockets and port+certificate bindings
-  if (!strcmp(keyword, "listen"))
-  {
-=======
   // Configure all listen sockets and port+certificate bindings.
   // Listen on the public address if "*" was specified as the listen
   // address or listen on the loopback address if "127.0.0.1" was
@@ -1163,19 +1122,11 @@ int processConfigLine(char* configLine) {
   // emulated Android device since it has a different ip address from
   // the host.
   if (!strcmp(keyword, "listen")) {
->>>>>>> upstream-releases
     char* hostname = strtok2(_caret, ":", &_caret);
     char* hostportstring = nullptr;
-<<<<<<< HEAD
-    if (strcmp(hostname, "*")) {
-||||||| merged common ancestors
-    if (strcmp(hostname, "*"))
-    {
-=======
     if (!strcmp(hostname, "*")) {
       listen_public = true;
     } else if (strcmp(hostname, "127.0.0.1")) {
->>>>>>> upstream-releases
       any_host_spec_config = true;
       hostportstring = strtok2(_caret, ":", &_caret);
     }
@@ -1189,17 +1140,6 @@ int processConfigLine(char* configLine) {
       return 1;
     }
 
-<<<<<<< HEAD
-    if (server_info_t* existingServer = findServerInfo(port)) {
-      char* certnick_copy = new char[strlen(certnick) + 1];
-      char* hostname_copy =
-          new char[strlen(hostname) + strlen(hostportstring) + 2];
-||||||| merged common ancestors
-    if (server_info_t* existingServer = findServerInfo(port))
-    {
-      char *certnick_copy = new char[strlen(certnick)+1];
-      char *hostname_copy = new char[strlen(hostname)+strlen(hostportstring)+2];
-=======
     if (server_info_t* existingServer = findServerInfo(port)) {
       if (!hostportstring) {
         LOG_ERROR(
@@ -1209,7 +1149,6 @@ int processConfigLine(char* configLine) {
       char* certnick_copy = new char[strlen(certnick) + 1];
       char* hostname_copy =
           new char[strlen(hostname) + strlen(hostportstring) + 2];
->>>>>>> upstream-releases
 
       strcpy(hostname_copy, hostname);
       strcat(hostname_copy, ":");
@@ -1226,17 +1165,6 @@ int processConfigLine(char* configLine) {
       server_info_t server;
       server.cert_nickname = certnick;
       server.listen_port = port;
-<<<<<<< HEAD
-      server.host_cert_table =
-          PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                          PL_CompareStrings, nullptr, nullptr);
-      if (!server.host_cert_table) {
-||||||| merged common ancestors
-      server.host_cert_table = PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                                               PL_CompareStrings, nullptr, nullptr);
-      if (!server.host_cert_table)
-      {
-=======
       server.host_cert_table =
           PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
                           PL_CompareStrings, nullptr, nullptr);
@@ -1255,21 +1183,9 @@ int processConfigLine(char* configLine) {
           PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
                           PL_CompareStrings, nullptr, nullptr);
       if (!server.host_redir_table) {
->>>>>>> upstream-releases
         LOG_ERROR(("Internal, could not create hash table\n"));
         return 1;
       }
-<<<<<<< HEAD
-      server.host_clientauth_table =
-          PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                          ClientAuthValueComparator, nullptr, nullptr);
-      if (!server.host_clientauth_table) {
-||||||| merged common ancestors
-      server.host_clientauth_table = PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                                                     ClientAuthValueComparator, nullptr, nullptr);
-      if (!server.host_clientauth_table)
-      {
-=======
 
       server.host_ssl3_table =
           PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
@@ -1285,72 +1201,33 @@ int processConfigLine(char* configLine) {
                           PL_CompareStrings, nullptr, nullptr);
 
       if (!server.host_tls1_table) {
->>>>>>> upstream-releases
         LOG_ERROR(("Internal, could not create hash table\n"));
         return 1;
       }
-<<<<<<< HEAD
-      server.host_redir_table =
-          PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                          PL_CompareStrings, nullptr, nullptr);
-      if (!server.host_redir_table) {
-||||||| merged common ancestors
-      server.host_redir_table = PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                                                PL_CompareStrings, nullptr, nullptr);
-      if (!server.host_redir_table)
-      {
-=======
 
       server.host_tls11_table =
           PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
                           PL_CompareStrings, nullptr, nullptr);
 
       if (!server.host_tls11_table) {
->>>>>>> upstream-releases
         LOG_ERROR(("Internal, could not create hash table\n"));
         return 1;
       }
 
-<<<<<<< HEAD
-      server.host_ssl3_table =
-          PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                          PL_CompareStrings, nullptr, nullptr);
-      ;
-      if (!server.host_ssl3_table) {
-||||||| merged common ancestors
-      server.host_ssl3_table = PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                                               PL_CompareStrings, nullptr, nullptr);;
-      if (!server.host_ssl3_table)
-      {
-=======
       server.host_tls12_table =
           PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
                           PL_CompareStrings, nullptr, nullptr);
 
       if (!server.host_tls12_table) {
->>>>>>> upstream-releases
         LOG_ERROR(("Internal, could not create hash table\n"));
         return 1;
       }
 
-<<<<<<< HEAD
-      server.host_tls1_table =
-          PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                          PL_CompareStrings, nullptr, nullptr);
-      ;
-      if (!server.host_tls1_table) {
-||||||| merged common ancestors
-      server.host_tls1_table = PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
-                                               PL_CompareStrings, nullptr, nullptr);;
-      if (!server.host_tls1_table)
-      {
-=======
       server.host_tls13_table =
           PL_NewHashTable(0, PL_HashString, PL_CompareStrings,
                           PL_CompareStrings, nullptr, nullptr);
 
       if (!server.host_tls13_table) {
->>>>>>> upstream-releases
         LOG_ERROR(("Internal, could not create hash table\n"));
         return 1;
       }
@@ -1597,17 +1474,8 @@ int freeSSL3HashItems(PLHashEntry* he, int i, void* arg) {
   return HT_ENUMERATE_REMOVE;
 }
 
-<<<<<<< HEAD
-int freeTLS1HashItems(PLHashEntry* he, int i, void* arg) {
-  delete[](char*) he->key;
-||||||| merged common ancestors
-int freeTLS1HashItems(PLHashEntry *he, int i, void *arg)
-{
-  delete [] (char*)he->key;
-=======
 int freeTLSHashItems(PLHashEntry* he, int i, void* arg) {
   delete[](char*) he->key;
->>>>>>> upstream-releases
   return HT_ENUMERATE_REMOVE;
 }
 
@@ -1749,33 +1617,6 @@ int main(int argc, char** argv) {
     LOG_DEBUG(("Leaked NSS objects!\n"));
   }
 
-<<<<<<< HEAD
-  for (auto& server : servers) {
-    PL_HashTableEnumerateEntries(server.host_cert_table, freeHostCertHashItems,
-                                 nullptr);
-    PL_HashTableEnumerateEntries(server.host_clientauth_table,
-                                 freeClientAuthHashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_redir_table,
-                                 freeHostRedirHashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_ssl3_table, freeSSL3HashItems,
-                                 nullptr);
-    PL_HashTableEnumerateEntries(server.host_tls1_table, freeTLS1HashItems,
-                                 nullptr);
-    PL_HashTableEnumerateEntries(server.host_rc4_table, freeRC4HashItems,
-                                 nullptr);
-    PL_HashTableEnumerateEntries(server.host_failhandshake_table,
-                                 freeRC4HashItems, nullptr);
-||||||| merged common ancestors
-  for (auto & server : servers)
-  {
-    PL_HashTableEnumerateEntries(server.host_cert_table, freeHostCertHashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_clientauth_table, freeClientAuthHashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_redir_table, freeHostRedirHashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_ssl3_table, freeSSL3HashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_tls1_table, freeTLS1HashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_rc4_table, freeRC4HashItems, nullptr);
-    PL_HashTableEnumerateEntries(server.host_failhandshake_table, freeRC4HashItems, nullptr);
-=======
   for (auto& server : servers) {
     PL_HashTableEnumerateEntries(server.host_cert_table, freeHostCertHashItems,
                                  nullptr);
@@ -1797,7 +1638,6 @@ int main(int argc, char** argv) {
                                  nullptr);
     PL_HashTableEnumerateEntries(server.host_failhandshake_table,
                                  freeRC4HashItems, nullptr);
->>>>>>> upstream-releases
     PL_HashTableDestroy(server.host_cert_table);
     PL_HashTableDestroy(server.host_clientauth_table);
     PL_HashTableDestroy(server.host_redir_table);

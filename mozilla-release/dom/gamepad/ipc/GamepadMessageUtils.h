@@ -16,59 +16,6 @@
 
 namespace IPC {
 
-<<<<<<< HEAD
-template <>
-struct ParamTraits<mozilla::dom::GamepadMappingType>
-    : public ContiguousEnumSerializer<
-          mozilla::dom::GamepadMappingType, mozilla::dom::GamepadMappingType(0),
-          mozilla::dom::GamepadMappingType(
-              mozilla::dom::GamepadMappingType::EndGuard_)> {};
-
-template <>
-struct ParamTraits<mozilla::dom::GamepadHand>
-    : public ContiguousEnumSerializer<
-          mozilla::dom::GamepadHand, mozilla::dom::GamepadHand(0),
-          mozilla::dom::GamepadHand(mozilla::dom::GamepadHand::EndGuard_)> {};
-
-template <>
-struct ParamTraits<mozilla::dom::GamepadServiceType>
-    : public ContiguousEnumSerializer<
-          mozilla::dom::GamepadServiceType, mozilla::dom::GamepadServiceType(0),
-          mozilla::dom::GamepadServiceType(
-              mozilla::dom::GamepadServiceType::NumGamepadServiceType)> {};
-
-template <>
-struct ParamTraits<mozilla::dom::GamepadCapabilityFlags>
-    : public BitFlagsEnumSerializer<
-          mozilla::dom::GamepadCapabilityFlags,
-          mozilla::dom::GamepadCapabilityFlags::Cap_All> {};
-||||||| merged common ancestors
-template<>
-struct ParamTraits<mozilla::dom::GamepadMappingType> :
-  public ContiguousEnumSerializer<mozilla::dom::GamepadMappingType,
-                                  mozilla::dom::GamepadMappingType(0),
-                                  mozilla::dom::GamepadMappingType(
-                                  mozilla::dom::GamepadMappingType::EndGuard_)> {};
-
-template<>
-struct ParamTraits<mozilla::dom::GamepadHand> :
-  public ContiguousEnumSerializer<mozilla::dom::GamepadHand,
-                                  mozilla::dom::GamepadHand(0),
-                                  mozilla::dom::GamepadHand(
-                                  mozilla::dom::GamepadHand::EndGuard_)> {};
-
-template<>
-struct ParamTraits<mozilla::dom::GamepadServiceType> :
-  public ContiguousEnumSerializer<mozilla::dom::GamepadServiceType,
-                                  mozilla::dom::GamepadServiceType(0),
-                                  mozilla::dom::GamepadServiceType(
-                                  mozilla::dom::GamepadServiceType::NumGamepadServiceType)> {};
-
-template<>
-struct ParamTraits<mozilla::dom::GamepadCapabilityFlags> :
-  public BitFlagsEnumSerializer<mozilla::dom::GamepadCapabilityFlags,
-                                mozilla::dom::GamepadCapabilityFlags::Cap_All> {};
-=======
 template <>
 struct ParamTraits<mozilla::dom::GamepadLightIndicatorType>
     : public ContiguousEnumSerializer<
@@ -102,7 +49,6 @@ struct ParamTraits<mozilla::dom::GamepadCapabilityFlags>
     : public BitFlagsEnumSerializer<
           mozilla::dom::GamepadCapabilityFlags,
           mozilla::dom::GamepadCapabilityFlags::Cap_All> {};
->>>>>>> upstream-releases
 
 template <>
 struct ParamTraits<mozilla::dom::GamepadPoseState> {
@@ -163,11 +109,6 @@ struct ParamTraits<mozilla::dom::GamepadPoseState> {
   }
 };
 
-<<<<<<< HEAD
-}  // namespace IPC
-||||||| merged common ancestors
-} // namespace IPC
-=======
 template <>
 struct ParamTraits<mozilla::dom::GamepadTouchState> {
   typedef mozilla::dom::GamepadTouchState paramType;
@@ -198,6 +139,5 @@ struct ParamTraits<mozilla::dom::GamepadTouchState> {
 };
 
 }  // namespace IPC
->>>>>>> upstream-releases
 
 #endif  // mozilla_dom_gamepad_GamepadMessageUtils_h

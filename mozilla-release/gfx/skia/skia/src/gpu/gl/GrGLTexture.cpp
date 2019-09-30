@@ -53,23 +53,10 @@ GrGLTexture::GrGLTexture(GrGLGpu* gpu, SkBudgeted budgeted, const GrSurfaceDesc&
     }
 }
 
-<<<<<<< HEAD
-GrGLTexture::GrGLTexture(GrGLGpu* gpu, Wrapped, const GrSurfaceDesc& desc,
-                         GrMipMapsStatus mipMapsStatus, const IDDesc& idDesc)
-        : GrSurface(gpu, desc)
-        , INHERITED(gpu, desc, TextureTypeFromTarget(idDesc.fInfo.fTarget), mipMapsStatus) {
-||||||| merged common ancestors
-GrGLTexture::GrGLTexture(GrGLGpu* gpu, Wrapped, const GrSurfaceDesc& desc,
-                         GrMipMapsStatus mipMapsStatus, const IDDesc& idDesc)
-    : GrSurface(gpu, desc)
-    , INHERITED(gpu, desc, sampler_type(idDesc, desc.fConfig, gpu),
-                highest_filter_mode(idDesc, desc.fConfig), mipMapsStatus) {
-=======
 GrGLTexture::GrGLTexture(GrGLGpu* gpu, const GrSurfaceDesc& desc, GrMipMapsStatus mipMapsStatus,
                          const IDDesc& idDesc, GrWrapCacheable cacheable, GrIOType ioType)
         : GrSurface(gpu, desc)
         , INHERITED(gpu, desc, TextureTypeFromTarget(idDesc.fInfo.fTarget), mipMapsStatus) {
->>>>>>> upstream-releases
     this->init(desc, idDesc);
     this->registerWithCacheWrapped(cacheable);
     if (ioType == kRead_GrIOType) {
@@ -87,20 +74,9 @@ GrGLTexture::GrGLTexture(GrGLGpu* gpu, const GrSurfaceDesc& desc, const IDDesc& 
 void GrGLTexture::init(const GrSurfaceDesc& desc, const IDDesc& idDesc) {
     SkASSERT(0 != idDesc.fInfo.fID);
     SkASSERT(0 != idDesc.fInfo.fFormat);
-<<<<<<< HEAD
-    fTexParams.invalidate();
-    fTexParamsTimestamp = GrGpu::kExpiredTimestamp;
-    fID = idDesc.fInfo.fID;
-    fFormat = idDesc.fInfo.fFormat;
-||||||| merged common ancestors
-    fTexParams.invalidate();
-    fTexParamsTimestamp = GrGpu::kExpiredTimestamp;
-    fInfo = idDesc.fInfo;
-=======
     fParamsTimestamp = GrGpu::kExpiredTimestamp;
     fID = idDesc.fInfo.fID;
     fFormat = idDesc.fInfo.fFormat;
->>>>>>> upstream-releases
     fTextureIDOwnership = idDesc.fOwnership;
 }
 
@@ -119,37 +95,11 @@ void GrGLTexture::onRelease() {
 }
 
 void GrGLTexture::onAbandon() {
-<<<<<<< HEAD
     fID = 0;
-    this->invokeReleaseProc();
-||||||| merged common ancestors
-    fInfo.fTarget = 0;
-    fInfo.fID = 0;
-    this->invokeReleaseProc();
-=======
-    fID = 0;
->>>>>>> upstream-releases
     INHERITED::onAbandon();
 }
 
 GrBackendTexture GrGLTexture::getBackendTexture() const {
-<<<<<<< HEAD
-    GrGLTextureInfo info;
-    info.fTarget = target_from_texture_type(this->texturePriv().textureType());
-    info.fID = fID;
-    info.fFormat = fFormat;
-    return GrBackendTexture(this->width(), this->height(), this->texturePriv().mipMapped(), info);
-||||||| merged common ancestors
-    return GrBackendTexture(this->width(), this->height(), this->texturePriv().mipMapped(), fInfo);
-}
-
-void GrGLTexture::setMemoryBacking(SkTraceMemoryDump* traceMemoryDump,
-                                   const SkString& dumpName) const {
-    SkString texture_id;
-    texture_id.appendU32(this->textureID());
-    traceMemoryDump->setMemoryBacking(dumpName.c_str(), "gl_texture",
-                                      texture_id.c_str());
-=======
     GrGLTextureInfo info;
     info.fTarget = target_from_texture_type(this->texturePriv().textureType());
     info.fID = fID;
@@ -160,7 +110,6 @@ void GrGLTexture::setMemoryBacking(SkTraceMemoryDump* traceMemoryDump,
 GrBackendFormat GrGLTexture::backendFormat() const {
     return GrBackendFormat::MakeGL(fFormat,
                                    target_from_texture_type(this->texturePriv().textureType()));
->>>>>>> upstream-releases
 }
 
 sk_sp<GrGLTexture> GrGLTexture::MakeWrapped(GrGLGpu* gpu, const GrSurfaceDesc& desc,

@@ -272,45 +272,7 @@ var AppManager = (exports.AppManager = {
 
   getTarget: function() {
     if (this.selectedProject.type == "mainProcess") {
-<<<<<<< HEAD
-      // Fx >=39 exposes a ParentProcessTargetActor to debug the main process
-      if (this.connection.client.mainRoot.traits.allowChromeProcess) {
-        return this.connection.client.mainRoot.getMainProcess()
-                   .then(front => {
-                     return TargetFactory.forRemoteTab({
-                       activeTab: front,
-                       client: this.connection.client,
-                       chrome: true,
-                     });
-                   });
-      }
-      // Fx <39 exposes chrome target actors on the root actor
-      return TargetFactory.forRemoteTab({
-          form: this._listTabsResponse,
-          client: this.connection.client,
-          chrome: true,
-      });
-||||||| merged common ancestors
-      // Fx >=39 exposes a ParentProcessTargetActor to debug the main process
-      if (this.connection.client.mainRoot.traits.allowChromeProcess) {
-        return this.connection.client.mainRoot.getProcess(0)
-                   .then(aResponse => {
-                     return TargetFactory.forRemoteTab({
-                       form: aResponse.form,
-                       client: this.connection.client,
-                       chrome: true,
-                     });
-                   });
-      }
-      // Fx <39 exposes chrome target actors on the root actor
-      return TargetFactory.forRemoteTab({
-          form: this._listTabsResponse,
-          client: this.connection.client,
-          chrome: true,
-      });
-=======
       return this.connection.client.mainRoot.getMainProcess();
->>>>>>> upstream-releases
     }
 
     if (this.selectedProject.type == "tab") {

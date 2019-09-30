@@ -1179,13 +1179,8 @@ security.ui.identitypopup:
     record_in_processes:
       - main
     extra_keys:
-<<<<<<< HEAD
-||||||| merged common ancestors
-      fb: Whether FastBlock was active while the user opened the popup
-=======
       fp: Whether Fingerprinter blocking was active while the user opened the popup
       cm: Whether Cryptominer blocking was active while the user opened the popup
->>>>>>> upstream-releases
       tp: Whether Tracking Protection was active while the user opened the popup
       cr: Whether Cookie Restrictions was active while the user opened the popup
     products:
@@ -1218,51 +1213,12 @@ security.ui.identitypopup:
     record_in_processes:
       - main
     extra_keys:
-<<<<<<< HEAD
-||||||| merged common ancestors
-      fb: Whether FastBlock was active while the user interacted with the UI
-=======
       fp: Whether Fingerprinter blocking was active while the user interacted with the UI
       cm: Whether Cryptominer blocking was active while the user interacted with the UI
->>>>>>> upstream-releases
       tp: Whether Tracking Protection was active while the user interacted with the UI
       cr: Whether Cookie Restrictions was active while the user interacted with the UI
     products:
       - firefox
-<<<<<<< HEAD
-
-intl.ui.browserLanguage:
-  action:
-    description: >
-      User interactions for the browser language within about-preferences in the main pane and in
-      the browser language dialog. Each dialog event (on the dialog object, and the manage and
-      search methods of the main object) has a value which is a monotonically increasing number
-      that links it with other events related to the same dialog instance.
-    objects:
-      - dialog
-      - main
-    methods:
-      - manage
-      - search
-      - add
-      - remove
-      - reorder
-      - apply
-      - accept
-      - cancel
-    extra_keys:
-      installId: The id for an install.
-    products:
-      - firefox
-    expiry_version: "70"
-    notification_emails:
-      - flod@mozilla.com
-      - mstriemer@mozilla.com
-    release_channel_collection: opt-out
-    record_in_processes: ["main"]
-    bug_numbers: [1486507]
-||||||| merged common ancestors
-=======
 uptake.remotecontent.result:
   uptake:
     description: >
@@ -1448,4 +1404,3 @@ pictureinpicture:
       - 1560590
     expiry_version: "74"
     release_channel_collection: opt-in
->>>>>>> upstream-releases

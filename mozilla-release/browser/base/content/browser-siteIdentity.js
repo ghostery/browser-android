@@ -305,31 +305,6 @@ var gIdentityHandler = {
     return this._protectionsPanelEnabled;
   },
 
-  get _insecureConnectionIconEnabled() {
-    delete this._insecureConnectionIconEnabled;
-    XPCOMUtils.defineLazyPreferenceGetter(this, "_insecureConnectionIconEnabled",
-                                          "security.insecure_connection_icon.enabled");
-    return this._insecureConnectionIconEnabled;
-  },
-  get _insecureConnectionIconPBModeEnabled() {
-    delete this._insecureConnectionIconPBModeEnabled;
-    XPCOMUtils.defineLazyPreferenceGetter(this, "_insecureConnectionIconPBModeEnabled",
-                                          "security.insecure_connection_icon.pbmode.enabled");
-    return this._insecureConnectionIconPBModeEnabled;
-  },
-  get _insecureConnectionTextEnabled() {
-    delete this._insecureConnectionTextEnabled;
-    XPCOMUtils.defineLazyPreferenceGetter(this, "_insecureConnectionTextEnabled",
-                                          "security.insecure_connection_text.enabled");
-    return this._insecureConnectionTextEnabled;
-  },
-  get _insecureConnectionTextPBModeEnabled() {
-    delete this._insecureConnectionTextPBModeEnabled;
-    XPCOMUtils.defineLazyPreferenceGetter(this, "_insecureConnectionTextPBModeEnabled",
-                                          "security.insecure_connection_text.pbmode.enabled");
-    return this._insecureConnectionTextPBModeEnabled;
-  },
-
   /**
    * Handles clicks on the "Clear Cookies and Site Data" button.
    */
@@ -734,37 +709,17 @@ var gIdentityHandler = {
           this._identityBox.classList.add("weakCipher");
         }
       } else {
-<<<<<<< HEAD
-        let warnOnInsecure = this._insecureConnectionIconEnabled ||
-                             (this._insecureConnectionIconPBModeEnabled &&
-                             PrivateBrowsingUtils.isWindowPrivate(window));
-||||||| merged common ancestors
-        let warnOnInsecure = Services.prefs.getBoolPref("security.insecure_connection_icon.enabled") ||
-                             (Services.prefs.getBoolPref("security.insecure_connection_icon.pbmode.enabled") &&
-                             PrivateBrowsingUtils.isWindowPrivate(window));
-=======
         let warnOnInsecure =
           this._insecureConnectionIconEnabled ||
           (this._insecureConnectionIconPBModeEnabled &&
             PrivateBrowsingUtils.isWindowPrivate(window));
->>>>>>> upstream-releases
         let className = warnOnInsecure ? "notSecure" : "unknownIdentity";
         this._identityBox.className = className;
 
-<<<<<<< HEAD
-        let warnTextOnInsecure = this._insecureConnectionTextEnabled ||
-                                 (this._insecureConnectionTextPBModeEnabled &&
-                                 PrivateBrowsingUtils.isWindowPrivate(window));
-||||||| merged common ancestors
-        let warnTextOnInsecure = Services.prefs.getBoolPref("security.insecure_connection_text.enabled") ||
-                                 (Services.prefs.getBoolPref("security.insecure_connection_text.pbmode.enabled") &&
-                                 PrivateBrowsingUtils.isWindowPrivate(window));
-=======
         let warnTextOnInsecure =
           this._insecureConnectionTextEnabled ||
           (this._insecureConnectionTextPBModeEnabled &&
             PrivateBrowsingUtils.isWindowPrivate(window));
->>>>>>> upstream-releases
         if (warnTextOnInsecure) {
           icon_label = gNavigatorBundle.getString("identity.notSecure.label");
           this._identityBox.classList.add("notSecureText");
@@ -1087,18 +1042,6 @@ var gIdentityHandler = {
       return;
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    // Move focus to the next available element in the identity popup.
-    // This is required by role=alertdialog and fixes an issue where
-    // an already open panel would steal focus from the identity popup.
-    if (event.type == "keypress") {
-      let panelView = PanelView.forNode(this._identityPopupMainView);
-      this._identityPopupMainView.addEventListener("ViewShown", () => panelView.focusFirstNavigableElement(),
-        {once: true});
-    }
-
-=======
     // If we are in DOM full-screen, exit it before showing the identity popup
     if (document.fullscreen) {
       // Open the identity popup after DOM full-screen exit
@@ -1133,7 +1076,6 @@ var gIdentityHandler = {
   },
 
   _openPopup(event) {
->>>>>>> upstream-releases
     // Make sure that the display:none style we set in xul is removed now that
     // the popup is actually needed
     this._identityPopup.hidden = false;

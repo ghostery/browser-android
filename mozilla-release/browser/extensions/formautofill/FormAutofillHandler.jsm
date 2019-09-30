@@ -10,30 +10,6 @@
 
 var EXPORTED_SYMBOLS = ["FormAutofillHandler"];
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://formautofill/FormAutofill.jsm");
-
-ChromeUtils.defineModuleGetter(this, "FormAutofillUtils",
-                               "resource://formautofill/FormAutofillUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "FormAutofillHeuristics",
-                               "resource://formautofill/FormAutofillHeuristics.jsm");
-ChromeUtils.defineModuleGetter(this, "FormLikeFactory",
-                               "resource://gre/modules/FormLikeFactory.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-ChromeUtils.import("resource://formautofill/FormAutofill.jsm");
-
-ChromeUtils.defineModuleGetter(this, "FormAutofillUtils",
-                               "resource://formautofill/FormAutofillUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "FormAutofillHeuristics",
-                               "resource://formautofill/FormAutofillHeuristics.jsm");
-ChromeUtils.defineModuleGetter(this, "FormLikeFactory",
-                               "resource://gre/modules/FormLikeFactory.jsm");
-=======
 const { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -69,13 +45,6 @@ XPCOMUtils.defineLazyGetter(this, "reauthPasswordPromptMessage", () => {
     `useCreditCardPasswordPrompt.${AppConstants.platform}`,
     [brandShortName]
   );
-});
->>>>>>> upstream-releases
-
-XPCOMUtils.defineLazyGetter(this, "reauthPasswordPromptMessage", () => {
-  const brandShortName = FormAutofillUtils.brandBundle.GetStringFromName("brandShortName");
-  return FormAutofillUtils.stringBundle.formatStringFromName(
-    `useCreditCardPasswordPrompt.${AppConstants.platform}`, [brandShortName], 1);
 });
 
 this.log = null;
@@ -363,20 +332,12 @@ class FormAutofillSection {
         // Use case for multiple select is not considered here.
         if (!option.selected) {
           option.selected = true;
-<<<<<<< HEAD
-          element.dispatchEvent(new element.ownerGlobal.Event("input", {bubbles: true}));
-          element.dispatchEvent(new element.ownerGlobal.Event("change", {bubbles: true}));
-||||||| merged common ancestors
-          element.dispatchEvent(new element.ownerGlobal.UIEvent("input", {bubbles: true}));
-          element.dispatchEvent(new element.ownerGlobal.Event("change", {bubbles: true}));
-=======
           element.dispatchEvent(
             new element.ownerGlobal.Event("input", { bubbles: true })
           );
           element.dispatchEvent(
             new element.ownerGlobal.Event("change", { bubbles: true })
           );
->>>>>>> upstream-releases
         }
         // Autofill highlight appears regardless if value is changed or not
         this._changeFieldState(fieldDetail, FIELD_STATES.AUTO_FILLED);
@@ -1005,16 +966,10 @@ class FormAutofillCreditCardSection extends FormAutofillSection {
     // Prompt the OS login dialog to get the decrypted credit
     // card number.
     if (profile["cc-number-encrypted"]) {
-<<<<<<< HEAD
-      let decrypted = await this._decrypt(profile["cc-number-encrypted"], reauthPasswordPromptMessage);
-||||||| merged common ancestors
-      let decrypted = await this._decrypt(profile["cc-number-encrypted"], true);
-=======
       let decrypted = await this._decrypt(
         profile["cc-number-encrypted"],
         reauthPasswordPromptMessage
       );
->>>>>>> upstream-releases
 
       if (!decrypted) {
         // Early return if the decrypted is empty or undefined

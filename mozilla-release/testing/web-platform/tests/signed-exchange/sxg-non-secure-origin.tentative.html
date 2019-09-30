@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<title>Loading SignedHTTPExchange from non secure origin must fail</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script src="/common/get-host-info.sub.js"></script>
-<script src="./resources/sxg-util.js"></script>
-<body>
-<script>
-promise_test(async (t) => {
-  try {
-    const sxgUrl = get_host_info().HTTP_ORIGIN + '/signed-exchange/resources/sxg-location.sxg';
-    await openSXGInIframeAndWaitForMessage(t, sxgUrl);
-    assert_unreached('SXG should not have loaded');
-  } catch (e) {
-    assert_equals(e, 'timeout');
-  }
-}, 'Loading SignedHTTPExchange from non secure origin must fail');
-
-</script>
-</body>
-||||||| merged common ancestors
-=======
 <!DOCTYPE html>
 <title>Loading SignedHTTPExchange from non secure origin must fail</title>
 <script src="/resources/testharness.js"></script>
@@ -38,4 +15,3 @@ promise_test(async (t) => {
 
 </script>
 </body>
->>>>>>> upstream-releases

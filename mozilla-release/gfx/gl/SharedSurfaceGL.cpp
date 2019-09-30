@@ -17,35 +17,6 @@ namespace gl {
 using gfx::IntSize;
 using gfx::SurfaceFormat;
 
-<<<<<<< HEAD
-/*static*/ UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Create(
-    GLContext* gl, const GLFormats& formats, const IntSize& size,
-    bool hasAlpha) {
-  UniquePtr<SharedSurface_Basic> ret;
-  gl->MakeCurrent();
-
-  GLContext::LocalErrorScope localError(*gl);
-  GLuint tex = CreateTextureForOffscreen(gl, formats, size);
-||||||| merged common ancestors
-/*static*/ UniquePtr<SharedSurface_Basic>
-SharedSurface_Basic::Create(GLContext* gl,
-                            const GLFormats& formats,
-                            const IntSize& size,
-                            bool hasAlpha)
-{
-    UniquePtr<SharedSurface_Basic> ret;
-    gl->MakeCurrent();
-
-    GLContext::LocalErrorScope localError(*gl);
-    GLuint tex = CreateTextureForOffscreen(gl, formats, size);
-
-    GLenum err = localError.GetError();
-    MOZ_ASSERT_IF(err != LOCAL_GL_NO_ERROR, err == LOCAL_GL_OUT_OF_MEMORY);
-    if (err) {
-        gl->fDeleteTextures(1, &tex);
-        return ret;
-    }
-=======
 /*static*/
 UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Create(
     GLContext* gl, const GLFormats& formats, const IntSize& size,
@@ -55,7 +26,6 @@ UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Create(
 
   GLContext::LocalErrorScope localError(*gl);
   GLuint tex = CreateTextureForOffscreen(gl, formats, size);
->>>>>>> upstream-releases
 
   GLenum err = localError.GetError();
   MOZ_ASSERT_IF(err != LOCAL_GL_NO_ERROR, err == LOCAL_GL_OUT_OF_MEMORY);
@@ -69,25 +39,6 @@ UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Create(
   return ret;
 }
 
-<<<<<<< HEAD
-/*static*/ UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Wrap(
-    GLContext* gl, const IntSize& size, bool hasAlpha, GLuint tex) {
-  bool ownsTex = false;
-  UniquePtr<SharedSurface_Basic> ret(
-      new SharedSurface_Basic(gl, size, hasAlpha, tex, ownsTex));
-  return ret;
-||||||| merged common ancestors
-/*static*/ UniquePtr<SharedSurface_Basic>
-SharedSurface_Basic::Wrap(GLContext* gl,
-                          const IntSize& size,
-                          bool hasAlpha,
-                          GLuint tex)
-{
-    bool ownsTex = false;
-    UniquePtr<SharedSurface_Basic> ret( new SharedSurface_Basic(gl, size, hasAlpha, tex,
-                                                                ownsTex) );
-    return ret;
-=======
 /*static*/
 UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Wrap(GLContext* gl,
                                                          const IntSize& size,
@@ -97,7 +48,6 @@ UniquePtr<SharedSurface_Basic> SharedSurface_Basic::Wrap(GLContext* gl,
   UniquePtr<SharedSurface_Basic> ret(
       new SharedSurface_Basic(gl, size, hasAlpha, tex, ownsTex));
   return ret;
->>>>>>> upstream-releases
 }
 
 SharedSurface_Basic::SharedSurface_Basic(GLContext* gl, const IntSize& size,
@@ -137,26 +87,11 @@ SurfaceFactory_Basic::SurfaceFactory_Basic(GLContext* gl,
 ////////////////////////////////////////////////////////////////////////
 // SharedSurface_GLTexture
 
-<<<<<<< HEAD
-/*static*/ UniquePtr<SharedSurface_GLTexture> SharedSurface_GLTexture::Create(
-    GLContext* prodGL, const GLFormats& formats, const IntSize& size,
-    bool hasAlpha) {
-  MOZ_ASSERT(prodGL);
-||||||| merged common ancestors
-/*static*/ UniquePtr<SharedSurface_GLTexture>
-SharedSurface_GLTexture::Create(GLContext* prodGL,
-                                const GLFormats& formats,
-                                const IntSize& size,
-                                bool hasAlpha)
-{
-    MOZ_ASSERT(prodGL);
-=======
 /*static*/
 UniquePtr<SharedSurface_GLTexture> SharedSurface_GLTexture::Create(
     GLContext* prodGL, const GLFormats& formats, const IntSize& size,
     bool hasAlpha) {
   MOZ_ASSERT(prodGL);
->>>>>>> upstream-releases
 
   prodGL->MakeCurrent();
 

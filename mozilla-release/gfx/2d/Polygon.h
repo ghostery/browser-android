@@ -156,16 +156,8 @@ class PolygonTyped {
   typedef Point3DTyped<Units> Point3DType;
   typedef Point4DTyped<Units> Point4DType;
 
-<<<<<<< HEAD
- public:
-  PolygonTyped() {}
-||||||| merged common ancestors
-public:
-  PolygonTyped() {}
-=======
  public:
   PolygonTyped() = default;
->>>>>>> upstream-releases
 
   explicit PolygonTyped(const nsTArray<Point4DType>& aPoints,
                         const Point4DType& aNormal = DefaultNormal())

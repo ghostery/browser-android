@@ -691,18 +691,6 @@ const browsingContextTargetPrototype = {
           pool.manage(actor);
         }
 
-<<<<<<< HEAD
-      return {
-        workers: actors,
-      };
-    });
-||||||| merged common ancestors
-      return {
-        "from": this.actorID,
-        "workers": actors.map((actor) => actor.form()),
-      };
-    });
-=======
         // Do not destroy the pool before transfering ownership to the newly created
         // pool, so that we do not accidently destroy actors that are still in use.
         if (this._workerTargetActorPool) {
@@ -716,7 +704,6 @@ const browsingContextTargetPrototype = {
           workers: actors,
         };
       });
->>>>>>> upstream-releases
   },
 
   logInPage(request) {

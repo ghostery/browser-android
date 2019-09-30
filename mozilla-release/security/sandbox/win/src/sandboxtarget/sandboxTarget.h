@@ -67,18 +67,11 @@ class SandboxTarget {
 
   sandbox::TargetServices* mTargetServices;
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-
-} // mozilla
-=======
  private:
   void NotifyStartObservers();
   std::list<std::function<void()>> mStartObservers;
 };
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif

@@ -198,19 +198,8 @@ var AccessFu = {
         this.Input.setSelection(data, win);
         break;
       case GECKOVIEW_MESSAGE.CLIPBOARD:
-<<<<<<< HEAD
-        this.Input.clipboard(data);
-        break;
-||||||| merged common ancestors
-        this.Input.clipboard(data);
-        break;
-      case GECKOVIEW_MESSAGE.SELECT:
-        this.Input.selectCurrent(data);
-        break;
-=======
         this.Input.clipboard(data, win);
         break;
->>>>>>> upstream-releases
     }
   },
 

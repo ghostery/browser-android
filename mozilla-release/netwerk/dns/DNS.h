@@ -107,98 +107,40 @@ union NetAddr {
   } local;
 #endif
   // introduced to support nsTArray<NetAddr> comparisons and sorting
-<<<<<<< HEAD
-  bool operator==(const NetAddr &other) const;
-  bool operator<(const NetAddr &other) const;
-||||||| merged common ancestors
-  bool operator == (const NetAddr& other) const;
-  bool operator < (const NetAddr &other) const;
-=======
   bool operator==(const NetAddr& other) const;
   bool operator<(const NetAddr& other) const;
->>>>>>> upstream-releases
 };
 
 // This class wraps a NetAddr union to provide C++ linked list
 // capabilities and other methods. It is created from a PRNetAddr,
 // which is converted to a mozilla::dns::NetAddr.
 class NetAddrElement : public LinkedListElement<NetAddrElement> {
-<<<<<<< HEAD
- public:
-  explicit NetAddrElement(const PRNetAddr *prNetAddr);
-  NetAddrElement(const NetAddrElement &netAddr);
-||||||| merged common ancestors
-public:
-  explicit NetAddrElement(const PRNetAddr *prNetAddr);
-  NetAddrElement(const NetAddrElement& netAddr);
-=======
  public:
   explicit NetAddrElement(const PRNetAddr* prNetAddr);
   NetAddrElement(const NetAddrElement& netAddr);
->>>>>>> upstream-releases
   ~NetAddrElement();
 
   NetAddr mAddress;
 };
 
 class AddrInfo {
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(AddrInfo)
 
  public:
->>>>>>> upstream-releases
   // Creates an AddrInfo object.
-<<<<<<< HEAD
-  explicit AddrInfo(const nsACString &host, const PRAddrInfo *prAddrInfo,
-                    bool disableIPv4, bool filterNameCollision,
-                    const nsACString &cname);
-||||||| merged common ancestors
-  explicit AddrInfo(const nsACString& host, const PRAddrInfo *prAddrInfo,
-           bool disableIPv4, bool filterNameCollision,
-           const nsACString& cname);
-=======
   explicit AddrInfo(const nsACString& host, const PRAddrInfo* prAddrInfo,
                     bool disableIPv4, bool filterNameCollision,
                     const nsACString& cname);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Creates a basic AddrInfo object (initialize only the host, cname and TRR
-  // type).
-  explicit AddrInfo(const nsACString &host, const nsACString &cname,
-                    unsigned int TRRType);
-||||||| merged common ancestors
-  // Creates a basic AddrInfo object (initialize only the host, cname and TRR type).
-  explicit AddrInfo(const nsACString& host, const nsACString& cname, unsigned int TRRType);
-=======
   // Creates a basic AddrInfo object (initialize only the host, cname and TRR
   // type).
   explicit AddrInfo(const nsACString& host, const nsACString& cname,
                     unsigned int TRRType);
->>>>>>> upstream-releases
 
   // Creates a basic AddrInfo object (initialize only the host and TRR status).
-<<<<<<< HEAD
-  explicit AddrInfo(const nsACString &host, unsigned int TRRType);
-  ~AddrInfo();
-||||||| merged common ancestors
   explicit AddrInfo(const nsACString& host, unsigned int TRRType);
-  ~AddrInfo();
-=======
-  explicit AddrInfo(const nsACString& host, unsigned int TRRType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  explicit AddrInfo(const AddrInfo *src);  // copy
-||||||| merged common ancestors
-  explicit AddrInfo(const AddrInfo *src); // copy
-=======
   explicit AddrInfo(const AddrInfo* src);  // copy
->>>>>>> upstream-releases
 
   void AddAddress(NetAddrElement* address);
 
@@ -211,16 +153,9 @@ public:
 
   AutoCleanLinkedList<NetAddrElement> mAddresses;
   unsigned int IsTRR() { return mFromTRR; }
-<<<<<<< HEAD
-
- private:
-||||||| merged common ancestors
-private:
-=======
 
  private:
   ~AddrInfo();
->>>>>>> upstream-releases
   unsigned int mFromTRR;
 };
 

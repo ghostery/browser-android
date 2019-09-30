@@ -15,16 +15,6 @@ using namespace mozilla::dom;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-JSObject* SVGAnimatedString::WrapObject(JSContext* aCx,
-                                        JS::Handle<JSObject*> aGivenProto) {
-  return SVGAnimatedString_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-SVGAnimatedString::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return SVGAnimatedString_Binding::Wrap(aCx, this, aGivenProto);
-=======
 NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(
     SVGAnimatedString::DOMAnimatedString, mSVGElement)
 
@@ -138,15 +128,6 @@ nsresult SVGAnimatedString::SMILString::SetAnimValue(const SMILValue& aValue) {
     mVal->SetAnimValue(*static_cast<nsAString*>(aValue.mU.mPtr), mSVGElement);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

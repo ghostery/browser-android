@@ -240,36 +240,9 @@
 @keyframes tp-icon-animation {
   from {
     transform: translateX(0);
-<<<<<<< HEAD
   }
   100% {
     transform: translateX(-2816px);
-||||||| merged common ancestors
-    fill-opacity: 0.3;
-  }
-  30% {
-    fill: inherit;
-    fill-opacity: 0.3;
-  }
-  31% {
-    fill: var(--tracking-protection-shield-color);
-    fill-opacity: 1;
-  }
-  50% {
-    transform: translateX(-1232px);
-  }
-  65% {
-    fill: var(--tracking-protection-shield-color);
-    fill-opacity: 1;
-  }
-  to {
-    fill: inherit;
-    fill-opacity: inherit;
-=======
-  }
-  100% {
-    transform: translateX(-2816px);
->>>>>>> upstream-releases
   }
 }
 

@@ -35,29 +35,10 @@ static StaticRefPtr<VRManagerParent> sVRManagerParentSingleton;
 void ReleaseVRManagerParentSingleton() { sVRManagerParentSingleton = nullptr; }
 
 VRManagerChild::VRManagerChild()
-<<<<<<< HEAD
-    : mDisplaysInitialized(false),
-      mMessageLoop(MessageLoop::current()),
-      mFrameRequestCallbackCounter(0),
-      mBackend(layers::LayersBackend::LAYERS_NONE),
-      mPromiseID(0),
-      mVRMockDisplay(nullptr),
-      mLastControllerState{} {
-||||||| merged common ancestors
-  : mDisplaysInitialized(false)
-  , mMessageLoop(MessageLoop::current())
-  , mFrameRequestCallbackCounter(0)
-  , mBackend(layers::LayersBackend::LAYERS_NONE)
-  , mPromiseID(0)
-  , mVRMockDisplay(nullptr)
-  , mLastControllerState{}
-{
-=======
     : mDisplaysInitialized(false),
       mMessageLoop(MessageLoop::current()),
       mFrameRequestCallbackCounter(0),
       mBackend(layers::LayersBackend::LAYERS_NONE) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   mStartTimeStamp = TimeStamp::Now();
@@ -65,18 +46,9 @@ VRManagerChild::VRManagerChild()
 
 VRManagerChild::~VRManagerChild() { MOZ_ASSERT(NS_IsMainThread()); }
 
-<<<<<<< HEAD
-/*static*/ void VRManagerChild::IdentifyTextureHost(
-    const TextureFactoryIdentifier& aIdentifier) {
-||||||| merged common ancestors
-/*static*/ void
-VRManagerChild::IdentifyTextureHost(const TextureFactoryIdentifier& aIdentifier)
-{
-=======
 /*static*/
 void VRManagerChild::IdentifyTextureHost(
     const TextureFactoryIdentifier& aIdentifier) {
->>>>>>> upstream-releases
   if (sVRManagerChildSingleton) {
     sVRManagerChildSingleton->mBackend = aIdentifier.mParentBackend;
     sVRManagerChildSingleton->mSyncObject =
@@ -89,46 +61,17 @@ layers::LayersBackend VRManagerChild::GetBackendType() const {
   return mBackend;
 }
 
-<<<<<<< HEAD
-/*static*/ VRManagerChild* VRManagerChild::Get() {
-||||||| merged common ancestors
-/*static*/ VRManagerChild*
-VRManagerChild::Get()
-{
-=======
 /*static*/
 VRManagerChild* VRManagerChild::Get() {
->>>>>>> upstream-releases
   MOZ_ASSERT(sVRManagerChildSingleton);
   return sVRManagerChildSingleton;
 }
 
-<<<<<<< HEAD
-/* static */ bool VRManagerChild::IsCreated() {
-  return !!sVRManagerChildSingleton;
-}
-||||||| merged common ancestors
-/* static */ bool
-VRManagerChild::IsCreated()
-{
-  return !!sVRManagerChildSingleton;
-}
-=======
 /* static */
 bool VRManagerChild::IsCreated() { return !!sVRManagerChildSingleton; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ bool VRManagerChild::InitForContent(
-    Endpoint<PVRManagerChild>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ bool
-VRManagerChild::InitForContent(Endpoint<PVRManagerChild>&& aEndpoint)
-{
-=======
 /* static */
 bool VRManagerChild::InitForContent(Endpoint<PVRManagerChild>&& aEndpoint) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!sVRManagerChildSingleton);
 
@@ -140,17 +83,8 @@ bool VRManagerChild::InitForContent(Endpoint<PVRManagerChild>&& aEndpoint) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool VRManagerChild::ReinitForContent(
-    Endpoint<PVRManagerChild>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ bool
-VRManagerChild::ReinitForContent(Endpoint<PVRManagerChild>&& aEndpoint)
-{
-=======
 /* static */
 bool VRManagerChild::ReinitForContent(Endpoint<PVRManagerChild>&& aEndpoint) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   ShutDown();
@@ -158,16 +92,8 @@ bool VRManagerChild::ReinitForContent(Endpoint<PVRManagerChild>&& aEndpoint) {
   return InitForContent(std::move(aEndpoint));
 }
 
-<<<<<<< HEAD
-/*static*/ void VRManagerChild::InitSameProcess() {
-||||||| merged common ancestors
-/*static*/ void
-VRManagerChild::InitSameProcess()
-{
-=======
 /*static*/
 void VRManagerChild::InitSameProcess() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!sVRManagerChildSingleton);
 
@@ -178,17 +104,8 @@ void VRManagerChild::InitSameProcess() {
                                  mozilla::ipc::ChildSide);
 }
 
-<<<<<<< HEAD
-/* static */ void VRManagerChild::InitWithGPUProcess(
-    Endpoint<PVRManagerChild>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ void
-VRManagerChild::InitWithGPUProcess(Endpoint<PVRManagerChild>&& aEndpoint)
-{
-=======
 /* static */
 void VRManagerChild::InitWithGPUProcess(Endpoint<PVRManagerChild>&& aEndpoint) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!sVRManagerChildSingleton);
 
@@ -198,16 +115,8 @@ void VRManagerChild::InitWithGPUProcess(Endpoint<PVRManagerChild>&& aEndpoint) {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void VRManagerChild::ShutDown() {
-||||||| merged common ancestors
-/*static*/ void
-VRManagerChild::ShutDown()
-{
-=======
 /*static*/
 void VRManagerChild::ShutDown() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (sVRManagerChildSingleton) {
     sVRManagerChildSingleton->Destroy();
@@ -215,17 +124,8 @@ void VRManagerChild::ShutDown() {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void VRManagerChild::DeferredDestroy(
-    RefPtr<VRManagerChild> aVRManagerChild) {
-||||||| merged common ancestors
-/*static*/ void
-VRManagerChild::DeferredDestroy(RefPtr<VRManagerChild> aVRManagerChild)
-{
-=======
 /*static*/
 void VRManagerChild::DeferredDestroy(RefPtr<VRManagerChild> aVRManagerChild) {
->>>>>>> upstream-releases
   aVRManagerChild->Close();
 }
 
@@ -338,14 +238,6 @@ mozilla::ipc::IPCResult VRManagerChild::RecvUpdateDisplayInfo(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-bool VRManagerChild::GetVRDisplays(
-    nsTArray<RefPtr<VRDisplayClient>>& aDisplays) {
-||||||| merged common ancestors
-bool
-VRManagerChild::GetVRDisplays(nsTArray<RefPtr<VRDisplayClient>>& aDisplays)
-{
-=======
 mozilla::ipc::IPCResult VRManagerChild::RecvNotifyPuppetCommandBufferCompleted(
     bool aSuccess) {
   RefPtr<dom::Promise> promise = mRunPuppetPromise;
@@ -394,7 +286,6 @@ void VRManagerChild::ResetPuppet(dom::Promise* aPromise, ErrorResult& aRv) {
 
 bool VRManagerChild::GetVRDisplays(
     nsTArray<RefPtr<VRDisplayClient>>& aDisplays) {
->>>>>>> upstream-releases
   aDisplays = mDisplays;
   return true;
 }
@@ -407,51 +298,9 @@ bool VRManagerChild::RefreshVRDisplaysWithCallback(uint64_t aWindowId) {
   return success;
 }
 
-<<<<<<< HEAD
-void VRManagerChild::CreateVRServiceTestDisplay(const nsCString& aID,
-                                                dom::Promise* aPromise) {
-  SendCreateVRServiceTestDisplay(aID, mPromiseID);
-  mPromiseList.Put(mPromiseID, aPromise);
-  ++mPromiseID;
-}
-
-void VRManagerChild::CreateVRServiceTestController(const nsCString& aID,
-                                                   dom::Promise* aPromise) {
-  SendCreateVRServiceTestController(aID, mPromiseID);
-  mPromiseList.Put(mPromiseID, aPromise);
-  ++mPromiseID;
-}
-
 PVRLayerChild* VRManagerChild::CreateVRLayer(uint32_t aDisplayID,
                                              nsIEventTarget* aTarget,
                                              uint32_t aGroup) {
-||||||| merged common ancestors
-void
-VRManagerChild::CreateVRServiceTestDisplay(const nsCString& aID, dom::Promise* aPromise)
-{
-  SendCreateVRServiceTestDisplay(aID, mPromiseID);
-  mPromiseList.Put(mPromiseID, aPromise);
-  ++mPromiseID;
-}
-
-void
-VRManagerChild::CreateVRServiceTestController(const nsCString& aID, dom::Promise* aPromise)
-{
-  SendCreateVRServiceTestController(aID, mPromiseID);
-  mPromiseList.Put(mPromiseID, aPromise);
-  ++mPromiseID;
-}
-
-PVRLayerChild*
-VRManagerChild::CreateVRLayer(uint32_t aDisplayID,
-                              nsIEventTarget* aTarget,
-                              uint32_t aGroup)
-{
-=======
-PVRLayerChild* VRManagerChild::CreateVRLayer(uint32_t aDisplayID,
-                                             nsIEventTarget* aTarget,
-                                             uint32_t aGroup) {
->>>>>>> upstream-releases
   PVRLayerChild* vrLayerChild = AllocPVRLayerChild(aDisplayID, aGroup);
   // Do the DOM labeling.
   if (aTarget) {
@@ -461,29 +310,11 @@ PVRLayerChild* VRManagerChild::CreateVRLayer(uint32_t aDisplayID,
   return SendPVRLayerConstructor(vrLayerChild, aDisplayID, aGroup);
 }
 
-<<<<<<< HEAD
-// XXX TODO - VRManagerChild::FrameRequest is the same as
-// nsIDocument::FrameRequest, should we consolodate these?
-struct VRManagerChild::FrameRequest {
-  FrameRequest(mozilla::dom::FrameRequestCallback& aCallback, int32_t aHandle)
-      : mCallback(&aCallback), mHandle(aHandle) {}
-||||||| merged common ancestors
-
-// XXX TODO - VRManagerChild::FrameRequest is the same as nsIDocument::FrameRequest, should we consolodate these?
-struct VRManagerChild::FrameRequest
-{
-  FrameRequest(mozilla::dom::FrameRequestCallback& aCallback,
-    int32_t aHandle) :
-    mCallback(&aCallback),
-    mHandle(aHandle)
-  {}
-=======
 // XXX TODO - VRManagerChild::FrameRequest is the same as
 // Document::FrameRequest, should we consolodate these?
 struct VRManagerChild::FrameRequest {
   FrameRequest(mozilla::dom::FrameRequestCallback& aCallback, int32_t aHandle)
       : mCallback(&aCallback), mHandle(aHandle) {}
->>>>>>> upstream-releases
 
   // Conversion operator so that we can append these to a
   // FrameRequestCallbackList
@@ -521,127 +352,8 @@ void VRManagerChild::CancelFrameRequestCallback(int32_t aHandle) {
   mFrameRequestCallbacks.RemoveElementSorted(aHandle);
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult VRManagerChild::RecvGamepadUpdate(
-    const GamepadChangeEvent& aGamepadEvent) {
-  // VRManagerChild could be at other processes, but GamepadManager
-  // only exists at the content process or the same process
-  // in non-e10s mode.
-  MOZ_ASSERT(XRE_IsContentProcess() || IsSameProcess());
-
-  RefPtr<GamepadManager> gamepadManager(GamepadManager::GetService());
-  if (gamepadManager) {
-    gamepadManager->Update(aGamepadEvent);
-  }
-
-  return IPC_OK();
-}
-
-mozilla::ipc::IPCResult VRManagerChild::RecvReplyCreateVRServiceTestDisplay(
-    const nsCString& aID, const uint32_t& aPromiseID,
-    const uint32_t& aDeviceID) {
-  RefPtr<dom::Promise> p;
-  if (!mPromiseList.Get(aPromiseID, getter_AddRefs(p))) {
-    MOZ_CRASH("We should always have a promise.");
-  }
-
-  // We only allow one VRMockDisplay in VR tests.
-  if (!mVRMockDisplay) {
-    mVRMockDisplay = new VRMockDisplay(aID, aDeviceID);
-  }
-  p->MaybeResolve(mVRMockDisplay);
-  mPromiseList.Remove(aPromiseID);
-  return IPC_OK();
-}
-
-mozilla::ipc::IPCResult VRManagerChild::RecvReplyCreateVRServiceTestController(
-    const nsCString& aID, const uint32_t& aPromiseID,
-    const uint32_t& aDeviceID) {
-  RefPtr<dom::Promise> p;
-  if (!mPromiseList.Get(aPromiseID, getter_AddRefs(p))) {
-    MOZ_CRASH("We should always have a promise.");
-  }
-
-  if (aDeviceID == 0) {
-    // A value of 0 indicates that the controller could not
-    // be created.  Most likely due to having no VR display
-    // to associate it with.
-    p->MaybeRejectWithUndefined();
-  } else {
-    p->MaybeResolve(new VRMockController(aID, aDeviceID));
-  }
-  mPromiseList.Remove(aPromiseID);
-  return IPC_OK();
-}
-
-void VRManagerChild::RunFrameRequestCallbacks() {
-  AUTO_PROFILER_TRACING("VR", "RunFrameRequestCallbacks");
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-VRManagerChild::RecvGamepadUpdate(const GamepadChangeEvent& aGamepadEvent)
-{
-  // VRManagerChild could be at other processes, but GamepadManager
-  // only exists at the content process or the same process
-  // in non-e10s mode.
-  MOZ_ASSERT(XRE_IsContentProcess() || IsSameProcess());
-
-  RefPtr<GamepadManager> gamepadManager(GamepadManager::GetService());
-  if (gamepadManager) {
-    gamepadManager->Update(aGamepadEvent);
-  }
-
-  return IPC_OK();
-}
-
-mozilla::ipc::IPCResult
-VRManagerChild::RecvReplyCreateVRServiceTestDisplay(const nsCString& aID,
-                                                    const uint32_t& aPromiseID,
-                                                    const uint32_t& aDeviceID)
-{
-  RefPtr<dom::Promise> p;
-  if (!mPromiseList.Get(aPromiseID, getter_AddRefs(p))) {
-    MOZ_CRASH("We should always have a promise.");
-  }
-
-  // We only allow one VRMockDisplay in VR tests.
-  if (!mVRMockDisplay) {
-    mVRMockDisplay = new VRMockDisplay(aID, aDeviceID);
-  }
-  p->MaybeResolve(mVRMockDisplay);
-  mPromiseList.Remove(aPromiseID);
-  return IPC_OK();
-}
-
-mozilla::ipc::IPCResult
-VRManagerChild::RecvReplyCreateVRServiceTestController(const nsCString& aID,
-                                                       const uint32_t& aPromiseID,
-                                                       const uint32_t& aDeviceID)
-{
-  RefPtr<dom::Promise> p;
-  if (!mPromiseList.Get(aPromiseID, getter_AddRefs(p))) {
-    MOZ_CRASH("We should always have a promise.");
-  }
-
-  if (aDeviceID == 0) {
-    // A value of 0 indicates that the controller could not
-    // be created.  Most likely due to having no VR display
-    // to associate it with.
-    p->MaybeRejectWithUndefined();
-  } else {
-    p->MaybeResolve(new VRMockController(aID, aDeviceID));
-  }
-  mPromiseList.Remove(aPromiseID);
-  return IPC_OK();
-}
-
-void
-VRManagerChild::RunFrameRequestCallbacks()
-{
-  AUTO_PROFILER_TRACING("VR", "RunFrameRequestCallbacks");
-=======
 void VRManagerChild::RunFrameRequestCallbacks() {
   AUTO_PROFILER_TRACING("VR", "RunFrameRequestCallbacks", GRAPHICS);
->>>>>>> upstream-releases
 
   TimeStamp nowTime = TimeStamp::Now();
   mozilla::TimeDuration duration = nowTime - mStartTimeStamp;
@@ -835,41 +547,5 @@ mozilla::ipc::IPCResult VRManagerChild::RecvReplyGamepadVibrateHaptic(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult VRManagerChild::RecvDispatchSubmitFrameResult(
-    const uint32_t& aDisplayID, const VRSubmitFrameResultInfo& aResult) {
-  nsTArray<RefPtr<VRDisplayClient>> displays;
-  displays = mDisplays;
-  for (auto& display : displays) {
-    if (display->GetDisplayInfo().GetDisplayID() == aDisplayID) {
-      display->UpdateSubmitFrameResult(aResult);
-    }
-  }
-
-  return IPC_OK();
-}
-
 }  // namespace gfx
 }  // namespace mozilla
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-VRManagerChild::RecvDispatchSubmitFrameResult(const uint32_t& aDisplayID,
-                                              const VRSubmitFrameResultInfo& aResult)
-{
-  nsTArray<RefPtr<VRDisplayClient>> displays;
-  displays = mDisplays;
-  for (auto& display : displays) {
-    if (display->GetDisplayInfo().GetDisplayID() == aDisplayID) {
-      display->UpdateSubmitFrameResult(aResult);
-    }
-  }
-
-  return IPC_OK();
-}
-
-} // namespace gfx
-} // namespace mozilla
-=======
-}  // namespace gfx
-}  // namespace mozilla
->>>>>>> upstream-releases

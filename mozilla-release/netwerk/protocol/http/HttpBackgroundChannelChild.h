@@ -22,16 +22,9 @@ class HttpChannelChild;
 
 class HttpBackgroundChannelChild final : public PHttpBackgroundChannelChild {
   friend class BackgroundChannelCreateCallback;
-<<<<<<< HEAD
-
- public:
-||||||| merged common ancestors
-public:
-=======
   friend class PHttpBackgroundChannelChild;
 
  public:
->>>>>>> upstream-releases
   explicit HttpBackgroundChannelChild();
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(HttpBackgroundChannelChild)
@@ -55,22 +48,10 @@ public:
                                    const uint32_t& aCount,
                                    const nsCString& aData);
 
-<<<<<<< HEAD
-  IPCResult RecvOnStopRequest(
-      const nsresult& aChannelStatus, const ResourceTimingStruct& aTiming,
-      const TimeStamp& aLastActiveTabOptHit,
-      const nsHttpHeaderArray& aResponseTrailers) override;
-||||||| merged common ancestors
-  IPCResult RecvOnStopRequest(const nsresult& aChannelStatus,
-                              const ResourceTimingStruct& aTiming,
-                              const TimeStamp& aLastActiveTabOptHit,
-                              const nsHttpHeaderArray& aResponseTrailers) override;
-=======
   IPCResult RecvOnStopRequest(const nsresult& aChannelStatus,
                               const ResourceTimingStruct& aTiming,
                               const TimeStamp& aLastActiveTabOptHit,
                               const nsHttpHeaderArray& aResponseTrailers);
->>>>>>> upstream-releases
 
   IPCResult RecvOnProgress(const int64_t& aProgress,
                            const int64_t& aProgressMax);
@@ -93,17 +74,8 @@ public:
   IPCResult RecvNotifyClassificationFlags(const uint32_t& aClassificationFlags,
                                           const bool& aIsThirdParty);
 
-<<<<<<< HEAD
-  IPCResult RecvNotifyCookieAllowed() override;
-
-  IPCResult RecvNotifyTrackingCookieBlocked(
-      const uint32_t& aRejectedReason) override;
-||||||| merged common ancestors
-  IPCResult RecvNotifyTrackingCookieBlocked(const uint32_t& aRejectedReason) override;
-=======
   IPCResult RecvNotifyFlashPluginStateChanged(
       const nsIHttpChannel::FlashPluginState& aState);
->>>>>>> upstream-releases
 
   IPCResult RecvSetClassifierMatchedInfo(const ClassifierInfo& info);
 

@@ -36,29 +36,12 @@ using mozilla::dom::Element;
 
 #define SAFARI_BUNDLE_IDENTIFIER "com.apple.Safari"
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsMacShellService, nsIMacShellService, nsIShellService,
-                  nsIWebProgressListener)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(nsMacShellService, nsIMacShellService, nsIShellService, nsIWebProgressListener)
-=======
 NS_IMPL_ISUPPORTS(nsMacShellService, nsIMacShellService, nsIShellService,
                   nsIToolkitShellService, nsIWebProgressListener)
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsMacShellService::IsDefaultBrowser(bool aStartupCheck, bool aForAllTypes,
-                                    bool* aIsDefaultBrowser) {
-||||||| merged common ancestors
-nsMacShellService::IsDefaultBrowser(bool aStartupCheck,
-                                    bool aForAllTypes,
-                                    bool* aIsDefaultBrowser)
-{
-=======
 nsMacShellService::IsDefaultBrowser(bool aForAllTypes,
                                     bool* aIsDefaultBrowser) {
->>>>>>> upstream-releases
   *aIsDefaultBrowser = false;
 
   CFStringRef firefoxID = ::CFBundleGetIdentifier(::CFBundleGetMainBundle());
@@ -201,15 +184,6 @@ nsMacShellService::OnStatusChange(nsIWebProgress* aWebProgress,
 
 NS_IMETHODIMP
 nsMacShellService::OnSecurityChange(nsIWebProgress* aWebProgress,
-<<<<<<< HEAD
-                                    nsIRequest* aRequest, uint32_t aState) {
-||||||| merged common ancestors
-                                    nsIRequest* aRequest,
-                                    uint32_t aOldState,
-                                    uint32_t aState,
-                                    const nsAString& aContentBlockingLogJSON)
-{
-=======
                                     nsIRequest* aRequest, uint32_t aState) {
   return NS_OK;
 }
@@ -218,7 +192,6 @@ NS_IMETHODIMP
 nsMacShellService::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
                                           nsIRequest* aRequest,
                                           uint32_t aEvent) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 

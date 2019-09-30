@@ -31,15 +31,7 @@ void nsHttpConnectionMgr::PrintDiagnostics() {
   }
 }
 
-<<<<<<< HEAD
-void nsHttpConnectionMgr::OnMsgPrintDiagnostics(int32_t, ARefBase *) {
-||||||| merged common ancestors
-void
-nsHttpConnectionMgr::OnMsgPrintDiagnostics(int32_t, ARefBase *)
-{
-=======
 void nsHttpConnectionMgr::OnMsgPrintDiagnostics(int32_t, ARefBase*) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
   nsCOMPtr<nsIConsoleService> consoleService =
@@ -111,15 +103,7 @@ void nsHttpConnectionMgr::OnMsgPrintDiagnostics(int32_t, ARefBase*) {
   mLogData.Truncate();
 }
 
-<<<<<<< HEAD
-void nsHttpConnectionMgr::nsHalfOpenSocket::PrintDiagnostics(nsCString &log) {
-||||||| merged common ancestors
-void
-nsHttpConnectionMgr::nsHalfOpenSocket::PrintDiagnostics(nsCString &log)
-{
-=======
 void nsHttpConnectionMgr::nsHalfOpenSocket::PrintDiagnostics(nsCString& log) {
->>>>>>> upstream-releases
   log.AppendPrintf("     has connected = %d, isSpeculative = %d\n",
                    HasConnected(), IsSpeculative());
 
@@ -141,15 +125,7 @@ void nsHttpConnectionMgr::nsHalfOpenSocket::PrintDiagnostics(nsCString& log) {
                    !!mSocketTransport.get(), !!mBackupTransport.get());
 }
 
-<<<<<<< HEAD
-void nsHttpConnection::PrintDiagnostics(nsCString &log) {
-||||||| merged common ancestors
-void
-nsHttpConnection::PrintDiagnostics(nsCString &log)
-{
-=======
 void nsHttpConnection::PrintDiagnostics(nsCString& log) {
->>>>>>> upstream-releases
   log.AppendPrintf("    CanDirectlyActivate = %d\n", CanDirectlyActivate());
 
   log.AppendPrintf("    npncomplete = %d  setupSSLCalled = %d\n", mNPNComplete,
@@ -181,15 +157,7 @@ void nsHttpConnection::PrintDiagnostics(nsCString& log) {
   if (mSpdySession) mSpdySession->PrintDiagnostics(log);
 }
 
-<<<<<<< HEAD
-void Http2Session::PrintDiagnostics(nsCString &log) {
-||||||| merged common ancestors
-void
-Http2Session::PrintDiagnostics(nsCString &log)
-{
-=======
 void Http2Session::PrintDiagnostics(nsCString& log) {
->>>>>>> upstream-releases
   log.AppendPrintf("     ::: HTTP2\n");
   log.AppendPrintf(
       "     shouldgoaway = %d mClosed = %d CanReuse = %d nextID=0x%X\n",
@@ -223,19 +191,8 @@ void Http2Session::PrintDiagnostics(nsCString& log) {
     log.AppendPrintf("     No Ping Outstanding\n");
 }
 
-<<<<<<< HEAD
-void nsHttpTransaction::PrintDiagnostics(nsCString &log) {
-  if (!mRequestHead) return;
-||||||| merged common ancestors
-void
-nsHttpTransaction::PrintDiagnostics(nsCString &log)
-{
-  if (!mRequestHead)
-    return;
-=======
 void nsHttpTransaction::PrintDiagnostics(nsCString& log) {
   if (!mRequestHead) return;
->>>>>>> upstream-releases
 
   nsAutoCString requestURI;
   mRequestHead->RequestURI(requestURI);
@@ -245,17 +202,8 @@ void nsHttpTransaction::PrintDiagnostics(nsCString& log) {
   log.AppendPrintf("       restart count = %u\n", mRestartCount);
 }
 
-<<<<<<< HEAD
-void nsHttpConnectionMgr::PendingTransactionInfo::PrintDiagnostics(
-    nsCString &log) {
-||||||| merged common ancestors
-void
-nsHttpConnectionMgr::PendingTransactionInfo::PrintDiagnostics(nsCString &log)
-{
-=======
 void nsHttpConnectionMgr::PendingTransactionInfo::PrintDiagnostics(
     nsCString& log) {
->>>>>>> upstream-releases
   log.AppendPrintf("     ::: Pending transaction\n");
   mTransaction->PrintDiagnostics(log);
   RefPtr<nsHalfOpenSocket> halfOpen = do_QueryReferent(mHalfOpen);

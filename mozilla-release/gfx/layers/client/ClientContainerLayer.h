@@ -37,17 +37,8 @@ class ClientContainerLayer : public ContainerLayer, public ClientLayer {
     MOZ_COUNT_DTOR(ClientContainerLayer);
   }
 
-<<<<<<< HEAD
- public:
-  virtual void RenderLayer() override {
-||||||| merged common ancestors
-public:
-  virtual void RenderLayer() override
-  {
-=======
  public:
   void RenderLayer() override {
->>>>>>> upstream-releases
     RenderMaskLayers(this);
 
     DefaultComputeSupportsComponentAlphaChildren();
@@ -68,29 +59,13 @@ public:
     }
   }
 
-<<<<<<< HEAD
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
-||||||| merged common ancestors
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
-  {
-=======
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(ClientManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ContainerLayer::SetVisibleRegion(aRegion);
   }
-<<<<<<< HEAD
-  virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override {
-    if (!ClientManager()->InConstruction()) {
-||||||| merged common ancestors
-  virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override
-  {
-    if(!ClientManager()->InConstruction()) {
-=======
   bool InsertAfter(Layer* aChild, Layer* aAfter) override {
     if (!ClientManager()->InConstruction()) {
->>>>>>> upstream-releases
       NS_ERROR("Can only set properties in construction phase");
       return false;
     }
@@ -105,14 +80,7 @@ public:
     return true;
   }
 
-<<<<<<< HEAD
-  virtual bool RemoveChild(Layer* aChild) override {
-||||||| merged common ancestors
-  virtual bool RemoveChild(Layer* aChild) override
-  {
-=======
   bool RemoveChild(Layer* aChild) override {
->>>>>>> upstream-releases
     if (!ClientManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -127,14 +95,7 @@ public:
     return true;
   }
 
-<<<<<<< HEAD
-  virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override {
-||||||| merged common ancestors
-  virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override
-  {
-=======
   bool RepositionChild(Layer* aChild, Layer* aAfter) override {
->>>>>>> upstream-releases
     if (!ClientManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -151,16 +112,8 @@ public:
   Layer* AsLayer() override { return this; }
   ShadowableLayer* AsShadowableLayer() override { return this; }
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const gfx::Matrix4x4& aTransformToSurface) override {
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
-  {
-=======
   void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
->>>>>>> upstream-releases
     DefaultComputeEffectiveTransforms(aTransformToSurface);
   }
 
@@ -186,38 +139,14 @@ class ClientRefLayer : public RefLayer, public ClientLayer {
  protected:
   virtual ~ClientRefLayer() { MOZ_COUNT_DTOR(ClientRefLayer); }
 
-<<<<<<< HEAD
- public:
-  virtual Layer* AsLayer() override { return this; }
-  virtual ShadowableLayer* AsShadowableLayer() override { return this; }
-||||||| merged common ancestors
-public:
-  virtual Layer* AsLayer() override { return this; }
-  virtual ShadowableLayer* AsShadowableLayer() override { return this; }
-=======
  public:
   Layer* AsLayer() override { return this; }
   ShadowableLayer* AsShadowableLayer() override { return this; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void RenderLayer() override {}
-||||||| merged common ancestors
-  virtual void RenderLayer() override { }
-=======
   void RenderLayer() override {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const gfx::Matrix4x4& aTransformToSurface) override {
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
-  {
-=======
   void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
->>>>>>> upstream-releases
     DefaultComputeEffectiveTransforms(aTransformToSurface);
   }
 

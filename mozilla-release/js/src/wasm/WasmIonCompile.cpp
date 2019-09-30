@@ -56,105 +56,6 @@ typedef OpIter<IonCompilePolicy> IonOpIter;
 
 class FunctionCompiler;
 
-<<<<<<< HEAD
-// CallCompileState describes a call that is being compiled. Due to expression
-// nesting, multiple calls can be in the middle of compilation at the same time
-// and these are tracked in a stack by FunctionCompiler.
-
-class CallCompileState {
-  // The line or bytecode of the call.
-  uint32_t lineOrBytecode_;
-
-  // A generator object that is passed each argument as it is compiled.
-  ABIArgGenerator abi_;
-
-  // The maximum number of bytes used by "child" calls, i.e., calls that occur
-  // while evaluating the arguments of the call represented by this
-  // CallCompileState.
-  uint32_t maxChildStackBytes_;
-
-  // Set by FunctionCompiler::finishCall(), tells the MWasmCall by how
-  // much to bump the stack pointer before making the call. See
-  // FunctionCompiler::startCall() comment below.
-  uint32_t spIncrement_;
-
-  // Accumulates the register arguments while compiling arguments.
-  MWasmCall::Args regArgs_;
-
-  // Reserved argument for passing Instance* to builtin instance method calls.
-  ABIArg instanceArg_;
-
-  // Accumulates the stack arguments while compiling arguments. This is only
-  // necessary to track when childClobbers_ is true so that the stack offsets
-  // can be updated.
-  Vector<MWasmStackArg*, 0, SystemAllocPolicy> stackArgs_;
-
-  // Set by child calls (i.e., calls that execute while evaluating a parent's
-  // operands) to indicate that the child and parent call cannot reuse the
-  // same stack space -- the parent must store its stack arguments below the
-  // child's and increment sp when performing its call.
-  bool childClobbers_;
-
-  // Only FunctionCompiler should be directly manipulating CallCompileState.
-  friend class FunctionCompiler;
-
- public:
-  CallCompileState(FunctionCompiler& f, uint32_t lineOrBytecode)
-      : lineOrBytecode_(lineOrBytecode),
-        maxChildStackBytes_(0),
-        spIncrement_(0),
-        childClobbers_(false) {}
-||||||| merged common ancestors
-// CallCompileState describes a call that is being compiled. Due to expression
-// nesting, multiple calls can be in the middle of compilation at the same time
-// and these are tracked in a stack by FunctionCompiler.
-
-class CallCompileState
-{
-    // The line or bytecode of the call.
-    uint32_t lineOrBytecode_;
-
-    // A generator object that is passed each argument as it is compiled.
-    ABIArgGenerator abi_;
-
-    // The maximum number of bytes used by "child" calls, i.e., calls that occur
-    // while evaluating the arguments of the call represented by this
-    // CallCompileState.
-    uint32_t maxChildStackBytes_;
-
-    // Set by FunctionCompiler::finishCall(), tells the MWasmCall by how
-    // much to bump the stack pointer before making the call. See
-    // FunctionCompiler::startCall() comment below.
-    uint32_t spIncrement_;
-
-    // Accumulates the register arguments while compiling arguments.
-    MWasmCall::Args regArgs_;
-
-    // Reserved argument for passing Instance* to builtin instance method calls.
-    ABIArg instanceArg_;
-
-    // Accumulates the stack arguments while compiling arguments. This is only
-    // necessary to track when childClobbers_ is true so that the stack offsets
-    // can be updated.
-    Vector<MWasmStackArg*, 0, SystemAllocPolicy> stackArgs_;
-
-    // Set by child calls (i.e., calls that execute while evaluating a parent's
-    // operands) to indicate that the child and parent call cannot reuse the
-    // same stack space -- the parent must store its stack arguments below the
-    // child's and increment sp when performing its call.
-    bool childClobbers_;
-
-    // Only FunctionCompiler should be directly manipulating CallCompileState.
-    friend class FunctionCompiler;
-
-  public:
-    CallCompileState(FunctionCompiler& f, uint32_t lineOrBytecode)
-      : lineOrBytecode_(lineOrBytecode),
-        maxChildStackBytes_(0),
-        spIncrement_(0),
-        childClobbers_(false)
-    { }
-=======
 // CallCompileState describes a call that is being compiled.
 
 class CallCompileState {
@@ -169,100 +70,11 @@ class CallCompileState {
 
   // Only FunctionCompiler should be directly manipulating CallCompileState.
   friend class FunctionCompiler;
->>>>>>> upstream-releases
 };
 
 // Encapsulates the compilation of a single function in an asm.js module. The
 // function compiler handles the creation and final backend compilation of the
 // MIR graph.
-<<<<<<< HEAD
-class FunctionCompiler {
-  struct ControlFlowPatch {
-    MControlInstruction* ins;
-    uint32_t index;
-    ControlFlowPatch(MControlInstruction* ins, uint32_t index)
-        : ins(ins), index(index) {}
-  };
-
-  typedef Vector<ControlFlowPatch, 0, SystemAllocPolicy> ControlFlowPatchVector;
-  typedef Vector<ControlFlowPatchVector, 0, SystemAllocPolicy>
-      ControlFlowPatchsVector;
-  typedef Vector<CallCompileState*, 0, SystemAllocPolicy>
-      CallCompileStateVector;
-
-  const ModuleEnvironment& env_;
-  IonOpIter iter_;
-  const FuncCompileInput& func_;
-  const ValTypeVector& locals_;
-  size_t lastReadCallSite_;
-
-  TempAllocator& alloc_;
-  MIRGraph& graph_;
-  const CompileInfo& info_;
-  MIRGenerator& mirGen_;
-
-  MBasicBlock* curBlock_;
-  CallCompileStateVector callStack_;
-  uint32_t maxStackArgBytes_;
-
-  uint32_t loopDepth_;
-  uint32_t blockDepth_;
-  ControlFlowPatchsVector blockPatches_;
-
-  // TLS pointer argument to the current function.
-  MWasmParameter* tlsPointer_;
-
- public:
-  FunctionCompiler(const ModuleEnvironment& env, Decoder& decoder,
-                   ExclusiveDeferredValidationState& dvs,
-                   const FuncCompileInput& func, const ValTypeVector& locals,
-                   MIRGenerator& mirGen)
-||||||| merged common ancestors
-class FunctionCompiler
-{
-    struct ControlFlowPatch {
-        MControlInstruction* ins;
-        uint32_t index;
-        ControlFlowPatch(MControlInstruction* ins, uint32_t index)
-          : ins(ins),
-            index(index)
-        {}
-    };
-
-    typedef Vector<ControlFlowPatch, 0, SystemAllocPolicy> ControlFlowPatchVector;
-    typedef Vector<ControlFlowPatchVector, 0, SystemAllocPolicy> ControlFlowPatchsVector;
-    typedef Vector<CallCompileState*, 0, SystemAllocPolicy> CallCompileStateVector;
-
-    const ModuleEnvironment&   env_;
-    IonOpIter                  iter_;
-    const FuncCompileInput&    func_;
-    const ValTypeVector&       locals_;
-    size_t                     lastReadCallSite_;
-
-    TempAllocator&             alloc_;
-    MIRGraph&                  graph_;
-    const CompileInfo&         info_;
-    MIRGenerator&              mirGen_;
-
-    MBasicBlock*               curBlock_;
-    CallCompileStateVector     callStack_;
-    uint32_t                   maxStackArgBytes_;
-
-    uint32_t                   loopDepth_;
-    uint32_t                   blockDepth_;
-    ControlFlowPatchsVector    blockPatches_;
-
-    // TLS pointer argument to the current function.
-    MWasmParameter*            tlsPointer_;
-
-  public:
-    FunctionCompiler(const ModuleEnvironment& env,
-                     Decoder& decoder,
-                     ExclusiveDeferredValidationState& dvs,
-                     const FuncCompileInput& func,
-                     const ValTypeVector& locals,
-                     MIRGenerator& mirGen)
-=======
 class FunctionCompiler {
   struct ControlFlowPatch {
     MControlInstruction* ins;
@@ -300,7 +112,6 @@ class FunctionCompiler {
   FunctionCompiler(const ModuleEnvironment& env, Decoder& decoder,
                    const FuncCompileInput& func, const ValTypeVector& locals,
                    MIRGenerator& mirGen)
->>>>>>> upstream-releases
       : env_(env),
         iter_(env, decoder),
         func_(func),
@@ -314,143 +125,6 @@ class FunctionCompiler {
         maxStackArgBytes_(0),
         loopDepth_(0),
         blockDepth_(0),
-<<<<<<< HEAD
-        tlsPointer_(nullptr) {}
-
-  const ModuleEnvironment& env() const { return env_; }
-  IonOpIter& iter() { return iter_; }
-  TempAllocator& alloc() const { return alloc_; }
-  const FuncType& funcType() const { return *env_.funcTypes[func_.index]; }
-
-  BytecodeOffset bytecodeOffset() const { return iter_.bytecodeOffset(); }
-  BytecodeOffset bytecodeIfNotAsmJS() const {
-    return env_.isAsmJS() ? BytecodeOffset() : iter_.bytecodeOffset();
-  }
-
-  bool init() {
-    // Prepare the entry block for MIR generation:
-
-    const ValTypeVector& args = funcType().args();
-
-    if (!mirGen_.ensureBallast()) {
-      return false;
-    }
-    if (!newBlock(/* prev */ nullptr, &curBlock_)) {
-      return false;
-    }
-
-    for (ABIArgIter<ValTypeVector> i(args); !i.done(); i++) {
-      MWasmParameter* ins = MWasmParameter::New(alloc(), *i, i.mirType());
-      curBlock_->add(ins);
-      curBlock_->initSlot(info().localSlot(i.index()), ins);
-      if (!mirGen_.ensureBallast()) {
-        return false;
-      }
-    }
-
-    // Set up a parameter that receives the hidden TLS pointer argument.
-    tlsPointer_ =
-        MWasmParameter::New(alloc(), ABIArg(WasmTlsReg), MIRType::Pointer);
-    curBlock_->add(tlsPointer_);
-    if (!mirGen_.ensureBallast()) {
-      return false;
-    }
-
-    for (size_t i = args.length(); i < locals_.length(); i++) {
-      MInstruction* ins = nullptr;
-      switch (locals_[i].code()) {
-        case ValType::I32:
-          ins = MConstant::New(alloc(), Int32Value(0), MIRType::Int32);
-          break;
-        case ValType::I64:
-          ins = MConstant::NewInt64(alloc(), 0);
-          break;
-        case ValType::F32:
-          ins = MConstant::New(alloc(), Float32Value(0.f), MIRType::Float32);
-          break;
-        case ValType::F64:
-          ins = MConstant::New(alloc(), DoubleValue(0.0), MIRType::Double);
-          break;
-        case ValType::Ref:
-        case ValType::AnyRef:
-          MOZ_CRASH("ion support for ref/anyref value NYI");
-          break;
-        case ValType::NullRef:
-          MOZ_CRASH("NullRef not expressible");
-      }
-||||||| merged common ancestors
-        tlsPointer_(nullptr)
-    {}
-
-    const ModuleEnvironment&   env() const   { return env_; }
-    IonOpIter&                 iter()        { return iter_; }
-    TempAllocator&             alloc() const { return alloc_; }
-    const FuncType&            funcType() const   { return *env_.funcTypes[func_.index]; }
-
-    BytecodeOffset bytecodeOffset() const {
-        return iter_.bytecodeOffset();
-    }
-    BytecodeOffset bytecodeIfNotAsmJS() const {
-        return env_.isAsmJS() ? BytecodeOffset() : iter_.bytecodeOffset();
-    }
-
-    bool init()
-    {
-        // Prepare the entry block for MIR generation:
-
-        const ValTypeVector& args = funcType().args();
-
-        if (!mirGen_.ensureBallast()) {
-            return false;
-        }
-        if (!newBlock(/* prev */ nullptr, &curBlock_)) {
-            return false;
-        }
-
-        for (ABIArgIter<ValTypeVector> i(args); !i.done(); i++) {
-            MWasmParameter* ins = MWasmParameter::New(alloc(), *i, i.mirType());
-            curBlock_->add(ins);
-            curBlock_->initSlot(info().localSlot(i.index()), ins);
-            if (!mirGen_.ensureBallast()) {
-                return false;
-            }
-        }
-
-        // Set up a parameter that receives the hidden TLS pointer argument.
-        tlsPointer_ = MWasmParameter::New(alloc(), ABIArg(WasmTlsReg), MIRType::Pointer);
-        curBlock_->add(tlsPointer_);
-        if (!mirGen_.ensureBallast()) {
-            return false;
-        }
-
-        for (size_t i = args.length(); i < locals_.length(); i++) {
-            MInstruction* ins = nullptr;
-            switch (locals_[i].code()) {
-              case ValType::I32:
-                ins = MConstant::New(alloc(), Int32Value(0), MIRType::Int32);
-                break;
-              case ValType::I64:
-                ins = MConstant::NewInt64(alloc(), 0);
-                break;
-              case ValType::F32:
-                ins = MConstant::New(alloc(), Float32Value(0.f), MIRType::Float32);
-                break;
-              case ValType::F64:
-                ins = MConstant::New(alloc(), DoubleValue(0.0), MIRType::Double);
-                break;
-              case ValType::Ref:
-              case ValType::AnyRef:
-                MOZ_CRASH("ion support for ref/anyref value NYI");
-                break;
-            }
-
-            curBlock_->add(ins);
-            curBlock_->initSlot(info().localSlot(i), ins);
-            if (!mirGen_.ensureBallast()) {
-                return false;
-            }
-        }
-=======
         tlsPointer_(nullptr) {}
 
   const ModuleEnvironment& env() const { return env_; }
@@ -523,50 +197,15 @@ class FunctionCompiler {
         return false;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      curBlock_->add(ins);
-      curBlock_->initSlot(info().localSlot(i), ins);
-      if (!mirGen_.ensureBallast()) {
-        return false;
-      }
-    }
-||||||| merged common ancestors
-        return true;
-    }
-=======
-    return true;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     return true;
   }
 
   void finish() {
     mirGen().initWasmMaxStackArgBytes(maxStackArgBytes_);
-||||||| merged common ancestors
-    void finish()
-    {
-        mirGen().initWasmMaxStackArgBytes(maxStackArgBytes_);
-=======
-  void finish() {
-    mirGen().initWasmMaxStackArgBytes(maxStackArgBytes_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_ASSERT(callStack_.empty());
     MOZ_ASSERT(loopDepth_ == 0);
     MOZ_ASSERT(blockDepth_ == 0);
-||||||| merged common ancestors
-        MOZ_ASSERT(callStack_.empty());
-        MOZ_ASSERT(loopDepth_ == 0);
-        MOZ_ASSERT(blockDepth_ == 0);
-=======
-    MOZ_ASSERT(loopDepth_ == 0);
-    MOZ_ASSERT(blockDepth_ == 0);
->>>>>>> upstream-releases
 #ifdef DEBUG
     for (ControlFlowPatchVector& patches : blockPatches_) {
       MOZ_ASSERT(patches.empty());
@@ -594,30 +233,6 @@ class FunctionCompiler {
 
   /***************************** Code generation (after local scope setup) */
 
-<<<<<<< HEAD
-  MDefinition* constant(const Value& v, MIRType type) {
-    if (inDeadCode()) {
-      return nullptr;
-||||||| merged common ancestors
-    MDefinition* constant(const Value& v, MIRType type)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-        MConstant* constant = MConstant::New(alloc(), v, type);
-        curBlock_->add(constant);
-        return constant;
-    }
-
-    MDefinition* constant(float f)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-        auto* cst = MWasmFloatConstant::NewFloat32(alloc(), f);
-        curBlock_->add(cst);
-        return cst;
-=======
   MDefinition* constant(const Value& v, MIRType type) {
     if (inDeadCode()) {
       return nullptr;
@@ -630,118 +245,39 @@ class FunctionCompiler {
   MDefinition* constant(float f) {
     if (inDeadCode()) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    MConstant* constant = MConstant::New(alloc(), v, type);
-    curBlock_->add(constant);
-    return constant;
-  }
-||||||| merged common ancestors
-=======
     auto* cst = MWasmFloatConstant::NewFloat32(alloc(), f);
     curBlock_->add(cst);
     return cst;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* constant(float f) {
-    if (inDeadCode()) {
-      return nullptr;
-||||||| merged common ancestors
-    MDefinition* constant(double d)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-        auto* cst = MWasmFloatConstant::NewDouble(alloc(), d);
-        curBlock_->add(cst);
-        return cst;
-=======
   MDefinition* constant(double d) {
     if (inDeadCode()) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    auto* cst = MWasmFloatConstant::NewFloat32(alloc(), f);
-    curBlock_->add(cst);
-    return cst;
-  }
-||||||| merged common ancestors
-=======
     auto* cst = MWasmFloatConstant::NewDouble(alloc(), d);
     curBlock_->add(cst);
     return cst;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* constant(double d) {
-    if (inDeadCode()) {
-      return nullptr;
-||||||| merged common ancestors
-    MDefinition* constant(int64_t i)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-        MConstant* constant = MConstant::NewInt64(alloc(), i);
-        curBlock_->add(constant);
-        return constant;
-=======
   MDefinition* constant(int64_t i) {
     if (inDeadCode()) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    auto* cst = MWasmFloatConstant::NewDouble(alloc(), d);
-    curBlock_->add(cst);
-    return cst;
-  }
-||||||| merged common ancestors
-=======
     MConstant* constant = MConstant::NewInt64(alloc(), i);
     curBlock_->add(constant);
     return constant;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* constant(int64_t i) {
-    if (inDeadCode()) {
-      return nullptr;
-||||||| merged common ancestors
-    template <class T>
-    MDefinition* unary(MDefinition* op)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-        T* ins = T::New(alloc(), op);
-        curBlock_->add(ins);
-        return ins;
-=======
   MDefinition* nullRefConstant() {
     if (inDeadCode()) {
       return nullptr;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    MConstant* constant = MConstant::NewInt64(alloc(), i);
-    curBlock_->add(constant);
-    return constant;
-  }
-||||||| merged common ancestors
-=======
     // MConstant has a lot of baggage so we don't use that here.
     MWasmNullConstant* constant = MWasmNullConstant::New(alloc());
     curBlock_->add(constant);
     return constant;
   }
->>>>>>> upstream-releases
 
   template <class T>
   MDefinition* unary(MDefinition* op) {
@@ -956,22 +492,12 @@ class FunctionCompiler {
           default:
             MOZ_CRASH("Bad sign extension");
         }
-<<<<<<< HEAD
-        ins = MSignExtendInt64::New(alloc(), op, mode);
-        break;
-      }
-      default: { MOZ_CRASH("Bad sign extension"); }
-||||||| merged common ancestors
-        curBlock_->add(ins);
-        return ins;
-=======
         ins = MSignExtendInt64::New(alloc(), op, mode);
         break;
       }
       default: {
         MOZ_CRASH("Bad sign extension");
       }
->>>>>>> upstream-releases
     }
     curBlock_->add(ins);
     return ins;
@@ -1042,7 +568,6 @@ class FunctionCompiler {
 
   MWasmLoadTls* maybeLoadBoundsCheckLimit() {
 #ifdef WASM_HUGE_MEMORY
-<<<<<<< HEAD
     if (!env_.isAsmJS()) {
       return nullptr;
     }
@@ -1065,34 +590,8 @@ class FunctionCompiler {
     // asm.js accesses are always aligned and need no checks.
     if (env_.isAsmJS() || !access->isAtomic()) {
       return false;
-||||||| merged common ancestors
-        if (!env_.isAsmJS()) {
-            return nullptr;
-        }
-#endif
-        AliasSet aliases = env_.maxMemoryLength.isSome() ? AliasSet::None()
-                                                         : AliasSet::Load(AliasSet::WasmHeapMeta);
-        auto load = MWasmLoadTls::New(alloc(), tlsPointer_, offsetof(wasm::TlsData, boundsCheckLimit),
-                                      MIRType::Int32, aliases);
-        curBlock_->add(load);
-        return load;
-=======
-    if (!env_.isAsmJS()) {
-      return nullptr;
->>>>>>> upstream-releases
     }
-#endif
-    AliasSet aliases = env_.maxMemoryLength.isSome()
-                           ? AliasSet::None()
-                           : AliasSet::Load(AliasSet::WasmHeapMeta);
-    auto load = MWasmLoadTls::New(alloc(), tlsPointer_,
-                                  offsetof(wasm::TlsData, boundsCheckLimit),
-                                  MIRType::Int32, aliases);
-    curBlock_->add(load);
-    return load;
-  }
 
-<<<<<<< HEAD
     if (base->isConstant()) {
       int32_t ptr = base->toConstant()->toInt32();
       // OK to wrap around the address computation here.
@@ -1108,49 +607,14 @@ class FunctionCompiler {
   void checkOffsetAndAlignmentAndBounds(MemoryAccessDesc* access,
                                         MDefinition** base) {
     MOZ_ASSERT(!inDeadCode());
-||||||| merged common ancestors
-    // Only sets *mustAdd if it also returns true.
-    bool needAlignmentCheck(MemoryAccessDesc* access, MDefinition* base, bool* mustAdd) {
-        MOZ_ASSERT(!*mustAdd);
 
-        // asm.js accesses are always aligned and need no checks.
-        if (env_.isAsmJS() || !access->isAtomic()) {
-            return false;
-        }
-
-        if (base->isConstant()) {
-            int32_t ptr = base->toConstant()->toInt32();
-            // OK to wrap around the address computation here.
-            if (((ptr + access->offset()) & (access->byteSize() - 1)) == 0) {
-                return false;
-            }
-        }
-=======
-  // Only sets *mustAdd if it also returns true.
-  bool needAlignmentCheck(MemoryAccessDesc* access, MDefinition* base,
-                          bool* mustAdd) {
-    MOZ_ASSERT(!*mustAdd);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     // Fold a constant base into the offset (so the base is 0 in which case
     // the codegen is optimized), if it doesn't wrap or trigger an
     // MWasmAddOffset.
     if ((*base)->isConstant()) {
       uint32_t basePtr = (*base)->toConstant()->toInt32();
       uint32_t offset = access->offset();
-||||||| merged common ancestors
-        *mustAdd = (access->offset() & (access->byteSize() - 1)) != 0;
-        return true;
-    }
-=======
-    // asm.js accesses are always aligned and need no checks.
-    if (env_.isAsmJS() || !access->isAtomic()) {
-      return false;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
       static_assert(
           OffsetGuardLimit < UINT32_MAX,
           "checking for overflow against OffsetGuardLimit is enough.");
@@ -1162,60 +626,10 @@ class FunctionCompiler {
         access->setOffset(access->offset() + basePtr);
       }
     }
-||||||| merged common ancestors
-    void checkOffsetAndAlignmentAndBounds(MemoryAccessDesc* access, MDefinition** base)
-    {
-        MOZ_ASSERT(!inDeadCode());
 
-        // Fold a constant base into the offset (so the base is 0 in which case
-        // the codegen is optimized), if it doesn't wrap or trigger an
-        // MWasmAddOffset.
-        if ((*base)->isConstant()) {
-            uint32_t basePtr = (*base)->toConstant()->toInt32();
-            uint32_t offset = access->offset();
-
-            static_assert(OffsetGuardLimit < UINT32_MAX,
-                          "checking for overflow against OffsetGuardLimit is enough.");
-
-            if (offset < OffsetGuardLimit && basePtr < OffsetGuardLimit - offset) {
-                auto* ins = MConstant::New(alloc(), Int32Value(0), MIRType::Int32);
-                curBlock_->add(ins);
-                *base = ins;
-                access->setOffset(access->offset() + basePtr);
-            }
-        }
-
-        bool mustAdd = false;
-        bool alignmentCheck = needAlignmentCheck(access, *base, &mustAdd);
-=======
-    if (base->isConstant()) {
-      int32_t ptr = base->toConstant()->toInt32();
-      // OK to wrap around the address computation here.
-      if (((ptr + access->offset()) & (access->byteSize() - 1)) == 0) {
-        return false;
-      }
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     bool mustAdd = false;
     bool alignmentCheck = needAlignmentCheck(access, *base, &mustAdd);
-||||||| merged common ancestors
-        // If the offset is bigger than the guard region, a separate instruction
-        // is necessary to add the offset to the base and check for overflow.
-        //
-        // Also add the offset if we have a Wasm atomic access that needs
-        // alignment checking and the offset affects alignment.
-        if (access->offset() >= OffsetGuardLimit || mustAdd || !JitOptions.wasmFoldOffsets) {
-            *base = computeEffectiveAddress(*base, access);
-        }
-=======
-    *mustAdd = (access->offset() & (access->byteSize() - 1)) != 0;
-    return true;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     // If the offset is bigger than the guard region, a separate instruction
     // is necessary to add the offset to the base and check for overflow.
     //
@@ -1225,42 +639,12 @@ class FunctionCompiler {
         !JitOptions.wasmFoldOffsets) {
       *base = computeEffectiveAddress(*base, access);
     }
-||||||| merged common ancestors
-        if (alignmentCheck) {
-            curBlock_->add(MWasmAlignmentCheck::New(alloc(), *base, access->byteSize(),
-                                                    bytecodeOffset()));
-        }
-=======
-  void checkOffsetAndAlignmentAndBounds(MemoryAccessDesc* access,
-                                        MDefinition** base) {
-    MOZ_ASSERT(!inDeadCode());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (alignmentCheck) {
       curBlock_->add(MWasmAlignmentCheck::New(
           alloc(), *base, access->byteSize(), bytecodeOffset()));
     }
-||||||| merged common ancestors
-        MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
-        if (boundsCheckLimit) {
-            auto* ins = MWasmBoundsCheck::New(alloc(), *base, boundsCheckLimit, bytecodeOffset());
-            curBlock_->add(ins);
-            if (JitOptions.spectreIndexMasking) {
-                *base = ins;
-            }
-        }
-    }
-=======
-    // Fold a constant base into the offset (so the base is 0 in which case
-    // the codegen is optimized), if it doesn't wrap or trigger an
-    // MWasmAddOffset.
-    if ((*base)->isConstant()) {
-      uint32_t basePtr = (*base)->toConstant()->toInt32();
-      uint32_t offset = access->offset();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
     if (boundsCheckLimit) {
       auto* ins = MWasmBoundsCheck::New(alloc(), *base, boundsCheckLimit,
@@ -1271,53 +655,16 @@ class FunctionCompiler {
       }
     }
   }
-||||||| merged common ancestors
-    bool isSmallerAccessForI64(ValType result, const MemoryAccessDesc* access) {
-        if (result == ValType::I64 && access->byteSize() <= 4) {
-            // These smaller accesses should all be zero-extending.
-            MOZ_ASSERT(!isSignedIntType(access->type()));
-            return true;
-        }
-        return false;
-    }
-=======
-      static_assert(
-          OffsetGuardLimit < UINT32_MAX,
-          "checking for overflow against OffsetGuardLimit is enough.");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   bool isSmallerAccessForI64(ValType result, const MemoryAccessDesc* access) {
     if (result == ValType::I64 && access->byteSize() <= 4) {
       // These smaller accesses should all be zero-extending.
       MOZ_ASSERT(!isSignedIntType(access->type()));
       return true;
-||||||| merged common ancestors
-  public:
-    MDefinition* computeEffectiveAddress(MDefinition* base, MemoryAccessDesc* access) {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-        if (!access->offset()) {
-            return base;
-        }
-        auto* ins = MWasmAddOffset::New(alloc(), base, access->offset(), bytecodeOffset());
-        curBlock_->add(ins);
-        access->clearOffset();
-        return ins;
-=======
-      if (offset < OffsetGuardLimit && basePtr < OffsetGuardLimit - offset) {
-        auto* ins = MConstant::New(alloc(), Int32Value(0), MIRType::Int32);
-        curBlock_->add(ins);
-        *base = ins;
-        access->setOffset(access->offset() + basePtr);
-      }
->>>>>>> upstream-releases
     }
     return false;
   }
 
-<<<<<<< HEAD
  public:
   MDefinition* computeEffectiveAddress(MDefinition* base,
                                        MemoryAccessDesc* access) {
@@ -1334,128 +681,12 @@ class FunctionCompiler {
     return ins;
   }
 
-  bool checkI32NegativeMeansFailedResult(MDefinition* value) {
-    if (inDeadCode()) {
-      return true;
-    }
-
-    auto* zero = constant(Int32Value(0), MIRType::Int32);
-    auto* cond = compare(value, zero, JSOP_LT, MCompare::Compare_Int32);
-||||||| merged common ancestors
-    bool checkI32NegativeMeansFailedResult(MDefinition* value) {
-        if (inDeadCode()) {
-            return true;
-        }
-
-        auto* zero = constant(Int32Value(0), MIRType::Int32);
-        auto* cond = compare(value, zero, JSOP_LT, MCompare::Compare_Int32);
-
-        MBasicBlock* failBlock;
-        if (!newBlock(curBlock_, &failBlock)) {
-            return false;
-        }
-=======
-    bool mustAdd = false;
-    bool alignmentCheck = needAlignmentCheck(access, *base, &mustAdd);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    MBasicBlock* failBlock;
-    if (!newBlock(curBlock_, &failBlock)) {
-      return false;
-    }
-||||||| merged common ancestors
-        MBasicBlock* okBlock;
-        if (!newBlock(curBlock_, &okBlock)) {
-            return false;
-        }
-=======
-    // If the offset is bigger than the guard region, a separate instruction
-    // is necessary to add the offset to the base and check for overflow.
-    //
-    // Also add the offset if we have a Wasm atomic access that needs
-    // alignment checking and the offset affects alignment.
-    if (access->offset() >= OffsetGuardLimit || mustAdd ||
-        !JitOptions.wasmFoldOffsets) {
-      *base = computeEffectiveAddress(*base, access);
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    MBasicBlock* okBlock;
-    if (!newBlock(curBlock_, &okBlock)) {
-      return false;
-||||||| merged common ancestors
-        curBlock_->end(MTest::New(alloc(), cond, failBlock, okBlock));
-        failBlock->end(MWasmTrap::New(alloc(), wasm::Trap::ThrowReported, bytecodeOffset()));
-        curBlock_ = okBlock;
-        return true;
-=======
-    if (alignmentCheck) {
-      curBlock_->add(MWasmAlignmentCheck::New(
-          alloc(), *base, access->byteSize(), bytecodeOffset()));
->>>>>>> upstream-releases
-    }
-
-<<<<<<< HEAD
-    curBlock_->end(MTest::New(alloc(), cond, failBlock, okBlock));
-    failBlock->end(
-        MWasmTrap::New(alloc(), wasm::Trap::ThrowReported, bytecodeOffset()));
-    curBlock_ = okBlock;
-    return true;
-  }
-||||||| merged common ancestors
-    MDefinition* load(MDefinition* base, MemoryAccessDesc* access, ValType result)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-=======
-    MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
-    if (boundsCheckLimit) {
-      auto* ins = MWasmBoundsCheck::New(alloc(), *base, boundsCheckLimit,
-                                        bytecodeOffset());
-      curBlock_->add(ins);
-      if (JitOptions.spectreIndexMasking) {
-        *base = ins;
-      }
-    }
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   MDefinition* load(MDefinition* base, MemoryAccessDesc* access,
                     ValType result) {
     if (inDeadCode()) {
       return nullptr;
-||||||| merged common ancestors
-        MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-        MInstruction* load = nullptr;
-        if (env_.isAsmJS()) {
-            MOZ_ASSERT(access->offset() == 0);
-            MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
-            load = MAsmJSLoadHeap::New(alloc(), memoryBase, base, boundsCheckLimit, access->type());
-        } else {
-            checkOffsetAndAlignmentAndBounds(access, &base);
-            load = MWasmLoad::New(alloc(), memoryBase, base, *access, ToMIRType(result));
-        }
-        if (!load) {
-            return nullptr;
-        }
-        curBlock_->add(load);
-        return load;
-=======
-  bool isSmallerAccessForI64(ValType result, const MemoryAccessDesc* access) {
-    if (result == ValType::I64 && access->byteSize() <= 4) {
-      // These smaller accesses should all be zero-extending.
-      MOZ_ASSERT(!isSignedIntType(access->type()));
-      return true;
->>>>>>> upstream-releases
     }
-    return false;
-  }
 
-<<<<<<< HEAD
     MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
     MInstruction* load = nullptr;
     if (env_.isAsmJS()) {
@@ -1474,59 +705,12 @@ class FunctionCompiler {
     curBlock_->add(load);
     return load;
   }
-||||||| merged common ancestors
-    void store(MDefinition* base, MemoryAccessDesc* access, MDefinition* v)
-    {
-        if (inDeadCode()) {
-            return;
-        }
-=======
- public:
-  MDefinition* computeEffectiveAddress(MDefinition* base,
-                                       MemoryAccessDesc* access) {
-    if (inDeadCode()) {
-      return nullptr;
-    }
-    if (!access->offset()) {
-      return base;
-    }
-    auto* ins =
-        MWasmAddOffset::New(alloc(), base, access->offset(), bytecodeOffset());
-    curBlock_->add(ins);
-    access->clearOffset();
-    return ins;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   void store(MDefinition* base, MemoryAccessDesc* access, MDefinition* v) {
     if (inDeadCode()) {
       return;
-||||||| merged common ancestors
-        MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-        MInstruction* store = nullptr;
-        if (env_.isAsmJS()) {
-            MOZ_ASSERT(access->offset() == 0);
-            MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
-            store = MAsmJSStoreHeap::New(alloc(), memoryBase, base, boundsCheckLimit,
-                                         access->type(), v);
-        } else {
-            checkOffsetAndAlignmentAndBounds(access, &base);
-            store = MWasmStore::New(alloc(), memoryBase, base, *access, v);
-        }
-        if (!store) {
-            return;
-        }
-        curBlock_->add(store);
-=======
-  MDefinition* load(MDefinition* base, MemoryAccessDesc* access,
-                    ValType result) {
-    if (inDeadCode()) {
-      return nullptr;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
     MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
     MInstruction* store = nullptr;
     if (env_.isAsmJS()) {
@@ -1543,35 +727,7 @@ class FunctionCompiler {
     }
     curBlock_->add(store);
   }
-||||||| merged common ancestors
-    MDefinition* atomicCompareExchangeHeap(MDefinition* base, MemoryAccessDesc* access,
-                                           ValType result, MDefinition* oldv, MDefinition* newv)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-=======
-    MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-    MInstruction* load = nullptr;
-    if (env_.isAsmJS()) {
-      MOZ_ASSERT(access->offset() == 0);
-      MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
-      load = MAsmJSLoadHeap::New(alloc(), memoryBase, base, boundsCheckLimit,
-                                 access->type());
-    } else {
-      checkOffsetAndAlignmentAndBounds(access, &base);
-      load =
-          MWasmLoad::New(alloc(), memoryBase, base, *access, ToMIRType(result));
-    }
-    if (!load) {
-      return nullptr;
-    }
-    curBlock_->add(load);
-    return load;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   MDefinition* atomicCompareExchangeHeap(MDefinition* base,
                                          MemoryAccessDesc* access,
                                          ValType result, MDefinition* oldv,
@@ -1579,81 +735,21 @@ class FunctionCompiler {
     if (inDeadCode()) {
       return nullptr;
     }
-||||||| merged common ancestors
-        checkOffsetAndAlignmentAndBounds(access, &base);
-=======
-  void store(MDefinition* base, MemoryAccessDesc* access, MDefinition* v) {
-    if (inDeadCode()) {
-      return;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     checkOffsetAndAlignmentAndBounds(access, &base);
-||||||| merged common ancestors
-        if (isSmallerAccessForI64(result, access)) {
-            auto* cvtOldv = MWrapInt64ToInt32::New(alloc(), oldv, /*bottomHalf=*/ true);
-            curBlock_->add(cvtOldv);
-            oldv = cvtOldv;
-=======
-    MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-    MInstruction* store = nullptr;
-    if (env_.isAsmJS()) {
-      MOZ_ASSERT(access->offset() == 0);
-      MWasmLoadTls* boundsCheckLimit = maybeLoadBoundsCheckLimit();
-      store = MAsmJSStoreHeap::New(alloc(), memoryBase, base, boundsCheckLimit,
-                                   access->type(), v);
-    } else {
-      checkOffsetAndAlignmentAndBounds(access, &base);
-      store = MWasmStore::New(alloc(), memoryBase, base, *access, v);
-    }
-    if (!store) {
-      return;
-    }
-    curBlock_->add(store);
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (isSmallerAccessForI64(result, access)) {
       auto* cvtOldv =
           MWrapInt64ToInt32::New(alloc(), oldv, /*bottomHalf=*/true);
       curBlock_->add(cvtOldv);
       oldv = cvtOldv;
-||||||| merged common ancestors
-            auto* cvtNewv = MWrapInt64ToInt32::New(alloc(), newv, /*bottomHalf=*/ true);
-            curBlock_->add(cvtNewv);
-            newv = cvtNewv;
-        }
-=======
-  MDefinition* atomicCompareExchangeHeap(MDefinition* base,
-                                         MemoryAccessDesc* access,
-                                         ValType result, MDefinition* oldv,
-                                         MDefinition* newv) {
-    if (inDeadCode()) {
-      return nullptr;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
       auto* cvtNewv =
           MWrapInt64ToInt32::New(alloc(), newv, /*bottomHalf=*/true);
       curBlock_->add(cvtNewv);
       newv = cvtNewv;
     }
-||||||| merged common ancestors
-        MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-        MInstruction* cas = MWasmCompareExchangeHeap::New(alloc(), bytecodeOffset(), memoryBase,
-                                                          base, *access, oldv, newv, tlsPointer_);
-        if (!cas) {
-            return nullptr;
-        }
-        curBlock_->add(cas);
-=======
-    checkOffsetAndAlignmentAndBounds(access, &base);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
     MInstruction* cas =
         MWasmCompareExchangeHeap::New(alloc(), bytecodeOffset(), memoryBase,
@@ -1662,106 +758,30 @@ class FunctionCompiler {
       return nullptr;
     }
     curBlock_->add(cas);
-||||||| merged common ancestors
-        if (isSmallerAccessForI64(result, access)) {
-            cas = MExtendInt32ToInt64::New(alloc(), cas, true);
-            curBlock_->add(cas);
-        }
-=======
-    if (isSmallerAccessForI64(result, access)) {
-      auto* cvtOldv =
-          MWrapInt64ToInt32::New(alloc(), oldv, /*bottomHalf=*/true);
-      curBlock_->add(cvtOldv);
-      oldv = cvtOldv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (isSmallerAccessForI64(result, access)) {
       cas = MExtendInt32ToInt64::New(alloc(), cas, true);
       curBlock_->add(cas);
-||||||| merged common ancestors
-        return cas;
-=======
-      auto* cvtNewv =
-          MWrapInt64ToInt32::New(alloc(), newv, /*bottomHalf=*/true);
-      curBlock_->add(cvtNewv);
-      newv = cvtNewv;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
     return cas;
   }
-||||||| merged common ancestors
-    MDefinition* atomicExchangeHeap(MDefinition* base, MemoryAccessDesc* access, ValType result,
-                                    MDefinition* value)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-=======
-    MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-    MInstruction* cas =
-        MWasmCompareExchangeHeap::New(alloc(), bytecodeOffset(), memoryBase,
-                                      base, *access, oldv, newv, tlsPointer_);
-    if (!cas) {
-      return nullptr;
-    }
-    curBlock_->add(cas);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   MDefinition* atomicExchangeHeap(MDefinition* base, MemoryAccessDesc* access,
                                   ValType result, MDefinition* value) {
     if (inDeadCode()) {
       return nullptr;
     }
-||||||| merged common ancestors
-        checkOffsetAndAlignmentAndBounds(access, &base);
-=======
-    if (isSmallerAccessForI64(result, access)) {
-      cas = MExtendInt32ToInt64::New(alloc(), cas, true);
-      curBlock_->add(cas);
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     checkOffsetAndAlignmentAndBounds(access, &base);
-||||||| merged common ancestors
-        if (isSmallerAccessForI64(result, access)) {
-            auto* cvtValue = MWrapInt64ToInt32::New(alloc(), value, /*bottomHalf=*/ true);
-            curBlock_->add(cvtValue);
-            value = cvtValue;
-        }
-=======
-    return cas;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (isSmallerAccessForI64(result, access)) {
       auto* cvtValue =
           MWrapInt64ToInt32::New(alloc(), value, /*bottomHalf=*/true);
       curBlock_->add(cvtValue);
       value = cvtValue;
     }
-||||||| merged common ancestors
-        MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-        MInstruction* xchg = MWasmAtomicExchangeHeap::New(alloc(), bytecodeOffset(), memoryBase,
-                                                          base, *access, value, tlsPointer_);
-        if (!xchg) {
-            return nullptr;
-        }
-        curBlock_->add(xchg);
-=======
-  MDefinition* atomicExchangeHeap(MDefinition* base, MemoryAccessDesc* access,
-                                  ValType result, MDefinition* value) {
-    if (inDeadCode()) {
-      return nullptr;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
     MInstruction* xchg =
         MWasmAtomicExchangeHeap::New(alloc(), bytecodeOffset(), memoryBase,
@@ -1770,105 +790,31 @@ class FunctionCompiler {
       return nullptr;
     }
     curBlock_->add(xchg);
-||||||| merged common ancestors
-        if (isSmallerAccessForI64(result, access)) {
-            xchg = MExtendInt32ToInt64::New(alloc(), xchg, true);
-            curBlock_->add(xchg);
-        }
-=======
-    checkOffsetAndAlignmentAndBounds(access, &base);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (isSmallerAccessForI64(result, access)) {
       xchg = MExtendInt32ToInt64::New(alloc(), xchg, true);
       curBlock_->add(xchg);
-||||||| merged common ancestors
-        return xchg;
-=======
-    if (isSmallerAccessForI64(result, access)) {
-      auto* cvtValue =
-          MWrapInt64ToInt32::New(alloc(), value, /*bottomHalf=*/true);
-      curBlock_->add(cvtValue);
-      value = cvtValue;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
     return xchg;
   }
-||||||| merged common ancestors
-    MDefinition* atomicBinopHeap(AtomicOp op, MDefinition* base, MemoryAccessDesc* access,
-                                 ValType result, MDefinition* value)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-=======
-    MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-    MInstruction* xchg =
-        MWasmAtomicExchangeHeap::New(alloc(), bytecodeOffset(), memoryBase,
-                                     base, *access, value, tlsPointer_);
-    if (!xchg) {
-      return nullptr;
-    }
-    curBlock_->add(xchg);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   MDefinition* atomicBinopHeap(AtomicOp op, MDefinition* base,
                                MemoryAccessDesc* access, ValType result,
                                MDefinition* value) {
     if (inDeadCode()) {
       return nullptr;
     }
-||||||| merged common ancestors
-        checkOffsetAndAlignmentAndBounds(access, &base);
-=======
-    if (isSmallerAccessForI64(result, access)) {
-      xchg = MExtendInt32ToInt64::New(alloc(), xchg, true);
-      curBlock_->add(xchg);
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     checkOffsetAndAlignmentAndBounds(access, &base);
-||||||| merged common ancestors
-        if (isSmallerAccessForI64(result, access)) {
-            auto* cvtValue = MWrapInt64ToInt32::New(alloc(), value, /*bottomHalf=*/ true);
-            curBlock_->add(cvtValue);
-            value = cvtValue;
-        }
-=======
-    return xchg;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (isSmallerAccessForI64(result, access)) {
       auto* cvtValue =
           MWrapInt64ToInt32::New(alloc(), value, /*bottomHalf=*/true);
       curBlock_->add(cvtValue);
       value = cvtValue;
     }
-||||||| merged common ancestors
-        MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-        MInstruction* binop = MWasmAtomicBinopHeap::New(alloc(), bytecodeOffset(), op, memoryBase,
-                                                        base, *access, value, tlsPointer_);
-        if (!binop) {
-            return nullptr;
-        }
-        curBlock_->add(binop);
-=======
-  MDefinition* atomicBinopHeap(AtomicOp op, MDefinition* base,
-                               MemoryAccessDesc* access, ValType result,
-                               MDefinition* value) {
-    if (inDeadCode()) {
-      return nullptr;
-    }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
     MInstruction* binop =
         MWasmAtomicBinopHeap::New(alloc(), bytecodeOffset(), op, memoryBase,
@@ -1877,144 +823,12 @@ class FunctionCompiler {
       return nullptr;
     }
     curBlock_->add(binop);
-||||||| merged common ancestors
-        if (isSmallerAccessForI64(result, access)) {
-            binop = MExtendInt32ToInt64::New(alloc(), binop, true);
-            curBlock_->add(binop);
-        }
-=======
-    checkOffsetAndAlignmentAndBounds(access, &base);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
     if (isSmallerAccessForI64(result, access)) {
       binop = MExtendInt32ToInt64::New(alloc(), binop, true);
       curBlock_->add(binop);
-||||||| merged common ancestors
-        return binop;
-=======
-    if (isSmallerAccessForI64(result, access)) {
-      auto* cvtValue =
-          MWrapInt64ToInt32::New(alloc(), value, /*bottomHalf=*/true);
-      curBlock_->add(cvtValue);
-      value = cvtValue;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    return binop;
-  }
-||||||| merged common ancestors
-    MDefinition* loadGlobalVar(unsigned globalDataOffset, bool isConst, bool isIndirect, MIRType type)
-    {
-        if (inDeadCode()) {
-            return nullptr;
-        }
-=======
-    MWasmLoadTls* memoryBase = maybeLoadMemoryBase();
-    MInstruction* binop =
-        MWasmAtomicBinopHeap::New(alloc(), bytecodeOffset(), op, memoryBase,
-                                  base, *access, value, tlsPointer_);
-    if (!binop) {
-      return nullptr;
-    }
-    curBlock_->add(binop);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  MDefinition* loadGlobalVar(unsigned globalDataOffset, bool isConst,
-                             bool isIndirect, MIRType type) {
-    if (inDeadCode()) {
-      return nullptr;
-    }
-
-    MInstruction* load;
-    if (isIndirect) {
-      // Pull a pointer to the value out of TlsData::globalArea, then
-      // load from that pointer.  Note that the pointer is immutable
-      // even though the value it points at may change, hence the use of
-      // |true| for the first node's |isConst| value, irrespective of
-      // the |isConst| formal parameter to this method.  The latter
-      // applies to the denoted value as a whole.
-      auto* cellPtr =
-          MWasmLoadGlobalVar::New(alloc(), MIRType::Pointer, globalDataOffset,
-                                  /*isConst=*/true, tlsPointer_);
-      curBlock_->add(cellPtr);
-      load = MWasmLoadGlobalCell::New(alloc(), type, cellPtr);
-    } else {
-      // Pull the value directly out of TlsData::globalArea.
-      load = MWasmLoadGlobalVar::New(alloc(), type, globalDataOffset, isConst,
-                                     tlsPointer_);
-||||||| merged common ancestors
-        MInstruction* load;
-        if (isIndirect) {
-            // Pull a pointer to the value out of TlsData::globalArea, then
-            // load from that pointer.  Note that the pointer is immutable
-            // even though the value it points at may change, hence the use of
-            // |true| for the first node's |isConst| value, irrespective of
-            // the |isConst| formal parameter to this method.  The latter
-            // applies to the denoted value as a whole.
-            auto* cellPtr = MWasmLoadGlobalVar::New(alloc(), MIRType::Pointer, globalDataOffset,
-                                                    /*isConst=*/true, tlsPointer_);
-            curBlock_->add(cellPtr);
-            load = MWasmLoadGlobalCell::New(alloc(), type, cellPtr);
-        } else {
-            // Pull the value directly out of TlsData::globalArea.
-            load = MWasmLoadGlobalVar::New(alloc(), type, globalDataOffset, isConst, tlsPointer_);
-        }
-        curBlock_->add(load);
-        return load;
-=======
-    if (isSmallerAccessForI64(result, access)) {
-      binop = MExtendInt32ToInt64::New(alloc(), binop, true);
-      curBlock_->add(binop);
->>>>>>> upstream-releases
-    }
-    curBlock_->add(load);
-    return load;
-  }
-
-<<<<<<< HEAD
-  void storeGlobalVar(uint32_t globalDataOffset, bool isIndirect,
-                      MDefinition* v) {
-    if (inDeadCode()) {
-      return;
-    }
-
-    MInstruction* store;
-    if (isIndirect) {
-      // Pull a pointer to the value out of TlsData::globalArea, then
-      // store through that pointer.
-      auto* cellPtr =
-          MWasmLoadGlobalVar::New(alloc(), MIRType::Pointer, globalDataOffset,
-                                  /*isConst=*/true, tlsPointer_);
-      curBlock_->add(cellPtr);
-      store = MWasmStoreGlobalCell::New(alloc(), v, cellPtr);
-    } else {
-      // Store the value directly in TlsData::globalArea.
-      store =
-          MWasmStoreGlobalVar::New(alloc(), globalDataOffset, v, tlsPointer_);
-||||||| merged common ancestors
-    void storeGlobalVar(uint32_t globalDataOffset, bool isIndirect, MDefinition* v)
-    {
-        if (inDeadCode()) {
-            return;
-        }
-
-        MInstruction* store;
-        if (isIndirect) {
-            // Pull a pointer to the value out of TlsData::globalArea, then
-            // store through that pointer.
-            auto* cellPtr = MWasmLoadGlobalVar::New(alloc(), MIRType::Pointer, globalDataOffset,
-                                                    /*isConst=*/true, tlsPointer_);
-            curBlock_->add(cellPtr);
-            store = MWasmStoreGlobalCell::New(alloc(), v, cellPtr);
-        } else {
-            // Store the value directly in TlsData::globalArea.
-            store = MWasmStoreGlobalVar::New(alloc(), globalDataOffset, v, tlsPointer_);
-        }
-        curBlock_->add(store);
-=======
     return binop;
   }
 
@@ -2041,89 +855,11 @@ class FunctionCompiler {
       // Pull the value directly out of TlsData::globalArea.
       load = MWasmLoadGlobalVar::New(alloc(), type, globalDataOffset, isConst,
                                      tlsPointer_);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    curBlock_->add(store);
-  }
-||||||| merged common ancestors
-=======
     curBlock_->add(load);
     return load;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void addInterruptCheck() {
-    if (inDeadCode()) {
-      return;
-    }
-    curBlock_->add(
-        MWasmInterruptCheck::New(alloc(), tlsPointer_, bytecodeOffset()));
-  }
-
-  /***************************************************************** Calls */
-
-  // The IonMonkey backend maintains a single stack offset (from the stack
-  // pointer to the base of the frame) by adding the total amount of spill
-  // space required plus the maximum stack required for argument passing.
-  // Since we do not use IonMonkey's MPrepareCall/MPassArg/MCall, we must
-  // manually accumulate, for the entire function, the maximum required stack
-  // space for argument passing. (This is passed to the CodeGenerator via
-  // MIRGenerator::maxWasmStackArgBytes.) Naively, this would just be the
-  // maximum of the stack space required for each individual call (as
-  // determined by the call ABI). However, as an optimization, arguments are
-  // stored to the stack immediately after evaluation (to decrease live
-  // ranges and reduce spilling). This introduces the complexity that,
-  // between evaluating an argument and making the call, another argument
-  // evaluation could perform a call that also needs to store to the stack.
-  // When this occurs childClobbers_ = true and the parent expression's
-  // arguments are stored above the maximum depth clobbered by a child
-  // expression.
-
-  bool startCall(CallCompileState* call) {
-    // Always push calls to maintain the invariant that if we're inDeadCode
-    // in finishCall, we have something to pop.
-    return callStack_.append(call);
-  }
-
-  bool passInstance(CallCompileState* args) {
-    if (inDeadCode()) {
-      return true;
-||||||| merged common ancestors
-    void addInterruptCheck()
-    {
-        if (inDeadCode()) {
-            return;
-        }
-        curBlock_->add(MWasmInterruptCheck::New(alloc(), tlsPointer_, bytecodeOffset()));
-    }
-
-    /***************************************************************** Calls */
-
-    // The IonMonkey backend maintains a single stack offset (from the stack
-    // pointer to the base of the frame) by adding the total amount of spill
-    // space required plus the maximum stack required for argument passing.
-    // Since we do not use IonMonkey's MPrepareCall/MPassArg/MCall, we must
-    // manually accumulate, for the entire function, the maximum required stack
-    // space for argument passing. (This is passed to the CodeGenerator via
-    // MIRGenerator::maxWasmStackArgBytes.) Naively, this would just be the
-    // maximum of the stack space required for each individual call (as
-    // determined by the call ABI). However, as an optimization, arguments are
-    // stored to the stack immediately after evaluation (to decrease live
-    // ranges and reduce spilling). This introduces the complexity that,
-    // between evaluating an argument and making the call, another argument
-    // evaluation could perform a call that also needs to store to the stack.
-    // When this occurs childClobbers_ = true and the parent expression's
-    // arguments are stored above the maximum depth clobbered by a child
-    // expression.
-
-    bool startCall(CallCompileState* call)
-    {
-        // Always push calls to maintain the invariant that if we're inDeadCode
-        // in finishCall, we have something to pop.
-        return callStack_.append(call);
-=======
   MInstruction* storeGlobalVar(uint32_t globalDataOffset, bool isIndirect,
                                MDefinition* v) {
     if (inDeadCode()) {
@@ -2168,38 +904,13 @@ class FunctionCompiler {
   void addInterruptCheck() {
     if (inDeadCode()) {
       return;
->>>>>>> upstream-releases
     }
     curBlock_->add(
         MWasmInterruptCheck::New(alloc(), tlsPointer_, bytecodeOffset()));
   }
 
-<<<<<<< HEAD
-    // Should only pass an instance once.
-    MOZ_ASSERT(args->instanceArg_ == ABIArg());
-    args->instanceArg_ = args->abi_.next(MIRType::Pointer);
-    return true;
-  }
-||||||| merged common ancestors
-    bool passInstance(CallCompileState* args)
-    {
-        if (inDeadCode()) {
-            return true;
-        }
-=======
   /***************************************************************** Calls */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool passArg(MDefinition* argDef, ValType type, CallCompileState* call) {
-    if (inDeadCode()) {
-      return true;
-||||||| merged common ancestors
-        // Should only pass an instance once.
-        MOZ_ASSERT(args->instanceArg_ == ABIArg());
-        args->instanceArg_ = args->abi_.next(MIRType::Pointer);
-        return true;
-=======
   // The IonMonkey backend maintains a single stack offset (from the stack
   // pointer to the base of the frame) by adding the total amount of spill
   // space required plus the maximum stack required for argument passing.
@@ -2215,22 +926,8 @@ class FunctionCompiler {
   bool passInstance(MIRType instanceType, CallCompileState* args) {
     if (inDeadCode()) {
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    ABIArg arg = call->abi_.next(ToMIRType(type));
-    switch (arg.kind()) {
-||||||| merged common ancestors
-    bool passArg(MDefinition* argDef, ValType type, CallCompileState* call)
-    {
-        if (inDeadCode()) {
-            return true;
-        }
-
-        ABIArg arg = call->abi_.next(ToMIRType(type));
-        switch (arg.kind()) {
-=======
     // Should only pass an instance once.  And it must be a non-GC pointer.
     MOZ_ASSERT(args->instanceArg_ == ABIArg());
     MOZ_ASSERT(instanceType == MIRType::Pointer);
@@ -2243,7 +940,6 @@ class FunctionCompiler {
                      CallCompileState* call) {
     ABIArg arg = call->abi_.next(type);
     switch (arg.kind()) {
->>>>>>> upstream-releases
 #ifdef JS_CODEGEN_REGISTER_PAIR
       case ABIArg::GPR_PAIR: {
         auto mirLow =
@@ -2258,54 +954,6 @@ class FunctionCompiler {
                    MWasmCall::Arg(AnyRegister(arg.gpr64().high), mirHigh));
       }
 #endif
-<<<<<<< HEAD
-      case ABIArg::GPR:
-      case ABIArg::FPU:
-        return call->regArgs_.append(MWasmCall::Arg(arg.reg(), argDef));
-      case ABIArg::Stack: {
-        auto* mir =
-            MWasmStackArg::New(alloc(), arg.offsetFromArgBase(), argDef);
-        curBlock_->add(mir);
-        return call->stackArgs_.append(mir);
-      }
-      case ABIArg::Uninitialized:
-        MOZ_ASSERT_UNREACHABLE("Uninitialized ABIArg kind");
-    }
-    MOZ_CRASH("Unknown ABIArg kind.");
-  }
-
-  void propagateMaxStackArgBytes(uint32_t stackBytes) {
-    if (callStack_.empty()) {
-      // Outermost call
-      maxStackArgBytes_ = Max(maxStackArgBytes_, stackBytes);
-      return;
-    }
-
-    // Non-outermost call
-    CallCompileState* outer = callStack_.back();
-    outer->maxChildStackBytes_ = Max(outer->maxChildStackBytes_, stackBytes);
-    if (stackBytes && !outer->stackArgs_.empty()) {
-      outer->childClobbers_ = true;
-    }
-  }
-
-  bool finishCall(CallCompileState* call) {
-    MOZ_ALWAYS_TRUE(callStack_.popCopy() == call);
-||||||| merged common ancestors
-          case ABIArg::GPR:
-          case ABIArg::FPU:
-            return call->regArgs_.append(MWasmCall::Arg(arg.reg(), argDef));
-          case ABIArg::Stack: {
-            auto* mir = MWasmStackArg::New(alloc(), arg.offsetFromArgBase(), argDef);
-            curBlock_->add(mir);
-            return call->stackArgs_.append(mir);
-          }
-          case ABIArg::Uninitialized:
-            MOZ_ASSERT_UNREACHABLE("Uninitialized ABIArg kind");
-        }
-        MOZ_CRASH("Unknown ABIArg kind.");
-    }
-=======
       case ABIArg::GPR:
       case ABIArg::FPU:
         return call->regArgs_.append(MWasmCall::Arg(arg.reg(), argDef));
@@ -2320,141 +968,37 @@ class FunctionCompiler {
     }
     MOZ_CRASH("Unknown ABIArg kind.");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (inDeadCode()) {
-      propagateMaxStackArgBytes(call->maxChildStackBytes_);
-      return true;
-    }
-||||||| merged common ancestors
-    void propagateMaxStackArgBytes(uint32_t stackBytes)
-    {
-        if (callStack_.empty()) {
-            // Outermost call
-            maxStackArgBytes_ = Max(maxStackArgBytes_, stackBytes);
-            return;
-        }
-=======
   bool passArg(MDefinition* argDef, MIRType type, CallCompileState* call) {
     if (inDeadCode()) {
       return true;
     }
     return passArgWorker(argDef, type, call);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (!call->regArgs_.append(
-            MWasmCall::Arg(AnyRegister(WasmTlsReg), tlsPointer_))) {
-      return false;
-||||||| merged common ancestors
-        // Non-outermost call
-        CallCompileState* outer = callStack_.back();
-        outer->maxChildStackBytes_ = Max(outer->maxChildStackBytes_, stackBytes);
-        if (stackBytes && !outer->stackArgs_.empty()) {
-            outer->childClobbers_ = true;
-        }
-=======
   bool passArg(MDefinition* argDef, ValType type, CallCompileState* call) {
     if (inDeadCode()) {
       return true;
->>>>>>> upstream-releases
     }
     return passArgWorker(argDef, ToMIRType(type), call);
   }
 
-<<<<<<< HEAD
-    uint32_t stackBytes = call->abi_.stackBytesConsumedSoFar();
-    if (call->childClobbers_) {
-      call->spIncrement_ =
-          AlignBytes(call->maxChildStackBytes_, WasmStackAlignment);
-      for (MWasmStackArg* stackArg : call->stackArgs_) {
-        stackArg->incrementOffset(call->spIncrement_);
-      }
-||||||| merged common ancestors
-    bool finishCall(CallCompileState* call)
-    {
-        MOZ_ALWAYS_TRUE(callStack_.popCopy() == call);
-=======
   bool finishCall(CallCompileState* call) {
     if (inDeadCode()) {
       return true;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // If instanceArg_ is not initialized then
-      // instanceArg_.kind() != ABIArg::Stack
-      if (call->instanceArg_.kind() == ABIArg::Stack) {
-        call->instanceArg_ =
-            ABIArg(call->instanceArg_.offsetFromArgBase() + call->spIncrement_);
-      }
-||||||| merged common ancestors
-        if (inDeadCode()) {
-            propagateMaxStackArgBytes(call->maxChildStackBytes_);
-            return true;
-        }
-=======
     if (!call->regArgs_.append(
             MWasmCall::Arg(AnyRegister(WasmTlsReg), tlsPointer_))) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      stackBytes += call->spIncrement_;
-    } else {
-      call->spIncrement_ = 0;
-      stackBytes = Max(stackBytes, call->maxChildStackBytes_);
-    }
-||||||| merged common ancestors
-        if (!call->regArgs_.append(MWasmCall::Arg(AnyRegister(WasmTlsReg), tlsPointer_))) {
-            return false;
-        }
-=======
     uint32_t stackBytes = call->abi_.stackBytesConsumedSoFar();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    propagateMaxStackArgBytes(stackBytes);
-    return true;
-  }
-||||||| merged common ancestors
-        uint32_t stackBytes = call->abi_.stackBytesConsumedSoFar();
-        if (call->childClobbers_) {
-            call->spIncrement_ = AlignBytes(call->maxChildStackBytes_, WasmStackAlignment);
-            for (MWasmStackArg* stackArg : call->stackArgs_) {
-                stackArg->incrementOffset(call->spIncrement_);
-            }
-
-            // If instanceArg_ is not initialized then instanceArg_.kind() != ABIArg::Stack
-            if (call->instanceArg_.kind() == ABIArg::Stack) {
-                call->instanceArg_ = ABIArg(call->instanceArg_.offsetFromArgBase() +
-                                            call->spIncrement_);
-            }
-
-            stackBytes += call->spIncrement_;
-        } else {
-            call->spIncrement_ = 0;
-            stackBytes = Max(stackBytes, call->maxChildStackBytes_);
-        }
-=======
     maxStackArgBytes_ = Max(maxStackArgBytes_, stackBytes);
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool callDirect(const FuncType& funcType, uint32_t funcIndex,
-                  const CallCompileState& call, MDefinition** def) {
-    if (inDeadCode()) {
-      *def = nullptr;
-      return true;
-||||||| merged common ancestors
-        propagateMaxStackArgBytes(stackBytes);
-        return true;
-=======
   // Wrappers for creating various kinds of calls.
 
   bool callDirect(const FuncType& funcType, uint32_t funcIndex,
@@ -2463,27 +1007,8 @@ class FunctionCompiler {
     if (inDeadCode()) {
       *def = nullptr;
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    CallSiteDesc desc(call.lineOrBytecode_, CallSiteDesc::Func);
-    MIRType ret = ToMIRType(funcType.ret());
-    auto callee = CalleeDesc::function(funcIndex);
-    auto* ins = MWasmCall::New(alloc(), desc, callee, call.regArgs_, ret,
-                               call.spIncrement_);
-    if (!ins) {
-      return false;
-    }
-||||||| merged common ancestors
-    bool callDirect(const FuncType& funcType, uint32_t funcIndex, const CallCompileState& call,
-                    MDefinition** def)
-    {
-        if (inDeadCode()) {
-            *def = nullptr;
-            return true;
-        }
-=======
     CallSiteDesc desc(lineOrBytecode, CallSiteDesc::Func);
     MIRType ret = ToMIRType(funcType.ret());
     auto callee = CalleeDesc::function(funcIndex);
@@ -2492,32 +1017,18 @@ class FunctionCompiler {
     if (!ins) {
       return false;
     }
->>>>>>> upstream-releases
 
     curBlock_->add(ins);
     *def = ins;
     return true;
   }
 
-<<<<<<< HEAD
-  bool callIndirect(uint32_t funcTypeIndex, uint32_t tableIndex,
-                    MDefinition* index, const CallCompileState& call,
-                    MDefinition** def) {
-    if (inDeadCode()) {
-      *def = nullptr;
-      return true;
-||||||| merged common ancestors
-        curBlock_->add(ins);
-        *def = ins;
-        return true;
-=======
   bool callIndirect(uint32_t funcTypeIndex, uint32_t tableIndex,
                     MDefinition* index, uint32_t lineOrBytecode,
                     const CallCompileState& call, MDefinition** def) {
     if (inDeadCode()) {
       *def = nullptr;
       return true;
->>>>>>> upstream-releases
     }
 
     const FuncTypeWithId& funcType = env_.types[funcTypeIndex].funcType();
@@ -2544,23 +1055,6 @@ class FunctionCompiler {
       callee = CalleeDesc::wasmTable(table, funcType.id);
     }
 
-<<<<<<< HEAD
-    CallSiteDesc desc(call.lineOrBytecode_, CallSiteDesc::Dynamic);
-    auto* ins =
-        MWasmCall::New(alloc(), desc, callee, call.regArgs_,
-                       ToMIRType(funcType.ret()), call.spIncrement_, index);
-    if (!ins) {
-      return false;
-    }
-||||||| merged common ancestors
-    bool callImport(unsigned globalDataOffset, const CallCompileState& call, ExprType ret,
-                    MDefinition** def)
-    {
-        if (inDeadCode()) {
-            *def = nullptr;
-            return true;
-        }
-=======
     CallSiteDesc desc(lineOrBytecode, CallSiteDesc::Dynamic);
     auto* ins = MWasmCall::New(
         alloc(), desc, callee, call.regArgs_, ToMIRType(funcType.ret()),
@@ -2568,50 +1062,20 @@ class FunctionCompiler {
     if (!ins) {
       return false;
     }
->>>>>>> upstream-releases
 
     curBlock_->add(ins);
     *def = ins;
     return true;
   }
 
-<<<<<<< HEAD
-  bool callImport(unsigned globalDataOffset, const CallCompileState& call,
-                  ExprType ret, MDefinition** def) {
-    if (inDeadCode()) {
-      *def = nullptr;
-      return true;
-||||||| merged common ancestors
-        curBlock_->add(ins);
-        *def = ins;
-        return true;
-=======
   bool callImport(unsigned globalDataOffset, uint32_t lineOrBytecode,
                   const CallCompileState& call, const FuncType& funcType,
                   MDefinition** def) {
     if (inDeadCode()) {
       *def = nullptr;
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    CallSiteDesc desc(call.lineOrBytecode_, CallSiteDesc::Dynamic);
-    auto callee = CalleeDesc::import(globalDataOffset);
-    auto* ins = MWasmCall::New(alloc(), desc, callee, call.regArgs_,
-                               ToMIRType(ret), call.spIncrement_);
-    if (!ins) {
-      return false;
-    }
-||||||| merged common ancestors
-    bool builtinCall(SymbolicAddress builtin, const CallCompileState& call, ValType ret,
-                     MDefinition** def)
-    {
-        if (inDeadCode()) {
-            *def = nullptr;
-            return true;
-        }
-=======
     CallSiteDesc desc(lineOrBytecode, CallSiteDesc::Dynamic);
     auto callee = CalleeDesc::import(globalDataOffset);
     auto* ins = MWasmCall::New(alloc(), desc, callee, call.regArgs_,
@@ -2620,67 +1084,22 @@ class FunctionCompiler {
     if (!ins) {
       return false;
     }
->>>>>>> upstream-releases
 
     curBlock_->add(ins);
     *def = ins;
     return true;
   }
 
-<<<<<<< HEAD
-  bool builtinCall(SymbolicAddress builtin, const CallCompileState& call,
-                   ValType ret, MDefinition** def) {
-    if (inDeadCode()) {
-      *def = nullptr;
-      return true;
-||||||| merged common ancestors
-        curBlock_->add(ins);
-        *def = ins;
-        return true;
-=======
   bool builtinCall(const SymbolicAddressSignature& builtin,
                    uint32_t lineOrBytecode, const CallCompileState& call,
                    MDefinition** def) {
     if (inDeadCode()) {
       *def = nullptr;
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    CallSiteDesc desc(call.lineOrBytecode_, CallSiteDesc::Symbolic);
-    auto callee = CalleeDesc::builtin(builtin);
-    auto* ins = MWasmCall::New(alloc(), desc, callee, call.regArgs_,
-                               ToMIRType(ret), call.spIncrement_);
-    if (!ins) {
-      return false;
-    }
-||||||| merged common ancestors
-    bool builtinInstanceMethodCall(SymbolicAddress builtin, const CallCompileState& call,
-                                   ValType ret, MDefinition** def)
-    {
-        if (inDeadCode()) {
-            *def = nullptr;
-            return true;
-        }
-=======
     MOZ_ASSERT(builtin.failureMode == FailureMode::Infallible);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    curBlock_->add(ins);
-    *def = ins;
-    return true;
-  }
-||||||| merged common ancestors
-        CallSiteDesc desc(call.lineOrBytecode_, CallSiteDesc::Symbolic);
-        auto* ins = MWasmCall::NewBuiltinInstanceMethodCall(alloc(), desc, builtin,
-                                                            call.instanceArg_, call.regArgs_,
-                                                            ToMIRType(ret), call.spIncrement_);
-        if (!ins) {
-            return false;
-        }
-=======
     CallSiteDesc desc(lineOrBytecode, CallSiteDesc::Symbolic);
     auto callee = CalleeDesc::builtin(builtin.identity);
     auto* ins =
@@ -2689,20 +1108,7 @@ class FunctionCompiler {
     if (!ins) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool builtinInstanceMethodCall(SymbolicAddress builtin,
-                                 const CallCompileState& call, ValType ret,
-                                 MDefinition** def) {
-    if (inDeadCode()) {
-      *def = nullptr;
-      return true;
-||||||| merged common ancestors
-        curBlock_->add(ins);
-        *def = ins;
-        return true;
-=======
     curBlock_->add(ins);
     *def = ins;
     return true;
@@ -2718,22 +1124,8 @@ class FunctionCompiler {
         *def = nullptr;
       }
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    CallSiteDesc desc(call.lineOrBytecode_, CallSiteDesc::Symbolic);
-    auto* ins = MWasmCall::NewBuiltinInstanceMethodCall(
-        alloc(), desc, builtin, call.instanceArg_, call.regArgs_,
-        ToMIRType(ret), call.spIncrement_);
-    if (!ins) {
-      return false;
-||||||| merged common ancestors
-    /*********************************************** Control flow generation */
-
-    inline bool inDeadCode() const {
-        return curBlock_ == nullptr;
-=======
     CallSiteDesc desc(lineOrBytecode, CallSiteDesc::Symbolic);
     auto* ins = MWasmCall::NewBuiltinInstanceMethodCall(
         alloc(), desc, builtin.identity, builtin.failureMode, call.instanceArg_,
@@ -2745,31 +1137,13 @@ class FunctionCompiler {
     curBlock_->add(ins);
     if (def) {
       *def = ins;
->>>>>>> upstream-releases
     }
     return true;
   }
 
-<<<<<<< HEAD
-    curBlock_->add(ins);
-    *def = ins;
-    return true;
-  }
-
   /*********************************************** Control flow generation */
 
   inline bool inDeadCode() const { return curBlock_ == nullptr; }
-||||||| merged common ancestors
-    void returnExpr(MDefinition* operand)
-    {
-        if (inDeadCode()) {
-            return;
-        }
-=======
-  /*********************************************** Control flow generation */
-
-  inline bool inDeadCode() const { return curBlock_ == nullptr; }
->>>>>>> upstream-releases
 
   void returnExpr(MDefinition* operand) {
     if (inDeadCode()) {
@@ -3426,7 +1800,6 @@ static bool EmitElse(FunctionCompiler& f) {
   return true;
 }
 
-<<<<<<< HEAD
 static bool EmitEnd(FunctionCompiler& f) {
   LabelKind kind;
   ExprType type;
@@ -3438,123 +1811,11 @@ static bool EmitEnd(FunctionCompiler& f) {
   MBasicBlock* block = f.iter().controlItem();
 
   f.iter().popEnd();
-||||||| merged common ancestors
-static bool
-EmitEnd(FunctionCompiler& f)
-{
-    LabelKind kind;
-    ExprType type;
-    MDefinition* value;
-    if (!f.iter().readEnd(&kind, &type, &value)) {
-        return false;
-    }
 
-    MBasicBlock* block = f.iter().controlItem();
-
-    f.iter().popEnd();
-=======
-static bool EmitEnd(FunctionCompiler& f) {
-  LabelKind kind;
-  ExprType type;
-  MDefinition* value;
-  if (!f.iter().readEnd(&kind, &type, &value)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (!IsVoid(type)) {
     f.pushDef(value);
   }
-||||||| merged common ancestors
-    if (!IsVoid(type)) {
-        f.pushDef(value);
-    }
-=======
-  MBasicBlock* block = f.iter().controlItem();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* def = nullptr;
-  switch (kind) {
-    case LabelKind::Block:
-      if (!f.finishBlock(&def)) {
-        return false;
-      }
-      break;
-    case LabelKind::Loop:
-      if (!f.closeLoop(block, &def)) {
-        return false;
-      }
-      break;
-    case LabelKind::Then:
-      // If we didn't see an Else, create a trivial else block so that we create
-      // a diamond anyway, to preserve Ion invariants.
-      if (!f.switchToElse(block, &block)) {
-        return false;
-      }
-||||||| merged common ancestors
-    MDefinition* def = nullptr;
-    switch (kind) {
-      case LabelKind::Block:
-        if (!f.finishBlock(&def)) {
-            return false;
-        }
-        break;
-      case LabelKind::Loop:
-        if (!f.closeLoop(block, &def)) {
-            return false;
-        }
-        break;
-      case LabelKind::Then:
-        // If we didn't see an Else, create a trivial else block so that we create
-        // a diamond anyway, to preserve Ion invariants.
-        if (!f.switchToElse(block, &block)) {
-            return false;
-        }
-=======
-  f.iter().popEnd();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      if (!f.joinIfElse(block, &def)) {
-        return false;
-      }
-      break;
-    case LabelKind::Else:
-      if (!f.joinIfElse(block, &def)) {
-        return false;
-      }
-      break;
-  }
-||||||| merged common ancestors
-        if (!f.joinIfElse(block, &def)) {
-            return false;
-        }
-        break;
-      case LabelKind::Else:
-        if (!f.joinIfElse(block, &def)) {
-            return false;
-        }
-        break;
-    }
-=======
-  if (!IsVoid(type)) {
-    f.pushDef(value);
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!IsVoid(type)) {
-    MOZ_ASSERT_IF(!f.inDeadCode(), def);
-    f.iter().setResult(def);
-  }
-||||||| merged common ancestors
-    if (!IsVoid(type)) {
-        MOZ_ASSERT_IF(!f.inDeadCode(), def);
-        f.iter().setResult(def);
-    }
-=======
   MDefinition* def = nullptr;
   switch (kind) {
     case LabelKind::Body:
@@ -3600,7 +1861,6 @@ static bool EmitEnd(FunctionCompiler& f) {
     MOZ_ASSERT_IF(!f.inDeadCode(), def);
     f.iter().setResult(def);
   }
->>>>>>> upstream-releases
 
   return true;
 }
@@ -3613,20 +1873,6 @@ static bool EmitBr(FunctionCompiler& f) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (IsVoid(type)) {
-    if (!f.br(relativeDepth, nullptr)) {
-      return false;
-||||||| merged common ancestors
-    if (IsVoid(type)) {
-        if (!f.br(relativeDepth, nullptr)) {
-            return false;
-        }
-    } else {
-        if (!f.br(relativeDepth, value)) {
-            return false;
-        }
-=======
   if (IsVoid(type)) {
     if (!f.br(relativeDepth, nullptr)) {
       return false;
@@ -3634,18 +1880,8 @@ static bool EmitBr(FunctionCompiler& f) {
   } else {
     if (!f.br(relativeDepth, value)) {
       return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } else {
-    if (!f.br(relativeDepth, value)) {
-      return false;
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   return true;
 }
@@ -3659,20 +1895,6 @@ static bool EmitBrIf(FunctionCompiler& f) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (IsVoid(type)) {
-    if (!f.brIf(relativeDepth, nullptr, condition)) {
-      return false;
-||||||| merged common ancestors
-    if (IsVoid(type)) {
-        if (!f.brIf(relativeDepth, nullptr, condition)) {
-            return false;
-        }
-    } else {
-        if (!f.brIf(relativeDepth, value, condition)) {
-            return false;
-        }
-=======
   if (IsVoid(type)) {
     if (!f.brIf(relativeDepth, nullptr, condition)) {
       return false;
@@ -3680,18 +1902,8 @@ static bool EmitBrIf(FunctionCompiler& f) {
   } else {
     if (!f.brIf(relativeDepth, value, condition)) {
       return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } else {
-    if (!f.brIf(relativeDepth, value, condition)) {
-      return false;
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   return true;
 }
@@ -3751,33 +1963,6 @@ static bool EmitUnreachable(FunctionCompiler& f) {
 
 typedef IonOpIter::ValueVector DefVector;
 
-<<<<<<< HEAD
-static bool EmitCallArgs(FunctionCompiler& f, const FuncType& funcType,
-                         const DefVector& args, CallCompileState* call) {
-  if (!f.startCall(call)) {
-    return false;
-  }
-
-  for (size_t i = 0, n = funcType.args().length(); i < n; ++i) {
-    if (!f.mirGen().ensureBallast()) {
-      return false;
-||||||| merged common ancestors
-static bool
-EmitCallArgs(FunctionCompiler& f, const FuncType& funcType, const DefVector& args,
-             CallCompileState* call)
-{
-    if (!f.startCall(call)) {
-        return false;
-    }
-
-    for (size_t i = 0, n = funcType.args().length(); i < n; ++i) {
-        if (!f.mirGen().ensureBallast()) {
-            return false;
-        }
-        if (!f.passArg(args[i], funcType.args()[i], call)) {
-            return false;
-        }
-=======
 static bool EmitCallArgs(FunctionCompiler& f, const FuncType& funcType,
                          const DefVector& args, CallCompileState* call) {
   for (size_t i = 0, n = funcType.args().length(); i < n; ++i) {
@@ -3786,17 +1971,8 @@ static bool EmitCallArgs(FunctionCompiler& f, const FuncType& funcType,
     }
     if (!f.passArg(args[i], funcType.args()[i], call)) {
       return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (!f.passArg(args[i], funcType.args()[i], call)) {
-      return false;
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   return f.finishCall(call);
 }
@@ -3823,44 +1999,11 @@ static bool EmitCall(FunctionCompiler& f, bool asmJSFuncDef) {
 
   const FuncType& funcType = *f.env().funcTypes[funcIndex];
 
-<<<<<<< HEAD
-  CallCompileState call(f, lineOrBytecode);
-  if (!EmitCallArgs(f, funcType, args, &call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* def;
-    if (f.env().funcIsImport(funcIndex)) {
-        uint32_t globalDataOffset = f.env().funcImportGlobalDataOffsets[funcIndex];
-        if (!f.callImport(globalDataOffset, call, funcType.ret(), &def)) {
-            return false;
-        }
-    } else {
-        if (!f.callDirect(funcType, funcIndex, call, &def)) {
-            return false;
-        }
-    }
-=======
   CallCompileState call;
   if (!EmitCallArgs(f, funcType, args, &call)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* def;
-  if (f.env().funcIsImport(funcIndex)) {
-    uint32_t globalDataOffset = f.env().funcImportGlobalDataOffsets[funcIndex];
-    if (!f.callImport(globalDataOffset, call, funcType.ret(), &def)) {
-      return false;
-    }
-  } else {
-    if (!f.callDirect(funcType, funcIndex, call, &def)) {
-      return false;
-||||||| merged common ancestors
-    if (IsVoid(funcType.ret())) {
-        return true;
-=======
   MDefinition* def;
   if (f.env().funcIsImport(funcIndex)) {
     uint32_t globalDataOffset = f.env().funcImportGlobalDataOffsets[funcIndex];
@@ -3870,7 +2013,6 @@ static bool EmitCall(FunctionCompiler& f, bool asmJSFuncDef) {
   } else {
     if (!f.callDirect(funcType, funcIndex, lineOrBytecode, call, &def)) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
@@ -3907,69 +2049,25 @@ static bool EmitCallIndirect(FunctionCompiler& f, bool oldStyle) {
 
   const FuncType& funcType = f.env().types[funcTypeIndex].funcType();
 
-<<<<<<< HEAD
-  CallCompileState call(f, lineOrBytecode);
-  if (!EmitCallArgs(f, funcType, args, &call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* def;
-    if (!f.callIndirect(funcTypeIndex, callee, call, &def)) {
-        return false;
-    }
-=======
   CallCompileState call;
   if (!EmitCallArgs(f, funcType, args, &call)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* def;
-  if (!f.callIndirect(funcTypeIndex, tableIndex, callee, call, &def)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (IsVoid(funcType.ret())) {
-        return true;
-    }
-=======
   MDefinition* def;
   if (!f.callIndirect(funcTypeIndex, tableIndex, callee, lineOrBytecode, call,
                       &def)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (IsVoid(funcType.ret())) {
     return true;
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-}
-=======
   }
 
   f.iter().setResult(def);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  f.iter().setResult(def);
-  return true;
-||||||| merged common ancestors
-static bool
-EmitGetLocal(FunctionCompiler& f)
-{
-    uint32_t id;
-    if (!f.iter().readGetLocal(f.locals(), &id)) {
-        return false;
-    }
-
-    f.iter().setResult(f.getLocalDef(id));
-    return true;
-=======
 static bool EmitGetLocal(FunctionCompiler& f) {
   uint32_t id;
   if (!f.iter().readGetLocal(f.locals(), &id)) {
@@ -3978,97 +2076,30 @@ static bool EmitGetLocal(FunctionCompiler& f) {
 
   f.iter().setResult(f.getLocalDef(id));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool EmitGetLocal(FunctionCompiler& f) {
-  uint32_t id;
-  if (!f.iter().readGetLocal(f.locals(), &id)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitSetLocal(FunctionCompiler& f)
-{
-    uint32_t id;
-    MDefinition* value;
-    if (!f.iter().readSetLocal(f.locals(), &id, &value)) {
-        return false;
-    }
-=======
 static bool EmitSetLocal(FunctionCompiler& f) {
   uint32_t id;
   MDefinition* value;
   if (!f.iter().readSetLocal(f.locals(), &id, &value)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  f.iter().setResult(f.getLocalDef(id));
-  return true;
-||||||| merged common ancestors
-    f.assign(id, value);
-    return true;
-=======
   f.assign(id, value);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool EmitSetLocal(FunctionCompiler& f) {
-  uint32_t id;
-  MDefinition* value;
-  if (!f.iter().readSetLocal(f.locals(), &id, &value)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitTeeLocal(FunctionCompiler& f)
-{
-    uint32_t id;
-    MDefinition* value;
-    if (!f.iter().readTeeLocal(f.locals(), &id, &value)) {
-        return false;
-    }
-=======
 static bool EmitTeeLocal(FunctionCompiler& f) {
   uint32_t id;
   MDefinition* value;
   if (!f.iter().readTeeLocal(f.locals(), &id, &value)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.assign(id, value);
   return true;
 }
 
-<<<<<<< HEAD
-static bool EmitTeeLocal(FunctionCompiler& f) {
-  uint32_t id;
-  MDefinition* value;
-  if (!f.iter().readTeeLocal(f.locals(), &id, &value)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitGetGlobal(FunctionCompiler& f)
-{
-    uint32_t id;
-    if (!f.iter().readGetGlobal(&id)) {
-        return false;
-    }
-
-    const GlobalDesc& global = f.env().globals[id];
-    if (!global.isConstant()) {
-        f.iter().setResult(f.loadGlobalVar(global.offset(), !global.isMutable(),
-                                           global.isIndirect(), ToMIRType(global.type())));
-        return true;
-    }
-=======
 static bool EmitGetGlobal(FunctionCompiler& f) {
   uint32_t id;
   if (!f.iter().readGetGlobal(&id)) {
@@ -4112,113 +2143,21 @@ static bool EmitGetGlobal(FunctionCompiler& f) {
   f.iter().setResult(result);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  f.assign(id, value);
-  return true;
-}
-||||||| merged common ancestors
-    LitVal value = global.constantValue();
-    MIRType mirType = ToMIRType(value.type());
-=======
 static bool EmitSetGlobal(FunctionCompiler& f) {
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool EmitGetGlobal(FunctionCompiler& f) {
-  uint32_t id;
-  if (!f.iter().readGetGlobal(&id)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* result;
-    switch (value.type().code()) {
-      case ValType::I32:
-        result = f.constant(Int32Value(value.i32()), mirType);
-        break;
-      case ValType::I64:
-        result = f.constant(int64_t(value.i64()));
-        break;
-      case ValType::F32:
-        result = f.constant(value.f32());
-        break;
-      case ValType::F64:
-        result = f.constant(value.f64());
-        break;
-      default:
-        MOZ_CRASH("unexpected type in EmitGetGlobal");
-    }
-=======
   uint32_t id;
   MDefinition* value;
   if (!f.iter().readSetGlobal(&id, &value)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const GlobalDesc& global = f.env().globals[id];
-  if (!global.isConstant()) {
-    f.iter().setResult(f.loadGlobalVar(global.offset(), !global.isMutable(),
-                                       global.isIndirect(),
-                                       ToMIRType(global.type())));
-    return true;
-  }
-
-  LitVal value = global.constantValue();
-  MIRType mirType = ToMIRType(value.type());
-
-  MDefinition* result;
-  switch (value.type().code()) {
-    case ValType::I32:
-      result = f.constant(Int32Value(value.i32()), mirType);
-      break;
-    case ValType::I64:
-      result = f.constant(int64_t(value.i64()));
-      break;
-    case ValType::F32:
-      result = f.constant(value.f32());
-      break;
-    case ValType::F64:
-      result = f.constant(value.f64());
-      break;
-    default:
-      MOZ_CRASH("unexpected type in EmitGetGlobal");
-  }
-
-  f.iter().setResult(result);
-  return true;
-}
-||||||| merged common ancestors
-    f.iter().setResult(result);
-    return true;
-}
-=======
   const GlobalDesc& global = f.env().globals[id];
   MOZ_ASSERT(global.isMutable());
   MInstruction* barrierAddr =
       f.storeGlobalVar(global.offset(), global.isIndirect(), value);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool EmitSetGlobal(FunctionCompiler& f) {
-  uint32_t id;
-  MDefinition* value;
-  if (!f.iter().readSetGlobal(&id, &value)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitSetGlobal(FunctionCompiler& f)
-{
-    uint32_t id;
-    MDefinition* value;
-    if (!f.iter().readSetGlobal(&id, &value)) {
-        return false;
-    }
-=======
   // We always call the C++ postbarrier because the location will never be in
   // the nursery, and the value stored will very frequently be in the nursery.
   // The C++ postbarrier performs any necessary filtering.
@@ -4237,21 +2176,8 @@ EmitSetGlobal(FunctionCompiler& f)
       return false;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const GlobalDesc& global = f.env().globals[id];
-  MOZ_ASSERT(global.isMutable());
-  f.storeGlobalVar(global.offset(), global.isIndirect(), value);
   return true;
-||||||| merged common ancestors
-    const GlobalDesc& global = f.env().globals[id];
-    MOZ_ASSERT(global.isMutable());
-    f.storeGlobalVar(global.offset(), global.isIndirect(), value);
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
 static bool EmitTeeGlobal(FunctionCompiler& f) {
@@ -4625,151 +2551,46 @@ static bool TryInlineUnaryBuiltin(FunctionCompiler& f, SymbolicAddress callee,
   return true;
 }
 
-<<<<<<< HEAD
-static bool EmitUnaryMathBuiltinCall(FunctionCompiler& f,
-                                     SymbolicAddress callee,
-                                     ValType operandType) {
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-||||||| merged common ancestors
-static bool
-EmitUnaryMathBuiltinCall(FunctionCompiler& f, SymbolicAddress callee, ValType operandType)
-{
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-=======
 static bool EmitUnaryMathBuiltinCall(FunctionCompiler& f,
                                      const SymbolicAddressSignature& callee) {
   MOZ_ASSERT(callee.numArgs == 1);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* input;
-  if (!f.iter().readUnary(operandType, &input)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* input;
-    if (!f.iter().readUnary(operandType, &input)) {
-        return false;
-    }
-=======
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (TryInlineUnaryBuiltin(f, callee, input)) {
-    return true;
-  }
-||||||| merged common ancestors
-    if (TryInlineUnaryBuiltin(f, callee, input)) {
-        return true;
-    }
-=======
   MDefinition* input;
   if (!f.iter().readUnary(ValType(callee.argTypes[0]), &input)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CallCompileState call(f, lineOrBytecode);
-  if (!f.startCall(&call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState call(f, lineOrBytecode);
-    if (!f.startCall(&call)) {
-        return false;
-    }
-=======
   if (TryInlineUnaryBuiltin(f, callee.identity, input)) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(input, operandType, &call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(input, operandType, &call)) {
-        return false;
-    }
-=======
   CallCompileState call;
   if (!f.passArg(input, callee.argTypes[0], &call)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!f.finishCall(&call)) {
     return false;
   }
 
-<<<<<<< HEAD
-  MDefinition* def;
-  if (!f.builtinCall(callee, call, operandType, &def)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* def;
-    if (!f.builtinCall(callee, call, operandType, &def)) {
-        return false;
-    }
-=======
   MDefinition* def;
   if (!f.builtinCall(callee, lineOrBytecode, call, &def)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.iter().setResult(def);
   return true;
 }
 
-<<<<<<< HEAD
-static bool EmitBinaryMathBuiltinCall(FunctionCompiler& f,
-                                      SymbolicAddress callee,
-                                      ValType operandType) {
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-||||||| merged common ancestors
-static bool
-EmitBinaryMathBuiltinCall(FunctionCompiler& f, SymbolicAddress callee, ValType operandType)
-{
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-=======
 static bool EmitBinaryMathBuiltinCall(FunctionCompiler& f,
                                       const SymbolicAddressSignature& callee) {
   MOZ_ASSERT(callee.numArgs == 2);
   MOZ_ASSERT(callee.argTypes[0] == callee.argTypes[1]);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CallCompileState call(f, lineOrBytecode);
-  if (!f.startCall(&call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState call(f, lineOrBytecode);
-    if (!f.startCall(&call)) {
-        return false;
-    }
-=======
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* lhs;
-  MDefinition* rhs;
-  if (!f.iter().readBinary(operandType, &lhs, &rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* lhs;
-    MDefinition* rhs;
-    if (!f.iter().readBinary(operandType, &lhs, &rhs)) {
-        return false;
-    }
-=======
   CallCompileState call;
   MDefinition* lhs;
   MDefinition* rhs;
@@ -4777,232 +2598,77 @@ static bool EmitBinaryMathBuiltinCall(FunctionCompiler& f,
   if (!f.iter().readBinary(ValType(callee.argTypes[0]), &lhs, &rhs)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(lhs, operandType, &call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(lhs, operandType, &call)) {
-        return false;
-    }
-=======
   if (!f.passArg(lhs, callee.argTypes[0], &call)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(rhs, operandType, &call)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(rhs, operandType, &call)) {
-        return false;
-    }
-=======
   if (!f.passArg(rhs, callee.argTypes[1], &call)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!f.finishCall(&call)) {
     return false;
   }
 
-<<<<<<< HEAD
-  MDefinition* def;
-  if (!f.builtinCall(callee, call, operandType, &def)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* def;
-    if (!f.builtinCall(callee, call, operandType, &def)) {
-        return false;
-    }
-=======
   MDefinition* def;
   if (!f.builtinCall(callee, lineOrBytecode, call, &def)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.iter().setResult(def);
   return true;
 }
 
-<<<<<<< HEAD
-static bool EmitGrowMemory(FunctionCompiler& f) {
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitGrowMemory(FunctionCompiler& f)
-{
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
 static bool EmitMemoryGrow(FunctionCompiler& f) {
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee = SASigMemoryGrow;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* delta;
-  if (!f.iter().readGrowMemory(&delta)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* delta;
-    if (!f.iter().readGrowMemory(&delta)) {
-        return false;
-    }
-=======
   MDefinition* delta;
   if (!f.iter().readMemoryGrow(&delta)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(delta, ValType::I32, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(delta, ValType::I32, &args)) {
-        return false;
-    }
-=======
   if (!f.passArg(delta, callee.argTypes[1], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.finishCall(&args);
 
-<<<<<<< HEAD
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(SymbolicAddress::GrowMemory, args,
-                                   ValType::I32, &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(SymbolicAddress::GrowMemory, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
   MDefinition* ret;
   if (!f.builtinInstanceMethodCall(callee, lineOrBytecode, args, &ret)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.iter().setResult(ret);
   return true;
 }
 
-<<<<<<< HEAD
-static bool EmitCurrentMemory(FunctionCompiler& f) {
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-||||||| merged common ancestors
-static bool
-EmitCurrentMemory(FunctionCompiler& f)
-{
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-=======
 static bool EmitMemorySize(FunctionCompiler& f) {
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-=======
   const SymbolicAddressSignature& callee = SASigMemorySize;
   CallCompileState args;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.iter().readCurrentMemory()) {
-    return false;
-  }
-
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.iter().readCurrentMemory()) {
-        return false;
-    }
-
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   if (!f.iter().readMemorySize()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.finishCall(&args);
 
-<<<<<<< HEAD
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(SymbolicAddress::CurrentMemory, args,
-                                   ValType::I32, &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(SymbolicAddress::CurrentMemory, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
   MDefinition* ret;
   if (!f.builtinInstanceMethodCall(callee, lineOrBytecode, args, &ret)) {
     return false;
   }
->>>>>>> upstream-releases
 
   f.iter().setResult(ret);
   return true;
@@ -5081,50 +2747,18 @@ static bool EmitAtomicStore(FunctionCompiler& f, ValType type,
   return true;
 }
 
-<<<<<<< HEAD
-static bool EmitWait(FunctionCompiler& f, ValType type, uint32_t byteSize) {
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-||||||| merged common ancestors
-static bool
-EmitWait(FunctionCompiler& f, ValType type, uint32_t byteSize)
-{
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-=======
 static bool EmitWait(FunctionCompiler& f, ValType type, uint32_t byteSize) {
   MOZ_ASSERT(type == ValType::I32 || type == ValType::I64);
   MOZ_ASSERT(SizeOf(type) == byteSize);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee =
       type == ValType::I32 ? SASigWaitI32 : SASigWaitI64;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
   LinearMemoryAddress<MDefinition*> addr;
   MDefinition* expected;
@@ -5140,94 +2774,32 @@ static bool EmitWait(FunctionCompiler& f, ValType type, uint32_t byteSize) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (!f.passArg(ptr, ValType::I32, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(ptr, ValType::I32, &args)) {
-        return false;
-    }
-=======
   if (!f.passArg(ptr, callee.argTypes[1], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(expected, type, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(expected, type, &args)) {
-        return false;
-    }
-=======
   MOZ_ASSERT(ToMIRType(type) == callee.argTypes[2]);
   if (!f.passArg(expected, callee.argTypes[2], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(timeout, ValType::I64, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(timeout, ValType::I64, &args)) {
-        return false;
-    }
-=======
   if (!f.passArg(timeout, callee.argTypes[3], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!f.finishCall(&args)) {
     return false;
   }
 
-<<<<<<< HEAD
-  SymbolicAddress callee = type == ValType::I32 ? SymbolicAddress::WaitI32
-                                                : SymbolicAddress::WaitI64;
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    SymbolicAddress callee = type == ValType::I32 ? SymbolicAddress::WaitI32 : SymbolicAddress::WaitI64;
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
   MDefinition* ret;
   if (!f.builtinInstanceMethodCall(callee, lineOrBytecode, args, &ret)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.checkI32NegativeMeansFailedResult(ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.checkI32NegativeMeansFailedResult(ret)) {
-        return false;
-    }
-=======
   f.iter().setResult(ret);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  f.iter().setResult(ret);
-  return true;
-||||||| merged common ancestors
-    f.iter().setResult(ret);
-    return true;
-=======
 static bool EmitWake(FunctionCompiler& f) {
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
 
@@ -5269,18 +2841,8 @@ static bool EmitWake(FunctionCompiler& f) {
 
   f.iter().setResult(ret);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool EmitWake(FunctionCompiler& f) {
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-||||||| merged common ancestors
-static bool
-EmitWake(FunctionCompiler& f)
-{
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-=======
 static bool EmitAtomicXchg(FunctionCompiler& f, ValType type,
                            Scalar::Type viewType) {
   LinearMemoryAddress<MDefinition*> addr;
@@ -5288,54 +2850,18 @@ static bool EmitAtomicXchg(FunctionCompiler& f, ValType type,
   if (!f.iter().readAtomicRMW(&addr, type, byteSize(viewType), &value)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   MemoryAccessDesc access(viewType, addr.align, addr.offset, f.bytecodeOffset(),
                           Synchronization::Full());
   MDefinition* ins = f.atomicExchangeHeap(addr.base, &access, type, value);
   if (!f.inDeadCode() && !ins) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   f.iter().setResult(ins);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  LinearMemoryAddress<MDefinition*> addr;
-  MDefinition* count;
-  if (!f.iter().readWake(&addr, &count)) {
-    return false;
-  }
-||||||| merged common ancestors
-    LinearMemoryAddress<MDefinition*> addr;
-    MDefinition* count;
-    if (!f.iter().readWake(&addr, &count)) {
-        return false;
-    }
-=======
 static bool EmitMemOrTableCopy(FunctionCompiler& f, bool isMem) {
   // Bulk memory must be available if shared memory is enabled.
 #ifndef ENABLE_WASM_BULKMEM_OPS
@@ -5343,22 +2869,7 @@ static bool EmitMemOrTableCopy(FunctionCompiler& f, bool isMem) {
     return f.iter().fail("bulk memory ops disabled");
   }
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MemoryAccessDesc access(Scalar::Int32, addr.align, addr.offset,
-                          f.bytecodeOffset());
-  MDefinition* ptr = f.computeEffectiveAddress(addr.base, &access);
-  if (!f.inDeadCode() && !ptr) {
-    return false;
-  }
-||||||| merged common ancestors
-    MemoryAccessDesc access(Scalar::Int32, addr.align, addr.offset, f.bytecodeOffset());
-    MDefinition* ptr = f.computeEffectiveAddress(addr.base, &access);
-    if (!f.inDeadCode() && !ptr) {
-        return false;
-    }
-=======
   MDefinition *dst, *src, *len;
   uint32_t dstTableIndex;
   uint32_t srcTableIndex;
@@ -5366,71 +2877,20 @@ static bool EmitMemOrTableCopy(FunctionCompiler& f, bool isMem) {
                                    &src, &len)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(ptr, ValType::I32, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(ptr, ValType::I32, &args)) {
-        return false;
-    }
-=======
   if (f.inDeadCode()) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(count, ValType::I32, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(count, ValType::I32, &args)) {
-        return false;
-    }
-=======
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.finishCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.finishCall(&args)) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee =
       isMem ? SASigMemCopy : SASigTableCopy;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(SymbolicAddress::Wake, args, ValType::I32,
-                                   &ret)) {
-    return false;
-  }
-
-  if (!f.checkI32NegativeMeansFailedResult(ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(SymbolicAddress::Wake, args, ValType::I32, &ret)) {
-        return false;
-    }
-
-    if (!f.checkI32NegativeMeansFailedResult(ret)) {
-        return false;
-    }
-=======
   if (!f.passArg(dst, callee.argTypes[1], &args)) {
     return false;
   }
@@ -5462,15 +2922,7 @@ static bool EmitMemOrTableCopy(FunctionCompiler& f, bool isMem) {
 
   return f.builtinInstanceMethodCall(callee, lineOrBytecode, args);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  f.iter().setResult(ret);
-  return true;
-||||||| merged common ancestors
-    f.iter().setResult(ret);
-    return true;
-=======
 static bool EmitDataOrElemDrop(FunctionCompiler& f, bool isData) {
   // Bulk memory must be available if shared memory is enabled.
 #ifndef ENABLE_WASM_BULKMEM_OPS
@@ -5508,27 +2960,8 @@ static bool EmitDataOrElemDrop(FunctionCompiler& f, bool isData) {
   }
 
   return f.builtinInstanceMethodCall(callee, lineOrBytecode, args);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool EmitAtomicXchg(FunctionCompiler& f, ValType type,
-                           Scalar::Type viewType) {
-  LinearMemoryAddress<MDefinition*> addr;
-  MDefinition* value;
-  if (!f.iter().readAtomicRMW(&addr, type, byteSize(viewType), &value)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitAtomicXchg(FunctionCompiler& f, ValType type, Scalar::Type viewType)
-{
-    LinearMemoryAddress<MDefinition*> addr;
-    MDefinition* value;
-    if (!f.iter().readAtomicRMW(&addr, type, byteSize(viewType), &value)) {
-        return false;
-    }
-=======
 static bool EmitMemFill(FunctionCompiler& f) {
   // Bulk memory must be available if shared memory is enabled.
 #ifndef ENABLE_WASM_BULKMEM_OPS
@@ -5536,36 +2969,12 @@ static bool EmitMemFill(FunctionCompiler& f) {
     return f.iter().fail("bulk memory ops disabled");
   }
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MemoryAccessDesc access(viewType, addr.align, addr.offset, f.bytecodeOffset(),
-                          Synchronization::Full());
-  MDefinition* ins = f.atomicExchangeHeap(addr.base, &access, type, value);
-  if (!f.inDeadCode() && !ins) {
-    return false;
-  }
-||||||| merged common ancestors
-    MemoryAccessDesc access(viewType, addr.align, addr.offset, f.bytecodeOffset(),
-                            Synchronization::Full());
-    MDefinition* ins = f.atomicExchangeHeap(addr.base, &access, type, value);
-    if (!f.inDeadCode() && !ins) {
-        return false;
-    }
-=======
   MDefinition *start, *val, *len;
   if (!f.iter().readMemFill(&start, &val, &len)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  f.iter().setResult(ins);
-  return true;
-||||||| merged common ancestors
-    f.iter().setResult(ins);
-    return true;
-=======
   if (f.inDeadCode()) {
     return true;
   }
@@ -5593,31 +3002,8 @@ static bool EmitMemFill(FunctionCompiler& f) {
   }
 
   return f.builtinInstanceMethodCall(callee, lineOrBytecode, args);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#ifdef ENABLE_WASM_BULKMEM_OPS
-static bool EmitMemOrTableCopy(FunctionCompiler& f, bool isMem) {
-  MDefinition *dst, *src, *len;
-  uint32_t dstTableIndex;
-  uint32_t srcTableIndex;
-  if (!f.iter().readMemOrTableCopy(isMem, &dstTableIndex, &dst, &srcTableIndex,
-                                   &src, &len)) {
-    return false;
-  }
-||||||| merged common ancestors
-#endif // ENABLE_WASM_THREAD_OPS
-
-#ifdef ENABLE_WASM_BULKMEM_OPS
-static bool
-EmitMemOrTableCopy(FunctionCompiler& f, bool isMem)
-{
-    MDefinition* dst, *src, *len;
-    if (!f.iter().readMemOrTableCopy(isMem, &dst, &src, &len)) {
-        return false;
-    }
-=======
 static bool EmitMemOrTableInit(FunctionCompiler& f, bool isMem) {
   // Bulk memory must be available if shared memory is enabled.
 #ifndef ENABLE_WASM_BULKMEM_OPS
@@ -5632,52 +3018,20 @@ static bool EmitMemOrTableInit(FunctionCompiler& f, bool isMem) {
                                    &srcOff, &len)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (f.inDeadCode()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (f.inDeadCode()) {
-        return false;
-    }
-=======
   if (f.inDeadCode()) {
     return true;
   }
->>>>>>> upstream-releases
 
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee =
       isMem ? SASigMemInit : SASigTableInit;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   if (!f.passArg(dstOff, callee.argTypes[1], &args)) {
     return false;
   }
@@ -5687,32 +3041,7 @@ static bool EmitMemOrTableInit(FunctionCompiler& f, bool isMem) {
   if (!f.passArg(len, callee.argTypes[3], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(dst, ValType::I32, &args)) {
-    return false;
-  }
-  if (!f.passArg(src, ValType::I32, &args)) {
-    return false;
-  }
-  if (!f.passArg(len, ValType::I32, &args)) {
-    return false;
-  }
-  if (!isMem) {
-    MDefinition* dti = f.constant(Int32Value(dstTableIndex), MIRType::Int32);
-    if (!dti) {
-      return false;
-    }
-    if (!f.passArg(dti, ValType::I32, &args)) {
-      return false;
-||||||| merged common ancestors
-    if (!f.passArg(dst, ValType::I32, &args)) {
-        return false;
-    }
-    if (!f.passArg(src, ValType::I32, &args)) {
-        return false;
-=======
   MDefinition* segIndex =
       f.constant(Int32Value(int32_t(segIndexVal)), MIRType::Int32);
   if (!f.passArg(segIndex, callee.argTypes[4], &args)) {
@@ -5722,34 +3051,10 @@ static bool EmitMemOrTableInit(FunctionCompiler& f, bool isMem) {
     MDefinition* dti = f.constant(Int32Value(dstTableIndex), MIRType::Int32);
     if (!dti) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    MDefinition* sti = f.constant(Int32Value(srcTableIndex), MIRType::Int32);
-    if (!sti) {
-      return false;
-||||||| merged common ancestors
-    if (!f.passArg(len, ValType::I32, &args)) {
-        return false;
-=======
     if (!f.passArg(dti, callee.argTypes[5], &args)) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (!f.passArg(sti, ValType::I32, &args)) {
-      return false;
-    }
-  }
-  if (!f.finishCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-
-    if (!f.finishCall(&args)) {
-        return false;
-    }
-=======
   }
   if (!f.finishCall(&args)) {
     return false;
@@ -5757,50 +3062,18 @@ static bool EmitMemOrTableInit(FunctionCompiler& f, bool isMem) {
 
   return f.builtinInstanceMethodCall(callee, lineOrBytecode, args);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  SymbolicAddress callee =
-      isMem ? SymbolicAddress::MemCopy : SymbolicAddress::TableCopy;
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    SymbolicAddress callee = isMem ? SymbolicAddress::MemCopy
-                                   : SymbolicAddress::TableCopy;
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
 #ifdef ENABLE_WASM_REFTYPES
 // Note, table.{get,grow,set} on table(funcref) are currently rejected by the
 // verifier.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.checkI32NegativeMeansFailedResult(ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.checkI32NegativeMeansFailedResult(ret)) {
-        return false;
-    }
-=======
 static bool EmitTableFill(FunctionCompiler& f) {
   uint32_t tableIndex;
   MDefinition *start, *val, *len;
   if (!f.iter().readTableFill(&tableIndex, &start, &val, &len)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   if (f.inDeadCode()) {
     return true;
   }
@@ -5837,92 +3110,31 @@ static bool EmitTableFill(FunctionCompiler& f) {
   }
 
   return f.builtinInstanceMethodCall(callee, lineOrBytecode, args);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool EmitMemOrTableDrop(FunctionCompiler& f, bool isMem) {
-  uint32_t segIndexVal = 0;
-  if (!f.iter().readMemOrTableDrop(isMem, &segIndexVal)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitMemOrTableDrop(FunctionCompiler& f, bool isMem)
-{
-    uint32_t segIndexVal = 0;
-    if (!f.iter().readMemOrTableDrop(isMem, &segIndexVal)) {
-        return false;
-    }
-=======
 static bool EmitTableGet(FunctionCompiler& f) {
   uint32_t tableIndex;
   MDefinition* index;
   if (!f.iter().readTableGet(&tableIndex, &index)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (f.inDeadCode()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (f.inDeadCode()) {
-        return false;
-    }
-=======
   if (f.inDeadCode()) {
     return true;
   }
->>>>>>> upstream-releases
 
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee = SASigTableGet;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   if (!f.passArg(index, callee.argTypes[1], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* segIndex =
-      f.constant(Int32Value(int32_t(segIndexVal)), MIRType::Int32);
-  if (!f.passArg(segIndex, ValType::I32, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* segIndex = f.constant(Int32Value(int32_t(segIndexVal)), MIRType::Int32);
-    if (!f.passArg(segIndex, ValType::I32, &args)) {
-        return false;
-    }
-=======
   MDefinition* tableIndexArg =
       f.constant(Int32Value(tableIndex), MIRType::Int32);
   if (!tableIndexArg) {
@@ -5931,44 +3143,18 @@ static bool EmitTableGet(FunctionCompiler& f) {
   if (!f.passArg(tableIndexArg, callee.argTypes[2], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!f.finishCall(&args)) {
     return false;
   }
 
-<<<<<<< HEAD
-  SymbolicAddress callee =
-      isMem ? SymbolicAddress::MemDrop : SymbolicAddress::TableDrop;
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    SymbolicAddress callee = isMem ? SymbolicAddress::MemDrop
-                                   : SymbolicAddress::TableDrop;
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
   // The return value here is either null, denoting an error, or a short-lived
   // pointer to a location containing a possibly-null ref.
   MDefinition* ret;
   if (!f.builtinInstanceMethodCall(callee, lineOrBytecode, args, &ret)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.checkI32NegativeMeansFailedResult(ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.checkI32NegativeMeansFailedResult(ret)) {
-        return false;
-    }
-=======
   f.iter().setResult(ret);
   return true;
 }
@@ -5980,89 +3166,27 @@ static bool EmitTableGrow(FunctionCompiler& f) {
   if (!f.iter().readTableGrow(&tableIndex, &initValue, &delta)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-}
-||||||| merged common ancestors
-    return true;
-}
-=======
   if (f.inDeadCode()) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool EmitMemFill(FunctionCompiler& f) {
-  MDefinition *start, *val, *len;
-  if (!f.iter().readMemFill(&start, &val, &len)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitMemFill(FunctionCompiler& f)
-{
-    MDefinition* start, *val, *len;
-    if (!f.iter().readMemFill(&start, &val, &len)) {
-        return false;
-    }
-=======
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (f.inDeadCode()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (f.inDeadCode()) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee = SASigTableGrow;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-||||||| merged common ancestors
-    uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-=======
   if (!f.passArg(initValue, callee.argTypes[1], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   if (!f.passArg(delta, callee.argTypes[2], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   MDefinition* tableIndexArg =
       f.constant(Int32Value(tableIndex), MIRType::Int32);
   if (!tableIndexArg) {
@@ -6071,75 +3195,20 @@ EmitMemFill(FunctionCompiler& f)
   if (!f.passArg(tableIndexArg, callee.argTypes[3], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(start, ValType::I32, &args)) {
-    return false;
-  }
-  if (!f.passArg(val, ValType::I32, &args)) {
-    return false;
-  }
-  if (!f.passArg(len, ValType::I32, &args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passArg(start, ValType::I32, &args)) {
-        return false;
-    }
-    if (!f.passArg(val, ValType::I32, &args)) {
-        return false;
-    }
-    if (!f.passArg(len, ValType::I32, &args)) {
-        return false;
-    }
-=======
   if (!f.finishCall(&args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.finishCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.finishCall(&args)) {
-        return false;
-    }
-=======
   MDefinition* ret;
   if (!f.builtinInstanceMethodCall(callee, lineOrBytecode, args, &ret)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(SymbolicAddress::MemFill, args, ValType::I32,
-                                   &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(SymbolicAddress::MemFill, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
   f.iter().setResult(ret);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.checkI32NegativeMeansFailedResult(ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.checkI32NegativeMeansFailedResult(ret)) {
-        return false;
-    }
-=======
 static bool EmitTableSet(FunctionCompiler& f) {
   uint32_t tableIndex;
   MDefinition* index;
@@ -6147,13 +3216,7 @@ static bool EmitTableSet(FunctionCompiler& f) {
   if (!f.iter().readTableSet(&tableIndex, &index, &value)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   if (f.inDeadCode()) {
     return true;
   }
@@ -6188,77 +3251,26 @@ static bool EmitTableSet(FunctionCompiler& f) {
   }
 
   return f.builtinInstanceMethodCall(callee, lineOrBytecode, args);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool EmitMemOrTableInit(FunctionCompiler& f, bool isMem) {
-  uint32_t segIndexVal = 0, dstTableIndex = 0;
-  MDefinition *dstOff, *srcOff, *len;
-  if (!f.iter().readMemOrTableInit(isMem, &segIndexVal, &dstTableIndex, &dstOff,
-                                   &srcOff, &len)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-EmitMemOrTableInit(FunctionCompiler& f, bool isMem)
-{
-    uint32_t segIndexVal = 0;
-    MDefinition* dstOff, *srcOff, *len;
-    if (!f.iter().readMemOrTableInit(isMem, &segIndexVal, &dstOff, &srcOff, &len)) {
-        return false;
-    }
-=======
 static bool EmitTableSize(FunctionCompiler& f) {
   uint32_t tableIndex;
   if (!f.iter().readTableSize(&tableIndex)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (f.inDeadCode()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (f.inDeadCode()) {
-        return false;
-    }
-=======
   if (f.inDeadCode()) {
     return true;
   }
->>>>>>> upstream-releases
 
   uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
 
-<<<<<<< HEAD
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    CallCompileState args(f, lineOrBytecode);
-    if (!f.startCall(&args)) {
-        return false;
-    }
-=======
   const SymbolicAddressSignature& callee = SASigTableSize;
   CallCompileState args;
   if (!f.passInstance(callee.argTypes[0], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.passInstance(&args)) {
-        return false;
-    }
-=======
   MDefinition* tableIndexArg =
       f.constant(Int32Value(tableIndex), MIRType::Int32);
   if (!tableIndexArg) {
@@ -6267,146 +3279,31 @@ static bool EmitTableSize(FunctionCompiler& f) {
   if (!f.passArg(tableIndexArg, callee.argTypes[1], &args)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.passArg(dstOff, ValType::I32, &args)) {
-    return false;
-  }
-  if (!f.passArg(srcOff, ValType::I32, &args)) {
-    return false;
-  }
-  if (!f.passArg(len, ValType::I32, &args)) {
-    return false;
-  }
-
-  MDefinition* segIndex =
-      f.constant(Int32Value(int32_t(segIndexVal)), MIRType::Int32);
-  if (!f.passArg(segIndex, ValType::I32, &args)) {
-    return false;
-  }
-  if (!isMem) {
-    MDefinition* dti = f.constant(Int32Value(dstTableIndex), MIRType::Int32);
-    if (!dti) {
-      return false;
-    }
-    if (!f.passArg(dti, ValType::I32, &args)) {
-      return false;
-    }
-  }
   if (!f.finishCall(&args)) {
     return false;
   }
-||||||| merged common ancestors
-    if (!f.passArg(dstOff, ValType::I32, &args)) {
-        return false;
-    }
-    if (!f.passArg(srcOff, ValType::I32, &args)) {
-        return false;
-    }
-    if (!f.passArg(len, ValType::I32, &args)) {
-        return false;
-    }
-=======
-  if (!f.finishCall(&args)) {
-    return false;
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  SymbolicAddress callee =
-      isMem ? SymbolicAddress::MemInit : SymbolicAddress::TableInit;
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    MDefinition* segIndex = f.constant(Int32Value(int32_t(segIndexVal)), MIRType::Int32);
-    if (!f.passArg(segIndex, ValType::I32, &args)) {
-        return false;
-    }
-=======
   MDefinition* ret;
   if (!f.builtinInstanceMethodCall(callee, lineOrBytecode, args, &ret)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!f.checkI32NegativeMeansFailedResult(ret)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!f.finishCall(&args)) {
-        return false;
-    }
-=======
   f.iter().setResult(ret);
   return true;
 }
 #endif  // ENABLE_WASM_REFTYPES
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-}
-#endif  // ENABLE_WASM_BULKMEM_OPS
-
-#ifdef ENABLE_WASM_GENERALIZED_TABLES
-// About these implementations: table.{get,grow,set} on table(anyfunc) is
-// rejected by the verifier, while table.{get,grow,set} on table(anyref)
-// requires gc_feature_opt_in and will always be handled by the baseline
-// compiler; we should never get here in that case.
-//
-// table.size must however be handled properly here.
-
-static bool EmitTableGet(FunctionCompiler& f) {
-  uint32_t tableIndex;
-  MDefinition* index;
-  if (!f.iter().readTableGet(&tableIndex, &index)) {
-    return false;
-  }
-||||||| merged common ancestors
-    SymbolicAddress callee = isMem ? SymbolicAddress::MemInit
-                                   : SymbolicAddress::TableInit;
-    MDefinition* ret;
-    if (!f.builtinInstanceMethodCall(callee, args, ValType::I32, &ret)) {
-        return false;
-    }
-=======
 #ifdef ENABLE_WASM_REFTYPES
 static bool EmitRefNull(FunctionCompiler& f) {
   if (!f.iter().readRefNull()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_CRASH("Should not happen");  // See above
-}
-||||||| merged common ancestors
-    if (!f.checkI32NegativeMeansFailedResult(ret)) {
-        return false;
-    }
-=======
   if (f.inDeadCode()) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool EmitTableGrow(FunctionCompiler& f) {
-  uint32_t tableIndex;
-  MDefinition* delta;
-  MDefinition* initValue;
-  if (!f.iter().readTableGrow(&tableIndex, &delta, &initValue)) {
-    return false;
-  }
-
-  MOZ_CRASH("Should not happen");  // See above
-||||||| merged common ancestors
-    return true;
-=======
   MDefinition* nullVal = f.nullRefConstant();
   if (!nullVal) {
     return false;
@@ -6432,71 +3329,8 @@ static bool EmitRefIsNull(FunctionCompiler& f) {
   f.iter().setResult(
       f.compare(input, nullVal, JSOP_EQ, MCompare::Compare_RefOrNull));
   return true;
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-#endif // ENABLE_WASM_BULKMEM_OPS
-=======
 #endif
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-static bool EmitTableSet(FunctionCompiler& f) {
-  uint32_t tableIndex;
-  MDefinition* index;
-  MDefinition* value;
-  if (!f.iter().readTableSet(&tableIndex, &index, &value)) {
-    return false;
-  }
-
-  MOZ_CRASH("Should not happen");  // See above
-}
-
-static bool EmitTableSize(FunctionCompiler& f) {
-  uint32_t tableIndex;
-  if (!f.iter().readTableSize(&tableIndex)) {
-    return false;
-  }
-
-  if (f.inDeadCode()) {
-    return false;
-  }
-
-  uint32_t lineOrBytecode = f.readCallSiteLineOrBytecode();
-
-  CallCompileState args(f, lineOrBytecode);
-  if (!f.startCall(&args)) {
-    return false;
-  }
-
-  if (!f.passInstance(&args)) {
-    return false;
-  }
-
-  MDefinition* tableIndexArg =
-      f.constant(Int32Value(tableIndex), MIRType::Int32);
-  if (!tableIndexArg) {
-    return false;
-  }
-  if (!f.passArg(tableIndexArg, ValType::I32, &args)) {
-    return false;
-  }
-
-  if (!f.finishCall(&args)) {
-    return false;
-  }
-
-  MDefinition* ret;
-  if (!f.builtinInstanceMethodCall(SymbolicAddress::TableSize, args,
-                                   ValType::I32, &ret)) {
-    return false;
-  }
-
-  f.iter().setResult(ret);
-  return true;
-}
-#endif  // ENABLE_WASM_GENERALIZED_TABLES
 
 static bool EmitBodyExprs(FunctionCompiler& f) {
   if (!f.iter().readFunctionStart(f.funcType().ret())) {
@@ -6510,26 +3344,6 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
   while (true) {
     if (!f.mirGen().ensureBallast()) {
       return false;
-||||||| merged common ancestors
-static bool
-EmitBodyExprs(FunctionCompiler& f)
-{
-    if (!f.iter().readFunctionStart(f.funcType().ret())) {
-        return false;
-=======
-static bool EmitBodyExprs(FunctionCompiler& f) {
-  if (!f.iter().readFunctionStart(f.funcType().ret())) {
-    return false;
-  }
-
-#define CHECK(c)          \
-  if (!(c)) return false; \
-  break
-
-  while (true) {
-    if (!f.mirGen().ensureBallast()) {
-      return false;
->>>>>>> upstream-releases
     }
 
     OpBytes op;
@@ -6542,794 +3356,11 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
         if (!EmitEnd(f)) {
           return false;
         }
-<<<<<<< HEAD
-
-        if (f.iter().controlStackEmpty()) {
-          if (f.inDeadCode() || IsVoid(f.funcType().ret())) {
-            f.returnVoid();
-          } else {
-            f.returnExpr(f.iter().getResult());
-          }
-          return f.iter().readFunctionEnd(f.iter().end());
-||||||| merged common ancestors
-
-        OpBytes op;
-        if (!f.iter().readOp(&op)) {
-            return false;
-=======
         if (f.iter().controlStackEmpty()) {
           return true;
->>>>>>> upstream-releases
         }
         break;
 
-<<<<<<< HEAD
-      // Control opcodes
-      case uint16_t(Op::Unreachable):
-        CHECK(EmitUnreachable(f));
-      case uint16_t(Op::Nop):
-        CHECK(f.iter().readNop());
-      case uint16_t(Op::Block):
-        CHECK(EmitBlock(f));
-      case uint16_t(Op::Loop):
-        CHECK(EmitLoop(f));
-      case uint16_t(Op::If):
-        CHECK(EmitIf(f));
-      case uint16_t(Op::Else):
-        CHECK(EmitElse(f));
-      case uint16_t(Op::Br):
-        CHECK(EmitBr(f));
-      case uint16_t(Op::BrIf):
-        CHECK(EmitBrIf(f));
-      case uint16_t(Op::BrTable):
-        CHECK(EmitBrTable(f));
-      case uint16_t(Op::Return):
-        CHECK(EmitReturn(f));
-
-      // Calls
-      case uint16_t(Op::Call):
-        CHECK(EmitCall(f, /* asmJSFuncDef = */ false));
-      case uint16_t(Op::CallIndirect):
-        CHECK(EmitCallIndirect(f, /* oldStyle = */ false));
-
-      // Parametric operators
-      case uint16_t(Op::Drop):
-        CHECK(f.iter().readDrop());
-      case uint16_t(Op::Select):
-        CHECK(EmitSelect(f));
-
-      // Locals and globals
-      case uint16_t(Op::GetLocal):
-        CHECK(EmitGetLocal(f));
-      case uint16_t(Op::SetLocal):
-        CHECK(EmitSetLocal(f));
-      case uint16_t(Op::TeeLocal):
-        CHECK(EmitTeeLocal(f));
-      case uint16_t(Op::GetGlobal):
-        CHECK(EmitGetGlobal(f));
-      case uint16_t(Op::SetGlobal):
-        CHECK(EmitSetGlobal(f));
-
-      // Memory-related operators
-      case uint16_t(Op::I32Load):
-        CHECK(EmitLoad(f, ValType::I32, Scalar::Int32));
-      case uint16_t(Op::I64Load):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Int64));
-      case uint16_t(Op::F32Load):
-        CHECK(EmitLoad(f, ValType::F32, Scalar::Float32));
-      case uint16_t(Op::F64Load):
-        CHECK(EmitLoad(f, ValType::F64, Scalar::Float64));
-      case uint16_t(Op::I32Load8S):
-        CHECK(EmitLoad(f, ValType::I32, Scalar::Int8));
-      case uint16_t(Op::I32Load8U):
-        CHECK(EmitLoad(f, ValType::I32, Scalar::Uint8));
-      case uint16_t(Op::I32Load16S):
-        CHECK(EmitLoad(f, ValType::I32, Scalar::Int16));
-      case uint16_t(Op::I32Load16U):
-        CHECK(EmitLoad(f, ValType::I32, Scalar::Uint16));
-      case uint16_t(Op::I64Load8S):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Int8));
-      case uint16_t(Op::I64Load8U):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Uint8));
-      case uint16_t(Op::I64Load16S):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Int16));
-      case uint16_t(Op::I64Load16U):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Uint16));
-      case uint16_t(Op::I64Load32S):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Int32));
-      case uint16_t(Op::I64Load32U):
-        CHECK(EmitLoad(f, ValType::I64, Scalar::Uint32));
-      case uint16_t(Op::I32Store):
-        CHECK(EmitStore(f, ValType::I32, Scalar::Int32));
-      case uint16_t(Op::I64Store):
-        CHECK(EmitStore(f, ValType::I64, Scalar::Int64));
-      case uint16_t(Op::F32Store):
-        CHECK(EmitStore(f, ValType::F32, Scalar::Float32));
-      case uint16_t(Op::F64Store):
-        CHECK(EmitStore(f, ValType::F64, Scalar::Float64));
-      case uint16_t(Op::I32Store8):
-        CHECK(EmitStore(f, ValType::I32, Scalar::Int8));
-      case uint16_t(Op::I32Store16):
-        CHECK(EmitStore(f, ValType::I32, Scalar::Int16));
-      case uint16_t(Op::I64Store8):
-        CHECK(EmitStore(f, ValType::I64, Scalar::Int8));
-      case uint16_t(Op::I64Store16):
-        CHECK(EmitStore(f, ValType::I64, Scalar::Int16));
-      case uint16_t(Op::I64Store32):
-        CHECK(EmitStore(f, ValType::I64, Scalar::Int32));
-      case uint16_t(Op::CurrentMemory):
-        CHECK(EmitCurrentMemory(f));
-      case uint16_t(Op::GrowMemory):
-        CHECK(EmitGrowMemory(f));
-
-      // Constants
-      case uint16_t(Op::I32Const):
-        CHECK(EmitI32Const(f));
-      case uint16_t(Op::I64Const):
-        CHECK(EmitI64Const(f));
-      case uint16_t(Op::F32Const):
-        CHECK(EmitF32Const(f));
-      case uint16_t(Op::F64Const):
-        CHECK(EmitF64Const(f));
-
-      // Comparison operators
-      case uint16_t(Op::I32Eqz):
-        CHECK(EmitConversion<MNot>(f, ValType::I32, ValType::I32));
-      case uint16_t(Op::I32Eq):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_EQ, MCompare::Compare_Int32));
-      case uint16_t(Op::I32Ne):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_NE, MCompare::Compare_Int32));
-      case uint16_t(Op::I32LtS):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_LT, MCompare::Compare_Int32));
-      case uint16_t(Op::I32LtU):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_LT, MCompare::Compare_UInt32));
-      case uint16_t(Op::I32GtS):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_GT, MCompare::Compare_Int32));
-      case uint16_t(Op::I32GtU):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_GT, MCompare::Compare_UInt32));
-      case uint16_t(Op::I32LeS):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_LE, MCompare::Compare_Int32));
-      case uint16_t(Op::I32LeU):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_LE, MCompare::Compare_UInt32));
-      case uint16_t(Op::I32GeS):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_GE, MCompare::Compare_Int32));
-      case uint16_t(Op::I32GeU):
-        CHECK(
-            EmitComparison(f, ValType::I32, JSOP_GE, MCompare::Compare_UInt32));
-      case uint16_t(Op::I64Eqz):
-        CHECK(EmitConversion<MNot>(f, ValType::I64, ValType::I32));
-      case uint16_t(Op::I64Eq):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_EQ, MCompare::Compare_Int64));
-      case uint16_t(Op::I64Ne):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_NE, MCompare::Compare_Int64));
-      case uint16_t(Op::I64LtS):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_LT, MCompare::Compare_Int64));
-      case uint16_t(Op::I64LtU):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_LT, MCompare::Compare_UInt64));
-      case uint16_t(Op::I64GtS):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_GT, MCompare::Compare_Int64));
-      case uint16_t(Op::I64GtU):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_GT, MCompare::Compare_UInt64));
-      case uint16_t(Op::I64LeS):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_LE, MCompare::Compare_Int64));
-      case uint16_t(Op::I64LeU):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_LE, MCompare::Compare_UInt64));
-      case uint16_t(Op::I64GeS):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_GE, MCompare::Compare_Int64));
-      case uint16_t(Op::I64GeU):
-        CHECK(
-            EmitComparison(f, ValType::I64, JSOP_GE, MCompare::Compare_UInt64));
-      case uint16_t(Op::F32Eq):
-        CHECK(EmitComparison(f, ValType::F32, JSOP_EQ,
-                             MCompare::Compare_Float32));
-      case uint16_t(Op::F32Ne):
-        CHECK(EmitComparison(f, ValType::F32, JSOP_NE,
-                             MCompare::Compare_Float32));
-      case uint16_t(Op::F32Lt):
-        CHECK(EmitComparison(f, ValType::F32, JSOP_LT,
-                             MCompare::Compare_Float32));
-      case uint16_t(Op::F32Gt):
-        CHECK(EmitComparison(f, ValType::F32, JSOP_GT,
-                             MCompare::Compare_Float32));
-      case uint16_t(Op::F32Le):
-        CHECK(EmitComparison(f, ValType::F32, JSOP_LE,
-                             MCompare::Compare_Float32));
-      case uint16_t(Op::F32Ge):
-        CHECK(EmitComparison(f, ValType::F32, JSOP_GE,
-                             MCompare::Compare_Float32));
-      case uint16_t(Op::F64Eq):
-        CHECK(
-            EmitComparison(f, ValType::F64, JSOP_EQ, MCompare::Compare_Double));
-      case uint16_t(Op::F64Ne):
-        CHECK(
-            EmitComparison(f, ValType::F64, JSOP_NE, MCompare::Compare_Double));
-      case uint16_t(Op::F64Lt):
-        CHECK(
-            EmitComparison(f, ValType::F64, JSOP_LT, MCompare::Compare_Double));
-      case uint16_t(Op::F64Gt):
-        CHECK(
-            EmitComparison(f, ValType::F64, JSOP_GT, MCompare::Compare_Double));
-      case uint16_t(Op::F64Le):
-        CHECK(
-            EmitComparison(f, ValType::F64, JSOP_LE, MCompare::Compare_Double));
-      case uint16_t(Op::F64Ge):
-        CHECK(
-            EmitComparison(f, ValType::F64, JSOP_GE, MCompare::Compare_Double));
-
-      // Numeric operators
-      case uint16_t(Op::I32Clz):
-        CHECK(EmitUnaryWithType<MClz>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Ctz):
-        CHECK(EmitUnaryWithType<MCtz>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Popcnt):
-        CHECK(EmitUnaryWithType<MPopcnt>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Add):
-        CHECK(EmitAdd(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Sub):
-        CHECK(EmitSub(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Mul):
-        CHECK(EmitMul(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32DivS):
-      case uint16_t(Op::I32DivU):
-        CHECK(
-            EmitDiv(f, ValType::I32, MIRType::Int32, Op(op.b0) == Op::I32DivU));
-      case uint16_t(Op::I32RemS):
-      case uint16_t(Op::I32RemU):
-        CHECK(
-            EmitRem(f, ValType::I32, MIRType::Int32, Op(op.b0) == Op::I32RemU));
-      case uint16_t(Op::I32And):
-        CHECK(EmitBitwise<MBitAnd>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Or):
-        CHECK(EmitBitwise<MBitOr>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Xor):
-        CHECK(EmitBitwise<MBitXor>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Shl):
-        CHECK(EmitBitwise<MLsh>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32ShrS):
-        CHECK(EmitBitwise<MRsh>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32ShrU):
-        CHECK(EmitBitwise<MUrsh>(f, ValType::I32, MIRType::Int32));
-      case uint16_t(Op::I32Rotl):
-      case uint16_t(Op::I32Rotr):
-        CHECK(EmitRotate(f, ValType::I32, Op(op.b0) == Op::I32Rotl));
-      case uint16_t(Op::I64Clz):
-        CHECK(EmitUnaryWithType<MClz>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Ctz):
-        CHECK(EmitUnaryWithType<MCtz>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Popcnt):
-        CHECK(EmitUnaryWithType<MPopcnt>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Add):
-        CHECK(EmitAdd(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Sub):
-        CHECK(EmitSub(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Mul):
-        CHECK(EmitMul(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64DivS):
-      case uint16_t(Op::I64DivU):
-        CHECK(
-            EmitDiv(f, ValType::I64, MIRType::Int64, Op(op.b0) == Op::I64DivU));
-      case uint16_t(Op::I64RemS):
-      case uint16_t(Op::I64RemU):
-        CHECK(
-            EmitRem(f, ValType::I64, MIRType::Int64, Op(op.b0) == Op::I64RemU));
-      case uint16_t(Op::I64And):
-        CHECK(EmitBitwise<MBitAnd>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Or):
-        CHECK(EmitBitwise<MBitOr>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Xor):
-        CHECK(EmitBitwise<MBitXor>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Shl):
-        CHECK(EmitBitwise<MLsh>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64ShrS):
-        CHECK(EmitBitwise<MRsh>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64ShrU):
-        CHECK(EmitBitwise<MUrsh>(f, ValType::I64, MIRType::Int64));
-      case uint16_t(Op::I64Rotl):
-      case uint16_t(Op::I64Rotr):
-        CHECK(EmitRotate(f, ValType::I64, Op(op.b0) == Op::I64Rotl));
-      case uint16_t(Op::F32Abs):
-        CHECK(EmitUnaryWithType<MAbs>(f, ValType::F32, MIRType::Float32));
-      case uint16_t(Op::F32Neg):
-        CHECK(EmitUnaryWithType<MWasmNeg>(f, ValType::F32, MIRType::Float32));
-      case uint16_t(Op::F32Ceil):
-        CHECK(
-            EmitUnaryMathBuiltinCall(f, SymbolicAddress::CeilF, ValType::F32));
-      case uint16_t(Op::F32Floor):
-        CHECK(
-            EmitUnaryMathBuiltinCall(f, SymbolicAddress::FloorF, ValType::F32));
-      case uint16_t(Op::F32Trunc):
-        CHECK(
-            EmitUnaryMathBuiltinCall(f, SymbolicAddress::TruncF, ValType::F32));
-      case uint16_t(Op::F32Nearest):
-        CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::NearbyIntF,
-                                       ValType::F32));
-      case uint16_t(Op::F32Sqrt):
-        CHECK(EmitUnaryWithType<MSqrt>(f, ValType::F32, MIRType::Float32));
-      case uint16_t(Op::F32Add):
-        CHECK(EmitAdd(f, ValType::F32, MIRType::Float32));
-      case uint16_t(Op::F32Sub):
-        CHECK(EmitSub(f, ValType::F32, MIRType::Float32));
-      case uint16_t(Op::F32Mul):
-        CHECK(EmitMul(f, ValType::F32, MIRType::Float32));
-      case uint16_t(Op::F32Div):
-        CHECK(EmitDiv(f, ValType::F32, MIRType::Float32,
-                      /* isUnsigned = */ false));
-      case uint16_t(Op::F32Min):
-      case uint16_t(Op::F32Max):
-        CHECK(EmitMinMax(f, ValType::F32, MIRType::Float32,
-                         Op(op.b0) == Op::F32Max));
-      case uint16_t(Op::F32CopySign):
-        CHECK(EmitCopySign(f, ValType::F32));
-      case uint16_t(Op::F64Abs):
-        CHECK(EmitUnaryWithType<MAbs>(f, ValType::F64, MIRType::Double));
-      case uint16_t(Op::F64Neg):
-        CHECK(EmitUnaryWithType<MWasmNeg>(f, ValType::F64, MIRType::Double));
-      case uint16_t(Op::F64Ceil):
-        CHECK(
-            EmitUnaryMathBuiltinCall(f, SymbolicAddress::CeilD, ValType::F64));
-      case uint16_t(Op::F64Floor):
-        CHECK(
-            EmitUnaryMathBuiltinCall(f, SymbolicAddress::FloorD, ValType::F64));
-      case uint16_t(Op::F64Trunc):
-        CHECK(
-            EmitUnaryMathBuiltinCall(f, SymbolicAddress::TruncD, ValType::F64));
-      case uint16_t(Op::F64Nearest):
-        CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::NearbyIntD,
-                                       ValType::F64));
-      case uint16_t(Op::F64Sqrt):
-        CHECK(EmitUnaryWithType<MSqrt>(f, ValType::F64, MIRType::Double));
-      case uint16_t(Op::F64Add):
-        CHECK(EmitAdd(f, ValType::F64, MIRType::Double));
-      case uint16_t(Op::F64Sub):
-        CHECK(EmitSub(f, ValType::F64, MIRType::Double));
-      case uint16_t(Op::F64Mul):
-        CHECK(EmitMul(f, ValType::F64, MIRType::Double));
-      case uint16_t(Op::F64Div):
-        CHECK(EmitDiv(f, ValType::F64, MIRType::Double,
-                      /* isUnsigned = */ false));
-      case uint16_t(Op::F64Min):
-      case uint16_t(Op::F64Max):
-        CHECK(EmitMinMax(f, ValType::F64, MIRType::Double,
-                         Op(op.b0) == Op::F64Max));
-      case uint16_t(Op::F64CopySign):
-        CHECK(EmitCopySign(f, ValType::F64));
-
-      // Conversions
-      case uint16_t(Op::I32WrapI64):
-        CHECK(EmitConversion<MWrapInt64ToInt32>(f, ValType::I64, ValType::I32));
-      case uint16_t(Op::I32TruncSF32):
-      case uint16_t(Op::I32TruncUF32):
-        CHECK(EmitTruncate(f, ValType::F32, ValType::I32,
-                           Op(op.b0) == Op::I32TruncUF32, false));
-      case uint16_t(Op::I32TruncSF64):
-      case uint16_t(Op::I32TruncUF64):
-        CHECK(EmitTruncate(f, ValType::F64, ValType::I32,
-                           Op(op.b0) == Op::I32TruncUF64, false));
-      case uint16_t(Op::I64ExtendSI32):
-      case uint16_t(Op::I64ExtendUI32):
-        CHECK(EmitExtendI32(f, Op(op.b0) == Op::I64ExtendUI32));
-      case uint16_t(Op::I64TruncSF32):
-      case uint16_t(Op::I64TruncUF32):
-        CHECK(EmitTruncate(f, ValType::F32, ValType::I64,
-                           Op(op.b0) == Op::I64TruncUF32, false));
-      case uint16_t(Op::I64TruncSF64):
-      case uint16_t(Op::I64TruncUF64):
-        CHECK(EmitTruncate(f, ValType::F64, ValType::I64,
-                           Op(op.b0) == Op::I64TruncUF64, false));
-      case uint16_t(Op::F32ConvertSI32):
-        CHECK(EmitConversion<MToFloat32>(f, ValType::I32, ValType::F32));
-      case uint16_t(Op::F32ConvertUI32):
-        CHECK(EmitConversion<MWasmUnsignedToFloat32>(f, ValType::I32,
-                                                     ValType::F32));
-      case uint16_t(Op::F32ConvertSI64):
-      case uint16_t(Op::F32ConvertUI64):
-        CHECK(EmitConvertI64ToFloatingPoint(f, ValType::F32, MIRType::Float32,
-                                            Op(op.b0) == Op::F32ConvertUI64));
-      case uint16_t(Op::F32DemoteF64):
-        CHECK(EmitConversion<MToFloat32>(f, ValType::F64, ValType::F32));
-      case uint16_t(Op::F64ConvertSI32):
-        CHECK(EmitConversion<MToDouble>(f, ValType::I32, ValType::F64));
-      case uint16_t(Op::F64ConvertUI32):
-        CHECK(EmitConversion<MWasmUnsignedToDouble>(f, ValType::I32,
-                                                    ValType::F64));
-      case uint16_t(Op::F64ConvertSI64):
-      case uint16_t(Op::F64ConvertUI64):
-        CHECK(EmitConvertI64ToFloatingPoint(f, ValType::F64, MIRType::Double,
-                                            Op(op.b0) == Op::F64ConvertUI64));
-      case uint16_t(Op::F64PromoteF32):
-        CHECK(EmitConversion<MToDouble>(f, ValType::F32, ValType::F64));
-
-      // Reinterpretations
-      case uint16_t(Op::I32ReinterpretF32):
-        CHECK(EmitReinterpret(f, ValType::I32, ValType::F32, MIRType::Int32));
-      case uint16_t(Op::I64ReinterpretF64):
-        CHECK(EmitReinterpret(f, ValType::I64, ValType::F64, MIRType::Int64));
-      case uint16_t(Op::F32ReinterpretI32):
-        CHECK(EmitReinterpret(f, ValType::F32, ValType::I32, MIRType::Float32));
-      case uint16_t(Op::F64ReinterpretI64):
-        CHECK(EmitReinterpret(f, ValType::F64, ValType::I64, MIRType::Double));
-||||||| merged common ancestors
-        switch (op.b0) {
-          case uint16_t(Op::End):
-            if (!EmitEnd(f)) {
-                return false;
-            }
-
-            if (f.iter().controlStackEmpty()) {
-                if (f.inDeadCode() || IsVoid(f.funcType().ret())) {
-                    f.returnVoid();
-                } else {
-                    f.returnExpr(f.iter().getResult());
-                }
-                return f.iter().readFunctionEnd(f.iter().end());
-            }
-            break;
-
-          // Control opcodes
-          case uint16_t(Op::Unreachable):
-            CHECK(EmitUnreachable(f));
-          case uint16_t(Op::Nop):
-            CHECK(f.iter().readNop());
-          case uint16_t(Op::Block):
-            CHECK(EmitBlock(f));
-          case uint16_t(Op::Loop):
-            CHECK(EmitLoop(f));
-          case uint16_t(Op::If):
-            CHECK(EmitIf(f));
-          case uint16_t(Op::Else):
-            CHECK(EmitElse(f));
-          case uint16_t(Op::Br):
-            CHECK(EmitBr(f));
-          case uint16_t(Op::BrIf):
-            CHECK(EmitBrIf(f));
-          case uint16_t(Op::BrTable):
-            CHECK(EmitBrTable(f));
-          case uint16_t(Op::Return):
-            CHECK(EmitReturn(f));
-
-          // Calls
-          case uint16_t(Op::Call):
-            CHECK(EmitCall(f, /* asmJSFuncDef = */ false));
-          case uint16_t(Op::CallIndirect):
-            CHECK(EmitCallIndirect(f, /* oldStyle = */ false));
-
-          // Parametric operators
-          case uint16_t(Op::Drop):
-            CHECK(f.iter().readDrop());
-          case uint16_t(Op::Select):
-            CHECK(EmitSelect(f));
-
-          // Locals and globals
-          case uint16_t(Op::GetLocal):
-            CHECK(EmitGetLocal(f));
-          case uint16_t(Op::SetLocal):
-            CHECK(EmitSetLocal(f));
-          case uint16_t(Op::TeeLocal):
-            CHECK(EmitTeeLocal(f));
-          case uint16_t(Op::GetGlobal):
-            CHECK(EmitGetGlobal(f));
-          case uint16_t(Op::SetGlobal):
-            CHECK(EmitSetGlobal(f));
-
-          // Memory-related operators
-          case uint16_t(Op::I32Load):
-            CHECK(EmitLoad(f, ValType::I32, Scalar::Int32));
-          case uint16_t(Op::I64Load):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Int64));
-          case uint16_t(Op::F32Load):
-            CHECK(EmitLoad(f, ValType::F32, Scalar::Float32));
-          case uint16_t(Op::F64Load):
-            CHECK(EmitLoad(f, ValType::F64, Scalar::Float64));
-          case uint16_t(Op::I32Load8S):
-            CHECK(EmitLoad(f, ValType::I32, Scalar::Int8));
-          case uint16_t(Op::I32Load8U):
-            CHECK(EmitLoad(f, ValType::I32, Scalar::Uint8));
-          case uint16_t(Op::I32Load16S):
-            CHECK(EmitLoad(f, ValType::I32, Scalar::Int16));
-          case uint16_t(Op::I32Load16U):
-            CHECK(EmitLoad(f, ValType::I32, Scalar::Uint16));
-          case uint16_t(Op::I64Load8S):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Int8));
-          case uint16_t(Op::I64Load8U):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Uint8));
-          case uint16_t(Op::I64Load16S):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Int16));
-          case uint16_t(Op::I64Load16U):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Uint16));
-          case uint16_t(Op::I64Load32S):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Int32));
-          case uint16_t(Op::I64Load32U):
-            CHECK(EmitLoad(f, ValType::I64, Scalar::Uint32));
-          case uint16_t(Op::I32Store):
-            CHECK(EmitStore(f, ValType::I32, Scalar::Int32));
-          case uint16_t(Op::I64Store):
-            CHECK(EmitStore(f, ValType::I64, Scalar::Int64));
-          case uint16_t(Op::F32Store):
-            CHECK(EmitStore(f, ValType::F32, Scalar::Float32));
-          case uint16_t(Op::F64Store):
-            CHECK(EmitStore(f, ValType::F64, Scalar::Float64));
-          case uint16_t(Op::I32Store8):
-            CHECK(EmitStore(f, ValType::I32, Scalar::Int8));
-          case uint16_t(Op::I32Store16):
-            CHECK(EmitStore(f, ValType::I32, Scalar::Int16));
-          case uint16_t(Op::I64Store8):
-            CHECK(EmitStore(f, ValType::I64, Scalar::Int8));
-          case uint16_t(Op::I64Store16):
-            CHECK(EmitStore(f, ValType::I64, Scalar::Int16));
-          case uint16_t(Op::I64Store32):
-            CHECK(EmitStore(f, ValType::I64, Scalar::Int32));
-          case uint16_t(Op::CurrentMemory):
-            CHECK(EmitCurrentMemory(f));
-          case uint16_t(Op::GrowMemory):
-            CHECK(EmitGrowMemory(f));
-
-          // Constants
-          case uint16_t(Op::I32Const):
-            CHECK(EmitI32Const(f));
-          case uint16_t(Op::I64Const):
-            CHECK(EmitI64Const(f));
-          case uint16_t(Op::F32Const):
-            CHECK(EmitF32Const(f));
-          case uint16_t(Op::F64Const):
-            CHECK(EmitF64Const(f));
-
-          // Comparison operators
-          case uint16_t(Op::I32Eqz):
-            CHECK(EmitConversion<MNot>(f, ValType::I32, ValType::I32));
-          case uint16_t(Op::I32Eq):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_EQ, MCompare::Compare_Int32));
-          case uint16_t(Op::I32Ne):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_NE, MCompare::Compare_Int32));
-          case uint16_t(Op::I32LtS):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_LT, MCompare::Compare_Int32));
-          case uint16_t(Op::I32LtU):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_LT, MCompare::Compare_UInt32));
-          case uint16_t(Op::I32GtS):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_GT, MCompare::Compare_Int32));
-          case uint16_t(Op::I32GtU):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_GT, MCompare::Compare_UInt32));
-          case uint16_t(Op::I32LeS):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_LE, MCompare::Compare_Int32));
-          case uint16_t(Op::I32LeU):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_LE, MCompare::Compare_UInt32));
-          case uint16_t(Op::I32GeS):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_GE, MCompare::Compare_Int32));
-          case uint16_t(Op::I32GeU):
-            CHECK(EmitComparison(f, ValType::I32, JSOP_GE, MCompare::Compare_UInt32));
-          case uint16_t(Op::I64Eqz):
-            CHECK(EmitConversion<MNot>(f, ValType::I64, ValType::I32));
-          case uint16_t(Op::I64Eq):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_EQ, MCompare::Compare_Int64));
-          case uint16_t(Op::I64Ne):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_NE, MCompare::Compare_Int64));
-          case uint16_t(Op::I64LtS):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_LT, MCompare::Compare_Int64));
-          case uint16_t(Op::I64LtU):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_LT, MCompare::Compare_UInt64));
-          case uint16_t(Op::I64GtS):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_GT, MCompare::Compare_Int64));
-          case uint16_t(Op::I64GtU):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_GT, MCompare::Compare_UInt64));
-          case uint16_t(Op::I64LeS):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_LE, MCompare::Compare_Int64));
-          case uint16_t(Op::I64LeU):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_LE, MCompare::Compare_UInt64));
-          case uint16_t(Op::I64GeS):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_GE, MCompare::Compare_Int64));
-          case uint16_t(Op::I64GeU):
-            CHECK(EmitComparison(f, ValType::I64, JSOP_GE, MCompare::Compare_UInt64));
-          case uint16_t(Op::F32Eq):
-            CHECK(EmitComparison(f, ValType::F32, JSOP_EQ, MCompare::Compare_Float32));
-          case uint16_t(Op::F32Ne):
-            CHECK(EmitComparison(f, ValType::F32, JSOP_NE, MCompare::Compare_Float32));
-          case uint16_t(Op::F32Lt):
-            CHECK(EmitComparison(f, ValType::F32, JSOP_LT, MCompare::Compare_Float32));
-          case uint16_t(Op::F32Gt):
-            CHECK(EmitComparison(f, ValType::F32, JSOP_GT, MCompare::Compare_Float32));
-          case uint16_t(Op::F32Le):
-            CHECK(EmitComparison(f, ValType::F32, JSOP_LE, MCompare::Compare_Float32));
-          case uint16_t(Op::F32Ge):
-            CHECK(EmitComparison(f, ValType::F32, JSOP_GE, MCompare::Compare_Float32));
-          case uint16_t(Op::F64Eq):
-            CHECK(EmitComparison(f, ValType::F64, JSOP_EQ, MCompare::Compare_Double));
-          case uint16_t(Op::F64Ne):
-            CHECK(EmitComparison(f, ValType::F64, JSOP_NE, MCompare::Compare_Double));
-          case uint16_t(Op::F64Lt):
-            CHECK(EmitComparison(f, ValType::F64, JSOP_LT, MCompare::Compare_Double));
-          case uint16_t(Op::F64Gt):
-            CHECK(EmitComparison(f, ValType::F64, JSOP_GT, MCompare::Compare_Double));
-          case uint16_t(Op::F64Le):
-            CHECK(EmitComparison(f, ValType::F64, JSOP_LE, MCompare::Compare_Double));
-          case uint16_t(Op::F64Ge):
-            CHECK(EmitComparison(f, ValType::F64, JSOP_GE, MCompare::Compare_Double));
-
-          // Numeric operators
-          case uint16_t(Op::I32Clz):
-            CHECK(EmitUnaryWithType<MClz>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Ctz):
-            CHECK(EmitUnaryWithType<MCtz>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Popcnt):
-            CHECK(EmitUnaryWithType<MPopcnt>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Add):
-            CHECK(EmitAdd(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Sub):
-            CHECK(EmitSub(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Mul):
-            CHECK(EmitMul(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32DivS):
-          case uint16_t(Op::I32DivU):
-            CHECK(EmitDiv(f, ValType::I32, MIRType::Int32, Op(op.b0) == Op::I32DivU));
-          case uint16_t(Op::I32RemS):
-          case uint16_t(Op::I32RemU):
-            CHECK(EmitRem(f, ValType::I32, MIRType::Int32, Op(op.b0) == Op::I32RemU));
-          case uint16_t(Op::I32And):
-            CHECK(EmitBitwise<MBitAnd>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Or):
-            CHECK(EmitBitwise<MBitOr>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Xor):
-            CHECK(EmitBitwise<MBitXor>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Shl):
-            CHECK(EmitBitwise<MLsh>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32ShrS):
-            CHECK(EmitBitwise<MRsh>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32ShrU):
-            CHECK(EmitBitwise<MUrsh>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(Op::I32Rotl):
-          case uint16_t(Op::I32Rotr):
-            CHECK(EmitRotate(f, ValType::I32, Op(op.b0) == Op::I32Rotl));
-          case uint16_t(Op::I64Clz):
-            CHECK(EmitUnaryWithType<MClz>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Ctz):
-            CHECK(EmitUnaryWithType<MCtz>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Popcnt):
-            CHECK(EmitUnaryWithType<MPopcnt>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Add):
-            CHECK(EmitAdd(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Sub):
-            CHECK(EmitSub(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Mul):
-            CHECK(EmitMul(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64DivS):
-          case uint16_t(Op::I64DivU):
-            CHECK(EmitDiv(f, ValType::I64, MIRType::Int64, Op(op.b0) == Op::I64DivU));
-          case uint16_t(Op::I64RemS):
-          case uint16_t(Op::I64RemU):
-            CHECK(EmitRem(f, ValType::I64, MIRType::Int64, Op(op.b0) == Op::I64RemU));
-          case uint16_t(Op::I64And):
-            CHECK(EmitBitwise<MBitAnd>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Or):
-            CHECK(EmitBitwise<MBitOr>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Xor):
-            CHECK(EmitBitwise<MBitXor>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Shl):
-            CHECK(EmitBitwise<MLsh>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64ShrS):
-            CHECK(EmitBitwise<MRsh>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64ShrU):
-            CHECK(EmitBitwise<MUrsh>(f, ValType::I64, MIRType::Int64));
-          case uint16_t(Op::I64Rotl):
-          case uint16_t(Op::I64Rotr):
-            CHECK(EmitRotate(f, ValType::I64, Op(op.b0) == Op::I64Rotl));
-          case uint16_t(Op::F32Abs):
-            CHECK(EmitUnaryWithType<MAbs>(f, ValType::F32, MIRType::Float32));
-          case uint16_t(Op::F32Neg):
-            CHECK(EmitUnaryWithType<MWasmNeg>(f, ValType::F32, MIRType::Float32));
-          case uint16_t(Op::F32Ceil):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::CeilF, ValType::F32));
-          case uint16_t(Op::F32Floor):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::FloorF, ValType::F32));
-          case uint16_t(Op::F32Trunc):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::TruncF, ValType::F32));
-          case uint16_t(Op::F32Nearest):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::NearbyIntF, ValType::F32));
-          case uint16_t(Op::F32Sqrt):
-            CHECK(EmitUnaryWithType<MSqrt>(f, ValType::F32, MIRType::Float32));
-          case uint16_t(Op::F32Add):
-            CHECK(EmitAdd(f, ValType::F32, MIRType::Float32));
-          case uint16_t(Op::F32Sub):
-            CHECK(EmitSub(f, ValType::F32, MIRType::Float32));
-          case uint16_t(Op::F32Mul):
-            CHECK(EmitMul(f, ValType::F32, MIRType::Float32));
-          case uint16_t(Op::F32Div):
-            CHECK(EmitDiv(f, ValType::F32, MIRType::Float32, /* isUnsigned = */ false));
-          case uint16_t(Op::F32Min):
-          case uint16_t(Op::F32Max):
-            CHECK(EmitMinMax(f, ValType::F32, MIRType::Float32, Op(op.b0) == Op::F32Max));
-          case uint16_t(Op::F32CopySign):
-            CHECK(EmitCopySign(f, ValType::F32));
-          case uint16_t(Op::F64Abs):
-            CHECK(EmitUnaryWithType<MAbs>(f, ValType::F64, MIRType::Double));
-          case uint16_t(Op::F64Neg):
-            CHECK(EmitUnaryWithType<MWasmNeg>(f, ValType::F64, MIRType::Double));
-          case uint16_t(Op::F64Ceil):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::CeilD, ValType::F64));
-          case uint16_t(Op::F64Floor):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::FloorD, ValType::F64));
-          case uint16_t(Op::F64Trunc):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::TruncD, ValType::F64));
-          case uint16_t(Op::F64Nearest):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::NearbyIntD, ValType::F64));
-          case uint16_t(Op::F64Sqrt):
-            CHECK(EmitUnaryWithType<MSqrt>(f, ValType::F64, MIRType::Double));
-          case uint16_t(Op::F64Add):
-            CHECK(EmitAdd(f, ValType::F64, MIRType::Double));
-          case uint16_t(Op::F64Sub):
-            CHECK(EmitSub(f, ValType::F64, MIRType::Double));
-          case uint16_t(Op::F64Mul):
-            CHECK(EmitMul(f, ValType::F64, MIRType::Double));
-          case uint16_t(Op::F64Div):
-            CHECK(EmitDiv(f, ValType::F64, MIRType::Double, /* isUnsigned = */ false));
-          case uint16_t(Op::F64Min):
-          case uint16_t(Op::F64Max):
-            CHECK(EmitMinMax(f, ValType::F64, MIRType::Double, Op(op.b0) == Op::F64Max));
-          case uint16_t(Op::F64CopySign):
-            CHECK(EmitCopySign(f, ValType::F64));
-
-          // Conversions
-          case uint16_t(Op::I32WrapI64):
-            CHECK(EmitConversion<MWrapInt64ToInt32>(f, ValType::I64, ValType::I32));
-          case uint16_t(Op::I32TruncSF32):
-          case uint16_t(Op::I32TruncUF32):
-            CHECK(EmitTruncate(f, ValType::F32, ValType::I32, Op(op.b0) == Op::I32TruncUF32, false));
-          case uint16_t(Op::I32TruncSF64):
-          case uint16_t(Op::I32TruncUF64):
-            CHECK(EmitTruncate(f, ValType::F64, ValType::I32, Op(op.b0) == Op::I32TruncUF64, false));
-          case uint16_t(Op::I64ExtendSI32):
-          case uint16_t(Op::I64ExtendUI32):
-            CHECK(EmitExtendI32(f, Op(op.b0) == Op::I64ExtendUI32));
-          case uint16_t(Op::I64TruncSF32):
-          case uint16_t(Op::I64TruncUF32):
-            CHECK(EmitTruncate(f, ValType::F32, ValType::I64, Op(op.b0) == Op::I64TruncUF32, false));
-          case uint16_t(Op::I64TruncSF64):
-          case uint16_t(Op::I64TruncUF64):
-            CHECK(EmitTruncate(f, ValType::F64, ValType::I64, Op(op.b0) == Op::I64TruncUF64, false));
-          case uint16_t(Op::F32ConvertSI32):
-            CHECK(EmitConversion<MToFloat32>(f, ValType::I32, ValType::F32));
-          case uint16_t(Op::F32ConvertUI32):
-            CHECK(EmitConversion<MWasmUnsignedToFloat32>(f, ValType::I32, ValType::F32));
-          case uint16_t(Op::F32ConvertSI64):
-          case uint16_t(Op::F32ConvertUI64):
-            CHECK(EmitConvertI64ToFloatingPoint(f, ValType::F32, MIRType::Float32, Op(op.b0) == Op::F32ConvertUI64));
-          case uint16_t(Op::F32DemoteF64):
-            CHECK(EmitConversion<MToFloat32>(f, ValType::F64, ValType::F32));
-          case uint16_t(Op::F64ConvertSI32):
-            CHECK(EmitConversion<MToDouble>(f, ValType::I32, ValType::F64));
-          case uint16_t(Op::F64ConvertUI32):
-            CHECK(EmitConversion<MWasmUnsignedToDouble>(f, ValType::I32, ValType::F64));
-          case uint16_t(Op::F64ConvertSI64):
-          case uint16_t(Op::F64ConvertUI64):
-            CHECK(EmitConvertI64ToFloatingPoint(f, ValType::F64, MIRType::Double, Op(op.b0) == Op::F64ConvertUI64));
-          case uint16_t(Op::F64PromoteF32):
-            CHECK(EmitConversion<MToDouble>(f, ValType::F32, ValType::F64));
-
-          // Reinterpretations
-          case uint16_t(Op::I32ReinterpretF32):
-            CHECK(EmitReinterpret(f, ValType::I32, ValType::F32, MIRType::Int32));
-          case uint16_t(Op::I64ReinterpretF64):
-            CHECK(EmitReinterpret(f, ValType::I64, ValType::F64, MIRType::Int64));
-          case uint16_t(Op::F32ReinterpretI32):
-            CHECK(EmitReinterpret(f, ValType::F32, ValType::I32, MIRType::Float32));
-          case uint16_t(Op::F64ReinterpretI64):
-            CHECK(EmitReinterpret(f, ValType::F64, ValType::I64, MIRType::Double));
-=======
       // Control opcodes
       case uint16_t(Op::Unreachable):
         CHECK(EmitUnreachable(f));
@@ -7730,22 +3761,8 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
         CHECK(EmitReinterpret(f, ValType::F32, ValType::I32, MIRType::Float32));
       case uint16_t(Op::F64ReinterpretI64):
         CHECK(EmitReinterpret(f, ValType::F64, ValType::I64, MIRType::Double));
->>>>>>> upstream-releases
 
 #ifdef ENABLE_WASM_GC
-<<<<<<< HEAD
-      case uint16_t(Op::RefEq):
-      case uint16_t(Op::RefNull):
-      case uint16_t(Op::RefIsNull):
-        // Not yet supported
-        return f.iter().unrecognizedOpcode(&op);
-||||||| merged common ancestors
-          case uint16_t(Op::RefEq):
-          case uint16_t(Op::RefNull):
-          case uint16_t(Op::RefIsNull):
-            // Not yet supported
-            return f.iter().unrecognizedOpcode(&op);
-=======
       case uint16_t(Op::RefEq):
         if (!f.env().gcTypesEnabled()) {
           return f.iter().unrecognizedOpcode(&op);
@@ -7758,114 +3775,8 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
         CHECK(EmitRefNull(f));
       case uint16_t(Op::RefIsNull):
         CHECK(EmitRefIsNull(f));
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-      // Sign extensions
-      case uint16_t(Op::I32Extend8S):
-        CHECK(EmitSignExtend(f, 1, 4));
-      case uint16_t(Op::I32Extend16S):
-        CHECK(EmitSignExtend(f, 2, 4));
-      case uint16_t(Op::I64Extend8S):
-        CHECK(EmitSignExtend(f, 1, 8));
-      case uint16_t(Op::I64Extend16S):
-        CHECK(EmitSignExtend(f, 2, 8));
-      case uint16_t(Op::I64Extend32S):
-        CHECK(EmitSignExtend(f, 4, 8));
-
-      // Miscellaneous operations
-      case uint16_t(Op::MiscPrefix): {
-        switch (op.b1) {
-          case uint16_t(MiscOp::I32TruncSSatF32):
-          case uint16_t(MiscOp::I32TruncUSatF32):
-            CHECK(EmitTruncate(f, ValType::F32, ValType::I32,
-                               MiscOp(op.b1) == MiscOp::I32TruncUSatF32, true));
-          case uint16_t(MiscOp::I32TruncSSatF64):
-          case uint16_t(MiscOp::I32TruncUSatF64):
-            CHECK(EmitTruncate(f, ValType::F64, ValType::I32,
-                               MiscOp(op.b1) == MiscOp::I32TruncUSatF64, true));
-          case uint16_t(MiscOp::I64TruncSSatF32):
-          case uint16_t(MiscOp::I64TruncUSatF32):
-            CHECK(EmitTruncate(f, ValType::F32, ValType::I64,
-                               MiscOp(op.b1) == MiscOp::I64TruncUSatF32, true));
-          case uint16_t(MiscOp::I64TruncSSatF64):
-          case uint16_t(MiscOp::I64TruncUSatF64):
-            CHECK(EmitTruncate(f, ValType::F64, ValType::I64,
-                               MiscOp(op.b1) == MiscOp::I64TruncUSatF64, true));
-#ifdef ENABLE_WASM_BULKMEM_OPS
-          case uint16_t(MiscOp::MemCopy):
-            CHECK(EmitMemOrTableCopy(f, /*isMem=*/true));
-          case uint16_t(MiscOp::MemDrop):
-            CHECK(EmitMemOrTableDrop(f, /*isMem=*/true));
-          case uint16_t(MiscOp::MemFill):
-            CHECK(EmitMemFill(f));
-          case uint16_t(MiscOp::MemInit):
-            CHECK(EmitMemOrTableInit(f, /*isMem=*/true));
-          case uint16_t(MiscOp::TableCopy):
-            CHECK(EmitMemOrTableCopy(f, /*isMem=*/false));
-          case uint16_t(MiscOp::TableDrop):
-            CHECK(EmitMemOrTableDrop(f, /*isMem=*/false));
-          case uint16_t(MiscOp::TableInit):
-            CHECK(EmitMemOrTableInit(f, /*isMem=*/false));
-#endif
-#ifdef ENABLE_WASM_GENERALIZED_TABLES
-          case uint16_t(MiscOp::TableGet):
-            CHECK(EmitTableGet(f));
-          case uint16_t(MiscOp::TableGrow):
-            CHECK(EmitTableGrow(f));
-          case uint16_t(MiscOp::TableSet):
-            CHECK(EmitTableSet(f));
-          case uint16_t(MiscOp::TableSize):
-            CHECK(EmitTableSize(f));
-||||||| merged common ancestors
-          // Sign extensions
-          case uint16_t(Op::I32Extend8S):
-            CHECK(EmitSignExtend(f, 1, 4));
-          case uint16_t(Op::I32Extend16S):
-            CHECK(EmitSignExtend(f, 2, 4));
-          case uint16_t(Op::I64Extend8S):
-            CHECK(EmitSignExtend(f, 1, 8));
-          case uint16_t(Op::I64Extend16S):
-            CHECK(EmitSignExtend(f, 2, 8));
-          case uint16_t(Op::I64Extend32S):
-            CHECK(EmitSignExtend(f, 4, 8));
-
-          // Miscellaneous operations
-          case uint16_t(Op::MiscPrefix): {
-            switch (op.b1) {
-              case uint16_t(MiscOp::I32TruncSSatF32):
-              case uint16_t(MiscOp::I32TruncUSatF32):
-                CHECK(EmitTruncate(f, ValType::F32, ValType::I32,
-                                   MiscOp(op.b1) == MiscOp::I32TruncUSatF32, true));
-              case uint16_t(MiscOp::I32TruncSSatF64):
-              case uint16_t(MiscOp::I32TruncUSatF64):
-                CHECK(EmitTruncate(f, ValType::F64, ValType::I32,
-                                   MiscOp(op.b1) == MiscOp::I32TruncUSatF64, true));
-              case uint16_t(MiscOp::I64TruncSSatF32):
-              case uint16_t(MiscOp::I64TruncUSatF32):
-                CHECK(EmitTruncate(f, ValType::F32, ValType::I64,
-                                   MiscOp(op.b1) == MiscOp::I64TruncUSatF32, true));
-              case uint16_t(MiscOp::I64TruncSSatF64):
-              case uint16_t(MiscOp::I64TruncUSatF64):
-                CHECK(EmitTruncate(f, ValType::F64, ValType::I64,
-                                   MiscOp(op.b1) == MiscOp::I64TruncUSatF64, true));
-#ifdef ENABLE_WASM_BULKMEM_OPS
-              case uint16_t(MiscOp::MemCopy):
-                CHECK(EmitMemOrTableCopy(f, /*isMem=*/true));
-              case uint16_t(MiscOp::MemDrop):
-                CHECK(EmitMemOrTableDrop(f, /*isMem=*/true));
-              case uint16_t(MiscOp::MemFill):
-                CHECK(EmitMemFill(f));
-              case uint16_t(MiscOp::MemInit):
-                CHECK(EmitMemOrTableInit(f, /*isMem=*/true));
-              case uint16_t(MiscOp::TableCopy):
-                CHECK(EmitMemOrTableCopy(f, /*isMem=*/false));
-              case uint16_t(MiscOp::TableDrop):
-                CHECK(EmitMemOrTableDrop(f, /*isMem=*/false));
-              case uint16_t(MiscOp::TableInit):
-                CHECK(EmitMemOrTableInit(f, /*isMem=*/false));
-=======
       // Sign extensions
       case uint16_t(Op::I32Extend8S):
         CHECK(EmitSignExtend(f, 1, 4));
@@ -7918,380 +3829,17 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
             CHECK(EmitTableGrow(f));
           case uint32_t(MiscOp::TableSize):
             CHECK(EmitTableSize(f));
->>>>>>> upstream-releases
 #endif
 #ifdef ENABLE_WASM_GC
-<<<<<<< HEAD
-          case uint16_t(MiscOp::StructNew):
-          case uint16_t(MiscOp::StructGet):
-          case uint16_t(MiscOp::StructSet):
-          case uint16_t(MiscOp::StructNarrow):
-            // Not yet supported
-            return f.iter().unrecognizedOpcode(&op);
-||||||| merged common ancestors
-              case uint16_t(MiscOp::StructNew):
-              case uint16_t(MiscOp::StructGet):
-              case uint16_t(MiscOp::StructSet):
-              case uint16_t(MiscOp::StructNarrow):
-                // Not yet supported
-                return f.iter().unrecognizedOpcode(&op);
-=======
           case uint32_t(MiscOp::StructNew):
           case uint32_t(MiscOp::StructGet):
           case uint32_t(MiscOp::StructSet):
           case uint32_t(MiscOp::StructNarrow):
             // Not yet supported
             return f.iter().unrecognizedOpcode(&op);
->>>>>>> upstream-releases
 #endif
           default:
             return f.iter().unrecognizedOpcode(&op);
-<<<<<<< HEAD
-        }
-        break;
-      }
-
-      // Thread operations
-      case uint16_t(Op::ThreadPrefix): {
-        switch (op.b1) {
-          case uint16_t(ThreadOp::Wake):
-            CHECK(EmitWake(f));
-
-          case uint16_t(ThreadOp::I32Wait):
-            CHECK(EmitWait(f, ValType::I32, 4));
-          case uint16_t(ThreadOp::I64Wait):
-            CHECK(EmitWait(f, ValType::I64, 8));
-
-          case uint16_t(ThreadOp::I32AtomicLoad):
-            CHECK(EmitAtomicLoad(f, ValType::I32, Scalar::Int32));
-          case uint16_t(ThreadOp::I64AtomicLoad):
-            CHECK(EmitAtomicLoad(f, ValType::I64, Scalar::Int64));
-          case uint16_t(ThreadOp::I32AtomicLoad8U):
-            CHECK(EmitAtomicLoad(f, ValType::I32, Scalar::Uint8));
-          case uint16_t(ThreadOp::I32AtomicLoad16U):
-            CHECK(EmitAtomicLoad(f, ValType::I32, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicLoad8U):
-            CHECK(EmitAtomicLoad(f, ValType::I64, Scalar::Uint8));
-          case uint16_t(ThreadOp::I64AtomicLoad16U):
-            CHECK(EmitAtomicLoad(f, ValType::I64, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicLoad32U):
-            CHECK(EmitAtomicLoad(f, ValType::I64, Scalar::Uint32));
-
-          case uint16_t(ThreadOp::I32AtomicStore):
-            CHECK(EmitAtomicStore(f, ValType::I32, Scalar::Int32));
-          case uint16_t(ThreadOp::I64AtomicStore):
-            CHECK(EmitAtomicStore(f, ValType::I64, Scalar::Int64));
-          case uint16_t(ThreadOp::I32AtomicStore8U):
-            CHECK(EmitAtomicStore(f, ValType::I32, Scalar::Uint8));
-          case uint16_t(ThreadOp::I32AtomicStore16U):
-            CHECK(EmitAtomicStore(f, ValType::I32, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicStore8U):
-            CHECK(EmitAtomicStore(f, ValType::I64, Scalar::Uint8));
-          case uint16_t(ThreadOp::I64AtomicStore16U):
-            CHECK(EmitAtomicStore(f, ValType::I64, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicStore32U):
-            CHECK(EmitAtomicStore(f, ValType::I64, Scalar::Uint32));
-
-          case uint16_t(ThreadOp::I32AtomicAdd):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Int32,
-                                AtomicFetchAddOp));
-          case uint16_t(ThreadOp::I64AtomicAdd):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Int64,
-                                AtomicFetchAddOp));
-          case uint16_t(ThreadOp::I32AtomicAdd8U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint8,
-                                AtomicFetchAddOp));
-          case uint16_t(ThreadOp::I32AtomicAdd16U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint16,
-                                AtomicFetchAddOp));
-          case uint16_t(ThreadOp::I64AtomicAdd8U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint8,
-                                AtomicFetchAddOp));
-          case uint16_t(ThreadOp::I64AtomicAdd16U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint16,
-                                AtomicFetchAddOp));
-          case uint16_t(ThreadOp::I64AtomicAdd32U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint32,
-                                AtomicFetchAddOp));
-
-          case uint16_t(ThreadOp::I32AtomicSub):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Int32,
-                                AtomicFetchSubOp));
-          case uint16_t(ThreadOp::I64AtomicSub):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Int64,
-                                AtomicFetchSubOp));
-          case uint16_t(ThreadOp::I32AtomicSub8U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint8,
-                                AtomicFetchSubOp));
-          case uint16_t(ThreadOp::I32AtomicSub16U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint16,
-                                AtomicFetchSubOp));
-          case uint16_t(ThreadOp::I64AtomicSub8U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint8,
-                                AtomicFetchSubOp));
-          case uint16_t(ThreadOp::I64AtomicSub16U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint16,
-                                AtomicFetchSubOp));
-          case uint16_t(ThreadOp::I64AtomicSub32U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint32,
-                                AtomicFetchSubOp));
-
-          case uint16_t(ThreadOp::I32AtomicAnd):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Int32,
-                                AtomicFetchAndOp));
-          case uint16_t(ThreadOp::I64AtomicAnd):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Int64,
-                                AtomicFetchAndOp));
-          case uint16_t(ThreadOp::I32AtomicAnd8U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint8,
-                                AtomicFetchAndOp));
-          case uint16_t(ThreadOp::I32AtomicAnd16U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint16,
-                                AtomicFetchAndOp));
-          case uint16_t(ThreadOp::I64AtomicAnd8U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint8,
-                                AtomicFetchAndOp));
-          case uint16_t(ThreadOp::I64AtomicAnd16U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint16,
-                                AtomicFetchAndOp));
-          case uint16_t(ThreadOp::I64AtomicAnd32U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint32,
-                                AtomicFetchAndOp));
-
-          case uint16_t(ThreadOp::I32AtomicOr):
-            CHECK(
-                EmitAtomicRMW(f, ValType::I32, Scalar::Int32, AtomicFetchOrOp));
-          case uint16_t(ThreadOp::I64AtomicOr):
-            CHECK(
-                EmitAtomicRMW(f, ValType::I64, Scalar::Int64, AtomicFetchOrOp));
-          case uint16_t(ThreadOp::I32AtomicOr8U):
-            CHECK(
-                EmitAtomicRMW(f, ValType::I32, Scalar::Uint8, AtomicFetchOrOp));
-          case uint16_t(ThreadOp::I32AtomicOr16U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint16,
-                                AtomicFetchOrOp));
-          case uint16_t(ThreadOp::I64AtomicOr8U):
-            CHECK(
-                EmitAtomicRMW(f, ValType::I64, Scalar::Uint8, AtomicFetchOrOp));
-          case uint16_t(ThreadOp::I64AtomicOr16U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint16,
-                                AtomicFetchOrOp));
-          case uint16_t(ThreadOp::I64AtomicOr32U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint32,
-                                AtomicFetchOrOp));
-
-          case uint16_t(ThreadOp::I32AtomicXor):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Int32,
-                                AtomicFetchXorOp));
-          case uint16_t(ThreadOp::I64AtomicXor):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Int64,
-                                AtomicFetchXorOp));
-          case uint16_t(ThreadOp::I32AtomicXor8U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint8,
-                                AtomicFetchXorOp));
-          case uint16_t(ThreadOp::I32AtomicXor16U):
-            CHECK(EmitAtomicRMW(f, ValType::I32, Scalar::Uint16,
-                                AtomicFetchXorOp));
-          case uint16_t(ThreadOp::I64AtomicXor8U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint8,
-                                AtomicFetchXorOp));
-          case uint16_t(ThreadOp::I64AtomicXor16U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint16,
-                                AtomicFetchXorOp));
-          case uint16_t(ThreadOp::I64AtomicXor32U):
-            CHECK(EmitAtomicRMW(f, ValType::I64, Scalar::Uint32,
-                                AtomicFetchXorOp));
-
-          case uint16_t(ThreadOp::I32AtomicXchg):
-            CHECK(EmitAtomicXchg(f, ValType::I32, Scalar::Int32));
-          case uint16_t(ThreadOp::I64AtomicXchg):
-            CHECK(EmitAtomicXchg(f, ValType::I64, Scalar::Int64));
-          case uint16_t(ThreadOp::I32AtomicXchg8U):
-            CHECK(EmitAtomicXchg(f, ValType::I32, Scalar::Uint8));
-          case uint16_t(ThreadOp::I32AtomicXchg16U):
-            CHECK(EmitAtomicXchg(f, ValType::I32, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicXchg8U):
-            CHECK(EmitAtomicXchg(f, ValType::I64, Scalar::Uint8));
-          case uint16_t(ThreadOp::I64AtomicXchg16U):
-            CHECK(EmitAtomicXchg(f, ValType::I64, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicXchg32U):
-            CHECK(EmitAtomicXchg(f, ValType::I64, Scalar::Uint32));
-
-          case uint16_t(ThreadOp::I32AtomicCmpXchg):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I32, Scalar::Int32));
-          case uint16_t(ThreadOp::I64AtomicCmpXchg):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I64, Scalar::Int64));
-          case uint16_t(ThreadOp::I32AtomicCmpXchg8U):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I32, Scalar::Uint8));
-          case uint16_t(ThreadOp::I32AtomicCmpXchg16U):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I32, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicCmpXchg8U):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I64, Scalar::Uint8));
-          case uint16_t(ThreadOp::I64AtomicCmpXchg16U):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I64, Scalar::Uint16));
-          case uint16_t(ThreadOp::I64AtomicCmpXchg32U):
-            CHECK(EmitAtomicCmpXchg(f, ValType::I64, Scalar::Uint32));
-
-          default:
-            return f.iter().unrecognizedOpcode(&op);
-        }
-        break;
-      }
-
-      // asm.js-specific operators
-      case uint16_t(Op::MozPrefix): {
-        if (!f.env().isAsmJS()) {
-          return f.iter().unrecognizedOpcode(&op);
-        }
-        switch (op.b1) {
-          case uint16_t(MozOp::TeeGlobal):
-            CHECK(EmitTeeGlobal(f));
-          case uint16_t(MozOp::I32Min):
-          case uint16_t(MozOp::I32Max):
-            CHECK(EmitMinMax(f, ValType::I32, MIRType::Int32,
-                             MozOp(op.b1) == MozOp::I32Max));
-          case uint16_t(MozOp::I32Neg):
-            CHECK(EmitUnaryWithType<MWasmNeg>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(MozOp::I32BitNot):
-            CHECK(EmitBitNot(f, ValType::I32));
-          case uint16_t(MozOp::I32Abs):
-            CHECK(EmitUnaryWithType<MAbs>(f, ValType::I32, MIRType::Int32));
-          case uint16_t(MozOp::F32TeeStoreF64):
-            CHECK(EmitTeeStoreWithCoercion(f, ValType::F32, Scalar::Float64));
-          case uint16_t(MozOp::F64TeeStoreF32):
-            CHECK(EmitTeeStoreWithCoercion(f, ValType::F64, Scalar::Float32));
-          case uint16_t(MozOp::I32TeeStore8):
-            CHECK(EmitTeeStore(f, ValType::I32, Scalar::Int8));
-          case uint16_t(MozOp::I32TeeStore16):
-            CHECK(EmitTeeStore(f, ValType::I32, Scalar::Int16));
-          case uint16_t(MozOp::I64TeeStore8):
-            CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int8));
-          case uint16_t(MozOp::I64TeeStore16):
-            CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int16));
-          case uint16_t(MozOp::I64TeeStore32):
-            CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int32));
-          case uint16_t(MozOp::I32TeeStore):
-            CHECK(EmitTeeStore(f, ValType::I32, Scalar::Int32));
-          case uint16_t(MozOp::I64TeeStore):
-            CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int64));
-          case uint16_t(MozOp::F32TeeStore):
-            CHECK(EmitTeeStore(f, ValType::F32, Scalar::Float32));
-          case uint16_t(MozOp::F64TeeStore):
-            CHECK(EmitTeeStore(f, ValType::F64, Scalar::Float64));
-          case uint16_t(MozOp::F64Mod):
-            CHECK(EmitRem(f, ValType::F64, MIRType::Double,
-                          /* isUnsigned = */ false));
-          case uint16_t(MozOp::F64Sin):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::SinD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Cos):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::CosD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Tan):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::TanD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Asin):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ASinD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Acos):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ACosD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Atan):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ATanD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Exp):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ExpD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Log):
-            CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::LogD,
-                                           ValType::F64));
-          case uint16_t(MozOp::F64Pow):
-            CHECK(EmitBinaryMathBuiltinCall(f, SymbolicAddress::PowD,
-                                            ValType::F64));
-          case uint16_t(MozOp::F64Atan2):
-            CHECK(EmitBinaryMathBuiltinCall(f, SymbolicAddress::ATan2D,
-                                            ValType::F64));
-          case uint16_t(MozOp::OldCallDirect):
-            CHECK(EmitCall(f, /* asmJSFuncDef = */ true));
-          case uint16_t(MozOp::OldCallIndirect):
-            CHECK(EmitCallIndirect(f, /* oldStyle = */ true));
-||||||| merged common ancestors
-#endif  // ENABLE_WASM_THREAD_OPS
-            break;
-          }
-
-          // asm.js-specific operators
-          case uint16_t(Op::MozPrefix): {
-            if (!f.env().isAsmJS()) {
-                return f.iter().unrecognizedOpcode(&op);
-            }
-            switch (op.b1) {
-              case uint16_t(MozOp::TeeGlobal):
-                CHECK(EmitTeeGlobal(f));
-              case uint16_t(MozOp::I32Min):
-              case uint16_t(MozOp::I32Max):
-                CHECK(EmitMinMax(f, ValType::I32, MIRType::Int32, MozOp(op.b1) == MozOp::I32Max));
-              case uint16_t(MozOp::I32Neg):
-                CHECK(EmitUnaryWithType<MWasmNeg>(f, ValType::I32, MIRType::Int32));
-              case uint16_t(MozOp::I32BitNot):
-                CHECK(EmitBitNot(f, ValType::I32));
-              case uint16_t(MozOp::I32Abs):
-                CHECK(EmitUnaryWithType<MAbs>(f, ValType::I32, MIRType::Int32));
-              case uint16_t(MozOp::F32TeeStoreF64):
-                CHECK(EmitTeeStoreWithCoercion(f, ValType::F32, Scalar::Float64));
-              case uint16_t(MozOp::F64TeeStoreF32):
-                CHECK(EmitTeeStoreWithCoercion(f, ValType::F64, Scalar::Float32));
-              case uint16_t(MozOp::I32TeeStore8):
-                CHECK(EmitTeeStore(f, ValType::I32, Scalar::Int8));
-              case uint16_t(MozOp::I32TeeStore16):
-                CHECK(EmitTeeStore(f, ValType::I32, Scalar::Int16));
-              case uint16_t(MozOp::I64TeeStore8):
-                CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int8));
-              case uint16_t(MozOp::I64TeeStore16):
-                CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int16));
-              case uint16_t(MozOp::I64TeeStore32):
-                CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int32));
-              case uint16_t(MozOp::I32TeeStore):
-                CHECK(EmitTeeStore(f, ValType::I32, Scalar::Int32));
-              case uint16_t(MozOp::I64TeeStore):
-                CHECK(EmitTeeStore(f, ValType::I64, Scalar::Int64));
-              case uint16_t(MozOp::F32TeeStore):
-                CHECK(EmitTeeStore(f, ValType::F32, Scalar::Float32));
-              case uint16_t(MozOp::F64TeeStore):
-                CHECK(EmitTeeStore(f, ValType::F64, Scalar::Float64));
-              case uint16_t(MozOp::F64Mod):
-                CHECK(EmitRem(f, ValType::F64, MIRType::Double, /* isUnsigned = */ false));
-              case uint16_t(MozOp::F64Sin):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::SinD, ValType::F64));
-              case uint16_t(MozOp::F64Cos):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::CosD, ValType::F64));
-              case uint16_t(MozOp::F64Tan):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::TanD, ValType::F64));
-              case uint16_t(MozOp::F64Asin):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ASinD, ValType::F64));
-              case uint16_t(MozOp::F64Acos):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ACosD, ValType::F64));
-              case uint16_t(MozOp::F64Atan):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ATanD, ValType::F64));
-              case uint16_t(MozOp::F64Exp):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::ExpD, ValType::F64));
-              case uint16_t(MozOp::F64Log):
-                CHECK(EmitUnaryMathBuiltinCall(f, SymbolicAddress::LogD, ValType::F64));
-              case uint16_t(MozOp::F64Pow):
-                CHECK(EmitBinaryMathBuiltinCall(f, SymbolicAddress::PowD, ValType::F64));
-              case uint16_t(MozOp::F64Atan2):
-                CHECK(EmitBinaryMathBuiltinCall(f, SymbolicAddress::ATan2D, ValType::F64));
-              case uint16_t(MozOp::OldCallDirect):
-                CHECK(EmitCall(f, /* asmJSFuncDef = */ true));
-              case uint16_t(MozOp::OldCallIndirect):
-                CHECK(EmitCallIndirect(f, /* oldStyle = */ true));
-
-              default:
-                return f.iter().unrecognizedOpcode(&op);
-            }
-            break;
-          }
-=======
         }
         break;
       }
@@ -8476,19 +4024,10 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
             CHECK(EmitAtomicCmpXchg(f, ValType::I64, Scalar::Uint16));
           case uint32_t(ThreadOp::I64AtomicCmpXchg32U):
             CHECK(EmitAtomicCmpXchg(f, ValType::I64, Scalar::Uint32));
->>>>>>> upstream-releases
 
           default:
             return f.iter().unrecognizedOpcode(&op);
         }
-<<<<<<< HEAD
-        break;
-      }
-
-      default:
-        return f.iter().unrecognizedOpcode(&op);
-||||||| merged common ancestors
-=======
         break;
       }
 
@@ -8568,7 +4107,6 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
 
       default:
         return f.iter().unrecognizedOpcode(&op);
->>>>>>> upstream-releases
     }
   }
 
@@ -8577,49 +4115,6 @@ static bool EmitBodyExprs(FunctionCompiler& f) {
 #undef CHECK
 }
 
-<<<<<<< HEAD
-bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
-                               const FuncCompileInputVector& inputs,
-                               CompiledCode* code,
-                               ExclusiveDeferredValidationState& dvs,
-                               UniqueChars* error) {
-  MOZ_ASSERT(env.tier() == Tier::Optimized);
-  MOZ_ASSERT(env.optimizedBackend() == OptimizedBackend::Ion);
-
-  TempAllocator alloc(&lifo);
-  JitContext jitContext(&alloc);
-  MOZ_ASSERT(IsCompilingWasm());
-  WasmMacroAssembler masm(alloc);
-
-  // Swap in already-allocated empty vectors to avoid malloc/free.
-  MOZ_ASSERT(code->empty());
-  if (!code->swap(masm)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
-                          const FuncCompileInputVector& inputs, CompiledCode* code,
-                          ExclusiveDeferredValidationState& dvs,
-                          UniqueChars* error)
-{
-    MOZ_ASSERT(env.tier() == Tier::Optimized);
-    MOZ_ASSERT(env.optimizedBackend() == OptimizedBackend::Ion);
-
-    TempAllocator alloc(&lifo);
-    JitContext jitContext(&alloc);
-    MOZ_ASSERT(IsCompilingWasm());
-    WasmMacroAssembler masm(alloc);
-
-    // Swap in already-allocated empty vectors to avoid malloc/free.
-    MOZ_ASSERT(code->empty());
-    if (!code->swap(masm)) {
-        return false;
-    }
-
-    for (const FuncCompileInput& func : inputs) {
-        Decoder d(func.begin, func.end, func.lineOrBytecode, error);
-=======
 bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
                                const FuncCompileInputVector& inputs,
                                CompiledCode* code, UniqueChars* error) {
@@ -8641,61 +4136,18 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
   MachineState trapExitLayout;
   size_t trapExitLayoutNumWords;
   GenerateTrapExitMachineState(&trapExitLayout, &trapExitLayoutNumWords);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (const FuncCompileInput& func : inputs) {
-    Decoder d(func.begin, func.end, func.lineOrBytecode, error);
-||||||| merged common ancestors
-        // Build the local types vector.
-=======
   for (const FuncCompileInput& func : inputs) {
     JitSpew(JitSpew_Codegen, "# ========================================");
     JitSpew(JitSpew_Codegen, "# ==");
     JitSpew(JitSpew_Codegen,
             "# wasm::IonCompileFunctions: starting on function index %d",
             (int)func.index);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Build the local types vector.
-||||||| merged common ancestors
-        ValTypeVector locals;
-        if (!locals.appendAll(env.funcTypes[func.index]->args())) {
-            return false;
-        }
-        if (!DecodeLocalEntries(d, env.kind, env.types, env.gcTypesEnabled(), &locals)) {
-            return false;
-        }
-=======
     Decoder d(func.begin, func.end, func.lineOrBytecode, error);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ValTypeVector locals;
-    if (!locals.appendAll(env.funcTypes[func.index]->args())) {
-      return false;
-    }
-    if (!DecodeLocalEntries(d, env.kind, env.types, env.gcTypesEnabled(),
-                            &locals)) {
-      return false;
-    }
-||||||| merged common ancestors
-        // Set up for Ion compilation.
-=======
     // Build the local types vector.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Set up for Ion compilation.
-||||||| merged common ancestors
-        const JitCompileOptions options;
-        MIRGraph graph(&alloc);
-        CompileInfo compileInfo(locals.length());
-        MIRGenerator mir(nullptr, options, &alloc, &graph, &compileInfo,
-                         IonOptimizations.get(OptimizationLevel::Wasm));
-        mir.initMinWasmHeapLength(env.minMemoryLength);
-=======
     const ValTypeVector& argTys = env.funcTypes[func.index]->args();
     ValTypeVector locals;
     if (!locals.appendAll(argTys)) {
@@ -8706,7 +4158,6 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
     }
 
     // Set up for Ion compilation.
->>>>>>> upstream-releases
 
     const JitCompileOptions options;
     MIRGraph graph(&alloc);
@@ -8715,25 +4166,12 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
                      IonOptimizations.get(OptimizationLevel::Wasm));
     mir.initMinWasmHeapLength(env.minMemoryLength);
 
-<<<<<<< HEAD
-    // Build MIR graph
-    {
-      FunctionCompiler f(env, d, dvs, func, locals, mir);
-      if (!f.init()) {
-        return false;
-      }
-||||||| merged common ancestors
-            if (!f.startBlock()) {
-                return false;
-            }
-=======
     // Build MIR graph
     {
       FunctionCompiler f(env, d, func, locals, mir);
       if (!f.init()) {
         return false;
       }
->>>>>>> upstream-releases
 
       if (!f.startBlock()) {
         return false;
@@ -8746,21 +4184,10 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
       f.finish();
     }
 
-<<<<<<< HEAD
-    // Compile MIR graph
-    {
-      jit::SpewBeginFunction(&mir, nullptr);
-      jit::AutoSpewEndFunction spewEndFunction(&mir);
-||||||| merged common ancestors
-            if (!OptimizeMIR(&mir)) {
-                return false;
-            }
-=======
     // Compile MIR graph
     {
       jit::SpewBeginWasmFunction(&mir, func.index);
       jit::AutoSpewEndFunction spewEndFunction(&mir);
->>>>>>> upstream-releases
 
       if (!OptimizeMIR(&mir)) {
         return false;
@@ -8775,19 +4202,6 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
 
       CodeGenerator codegen(&mir, lir, &masm);
 
-<<<<<<< HEAD
-      BytecodeOffset prologueTrapOffset(func.lineOrBytecode);
-      FuncOffsets offsets;
-      if (!codegen.generateWasm(funcTypeId, prologueTrapOffset, &offsets)) {
-        return false;
-      }
-||||||| merged common ancestors
-            if (!code->codeRanges.emplaceBack(func.index, func.lineOrBytecode, offsets)) {
-                return false;
-            }
-        }
-    }
-=======
       BytecodeOffset prologueTrapOffset(func.lineOrBytecode);
       FuncOffsets offsets;
       if (!codegen.generateWasm(funcTypeId, prologueTrapOffset, argTys,
@@ -8795,25 +4209,13 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
                                 &offsets, &code->stackMaps)) {
         return false;
       }
->>>>>>> upstream-releases
 
       if (!code->codeRanges.emplaceBack(func.index, func.lineOrBytecode,
                                         offsets)) {
         return false;
       }
     }
-  }
 
-  masm.finish();
-  if (masm.oom()) {
-    return false;
-  }
-
-<<<<<<< HEAD
-  return code->swap(masm);
-||||||| merged common ancestors
-    return code->swap(masm);
-=======
     JitSpew(JitSpew_Codegen,
             "# wasm::IonCompileFunctions: completed function index %d",
             (int)func.index);
@@ -8827,26 +4229,13 @@ bool wasm::IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
   }
 
   return code->swap(masm);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::wasm::IonCanCompile() {
-#if !defined(JS_CODEGEN_NONE) && !defined(JS_CODEGEN_ARM64)
-  return true;
-||||||| merged common ancestors
-bool
-js::wasm::IonCanCompile()
-{
-#if !defined(JS_CODEGEN_NONE) && !defined(JS_CODEGEN_ARM64)
-    return true;
-=======
 bool js::wasm::IonCanCompile() {
 #if defined(JS_CODEGEN_X64) || defined(JS_CODEGEN_X86) ||    \
     defined(JS_CODEGEN_ARM) || defined(JS_CODEGEN_MIPS32) || \
     defined(JS_CODEGEN_MIPS64)
   return true;
->>>>>>> upstream-releases
 #else
   return false;
 #endif

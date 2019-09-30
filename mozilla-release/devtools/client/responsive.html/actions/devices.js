@@ -22,13 +22,7 @@ const { post } = require("../utils/message");
 
 const { addDevice, editDevice, getDevices, removeDevice } = require("devtools/client/shared/devices");
 const { changeUserAgent, toggleTouchSimulation } = require("./ui");
-<<<<<<< HEAD
-const { changeDevice, changePixelRatio } = require("./viewports");
-||||||| merged common ancestors
-const { changeDevice, changePixelRatio, resizeViewport } = require("./viewports");
-=======
 const { changeDevice, changePixelRatio, changeViewportAngle } = require("./viewports");
->>>>>>> upstream-releases
 
 const DISPLAYED_DEVICES_PREF = "devtools.responsive.html.displayedDeviceList";
 
@@ -219,19 +213,8 @@ module.exports = {
         return;
       }
 
-<<<<<<< HEAD
-      post(window, {
-||||||| merged common ancestors
-      post(window, {
-        type: "viewport-resize",
-        width: device.width,
-        height: device.height,
-      });
-      post(window, {
-=======
       const viewport = getState().viewports[0];
       post(window, {
->>>>>>> upstream-releases
         type: "change-device",
         device,
         viewport,

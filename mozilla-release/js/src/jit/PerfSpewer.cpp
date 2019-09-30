@@ -10,32 +10,14 @@
 #include "mozilla/Printf.h"
 
 #ifdef XP_UNIX
-<<<<<<< HEAD
-#include <unistd.h>
-||||||| merged common ancestors
-# include <unistd.h>
-=======
 #  include <unistd.h>
->>>>>>> upstream-releases
 #endif
 
 #ifdef JS_ION_PERF
-<<<<<<< HEAD
-#include "jit/JitSpewer.h"
-#include "jit/LIR.h"
-#include "jit/MIR.h"
-#include "jit/MIRGraph.h"
-||||||| merged common ancestors
-# include "jit/JitSpewer.h"
-# include "jit/LIR.h"
-# include "jit/MIR.h"
-# include "jit/MIRGraph.h"
-=======
 #  include "jit/JitSpewer.h"
 #  include "jit/LIR.h"
 #  include "jit/MIR.h"
 #  include "jit/MIRGraph.h"
->>>>>>> upstream-releases
 #endif
 
 #include "vm/MutexIDs.h"
@@ -47,28 +29,12 @@
 // /data/local/tmp/ so also try /sdcard/.
 
 #ifndef PERF_SPEW_DIR
-<<<<<<< HEAD
-#if defined(__ANDROID__)
-#define PERF_SPEW_DIR "/data/local/tmp/"
-#define PERF_SPEW_DIR_2 "/sdcard/"
-#else
-#define PERF_SPEW_DIR "/tmp/"
-#endif
-||||||| merged common ancestors
-# if defined(__ANDROID__)
-#  define PERF_SPEW_DIR "/data/local/tmp/"
-#  define PERF_SPEW_DIR_2 "/sdcard/"
-# else
-#  define PERF_SPEW_DIR "/tmp/"
-# endif
-=======
 #  if defined(__ANDROID__)
 #    define PERF_SPEW_DIR "/data/local/tmp/"
 #    define PERF_SPEW_DIR_2 "/sdcard/"
 #  else
 #    define PERF_SPEW_DIR "/tmp/"
 #  endif
->>>>>>> upstream-releases
 #endif
 
 using namespace js;
@@ -107,90 +73,6 @@ static bool openPerfMap(const char* dir) {
   return true;
 }
 
-<<<<<<< HEAD
-void js::jit::CheckPerf() {
-  if (!PerfChecked) {
-    const char* env = getenv("IONPERF");
-    if (env == nullptr) {
-      PerfMode = PERF_MODE_NONE;
-      fprintf(stderr,
-              "Warning: JIT perf reporting requires IONPERF set to \"block\" "
-              "or \"func\". ");
-      fprintf(stderr, "Perf mapping will be deactivated.\n");
-    } else if (!strcmp(env, "none")) {
-      PerfMode = PERF_MODE_NONE;
-    } else if (!strcmp(env, "block")) {
-      PerfMode = PERF_MODE_BLOCK;
-    } else if (!strcmp(env, "func")) {
-      PerfMode = PERF_MODE_FUNC;
-    } else {
-      fprintf(stderr, "Use IONPERF=func to record at function granularity\n");
-      fprintf(stderr,
-              "Use IONPERF=block to record at basic block granularity\n");
-      fprintf(stderr, "\n");
-      fprintf(stderr, "Be advised that using IONPERF will cause all scripts\n");
-      fprintf(stderr, "to be leaked.\n");
-      exit(0);
-    }
-
-    if (PerfMode != PERF_MODE_NONE) {
-      PerfMutex = js_new<js::Mutex>(mutexid::PerfSpewer);
-      if (!PerfMutex) {
-        MOZ_CRASH("failed to allocate PerfMutex");
-      }
-
-      if (openPerfMap(PERF_SPEW_DIR)) {
-        PerfChecked = true;
-        return;
-      }
-
-#if defined(__ANDROID__)
-      if (openPerfMap(PERF_SPEW_DIR_2)) {
-||||||| merged common ancestors
-void
-js::jit::CheckPerf() {
-    if (!PerfChecked) {
-        const char* env = getenv("IONPERF");
-        if (env == nullptr) {
-            PerfMode = PERF_MODE_NONE;
-            fprintf(stderr, "Warning: JIT perf reporting requires IONPERF set to \"block\" or \"func\". ");
-            fprintf(stderr, "Perf mapping will be deactivated.\n");
-        } else if (!strcmp(env, "none")) {
-            PerfMode = PERF_MODE_NONE;
-        } else if (!strcmp(env, "block")) {
-            PerfMode = PERF_MODE_BLOCK;
-        } else if (!strcmp(env, "func")) {
-            PerfMode = PERF_MODE_FUNC;
-        } else {
-            fprintf(stderr, "Use IONPERF=func to record at function granularity\n");
-            fprintf(stderr, "Use IONPERF=block to record at basic block granularity\n");
-            fprintf(stderr, "\n");
-            fprintf(stderr, "Be advised that using IONPERF will cause all scripts\n");
-            fprintf(stderr, "to be leaked.\n");
-            exit(0);
-        }
-
-        if (PerfMode != PERF_MODE_NONE) {
-            PerfMutex = js_new<js::Mutex>(mutexid::PerfSpewer);
-            if (!PerfMutex) {
-                MOZ_CRASH("failed to allocate PerfMutex");
-            }
-
-            if (openPerfMap(PERF_SPEW_DIR)) {
-                PerfChecked = true;
-                return;
-            }
-
-#if defined(__ANDROID__)
-            if (openPerfMap(PERF_SPEW_DIR_2)) {
-                PerfChecked = true;
-                return;
-            }
-#endif
-            fprintf(stderr, "Failed to open perf map file.  Disabling IONPERF.\n");
-            PerfMode = PERF_MODE_NONE;
-        }
-=======
 void js::jit::CheckPerf() {
   if (!PerfChecked) {
     const char* env = getenv("IONPERF");
@@ -229,22 +111,12 @@ void js::jit::CheckPerf() {
 
 #  if defined(__ANDROID__)
       if (openPerfMap(PERF_SPEW_DIR_2)) {
->>>>>>> upstream-releases
         PerfChecked = true;
-<<<<<<< HEAD
-        return;
-      }
-#endif
-      fprintf(stderr, "Failed to open perf map file.  Disabling IONPERF.\n");
-      PerfMode = PERF_MODE_NONE;
-||||||| merged common ancestors
-=======
         return;
       }
 #  endif
       fprintf(stderr, "Failed to open perf map file.  Disabling IONPERF.\n");
       PerfMode = PERF_MODE_NONE;
->>>>>>> upstream-releases
     }
     PerfChecked = true;
   }

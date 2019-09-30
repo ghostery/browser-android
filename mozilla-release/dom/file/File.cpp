@@ -24,40 +24,14 @@ File::File(nsISupports* aParent, BlobImpl* aImpl) : Blob(aParent, aImpl) {
 
 File::~File() {}
 
-<<<<<<< HEAD
-/* static */ File* File::Create(nsISupports* aParent, BlobImpl* aImpl) {
-||||||| merged common ancestors
-/* static */ File*
-File::Create(nsISupports* aParent, BlobImpl* aImpl)
-{
-=======
 /* static */
 File* File::Create(nsISupports* aParent, BlobImpl* aImpl) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aImpl);
   MOZ_ASSERT(aImpl->IsFile());
 
   return new File(aParent, aImpl);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<File> File::Create(nsISupports* aParent,
-                                                 const nsAString& aName,
-                                                 const nsAString& aContentType,
-                                                 uint64_t aLength,
-                                                 int64_t aLastModifiedDate) {
-  RefPtr<File> file = new File(
-      aParent,
-      new BaseBlobImpl(aName, aContentType, aLength, aLastModifiedDate));
-||||||| merged common ancestors
-/* static */ already_AddRefed<File>
-File::Create(nsISupports* aParent, const nsAString& aName,
-             const nsAString& aContentType, uint64_t aLength,
-             int64_t aLastModifiedDate)
-{
-  RefPtr<File> file = new File(aParent,
-    new BaseBlobImpl(aName, aContentType, aLength, aLastModifiedDate));
-=======
 /* static */
 already_AddRefed<File> File::Create(nsISupports* aParent,
                                     const nsAString& aName,
@@ -67,29 +41,9 @@ already_AddRefed<File> File::Create(nsISupports* aParent,
   RefPtr<File> file = new File(
       aParent, new BaseBlobImpl(NS_LITERAL_STRING("BaseBlobImpl"), aName,
                                 aContentType, aLength, aLastModifiedDate));
->>>>>>> upstream-releases
   return file.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<File> File::CreateMemoryFile(
-    nsISupports* aParent, void* aMemoryBuffer, uint64_t aLength,
-    const nsAString& aName, const nsAString& aContentType,
-    int64_t aLastModifiedDate) {
-  RefPtr<File> file =
-      new File(aParent, new MemoryBlobImpl(aMemoryBuffer, aLength, aName,
-                                           aContentType, aLastModifiedDate));
-||||||| merged common ancestors
-/* static */ already_AddRefed<File>
-File::CreateMemoryFile(nsISupports* aParent, void* aMemoryBuffer,
-                       uint64_t aLength, const nsAString& aName,
-                       const nsAString& aContentType,
-                       int64_t aLastModifiedDate)
-{
-  RefPtr<File> file = new File(aParent,
-    new MemoryBlobImpl(aMemoryBuffer, aLength, aName,
-                       aContentType, aLastModifiedDate));
-=======
 /* static */
 already_AddRefed<File> File::CreateMemoryFile(nsISupports* aParent,
                                               void* aMemoryBuffer,
@@ -100,43 +54,22 @@ already_AddRefed<File> File::CreateMemoryFile(nsISupports* aParent,
   RefPtr<File> file =
       new File(aParent, new MemoryBlobImpl(aMemoryBuffer, aLength, aName,
                                            aContentType, aLastModifiedDate));
->>>>>>> upstream-releases
   return file.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<File> File::CreateFromFile(nsISupports* aParent,
-                                                         nsIFile* aFile) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<File>
-File::CreateFromFile(nsISupports* aParent, nsIFile* aFile)
-{
-=======
 /* static */
 already_AddRefed<File> File::CreateFromFile(nsISupports* aParent,
                                             nsIFile* aFile) {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess());
   RefPtr<File> file = new File(aParent, new FileBlobImpl(aFile));
   return file.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<File> File::CreateFromFile(
-    nsISupports* aParent, nsIFile* aFile, const nsAString& aName,
-    const nsAString& aContentType) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<File>
-File::CreateFromFile(nsISupports* aParent, nsIFile* aFile,
-                     const nsAString& aName, const nsAString& aContentType)
-{
-=======
 /* static */
 already_AddRefed<File> File::CreateFromFile(nsISupports* aParent,
                                             nsIFile* aFile,
                                             const nsAString& aName,
                                             const nsAString& aContentType) {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess());
   RefPtr<File> file =
       new File(aParent, new FileBlobImpl(aFile, aName, aContentType));
@@ -166,55 +99,21 @@ int64_t File::GetLastModified(ErrorResult& aRv) {
   return mImpl->GetLastModified(aRv);
 }
 
-<<<<<<< HEAD
-void File::GetMozFullPath(nsAString& aFilename,
-                          SystemCallerGuarantee aGuarantee,
-                          ErrorResult& aRv) const {
-||||||| merged common ancestors
-void
-File::GetMozFullPath(nsAString& aFilename, SystemCallerGuarantee aGuarantee,
-                     ErrorResult& aRv) const
-{
-=======
 void File::GetMozFullPath(nsAString& aFilename,
                           SystemCallerGuarantee aGuarantee, ErrorResult& aRv) {
->>>>>>> upstream-releases
   mImpl->GetMozFullPath(aFilename, aGuarantee, aRv);
 }
 
-<<<<<<< HEAD
-void File::GetMozFullPathInternal(nsAString& aFileName,
-                                  ErrorResult& aRv) const {
-||||||| merged common ancestors
-void
-File::GetMozFullPathInternal(nsAString& aFileName, ErrorResult& aRv) const
-{
-=======
 void File::GetMozFullPathInternal(nsAString& aFileName, ErrorResult& aRv) {
->>>>>>> upstream-releases
   mImpl->GetMozFullPathInternal(aFileName, aRv);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<File> File::Constructor(
-    const GlobalObject& aGlobal, const Sequence<BlobPart>& aData,
-    const nsAString& aName, const FilePropertyBag& aBag, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<File>
-File::Constructor(const GlobalObject& aGlobal,
-                  const Sequence<BlobPart>& aData,
-                  const nsAString& aName,
-                  const FilePropertyBag& aBag,
-                  ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<File> File::Constructor(const GlobalObject& aGlobal,
                                          const Sequence<BlobPart>& aData,
                                          const nsAString& aName,
                                          const FilePropertyBag& aBag,
                                          ErrorResult& aRv) {
->>>>>>> upstream-releases
   // Normalizing the filename
   nsString name(aName);
   name.ReplaceChar('/', ':');
@@ -237,26 +136,11 @@ already_AddRefed<File> File::Constructor(const GlobalObject& aGlobal,
   return file.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Promise> File::CreateFromNsIFile(
-    const GlobalObject& aGlobal, nsIFile* aData,
-    const ChromeFilePropertyBag& aBag, SystemCallerGuarantee aGuarantee,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Promise>
-File::CreateFromNsIFile(const GlobalObject& aGlobal,
-                        nsIFile* aData,
-                        const ChromeFilePropertyBag& aBag,
-                        SystemCallerGuarantee aGuarantee,
-                        ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Promise> File::CreateFromNsIFile(
     const GlobalObject& aGlobal, nsIFile* aData,
     const ChromeFilePropertyBag& aBag, SystemCallerGuarantee aGuarantee,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
 
   RefPtr<Promise> promise =
@@ -264,26 +148,11 @@ already_AddRefed<Promise> File::CreateFromNsIFile(
   return promise.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Promise> File::CreateFromFileName(
-    const GlobalObject& aGlobal, const nsAString& aPath,
-    const ChromeFilePropertyBag& aBag, SystemCallerGuarantee aGuarantee,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Promise>
-File::CreateFromFileName(const GlobalObject& aGlobal,
-                         const nsAString& aPath,
-                         const ChromeFilePropertyBag& aBag,
-                         SystemCallerGuarantee aGuarantee,
-                         ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Promise> File::CreateFromFileName(
     const GlobalObject& aGlobal, const nsAString& aPath,
     const ChromeFilePropertyBag& aBag, SystemCallerGuarantee aGuarantee,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> file;
   aRv = NS_NewLocalFile(aPath, false, getter_AddRefs(file));
   if (NS_WARN_IF(aRv.Failed())) {

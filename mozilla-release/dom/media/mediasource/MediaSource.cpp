@@ -141,24 +141,11 @@ nsresult MediaSource::IsTypeSupported(const nsAString& aType,
   return NS_ERROR_DOM_NOT_SUPPORTED_ERR;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MediaSource> MediaSource::Constructor(
-    const GlobalObject& aGlobal, ErrorResult& aRv) {
-  nsCOMPtr<nsPIDOMWindowInner> window =
-      do_QueryInterface(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-/* static */ already_AddRefed<MediaSource>
-MediaSource::Constructor(const GlobalObject& aGlobal,
-                         ErrorResult& aRv)
-{
-  nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aGlobal.GetAsSupports());
-=======
 /* static */
 already_AddRefed<MediaSource> MediaSource::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> window =
       do_QueryInterface(aGlobal.GetAsSupports());
->>>>>>> upstream-releases
   if (!window) {
     aRv.Throw(NS_ERROR_UNEXPECTED);
     return nullptr;
@@ -374,14 +361,6 @@ void MediaSource::EndOfStream(const MediaResult& aError) {
   mDecoder->DecodeError(aError);
 }
 
-<<<<<<< HEAD
-/* static */ bool MediaSource::IsTypeSupported(const GlobalObject& aOwner,
-                                               const nsAString& aType) {
-||||||| merged common ancestors
-/* static */ bool
-MediaSource::IsTypeSupported(const GlobalObject& aOwner, const nsAString& aType)
-{
-=======
 static bool AreExtraParametersSane(const nsAString& aType) {
   Maybe<MediaContainerType> containerType = MakeMediaContainerType(aType);
   if (!containerType) {
@@ -432,22 +411,14 @@ static bool IsYouTube(const GlobalObject& aOwner) {
 /* static */
 bool MediaSource::IsTypeSupported(const GlobalObject& aOwner,
                                   const nsAString& aType) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   DecoderDoctorDiagnostics diagnostics;
   nsresult rv = IsTypeSupported(aType, &diagnostics);
-<<<<<<< HEAD
-  nsCOMPtr<nsPIDOMWindowInner> window =
-      do_QueryInterface(aOwner.GetAsSupports());
-||||||| merged common ancestors
-  nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aOwner.GetAsSupports());
-=======
   if (NS_SUCCEEDED(rv) && IsYouTube(aOwner) && !AreExtraParametersSane(aType)) {
     rv = NS_ERROR_DOM_NOT_SUPPORTED_ERR;
   }
   nsCOMPtr<nsPIDOMWindowInner> window =
       do_QueryInterface(aOwner.GetAsSupports());
->>>>>>> upstream-releases
   diagnostics.StoreFormatDiagnostics(window ? window->GetExtantDoc() : nullptr,
                                      aType, NS_SUCCEEDED(rv), __func__);
   MOZ_LOG(GetMediaSourceAPILog(), mozilla::LogLevel::Debug,
@@ -457,30 +428,13 @@ bool MediaSource::IsTypeSupported(const GlobalObject& aOwner,
   return NS_SUCCEEDED(rv);
 }
 
-<<<<<<< HEAD
-/* static */ bool MediaSource::Enabled(JSContext* cx, JSObject* aGlobal) {
-||||||| merged common ancestors
-/* static */ bool
-MediaSource::Enabled(JSContext* cx, JSObject* aGlobal)
-{
-=======
 /* static */
 bool MediaSource::Enabled(JSContext* cx, JSObject* aGlobal) {
->>>>>>> upstream-releases
   return Preferences::GetBool("media.mediasource.enabled");
 }
 
-<<<<<<< HEAD
-/* static */ bool MediaSource::ExperimentalEnabled(JSContext* cx,
-                                                   JSObject* aGlobal) {
-||||||| merged common ancestors
-/* static */ bool
-MediaSource::ExperimentalEnabled(JSContext* cx, JSObject* aGlobal)
-{
-=======
 /* static */
 bool MediaSource::ExperimentalEnabled(JSContext* cx, JSObject* aGlobal) {
->>>>>>> upstream-releases
   return Preferences::GetBool("media.mediasource.experimental.enabled");
 }
 
@@ -661,19 +615,6 @@ void MediaSource::DurationChange(double aNewDuration, ErrorResult& aRv) {
   mDecoder->SetMediaSourceDuration(aNewDuration);
 }
 
-<<<<<<< HEAD
-void MediaSource::GetMozDebugReaderData(nsAString& aString) {
-  nsAutoCString result;
-  mDecoder->GetMozDebugReaderData(result);
-  aString = NS_ConvertUTF8toUTF16(result);
-||||||| merged common ancestors
-void
-MediaSource::GetMozDebugReaderData(nsAString& aString)
-{
-  nsAutoCString result;
-  mDecoder->GetMozDebugReaderData(result);
-  aString = NS_ConvertUTF8toUTF16(result);
-=======
 already_AddRefed<Promise> MediaSource::MozDebugReaderData(ErrorResult& aRv) {
   // Creating a JS promise
   nsPIDOMWindowInner* win = GetOwner();
@@ -690,7 +631,6 @@ already_AddRefed<Promise> MediaSource::MozDebugReaderData(ErrorResult& aRv) {
   mDecoder->GetDebugInfo(info);
   domPromise->MaybeResolve(info);
   return domPromise.forget();
->>>>>>> upstream-releases
 }
 
 nsPIDOMWindowInner* MediaSource::GetParentObject() const { return GetOwner(); }

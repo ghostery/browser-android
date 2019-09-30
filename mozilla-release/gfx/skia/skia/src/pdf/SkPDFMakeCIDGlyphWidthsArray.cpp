@@ -6,18 +6,6 @@
  */
 
 #include "SkPDFMakeCIDGlyphWidthsArray.h"
-<<<<<<< HEAD
-
-#include "SkBitSet.h"
-#include "SkGlyphCache.h"
-#include "SkPaint.h"
-#include "SkTo.h"
-
-#include <vector>
-||||||| merged common ancestors
-#include "SkPaint.h"
-#include "SkGlyphCache.h"
-=======
 
 #include "SkPDFGlyphUse.h"
 #include "SkPaint.h"
@@ -25,7 +13,6 @@
 #include "SkTo.h"
 
 #include <vector>
->>>>>>> upstream-releases
 
 // TODO(halcanary): Write unit tests for SkPDFMakeCIDGlyphWidthsArray().
 
@@ -134,16 +121,8 @@ static void compose_advance_data(const AdvanceMetric& range,
             break;
         }
         case AdvanceMetric::kRange: {
-<<<<<<< HEAD
-            auto advanceArray = sk_make_sp<SkPDFArray>();
-            for (size_t j = 0; j < range.fAdvance.size(); j++)
-||||||| merged common ancestors
-            auto advanceArray = sk_make_sp<SkPDFArray>();
-            for (int j = 0; j < range.fAdvance.count(); j++)
-=======
             auto advanceArray = SkPDFMakeArray();
             for (size_t j = 0; j < range.fAdvance.size(); j++)
->>>>>>> upstream-releases
                 advanceArray->appendScalar(
                         scale_from_font_units(range.fAdvance[j], emSize));
             result->appendInt(range.fStartId);

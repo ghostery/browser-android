@@ -3,21 +3,9 @@
 //! Jump tables are declared in the preamble and assigned an `ir::entities::JumpTable` reference.
 //! The actual table of destinations is stored in a `JumpTableData` struct defined in this module.
 
-<<<<<<< HEAD
-use ir::entities::Ebb;
-use std::fmt::{self, Display, Formatter};
-use std::slice::{Iter, IterMut};
-||||||| merged common ancestors
-use ir::entities::Ebb;
-use packed_option::PackedOption;
-use std::fmt::{self, Display, Formatter};
-use std::iter;
-use std::slice;
-=======
 use crate::ir::entities::Ebb;
 use core::fmt::{self, Display, Formatter};
 use core::slice::{Iter, IterMut};
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// Contents of a jump table.

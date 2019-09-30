@@ -49,19 +49,9 @@ const TEST_DATA = [
     node: "#testid3",
     value: ".testclass3",
     commitKey: "VK_TAB",
-<<<<<<< HEAD
-    modifiers: {shiftKey: true},
-    expected: ".testclass3",
-  },
-||||||| merged common ancestors
-    modifiers: {shiftKey: true},
-    expected: ".testclass3"
-  }
-=======
     modifiers: { shiftKey: true },
     expected: ".testclass3",
   },
->>>>>>> upstream-releases
 ];
 
 add_task(async function() {

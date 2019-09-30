@@ -21,16 +21,8 @@ StaticRefPtr<StorageNotifierService> gStorageNotifierService;
 
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ StorageNotifierService* StorageNotifierService::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ StorageNotifierService*
-StorageNotifierService::GetOrCreate()
-{
-=======
 /* static */
 StorageNotifierService* StorageNotifierService::GetOrCreate() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!gStorageNotifierService && !gStorageShuttingDown) {
     gStorageNotifierService = new StorageNotifierService();
@@ -51,24 +43,11 @@ StorageNotifierService::~StorageNotifierService() {
   gStorageShuttingDown = true;
 }
 
-<<<<<<< HEAD
-/* static */ void StorageNotifierService::Broadcast(
-    StorageEvent* aEvent, const char16_t* aStorageType, bool aPrivateBrowsing,
-    bool aImmediateDispatch) {
-||||||| merged common ancestors
-/* static */ void
-StorageNotifierService::Broadcast(StorageEvent* aEvent,
-                                  const char16_t* aStorageType,
-                                  bool aPrivateBrowsing,
-                                  bool aImmediateDispatch)
-{
-=======
 /* static */
 void StorageNotifierService::Broadcast(StorageEvent* aEvent,
                                        const char16_t* aStorageType,
                                        bool aPrivateBrowsing,
                                        bool aImmediateDispatch) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   RefPtr<StorageNotifierService> service = gStorageNotifierService;

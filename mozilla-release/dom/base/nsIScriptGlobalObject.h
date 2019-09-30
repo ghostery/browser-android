@@ -26,21 +26,9 @@ struct ErrorEventInit;
 // notifies it of an error via nsIScriptGlobalObject::HandleScriptError.
 // Returns true if HandleDOMEvent was actually called, in which case
 // aStatus will be filled in with the status.
-<<<<<<< HEAD
-bool NS_HandleScriptError(nsIScriptGlobalObject *aScriptGlobal,
-                          const mozilla::dom::ErrorEventInit &aErrorEvent,
-                          nsEventStatus *aStatus);
-||||||| merged common ancestors
-bool
-NS_HandleScriptError(nsIScriptGlobalObject *aScriptGlobal,
-                     const mozilla::dom::ErrorEventInit &aErrorEvent,
-                     nsEventStatus *aStatus);
-
-=======
 bool NS_HandleScriptError(nsIScriptGlobalObject* aScriptGlobal,
                           const mozilla::dom::ErrorEventInit& aErrorEvent,
                           nsEventStatus* aStatus);
->>>>>>> upstream-releases
 
 // Must be kept in sync with xpcom/rust/xpcom/src/interfaces/nonidl.rs
 #define NS_ISCRIPTGLOBALOBJECT_IID                   \
@@ -76,15 +64,7 @@ class nsIScriptGlobalObject : public nsIGlobalObject {
    */
   virtual nsIScriptContext* GetScriptContext() = 0;
 
-<<<<<<< HEAD
-  nsIScriptContext *GetContext() { return GetScriptContext(); }
-||||||| merged common ancestors
-  nsIScriptContext* GetContext() {
-    return GetScriptContext();
-  }
-=======
   nsIScriptContext* GetContext() { return GetScriptContext(); }
->>>>>>> upstream-releases
 
   /**
    * Handle a script error.  Generally called by a script context.

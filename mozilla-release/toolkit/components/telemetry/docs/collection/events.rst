@@ -148,10 +148,6 @@ The following event properties are valid:
 
   Combinations of ``category``, ``method``, and ``object`` defined in the file must be unique.
 
-.. note::
-
-  Combinations of ``category``, ``method``, and ``object`` defined in the file must be unique.
-
 The API
 =======
 

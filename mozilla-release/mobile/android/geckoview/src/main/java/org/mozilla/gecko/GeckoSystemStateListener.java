@@ -114,23 +114,6 @@ public class GeckoSystemStateListener
         contentResolver.notifyChange(animationSetting, null);
     }
 
-<<<<<<< HEAD
-    @WrapForJNI(stubName = "OnDeviceChanged", calledFrom = "ui", dispatchTo = "gecko")
-    private static native void nativeOnDeviceChanged();
-
-    private static void onDeviceChanged() {
-        if (GeckoThread.isStateAtLeast(GeckoThread.State.PROFILE_READY)) {
-            nativeOnDeviceChanged();
-        } else {
-            GeckoThread.queueNativeCallUntil(
-                    GeckoThread.State.PROFILE_READY, GeckoSystemStateListener.class,
-                    "nativeOnDeviceChanged");
-        }
-    }
-||||||| merged common ancestors
-    @WrapForJNI(calledFrom = "ui", dispatchTo = "gecko")
-    private static native void onDeviceChanged();
-=======
     @WrapForJNI(calledFrom = "gecko")
     /**
      * For prefers-color-scheme media queries feature.
@@ -161,7 +144,6 @@ public class GeckoSystemStateListener
                     "nativeOnDeviceChanged");
         }
     }
->>>>>>> upstream-releases
 
     private void notifyDeviceChanged(final int deviceId) {
         InputDevice device = InputDevice.getDevice(deviceId);

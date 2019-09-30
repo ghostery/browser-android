@@ -204,19 +204,9 @@ void GrVkBuffer::internalUnmap(GrVkGpu* gpu, size_t size) {
         if (size <= 65536 && 0 == (size & 0x3)) {
             gpu->updateBuffer(this, fMapPtr, this->offset(), size);
         } else {
-<<<<<<< HEAD
-            GrVkTransferBuffer* transferBuffer =
-                    GrVkTransferBuffer::Create(gpu, size, GrVkBuffer::kCopyRead_Type);
-            if (!transferBuffer) {
-||||||| merged common ancestors
-            GrVkTransferBuffer* transferBuffer =
-                    GrVkTransferBuffer::Create(gpu, size, GrVkBuffer::kCopyRead_Type);
-            if(!transferBuffer) {
-=======
             sk_sp<GrVkTransferBuffer> transferBuffer =
                     GrVkTransferBuffer::Make(gpu, size, GrVkBuffer::kCopyRead_Type);
             if (!transferBuffer) {
->>>>>>> upstream-releases
                 return;
             }
 

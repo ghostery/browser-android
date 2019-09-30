@@ -10,16 +10,7 @@
 #include "MediaInfo.h"
 #include "MediaSegment.h"
 #include "nsSize.h"
-<<<<<<< HEAD
 #include "TrackID.h"
-
-class nsIDocument;
-||||||| merged common ancestors
-
-class nsIDocument;
-=======
-#include "TrackID.h"
->>>>>>> upstream-releases
 
 namespace mozilla {
 

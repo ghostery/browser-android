@@ -8,13 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/x_error_trap.cc
-#include "modules/desktop_capture/x11/x_error_trap.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/x11/x_error_trap.h"
-=======
 #include "modules/desktop_capture/linux/x_error_trap.h"
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/x_error_trap.cc
 
 #include <assert.h>
 

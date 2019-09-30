@@ -291,18 +291,6 @@ IPCResult HttpBackgroundChannelChild::RecvDivertMessages() {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-IPCResult HttpBackgroundChannelChild::RecvNotifyTrackingProtectionDisabled() {
-  LOG(
-      ("HttpBackgroundChannelChild::RecvNotifyTrackingProtectionDisabled "
-       "[this=%p]\n",
-       this));
-||||||| merged common ancestors
-IPCResult
-HttpBackgroundChannelChild::RecvNotifyTrackingProtectionDisabled()
-{
-  LOG(("HttpBackgroundChannelChild::RecvNotifyTrackingProtectionDisabled [this=%p]\n", this));
-=======
 IPCResult
 HttpBackgroundChannelChild::RecvNotifyChannelClassifierProtectionDisabled(
     const uint32_t& aAcceptedReason) {
@@ -311,7 +299,6 @@ HttpBackgroundChannelChild::RecvNotifyChannelClassifierProtectionDisabled(
        "RecvNotifyChannelClassifierProtectionDisabled [this=%p "
        "aAcceptedReason=%" PRIu32 "]\n",
        this, aAcceptedReason));
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread());
 
   if (NS_WARN_IF(!mChannelChild)) {
@@ -326,7 +313,6 @@ HttpBackgroundChannelChild::RecvNotifyChannelClassifierProtectionDisabled(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
 IPCResult HttpBackgroundChannelChild::RecvNotifyCookieAllowed() {
   LOG(("HttpBackgroundChannelChild::RecvNotifyCookieAllowed [this=%p]\n",
        this));
@@ -341,46 +327,6 @@ IPCResult HttpBackgroundChannelChild::RecvNotifyCookieAllowed() {
   return IPC_OK();
 }
 
-IPCResult HttpBackgroundChannelChild::RecvNotifyTrackingCookieBlocked(
-    const uint32_t& aRejectedReason) {
-  LOG((
-      "HttpBackgroundChannelChild::RecvNotifyTrackingCookieBlocked [this=%p]\n",
-      this));
-||||||| merged common ancestors
-IPCResult
-HttpBackgroundChannelChild::RecvNotifyTrackingCookieBlocked(const uint32_t& aRejectedReason)
-{
-  LOG(("HttpBackgroundChannelChild::RecvNotifyTrackingCookieBlocked [this=%p]\n", this));
-=======
-IPCResult HttpBackgroundChannelChild::RecvNotifyCookieAllowed() {
-  LOG(("HttpBackgroundChannelChild::RecvNotifyCookieAllowed [this=%p]\n",
-       this));
->>>>>>> upstream-releases
-  MOZ_ASSERT(OnSocketThread());
-
-  if (NS_WARN_IF(!mChannelChild)) {
-    return IPC_OK();
-  }
-
-  mChannelChild->ProcessNotifyCookieAllowed();
-
-  return IPC_OK();
-}
-
-<<<<<<< HEAD
-IPCResult HttpBackgroundChannelChild::RecvNotifyTrackingResource(
-    const bool& aIsThirdParty) {
-  LOG(
-      ("HttpBackgroundChannelChild::RecvNotifyTrackingResource thirdparty=%d "
-       "[this=%p]\n",
-       static_cast<int>(aIsThirdParty), this));
-||||||| merged common ancestors
-IPCResult
-HttpBackgroundChannelChild::RecvNotifyTrackingResource(const bool& aIsThirdParty)
-{
-  LOG(("HttpBackgroundChannelChild::RecvNotifyTrackingResource thirdparty=%d "
-       "[this=%p]\n", static_cast<int>(aIsThirdParty), this));
-=======
 IPCResult HttpBackgroundChannelChild::RecvNotifyCookieBlocked(
     const uint32_t& aRejectedReason) {
   LOG(
@@ -404,7 +350,6 @@ IPCResult HttpBackgroundChannelChild::RecvNotifyClassificationFlags(
       ("HttpBackgroundChannelChild::RecvNotifyClassificationFlags "
        "classificationFlags=%" PRIu32 ", thirdparty=%d [this=%p]\n",
        aClassificationFlags, static_cast<int>(aIsThirdParty), this));
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread());
 
   if (NS_WARN_IF(!mChannelChild)) {
@@ -419,17 +364,6 @@ IPCResult HttpBackgroundChannelChild::RecvNotifyClassificationFlags(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-IPCResult HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo(
-    const ClassifierInfo& info) {
-  LOG(("HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo [this=%p]\n",
-       this));
-||||||| merged common ancestors
-IPCResult
-HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo(const ClassifierInfo& info)
-{
-  LOG(("HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo [this=%p]\n", this));
-=======
 IPCResult HttpBackgroundChannelChild::RecvNotifyFlashPluginStateChanged(
     const nsIHttpChannel::FlashPluginState& aState) {
   LOG(
@@ -453,7 +387,6 @@ IPCResult HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo(
     const ClassifierInfo& info) {
   LOG(("HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo [this=%p]\n",
        this));
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread());
 
   if (NS_WARN_IF(!mChannelChild)) {
@@ -468,13 +401,6 @@ IPCResult HttpBackgroundChannelChild::RecvSetClassifierMatchedInfo(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void HttpBackgroundChannelChild::ActorDestroy(ActorDestroyReason aWhy) {
-||||||| merged common ancestors
-void
-HttpBackgroundChannelChild::ActorDestroy(ActorDestroyReason aWhy)
-{
-=======
 IPCResult HttpBackgroundChannelChild::RecvSetClassifierMatchedTrackingInfo(
     const ClassifierInfo& info) {
   LOG(
@@ -495,7 +421,6 @@ IPCResult HttpBackgroundChannelChild::RecvSetClassifierMatchedTrackingInfo(
   return IPC_OK();
 }
 void HttpBackgroundChannelChild::ActorDestroy(ActorDestroyReason aWhy) {
->>>>>>> upstream-releases
   LOG(("HttpBackgroundChannelChild::ActorDestroy[this=%p]\n", this));
   // This function might be called during shutdown phase, so OnSocketThread()
   // might return false even on STS thread. Use IsOnCurrentThreadInfallible()

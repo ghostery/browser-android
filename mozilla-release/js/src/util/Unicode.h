@@ -203,27 +203,6 @@ inline bool IsUnicodeIDStart(uint32_t codePoint) {
   return IsUnicodeIDStart(char16_t(codePoint));
 }
 
-<<<<<<< HEAD
-inline bool IsSpace(char16_t ch) {
-  /*
-   * IsSpace checks if some character is included in the merged set
-   * of WhiteSpace and LineTerminator, specified by ES2016 11.2 and 11.3.
-   * We combined them, because in practice nearly every
-   * calling function wants this, except some code in the tokenizer.
-   *
-   * We use a lookup table for ASCII-7 characters, because they are
-   * very common and must be handled quickly in the tokenizer.
-   * NO-BREAK SPACE is supposed to be the most common character not in
-   * this range, so we inline this case, too.
-   */
-||||||| merged common ancestors
-inline bool
-IsSpaceOrBOM2(char16_t ch)
-{
-    if (ch < 128) {
-        return js_isspace[ch];
-    }
-=======
 // IsSpace checks if a code point is included in the merged set of WhiteSpace
 // and LineTerminator specified by #sec-white-space and #sec-line-terminators.
 // We combine them because nearly every calling function wants this, excepting
@@ -235,47 +214,13 @@ inline bool IsSpace(char16_t ch) {
   if (ch < 128) {
     return js_isspace[ch];
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (ch < 128) {
-    return js_isspace[ch];
-  }
-
-  if (ch == NO_BREAK_SPACE) {
-    return true;
-  }
-
-  return CharInfo(ch).isSpace();
-}
-
-inline bool IsSpaceOrBOM2(char16_t ch) {
-  if (ch < 128) {
-    return js_isspace[ch];
-  }
-
-  /* We accept BOM2 (0xFFFE) for compatibility reasons in the parser. */
-  if (ch == NO_BREAK_SPACE || ch == BYTE_ORDER_MARK2) {
-    return true;
-  }
-||||||| merged common ancestors
-    /* We accept BOM2 (0xFFFE) for compatibility reasons in the parser. */
-    if (ch == NO_BREAK_SPACE || ch == BYTE_ORDER_MARK2) {
-        return true;
-    }
-=======
   // NO-BREAK SPACE is supposed to be the most common non-ASCII WhiteSpace code
   // point, so inline its handling too.
   if (ch == NO_BREAK_SPACE) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return CharInfo(ch).isSpace();
-||||||| merged common ancestors
-    return CharInfo(ch).isSpace();
-=======
   return CharInfo(ch).isSpace();
 }
 
@@ -310,7 +255,6 @@ inline bool IsSpace(char32_t ch) {
   }
 
   return CharInfo(ch).isSpace();
->>>>>>> upstream-releases
 }
 
 /*

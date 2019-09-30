@@ -44,58 +44,6 @@ class MOZ_STACK_CLASS AutoRecordDecoderTelemetry final {
 };
 
 Decoder::Decoder(RasterImage* aImage)
-<<<<<<< HEAD
-    : mImageData(nullptr),
-      mImageDataLength(0),
-      mColormap(nullptr),
-      mColormapSize(0),
-      mImage(aImage),
-      mFrameRecycler(nullptr),
-      mProgress(NoProgress),
-      mFrameCount(0),
-      mLoopLength(FrameTimeout::Zero()),
-      mDecoderFlags(DefaultDecoderFlags()),
-      mSurfaceFlags(DefaultSurfaceFlags()),
-      mInitialized(false),
-      mMetadataDecode(false),
-      mHaveExplicitOutputSize(false),
-      mInFrame(false),
-      mFinishedNewFrame(false),
-      mHasFrameToTake(false),
-      mReachedTerminalState(false),
-      mDecodeDone(false),
-      mError(false),
-      mShouldReportError(false),
-      mFinalizeFrames(true) {}
-
-Decoder::~Decoder() {
-||||||| merged common ancestors
-  : mImageData(nullptr)
-  , mImageDataLength(0)
-  , mColormap(nullptr)
-  , mColormapSize(0)
-  , mImage(aImage)
-  , mProgress(NoProgress)
-  , mFrameCount(0)
-  , mLoopLength(FrameTimeout::Zero())
-  , mDecoderFlags(DefaultDecoderFlags())
-  , mSurfaceFlags(DefaultSurfaceFlags())
-  , mInitialized(false)
-  , mMetadataDecode(false)
-  , mHaveExplicitOutputSize(false)
-  , mInFrame(false)
-  , mFinishedNewFrame(false)
-  , mHasFrameToTake(false)
-  , mReachedTerminalState(false)
-  , mDecodeDone(false)
-  , mError(false)
-  , mShouldReportError(false)
-  , mFinalizeFrames(true)
-{ }
-
-Decoder::~Decoder()
-{
-=======
     : mInProfile(nullptr),
       mTransform(nullptr),
       mImageData(nullptr),
@@ -120,7 +68,6 @@ Decoder::~Decoder()
       mFinalizeFrames(true) {}
 
 Decoder::~Decoder() {
->>>>>>> upstream-releases
   MOZ_ASSERT(mProgress == NoProgress || !mImage,
              "Destroying Decoder without taking all its progress changes");
   MOZ_ASSERT(mInvalidRect.IsEmpty() || !mImage,
@@ -313,33 +260,11 @@ DecoderTelemetry Decoder::Telemetry() const {
                           mIterator ? mIterator->ChunkCount() : 0, mDecodeTime);
 }
 
-<<<<<<< HEAD
-nsresult Decoder::AllocateFrame(const gfx::IntSize& aOutputSize,
-                                const gfx::IntRect& aFrameRect,
-                                gfx::SurfaceFormat aFormat,
-                                uint8_t aPaletteDepth,
-                                const Maybe<AnimationParams>& aAnimParams) {
-  mCurrentFrame =
-      AllocateFrameInternal(aOutputSize, aFrameRect, aFormat, aPaletteDepth,
-                            aAnimParams, std::move(mCurrentFrame));
-||||||| merged common ancestors
-nsresult
-Decoder::AllocateFrame(const gfx::IntSize& aOutputSize,
-                       const gfx::IntRect& aFrameRect,
-                       gfx::SurfaceFormat aFormat,
-                       uint8_t aPaletteDepth,
-                       const Maybe<AnimationParams>& aAnimParams)
-{
-  mCurrentFrame = AllocateFrameInternal(aOutputSize, aFrameRect, aFormat,
-                                        aPaletteDepth, aAnimParams,
-                                        std::move(mCurrentFrame));
-=======
 nsresult Decoder::AllocateFrame(const gfx::IntSize& aOutputSize,
                                 gfx::SurfaceFormat aFormat,
                                 const Maybe<AnimationParams>& aAnimParams) {
   mCurrentFrame = AllocateFrameInternal(aOutputSize, aFormat, aAnimParams,
                                         std::move(mCurrentFrame));
->>>>>>> upstream-releases
 
   if (mCurrentFrame) {
     mHasFrameToTake = true;
@@ -362,27 +287,10 @@ nsresult Decoder::AllocateFrame(const gfx::IntSize& aOutputSize,
   return mCurrentFrame ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-RawAccessFrameRef Decoder::AllocateFrameInternal(
-    const gfx::IntSize& aOutputSize, const gfx::IntRect& aFrameRect,
-    SurfaceFormat aFormat, uint8_t aPaletteDepth,
-    const Maybe<AnimationParams>& aAnimParams,
-    RawAccessFrameRef&& aPreviousFrame) {
-||||||| merged common ancestors
-RawAccessFrameRef
-Decoder::AllocateFrameInternal(const gfx::IntSize& aOutputSize,
-                               const gfx::IntRect& aFrameRect,
-                               SurfaceFormat aFormat,
-                               uint8_t aPaletteDepth,
-                               const Maybe<AnimationParams>& aAnimParams,
-                               RawAccessFrameRef&& aPreviousFrame)
-{
-=======
 RawAccessFrameRef Decoder::AllocateFrameInternal(
     const gfx::IntSize& aOutputSize, SurfaceFormat aFormat,
     const Maybe<AnimationParams>& aAnimParams,
     RawAccessFrameRef&& aPreviousFrame) {
->>>>>>> upstream-releases
   if (HasError()) {
     return RawAccessFrameRef();
   }
@@ -401,19 +309,6 @@ RawAccessFrameRef Decoder::AllocateFrameInternal(
   if (frameNum == 1) {
     MOZ_ASSERT(aPreviousFrame, "Must provide a previous frame when animated");
     aPreviousFrame->SetRawAccessOnly();
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-    // If we dispose of the first frame by clearing it, then the first frame's
-    // refresh area is all of itself.
-    // RESTORE_PREVIOUS is invalid (assumed to be DISPOSE_CLEAR).
-    DisposalMethod prevDisposal = aPreviousFrame->GetDisposalMethod();
-    if (prevDisposal == DisposalMethod::CLEAR ||
-        prevDisposal == DisposalMethod::CLEAR_ALL ||
-        prevDisposal == DisposalMethod::RESTORE_PREVIOUS) {
-      mFirstFrameRefreshArea = aPreviousFrame->GetRect();
-    }
-=======
   }
 
   if (frameNum > 0) {
@@ -433,53 +328,8 @@ RawAccessFrameRef Decoder::AllocateFrameInternal(
       // forgotten due to us restoring the same frame again.
       mRestoreDirtyRect = aPreviousFrame->GetBoundedBlendRect();
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (frameNum > 0) {
-    if (ShouldBlendAnimation()) {
-      if (aPreviousFrame->GetDisposalMethod() !=
-          DisposalMethod::RESTORE_PREVIOUS) {
-        // If the new restore frame is the direct previous frame, then we know
-        // the dirty rect is composed only of the current frame's blend rect and
-        // the restore frame's clear rect (if applicable) which are handled in
-        // filters.
-        mRestoreFrame = std::move(aPreviousFrame);
-        mRestoreDirtyRect.SetBox(0, 0, 0, 0);
-      } else {
-        // We only need the previous frame's dirty rect, because while there may
-        // have been several frames between us and mRestoreFrame, the only areas
-        // that changed are the restore frame's clear rect, the current frame
-        // blending rect, and the previous frame's blending rect. All else is
-        // forgotten due to us restoring the same frame again.
-        mRestoreDirtyRect = aPreviousFrame->GetBoundedBlendRect();
-||||||| merged common ancestors
-  if (frameNum > 0) {
-    ref->SetRawAccessOnly();
-
-    // Some GIFs are huge but only have a small area that they animate. We only
-    // need to refresh that small area when frame 0 comes around again.
-    mFirstFrameRefreshArea.UnionRect(mFirstFrameRefreshArea,
-                                     ref->GetBoundedBlendRect());
-
-    if (ShouldBlendAnimation()) {
-      if (aPreviousFrame->GetDisposalMethod() !=
-          DisposalMethod::RESTORE_PREVIOUS) {
-        // If the new restore frame is the direct previous frame, then we know
-        // the dirty rect is composed only of the current frame's blend rect and
-        // the restore frame's clear rect (if applicable) which are handled in
-        // filters.
-        mRestoreFrame = std::move(aPreviousFrame);
-        mRestoreDirtyRect.SetBox(0, 0, 0, 0);
-      } else {
-        // We only need the previous frame's dirty rect, because while there may
-        // have been several frames between us and mRestoreFrame, the only areas
-        // that changed are the restore frame's clear rect, the current frame
-        // blending rect, and the previous frame's blending rect. All else is
-        // forgotten due to us restoring the same frame again.
-        mRestoreDirtyRect = aPreviousFrame->GetBoundedBlendRect();
-=======
   RawAccessFrameRef ref;
 
   // If we have a frame recycler, it must be for an animated image producing
@@ -502,71 +352,10 @@ RawAccessFrameRef Decoder::AllocateFrameInternal(
 
       if (blocked) {
         ref.reset();
->>>>>>> upstream-releases
       }
     }
   }
 
-<<<<<<< HEAD
-  RawAccessFrameRef ref;
-
-  // If we have a frame recycler, it must be for an animated image producing
-  // full frames. If the higher layers are discarding frames because of the
-  // memory footprint, then the recycler will allow us to reuse the buffers.
-  // Each frame should be the same size and have mostly the same properties.
-  if (mFrameRecycler) {
-    MOZ_ASSERT(ShouldBlendAnimation());
-    MOZ_ASSERT(aPaletteDepth == 0);
-    MOZ_ASSERT(aAnimParams);
-    MOZ_ASSERT(aFrameRect.IsEqualEdges(IntRect(IntPoint(0, 0), aOutputSize)));
-
-    ref = mFrameRecycler->RecycleFrame(mRecycleRect);
-    if (ref) {
-      // If the recycled frame is actually the current restore frame, we cannot
-      // use it. If the next restore frame is the new frame we are creating, in
-      // theory we could reuse it, but we would need to store the restore frame
-      // animation parameters elsewhere. For now we just drop it.
-      bool blocked = ref.get() == mRestoreFrame.get();
-      if (!blocked) {
-        nsresult rv = ref->InitForDecoderRecycle(aAnimParams.ref());
-        blocked = NS_WARN_IF(NS_FAILED(rv));
-      }
-
-      if (blocked) {
-        ref.reset();
-      }
-    }
-  }
-
-  // Either the recycler had nothing to give us, or we don't have a recycler.
-  // Produce a new frame to store the data.
-  if (!ref) {
-    // There is no underlying data to reuse, so reset the recycle rect to be
-    // the full frame, to ensure the restore frame is fully copied.
-    mRecycleRect = IntRect(IntPoint(0, 0), aOutputSize);
-
-    bool nonPremult = bool(mSurfaceFlags & SurfaceFlags::NO_PREMULTIPLY_ALPHA);
-    auto frame = MakeNotNull<RefPtr<imgFrame>>();
-    if (NS_FAILED(frame->InitForDecoder(
-            aOutputSize, aFrameRect, aFormat, aPaletteDepth, nonPremult,
-            aAnimParams, ShouldBlendAnimation(), bool(mFrameRecycler)))) {
-      NS_WARNING("imgFrame::Init should succeed");
-      return RawAccessFrameRef();
-    }
-
-    ref = frame->RawAccessRef();
-    if (!ref) {
-      frame->Abort();
-      return RawAccessFrameRef();
-    }
-
-    if (frameNum > 0) {
-      frame->SetRawAccessOnly();
-    }
-  }
-
-||||||| merged common ancestors
-=======
   // Either the recycler had nothing to give us, or we don't have a recycler.
   // Produce a new frame to store the data.
   if (!ref) {
@@ -593,7 +382,6 @@ RawAccessFrameRef Decoder::AllocateFrameInternal(
     }
   }
 
->>>>>>> upstream-releases
   mFrameCount++;
 
   return ref;

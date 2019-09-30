@@ -46,21 +46,9 @@ namespace mozilla {
 extern LazyLogModule gMediaStreamGraphLog;
 
 namespace dom {
-<<<<<<< HEAD
-enum class AudioContextOperation;
-}
-||||||| merged common ancestors
-  enum class AudioContextOperation;
-}
-
-namespace media {
-  template<typename V, typename E> class Pledge;
-}
-=======
 enum class AudioContextOperation;
 enum class AudioContextOperationFlags;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /*
  * MediaStreamGraph is a framework for synchronized audio/video processing
@@ -233,18 +221,8 @@ struct TrackBound {
  *
  * Any stream can have its audio and video playing when requested. The media
  * stream graph plays audio by constructing audio output streams as necessary.
-<<<<<<< HEAD
- * Video is played by setting video frames into an MediaStreamVideoSink at the
- * right time. To ensure video plays in sync with audio, make sure that the same
- * stream is playing both the audio and video.
-||||||| merged common ancestors
- * Video is played by setting video frames into an MediaStreamVideoSink at the right
- * time. To ensure video plays in sync with audio, make sure that the same
- * stream is playing both the audio and video.
-=======
  * Video is played through a DirectMediaStreamTrackListener managed by
  * VideoStreamTrack.
->>>>>>> upstream-releases
  *
  * The data in a stream is managed by StreamTracks. It consists of a set of
  * tracks of various types that can start and end over time.
@@ -439,18 +417,6 @@ class MediaStream : public mozilla::LinkedListElement<MediaStream> {
   void SetAudioOutputVolumeImpl(void* aKey, float aVolume);
   void AddAudioOutputImpl(void* aKey);
   void RemoveAudioOutputImpl(void* aKey);
-<<<<<<< HEAD
-  void AddVideoOutputImpl(already_AddRefed<MediaStreamVideoSink> aSink,
-                          TrackID aID);
-  void RemoveVideoOutputImpl(MediaStreamVideoSink* aSink, TrackID aID);
-||||||| merged common ancestors
-  void AddVideoOutputImpl(already_AddRefed<MediaStreamVideoSink> aSink,
-                          TrackID aID);
-  void RemoveVideoOutputImpl(MediaStreamVideoSink* aSink, TrackID aID);
-  void AddListenerImpl(already_AddRefed<MediaStreamListener> aListener);
-  void RemoveListenerImpl(MediaStreamListener* aListener);
-=======
->>>>>>> upstream-releases
 
   /**
    * Removes all direct listeners and signals to them that they have been
@@ -642,33 +608,6 @@ class MediaStream : public mozilla::LinkedListElement<MediaStream> {
    * and fired NotifyFinished notifications.
    */
   bool mNotifiedFinished;
-<<<<<<< HEAD
-  /**
-   * True if some data can be present by this stream if/when it's unblocked.
-   * Set by the stream itself on the MediaStreamGraph thread. Only changes
-   * from false to true once a stream has data, since we won't
-   * unblock it until there's more data.
-   */
-  bool mHasCurrentData;
-||||||| merged common ancestors
-  /**
-   * When true, the last NotifyBlockingChanged delivered to the listeners
-   * indicated that the stream is blocked.
-   */
-  bool mNotifiedBlocked;
-  /**
-   * True if some data can be present by this stream if/when it's unblocked.
-   * Set by the stream itself on the MediaStreamGraph thread. Only changes
-   * from false to true once a stream has data, since we won't
-   * unblock it until there's more data.
-   */
-  bool mHasCurrentData;
-  /**
-   * True if mHasCurrentData is true and we've notified listeners.
-   */
-  bool mNotifiedHasCurrentData;
-=======
->>>>>>> upstream-releases
 
   // Main-thread views of state
   StreamTime mMainThreadCurrentTime;
@@ -731,21 +670,7 @@ class SourceMediaStream : public MediaStream {
   /**
    * Extract any state updates pending in the stream, and apply them.
    */
-<<<<<<< HEAD
-  void ExtractPendingInput(GraphTime aCurrentTime);
-||||||| merged common ancestors
-  void ExtractPendingInput();
-
-  /**
-   * These add/remove DirectListeners, which allow bypassing the graph and any
-   * synchronization delays for e.g. PeerConnection, which wants the data ASAP
-   * and lets the far-end handle sync and playout timing.
-   */
-  void NotifyListenersEventImpl(MediaStreamGraphEvent aEvent);
-  void NotifyListenersEvent(MediaStreamGraphEvent aEvent);
-=======
   void ExtractPendingInput(GraphTime aCurrentTime, GraphTime aDesiredUpToTime);
->>>>>>> upstream-releases
 
   enum {
     ADDTRACK_QUEUED = 0x01  // Queue track add until FinishAddTracks()
@@ -771,37 +696,10 @@ class SourceMediaStream : public MediaStream {
   void FinishAddTracks();
 
   /**
-<<<<<<< HEAD
    * Append media data to a track. Ownership of aSegment remains with the
    * caller, but aSegment is emptied. Returns 0 if the data was not appended
    * because no such track exists or the stream was already finished. Returns
    * the duration of the appended data in the graph's track rate otherwise.
-   */
-  virtual StreamTime AppendToTrack(TrackID aID, MediaSegment* aSegment,
-                                   MediaSegment* aRawSegment = nullptr);
-  /**
-   * Get the stream time of the end of the data that has been appended so far.
-   * Can be called from any thread but won't be useful if it can race with
-   * an AppendToTrack call, so should probably just be called from the thread
-   * that also calls AppendToTrack.
-||||||| merged common ancestors
-   * Append media data to a track. Ownership of aSegment remains with the caller,
-   * but aSegment is emptied.
-   * Returns false if the data was not appended because no such track exists
-   * or the stream was already finished.
-   */
-  virtual bool AppendToTrack(TrackID aID, MediaSegment* aSegment, MediaSegment *aRawSegment = nullptr);
-  /**
-   * Get the stream time of the end of the data that has been appended so far.
-   * Can be called from any thread but won't be useful if it can race with
-   * an AppendToTrack call, so should probably just be called from the thread
-   * that also calls AppendToTrack.
-=======
-   * Append media data to a track. Ownership of aSegment remains with the
-   * caller, but aSegment is emptied. Returns 0 if the data was not appended
-   * because no such track exists or the stream was already finished. Returns
-   * the duration of the appended data in the graph's track rate otherwise.
->>>>>>> upstream-releases
    */
   virtual StreamTime AppendToTrack(TrackID aID, MediaSegment* aSegment,
                                    MediaSegment* aRawSegment = nullptr);
@@ -849,21 +747,6 @@ class SourceMediaStream : public MediaStream {
    */
   bool HasPendingAudioTrack();
 
-<<<<<<< HEAD
-  TimeStamp GetStreamTracksStrartTimeStamp() {
-    MutexAutoLock lock(mMutex);
-    return mStreamTracksStartTimeStamp;
-  }
-
-||||||| merged common ancestors
-  TimeStamp GetStreamTracksStrartTimeStamp()
-  {
-    MutexAutoLock lock(mMutex);
-    return mStreamTracksStartTimeStamp;
-  }
-
-=======
->>>>>>> upstream-releases
   // XXX need a Reset API
 
   friend class MediaStreamGraphImpl;
@@ -926,33 +809,10 @@ class SourceMediaStream : public MediaStream {
    * from AppendToTrack on the thread providing the data, and will call
    * the Listeners on this thread.
    */
-<<<<<<< HEAD
   void NotifyDirectConsumers(TrackData* aTrack, MediaSegment* aSegment);
 
   virtual void AdvanceTimeVaryingValuesToCurrentTime(
       GraphTime aCurrentTime, GraphTime aBlockedTime) override;
-  void SetStreamTracksStartTimeStamp(const TimeStamp& aTimeStamp) {
-    MutexAutoLock lock(mMutex);
-    mStreamTracksStartTimeStamp = aTimeStamp;
-  }
-||||||| merged common ancestors
-  void NotifyDirectConsumers(TrackData *aTrack,
-                             MediaSegment *aSegment);
-
-  virtual void
-  AdvanceTimeVaryingValuesToCurrentTime(GraphTime aCurrentTime,
-                                        GraphTime aBlockedTime) override;
-  void SetStreamTracksStartTimeStamp(const TimeStamp& aTimeStamp)
-  {
-    MutexAutoLock lock(mMutex);
-    mStreamTracksStartTimeStamp = aTimeStamp;
-  }
-=======
-  void NotifyDirectConsumers(TrackData* aTrack, MediaSegment* aSegment);
-
-  virtual void AdvanceTimeVaryingValuesToCurrentTime(
-      GraphTime aCurrentTime, GraphTime aBlockedTime) override;
->>>>>>> upstream-releases
 
   // Only accessed on the MSG thread.  Used so to ask the MSGImpl to usecount
   // users of a specific input.
@@ -964,19 +824,6 @@ class SourceMediaStream : public MediaStream {
   // held together.
   Mutex mMutex;
   // protected by mMutex
-<<<<<<< HEAD
-  // This time stamp will be updated in adding and blocked SourceMediaStream,
-  // |AddStreamGraphThread| and |AdvanceTimeVaryingValuesToCurrentTime| in
-  // particularly.
-  TimeStamp mStreamTracksStartTimeStamp;
-||||||| merged common ancestors
-  StreamTime mUpdateKnownTracksTime;
-  // This time stamp will be updated in adding and blocked SourceMediaStream,
-  // |AddStreamGraphThread| and |AdvanceTimeVaryingValuesToCurrentTime| in
-  // particularly.
-  TimeStamp mStreamTracksStartTimeStamp;
-=======
->>>>>>> upstream-releases
   nsTArray<TrackData> mUpdateTracks;
   nsTArray<TrackData> mPendingTracks;
   nsTArray<TrackBound<DirectMediaStreamTrackListener>> mDirectTrackListeners;
@@ -1321,11 +1168,6 @@ class MediaStreamGraph {
     SYSTEM_THREAD_DRIVER,
     OFFLINE_THREAD_DRIVER
   };
-<<<<<<< HEAD
-  static const uint32_t AUDIO_CALLBACK_DRIVER_SHUTDOWN_TIMEOUT = 20 * 1000;
-||||||| merged common ancestors
-  static const uint32_t AUDIO_CALLBACK_DRIVER_SHUTDOWN_TIMEOUT = 20*1000;
-=======
   // A MediaStreamGraph running an AudioWorklet must always be run from the
   // same thread, in order to run js. To acheive this, create the graph with
   // a SINGLE_THREAD RunType. DIRECT_DRIVER will run the graph directly off
@@ -1335,7 +1177,6 @@ class MediaStreamGraph {
     SINGLE_THREAD,
   };
   static const uint32_t AUDIO_CALLBACK_DRIVER_SHUTDOWN_TIMEOUT = 20 * 1000;
->>>>>>> upstream-releases
   static const TrackRate REQUEST_DEFAULT_SAMPLE_RATE = 0;
 
   // Main thread only
@@ -1424,15 +1265,7 @@ class MediaStreamGraph {
    * Note that if called during shutdown the runnable will be ignored and
    * released on main thread.
    */
-<<<<<<< HEAD
-  void DispatchToMainThreadAfterStreamStateUpdate(
-      already_AddRefed<nsIRunnable> aRunnable);
-||||||| merged common ancestors
-  virtual void DispatchToMainThreadAfterStreamStateUpdate(
-    already_AddRefed<nsIRunnable> aRunnable);
-=======
   void DispatchToMainThreadStableState(already_AddRefed<nsIRunnable> aRunnable);
->>>>>>> upstream-releases
 
   /**
    * Returns graph sample rate in Hz.
@@ -1463,22 +1296,9 @@ class MediaStreamGraph {
 
   // Intended only for assertions, either on graph thread or not running (in
   // which case we must be on the main thread).
-<<<<<<< HEAD
-  bool OnGraphThreadOrNotRunning() const;
-  bool OnGraphThread() const;
-
-||||||| merged common ancestors
-  bool OnGraphThreadOrNotRunning() const;
-  bool OnGraphThread() const;
-
-  // Media graph thread only
-  nsTArray<nsCOMPtr<nsIRunnable> > mPendingUpdateRunnables;
-
-=======
   virtual bool OnGraphThreadOrNotRunning() const = 0;
   virtual bool OnGraphThread() const = 0;
 
->>>>>>> upstream-releases
   /**
    * Sample rate at which this graph runs. For real time graphs, this is
    * the rate of the audio mixer. For offline graphs, this is the rate specified

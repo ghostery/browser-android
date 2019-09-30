@@ -16,72 +16,8 @@ async function run_test() {
   let patches = getRemotePatchString({});
   let updates = getRemoteUpdateString({}, patches);
   gResponseBody = getRemoteUpdatesXMLString(updates);
-<<<<<<< HEAD
-  gCheckFunc = updateCheckCompleted;
-  gUpdateChecker.checkForUpdates(updateCheckListener, true);
-}
-
-/**
- * Since gCheckFunc value is the updateCheckCompleted function at this stage
- * this is called after the update check completes in updateCheckListener.
- */
-function updateCheckCompleted() {
-  Assert.equal(gUpdateCount, 1,
-               "the update count" + MSG_SHOULD_EQUAL);
-  let bestUpdate = gAUS.selectUpdate(gUpdates, gUpdateCount);
-  let state = gAUS.downloadUpdate(bestUpdate, false);
-  if (state == STATE_NONE || state == STATE_FAILED) {
-    do_throw("nsIApplicationUpdateService:downloadUpdate returned " + state);
-  }
-  gAUS.addDownloadListener(downloadListener);
-}
-
-/**
- * Called after the download listener onStopRequest is called.
- */
-function downloadListenerStop() {
-  Assert.equal(gStatusResult, Cr.NS_ERROR_NET_RESET,
-               "the download status result" + MSG_SHOULD_EQUAL);
-  gAUS.removeDownloadListener(downloadListener);
-||||||| merged common ancestors
-  gCheckFunc = updateCheckCompleted;
-  gUpdateChecker.checkForUpdates(updateCheckListener, true);
-}
-
-/**
- * Since gCheckFunc value is the updateCheckCompleted function at this stage
- * this is called after the update check completes in updateCheckListener.
- */
-function updateCheckCompleted() {
-  Assert.equal(gUpdateCount, 1,
-               "the update count" + MSG_SHOULD_EQUAL);
-  let bestUpdate = gAUS.selectUpdate(gUpdates, gUpdateCount);
-  let state = gAUS.downloadUpdate(bestUpdate, false);
-  if (state == STATE_NONE || state == STATE_FAILED) {
-    do_throw("nsIApplicationUpdateService:downloadUpdate returned " + state);
-  }
-  gAUS.addDownloadListener(downloadListener);
-}
-
-/**
- * Called after the download listener onStopRequest is called.
- */
-function downloadListenerStop() {
-  Assert.equal(gStatusResult, Cr.NS_ERROR_NET_RESET,
-               "the download status result" + MSG_SHOULD_EQUAL);
-  gAUS.removeDownloadListener(downloadListener);
-  executeSoon(waitForUpdateXMLFiles);
-}
-
-/**
- * Called after the call to waitForUpdateXMLFiles finishes.
- */
-function waitForUpdateXMLFilesFinished() {
-  // The HttpServer must be stopped before calling do_test_finished
-=======
   await waitForUpdateCheck(true, { updateCount: 1 }).then(async aArgs => {
     await waitForUpdateDownload(aArgs.updates, Cr.NS_ERROR_NET_RESET);
   });
->>>>>>> upstream-releases
   stop_httpserver(doTestFinish);
 }

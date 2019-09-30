@@ -22,13 +22,6 @@
 #include "mozilla/StaticPtr.h"                   // for StaticAutoPtr
 #include "mozilla/TimeStamp.h"                   // for TimeStamp
 #include "nsString.h"
-<<<<<<< HEAD
-#include "nsStyleCoord.h"  // for nsStyleCoord
-#include "PLDHashTable.h"  // for PLDHashNumber
-||||||| merged common ancestors
-#include "nsStyleCoord.h"               // for nsStyleCoord
-#include "PLDHashTable.h"               // for PLDHashNumber
-=======
 #include "mozilla/ServoStyleConsts.h"
 #include "PLDHashTable.h"  // for PLDHashNumber
 
@@ -36,7 +29,6 @@ struct nsStyleDisplay;
 namespace mozilla {
 class WritingMode;
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 namespace IPC {
 template <typename T>
@@ -97,59 +89,6 @@ struct FrameMetrics {
   // clang-format on
 
   FrameMetrics()
-<<<<<<< HEAD
-      : mScrollId(ScrollableLayerGuid::NULL_SCROLL_ID),
-        mPresShellResolution(1),
-        mCompositionBounds(0, 0, 0, 0),
-        mDisplayPort(0, 0, 0, 0),
-        mCriticalDisplayPort(0, 0, 0, 0),
-        mScrollableRect(0, 0, 0, 0),
-        mCumulativeResolution(),
-        mDevPixelsPerCSSPixel(1),
-        mScrollOffset(0, 0),
-        mBaseScrollOffset(0, 0),
-        mZoom(),
-        mScrollGeneration(0),
-        mSmoothScrollOffset(0, 0),
-        mRootCompositionSize(0, 0),
-        mDisplayPortMargins(0, 0, 0, 0),
-        mPresShellId(-1),
-        mViewport(0, 0, 0, 0),
-        mExtraResolution(),
-        mPaintRequestTime(),
-        mScrollUpdateType(eNone),
-        mIsRootContent(false),
-        mIsRelative(false),
-        mDoSmoothScroll(false),
-        mUseDisplayPortMargins(false),
-        mIsScrollInfoLayer(false) {}
-||||||| merged common ancestors
-    : mScrollId(NULL_SCROLL_ID)
-    , mPresShellResolution(1)
-    , mCompositionBounds(0, 0, 0, 0)
-    , mDisplayPort(0, 0, 0, 0)
-    , mCriticalDisplayPort(0, 0, 0, 0)
-    , mScrollableRect(0, 0, 0, 0)
-    , mCumulativeResolution()
-    , mDevPixelsPerCSSPixel(1)
-    , mScrollOffset(0, 0)
-    , mZoom()
-    , mScrollGeneration(0)
-    , mSmoothScrollOffset(0, 0)
-    , mRootCompositionSize(0, 0)
-    , mDisplayPortMargins(0, 0, 0, 0)
-    , mPresShellId(-1)
-    , mViewport(0, 0, 0, 0)
-    , mExtraResolution()
-    , mPaintRequestTime()
-    , mScrollUpdateType(eNone)
-    , mIsRootContent(false)
-    , mDoSmoothScroll(false)
-    , mUseDisplayPortMargins(false)
-    , mIsScrollInfoLayer(false)
-  {
-  }
-=======
       : mScrollId(ScrollableLayerGuid::NULL_SCROLL_ID),
         mPresShellResolution(1),
         mCompositionBounds(0, 0, 0, 0),
@@ -176,7 +115,6 @@ struct FrameMetrics {
         mIsRelative(false),
         mDoSmoothScroll(false),
         mIsScrollInfoLayer(false) {}
->>>>>>> upstream-releases
 
   // Default copy ctor and operator= are fine
 
@@ -440,29 +378,11 @@ struct FrameMetrics {
     SetScrollOffset(CalculateScrollRange().ClampPoint(aScrollOffset));
   }
 
-<<<<<<< HEAD
   const CSSPoint& GetScrollOffset() const { return mScrollOffset; }
 
   const CSSPoint& GetBaseScrollOffset() const { return mBaseScrollOffset; }
-||||||| merged common ancestors
-  const CSSPoint& GetScrollOffset() const
-  {
-    return mScrollOffset;
-  }
-=======
-  const CSSPoint& GetScrollOffset() const { return mScrollOffset; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  void SetSmoothScrollOffset(const CSSPoint& aSmoothScrollDestination) {
-||||||| merged common ancestors
-  void SetSmoothScrollOffset(const CSSPoint& aSmoothScrollDestination)
-  {
-=======
-  const CSSPoint& GetBaseScrollOffset() const { return mBaseScrollOffset; }
 
   void SetSmoothScrollOffset(const CSSPoint& aSmoothScrollDestination) {
->>>>>>> upstream-releases
     mSmoothScrollOffset = aSmoothScrollDestination;
   }
 
@@ -473,30 +393,11 @@ struct FrameMetrics {
 
   const CSSPoint& GetSmoothScrollOffset() const { return mSmoothScrollOffset; }
 
-<<<<<<< HEAD
   void SetZoom(const CSSToParentLayerScale2D& aZoom) { mZoom = aZoom; }
 
   const CSSToParentLayerScale2D& GetZoom() const { return mZoom; }
-||||||| merged common ancestors
-  const CSSToParentLayerScale2D& GetZoom() const
-  {
-    return mZoom;
-  }
-=======
-  void SetZoom(const CSSToParentLayerScale2D& aZoom) { mZoom = aZoom; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  void SetScrollGeneration(uint32_t aScrollGeneration) {
-||||||| merged common ancestors
-  void SetScrollOffsetUpdated(uint32_t aScrollGeneration)
-  {
-    mScrollUpdateType = eMainThread;
-=======
-  const CSSToParentLayerScale2D& GetZoom() const { return mZoom; }
 
   void SetScrollGeneration(uint32_t aScrollGeneration) {
->>>>>>> upstream-releases
     mScrollGeneration = aScrollGeneration;
   }
 
@@ -521,33 +422,13 @@ struct FrameMetrics {
 
   bool GetDoSmoothScroll() const { return mDoSmoothScroll; }
 
-<<<<<<< HEAD
-  uint32_t GetScrollGeneration() const { return mScrollGeneration; }
-
-  ViewID GetScrollId() const { return mScrollId; }
-||||||| merged common ancestors
-  void SetScrollId(ViewID scrollId)
-  {
-    mScrollId = scrollId;
-  }
-=======
   uint32_t GetScrollGeneration() const { return mScrollGeneration; }
 
   ViewID GetScrollId() const { return mScrollId; }
 
   void SetScrollId(ViewID scrollId) { mScrollId = scrollId; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  void SetScrollId(ViewID scrollId) { mScrollId = scrollId; }
 
   void SetRootCompositionSize(const CSSSize& aRootCompositionSize) {
-||||||| merged common ancestors
-  void SetRootCompositionSize(const CSSSize& aRootCompositionSize)
-  {
-=======
-  void SetRootCompositionSize(const CSSSize& aRootCompositionSize) {
->>>>>>> upstream-releases
     mRootCompositionSize = aRootCompositionSize;
   }
 
@@ -561,76 +442,17 @@ struct FrameMetrics {
     return mDisplayPortMargins;
   }
 
-<<<<<<< HEAD
-  void SetUseDisplayPortMargins(bool aValue) {
-    mUseDisplayPortMargins = aValue;
-  }
-
-  bool GetUseDisplayPortMargins() const { return mUseDisplayPortMargins; }
-||||||| merged common ancestors
-  void SetUseDisplayPortMargins(bool aValue)
-  {
-    mUseDisplayPortMargins = aValue;
-  }
-
-  bool GetUseDisplayPortMargins() const
-  {
-    return mUseDisplayPortMargins;
-  }
-=======
   uint32_t GetPresShellId() const { return mPresShellId; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t GetPresShellId() const { return mPresShellId; }
-||||||| merged common ancestors
-  uint32_t GetPresShellId() const
-  {
-    return mPresShellId;
-  }
-=======
   void SetPresShellId(uint32_t aPresShellId) { mPresShellId = aPresShellId; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetPresShellId(uint32_t aPresShellId) { mPresShellId = aPresShellId; }
-||||||| merged common ancestors
-  void SetPresShellId(uint32_t aPresShellId)
-  {
-    mPresShellId = aPresShellId;
-  }
-=======
   void SetLayoutViewport(const CSSRect& aLayoutViewport) {
     mLayoutViewport = aLayoutViewport;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetViewport(const CSSRect& aViewport) { mViewport = aViewport; }
-||||||| merged common ancestors
-  void SetViewport(const CSSRect& aViewport)
-  {
-    mViewport = aViewport;
-  }
-=======
   const CSSRect& GetLayoutViewport() const { return mLayoutViewport; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  const CSSRect& GetViewport() const { return mViewport; }
 
   CSSRect GetVisualViewport() const {
-||||||| merged common ancestors
-  const CSSRect& GetViewport() const
-  {
-    return mViewport;
-  }
-
-  CSSRect GetVisualViewport() const
-  {
-=======
-  CSSRect GetVisualViewport() const {
->>>>>>> upstream-releases
     return CSSRect(mScrollOffset, CalculateCompositedSizeInCssPixels());
   }
 
@@ -665,13 +487,6 @@ struct FrameMetrics {
   void SetIsScrollInfoLayer(bool aIsScrollInfoLayer) {
     mIsScrollInfoLayer = aIsScrollInfoLayer;
   }
-<<<<<<< HEAD
-  bool IsScrollInfoLayer() const { return mIsScrollInfoLayer; }
-||||||| merged common ancestors
-  bool IsScrollInfoLayer() const {
-    return mIsScrollInfoLayer;
-  }
-=======
   bool IsScrollInfoLayer() const { return mIsScrollInfoLayer; }
 
   void SetVisualViewportOffset(const CSSPoint& aVisualViewportOffset) {
@@ -687,7 +502,6 @@ struct FrameMetrics {
   ScrollOffsetUpdateType GetVisualScrollUpdateType() const {
     return mVisualScrollUpdateType;
   }
->>>>>>> upstream-releases
 
   // Determine if the visual viewport is outside of the layout viewport and
   // adjust the x,y-offset in mLayoutViewport accordingly. This is necessary to
@@ -706,26 +520,11 @@ struct FrameMetrics {
   // and we pass in the scrollable rect so this function can maintain that
   // constraint.
   static void KeepLayoutViewportEnclosingVisualViewport(
-<<<<<<< HEAD
-      const CSSRect& aVisualViewport, CSSRect& aLayoutViewport);
-||||||| merged common ancestors
-      const CSSRect& aVisualViewport,
-      CSSRect& aLayoutViewport);
-=======
       const CSSRect& aVisualViewport, const CSSRect& aScrollableRect,
       CSSRect& aLayoutViewport);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  // A unique ID assigned to each scrollable frame.
-||||||| merged common ancestors
-private:
-  // A unique ID assigned to each scrollable frame.
-=======
  private:
   // A ID assigned to each scrollable frame, unique within each LayersId..
->>>>>>> upstream-releases
   ViewID mScrollId;
 
   // The pres-shell resolution that has been induced on the document containing
@@ -812,22 +611,6 @@ private:
   // be within |mScrollableRect|.
   CSSPoint mScrollOffset;
 
-<<<<<<< HEAD
-  // The base scroll offset to use for calculating a relative update to a
-  // scroll offset.
-  CSSPoint mBaseScrollOffset;
-
-  // The "user zoom". Content is painted by gecko at mResolution *
-  // mDevPixelsPerCSSPixel, but will be drawn to the screen at mZoom. In the
-  // steady state, the two will be the same, but during an async zoom action the
-  // two may diverge. This information is initialized in Gecko but updated in
-  // the APZC.
-||||||| merged common ancestors
-  // The "user zoom". Content is painted by gecko at mResolution * mDevPixelsPerCSSPixel,
-  // but will be drawn to the screen at mZoom. In the steady state, the
-  // two will be the same, but during an async zoom action the two may
-  // diverge. This information is initialized in Gecko but updated in the APZC.
-=======
   // The base scroll offset to use for calculating a relative update to a
   // scroll offset.
   CSSPoint mBaseScrollOffset;
@@ -837,7 +620,6 @@ private:
   // steady state, the two will be the same, but during an async zoom action the
   // two may diverge. This information is initialized in Gecko but updated in
   // the APZC.
->>>>>>> upstream-releases
   CSSToParentLayerScale2D mZoom;
 
   // The scroll generation counter used to acknowledge the scroll offset update.
@@ -906,35 +688,13 @@ private:
 
   // When mDoSmoothScroll, the scroll offset should be animated to
   // smoothly transition to mScrollOffset rather than be updated instantly.
-<<<<<<< HEAD
   bool mDoSmoothScroll : 1;
 
-  // If this is true then we use the display port margins on this metrics,
-  // otherwise use the display port rect.
-  bool mUseDisplayPortMargins : 1;
-||||||| merged common ancestors
-  bool mDoSmoothScroll:1;
-
-  // If this is true then we use the display port margins on this metrics,
-  // otherwise use the display port rect.
-  bool mUseDisplayPortMargins:1;
-=======
-  bool mDoSmoothScroll : 1;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Whether or not this frame has a "scroll info layer" to capture events.
-  bool mIsScrollInfoLayer : 1;
-||||||| merged common ancestors
-  // Whether or not this frame has a "scroll info layer" to capture events.
-  bool mIsScrollInfoLayer:1;
-=======
   // True if this scroll frame is a scroll info layer. A scroll info layer is
   // not layerized and its content cannot be truly async-scrolled, but its
   // metrics are still sent to and updated by the compositor, with the updates
   // being reflected on the next paint rather than the next composite.
   bool mIsScrollInfoLayer : 1;
->>>>>>> upstream-releases
 
   // WARNING!!!!
   //
@@ -956,29 +716,11 @@ private:
 };
 
 struct ScrollSnapInfo {
-<<<<<<< HEAD
-  ScrollSnapInfo() = default;
-
-  bool operator==(const ScrollSnapInfo& aOther) const {
-    return mScrollSnapTypeX == aOther.mScrollSnapTypeX &&
-           mScrollSnapTypeY == aOther.mScrollSnapTypeY &&
-||||||| merged common ancestors
-  ScrollSnapInfo()
-    : mScrollSnapTypeX(NS_STYLE_SCROLL_SNAP_TYPE_NONE)
-    , mScrollSnapTypeY(NS_STYLE_SCROLL_SNAP_TYPE_NONE)
-  {}
-
-  bool operator==(const ScrollSnapInfo& aOther) const
-  {
-    return mScrollSnapTypeX == aOther.mScrollSnapTypeX &&
-           mScrollSnapTypeY == aOther.mScrollSnapTypeY &&
-=======
   ScrollSnapInfo() = default;
 
   bool operator==(const ScrollSnapInfo& aOther) const {
     return mScrollSnapStrictnessX == aOther.mScrollSnapStrictnessX &&
            mScrollSnapStrictnessY == aOther.mScrollSnapStrictnessY &&
->>>>>>> upstream-releases
            mScrollSnapIntervalX == aOther.mScrollSnapIntervalX &&
            mScrollSnapIntervalY == aOther.mScrollSnapIntervalY &&
            mScrollSnapDestination == aOther.mScrollSnapDestination &&
@@ -990,20 +732,9 @@ struct ScrollSnapInfo {
            mSnapportSize == aOther.mSnapportSize;
   }
 
-<<<<<<< HEAD
-  bool HasScrollSnapping() const {
-    return mScrollSnapTypeY != mozilla::StyleScrollSnapType::None ||
-           mScrollSnapTypeX != mozilla::StyleScrollSnapType::None;
-||||||| merged common ancestors
-  bool HasScrollSnapping() const
-  {
-    return mScrollSnapTypeY != NS_STYLE_SCROLL_SNAP_TYPE_NONE ||
-           mScrollSnapTypeX != NS_STYLE_SCROLL_SNAP_TYPE_NONE;
-=======
   bool HasScrollSnapping() const {
     return mScrollSnapStrictnessY != mozilla::StyleScrollSnapStrictness::None ||
            mScrollSnapStrictnessX != mozilla::StyleScrollSnapStrictness::None;
->>>>>>> upstream-releases
   }
 
   bool HasSnapPositions() const {
@@ -1018,21 +749,10 @@ struct ScrollSnapInfo {
                                       const nsStyleDisplay* aDisplay);
 
   // The scroll frame's scroll-snap-type.
-<<<<<<< HEAD
-  mozilla::StyleScrollSnapType mScrollSnapTypeX =
-      mozilla::StyleScrollSnapType::None;
-  mozilla::StyleScrollSnapType mScrollSnapTypeY =
-      mozilla::StyleScrollSnapType::None;
-||||||| merged common ancestors
-  // One of NS_STYLE_SCROLL_SNAP_{NONE, MANDATORY, PROXIMITY}.
-  uint8_t mScrollSnapTypeX;
-  uint8_t mScrollSnapTypeY;
-=======
   mozilla::StyleScrollSnapStrictness mScrollSnapStrictnessX =
       mozilla::StyleScrollSnapStrictness::None;
   mozilla::StyleScrollSnapStrictness mScrollSnapStrictnessY =
       mozilla::StyleScrollSnapStrictness::None;
->>>>>>> upstream-releases
 
   // The intervals derived from the scroll frame's scroll-snap-points.
   Maybe<nscoord> mScrollSnapIntervalX;
@@ -1148,26 +868,12 @@ struct LayerClip {
 typedef Maybe<LayerClip> MaybeLayerClip;  // for passing over IPDL
 
 /**
-<<<<<<< HEAD
- * Metadata about a scroll frame that's stored in the layer tree for use by
- * the compositor (including APZ). This includes the scroll frame's
- * FrameMetrics, as well as other metadata. We don't put the other metadata into
- * FrameMetrics to avoid FrameMetrics becoming too bloated (as a FrameMetrics is
- * e.g. sent over IPC for every repaint request for every active scroll frame).
-||||||| merged common ancestors
- * Metadata about a scroll frame that's stored in the layer tree for use by
- * the compositor (including APZ). This includes the scroll frame's FrameMetrics,
- * as well as other metadata. We don't put the other metadata into FrameMetrics
- * to avoid FrameMetrics becoming too bloated (as a FrameMetrics is e.g. sent
- * over IPC for every repaint request for every active scroll frame).
-=======
  * Metadata about a scroll frame that's sent to the compositor during a layers
  * or WebRender transaction, and also stored by APZ between transactions.
  * This includes the scroll frame's FrameMetrics, as well as other metadata.
  * We don't put the other metadata into FrameMetrics to avoid FrameMetrics
  * becoming too bloated (as a FrameMetrics is e.g. stored in memory shared
  * with the content process).
->>>>>>> upstream-releases
  */
 struct ScrollMetadata {
   friend struct IPC::ParamTraits<mozilla::layers::ScrollMetadata>;
@@ -1280,18 +986,8 @@ struct ScrollMetadata {
   void SetIsAutoDirRootContentRTL(bool aValue) {
     mIsAutoDirRootContentRTL = aValue;
   }
-<<<<<<< HEAD
-  bool IsAutoDirRootContentRTL() const { return mIsAutoDirRootContentRTL; }
-  // Implemented out of line because the implementation needs gfxPrefs.h
-||||||| merged common ancestors
-  bool IsAutoDirRootContentRTL() const {
-    return mIsAutoDirRootContentRTL;
-  }
-  // Implemented out of line because the implementation needs gfxPrefs.h
-=======
   bool IsAutoDirRootContentRTL() const { return mIsAutoDirRootContentRTL; }
   // Implemented out of line because the implementation needs StaticPrefs.h
->>>>>>> upstream-releases
   // and we don't want to include that from FrameMetrics.h.
   void SetUsesContainerScrolling(bool aValue);
   bool UsesContainerScrolling() const { return mUsesContainerScrolling; }

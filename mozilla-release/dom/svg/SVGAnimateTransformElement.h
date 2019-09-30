@@ -22,22 +22,10 @@ class SVGAnimateTransformElement final : public SVGAnimationElement {
   explicit SVGAnimateTransformElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
-<<<<<<< HEAD
-  nsSMILAnimationFunction mAnimationFunction;
-  friend nsresult(::NS_NewSVGAnimateTransformElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-||||||| merged common ancestors
-  nsSMILAnimationFunction mAnimationFunction;
-  friend nsresult
-    (::NS_NewSVGAnimateTransformElement(nsIContent **aResult,
-                                        already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-=======
   SMILAnimationFunction mAnimationFunction;
   friend nsresult(::NS_NewSVGAnimateTransformElement(
       nsIContent** aResult,
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
->>>>>>> upstream-releases
 
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override;

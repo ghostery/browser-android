@@ -565,7 +565,6 @@ static void CreateHeaderBarButton(GtkWidget* aParentWidget,
   GtkStyleContext* style = gtk_widget_get_style_context(widget);
   gtk_style_context_add_class(style, "titlebutton");
 
-<<<<<<< HEAD
   GtkWidget* image = nullptr;
   switch (aAppearance) {
     case MOZ_GTK_HEADER_BAR_BUTTON_CLOSE:
@@ -588,86 +587,6 @@ static void CreateHeaderBarButton(GtkWidget* aParentWidget,
     case MOZ_GTK_HEADER_BAR_BUTTON_MAXIMIZE_RESTORE:
       gtk_style_context_add_class(style, "maximize");
       image = gtk_image_new_from_icon_name("window-restore-symbolic",
-||||||| merged common ancestors
-  GtkWidget *image = nullptr;
-  switch (aWidgetType) {
-     case MOZ_GTK_HEADER_BAR_BUTTON_CLOSE:
-       gtk_style_context_add_class(style, "close");
-       image = gtk_image_new_from_icon_name("window-close-symbolic",
-=======
-  GtkWidget* image = nullptr;
-  switch (aAppearance) {
-    case MOZ_GTK_HEADER_BAR_BUTTON_CLOSE:
-      gtk_style_context_add_class(style, "close");
-      image = gtk_image_new_from_icon_name("window-close-symbolic",
-                                           GTK_ICON_SIZE_MENU);
-      break;
-    case MOZ_GTK_HEADER_BAR_BUTTON_MINIMIZE:
-      gtk_style_context_add_class(style, "minimize");
-      image = gtk_image_new_from_icon_name("window-minimize-symbolic",
-                                           GTK_ICON_SIZE_MENU);
-      break;
-
-    case MOZ_GTK_HEADER_BAR_BUTTON_MAXIMIZE:
-      gtk_style_context_add_class(style, "maximize");
-      image = gtk_image_new_from_icon_name("window-maximize-symbolic",
->>>>>>> upstream-releases
-                                           GTK_ICON_SIZE_MENU);
-<<<<<<< HEAD
-      break;
-    default:
-      break;
-  }
-
-  gtk_widget_set_valign(widget, GTK_ALIGN_CENTER);
-  g_object_set(image, "use-fallback", TRUE, NULL);
-  gtk_container_add(GTK_CONTAINER(widget), image);
-
-  // We bypass GetWidget() here by explicit sWidgetStorage[] update so
-  // invalidate the style as well as GetWidget() does.
-  style = gtk_widget_get_style_context(image);
-  gtk_style_context_invalidate(style);
-
-  LoadWidgetIconPixbuf(image);
-||||||| merged common ancestors
-       break;
-     case MOZ_GTK_HEADER_BAR_BUTTON_MINIMIZE:
-       gtk_style_context_add_class(style, "minimize");
-       image = gtk_image_new_from_icon_name("window-minimize-symbolic",
-                                            GTK_ICON_SIZE_MENU);
-       break;
-
-     case MOZ_GTK_HEADER_BAR_BUTTON_MAXIMIZE:
-       gtk_style_context_add_class(style, "maximize");
-       image = gtk_image_new_from_icon_name("window-maximize-symbolic",
-                                            GTK_ICON_SIZE_MENU);
-       break;
-
-     case MOZ_GTK_HEADER_BAR_BUTTON_MAXIMIZE_RESTORE:
-       gtk_style_context_add_class(style, "maximize");
-       image = gtk_image_new_from_icon_name("window-restore-symbolic",
-                                            GTK_ICON_SIZE_MENU);
-       break;
-     default:
-       break;
-   }
-
-   gtk_widget_set_valign(widget, GTK_ALIGN_CENTER);
-   g_object_set(image, "use-fallback", TRUE, NULL);
-   gtk_container_add(GTK_CONTAINER (widget), image);
-
-   // We bypass GetWidget() here by explicit sWidgetStorage[] update so
-   // invalidate the style as well as GetWidget() does.
-   style = gtk_widget_get_style_context(image);
-   gtk_style_context_invalidate(style);
-
-   LoadWidgetIconPixbuf(image);
-=======
-      break;
-
-    case MOZ_GTK_HEADER_BAR_BUTTON_MAXIMIZE_RESTORE:
-      gtk_style_context_add_class(style, "maximize");
-      image = gtk_image_new_from_icon_name("window-restore-symbolic",
                                            GTK_ICON_SIZE_MENU);
       break;
     default:
@@ -684,7 +603,6 @@ static void CreateHeaderBarButton(GtkWidget* aParentWidget,
   gtk_style_context_invalidate(style);
 
   LoadWidgetIconPixbuf(image);
->>>>>>> upstream-releases
 }
 
 static bool IsToolbarButtonEnabled(WidgetNodeType* aButtonLayout,
@@ -743,24 +661,8 @@ static void CreateHeaderBar() {
   CreateHeaderBarButtons();
 }
 
-<<<<<<< HEAD
-static GtkWidget* CreateWidget(WidgetNodeType aAppearance) {
-  MOZ_ASSERT(aAppearance != MOZ_GTK_DROPDOWN_ENTRY,
-             "Callers should be passing MOZ_GTK_ENTRY");
-
-  switch (aAppearance) {
-||||||| merged common ancestors
-static GtkWidget*
-CreateWidget(WidgetNodeType aWidgetType)
-{
-  MOZ_ASSERT(aWidgetType != MOZ_GTK_DROPDOWN_ENTRY,
-             "Callers should be passing MOZ_GTK_ENTRY");
-
-  switch (aWidgetType) {
-=======
 static GtkWidget* CreateWidget(WidgetNodeType aAppearance) {
   switch (aAppearance) {
->>>>>>> upstream-releases
     case MOZ_GTK_WINDOW:
       return CreateWindowWidget();
     case MOZ_GTK_WINDOW_CONTAINER:
@@ -1442,28 +1344,9 @@ void ResetWidgetCache(void) {
   mozilla::PodArrayZero(sWidgetStorage);
 }
 
-<<<<<<< HEAD
-GtkStyleContext* GetStyleContext(WidgetNodeType aNodeType,
-                                 GtkTextDirection aDirection,
-                                 GtkStateFlags aStateFlags, StyleFlags aFlags) {
-  if (aNodeType == MOZ_GTK_DROPDOWN_ENTRY) {
-    aNodeType = MOZ_GTK_ENTRY;
-  }
-
-||||||| merged common ancestors
-GtkStyleContext*
-GetStyleContext(WidgetNodeType aNodeType, GtkTextDirection aDirection,
-                GtkStateFlags aStateFlags, StyleFlags aFlags)
-{
-  if (aNodeType == MOZ_GTK_DROPDOWN_ENTRY) {
-    aNodeType = MOZ_GTK_ENTRY;
-  }
-
-=======
 GtkStyleContext* GetStyleContext(WidgetNodeType aNodeType, int aScale,
                                  GtkTextDirection aDirection,
                                  GtkStateFlags aStateFlags) {
->>>>>>> upstream-releases
   GtkStyleContext* style;
   if (gtk_check_version(3, 20, 0) != nullptr) {
     style = GetWidgetStyleInternal(aNodeType);
@@ -1519,20 +1402,6 @@ GtkStyleContext* GetStyleContext(WidgetNodeType aNodeType, int aScale,
   return style;
 }
 
-<<<<<<< HEAD
-GtkStyleContext* CreateStyleContextWithStates(WidgetNodeType aNodeType,
-                                              GtkTextDirection aDirection,
-                                              GtkStateFlags aStateFlags) {
-  GtkStyleContext* style = GetStyleContext(aNodeType, aDirection, aStateFlags);
-  GtkWidgetPath* path = gtk_widget_path_copy(gtk_style_context_get_path(style));
-||||||| merged common ancestors
-GtkStyleContext*
-CreateStyleContextWithStates(WidgetNodeType aNodeType, GtkTextDirection aDirection,
-                             GtkStateFlags aStateFlags)
-{
-  GtkStyleContext* style = GetStyleContext(aNodeType, aDirection, aStateFlags);
-  GtkWidgetPath *path = gtk_widget_path_copy(gtk_style_context_get_path(style));
-=======
 GtkStyleContext* CreateStyleContextWithStates(WidgetNodeType aNodeType,
                                               int aScale,
                                               GtkTextDirection aDirection,
@@ -1540,7 +1409,6 @@ GtkStyleContext* CreateStyleContextWithStates(WidgetNodeType aNodeType,
   GtkStyleContext* style =
       GetStyleContext(aNodeType, aScale, aDirection, aStateFlags);
   GtkWidgetPath* path = gtk_widget_path_copy(gtk_style_context_get_path(style));
->>>>>>> upstream-releases
 
   if (gtk_check_version(3, 14, 0) == nullptr) {
     static auto sGtkWidgetPathIterGetState =

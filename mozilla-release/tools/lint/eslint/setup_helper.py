@@ -122,20 +122,10 @@ def package_setup(package_root, package_name, should_clobber=False):
         else:
             cmd = [npm_path, "ci"]
 
-<<<<<<< HEAD
-    node_path, _ = find_node_executable()
-    if not node_path:
-        return 1
-
-    extra_parameters = ["--loglevel=error"]
-||||||| merged common ancestors
-    extra_parameters = ["--loglevel=error"]
-=======
         # On non-Windows, ensure npm is called via node, as node may not be in the
         # path.
         if platform.system() != "Windows":
             cmd.insert(0, node_path)
->>>>>>> upstream-releases
 
         cmd.extend(extra_parameters)
 
@@ -150,23 +140,8 @@ def package_setup(package_root, package_name, should_clobber=False):
         print("Installing %s for mach using \"%s\"..." % (package_name, " ".join(cmd)))
         result = call_process(package_name, cmd, append_env={'PATH': os.pathsep.join(path)})
 
-<<<<<<< HEAD
-    # On non-Windows, ensure npm is called via node, as node may not be in the
-    # path.
-    if platform.system() != "Windows":
-        cmd.insert(0, node_path)
-
-    cmd.extend(extra_parameters)
-    print("Installing eslint for mach using \"%s\"..." % (" ".join(cmd)))
-    result = call_process("eslint", cmd)
-||||||| merged common ancestors
-    cmd.extend(extra_parameters)
-    print("Installing eslint for mach using \"%s\"..." % (" ".join(cmd)))
-    result = call_process("eslint", cmd)
-=======
         if npm_is_older_version:
             shutil.move(package_lock_json_tmp_path, package_lock_json_path)
->>>>>>> upstream-releases
 
         if not result:
             return 1

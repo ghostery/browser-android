@@ -163,31 +163,12 @@ class DesktopCaptureImpl : public DesktopCapturer::Callback,
   static VideoCaptureModule::DeviceInfo* CreateDeviceInfo(
       const int32_t id, const CaptureDeviceType type);
 
-<<<<<<< HEAD:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
-  int32_t Init(const char* uniqueId, const CaptureDeviceType type);
   // Call backs
   void RegisterCaptureDataCallback(
       rtc::VideoSinkInterface<VideoFrame>* dataCallback) override;
   void DeRegisterCaptureDataCallback(
       rtc::VideoSinkInterface<VideoFrame>* dataCallback) override;
   int32_t StopCaptureIfAllClientsClose() override;
-||||||| merged common ancestors
-  int32_t Init(const char* uniqueId, const CaptureDeviceType type);
-  //RefCounting for RefCountedModule
-  virtual int32_t AddRef() const override;
-  virtual int32_t Release() const override;
-  //Call backs
-  virtual void RegisterCaptureDataCallback(rtc::VideoSinkInterface<VideoFrame> *dataCallback) override;
-  virtual void DeRegisterCaptureDataCallback(rtc::VideoSinkInterface<VideoFrame> *dataCallback) override;
-  virtual int32_t StopCaptureIfAllClientsClose() override;
-=======
-  // Call backs
-  void RegisterCaptureDataCallback(
-      rtc::VideoSinkInterface<VideoFrame>* dataCallback) override;
-  void DeRegisterCaptureDataCallback(
-      rtc::VideoSinkInterface<VideoFrame>* dataCallback) override;
-  int32_t StopCaptureIfAllClientsClose() override;
->>>>>>> upstream-releases:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
 
   int32_t SetCaptureRotation(VideoRotation rotation) override;
   bool SetApplyRotation(bool enable) override;
@@ -208,17 +189,9 @@ class DesktopCaptureImpl : public DesktopCapturer::Callback,
   bool CaptureStarted() override;
   int32_t CaptureSettings(VideoCaptureCapability& settings) override;
 
-<<<<<<< HEAD:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
- protected:
-  DesktopCaptureImpl(const int32_t id);
-||||||| merged common ancestors
-protected:
-  DesktopCaptureImpl(const int32_t id);
-=======
  protected:
   DesktopCaptureImpl(const int32_t id, const char* uniqueId,
                      const CaptureDeviceType type);
->>>>>>> upstream-releases:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
   virtual ~DesktopCaptureImpl();
   int32_t DeliverCapturedFrame(webrtc::VideoFrame& captureFrame,
                                int64_t capture_time);
@@ -226,19 +199,6 @@ protected:
   static const uint32_t kMaxDesktopCaptureCpuUsage =
       50;  // maximum CPU usage in %
 
-<<<<<<< HEAD:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
-  int32_t _id;                  // Module ID
-  std::string _deviceUniqueId;  // current Device unique name;
-  rtc::CriticalSection _apiCs;
-  VideoCaptureCapability
-      _requestedCapability;  // Should be set by platform dependent code in
-                             // StartCapture.
-||||||| merged common ancestors
-  int32_t _id; // Module ID
-  std::string _deviceUniqueId; // current Device unique name;
-  CriticalSectionWrapper& _apiCs;
-  VideoCaptureCapability _requestedCapability; // Should be set by platform dependent code in StartCapture.
-=======
   int32_t _id;                  // Module ID
   std::string _deviceUniqueId;  // current Device unique name;
   CaptureDeviceType _deviceType;
@@ -246,16 +206,9 @@ protected:
   VideoCaptureCapability
       _requestedCapability;  // Should be set by platform dependent code in
                              // StartCapture.
->>>>>>> upstream-releases:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
 
-<<<<<<< HEAD:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   int32_t Init();
->>>>>>> upstream-releases:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
   void UpdateFrameCount();
   uint32_t CalculateFrameRate(int64_t now_ns);
 
@@ -285,16 +238,10 @@ private:
   };
   void process();
 
-<<<<<<< HEAD:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   // This is created on the main thread and accessed on both the main thread
   // and the capturer thread. It is created prior to the capturer thread
   // starting and is destroyed after it is stopped.
->>>>>>> upstream-releases:mozilla-release/dom/media/systemservices/video_engine/desktop_capture_impl.h
   std::unique_ptr<DesktopAndCursorComposer> desktop_capturer_cursor_composer_;
 
   std::unique_ptr<EventWrapper> time_event_;

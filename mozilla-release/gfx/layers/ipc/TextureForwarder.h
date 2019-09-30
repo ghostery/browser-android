@@ -59,16 +59,8 @@ class LayersIPCChannel : public LayersIPCActor,
     return Nothing();
   }
 
-<<<<<<< HEAD
- protected:
-  virtual ~LayersIPCChannel() {}
-||||||| merged common ancestors
-protected:
-  virtual ~LayersIPCChannel() {}
-=======
  protected:
   virtual ~LayersIPCChannel() = default;
->>>>>>> upstream-releases
 };
 
 /**
@@ -83,20 +75,6 @@ class TextureForwarder : public LayersIPCChannel {
    * parent side.
    */
   virtual PTextureChild* CreateTexture(
-<<<<<<< HEAD
-      const SurfaceDescriptor& aSharedData, const ReadLockDescriptor& aReadLock,
-      LayersBackend aLayersBackend, TextureFlags aFlags, uint64_t aSerial,
-      wr::MaybeExternalImageId& aExternalImageId,
-      nsIEventTarget* aTarget = nullptr) = 0;
-||||||| merged common ancestors
-    const SurfaceDescriptor& aSharedData,
-    const ReadLockDescriptor& aReadLock,
-    LayersBackend aLayersBackend,
-    TextureFlags aFlags,
-    uint64_t aSerial,
-    wr::MaybeExternalImageId& aExternalImageId,
-    nsIEventTarget* aTarget = nullptr) = 0;
-=======
       const SurfaceDescriptor& aSharedData, const ReadLockDescriptor& aReadLock,
       LayersBackend aLayersBackend, TextureFlags aFlags, uint64_t aSerial,
       wr::MaybeExternalImageId& aExternalImageId,
@@ -106,7 +84,6 @@ class TextureForwarder : public LayersIPCChannel {
    * Returns the CanvasChild for this TextureForwarder.
    */
   virtual already_AddRefed<CanvasChild> GetCanvasChild() { return nullptr; };
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

@@ -47,13 +47,7 @@ describe("PersistentCache", () => {
     });
     it("doesnt try to fetch the file if it was already loaded", async () => {
       await cache._load();
-<<<<<<< HEAD
-      fakeOS.File.read.resetHistory();
-||||||| merged common ancestors
-      fakeOS.File.read.reset();
-=======
       fakeFetch.resetHistory();
->>>>>>> upstream-releases
       await cache.get("foo");
       assert.notCalled(fakeFetch);
     });
@@ -86,19 +80,9 @@ describe("PersistentCache", () => {
     it("doesnt try to fetch the file if it was already loaded", async () => {
       cache = new PersistentCache(filename, true);
       await cache._load();
-<<<<<<< HEAD
-      fakeOS.File.read.resetHistory();
-      await cache.set("foo", {x: 42});
-      assert.notCalled(fakeOS.File.read);
-||||||| merged common ancestors
-      fakeOS.File.read.reset();
-      await cache.set("foo", {x: 42});
-      assert.notCalled(fakeOS.File.read);
-=======
       fakeFetch.resetHistory();
       await cache.set("foo", { x: 42 });
       assert.notCalled(fakeFetch);
->>>>>>> upstream-releases
     });
     it("tries to fetch the file on the first set", async () => {
       await cache.set("foo", { x: 42 });

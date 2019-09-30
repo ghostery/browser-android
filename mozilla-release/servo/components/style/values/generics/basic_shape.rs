@@ -5,15 +5,6 @@
 //! CSS handling for the [`basic-shape`](https://drafts.csswg.org/css-shapes/#typedef-basic-shape)
 //! types that are generic over their `ToCss` implementations.
 
-<<<<<<< HEAD
-use crate::values::animated::{Animate, Procedure, ToAnimatedZero};
-use crate::values::distance::{ComputeSquaredDistance, SquaredDistance};
-use crate::values::generics::border::BorderRadius;
-use crate::values::generics::position::Position;
-use crate::values::generics::rect::Rect;
-use crate::values::specified::SVGPathData;
-||||||| merged common ancestors
-=======
 use crate::values::animated::{Animate, Procedure, ToAnimatedZero};
 use crate::values::distance::{ComputeSquaredDistance, SquaredDistance};
 use crate::values::generics::border::GenericBorderRadius;
@@ -21,7 +12,6 @@ use crate::values::generics::position::GenericPosition;
 use crate::values::generics::rect::Rect;
 use crate::values::specified::SVGPathData;
 use crate::Zero;
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
 
@@ -457,16 +447,9 @@ where
                     this.0.animate(&other.0, procedure)?,
                     this.1.animate(&other.1, procedure)?,
                 ))
-<<<<<<< HEAD
-            })
-            .collect::<Result<Vec<_>, _>>()?;
-||||||| merged common ancestors
-            }).collect::<Result<Vec<_>, _>>()?;
-=======
             })
             .collect::<Result<Vec<_>, _>>()?
             .into();
->>>>>>> upstream-releases
         Ok(Polygon {
             fill: self.fill,
             coordinates,

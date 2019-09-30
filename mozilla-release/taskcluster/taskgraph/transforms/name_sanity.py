@@ -3,13 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 Generate labels for tasks without names, consistently.
-<<<<<<< HEAD
-Uses attributes from `primary-dependency` or `primary-dependency`.
-||||||| merged common ancestors
-Uses attributes from 'dependent-task'.
-=======
 Uses attributes from `primary-dependency`.
->>>>>>> upstream-releases
 """
 
 from __future__ import absolute_import, print_function, unicode_literals
@@ -25,16 +19,7 @@ def make_label(config, jobs):
     """ Generate a sane label for a new task constructed from a dependency
     Using attributes from the dependent job and the current task kind"""
     for job in jobs:
-<<<<<<< HEAD
-        if 'primary-dependency' in job:
-            dep_job = job['primary-dependency']
-        else:
-            dep_job = job['primary-dependency']
-||||||| merged common ancestors
-        dep_job = job['dependent-task']
-=======
         dep_job = job['primary-dependency']
->>>>>>> upstream-releases
         attr = dep_job.attributes.get
 
         if attr('locale', job.get('locale')):

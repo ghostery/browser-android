@@ -413,21 +413,10 @@ class Typedef(object):
         return "%s %s" % (self.name, '*' if 'out' in calltype else '')
 
     def rustType(self, calltype):
-<<<<<<< HEAD
-        if self.name == 'nsresult':
-            return '::nserror::nsresult'
-
-        return "%s%s" % (calltype != 'in' and '*mut ' or '',
-                         self.name)
-||||||| merged common ancestors
-        return "%s%s" % (calltype != 'in' and '*mut ' or '',
-                         self.name)
-=======
         if self.name == 'nsresult':
             return "%s::nserror::nsresult" % ('*mut ' if 'out' in calltype else '')
 
         return "%s%s" % ('*mut ' if 'out' in calltype else '', self.name)
->>>>>>> upstream-releases
 
     def __str__(self):
         return "typedef %s %s\n" % (self.type, self.name)
@@ -672,27 +661,6 @@ class Interface(object):
             if not isinstance(m, CDATA):
                 self.namemap.set(m)
 
-<<<<<<< HEAD
-            if ((m.kind == 'method' or m.kind == 'attribute') and
-                m.notxpcom and name != 'nsISupports'):
-                # An interface cannot be implemented by JS if it has a notxpcom
-                # method or attribute. Such a type is an "implicit builtinclass".
-                #
-                # XXX(nika): Why does nostdcall not imply builtinclass?
-                # It could screw up the shims as well...
-                self.implicit_builtinclass = True
-
-||||||| merged common ancestors
-            if m.kind == 'method' and m.notxpcom and name != 'nsISupports':
-                # An interface cannot be implemented by JS if it has a
-                # notxpcom method. Such a type is an "implicit builtinclass".
-                #
-                # XXX(nika): Why does nostdcall not imply builtinclass?
-                # It could screw up the shims as well...
-                self.implicit_builtinclass = True
-
-=======
->>>>>>> upstream-releases
     def __eq__(self, other):
         return self.name == other.name and self.location == other.location
 
@@ -906,88 +874,6 @@ class ConstMember(object):
         return 0
 
 
-<<<<<<< HEAD
-# Represents a single name/value pair in a CEnum
-class CEnumVariant(object):
-    # Treat CEnumVariants as consts in terms of value resolution, so we can
-    # do things like binary operation values for enum members.
-    kind = 'const'
-
-    def __init__(self, name, value, location):
-        self.name = name
-        self.value = value
-        self.location = location
-
-    def getValue(self):
-        return self.value
-
-
-class CEnum(object):
-    kind = 'cenum'
-
-    def __init__(self, width, name, variants, location, doccomments):
-        # We have to set a name here, otherwise we won't pass namemap checks on
-        # the interface. This name will change it in resolve(), in order to
-        # namespace the enum within the interface.
-        self.name = name
-        self.basename = name
-        self.width = width
-        self.location = location
-        self.namemap = NameMap()
-        self.doccomments = doccomments
-        self.variants = variants
-        if self.width not in (8, 16, 32):
-            raise IDLError("Width must be one of {8, 16, 32}", self.location)
-
-    def getValue(self):
-        return self.value(self.iface)
-
-    def resolve(self, iface):
-        self.iface = iface
-        # Renaming enum to faux-namespace the enum type to the interface in JS
-        # so we don't collide in the global namespace. Hacky/ugly but it does
-        # the job well enough, and the name will still be interface::variant in
-        # C++.
-        self.name = '%s_%s' % (self.iface.name, self.basename)
-        self.iface.idl.setName(self)
-
-        # Compute the value for each enum variant that doesn't set its own
-        # value
-        next_value = 0
-        for variant in self.variants:
-            # CEnum variants resolve to interface level consts in javascript,
-            # meaning their names could collide with other interface members.
-            # Iterate through all CEnum variants to make sure there are no
-            # collisions.
-            self.iface.namemap.set(variant)
-            # Value may be a lambda. If it is, resolve it.
-            if variant.value:
-                next_value = variant.value = variant.value(self.iface)
-            else:
-                variant.value = next_value
-            next_value += 1
-
-    def count(self):
-        return 0
-
-    def isScriptable(self):
-        return True
-
-    def nativeType(self, calltype):
-        if 'out' in calltype:
-            return "%s::%s *" % (self.iface.name, self.basename)
-        return "%s::%s " % (self.iface.name, self.basename)
-
-    def rustType(self, calltype):
-        raise RustNoncompat('cenums unimplemented')
-
-    def __str__(self):
-        body = ', '.join('%s = %s' % v for v in self.variants)
-        return "\tcenum %s : %d { %s };\n" % (self.name, self.width, body)
-
-
-||||||| merged common ancestors
-=======
 # Represents a single name/value pair in a CEnum
 class CEnumVariant(object):
     # Treat CEnumVariants as consts in terms of value resolution, so we can
@@ -1083,7 +969,6 @@ def ensureBuiltinClassIfNeeded(methodOrAttribute):
             methodOrAttribute.location)
 
 
->>>>>>> upstream-releases
 class Attribute(object):
     kind = 'attribute'
     noscript = False

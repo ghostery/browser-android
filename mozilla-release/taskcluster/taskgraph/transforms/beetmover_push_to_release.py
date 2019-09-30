@@ -8,18 +8,10 @@ Transform the beetmover-push-to-release task into a task description.
 from __future__ import absolute_import, print_function, unicode_literals
 
 from taskgraph.transforms.base import TransformSequence
-<<<<<<< HEAD
-from taskgraph.util.schema import Schema
-||||||| merged common ancestors
-from taskgraph.util.schema import (
-     validate_schema, Schema,
-)
-=======
 from taskgraph.util.schema import (
     Schema,
     taskref_or_string,
 )
->>>>>>> upstream-releases
 from taskgraph.util.scriptworker import (
     get_beetmover_bucket_scope, add_scope_prefix,
     get_worker_type_for_scope,
@@ -27,29 +19,6 @@ from taskgraph.util.scriptworker import (
 from taskgraph.transforms.task import task_description_schema
 from voluptuous import Required, Optional
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-job_description_schema = {str(k): v for k, v in job_description_schema.schema.iteritems()}
-
-
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-||||||| merged common ancestors
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-job_description_schema = {str(k): v for k, v in job_description_schema.schema.iteritems()}
-
-transforms = TransformSequence()
-
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-=======
->>>>>>> upstream-releases
 
 beetmover_push_to_release_description_schema = Schema({
     Required('name'): basestring,

@@ -27,20 +27,9 @@ class TextEditUtils final {
  * stack based helper class for detecting end of editor initialization, in
  * order to trigger "end of init" initialization of the edit rules.
  */
-<<<<<<< HEAD
-class AutoEditInitRulesTrigger final {
- private:
-  TextEditor* mTextEditor;
-||||||| merged common ancestors
-class AutoEditInitRulesTrigger final
-{
-private:
-  TextEditor* mTextEditor;
-=======
 class AutoEditInitRulesTrigger final {
  private:
   RefPtr<TextEditor> mTextEditor;
->>>>>>> upstream-releases
   nsresult& mResult;
 
  public:

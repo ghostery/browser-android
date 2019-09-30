@@ -6,22 +6,6 @@ import { FluentBundle } from "fluent";
  *   value: a property or array of properties on the message.content object
  */
 const RICH_TEXT_CONFIG = {
-<<<<<<< HEAD
-  "text": ["text", "scene1_text"],
-  "success_text": "success_text",
-  "error_text": "error_text",
-  "scene2_text": "scene2_text",
-  "amo_html": "amo_html",
-  "privacy_html": "scene2_privacy_html",
-  "disclaimer_html": "scene2_disclaimer_html",
-||||||| merged common ancestors
-  "text": ["text", "scene1_text"],
-  "success_text": "success_text",
-  "error_text": "error_text",
-  "scene2_text": "scene2_text",
-  "privacy_html": "scene2_privacy_html",
-  "disclaimer_html": "scene2_disclaimer_html",
-=======
   text: ["text", "scene1_text"],
   success_text: "success_text",
   error_text: "error_text",
@@ -29,7 +13,6 @@ const RICH_TEXT_CONFIG = {
   amo_html: "amo_html",
   privacy_html: "scene2_privacy_html",
   disclaimer_html: "scene2_disclaimer_html",
->>>>>>> upstream-releases
 };
 
 export const RICH_TEXT_KEYS = Object.keys(RICH_TEXT_CONFIG);

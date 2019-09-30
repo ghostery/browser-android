@@ -52,99 +52,11 @@ void js::CompileError::throwError(JSContext* cx) {
   ErrorToException(cx, this, nullptr, nullptr);
 }
 
-<<<<<<< HEAD
-bool js::ReportExceptionClosure::operator()(JSContext* cx) {
-  cx->setPendingException(exn_);
-  return false;
-||||||| merged common ancestors
-bool
-js::ReportExceptionClosure::operator()(JSContext* cx)
-{
-    cx->setPendingException(exn_);
-    return false;
-=======
 bool js::ReportExceptionClosure::operator()(JSContext* cx) {
   cx->setPendingExceptionAndCaptureStack(exn_);
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata,
-                              UniquePtr<JSErrorNotes> notes, unsigned flags,
-                              unsigned errorNumber, va_list args) {
-  // On the main thread, report the error immediately. When compiling off
-  // thread, save the error so that the thread finishing the parse can report
-  // it later.
-  CompileError tempErr;
-  CompileError* err = &tempErr;
-  if (cx->helperThread() && !cx->addPendingCompileError(&err)) {
-    return false;
-  }
-
-  err->notes = std::move(notes);
-  err->flags = flags;
-  err->errorNumber = errorNumber;
-
-  err->filename = metadata.filename;
-  err->lineno = metadata.lineNumber;
-  err->column = metadata.columnNumber;
-  err->isMuted = metadata.isMuted;
-
-  if (UniqueTwoByteChars lineOfContext = std::move(metadata.lineOfContext)) {
-    err->initOwnedLinebuf(lineOfContext.release(), metadata.lineLength,
-                          metadata.tokenOffset);
-  }
-
-  if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr, errorNumber,
-                              nullptr, ArgumentsAreLatin1, err, args)) {
-    return false;
-  }
-
-  if (!cx->helperThread()) {
-    err->throwError(cx);
-  }
-
-  return true;
-||||||| merged common ancestors
-bool
-js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
-                         unsigned flags, unsigned errorNumber, va_list args)
-{
-    // On the main thread, report the error immediately. When compiling off
-    // thread, save the error so that the thread finishing the parse can report
-    // it later.
-    CompileError tempErr;
-    CompileError* err = &tempErr;
-    if (cx->helperThread() && !cx->addPendingCompileError(&err)) {
-        return false;
-    }
-
-    err->notes = std::move(notes);
-    err->flags = flags;
-    err->errorNumber = errorNumber;
-
-    err->filename = metadata.filename;
-    err->lineno = metadata.lineNumber;
-    err->column = metadata.columnNumber;
-    err->isMuted = metadata.isMuted;
-
-    if (UniqueTwoByteChars lineOfContext = std::move(metadata.lineOfContext)) {
-        err->initOwnedLinebuf(lineOfContext.release(), metadata.lineLength, metadata.tokenOffset);
-    }
-
-    if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr, errorNumber,
-                                nullptr, ArgumentsAreLatin1, err, args))
-    {
-        return false;
-    }
-
-    if (!cx->helperThread()) {
-        err->throwError(cx);
-    }
-
-    return true;
-=======
 bool js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata,
                               UniquePtr<JSErrorNotes> notes, unsigned flags,
                               unsigned errorNumber, va_list* args) {
@@ -181,81 +93,8 @@ bool js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata,
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata,
-                            UniquePtr<JSErrorNotes> notes, unsigned flags,
-                            unsigned errorNumber, va_list args) {
-  // On the main thread, report the error immediately. When compiling off
-  // thread, save the error so that the thread finishing the parse can report
-  // it later.
-  CompileError tempErr;
-  CompileError* err = &tempErr;
-  if (cx->helperThread() && !cx->addPendingCompileError(&err)) {
-    return;
-  }
-
-  err->notes = std::move(notes);
-  err->flags = flags;
-  err->errorNumber = errorNumber;
-
-  err->filename = metadata.filename;
-  err->lineno = metadata.lineNumber;
-  err->column = metadata.columnNumber;
-  err->isMuted = metadata.isMuted;
-
-  if (UniqueTwoByteChars lineOfContext = std::move(metadata.lineOfContext)) {
-    err->initOwnedLinebuf(lineOfContext.release(), metadata.lineLength,
-                          metadata.tokenOffset);
-  }
-
-  if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr, errorNumber,
-                              nullptr, ArgumentsAreLatin1, err, args)) {
-    return;
-  }
-
-  if (!cx->helperThread()) {
-    err->throwError(cx);
-  }
-||||||| merged common ancestors
-void
-js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
-                       unsigned flags, unsigned errorNumber, va_list args)
-{
-    // On the main thread, report the error immediately. When compiling off
-    // thread, save the error so that the thread finishing the parse can report
-    // it later.
-    CompileError tempErr;
-    CompileError* err = &tempErr;
-    if (cx->helperThread() && !cx->addPendingCompileError(&err)) {
-        return;
-    }
-
-    err->notes = std::move(notes);
-    err->flags = flags;
-    err->errorNumber = errorNumber;
-
-    err->filename = metadata.filename;
-    err->lineno = metadata.lineNumber;
-    err->column = metadata.columnNumber;
-    err->isMuted = metadata.isMuted;
-
-    if (UniqueTwoByteChars lineOfContext = std::move(metadata.lineOfContext)) {
-        err->initOwnedLinebuf(lineOfContext.release(), metadata.lineLength, metadata.tokenOffset);
-    }
-
-    if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr, errorNumber,
-                                nullptr, ArgumentsAreLatin1, err, args))
-    {
-        return;
-    }
-
-    if (!cx->helperThread()) {
-        err->throwError(cx);
-    }
-=======
 void js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata,
                             UniquePtr<JSErrorNotes> notes, unsigned flags,
                             unsigned errorNumber, va_list* args) {
@@ -290,7 +129,6 @@ void js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata,
   if (!cx->isHelperThreadContext()) {
     err->throwError(cx);
   }
->>>>>>> upstream-releases
 }
 
 void js::ReportErrorToGlobal(JSContext* cx, Handle<GlobalObject*> global,

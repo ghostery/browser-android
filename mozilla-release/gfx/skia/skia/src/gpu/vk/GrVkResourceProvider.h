@@ -44,20 +44,10 @@ public:
     // Set up any initial vk objects
     void init();
 
-<<<<<<< HEAD
-    GrVkPipeline* createPipeline(const GrPrimitiveProcessor& primProc,
-                                 const GrPipeline& pipeline,
-                                 const GrStencilSettings& stencil,
-||||||| merged common ancestors
-    GrVkPipeline* createPipeline(const GrPipeline& pipeline,
-                                 const GrStencilSettings& stencil,
-                                 const GrPrimitiveProcessor& primProc,
-=======
     GrVkPipeline* createPipeline(int numColorSamples,
                                  const GrPrimitiveProcessor& primProc,
                                  const GrPipeline& pipeline,
                                  const GrStencilSettings& stencil,
->>>>>>> upstream-releases
                                  VkPipelineShaderStageCreateInfo* shaderStageInfo,
                                  int shaderStageCount,
                                  GrPrimitiveType primitiveType,
@@ -115,17 +105,6 @@ public:
     GrVkSampler* findOrCreateCompatibleSampler(const GrSamplerState&,
                                                const GrVkYcbcrConversionInfo& ycbcrInfo);
 
-<<<<<<< HEAD
-    GrVkPipelineState* findOrCreateCompatiblePipelineState(const GrPipeline&,
-                                                           const GrPrimitiveProcessor&,
-                                                           GrPrimitiveType,
-                                                           VkRenderPass compatibleRenderPass);
-||||||| merged common ancestors
-    GrVkPipelineState* findOrCreateCompatiblePipelineState(const GrPipeline&,
-                                                           const GrPrimitiveProcessor&,
-                                                           GrPrimitiveType,
-                                                           const GrVkRenderPass& renderPass);
-=======
     // Finds or creates a compatible GrVkSamplerYcbcrConversion based on the GrSamplerState and
     // GrVkYcbcrConversionInfo. The refcount is incremented and a pointer returned.
     GrVkSamplerYcbcrConversion* findOrCreateCompatibleSamplerYcbcrConversion(
@@ -138,7 +117,6 @@ public:
             const GrTextureProxy* const primProcProxies[],
             GrPrimitiveType,
             VkRenderPass compatibleRenderPass);
->>>>>>> upstream-releases
 
     void getSamplerDescriptorSetHandle(VkDescriptorType type,
                                        const GrVkUniformHandler&,
@@ -212,18 +190,10 @@ private:
 
         void abandon();
         void release();
-<<<<<<< HEAD
-        GrVkPipelineState* refPipelineState(const GrPrimitiveProcessor&,
-                                            const GrPipeline&,
-||||||| merged common ancestors
-        GrVkPipelineState* refPipelineState(const GrPipeline&,
-                                            const GrPrimitiveProcessor&,
-=======
         GrVkPipelineState* refPipelineState(GrRenderTarget*, GrSurfaceOrigin,
                                             const GrPrimitiveProcessor&,
                                             const GrTextureProxy* const primProcProxies[],
                                             const GrPipeline&,
->>>>>>> upstream-releases
                                             GrPrimitiveType,
                                             VkRenderPass compatibleRenderPass);
 

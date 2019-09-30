@@ -11,13 +11,7 @@ DIRS += [
     'sources-tree',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/moz.build
     'assert.js',
     'ast.js',
     'async-value.js',

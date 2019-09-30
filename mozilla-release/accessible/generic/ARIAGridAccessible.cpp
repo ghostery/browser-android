@@ -551,19 +551,12 @@ ARIAGridCellAccessible::NativeAttributes() {
 
   // Expose "table-cell-index" attribute.
   Accessible* thisRow = Row();
-<<<<<<< HEAD
-  if (!thisRow) return attributes.forget();
-||||||| merged common ancestors
-  if (!thisRow)
-    return attributes.forget();
-=======
   if (!thisRow) return attributes.forget();
 
   int32_t rowIdx = RowIndexFor(thisRow);
   if (rowIdx == -1) {  // error
     return attributes.forget();
   }
->>>>>>> upstream-releases
 
   int32_t colIdx = 0, colCount = 0;
   uint32_t childCount = thisRow->ChildCount();

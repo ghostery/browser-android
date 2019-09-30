@@ -138,13 +138,6 @@ inline bool IsEastAsianWidthFWH(uint32_t aCh) {
   return false;
 }
 
-<<<<<<< HEAD
-inline bool IsDefaultIgnorable(uint32_t aCh) {
-||||||| merged common ancestors
-inline bool
-IsDefaultIgnorable(uint32_t aCh)
-{
-=======
 inline bool IsEastAsianWidthAFW(uint32_t aCh) {
   switch (u_getIntPropertyValue(aCh, UCHAR_EAST_ASIAN_WIDTH)) {
     case U_EA_AMBIGUOUS:
@@ -160,7 +153,6 @@ inline bool IsEastAsianWidthAFW(uint32_t aCh) {
 }
 
 inline bool IsDefaultIgnorable(uint32_t aCh) {
->>>>>>> upstream-releases
   return u_hasBinaryProperty(aCh, UCHAR_DEFAULT_IGNORABLE_CODE_POINT);
 }
 

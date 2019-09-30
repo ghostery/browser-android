@@ -60,29 +60,6 @@ var Components_ = this.require ? require("chrome").components : Components;
 if (Cu) {
   // If we're in a devtools module environment, ChromeUtils won't exist.
   /* eslint "mozilla/use-chromeutils-import": ["error", {allowCu: true}] */
-<<<<<<< HEAD
-  Cu.import("resource://gre/modules/Services.jsm", this);
-  Cu.import("resource://gre/modules/XPCOMUtils.jsm", this);
-
-  XPCOMUtils.defineLazyServiceGetter(this, "FinalizationWitnessService",
-                                     "@mozilla.org/toolkit/finalizationwitness;1",
-                                     "nsIFinalizationWitnessService");
-
-  // For now, we're worried about add-ons using Promises with CPOWs, so we'll
-  // permit them in this scope, but this support will go away soon.
-  Cu.permitCPOWsInScope(this);
-||||||| merged common ancestors
-  Cu.import("resource://gre/modules/Services.jsm");
-  Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-
-  XPCOMUtils.defineLazyServiceGetter(this, "FinalizationWitnessService",
-                                     "@mozilla.org/toolkit/finalizationwitness;1",
-                                     "nsIFinalizationWitnessService");
-
-  // For now, we're worried about add-ons using Promises with CPOWs, so we'll
-  // permit them in this scope, but this support will go away soon.
-  Cu.permitCPOWsInScope(this);
-=======
   Cu.import("resource://gre/modules/Services.jsm", this);
   Cu.import("resource://gre/modules/XPCOMUtils.jsm", this);
 
@@ -92,7 +69,6 @@ if (Cu) {
     "@mozilla.org/toolkit/finalizationwitness;1",
     "nsIFinalizationWitnessService"
   );
->>>>>>> upstream-releases
 }
 
 const STATUS_PENDING = 0;

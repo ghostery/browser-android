@@ -386,13 +386,7 @@ bool IsInterfaceEqualToOrInheritedFrom(REFIID aInterface, REFIID aFrom,
   return false;
 }
 
-<<<<<<< HEAD
-#endif  // defined(MOZILLA_INTERNAL_API)
-||||||| merged common ancestors
-#endif // defined(MOZILLA_INTERNAL_API)
-=======
 #  endif  // defined(MOZILLA_INTERNAL_API)
->>>>>>> upstream-releases
 
 #endif  // defined(ACCESSIBILITY)
 

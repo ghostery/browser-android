@@ -19,14 +19,6 @@ class SVGAnimatedViewBox;
 
 namespace dom {
 
-<<<<<<< HEAD
-class SVGAnimatedRect final : public nsWrapperCache {
- public:
-||||||| merged common ancestors
-class SVGAnimatedRect final : public nsWrapperCache
-{
-public:
-=======
 class SVGRect;
 
 // Despite the name of this class appearing to be generic,
@@ -34,22 +26,12 @@ class SVGRect;
 
 class SVGAnimatedRect final : public nsWrapperCache {
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(SVGAnimatedRect)
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(SVGAnimatedRect)
 
   SVGAnimatedRect(SVGAnimatedViewBox* aVal, SVGElement* aSVGElement);
 
-<<<<<<< HEAD
-  nsSVGElement* GetParentObject() const { return mSVGElement; }
-||||||| merged common ancestors
-  nsSVGElement* GetParentObject() const
-  {
-    return mSVGElement;
-  }
-=======
   SVGElement* GetParentObject() const { return mSVGElement; }
->>>>>>> upstream-releases
 
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
@@ -61,16 +43,8 @@ class SVGAnimatedRect final : public nsWrapperCache {
  private:
   virtual ~SVGAnimatedRect();
 
-<<<<<<< HEAD
-  nsSVGViewBox* mVal;  // kept alive because it belongs to content
-  RefPtr<nsSVGElement> mSVGElement;
-||||||| merged common ancestors
-  nsSVGViewBox* mVal; // kept alive because it belongs to content
-  RefPtr<nsSVGElement> mSVGElement;
-=======
   SVGAnimatedViewBox* mVal;  // kept alive because it belongs to content
   RefPtr<SVGElement> mSVGElement;
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

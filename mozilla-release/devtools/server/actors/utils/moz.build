@@ -9,21 +9,9 @@ DevToolsModules(
     'actor-registry-utils.js',
     'actor-registry.js',
     'breakpoint-actor-map.js',
-<<<<<<< HEAD
-    'call-watcher.js',
-    'closest-scripts.js',
-||||||| merged common ancestors
-    'call-watcher.js',
-=======
->>>>>>> upstream-releases
     'css-grid-utils.js',
-<<<<<<< HEAD
-    'dbg-source.js',
-||||||| merged common ancestors
-=======
     'dbg-source.js',
     'event-breakpoints.js',
->>>>>>> upstream-releases
     'event-loop.js',
     'inactive-property-helper.js',
     'make-debugger.js',

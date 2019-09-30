@@ -29,13 +29,7 @@
 #include <stdint.h>
 
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#pragma warning(disable : 4800)
-||||||| merged common ancestors
-#pragma warning( disable : 4800 )
-=======
 #  pragma warning(disable : 4800)
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -659,44 +653,16 @@ struct ParamTraits<mozilla::gfx::ColorDepth>
                                       mozilla::gfx::ColorDepth::UNKNOWN> {};
 
 template <>
-<<<<<<< HEAD
-struct ParamTraits<mozilla::StereoMode>
-    : public ContiguousEnumSerializer<mozilla::StereoMode,
-                                      mozilla::StereoMode::MONO,
-                                      mozilla::StereoMode::MAX> {};
-||||||| merged common ancestors
-struct ParamTraits<mozilla::StereoMode>
-  : public ContiguousEnumSerializer<
-             mozilla::StereoMode,
-             mozilla::StereoMode::MONO,
-             mozilla::StereoMode::MAX>
-{};
-=======
 struct ParamTraits<mozilla::gfx::YUVColorSpace>
     : public ContiguousEnumSerializer<
           mozilla::gfx::YUVColorSpace, mozilla::gfx::YUVColorSpace::BT601,
           mozilla::gfx::YUVColorSpace::_NUM_COLORSPACE> {};
->>>>>>> upstream-releases
 
 template <>
-<<<<<<< HEAD
-struct ParamTraits<mozilla::YUVColorSpace>
-    : public ContiguousEnumSerializer<mozilla::YUVColorSpace,
-                                      mozilla::YUVColorSpace::BT601,
-                                      mozilla::YUVColorSpace::UNKNOWN> {};
-||||||| merged common ancestors
-struct ParamTraits<mozilla::YUVColorSpace>
-  : public ContiguousEnumSerializer<
-             mozilla::YUVColorSpace,
-             mozilla::YUVColorSpace::BT601,
-             mozilla::YUVColorSpace::UNKNOWN>
-{};
-=======
 struct ParamTraits<mozilla::StereoMode>
     : public ContiguousEnumSerializer<mozilla::StereoMode,
                                       mozilla::StereoMode::MONO,
                                       mozilla::StereoMode::MAX> {};
->>>>>>> upstream-releases
 
 template <>
 struct ParamTraits<mozilla::gfx::ImplicitlyCopyableFloatArray>

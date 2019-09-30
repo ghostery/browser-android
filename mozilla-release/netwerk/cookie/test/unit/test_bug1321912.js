@@ -6,21 +6,10 @@ const dirSvc = Services.dirsvc;
 let dbFile = dirSvc.get("ProfD", Ci.nsIFile);
 dbFile.append("cookies.sqlite");
 
-<<<<<<< HEAD
-let storage = Services.storage;
-let properties = Cc["@mozilla.org/hash-property-bag;1"].
-                 createInstance(Ci.nsIWritablePropertyBag);
-||||||| merged common ancestors
-let storage = Cc["@mozilla.org/storage/service;1"].
-              getService(Ci.mozIStorageService);
-let properties = Cc["@mozilla.org/hash-property-bag;1"].
-                 createInstance(Ci.nsIWritablePropertyBag);
-=======
 let storage = Services.storage;
 let properties = Cc["@mozilla.org/hash-property-bag;1"].createInstance(
   Ci.nsIWritablePropertyBag
 );
->>>>>>> upstream-releases
 properties.setProperty("shared", true);
 let conn = storage.openDatabase(dbFile);
 

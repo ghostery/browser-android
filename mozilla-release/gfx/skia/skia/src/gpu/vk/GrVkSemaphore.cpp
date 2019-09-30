@@ -46,32 +46,10 @@ GrVkSemaphore::GrVkSemaphore(GrVkGpu* gpu, VkSemaphore semaphore, bool prohibitS
                              bool prohibitWait, bool isOwned)
         : INHERITED(gpu) {
     fResource = new Resource(semaphore, prohibitSignal, prohibitWait, isOwned);
-<<<<<<< HEAD
-    isOwned ? this->registerWithCache(SkBudgeted::kNo) : this->registerWithCacheWrapped();
-||||||| merged common ancestors
-=======
     isOwned ? this->registerWithCache(SkBudgeted::kNo)
             : this->registerWithCacheWrapped(GrWrapCacheable::kNo);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GrVkSemaphore::onRelease() {
-    if (fResource) {
-        fResource->unref(static_cast<const GrVkGpu*>(this->getGpu()));
-        fResource = nullptr;
-    }
-    INHERITED::onRelease();
-}
-
-void GrVkSemaphore::onAbandon() {
-    if (fResource) {
-||||||| merged common ancestors
-GrVkSemaphore::~GrVkSemaphore() {
-    if (fGpu) {
-        fResource->unref(static_cast<const GrVkGpu*>(fGpu));
-    } else {
-=======
 void GrVkSemaphore::onRelease() {
     if (fResource) {
         fResource->unref(static_cast<GrVkGpu*>(this->getGpu()));
@@ -82,7 +60,6 @@ void GrVkSemaphore::onRelease() {
 
 void GrVkSemaphore::onAbandon() {
     if (fResource) {
->>>>>>> upstream-releases
         fResource->unrefAndAbandon();
         fResource = nullptr;
     }

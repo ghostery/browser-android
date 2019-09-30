@@ -1275,38 +1275,18 @@ async function integrity(dbName) {
     try {
       await db.execute("REINDEX");
     } catch (ex) {
-<<<<<<< HEAD
-      throw new Components.Exception("Impossible to reindex database",
-                                     Cr.NS_ERROR_FILE_CORRUPTED);
-||||||| merged common ancestors
-      let error = new Error("Impossible to reindex database");
-      error.status = Cr.NS_ERROR_FILE_CORRUPTED;
-      throw error;
-=======
       throw new Components.Exception(
         "Impossible to reindex database",
         Cr.NS_ERROR_FILE_CORRUPTED
       );
->>>>>>> upstream-releases
     }
 
     // Check again.
-<<<<<<< HEAD
-    if (!await check(db)) {
-      throw new Components.Exception("The database is still corrupt",
-                                     Cr.NS_ERROR_FILE_CORRUPTED);
-||||||| merged common ancestors
-    if (!await check(db)) {
-      let error = new Error("The database is still corrupt");
-      error.status = Cr.NS_ERROR_FILE_CORRUPTED;
-      throw error;
-=======
     if (!(await check(db))) {
       throw new Components.Exception(
         "The database is still corrupt",
         Cr.NS_ERROR_FILE_CORRUPTED
       );
->>>>>>> upstream-releases
     }
   } finally {
     await db.close();

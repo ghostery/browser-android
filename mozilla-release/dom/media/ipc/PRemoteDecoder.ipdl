@@ -5,43 +5,18 @@
 
 include "mozilla/dom/MediaIPCUtils.h";
 
-<<<<<<< HEAD:mozilla-release/dom/media/ipc/PVideoDecoder.ipdl
-include protocol PVideoDecoderManager;
-include PMediaDecoderParams;
-include LayersSurfaces;
-||||||| merged common ancestors
-include protocol PVideoDecoderManager;
-include LayersSurfaces;
-=======
 include protocol PRemoteDecoderManager;
 
 using mozilla::MediaDataDecoder::ConversionRequired from "PlatformDecoderModule.h";
 using mozilla::TrackInfo::TrackType from "MediaInfo.h";
->>>>>>> upstream-releases:mozilla-release/dom/media/ipc/PRemoteDecoder.ipdl
 using mozilla::layers::LayersBackend from "mozilla/layers/LayersTypes.h";
 
 include PMediaDecoderParams;
 include LayersSurfaces;
 
-<<<<<<< HEAD:mozilla-release/dom/media/ipc/PVideoDecoder.ipdl
-struct VideoDataIPDL
-||||||| merged common ancestors
-struct MediaDataIPDL
-{
-  int64_t offset;
-  int64_t time;
-  int64_t timecode;
-  int64_t duration;
-  uint32_t frames;
-  bool keyframe;
-};
-
-struct VideoDataIPDL
-=======
 namespace mozilla {
 
 struct RemoteVideoDataIPDL
->>>>>>> upstream-releases:mozilla-release/dom/media/ipc/PRemoteDecoder.ipdl
 {
   MediaDataIPDL base;
   IntSize display;
@@ -50,15 +25,6 @@ struct RemoteVideoDataIPDL
   int32_t frameID;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/media/ipc/PVideoDecoder.ipdl
-||||||| merged common ancestors
-struct MediaRawDataIPDL
-{
-  MediaDataIPDL base;
-  Shmem buffer;
-};
-
-=======
 struct RemoteAudioDataIPDL
 {
   MediaDataIPDL base;
@@ -74,7 +40,6 @@ union DecodedOutputIPDL
   RemoteVideoDataIPDL;
 };
 
->>>>>>> upstream-releases:mozilla-release/dom/media/ipc/PRemoteDecoder.ipdl
 // This protocol provides a way to use MediaDataDecoder across processes.
 // The parent side currently is only implemented to work with
 // RemoteDecoderModule or WindowsMediaFoundation.

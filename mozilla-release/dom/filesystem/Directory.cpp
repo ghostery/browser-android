@@ -47,21 +47,10 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Directory)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Directory> Directory::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aRealPath, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Directory>
-Directory::Constructor(const GlobalObject& aGlobal,
-                       const nsAString& aRealPath,
-                       ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Directory> Directory::Constructor(const GlobalObject& aGlobal,
                                                    const nsAString& aRealPath,
                                                    ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> path;
   aRv = NS_NewLocalFile(aRealPath, true, getter_AddRefs(path));
   if (NS_WARN_IF(aRv.Failed())) {
@@ -71,20 +60,10 @@ already_AddRefed<Directory> Directory::Constructor(const GlobalObject& aGlobal,
   return Create(aGlobal.GetAsSupports(), path);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Directory> Directory::Create(
-    nsISupports* aParent, nsIFile* aFile, FileSystemBase* aFileSystem) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Directory>
-Directory::Create(nsISupports* aParent, nsIFile* aFile,
-                  FileSystemBase* aFileSystem)
-{
-=======
 /* static */
 already_AddRefed<Directory> Directory::Create(nsISupports* aParent,
                                               nsIFile* aFile,
                                               FileSystemBase* aFileSystem) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aParent);
   MOZ_ASSERT(aFile);
 

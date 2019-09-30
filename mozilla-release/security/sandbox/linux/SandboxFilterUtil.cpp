@@ -20,13 +20,7 @@
 // Older kernel headers (mostly Android, but also some older desktop
 // distributions) are missing some or all of these:
 #ifndef SYS_ACCEPT4
-<<<<<<< HEAD
-#define SYS_ACCEPT4 18
-||||||| merged common ancestors
-#define SYS_ACCEPT4  18
-=======
 #  define SYS_ACCEPT4 18
->>>>>>> upstream-releases
 #endif
 #ifndef SYS_RECVMMSG
 #  define SYS_RECVMMSG 19
@@ -70,27 +64,12 @@ sandbox::bpf_dsl::ResultExpr SandboxPolicyBase::EvaluateSyscall(
       }
       return acc->Default(InvalidSyscall());
     }
-<<<<<<< HEAD
-#endif  // ANDROID
-#endif  // __NR_socketcall
-        // clang-format off
-#define DISPATCH_SOCKETCALL(sysnum, socketnum) \
-  case sysnum:                                 \
-    return EvaluateSocketCall(socketnum, true).valueOr(InvalidSyscall())
-||||||| merged common ancestors
-#endif // ANDROID
-#endif // __NR_socketcall
-#define DISPATCH_SOCKETCALL(sysnum, socketnum)                       \
-    case sysnum:                                                     \
-      return EvaluateSocketCall(socketnum, true).valueOr(InvalidSyscall())
-=======
 #  endif  // ANDROID
 #endif    // __NR_socketcall
           // clang-format off
 #define DISPATCH_SOCKETCALL(sysnum, socketnum) \
   case sysnum:                                 \
     return EvaluateSocketCall(socketnum, true).valueOr(InvalidSyscall())
->>>>>>> upstream-releases
 #ifdef __NR_socket
       DISPATCH_SOCKETCALL(__NR_socket,      SYS_SOCKET);
       DISPATCH_SOCKETCALL(__NR_bind,        SYS_BIND);
@@ -136,32 +115,14 @@ sandbox::bpf_dsl::ResultExpr SandboxPolicyBase::EvaluateSyscall(
       DISPATCH_SYSVCALL(__NR_shmget,      SHMGET);
       DISPATCH_SYSVCALL(__NR_shmctl,      SHMCTL);
 #undef DISPATCH_SYSVCALL
-<<<<<<< HEAD
-#endif  // ANDROID
-#endif  // __NR_socketcall
-        // clang-format on
-    default:
-      return InvalidSyscall();
-||||||| merged common ancestors
-#endif // ANDROID
-#endif // __NR_socketcall
-  default:
-    return InvalidSyscall();
-=======
 #endif  // ANDROID
 #endif  // __NR_socketcall
           // clang-format on
     default:
       return InvalidSyscall();
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-=======
 /* static */ bool SandboxPolicyBase::HasSeparateSocketCalls() {
 #ifdef __NR_socket
   // If there's no socketcall, then obviously there are separate syscalls.
@@ -182,4 +143,3 @@ sandbox::bpf_dsl::ResultExpr SandboxPolicyBase::EvaluateSyscall(
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

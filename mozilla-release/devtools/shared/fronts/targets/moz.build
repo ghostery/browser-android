@@ -7,12 +7,7 @@
 DevToolsModules(
     'addon.js',
     'browsing-context.js',
-<<<<<<< HEAD
-    'content-process.js',
-||||||| merged common ancestors
-=======
     'content-process.js',
     'target-mixin.js',
->>>>>>> upstream-releases
     'worker.js',
 )

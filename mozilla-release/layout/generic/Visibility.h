@@ -36,17 +36,8 @@ enum class Visibility : uint8_t {
 };
 
 // Requested actions when frames transition to the nonvisible state.
-<<<<<<< HEAD
-enum class OnNonvisible : uint8_t {
-  DISCARD_IMAGES  // Discard images associated with the frame.
-||||||| merged common ancestors
-enum class OnNonvisible : uint8_t
-{
-  DISCARD_IMAGES  // Discard images associated with the frame.
-=======
 enum class OnNonvisible : uint8_t {
   DiscardImages  // Discard images associated with the frame.
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

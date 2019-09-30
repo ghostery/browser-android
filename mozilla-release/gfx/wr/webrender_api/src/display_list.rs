@@ -15,34 +15,6 @@ use std::ops::Range;
 use std::{io, mem, ptr, slice};
 use std::collections::HashMap;
 use time::precise_time_ns;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-use {AlphaType, BorderDetails, BorderDisplayItem, BorderRadius, BoxShadowClipMode, CacheMarkerDisplayItem};
-use {BoxShadowDisplayItem, ClipAndScrollInfo, ClipChainId, ClipChainItem, ClipDisplayItem, ClipId};
-use {ColorF, ComplexClipRegion, DisplayItem, ExtendMode, ExternalScrollId, FilterOp};
-use {FontInstanceKey, GlyphInstance, GlyphOptions, RasterSpace, Gradient, GradientBuilder};
-use {GradientDisplayItem, GradientStop, IframeDisplayItem, ImageDisplayItem, ImageKey, ImageMask};
-use {ImageRendering, LayoutPoint, LayoutPrimitiveInfo, LayoutRect, LayoutSideOffsets, LayoutSize};
-use {LayoutTransform, LayoutVector2D, LineDisplayItem, LineOrientation, LineStyle, MixBlendMode};
-use {PipelineId, PropertyBinding, PushReferenceFrameDisplayListItem};
-use {PushStackingContextDisplayItem, RadialGradient, RadialGradientDisplayItem};
-use {RectangleDisplayItem, ReferenceFrame, ScrollFrameDisplayItem, ScrollSensitivity};
-use {SerializedDisplayItem, Shadow, SpecificDisplayItem};
-use {StackingContext, StickyFrameDisplayItem, StickyOffsetBounds};
-use {TextDisplayItem, TransformStyle, YuvColorSpace, YuvData, YuvImageDisplayItem, ColorDepth};
-||||||| merged common ancestors
-use {AlphaType, BorderDetails, BorderDisplayItem, BorderRadius, BoxShadowClipMode};
-use {BoxShadowDisplayItem, ClipAndScrollInfo, ClipChainId, ClipChainItem, ClipDisplayItem, ClipId};
-use {ColorF, ComplexClipRegion, DisplayItem, ExtendMode, ExternalScrollId, FilterOp};
-use {FontInstanceKey, GlyphInstance, GlyphOptions, RasterSpace, Gradient, GradientBuilder};
-use {GradientDisplayItem, GradientStop, IframeDisplayItem, ImageDisplayItem, ImageKey, ImageMask};
-use {ImageRendering, LayoutPoint, LayoutPrimitiveInfo, LayoutRect, LayoutSideOffsets, LayoutSize};
-use {LayoutTransform, LayoutVector2D, LineDisplayItem, LineOrientation, LineStyle, MixBlendMode};
-use {PipelineId, PropertyBinding, PushReferenceFrameDisplayListItem};
-use {PushStackingContextDisplayItem, RadialGradient, RadialGradientDisplayItem};
-use {RectangleDisplayItem, ReferenceFrame, ScrollFrameDisplayItem, ScrollSensitivity, Shadow};
-use {SpecificDisplayItem, StackingContext, StickyFrameDisplayItem, StickyOffsetBounds};
-use {TextDisplayItem, TransformStyle, YuvColorSpace, YuvData, YuvImageDisplayItem, ColorDepth};
-=======
 // local imports
 use crate::display_item as di;
 use crate::api::{PipelineId, PropertyBinding};
@@ -52,7 +24,6 @@ use crate::font::{FontInstanceKey, GlyphInstance, GlyphOptions};
 use crate::image::{ColorDepth, ImageKey};
 use crate::units::*;
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
 
 // We don't want to push a long text-run. If a text-run is too long, split it into several parts.
 // This needs to be set to (renderer::MAX_VERTEX_TEXTURE_WIDTH - VECS_PER_TEXT_RUN) * 2
@@ -593,95 +564,6 @@ impl Serialize for BuiltDisplayList {
         let mut seq = serializer.serialize_seq(None)?;
         let mut traversal = self.iter();
         while let Some(item) = traversal.next_raw() {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-            let display_item = item.display_item();
-            let serial_di = GenericDisplayItem {
-                item: match display_item.item {
-                    SpecificDisplayItem::Clip(v) => Clip(
-                        v,
-                        item.iter.list.get(item.iter.cur_complex_clip.0).collect()
-                    ),
-                    SpecificDisplayItem::ClipChain(v) => ClipChain(
-                        v,
-                        item.iter.list.get(item.iter.cur_clip_chain_items).collect(),
-                    ),
-                    SpecificDisplayItem::ScrollFrame(v) => ScrollFrame(
-                        v,
-                        item.iter.list.get(item.iter.cur_complex_clip.0).collect()
-                    ),
-                    SpecificDisplayItem::StickyFrame(v) => StickyFrame(v),
-                    SpecificDisplayItem::Rectangle(v) => Rectangle(v),
-                    SpecificDisplayItem::ClearRectangle => ClearRectangle,
-                    SpecificDisplayItem::Line(v) => Line(v),
-                    SpecificDisplayItem::Text(v) => Text(
-                        v,
-                        item.iter.list.get(item.iter.cur_glyphs).collect()
-                    ),
-                    SpecificDisplayItem::Image(v) => Image(v),
-                    SpecificDisplayItem::YuvImage(v) => YuvImage(v),
-                    SpecificDisplayItem::Border(v) => Border(v),
-                    SpecificDisplayItem::BoxShadow(v) => BoxShadow(v),
-                    SpecificDisplayItem::Gradient(v) => Gradient(v),
-                    SpecificDisplayItem::RadialGradient(v) => RadialGradient(v),
-                    SpecificDisplayItem::Iframe(v) => Iframe(v),
-                    SpecificDisplayItem::PushStackingContext(v) => PushStackingContext(
-                        v,
-                        item.iter.list.get(item.iter.cur_filters).collect()
-                    ),
-                    SpecificDisplayItem::PopStackingContext => PopStackingContext,
-                    SpecificDisplayItem::PushReferenceFrame(v) => PushReferenceFrame(v),
-                    SpecificDisplayItem::PopReferenceFrame => PopReferenceFrame,
-                    SpecificDisplayItem::SetGradientStops => SetGradientStops(
-                        item.iter.list.get(item.iter.cur_stops).collect()
-                    ),
-                    SpecificDisplayItem::PushShadow(v) => PushShadow(v),
-                    SpecificDisplayItem::PopAllShadows => PopAllShadows,
-                    SpecificDisplayItem::PushCacheMarker(m) => PushCacheMarker(m),
-                    SpecificDisplayItem::PopCacheMarker => PopCacheMarker,
-||||||| merged common ancestors
-            let display_item = item.display_item();
-            let serial_di = GenericDisplayItem {
-                item: match display_item.item {
-                    SpecificDisplayItem::Clip(v) => Clip(
-                        v,
-                        item.iter.list.get(item.iter.cur_complex_clip.0).collect()
-                    ),
-                    SpecificDisplayItem::ClipChain(v) => ClipChain(
-                        v,
-                        item.iter.list.get(item.iter.cur_clip_chain_items).collect(),
-                    ),
-                    SpecificDisplayItem::ScrollFrame(v) => ScrollFrame(
-                        v,
-                        item.iter.list.get(item.iter.cur_complex_clip.0).collect()
-                    ),
-                    SpecificDisplayItem::StickyFrame(v) => StickyFrame(v),
-                    SpecificDisplayItem::Rectangle(v) => Rectangle(v),
-                    SpecificDisplayItem::ClearRectangle => ClearRectangle,
-                    SpecificDisplayItem::Line(v) => Line(v),
-                    SpecificDisplayItem::Text(v) => Text(
-                        v,
-                        item.iter.list.get(item.iter.cur_glyphs).collect()
-                    ),
-                    SpecificDisplayItem::Image(v) => Image(v),
-                    SpecificDisplayItem::YuvImage(v) => YuvImage(v),
-                    SpecificDisplayItem::Border(v) => Border(v),
-                    SpecificDisplayItem::BoxShadow(v) => BoxShadow(v),
-                    SpecificDisplayItem::Gradient(v) => Gradient(v),
-                    SpecificDisplayItem::RadialGradient(v) => RadialGradient(v),
-                    SpecificDisplayItem::Iframe(v) => Iframe(v),
-                    SpecificDisplayItem::PushStackingContext(v) => PushStackingContext(
-                        v,
-                        item.iter.list.get(item.iter.cur_filters).collect()
-                    ),
-                    SpecificDisplayItem::PopStackingContext => PopStackingContext,
-                    SpecificDisplayItem::PushReferenceFrame(v) => PushReferenceFrame(v),
-                    SpecificDisplayItem::PopReferenceFrame => PopReferenceFrame,
-                    SpecificDisplayItem::SetGradientStops => SetGradientStops(
-                        item.iter.list.get(item.iter.cur_stops).collect()
-                    ),
-                    SpecificDisplayItem::PushShadow(v) => PushShadow(v),
-                    SpecificDisplayItem::PopAllShadows => PopAllShadows,
-=======
             let serial_di = match *item.item() {
                 Real::Clip(v) => Debug::Clip(
                     v,
@@ -719,7 +601,6 @@ impl Serialize for BuiltDisplayList {
                         func_a_type: func_types[3],
                         a_values: temp_filter_data.a_values.iter().collect(),
                     })
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
                 },
                 Real::SetGradientStops => Debug::SetGradientStops(
                     item.iter.cur_stops.iter().collect()
@@ -770,127 +651,11 @@ impl<'de> Deserialize<'de> for BuiltDisplayList {
         let mut total_clip_nodes = FIRST_CLIP_NODE_INDEX;
         let mut total_spatial_nodes = FIRST_SPATIAL_NODE_INDEX;
         for complete in list {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-            let item = DisplayItem {
-                item: match complete.item {
-                    Clip(specific_item, complex_clips) => {
-                        total_clip_nodes += 1;
-                        DisplayListBuilder::push_iter_impl(&mut temp, complex_clips);
-                        SpecificDisplayItem::Clip(specific_item)
-                    },
-                    ClipChain(specific_item, clip_chain_ids) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, clip_chain_ids);
-                        SpecificDisplayItem::ClipChain(specific_item)
-                    }
-                    ScrollFrame(specific_item, complex_clips) => {
-                        total_spatial_nodes += 1;
-                        total_clip_nodes += 1;
-                        DisplayListBuilder::push_iter_impl(&mut temp, complex_clips);
-                        SpecificDisplayItem::ScrollFrame(specific_item)
-                    },
-                    StickyFrame(specific_item) => {
-                        total_spatial_nodes += 1;
-                        SpecificDisplayItem::StickyFrame(specific_item)
-                    }
-                    Rectangle(specific_item) => SpecificDisplayItem::Rectangle(specific_item),
-                    ClearRectangle => SpecificDisplayItem::ClearRectangle,
-                    Line(specific_item) => SpecificDisplayItem::Line(specific_item),
-                    Text(specific_item, glyphs) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, glyphs);
-                        SpecificDisplayItem::Text(specific_item)
-                    },
-                    Image(specific_item) => SpecificDisplayItem::Image(specific_item),
-                    YuvImage(specific_item) => SpecificDisplayItem::YuvImage(specific_item),
-                    Border(specific_item) => SpecificDisplayItem::Border(specific_item),
-                    BoxShadow(specific_item) => SpecificDisplayItem::BoxShadow(specific_item),
-                    Gradient(specific_item) => SpecificDisplayItem::Gradient(specific_item),
-                    RadialGradient(specific_item) =>
-                        SpecificDisplayItem::RadialGradient(specific_item),
-                    Iframe(specific_item) => {
-                        total_clip_nodes += 1;
-                        SpecificDisplayItem::Iframe(specific_item)
-                    }
-                    PushStackingContext(specific_item, filters) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, filters);
-                        SpecificDisplayItem::PushStackingContext(specific_item)
-                    },
-                    PopStackingContext => SpecificDisplayItem::PopStackingContext,
-                    PushReferenceFrame(specific_item) => {
-                        total_spatial_nodes += 1;
-                        SpecificDisplayItem::PushReferenceFrame(specific_item)
-                    }
-                    PopReferenceFrame => SpecificDisplayItem::PopReferenceFrame,
-                    SetGradientStops(stops) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, stops);
-                        SpecificDisplayItem::SetGradientStops
-                    },
-                    PushShadow(specific_item) => SpecificDisplayItem::PushShadow(specific_item),
-                    PopAllShadows => SpecificDisplayItem::PopAllShadows,
-                    PushCacheMarker(marker) => SpecificDisplayItem::PushCacheMarker(marker),
-                    PopCacheMarker => SpecificDisplayItem::PopCacheMarker,
-||||||| merged common ancestors
-            let item = DisplayItem {
-                item: match complete.item {
-                    Clip(specific_item, complex_clips) => {
-                        total_clip_nodes += 1;
-                        DisplayListBuilder::push_iter_impl(&mut temp, complex_clips);
-                        SpecificDisplayItem::Clip(specific_item)
-                    },
-                    ClipChain(specific_item, clip_chain_ids) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, clip_chain_ids);
-                        SpecificDisplayItem::ClipChain(specific_item)
-                    }
-                    ScrollFrame(specific_item, complex_clips) => {
-                        total_spatial_nodes += 1;
-                        total_clip_nodes += 1;
-                        DisplayListBuilder::push_iter_impl(&mut temp, complex_clips);
-                        SpecificDisplayItem::ScrollFrame(specific_item)
-                    },
-                    StickyFrame(specific_item) => {
-                        total_spatial_nodes += 1;
-                        SpecificDisplayItem::StickyFrame(specific_item)
-                    }
-                    Rectangle(specific_item) => SpecificDisplayItem::Rectangle(specific_item),
-                    ClearRectangle => SpecificDisplayItem::ClearRectangle,
-                    Line(specific_item) => SpecificDisplayItem::Line(specific_item),
-                    Text(specific_item, glyphs) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, glyphs);
-                        SpecificDisplayItem::Text(specific_item)
-                    },
-                    Image(specific_item) => SpecificDisplayItem::Image(specific_item),
-                    YuvImage(specific_item) => SpecificDisplayItem::YuvImage(specific_item),
-                    Border(specific_item) => SpecificDisplayItem::Border(specific_item),
-                    BoxShadow(specific_item) => SpecificDisplayItem::BoxShadow(specific_item),
-                    Gradient(specific_item) => SpecificDisplayItem::Gradient(specific_item),
-                    RadialGradient(specific_item) =>
-                        SpecificDisplayItem::RadialGradient(specific_item),
-                    Iframe(specific_item) => {
-                        total_clip_nodes += 1;
-                        SpecificDisplayItem::Iframe(specific_item)
-                    }
-                    PushStackingContext(specific_item, filters) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, filters);
-                        SpecificDisplayItem::PushStackingContext(specific_item)
-                    },
-                    PopStackingContext => SpecificDisplayItem::PopStackingContext,
-                    PushReferenceFrame(specific_item) => {
-                        total_spatial_nodes += 1;
-                        SpecificDisplayItem::PushReferenceFrame(specific_item)
-                    }
-                    PopReferenceFrame => SpecificDisplayItem::PopReferenceFrame,
-                    SetGradientStops(stops) => {
-                        DisplayListBuilder::push_iter_impl(&mut temp, stops);
-                        SpecificDisplayItem::SetGradientStops
-                    },
-                    PushShadow(specific_item) => SpecificDisplayItem::PushShadow(specific_item),
-                    PopAllShadows => SpecificDisplayItem::PopAllShadows,
-=======
             let item = match complete {
                 Debug::Clip(v, complex_clips) => {
                     total_clip_nodes += 1;
                     DisplayListBuilder::push_iter_impl(&mut temp, complex_clips);
                     Real::Clip(v)
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
                 },
                 Debug::ClipChain(v, clip_chain_ids) => {
                     DisplayListBuilder::push_iter_impl(&mut temp, clip_chain_ids);
@@ -1307,16 +1072,8 @@ impl DisplayListBuilder {
         {
             let mut iter = BuiltDisplayListIter::new(&temp);
             while let Some(item) = iter.next_raw() {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-                if index >= range.start.unwrap_or(0) && range.end.map_or(true, |e| index < e) {
-                    writeln!(sink, "{}{:?}", "  ".repeat(indent), item.display_item()).unwrap();
-||||||| merged common ancestors
-                if index >= start.unwrap_or(0) && end.map_or(true, |e| index < e) {
-                    eprintln!("{}{:?}", "  ".repeat(indent), item.display_item());
-=======
                 if index >= range.start.unwrap_or(0) && range.end.map_or(true, |e| index < e) {
                     writeln!(sink, "{}{:?}", "  ".repeat(indent), item.item()).unwrap();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
                 }
                 index += 1;
             }
@@ -1331,82 +1088,9 @@ impl DisplayListBuilder {
     /// NOTE: It is usually preferable to use the specialized methods to push
     /// display items. Pushing unexpected or invalid items here may
     /// result in WebRender panicking or behaving in unexpected ways.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-    pub fn push_item(&mut self, item: &SpecificDisplayItem, info: &LayoutPrimitiveInfo) {
-        serialize_fast(
-            &mut self.data,
-            SerializedDisplayItem {
-                item,
-                clip_and_scroll: self.clip_stack.last().unwrap(),
-                info,
-            },
-        )
-    }
-
-    fn push_item_with_clip_scroll_info(
-        &mut self,
-        item: &SpecificDisplayItem,
-        info: &LayoutPrimitiveInfo,
-        clip_and_scroll: &ClipAndScrollInfo
-    ) {
-        serialize_fast(
-            &mut self.data,
-            SerializedDisplayItem {
-                item,
-                clip_and_scroll,
-                info,
-            },
-        )
-    }
-
-    fn push_new_empty_item(&mut self, item: &SpecificDisplayItem) {
-        let info = &LayoutPrimitiveInfo::new(LayoutRect::zero());
-        self.push_item(item, info)
-||||||| merged common ancestors
-    pub fn push_item(&mut self, item: SpecificDisplayItem, info: &LayoutPrimitiveInfo) {
-        self.prim_count_estimate += 1;
-        serialize_fast(
-            &mut self.data,
-            &DisplayItem {
-                item,
-                clip_and_scroll: *self.clip_stack.last().unwrap(),
-                info: *info,
-            },
-        )
-    }
-
-    fn push_item_with_clip_scroll_info(
-        &mut self,
-        item: SpecificDisplayItem,
-        info: &LayoutPrimitiveInfo,
-        scrollinfo: ClipAndScrollInfo
-    ) {
-        self.prim_count_estimate += 1;
-        serialize_fast(
-            &mut self.data,
-            &DisplayItem {
-                item,
-                clip_and_scroll: scrollinfo,
-                info: *info,
-            },
-        )
-    }
-
-    fn push_new_empty_item(&mut self, item: SpecificDisplayItem) {
-        let info = LayoutPrimitiveInfo::new(LayoutRect::zero());
-        serialize_fast(
-            &mut self.data,
-            &DisplayItem {
-                item,
-                clip_and_scroll: *self.clip_stack.last().unwrap(),
-                info,
-            }
-        )
-=======
     #[inline]
     pub fn push_item(&mut self, item: &di::DisplayItem) {
         serialize_fast(&mut self.data, item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     fn push_iter_impl<I>(data: &mut Vec<u8>, iter_source: I)
@@ -1453,15 +1137,6 @@ impl DisplayListBuilder {
         Self::push_iter_impl(&mut self.data, iter);
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-    pub fn push_rect(&mut self, info: &LayoutPrimitiveInfo, color: ColorF) {
-        let item = SpecificDisplayItem::Rectangle(RectangleDisplayItem { color });
-        self.push_item(&item, info);
-||||||| merged common ancestors
-    pub fn push_rect(&mut self, info: &LayoutPrimitiveInfo, color: ColorF) {
-        let item = SpecificDisplayItem::Rectangle(RectangleDisplayItem { color });
-        self.push_item(item, info);
-=======
     pub fn push_rect(
         &mut self,
         common: &di::CommonItemProperties,
@@ -1482,16 +1157,8 @@ impl DisplayListBuilder {
             common: *common,
         });
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-    pub fn push_clear_rect(&mut self, info: &LayoutPrimitiveInfo) {
-        self.push_item(&SpecificDisplayItem::ClearRectangle, info);
-||||||| merged common ancestors
-    pub fn push_clear_rect(&mut self, info: &LayoutPrimitiveInfo) {
-        self.push_item(SpecificDisplayItem::ClearRectangle, info);
-=======
     pub fn push_hit_test(
         &mut self,
         common: &di::CommonItemProperties,
@@ -1500,7 +1167,6 @@ impl DisplayListBuilder {
             common: *common,
         });
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_line(
@@ -1521,13 +1187,7 @@ impl DisplayListBuilder {
             style,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_image(
@@ -1552,13 +1212,7 @@ impl DisplayListBuilder {
             color,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     /// Push a yuv image. All planar data in yuv image should use the same buffer type.
@@ -1579,13 +1233,7 @@ impl DisplayListBuilder {
             color_space,
             image_rendering,
         });
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_text(
@@ -1606,13 +1254,7 @@ impl DisplayListBuilder {
         });
 
         for split_glyphs in glyphs.chunks(MAX_TEXT_RUN_LENGTH) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-            self.push_item(&item, info);
-||||||| merged common ancestors
-            self.push_item(item, info);
-=======
             self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
             self.push_iter(split_glyphs);
         }
     }
@@ -1661,13 +1303,7 @@ impl DisplayListBuilder {
             widths,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_box_shadow(
@@ -1692,13 +1328,7 @@ impl DisplayListBuilder {
             clip_mode,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     /// Pushes a linear gradient to be displayed.
@@ -1731,13 +1361,7 @@ impl DisplayListBuilder {
             tile_spacing,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     /// Pushes a radial gradient to be displayed.
@@ -1759,13 +1383,7 @@ impl DisplayListBuilder {
             tile_spacing,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_reference_frame(
@@ -1788,57 +1406,17 @@ impl DisplayListBuilder {
                 id,
             },
         });
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
 
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         id
     }
 
-    pub fn push_cache_marker(&mut self) {
-        self.push_new_empty_item(&SpecificDisplayItem::PushCacheMarker(CacheMarkerDisplayItem {
-            // The display item itself is empty for now while we experiment with
-            // the API. In future it may contain extra information, such as details
-            // on whether the surface is known to be opaque and/or a background color
-            // hint that WR should clear the surface to.
-        }));
-    }
-
-    pub fn pop_cache_marker(&mut self) {
-        self.push_new_empty_item(&SpecificDisplayItem::PopCacheMarker);
-    }
-
     pub fn pop_reference_frame(&mut self) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_new_empty_item(&SpecificDisplayItem::PopReferenceFrame);
-||||||| merged common ancestors
-        self.push_new_empty_item(SpecificDisplayItem::PopReferenceFrame);
-=======
         self.push_item(&di::DisplayItem::PopReferenceFrame);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_stacking_context(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        info: &LayoutPrimitiveInfo,
-        clip_node_id: Option<ClipId>,
-        transform_style: TransformStyle,
-        mix_blend_mode: MixBlendMode,
-        filters: &[FilterOp],
-        raster_space: RasterSpace,
-||||||| merged common ancestors
-        info: &LayoutPrimitiveInfo,
-        clip_node_id: Option<ClipId>,
-        transform_style: TransformStyle,
-        mix_blend_mode: MixBlendMode,
-        filters: Vec<FilterOp>,
-        raster_space: RasterSpace,
-=======
         origin: LayoutPoint,
         spatial_id: di::SpatialId,
         is_backface_visible: bool,
@@ -1849,7 +1427,6 @@ impl DisplayListBuilder {
         filter_datas: &[di::FilterData],
         raster_space: di::RasterSpace,
         cache_tiles: bool,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     ) {
         if filters.len() > 0 {
             self.push_item(&di::DisplayItem::SetFilterOps);
@@ -1881,13 +1458,6 @@ impl DisplayListBuilder {
             },
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-        self.push_iter(filters);
-||||||| merged common ancestors
-        self.push_item(item, info);
-        self.push_iter(&filters);
-=======
         self.push_item(&item);
     }
 
@@ -1922,30 +1492,17 @@ impl DisplayListBuilder {
             di::RasterSpace::Screen,
             /* cache_tiles = */ false,
         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn pop_stacking_context(&mut self) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_new_empty_item(&SpecificDisplayItem::PopStackingContext);
-||||||| merged common ancestors
-        self.push_new_empty_item(SpecificDisplayItem::PopStackingContext);
-=======
         self.push_item(&di::DisplayItem::PopStackingContext);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn push_stops(&mut self, stops: &[di::GradientStop]) {
         if stops.is_empty() {
             return;
         }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_new_empty_item(&SpecificDisplayItem::SetGradientStops);
-||||||| merged common ancestors
-        self.push_new_empty_item(SpecificDisplayItem::SetGradientStops);
-=======
         self.push_item(&di::DisplayItem::SetGradientStops);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         self.push_iter(stops);
     }
 
@@ -1993,21 +1550,7 @@ impl DisplayListBuilder {
             external_scroll_offset,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item_with_clip_scroll_info(
-            &item,
-            &LayoutPrimitiveInfo::with_clip_rect(content_rect, clip_rect),
-            &ClipAndScrollInfo::simple(parent),
-        );
-||||||| merged common ancestors
-        self.push_item_with_clip_scroll_info(
-            item,
-            &LayoutPrimitiveInfo::with_clip_rect(content_rect, clip_rect),
-            ClipAndScrollInfo::simple(parent),
-        );
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         self.push_iter(complex_clips);
 
         di::SpaceAndClipInfo {
@@ -2026,13 +1569,7 @@ impl DisplayListBuilder {
         I::IntoIter: ExactSizeIterator + Clone,
     {
         let id = self.generate_clip_chain_id();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_new_empty_item(&SpecificDisplayItem::ClipChain(ClipChainItem { id, parent }));
-||||||| merged common ancestors
-        self.push_new_empty_item(SpecificDisplayItem::ClipChain(ClipChainItem { id, parent }));
-=======
         self.push_item(&di::DisplayItem::ClipChain(di::ClipChainItem { id, parent }));
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         self.push_iter(clips);
         id
     }
@@ -2045,72 +1582,7 @@ impl DisplayListBuilder {
         image_mask: Option<di::ImageMask>,
     ) -> di::ClipId
     where
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        I: IntoIterator<Item = ComplexClipRegion>,
-        I::IntoIter: ExactSizeIterator + Clone,
-    {
-        let clip_and_scroll = self.clip_stack.last().unwrap().clone();
-        self.define_clip_impl(
-            clip_and_scroll,
-            clip_rect,
-            complex_clips,
-            image_mask,
-        )
-    }
-
-    pub fn define_clip_with_parent<I>(
-        &mut self,
-        parent: ClipId,
-        clip_rect: LayoutRect,
-        complex_clips: I,
-        image_mask: Option<ImageMask>,
-    ) -> ClipId
-    where
-        I: IntoIterator<Item = ComplexClipRegion>,
-||||||| merged common ancestors
-        I: IntoIterator<Item = ComplexClipRegion>,
-        I::IntoIter: ExactSizeIterator + Clone,
-    {
-        let parent = self.clip_stack.last().unwrap().scroll_node_id;
-        self.define_clip_with_parent(
-            parent,
-            clip_rect,
-            complex_clips,
-            image_mask
-        )
-    }
-
-    pub fn define_clip_with_parent<I>(
-        &mut self,
-        parent: ClipId,
-        clip_rect: LayoutRect,
-        complex_clips: I,
-        image_mask: Option<ImageMask>,
-    ) -> ClipId
-    where
-        I: IntoIterator<Item = ComplexClipRegion>,
-=======
         I: IntoIterator<Item = di::ComplexClipRegion>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        I::IntoIter: ExactSizeIterator + Clone,
-    {
-        self.define_clip_impl(
-            ClipAndScrollInfo::simple(parent),
-            clip_rect,
-            complex_clips,
-            image_mask,
-        )
-    }
-
-    fn define_clip_impl<I>(
-        &mut self,
-        scrollinfo: ClipAndScrollInfo,
-        clip_rect: LayoutRect,
-        complex_clips: I,
-        image_mask: Option<ImageMask>,
-    ) -> ClipId
-    where
-        I: IntoIterator<Item = ComplexClipRegion>,
         I::IntoIter: ExactSizeIterator + Clone,
     {
         let id = self.generate_clip_index();
@@ -2121,18 +1593,7 @@ impl DisplayListBuilder {
             image_mask,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        let info = LayoutPrimitiveInfo::new(clip_rect);
-
-        self.push_item_with_clip_scroll_info(&item, &info, &scrollinfo);
-||||||| merged common ancestors
-        let info = LayoutPrimitiveInfo::new(clip_rect);
-
-        let scrollinfo = ClipAndScrollInfo::simple(parent);
-        self.push_item_with_clip_scroll_info(item, &info, scrollinfo);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         self.push_iter(complex_clips);
         id
     }
@@ -2145,14 +1606,7 @@ impl DisplayListBuilder {
         vertical_offset_bounds: di::StickyOffsetBounds,
         horizontal_offset_bounds: di::StickyOffsetBounds,
         previously_applied_offset: LayoutVector2D,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-    ) -> ClipId {
-||||||| merged common ancestors
-
-    ) -> ClipId {
-=======
     ) -> di::SpatialId {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         let id = self.generate_spatial_index();
         let item = di::DisplayItem::StickyFrame(di::StickyFrameDisplayItem {
             parent_spatial_id,
@@ -2164,15 +1618,7 @@ impl DisplayListBuilder {
             previously_applied_offset,
         });
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        let info = LayoutPrimitiveInfo::new(frame_rect);
-        self.push_item(&item, &info);
-||||||| merged common ancestors
-        let info = LayoutPrimitiveInfo::new(frame_rect);
-        self.push_item(item, &info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         id
     }
 
@@ -2191,22 +1637,9 @@ impl DisplayListBuilder {
             pipeline_id,
             ignore_missing_pipeline,
         });
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_item(&item, info);
-||||||| merged common ancestors
-        self.push_item(item, info);
-=======
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-    pub fn push_shadow(&mut self, info: &LayoutPrimitiveInfo, shadow: Shadow) {
-        self.push_item(&SpecificDisplayItem::PushShadow(shadow), info);
-||||||| merged common ancestors
-    pub fn push_shadow(&mut self, info: &LayoutPrimitiveInfo, shadow: Shadow) {
-        self.push_item(SpecificDisplayItem::PushShadow(shadow), info);
-=======
     pub fn push_shadow(
         &mut self,
         space_and_clip: &di::SpaceAndClipInfo,
@@ -2219,30 +1652,17 @@ impl DisplayListBuilder {
             should_inflate,
         });
         self.push_item(&item);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn pop_all_shadows(&mut self) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-        self.push_new_empty_item(&SpecificDisplayItem::PopAllShadows);
-||||||| merged common ancestors
-        self.push_new_empty_item(SpecificDisplayItem::PopAllShadows);
-=======
         self.push_item(&di::DisplayItem::PopAllShadows);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
     }
 
     pub fn finalize(self) -> (PipelineId, LayoutSize, BuiltDisplayList) {
         assert!(self.save_state.is_none(), "Finalized DisplayListBuilder with a pending save");
 
         let end_time = precise_time_ns();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
-||||||| merged common ancestors
 
-
-=======
-
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_list.rs
         (
             self.pipeline_id,
             self.content_size,

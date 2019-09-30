@@ -76,21 +76,6 @@ add_task(async function() {
   ok(true, "Buffer percentage increased in display.");
 
   const bufferUsage = PerformanceController.getBufferUsageForRecording(
-<<<<<<< HEAD
-    PerformanceController.getCurrentRecording());
-  is(bufferUsage, 1, "Buffer is full for this recording.");
-  is(DETAILS_CONTAINER.getAttribute("buffer-status"), "full",
-    "Container has [buffer-status=full].");
-  ok(NORMAL_BUFFER_STATUS_MESSAGE.value.includes(gPercent + "%"),
-    "Buffer status text has correct percentage.");
-||||||| merged common ancestors
-    PerformanceController.getCurrentRecording());
-  ok(bufferUsage, 1, "Buffer is full for this recording.");
-  ok(DETAILS_CONTAINER.getAttribute("buffer-status"), "full",
-    "Container has [buffer-status=full].");
-  ok(NORMAL_BUFFER_STATUS_MESSAGE.value.includes(gPercent + "%"),
-    "Buffer status text has correct percentage.");
-=======
     PerformanceController.getCurrentRecording()
   );
   is(bufferUsage, 1, "Buffer is full for this recording.");
@@ -103,7 +88,6 @@ add_task(async function() {
     NORMAL_BUFFER_STATUS_MESSAGE.value.includes(gPercent + "%"),
     "Buffer status text has correct percentage."
   );
->>>>>>> upstream-releases
 
   // Stop the manual recording.
   await stopRecording(panel);

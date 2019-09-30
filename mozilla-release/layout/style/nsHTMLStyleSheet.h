@@ -28,20 +28,9 @@ class Document;
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-class nsHTMLStyleSheet final {
- public:
-  explicit nsHTMLStyleSheet(nsIDocument* aDocument);
-||||||| merged common ancestors
-class nsHTMLStyleSheet final
-{
-public:
-  explicit nsHTMLStyleSheet(nsIDocument* aDocument);
-=======
 class nsHTMLStyleSheet final {
  public:
   explicit nsHTMLStyleSheet(mozilla::dom::Document* aDocument);
->>>>>>> upstream-releases
 
   void SetOwningDocument(mozilla::dom::Document* aDocument);
 
@@ -83,18 +72,9 @@ class nsHTMLStyleSheet final {
   nsresult ImplLinkColorSetter(RefPtr<RawServoDeclarationBlock>& aDecl,
                                nscolor aColor);
 
-<<<<<<< HEAD
- public:  // for mLangRuleTable structures only
- private:
-  nsIDocument* mDocument;
-||||||| merged common ancestors
-private:
-  nsIDocument*            mDocument;
-=======
  public:  // for mLangRuleTable structures only
  private:
   mozilla::dom::Document* mDocument;
->>>>>>> upstream-releases
   RefPtr<RawServoDeclarationBlock> mServoUnvisitedLinkDecl;
   RefPtr<RawServoDeclarationBlock> mServoVisitedLinkDecl;
   RefPtr<RawServoDeclarationBlock> mServoActiveLinkDecl;

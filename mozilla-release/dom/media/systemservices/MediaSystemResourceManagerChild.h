@@ -22,21 +22,11 @@ namespace media {
 /**
  * Handle MediaSystemResourceManager's IPC
  */
-<<<<<<< HEAD
-class MediaSystemResourceManagerChild final
-    : public PMediaSystemResourceManagerChild {
- public:
-||||||| merged common ancestors
-class MediaSystemResourceManagerChild final : public PMediaSystemResourceManagerChild
-{
-public:
-=======
 class MediaSystemResourceManagerChild final
     : public PMediaSystemResourceManagerChild {
   friend class PMediaSystemResourceManagerChild;
 
  public:
->>>>>>> upstream-releases
   struct ResourceListener {
     /* The resource is reserved and can be granted.
      * The client can allocate the requested resource.

@@ -55,33 +55,17 @@ using dom::Promise;
 #define OBS_TOPIC_PRELOAD_SCRIPT "web-extension-preload-content-script"
 #define OBS_TOPIC_LOAD_SCRIPT "web-extension-load-content-script"
 
-<<<<<<< HEAD
-static mozIExtensionProcessScript& ProcessScript() {
-||||||| merged common ancestors
-
-static mozIExtensionProcessScript&
-ProcessScript()
-{
-=======
 static const char kDocElementInserted[] = "initial-document-element-inserted";
 
 static mozIExtensionProcessScript& ProcessScript() {
->>>>>>> upstream-releases
   static nsCOMPtr<mozIExtensionProcessScript> sProcessScript;
 
   if (MOZ_UNLIKELY(!sProcessScript)) {
-<<<<<<< HEAD
-    sProcessScript =
-        do_GetService("@mozilla.org/webextensions/extension-process-script;1");
-||||||| merged common ancestors
-    sProcessScript = do_GetService("@mozilla.org/webextensions/extension-process-script;1");
-=======
     nsCOMPtr<mozIExtensionProcessScriptJSM> jsm =
         do_ImportModule("resource://gre/modules/ExtensionProcessScript.jsm");
     MOZ_RELEASE_ASSERT(jsm);
 
     Unused << jsm->GetExtensionProcessScript(getter_AddRefs(sProcessScript));
->>>>>>> upstream-releases
     MOZ_RELEASE_ASSERT(sProcessScript);
     ClearOnShutdown(&sProcessScript);
   }
@@ -253,75 +237,27 @@ ExtensionPolicyService::CollectReports(nsIHandleReportCallback* aHandleReport,
  * Content script management
  *****************************************************************************/
 
-<<<<<<< HEAD
-void ExtensionPolicyService::RegisterObservers() {
-  mObs->AddObserver(this, "content-document-global-created", false);
-  mObs->AddObserver(this, "document-element-inserted", false);
-||||||| merged common ancestors
-void
-ExtensionPolicyService::RegisterObservers()
-{
-  mObs->AddObserver(this, "content-document-global-created", false);
-  mObs->AddObserver(this, "document-element-inserted", false);
-=======
 void ExtensionPolicyService::RegisterObservers() {
   mObs->AddObserver(this, kDocElementInserted, false);
->>>>>>> upstream-releases
   mObs->AddObserver(this, "tab-content-frameloader-created", false);
   if (XRE_IsContentProcess()) {
     mObs->AddObserver(this, "http-on-opening-request", false);
   }
 }
 
-<<<<<<< HEAD
-void ExtensionPolicyService::UnregisterObservers() {
-  mObs->RemoveObserver(this, "content-document-global-created");
-  mObs->RemoveObserver(this, "document-element-inserted");
-||||||| merged common ancestors
-void
-ExtensionPolicyService::UnregisterObservers()
-{
-  mObs->RemoveObserver(this, "content-document-global-created");
-  mObs->RemoveObserver(this, "document-element-inserted");
-=======
 void ExtensionPolicyService::UnregisterObservers() {
   mObs->RemoveObserver(this, kDocElementInserted);
->>>>>>> upstream-releases
   mObs->RemoveObserver(this, "tab-content-frameloader-created");
   if (XRE_IsContentProcess()) {
     mObs->RemoveObserver(this, "http-on-opening-request");
   }
 }
 
-<<<<<<< HEAD
-nsresult ExtensionPolicyService::Observe(nsISupports* aSubject,
-                                         const char* aTopic,
-                                         const char16_t* aData) {
-  if (!strcmp(aTopic, "content-document-global-created")) {
-    nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(aSubject);
-    if (win) {
-      CheckWindow(win);
-    }
-  } else if (!strcmp(aTopic, "document-element-inserted")) {
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aSubject);
-||||||| merged common ancestors
-nsresult
-ExtensionPolicyService::Observe(nsISupports* aSubject, const char* aTopic, const char16_t* aData)
-{
-  if (!strcmp(aTopic, "content-document-global-created")) {
-    nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(aSubject);
-    if (win) {
-      CheckWindow(win);
-    }
-  } else if (!strcmp(aTopic, "document-element-inserted")) {
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aSubject);
-=======
 nsresult ExtensionPolicyService::Observe(nsISupports* aSubject,
                                          const char* aTopic,
                                          const char16_t* aData) {
   if (!strcmp(aTopic, kDocElementInserted)) {
     nsCOMPtr<Document> doc = do_QueryInterface(aSubject);
->>>>>>> upstream-releases
     if (doc) {
       CheckDocument(doc);
     }
@@ -460,26 +396,8 @@ nsresult ExtensionPolicyService::InjectContentScripts(
 
 // Checks a request for matching content scripts, and begins pre-loading them
 // if necessary.
-<<<<<<< HEAD
-void ExtensionPolicyService::CheckRequest(nsIChannel* aChannel) {
-  nsCOMPtr<nsILoadInfo> loadInfo = aChannel->GetLoadInfo();
-  if (!loadInfo) {
-    return;
-  }
-
-||||||| merged common ancestors
-void
-ExtensionPolicyService::CheckRequest(nsIChannel* aChannel)
-{
-  nsCOMPtr<nsILoadInfo> loadInfo = aChannel->GetLoadInfo();
-  if (!loadInfo) {
-    return;
-  }
-
-=======
 void ExtensionPolicyService::CheckRequest(nsIChannel* aChannel) {
   nsCOMPtr<nsILoadInfo> loadInfo = aChannel->LoadInfo();
->>>>>>> upstream-releases
   auto loadType = loadInfo->GetExternalContentPolicyType();
   if (loadType != nsIContentPolicy::TYPE_DOCUMENT &&
       loadType != nsIContentPolicy::TYPE_SUBDOCUMENT) {
@@ -534,15 +452,7 @@ static bool CheckParentFrames(nsPIDOMWindowOuter* aWindow,
 // Checks a document, just after the document element has been inserted, for
 // matching content scripts or extension principals, and loads them if
 // necessary.
-<<<<<<< HEAD
-void ExtensionPolicyService::CheckDocument(nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-ExtensionPolicyService::CheckDocument(nsIDocument* aDocument)
-{
-=======
 void ExtensionPolicyService::CheckDocument(Document* aDocument) {
->>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowOuter> win = aDocument->GetWindow();
   if (win) {
     nsIDocShell* docShell = win->GetDocShell();
@@ -567,75 +477,8 @@ void ExtensionPolicyService::CheckDocument(Document* aDocument) {
   }
 }
 
-<<<<<<< HEAD
-// Checks for loads of about:blank into new window globals, and loads any
-// matching content scripts. about:blank loads do not trigger document element
-// inserted events, so they're the only load type that are special cased this
-// way.
-void ExtensionPolicyService::CheckWindow(nsPIDOMWindowOuter* aWindow) {
-  // We only care about non-initial document loads here. The initial
-  // about:blank document will usually be re-used to load another document.
-  nsCOMPtr<nsIDocument> doc = aWindow->GetExtantDoc();
-  if (!doc || doc->IsInitialDocument() ||
-      doc->GetReadyStateEnum() == nsIDocument::READYSTATE_UNINITIALIZED) {
-    return;
-  }
-
-  nsCOMPtr<nsIURI> docUri = doc->GetDocumentURI();
-  nsCOMPtr<nsIURI> uri;
-  if (!docUri || NS_FAILED(NS_GetURIWithoutRef(docUri, getter_AddRefs(uri))) ||
-      !NS_IsAboutBlank(uri)) {
-    return;
-  }
-
-  nsIDocShell* docShell = aWindow->GetDocShell();
-  if (RefPtr<ContentFrameMessageManager> mm = docShell->GetMessageManager()) {
-    if (mMessageManagers.Contains(mm)) {
-      CheckContentScripts(aWindow, false);
-    }
-  }
-}
-
 void ExtensionPolicyService::CheckContentScripts(const DocInfo& aDocInfo,
                                                  bool aIsPreload) {
-||||||| merged common ancestors
-// Checks for loads of about:blank into new window globals, and loads any
-// matching content scripts. about:blank loads do not trigger document element
-// inserted events, so they're the only load type that are special cased this
-// way.
-void
-ExtensionPolicyService::CheckWindow(nsPIDOMWindowOuter* aWindow)
-{
-  // We only care about non-initial document loads here. The initial
-  // about:blank document will usually be re-used to load another document.
-  nsCOMPtr<nsIDocument> doc = aWindow->GetExtantDoc();
-  if (!doc || doc->IsInitialDocument() ||
-      doc->GetReadyStateEnum() == nsIDocument::READYSTATE_UNINITIALIZED) {
-    return;
-  }
-
-  nsCOMPtr<nsIURI> docUri = doc->GetDocumentURI();
-  nsCOMPtr<nsIURI> uri;
-  if (!docUri || NS_FAILED(NS_GetURIWithoutRef(docUri, getter_AddRefs(uri))) ||
-      !NS_IsAboutBlank(uri)) {
-    return;
-  }
-
-  nsIDocShell* docShell = aWindow->GetDocShell();
-  if (RefPtr<ContentFrameMessageManager> mm = docShell->GetMessageManager()) {
-    if (mMessageManagers.Contains(mm)) {
-      CheckContentScripts(aWindow, false);
-    }
-  }
-}
-
-void
-ExtensionPolicyService::CheckContentScripts(const DocInfo& aDocInfo, bool aIsPreload)
-{
-=======
-void ExtensionPolicyService::CheckContentScripts(const DocInfo& aDocInfo,
-                                                 bool aIsPreload) {
->>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowInner> win;
   if (!aIsPreload) {
     win = aDocInfo.GetWindow()->GetCurrentInnerWindow();

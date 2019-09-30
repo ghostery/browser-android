@@ -26,19 +26,11 @@ function test() {
   }
 
   Services.obs.addObserver(observer, "browser-search-engine-modified");
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_483086.js
-  gSS.addEngine("http://mochi.test:8888/browser/browser/components/search/test/browser/483086-1.xml",
-                "data:image/x-icon;%00", false);
-||||||| merged common ancestors
-  gSS.addEngine("http://mochi.test:8888/browser/browser/components/search/test/483086-1.xml",
-                "data:image/x-icon;%00", false);
-=======
   gSS.addEngine(
     "http://mochi.test:8888/browser/browser/components/search/test/browser/483086-1.xml",
     "data:image/x-icon;%00",
     false
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_483086.js
 }
 
 function test2() {
@@ -58,17 +50,9 @@ function test2() {
   }
 
   Services.obs.addObserver(observer, "browser-search-engine-modified");
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_483086.js
-  gSS.addEngine("http://mochi.test:8888/browser/browser/components/search/test/browser/483086-2.xml",
-                "data:image/x-icon;%00", false);
-||||||| merged common ancestors
-  gSS.addEngine("http://mochi.test:8888/browser/browser/components/search/test/483086-2.xml",
-                "data:image/x-icon;%00", false);
-=======
   gSS.addEngine(
     "http://mochi.test:8888/browser/browser/components/search/test/browser/483086-2.xml",
     "data:image/x-icon;%00",
     false
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_483086.js
 }

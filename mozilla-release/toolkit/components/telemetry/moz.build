@@ -67,10 +67,6 @@ EXPORTS.mozilla.telemetry += [
     'core/Stopwatch.h',
 ]
 
-EXPORTS.mozilla.telemetry += [
-    'core/Stopwatch.h',
-]
-
 SOURCES += [
     'core/ipc/TelemetryIPC.cpp',
     'core/ipc/TelemetryIPCAccumulator.cpp',

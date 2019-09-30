@@ -4,26 +4,15 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const { createFactory, PureComponent } = require("devtools/client/shared/vendor/react");
-||||||| merged common ancestors
-const { PureComponent } = require("devtools/client/shared/vendor/react");
-=======
 const {
   createFactory,
   PureComponent,
 } = require("devtools/client/shared/vendor/react");
->>>>>>> upstream-releases
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
-<<<<<<< HEAD
-const Link = createFactory(require("devtools/client/shared/vendor/react-router-dom").Link);
-||||||| merged common ancestors
-=======
 const Link = createFactory(
   require("devtools/client/shared/vendor/react-router-dom").Link
 );
->>>>>>> upstream-releases
 
 /**
  * This component is used as a wrapper by items in the sidebar.
@@ -38,25 +27,6 @@ class SidebarItem extends PureComponent {
     };
   }
 
-<<<<<<< HEAD
-  renderContent() {
-    const { children, to } = this.props;
-
-    if (to) {
-      return Link(
-        {
-          className: "sidebar-item__link js-sidebar-link",
-          to,
-        },
-        children
-      );
-    }
-
-    return children;
-||||||| merged common ancestors
-  onItemClick() {
-    this.props.onSelect();
-=======
   static get defaultProps() {
     return {
       isSelected: false,
@@ -88,38 +58,13 @@ class SidebarItem extends PureComponent {
     }
 
     return children;
->>>>>>> upstream-releases
   }
 
   render() {
-<<<<<<< HEAD
-    const {className, isSelected, to } = this.props;
-||||||| merged common ancestors
-    const {children, className, isSelected, selectable } = this.props;
-=======
     const { className, isSelected, to } = this.props;
->>>>>>> upstream-releases
 
     return dom.li(
       {
-<<<<<<< HEAD
-        className: "sidebar-item js-sidebar-item" +
-                   (className ? ` ${className}` : "") +
-                   (isSelected ?
-                      " sidebar-item--selected js-sidebar-item-selected" :
-                      ""
-                   ) +
-                   (to ? " sidebar-item--selectable" : ""),
-||||||| merged common ancestors
-        className: "sidebar-item js-sidebar-item" +
-                   (className ? ` ${className}` : "") +
-                   (isSelected ?
-                      " sidebar-item--selected js-sidebar-item-selected" :
-                      ""
-                   ) +
-                   (selectable ? " sidebar-item--selectable" : ""),
-        onClick: selectable ? () => this.onItemClick() : null,
-=======
         className:
           "sidebar-item qa-sidebar-item" +
           (className ? ` ${className}` : "") +
@@ -127,7 +72,6 @@ class SidebarItem extends PureComponent {
             ? " sidebar-item--selected qa-sidebar-item-selected"
             : "") +
           (to ? " sidebar-item--selectable" : ""),
->>>>>>> upstream-releases
       },
       this.renderContent()
     );

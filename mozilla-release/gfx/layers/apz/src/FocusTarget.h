@@ -9,25 +9,11 @@
 
 #include <stdint.h>  // for int32_t, uint32_t
 
-<<<<<<< HEAD
-#include "mozilla/DefineEnum.h"                  // for MOZ_DEFINE_ENUM
-#include "mozilla/layers/ScrollableLayerGuid.h"  // for ViewID
-#include "mozilla/Variant.h"                     // for Variant
-
-class nsIPresShell;
-||||||| merged common ancestors
-#include "FrameMetrics.h"        // for FrameMetrics::ViewID
-#include "mozilla/DefineEnum.h"  // for MOZ_DEFINE_ENUM
-#include "mozilla/Variant.h"     // for Variant
-
-class nsIPresShell;
-=======
 #include "mozilla/DefineEnum.h"                  // for MOZ_DEFINE_ENUM
 #include "mozilla/layers/ScrollableLayerGuid.h"  // for ViewID
 #include "mozilla/webrender/WebRenderTypes.h"    // for RenderRoot
 #include "mozilla/Variant.h"                     // for Variant
 #include "mozilla/Maybe.h"                       // for Maybe
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -41,29 +27,6 @@ namespace layers {
  * scrolling it. It is created on the main thread at paint-time, but is then
  * passed over IPC to the compositor/APZ code.
  */
-<<<<<<< HEAD
-class FocusTarget final {
- public:
-  struct ScrollTargets {
-    ScrollableLayerGuid::ViewID mHorizontal;
-    ScrollableLayerGuid::ViewID mVertical;
-
-    bool operator==(const ScrollTargets& aRhs) const {
-      return mHorizontal == aRhs.mHorizontal && mVertical == aRhs.mVertical;
-||||||| merged common ancestors
-class FocusTarget final
-{
-public:
-  struct ScrollTargets
-  {
-    FrameMetrics::ViewID mHorizontal;
-    FrameMetrics::ViewID mVertical;
-
-    bool operator==(const ScrollTargets& aRhs) const
-    {
-      return mHorizontal == aRhs.mHorizontal &&
-             mVertical == aRhs.mVertical;
-=======
 class FocusTarget final {
  public:
   struct ScrollTargets {
@@ -83,7 +46,6 @@ class FocusTarget final {
                    mVerticalRenderRoot == aRhs.mVerticalRenderRoot);
       }
       return ret;
->>>>>>> upstream-releases
     }
   };
 
@@ -98,14 +60,7 @@ class FocusTarget final {
   /**
    * Construct a focus target for the specified top level PresShell
    */
-<<<<<<< HEAD
-  FocusTarget(nsIPresShell* aRootPresShell, uint64_t aFocusSequenceNumber);
-||||||| merged common ancestors
-  FocusTarget(nsIPresShell* aRootPresShell,
-              uint64_t aFocusSequenceNumber);
-=======
   FocusTarget(PresShell* aRootPresShell, uint64_t aFocusSequenceNumber);
->>>>>>> upstream-releases
 
   bool operator==(const FocusTarget& aRhs) const;
 

@@ -19,50 +19,11 @@ from taskgraph.util.schema import (
 from taskgraph.util.taskcluster import get_artifact_prefix
 from taskgraph.util.platforms import archive_format, executable_extension, architecture
 from taskgraph.util.workertypes import worker_type_implementation
-<<<<<<< HEAD
-from taskgraph.transforms.job import job_description_schema
-from voluptuous import Any, Required, Optional
-||||||| merged common ancestors
-from taskgraph.transforms.task import task_description_schema
-from voluptuous import Any, Required, Optional
-=======
 from taskgraph.transforms.job import job_description_schema
 from voluptuous import Required, Optional
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-job_description_schema = {str(k): v for k, v in job_description_schema.schema.iteritems()}
-
-
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
 
 packaging_description_schema = schema.extend({
-||||||| merged common ancestors
-transforms = TransformSequence()
-
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
-packaging_description_schema = Schema({
-    # the dependant task (object) for this  job, used to inform repackaging.
-    Required('dependent-task'): object,
-
-=======
-
-packaging_description_schema = schema.extend({
->>>>>>> upstream-releases
     # depname is used in taskref's to identify the taskID of the signed things
     Required('depname', default='build'): basestring,
 
@@ -141,21 +102,6 @@ PACKAGE_FORMATS = {
         },
         'output': "target.bz2.complete.mar",
     },
-<<<<<<< HEAD
-    'msi': {
-        'args': ['msi', '--wsx', '{wsx-stub}',
-                 '--version', '{version_display}',
-                 '--locale', '{_locale}',
-                 '--arch', '{_arch}',
-                 '--candle', '{fetch-dir}/candle.exe',
-                 '--light', '{fetch-dir}/light.exe'],
-        'inputs': {
-            'setupexe': 'target.installer.exe',
-        },
-        'output': 'target.installer.msi',
-    },
-||||||| merged common ancestors
-=======
     'msi': {
         'args': ['msi', '--wsx', '{wsx-stub}',
                  '--version', '{version_display}',
@@ -168,7 +114,6 @@ PACKAGE_FORMATS = {
         },
         'output': 'target.installer.msi',
     },
->>>>>>> upstream-releases
     'dmg': {
         'args': ['dmg'],
         'inputs': {
@@ -305,25 +250,8 @@ def make_job_description(config, jobs):
             dependencies['build'] = "build-{}/opt".format(
                 dependencies[build_task][13:dependencies[build_task].rfind('-')])
             build_task = 'build'
-<<<<<<< HEAD
             _fetch_subst_locale = locale
 
-        level = config.params['level']
-||||||| merged common ancestors
-
-        attributes = copy_attributes_from_dependent_job(dep_job)
-        attributes['repackage_type'] = 'repackage'
-
-        locale = None
-        if job.get('locale'):
-            locale = job['locale']
-            attributes['locale'] = locale
-
-        level = config.params['level']
-=======
-            _fetch_subst_locale = locale
-
->>>>>>> upstream-releases
         build_platform = attributes['build_platform']
 
         use_stub = attributes.get('stub-installer')
@@ -333,22 +261,14 @@ def make_job_description(config, jobs):
         if use_stub and not repackage_signing_task:
             # if repackage_signing_task doesn't exists, generate the stub installer
             package_formats += ['installer-stub']
-        _fetch_subst_arch = 'x86' if 'win32' in build_platform else 'x64'
         for format in package_formats:
             command = copy.deepcopy(PACKAGE_FORMATS[format])
             substs = {
                 'archive_format': archive_format(build_platform),
                 'executable_extension': executable_extension(build_platform),
-<<<<<<< HEAD
-                '_locale': _fetch_subst_locale,
-                '_arch': _fetch_subst_arch,
-                'version_display': config.params['version'],
-||||||| merged common ancestors
-=======
                 '_locale': _fetch_subst_locale,
                 'architecture': architecture(build_platform),
                 'version_display': config.params['version'],
->>>>>>> upstream-releases
             }
             # Allow us to replace args a well, but specifying things expanded in mozharness
             # Without breaking .format and without allowing unknown through
@@ -358,18 +278,11 @@ def make_job_description(config, jobs):
                 name: filename.format(**substs)
                 for name, filename in command['inputs'].items()
             }
-<<<<<<< HEAD
-            command['args'] = [
-                arg.format(**substs) for arg in command['args']
-            ]
-||||||| merged common ancestors
-=======
             command['args'] = [
                 arg.format(**substs) for arg in command['args']
             ]
             if 'installer' in format and 'aarch64' not in build_platform:
                 command['args'].append('--use-upx')
->>>>>>> upstream-releases
             repackage_config.append(command)
 
         run = job.get('mozharness', {})

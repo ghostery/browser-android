@@ -71,29 +71,6 @@ function checkStartQueryCall(stub, expectedQueryContextProps, callIndex = 0) {
   }
 }
 
-<<<<<<< HEAD
-add_task(async function setup() {
-  sandbox = sinon.sandbox.create();
-
-  fakeController = new UrlbarController({
-    browserWindow: window,
-  });
-
-  sandbox.stub(fakeController, "startQuery");
-  sandbox.stub(PrivateBrowsingUtils, "isWindowPrivate").returns(false);
-
-||||||| merged common ancestors
-add_task(async function setup() {
-  sandbox = sinon.sandbox.create();
-
-  fakeController = new UrlbarController({
-    window,
-  });
-
-  sandbox.stub(fakeController, "startQuery");
-  sandbox.stub(PrivateBrowsingUtils, "isWindowPrivate").returns(false);
-
-=======
 /**
  * Opens a new empty chrome window and clones the textbox and panel into it.
  *
@@ -101,7 +78,6 @@ add_task(async function setup() {
  *                   It's passed a new UrlbarInput object.
  */
 async function withNewWindow(callback) {
->>>>>>> upstream-releases
   // Open a new window, so we don't affect other tests by adding extra
   // UrbarInput wrappers around the urlbar.
   let gTestRoot = getRootDirectory(gTestPath);

@@ -2,13 +2,7 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 en_AU{
     %%Parent{"en_001"}
-<<<<<<< HEAD
-    Version{"2.1.44.18"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.48.43"}
->>>>>>> upstream-releases
     zoneStrings{
         "America:St_Barthelemy"{
             ec{"St Barthélemy"}
@@ -66,17 +60,6 @@ en_AU{
             lg{"Cook Island Time"}
             ls{"Cook Island Standard Time"}
         }
-<<<<<<< HEAD
-        "meta:Iran"{
-            lg{"Iran Time"}
-            ls{"Iran Standard Time"}
-        }
-        "meta:Israel"{
-            lg{"Israel Time"}
-            ls{"Israel Standard Time"}
-        }
-||||||| merged common ancestors
-=======
         "meta:Europe_Eastern"{
             ld{"Eastern European Summer Time"}
             ls{"Eastern European Standard Time"}
@@ -89,7 +72,6 @@ en_AU{
             lg{"Israel Time"}
             ls{"Israel Standard Time"}
         }
->>>>>>> upstream-releases
         "meta:Japan"{
             ld{"Japan Summer Time"}
             lg{"Japan Time"}

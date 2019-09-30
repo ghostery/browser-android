@@ -30,14 +30,8 @@ bool nsIFrame::IsFlexOrGridItem() const {
 
 bool nsIFrame::IsTableCaption() const {
   return StyleDisplay()->mDisplay == mozilla::StyleDisplay::TableCaption &&
-<<<<<<< HEAD
-         GetParent()->Style()->GetPseudo() == nsCSSAnonBoxes::tableWrapper();
-||||||| merged common ancestors
-    GetParent()->Style()->GetPseudo() == nsCSSAnonBoxes::tableWrapper();
-=======
          GetParent()->Style()->GetPseudoType() ==
              mozilla::PseudoStyleType::tableWrapper;
->>>>>>> upstream-releases
 }
 
 bool nsIFrame::IsFloating() const { return StyleDisplay()->IsFloating(this); }
@@ -54,21 +48,12 @@ bool nsIFrame::IsRelativelyPositioned() const {
   return StyleDisplay()->IsRelativelyPositioned(this);
 }
 
-<<<<<<< HEAD
-bool nsIFrame::IsAbsolutelyPositioned(
-    const nsStyleDisplay* aStyleDisplay) const {
-||||||| merged common ancestors
-bool
-nsIFrame::IsAbsolutelyPositioned(const nsStyleDisplay* aStyleDisplay) const
-{
-=======
 bool nsIFrame::IsStickyPositioned() const {
   return StyleDisplay()->IsStickyPositioned(this);
 }
 
 bool nsIFrame::IsAbsolutelyPositioned(
     const nsStyleDisplay* aStyleDisplay) const {
->>>>>>> upstream-releases
   const nsStyleDisplay* disp = StyleDisplayWithOptionalParam(aStyleDisplay);
   return disp->IsAbsolutelyPositioned(this);
 }
@@ -85,21 +70,6 @@ bool nsIFrame::IsInlineOutside() const {
   return StyleDisplay()->IsInlineOutside(this);
 }
 
-<<<<<<< HEAD
-bool nsIFrame::IsColumnSpan() const {
-  return IsBlockOutside() && StyleColumn()->IsColumnSpanStyle();
-}
-
-bool nsIFrame::IsColumnSpanInMulticolSubtree() const {
-  return IsColumnSpan() && HasAnyStateBits(NS_FRAME_HAS_MULTI_COLUMN_ANCESTOR);
-}
-
-mozilla::StyleDisplay nsIFrame::GetDisplay() const {
-||||||| merged common ancestors
-mozilla::StyleDisplay
-nsIFrame::GetDisplay() const
-{
-=======
 bool nsIFrame::IsColumnSpan() const {
   return IsBlockOutside() && StyleColumn()->IsColumnSpanStyle();
 }
@@ -114,7 +84,6 @@ bool nsIFrame::IsColumnSpanInMulticolSubtree() const {
 }
 
 mozilla::StyleDisplay nsIFrame::GetDisplay() const {
->>>>>>> upstream-releases
   return StyleDisplay()->GetDisplay(this);
 }
 

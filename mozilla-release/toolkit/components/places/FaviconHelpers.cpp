@@ -208,26 +208,11 @@ nsresult SetIconInfo(const RefPtr<Database>& aDB, IconData& aIcon,
   // that case it won't have the page uri at hand, thus it can't tell if the
   // icon is a root icon or not. For that reason, never overwrite a root = 1.
   nsCOMPtr<mozIStorageStatement> updateStmt = aDB->GetStatement(
-<<<<<<< HEAD
-      "UPDATE moz_icons SET width = :width, "
-      "expire_ms = :expire, "
-      "data = :data, "
-      "root = :root "
-      "WHERE id = :id ");
-||||||| merged common ancestors
-    "UPDATE moz_icons SET width = :width, "
-                         "expire_ms = :expire, "
-                         "data = :data, "
-                         "root = :root "
-    "WHERE id = :id "
-  );
-=======
       "UPDATE moz_icons SET width = :width, "
       "expire_ms = :expire, "
       "data = :data, "
       "root = (root  OR :root) "
       "WHERE id = :id ");
->>>>>>> upstream-releases
   NS_ENSURE_STATE(updateStmt);
 
   for (auto& payload : aIcon.payloads) {
@@ -641,16 +626,7 @@ AsyncFetchAndSetIconForPage::Cancel() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest,
-                                            nsISupports* aContext) {
-||||||| merged common ancestors
-AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest,
-                                            nsISupports* aContext)
-{
-=======
 AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   // mRequest should already be set from ::FetchFromNetwork, but in the case of
   // a redirect we might get a new request, and we should make sure we keep a
   // reference to the most current request.
@@ -705,16 +681,7 @@ AsyncFetchAndSetIconForPage::AsyncOnChannelRedirect(
 
 NS_IMETHODIMP
 AsyncFetchAndSetIconForPage::OnStopRequest(nsIRequest* aRequest,
-<<<<<<< HEAD
-                                           nsISupports* aContext,
                                            nsresult aStatusCode) {
-||||||| merged common ancestors
-                                           nsISupports* aContext,
-                                           nsresult aStatusCode)
-{
-=======
-                                           nsresult aStatusCode) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // Don't need to track this anymore.
@@ -907,47 +874,7 @@ AsyncAssociateIconToPage::Run() {
     // it being elapsed. We don't remove orphan icons at this time since it
     // would have a cost. The privacy hit is limited since history removal
     // methods already expire orphan icons.
-<<<<<<< HEAD
-    if (mPage.id != 0) {
-      nsCOMPtr<mozIStorageStatement> stmt;
-      stmt = DB->GetStatement(
-          "DELETE FROM moz_icons_to_pages "
-          "WHERE icon_id IN ( "
-          "SELECT icon_id FROM moz_icons_to_pages "
-          "JOIN moz_icons i ON icon_id = i.id "
-          "WHERE page_id = :page_id "
-          "AND expire_ms < strftime('%s','now','localtime','start of day','-7 "
-          "days','utc') * 1000 "
-          ") AND page_id = :page_id ");
-      NS_ENSURE_STATE(stmt);
-      mozStorageStatementScoper scoper(stmt);
-      rv = stmt->BindInt64ByName(NS_LITERAL_CSTRING("page_id"), mPage.id);
-      NS_ENSURE_SUCCESS(rv, rv);
-      rv = stmt->Execute();
-      NS_ENSURE_SUCCESS(rv, rv);
-    } else {
-||||||| merged common ancestors
-    if (mPage.id != 0)  {
-      nsCOMPtr<mozIStorageStatement> stmt;
-      stmt = DB->GetStatement(
-        "DELETE FROM moz_icons_to_pages "
-        "WHERE icon_id IN ( "
-          "SELECT icon_id FROM moz_icons_to_pages "
-          "JOIN moz_icons i ON icon_id = i.id "
-          "WHERE page_id = :page_id "
-            "AND expire_ms < strftime('%s','now','localtime','start of day','-7 days','utc') * 1000 "
-        ") AND page_id = :page_id "
-      );
-      NS_ENSURE_STATE(stmt);
-      mozStorageStatementScoper scoper(stmt);
-      rv = stmt->BindInt64ByName(NS_LITERAL_CSTRING("page_id"), mPage.id);
-      NS_ENSURE_SUCCESS(rv, rv);
-      rv = stmt->Execute();
-      NS_ENSURE_SUCCESS(rv, rv);
-    } else {
-=======
     if (mPage.id == 0) {
->>>>>>> upstream-releases
       // We need to create the page entry.
       nsCOMPtr<mozIStorageStatement> stmt;
       stmt = DB->GetStatement(
@@ -1305,17 +1232,8 @@ nsresult FetchAndConvertUnsupportedPayloads::ConvertPayload(
 
   // Convert the payload to an input stream.
   nsCOMPtr<nsIInputStream> stream;
-<<<<<<< HEAD
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream), aPayload.get(),
-                                      aPayload.Length(), NS_ASSIGNMENT_DEPEND);
-||||||| merged common ancestors
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),
-                aPayload.get(), aPayload.Length(),
-                NS_ASSIGNMENT_DEPEND);
-=======
   nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream), aPayload,
                                       NS_ASSIGNMENT_DEPEND);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Decode the input stream to a surface.

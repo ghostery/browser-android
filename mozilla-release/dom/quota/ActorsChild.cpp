@@ -263,13 +263,6 @@ void QuotaRequestChild::HandleResponse(bool aResponse) {
   mRequest->SetResult(variant);
 }
 
-<<<<<<< HEAD
-void QuotaRequestChild::ActorDestroy(ActorDestroyReason aWhy) {
-||||||| merged common ancestors
-void
-QuotaRequestChild::ActorDestroy(ActorDestroyReason aWhy)
-{
-=======
 void QuotaRequestChild::HandleResponse(const nsTArray<nsCString>& aResponse) {
   AssertIsOnOwningThread();
   MOZ_ASSERT(mRequest);
@@ -300,7 +293,6 @@ void QuotaRequestChild::HandleResponse(const nsTArray<nsCString>& aResponse) {
 }
 
 void QuotaRequestChild::ActorDestroy(ActorDestroyReason aWhy) {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
 }
 

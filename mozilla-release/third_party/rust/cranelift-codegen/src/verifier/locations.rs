@@ -332,22 +332,10 @@ impl<'a> LocationVerifier<'a> {
                     }
                 }
             }
-<<<<<<< HEAD
-            Table(jt, ebb) => {
-                for d in divert.all() {
-                    let lr = &liveness[d.value];
-                    if let Some(ebb) = ebb {
-||||||| merged common ancestors
-            Table(jt) => {
-                for d in divert.all() {
-                    let lr = &liveness[d.value];
-                    for (_, ebb) in self.func.jump_tables[jt].entries() {
-=======
             Table(jt, ebb) => {
                 for (&value, d) in divert.iter() {
                     let lr = &liveness[value];
                     if let Some(ebb) = ebb {
->>>>>>> upstream-releases
                         if lr.is_livein(ebb, liveness.context(&self.func.layout)) {
                             return fatal!(
                                 errors,
@@ -366,18 +354,6 @@ impl<'a> LocationVerifier<'a> {
                                 inst,
                                 "{} is diverted to {} and live in to {}",
                                 value,
-                                d.to.display(&self.reginfo),
-                                ebb
-                            );
-                        }
-                    }
-                    for ebb in self.func.jump_tables[jt].iter() {
-                        if lr.is_livein(*ebb, liveness.context(&self.func.layout)) {
-                            return fatal!(
-                                errors,
-                                inst,
-                                "{} is diverted to {} and live in to {}",
-                                d.value,
                                 d.to.display(&self.reginfo),
                                 ebb
                             );

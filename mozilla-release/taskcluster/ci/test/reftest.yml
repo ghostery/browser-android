@@ -10,21 +10,11 @@ job-defaults:
             android-em-7.*: geckoview-androidTest.apk
             android-hw-.*-qr/.*: geckoview-androidTest.apk
             default: null
-<<<<<<< HEAD
-    serviceworker-e10s:
-||||||| merged common ancestors
-    tier:
-        by-test-platform:
-            android-em-7.0-x86/opt: 3
-            default: default
-    serviceworker-e10s:
-=======
     variants:
         by-test-platform:
             linux64/debug: ['fission', 'serviceworker']
             default: ['fission']
     run-on-projects:
->>>>>>> upstream-releases
         by-test-platform:
             android-em-4.*/.*: ['try', 'mozilla-central']  # bug 1548659
             android-hw-.*-qr/.*: ['try', 'mozilla-central']
@@ -58,15 +48,6 @@ job-defaults:
 crashtest:
     description: "Crashtest run"
     treeherder-symbol: R(C)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            android-em-7.0-x86/opt: ['mozilla-central']
-            default: built-projects
-=======
->>>>>>> upstream-releases
     instance-size:
         by-test-platform:
             android-em.*: xlarge
@@ -97,60 +78,20 @@ jsreftest:
     description: "JS Reftest run"
     schedules-component: jsreftest
     treeherder-symbol: R(J)
-<<<<<<< HEAD
-    run-on-projects: built-projects
-    instance-size:
-        by-test-platform:
-            android-em.*: xlarge
-            default: default
-||||||| merged common ancestors
-    run-on-projects:
-        by-test-platform:
-            android-em-7.0-x86/opt: ['mozilla-central']
-            default: built-projects
-    instance-size:
-        by-test-platform:
-            android-em.*: xlarge
-            default: default
-=======
     instance-size: default
->>>>>>> upstream-releases
     chunks:
         by-test-platform:
-<<<<<<< HEAD
-            android-em-4.3-arm7-api-16/debug: 100
-            android-em-7.0-x86/opt: 4
-            android-em.*: 40
-            windows.*: 2
-||||||| merged common ancestors
-            android-em-4.3-arm7-api-16/debug: 100
-            android-em-7.0-x86/opt: 3
-            android-em.*: 40
-            windows.*: 2
-=======
             android-hw.*\/debug: 12
             android-hw.*/(opt|pgo)?: 6
             windows.*\/opt: 2
             windows10-64-asan/opt: 3
->>>>>>> upstream-releases
             windows10-64-ccov/debug: 5
             linux64-ccov/.*: 5
-<<<<<<< HEAD
-            linux64-qr/.*: 4
-            linux32/debug: 5
-            macosx64-ccov/debug: 5
-||||||| merged common ancestors
-            linux64-qr/.*: 4
-            linux32/debug: 5
-            macosx.*: 2
-            macosx64-ccov/debug: 5
-=======
             linux64-qr/opt: 4
             linux64-qr/debug: 5
             linux64/debug: 5
             macosx.*-64-ccov/debug: 5
             macosx.*-64(-shippable)?/.*: 2
->>>>>>> upstream-releases
             default: 3
     max-run-time:
         by-test-platform:
@@ -197,15 +138,8 @@ reftest:
         by-test-platform:
             android-em.*: 7200
             windows10-64-ccov/debug: 5400
-<<<<<<< HEAD
-            windows10-64-asan/opt: 5400
-            macosx64-ccov/debug: 5400
-||||||| merged common ancestors
-            macosx64-ccov/debug: 5400
-=======
             windows10-64-asan/opt: 5400
             macosx.*64-ccov/debug: 5400
->>>>>>> upstream-releases
             default: 3600
     mozharness:
         chunked:

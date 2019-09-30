@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 environment:
   matrix:
     - LLVM_VERSION: 7.0.0
@@ -11,30 +10,3 @@ build: false
 
 test_script:
   - .\ci\test_script.bat
-||||||| merged common ancestors
-environment:
-  matrix:
-    - LLVM_VERSION: 5.0.0
-      CLANG_VERSION: clang_5_0
-
-install:
-  - .\ci\install.bat
-
-build: false
-
-test_script:
-  - .\ci\test_script.bat
-=======
-environment:
-  matrix:
-    - LLVM_VERSION: 7.0.0
-      CLANG_VERSION: clang_7_0
-
-install:
-  - .\ci\install.bat
-
-build: false
-
-test_script:
-  - .\ci\test_script.bat
->>>>>>> upstream-releases

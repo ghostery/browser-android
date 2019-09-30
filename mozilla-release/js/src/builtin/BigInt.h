@@ -45,19 +45,7 @@ class BigIntObject : public NativeObject {
   static const JSFunctionSpec staticMethods[];
 };
 
-<<<<<<< HEAD
 extern JSObject* InitBigIntClass(JSContext* cx, Handle<GlobalObject*> global);
-
-extern bool intrinsic_ToBigInt(JSContext* cx, unsigned argc, JS::Value* vp);
-||||||| merged common ancestors
-extern JSObject*
-InitBigIntClass(JSContext* cx, Handle<GlobalObject*> global);
-
-extern bool
-intrinsic_ToBigInt(JSContext* cx, unsigned argc, JS::Value* vp);
-=======
-extern JSObject* InitBigIntClass(JSContext* cx, Handle<GlobalObject*> global);
->>>>>>> upstream-releases
 
 }  // namespace js
 

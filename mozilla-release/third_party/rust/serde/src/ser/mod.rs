@@ -83,13 +83,8 @@
 //!    - Path
 //!    - PathBuf
 //!    - Range\<T\>
-<<<<<<< HEAD
-//!    - RangeInclusive\<T\>
-||||||| merged common ancestors
-=======
 //!    - RangeInclusive\<T\>
 //!    - Bound\<T\>
->>>>>>> upstream-releases
 //!    - num::NonZero*
 //!    - `!` *(unstable)*
 //!  - **Net types**:
@@ -216,16 +211,8 @@ pub trait Serialize {
     /// See the [Implementing `Serialize`] section of the manual for more
     /// information about how to implement this method.
     ///
-<<<<<<< HEAD
-    /// ```rust
-    /// use serde::ser::{Serialize, SerializeStruct, Serializer};
-||||||| merged common ancestors
-    /// ```rust
-    /// use serde::ser::{Serialize, Serializer, SerializeStruct};
-=======
     /// ```edition2018
     /// use serde::ser::{Serialize, SerializeStruct, Serializer};
->>>>>>> upstream-releases
     ///
     /// struct Person {
     ///     name: String,
@@ -1027,16 +1014,8 @@ pub trait Serializer: Sized {
     /// }
     /// ```
     ///
-<<<<<<< HEAD
-    /// ```rust
-    /// use serde::ser::{Serialize, SerializeTuple, Serializer};
-||||||| merged common ancestors
-    /// ```rust
-    /// use serde::ser::{Serialize, Serializer, SerializeTuple};
-=======
     /// ```edition2018
     /// use serde::ser::{Serialize, SerializeTuple, Serializer};
->>>>>>> upstream-releases
     ///
     /// const VRAM_SIZE: usize = 386;
     /// struct Vram([u16; VRAM_SIZE]);
@@ -1063,16 +1042,8 @@ pub trait Serializer: Sized {
     /// The `name` is the name of the tuple struct and the `len` is the number
     /// of data fields that will be serialized.
     ///
-<<<<<<< HEAD
-    /// ```rust
-    /// use serde::ser::{Serialize, SerializeTupleStruct, Serializer};
-||||||| merged common ancestors
-    /// ```rust
-    /// use serde::ser::{Serialize, Serializer, SerializeTupleStruct};
-=======
     /// ```edition2018
     /// use serde::ser::{Serialize, SerializeTupleStruct, Serializer};
->>>>>>> upstream-releases
     ///
     /// struct Rgb(u8, u8, u8);
     ///
@@ -1103,16 +1074,8 @@ pub trait Serializer: Sized {
     /// this variant within the enum, the `variant` is the name of the variant,
     /// and the `len` is the number of data fields that will be serialized.
     ///
-<<<<<<< HEAD
-    /// ```rust
-    /// use serde::ser::{Serialize, SerializeTupleVariant, Serializer};
-||||||| merged common ancestors
-    /// ```rust
-    /// use serde::ser::{Serialize, Serializer, SerializeTupleVariant};
-=======
     /// ```edition2018
     /// use serde::ser::{Serialize, SerializeTupleVariant, Serializer};
->>>>>>> upstream-releases
     ///
     /// enum E {
     ///     T(u8, u8),
@@ -1205,16 +1168,8 @@ pub trait Serializer: Sized {
     /// The `name` is the name of the struct and the `len` is the number of
     /// data fields that will be serialized.
     ///
-<<<<<<< HEAD
-    /// ```rust
-    /// use serde::ser::{Serialize, SerializeStruct, Serializer};
-||||||| merged common ancestors
-    /// ```rust
-    /// use serde::ser::{Serialize, Serializer, SerializeStruct};
-=======
     /// ```edition2018
     /// use serde::ser::{Serialize, SerializeStruct, Serializer};
->>>>>>> upstream-releases
     ///
     /// struct Rgb {
     ///     r: u8,
@@ -1249,16 +1204,8 @@ pub trait Serializer: Sized {
     /// this variant within the enum, the `variant` is the name of the variant,
     /// and the `len` is the number of data fields that will be serialized.
     ///
-<<<<<<< HEAD
-    /// ```rust
-    /// use serde::ser::{Serialize, SerializeStructVariant, Serializer};
-||||||| merged common ancestors
-    /// ```rust
-    /// use serde::ser::{Serialize, Serializer, SerializeStructVariant};
-=======
     /// ```edition2018
     /// use serde::ser::{Serialize, SerializeStructVariant, Serializer};
->>>>>>> upstream-releases
     ///
     /// enum E {
     ///     S { r: u8, g: u8, b: u8 },
@@ -1336,14 +1283,7 @@ pub trait Serializer: Sized {
     /// using [`serialize_map`]. Implementors should not need to override this
     /// method.
     ///
-<<<<<<< HEAD
-    /// ```rust
-||||||| merged common ancestors
-    /// ```rust
-    /// use std::collections::BTreeSet;
-=======
     /// ```edition2018
->>>>>>> upstream-releases
     /// use serde::{Serialize, Serializer};
     /// use std::collections::BTreeSet;
     ///
@@ -1672,16 +1612,8 @@ pub trait SerializeTuple {
 ///
 /// # Example use
 ///
-<<<<<<< HEAD
-/// ```rust
-/// use serde::ser::{Serialize, SerializeTupleStruct, Serializer};
-||||||| merged common ancestors
-/// ```rust
-/// use serde::ser::{Serialize, Serializer, SerializeTupleStruct};
-=======
 /// ```edition2018
 /// use serde::ser::{Serialize, SerializeTupleStruct, Serializer};
->>>>>>> upstream-releases
 ///
 /// struct Rgb(u8, u8, u8);
 ///
@@ -1725,16 +1657,8 @@ pub trait SerializeTupleStruct {
 ///
 /// # Example use
 ///
-<<<<<<< HEAD
-/// ```rust
-/// use serde::ser::{Serialize, SerializeTupleVariant, Serializer};
-||||||| merged common ancestors
-/// ```rust
-/// use serde::ser::{Serialize, Serializer, SerializeTupleVariant};
-=======
 /// ```edition2018
 /// use serde::ser::{Serialize, SerializeTupleVariant, Serializer};
->>>>>>> upstream-releases
 ///
 /// enum E {
 ///     T(u8, u8),
@@ -1902,16 +1826,8 @@ pub trait SerializeMap {
 ///
 /// # Example use
 ///
-<<<<<<< HEAD
-/// ```rust
-/// use serde::ser::{Serialize, SerializeStruct, Serializer};
-||||||| merged common ancestors
-/// ```rust
-/// use serde::ser::{Serialize, Serializer, SerializeStruct};
-=======
 /// ```edition2018
 /// use serde::ser::{Serialize, SerializeStruct, Serializer};
->>>>>>> upstream-releases
 ///
 /// struct Rgb {
 ///     r: u8,
@@ -1970,16 +1886,8 @@ pub trait SerializeStruct {
 ///
 /// # Example use
 ///
-<<<<<<< HEAD
-/// ```rust
-/// use serde::ser::{Serialize, SerializeStructVariant, Serializer};
-||||||| merged common ancestors
-/// ```rust
-/// use serde::ser::{Serialize, Serializer, SerializeStructVariant};
-=======
 /// ```edition2018
 /// use serde::ser::{Serialize, SerializeStructVariant, Serializer};
->>>>>>> upstream-releases
 ///
 /// enum E {
 ///     S { r: u8, g: u8, b: u8 },

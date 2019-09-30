@@ -182,31 +182,8 @@ class LookupCache {
   // entry
   static nsresult GetLookupFragments(const nsACString& aSpec,
                                      nsTArray<nsCString>* aFragments);
-<<<<<<< HEAD
-  // Similar to GetKey(), but if the domain contains three or more components,
-  // two keys will be returned:
-  //  hostname.com/foo/bar -> [hostname.com]
-  //  mail.hostname.com/foo/bar -> [hostname.com, mail.hostname.com]
-  //  www.mail.hostname.com/foo/bar -> [hostname.com, mail.hostname.com]
-  static nsresult GetHostKeys(const nsACString& aSpec,
-                              nsTArray<nsCString>* aHostKeys);
 
   LookupCache(const nsACString& aTableName, const nsACString& aProvider,
-||||||| merged common ancestors
-  // Similar to GetKey(), but if the domain contains three or more components,
-  // two keys will be returned:
-  //  hostname.com/foo/bar -> [hostname.com]
-  //  mail.hostname.com/foo/bar -> [hostname.com, mail.hostname.com]
-  //  www.mail.hostname.com/foo/bar -> [hostname.com, mail.hostname.com]
-  static nsresult GetHostKeys(const nsACString& aSpec,
-                              nsTArray<nsCString>* aHostKeys);
-
-  LookupCache(const nsACString& aTableName,
-              const nsACString& aProvider,
-=======
-
-  LookupCache(const nsACString& aTableName, const nsACString& aProvider,
->>>>>>> upstream-releases
               nsCOMPtr<nsIFile>& aStoreFile);
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(LookupCache);
@@ -244,19 +221,6 @@ class LookupCache {
   nsresult VerifyCRC32(nsCOMPtr<nsIInputStream>& aIn);
 
   virtual nsresult Open();
-<<<<<<< HEAD
-  virtual nsresult Init() = 0;
-  virtual nsresult ClearPrefixes() = 0;
-  virtual nsresult Has(const Completion& aCompletion, bool* aHas,
-                       uint32_t* aMatchLength, bool* aConfirmed) = 0;
-||||||| merged common ancestors
-  virtual nsresult Init() = 0;
-  virtual nsresult ClearPrefixes() = 0;
-  virtual nsresult Has(const Completion& aCompletion,
-                       bool* aHas,
-                       uint32_t* aMatchLength,
-                       bool* aConfirmed) = 0;
-=======
   virtual nsresult Init();
   ;
   virtual nsresult ClearPrefixes();
@@ -268,7 +232,6 @@ class LookupCache {
     uint32_t magic;
     uint32_t version;
   };
->>>>>>> upstream-releases
 
   virtual nsresult StoreToFile(nsCOMPtr<nsIFile>& aFile);
   virtual nsresult LoadFromFile(nsCOMPtr<nsIFile>& aFile);
@@ -277,15 +240,9 @@ class LookupCache {
 
   virtual void ClearAll();
 
-<<<<<<< HEAD
-  template <typename T>
-||||||| merged common ancestors
-  template<typename T>
-=======
   virtual nsresult LoadMozEntries() = 0;
 
   template <typename T>
->>>>>>> upstream-releases
   static T* Cast(LookupCache* aThat) {
     return ((aThat && T::VER == aThat->Ver()) ? reinterpret_cast<T*>(aThat)
                                               : nullptr);
@@ -305,18 +262,12 @@ class LookupCache {
 
   virtual int Ver() const = 0;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   virtual void GetHeader(Header& aHeader) = 0;
   virtual nsresult SanityCheck(const Header& aHeader) = 0;
   virtual nsresult LoadLegacyFile() = 0;
   virtual nsresult ClearLegacyFile() = 0;
 
  protected:
->>>>>>> upstream-releases
   virtual ~LookupCache() {}
 
   // Buffer size for file read/write
@@ -351,37 +302,10 @@ class LookupCacheV2 final : public LookupCache {
                          nsCOMPtr<nsIFile>& aStoreFile)
       : LookupCache(aTableName, aProvider, aStoreFile) {}
 
-<<<<<<< HEAD
-  virtual nsresult Init() override;
-  virtual nsresult Open() override;
-  virtual void ClearAll() override;
   virtual nsresult Has(const Completion& aCompletion, bool* aHas,
                        uint32_t* aMatchLength, bool* aConfirmed) override;
-||||||| merged common ancestors
-  virtual nsresult Init() override;
-  virtual nsresult Open() override;
-  virtual void ClearAll() override;
-  virtual nsresult Has(const Completion& aCompletion,
-                       bool* aHas,
-                       uint32_t* aMatchLength,
-                       bool* aConfirmed) override;
-=======
-  virtual nsresult Has(const Completion& aCompletion, bool* aHas,
-                       uint32_t* aMatchLength, bool* aConfirmed) override;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual bool IsEmpty() const override;
 
   nsresult Build(AddPrefixArray& aAddPrefixes, AddCompleteArray& aAddCompletes);
-||||||| merged common ancestors
-  virtual bool IsEmpty() const override;
-
-  nsresult Build(AddPrefixArray& aAddPrefixes,
-                 AddCompleteArray& aAddCompletes);
-=======
-  nsresult Build(AddPrefixArray& aAddPrefixes, AddCompleteArray& aAddCompletes);
->>>>>>> upstream-releases
 
   nsresult GetPrefixes(FallibleTArray<uint32_t>& aAddPrefixes);
   nsresult GetPrefixes(FallibleTArray<uint32_t>& aAddPrefixes,
@@ -399,26 +323,8 @@ class LookupCacheV2 final : public LookupCache {
   static const uint32_t VLPSET_MAGIC;
   static const uint32_t VLPSET_VERSION;
 
-<<<<<<< HEAD
- protected:
-  nsresult ReadCompletions();
-
-  virtual nsresult ClearPrefixes() override;
-  virtual nsresult StoreToFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual nsresult LoadFromFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual size_t SizeOfPrefixSet() const override;
-||||||| merged common ancestors
-protected:
-  nsresult ReadCompletions();
-
-  virtual nsresult ClearPrefixes() override;
-  virtual nsresult StoreToFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual nsresult LoadFromFile(nsCOMPtr<nsIFile>& aFile) override;
-  virtual size_t SizeOfPrefixSet() const override;
-=======
  protected:
   virtual nsCString GetPrefixSetSuffix() const override;
->>>>>>> upstream-releases
 
  private:
   ~LookupCacheV2() {}

@@ -28,21 +28,9 @@ class nsRequestObserverProxy final : public nsIRequestObserverProxy {
 
   nsRequestObserverProxy() = default;
 
-<<<<<<< HEAD
-  nsIRequestObserver *Observer() { return mObserver; }
-||||||| merged common ancestors
-    nsIRequestObserver *Observer() { return mObserver; }
-=======
   nsIRequestObserver* Observer() { return mObserver; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult FireEvent(nsARequestObserverEvent *);
-||||||| merged common ancestors
-    nsresult FireEvent(nsARequestObserverEvent *);
-=======
   nsresult FireEvent(nsARequestObserverEvent*);
->>>>>>> upstream-releases
 
  protected:
   nsMainThreadPtrHandle<nsIRequestObserver> mObserver;
@@ -52,20 +40,9 @@ class nsRequestObserverProxy final : public nsIRequestObserverProxy {
   friend class nsOnStopRequestEvent;
 };
 
-<<<<<<< HEAD
-class nsARequestObserverEvent : public Runnable {
- public:
-  explicit nsARequestObserverEvent(nsIRequest *);
-||||||| merged common ancestors
-class nsARequestObserverEvent : public Runnable
-{
-public:
-    explicit nsARequestObserverEvent(nsIRequest *);
-=======
 class nsARequestObserverEvent : public Runnable {
  public:
   explicit nsARequestObserverEvent(nsIRequest*);
->>>>>>> upstream-releases
 
  protected:
   virtual ~nsARequestObserverEvent() = default;

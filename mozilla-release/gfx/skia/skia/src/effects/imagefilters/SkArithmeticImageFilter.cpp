@@ -30,23 +30,6 @@
 #include "glsl/GrGLSLFragmentShaderBuilder.h"
 #include "glsl/GrGLSLProgramDataManager.h"
 #include "glsl/GrGLSLUniformHandler.h"
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
-
-GR_FP_SRC_STRING SKSL_ARITHMETIC_SRC = R"(
-in uniform float4 k;
-layout(key) const in bool enforcePMColor;
-in fragmentProcessor child;
-
-void main(int x, int y, inout half4 color) {
-    half4 dst = process(child);
-    color = saturate(k.x * color * dst + k.y * color + k.z * dst + k.w);
-    if (enforcePMColor) {
-        color.rgb = min(color.rgb, color.a);
-    }
-}
-)";
-||||||| merged common ancestors
-=======
 
 GR_FP_SRC_STRING SKSL_ARITHMETIC_SRC = R"(
 in uniform half4 k;
@@ -61,7 +44,6 @@ void main(inout half4 color) {
     }
 }
 )";
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
 #endif
 
 class ArithmeticImageFilterImpl : public SkImageFilter {
@@ -70,15 +52,6 @@ public:
                               sk_sp<SkImageFilter> inputs[2], const CropRect* cropRect)
             : INHERITED(inputs, 2, cropRect), fK{k1, k2, k3, k4}, fEnforcePMColor(enforcePMColor) {}
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(ArithmeticImageFilterImpl)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(ArithmeticImageFilterImpl)
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
 protected:
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,
                                         SkIPoint* offset) const override;
@@ -336,19 +309,10 @@ sk_sp<SkSpecialImage> ArithmeticImageFilterImpl::filterImageGPU(
     std::unique_ptr<GrFragmentProcessor> bgFP;
 
     if (backgroundProxy) {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
-        SkMatrix backgroundMatrix = SkMatrix::MakeTrans(-SkIntToScalar(backgroundOffset.fX),
-                                                        -SkIntToScalar(backgroundOffset.fY));
-||||||| merged common ancestors
-        SkMatrix backgroundMatrix = SkMatrix::MakeTrans(-SkIntToScalar(backgroundOffset.fX),
-                                                        -SkIntToScalar(backgroundOffset.fY));
-        GrPixelConfig bgConfig = backgroundProxy->config();
-=======
         SkIRect bgSubset = background->subset();
         SkMatrix backgroundMatrix = SkMatrix::MakeTrans(
                 SkIntToScalar(bgSubset.left() - backgroundOffset.fX),
                 SkIntToScalar(bgSubset.top()  - backgroundOffset.fY));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
         bgFP = GrTextureDomainEffect::Make(
                 std::move(backgroundProxy), backgroundMatrix,
                 GrTextureDomain::MakeTexelDomain(bgSubset, GrTextureDomain::kDecal_Mode),
@@ -362,19 +326,10 @@ sk_sp<SkSpecialImage> ArithmeticImageFilterImpl::filterImageGPU(
     }
 
     if (foregroundProxy) {
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
-        SkMatrix foregroundMatrix = SkMatrix::MakeTrans(-SkIntToScalar(foregroundOffset.fX),
-                                                        -SkIntToScalar(foregroundOffset.fY));
-||||||| merged common ancestors
-        SkMatrix foregroundMatrix = SkMatrix::MakeTrans(-SkIntToScalar(foregroundOffset.fX),
-                                                        -SkIntToScalar(foregroundOffset.fY));
-        GrPixelConfig fgConfig = foregroundProxy->config();
-=======
         SkIRect fgSubset = foreground->subset();
         SkMatrix foregroundMatrix = SkMatrix::MakeTrans(
                 SkIntToScalar(fgSubset.left() - foregroundOffset.fX),
                 SkIntToScalar(fgSubset.top()  - foregroundOffset.fY));
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
         auto foregroundFP = GrTextureDomainEffect::Make(
                 std::move(foregroundProxy), foregroundMatrix,
                 GrTextureDomain::MakeTexelDomain(fgSubset, GrTextureDomain::kDecal_Mode),
@@ -406,16 +361,6 @@ sk_sp<SkSpecialImage> ArithmeticImageFilterImpl::filterImageGPU(
 
     paint.setPorterDuffXPFactory(SkBlendMode::kSrc);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
-    sk_sp<GrRenderTargetContext> renderTargetContext(
-        context->contextPriv().makeDeferredRenderTargetContext(
-            SkBackingFit::kApprox, bounds.width(), bounds.height(),
-            SkColorType2GrPixelConfig(outputProperties.colorType()),
-||||||| merged common ancestors
-    sk_sp<GrRenderTargetContext> renderTargetContext(context->makeDeferredRenderTargetContext(
-            SkBackingFit::kApprox, bounds.width(), bounds.height(),
-            GrRenderableConfigForColorSpace(outputProperties.colorSpace()),
-=======
     SkColorType colorType = outputProperties.colorType();
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(colorType);
@@ -424,7 +369,6 @@ sk_sp<SkSpecialImage> ArithmeticImageFilterImpl::filterImageGPU(
         context->priv().makeDeferredRenderTargetContext(
             format, SkBackingFit::kApprox, bounds.width(), bounds.height(),
             SkColorType2GrPixelConfig(colorType),
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkArithmeticImageFilter.cpp
             sk_ref_sp(outputProperties.colorSpace())));
     if (!renderTargetContext) {
         return nullptr;

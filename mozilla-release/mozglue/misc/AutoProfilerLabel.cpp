@@ -42,19 +42,6 @@ class MOZ_RAII AutoProfilerLabelData {
     void Unlock() { mozilla::detail::MutexImpl::unlock(); }
   };
 
-<<<<<<< HEAD
-void RegisterProfilerLabelEnterExit(ProfilerLabelEnter aEnter,
-                                    ProfilerLabelExit aExit) {
-  sEnter = aEnter;
-  sExit = aExit;
-||||||| merged common ancestors
-void
-RegisterProfilerLabelEnterExit(ProfilerLabelEnter aEnter,
-                               ProfilerLabelExit aExit)
-{
-  sEnter = aEnter;
-  sExit = aExit;
-=======
   // Mutex protecting access to the following static members.
   static Mutex sAPLMutex;
 
@@ -80,7 +67,6 @@ void RegisterProfilerLabelEnterExit(ProfilerLabelEnter aEnter,
   data.EnterRef() = aEnter;
   data.ExitRef() = aExit;
   ++data.GenerationRef();
->>>>>>> upstream-releases
 }
 
 AutoProfilerLabel::AutoProfilerLabel(
@@ -88,29 +74,13 @@ AutoProfilerLabel::AutoProfilerLabel(
     const char* aDynamicString MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL) {
   MOZ_GUARD_OBJECT_NOTIFIER_INIT;
 
-<<<<<<< HEAD
-  mProfilingStack = sEnter ? sEnter(aLabel, aDynamicString, this) : nullptr;
-||||||| merged common ancestors
-  mProfilingStack = sEnter ? sEnter(aLabel, aDynamicString, this, aLine) : nullptr;
-=======
   const AutoProfilerLabelData data;
   mEntryContext = (data.EnterCRef())
                       ? data.EnterCRef()(aLabel, aDynamicString, this)
                       : nullptr;
   mGeneration = data.GenerationCRef();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-AutoProfilerLabel::~AutoProfilerLabel() {
-  if (sExit && mProfilingStack) {
-    sExit(mProfilingStack);
-||||||| merged common ancestors
-AutoProfilerLabel::~AutoProfilerLabel()
-{
-  if (sExit && mProfilingStack) {
-    sExit(mProfilingStack);
-=======
 AutoProfilerLabel::~AutoProfilerLabel() {
   if (!mEntryContext) {
     return;
@@ -118,7 +88,6 @@ AutoProfilerLabel::~AutoProfilerLabel() {
   const AutoProfilerLabelData data;
   if (data.ExitCRef() && (mGeneration == data.GenerationCRef())) {
     data.ExitCRef()(mEntryContext);
->>>>>>> upstream-releases
   }
 }
 

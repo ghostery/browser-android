@@ -45,15 +45,6 @@ class OriginUsageResult : public nsIQuotaOriginUsageResult {
   NS_DECL_NSIQUOTAORIGINUSAGERESULT
 };
 
-<<<<<<< HEAD
-}  // namespace quota
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace quota
-} // namespace dom
-} // namespace mozilla
-=======
 class InitializedOriginsResult : public nsIQuotaInitializedOriginsResult {
   nsCString mOrigin;
 
@@ -70,6 +61,5 @@ class InitializedOriginsResult : public nsIQuotaInitializedOriginsResult {
 }  // namespace quota
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_dom_quota_QuotaResults_h

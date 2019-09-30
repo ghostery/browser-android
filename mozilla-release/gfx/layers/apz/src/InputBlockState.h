@@ -14,19 +14,9 @@
 #include "mozilla/layers/APZUtils.h"
 #include "mozilla/layers/LayersTypes.h"  // for TouchBehaviorFlags
 #include "mozilla/layers/AsyncDragMetrics.h"
-<<<<<<< HEAD
-#include "mozilla/TimeStamp.h"  // for TimeStamp
-#include "nsTArray.h"           // for nsTArray
-#include "TouchCounter.h"
-||||||| merged common ancestors
-#include "mozilla/TimeStamp.h"              // for TimeStamp
-#include "nsTArray.h"                       // for nsTArray
-#include "TouchCounter.h"
-=======
 #include "mozilla/layers/TouchCounter.h"
 #include "mozilla/TimeStamp.h"  // for TimeStamp
 #include "nsTArray.h"           // for nsTArray
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -406,12 +396,6 @@ class TouchBlockState : public CancelableBlockState {
    * If the allowed touch behaviors have been set, populate them into
    * |aOutBehaviors| and return true. Else, return false.
    */
-<<<<<<< HEAD
-  bool GetAllowedTouchBehaviors(
-      nsTArray<TouchBehaviorFlags>& aOutBehaviors) const;
-||||||| merged common ancestors
-  bool GetAllowedTouchBehaviors(nsTArray<TouchBehaviorFlags>& aOutBehaviors) const;
-=======
   bool GetAllowedTouchBehaviors(
       nsTArray<TouchBehaviorFlags>& aOutBehaviors) const;
 
@@ -420,7 +404,6 @@ class TouchBlockState : public CancelableBlockState {
    * action is disabled.
    */
   bool HasAllowedTouchBehaviors() const;
->>>>>>> upstream-releases
 
   /**
    * Copy various properties from another block.

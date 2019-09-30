@@ -70,27 +70,12 @@ class nsSplittableFrame : public nsFrame {
   // methods.
   static void RemoveFromFlow(nsIFrame* aFrame);
 
-<<<<<<< HEAD
- protected:
-  nsSplittableFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsFrame(aStyle, aID),
-        mPrevContinuation(nullptr),
-        mNextContinuation(nullptr) {}
-||||||| merged common ancestors
-protected:
-  nsSplittableFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsFrame(aStyle, aID)
-    , mPrevContinuation(nullptr)
-    , mNextContinuation(nullptr)
-  {}
-=======
  protected:
   nsSplittableFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                     ClassID aID)
       : nsFrame(aStyle, aPresContext, aID),
         mPrevContinuation(nullptr),
         mNextContinuation(nullptr) {}
->>>>>>> upstream-releases
 
   /**
    * Return the sum of the block-axis content size of our prev-in-flows.

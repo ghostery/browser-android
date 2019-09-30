@@ -63,41 +63,14 @@
       this._engines = null;
     }
 
-<<<<<<< HEAD
-/**
- * Defines the search bar element.
- */
-class MozSearchbar extends MozXULElement {
-||||||| merged common ancestors
-class MozSearchbar extends MozXULElement {
-=======
     connectedCallback() {
       // Don't initialize if this isn't going to be visible
       if (this.closest("#BrowserToolbarPalette")) {
         return;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static get observedAttributes() {
-    let unique = new Set();
-    for (let i in inheritsMap) {
-      inheritsMap[i].forEach(attr => unique.add(attr));
-    }
-    return Array.from(unique);
-  }
-||||||| merged common ancestors
-  static get observedAttributes() {
-    let unique = new Set();
-    for (var i in inheritsMap) {
-      inheritsMap[i].forEach(attr => unique.add(attr));
-    }
-    return Array.from(unique);
-  }
-=======
       this.appendChild(document.importNode(this.content, true));
       this.initializeAttributeInheritance();
->>>>>>> upstream-releases
 
       // Don't go further if in Customize mode.
       if (this.parentNode.parentNode.localName == "toolbarpaletteitem") {
@@ -291,48 +264,9 @@ class MozSearchbar extends MozXULElement {
 
       this.currentEngine = engines[newIndex];
 
-<<<<<<< HEAD
-  set currentEngine(val) {
-    Services.search.defaultEngine = val;
-    return val;
-  }
-||||||| merged common ancestors
-  set currentEngine(val) {
-    Services.search.currentEngine = val;
-    return val;
-  }
-=======
       this.openSuggestionsPanel();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  get currentEngine() {
-    let currentEngine = Services.search.defaultEngine;
-    // Return a dummy engine if there is no currentEngine
-    return currentEngine || { name: "", uri: null };
-  }
-  /**
-   * textbox is used by sanitize.js to clear the undo history when
-   * clearing form information.
-   */
-  get textbox() {
-    return this._textbox;
-  }
-||||||| merged common ancestors
-  get currentEngine() {
-    var currentEngine = Services.search.currentEngine;
-    // Return a dummy engine if there is no currentEngine
-    return currentEngine || { name: "", uri: null };
-  }
-  /**
-   * textbox is used by sanitize.js to clear the undo history when
-   * clearing form information.
-   */
-  get textbox() {
-    return this._textbox;
-  }
-=======
     handleSearchCommand(aEvent, aEngine, aForceNewTab) {
       let where = "current";
       let params;
@@ -369,7 +303,6 @@ class MozSearchbar extends MozXULElement {
           };
         }
       }
->>>>>>> upstream-releases
 
       this.handleSearchCommandWhere(aEvent, aEngine, where, params);
     }
@@ -500,33 +433,10 @@ class MozSearchbar extends MozXULElement {
           return;
         }
 
-<<<<<<< HEAD
-  updateDisplay() {
-    let uri = this.currentEngine.iconURI;
-    this.setIcon(this, uri ? uri.spec : "");
-||||||| merged common ancestors
-  updateDisplay() {
-    var uri = this.currentEngine.iconURI;
-    this.setIcon(this, uri ? uri.spec : "");
-=======
         this.focus();
         this.select();
       });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    let name = this.currentEngine.name;
-    let text = this._stringBundle.getFormattedString("searchtip", [name]);
-    this._textbox.label = text;
-    this._textbox.tooltipText = text;
-  }
-||||||| merged common ancestors
-    var name = this.currentEngine.name;
-    var text = this._stringBundle.getFormattedString("searchtip", [name]);
-    this._textbox.label = text;
-    this._textbox.tooltipText = text;
-  }
-=======
       this.addEventListener(
         "DOMMouseScroll",
         event => {
@@ -536,7 +446,6 @@ class MozSearchbar extends MozXULElement {
         },
         true
       );
->>>>>>> upstream-releases
 
       this.addEventListener("input", event => {
         this.updateGoButtonVisibility();
@@ -578,17 +487,6 @@ class MozSearchbar extends MozXULElement {
             return;
           }
 
-<<<<<<< HEAD
-  selectEngine(aEvent, isNextEngine) {
-    // Find the new index
-    let newIndex = this.engines.indexOf(this.currentEngine);
-    newIndex += isNextEngine ? 1 : -1;
-||||||| merged common ancestors
-  selectEngine(aEvent, isNextEngine) {
-    // Find the new index
-    var newIndex = this.engines.indexOf(this.currentEngine);
-    newIndex += isNextEngine ? 1 : -1;
-=======
           // Don't open the suggestions if the mouse was used to focus the
           // textbox, that will be taken care of in the click handler.
           if (
@@ -597,7 +495,6 @@ class MozSearchbar extends MozXULElement {
           ) {
             return;
           }
->>>>>>> upstream-releases
 
           this.openSuggestionsPanel();
         },
@@ -615,68 +512,11 @@ class MozSearchbar extends MozXULElement {
           return;
         }
 
-<<<<<<< HEAD
-  handleSearchCommand(aEvent, aEngine, aForceNewTab) {
-    let where = "current";
-    let params;
-||||||| merged common ancestors
-  handleSearchCommand(aEvent, aEngine, aForceNewTab) {
-    var where = "current";
-    let params;
-=======
         // Ignore clicks on menu items in the input's context menu.
         if (event.originalTarget.localName == "menuitem") {
           return;
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Open ctrl/cmd clicks on one-off buttons in a new background tab.
-    if (aEvent && aEvent.originalTarget.classList.contains("search-go-button")) {
-      if (aEvent.button == 2)
-        return;
-      where = whereToOpenLink(aEvent, false, true);
-    } else if (aForceNewTab) {
-      where = "tab";
-      if (Services.prefs.getBoolPref("browser.tabs.loadInBackground"))
-        where += "-background";
-    } else {
-      let newTabPref = Services.prefs.getBoolPref("browser.search.openintab");
-      if (((aEvent instanceof KeyboardEvent && aEvent.altKey) ^ newTabPref) &&
-        !gBrowser.selectedTab.isEmpty) {
-        where = "tab";
-      }
-      if ((aEvent instanceof MouseEvent) &&
-        (aEvent.button == 1 || aEvent.getModifierState("Accel"))) {
-        where = "tab";
-        params = {
-          inBackground: true,
-        };
-      }
-||||||| merged common ancestors
-    // Open ctrl/cmd clicks on one-off buttons in a new background tab.
-    if (aEvent && aEvent.originalTarget.classList.contains("search-go-button")) {
-      if (aEvent.button == 2)
-        return;
-      where = whereToOpenLink(aEvent, false, true);
-    } else if (aForceNewTab) {
-      where = "tab";
-      if (Services.prefs.getBoolPref("browser.tabs.loadInBackground"))
-        where += "-background";
-    } else {
-      var newTabPref = Services.prefs.getBoolPref("browser.search.openintab");
-      if (((aEvent instanceof KeyboardEvent && aEvent.altKey) ^ newTabPref) &&
-        !isTabEmpty(gBrowser.selectedTab)) {
-        where = "tab";
-      }
-      if ((aEvent instanceof MouseEvent) &&
-        (aEvent.button == 1 || aEvent.getModifierState("Accel"))) {
-        where = "tab";
-        params = {
-          inBackground: true,
-        };
-      }
-=======
         let isIconClick = event.originalTarget.classList.contains(
           "searchbar-search-button"
         );
@@ -690,7 +530,6 @@ class MozSearchbar extends MozXULElement {
           this.openSuggestionsPanel(true);
         }
       });
->>>>>>> upstream-releases
     }
 
     _setupTextboxEventListeners() {
@@ -698,61 +537,6 @@ class MozSearchbar extends MozXULElement {
         this.textbox.popup.removeAttribute("showonlysettings");
       });
 
-<<<<<<< HEAD
-  handleSearchCommandWhere(aEvent, aEngine, aWhere, aParams) {
-    let textBox = this._textbox;
-    let textValue = textBox.value;
-
-    let selection = this.telemetrySearchDetails;
-    let oneOffRecorded = false;
-
-    BrowserUsageTelemetry.recordSearchbarSelectedResultMethod(
-      aEvent,
-      selection ? selection.index : -1
-    );
-
-    if (!selection || (selection.index == -1)) {
-      oneOffRecorded = this.textbox.popup.oneOffButtons
-        .maybeRecordTelemetry(aEvent, aWhere, aParams);
-      if (!oneOffRecorded) {
-        let source = "unknown";
-        let type = "unknown";
-        let target = aEvent.originalTarget;
-        if (aEvent instanceof KeyboardEvent) {
-          type = "key";
-        } else if (aEvent instanceof MouseEvent) {
-          type = "mouse";
-          if (target.classList.contains("search-panel-header") ||
-            target.parentNode.classList.contains("search-panel-header")) {
-            source = "header";
-||||||| merged common ancestors
-  handleSearchCommandWhere(aEvent, aEngine, aWhere, aParams) {
-    var textBox = this._textbox;
-    var textValue = textBox.value;
-
-    let selection = this.telemetrySearchDetails;
-    let oneOffRecorded = false;
-
-    BrowserUsageTelemetry.recordSearchbarSelectedResultMethod(
-      aEvent,
-      selection ? selection.index : -1
-    );
-
-    if (!selection || (selection.index == -1)) {
-      oneOffRecorded = this.textbox.popup.oneOffButtons
-        .maybeRecordTelemetry(aEvent, aWhere, aParams);
-      if (!oneOffRecorded) {
-        let source = "unknown";
-        let type = "unknown";
-        let target = aEvent.originalTarget;
-        if (aEvent instanceof KeyboardEvent) {
-          type = "key";
-        } else if (aEvent instanceof MouseEvent) {
-          type = "mouse";
-          if (target.classList.contains("search-panel-header") ||
-            target.parentNode.classList.contains("search-panel-header")) {
-            source = "header";
-=======
       this.textbox.addEventListener(
         "keypress",
         event => {
@@ -792,7 +576,6 @@ class MozSearchbar extends MozXULElement {
             event.getModifierState("Accel")
           ) {
             this.selectEngine(event, true);
->>>>>>> upstream-releases
           }
         },
         true
@@ -836,47 +619,6 @@ class MozSearchbar extends MozXULElement {
       });
     }
 
-<<<<<<< HEAD
-    // This is a one-off search only if oneOffRecorded is true.
-    this.doSearch(textValue, aWhere, aEngine, aParams, oneOffRecorded);
-
-    if (aWhere == "tab" && aParams && aParams.inBackground)
-      this.focus();
-  }
-
-  doSearch(aData, aWhere, aEngine, aParams, aOneOff) {
-    let textBox = this._textbox;
-
-    // Save the current value in the form history
-    if (aData && !PrivateBrowsingUtils.isWindowPrivate(window) && this.FormHistory.enabled) {
-      this.FormHistory.update({
-        op: "bump",
-        fieldname: textBox.getAttribute("autocompletesearchparam"),
-        value: aData,
-      }, {
-        handleError(aError) {
-          Cu.reportError("Saving search to form history failed: " + aError.message);
-||||||| merged common ancestors
-    // This is a one-off search only if oneOffRecorded is true.
-    this.doSearch(textValue, aWhere, aEngine, aParams, oneOffRecorded);
-
-    if (aWhere == "tab" && aParams && aParams.inBackground)
-      this.focus();
-  }
-
-  doSearch(aData, aWhere, aEngine, aParams, aOneOff) {
-    var textBox = this._textbox;
-
-    // Save the current value in the form history
-    if (aData && !PrivateBrowsingUtils.isWindowPrivate(window) && this.FormHistory.enabled) {
-      this.FormHistory.update({
-        op: "bump",
-        fieldname: textBox.getAttribute("autocompletesearchparam"),
-        value: aData,
-      }, {
-        handleError(aError) {
-          Cu.reportError("Saving search to form history failed: " + aError.message);
-=======
     _initTextbox() {
       // nsIController
       this.searchbarController = {
@@ -885,7 +627,6 @@ class MozSearchbar extends MozXULElement {
           return (
             command == "cmd_clearhistory" || command == "cmd_togglesuggest"
           );
->>>>>>> upstream-releases
         },
         isCommandEnabled(command) {
           return true;
@@ -915,93 +656,14 @@ class MozSearchbar extends MozXULElement {
         },
       };
 
-<<<<<<< HEAD
-    let engine = aEngine || this.currentEngine;
-    let submission = engine.getSubmission(aData, null, "searchbar");
-    let telemetrySearchDetails = this.telemetrySearchDetails;
-    this.telemetrySearchDetails = null;
-    if (telemetrySearchDetails && telemetrySearchDetails.index == -1) {
-      telemetrySearchDetails = null;
-    }
-    // If we hit here, we come either from a one-off, a plain search or a suggestion.
-    const details = {
-      isOneOff: aOneOff,
-      isSuggestion: (!aOneOff && telemetrySearchDetails),
-      selection: telemetrySearchDetails,
-    };
-    BrowserSearch.recordSearchInTelemetry(engine, "searchbar", details);
-    // null parameter below specifies HTML response for search
-    let params = {
-      postData: submission.postData,
-    };
-    if (aParams) {
-      for (let key in aParams) {
-        params[key] = aParams[key];
-||||||| merged common ancestors
-    let engine = aEngine || this.currentEngine;
-    var submission = engine.getSubmission(aData, null, "searchbar");
-    let telemetrySearchDetails = this.telemetrySearchDetails;
-    this.telemetrySearchDetails = null;
-    if (telemetrySearchDetails && telemetrySearchDetails.index == -1) {
-      telemetrySearchDetails = null;
-    }
-    // If we hit here, we come either from a one-off, a plain search or a suggestion.
-    const details = {
-      isOneOff: aOneOff,
-      isSuggestion: (!aOneOff && telemetrySearchDetails),
-      selection: telemetrySearchDetails,
-    };
-    BrowserSearch.recordSearchInTelemetry(engine, "searchbar", details);
-    // null parameter below specifies HTML response for search
-    let params = {
-      postData: submission.postData,
-    };
-    if (aParams) {
-      for (let key in aParams) {
-        params[key] = aParams[key];
-=======
       if (this.parentNode.parentNode.localName == "toolbarpaletteitem") {
         return;
->>>>>>> upstream-releases
       }
 
       if (Services.prefs.getBoolPref("browser.urlbar.clickSelectsAll")) {
         this.textbox.setAttribute("clickSelectsAll", true);
       }
 
-<<<<<<< HEAD
-  _setupEventListeners() {
-    this.addEventListener("command", (event) => {
-      const target = event.originalTarget;
-      if (target.engine) {
-        this.currentEngine = target.engine;
-      } else if (target.classList.contains("addengine-item")) {
-        // Select the installed engine if the installation succeeds
-        let installCallback = {
-          onSuccess: engine => this.currentEngine = engine,
-        };
-        Services.search.addEngine(target.getAttribute("uri"), null,
-          target.getAttribute("src"), false,
-          installCallback);
-      } else
-        return;
-||||||| merged common ancestors
-  _setupEventListeners() {
-    this.addEventListener("command", (event) => {
-      const target = event.originalTarget;
-      if (target.engine) {
-        this.currentEngine = target.engine;
-      } else if (target.classList.contains("addengine-item")) {
-        // Select the installed engine if the installation succeeds
-        var installCallback = {
-          onSuccess: engine => this.currentEngine = engine,
-        };
-        Services.search.addEngine(target.getAttribute("uri"), null,
-          target.getAttribute("src"), false,
-          installCallback);
-      } else
-        return;
-=======
       let inputBox = document.getAnonymousElementByAttribute(
         this.textbox,
         "anonid",
@@ -1039,7 +701,6 @@ class MozSearchbar extends MozXULElement {
           return val;
         },
       });
->>>>>>> upstream-releases
 
       Object.defineProperty(this.textbox, "selectedButton", {
         get() {

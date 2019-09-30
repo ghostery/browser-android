@@ -7,42 +7,6 @@
 #include "nsCacheMetaData.h"
 #include "nsICacheEntryDescriptor.h"
 
-<<<<<<< HEAD
-const char *nsCacheMetaData::GetElement(const char *key) {
-  const char *data = mBuffer;
-  const char *limit = mBuffer + mMetaSize;
-
-  while (data < limit) {
-    // Point to the value part
-    const char *value = data + strlen(data) + 1;
-    MOZ_ASSERT(value < limit, "Cache Metadata corrupted");
-    if (strcmp(data, key) == 0) return value;
-
-    // Skip value part
-    data = value + strlen(value) + 1;
-  }
-  MOZ_ASSERT(data == limit, "Metadata corrupted");
-  return nullptr;
-||||||| merged common ancestors
-const char *
-nsCacheMetaData::GetElement(const char * key)
-{
-    const char * data = mBuffer;
-    const char * limit = mBuffer + mMetaSize;
-
-    while (data < limit) {
-        // Point to the value part
-        const char * value = data + strlen(data) + 1;
-        MOZ_ASSERT(value < limit, "Cache Metadata corrupted");
-        if (strcmp(data, key) == 0)
-            return value;
-
-        // Skip value part
-        data = value + strlen(value) + 1;
-    }
-    MOZ_ASSERT(data == limit, "Metadata corrupted");
-    return nullptr;
-=======
 const char* nsCacheMetaData::GetElement(const char* key) {
   const char* data = mBuffer;
   const char* limit = mBuffer + mMetaSize;
@@ -58,19 +22,11 @@ const char* nsCacheMetaData::GetElement(const char* key) {
   }
   MOZ_ASSERT(data == limit, "Metadata corrupted");
   return nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsCacheMetaData::SetElement(const char *key, const char *value) {
-  const uint32_t keySize = strlen(key) + 1;
-  char *pos = (char *)GetElement(key);
-||||||| merged common ancestors
-=======
 nsresult nsCacheMetaData::SetElement(const char* key, const char* value) {
   const uint32_t keySize = strlen(key) + 1;
   char* pos = (char*)GetElement(key);
->>>>>>> upstream-releases
 
   if (!value) {
     // No value means remove the key/value pair completely, if existing
@@ -119,74 +75,22 @@ nsresult nsCacheMetaData::SetElement(const char* key, const char* value) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCacheMetaData::FlattenMetaData(char *buffer, uint32_t bufSize) {
-  if (mMetaSize > bufSize) {
-    NS_ERROR("buffer size too small for meta data.");
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-||||||| merged common ancestors
-nsresult
-nsCacheMetaData::FlattenMetaData(char * buffer, uint32_t bufSize)
-{
-    if (mMetaSize > bufSize) {
-        NS_ERROR("buffer size too small for meta data.");
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-=======
 nsresult nsCacheMetaData::FlattenMetaData(char* buffer, uint32_t bufSize) {
   if (mMetaSize > bufSize) {
     NS_ERROR("buffer size too small for meta data.");
     return NS_ERROR_OUT_OF_MEMORY;
   }
->>>>>>> upstream-releases
 
   memcpy(buffer, mBuffer, mMetaSize);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCacheMetaData::UnflattenMetaData(const char *data, uint32_t size) {
-  if (data && size) {
-    // Check if the metadata ends with a zero byte.
-    if (data[size - 1] != '\0') {
-      NS_ERROR("Cache MetaData is not null terminated");
-      return NS_ERROR_ILLEGAL_VALUE;
-||||||| merged common ancestors
-nsresult
-nsCacheMetaData::UnflattenMetaData(const char * data, uint32_t size)
-{
-    if (data && size) {
-        // Check if the metadata ends with a zero byte.
-        if (data[size-1] != '\0') {
-            NS_ERROR("Cache MetaData is not null terminated");
-            return NS_ERROR_ILLEGAL_VALUE;
-        }
-        // Check that there are an even number of zero bytes
-        // to match the pattern { key \0 value \0 }
-        bool odd = false;
-        for (uint32_t i = 0; i < size; i++) {
-            if (data[i] == '\0')
-                odd = !odd;
-        }
-        if (odd) {
-            NS_ERROR("Cache MetaData is malformed");
-            return NS_ERROR_ILLEGAL_VALUE;
-        }
-
-        nsresult rv = EnsureBuffer(size);
-        NS_ENSURE_SUCCESS(rv, rv);
-
-        memcpy(mBuffer, data, size);
-        mMetaSize = size;
-=======
 nsresult nsCacheMetaData::UnflattenMetaData(const char* data, uint32_t size) {
   if (data && size) {
     // Check if the metadata ends with a zero byte.
     if (data[size - 1] != '\0') {
       NS_ERROR("Cache MetaData is not null terminated");
       return NS_ERROR_ILLEGAL_VALUE;
->>>>>>> upstream-releases
     }
     // Check that there are an even number of zero bytes
     // to match the pattern { key \0 value \0 }
@@ -208,48 +112,6 @@ nsresult nsCacheMetaData::UnflattenMetaData(const char* data, uint32_t size) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCacheMetaData::VisitElements(nsICacheMetaDataVisitor *visitor) {
-  const char *data = mBuffer;
-  const char *limit = mBuffer + mMetaSize;
-
-  while (data < limit) {
-    const char *key = data;
-    // Skip key part
-    data += strlen(data) + 1;
-    MOZ_ASSERT(data < limit, "Metadata corrupted");
-    bool keepGoing;
-    nsresult rv = visitor->VisitMetaDataElement(key, data, &keepGoing);
-    if (NS_FAILED(rv) || !keepGoing) return NS_OK;
-
-    // Skip value part
-    data += strlen(data) + 1;
-  }
-  MOZ_ASSERT(data == limit, "Metadata corrupted");
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsCacheMetaData::VisitElements(nsICacheMetaDataVisitor * visitor)
-{
-    const char * data = mBuffer;
-    const char * limit = mBuffer + mMetaSize;
-
-    while (data < limit) {
-        const char * key = data;
-        // Skip key part
-        data += strlen(data) + 1;
-        MOZ_ASSERT(data < limit, "Metadata corrupted");
-        bool keepGoing;
-        nsresult rv = visitor->VisitMetaDataElement(key, data, &keepGoing);
-        if (NS_FAILED(rv) || !keepGoing)
-            return NS_OK;
-
-        // Skip value part
-        data += strlen(data) + 1;
-    }
-    MOZ_ASSERT(data == limit, "Metadata corrupted");
-    return NS_OK;
-=======
 nsresult nsCacheMetaData::VisitElements(nsICacheMetaDataVisitor* visitor) {
   const char* data = mBuffer;
   const char* limit = mBuffer + mMetaSize;
@@ -268,33 +130,13 @@ nsresult nsCacheMetaData::VisitElements(nsICacheMetaDataVisitor* visitor) {
   }
   MOZ_ASSERT(data == limit, "Metadata corrupted");
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsCacheMetaData::EnsureBuffer(uint32_t bufSize) {
-  if (mBufferSize < bufSize) {
-    char *buf = (char *)realloc(mBuffer, bufSize);
-    if (!buf) {
-      return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-nsresult
-nsCacheMetaData::EnsureBuffer(uint32_t bufSize)
-{
-    if (mBufferSize < bufSize) {
-        char * buf = (char *)realloc(mBuffer, bufSize);
-        if (!buf) {
-            return NS_ERROR_OUT_OF_MEMORY;
-        }
-        mBuffer = buf;
-        mBufferSize = bufSize;
-=======
 nsresult nsCacheMetaData::EnsureBuffer(uint32_t bufSize) {
   if (mBufferSize < bufSize) {
     char* buf = (char*)realloc(mBuffer, bufSize);
     if (!buf) {
       return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
     }
     mBuffer = buf;
     mBufferSize = bufSize;

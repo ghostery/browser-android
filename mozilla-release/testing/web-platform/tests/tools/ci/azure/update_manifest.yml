@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-steps:
-- script: ./wpt manifest
-  displayName: 'Update manifest'
-||||||| merged common ancestors
-=======
 steps:
 # `python wpt` instead of `./wpt` is to make this work on Windows:
 - script: python wpt manifest
   displayName: 'Update manifest'
->>>>>>> upstream-releases

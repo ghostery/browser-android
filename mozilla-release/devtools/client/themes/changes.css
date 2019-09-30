@@ -2,31 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
- /* CSS Variables specific to the Changes panel that aren't defined by the themes */
- :root {
-   --diff-add-background-color: #f1feec;
-   --diff-add-text-color: #54983f;
-   --diff-remove-background-color: #fbf2f5;
-   --diff-remove-text-color: #bf7173;
-   --diff-source-background: var(--theme-toolbar-background);
-   --diff-level: 0;
-   --diff-level-offset: 10px;
-   /*
-    Minimum padding so content on the first level (zero) isn't touching the edge. Added
-    and removed lines will re-declare this to add extra padding to clear the +/- icons.
-   */
-   --diff-level-min-offset: 5px;
- }
-||||||| merged common ancestors
- /* CSS Variables specific to the Changes panel that aren't defined by the themes */
- :root {
-   --diff-add-background-color: #f1feec;
-   --diff-add-text-color: #54983f;
-   --diff-remove-background-color: #fbf2f5;
-   --diff-remove-text-color: #bf7173;
- }
-=======
 /* CSS Variables specific to the Changes panel that aren't defined by the themes */
 :root {
   --diff-add-background-color: #f1feec;
@@ -42,25 +17,6 @@
   */
   --diff-level-min-offset: 5px;
 }
-
-:root.theme-dark {
-  --diff-add-background-color: rgba(18, 188, 0, 0.15);
-  --diff-add-text-color: #12BC00;
-  --diff-remove-background-color: rgba(255, 0, 57, 0.15);
-  --diff-remove-text-color: #FF0039;
-  --diff-source-background: #222225;
-}
-
-:root[dir="rtl"] {
-  /* Increase minimum offset on right-to-left layout to clear the floating scrollbar. */
-  --diff-level-min-offset: 15px;
-}
-
-:root[dir="rtl"] #sidebar-panel-changes .source {
-  /* Enforce left-to-right code rendering on right-to-left layout. */
-  direction: ltr;
-}
->>>>>>> upstream-releases
 
 :root.theme-dark {
   --diff-add-background-color: rgba(18, 188, 0, 0.15);
@@ -101,7 +57,6 @@
   font-size: 12px;
 }
 
-<<<<<<< HEAD
 #sidebar-panel-changes .source:first-child .href {
   border-top: unset;
 }
@@ -109,67 +64,19 @@
 #sidebar-panel-changes .href span {
   /* Allows trimming of flex item with overflow ellipsis within the flex container */
   min-width: 0;
-||||||| merged common ancestors
-summary {
-  outline: none;
-  padding: 5px 0;
-  -moz-user-select: none;
-  cursor: pointer;
-}
-
-details.source[open] {
-  padding-bottom: 10px;
-}
-
-details.source > summary {
-  background: var(--theme-sidebar-background);
-  border-top: 1px solid var(--theme-splitter-color);
-  border-bottom: 1px solid var(--theme-splitter-color);
-  padding-left: 5px;
-=======
-#sidebar-panel-changes .source:first-child .href {
-  border-top: unset;
-}
-
-#sidebar-panel-changes .href span {
-  /* Allows trimming of flex item with overflow ellipsis within the flex container */
-  min-width: 0;
->>>>>>> upstream-releases
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-<<<<<<< HEAD
 #sidebar-panel-changes .level {
   padding-top: 3px;
   padding-right: 5px;
   padding-bottom: 3px;
   padding-left: calc(var(--diff-level-min-offset) +
                      var(--diff-level-offset) * var(--diff-level));
-  position: relative;
-||||||| merged common ancestors
-details.selector > summary {
-  padding-left: 10px;
-=======
-#sidebar-panel-changes .level {
-  padding-top: 3px;
-  padding-right: 5px;
-  padding-bottom: 3px;
-  padding-left: calc(var(--diff-level-min-offset) +
-                     var(--diff-level-offset) * var(--diff-level));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#sidebar-panel-changes .selector {
-  word-wrap: break-word;
-||||||| merged common ancestors
-details.selector summary::after{
-  content: "{…}";
-  display: inline-block;
-  padding-left: 5px;
-=======
 #sidebar-panel-changes .changes__toolbar {
   background: var(--theme-sidebar-background);
   border-bottom: 1px solid var(--theme-splitter-color);
@@ -230,64 +137,27 @@ details.selector summary::after{
   position: absolute;
   right: 5px;
   top: 2px;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#sidebar-panel-changes .rule .bracket-open {
-  display: inline-block;
-  margin-left: 5px;
-||||||| merged common ancestors
-details.selector[open]{
-  margin-bottom: 5px;
-=======
 .changes__copy-rule-button:active {
   background-color: var(--theme-button-active-background);
 }
 
 .changes__rule {
   position: relative;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#sidebar-panel-changes .declaration-name {
-  margin-left: 10px;
-||||||| merged common ancestors
-details.selector[open] summary::after{
-  content: "{";
-=======
 .changes__selector {
   word-wrap: break-word;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#sidebar-panel-changes .declaration-value {
-  margin-left: 5px;
-||||||| merged common ancestors
-details.selector[open]::after{
-  content: "}";
-  display: block;
-  padding-left: 10px;
-=======
 /* Show the Copy Rule button when hovering over the rule's selector elements */
 .changes__selector:hover + .changes__copy-rule-button,
 .changes__selector:hover + .changes__selector + .changes__copy-rule-button,
 .changes__copy-rule-button:hover {
   display: block;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.diff-add,
-.diff-remove {
-  --diff-level-min-offset: 15px;
-||||||| merged common ancestors
-.line {
-  padding: 3px 5px 3px 15px;
-  position: relative;
-=======
 .changes__declaration {
   overflow-wrap: break-word;
 }
@@ -300,18 +170,9 @@ details.selector[open]::after{
 .diff-remove {
   --diff-level-min-offset: 15px;
   position: relative;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.diff-add::before,
-.diff-remove::before {
-||||||| merged common ancestors
-.diff-add::before,
-.diff-remove::before{
-=======
 .diff-marker {
->>>>>>> upstream-releases
   position: absolute;
   left: 5px;
 }

@@ -7,12 +7,7 @@
 [NoInterfaceObject, JSImplementation="@mozilla.org/sidebar;1"]
 interface External
 {
-<<<<<<< HEAD
-  [UseCounter]
-||||||| merged common ancestors
-=======
   [Deprecated="External_AddSearchProvider"]
->>>>>>> upstream-releases
   void AddSearchProvider(DOMString aDescriptionURL);
   void IsSearchProviderInstalled();
 };

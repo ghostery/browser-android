@@ -173,18 +173,11 @@ decorate_task(
   async function(reportRecipeStub, reportActionStub) {
     const recipe = recipeFactory();
     const action = new FailPreExecutionAction();
-<<<<<<< HEAD
-    is(action.state, FailPreExecutionAction.STATE_FAILED, "Action should fail during pre-execution fail");
-    is(action.lastError, NoopAction._errorToThrow, "The thrown error should be stored in lastError");
-||||||| merged common ancestors
-    is(action.state, FailPreExecutionAction.STATE_FAILED, "Action should fail during pre-execution fail");
-=======
     is(
       action.state,
       FailPreExecutionAction.STATE_PREPARING,
       "Pre-execution should not happen immediately"
     );
->>>>>>> upstream-releases
 
     // Should fail, putting the action into a "failed" state, but the
     // entry point `runRecipe()` itself should not throw an exception.
@@ -202,12 +195,6 @@ decorate_task(
 
     // Should not throw, even though the action is in a disabled state.
     await action.finalize();
-<<<<<<< HEAD
-    is(action.state, FailPreExecutionAction.STATE_FINALIZED, "Action should be finalized");
-    is(action.lastError, NoopAction._errorToThrow, "lastError should not have changed");
-||||||| merged common ancestors
-    is(action.state, FailPreExecutionAction.STATE_FINALIZED, "Action should be finalized");
-=======
     is(
       action.state,
       FailPreExecutionAction.STATE_FINALIZED,
@@ -218,7 +205,6 @@ decorate_task(
       NoopAction._errorToThrow,
       "lastError should not have changed"
     );
->>>>>>> upstream-releases
 
     is(action._testRunFlag, false, "_run should not have been called");
     is(

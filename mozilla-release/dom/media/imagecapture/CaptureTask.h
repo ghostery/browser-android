@@ -29,20 +29,9 @@ class MediaStreamTrack;
  * CaptureTask holds a reference of ImageCapture to ensure ImageCapture won't be
  * released during the period of the capturing process described above.
  */
-<<<<<<< HEAD
-class CaptureTask : public MediaStreamVideoSink,
-                    public dom::PrincipalChangeObserver<dom::MediaStreamTrack> {
- public:
-||||||| merged common ancestors
-class CaptureTask : public MediaStreamVideoSink,
-                    public dom::PrincipalChangeObserver<dom::MediaStreamTrack>
-{
-public:
-=======
 class CaptureTask : public DirectMediaStreamTrackListener,
                     public dom::PrincipalChangeObserver<dom::MediaStreamTrack> {
  public:
->>>>>>> upstream-releases
   class MediaStreamEventListener;
 
   // DirectMediaStreamTrackListener methods

@@ -31,20 +31,6 @@ void SVGLength::GetValueAsString(nsAString& aValue) const {
   aValue.Append(unitString);
 }
 
-<<<<<<< HEAD
-bool SVGLength::SetValueFromString(const nsAString& aString) {
-  RangedPtr<const char16_t> iter = SVGContentUtils::GetStartRangedPtr(aString);
-  const RangedPtr<const char16_t> end =
-      SVGContentUtils::GetEndRangedPtr(aString);
-||||||| merged common ancestors
-bool
-SVGLength::SetValueFromString(const nsAString &aString)
-{
-  RangedPtr<const char16_t> iter =
-    SVGContentUtils::GetStartRangedPtr(aString);
-  const RangedPtr<const char16_t> end =
-    SVGContentUtils::GetEndRangedPtr(aString);
-=======
 bool SVGLength::SetValueFromString(const nsAString& aString) {
   bool success;
   auto token = SVGContentUtils::GetAndEnsureOneToken(aString, success);
@@ -55,7 +41,6 @@ bool SVGLength::SetValueFromString(const nsAString& aString) {
 
   RangedPtr<const char16_t> iter = SVGContentUtils::GetStartRangedPtr(token);
   const RangedPtr<const char16_t> end = SVGContentUtils::GetEndRangedPtr(token);
->>>>>>> upstream-releases
 
   float value;
 
@@ -112,21 +97,9 @@ inline static float GetAbsUnitsPerAbsUnit(uint8_t aUnits, uint8_t aPerUnit) {
   return CSSAbsoluteUnitConversionFactors[aUnits - 6][aPerUnit - 6];
 }
 
-<<<<<<< HEAD
-float SVGLength::GetValueInSpecifiedUnit(uint8_t aUnit,
-                                         const nsSVGElement* aElement,
-                                         uint8_t aAxis) const {
-||||||| merged common ancestors
-float
-SVGLength::GetValueInSpecifiedUnit(uint8_t aUnit,
-                                   const nsSVGElement *aElement,
-                                   uint8_t aAxis) const
-{
-=======
 float SVGLength::GetValueInSpecifiedUnit(uint8_t aUnit,
                                          const SVGElement* aElement,
                                          uint8_t aAxis) const {
->>>>>>> upstream-releases
   if (aUnit == mUnit) {
     return mValue;
   }
@@ -167,17 +140,8 @@ float SVGLength::GetValueInSpecifiedUnit(uint8_t aUnit,
 #define INCHES_PER_MM_FLOAT float(0.0393700787)
 #define INCHES_PER_CM_FLOAT float(0.393700787)
 
-<<<<<<< HEAD
-float SVGLength::GetUserUnitsPerUnit(const nsSVGElement* aElement,
-                                     uint8_t aAxis) const {
-||||||| merged common ancestors
-float
-SVGLength::GetUserUnitsPerUnit(const nsSVGElement *aElement, uint8_t aAxis) const
-{
-=======
 float SVGLength::GetUserUnitsPerUnit(const SVGElement* aElement,
                                      uint8_t aAxis) const {
->>>>>>> upstream-releases
   switch (mUnit) {
     case SVGLength_Binding::SVG_LENGTHTYPE_NUMBER:
     case SVGLength_Binding::SVG_LENGTHTYPE_PX:
@@ -197,32 +161,16 @@ float SVGLength::GetUserUnitsPerUnit(const SVGElement* aElement,
     case SVGLength_Binding::SVG_LENGTHTYPE_EMS:
       return SVGContentUtils::GetFontSize(const_cast<SVGElement*>(aElement));
     case SVGLength_Binding::SVG_LENGTHTYPE_EXS:
-<<<<<<< HEAD
-      return SVGContentUtils::GetFontXHeight(
-          const_cast<nsSVGElement*>(aElement));
-||||||| merged common ancestors
-      return SVGContentUtils::GetFontXHeight(const_cast<nsSVGElement*>(aElement));
-=======
       return SVGContentUtils::GetFontXHeight(const_cast<SVGElement*>(aElement));
->>>>>>> upstream-releases
     default:
       MOZ_ASSERT_UNREACHABLE("Unknown unit type");
       return std::numeric_limits<float>::quiet_NaN();
   }
 }
 
-<<<<<<< HEAD
-/* static */ float SVGLength::GetUserUnitsPerPercent(
-    const nsSVGElement* aElement, uint8_t aAxis) {
-||||||| merged common ancestors
-/* static */ float
-SVGLength::GetUserUnitsPerPercent(const nsSVGElement *aElement, uint8_t aAxis)
-{
-=======
 /* static */
 float SVGLength::GetUserUnitsPerPercent(const SVGElement* aElement,
                                         uint8_t aAxis) {
->>>>>>> upstream-releases
   if (aElement) {
     dom::SVGViewportElement* viewportElement = aElement->GetCtx();
     if (viewportElement) {

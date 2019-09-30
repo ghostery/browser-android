@@ -69,14 +69,9 @@ const {
   getHistory,
   getHistoryValue,
 } = require("devtools/client/webconsole/selectors/history");
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-const {getAutocompleteState} = require("devtools/client/webconsole/selectors/autocomplete");
-||||||| merged common ancestors
-=======
 const {
   getAutocompleteState,
 } = require("devtools/client/webconsole/selectors/autocomplete");
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
 const historyActions = require("devtools/client/webconsole/actions/history");
 const autocompleteActions = require("devtools/client/webconsole/actions/autocomplete");
 
@@ -112,13 +107,6 @@ class JSTerm extends Component {
       codeMirrorEnabled: PropTypes.bool,
       // Update position in the history after executing an expression (action).
       updateHistoryPosition: PropTypes.func.isRequired,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-      // Update autocomplete popup state.
-      autocompleteUpdate: PropTypes.func.isRequired,
-      // Data to be displayed in the autocomplete popup.
-      autocompleteData: PropTypes.object.isRequired,
-||||||| merged common ancestors
-=======
       // Update autocomplete popup state.
       autocompleteUpdate: PropTypes.func.isRequired,
       autocompleteClear: PropTypes.func.isRequired,
@@ -127,7 +115,6 @@ class JSTerm extends Component {
       // Is the input in editor mode.
       editorMode: PropTypes.bool,
       autocomplete: PropTypes.bool,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
     };
   }
 
@@ -145,45 +132,12 @@ class JSTerm extends Component {
     this.onContextMenu = this.onContextMenu.bind(this);
     this.imperativeUpdate = this.imperativeUpdate.bind(this);
 
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-    this.SELECTED_FRAME = -1;
-
-    /**
-||||||| merged common ancestors
-    this.SELECTED_FRAME = -1;
-
-    /**
-     * Array that caches the user input suggestions received from the server.
-     * @private
-     * @type array
-     */
-    this._autocompleteCache = null;
-
-    /**
-     * The input that caused the last request to the server, whose response is
-     * cached in the _autocompleteCache array.
-     * @private
-     * @type string
-     */
-    this._autocompleteQuery = null;
-
-    /**
-     * The frameActorId used in the last autocomplete query. Whenever this changes
-     * the autocomplete cache must be invalidated.
-     * @private
-     * @type string
-     */
-    this._lastFrameActorId = null;
-
-    /**
-=======
     // We debounce the autocompleteUpdate so we don't send too many requests to the server
     // as the user is typing.
     // The delay should be small enough to be unnoticed by the user.
     this.autocompleteUpdate = debounce(this.props.autocompleteUpdate, 75, this);
 
     /**
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
      * Last input value.
      * @type string
      */
@@ -256,16 +210,6 @@ class JSTerm extends Component {
           return null;
         };
 
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-        const onArrowLeft = () => {
-          if (this.autocompletePopup.isOpen || this.getAutoCompletionText()) {
-            this.clearCompletion();
-          }
-          return "CodeMirror.Pass";
-        };
-
-||||||| merged common ancestors
-=======
         const onArrowLeft = () => {
           if (this.autocompletePopup.isOpen || this.getAutoCompletionText()) {
             this.clearCompletion();
@@ -294,7 +238,6 @@ class JSTerm extends Component {
           return null;
         };
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
         this.editor = new Editor({
           autofocus: true,
           enableCodeFolding: false,
@@ -364,25 +307,12 @@ class JSTerm extends Component {
 
               const hasSuggestion = this.hasAutocompletionSuggestion();
 
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-            "Left": onArrowLeft,
-            "Ctrl-Left": onArrowLeft,
-            "Cmd-Left": onArrowLeft,
-||||||| merged common ancestors
-            "Left": () => {
-              if (this.autocompletePopup.isOpen || this.getAutoCompletionText()) {
-                this.clearCompletion();
-              }
-              return "CodeMirror.Pass";
-            },
-=======
               if (hasSuggestion) {
                 return false;
               }
 
               return "CodeMirror.Pass";
             },
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
 
             Up: onArrowUp,
             "Cmd-Up": onArrowUp,
@@ -509,13 +439,7 @@ class JSTerm extends Component {
 
             "Ctrl-Space": () => {
               if (!this.autocompletePopup.isOpen) {
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-                this.fetchAutocompletionProperties(true);
-||||||| merged common ancestors
-                this.updateAutocompletion(true);
-=======
                 this.props.autocompleteUpdate(true);
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
                 return null;
               }
 
@@ -580,24 +504,6 @@ class JSTerm extends Component {
   }
 
   /**
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-   * Do all the imperative work needed after a Redux store update.
-   *
-   * @param {Object} nextProps: props passed from shouldComponentUpdate.
-   */
-  imperativeUpdate(nextProps) {
-    if (
-      nextProps &&
-      nextProps.autocompleteData !== this.props.autocompleteData &&
-      nextProps.autocompleteData.pendingRequestId === null
-    ) {
-      this.updateAutocompletionPopup(nextProps.autocompleteData);
-    }
-  }
-
-  /**
-||||||| merged common ancestors
-=======
    * Do all the imperative work needed after a Redux store update.
    *
    * @param {Object} nextProps: props passed from shouldComponentUpdate.
@@ -620,7 +526,6 @@ class JSTerm extends Component {
   }
 
   /**
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
    * Getter for the element that holds the messages we display.
    * @type Element
    */
@@ -1026,15 +931,9 @@ class JSTerm extends Component {
     const value = this._getValue();
     if (this.lastInputValue !== value) {
       this.resizeInput();
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-      this.fetchAutocompletionProperties();
-||||||| merged common ancestors
-      this.updateAutocompletion();
-=======
       if (this.props.autocomplete || this.autocompletePopup.isOpen) {
         this.autocompleteUpdate();
       }
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
       this.lastInputValue = value;
     }
   }
@@ -1118,11 +1017,6 @@ class JSTerm extends Component {
 
       if (event.key === " " && !this.autocompletePopup.isOpen) {
         // Open the autocompletion popup on Ctrl-Space (if it wasn't displayed).
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-        this.fetchAutocompletionProperties(true);
-||||||| merged common ancestors
-        this.updateAutocompletion(true);
-=======
         this.props.autocompleteUpdate(true);
         event.preventDefault();
       }
@@ -1151,14 +1045,7 @@ class JSTerm extends Component {
         } else if (this.props.editorMode) {
           this.execute();
         }
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
         event.preventDefault();
-      }
-
-      if (event.keyCode === KeyCodes.DOM_VK_LEFT &&
-        (this.autocompletePopup.isOpen || this.getAutoCompletionText())
-      ) {
-        this.clearCompletion();
       }
 
       return;
@@ -1423,25 +1310,9 @@ class JSTerm extends Component {
   }
 
   /**
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-   * Retrieves properties maching the current input for the selected frame, either from
-   * the server or from a cache if possible.
-   * Will bail-out if there's some text selection in the input.
-||||||| merged common ancestors
-=======
    * Takes the data returned by the server and update the autocomplete popup state (i.e.
    * its visibility and items).
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
    *
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-   * @param {Boolean} force: True to not perform any check before trying to show the
-   *                         autocompletion popup. Defaults to false.
-   * @fires autocomplete-updated
-   * @returns void
-||||||| merged common ancestors
-   * @param {Boolean} force: True to not perform any check before trying to show the
-   *                         autocompletion popup. Defaults to false.
-=======
    * @param {Object} data
    *        The autocompletion data as returned by the webconsole actor's autocomplete
    *        service. Should be of the following shape:
@@ -1452,89 +1323,10 @@ class JSTerm extends Component {
    *                           i.e. `document["addEve`.
    *        }
    * @fires autocomplete-updated
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
    */
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-  async fetchAutocompletionProperties(force = false) {
-    const inputValue = this.getInputValue();
-    const frameActorId = this.getFrameActor(this.SELECTED_FRAME);
-    const cursor = this.getSelectionStart();
-
-    const {editor, inputNode} = this;
-    if (
-      (inputNode && inputNode.selectionStart != inputNode.selectionEnd) ||
-      (editor && editor.getSelection())
-    ) {
-||||||| merged common ancestors
-  async updateAutocompletion(force = false) {
-    const inputValue = this.getInputValue();
-    const {editor, inputNode} = this;
-    const frameActor = this.getFrameActor(this.SELECTED_FRAME);
-
-    const cursor = this.getSelectionStart();
-
-    // Complete if:
-    // - `force` is true OR
-    //   - The input is not empty
-    //   - AND there is not text selected
-    //   - AND the input or frameActor are different from previous completion
-    //   - AND there is not an alphanumeric (+ "_" and "$") right after the cursor
-    if (!force && (
-      !inputValue ||
-      (inputNode && inputNode.selectionStart != inputNode.selectionEnd) ||
-      (editor && editor.getSelection()) ||
-      (
-        !force &&
-        this.lastInputValue === inputValue &&
-        frameActor === this._lastFrameActorId
-      ) ||
-      /^[a-zA-Z0-9_$]/.test(inputValue.substring(cursor))
-    )) {
-=======
   updateAutocompletionPopup(data) {
     const { matches, matchProp, isElementAccess } = data;
     if (!matches.length) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
-      this.clearCompletion();
-      this.emit("autocomplete-updated");
-      return;
-    }
-
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-    let selectedNodeActor = null;
-    const inspectorSelection = this.hud.owner.getInspectorSelection();
-    if (inspectorSelection && inspectorSelection.nodeFront) {
-      selectedNodeActor = inspectorSelection.nodeFront.actorID;
-    }
-
-    this.props.autocompleteUpdate({
-      inputValue,
-      cursor,
-      frameActorId,
-      force,
-      client: this.webConsoleClient,
-      selectedNodeActor,
-    });
-  }
-
-  /**
-   * Takes the data returned by the server and update the autocomplete popup state (i.e.
-   * its visibility and items).
-   *
-   * @param {Object} data
-   *        The autocompletion data as returned by the webconsole actor's autocomplete
-   *        service. Should be of the following shape:
-   *        {
-   *          matches: {Array} array of the properties matching the input,
-   *          matchProp: {String} The string used to filter the properties,
-   *          isElementAccess: {Boolean} True when the input is an element access,
-   *                           i.e. `document["addEve`.
-   *        }
-   * @fires autocomplete-updated
-   */
-  updateAutocompletionPopup(data) {
-    const {matches, matchProp, isElementAccess} = data;
-    if (!matches.length) {
       this.clearCompletion();
       this.emit("autocomplete-updated");
       return;
@@ -1542,109 +1334,6 @@ class JSTerm extends Component {
 
     const inputUntilCursor = this.getInputValueBeforeCursor();
 
-||||||| merged common ancestors
-    const input = this.getInputValueBeforeCursor();
-
-    // If the current input starts with the previous input, then we already
-    // have a list of suggestions and we just need to filter the cached
-    // suggestions. When the current input ends with a non-alphanumeric character we ask
-    // the server again for suggestions.
-
-    // Check if last character is non-alphanumeric
-    if (!/[a-zA-Z0-9]$/.test(input) || frameActor != this._lastFrameActorId) {
-      this._autocompleteQuery = null;
-      this._autocompleteCache = null;
-    }
-
-    if (this._autocompleteQuery && input.startsWith(this._autocompleteQuery)) {
-      let filterBy = input;
-      if (this._autocompleteCache.isElementAccess) {
-        // if we're performing an element access, we can simply retrieve whatever comes
-        // after the last opening bracket.
-        filterBy = input.substring(input.lastIndexOf("[") + 1);
-      } else {
-        // Find the last non-alphanumeric other than "_", ":", or "$" if it exists.
-        const lastNonAlpha = input.match(/[^a-zA-Z0-9_$:][a-zA-Z0-9_$:]*$/);
-        // If input contains non-alphanumerics, use the part after the last one
-        // to filter the cache.
-        if (lastNonAlpha) {
-          filterBy = input.substring(input.lastIndexOf(lastNonAlpha) + 1);
-        }
-      }
-
-      const stripWrappingQuotes = s => s.replace(/^['"`](.+(?=['"`]$))['"`]$/g, "$1");
-      const filterByLc = filterBy.toLocaleLowerCase();
-      const looseMatching = !filterBy || filterBy[0].toLocaleLowerCase() === filterBy[0];
-      const needStripQuote = this._autocompleteCache.isElementAccess
-        && !/^[`"']/.test(filterBy);
-      const newList = this._autocompleteCache.matches.filter(l => {
-        if (needStripQuote) {
-          l = stripWrappingQuotes(l);
-        }
-
-        if (looseMatching) {
-          return l.toLocaleLowerCase().startsWith(filterByLc);
-        }
-
-        return l.startsWith(filterBy);
-      });
-
-      this._receiveAutocompleteProperties(null, {
-        matches: newList,
-        matchProp: filterBy,
-        isElementAccess: this._autocompleteCache.isElementAccess,
-      });
-      return;
-    }
-    const requestId = gSequenceId();
-    this._lastFrameActorId = frameActor;
-    this.currentAutoCompletionRequestId = requestId;
-
-    const message = await this.webConsoleClient.autocomplete(input, cursor, frameActor);
-    this._receiveAutocompleteProperties(requestId, message);
-  }
-
-  /**
-   * Handler for the autocompletion results. This method takes
-   * the completion result received from the server and updates the UI
-   * accordingly.
-   *
-   * @param number requestId
-   *        Request ID.
-   * @param object message
-   *        The JSON message which holds the completion results received from
-   *        the content process.
-   */
-  _receiveAutocompleteProperties(requestId, message) {
-    if (this.currentAutoCompletionRequestId !== requestId) {
-      return;
-    }
-    this.currentAutoCompletionRequestId = null;
-
-    // Cache whatever came from the server if the last char is
-    // alphanumeric, '.' or '['.
-    const inputUntilCursor = this.getInputValueBeforeCursor();
-
-    if (requestId != null && /[a-zA-Z0-9.\[]$/.test(inputUntilCursor)) {
-      this._autocompleteCache = {
-        matches: message.matches,
-        matchProp: message.matchProp,
-        isElementAccess: message.isElementAccess,
-      };
-      this._autocompleteQuery = inputUntilCursor;
-    }
-
-    const {matches, matchProp, isElementAccess} = message;
-    if (!matches.length) {
-      this.clearCompletion();
-      this.emit("autocomplete-updated");
-      return;
-    }
-
-=======
-    const inputUntilCursor = this.getInputValueBeforeCursor();
-
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
     const items = matches.map(label => {
       let preLabel = label.substring(0, matchProp.length);
       // If the user is performing an element access, and if they did not typed a quote,
@@ -2103,42 +1792,20 @@ class JSTerm extends Component {
 function mapStateToProps(state) {
   return {
     history: getHistory(state),
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-    getValueFromHistory: (direction) => getHistoryValue(state, direction),
-    autocompleteData: getAutocompleteState(state),
-||||||| merged common ancestors
-    getValueFromHistory: (direction) => getHistoryValue(state, direction),
-=======
     getValueFromHistory: direction => getHistoryValue(state, direction),
     autocompleteData: getAutocompleteState(state),
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-
-    appendToHistory: (expr) => dispatch(historyActions.appendToHistory(expr)),
-||||||| merged common ancestors
-    appendToHistory: (expr) => dispatch(historyActions.appendToHistory(expr)),
-=======
     appendToHistory: expr => dispatch(historyActions.appendToHistory(expr)),
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
     clearHistory: () => dispatch(historyActions.clearHistory()),
     updateHistoryPosition: (direction, expression) =>
       dispatch(historyActions.updateHistoryPosition(direction, expression)),
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/JSTerm.js
-    autocompleteUpdate: options => dispatch(
-      autocompleteActions.autocompleteUpdate(options)
-    ),
-    autocompleteBailOut: () => dispatch(autocompleteActions.autocompleteBailOut()),
-||||||| merged common ancestors
-=======
     autocompleteUpdate: force =>
       dispatch(autocompleteActions.autocompleteUpdate(force)),
     autocompleteClear: () => dispatch(autocompleteActions.autocompleteClear()),
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Input/JSTerm.js
   };
 }
 

@@ -28,19 +28,8 @@ class SQLiteMutex : private BlockingResourceBase {
    * @param aName
    *        A name which can be used to reference this mutex.
    */
-<<<<<<< HEAD
-  explicit SQLiteMutex(const char *aName)
-      : BlockingResourceBase(aName, eMutex), mMutex(nullptr) {}
-||||||| merged common ancestors
-  explicit SQLiteMutex(const char *aName)
-  : BlockingResourceBase(aName, eMutex)
-  , mMutex(nullptr)
-  {
-  }
-=======
   explicit SQLiteMutex(const char* aName)
       : BlockingResourceBase(aName, eMutex), mMutex(nullptr) {}
->>>>>>> upstream-releases
 
   /**
    * Sets the mutex that we are wrapping.  We generally do not have access to
@@ -50,14 +39,7 @@ class SQLiteMutex : private BlockingResourceBase {
    * @param aMutex
    *        The sqlite3_mutex that we are going to wrap.
    */
-<<<<<<< HEAD
-  void initWithMutex(sqlite3_mutex *aMutex) {
-||||||| merged common ancestors
-  void initWithMutex(sqlite3_mutex *aMutex)
-  {
-=======
   void initWithMutex(sqlite3_mutex* aMutex) {
->>>>>>> upstream-releases
     NS_ASSERTION(aMutex, "You must pass in a valid mutex!");
     NS_ASSERTION(!mMutex, "A mutex has already been set for this!");
     mMutex = aMutex;
@@ -124,90 +106,40 @@ class SQLiteMutex : private BlockingResourceBase {
   }
 #endif  // ifndef DEBUG
 
-<<<<<<< HEAD
- private:
-  sqlite3_mutex *mMutex;
-||||||| merged common ancestors
-private:
-  sqlite3_mutex *mMutex;
-=======
  private:
   sqlite3_mutex* mMutex;
->>>>>>> upstream-releases
 };
 
 /**
  * Automatically acquires the mutex when it enters scope, and releases it when
  * it leaves scope.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS SQLiteMutexAutoLock {
- public:
-  explicit SQLiteMutexAutoLock(SQLiteMutex &aMutex) : mMutex(aMutex) {
-||||||| merged common ancestors
-class MOZ_STACK_CLASS SQLiteMutexAutoLock
-{
-public:
-  explicit SQLiteMutexAutoLock(SQLiteMutex &aMutex)
-  : mMutex(aMutex)
-  {
-=======
 class MOZ_STACK_CLASS SQLiteMutexAutoLock {
  public:
   explicit SQLiteMutexAutoLock(SQLiteMutex& aMutex) : mMutex(aMutex) {
->>>>>>> upstream-releases
     mMutex.lock();
   }
 
   ~SQLiteMutexAutoLock() { mMutex.unlock(); }
 
-<<<<<<< HEAD
- private:
-  SQLiteMutex &mMutex;
-||||||| merged common ancestors
-private:
-  SQLiteMutex &mMutex;
-=======
  private:
   SQLiteMutex& mMutex;
->>>>>>> upstream-releases
 };
 
 /**
  * Automatically releases the mutex when it enters scope, and acquires it when
  * it leaves scope.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS SQLiteMutexAutoUnlock {
- public:
-  explicit SQLiteMutexAutoUnlock(SQLiteMutex &aMutex) : mMutex(aMutex) {
-||||||| merged common ancestors
-class MOZ_STACK_CLASS SQLiteMutexAutoUnlock
-{
-public:
-  explicit SQLiteMutexAutoUnlock(SQLiteMutex &aMutex)
-  : mMutex(aMutex)
-  {
-=======
 class MOZ_STACK_CLASS SQLiteMutexAutoUnlock {
  public:
   explicit SQLiteMutexAutoUnlock(SQLiteMutex& aMutex) : mMutex(aMutex) {
->>>>>>> upstream-releases
     mMutex.unlock();
   }
 
   ~SQLiteMutexAutoUnlock() { mMutex.lock(); }
 
-<<<<<<< HEAD
- private:
-  SQLiteMutex &mMutex;
-||||||| merged common ancestors
-private:
-  SQLiteMutex &mMutex;
-=======
  private:
   SQLiteMutex& mMutex;
->>>>>>> upstream-releases
 };
 
 }  // namespace storage

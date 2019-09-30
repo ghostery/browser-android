@@ -16,15 +16,6 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-WebRenderTextureHostWrapper::WebRenderTextureHostWrapper(
-    AsyncImagePipelineManager* aManager)
-    : mExternalImageId(aManager->GetNextExternalImageId()) {
-||||||| merged common ancestors
-WebRenderTextureHostWrapper::WebRenderTextureHostWrapper(AsyncImagePipelineManager* aManager)
-  : mExternalImageId(aManager->GetNextExternalImageId())
-{
-=======
 class ScheduleUpdateRenderTextureHost : public wr::NotificationHandler {
  public:
   ScheduleUpdateRenderTextureHost(uint64_t aSrcExternalImageId,
@@ -50,7 +41,6 @@ class ScheduleUpdateRenderTextureHost : public wr::NotificationHandler {
 WebRenderTextureHostWrapper::WebRenderTextureHostWrapper(
     AsyncImagePipelineManager* aManager)
     : mExternalImageId(aManager->GetNextExternalImageId()) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aManager);
   MOZ_COUNT_CTOR(WebRenderTextureHostWrapper);
 
@@ -65,16 +55,8 @@ WebRenderTextureHostWrapper::~WebRenderTextureHostWrapper() {
       wr::AsUint64(mExternalImageId));
 }
 
-<<<<<<< HEAD
-void WebRenderTextureHostWrapper::UpdateWebRenderTextureHost(
-    WebRenderTextureHost* aTextureHost) {
-||||||| merged common ancestors
-void
-WebRenderTextureHostWrapper::UpdateWebRenderTextureHost(WebRenderTextureHost* aTextureHost) {
-=======
 void WebRenderTextureHostWrapper::UpdateWebRenderTextureHost(
     wr::TransactionBuilder& aTxn, WebRenderTextureHost* aTextureHost) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aTextureHost);
 
   // AsyncImagePipelineManager is responsible of holding compositable ref of
@@ -87,14 +69,6 @@ void WebRenderTextureHostWrapper::UpdateWebRenderTextureHost(
                   wr::AsUint64(aTextureHost->GetExternalImageKey())));
 
   mWrTextureHost = aTextureHost;
-<<<<<<< HEAD
-  wr::RenderThread::Get()->UpdateRenderTextureHost(
-      wr::AsUint64(mExternalImageId),
-      wr::AsUint64(aTextureHost->GetExternalImageKey()));
-||||||| merged common ancestors
-  wr::RenderThread::Get()->UpdateRenderTextureHost(wr::AsUint64(mExternalImageId), wr::AsUint64(aTextureHost->GetExternalImageKey()));
-=======
->>>>>>> upstream-releases
 }
 
 }  // namespace layers

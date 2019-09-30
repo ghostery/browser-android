@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 en{
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.65"}
->>>>>>> upstream-releases
     zoneStrings{
         "Africa:Sao_Tome"{
             ec{"São Tomé"}

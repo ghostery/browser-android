@@ -23,88 +23,28 @@ class WebSocketEventListenerChild final : public PWebSocketEventListenerChild,
   explicit WebSocketEventListenerChild(uint64_t aInnerWindowID,
                                        nsIEventTarget* aTarget);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvWebSocketCreated(
-      const uint32_t& aWebSocketSerialID, const nsString& aURI,
-      const nsCString& aProtocols) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvWebSocketCreated(const uint32_t& aWebSocketSerialID,
-                                               const nsString& aURI,
-                                               const nsCString& aProtocols) override;
-=======
   mozilla::ipc::IPCResult RecvWebSocketCreated(
       const uint32_t& aWebSocketSerialID, const nsString& aURI,
       const nsCString& aProtocols);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvWebSocketOpened(
-      const uint32_t& aWebSocketSerialID, const nsString& aEffectiveURI,
-      const nsCString& aProtocols, const nsCString& aExtensions) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvWebSocketOpened(const uint32_t& aWebSocketSerialID,
-                                              const nsString& aEffectiveURI,
-                                              const nsCString& aProtocols,
-                                              const nsCString& aExtensions) override;
-=======
   mozilla::ipc::IPCResult RecvWebSocketOpened(
       const uint32_t& aWebSocketSerialID, const nsString& aEffectiveURI,
       const nsCString& aProtocols, const nsCString& aExtensions,
       const uint64_t& aHttpChannelId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvWebSocketMessageAvailable(
-      const uint32_t& aWebSocketSerialID, const nsCString& aData,
-      const uint16_t& aMessageType) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvWebSocketMessageAvailable(const uint32_t& aWebSocketSerialID,
-                                                        const nsCString& aData,
-                                                        const uint16_t& aMessageType) override;
-=======
   mozilla::ipc::IPCResult RecvWebSocketMessageAvailable(
       const uint32_t& aWebSocketSerialID, const nsCString& aData,
       const uint16_t& aMessageType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvWebSocketClosed(
-      const uint32_t& aWebSocketSerialID, const bool& aWasClean,
-      const uint16_t& aCode, const nsString& aReason) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvWebSocketClosed(const uint32_t& aWebSocketSerialID,
-                                              const bool& aWasClean,
-                                              const uint16_t& aCode,
-                                              const nsString& aReason) override;
-=======
   mozilla::ipc::IPCResult RecvWebSocketClosed(
       const uint32_t& aWebSocketSerialID, const bool& aWasClean,
       const uint16_t& aCode, const nsString& aReason);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvFrameReceived(
-      const uint32_t& aWebSocketSerialID,
-      const WebSocketFrameData& aFrameData) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvFrameReceived(const uint32_t& aWebSocketSerialID,
-                                            const WebSocketFrameData& aFrameData) override;
-=======
   mozilla::ipc::IPCResult RecvFrameReceived(
       const uint32_t& aWebSocketSerialID, const WebSocketFrameData& aFrameData);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvFrameSent(
-      const uint32_t& aWebSocketSerialID,
-      const WebSocketFrameData& aFrameData) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvFrameSent(const uint32_t& aWebSocketSerialID,
-                                        const WebSocketFrameData& aFrameData) override;
-=======
   mozilla::ipc::IPCResult RecvFrameSent(const uint32_t& aWebSocketSerialID,
                                         const WebSocketFrameData& aFrameData);
->>>>>>> upstream-releases
 
   void Close();
 

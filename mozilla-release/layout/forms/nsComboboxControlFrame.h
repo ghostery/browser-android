@@ -52,21 +52,10 @@ class nsComboboxControlFrame final : public nsBlockFrame,
                                      public nsIStatefulFrame {
   typedef mozilla::gfx::DrawTarget DrawTarget;
 
-<<<<<<< HEAD
- public:
-  friend nsComboboxControlFrame* NS_NewComboboxControlFrame(
-      nsIPresShell* aPresShell, ComputedStyle* aStyle, nsFrameState aFlags);
-||||||| merged common ancestors
-public:
-  friend nsComboboxControlFrame* NS_NewComboboxControlFrame(nsIPresShell* aPresShell,
-                                                            ComputedStyle* aStyle,
-                                                            nsFrameState aFlags);
-=======
  public:
   friend nsComboboxControlFrame* NS_NewComboboxControlFrame(
       mozilla::PresShell* aPresShell, ComputedStyle* aStyle,
       nsFrameState aFlags);
->>>>>>> upstream-releases
   friend class nsComboboxDisplayFrame;
 
   explicit nsComboboxControlFrame(ComputedStyle* aStyle,
@@ -139,15 +128,8 @@ public:
    * If it lost focus, the dropdown menu will be rolled up if needed,
    * and FireOnChange() will be called.
    * @param aOn true if got focus, false if lost focus.
-<<<<<<< HEAD
-   * @param aRepaint if true then force repaint (NOTE: we always force repaint
-   * currently)
-||||||| merged common ancestors
-   * @param aRepaint if true then force repaint (NOTE: we always force repaint currently)
-=======
    * @param aRepaint if true then force repaint (NOTE: we always force repaint
    *        currently)
->>>>>>> upstream-releases
    * @note This method might destroy |this|.
    */
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
@@ -197,17 +179,9 @@ public:
    * Hide the dropdown menu and stop capturing mouse events.
    * @note This method might destroy |this|.
    */
-<<<<<<< HEAD
-  virtual bool Rollup(uint32_t aCount, bool aFlush, const nsIntPoint* pos,
-                      nsIContent** aLastRolledUp) override;
-||||||| merged common ancestors
-  virtual bool Rollup(uint32_t aCount, bool aFlush,
-                      const nsIntPoint* pos, nsIContent** aLastRolledUp) override;
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual bool Rollup(uint32_t aCount, bool aFlush, const nsIntPoint* pos,
                       nsIContent** aLastRolledUp) override;
->>>>>>> upstream-releases
   virtual void NotifyGeometryChange() override;
 
   /**
@@ -235,17 +209,8 @@ public:
   mozilla::UniquePtr<mozilla::PresState> SaveState() override;
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD RestoreState(mozilla::PresState* aState) override;
-<<<<<<< HEAD
-  NS_IMETHOD GenerateStateKey(nsIContent* aContent, nsIDocument* aDocument,
-                              nsACString& aKey) override;
-||||||| merged common ancestors
-  NS_IMETHOD GenerateStateKey(nsIContent* aContent,
-                              nsIDocument* aDocument,
-                              nsACString& aKey) override;
-=======
   void GenerateStateKey(nsIContent* aContent, mozilla::dom::Document* aDocument,
                         nsACString& aKey) override;
->>>>>>> upstream-releases
 
   static bool ToolkitHasNativePopup();
 

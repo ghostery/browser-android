@@ -14,41 +14,6 @@ using namespace js;
 using namespace js::jit;
 
 ABIArgGenerator::ABIArgGenerator()
-<<<<<<< HEAD
-    : usedArgSlots_(0), firstArgFloat(false), current_() {}
-
-ABIArg ABIArgGenerator::next(MIRType type) {
-  switch (type) {
-    case MIRType::Int32:
-    case MIRType::Int64:
-    case MIRType::Pointer: {
-      Register destReg;
-      if (GetIntArgReg(usedArgSlots_, &destReg)) {
-        current_ = ABIArg(destReg);
-      } else {
-        current_ = ABIArg(GetArgStackDisp(usedArgSlots_));
-||||||| merged common ancestors
-  : usedArgSlots_(0),
-    firstArgFloat(false),
-    current_()
-{}
-
-ABIArg
-ABIArgGenerator::next(MIRType type)
-{
-    switch (type) {
-      case MIRType::Int32:
-      case MIRType::Int64:
-      case MIRType::Pointer: {
-        Register destReg;
-        if (GetIntArgReg(usedArgSlots_, &destReg)) {
-            current_ = ABIArg(destReg);
-        } else {
-            current_ = ABIArg(GetArgStackDisp(usedArgSlots_));
-        }
-        usedArgSlots_++;
-        break;
-=======
     : usedArgSlots_(0), firstArgFloat(false), current_() {}
 
 ABIArg ABIArgGenerator::next(MIRType type) {
@@ -62,7 +27,6 @@ ABIArg ABIArgGenerator::next(MIRType type) {
         current_ = ABIArg(destReg);
       } else {
         current_ = ABIArg(GetArgStackDisp(usedArgSlots_));
->>>>>>> upstream-releases
       }
       usedArgSlots_++;
       break;
@@ -148,49 +112,6 @@ void Assembler::TraceJumpRelocations(JSTracer* trc, JitCode* code,
   }
 }
 
-<<<<<<< HEAD
-static void TraceOneDataRelocation(JSTracer* trc, Instruction* inst) {
-  void* ptr = (void*)Assembler::ExtractLoad64Value(inst);
-  void* prior = ptr;
-
-  // All pointers on MIPS64 will have the top bits cleared. If those bits
-  // are not cleared, this must be a Value.
-  uintptr_t word = reinterpret_cast<uintptr_t>(ptr);
-  if (word >> JSVAL_TAG_SHIFT) {
-    Value v = Value::fromRawBits(word);
-    TraceManuallyBarrieredEdge(trc, &v, "ion-masm-value");
-    ptr = (void*)v.bitsAsPunboxPointer();
-  } else {
-    // No barrier needed since these are constants.
-    TraceManuallyBarrieredGenericPointerEdge(
-        trc, reinterpret_cast<gc::Cell**>(&ptr), "ion-masm-ptr");
-  }
-
-  if (ptr != prior) {
-    Assembler::UpdateLoad64Value(inst, uint64_t(ptr));
-    AutoFlushICache::flush(uintptr_t(inst), 6 * sizeof(uint32_t));
-  }
-}
-||||||| merged common ancestors
-static void
-TraceOneDataRelocation(JSTracer* trc, Instruction* inst)
-{
-    void* ptr = (void*)Assembler::ExtractLoad64Value(inst);
-    void* prior = ptr;
-
-    // All pointers on MIPS64 will have the top bits cleared. If those bits
-    // are not cleared, this must be a Value.
-    uintptr_t word = reinterpret_cast<uintptr_t>(ptr);
-    if (word >> JSVAL_TAG_SHIFT) {
-        Value v = Value::fromRawBits(word);
-        TraceManuallyBarrieredEdge(trc, &v, "ion-masm-value");
-        ptr = (void*)v.bitsAsPunboxPointer();
-    } else {
-        // No barrier needed since these are constants.
-        TraceManuallyBarrieredGenericPointerEdge(trc, reinterpret_cast<gc::Cell**>(&ptr),
-                                                     "ion-masm-ptr");
-    }
-=======
 static void TraceOneDataRelocation(JSTracer* trc, Instruction* inst) {
   void* ptr = (void*)Assembler::ExtractLoad64Value(inst);
   void* prior = ptr;
@@ -217,22 +138,7 @@ static void TraceOneDataRelocation(JSTracer* trc, Instruction* inst) {
     AutoFlushICache::flush(uintptr_t(inst), 6 * sizeof(uint32_t));
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
-                                                  CompactBufferReader& reader) {
-  while (reader.more()) {
-    size_t offset = reader.readUnsigned();
-    Instruction* inst = (Instruction*)(code->raw() + offset);
-    TraceOneDataRelocation(trc, inst);
-  }
-||||||| merged common ancestors
-    if (ptr != prior) {
-        Assembler::UpdateLoad64Value(inst, uint64_t(ptr));
-        AutoFlushICache::flush(uintptr_t(inst), 6 * sizeof(uint32_t));
-    }
-=======
 /* static */
 void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
                                      CompactBufferReader& reader) {
@@ -241,7 +147,6 @@ void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
     Instruction* inst = (Instruction*)(code->raw() + offset);
     TraceOneDataRelocation(trc, inst);
   }
->>>>>>> upstream-releases
 }
 
 void Assembler::Bind(uint8_t* rawCode, const CodeLabel& label) {

@@ -16,26 +16,11 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-class DataChannelChild : public nsDataChannel,
-                         public nsIChildChannel,
-                         public PDataChannelChild {
- public:
-  explicit DataChannelChild(nsIURI *uri);
-||||||| merged common ancestors
-class DataChannelChild : public nsDataChannel
-                       , public nsIChildChannel
-                       , public PDataChannelChild
-{
-public:
-    explicit DataChannelChild(nsIURI *uri);
-=======
 class DataChannelChild : public nsDataChannel,
                          public nsIChildChannel,
                          public PDataChannelChild {
  public:
   explicit DataChannelChild(nsIURI* uri);
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSICHILDCHANNEL

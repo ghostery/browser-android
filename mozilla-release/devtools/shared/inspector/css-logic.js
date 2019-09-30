@@ -333,13 +333,6 @@ function prettifyCSS(text, ruleCount) {
         break;
       }
 
-<<<<<<< HEAD
-      if (token.tokenType === "at") {
-        isInAtRuleDefinition = true;
-      }
-
-||||||| merged common ancestors
-=======
       const line = tokens.lineNumber;
       const column = tokens.columnNumber;
       mappings.push({
@@ -359,7 +352,6 @@ function prettifyCSS(text, ruleCount) {
         isInAtRuleDefinition = true;
       }
 
->>>>>>> upstream-releases
       // A "}" symbol must be inserted later, to deal with indentation
       // and newline.
       if (token.tokenType === "symbol" && token.text === "}") {
@@ -388,14 +380,6 @@ function prettifyCSS(text, ruleCount) {
         break;
       }
 
-<<<<<<< HEAD
-      if (token.tokenType === "symbol" && token.text === "," &&
-          isInSelector && !isInAtRuleDefinition) {
-        break;
-      }
-
-||||||| merged common ancestors
-=======
       if (
         token.tokenType === "symbol" &&
         token.text === "," &&
@@ -405,7 +389,6 @@ function prettifyCSS(text, ruleCount) {
         break;
       }
 
->>>>>>> upstream-releases
       lastWasWS = token.tokenType === "whitespace";
     }
     return token;

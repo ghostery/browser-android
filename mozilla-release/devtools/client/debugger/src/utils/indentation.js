@@ -21,17 +21,6 @@ function getMaxIndentation(lines) {
   const firstLine = lines[0];
   const secondLine = lines[1];
   const lastLine = lines[lines.length - 1];
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/indentation.js
-
-  const indentations = [
-    getIndentation(firstLine),
-    getIndentation(secondLine),
-    getIndentation(lastLine)
-  ];
-
-||||||| merged common ancestors
-  const indentations = [getIndentation(firstLine), getIndentation(secondLine), getIndentation(lastLine)];
-=======
 
   const indentations = [
     getIndentation(firstLine),
@@ -39,7 +28,6 @@ function getMaxIndentation(lines) {
     getIndentation(lastLine),
   ];
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/indentation.js
   return Math.max(...indentations);
 }
 

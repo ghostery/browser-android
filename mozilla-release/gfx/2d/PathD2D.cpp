@@ -17,44 +17,21 @@ namespace gfx {
 // a geometry to be duplicated into a geometry sink, while removing the final
 // figure end and thus allowing a figure that was implicitly closed to be
 // continued.
-<<<<<<< HEAD
-class OpeningGeometrySink : public ID2D1SimplifiedGeometrySink {
- public:
-  explicit OpeningGeometrySink(ID2D1SimplifiedGeometrySink *aSink)
-      : mSink(aSink), mNeedsFigureEnded(false) {}
-||||||| merged common ancestors
-class OpeningGeometrySink : public ID2D1SimplifiedGeometrySink
-{
-public:
-  explicit OpeningGeometrySink(ID2D1SimplifiedGeometrySink *aSink)
-    : mSink(aSink)
-    , mNeedsFigureEnded(false)
-  {
-  }
-=======
 class OpeningGeometrySink : public ID2D1SimplifiedGeometrySink {
  public:
   explicit OpeningGeometrySink(ID2D1SimplifiedGeometrySink* aSink)
       : mSink(aSink), mNeedsFigureEnded(false) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  HRESULT STDMETHODCALLTYPE QueryInterface(const IID &aIID, void **aPtr) {
-||||||| merged common ancestors
-  HRESULT STDMETHODCALLTYPE QueryInterface(const IID &aIID, void **aPtr)
-  {
-=======
   HRESULT STDMETHODCALLTYPE QueryInterface(const IID& aIID, void** aPtr) {
->>>>>>> upstream-releases
     if (!aPtr) {
       return E_POINTER;
     }
 
     if (aIID == IID_IUnknown) {
-      *aPtr = static_cast<IUnknown *>(this);
+      *aPtr = static_cast<IUnknown*>(this);
       return S_OK;
     } else if (aIID == IID_ID2D1SimplifiedGeometrySink) {
-      *aPtr = static_cast<ID2D1SimplifiedGeometrySink *>(this);
+      *aPtr = static_cast<ID2D1SimplifiedGeometrySink*>(this);
       return S_OK;
     }
 
@@ -66,45 +43,6 @@ class OpeningGeometrySink : public ID2D1SimplifiedGeometrySink {
   ULONG STDMETHODCALLTYPE Release() { return 1; }
 
   // We ignore SetFillMode, the copier will decide.
-<<<<<<< HEAD
-  STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE aMode) {
-    EnsureFigureEnded();
-    return;
-  }
-  STDMETHOD_(void, BeginFigure)
-  (D2D1_POINT_2F aPoint, D2D1_FIGURE_BEGIN aBegin) {
-    EnsureFigureEnded();
-    return mSink->BeginFigure(aPoint, aBegin);
-  }
-  STDMETHOD_(void, AddLines)(const D2D1_POINT_2F *aLines, UINT aCount) {
-    EnsureFigureEnded();
-    return mSink->AddLines(aLines, aCount);
-  }
-  STDMETHOD_(void, AddBeziers)
-  (const D2D1_BEZIER_SEGMENT *aSegments, UINT aCount) {
-    EnsureFigureEnded();
-    return mSink->AddBeziers(aSegments, aCount);
-  }
-  STDMETHOD(Close)() { /* Should never be called! */
-    return S_OK;
-  }
-  STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT aFlags) {
-    return mSink->SetSegmentFlags(aFlags);
-  }
-||||||| merged common ancestors
-  STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE aMode)
-  { EnsureFigureEnded(); return; }
-  STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F aPoint, D2D1_FIGURE_BEGIN aBegin)
-  { EnsureFigureEnded(); return mSink->BeginFigure(aPoint, aBegin); }
-  STDMETHOD_(void, AddLines)(const D2D1_POINT_2F *aLines, UINT aCount)
-  { EnsureFigureEnded(); return mSink->AddLines(aLines, aCount); }
-  STDMETHOD_(void, AddBeziers)(const D2D1_BEZIER_SEGMENT *aSegments, UINT aCount)
-  { EnsureFigureEnded(); return mSink->AddBeziers(aSegments, aCount); }
-  STDMETHOD(Close)()
-  { /* Should never be called! */ return S_OK; }
-  STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT aFlags)
-  { return mSink->SetSegmentFlags(aFlags); }
-=======
   STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE aMode) {
     EnsureFigureEnded();
     return;
@@ -129,7 +67,6 @@ class OpeningGeometrySink : public ID2D1SimplifiedGeometrySink {
   STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT aFlags) {
     return mSink->SetSegmentFlags(aFlags);
   }
->>>>>>> upstream-releases
 
   // This function is special - it's the reason this class exists.
   // It needs to intercept the very last endfigure. So that a user can
@@ -154,209 +91,9 @@ class OpeningGeometrySink : public ID2D1SimplifiedGeometrySink {
   bool mNeedsFigureEnded;
 };
 
-<<<<<<< HEAD
-class MOZ_STACK_CLASS AutoRestoreFP {
- public:
-  AutoRestoreFP() {
-    // save the current floating point control word
-    _controlfp_s(&savedFPSetting, 0, 0);
-    UINT unused;
-    // set the floating point control word to its default value
-    _controlfp_s(&unused, _CW_DEFAULT, MCW_PC);
-  }
-  ~AutoRestoreFP() {
-    UINT unused;
-    // restore the saved floating point control word
-    _controlfp_s(&unused, savedFPSetting, MCW_PC);
-  }
-
- private:
-  UINT savedFPSetting;
-};
-
-// Note that overrides of ID2D1SimplifiedGeometrySink methods in this class may
-// get called from D2D with nonstandard floating point settings (see comments in
-// bug 1134549) - use AutoRestoreFP to reset the floating point control word to
-// what we expect
-class StreamingGeometrySink : public ID2D1SimplifiedGeometrySink {
- public:
-  explicit StreamingGeometrySink(PathSink *aSink) : mSink(aSink) {}
-
-  HRESULT STDMETHODCALLTYPE QueryInterface(const IID &aIID, void **aPtr) {
-    if (!aPtr) {
-      return E_POINTER;
-    }
-
-    if (aIID == IID_IUnknown) {
-      *aPtr = static_cast<IUnknown *>(this);
-      return S_OK;
-    } else if (aIID == IID_ID2D1SimplifiedGeometrySink) {
-      *aPtr = static_cast<ID2D1SimplifiedGeometrySink *>(this);
-      return S_OK;
-    }
-
-    return E_NOINTERFACE;
-  }
-
-  ULONG STDMETHODCALLTYPE AddRef() { return 1; }
-
-  ULONG STDMETHODCALLTYPE Release() { return 1; }
-
-  // We ignore SetFillMode, this depends on the destination sink.
-  STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE aMode) { return; }
-  STDMETHOD_(void, BeginFigure)
-  (D2D1_POINT_2F aPoint, D2D1_FIGURE_BEGIN aBegin) {
-    AutoRestoreFP resetFloatingPoint;
-    mSink->MoveTo(ToPoint(aPoint));
-  }
-  STDMETHOD_(void, AddLines)(const D2D1_POINT_2F *aLines, UINT aCount) {
-    AutoRestoreFP resetFloatingPoint;
-    for (UINT i = 0; i < aCount; i++) {
-      mSink->LineTo(ToPoint(aLines[i]));
-    }
-  }
-  STDMETHOD_(void, AddBeziers)
-  (const D2D1_BEZIER_SEGMENT *aSegments, UINT aCount) {
-    AutoRestoreFP resetFloatingPoint;
-    for (UINT i = 0; i < aCount; i++) {
-      mSink->BezierTo(ToPoint(aSegments[i].point1),
-                      ToPoint(aSegments[i].point2),
-                      ToPoint(aSegments[i].point3));
-    }
-  }
-  STDMETHOD(Close)() { /* Should never be called! */
-    return S_OK;
-  }
-  STDMETHOD_(void, SetSegmentFlags)
-  (D2D1_PATH_SEGMENT aFlags) { /* Should never be called! */
-  }
-
-  STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END aEnd) {
-    AutoRestoreFP resetFloatingPoint;
-    if (aEnd == D2D1_FIGURE_END_CLOSED) {
-      return mSink->Close();
-    }
-  }
-
- private:
-  PathSink *mSink;
-};
-
 PathBuilderD2D::~PathBuilderD2D() {}
-||||||| merged common ancestors
-class MOZ_STACK_CLASS AutoRestoreFP
-{
-public:
-  AutoRestoreFP()
-  {
-    // save the current floating point control word
-    _controlfp_s(&savedFPSetting, 0, 0);
-    UINT unused;
-    // set the floating point control word to its default value
-    _controlfp_s(&unused, _CW_DEFAULT, MCW_PC);
-  }
-  ~AutoRestoreFP()
-  {
-    UINT unused;
-    // restore the saved floating point control word
-    _controlfp_s(&unused, savedFPSetting, MCW_PC);
-  }
-private:
-  UINT savedFPSetting;
-};
 
-// Note that overrides of ID2D1SimplifiedGeometrySink methods in this class may
-// get called from D2D with nonstandard floating point settings (see comments in
-// bug 1134549) - use AutoRestoreFP to reset the floating point control word to
-// what we expect
-class StreamingGeometrySink : public ID2D1SimplifiedGeometrySink
-{
-public:
-  explicit StreamingGeometrySink(PathSink *aSink)
-    : mSink(aSink)
-  {
-  }
-
-  HRESULT STDMETHODCALLTYPE QueryInterface(const IID &aIID, void **aPtr)
-  {
-    if (!aPtr) {
-      return E_POINTER;
-    }
-
-    if (aIID == IID_IUnknown) {
-      *aPtr = static_cast<IUnknown*>(this);
-      return S_OK;
-    } else if (aIID == IID_ID2D1SimplifiedGeometrySink) {
-      *aPtr = static_cast<ID2D1SimplifiedGeometrySink*>(this);
-      return S_OK;
-    }
-
-    return E_NOINTERFACE;
-  }
-
-  ULONG STDMETHODCALLTYPE AddRef()
-  {
-    return 1;
-  }
-
-  ULONG STDMETHODCALLTYPE Release()
-  {
-    return 1;
-  }
-
-  // We ignore SetFillMode, this depends on the destination sink.
-  STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE aMode)
-  { return; }
-  STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F aPoint, D2D1_FIGURE_BEGIN aBegin)
-  {
-    AutoRestoreFP resetFloatingPoint;
-    mSink->MoveTo(ToPoint(aPoint));
-  }
-  STDMETHOD_(void, AddLines)(const D2D1_POINT_2F *aLines, UINT aCount)
-  {
-    AutoRestoreFP resetFloatingPoint;
-    for (UINT i = 0; i < aCount; i++) { mSink->LineTo(ToPoint(aLines[i])); }
-  }
-  STDMETHOD_(void, AddBeziers)(const D2D1_BEZIER_SEGMENT *aSegments, UINT aCount)
-  {
-    AutoRestoreFP resetFloatingPoint;
-    for (UINT i = 0; i < aCount; i++) {
-      mSink->BezierTo(ToPoint(aSegments[i].point1), ToPoint(aSegments[i].point2), ToPoint(aSegments[i].point3));
-    }
-  }
-  STDMETHOD(Close)()
-  { /* Should never be called! */ return S_OK; }
-  STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT aFlags)
-  { /* Should never be called! */ }
-
-  STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END aEnd)
-  {
-    AutoRestoreFP resetFloatingPoint;
-    if (aEnd == D2D1_FIGURE_END_CLOSED) {
-      return mSink->Close();
-    }
-  }
-private:
-
-  PathSink *mSink;
-};
-
-PathBuilderD2D::~PathBuilderD2D()
-{
-}
-=======
-PathBuilderD2D::~PathBuilderD2D() {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void PathBuilderD2D::MoveTo(const Point &aPoint) {
-||||||| merged common ancestors
-void
-PathBuilderD2D::MoveTo(const Point &aPoint)
-{
-=======
 void PathBuilderD2D::MoveTo(const Point& aPoint) {
->>>>>>> upstream-releases
   if (mFigureActive) {
     mSink->EndFigure(D2D1_FIGURE_END_OPEN);
     mFigureActive = false;
@@ -365,34 +102,15 @@ void PathBuilderD2D::MoveTo(const Point& aPoint) {
   mCurrentPoint = aPoint;
 }
 
-<<<<<<< HEAD
-void PathBuilderD2D::LineTo(const Point &aPoint) {
-||||||| merged common ancestors
-void
-PathBuilderD2D::LineTo(const Point &aPoint)
-{
-=======
 void PathBuilderD2D::LineTo(const Point& aPoint) {
->>>>>>> upstream-releases
   EnsureActive(aPoint);
   mSink->AddLine(D2DPoint(aPoint));
 
   mCurrentPoint = aPoint;
 }
 
-<<<<<<< HEAD
-void PathBuilderD2D::BezierTo(const Point &aCP1, const Point &aCP2,
-                              const Point &aCP3) {
-||||||| merged common ancestors
-void
-PathBuilderD2D::BezierTo(const Point &aCP1,
-                         const Point &aCP2,
-                         const Point &aCP3)
-  {
-=======
 void PathBuilderD2D::BezierTo(const Point& aCP1, const Point& aCP2,
                               const Point& aCP3) {
->>>>>>> upstream-releases
   EnsureActive(aCP1);
   mSink->AddBezier(
       D2D1::BezierSegment(D2DPoint(aCP1), D2DPoint(aCP2), D2DPoint(aCP3)));
@@ -400,16 +118,7 @@ void PathBuilderD2D::BezierTo(const Point& aCP1, const Point& aCP2,
   mCurrentPoint = aCP3;
 }
 
-<<<<<<< HEAD
-void PathBuilderD2D::QuadraticBezierTo(const Point &aCP1, const Point &aCP2) {
-||||||| merged common ancestors
-void
-PathBuilderD2D::QuadraticBezierTo(const Point &aCP1,
-                                  const Point &aCP2)
-{
-=======
 void PathBuilderD2D::QuadraticBezierTo(const Point& aCP1, const Point& aCP2) {
->>>>>>> upstream-releases
   EnsureActive(aCP1);
   mSink->AddQuadraticBezier(
       D2D1::QuadraticBezierSegment(D2DPoint(aCP1), D2DPoint(aCP2)));
@@ -427,18 +136,8 @@ void PathBuilderD2D::Close() {
   }
 }
 
-<<<<<<< HEAD
-void PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
-                         Float aEndAngle, bool aAntiClockwise) {
-||||||| merged common ancestors
-void
-PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
-                 Float aEndAngle, bool aAntiClockwise)
-{
-=======
 void PathBuilderD2D::Arc(const Point& aOrigin, Float aRadius, Float aStartAngle,
                          Float aEndAngle, bool aAntiClockwise) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRadius >= 0);
 
   if (aAntiClockwise && aStartAngle < aEndAngle) {
@@ -524,23 +223,7 @@ void PathBuilderD2D::Arc(const Point& aOrigin, Float aRadius, Float aStartAngle,
   mCurrentPoint = endPoint;
 }
 
-<<<<<<< HEAD
-Point PathBuilderD2D::CurrentPoint() const { return mCurrentPoint; }
-
-void PathBuilderD2D::EnsureActive(const Point &aPoint) {
-||||||| merged common ancestors
-Point
-PathBuilderD2D::CurrentPoint() const
-{
-  return mCurrentPoint;
-}
-
-void
-PathBuilderD2D::EnsureActive(const Point &aPoint)
-{
-=======
 void PathBuilderD2D::EnsureActive(const Point& aPoint) {
->>>>>>> upstream-releases
   if (!mFigureActive) {
     mSink->BeginFigure(D2DPoint(aPoint), D2D1_FIGURE_BEGIN_FILLED);
     mBeginPoint = aPoint;
@@ -567,17 +250,8 @@ already_AddRefed<PathBuilder> PathD2D::CopyToBuilder(FillRule aFillRule) const {
   return TransformedCopyToBuilder(Matrix(), aFillRule);
 }
 
-<<<<<<< HEAD
-already_AddRefed<PathBuilder> PathD2D::TransformedCopyToBuilder(
-    const Matrix &aTransform, FillRule aFillRule) const {
-||||||| merged common ancestors
-already_AddRefed<PathBuilder>
-PathD2D::TransformedCopyToBuilder(const Matrix &aTransform, FillRule aFillRule) const
-{
-=======
 already_AddRefed<PathBuilder> PathD2D::TransformedCopyToBuilder(
     const Matrix& aTransform, FillRule aFillRule) const {
->>>>>>> upstream-releases
   RefPtr<ID2D1PathGeometry> path;
   HRESULT hr =
       DrawTargetD2D1::factory()->CreatePathGeometry(getter_AddRefs(path));
@@ -626,15 +300,7 @@ already_AddRefed<PathBuilder> PathD2D::TransformedCopyToBuilder(
   return pathBuilder.forget();
 }
 
-<<<<<<< HEAD
-void PathD2D::StreamToSink(PathSink *aSink) const {
-||||||| merged common ancestors
-void
-PathD2D::StreamToSink(PathSink *aSink) const
-{
-=======
 void PathD2D::StreamToSink(PathSink* aSink) const {
->>>>>>> upstream-releases
   HRESULT hr;
 
   StreamingGeometrySink sink(aSink);
@@ -647,20 +313,9 @@ void PathD2D::StreamToSink(PathSink* aSink) const {
     return;
   }
 }
-<<<<<<< HEAD
-
-bool PathD2D::ContainsPoint(const Point &aPoint,
-                            const Matrix &aTransform) const {
-||||||| merged common ancestors
- 
-bool
-PathD2D::ContainsPoint(const Point &aPoint, const Matrix &aTransform) const
-{
-=======
 
 bool PathD2D::ContainsPoint(const Point& aPoint,
                             const Matrix& aTransform) const {
->>>>>>> upstream-releases
   BOOL result;
 
   HRESULT hr = mGeometry->FillContainsPoint(
@@ -674,21 +329,9 @@ bool PathD2D::ContainsPoint(const Point& aPoint,
   return !!result;
 }
 
-<<<<<<< HEAD
-bool PathD2D::StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
-                                  const Point &aPoint,
-                                  const Matrix &aTransform) const {
-||||||| merged common ancestors
-bool
-PathD2D::StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
-                             const Point &aPoint,
-                             const Matrix &aTransform) const
-{
-=======
 bool PathD2D::StrokeContainsPoint(const StrokeOptions& aStrokeOptions,
                                   const Point& aPoint,
                                   const Matrix& aTransform) const {
->>>>>>> upstream-releases
   BOOL result;
 
   RefPtr<ID2D1StrokeStyle> strokeStyle =
@@ -705,15 +348,7 @@ bool PathD2D::StrokeContainsPoint(const StrokeOptions& aStrokeOptions,
   return !!result;
 }
 
-<<<<<<< HEAD
-Rect PathD2D::GetBounds(const Matrix &aTransform) const {
-||||||| merged common ancestors
-Rect
-PathD2D::GetBounds(const Matrix &aTransform) const
-{
-=======
 Rect PathD2D::GetBounds(const Matrix& aTransform) const {
->>>>>>> upstream-releases
   D2D1_RECT_F d2dBounds;
 
   HRESULT hr = mGeometry->GetBounds(D2DMatrix(aTransform), &d2dBounds);
@@ -727,18 +362,8 @@ Rect PathD2D::GetBounds(const Matrix& aTransform) const {
   return bounds;
 }
 
-<<<<<<< HEAD
-Rect PathD2D::GetStrokedBounds(const StrokeOptions &aStrokeOptions,
-                               const Matrix &aTransform) const {
-||||||| merged common ancestors
-Rect
-PathD2D::GetStrokedBounds(const StrokeOptions &aStrokeOptions,
-                          const Matrix &aTransform) const
-{
-=======
 Rect PathD2D::GetStrokedBounds(const StrokeOptions& aStrokeOptions,
                                const Matrix& aTransform) const {
->>>>>>> upstream-releases
   D2D1_RECT_F d2dBounds;
 
   RefPtr<ID2D1StrokeStyle> strokeStyle =

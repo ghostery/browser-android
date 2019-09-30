@@ -26,14 +26,14 @@
  */
 
 #if defined(__cplusplus)
-#include <new>
+#  include <new>
 // Since libstdc++ 6, including the C headers (e.g. stdlib.h) instead of the
 // corresponding C++ header (e.g. cstdlib) can cause confusion in C++ code
 // using things defined there. Specifically, with stdlib.h, the use of abs()
 // in gfx/graphite2/src/inc/UtfCodec.h somehow ends up picking the wrong abs()
-#include <cstdlib>
+#  include <cstdlib>
 #else
-#include <stdlib.h>
+#  include <stdlib.h>
 #endif
 
 #if defined(__cplusplus)
@@ -106,160 +106,13 @@ MOZ_END_EXTERN_C
 /* NB: This is defined just to silence vacuous warnings about symbol
  * visibility on OS X/gcc. These symbols are force-inline and not
  * exported. */
-<<<<<<< HEAD
-#if defined(XP_MACOSX)
-#define MOZALLOC_EXPORT_NEW MFBT_API
-#else
-#define MOZALLOC_EXPORT_NEW
-#endif
-||||||| merged common ancestors
-#if defined(XP_MACOSX)
-#  define MOZALLOC_EXPORT_NEW MFBT_API
-#else
-#  define MOZALLOC_EXPORT_NEW
-#endif
-=======
 #  if defined(XP_MACOSX)
 #    define MOZALLOC_EXPORT_NEW MFBT_API MOZ_ALWAYS_INLINE_EVEN_DEBUG
 #  else
 #    define MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MOZALLOC_EXPORT_NEW
-#if defined(__GNUC__) && !defined(__clang__) && defined(__SANITIZE_ADDRESS__)
-/* gcc's asan somehow doesn't like always_inline on this function. */
-__attribute__((gnu_inline)) inline
-#else
-MOZ_ALWAYS_INLINE_EVEN_DEBUG
-#endif
-    void*
-    operator new(size_t size) noexcept(false) {
-  return moz_xmalloc(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void* operator new(
-    size_t size, const std::nothrow_t&) noexcept(true) {
-  return malloc_impl(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void* operator new[](
-    size_t size) noexcept(false) {
-  return moz_xmalloc(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void* operator new[](
-    size_t size, const std::nothrow_t&) noexcept(true) {
-  return malloc_impl(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void operator delete(
-    void* ptr) noexcept(true) {
-  return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void operator delete(
-    void* ptr, const std::nothrow_t&)noexcept(true) {
-  return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void operator delete[](
-    void* ptr) noexcept(true) {
-  return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void operator delete[](
-    void* ptr, const std::nothrow_t&) noexcept(true) {
-  return free_impl(ptr);
-}
-
-#if defined(XP_WIN)
-// We provide the global sized delete overloads unconditionally because the
-// MSVC runtime headers do, despite compiling with /Zc:sizedDealloc-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void operator delete(
-    void* ptr, size_t /*size*/) noexcept(true) {
-  return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG void operator delete[](
-    void* ptr, size_t /*size*/) noexcept(true) {
-  return free_impl(ptr);
-}
-#endif
-||||||| merged common ancestors
-MOZALLOC_EXPORT_NEW
-#if defined(__GNUC__) && !defined(__clang__) && defined(__SANITIZE_ADDRESS__)
-/* gcc's asan somehow doesn't like always_inline on this function. */
-__attribute__((gnu_inline)) inline
-#else
-MOZ_ALWAYS_INLINE_EVEN_DEBUG
-#endif
-void* operator new(size_t size) noexcept(false)
-{
-    return moz_xmalloc(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void* operator new(size_t size, const std::nothrow_t&) noexcept(true)
-{
-    return malloc_impl(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void* operator new[](size_t size) noexcept(false)
-{
-    return moz_xmalloc(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void* operator new[](size_t size, const std::nothrow_t&) noexcept(true)
-{
-    return malloc_impl(size);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void operator delete(void* ptr) noexcept(true)
-{
-    return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void operator delete(void* ptr, const std::nothrow_t&) noexcept(true)
-{
-    return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void operator delete[](void* ptr) noexcept(true)
-{
-    return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void operator delete[](void* ptr, const std::nothrow_t&) noexcept(true)
-{
-    return free_impl(ptr);
-}
-
-#if defined(XP_WIN)
-// We provide the global sized delete overloads unconditionally because the
-// MSVC runtime headers do, despite compiling with /Zc:sizedDealloc-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void operator delete(void* ptr, size_t /*size*/) noexcept(true)
-{
-    return free_impl(ptr);
-}
-
-MOZALLOC_EXPORT_NEW MOZ_ALWAYS_INLINE_EVEN_DEBUG
-void operator delete[](void* ptr, size_t /*size*/) noexcept(true)
-{
-    return free_impl(ptr);
-}
-#endif
-=======
 #  include "mozilla/cxxalloc.h"
->>>>>>> upstream-releases
 
 /*
  * This policy is identical to MallocAllocPolicy, except it uses

@@ -18,14 +18,8 @@
     "patches": [
       "static-llvm-symbolizer.patch",
       "find_symbolizer_linux.patch",
-<<<<<<< HEAD
-      "rename_gcov_flush_.patch"
-||||||| merged common ancestors
-      "rename_gcov_flush.patch"
-=======
       "rename_gcov_flush_7.patch",
       "r350774.patch",
       "android-mangling-error.patch"
->>>>>>> upstream-releases
     ]
 }

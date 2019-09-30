@@ -188,15 +188,6 @@ class SharedIntlData {
       explicit Lookup(JSLinearString* locale);
     };
 
-<<<<<<< HEAD
-    static js::HashNumber hash(const Lookup& lookup) { return lookup.hash; }
-    static bool match(Locale key, const Lookup& lookup);
-  };
-
-  using LocaleSet = GCHashSet<Locale, LocaleHasher, SystemAllocPolicy>;
-||||||| merged common ancestors
-    using LocaleSet = GCHashSet<Locale, LocaleHasher, SystemAllocPolicy>;
-=======
     static js::HashNumber hash(const Lookup& lookup) { return lookup.hash; }
     static bool match(Locale key, const Lookup& lookup);
   };
@@ -211,13 +202,7 @@ class SharedIntlData {
    * Precomputes the available locales which use upper-case first sorting.
    */
   bool ensureUpperCaseFirstLocales(JSContext* cx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  LocaleSet upperCaseFirstLocales;
-||||||| merged common ancestors
-    LocaleSet upperCaseFirstLocales;
-=======
  public:
   /**
    * Sets |isUpperFirst| to true if |locale| sorts upper-case characters
@@ -225,50 +210,15 @@ class SharedIntlData {
    */
   bool isUpperCaseFirst(JSContext* cx, JS::Handle<JSString*> locale,
                         bool* isUpperFirst);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool upperCaseFirstInitialized = false;
-||||||| merged common ancestors
-    bool upperCaseFirstInitialized = false;
-=======
  private:
   using UniqueUDateTimePatternGenerator =
       mozilla::UniquePtr<UDateTimePatternGenerator,
                          DateTimePatternGeneratorDeleter>;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /**
-   * Precomputes the available locales which use upper-case first sorting.
-   */
-  bool ensureUpperCaseFirstLocales(JSContext* cx);
-||||||| merged common ancestors
-    /**
-     * Precomputes the available locales which use upper-case first sorting.
-     */
-    bool ensureUpperCaseFirstLocales(JSContext* cx);
-=======
   UniqueUDateTimePatternGenerator dateTimePatternGenerator;
   JS::UniqueChars dateTimePatternGeneratorLocale;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  /**
-   * Sets |isUpperFirst| to true if |locale| sorts upper-case characters
-   * before lower-case characters.
-   */
-  bool isUpperCaseFirst(JSContext* cx, JS::Handle<JSString*> locale,
-                        bool* isUpperFirst);
-||||||| merged common ancestors
-  public:
-    /**
-     * Sets |isUpperFirst| to true if |locale| sorts upper-case characters
-     * before lower-case characters.
-     */
-    bool isUpperCaseFirst(JSContext* cx, JS::Handle<JSString*> locale, bool* isUpperFirst);
-=======
  public:
   /**
    * Wrapper around |udatpg_open| to return a possibly cached generator
@@ -276,7 +226,6 @@ class SharedIntlData {
    */
   UDateTimePatternGenerator* getDateTimePatternGenerator(JSContext* cx,
                                                          const char* locale);
->>>>>>> upstream-releases
 
  public:
   void destroyInstance();

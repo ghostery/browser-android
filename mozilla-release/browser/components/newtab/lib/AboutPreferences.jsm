@@ -12,15 +12,7 @@ const { actionTypes: at } = ChromeUtils.import(
 );
 
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
-<<<<<<< HEAD
-
 const HTML_NS = "http://www.w3.org/1999/xhtml";
-
-||||||| merged common ancestors
-
-=======
-const HTML_NS = "http://www.w3.org/1999/xhtml";
->>>>>>> upstream-releases
 const PREFERENCES_LOADED_EVENT = "home-pane-loaded";
 
 // These "section" objects are formatted in a way to be similar to the ones from
@@ -208,18 +200,6 @@ this.AboutPreferences = class AboutPreferences {
     );
     contentsGroup.id = "homeContentsGroup";
     contentsGroup.setAttribute("data-subcategory", "contents");
-<<<<<<< HEAD
-    createAppend("label", contentsGroup)
-      .appendChild(document.createElementNS(HTML_NS, "h2"))
-      .textContent = formatString("prefs_home_header");
-    createAppend("description", contentsGroup)
-      .textContent = formatString("prefs_home_description");
-||||||| merged common ancestors
-    const caption = createAppend("caption", contentsGroup);
-    caption.setAttribute("label", formatString("prefs_home_header"));
-    const description = createAppend("description", contentsGroup);
-    description.textContent = formatString("prefs_home_description");
-=======
     const homeHeader = createAppend("label", contentsGroup).appendChild(
       document.createElementNS(HTML_NS, "h2")
     );
@@ -230,7 +210,6 @@ this.AboutPreferences = class AboutPreferences {
       homeDescription,
       "home-prefs-content-description"
     );
->>>>>>> upstream-releases
 
     // Add preferences for each section
     prefStructure.forEach(sectionData => {

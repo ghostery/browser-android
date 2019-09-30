@@ -158,13 +158,7 @@
         <description id="downloadsPanel-blockedSubview-details2"/>
       </vbox>
       <hbox id="downloadsPanel-blockedSubview-buttons"
-<<<<<<< HEAD
-            class="panel-footer downloadsPanelFooter"
-||||||| merged common ancestors
-            class="downloadsPanelFooter"
-=======
             class="panel-footer"
->>>>>>> upstream-releases
             align="stretch">
         <button id="downloadsPanel-blockedSubview-openButton"
                 class="downloadsPanelFooterButton"

@@ -122,14 +122,7 @@ nsDirectoryService::Undefine(const char* aProp) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDirectoryService::GetKeys(uint32_t* aCount, char*** aKeys) {
-||||||| merged common ancestors
-nsDirectoryService::GetKeys(uint32_t* aCount, char*** aKeys)
-{
-=======
 nsDirectoryService::GetKeys(nsTArray<nsCString>& aKeys) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -315,18 +308,8 @@ nsDirectoryService::UnregisterProvider(nsIDirectoryServiceProvider* aProv) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX) && defined(XP_WIN)
-static nsresult GetLowIntegrityTempBase(nsIFile** aLowIntegrityTempBase) {
-||||||| merged common ancestors
-#if defined(MOZ_CONTENT_SANDBOX) && defined(XP_WIN)
-static nsresult
-GetLowIntegrityTempBase(nsIFile** aLowIntegrityTempBase)
-{
-=======
 #if defined(MOZ_SANDBOX) && defined(XP_WIN)
 static nsresult GetLowIntegrityTempBase(nsIFile** aLowIntegrityTempBase) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> localFile;
   nsresult rv =
       GetSpecialSystemDirectory(Win_LocalAppdataLow, getter_AddRefs(localFile));

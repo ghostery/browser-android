@@ -53,12 +53,6 @@ class PartiallySeekableInputStream final : public nsISeekableStream,
 
   ~PartiallySeekableInputStream() = default;
 
-<<<<<<< HEAD
-  void Init();
-||||||| merged common ancestors
-  void
-  Init();
-=======
   void Init();
 
   template <typename M>
@@ -66,7 +60,6 @@ class PartiallySeekableInputStream final : public nsISeekableStream,
                          FileDescriptorArray& aFileDescriptors,
                          bool aDelayedStart, uint32_t aMaxSize,
                          uint32_t* aSizeUsed, M* aManager);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIInputStream> mInputStream;
 

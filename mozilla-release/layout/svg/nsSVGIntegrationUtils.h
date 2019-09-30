@@ -66,12 +66,6 @@ class nsSVGIntegrationUtils final {
   /**
    * Returns true if mask or clippath are currently applied to this frame.
    */
-<<<<<<< HEAD
-  static bool UsingMaskOrClipPathForFrame(const nsIFrame* aFrame);
-||||||| merged common ancestors
-  static bool
-  UsingMaskOrClipPathForFrame(const nsIFrame* aFrame);
-=======
   static bool UsingMaskOrClipPathForFrame(const nsIFrame* aFrame);
 
   /**
@@ -79,7 +73,6 @@ class nsSVGIntegrationUtils final {
    * be represented without a mask in WebRender.
    */
   static bool UsingSimpleClipPathForFrame(const nsIFrame* aFrame);
->>>>>>> upstream-releases
 
   /**
    * Returns the size of the union of the border-box rects of all of
@@ -147,16 +140,8 @@ class nsSVGIntegrationUtils final {
    * Figure out which area of the source is needed given an area to
    * repaint
    */
-<<<<<<< HEAD
-  static nsRect GetRequiredSourceForInvalidArea(nsIFrame* aFrame,
-                                                const nsRect& aDamageRect);
-||||||| merged common ancestors
-  static nsRect
-  GetRequiredSourceForInvalidArea(nsIFrame* aFrame, const nsRect& aDamageRect);
-=======
   static nsRect GetRequiredSourceForInvalidArea(nsIFrame* aFrame,
                                                 const nsRect& aDirtyRect);
->>>>>>> upstream-releases
 
   /**
    * Returns true if the given point is not clipped out by effects.
@@ -171,19 +156,9 @@ class nsSVGIntegrationUtils final {
     const nsRect& borderArea;
     nsDisplayListBuilder* builder;
     mozilla::layers::LayerManager* layerManager;
-<<<<<<< HEAD
-    bool handleOpacity;  // If true, PaintMaskAndClipPath/ PaintFilter should
-                         // apply css opacity.
-    IntRect maskRect;
-||||||| merged common ancestors
-    bool handleOpacity; // If true, PaintMaskAndClipPath/ PaintFilter should
-                        // apply css opacity.
-    IntRect maskRect;
-=======
     bool handleOpacity;  // If true, PaintMaskAndClipPath/ PaintFilter should
                          // apply css opacity.
     mozilla::Maybe<mozilla::gfx::Rect> maskRect;
->>>>>>> upstream-releases
     imgDrawingParams& imgParams;
 
     explicit PaintFramesParams(gfxContext& aCtx, nsIFrame* aFrame,
@@ -228,22 +203,6 @@ class nsSVGIntegrationUtils final {
   /**
    * Paint non-SVG frame with filter and opacity effect.
    */
-<<<<<<< HEAD
-  static void PaintFilter(const PaintFramesParams& aParams);
-
-  /**
-   * Try to build WebRender filters for a frame if the filters applied to it are
-   * supported.
-   */
-  static bool BuildWebRenderFilters(
-      nsIFrame* aFilteredFrame,
-      const mozilla::LayoutDeviceIntRect& aPreFilterBounds,
-      nsTArray<mozilla::wr::WrFilterOp>& aWrFilters,
-      mozilla::LayoutDeviceIntRect& aPostFilterBounds);
-||||||| merged common ancestors
-  static void
-  PaintFilter(const PaintFramesParams& aParams);
-=======
   static void PaintFilter(const PaintFramesParams& aParams);
 
   /**
@@ -253,7 +212,6 @@ class nsSVGIntegrationUtils final {
   static bool BuildWebRenderFilters(nsIFrame* aFilteredFrame,
                                     WrFiltersHolder& aWrFilters,
                                     mozilla::Maybe<nsRect>& aPostFilterClip);
->>>>>>> upstream-releases
 
   /**
    * @param aRenderingContext the target rendering context in which the paint

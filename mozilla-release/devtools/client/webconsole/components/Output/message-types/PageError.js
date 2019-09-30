@@ -21,13 +21,8 @@ PageError.propTypes = {
   open: PropTypes.bool,
   timestampsVisible: PropTypes.bool.isRequired,
   serviceContainer: PropTypes.object,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/PageError.js
-  maybeScrollToBottom: PropTypes.func,
-||||||| merged common ancestors
-=======
   maybeScrollToBottom: PropTypes.func,
   inWarningGroup: PropTypes.bool.isRequired,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/PageError.js
 };
 
 PageError.defaultProps = {
@@ -43,24 +38,12 @@ function PageError(props) {
     serviceContainer,
     timestampsVisible,
     isPaused,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/PageError.js
-    maybeScrollToBottom,
-||||||| merged common ancestors
-=======
     maybeScrollToBottom,
     inWarningGroup,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/PageError.js
   } = props;
   const {
     id: messageId,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/PageError.js
     executionPoint,
-    indent,
-||||||| merged common ancestors
-    indent,
-=======
-    executionPoint,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/PageError.js
     source,
     type,
     level,
@@ -103,13 +86,8 @@ function PageError(props) {
     timeStamp,
     notes,
     timestampsVisible,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/message-types/PageError.js
-    maybeScrollToBottom,
-||||||| merged common ancestors
-=======
     maybeScrollToBottom,
     message,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/message-types/PageError.js
   });
 }
 

@@ -130,13 +130,7 @@ interface nsITransferable : nsISupports
     * @param  aFlavor (in parameter) the flavor of data to retrieve
     * @param  aData the data. Some variant of class in nsISupportsPrimitives.idl
     */
-<<<<<<< HEAD
-  void getTransferData(in string aFlavor, out nsISupports aData);
-||||||| merged common ancestors
-  void getTransferData ( in string aFlavor, out nsISupports aData, out unsigned long aDataLen ) ;
-=======
   [must_use] void getTransferData(in string aFlavor, out nsISupports aData);
->>>>>>> upstream-releases
 
   /**
     * Returns the best flavor in the transferable, given those that have

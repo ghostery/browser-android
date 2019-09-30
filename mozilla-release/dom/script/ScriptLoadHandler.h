@@ -71,23 +71,8 @@ class ScriptLoadHandler final : public nsIIncrementalStreamLoaderObserver {
    * isn't enough information yet to make the determination, or true if a
    * determination was made.
    */
-<<<<<<< HEAD
-  bool EnsureDecoder(nsIIncrementalStreamLoader* aLoader, const uint8_t* aData,
-                     uint32_t aDataLength, bool aEndOfStream);
-  bool EnsureDecoder(nsIIncrementalStreamLoader* aLoader, const uint8_t* aData,
-                     uint32_t aDataLength, bool aEndOfStream,
-                     nsCString& oCharset);
-||||||| merged common ancestors
-  bool EnsureDecoder(nsIIncrementalStreamLoader* aLoader,
-                     const uint8_t* aData, uint32_t aDataLength,
-                     bool aEndOfStream);
-  bool EnsureDecoder(nsIIncrementalStreamLoader* aLoader,
-                     const uint8_t* aData, uint32_t aDataLength,
-                     bool aEndOfStream, nsCString& oCharset);
-=======
   bool TrySetDecoder(nsIIncrementalStreamLoader* aLoader, const uint8_t* aData,
                      uint32_t aDataLength, bool aEndOfStream);
->>>>>>> upstream-releases
 
   /*
    * When streaming bytecode, we have the opportunity to fallback early if SRI

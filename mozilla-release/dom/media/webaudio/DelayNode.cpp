@@ -70,18 +70,8 @@ class DelayNodeEngine final : public AudioNodeEngine {
     if (!aInput.IsSilentOrSubnormal()) {
       if (mLeftOverData <= 0) {
         RefPtr<PlayingRefChanged> refchanged =
-<<<<<<< HEAD
-            new PlayingRefChanged(aStream, PlayingRefChanged::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-||||||| merged common ancestors
-          new PlayingRefChanged(aStream, PlayingRefChanged::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-          refchanged.forget());
-=======
             new PlayingRefChanged(aStream, PlayingRefChanged::ADDREF);
         aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
->>>>>>> upstream-releases
       }
       mLeftOverData = mBuffer.MaxDelayTicks();
     } else if (mLeftOverData > 0) {
@@ -95,18 +85,8 @@ class DelayNodeEngine final : public AudioNodeEngine {
         mBuffer.Reset();
 
         RefPtr<PlayingRefChanged> refchanged =
-<<<<<<< HEAD
-            new PlayingRefChanged(aStream, PlayingRefChanged::RELEASE);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-||||||| merged common ancestors
-          new PlayingRefChanged(aStream, PlayingRefChanged::RELEASE);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-          refchanged.forget());
-=======
             new PlayingRefChanged(aStream, PlayingRefChanged::RELEASE);
         aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
->>>>>>> upstream-releases
       }
       aOutput->SetNull(WEBAUDIO_BLOCK_SIZE);
       return;
@@ -191,30 +171,6 @@ class DelayNodeEngine final : public AudioNodeEngine {
 };
 
 DelayNode::DelayNode(AudioContext* aContext, double aMaxDelay)
-<<<<<<< HEAD
-    : AudioNode(aContext, 2, ChannelCountMode::Max,
-                ChannelInterpretation::Speakers),
-      mDelay(new AudioParam(this, DelayNodeEngine::DELAY, "delayTime", 0.0f,
-                            0.f, aMaxDelay)) {
-  DelayNodeEngine* engine = new DelayNodeEngine(
-      this, aContext->Destination(), aContext->SampleRate() * aMaxDelay);
-  mStream = AudioNodeStream::Create(
-      aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
-||||||| merged common ancestors
-  : AudioNode(aContext,
-              2,
-              ChannelCountMode::Max,
-              ChannelInterpretation::Speakers)
-  , mDelay(new AudioParam(this, DelayNodeEngine::DELAY, "delayTime", 0.0f,
-                          0.f, aMaxDelay))
-{
-  DelayNodeEngine* engine =
-    new DelayNodeEngine(this, aContext->Destination(),
-                        aContext->SampleRate() * aMaxDelay);
-  mStream = AudioNodeStream::Create(aContext, engine,
-                                    AudioNodeStream::NO_STREAM_FLAGS,
-                                    aContext->Graph());
-=======
     : AudioNode(aContext, 2, ChannelCountMode::Max,
                 ChannelInterpretation::Speakers) {
   CreateAudioParam(mDelay, DelayNodeEngine::DELAY, "delayTime", 0.0f, 0.f,
@@ -223,33 +179,12 @@ DelayNode::DelayNode(AudioContext* aContext, double aMaxDelay)
       this, aContext->Destination(), aContext->SampleRate() * aMaxDelay);
   mStream = AudioNodeStream::Create(
       aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DelayNode> DelayNode::Create(
-    AudioContext& aAudioContext, const DelayOptions& aOptions,
-    ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-||||||| merged common ancestors
-/* static */ already_AddRefed<DelayNode>
-DelayNode::Create(AudioContext& aAudioContext,
-                  const DelayOptions& aOptions,
-                  ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-=======
 /* static */
 already_AddRefed<DelayNode> DelayNode::Create(AudioContext& aAudioContext,
                                               const DelayOptions& aOptions,
                                               ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (aOptions.mMaxDelayTime <= 0. || aOptions.mMaxDelayTime >= 180.) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;

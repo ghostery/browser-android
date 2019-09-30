@@ -4,17 +4,6 @@
 
 //! Gecko-specific bits for selector-parsing.
 
-<<<<<<< HEAD
-use crate::element_state::{DocumentState, ElementState};
-use crate::gecko_bindings::structs::RawServoSelectorList;
-use crate::gecko_bindings::sugar::ownership::{HasBoxFFI, HasFFI, HasSimpleFFI};
-use crate::invalidation::element::document_state::InvalidationMatchingData;
-use crate::selector_parser::{Direction, SelectorParser};
-use crate::str::starts_with_ignore_ascii_case;
-use crate::string_cache::{Atom, Namespace, WeakAtom, WeakNamespace};
-use crate::values::serialize_atom_identifier;
-||||||| merged common ancestors
-=======
 use crate::element_state::{DocumentState, ElementState};
 use crate::gecko_bindings::structs::{self, RawServoSelectorList};
 use crate::gecko_bindings::sugar::ownership::{HasBoxFFI, HasFFI, HasSimpleFFI};
@@ -23,7 +12,6 @@ use crate::selector_parser::{Direction, SelectorParser};
 use crate::str::starts_with_ignore_ascii_case;
 use crate::string_cache::{Atom, Namespace, WeakAtom, WeakNamespace};
 use crate::values::serialize_atom_identifier;
->>>>>>> upstream-releases
 use cssparser::{BasicParseError, BasicParseErrorKind, Parser};
 use cssparser::{CowRcStr, SourceLocation, ToCss, Token};
 use selectors::parser::{self as selector_parser, Selector};
@@ -187,19 +175,8 @@ impl NonTSPseudoClass {
             // For pseudo-classes with pref, the availability in content
             // depends on the pref.
             NonTSPseudoClass::Fullscreen => unsafe {
-<<<<<<< HEAD
-                mozilla::StaticPrefs_sVarCache_full_screen_api_unprefix_enabled
-            },
-||||||| merged common ancestors
-                mozilla::StaticPrefs_sVarCache_full_screen_api_unprefix_enabled
-            },
-            NonTSPseudoClass::Defined => unsafe {
-                structs::nsContentUtils_sIsCustomElementsEnabled
-            },
-=======
                 mozilla::StaticPrefs::sVarCache_full_screen_api_unprefix_enabled
             },
->>>>>>> upstream-releases
             // Otherwise, a pseudo-class is enabled in content when it
             // doesn't have any enabled flag.
             _ => !self

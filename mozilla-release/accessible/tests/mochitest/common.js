@@ -840,18 +840,10 @@ function getTextFromClipboard() {
 
   if (str) {
     str = str.value.QueryInterface(Ci.nsISupportsString);
-<<<<<<< HEAD
-  if (str)
-    return str.data;
-||||||| merged common ancestors
-  if (str)
-    return str.data.substring(0, strLength.value / 2);
-=======
   }
   if (str) {
     return str.data;
   }
->>>>>>> upstream-releases
 
   return "";
 }

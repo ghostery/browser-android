@@ -596,13 +596,4 @@ int32_t NumberStringBuilder::trimFront(int32_t start) const {
         USET_SPAN_CONTAINED);
 }
 
-bool NumberStringBuilder::containsField(Field field) const {
-    for (int32_t i = 0; i < fLength; i++) {
-        if (field == fieldAt(i)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 #endif /* #if !UCONFIG_NO_FORMATTING */

@@ -24,19 +24,10 @@ test_valid_value("rotate", "0deg");
 test_valid_value("rotate", "100 200 300 400grad");
 test_valid_value("rotate", "400grad 100 200 300", "100 200 300 400grad");
 
-<<<<<<< HEAD
-test_valid_value("rotate", "x 400grad");
-test_valid_value("rotate", "400grad x", "x 400grad");
-test_valid_value("rotate", "1 0 0 400grad", "x 400grad");
-||||||| merged common ancestors
-test_valid_value("rotate", "x 400grad", "1 0 0 400grad");
-test_valid_value("rotate", "400grad x", "1 0 0 400grad");
-=======
 // If the axis is parallel with the x, y, or z axis, it must serialize as the appropriate keyword.
 test_valid_value("rotate", "x 400grad");
 test_valid_value("rotate", "400grad x", "x 400grad");
 test_valid_value("rotate", "1 0 0 400grad", "x 400grad");
->>>>>>> upstream-releases
 
 test_valid_value("rotate", "y 400grad");
 test_valid_value("rotate", "400grad y", "y 400grad");

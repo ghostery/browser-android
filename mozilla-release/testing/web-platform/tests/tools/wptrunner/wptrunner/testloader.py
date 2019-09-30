@@ -109,22 +109,14 @@ class TagFilter(object):
 
 
 class ManifestLoader(object):
-<<<<<<< HEAD
-    def __init__(self, test_paths, force_manifest_update=False, manifest_download=False,
-                 types=None, meta_filters=None):
-||||||| merged common ancestors
-    def __init__(self, test_paths, force_manifest_update=False, manifest_download=False, types=None, meta_filters=None):
-=======
     def __init__(self, test_paths, force_manifest_update=False, manifest_download=False,
                  types=None):
->>>>>>> upstream-releases
         do_delayed_imports()
         self.test_paths = test_paths
         self.force_manifest_update = force_manifest_update
         self.manifest_download = manifest_download
         self.types = types
         self.logger = structured.get_default_logger()
-        self.meta_filters = meta_filters
         if self.logger is None:
             self.logger = structured.structuredlog.StructuredLogger("ManifestLoader")
 
@@ -142,54 +134,9 @@ class ManifestLoader(object):
         cache_root = os.path.join(metadata_path, ".cache")
         if self.manifest_download:
             download_from_github(manifest_path, tests_path)
-<<<<<<< HEAD
-        return manifest.load_and_update(tests_path, manifest_path, url_base,
-                                        cache_root=cache_root, update=self.force_manifest_update,
-                                        meta_filters=self.meta_filters)
-||||||| merged common ancestors
-
-        if not recreate:
-            try:
-                with open(manifest_path) as f:
-                    json_data = json.load(f)
-            except IOError:
-                self.logger.info("Unable to find test manifest")
-            except ValueError:
-                self.logger.info("Unable to parse test manifest")
-
-        if not json_data:
-            self.logger.info("Creating test manifest")
-            manifest_file = manifest.Manifest(url_base)
-        else:
-            try:
-                manifest_file = manifest.Manifest.from_json(tests_path, json_data)
-            except manifest.ManifestVersionMismatch:
-                manifest_file = manifest.Manifest(url_base)
-
-        manifest_update.update(tests_path, manifest_file, True)
-
-        manifest.write(manifest_file, manifest_path)
-
-    def load_manifest(self, tests_path, manifest_path, url_base="/", **kwargs):
-        if (not os.path.exists(manifest_path) or
-            self.force_manifest_update):
-            self.update_manifest(manifest_path, tests_path, url_base, download=self.manifest_download)
-        try:
-            manifest_file = manifest.load(tests_path, manifest_path, types=self.types, meta_filters=self.meta_filters)
-        except manifest.ManifestVersionMismatch:
-            manifest_file = manifest.Manifest(url_base)
-        if manifest_file.url_base != url_base:
-            self.logger.info("Updating url_base in manifest from %s to %s" % (manifest_file.url_base,
-                                                                              url_base))
-            manifest_file.url_base = url_base
-            manifest.write(manifest_file, manifest_path)
-
-        return manifest_file
-=======
         return manifest.load_and_update(tests_path, manifest_path, url_base,
                                         cache_root=cache_root, update=self.force_manifest_update,
                                         types=self.types)
->>>>>>> upstream-releases
 
 
 def iterfilter(filters, iter):
@@ -288,27 +235,10 @@ class TestLoader(object):
         for test_type, test_path, tests in manifest_items:
             manifest_file = manifests_by_url_base[iter(tests).next().url_base]
             metadata_path = self.manifests[manifest_file]["metadata_path"]
-<<<<<<< HEAD
 
             inherit_metadata, test_metadata = self.load_metadata(manifest_file, metadata_path, test_path)
             for test in tests:
                 yield test_path, test_type, self.get_test(manifest_file, test, inherit_metadata, test_metadata)
-||||||| merged common ancestors
-            inherit_metadata, test_metadata = self.load_metadata(manifest_file, metadata_path, test_path)
-
-            for test in iterfilter(self.meta_filters,
-                                   self.iter_wpttest(inherit_metadata, test_metadata, tests)):
-                yield test_path, test_type, test
-
-    def iter_wpttest(self, inherit_metadata, test_metadata, tests):
-        for manifest_test in tests:
-            yield self.get_test(manifest_test, inherit_metadata, test_metadata)
-=======
-
-            inherit_metadata, test_metadata = self.load_metadata(manifest_file, metadata_path, test_path)
-            for test in tests:
-                yield test_path, test_type, self.get_test(manifest_file, test, inherit_metadata, test_metadata)
->>>>>>> upstream-releases
 
     def _load_tests(self):
         """Read in the tests from the manifest file and add them to a queue"""

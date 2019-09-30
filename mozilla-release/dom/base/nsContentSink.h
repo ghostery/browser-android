@@ -52,44 +52,18 @@ class ScriptLoader;
 
 extern mozilla::LazyLogModule gContentSinkLogModuleInfo;
 
-<<<<<<< HEAD
-#define SINK_TRACE_CALLS 0x1
-#define SINK_TRACE_REFLOW 0x2
-#define SINK_ALWAYS_REFLOW 0x4
-||||||| merged common ancestors
-#define SINK_TRACE_CALLS              0x1
-#define SINK_TRACE_REFLOW             0x2
-#define SINK_ALWAYS_REFLOW            0x4
-=======
 #  define SINK_TRACE_CALLS 0x1
 #  define SINK_TRACE_REFLOW 0x2
 #  define SINK_ALWAYS_REFLOW 0x4
->>>>>>> upstream-releases
 
 #  define SINK_LOG_TEST(_lm, _bit) (int((_lm)->Level()) & (_bit))
 
-<<<<<<< HEAD
-#define SINK_TRACE(_lm, _bit, _args) \
-  do {                               \
-    if (SINK_LOG_TEST(_lm, _bit)) {  \
-      printf_stderr _args;           \
-    }                                \
-  } while (0)
-||||||| merged common ancestors
-#define SINK_TRACE(_lm, _bit, _args) \
-  do {                     \
-    if (SINK_LOG_TEST(_lm, _bit)) {  \
-      printf_stderr _args;             \
-    }                                \
-  } while(0)
-=======
 #  define SINK_TRACE(_lm, _bit, _args) \
     do {                               \
       if (SINK_LOG_TEST(_lm, _bit)) {  \
         printf_stderr _args;           \
       }                                \
     } while (0)
->>>>>>> upstream-releases
 
 #else
 #  define SINK_TRACE(_lm, _bit, _args)
@@ -103,18 +77,11 @@ class nsContentSink : public nsICSSLoaderObserver,
                       public nsSupportsWeakReference,
                       public nsStubDocumentObserver,
                       public nsITimerCallback,
-<<<<<<< HEAD
-                      public nsINamed {
-||||||| merged common ancestors
-                      public nsINamed
-{
-=======
                       public nsINamed {
  protected:
   typedef mozilla::dom::Document Document;
 
  private:
->>>>>>> upstream-releases
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsContentSink, nsICSSLoaderObserver)
   // nsITimerCallback
@@ -178,16 +145,8 @@ class nsContentSink : public nsICSSLoaderObserver,
     CACHE_SELECTION_RESELECT_WITHOUT_MANIFEST = 3
   };
 
-<<<<<<< HEAD
-  nsresult Init(nsIDocument* aDoc, nsIURI* aURI, nsISupports* aContainer,
-                nsIChannel* aChannel);
-||||||| merged common ancestors
-  nsresult Init(nsIDocument* aDoc, nsIURI* aURI,
-                nsISupports* aContainer, nsIChannel* aChannel);
-=======
   nsresult Init(Document* aDoc, nsIURI* aURI, nsISupports* aContainer,
                 nsIChannel* aChannel);
->>>>>>> upstream-releases
 
   nsresult ProcessHTTPHeaders(nsIChannel* aChannel);
   nsresult ProcessHeaderData(nsAtom* aHeader, const nsAString& aValue,
@@ -310,24 +269,11 @@ class nsContentSink : public nsICSSLoaderObserver,
 
   void StopDeflecting() { mDeflectedCount = sPerfDeflectCount; }
 
-<<<<<<< HEAD
- protected:
-  nsCOMPtr<nsIDocument> mDocument;
-  RefPtr<nsParserBase> mParser;
-  nsCOMPtr<nsIURI> mDocumentURI;
-  nsCOMPtr<nsIDocShell> mDocShell;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument>         mDocument;
-  RefPtr<nsParserBase>        mParser;
-  nsCOMPtr<nsIURI>              mDocumentURI;
-  nsCOMPtr<nsIDocShell>         mDocShell;
-=======
  protected:
   RefPtr<Document> mDocument;
   RefPtr<nsParserBase> mParser;
   nsCOMPtr<nsIURI> mDocumentURI;
   nsCOMPtr<nsIDocShell> mDocShell;
->>>>>>> upstream-releases
   RefPtr<mozilla::css::Loader> mCSSLoader;
   RefPtr<nsNodeInfoManager> mNodeInfoManager;
   RefPtr<mozilla::dom::ScriptLoader> mScriptLoader;

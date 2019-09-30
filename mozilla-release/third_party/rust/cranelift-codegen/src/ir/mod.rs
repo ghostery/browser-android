@@ -50,19 +50,9 @@ pub use crate::ir::trapcode::TrapCode;
 pub use crate::ir::types::Type;
 pub use crate::ir::valueloc::{ArgumentLoc, ValueLoc};
 
-<<<<<<< HEAD
-use binemit;
-use entity::{PrimaryMap, SecondaryMap};
-use isa;
-||||||| merged common ancestors
-use binemit;
-use entity::{EntityMap, PrimaryMap};
-use isa;
-=======
 use crate::binemit;
 use crate::entity::{entity_impl, PrimaryMap, SecondaryMap};
 use crate::isa;
->>>>>>> upstream-releases
 
 /// Map of value locations.
 pub type ValueLocations = SecondaryMap<Value, ValueLoc>;
@@ -80,11 +70,6 @@ pub type EbbOffsets = SecondaryMap<Ebb, binemit::CodeOffset>;
 pub type JumpTableOffsets = SecondaryMap<JumpTable, binemit::CodeOffset>;
 
 /// Source locations for instructions.
-<<<<<<< HEAD
-pub type SourceLocs = SecondaryMap<Inst, SourceLoc>;
-||||||| merged common ancestors
-pub type SourceLocs = EntityMap<Inst, SourceLoc>;
-=======
 pub type SourceLocs = SecondaryMap<Inst, SourceLoc>;
 
 /// Marked with a label value.
@@ -117,4 +102,3 @@ pub enum ValueLabelAssignments {
         value: Value,
     },
 }
->>>>>>> upstream-releases

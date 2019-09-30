@@ -291,15 +291,8 @@ def run_tests(config, test_paths, product, **kwargs):
                 logger.suite_end()
                 if repeat_until_unexpected and unexpected_total > 0:
                     break
-<<<<<<< HEAD
-                if len(test_loader.test_ids) == skipped_tests:
-                    break;
-||||||| merged common ancestors
-                logger.suite_end()
-=======
                 if repeat_count == 1 and len(test_loader.test_ids) == skipped_tests:
                     break
->>>>>>> upstream-releases
 
     if test_total == 0:
         if skipped_tests > 0:

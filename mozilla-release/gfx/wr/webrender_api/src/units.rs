@@ -12,25 +12,12 @@
 //! The terms "layer" and "stacking context" can be used interchangeably
 //! in the context of coordinate systems.
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/units.rs
-use app_units::Au;
-use euclid::{Length, TypedRect, TypedScale, TypedSize2D, TypedTransform3D, TypedTranslation2D};
-||||||| merged common ancestors
-use app_units::Au;
-use euclid::{Length, TypedRect, TypedScale, TypedSize2D, TypedTransform3D};
-=======
 pub use app_units::Au;
 use euclid::{Length, TypedRect, TypedScale, TypedSize2D, TypedTransform3D, TypedTranslation2D};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/units.rs
 use euclid::{TypedPoint2D, TypedPoint3D, TypedVector2D, TypedVector3D, TypedSideOffsets2D};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/units.rs
-use DirtyRect;
-||||||| merged common ancestors
-=======
 use euclid::HomogeneousVector;
 // local imports
 use crate::image::DirtyRect;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/units.rs
 
 /// Geometry in the coordinate system of the render target (screen or intermediate
 /// surface) in physical pixels.

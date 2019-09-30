@@ -10,16 +10,6 @@ from raptor.cmdline import verify_options
 
 
 def test_verify_options(filedir):
-<<<<<<< HEAD
-    args = Namespace(app='firefox',
-                     binary='invalid/path',
-                     gecko_profile='False',
-                     page_cycles=1,
-                     page_timeout=60000,
-                     debug='True')
-||||||| merged common ancestors
-    args = Namespace(app='firefox', binary='invalid/path')
-=======
     args = Namespace(app='firefox',
                      binary='invalid/path',
                      gecko_profile='False',
@@ -30,7 +20,6 @@ def test_verify_options(filedir):
                      cpu_test=False,
                      memory_test=False,
                      enable_webrender=False)
->>>>>>> upstream-releases
     parser = ArgumentParser()
 
     with pytest.raises(SystemExit):
@@ -39,16 +28,6 @@ def test_verify_options(filedir):
     args.binary = os.path.join(filedir, 'fake_binary.exe')
     verify_options(parser, args)  # assert no exception
 
-<<<<<<< HEAD
-    args = Namespace(app='geckoview',
-                     binary='org.mozilla.geckoview_example',
-                     gecko_profile='False',
-                     is_release_build=False,
-                     host='sophie')
-    verify_options(parser, args)  # assert no exception
-
-||||||| merged common ancestors
-=======
     args = Namespace(app='geckoview',
                      binary='org.mozilla.geckoview_example',
                      activity='org.mozilla.geckoview_example.GeckoViewActivity',
@@ -116,7 +95,6 @@ def test_verify_options(filedir):
 
     verify_options(parser, args)  # also will work as uses default activity
 
->>>>>>> upstream-releases
 
 if __name__ == '__main__':
     mozunit.main()

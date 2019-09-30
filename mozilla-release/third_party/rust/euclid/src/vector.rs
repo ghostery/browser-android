@@ -32,7 +32,6 @@ pub struct TypedVector2D<T, U> {
     #[doc(hidden)]
     pub _unit: PhantomData<U>,
 }
-mint_vec!(TypedVector2D[x, y] = Vector2);
 
 mint_vec!(TypedVector2D[x, y] = Vector2);
 
@@ -482,7 +481,6 @@ pub struct TypedVector3D<T, U> {
     #[doc(hidden)]
     pub _unit: PhantomData<U>,
 }
-mint_vec!(TypedVector3D[x, y, z] = Vector3);
 
 mint_vec!(TypedVector3D[x, y, z] = Vector3);
 

@@ -425,30 +425,6 @@ function setupEnvironment() {
   }
 
   var defaultMochitestPrefs = {
-<<<<<<< HEAD
-    'set': [
-      // We can't use the Fake H.264 GMP encoder with a real decoder until
-      // bug 1509012 is done. So force using the Fake H.264 GMP decoder for now.
-      ['media.navigator.mediadatadecoder_h264_enabled', false],
-      ['media.peerconnection.enabled', true],
-      ['media.peerconnection.identity.enabled', true],
-      ['media.peerconnection.identity.timeout', 120000],
-      ['media.peerconnection.ice.stun_client_maximum_transmits', 14],
-      ['media.peerconnection.ice.trickle_grace_period', 30000],
-      ['media.peerconnection.remoteTrackId.enabled', true],
-      ['media.peerconnection.rtpsourcesapi.enabled', true],
-      ['media.navigator.permission.disabled', true],
-||||||| merged common ancestors
-    'set': [
-      ['media.peerconnection.enabled', true],
-      ['media.peerconnection.identity.enabled', true],
-      ['media.peerconnection.identity.timeout', 120000],
-      ['media.peerconnection.ice.stun_client_maximum_transmits', 14],
-      ['media.peerconnection.ice.trickle_grace_period', 30000],
-      ['media.peerconnection.remoteTrackId.enabled', true],
-      ['media.peerconnection.rtpsourcesapi.enabled', true],
-      ['media.navigator.permission.disabled', true],
-=======
     set: [
       // We can't use the Fake H.264 GMP encoder with a real decoder until
       // bug 1509012 is done. So force using the Fake H.264 GMP decoder for now.
@@ -460,7 +436,6 @@ function setupEnvironment() {
       ["media.peerconnection.ice.trickle_grace_period", 30000],
       ["media.peerconnection.rtpsourcesapi.enabled", true],
       ["media.navigator.permission.disabled", true],
->>>>>>> upstream-releases
       // If either fake audio or video is desired we enable fake streams.
       // If loopback devices are set they will be chosen instead of fakes in gecko.
       ["media.navigator.streams.fake", WANT_FAKE_AUDIO || WANT_FAKE_VIDEO],

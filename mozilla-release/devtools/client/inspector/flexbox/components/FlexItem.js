@@ -40,48 +40,6 @@ class FlexItem extends PureComponent {
     } = this.props;
     const { nodeFront } = flexItem;
 
-<<<<<<< HEAD
-    return (
-      dom.button(
-        {
-          className: "devtools-button devtools-monospace",
-          onClick: e => {
-            e.stopPropagation();
-            scrollToTop();
-            setSelectedNode(nodeFront);
-            onHideBoxModelHighlighter();
-          },
-          onMouseOut: () => onHideBoxModelHighlighter(),
-          onMouseOver: () => onShowBoxModelHighlighterForNode(nodeFront),
-        },
-        dom.span({ className: "flex-item-index" }, index),
-        Rep({
-          defaultRep: ElementNode,
-          mode: MODE.TINY,
-          object: translateNodeFrontToGrip(nodeFront),
-        })
-      )
-||||||| merged common ancestors
-    return (
-      dom.li({},
-        dom.button(
-          {
-            className: "devtools-button devtools-monospace",
-            onClick: () => {
-              setSelectedNode(nodeFront);
-              onHideBoxModelHighlighter();
-            },
-            onMouseOut: () => onHideBoxModelHighlighter(),
-            onMouseOver: () => onShowBoxModelHighlighterForNode(nodeFront),
-          },
-          Rep({
-            defaultRep: ElementNode,
-            mode: MODE.TINY,
-            object: translateNodeFrontToGrip(nodeFront),
-          })
-        )
-      )
-=======
     return dom.button(
       {
         className: "devtools-button devtools-monospace",
@@ -100,7 +58,6 @@ class FlexItem extends PureComponent {
         mode: MODE.TINY,
         object: translateNodeFrontToGrip(nodeFront),
       })
->>>>>>> upstream-releases
     );
   }
 }

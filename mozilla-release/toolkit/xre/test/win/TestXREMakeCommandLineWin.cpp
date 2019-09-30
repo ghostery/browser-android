@@ -18,31 +18,6 @@
 #define DUMMY_ARG1 L"\"arg 1\" "
 
 #ifndef MAXPATHLEN
-<<<<<<< HEAD
-#ifdef PATH_MAX
-#define MAXPATHLEN PATH_MAX
-#elif defined(MAX_PATH)
-#define MAXPATHLEN MAX_PATH
-#elif defined(_MAX_PATH)
-#define MAXPATHLEN _MAX_PATH
-#elif defined(CCHMAXPATH)
-#define MAXPATHLEN CCHMAXPATH
-#else
-#define MAXPATHLEN 1024
-#endif
-||||||| merged common ancestors
-# ifdef PATH_MAX
-#  define MAXPATHLEN PATH_MAX
-# elif defined(MAX_PATH)
-#  define MAXPATHLEN MAX_PATH
-# elif defined(_MAX_PATH)
-#  define MAXPATHLEN _MAX_PATH
-# elif defined(CCHMAXPATH)
-#  define MAXPATHLEN CCHMAXPATH
-# else
-#  define MAXPATHLEN 1024
-# endif
-=======
 #  ifdef PATH_MAX
 #    define MAXPATHLEN PATH_MAX
 #  elif defined(MAX_PATH)
@@ -54,7 +29,6 @@
 #  else
 #    define MAXPATHLEN 1024
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #define TEST_NAME L"XRE MakeCommandLine"
@@ -67,19 +41,8 @@
 // accomplished by converting inCmdLine to an argument list with
 // CommandLineToArgvW and converting it back to a command line with
 // MakeCommandLine.
-<<<<<<< HEAD
-static int verifyCmdLineCreation(wchar_t *inCmdLine, wchar_t *compareCmdLine,
-                                 bool passes, int testNum) {
-||||||| merged common ancestors
-static int
-verifyCmdLineCreation(wchar_t *inCmdLine,
-                      wchar_t *compareCmdLine,
-                      bool passes, int testNum)
-{
-=======
 static int verifyCmdLineCreation(wchar_t* inCmdLine, wchar_t* compareCmdLine,
                                  bool passes, int testNum) {
->>>>>>> upstream-releases
   int rv = 0;
   int i;
   int inArgc;
@@ -98,29 +61,15 @@ static int verifyCmdLineCreation(wchar_t* inCmdLine, wchar_t* compareCmdLine,
   // handles argv[0] differently than other arguments since argv[0] is the path
   // to the binary being executed and MakeCommandLine only handles argv[1] and
   // larger.
-<<<<<<< HEAD
-  wchar_t *inCmdLineNew = (wchar_t *)malloc(
-      (wcslen(DUMMY_ARG1) + wcslen(inCmdLine) + 1) * sizeof(wchar_t));
-||||||| merged common ancestors
-  wchar_t *inCmdLineNew = (wchar_t *) malloc((wcslen(DUMMY_ARG1) + wcslen(inCmdLine) + 1) * sizeof(wchar_t));
-=======
   wchar_t* inCmdLineNew = (wchar_t*)malloc(
       (wcslen(DUMMY_ARG1) + wcslen(inCmdLine) + 1) * sizeof(wchar_t));
->>>>>>> upstream-releases
   wcscpy(inCmdLineNew, DUMMY_ARG1);
   wcscat(inCmdLineNew, inCmdLine);
   LPWSTR* inArgv = CommandLineToArgvW(inCmdLineNew, &inArgc);
 
   auto outCmdLine = mozilla::MakeCommandLine(inArgc - 1, inArgv + 1);
-<<<<<<< HEAD
-  wchar_t *outCmdLineNew = (wchar_t *)malloc(
-      (wcslen(DUMMY_ARG1) + wcslen(outCmdLine.get()) + 1) * sizeof(wchar_t));
-||||||| merged common ancestors
-  wchar_t *outCmdLineNew = (wchar_t *) malloc((wcslen(DUMMY_ARG1) + wcslen(outCmdLine.get()) + 1) * sizeof(wchar_t));
-=======
   wchar_t* outCmdLineNew = (wchar_t*)malloc(
       (wcslen(DUMMY_ARG1) + wcslen(outCmdLine.get()) + 1) * sizeof(wchar_t));
->>>>>>> upstream-releases
   wcscpy(outCmdLineNew, DUMMY_ARG1);
   wcscat(outCmdLineNew, outCmdLine.get());
   LPWSTR* outArgv = CommandLineToArgvW(outCmdLineNew, &outArgc);
@@ -206,14 +155,7 @@ static int verifyCmdLineCreation(wchar_t* inCmdLine, wchar_t* compareCmdLine,
   return rv;
 }
 
-<<<<<<< HEAD
-int wmain(int argc, wchar_t *argv[]) {
-||||||| merged common ancestors
-int wmain(int argc, wchar_t *argv[])
-{
-=======
 int wmain(int argc, wchar_t* argv[]) {
->>>>>>> upstream-releases
   int i;
   int rv = 0;
 
@@ -311,27 +253,11 @@ int wmain(int argc, wchar_t* argv[]) {
 
 #  include <shellapi.h>
 
-<<<<<<< HEAD
-int main(int argc, char **argv) {
-||||||| merged common ancestors
-int main(int argc, char **argv)
-{
-=======
 int main(int argc, char** argv) {
->>>>>>> upstream-releases
   LPWSTR commandLine = GetCommandLineW();
   int argcw = 0;
-<<<<<<< HEAD
-  LPWSTR *argvw = CommandLineToArgvW(commandLine, &argcw);
-  if (!argvw) return 127;
-||||||| merged common ancestors
-  LPWSTR *argvw = CommandLineToArgvW(commandLine, &argcw);
-  if (!argvw)
-    return 127;
-=======
   LPWSTR* argvw = CommandLineToArgvW(commandLine, &argcw);
   if (!argvw) return 127;
->>>>>>> upstream-releases
 
   int result = wmain(argcw, argvw);
   LocalFree(argvw);

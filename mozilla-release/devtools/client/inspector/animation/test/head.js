@@ -58,23 +58,6 @@ const closeAnimationInspector = async function() {
  */
 const enableAnimationFeatures = function() {
   return new Promise(resolve => {
-<<<<<<< HEAD
-    SpecialPowers.pushPrefEnv({"set": [
-      ["dom.animations-api.core.enabled", true],
-      ["dom.animations-api.getAnimations.enabled", true],
-      ["dom.animations-api.implicit-keyframes.enabled", true],
-      ["dom.animations-api.timelines.enabled", true],
-      ["layout.css.step-position-jump.enabled", true],
-    ]}, resolve);
-||||||| merged common ancestors
-    SpecialPowers.pushPrefEnv({"set": [
-      ["dom.animations-api.core.enabled", true],
-      ["dom.animations-api.getAnimations.enabled", true],
-      ["dom.animations-api.implicit-keyframes.enabled", true],
-      ["dom.animations-api.timelines.enabled", true],
-      ["layout.css.frames-timing.enabled", true],
-    ]}, resolve);
-=======
     SpecialPowers.pushPrefEnv(
       {
         set: [
@@ -87,7 +70,6 @@ const enableAnimationFeatures = function() {
       },
       resolve
     );
->>>>>>> upstream-releases
   });
 };
 
@@ -338,20 +320,12 @@ const clickOnTargetNode = async function(animationInspector, panel, index) {
     index
   ];
   targetEl.scrollIntoView(false);
-<<<<<<< HEAD
-  const onHighlight = animationInspector.inspector.highlighter.once("node-highlight");
-  const onAnimationTargetUpdated = animationInspector.once("animation-target-rendered");
-||||||| merged common ancestors
-  const onHighlight = animationInspector.inspector.toolbox.once("node-highlight");
-  const onAnimationTargetUpdated = animationInspector.once("animation-target-rendered");
-=======
   const onHighlight = animationInspector.inspector.highlighter.once(
     "node-highlight"
   );
   const onAnimationTargetUpdated = animationInspector.once(
     "animation-target-rendered"
   );
->>>>>>> upstream-releases
   EventUtils.synthesizeMouseAtCenter(targetEl, {}, targetEl.ownerGlobal);
   await onAnimationTargetUpdated;
   await waitForSummaryAndDetail(animationInspector);
@@ -516,16 +490,8 @@ const selectAnimationInspector = async function(inspector) {
   await inspector.toolbox.selectTool("inspector");
   const onDispatched = waitForDispatch(inspector, "UPDATE_ANIMATIONS");
   inspector.sidebar.select("animationinspector");
-<<<<<<< HEAD
-  await onUpdated;
-  await waitForRendering(inspector.getPanel("animationinspector"));
-||||||| merged common ancestors
-  await onUpdated;
-  await waitForRendering(inspector.animationinspector);
-=======
   await onDispatched;
   await waitForRendering(inspector.getPanel("animationinspector"));
->>>>>>> upstream-releases
 };
 
 /**
@@ -549,21 +515,9 @@ const selectNodeAndWaitForAnimations = async function(
 ) {
   // We want to make sure the rest of the test waits for the animations to
   // be properly displayed (wait for all target DOM nodes to be previewed).
-<<<<<<< HEAD
-  const onUpdated = inspector.once("inspector-updated");
-  await selectNode(data, inspector, reason);
-  await onUpdated;
-  await waitForRendering(inspector.getPanel("animationinspector"));
-||||||| merged common ancestors
-  const onUpdated = inspector.once("inspector-updated");
-  await selectNode(data, inspector, reason);
-  await onUpdated;
-  await waitForRendering(inspector.animationinspector);
-=======
   selectNode(data, inspector, reason);
   await waitForDispatch(inspector, "UPDATE_ANIMATIONS");
   await waitForRendering(inspector.getPanel("animationinspector"));
->>>>>>> upstream-releases
 };
 
 /**

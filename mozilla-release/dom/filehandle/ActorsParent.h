@@ -90,17 +90,9 @@ class FileHandleThreadPool final {
   bool MaybeFireCallback(StoragesCompleteCallback* aCallback);
 };
 
-<<<<<<< HEAD
-class BackgroundMutableFileParentBase : public PBackgroundMutableFileParent {
-||||||| merged common ancestors
-class BackgroundMutableFileParentBase
-  : public PBackgroundMutableFileParent
-{
-=======
 class BackgroundMutableFileParentBase : public PBackgroundMutableFileParent {
   friend PBackgroundMutableFileParent;
 
->>>>>>> upstream-releases
   nsTHashtable<nsPtrHashKey<FileHandle>> mFileHandles;
   nsCString mDirectoryId;
   nsString mFileName;
@@ -162,49 +154,18 @@ class BackgroundMutableFileParentBase : public PBackgroundMutableFileParent {
   // IPDL methods are only called by IPDL.
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 
-<<<<<<< HEAD
-  virtual PBackgroundFileHandleParent* AllocPBackgroundFileHandleParent(
-      const FileMode& aMode) override;
-||||||| merged common ancestors
-  virtual PBackgroundFileHandleParent*
-  AllocPBackgroundFileHandleParent(const FileMode& aMode) override;
-=======
   virtual PBackgroundFileHandleParent* AllocPBackgroundFileHandleParent(
       const FileMode& aMode);
->>>>>>> upstream-releases
 
   virtual mozilla::ipc::IPCResult RecvPBackgroundFileHandleConstructor(
       PBackgroundFileHandleParent* aActor, const FileMode& aMode) override;
 
-<<<<<<< HEAD
-  virtual bool DeallocPBackgroundFileHandleParent(
-      PBackgroundFileHandleParent* aActor) override;
-||||||| merged common ancestors
-  virtual bool
-  DeallocPBackgroundFileHandleParent(PBackgroundFileHandleParent* aActor)
-                                     override;
-=======
   virtual bool DeallocPBackgroundFileHandleParent(
       PBackgroundFileHandleParent* aActor);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvDeleteMe() override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvDeleteMe() override;
-=======
   mozilla::ipc::IPCResult RecvDeleteMe();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvGetFileId(int64_t* aFileId) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvGetFileId(int64_t* aFileId) override;
-=======
   virtual mozilla::ipc::IPCResult RecvGetFileId(int64_t* aFileId);
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

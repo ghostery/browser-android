@@ -18,15 +18,7 @@ function run_test() {
   runHttpTests(tests, testComplete(srv));
 }
 
-<<<<<<< HEAD
-
 /** **********
-||||||| merged common ancestors
-
-/************
-=======
-/** **********
->>>>>>> upstream-releases
  * HANDLERS *
  ************/
 
@@ -54,30 +46,15 @@ function pathHandler(request, response) {
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
-<<<<<<< HEAD
-    new Test("http://localhost:" + srv.identity.primaryPort + "/path-handler",
-             null, check),
-||||||| merged common ancestors
-    new Test("http://localhost:" + srv.identity.primaryPort + "/path-handler",
-             null, check)
-=======
     new Test(
       "http://localhost:" + srv.identity.primaryPort + "/path-handler",
       null,
       check
     ),
->>>>>>> upstream-releases
   ];
 });
 
-<<<<<<< HEAD
-function check(ch, cx) {
-||||||| merged common ancestors
-function check(ch, cx)
-{
-=======
 function check(ch) {
->>>>>>> upstream-releases
   var headerValue;
 
   headerValue = ch.getResponseHeader("Proxy-Authenticate");

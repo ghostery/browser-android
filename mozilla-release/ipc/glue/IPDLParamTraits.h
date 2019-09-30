@@ -25,41 +25,14 @@ struct IPDLParamTraits {
   // This is the default impl which discards the actor parameter and calls into
   // ParamTraits. Types which want to use the actor parameter must specialize
   // IPDLParamTraits.
-<<<<<<< HEAD
   template <typename R>
   static inline void Write(IPC::Message* aMsg, IProtocol*, R&& aParam) {
-    static_assert(
-        IsSame<P, typename IPC::ParamTraitsSelector<R>::Type>::value,
-        "IPDLParamTraits::Write only forwards calls which work via WriteParam");
-
-||||||| merged common ancestors
-  template<typename R>
-  static inline void Write(IPC::Message* aMsg, IProtocol*, R&& aParam)
-  {
-    static_assert(IsSame<P, typename IPC::ParamTraitsSelector<R>::Type>::value,
-                  "IPDLParamTraits::Write only forwards calls which work via WriteParam");
-
-=======
-  template <typename R>
-  static inline void Write(IPC::Message* aMsg, IProtocol*, R&& aParam) {
->>>>>>> upstream-releases
     IPC::ParamTraits<P>::Write(aMsg, std::forward<R>(aParam));
   }
 
   template <typename R>
   static inline bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
                           IProtocol*, R* aResult) {
-<<<<<<< HEAD
-    static_assert(
-        IsSame<P, typename IPC::ParamTraitsSelector<R>::Type>::value,
-        "IPDLParamTraits::Read only forwards calls which work via ReadParam");
-
-||||||| merged common ancestors
-    static_assert(IsSame<P, typename IPC::ParamTraitsSelector<R>::Type>::value,
-                  "IPDLParamTraits::Read only forwards calls which work via ReadParam");
-
-=======
->>>>>>> upstream-releases
     return IPC::ParamTraits<P>::Read(aMsg, aIter, aResult);
   }
 };
@@ -74,72 +47,20 @@ struct IPDLParamTraits {
 // implementation. See the comment on IPDLParamTraits<nsTArray<T>>::Write for
 // more information.
 //
-<<<<<<< HEAD
-template <typename P>
-static MOZ_NEVER_INLINE void WriteIPDLParam(IPC::Message* aMsg,
-                                            IProtocol* aActor, P&& aParam) {
-  IPDLParamTraits<typename IPC::ParamTraitsSelector<P>::Type>::Write(
-      aMsg, aActor, std::forward<P>(aParam));
-||||||| merged common ancestors
-template<typename P>
-static MOZ_NEVER_INLINE void
-WriteIPDLParam(IPC::Message* aMsg,
-               IProtocol* aActor,
-               P&& aParam)
-{
-  IPDLParamTraits<typename IPC::ParamTraitsSelector<P>::Type>
-    ::Write(aMsg, aActor, std::forward<P>(aParam));
-=======
 template <typename P>
 static MOZ_NEVER_INLINE void WriteIPDLParam(IPC::Message* aMsg,
                                             IProtocol* aActor, P&& aParam) {
   IPDLParamTraits<typename Decay<P>::Type>::Write(aMsg, aActor,
                                                   std::forward<P>(aParam));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <typename P>
-static MOZ_NEVER_INLINE bool ReadIPDLParam(const IPC::Message* aMsg,
-                                           PickleIterator* aIter,
-                                           IProtocol* aActor, P* aResult) {
-  return IPDLParamTraits<typename IPC::ParamTraitsSelector<P>::Type>::Read(
-      aMsg, aIter, aActor, aResult);
-||||||| merged common ancestors
-template<typename P>
-static MOZ_NEVER_INLINE bool
-ReadIPDLParam(const IPC::Message* aMsg,
-              PickleIterator* aIter,
-              IProtocol* aActor,
-              P* aResult)
-{
-  return IPDLParamTraits<typename IPC::ParamTraitsSelector<P>::Type>
-    ::Read(aMsg, aIter, aActor, aResult);
-=======
 template <typename P>
 static MOZ_NEVER_INLINE bool ReadIPDLParam(const IPC::Message* aMsg,
                                            PickleIterator* aIter,
                                            IProtocol* aActor, P* aResult) {
   return IPDLParamTraits<P>::Read(aMsg, aIter, aActor, aResult);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// nsTArray support for IPDLParamTraits
-template <typename T>
-struct IPDLParamTraits<nsTArray<T>> {
-  static inline void Write(IPC::Message* aMsg, IProtocol* aActor,
-                           const nsTArray<T>& aParam) {
-    WriteInternal(aMsg, aActor, aParam);
-||||||| merged common ancestors
-// nsTArray support for IPDLParamTraits
-template<typename T>
-struct IPDLParamTraits<nsTArray<T>>
-{
-  static inline void Write(IPC::Message* aMsg, IProtocol* aActor,
-                           const nsTArray<T>& aParam) {
-    WriteInternal(aMsg, aActor, aParam);
-=======
 constexpr void WriteIPDLParamList(IPC::Message*, IProtocol*) {}
 
 template <typename P, typename... Ps>
@@ -173,7 +94,6 @@ struct IPDLParamTraits<RefPtr<T>> {
   static void Write(IPC::Message* aMsg, IProtocol* aActor,
                     const RefPtr<T>& aParam) {
     IPDLParamTraits<T*>::Write(aMsg, aActor, aParam.get());
->>>>>>> upstream-releases
   }
 
   static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
@@ -266,21 +186,6 @@ struct IPDLParamTraits<nsTArray<T>> {
     return true;
   }
 
-<<<<<<< HEAD
- private:
-  template <typename U>
-  static inline void WriteInternal(IPC::Message* aMsg, IProtocol* aActor,
-                                   U&& aParam) {
-    uint32_t length = aParam.Length();
-    WriteIPDLParam(aMsg, aActor, length);
-||||||| merged common ancestors
-private:
-  template<typename U>
-  static inline void
-  WriteInternal(IPC::Message* aMsg, IProtocol* aActor, U&& aParam) {
-    uint32_t length = aParam.Length();
-    WriteIPDLParam(aMsg, aActor, length);
-=======
  private:
   // Length has already been written. Const overload.
   static void WriteValues(IPC::Message* aMsg, IProtocol* aActor,
@@ -289,7 +194,6 @@ private:
       WriteIPDLParam(aMsg, aActor, elt);
     }
   }
->>>>>>> upstream-releases
 
   // Length has already been written. Rvalue overload.
   static void WriteValues(IPC::Message* aMsg, IProtocol* aActor,
@@ -309,13 +213,6 @@ private:
   // not use mozilla::IsPod here because it is perfectly reasonable to have
   // a data structure T for which IsPod<T>::value is true, yet also have a
   // {IPDL,}ParamTraits<T> specialization.
-<<<<<<< HEAD
-  static const bool sUseWriteBytes =
-      (mozilla::IsIntegral<T>::value || mozilla::IsFloatingPoint<T>::value);
-||||||| merged common ancestors
-  static const bool sUseWriteBytes = (mozilla::IsIntegral<T>::value ||
-                                      mozilla::IsFloatingPoint<T>::value);
-=======
   static const bool sUseWriteBytes =
       (mozilla::IsIntegral<T>::value || mozilla::IsFloatingPoint<T>::value);
 };
@@ -445,55 +342,9 @@ struct IPDLParamTraits<Tuple<Ts...>> {
                            std::index_sequence<Is...>) {
     return ReadIPDLParamList(aMsg, aIter, aActor, &Get<Is>(aResult)...);
   }
->>>>>>> upstream-releases
-};
-
-<<<<<<< HEAD
-template <typename T>
-struct IPDLParamTraits<mozilla::UniquePtr<T>> {
-  typedef mozilla::UniquePtr<T> paramType;
-
-  // Allow UniquePtr<T>& and UniquePtr<T>&&
-  template <typename ParamTypeRef>
-  static void Write(IPC::Message* aMsg, IProtocol* aActor,
-                    ParamTypeRef&& aParam) {
-    // write bool true if inner object is null
-    WriteParam(aMsg, aParam == nullptr);
-    if (aParam) {
-      WriteIPDLParam(aMsg, aActor, *aParam.get());
-      aParam = nullptr;
-    }
-  }
-
-  static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
-                   IProtocol* aActor, paramType* aResult) {
-    MOZ_ASSERT(aResult);
-    bool isNull;
-    *aResult = nullptr;
-    if (!ReadParam(aMsg, aIter, &isNull)) {
-      return false;
-    }
-    if (isNull) {
-      return true;
-    }
-    T* obj = new T();
-    if (!ReadIPDLParam(aMsg, aIter, aActor, obj)) {
-      delete obj;
-      return false;
-    }
-    aResult->reset(obj);
-    return true;
-  }
 };
 
 }  // namespace ipc
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace ipc
-} // namespace mozilla
-=======
-}  // namespace ipc
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // defined(mozilla_ipc_IPDLParamTraits_h)

@@ -392,25 +392,6 @@ nsresult gfxFontUtils::ReadCMAPTableFormat14(const uint8_t* aBuf,
 // subtable to replace it.
 
 #if defined(XP_MACOSX)
-<<<<<<< HEAD
-#define acceptableFormat4(p, e, k)                                         \
-  (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDMicrosoft && !(k)) || \
-   ((p) == PLATFORM_ID_UNICODE))
-
-#define acceptableUCS4Encoding(p, e, k)           \
-  (((p) == PLATFORM_ID_MICROSOFT &&               \
-    (e) == EncodingIDUCS4ForMicrosoftPlatform) && \
-       (k) != 12 ||                               \
-   ((p) == PLATFORM_ID_UNICODE && ((e) != EncodingIDUVSForUnicodePlatform)))
-||||||| merged common ancestors
-    #define acceptableFormat4(p,e,k) (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDMicrosoft && !(k)) || \
-                                      ((p) == PLATFORM_ID_UNICODE))
-
-    #define acceptableUCS4Encoding(p, e, k) \
-        (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDUCS4ForMicrosoftPlatform) && (k) != 12 || \
-         ((p) == PLATFORM_ID_UNICODE   && \
-          ((e) != EncodingIDUVSForUnicodePlatform)))
-=======
 #  define acceptableFormat4(p, e, k)                                         \
     (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDMicrosoft && !(k)) || \
      ((p) == PLATFORM_ID_UNICODE))
@@ -420,31 +401,13 @@ nsresult gfxFontUtils::ReadCMAPTableFormat14(const uint8_t* aBuf,
       (e) == EncodingIDUCS4ForMicrosoftPlatform) && \
          (k) != 12 ||                               \
      ((p) == PLATFORM_ID_UNICODE && ((e) != EncodingIDUVSForUnicodePlatform)))
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define acceptableFormat4(p, e, k)                                 \
-  (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDMicrosoft) || \
-   ((p) == PLATFORM_ID_UNICODE))
-||||||| merged common ancestors
-    #define acceptableFormat4(p,e,k) (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDMicrosoft) || \
-                                      ((p) == PLATFORM_ID_UNICODE))
-=======
 #  define acceptableFormat4(p, e, k)                                 \
     (((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDMicrosoft) || \
      ((p) == PLATFORM_ID_UNICODE))
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define acceptableUCS4Encoding(p, e, k) \
-  ((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDUCS4ForMicrosoftPlatform)
-||||||| merged common ancestors
-    #define acceptableUCS4Encoding(p, e, k) \
-        ((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDUCS4ForMicrosoftPlatform)
-=======
 #  define acceptableUCS4Encoding(p, e, k) \
     ((p) == PLATFORM_ID_MICROSOFT && (e) == EncodingIDUCS4ForMicrosoftPlatform)
->>>>>>> upstream-releases
 #endif
 
 #define acceptablePlatform(p) \
@@ -972,30 +935,6 @@ gfxUserFontType gfxFontUtils::DetermineFontDataType(const uint8_t* aFontData,
     }
   }
 
-<<<<<<< HEAD
-  // test for WOFF
-  if (aFontDataLength >= sizeof(AutoSwap_PRUint32)) {
-    const AutoSwap_PRUint32* version =
-        reinterpret_cast<const AutoSwap_PRUint32*>(aFontData);
-    if (uint32_t(*version) == TRUETYPE_TAG('w', 'O', 'F', 'F')) {
-      return GFX_USERFONT_WOFF;
-    }
-    if (Preferences::GetBool(GFX_PREF_WOFF2_ENABLED) &&
-        uint32_t(*version) == TRUETYPE_TAG('w', 'O', 'F', '2')) {
-      return GFX_USERFONT_WOFF2;
-||||||| merged common ancestors
-    // test for WOFF
-    if (aFontDataLength >= sizeof(AutoSwap_PRUint32)) {
-        const AutoSwap_PRUint32 *version =
-            reinterpret_cast<const AutoSwap_PRUint32*>(aFontData);
-        if (uint32_t(*version) == TRUETYPE_TAG('w','O','F','F')) {
-            return GFX_USERFONT_WOFF;
-        }
-        if (Preferences::GetBool(GFX_PREF_WOFF2_ENABLED) &&
-            uint32_t(*version) == TRUETYPE_TAG('w','O','F','2')) {
-            return GFX_USERFONT_WOFF2;
-        }
-=======
   // test for WOFF or WOFF2
   if (aFontDataLength >= sizeof(AutoSwap_PRUint32)) {
     const AutoSwap_PRUint32* version =
@@ -1005,7 +944,6 @@ gfxUserFontType gfxFontUtils::DetermineFontDataType(const uint8_t* aFontData,
     }
     if (uint32_t(*version) == TRUETYPE_TAG('w', 'O', 'F', '2')) {
       return GFX_USERFONT_WOFF2;
->>>>>>> upstream-releases
     }
   }
 
@@ -1382,39 +1320,15 @@ struct MacCharsetMappingComparator {
   explicit MacCharsetMappingComparator(
       const MacFontNameCharsetMapping& aSearchValue)
       : mSearchValue(aSearchValue) {}
-<<<<<<< HEAD
-  int operator()(const MacFontNameCharsetMapping& aEntry) const {
-    if (mSearchValue < aEntry) {
-      return -1;
-||||||| merged common ancestors
-    int operator()(const MacFontNameCharsetMapping& aEntry) const {
-        if (mSearchValue < aEntry) {
-            return -1;
-        }
-        if (aEntry < mSearchValue) {
-            return 1;
-        }
-        return 0;
-=======
   int operator()(const MacFontNameCharsetMapping& aEntry) const {
     if (mSearchValue < aEntry) {
       return -1;
     }
     if (aEntry < mSearchValue) {
       return 1;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (aEntry < mSearchValue) {
-      return 1;
     }
     return 0;
   }
-||||||| merged common ancestors
-=======
-    return 0;
-  }
->>>>>>> upstream-releases
 };
 
 // Return the Encoding object we should use to decode a font name
@@ -1524,7 +1438,6 @@ bool gfxFontUtils::DecodeFontName(const char* aNameData, int32_t aByteLen,
   return NS_SUCCEEDED(rv);
 }
 
-<<<<<<< HEAD
 nsresult gfxFontUtils::ReadNames(const char* aNameData, uint32_t aDataLen,
                                  uint32_t aNameID, int32_t aLangID,
                                  int32_t aPlatformID,
@@ -1534,34 +1447,6 @@ nsresult gfxFontUtils::ReadNames(const char* aNameData, uint32_t aDataLen,
   if (!aDataLen) {
     return NS_ERROR_FAILURE;
   }
-||||||| merged common ancestors
-nsresult
-gfxFontUtils::ReadNames(const char *aNameData, uint32_t aDataLen,
-                        uint32_t aNameID,
-                        int32_t aLangID, int32_t aPlatformID,
-                        nsTArray<nsCString>& aNames)
-{
-    NS_ASSERTION(aDataLen != 0, "null name table");
-
-    if (!aDataLen) {
-        return NS_ERROR_FAILURE;
-    }
-
-    // -- name table data
-    const NameHeader *nameHeader = reinterpret_cast<const NameHeader*>(aNameData);
-
-    uint32_t nameCount = nameHeader->count;
-=======
-nsresult gfxFontUtils::ReadNames(const char* aNameData, uint32_t aDataLen,
-                                 uint32_t aNameID, int32_t aLangID,
-                                 int32_t aPlatformID,
-                                 nsTArray<nsCString>& aNames) {
-  NS_ASSERTION(aDataLen != 0, "null name table");
-
-  if (!aDataLen) {
-    return NS_ERROR_FAILURE;
-  }
->>>>>>> upstream-releases
 
   // -- name table data
   const NameHeader* nameHeader = reinterpret_cast<const NameHeader*>(aNameData);
@@ -1733,7 +1618,6 @@ bool gfxFontUtils::ValidateColorGlyphs(hb_blob_t* aCOLR, hb_blob_t* aCPAL) {
     const uint16_t numLayers = baseGlyph->numLayers;
     const uint16_t glyphId = baseGlyph->glyphId;
 
-<<<<<<< HEAD
     if (lastGlyphId && lastGlyphId >= glyphId) {
       // glyphId must be sorted
       return false;
@@ -1743,65 +1627,13 @@ bool gfxFontUtils::ValidateColorGlyphs(hb_blob_t* aCOLR, hb_blob_t* aCPAL) {
     if (!numLayers) {
       // no layer
       return false;
-||||||| merged common ancestors
-        if (!numLayers) {
-            // no layer
-            return false;
-        }
-        if (firstLayerIndex + numLayers > numLayerRecords) {
-            // layer length of target glyph is overflow
-            return false;
-        }
-=======
-    if (lastGlyphId && lastGlyphId >= glyphId) {
-      // glyphId must be sorted
-      return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (firstLayerIndex + numLayers > numLayerRecords) {
-      // layer length of target glyph is overflow
-      return false;
-    }
-  }
-||||||| merged common ancestors
-=======
-    lastGlyphId = glyphId;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  const COLRLayerRecord* layer = reinterpret_cast<const COLRLayerRecord*>(
-      reinterpret_cast<const uint8_t*>(colr) + offsetLayerRecord);
-||||||| merged common ancestors
-    const COLRLayerRecord* layer =
-        reinterpret_cast<const COLRLayerRecord*>(
-            reinterpret_cast<const uint8_t*>(colr) + offsetLayerRecord);
-=======
-    if (!numLayers) {
-      // no layer
-      return false;
     }
     if (firstLayerIndex + numLayers > numLayerRecords) {
       // layer length of target glyph is overflow
       return false;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (uint16_t i = 0; i < numLayerRecords; i++, layer++) {
-    if (uint16_t(layer->paletteEntryIndex) >= numPaletteEntries &&
-        uint16_t(layer->paletteEntryIndex) != 0xFFFF) {
-      // CPAL palette entry record is overflow
-      return false;
-||||||| merged common ancestors
-    for (uint16_t i = 0; i < numLayerRecords; i++, layer++) {
-        if (uint16_t(layer->paletteEntryIndex) >= numPaletteEntries &&
-            uint16_t(layer->paletteEntryIndex) != 0xFFFF) {
-            // CPAL palette entry record is overflow
-            return false;
-        }
-=======
   const COLRLayerRecord* layer = reinterpret_cast<const COLRLayerRecord*>(
       reinterpret_cast<const uint8_t*>(colr) + offsetLayerRecord);
 
@@ -1810,7 +1642,6 @@ bool gfxFontUtils::ValidateColorGlyphs(hb_blob_t* aCOLR, hb_blob_t* aCPAL) {
         uint16_t(layer->paletteEntryIndex) != 0xFFFF) {
       // CPAL palette entry record is overflow
       return false;
->>>>>>> upstream-releases
     }
   }
 
@@ -1890,24 +1721,10 @@ void gfxFontUtils::GetVariationInstances(
     gfxFontEntry* aFontEntry, nsTArray<gfxFontVariationInstance>& aInstances) {
   MOZ_ASSERT(aInstances.IsEmpty());
 
-<<<<<<< HEAD
-  if (!aFontEntry->HasVariations()) {
-    return;
-  }
-||||||| merged common ancestors
-    if (!aFontEntry->HasVariations()) {
-        return;
-    }
-=======
   if (!aFontEntry->HasVariations()) {
     return;
   }
 
-  // Some platforms don't offer a simple API to return the list of instances,
-  // so we have to interpret the 'fvar' table ourselves.
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Some platforms don't offer a simple API to return the list of instances,
   // so we have to interpret the 'fvar' table ourselves.
 
@@ -1943,76 +1760,6 @@ void gfxFontUtils::GetVariationInstances(
     // represent this in the struct, because its offset varies depending
     // on the number of axes present.
     // (Not currently used by our code here anyhow.)
-||||||| merged common ancestors
-    // Some platforms don't offer a simple API to return the list of instances,
-    // so we have to interpret the 'fvar' table ourselves.
-
-    // https://www.microsoft.com/typography/otspec/fvar.htm#fvarHeader
-    struct FvarHeader {
-        AutoSwap_PRUint16 majorVersion;
-        AutoSwap_PRUint16 minorVersion;
-        AutoSwap_PRUint16 axesArrayOffset;
-        AutoSwap_PRUint16 reserved;
-        AutoSwap_PRUint16 axisCount;
-        AutoSwap_PRUint16 axisSize;
-        AutoSwap_PRUint16 instanceCount;
-        AutoSwap_PRUint16 instanceSize;
-    };
-
-    // https://www.microsoft.com/typography/otspec/fvar.htm#variationAxisRecord
-    struct AxisRecord {
-        AutoSwap_PRUint32 axisTag;
-        AutoSwap_PRInt32  minValue;
-        AutoSwap_PRInt32  defaultValue;
-        AutoSwap_PRInt32  maxValue;
-        AutoSwap_PRUint16 flags;
-        AutoSwap_PRUint16 axisNameID;
-    };
-
-    // https://www.microsoft.com/typography/otspec/fvar.htm#instanceRecord
-    struct InstanceRecord {
-        AutoSwap_PRUint16 subfamilyNameID;
-        AutoSwap_PRUint16 flags;
-        AutoSwap_PRInt32  coordinates[1]; // variable-size array [axisCount]
-        // The variable-length 'coordinates' array may be followed by an
-        // optional extra field 'postScriptNameID'. We can't directly
-        // represent this in the struct, because its offset varies depending
-        // on the number of axes present.
-        // (Not currently used by our code here anyhow.)
-=======
-  // https://www.microsoft.com/typography/otspec/fvar.htm#fvarHeader
-  struct FvarHeader {
-    AutoSwap_PRUint16 majorVersion;
-    AutoSwap_PRUint16 minorVersion;
-    AutoSwap_PRUint16 axesArrayOffset;
-    AutoSwap_PRUint16 reserved;
-    AutoSwap_PRUint16 axisCount;
-    AutoSwap_PRUint16 axisSize;
-    AutoSwap_PRUint16 instanceCount;
-    AutoSwap_PRUint16 instanceSize;
-  };
-
-  // https://www.microsoft.com/typography/otspec/fvar.htm#variationAxisRecord
-  struct AxisRecord {
-    AutoSwap_PRUint32 axisTag;
-    AutoSwap_PRInt32 minValue;
-    AutoSwap_PRInt32 defaultValue;
-    AutoSwap_PRInt32 maxValue;
-    AutoSwap_PRUint16 flags;
-    AutoSwap_PRUint16 axisNameID;
-  };
-
-  // https://www.microsoft.com/typography/otspec/fvar.htm#instanceRecord
-  struct InstanceRecord {
-    AutoSwap_PRUint16 subfamilyNameID;
-    AutoSwap_PRUint16 flags;
-    AutoSwap_PRInt32 coordinates[1];  // variable-size array [axisCount]
-    // The variable-length 'coordinates' array may be followed by an
-    // optional extra field 'postScriptNameID'. We can't directly
-    // represent this in the struct, because its offset varies depending
-    // on the number of axes present.
-    // (Not currently used by our code here anyhow.)
->>>>>>> upstream-releases
     //  AutoSwap_PRUint16 postScriptNameID;
   };
 
@@ -2021,21 +1768,7 @@ void gfxFontUtils::GetVariationInstances(
    public:
     explicit AutoHBBlob(hb_blob_t* aBlob) : mBlob(aBlob) {}
 
-<<<<<<< HEAD
-    ~AutoHBBlob() {
-      if (mBlob) {
-        hb_blob_destroy(mBlob);
-      }
-    }
-||||||| merged common ancestors
-        ~AutoHBBlob() {
-            if (mBlob) {
-                hb_blob_destroy(mBlob);
-            }
-        }
-=======
     ~AutoHBBlob() { hb_blob_destroy(mBlob); }
->>>>>>> upstream-releases
 
     operator hb_blob_t*() { return mBlob; }
 
@@ -2043,115 +1776,6 @@ void gfxFontUtils::GetVariationInstances(
     hb_blob_t* const mBlob;
   };
 
-<<<<<<< HEAD
-  // Load the two font tables we need as harfbuzz blobs; if either is absent,
-  // just bail out.
-  AutoHBBlob fvarTable(
-      aFontEntry->GetFontTable(TRUETYPE_TAG('f', 'v', 'a', 'r')));
-  AutoHBBlob nameTable(
-      aFontEntry->GetFontTable(TRUETYPE_TAG('n', 'a', 'm', 'e')));
-  if (!fvarTable || !nameTable) {
-    return;
-  }
-  unsigned int len;
-  const char* data = hb_blob_get_data(fvarTable, &len);
-  if (len < sizeof(FvarHeader)) {
-    return;
-  }
-  // Read the fields of the table header; bail out if it looks broken.
-  auto fvar = reinterpret_cast<const FvarHeader*>(data);
-  if (uint16_t(fvar->majorVersion) != 1 || uint16_t(fvar->minorVersion) != 0 ||
-      uint16_t(fvar->reserved) != 2) {
-    return;
-  }
-  uint16_t axisCount = fvar->axisCount;
-  uint16_t axisSize = fvar->axisSize;
-  uint16_t instanceCount = fvar->instanceCount;
-  uint16_t instanceSize = fvar->instanceSize;
-  if (axisCount ==
-          0 ||  // no axes?
-                // https://www.microsoft.com/typography/otspec/fvar.htm#axisSize
-      axisSize != 20 ||      // required value for current table version
-      instanceCount == 0 ||  // no instances?
-      // https://www.microsoft.com/typography/otspec/fvar.htm#instanceSize
-      (instanceSize != axisCount * sizeof(int32_t) + 4 &&
-       instanceSize != axisCount * sizeof(int32_t) + 6)) {
-    return;
-  }
-  // Check that axis array will not exceed table size
-  uint16_t axesOffset = fvar->axesArrayOffset;
-  if (axesOffset + uint32_t(axisCount) * axisSize > len) {
-    return;
-  }
-  // Get pointer to the array of axis records
-  auto axes = reinterpret_cast<const AxisRecord*>(data + axesOffset);
-  // Get address of instance array, and check it doesn't overflow table size.
-  // https://www.microsoft.com/typography/otspec/fvar.htm#axisAndInstanceArrays
-  auto instData = data + axesOffset + axisCount * axisSize;
-  if (instData + uint32_t(instanceCount) * instanceSize > data + len) {
-    return;
-  }
-  aInstances.SetCapacity(instanceCount);
-  for (unsigned i = 0; i < instanceCount; ++i, instData += instanceSize) {
-    // Typed pointer to the current instance record, to read its fields.
-    auto inst = reinterpret_cast<const InstanceRecord*>(instData);
-    // Pointer to the coordinates array within the instance record.
-    // This array has axisCount elements, and is included in instanceSize
-    // (which depends on axisCount, and was validated above) so we know
-    // access to coords[j] below will not be outside the table bounds.
-    auto coords = &inst->coordinates[0];
-    gfxFontVariationInstance instance;
-    uint16_t nameID = inst->subfamilyNameID;
-    nsresult rv = ReadCanonicalName(nameTable, nameID, instance.mName);
-    if (NS_FAILED(rv)) {
-      // If no name was available for the instance, ignore it.
-      continue;
-||||||| merged common ancestors
-    // Load the two font tables we need as harfbuzz blobs; if either is absent,
-    // just bail out.
-    AutoHBBlob fvarTable(aFontEntry->GetFontTable(TRUETYPE_TAG('f','v','a','r')));
-    AutoHBBlob nameTable(aFontEntry->GetFontTable(TRUETYPE_TAG('n','a','m','e')));
-    if (!fvarTable || !nameTable) {
-        return;
-    }
-    unsigned int len;
-    const char* data = hb_blob_get_data(fvarTable, &len);
-    if (len < sizeof(FvarHeader)) {
-        return;
-    }
-    // Read the fields of the table header; bail out if it looks broken.
-    auto fvar = reinterpret_cast<const FvarHeader*>(data);
-    if (uint16_t(fvar->majorVersion) != 1 ||
-        uint16_t(fvar->minorVersion) != 0 ||
-        uint16_t(fvar->reserved) != 2) {
-        return;
-    }
-    uint16_t axisCount = fvar->axisCount;
-    uint16_t axisSize = fvar->axisSize;
-    uint16_t instanceCount = fvar->instanceCount;
-    uint16_t instanceSize = fvar->instanceSize;
-    if (axisCount == 0 || // no axes?
-        // https://www.microsoft.com/typography/otspec/fvar.htm#axisSize
-        axisSize != 20 || // required value for current table version
-        instanceCount == 0 || // no instances?
-        // https://www.microsoft.com/typography/otspec/fvar.htm#instanceSize
-        (instanceSize != axisCount * sizeof(int32_t) + 4 &&
-         instanceSize != axisCount * sizeof(int32_t) + 6)) {
-        return;
-    }
-    // Check that axis array will not exceed table size
-    uint16_t axesOffset = fvar->axesArrayOffset;
-    if (axesOffset + uint32_t(axisCount) * axisSize > len) {
-        return;
-    }
-    // Get pointer to the array of axis records
-    auto axes = reinterpret_cast<const AxisRecord*>(data + axesOffset);
-    // Get address of instance array, and check it doesn't overflow table size.
-    // https://www.microsoft.com/typography/otspec/fvar.htm#axisAndInstanceArrays
-    auto instData = data + axesOffset + axisCount * axisSize;
-    if (instData + uint32_t(instanceCount) * instanceSize > data + len) {
-        return;
-=======
   // Load the two font tables we need as harfbuzz blobs; if either is absent,
   // just bail out.
   AutoHBBlob fvarTable(
@@ -2221,42 +1845,7 @@ void gfxFontUtils::GetVariationInstances(
       value.mAxis = axes[j].axisTag;
       value.mValue = int32_t(coords[j]) / 65536.0;
       instance.mValues.AppendElement(value);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    instance.mValues.SetCapacity(axisCount);
-    for (unsigned j = 0; j < axisCount; ++j) {
-      gfxFontVariationValue value;
-      value.mAxis = axes[j].axisTag;
-      value.mValue = int32_t(coords[j]) / 65536.0;
-      instance.mValues.AppendElement(value);
-||||||| merged common ancestors
-    aInstances.SetCapacity(instanceCount);
-    for (unsigned i = 0; i < instanceCount; ++i, instData += instanceSize) {
-        // Typed pointer to the current instance record, to read its fields.
-        auto inst = reinterpret_cast<const InstanceRecord*>(instData);
-        // Pointer to the coordinates array within the instance record.
-        // This array has axisCount elements, and is included in instanceSize
-        // (which depends on axisCount, and was validated above) so we know
-        // access to coords[j] below will not be outside the table bounds.
-        auto coords = &inst->coordinates[0];
-        gfxFontVariationInstance instance;
-        uint16_t nameID = inst->subfamilyNameID;
-        nsresult rv =
-            ReadCanonicalName(nameTable, nameID, instance.mName);
-        if (NS_FAILED(rv)) {
-            // If no name was available for the instance, ignore it.
-            continue;
-        }
-        instance.mValues.SetCapacity(axisCount);
-        for (unsigned j = 0; j < axisCount; ++j) {
-            gfxFontVariationValue value;
-            value.mAxis = axes[j].axisTag;
-            value.mValue = int32_t(coords[j]) / 65536.0;
-            instance.mValues.AppendElement(value);
-        }
-        aInstances.AppendElement(instance);
-=======
     aInstances.AppendElement(instance);
   }
 }
@@ -2300,15 +1889,8 @@ void gfxFontUtils::ReadOtherFamilyNamesForFace(
           !aOtherFamilyNames.Contains(otherFamilyName)) {
         aOtherFamilyNames.AppendElement(otherFamilyName);
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    aInstances.AppendElement(instance);
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 }
 
 #ifdef XP_WIN

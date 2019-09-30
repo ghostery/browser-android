@@ -269,14 +269,8 @@ const MESSAGES = () => [
       scene1_title_icon_dark_theme: "",
 
       scene2_button_label: "Send",
-<<<<<<< HEAD
-      scene2_disclaimer_html: "The intended recipient of the email must have consented. <privacyLink>Learn more</privacyLink>.",
-||||||| merged common ancestors
-      scene2_disclaimer_html: "The intended recipient of the email must have consented. <privacyLink>Learn more.</privacyLink>",
-=======
       scene2_disclaimer_html:
         "The intended recipient of the email must have consented. <privacyLink>Learn more</privacyLink>.",
->>>>>>> upstream-releases
       scene2_dismiss_button_text: "Dismiss",
       scene2_icon: TEST_ICON,
       scene2_icon_dark_theme: "",

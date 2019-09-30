@@ -87,17 +87,8 @@ bool nsShmImage::CreateShmSegment() {
     return false;
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT(size <= info.shm_segsz, "Segment doesn't have enough space!");
-#endif
-||||||| merged common ancestors
-  MOZ_ASSERT(size <= info.shm_segsz,
-             "Segment doesn't have enough space!");
-#endif
-=======
   MOZ_ASSERT(size <= info.shm_segsz, "Segment doesn't have enough space!");
 #  endif
->>>>>>> upstream-releases
 
   return true;
 }

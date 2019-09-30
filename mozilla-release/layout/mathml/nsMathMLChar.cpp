@@ -55,18 +55,8 @@ static const float kMaxScaleFactor = 20.0;
 static const float kLargeOpFactor = float(M_SQRT2);
 static const float kIntegralFactor = 2.0;
 
-<<<<<<< HEAD
-static void NormalizeDefaultFont(nsFont& aFont, float aFontSizeInflation) {
-  if (aFont.fontlist.GetDefaultFontType() != eFamily_none) {
-||||||| merged common ancestors
-static void
-NormalizeDefaultFont(nsFont& aFont, float aFontSizeInflation)
-{
-  if (aFont.fontlist.GetDefaultFontType() != eFamily_none) {
-=======
 static void NormalizeDefaultFont(nsFont& aFont, float aFontSizeInflation) {
   if (aFont.fontlist.GetDefaultFontType() != StyleGenericFontFamily::None) {
->>>>>>> upstream-releases
     nsTArray<FontFamilyName> names;
     names.AppendElements(aFont.fontlist.GetFontlist()->mNames);
     names.AppendElement(FontFamilyName(aFont.fontlist.GetDefaultFontType()));
@@ -176,16 +166,8 @@ class nsPropertiesTable final : public nsGlyphTable {
   explicit nsPropertiesTable(const nsACString& aPrimaryFontName)
       : mState(NS_TABLE_STATE_EMPTY) {
     MOZ_COUNT_CTOR(nsPropertiesTable);
-<<<<<<< HEAD
-    mGlyphCodeFonts.AppendElement(
-        FontFamilyName(aPrimaryFontName, eUnquotedName));
-||||||| merged common ancestors
-    mGlyphCodeFonts.AppendElement(FontFamilyName(aPrimaryFontName,
-                                                 eUnquotedName));
-=======
     mGlyphCodeFonts.AppendElement(FontFamilyName(
         aPrimaryFontName, StyleFontFamilyNameSyntax::Identifiers));
->>>>>>> upstream-releases
   }
 
   ~nsPropertiesTable() { MOZ_COUNT_DTOR(nsPropertiesTable); }
@@ -302,19 +284,10 @@ nsGlyphCode nsPropertiesTable::ElementAt(DrawTarget* /* aDrawTarget */,
       rv = mGlyphProperties->GetStringProperty(key, value);
       if (NS_FAILED(rv)) break;
       Clean(value);
-<<<<<<< HEAD
-      mGlyphCodeFonts.AppendElement(FontFamilyName(
-          NS_ConvertUTF16toUTF8(value),
-          eUnquotedName));  // i.e., mGlyphCodeFonts[i] holds this font name
-||||||| merged common ancestors
-      mGlyphCodeFonts.AppendElement(FontFamilyName(NS_ConvertUTF16toUTF8(value),
-                                    eUnquotedName)); // i.e., mGlyphCodeFonts[i] holds this font name
-=======
       mGlyphCodeFonts.AppendElement(FontFamilyName(
           NS_ConvertUTF16toUTF8(value),
           StyleFontFamilyNameSyntax::Identifiers));  // i.e., mGlyphCodeFonts[i]
                                                      // holds this font name
->>>>>>> upstream-releases
     }
   }
 
@@ -446,21 +419,10 @@ class nsOpenTypeTable final : public nsGlyphTable {
   uint32_t mGlyphID;
 
   explicit nsOpenTypeTable(gfxFont* aFont)
-<<<<<<< HEAD
-      : mFont(aFont),
-        mFontFamilyName(aFont->GetFontEntry()->FamilyName(), eUnquotedName),
-        mGlyphID(0) {
-||||||| merged common ancestors
-    : mFont(aFont)
-    , mFontFamilyName(aFont->GetFontEntry()->FamilyName(), eUnquotedName)
-    , mGlyphID(0)
-  {
-=======
       : mFont(aFont),
         mFontFamilyName(aFont->GetFontEntry()->FamilyName(),
                         StyleFontFamilyNameSyntax::Identifiers),
         mGlyphID(0) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsOpenTypeTable);
   }
 
@@ -556,22 +518,10 @@ already_AddRefed<gfxTextRun> nsOpenTypeTable::MakeTextRun(
       gfxTextRun::Create(&params, 1, aFontGroup, gfx::ShapedTextFlags(),
                          nsTextFrameUtils::Flags());
   textRun->AddGlyphRun(aFontGroup->GetFirstValidFont(),
-<<<<<<< HEAD
-                       gfxTextRange::MatchType::kFontGroup, 0, false,
-                       gfx::ShapedTextFlags::TEXT_ORIENT_HORIZONTAL);
-  // We don't care about CSS writing mode here;
-  // math runs are assumed to be horizontal.
-||||||| merged common ancestors
-                       gfxTextRange::MatchType::kFontGroup, 0,
-                       false, gfx::ShapedTextFlags::TEXT_ORIENT_HORIZONTAL);
-                              // We don't care about CSS writing mode here;
-                              // math runs are assumed to be horizontal.
-=======
                        FontMatchType::Kind::kFontGroup, 0, false,
                        gfx::ShapedTextFlags::TEXT_ORIENT_HORIZONTAL);
   // We don't care about CSS writing mode here;
   // math runs are assumed to be horizontal.
->>>>>>> upstream-releases
   gfxTextRun::DetailedGlyph detailedGlyph;
   detailedGlyph.mGlyphID = aGlyph.glyphID;
   detailedGlyph.mAdvance = NSToCoordRound(
@@ -940,19 +890,9 @@ bool nsMathMLChar::SetFontFamily(nsPresContext* aPresContext,
         aPresContext->DeviceContext()->GetMetricsFor(font, params);
     // Set the font if it is an unicode table
     // or if the same family name has been found
-<<<<<<< HEAD
-    gfxFont* firstFont = fm->GetThebesFontGroup()->GetFirstValidFont();
-    FontFamilyList firstFontList(firstFont->GetFontEntry()->FamilyName(),
-                                 eUnquotedName);
-||||||| merged common ancestors
-    gfxFont *firstFont = fm->GetThebesFontGroup()->GetFirstValidFont();
-    FontFamilyList firstFontList(
-      firstFont->GetFontEntry()->FamilyName(), eUnquotedName);
-=======
     gfxFont* firstFont = fm->GetThebesFontGroup()->GetFirstValidFont();
     FontFamilyList firstFontList(firstFont->GetFontEntry()->FamilyName(),
                                  StyleFontFamilyNameSyntax::Identifiers);
->>>>>>> upstream-releases
     if (aGlyphTable == &gGlyphTableList->mUnicodeTable ||
         firstFontList == familyList) {
       aFont.fontlist = familyList;
@@ -1352,25 +1292,11 @@ bool nsMathMLChar::StretchEnumContext::EnumCallback(
   nsFont font = sc->StyleFont()->mFont;
   NormalizeDefaultFont(font, context->mFontSizeInflation);
   RefPtr<gfxFontGroup> fontGroup;
-<<<<<<< HEAD
-  FontFamilyList family(unquotedFamilyName);
-  if (!aGeneric &&
-      !context->mChar->SetFontFamily(context->mPresContext, nullptr, kNullGlyph,
-                                     family, font, &fontGroup))
-    return true;  // Could not set the family
-||||||| merged common ancestors
-  FontFamilyList family(unquotedFamilyName);
-  if (!aGeneric && !context->mChar->SetFontFamily(context->mPresContext,
-                                                  nullptr, kNullGlyph, family,
-                                                  font, &fontGroup))
-     return true; // Could not set the family
-=======
   FontFamilyList family(nsTArray<FontFamilyName>{unquotedFamilyName});
   if (!aGeneric &&
       !context->mChar->SetFontFamily(context->mPresContext, nullptr, kNullGlyph,
                                      family, font, &fontGroup))
     return true;  // Could not set the family
->>>>>>> upstream-releases
 
   // Determine the glyph table to use for this font.
   nsAutoPtr<nsOpenTypeTable> openTypeTable;
@@ -1419,15 +1345,8 @@ bool nsMathMLChar::StretchEnumContext::EnumCallback(
 static void AppendFallbacks(nsTArray<FontFamilyName>& aNames,
                             const nsTArray<nsCString>& aFallbacks) {
   for (const nsCString& fallback : aFallbacks) {
-<<<<<<< HEAD
-    aNames.AppendElement(FontFamilyName(fallback, eUnquotedName));
-||||||| merged common ancestors
-    aNames.AppendElement(FontFamilyName(fallback,
-                                        eUnquotedName));
-=======
     aNames.AppendElement(
         FontFamilyName(fallback, StyleFontFamilyNameSyntax::Identifiers));
->>>>>>> upstream-releases
   }
 }
 
@@ -1763,25 +1682,11 @@ nscoord nsMathMLChar::GetMaxWidth(nsIFrame* aForFrame, DrawTarget* aDrawTarget,
   return std::max(bm.width, bm.rightBearing) - std::min(0, bm.leftBearing);
 }
 
-<<<<<<< HEAD
-class nsDisplayMathMLSelectionRect final : public nsDisplayItem {
- public:
-  nsDisplayMathMLSelectionRect(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-                               const nsRect& aRect)
-      : nsDisplayItem(aBuilder, aFrame), mRect(aRect) {
-||||||| merged common ancestors
-class nsDisplayMathMLSelectionRect final : public nsDisplayItem {
-public:
-  nsDisplayMathMLSelectionRect(nsDisplayListBuilder* aBuilder,
-                               nsIFrame* aFrame, const nsRect& aRect)
-    : nsDisplayItem(aBuilder, aFrame), mRect(aRect) {
-=======
 class nsDisplayMathMLSelectionRect final : public nsPaintedDisplayItem {
  public:
   nsDisplayMathMLSelectionRect(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                                const nsRect& aRect)
       : nsPaintedDisplayItem(aBuilder, aFrame), mRect(aRect) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayMathMLSelectionRect);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -1803,49 +1708,20 @@ void nsDisplayMathMLSelectionRect::Paint(nsDisplayListBuilder* aBuilder,
                                   mFrame->PresContext()->AppUnitsPerDevPixel(),
                                   *drawTarget);
   // get color to use for selection from the look&feel object
-<<<<<<< HEAD
-  nscolor bgColor = LookAndFeel::GetColor(
-      LookAndFeel::eColorID_TextSelectBackground, NS_RGB(0, 0, 0));
-||||||| merged common ancestors
-  nscolor bgColor =
-    LookAndFeel::GetColor(LookAndFeel::eColorID_TextSelectBackground,
-                          NS_RGB(0, 0, 0));
-=======
   nscolor bgColor = LookAndFeel::GetColor(
       LookAndFeel::ColorID::TextSelectBackground, NS_RGB(0, 0, 0));
->>>>>>> upstream-releases
   drawTarget->FillRect(rect, ColorPattern(ToDeviceColor(bgColor)));
 }
 
-<<<<<<< HEAD
-class nsDisplayMathMLCharForeground final : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayMathMLCharForeground final : public nsDisplayItem {
-public:
-=======
 class nsDisplayMathMLCharForeground final : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayMathMLCharForeground(nsDisplayListBuilder* aBuilder,
                                 nsIFrame* aFrame, nsMathMLChar* aChar,
-<<<<<<< HEAD
-                                uint32_t aIndex, bool aIsSelected)
-      : nsDisplayItem(aBuilder, aFrame),
-        mChar(aChar),
-        mIndex(aIndex),
-        mIsSelected(aIsSelected) {
-||||||| merged common ancestors
-				                uint32_t aIndex, bool aIsSelected)
-    : nsDisplayItem(aBuilder, aFrame), mChar(aChar),
-      mIndex(aIndex), mIsSelected(aIsSelected) {
-=======
                                 uint16_t aIndex, bool aIsSelected)
       : nsPaintedDisplayItem(aBuilder, aFrame),
         mChar(aChar),
         mIndex(aIndex),
         mIsSelected(aIsSelected) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayMathMLCharForeground);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -1886,38 +1762,16 @@ class nsDisplayMathMLCharForeground final : public nsPaintedDisplayItem {
 
  private:
   nsMathMLChar* mChar;
-<<<<<<< HEAD
-  uint32_t mIndex;
-  bool mIsSelected;
-||||||| merged common ancestors
-  uint32_t      mIndex;
-  bool          mIsSelected;
-=======
   uint16_t mIndex;
   bool mIsSelected;
->>>>>>> upstream-releases
 };
 
 #ifdef DEBUG
-<<<<<<< HEAD
-class nsDisplayMathMLCharDebug final : public nsDisplayItem {
- public:
-  nsDisplayMathMLCharDebug(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-                           const nsRect& aRect)
-      : nsDisplayItem(aBuilder, aFrame), mRect(aRect) {
-||||||| merged common ancestors
-class nsDisplayMathMLCharDebug final : public nsDisplayItem {
-public:
-  nsDisplayMathMLCharDebug(nsDisplayListBuilder* aBuilder,
-                           nsIFrame* aFrame, const nsRect& aRect)
-    : nsDisplayItem(aBuilder, aFrame), mRect(aRect) {
-=======
 class nsDisplayMathMLCharDebug final : public nsPaintedDisplayItem {
  public:
   nsDisplayMathMLCharDebug(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                            const nsRect& aRect)
       : nsPaintedDisplayItem(aBuilder, aFrame), mRect(aRect) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayMathMLCharDebug);
   }
 #  ifdef NS_BUILD_REFCNT_LOGGING
@@ -1942,16 +1796,8 @@ void nsDisplayMathMLCharDebug::Paint(nsDisplayListBuilder* aBuilder,
   nsRect rect = mRect + ToReferenceFrame();
 
   PaintBorderFlags flags = aBuilder->ShouldSyncDecodeImages()
-<<<<<<< HEAD
-                               ? PaintBorderFlags::SYNC_DECODE_IMAGES
-                               : PaintBorderFlags();
-||||||| merged common ancestors
-                         ? PaintBorderFlags::SYNC_DECODE_IMAGES
-                         : PaintBorderFlags();
-=======
                                ? PaintBorderFlags::SyncDecodeImages
                                : PaintBorderFlags();
->>>>>>> upstream-releases
 
   // Since this is used only for debugging, we don't need to worry about
   // tracking the ImgDrawResult.
@@ -1984,69 +1830,29 @@ void nsMathMLChar::Display(nsDisplayListBuilder* aBuilder, nsIFrame* aForFrame,
   // purposes. Normally, users will set the background on the container frame.
   // paint the selection background -- beware MathML frames overlap a lot
   if (aSelectedRect && !aSelectedRect->IsEmpty()) {
-<<<<<<< HEAD
-    aLists.BorderBackground()->AppendToTop(
-        MakeDisplayItem<nsDisplayMathMLSelectionRect>(aBuilder, aForFrame,
-                                                      *aSelectedRect));
-  } else if (mRect.width && mRect.height) {
-||||||| merged common ancestors
-    aLists.BorderBackground()->AppendToTop(
-      MakeDisplayItem<nsDisplayMathMLSelectionRect>(aBuilder, aForFrame, *aSelectedRect));
-  }
-  else if (mRect.width && mRect.height) {
-=======
     aLists.BorderBackground()->AppendNewToTop<nsDisplayMathMLSelectionRect>(
         aBuilder, aForFrame, *aSelectedRect);
   } else if (mRect.width && mRect.height) {
->>>>>>> upstream-releases
     if (!usingParentStyle &&
         NS_GET_A(computedStyle->StyleBackground()->BackgroundColor(
             computedStyle)) > 0) {
       nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
-<<<<<<< HEAD
-          aBuilder, aForFrame, mRect, aLists.BorderBackground(),
-          /* aAllowWillPaintBorderOptimization */ true, computedStyle);
-||||||| merged common ancestors
-        aBuilder, aForFrame, mRect, aLists.BorderBackground(),
-        /* aAllowWillPaintBorderOptimization */ true, computedStyle);
-=======
           aBuilder, aForFrame, mRect + aBuilder->ToReferenceFrame(aForFrame),
           aLists.BorderBackground(),
           /* aAllowWillPaintBorderOptimization */ true, computedStyle);
->>>>>>> upstream-releases
     }
     // else
     //  our container frame will take care of painting its background
 
 #if defined(DEBUG) && defined(SHOW_BOUNDING_BOX)
     // for visual debug
-<<<<<<< HEAD
-    aLists.BorderBackground()->AppendToTop(
-        MakeDisplayItem<nsDisplayMathMLCharDebug>(aBuilder, aForFrame, mRect));
-||||||| merged common ancestors
-    aLists.BorderBackground()->AppendToTop(
-      MakeDisplayItem<nsDisplayMathMLCharDebug>(aBuilder, aForFrame, mRect));
-=======
     aLists.BorderBackground()->AppendNewToTop<nsDisplayMathMLCharDebug>(
         aBuilder, aForFrame, mRect);
->>>>>>> upstream-releases
 #endif
   }
-<<<<<<< HEAD
-  aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayMathMLCharForeground>(
-      aBuilder, aForFrame, this, aIndex,
-      aSelectedRect && !aSelectedRect->IsEmpty()));
-||||||| merged common ancestors
-  aLists.Content()->AppendToTop(
-    MakeDisplayItem<nsDisplayMathMLCharForeground>(aBuilder, aForFrame, this,
-                                                   aIndex,
-                                                   aSelectedRect &&
-                                                   !aSelectedRect->IsEmpty()));
-=======
   aLists.Content()->AppendNewToTop<nsDisplayMathMLCharForeground>(
       aBuilder, aForFrame, this, aIndex,
       aSelectedRect && !aSelectedRect->IsEmpty());
->>>>>>> upstream-releases
 }
 
 void nsMathMLChar::ApplyTransforms(gfxContext* aThebesContext,
@@ -2219,16 +2025,8 @@ nsresult nsMathMLChar::PaintVertically(nsPresContext* aPresContext,
   nsRect unionRect = aRect;
   unionRect.x += mBoundingMetrics.leftBearing;
   unionRect.width =
-<<<<<<< HEAD
-      mBoundingMetrics.rightBearing - mBoundingMetrics.leftBearing;
-  unionRect.Inflate(oneDevPixel, oneDevPixel);
-||||||| merged common ancestors
-    mBoundingMetrics.rightBearing - mBoundingMetrics.leftBearing;
-  unionRect.Inflate(oneDevPixel, oneDevPixel);
-=======
       mBoundingMetrics.rightBearing - mBoundingMetrics.leftBearing;
   unionRect.Inflate(oneDevPixel);
->>>>>>> upstream-releases
 
   gfxTextRun::DrawParams params(aThebesContext);
 

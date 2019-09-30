@@ -91,16 +91,8 @@ class AnimationEffect : public nsISupports, public nsWrapperCache {
 
   Nullable<TimeDuration> GetLocalTime() const;
 
-<<<<<<< HEAD
- protected:
-  RefPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-protected:
-  RefPtr<nsIDocument> mDocument;
-=======
  protected:
   RefPtr<Document> mDocument;
->>>>>>> upstream-releases
   RefPtr<Animation> mAnimation;
   TimingParams mTiming;
 };

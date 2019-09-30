@@ -155,18 +155,8 @@ static bool IsTextFormControl(nsIContent& aContent) {
 static bool SkipNode(const nsIContent* aContent) {
   const nsIContent* content = aContent;
   while (content) {
-<<<<<<< HEAD
-    if (!IsDisplayedNode(content) || content->IsComment() ||
-        content->IsAnyOfHTMLElements(nsGkAtoms::script, nsGkAtoms::noframes,
-||||||| merged common ancestors
-    if (!IsDisplayedNode(content) ||
-        content->IsComment() ||
-        content->IsAnyOfHTMLElements(nsGkAtoms::script,
-                                     nsGkAtoms::noframes,
-=======
     if (!IsVisibleNode(content) || content->IsComment() ||
         content->IsAnyOfHTMLElements(nsGkAtoms::script, nsGkAtoms::noframes,
->>>>>>> upstream-releases
                                      nsGkAtoms::select)) {
       DEBUG_FIND_PRINTF("Skipping node: ");
       DumpNode(content);
@@ -458,18 +448,8 @@ char16_t nsFind::PeekNextChar(State& aState) const {
 // Take nodes out of the tree with NextNode, until null (NextNode will return 0
 // at the end of our range).
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFind::Find(const char16_t* aPatText, nsRange* aSearchRange,
-             nsRange* aStartPoint, nsRange* aEndPoint, nsRange** aRangeRet) {
-||||||| merged common ancestors
-nsFind::Find(const char16_t* aPatText, nsRange* aSearchRange,
-             nsRange* aStartPoint, nsRange* aEndPoint,
-             nsRange** aRangeRet)
-{
-=======
 nsFind::Find(const nsAString& aPatText, nsRange* aSearchRange,
              nsRange* aStartPoint, nsRange* aEndPoint, nsRange** aRangeRet) {
->>>>>>> upstream-releases
   DEBUG_FIND_PRINTF("============== nsFind::Find('%s'%s, %p, %p, %p)\n",
                     NS_LossyConvertUTF16toASCII(aPatText).get(),
                     mFindBackward ? " (backward)" : " (forward)",
@@ -480,16 +460,8 @@ nsFind::Find(const nsAString& aPatText, nsRange* aSearchRange,
   NS_ENSURE_ARG(aEndPoint);
   NS_ENSURE_ARG_POINTER(aRangeRet);
 
-<<<<<<< HEAD
-  nsIDocument* document =
-      aStartPoint->GetRoot() ? aStartPoint->GetRoot()->OwnerDoc() : nullptr;
-||||||| merged common ancestors
-  nsIDocument* document =
-    aStartPoint->GetRoot() ? aStartPoint->GetRoot()->OwnerDoc() : nullptr;
-=======
   Document* document =
       aStartPoint->GetRoot() ? aStartPoint->GetRoot()->OwnerDoc() : nullptr;
->>>>>>> upstream-releases
   NS_ENSURE_ARG(document);
 
   Element* root = document->GetRootElement();

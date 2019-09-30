@@ -21,47 +21,17 @@ class WebGLContext;
 // This class is a mixin for objects that are tied to a specific
 // context (which is to say, all of them).  They provide initialization
 // as well as comparison with the current context.
-<<<<<<< HEAD
-class WebGLContextBoundObject {
- public:
-  WebGLContext* const mContext;
-||||||| merged common ancestors
-class WebGLContextBoundObject
-{
-public:
-    WebGLContext* const mContext;
-private:
-    const uint32_t mContextGeneration;
-=======
 class WebGLContextBoundObject {
  public:
   const WeakPtr<WebGLContext> mContext;
 
  private:
   const uint32_t mContextGeneration;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  const uint32_t mContextGeneration;
-||||||| merged common ancestors
-public:
-    explicit WebGLContextBoundObject(WebGLContext* webgl);
-=======
- public:
-  explicit WebGLContextBoundObject(WebGLContext* webgl);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
  public:
   explicit WebGLContextBoundObject(WebGLContext* webgl);
 
   bool IsCompatibleWithContext(const WebGLContext* other) const;
-||||||| merged common ancestors
-    bool IsCompatibleWithContext(const WebGLContext* other) const;
-=======
-  bool IsCompatibleWithContext(const WebGLContext* other) const;
->>>>>>> upstream-releases
 };
 
 ////
@@ -168,7 +138,6 @@ class WebGLDeletableObject : public WebGLContextBoundObject {
  * known as the "curiously recursive template pattern (CRTP)".
  */
 
-<<<<<<< HEAD
 template <typename Derived>
 class WebGLRefCountedObject : public WebGLDeletableObject {
   friend class WebGLContext;
@@ -217,112 +186,6 @@ class WebGLRefCountedObject : public WebGLDeletableObject {
   void MaybeDelete() {
     if (mWebGLRefCnt == 0 && mDeletionStatus == DeleteRequested) {
       DeleteOnce();
-||||||| merged common ancestors
-template<typename Derived>
-class WebGLRefCountedObject : public WebGLDeletableObject
-{
-    friend class WebGLContext;
-    template<typename T> friend void ClearLinkedList(LinkedList<T>& list);
-
-private:
-    nsAutoRefCnt mWebGLRefCnt;
-
-public:
-    explicit WebGLRefCountedObject(WebGLContext* webgl)
-        : WebGLDeletableObject(webgl)
-    { }
-
-    ~WebGLRefCountedObject() {
-        MOZ_ASSERT(mWebGLRefCnt == 0,
-                   "Destroying WebGL object still referenced by other WebGL"
-                   " objects.");
-    }
-
-    // called by WebGLRefPtr
-    void WebGLAddRef() {
-        ++mWebGLRefCnt;
-    }
-
-    // called by WebGLRefPtr
-    void WebGLRelease() {
-        MOZ_ASSERT(mWebGLRefCnt > 0,
-                   "Releasing WebGL object with WebGL refcnt already zero");
-        --mWebGLRefCnt;
-        MaybeDelete();
-    }
-
-    // this is the function that WebGL.deleteXxx() functions want to call
-    void RequestDelete() {
-        if (mDeletionStatus == Default)
-            mDeletionStatus = DeleteRequested;
-        MaybeDelete();
-    }
-
-protected:
-    void DeleteOnce() {
-        if (mDeletionStatus != Deleted) {
-            static_cast<Derived*>(this)->Delete();
-            mDeletionStatus = Deleted;
-        }
-    }
-
-private:
-    void MaybeDelete() {
-        if (mWebGLRefCnt == 0 &&
-            mDeletionStatus == DeleteRequested)
-        {
-            DeleteOnce();
-        }
-=======
-template <typename Derived>
-class WebGLRefCountedObject : public WebGLDeletableObject {
-  friend class WebGLContext;
-  template <typename T>
-  friend void ClearLinkedList(LinkedList<T>& list);
-
- private:
-  nsAutoRefCnt mWebGLRefCnt;
-
- public:
-  explicit WebGLRefCountedObject(WebGLContext* webgl)
-      : WebGLDeletableObject(webgl) {}
-
-  ~WebGLRefCountedObject() {
-    MOZ_ASSERT(mWebGLRefCnt == 0,
-               "Destroying WebGL object still referenced by other WebGL"
-               " objects.");
-  }
-
-  // called by WebGLRefPtr
-  void WebGLAddRef() { ++mWebGLRefCnt; }
-
-  // called by WebGLRefPtr
-  void WebGLRelease() {
-    MOZ_ASSERT(mWebGLRefCnt > 0,
-               "Releasing WebGL object with WebGL refcnt already zero");
-    --mWebGLRefCnt;
-    MaybeDelete();
-  }
-
-  // this is the function that WebGL.deleteXxx() functions want to call
-  void RequestDelete() {
-    if (mDeletionStatus == Default) mDeletionStatus = DeleteRequested;
-    MaybeDelete();
-  }
-
- protected:
-  void DeleteOnce() {
-    if (mDeletionStatus != Deleted) {
-      static_cast<Derived*>(this)->Delete();
-      mDeletionStatus = Deleted;
-    }
-  }
-
- private:
-  void MaybeDelete() {
-    if (mWebGLRefCnt == 0 && mDeletionStatus == DeleteRequested) {
-      DeleteOnce();
->>>>>>> upstream-releases
     }
   }
 };

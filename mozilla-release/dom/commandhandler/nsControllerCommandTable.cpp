@@ -170,25 +170,8 @@ nsControllerCommandTable::GetCommandState(const char* aCommandName,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsControllerCommandTable::GetSupportedCommands(uint32_t* aCount,
-                                               char*** aCommands) {
-  char** commands =
-      static_cast<char**>(moz_xmalloc(sizeof(char*) * mCommandsTable.Count()));
-  *aCount = mCommandsTable.Count();
-  *aCommands = commands;
-||||||| merged common ancestors
-nsControllerCommandTable::GetSupportedCommands(uint32_t* aCount,
-                                               char*** aCommands)
-{
-  char** commands =
-    static_cast<char**>(moz_xmalloc(sizeof(char*) * mCommandsTable.Count()));
-  *aCount = mCommandsTable.Count();
-  *aCommands = commands;
-=======
 nsControllerCommandTable::GetSupportedCommands(nsTArray<nsCString>& aCommands) {
   aCommands.SetCapacity(mCommandsTable.Count());
->>>>>>> upstream-releases
 
   for (auto iter = mCommandsTable.Iter(); !iter.Done(); iter.Next()) {
     aCommands.AppendElement(iter.Key());
@@ -198,20 +181,9 @@ nsControllerCommandTable::GetSupportedCommands(nsTArray<nsCString>& aCommands) {
 
 typedef nsresult (*CommandTableRegistrar)(nsControllerCommandTable*);
 
-<<<<<<< HEAD
-static already_AddRefed<nsIControllerCommandTable>
-CreateCommandTableWithCommands(CommandTableRegistrar aRegistrar) {
-  nsCOMPtr<nsIControllerCommandTable> commandTable =
-||||||| merged common ancestors
-static already_AddRefed<nsIControllerCommandTable>
-CreateCommandTableWithCommands(CommandTableRegistrar aRegistrar)
-{
-  nsCOMPtr<nsIControllerCommandTable> commandTable =
-=======
 static already_AddRefed<nsControllerCommandTable>
 CreateCommandTableWithCommands(CommandTableRegistrar aRegistrar) {
   RefPtr<nsControllerCommandTable> commandTable =
->>>>>>> upstream-releases
       new nsControllerCommandTable();
 
   nsresult rv = aRegistrar(commandTable);
@@ -224,111 +196,36 @@ CreateCommandTableWithCommands(CommandTableRegistrar aRegistrar) {
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateEditorCommandTable() {
-||||||| merged common ancestors
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateEditorCommandTable()
-{
-=======
 already_AddRefed<nsControllerCommandTable>
 nsControllerCommandTable::CreateEditorCommandTable() {
->>>>>>> upstream-releases
   return CreateCommandTableWithCommands(
       EditorController::RegisterEditorCommands);
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateEditingCommandTable() {
-||||||| merged common ancestors
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateEditingCommandTable()
-{
-=======
 already_AddRefed<nsControllerCommandTable>
 nsControllerCommandTable::CreateEditingCommandTable() {
->>>>>>> upstream-releases
   return CreateCommandTableWithCommands(
       EditorController::RegisterEditingCommands);
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateHTMLEditorCommandTable() {
-||||||| merged common ancestors
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateHTMLEditorCommandTable()
-{
-=======
 already_AddRefed<nsControllerCommandTable>
 nsControllerCommandTable::CreateHTMLEditorCommandTable() {
->>>>>>> upstream-releases
   return CreateCommandTableWithCommands(
       HTMLEditorController::RegisterHTMLEditorCommands);
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateHTMLEditorDocStateCommandTable() {
-||||||| merged common ancestors
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateHTMLEditorDocStateCommandTable()
-{
-=======
 already_AddRefed<nsControllerCommandTable>
 nsControllerCommandTable::CreateHTMLEditorDocStateCommandTable() {
->>>>>>> upstream-releases
   return CreateCommandTableWithCommands(
       HTMLEditorController::RegisterEditorDocStateCommands);
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateWindowCommandTable() {
-||||||| merged common ancestors
-already_AddRefed<nsIControllerCommandTable>
-nsControllerCommandTable::CreateWindowCommandTable()
-{
-=======
 already_AddRefed<nsControllerCommandTable>
 nsControllerCommandTable::CreateWindowCommandTable() {
->>>>>>> upstream-releases
   return CreateCommandTableWithCommands(
       nsWindowCommandRegistration::RegisterWindowCommands);
 }
-<<<<<<< HEAD
-
-nsresult NS_NewControllerCommandTable(nsIControllerCommandTable** aResult) {
-  MOZ_ASSERT(aResult != nullptr, "null ptr");
-  if (!aResult) {
-    return NS_ERROR_NULL_POINTER;
-  }
-
-  nsControllerCommandTable* newCommandTable = new nsControllerCommandTable();
-  NS_ADDREF(newCommandTable);
-  *aResult = newCommandTable;
-  return NS_OK;
-}
-||||||| merged common ancestors
-
-nsresult
-NS_NewControllerCommandTable(nsIControllerCommandTable** aResult)
-{
-  MOZ_ASSERT(aResult != nullptr, "null ptr");
-  if (!aResult) {
-    return NS_ERROR_NULL_POINTER;
-  }
-
-  nsControllerCommandTable* newCommandTable = new nsControllerCommandTable();
-  NS_ADDREF(newCommandTable);
-  *aResult = newCommandTable;
-  return NS_OK;
-}
-=======
->>>>>>> upstream-releases

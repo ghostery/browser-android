@@ -68,15 +68,7 @@ bool SharedMemoryBasic::Create(size_t aNbytes) {
   return true;
 }
 
-<<<<<<< HEAD
-bool SharedMemoryBasic::Map(size_t nBytes) {
-||||||| merged common ancestors
-bool
-SharedMemoryBasic::Map(size_t nBytes)
-{
-=======
 bool SharedMemoryBasic::Map(size_t nBytes, void* fixed_address) {
->>>>>>> upstream-releases
   MOZ_ASSERT(nullptr == mMemory, "Already Map()d");
 
   int prot = PROT_READ;
@@ -84,20 +76,10 @@ bool SharedMemoryBasic::Map(size_t nBytes, void* fixed_address) {
     prot |= PROT_WRITE;
   }
 
-<<<<<<< HEAD
-  mMemory = mmap(nullptr, nBytes, prot, MAP_SHARED, mShmFd, 0);
-||||||| merged common ancestors
-  mMemory = mmap(nullptr, nBytes,
-                 prot,
-                 MAP_SHARED,
-                 mShmFd,
-                 0);
-=======
   // Don't use MAP_FIXED when a fixed_address was specified, since that can
   // replace pages that are alread mapped at that address.
   mMemory = mmap(fixed_address, nBytes, prot, MAP_SHARED, mShmFd, 0);
 
->>>>>>> upstream-releases
   if (MAP_FAILED == mMemory) {
     if (!fixed_address) {
       LogError("ShmemAndroid::Map()");
@@ -118,15 +100,6 @@ bool SharedMemoryBasic::Map(size_t nBytes, void* fixed_address) {
   return true;
 }
 
-<<<<<<< HEAD
-bool SharedMemoryBasic::ShareToProcess(base::ProcessId /*unused*/,
-                                       Handle* aNewHandle) {
-||||||| merged common ancestors
-bool
-SharedMemoryBasic::ShareToProcess(base::ProcessId/*unused*/,
-                                  Handle* aNewHandle)
-{
-=======
 void* SharedMemoryBasic::FindFreeAddressSpace(size_t size) {
   void* memory =
       mmap(NULL, size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -136,7 +109,6 @@ void* SharedMemoryBasic::FindFreeAddressSpace(size_t size) {
 
 bool SharedMemoryBasic::ShareToProcess(base::ProcessId /*unused*/,
                                        Handle* aNewHandle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mShmFd >= 0, "Should have been Create()d by now");
 
   int shmfdDup = dup(mShmFd);

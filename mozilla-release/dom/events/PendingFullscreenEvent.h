@@ -11,18 +11,11 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-enum class FullscreenEventType {
-||||||| merged common ancestors
-enum class FullscreenEventType
-{
-=======
 namespace dom {
 class Document;
 }
 
 enum class FullscreenEventType {
->>>>>>> upstream-releases
   Change,
   Error,
 };
@@ -31,21 +24,9 @@ enum class FullscreenEventType {
  * Class for dispatching a fullscreen event. It should be queued and
  * invoked as part of "run the fullscreen steps" algorithm.
  */
-<<<<<<< HEAD
-class PendingFullscreenEvent {
- public:
-  PendingFullscreenEvent(FullscreenEventType aType, nsIDocument* aDocument,
-||||||| merged common ancestors
-class PendingFullscreenEvent
-{
-public:
-  PendingFullscreenEvent(FullscreenEventType aType,
-                         nsIDocument* aDocument,
-=======
 class PendingFullscreenEvent {
  public:
   PendingFullscreenEvent(FullscreenEventType aType, dom::Document* aDocument,
->>>>>>> upstream-releases
                          nsINode* aTarget)
       : mDocument(aDocument), mTarget(aTarget), mType(aType) {
     MOZ_ASSERT(aDocument);
@@ -75,16 +56,8 @@ class PendingFullscreenEvent {
         Composed::eYes);
   }
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsIDocument> mDocument;
-=======
  private:
   RefPtr<dom::Document> mDocument;
->>>>>>> upstream-releases
   nsCOMPtr<nsINode> mTarget;
   FullscreenEventType mType;
 #ifdef DEBUG

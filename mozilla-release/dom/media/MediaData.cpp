@@ -40,19 +40,6 @@ bool IsDataLoudnessHearable(const AudioDataValue aData) {
   return 20.0f * std::log10(AudioSampleToFloat(aData)) > -100;
 }
 
-<<<<<<< HEAD
-void AudioData::EnsureAudioBuffer() {
-  if (mAudioBuffer) return;
-  mAudioBuffer =
-      SharedBuffer::Create(mFrames * mChannels * sizeof(AudioDataValue));
-||||||| merged common ancestors
-void
-AudioData::EnsureAudioBuffer()
-{
-  if (mAudioBuffer)
-    return;
-  mAudioBuffer = SharedBuffer::Create(mFrames*mChannels*sizeof(AudioDataValue));
-=======
 AudioData::AudioData(int64_t aOffset, const media::TimeUnit& aTime,
                      AlignedAudioBuffer&& aData, uint32_t aChannels,
                      uint32_t aRate, uint32_t aChannelMap)
@@ -133,18 +120,11 @@ void AudioData::EnsureAudioBuffer() {
   const AudioDataValue* srcData = GetAdjustedData();
   mAudioBuffer =
       SharedBuffer::Create(mFrames * mChannels * sizeof(AudioDataValue));
->>>>>>> upstream-releases
 
   AudioDataValue* destData = static_cast<AudioDataValue*>(mAudioBuffer->Data());
   for (uint32_t i = 0; i < mFrames; ++i) {
     for (uint32_t j = 0; j < mChannels; ++j) {
-<<<<<<< HEAD
-      data[j * mFrames + i] = mAudioData[i * mChannels + j];
-||||||| merged common ancestors
-      data[j*mFrames + i] = mAudioData[i*mChannels + j];
-=======
       destData[j * mFrames + i] = srcData[i * mChannels + j];
->>>>>>> upstream-releases
     }
   }
 }
@@ -175,34 +155,6 @@ bool AudioData::IsAudible() const {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */
-already_AddRefed<AudioData> AudioData::TransferAndUpdateTimestampAndDuration(
-    AudioData* aOther, const TimeUnit& aTimestamp, const TimeUnit& aDuration) {
-  NS_ENSURE_TRUE(aOther, nullptr);
-  RefPtr<AudioData> v =
-      new AudioData(aOther->mOffset, aTimestamp, aDuration, aOther->mFrames,
-                    std::move(aOther->mAudioData), aOther->mChannels,
-                    aOther->mRate, aOther->mChannelMap);
-  return v.forget();
-||||||| merged common ancestors
-/* static */
-already_AddRefed<AudioData>
-AudioData::TransferAndUpdateTimestampAndDuration(AudioData* aOther,
-                                                 const TimeUnit& aTimestamp,
-                                                 const TimeUnit& aDuration)
-{
-  NS_ENSURE_TRUE(aOther, nullptr);
-  RefPtr<AudioData> v = new AudioData(aOther->mOffset,
-                                      aTimestamp,
-                                      aDuration,
-                                      aOther->mFrames,
-                                      std::move(aOther->mAudioData),
-                                      aOther->mChannels,
-                                      aOther->mRate,
-                                      aOther->mChannelMap);
-  return v.forget();
-=======
 AlignedAudioBuffer AudioData::MoveableData() {
   // Trim buffer according to trimming mask.
   mAudioData.PopFront(mDataOffset);
@@ -211,7 +163,6 @@ AlignedAudioBuffer AudioData::MoveableData() {
   mFrames = 0;
   mTrimWindow.reset();
   return std::move(mAudioData);
->>>>>>> upstream-releases
 }
 
 static bool ValidatePlane(const VideoData::YCbCrBuffer::Plane& aPlane) {
@@ -261,26 +212,11 @@ VideoData::VideoData(int64_t aOffset, const TimeUnit& aTime,
                      const TimeUnit& aDuration, bool aKeyframe,
                      const TimeUnit& aTimecode, IntSize aDisplay,
                      layers::ImageContainer::FrameID aFrameID)
-<<<<<<< HEAD
-    : MediaData(VIDEO_DATA, aOffset, aTime, aDuration, 1),
-      mDisplay(aDisplay),
-      mFrameID(aFrameID),
-      mSentToCompositor(false),
-      mNextKeyFrameTime(TimeUnit::Invalid()) {
-||||||| merged common ancestors
-  : MediaData(VIDEO_DATA, aOffset, aTime, aDuration, 1)
-  , mDisplay(aDisplay)
-  , mFrameID(aFrameID)
-  , mSentToCompositor(false)
-  , mNextKeyFrameTime(TimeUnit::Invalid())
-{
-=======
     : MediaData(Type::VIDEO_DATA, aOffset, aTime, aDuration),
       mDisplay(aDisplay),
       mFrameID(aFrameID),
       mSentToCompositor(false),
       mNextKeyFrameTime(TimeUnit::Invalid()) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mDuration.IsNegative(), "Frame must have non-negative duration.");
   mKeyframe = aKeyframe;
   mTimecode = aTimecode;
@@ -363,27 +299,11 @@ PlanarYCbCrData ConstructPlanarYCbCrData(const VideoInfo& aInfo,
   return data;
 }
 
-<<<<<<< HEAD
-/* static */ bool VideoData::SetVideoDataToImage(PlanarYCbCrImage* aVideoImage,
-                                                 const VideoInfo& aInfo,
-                                                 const YCbCrBuffer& aBuffer,
-                                                 const IntRect& aPicture,
-                                                 bool aCopyData) {
-||||||| merged common ancestors
-/* static */ bool
-VideoData::SetVideoDataToImage(PlanarYCbCrImage* aVideoImage,
-                               const VideoInfo& aInfo,
-                               const YCbCrBuffer &aBuffer,
-                               const IntRect& aPicture,
-                               bool aCopyData)
-{
-=======
 /* static */
 bool VideoData::SetVideoDataToImage(PlanarYCbCrImage* aVideoImage,
                                     const VideoInfo& aInfo,
                                     const YCbCrBuffer& aBuffer,
                                     const IntRect& aPicture, bool aCopyData) {
->>>>>>> upstream-releases
   if (!aVideoImage) {
     return false;
   }
@@ -489,15 +409,6 @@ already_AddRefed<VideoData> VideoData::CreateAndCopyData(
   if (!v->mImage) {
     return nullptr;
   }
-<<<<<<< HEAD
-  if (!videoImage->Allocate(
-          IntSize(aBuffer.mPlanes[0].mWidth, aBuffer.mPlanes[0].mHeight),
-          SurfaceFormat::B8G8R8A8)) {
-||||||| merged common ancestors
-  if (!videoImage->Allocate(IntSize(aBuffer.mPlanes[0].mWidth,
-                                    aBuffer.mPlanes[0].mHeight),
-                            SurfaceFormat::B8G8R8A8)) {
-=======
   if (!videoImage->Allocate(
           IntSize(aBuffer.mPlanes[0].mWidth, aBuffer.mPlanes[0].mHeight),
           SurfaceFormat::B8G8R8A8)) {
@@ -521,7 +432,6 @@ already_AddRefed<VideoData> VideoData::CreateAndCopyData(
   layers::MappedTextureData buffer;
   if (!texture->BorrowMappedData(buffer)) {
     NS_WARNING("Failed to borrow mapped data");
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -530,15 +440,8 @@ already_AddRefed<VideoData> VideoData::CreateAndCopyData(
   ConvertYCbCrAToARGB(aBuffer.mPlanes[0].mData, aBuffer.mPlanes[1].mData,
                       aBuffer.mPlanes[2].mData, aAlphaPlane.mData,
                       aBuffer.mPlanes[0].mStride, aBuffer.mPlanes[1].mStride,
-<<<<<<< HEAD
-                      argb_buffer, size.width * 4, size.width, size.height);
-||||||| merged common ancestors
-                      argb_buffer, size.width * 4,
-                      size.width, size.height);
-=======
                       buffer.data, buffer.stride, buffer.size.width,
                       buffer.size.height);
->>>>>>> upstream-releases
 
   return v.forget();
 }
@@ -555,52 +458,19 @@ already_AddRefed<VideoData> VideoData::CreateFromImage(
 }
 
 MediaRawData::MediaRawData()
-<<<<<<< HEAD
-    : MediaData(RAW_DATA, 0), mCrypto(mCryptoInternal) {}
-||||||| merged common ancestors
-  : MediaData(RAW_DATA, 0)
-  , mCrypto(mCryptoInternal)
-{
-}
-=======
     : MediaData(Type::RAW_DATA), mCrypto(mCryptoInternal) {}
->>>>>>> upstream-releases
 
 MediaRawData::MediaRawData(const uint8_t* aData, size_t aSize)
-<<<<<<< HEAD
-    : MediaData(RAW_DATA, 0), mCrypto(mCryptoInternal), mBuffer(aData, aSize) {}
-||||||| merged common ancestors
-  : MediaData(RAW_DATA, 0)
-  , mCrypto(mCryptoInternal)
-  , mBuffer(aData, aSize)
-{
-}
-=======
     : MediaData(Type::RAW_DATA),
       mCrypto(mCryptoInternal),
       mBuffer(aData, aSize) {}
->>>>>>> upstream-releases
 
 MediaRawData::MediaRawData(const uint8_t* aData, size_t aSize,
                            const uint8_t* aAlphaData, size_t aAlphaSize)
-<<<<<<< HEAD
-    : MediaData(RAW_DATA, 0),
-      mCrypto(mCryptoInternal),
-      mBuffer(aData, aSize),
-      mAlphaBuffer(aAlphaData, aAlphaSize) {}
-||||||| merged common ancestors
-  : MediaData(RAW_DATA, 0)
-  , mCrypto(mCryptoInternal)
-  , mBuffer(aData, aSize)
-  , mAlphaBuffer(aAlphaData, aAlphaSize)
-{
-}
-=======
     : MediaData(Type::RAW_DATA),
       mCrypto(mCryptoInternal),
       mBuffer(aData, aSize),
       mAlphaBuffer(aAlphaData, aAlphaSize) {}
->>>>>>> upstream-releases
 
 already_AddRefed<MediaRawData> MediaRawData::Clone() const {
   RefPtr<MediaRawData> s = new MediaRawData;

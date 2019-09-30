@@ -18,15 +18,8 @@
 #include "updatehelper.h"
 #include "shellapi.h"
 #include "readstrings.h"
-<<<<<<< HEAD
-#include "errors.h"
-#include "commonupdatedir.h"
-||||||| merged common ancestors
-#include "errors.h"
-=======
 #include "updatererrors.h"
 #include "commonupdatedir.h"
->>>>>>> upstream-releases
 
 #pragma comment(lib, "version.lib")
 
@@ -56,21 +49,9 @@ static BOOL UpdateUninstallerVersionString(LPWSTR versionString) {
  * @param path    The path of the ini file to read from
  * @param results The maintenance service strings that were read
  * @return OK on success
-<<<<<<< HEAD
- */
-static int ReadMaintenanceServiceStrings(
-    LPCWSTR path, MaintenanceServiceStringTable *results) {
-||||||| merged common ancestors
-*/
-static int
-ReadMaintenanceServiceStrings(LPCWSTR path,
-                              MaintenanceServiceStringTable *results)
-{
-=======
  */
 static int ReadMaintenanceServiceStrings(
     LPCWSTR path, MaintenanceServiceStringTable* results) {
->>>>>>> upstream-releases
   // Read in the maintenance service description string if specified.
   const unsigned int kNumStrings = 1;
   const char* kServiceKeys = "MozillaMaintenanceDescription\0";
@@ -95,18 +76,8 @@ static int ReadMaintenanceServiceStrings(
  * @param  D    The fourth part of the version number
  * @return TRUE if successful
  */
-<<<<<<< HEAD
-static BOOL GetVersionNumberFromPath(LPWSTR path, DWORD &A, DWORD &B, DWORD &C,
-                                     DWORD &D) {
-||||||| merged common ancestors
-static BOOL
-GetVersionNumberFromPath(LPWSTR path, DWORD &A, DWORD &B,
-                         DWORD &C, DWORD &D)
-{
-=======
 static BOOL GetVersionNumberFromPath(LPWSTR path, DWORD& A, DWORD& B, DWORD& C,
                                      DWORD& D) {
->>>>>>> upstream-releases
   DWORD fileVersionInfoSize = GetFileVersionInfoSizeW(path, 0);
   mozilla::UniquePtr<char[]> fileVersionInfo(new char[fileVersionInfoSize]);
   if (!GetFileVersionInfoW(path, 0, fileVersionInfoSize,
@@ -116,34 +87,14 @@ static BOOL GetVersionNumberFromPath(LPWSTR path, DWORD& A, DWORD& B, DWORD& C,
     return FALSE;
   }
 
-<<<<<<< HEAD
-  VS_FIXEDFILEINFO *fixedFileInfo =
-      reinterpret_cast<VS_FIXEDFILEINFO *>(fileVersionInfo.get());
-||||||| merged common ancestors
-  VS_FIXEDFILEINFO *fixedFileInfo =
-    reinterpret_cast<VS_FIXEDFILEINFO *>(fileVersionInfo.get());
-=======
   VS_FIXEDFILEINFO* fixedFileInfo =
       reinterpret_cast<VS_FIXEDFILEINFO*>(fileVersionInfo.get());
->>>>>>> upstream-releases
   UINT size;
   if (!VerQueryValueW(fileVersionInfo.get(), L"\\",
-<<<<<<< HEAD
-                      reinterpret_cast<LPVOID *>(&fixedFileInfo), &size)) {
-    LOG_WARN(("Could not query file version info of old service.  (%d)",
-              GetLastError()));
-    return FALSE;
-||||||| merged common ancestors
-    reinterpret_cast<LPVOID*>(&fixedFileInfo), &size)) {
-      LOG_WARN(("Could not query file version info of old service.  (%d)",
-                GetLastError()));
-      return FALSE;
-=======
                       reinterpret_cast<LPVOID*>(&fixedFileInfo), &size)) {
     LOG_WARN(("Could not query file version info of old service.  (%d)",
               GetLastError()));
     return FALSE;
->>>>>>> upstream-releases
   }
 
   A = HIWORD(fixedFileInfo->dwFileVersionMS);
@@ -234,22 +185,9 @@ BOOL UpdateServiceDescription(SC_HANDLE serviceHandle) {
  * @param currentServicePath  The current (possibly wrong) path that is used.
  * @param servicePathWasWrong Out parameter set to TRUE if a fix was needed.
  * @return TRUE if the service path is now correct.
-<<<<<<< HEAD
- */
-BOOL FixServicePath(SC_HANDLE service, LPCWSTR currentServicePath,
-                    BOOL &servicePathWasWrong) {
-||||||| merged common ancestors
-*/
-BOOL
-FixServicePath(SC_HANDLE service,
-               LPCWSTR currentServicePath,
-               BOOL &servicePathWasWrong)
-{
-=======
  */
 BOOL FixServicePath(SC_HANDLE service, LPCWSTR currentServicePath,
                     BOOL& servicePathWasWrong) {
->>>>>>> upstream-releases
   // When we originally upgraded the MozillaMaintenance service we
   // would uninstall the service on each upgrade.  This had an
   // intermittent error which could cause the service to use the file
@@ -307,24 +245,7 @@ BOOL FixServicePath(SC_HANDLE service, LPCWSTR currentServicePath,
  * @param  action The action to perform.
  * @return TRUE if the service was installed/upgraded
  */
-<<<<<<< HEAD
 BOOL SvcInstall(SvcInstallAction action) {
-  mozilla::UniquePtr<wchar_t[]> updateDir;
-  HRESULT permResult = GetCommonUpdateDirectory(
-      nullptr, SetPermissionsOf::AllFilesAndDirs, updateDir);
-  if (FAILED(permResult)) {
-    LOG_WARN(
-        ("Unable to set the permissions on the update directory ('%S'): %d",
-         updateDir.get(), permResult));
-  }
-
-||||||| merged common ancestors
-BOOL
-SvcInstall(SvcInstallAction action)
-{
-=======
-BOOL SvcInstall(SvcInstallAction action) {
->>>>>>> upstream-releases
   // Get a handle to the local computer SCM database with full access rights.
   nsAutoServiceHandle schSCManager(
       OpenSCManager(nullptr, nullptr, SC_MANAGER_ALL_ACCESS));
@@ -380,35 +301,16 @@ BOOL SvcInstall(SvcInstallAction action) {
     // Get the service config information, in particular we want the binary
     // path of the service.
     mozilla::UniquePtr<char[]> serviceConfigBuffer(new char[bytesNeeded]);
-<<<<<<< HEAD
-    if (!QueryServiceConfigW(schService,
-                             reinterpret_cast<QUERY_SERVICE_CONFIGW *>(
-                                 serviceConfigBuffer.get()),
-                             bytesNeeded, &bytesNeeded)) {
-||||||| merged common ancestors
-    if (!QueryServiceConfigW(schService,
-        reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get()),
-        bytesNeeded, &bytesNeeded)) {
-=======
     if (!QueryServiceConfigW(
             schService,
             reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get()),
             bytesNeeded, &bytesNeeded)) {
->>>>>>> upstream-releases
       LOG_WARN(("Could open service but could not query service config.  (%d)",
                 GetLastError()));
       return FALSE;
     }
-<<<<<<< HEAD
-    QUERY_SERVICE_CONFIGW &serviceConfig =
-        *reinterpret_cast<QUERY_SERVICE_CONFIGW *>(serviceConfigBuffer.get());
-||||||| merged common ancestors
-    QUERY_SERVICE_CONFIGW &serviceConfig =
-      *reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get());
-=======
     QUERY_SERVICE_CONFIGW& serviceConfig =
         *reinterpret_cast<QUERY_SERVICE_CONFIGW*>(serviceConfigBuffer.get());
->>>>>>> upstream-releases
 
     // Check if we need to fix the service path
     BOOL servicePathWasWrong;
@@ -738,17 +640,8 @@ BOOL SetUserAccessServiceDACL(SC_HANDLE hService) {
  * @return ERROR_SUCCESS if successful
  */
 DWORD
-<<<<<<< HEAD
-SetUserAccessServiceDACL(SC_HANDLE hService, PACL &pNewAcl,
-                         PSECURITY_DESCRIPTOR psd) {
-||||||| merged common ancestors
-SetUserAccessServiceDACL(SC_HANDLE hService, PACL &pNewAcl,
-                         PSECURITY_DESCRIPTOR psd)
-{
-=======
 SetUserAccessServiceDACL(SC_HANDLE hService, PACL& pNewAcl,
                          PSECURITY_DESCRIPTOR psd) {
->>>>>>> upstream-releases
   // Get the current security descriptor needed size
   DWORD needed = 0;
   if (!QueryServiceObjectSecurity(hService, DACL_SECURITY_INFORMATION, &psd, 0,

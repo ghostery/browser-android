@@ -175,23 +175,10 @@ char (&ArrayLengthHelper(T (&array)[N]))[N];
  * can't call ArrayLength() when it is not a C++11 constexpr function.
  */
 #ifdef __cplusplus
-<<<<<<< HEAD
-#define MOZ_ARRAY_LENGTH(array) \
-  sizeof(mozilla::detail::ArrayLengthHelper(array))
-||||||| merged common ancestors
-#  define MOZ_ARRAY_LENGTH(array)   sizeof(mozilla::detail::ArrayLengthHelper(array))
-=======
 #  define MOZ_ARRAY_LENGTH(array) \
     sizeof(mozilla::detail::ArrayLengthHelper(array))
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
-||||||| merged common ancestors
-#  define MOZ_ARRAY_LENGTH(array)   (sizeof(array)/sizeof((array)[0]))
-=======
 #  define MOZ_ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
->>>>>>> upstream-releases
 #endif
 
 #endif /* mozilla_ArrayUtils_h */

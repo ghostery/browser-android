@@ -56,14 +56,7 @@ function run_test() {
  */
 
 var initialStarted = false;
-<<<<<<< HEAD
-function initialStart(ch, cx) {
-||||||| merged common ancestors
-function initialStart(ch, cx)
-{
-=======
 function initialStart(ch) {
->>>>>>> upstream-releases
   dumpn("*** initialStart");
 
   if (initialStarted) {
@@ -80,14 +73,7 @@ function initialStart(ch) {
 }
 
 var initialStopped = false;
-<<<<<<< HEAD
-function initialStop(ch, cx, status, data) {
-||||||| merged common ancestors
-function initialStop(ch, cx, status, data)
-{
-=======
 function initialStop(ch, status, data) {
->>>>>>> upstream-releases
   dumpn("*** initialStop");
 
   Assert.equal(
@@ -120,14 +106,7 @@ function initialStop(ch, status, data) {
 }
 
 var intermediateStarted = false;
-<<<<<<< HEAD
-function intermediateStart(ch, cx) {
-||||||| merged common ancestors
-function intermediateStart(ch, cx)
-{
-=======
 function intermediateStart(ch) {
->>>>>>> upstream-releases
   dumpn("*** intermediateStart");
 
   Assert.notEqual(srv.getObjectState("object-state-test"), null);
@@ -143,14 +122,7 @@ function intermediateStart(ch) {
 }
 
 var intermediateStopped = false;
-<<<<<<< HEAD
-function intermediateStop(ch, cx, status, data) {
-||||||| merged common ancestors
-function intermediateStop(ch, cx, status, data)
-{
-=======
 function intermediateStop(ch, status, data) {
->>>>>>> upstream-releases
   dumpn("*** intermediateStop");
 
   Assert.equal(
@@ -180,14 +152,7 @@ function intermediateStop(ch, status, data) {
 }
 
 var triggerStarted = false;
-<<<<<<< HEAD
-function triggerStart(ch, cx) {
-||||||| merged common ancestors
-function triggerStart(ch, cx)
-{
-=======
 function triggerStart(ch) {
->>>>>>> upstream-releases
   dumpn("*** triggerStart");
 
   if (!initialStarted) {
@@ -207,14 +172,7 @@ function triggerStart(ch) {
 }
 
 var triggerStopped = false;
-<<<<<<< HEAD
-function triggerStop(ch, cx, status, data) {
-||||||| merged common ancestors
-function triggerStop(ch, cx, status, data)
-{
-=======
 function triggerStop(ch, status, data) {
->>>>>>> upstream-releases
   dumpn("*** triggerStop");
 
   Assert.equal(
@@ -274,30 +232,14 @@ function checkForFinish() {
       }
       if (!triggerStarted) {
         do_throw("checkForFinish: triggerStarted is false?!?!");
-<<<<<<< HEAD
-    } finally {
-||||||| merged common ancestors
-    }
-    finally
-    {
-=======
       }
     } finally {
->>>>>>> upstream-releases
       srv.stop(do_test_finished);
     }
   }
 }
 
-<<<<<<< HEAD
-
 /** *******************************
-||||||| merged common ancestors
-
-/*********************************
-=======
-/** *******************************
->>>>>>> upstream-releases
  * UTILITY OBSERVABLE URL LOADER *
  *********************************/
 
@@ -318,50 +260,6 @@ function HTTPTestLoader(path, start, stop) {
   var channel = makeChannel(path);
   channel.asyncOpen(this);
 }
-<<<<<<< HEAD
-HTTPTestLoader.prototype =
-  {
-    onStartRequest(request, cx) {
-      dumpn("*** HTTPTestLoader.onStartRequest for " + this._path);
-
-      var ch = request.QueryInterface(Ci.nsIHttpChannel)
-                      .QueryInterface(Ci.nsIHttpChannelInternal);
-
-      try {
-        try {
-          this._start(ch, cx);
-        } catch (e) {
-          do_throw(this._path + ": error in onStartRequest: " + e);
-        }
-      } catch (e) {
-        dumpn("!!! swallowing onStartRequest exception so onStopRequest is " +
-              "called...");
-||||||| merged common ancestors
-HTTPTestLoader.prototype =
-  {
-    onStartRequest: function(request, cx)
-    {
-      dumpn("*** HTTPTestLoader.onStartRequest for " + this._path);
-
-      var ch = request.QueryInterface(Ci.nsIHttpChannel)
-                      .QueryInterface(Ci.nsIHttpChannelInternal);
-
-      try
-      {
-        try
-        {
-          this._start(ch, cx);
-        }
-        catch (e)
-        {
-          do_throw(this._path + ": error in onStartRequest: " + e);
-        }
-      }
-      catch (e)
-      {
-        dumpn("!!! swallowing onStartRequest exception so onStopRequest is " +
-              "called...");
-=======
 HTTPTestLoader.prototype = {
   onStartRequest(request) {
     dumpn("*** HTTPTestLoader.onStartRequest for " + this._path);
@@ -375,56 +273,7 @@ HTTPTestLoader.prototype = {
         this._start(ch);
       } catch (e) {
         do_throw(this._path + ": error in onStartRequest: " + e);
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-    },
-    onDataAvailable(request, cx, inputStream, offset, count) {
-      dumpn("*** HTTPTestLoader.onDataAvailable for " + this._path);
-
-      Array.prototype.push.apply(this._data,
-                                 makeBIS(inputStream).readByteArray(count));
-    },
-    onStopRequest(request, cx, status) {
-      dumpn("*** HTTPTestLoader.onStopRequest for " + this._path);
-
-      var ch = request.QueryInterface(Ci.nsIHttpChannel)
-                      .QueryInterface(Ci.nsIHttpChannelInternal);
-
-      this._stop(ch, cx, status, this._data);
-    },
-    QueryInterface: ChromeUtils.generateQI(["nsIStreamListener", "nsIRequestObserver"]),
-  };
-||||||| merged common ancestors
-    },
-    onDataAvailable: function(request, cx, inputStream, offset, count)
-    {
-      dumpn("*** HTTPTestLoader.onDataAvailable for " + this._path);
-
-      Array.prototype.push.apply(this._data,
-                                 makeBIS(inputStream).readByteArray(count));
-    },
-    onStopRequest: function(request, cx, status)
-    {
-      dumpn("*** HTTPTestLoader.onStopRequest for " + this._path);
-
-      var ch = request.QueryInterface(Ci.nsIHttpChannel)
-                      .QueryInterface(Ci.nsIHttpChannelInternal);
-
-      this._stop(ch, cx, status, this._data);
-    },
-    QueryInterface: function(aIID)
-    {
-      dumpn("*** QueryInterface: " + aIID);
-
-      if (aIID.equals(Ci.nsIStreamListener) ||
-          aIID.equals(Ci.nsIRequestObserver) ||
-          aIID.equals(Ci.nsISupports))
-        return this;
-      throw Cr.NS_ERROR_NO_INTERFACE;
-    }
-  };
-=======
     } catch (e) {
       dumpn(
         "!!! swallowing onStartRequest exception so onStopRequest is " +
@@ -454,4 +303,3 @@ HTTPTestLoader.prototype = {
     "nsIRequestObserver",
   ]),
 };
->>>>>>> upstream-releases

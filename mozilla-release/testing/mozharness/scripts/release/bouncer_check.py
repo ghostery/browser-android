@@ -109,40 +109,18 @@ class BouncerCheck(BaseScript):
             r = session.head(url, verify=True, timeout=10, allow_redirects=True)
             try:
                 r.raise_for_status()
-<<<<<<< HEAD
-            except Exception:
-                self.error("FAIL: {}, status: {}".format(url, r.status_code))
-||||||| merged common ancestors
-            except Exception:
-                self.warning("FAIL: {}, status: {}".format(url, r.status_code))
-=======
             except HTTPError:
                 self.error("FAIL: {}, status: {}".format(url, r.status_code))
->>>>>>> upstream-releases
                 raise
 
             final_url = urlparse(r.url)
             if final_url.scheme != 'https':
-<<<<<<< HEAD
-                self.error('FAIL: URL scheme is not https: {}'.format(r.url))
-||||||| merged common ancestors
-                self.warning('FAIL: URL scheme is not https: {}'.format(r.url))
-=======
                 self.error('FAIL: URL scheme is not https: {}'.format(r.url))
                 self.return_code = EXIT_STATUS_DICT[TBPL_FAILURE]
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-            if final_url.netloc not in mozilla_locations:
-                self.error('FAIL: host not in allowed locations: {}'.format(r.url))
-||||||| merged common ancestors
-            if final_url.netloc not in mozilla_locations:
-                self.warning('FAIL: host not in allowed locations: {}'.format(r.url))
-=======
             if final_url.netloc not in self.config['cdn_urls']:
                 self.error('FAIL: host not in allowed locations: {}'.format(r.url))
                 self.return_code = EXIT_STATUS_DICT[TBPL_FAILURE]
->>>>>>> upstream-releases
 
         try:
             retry(do_check_url, sleeptime=3, max_sleeptime=10, attempts=3)

@@ -22,14 +22,6 @@ class TargetPolicy;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-class SandboxBroker {
- public:
-||||||| merged common ancestors
-class SandboxBroker
-{
-public:
-=======
 class AbstractSandboxBroker {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(AbstractSandboxBroker)
@@ -70,10 +62,9 @@ class AbstractSandboxBroker {
 
 class SandboxBroker : public AbstractSandboxBroker {
  public:
->>>>>>> upstream-releases
   SandboxBroker();
 
-  static void Initialize(sandbox::BrokerServices *aBrokerServices);
+  static void Initialize(sandbox::BrokerServices* aBrokerServices);
 
   void Shutdown() override {}
 
@@ -83,58 +74,21 @@ class SandboxBroker : public AbstractSandboxBroker {
    */
   static void GeckoDependentInitialize();
 
-<<<<<<< HEAD
-  bool LaunchApp(const wchar_t *aPath, const wchar_t *aArguments,
-                 base::EnvironmentMap &aEnvironment,
-                 GeckoProcessType aProcessType, const bool aEnableLogging,
-                 void **aProcessHandle);
-||||||| merged common ancestors
-  bool LaunchApp(const wchar_t *aPath,
-                 const wchar_t *aArguments,
-                 base::EnvironmentMap& aEnvironment,
-                 GeckoProcessType aProcessType,
-                 const bool aEnableLogging,
-                 void **aProcessHandle);
-=======
   bool LaunchApp(const wchar_t* aPath, const wchar_t* aArguments,
                  base::EnvironmentMap& aEnvironment,
                  GeckoProcessType aProcessType, const bool aEnableLogging,
                  void** aProcessHandle) override;
->>>>>>> upstream-releases
   virtual ~SandboxBroker();
 
   // Security levels for different types of processes
   void SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
                                          bool aIsFileProcess) override;
 
-<<<<<<< HEAD
-  void SetSecurityLevelForGPUProcess(int32_t aSandboxLevel);
-  bool SetSecurityLevelForRDDProcess();
-||||||| merged common ancestors
-  void SetSecurityLevelForGPUProcess(int32_t aSandboxLevel);
-=======
   void SetSecurityLevelForGPUProcess(int32_t aSandboxLevel) override;
   bool SetSecurityLevelForRDDProcess() override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool SetSecurityLevelForPluginProcess(int32_t aSandboxLevel);
-  enum SandboxLevel { LockDown, Restricted };
-  bool SetSecurityLevelForGMPlugin(SandboxLevel aLevel);
-||||||| merged common ancestors
-  bool SetSecurityLevelForPluginProcess(int32_t aSandboxLevel);
-#ifdef MOZ_ENABLE_SKIA_PDF
-  bool SetSecurityLevelForPDFiumProcess();
-#endif
-  enum SandboxLevel {
-    LockDown,
-    Restricted
-  };
-  bool SetSecurityLevelForGMPlugin(SandboxLevel aLevel);
-=======
   bool SetSecurityLevelForPluginProcess(int32_t aSandboxLevel) override;
   bool SetSecurityLevelForGMPlugin(SandboxLevel aLevel) override;
->>>>>>> upstream-releases
 
   // File system permissions
   bool AllowReadFile(wchar_t const* file) override;
@@ -156,16 +110,8 @@ class SandboxBroker : public AbstractSandboxBroker {
   // Set up dummy interceptions via the broker, so we can log calls.
   void ApplyLoggingPolicy();
 
-<<<<<<< HEAD
- private:
-  static sandbox::BrokerServices *sBrokerService;
-||||||| merged common ancestors
-private:
-  static sandbox::BrokerServices *sBrokerService;
-=======
  private:
   static sandbox::BrokerServices* sBrokerService;
->>>>>>> upstream-releases
   static bool sRunningFromNetworkDrive;
   sandbox::TargetPolicy* mPolicy;
 };

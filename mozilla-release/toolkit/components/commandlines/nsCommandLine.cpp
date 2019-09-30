@@ -187,40 +187,7 @@ nsCommandLine::GetWorkingDirectory(nsIFile** aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCommandLine::GetWindowContext(nsIDOMWindow** aResult) {
-  NS_IF_ADDREF(*aResult = mWindowContext);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCommandLine::SetWindowContext(nsIDOMWindow* aValue) {
-  mWindowContext = aValue;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
 nsCommandLine::ResolveFile(const nsAString& aArgument, nsIFile** aResult) {
-||||||| merged common ancestors
-nsCommandLine::GetWindowContext(nsIDOMWindow* *aResult)
-{
-  NS_IF_ADDREF(*aResult = mWindowContext);
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCommandLine::SetWindowContext(nsIDOMWindow* aValue)
-{
-  mWindowContext = aValue;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsCommandLine::ResolveFile(const nsAString& aArgument, nsIFile* *aResult)
-{
-=======
-nsCommandLine::ResolveFile(const nsAString& aArgument, nsIFile** aResult) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(mWorkingDir, NS_ERROR_NOT_INITIALIZED);
 
   // This is some seriously screwed-up code. nsIFile.appendRelativeNativePath
@@ -287,16 +254,8 @@ nsCommandLine::ResolveFile(const nsAString& aArgument, nsIFile** aResult) {
   lf.forget(aResult);
   return NS_OK;
 
-<<<<<<< HEAD
-#elif defined(XP_WIN32)
-  nsCOMPtr<nsIFile> lf(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID));
-||||||| merged common ancestors
-#elif defined(XP_WIN32)
-  nsCOMPtr<nsIFile> lf (do_CreateInstance(NS_LOCAL_FILE_CONTRACTID));
-=======
 #elif defined(XP_WIN)
   nsCOMPtr<nsIFile> lf(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID));
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(lf, NS_ERROR_OUT_OF_MEMORY);
 
   rv = lf->InitWithPath(aArgument);

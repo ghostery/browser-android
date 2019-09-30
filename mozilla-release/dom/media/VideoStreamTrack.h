@@ -17,22 +17,6 @@ class VideoOutput;
 namespace dom {
 
 class VideoStreamTrack : public MediaStreamTrack {
-<<<<<<< HEAD
- public:
-  VideoStreamTrack(
-      DOMMediaStream* aStream, TrackID aTrackID, TrackID aInputTrackID,
-      MediaStreamTrackSource* aSource,
-      const MediaTrackConstraints& aConstraints = MediaTrackConstraints())
-      : MediaStreamTrack(aStream, aTrackID, aInputTrackID, aSource,
-                         aConstraints) {}
-||||||| merged common ancestors
-public:
-  VideoStreamTrack(DOMMediaStream* aStream, TrackID aTrackID,
-                   TrackID aInputTrackID,
-                   MediaStreamTrackSource* aSource,
-                   const MediaTrackConstraints& aConstraints = MediaTrackConstraints())
-    : MediaStreamTrack(aStream, aTrackID, aInputTrackID, aSource, aConstraints) {}
-=======
  public:
   VideoStreamTrack(
       DOMMediaStream* aStream, TrackID aTrackID, TrackID aInputTrackID,
@@ -40,7 +24,6 @@ public:
       const MediaTrackConstraints& aConstraints = MediaTrackConstraints());
 
   void Destroy() override;
->>>>>>> upstream-releases
 
   VideoStreamTrack* AsVideoStreamTrack() override { return this; }
   const VideoStreamTrack* AsVideoStreamTrack() const override { return this; }

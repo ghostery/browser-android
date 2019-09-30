@@ -398,68 +398,6 @@
         p.remove();
       }
 
-<<<<<<< HEAD
-      function testShiftTabbingThroughFocusableHost() {
-        opener.is(document.activeElement, document.body.firstChild,
-                  "body's first child should have focus.");
-
-        var host = document.createElement("div");
-        host.id = "host";
-        host.tabIndex = 0;
-        host.onfocus = focusLogger;
-        document.body.appendChild(host);
-
-        var sr = host.attachShadow({mode: "open"});
-        var shadowButton = document.createElement("button");
-        shadowButton.innerText = "X";
-        shadowButton.onfocus = focusLogger;
-        sr.appendChild(shadowButton);
-
-        var shadowInput = document.createElement("input");
-        shadowInput.onfocus = focusLogger;
-        sr.appendChild(shadowInput);
-        sr.appendChild(document.createElement("br"));
-
-        var input = document.createElement("input");
-        input.onfocus = focusLogger;
-        document.body.appendChild(input);
-
-        document.body.offsetLeft;
-
-        synthesizeKey("KEY_Tab");
-        opener.is(lastFocusTarget, host, "Should have focused host element. (1)");
-
-        synthesizeKey("KEY_Tab");
-        opener.is(lastFocusTarget, shadowButton, "Should have focused button element in shadow DOM. (2)");
-
-        synthesizeKey("KEY_Tab");
-        opener.is(lastFocusTarget, shadowInput, "Should have focused input element in shadow DOM. (3)");
-
-        synthesizeKey("KEY_Tab");
-        opener.is(lastFocusTarget, input, "Should have focused input element. (4)");
-
-        // Backwards
-        synthesizeKey("KEY_Tab", {shiftKey: true});
-        opener.is(lastFocusTarget, shadowInput, "Should have focused input element in shadow DOM. (5)");
-
-        synthesizeKey("KEY_Tab", {shiftKey: true});
-        opener.is(lastFocusTarget, shadowButton, "Should have focused button element in shadow DOM. (6)");
-
-        synthesizeKey("KEY_Tab", {shiftKey: true});
-        // focus is already on host
-        opener.is(sr.activeElement, null,
-                  "Focus should have left button element in shadow DOM. (7)");
-
-        synthesizeKey("KEY_Tab", {shiftKey: true});
-        opener.is(document.activeElement, document.body.firstChild,
-                  "body's first child should have focus.");
-
-        host.remove();
-        input.remove();
-      }
-
-||||||| merged common ancestors
-=======
       function testShiftTabbingThroughFocusableHost() {
         opener.is(document.activeElement, document.body.firstChild,
                   "body's first child should have focus.");
@@ -927,7 +865,6 @@
         first.remove();
       }
 
->>>>>>> upstream-releases
       function runTest() {
 
         testTabbingThroughShadowDOMWithTabIndexes();
@@ -936,10 +873,6 @@
         testTabbingThroughDisplayContentsHost();
         testTabbingThroughLightDOMShadowDOMLightDOM();
         testFocusableHost();
-<<<<<<< HEAD
-        testShiftTabbingThroughFocusableHost();
-||||||| merged common ancestors
-=======
         testShiftTabbingThroughFocusableHost();
         testTabbingThroughNestedSlot();
         testTabbingThroughSlotInLightDOM();
@@ -947,7 +880,6 @@
         testTabbingThroughScrollableShadowDOM();
         testDeeplyNestedShadowTree();
         testBackwardsTabbingWithSlotsWithoutFocusableContent();
->>>>>>> upstream-releases
 
         opener.didRunTests();
         window.close();

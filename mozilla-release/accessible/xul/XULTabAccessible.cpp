@@ -93,17 +93,8 @@ Relation XULTabAccessible::RelationByType(RelationType aType) const {
   if (!parent) return rel;
 
   nsCOMPtr<nsIDOMXULRelatedElement> tabsElm =
-<<<<<<< HEAD
-      do_QueryInterface(mContent->GetParent());
-  if (!tabsElm) return rel;
-||||||| merged common ancestors
-    do_QueryInterface(mContent->GetParent());
-  if (!tabsElm)
-    return rel;
-=======
       parent->AsElement()->AsXULRelated();
   if (!tabsElm) return rel;
->>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::Element> tabpanelElement;
   tabsElm->GetRelatedElement(GetNode(), getter_AddRefs(tabpanelElement));
@@ -215,17 +206,8 @@ Relation XULTabpanelAccessible::RelationByType(RelationType aType) const {
   if (!mContent->GetParent()) return rel;
 
   nsCOMPtr<nsIDOMXULRelatedElement> tabpanelsElm =
-<<<<<<< HEAD
-      do_QueryInterface(mContent->GetParent());
-  if (!tabpanelsElm) return rel;
-||||||| merged common ancestors
-    do_QueryInterface(mContent->GetParent());
-  if (!tabpanelsElm)
-    return rel;
-=======
       mContent->GetParent()->AsElement()->AsXULRelated();
   if (!tabpanelsElm) return rel;
->>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::Element> tabElement;
   tabpanelsElm->GetRelatedElement(GetNode(), getter_AddRefs(tabElement));

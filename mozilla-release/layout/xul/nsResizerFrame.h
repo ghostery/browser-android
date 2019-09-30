@@ -12,17 +12,6 @@
 
 class nsIBaseWindow;
 
-<<<<<<< HEAD
-class nsResizerFrame final : public nsTitleBarFrame {
- protected:
-  typedef mozilla::LayoutDeviceIntPoint LayoutDeviceIntPoint;
-  typedef mozilla::LayoutDeviceIntRect LayoutDeviceIntRect;
-
-||||||| merged common ancestors
-class nsResizerFrame final : public nsTitleBarFrame
-{
-protected:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
@@ -32,7 +21,6 @@ class nsResizerFrame final : public nsTitleBarFrame {
   typedef mozilla::LayoutDeviceIntPoint LayoutDeviceIntPoint;
   typedef mozilla::LayoutDeviceIntRect LayoutDeviceIntRect;
 
->>>>>>> upstream-releases
   struct Direction {
     int8_t mHorizontal;
     int8_t mVertical;
@@ -41,15 +29,8 @@ class nsResizerFrame final : public nsTitleBarFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsResizerFrame)
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewResizerFrame(nsIPresShell* aPresShell,
-                                      ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewResizerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewResizerFrame(mozilla::PresShell* aPresShell,
                                       ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   explicit nsResizerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
 
@@ -60,18 +41,9 @@ class nsResizerFrame final : public nsTitleBarFrame {
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual void MouseClicked(mozilla::WidgetMouseEvent* aEvent) override;
 
-<<<<<<< HEAD
- protected:
-  nsIContent* GetContentToResize(nsIPresShell* aPresShell,
-                                 nsIBaseWindow** aWindow);
-||||||| merged common ancestors
-protected:
-  nsIContent* GetContentToResize(nsIPresShell* aPresShell, nsIBaseWindow** aWindow);
-=======
  protected:
   nsIContent* GetContentToResize(mozilla::PresShell* aPresShell,
                                  nsIBaseWindow** aWindow);
->>>>>>> upstream-releases
 
   Direction GetDirection();
 

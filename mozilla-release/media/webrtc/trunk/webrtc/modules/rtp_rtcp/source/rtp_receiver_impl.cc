@@ -28,29 +28,6 @@
 
 namespace webrtc {
 
-<<<<<<< HEAD
-namespace {
-bool InOrderPacket(rtc::Optional<uint16_t> latest_sequence_number,
-                   uint16_t current_sequence_number) {
-  if (!latest_sequence_number)
-    return true;
-
-  // We need to distinguish between a late or retransmitted packet,
-  // and a sequence number discontinuity.
-  if (IsNewerSequenceNumber(current_sequence_number, *latest_sequence_number)) {
-    return true;
-  } else {
-    // If we have a restart of the remote side this packet is still in order.
-    return !IsNewerSequenceNumber(
-        current_sequence_number,
-        *latest_sequence_number - kDefaultMaxReorderingThreshold);
-  }
-}
-
-}  // namespace
-
-||||||| merged common ancestors
-=======
 namespace {
 bool InOrderPacket(const rtc::Optional<uint16_t>& latest_sequence_number,
                    uint16_t current_sequence_number) {
@@ -71,7 +48,6 @@ bool InOrderPacket(const rtc::Optional<uint16_t>& latest_sequence_number,
 
 }  // namespace
 
->>>>>>> upstream-releases
 using RtpUtility::Payload;
 
 // Only return the sources in the last 10 seconds.

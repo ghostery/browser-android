@@ -2,25 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-use crate::cg;
-use crate::to_css::CssVariantAttrs;
-use proc_macro2::TokenStream;
-use syn::{DeriveInput, Path};
-use synstructure;
-||||||| merged common ancestors
-use cg;
-use quote::Tokens;
-use syn::{DeriveInput, Path};
-use synstructure;
-use to_css::CssVariantAttrs;
-=======
 use crate::to_css::CssVariantAttrs;
 use derive_common::cg;
 use proc_macro2::TokenStream;
 use syn::{self, DeriveInput, Path};
 use synstructure::{Structure, VariantInfo};
->>>>>>> upstream-releases
 
 #[darling(attributes(parse), default)]
 #[derive(Default, FromVariant)]
@@ -29,11 +15,6 @@ pub struct ParseVariantAttrs {
     pub condition: Option<Path>,
 }
 
-<<<<<<< HEAD
-pub fn derive(input: DeriveInput) -> TokenStream {
-||||||| merged common ancestors
-pub fn derive(input: DeriveInput) -> Tokens {
-=======
 fn parse_non_keyword_variant(
     name: &syn::Ident,
     variant: &VariantInfo,
@@ -97,7 +78,6 @@ pub fn derive(mut input: DeriveInput) -> TokenStream {
         input.generics.where_clause = where_clause;
     }
 
->>>>>>> upstream-releases
     let name = &input.ident;
     let s = Structure::new(&input);
 
@@ -124,13 +104,7 @@ pub fn derive(mut input: DeriveInput) -> TokenStream {
         let identifier = cg::to_css_identifier(
             &css_variant_attrs
                 .keyword
-<<<<<<< HEAD
-                .unwrap_or(variant.ast().ident.to_string()),
-||||||| merged common ancestors
-                .unwrap_or(variant.ast().ident.as_ref().into()),
-=======
                 .unwrap_or_else(|| variant.ast().ident.to_string()),
->>>>>>> upstream-releases
         );
         let ident = &variant.ast().ident;
 
@@ -163,27 +137,6 @@ pub fn derive(mut input: DeriveInput) -> TokenStream {
         quote! { _ }
     };
 
-<<<<<<< HEAD
-    let parse_body = if saw_condition {
-        quote! {
-            let location = input.current_source_location();
-            let ident = input.expect_ident()?;
-            match_ignore_ascii_case! { &ident,
-                #match_body
-                _ => Err(location.new_unexpected_token_error(
-                    cssparser::Token::Ident(ident.clone())
-                ))
-||||||| merged common ancestors
-    let parse_body = if saw_condition {
-        quote! {
-            let location = input.current_source_location();
-            let ident = input.expect_ident()?;
-            match_ignore_ascii_case! { &ident,
-                #match_body
-                _ => Err(location.new_unexpected_token_error(
-                    ::cssparser::Token::Ident(ident.clone())
-                ))
-=======
     let has_keywords = non_keywords.len() != effective_variants;
 
     let mut parse_non_keywords = quote! {};
@@ -205,7 +158,6 @@ pub fn derive(mut input: DeriveInput) -> TokenStream {
                         cssparser::Token::Ident(ident.clone())
                     ))
                 }
->>>>>>> upstream-releases
             }
         } else {
             quote! {}
@@ -222,13 +174,7 @@ pub fn derive(mut input: DeriveInput) -> TokenStream {
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     let parse_trait_impl = quote! {
-<<<<<<< HEAD
-        impl crate::parser::Parse for #name {
-||||||| merged common ancestors
-        impl ::parser::Parse for #name {
-=======
         impl #impl_generics crate::parser::Parse for #name #ty_generics #where_clause {
->>>>>>> upstream-releases
             #[inline]
             fn parse<'i, 't>(
                 #context_ident: &crate::parser::ParserContext,

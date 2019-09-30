@@ -21,15 +21,7 @@ NS_INTERFACE_MAP_END
 
 SpeechGrammar::SpeechGrammar(nsISupports* aParent) : mParent(aParent) {}
 
-<<<<<<< HEAD
-SpeechGrammar::~SpeechGrammar() {}
-||||||| merged common ancestors
-SpeechGrammar::~SpeechGrammar()
-{
-}
-=======
 SpeechGrammar::~SpeechGrammar() = default;
->>>>>>> upstream-releases
 
 already_AddRefed<SpeechGrammar> SpeechGrammar::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {

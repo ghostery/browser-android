@@ -629,12 +629,6 @@ def target_tasks_nightly_desktop(full_task_graph, parameters, graph_config):
 def target_tasks_searchfox(full_task_graph, parameters, graph_config):
     """Select tasks required for indexing Firefox for Searchfox web site each day"""
     return ['searchfox-linux64-searchfox/debug',
-<<<<<<< HEAD
-            'searchfox-macosx64-searchfox/debug',
-            'searchfox-win64-searchfox/debug']
-||||||| merged common ancestors
-            'searchfox-macosx64-searchfox/debug']
-=======
             'searchfox-macosx64-searchfox/debug',
             'searchfox-win64-searchfox/debug',
             'searchfox-android-armv7-searchfox/debug',
@@ -654,7 +648,6 @@ def target_tasks_chromium_update(full_task_graph, parameters, graph_config):
             'fetch-win32-chromium',
             'fetch-win64-chromium',
             'fetch-mac-chromium']
->>>>>>> upstream-releases
 
 
 @_target_task('pipfile_update')
@@ -740,12 +733,6 @@ def target_tasks_release_simulation(full_task_graph, parameters, graph_config):
     return [l for l, t in full_task_graph.tasks.iteritems()
             if filter_release_tasks(t, parameters)
             and filter_out_cron(t, parameters)
-<<<<<<< HEAD
-            and filter_for_target_project(t)
-            and filter_out_android_on_esr(t)]
-||||||| merged common ancestors
-            and filter_for_beta(t)]
-=======
             and filter_for_target_project(t)
             and filter_out_android_on_esr(t)]
 
@@ -772,4 +759,3 @@ def target_tasks_codereview(full_task_graph, parameters, graph_config):
 def target_tasks_nothing(full_task_graph, parameters, graph_config):
     """Select nothing, for DONTBUILD pushes"""
     return []
->>>>>>> upstream-releases

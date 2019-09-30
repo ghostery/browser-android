@@ -11,12 +11,6 @@ config = {
          '--upload', 'mozilla/geckoview',
          '--upload-branch', 'gh-pages/javadoc/{project}',
          '--upload-message', 'Update {project} javadoc to rev {revision}',
-<<<<<<< HEAD
-         '--variant', 'withGeckoBinariesRelease',
-||||||| merged common ancestors
-         '--variant', 'officialWithGeckoBinariesNoMinApiRelease',
-=======
->>>>>>> upstream-releases
         ],
     ],
     'max_build_output_timeout': 0,

@@ -4,7 +4,6 @@
 
 #include "nsAutoCompleteSimpleResult.h"
 
-<<<<<<< HEAD
 #define CHECK_MATCH_INDEX(_index, _insert)                                   \
   if (_index < 0 ||                                                          \
       static_cast<MatchesArray::size_type>(_index) > mMatches.Length() ||    \
@@ -17,91 +16,8 @@
 NS_IMPL_ISUPPORTS(nsAutoCompleteSimpleResult, nsIAutoCompleteResult,
                   nsIAutoCompleteSimpleResult)
 
-struct AutoCompleteSimpleResultMatch {
-  AutoCompleteSimpleResultMatch(const nsAString& aValue,
-                                const nsAString& aComment,
-                                const nsAString& aImage,
-                                const nsAString& aStyle,
-                                const nsAString& aFinalCompleteValue,
-                                const nsAString& aLabel)
-      : mValue(aValue),
-        mComment(aComment),
-        mImage(aImage),
-        mStyle(aStyle),
-        mFinalCompleteValue(aFinalCompleteValue),
-        mLabel(aLabel) {}
-||||||| merged common ancestors
-#define CHECK_MATCH_INDEX(_index, _insert)                                     \
-  if (_index < 0 ||                                                            \
-      static_cast<MatchesArray::size_type>(_index) > mMatches.Length() ||      \
-      (!_insert && static_cast<MatchesArray::size_type>(_index) == mMatches.Length())) { \
-    MOZ_ASSERT(false, "Trying to use an invalid index on mMatches");           \
-    return NS_ERROR_ILLEGAL_VALUE;                                             \
-  }                                                                            \
-
-NS_IMPL_ISUPPORTS(nsAutoCompleteSimpleResult,
-                  nsIAutoCompleteResult,
-                  nsIAutoCompleteSimpleResult)
-
-struct AutoCompleteSimpleResultMatch
-{
-  AutoCompleteSimpleResultMatch(const nsAString& aValue,
-                                const nsAString& aComment,
-                                const nsAString& aImage,
-                                const nsAString& aStyle,
-                                const nsAString& aFinalCompleteValue,
-                                const nsAString& aLabel)
-    : mValue(aValue)
-    , mComment(aComment)
-    , mImage(aImage)
-    , mStyle(aStyle)
-    , mFinalCompleteValue(aFinalCompleteValue)
-    , mLabel(aLabel)
-  {
-  }
-=======
-#define CHECK_MATCH_INDEX(_index, _insert)                                   \
-  if (_index < 0 ||                                                          \
-      static_cast<MatchesArray::size_type>(_index) > mMatches.Length() ||    \
-      (!_insert &&                                                           \
-       static_cast<MatchesArray::size_type>(_index) == mMatches.Length())) { \
-    MOZ_ASSERT(false, "Trying to use an invalid index on mMatches");         \
-    return NS_ERROR_ILLEGAL_VALUE;                                           \
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsString mValue;
-  nsString mComment;
-  nsString mImage;
-  nsString mStyle;
-  nsString mFinalCompleteValue;
-  nsString mLabel;
-};
-
 nsAutoCompleteSimpleResult::nsAutoCompleteSimpleResult()
     : mDefaultIndex(-1), mSearchResult(RESULT_NOMATCH) {}
-||||||| merged common ancestors
-  nsString mValue;
-  nsString mComment;
-  nsString mImage;
-  nsString mStyle;
-  nsString mFinalCompleteValue;
-  nsString mLabel;
-};
-
-nsAutoCompleteSimpleResult::nsAutoCompleteSimpleResult() :
-  mDefaultIndex(-1),
-  mSearchResult(RESULT_NOMATCH)
-{
-}
-=======
-NS_IMPL_ISUPPORTS(nsAutoCompleteSimpleResult, nsIAutoCompleteResult,
-                  nsIAutoCompleteSimpleResult)
-
-nsAutoCompleteSimpleResult::nsAutoCompleteSimpleResult()
-    : mDefaultIndex(-1), mSearchResult(RESULT_NOMATCH) {}
->>>>>>> upstream-releases
 
 nsresult nsAutoCompleteSimpleResult::AppendResult(
     nsIAutoCompleteResult* aResult) {

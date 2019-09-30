@@ -1516,14 +1516,6 @@ inline std::ostream& operator<<(std::ostream& os, SdpSetupAttribute::Role r) {
 // ; WSP defined in [RFC5234]
 // ; fmt, token defined in [RFC4566]
 // ; rid-identifier defined in [I-D.pthatcher-mmusic-rid]
-<<<<<<< HEAD
-class SdpSimulcastAttribute : public SdpAttribute {
- public:
-||||||| merged common ancestors
-class SdpSimulcastAttribute : public SdpAttribute
-{
-public:
-=======
 //
 // New draft 14, need to parse this for now, will eventually emit it
 // sc-value     = ( sc-send [SP sc-recv] ) / ( sc-recv [SP sc-send] )
@@ -1538,7 +1530,6 @@ public:
 
 class SdpSimulcastAttribute : public SdpAttribute {
  public:
->>>>>>> upstream-releases
   SdpSimulcastAttribute() : SdpAttribute(kSimulcastAttribute) {}
 
   void Serialize(std::ostream& os) const override;

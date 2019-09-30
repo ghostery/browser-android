@@ -68,15 +68,6 @@ public:
                                      sk_sp<SkImageFilter> input,
                                      const CropRect* cropRect = nullptr);
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkMatrixConvolutionImageFilter)
-
-=======
->>>>>>> upstream-releases
 protected:
     SkMatrixConvolutionImageFilter(const SkISize& kernelSize,
                                    const SkScalar* kernel,
@@ -97,15 +88,8 @@ protected:
     bool affectsTransparentBlack() const override;
 
 private:
-<<<<<<< HEAD
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
-
-||||||| merged common ancestors
-=======
     SK_FLATTENABLE_HOOKS(SkMatrixConvolutionImageFilter)
 
->>>>>>> upstream-releases
     SkISize   fKernelSize;
     SkScalar* fKernel;
     SkScalar  fGain;

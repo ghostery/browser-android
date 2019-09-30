@@ -15,17 +15,8 @@ namespace dom {
 
 class BlobImpl;
 
-<<<<<<< HEAD
-class PendingIPCBlobChild final : public mozilla::ipc::PPendingIPCBlobChild {
- public:
-||||||| merged common ancestors
-class PendingIPCBlobChild final : public mozilla::ipc::PPendingIPCBlobChild
-{
-public:
-=======
 class PendingIPCBlobChild final : public PPendingIPCBlobChild {
  public:
->>>>>>> upstream-releases
   explicit PendingIPCBlobChild(const IPCBlob& aBlob);
 
   // After calling one of the following method, the actor will be deleted.
@@ -48,10 +39,4 @@ class PendingIPCBlobChild final : public PPendingIPCBlobChild {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_ipc_PendingIPCBlobChild_h
-||||||| merged common ancestors
-#endif // mozilla_dom_ipc_PendingIPCBlobChild_h
-=======
 #endif  // mozilla_dom_PendingIPCBlobChild_h
->>>>>>> upstream-releases

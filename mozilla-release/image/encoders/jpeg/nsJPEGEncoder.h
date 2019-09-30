@@ -13,38 +13,6 @@
 
 #include "nsCOMPtr.h"
 
-<<<<<<< HEAD
-// needed for JPEG library
-#include <stdio.h>
-
-extern "C" {
-#include "jpeglib.h"
-}
-
-#define NS_JPEGENCODER_CID                           \
-  {                                                  \
-    /* ac2bb8fe-eeeb-4572-b40f-be03932b56e0 */       \
-    0xac2bb8fe, 0xeeeb, 0x4572, {                    \
-      0xb4, 0x0f, 0xbe, 0x03, 0x93, 0x2b, 0x56, 0xe0 \
-    }                                                \
-  }
-||||||| merged common ancestors
-// needed for JPEG library
-#include <stdio.h>
-
-extern "C" {
-#include "jpeglib.h"
-}
-
-#define NS_JPEGENCODER_CID \
-{                                                    \
-  /* ac2bb8fe-eeeb-4572-b40f-be03932b56e0 */         \
-     0xac2bb8fe,                                     \
-     0xeeeb,                                         \
-     0x4572,                                         \
-    {0xb4, 0x0f, 0xbe, 0x03, 0x93, 0x2b, 0x56, 0xe0} \
-}
-=======
 struct jpeg_compress_struct;
 struct jpeg_common_struct;
 
@@ -55,21 +23,13 @@ struct jpeg_common_struct;
       0xb4, 0x0f, 0xbe, 0x03, 0x93, 0x2b, 0x56, 0xe0 \
     }                                                \
   }
->>>>>>> upstream-releases
 
 // Provides JPEG encoding functionality. Use InitFromData() to do the
 // encoding. See that function definition for encoding options.
 class nsJPEGEncoderInternal;
 
-<<<<<<< HEAD
-class nsJPEGEncoder final : public imgIEncoder {
-||||||| merged common ancestors
-class nsJPEGEncoder final : public imgIEncoder
-{
-=======
 class nsJPEGEncoder final : public imgIEncoder {
   friend class nsJPEGEncoderInternal;
->>>>>>> upstream-releases
   typedef mozilla::ReentrantMonitor ReentrantMonitor;
 
  public:

@@ -52,63 +52,6 @@ static_assert(sizeof(AbortReasonOr<bool>) <= sizeof(uintptr_t),
 // JSContext, either of which may be nullptr, and the active realm, which
 // will not be nullptr.
 
-<<<<<<< HEAD
-class JitContext {
- public:
-  JitContext(JSContext* cx, TempAllocator* temp);
-  JitContext(CompileRuntime* rt, CompileRealm* realm, TempAllocator* temp);
-  explicit JitContext(TempAllocator* temp);
-  JitContext();
-  ~JitContext();
-
-  // Running context when executing on the main thread. Not available during
-  // compilation.
-  JSContext* cx;
-
-  // Allocator for temporary memory during compilation.
-  TempAllocator* temp;
-
-  // Wrappers with information about the current runtime/realm for use
-  // during compilation.
-  CompileRuntime* runtime;
-  CompileRealm* realm;
-  CompileZone* zone;
-
-  int getNextAssemblerId() { return assemblerCount_++; }
-
- private:
-  JitContext* prev_;
-  int assemblerCount_;
-||||||| merged common ancestors
-class JitContext
-{
-  public:
-    JitContext(JSContext* cx, TempAllocator* temp);
-    JitContext(CompileRuntime* rt, CompileRealm* realm, TempAllocator* temp);
-    explicit JitContext(TempAllocator* temp);
-    JitContext();
-    ~JitContext();
-
-    // Running context when executing on the main thread. Not available during
-    // compilation.
-    JSContext* cx;
-
-    // Allocator for temporary memory during compilation.
-    TempAllocator* temp;
-
-    // Wrappers with information about the current runtime/realm for use
-    // during compilation.
-    CompileRuntime* runtime;
-    CompileRealm* realm;
-    CompileZone* zone;
-
-    int getNextAssemblerId() {
-        return assemblerCount_++;
-    }
-  private:
-    JitContext* prev_;
-    int assemblerCount_;
-=======
 class JitContext {
  public:
   JitContext(JSContext* cx, TempAllocator* temp);
@@ -150,7 +93,6 @@ class JitContext {
   bool oom_;
 #endif
   int assemblerCount_;
->>>>>>> upstream-releases
 };
 
 // Initialize Ion statically for all JSRuntimes.
@@ -221,46 +163,15 @@ void FreeIonBuilder(IonBuilder* builder);
 void LinkIonScript(JSContext* cx, HandleScript calleescript);
 uint8_t* LazyLinkTopActivation(JSContext* cx, LazyLinkExitFrameLayout* frame);
 
-<<<<<<< HEAD
-static inline bool IsIonEnabled(JSContext* cx) {
-  // The ARM64 Ion engine is not yet implemented.
-#if defined(JS_CODEGEN_NONE) || defined(JS_CODEGEN_ARM64)
-  return false;
-||||||| merged common ancestors
-static inline bool
-IsIonEnabled(JSContext* cx)
-{
-    // The ARM64 Ion engine is not yet implemented.
-#if defined(JS_CODEGEN_NONE) || defined(JS_CODEGEN_ARM64)
-    return false;
-=======
 static inline bool IsIonEnabled(JSContext* cx) {
 #if defined(JS_CODEGEN_NONE)
   return false;
->>>>>>> upstream-releases
 #else
   return cx->options().ion() && cx->options().baseline() &&
          cx->runtime()->jitSupportsFloatingPoint;
 #endif
 }
 
-<<<<<<< HEAD
-inline bool IsIonInlinablePC(jsbytecode* pc) {
-  // CALL, FUNCALL, FUNAPPLY, EVAL, NEW (Normal Callsites)
-  // GETPROP, CALLPROP, and LENGTH. (Inlined Getters)
-  // SETPROP, SETNAME, SETGNAME (Inlined Setters)
-  return (IsCallPC(pc) && !IsSpreadCallPC(pc)) || IsGetPropPC(pc) ||
-         IsSetPropPC(pc);
-||||||| merged common ancestors
-inline bool
-IsIonInlinablePC(jsbytecode* pc) {
-    // CALL, FUNCALL, FUNAPPLY, EVAL, NEW (Normal Callsites)
-    // GETPROP, CALLPROP, and LENGTH. (Inlined Getters)
-    // SETPROP, SETNAME, SETGNAME (Inlined Setters)
-    return (IsCallPC(pc) && !IsSpreadCallPC(pc)) ||
-           IsGetPropPC(pc) ||
-           IsSetPropPC(pc);
-=======
 inline bool IsIonInlinableGetterOrSetterPC(jsbytecode* pc) {
   // GETPROP, CALLPROP, LENGTH, GETELEM, and JSOP_CALLELEM. (Inlined Getters)
   // SETPROP, SETNAME, SETGNAME (Inlined Setters)
@@ -272,7 +183,6 @@ inline bool IsIonInlinablePC(jsbytecode* pc) {
   // or an inlinable getter or setter.
   return (IsCallPC(pc) && !IsSpreadCallPC(pc)) ||
          IsIonInlinableGetterOrSetterPC(pc);
->>>>>>> upstream-releases
 }
 
 inline bool TooManyActualArguments(unsigned nargs) {

@@ -184,17 +184,9 @@ splitter.devtools-horizontal-splitter,
   background-repeat: no-repeat !important;
   text-overflow: ellipsis;
   overflow: hidden;
-<<<<<<< HEAD
-  padding-inline-start: 2px !important;
-  padding-inline-end: 10px !important;
-  fill: var(--theme-toolbar-photon-icon-color);
-||||||| merged common ancestors
-  fill: var(--theme-toolbar-photon-icon-color);
-=======
   padding-inline-start: 2px !important;
   padding-inline-end: 10px !important;
   fill: var(--theme-icon-color);
->>>>>>> upstream-releases
   -moz-context-properties: fill;
 }
 

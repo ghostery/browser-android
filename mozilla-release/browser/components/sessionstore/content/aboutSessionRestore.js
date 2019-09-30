@@ -81,16 +81,6 @@ async function initTreeView() {
     return;
   }
   var tabList = document.getElementById("tabList");
-<<<<<<< HEAD
-  let l10nIds = [];
-  for (let labelIndex = 0; labelIndex < gStateObject.windows.length; labelIndex++) {
-      l10nIds.push({id: "restore-page-window-label", args: { windowNumber: (labelIndex + 1)}});
-  }
-  let winLabels = await document.l10n.formatValues(l10nIds);
-||||||| merged common ancestors
-  var winLabel = tabList.getAttribute("_window_label");
-
-=======
   let l10nIds = [];
   for (
     let labelIndex = 0;
@@ -103,7 +93,6 @@ async function initTreeView() {
     });
   }
   let winLabels = await document.l10n.formatValues(l10nIds);
->>>>>>> upstream-releases
   gTreeData = [];
   gStateObject.windows.forEach(function(aWinData, aIx) {
     var winState = {

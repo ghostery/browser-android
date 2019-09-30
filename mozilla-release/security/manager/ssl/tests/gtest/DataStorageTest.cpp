@@ -33,18 +33,7 @@ NS_NAMED_LITERAL_CSTRING(testKey, "test");
 NS_NAMED_LITERAL_CSTRING(testValue, "value");
 NS_NAMED_LITERAL_CSTRING(privateTestValue, "private");
 
-<<<<<<< HEAD
 TEST_F(psm_DataStorageTest, GetPutRemove) {
-  EXPECT_TRUE(dataWillPersist);
-
-||||||| merged common ancestors
-TEST_F(psm_DataStorageTest, GetPutRemove)
-{
-  EXPECT_TRUE(dataWillPersist);
-
-=======
-TEST_F(psm_DataStorageTest, GetPutRemove) {
->>>>>>> upstream-releases
   // Test Put/Get on Persistent data
   EXPECT_EQ(NS_OK, storage->Put(testKey, testValue, DataStorage_Persistent));
   // Don't re-use testKey / testValue here, to make sure that this works as
@@ -97,18 +86,7 @@ TEST_F(psm_DataStorageTest, GetPutRemove) {
   EXPECT_TRUE(result.IsEmpty());
 }
 
-<<<<<<< HEAD
 TEST_F(psm_DataStorageTest, InputValidation) {
-  EXPECT_TRUE(dataWillPersist);
-
-||||||| merged common ancestors
-TEST_F(psm_DataStorageTest, InputValidation)
-{
-  EXPECT_TRUE(dataWillPersist);
-
-=======
-TEST_F(psm_DataStorageTest, InputValidation) {
->>>>>>> upstream-releases
   // Keys may not have tabs or newlines
   EXPECT_EQ(NS_ERROR_INVALID_ARG,
             storage->Put(NS_LITERAL_CSTRING("key\thas tab"), testValue,
@@ -167,18 +145,7 @@ TEST_F(psm_DataStorageTest, InputValidation) {
   EXPECT_TRUE(result.IsEmpty());
 }
 
-<<<<<<< HEAD
 TEST_F(psm_DataStorageTest, Eviction) {
-  EXPECT_TRUE(dataWillPersist);
-
-||||||| merged common ancestors
-TEST_F(psm_DataStorageTest, Eviction)
-{
-  EXPECT_TRUE(dataWillPersist);
-
-=======
-TEST_F(psm_DataStorageTest, Eviction) {
->>>>>>> upstream-releases
   // Eviction is on a per-table basis. Tables shouldn't affect each other.
   EXPECT_EQ(NS_OK, storage->Put(testKey, testValue, DataStorage_Persistent));
   for (int i = 0; i < 1025; i++) {
@@ -203,24 +170,9 @@ TEST_F(psm_DataStorageTest, Eviction) {
   EXPECT_STREQ("value", result.get());
 }
 
-<<<<<<< HEAD
-TEST_F(psm_DataStorageTest, ClearPrivateData) {
-  EXPECT_TRUE(dataWillPersist);
-
-  EXPECT_EQ(NS_OK,
-            storage->Put(testKey, privateTestValue, DataStorage_Private));
-||||||| merged common ancestors
-TEST_F(psm_DataStorageTest, ClearPrivateData)
-{
-  EXPECT_TRUE(dataWillPersist);
-
-  EXPECT_EQ(NS_OK, storage->Put(testKey, privateTestValue,
-                                DataStorage_Private));
-=======
 TEST_F(psm_DataStorageTest, ClearPrivateData) {
   EXPECT_EQ(NS_OK,
             storage->Put(testKey, privateTestValue, DataStorage_Private));
->>>>>>> upstream-releases
   nsCString result = storage->Get(testKey, DataStorage_Private);
   EXPECT_STREQ("private", result.get());
   storage->Observe(nullptr, "last-pb-context-exited", nullptr);
@@ -228,18 +180,7 @@ TEST_F(psm_DataStorageTest, ClearPrivateData) {
   EXPECT_TRUE(result.IsEmpty());
 }
 
-<<<<<<< HEAD
 TEST_F(psm_DataStorageTest, Shutdown) {
-  EXPECT_TRUE(dataWillPersist);
-
-||||||| merged common ancestors
-TEST_F(psm_DataStorageTest, Shutdown)
-{
-  EXPECT_TRUE(dataWillPersist);
-
-=======
-TEST_F(psm_DataStorageTest, Shutdown) {
->>>>>>> upstream-releases
   EXPECT_EQ(NS_OK, storage->Put(testKey, testValue, DataStorage_Persistent));
   nsCString result = storage->Get(testKey, DataStorage_Persistent);
   EXPECT_STREQ("value", result.get());

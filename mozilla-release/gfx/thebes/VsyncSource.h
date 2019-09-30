@@ -38,81 +38,6 @@ class VsyncSource {
  public:
   // Controls vsync unique to each display and unique on each platform
   class Display {
-<<<<<<< HEAD
-   public:
-    Display();
-    virtual ~Display();
-
-    // Notified when this display's vsync occurs, on the vsync thread
-    // The aVsyncTimestamp should normalize to the Vsync time that just occured
-    // However, different platforms give different vsync notification times.
-    // OSX - The vsync timestamp of the upcoming frame, in the future
-    // Windows: It's messy, see gfxWindowsPlatform.
-    // Android: TODO
-    // All platforms should normalize to the vsync that just occured.
-    // Large parts of Gecko assume TimeStamps should not be in the future such
-    // as animations
-    virtual void NotifyVsync(TimeStamp aVsyncTimestamp);
-
-    RefPtr<RefreshTimerVsyncDispatcher> GetRefreshTimerVsyncDispatcher();
-
-    void AddCompositorVsyncDispatcher(
-        CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-    void RemoveCompositorVsyncDispatcher(
-        CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-    void NotifyRefreshTimerVsyncStatus(bool aEnable);
-    virtual TimeDuration GetVsyncRate();
-
-    // These should all only be called on the main thread
-    virtual void EnableVsync() = 0;
-    virtual void DisableVsync() = 0;
-    virtual bool IsVsyncEnabled() = 0;
-    virtual void Shutdown() = 0;
-
-   private:
-    void UpdateVsyncStatus();
-
-    Mutex mDispatcherLock;
-    bool mRefreshTimerNeedsVsync;
-    nsTArray<RefPtr<CompositorVsyncDispatcher>> mCompositorVsyncDispatchers;
-    RefPtr<RefreshTimerVsyncDispatcher> mRefreshTimerVsyncDispatcher;
-    VsyncId mVsyncId;
-||||||| merged common ancestors
-    public:
-      Display();
-      virtual ~Display();
-
-      // Notified when this display's vsync occurs, on the vsync thread
-      // The aVsyncTimestamp should normalize to the Vsync time that just occured
-      // However, different platforms give different vsync notification times.
-      // OSX - The vsync timestamp of the upcoming frame, in the future
-      // Windows: It's messy, see gfxWindowsPlatform.
-      // Android: TODO
-      // All platforms should normalize to the vsync that just occured.
-      // Large parts of Gecko assume TimeStamps should not be in the future such as animations
-      virtual void NotifyVsync(TimeStamp aVsyncTimestamp);
-
-      RefPtr<RefreshTimerVsyncDispatcher> GetRefreshTimerVsyncDispatcher();
-
-      void AddCompositorVsyncDispatcher(CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-      void RemoveCompositorVsyncDispatcher(CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-      void NotifyRefreshTimerVsyncStatus(bool aEnable);
-      virtual TimeDuration GetVsyncRate();
-
-      // These should all only be called on the main thread
-      virtual void EnableVsync() = 0;
-      virtual void DisableVsync() = 0;
-      virtual bool IsVsyncEnabled() = 0;
-      virtual void Shutdown() = 0;
-
-    private:
-      void UpdateVsyncStatus();
-
-      Mutex mDispatcherLock;
-      bool mRefreshTimerNeedsVsync;
-      nsTArray<RefPtr<CompositorVsyncDispatcher>> mCompositorVsyncDispatchers;
-      RefPtr<RefreshTimerVsyncDispatcher> mRefreshTimerVsyncDispatcher;
-=======
    public:
     Display();
     virtual ~Display();
@@ -152,37 +77,19 @@ class VsyncSource {
     nsTArray<RefPtr<CompositorVsyncDispatcher>> mCompositorVsyncDispatchers;
     RefPtr<RefreshTimerVsyncDispatcher> mRefreshTimerVsyncDispatcher;
     VsyncId mVsyncId;
->>>>>>> upstream-releases
   };
 
-<<<<<<< HEAD
-  void AddCompositorVsyncDispatcher(
-      CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-  void RemoveCompositorVsyncDispatcher(
-      CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-||||||| merged common ancestors
-  void AddCompositorVsyncDispatcher(CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-  void RemoveCompositorVsyncDispatcher(CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
-=======
   void AddCompositorVsyncDispatcher(
       CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
   void RemoveCompositorVsyncDispatcher(
       CompositorVsyncDispatcher* aCompositorVsyncDispatcher);
 
   void MoveListenersToNewSource(VsyncSource* aNewSource);
->>>>>>> upstream-releases
 
   RefPtr<RefreshTimerVsyncDispatcher> GetRefreshTimerVsyncDispatcher();
   virtual Display& GetGlobalDisplay() = 0;  // Works across all displays
   void Shutdown();
 
-<<<<<<< HEAD
- protected:
-  virtual ~VsyncSource() {}
-||||||| merged common ancestors
-protected:
-  virtual ~VsyncSource() {}
-=======
  protected:
   virtual ~VsyncSource() = default;
 };
@@ -207,38 +114,8 @@ struct VsyncEvent {
   friend class gfx::PVsyncBridgeParent;
   friend class layout::PVsyncChild;
   friend void recordreplay::child::NotifyVsyncObserver();
->>>>>>> upstream-releases
-};
-
-<<<<<<< HEAD
-}  // namespace gfx
-
-namespace recordreplay {
-namespace child {
-void NotifyVsyncObserver();
-}
-}  // namespace recordreplay
-
-struct VsyncEvent {
-  VsyncId mId;
-  TimeStamp mTime;
-
- private:
-  VsyncEvent(const VsyncId& aId, const TimeStamp& aTime)
-      : mId(aId), mTime(aTime) {}
-  VsyncEvent() {}
-  friend class gfx::VsyncSource::Display;
-  friend class gfx::PVsyncBridgeParent;
-  friend class layout::PVsyncChild;
-  friend void recordreplay::child::NotifyVsyncObserver();
 };
 
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif /* GFX_VSYNCSOURCE_H */

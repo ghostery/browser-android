@@ -75,15 +75,6 @@ a `std::io::Read`, decode it into UTF-8 and presenting the result via
 `std::io::Read`. The [`encoding_rs_io`](https://crates.io/crates/encoding_rs_io)
 crate provides that capability.
 
-<<<<<<< HEAD
-## Decoding Email
-
-For decoding character encodings that occur in email, use the
-[`charset`](https://crates.io/crates/charset) crate instead of using this
-one directly. (It wraps this crate and adds UTF-7 decoding.)
-
-||||||| merged common ancestors
-=======
 ## Decoding Email
 
 For decoding character encodings that occur in email, use the
@@ -95,7 +86,6 @@ one directly. (It wraps this crate and adds UTF-7 decoding.)
 For mappings to and from Windows code page identifiers, use the
 [`codepage`](https://crates.io/crates/codepage) crate.
 
->>>>>>> upstream-releases
 ## Licensing
 
 Please see the file named
@@ -169,8 +159,6 @@ PowerPC, MIPS, etc., SIMD at this time, so even if you were to follow
 the advice from the previous paragraph, you probably shouldn't use
 the `simd-accel` option on the less mainstream architectures at this
 time.
-
-Used by Firefox.
 
 Used by Firefox.
 
@@ -364,22 +352,6 @@ encoding_rs is
 written with the assuption that Firefox would need it, but it is not currently
 used in Firefox.
 
-<<<<<<< HEAD
-## Regenerating Generated Code
-
-To regenerate the generated code:
-
- * Have Python 2 installed.
- * Clone [`https://github.com/hsivonen/encoding_c`](https://github.com/hsivonen/encoding_c)
-   next to the `encoding_rs` directory.
- * Clone [`https://github.com/whatwg/encoding`](https://github.com/whatwg/encoding)
-   next to the `encoding_rs` directory.
- * Checkout revision `f381389` of the `encoding` repo.
- * With the `encoding_rs` directory as the working directory, run
-   `python generate-encoding-data.py`.
-
-||||||| merged common ancestors
-=======
 ## Regenerating Generated Code
 
 To regenerate the generated code:
@@ -395,7 +367,6 @@ To regenerate the generated code:
  * With the `encoding_rs` directory as the working directory, run
    `python generate-encoding-data.py`.
 
->>>>>>> upstream-releases
 ## Roadmap
 
 - [x] Design the low-level API.
@@ -426,67 +397,13 @@ To regenerate the generated code:
 - [x] Implement the rust-encoding API in terms of encoding_rs.
 - [x] Add SIMD acceleration for Aarch64.
 - [x] Investigate the use of NEON on 32-bit ARM.
-<<<<<<< HEAD
-- [ ] ~Investigate Björn Höhrmann's lookup table acceleration for UTF-8 as
-      adapted to Rust in rust-encoding.~
-- [x] Add actually fast CJK encode options.
-- [ ] Investigate [Bob Steagall's lookup table acceleration for UTF-8](https://github.com/BobSteagall/CppNow2018/blob/master/FastConversionFromUTF-8/Fast%20Conversion%20From%20UTF-8%20with%20C%2B%2B%2C%20DFAs%2C%20and%20SSE%20Intrinsics%20-%20Bob%20Steagall%20-%20C%2B%2BNow%202018.pdf).
-||||||| merged common ancestors
-- [ ] Investigate Björn Höhrmann's lookup table acceleration for UTF-8 as
-      adapted to Rust in rust-encoding.
-- [ ] Add actually fast CJK encode options.
-=======
 - [ ] ~Investigate Björn Höhrmann's lookup table acceleration for UTF-8 as
       adapted to Rust in rust-encoding.~
 - [x] Add actually fast CJK encode options.
 - [ ] ~Investigate [Bob Steagall's lookup table acceleration for UTF-8](https://github.com/BobSteagall/CppNow2018/blob/master/FastConversionFromUTF-8/Fast%20Conversion%20From%20UTF-8%20with%20C%2B%2B%2C%20DFAs%2C%20and%20SSE%20Intrinsics%20-%20Bob%20Steagall%20-%20C%2B%2BNow%202018.pdf).~
->>>>>>> upstream-releases
 
 ## Release Notes
 
-<<<<<<< HEAD
-### 0.8.13
-
-* Made the UTF-8 to UTF-16 compare the number of code units written with the
-  length of the right slice (the output slice) to fix a panic introduced in
-  0.8.11.
-
-### 0.8.12
-
-* Removed the `clippy::` prefix from clippy lint names.
-
-### 0.8.11
-
-* Changed minimum Rust requirement to 1.29.0 (for the ability to refer
-  to the interior of a `static` when defining another `static`).
-* Explicitly aligned the lookup tables for single-byte encodings and
-  UTF-8 to cache lines in the hope of freeing up one cache line for
-  other data. (Perhaps the tables were already aligned and this is
-  placebo.)
-* Added 32 bits of encode-oriented data for each single-byte encoding.
-  The change was performance-neutral for non-Latin1-ish Latin legacy
-  encodings, improved Latin1-ish and Arabic legacy encode speed
-  somewhat (new speed is 2.4x the old speed for German, 2.3x for
-  Arabic, 1.7x for Portuguese and 1.4x for French) and improved
-  non-Latin1, non-Arabic legacy single-byte encode a lot (7.2x for
-  Thai, 6x for Greek, 5x for Russian, 4x for Hebrew).
-* Added compile-time options for fast CJK legacy encode options (at
-  the cost of binary size (up to 176 KB) and run-time memory usage).
-  These options still retain the overall code structure instead of
-  rewriting the CJK encoders totally, so the speed isn't as good as
-  what could be achieved by using even more memory / making the
-  binary even langer.
-* Made UTF-8 decode and validation faster.
-* Added method `is_single_byte()` on `Encoding`.
-* Added `mem::decode_latin1()` and `mem::encode_latin1_lossy()`.
-
-### 0.8.10
-
-* Disabled a unit test that tests a panic condition when the assertion
-  being tested is disabled.
-
-||||||| merged common ancestors
-=======
 ### 0.8.17
 
 * Update `bincode` (dev dependency) version requirement to 1.0.
@@ -544,7 +461,6 @@ To regenerate the generated code:
 * Disabled a unit test that tests a panic condition when the assertion
   being tested is disabled.
 
->>>>>>> upstream-releases
 ### 0.8.9
 
 * Made `--features simd-accel` work with stable-channel compiler to

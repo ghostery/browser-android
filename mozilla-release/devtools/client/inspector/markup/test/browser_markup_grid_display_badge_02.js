@@ -35,50 +35,6 @@ add_task(async function() {
   const grid1 = await getContainerForSelector("#grid1", inspector);
   const grid2 = await getContainerForSelector("#grid2", inspector);
   const grid3 = await getContainerForSelector("#grid3", inspector);
-<<<<<<< HEAD
-  const gridDisplayBadge1 = grid1.elt.querySelector(
-    ".inspector-badge.interactive[data-display]");
-  const gridDisplayBadge2 = grid2.elt.querySelector(
-    ".inspector-badge.interactive[data-display]");
-  const gridDisplayBadge3 = grid3.elt.querySelector(
-    ".inspector-badge.interactive[data-display]");
-
-  info("Check the initial state of the grid display badges and grid highlighters");
-  ok(!gridDisplayBadge1.classList.contains("active"),
-    "#grid1 display badge is not active.");
-  ok(!gridDisplayBadge2.classList.contains("active"),
-    "#grid2 display badge is not active.");
-  ok(!gridDisplayBadge3.classList.contains("active"),
-    "#grid3 display badge is not active.");
-  ok(gridDisplayBadge1.classList.contains("interactive"),
-    "#grid1 display badge is interactive");
-  ok(gridDisplayBadge2.classList.contains("interactive"),
-    "#grid2 display badge is interactive");
-  ok(gridDisplayBadge3.classList.contains("interactive"),
-    "#grid3 display badge is interactive");
-  ok(!highlighters.gridHighlighters.size,
-    "No CSS grid highlighter exists in the highlighters overlay.");
-||||||| merged common ancestors
-  const gridDisplayBadge1 = grid1.elt.querySelector(".markup-badge[data-display]");
-  const gridDisplayBadge2 = grid2.elt.querySelector(".markup-badge[data-display]");
-  const gridDisplayBadge3 = grid3.elt.querySelector(".markup-badge[data-display]");
-
-  info("Check the initial state of the grid display badges and grid highlighters");
-  ok(!gridDisplayBadge1.classList.contains("active"),
-    "#grid1 display badge is not active.");
-  ok(!gridDisplayBadge2.classList.contains("active"),
-    "#grid2 display badge is not active.");
-  ok(!gridDisplayBadge3.classList.contains("active"),
-    "#grid3 display badge is not active.");
-  ok(gridDisplayBadge1.classList.contains("interactive"),
-    "#grid1 display badge is interactive");
-  ok(gridDisplayBadge2.classList.contains("interactive"),
-    "#grid2 display badge is interactive");
-  ok(gridDisplayBadge3.classList.contains("interactive"),
-    "#grid3 display badge is interactive");
-  ok(!highlighters.gridHighlighters.size,
-    "No CSS grid highlighter exists in the highlighters overlay.");
-=======
   const gridDisplayBadge1 = grid1.elt.querySelector(
     ".inspector-badge.interactive[data-display]"
   );
@@ -120,7 +76,6 @@ add_task(async function() {
     !highlighters.gridHighlighters.size,
     "No CSS grid highlighter exists in the highlighters overlay."
   );
->>>>>>> upstream-releases
 
   info("Toggling ON the CSS grid highlighter from the #grid1 display badge.");
   let onHighlighterShown = highlighters.once("grid-highlighter-shown");

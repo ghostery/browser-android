@@ -50,27 +50,6 @@ add_task(async function test_nonremote_window_open_aboutBlank() {
 
   Assert.ok(!browser.isRemoteBrowser, "shouldn't be a remote browser");
 
-<<<<<<< HEAD
-  await ContentTask.spawn(browser, {}, async function() {
-    info("origin " + content.document.nodePrincipal.origin);
-
-    Assert.ok(content.document.nodePrincipal.isNullPrincipal,
-              "The principal of remote about:blank should be a NullPrincipal.");
-
-    let str = content.document.nodePrincipal.originNoSuffix;
-    let expectDomain = str.substring("moz-nullprincipal:{".length, str.length - 1) + ".mozilla";
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 expectDomain,
-                 "non-remote about:blank should have firstPartyDomain set to " + expectDomain);
-||||||| merged common ancestors
-  let attrs = { firstPartyDomain: "about.ef2a7dd5-93bc-417f-a698-142c3116864f.mozilla" };
-  await ContentTask.spawn(browser, attrs, async function(expectAttrs) {
-    Assert.ok(!content.document.nodePrincipal.isCodebasePrincipal,
-              "The principal of non-remote about:blank should not be a codebase principal.");
-    Assert.equal(content.document.nodePrincipal.originAttributes.firstPartyDomain,
-                 expectAttrs.firstPartyDomain,
-                 "non-remote about:blank should have firstPartyDomain set");
-=======
   await ContentTask.spawn(browser, {}, async function() {
     info("origin " + content.document.nodePrincipal.origin);
 
@@ -88,7 +67,6 @@ add_task(async function test_nonremote_window_open_aboutBlank() {
       "non-remote about:blank should have firstPartyDomain set to " +
         expectDomain
     );
->>>>>>> upstream-releases
   });
 
   win.close();

@@ -17,7 +17,6 @@ class CheckResponsivenessTask : public CancelableRunnable,
                                 public nsITimerCallback {
  public:
   explicit CheckResponsivenessTask(nsIEventTarget* aThread, bool aIsMainThread)
-<<<<<<< HEAD
       : CancelableRunnable("CheckResponsivenessTask"),
         mStartToPrevTracer_us(uint64_t(profiler_time() * 1000.0)),
         mStop(false),
@@ -27,33 +26,6 @@ class CheckResponsivenessTask : public CancelableRunnable,
 
  protected:
   ~CheckResponsivenessTask() {}
-||||||| merged common ancestors
-    : CancelableRunnable("CheckResponsivenessTask")
-    , mStartToPrevTracer_us(uint64_t(profiler_time() * 1000.0))
-    , mStop(false)
-    , mHasEverBeenSuccessfullyDispatched(false)
-    , mThread(aThread)
-    , mIsMainThread(aIsMainThread)
-  {
-  }
-
-protected:
-  ~CheckResponsivenessTask()
-  {
-  }
-
-public:
-=======
-      : CancelableRunnable("CheckResponsivenessTask"),
-        mStartToPrevTracer_us(uint64_t(profiler_time() * 1000.0)),
-        mStop(false),
-        mHasEverBeenSuccessfullyDispatched(false),
-        mThread(aThread),
-        mIsMainThread(aIsMainThread) {}
-
- protected:
-  ~CheckResponsivenessTask() {}
->>>>>>> upstream-releases
 
  public:
   // Must be called from the same thread every time. Call that the update

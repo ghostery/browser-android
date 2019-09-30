@@ -60,25 +60,8 @@ public:
         return fProxy->fLazyInstantiationType;
     }
 
-<<<<<<< HEAD
-    bool isSafeToUninstantiate() const {
-        return SkToBool(fProxy->fTarget) &&
-               SkToBool(fProxy->fLazyInstantiateCallback) &&
-               GrSurfaceProxy::LazyInstantiationType::kUninstantiate == lazyInstantiationType();
-    }
-
     static bool SK_WARN_UNUSED_RESULT AttachStencilIfNeeded(GrResourceProvider*, GrSurface*,
                                                             bool needsStencil);
-||||||| merged common ancestors
-    void testingOnly_setLazyInstantiationType(GrSurfaceProxy::LazyInstantiationType lazyType) {
-        fProxy->fLazyInstantiationType = lazyType;
-    }
-
-    static bool AttachStencilIfNeeded(GrResourceProvider*, GrSurface*, bool needsStencil);
-=======
-    static bool SK_WARN_UNUSED_RESULT AttachStencilIfNeeded(GrResourceProvider*, GrSurface*,
-                                                            bool needsStencil);
->>>>>>> upstream-releases
 
 private:
     explicit GrSurfaceProxyPriv(GrSurfaceProxy* proxy) : fProxy(proxy) {}

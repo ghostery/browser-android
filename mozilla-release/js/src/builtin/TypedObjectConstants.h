@@ -99,19 +99,9 @@
 // prefer ReferenceTypeRepresentation::TYPE_ANY etc, which allows
 // you to write a switch which will receive a warning if you omit a
 // case.
-<<<<<<< HEAD
-#define JS_REFERENCETYPEREPR_ANY 0
-#define JS_REFERENCETYPEREPR_OBJECT 1
-#define JS_REFERENCETYPEREPR_STRING 2
-||||||| merged common ancestors
-#define JS_REFERENCETYPEREPR_ANY        0
-#define JS_REFERENCETYPEREPR_OBJECT     1
-#define JS_REFERENCETYPEREPR_STRING     2
-=======
 #define JS_REFERENCETYPEREPR_ANY 0
 #define JS_REFERENCETYPEREPR_OBJECT 1
 #define JS_REFERENCETYPEREPR_WASM_ANYREF 2
 #define JS_REFERENCETYPEREPR_STRING 3
->>>>>>> upstream-releases
 
 #endif

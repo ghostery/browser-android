@@ -40,19 +40,9 @@ void HTMLSharedElement::GetHref(nsAString& aValue) {
   GetAttr(kNameSpaceID_None, nsGkAtoms::href, href);
 
   nsCOMPtr<nsIURI> uri;
-<<<<<<< HEAD
-  nsIDocument* doc = OwnerDoc();
-  nsContentUtils::NewURIWithDocumentCharset(getter_AddRefs(uri), href, doc,
-                                            doc->GetFallbackBaseURI());
-||||||| merged common ancestors
-  nsIDocument* doc = OwnerDoc();
-  nsContentUtils::NewURIWithDocumentCharset(
-    getter_AddRefs(uri), href, doc, doc->GetFallbackBaseURI());
-=======
   Document* doc = OwnerDoc();
   nsContentUtils::NewURIWithDocumentCharset(getter_AddRefs(uri), href, doc,
                                             doc->GetFallbackBaseURI());
->>>>>>> upstream-releases
 
   if (!uri) {
     aValue = href;
@@ -136,17 +126,8 @@ HTMLSharedElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   return nsGenericHTMLElement::IsAttributeMapped(aAttribute);
 }
 
-<<<<<<< HEAD
-static void SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument,
-                                             nsIContent* aMustMatch) {
-||||||| merged common ancestors
-static void
-SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument, nsIContent* aMustMatch)
-{
-=======
 static void SetBaseURIUsingFirstBaseWithHref(Document* aDocument,
                                              nsIContent* aMustMatch) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument, "Need a document!");
 
   for (nsIContent* child = aDocument->GetFirstChild(); child;
@@ -192,18 +173,8 @@ static void SetBaseURIUsingFirstBaseWithHref(Document* aDocument,
   aDocument->SetBaseURI(nullptr);
 }
 
-<<<<<<< HEAD
-static void SetBaseTargetUsingFirstBaseWithTarget(nsIDocument* aDocument,
-                                                  nsIContent* aMustMatch) {
-||||||| merged common ancestors
-static void
-SetBaseTargetUsingFirstBaseWithTarget(nsIDocument* aDocument,
-                                      nsIContent* aMustMatch)
-{
-=======
 static void SetBaseTargetUsingFirstBaseWithTarget(Document* aDocument,
                                                   nsIContent* aMustMatch) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument, "Need a document!");
 
   for (nsIContent* child = aDocument->GetFirstChild(); child;
@@ -254,36 +225,14 @@ nsresult HTMLSharedElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
       aNamespaceID, aName, aValue, aOldValue, aSubjectPrincipal, aNotify);
 }
 
-<<<<<<< HEAD
-nsresult HTMLSharedElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLSharedElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLSharedElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // The document stores a pointer to its base URI and base target, which we may
   // need to update here.
-<<<<<<< HEAD
-  if (mNodeInfo->Equals(nsGkAtoms::base) && aDocument) {
-||||||| merged common ancestors
-  if (mNodeInfo->Equals(nsGkAtoms::base) &&
-      aDocument) {
-=======
   if (mNodeInfo->Equals(nsGkAtoms::base) && IsInUncomposedDoc()) {
->>>>>>> upstream-releases
     if (HasAttr(kNameSpaceID_None, nsGkAtoms::href)) {
       SetBaseURIUsingFirstBaseWithHref(&aContext.OwnerDoc(), this);
     }
@@ -295,18 +244,8 @@ nsresult HTMLSharedElement::BindToTree(BindContext& aContext,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLSharedElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsIDocument* doc = GetUncomposedDoc();
-||||||| merged common ancestors
-void
-HTMLSharedElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsIDocument* doc = GetUncomposedDoc();
-=======
 void HTMLSharedElement::UnbindFromTree(bool aNullParent) {
   Document* doc = GetUncomposedDoc();
->>>>>>> upstream-releases
 
   nsGenericHTMLElement::UnbindFromTree(aNullParent);
 

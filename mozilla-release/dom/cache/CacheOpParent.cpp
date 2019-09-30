@@ -184,20 +184,9 @@ void CacheOpParent::OnOpComplete(
   Unused << Send__delete__(this, aRv, result.SendAsOpResult());
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIInputStream> CacheOpParent::DeserializeCacheStream(
-    const CacheReadStreamOrVoid& aStreamOrVoid) {
-  if (aStreamOrVoid.type() == CacheReadStreamOrVoid::Tvoid_t) {
-||||||| merged common ancestors
-already_AddRefed<nsIInputStream>
-CacheOpParent::DeserializeCacheStream(const CacheReadStreamOrVoid& aStreamOrVoid)
-{
-  if (aStreamOrVoid.type() == CacheReadStreamOrVoid::Tvoid_t) {
-=======
 already_AddRefed<nsIInputStream> CacheOpParent::DeserializeCacheStream(
     const Maybe<CacheReadStream>& aMaybeStream) {
   if (aMaybeStream.isNothing()) {
->>>>>>> upstream-releases
     return nullptr;
   }
 

@@ -67,22 +67,12 @@ bool RenderDXGITextureHostOGL::EnsureLockable(wr::ImageRendering aRendering) {
   // We use EGLStream to get the converted gl handle from d3d texture. The
   // NV_stream_consumer_gltexture_yuv and ANGLE_stream_producer_d3d_texture
   // could support nv12 and rgb d3d texture format.
-<<<<<<< HEAD
-  if (!egl->IsExtensionSupported(
-          gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
-      !egl->IsExtensionSupported(
-          gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
-||||||| merged common ancestors
-  if (!egl->IsExtensionSupported(gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
-      !egl->IsExtensionSupported(gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
-=======
   if (!egl->IsExtensionSupported(
           gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
       !egl->IsExtensionSupported(
           gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
     gfxCriticalNote
         << "RenderDXGITextureHostOGL egl extensions are not suppored";
->>>>>>> upstream-releases
     return false;
   }
 
@@ -102,18 +92,6 @@ bool RenderDXGITextureHostOGL::EnsureLockable(wr::ImageRendering aRendering) {
   }
 
   // Get the D3D11 texture from shared handle.
-<<<<<<< HEAD
-  if (FAILED(device->OpenSharedResource(
-          (HANDLE)mHandle, __uuidof(ID3D11Texture2D),
-          (void**)(ID3D11Texture2D**)getter_AddRefs(mTexture)))) {
-    NS_WARNING(
-        "RenderDXGITextureHostOGL::Lock(): Failed to open shared texture");
-||||||| merged common ancestors
-  if (FAILED(device->OpenSharedResource((HANDLE)mHandle,
-                                        __uuidof(ID3D11Texture2D),
-                                        (void**)(ID3D11Texture2D**)getter_AddRefs(mTexture)))) {
-    NS_WARNING("RenderDXGITextureHostOGL::Lock(): Failed to open shared texture");
-=======
   HRESULT hr = device->OpenSharedResource(
       (HANDLE)mHandle, __uuidof(ID3D11Texture2D),
       (void**)(ID3D11Texture2D**)getter_AddRefs(mTexture));
@@ -124,7 +102,6 @@ bool RenderDXGITextureHostOGL::EnsureLockable(wr::ImageRendering aRendering) {
     gfxCriticalNote
         << "RenderDXGITextureHostOGL Failed to open shared texture, hr="
         << gfx::hexa(hr);
->>>>>>> upstream-releases
     return false;
   }
 
@@ -331,18 +308,6 @@ bool RenderDXGIYCbCrTextureHostOGL::EnsureLockable(
   // The eglCreatePbufferFromClientBuffer doesn't support R8 format, so we
   // use EGLStream to get the converted gl handle from d3d R8 texture.
 
-<<<<<<< HEAD
-  if (!egl->IsExtensionSupported(
-          gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
-      !egl->IsExtensionSupported(
-          gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
-    return false;
-||||||| merged common ancestors
-  if (!egl->IsExtensionSupported(gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
-      !egl->IsExtensionSupported(gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture))
-  {
-      return false;
-=======
   if (!egl->IsExtensionSupported(
           gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
       !egl->IsExtensionSupported(
@@ -350,7 +315,6 @@ bool RenderDXGIYCbCrTextureHostOGL::EnsureLockable(
     gfxCriticalNote
         << "RenderDXGIYCbCrTextureHostOGL egl extensions are not suppored";
     return false;
->>>>>>> upstream-releases
   }
 
   // Fetch the D3D11 device.
@@ -370,19 +334,6 @@ bool RenderDXGIYCbCrTextureHostOGL::EnsureLockable(
 
   for (int i = 0; i < 3; ++i) {
     // Get the R8 D3D11 texture from shared handle.
-<<<<<<< HEAD
-    if (FAILED(device->OpenSharedResource(
-            (HANDLE)mHandles[i], __uuidof(ID3D11Texture2D),
-            (void**)(ID3D11Texture2D**)getter_AddRefs(mTextures[i])))) {
-      NS_WARNING(
-          "RenderDXGIYCbCrTextureHostOGL::Lock(): Failed to open shared "
-          "texture");
-||||||| merged common ancestors
-    if (FAILED(device->OpenSharedResource((HANDLE)mHandles[i],
-                                          __uuidof(ID3D11Texture2D),
-                                          (void**)(ID3D11Texture2D**)getter_AddRefs(mTextures[i])))) {
-      NS_WARNING("RenderDXGIYCbCrTextureHostOGL::Lock(): Failed to open shared texture");
-=======
     HRESULT hr = device->OpenSharedResource(
         (HANDLE)mHandles[i], __uuidof(ID3D11Texture2D),
         (void**)(ID3D11Texture2D**)getter_AddRefs(mTextures[i]));
@@ -394,7 +345,6 @@ bool RenderDXGIYCbCrTextureHostOGL::EnsureLockable(
       gfxCriticalNote
           << "RenderDXGIYCbCrTextureHostOGL Failed to open shared texture, hr="
           << gfx::hexa(hr);
->>>>>>> upstream-releases
       return false;
     }
   }

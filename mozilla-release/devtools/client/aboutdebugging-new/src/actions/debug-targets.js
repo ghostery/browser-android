@@ -5,15 +5,6 @@
 "use strict";
 
 const { AddonManager } = require("resource://gre/modules/AddonManager.jsm");
-<<<<<<< HEAD
-const { gDevToolsBrowser } = require("devtools/client/framework/devtools-browser");
-const { remoteClientManager } =
-  require("devtools/client/shared/remote-debugging/remote-client-manager");
-
-const { l10n } = require("../modules/l10n");
-||||||| merged common ancestors
-const { gDevToolsBrowser } = require("devtools/client/framework/devtools-browser");
-=======
 const {
   remoteClientManager,
 } = require("devtools/client/shared/remote-debugging/remote-client-manager");
@@ -24,7 +15,6 @@ const { l10n } = require("../modules/l10n");
 const {
   isSupportedDebugTargetPane,
 } = require("../modules/debug-target-support");
->>>>>>> upstream-releases
 
 const {
   openTemporaryExtension,
@@ -91,69 +81,7 @@ function getTabForUrl(url) {
 function inspectDebugTarget(type, id) {
   return async (dispatch, getState) => {
     const runtime = getCurrentRuntime(getState().runtimes);
-<<<<<<< HEAD
-    const { runtimeDetails, type: runtimeType } = runtime;
-
-    switch (type) {
-      case DEBUG_TARGETS.TAB: {
-        // Open tab debugger in new window.
-        if (runtimeType === RUNTIMES.NETWORK || runtimeType === RUNTIMES.USB) {
-          // Pass the remote id from the client manager so that about:devtools-toolbox can
-          // retrieve the connected client directly.
-          const remoteId = remoteClientManager.getRemoteId(runtime.id, runtime.type);
-          window.open(`about:devtools-toolbox?type=tab&id=${id}&remoteId=${remoteId}`);
-        } else if (runtimeType === RUNTIMES.THIS_FIREFOX) {
-          window.open(`about:devtools-toolbox?type=tab&id=${id}`);
-        }
-        break;
-      }
-      case DEBUG_TARGETS.EXTENSION: {
-        if (runtimeType === RUNTIMES.NETWORK || runtimeType === RUNTIMES.USB) {
-          const devtoolsClient = runtimeDetails.clientWrapper.client;
-          await debugRemoteAddon(id, devtoolsClient);
-        } else if (runtimeType === RUNTIMES.THIS_FIREFOX) {
-          debugLocalAddon(id);
-        }
-        break;
-      }
-      case DEBUG_TARGETS.WORKER: {
-        // Open worker toolbox in new window.
-        const devtoolsClient = runtimeDetails.clientWrapper.client;
-        const front = devtoolsClient.getActor(id);
-        gDevToolsBrowser.openWorkerToolbox(front);
-        break;
-      }
-||||||| merged common ancestors
-    const { connection, type: runtimeType } = runtime;
-
-    switch (type) {
-      case DEBUG_TARGETS.TAB: {
-        // Open tab debugger in new window.
-        if (runtimeType === RUNTIMES.NETWORK || runtimeType === RUNTIMES.USB) {
-          const { host, port } = connection.transportDetails;
-          window.open(`about:devtools-toolbox?type=tab&id=${id}` +
-                      `&host=${host}&port=${port}`);
-        } else if (runtimeType === RUNTIMES.THIS_FIREFOX) {
-          window.open(`about:devtools-toolbox?type=tab&id=${id}`);
-        }
-        break;
-      }
-      case DEBUG_TARGETS.EXTENSION: {
-        if (runtimeType === RUNTIMES.NETWORK) {
-          await debugRemoteAddon(id, connection.client);
-        } else if (runtimeType === RUNTIMES.THIS_FIREFOX) {
-          debugLocalAddon(id);
-        }
-        break;
-      }
-      case DEBUG_TARGETS.WORKER: {
-        // Open worker toolbox in new window.
-        gDevToolsBrowser.openWorkerToolbox(connection.client, id);
-        break;
-      }
-=======
     id = encodeURIComponent(id);
->>>>>>> upstream-releases
 
     let url;
     if (
@@ -196,17 +124,10 @@ function inspectDebugTarget(type, id) {
   };
 }
 
-<<<<<<< HEAD
-function installTemporaryExtension() {
-  const message = l10n.getString("about-debugging-tmp-extension-install-message");
-||||||| merged common ancestors
-function installTemporaryExtension(message) {
-=======
 function installTemporaryExtension() {
   const message = l10n.getString(
     "about-debugging-tmp-extension-install-message"
   );
->>>>>>> upstream-releases
   return async (dispatch, getState) => {
     dispatch({ type: TEMPORARY_EXTENSION_INSTALL_START });
     const file = await openTemporaryExtension(window, message);
@@ -224,46 +145,23 @@ function pushServiceWorker(id) {
     const clientWrapper = getCurrentClient(getState().runtimes);
 
     try {
-<<<<<<< HEAD
-      await clientWrapper.request({ to: actor, type: "push" });
-||||||| merged common ancestors
-      await client.request({ to: actor, type: "push" });
-=======
       const workerActor = await clientWrapper.getServiceWorkerFront({ id });
       await workerActor.push();
->>>>>>> upstream-releases
     } catch (e) {
       console.error(e);
     }
   };
 }
 
-<<<<<<< HEAD
-function reloadTemporaryExtension(id) {
-  return async (_, getState) => {
-    const clientWrapper = getCurrentClient(getState().runtimes);
-||||||| merged common ancestors
-function reloadTemporaryExtension(actor) {
-  return async (_, getState) => {
-    const client = getCurrentClient(getState().runtimes);
-=======
 function reloadTemporaryExtension(id) {
   return async (dispatch, getState) => {
     dispatch({ type: TEMPORARY_EXTENSION_RELOAD_START, id });
     const clientWrapper = getCurrentClient(getState().runtimes);
->>>>>>> upstream-releases
 
     try {
-<<<<<<< HEAD
-      const addonTargetFront = await clientWrapper.getAddon({ id });
-      await addonTargetFront.reload();
-||||||| merged common ancestors
-      await client.request({ to: actor, type: "reload" });
-=======
       const addonTargetFront = await clientWrapper.getAddon({ id });
       await addonTargetFront.reload();
       dispatch({ type: TEMPORARY_EXTENSION_RELOAD_SUCCESS, id });
->>>>>>> upstream-releases
     } catch (e) {
       const error = typeof e === "string" ? new Error(e) : e;
       dispatch({ type: TEMPORARY_EXTENSION_RELOAD_FAILURE, id, error });
@@ -285,21 +183,10 @@ function requestTabs() {
   return async (dispatch, getState) => {
     dispatch({ type: REQUEST_TABS_START });
 
-<<<<<<< HEAD
-    const clientWrapper = getCurrentClient(getState().runtimes);
-||||||| merged common ancestors
-    const client = getCurrentClient(getState().runtimes);
-=======
     const runtime = getCurrentRuntime(getState().runtimes);
     const clientWrapper = getCurrentClient(getState().runtimes);
->>>>>>> upstream-releases
 
     try {
-<<<<<<< HEAD
-      const { tabs } = await clientWrapper.listTabs({ favicons: true });
-||||||| merged common ancestors
-      const { tabs } = await client.listTabs({ favicons: true });
-=======
       const isSupported = isSupportedDebugTargetPane(
         runtime.runtimeDetails.info.type,
         DEBUG_TARGET_PANE.TAB
@@ -307,7 +194,6 @@ function requestTabs() {
       const tabs = isSupported
         ? await clientWrapper.listTabs({ favicons: true })
         : [];
->>>>>>> upstream-releases
 
       dispatch({ type: REQUEST_TABS_SUCCESS, tabs });
     } catch (e) {
@@ -324,31 +210,6 @@ function requestExtensions() {
     const clientWrapper = getCurrentClient(getState().runtimes);
 
     try {
-<<<<<<< HEAD
-      const addons = await clientWrapper.listAddons();
-      let extensions = addons.filter(a => a.debuggable);
-
-      // Filter out system addons unless the dedicated preference is set to true.
-      if (!getState().ui.showSystemAddons) {
-        extensions = extensions.filter(e => !e.isSystem);
-      }
-
-      if (runtime.type !== RUNTIMES.THIS_FIREFOX) {
-        // manifestURL can only be used when debugging local addons, remove this
-        // information for the extension data.
-        extensions.forEach(extension => {
-          extension.manifestURL = null;
-        });
-      }
-
-      const installedExtensions = extensions.filter(e => !e.temporarilyInstalled);
-      const temporaryExtensions = extensions.filter(e => e.temporarilyInstalled);
-||||||| merged common ancestors
-      const { addons } = await client.listAddons();
-      const extensions = addons.filter(a => a.debuggable);
-      const installedExtensions = extensions.filter(e => !e.temporarilyInstalled);
-      const temporaryExtensions = extensions.filter(e => e.temporarilyInstalled);
-=======
       const isIconDataURLRequired = runtime.type !== RUNTIMES.THIS_FIREFOX;
       const addons = await clientWrapper.listAddons({
         iconDataURL: isIconDataURLRequired,
@@ -377,7 +238,6 @@ function requestExtensions() {
       const temporaryExtensions = extensions.filter(
         e => e.temporarilyInstalled
       );
->>>>>>> upstream-releases
 
       dispatch({
         type: REQUEST_EXTENSIONS_SUCCESS,
@@ -385,11 +245,6 @@ function requestExtensions() {
         temporaryExtensions,
       });
     } catch (e) {
-<<<<<<< HEAD
-      dispatch({ type: REQUEST_EXTENSIONS_FAILURE, error: e });
-||||||| merged common ancestors
-      dispatch({ type: REQUEST_EXTENSIONS_FAILURE, error: e.message });
-=======
       dispatch({ type: REQUEST_EXTENSIONS_FAILURE, error: e });
     }
   };
@@ -413,7 +268,6 @@ function requestProcesses() {
       });
     } catch (e) {
       dispatch({ type: REQUEST_PROCESSES_FAILURE, error: e });
->>>>>>> upstream-releases
     }
   };
 }
@@ -426,17 +280,6 @@ function requestWorkers() {
 
     try {
       const {
-<<<<<<< HEAD
-        otherWorkers,
-        serviceWorkers,
-        sharedWorkers,
-      } = await clientWrapper.listWorkers();
-||||||| merged common ancestors
-        other: otherWorkers,
-        service: serviceWorkers,
-        shared: sharedWorkers,
-      } = await client.mainRoot.listAllWorkers();
-=======
         otherWorkers,
         serviceWorkers,
         sharedWorkers,
@@ -451,7 +294,6 @@ function requestWorkers() {
         const subscription = await registrationFront.getPushSubscription();
         serviceWorker.subscription = subscription;
       }
->>>>>>> upstream-releases
 
       dispatch({
         type: REQUEST_WORKERS_SUCCESS,
@@ -467,11 +309,6 @@ function requestWorkers() {
 
 function startServiceWorker(registrationFront) {
   return async (_, getState) => {
-<<<<<<< HEAD
-    const clientWrapper = getCurrentClient(getState().runtimes);
-||||||| merged common ancestors
-    const client = getCurrentClient(getState().runtimes);
-=======
     try {
       await registrationFront.start();
     } catch (e) {
@@ -479,18 +316,11 @@ function startServiceWorker(registrationFront) {
     }
   };
 }
->>>>>>> upstream-releases
 
 function unregisterServiceWorker(registrationFront) {
   return async (_, getState) => {
     try {
-<<<<<<< HEAD
-      await clientWrapper.request({ to: actor, type: "start" });
-||||||| merged common ancestors
-      await client.request({ to: actor, type: "start" });
-=======
       await registrationFront.unregister();
->>>>>>> upstream-releases
     } catch (e) {
       console.error(e);
     }

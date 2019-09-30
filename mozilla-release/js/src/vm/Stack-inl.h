@@ -34,26 +34,8 @@ inline GlobalObject& InterpreterFrame::global() const {
   return script()->global();
 }
 
-<<<<<<< HEAD
-inline JSObject& InterpreterFrame::varObj() const {
-  JSObject* obj = environmentChain();
-  while (!obj->isQualifiedVarObj()) {
-    obj = obj->enclosingEnvironment();
-  }
-  return *obj;
-||||||| merged common ancestors
-inline JSObject&
-InterpreterFrame::varObj() const
-{
-    JSObject* obj = environmentChain();
-    while (!obj->isQualifiedVarObj()) {
-        obj = obj->enclosingEnvironment();
-    }
-    return *obj;
-=======
 inline JSObject& InterpreterFrame::varObj() const {
   return GetVariablesObject(environmentChain());
->>>>>>> upstream-releases
 }
 
 inline LexicalEnvironmentObject&
@@ -207,18 +189,8 @@ inline void InterpreterFrame::unsetIsDebuggee() {
 
 /*****************************************************************************/
 
-<<<<<<< HEAD
-inline void InterpreterStack::purge(JSRuntime* rt) {
-  rt->gc.freeUnusedLifoBlocksAfterSweeping(&allocator_);
-||||||| merged common ancestors
-inline void
-InterpreterStack::purge(JSRuntime* rt)
-{
-    rt->gc.freeUnusedLifoBlocksAfterSweeping(&allocator_);
-=======
 inline void InterpreterStack::purge(JSRuntime* rt) {
   rt->gc.queueUnusedLifoBlocksForFree(&allocator_);
->>>>>>> upstream-releases
 }
 
 uint8_t* InterpreterStack::allocateFrame(JSContext* cx, size_t size) {
@@ -576,144 +548,6 @@ inline bool AbstractFramePtr::isModuleFrame() const {
   }
   if (isWasmDebugFrame()) {
     return false;
-<<<<<<< HEAD
-  }
-  return asRematerializedFrame()->isModuleFrame();
-}
-
-inline bool AbstractFramePtr::isEvalFrame() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->isEvalFrame();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->isEvalFrame();
-  }
-  if (isWasmDebugFrame()) {
-    return false;
-  }
-  MOZ_ASSERT(isRematerializedFrame());
-  return false;
-}
-
-inline bool AbstractFramePtr::isDebuggerEvalFrame() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->isDebuggerEvalFrame();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->isDebuggerEvalFrame();
-  }
-  MOZ_ASSERT(isRematerializedFrame());
-  return false;
-}
-
-inline bool AbstractFramePtr::isDebuggee() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->isDebuggee();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->isDebuggee();
-  }
-  if (isWasmDebugFrame()) {
-    return asWasmDebugFrame()->isDebuggee();
-  }
-  return asRematerializedFrame()->isDebuggee();
-}
-
-inline void AbstractFramePtr::setIsDebuggee() {
-  if (isInterpreterFrame()) {
-    asInterpreterFrame()->setIsDebuggee();
-  } else if (isBaselineFrame()) {
-    asBaselineFrame()->setIsDebuggee();
-  } else if (isWasmDebugFrame()) {
-    asWasmDebugFrame()->setIsDebuggee();
-  } else {
-    asRematerializedFrame()->setIsDebuggee();
-  }
-}
-
-inline void AbstractFramePtr::unsetIsDebuggee() {
-  if (isInterpreterFrame()) {
-    asInterpreterFrame()->unsetIsDebuggee();
-  } else if (isBaselineFrame()) {
-    asBaselineFrame()->unsetIsDebuggee();
-  } else if (isWasmDebugFrame()) {
-    asWasmDebugFrame()->unsetIsDebuggee();
-  } else {
-    asRematerializedFrame()->unsetIsDebuggee();
-  }
-}
-
-inline bool AbstractFramePtr::isConstructing() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->isConstructing();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->isConstructing();
-  }
-  if (isRematerializedFrame()) {
-    return asRematerializedFrame()->isConstructing();
-  }
-  MOZ_CRASH("Unexpected frame");
-}
-
-inline bool AbstractFramePtr::hasArgs() const { return isFunctionFrame(); }
-
-inline bool AbstractFramePtr::hasScript() const { return !isWasmDebugFrame(); }
-
-inline JSScript* AbstractFramePtr::script() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->script();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->script();
-  }
-  return asRematerializedFrame()->script();
-}
-
-inline wasm::Instance* AbstractFramePtr::wasmInstance() const {
-  return asWasmDebugFrame()->instance();
-}
-
-inline GlobalObject* AbstractFramePtr::global() const {
-  if (isWasmDebugFrame()) {
-    return asWasmDebugFrame()->global();
-  }
-  return &script()->global();
-}
-
-inline JSFunction* AbstractFramePtr::callee() const {
-  if (isInterpreterFrame()) {
-    return &asInterpreterFrame()->callee();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->callee();
-  }
-  return asRematerializedFrame()->callee();
-}
-
-inline Value AbstractFramePtr::calleev() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->calleev();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->calleev();
-  }
-  return asRematerializedFrame()->calleev();
-}
-
-inline bool AbstractFramePtr::isFunctionFrame() const {
-  if (isInterpreterFrame()) {
-    return asInterpreterFrame()->isFunctionFrame();
-  }
-  if (isBaselineFrame()) {
-    return asBaselineFrame()->isFunctionFrame();
-  }
-  if (isWasmDebugFrame()) {
-    return false;
-  }
-  return asRematerializedFrame()->isFunctionFrame();
-||||||| merged common ancestors
-=======
   }
   return asRematerializedFrame()->isModuleFrame();
 }
@@ -856,7 +690,6 @@ inline bool AbstractFramePtr::isFunctionFrame() const {
     return false;
   }
   return asRematerializedFrame()->isFunctionFrame();
->>>>>>> upstream-releases
 }
 
 inline bool AbstractFramePtr::isGeneratorFrame() const {
@@ -1088,18 +921,8 @@ InterpreterActivation::InterpreterActivation(RunState& state, JSContext* cx,
       oldFrameCount_(cx->interpreterStack().frameCount_)
 #endif
 {
-<<<<<<< HEAD
   regs_.prepareToRun(*entryFrame, state.script());
   MOZ_ASSERT(regs_.pc == state.script()->code());
-  MOZ_ASSERT_IF(entryFrame_->isEvalFrame(), state.script()->isActiveEval());
-||||||| merged common ancestors
-    regs_.prepareToRun(*entryFrame, state.script());
-    MOZ_ASSERT(regs_.pc == state.script()->code());
-    MOZ_ASSERT_IF(entryFrame_->isEvalFrame(), state.script()->isActiveEval());
-=======
-  regs_.prepareToRun(*entryFrame, state.script());
-  MOZ_ASSERT(regs_.pc == state.script()->code());
->>>>>>> upstream-releases
 }
 
 InterpreterActivation::~InterpreterActivation() {
@@ -1197,20 +1020,10 @@ LiveSavedFrameCache::FramePtr::create(AbstractFramePtr afp) {
 }
 
 struct LiveSavedFrameCache::FramePtr::HasCachedMatcher {
-<<<<<<< HEAD
-  template <typename Frame>
-  bool match(Frame* f) const {
-    return f->hasCachedSavedFrame();
-  }
-||||||| merged common ancestors
-    template<typename Frame>
-    bool match(Frame* f) const { return f->hasCachedSavedFrame(); }
-=======
   template <typename Frame>
   bool operator()(Frame* f) const {
     return f->hasCachedSavedFrame();
   }
->>>>>>> upstream-releases
 };
 
 inline bool LiveSavedFrameCache::FramePtr::hasCachedSavedFrame() const {
@@ -1218,20 +1031,10 @@ inline bool LiveSavedFrameCache::FramePtr::hasCachedSavedFrame() const {
 }
 
 struct LiveSavedFrameCache::FramePtr::SetHasCachedMatcher {
-<<<<<<< HEAD
-  template <typename Frame>
-  void match(Frame* f) {
-    f->setHasCachedSavedFrame();
-  }
-||||||| merged common ancestors
-    template<typename Frame>
-    void match(Frame* f) { f->setHasCachedSavedFrame(); }
-=======
   template <typename Frame>
   void operator()(Frame* f) {
     f->setHasCachedSavedFrame();
   }
->>>>>>> upstream-releases
 };
 
 inline void LiveSavedFrameCache::FramePtr::setHasCachedSavedFrame() {
@@ -1239,20 +1042,10 @@ inline void LiveSavedFrameCache::FramePtr::setHasCachedSavedFrame() {
 }
 
 struct LiveSavedFrameCache::FramePtr::ClearHasCachedMatcher {
-<<<<<<< HEAD
-  template <typename Frame>
-  void match(Frame* f) {
-    f->clearHasCachedSavedFrame();
-  }
-||||||| merged common ancestors
-    template<typename Frame>
-    void match(Frame* f) { f->clearHasCachedSavedFrame(); }
-=======
   template <typename Frame>
   void operator()(Frame* f) {
     f->clearHasCachedSavedFrame();
   }
->>>>>>> upstream-releases
 };
 
 inline void LiveSavedFrameCache::FramePtr::clearHasCachedSavedFrame() {

@@ -4,31 +4,11 @@
 
 //! Generic type for CSS properties that are composed by two dimensions.
 
-<<<<<<< HEAD
-use crate::parser::ParserContext;
-use crate::values::animated::ToAnimatedValue;
-||||||| merged common ancestors
-=======
 use crate::parser::ParserContext;
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::Parser;
-<<<<<<< HEAD
-use euclid::Size2D;
-||||||| merged common ancestors
-use euclid::Size2D;
-use parser::ParserContext;
-=======
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use style_traits::{CssWriter, ParseError, SpecifiedValueInfo, ToCss};
-||||||| merged common ancestors
-use style_traits::{CssWriter, ParseError, SpecifiedValueInfo, ToCss};
-use values::animated::ToAnimatedValue;
-=======
 use style_traits::{CssWriter, ParseError, ToCss};
->>>>>>> upstream-releases
 
 /// A generic size, for `border-*-radius` longhand properties, or
 /// `border-spacing`.

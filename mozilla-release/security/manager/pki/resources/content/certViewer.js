@@ -12,34 +12,6 @@
  *           The cert to view, queryable to nsIX509Cert.
  */
 
-<<<<<<< HEAD
-const nsIX509Cert = Ci.nsIX509Cert;
-const nsX509CertDB = "@mozilla.org/security/x509certdb;1";
-const nsIX509CertDB = Ci.nsIX509CertDB;
-const nsPK11TokenDB = "@mozilla.org/security/pk11tokendb;1";
-const nsIPK11TokenDB = Ci.nsIPK11TokenDB;
-const nsIASN1Object = Ci.nsIASN1Object;
-const nsIASN1Sequence = Ci.nsIASN1Sequence;
-const nsIASN1PrintableItem = Ci.nsIASN1PrintableItem;
-const nsIASN1Tree = Ci.nsIASN1Tree;
-const nsASN1Tree = "@mozilla.org/security/nsASN1Tree;1";
-
-||||||| merged common ancestors
-const nsIX509Cert = Ci.nsIX509Cert;
-const nsX509CertDB = "@mozilla.org/security/x509certdb;1";
-const nsIX509CertDB = Ci.nsIX509CertDB;
-const nsPK11TokenDB = "@mozilla.org/security/pk11tokendb;1";
-const nsIPK11TokenDB = Ci.nsIPK11TokenDB;
-const nsIASN1Object = Ci.nsIASN1Object;
-const nsIASN1Sequence = Ci.nsIASN1Sequence;
-const nsIASN1PrintableItem = Ci.nsIASN1PrintableItem;
-const nsIASN1Tree = Ci.nsIASN1Tree;
-const nsASN1Tree = "@mozilla.org/security/nsASN1Tree;1";
-
-var bundle;
-
-=======
->>>>>>> upstream-releases
 /**
  * Fills out the "Certificate Hierarchy" tree of the cert viewer "Details" tab.
  *
@@ -74,18 +46,9 @@ function AddCertChain(node, chain) {
  */
 function AddUsage(l10nId) {
   let verifyInfoBox = document.getElementById("verify_info_box");
-<<<<<<< HEAD
-  let text = document.createXULElement("textbox");
-  document.l10n.setAttributes(text, l10nId);
-  text.setAttribute("data-l10n-attrs", "value");
-||||||| merged common ancestors
-  let text = document.createXULElement("textbox");
-  text.setAttribute("value", usage);
-=======
   let text = document.createElementNS("http://www.w3.org/1999/xhtml", "input");
   document.l10n.setAttributes(text, l10nId);
   text.setAttribute("data-l10n-attrs", "value");
->>>>>>> upstream-releases
   text.setAttribute("style", "margin: 2px 5px");
   text.setAttribute("readonly", "readonly");
   text.setAttribute("class", "scrollfield");
@@ -94,18 +57,11 @@ function AddUsage(l10nId) {
 
 function setWindowName() {
   let cert = window.arguments[0].QueryInterface(Ci.nsIX509Cert);
-<<<<<<< HEAD
-  window.document.l10n.setAttributes(window.document.documentElement, "cert-viewer-title", {certName: cert.displayName});
-||||||| merged common ancestors
-  document.title = bundle.getFormattedString("certViewerTitle",
-                                             [cert.displayName]);
-=======
   window.document.l10n.setAttributes(
     window.document.documentElement,
     "cert-viewer-title",
     { certName: cert.displayName }
   );
->>>>>>> upstream-releases
 
   //
   //  Set the cert attributes for viewing
@@ -168,37 +124,6 @@ function displayUsages(results) {
     AddCertChain("treesetDump", getBestChain(results));
   } else {
     const errorRankings = [
-<<<<<<< HEAD
-      { error: SEC_ERROR_REVOKED_CERTIFICATE,
-        bundleString: "cert-not-verified-cert-revoked" },
-      { error: SEC_ERROR_UNTRUSTED_CERT,
-        bundleString: "cert-not-verified-cert-not-trusted" },
-      { error: SEC_ERROR_UNTRUSTED_ISSUER,
-        bundleString: "cert-not-verified-issuer-not-trusted" },
-      { error: SEC_ERROR_CERT_SIGNATURE_ALGORITHM_DISABLED,
-        bundleString: "cert-not-verified_algorithm-disabled" },
-      { error: SEC_ERROR_EXPIRED_CERTIFICATE,
-        bundleString: "cert-not-verified-cert-expired" },
-      { error: SEC_ERROR_EXPIRED_ISSUER_CERTIFICATE,
-        bundleString: "cert-not-verified-ca-invalid" },
-      { error: SEC_ERROR_UNKNOWN_ISSUER,
-        bundleString: "cert-not-verified-issuer-unknown" },
-||||||| merged common ancestors
-      { error: SEC_ERROR_REVOKED_CERTIFICATE,
-        bundleString: "certNotVerified_CertRevoked" },
-      { error: SEC_ERROR_UNTRUSTED_CERT,
-        bundleString: "certNotVerified_CertNotTrusted" },
-      { error: SEC_ERROR_UNTRUSTED_ISSUER,
-        bundleString: "certNotVerified_IssuerNotTrusted" },
-      { error: SEC_ERROR_CERT_SIGNATURE_ALGORITHM_DISABLED,
-        bundleString: "certNotVerified_AlgorithmDisabled" },
-      { error: SEC_ERROR_EXPIRED_CERTIFICATE,
-        bundleString: "certNotVerified_CertExpired" },
-      { error: SEC_ERROR_EXPIRED_ISSUER_CERTIFICATE,
-        bundleString: "certNotVerified_CAInvalid" },
-      { error: SEC_ERROR_UNKNOWN_ISSUER,
-        bundleString: "certNotVerified_IssuerUnknown" },
-=======
       {
         error: SEC_ERROR_REVOKED_CERTIFICATE,
         bundleString: "cert-not-verified-cert-revoked",
@@ -227,7 +152,6 @@ function displayUsages(results) {
         error: SEC_ERROR_UNKNOWN_ISSUER,
         bundleString: "cert-not-verified-issuer-unknown",
       },
->>>>>>> upstream-releases
     ];
     let errorPresentFlag = false;
     for (let errorRanking of errorRankings) {

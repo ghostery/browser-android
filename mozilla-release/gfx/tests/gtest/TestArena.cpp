@@ -28,16 +28,8 @@ class A;
 class B;
 
 class Base {
-<<<<<<< HEAD
- public:
-  virtual ~Base() {}
-||||||| merged common ancestors
-public:
-  virtual ~Base() {}
-=======
  public:
   virtual ~Base() = default;
->>>>>>> upstream-releases
   virtual A* AsA() { return nullptr; }
   virtual B* AsB() { return nullptr; }
 };
@@ -72,14 +64,7 @@ struct BigStruct {
   explicit BigStruct(uint64_t val) : mVal(val) {}
 };
 
-<<<<<<< HEAD
-void TestArenaAlloc(IterableArena::ArenaType aType) {
-||||||| merged common ancestors
-void TestArenaAlloc(IterableArena::ArenaType aType)
-{
-=======
 static void TestArenaAlloc(IterableArena::ArenaType aType) {
->>>>>>> upstream-releases
   sDtorItemA = 0;
   sDtorItemB = 0;
   IterableArena arena(aType, 256);
@@ -148,15 +133,8 @@ static void TestArenaAlloc(IterableArena::ArenaType aType) {
   }
 }
 
-<<<<<<< HEAD
-void TestArenaLimit(IterableArena::ArenaType aType, bool aShouldReachLimit) {
-||||||| merged common ancestors
-void TestArenaLimit(IterableArena::ArenaType aType, bool aShouldReachLimit)
-{
-=======
 static void TestArenaLimit(IterableArena::ArenaType aType,
                            bool aShouldReachLimit) {
->>>>>>> upstream-releases
   IterableArena arena(aType, 128);
 
   // A non-growable arena should return a negative offset when running out

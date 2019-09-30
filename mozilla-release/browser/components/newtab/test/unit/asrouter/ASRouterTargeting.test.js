@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-import {ASRouterTargeting, CachedTargetingGetter} from "lib/ASRouterTargeting.jsm";
-import {OnboardingMessageProvider} from "lib/OnboardingMessageProvider.jsm";
-||||||| merged common ancestors
-import {CachedTargetingGetter} from "lib/ASRouterTargeting.jsm";
-=======
 import {
   ASRouterTargeting,
   CachedTargetingGetter,
 } from "lib/ASRouterTargeting.jsm";
 import { OnboardingMessageProvider } from "lib/OnboardingMessageProvider.jsm";
->>>>>>> upstream-releases
 
 // Note that tests for the ASRouterTargeting environment can be found in
 // test/functional/mochitest/browser_asrouter_targeting.js
@@ -68,28 +61,6 @@ describe("#CachedTargetingGetter", () => {
       assert.calledOnce(global.Cu.reportError);
     }
   });
-<<<<<<< HEAD
-  it("should check targeted message before message without targeting", async () => {
-    const messages = (await OnboardingMessageProvider.getUntranslatedMessages());
-    const stub = sandbox.stub(ASRouterTargeting, "checkMessageTargeting").resolves();
-    const context = {attributionData: {campaign: "non-fx-button", source: "addons.mozilla.org"}};
-    await ASRouterTargeting.findMatchingMessage({messages, trigger: {id: "firstRun"}, context});
-
-    assert.calledTwice(stub);
-    assert.equal(stub.firstCall.args[0].id, "RETURN_TO_AMO_1");
-    assert.equal(stub.secondCall.args[0].id, "FXA_1");
-  });
-  it("should return FxA message (is fallback)", async () => {
-    const messages = (await OnboardingMessageProvider.getUntranslatedMessages())
-      .filter(m => m.id !== "RETURN_TO_AMO_1");
-    const context = {attributionData: {campaign: "non-fx-button", source: "addons.mozilla.org"}};
-    const result = await ASRouterTargeting.findMatchingMessage({messages, trigger: {id: "firstRun"}, context});
-
-    assert.isDefined(result);
-    assert.equal(result.id, "FXA_1");
-  });
-||||||| merged common ancestors
-=======
   it("should check targeted message before message without targeting", async () => {
     const messages = await OnboardingMessageProvider.getUntranslatedMessages();
     const stub = sandbox
@@ -259,5 +230,4 @@ describe("#CachedTargetingGetter", () => {
       assert.calledOnce(global.Cu.reportError);
     });
   });
->>>>>>> upstream-releases
 });

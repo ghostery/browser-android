@@ -14,15 +14,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1223372
 /** Test for Bug 1223372 **/
 const {TestUtils} = ChromeUtils.import("resource://testing-common/TestUtils.jsm");
 
-<<<<<<< HEAD
-function go() {
-    SpecialPowers.pushPrefEnv({"set": [["security.allow_eval_with_system_principal",
-                                        true]]});
-||||||| merged common ancestors
-function go() {
-=======
 async function go() {
->>>>>>> upstream-releases
     SimpleTest.waitForExplicitFinish();
     await SpecialPowers.pushPrefEnv({"set": [["security.allow_eval_with_system_principal",
                                              true]]});

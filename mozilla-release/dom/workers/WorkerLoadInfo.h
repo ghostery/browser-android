@@ -33,14 +33,8 @@ namespace mozilla {
 
 namespace ipc {
 class PrincipalInfo;
-<<<<<<< HEAD
-}  // namespace ipc
-||||||| merged common ancestors
-} // namespace ipc
-=======
 class CSPInfo;
 }  // namespace ipc
->>>>>>> upstream-releases
 
 namespace dom {
 
@@ -84,25 +78,11 @@ struct WorkerLoadInfoData {
     void MaybeAddBrowserChild(nsILoadGroup* aLoadGroup);
     NS_IMETHOD GetInterface(const nsIID& aIID, void** aSink) override;
 
-<<<<<<< HEAD
     void SetOuterRequestor(nsIInterfaceRequestor* aOuterRequestor) {
       MOZ_ASSERT(!mOuterRequestor);
       MOZ_ASSERT(aOuterRequestor);
       mOuterRequestor = aOuterRequestor;
     }
-
-   private:
-    ~InterfaceRequestor() {}
-||||||| merged common ancestors
-  private:
-    ~InterfaceRequestor() { }
-=======
-    void SetOuterRequestor(nsIInterfaceRequestor* aOuterRequestor) {
-      MOZ_ASSERT(!mOuterRequestor);
-      MOZ_ASSERT(aOuterRequestor);
-      mOuterRequestor = aOuterRequestor;
-    }
->>>>>>> upstream-releases
 
    private:
     ~InterfaceRequestor() {}
@@ -169,42 +149,16 @@ struct WorkerLoadInfo : WorkerLoadInfoData {
 
   WorkerLoadInfo& operator=(WorkerLoadInfo&& aOther) = default;
 
-<<<<<<< HEAD
-  nsresult SetPrincipalOnMainThread(nsIPrincipal* aPrincipal,
-                                    nsILoadGroup* aLoadGroup);
-||||||| merged common ancestors
-  nsresult
-  SetPrincipalOnMainThread(nsIPrincipal* aPrincipal, nsILoadGroup* aLoadGroup);
-=======
   nsresult SetPrincipalsAndCSPOnMainThread(nsIPrincipal* aPrincipal,
                                            nsIPrincipal* aStoragePrincipal,
                                            nsILoadGroup* aLoadGroup,
                                            nsIContentSecurityPolicy* aCSP);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult GetPrincipalAndLoadGroupFromChannel(nsIChannel* aChannel,
-                                               nsIPrincipal** aPrincipalOut,
-                                               nsILoadGroup** aLoadGroupOut);
-||||||| merged common ancestors
-  nsresult
-  GetPrincipalAndLoadGroupFromChannel(nsIChannel* aChannel,
-                                      nsIPrincipal** aPrincipalOut,
-                                      nsILoadGroup** aLoadGroupOut);
-=======
   nsresult GetPrincipalsAndLoadGroupFromChannel(
       nsIChannel* aChannel, nsIPrincipal** aPrincipalOut,
       nsIPrincipal** aStoragePrincipalOut, nsILoadGroup** aLoadGroupOut);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult SetPrincipalFromChannel(nsIChannel* aChannel);
-||||||| merged common ancestors
-  nsresult
-  SetPrincipalFromChannel(nsIChannel* aChannel);
-=======
   nsresult SetPrincipalsAndCSPFromChannel(nsIChannel* aChannel);
->>>>>>> upstream-releases
 
   bool FinalChannelPrincipalIsValid(nsIChannel* aChannel);
 

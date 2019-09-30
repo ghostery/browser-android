@@ -36,21 +36,11 @@ static MOZ_THREAD_LOCAL(PRThread*) gTlsCurrentVirtualThread;
 
 bool NS_IsMainThreadTLSInitialized() { return sTLSIsMainThread.initialized(); }
 
-<<<<<<< HEAD
-bool NS_IsMainThread() { return sTLSIsMainThread.get(); }
-||||||| merged common ancestors
-bool
-NS_IsMainThread()
-{
-  return sTLSIsMainThread.get();
-}
-=======
 extern "C" {
 // This uses the C language linkage because it's exposed to Rust
 // via the xpcom/rust/moz_task crate.
 bool NS_IsMainThread() { return sTLSIsMainThread.get(); }
 }
->>>>>>> upstream-releases
 
 void NS_SetMainThread() {
   if (!sTLSIsMainThread.init()) {
@@ -60,37 +50,13 @@ void NS_SetMainThread() {
   MOZ_ASSERT(NS_IsMainThread());
 }
 
-<<<<<<< HEAD
 void NS_SetMainThread(PRThread* aVirtualThread) {
-  MOZ_ASSERT(Scheduler::IsCooperativeThread());
-
-||||||| merged common ancestors
-void
-NS_SetMainThread(PRThread* aVirtualThread)
-{
-  MOZ_ASSERT(Scheduler::IsCooperativeThread());
-
-=======
-void NS_SetMainThread(PRThread* aVirtualThread) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!gTlsCurrentVirtualThread.get());
   gTlsCurrentVirtualThread.set(aVirtualThread);
   NS_SetMainThread();
 }
 
-<<<<<<< HEAD
 void NS_UnsetMainThread() {
-  MOZ_ASSERT(Scheduler::IsCooperativeThread());
-
-||||||| merged common ancestors
-void
-NS_UnsetMainThread()
-{
-  MOZ_ASSERT(Scheduler::IsCooperativeThread());
-
-=======
-void NS_UnsetMainThread() {
->>>>>>> upstream-releases
   sTLSIsMainThread.set(false);
   MOZ_ASSERT(!NS_IsMainThread());
   gTlsCurrentVirtualThread.set(nullptr);
@@ -112,16 +78,8 @@ static bool sShutdownComplete;
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-/* static */ void nsThreadManager::ReleaseThread(void* aData) {
-||||||| merged common ancestors
-/* static */ void
-nsThreadManager::ReleaseThread(void* aData)
-{
-=======
 /* static */
 void nsThreadManager::ReleaseThread(void* aData) {
->>>>>>> upstream-releases
   if (sShutdownComplete) {
     // We've already completed shutdown and released the references to all or
     // our TLS wrappers. Don't try to release them again.
@@ -222,16 +180,8 @@ StaticRefPtr<ShutdownObserveHelper> gShutdownObserveHelper;
   return sInstance;
 }
 
-<<<<<<< HEAD
-/* static */ void nsThreadManager::InitializeShutdownObserver() {
-||||||| merged common ancestors
-/* static */ void
-nsThreadManager::InitializeShutdownObserver()
-{
-=======
 /* static */
 void nsThreadManager::InitializeShutdownObserver() {
->>>>>>> upstream-releases
   MOZ_ASSERT(!gShutdownObserveHelper);
 
   RefPtr<ShutdownObserveHelper> observer;
@@ -272,38 +222,8 @@ nsresult nsThreadManager::Init() {
 
   nsCOMPtr<nsIIdlePeriod> idlePeriod = new MainThreadIdlePeriod();
 
-<<<<<<< HEAD
-  bool startScheduler = false;
-  if (XRE_IsContentProcess() && Scheduler::IsSchedulerEnabled()) {
-    mMainThread = Scheduler::Init(idlePeriod);
-    startScheduler = true;
-  } else {
-    if (XRE_IsContentProcess() && Scheduler::UseMultipleQueues()) {
-      mMainThread = CreateMainThread<
-          ThreadEventQueue<PrioritizedEventQueue<LabeledEventQueue>>,
-          LabeledEventQueue>(idlePeriod);
-    } else {
-      mMainThread =
-          CreateMainThread<ThreadEventQueue<PrioritizedEventQueue<EventQueue>>,
-                           EventQueue>(idlePeriod);
-    }
-  }
-||||||| merged common ancestors
-  bool startScheduler = false;
-  if (XRE_IsContentProcess() && Scheduler::IsSchedulerEnabled()) {
-    mMainThread = Scheduler::Init(idlePeriod);
-    startScheduler = true;
-  } else {
-    if (XRE_IsContentProcess() && Scheduler::UseMultipleQueues()) {
-      mMainThread = CreateMainThread<ThreadEventQueue<PrioritizedEventQueue<LabeledEventQueue>>, LabeledEventQueue>(idlePeriod);
-    } else {
-      mMainThread = CreateMainThread<ThreadEventQueue<PrioritizedEventQueue<EventQueue>>, EventQueue>(idlePeriod);
-    }
-  }
-=======
   mMainThread =
       CreateMainThread<ThreadEventQueue<PrioritizedEventQueue>>(idlePeriod);
->>>>>>> upstream-releases
 
   nsresult rv = mMainThread->InitCurrentThread();
   if (NS_FAILED(rv)) {
@@ -663,22 +583,10 @@ bool nsThreadManager::MainThreadHasPendingHighPriorityEvents() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsThreadManager::IdleDispatchToMainThread(nsIRunnable* aEvent,
-                                          uint32_t aTimeout) {
-  // Note: C++ callers should instead use NS_IdleDispatchToThread or
-  // NS_IdleDispatchToCurrentThread.
-||||||| merged common ancestors
-nsThreadManager::IdleDispatchToMainThread(nsIRunnable *aEvent, uint32_t aTimeout)
-{
-  // Note: C++ callers should instead use NS_IdleDispatchToThread or
-  // NS_IdleDispatchToCurrentThread.
-=======
 nsThreadManager::IdleDispatchToMainThread(nsIRunnable* aEvent,
                                           uint32_t aTimeout) {
   // Note: C++ callers should instead use NS_DispatchToThreadQueue or
   // NS_DispatchToCurrentThreadQueue.
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIRunnable> event(aEvent);

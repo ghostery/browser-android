@@ -31,34 +31,10 @@ class nsIndexedToHTML : public nsIStreamConverter, public nsIDirIndexListener {
 
   nsIndexedToHTML();
 
-<<<<<<< HEAD
-  nsresult Init(nsIStreamListener *aListener);
-||||||| merged common ancestors
-    nsresult Init(nsIStreamListener *aListener);
-=======
   nsresult Init(nsIStreamListener* aListener);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static nsresult Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-||||||| merged common ancestors
-    static nsresult
-    Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-=======
   static nsresult Create(nsISupports* aOuter, REFNSIID aIID, void** aResult);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  void FormatSizeString(int64_t inSize, nsCString &outSizeString);
-  nsresult SendToListener(nsIRequest *aRequest, nsISupports *aContext,
-                          const nsACString &aBuffer);
-  // Helper to properly implement OnStartRequest
-  nsresult DoOnStartRequest(nsIRequest *request, nsISupports *aContext,
-                            nsCString &aBuffer);
-||||||| merged common ancestors
-protected:
-=======
  protected:
   void FormatSizeString(int64_t inSize, nsCString& outSizeString);
   nsresult SendToListener(nsIRequest* aRequest, nsISupports* aContext,
@@ -66,7 +42,6 @@ protected:
   // Helper to properly implement OnStartRequest
   nsresult DoOnStartRequest(nsIRequest* request, nsISupports* aContext,
                             nsCString& aBuffer);
->>>>>>> upstream-releases
 
  protected:
   nsCOMPtr<nsIDirIndexParser> mParser;

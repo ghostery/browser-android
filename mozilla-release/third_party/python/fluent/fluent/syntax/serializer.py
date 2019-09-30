@@ -90,17 +90,6 @@ def serialize_message(message):
             parts.append(serialize_attribute(attribute))
 
     parts.append("\n")
-<<<<<<< HEAD
-    return ''.join(parts)
-
-
-def serialize_term(term):
-    parts = []
-
-    if term.comment:
-        parts.append(serialize_comment(term.comment))
-||||||| merged common ancestors
-=======
     return ''.join(parts)
 
 
@@ -112,40 +101,19 @@ def serialize_term(term):
 
     parts.append("-{} =".format(term.id.name))
     parts.append(serialize_pattern(term.value))
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    parts.append("-{} =".format(term.id.name))
-    parts.append(serialize_value(term.value))
 
     if term.attributes:
         for attribute in term.attributes:
             parts.append(serialize_attribute(attribute))
 
     parts.append("\n")
-||||||| merged common ancestors
-=======
-    if term.attributes:
-        for attribute in term.attributes:
-            parts.append(serialize_attribute(attribute))
-
-    parts.append("\n")
->>>>>>> upstream-releases
     return ''.join(parts)
 
 
 def serialize_attribute(attribute):
     return "\n    .{} ={}".format(
-<<<<<<< HEAD
-        attribute.id.name,
-        indent(serialize_value(attribute.value))
-||||||| merged common ancestors
-        serialize_identifier(attribute.id),
-        indent(serialize_value(attribute.value))
-=======
         attribute.id.name,
         indent(serialize_pattern(attribute.value))
->>>>>>> upstream-releases
     )
 
 
@@ -184,49 +152,10 @@ def serialize_placeable(placeable):
 
 def serialize_expression(expression):
     if isinstance(expression, ast.StringLiteral):
-<<<<<<< HEAD
-        return '"{}"'.format(expression.raw)
-||||||| merged common ancestors
-        return serialize_string_literal(expression)
-=======
         return '"{}"'.format(expression.value)
->>>>>>> upstream-releases
     if isinstance(expression, ast.NumberLiteral):
-<<<<<<< HEAD
         return expression.value
-    if isinstance(expression, ast.MessageReference):
-        return expression.id.name
-    if isinstance(expression, ast.FunctionReference):
-        return expression.id.name
-    if isinstance(expression, ast.TermReference):
-        return '-{}'.format(expression.id.name)
-||||||| merged common ancestors
-        return serialize_number_literal(expression)
-    if isinstance(expression, ast.MessageReference):
-        return serialize_message_reference(expression)
-    if isinstance(expression, ast.TermReference):
-        return serialize_message_reference(expression)
-=======
-        return expression.value
->>>>>>> upstream-releases
     if isinstance(expression, ast.VariableReference):
-<<<<<<< HEAD
-        return '${}'.format(expression.id.name)
-    if isinstance(expression, ast.AttributeExpression):
-        return serialize_attribute_expression(expression)
-    if isinstance(expression, ast.VariantExpression):
-        return serialize_variant_expression(expression)
-    if isinstance(expression, ast.CallExpression):
-        return serialize_call_expression(expression)
-||||||| merged common ancestors
-        return serialize_variable_reference(expression)
-    if isinstance(expression, ast.AttributeExpression):
-        return serialize_attribute_expression(expression)
-    if isinstance(expression, ast.VariantExpression):
-        return serialize_variant_expression(expression)
-    if isinstance(expression, ast.CallExpression):
-        return serialize_call_expression(expression)
-=======
         return "${}".format(expression.id.name)
     if isinstance(expression, ast.TermReference):
         out = "-{}".format(expression.id.name)
@@ -243,7 +172,6 @@ def serialize_expression(expression):
     if isinstance(expression, ast.FunctionReference):
         args = serialize_call_arguments(expression.arguments)
         return "{}{}".format(expression.id.name, args)
->>>>>>> upstream-releases
     if isinstance(expression, ast.SelectExpression):
         out = "{} ->".format(
             serialize_expression(expression.selector))
@@ -255,115 +183,22 @@ def serialize_expression(expression):
     raise Exception('Unknown expression type: {}'.format(type(expression)))
 
 
-<<<<<<< HEAD
-def serialize_select_expression(expr):
-    parts = []
-    selector = "{} ->".format(
-        serialize_expression(expr.selector))
-    parts.append(selector)
-
-    for variant in expr.variants:
-        parts.append(serialize_variant(variant))
-
-    parts.append("\n")
-
-    return "".join(parts)
-
-
-def serialize_attribute_expression(expr):
-    return "{}.{}".format(
-        serialize_expression(expr.ref),
-        expr.name.name,
-    )
-
-
-def serialize_variant_expression(expr):
-    return "{}[{}]".format(
-        serialize_expression(expr.ref),
-        serialize_variant_key(expr.key),
-||||||| merged common ancestors
-def serialize_string_literal(expr):
-    return "\"{}\"".format(expr.value)
-
-
-def serialize_number_literal(expr):
-    return expr.value
-
-
-def serialize_message_reference(expr):
-    return serialize_identifier(expr.id)
-
-
-def serialize_variable_reference(expr):
-    return "${}".format(serialize_identifier(expr.id))
-
-
-def serialize_select_expression(expr):
-    parts = []
-    selector = "{} ->".format(
-        serialize_expression(expr.selector))
-    parts.append(selector)
-
-    for variant in expr.variants:
-        parts.append(serialize_variant(variant))
-
-    parts.append("\n")
-
-    return "".join(parts)
-
-
-def serialize_attribute_expression(expr):
-    return "{}.{}".format(
-        serialize_expression(expr.ref),
-        serialize_identifier(expr.name),
-    )
-
-
-def serialize_variant_expression(expr):
-    return "{}[{}]".format(
-        serialize_expression(expr.ref),
-        serialize_variant_key(expr.key),
-=======
 def serialize_variant(variant):
     return "\n{}[{}]{}".format(
         "   *" if variant.default else "    ",
         serialize_variant_key(variant.key),
         indent(serialize_pattern(variant.value))
->>>>>>> upstream-releases
     )
 
 
-<<<<<<< HEAD
-def serialize_call_expression(expr):
-    callee = serialize_expression(expr.callee)
-||||||| merged common ancestors
-def serialize_call_expression(expr):
-    fun = serialize_function(expr.callee)
-=======
 def serialize_call_arguments(expr):
->>>>>>> upstream-releases
     positional = ", ".join(
         serialize_expression(arg) for arg in expr.positional)
     named = ", ".join(
         serialize_named_argument(arg) for arg in expr.named)
     if len(expr.positional) > 0 and len(expr.named) > 0:
-<<<<<<< HEAD
-        return '{}({}, {})'.format(callee, positional, named)
-    return '{}({})'.format(callee, positional or named)
-||||||| merged common ancestors
-        return '{}({}, {})'.format(fun, positional, named)
-    return '{}({})'.format(fun, positional or named)
-
-
-def serialize_call_argument(arg):
-    if isinstance(arg, ast.Expression):
-        return serialize_expression(arg)
-    if isinstance(arg, ast.NamedArgument):
-        return serialize_named_argument(arg)
-=======
         return '({}, {})'.format(positional, named)
     return '({})'.format(positional or named)
->>>>>>> upstream-releases
 
 
 def serialize_named_argument(arg):
@@ -374,25 +209,8 @@ def serialize_named_argument(arg):
 
 
 def serialize_variant_key(key):
-<<<<<<< HEAD
-    if isinstance(key, ast.Identifier):
-        return key.name
-    else:
-        return serialize_expression(key)
-||||||| merged common ancestors
-    if isinstance(key, ast.VariantName):
-        return serialize_variant_name(key)
-    if isinstance(key, ast.NumberLiteral):
-        return serialize_number_literal(key)
-    raise Exception('Unknown variant key type: {}'.format(type(key)))
-
-
-def serialize_function(function):
-    return function.name
-=======
     if isinstance(key, ast.Identifier):
         return key.name
     if isinstance(key, ast.NumberLiteral):
         return key.value
     raise Exception('Unknown variant key type: {}'.format(type(key)))
->>>>>>> upstream-releases

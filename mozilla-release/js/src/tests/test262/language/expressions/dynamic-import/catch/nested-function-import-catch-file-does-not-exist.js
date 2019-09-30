@@ -1,9 +1,4 @@
-<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/catch/nested-function-import-catch-file-does-not-exist.js
-||||||| merged common ancestors
-// |reftest| skip -- dynamic-import is not supported
-=======
 // |reftest| skip-if(!xulRuntime.shell) -- dynamic-import is not enabled unconditionally
->>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/catch/nested-function-import-catch-file-does-not-exist.js
 // This file was procedurally generated from the following sources:
 // - src/dynamic-import/file-does-not-exist.case
 // - src/dynamic-import/catch/nested-function.template

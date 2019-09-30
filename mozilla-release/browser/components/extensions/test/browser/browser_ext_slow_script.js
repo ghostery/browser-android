@@ -52,19 +52,11 @@ add_task(async function test_slow_content_script() {
     "http://example.com/"
   );
 
-<<<<<<< HEAD
-  let notification = await BrowserTestUtils.waitForGlobalNotificationBar(window, "process-hang");
-  let text = notification.messageText.textContent;
-||||||| merged common ancestors
-  let notification = await BrowserTestUtils.waitForGlobalNotificationBar(window, "process-hang");
-  let text = document.getAnonymousElementByAttribute(notification, "anonid", "messageText").textContent;
-=======
   let notification = await BrowserTestUtils.waitForGlobalNotificationBar(
     window,
     "process-hang"
   );
   let text = notification.messageText.textContent;
->>>>>>> upstream-releases
 
   ok(text.includes("\u201cSlow Script Extension\u201d"), "Label is correct");
 

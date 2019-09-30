@@ -51,30 +51,6 @@ static inline bool IsOptimizedArguments(AbstractFramePtr frame,
  * However, this speculation must be guarded before calling 'apply' in case it
  * is not the builtin Function.prototype.apply.
  */
-<<<<<<< HEAD
-static inline bool GuardFunApplyArgumentsOptimization(JSContext* cx,
-                                                      AbstractFramePtr frame,
-                                                      CallArgs& args) {
-  if (args.length() == 2 && IsOptimizedArguments(frame, args[1])) {
-    if (!IsNativeFunction(args.calleev(), js::fun_apply)) {
-      RootedScript script(cx, frame.script());
-      if (!JSScript::argumentsOptimizationFailed(cx, script)) {
-        return false;
-      }
-      args[1].setObject(frame.argsObj());
-||||||| merged common ancestors
-static inline bool
-GuardFunApplyArgumentsOptimization(JSContext* cx, AbstractFramePtr frame, CallArgs& args)
-{
-    if (args.length() == 2 && IsOptimizedArguments(frame, args[1])) {
-        if (!IsNativeFunction(args.calleev(), js::fun_apply)) {
-            RootedScript script(cx, frame.script());
-            if (!JSScript::argumentsOptimizationFailed(cx, script)) {
-                return false;
-            }
-            args[1].setObject(frame.argsObj());
-        }
-=======
 static inline bool GuardFunApplyArgumentsOptimization(JSContext* cx,
                                                       AbstractFramePtr frame,
                                                       CallArgs& args) {
@@ -83,7 +59,6 @@ static inline bool GuardFunApplyArgumentsOptimization(JSContext* cx,
       RootedScript script(cx, frame.script());
       JSScript::argumentsOptimizationFailed(cx, script);
       args[1].setObject(frame.argsObj());
->>>>>>> upstream-releases
     }
   }
 
@@ -164,27 +139,6 @@ static inline void ReportRuntimeConstAssignment(JSContext* cx,
   ReportRuntimeLexicalError(cx, JSMSG_BAD_CONST_ASSIGN, script, pc);
 }
 
-<<<<<<< HEAD
-inline bool GetLengthProperty(const Value& lval, MutableHandleValue vp) {
-  /* Optimize length accesses on strings, arrays, and arguments. */
-  if (lval.isString()) {
-    vp.setInt32(lval.toString()->length());
-    return true;
-  }
-  if (lval.isObject()) {
-    JSObject* obj = &lval.toObject();
-    if (obj->is<ArrayObject>()) {
-      vp.setNumber(obj->as<ArrayObject>().length());
-      return true;
-||||||| merged common ancestors
-inline bool
-GetLengthProperty(const Value& lval, MutableHandleValue vp)
-{
-    /* Optimize length accesses on strings, arrays, and arguments. */
-    if (lval.isString()) {
-        vp.setInt32(lval.toString()->length());
-        return true;
-=======
 inline bool GetLengthProperty(const Value& lval, MutableHandleValue vp) {
   /* Optimize length accesses on strings, arrays, and arguments. */
   if (lval.isString()) {
@@ -206,49 +160,10 @@ inline bool GetLengthProperty(const Value& lval, MutableHandleValue vp) {
         vp.setInt32(int32_t(length));
         return true;
       }
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-||||||| merged common ancestors
-    if (lval.isObject()) {
-        JSObject* obj = &lval.toObject();
-        if (obj->is<ArrayObject>()) {
-            vp.setNumber(obj->as<ArrayObject>().length());
-            return true;
-        }
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (obj->is<ArgumentsObject>()) {
-      ArgumentsObject* argsobj = &obj->as<ArgumentsObject>();
-      if (!argsobj->hasOverriddenLength()) {
-        uint32_t length = argsobj->initialLength();
-        MOZ_ASSERT(length < INT32_MAX);
-        vp.setInt32(int32_t(length));
-        return true;
-      }
     }
   }
 
   return false;
-||||||| merged common ancestors
-        if (obj->is<ArgumentsObject>()) {
-            ArgumentsObject* argsobj = &obj->as<ArgumentsObject>();
-            if (!argsobj->hasOverriddenLength()) {
-                uint32_t length = argsobj->initialLength();
-                MOZ_ASSERT(length < INT32_MAX);
-                vp.setInt32(int32_t(length));
-                return true;
-            }
-        }
-    }
-
-    return false;
-=======
-  return false;
->>>>>>> upstream-releases
 }
 
 enum class GetNameMode { Normal, TypeOf };
@@ -351,10 +266,6 @@ inline bool HasOwnProperty(JSContext* cx, HandleValue val, HandleValue idValue,
       *result = prop.isFound();
       return true;
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
   }
 
   // Step 1.
@@ -472,42 +383,11 @@ static MOZ_ALWAYS_INLINE bool NegOperation(JSContext* cx,
   if (val.isBigInt()) {
     return BigInt::neg(cx, val, res);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 1.
-  RootedId key(cx);
-  if (!ToPropertyKey(cx, idValue, &key)) {
-    return false;
-  }
-
-  // Step 2.
-  RootedObject obj(cx, ToObject(cx, val));
-  if (!obj) {
-    return false;
-  }
-
-  // Step 3.
-  return HasOwnProperty(cx, obj, key, result);
-||||||| merged common ancestors
-    return FetchName<mode>(cx, obj, pobj, name, prop, vp);
-=======
   res.setNumber(-val.toNumber());
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline bool GetIntrinsicOperation(JSContext* cx, HandleScript script,
-                                  jsbytecode* pc, MutableHandleValue vp) {
-  RootedPropertyName name(cx, script->getName(pc));
-  return GlobalObject::getIntrinsicValue(cx, cx->global(), name, vp);
-}
-||||||| merged common ancestors
-inline bool
-HasOwnProperty(JSContext* cx, HandleValue val, HandleValue idValue, bool* result)
-{
-=======
 static MOZ_ALWAYS_INLINE bool IncOperation(JSContext* cx,
                                            MutableHandleValue val,
                                            MutableHandleValue res) {
@@ -516,48 +396,12 @@ static MOZ_ALWAYS_INLINE bool IncOperation(JSContext* cx,
     res.setInt32(i + 1);
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline bool SetIntrinsicOperation(JSContext* cx, JSScript* script,
-                                  jsbytecode* pc, HandleValue val) {
-  RootedPropertyName name(cx, script->getName(pc));
-  return GlobalObject::setIntrinsicValue(cx, cx->global(), name, val);
-}
-||||||| merged common ancestors
-    // As an optimization, provide a fast path when rooting is not necessary and
-    // we can safely retrieve the object's shape.
-    jsid id;
-    if (val.isObject() && ValueToId<NoGC>(cx, idValue, &id)) {
-        JSObject* obj = &val.toObject();
-        PropertyResult prop;
-        if (obj->isNative() &&
-            NativeLookupOwnProperty<NoGC>(cx, &obj->as<NativeObject>(), id, &prop))
-        {
-            *result = prop.isFound();
-            return true;
-        }
-    }
-=======
   if (val.isNumber()) {
     res.setNumber(val.toNumber() + 1);
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline void SetAliasedVarOperation(JSContext* cx, JSScript* script,
-                                   jsbytecode* pc, EnvironmentObject& obj,
-                                   EnvironmentCoordinate ec, const Value& val,
-                                   MaybeCheckTDZ checkTDZ) {
-  MOZ_ASSERT_IF(checkTDZ, !IsUninitializedLexical(obj.aliasedBinding(ec)));
-||||||| merged common ancestors
-    // Step 1.
-    RootedId key(cx);
-    if (!ToPropertyKey(cx, idValue, &key)) {
-        return false;
-    }
-=======
   MOZ_ASSERT(val.isBigInt(), "+1 only callable on result of JSOP_TONUMERIC");
   return BigInt::inc(cx, val, res);
 }
@@ -575,22 +419,7 @@ static MOZ_ALWAYS_INLINE bool DecOperation(JSContext* cx,
     res.setNumber(val.toNumber() - 1);
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Avoid computing the name if no type updates are needed, as this may be
-  // expensive on scopes with large numbers of variables.
-  PropertyName* name =
-      obj.isSingleton() ? EnvironmentCoordinateName(
-                              cx->caches().envCoordinateNameCache, script, pc)
-                        : nullptr;
-||||||| merged common ancestors
-    // Step 2.
-    RootedObject obj(cx, ToObject(cx, val));
-    if (!obj) {
-        return false;
-    }
-=======
   MOZ_ASSERT(val.isBigInt(), "-1 only callable on result of JSOP_TONUMERIC");
   return BigInt::dec(cx, val, res);
 }
@@ -631,136 +460,7 @@ static MOZ_ALWAYS_INLINE bool GetObjectElementOperation(
       }
       break;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  obj.setAliasedBinding(cx, ec, name, val);
-}
-
-inline bool SetNameOperation(JSContext* cx, JSScript* script, jsbytecode* pc,
-                             HandleObject env, HandleValue val) {
-  MOZ_ASSERT(*pc == JSOP_SETNAME || *pc == JSOP_STRICTSETNAME ||
-             *pc == JSOP_SETGNAME || *pc == JSOP_STRICTSETGNAME);
-  MOZ_ASSERT_IF((*pc == JSOP_SETGNAME || *pc == JSOP_STRICTSETGNAME) &&
-                    !script->hasNonSyntacticScope(),
-                env == cx->global() ||
-                    env == &cx->global()->lexicalEnvironment() ||
-                    env->is<RuntimeLexicalErrorObject>());
-
-  bool strict = *pc == JSOP_STRICTSETNAME || *pc == JSOP_STRICTSETGNAME;
-  RootedPropertyName name(cx, script->getName(pc));
-
-  // In strict mode, assigning to an undeclared global variable is an
-  // error. To detect this, we call NativeSetProperty directly and pass
-  // Unqualified. It stores the error, if any, in |result|.
-  bool ok;
-  ObjectOpResult result;
-  RootedId id(cx, NameToId(name));
-  RootedValue receiver(cx, ObjectValue(*env));
-  if (env->isUnqualifiedVarObj()) {
-    RootedNativeObject varobj(cx);
-    if (env->is<DebugEnvironmentProxy>()) {
-      varobj =
-          &env->as<DebugEnvironmentProxy>().environment().as<NativeObject>();
-    } else {
-      varobj = &env->as<NativeObject>();
-||||||| merged common ancestors
-    // Step 3.
-    return HasOwnProperty(cx, obj, key, result);
-}
-
-
-inline bool
-GetIntrinsicOperation(JSContext* cx, HandleScript script, jsbytecode* pc, MutableHandleValue vp)
-{
-    RootedPropertyName name(cx, script->getName(pc));
-    return GlobalObject::getIntrinsicValue(cx, cx->global(), name, vp);
-}
-
-inline bool
-SetIntrinsicOperation(JSContext* cx, JSScript* script, jsbytecode* pc, HandleValue val)
-{
-    RootedPropertyName name(cx, script->getName(pc));
-    return GlobalObject::setIntrinsicValue(cx, cx->global(), name, val);
-}
-
-inline void
-SetAliasedVarOperation(JSContext* cx, JSScript* script, jsbytecode* pc,
-                       EnvironmentObject& obj, EnvironmentCoordinate ec, const Value& val,
-                       MaybeCheckTDZ checkTDZ)
-{
-    MOZ_ASSERT_IF(checkTDZ, !IsUninitializedLexical(obj.aliasedBinding(ec)));
-
-    // Avoid computing the name if no type updates are needed, as this may be
-    // expensive on scopes with large numbers of variables.
-    PropertyName* name = obj.isSingleton()
-                         ? EnvironmentCoordinateName(cx->caches().envCoordinateNameCache, script, pc)
-                         : nullptr;
-
-    obj.setAliasedBinding(cx, ec, name, val);
-}
-
-inline bool
-SetNameOperation(JSContext* cx, JSScript* script, jsbytecode* pc, HandleObject env,
-                 HandleValue val)
-{
-    MOZ_ASSERT(*pc == JSOP_SETNAME ||
-               *pc == JSOP_STRICTSETNAME ||
-               *pc == JSOP_SETGNAME ||
-               *pc == JSOP_STRICTSETGNAME);
-    MOZ_ASSERT_IF((*pc == JSOP_SETGNAME || *pc == JSOP_STRICTSETGNAME) &&
-                  !script->hasNonSyntacticScope(),
-                  env == cx->global() ||
-                  env == &cx->global()->lexicalEnvironment() ||
-                  env->is<RuntimeLexicalErrorObject>());
-
-    bool strict = *pc == JSOP_STRICTSETNAME || *pc == JSOP_STRICTSETGNAME;
-    RootedPropertyName name(cx, script->getName(pc));
-
-    // In strict mode, assigning to an undeclared global variable is an
-    // error. To detect this, we call NativeSetProperty directly and pass
-    // Unqualified. It stores the error, if any, in |result|.
-    bool ok;
-    ObjectOpResult result;
-    RootedId id(cx, NameToId(name));
-    RootedValue receiver(cx, ObjectValue(*env));
-    if (env->isUnqualifiedVarObj()) {
-        RootedNativeObject varobj(cx);
-        if (env->is<DebugEnvironmentProxy>()) {
-            varobj = &env->as<DebugEnvironmentProxy>().environment().as<NativeObject>();
-        } else {
-            varobj = &env->as<NativeObject>();
-        }
-        MOZ_ASSERT(!varobj->getOpsSetProperty());
-        ok = NativeSetProperty<Unqualified>(cx, varobj, id, val, receiver, result);
-    } else {
-        ok = SetProperty(cx, env, id, val, receiver, result);
-    }
-    return ok && result.checkStrictErrorOrWarning(cx, env, id, strict);
-}
-
-inline bool
-DefLexicalOperation(JSContext* cx, Handle<LexicalEnvironmentObject*> lexicalEnv,
-                    HandleObject varObj, HandlePropertyName name, unsigned attrs)
-{
-    // Redeclaration checks should have already been done.
-    MOZ_ASSERT(CheckLexicalNameConflict(cx, lexicalEnv, varObj, name));
-    RootedId id(cx, NameToId(name));
-    RootedValue uninitialized(cx, MagicValue(JS_UNINITIALIZED_LEXICAL));
-    return NativeDefineDataProperty(cx, lexicalEnv, id, uninitialized, attrs);
-}
-
-inline bool
-DefLexicalOperation(JSContext* cx, LexicalEnvironmentObject* lexicalEnvArg,
-                    JSObject* varObjArg, JSScript* script, jsbytecode* pc)
-{
-    MOZ_ASSERT(*pc == JSOP_DEFLET || *pc == JSOP_DEFCONST);
-    RootedPropertyName name(cx, script->getName(pc));
-
-    unsigned attrs = JSPROP_ENUMERATE | JSPROP_PERMANENT;
-    if (*pc == JSOP_DEFCONST) {
-        attrs |= JSPROP_READONLY;
-=======
     if (key.isString()) {
       JSString* str = key.toString();
       JSAtom* name = str->isAtom() ? &str->asAtom() : AtomizeString(cx, str);
@@ -777,92 +477,8 @@ DefLexicalOperation(JSContext* cx, LexicalEnvironmentObject* lexicalEnvArg,
           break;
         }
       }
->>>>>>> upstream-releases
     }
-    MOZ_ASSERT(!varobj->getOpsSetProperty());
-    ok = NativeSetProperty<Unqualified>(cx, varobj, id, val, receiver, result);
-  } else {
-    ok = SetProperty(cx, env, id, val, receiver, result);
-  }
-  return ok && result.checkStrictErrorOrWarning(cx, env, id, strict);
-}
 
-<<<<<<< HEAD
-inline bool DefLexicalOperation(JSContext* cx,
-                                Handle<LexicalEnvironmentObject*> lexicalEnv,
-                                HandleObject varObj, HandlePropertyName name,
-                                unsigned attrs) {
-  // Redeclaration checks should have already been done.
-  MOZ_ASSERT(CheckLexicalNameConflict(cx, lexicalEnv, varObj, name));
-  RootedId id(cx, NameToId(name));
-  RootedValue uninitialized(cx, MagicValue(JS_UNINITIALIZED_LEXICAL));
-  return NativeDefineDataProperty(cx, lexicalEnv, id, uninitialized, attrs);
-}
-
-inline bool DefLexicalOperation(JSContext* cx,
-                                LexicalEnvironmentObject* lexicalEnvArg,
-                                JSObject* varObjArg, JSScript* script,
-                                jsbytecode* pc) {
-  MOZ_ASSERT(*pc == JSOP_DEFLET || *pc == JSOP_DEFCONST);
-  RootedPropertyName name(cx, script->getName(pc));
-
-  unsigned attrs = JSPROP_ENUMERATE | JSPROP_PERMANENT;
-  if (*pc == JSOP_DEFCONST) {
-    attrs |= JSPROP_READONLY;
-  }
-
-  Rooted<LexicalEnvironmentObject*> lexicalEnv(cx, lexicalEnvArg);
-  RootedObject varObj(cx, varObjArg);
-  MOZ_ASSERT_IF(!script->hasNonSyntacticScope(),
-                lexicalEnv == &cx->global()->lexicalEnvironment() &&
-                    varObj == cx->global());
-
-  return DefLexicalOperation(cx, lexicalEnv, varObj, name, attrs);
-}
-
-inline void InitGlobalLexicalOperation(JSContext* cx,
-                                       LexicalEnvironmentObject* lexicalEnvArg,
-                                       JSScript* script, jsbytecode* pc,
-                                       HandleValue value) {
-  MOZ_ASSERT_IF(!script->hasNonSyntacticScope(),
-                lexicalEnvArg == &cx->global()->lexicalEnvironment());
-  MOZ_ASSERT(*pc == JSOP_INITGLEXICAL);
-  Rooted<LexicalEnvironmentObject*> lexicalEnv(cx, lexicalEnvArg);
-  RootedShape shape(cx, lexicalEnv->lookup(cx, script->getName(pc)));
-  MOZ_ASSERT(shape);
-  lexicalEnv->setSlotWithType(cx, shape, value);
-}
-||||||| merged common ancestors
-    Rooted<LexicalEnvironmentObject*> lexicalEnv(cx, lexicalEnvArg);
-    RootedObject varObj(cx, varObjArg);
-    MOZ_ASSERT_IF(!script->hasNonSyntacticScope(),
-                  lexicalEnv == &cx->global()->lexicalEnvironment() && varObj == cx->global());
-
-    return DefLexicalOperation(cx, lexicalEnv, varObj, name, attrs);
-}
-
-inline void
-InitGlobalLexicalOperation(JSContext* cx, LexicalEnvironmentObject* lexicalEnvArg,
-                           JSScript* script, jsbytecode* pc, HandleValue value)
-{
-    MOZ_ASSERT_IF(!script->hasNonSyntacticScope(),
-                  lexicalEnvArg == &cx->global()->lexicalEnvironment());
-    MOZ_ASSERT(*pc == JSOP_INITGLEXICAL);
-    Rooted<LexicalEnvironmentObject*> lexicalEnv(cx, lexicalEnvArg);
-    RootedShape shape(cx, lexicalEnv->lookup(cx, script->getName(pc)));
-    MOZ_ASSERT(shape);
-    lexicalEnv->setSlotWithType(cx, shape, value);
-}
-
-inline bool
-InitPropertyOperation(JSContext* cx, JSOp op, HandleObject obj, HandlePropertyName name,
-                      HandleValue rhs)
-{
-    if (obj->is<PlainObject>() || obj->is<JSFunction>()) {
-        unsigned propAttrs = GetInitDataPropAttrs(op);
-        return NativeDefineDataProperty(cx, obj.as<NativeObject>(), name, rhs, propAttrs);
-    }
-=======
     RootedId id(cx);
     if (!ToPropertyKey(cx, key, &id)) {
       return false;
@@ -871,114 +487,16 @@ InitPropertyOperation(JSContext* cx, JSOp op, HandleObject obj, HandlePropertyNa
       return false;
     }
   } while (false);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline bool InitPropertyOperation(JSContext* cx, JSOp op, HandleObject obj,
-                                  HandlePropertyName name, HandleValue rhs) {
-  if (obj->is<PlainObject>() || obj->is<JSFunction>()) {
-    unsigned propAttrs = GetInitDataPropAttrs(op);
-    return NativeDefineDataProperty(cx, obj.as<NativeObject>(), name, rhs,
-                                    propAttrs);
-  }
-
-  MOZ_ASSERT(obj->as<UnboxedPlainObject>().layout().lookup(name));
-  RootedId id(cx, NameToId(name));
-  return PutProperty(cx, obj, id, rhs, false);
-||||||| merged common ancestors
-    MOZ_ASSERT(obj->as<UnboxedPlainObject>().layout().lookup(name));
-    RootedId id(cx, NameToId(name));
-    return PutProperty(cx, obj, id, rhs, false);
-=======
   cx->debugOnlyCheck(res);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline bool DefVarOperation(JSContext* cx, HandleObject varobj,
-                            HandlePropertyName dn, unsigned attrs) {
-  MOZ_ASSERT(varobj->isQualifiedVarObj());
-||||||| merged common ancestors
-inline bool
-DefVarOperation(JSContext* cx, HandleObject varobj, HandlePropertyName dn, unsigned attrs)
-{
-    MOZ_ASSERT(varobj->isQualifiedVarObj());
-=======
 static MOZ_ALWAYS_INLINE bool GetPrimitiveElementOperation(
     JSContext* cx, JSOp op, JS::HandleValue receiver, HandleValue key,
     MutableHandleValue res) {
   MOZ_ASSERT(op == JSOP_GETELEM || op == JSOP_CALLELEM);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef DEBUG
-  // Per spec, it is an error to redeclare a lexical binding. This should
-  // have already been checked.
-  if (JS_HasExtensibleLexicalEnvironment(varobj)) {
-    Rooted<LexicalEnvironmentObject*> lexicalEnv(cx);
-    lexicalEnv = &JS_ExtensibleLexicalEnvironment(varobj)
-                      ->as<LexicalEnvironmentObject>();
-    MOZ_ASSERT(CheckVarNameConflict(cx, lexicalEnv, dn));
-  }
-#endif
-
-  Rooted<PropertyResult> prop(cx);
-  RootedObject obj2(cx);
-  if (!LookupProperty(cx, varobj, dn, &obj2, &prop)) {
-    return false;
-  }
-
-  /* Steps 8c, 8d. */
-  if (!prop || (obj2 != varobj && varobj->is<GlobalObject>())) {
-    if (!DefineDataProperty(cx, varobj, dn, UndefinedHandleValue, attrs)) {
-      return false;
-    }
-  }
-
-  if (varobj->is<GlobalObject>()) {
-    if (!varobj->as<GlobalObject>().realm()->addToVarNames(cx, dn)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-static MOZ_ALWAYS_INLINE bool NegOperation(JSContext* cx,
-                                           MutableHandleValue val,
-                                           MutableHandleValue res) {
-  /*
-   * When the operand is int jsval, INT32_FITS_IN_JSVAL(i) implies
-   * INT32_FITS_IN_JSVAL(-i) unless i is 0 or INT32_MIN when the
-   * results, -0.0 or INT32_MAX + 1, are double values.
-   */
-  int32_t i;
-  if (val.isInt32() && (i = val.toInt32()) != 0 && i != INT32_MIN) {
-    res.setInt32(-i);
-    return true;
-  }
-
-  if (!ToNumeric(cx, val)) {
-    return false;
-  }
-
-#ifdef ENABLE_BIGINT
-  if (val.isBigInt()) {
-    return BigInt::neg(cx, val, res);
-  }
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-    // Per spec, it is an error to redeclare a lexical binding. This should
-    // have already been checked.
-    if (JS_HasExtensibleLexicalEnvironment(varobj)) {
-        Rooted<LexicalEnvironmentObject*> lexicalEnv(cx);
-        lexicalEnv = &JS_ExtensibleLexicalEnvironment(varobj)->as<LexicalEnvironmentObject>();
-        MOZ_ASSERT(CheckVarNameConflict(cx, lexicalEnv, dn));
-    }
-#endif
-=======
   // FIXME: Bug 1234324 We shouldn't be boxing here.
   RootedObject boxed(cx, ToObjectFromStack(cx, receiver));
   if (!boxed) {
@@ -991,73 +509,13 @@ static MOZ_ALWAYS_INLINE bool NegOperation(JSContext* cx,
       if (GetElementNoGC(cx, boxed, receiver, index, res.address())) {
         break;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  res.setNumber(-val.toNumber());
-  return true;
-}
-
-static MOZ_ALWAYS_INLINE bool ToIdOperation(JSContext* cx, HandleValue idval,
-                                            MutableHandleValue res) {
-  if (idval.isInt32()) {
-    res.set(idval);
-    return true;
-  }
-
-  RootedId id(cx);
-  if (!ToPropertyKey(cx, idval, &id)) {
-    return false;
-  }
-
-  res.set(IdToValue(id));
-  return true;
-}
-
-static MOZ_ALWAYS_INLINE bool GetObjectElementOperation(
-    JSContext* cx, JSOp op, JS::HandleObject obj, JS::HandleValue receiver,
-    HandleValue key, MutableHandleValue res) {
-  MOZ_ASSERT(op == JSOP_GETELEM || op == JSOP_CALLELEM ||
-             op == JSOP_GETELEM_SUPER);
-  MOZ_ASSERT_IF(op == JSOP_GETELEM || op == JSOP_CALLELEM,
-                obj == &receiver.toObject());
-
-  do {
-    uint32_t index;
-    if (IsDefinitelyIndex(key, &index)) {
-      if (GetElementNoGC(cx, obj, receiver, index, res.address())) {
-        break;
-      }
-
-      if (!GetElement(cx, obj, receiver, index, res)) {
-||||||| merged common ancestors
-    Rooted<PropertyResult> prop(cx);
-    RootedObject obj2(cx);
-    if (!LookupProperty(cx, varobj, dn, &obj2, &prop)) {
-=======
       if (!GetElement(cx, boxed, receiver, index, res)) {
->>>>>>> upstream-releases
         return false;
       }
       break;
     }
 
-<<<<<<< HEAD
-    if (key.isString()) {
-      JSString* str = key.toString();
-      JSAtom* name = str->isAtom() ? &str->asAtom() : AtomizeString(cx, str);
-      if (!name) {
-        return false;
-      }
-      if (name->isIndex(&index)) {
-        if (GetElementNoGC(cx, obj, receiver, index, res.address())) {
-          break;
-||||||| merged common ancestors
-    /* Steps 8c, 8d. */
-    if (!prop || (obj2 != varobj && varobj->is<GlobalObject>())) {
-        if (!DefineDataProperty(cx, varobj, dn, UndefinedHandleValue, attrs)) {
-            return false;
-=======
     if (key.isString()) {
       JSString* str = key.toString();
       JSAtom* name = str->isAtom() ? &str->asAtom() : AtomizeString(cx, str);
@@ -1072,90 +530,23 @@ static MOZ_ALWAYS_INLINE bool GetObjectElementOperation(
         if (GetPropertyNoGC(cx, boxed, receiver, name->asPropertyName(),
                             res.address())) {
           break;
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-      } else {
-        if (GetPropertyNoGC(cx, obj, receiver, name->asPropertyName(),
-                            res.address())) {
-          break;
         }
       }
-||||||| merged common ancestors
-=======
-      }
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
     RootedId id(cx);
     if (!ToPropertyKey(cx, key, &id)) {
       return false;
     }
-    if (!GetProperty(cx, obj, receiver, id, res)) {
-      return false;
-||||||| merged common ancestors
-    if (varobj->is<GlobalObject>()) {
-        if (!varobj->as<GlobalObject>().realm()->addToVarNames(cx, dn)) {
-            return false;
-        }
-=======
-    RootedId id(cx);
-    if (!ToPropertyKey(cx, key, &id)) {
-      return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  } while (false);
-||||||| merged common ancestors
-=======
     if (!GetProperty(cx, boxed, receiver, id, res)) {
       return false;
     }
   } while (false);
->>>>>>> upstream-releases
 
   cx->debugOnlyCheck(res);
   return true;
 }
 
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE bool GetPrimitiveElementOperation(
-    JSContext* cx, JSOp op, JS::HandleValue receiver, HandleValue key,
-    MutableHandleValue res) {
-  MOZ_ASSERT(op == JSOP_GETELEM || op == JSOP_CALLELEM);
-
-  // FIXME: Bug 1234324 We shouldn't be boxing here.
-  RootedObject boxed(cx, ToObjectFromStack(cx, receiver));
-  if (!boxed) {
-    return false;
-  }
-
-  do {
-    uint32_t index;
-    if (IsDefinitelyIndex(key, &index)) {
-      if (GetElementNoGC(cx, boxed, receiver, index, res.address())) {
-        break;
-      }
-
-      if (!GetElement(cx, boxed, receiver, index, res)) {
-        return false;
-      }
-      break;
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE bool
-NegOperation(JSContext* cx, MutableHandleValue val, MutableHandleValue res)
-{
-    /*
-     * When the operand is int jsval, INT32_FITS_IN_JSVAL(i) implies
-     * INT32_FITS_IN_JSVAL(-i) unless i is 0 or INT32_MIN when the
-     * results, -0.0 or INT32_MAX + 1, are double values.
-     */
-    int32_t i;
-    if (val.isInt32() && (i = val.toInt32()) != 0 && i != INT32_MIN) {
-        res.setInt32(-i);
-        return true;
-=======
 static MOZ_ALWAYS_INLINE bool GetElemOptimizedArguments(
     JSContext* cx, AbstractFramePtr frame, MutableHandleValue lref,
     HandleValue rref, MutableHandleValue res, bool* done) {
@@ -1169,103 +560,10 @@ static MOZ_ALWAYS_INLINE bool GetElemOptimizedArguments(
         *done = true;
         return true;
       }
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (key.isString()) {
-      JSString* str = key.toString();
-      JSAtom* name = str->isAtom() ? &str->asAtom() : AtomizeString(cx, str);
-      if (!name) {
-        return false;
-      }
-      if (name->isIndex(&index)) {
-        if (GetElementNoGC(cx, boxed, receiver, index, res.address())) {
-          break;
-        }
-      } else {
-        if (GetPropertyNoGC(cx, boxed, receiver, name->asPropertyName(),
-                            res.address())) {
-          break;
-        }
-      }
-    }
-||||||| merged common ancestors
-    if (!ToNumeric(cx, val)) {
-        return false;
-    }
-=======
     RootedScript script(cx, frame.script());
     JSScript::argumentsOptimizationFailed(cx, script);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    RootedId id(cx);
-    if (!ToPropertyKey(cx, key, &id)) {
-      return false;
-    }
-    if (!GetProperty(cx, boxed, receiver, id, res)) {
-      return false;
-    }
-  } while (false);
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (val.isBigInt()) {
-        return BigInt::neg(cx, val, res);
-    }
-#endif
-=======
-    lref.set(ObjectValue(frame.argsObj()));
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  cx->debugOnlyCheck(res);
-  return true;
-||||||| merged common ancestors
-    res.setNumber(-val.toNumber());
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE bool GetElemOptimizedArguments(
-    JSContext* cx, AbstractFramePtr frame, MutableHandleValue lref,
-    HandleValue rref, MutableHandleValue res, bool* done) {
-  MOZ_ASSERT(!*done);
-
-  if (IsOptimizedArguments(frame, lref)) {
-    if (rref.isInt32()) {
-      int32_t i = rref.toInt32();
-      if (i >= 0 && uint32_t(i) < frame.numActualArgs()) {
-        res.set(frame.unaliasedActual(i));
-        *done = true;
-        return true;
-      }
-    }
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE bool
-ToIdOperation(JSContext* cx, HandleValue idval, MutableHandleValue res)
-{
-    if (idval.isInt32()) {
-        res.set(idval);
-        return true;
-    }
-=======
-static MOZ_ALWAYS_INLINE bool GetElementOperation(JSContext* cx, JSOp op,
-                                                  HandleValue lref,
-                                                  HandleValue rref,
-                                                  MutableHandleValue res) {
-  MOZ_ASSERT(op == JSOP_GETELEM || op == JSOP_CALLELEM);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    RootedScript script(cx, frame.script());
-    if (!JSScript::argumentsOptimizationFailed(cx, script)) {
-      return false;
-    }
 
     lref.set(ObjectValue(frame.argsObj()));
   }
@@ -1285,17 +583,6 @@ static MOZ_ALWAYS_INLINE bool GetElementOperation(JSContext* cx, JSOp op,
     if (index < str->length()) {
       str = cx->staticStrings().getUnitStringForElement(cx, str, index);
       if (!str) {
-||||||| merged common ancestors
-    RootedId id(cx);
-    if (!ToPropertyKey(cx, idval, &id)) {
-=======
-  uint32_t index;
-  if (lref.isString() && IsDefinitelyIndex(rref, &index)) {
-    JSString* str = lref.toString();
-    if (index < str->length()) {
-      str = cx->staticStrings().getUnitStringForElement(cx, str, index);
-      if (!str) {
->>>>>>> upstream-releases
         return false;
       }
       res.setString(str);
@@ -1377,128 +664,17 @@ static MOZ_ALWAYS_INLINE bool InitArrayElemOperation(JSContext* cx,
   return true;
 }
 
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE bool ProcessCallSiteObjOperation(JSContext* cx,
-                                                          HandleObject cso,
-                                                          HandleObject raw) {
-  MOZ_ASSERT(cso->is<ArrayObject>());
-  MOZ_ASSERT(raw->is<ArrayObject>());
-||||||| merged common ancestors
-        if (key.isString()) {
-            JSString* str = key.toString();
-            JSAtom* name = str->isAtom() ? &str->asAtom() : AtomizeString(cx, str);
-            if (!name) {
-                return false;
-            }
-            if (name->isIndex(&index)) {
-                if (GetElementNoGC(cx, boxed, receiver, index, res.address())) {
-                    break;
-                }
-            } else {
-                if (GetPropertyNoGC(cx, boxed, receiver, name->asPropertyName(), res.address())) {
-                    break;
-                }
-            }
-        }
-=======
 static inline ArrayObject* ProcessCallSiteObjOperation(JSContext* cx,
                                                        HandleScript script,
                                                        jsbytecode* pc) {
   MOZ_ASSERT(*pc == JSOP_CALLSITEOBJ);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (cso->nonProxyIsExtensible()) {
-    RootedValue rawValue(cx, ObjectValue(*raw));
-    if (!DefineDataProperty(cx, cso, cx->names().raw, rawValue, 0)) {
-      return false;
-    }
-    if (!FreezeObject(cx, raw)) {
-      return false;
-    }
-    if (!FreezeObject(cx, cso)) {
-      return false;
-    }
-  }
-  return true;
-}
-||||||| merged common ancestors
-        RootedId id(cx);
-        if (!ToPropertyKey(cx, key, &id)) {
-            return false;
-        }
-        if (!GetProperty(cx, boxed, receiver, id, res)) {
-            return false;
-        }
-    } while (false);
-=======
   RootedArrayObject cso(cx, &script->getObject(pc)->as<ArrayObject>());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// BigInt proposal 3.2.4 Abstract Relational Comparison
-// Returns Nothing when at least one operand is a NaN, or when
-// ToNumeric or StringToBigInt can't interpret a string as a numeric
-// value. (These cases correspond to a NaN result in the spec.)
-// Otherwise, return a boolean to indicate whether lhs is less than
-// rhs. The operands must be primitives; the caller is responsible for
-// evaluating them in the correct order.
-static MOZ_ALWAYS_INLINE bool LessThanImpl(JSContext* cx,
-                                           MutableHandleValue lhs,
-                                           MutableHandleValue rhs,
-                                           mozilla::Maybe<bool>& res) {
-  // Steps 1 and 2 are performed by the caller.
-
-  // Step 3.
-  if (lhs.isString() && rhs.isString()) {
-    JSString* l = lhs.toString();
-    JSString* r = rhs.toString();
-    int32_t result;
-    if (!CompareStrings(cx, l, r, &result)) {
-      return false;
-    }
-    res = mozilla::Some(result < 0);
-    return true;
-  }
-||||||| merged common ancestors
-    cx->debugOnlyCheck(res);
-    return true;
-}
-=======
   if (cso->isExtensible()) {
     RootedObject raw(cx, script->getObject(GET_UINT32_INDEX(pc) + 1));
     MOZ_ASSERT(raw->is<ArrayObject>());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
-  // Step 4a.
-  if (lhs.isBigInt() && rhs.isString()) {
-    return BigInt::lessThan(cx, lhs, rhs, res);
-  }
-
-  // Step 4b.
-  if (lhs.isString() && rhs.isBigInt()) {
-    return BigInt::lessThan(cx, lhs, rhs, res);
-  }
-#endif
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE bool
-GetElemOptimizedArguments(JSContext* cx, AbstractFramePtr frame, MutableHandleValue lref,
-                          HandleValue rref, MutableHandleValue res, bool* done)
-{
-    MOZ_ASSERT(!*done);
-
-    if (IsOptimizedArguments(frame, lref)) {
-        if (rref.isInt32()) {
-            int32_t i = rref.toInt32();
-            if (i >= 0 && uint32_t(i) < frame.numActualArgs()) {
-                res.set(frame.unaliasedActual(i));
-                *done = true;
-                return true;
-            }
-        }
-=======
     RootedValue rawValue(cx, ObjectValue(*raw));
     if (!DefineDataProperty(cx, cso, cx->names().raw, rawValue, 0)) {
       return nullptr;
@@ -1510,19 +686,7 @@ GetElemOptimizedArguments(JSContext* cx, AbstractFramePtr frame, MutableHandleVa
       return nullptr;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Steps 4c and 4d.
-  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-        RootedScript script(cx, frame.script());
-        if (!JSScript::argumentsOptimizationFailed(cx, script)) {
-            return false;
-        }
-=======
   return cso;
 }
 
@@ -1538,19 +702,7 @@ static MOZ_ALWAYS_INLINE bool LessThanImpl(JSContext* cx,
                                            MutableHandleValue rhs,
                                            mozilla::Maybe<bool>& res) {
   // Steps 1 and 2 are performed by the caller.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
-  // Steps 4e-j.
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    return BigInt::lessThan(cx, lhs, rhs, res);
-  }
-#endif
-||||||| merged common ancestors
-        lref.set(ObjectValue(frame.argsObj()));
-    }
-=======
   // Step 3.
   if (lhs.isString() && rhs.isString()) {
     JSString* l = lhs.toString();
@@ -1562,18 +714,7 @@ static MOZ_ALWAYS_INLINE bool LessThanImpl(JSContext* cx,
     res = mozilla::Some(result < 0);
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 4e for Number operands.
-  MOZ_ASSERT(lhs.isNumber() && rhs.isNumber());
-  double lhsNum = lhs.toNumber();
-  double rhsNum = rhs.toNumber();
-
-  if (mozilla::IsNaN(lhsNum) || mozilla::IsNaN(rhsNum)) {
-    res = mozilla::Maybe<bool>(mozilla::Nothing());
-||||||| merged common ancestors
-=======
   // Step 4a.
   if (lhs.isBigInt() && rhs.isString()) {
     return BigInt::lessThan(cx, lhs, rhs, res);
@@ -1601,7 +742,6 @@ static MOZ_ALWAYS_INLINE bool LessThanImpl(JSContext* cx,
 
   if (mozilla::IsNaN(lhsNum) || mozilla::IsNaN(rhsNum)) {
     res = mozilla::Maybe<bool>(mozilla::Nothing());
->>>>>>> upstream-releases
     return true;
   }
 
@@ -1689,56 +829,12 @@ static MOZ_ALWAYS_INLINE bool GreaterThanOrEqualOperation(
   if (lhs.isInt32() && rhs.isInt32()) {
     *res = lhs.toInt32() >= rhs.toInt32();
     return true;
-<<<<<<< HEAD
   }
 
   if (!ToPrimitive(cx, JSTYPE_NUMBER, lhs)) {
     return false;
   }
-||||||| merged common ancestors
-}
-=======
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!ToPrimitive(cx, JSTYPE_NUMBER, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE bool
-ProcessCallSiteObjOperation(JSContext* cx, HandleObject cso, HandleObject raw)
-{
-    MOZ_ASSERT(cso->is<ArrayObject>());
-    MOZ_ASSERT(raw->is<ArrayObject>());
-=======
-  if (!ToPrimitive(cx, JSTYPE_NUMBER, lhs)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  mozilla::Maybe<bool> tmpResult;
-  if (!LessThanImpl(cx, lhs, rhs, tmpResult)) {
-    return false;
-  }
-  *res = !tmpResult.valueOr(true);
-  return true;
-||||||| merged common ancestors
-    if (cso->nonProxyIsExtensible()) {
-        RootedValue rawValue(cx, ObjectValue(*raw));
-        if (!DefineDataProperty(cx, cso, cx->names().raw, rawValue, 0)) {
-            return false;
-        }
-        if (!FreezeObject(cx, raw)) {
-            return false;
-        }
-        if (!FreezeObject(cx, cso)) {
-            return false;
-        }
-    }
-    return true;
-=======
   if (!ToPrimitive(cx, JSTYPE_NUMBER, rhs)) {
     return false;
   }
@@ -1749,7 +845,6 @@ ProcessCallSiteObjOperation(JSContext* cx, HandleObject cso, HandleObject raw)
   }
   *res = !tmpResult.valueOr(true);
   return true;
->>>>>>> upstream-releases
 }
 
 static MOZ_ALWAYS_INLINE bool BitNot(JSContext* cx, MutableHandleValue in,
@@ -1758,23 +853,9 @@ static MOZ_ALWAYS_INLINE bool BitNot(JSContext* cx, MutableHandleValue in,
     return false;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
   if (in.isBigInt()) {
     return BigInt::bitNot(cx, in, out);
   }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (in.isBigInt()) {
-        return BigInt::bitNot(cx, in, out);
-    }
-#endif
-=======
-  if (in.isBigInt()) {
-    return BigInt::bitNot(cx, in, out);
-  }
->>>>>>> upstream-releases
 
   out.setInt32(~in.toInt32());
   return true;
@@ -1787,23 +868,9 @@ static MOZ_ALWAYS_INLINE bool BitXor(JSContext* cx, MutableHandleValue lhs,
     return false;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::bitXor(cx, lhs, rhs, out);
   }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (lhs.isBigInt() || rhs.isBigInt()) {
-        return BigInt::bitXor(cx, lhs, rhs, out);
-    }
-#endif
-=======
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    return BigInt::bitXor(cx, lhs, rhs, out);
-  }
->>>>>>> upstream-releases
 
   out.setInt32(lhs.toInt32() ^ rhs.toInt32());
   return true;
@@ -1816,23 +883,9 @@ static MOZ_ALWAYS_INLINE bool BitOr(JSContext* cx, MutableHandleValue lhs,
     return false;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::bitOr(cx, lhs, rhs, out);
   }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (lhs.isBigInt() || rhs.isBigInt()) {
-        return BigInt::bitOr(cx, lhs, rhs, out);
-    }
-#endif
-=======
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    return BigInt::bitOr(cx, lhs, rhs, out);
-  }
->>>>>>> upstream-releases
 
   out.setInt32(lhs.toInt32() | rhs.toInt32());
   return true;
@@ -1845,23 +898,9 @@ static MOZ_ALWAYS_INLINE bool BitAnd(JSContext* cx, MutableHandleValue lhs,
     return false;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::bitAnd(cx, lhs, rhs, out);
   }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (lhs.isBigInt() || rhs.isBigInt()) {
-        return BigInt::bitAnd(cx, lhs, rhs, out);
-    }
-#endif
-=======
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    return BigInt::bitAnd(cx, lhs, rhs, out);
-  }
->>>>>>> upstream-releases
 
   out.setInt32(lhs.toInt32() & rhs.toInt32());
   return true;
@@ -1874,23 +913,9 @@ static MOZ_ALWAYS_INLINE bool BitLsh(JSContext* cx, MutableHandleValue lhs,
     return false;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::lsh(cx, lhs, rhs, out);
   }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (lhs.isBigInt() || rhs.isBigInt()) {
-        return BigInt::lsh(cx, lhs, rhs, out);
-    }
-#endif
-=======
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    return BigInt::lsh(cx, lhs, rhs, out);
-  }
->>>>>>> upstream-releases
 
   out.setInt32(lhs.toInt32() << (rhs.toInt32() & 31));
   return true;
@@ -1903,46 +928,14 @@ static MOZ_ALWAYS_INLINE bool BitRsh(JSContext* cx, MutableHandleValue lhs,
     return false;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::rsh(cx, lhs, rhs, out);
   }
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_BIGINT
-    if (lhs.isBigInt() || rhs.isBigInt()) {
-        return BigInt::rsh(cx, lhs, rhs, out);
-    }
-#endif
-=======
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    return BigInt::rsh(cx, lhs, rhs, out);
-  }
->>>>>>> upstream-releases
 
   out.setInt32(lhs.toInt32() >> (rhs.toInt32() & 31));
   return true;
 }
 
-<<<<<<< HEAD
-static MOZ_ALWAYS_INLINE bool UrshOperation(JSContext* cx,
-                                            MutableHandleValue lhs,
-                                            MutableHandleValue rhs,
-                                            MutableHandleValue out) {
-#ifdef ENABLE_BIGINT
-  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-static MOZ_ALWAYS_INLINE bool
-UrshOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue out)
-{
-#ifdef ENABLE_BIGINT
-    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
-        return false;
-    }
-=======
 static MOZ_ALWAYS_INLINE bool UrshOperation(JSContext* cx,
                                             MutableHandleValue lhs,
                                             MutableHandleValue rhs,
@@ -1950,29 +943,12 @@ static MOZ_ALWAYS_INLINE bool UrshOperation(JSContext* cx,
   if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (lhs.isBigInt() || rhs.isBigInt()) {
     JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                               JSMSG_BIGINT_TO_NUMBER);
     return false;
   }
-#endif
-||||||| merged common ancestors
-    if (lhs.isBigInt() || rhs.isBigInt()) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_BIGINT_TO_NUMBER);
-        return false;
-    }
-#endif
-=======
-  if (lhs.isBigInt() || rhs.isBigInt()) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_TO_NUMBER);
-    return false;
-  }
->>>>>>> upstream-releases
 
   uint32_t left;
   int32_t right;

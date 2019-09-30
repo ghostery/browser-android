@@ -37,22 +37,12 @@ struct APZTestDataToJSConverter {
   static void ConvertAPZTestData(const APZTestData& aFrom,
                                  dom::APZTestData& aOutTo) {
     ConvertMap(aFrom.mPaints, aOutTo.mPaints.Construct(), ConvertBucket);
-<<<<<<< HEAD
-    ConvertMap(aFrom.mRepaintRequests, aOutTo.mRepaintRequests.Construct(),
-               ConvertBucket);
-    ConvertList(aFrom.mHitResults, aOutTo.mHitResults.Construct(),
-                ConvertHitResult);
-||||||| merged common ancestors
-    ConvertMap(aFrom.mRepaintRequests, aOutTo.mRepaintRequests.Construct(), ConvertBucket);
-    ConvertList(aFrom.mHitResults, aOutTo.mHitResults.Construct(), ConvertHitResult);
-=======
     ConvertMap(aFrom.mRepaintRequests, aOutTo.mRepaintRequests.Construct(),
                ConvertBucket);
     ConvertList(aFrom.mHitResults, aOutTo.mHitResults.Construct(),
                 ConvertHitResult);
     ConvertMap(aFrom.mAdditionalData, aOutTo.mAdditionalData.Construct(),
                ConvertAdditionalDataEntry);
->>>>>>> upstream-releases
   }
 
   static void ConvertBucket(const SequenceNumber& aKey,
@@ -91,19 +81,6 @@ struct APZTestDataToJSConverter {
                                dom::APZHitResult& aOutHitResult) {
     aOutHitResult.mScreenX.Construct() = aResult.point.x;
     aOutHitResult.mScreenY.Construct() = aResult.point.y;
-<<<<<<< HEAD
-    static_assert(MaxEnumValue<gfx::CompositorHitTestInfo::valueType>::value <
-                      std::numeric_limits<uint16_t>::digits,
-                  "CompositorHitTestFlags MAX value have to be less than "
-                  "number of bits in uint16_t");
-    aOutHitResult.mHitResult.Construct() =
-        static_cast<uint16_t>(aResult.result.serialize());
-||||||| merged common ancestors
-    static_assert(MaxEnumValue<gfx::CompositorHitTestInfo::valueType>::value
-                  < std::numeric_limits<uint16_t>::digits,
-                  "CompositorHitTestFlags MAX value have to be less than number of bits in uint16_t");
-    aOutHitResult.mHitResult.Construct() = static_cast<uint16_t>(aResult.result.serialize());
-=======
     static_assert(MaxEnumValue<gfx::CompositorHitTestInfo::valueType>::value <
                       std::numeric_limits<uint16_t>::digits,
                   "CompositorHitTestFlags MAX value have to be less than "
@@ -111,7 +88,6 @@ struct APZTestDataToJSConverter {
     aOutHitResult.mHitResult.Construct() =
         static_cast<uint16_t>(aResult.result.serialize());
     aOutHitResult.mLayersId.Construct() = aResult.layersId.mId;
->>>>>>> upstream-releases
     aOutHitResult.mScrollId.Construct() = aResult.scrollId;
   }
 };

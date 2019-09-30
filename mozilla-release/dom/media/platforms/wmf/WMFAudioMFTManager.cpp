@@ -18,26 +18,12 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-static void AACAudioSpecificConfigToUserData(uint8_t aAACProfileLevelIndication,
-                                             const uint8_t* aAudioSpecConfig,
-                                             uint32_t aConfigLength,
-                                             nsTArray<BYTE>& aOutUserData) {
-||||||| merged common ancestors
-static void
-AACAudioSpecificConfigToUserData(uint8_t aAACProfileLevelIndication,
-                                 const uint8_t* aAudioSpecConfig,
-                                 uint32_t aConfigLength,
-                                 nsTArray<BYTE>& aOutUserData)
-{
-=======
 using media::TimeUnit;
 
 static void AACAudioSpecificConfigToUserData(uint8_t aAACProfileLevelIndication,
                                              const uint8_t* aAudioSpecConfig,
                                              uint32_t aConfigLength,
                                              nsTArray<BYTE>& aOutUserData) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOutUserData.IsEmpty());
 
   // The MF_MT_USER_DATA for AAC is defined here:
@@ -269,64 +255,6 @@ WMFAudioMFTManager::Output(int64_t aStreamOffset, RefPtr<MediaData>& aOutData) {
     return E_FAIL;
   }
 
-<<<<<<< HEAD
-  RefPtr<IMFMediaBuffer> buffer;
-  hr = sample->ConvertToContiguousBuffer(getter_AddRefs(buffer));
-  NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
-
-  BYTE* data = nullptr;  // Note: *data will be owned by the IMFMediaBuffer, we
-                         // don't need to free it.
-  DWORD maxLength = 0, currentLength = 0;
-  hr = buffer->Lock(&data, &maxLength, &currentLength);
-  NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
-
-  // Sometimes when starting decoding, the AAC decoder gives us samples
-  // with a negative timestamp. AAC does usually have preroll (or encoder
-  // delay) encoded into its bitstream, but the amount encoded to the stream
-  // is variable, and it not signalled in-bitstream. There is sometimes
-  // signalling in the MP4 container what the preroll amount, but it's
-  // inconsistent. It looks like WMF's AAC encoder may take this into
-  // account, so strip off samples with a negative timestamp to get us
-  // to a 0-timestamp start. This seems to maintain A/V sync, so we can run
-  // with this until someone complains...
-
-  // We calculate the timestamp and the duration based on the number of audio
-  // frames we've already played. We don't trust the timestamp stored on the
-  // IMFSample, as sometimes it's wrong, possibly due to buggy encoders?
-
-  // If this sample block comes after a discontinuity (i.e. a gap or seek)
-  // reset the frame counters, and capture the timestamp. Future timestamps
-  // will be offset from this block's timestamp.
-||||||| merged common ancestors
-  RefPtr<IMFMediaBuffer> buffer;
-  hr = sample->ConvertToContiguousBuffer(getter_AddRefs(buffer));
-  NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
-
-  BYTE* data = nullptr; // Note: *data will be owned by the IMFMediaBuffer, we
-                        // don't need to free it.
-  DWORD maxLength = 0, currentLength = 0;
-  hr = buffer->Lock(&data, &maxLength, &currentLength);
-  NS_ENSURE_TRUE(SUCCEEDED(hr), hr);
-
-  // Sometimes when starting decoding, the AAC decoder gives us samples
-  // with a negative timestamp. AAC does usually have preroll (or encoder
-  // delay) encoded into its bitstream, but the amount encoded to the stream
-  // is variable, and it not signalled in-bitstream. There is sometimes
-  // signalling in the MP4 container what the preroll amount, but it's
-  // inconsistent. It looks like WMF's AAC encoder may take this into
-  // account, so strip off samples with a negative timestamp to get us
-  // to a 0-timestamp start. This seems to maintain A/V sync, so we can run
-  // with this until someone complains...
-
-  // We calculate the timestamp and the duration based on the number of audio
-  // frames we've already played. We don't trust the timestamp stored on the
-  // IMFSample, as sometimes it's wrong, possibly due to buggy encoders?
-
-  // If this sample block comes after a discontinuity (i.e. a gap or seek)
-  // reset the frame counters, and capture the timestamp. Future timestamps
-  // will be offset from this block's timestamp.
-=======
->>>>>>> upstream-releases
   UINT32 discontinuity = false;
   sample->GetUINT32(MFSampleExtension_Discontinuity, &discontinuity);
   if (mFirstFrame || discontinuity) {
@@ -372,58 +300,17 @@ WMFAudioMFTManager::Output(int64_t aStreamOffset, RefPtr<MediaData>& aOutData) {
 
   buffer->Unlock();
 
-<<<<<<< HEAD
-  media::TimeUnit timestamp =
-      mAudioTimeOffset + FramesToTimeUnit(mAudioFrameSum, mAudioRate);
-  NS_ENSURE_TRUE(timestamp.IsValid(), E_FAIL);
-
-  mAudioFrameSum += numFrames;
-
-  media::TimeUnit duration = FramesToTimeUnit(numFrames, mAudioRate);
-||||||| merged common ancestors
-  media::TimeUnit timestamp =
-    mAudioTimeOffset + FramesToTimeUnit(mAudioFrameSum, mAudioRate);
-  NS_ENSURE_TRUE(timestamp.IsValid(), E_FAIL);
-
-  mAudioFrameSum += numFrames;
-
-  media::TimeUnit duration = FramesToTimeUnit(numFrames, mAudioRate);
-=======
   TimeUnit duration = FramesToTimeUnit(numFrames, mAudioRate);
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(duration.IsValid(), E_FAIL);
 
-<<<<<<< HEAD
-  aOutData = new AudioData(aStreamOffset, timestamp, duration, numFrames,
-                           std::move(audioData), mAudioChannels, mAudioRate,
-                           mChannelsMap);
-||||||| merged common ancestors
-  aOutData = new AudioData(aStreamOffset,
-                           timestamp,
-                           duration,
-                           numFrames,
-                           std::move(audioData),
-                           mAudioChannels,
-                           mAudioRate,
-                           mChannelsMap);
-=======
   aOutData = new AudioData(aStreamOffset, pts, std::move(audioData),
                            mAudioChannels, mAudioRate, mChannelsMap);
   MOZ_DIAGNOSTIC_ASSERT(duration == aOutData->mDuration, "must be equal");
->>>>>>> upstream-releases
 
 #ifdef LOG_SAMPLE_DECODE
   LOG("Decoded audio sample! timestamp=%lld duration=%lld currentLength=%u",
-<<<<<<< HEAD
-      timestamp.ToMicroseconds(), duration.ToMicroseconds(), currentLength);
-#endif
-||||||| merged common ancestors
-      timestamp.ToMicroseconds(), duration.ToMicroseconds(), currentLength);
-  #endif
-=======
       pts.ToMicroseconds(), duration.ToMicroseconds(), currentLength);
 #endif
->>>>>>> upstream-releases
 
   return S_OK;
 }

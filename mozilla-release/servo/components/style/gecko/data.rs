@@ -18,31 +18,6 @@ use crate::shared_lock::{Locked, SharedRwLockReadGuard, StylesheetGuards};
 use crate::stylesheets::{CssRule, Origin, StylesheetContents, StylesheetInDocument};
 use crate::stylist::Stylist;
 use atomic_refcell::{AtomicRef, AtomicRefCell, AtomicRefMut};
-<<<<<<< HEAD
-use crate::context::QuirksMode;
-use crate::dom::TElement;
-use crate::gecko_bindings::bindings::{self, RawServoStyleSet};
-use crate::gecko_bindings::structs::StyleSheet as DomStyleSheet;
-use crate::gecko_bindings::structs::{nsIDocument, StyleSheetInfo};
-use crate::gecko_bindings::structs::{RawGeckoPresContextBorrowed, ServoStyleSetSizes};
-use crate::gecko_bindings::sugar::ownership::{HasArcFFI, HasBoxFFI, HasFFI, HasSimpleFFI};
-use crate::invalidation::media_queries::{MediaListKey, ToMediaListKey};
-use crate::media_queries::{Device, MediaList};
-use crate::properties::ComputedValues;
-use crate::selector_parser::SnapshotMap;
-use crate::shared_lock::{Locked, SharedRwLockReadGuard, StylesheetGuards};
-use crate::stylesheets::{CssRule, Origin, StylesheetContents, StylesheetInDocument};
-use crate::stylist::Stylist;
-||||||| merged common ancestors
-use context::QuirksMode;
-use dom::TElement;
-use gecko_bindings::bindings::{self, RawServoStyleSet};
-use gecko_bindings::structs::{RawGeckoPresContextBorrowed, ServoStyleSetSizes, StyleSheet as DomStyleSheet};
-use gecko_bindings::structs::{StyleSheetInfo, nsIDocument};
-use gecko_bindings::sugar::ownership::{HasArcFFI, HasBoxFFI, HasFFI, HasSimpleFFI};
-use invalidation::media_queries::{MediaListKey, ToMediaListKey};
-=======
->>>>>>> upstream-releases
 use malloc_size_of::MallocSizeOfOps;
 use servo_arc::Arc;
 use std::fmt;

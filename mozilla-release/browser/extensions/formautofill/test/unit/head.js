@@ -325,19 +325,6 @@ add_task(async function head_initialize() {
 
   await loadExtension();
 });
-<<<<<<< HEAD
-
-let OSKeyStoreTestUtils;
-add_task(async function os_key_store_setup() {
-  ({OSKeyStoreTestUtils} =
-    ChromeUtils.import("resource://testing-common/OSKeyStoreTestUtils.jsm", {}));
-  OSKeyStoreTestUtils.setup();
-  registerCleanupFunction(async function cleanup() {
-    await OSKeyStoreTestUtils.cleanup();
-  });
-});
-||||||| merged common ancestors
-=======
 
 let OSKeyStoreTestUtils;
 add_task(async function os_key_store_setup() {
@@ -349,4 +336,3 @@ add_task(async function os_key_store_setup() {
     await OSKeyStoreTestUtils.cleanup();
   });
 });
->>>>>>> upstream-releases

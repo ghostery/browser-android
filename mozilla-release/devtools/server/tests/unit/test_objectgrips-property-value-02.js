@@ -4,55 +4,11 @@
 
 "use strict";
 
-<<<<<<< HEAD
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
-add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
-  debuggee.eval(function stopMe(arg1) {
-    debugger;
-  }.toString());
-||||||| merged common ancestors
-async function run_test() {
-  try {
-    do_test_pending();
-    await run_test_with_server(DebuggerServer);
-    await run_test_with_server(WorkerDebuggerServer);
-  } finally {
-    do_test_finished();
-  }
-}
-
-async function run_test_with_server(server) {
-  initTestDebuggerServer(server);
-  const debuggee = addTestGlobal("test-grips", server);
-  debuggee.eval(`
-    function stopMe(arg1) {
-      debugger;
-    }
-  `);
-
-  const dbgClient = new DebuggerClient(server.connectPipe());
-  await dbgClient.connect();
-  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
-=======
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  await test_object_grip(debuggee, threadClient);
-}));
-||||||| merged common ancestors
-  await test_object_grip(debuggee, threadClient);
-
-  await dbgClient.close();
-}
-=======
 add_task(
   threadClientTest(async ({ threadClient, debuggee, client }) => {
     debuggee.eval(
@@ -64,7 +20,6 @@ add_task(
     await test_object_grip(debuggee, threadClient);
   })
 );
->>>>>>> upstream-releases
 
 async function test_object_grip(debuggee, threadClient) {
   const code = `

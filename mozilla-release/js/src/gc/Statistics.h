@@ -121,122 +121,6 @@ const char* ExplainInvocationKind(JSGCInvocationKind gckind);
  * Incremental GC is represented by recording separate timing results for each
  * slice within the overall GC.
  */
-<<<<<<< HEAD
-struct Statistics {
-  template <typename T, size_t Length>
-  using Array = mozilla::Array<T, Length>;
-
-  template <typename IndexType, IndexType SizeAsEnumValue, typename ValueType>
-  using EnumeratedArray =
-      mozilla::EnumeratedArray<IndexType, SizeAsEnumValue, ValueType>;
-
-  using TimeDuration = mozilla::TimeDuration;
-  using TimeStamp = mozilla::TimeStamp;
-
-  // Create a convenient type for referring to tables of phase times.
-  using PhaseTimeTable = EnumeratedArray<Phase, Phase::LIMIT, TimeDuration>;
-
-  static MOZ_MUST_USE bool initialize();
-
-  explicit Statistics(JSRuntime* rt);
-  ~Statistics();
-
-  Statistics(const Statistics&) = delete;
-  Statistics& operator=(const Statistics&) = delete;
-
-  void beginPhase(PhaseKind phaseKind);
-  void endPhase(PhaseKind phaseKind);
-  void recordParallelPhase(PhaseKind phaseKind, TimeDuration duration);
-
-  // Occasionally, we may be in the middle of something that is tracked by
-  // this class, and we need to do something unusual (eg evict the nursery)
-  // that doesn't normally nest within the current phase. Suspend the
-  // currently tracked phase stack, at which time the caller is free to do
-  // other tracked operations.
-  //
-  // This also happens internally with the PhaseKind::MUTATOR "phase". While in
-  // this phase, any beginPhase will automatically suspend the non-GC phase,
-  // until that inner stack is complete, at which time it will automatically
-  // resume the non-GC phase. Explicit suspensions do not get auto-resumed.
-  void suspendPhases(PhaseKind suspension = PhaseKind::EXPLICIT_SUSPENSION);
-
-  // Resume a suspended stack of phases.
-  void resumePhases();
-
-  void beginSlice(const ZoneGCStats& zoneStats, JSGCInvocationKind gckind,
-                  SliceBudget budget, JS::gcreason::Reason reason);
-  void endSlice();
-
-  MOZ_MUST_USE bool startTimingMutator();
-  MOZ_MUST_USE bool stopTimingMutator(double& mutator_ms, double& gc_ms);
-
-  // Note when we sweep a zone or compartment.
-  void sweptZone() { ++zoneStats.sweptZoneCount; }
-  void sweptCompartment() { ++zoneStats.sweptCompartmentCount; }
-
-  void reset(gc::AbortReason reason) {
-    MOZ_ASSERT(reason != gc::AbortReason::None);
-    if (!aborted) {
-      slices_.back().resetReason = reason;
-||||||| merged common ancestors
-struct Statistics
-{
-    template <typename T, size_t Length>
-    using Array = mozilla::Array<T, Length>;
-
-    template <typename IndexType, IndexType SizeAsEnumValue, typename ValueType>
-    using EnumeratedArray = mozilla::EnumeratedArray<IndexType, SizeAsEnumValue, ValueType>;
-
-    using TimeDuration = mozilla::TimeDuration;
-    using TimeStamp = mozilla::TimeStamp;
-
-    // Create a convenient type for referring to tables of phase times.
-    using PhaseTimeTable = EnumeratedArray<Phase, Phase::LIMIT, TimeDuration>;
-
-    static MOZ_MUST_USE bool initialize();
-
-    explicit Statistics(JSRuntime* rt);
-    ~Statistics();
-
-    Statistics(const Statistics&) = delete;
-    Statistics& operator=(const Statistics&) = delete;
-
-    void beginPhase(PhaseKind phaseKind);
-    void endPhase(PhaseKind phaseKind);
-    void recordParallelPhase(PhaseKind phaseKind, TimeDuration duration);
-
-    // Occasionally, we may be in the middle of something that is tracked by
-    // this class, and we need to do something unusual (eg evict the nursery)
-    // that doesn't normally nest within the current phase. Suspend the
-    // currently tracked phase stack, at which time the caller is free to do
-    // other tracked operations.
-    //
-    // This also happens internally with the PhaseKind::MUTATOR "phase". While in
-    // this phase, any beginPhase will automatically suspend the non-GC phase,
-    // until that inner stack is complete, at which time it will automatically
-    // resume the non-GC phase. Explicit suspensions do not get auto-resumed.
-    void suspendPhases(PhaseKind suspension = PhaseKind::EXPLICIT_SUSPENSION);
-
-    // Resume a suspended stack of phases.
-    void resumePhases();
-
-    void beginSlice(const ZoneGCStats& zoneStats, JSGCInvocationKind gckind,
-                    SliceBudget budget, JS::gcreason::Reason reason);
-    void endSlice();
-
-    MOZ_MUST_USE bool startTimingMutator();
-    MOZ_MUST_USE bool stopTimingMutator(double& mutator_ms, double& gc_ms);
-
-    // Note when we sweep a zone or compartment.
-    void sweptZone() { ++zoneStats.sweptZoneCount; }
-    void sweptCompartment() { ++zoneStats.sweptCompartmentCount; }
-
-    void reset(gc::AbortReason reason) {
-        MOZ_ASSERT(reason != gc::AbortReason::None);
-        if (!aborted) {
-            slices_.back().resetReason = reason;
-        }
-=======
 struct Statistics {
   template <typename T, size_t Length>
   using Array = mozilla::Array<T, Length>;
@@ -293,7 +177,6 @@ struct Statistics {
     MOZ_ASSERT(reason != gc::AbortReason::None);
     if (!aborted) {
       slices_.back().resetReason = reason;
->>>>>>> upstream-releases
     }
   }
 
@@ -340,17 +223,8 @@ struct Statistics {
     return &allocsSinceMinorGC.nursery;
   }
 
-<<<<<<< HEAD
-  void beginNurseryCollection(JS::gcreason::Reason reason);
-  void endNurseryCollection(JS::gcreason::Reason reason);
-||||||| merged common ancestors
-    UniqueChars formatCompactSliceMessage() const;
-    UniqueChars formatCompactSummaryMessage() const;
-    UniqueChars formatDetailedMessage() const;
-=======
   void beginNurseryCollection(JS::GCReason reason);
   void endNurseryCollection(JS::GCReason reason);
->>>>>>> upstream-releases
 
   TimeStamp beginSCC();
   void endSCC(unsigned scc, TimeStamp start);
@@ -370,23 +244,6 @@ struct Statistics {
 
   static const size_t MAX_SUSPENDED_PHASES = MAX_PHASE_NESTING * 3;
 
-<<<<<<< HEAD
-  struct SliceData {
-    SliceData(SliceBudget budget, JS::gcreason::Reason reason, TimeStamp start,
-              size_t startFaults, gc::State initialState)
-        : budget(budget),
-          reason(reason),
-          initialState(initialState),
-          finalState(gc::State::NotActive),
-          resetReason(gc::AbortReason::None),
-          start(start),
-          startFaults(startFaults),
-          endFaults(0) {}
-||||||| merged common ancestors
-        TimeDuration duration() const { return end - start; }
-        bool wasReset() const { return resetReason != gc::AbortReason::None; }
-    };
-=======
   struct SliceData {
     SliceData(SliceBudget budget, JS::GCReason reason, TimeStamp start,
               size_t startFaults, gc::State initialState)
@@ -398,20 +255,7 @@ struct Statistics {
           start(start),
           startFaults(startFaults),
           endFaults(0) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    SliceBudget budget;
-    JS::gcreason::Reason reason;
-    gc::State initialState, finalState;
-    gc::AbortReason resetReason;
-    TimeStamp start, end;
-    size_t startFaults, endFaults;
-    PhaseTimeTable phaseTimes;
-    PhaseTimeTable parallelTimes;
-||||||| merged common ancestors
-    typedef Vector<SliceData, 8, SystemAllocPolicy> SliceDataVector;
-=======
     SliceBudget budget;
     JS::GCReason reason;
     gc::State initialState, finalState;
@@ -420,7 +264,6 @@ struct Statistics {
     size_t startFaults, endFaults;
     PhaseTimeTable phaseTimes;
     PhaseTimeTable parallelTimes;
->>>>>>> upstream-releases
 
     TimeDuration duration() const { return end - start; }
     bool wasReset() const { return resetReason != gc::AbortReason::None; }
@@ -428,15 +271,6 @@ struct Statistics {
 
   typedef Vector<SliceData, 8, SystemAllocPolicy> SliceDataVector;
 
-<<<<<<< HEAD
-  const SliceDataVector& slices() const { return slices_; }
-
-  TimeStamp start() const { return slices_[0].start; }
-||||||| merged common ancestors
-    TimeStamp end() const {
-        return slices_.back().end;
-    }
-=======
   const SliceDataVector& slices() const { return slices_; }
 
   TimeStamp start() const { return slices_[0].start; }
@@ -445,78 +279,24 @@ struct Statistics {
 
   // Occasionally print header lines for profiling information.
   void maybePrintProfileHeaders();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TimeStamp end() const { return slices_.back().end; }
-||||||| merged common ancestors
-    // Occasionally print header lines for profiling information.
-    void maybePrintProfileHeaders();
-=======
   // Print header line for profile times.
   void printProfileHeader();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Occasionally print header lines for profiling information.
-  void maybePrintProfileHeaders();
-||||||| merged common ancestors
-    // Print header line for profile times.
-    void printProfileHeader();
-=======
   // Print total profile times on shutdown.
   void printTotalProfileTimes();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Print header line for profile times.
-  void printProfileHeader();
-||||||| merged common ancestors
-    // Print total profile times on shutdown.
-    void printTotalProfileTimes();
-=======
   enum JSONUse { TELEMETRY, PROFILER };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Print total profile times on shutdown.
-  void printTotalProfileTimes();
-||||||| merged common ancestors
-    // Return JSON for a whole major GC, optionally including detailed
-    // per-slice data.
-    UniqueChars renderJsonMessage(uint64_t timestamp, bool includeSlices = true) const;
-=======
   // Return JSON for a whole major GC.  If use == PROFILER then
   // detailed per-slice data and some other fields will be included.
   UniqueChars renderJsonMessage(uint64_t timestamp, JSONUse use) const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Return JSON for a whole major GC, optionally including detailed
-  // per-slice data.
-  UniqueChars renderJsonMessage(uint64_t timestamp,
-                                bool includeSlices = true) const;
-||||||| merged common ancestors
-    // Return JSON for the timings of just the given slice.
-    UniqueChars renderJsonSlice(size_t sliceNum) const;
-=======
-  // Return JSON for the timings of just the given slice.
-  UniqueChars renderJsonSlice(size_t sliceNum) const;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Return JSON for the timings of just the given slice.
   UniqueChars renderJsonSlice(size_t sliceNum) const;
 
   // Return JSON for the previous nursery collection.
   UniqueChars renderNurseryJson(JSRuntime* rt) const;
-||||||| merged common ancestors
-    // Return JSON for the previous nursery collection.
-    UniqueChars renderNurseryJson(JSRuntime* rt) const;
-=======
-  // Return JSON for the previous nursery collection.
-  UniqueChars renderNurseryJson(JSRuntime* rt) const;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // Print a logging message.
@@ -550,155 +330,6 @@ struct Statistics {
   EnumeratedArray<Phase, Phase::LIMIT, TimeStamp> phaseEndTimes;
 #endif
 
-<<<<<<< HEAD
-  /* Bookkeeping for GC timings when timingMutator is true */
-  TimeStamp timedGCStart;
-  TimeDuration timedGCTime;
-
-  /* Total time in a given phase for this GC. */
-  PhaseTimeTable phaseTimes;
-  PhaseTimeTable parallelTimes;
-
-  /* Number of events of this type for this GC. */
-  EnumeratedArray<
-      Count, COUNT_LIMIT,
-      mozilla::Atomic<uint32_t, mozilla::ReleaseAcquire,
-                      mozilla::recordreplay::Behavior::DontPreserve>>
-      counts;
-
-  /* Other GC statistics. */
-  EnumeratedArray<Stat, STAT_LIMIT, uint32_t> stats;
-
-  /*
-   * These events cannot be kept in the above array, we need to take their
-   * address.
-   */
-  struct {
-    uint32_t nursery;
-    uint32_t tenured;
-  } allocsSinceMinorGC;
-
-  /* Allocated space before the GC started. */
-  size_t preBytes;
-
-  /* If the GC was triggered by exceeding some threshold, record the
-   * threshold and the value that exceeded it. */
-  bool thresholdTriggered;
-  double triggerAmount;
-  double triggerThreshold;
-
-  /* GC numbers as of the beginning of the collection. */
-  uint64_t startingMinorGCNumber;
-  uint64_t startingMajorGCNumber;
-  uint64_t startingSliceNumber;
-
-  /* Records the maximum GC pause in an API-controlled interval (in us). */
-  mutable TimeDuration maxPauseInInterval;
-
-  /* Phases that are currently on stack. */
-  Vector<Phase, MAX_PHASE_NESTING, SystemAllocPolicy> phaseStack;
-
-  /*
-   * Certain phases can interrupt the phase stack, eg callback phases. When
-   * this happens, we move the suspended phases over to a sepearate list,
-   * terminated by a dummy PhaseKind::SUSPENSION phase (so that we can nest
-   * suspensions by suspending multiple stacks with a PhaseKind::SUSPENSION in
-   * between).
-   */
-  Vector<Phase, MAX_SUSPENDED_PHASES, SystemAllocPolicy> suspendedPhases;
-
-  /* Sweep times for SCCs of compartments. */
-  Vector<TimeDuration, 0, SystemAllocPolicy> sccTimes;
-
-  JS::GCSliceCallback sliceCallback;
-  JS::GCNurseryCollectionCallback nurseryCollectionCallback;
-
-  /*
-   * True if we saw an OOM while allocating slices or we saw an impossible
-   * timestamp. The statistics for this GC will be invalid.
-   */
-  bool aborted;
-
-  /* Profiling data. */
-
-  enum class ProfileKey {
-    Total,
-#define DEFINE_TIME_KEY(name, text, phase) name,
-    FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
-||||||| merged common ancestors
-    /* Bookkeeping for GC timings when timingMutator is true */
-    TimeStamp timedGCStart;
-    TimeDuration timedGCTime;
-
-    /* Total time in a given phase for this GC. */
-    PhaseTimeTable phaseTimes;
-    PhaseTimeTable parallelTimes;
-
-    /* Number of events of this type for this GC. */
-    EnumeratedArray<Stat,
-                    STAT_LIMIT,
-                    mozilla::Atomic<uint32_t, mozilla::ReleaseAcquire,
-                                    mozilla::recordreplay::Behavior::DontPreserve>> counts;
-
-    /*
-     * These events cannot be kept in the above array, we need to take their
-     * address.
-     */
-    struct {
-        uint32_t nursery;
-        uint32_t tenured;
-    } allocsSinceMinorGC;
-
-    /* Allocated space before the GC started. */
-    size_t preBytes;
-
-    /* If the GC was triggered by exceeding some threshold, record the
-     * threshold and the value that exceeded it. */
-    bool thresholdTriggered;
-    double triggerAmount;
-    double triggerThreshold;
-
-    /* GC numbers as of the beginning of the collection. */
-    uint64_t startingMinorGCNumber;
-    uint64_t startingMajorGCNumber;
-    uint64_t startingSliceNumber;
-
-    /* Records the maximum GC pause in an API-controlled interval (in us). */
-    mutable TimeDuration maxPauseInInterval;
-
-    /* Phases that are currently on stack. */
-    Vector<Phase, MAX_PHASE_NESTING, SystemAllocPolicy> phaseStack;
-
-    /*
-     * Certain phases can interrupt the phase stack, eg callback phases. When
-     * this happens, we move the suspended phases over to a sepearate list,
-     * terminated by a dummy PhaseKind::SUSPENSION phase (so that we can nest
-     * suspensions by suspending multiple stacks with a PhaseKind::SUSPENSION in
-     * between).
-     */
-    Vector<Phase, MAX_SUSPENDED_PHASES, SystemAllocPolicy> suspendedPhases;
-
-    /* Sweep times for SCCs of compartments. */
-    Vector<TimeDuration, 0, SystemAllocPolicy> sccTimes;
-
-    JS::GCSliceCallback sliceCallback;
-    JS::GCNurseryCollectionCallback nurseryCollectionCallback;
-
-    /*
-     * True if we saw an OOM while allocating slices or we saw an impossible
-     * timestamp. The statistics for this GC will be invalid.
-     */
-    bool aborted;
-
-    /* Profiling data. */
-
-    enum class ProfileKey
-    {
-        Total,
-#define DEFINE_TIME_KEY(name, text, phase)                                    \
-        name,
-FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
-=======
   /* Bookkeeping for GC timings when timingMutator is true */
   TimeStamp timedGCStart;
   TimeDuration timedGCTime;
@@ -776,7 +407,6 @@ FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
     Total,
 #define DEFINE_TIME_KEY(name, text, phase) name,
     FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
->>>>>>> upstream-releases
 #undef DEFINE_TIME_KEY
         KeyCount
   };
@@ -792,16 +422,8 @@ FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
   Phase currentPhase() const;
   Phase lookupChildPhase(PhaseKind phaseKind) const;
 
-<<<<<<< HEAD
-  void beginGC(JSGCInvocationKind kind);
-  void endGC();
-||||||| merged common ancestors
-    void beginGC(JSGCInvocationKind kind);
-    void endGC();
-=======
   void beginGC(JSGCInvocationKind kind, const TimeStamp& currentTime);
   void endGC();
->>>>>>> upstream-releases
 
   void recordPhaseBegin(Phase phase);
   void recordPhaseEnd(Phase phase);
@@ -821,26 +443,12 @@ FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
   UniqueChars formatDetailedPhaseTimes(const PhaseTimeTable& phaseTimes) const;
   UniqueChars formatDetailedTotals() const;
 
-<<<<<<< HEAD
-  void formatJsonDescription(uint64_t timestamp, JSONPrinter&) const;
-  void formatJsonSliceDescription(unsigned i, const SliceData& slice,
-                                  JSONPrinter&) const;
-  void formatJsonPhaseTimes(const PhaseTimeTable& phaseTimes,
-                            JSONPrinter&) const;
-  void formatJsonSlice(size_t sliceNum, JSONPrinter&) const;
-||||||| merged common ancestors
-    void formatJsonDescription(uint64_t timestamp, JSONPrinter&) const;
-    void formatJsonSliceDescription(unsigned i, const SliceData& slice, JSONPrinter&) const;
-    void formatJsonPhaseTimes(const PhaseTimeTable& phaseTimes, JSONPrinter&) const;
-    void formatJsonSlice(size_t sliceNum, JSONPrinter&) const;
-=======
   void formatJsonDescription(uint64_t timestamp, JSONPrinter&, JSONUse) const;
   void formatJsonSliceDescription(unsigned i, const SliceData& slice,
                                   JSONPrinter&) const;
   void formatJsonPhaseTimes(const PhaseTimeTable& phaseTimes,
                             JSONPrinter&) const;
   void formatJsonSlice(size_t sliceNum, JSONPrinter&) const;
->>>>>>> upstream-releases
 
   double computeMMU(TimeDuration resolution) const;
 
@@ -848,26 +456,6 @@ FOR_EACH_GC_PROFILE_TIME(DEFINE_TIME_KEY)
   static void printProfileTimes(const ProfileDurations& times);
 };
 
-<<<<<<< HEAD
-struct MOZ_RAII AutoGCSlice {
-  AutoGCSlice(Statistics& stats, const ZoneGCStats& zoneStats,
-              JSGCInvocationKind gckind, SliceBudget budget,
-              JS::gcreason::Reason reason)
-      : stats(stats) {
-    stats.beginSlice(zoneStats, gckind, budget, reason);
-  }
-  ~AutoGCSlice() { stats.endSlice(); }
-||||||| merged common ancestors
-struct MOZ_RAII AutoGCSlice
-{
-    AutoGCSlice(Statistics& stats, const ZoneGCStats& zoneStats, JSGCInvocationKind gckind,
-                SliceBudget budget, JS::gcreason::Reason reason)
-      : stats(stats)
-    {
-        stats.beginSlice(zoneStats, gckind, budget, reason);
-    }
-    ~AutoGCSlice() { stats.endSlice(); }
-=======
 struct MOZ_RAII AutoGCSlice {
   AutoGCSlice(Statistics& stats, const ZoneGCStats& zoneStats,
               JSGCInvocationKind gckind, SliceBudget budget,
@@ -876,7 +464,6 @@ struct MOZ_RAII AutoGCSlice {
     stats.beginSlice(zoneStats, gckind, budget, reason);
   }
   ~AutoGCSlice() { stats.endSlice(); }
->>>>>>> upstream-releases
 
   Statistics& stats;
 };

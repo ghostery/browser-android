@@ -86,38 +86,15 @@ using namespace mozilla;
 using namespace mozilla::dom;
 using namespace mozilla::gfx;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle,
-                         bool aIsRoot, nsBoxLayout* aLayoutManager) {
-  return new (aPresShell)
-      nsBoxFrame(aStyle, nsBoxFrame::kClassID, aIsRoot, aLayoutManager);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle, bool aIsRoot, nsBoxLayout* aLayoutManager)
-{
-  return new (aPresShell) nsBoxFrame(aStyle, nsBoxFrame::kClassID,
-                                     aIsRoot, aLayoutManager);
-=======
 nsIFrame* NS_NewBoxFrame(PresShell* aPresShell, ComputedStyle* aStyle,
                          bool aIsRoot, nsBoxLayout* aLayoutManager) {
   return new (aPresShell)
       nsBoxFrame(aStyle, aPresShell->GetPresContext(), nsBoxFrame::kClassID,
                  aIsRoot, aLayoutManager);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsBoxFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsBoxFrame(aStyle);
-=======
 nsIFrame* NS_NewBoxFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsBoxFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsBoxFrame)
@@ -128,24 +105,9 @@ NS_QUERYFRAME_HEAD(nsBoxFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 #endif
 
-<<<<<<< HEAD
-nsBoxFrame::nsBoxFrame(ComputedStyle* aStyle, ClassID aID, bool aIsRoot,
-                       nsBoxLayout* aLayoutManager)
-    : nsContainerFrame(aStyle, aID), mFlex(0), mAscent(0) {
-||||||| merged common ancestors
-nsBoxFrame::nsBoxFrame(ComputedStyle* aStyle,
-                       ClassID aID,
-                       bool aIsRoot,
-                       nsBoxLayout* aLayoutManager)
-  : nsContainerFrame(aStyle, aID)
-  , mFlex(0)
-  , mAscent(0)
-{
-=======
 nsBoxFrame::nsBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                        ClassID aID, bool aIsRoot, nsBoxLayout* aLayoutManager)
     : nsContainerFrame(aStyle, aPresContext, aID), mFlex(0), mAscent(0) {
->>>>>>> upstream-releases
   AddStateBits(NS_STATE_IS_HORIZONTAL | NS_STATE_AUTO_STRETCH);
 
   if (aIsRoot) AddStateBits(NS_STATE_IS_ROOT);
@@ -177,17 +139,8 @@ void nsBoxFrame::SetInitialChildList(ChildListID aListID,
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsBoxFrame::DidSetComputedStyle(
-    ComputedStyle* aOldComputedStyle) {
-||||||| merged common ancestors
-/* virtual */ void
-nsBoxFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
-{
-=======
 /* virtual */
 void nsBoxFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
->>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   // The values that CacheAttributes() computes depend on our style,
@@ -562,16 +515,8 @@ static void printSize(char* aDesc, nscoord aSize) {
 }
 #endif
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsBoxFrame::GetMinISize(gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsBoxFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsBoxFrame::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_MIN_INLINE_SIZE(this, result);
 
@@ -591,16 +536,8 @@ nscoord nsBoxFrame::GetMinISize(gfxContext* aRenderingContext) {
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsBoxFrame::GetPrefISize(gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsBoxFrame::GetPrefISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsBoxFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_PREF_INLINE_SIZE(this, result);
 
@@ -910,16 +847,8 @@ void nsBoxFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsContainerFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsBoxFrame::MarkIntrinsicISizesDirty() {
-||||||| merged common ancestors
-/* virtual */ void
-nsBoxFrame::MarkIntrinsicISizesDirty()
-{
-=======
 /* virtual */
 void nsBoxFrame::MarkIntrinsicISizesDirty() {
->>>>>>> upstream-releases
   SizeNeedsRecalc(mPrefSize);
   SizeNeedsRecalc(mMinSize);
   SizeNeedsRecalc(mMaxSize);
@@ -968,13 +897,6 @@ void nsBoxFrame::InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
   const nsFrameList::Slice& newFrames =
       mFrames.InsertFrames(this, aPrevFrame, aFrameList);
 
-<<<<<<< HEAD
-  // notify the layout manager
-  if (mLayoutManager)
-    mLayoutManager->ChildrenInserted(this, state, aPrevFrame, newFrames);
-||||||| merged common ancestors
-   nsBoxLayoutState state(PresContext());
-=======
   // notify the layout manager
   if (mLayoutManager)
     mLayoutManager->ChildrenInserted(this, state, aPrevFrame, newFrames);
@@ -988,75 +910,15 @@ void nsBoxFrame::InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
   PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Make sure to check box order _after_ notifying the layout
-  // manager; otherwise the slice we give the layout manager will
-  // just be bogus.  If the layout manager cares about the order, we
-  // just lose.
-  CheckBoxOrder();
-||||||| merged common ancestors
-   // append the new frames
-   const nsFrameList::Slice& newFrames = mFrames.AppendFrames(this, aFrameList);
-=======
 void nsBoxFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
   MOZ_ASSERT(aListID == kPrincipalList, "We don't support out-of-flow kids");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                                NS_FRAME_HAS_DIRTY_CHILDREN);
-}
-||||||| merged common ancestors
-   // notify the layout manager
-   if (mLayoutManager)
-     mLayoutManager->ChildrenAppended(this, state, newFrames);
-=======
-  nsBoxLayoutState state(PresContext());
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void nsBoxFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
-  MOZ_ASSERT(aListID == kPrincipalList, "We don't support out-of-flow kids");
-||||||| merged common ancestors
-   // Make sure to check box order _after_ notifying the layout
-   // manager; otherwise the slice we give the layout manager will
-   // just be bogus.  If the layout manager cares about the order, we
-   // just lose.
-   CheckBoxOrder();
-=======
-  // append the new frames
-  const nsFrameList::Slice& newFrames = mFrames.AppendFrames(this, aFrameList);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   nsBoxLayoutState state(PresContext());
 
   // append the new frames
   const nsFrameList::Slice& newFrames = mFrames.AppendFrames(this, aFrameList);
 
-  // notify the layout manager
-  if (mLayoutManager) mLayoutManager->ChildrenAppended(this, state, newFrames);
-
-  // Make sure to check box order _after_ notifying the layout
-  // manager; otherwise the slice we give the layout manager will
-  // just be bogus.  If the layout manager cares about the order, we
-  // just lose.
-  CheckBoxOrder();
-
-  // XXXbz why is this NS_FRAME_FIRST_REFLOW check here?
-  if (!(GetStateBits() & NS_FRAME_FIRST_REFLOW)) {
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                                  NS_FRAME_HAS_DIRTY_CHILDREN);
-  }
-||||||| merged common ancestors
-   // XXXbz why is this NS_FRAME_FIRST_REFLOW check here?
-   if (!(GetStateBits() & NS_FRAME_FIRST_REFLOW)) {
-     PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
-                                   NS_FRAME_HAS_DIRTY_CHILDREN);
-   }
-=======
   // notify the layout manager
   if (mLayoutManager) mLayoutManager->ChildrenAppended(this, state, newFrames);
 
@@ -1071,19 +933,10 @@ void nsBoxFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
     PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* virtual */ nsContainerFrame* nsBoxFrame::GetContentInsertionFrame() {
-||||||| merged common ancestors
-/* virtual */ nsContainerFrame*
-nsBoxFrame::GetContentInsertionFrame()
-{
-=======
 /* virtual */
 nsContainerFrame* nsBoxFrame::GetContentInsertionFrame() {
->>>>>>> upstream-releases
   if (GetStateBits() & NS_STATE_BOX_WRAPS_KIDS_IN_BLOCK)
     return PrincipalChildList().FirstChild()->GetContentInsertionFrame();
   return nsContainerFrame::GetContentInsertionFrame();
@@ -1250,18 +1103,6 @@ void nsBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     const ActiveScrolledRoot* ownLayerASR = contASRTracker->GetContainerASR();
     DisplayListClipState::AutoSaveRestore ownLayerClipState(aBuilder);
 
-<<<<<<< HEAD
-    // Wrap the list to make it its own layer
-    aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayOwnLayer>(
-        aBuilder, this, &masterList, ownLayerASR, nsDisplayOwnLayerFlags::eNone,
-        mozilla::layers::ScrollbarData{}, true, true));
-||||||| merged common ancestors
-    // Wrap the list to make it its own layer
-    aLists.Content()->AppendToTop(
-      MakeDisplayItem<nsDisplayOwnLayer>(aBuilder, this, &masterList, ownLayerASR,
-                                         nsDisplayOwnLayerFlags::eNone,
-                                         mozilla::layers::ScrollbarData{}, true, true));
-=======
     if (forceLayer) {
       MOZ_ASSERT(renderRoot == wr::RenderRoot::Default);
       // Wrap the list to make it its own layer
@@ -1274,7 +1115,6 @@ void nsBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
       aLists.Content()->AppendNewToTop<nsDisplayRenderRoot>(
           aBuilder, this, &masterList, ownLayerASR, renderRoot);
     }
->>>>>>> upstream-releases
   }
 }
 

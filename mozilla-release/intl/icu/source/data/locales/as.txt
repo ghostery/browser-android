@@ -41,15 +41,9 @@ as{
         default{"beng"}
         latn{
             miscPatterns{
-<<<<<<< HEAD
-                atLeast{"≥{0}"}
-||||||| merged common ancestors
-                atLeast{"⩾{0}"}
-=======
                 approximately{"~{0}"}
                 atLeast{"≥{0}"}
                 atMost{"≤{0}"}
->>>>>>> upstream-releases
                 range{"{0}–{1}"}
             }
             patterns{
@@ -234,13 +228,7 @@ as{
         minimumGroupingDigits{"1"}
         native{"beng"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

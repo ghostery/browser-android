@@ -58,17 +58,8 @@ class MOZ_STACK_CLASS EnsureMTA final {
   };
 
   template <typename FuncT>
-<<<<<<< HEAD
-  explicit EnsureMTA(const FuncT& aClosure) {
-    if (IsCurrentThreadMTA()) {
-||||||| merged common ancestors
-  explicit EnsureMTA(const FuncT& aClosure)
-  {
-    if (IsCurrentThreadMTA()) {
-=======
   explicit EnsureMTA(const FuncT& aClosure, Option aOpt = Option::Default) {
     if (aOpt != Option::ForceDispatch && IsCurrentThreadMTA()) {
->>>>>>> upstream-releases
       // We're already on the MTA, we can run aClosure directly
       aClosure();
       return;

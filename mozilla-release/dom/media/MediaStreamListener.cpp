@@ -17,52 +17,17 @@ namespace mozilla {
 
 #define LOG(type, msg) MOZ_LOG(gMediaStreamGraphLog, type, msg)
 
-<<<<<<< HEAD
 void DirectMediaStreamTrackListener::MirrorAndDisableSegment(
     AudioSegment& aFrom, AudioSegment& aTo) {
-  aTo.Clear();
-||||||| merged common ancestors
-void
-DirectMediaStreamTrackListener::MirrorAndDisableSegment(AudioSegment& aFrom,
-                                                        AudioSegment& aTo)
-{
-  aTo.Clear();
-=======
-void DirectMediaStreamTrackListener::MirrorAndDisableSegment(
-    AudioSegment& aFrom, AudioSegment& aTo) {
->>>>>>> upstream-releases
   aTo.AppendNullData(aFrom.GetDuration());
 }
 
-<<<<<<< HEAD
 void DirectMediaStreamTrackListener::MirrorAndDisableSegment(
     VideoSegment& aFrom, VideoSegment& aTo, DisabledTrackMode aMode) {
-  aTo.Clear();
-||||||| merged common ancestors
-void
-DirectMediaStreamTrackListener::MirrorAndDisableSegment(VideoSegment& aFrom,
-                                                        VideoSegment& aTo,
-                                                        DisabledTrackMode aMode)
-{
-  aTo.Clear();
-=======
-void DirectMediaStreamTrackListener::MirrorAndDisableSegment(
-    VideoSegment& aFrom, VideoSegment& aTo, DisabledTrackMode aMode) {
->>>>>>> upstream-releases
   if (aMode == DisabledTrackMode::SILENCE_BLACK) {
     for (VideoSegment::ChunkIterator it(aFrom); !it.IsEnded(); it.Next()) {
-<<<<<<< HEAD
-      aTo.AppendFrame(do_AddRef(it->mFrame.GetImage()), it->GetDuration(),
-                      it->mFrame.GetIntrinsicSize(), it->GetPrincipalHandle(),
-||||||| merged common ancestors
-      aTo.AppendFrame(do_AddRef(it->mFrame.GetImage()),
-                      it->GetDuration(),
-                      it->mFrame.GetIntrinsicSize(),
-                      it->GetPrincipalHandle(),
-=======
       aTo.AppendFrame(do_AddRef(it->mFrame.GetImage()),
                       it->mFrame.GetIntrinsicSize(), it->GetPrincipalHandle(),
->>>>>>> upstream-releases
                       true);
       aTo.ExtendLastFrameBy(it->GetDuration());
     }
@@ -81,36 +46,15 @@ void DirectMediaStreamTrackListener::
   }
 
   DisabledTrackMode mode = mDisabledBlackCount > 0
-<<<<<<< HEAD
-                               ? DisabledTrackMode::SILENCE_BLACK
-                               : DisabledTrackMode::SILENCE_FREEZE;
-  if (!mMedia) {
-    mMedia = aMedia.CreateEmptyClone();
-  }
-||||||| merged common ancestors
-                           ? DisabledTrackMode::SILENCE_BLACK
-                           : DisabledTrackMode::SILENCE_FREEZE;
-  if (!mMedia) {
-    mMedia = aMedia.CreateEmptyClone();
-  }
-=======
                                ? DisabledTrackMode::SILENCE_BLACK
                                : DisabledTrackMode::SILENCE_FREEZE;
   UniquePtr<MediaSegment> media(aMedia.CreateEmptyClone());
->>>>>>> upstream-releases
   if (aMedia.GetType() == MediaSegment::AUDIO) {
     MirrorAndDisableSegment(static_cast<AudioSegment&>(aMedia),
                             static_cast<AudioSegment&>(*media));
   } else if (aMedia.GetType() == MediaSegment::VIDEO) {
     MirrorAndDisableSegment(static_cast<VideoSegment&>(aMedia),
-<<<<<<< HEAD
-                            static_cast<VideoSegment&>(*mMedia), mode);
-||||||| merged common ancestors
-                            static_cast<VideoSegment&>(*mMedia),
-                            mode);
-=======
                             static_cast<VideoSegment&>(*media), mode);
->>>>>>> upstream-releases
   } else {
     MOZ_CRASH("Unsupported media type");
   }

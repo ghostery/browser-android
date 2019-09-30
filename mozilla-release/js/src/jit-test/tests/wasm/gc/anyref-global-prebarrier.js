@@ -10,18 +10,8 @@ if (opts['ion.enable'] || opts['baseline.enable'])
 const { startProfiling, endProfiling, assertEqPreciseStacks, isSingleStepProfilingEnabled } = WasmHelpers;
 
 let e = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-    (global $g (mut anyref) (ref.null))
-    (func (export "set") (param anyref) get_local 0 set_global $g)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-    (global $g (mut anyref) (ref.null anyref))
-    (func (export "set") (param anyref) get_local 0 set_global $g)
-=======
     (global $g (mut anyref) (ref.null))
     (func (export "set") (param anyref) local.get 0 global.set $g)
->>>>>>> upstream-releases
 )`).exports;
 
 let obj = { field: null };

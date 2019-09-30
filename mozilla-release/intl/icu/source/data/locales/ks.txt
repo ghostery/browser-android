@@ -36,13 +36,7 @@ ks{
         }
         native{"arabext"}
     }
-<<<<<<< HEAD
-    Version{"2.1.41.34"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.47.83"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

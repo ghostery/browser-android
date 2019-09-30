@@ -88,16 +88,9 @@ class TypeVisitor:
     def visitEndpointType(self, s, *args):
         pass
 
-<<<<<<< HEAD
-    def visitUniquePtrType(self, s, *args):
-        pass
-
-||||||| merged common ancestors
-=======
     def visitManagedEndpointType(self, s, *args):
         pass
 
->>>>>>> upstream-releases
 
 class Type:
     def __cmp__(self, o):
@@ -536,22 +529,6 @@ class EndpointType(IPDLType):
         return str(self.qname)
 
 
-<<<<<<< HEAD
-class UniquePtrType(Type):
-    def __init__(self, innertype):
-        self.innertype = innertype
-
-    def isUniquePtr(self): return True
-
-    def name(self):
-        return 'UniquePtr<' + self.innertype.fullname() + '>'
-
-    def fullname(self):
-        return 'mozilla::UniquePtr<' + self.innertype.fullname() + '>'
-
-
-||||||| merged common ancestors
-=======
 class ManagedEndpointType(IPDLType):
     def __init__(self, qname):
         self.qname = qname
@@ -582,7 +559,6 @@ class UniquePtrType(IPDLType):
         return 'mozilla::UniquePtr<' + self.basetype.fullname() + '>'
 
 
->>>>>>> upstream-releases
 def iteractortypes(t, visited=None):
     """Iterate over any actor(s) buried in |type|."""
     if visited is None:
@@ -1148,19 +1124,12 @@ class GatherDecls(TcheckVisitor):
         if typespec.array:
             itype = ArrayType(itype)
 
-<<<<<<< HEAD
-        if typespec.uniqueptr:
-            itype = UniquePtrType(itype)
-
-||||||| merged common ancestors
-=======
         if typespec.maybe:
             itype = MaybeType(itype)
 
         if typespec.uniqueptr:
             itype = UniquePtrType(itype)
 
->>>>>>> upstream-releases
         return itype
 
 

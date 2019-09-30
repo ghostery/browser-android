@@ -79,21 +79,6 @@ var move = {
 
 function isLast(containerId, defaultPlacements, id) {
   assertAreaPlacements(containerId, defaultPlacements.concat([id]));
-<<<<<<< HEAD
-  let thisTarget =
-    CustomizableUI.getCustomizationTarget(document.getElementById(containerId));
-  is(thisTarget.lastElementChild.firstElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in customizing window.");
-  let otherTarget =
-    CustomizableUI.getCustomizationTarget(otherWin.document.getElementById(containerId));
-  is(otherTarget.lastElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in other window.");
-||||||| merged common ancestors
-  is(document.getElementById(containerId).customizationTarget.lastElementChild.firstElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in customizing window.");
-  is(otherWin.document.getElementById(containerId).customizationTarget.lastElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in other window.");
-=======
   let thisTarget = CustomizableUI.getCustomizationTarget(
     document.getElementById(containerId)
   );
@@ -110,19 +95,12 @@ function isLast(containerId, defaultPlacements, id) {
     id,
     "Widget " + id + " should be in " + containerId + " in other window."
   );
->>>>>>> upstream-releases
 }
 
 function getLastVisibleNodeInToolbar(containerId, win = window) {
-<<<<<<< HEAD
-  let container = CustomizableUI.getCustomizationTarget(win.document.getElementById(containerId));
-||||||| merged common ancestors
-  let container = win.document.getElementById(containerId).customizationTarget;
-=======
   let container = CustomizableUI.getCustomizationTarget(
     win.document.getElementById(containerId)
   );
->>>>>>> upstream-releases
   let rv = container.lastElementChild;
   while (
     rv &&
@@ -164,21 +142,6 @@ function isLastVisibleInToolbar(containerId, defaultPlacements, id) {
 
 function isFirst(containerId, defaultPlacements, id) {
   assertAreaPlacements(containerId, [id].concat(defaultPlacements));
-<<<<<<< HEAD
-  let thisTarget =
-    CustomizableUI.getCustomizationTarget(document.getElementById(containerId));
-  is(thisTarget.firstElementChild.firstElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in customizing window.");
-  let otherTarget =
-    CustomizableUI.getCustomizationTarget(otherWin.document.getElementById(containerId));
-  is(otherTarget.firstElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in other window.");
-||||||| merged common ancestors
-  is(document.getElementById(containerId).customizationTarget.firstElementChild.firstElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in customizing window.");
-  is(otherWin.document.getElementById(containerId).customizationTarget.firstElementChild.id, id,
-     "Widget " + id + " should be in " + containerId + " in other window.");
-=======
   let thisTarget = CustomizableUI.getCustomizationTarget(
     document.getElementById(containerId)
   );
@@ -195,7 +158,6 @@ function isFirst(containerId, defaultPlacements, id) {
     id,
     "Widget " + id + " should be in " + containerId + " in other window."
   );
->>>>>>> upstream-releases
 }
 
 async function checkToolbar(id, method) {

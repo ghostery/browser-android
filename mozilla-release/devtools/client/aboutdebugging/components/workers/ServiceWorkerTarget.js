@@ -40,19 +40,9 @@ class ServiceWorkerTarget extends Component {
         name: PropTypes.string.isRequired,
         url: PropTypes.string,
         scope: PropTypes.string.isRequired,
-<<<<<<< HEAD
-        // registrationActor can be missing in e10s.
-        registrationActor: PropTypes.string,
-        workerTargetFront: PropTypes.object,
-||||||| merged common ancestors
-        // registrationActor can be missing in e10s.
-        registrationActor: PropTypes.string,
-        workerTargetActor: PropTypes.string,
-=======
         // registrationFront can be missing in e10s.
         registrationFront: PropTypes.object,
         workerTargetFront: PropTypes.object,
->>>>>>> upstream-releases
       }).isRequired,
     };
   }

@@ -8,15 +8,8 @@
  */
 
 dictionary BasicCardRequest {
-<<<<<<< HEAD
-  sequence<DOMString> supportedNetworks;
-||||||| merged common ancestors
-  sequence<DOMString> supportedNetworks;
-  sequence<BasicCardType> supportedTypes;
-=======
   sequence<DOMString> supportedNetworks = [];
   boolean requestSecurityCode = true;
->>>>>>> upstream-releases
 };
 
 dictionary BasicCardResponse {
@@ -30,10 +23,6 @@ dictionary BasicCardResponse {
 
 dictionary BasicCardChangeDetails {
   PaymentAddress? billingAddress = null;
-};
-
-dictionary BasicCardChangeDetails {
-  PaymentAddress? billingAddress;
 };
 
 dictionary BasicCardErrors {

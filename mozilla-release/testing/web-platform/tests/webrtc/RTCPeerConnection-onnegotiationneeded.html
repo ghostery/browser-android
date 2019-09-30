@@ -337,33 +337,6 @@
     const pc = new RTCPeerConnection();
     t.add_cleanup(() => pc.close());
 
-<<<<<<< HEAD
-    return assert_first_promise_fulfill_after_second(
-      awaitNegotiation(pc),
-      generateAudioReceiveOnlyOffer(pc)
-      .then(offer =>
-        pc.setLocalDescription(offer)
-        .then(() => {
-          pc.createDataChannel('test');
-          return generateAnswer(offer);
-        }))
-      .then(answer => pc.setRemoteDescription(answer)),
-      'Expect negotiationneeded promise to resolve after pc has set remote answer and go back to stable state');
-  }, 'negotiationneeded event should fire only after signaling state go back to stable');
-||||||| merged common ancestors
-    return assert_first_promise_fulfill_after_second(
-      awaitNegotiation(pc),
-      pc.createOffer({ offerToReceiveAudio: true })
-      .then(offer =>
-        pc.setLocalDescription(offer)
-        .then(() => {
-          pc.createDataChannel('test');
-          return generateAnswer(offer);
-        }))
-      .then(answer => pc.setRemoteDescription(answer)),
-      'Expect negotiationneeded promise to resolve after pc has set remote answer and go back to stable state');
-  }, 'negotiationneeded event should fire only after signaling state go back to stable');
-=======
     const transceiver = pc.addTransceiver('audio', {direction:'sendrecv'});
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
@@ -374,7 +347,6 @@
     transceiver.sender.setStreams(stream);
     await new Promise(resolve => pc.onnegotiationneeded = resolve);
   }, 'Calling setStreams should cause negotiationneeded to fire');
->>>>>>> upstream-releases
 
   /*
     TODO

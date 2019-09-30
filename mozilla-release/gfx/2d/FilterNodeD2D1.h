@@ -20,28 +20,11 @@ class FilterNodeD2D1 : public FilterNode {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodeD2D1, override)
 
-<<<<<<< HEAD
-  static already_AddRefed<FilterNode> Create(ID2D1DeviceContext *aDC,
-                                             FilterType aType);
-||||||| merged common ancestors
-  static already_AddRefed<FilterNode> Create(ID2D1DeviceContext *aDC, FilterType aType);
-=======
   static already_AddRefed<FilterNode> Create(ID2D1DeviceContext* aDC,
                                              FilterType aType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  FilterNodeD2D1(ID2D1Effect *aEffect, FilterType aType)
-      : mEffect(aEffect), mType(aType) {
-||||||| merged common ancestors
-  FilterNodeD2D1(ID2D1Effect *aEffect, FilterType aType)
-    : mEffect(aEffect)
-    , mType(aType)
-  {
-=======
   FilterNodeD2D1(ID2D1Effect* aEffect, FilterType aType)
       : mEffect(aEffect), mType(aType) {
->>>>>>> upstream-releases
     InitUnmappedProperties();
   }
 
@@ -61,21 +44,10 @@ class FilterNodeD2D1 : public FilterNode {
   virtual void SetAttribute(uint32_t aIndex, const Rect& aValue);
   virtual void SetAttribute(uint32_t aIndex, const IntRect& aValue);
   virtual void SetAttribute(uint32_t aIndex, bool aValue);
-<<<<<<< HEAD
-  virtual void SetAttribute(uint32_t aIndex, const Float *aValues,
-                            uint32_t aSize);
-  virtual void SetAttribute(uint32_t aIndex, const IntPoint &aValue);
-  virtual void SetAttribute(uint32_t aIndex, const Matrix &aValue);
-||||||| merged common ancestors
-  virtual void SetAttribute(uint32_t aIndex, const Float *aValues, uint32_t aSize);
-  virtual void SetAttribute(uint32_t aIndex, const IntPoint &aValue);
-  virtual void SetAttribute(uint32_t aIndex, const Matrix &aValue);
-=======
   virtual void SetAttribute(uint32_t aIndex, const Float* aValues,
                             uint32_t aSize);
   virtual void SetAttribute(uint32_t aIndex, const IntPoint& aValue);
   virtual void SetAttribute(uint32_t aIndex, const Matrix& aValue);
->>>>>>> upstream-releases
 
   // Called by DrawTarget before it draws our OutputEffect, and recursively
   // by the filter nodes that have this filter as one of their inputs. This
@@ -83,9 +55,9 @@ class FilterNodeD2D1 : public FilterNode {
   // the DrawTarget that we will draw to.
   virtual void WillDraw(DrawTarget* aDT);
 
-  virtual ID2D1Effect *MainEffect() { return mEffect.get(); }
-  virtual ID2D1Effect *InputEffect() { return mEffect.get(); }
-  virtual ID2D1Effect *OutputEffect() { return mEffect.get(); }
+  virtual ID2D1Effect* MainEffect() { return mEffect.get(); }
+  virtual ID2D1Effect* InputEffect() { return mEffect.get(); }
+  virtual ID2D1Effect* OutputEffect() { return mEffect.get(); }
 
  protected:
   friend class DrawTargetD2D1;
@@ -116,13 +88,7 @@ class FilterNodeConvolveD2D1 : public FilterNodeD2D1 {
   void SetAttribute(uint32_t aIndex, const IntPoint& aValue) override;
   void SetAttribute(uint32_t aIndex, const IntRect& aValue) override;
 
-<<<<<<< HEAD
-  virtual ID2D1Effect *InputEffect() override;
-||||||| merged common ancestors
-  virtual ID2D1Effect* InputEffect() override;
-=======
   ID2D1Effect* InputEffect() override;
->>>>>>> upstream-releases
 
  private:
   using FilterNode::SetAttribute;
@@ -143,46 +109,12 @@ class FilterNodeConvolveD2D1 : public FilterNodeD2D1 {
 class FilterNodeOpacityD2D1 : public FilterNodeD2D1 {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodeOpacityD2D1, override)
-<<<<<<< HEAD
-  explicit FilterNodeOpacityD2D1(ID2D1Effect *aEffect, FilterType aType)
-      : FilterNodeD2D1(aEffect, aType) {}
-||||||| merged common ancestors
-  explicit FilterNodeOpacityD2D1(ID2D1Effect *aEffect, FilterType aType)
-    : FilterNodeD2D1(aEffect, aType)
-  {}
-=======
   FilterNodeOpacityD2D1(ID2D1Effect* aEffect, FilterType aType)
       : FilterNodeD2D1(aEffect, aType) {}
->>>>>>> upstream-releases
 
   void SetAttribute(uint32_t aIndex, Float aValue) override;
 };
 
-<<<<<<< HEAD
-class FilterNodeExtendInputAdapterD2D1 : public FilterNodeD2D1 {
- public:
-  MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodeExtendInputAdapterD2D1,
-                                          override)
-  FilterNodeExtendInputAdapterD2D1(ID2D1DeviceContext *aDC,
-                                   FilterNodeD2D1 *aFilterNode,
-                                   FilterType aType);
-
-  virtual ID2D1Effect *InputEffect() override {
-    return mExtendInputEffect.get();
-  }
-  virtual ID2D1Effect *OutputEffect() override {
-    return mWrappedFilterNode->OutputEffect();
-  }
-||||||| merged common ancestors
-class FilterNodeExtendInputAdapterD2D1 : public FilterNodeD2D1
-{
-public:
-  MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodeExtendInputAdapterD2D1, override)
-  FilterNodeExtendInputAdapterD2D1(ID2D1DeviceContext *aDC, FilterNodeD2D1 *aFilterNode, FilterType aType);
-
-  virtual ID2D1Effect* InputEffect() override { return mExtendInputEffect.get(); }
-  virtual ID2D1Effect* OutputEffect() override { return mWrappedFilterNode->OutputEffect(); }
-=======
 class FilterNodeExtendInputAdapterD2D1 : public FilterNodeD2D1 {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodeExtendInputAdapterD2D1,
@@ -195,38 +127,12 @@ class FilterNodeExtendInputAdapterD2D1 : public FilterNodeD2D1 {
   ID2D1Effect* OutputEffect() override {
     return mWrappedFilterNode->OutputEffect();
   }
->>>>>>> upstream-releases
 
  private:
   RefPtr<FilterNodeD2D1> mWrappedFilterNode;
   RefPtr<ID2D1Effect> mExtendInputEffect;
 };
 
-<<<<<<< HEAD
-class FilterNodePremultiplyAdapterD2D1 : public FilterNodeD2D1 {
- public:
-  MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodePremultiplyAdapterD2D1,
-                                          override)
-  FilterNodePremultiplyAdapterD2D1(ID2D1DeviceContext *aDC,
-                                   FilterNodeD2D1 *aFilterNode,
-                                   FilterType aType);
-
-  virtual ID2D1Effect *InputEffect() override {
-    return mPrePremultiplyEffect.get();
-  }
-  virtual ID2D1Effect *OutputEffect() override {
-    return mPostUnpremultiplyEffect.get();
-  }
-||||||| merged common ancestors
-class FilterNodePremultiplyAdapterD2D1 : public FilterNodeD2D1
-{
-public:
-  MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodePremultiplyAdapterD2D1, override)
-  FilterNodePremultiplyAdapterD2D1(ID2D1DeviceContext *aDC, FilterNodeD2D1 *aFilterNode, FilterType aType);
-
-  virtual ID2D1Effect* InputEffect() override { return mPrePremultiplyEffect.get(); }
-  virtual ID2D1Effect* OutputEffect() override { return mPostUnpremultiplyEffect.get(); }
-=======
 class FilterNodePremultiplyAdapterD2D1 : public FilterNodeD2D1 {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(FilterNodePremultiplyAdapterD2D1,
@@ -239,7 +145,6 @@ class FilterNodePremultiplyAdapterD2D1 : public FilterNodeD2D1 {
   ID2D1Effect* OutputEffect() override {
     return mPostUnpremultiplyEffect.get();
   }
->>>>>>> upstream-releases
 
  private:
   RefPtr<ID2D1Effect> mPrePremultiplyEffect;

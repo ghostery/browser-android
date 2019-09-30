@@ -220,13 +220,7 @@ hi{
         minimumGroupingDigits{"1"}
         native{"deva"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         ethiopic{
             monthNames{
@@ -1323,12 +1317,7 @@ hi{
                     "ताईशो",
                     "शोवा",
                     "हेईसेई",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "रेइवा",
->>>>>>> upstream-releases
                 }
             }
         }

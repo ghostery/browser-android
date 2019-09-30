@@ -25,18 +25,9 @@ class APZScrollHandoffTester : public APZCTreeManagerTester {
                               ScrollableLayerGuid::START_SCROLL_ID + 1,
                               CSSRect(0, 0, 100, 100));
     SetScrollHandoff(layers[1], root);
-<<<<<<< HEAD
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
-                                                           root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
     rootApzc = ApzcOf(root);
     rootApzc->GetFrameMetrics().SetIsRootContent(
         true);  // make root APZC zoomable
@@ -95,18 +86,9 @@ class APZScrollHandoffTester : public APZCTreeManagerTester {
     SetScrollHandoff(layers[3], layers[0]);
     SetScrollHandoff(layers[2], layers[1]);
     SetScrollHandoff(layers[4], layers[3]);
-<<<<<<< HEAD
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
-                                                           root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
   }
 
   // Creates a layer tree with a parent layer that is only scrollable
@@ -123,18 +105,9 @@ class APZScrollHandoffTester : public APZCTreeManagerTester {
                               ScrollableLayerGuid::START_SCROLL_ID + 1,
                               CSSRect(0, 0, 100, 200));
     SetScrollHandoff(layers[1], root);
-<<<<<<< HEAD
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
-                                                           root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
     rootApzc = ApzcOf(root);
   }
 
@@ -153,18 +126,9 @@ class APZScrollHandoffTester : public APZCTreeManagerTester {
                               ScrollableLayerGuid::START_SCROLL_ID + 1,
                               CSSRect(0, 0, 100, 200));
     SetScrollHandoff(layers[1], root);
-<<<<<<< HEAD
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
-                                                           root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-||||||| merged common ancestors
-    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
-    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
-=======
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
->>>>>>> upstream-releases
     rootApzc = ApzcOf(root);
     rootApzc->GetScrollMetadata().SetHasScrollgrab(true);
   }

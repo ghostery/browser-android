@@ -52,42 +52,6 @@ NS_IMPL_ISUPPORTS(imgRequest, nsIStreamListener, nsIRequestObserver,
                   nsIInterfaceRequestor, nsIAsyncVerifyRedirectCallback)
 
 imgRequest::imgRequest(imgLoader* aLoader, const ImageCacheKey& aCacheKey)
-<<<<<<< HEAD
-    : mLoader(aLoader),
-      mCacheKey(aCacheKey),
-      mLoadId(nullptr),
-      mFirstProxy(nullptr),
-      mValidator(nullptr),
-      mInnerWindowId(0),
-      mCORSMode(imgIRequest::CORS_NONE),
-      mReferrerPolicy(mozilla::net::RP_Unset),
-      mImageErrorCode(NS_OK),
-      mMutex("imgRequest"),
-      mProgressTracker(new ProgressTracker()),
-      mIsMultiPartChannel(false),
-      mIsInCache(false),
-      mDecodeRequested(false),
-      mNewPartPending(false),
-      mHadInsecureRedirect(false) {
-||||||| merged common ancestors
- : mLoader(aLoader)
- , mCacheKey(aCacheKey)
- , mLoadId(nullptr)
- , mFirstProxy(nullptr)
- , mValidator(nullptr)
- , mInnerWindowId(0)
- , mCORSMode(imgIRequest::CORS_NONE)
- , mReferrerPolicy(mozilla::net::RP_Unset)
- , mImageErrorCode(NS_OK)
- , mMutex("imgRequest")
- , mProgressTracker(new ProgressTracker())
- , mIsMultiPartChannel(false)
- , mIsInCache(false)
- , mDecodeRequested(false)
- , mNewPartPending(false)
- , mHadInsecureRedirect(false)
-{
-=======
     : mLoader(aLoader),
       mCacheKey(aCacheKey),
       mLoadId(nullptr),
@@ -105,7 +69,6 @@ imgRequest::imgRequest(imgLoader* aLoader, const ImageCacheKey& aCacheKey)
       mDecodeRequested(false),
       mNewPartPending(false),
       mHadInsecureRedirect(false) {
->>>>>>> upstream-releases
   LOG_FUNC(gImgLog, "imgRequest::imgRequest()");
 }
 
@@ -505,18 +468,8 @@ void imgRequest::AdjustPriorityInternal(int32_t aDelta) {
   }
 }
 
-<<<<<<< HEAD
-void imgRequest::BoostPriority(uint32_t aCategory) {
-  if (!gfxPrefs::ImageLayoutNetworkPriority()) {
-||||||| merged common ancestors
-void
-imgRequest::BoostPriority(uint32_t aCategory)
-{
-  if (!gfxPrefs::ImageLayoutNetworkPriority()) {
-=======
 void imgRequest::BoostPriority(uint32_t aCategory) {
   if (!StaticPrefs::image_layout_network_priority()) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -697,14 +650,7 @@ bool imgRequest::HadInsecureRedirect() const {
 /** nsIRequestObserver methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgRequest::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt) {
-||||||| merged common ancestors
-imgRequest::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt)
-{
-=======
 imgRequest::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   LOG_SCOPE(gImgLog, "imgRequest::OnStartRequest");
 
   RefPtr<Image> image;
@@ -794,16 +740,7 @@ imgRequest::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgRequest::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
-                          nsresult status) {
-||||||| merged common ancestors
-imgRequest::OnStopRequest(nsIRequest* aRequest,
-                          nsISupports* ctxt, nsresult status)
-{
-=======
 imgRequest::OnStopRequest(nsIRequest* aRequest, nsresult status) {
->>>>>>> upstream-releases
   LOG_FUNC(gImgLog, "imgRequest::OnStopRequest");
   MOZ_ASSERT(NS_IsMainThread(), "Can't send notifications off-main-thread");
 
@@ -1060,23 +997,9 @@ void imgRequest::FinishPreparingForNewPart(const NewPartResult& aResult) {
 bool imgRequest::ImageAvailable() const { return mImageAvailable; }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                            nsIInputStream* aInStr, uint64_t aOffset,
-                            uint32_t aCount) {
-  LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::OnDataAvailable", "count", aCount);
-||||||| merged common ancestors
-imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                            nsIInputStream* aInStr, uint64_t aOffset,
-                            uint32_t aCount)
-{
-  LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::OnDataAvailable",
-                       "count", aCount);
-=======
 imgRequest::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInStr,
                             uint64_t aOffset, uint32_t aCount) {
   LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::OnDataAvailable", "count", aCount);
->>>>>>> upstream-releases
 
   NS_ASSERTION(aRequest, "imgRequest::OnDataAvailable -- no request!");
 
@@ -1132,17 +1055,9 @@ imgRequest::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInStr,
         FinishPreparingForNewPart(result);
       } else {
         nsCOMPtr<nsIRunnable> runnable =
-<<<<<<< HEAD
-            new FinishPreparingForNewPartRunnable(this, std::move(result));
-        eventTarget->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-          new FinishPreparingForNewPartRunnable(this, std::move(result));
-        eventTarget->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
-=======
             new FinishPreparingForNewPartRunnable(this, std::move(result));
         eventTarget->Dispatch(CreateMediumHighRunnable(runnable.forget()),
                               NS_DISPATCH_NORMAL);
->>>>>>> upstream-releases
       }
     }
 
@@ -1155,16 +1070,8 @@ imgRequest::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInStr,
 
   // Notify the image that it has new data.
   if (aInStr) {
-<<<<<<< HEAD
-    nsresult rv = image->OnImageDataAvailable(aRequest, aContext, aInStr,
-                                              aOffset, aCount);
-||||||| merged common ancestors
-    nsresult rv =
-      image->OnImageDataAvailable(aRequest, aContext, aInStr, aOffset, aCount);
-=======
     nsresult rv =
         image->OnImageDataAvailable(aRequest, nullptr, aInStr, aOffset, aCount);
->>>>>>> upstream-releases
 
     if (NS_FAILED(rv)) {
       MOZ_LOG(gImgLog, LogLevel::Warning,
@@ -1298,25 +1205,6 @@ imgRequest::OnRedirectVerifyCallback(nsresult result) {
     MutexAutoLock lock(mMutex);
 
     // The csp directive upgrade-insecure-requests performs an internal redirect
-<<<<<<< HEAD
-    // to upgrade all requests from http to https before any data is fetched
-    // from the network. Do not pollute mHadInsecureRedirect in case of such an
-    // internal redirect.
-    nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
-    bool upgradeInsecureRequests =
-        loadInfo ? loadInfo->GetUpgradeInsecureRequests() ||
-                       loadInfo->GetBrowserUpgradeInsecureRequests()
-                 : false;
-||||||| merged common ancestors
-    // to upgrade all requests from http to https before any data is fetched from
-    // the network. Do not pollute mHadInsecureRedirect in case of such an internal
-    // redirect.
-    nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
-    bool upgradeInsecureRequests = loadInfo ?
-                                   loadInfo->GetUpgradeInsecureRequests() ||
-                                   loadInfo->GetBrowserUpgradeInsecureRequests()
-                                            : false;
-=======
     // to upgrade all requests from http to https before any data is fetched
     // from the network. Do not pollute mHadInsecureRedirect in case of such an
     // internal redirect.
@@ -1325,7 +1213,6 @@ imgRequest::OnRedirectVerifyCallback(nsresult result) {
         loadInfo ? loadInfo->GetUpgradeInsecureRequests() ||
                        loadInfo->GetBrowserUpgradeInsecureRequests()
                  : false;
->>>>>>> upstream-releases
     if (!upgradeInsecureRequests) {
       mHadInsecureRedirect = true;
     }

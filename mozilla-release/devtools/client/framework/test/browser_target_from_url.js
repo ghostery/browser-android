@@ -53,18 +53,10 @@ add_task(async function() {
   assertTarget(target, TEST_URI);
 
   info("Test tab with chrome privileges");
-<<<<<<< HEAD
-  target = await targetFromURL(new URL("http://foo?type=tab&id=" + windowId + "&chrome"));
-  assertTarget(target, TEST_URI, true);
-||||||| merged common ancestors
-  target = await targetFromURL(new URL("http://foo?type=tab&id=" + windowId + "&chrome"));
-  assertIsTabTarget(target, TEST_URI, true);
-=======
   target = await targetFromURL(
     new URL("http://foo?type=tab&id=" + windowId + "&chrome")
   );
   assertTarget(target, TEST_URI, true);
->>>>>>> upstream-releases
 
   info("Test invalid tab id");
   try {

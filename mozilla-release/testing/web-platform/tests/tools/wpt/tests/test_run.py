@@ -6,45 +6,6 @@ import sys
 import pytest
 
 from tools.wpt import run
-<<<<<<< HEAD
-from tools import localpaths  # noqa: F401
-from wptrunner.browsers import product_list
-
-
-@pytest.fixture(scope="module")
-def venv():
-    from tools.wpt import virtualenv
-
-    class Virtualenv(virtualenv.Virtualenv):
-        def __init__(self):
-            self.path = tempfile.mkdtemp()
-
-        def create(self):
-            return
-
-        def activate(self):
-            return
-
-        def start(self):
-            return
-
-        def install(self, *requirements):
-            return
-
-        def install_requirements(self, requirements_path):
-            return
-
-    venv = Virtualenv()
-    yield venv
-
-    shutil.rmtree(venv.path)
-
-
-@pytest.fixture(scope="module")
-def logger():
-    run.setup_logging({})
-||||||| merged common ancestors
-=======
 from tools import localpaths  # noqa: F401
 from wptrunner.browsers import product_list
 
@@ -82,7 +43,6 @@ def venv():
 @pytest.fixture(scope="module")
 def logger():
     run.setup_logging({})
->>>>>>> upstream-releases
 
 
 @pytest.mark.parametrize("platform", ["Windows", "Linux", "Darwin"])

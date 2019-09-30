@@ -13,43 +13,6 @@ const FRAME_SRC =
 const TEST_URL =
   "data:text/html;charset=utf-8," +
   "<div class=root-level-node></div>" +
-<<<<<<< HEAD
-  "<iframe src=\"" + FRAME_SRC + "\" />";
-
-const TEST_DATA = [{
-  selector: ".root-level-node",
-  containerCount: 1,
-}, {
-  selector: ".sub-level-node",
-  containerCount: 0,
-}, {
-  inIframe: true,
-  selector: ".root-level-node",
-  containerCount: 0,
-}, {
-  inIframe: true,
-  selector: ".sub-level-node",
-  containerCount: 1,
-}];
-||||||| merged common ancestors
-  "<iframe src=\"" + FRAME_SRC + "\" />";
-
-const TEST_DATA = [{
-  selector: ".root-level-node",
-  containerCount: 1
-}, {
-  selector: ".sub-level-node",
-  containerCount: 0
-}, {
-  inIframe: true,
-  selector: ".root-level-node",
-  containerCount: 0
-}, {
-  inIframe: true,
-  selector: ".sub-level-node",
-  containerCount: 1
-}];
-=======
   '<iframe src="' +
   FRAME_SRC +
   '" />';
@@ -74,7 +37,6 @@ const TEST_DATA = [
     containerCount: 1,
   },
 ];
->>>>>>> upstream-releases
 
 requestLongerTimeout(5);
 

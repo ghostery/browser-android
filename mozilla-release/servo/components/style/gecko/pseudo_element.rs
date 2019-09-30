@@ -8,16 +8,6 @@
 //! `pseudo_element_definition.mako.rs`. If you touch that file, you probably
 //! need to update the checked-in files for Servo.
 
-<<<<<<< HEAD
-use crate::gecko_bindings::structs::{self, CSSPseudoElementType};
-use crate::properties::longhands::display::computed_value::T as Display;
-use crate::properties::{ComputedValues, PropertyFlags};
-use crate::selector_parser::{NonTSPseudoClass, PseudoElementCascadeType, SelectorImpl};
-use crate::str::{starts_with_ignore_ascii_case, string_as_ascii_lowercase};
-use crate::string_cache::Atom;
-use crate::values::serialize_atom_identifier;
-||||||| merged common ancestors
-=======
 use crate::gecko_bindings::structs::{self, PseudoStyleType};
 use crate::properties::longhands::display::computed_value::T as Display;
 use crate::properties::{ComputedValues, PropertyFlags};
@@ -25,7 +15,6 @@ use crate::selector_parser::{PseudoElementCascadeType, SelectorImpl};
 use crate::str::{starts_with_ignore_ascii_case, string_as_ascii_lowercase};
 use crate::string_cache::Atom;
 use crate::values::serialize_atom_identifier;
->>>>>>> upstream-releases
 use cssparser::ToCss;
 use std::fmt;
 use thin_slice::ThinBoxedSlice;
@@ -38,27 +27,6 @@ include!(concat!(
 impl ::selectors::parser::PseudoElement for PseudoElement {
     type Impl = SelectorImpl;
 
-<<<<<<< HEAD
-    // ::slotted() should support all tree-abiding pseudo-elements, see
-    // https://drafts.csswg.org/css-scoping/#slotted-pseudo
-    // https://drafts.csswg.org/css-pseudo-4/#treelike
-    fn valid_after_slotted(&self) -> bool {
-        matches!(
-            *self,
-            PseudoElement::Before | PseudoElement::After | PseudoElement::Placeholder
-        )
-    }
-
-    fn supports_pseudo_class(&self, pseudo_class: &NonTSPseudoClass) -> bool {
-        if !self.supports_user_action_state() {
-            return false;
-        }
-||||||| merged common ancestors
-    fn supports_pseudo_class(&self, pseudo_class: &NonTSPseudoClass) -> bool {
-        if !self.supports_user_action_state() {
-            return false;
-        }
-=======
     // ::slotted() should support all tree-abiding pseudo-elements, see
     // https://drafts.csswg.org/css-scoping/#slotted-pseudo
     // https://drafts.csswg.org/css-pseudo-4/#treelike
@@ -72,7 +40,6 @@ impl ::selectors::parser::PseudoElement for PseudoElement {
                 PseudoElement::Placeholder
         )
     }
->>>>>>> upstream-releases
 
     #[inline]
     fn accepts_state_pseudo_classes(&self) -> bool {

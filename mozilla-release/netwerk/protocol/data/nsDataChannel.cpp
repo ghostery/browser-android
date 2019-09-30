@@ -24,7 +24,6 @@ using namespace mozilla;
  * @return Reference to the string containing the unescaped data.
  */
 const nsACString& Unescape(const nsACString& aStr, nsACString& aBuffer,
-<<<<<<< HEAD
                            nsresult* rv) {
   MOZ_ASSERT(rv);
 
@@ -36,178 +35,8 @@ const nsACString& Unescape(const nsACString& aStr, nsACString& aBuffer,
   }
 
   return aBuffer;
-||||||| merged common ancestors
-                           nsresult* rv)
-{
-    MOZ_ASSERT(rv);
-
-    bool appended = false;
-    *rv = NS_UnescapeURL(aStr.Data(), aStr.Length(), /* aFlags = */ 0,
-                         aBuffer, appended, mozilla::fallible);
-    if (NS_FAILED(*rv) || !appended) {
-        return aStr;
-    }
-
-    return aBuffer;
-=======
-                           nsresult* rv) {
-  MOZ_ASSERT(rv);
-
-  bool appended = false;
-  *rv = NS_UnescapeURL(aStr.Data(), aStr.Length(), /* aFlags = */ 0, aBuffer,
-                       appended, mozilla::fallible);
-  if (NS_FAILED(*rv) || !appended) {
-    return aStr;
-  }
-
-  return aBuffer;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsDataChannel::OpenContentStream(bool async, nsIInputStream** result,
-                                          nsIChannel** channel) {
-  NS_ENSURE_TRUE(URI(), NS_ERROR_NOT_INITIALIZED);
-
-  nsresult rv;
-
-  // In order to avoid potentially building up a new path including the
-  // ref portion of the URI, which we don't care about, we clone a version
-  // of the URI that does not have a ref and in most cases should share
-  // string buffers with the original URI.
-  nsCOMPtr<nsIURI> uri;
-  rv = NS_GetURIWithoutRef(URI(), getter_AddRefs(uri));
-  if (NS_FAILED(rv)) return rv;
-
-  nsAutoCString path;
-  rv = uri->GetPathQueryRef(path);
-  if (NS_FAILED(rv)) return rv;
-
-  nsCString contentType, contentCharset;
-  nsDependentCSubstring dataRange;
-  bool lBase64;
-  rv = nsDataHandler::ParsePathWithoutRef(path, contentType, &contentCharset,
-                                          lBase64, &dataRange);
-  if (NS_FAILED(rv)) return rv;
-
-  // This will avoid a copy if nothing needs to be unescaped.
-  nsAutoCString unescapedBuffer;
-  const nsACString& data = Unescape(dataRange, unescapedBuffer, &rv);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-
-  if (lBase64 && &data == &unescapedBuffer) {
-    // Don't allow spaces in base64-encoded content. This is only
-    // relevant for escaped spaces; other spaces are stripped in
-    // NewURI. We know there were no escaped spaces if the data buffer
-    // wasn't used in |Unescape|.
-    unescapedBuffer.StripWhitespace();
-  }
-
-  nsCOMPtr<nsIInputStream> bufInStream;
-  uint32_t contentLen;
-  if (lBase64) {
-    nsAutoCString decodedData;
-    rv = Base64Decode(data, decodedData);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    contentLen = decodedData.Length();
-    rv = NS_NewCStringInputStream(getter_AddRefs(bufInStream), decodedData);
-  } else {
-    contentLen = data.Length();
-    rv = NS_NewCStringInputStream(getter_AddRefs(bufInStream), data);
-  }
-
-  if (NS_FAILED(rv)) return rv;
-
-  SetContentType(contentType);
-  SetContentCharset(contentCharset);
-  mContentLength = contentLen;
-
-  bufInStream.forget(result);
-
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-nsDataChannel::OpenContentStream(bool async, nsIInputStream **result,
-                                 nsIChannel** channel)
-{
-    NS_ENSURE_TRUE(URI(), NS_ERROR_NOT_INITIALIZED);
-
-    nsresult rv;
-
-    // In order to avoid potentially building up a new path including the
-    // ref portion of the URI, which we don't care about, we clone a version
-    // of the URI that does not have a ref and in most cases should share
-    // string buffers with the original URI.
-    nsCOMPtr<nsIURI> uri;
-    rv = NS_GetURIWithoutRef(URI(), getter_AddRefs(uri));
-    if (NS_FAILED(rv))
-        return rv;
-
-    nsAutoCString path;
-    rv = uri->GetPathQueryRef(path);
-    if (NS_FAILED(rv))
-        return rv;
-
-    nsCString contentType, contentCharset;
-    nsDependentCSubstring dataRange;
-    bool lBase64;
-    rv = nsDataHandler::ParsePathWithoutRef(path, contentType, &contentCharset,
-                                            lBase64, &dataRange);
-    if (NS_FAILED(rv))
-        return rv;
-
-    // This will avoid a copy if nothing needs to be unescaped.
-    nsAutoCString unescapedBuffer;
-    const nsACString& data = Unescape(dataRange, unescapedBuffer, &rv);
-    if (NS_FAILED(rv)) {
-        return rv;
-    }
-
-    if (lBase64 && &data == &unescapedBuffer) {
-        // Don't allow spaces in base64-encoded content. This is only
-        // relevant for escaped spaces; other spaces are stripped in
-        // NewURI. We know there were no escaped spaces if the data buffer
-        // wasn't used in |Unescape|.
-        unescapedBuffer.StripWhitespace();
-    }
-
-    nsCOMPtr<nsIInputStream> bufInStream;
-    nsCOMPtr<nsIOutputStream> bufOutStream;
-
-    // create an unbounded pipe.
-    rv = NS_NewPipe(getter_AddRefs(bufInStream),
-                    getter_AddRefs(bufOutStream),
-                    net::nsIOService::gDefaultSegmentSize,
-                    UINT32_MAX,
-                    async, true);
-    if (NS_FAILED(rv))
-        return rv;
-
-    uint32_t contentLen;
-    if (lBase64) {
-        nsAutoCString decodedData;
-        rv = Base64Decode(data, decodedData);
-        NS_ENSURE_SUCCESS(rv, rv);
-
-        rv = bufOutStream->Write(decodedData.get(), decodedData.Length(), &contentLen);
-    } else {
-        rv = bufOutStream->Write(data.Data(), data.Length(), &contentLen);
-    }
-
-    if (NS_FAILED(rv))
-        return rv;
-
-    SetContentType(contentType);
-    SetContentCharset(contentCharset);
-    mContentLength = contentLen;
-
-    bufInStream.forget(result);
-
-    return NS_OK;
-=======
 nsresult nsDataChannel::OpenContentStream(bool async, nsIInputStream** result,
                                           nsIChannel** channel) {
   NS_ENSURE_TRUE(URI(), NS_ERROR_NOT_INITIALIZED);
@@ -277,5 +106,4 @@ nsresult nsDataChannel::OpenContentStream(bool async, nsIInputStream** result,
   bufInStream.forget(result);
 
   return NS_OK;
->>>>>>> upstream-releases
 }

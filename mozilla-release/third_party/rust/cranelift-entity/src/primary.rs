@@ -1,13 +1,4 @@
 //! Densely numbered entity references as mapping keys.
-<<<<<<< HEAD
-use std::marker::PhantomData;
-use std::ops::{Index, IndexMut};
-use std::slice;
-||||||| merged common ancestors
-use std::marker::PhantomData;
-use std::ops::{Deref, DerefMut, Index, IndexMut};
-use std::slice;
-=======
 use crate::boxed_slice::BoxedSlice;
 use crate::iter::{Iter, IterMut};
 use crate::keys::Keys;
@@ -17,7 +8,6 @@ use core::marker::PhantomData;
 use core::ops::{Index, IndexMut};
 use core::slice;
 use std::boxed::Box;
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// A primary mapping `K -> V` allocating dense entity references.
@@ -29,21 +19,12 @@ use std::vec::Vec;
 ///
 /// There should only be a single `PrimaryMap` instance for a given `EntityRef` type, otherwise
 /// conflicting references will be created. Using unknown keys for indexing will cause a panic.
-<<<<<<< HEAD
-///
-/// Note that `PrimaryMap` doesn't implement `Deref` or `DerefMut`, which would allow
-/// `&PrimaryMap<K, V>` to convert to `&[V]`. One of the main advantages of `PrimaryMap` is
-/// that it only allows indexing with the distinct `EntityRef` key type, so converting to a
-/// plain slice would make it easier to use incorrectly.
-||||||| merged common ancestors
-=======
 ///
 /// Note that `PrimaryMap` doesn't implement `Deref` or `DerefMut`, which would allow
 /// `&PrimaryMap<K, V>` to convert to `&[V]`. One of the main advantages of `PrimaryMap` is
 /// that it only allows indexing with the distinct `EntityRef` key type, so converting to a
 /// plain slice would make it easier to use incorrectly. To make a slice of a `PrimaryMap`, use
 /// `into_boxed_slice`.
->>>>>>> upstream-releases
 #[derive(Debug, Clone)]
 pub struct PrimaryMap<K, V>
 where
@@ -139,24 +120,6 @@ where
         self.elems.push(v);
         k
     }
-<<<<<<< HEAD
-
-    /// Returns the last element that was inserted in the map.
-    pub fn last(&self) -> Option<&V> {
-        self.elems.last()
-    }
-
-    /// Reserves capacity for at least `additional` more elements to be inserted.
-    pub fn reserve(&mut self, additional: usize) {
-        self.elems.reserve(additional)
-    }
-
-    /// Reserves the minimum capacity for exactly `additional` more elements to be inserted.
-    pub fn reserve_exact(&mut self, additional: usize) {
-        self.elems.reserve_exact(additional)
-    }
-||||||| merged common ancestors
-=======
 
     /// Returns the last element that was inserted in the map.
     pub fn last(&self) -> Option<&V> {
@@ -182,7 +145,6 @@ where
     pub fn into_boxed_slice(self) -> BoxedSlice<K, V> {
         unsafe { BoxedSlice::<K, V>::from_raw(Box::<[V]>::into_raw(self.elems.into_boxed_slice())) }
     }
->>>>>>> upstream-releases
 }
 
 /// Immutable indexing into an `PrimaryMap`.
@@ -232,29 +194,6 @@ where
     }
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-impl<K, V> Deref for PrimaryMap<K, V>
-where
-    K: EntityRef,
-{
-    type Target = [V];
-
-    fn deref(&self) -> &Self::Target {
-        &self.elems
-    }
-}
-
-impl<K, V> DerefMut for PrimaryMap<K, V>
-where
-    K: EntityRef,
-{
-    fn deref_mut(&mut self) -> &mut [V] {
-        &mut self.elems
-    }
-}
-
-=======
 impl<K, V> FromIterator<V> for PrimaryMap<K, V>
 where
     K: EntityRef,
@@ -270,7 +209,6 @@ where
     }
 }
 
->>>>>>> upstream-releases
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -447,18 +385,6 @@ mod tests {
             }
         }
     }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-    #[test]
-    fn deref() {
-        let mut m = PrimaryMap::<E, isize>::new();
-        let _: &[isize] = m.as_ref();
-        let _: &mut [isize] = m.as_mut();
-        let _: &[isize] = &m;
-        let _: &mut [isize] = &mut m;
-    }
-=======
 
     #[test]
     fn from_iter() {
@@ -472,5 +398,4 @@ mod tests {
             assert!(*me == **ne);
         }
     }
->>>>>>> upstream-releases
 }

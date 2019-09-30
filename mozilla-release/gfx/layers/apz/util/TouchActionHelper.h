@@ -19,27 +19,8 @@ namespace layers {
  * Helper class to figure out the allowed touch behavior for frames, as per
  * the touch-action spec.
  */
-<<<<<<< HEAD
-class TouchActionHelper {
- private:
-  static void UpdateAllowedBehavior(uint32_t aTouchActionValue,
-                                    bool aConsiderPanning,
-                                    TouchBehaviorFlags& aOutBehavior);
-
- public:
-||||||| merged common ancestors
-class TouchActionHelper
-{
-private:
-  static void UpdateAllowedBehavior(uint32_t aTouchActionValue,
-                                    bool aConsiderPanning,
-                                    TouchBehaviorFlags& aOutBehavior);
-
-public:
-=======
 class TouchActionHelper {
  public:
->>>>>>> upstream-releases
   /*
    * Performs hit testing on content, finds frame that corresponds to the aPoint
    * and retrieves touch-action css property value from it according the rules

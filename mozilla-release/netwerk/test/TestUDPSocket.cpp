@@ -229,7 +229,8 @@ MulticastTimerCallback::Notify(nsITimer* timer) {
 
 /**** Main ****/
 
-TEST(TestUDPSocket, TestUDPSocketMain) {
+TEST(TestUDPSocket, TestUDPSocketMain)
+{
   nsresult rv;
 
   // Create UDPSocket
@@ -266,14 +267,7 @@ TEST(TestUDPSocket, TestUDPSocketMain) {
   data.AppendElements((const uint8_t*)&dataBuffer, sizeof(uint32_t));
 
   phase = TEST_OUTPUT_STREAM;
-<<<<<<< HEAD
-  rv = client->Send(NS_LITERAL_CSTRING("127.0.0.1"), serverPort,
-                    (uint8_t*)&data, sizeof(uint32_t), &count);
-||||||| merged common ancestors
-  rv = client->Send(NS_LITERAL_CSTRING("127.0.0.1"), serverPort, (uint8_t*)&data, sizeof(uint32_t), &count);
-=======
   rv = client->Send(NS_LITERAL_CSTRING("127.0.0.1"), serverPort, data, &count);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   EXPECT_EQ(count, sizeof(uint32_t));
 
@@ -292,14 +286,7 @@ TEST(TestUDPSocket, TestUDPSocketMain) {
   clientAddr.inet.ip = PR_htonl(127 << 24 | 1);
 
   phase = TEST_SEND_API;
-<<<<<<< HEAD
-  rv = server->SendWithAddress(&clientAddr, (uint8_t*)&data, sizeof(uint32_t),
-                               &count);
-||||||| merged common ancestors
-  rv = server->SendWithAddress(&clientAddr, (uint8_t*)&data, sizeof(uint32_t), &count);
-=======
   rv = server->SendWithAddress(&clientAddr, data, &count);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   EXPECT_EQ(count, sizeof(uint32_t));
 
@@ -328,14 +315,7 @@ TEST(TestUDPSocket, TestUDPSocketMain) {
   // Send multicast ping
   timerCb->mResult = NS_OK;
   timer->InitWithCallback(timerCb, MULTICAST_TIMEOUT, nsITimer::TYPE_ONE_SHOT);
-<<<<<<< HEAD
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data,
-                               sizeof(uint32_t), &count);
-||||||| merged common ancestors
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data, sizeof(uint32_t), &count);
-=======
   rv = client->SendWithAddress(&multicastAddr, data, &count);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   EXPECT_EQ(count, sizeof(uint32_t));
 
@@ -353,14 +333,7 @@ TEST(TestUDPSocket, TestUDPSocketMain) {
   // Send multicast ping
   timerCb->mResult = NS_OK;
   timer->InitWithCallback(timerCb, MULTICAST_TIMEOUT, nsITimer::TYPE_ONE_SHOT);
-<<<<<<< HEAD
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data,
-                               sizeof(uint32_t), &count);
-||||||| merged common ancestors
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data, sizeof(uint32_t), &count);
-=======
   rv = client->SendWithAddress(&multicastAddr, data, &count);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   EXPECT_EQ(count, sizeof(uint32_t));
 
@@ -382,14 +355,7 @@ TEST(TestUDPSocket, TestUDPSocketMain) {
   // Send multicast ping
   timerCb->mResult = NS_OK;
   timer->InitWithCallback(timerCb, MULTICAST_TIMEOUT, nsITimer::TYPE_ONE_SHOT);
-<<<<<<< HEAD
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data,
-                               sizeof(uint32_t), &count);
-||||||| merged common ancestors
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data, sizeof(uint32_t), &count);
-=======
   rv = client->SendWithAddress(&multicastAddr, data, &count);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   EXPECT_EQ(count, sizeof(uint32_t));
 
@@ -411,14 +377,7 @@ TEST(TestUDPSocket, TestUDPSocketMain) {
   // Send multicast ping
   timerCb->mResult = NS_OK;
   timer->InitWithCallback(timerCb, MULTICAST_TIMEOUT, nsITimer::TYPE_ONE_SHOT);
-<<<<<<< HEAD
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data,
-                               sizeof(uint32_t), &count);
-||||||| merged common ancestors
-  rv = client->SendWithAddress(&multicastAddr, (uint8_t*)&data, sizeof(uint32_t), &count);
-=======
   rv = client->SendWithAddress(&multicastAddr, data, &count);
->>>>>>> upstream-releases
   ASSERT_TRUE(NS_SUCCEEDED(rv));
   EXPECT_EQ(count, sizeof(uint32_t));
 

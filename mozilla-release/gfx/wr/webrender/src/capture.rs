@@ -7,20 +7,12 @@ use std::path::{Path, PathBuf};
 
 use api::{CaptureBits, ExternalImageData, ImageDescriptor};
 #[cfg(feature = "png")]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/capture.rs
-use device::ReadPixelsFormat;
-#[cfg(feature = "png")]
-use api::DeviceIntSize;
-||||||| merged common ancestors
-use device::ReadPixelsFormat;
-=======
 use api::ImageFormat;
 use api::units::TexelRect;
 #[cfg(feature = "png")]
 use api::units::DeviceIntSize;
 #[cfg(feature = "capture")]
 use crate::print_tree::{PrintableTree, PrintTree};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/capture.rs
 use ron;
 use serde;
 
@@ -109,13 +101,7 @@ impl CaptureConfig {
 
     #[cfg(feature = "png")]
     pub fn save_png(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/capture.rs
-        path: PathBuf, size: DeviceIntSize, format: ReadPixelsFormat, data: &[u8],
-||||||| merged common ancestors
-        path: PathBuf, size: (u32, u32), format: ReadPixelsFormat, data: &[u8],
-=======
         path: PathBuf, size: DeviceIntSize, format: ImageFormat, data: &[u8],
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/capture.rs
     ) {
         use png::{BitDepth, ColorType, Encoder, HasParameters};
         use std::io::BufWriter;

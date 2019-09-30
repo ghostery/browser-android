@@ -65,22 +65,10 @@
 #include <stdlib.h>
 #include <errno.h>
 #ifdef HAVE_IO_H
-<<<<<<< HEAD
-#include <io.h> /* for isatty() */
-||||||| merged common ancestors
-#include <io.h>     /* for isatty() */
-=======
 #  include <io.h> /* for isatty() */
->>>>>>> upstream-releases
 #endif
 #ifdef HAVE_UNISTD_H
-<<<<<<< HEAD
-#include <unistd.h> /* for isatty() */
-||||||| merged common ancestors
-#include <unistd.h>     /* for isatty() */
-=======
 #  include <unistd.h> /* for isatty() */
->>>>>>> upstream-releases
 #endif
 
 #ifdef ENABLE_TESTS
@@ -159,63 +147,6 @@ static bool GetLocationProperty(JSContext* cx, unsigned argc, Value* vp) {
   // XXX: your platform should really implement this
   return false;
 #else
-<<<<<<< HEAD
-  JS::AutoFilename filename;
-  if (JS::DescribeScriptedCaller(cx, &filename) && filename.get()) {
-#if defined(XP_WIN)
-    // convert from the system codepage to UTF-16
-    int bufferSize =
-        MultiByteToWideChar(CP_ACP, 0, filename.get(), -1, nullptr, 0);
-    nsAutoString filenameString;
-    filenameString.SetLength(bufferSize);
-    MultiByteToWideChar(CP_ACP, 0, filename.get(), -1,
-                        (LPWSTR)filenameString.BeginWriting(),
-                        filenameString.Length());
-    // remove the null terminator
-    filenameString.SetLength(bufferSize - 1);
-
-    // replace forward slashes with backslashes,
-    // since nsLocalFileWin chokes on them
-    char16_t* start = filenameString.BeginWriting();
-    char16_t* end = filenameString.EndWriting();
-
-    while (start != end) {
-      if (*start == L'/') {
-        *start = L'\\';
-      }
-      start++;
-    }
-#elif defined(XP_UNIX)
-    NS_ConvertUTF8toUTF16 filenameString(filename.get());
-||||||| merged common ancestors
-    JS::AutoFilename filename;
-    if (JS::DescribeScriptedCaller(cx, &filename) && filename.get()) {
-#if defined(XP_WIN)
-        // convert from the system codepage to UTF-16
-        int bufferSize = MultiByteToWideChar(CP_ACP, 0, filename.get(),
-                                             -1, nullptr, 0);
-        nsAutoString filenameString;
-        filenameString.SetLength(bufferSize);
-        MultiByteToWideChar(CP_ACP, 0, filename.get(),
-                            -1, (LPWSTR)filenameString.BeginWriting(),
-                            filenameString.Length());
-        // remove the null terminator
-        filenameString.SetLength(bufferSize - 1);
-
-        // replace forward slashes with backslashes,
-        // since nsLocalFileWin chokes on them
-        char16_t* start = filenameString.BeginWriting();
-        char16_t* end = filenameString.EndWriting();
-
-        while (start != end) {
-            if (*start == L'/') {
-                *start = L'\\';
-            }
-            start++;
-        }
-#elif defined(XP_UNIX)
-        NS_ConvertUTF8toUTF16 filenameString(filename.get());
-=======
   JS::AutoFilename filename;
   if (JS::DescribeScriptedCaller(cx, &filename) && filename.get()) {
 #  if defined(XP_WIN)
@@ -274,123 +205,13 @@ static bool GetLocationProperty(JSContext* cx, unsigned argc, Value* vp) {
   }
 
   return true;
->>>>>>> upstream-releases
-#endif
-}
-
-<<<<<<< HEAD
-    nsCOMPtr<nsIFile> location;
-    nsresult rv =
-        NS_NewLocalFile(filenameString, false, getter_AddRefs(location));
-
-    if (!location && gWorkingDirectory) {
-      // could be a relative path, try appending it to the cwd
-      // and then normalize
-      nsAutoString absolutePath(*gWorkingDirectory);
-      absolutePath.Append(filenameString);
-
-      rv = NS_NewLocalFile(absolutePath, false, getter_AddRefs(location));
-    }
-||||||| merged common ancestors
-        nsCOMPtr<nsIFile> location;
-        nsresult rv = NS_NewLocalFile(filenameString,
-                                      false, getter_AddRefs(location));
-
-        if (!location && gWorkingDirectory) {
-            // could be a relative path, try appending it to the cwd
-            // and then normalize
-            nsAutoString absolutePath(*gWorkingDirectory);
-            absolutePath.Append(filenameString);
-
-            rv = NS_NewLocalFile(absolutePath,
-                                 false, getter_AddRefs(location));
-        }
-=======
-static bool GetLine(JSContext* cx, char* bufp, FILE* file, const char* prompt) {
-  fputs(prompt, gOutFile);
-  fflush(gOutFile);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    if (location) {
-      bool symlink;
-      // don't normalize symlinks, because that's kind of confusing
-      if (NS_SUCCEEDED(location->IsSymlink(&symlink)) && !symlink)
-        location->Normalize();
-      RootedObject locationObj(cx);
-      RootedObject scope(cx, JS::CurrentGlobalOrNull(cx));
-      rv = nsXPConnect::XPConnect()->WrapNative(
-          cx, scope, location, NS_GET_IID(nsIFile), locationObj.address());
-      if (NS_SUCCEEDED(rv) && locationObj) {
-        args.rval().setObject(*locationObj);
-      }
-||||||| merged common ancestors
-        if (location) {
-            bool symlink;
-            // don't normalize symlinks, because that's kind of confusing
-            if (NS_SUCCEEDED(location->IsSymlink(&symlink)) &&
-                !symlink)
-                location->Normalize();
-            RootedObject locationObj(cx);
-            RootedObject scope(cx, JS::CurrentGlobalOrNull(cx));
-            rv = nsXPConnect::XPConnect()->WrapNative(cx, scope,
-                                                      location,
-                                                      NS_GET_IID(nsIFile),
-                                                      locationObj.address());
-            if (NS_SUCCEEDED(rv) && locationObj) {
-                args.rval().setObject(*locationObj);
-            }
-        }
-=======
-  char line[4096] = {'\0'};
-  while (true) {
-    if (fgets(line, sizeof line, file)) {
-      strcpy(bufp, line);
-      return true;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-
-  return true;
 #endif
 }
 
 static bool GetLine(JSContext* cx, char* bufp, FILE* file, const char* prompt) {
   fputs(prompt, gOutFile);
   fflush(gOutFile);
-||||||| merged common ancestors
 
-    return true;
-#endif
-}
-
-static bool
-GetLine(JSContext* cx, char* bufp, FILE* file, const char* prompt)
-{
-    fputs(prompt, gOutFile);
-    fflush(gOutFile);
-
-    char line[4096] = { '\0' };
-    while (true) {
-        if (fgets(line, sizeof line, file)) {
-            strcpy(bufp, line);
-            return true;
-        }
-        if (errno != EINTR) {
-            return false;
-        }
-    }
-}
-=======
-    if (errno != EINTR) {
-      return false;
-    }
-  }
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   char line[4096] = {'\0'};
   while (true) {
     if (fgets(line, sizeof line, file)) {
@@ -402,43 +223,7 @@ GetLine(JSContext* cx, char* bufp, FILE* file, const char* prompt)
     }
   }
 }
-||||||| merged common ancestors
-static bool
-ReadLine(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
 
-    // While 4096 might be quite arbitrary, this is something to be fixed in
-    // bug 105707. It is also the same limit as in ProcessFile.
-    char buf[4096];
-    RootedString str(cx);
-
-    /* If a prompt was specified, construct the string */
-    if (args.length() > 0) {
-        str = JS::ToString(cx, args[0]);
-        if (!str) {
-            return false;
-        }
-    } else {
-        str = JS_GetEmptyString(cx);
-    }
-
-    /* Get a line from the infile */
-    JS::UniqueChars strBytes = JS_EncodeStringToLatin1(cx, str);
-    if (!strBytes || !GetLine(cx, buf, gInFile, strBytes.get())) {
-        return false;
-    }
-=======
-static bool ReadLine(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  // While 4096 might be quite arbitrary, this is something to be fixed in
-  // bug 105707. It is also the same limit as in ProcessFile.
-  char buf[4096];
-  RootedString str(cx);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 static bool ReadLine(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -450,25 +235,6 @@ static bool ReadLine(JSContext* cx, unsigned argc, Value* vp) {
   /* If a prompt was specified, construct the string */
   if (args.length() > 0) {
     str = JS::ToString(cx, args[0]);
-||||||| merged common ancestors
-    /* Strip newline character added by GetLine() */
-    unsigned int buflen = strlen(buf);
-    if (buflen == 0) {
-        if (feof(gInFile)) {
-            args.rval().setNull();
-            return true;
-        }
-    } else if (buf[buflen - 1] == '\n') {
-        --buflen;
-    }
-
-    /* Turn buf into a JSString */
-    str = JS_NewStringCopyN(cx, buf, buflen);
-=======
-  /* If a prompt was specified, construct the string */
-  if (args.length() > 0) {
-    str = JS::ToString(cx, args[0]);
->>>>>>> upstream-releases
     if (!str) {
       return false;
     }
@@ -599,54 +365,6 @@ static bool Load(JSContext* cx, unsigned argc, Value* vp) {
                          filename.get());
       return false;
     }
-<<<<<<< HEAD
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(filename.get(), 1).setIsRunOnce(true);
-    JS::Rooted<JSScript*> script(cx);
-    JS::Rooted<JSObject*> global(cx, JS::CurrentGlobalOrNull(cx));
-    JS::CompileUtf8File(cx, options, file, &script);
-    fclose(file);
-    if (!script) {
-      return false;
-||||||| merged common ancestors
-
-    RootedString str(cx);
-    for (unsigned i = 0; i < args.length(); i++) {
-        str = ToString(cx, args[i]);
-        if (!str) {
-            return false;
-        }
-        JS::UniqueChars filename = JS_EncodeStringToLatin1(cx, str);
-        if (!filename) {
-            return false;
-        }
-        FILE* file = fopen(filename.get(), "r");
-        if (!file) {
-            filename = JS_EncodeStringToUTF8(cx, str);
-            if (!filename) {
-                return false;
-            }
-            JS_ReportErrorUTF8(cx, "cannot open file '%s' for reading",
-                               filename.get());
-            return false;
-        }
-        JS::CompileOptions options(cx);
-        options.setFileAndLine(filename.get(), 1)
-               .setIsRunOnce(true);
-        JS::Rooted<JSScript*> script(cx);
-        JS::Rooted<JSObject*> global(cx, JS::CurrentGlobalOrNull(cx));
-        JS::CompileUtf8File(cx, options, file, &script);
-        fclose(file);
-        if (!script) {
-            return false;
-        }
-
-        if (!compileOnly) {
-            if (!JS_ExecuteScript(cx, script)) {
-                return false;
-            }
-        }
-=======
     JS::CompileOptions options(cx);
     options.setFileAndLine(filename.get(), 1).setIsRunOnce(true);
     JS::Rooted<JSScript*> script(cx);
@@ -655,7 +373,6 @@ static bool Load(JSContext* cx, unsigned argc, Value* vp) {
     fclose(file);
     if (!script) {
       return false;
->>>>>>> upstream-releases
     }
 
     if (!compileOnly) {
@@ -663,7 +380,6 @@ static bool Load(JSContext* cx, unsigned argc, Value* vp) {
         return false;
       }
     }
-<<<<<<< HEAD
   }
   args.rval().setUndefined();
   return true;
@@ -671,27 +387,9 @@ static bool Load(JSContext* cx, unsigned argc, Value* vp) {
 
 static bool Quit(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
-||||||| merged common ancestors
-=======
-  }
-  args.rval().setUndefined();
-  return true;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  gExitCode = 0;
-  if (!ToInt32(cx, args.get(0), &gExitCode)) {
-||||||| merged common ancestors
-    gQuitting = true;
-//    exit(0);
-=======
-static bool Quit(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
 
   gExitCode = 0;
   if (!ToInt32(cx, args.get(0), &gExitCode)) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -752,22 +450,10 @@ static bool SendCommand(JSContext* cx, unsigned argc, Value* vp) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (args.get(1).isObject() && !JS_ObjectIsFunction(cx, &args[1].toObject())) {
-    JS_ReportErrorASCII(cx, "Could not convert argument 2 to function!");
-    return false;
-  }
-||||||| merged common ancestors
-    if (args.get(1).isObject() && !JS_ObjectIsFunction(cx, &args[1].toObject())) {
-        JS_ReportErrorASCII(cx, "Could not convert argument 2 to function!");
-        return false;
-    }
-=======
   if (args.get(1).isObject() && !JS_ObjectIsFunction(&args[1].toObject())) {
     JS_ReportErrorASCII(cx, "Could not convert argument 2 to function!");
     return false;
   }
->>>>>>> upstream-releases
 
   if (!XRE_SendTestShellCommand(
           cx, str, args.length() > 1 ? args[1].address() : nullptr)) {
@@ -779,7 +465,6 @@ static bool SendCommand(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-<<<<<<< HEAD
 static bool Options(JSContext* cx, unsigned argc, Value* vp) {
   JS::CallArgs args = CallArgsFromVp(argc, vp);
   ContextOptions oldContextOptions = ContextOptionsRef(cx);
@@ -790,49 +475,6 @@ static bool Options(JSContext* cx, unsigned argc, Value* vp) {
     str = ToString(cx, args[i]);
     if (!str) {
       return false;
-||||||| merged common ancestors
-static bool
-Options(JSContext* cx, unsigned argc, Value* vp)
-{
-    JS::CallArgs args = CallArgsFromVp(argc, vp);
-    ContextOptions oldContextOptions = ContextOptionsRef(cx);
-
-    RootedString str(cx);
-    JS::UniqueChars opt;
-    for (unsigned i = 0; i < args.length(); ++i) {
-        str = ToString(cx, args[i]);
-        if (!str) {
-            return false;
-        }
-
-        opt = JS_EncodeStringToUTF8(cx, str);
-        if (!opt) {
-            return false;
-        }
-
-        if (strcmp(opt.get(), "strict") == 0) {
-            ContextOptionsRef(cx).toggleExtraWarnings();
-        } else if (strcmp(opt.get(), "werror") == 0) {
-            ContextOptionsRef(cx).toggleWerror();
-        } else if (strcmp(opt.get(), "strict_mode") == 0) {
-            ContextOptionsRef(cx).toggleStrictMode();
-        } else {
-            JS_ReportErrorUTF8(cx, "unknown option name '%s'. The valid names are "
-                               "strict, werror, and strict_mode.", opt.get());
-            return false;
-        }
-=======
-static bool Options(JSContext* cx, unsigned argc, Value* vp) {
-  JS::CallArgs args = CallArgsFromVp(argc, vp);
-  ContextOptions oldContextOptions = ContextOptionsRef(cx);
-
-  RootedString str(cx);
-  JS::UniqueChars opt;
-  for (unsigned i = 0; i < args.length(); ++i) {
-    str = ToString(cx, args[i]);
-    if (!str) {
-      return false;
->>>>>>> upstream-releases
     }
 
     opt = JS_EncodeStringToUTF8(cx, str);
@@ -1059,40 +701,11 @@ static bool ProcessUtf8Line(AutoJSAPI& jsapi, const char* buffer,
   JS::CompileOptions options(cx);
   options.setFileAndLine("typein", startline).setIsRunOnce(true);
 
-<<<<<<< HEAD
-  JS::RootedScript script(cx);
-  if (!JS::CompileUtf8(cx, options, buffer, strlen(buffer), &script)) {
-    return false;
-  }
-  if (compileOnly) {
-    return true;
-  }
-||||||| merged common ancestors
-    JS::RootedScript script(cx);
-    if (!JS::CompileUtf8(cx, options, buffer, strlen(buffer), &script)) {
-        return false;
-    }
-    if (compileOnly) {
-        return true;
-    }
-=======
   JS::SourceText<mozilla::Utf8Unit> srcBuf;
   if (!srcBuf.init(cx, buffer, strlen(buffer), JS::SourceOwnership::Borrowed)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::RootedValue result(cx);
-  if (!JS_ExecuteScript(cx, script, &result)) {
-    return false;
-  }
-||||||| merged common ancestors
-    JS::RootedValue result(cx);
-    if (!JS_ExecuteScript(cx, script, &result)) {
-        return false;
-    }
-=======
   JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
   if (!script) {
     return false;
@@ -1100,63 +713,21 @@ static bool ProcessUtf8Line(AutoJSAPI& jsapi, const char* buffer,
   if (compileOnly) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (result.isUndefined()) {
-    return true;
-  }
-||||||| merged common ancestors
-    if (result.isUndefined()) {
-        return true;
-    }
-=======
   JS::RootedValue result(cx);
   if (!JS_ExecuteScript(cx, script, &result)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedString str(cx, JS::ToString(cx, result));
-  if (!str) {
-    return false;
-  }
-||||||| merged common ancestors
-    RootedString str(cx, JS::ToString(cx, result));
-    if (!str) {
-        return false;
-    }
-=======
   if (result.isUndefined()) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::UniqueChars bytes = JS_EncodeStringToLatin1(cx, str);
-  if (!bytes) {
-    return false;
-  }
-||||||| merged common ancestors
-    JS::UniqueChars bytes = JS_EncodeStringToLatin1(cx, str);
-    if (!bytes) {
-        return false;
-    }
-=======
   RootedString str(cx, JS::ToString(cx, result));
   if (!str) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  fprintf(gOutFile, "%s\n", bytes.get());
-  return true;
-||||||| merged common ancestors
-    fprintf(gOutFile, "%s\n", bytes.get());
-    return true;
-=======
   JS::UniqueChars bytes = JS_EncodeStringToLatin1(cx, str);
   if (!bytes) {
     return false;
@@ -1164,7 +735,6 @@ static bool ProcessUtf8Line(AutoJSAPI& jsapi, const char* buffer,
 
   fprintf(gOutFile, "%s\n", bytes.get());
   return true;
->>>>>>> upstream-releases
 }
 
 static bool ProcessFile(AutoJSAPI& jsapi, const char* filename, FILE* file,
@@ -1194,56 +764,6 @@ static bool ProcessFile(AutoJSAPI& jsapi, const char* filename, FILE* file,
     }
     ungetc(ch, file);
 
-<<<<<<< HEAD
-    JS::RootedScript script(cx);
-    JS::RootedValue unused(cx);
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(filename, 1)
-        .setIsRunOnce(true)
-        .setNoScriptRval(true);
-    if (!JS::CompileUtf8File(cx, options, file, &script)) {
-      return false;
-    }
-    return compileOnly || JS_ExecuteScript(cx, script, &unused);
-  }
-
-  /* It's an interactive filehandle; drop into read-eval-print loop. */
-  int lineno = 1;
-  bool hitEOF = false;
-  do {
-    char buffer[4096];
-    char* bufp = buffer;
-    *bufp = '\0';
-||||||| merged common ancestors
-    /* It's an interactive filehandle; drop into read-eval-print loop. */
-    int lineno = 1;
-    bool hitEOF = false;
-    do {
-        char buffer[4096];
-        char* bufp = buffer;
-        *bufp = '\0';
-
-        /*
-         * Accumulate lines until we get a 'compilable unit' - one that either
-         * generates an error (before running out of source) or that compiles
-         * cleanly.  This should be whenever we get a complete statement that
-         * coincides with the end of a line.
-         */
-        int startline = lineno;
-        do {
-            if (!GetLine(cx, bufp, file, startline == lineno ? "js> " : "")) {
-                hitEOF = true;
-                break;
-            }
-            bufp += strlen(bufp);
-            lineno++;
-        } while (!JS_Utf8BufferIsCompilableUnit(cx, global, buffer, strlen(buffer)));
-
-        if (!ProcessUtf8Line(jsapi, buffer, startline)) {
-            jsapi.ReportException();
-        }
-    } while (!hitEOF && !gQuitting);
-=======
     JS::RootedScript script(cx);
     JS::RootedValue unused(cx);
     JS::CompileOptions options(cx);
@@ -1264,7 +784,6 @@ static bool ProcessFile(AutoJSAPI& jsapi, const char* filename, FILE* file,
     char buffer[4096];
     char* bufp = buffer;
     *bufp = '\0';
->>>>>>> upstream-releases
 
     /*
      * Accumulate lines until we get a 'compilable unit' - one that either
@@ -1332,44 +851,6 @@ static bool printUsageAndSetExitCode() {
   return false;
 }
 
-<<<<<<< HEAD
-static void ProcessArgsForCompartment(JSContext* cx, char** argv, int argc) {
-  for (int i = 0; i < argc; i++) {
-    if (argv[i][0] != '-' || argv[i][1] == '\0') {
-      break;
-    }
-||||||| merged common ancestors
-static void
-ProcessArgsForCompartment(JSContext* cx, char** argv, int argc)
-{
-    for (int i = 0; i < argc; i++) {
-        if (argv[i][0] != '-' || argv[i][1] == '\0') {
-            break;
-        }
-
-        switch (argv[i][1]) {
-          case 'v':
-          case 'f':
-          case 'e':
-            if (++i == argc) {
-                return;
-            }
-            break;
-        case 'S':
-            ContextOptionsRef(cx).toggleWerror();
-            MOZ_FALLTHROUGH; // because -S implies -s
-        case 's':
-            ContextOptionsRef(cx).toggleExtraWarnings();
-            break;
-        case 'I':
-            ContextOptionsRef(cx).toggleIon()
-                                 .toggleAsmJS()
-                                 .toggleWasm();
-            break;
-        }
-    }
-}
-=======
 static void ProcessArgsForCompartment(JSContext* cx, char** argv, int argc) {
   for (int i = 0; i < argc; i++) {
     if (argv[i][0] != '-' || argv[i][1] == '\0') {
@@ -1383,141 +864,6 @@ static void ProcessArgsForCompartment(JSContext* cx, char** argv, int argc) {
         if (++i == argc) {
           return;
         }
-        break;
-      case 'S':
-        ContextOptionsRef(cx).toggleWerror();
-        MOZ_FALLTHROUGH;  // because -S implies -s
-      case 's':
-        ContextOptionsRef(cx).toggleExtraWarnings();
-        break;
-      case 'I':
-        ContextOptionsRef(cx).toggleIon().toggleAsmJS().toggleWasm();
-        break;
-    }
-  }
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    switch (argv[i][1]) {
-      case 'v':
-      case 'f':
-      case 'e':
-        if (++i == argc) {
-          return;
-||||||| merged common ancestors
-static bool
-ProcessArgs(AutoJSAPI& jsapi, char** argv, int argc, XPCShellDirProvider* aDirProvider)
-{
-    JSContext* cx = jsapi.cx();
-    const char rcfilename[] = "xpcshell.js";
-    FILE* rcfile;
-    int rootPosition;
-    JS::Rooted<JSObject*> argsObj(cx);
-    char* filename = nullptr;
-    bool isInteractive = true;
-    bool forceTTY = false;
-
-    rcfile = fopen(rcfilename, "r");
-    if (rcfile) {
-        printf("[loading '%s'...]\n", rcfilename);
-        bool ok = ProcessFile(jsapi, rcfilename, rcfile, false);
-        fclose(rcfile);
-        if (!ok) {
-            return false;
-=======
-static bool ProcessArgs(AutoJSAPI& jsapi, char** argv, int argc,
-                        XPCShellDirProvider* aDirProvider) {
-  JSContext* cx = jsapi.cx();
-  const char rcfilename[] = "xpcshell.js";
-  FILE* rcfile;
-  int rootPosition;
-  JS::Rooted<JSObject*> argsObj(cx);
-  char* filename = nullptr;
-  bool isInteractive = true;
-  bool forceTTY = false;
-
-  rcfile = fopen(rcfilename, "r");
-  if (rcfile) {
-    printf("[loading '%s'...]\n", rcfilename);
-    bool ok = ProcessFile(jsapi, rcfilename, rcfile, false);
-    fclose(rcfile);
-    if (!ok) {
-      return false;
-    }
-  }
-
-  JS::Rooted<JSObject*> global(cx, JS::CurrentGlobalOrNull(cx));
-
-  /*
-   * Scan past all optional arguments so we can create the arguments object
-   * before processing any -f options, which must interleave properly with
-   * -v and -w options.  This requires two passes, and without getopt, we'll
-   * have to keep the option logic here and in the second for loop in sync.
-   * First of all, find out the first argument position which will be passed
-   * as a script file to be executed.
-   */
-  for (rootPosition = 0; rootPosition < argc; rootPosition++) {
-    if (argv[rootPosition][0] != '-' || argv[rootPosition][1] == '\0') {
-      ++rootPosition;
-      break;
-    }
-
-    bool isPairedFlag =
-        argv[rootPosition][0] != '\0' &&
-        (argv[rootPosition][1] == 'v' || argv[rootPosition][1] == 'f' ||
-         argv[rootPosition][1] == 'e');
-    if (isPairedFlag && rootPosition < argc - 1) {
-      ++rootPosition;  // Skip over the 'foo' portion of |-v foo|, |-f foo|, or
-                       // |-e foo|.
-    }
-  }
-
-  /*
-   * Create arguments early and define it to root it, so it's safe from any
-   * GC calls nested below, and so it is available to -f <file> arguments.
-   */
-  argsObj = JS_NewArrayObject(cx, 0);
-  if (!argsObj) {
-    return 1;
-  }
-  if (!JS_DefineProperty(cx, global, "arguments", argsObj, 0)) {
-    return 1;
-  }
-
-  for (int j = 0, length = argc - rootPosition; j < length; j++) {
-    RootedString str(cx, JS_NewStringCopyZ(cx, argv[rootPosition++]));
-    if (!str || !JS_DefineElement(cx, argsObj, j, str, JSPROP_ENUMERATE)) {
-      return 1;
-    }
-  }
-
-  for (int i = 0; i < argc; i++) {
-    if (argv[i][0] != '-' || argv[i][1] == '\0') {
-      filename = argv[i++];
-      isInteractive = false;
-      break;
-    }
-    switch (argv[i][1]) {
-      case 'W':
-        reportWarnings = false;
-        break;
-      case 'w':
-        reportWarnings = true;
-        break;
-      case 'x':
-        break;
-      case 'd':
-        /* This used to try to turn on the debugger. */
-        break;
-      case 'm':
-        break;
-      case 'f':
-        if (++i == argc) {
-          return printUsageAndSetExitCode();
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
         break;
       case 'S':
         ContextOptionsRef(cx).toggleWerror();
@@ -1621,41 +967,10 @@ static bool ProcessArgs(AutoJSAPI& jsapi, char** argv, int argc,
       case 'f':
         if (++i == argc) {
           return printUsageAndSetExitCode();
-||||||| merged common ancestors
-    }
-
-    JS::Rooted<JSObject*> global(cx, JS::CurrentGlobalOrNull(cx));
-
-    /*
-     * Scan past all optional arguments so we can create the arguments object
-     * before processing any -f options, which must interleave properly with
-     * -v and -w options.  This requires two passes, and without getopt, we'll
-     * have to keep the option logic here and in the second for loop in sync.
-     * First of all, find out the first argument position which will be passed
-     * as a script file to be executed.
-     */
-    for (rootPosition = 0; rootPosition < argc; rootPosition++) {
-        if (argv[rootPosition][0] != '-' || argv[rootPosition][1] == '\0') {
-            ++rootPosition;
-            break;
-=======
-        if (!Process(jsapi, argv[i], false)) {
-          return false;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
         if (!Process(jsapi, argv[i], false)) {
           return false;
-||||||| merged common ancestors
-
-        bool isPairedFlag =
-            argv[rootPosition][0] != '\0' &&
-            (argv[rootPosition][1] == 'v' ||
-             argv[rootPosition][1] == 'f' ||
-             argv[rootPosition][1] == 'e');
-        if (isPairedFlag && rootPosition < argc - 1) {
-          ++rootPosition; // Skip over the 'foo' portion of |-v foo|, |-f foo|, or |-e foo|.
-=======
+        }
         /*
          * XXX: js -f foo.js should interpret foo.js and then
          * drop into interactive mode, but that breaks test
@@ -1671,45 +986,7 @@ static bool ProcessArgs(AutoJSAPI& jsapi, char** argv, int argc,
 
         if (++i == argc) {
           return printUsageAndSetExitCode();
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        /*
-         * XXX: js -f foo.js should interpret foo.js and then
-         * drop into interactive mode, but that breaks test
-         * harness. Just execute foo.js for now.
-         */
-        isInteractive = false;
-        break;
-      case 'i':
-        isInteractive = forceTTY = true;
-        break;
-      case 'e': {
-        RootedValue rval(cx);
-
-        if (++i == argc) {
-          return printUsageAndSetExitCode();
-||||||| merged common ancestors
-    }
-
-    /*
-     * Create arguments early and define it to root it, so it's safe from any
-     * GC calls nested below, and so it is available to -f <file> arguments.
-     */
-    argsObj = JS_NewArrayObject(cx, 0);
-    if (!argsObj) {
-        return 1;
-    }
-    if (!JS_DefineProperty(cx, global, "arguments", argsObj, 0)) {
-        return 1;
-    }
-
-    for (int j = 0, length = argc - rootPosition; j < length; j++) {
-        RootedString str(cx, JS_NewStringCopyZ(cx, argv[rootPosition++]));
-        if (!str ||
-            !JS_DefineElement(cx, argsObj, j, str, JSPROP_ENUMERATE)) {
-            return 1;
-=======
 
         JS::CompileOptions opts(cx);
         opts.setFileAndLine("-e", 1);
@@ -1718,14 +995,7 @@ static bool ProcessArgs(AutoJSAPI& jsapi, char** argv, int argc,
         if (srcBuf.init(cx, argv[i], strlen(argv[i]),
                         JS::SourceOwnership::Borrowed)) {
           JS::EvaluateDontInflate(cx, opts, srcBuf, &rval);
->>>>>>> upstream-releases
         }
-
-<<<<<<< HEAD
-        JS::CompileOptions opts(cx);
-        opts.setFileAndLine("-e", 1);
-
-        JS::EvaluateUtf8(cx, opts, argv[i], strlen(argv[i]), &rval);
 
         isInteractive = false;
         break;
@@ -1760,125 +1030,6 @@ static bool ProcessArgs(AutoJSAPI& jsapi, char** argv, int argc,
     return Process(jsapi, filename, forceTTY);
   }
   return true;
-||||||| merged common ancestors
-    for (int i = 0; i < argc; i++) {
-        if (argv[i][0] != '-' || argv[i][1] == '\0') {
-            filename = argv[i++];
-            isInteractive = false;
-            break;
-        }
-        switch (argv[i][1]) {
-        case 'W':
-            reportWarnings = false;
-            break;
-        case 'w':
-            reportWarnings = true;
-            break;
-        case 'x':
-            break;
-        case 'd':
-            /* This used to try to turn on the debugger. */
-            break;
-        case 'm':
-            break;
-        case 'f':
-            if (++i == argc) {
-                return printUsageAndSetExitCode();
-            }
-            if (!Process(jsapi, argv[i], false)) {
-                return false;
-            }
-            /*
-             * XXX: js -f foo.js should interpret foo.js and then
-             * drop into interactive mode, but that breaks test
-             * harness. Just execute foo.js for now.
-             */
-            isInteractive = false;
-            break;
-        case 'i':
-            isInteractive = forceTTY = true;
-            break;
-        case 'e':
-        {
-            RootedValue rval(cx);
-
-            if (++i == argc) {
-                return printUsageAndSetExitCode();
-            }
-
-            JS::CompileOptions opts(cx);
-            opts.setFileAndLine("-e", 1);
-
-            JS::EvaluateUtf8(cx, opts, argv[i], strlen(argv[i]), &rval);
-
-            isInteractive = false;
-            break;
-        }
-        case 'C':
-            compileOnly = true;
-            isInteractive = false;
-            break;
-        case 'S':
-        case 's':
-        case 'I':
-            // These options are processed in ProcessArgsForCompartment.
-            break;
-        case 'p':
-        {
-          // plugins path
-          char* pluginPath = argv[++i];
-          nsCOMPtr<nsIFile> pluginsDir;
-          if (NS_FAILED(XRE_GetFileFromPath(pluginPath, getter_AddRefs(pluginsDir)))) {
-              fprintf(gErrFile, "Couldn't use given plugins dir.\n");
-              return printUsageAndSetExitCode();
-          }
-          aDirProvider->SetPluginDir(pluginsDir);
-          break;
-        }
-        default:
-            return printUsageAndSetExitCode();
-        }
-    }
-
-    if (filename || isInteractive) {
-        return Process(jsapi, filename, forceTTY);
-    }
-    return true;
-=======
-        isInteractive = false;
-        break;
-      }
-      case 'C':
-        compileOnly = true;
-        isInteractive = false;
-        break;
-      case 'S':
-      case 's':
-      case 'I':
-        // These options are processed in ProcessArgsForCompartment.
-        break;
-      case 'p': {
-        // plugins path
-        char* pluginPath = argv[++i];
-        nsCOMPtr<nsIFile> pluginsDir;
-        if (NS_FAILED(
-                XRE_GetFileFromPath(pluginPath, getter_AddRefs(pluginsDir)))) {
-          fprintf(gErrFile, "Couldn't use given plugins dir.\n");
-          return printUsageAndSetExitCode();
-        }
-        aDirProvider->SetPluginDir(pluginsDir);
-        break;
-      }
-      default:
-        return printUsageAndSetExitCode();
-    }
-  }
-
-  if (filename || isInteractive) {
-    return Process(jsapi, filename, forceTTY);
-  }
-  return true;
->>>>>>> upstream-releases
 }
 
 /***************************************************************************/
@@ -1935,17 +1086,11 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
 
   NS_LogInit();
 
-<<<<<<< HEAD
-  mozilla::LogModule::Init(argc, argv);
-||||||| merged common ancestors
-    mozilla::LogModule::Init(argc, argv);
-=======
   mozilla::LogModule::Init(argc, argv);
 
   // This guard ensures that all threads that attempt to register themselves
   // with the IOInterposer will be properly tracked.
   mozilla::IOInterposerInit ioInterposerGuard;
->>>>>>> upstream-releases
 
 #ifdef MOZ_GECKO_PROFILER
   char aLocal;
@@ -2094,36 +1239,6 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
         appOmni = greOmni;
       }
 
-<<<<<<< HEAD
-      XRE_InitOmnijar(greOmni, appOmni);
-      argc -= 2;
-      argv += 2;
-    }
-
-    nsCOMPtr<nsIServiceManager> servMan;
-    rv = NS_InitXPCOM2(getter_AddRefs(servMan), appDir, &dirprovider);
-    if (NS_FAILED(rv)) {
-      printf("NS_InitXPCOM2 failed!\n");
-      return 1;
-    }
-
-    // xpc::ErrorReport::LogToConsoleWithStack needs this to print errors
-    // to stderr.
-    Preferences::SetBool("browser.dom.window.dump.enabled", true);
-    Preferences::SetBool("devtools.console.stdout.chrome", true);
-
-    AutoJSAPI jsapi;
-    jsapi.Init();
-    cx = jsapi.cx();
-||||||| merged common ancestors
-        RefPtr<BackstagePass> backstagePass;
-        rv = NS_NewBackstagePass(getter_AddRefs(backstagePass));
-        if (NS_FAILED(rv)) {
-            fprintf(gErrFile, "+++ Failed to create BackstagePass: %8x\n",
-                    static_cast<uint32_t>(rv));
-            return 1;
-        }
-=======
       XRE_InitOmnijar(greOmni, appOmni);
       argc -= 2;
       argv += 2;
@@ -2144,7 +1259,6 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
     AutoJSAPI jsapi;
     jsapi.Init();
     cx = jsapi.cx();
->>>>>>> upstream-releases
 
     // Override the default XPConnect interrupt callback. We could store the
     // old one and restore it before shutting down, but there's not really a
@@ -2213,63 +1327,9 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
       return 1;
     }
 
-<<<<<<< HEAD
-    // Initialize graphics prefs on the main thread, if not already done
-    gfxPrefs::GetSingleton();
     // Initialize e10s check on the main thread, if not already done
     BrowserTabsRemoteAutostart();
-||||||| merged common ancestors
-        // Initialize graphics prefs on the main thread, if not already done
-        gfxPrefs::GetSingleton();
-        // Initialize e10s check on the main thread, if not already done
-        BrowserTabsRemoteAutostart();
-=======
-    // Initialize e10s check on the main thread, if not already done
-    BrowserTabsRemoteAutostart();
->>>>>>> upstream-releases
 #ifdef XP_WIN
-<<<<<<< HEAD
-    // Plugin may require audio session if installed plugin can initialize
-    // asynchronized.
-    AutoAudioSession audioSession;
-
-    // Ensure that DLL Services are running
-    RefPtr<DllServices> dllSvc(DllServices::Get());
-    auto dllServicesDisable = MakeScopeExit([&dllSvc]() { dllSvc->Disable(); });
-
-#if defined(MOZ_SANDBOX)
-    // Required for sandboxed child processes.
-    if (aShellData->sandboxBrokerServices) {
-      SandboxBroker::Initialize(aShellData->sandboxBrokerServices);
-      SandboxBroker::GeckoDependentInitialize();
-    } else {
-      NS_WARNING(
-          "Failed to initialize broker services, sandboxed "
-          "processes will fail to start.");
-    }
-#endif
-||||||| merged common ancestors
-        // Plugin may require audio session if installed plugin can initialize
-        // asynchronized.
-        AutoAudioSession audioSession;
-
-        // Ensure that DLL Services are running
-        RefPtr<DllServices> dllSvc(DllServices::Get());
-        auto dllServicesDisable = MakeScopeExit([&dllSvc]() {
-          dllSvc->Disable();
-        });
-
-#if defined(MOZ_SANDBOX)
-        // Required for sandboxed child processes.
-        if (aShellData->sandboxBrokerServices) {
-          SandboxBroker::Initialize(aShellData->sandboxBrokerServices);
-          SandboxBroker::GeckoDependentInitialize();
-        } else {
-          NS_WARNING("Failed to initialize broker services, sandboxed "
-                     "processes will fail to start.");
-        }
-#endif
-=======
     // Plugin may require audio session if installed plugin can initialize
     // asynchronized.
     AutoAudioSession audioSession;
@@ -2290,7 +1350,6 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
           "processes will fail to start.");
     }
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #ifdef MOZ_CODE_COVERAGE
@@ -2306,69 +1365,11 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
 
       JSAutoRealm ar(cx, glob);
 
-<<<<<<< HEAD
       // Even if we're building in a configuration where source is
       // discarded, there's no reason to do that on XPCShell, and doing so
       // might break various automation scripts.
       JS::RealmBehaviorsRef(cx).setDiscardSource(false);
 
-      if (!JS_InitReflectParse(cx, glob)) {
-        return 1;
-      }
-||||||| merged common ancestors
-    // no nsCOMPtrs are allowed to be alive when you call NS_ShutdownXPCOM
-    rv = NS_ShutdownXPCOM( nullptr );
-    MOZ_ASSERT(NS_SUCCEEDED(rv), "NS_ShutdownXPCOM failed");
-=======
-      // Even if we're building in a configuration where source is
-      // discarded, there's no reason to do that on XPCShell, and doing so
-      // might break various automation scripts.
-      JS::RealmBehaviorsRef(cx).setDiscardSource(false);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      if (!JS_DefineFunctions(cx, glob, glob_functions) ||
-          !JS_DefineProfilingFunctions(cx, glob)) {
-        return 1;
-      }
-
-      nsAutoString workingDirectory;
-      if (GetCurrentWorkingDirectory(workingDirectory)) {
-        gWorkingDirectory = &workingDirectory;
-      }
-
-      JS_DefineProperty(cx, glob, "__LOCATION__", GetLocationProperty, nullptr,
-                        0);
-
-      {
-        // We are almost certainly going to run script here, so we need an
-        // AutoEntryScript. This is Gecko-specific and not in any spec.
-        AutoEntryScript aes(backstagePass, "xpcshell argument processing");
-
-        // If an exception is thrown, we'll set our return code
-        // appropriately, and then let the AutoEntryScript destructor report
-        // the error to the console.
-        if (!ProcessArgs(aes, argv, argc, &dirprovider)) {
-          if (gExitCode) {
-            result = gExitCode;
-          } else if (gQuitting) {
-            result = 0;
-          } else {
-            result = EXITCODE_RUNTIME_ERROR;
-          }
-        }
-      }
-
-      JS_DropPrincipals(cx, gJSPrincipals);
-      JS_SetAllNonReservedSlotsToUndefined(cx, glob);
-      JS_SetAllNonReservedSlotsToUndefined(cx,
-                                           JS_GlobalLexicalEnvironment(glob));
-      JS_GC(cx);
-||||||| merged common ancestors
-    // Shut down the crashreporter service to prevent leaking some strings it holds.
-    if (CrashReporter::GetEnabled()) {
-        CrashReporter::UnsetExceptionHandler();
-=======
       if (!JS_InitReflectParse(cx, glob)) {
         return 1;
       }
@@ -2409,7 +1410,6 @@ int XRE_XPCShellMain(int argc, char** argv, char** envp,
       JS::RootedObject lexicalEnv(cx, JS_GlobalLexicalEnvironment(glob));
       JS_SetAllNonReservedSlotsToUndefined(lexicalEnv);
       JS_GC(cx);
->>>>>>> upstream-releases
     }
     JS_GC(cx);
 

@@ -7,24 +7,6 @@ add_task(async function() {
   info("Starting subResources test");
 
   await SpecialPowers.flushPrefEnv();
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({"set": [
-    ["privacy.userInteraction.document.interval", 1],
-    ["network.cookie.cookieBehavior", Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-    ["privacy.trackingprotection.enabled", false],
-    ["privacy.trackingprotection.pbmode.enabled", false],
-    ["privacy.trackingprotection.annotate_channels", true],
-  ]});
-||||||| merged common ancestors
-  await SpecialPowers.pushPrefEnv({"set": [
-    ["privacy.userInteraction.document.interval", 1],
-    ["browser.contentblocking.enabled", true],
-    ["network.cookie.cookieBehavior", Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-    ["privacy.trackingprotection.enabled", false],
-    ["privacy.trackingprotection.pbmode.enabled", false],
-    ["privacy.trackingprotection.annotate_channels", true],
-  ]});
-=======
   await SpecialPowers.pushPrefEnv({
     set: [
       ["privacy.userInteraction.document.interval", 1],
@@ -37,7 +19,6 @@ add_task(async function() {
       ["privacy.trackingprotection.annotate_channels", true],
     ],
   });
->>>>>>> upstream-releases
 
   await UrlClassifierTestUtils.addTestTrackers();
 

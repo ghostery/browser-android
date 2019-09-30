@@ -27,17 +27,9 @@ class VP8TrackEncoder : public VideoTrackEncoder {
     SKIP_FRAME,           // Skip the next frame.
   };
 
-<<<<<<< HEAD
- public:
-  VP8TrackEncoder(TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
-||||||| merged common ancestors
-public:
-  VP8TrackEncoder(TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
-=======
  public:
   VP8TrackEncoder(RefPtr<DriftCompensator> aDriftCompensator,
                   TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
->>>>>>> upstream-releases
   virtual ~VP8TrackEncoder();
 
   already_AddRefed<TrackMetadataBase> GetMetadata() final;

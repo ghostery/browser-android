@@ -29,17 +29,7 @@ loader.lazyRequireGetter(
  * is a front to the thread actor created in the server side, hiding the
  * protocol details in a traditional JavaScript API.
  *
-<<<<<<< HEAD
- * @param client DebuggerClient, WorkerTargetFront or BrowsingContextTargetFront
- *        The parent of the thread (tab for target-scoped debuggers,
- *        DebuggerClient for chrome debuggers).
-||||||| merged common ancestors
- * @param client DebuggerClient, WorkerTargetFront or BrowsingContextFront
- *        The parent of the thread (tab for target-scoped debuggers,
- *        DebuggerClient for chrome debuggers).
-=======
  * @param client DebuggerClient
->>>>>>> upstream-releases
  * @param actor string
  *        The actor ID for this thread.
  */
@@ -352,50 +342,8 @@ class ThreadClient extends FrontClassWithSpec(threadSpec) {
 
     this._threadGrips[form.actor] = new SourceFront(this.client, form);
     return this._threadGrips[form.actor];
-<<<<<<< HEAD
-  },
-
-  /**
-   * Request the prototype and own properties of mutlipleObjects.
-   *
-   * @param onResponse function
-   *        Called with the request's response.
-   * @param actors [string]
-   *        List of actor ID of the queried objects.
-   */
-  getPrototypesAndProperties: DebuggerClient.requester({
-    type: "prototypesAndProperties",
-    actors: arg(0),
-  }),
-
-  events: ["newSource", "progress"],
-};
-
-eventSource(ThreadClient.prototype);
-||||||| merged common ancestors
-  },
-
-  /**
-   * Request the prototype and own properties of mutlipleObjects.
-   *
-   * @param onResponse function
-   *        Called with the request's response.
-   * @param actors [string]
-   *        List of actor ID of the queried objects.
-   */
-  getPrototypesAndProperties: DebuggerClient.requester({
-    type: "prototypesAndProperties",
-    actors: arg(0),
-  }),
-
-  events: ["newSource"],
-};
-
-eventSource(ThreadClient.prototype);
-=======
   }
 }
->>>>>>> upstream-releases
 
 exports.ThreadClient = ThreadClient;
 registerFront(ThreadClient);

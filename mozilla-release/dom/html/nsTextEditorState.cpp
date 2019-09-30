@@ -295,15 +295,8 @@ class nsTextInputSelectionImpl final : public nsSupportsWeakReference,
   NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsTextInputSelectionImpl,
                                            nsISelectionController)
 
-<<<<<<< HEAD
-  nsTextInputSelectionImpl(nsFrameSelection* aSel, nsIPresShell* aShell,
-                           nsIContent* aLimiter);
-||||||| merged common ancestors
-  nsTextInputSelectionImpl(nsFrameSelection *aSel, nsIPresShell *aShell, nsIContent *aLimiter);
-=======
   nsTextInputSelectionImpl(nsFrameSelection* aSel, PresShell* aPresShell,
                            nsIContent* aLimiter);
->>>>>>> upstream-releases
 
   void SetScrollableFrame(nsIScrollableFrame* aScrollableFrame);
   nsFrameSelection* GetConstFrameSelection() { return mFrameSelection; }
@@ -371,45 +364,17 @@ NS_IMPL_CYCLE_COLLECTION(nsTextInputSelectionImpl, mFrameSelection, mLimiter)
 
 // BEGIN nsTextInputSelectionImpl
 
-<<<<<<< HEAD
-nsTextInputSelectionImpl::nsTextInputSelectionImpl(nsFrameSelection* aSel,
-                                                   nsIPresShell* aShell,
-                                                   nsIContent* aLimiter)
-    : mScrollFrame(nullptr) {
-  if (aSel && aShell) {
-    mFrameSelection = aSel;  // we are the owner now!
-||||||| merged common ancestors
-nsTextInputSelectionImpl::nsTextInputSelectionImpl(nsFrameSelection *aSel,
-                                                   nsIPresShell *aShell,
-                                                   nsIContent *aLimiter)
-  : mScrollFrame(nullptr)
-{
-  if (aSel && aShell)
-  {
-    mFrameSelection = aSel;//we are the owner now!
-=======
 nsTextInputSelectionImpl::nsTextInputSelectionImpl(nsFrameSelection* aSel,
                                                    PresShell* aPresShell,
                                                    nsIContent* aLimiter)
     : mScrollFrame(nullptr) {
   if (aSel && aPresShell) {
     mFrameSelection = aSel;  // we are the owner now!
->>>>>>> upstream-releases
     mLimiter = aLimiter;
     bool accessibleCaretEnabled =
-<<<<<<< HEAD
-        PresShell::AccessibleCaretEnabled(aLimiter->OwnerDoc()->GetDocShell());
-    mFrameSelection->Init(aShell, mLimiter, accessibleCaretEnabled);
-    mPresShellWeak = do_GetWeakReference(aShell);
-||||||| merged common ancestors
-      PresShell::AccessibleCaretEnabled(aLimiter->OwnerDoc()->GetDocShell());
-    mFrameSelection->Init(aShell, mLimiter, accessibleCaretEnabled);
-    mPresShellWeak = do_GetWeakReference(aShell);
-=======
         PresShell::AccessibleCaretEnabled(aLimiter->OwnerDoc()->GetDocShell());
     mFrameSelection->Init(aPresShell, mLimiter, accessibleCaretEnabled);
     mPresShellWeak = do_GetWeakReference(aPresShell);
->>>>>>> upstream-releases
   }
 }
 
@@ -507,20 +472,6 @@ nsresult nsTextInputSelectionImpl::RepaintSelection(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsTextInputSelectionImpl::SetCaretEnabled(bool enabled) {
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak);
-  if (!shell) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsTextInputSelectionImpl::SetCaretEnabled(bool enabled)
-{
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak);
-  if (!shell) return NS_ERROR_FAILURE;
-=======
 nsTextInputSelectionImpl::SetCaretEnabled(bool enabled) {
   if (!mPresShellWeak) {
     return NS_ERROR_NOT_INITIALIZED;
@@ -529,69 +480,19 @@ nsTextInputSelectionImpl::SetCaretEnabled(bool enabled) {
   if (!presShell) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // tell the pres shell to enable the caret, rather than settings its
-  // visibility directly. this way the presShell's idea of caret visibility is
-  // maintained.
-  nsCOMPtr<nsISelectionController> selCon = do_QueryInterface(shell);
-  if (!selCon) return NS_ERROR_NO_INTERFACE;
-  selCon->SetCaretEnabled(enabled);
-||||||| merged common ancestors
-  // tell the pres shell to enable the caret, rather than settings its visibility directly.
-  // this way the presShell's idea of caret visibility is maintained.
-  nsCOMPtr<nsISelectionController> selCon = do_QueryInterface(shell);
-  if (!selCon) return NS_ERROR_NO_INTERFACE;
-  selCon->SetCaretEnabled(enabled);
-=======
   // tell the pres shell to enable the caret, rather than settings its
   // visibility directly. this way the presShell's idea of caret visibility is
   // maintained.
   presShell->SetCaretEnabled(enabled);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsTextInputSelectionImpl::SetCaretReadOnly(bool aReadOnly) {
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-  nsresult result;
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak, &result);
-  if (shell) {
-    RefPtr<nsCaret> caret = shell->GetCaret();
-    if (caret) {
-      Selection* selection =
-          mFrameSelection->GetSelection(SelectionType::eNormal);
-      if (selection) {
-        caret->SetCaretReadOnly(aReadOnly);
-      }
-      return NS_OK;
-    }
-||||||| merged common ancestors
-nsTextInputSelectionImpl::SetCaretReadOnly(bool aReadOnly)
-{
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-  nsresult result;
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak, &result);
-  if (shell)
-  {
-    RefPtr<nsCaret> caret = shell->GetCaret();
-    if (caret) {
-      Selection* selection =
-        mFrameSelection->GetSelection(SelectionType::eNormal);
-      if (selection) {
-        caret->SetCaretReadOnly(aReadOnly);
-      }
-      return NS_OK;
-    }
-=======
 nsTextInputSelectionImpl::SetCaretReadOnly(bool aReadOnly) {
   if (!mPresShellWeak) {
     return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
   }
   nsresult rv;
   RefPtr<PresShell> presShell = do_QueryReferent(mPresShellWeak, &rv);
@@ -615,35 +516,9 @@ nsTextInputSelectionImpl::GetCaretEnabled(bool* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsTextInputSelectionImpl::GetCaretVisible(bool* _retval) {
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-  nsresult result;
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak, &result);
-  if (shell) {
-    RefPtr<nsCaret> caret = shell->GetCaret();
-    if (caret) {
-      *_retval = caret->IsVisible();
-      return NS_OK;
-    }
-||||||| merged common ancestors
-nsTextInputSelectionImpl::GetCaretVisible(bool *_retval)
-{
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-  nsresult result;
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak, &result);
-  if (shell)
-  {
-    RefPtr<nsCaret> caret = shell->GetCaret();
-    if (caret) {
-      *_retval = caret->IsVisible();
-      return NS_OK;
-    }
-=======
 nsTextInputSelectionImpl::GetCaretVisible(bool* _retval) {
   if (!mPresShellWeak) {
     return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
   }
   nsresult rv;
   RefPtr<PresShell> presShell = do_QueryReferent(mPresShellWeak, &rv);
@@ -659,43 +534,9 @@ nsTextInputSelectionImpl::GetCaretVisible(bool* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsTextInputSelectionImpl::SetCaretVisibilityDuringSelection(bool aVisibility) {
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-  nsresult result;
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak, &result);
-  if (shell) {
-    RefPtr<nsCaret> caret = shell->GetCaret();
-    if (caret) {
-      Selection* selection =
-          mFrameSelection->GetSelection(SelectionType::eNormal);
-      if (selection) {
-        caret->SetVisibilityDuringSelection(aVisibility);
-      }
-      return NS_OK;
-    }
-||||||| merged common ancestors
-nsTextInputSelectionImpl::SetCaretVisibilityDuringSelection(bool aVisibility)
-{
-  if (!mPresShellWeak) return NS_ERROR_NOT_INITIALIZED;
-  nsresult result;
-  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShellWeak, &result);
-  if (shell)
-  {
-    RefPtr<nsCaret> caret = shell->GetCaret();
-    if (caret) {
-      Selection* selection =
-        mFrameSelection->GetSelection(SelectionType::eNormal);
-      if (selection) {
-        caret->SetVisibilityDuringSelection(aVisibility);
-      }
-      return NS_OK;
-    }
-=======
 nsTextInputSelectionImpl::SetCaretVisibilityDuringSelection(bool aVisibility) {
   if (!mPresShellWeak) {
     return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
   }
   nsresult rv;
   RefPtr<PresShell> presShell = do_QueryReferent(mPresShellWeak, &rv);
@@ -854,14 +695,7 @@ nsTextInputSelectionImpl::ScrollPage(bool aForward) {
   if (!mScrollFrame) return NS_ERROR_NOT_INITIALIZED;
 
   mScrollFrame->ScrollBy(nsIntPoint(0, aForward ? 1 : -1),
-<<<<<<< HEAD
-                         nsIScrollableFrame::PAGES, nsIScrollableFrame::SMOOTH);
-||||||| merged common ancestors
-                         nsIScrollableFrame::PAGES,
-                         nsIScrollableFrame::SMOOTH);
-=======
                          nsIScrollableFrame::PAGES, ScrollMode::Smooth);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -870,14 +704,7 @@ nsTextInputSelectionImpl::ScrollLine(bool aForward) {
   if (!mScrollFrame) return NS_ERROR_NOT_INITIALIZED;
 
   mScrollFrame->ScrollBy(nsIntPoint(0, aForward ? 1 : -1),
-<<<<<<< HEAD
-                         nsIScrollableFrame::LINES, nsIScrollableFrame::SMOOTH);
-||||||| merged common ancestors
-                         nsIScrollableFrame::LINES,
-                         nsIScrollableFrame::SMOOTH);
-=======
                          nsIScrollableFrame::LINES, ScrollMode::Smooth);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -886,14 +713,7 @@ nsTextInputSelectionImpl::ScrollCharacter(bool aRight) {
   if (!mScrollFrame) return NS_ERROR_NOT_INITIALIZED;
 
   mScrollFrame->ScrollBy(nsIntPoint(aRight ? 1 : -1, 0),
-<<<<<<< HEAD
-                         nsIScrollableFrame::LINES, nsIScrollableFrame::SMOOTH);
-||||||| merged common ancestors
-                         nsIScrollableFrame::LINES,
-                         nsIScrollableFrame::SMOOTH);
-=======
                          nsIScrollableFrame::LINES, ScrollMode::Smooth);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1013,22 +833,10 @@ void TextInputListener::OnSelectionChange(Selection& aSelection,
   UpdateTextInputCommands(NS_LITERAL_STRING("select"), &aSelection, aReason);
 }
 
-<<<<<<< HEAD
-static void DoCommandCallback(Command aCommand, void* aData) {
-  nsTextControlFrame* frame = static_cast<nsTextControlFrame*>(aData);
-  nsIContent* content = frame->GetContent();
-||||||| merged common ancestors
-static void
-DoCommandCallback(Command aCommand, void* aData)
-{
-  nsTextControlFrame *frame = static_cast<nsTextControlFrame*>(aData);
-  nsIContent *content = frame->GetContent();
-=======
 MOZ_CAN_RUN_SCRIPT
 static void DoCommandCallback(Command aCommand, void* aData) {
   nsTextControlFrame* frame = static_cast<nsTextControlFrame*>(aData);
   nsIContent* content = frame->GetContent();
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIControllers> controllers;
   HTMLInputElement* input = HTMLInputElement::FromNode(content);
@@ -1073,54 +881,11 @@ TextInputListener::HandleEvent(Event* aEvent) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
   RefPtr<KeyboardEvent> keyEvent = aEvent->AsKeyboardEvent();
   if (!keyEvent) {
     return NS_ERROR_UNEXPECTED;
   }
 
-  WidgetKeyboardEvent* widgetKeyEvent =
-      aEvent->WidgetEventPtr()->AsKeyboardEvent();
-||||||| merged common ancestors
-  WidgetKeyboardEvent* keyEvent =
-    aEvent->WidgetEventPtr()->AsKeyboardEvent();
-=======
-  RefPtr<KeyboardEvent> keyEvent = aEvent->AsKeyboardEvent();
->>>>>>> upstream-releases
-  if (!keyEvent) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-<<<<<<< HEAD
-  nsXBLPrototypeHandler* keyHandlers = ShortcutKeys::GetHandlers(
-      mTxtCtrlElement->IsTextArea() ? HandlerType::eTextArea
-                                    : HandlerType::eInput);
-
-  RefPtr<nsAtom> eventTypeAtom =
-      ShortcutKeys::ConvertEventToDOMEventType(widgetKeyEvent);
-  for (nsXBLPrototypeHandler* handler = keyHandlers; handler;
-       handler = handler->GetNextHandler()) {
-    if (!handler->EventTypeEquals(eventTypeAtom)) {
-      continue;
-    }
-
-    if (!handler->KeyEventMatched(keyEvent, 0, IgnoreModifierState())) {
-      continue;
-    }
-
-    // XXX Do we execute only one handler even if the handler neither stops
-    //     propagation nor prevents default of the event?
-    nsCOMPtr<EventTarget> target = do_QueryInterface(mTxtCtrlElement);
-    nsresult rv = handler->ExecuteHandler(target, aEvent);
-    if (NS_SUCCEEDED(rv)) {
-      return rv;
-    }
-  }
-
-  if (widgetKeyEvent->mMessage != eKeyPress) {
-||||||| merged common ancestors
-  if (keyEvent->mMessage != eKeyPress) {
-=======
   WidgetKeyboardEvent* widgetKeyEvent =
       aEvent->WidgetEventPtr()->AsKeyboardEvent();
   if (!keyEvent) {
@@ -1153,7 +918,6 @@ TextInputListener::HandleEvent(Event* aEvent) {
   }
 
   if (widgetKeyEvent->mMessage != eKeyPress) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -1472,23 +1236,9 @@ nsresult nsTextEditorState::BindToFrame(nsTextControlFrame* aFrame) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-struct PreDestroyer {
-||||||| merged common ancestors
-struct PreDestroyer
-{
-=======
 struct MOZ_STACK_CLASS PreDestroyer {
->>>>>>> upstream-releases
   void Init(TextEditor* aTextEditor) { mTextEditor = aTextEditor; }
-<<<<<<< HEAD
-  ~PreDestroyer() {
-||||||| merged common ancestors
-  ~PreDestroyer()
-  {
-=======
   MOZ_CAN_RUN_SCRIPT ~PreDestroyer() {
->>>>>>> upstream-releases
     if (mTextEditor) {
       MOZ_KnownLive(mTextEditor)->PreDestroy(true);
     }
@@ -1525,16 +1275,8 @@ nsresult nsTextEditorState::PrepareEditor(const nsAString* aValue) {
   // one around, in which case we don't create a new one, and we'll just tie
   // the required machinery to it.
 
-<<<<<<< HEAD
-  nsPresContext* presContext = mBoundFrame->PresContext();
-  nsIPresShell* shell = presContext->GetPresShell();
-||||||| merged common ancestors
-  nsPresContext *presContext = mBoundFrame->PresContext();
-  nsIPresShell *shell = presContext->GetPresShell();
-=======
   nsPresContext* presContext = mBoundFrame->PresContext();
   PresShell* presShell = presContext->GetPresShell();
->>>>>>> upstream-releases
 
   // Setup the editor flags
   uint32_t editorFlags = nsIPlaintextEditor::eEditorPlaintextMask;
@@ -2388,15 +2130,6 @@ void nsTextEditorState::GetValue(nsAString& aValue, bool aIgnoreWrap) const {
   }
 }
 
-<<<<<<< HEAD
-bool nsTextEditorState::SetValue(const nsAString& aValue,
-                                 const nsAString* aOldValue, uint32_t aFlags) {
-||||||| merged common ancestors
-bool
-nsTextEditorState::SetValue(const nsAString& aValue, const nsAString* aOldValue,
-                            uint32_t aFlags)
-{
-=======
 #ifdef DEBUG
 namespace {
 // @param aFlags nsTextEditorState::SetValueFlags
@@ -2412,7 +2145,6 @@ bool AreFlagsNotDemandingContradictingMovements(uint32_t aFlags) {
 
 bool nsTextEditorState::SetValue(const nsAString& aValue,
                                  const nsAString* aOldValue, uint32_t aFlags) {
->>>>>>> upstream-releases
   nsAutoString newValue(aValue);
 
   // While mIsCommittingComposition is true (that means that some event
@@ -2584,13 +2316,6 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
             // autocomplete, we need to replace the text as "insert string"
             // because undo should cancel only this operation (i.e., previous
             // transactions typed by user shouldn't be merged with this).
-<<<<<<< HEAD
-            // In this case, we need to dispatch "input" event because
-            // web apps may need to know the user's operation.
-            DebugOnly<nsresult> rv = textEditor->ReplaceTextAsAction(newValue);
-||||||| merged common ancestors
-            DebugOnly<nsresult> rv = textEditor->ReplaceTextAsAction(newValue);
-=======
             // In this case, we need to dispatch "input" event because
             // web apps may need to know the user's operation.
             RefPtr<nsRange> range;  // See bug 1506439
@@ -2600,7 +2325,6 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
             // do it.
             DebugOnly<nsresult> rv =
                 textEditor->ReplaceTextAsAction(newValue, range, nullptr);
->>>>>>> upstream-releases
             NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
                                  "Failed to set the new value");
           } else if (aFlags & eSetValue_ForXUL) {
@@ -2632,20 +2356,11 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
                 StringTail(newValue, newlength - currentLength);
 
             if (insertValue.IsEmpty()) {
-<<<<<<< HEAD
-              DebugOnly<nsresult> rv = textEditor->DeleteSelectionAsAction(
-                  nsIEditor::eNone, nsIEditor::eStrip);
-||||||| merged common ancestors
-              DebugOnly<nsresult> rv =
-                textEditor->DeleteSelectionAsAction(nsIEditor::eNone,
-                                                    nsIEditor::eStrip);
-=======
               // In this case, we makes the editor stop dispatching "input"
               // event so that passing nullptr as nsIPrincipal is safe for
               // now.
               DebugOnly<nsresult> rv = textEditor->DeleteSelectionAsAction(
                   nsIEditor::eNone, nsIEditor::eStrip, nullptr);
->>>>>>> upstream-releases
               NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
                                    "Failed to remove the text");
             } else {
@@ -2653,13 +2368,7 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
               // event so that passing nullptr as nsIPrincipal is safe for
               // now.
               DebugOnly<nsresult> rv =
-<<<<<<< HEAD
-                  textEditor->InsertTextAsAction(insertValue);
-||||||| merged common ancestors
-                textEditor->InsertTextAsAction(insertValue);
-=======
                   textEditor->InsertTextAsAction(insertValue, nullptr);
->>>>>>> upstream-releases
               NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
                                    "Failed to insert the new value");
             }
@@ -2758,21 +2467,6 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
       if (mBoundFrame) {
         mBoundFrame->UpdateValueDisplay(true);
       }
-<<<<<<< HEAD
-
-      // If this is called as part of user input, we need to dispatch "input"
-      // event since web apps may want to know the user operation.
-      if (aFlags & eSetValue_BySetUserInput) {
-        nsCOMPtr<Element> element = do_QueryInterface(textControlElement);
-        MOZ_ASSERT(element);
-        RefPtr<TextEditor> textEditor;
-        DebugOnly<nsresult> rvIgnored =
-            nsContentUtils::DispatchInputEvent(element, textEditor);
-        NS_WARNING_ASSERTION(NS_SUCCEEDED(rvIgnored),
-                             "Failed to dispatch input event");
-      }
-||||||| merged common ancestors
-=======
 
       // If this is called as part of user input, we need to dispatch "input"
       // event with "insertReplacementText" since web apps may want to know
@@ -2788,7 +2482,6 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
         NS_WARNING_ASSERTION(NS_SUCCEEDED(rvIgnored),
                              "Failed to dispatch input event");
       }
->>>>>>> upstream-releases
     } else {
       // Even if our value is not actually changing, apparently we need to mark
       // our SelectionProperties dirty to make accessibility tests happy.
@@ -2805,20 +2498,10 @@ bool nsTextEditorState::SetValue(const nsAString& aValue,
     ValueWasChanged(!!mBoundFrame);
   }
 
-<<<<<<< HEAD
-  // XXX Should we stop notifying "value changed" if mTextCtrlElement has
-  //     been cleared?
-  textControlElement->OnValueChanged(/* aNotify = */ !!mBoundFrame,
-                                     /* aWasInteractiveUserChange = */ false);
-||||||| merged common ancestors
-  mTextCtrlElement->OnValueChanged(/* aNotify = */ !!mBoundFrame,
-                                   /* aWasInteractiveUserChange = */ false);
-=======
   // TODO(emilio): It seems wrong to pass ValueChangeKind::Script if
   // BySetUserInput is in aFlags.
   auto changeKind = (aFlags & eSetValue_Internal) ? ValueChangeKind::Internal
                                                   : ValueChangeKind::Script;
->>>>>>> upstream-releases
 
   // XXX Should we stop notifying "value changed" if mTextCtrlElement has
   //     been cleared?

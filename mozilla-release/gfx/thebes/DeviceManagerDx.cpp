@@ -55,31 +55,11 @@ PFN_DCOMPOSITION_CREATE_DEVICE sDcompCreateDeviceFn = nullptr;
 // be used within InitializeDirectDrawConfig.
 decltype(DirectDrawCreateEx)* sDirectDrawCreateExFn = nullptr;
 
-<<<<<<< HEAD
-/* static */ void DeviceManagerDx::Init() { sInstance = new DeviceManagerDx(); }
-||||||| merged common ancestors
-/* static */ void
-DeviceManagerDx::Init()
-{
-  sInstance = new DeviceManagerDx();
-}
-=======
 /* static */
 void DeviceManagerDx::Init() { sInstance = new DeviceManagerDx(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void DeviceManagerDx::Shutdown() { sInstance = nullptr; }
-||||||| merged common ancestors
-/* static */ void
-DeviceManagerDx::Shutdown()
-{
-  sInstance = nullptr;
-}
-=======
 /* static */
 void DeviceManagerDx::Shutdown() { sInstance = nullptr; }
->>>>>>> upstream-releases
 
 DeviceManagerDx::DeviceManagerDx()
     : mDeviceLock("gfxWindowsPlatform.mDeviceLock"),
@@ -123,20 +103,8 @@ bool DeviceManagerDx::LoadD3D11() {
   return true;
 }
 
-<<<<<<< HEAD
-bool DeviceManagerDx::LoadDcomp() {
-  FeatureState& d3d11 = gfxConfig::GetFeature(Feature::D3D11_COMPOSITING);
-  MOZ_ASSERT(d3d11.IsEnabled());
-||||||| merged common ancestors
-bool
-DeviceManagerDx::LoadDcomp()
-{
-  FeatureState& d3d11 = gfxConfig::GetFeature(Feature::D3D11_COMPOSITING);
-  MOZ_ASSERT(d3d11.IsEnabled());
-=======
 bool DeviceManagerDx::LoadDcomp() {
   MOZ_ASSERT(gfxConfig::GetFeature(Feature::D3D11_COMPOSITING).IsEnabled());
->>>>>>> upstream-releases
   MOZ_ASSERT(gfxVars::UseWebRender());
   MOZ_ASSERT(gfxVars::UseWebRenderANGLE());
   MOZ_ASSERT(gfxVars::UseWebRenderDCompWin());
@@ -170,13 +138,6 @@ void DeviceManagerDx::ReleaseD3D11() {
   sD3D11CreateDeviceFn = nullptr;
 }
 
-<<<<<<< HEAD
-static inline bool ProcessOwnsCompositor() {
-||||||| merged common ancestors
-static inline bool
-ProcessOwnsCompositor()
-{
-=======
 nsTArray<DXGI_OUTPUT_DESC1> DeviceManagerDx::EnumerateOutputs() {
   RefPtr<IDXGIAdapter> adapter = GetDXGIAdapter();
 
@@ -210,7 +171,6 @@ nsTArray<DXGI_OUTPUT_DESC1> DeviceManagerDx::EnumerateOutputs() {
 
 #ifdef DEBUG
 static inline bool ProcessOwnsCompositor() {
->>>>>>> upstream-releases
   return XRE_GetProcessType() == GeckoProcessType_GPU ||
          XRE_GetProcessType() == GeckoProcessType_VR ||
          (XRE_IsParentProcess() && !gfxConfig::IsEnabled(Feature::GPU_PROCESS));
@@ -307,13 +267,6 @@ bool DeviceManagerDx::CreateVRDevice() {
   return true;
 }
 
-<<<<<<< HEAD
-void DeviceManagerDx::CreateDirectCompositionDevice() {
-||||||| merged common ancestors
-void
-DeviceManagerDx::CreateDirectCompositionDevice()
-{
-=======
 bool DeviceManagerDx::CreateCanvasDevice() {
   MOZ_ASSERT(ProcessOwnsCompositor());
 
@@ -353,7 +306,6 @@ bool DeviceManagerDx::CreateCanvasDevice() {
 }
 
 void DeviceManagerDx::CreateDirectCompositionDevice() {
->>>>>>> upstream-releases
   if (!gfxVars::UseWebRenderDCompWin()) {
     return;
   }
@@ -490,18 +442,9 @@ bool DeviceManagerDx::CreateCompositorDeviceHelper(
     FeatureState& aD3d11, IDXGIAdapter1* aAdapter, bool aAttemptVideoSupport,
     RefPtr<ID3D11Device>& aOutDevice) {
   // Check if a failure was injected for testing.
-<<<<<<< HEAD
-  if (gfxPrefs::DeviceFailForTesting()) {
-    aD3d11.SetFailed(FeatureStatus::Failed,
-                     "Direct3D11 device failure simulated by preference",
-||||||| merged common ancestors
-  if (gfxPrefs::DeviceFailForTesting()) {
-    aD3d11.SetFailed(FeatureStatus::Failed, "Direct3D11 device failure simulated by preference",
-=======
   if (StaticPrefs::gfx_testing_device_fail()) {
     aD3d11.SetFailed(FeatureStatus::Failed,
                      "Direct3D11 device failure simulated by preference",
->>>>>>> upstream-releases
                      NS_LITERAL_CSTRING("FEATURE_FAILURE_D3D11_SIM"));
     return false;
   }
@@ -557,18 +500,8 @@ static inline int32_t GetNextDeviceCounter() {
   return XRE_IsGPUProcess() ? --sDeviceCounter : ++sDeviceCounter;
 }
 
-<<<<<<< HEAD
-void DeviceManagerDx::CreateCompositorDevice(FeatureState& d3d11) {
-  if (gfxPrefs::LayersD3D11ForceWARP()) {
-||||||| merged common ancestors
-void
-DeviceManagerDx::CreateCompositorDevice(FeatureState& d3d11)
-{
-  if (gfxPrefs::LayersD3D11ForceWARP()) {
-=======
 void DeviceManagerDx::CreateCompositorDevice(FeatureState& d3d11) {
   if (StaticPrefs::layers_d3d11_force_warp()) {
->>>>>>> upstream-releases
     CreateWARPCompositorDevice();
     return;
   }
@@ -634,30 +567,12 @@ void DeviceManagerDx::CreateCompositorDevice(FeatureState& d3d11) {
   mCompositorDevice->SetExceptionMode(0);
 }
 
-<<<<<<< HEAD
-bool DeviceManagerDx::CreateDevice(IDXGIAdapter* aAdapter,
-                                   D3D_DRIVER_TYPE aDriverType, UINT aFlags,
-                                   HRESULT& aResOut,
-                                   RefPtr<ID3D11Device>& aOutDevice) {
-  if (gfxPrefs::Direct3D11EnableDebugLayer() ||
-      gfxPrefs::Direct3D11BreakOnError()) {
-||||||| merged common ancestors
-bool
-DeviceManagerDx::CreateDevice(IDXGIAdapter* aAdapter,
-                                 D3D_DRIVER_TYPE aDriverType,
-                                 UINT aFlags,
-                                 HRESULT& aResOut,
-                                 RefPtr<ID3D11Device>& aOutDevice)
-{
-  if (gfxPrefs::Direct3D11EnableDebugLayer() || gfxPrefs::Direct3D11BreakOnError()) {
-=======
 bool DeviceManagerDx::CreateDevice(IDXGIAdapter* aAdapter,
                                    D3D_DRIVER_TYPE aDriverType, UINT aFlags,
                                    HRESULT& aResOut,
                                    RefPtr<ID3D11Device>& aOutDevice) {
   if (StaticPrefs::gfx_direct3d11_enable_debug_layer() ||
       StaticPrefs::gfx_direct3d11_break_on_error()) {
->>>>>>> upstream-releases
     aFlags |= D3D11_CREATE_DEVICE_DEBUG;
   }
 
@@ -703,20 +618,9 @@ bool DeviceManagerDx::CreateDevice(IDXGIAdapter* aAdapter,
   return true;
 }
 
-<<<<<<< HEAD
-void DeviceManagerDx::CreateWARPCompositorDevice() {
-  ScopedGfxFeatureReporter reporterWARP("D3D11-WARP",
-                                        gfxPrefs::LayersD3D11ForceWARP());
-||||||| merged common ancestors
-void
-DeviceManagerDx::CreateWARPCompositorDevice()
-{
-  ScopedGfxFeatureReporter reporterWARP("D3D11-WARP", gfxPrefs::LayersD3D11ForceWARP());
-=======
 void DeviceManagerDx::CreateWARPCompositorDevice() {
   ScopedGfxFeatureReporter reporterWARP("D3D11-WARP",
                                         StaticPrefs::layers_d3d11_force_warp());
->>>>>>> upstream-releases
   FeatureState& d3d11 = gfxConfig::GetFeature(Feature::D3D11_COMPOSITING);
 
   HRESULT hr;
@@ -841,19 +745,9 @@ RefPtr<ID3D11Device> DeviceManagerDx::CreateDecoderDevice() {
   }
 
   bool reuseDevice = false;
-<<<<<<< HEAD
-  if (gfxPrefs::Direct3D11ReuseDecoderDevice() < 0) {
-    // Use the default logic, which is to allow reuse of devices on AMD, but
-    // create separate devices everywhere else.
-||||||| merged common ancestors
-  if (gfxPrefs::Direct3D11ReuseDecoderDevice() < 0) {
-    // Use the default logic, which is to allow reuse of devices on AMD, but create
-    // separate devices everywhere else.
-=======
   if (StaticPrefs::gfx_direct3d11_reuse_decoder_device() < 0) {
     // Use the default logic, which is to allow reuse of devices on AMD, but
     // create separate devices everywhere else.
->>>>>>> upstream-releases
     if (isAMD) {
       reuseDevice = true;
     }
@@ -1135,33 +1029,14 @@ bool DeviceManagerDx::GetAnyDeviceRemovedReason(DeviceResetReason* aOutReason) {
   mDeviceLock.AssertCurrentThreadOwns();
 
   if (DidDeviceReset(mCompositorDevice, aOutReason) ||
-<<<<<<< HEAD
-      DidDeviceReset(mContentDevice, aOutReason)) {
-||||||| merged common ancestors
-      DidDeviceReset(mContentDevice, aOutReason))
-  {
-=======
       DidDeviceReset(mContentDevice, aOutReason) ||
       DidDeviceReset(mCanvasDevice, aOutReason)) {
->>>>>>> upstream-releases
     return true;
   }
 
-<<<<<<< HEAD
-  if (XRE_IsParentProcess() && NS_IsMainThread() &&
-      gfxPrefs::DeviceResetForTesting()) {
-    gfxPrefs::SetDeviceResetForTesting(0);
-||||||| merged common ancestors
-  if (XRE_IsParentProcess() &&
-      NS_IsMainThread() &&
-      gfxPrefs::DeviceResetForTesting())
-  {
-    gfxPrefs::SetDeviceResetForTesting(0);
-=======
   if (XRE_IsParentProcess() && NS_IsMainThread() &&
       StaticPrefs::gfx_testing_device_reset()) {
     Preferences::SetInt("gfx.testing.device-reset", 0);
->>>>>>> upstream-releases
     *aOutReason = DeviceResetReason::FORCED_RESET;
     return true;
   }
@@ -1193,18 +1068,10 @@ RefPtr<ID3D11Device> DeviceManagerDx::GetCompositorDevice() {
   return mCompositorDevice;
 }
 
-<<<<<<< HEAD
-RefPtr<ID3D11Device> DeviceManagerDx::GetContentDevice() {
-||||||| merged common ancestors
-RefPtr<ID3D11Device>
-DeviceManagerDx::GetContentDevice()
-{
-=======
 RefPtr<ID3D11Device> DeviceManagerDx::GetContentDevice() {
   MOZ_ASSERT(XRE_IsGPUProcess() ||
              gfxPlatform::GetPlatform()->DevicesInitialized());
 
->>>>>>> upstream-releases
   MutexAutoLock lock(mDeviceLock);
   return mContentDevice;
 }
@@ -1246,13 +1113,6 @@ RefPtr<ID3D11Device> DeviceManagerDx::GetVRDevice() {
   return mVRDevice;
 }
 
-<<<<<<< HEAD
-RefPtr<IDCompositionDevice> DeviceManagerDx::GetDirectCompositionDevice() {
-||||||| merged common ancestors
-RefPtr<IDCompositionDevice>
-DeviceManagerDx::GetDirectCompositionDevice()
-{
-=======
 RefPtr<ID3D11Device> DeviceManagerDx::GetCanvasDevice() {
   MutexAutoLock lock(mDeviceLock);
   if (!mCanvasDevice) {
@@ -1262,7 +1122,6 @@ RefPtr<ID3D11Device> DeviceManagerDx::GetCanvasDevice() {
 }
 
 RefPtr<IDCompositionDevice> DeviceManagerDx::GetDirectCompositionDevice() {
->>>>>>> upstream-releases
   MutexAutoLock lock(mDeviceLock);
   return mDirectCompositionDevice;
 }
@@ -1439,16 +1298,8 @@ void DeviceManagerDx::GetCompositorDevices(
   *aOutAttachments = attachments;
 }
 
-<<<<<<< HEAD
-/* static */ void DeviceManagerDx::PreloadAttachmentsOnCompositorThread() {
-||||||| merged common ancestors
-/* static */ void
-DeviceManagerDx::PreloadAttachmentsOnCompositorThread()
-{
-=======
 /* static */
 void DeviceManagerDx::PreloadAttachmentsOnCompositorThread() {
->>>>>>> upstream-releases
   MessageLoop* loop = layers::CompositorThreadHolder::Loop();
   if (!loop) {
     return;

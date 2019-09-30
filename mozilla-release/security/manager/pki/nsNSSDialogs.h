@@ -21,28 +21,11 @@
     }                                                \
   }
 
-<<<<<<< HEAD
-class nsNSSDialogs : public nsICertificateDialogs,
-                     public nsIClientAuthDialogs,
-                     public nsIGeneratingKeypairInfoDialogs,
-                     public nsITokenDialogs,
-                     public nsITokenPasswordDialogs {
- public:
-||||||| merged common ancestors
-class nsNSSDialogs : public nsICertificateDialogs
-                   , public nsIClientAuthDialogs
-                   , public nsIGeneratingKeypairInfoDialogs
-                   , public nsITokenDialogs
-                   , public nsITokenPasswordDialogs
-{
-public:
-=======
 class nsNSSDialogs : public nsICertificateDialogs,
                      public nsIClientAuthDialogs,
                      public nsITokenDialogs,
                      public nsITokenPasswordDialogs {
  public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSITOKENPASSWORDDIALOGS
   NS_DECL_NSICERTIFICATEDIALOGS

@@ -53,29 +53,13 @@ class ClientPaintedLayer : public PaintedLayer, public ClientLayer {
     MOZ_COUNT_DTOR(ClientPaintedLayer);
   }
 
-<<<<<<< HEAD
- public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
-||||||| merged common ancestors
-public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
-  {
-=======
  public:
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(ClientManager()->InConstruction(),
                  "Can only set properties in construction phase");
     PaintedLayer::SetVisibleRegion(aRegion);
   }
-<<<<<<< HEAD
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override {
-||||||| merged common ancestors
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override
-  {
-=======
   void InvalidateRegion(const nsIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(ClientManager()->InConstruction(),
                  "Can only set properties in construction phase");
     mInvalidRegion.Add(aRegion);
@@ -84,22 +68,9 @@ public:
 
   void RenderLayer() override { RenderLayerWithReadback(nullptr); }
 
-<<<<<<< HEAD
-  virtual void RenderLayerWithReadback(ReadbackProcessor* aReadback) override;
-||||||| merged common ancestors
-  virtual void RenderLayerWithReadback(ReadbackProcessor *aReadback) override;
-=======
   void RenderLayerWithReadback(ReadbackProcessor* aReadback) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void ClearCachedResources() override {
-||||||| merged common ancestors
-  virtual void ClearCachedResources() override
-  {
-=======
   void ClearCachedResources() override {
->>>>>>> upstream-releases
     if (mContentClient) {
       mContentClient->Clear();
     }
@@ -107,69 +78,28 @@ public:
     DestroyBackBuffer();
   }
 
-<<<<<<< HEAD
-  virtual void HandleMemoryPressure() override {
-||||||| merged common ancestors
-  virtual void HandleMemoryPressure() override
-  {
-=======
   void HandleMemoryPressure() override {
->>>>>>> upstream-releases
     if (mContentClient) {
       mContentClient->HandleMemoryPressure();
     }
   }
 
-<<<<<<< HEAD
-  virtual void FillSpecificAttributes(
-      SpecificLayerAttributes& aAttrs) override {
-||||||| merged common ancestors
-  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override
-  {
-=======
   void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override {
->>>>>>> upstream-releases
     aAttrs = PaintedLayerAttributes(GetValidRegion());
   }
 
   ClientLayerManager* ClientManager() {
     return static_cast<ClientLayerManager*>(mManager);
   }
-<<<<<<< HEAD
 
-  virtual Layer* AsLayer() override { return this; }
-  virtual ShadowableLayer* AsShadowableLayer() override { return this; }
-||||||| merged common ancestors
-  
-  virtual Layer* AsLayer() override { return this; }
-  virtual ShadowableLayer* AsShadowableLayer() override { return this; }
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  virtual CompositableClient* GetCompositableClient() override {
-||||||| merged common ancestors
-  virtual CompositableClient* GetCompositableClient() override
-  {
-=======
   Layer* AsLayer() override { return this; }
   ShadowableLayer* AsShadowableLayer() override { return this; }
 
   CompositableClient* GetCompositableClient() override {
->>>>>>> upstream-releases
     return mContentClient;
   }
 
-<<<<<<< HEAD
-  virtual void Disconnect() override { mContentClient = nullptr; }
-||||||| merged common ancestors
-  virtual void Disconnect() override
-  {
-    mContentClient = nullptr;
-  }
-=======
   void Disconnect() override { mContentClient = nullptr; }
->>>>>>> upstream-releases
 
  protected:
   void RecordThebes();
@@ -180,14 +110,7 @@ public:
   bool UpdatePaintRegion(PaintState& aState);
   void FinishPaintState(PaintState& aState);
 
-<<<<<<< HEAD
-  virtual void PrintInfo(std::stringstream& aStream,
-                         const char* aPrefix) override;
-||||||| merged common ancestors
-  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
-=======
   void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
->>>>>>> upstream-releases
 
   void DestroyBackBuffer() { mContentClient = nullptr; }
 

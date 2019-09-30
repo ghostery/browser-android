@@ -5,30 +5,6 @@
 //! `list` computed values.
 
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-pub use crate::values::specified::list::ListStyleType;
-pub use crate::values::specified::list::{QuotePair, Quotes};
-
-use servo_arc::Arc;
-
-lazy_static! {
-    static ref INITIAL_QUOTES: Arc<Box<[QuotePair]>> = Arc::new(
-        vec![
-            QuotePair {
-                opening: "\u{201c}".to_owned().into_boxed_str(),
-                closing: "\u{201d}".to_owned().into_boxed_str(),
-            },
-            QuotePair {
-                opening: "\u{2018}".to_owned().into_boxed_str(),
-                closing: "\u{2019}".to_owned().into_boxed_str(),
-            },
-        ]
-        .into_boxed_slice()
-    );
-}
-||||||| merged common ancestors
-pub use values::specified::list::ListStyleType;
-=======
 pub use crate::values::specified::list::ListStyleType;
 pub use crate::values::specified::list::MozListReversed;
 pub use crate::values::specified::list::{QuotePair, Quotes};
@@ -48,7 +24,6 @@ lazy_static! {
         .into_iter()
     );
 }
->>>>>>> upstream-releases
 
 impl Quotes {
     /// Initial value for `quotes`.

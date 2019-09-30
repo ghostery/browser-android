@@ -12,33 +12,15 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-TimeoutHandler::TimeoutHandler(JSContext* aCx) : TimeoutHandler() {
-||||||| merged common ancestors
-TimeoutHandler::TimeoutHandler(JSContext* aCx)
-  : TimeoutHandler()
-{
-=======
 //-----------------------------------------------------------------------------
 // TimeoutHandler
 //-----------------------------------------------------------------------------
 
 TimeoutHandler::TimeoutHandler(JSContext* aCx) : TimeoutHandler() {
->>>>>>> upstream-releases
   nsJSUtils::GetCallingLocation(aCx, mFileName, &mLineNo, &mColumn);
 }
 
-<<<<<<< HEAD
-nsresult TimeoutHandler::Call() { return NS_OK; }
-||||||| merged common ancestors
-nsresult
-TimeoutHandler::Call()
-{
-  return NS_OK;
-}
-=======
 bool TimeoutHandler::Call(const char* /* unused */) { return false; }
->>>>>>> upstream-releases
 
 void TimeoutHandler::GetLocation(const char** aFileName, uint32_t* aLineNo,
                                  uint32_t* aColumn) {
@@ -56,13 +38,6 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(TimeoutHandler)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 //-----------------------------------------------------------------------------
 // ScriptTimeoutHandler
 //-----------------------------------------------------------------------------
@@ -194,4 +169,3 @@ void CallbackTimeoutHandler::MarkForCC() { mFunction->MarkForCC(); }
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

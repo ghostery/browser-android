@@ -14,13 +14,7 @@ es_UY{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.79"}
-||||||| merged common ancestors
-    Version{"2.1.38.39"}
-=======
     Version{"2.1.47.70"}
->>>>>>> upstream-releases
     calendar{
         gregorian{
             AmPmMarkers{

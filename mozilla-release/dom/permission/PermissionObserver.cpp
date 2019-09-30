@@ -31,17 +31,8 @@ PermissionObserver::~PermissionObserver() {
   gInstance = nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PermissionObserver>
-PermissionObserver::GetInstance() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PermissionObserver>
-PermissionObserver::GetInstance()
-{
-=======
 /* static */
 already_AddRefed<PermissionObserver> PermissionObserver::GetInstance() {
->>>>>>> upstream-releases
   RefPtr<PermissionObserver> instance = gInstance;
   if (!instance) {
     instance = new PermissionObserver();

@@ -53,23 +53,10 @@ class nsRemoteClient {
    * @return true if succeeded, false if no running instance was found.
    *
    */
-<<<<<<< HEAD:mozilla-release/widget/xremoteclient/nsRemoteClient.h
-  virtual nsresult SendCommandLine(const char *aProgram, const char *aUsername,
-                                   const char *aProfile, int32_t argc,
-                                   char **argv, const char *aDesktopStartupID,
-                                   char **aResponse, bool *aSucceeded) = 0;
-||||||| merged common ancestors
-  virtual nsresult SendCommandLine(const char *aProgram, const char *aUsername,
-                                   const char *aProfile,
-                                   int32_t argc, char **argv,
-                                   const char* aDesktopStartupID,
-                                   char **aResponse, bool *aSucceeded) = 0;
-=======
   virtual nsresult SendCommandLine(const char* aProgram, const char* aProfile,
                                    int32_t argc, char** argv,
                                    const char* aDesktopStartupID,
                                    char** aResponse, bool* aSucceeded) = 0;
->>>>>>> upstream-releases:mozilla-release/toolkit/components/remote/nsRemoteClient.h
 };
 
 #endif  // nsRemoteClient_h__

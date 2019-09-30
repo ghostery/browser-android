@@ -178,30 +178,6 @@ describe("AboutPreferences Feed", () => {
     let prefStructure;
     let Preferences;
     let gHomePane;
-<<<<<<< HEAD
-    const testRender = () => instance.renderPreferences({
-      document: {
-        createXULElement: sandbox.stub().returns(node),
-        createProcessingInstruction: sandbox.stub(),
-        createElementNS: sandbox.stub().callsFake((NS, el) => document.createElement(el)),
-        getElementById: sandbox.stub().returns(node),
-        insertBefore: sandbox.stub().returnsArg(0),
-      },
-      Preferences,
-      gHomePane,
-    }, strings, prefStructure);
-||||||| merged common ancestors
-    const testRender = () => instance.renderPreferences({
-      document: {
-        createXULElement: sandbox.stub().returns(node),
-        createProcessingInstruction: sandbox.stub(),
-        getElementById: sandbox.stub().returns(node),
-        insertBefore: sandbox.stub().returnsArg(0),
-      },
-      Preferences,
-      gHomePane,
-    }, strings, prefStructure);
-=======
     const testRender = () =>
       instance.renderPreferences(
         {
@@ -228,7 +204,6 @@ describe("AboutPreferences Feed", () => {
         prefStructure,
         DiscoveryStream.config
       );
->>>>>>> upstream-releases
     beforeEach(() => {
       node = {
         appendChild: sandbox.stub().returnsArg(0),

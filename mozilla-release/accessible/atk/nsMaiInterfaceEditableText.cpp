@@ -91,16 +91,8 @@ static void deleteTextCB(AtkEditableText* aText, gint aStartPos, gint aEndPos) {
   }
 }
 
-<<<<<<< HEAD
-static void pasteTextCB(AtkEditableText* aText, gint aPosition) {
-||||||| merged common ancestors
-static void
-pasteTextCB(AtkEditableText *aText, gint aPosition)
-{
-=======
 MOZ_CAN_RUN_SCRIPT_BOUNDARY
 static void pasteTextCB(AtkEditableText* aText, gint aPosition) {
->>>>>>> upstream-releases
   AccessibleWrap* accWrap = GetAccessibleWrap(ATK_OBJECT(aText));
   if (accWrap) {
     RefPtr<HyperTextAccessible> text = accWrap->AsHyperText();

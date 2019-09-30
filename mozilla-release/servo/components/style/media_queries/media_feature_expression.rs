@@ -5,46 +5,13 @@
 //! Parsing for media feature expressions, like `(foo: bar)` or
 //! `(width >= 400px)`.
 
-<<<<<<< HEAD
-use super::media_feature::{Evaluator, MediaFeatureDescription};
-use super::media_feature::{KeywordDiscriminant, ParsingRequirements};
-use super::Device;
-use crate::context::QuirksMode;
-||||||| merged common ancestors
-use Atom;
-use context::QuirksMode;
-use cssparser::{Parser, Token};
-=======
 use super::media_feature::{Evaluator, MediaFeatureDescription};
 use super::media_feature::{KeywordDiscriminant, ParsingRequirements};
 use super::Device;
 use crate::context::QuirksMode;
 #[cfg(feature = "gecko")]
 use crate::gecko::media_features::MEDIA_FEATURES;
->>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::gecko::media_features::MEDIA_FEATURES;
-#[cfg(feature = "gecko")]
-use crate::gecko_bindings::structs;
-use crate::parser::{Parse, ParserContext};
-#[cfg(feature = "servo")]
-use crate::servo::media_queries::MEDIA_FEATURES;
-use crate::str::{starts_with_ignore_ascii_case, string_as_ascii_lowercase};
-use crate::stylesheets::Origin;
-use crate::values::computed::{self, ToComputedValue};
-use crate::values::specified::{Integer, Length, Number, Resolution};
-use crate::values::{serialize_atom_identifier, CSSFloat};
-use crate::Atom;
-use cssparser::{Parser, Token};
-use num_traits::Zero;
-use std::cmp::{Ordering, PartialOrd};
-||||||| merged common ancestors
-use gecko_bindings::structs;
-use num_traits::Zero;
-use parser::{Parse, ParserContext};
-use std::cmp::{PartialOrd, Ordering};
-=======
 use crate::gecko_bindings::structs;
 use crate::parser::{Parse, ParserContext};
 #[cfg(feature = "servo")]
@@ -56,7 +23,6 @@ use crate::values::{serialize_atom_identifier, CSSFloat};
 use crate::{Atom, Zero};
 use cssparser::{Parser, Token};
 use std::cmp::{Ordering, PartialOrd};
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
 

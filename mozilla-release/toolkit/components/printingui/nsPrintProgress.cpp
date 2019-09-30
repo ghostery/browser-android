@@ -26,15 +26,7 @@ NS_INTERFACE_MAP_BEGIN(nsPrintProgress)
   NS_INTERFACE_MAP_ENTRY(nsIWebProgressListener)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-nsPrintProgress::nsPrintProgress(nsIPrintSettings *aPrintSettings) {
-||||||| merged common ancestors
-
-nsPrintProgress::nsPrintProgress(nsIPrintSettings* aPrintSettings)
-{
-=======
 nsPrintProgress::nsPrintProgress(nsIPrintSettings* aPrintSettings) {
->>>>>>> upstream-releases
   m_closeProgress = false;
   m_processCanceled = false;
   m_pendingStateFlags = -1;
@@ -44,22 +36,9 @@ nsPrintProgress::nsPrintProgress(nsIPrintSettings* aPrintSettings) {
 
 nsPrintProgress::~nsPrintProgress() { (void)ReleaseListeners(); }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::OpenProgressDialog(
-    mozIDOMWindowProxy *parent, const char *dialogURL, nsISupports *parameters,
-    nsIObserver *openDialogObserver, bool *notifyOnOpen) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::OpenProgressDialog(mozIDOMWindowProxy *parent,
-                                                  const char *dialogURL,
-                                                  nsISupports *parameters,
-                                                  nsIObserver *openDialogObserver,
-                                                  bool *notifyOnOpen)
-{
-=======
 NS_IMETHODIMP nsPrintProgress::OpenProgressDialog(
     mozIDOMWindowProxy* parent, const char* dialogURL, nsISupports* parameters,
     nsIObserver* openDialogObserver, bool* notifyOnOpen) {
->>>>>>> upstream-releases
   *notifyOnOpen = true;
   m_observer = openDialogObserver;
   nsresult rv = NS_ERROR_FAILURE;
@@ -76,7 +55,7 @@ NS_IMETHODIMP nsPrintProgress::OpenProgressDialog(
         do_CreateInstance(NS_SUPPORTS_INTERFACE_POINTER_CONTRACTID, &rv);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    ifptr->SetData(static_cast<nsIPrintProgress *>(this));
+    ifptr->SetData(static_cast<nsIPrintProgress*>(this));
     ifptr->SetDataIID(&NS_GET_IID(nsIPrintProgress));
 
     array->AppendElement(ifptr);
@@ -121,14 +100,7 @@ NS_IMETHODIMP nsPrintProgress::CloseProgressDialog(bool forceClose) {
                        (nsresult)forceClose);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::GetPrompter(nsIPrompt **_retval) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::GetPrompter(nsIPrompt **_retval)
-{
-=======
 NS_IMETHODIMP nsPrintProgress::GetPrompter(nsIPrompt** _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_retval);
   *_retval = nullptr;
 
@@ -141,16 +113,8 @@ NS_IMETHODIMP nsPrintProgress::GetPrompter(nsIPrompt** _retval) {
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::GetProcessCanceledByUser(
-    bool *aProcessCanceledByUser) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::GetProcessCanceledByUser(bool *aProcessCanceledByUser)
-{
-=======
 NS_IMETHODIMP nsPrintProgress::GetProcessCanceledByUser(
     bool* aProcessCanceledByUser) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aProcessCanceledByUser);
   *aProcessCanceledByUser = m_processCanceled;
   return NS_OK;
@@ -167,19 +131,9 @@ NS_IMETHODIMP nsPrintProgress::SetProcessCanceledByUser(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::RegisterListener(
-    nsIWebProgressListener *listener) {
-  if (!listener)  // Nothing to do with a null listener!
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::RegisterListener(nsIWebProgressListener * listener)
-{
-  if (!listener) //Nothing to do with a null listener!
-=======
 NS_IMETHODIMP nsPrintProgress::RegisterListener(
     nsIWebProgressListener* listener) {
   if (!listener)  // Nothing to do with a null listener!
->>>>>>> upstream-releases
     return NS_OK;
 
   m_listenerList.AppendObject(listener);
@@ -196,20 +150,9 @@ NS_IMETHODIMP nsPrintProgress::RegisterListener(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::UnregisterListener(
-    nsIWebProgressListener *listener) {
-  if (listener) m_listenerList.RemoveObject(listener);
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::UnregisterListener(nsIWebProgressListener *listener)
-{
-  if (listener)
-    m_listenerList.RemoveObject(listener);
-=======
 NS_IMETHODIMP nsPrintProgress::UnregisterListener(
     nsIWebProgressListener* listener) {
   if (listener) m_listenerList.RemoveObject(listener);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -221,20 +164,10 @@ NS_IMETHODIMP nsPrintProgress::DoneIniting() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::OnStateChange(nsIWebProgress *aWebProgress,
-                                             nsIRequest *aRequest,
-                                             uint32_t aStateFlags,
-                                             nsresult aStatus) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::OnStateChange(nsIWebProgress *aWebProgress, nsIRequest *aRequest, uint32_t aStateFlags, nsresult aStatus)
-{
-=======
 NS_IMETHODIMP nsPrintProgress::OnStateChange(nsIWebProgress* aWebProgress,
                                              nsIRequest* aRequest,
                                              uint32_t aStateFlags,
                                              nsresult aStatus) {
->>>>>>> upstream-releases
   if (XRE_IsE10sParentProcess() &&
       aStateFlags & nsIWebProgressListener::STATE_STOP) {
     // If we're in an e10s parent, m_observer is a PrintProgressDialogParent,
@@ -258,24 +191,12 @@ NS_IMETHODIMP nsPrintProgress::OnStateChange(nsIWebProgress* aWebProgress,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::OnProgressChange(nsIWebProgress *aWebProgress,
-                                                nsIRequest *aRequest,
-                                                int32_t aCurSelfProgress,
-                                                int32_t aMaxSelfProgress,
-                                                int32_t aCurTotalProgress,
-                                                int32_t aMaxTotalProgress) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::OnProgressChange(nsIWebProgress *aWebProgress, nsIRequest *aRequest, int32_t aCurSelfProgress, int32_t aMaxSelfProgress, int32_t aCurTotalProgress, int32_t aMaxTotalProgress)
-{
-=======
 NS_IMETHODIMP nsPrintProgress::OnProgressChange(nsIWebProgress* aWebProgress,
                                                 nsIRequest* aRequest,
                                                 int32_t aCurSelfProgress,
                                                 int32_t aMaxSelfProgress,
                                                 int32_t aCurTotalProgress,
                                                 int32_t aMaxTotalProgress) {
->>>>>>> upstream-releases
   if (XRE_IsE10sParentProcess() && aCurSelfProgress &&
       aCurSelfProgress >= aMaxSelfProgress) {
     // If we're in an e10s parent, m_observer is a PrintProgressDialogParent,
@@ -297,43 +218,18 @@ NS_IMETHODIMP nsPrintProgress::OnProgressChange(nsIWebProgress* aWebProgress,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::OnLocationChange(nsIWebProgress *aWebProgress,
-                                                nsIRequest *aRequest,
-                                                nsIURI *location,
-                                                uint32_t aFlags) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::OnLocationChange(nsIWebProgress *aWebProgress, nsIRequest *aRequest, nsIURI *location, uint32_t aFlags)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 NS_IMETHODIMP nsPrintProgress::OnLocationChange(nsIWebProgress* aWebProgress,
                                                 nsIRequest* aRequest,
                                                 nsIURI* location,
                                                 uint32_t aFlags) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::OnStatusChange(nsIWebProgress *aWebProgress,
-                                              nsIRequest *aRequest,
-                                              nsresult aStatus,
-                                              const char16_t *aMessage) {
-  if (aMessage && *aMessage) m_pendingStatus = aMessage;
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::OnStatusChange(nsIWebProgress *aWebProgress, nsIRequest *aRequest, nsresult aStatus, const char16_t *aMessage)
-{
-  if (aMessage && *aMessage)
-  m_pendingStatus = aMessage;
-=======
 NS_IMETHODIMP nsPrintProgress::OnStatusChange(nsIWebProgress* aWebProgress,
                                               nsIRequest* aRequest,
                                               nsresult aStatus,
                                               const char16_t* aMessage) {
   if (aMessage && *aMessage) m_pendingStatus = aMessage;
->>>>>>> upstream-releases
 
   uint32_t count = m_listenerList.Count();
   for (uint32_t i = count - 1; i < count; i--) {
@@ -347,40 +243,18 @@ NS_IMETHODIMP nsPrintProgress::OnStatusChange(nsIWebProgress* aWebProgress,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsPrintProgress::OnSecurityChange(nsIWebProgress *aWebProgress,
-                                                nsIRequest *aRequest,
-                                                uint32_t state) {
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP nsPrintProgress::OnSecurityChange(nsIWebProgress *aWebProgress,
-                                                nsIRequest *aRequest,
-                                                uint32_t aOldState,
-                                                uint32_t aState,
-                                                const nsAString& aContentBlockingLogJSON)
-{
-    return NS_OK;
-=======
 NS_IMETHODIMP nsPrintProgress::OnSecurityChange(nsIWebProgress* aWebProgress,
                                                 nsIRequest* aRequest,
                                                 uint32_t aState) {
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsPrintProgress::ReleaseListeners() {
-||||||| merged common ancestors
-nsresult nsPrintProgress::ReleaseListeners()
-{
-=======
 NS_IMETHODIMP nsPrintProgress::OnContentBlockingEvent(
     nsIWebProgress* aWebProgress, nsIRequest* aRequest, uint32_t aEvent) {
   return NS_OK;
 }
 
 nsresult nsPrintProgress::ReleaseListeners() {
->>>>>>> upstream-releases
   m_listenerList.Clear();
 
   return NS_OK;

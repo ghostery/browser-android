@@ -109,27 +109,11 @@ NS_IMPL_CYCLE_COLLECTING_ADDREF(nsBindingManager)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(nsBindingManager)
 
 // Constructors/Destructors
-<<<<<<< HEAD
-nsBindingManager::nsBindingManager(nsIDocument* aDocument)
-    : mProcessingAttachedStack(false),
-      mDestroyed(false),
-      mAttachedStackSizeOnOutermost(0),
-      mDocument(aDocument) {}
-||||||| merged common ancestors
-nsBindingManager::nsBindingManager(nsIDocument* aDocument)
-  : mProcessingAttachedStack(false),
-    mDestroyed(false),
-    mAttachedStackSizeOnOutermost(0),
-    mDocument(aDocument)
-{
-}
-=======
 nsBindingManager::nsBindingManager(Document* aDocument)
     : mProcessingAttachedStack(false),
       mDestroyed(false),
       mAttachedStackSizeOnOutermost(0),
       mDocument(aDocument) {}
->>>>>>> upstream-releases
 
 nsBindingManager::~nsBindingManager(void) { mDestroyed = true; }
 
@@ -196,21 +180,9 @@ nsresult nsBindingManager::SetWrappedJS(nsIContent* aContent,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsBindingManager::RemovedFromDocumentInternal(
-    nsIContent* aContent, nsIDocument* aOldDocument,
-    DestructorHandling aDestructorHandling) {
-||||||| merged common ancestors
-void
-nsBindingManager::RemovedFromDocumentInternal(nsIContent* aContent,
-                                              nsIDocument* aOldDocument,
-                                              DestructorHandling aDestructorHandling)
-{
-=======
 void nsBindingManager::RemovedFromDocumentInternal(
     nsIContent* aContent, Document* aOldDocument,
     DestructorHandling aDestructorHandling) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOldDocument != nullptr, "no old document");
 
   RefPtr<nsXBLBinding> binding = aContent->GetXBLBinding();
@@ -232,48 +204,7 @@ void nsBindingManager::RemovedFromDocumentInternal(
   aContent->SetXBLInsertionPoint(nullptr);
 }
 
-<<<<<<< HEAD
-nsAtom* nsBindingManager::ResolveTag(nsIContent* aContent,
-                                     int32_t* aNameSpaceID) {
-  nsXBLBinding* binding = aContent->GetXBLBinding();
-
-  if (binding) {
-    nsAtom* base = binding->GetBaseTag(aNameSpaceID);
-
-    if (base) {
-      return base;
-    }
-  }
-
-  *aNameSpaceID = aContent->GetNameSpaceID();
-  return aContent->NodeInfo()->NameAtom();
-}
-
 nsINodeList* nsBindingManager::GetAnonymousNodesFor(nsIContent* aContent) {
-||||||| merged common ancestors
-nsAtom*
-nsBindingManager::ResolveTag(nsIContent* aContent, int32_t* aNameSpaceID)
-{
-  nsXBLBinding *binding = aContent->GetXBLBinding();
-
-  if (binding) {
-    nsAtom* base = binding->GetBaseTag(aNameSpaceID);
-
-    if (base) {
-      return base;
-    }
-  }
-
-  *aNameSpaceID = aContent->GetNameSpaceID();
-  return aContent->NodeInfo()->NameAtom();
-}
-
-nsINodeList*
-nsBindingManager::GetAnonymousNodesFor(nsIContent* aContent)
-{
-=======
-nsINodeList* nsBindingManager::GetAnonymousNodesFor(nsIContent* aContent) {
->>>>>>> upstream-releases
   nsXBLBinding* binding = GetBindingWithContent(aContent);
   return binding ? binding->GetAnonymousNodeList() : nullptr;
 }
@@ -313,34 +244,16 @@ nsresult nsBindingManager::ClearBinding(Element* aElement) {
   // been removed and style may have changed due to the removal of the
   // anonymous children.
   // XXXbz this should be using the current doc (if any), not the owner doc.
-<<<<<<< HEAD
-  presShell = doc->GetShell();  // get the shell again, just in case it changed
-||||||| merged common ancestors
-  presShell = doc->GetShell(); // get the shell again, just in case it changed
-=======
   // get the shell again, just in case it changed
   PresShell* presShell = doc->GetPresShell();
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(presShell, NS_ERROR_FAILURE);
   presShell->PostRecreateFramesFor(aElement);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsBindingManager::LoadBindingDocument(nsIDocument* aBoundDoc,
-                                               nsIURI* aURL,
-                                               nsIPrincipal* aOriginPrincipal) {
-||||||| merged common ancestors
-nsresult
-nsBindingManager::LoadBindingDocument(nsIDocument* aBoundDoc,
-                                      nsIURI* aURL,
-                                      nsIPrincipal* aOriginPrincipal)
-{
-=======
 nsresult nsBindingManager::LoadBindingDocument(Document* aBoundDoc,
                                                nsIURI* aURL,
                                                nsIPrincipal* aOriginPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aURL, "Must have a URI to load!");
 
   // First we need to load our binding.
@@ -541,54 +454,6 @@ void nsBindingManager::RemoveLoadingDocListener(nsIURI* aURL) {
   }
 }
 
-<<<<<<< HEAD
-void nsBindingManager::FlushSkinBindings() {
-  if (!mBoundContentSet) {
-    return;
-  }
-
-  for (auto iter = mBoundContentSet->Iter(); !iter.Done(); iter.Next()) {
-    nsXBLBinding* binding = iter.Get()->GetKey()->GetXBLBinding();
-
-    if (binding->MarkedForDeath()) {
-      continue;
-    }
-
-    nsAutoCString path;
-    binding->PrototypeBinding()->DocURI()->GetPathQueryRef(path);
-
-    if (!strncmp(path.get(), "/skin", 5)) {
-      binding->MarkForDeath();
-    }
-  }
-}
-
-||||||| merged common ancestors
-void
-nsBindingManager::FlushSkinBindings()
-{
-  if (!mBoundContentSet) {
-    return;
-  }
-
-  for (auto iter = mBoundContentSet->Iter(); !iter.Done(); iter.Next()) {
-    nsXBLBinding* binding = iter.Get()->GetKey()->GetXBLBinding();
-
-    if (binding->MarkedForDeath()) {
-      continue;
-    }
-
-    nsAutoCString path;
-    binding->PrototypeBinding()->DocURI()->GetPathQueryRef(path);
-
-    if (!strncmp(path.get(), "/skin", 5)) {
-      binding->MarkForDeath();
-    }
-  }
-}
-
-=======
->>>>>>> upstream-releases
 // Used below to protect from recurring in QI calls through XPConnect.
 struct AntiRecursionData {
   nsIContent* element;
@@ -699,92 +564,8 @@ nsresult nsBindingManager::GetBindingImplementation(nsIContent* aContent,
   return NS_NOINTERFACE;
 }
 
-<<<<<<< HEAD
-bool nsBindingManager::EnumerateBoundContentProtoBindings(
-    const BoundContentProtoBindingCallback& aCallback) const {
-  if (!mBoundContentSet) {
-    return true;
-  }
-
-  nsTHashtable<nsPtrHashKey<nsXBLPrototypeBinding>> bindings;
-  for (auto iter = mBoundContentSet->Iter(); !iter.Done(); iter.Next()) {
-    nsIContent* boundContent = iter.Get()->GetKey();
-    for (nsXBLBinding* binding = boundContent->GetXBLBinding(); binding;
-         binding = binding->GetBaseBinding()) {
-      nsXBLPrototypeBinding* proto = binding->PrototypeBinding();
-      // If we have already invoked the callback with a binding, we
-      // should have also invoked it for all its base bindings, so we
-      // don't need to continue this loop anymore.
-      if (!bindings.EnsureInserted(proto)) {
-        break;
-      }
-      if (!aCallback(proto)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
-void nsBindingManager::AppendAllSheets(nsTArray<StyleSheet*>& aArray) {
-  EnumerateBoundContentProtoBindings([&aArray](nsXBLPrototypeBinding* aProto) {
-    aProto->AppendStyleSheetsTo(aArray);
-    return true;
-  });
-}
-
 static void InsertAppendedContent(XBLChildrenElement* aPoint,
                                   nsIContent* aFirstNewContent) {
-||||||| merged common ancestors
-
-bool
-nsBindingManager::EnumerateBoundContentProtoBindings(
-  const BoundContentProtoBindingCallback& aCallback) const
-{
-  if (!mBoundContentSet) {
-    return true;
-  }
-
-  nsTHashtable<nsPtrHashKey<nsXBLPrototypeBinding>> bindings;
-  for (auto iter = mBoundContentSet->Iter(); !iter.Done(); iter.Next()) {
-    nsIContent* boundContent = iter.Get()->GetKey();
-    for (nsXBLBinding* binding = boundContent->GetXBLBinding();
-         binding;
-         binding = binding->GetBaseBinding()) {
-      nsXBLPrototypeBinding* proto = binding->PrototypeBinding();
-      // If we have already invoked the callback with a binding, we
-      // should have also invoked it for all its base bindings, so we
-      // don't need to continue this loop anymore.
-      if (!bindings.EnsureInserted(proto)) {
-        break;
-      }
-      if (!aCallback(proto)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
-void
-nsBindingManager::AppendAllSheets(nsTArray<StyleSheet*>& aArray)
-{
-  EnumerateBoundContentProtoBindings([&aArray](nsXBLPrototypeBinding* aProto) {
-    aProto->AppendStyleSheetsTo(aArray);
-    return true;
-  });
-}
-
-static void
-InsertAppendedContent(XBLChildrenElement* aPoint,
-                      nsIContent* aFirstNewContent)
-{
-=======
-static void InsertAppendedContent(XBLChildrenElement* aPoint,
-                                  nsIContent* aFirstNewContent) {
->>>>>>> upstream-releases
   int32_t insertionIndex;
   if (nsIContent* prevSibling = aFirstNewContent->GetPreviousSibling()) {
     // If we have a previous sibling, then it must already be in aPoint. Find

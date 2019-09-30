@@ -9,7 +9,6 @@
 #include "SkBitmap.h"
 #include "SkColorData.h"
 #include "SkColorSpaceXformer.h"
-#include "SkFlattenablePriv.h"
 #include "SkImageFilterPriv.h"
 #include "SkPoint3.h"
 #include "SkReadBuffer.h"
@@ -467,17 +466,6 @@ sk_sp<SkSpecialImage> SkLightingImageFilterInternal::filterImageGPU(
     sk_sp<GrTextureProxy> inputProxy(input->asTextureProxyRef(context));
     SkASSERT(inputProxy);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
-
-    sk_sp<GrRenderTargetContext> renderTargetContext(
-        context->contextPriv().makeDeferredRenderTargetContext(
-                                SkBackingFit::kApprox, offsetBounds.width(), offsetBounds.height(),
-                                SkColorType2GrPixelConfig(outputProperties.colorType()),
-||||||| merged common ancestors
-    sk_sp<GrRenderTargetContext> renderTargetContext(context->makeDeferredRenderTargetContext(
-                                SkBackingFit::kApprox, offsetBounds.width(), offsetBounds.height(),
-                                GrRenderableConfigForColorSpace(outputProperties.colorSpace()),
-=======
     SkColorType colorType = outputProperties.colorType();
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(colorType);
@@ -486,7 +474,6 @@ sk_sp<SkSpecialImage> SkLightingImageFilterInternal::filterImageGPU(
         context->priv().makeDeferredRenderTargetContext(
                                 format, SkBackingFit::kApprox, offsetBounds.width(),
                                 offsetBounds.height(), SkColorType2GrPixelConfig(colorType),
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
                                 sk_ref_sp(outputProperties.colorSpace())));
     if (!renderTargetContext) {
         return nullptr;
@@ -546,13 +533,6 @@ public:
                                      sk_sp<SkImageFilter>,
                                      const CropRect*);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkDiffuseLightingImageFilter)
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkDiffuseLightingImageFilter)
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
     SkScalar kd() const { return fKD; }
 
 protected:
@@ -587,15 +567,6 @@ public:
                                      SkScalar ks, SkScalar shininess,
                                      sk_sp<SkImageFilter>, const CropRect*);
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSpecularLightingImageFilter)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSpecularLightingImageFilter)
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
     SkScalar ks() const { return fKS; }
     SkScalar shininess() const { return fShininess; }
 

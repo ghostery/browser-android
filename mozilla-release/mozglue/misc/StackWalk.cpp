@@ -147,13 +147,7 @@ MFBT_API void UnregisterJitCodeRegion(uint8_t* aStart, size_t aSize) {
   sJitCodeRegionSize = 0;
 }
 
-<<<<<<< HEAD
-#endif  // _M_AMD64
-||||||| merged common ancestors
-#endif // _M_AMD64
-=======
 #  endif  // _M_AMD64 || _M_ARM64
->>>>>>> upstream-releases
 
 // Routine to print an error message to standard error.
 static void PrintError(const char* aPrefix) {
@@ -200,57 +194,14 @@ static void WalkStackMain64(struct WalkStackData* aData) {
   // Setup initial stack frame to walk from.
   STACKFRAME64 frame64;
   memset(&frame64, 0, sizeof(frame64));
-<<<<<<< HEAD
-#ifdef _M_IX86
-  frame64.AddrPC.Offset = context->Eip;
-||||||| merged common ancestors
-#ifdef _M_IX86
-  frame64.AddrPC.Offset    = context->Eip;
-=======
 #    ifdef _M_IX86
   frame64.AddrPC.Offset = context->Eip;
->>>>>>> upstream-releases
   frame64.AddrStack.Offset = context->Esp;
   frame64.AddrFrame.Offset = context->Ebp;
-<<<<<<< HEAD
-#elif defined _M_IA64
-  frame64.AddrPC.Offset = context->StIIP;
-||||||| merged common ancestors
-#elif defined _M_IA64
-  frame64.AddrPC.Offset    = context->StIIP;
-=======
 #    elif defined _M_IA64
   frame64.AddrPC.Offset = context->StIIP;
->>>>>>> upstream-releases
   frame64.AddrStack.Offset = context->SP;
   frame64.AddrFrame.Offset = context->RsBSP;
-<<<<<<< HEAD
-#elif defined _M_ARM64
-  frame64.AddrPC.Offset = context->Pc;
-  frame64.AddrStack.Offset = context->Sp;
-  frame64.AddrFrame.Offset = context->Fp;
-#endif
-  frame64.AddrPC.Mode = AddrModeFlat;
-  frame64.AddrStack.Mode = AddrModeFlat;
-  frame64.AddrFrame.Mode = AddrModeFlat;
-  frame64.AddrReturn.Mode = AddrModeFlat;
-#endif
-
-#ifdef _M_AMD64
-||||||| merged common ancestors
-#elif defined _M_ARM64
-  frame64.AddrPC.Offset    = context->Pc;
-  frame64.AddrStack.Offset = context->Sp;
-  frame64.AddrFrame.Offset = context->Fp;
-#endif
-  frame64.AddrPC.Mode      = AddrModeFlat;
-  frame64.AddrStack.Mode   = AddrModeFlat;
-  frame64.AddrFrame.Mode   = AddrModeFlat;
-  frame64.AddrReturn.Mode  = AddrModeFlat;
-#endif
-
-#ifdef _M_AMD64
-=======
 #    endif
   frame64.AddrPC.Mode = AddrModeFlat;
   frame64.AddrStack.Mode = AddrModeFlat;
@@ -259,7 +210,6 @@ static void WalkStackMain64(struct WalkStackData* aData) {
 #  endif
 
 #  if defined(_M_AMD64) || defined(_M_ARM64)
->>>>>>> upstream-releases
   // If there are any active suppressions, then at least one thread (we don't
   // know which) is holding a lock that can deadlock RtlVirtualUnwind. Since
   // that thread may be the one that we're trying to unwind, we can't proceed.
@@ -292,36 +242,6 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     // Debug routines are not threadsafe, so grab the lock.
     EnterCriticalSection(&gDbgHelpCS);
     BOOL ok = StackWalk64(
-<<<<<<< HEAD
-#if defined _M_IA64
-        IMAGE_FILE_MACHINE_IA64,
-#elif defined _M_IX86
-        IMAGE_FILE_MACHINE_I386,
-#elif defined _M_ARM64
-        IMAGE_FILE_MACHINE_ARM64,
-#endif
-        aData->process, aData->thread, &frame64, context, nullptr,
-        SymFunctionTableAccess64,  // function table access routine
-        SymGetModuleBase64,        // module base routine
-        0);
-||||||| merged common ancestors
-#if defined _M_IA64
-      IMAGE_FILE_MACHINE_IA64,
-#elif defined _M_IX86
-      IMAGE_FILE_MACHINE_I386,
-#elif defined _M_ARM64
-      IMAGE_FILE_MACHINE_ARM64,
-#endif
-      aData->process,
-      aData->thread,
-      &frame64,
-      context,
-      nullptr,
-      SymFunctionTableAccess64, // function table access routine
-      SymGetModuleBase64,       // module base routine
-      0
-    );
-=======
 #    if defined _M_IA64
         IMAGE_FILE_MACHINE_IA64,
 #    elif defined _M_IX86
@@ -331,7 +251,6 @@ static void WalkStackMain64(struct WalkStackData* aData) {
         SymFunctionTableAccess64,  // function table access routine
         SymGetModuleBase64,        // module base routine
         0);
->>>>>>> upstream-releases
     LeaveCriticalSection(&gDbgHelpCS);
 
     if (ok) {
@@ -359,17 +278,8 @@ static void WalkStackMain64(struct WalkStackData* aData) {
 
     // If we reach a frame in JIT code, we don't have enough information to
     // unwind, so we have to give up.
-<<<<<<< HEAD
-    if (sJitCodeRegionStart && (uint8_t*)context->Rip >= sJitCodeRegionStart &&
-        (uint8_t*)context->Rip < sJitCodeRegionStart + sJitCodeRegionSize) {
-||||||| merged common ancestors
-    if (sJitCodeRegionStart &&
-        (uint8_t*)context->Rip >= sJitCodeRegionStart &&
-        (uint8_t*)context->Rip < sJitCodeRegionStart + sJitCodeRegionSize) {
-=======
     if (sJitCodeRegionStart && (uint8_t*)currentInstr >= sJitCodeRegionStart &&
         (uint8_t*)currentInstr < sJitCodeRegionStart + sJitCodeRegionSize) {
->>>>>>> upstream-releases
       break;
     }
 
@@ -377,18 +287,9 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     // unwind data, so their JIT unwind callback just throws up its hands and
     // terminates the process.
     if (sMsMpegJitCodeRegionStart &&
-<<<<<<< HEAD
-        (uint8_t*)context->Rip >= sMsMpegJitCodeRegionStart &&
-        (uint8_t*)context->Rip <
-            sMsMpegJitCodeRegionStart + sMsMpegJitCodeRegionSize) {
-||||||| merged common ancestors
-        (uint8_t*)context->Rip >= sMsMpegJitCodeRegionStart &&
-        (uint8_t*)context->Rip < sMsMpegJitCodeRegionStart + sMsMpegJitCodeRegionSize) {
-=======
         (uint8_t*)currentInstr >= sMsMpegJitCodeRegionStart &&
         (uint8_t*)currentInstr <
             sMsMpegJitCodeRegionStart + sMsMpegJitCodeRegionSize) {
->>>>>>> upstream-releases
       break;
     }
 
@@ -396,35 +297,14 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     // Try to look up unwind metadata for the current function.
     ULONG64 imageBase;
     PRUNTIME_FUNCTION runtimeFunction =
-<<<<<<< HEAD
-        RtlLookupFunctionEntry(context->Rip, &imageBase, NULL);
-||||||| merged common ancestors
-      RtlLookupFunctionEntry(context->Rip, &imageBase, NULL);
-=======
         RtlLookupFunctionEntry(currentInstr, &imageBase, NULL);
->>>>>>> upstream-releases
 
     if (runtimeFunction) {
       PVOID dummyHandlerData;
       ULONG64 dummyEstablisherFrame;
-<<<<<<< HEAD
-      RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, context->Rip,
-                       runtimeFunction, context, &dummyHandlerData,
-                       &dummyEstablisherFrame, nullptr);
-||||||| merged common ancestors
-      RtlVirtualUnwind(UNW_FLAG_NHANDLER,
-                       imageBase,
-                       context->Rip,
-                       runtimeFunction,
-                       context,
-                       &dummyHandlerData,
-                       &dummyEstablisherFrame,
-                       nullptr);
-=======
       RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, currentInstr,
                        runtimeFunction, context, &dummyHandlerData,
                        &dummyEstablisherFrame, nullptr);
->>>>>>> upstream-releases
     } else if (firstFrame) {
       // Leaf functions can be unwound by hand.
 #    if defined(_M_AMD64)
@@ -615,22 +495,6 @@ static BOOL CALLBACK callbackEspecial64(PCSTR aModuleName, DWORD64 aModuleBase,
 // compiler version, and the version number in debughlp.h was NOT bumped
 // when these changes were made, ifdef based on a constant that was
 // added between these versions.
-<<<<<<< HEAD
-#ifdef SSRVOPT_SETCONTEXT
-#define NS_IMAGEHLP_MODULE64_SIZE                                        \
-  (((offsetof(IMAGEHLP_MODULE64, LoadedPdbName) + sizeof(DWORD64) - 1) / \
-    sizeof(DWORD64)) *                                                   \
-   sizeof(DWORD64))
-#else
-#define NS_IMAGEHLP_MODULE64_SIZE sizeof(IMAGEHLP_MODULE64)
-#endif
-||||||| merged common ancestors
-#ifdef SSRVOPT_SETCONTEXT
-#define NS_IMAGEHLP_MODULE64_SIZE (((offsetof(IMAGEHLP_MODULE64, LoadedPdbName) + sizeof(DWORD64) - 1) / sizeof(DWORD64)) * sizeof(DWORD64))
-#else
-#define NS_IMAGEHLP_MODULE64_SIZE sizeof(IMAGEHLP_MODULE64)
-#endif
-=======
 #  ifdef SSRVOPT_SETCONTEXT
 #    define NS_IMAGEHLP_MODULE64_SIZE                                        \
       (((offsetof(IMAGEHLP_MODULE64, LoadedPdbName) + sizeof(DWORD64) - 1) / \
@@ -639,7 +503,6 @@ static BOOL CALLBACK callbackEspecial64(PCSTR aModuleName, DWORD64 aModuleBase,
 #  else
 #    define NS_IMAGEHLP_MODULE64_SIZE sizeof(IMAGEHLP_MODULE64)
 #  endif
->>>>>>> upstream-releases
 
 BOOL SymGetModuleInfoEspecial64(HANDLE aProcess, DWORD64 aAddr,
                                 PIMAGEHLP_MODULE64 aModuleInfo,
@@ -803,28 +666,11 @@ MFBT_API bool MozDescribeCodeAddress(void* aPC,
 
 // This thing is exported by libstdc++
 // Yes, this is a gcc only hack
-<<<<<<< HEAD
-#if defined(MOZ_DEMANGLE_SYMBOLS)
-#include <cxxabi.h>
-#endif  // MOZ_DEMANGLE_SYMBOLS
-
-void DemangleSymbol(const char* aSymbol, char* aBuffer, int aBufLen) {
-||||||| merged common ancestors
-#if defined(MOZ_DEMANGLE_SYMBOLS)
-#include <cxxabi.h>
-#endif // MOZ_DEMANGLE_SYMBOLS
-
-void DemangleSymbol(const char* aSymbol,
-                    char* aBuffer,
-                    int aBufLen)
-{
-=======
 #  if defined(MOZ_DEMANGLE_SYMBOLS)
 #    include <cxxabi.h>
 #  endif  // MOZ_DEMANGLE_SYMBOLS
 
 void DemangleSymbol(const char* aSymbol, char* aBuffer, int aBufLen) {
->>>>>>> upstream-releases
   aBuffer[0] = '\0';
 
 #  if defined(MOZ_DEMANGLE_SYMBOLS)
@@ -836,13 +682,7 @@ void DemangleSymbol(const char* aSymbol, char* aBuffer, int aBufLen) {
     aBuffer[aBufLen - 1] = '\0';
     free(demangled);
   }
-<<<<<<< HEAD
-#endif  // MOZ_DEMANGLE_SYMBOLS
-||||||| merged common ancestors
-#endif // MOZ_DEMANGLE_SYMBOLS
-=======
 #  endif  // MOZ_DEMANGLE_SYMBOLS
->>>>>>> upstream-releases
 }
 
 // {x86, ppc} x {Linux, Mac} stackwalking code.
@@ -884,19 +724,9 @@ MFBT_API void MozStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
     uintptr_t stackStart = std::max(maxStackStart, uintptr_t(bp));
     stackEnd = reinterpret_cast<void*>(stackStart + kMaxStackSize);
   }
-<<<<<<< HEAD
-#else
-#error Unsupported configuration
-#endif
-||||||| merged common ancestors
-#else
-#  error Unsupported configuration
-#endif
-=======
 #    else
 #      error Unsupported configuration
 #    endif
->>>>>>> upstream-releases
   FramePointerStackWalk(aCallback, aSkipFrames, aMaxFrames, aClosure, bp,
                         stackEnd);
 }
@@ -1009,22 +839,10 @@ MFBT_API bool MozDescribeCodeAddress(void* aPC,
 
 #if defined(XP_WIN) || defined(XP_MACOSX) || defined(XP_LINUX)
 namespace mozilla {
-<<<<<<< HEAD
-void FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
-                           uint32_t aMaxFrames, void* aClosure, void** aBp,
-                           void* aStackEnd) {
-||||||| merged common ancestors
-void
-FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
-                      uint32_t aMaxFrames, void* aClosure, void** aBp,
-                      void* aStackEnd)
-{
-=======
 MOZ_ASAN_BLACKLIST
 void FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
                            uint32_t aMaxFrames, void* aClosure, void** aBp,
                            void* aStackEnd) {
->>>>>>> upstream-releases
   // Stack walking code courtesy Kipp's "leaky".
 
   int32_t skip = aSkipFrames;
@@ -1037,28 +855,14 @@ void FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
     // a little if the stack has been corrupted.)
     // We don't need to check against the begining of the stack because
     // we can assume that aBp > sp
-<<<<<<< HEAD
-    if (next <= aBp || next > aStackEnd || (uintptr_t(next) & 3)) {
-||||||| merged common ancestors
-    if (next <= aBp ||
-        next > aStackEnd ||
-        (uintptr_t(next) & 3)) {
-=======
     if (next <= aBp || next >= aStackEnd || (uintptr_t(next) & 3)) {
->>>>>>> upstream-releases
       break;
     }
 #  if (defined(__ppc__) && defined(XP_MACOSX)) || defined(__powerpc64__)
     // ppc mac or powerpc64 linux
     void* pc = *(aBp + 2);
     aBp += 3;
-<<<<<<< HEAD
-#else  // i386 or powerpc32 linux
-||||||| merged common ancestors
-#else // i386 or powerpc32 linux
-=======
 #  else  // i386 or powerpc32 linux
->>>>>>> upstream-releases
     void* pc = *(aBp + 1);
     aBp += 2;
 #  endif

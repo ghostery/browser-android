@@ -10,24 +10,6 @@
 #include "nsIOSPermissionRequest.h"
 #include "nsWeakReference.h"
 
-<<<<<<< HEAD
-#define NS_OSPERMISSIONREQUEST_CID                   \
-  {                                                  \
-    0x95790842, 0x75a0, 0x430d, {                    \
-      0x98, 0xbf, 0xf5, 0xce, 0x37, 0x88, 0xea, 0x6d \
-    }                                                \
-  }
-#define NS_OSPERMISSIONREQUEST_CONTRACTID "@mozilla.org/ospermissionrequest;1"
-
-||||||| merged common ancestors
-#define  NS_OSPERMISSIONREQUEST_CID                                   \
-{ 0x95790842, 0x75a0, 0x430d, \
-  { 0x98, 0xbf, 0xf5, 0xce, 0x37, 0x88, 0xea, 0x6d } }
-#define NS_OSPERMISSIONREQUEST_CONTRACTID \
-  "@mozilla.org/ospermissionrequest;1"
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 class Promise;

@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 gd{
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     zoneStrings{
         "Africa:Abidjan"{
             ec{"Abidjan"}
@@ -959,10 +953,6 @@ gd{
         }
         "Etc:UTC"{
             ls{"Àm Uile-choitcheann Co-òrdanaichte"}
-<<<<<<< HEAD
-            ss{"UTC"}
-||||||| merged common ancestors
-=======
             ss{"UTC"}
         }
         "Etc:Unknown"{
@@ -1006,7 +996,6 @@ gd{
         }
         "Europe:Copenhagen"{
             ec{"Beirbh"}
->>>>>>> upstream-releases
         }
         "Europe:Dublin"{
             ec{"Baile Àtha Cliath"}

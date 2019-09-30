@@ -25,41 +25,18 @@ using namespace mozilla;
 using namespace mozilla::gfx;
 using namespace mozilla::layout;
 
-<<<<<<< HEAD
-nsContainerFrame* NS_NewFieldSetFrame(nsIPresShell* aPresShell,
-                                      ComputedStyle* aStyle) {
-  return new (aPresShell) nsFieldSetFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewFieldSetFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsFieldSetFrame(aStyle);
-=======
 nsContainerFrame* NS_NewFieldSetFrame(PresShell* aPresShell,
                                       ComputedStyle* aStyle) {
   return new (aPresShell) nsFieldSetFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsFieldSetFrame)
 
-<<<<<<< HEAD
-nsFieldSetFrame::nsFieldSetFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID), mLegendRect(GetWritingMode()) {
-  mLegendSpace = 0;
-||||||| merged common ancestors
-nsFieldSetFrame::nsFieldSetFrame(ComputedStyle* aStyle)
-  : nsContainerFrame(aStyle, kClassID)
-  , mLegendRect(GetWritingMode())
-{
-  mLegendSpace  = 0;
-=======
 nsFieldSetFrame::nsFieldSetFrame(ComputedStyle* aStyle,
                                  nsPresContext* aPresContext)
     : nsContainerFrame(aStyle, aPresContext, kClassID),
       mLegendRect(GetWritingMode()) {
   mLegendSpace = 0;
->>>>>>> upstream-releases
 }
 
 nsRect nsFieldSetFrame::VisualBorderRectRelativeToSelf() const {
@@ -95,15 +72,8 @@ nsRect nsFieldSetFrame::VisualBorderRectRelativeToSelf() const {
 
 nsIFrame* nsFieldSetFrame::GetInner() const {
   nsIFrame* last = mFrames.LastChild();
-<<<<<<< HEAD
-  if (last && last->Style()->GetPseudo() == nsCSSAnonBoxes::fieldsetContent()) {
-||||||| merged common ancestors
-  if (last &&
-      last->Style()->GetPseudo() == nsCSSAnonBoxes::fieldsetContent()) {
-=======
   if (last &&
       last->Style()->GetPseudoType() == PseudoStyleType::fieldsetContent) {
->>>>>>> upstream-releases
     return last;
   }
   MOZ_ASSERT(mFrames.LastChild() == mFrames.FirstChild());
@@ -120,26 +90,11 @@ nsIFrame* nsFieldSetFrame::GetLegend() const {
   return mFrames.FirstChild();
 }
 
-<<<<<<< HEAD
-class nsDisplayFieldSetBorder final : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayFieldSetBorder final : public nsDisplayItem
-{
-public:
-=======
 class nsDisplayFieldSetBorder final : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayFieldSetBorder(nsDisplayListBuilder* aBuilder,
                           nsFieldSetFrame* aFrame)
-<<<<<<< HEAD
-      : nsDisplayItem(aBuilder, aFrame) {
-||||||| merged common ancestors
-    : nsDisplayItem(aBuilder, aFrame) {
-=======
       : nsPaintedDisplayItem(aBuilder, aFrame) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayFieldSetBorder);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -147,32 +102,6 @@ class nsDisplayFieldSetBorder final : public nsPaintedDisplayItem {
     MOZ_COUNT_DTOR(nsDisplayFieldSetBorder);
   }
 #endif
-<<<<<<< HEAD
-  virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
-  virtual nsDisplayItemGeometry* AllocateGeometry(
-      nsDisplayListBuilder* aBuilder) override;
-  virtual void ComputeInvalidationRegion(
-      nsDisplayListBuilder* aBuilder, const nsDisplayItemGeometry* aGeometry,
-      nsRegion* aInvalidRegion) const override;
-  bool CreateWebRenderCommands(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder) override;
-||||||| merged common ancestors
-  virtual void Paint(nsDisplayListBuilder* aBuilder,
-                     gfxContext* aCtx) override;
-  virtual nsDisplayItemGeometry* AllocateGeometry(nsDisplayListBuilder* aBuilder) override;
-  virtual void ComputeInvalidationRegion(nsDisplayListBuilder* aBuilder,
-                                         const nsDisplayItemGeometry* aGeometry,
-                                         nsRegion *aInvalidRegion) const override;
-  bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                               mozilla::wr::IpcResourceUpdateQueue& aResources,
-                               const StackingContextHelper& aSc,
-                               mozilla::layers::WebRenderLayerManager* aManager,
-                               nsDisplayListBuilder* aDisplayListBuilder) override;
-=======
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
   virtual nsDisplayItemGeometry* AllocateGeometry(
       nsDisplayListBuilder* aBuilder) override;
@@ -185,7 +114,6 @@ class nsDisplayFieldSetBorder final : public nsPaintedDisplayItem {
       const StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override;
->>>>>>> upstream-releases
   virtual nsRect GetBounds(nsDisplayListBuilder* aBuilder,
                            bool* aSnap) const override;
   NS_DISPLAY_DECL_NAME("FieldSetBorder", TYPE_FIELDSET_BORDER_BACKGROUND)
@@ -231,29 +159,12 @@ nsRect nsDisplayFieldSetBorder::GetBounds(nsDisplayListBuilder* aBuilder,
   return Frame()->GetVisualOverflowRectRelativeToSelf() + ToReferenceFrame();
 }
 
-<<<<<<< HEAD
-bool nsDisplayFieldSetBorder::CreateWebRenderCommands(
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder) {
-||||||| merged common ancestors
-bool
-nsDisplayFieldSetBorder::CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                                 mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                                 const StackingContextHelper& aSc,
-                                                 mozilla::layers::WebRenderLayerManager* aManager,
-                                                 nsDisplayListBuilder* aDisplayListBuilder)
-{
-=======
 bool nsDisplayFieldSetBorder::CreateWebRenderCommands(
     mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
     const StackingContextHelper& aSc,
     mozilla::layers::RenderRootStateManager* aManager,
     nsDisplayListBuilder* aDisplayListBuilder) {
->>>>>>> upstream-releases
   auto frame = static_cast<nsFieldSetFrame*>(mFrame);
   auto offset = ToReferenceFrame();
   nsRect rect;
@@ -262,13 +173,6 @@ bool nsDisplayFieldSetBorder::CreateWebRenderCommands(
   if (nsIFrame* legend = frame->GetLegend()) {
     rect = frame->VisualBorderRectRelativeToSelf() + offset;
 
-<<<<<<< HEAD
-    // Legends require a "negative" clip around the text, which WR doesn't
-    // support yet.
-||||||| merged common ancestors
-    // Legends require a "negative" clip around the text, which WR doesn't support yet.
-=======
->>>>>>> upstream-releases
     nsRect legendRect = legend->GetNormalRect() + offset;
 
     // Make sure we clip all of the border in case the legend is smaller.
@@ -318,50 +222,18 @@ void nsFieldSetFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   // the background/border display item won't do anything, and if it isn't
   // empty, we need to paint the outline
   if (!(GetStateBits() & NS_FRAME_IS_OVERFLOW_CONTAINER) &&
-<<<<<<< HEAD
-      IsVisibleForPainting()) {
-    if (StyleEffects()->mBoxShadow) {
-      aLists.BorderBackground()->AppendToTop(
-          MakeDisplayItem<nsDisplayBoxShadowOuter>(aBuilder, this));
-    }
-||||||| merged common ancestors
-      IsVisibleForPainting(aBuilder)) {
-    if (StyleEffects()->mBoxShadow) {
-      aLists.BorderBackground()->AppendToTop(
-        MakeDisplayItem<nsDisplayBoxShadowOuter>(aBuilder, this));
-    }
-=======
       IsVisibleForPainting()) {
     DisplayOutsetBoxShadowUnconditional(aBuilder, aLists.BorderBackground());
 
     const nsRect rect =
         VisualBorderRectRelativeToSelf() + aBuilder->ToReferenceFrame(this);
->>>>>>> upstream-releases
 
     nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
-<<<<<<< HEAD
-        aBuilder, this, VisualBorderRectRelativeToSelf(),
-        aLists.BorderBackground(),
-        /* aAllowWillPaintBorderOptimization = */ false);
-||||||| merged common ancestors
-      aBuilder, this, VisualBorderRectRelativeToSelf(),
-      aLists.BorderBackground(),
-      /* aAllowWillPaintBorderOptimization = */ false);
-=======
         aBuilder, this, rect, aLists.BorderBackground(),
         /* aAllowWillPaintBorderOptimization = */ false);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    aLists.BorderBackground()->AppendToTop(
-        MakeDisplayItem<nsDisplayFieldSetBorder>(aBuilder, this));
-||||||| merged common ancestors
-    aLists.BorderBackground()->AppendToTop(
-      MakeDisplayItem<nsDisplayFieldSetBorder>(aBuilder, this));
-=======
     aLists.BorderBackground()->AppendNewToTop<nsDisplayFieldSetBorder>(aBuilder,
                                                                        this);
->>>>>>> upstream-releases
 
     DisplayOutlineUnconditional(aBuilder, aLists);
 
@@ -407,16 +279,8 @@ image::ImgDrawResult nsFieldSetFrame::PaintBorder(
   nsPresContext* presContext = PresContext();
 
   PaintBorderFlags borderFlags = aBuilder->ShouldSyncDecodeImages()
-<<<<<<< HEAD
-                                     ? PaintBorderFlags::SYNC_DECODE_IMAGES
-                                     : PaintBorderFlags();
-||||||| merged common ancestors
-                               ? PaintBorderFlags::SYNC_DECODE_IMAGES
-                               : PaintBorderFlags();
-=======
                                      ? PaintBorderFlags::SyncDecodeImages
                                      : PaintBorderFlags();
->>>>>>> upstream-releases
 
   ImgDrawResult result = ImgDrawResult::SUCCESS;
 
@@ -636,16 +500,8 @@ void nsFieldSetFrame::Reflow(nsPresContext* aPresContext,
   // reflow the content frame only if needed
   if (reflowInner) {
     ReflowInput kidReflowInput(aPresContext, aReflowInput, inner,
-<<<<<<< HEAD
-                               innerAvailSize, nullptr,
-                               ReflowInput::CALLER_WILL_INIT);
-||||||| merged common ancestors
-                                     innerAvailSize, nullptr,
-                                     ReflowInput::CALLER_WILL_INIT);
-=======
                                innerAvailSize, Nothing(),
                                ReflowInput::CALLER_WILL_INIT);
->>>>>>> upstream-releases
     // Override computed padding, in case it's percentage padding
     kidReflowInput.Init(aPresContext, Nothing(), nullptr,
                         &aReflowInput.ComputedPhysicalPadding());

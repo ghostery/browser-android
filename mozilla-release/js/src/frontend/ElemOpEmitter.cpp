@@ -124,35 +124,6 @@ bool ElemOpEmitter::emitGet() {
   return true;
 }
 
-<<<<<<< HEAD
-bool ElemOpEmitter::prepareForRhs() {
-  MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
-  MOZ_ASSERT_IF(isSimpleAssignment(), state_ == State::Key);
-  MOZ_ASSERT_IF(isCompoundAssignment(), state_ == State::Get);
-
-  if (isSimpleAssignment()) {
-    // For CompoundAssignment, SUPERBASE is already emitted by emitGet.
-    if (isSuper()) {
-      if (!bce_->emitSuperBase()) {
-        //          [stack] THIS KEY SUPERBASE
-        return false;
-      }
-||||||| merged common ancestors
-bool
-ElemOpEmitter::prepareForRhs()
-{
-    MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
-    MOZ_ASSERT_IF(isSimpleAssignment(), state_ == State::Key);
-    MOZ_ASSERT_IF(isCompoundAssignment(), state_ == State::Get);
-
-    if (isSimpleAssignment()) {
-        // For CompoundAssignment, SUPERBASE is already emitted by emitGet.
-        if (isSuper()) {
-            if (!bce_->emit1(JSOP_SUPERBASE)) {           // THIS KEY SUPERBASE
-                return false;
-            }
-        }
-=======
 bool ElemOpEmitter::prepareForRhs() {
   MOZ_ASSERT(isSimpleAssignment() || isPropInit() || isCompoundAssignment());
   MOZ_ASSERT_IF(isSimpleAssignment() || isPropInit(), state_ == State::Key);
@@ -165,7 +136,6 @@ bool ElemOpEmitter::prepareForRhs() {
         //          [stack] THIS KEY SUPERBASE
         return false;
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -175,21 +145,9 @@ bool ElemOpEmitter::prepareForRhs() {
   return true;
 }
 
-<<<<<<< HEAD
-bool ElemOpEmitter::skipObjAndKeyAndRhs() {
-  MOZ_ASSERT(state_ == State::Start);
-  MOZ_ASSERT(isSimpleAssignment());
-||||||| merged common ancestors
-bool
-ElemOpEmitter::skipObjAndKeyAndRhs()
-{
-    MOZ_ASSERT(state_ == State::Start);
-    MOZ_ASSERT(isSimpleAssignment());
-=======
 bool ElemOpEmitter::skipObjAndKeyAndRhs() {
   MOZ_ASSERT(state_ == State::Start);
   MOZ_ASSERT(isSimpleAssignment() || isPropInit());
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::Rhs;
@@ -237,33 +195,6 @@ bool ElemOpEmitter::emitDelete() {
   return true;
 }
 
-<<<<<<< HEAD
-bool ElemOpEmitter::emitAssignment() {
-  MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
-  MOZ_ASSERT(state_ == State::Rhs);
-
-  JSOp setOp =
-      isSuper()
-          ? bce_->sc->strict() ? JSOP_STRICTSETELEM_SUPER : JSOP_SETELEM_SUPER
-          : bce_->sc->strict() ? JSOP_STRICTSETELEM : JSOP_SETELEM;
-  if (!bce_->emitElemOpBase(setOp)) {
-    //              [stack] ELEM
-    return false;
-  }
-||||||| merged common ancestors
-bool
-ElemOpEmitter::emitAssignment()
-{
-    MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
-    MOZ_ASSERT(state_ == State::Rhs);
-
-    JSOp setOp = isSuper()
-                 ? bce_->sc->strict() ? JSOP_STRICTSETELEM_SUPER : JSOP_SETELEM_SUPER
-                 : bce_->sc->strict() ? JSOP_STRICTSETELEM : JSOP_SETELEM;
-    if (!bce_->emitElemOpBase(setOp)) {               // ELEM
-        return false;
-    }
-=======
 bool ElemOpEmitter::emitAssignment(EmitSetFunctionName emitSetFunName) {
   MOZ_ASSERT(isSimpleAssignment() || isPropInit() || isCompoundAssignment());
   MOZ_ASSERT(state_ == State::Rhs);
@@ -294,7 +225,6 @@ bool ElemOpEmitter::emitAssignment(EmitSetFunctionName emitSetFunName) {
     //              [stack] ELEM
     return false;
   }
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::Assignment;
@@ -302,37 +232,6 @@ bool ElemOpEmitter::emitAssignment(EmitSetFunctionName emitSetFunName) {
   return true;
 }
 
-<<<<<<< HEAD
-bool ElemOpEmitter::emitIncDec() {
-  MOZ_ASSERT(state_ == State::Key);
-  MOZ_ASSERT(isIncDec());
-
-  if (!emitGet()) {
-    //              [stack] ... ELEM
-    return false;
-  }
-
-  MOZ_ASSERT(state_ == State::Get);
-
-  JSOp binOp = isInc() ? JSOP_ADD : JSOP_SUB;
-  if (!bce_->emit1(JSOP_POS)) {
-    //              [stack] ... N
-    return false;
-  }
-  if (isPostIncDec()) {
-    if (!bce_->emit1(JSOP_DUP)) {
-      //            [stack] ... N? N
-      return false;
-||||||| merged common ancestors
-bool
-ElemOpEmitter::emitIncDec()
-{
-    MOZ_ASSERT(state_ == State::Key);
-    MOZ_ASSERT(isIncDec());
-
-    if (!emitGet()) {                                 // ... ELEM
-        return false;
-=======
 bool ElemOpEmitter::emitIncDec() {
   MOZ_ASSERT(state_ == State::Key);
   MOZ_ASSERT(isIncDec());
@@ -353,23 +252,7 @@ bool ElemOpEmitter::emitIncDec() {
     if (!bce_->emit1(JSOP_DUP)) {
       //            [stack] ... N? N
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-  if (!bce_->emit1(JSOP_ONE)) {
-    //              [stack] ... N? N 1
-    return false;
-  }
-  if (!bce_->emit1(binOp)) {
-    //              [stack] ... N? N+1
-    return false;
-  }
-  if (isPostIncDec()) {
-    if (isSuper()) {
-      //            [stack] THIS KEY OBJ N N+1
-||||||| merged common ancestors
-=======
   }
   if (!bce_->emit1(incOp)) {
     //              [stack] ... N? N+1
@@ -378,7 +261,6 @@ bool ElemOpEmitter::emitIncDec() {
   if (isPostIncDec()) {
     if (isSuper()) {
       //            [stack] THIS KEY OBJ N N+1
->>>>>>> upstream-releases
 
       if (!bce_->emit2(JSOP_PICK, 4)) {
         //          [stack] KEY SUPERBASE N N+1 THIS

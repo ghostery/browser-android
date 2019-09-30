@@ -99,17 +99,7 @@ class VibrancyManager {
    */
   static NSView* CreateEffectView(VibrancyType aType, BOOL aIsContainer = NO);
 
-<<<<<<< HEAD
  protected:
-  void ClearVibrantRegion(const LayoutDeviceIntRegion& aVibrantRegion) const;
-
-||||||| merged common ancestors
-protected:
-  void ClearVibrantRegion(const LayoutDeviceIntRegion& aVibrantRegion) const;
-
-=======
- protected:
->>>>>>> upstream-releases
   const nsChildView& mCoordinateConverter;
   NSView* mContainerView;
   nsClassHashtable<nsUint32HashKey, ViewRegion> mVibrantRegions;

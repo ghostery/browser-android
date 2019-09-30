@@ -41,15 +41,9 @@
 #undef max
 
 using std::ifstream;
-<<<<<<< HEAD
-using std::ios;
-using std::map;
-||||||| merged common ancestors
-=======
 using std::ios;
 using std::ios_base;
 using std::map;
->>>>>>> upstream-releases
 using std::ofstream;
 using std::set;
 using std::string;
@@ -1340,28 +1334,7 @@ bool UIDeleteFile(const string& oldfile) {
   return DeleteFile(UTF8ToWide(oldfile).c_str()) == TRUE;
 }
 
-<<<<<<< HEAD
-ifstream* UIOpenRead(const string& filename, bool binary) {
-  // adapted from breakpad's src/common/windows/http_upload.cc
-  std::ios_base::openmode mode = ios::in;
-
-  if (binary) {
-    mode = mode | ios::binary;
-  }
-
-||||||| merged common ancestors
-ifstream* UIOpenRead(const string& filename, bool binary)
-{
-  // adapted from breakpad's src/common/windows/http_upload.cc
-  std::ios_base::openmode mode = ios::in;
-
-  if (binary) {
-    mode = mode | ios::binary;
-  }
-
-=======
 ifstream* UIOpenRead(const string& filename, ios_base::openmode mode) {
->>>>>>> upstream-releases
 #if defined(_MSC_VER)
   ifstream* file = new ifstream();
   file->open(UTF8ToWide(filename).c_str(), mode);
@@ -1373,37 +1346,7 @@ ifstream* UIOpenRead(const string& filename, ios_base::openmode mode) {
   return file;
 }
 
-<<<<<<< HEAD
-ofstream* UIOpenWrite(const string& filename,
-                      bool append,  // append=false
-                      bool binary)  // binary=false
-{
-  // adapted from breakpad's src/common/windows/http_upload.cc
-  std::ios_base::openmode mode = ios::out;
-  if (append) {
-    mode = mode | ios::app;
-  }
-  if (binary) {
-    mode = mode | ios::binary;
-  }
-
-||||||| merged common ancestors
-ofstream* UIOpenWrite(const string& filename,
-                      bool append, // append=false
-                      bool binary) // binary=false
-{
-  // adapted from breakpad's src/common/windows/http_upload.cc
-  std::ios_base::openmode mode = ios::out;
-  if (append) {
-    mode = mode | ios::app;
-  }
-  if (binary) {
-    mode = mode | ios::binary;
-  }
-
-=======
 ofstream* UIOpenWrite(const string& filename, ios_base::openmode mode) {
->>>>>>> upstream-releases
 #if defined(_MSC_VER)
   ofstream* file = new ofstream();
   file->open(UTF8ToWide(filename).c_str(), mode);

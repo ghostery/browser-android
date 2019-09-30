@@ -2,11 +2,5 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 zh_Hant_MO{
     %%Parent{"zh_Hant_HK"}
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.39"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
 }

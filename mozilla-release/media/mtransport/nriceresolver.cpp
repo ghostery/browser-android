@@ -124,66 +124,25 @@ void NrIceResolver::DestroyResolver() {
   Release();
 }
 
-<<<<<<< HEAD
-int NrIceResolver::destroy(void **objp) {
-  if (!objp || !*objp) return 0;
-  NrIceResolver *resolver = static_cast<NrIceResolver *>(*objp);
-||||||| merged common ancestors
-int NrIceResolver::destroy(void **objp) {
-  if (!objp || !*objp)
-    return 0;
-  NrIceResolver *resolver = static_cast<NrIceResolver *>(*objp);
-=======
 int NrIceResolver::destroy(void** objp) {
   if (!objp || !*objp) return 0;
   NrIceResolver* resolver = static_cast<NrIceResolver*>(*objp);
->>>>>>> upstream-releases
   *objp = nullptr;
   resolver->DestroyResolver();
   return 0;
 }
 
-<<<<<<< HEAD
-int NrIceResolver::resolve(void *obj, nr_resolver_resource *resource,
-                           int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                           void *cb_arg, void **handle) {
-||||||| merged common ancestors
-int NrIceResolver::resolve(void *obj,
-                           nr_resolver_resource *resource,
-                           int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                           void *cb_arg,
-                           void **handle) {
-=======
 int NrIceResolver::resolve(void* obj, nr_resolver_resource* resource,
                            int (*cb)(void* cb_arg, nr_transport_addr* addr),
                            void* cb_arg, void** handle) {
->>>>>>> upstream-releases
   MOZ_ASSERT(obj);
-<<<<<<< HEAD
-  return static_cast<NrIceResolver *>(obj)->resolve(resource, cb, cb_arg,
-                                                    handle);
-||||||| merged common ancestors
-  return static_cast<NrIceResolver *>(obj)->resolve(resource, cb, cb_arg, handle);
-=======
   return static_cast<NrIceResolver*>(obj)->resolve(resource, cb, cb_arg,
                                                    handle);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-int NrIceResolver::resolve(nr_resolver_resource *resource,
-                           int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                           void *cb_arg, void **handle) {
-||||||| merged common ancestors
-int NrIceResolver::resolve(nr_resolver_resource *resource,
-                           int (*cb)(void *cb_arg, nr_transport_addr *addr),
-                           void *cb_arg,
-                           void **handle) {
-=======
 int NrIceResolver::resolve(nr_resolver_resource* resource,
                            int (*cb)(void* cb_arg, nr_transport_addr* addr),
                            void* cb_arg, void** handle) {
->>>>>>> upstream-releases
   int _status;
   MOZ_ASSERT(allocated_resolvers_ > 0);
   ASSERT_ON_THREAD(sts_thread_);

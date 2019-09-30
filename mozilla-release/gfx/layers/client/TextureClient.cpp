@@ -8,14 +8,8 @@
 #include <stdint.h>  // for uint8_t, uint32_t, etc
 #include "Layers.h"  // for Layer, etc
 #include "gfx2DGlue.h"
-<<<<<<< HEAD
-#include "gfxPlatform.h"  // for gfxPlatform
-||||||| merged common ancestors
-#include "gfxPlatform.h"                // for gfxPlatform
-=======
 #include "gfxPlatform.h"  // for gfxPlatform
 #include "MainThreadUtils.h"
->>>>>>> upstream-releases
 #include "mozilla/Atomics.h"
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/SystemGroup.h"
@@ -63,17 +57,9 @@
 #if 0
 #  define RECYCLE_LOG(...) printf_stderr(__VA_ARGS__)
 #else
-<<<<<<< HEAD
-#define RECYCLE_LOG(...) \
-  do {                   \
-  } while (0)
-||||||| merged common ancestors
-#define RECYCLE_LOG(...) do { } while (0)
-=======
 #  define RECYCLE_LOG(...) \
     do {                   \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -251,16 +237,6 @@ class TextureChild final : PTextureChild {
   friend void DeallocateTextureClient(TextureDeallocParams params);
 };
 
-<<<<<<< HEAD
-static void DestroyTextureData(TextureData* aTextureData,
-                               LayersIPCChannel* aAllocator, bool aDeallocate,
-                               bool aMainThreadOnly) {
-||||||| merged common ancestors
-
-static void DestroyTextureData(TextureData* aTextureData, LayersIPCChannel* aAllocator,
-                               bool aDeallocate, bool aMainThreadOnly)
-{
-=======
 static inline gfx::BackendType BackendTypeForBackendSelector(
     LayersBackend aLayersBackend, BackendSelector aSelector) {
   switch (aSelector) {
@@ -410,7 +386,6 @@ bool TextureData::IsRemote(LayersBackend aLayersBackend,
 static void DestroyTextureData(TextureData* aTextureData,
                                LayersIPCChannel* aAllocator, bool aDeallocate,
                                bool aMainThreadOnly) {
->>>>>>> upstream-releases
   if (!aTextureData) {
     return;
   }
@@ -474,18 +449,9 @@ void TextureChild::Destroy(const TextureDeallocParams& aParams) {
 /* static */
 Atomic<uint64_t> TextureClient::sSerialCounter(0);
 
-<<<<<<< HEAD
-void DeallocateTextureClientSyncProxy(TextureDeallocParams params,
-                                      ReentrantMonitor* aBarrier, bool* aDone) {
-||||||| merged common ancestors
-void DeallocateTextureClientSyncProxy(TextureDeallocParams params,
-                                        ReentrantMonitor* aBarrier, bool* aDone)
-{
-=======
 static void DeallocateTextureClientSyncProxy(TextureDeallocParams params,
                                              ReentrantMonitor* aBarrier,
                                              bool* aDone) {
->>>>>>> upstream-releases
   DeallocateTextureClient(params);
   ReentrantMonitorAutoEnter autoMon(*aBarrier);
   *aDone = true;
@@ -868,13 +834,6 @@ gfx::DrawTarget* TextureClient::BorrowDrawTarget() {
   return mBorrowedDrawTarget;
 }
 
-<<<<<<< HEAD
-bool TextureClient::BorrowMappedData(MappedTextureData& aMap) {
-||||||| merged common ancestors
-bool
-TextureClient::BorrowMappedData(MappedTextureData& aMap)
-{
-=======
 already_AddRefed<gfx::SourceSurface> TextureClient::BorrowSnapshot() {
   MOZ_ASSERT(mIsLocked);
 
@@ -887,7 +846,6 @@ already_AddRefed<gfx::SourceSurface> TextureClient::BorrowSnapshot() {
 }
 
 bool TextureClient::BorrowMappedData(MappedTextureData& aMap) {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsValid());
 
   // TODO - SharedRGBImage just accesses the buffer without properly locking
@@ -994,16 +952,8 @@ void TextureClient::SetAddedToCompositableClient() {
   }
 }
 
-<<<<<<< HEAD
-void CancelTextureClientRecycle(uint64_t aTextureId,
-                                LayersIPCChannel* aAllocator) {
-||||||| merged common ancestors
-void CancelTextureClientRecycle(uint64_t aTextureId, LayersIPCChannel* aAllocator)
-{
-=======
 static void CancelTextureClientNotifyNotUsed(uint64_t aTextureId,
                                              LayersIPCChannel* aAllocator) {
->>>>>>> upstream-releases
   if (!aAllocator) {
     return;
   }
@@ -1021,33 +971,16 @@ static void CancelTextureClientNotifyNotUsed(uint64_t aTextureId,
   }
 }
 
-<<<<<<< HEAD
-void TextureClient::CancelWaitForRecycle() {
-||||||| merged common ancestors
-void
-TextureClient::CancelWaitForRecycle()
-{
-=======
 void TextureClient::CancelWaitForNotifyNotUsed() {
->>>>>>> upstream-releases
   if (GetFlags() & TextureFlags::RECYCLE) {
     CancelTextureClientNotifyNotUsed(mSerial, GetAllocator());
     return;
   }
 }
 
-<<<<<<< HEAD
-/* static */ void TextureClient::TextureClientRecycleCallback(
-    TextureClient* aClient, void* aClosure) {
-||||||| merged common ancestors
-/* static */ void
-TextureClient::TextureClientRecycleCallback(TextureClient* aClient, void* aClosure)
-{
-=======
 /* static */
 void TextureClient::TextureClientRecycleCallback(TextureClient* aClient,
                                                  void* aClosure) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aClient->GetRecycleAllocator());
   aClient->GetRecycleAllocator()->RecycleTextureClient(aClient);
 }
@@ -1154,25 +1087,11 @@ bool TextureClient::InitIPDLActor(CompositableForwarder* aForwarder) {
   return mActor->IPCOpen();
 }
 
-<<<<<<< HEAD
-bool TextureClient::InitIPDLActor(KnowsCompositor* aForwarder) {
-  MOZ_ASSERT(aForwarder &&
-             aForwarder->GetTextureForwarder()->GetMessageLoop() ==
-                 mAllocator->GetMessageLoop());
-  TextureForwarder* fwd = aForwarder->GetTextureForwarder();
-||||||| merged common ancestors
-bool
-TextureClient::InitIPDLActor(KnowsCompositor* aForwarder)
-{
-  MOZ_ASSERT(aForwarder && aForwarder->GetTextureForwarder()->GetMessageLoop() == mAllocator->GetMessageLoop());
-  TextureForwarder* fwd = aForwarder->GetTextureForwarder();
-=======
 bool TextureClient::InitIPDLActor(KnowsCompositor* aKnowsCompositor) {
   MOZ_ASSERT(aKnowsCompositor &&
              aKnowsCompositor->GetTextureForwarder()->GetMessageLoop() ==
                  mAllocator->GetMessageLoop());
   TextureForwarder* fwd = aKnowsCompositor->GetTextureForwarder();
->>>>>>> upstream-releases
   if (mActor && !mActor->mDestroyed) {
     CompositableForwarder* currentFwd = mActor->mCompositableForwarder;
     TextureForwarder* currentTexFwd = mActor->mTextureForwarder;
@@ -1200,15 +1119,8 @@ bool TextureClient::InitIPDLActor(KnowsCompositor* aKnowsCompositor) {
   }
 
   // Try external image id allocation.
-<<<<<<< HEAD
-  mExternalImageId =
-      aForwarder->GetTextureForwarder()->GetNextExternalImageId();
-||||||| merged common ancestors
-  mExternalImageId = aForwarder->GetTextureForwarder()->GetNextExternalImageId();
-=======
   mExternalImageId =
       aKnowsCompositor->GetTextureForwarder()->GetNextExternalImageId();
->>>>>>> upstream-releases
 
   ReadLockDescriptor readLockDescriptor = null_t();
   if (mReadLock) {
@@ -1216,37 +1128,14 @@ bool TextureClient::InitIPDLActor(KnowsCompositor* aKnowsCompositor) {
   }
 
   PTextureChild* actor = fwd->CreateTexture(
-<<<<<<< HEAD
-      desc, readLockDescriptor, aForwarder->GetCompositorBackendType(),
-      GetFlags(), mSerial, mExternalImageId);
-||||||| merged common ancestors
-    desc,
-    readLockDescriptor,
-    aForwarder->GetCompositorBackendType(),
-    GetFlags(),
-    mSerial,
-    mExternalImageId);
-=======
       desc, readLockDescriptor, aKnowsCompositor->GetCompositorBackendType(),
       GetFlags(), mSerial, mExternalImageId);
->>>>>>> upstream-releases
   if (!actor) {
     gfxCriticalNote << static_cast<int32_t>(desc.type()) << ", "
-<<<<<<< HEAD
-                    << static_cast<int32_t>(
-                           aForwarder->GetCompositorBackendType())
-                    << ", " << static_cast<uint32_t>(GetFlags()) << ", "
-                    << mSerial;
-||||||| merged common ancestors
-                    << static_cast<int32_t>(aForwarder->GetCompositorBackendType()) << ", "
-                    << static_cast<uint32_t>(GetFlags())
-                    << ", " << mSerial;
-=======
                     << static_cast<int32_t>(
                            aKnowsCompositor->GetCompositorBackendType())
                     << ", " << static_cast<uint32_t>(GetFlags()) << ", "
                     << mSerial;
->>>>>>> upstream-releases
     return false;
   }
 
@@ -1264,44 +1153,7 @@ bool TextureClient::InitIPDLActor(KnowsCompositor* aKnowsCompositor) {
   return mActor->IPCOpen();
 }
 
-<<<<<<< HEAD
 PTextureChild* TextureClient::GetIPDLActor() { return mActor; }
-
-static inline gfx::BackendType BackendTypeForBackendSelector(
-    LayersBackend aLayersBackend, BackendSelector aSelector) {
-  switch (aSelector) {
-    case BackendSelector::Canvas:
-      return gfxPlatform::GetPlatform()->GetPreferredCanvasBackend();
-    case BackendSelector::Content:
-      return gfxPlatform::GetPlatform()->GetContentBackendFor(aLayersBackend);
-    default:
-      MOZ_ASSERT_UNREACHABLE("Unknown backend selector");
-      return gfx::BackendType::NONE;
-  }
-};
-||||||| merged common ancestors
-PTextureChild*
-TextureClient::GetIPDLActor()
-{
-  return mActor;
-}
-
-static inline gfx::BackendType
-BackendTypeForBackendSelector(LayersBackend aLayersBackend, BackendSelector aSelector)
-{
-  switch (aSelector) {
-    case BackendSelector::Canvas:
-      return gfxPlatform::GetPlatform()->GetPreferredCanvasBackend();
-    case BackendSelector::Content:
-      return gfxPlatform::GetPlatform()->GetContentBackendFor(aLayersBackend);
-    default:
-      MOZ_ASSERT_UNREACHABLE("Unknown backend selector");
-      return gfx::BackendType::NONE;
-  }
-};
-=======
-PTextureChild* TextureClient::GetIPDLActor() { return mActor; }
->>>>>>> upstream-releases
 
 // static
 already_AddRefed<TextureClient> TextureClient::CreateForDrawing(
@@ -1337,114 +1189,9 @@ already_AddRefed<TextureClient> TextureClient::CreateForDrawing(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  TextureData* data = nullptr;
-
-#ifdef XP_WIN
-  if ((aLayersBackend == LayersBackend::LAYERS_D3D11 ||
-       aLayersBackend == LayersBackend::LAYERS_WR) &&
-      (moz2DBackend == gfx::BackendType::DIRECT2D ||
-       moz2DBackend == gfx::BackendType::DIRECT2D1_1 ||
-       (!!(aAllocFlags & ALLOC_FOR_OUT_OF_BAND_CONTENT) &&
-        DeviceManagerDx::Get()->GetContentDevice())) &&
-      aSize.width <= aMaxTextureSize && aSize.height <= aMaxTextureSize &&
-      !(aAllocFlags & ALLOC_UPDATE_FROM_SURFACE)) {
-    data = DXGITextureData::Create(aSize, aFormat, aAllocFlags);
-  }
-
-  if (aLayersBackend != LayersBackend::LAYERS_WR && !data &&
-      aFormat == SurfaceFormat::B8G8R8X8 &&
-      moz2DBackend == gfx::BackendType::CAIRO && NS_IsMainThread()) {
-    data = DIBTextureData::Create(aSize, aFormat, aAllocator);
-  }
-#endif
-
-#ifdef MOZ_X11
-  gfxSurfaceType type =
-      gfxPlatform::GetPlatform()->ScreenReferenceSurface()->GetType();
-
-  if (!data && aLayersBackend == LayersBackend::LAYERS_BASIC &&
-      moz2DBackend == gfx::BackendType::CAIRO && type == gfxSurfaceType::Xlib) {
-    data = X11TextureData::Create(aSize, aFormat, aTextureFlags, aAllocator);
-  }
-  if (!data && aLayersBackend == LayersBackend::LAYERS_OPENGL &&
-      type == gfxSurfaceType::Xlib && aFormat != SurfaceFormat::A8 &&
-      gl::sGLXLibrary.UseTextureFromPixmap()) {
-    data = X11TextureData::Create(aSize, aFormat, aTextureFlags, aAllocator);
-  }
-#endif
-
-#ifdef XP_MACOSX
-  if (!data && gfxPrefs::UseIOSurfaceTextures()) {
-    data = MacIOSurfaceTextureData::Create(aSize, aFormat, moz2DBackend);
-  }
-#endif
-
-#ifdef MOZ_WIDGET_ANDROID
-  if (!data && gfxPrefs::UseSurfaceTextureTextures()) {
-    data = AndroidNativeWindowTextureData::Create(aSize, aFormat);
-  }
-#endif
-||||||| merged common ancestors
-  TextureData* data = nullptr;
-
-#ifdef XP_WIN
-  if ((aLayersBackend == LayersBackend::LAYERS_D3D11 ||
-       aLayersBackend == LayersBackend::LAYERS_WR) &&
-      (moz2DBackend == gfx::BackendType::DIRECT2D ||
-       moz2DBackend == gfx::BackendType::DIRECT2D1_1 ||
-       (!!(aAllocFlags & ALLOC_FOR_OUT_OF_BAND_CONTENT) &&
-        DeviceManagerDx::Get()->GetContentDevice())) &&
-      aSize.width <= aMaxTextureSize &&
-      aSize.height <= aMaxTextureSize &&
-      !(aAllocFlags & ALLOC_UPDATE_FROM_SURFACE))
-  {
-    data = DXGITextureData::Create(aSize, aFormat, aAllocFlags);
-  }
-
-  if (aLayersBackend != LayersBackend::LAYERS_WR &&
-      !data && aFormat == SurfaceFormat::B8G8R8X8 &&
-      moz2DBackend == gfx::BackendType::CAIRO &&
-      NS_IsMainThread()) {
-    data = DIBTextureData::Create(aSize, aFormat, aAllocator);
-  }
-#endif
-
-#ifdef MOZ_X11
-  gfxSurfaceType type =
-    gfxPlatform::GetPlatform()->ScreenReferenceSurface()->GetType();
-
-  if (!data && aLayersBackend == LayersBackend::LAYERS_BASIC &&
-      moz2DBackend == gfx::BackendType::CAIRO &&
-      type == gfxSurfaceType::Xlib)
-  {
-    data = X11TextureData::Create(aSize, aFormat, aTextureFlags, aAllocator);
-  }
-  if (!data && aLayersBackend == LayersBackend::LAYERS_OPENGL &&
-      type == gfxSurfaceType::Xlib &&
-      aFormat != SurfaceFormat::A8 &&
-      gl::sGLXLibrary.UseTextureFromPixmap())
-  {
-    data = X11TextureData::Create(aSize, aFormat, aTextureFlags, aAllocator);
-  }
-#endif
-
-#ifdef XP_MACOSX
-  if (!data && gfxPrefs::UseIOSurfaceTextures()) {
-    data = MacIOSurfaceTextureData::Create(aSize, aFormat, moz2DBackend);
-  }
-#endif
-
-#ifdef MOZ_WIDGET_ANDROID
-  if (!data && gfxPrefs::UseSurfaceTextureTextures()) {
-    data = AndroidNativeWindowTextureData::Create(aSize, aFormat);
-  }
-#endif
-=======
   TextureData* data = TextureData::Create(
       aAllocator, aFormat, aSize, aLayersBackend, aMaxTextureSize, aSelector,
       aTextureFlags, aAllocFlags);
->>>>>>> upstream-releases
 
   if (data) {
     return MakeAndAddRef<TextureClient>(data, aTextureFlags, aAllocator);
@@ -1583,31 +1330,11 @@ already_AddRefed<TextureClient> TextureClient::CreateForRawBufferAccess(
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<TextureClient> TextureClient::CreateForYCbCr(
-    KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
-    gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
-    gfx::ColorDepth aColorDepth, YUVColorSpace aYUVColorSpace,
-    TextureFlags aTextureFlags) {
-||||||| merged common ancestors
-already_AddRefed<TextureClient>
-TextureClient::CreateForYCbCr(KnowsCompositor* aAllocator,
-                              gfx::IntSize aYSize,
-                              uint32_t aYStride,
-                              gfx::IntSize aCbCrSize,
-                              uint32_t aCbCrStride,
-                              StereoMode aStereoMode,
-                              gfx::ColorDepth aColorDepth,
-                              YUVColorSpace aYUVColorSpace,
-                              TextureFlags aTextureFlags)
-{
-=======
 already_AddRefed<TextureClient> TextureClient::CreateForYCbCr(
     KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
     gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
     gfx::ColorDepth aColorDepth, gfx::YUVColorSpace aYUVColorSpace,
     TextureFlags aTextureFlags) {
->>>>>>> upstream-releases
   if (!aAllocator || !aAllocator->GetLayersIPCActor()->IPCOpen()) {
     return nullptr;
   }
@@ -1761,14 +1488,7 @@ class MemoryTextureReadLock : public NonBlockingTextureReadLock {
 
   bool IsValid() const override { return true; };
 
-<<<<<<< HEAD
-  virtual bool Serialize(ReadLockDescriptor& aOutput,
-                         base::ProcessId aOther) override;
-||||||| merged common ancestors
-  virtual bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
-=======
   bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
->>>>>>> upstream-releases
 
   Atomic<int32_t> mReadCount;
 };
@@ -1801,14 +1521,7 @@ class ShmemTextureReadLock : public NonBlockingTextureReadLock {
 
   LockType GetType() override { return TYPE_NONBLOCKING_SHMEM; }
 
-<<<<<<< HEAD
-  virtual bool Serialize(ReadLockDescriptor& aOutput,
-                         base::ProcessId aOther) override;
-||||||| merged common ancestors
-  virtual bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
-=======
   bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
->>>>>>> upstream-releases
 
   mozilla::layers::ShmemSection& GetShmemSection() { return mShmemSection; }
 
@@ -1836,40 +1549,19 @@ class CrossProcessSemaphoreReadLock : public TextureReadLock {
   explicit CrossProcessSemaphoreReadLock(CrossProcessSemaphoreHandle aHandle)
       : mSemaphore(CrossProcessSemaphore::Create(aHandle)), mShared(false) {}
 
-<<<<<<< HEAD
-  virtual bool ReadLock() override {
-||||||| merged common ancestors
-  virtual bool ReadLock() override
-  {
-=======
   bool ReadLock() override {
->>>>>>> upstream-releases
     if (!IsValid()) {
       return false;
     }
     return mSemaphore->Wait();
   }
-<<<<<<< HEAD
-  virtual bool TryReadLock(TimeDuration aTimeout) override {
-||||||| merged common ancestors
-  virtual bool TryReadLock(TimeDuration aTimeout) override
-  {
-=======
   bool TryReadLock(TimeDuration aTimeout) override {
->>>>>>> upstream-releases
     if (!IsValid()) {
       return false;
     }
     return mSemaphore->Wait(Some(aTimeout));
   }
-<<<<<<< HEAD
-  virtual int32_t ReadUnlock() override {
-||||||| merged common ancestors
-  virtual int32_t ReadUnlock() override
-  {
-=======
   int32_t ReadUnlock() override {
->>>>>>> upstream-releases
     if (!IsValid()) {
       return 1;
     }
@@ -1878,14 +1570,7 @@ class CrossProcessSemaphoreReadLock : public TextureReadLock {
   }
   bool IsValid() const override { return !!mSemaphore; }
 
-<<<<<<< HEAD
-  virtual bool Serialize(ReadLockDescriptor& aOutput,
-                         base::ProcessId aOther) override;
-||||||| merged common ancestors
-  virtual bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
-=======
   bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
->>>>>>> upstream-releases
 
   LockType GetType() override { return TYPE_CROSS_PROCESS_SEMAPHORE; }
 

@@ -30,16 +30,8 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(CSSSupportsRule)
 NS_INTERFACE_MAP_END_INHERITING(ConditionRule)
 
 #ifdef DEBUG
-<<<<<<< HEAD
-/* virtual */ void CSSSupportsRule::List(FILE* out, int32_t aIndent) const {
-||||||| merged common ancestors
-/* virtual */ void
-CSSSupportsRule::List(FILE* out, int32_t aIndent) const
-{
-=======
 /* virtual */
 void CSSSupportsRule::List(FILE* out, int32_t aIndent) const {
->>>>>>> upstream-releases
   nsAutoCString str;
   for (int32_t i = 0; i < aIndent; i++) {
     str.AppendLiteral("  ");
@@ -53,66 +45,29 @@ void CSSSupportsRule::GetConditionText(nsAString& aConditionText) {
   Servo_SupportsRule_GetConditionText(mRawRule, &aConditionText);
 }
 
-<<<<<<< HEAD
-void CSSSupportsRule::SetConditionText(const nsAString& aConditionText,
-                                       ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-CSSSupportsRule::SetConditionText(const nsAString& aConditionText,
-                                  ErrorResult& aRv)
-{
-=======
 void CSSSupportsRule::SetConditionText(const nsAString& aConditionText,
                                        ErrorResult& aRv) {
   if (IsReadOnly()) {
     return;
   }
 
->>>>>>> upstream-releases
   aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);
 }
 
-<<<<<<< HEAD
-/* virtual */ void CSSSupportsRule::GetCssText(nsAString& aCssText) const {
-||||||| merged common ancestors
-/* virtual */ void
-CSSSupportsRule::GetCssText(nsAString& aCssText) const
-{
-=======
 /* virtual */
 void CSSSupportsRule::GetCssText(nsAString& aCssText) const {
->>>>>>> upstream-releases
   Servo_SupportsRule_GetCssText(mRawRule, &aCssText);
 }
 
-<<<<<<< HEAD
-/* virtual */ size_t CSSSupportsRule::SizeOfIncludingThis(
-    MallocSizeOf aMallocSizeOf) const {
-||||||| merged common ancestors
-/* virtual */ size_t
-CSSSupportsRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
-{
-=======
 /* virtual */
 size_t CSSSupportsRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
->>>>>>> upstream-releases
   // TODO Implement this!
   return aMallocSizeOf(this);
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* CSSSupportsRule::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-CSSSupportsRule::WrapObject(JSContext* aCx,
-                            JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* CSSSupportsRule::WrapObject(JSContext* aCx,
                                       JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return CSSSupportsRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

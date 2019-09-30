@@ -63,19 +63,9 @@ class SourceBufferTaskQueue {
 
 DDLoggedTypeDeclName(TrackBuffersManager);
 
-<<<<<<< HEAD
-class TrackBuffersManager
-    : public DecoderDoctorLifeLogger<TrackBuffersManager> {
- public:
-||||||| merged common ancestors
-class TrackBuffersManager : public DecoderDoctorLifeLogger<TrackBuffersManager>
-{
-public:
-=======
 class TrackBuffersManager final
     : public DecoderDoctorLifeLogger<TrackBuffersManager> {
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(TrackBuffersManager);
 
   enum class EvictDataResult : int8_t {
@@ -209,26 +199,12 @@ class TrackBuffersManager final
   bool HasVideo() const { return mVideoTracks.mNumTracks > 0; }
   bool HasAudio() const { return mAudioTracks.mNumTracks > 0; }
 
-<<<<<<< HEAD
-  // The input buffer as per
-  // http://w3c.github.io/media-source/index.html#sourcebuffer-input-buffer
-  RefPtr<MediaByteBuffer> mInputBuffer;
-  // Buffer full flag as per
-  // https://w3c.github.io/media-source/#sourcebuffer-buffer-full-flag. Accessed
-  // on both the main thread and the task queue.
-||||||| merged common ancestors
-  // The input buffer as per http://w3c.github.io/media-source/index.html#sourcebuffer-input-buffer
-  RefPtr<MediaByteBuffer> mInputBuffer;
-  // Buffer full flag as per https://w3c.github.io/media-source/#sourcebuffer-buffer-full-flag.
-  // Accessed on both the main thread and the task queue.
-=======
   // The input buffer as per
   // http://w3c.github.io/media-source/index.html#sourcebuffer-input-buffer
   Maybe<MediaSpan> mInputBuffer;
   // Buffer full flag as per
   // https://w3c.github.io/media-source/#sourcebuffer-buffer-full-flag. Accessed
   // on both the main thread and the task queue.
->>>>>>> upstream-releases
   Atomic<bool> mBufferFull;
   bool mFirstInitializationSegmentReceived;
   bool mChangeTypeReceived;
@@ -425,15 +401,8 @@ class TrackBuffersManager final
     kTruncateFrame,
   };
   uint32_t RemoveFrames(const media::TimeIntervals& aIntervals,
-<<<<<<< HEAD
-                        TrackData& aTrackData, uint32_t aStartIndex);
-||||||| merged common ancestors
-                        TrackData& aTrackData,
-                        uint32_t aStartIndex);
-=======
                         TrackData& aTrackData, uint32_t aStartIndex,
                         RemovalMode aMode);
->>>>>>> upstream-releases
   // Recalculate track's evictable amount.
   void ResetEvictionIndex(TrackData& aTrackData);
   void UpdateEvictionIndex(TrackData& aTrackData, uint32_t aCurrentIndex);

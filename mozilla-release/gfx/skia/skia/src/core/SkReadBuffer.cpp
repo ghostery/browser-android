@@ -7,14 +7,7 @@
 
 #include "SkAutoMalloc.h"
 #include "SkBitmap.h"
-<<<<<<< HEAD
 #include "SkData.h"
-#include "SkDeduper.h"
-||||||| merged common ancestors
-#include "SkDeduper.h"
-=======
-#include "SkData.h"
->>>>>>> upstream-releases
 #include "SkImage.h"
 #include "SkImageGenerator.h"
 #include "SkMakeUnique.h"
@@ -293,26 +286,8 @@ sk_sp<SkImage> SkReadBuffer::readImage() {
     } else {
         this->readIRect(&bounds);
     }
-<<<<<<< HEAD
-
-    SkIRect bounds;
-    if (this->isVersionLT(kStoreImageBounds_Version)) {
-        bounds.fLeft = bounds.fTop = 0;
-        bounds.fRight = this->read32();
-        bounds.fBottom = this->read32();
-    } else {
-        this->readIRect(&bounds);
-    }
     const int width = bounds.width();
     const int height = bounds.height();
-||||||| merged common ancestors
-
-    int width = this->read32();
-    int height = this->read32();
-=======
-    const int width = bounds.width();
-    const int height = bounds.height();
->>>>>>> upstream-releases
     if (width <= 0 || height <= 0) {    // SkImage never has a zero dimension
         this->validate(false);
         return nullptr;

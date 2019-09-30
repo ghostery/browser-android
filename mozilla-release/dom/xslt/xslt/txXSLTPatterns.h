@@ -83,19 +83,9 @@ class txPattern {
 #ifndef TX_TO_STRING
 #  define TX_DECL_PATTERN TX_DECL_PATTERN_BASE
 #else
-<<<<<<< HEAD
-#define TX_DECL_PATTERN \
-  TX_DECL_PATTERN_BASE; \
-  void toString(nsAString& aDest) override
-||||||| merged common ancestors
-#define TX_DECL_PATTERN \
-    TX_DECL_PATTERN_BASE; \
-    void toString(nsAString& aDest) override
-=======
 #  define TX_DECL_PATTERN \
     TX_DECL_PATTERN_BASE; \
     void toString(nsAString& aDest) override
->>>>>>> upstream-releases
 #endif
 
 #define TX_IMPL_PATTERN_STUBS_NO_SUB_EXPR(_class)               \

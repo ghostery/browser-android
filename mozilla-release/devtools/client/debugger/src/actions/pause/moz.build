@@ -7,13 +7,7 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/pause/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/pause/moz.build
     'breakOnNext.js',
     'commands.js',
     'continueToHere.js',

@@ -86,31 +86,6 @@ public:
     bool readOnly() const { return fSurfaceFlags & GrInternalSurfaceFlags::kReadOnly; }
 
 protected:
-<<<<<<< HEAD
-    void setHasMixedSamples() {
-        SkASSERT(this->asRenderTarget());
-        fSurfaceFlags |= GrInternalSurfaceFlags::kMixedSampled;
-    }
-    bool hasMixedSamples() const { return fSurfaceFlags & GrInternalSurfaceFlags::kMixedSampled; }
-
-    void setSupportsWindowRects() {
-        SkASSERT(this->asRenderTarget());
-        fSurfaceFlags |= GrInternalSurfaceFlags::kWindowRectsSupport;
-    }
-    bool supportsWindowRects() const {
-        return fSurfaceFlags & GrInternalSurfaceFlags::kWindowRectsSupport;
-    }
-
-    void setGLRTFBOIDIs0() {
-        SkASSERT(this->asRenderTarget());
-        fSurfaceFlags |= GrInternalSurfaceFlags::kGLRTFBOIDIs0;
-    }
-    bool glRTFBOIDis0() const {
-        return fSurfaceFlags & GrInternalSurfaceFlags::kGLRTFBOIDIs0;
-    }
-
-||||||| merged common ancestors
-=======
     void setHasMixedSamples() {
         SkASSERT(this->asRenderTarget());
         fSurfaceFlags |= GrInternalSurfaceFlags::kMixedSampled;
@@ -130,7 +105,6 @@ protected:
         fSurfaceFlags |= GrInternalSurfaceFlags::kReadOnly;
     }
 
->>>>>>> upstream-releases
     // Methods made available via GrSurfacePriv
     bool hasPendingRead() const;
     bool hasPendingWrite() const;
@@ -143,20 +117,9 @@ protected:
             : INHERITED(gpu)
             , fConfig(desc.fConfig)
             , fWidth(desc.fWidth)
-<<<<<<< HEAD
             , fHeight(desc.fHeight)
             , fSurfaceFlags(GrInternalSurfaceFlags::kNone) {
     }
-
-    ~GrSurface() override {}
-||||||| merged common ancestors
-            , fHeight(desc.fHeight) {}
-    ~GrSurface() override {}
-=======
-            , fHeight(desc.fHeight)
-            , fSurfaceFlags(GrInternalSurfaceFlags::kNone) {
-    }
->>>>>>> upstream-releases
 
     ~GrSurface() override {
         // check that invokeReleaseProc has been called (if needed)
@@ -167,18 +130,6 @@ protected:
     void onAbandon() override;
 
 private:
-<<<<<<< HEAD
-    const char* getResourceType() const override { return "Surface"; }
-
-    GrPixelConfig          fConfig;
-    int                    fWidth;
-    int                    fHeight;
-    GrInternalSurfaceFlags fSurfaceFlags;
-||||||| merged common ancestors
-    GrPixelConfig        fConfig;
-    int                  fWidth;
-    int                  fHeight;
-=======
     const char* getResourceType() const override { return "Surface"; }
 
     // Unmanaged backends (e.g. Vulkan) may want to specially handle the release proc in order to
@@ -196,7 +147,6 @@ private:
     int                        fHeight;
     GrInternalSurfaceFlags     fSurfaceFlags;
     sk_sp<GrRefCntedCallback>  fReleaseHelper;
->>>>>>> upstream-releases
 
     typedef GrGpuResource INHERITED;
 };

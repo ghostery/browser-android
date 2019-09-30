@@ -15,20 +15,9 @@
 namespace mozilla {
 namespace storage {
 
-<<<<<<< HEAD
-class ArgValueArray final : public mozIStorageValueArray {
- public:
-  ArgValueArray(int32_t aArgc, sqlite3_value **aArgv);
-||||||| merged common ancestors
-class ArgValueArray final : public mozIStorageValueArray
-{
-public:
-  ArgValueArray(int32_t aArgc, sqlite3_value **aArgv);
-=======
 class ArgValueArray final : public mozIStorageValueArray {
  public:
   ArgValueArray(int32_t aArgc, sqlite3_value** aArgv);
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_MOZISTORAGEVALUEARRAY

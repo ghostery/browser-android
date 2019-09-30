@@ -38,26 +38,9 @@ NS_INTERFACE_MAP_END_INHERITING(SVGSwitchElementBase)
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
 SVGSwitchElement::SVGSwitchElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGSwitchElementBase(std::move(aNodeInfo)) {}
-
-SVGSwitchElement::~SVGSwitchElement() {}
-||||||| merged common ancestors
-SVGSwitchElement::SVGSwitchElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-: SVGSwitchElementBase(std::move(aNodeInfo))
-{
-}
-
-SVGSwitchElement::~SVGSwitchElement()
-{
-}
-=======
-SVGSwitchElement::SVGSwitchElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGSwitchElementBase(std::move(aNodeInfo)) {}
->>>>>>> upstream-releases
 
 void SVGSwitchElement::MaybeInvalidate() {
   // We must not change mActiveChild until after
@@ -72,17 +55,8 @@ void SVGSwitchElement::MaybeInvalidate() {
 
   nsIFrame* frame = GetPrimaryFrame();
   if (frame) {
-<<<<<<< HEAD
-    nsLayoutUtils::PostRestyleEvent(this, nsRestyleHint(0),
-                                    nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-    nsLayoutUtils::PostRestyleEvent(
-      this, nsRestyleHint(0),
-      nsChangeHint_InvalidateRenderingObservers);
-=======
     nsLayoutUtils::PostRestyleEvent(this, RestyleHint{0},
                                     nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
     nsSVGUtils::ScheduleReflowSVG(frame);
   }
 

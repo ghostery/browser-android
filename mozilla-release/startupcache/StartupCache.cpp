@@ -152,38 +152,6 @@ nsresult StartupCache::Init() {
       return rv;
     }
 
-<<<<<<< HEAD
-    nsCOMPtr<nsIFile> profDir;
-    NS_GetSpecialDirectory("ProfDS", getter_AddRefs(profDir));
-    if (profDir) {
-      bool same;
-      if (NS_SUCCEEDED(profDir->Equals(file, &same)) && !same) {
-        // We no longer store the startup cache in the main profile
-        // directory, so we should cleanup the old one.
-        if (NS_SUCCEEDED(
-                profDir->AppendNative(NS_LITERAL_CSTRING("startupCache")))) {
-          profDir->Remove(true);
-        }
-      }
-    }
-
-||||||| merged common ancestors
-    nsCOMPtr<nsIFile> profDir;
-    NS_GetSpecialDirectory("ProfDS", getter_AddRefs(profDir));
-    if (profDir) {
-      bool same;
-      if (NS_SUCCEEDED(profDir->Equals(file, &same)) && !same) {
-        // We no longer store the startup cache in the main profile
-        // directory, so we should cleanup the old one.
-        if (NS_SUCCEEDED(
-              profDir->AppendNative(NS_LITERAL_CSTRING("startupCache")))) {
-          profDir->Remove(true);
-        }
-      }
-    }
-
-=======
->>>>>>> upstream-releases
     rv = file->AppendNative(NS_LITERAL_CSTRING("startupCache"));
     NS_ENSURE_SUCCESS(rv, rv);
 
@@ -233,30 +201,8 @@ nsresult StartupCache::Init() {
  * LoadArchive can be called from the main thread or while reloading cache on
  * write thread.
  */
-<<<<<<< HEAD
 nsresult StartupCache::LoadArchive() {
   if (gIgnoreDiskCache) return NS_ERROR_FAILURE;
-
-  bool exists;
-  mArchive = nullptr;
-  nsresult rv = mFile->Exists(&exists);
-  if (NS_FAILED(rv) || !exists) return NS_ERROR_FILE_NOT_FOUND;
-||||||| merged common ancestors
-nsresult
-StartupCache::LoadArchive()
-{
-  if (gIgnoreDiskCache)
-    return NS_ERROR_FAILURE;
-
-  bool exists;
-  mArchive = nullptr;
-  nsresult rv = mFile->Exists(&exists);
-  if (NS_FAILED(rv) || !exists)
-    return NS_ERROR_FILE_NOT_FOUND;
-=======
-nsresult StartupCache::LoadArchive() {
-  if (gIgnoreDiskCache) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
   mArchive = new nsZipArchive();
   nsresult rv = mArchive->OpenArchive(mFile);
@@ -309,12 +255,6 @@ nsresult StartupCache::GetBuffer(const char* id, UniquePtr<char[]>* outbuf,
   }
 
   nsresult rv = GetBufferFromZipArchive(mArchive, true, id, outbuf, length);
-<<<<<<< HEAD
-  if (NS_SUCCEEDED(rv)) return rv;
-||||||| merged common ancestors
-  if (NS_SUCCEEDED(rv))
-    return rv;
-=======
   if (NS_SUCCEEDED(rv)) {
     Telemetry::AccumulateCategorical(
         Telemetry::LABELS_STARTUP_CACHE_REQUESTS::HitDisk);
@@ -323,7 +263,6 @@ nsresult StartupCache::GetBuffer(const char* id, UniquePtr<char[]>* outbuf,
 
   Telemetry::AccumulateCategorical(
       Telemetry::LABELS_STARTUP_CACHE_REQUESTS::Miss);
->>>>>>> upstream-releases
 
   RefPtr<nsZipArchive> omnijar =
       mozilla::Omnijar::GetReader(mozilla::Omnijar::APP);
@@ -479,13 +418,6 @@ void StartupCache::WriteToDisk() {
   LoadArchive();
 }
 
-<<<<<<< HEAD
-void StartupCache::InvalidateCache() {
-||||||| merged common ancestors
-void
-StartupCache::InvalidateCache()
-{
-=======
 void StartupCache::InvalidateCache(bool memoryOnly) {
   if (memoryOnly) {
     // The memoryOnly option is just for testing purposes. We want to ensure
@@ -494,7 +426,6 @@ void StartupCache::InvalidateCache(bool memoryOnly) {
     WriteToDisk();
     return;
   }
->>>>>>> upstream-releases
   WaitOnWriteThread();
   mPendingWrites.Clear();
   mTable.Clear();

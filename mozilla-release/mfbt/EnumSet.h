@@ -44,15 +44,7 @@ class EnumSet {
       : mBitField(bitFor(aEnum1) | bitFor(aEnum2) | bitFor(aEnum3) |
                   bitFor(aEnum4)) {}
 
-<<<<<<< HEAD
-  MOZ_IMPLICIT EnumSet(std::initializer_list<T> list) : mBitField(0) {
-||||||| merged common ancestors
-  MOZ_IMPLICIT EnumSet(std::initializer_list<T> list)
-    : mBitField(0)
-  {
-=======
   constexpr MOZ_IMPLICIT EnumSet(std::initializer_list<T> list) : mBitField(0) {
->>>>>>> upstream-releases
     for (auto value : list) {
       (*this) += value;
     }
@@ -63,14 +55,7 @@ class EnumSet {
   /**
    * Add an element
    */
-<<<<<<< HEAD
-  void operator+=(T aEnum) {
-||||||| merged common ancestors
-  void operator+=(T aEnum)
-  {
-=======
   constexpr void operator+=(T aEnum) {
->>>>>>> upstream-releases
     incVersion();
     mBitField |= bitFor(aEnum);
   }
@@ -78,14 +63,7 @@ class EnumSet {
   /**
    * Add an element
    */
-<<<<<<< HEAD
-  EnumSet operator+(T aEnum) const {
-||||||| merged common ancestors
-  EnumSet operator+(T aEnum) const
-  {
-=======
   constexpr EnumSet operator+(T aEnum) const {
->>>>>>> upstream-releases
     EnumSet result(*this);
     result += aEnum;
     return result;

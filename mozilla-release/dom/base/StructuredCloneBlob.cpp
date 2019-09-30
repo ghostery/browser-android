@@ -18,44 +18,19 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-StructuredCloneBlob::StructuredCloneBlob()
-    : StructuredCloneHolder(CloningSupported, TransferringNotSupported,
-                            StructuredCloneScope::DifferentProcess) {}
-||||||| merged common ancestors
-StructuredCloneBlob::StructuredCloneBlob()
-    : StructuredCloneHolder(CloningSupported, TransferringNotSupported,
-                            StructuredCloneScope::DifferentProcess)
-{}
-=======
 StructuredCloneBlob::StructuredCloneBlob() {
   mHolder.emplace(Holder::CloningSupported, Holder::TransferringNotSupported,
                   Holder::StructuredCloneScope::DifferentProcess);
 }
->>>>>>> upstream-releases
 
 StructuredCloneBlob::~StructuredCloneBlob() {
   UnregisterWeakMemoryReporter(this);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<StructuredCloneBlob>
-StructuredCloneBlob::Constructor(GlobalObject& aGlobal, JS::HandleValue aValue,
-                                 JS::HandleObject aTargetGlobal,
-                                 ErrorResult& aRv) {
-||||||| merged common ancestors
-
-/* static */ already_AddRefed<StructuredCloneBlob>
-StructuredCloneBlob::Constructor(GlobalObject& aGlobal, JS::HandleValue aValue,
-                                 JS::HandleObject aTargetGlobal,
-                                 ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<StructuredCloneBlob> StructuredCloneBlob::Constructor(
     GlobalObject& aGlobal, JS::HandleValue aValue,
     JS::HandleObject aTargetGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   RefPtr<StructuredCloneBlob> holder = StructuredCloneBlob::Create();
@@ -100,19 +75,6 @@ already_AddRefed<StructuredCloneBlob> StructuredCloneBlob::Constructor(
   return holder.forget();
 }
 
-<<<<<<< HEAD
-void StructuredCloneBlob::Deserialize(JSContext* aCx,
-                                      JS::HandleObject aTargetScope,
-                                      JS::MutableHandleValue aResult,
-                                      ErrorResult& aRv) {
-  JS::RootedObject scope(aCx, js::CheckedUnwrap(aTargetScope));
-||||||| merged common ancestors
-void
-StructuredCloneBlob::Deserialize(JSContext* aCx, JS::HandleObject aTargetScope,
-                                      JS::MutableHandleValue aResult, ErrorResult& aRv)
-{
-  JS::RootedObject scope(aCx, js::CheckedUnwrap(aTargetScope));
-=======
 void StructuredCloneBlob::Deserialize(JSContext* aCx,
                                       JS::HandleObject aTargetScope,
                                       bool aKeepData,
@@ -120,7 +82,6 @@ void StructuredCloneBlob::Deserialize(JSContext* aCx,
                                       ErrorResult& aRv) {
   // OK to unwrap if our caller (represented by aCx's Realm) can do it.
   JS::RootedObject scope(aCx, js::CheckedUnwrapDynamic(aTargetScope, aCx));
->>>>>>> upstream-releases
   if (!scope) {
     js::ReportAccessDenied(aCx);
     aRv.NoteJSContextException(aCx);
@@ -151,22 +112,10 @@ void StructuredCloneBlob::Deserialize(JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-/* static */ JSObject* StructuredCloneBlob::ReadStructuredClone(
-    JSContext* aCx, JSStructuredCloneReader* aReader,
-    StructuredCloneHolder* aHolder) {
-||||||| merged common ancestors
-
-/* static */ JSObject*
-StructuredCloneBlob::ReadStructuredClone(JSContext* aCx, JSStructuredCloneReader* aReader,
-                                         StructuredCloneHolder* aHolder)
-{
-=======
 /* static */
 JSObject* StructuredCloneBlob::ReadStructuredClone(
     JSContext* aCx, JSStructuredCloneReader* aReader,
     StructuredCloneHolder* aHolder) {
->>>>>>> upstream-releases
   JS::RootedObject obj(aCx);
   {
     RefPtr<StructuredCloneBlob> holder = StructuredCloneBlob::Create();
@@ -179,20 +128,9 @@ JSObject* StructuredCloneBlob::ReadStructuredClone(
   return obj.get();
 }
 
-<<<<<<< HEAD
-bool StructuredCloneBlob::ReadStructuredCloneInternal(
-    JSContext* aCx, JSStructuredCloneReader* aReader,
-    StructuredCloneHolder* aHolder) {
-||||||| merged common ancestors
-bool
-StructuredCloneBlob::ReadStructuredCloneInternal(JSContext* aCx, JSStructuredCloneReader* aReader,
-                                                 StructuredCloneHolder* aHolder)
-{
-=======
 bool StructuredCloneBlob::Holder::ReadStructuredCloneInternal(
     JSContext* aCx, JSStructuredCloneReader* aReader,
     StructuredCloneHolder* aHolder) {
->>>>>>> upstream-releases
   uint32_t length;
   uint32_t version;
   if (!JS_ReadUint32Pair(aReader, &length, &version)) {
@@ -230,16 +168,6 @@ bool StructuredCloneBlob::Holder::ReadStructuredCloneInternal(
   return true;
 }
 
-<<<<<<< HEAD
-bool StructuredCloneBlob::WriteStructuredClone(JSContext* aCx,
-                                               JSStructuredCloneWriter* aWriter,
-                                               StructuredCloneHolder* aHolder) {
-||||||| merged common ancestors
-bool
-StructuredCloneBlob::WriteStructuredClone(JSContext* aCx, JSStructuredCloneWriter* aWriter,
-                                          StructuredCloneHolder* aHolder)
-{
-=======
 bool StructuredCloneBlob::WriteStructuredClone(JSContext* aCx,
                                                JSStructuredCloneWriter* aWriter,
                                                StructuredCloneHolder* aHolder) {
@@ -252,7 +180,6 @@ bool StructuredCloneBlob::WriteStructuredClone(JSContext* aCx,
 bool StructuredCloneBlob::Holder::WriteStructuredClone(
     JSContext* aCx, JSStructuredCloneWriter* aWriter,
     StructuredCloneHolder* aHolder) {
->>>>>>> upstream-releases
   auto& data = mBuffer->data();
   if (!JS_WriteUint32Pair(aWriter, SCTAG_DOM_STRUCTURED_CLONE_HOLDER, 0) ||
       !JS_WriteUint32Pair(aWriter, data.Size(), JS_STRUCTURED_CLONE_VERSION) ||
@@ -276,20 +203,6 @@ bool StructuredCloneBlob::WrapObject(JSContext* aCx,
 
 NS_IMETHODIMP
 StructuredCloneBlob::CollectReports(nsIHandleReportCallback* aHandleReport,
-<<<<<<< HEAD
-                                    nsISupports* aData, bool aAnonymize) {
-  MOZ_COLLECT_REPORT("explicit/dom/structured-clone-holder", KIND_HEAP,
-                     UNITS_BYTES,
-                     MallocSizeOf(this) + SizeOfExcludingThis(MallocSizeOf),
-                     "Memory used by StructuredCloneHolder DOM objects.");
-||||||| merged common ancestors
-                                    nsISupports* aData, bool aAnonymize)
-{
-  MOZ_COLLECT_REPORT(
-    "explicit/dom/structured-clone-holder", KIND_HEAP, UNITS_BYTES,
-    MallocSizeOf(this) + SizeOfExcludingThis(MallocSizeOf),
-    "Memory used by StructuredCloneHolder DOM objects.");
-=======
                                     nsISupports* aData, bool aAnonymize) {
   size_t size = MallocSizeOf(this);
   if (mHolder.isSome()) {
@@ -299,7 +212,6 @@ StructuredCloneBlob::CollectReports(nsIHandleReportCallback* aHandleReport,
   MOZ_COLLECT_REPORT("explicit/dom/structured-clone-holder", KIND_HEAP,
                      UNITS_BYTES, size,
                      "Memory used by StructuredCloneHolder DOM objects.");
->>>>>>> upstream-releases
 
   return NS_OK;
 }

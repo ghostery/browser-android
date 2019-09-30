@@ -5,19 +5,9 @@
 use clap;
 use euclid::SideOffsets2D;
 use image;
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
-use image::GenericImageView;
-use parse_function::parse_function;
-use premultiply::premultiply;
-||||||| merged common ancestors
-use image::GenericImage;
-use parse_function::parse_function;
-use premultiply::premultiply;
-=======
 use image::GenericImageView;
 use crate::parse_function::parse_function;
 use crate::premultiply::premultiply;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
@@ -517,25 +507,11 @@ impl YamlFrameReader {
 
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
-    pub fn add_or_get_image(
-        &mut self,
-        file: &Path,
-        tiling: Option<i64>,
-        wrench: &mut Wrench,
-||||||| merged common ancestors
-    pub fn add_or_get_image(
-            &mut self,
-            file: &Path,
-            tiling: Option<i64>,
-            wrench: &mut Wrench,
-=======
     fn add_or_get_image(
         &mut self,
         file: &Path,
         tiling: Option<i64>,
         wrench: &mut Wrench,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
     ) -> (ImageKey, LayoutSize) {
         let key = (file.to_owned(), tiling);
         if let Some(k) = self.image_map.get(&key) {
@@ -741,15 +717,6 @@ impl YamlFrameReader {
             }
         };
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
-        let tiling = item["tile-size"].as_i64();
-        let (image_key, image_dims) =
-            self.add_or_get_image(&file, tiling, wrench);
-||||||| merged common ancestors
-        let (image_key, image_dims) =
-            self.add_or_get_image(&file, None, wrench);
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
         let image_rect = item["rect"]
             .as_rect()
             .unwrap_or(LayoutRect::new(LayoutPoint::zero(), image_dims));
@@ -1922,14 +1889,8 @@ impl YamlFrameReader {
             clip_node_id,
             transform_style,
             mix_blend_mode,
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
-            &filters,
-||||||| merged common ancestors
-            filters,
-=======
             &filters,
             &filter_datas,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/yaml_frame_reader.rs
             raster_space,
             cache_tiles,
         );

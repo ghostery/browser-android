@@ -83,18 +83,12 @@ class ServoStyleSet {
   friend class RestyleManager;
   typedef ServoElementSnapshotTable SnapshotTable;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   using Origin = StyleOrigin;
 
  public:
   static constexpr const StyleOrigin kOrigins[] = {
       StyleOrigin::UserAgent, StyleOrigin::User, StyleOrigin::Author};
 
->>>>>>> upstream-releases
   static bool IsInServoTraversal() { return mozilla::IsInServoTraversal(); }
 
 #ifdef DEBUG
@@ -142,19 +136,6 @@ public:
 
   void SetAuthorStyleDisabled(bool aStyleDisabled);
 
-<<<<<<< HEAD
-  // FIXME(emilio): All the callers pass Allow here
-  already_AddRefed<ComputedStyle> ResolveStyleFor(
-      dom::Element* aElement, LazyComputeBehavior aMayCompute);
-
-||||||| merged common ancestors
-  // FIXME(emilio): All the callers pass Allow here
-  already_AddRefed<ComputedStyle>
-  ResolveStyleFor(dom::Element* aElement,
-                  LazyComputeBehavior aMayCompute);
-
-=======
->>>>>>> upstream-releases
   // Get a CopmutedStyle for a text node (which no rules will match).
   //
   // The returned ComputedStyle will have nsCSSAnonBoxes::mozText() as its
@@ -163,16 +144,8 @@ public:
   // (Perhaps mozText should go away and we shouldn't even create style
   // contexts for such content nodes, when text-combine-upright is not
   // present.  However, not doing any rule matching for them is a first step.)
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> ResolveStyleForText(
-      nsIContent* aTextNode, ComputedStyle* aParentContext);
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-  ResolveStyleForText(nsIContent* aTextNode, ComputedStyle* aParentContext);
-=======
   already_AddRefed<ComputedStyle> ResolveStyleForText(
       nsIContent* aTextNode, ComputedStyle* aParentStyle);
->>>>>>> upstream-releases
 
   // Get a ComputedStyle for a first-letter continuation (which no rules will
   // match).
@@ -184,16 +157,8 @@ public:
   // shouldn't even create ComputedStyles for such frames.  However, not doing
   // any rule matching for them is a first step.  And right now we do use this
   // ComputedStyle for some things)
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> ResolveStyleForFirstLetterContinuation(
-      ComputedStyle* aParentContext);
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-  ResolveStyleForFirstLetterContinuation(ComputedStyle* aParentContext);
-=======
   already_AddRefed<ComputedStyle> ResolveStyleForFirstLetterContinuation(
       ComputedStyle* aParentStyle);
->>>>>>> upstream-releases
 
   // Get a ComputedStyle for a placeholder frame (which no rules will match).
   //
@@ -203,32 +168,6 @@ public:
   // (Perhaps nsCSSAnonBoxes::oofPaceholder() should go away and we shouldn't
   // even create ComputedStyle for placeholders.  However, not doing any rule
   // matching for them is a first step.)
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> ResolveStyleForPlaceholder();
-
-  // Get a ComputedStyle for a pseudo-element.  aParentElement must be
-  // non-null.  aPseudoID is the CSSPseudoElementType for the
-  // pseudo-element.  aPseudoElement must be non-null if the pseudo-element
-  // type is one that allows user action pseudo-classes after it or allows
-  // style attributes; otherwise, it is ignored.
-  already_AddRefed<ComputedStyle> ResolvePseudoElementStyle(
-      dom::Element* aOriginatingElement, CSSPseudoElementType aType,
-      ComputedStyle* aParentContext, dom::Element* aPseudoElement);
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-  ResolveStyleForPlaceholder();
-
-  // Get a ComputedStyle for a pseudo-element.  aParentElement must be
-  // non-null.  aPseudoID is the CSSPseudoElementType for the
-  // pseudo-element.  aPseudoElement must be non-null if the pseudo-element
-  // type is one that allows user action pseudo-classes after it or allows
-  // style attributes; otherwise, it is ignored.
-  already_AddRefed<ComputedStyle>
-  ResolvePseudoElementStyle(dom::Element* aOriginatingElement,
-                            CSSPseudoElementType aType,
-                            ComputedStyle* aParentContext,
-                            dom::Element* aPseudoElement);
-=======
   already_AddRefed<ComputedStyle> ResolveStyleForPlaceholder();
 
   // Returns whether a given pseudo-element should exist or not.
@@ -256,50 +195,9 @@ public:
     return ResolvePseudoElementStyle(aOriginatingElement, aType, aParentStyle,
                                      IsProbe::Yes);
   }
->>>>>>> upstream-releases
 
   // Resolves style for a (possibly-pseudo) Element without assuming that the
   // style has been resolved. If the element was unstyled and a new style
-<<<<<<< HEAD
-  // context was resolved, it is not stored in the DOM. (That is, the element
-  // remains unstyled.)
-  already_AddRefed<ComputedStyle> ResolveStyleLazily(
-      dom::Element* aElement, CSSPseudoElementType aPseudoType,
-      StyleRuleInclusion aRules = StyleRuleInclusion::All);
-
-  // Get a ComputedStyle for an anonymous box.  aPseudoTag is the pseudo-tag to
-  // use and must be non-null.  It must be an anon box, and must be one that
-  // inherits style from the given aParentContext.
-  already_AddRefed<ComputedStyle> ResolveInheritingAnonymousBoxStyle(
-      nsAtom* aPseudoTag, ComputedStyle* aParentContext);
-
-  // Get a ComputedStyle for an anonymous box that does not inherit style from
-  // anything.  aPseudoTag is the pseudo-tag to use and must be non-null.  It
-  // must be an anon box, and must be a non-inheriting one.
-  already_AddRefed<ComputedStyle> ResolveNonInheritingAnonymousBoxStyle(
-      nsAtom* aPseudoTag);
-||||||| merged common ancestors
-  // context was resolved, it is not stored in the DOM. (That is, the element
-  // remains unstyled.)
-  already_AddRefed<ComputedStyle>
-  ResolveStyleLazily(dom::Element* aElement,
-                     CSSPseudoElementType aPseudoType,
-                     StyleRuleInclusion aRules =
-                       StyleRuleInclusion::All);
-
-  // Get a ComputedStyle for an anonymous box.  aPseudoTag is the pseudo-tag to
-  // use and must be non-null.  It must be an anon box, and must be one that
-  // inherits style from the given aParentContext.
-  already_AddRefed<ComputedStyle>
-  ResolveInheritingAnonymousBoxStyle(nsAtom* aPseudoTag,
-                                     ComputedStyle* aParentContext);
-
-  // Get a ComputedStyle for an anonymous box that does not inherit style from
-  // anything.  aPseudoTag is the pseudo-tag to use and must be non-null.  It
-  // must be an anon box, and must be a non-inheriting one.
-  already_AddRefed<ComputedStyle>
-  ResolveNonInheritingAnonymousBoxStyle(nsAtom* aPseudoTag);
-=======
   // was resolved, it is not stored in the DOM. (That is, the element remains
   // unstyled.)
   //
@@ -317,99 +215,28 @@ public:
   // a non-inheriting anon box.
   already_AddRefed<ComputedStyle> ResolveNonInheritingAnonymousBoxStyle(
       PseudoStyleType);
->>>>>>> upstream-releases
 
 #ifdef MOZ_XUL
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> ResolveXULTreePseudoStyle(
-      dom::Element* aParentElement, nsCSSAnonBoxPseudoStaticAtom* aPseudoTag,
-      ComputedStyle* aParentContext, const AtomArray& aInputWord);
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-  ResolveXULTreePseudoStyle(dom::Element* aParentElement,
-                            nsCSSAnonBoxPseudoStaticAtom* aPseudoTag,
-                            ComputedStyle* aParentContext,
-                            const AtomArray& aInputWord);
-=======
   already_AddRefed<ComputedStyle> ResolveXULTreePseudoStyle(
       dom::Element* aParentElement, nsCSSAnonBoxPseudoStaticAtom* aPseudoTag,
       ComputedStyle* aParentStyle, const AtomArray& aInputWord);
->>>>>>> upstream-releases
 #endif
 
   // manage the set of style sheets in the style set
-<<<<<<< HEAD
-  nsresult AppendStyleSheet(SheetType aType, StyleSheet* aSheet);
-  nsresult PrependStyleSheet(SheetType aType, StyleSheet* aSheet);
-  nsresult RemoveStyleSheet(SheetType aType, StyleSheet* aSheet);
-  nsresult ReplaceSheets(SheetType aType,
-                         const nsTArray<RefPtr<StyleSheet>>& aNewSheets);
-  nsresult InsertStyleSheetBefore(SheetType aType, StyleSheet* aNewSheet,
-                                  StyleSheet* aReferenceSheet);
-
-  int32_t SheetCount(SheetType aType) const;
-  StyleSheet* StyleSheetAt(SheetType aType, int32_t aIndex) const;
-||||||| merged common ancestors
-  nsresult AppendStyleSheet(SheetType aType, StyleSheet* aSheet);
-  nsresult PrependStyleSheet(SheetType aType, StyleSheet* aSheet);
-  nsresult RemoveStyleSheet(SheetType aType, StyleSheet* aSheet);
-  nsresult ReplaceSheets(SheetType aType,
-                         const nsTArray<RefPtr<StyleSheet>>& aNewSheets);
-  nsresult InsertStyleSheetBefore(SheetType aType,
-                                  StyleSheet* aNewSheet,
-                                  StyleSheet* aReferenceSheet);
-
-  int32_t SheetCount(SheetType aType) const;
-  StyleSheet* StyleSheetAt(SheetType aType, int32_t aIndex) const;
-=======
   void AppendStyleSheet(Origin, StyleSheet*);
   void RemoveStyleSheet(Origin, StyleSheet*);
   void InsertStyleSheetBefore(Origin, StyleSheet*, StyleSheet* aReferenceSheet);
 
   size_t SheetCount(Origin) const;
   StyleSheet* SheetAt(Origin, size_t aIndex) const;
->>>>>>> upstream-releases
 
   void AppendAllNonDocumentAuthorSheets(nsTArray<StyleSheet*>& aArray) const;
 
-<<<<<<< HEAD
-  template <typename Func>
-  void EnumerateStyleSheetArrays(Func aCallback) const {
-    for (const auto& sheetArray : mSheets) {
-      aCallback(sheetArray);
-    }
-||||||| merged common ancestors
-  template<typename Func>
-  void EnumerateStyleSheetArrays(Func aCallback) const {
-    for (const auto& sheetArray : mSheets) {
-      aCallback(sheetArray);
-    }
-=======
   void RemoveDocStyleSheet(StyleSheet* aSheet) {
     RemoveStyleSheet(StyleOrigin::Author, aSheet);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  nsresult RemoveDocStyleSheet(StyleSheet* aSheet);
-  nsresult AddDocStyleSheet(StyleSheet* aSheet, nsIDocument* aDocument);
-
-  // check whether there is ::before/::after style for an element
-  already_AddRefed<ComputedStyle> ProbePseudoElementStyle(
-      const dom::Element& aOriginatingElement, CSSPseudoElementType aType,
-      ComputedStyle* aParentStyle);
-||||||| merged common ancestors
-  nsresult RemoveDocStyleSheet(StyleSheet* aSheet);
-  nsresult AddDocStyleSheet(StyleSheet* aSheet, nsIDocument* aDocument);
-
-  // check whether there is ::before/::after style for an element
-  already_AddRefed<ComputedStyle>
-  ProbePseudoElementStyle(const dom::Element& aOriginatingElement,
-                          CSSPseudoElementType aType,
-                          ComputedStyle* aParentStyle);
-=======
   void AddDocStyleSheet(StyleSheet* aSheet);
->>>>>>> upstream-releases
 
   /**
    * Performs a Servo traversal to compute style for all dirty nodes in the
@@ -543,19 +370,9 @@ public:
    * If the parent style is not specified, the document default computed values
    * is used.
    */
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> ResolveForDeclarations(
-      const ComputedStyle* aParentOrNull,
-      RawServoDeclarationBlockBorrowed aDeclarations);
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-  ResolveForDeclarations(const ComputedStyle* aParentOrNull,
-                         RawServoDeclarationBlockBorrowed aDeclarations);
-=======
   already_AddRefed<ComputedStyle> ResolveForDeclarations(
       const ComputedStyle* aParentOrNull,
       const RawServoDeclarationBlock* aDeclarations);
->>>>>>> upstream-releases
 
   already_AddRefed<RawServoAnimationValue> ComputeAnimationValue(
       dom::Element* aElement, RawServoDeclarationBlock* aDeclaration,
@@ -698,62 +515,12 @@ public:
    */
   void UpdateStylist();
 
-<<<<<<< HEAD
-  already_AddRefed<ComputedStyle> ResolveStyleLazilyInternal(
-      dom::Element* aElement, CSSPseudoElementType aPseudoType,
-      StyleRuleInclusion aRules = StyleRuleInclusion::All);
-
-||||||| merged common ancestors
-  already_AddRefed<ComputedStyle>
-    ResolveStyleLazilyInternal(dom::Element* aElement,
-                               CSSPseudoElementType aPseudoType,
-                               StyleRuleInclusion aRules =
-                                 StyleRuleInclusion::All);
-
-=======
->>>>>>> upstream-releases
   void RunPostTraversalTasks();
 
-<<<<<<< HEAD
-  void PrependSheetOfType(SheetType aType, StyleSheet* aSheet);
-
-  void AppendSheetOfType(SheetType aType, StyleSheet* aSheet);
-
-  void InsertSheetOfType(SheetType aType, StyleSheet* aSheet,
-                         StyleSheet* aBeforeSheet);
-
-  void RemoveSheetOfType(SheetType aType, StyleSheet* aSheet);
-
-  // The owner document of this style set. Null if this is an XBL style set.
-  //
-  // TODO(emilio): This should become a DocumentOrShadowRoot, and be owned by it
-  // directly instead of the shell, eventually.
-  nsIDocument* mDocument;
-||||||| merged common ancestors
-  void PrependSheetOfType(SheetType aType,
-                          StyleSheet* aSheet);
-
-  void AppendSheetOfType(SheetType aType,
-                         StyleSheet* aSheet);
-
-  void InsertSheetOfType(SheetType aType,
-                         StyleSheet* aSheet,
-                         StyleSheet* aBeforeSheet);
-
-  void RemoveSheetOfType(SheetType aType,
-                         StyleSheet* aSheet);
-
-  // The owner document of this style set. Null if this is an XBL style set.
-  //
-  // TODO(emilio): This should become a DocumentOrShadowRoot, and be owned by it
-  // directly instead of the shell, eventually.
-  nsIDocument* mDocument;
-=======
   void PrependSheetOfType(Origin, StyleSheet*);
   void AppendSheetOfType(Origin, StyleSheet*);
   void InsertSheetOfType(Origin, StyleSheet*, StyleSheet* aBeforeSheet);
   void RemoveSheetOfType(Origin, StyleSheet*);
->>>>>>> upstream-releases
 
   const nsPresContext* GetPresContext() const {
     return const_cast<ServoStyleSet*>(this)->GetPresContext();
@@ -769,43 +536,11 @@ public:
   // StyleSet.
   dom::Document* mDocument;
   UniquePtr<RawServoStyleSet> mRawSet;
-<<<<<<< HEAD
-  EnumeratedArray<SheetType, SheetType::Count, nsTArray<RefPtr<StyleSheet>>>
-      mSheets;
-  bool mAuthorStyleDisabled;
-  StylistState mStylistState;
-  uint64_t mUserFontSetUpdateGeneration;
 
-  bool mNeedsRestyleAfterEnsureUniqueInner;
-||||||| merged common ancestors
-  EnumeratedArray<SheetType, SheetType::Count,
-                  nsTArray<RefPtr<StyleSheet>>> mSheets;
-  bool mAuthorStyleDisabled;
-  StylistState mStylistState;
-  uint64_t mUserFontSetUpdateGeneration;
-
-  bool mNeedsRestyleAfterEnsureUniqueInner;
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Stores pointers to our cached ComputedStyles for non-inheriting anonymous
-  // boxes.
-  EnumeratedArray<nsCSSAnonBoxes::NonInheriting,
-                  nsCSSAnonBoxes::NonInheriting::_Count, RefPtr<ComputedStyle>>
-      mNonInheritingComputedStyles;
-||||||| merged common ancestors
-  // Stores pointers to our cached ComputedStyles for non-inheriting anonymous
-  // boxes.
-  EnumeratedArray<nsCSSAnonBoxes::NonInheriting,
-                  nsCSSAnonBoxes::NonInheriting::_Count,
-                  RefPtr<ComputedStyle>> mNonInheritingComputedStyles;
-=======
   // Map from raw Servo style rule to Gecko's wrapper object.
   // Constructed lazily when requested by devtools.
   UniquePtr<ServoStyleRuleMap> mStyleRuleMap;
   uint64_t mUserFontSetUpdateGeneration = 0;
->>>>>>> upstream-releases
 
   // Tasks to perform after a traversal, back on the main thread.
   //

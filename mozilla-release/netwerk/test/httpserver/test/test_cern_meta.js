@@ -13,29 +13,6 @@ XPCOMUtils.defineLazyGetter(this, "PREFIX", function() {
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
-<<<<<<< HEAD
-     new Test(PREFIX + "/test_both.html",
-              null, start_testBoth, null),
-     new Test(PREFIX + "/test_ctype_override.txt",
-              null, start_test_ctype_override_txt, null),
-     new Test(PREFIX + "/test_status_override.html",
-              null, start_test_status_override_html, null),
-     new Test(PREFIX + "/test_status_override_nodesc.txt",
-              null, start_test_status_override_nodesc_txt, null),
-     new Test(PREFIX + "/caret_test.txt^",
-              null, start_caret_test_txt_, null),
-||||||| merged common ancestors
-     new Test(PREFIX + "/test_both.html",
-              null, start_testBoth, null),
-     new Test(PREFIX + "/test_ctype_override.txt",
-              null, start_test_ctype_override_txt, null),
-     new Test(PREFIX + "/test_status_override.html",
-              null, start_test_status_override_html, null),
-     new Test(PREFIX + "/test_status_override_nodesc.txt",
-              null, start_test_status_override_nodesc_txt, null),
-     new Test(PREFIX + "/caret_test.txt^",
-              null, start_caret_test_txt_, null)
-=======
     new Test(PREFIX + "/test_both.html", null, start_testBoth, null),
     new Test(
       PREFIX + "/test_ctype_override.txt",
@@ -56,7 +33,6 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
       null
     ),
     new Test(PREFIX + "/caret_test.txt^", null, start_caret_test_txt_, null),
->>>>>>> upstream-releases
   ];
 });
 
@@ -73,63 +49,28 @@ function run_test() {
 
 // TEST DATA
 
-<<<<<<< HEAD
-function start_testBoth(ch, cx) {
-||||||| merged common ancestors
-function start_testBoth(ch, cx)
-{
-=======
 function start_testBoth(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 501);
   Assert.equal(ch.responseStatusText, "Unimplemented");
 
   Assert.equal(ch.getResponseHeader("Content-Type"), "text/plain");
 }
 
-<<<<<<< HEAD
-function start_test_ctype_override_txt(ch, cx) {
-||||||| merged common ancestors
-function start_test_ctype_override_txt(ch, cx)
-{
-=======
 function start_test_ctype_override_txt(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.getResponseHeader("Content-Type"), "text/html");
 }
 
-<<<<<<< HEAD
-function start_test_status_override_html(ch, cx) {
-||||||| merged common ancestors
-function start_test_status_override_html(ch, cx)
-{
-=======
 function start_test_status_override_html(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 404);
   Assert.equal(ch.responseStatusText, "Can't Find This");
 }
 
-<<<<<<< HEAD
-function start_test_status_override_nodesc_txt(ch, cx) {
-||||||| merged common ancestors
-function start_test_status_override_nodesc_txt(ch, cx)
-{
-=======
 function start_test_status_override_nodesc_txt(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 732);
   Assert.equal(ch.responseStatusText, "");
 }
 
-<<<<<<< HEAD
-function start_caret_test_txt_(ch, cx) {
-||||||| merged common ancestors
-function start_caret_test_txt_(ch, cx)
-{
-=======
 function start_caret_test_txt_(ch) {
->>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 500);
   Assert.equal(ch.responseStatusText, "This Isn't A Server Error");
 

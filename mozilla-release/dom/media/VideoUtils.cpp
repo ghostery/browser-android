@@ -181,61 +181,6 @@ bool IsVideoContentType(const nsCString& aContentType) {
   return false;
 }
 
-<<<<<<< HEAD
-bool IsValidVideoRegion(const gfx::IntSize& aFrame,
-                        const gfx::IntRect& aPicture,
-                        const gfx::IntSize& aDisplay) {
-  return aFrame.width <= PlanarYCbCrImage::MAX_DIMENSION &&
-         aFrame.height <= PlanarYCbCrImage::MAX_DIMENSION &&
-         aFrame.width * aFrame.height <= MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT &&
-         aFrame.width * aFrame.height != 0 &&
-         aPicture.width <= PlanarYCbCrImage::MAX_DIMENSION &&
-         aPicture.x < PlanarYCbCrImage::MAX_DIMENSION &&
-         aPicture.x + aPicture.width < PlanarYCbCrImage::MAX_DIMENSION &&
-         aPicture.height <= PlanarYCbCrImage::MAX_DIMENSION &&
-         aPicture.y < PlanarYCbCrImage::MAX_DIMENSION &&
-         aPicture.y + aPicture.height < PlanarYCbCrImage::MAX_DIMENSION &&
-         aPicture.width * aPicture.height <=
-             MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT &&
-         aPicture.width * aPicture.height != 0 &&
-         aDisplay.width <= PlanarYCbCrImage::MAX_DIMENSION &&
-         aDisplay.height <= PlanarYCbCrImage::MAX_DIMENSION &&
-         aDisplay.width * aDisplay.height <=
-             MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT &&
-         aDisplay.width * aDisplay.height != 0;
-}
-
-already_AddRefed<SharedThreadPool> GetMediaThreadPool(MediaThreadType aType) {
-  const char* name;
-||||||| merged common ancestors
-bool
-IsValidVideoRegion(const gfx::IntSize& aFrame,
-                   const gfx::IntRect& aPicture,
-                   const gfx::IntSize& aDisplay)
-{
-  return
-    aFrame.width <= PlanarYCbCrImage::MAX_DIMENSION &&
-    aFrame.height <= PlanarYCbCrImage::MAX_DIMENSION &&
-    aFrame.width * aFrame.height <= MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT &&
-    aFrame.width * aFrame.height != 0 &&
-    aPicture.width <= PlanarYCbCrImage::MAX_DIMENSION &&
-    aPicture.x < PlanarYCbCrImage::MAX_DIMENSION &&
-    aPicture.x + aPicture.width < PlanarYCbCrImage::MAX_DIMENSION &&
-    aPicture.height <= PlanarYCbCrImage::MAX_DIMENSION &&
-    aPicture.y < PlanarYCbCrImage::MAX_DIMENSION &&
-    aPicture.y + aPicture.height < PlanarYCbCrImage::MAX_DIMENSION &&
-    aPicture.width * aPicture.height <= MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT &&
-    aPicture.width * aPicture.height != 0 &&
-    aDisplay.width <= PlanarYCbCrImage::MAX_DIMENSION &&
-    aDisplay.height <= PlanarYCbCrImage::MAX_DIMENSION &&
-    aDisplay.width * aDisplay.height <= MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT &&
-    aDisplay.width * aDisplay.height != 0;
-}
-
-already_AddRefed<SharedThreadPool> GetMediaThreadPool(MediaThreadType aType)
-{
-  const char *name;
-=======
 bool IsValidVideoRegion(const gfx::IntSize& aFrame,
                         const gfx::IntRect& aPicture,
                         const gfx::IntSize& aDisplay) {
@@ -262,7 +207,6 @@ bool IsValidVideoRegion(const gfx::IntSize& aFrame,
 already_AddRefed<SharedThreadPool> GetMediaThreadPool(MediaThreadType aType) {
   const char* name;
   uint32_t threads = 4;
->>>>>>> upstream-releases
   switch (aType) {
     case MediaThreadType::PLATFORM_DECODER:
       name = "MediaPDecoder";
@@ -284,18 +228,8 @@ already_AddRefed<SharedThreadPool> GetMediaThreadPool(MediaThreadType aType) {
       break;
   }
 
-<<<<<<< HEAD
-  static const uint32_t kMediaThreadPoolDefaultCount = 4;
-  RefPtr<SharedThreadPool> pool = SharedThreadPool::Get(
-      nsDependentCString(name), kMediaThreadPoolDefaultCount);
-||||||| merged common ancestors
-  static const uint32_t kMediaThreadPoolDefaultCount = 4;
-  RefPtr<SharedThreadPool> pool = SharedThreadPool::
-    Get(nsDependentCString(name), kMediaThreadPoolDefaultCount);
-=======
   RefPtr<SharedThreadPool> pool =
       SharedThreadPool::Get(nsDependentCString(name), threads);
->>>>>>> upstream-releases
 
   // Ensure a larger stack for platform decoder threads
   if (aType == MediaThreadType::PLATFORM_DECODER) {
@@ -785,11 +719,6 @@ UniquePtr<TrackInfo> CreateTrackInfoWithMIMETypeAndContainerTypeExtraParameters(
   return trackInfo;
 }
 
-<<<<<<< HEAD
-}  // end namespace mozilla
-||||||| merged common ancestors
-} // end namespace mozilla
-=======
 bool OnCellularConnection() {
   uint32_t linkType = nsINetworkLinkService::LINK_TYPE_UNKNOWN;
   if (XRE_IsContentProcess()) {
@@ -833,4 +762,3 @@ bool OnCellularConnection() {
 }
 
 }  // end namespace mozilla
->>>>>>> upstream-releases

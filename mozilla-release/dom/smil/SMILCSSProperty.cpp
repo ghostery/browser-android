@@ -20,41 +20,17 @@
 namespace mozilla {
 
 // Class Methods
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-nsSMILCSSProperty::nsSMILCSSProperty(nsCSSPropertyID aPropID, Element* aElement,
-                                     ComputedStyle* aBaseComputedStyle)
-    : mPropID(aPropID),
-      mElement(aElement),
-      mBaseComputedStyle(aBaseComputedStyle) {
-||||||| merged common ancestors
-nsSMILCSSProperty::nsSMILCSSProperty(nsCSSPropertyID aPropID,
-                                     Element* aElement,
-                                     ComputedStyle* aBaseComputedStyle)
-  : mPropID(aPropID)
-  , mElement(aElement)
-  , mBaseComputedStyle(aBaseComputedStyle)
-{
-=======
 SMILCSSProperty::SMILCSSProperty(nsCSSPropertyID aPropID, Element* aElement,
                                  ComputedStyle* aBaseComputedStyle)
     : mPropID(aPropID),
       mElement(aElement),
       mBaseComputedStyle(aBaseComputedStyle) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   MOZ_ASSERT(IsPropertyAnimatable(mPropID),
              "Creating a SMILCSSProperty for a property "
              "that's not supported for animation");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-nsSMILValue nsSMILCSSProperty::GetBaseValue() const {
-||||||| merged common ancestors
-nsSMILValue
-nsSMILCSSProperty::GetBaseValue() const
-{
-=======
 SMILValue SMILCSSProperty::GetBaseValue() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   // To benefit from Return Value Optimization and avoid copy constructor calls
   // due to our use of return-by-value, we must return the exact same object
   // from ALL return points. This function must only return THIS variable:
@@ -91,48 +67,18 @@ SMILValue SMILCSSProperty::GetBaseValue() const {
     return baseValue;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-  baseValue = nsSMILCSSValueType::ValueFromAnimationValue(mPropID, mElement,
-                                                          computedValue);
-||||||| merged common ancestors
-  baseValue =
-    nsSMILCSSValueType::ValueFromAnimationValue(mPropID, mElement,
-                                                computedValue);
-=======
   baseValue = SMILCSSValueType::ValueFromAnimationValue(mPropID, mElement,
                                                         computedValue);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   return baseValue;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-nsresult nsSMILCSSProperty::ValueFromString(
-    const nsAString& aStr, const SVGAnimationElement* aSrcElement,
-    nsSMILValue& aValue, bool& aPreventCachingOfSandwich) const {
-||||||| merged common ancestors
-nsresult
-nsSMILCSSProperty::ValueFromString(const nsAString& aStr,
-                                   const SVGAnimationElement* aSrcElement,
-                                   nsSMILValue& aValue,
-                                   bool& aPreventCachingOfSandwich) const
-{
-=======
 nsresult SMILCSSProperty::ValueFromString(
     const nsAString& aStr, const SVGAnimationElement* aSrcElement,
     SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   NS_ENSURE_TRUE(IsPropertyAnimatable(mPropID), NS_ERROR_FAILURE);
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-  nsSMILCSSValueType::ValueFromString(mPropID, mElement, aStr, aValue,
-                                      &aPreventCachingOfSandwich);
-||||||| merged common ancestors
-  nsSMILCSSValueType::ValueFromString(mPropID, mElement, aStr, aValue,
-      &aPreventCachingOfSandwich);
-=======
   SMILCSSValueType::ValueFromString(mPropID, mElement, aStr, aValue,
                                     &aPreventCachingOfSandwich);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
 
   if (aValue.IsNull()) {
     return NS_ERROR_FAILURE;
@@ -147,28 +93,12 @@ nsresult SMILCSSProperty::ValueFromString(
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-nsresult nsSMILCSSProperty::SetAnimValue(const nsSMILValue& aValue) {
-||||||| merged common ancestors
-nsresult
-nsSMILCSSProperty::SetAnimValue(const nsSMILValue& aValue)
-{
-=======
 nsresult SMILCSSProperty::SetAnimValue(const SMILValue& aValue) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   NS_ENSURE_TRUE(IsPropertyAnimatable(mPropID), NS_ERROR_FAILURE);
   return mElement->SMILOverrideStyle()->SetSMILValue(mPropID, aValue);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-void nsSMILCSSProperty::ClearAnimValue() {
-||||||| merged common ancestors
-void
-nsSMILCSSProperty::ClearAnimValue()
-{
-=======
 void SMILCSSProperty::ClearAnimValue() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   // Put empty string in override style for our property
   mElement->SMILOverrideStyle()->SetPropertyValue(mPropID, EmptyString(),
                                                   nullptr);
@@ -176,25 +106,7 @@ void SMILCSSProperty::ClearAnimValue() {
 
 // Based on http://www.w3.org/TR/SVG/propidx.html
 // static
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCSSProperty.cpp
-bool nsSMILCSSProperty::IsPropertyAnimatable(nsCSSPropertyID aPropID) {
-  // Bug 1353918: Drop this check
-  if (!Servo_Property_IsAnimatable(aPropID)) {
-    return false;
-  }
-
-||||||| merged common ancestors
-bool
-nsSMILCSSProperty::IsPropertyAnimatable(nsCSSPropertyID aPropID)
-{
-  // Bug 1353918: Drop this check
-  if (!Servo_Property_IsAnimatable(aPropID)) {
-    return false;
-  }
-
-=======
 bool SMILCSSProperty::IsPropertyAnimatable(nsCSSPropertyID aPropID) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCSSProperty.cpp
   // NOTE: Right now, Gecko doesn't recognize the following properties from
   // the SVG Property Index:
   //   alignment-baseline

@@ -949,39 +949,6 @@ DefineTransaction.verifyInput = function(
 
 // Update the documentation at the top of this module if you add or
 // remove properties.
-<<<<<<< HEAD
-DefineTransaction.defineInputProps(["url"],
-                                   DefineTransaction.urlValidate, null);
-DefineTransaction.defineInputProps(["guid", "parentGuid", "newParentGuid"],
-                                   DefineTransaction.guidValidate);
-DefineTransaction.defineInputProps(["title", "postData"],
-                                   DefineTransaction.strOrNullValidate, null);
-DefineTransaction.defineInputProps(["keyword", "oldKeyword", "oldTag", "tag",
-                                    "excludingAnnotation"],
-                                   DefineTransaction.strValidate, "");
-DefineTransaction.defineInputProps(["index", "newIndex"],
-                                   DefineTransaction.indexValidate,
-                                   PlacesUtils.bookmarks.DEFAULT_INDEX);
-DefineTransaction.defineInputProps(["child"],
-                                   DefineTransaction.childObjectValidate);
-||||||| merged common ancestors
-DefineTransaction.defineInputProps(["url", "feedUrl", "siteUrl"],
-                                   DefineTransaction.urlValidate, null);
-DefineTransaction.defineInputProps(["guid", "parentGuid", "newParentGuid"],
-                                   DefineTransaction.guidValidate);
-DefineTransaction.defineInputProps(["title", "postData"],
-                                   DefineTransaction.strOrNullValidate, null);
-DefineTransaction.defineInputProps(["keyword", "oldKeyword", "oldTag", "tag",
-                                    "excludingAnnotation"],
-                                   DefineTransaction.strValidate, "");
-DefineTransaction.defineInputProps(["index", "newIndex"],
-                                   DefineTransaction.indexValidate,
-                                   PlacesUtils.bookmarks.DEFAULT_INDEX);
-DefineTransaction.defineInputProps(["annotation"],
-                                   DefineTransaction.annotationObjectValidate);
-DefineTransaction.defineInputProps(["child"],
-                                   DefineTransaction.childObjectValidate);
-=======
 DefineTransaction.defineInputProps(
   ["url"],
   DefineTransaction.urlValidate,
@@ -1010,7 +977,6 @@ DefineTransaction.defineInputProps(
   ["child"],
   DefineTransaction.childObjectValidate
 );
->>>>>>> upstream-releases
 DefineTransaction.defineArrayInputProp("guids", "guid");
 DefineTransaction.defineArrayInputProp("urls", "url");
 DefineTransaction.defineArrayInputProp("tags", "tag");
@@ -1118,18 +1084,10 @@ var PT = PlacesTransactions;
  *
  * When this transaction is executed, it's resolved to the new bookmark's GUID.
  */
-<<<<<<< HEAD
-PT.NewBookmark = DefineTransaction(["parentGuid", "url"],
-                                   ["index", "title", "tags"]);
-||||||| merged common ancestors
-PT.NewBookmark = DefineTransaction(["parentGuid", "url"],
-                                   ["index", "title", "annotations", "tags"]);
-=======
 PT.NewBookmark = DefineTransaction(
   ["parentGuid", "url"],
   ["index", "title", "tags"]
 );
->>>>>>> upstream-releases
 PT.NewBookmark.prototype = Object.seal({
   async execute({ parentGuid, url, index, title, tags }) {
     let info = { parentGuid, index, url, title };
@@ -1172,18 +1130,10 @@ PT.NewBookmark.prototype = Object.seal({
  *
  * When this transaction is executed, it's resolved to the new folder's GUID.
  */
-<<<<<<< HEAD
-PT.NewFolder = DefineTransaction(["parentGuid", "title"],
-                                 ["index", "children"]);
-||||||| merged common ancestors
-PT.NewFolder = DefineTransaction(["parentGuid", "title"],
-                                 ["index", "annotations", "children"]);
-=======
 PT.NewFolder = DefineTransaction(
   ["parentGuid", "title"],
   ["index", "children"]
 );
->>>>>>> upstream-releases
 PT.NewFolder.prototype = Object.seal({
   async execute({ parentGuid, title, index, children }) {
     let folderGuid;
@@ -1516,28 +1466,6 @@ PT.Remove.prototype = {
     }
 
     let removeThem = async function() {
-<<<<<<< HEAD
-      if (removedItems.length) {
-        // We have to pass just the guids as although remove() accepts full
-        // info items, promiseBookmarksTree returns dateAdded and lastModified
-        // as PRTime rather than date types.
-        await PlacesUtils.bookmarks.remove(removedItems.map(info => {
-          return { guid: info.guid};
-        }));
-||||||| merged common ancestors
-      let bmsToRemove = [];
-      for (let info of removedItems) {
-        if (info.annos &&
-            info.annos.some(anno => anno.name == PlacesUtils.LMANNO_FEEDURI)) {
-          await PlacesUtils.livemarks.removeLivemark({ guid: info.guid });
-        } else {
-          bmsToRemove.push({guid: info.guid});
-        }
-      }
-
-      if (bmsToRemove.length) {
-        await PlacesUtils.bookmarks.remove(bmsToRemove);
-=======
       if (removedItems.length) {
         // We have to pass just the guids as although remove() accepts full
         // info items, promiseBookmarksTree returns dateAdded and lastModified
@@ -1545,7 +1473,6 @@ PT.Remove.prototype = {
         await PlacesUtils.bookmarks.remove(
           removedItems.map(info => ({ guid: info.guid }))
         );
->>>>>>> upstream-releases
       }
     };
     await removeThem();

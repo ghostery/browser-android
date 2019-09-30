@@ -168,16 +168,8 @@ nsresult nsSVGViewportFrame::AttributeChanged(int32_t aNameSpaceID,
 
     if (aAttribute == nsGkAtoms::width || aAttribute == nsGkAtoms::height) {
       nsLayoutUtils::PostRestyleEvent(
-<<<<<<< HEAD
-          mContent->AsElement(), nsRestyleHint(0),
-          nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-        mContent->AsElement(), nsRestyleHint(0),
-        nsChangeHint_InvalidateRenderingObservers);
-=======
           mContent->AsElement(), RestyleHint{0},
           nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
       nsSVGUtils::ScheduleReflowSVG(this);
 
       if (content->HasViewBoxOrSyntheticViewBox()) {
@@ -213,16 +205,8 @@ nsresult nsSVGViewportFrame::AttributeChanged(int32_t aNameSpaceID,
 
       if (aAttribute == nsGkAtoms::x || aAttribute == nsGkAtoms::y) {
         nsLayoutUtils::PostRestyleEvent(
-<<<<<<< HEAD
-            mContent->AsElement(), nsRestyleHint(0),
-            nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-          mContent->AsElement(), nsRestyleHint(0),
-          nsChangeHint_InvalidateRenderingObservers);
-=======
             mContent->AsElement(), RestyleHint{0},
             nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
         nsSVGUtils::ScheduleReflowSVG(this);
       } else if (aAttribute == nsGkAtoms::viewBox ||
                  (aAttribute == nsGkAtoms::preserveAspectRatio &&
@@ -247,19 +231,9 @@ nsIFrame* nsSVGViewportFrame::GetFrameForPoint(const gfxPoint& aPoint) {
 
   if (StyleDisplay()->IsScrollableOverflow()) {
     Rect clip;
-<<<<<<< HEAD
-    static_cast<nsSVGElement*>(GetContent())
-        ->GetAnimatedLengthValues(&clip.x, &clip.y, &clip.width, &clip.height,
-                                  nullptr);
-||||||| merged common ancestors
-    static_cast<nsSVGElement*>(GetContent())->
-      GetAnimatedLengthValues(&clip.x, &clip.y,
-                              &clip.width, &clip.height, nullptr);
-=======
     static_cast<SVGElement*>(GetContent())
         ->GetAnimatedLengthValues(&clip.x, &clip.y, &clip.width, &clip.height,
                                   nullptr);
->>>>>>> upstream-releases
     if (!clip.Contains(ToPoint(aPoint))) {
       return nullptr;
     }

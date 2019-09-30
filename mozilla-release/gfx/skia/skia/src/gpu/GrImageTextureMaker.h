@@ -11,14 +11,8 @@
 #include "GrTextureMaker.h"
 #include "SkImage.h"
 
-<<<<<<< HEAD
-class SkImage_Lazy;
-||||||| merged common ancestors
-class SkImageCacherator;
-=======
 class SkImage_Lazy;
 class SkImage_GpuYUVA;
->>>>>>> upstream-releases
 
 /** This class manages the conversion of generator-backed images to GrTextures. If the caching hint
     is kAllow the image's ID is used for the cache key. */

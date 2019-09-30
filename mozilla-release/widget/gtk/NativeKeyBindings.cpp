@@ -28,34 +28,14 @@ inline void AddCommand(Command aCommand) {
 }
 
 // Common GtkEntry and GtkTextView signals
-<<<<<<< HEAD
-static void copy_clipboard_cb(GtkWidget* w, gpointer user_data) {
-  gCurrentCommands->AppendElement(CommandCopy);
-||||||| merged common ancestors
-static void
-copy_clipboard_cb(GtkWidget *w, gpointer user_data)
-{
-  gCurrentCommands->AppendElement(CommandCopy);
-=======
 static void copy_clipboard_cb(GtkWidget* w, gpointer user_data) {
   AddCommand(Command::Copy);
->>>>>>> upstream-releases
   g_signal_stop_emission_by_name(w, "copy_clipboard");
   gHandled = true;
 }
 
-<<<<<<< HEAD
-static void cut_clipboard_cb(GtkWidget* w, gpointer user_data) {
-  gCurrentCommands->AppendElement(CommandCut);
-||||||| merged common ancestors
-static void
-cut_clipboard_cb(GtkWidget *w, gpointer user_data)
-{
-  gCurrentCommands->AppendElement(CommandCut);
-=======
 static void cut_clipboard_cb(GtkWidget* w, gpointer user_data) {
   AddCommand(Command::Cut);
->>>>>>> upstream-releases
   g_signal_stop_emission_by_name(w, "cut_clipboard");
   gHandled = true;
 }
@@ -66,34 +46,6 @@ static void cut_clipboard_cb(GtkWidget* w, gpointer user_data) {
 // lines, which are newline-terminated.
 
 static const Command sDeleteCommands[][2] = {
-<<<<<<< HEAD
-    // backward, forward
-    {CommandDeleteCharBackward, CommandDeleteCharForward},       // CHARS
-    {CommandDeleteWordBackward, CommandDeleteWordForward},       // WORD_ENDS
-    {CommandDeleteWordBackward, CommandDeleteWordForward},       // WORDS
-    {CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine},  // LINES
-    {CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine},  // LINE_ENDS
-    {CommandDeleteToBeginningOfLine,
-     CommandDeleteToEndOfLine},  // PARAGRAPH_ENDS
-    {CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine},  // PARAGRAPHS
-    // This deletes from the end of the previous word to the beginning of the
-    // next word, but only if the caret is not in a word.
-    // XXX need to implement in editor
-    {CommandDoNothing, CommandDoNothing}  // WHITESPACE
-||||||| merged common ancestors
-  // backward, forward
-  { CommandDeleteCharBackward, CommandDeleteCharForward },    // CHARS
-  { CommandDeleteWordBackward, CommandDeleteWordForward },    // WORD_ENDS
-  { CommandDeleteWordBackward, CommandDeleteWordForward },    // WORDS
-  { CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine }, // LINES
-  { CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine }, // LINE_ENDS
-  { CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine }, // PARAGRAPH_ENDS
-  { CommandDeleteToBeginningOfLine, CommandDeleteToEndOfLine }, // PARAGRAPHS
-  // This deletes from the end of the previous word to the beginning of the
-  // next word, but only if the caret is not in a word.
-  // XXX need to implement in editor
-  { CommandDoNothing, CommandDoNothing } // WHITESPACE
-=======
     // backward, forward
     // CHARS
     {Command::DeleteCharBackward, Command::DeleteCharForward},
@@ -113,7 +65,6 @@ static const Command sDeleteCommands[][2] = {
     // next word, but only if the caret is not in a word.
     // XXX need to implement in editor
     {Command::DoNothing, Command::DoNothing}  // WHITESPACE
->>>>>>> upstream-releases
 };
 
 static void delete_from_cursor_cb(GtkWidget* w, GtkDeleteType del_type,
@@ -169,16 +120,8 @@ static void delete_from_cursor_cb(GtkWidget* w, GtkDeleteType del_type,
   }
 
   Command command = sDeleteCommands[del_type][forward];
-<<<<<<< HEAD
-  if (!command) {
-    return;  // unsupported command
-||||||| merged common ancestors
-  if (!command) {
-    return; // unsupported command
-=======
   if (command == Command::DoNothing) {
     return;
->>>>>>> upstream-releases
   }
 
   unsigned int absCount = Abs(count);
@@ -188,96 +131,6 @@ static void delete_from_cursor_cb(GtkWidget* w, GtkDeleteType del_type,
 }
 
 static const Command sMoveCommands[][2][2] = {
-<<<<<<< HEAD
-    // non-extend { backward, forward }, extend { backward, forward }
-    // GTK differentiates between logical position, which is prev/next,
-    // and visual position, which is always left/right.
-    // We should fix this to work the same way for RTL text input.
-    {// LOGICAL_POSITIONS
-     {CommandCharPrevious, CommandCharNext},
-     {CommandSelectCharPrevious, CommandSelectCharNext}},
-    {// VISUAL_POSITIONS
-     {CommandCharPrevious, CommandCharNext},
-     {CommandSelectCharPrevious, CommandSelectCharNext}},
-    {// WORDS
-     {CommandWordPrevious, CommandWordNext},
-     {CommandSelectWordPrevious, CommandSelectWordNext}},
-    {// DISPLAY_LINES
-     {CommandLinePrevious, CommandLineNext},
-     {CommandSelectLinePrevious, CommandSelectLineNext}},
-    {// DISPLAY_LINE_ENDS
-     {CommandBeginLine, CommandEndLine},
-     {CommandSelectBeginLine, CommandSelectEndLine}},
-    {// PARAGRAPHS
-     {CommandLinePrevious, CommandLineNext},
-     {CommandSelectLinePrevious, CommandSelectLineNext}},
-    {// PARAGRAPH_ENDS
-     {CommandBeginLine, CommandEndLine},
-     {CommandSelectBeginLine, CommandSelectEndLine}},
-    {// PAGES
-     {CommandMovePageUp, CommandMovePageDown},
-     {CommandSelectPageUp, CommandSelectPageDown}},
-    {// BUFFER_ENDS
-     {CommandMoveTop, CommandMoveBottom},
-     {CommandSelectTop, CommandSelectBottom}},
-    {// HORIZONTAL_PAGES (unsupported)
-     {CommandDoNothing, CommandDoNothing},
-     {CommandDoNothing, CommandDoNothing}}};
-
-static void move_cursor_cb(GtkWidget* w, GtkMovementStep step, gint count,
-                           gboolean extend_selection, gpointer user_data) {
-||||||| merged common ancestors
-  // non-extend { backward, forward }, extend { backward, forward }
-  // GTK differentiates between logical position, which is prev/next,
-  // and visual position, which is always left/right.
-  // We should fix this to work the same way for RTL text input.
-  { // LOGICAL_POSITIONS
-    { CommandCharPrevious, CommandCharNext },
-    { CommandSelectCharPrevious, CommandSelectCharNext }
-  },
-  { // VISUAL_POSITIONS
-    { CommandCharPrevious, CommandCharNext },
-    { CommandSelectCharPrevious, CommandSelectCharNext }
-  },
-  { // WORDS
-    { CommandWordPrevious, CommandWordNext },
-    { CommandSelectWordPrevious, CommandSelectWordNext }
-  },
-  { // DISPLAY_LINES
-    { CommandLinePrevious, CommandLineNext },
-    { CommandSelectLinePrevious, CommandSelectLineNext }
-  },
-  { // DISPLAY_LINE_ENDS
-    { CommandBeginLine, CommandEndLine },
-    { CommandSelectBeginLine, CommandSelectEndLine }
-  },
-  { // PARAGRAPHS
-    { CommandLinePrevious, CommandLineNext },
-    { CommandSelectLinePrevious, CommandSelectLineNext }
-  },
-  { // PARAGRAPH_ENDS
-    { CommandBeginLine, CommandEndLine },
-    { CommandSelectBeginLine, CommandSelectEndLine }
-  },
-  { // PAGES
-    { CommandMovePageUp, CommandMovePageDown },
-    { CommandSelectPageUp, CommandSelectPageDown }
-  },
-  { // BUFFER_ENDS
-    { CommandMoveTop, CommandMoveBottom },
-    { CommandSelectTop, CommandSelectBottom }
-  },
-  { // HORIZONTAL_PAGES (unsupported)
-    { CommandDoNothing, CommandDoNothing },
-    { CommandDoNothing, CommandDoNothing }
-  }
-};
-
-static void
-move_cursor_cb(GtkWidget *w, GtkMovementStep step, gint count,
-               gboolean extend_selection, gpointer user_data)
-{
-=======
     // non-extend { backward, forward }, extend { backward, forward }
     // GTK differentiates between logical position, which is prev/next,
     // and visual position, which is always left/right.
@@ -315,7 +168,6 @@ move_cursor_cb(GtkWidget *w, GtkMovementStep step, gint count,
 
 static void move_cursor_cb(GtkWidget* w, GtkMovementStep step, gint count,
                            gboolean extend_selection, gpointer user_data) {
->>>>>>> upstream-releases
   g_signal_stop_emission_by_name(w, "move_cursor");
   if (count == 0) {
     // Nothing to do.
@@ -330,16 +182,8 @@ static void move_cursor_cb(GtkWidget* w, GtkMovementStep step, gint count,
   }
 
   Command command = sMoveCommands[step][extend_selection][forward];
-<<<<<<< HEAD
-  if (!command) {
-    return;  // unsupported command
-||||||| merged common ancestors
-  if (!command) {
-    return; // unsupported command
-=======
   if (command == Command::DoNothing) {
     return;
->>>>>>> upstream-releases
   }
 
   unsigned int absCount = Abs(count);
@@ -348,35 +192,15 @@ static void move_cursor_cb(GtkWidget* w, GtkMovementStep step, gint count,
   }
 }
 
-<<<<<<< HEAD
-static void paste_clipboard_cb(GtkWidget* w, gpointer user_data) {
-  gCurrentCommands->AppendElement(CommandPaste);
-||||||| merged common ancestors
-static void
-paste_clipboard_cb(GtkWidget *w, gpointer user_data)
-{
-  gCurrentCommands->AppendElement(CommandPaste);
-=======
 static void paste_clipboard_cb(GtkWidget* w, gpointer user_data) {
   AddCommand(Command::Paste);
->>>>>>> upstream-releases
   g_signal_stop_emission_by_name(w, "paste_clipboard");
   gHandled = true;
 }
 
 // GtkTextView-only signals
-<<<<<<< HEAD
-static void select_all_cb(GtkWidget* w, gboolean select, gpointer user_data) {
-  gCurrentCommands->AppendElement(CommandSelectAll);
-||||||| merged common ancestors
-static void
-select_all_cb(GtkWidget *w, gboolean select, gpointer user_data)
-{
-  gCurrentCommands->AppendElement(CommandSelectAll);
-=======
 static void select_all_cb(GtkWidget* w, gboolean select, gpointer user_data) {
   AddCommand(Command::SelectAll);
->>>>>>> upstream-releases
   g_signal_stop_emission_by_name(w, "select_all");
   gHandled = true;
 }

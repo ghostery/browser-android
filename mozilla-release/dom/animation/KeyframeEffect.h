@@ -111,20 +111,9 @@ namespace dom {
 class Animation;
 class Document;
 
-<<<<<<< HEAD
-class KeyframeEffect : public AnimationEffect {
- public:
-  KeyframeEffect(nsIDocument* aDocument,
-||||||| merged common ancestors
-class KeyframeEffect : public AnimationEffect
-{
-public:
-  KeyframeEffect(nsIDocument* aDocument,
-=======
 class KeyframeEffect : public AnimationEffect {
  public:
   KeyframeEffect(Document* aDocument,
->>>>>>> upstream-releases
                  const Maybe<OwningAnimationTarget>& aTarget,
                  TimingParams&& aTiming, const KeyframeEffectParams& aOptions);
 
@@ -173,17 +162,8 @@ class KeyframeEffect : public AnimationEffect {
   // GetComputedStyle.
   void SetTarget(const Nullable<ElementOrCSSPseudoElement>& aTarget);
 
-<<<<<<< HEAD
-  void GetKeyframes(JSContext*& aCx, nsTArray<JSObject*>& aResult,
-                    ErrorResult& aRv);
-||||||| merged common ancestors
-  void GetKeyframes(JSContext*& aCx,
-                    nsTArray<JSObject*>& aResult,
-                    ErrorResult& aRv);
-=======
   void GetKeyframes(JSContext*& aCx, nsTArray<JSObject*>& aResult,
                     ErrorResult& aRv) const;
->>>>>>> upstream-releases
   void GetProperties(nsTArray<AnimationPropertyDetails>& aProperties,
                      ErrorResult& aRv) const;
 
@@ -218,23 +198,6 @@ class KeyframeEffect : public AnimationEffect {
   // property is not overridden by !important rules.
   // Also EffectiveAnimationOfProperty returns true under the same condition.
   //
-<<<<<<< HEAD
-  // |aEffect| should be the EffectSet containing this KeyframeEffect since
-  // this function is typically called for all KeyframeEffects on an element
-  // so that we can avoid multiple calls of EffectSet::GetEffect().
-  //
-  // NOTE: We don't currently check for !important rules for properties that
-  // can't run on the compositor.
-  bool HasEffectiveAnimationOfProperty(nsCSSPropertyID aProperty,
-                                       const EffectSet& aEffect) const {
-    return GetEffectiveAnimationOfProperty(aProperty, aEffect) != nullptr;
-||||||| merged common ancestors
-  // NOTE: We don't currently check for !important rules for properties that
-  // can't run on the compositor.
-  bool HasEffectiveAnimationOfProperty(nsCSSPropertyID aProperty) const
-  {
-    return GetEffectiveAnimationOfProperty(aProperty) != nullptr;
-=======
   // |aEffect| should be the EffectSet containing this KeyframeEffect since
   // this function is typically called for all KeyframeEffects on an element
   // so that we can avoid multiple calls of EffectSet::GetEffect().
@@ -246,31 +209,10 @@ class KeyframeEffect : public AnimationEffect {
   bool HasEffectiveAnimationOfProperty(nsCSSPropertyID aProperty,
                                        const EffectSet& aEffect) const {
     return GetEffectiveAnimationOfProperty(aProperty, aEffect) != nullptr;
->>>>>>> upstream-releases
   }
   const AnimationProperty* GetEffectiveAnimationOfProperty(
       nsCSSPropertyID aProperty, const EffectSet& aEffect) const;
 
-<<<<<<< HEAD
-  // Returns all the effective animated CSS properties that can be animated on
-  // the compositor and are not overridden by a higher cascade level.
-  //
-  // NOTE: This function is basically called for all KeyframeEffects on an
-  // element thus it takes |aEffects| to avoid multiple calls of
-  // EffectSet::GetEffect().
-  //
-  // NOTE(2): This function does NOT check that animations are permitted on
-  // |aFrame|. It is the responsibility of the caller to first call
-  // EffectCompositor::AllowCompositorAnimationsOnFrame for |aFrame|, or use
-  // nsLayoutUtils::GetAnimationPropertiesForCompositor instead.
-  nsCSSPropertyIDSet GetPropertiesForCompositor(EffectSet& aEffects,
-                                                const nsIFrame* aFrame) const;
-
-  const InfallibleTArray<AnimationProperty>& Properties() const {
-||||||| merged common ancestors
-  const InfallibleTArray<AnimationProperty>& Properties() const
-  {
-=======
   // Similar to HasEffectiveAnimationOfProperty, above, but for
   // an nsCSSPropertyIDSet. Returns true if this keyframe effect has at least
   // one property in |aPropertySet| that is not overridden by an !important
@@ -299,7 +241,6 @@ class KeyframeEffect : public AnimationEffect {
                                                 const nsIFrame* aFrame) const;
 
   const InfallibleTArray<AnimationProperty>& Properties() const {
->>>>>>> upstream-releases
     return mProperties;
   }
 
@@ -336,15 +277,8 @@ class KeyframeEffect : public AnimationEffect {
   // When returning true, |aPerformanceWarning| stores the reason why
   // we shouldn't run the transform animations.
   bool ShouldBlockAsyncTransformAnimations(
-<<<<<<< HEAD
-      const nsIFrame* aFrame,
-      AnimationPerformanceWarning::Type& aPerformanceWarning /* out */) const;
-||||||| merged common ancestors
-    const nsIFrame* aFrame, AnimationPerformanceWarning::Type& aPerformanceWarning) const;
-=======
       const nsIFrame* aFrame, const nsCSSPropertyIDSet& aPropertySet,
       AnimationPerformanceWarning::Type& aPerformanceWarning /* out */) const;
->>>>>>> upstream-releases
   bool HasGeometricProperties() const;
   bool AffectsGeometry() const override {
     return GetTarget() && HasGeometricProperties();
@@ -357,17 +291,8 @@ class KeyframeEffect : public AnimationEffect {
   // indicating why, for example, the property could not be animated on the
   // compositor. |aParams| and |aParamsLength| are optional parameters which
   // will be used to generate a localized message for devtools.
-<<<<<<< HEAD
-  void SetPerformanceWarning(nsCSSPropertyID aProperty,
-                             const AnimationPerformanceWarning& aWarning);
-||||||| merged common ancestors
-  void SetPerformanceWarning(
-    nsCSSPropertyID aProperty,
-    const AnimationPerformanceWarning& aWarning);
-=======
   void SetPerformanceWarning(const nsCSSPropertyIDSet& aPropertySet,
                              const AnimationPerformanceWarning& aWarning);
->>>>>>> upstream-releases
 
   // Cumulative change hint on each segment for each property.
   // This is used for deciding the animation is paint-only.
@@ -394,29 +319,6 @@ class KeyframeEffect : public AnimationEffect {
     return result;
   }
 
-<<<<<<< HEAD
-  enum class MatchForCompositor {
-    // This animation matches and should run on the compositor if possible.
-    Yes,
-    // This (not currently playing) animation matches and can be run on the
-    // compositor if there are other animations for this property that return
-    // 'Yes'.
-    IfNeeded,
-    // This animation does not match or can't be run on the compositor.
-    No,
-    // This animation does not match or can't be run on the compositor and,
-    // furthermore, its presence means we should not run any animations for this
-    // property on the compositor.
-    NoAndBlockThisProperty
-  };
-
-  MatchForCompositor IsMatchForCompositor(
-      nsCSSPropertyID aProperty, const nsIFrame* aFrame,
-      const EffectSet& aEffects,
-      AnimationPerformanceWarning::Type& aPerformanceWarning /* out */) const;
-
-||||||| merged common ancestors
-=======
   enum class MatchForCompositor {
     // This animation matches and should run on the compositor if possible.
     Yes,
@@ -437,7 +339,6 @@ class KeyframeEffect : public AnimationEffect {
       const EffectSet& aEffects,
       AnimationPerformanceWarning::Type& aPerformanceWarning /* out */) const;
 
->>>>>>> upstream-releases
   static bool HasComputedTimingChanged(
       const ComputedTiming& aComputedTiming,
       IterationCompositeOperation aIterationComposite,
@@ -522,37 +423,13 @@ class KeyframeEffect : public AnimationEffect {
 
   // We need to track when we go to or from being "in effect" since
   // we need to re-evaluate the cascade of animations when that changes.
-<<<<<<< HEAD
-  bool mInEffectOnLastAnimationTimingUpdate;
-
-  // The non-animated values for properties in this effect that contain at
-  // least one animation value that is composited with the underlying value
-  // (i.e. it uses the additive or accumulate composite mode).
-  using BaseValuesHashmap =
-      nsRefPtrHashtable<nsUint32HashKey, RawServoAnimationValue>;
-  BaseValuesHashmap mBaseValues;
-||||||| merged common ancestors
-  bool mInEffectOnLastAnimationTimingUpdate;
-
-  // The non-animated values for properties in this effect that contain at
-  // least one animation value that is composited with the underlying value
-  // (i.e. it uses the additive or accumulate composite mode).
-  nsRefPtrHashtable<nsUint32HashKey, RawServoAnimationValue>
-    mBaseStyleValuesForServo;
-=======
   bool mInEffectOnLastAnimationTimingUpdate = false;
->>>>>>> upstream-releases
 
   // True if this effect is in the EffectSet for its target element. This is
   // used as an optimization to avoid unnecessary hashmap lookups on the
   // EffectSet.
   bool mInEffectSet = false;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // True if the last time we tried to update the cumulative change hint we
   // didn't have style data to do so. We set this flag so that the next time
   // our style context changes we know to update the cumulative change hint even
@@ -567,7 +444,6 @@ private:
   BaseValuesHashmap mBaseValues;
 
  private:
->>>>>>> upstream-releases
   nsChangeHint mCumulativeChangeHint;
 
   void ComposeStyleRule(RawServoAnimationValueMap& aAnimationValues,

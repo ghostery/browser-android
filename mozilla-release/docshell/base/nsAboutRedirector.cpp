@@ -11,17 +11,6 @@
 #include "mozilla/ArrayUtils.h"
 #include "nsIProtocolHandler.h"
 
-<<<<<<< HEAD
-#if defined(MOZ_WIDGET_ANDROID) && defined(RELEASE_OR_BETA)
-#define ABOUT_CONFIG_BLOCKED_GV
-#endif
-
-#ifdef ABOUT_CONFIG_BLOCKED_GV
-#include "mozilla/jni/Utils.h"  // for mozilla::jni::IsFennec()
-#endif
-
-||||||| merged common ancestors
-=======
 #if defined(MOZ_WIDGET_ANDROID) && defined(RELEASE_OR_BETA)
 #  define ABOUT_CONFIG_BLOCKED_GV
 #endif
@@ -30,7 +19,6 @@
 #  include "mozilla/jni/Utils.h"  // for mozilla::jni::IsFennec()
 #endif
 
->>>>>>> upstream-releases
 NS_IMPL_ISUPPORTS(nsAboutRedirector, nsIAboutModule)
 
 struct RedirEntry {
@@ -88,83 +76,6 @@ static const RedirEntry kRedirMap[] = {
 #ifdef MOZ_CRASHREPORTER
     {"crashes", "chrome://global/content/crashes.xhtml", 0},
 #endif
-<<<<<<< HEAD
-    {"credits", "https://www.mozilla.org/credits/",
-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
-    {"license", "chrome://global/content/license.html",
-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-         nsIAboutModule::MAKE_LINKABLE},
-    {"logo", "chrome://branding/content/about.png",
-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-         // Linkable for testing reasons.
-         nsIAboutModule::MAKE_LINKABLE},
-    {"memory", "chrome://global/content/aboutMemory.xhtml",
-     nsIAboutModule::ALLOW_SCRIPT},
-    {"mozilla", "chrome://global/content/mozilla.xhtml",
-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
-    {"neterror", "chrome://global/content/netError.xhtml",
-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
-    {"networking", "chrome://global/content/aboutNetworking.xhtml",
-     nsIAboutModule::ALLOW_SCRIPT},
-    {"performance", "chrome://global/content/aboutPerformance.xhtml",
-     nsIAboutModule::ALLOW_SCRIPT},
-    {"plugins", "chrome://global/content/plugins.html",
-     nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
-    {"serviceworkers", "chrome://global/content/aboutServiceWorkers.xhtml",
-     nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT},
-||||||| merged common ancestors
-  {
-    "credits", "https://www.mozilla.org/credits/",
-    nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT
-  },
-  {
-    "license", "chrome://global/content/license.html",
-    nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-      nsIAboutModule::MAKE_LINKABLE
-  },
-  {
-    "logo", "chrome://branding/content/about.png",
-    nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-    // Linkable for testing reasons.
-    nsIAboutModule::MAKE_LINKABLE
-  },
-  {
-    "memory", "chrome://global/content/aboutMemory.xhtml",
-    nsIAboutModule::ALLOW_SCRIPT
-  },
-  {
-    "mozilla", "chrome://global/content/mozilla.xhtml",
-    nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT
-  },
-  {
-    "neterror", "chrome://global/content/netError.xhtml",
-    nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-      nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
-      nsIAboutModule::ALLOW_SCRIPT |
-      nsIAboutModule::HIDE_FROM_ABOUTABOUT
-  },
-  {
-    "networking", "chrome://global/content/aboutNetworking.xhtml",
-    nsIAboutModule::ALLOW_SCRIPT
-  },
-  {
-    "performance", "chrome://global/content/aboutPerformance.xhtml",
-    nsIAboutModule::ALLOW_SCRIPT
-  },
-  {
-    "plugins", "chrome://global/content/plugins.html",
-    nsIAboutModule::URI_MUST_LOAD_IN_CHILD
-  },
-  {
-    "serviceworkers", "chrome://global/content/aboutServiceWorkers.xhtml",
-    nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
-    nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
-    nsIAboutModule::ALLOW_SCRIPT
-  },
-=======
     {"credits", "https://www.mozilla.org/credits/",
      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
     {"license", "chrome://global/content/license.html",
@@ -195,7 +106,6 @@ static const RedirEntry kRedirMap[] = {
     {"serviceworkers", "chrome://global/content/aboutServiceWorkers.xhtml",
      nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
          nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT},
->>>>>>> upstream-releases
 #ifndef ANDROID
     {"profiles", "chrome://global/content/aboutProfiles.xhtml",
      nsIAboutModule::ALLOW_SCRIPT},

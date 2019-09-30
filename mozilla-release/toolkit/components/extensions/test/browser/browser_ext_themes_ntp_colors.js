@@ -122,23 +122,6 @@ add_task(async function test_support_ntp_colors() {
   NewTabPagePreloading.removePreloadedBrowser(window);
   for (let url of ["about:newtab", "about:home", "about:welcome"]) {
     info("Opening url: " + url);
-<<<<<<< HEAD
-    await BrowserTestUtils.withNewTab({gBrowser, url}, async browser => {
-      await test_ntp_theme({
-        colors: {
-          frame: ACCENT_COLOR,
-          tab_background_text: TEXT_COLOR,
-          ntp_background: "#add8e6",
-          ntp_text: "#00008b",
-||||||| merged common ancestors
-    await BrowserTestUtils.withNewTab({gBrowser, url}, async browser => {
-      await test_ntp_theme({
-        colors: {
-          accentcolor: ACCENT_COLOR,
-          textcolor: TEXT_COLOR,
-          ntp_background: "#add8e6",
-          ntp_text: "#00008b",
-=======
     await BrowserTestUtils.withNewTab({ gBrowser, url }, async browser => {
       await test_ntp_theme(
         {
@@ -148,27 +131,11 @@ add_task(async function test_support_ntp_colors() {
             ntp_background: "#add8e6",
             ntp_text: "#00008b",
           },
->>>>>>> upstream-releases
         },
         false,
         url
       );
 
-<<<<<<< HEAD
-      await test_ntp_theme({
-        colors: {
-          frame: ACCENT_COLOR,
-          tab_background_text: TEXT_COLOR,
-          ntp_background: "#00008b",
-          ntp_text: "#add8e6",
-||||||| merged common ancestors
-      await test_ntp_theme({
-        colors: {
-          accentcolor: ACCENT_COLOR,
-          textcolor: TEXT_COLOR,
-          ntp_background: "#00008b",
-          ntp_text: "#add8e6",
-=======
       await test_ntp_theme(
         {
           colors: {
@@ -177,7 +144,6 @@ add_task(async function test_support_ntp_colors() {
             ntp_background: "#00008b",
             ntp_text: "#add8e6",
           },
->>>>>>> upstream-releases
         },
         true,
         url

@@ -3,22 +3,12 @@
 
 // Utilities for synthesizing of native events.
 
-<<<<<<< HEAD
-function getResolution() {
-  let resolution = { value: -1 }; // bogus value in case DWU fails us
-  SpecialPowers.getDOMWindowUtils(window).getResolution(resolution);
-  return resolution.value;
-}
-
-||||||| merged common ancestors
-=======
 function getResolution() {
   let resolution = -1; // bogus value in case DWU fails us
   resolution = SpecialPowers.getDOMWindowUtils(window).getResolution();
   return resolution;
 }
 
->>>>>>> upstream-releases
 function getPlatform() {
   if (navigator.platform.indexOf("Win") == 0) {
     return "windows";
@@ -85,41 +75,16 @@ function utilsForTarget(aTarget) {
   return SpecialPowers.getDOMWindowUtils(windowForTarget(aTarget));
 }
 
-// Given an event target which may be a window or an element, get the associated window.
-function windowForTarget(aTarget) {
-  if (aTarget instanceof Window) {
-    return aTarget;
-  }
-  return aTarget.ownerDocument.defaultView;
-}
-
-// Given an event target which may be a window or an element, get the associated element.
-function elementForTarget(aTarget) {
-  if (aTarget instanceof Window) {
-    return aTarget.document.documentElement;
-  }
-  return aTarget;
-}
-
 // Given a pixel scrolling delta, converts it to the platform's native units.
 function nativeScrollUnits(aTarget, aDimen) {
   switch (getPlatform()) {
     case "linux": {
       // GTK deltas are treated as line height divided by 3 by gecko.
-<<<<<<< HEAD
-      var targetWindow = windowForTarget(aTarget);
-      var targetElement = elementForTarget(aTarget);
-      var lineHeight = targetWindow.getComputedStyle(targetElement)["font-size"];
-||||||| merged common ancestors
-      var targetWindow = aElement.ownerDocument.defaultView;
-      var lineHeight = targetWindow.getComputedStyle(aElement)["font-size"];
-=======
       var targetWindow = windowForTarget(aTarget);
       var targetElement = elementForTarget(aTarget);
       var lineHeight = targetWindow.getComputedStyle(targetElement)[
         "font-size"
       ];
->>>>>>> upstream-releases
       return aDimen / (parseInt(lineHeight) * 3);
     }
   }
@@ -177,34 +142,6 @@ function nativeMouseUpEventMsg() {
 function getBoundingClientRectRelativeToVisualViewport(aElement) {
   let utils = SpecialPowers.getDOMWindowUtils(window);
   var rect = aElement.getBoundingClientRect();
-<<<<<<< HEAD
-  var offsetX = {}, offsetY = {};
-  utils.getVisualViewportOffsetRelativeToLayoutViewport(offsetX, offsetY);
-  rect.x -= offsetX.value;
-  rect.y -= offsetY.value;
-  return rect;
-}
-
-// Several event sythesization functions below (and their helpers) take a "target" 
-// parameter which may be either an element or a window. For such functions,
-// the target's "bounding rect" refers to the bounding client rect for an element,
-// and the window's origin for a window.
-// Not all functions have been "upgraded" to allow a window argument yet; feel
-// free to upgrade others as necessary.
-
-// Convert (aX, aY), in CSS pixels relative to aTarget's bounding rect
-// to device pixels relative to the screen.
-function coordinatesRelativeToScreen(aX, aY, aTarget) {
-  var targetWindow = windowForTarget(aTarget);
-  var deviceScale = targetWindow.devicePixelRatio;
-  var resolution = getResolution();
-  var rect = (aTarget instanceof Window)
-    ? {left: 0, top: 0} /* we don't use the width or height */
-    : getBoundingClientRectRelativeToVisualViewport(aTarget);
-  // moxInnerScreen{X,Y} are in CSS coordinates of the browser chrome.
-  // The device scale applies to them, but the resolution only zooms the content.
-||||||| merged common ancestors
-=======
   var offsetX = {},
     offsetY = {};
   // TODO: Audit whether these offset values are correct or not for
@@ -235,22 +172,13 @@ function coordinatesRelativeToScreen(aX, aY, aTarget) {
       : getBoundingClientRectRelativeToVisualViewport(aTarget);
   // moxInnerScreen{X,Y} are in CSS coordinates of the browser chrome.
   // The device scale applies to them, but the resolution only zooms the content.
->>>>>>> upstream-releases
   return {
-<<<<<<< HEAD
-    x: (targetWindow.mozInnerScreenX + ((rect.left + aX) * resolution)) * deviceScale,
-    y: (targetWindow.mozInnerScreenY + ((rect.top + aY) * resolution)) * deviceScale
-||||||| merged common ancestors
-    x: (targetWindow.mozInnerScreenX + rect.left + aX) * scale,
-    y: (targetWindow.mozInnerScreenY + rect.top + aY) * scale
-=======
     x:
       (targetWindow.mozInnerScreenX + (rect.left + aX) * resolution) *
       deviceScale,
     y:
       (targetWindow.mozInnerScreenY + (rect.top + aY) * resolution) *
       deviceScale,
->>>>>>> upstream-releases
   };
 }
 
@@ -281,20 +209,6 @@ function synthesizeNativeWheel(aTarget, aX, aY, aDeltaX, aDeltaY, aObserver) {
       "Simultaneous wheeling of horizontal and vertical is not supported on all platforms."
     );
   }
-<<<<<<< HEAD
-  aDeltaX = nativeScrollUnits(aTarget, aDeltaX);
-  aDeltaY = nativeScrollUnits(aTarget, aDeltaY);
-  var msg = aDeltaX ? nativeHorizontalWheelEventMsg() : nativeVerticalWheelEventMsg();
-  var utils = SpecialPowers.getDOMWindowUtils(windowForTarget(aTarget));
-  var element = elementForTarget(aTarget);
-  utils.sendNativeMouseScrollEvent(pt.x, pt.y, msg, aDeltaX, aDeltaY, 0, 0, 0, element, aObserver);
-||||||| merged common ancestors
-  aDeltaX = nativeScrollUnits(aElement, aDeltaX);
-  aDeltaY = nativeScrollUnits(aElement, aDeltaY);
-  var msg = aDeltaX ? nativeHorizontalWheelEventMsg() : nativeVerticalWheelEventMsg();
-  var utils = SpecialPowers.getDOMWindowUtils(aElement.ownerDocument.defaultView);
-  utils.sendNativeMouseScrollEvent(pt.x, pt.y, msg, aDeltaX, aDeltaY, 0, 0, 0, aElement, aObserver);
-=======
   aDeltaX = nativeScrollUnits(aTarget, aDeltaX);
   aDeltaY = nativeScrollUnits(aTarget, aDeltaY);
   var msg = aDeltaX
@@ -314,7 +228,6 @@ function synthesizeNativeWheel(aTarget, aX, aY, aDeltaX, aDeltaY, aObserver) {
     element,
     aObserver
   );
->>>>>>> upstream-releases
   return true;
 }
 
@@ -341,28 +254,6 @@ function synthesizeNativeWheelAndWaitForObserver(
 }
 
 // Synthesizes a native mousewheel event and invokes the callback once the
-<<<<<<< HEAD
-// wheel event is dispatched to |aTarget|'s containing window. If the event
-// targets content in a subdocument, |aTarget| should be inside the
-// subdocument (or the subdocument's window). See synthesizeNativeWheel for 
-// details on the other parameters.
-function synthesizeNativeWheelAndWaitForWheelEvent(aTarget, aX, aY, aDeltaX, aDeltaY, aCallback) {
-  var targetWindow = windowForTarget(aTarget);
-  targetWindow.addEventListener("wheel", function(e) {
-    setTimeout(aCallback, 0);
-  }, {once: true});
-  return synthesizeNativeWheel(aTarget, aX, aY, aDeltaX, aDeltaY);
-||||||| merged common ancestors
-// wheel event is dispatched to |aElement|'s containing window. If the event
-// targets content in a subdocument, |aElement| should be inside the
-// subdocument. See synthesizeNativeWheel for details on the other parameters.
-function synthesizeNativeWheelAndWaitForWheelEvent(aElement, aX, aY, aDeltaX, aDeltaY, aCallback) {
-  var targetWindow = aElement.ownerDocument.defaultView;
-  targetWindow.addEventListener("wheel", function(e) {
-    setTimeout(aCallback, 0);
-  }, {once: true});
-  return synthesizeNativeWheel(aElement, aX, aY, aDeltaX, aDeltaY);
-=======
 // wheel event is dispatched to |aTarget|'s containing window. If the event
 // targets content in a subdocument, |aTarget| should be inside the
 // subdocument (or the subdocument's window). See synthesizeNativeWheel for
@@ -384,33 +275,9 @@ function synthesizeNativeWheelAndWaitForWheelEvent(
     { once: true }
   );
   return synthesizeNativeWheel(aTarget, aX, aY, aDeltaX, aDeltaY);
->>>>>>> upstream-releases
 }
 
 // Synthesizes a native mousewheel event and invokes the callback once the
-<<<<<<< HEAD
-// first resulting scroll event is dispatched to |aTarget|'s containing window.
-// If the event targets content in a subdocument, |aTarget| should be inside
-// the subdocument (or the subdocument's window).  See synthesizeNativeWheel 
-// for details on the other parameters.
-function synthesizeNativeWheelAndWaitForScrollEvent(aTarget, aX, aY, aDeltaX, aDeltaY, aCallback) {
-  var targetWindow = windowForTarget(aTarget);
-  targetWindow.addEventListener("scroll", function() {
-    setTimeout(aCallback, 0);
-  }, {capture: true, once: true}); // scroll events don't always bubble
-  return synthesizeNativeWheel(aTarget, aX, aY, aDeltaX, aDeltaY);
-||||||| merged common ancestors
-// first resulting scroll event is dispatched to |aElement|'s containing window.
-// If the event targets content in a subdocument, |aElement| should be inside
-// the subdocument.  See synthesizeNativeWheel for details on the other
-// parameters.
-function synthesizeNativeWheelAndWaitForScrollEvent(aElement, aX, aY, aDeltaX, aDeltaY, aCallback) {
-  var targetWindow = aElement.ownerDocument.defaultView;
-  targetWindow.addEventListener("scroll", function() {
-    setTimeout(aCallback, 0);
-  }, {capture: true, once: true}); // scroll events don't always bubble
-  return synthesizeNativeWheel(aElement, aX, aY, aDeltaX, aDeltaY);
-=======
 // first resulting scroll event is dispatched to |aTarget|'s containing window.
 // If the event targets content in a subdocument, |aTarget| should be inside
 // the subdocument (or the subdocument's window).  See synthesizeNativeWheel
@@ -432,58 +299,19 @@ function synthesizeNativeWheelAndWaitForScrollEvent(
     { capture: true, once: true }
   ); // scroll events don't always bubble
   return synthesizeNativeWheel(aTarget, aX, aY, aDeltaX, aDeltaY);
->>>>>>> upstream-releases
 }
 
 // Synthesizes a native mouse move event and returns immediately.
-<<<<<<< HEAD
-// aX and aY are relative to the top-left of |aTarget|'s bounding rect.
-function synthesizeNativeMouseMove(aTarget, aX, aY) {
-  var pt = coordinatesRelativeToScreen(aX, aY, aTarget);
-  var utils = SpecialPowers.getDOMWindowUtils(windowForTarget(aTarget));
-  var element = elementForTarget(aTarget);
-  utils.sendNativeMouseEvent(pt.x, pt.y, nativeMouseMoveEventMsg(), 0, element);
-||||||| merged common ancestors
-// aX and aY are relative to the top-left of |aElement|'s containing window.
-function synthesizeNativeMouseMove(aElement, aX, aY) {
-  var pt = coordinatesRelativeToScreen(aX, aY, aElement);
-  var utils = SpecialPowers.getDOMWindowUtils(aElement.ownerDocument.defaultView);
-  utils.sendNativeMouseEvent(pt.x, pt.y, nativeMouseMoveEventMsg(), 0, aElement);
-=======
 // aX and aY are relative to the top-left of |aTarget|'s bounding rect.
 function synthesizeNativeMouseMove(aTarget, aX, aY) {
   var pt = coordinatesRelativeToScreen(aX, aY, aTarget);
   var utils = utilsForTarget(aTarget);
   var element = elementForTarget(aTarget);
   utils.sendNativeMouseEvent(pt.x, pt.y, nativeMouseMoveEventMsg(), 0, element);
->>>>>>> upstream-releases
   return true;
 }
 
 // Synthesizes a native mouse move event and invokes the callback once the
-<<<<<<< HEAD
-// mouse move event is dispatched to |aTarget|'s containing window. If the event
-// targets content in a subdocument, |aTarget| should be inside the
-// subdocument (or the subdocument window). See synthesizeNativeMouseMove for 
-// details on the other parameters.
-function synthesizeNativeMouseMoveAndWaitForMoveEvent(aTarget, aX, aY, aCallback) {
-  var targetWindow = windowForTarget(aTarget);
-  targetWindow.addEventListener("mousemove", function(e) {
-    setTimeout(aCallback, 0);
-  }, {once: true});
-  return synthesizeNativeMouseMove(aTarget, aX, aY);
-||||||| merged common ancestors
-// mouse move event is dispatched to |aElement|'s containing window. If the event
-// targets content in a subdocument, |aElement| should be inside the
-// subdocument. See synthesizeNativeMouseMove for details on the other
-// parameters.
-function synthesizeNativeMouseMoveAndWaitForMoveEvent(aElement, aX, aY, aCallback) {
-  var targetWindow = aElement.ownerDocument.defaultView;
-  targetWindow.addEventListener("mousemove", function(e) {
-    setTimeout(aCallback, 0);
-  }, {once: true});
-  return synthesizeNativeMouseMove(aElement, aX, aY);
-=======
 // mouse move event is dispatched to |aTarget|'s containing window. If the event
 // targets content in a subdocument, |aTarget| should be inside the
 // subdocument (or the subdocument window). See synthesizeNativeMouseMove for
@@ -503,21 +331,9 @@ function synthesizeNativeMouseMoveAndWaitForMoveEvent(
     { once: true }
   );
   return synthesizeNativeMouseMove(aTarget, aX, aY);
->>>>>>> upstream-releases
 }
 
 // Synthesizes a native touch event and dispatches it. aX and aY in CSS pixels
-<<<<<<< HEAD
-// relative to the top-left of |aTarget|'s bounding rect.
-function synthesizeNativeTouch(aTarget, aX, aY, aType, aObserver = null, aTouchId = 0) {
-  var pt = coordinatesRelativeToScreen(aX, aY, aTarget);
-  var utils = SpecialPowers.getDOMWindowUtils(windowForTarget(aTarget));
-||||||| merged common ancestors
-// relative to the top-left of |aElement|'s bounding rect.
-function synthesizeNativeTouch(aElement, aX, aY, aType, aObserver = null, aTouchId = 0) {
-  var pt = coordinatesRelativeToScreen(aX, aY, aElement);
-  var utils = SpecialPowers.getDOMWindowUtils(aElement.ownerDocument.defaultView);
-=======
 // relative to the top-left of |aTarget|'s bounding rect.
 function synthesizeNativeTouch(
   aTarget,
@@ -529,7 +345,6 @@ function synthesizeNativeTouch(
 ) {
   var pt = coordinatesRelativeToScreen(aX, aY, aTarget);
   var utils = utilsForTarget(aTarget);
->>>>>>> upstream-releases
   utils.sendNativeTouchPoint(aTouchId, aType, pt.x, pt.y, 1, 90, aObserver);
   return true;
 }
@@ -552,18 +367,12 @@ function synthesizeNativeTouch(
 // aObserver is the observer that will get registered on the very last
 //   synthesizeNativeTouch call this function makes.
 // aTouchIds is an array holding the touch ID values of each "finger".
-<<<<<<< HEAD
-function* synthesizeNativeTouchSequences(aTarget, aPositions, aObserver = null, aTouchIds = [0]) {
-||||||| merged common ancestors
-function* synthesizeNativeTouchSequences(aElement, aPositions, aObserver = null, aTouchIds = [0]) {
-=======
 function* synthesizeNativeTouchSequences(
   aTarget,
   aPositions,
   aObserver = null,
   aTouchIds = [0]
 ) {
->>>>>>> upstream-releases
   // We use lastNonNullValue to figure out which synthesizeNativeTouch call
   // will be the last one we make, so that we can register aObserver on it.
   var lastNonNullValue = -1;
@@ -622,15 +431,6 @@ function* synthesizeNativeTouchSequences(
         } else {
           // synthesize the touch-up. If this is the last call we're going to
           // make, pass the observer as well
-<<<<<<< HEAD
-          var thisIndex = ((i - yields) * aTouchIds.length) + j;
-          var observer = (lastSynthesizeCall == thisIndex) ? aObserver : null;
-          synthesizeNativeTouch(aTarget, currentPositions[j].x, currentPositions[j].y, SpecialPowers.DOMWindowUtils.TOUCH_REMOVE, observer, aTouchIds[j]);
-||||||| merged common ancestors
-          var thisIndex = ((i - yields) * aTouchIds.length) + j;
-          var observer = (lastSynthesizeCall == thisIndex) ? aObserver : null;
-          synthesizeNativeTouch(aElement, currentPositions[j].x, currentPositions[j].y, SpecialPowers.DOMWindowUtils.TOUCH_REMOVE, observer, aTouchIds[j]);
-=======
           var thisIndex = (i - yields) * aTouchIds.length + j;
           var observer = lastSynthesizeCall == thisIndex ? aObserver : null;
           synthesizeNativeTouch(
@@ -641,15 +441,9 @@ function* synthesizeNativeTouchSequences(
             observer,
             aTouchIds[j]
           );
->>>>>>> upstream-releases
           currentPositions[j] = null;
         }
       } else {
-<<<<<<< HEAD
-        synthesizeNativeTouch(aTarget, aPositions[i][j].x, aPositions[i][j].y, SpecialPowers.DOMWindowUtils.TOUCH_CONTACT, null, aTouchIds[j]);
-||||||| merged common ancestors
-        synthesizeNativeTouch(aElement, aPositions[i][j].x, aPositions[i][j].y, SpecialPowers.DOMWindowUtils.TOUCH_CONTACT, null, aTouchIds[j]);
-=======
         synthesizeNativeTouch(
           aTarget,
           aPositions[i][j].x,
@@ -658,7 +452,6 @@ function* synthesizeNativeTouchSequences(
           null,
           aTouchIds[j]
         );
->>>>>>> upstream-releases
         currentPositions[j] = aPositions[i][j];
       }
     }
@@ -669,11 +462,6 @@ function* synthesizeNativeTouchSequences(
 // Note that when calling this function you'll want to make sure that the pref
 // "apz.touch_start_tolerance" is set to 0, or some of the touchmove will get
 // consumed to overcome the panning threshold.
-<<<<<<< HEAD
-function synthesizeNativeTouchDrag(aTarget, aX, aY, aDeltaX, aDeltaY, aObserver = null, aTouchId = 0) {
-||||||| merged common ancestors
-function synthesizeNativeTouchDrag(aElement, aX, aY, aDeltaX, aDeltaY, aObserver = null, aTouchId = 0) {
-=======
 function synthesizeNativeTouchDrag(
   aTarget,
   aX,
@@ -683,7 +471,6 @@ function synthesizeNativeTouchDrag(
   aObserver = null,
   aTouchId = 0
 ) {
->>>>>>> upstream-releases
   var steps = Math.max(Math.abs(aDeltaX), Math.abs(aDeltaY));
   var positions = [[{ x: aX, y: aY }]];
   for (var i = 1; i < steps; i++) {
@@ -693,18 +480,12 @@ function synthesizeNativeTouchDrag(
     positions.push([pos]);
   }
   positions.push([{ x: aX + aDeltaX, y: aY + aDeltaY }]);
-<<<<<<< HEAD
-  var continuation = synthesizeNativeTouchSequences(aTarget, positions, aObserver, [aTouchId]);
-||||||| merged common ancestors
-  var continuation = synthesizeNativeTouchSequences(aElement, positions, aObserver, [aTouchId]);
-=======
   var continuation = synthesizeNativeTouchSequences(
     aTarget,
     positions,
     aObserver,
     [aTouchId]
   );
->>>>>>> upstream-releases
   var yielded = continuation.next();
   while (!yielded.done) {
     yielded = continuation.next();
@@ -762,21 +543,6 @@ function synthesizeNativeClick(aElement, aX, aY, aObserver = null) {
 // We also wait for the mouse move event to be processed before sending the
 // wheel event, otherwise there is a chance they might get reordered, and
 // we have the transaction problem again.
-<<<<<<< HEAD
-function moveMouseAndScrollWheelOver(target, dx, dy, testDriver, waitForScroll = true) {
-  return synthesizeNativeMouseMoveAndWaitForMoveEvent(target, dx, dy, function() {
-    if (waitForScroll) {
-      synthesizeNativeWheelAndWaitForScrollEvent(target, dx, dy, 0, -10, testDriver);
-    } else {
-      synthesizeNativeWheelAndWaitForWheelEvent(target, dx, dy, 0, -10, testDriver);
-||||||| merged common ancestors
-function moveMouseAndScrollWheelOver(element, dx, dy, testDriver, waitForScroll = true) {
-  return synthesizeNativeMouseMoveAndWaitForMoveEvent(element, dx, dy, function() {
-    if (waitForScroll) {
-      synthesizeNativeWheelAndWaitForScrollEvent(element, dx, dy, 0, -10, testDriver);
-    } else {
-      synthesizeNativeWheelAndWaitForWheelEvent(element, dx, dy, 0, -10, testDriver);
-=======
 function moveMouseAndScrollWheelOver(
   target,
   dx,
@@ -808,7 +574,6 @@ function moveMouseAndScrollWheelOver(
           testDriver
         );
       }
->>>>>>> upstream-releases
     }
   );
 }
@@ -835,17 +600,6 @@ function promiseMoveMouseAndScrollWheelOver(
 // processed by the widget code can be detected by listening for the mousemove
 // events in the caller, or for some other event that is triggered by the
 // mousemove, such as the scroll event resulting from the scrollbar drag.
-<<<<<<< HEAD
-// Note: helper_scrollbar_snap_bug1501062.html contains a copy of this code
-// with modifications. Fixes here should be copied there if appropriate.
-function* dragVerticalScrollbar(element, testDriver, distance = 20, increment = 5) {
-  var boundingClientRect = element.getBoundingClientRect();
-  var verticalScrollbarWidth = boundingClientRect.width - element.clientWidth;
-||||||| merged common ancestors
-function* dragVerticalScrollbar(element, testDriver, distance = 20, increment = 5) {
-  var boundingClientRect = element.getBoundingClientRect();
-  var verticalScrollbarWidth = boundingClientRect.width - element.clientWidth;
-=======
 // Note: helper_scrollbar_snap_bug1501062.html contains a copy of this code
 // with modifications. Fixes here should be copied there if appropriate.
 // |target| can be an element (for subframes) or a window (for root frames).
@@ -860,7 +614,6 @@ function* dragVerticalScrollbar(
     h = {};
   utilsForTarget(target).getScrollbarSizes(targetElement, w, h);
   var verticalScrollbarWidth = w.value;
->>>>>>> upstream-releases
   if (verticalScrollbarWidth == 0) {
     return false;
   }

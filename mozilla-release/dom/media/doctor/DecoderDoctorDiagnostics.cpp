@@ -41,23 +41,10 @@ namespace mozilla {
 // nothing new happened, StopWatching() will remove the document property and
 // timer (if present), so no more work will happen and the watcher will be
 // destroyed once all references are gone.
-<<<<<<< HEAD
-class DecoderDoctorDocumentWatcher : public nsITimerCallback, public nsINamed {
- public:
-  static already_AddRefed<DecoderDoctorDocumentWatcher> RetrieveOrCreate(
-      nsIDocument* aDocument);
-||||||| merged common ancestors
-class DecoderDoctorDocumentWatcher : public nsITimerCallback, public nsINamed
-{
-public:
-  static already_AddRefed<DecoderDoctorDocumentWatcher>
-  RetrieveOrCreate(nsIDocument* aDocument);
-=======
 class DecoderDoctorDocumentWatcher : public nsITimerCallback, public nsINamed {
  public:
   static already_AddRefed<DecoderDoctorDocumentWatcher> RetrieveOrCreate(
       dom::Document* aDocument);
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSITIMERCALLBACK
@@ -66,16 +53,8 @@ class DecoderDoctorDocumentWatcher : public nsITimerCallback, public nsINamed {
   void AddDiagnostics(DecoderDoctorDiagnostics&& aDiagnostics,
                       const char* aCallSite);
 
-<<<<<<< HEAD
- private:
-  explicit DecoderDoctorDocumentWatcher(nsIDocument* aDocument);
-||||||| merged common ancestors
-private:
-  explicit DecoderDoctorDocumentWatcher(nsIDocument* aDocument);
-=======
  private:
   explicit DecoderDoctorDocumentWatcher(dom::Document* aDocument);
->>>>>>> upstream-releases
   virtual ~DecoderDoctorDocumentWatcher();
 
   // This will prevent further work from happening, watcher will deregister
@@ -103,31 +82,12 @@ private:
   //    period, so we just stop watching.
   // Once nulled, no more actual work will happen, and the watcher will be
   // destroyed soon.
-<<<<<<< HEAD
-  nsIDocument* mDocument;
-
-  struct Diagnostics {
-    Diagnostics(DecoderDoctorDiagnostics&& aDiagnostics, const char* aCallSite)
-        : mDecoderDoctorDiagnostics(std::move(aDiagnostics)),
-          mCallSite(aCallSite) {}
-||||||| merged common ancestors
-  nsIDocument* mDocument;
-
-  struct Diagnostics
-  {
-    Diagnostics(DecoderDoctorDiagnostics&& aDiagnostics,
-                const char* aCallSite)
-      : mDecoderDoctorDiagnostics(std::move(aDiagnostics))
-      , mCallSite(aCallSite)
-    {}
-=======
   dom::Document* mDocument;
 
   struct Diagnostics {
     Diagnostics(DecoderDoctorDiagnostics&& aDiagnostics, const char* aCallSite)
         : mDecoderDoctorDiagnostics(std::move(aDiagnostics)),
           mCallSite(aCallSite) {}
->>>>>>> upstream-releases
     Diagnostics(const Diagnostics&) = delete;
     Diagnostics(Diagnostics&& aOther)
         : mDecoderDoctorDiagnostics(
@@ -148,14 +108,7 @@ NS_IMPL_ISUPPORTS(DecoderDoctorDocumentWatcher, nsITimerCallback, nsINamed)
 
 // static
 already_AddRefed<DecoderDoctorDocumentWatcher>
-<<<<<<< HEAD
-DecoderDoctorDocumentWatcher::RetrieveOrCreate(nsIDocument* aDocument) {
-||||||| merged common ancestors
-DecoderDoctorDocumentWatcher::RetrieveOrCreate(nsIDocument* aDocument)
-{
-=======
 DecoderDoctorDocumentWatcher::RetrieveOrCreate(dom::Document* aDocument) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aDocument);
   RefPtr<DecoderDoctorDocumentWatcher> watcher =
@@ -179,19 +132,9 @@ DecoderDoctorDocumentWatcher::RetrieveOrCreate(dom::Document* aDocument) {
   return watcher.forget();
 }
 
-<<<<<<< HEAD
-DecoderDoctorDocumentWatcher::DecoderDoctorDocumentWatcher(
-    nsIDocument* aDocument)
-    : mDocument(aDocument) {
-||||||| merged common ancestors
-DecoderDoctorDocumentWatcher::DecoderDoctorDocumentWatcher(nsIDocument* aDocument)
-  : mDocument(aDocument)
-{
-=======
 DecoderDoctorDocumentWatcher::DecoderDoctorDocumentWatcher(
     dom::Document* aDocument)
     : mDocument(aDocument) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mDocument);
   DD_DEBUG(
@@ -399,62 +342,12 @@ static void DispatchNotification(
   }
 }
 
-<<<<<<< HEAD
-static void ReportToConsole(nsIDocument* aDocument,
-                            const char* aConsoleStringId,
-                            nsTArray<const char16_t*>& aParams) {
-||||||| merged common ancestors
-static void
-ReportToConsole(nsIDocument* aDocument,
-                const char* aConsoleStringId,
-                nsTArray<const char16_t*>& aParams)
-{
-=======
 static void ReportToConsole(dom::Document* aDocument,
                             const char* aConsoleStringId,
                             const nsTArray<nsString>& aParams) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aDocument);
 
-<<<<<<< HEAD
-  DD_DEBUG(
-      "DecoderDoctorDiagnostics.cpp:ReportToConsole(doc=%p) ReportToConsole"
-      " - aMsg='%s' params={%s%s%s%s}",
-      aDocument, aConsoleStringId,
-      aParams.IsEmpty() ? "<no params>"
-                        : NS_ConvertUTF16toUTF8(aParams[0]).get(),
-      (aParams.Length() < 1 || !aParams[1]) ? "" : ", ",
-      (aParams.Length() < 1 || !aParams[1])
-          ? ""
-          : NS_ConvertUTF16toUTF8(aParams[1]).get(),
-      aParams.Length() < 2 ? "" : ", ...");
-  nsContentUtils::ReportToConsole(
-      nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Media"), aDocument,
-      nsContentUtils::eDOM_PROPERTIES, aConsoleStringId,
-      aParams.IsEmpty() ? nullptr : aParams.Elements(), aParams.Length());
-||||||| merged common ancestors
-  DD_DEBUG("DecoderDoctorDiagnostics.cpp:ReportToConsole(doc=%p) ReportToConsole"
-           " - aMsg='%s' params={%s%s%s%s}",
-           aDocument, aConsoleStringId,
-           aParams.IsEmpty()
-           ? "<no params>"
-           : NS_ConvertUTF16toUTF8(aParams[0]).get(),
-           (aParams.Length() < 1 || !aParams[1]) ? "" : ", ",
-           (aParams.Length() < 1 || !aParams[1])
-           ? ""
-           : NS_ConvertUTF16toUTF8(aParams[1]).get(),
-           aParams.Length() < 2 ? "" : ", ...");
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("Media"),
-                                  aDocument,
-                                  nsContentUtils::eDOM_PROPERTIES,
-                                  aConsoleStringId,
-                                  aParams.IsEmpty()
-                                  ? nullptr
-                                  : aParams.Elements(),
-                                  aParams.Length());
-=======
   DD_DEBUG(
       "DecoderDoctorDiagnostics.cpp:ReportToConsole(doc=%p) ReportToConsole"
       " - aMsg='%s' params={%s%s%s%s}",
@@ -469,7 +362,6 @@ static void ReportToConsole(dom::Document* aDocument,
   nsContentUtils::ReportToConsole(
       nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Media"), aDocument,
       nsContentUtils::eDOM_PROPERTIES, aConsoleStringId, aParams);
->>>>>>> upstream-releases
 }
 
 static bool AllowNotification(
@@ -513,25 +405,6 @@ static bool AllowDecodeIssue(const MediaResult& aDecodeIssue,
   return StringListContains(filter, decodeIssueName);
 }
 
-<<<<<<< HEAD
-static void ReportAnalysis(
-    nsIDocument* aDocument, const NotificationAndReportStringId& aNotification,
-    bool aIsSolved, const nsAString& aFormats = NS_LITERAL_STRING(""),
-    const MediaResult& aDecodeIssue = NS_OK, bool aDecodeIssueIsError = true,
-    const nsACString& aDocURL = NS_LITERAL_CSTRING(""),
-    const nsAString& aResourceURL = NS_LITERAL_STRING("")) {
-||||||| merged common ancestors
-static void
-ReportAnalysis(nsIDocument* aDocument,
-               const NotificationAndReportStringId& aNotification,
-               bool aIsSolved,
-               const nsAString& aFormats = NS_LITERAL_STRING(""),
-               const MediaResult& aDecodeIssue = NS_OK,
-               bool aDecodeIssueIsError = true,
-               const nsACString& aDocURL = NS_LITERAL_CSTRING(""),
-               const nsAString& aResourceURL = NS_LITERAL_STRING(""))
-{
-=======
 static void ReportAnalysis(
     dom::Document* aDocument,
     const NotificationAndReportStringId& aNotification, bool aIsSolved,
@@ -539,7 +412,6 @@ static void ReportAnalysis(
     const MediaResult& aDecodeIssue = NS_OK, bool aDecodeIssueIsError = true,
     const nsACString& aDocURL = NS_LITERAL_CSTRING(""),
     const nsAString& aResourceURL = NS_LITERAL_STRING("")) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!aDocument) {
@@ -555,53 +427,12 @@ static void ReportAnalysis(
   // Report non-solved issues to console.
   if (!aIsSolved) {
     // Build parameter array needed by console message.
-<<<<<<< HEAD
-    AutoTArray<const char16_t*, NotificationAndReportStringId::maxReportParams>
-        params;
-||||||| merged common ancestors
-    AutoTArray<const char16_t*,
-               NotificationAndReportStringId::maxReportParams> params;
-=======
     AutoTArray<nsString, NotificationAndReportStringId::maxReportParams> params;
->>>>>>> upstream-releases
     for (int i = 0; i < NotificationAndReportStringId::maxReportParams; ++i) {
       if (aNotification.mReportParams[i] == ReportParam::None) {
         break;
       }
       switch (aNotification.mReportParams[i]) {
-<<<<<<< HEAD
-        case ReportParam::Formats:
-          params.AppendElement(aFormats.Data());
-          break;
-        case ReportParam::DecodeIssue:
-          params.AppendElement(decodeIssueDescription.Data());
-          break;
-        case ReportParam::DocURL:
-          params.AppendElement(NS_ConvertUTF8toUTF16(aDocURL).Data());
-          break;
-        case ReportParam::ResourceURL:
-          params.AppendElement(aResourceURL.Data());
-          break;
-        default:
-          MOZ_ASSERT_UNREACHABLE("Bad notification parameter choice");
-          break;
-||||||| merged common ancestors
-      case ReportParam::Formats:
-        params.AppendElement(aFormats.Data());
-        break;
-      case ReportParam::DecodeIssue:
-        params.AppendElement(decodeIssueDescription.Data());
-        break;
-      case ReportParam::DocURL:
-        params.AppendElement(NS_ConvertUTF8toUTF16(aDocURL).Data());
-        break;
-      case ReportParam::ResourceURL:
-        params.AppendElement(aResourceURL.Data());
-        break;
-      default:
-        MOZ_ASSERT_UNREACHABLE("Bad notification parameter choice");
-        break;
-=======
         case ReportParam::Formats:
           params.AppendElement(aFormats);
           break;
@@ -617,7 +448,6 @@ static void ReportAnalysis(
         default:
           MOZ_ASSERT_UNREACHABLE("Bad notification parameter choice");
           break;
->>>>>>> upstream-releases
       }
     }
     ReportToConsole(aDocument, aNotification.mReportStringId, params);
@@ -979,61 +809,27 @@ DecoderDoctorDocumentWatcher::GetName(nsACString& aName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void DecoderDoctorDiagnostics::StoreFormatDiagnostics(nsIDocument* aDocument,
-                                                      const nsAString& aFormat,
-                                                      bool aCanPlay,
-                                                      const char* aCallSite) {
-||||||| merged common ancestors
-void
-DecoderDoctorDiagnostics::StoreFormatDiagnostics(nsIDocument* aDocument,
-                                                 const nsAString& aFormat,
-                                                 bool aCanPlay,
-                                                 const char* aCallSite)
-{
-=======
 void DecoderDoctorDiagnostics::StoreFormatDiagnostics(dom::Document* aDocument,
                                                       const nsAString& aFormat,
                                                       bool aCanPlay,
                                                       const char* aCallSite) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Make sure we only store once.
   MOZ_ASSERT(mDiagnosticsType == eUnsaved);
   mDiagnosticsType = eFormatSupportCheck;
 
   if (NS_WARN_IF(!aDocument)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(nsIDocument* "
-        "aDocument=nullptr, format='%s', can-play=%d, call site '%s')",
-        this, NS_ConvertUTF16toUTF8(aFormat).get(), aCanPlay, aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(nsIDocument* aDocument=nullptr, format='%s', can-play=%d, call site '%s')",
-            this, NS_ConvertUTF16toUTF8(aFormat).get(), aCanPlay, aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(Document* "
         "aDocument=nullptr, format='%s', can-play=%d, call site '%s')",
         this, NS_ConvertUTF16toUTF8(aFormat).get(), aCanPlay, aCallSite);
->>>>>>> upstream-releases
     return;
   }
   if (NS_WARN_IF(aFormat.IsEmpty())) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(nsIDocument* "
-        "aDocument=%p, format=<empty>, can-play=%d, call site '%s')",
-        this, aDocument, aCanPlay, aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(nsIDocument* aDocument=%p, format=<empty>, can-play=%d, call site '%s')",
-            this, aDocument, aCanPlay, aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(Document* "
         "aDocument=%p, format=<empty>, can-play=%d, call site '%s')",
         this, aDocument, aCanPlay, aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1041,24 +837,12 @@ void DecoderDoctorDiagnostics::StoreFormatDiagnostics(dom::Document* aDocument,
       DecoderDoctorDocumentWatcher::RetrieveOrCreate(aDocument);
 
   if (NS_WARN_IF(!watcher)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(nsIDocument* "
-        "aDocument=%p, format='%s', can-play=%d, call site '%s') - Could not "
-        "create document watcher",
-        this, aDocument, NS_ConvertUTF16toUTF8(aFormat).get(), aCanPlay,
-        aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(nsIDocument* aDocument=%p, format='%s', can-play=%d, call site '%s') - Could not create document watcher",
-            this, aDocument, NS_ConvertUTF16toUTF8(aFormat).get(), aCanPlay, aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreFormatDiagnostics(Document* "
         "aDocument=%p, format='%s', can-play=%d, call site '%s') - Could not "
         "create document watcher",
         this, aDocument, NS_ConvertUTF16toUTF8(aFormat).get(), aCanPlay,
         aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1073,59 +857,26 @@ void DecoderDoctorDiagnostics::StoreFormatDiagnostics(dom::Document* aDocument,
   MOZ_ASSERT(mDiagnosticsType == eFormatSupportCheck);
 }
 
-<<<<<<< HEAD
-void DecoderDoctorDiagnostics::StoreMediaKeySystemAccess(
-    nsIDocument* aDocument, const nsAString& aKeySystem, bool aIsSupported,
-    const char* aCallSite) {
-||||||| merged common ancestors
-void
-DecoderDoctorDiagnostics::StoreMediaKeySystemAccess(nsIDocument* aDocument,
-                                                    const nsAString& aKeySystem,
-                                                    bool aIsSupported,
-                                                    const char* aCallSite)
-{
-=======
 void DecoderDoctorDiagnostics::StoreMediaKeySystemAccess(
     dom::Document* aDocument, const nsAString& aKeySystem, bool aIsSupported,
     const char* aCallSite) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Make sure we only store once.
   MOZ_ASSERT(mDiagnosticsType == eUnsaved);
   mDiagnosticsType = eMediaKeySystemAccessRequest;
 
   if (NS_WARN_IF(!aDocument)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(nsIDocument* "
-        "aDocument=nullptr, keysystem='%s', supported=%d, call site '%s')",
-        this, NS_ConvertUTF16toUTF8(aKeySystem).get(), aIsSupported, aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(nsIDocument* aDocument=nullptr, keysystem='%s', supported=%d, call site '%s')",
-            this, NS_ConvertUTF16toUTF8(aKeySystem).get(), aIsSupported, aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(Document* "
         "aDocument=nullptr, keysystem='%s', supported=%d, call site '%s')",
         this, NS_ConvertUTF16toUTF8(aKeySystem).get(), aIsSupported, aCallSite);
->>>>>>> upstream-releases
     return;
   }
   if (NS_WARN_IF(aKeySystem.IsEmpty())) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(nsIDocument* "
-        "aDocument=%p, keysystem=<empty>, supported=%d, call site '%s')",
-        this, aDocument, aIsSupported, aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(nsIDocument* aDocument=%p, keysystem=<empty>, supported=%d, call site '%s')",
-            this, aDocument, aIsSupported, aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(Document* "
         "aDocument=%p, keysystem=<empty>, supported=%d, call site '%s')",
         this, aDocument, aIsSupported, aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1133,24 +884,12 @@ void DecoderDoctorDiagnostics::StoreMediaKeySystemAccess(
       DecoderDoctorDocumentWatcher::RetrieveOrCreate(aDocument);
 
   if (NS_WARN_IF(!watcher)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(nsIDocument* "
-        "aDocument=%p, keysystem='%s', supported=%d, call site '%s') - Could "
-        "not create document watcher",
-        this, aDocument, NS_ConvertUTF16toUTF8(aKeySystem).get(), aIsSupported,
-        aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(nsIDocument* aDocument=%p, keysystem='%s', supported=%d, call site '%s') - Could not create document watcher",
-            this, aDocument, NS_ConvertUTF16toUTF8(aKeySystem).get(), aIsSupported, aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreMediaKeySystemAccess(Document* "
         "aDocument=%p, keysystem='%s', supported=%d, call site '%s') - Could "
         "not create document watcher",
         this, aDocument, NS_ConvertUTF16toUTF8(aKeySystem).get(), aIsSupported,
         aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1165,21 +904,9 @@ void DecoderDoctorDiagnostics::StoreMediaKeySystemAccess(
   MOZ_ASSERT(mDiagnosticsType == eMediaKeySystemAccessRequest);
 }
 
-<<<<<<< HEAD
-void DecoderDoctorDiagnostics::StoreEvent(nsIDocument* aDocument,
-                                          const DecoderDoctorEvent& aEvent,
-                                          const char* aCallSite) {
-||||||| merged common ancestors
-void
-DecoderDoctorDiagnostics::StoreEvent(nsIDocument* aDocument,
-                                     const DecoderDoctorEvent& aEvent,
-                                     const char* aCallSite)
-{
-=======
 void DecoderDoctorDiagnostics::StoreEvent(dom::Document* aDocument,
                                           const DecoderDoctorEvent& aEvent,
                                           const char* aCallSite) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Make sure we only store once.
   MOZ_ASSERT(mDiagnosticsType == eUnsaved);
@@ -1187,20 +914,10 @@ void DecoderDoctorDiagnostics::StoreEvent(dom::Document* aDocument,
   mEvent = aEvent;
 
   if (NS_WARN_IF(!aDocument)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreEvent(nsIDocument* "
-        "aDocument=nullptr, aEvent=%s, call site '%s')",
-        this, GetDescription().get(), aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreEvent(nsIDocument* aDocument=nullptr, aEvent=%s, call site '%s')",
-            this, GetDescription().get(), aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreEvent(Document* "
         "aDocument=nullptr, aEvent=%s, call site '%s')",
         this, GetDescription().get(), aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1228,48 +945,21 @@ void DecoderDoctorDiagnostics::StoreEvent(dom::Document* aDocument,
 #endif  // MOZ_PULSEAUDIO
 }
 
-<<<<<<< HEAD
-void DecoderDoctorDiagnostics::StoreDecodeError(nsIDocument* aDocument,
-                                                const MediaResult& aError,
-                                                const nsString& aMediaSrc,
-                                                const char* aCallSite) {
-||||||| merged common ancestors
-void
-DecoderDoctorDiagnostics::StoreDecodeError(nsIDocument* aDocument,
-                                           const MediaResult& aError,
-                                           const nsString& aMediaSrc,
-                                           const char* aCallSite)
-{
-=======
 void DecoderDoctorDiagnostics::StoreDecodeError(dom::Document* aDocument,
                                                 const MediaResult& aError,
                                                 const nsString& aMediaSrc,
                                                 const char* aCallSite) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Make sure we only store once.
   MOZ_ASSERT(mDiagnosticsType == eUnsaved);
   mDiagnosticsType = eDecodeError;
 
   if (NS_WARN_IF(!aDocument)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreDecodeError("
-        "nsIDocument* aDocument=nullptr, aError=%s,"
-        " aMediaSrc=<provided>, call site '%s')",
-        this, aError.Description().get(), aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreDecodeError("
-            "nsIDocument* aDocument=nullptr, aError=%s,"
-            " aMediaSrc=<provided>, call site '%s')",
-            this, aError.Description().get(), aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreDecodeError("
         "Document* aDocument=nullptr, aError=%s,"
         " aMediaSrc=<provided>, call site '%s')",
         this, aError.Description().get(), aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1277,24 +967,11 @@ void DecoderDoctorDiagnostics::StoreDecodeError(dom::Document* aDocument,
       DecoderDoctorDocumentWatcher::RetrieveOrCreate(aDocument);
 
   if (NS_WARN_IF(!watcher)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreDecodeError("
-        "nsIDocument* aDocument=%p, aError='%s', aMediaSrc=<provided>,"
-        " call site '%s') - Could not create document watcher",
-        this, aDocument, aError.Description().get(), aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreDecodeError("
-            "nsIDocument* aDocument=%p, aError='%s', aMediaSrc=<provided>,"
-            " call site '%s') - Could not create document watcher",
-            this, aDocument, aError.Description().get(), aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreDecodeError("
         "Document* aDocument=%p, aError='%s', aMediaSrc=<provided>,"
         " call site '%s') - Could not create document watcher",
         this, aDocument, aError.Description().get(), aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1309,48 +986,21 @@ void DecoderDoctorDiagnostics::StoreDecodeError(dom::Document* aDocument,
   MOZ_ASSERT(mDiagnosticsType == eDecodeError);
 }
 
-<<<<<<< HEAD
-void DecoderDoctorDiagnostics::StoreDecodeWarning(nsIDocument* aDocument,
-                                                  const MediaResult& aWarning,
-                                                  const nsString& aMediaSrc,
-                                                  const char* aCallSite) {
-||||||| merged common ancestors
-void
-DecoderDoctorDiagnostics::StoreDecodeWarning(nsIDocument* aDocument,
-                                             const MediaResult& aWarning,
-                                             const nsString& aMediaSrc,
-                                             const char* aCallSite)
-{
-=======
 void DecoderDoctorDiagnostics::StoreDecodeWarning(dom::Document* aDocument,
                                                   const MediaResult& aWarning,
                                                   const nsString& aMediaSrc,
                                                   const char* aCallSite) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Make sure we only store once.
   MOZ_ASSERT(mDiagnosticsType == eUnsaved);
   mDiagnosticsType = eDecodeWarning;
 
   if (NS_WARN_IF(!aDocument)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreDecodeWarning("
-        "nsIDocument* aDocument=nullptr, aWarning=%s,"
-        " aMediaSrc=<provided>, call site '%s')",
-        this, aWarning.Description().get(), aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreDecodeWarning("
-            "nsIDocument* aDocument=nullptr, aWarning=%s,"
-            " aMediaSrc=<provided>, call site '%s')",
-            this, aWarning.Description().get(), aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreDecodeWarning("
         "Document* aDocument=nullptr, aWarning=%s,"
         " aMediaSrc=<provided>, call site '%s')",
         this, aWarning.Description().get(), aCallSite);
->>>>>>> upstream-releases
     return;
   }
 
@@ -1358,24 +1008,11 @@ void DecoderDoctorDiagnostics::StoreDecodeWarning(dom::Document* aDocument,
       DecoderDoctorDocumentWatcher::RetrieveOrCreate(aDocument);
 
   if (NS_WARN_IF(!watcher)) {
-<<<<<<< HEAD
-    DD_WARN(
-        "DecoderDoctorDiagnostics[%p]::StoreDecodeWarning("
-        "nsIDocument* aDocument=%p, aWarning='%s', aMediaSrc=<provided>,"
-        " call site '%s') - Could not create document watcher",
-        this, aDocument, aWarning.Description().get(), aCallSite);
-||||||| merged common ancestors
-    DD_WARN("DecoderDoctorDiagnostics[%p]::StoreDecodeWarning("
-            "nsIDocument* aDocument=%p, aWarning='%s', aMediaSrc=<provided>,"
-            " call site '%s') - Could not create document watcher",
-            this, aDocument, aWarning.Description().get(), aCallSite);
-=======
     DD_WARN(
         "DecoderDoctorDiagnostics[%p]::StoreDecodeWarning("
         "Document* aDocument=%p, aWarning='%s', aMediaSrc=<provided>,"
         " call site '%s') - Could not create document watcher",
         this, aDocument, aWarning.Description().get(), aCallSite);
->>>>>>> upstream-releases
     return;
   }
 

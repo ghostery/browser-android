@@ -17,40 +17,15 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-class nsSVGAFrame final : public nsSVGDisplayContainerFrame {
-  friend nsIFrame* NS_NewSVGAFrame(nsIPresShell* aPresShell,
-                                   ComputedStyle* aStyle);
-
- protected:
-  explicit nsSVGAFrame(ComputedStyle* aStyle)
-      : nsSVGDisplayContainerFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-class nsSVGAFrame final : public nsSVGDisplayContainerFrame
-{
-  friend nsIFrame*
-  NS_NewSVGAFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit nsSVGAFrame(ComputedStyle* aStyle)
-    : nsSVGDisplayContainerFrame(aStyle, kClassID)
-  {}
-=======
 class nsSVGAFrame final : public nsSVGDisplayContainerFrame {
   friend nsIFrame* NS_NewSVGAFrame(mozilla::PresShell* aPresShell,
                                    ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
  protected:
   explicit nsSVGAFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsSVGDisplayContainerFrame(aStyle, aPresContext, kClassID) {}
 
  public:
->>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSVGAFrame)
 
 #ifdef DEBUG
@@ -72,18 +47,8 @@ public:
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGAFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGAFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGAFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGAFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGAFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGAFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGAFrame)

@@ -1,27 +1,5 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
-<<<<<<< HEAD
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
-
-use crate::attr::{AttrSelectorOperator, AttrSelectorWithOptionalNamespace};
-use crate::attr::{NamespaceConstraint, ParsedAttrSelectorOperation};
-use crate::attr::{ParsedCaseSensitivity, SELECTOR_WHITESPACE};
-use crate::bloom::BLOOM_HASH_MASK;
-use crate::builder::{SelectorBuilder, SpecificityAndFlags};
-use crate::context::QuirksMode;
-use crate::sink::Push;
-pub use crate::visitor::{SelectorVisitor, Visit};
-use cssparser::{parse_nth, serialize_identifier};
-||||||| merged common ancestors
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-use attr::{AttrSelectorOperator, AttrSelectorWithOptionalNamespace};
-use attr::{NamespaceConstraint, ParsedAttrSelectorOperation};
-use attr::{ParsedCaseSensitivity, SELECTOR_WHITESPACE};
-use bloom::BLOOM_HASH_MASK;
-use builder::{SelectorBuilder, SpecificityAndFlags};
-use context::QuirksMode;
-=======
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::attr::{AttrSelectorOperator, AttrSelectorWithOptionalNamespace};
@@ -33,7 +11,6 @@ use crate::context::QuirksMode;
 use crate::sink::Push;
 pub use crate::visitor::{SelectorVisitor, Visit};
 use cssparser::{parse_nth, serialize_identifier};
->>>>>>> upstream-releases
 use cssparser::{BasicParseError, BasicParseErrorKind, ParseError, ParseErrorKind};
 use cssparser::{CowRcStr, Delimiter, SourceLocation};
 use cssparser::{CssStringWriter, Parser as CssParser, ToCss, Token};
@@ -54,11 +31,6 @@ pub trait PseudoElement: Sized + ToCss {
     /// Whether the pseudo-element supports a given state selector to the right
     /// of it.
     fn accepts_state_pseudo_classes(&self) -> bool {
-        false
-    }
-
-    /// Whether this pseudo-element is valid after a ::slotted(..) pseudo.
-    fn valid_after_slotted(&self) -> bool {
         false
     }
 
@@ -170,15 +142,9 @@ pub enum SelectorParseErrorKind<'i> {
     DanglingCombinator,
     NonSimpleSelectorInNegation,
     NonCompoundSelector,
-<<<<<<< HEAD
-    NonPseudoElementAfterSlotted,
-    InvalidPseudoElementAfterSlotted,
-||||||| merged common ancestors
-=======
     NonPseudoElementAfterSlotted,
     InvalidPseudoElementAfterSlotted,
     InvalidState,
->>>>>>> upstream-releases
     UnexpectedTokenInAttributeSelector(Token<'i>),
     PseudoElementExpectedColon(Token<'i>),
     PseudoElementExpectedIdent(Token<'i>),
@@ -563,7 +529,7 @@ where
                 ) {
                     return false;
                 }
-            }
+            },
             AttributeOther(ref attr_selector) if !attr_selector.never_matches => {
                 let empty_string;
                 let namespace = match attr_selector.namespace() {
@@ -1884,33 +1850,8 @@ where
     let case_sensitivity;
     {
         let local_name_lower_cow = to_ascii_lowercase(&local_name);
-<<<<<<< HEAD
-        if let ParsedCaseSensitivity::CaseSensitive = case_sensitivity {
-            if namespace.is_none() && include!(concat!(
-                env!("OUT_DIR"),
-                "/ascii_case_insensitive_html_attributes.rs"
-            ))
-            .contains(&*local_name_lower_cow)
-            {
-                case_sensitivity =
-                    ParsedCaseSensitivity::AsciiCaseInsensitiveIfInHtmlElementInHtmlDocument
-            }
-        }
-||||||| merged common ancestors
-        if let ParsedCaseSensitivity::CaseSensitive = case_sensitivity {
-            if namespace.is_none() && include!(concat!(
-                env!("OUT_DIR"),
-                "/ascii_case_insensitive_html_attributes.rs"
-            )).contains(&*local_name_lower_cow)
-            {
-                case_sensitivity =
-                    ParsedCaseSensitivity::AsciiCaseInsensitiveIfInHtmlElementInHtmlDocument
-            }
-        }
-=======
         case_sensitivity =
             attribute_flags.to_case_sensitivity(local_name_lower_cow.as_ref(), namespace.is_some());
->>>>>>> upstream-releases
         local_name_lower = local_name_lower_cow.as_ref().into();
         local_name_is_ascii_lowercase = matches!(local_name_lower_cow, Cow::Borrowed(..));
     }
@@ -2075,14 +2016,7 @@ where
         empty = false;
     }
 
-<<<<<<< HEAD
-    let mut pseudo = false;
-    let mut slot = false;
-||||||| merged common ancestors
-    let mut pseudo = false;
-=======
     let mut state = SelectorParsingState::empty();
->>>>>>> upstream-releases
     loop {
         let parse_result = match parse_one_simple_selector(parser, input, state)? {
             None => break,
@@ -2091,174 +2025,10 @@ where
 
         empty = false;
 
-        empty = false;
-
-        let slotted_selector;
-        let pseudo_element;
-
         match parse_result {
             SimpleSelectorParseResult::SimpleSelector(s) => {
                 builder.push_simple_selector(s);
-<<<<<<< HEAD
-                continue;
-||||||| merged common ancestors
-                empty = false
-=======
->>>>>>> upstream-releases
             },
-<<<<<<< HEAD
-            SimpleSelectorParseResult::PseudoElement(p) => {
-                slotted_selector = None;
-                pseudo_element = Some(p);
-            },
-            SimpleSelectorParseResult::SlottedPseudo(selector) => {
-                slotted_selector = Some(selector);
-                let maybe_pseudo =
-                    parse_one_simple_selector(parser, input, /* inside_negation = */ false)?;
-
-                pseudo_element = match maybe_pseudo {
-                    None => None,
-                    Some(SimpleSelectorParseResult::PseudoElement(pseudo)) => {
-                        if !pseudo.valid_after_slotted() {
-                            return Err(input.new_custom_error(
-                                SelectorParseErrorKind::InvalidPseudoElementAfterSlotted,
-                            ));
-                        }
-                        Some(pseudo)
-                    },
-                    Some(SimpleSelectorParseResult::SimpleSelector(..)) |
-                    Some(SimpleSelectorParseResult::SlottedPseudo(..)) => {
-                        return Err(input.new_custom_error(
-                            SelectorParseErrorKind::NonPseudoElementAfterSlotted,
-                        ));
-                    },
-                };
-            },
-        }
-
-        debug_assert!(slotted_selector.is_some() || pseudo_element.is_some());
-        // Try to parse state to the right of the pseudo-element.
-        //
-        // There are only 3 allowable state selectors that can go on
-        // pseudo-elements as of right now.
-        let mut state_selectors = SmallVec::<[Component<Impl>; 3]>::new();
-        if let Some(ref p) = pseudo_element {
-            loop {
-                let location = input.current_source_location();
-                match input.next_including_whitespace() {
-                    Ok(&Token::Colon) => {},
-                    Ok(&Token::WhiteSpace(_)) | Err(_) => break,
-                    Ok(t) => {
-                        let e = SelectorParseErrorKind::PseudoElementExpectedColon(t.clone());
-                        return Err(location.new_custom_error(e));
-                    },
-                }
-
-                let location = input.current_source_location();
-                // TODO(emilio): Functional pseudo-classes too?
-                // We don't need it for now.
-                let name = match input.next_including_whitespace()? {
-                    &Token::Ident(ref name) => name.clone(),
-                    t => {
-                        return Err(location
-                            .new_custom_error(SelectorParseErrorKind::NoIdentForPseudo(t.clone())))
-                    },
-                };
-
-                let pseudo_class = P::parse_non_ts_pseudo_class(parser, location, name.clone())?;
-                if !p.supports_pseudo_class(&pseudo_class) {
-                    return Err(input.new_custom_error(
-                        SelectorParseErrorKind::UnsupportedPseudoClassOrElement(name),
-                    ));
-                }
-                state_selectors.push(Component::NonTSPseudoClass(pseudo_class));
-            }
-        }
-
-        if let Some(slotted) = slotted_selector {
-            slot = true;
-            if !builder.is_empty() {
-                builder.push_combinator(Combinator::SlotAssignment);
-            }
-            builder.push_simple_selector(Component::Slotted(slotted));
-        }
-
-        if let Some(p) = pseudo_element {
-            pseudo = true;
-            if !builder.is_empty() {
-                builder.push_combinator(Combinator::PseudoElement);
-            }
-
-            builder.push_simple_selector(Component::PseudoElement(p));
-
-            for state_selector in state_selectors.drain() {
-                builder.push_simple_selector(state_selector);
-            }
-||||||| merged common ancestors
-            SimpleSelectorParseResult::PseudoElement(p) => {
-                // Try to parse state to its right. There are only 3 allowable
-                // state selectors that can go on pseudo-elements.
-                let mut state_selectors = SmallVec::<[Component<Impl>; 3]>::new();
-
-                loop {
-                    let location = input.current_source_location();
-                    match input.next_including_whitespace() {
-                        Ok(&Token::Colon) => {},
-                        Ok(&Token::WhiteSpace(_)) | Err(_) => break,
-                        Ok(t) => {
-                            let e = SelectorParseErrorKind::PseudoElementExpectedColon(t.clone());
-                            return Err(location.new_custom_error(e));
-                        },
-                    }
-
-                    let location = input.current_source_location();
-                    // TODO(emilio): Functional pseudo-classes too?
-                    // We don't need it for now.
-                    let name = match input.next_including_whitespace()? {
-                        &Token::Ident(ref name) => name.clone(),
-                        t => {
-                            return Err(location.new_custom_error(
-                                SelectorParseErrorKind::NoIdentForPseudo(t.clone()),
-                            ))
-                        },
-                    };
-
-                    let pseudo_class =
-                        P::parse_non_ts_pseudo_class(parser, location, name.clone())?;
-                    if !p.supports_pseudo_class(&pseudo_class) {
-                        return Err(input.new_custom_error(
-                            SelectorParseErrorKind::UnsupportedPseudoClassOrElement(name),
-                        ));
-                    }
-                    state_selectors.push(Component::NonTSPseudoClass(pseudo_class));
-                }
-
-                if !builder.is_empty() {
-                    builder.push_combinator(Combinator::PseudoElement);
-                }
-
-                builder.push_simple_selector(Component::PseudoElement(p));
-                for state_selector in state_selectors.drain() {
-                    builder.push_simple_selector(state_selector);
-                }
-
-                pseudo = true;
-                empty = false;
-                break;
-            },
-            SimpleSelectorParseResult::SlottedPseudo(selector) => {
-                empty = false;
-                slot = true;
-                if !builder.is_empty() {
-                    builder.push_combinator(Combinator::SlotAssignment);
-                }
-                builder.push_simple_selector(Component::Slotted(selector));
-                // FIXME(emilio): ::slotted() should support ::before and
-                // ::after after it, so we shouldn't break, but we shouldn't
-                // push more type selectors either.
-                break;
-            },
-=======
             SimpleSelectorParseResult::PartPseudo(part_name) => {
                 state.insert(SelectorParsingState::AFTER_PART);
                 builder.push_combinator(Combinator::Part);
@@ -2277,10 +2047,7 @@ where
                 builder.push_combinator(Combinator::PseudoElement);
                 builder.push_simple_selector(Component::PseudoElement(p));
             },
->>>>>>> upstream-releases
         }
-
-        break;
     }
     if empty {
         // An empty selector is invalid.
@@ -2483,40 +2250,6 @@ where
     P: Parser<'i, Impl = Impl>,
     Impl: SelectorImpl,
 {
-<<<<<<< HEAD
-    (match_ignore_ascii_case! { &name,
-        "first-child" => Ok(Component::FirstChild),
-        "last-child"  => Ok(Component::LastChild),
-        "only-child"  => Ok(Component::OnlyChild),
-        "root" => Ok(Component::Root),
-        "empty" => Ok(Component::Empty),
-        "scope" => Ok(Component::Scope),
-        "host" if P::parse_host(parser) => Ok(Component::Host(None)),
-        "first-of-type" => Ok(Component::FirstOfType),
-        "last-of-type" => Ok(Component::LastOfType),
-        "only-of-type" => Ok(Component::OnlyOfType),
-        _ => Err(())
-    })
-    .or_else(|()| {
-        P::parse_non_ts_pseudo_class(parser, location, name).map(Component::NonTSPseudoClass)
-    })
-||||||| merged common ancestors
-    (match_ignore_ascii_case! { &name,
-        "first-child" => Ok(Component::FirstChild),
-        "last-child"  => Ok(Component::LastChild),
-        "only-child"  => Ok(Component::OnlyChild),
-        "root" => Ok(Component::Root),
-        "empty" => Ok(Component::Empty),
-        "scope" => Ok(Component::Scope),
-        "host" if P::parse_host(parser) => Ok(Component::Host(None)),
-        "first-of-type" => Ok(Component::FirstOfType),
-        "last-of-type" => Ok(Component::LastOfType),
-        "only-of-type" => Ok(Component::OnlyOfType),
-        _ => Err(())
-    }).or_else(|()| {
-        P::parse_non_ts_pseudo_class(parser, location, name).map(Component::NonTSPseudoClass)
-    })
-=======
     if !state.allows_non_functional_pseudo_classes() {
         return Err(location.new_custom_error(SelectorParseErrorKind::InvalidState));
     }
@@ -2544,23 +2277,14 @@ where
         return Err(location.new_custom_error(SelectorParseErrorKind::InvalidState));
     }
     Ok(Component::NonTSPseudoClass(pseudo_class))
->>>>>>> upstream-releases
 }
 
 // NB: pub module in order to access the DummyParser
 #[cfg(test)]
 pub mod tests {
-<<<<<<< HEAD
-    use super::*;
-    use crate::builder::HAS_PSEUDO_BIT;
-    use crate::parser;
-||||||| merged common ancestors
-    use builder::HAS_PSEUDO_BIT;
-=======
     use super::*;
     use crate::builder::SelectorFlags;
     use crate::parser;
->>>>>>> upstream-releases
     use cssparser::{serialize_identifier, Parser as CssParser, ParserInput, ToCss};
     use std::collections::HashMap;
     use std::fmt;
@@ -2582,10 +2306,6 @@ pub mod tests {
         type Impl = DummySelectorImpl;
 
         fn accepts_state_pseudo_classes(&self) -> bool {
-            true
-        }
-
-        fn valid_after_slotted(&self) -> bool {
             true
         }
 
@@ -2846,14 +2566,8 @@ pub mod tests {
                     lower_name: DummyAtom::from("eeÉ"),
                 })],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("|e"),
@@ -2866,14 +2580,8 @@ pub mod tests {
                     }),
                 ],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // When the default namespace is not set, *| should be elided.
         // https://github.com/servo/servo/pull/17537
@@ -2885,14 +2593,8 @@ pub mod tests {
                     lower_name: DummyAtom::from("e"),
                 })],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // When the default namespace is set, *| should _not_ be elided (as foo
         // is no longer equivalent to *|foo--the former is only for foo in the
@@ -2912,30 +2614,16 @@ pub mod tests {
                     }),
                 ],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("*"),
             Ok(SelectorList::from_vec(vec![Selector::from_vec(
                 vec![Component::ExplicitUniversalType],
-<<<<<<< HEAD
-                specificity(0, 0, 0)
-            )]))
-||||||| merged common ancestors
-                specificity(0, 0, 0)
-            ), ]))
-=======
                 specificity(0, 0, 0),
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("|*"),
@@ -2945,30 +2633,16 @@ pub mod tests {
                     Component::ExplicitUniversalType,
                 ],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_expected("*|*", Some("*")),
             Ok(SelectorList::from_vec(vec![Selector::from_vec(
                 vec![Component::ExplicitUniversalType],
-<<<<<<< HEAD
-                specificity(0, 0, 0)
-            )]))
-||||||| merged common ancestors
-                specificity(0, 0, 0)
-            ), ]))
-=======
                 specificity(0, 0, 0),
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns(
@@ -2981,14 +2655,8 @@ pub mod tests {
                     Component::ExplicitUniversalType,
                 ],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse(".foo:lang(en-US)"),
@@ -2998,28 +2666,16 @@ pub mod tests {
                     Component::NonTSPseudoClass(PseudoClass::Lang("en-US".to_owned())),
                 ],
                 specificity(0, 2, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("#bar"),
             Ok(SelectorList::from_vec(vec![Selector::from_vec(
                 vec![Component::ID(DummyAtom::from("bar"))],
                 specificity(1, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("e.foo#bar"),
@@ -3033,14 +2689,8 @@ pub mod tests {
                     Component::ID(DummyAtom::from("bar")),
                 ],
                 specificity(1, 1, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("e.foo #bar"),
@@ -3055,14 +2705,8 @@ pub mod tests {
                     Component::ID(DummyAtom::from("bar")),
                 ],
                 specificity(1, 1, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // Default namespace does not apply to attribute selectors
         // https://github.com/mozilla/servo/pull/1652
@@ -3075,14 +2719,8 @@ pub mod tests {
                     local_name_lower: DummyAtom::from("foo"),
                 }],
                 specificity(0, 1, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert!(parse_ns("svg|circle", &parser).is_err());
         parser
@@ -3099,14 +2737,8 @@ pub mod tests {
                     }),
                 ],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns("svg|*", &parser),
@@ -3116,14 +2748,8 @@ pub mod tests {
                     Component::ExplicitUniversalType,
                 ],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // Default namespace does not apply to attribute selectors
         // https://github.com/mozilla/servo/pull/1652
@@ -3141,14 +2767,8 @@ pub mod tests {
                     },
                 ],
                 specificity(0, 1, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // Default namespace does apply to type selectors
         assert_eq!(
@@ -3162,14 +2782,8 @@ pub mod tests {
                     }),
                 ],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns("*", &parser),
@@ -3179,14 +2793,8 @@ pub mod tests {
                     Component::ExplicitUniversalType,
                 ],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns("*|*", &parser),
@@ -3196,14 +2804,8 @@ pub mod tests {
                     Component::ExplicitUniversalType,
                 ],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // Default namespace applies to universal and type selectors inside :not and :matches,
         // but not otherwise.
@@ -3219,14 +2821,8 @@ pub mod tests {
                     ),
                 ],
                 specificity(0, 1, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns(":not(*)", &parser),
@@ -3243,14 +2839,8 @@ pub mod tests {
                     ),
                 ],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns(":not(e)", &parser),
@@ -3270,14 +2860,8 @@ pub mod tests {
                     ),
                 ],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("[attr|=\"foo\"]"),
@@ -3290,28 +2874,13 @@ pub mod tests {
                     case_sensitivity: ParsedCaseSensitivity::CaseSensitive,
                 }],
                 specificity(0, 1, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // https://github.com/mozilla/servo/issues/1723
         assert_eq!(
             parse("::before"),
             Ok(SelectorList::from_vec(vec![Selector::from_vec(
-<<<<<<< HEAD
-                vec![Component::PseudoElement(PseudoElement::Before)],
-                specificity(0, 0, 1) | HAS_PSEUDO_BIT,
-            )]))
-||||||| merged common ancestors
-                vec![Component::PseudoElement(PseudoElement::Before)],
-                specificity(0, 0, 1) | HAS_PSEUDO_BIT,
-            ), ]))
-=======
                 vec![
                     Component::Combinator(Combinator::PseudoElement),
                     Component::PseudoElement(PseudoElement::Before),
@@ -3319,7 +2888,6 @@ pub mod tests {
                 specificity(0, 0, 1),
                 SelectorFlags::HAS_PSEUDO,
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("::before:hover"),
@@ -3329,17 +2897,9 @@ pub mod tests {
                     Component::PseudoElement(PseudoElement::Before),
                     Component::NonTSPseudoClass(PseudoClass::Hover),
                 ],
-<<<<<<< HEAD
-                specificity(0, 1, 1) | HAS_PSEUDO_BIT,
-            )]))
-||||||| merged common ancestors
-                specificity(0, 1, 1) | HAS_PSEUDO_BIT,
-            ), ]))
-=======
                 specificity(0, 1, 1),
                 SelectorFlags::HAS_PSEUDO,
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("::before:hover:hover"),
@@ -3350,17 +2910,9 @@ pub mod tests {
                     Component::NonTSPseudoClass(PseudoClass::Hover),
                     Component::NonTSPseudoClass(PseudoClass::Hover),
                 ],
-<<<<<<< HEAD
-                specificity(0, 2, 1) | HAS_PSEUDO_BIT,
-            )]))
-||||||| merged common ancestors
-                specificity(0, 2, 1) | HAS_PSEUDO_BIT,
-            ), ]))
-=======
                 specificity(0, 2, 1),
                 SelectorFlags::HAS_PSEUDO,
             )]))
->>>>>>> upstream-releases
         );
         assert!(parse("::before:hover:lang(foo)").is_err());
         assert!(parse("::before:hover .foo").is_err());
@@ -3382,17 +2934,9 @@ pub mod tests {
                     Component::Combinator(Combinator::PseudoElement),
                     Component::PseudoElement(PseudoElement::After),
                 ],
-<<<<<<< HEAD
-                specificity(0, 0, 2) | HAS_PSEUDO_BIT,
-            )]))
-||||||| merged common ancestors
-                specificity(0, 0, 2) | HAS_PSEUDO_BIT,
-            ), ]))
-=======
                 specificity(0, 0, 2),
                 SelectorFlags::HAS_PSEUDO,
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse("#d1 > .ok"),
@@ -3403,14 +2947,8 @@ pub mod tests {
                     Component::Class(DummyAtom::from("ok")),
                 ],
                 (1 << 20) + (1 << 10) + (0 << 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         parser.default_ns = None;
         assert!(parse(":not(#provel.old)").is_err());
@@ -3425,14 +2963,8 @@ pub mod tests {
                         .into(),
                 )],
                 specificity(1, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns(":not(svg|circle)", &parser),
@@ -3449,14 +2981,8 @@ pub mod tests {
                     .into(),
                 )],
                 specificity(0, 0, 1),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // https://github.com/servo/servo/issues/16017
         assert_eq!(
@@ -3468,14 +2994,8 @@ pub mod tests {
                         .into(),
                 )],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         assert_eq!(
             parse_ns(":not(|*)", &parser),
@@ -3489,14 +3009,8 @@ pub mod tests {
                     .into(),
                 )],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
         // *| should be elided if there is no default namespace.
         // https://github.com/servo/servo/pull/17537
@@ -3509,14 +3023,8 @@ pub mod tests {
                         .into(),
                 )],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
 
         assert_eq!(
@@ -3531,14 +3039,8 @@ pub mod tests {
                     .into(),
                 )],
                 specificity(0, 0, 0),
-<<<<<<< HEAD
-            )]))
-||||||| merged common ancestors
-            ), ]))
-=======
                 Default::default(),
             )]))
->>>>>>> upstream-releases
         );
 
         assert!(parse("::slotted()").is_err());

@@ -26,16 +26,8 @@ class ToolboxTab extends Component {
     this.renderIcon = this.renderIcon.bind(this);
   }
 
-<<<<<<< HEAD
-  renderIcon(definition) {
-    const {icon} = definition;
-||||||| merged common ancestors
-  renderIcon(definition, isHighlighted) {
-    const {icon} = definition;
-=======
   renderIcon(definition) {
     const { icon } = definition;
->>>>>>> upstream-releases
     if (!icon) {
       return [];
     }
@@ -91,53 +83,6 @@ class ToolboxTab extends Component {
           }
         },
       },
-<<<<<<< HEAD
-      span(
-        {
-          className: "devtools-tab-line",
-        }
-      ),
-      ...this.renderIcon(panelDefinition),
-      iconOnly ?
-        null :
-        span(
-          {
-            className: "devtools-tab-label",
-          },
-          label,
-          badge && !isHighlighted ?
-            span(
-              {
-                className: "devtools-tab-badge",
-              },
-              badge
-            ) :
-            null
-        )
-||||||| merged common ancestors
-      span(
-        {
-          className: "devtools-tab-line",
-        }
-      ),
-      ...this.renderIcon(panelDefinition, isHighlighted),
-      iconOnly ?
-        null :
-        span(
-          {
-            className: "devtools-tab-label",
-          },
-          label,
-          badge && !isHighlighted ?
-            span(
-              {
-                className: "devtools-tab-badge",
-              },
-              badge
-            ) :
-            null
-        )
-=======
       span({
         className: "devtools-tab-line",
       }),
@@ -158,7 +103,6 @@ class ToolboxTab extends Component {
                 )
               : null
           )
->>>>>>> upstream-releases
     );
   }
 }

@@ -135,34 +135,14 @@ ScaledFontFontconfig::InstanceData::InstanceData(
     if (aOptions->render_mode != wr::FontRenderMode::Mono) {
       mFlags |= ANTIALIAS;
       if (aOptions->render_mode == wr::FontRenderMode::Subpixel) {
-<<<<<<< HEAD
-        if (aOptions->flags & wr::FontInstanceFlags::SUBPIXEL_BGR) {
-          mSubpixelOrder = aOptions->flags & wr::FontInstanceFlags::LCD_VERTICAL
-                               ? FC_RGBA_VBGR
-                               : FC_RGBA_BGR;
-||||||| merged common ancestors
-        if (aOptions->flags & wr::FontInstanceFlags::SUBPIXEL_BGR) {
-          mSubpixelOrder =
-            aOptions->flags & wr::FontInstanceFlags::LCD_VERTICAL ? FC_RGBA_VBGR : FC_RGBA_BGR;
-=======
         if (aOptions->flags & wr::FontInstanceFlags_SUBPIXEL_BGR) {
           mSubpixelOrder = aOptions->flags & wr::FontInstanceFlags_LCD_VERTICAL
                                ? FC_RGBA_VBGR
                                : FC_RGBA_BGR;
->>>>>>> upstream-releases
         } else {
-<<<<<<< HEAD
-          mSubpixelOrder = aOptions->flags & wr::FontInstanceFlags::LCD_VERTICAL
-                               ? FC_RGBA_VRGB
-                               : FC_RGBA_RGB;
-||||||| merged common ancestors
-          mSubpixelOrder =
-            aOptions->flags & wr::FontInstanceFlags::LCD_VERTICAL ? FC_RGBA_VRGB : FC_RGBA_RGB;
-=======
           mSubpixelOrder = aOptions->flags & wr::FontInstanceFlags_LCD_VERTICAL
                                ? FC_RGBA_VRGB
                                : FC_RGBA_RGB;
->>>>>>> upstream-releases
         }
       }
     }
@@ -333,48 +313,20 @@ bool ScaledFontFontconfig::GetWRFontInstanceOptions(
   platformOptions.hinting = wr::FontHinting::Normal;
 
   FcBool autohint;
-<<<<<<< HEAD
-  if (FcPatternGetBool(mPattern, FC_AUTOHINT, 0, &autohint) == FcResultMatch &&
-      autohint) {
-    options.flags |= wr::FontInstanceFlags::FORCE_AUTOHINT;
-||||||| merged common ancestors
-  if (FcPatternGetBool(mPattern, FC_AUTOHINT, 0, &autohint) == FcResultMatch && autohint) {
-    options.flags |= wr::FontInstanceFlags::FORCE_AUTOHINT;
-=======
   if (FcPatternGetBool(mPattern, FC_AUTOHINT, 0, &autohint) == FcResultMatch &&
       autohint) {
     options.flags |= wr::FontInstanceFlags_FORCE_AUTOHINT;
->>>>>>> upstream-releases
   }
   FcBool embolden;
-<<<<<<< HEAD
-  if (FcPatternGetBool(mPattern, FC_EMBOLDEN, 0, &embolden) == FcResultMatch &&
-      embolden) {
-    options.flags |= wr::FontInstanceFlags::SYNTHETIC_BOLD;
-||||||| merged common ancestors
-  if (FcPatternGetBool(mPattern, FC_EMBOLDEN, 0, &embolden) == FcResultMatch && embolden) {
-    options.flags |= wr::FontInstanceFlags::SYNTHETIC_BOLD;
-=======
   if (FcPatternGetBool(mPattern, FC_EMBOLDEN, 0, &embolden) == FcResultMatch &&
       embolden) {
     options.flags |= wr::FontInstanceFlags_SYNTHETIC_BOLD;
->>>>>>> upstream-releases
   }
   FcBool vertical;
-<<<<<<< HEAD
-  if (FcPatternGetBool(mPattern, FC_VERTICAL_LAYOUT, 0, &vertical) ==
-          FcResultMatch &&
-      vertical) {
-    options.flags |= wr::FontInstanceFlags::VERTICAL_LAYOUT;
-||||||| merged common ancestors
-  if (FcPatternGetBool(mPattern, FC_VERTICAL_LAYOUT, 0, &vertical) == FcResultMatch && vertical) {
-    options.flags |= wr::FontInstanceFlags::VERTICAL_LAYOUT;
-=======
   if (FcPatternGetBool(mPattern, FC_VERTICAL_LAYOUT, 0, &vertical) ==
           FcResultMatch &&
       vertical) {
     options.flags |= wr::FontInstanceFlags_VERTICAL_LAYOUT;
->>>>>>> upstream-releases
   }
 
   FcBool antialias;
@@ -388,27 +340,6 @@ bool ScaledFontFontconfig::GetWRFontInstanceOptions(
         case FC_RGBA_BGR:
         case FC_RGBA_VRGB:
         case FC_RGBA_VBGR:
-<<<<<<< HEAD
-          options.render_mode = wr::FontRenderMode::Subpixel;
-          if (rgba == FC_RGBA_VRGB || rgba == FC_RGBA_VBGR) {
-            options.flags |= wr::FontInstanceFlags::LCD_VERTICAL;
-          }
-          platformOptions.hinting = wr::FontHinting::LCD;
-          if (rgba == FC_RGBA_BGR || rgba == FC_RGBA_VBGR) {
-            options.flags |= wr::FontInstanceFlags::SUBPIXEL_BGR;
-          }
-          break;
-||||||| merged common ancestors
-            options.render_mode = wr::FontRenderMode::Subpixel;
-            if (rgba == FC_RGBA_VRGB || rgba == FC_RGBA_VBGR) {
-                options.flags |= wr::FontInstanceFlags::LCD_VERTICAL;
-            }
-            platformOptions.hinting = wr::FontHinting::LCD;
-            if (rgba == FC_RGBA_BGR || rgba == FC_RGBA_VBGR) {
-                options.flags |= wr::FontInstanceFlags::SUBPIXEL_BGR;
-            }
-            break;
-=======
           options.render_mode = wr::FontRenderMode::Subpixel;
           if (rgba == FC_RGBA_VRGB || rgba == FC_RGBA_VBGR) {
             options.flags |= wr::FontInstanceFlags_LCD_VERTICAL;
@@ -418,7 +349,6 @@ bool ScaledFontFontconfig::GetWRFontInstanceOptions(
             options.flags |= wr::FontInstanceFlags_SUBPIXEL_BGR;
           }
           break;
->>>>>>> upstream-releases
         case FC_RGBA_NONE:
         case FC_RGBA_UNKNOWN:
         default:
@@ -451,20 +381,10 @@ bool ScaledFontFontconfig::GetWRFontInstanceOptions(
     // If AA is explicitly disabled, leave bitmaps enabled.
     // Otherwise, disable embedded bitmaps unless explicitly enabled.
     FcBool bitmap;
-<<<<<<< HEAD
-    if (FcPatternGetBool(mPattern, FC_EMBEDDED_BITMAP, 0, &bitmap) ==
-            FcResultMatch &&
-        bitmap) {
-      options.flags |= wr::FontInstanceFlags::EMBEDDED_BITMAPS;
-||||||| merged common ancestors
-    if (FcPatternGetBool(mPattern, FC_EMBEDDED_BITMAP, 0, &bitmap) == FcResultMatch && bitmap) {
-      options.flags |= wr::FontInstanceFlags::EMBEDDED_BITMAPS;
-=======
     if (FcPatternGetBool(mPattern, FC_EMBEDDED_BITMAP, 0, &bitmap) ==
             FcResultMatch &&
         bitmap) {
       options.flags |= wr::FontInstanceFlags_EMBEDDED_BITMAPS;
->>>>>>> upstream-releases
     }
   } else {
     options.render_mode = wr::FontRenderMode::Mono;

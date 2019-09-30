@@ -7,25 +7,11 @@ add_task(async function test_tab_background_color_property() {
   const TAB_BACKGROUND_COLOR = "#9400ff";
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "tab_selected": TAB_BACKGROUND_COLOR,
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "tab_selected": TAB_BACKGROUND_COLOR,
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
           tab_selected: TAB_BACKGROUND_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

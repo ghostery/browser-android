@@ -39,31 +39,14 @@ function makeCancelListener() {
   };
 }
 
-<<<<<<< HEAD
-let testserver = createHttpServer({hosts: ["example.com"]});
-
-||||||| merged common ancestors
-=======
 let testserver = createHttpServer({ hosts: ["example.com"] });
 
->>>>>>> upstream-releases
 // Set up the HTTP server so that we can control when it responds
-<<<<<<< HEAD
-let _httpResolve;
-function resetUpdateListener() {
-  return new Promise(resolve => { _httpResolve = resolve; });
-||||||| merged common ancestors
-var httpReceived = PromiseUtils.defer();
-function dataHandler(aRequest, aResponse) {
-  aResponse.processAsync();
-  httpReceived.resolve([aRequest, aResponse]);
-=======
 let _httpResolve;
 function resetUpdateListener() {
   return new Promise(resolve => {
     _httpResolve = resolve;
   });
->>>>>>> upstream-releases
 }
 
 testserver.registerPathHandler("/data/test_update.json", (req, resp) => {
@@ -114,13 +97,7 @@ add_task(async function cancel_during_check() {
   a1.findUpdates(listener, AddonManager.UPDATE_WHEN_USER_REQUESTED);
 
   // Wait for the http request to arrive
-<<<<<<< HEAD
-  let [/* request */, response] = await requestPromise;
-||||||| merged common ancestors
-  let [/* request */, response] = await httpReceived.promise;
-=======
   let [, /* request */ response] = await requestPromise;
->>>>>>> upstream-releases
 
   // cancelUpdate returns true if there is an update check in progress
   Assert.ok(a1.cancelUpdate());
@@ -149,13 +126,7 @@ add_task(async function shutdown_during_check() {
   a1.findUpdates(listener, AddonManager.UPDATE_WHEN_USER_REQUESTED);
 
   // Wait for the http request to arrive
-<<<<<<< HEAD
-  let [/* request */, response] = await requestPromise;
-||||||| merged common ancestors
-  let [/* request */, response] = await httpReceived.promise;
-=======
   let [, /* request */ response] = await requestPromise;
->>>>>>> upstream-releases
 
   await promiseShutdownManager();
 

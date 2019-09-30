@@ -433,16 +433,8 @@ void MathMLTextRunFactory::RebuildTextRun(
   AutoTArray<uint8_t, 50> canBreakBeforeArray;
   bool mergeNeeded = false;
 
-<<<<<<< HEAD
-  bool singleCharMI = !!(aTextRun->GetFlags2() &
-                         nsTextFrameUtils::Flags::TEXT_IS_SINGLE_CHAR_MI);
-||||||| merged common ancestors
-  bool singleCharMI =
-    !!(aTextRun->GetFlags2() & nsTextFrameUtils::Flags::TEXT_IS_SINGLE_CHAR_MI);
-=======
   bool singleCharMI =
       !!(aTextRun->GetFlags2() & nsTextFrameUtils::Flags::IsSingleCharMi);
->>>>>>> upstream-releases
 
   uint32_t length = aTextRun->GetLength();
   const char16_t* str = aTextRun->mString.BeginReading();
@@ -568,19 +560,9 @@ void MathMLTextRunFactory::RebuildTextRun(
         // Bug 930504. Some platforms do not have fonts for Mathematical
         // Alphanumeric Symbols. Hence we check whether the transformed
         // character is actually available.
-<<<<<<< HEAD
-        gfxTextRange::MatchType matchType;
-        RefPtr<gfxFont> mathFont = fontGroup->FindFontForChar(
-            ch2, 0, 0, unicode::Script::COMMON, nullptr, &matchType);
-||||||| merged common ancestors
-        gfxTextRange::MatchType matchType;
-        RefPtr<gfxFont> mathFont = fontGroup->
-          FindFontForChar(ch2, 0, 0, unicode::Script::COMMON, nullptr, &matchType);
-=======
         FontMatchType matchType;
         RefPtr<gfxFont> mathFont = fontGroup->FindFontForChar(
             ch2, 0, 0, unicode::Script::COMMON, nullptr, &matchType);
->>>>>>> upstream-releases
         if (mathFont) {
           // Don't apply the CSS style if there is a math font for at least one
           // of the transformed character in this text run.

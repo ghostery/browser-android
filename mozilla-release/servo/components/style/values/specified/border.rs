@@ -4,20 +4,6 @@
 
 //! Specified types for CSS values related to borders.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::{self, Context, ToComputedValue};
-use crate::values::generics::border::BorderCornerRadius as GenericBorderCornerRadius;
-use crate::values::generics::border::BorderImageSideWidth as GenericBorderImageSideWidth;
-use crate::values::generics::border::BorderImageSlice as GenericBorderImageSlice;
-use crate::values::generics::border::BorderRadius as GenericBorderRadius;
-use crate::values::generics::border::BorderSpacing as GenericBorderSpacing;
-use crate::values::generics::rect::Rect;
-use crate::values::generics::size::Size;
-use crate::values::specified::length::{Length, LengthOrPercentage, NonNegativeLength};
-use crate::values::specified::{AllowQuirks, Number, NumberOrPercentage};
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::computed::{self, Context, ToComputedValue};
 use crate::values::generics::border::BorderCornerRadius as GenericBorderCornerRadius;
@@ -30,65 +16,9 @@ use crate::values::generics::size::Size2D;
 use crate::values::specified::length::{NonNegativeLength, NonNegativeLengthPercentage};
 use crate::values::specified::{AllowQuirks, NonNegativeNumber, NonNegativeNumberOrPercentage};
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::Parser;
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ParseError, ToCss};
-<<<<<<< HEAD
-
-/// A specified value for a single side of a `border-style` property.
-///
-/// The order here corresponds to the integer values from the border conflict
-/// resolution rules in CSS 2.1 § 17.6.2.1. Higher values override lower values.
-#[allow(missing_docs)]
-#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    MallocSizeOf,
-    Ord,
-    Parse,
-    PartialEq,
-    PartialOrd,
-    SpecifiedValueInfo,
-    ToComputedValue,
-    ToCss,
-)]
-#[repr(u8)]
-pub enum BorderStyle {
-    Hidden,
-    None,
-    Inset,
-    Groove,
-    Outset,
-    Ridge,
-    Dotted,
-    Dashed,
-    Solid,
-    Double,
-}
-
-impl BorderStyle {
-    /// Whether this border style is either none or hidden.
-    #[inline]
-    pub fn none_or_hidden(&self) -> bool {
-        matches!(*self, BorderStyle::None | BorderStyle::Hidden)
-    }
-}
-||||||| merged common ancestors
-use values::computed::{self, Context, ToComputedValue};
-use values::generics::border::BorderCornerRadius as GenericBorderCornerRadius;
-use values::generics::border::BorderImageSideWidth as GenericBorderImageSideWidth;
-use values::generics::border::BorderImageSlice as GenericBorderImageSlice;
-use values::generics::border::BorderRadius as GenericBorderRadius;
-use values::generics::border::BorderSpacing as GenericBorderSpacing;
-use values::generics::rect::Rect;
-use values::generics::size::Size;
-use values::specified::{AllowQuirks, Number, NumberOrPercentage};
-use values::specified::length::{Length, LengthOrPercentage, NonNegativeLength};
-=======
 
 /// A specified value for a single side of a `border-style` property.
 ///
@@ -134,7 +64,6 @@ impl BorderStyle {
         matches!(*self, BorderStyle::None | BorderStyle::Hidden)
     }
 }
->>>>>>> upstream-releases
 
 /// A specified value for a single side of the `border-width` property.
 #[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToCss, ToShmem)]
@@ -312,21 +241,10 @@ impl Parse for BorderSpacing {
         context: &ParserContext,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self, ParseError<'i>> {
-<<<<<<< HEAD
-        Size::parse_with(context, input, |context, input| {
-            Length::parse_non_negative_quirky(context, input, AllowQuirks::Yes).map(From::from)
-        })
-        .map(GenericBorderSpacing)
-||||||| merged common ancestors
-        Size::parse_with(context, input, |context, input| {
-            Length::parse_non_negative_quirky(context, input, AllowQuirks::Yes).map(From::from)
-        }).map(GenericBorderSpacing)
-=======
         Size2D::parse_with(context, input, |context, input| {
             NonNegativeLength::parse_quirky(context, input, AllowQuirks::Yes)
         })
         .map(GenericBorderSpacing)
->>>>>>> upstream-releases
     }
 }
 

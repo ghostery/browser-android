@@ -39,32 +39,14 @@ namespace gfx {
  * drawing for per-component alpha extraction for backends which do not support
  * native component alpha.
  */
-<<<<<<< HEAD
-class DrawTargetDual : public DrawTarget {
- public:
-||||||| merged common ancestors
-class DrawTargetDual : public DrawTarget
-{
-public:
-=======
 class DrawTargetDual : public DrawTarget {
  public:
   virtual bool IsValid() const override {
     return mA->IsValid() && mB->IsValid();
   };
 
->>>>>>> upstream-releases
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(DrawTargetDual, override)
-<<<<<<< HEAD
-  DrawTargetDual(DrawTarget *aA, DrawTarget *aB) : mA(aA), mB(aB) {
-||||||| merged common ancestors
-  DrawTargetDual(DrawTarget *aA, DrawTarget *aB)
-    : mA(aA)
-    , mB(aB)
-  { 
-=======
   DrawTargetDual(DrawTarget* aA, DrawTarget* aB) : mA(aA), mB(aB) {
->>>>>>> upstream-releases
     mFormat = aA->GetFormat();
   }
 
@@ -91,31 +73,10 @@ class DrawTargetDual : public DrawTarget {
     mB->SetTransform(aTransform);
   }
 
-<<<<<<< HEAD
-  virtual void DrawSurface(SourceSurface *aSurface, const Rect &aDest,
-                           const Rect &aSource,
-                           const DrawSurfaceOptions &aSurfOptions,
-                           const DrawOptions &aOptions) override;
-||||||| merged common ancestors
-  virtual void DrawSurface(SourceSurface *aSurface, const Rect &aDest, const Rect & aSource,
-                           const DrawSurfaceOptions &aSurfOptions, const DrawOptions &aOptions) override;
-=======
   virtual bool SupportsRegionClipping() const override {
     return mA->SupportsRegionClipping() && mB->SupportsRegionClipping();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void DrawFilter(
-      FilterNode *aNode, const Rect &aSourceRect, const Point &aDestPoint,
-      const DrawOptions &aOptions = DrawOptions()) override {
-||||||| merged common ancestors
-  virtual void DrawFilter(FilterNode *aNode,
-                          const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override
-  {
-=======
   virtual void DrawSurface(SourceSurface* aSurface, const Rect& aDest,
                            const Rect& aSource,
                            const DrawSurfaceOptions& aSurfOptions,
@@ -124,21 +85,10 @@ class DrawTargetDual : public DrawTarget {
   virtual void DrawFilter(
       FilterNode* aNode, const Rect& aSourceRect, const Point& aDestPoint,
       const DrawOptions& aOptions = DrawOptions()) override {
->>>>>>> upstream-releases
     mA->DrawFilter(aNode, aSourceRect, aDestPoint, aOptions);
     mB->DrawFilter(aNode, aSourceRect, aDestPoint, aOptions);
   }
 
-<<<<<<< HEAD
-  virtual void MaskSurface(
-      const Pattern &aSource, SourceSurface *aMask, Point aOffset,
-      const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void MaskSurface(const Pattern &aSource,
-                           SourceSurface *aMask,
-                           Point aOffset,
-                           const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void MaskSurface(
       const Pattern& aSource, SourceSurface* aMask, Point aOffset,
       const DrawOptions& aOptions = DrawOptions()) override;
@@ -147,20 +97,8 @@ class DrawTargetDual : public DrawTarget {
                                      const Point& aDest, const Color& aColor,
                                      const Point& aOffset, Float aSigma,
                                      CompositionOp aOp) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest, const Color &aColor,
-                                     const Point &aOffset, Float aSigma,
-                                     CompositionOp aOp) override;
-||||||| merged common ancestors
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface, const Point &aDest,
-                                     const Color &aColor, const Point &aOffset,
-                                     Float aSigma, CompositionOp aOp) override;
-=======
   virtual void ClearRect(const Rect& aRect) override;
->>>>>>> upstream-releases
 
   virtual void CopySurface(SourceSurface* aSurface, const IntRect& aSourceRect,
                            const IntPoint& aDestination) override;
@@ -168,169 +106,53 @@ class DrawTargetDual : public DrawTarget {
   virtual void FillRect(const Rect& aRect, const Pattern& aPattern,
                         const DrawOptions& aOptions) override;
 
-<<<<<<< HEAD
-  virtual void FillRect(const Rect &aRect, const Pattern &aPattern,
-                        const DrawOptions &aOptions) override;
-||||||| merged common ancestors
-  virtual void FillRect(const Rect &aRect, const Pattern &aPattern, const DrawOptions &aOptions) override;
-=======
   virtual void StrokeRect(const Rect& aRect, const Pattern& aPattern,
                           const StrokeOptions& aStrokeOptions,
                           const DrawOptions& aOptions) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void StrokeRect(const Rect &aRect, const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions,
-                          const DrawOptions &aOptions) override;
-||||||| merged common ancestors
-  virtual void StrokeRect(const Rect &aRect, const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions, const DrawOptions &aOptions) override;
-=======
   virtual void StrokeLine(const Point& aStart, const Point& aEnd,
                           const Pattern& aPattern,
                           const StrokeOptions& aStrokeOptions,
                           const DrawOptions& aOptions) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void StrokeLine(const Point &aStart, const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions,
-                          const DrawOptions &aOptions) override;
-||||||| merged common ancestors
-  virtual void StrokeLine(const Point &aStart, const Point &aEnd, const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions, const DrawOptions &aOptions) override;
-=======
   virtual void Stroke(const Path* aPath, const Pattern& aPattern,
                       const StrokeOptions& aStrokeOptions,
                       const DrawOptions& aOptions) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Stroke(const Path *aPath, const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions,
-                      const DrawOptions &aOptions) override;
-||||||| merged common ancestors
-  virtual void Stroke(const Path *aPath, const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions, const DrawOptions &aOptions) override;
-=======
   virtual void Fill(const Path* aPath, const Pattern& aPattern,
                     const DrawOptions& aOptions) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void Fill(const Path *aPath, const Pattern &aPattern,
-                    const DrawOptions &aOptions) override;
-||||||| merged common ancestors
-  virtual void Fill(const Path *aPath, const Pattern &aPattern, const DrawOptions &aOptions) override;
-=======
   virtual void FillGlyphs(ScaledFont* aScaledFont, const GlyphBuffer& aBuffer,
                           const Pattern& aPattern,
                           const DrawOptions& aOptions) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void FillGlyphs(ScaledFont *aScaledFont, const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions) override;
-
-  virtual void Mask(const Pattern &aSource, const Pattern &aMask,
-                    const DrawOptions &aOptions) override;
-
-  virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface *aMask,
-                         const Matrix &aMaskTransform,
-                         const IntRect &aBounds = IntRect(),
-||||||| merged common ancestors
-  virtual void FillGlyphs(ScaledFont *aScaledFont, const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern, const DrawOptions &aOptions) override;
-  
-  virtual void Mask(const Pattern &aSource, const Pattern &aMask, const DrawOptions &aOptions) override;
-
-  virtual void PushLayer(bool aOpaque, Float aOpacity,
-                         SourceSurface* aMask,
-                         const Matrix& aMaskTransform,
-                         const IntRect& aBounds = IntRect(),
-=======
   virtual void Mask(const Pattern& aSource, const Pattern& aMask,
                     const DrawOptions& aOptions) override;
 
   virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface* aMask,
                          const Matrix& aMaskTransform,
                          const IntRect& aBounds = IntRect(),
->>>>>>> upstream-releases
                          bool aCopyBackground = false) override;
 
   virtual bool Unrotate(IntPoint aRotation) override {
     return mA->Unrotate(aRotation) && mB->Unrotate(aRotation);
   }
 
-<<<<<<< HEAD
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
-      unsigned char *aData, const IntSize &aSize, int32_t aStride,
-      SurfaceFormat aFormat) const override {
-||||||| merged common ancestors
-  virtual already_AddRefed<SourceSurface>
-    CreateSourceSurfaceFromData(unsigned char *aData,
-                                const IntSize &aSize,
-                                int32_t aStride,
-                                SurfaceFormat aFormat) const override
-  {
-=======
   virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
       unsigned char* aData, const IntSize& aSize, int32_t aStride,
       SurfaceFormat aFormat) const override {
->>>>>>> upstream-releases
     return mA->CreateSourceSurfaceFromData(aData, aSize, aStride, aFormat);
   }
-<<<<<<< HEAD
-
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
-      SourceSurface *aSurface) const override {
-||||||| merged common ancestors
-     
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(SourceSurface *aSurface) const override
-  {
-=======
 
   virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
       SourceSurface* aSurface) const override {
->>>>>>> upstream-releases
     return mA->OptimizeSourceSurface(aSurface);
   }
-<<<<<<< HEAD
-
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
-      const NativeSurface &aSurface) const override {
-||||||| merged common ancestors
-     
-  virtual already_AddRefed<SourceSurface>
-    CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const override
-  {
-=======
 
   virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
       const NativeSurface& aSurface) const override {
->>>>>>> upstream-releases
     return mA->CreateSourceSurfaceFromNativeSurface(aSurface);
   }
-<<<<<<< HEAD
-
-  virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
-      const IntSize &aSize, SurfaceFormat aFormat) const override;
-  virtual bool CanCreateSimilarDrawTarget(const IntSize &aSize,
-                                          SurfaceFormat aFormat) const override;
-
-  virtual already_AddRefed<PathBuilder> CreatePathBuilder(
-      FillRule aFillRule = FillRule::FILL_WINDING) const override {
-||||||| merged common ancestors
-     
-  virtual already_AddRefed<DrawTarget>
-    CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const override;
-     
-  virtual already_AddRefed<PathBuilder> CreatePathBuilder(FillRule aFillRule = FillRule::FILL_WINDING) const override
-  {
-=======
 
   virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
       const IntSize& aSize, SurfaceFormat aFormat) const override;
@@ -341,27 +163,12 @@ class DrawTargetDual : public DrawTarget {
 
   virtual already_AddRefed<PathBuilder> CreatePathBuilder(
       FillRule aFillRule = FillRule::FILL_WINDING) const override {
->>>>>>> upstream-releases
     return mA->CreatePathBuilder(aFillRule);
   }
-<<<<<<< HEAD
-
-  virtual already_AddRefed<GradientStops> CreateGradientStops(
-      GradientStop *aStops, uint32_t aNumStops,
-      ExtendMode aExtendMode = ExtendMode::CLAMP) const override {
-||||||| merged common ancestors
-     
-  virtual already_AddRefed<GradientStops>
-    CreateGradientStops(GradientStop *aStops,
-                        uint32_t aNumStops,
-                        ExtendMode aExtendMode = ExtendMode::CLAMP) const override
-  {
-=======
 
   virtual already_AddRefed<GradientStops> CreateGradientStops(
       GradientStop* aStops, uint32_t aNumStops,
       ExtendMode aExtendMode = ExtendMode::CLAMP) const override {
->>>>>>> upstream-releases
     return mA->CreateGradientStops(aStops, aNumStops, aExtendMode);
   }
 
@@ -369,14 +176,7 @@ class DrawTargetDual : public DrawTarget {
     return mA->CreateFilter(aType);
   }
 
-<<<<<<< HEAD
-  virtual void *GetNativeSurface(NativeSurfaceType aType) override {
-||||||| merged common ancestors
-  virtual void *GetNativeSurface(NativeSurfaceType aType) override
-  {
-=======
   virtual void* GetNativeSurface(NativeSurfaceType aType) override {
->>>>>>> upstream-releases
     return nullptr;
   }
 

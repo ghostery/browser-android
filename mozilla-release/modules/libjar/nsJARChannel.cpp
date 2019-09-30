@@ -61,41 +61,6 @@ static LazyLogModule gJarProtocolLog("nsJarProtocol");
 // this class allows us to do some extra work on the stream transport thread.
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-class nsJARInputThunk : public nsIInputStream {
- public:
-  // Preserve refcount changes when record/replaying, as otherwise the thread
-  // which destroys the thunk may vary between recording and replaying.
-  NS_DECL_THREADSAFE_ISUPPORTS_WITH_RECORDING(recordreplay::Behavior::Preserve)
-  NS_DECL_NSIINPUTSTREAM
-
-  nsJARInputThunk(nsIZipReader *zipReader, nsIURI *fullJarURI,
-                  const nsACString &jarEntry, bool usingJarCache)
-      : mUsingJarCache(usingJarCache),
-        mJarReader(zipReader),
-        mJarEntry(jarEntry),
-        mContentLength(-1) {
-    if (fullJarURI) {
-||||||| merged common ancestors
-class nsJARInputThunk : public nsIInputStream
-{
-public:
-    // Preserve refcount changes when record/replaying, as otherwise the thread
-    // which destroys the thunk may vary between recording and replaying.
-    NS_DECL_THREADSAFE_ISUPPORTS_WITH_RECORDING(recordreplay::Behavior::Preserve)
-    NS_DECL_NSIINPUTSTREAM
-
-    nsJARInputThunk(nsIZipReader *zipReader,
-                    nsIURI* fullJarURI,
-                    const nsACString &jarEntry,
-                    bool usingJarCache)
-        : mUsingJarCache(usingJarCache)
-        , mJarReader(zipReader)
-        , mJarEntry(jarEntry)
-        , mContentLength(-1)
-    {
-        if (fullJarURI) {
-=======
 class nsJARInputThunk : public nsIInputStream {
  public:
   // Preserve refcount changes when record/replaying, as otherwise the thread
@@ -110,7 +75,6 @@ class nsJARInputThunk : public nsIInputStream {
         mJarEntry(jarEntry),
         mContentLength(-1) {
     if (fullJarURI) {
->>>>>>> upstream-releases
 #ifdef DEBUG
       nsresult rv =
 #endif
@@ -156,22 +120,10 @@ nsresult nsJARInputThunk::Init() {
     return rv;
   }
 
-<<<<<<< HEAD
-  // ask the JarStream for the content length
-  uint64_t avail;
-  rv = mJarStream->Available((uint64_t *)&avail);
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    // ask the JarStream for the content length
-    uint64_t avail;
-    rv = mJarStream->Available((uint64_t *) &avail);
-    if (NS_FAILED(rv)) return rv;
-=======
   // ask the JarStream for the content length
   uint64_t avail;
   rv = mJarStream->Available((uint64_t*)&avail);
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   mContentLength = avail < INT64_MAX ? (int64_t)avail : -1;
 
@@ -192,68 +144,26 @@ nsJARInputThunk::Close() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARInputThunk::Available(uint64_t *avail) {
-  return mJarStream->Available(avail);
-||||||| merged common ancestors
-nsJARInputThunk::Available(uint64_t *avail)
-{
-    return mJarStream->Available(avail);
-=======
 nsJARInputThunk::Available(uint64_t* avail) {
   return mJarStream->Available(avail);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARInputThunk::Read(char *buf, uint32_t count, uint32_t *countRead) {
-  return mJarStream->Read(buf, count, countRead);
-||||||| merged common ancestors
-nsJARInputThunk::Read(char *buf, uint32_t count, uint32_t *countRead)
-{
-    return mJarStream->Read(buf, count, countRead);
-=======
 nsJARInputThunk::Read(char* buf, uint32_t count, uint32_t* countRead) {
   return mJarStream->Read(buf, count, countRead);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARInputThunk::ReadSegments(nsWriteSegmentFun writer, void *closure,
-                              uint32_t count, uint32_t *countRead) {
-  // stream transport does only calls Read()
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsJARInputThunk::ReadSegments(nsWriteSegmentFun writer, void *closure,
-                              uint32_t count, uint32_t *countRead)
-{
-    // stream transport does only calls Read()
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsJARInputThunk::ReadSegments(nsWriteSegmentFun writer, void* closure,
                               uint32_t count, uint32_t* countRead) {
   // stream transport does only calls Read()
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARInputThunk::IsNonBlocking(bool *nonBlocking) {
-  *nonBlocking = false;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARInputThunk::IsNonBlocking(bool *nonBlocking)
-{
-    *nonBlocking = false;
-    return NS_OK;
-=======
 nsJARInputThunk::IsNonBlocking(bool* nonBlocking) {
   *nonBlocking = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -279,32 +189,6 @@ nsJARChannel::~nsJARChannel() {
     return;
   }
 
-<<<<<<< HEAD
-  // Proxy release the following members to main thread.
-  NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mLoadInfo",
-                                    mLoadInfo.forget());
-  NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mCallbacks",
-                                    mCallbacks.forget());
-  NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mProgressSink",
-                                    mProgressSink.forget());
-  NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mLoadGroup",
-                                    mLoadGroup.forget());
-  NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mListener",
-                                    mListener.forget());
-  NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mListenerContext",
-                                    mListenerContext.forget());
-}
-
-NS_IMPL_ISUPPORTS_INHERITED(nsJARChannel, nsHashPropertyBag, nsIRequest,
-                            nsIChannel, nsIStreamListener, nsIRequestObserver,
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS_INHERITED(nsJARChannel,
-                            nsHashPropertyBag,
-                            nsIRequest,
-                            nsIChannel,
-                            nsIStreamListener,
-                            nsIRequestObserver,
-=======
   // Proxy release the following members to main thread.
   NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::mLoadInfo",
                                     mLoadInfo.forget());
@@ -320,39 +204,12 @@ NS_IMPL_ISUPPORTS_INHERITED(nsJARChannel,
 
 NS_IMPL_ISUPPORTS_INHERITED(nsJARChannel, nsHashPropertyBag, nsIRequest,
                             nsIChannel, nsIStreamListener, nsIRequestObserver,
->>>>>>> upstream-releases
                             nsIThreadRetargetableRequest,
                             nsIThreadRetargetableStreamListener, nsIJARChannel)
 
-<<<<<<< HEAD
-nsresult nsJARChannel::Init(nsIURI *uri) {
-  LOG(("nsJARChannel::Init [this=%p]\n", this));
-  nsresult rv;
-||||||| merged common ancestors
-    mJarURI = do_QueryInterface(uri, &rv);
-    if (NS_FAILED(rv))
-        return rv;
-
-    mOriginalURI = mJarURI;
-
-    // Prevent loading jar:javascript URIs (see bug 290982).
-    nsCOMPtr<nsIURI> innerURI;
-    rv = mJarURI->GetJARFile(getter_AddRefs(innerURI));
-    if (NS_FAILED(rv))
-        return rv;
-    bool isJS;
-    rv = innerURI->SchemeIs("javascript", &isJS);
-    if (NS_FAILED(rv))
-        return rv;
-    if (isJS) {
-        NS_WARNING("blocking jar:javascript:");
-        return NS_ERROR_INVALID_ARG;
-    }
-=======
 nsresult nsJARChannel::Init(nsIURI* uri) {
   LOG(("nsJARChannel::Init [this=%p]\n", this));
   nsresult rv;
->>>>>>> upstream-releases
 
   mWorker = do_GetService(NS_STREAMTRANSPORTSERVICE_CONTRACTID, &rv);
   if (NS_FAILED(rv)) {
@@ -380,36 +237,11 @@ nsresult nsJARChannel::Init(nsIURI* uri) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsJARChannel::CreateJarInput(nsIZipReaderCache *jarCache,
-                                      nsJARInputThunk **resultInput) {
-  LOG(("nsJARChannel::CreateJarInput [this=%p]\n", this));
-  MOZ_ASSERT(resultInput);
-  MOZ_ASSERT(mJarFile);
-||||||| merged common ancestors
-nsresult
-nsJARChannel::CreateJarInput(nsIZipReaderCache *jarCache, nsJARInputThunk **resultInput)
-{
-    LOG(("nsJARChannel::CreateJarInput [this=%p]\n", this));
-    MOZ_ASSERT(resultInput);
-    MOZ_ASSERT(mJarFile);
-
-    // important to pass a clone of the file since the nsIFile impl is not
-    // necessarily MT-safe
-    nsCOMPtr<nsIFile> clonedFile;
-    nsresult rv = NS_OK;
-    if (mJarFile) {
-        rv = mJarFile->Clone(getter_AddRefs(clonedFile));
-        if (NS_FAILED(rv))
-            return rv;
-    }
-=======
 nsresult nsJARChannel::CreateJarInput(nsIZipReaderCache* jarCache,
                                       nsJARInputThunk** resultInput) {
   LOG(("nsJARChannel::CreateJarInput [this=%p]\n", this));
   MOZ_ASSERT(resultInput);
   MOZ_ASSERT(mJarFile);
->>>>>>> upstream-releases
 
   // important to pass a clone of the file since the nsIFile impl is not
   // necessarily MT-safe
@@ -509,46 +341,6 @@ nsresult nsJARChannel::LookupFile() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult CreateLocalJarInput(nsIZipReaderCache *aJarCache, nsIFile *aFile,
-                             const nsACString &aInnerJarEntry,
-                             nsIJARURI *aJarURI, const nsACString &aJarEntry,
-                             nsJARInputThunk **aResultInput) {
-  LOG(("nsJARChannel::CreateLocalJarInput [aJarCache=%p, %s, %s]\n", aJarCache,
-       PromiseFlatCString(aInnerJarEntry).get(),
-       PromiseFlatCString(aJarEntry).get()));
-||||||| merged common ancestors
-nsresult
-CreateLocalJarInput(nsIZipReaderCache* aJarCache,
-                    nsIFile* aFile,
-                    const nsACString& aInnerJarEntry,
-                    nsIJARURI* aJarURI,
-                    const nsACString& aJarEntry,
-                    nsJARInputThunk** aResultInput)
-{
-    LOG(("nsJARChannel::CreateLocalJarInput [aJarCache=%p, %s, %s]\n",
-         aJarCache,
-         PromiseFlatCString(aInnerJarEntry).get(),
-         PromiseFlatCString(aJarEntry).get()));
-
-    MOZ_ASSERT(!NS_IsMainThread());
-    MOZ_ASSERT(aJarCache);
-    MOZ_ASSERT(aResultInput);
-
-    nsresult rv;
-
-    nsCOMPtr<nsIZipReader> reader;
-    if (aInnerJarEntry.IsEmpty()) {
-        rv = aJarCache->GetZip(aFile, getter_AddRefs(reader));
-    } else {
-        rv = aJarCache->GetInnerZip(aFile,
-                                    aInnerJarEntry,
-                                    getter_AddRefs(reader));
-    }
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-    }
-=======
 nsresult CreateLocalJarInput(nsIZipReaderCache* aJarCache, nsIFile* aFile,
                              const nsACString& aInnerJarEntry,
                              nsIJARURI* aJarURI, const nsACString& aJarEntry,
@@ -556,7 +348,6 @@ nsresult CreateLocalJarInput(nsIZipReaderCache* aJarCache, nsIFile* aFile,
   LOG(("nsJARChannel::CreateLocalJarInput [aJarCache=%p, %s, %s]\n", aJarCache,
        PromiseFlatCString(aInnerJarEntry).get(),
        PromiseFlatCString(aJarEntry).get()));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!NS_IsMainThread());
   MOZ_ASSERT(aJarCache);
@@ -612,14 +403,6 @@ nsresult nsJARChannel::OpenLocalFile() {
     return ContinueOpenLocalFile(input, true);
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIZipReaderCache> jarCache = gJarHandler->JarCache();
-  if (NS_WARN_IF(!jarCache)) {
-    return NS_ERROR_UNEXPECTED;
-  }
-||||||| merged common ancestors
-    nsCOMPtr<nsIJARURI> localJARURI = mJarURI;
-=======
   nsCOMPtr<nsIZipReaderCache> jarCache = gJarHandler->JarCache();
   if (NS_WARN_IF(!jarCache)) {
     return NS_ERROR_UNEXPECTED;
@@ -630,22 +413,8 @@ nsresult nsJARChannel::OpenLocalFile() {
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsCOMPtr<nsIFile> clonedFile;
-  rv = mJarFile->Clone(getter_AddRefs(clonedFile));
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
 
   nsCOMPtr<nsIJARURI> localJARURI = mJarURI;
-||||||| merged common ancestors
-    nsAutoCString jarEntry(mJarEntry);
-    nsAutoCString innerJarEntry(mInnerJarEntry);
-=======
-  nsCOMPtr<nsIJARURI> localJARURI = mJarURI;
->>>>>>> upstream-releases
 
   nsAutoCString jarEntry(mJarEntry);
   nsAutoCString innerJarEntry(mInnerJarEntry);
@@ -678,20 +447,9 @@ nsresult nsJARChannel::OpenLocalFile() {
       }));
 }
 
-<<<<<<< HEAD
-nsresult nsJARChannel::ContinueOpenLocalFile(nsJARInputThunk *aInput,
-                                             bool aIsSyncCall) {
-  LOG(("nsJARChannel::ContinueOpenLocalFile [this=%p %p]\n", this, aInput));
-||||||| merged common ancestors
-nsresult
-nsJARChannel::ContinueOpenLocalFile(nsJARInputThunk* aInput, bool aIsSyncCall)
-{
-    LOG(("nsJARChannel::ContinueOpenLocalFile [this=%p %p]\n", this, aInput));
-=======
 nsresult nsJARChannel::ContinueOpenLocalFile(nsJARInputThunk* aInput,
                                              bool aIsSyncCall) {
   LOG(("nsJARChannel::ContinueOpenLocalFile [this=%p %p]\n", this, aInput));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mIsPending);
@@ -731,27 +489,11 @@ nsresult nsJARChannel::OnOpenLocalFileComplete(nsresult aResult,
       mLoadGroup->RemoveRequest(this, nullptr, aResult);
     }
 
-<<<<<<< HEAD
-    mOpened = false;
-    mIsPending = false;
-    mListenerContext = nullptr;
-    mListener = nullptr;
-    mCallbacks = nullptr;
-    mProgressSink = nullptr;
-||||||| merged common ancestors
-        mOpened = false;
-        mIsPending = false;
-        mListenerContext = nullptr;
-        mListener = nullptr;
-        mCallbacks = nullptr;
-        mProgressSink = nullptr;
-=======
     mOpened = false;
     mIsPending = false;
     mListener = nullptr;
     mCallbacks = nullptr;
     mProgressSink = nullptr;
->>>>>>> upstream-releases
 
     return aResult;
   }
@@ -788,16 +530,8 @@ void nsJARChannel::NotifyError(nsresult aError) {
 
   mStatus = aError;
 
-<<<<<<< HEAD
-  OnStartRequest(nullptr, nullptr);
-  OnStopRequest(nullptr, nullptr, aError);
-||||||| merged common ancestors
-    OnStartRequest(nullptr, nullptr);
-    OnStopRequest(nullptr, nullptr, aError);
-=======
   OnStartRequest(nullptr);
   OnStopRequest(nullptr, aError);
->>>>>>> upstream-releases
 }
 
 void nsJARChannel::FireOnProgress(uint64_t aProgress) {
@@ -812,58 +546,21 @@ void nsJARChannel::FireOnProgress(uint64_t aProgress) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetName(nsACString &result) { return mJarURI->GetSpec(result); }
-||||||| merged common ancestors
-nsJARChannel::GetName(nsACString &result)
-{
-    return mJarURI->GetSpec(result);
-}
-=======
 nsJARChannel::GetName(nsACString& result) { return mJarURI->GetSpec(result); }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::IsPending(bool *result) {
-  *result = mIsPending;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::IsPending(bool *result)
-{
-    *result = mIsPending;
-    return NS_OK;
-=======
 nsJARChannel::IsPending(bool* result) {
   *result = mIsPending;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetStatus(nsresult *status) {
-  if (mPump && NS_SUCCEEDED(mStatus))
-    mPump->GetStatus(status);
-  else
-    *status = mStatus;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetStatus(nsresult *status)
-{
-    if (mPump && NS_SUCCEEDED(mStatus))
-        mPump->GetStatus(status);
-    else
-        *status = mStatus;
-    return NS_OK;
-=======
 nsJARChannel::GetStatus(nsresult* status) {
   if (mPump && NS_SUCCEEDED(mStatus))
     mPump->GetStatus(status);
   else
     *status = mStatus;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -906,20 +603,9 @@ nsJARChannel::Resume() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetLoadFlags(nsLoadFlags *aLoadFlags) {
-  *aLoadFlags = mLoadFlags;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetLoadFlags(nsLoadFlags *aLoadFlags)
-{
-    *aLoadFlags = mLoadFlags;
-    return NS_OK;
-=======
 nsJARChannel::GetLoadFlags(nsLoadFlags* aLoadFlags) {
   *aLoadFlags = mLoadFlags;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -929,51 +615,20 @@ nsJARChannel::SetLoadFlags(nsLoadFlags aLoadFlags) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetIsDocument(bool *aIsDocument) {
-  return NS_GetIsDocumentChannel(this, aIsDocument);
-||||||| merged common ancestors
-nsJARChannel::GetIsDocument(bool *aIsDocument)
-{
-    return NS_GetIsDocumentChannel(this, aIsDocument);
-=======
 nsJARChannel::GetIsDocument(bool* aIsDocument) {
   return NS_GetIsDocumentChannel(this, aIsDocument);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetLoadGroup(nsILoadGroup **aLoadGroup) {
-  NS_IF_ADDREF(*aLoadGroup = mLoadGroup);
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetLoadGroup(nsILoadGroup **aLoadGroup)
-{
-    NS_IF_ADDREF(*aLoadGroup = mLoadGroup);
-    return NS_OK;
-=======
 nsJARChannel::GetLoadGroup(nsILoadGroup** aLoadGroup) {
   NS_IF_ADDREF(*aLoadGroup = mLoadGroup);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetLoadGroup(nsILoadGroup *aLoadGroup) {
-  mLoadGroup = aLoadGroup;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::SetLoadGroup(nsILoadGroup *aLoadGroup)
-{
-    mLoadGroup = aLoadGroup;
-    return NS_OK;
-=======
 nsJARChannel::SetLoadGroup(nsILoadGroup* aLoadGroup) {
   mLoadGroup = aLoadGroup;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -981,205 +636,74 @@ nsJARChannel::SetLoadGroup(nsILoadGroup* aLoadGroup) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetOriginalURI(nsIURI **aURI) {
-  *aURI = mOriginalURI;
-  NS_ADDREF(*aURI);
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetOriginalURI(nsIURI **aURI)
-{
-    *aURI = mOriginalURI;
-    NS_ADDREF(*aURI);
-    return NS_OK;
-=======
 nsJARChannel::GetOriginalURI(nsIURI** aURI) {
   *aURI = mOriginalURI;
   NS_ADDREF(*aURI);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetOriginalURI(nsIURI *aURI) {
-  NS_ENSURE_ARG_POINTER(aURI);
-  mOriginalURI = aURI;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::SetOriginalURI(nsIURI *aURI)
-{
-    NS_ENSURE_ARG_POINTER(aURI);
-    mOriginalURI = aURI;
-    return NS_OK;
-=======
 nsJARChannel::SetOriginalURI(nsIURI* aURI) {
   NS_ENSURE_ARG_POINTER(aURI);
   mOriginalURI = aURI;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetURI(nsIURI **aURI) {
-  NS_IF_ADDREF(*aURI = mJarURI);
-||||||| merged common ancestors
-nsJARChannel::GetURI(nsIURI **aURI)
-{
-    NS_IF_ADDREF(*aURI = mJarURI);
-=======
 nsJARChannel::GetURI(nsIURI** aURI) {
   NS_IF_ADDREF(*aURI = mJarURI);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetOwner(nsISupports **aOwner) {
-  // JAR signatures are not processed to avoid main-thread network I/O (bug
-  // 726125)
-  *aOwner = mOwner;
-  NS_IF_ADDREF(*aOwner);
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetOwner(nsISupports **aOwner)
-{
-    // JAR signatures are not processed to avoid main-thread network I/O (bug 726125)
-    *aOwner = mOwner;
-    NS_IF_ADDREF(*aOwner);
-    return NS_OK;
-=======
 nsJARChannel::GetOwner(nsISupports** aOwner) {
   // JAR signatures are not processed to avoid main-thread network I/O (bug
   // 726125)
   *aOwner = mOwner;
   NS_IF_ADDREF(*aOwner);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetOwner(nsISupports *aOwner) {
-  mOwner = aOwner;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::SetOwner(nsISupports *aOwner)
-{
-    mOwner = aOwner;
-    return NS_OK;
-=======
 nsJARChannel::SetOwner(nsISupports* aOwner) {
   mOwner = aOwner;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetLoadInfo(nsILoadInfo **aLoadInfo) {
-||||||| merged common ancestors
-nsJARChannel::GetLoadInfo(nsILoadInfo **aLoadInfo)
-{
-=======
 nsJARChannel::GetLoadInfo(nsILoadInfo** aLoadInfo) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aLoadInfo = mLoadInfo);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetLoadInfo(nsILoadInfo *aLoadInfo) {
-||||||| merged common ancestors
-nsJARChannel::SetLoadInfo(nsILoadInfo* aLoadInfo)
-{
-=======
 nsJARChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
   MOZ_RELEASE_ASSERT(aLoadInfo, "loadinfo can't be null");
->>>>>>> upstream-releases
   mLoadInfo = aLoadInfo;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetNotificationCallbacks(nsIInterfaceRequestor **aCallbacks) {
-  NS_IF_ADDREF(*aCallbacks = mCallbacks);
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetNotificationCallbacks(nsIInterfaceRequestor **aCallbacks)
-{
-    NS_IF_ADDREF(*aCallbacks = mCallbacks);
-    return NS_OK;
-=======
 nsJARChannel::GetNotificationCallbacks(nsIInterfaceRequestor** aCallbacks) {
   NS_IF_ADDREF(*aCallbacks = mCallbacks);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks) {
-  mCallbacks = aCallbacks;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks)
-{
-    mCallbacks = aCallbacks;
-    return NS_OK;
-=======
 nsJARChannel::SetNotificationCallbacks(nsIInterfaceRequestor* aCallbacks) {
   mCallbacks = aCallbacks;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetSecurityInfo(nsISupports **aSecurityInfo) {
-  MOZ_ASSERT(aSecurityInfo, "Null out param");
-  NS_IF_ADDREF(*aSecurityInfo = mSecurityInfo);
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetSecurityInfo(nsISupports **aSecurityInfo)
-{
-    MOZ_ASSERT(aSecurityInfo, "Null out param");
-    NS_IF_ADDREF(*aSecurityInfo = mSecurityInfo);
-    return NS_OK;
-=======
 nsJARChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
   MOZ_ASSERT(aSecurityInfo, "Null out param");
   NS_IF_ADDREF(*aSecurityInfo = mSecurityInfo);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetContentType(nsACString &result) {
-  // If the Jar file has not been open yet,
-  // We return application/x-unknown-content-type
-  if (!mOpened) {
-    result.AssignLiteral(UNKNOWN_CONTENT_TYPE);
-    return NS_OK;
-  }
-||||||| merged common ancestors
-nsJARChannel::GetContentType(nsACString &result)
-{
-    // If the Jar file has not been open yet,
-    // We return application/x-unknown-content-type
-    if (!mOpened) {
-      result.AssignLiteral(UNKNOWN_CONTENT_TYPE);
-      return NS_OK;
-    }
-
-    if (mContentType.IsEmpty()) {
-=======
 nsJARChannel::GetContentType(nsACString& result) {
   // If the Jar file has not been open yet,
   // We return application/x-unknown-content-type
@@ -1187,7 +711,6 @@ nsJARChannel::GetContentType(nsACString& result) {
     result.AssignLiteral(UNKNOWN_CONTENT_TYPE);
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   if (mContentType.IsEmpty()) {
     //
@@ -1208,17 +731,6 @@ nsJARChannel::GetContentType(nsACString& result) {
           ext = &fileName[i + 1];
           break;
         }
-<<<<<<< HEAD
-      }
-      if (ext) {
-        nsIMIMEService *mimeServ = gJarHandler->MimeService();
-        if (mimeServ)
-          mimeServ->GetTypeFromExtension(nsDependentCString(ext), mContentType);
-      }
-      if (mContentType.IsEmpty())
-        mContentType.AssignLiteral(UNKNOWN_CONTENT_TYPE);
-||||||| merged common ancestors
-=======
       }
       if (ext) {
         nsIMIMEService* mimeServ = gJarHandler->MimeService();
@@ -1227,7 +739,6 @@ nsJARChannel::GetContentType(nsACString& result) {
       }
       if (mContentType.IsEmpty())
         mContentType.AssignLiteral(UNKNOWN_CONTENT_TYPE);
->>>>>>> upstream-releases
     }
   }
   result = mContentType;
@@ -1235,20 +746,9 @@ nsJARChannel::GetContentType(nsACString& result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetContentType(const nsACString &aContentType) {
-  // If someone gives us a type hint we should just use that type instead of
-  // doing our guessing.  So we don't care when this is being called.
-||||||| merged common ancestors
-nsJARChannel::SetContentType(const nsACString &aContentType)
-{
-    // If someone gives us a type hint we should just use that type instead of
-    // doing our guessing.  So we don't care when this is being called.
-=======
 nsJARChannel::SetContentType(const nsACString& aContentType) {
   // If someone gives us a type hint we should just use that type instead of
   // doing our guessing.  So we don't care when this is being called.
->>>>>>> upstream-releases
 
   // mContentCharset is unchanged if not parsed
   NS_ParseResponseContentType(aContentType, mContentType, mContentCharset);
@@ -1256,57 +756,22 @@ nsJARChannel::SetContentType(const nsACString& aContentType) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetContentCharset(nsACString &aContentCharset) {
-  // If someone gives us a charset hint we should just use that charset.
-  // So we don't care when this is being called.
-  aContentCharset = mContentCharset;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetContentCharset(nsACString &aContentCharset)
-{
-    // If someone gives us a charset hint we should just use that charset.
-    // So we don't care when this is being called.
-    aContentCharset = mContentCharset;
-    return NS_OK;
-=======
 nsJARChannel::GetContentCharset(nsACString& aContentCharset) {
   // If someone gives us a charset hint we should just use that charset.
   // So we don't care when this is being called.
   aContentCharset = mContentCharset;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetContentCharset(const nsACString &aContentCharset) {
-  mContentCharset = aContentCharset;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::SetContentCharset(const nsACString &aContentCharset)
-{
-    mContentCharset = aContentCharset;
-    return NS_OK;
-=======
 nsJARChannel::SetContentCharset(const nsACString& aContentCharset) {
   mContentCharset = aContentCharset;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetContentDisposition(uint32_t *aContentDisposition) {
-  return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsJARChannel::GetContentDisposition(uint32_t *aContentDisposition)
-{
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsJARChannel::GetContentDisposition(uint32_t* aContentDisposition) {
   return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1315,68 +780,27 @@ nsJARChannel::SetContentDisposition(uint32_t aContentDisposition) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetContentDispositionFilename(
-    nsAString &aContentDispositionFilename) {
-  return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsJARChannel::GetContentDispositionFilename(nsAString &aContentDispositionFilename)
-{
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsJARChannel::GetContentDispositionFilename(
     nsAString& aContentDispositionFilename) {
   return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetContentDispositionFilename(
-    const nsAString &aContentDispositionFilename) {
-  return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsJARChannel::SetContentDispositionFilename(const nsAString &aContentDispositionFilename)
-{
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsJARChannel::SetContentDispositionFilename(
     const nsAString& aContentDispositionFilename) {
   return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetContentDispositionHeader(
-    nsACString &aContentDispositionHeader) {
-  return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsJARChannel::GetContentDispositionHeader(nsACString &aContentDispositionHeader)
-{
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 nsJARChannel::GetContentDispositionHeader(
     nsACString& aContentDispositionHeader) {
   return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetContentLength(int64_t *result) {
-  *result = mContentLength;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetContentLength(int64_t *result)
-{
-    *result = mContentLength;
-    return NS_OK;
-=======
 nsJARChannel::GetContentLength(int64_t* result) {
   *result = mContentLength;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1387,197 +811,39 @@ nsJARChannel::SetContentLength(int64_t aContentLength) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::Open(nsIInputStream **stream) {
-  LOG(("nsJARChannel::Open [this=%p]\n", this));
-||||||| merged common ancestors
-nsJARChannel::Open(nsIInputStream **stream)
-{
-    LOG(("nsJARChannel::Open [this=%p]\n", this));
-=======
 nsJARChannel::Open(nsIInputStream** aStream) {
   LOG(("nsJARChannel::Open [this=%p]\n", this));
   nsCOMPtr<nsIStreamListener> listener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  NS_ENSURE_TRUE(!mOpened, NS_ERROR_IN_PROGRESS);
-  NS_ENSURE_TRUE(!mIsPending, NS_ERROR_IN_PROGRESS);
-||||||| merged common ancestors
-    NS_ENSURE_TRUE(!mOpened, NS_ERROR_IN_PROGRESS);
-    NS_ENSURE_TRUE(!mIsPending, NS_ERROR_IN_PROGRESS);
-=======
   LOG(("nsJARChannel::Open [this=%p]\n", this));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mJarFile = nullptr;
-||||||| merged common ancestors
-    mJarFile = nullptr;
-=======
   NS_ENSURE_TRUE(!mOpened, NS_ERROR_IN_PROGRESS);
   NS_ENSURE_TRUE(!mIsPending, NS_ERROR_IN_PROGRESS);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv = LookupFile();
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    nsresult rv = LookupFile();
-    if (NS_FAILED(rv))
-        return rv;
-=======
   mJarFile = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // If mJarFile was not set by LookupFile, we can't open a channel.
-  if (!mJarFile) {
-    MOZ_ASSERT_UNREACHABLE("only file-backed jars are supported");
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-||||||| merged common ancestors
-    // If mJarFile was not set by LookupFile, we can't open a channel.
-    if (!mJarFile) {
-        MOZ_ASSERT_UNREACHABLE("only file-backed jars are supported");
-        return NS_ERROR_NOT_IMPLEMENTED;
-    }
-=======
   rv = LookupFile();
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RefPtr<nsJARInputThunk> input;
-  rv = CreateJarInput(gJarHandler->JarCache(), getter_AddRefs(input));
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-    RefPtr<nsJARInputThunk> input;
-    rv = CreateJarInput(gJarHandler->JarCache(), getter_AddRefs(input));
-    if (NS_FAILED(rv))
-        return rv;
-=======
   // If mJarFile was not set by LookupFile, we can't open a channel.
   if (!mJarFile) {
     MOZ_ASSERT_UNREACHABLE("only file-backed jars are supported");
     return NS_ERROR_NOT_IMPLEMENTED;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  input.forget(stream);
-  mOpened = true;
-  return NS_OK;
-}
-||||||| merged common ancestors
-    input.forget(stream);
-    mOpened = true;
-    return NS_OK;
-}
-=======
   RefPtr<nsJARInputThunk> input;
   rv = CreateJarInput(gJarHandler->JarCache(), getter_AddRefs(input));
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJARChannel::Open2(nsIInputStream **aStream) {
-  LOG(("nsJARChannel::Open2 [this=%p]\n", this));
-  nsCOMPtr<nsIStreamListener> listener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return Open(aStream);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJARChannel::Open2(nsIInputStream** aStream)
-{
-    LOG(("nsJARChannel::Open2 [this=%p]\n", this));
-    nsCOMPtr<nsIStreamListener> listener;
-    nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-    NS_ENSURE_SUCCESS(rv, rv);
-    return Open(aStream);
-=======
   input.forget(aStream);
   mOpened = true;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctx) {
-  LOG(("nsJARChannel::AsyncOpen [this=%p]\n", this));
-  MOZ_ASSERT(
-      !mLoadInfo || mLoadInfo->GetSecurityMode() == 0 ||
-          mLoadInfo->GetInitialSecurityCheckDone() ||
-          (mLoadInfo->GetSecurityMode() ==
-               nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
-           nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
-      "security flags in loadInfo but asyncOpen2() not called");
-
-  NS_ENSURE_ARG_POINTER(listener);
-  NS_ENSURE_TRUE(!mOpened, NS_ERROR_IN_PROGRESS);
-  NS_ENSURE_TRUE(!mIsPending, NS_ERROR_IN_PROGRESS);
-
-  mJarFile = nullptr;
-
-  // Initialize mProgressSink
-  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup, mProgressSink);
-
-  mListener = listener;
-  mListenerContext = ctx;
-  mIsPending = true;
-
-  nsresult rv = LookupFile();
-  if (NS_FAILED(rv) || !mJarFile) {
-    // Not a local file...
-    mIsPending = false;
-    mListenerContext = nullptr;
-    mListener = nullptr;
-    mCallbacks = nullptr;
-    mProgressSink = nullptr;
-    return mJarFile ? rv : NS_ERROR_UNSAFE_CONTENT_TYPE;
-  }
-||||||| merged common ancestors
-nsJARChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctx)
-{
-    LOG(("nsJARChannel::AsyncOpen [this=%p]\n", this));
-    MOZ_ASSERT(!mLoadInfo ||
-               mLoadInfo->GetSecurityMode() == 0 ||
-               mLoadInfo->GetInitialSecurityCheckDone() ||
-               (mLoadInfo->GetSecurityMode() == nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
-                nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
-               "security flags in loadInfo but asyncOpen2() not called");
-
-    NS_ENSURE_ARG_POINTER(listener);
-    NS_ENSURE_TRUE(!mOpened, NS_ERROR_IN_PROGRESS);
-    NS_ENSURE_TRUE(!mIsPending, NS_ERROR_IN_PROGRESS);
-
-    mJarFile = nullptr;
-
-    // Initialize mProgressSink
-    NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup, mProgressSink);
-
-    mListener = listener;
-    mListenerContext = ctx;
-    mIsPending = true;
-
-    nsresult rv = LookupFile();
-    if (NS_FAILED(rv) || !mJarFile) {
-        // Not a local file...
-        mIsPending = false;
-        mListenerContext = nullptr;
-        mListener = nullptr;
-        mCallbacks = nullptr;
-        mProgressSink = nullptr;
-        return mJarFile ? rv : NS_ERROR_UNSAFE_CONTENT_TYPE;
-    }
-=======
 nsJARChannel::AsyncOpen(nsIStreamListener* aListener) {
   LOG(("nsJARChannel::AsyncOpen [this=%p]\n", this));
   nsCOMPtr<nsIStreamListener> listener = aListener;
@@ -1590,29 +856,7 @@ nsJARChannel::AsyncOpen(nsIStreamListener* aListener) {
     mProgressSink = nullptr;
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  rv = OpenLocalFile();
-  if (NS_FAILED(rv)) {
-    mIsPending = false;
-    mListenerContext = nullptr;
-    mListener = nullptr;
-    mCallbacks = nullptr;
-    mProgressSink = nullptr;
-    return rv;
-  }
-||||||| merged common ancestors
-    rv = OpenLocalFile();
-    if (NS_FAILED(rv)) {
-        mIsPending = false;
-        mListenerContext = nullptr;
-        mListener = nullptr;
-        mCallbacks = nullptr;
-        mProgressSink = nullptr;
-        return rv;
-    }
-=======
   LOG(("nsJARChannel::AsyncOpen [this=%p]\n", this));
   MOZ_ASSERT(
       !mLoadInfo || mLoadInfo->GetSecurityMode() == 0 ||
@@ -1621,51 +865,11 @@ nsJARChannel::AsyncOpen(nsIStreamListener* aListener) {
                nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
            nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
       "security flags in loadInfo but doContentSecurityCheck() not called");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-}
-||||||| merged common ancestors
-    return NS_OK;
-}
-=======
   NS_ENSURE_ARG_POINTER(listener);
   NS_ENSURE_TRUE(!mOpened, NS_ERROR_IN_PROGRESS);
   NS_ENSURE_TRUE(!mIsPending, NS_ERROR_IN_PROGRESS);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsJARChannel::AsyncOpen2(nsIStreamListener *aListener) {
-  LOG(("nsJARChannel::AsyncOpen2 [this=%p]\n", this));
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-  if (NS_FAILED(rv)) {
-    mIsPending = false;
-    mListenerContext = nullptr;
-    mListener = nullptr;
-    mCallbacks = nullptr;
-    mProgressSink = nullptr;
-    return rv;
-  }
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsJARChannel::AsyncOpen2(nsIStreamListener *aListener)
-{
-    LOG(("nsJARChannel::AsyncOpen2 [this=%p]\n", this));
-    nsCOMPtr<nsIStreamListener> listener = aListener;
-    nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-    if (NS_FAILED(rv)) {
-        mIsPending = false;
-        mListenerContext = nullptr;
-        mListener = nullptr;
-        mCallbacks = nullptr;
-        mProgressSink = nullptr;
-        return rv;
-    }
-=======
   mJarFile = nullptr;
 
   // Initialize mProgressSink
@@ -1692,88 +896,29 @@ nsJARChannel::AsyncOpen2(nsIStreamListener *aListener)
     mProgressSink = nullptr;
     return rv;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return AsyncOpen(listener, nullptr);
-||||||| merged common ancestors
-    return AsyncOpen(listener, nullptr);
-=======
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
 // nsIJARChannel
 //-----------------------------------------------------------------------------
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetJarFile(nsIFile **aFile) {
-  NS_IF_ADDREF(*aFile = mJarFile);
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::GetJarFile(nsIFile **aFile)
-{
-    NS_IF_ADDREF(*aFile = mJarFile);
-    return NS_OK;
-=======
 nsJARChannel::GetJarFile(nsIFile** aFile) {
   NS_IF_ADDREF(*aFile = mJarFile);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::SetJarFile(nsIFile *aFile) {
-  if (mOpened) {
-    return NS_ERROR_IN_PROGRESS;
-  }
-  mJarFileOverride = aFile;
-  return NS_OK;
-||||||| merged common ancestors
-nsJARChannel::SetJarFile(nsIFile *aFile)
-{
-    if (mOpened) {
-        return NS_ERROR_IN_PROGRESS;
-    }
-    mJarFileOverride = aFile;
-    return NS_OK;
-=======
 nsJARChannel::SetJarFile(nsIFile* aFile) {
   if (mOpened) {
     return NS_ERROR_IN_PROGRESS;
   }
   mJarFileOverride = aFile;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::EnsureCached(bool *aIsCached) {
-  nsresult rv;
-  *aIsCached = false;
-
-  if (mOpened) {
-    return NS_ERROR_ALREADY_OPENED;
-  }
-||||||| merged common ancestors
-nsJARChannel::EnsureCached(bool *aIsCached)
-{
-    nsresult rv;
-    *aIsCached = false;
-
-    if (mOpened) {
-        return NS_ERROR_ALREADY_OPENED;
-    }
-
-    if (mPreCachedJarReader) {
-        // We've already been called and found the JAR is cached
-        *aIsCached = true;
-        return NS_OK;
-    }
-=======
 nsJARChannel::EnsureCached(bool* aIsCached) {
   nsresult rv;
   *aIsCached = false;
@@ -1781,7 +926,6 @@ nsJARChannel::EnsureCached(bool* aIsCached) {
   if (mOpened) {
     return NS_ERROR_ALREADY_OPENED;
   }
->>>>>>> upstream-releases
 
   if (mPreCachedJarReader) {
     // We've already been called and found the JAR is cached
@@ -1807,31 +951,10 @@ nsJARChannel::EnsureCached(bool* aIsCached) {
   rv = ioService->GetProtocolHandler("jar", getter_AddRefs(handler));
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIJARProtocolHandler> jarHandler = do_QueryInterface(handler);
-  MOZ_ASSERT(jarHandler);
-||||||| merged common ancestors
-    nsCOMPtr<nsIZipReaderCache> jarCache;
-    rv = jarHandler->GetJARCache(getter_AddRefs(jarCache));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   auto jarHandler = static_cast<nsJARProtocolHandler*>(handler.get());
   MOZ_ASSERT(jarHandler);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIZipReaderCache> jarCache;
-  rv = jarHandler->GetJARCache(getter_AddRefs(jarCache));
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    rv = jarCache->GetZipIfCached(jarFile, getter_AddRefs(mPreCachedJarReader));
-    if (rv == NS_ERROR_CACHE_KEY_NOT_FOUND) {
-        return NS_OK;
-    }
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
   nsIZipReaderCache* jarCache = jarHandler->JarCache();
->>>>>>> upstream-releases
 
   rv = jarCache->GetZipIfCached(jarFile, getter_AddRefs(mPreCachedJarReader));
   if (rv == NS_ERROR_CACHE_KEY_NOT_FOUND) {
@@ -1844,21 +967,9 @@ nsJARChannel::EnsureCached(bool* aIsCached) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetZipEntry(nsIZipEntry **aZipEntry) {
-  nsresult rv = LookupFile();
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-nsJARChannel::GetZipEntry(nsIZipEntry **aZipEntry)
-{
-    nsresult rv = LookupFile();
-    if (NS_FAILED(rv))
-        return rv;
-=======
 nsJARChannel::GetZipEntry(nsIZipEntry** aZipEntry) {
   nsresult rv = LookupFile();
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   if (!mJarFile) return NS_ERROR_NOT_AVAILABLE;
 
@@ -1874,61 +985,6 @@ nsJARChannel::GetZipEntry(nsIZipEntry** aZipEntry) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::OnStartRequest(nsIRequest *req, nsISupports *ctx) {
-  LOG(("nsJARChannel::OnStartRequest [this=%p %s]\n", this, mSpec.get()));
-
-  mRequest = req;
-  nsresult rv = mListener->OnStartRequest(this, mListenerContext);
-  mRequest = nullptr;
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // Restrict loadable content types.
-  nsAutoCString contentType;
-  GetContentType(contentType);
-  auto contentPolicyType = mLoadInfo->GetExternalContentPolicyType();
-  if (contentType.Equals(APPLICATION_HTTP_INDEX_FORMAT) &&
-      contentPolicyType != nsIContentPolicy::TYPE_DOCUMENT &&
-      contentPolicyType != nsIContentPolicy::TYPE_FETCH) {
-    return NS_ERROR_CORRUPTED_CONTENT;
-  }
-  if (contentPolicyType == nsIContentPolicy::TYPE_STYLESHEET &&
-      !contentType.EqualsLiteral(TEXT_CSS)) {
-    return NS_ERROR_CORRUPTED_CONTENT;
-  }
-  if (contentPolicyType == nsIContentPolicy::TYPE_SCRIPT &&
-      !nsContentUtils::IsJavascriptMIMEType(
-          NS_ConvertUTF8toUTF16(contentType))) {
-    return NS_ERROR_CORRUPTED_CONTENT;
-  }
-||||||| merged common ancestors
-nsJARChannel::OnStartRequest(nsIRequest *req, nsISupports *ctx)
-{
-    LOG(("nsJARChannel::OnStartRequest [this=%p %s]\n", this, mSpec.get()));
-
-    mRequest = req;
-    nsresult rv = mListener->OnStartRequest(this, mListenerContext);
-    mRequest = nullptr;
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    // Restrict loadable content types.
-    nsAutoCString contentType;
-    GetContentType(contentType);
-    auto contentPolicyType = mLoadInfo->GetExternalContentPolicyType();
-    if (contentType.Equals(APPLICATION_HTTP_INDEX_FORMAT) &&
-        contentPolicyType != nsIContentPolicy::TYPE_DOCUMENT &&
-        contentPolicyType != nsIContentPolicy::TYPE_FETCH) {
-      return NS_ERROR_CORRUPTED_CONTENT;
-    }
-    if (contentPolicyType == nsIContentPolicy::TYPE_STYLESHEET &&
-        !contentType.EqualsLiteral(TEXT_CSS)) {
-      return NS_ERROR_CORRUPTED_CONTENT;
-    }
-    if (contentPolicyType == nsIContentPolicy::TYPE_SCRIPT &&
-        !nsContentUtils::IsJavascriptMIMEType(NS_ConvertUTF8toUTF16(contentType))) {
-      return NS_ERROR_CORRUPTED_CONTENT;
-    }
-=======
 nsJARChannel::OnStartRequest(nsIRequest* req) {
   LOG(("nsJARChannel::OnStartRequest [this=%p %s]\n", this, mSpec.get()));
 
@@ -1955,54 +1011,21 @@ nsJARChannel::OnStartRequest(nsIRequest* req) {
           NS_ConvertUTF8toUTF16(contentType))) {
     return NS_ERROR_CORRUPTED_CONTENT;
   }
->>>>>>> upstream-releases
 
   return rv;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::OnStopRequest(nsIRequest *req, nsISupports *ctx,
-                            nsresult status) {
-  LOG(("nsJARChannel::OnStopRequest [this=%p %s status=%" PRIx32 "]\n", this,
-       mSpec.get(), static_cast<uint32_t>(status)));
-||||||| merged common ancestors
-nsJARChannel::OnStopRequest(nsIRequest *req, nsISupports *ctx, nsresult status)
-{
-    LOG(("nsJARChannel::OnStopRequest [this=%p %s status=%" PRIx32 "]\n",
-         this, mSpec.get(), static_cast<uint32_t>(status)));
-
-    if (NS_SUCCEEDED(mStatus))
-        mStatus = status;
-
-    if (mListener) {
-        mListener->OnStopRequest(this, mListenerContext, status);
-        mListener = nullptr;
-        mListenerContext = nullptr;
-    }
-=======
 nsJARChannel::OnStopRequest(nsIRequest* req, nsresult status) {
   LOG(("nsJARChannel::OnStopRequest [this=%p %s status=%" PRIx32 "]\n", this,
        mSpec.get(), static_cast<uint32_t>(status)));
->>>>>>> upstream-releases
 
   if (NS_SUCCEEDED(mStatus)) mStatus = status;
 
-<<<<<<< HEAD
-  if (mListener) {
-    mListener->OnStopRequest(this, mListenerContext, status);
-    mListener = nullptr;
-    mListenerContext = nullptr;
-  }
-||||||| merged common ancestors
-    mPump = nullptr;
-    mIsPending = false;
-=======
   if (mListener) {
     mListener->OnStopRequest(this, status);
     mListener = nullptr;
   }
->>>>>>> upstream-releases
 
   if (mLoadGroup) mLoadGroup->RemoveRequest(this, nullptr, status);
 
@@ -2023,52 +1046,6 @@ nsJARChannel::OnStopRequest(nsIRequest* req, nsresult status) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::OnDataAvailable(nsIRequest *req, nsISupports *ctx,
-                              nsIInputStream *stream, uint64_t offset,
-                              uint32_t count) {
-  LOG(("nsJARChannel::OnDataAvailable [this=%p %s]\n", this, mSpec.get()));
-
-  nsresult rv;
-
-  rv =
-      mListener->OnDataAvailable(this, mListenerContext, stream, offset, count);
-
-  // simply report progress here instead of hooking ourselves up as a
-  // nsITransportEventSink implementation.
-  // XXX do the 64-bit stuff for real
-  if (mProgressSink && NS_SUCCEEDED(rv)) {
-    if (NS_IsMainThread()) {
-      FireOnProgress(offset + count);
-    } else {
-      NS_DispatchToMainThread(NewRunnableMethod<uint64_t>(
-          "nsJARChannel::FireOnProgress", this, &nsJARChannel::FireOnProgress,
-          offset + count));
-||||||| merged common ancestors
-nsJARChannel::OnDataAvailable(nsIRequest *req, nsISupports *ctx,
-                               nsIInputStream *stream,
-                               uint64_t offset, uint32_t count)
-{
-    LOG(("nsJARChannel::OnDataAvailable [this=%p %s]\n", this, mSpec.get()));
-
-    nsresult rv;
-
-    rv = mListener->OnDataAvailable(this, mListenerContext, stream, offset, count);
-
-    // simply report progress here instead of hooking ourselves up as a
-    // nsITransportEventSink implementation.
-    // XXX do the 64-bit stuff for real
-    if (mProgressSink && NS_SUCCEEDED(rv)) {
-        if (NS_IsMainThread()) {
-            FireOnProgress(offset + count);
-        } else {
-            NS_DispatchToMainThread(NewRunnableMethod
-                                    <uint64_t>("nsJARChannel::FireOnProgress",
-                                               this,
-                                               &nsJARChannel::FireOnProgress,
-                                               offset + count));
-        }
-=======
 nsJARChannel::OnDataAvailable(nsIRequest* req, nsIInputStream* stream,
                               uint64_t offset, uint32_t count) {
   LOG(("nsJARChannel::OnDataAvailable [this=%p %s]\n", this, mSpec.get()));
@@ -2087,7 +1064,6 @@ nsJARChannel::OnDataAvailable(nsIRequest* req, nsIInputStream* stream,
       NS_DispatchToMainThread(NewRunnableMethod<uint64_t>(
           "nsJARChannel::FireOnProgress", this, &nsJARChannel::FireOnProgress,
           offset + count));
->>>>>>> upstream-releases
     }
   }
 
@@ -2095,14 +1071,7 @@ nsJARChannel::OnDataAvailable(nsIRequest* req, nsIInputStream* stream,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::RetargetDeliveryTo(nsIEventTarget *aEventTarget) {
-||||||| merged common ancestors
-nsJARChannel::RetargetDeliveryTo(nsIEventTarget* aEventTarget)
-{
-=======
 nsJARChannel::RetargetDeliveryTo(nsIEventTarget* aEventTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIThreadRetargetableRequest> request = do_QueryInterface(mRequest);
@@ -2114,14 +1083,7 @@ nsJARChannel::RetargetDeliveryTo(nsIEventTarget* aEventTarget) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsJARChannel::GetDeliveryTarget(nsIEventTarget **aEventTarget) {
-||||||| merged common ancestors
-nsJARChannel::GetDeliveryTarget(nsIEventTarget** aEventTarget)
-{
-=======
 nsJARChannel::GetDeliveryTarget(nsIEventTarget** aEventTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIThreadRetargetableRequest> request = do_QueryInterface(mRequest);

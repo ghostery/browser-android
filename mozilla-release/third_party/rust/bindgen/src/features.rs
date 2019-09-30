@@ -96,11 +96,6 @@ macro_rules! rust_target_base {
             => Stable_1_21 => 1.21;
             /// Rust stable 1.25
             => Stable_1_25 => 1.25;
-<<<<<<< HEAD
-            /// Rust stable 1.26
-            => Stable_1_26 => 1.26;
-||||||| merged common ancestors
-=======
             /// Rust stable 1.26
             => Stable_1_26 => 1.26;
             /// Rust stable 1.27
@@ -111,7 +106,6 @@ macro_rules! rust_target_base {
             => Stable_1_30 => 1.30;
             /// Rust stable 1.33
             => Stable_1_33 => 1.33;
->>>>>>> upstream-releases
             /// Nightly rust
             => Nightly => nightly;
         );
@@ -188,13 +182,6 @@ rust_feature_def!(
         /// repr(align) ([PR](https://github.com/rust-lang/rust/pull/47006))
         => repr_align;
     }
-<<<<<<< HEAD
-    Stable_1_26 {
-        /// [i128 / u128 support](https://doc.rust-lang.org/std/primitive.i128.html)
-        => i128_and_u128;
-    }
-||||||| merged common ancestors
-=======
     Stable_1_26 {
         /// [i128 / u128 support](https://doc.rust-lang.org/std/primitive.i128.html)
         => i128_and_u128;
@@ -216,7 +203,6 @@ rust_feature_def!(
         /// repr(packed(N)) ([PR](https://github.com/rust-lang/rust/pull/57049))
         => repr_packed_n;
     }
->>>>>>> upstream-releases
     Nightly {
         /// `thiscall` calling convention ([Tracking issue](https://github.com/rust-lang/rust/issues/42202))
         => thiscall_abi;

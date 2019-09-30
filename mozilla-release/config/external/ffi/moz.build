@@ -77,11 +77,6 @@ else:
             ASFLAGS += ['-no-integrated-as']
     elif CONFIG['FFI_TARGET'] == 'AARCH64':
         ffi_srcs = ('sysv.S', 'ffi.c')
-<<<<<<< HEAD
-    elif CONFIG['FFI_TARGET'] == 'ARM64_WIN64':
-        ffi_srcs = ('win64.asm', 'ffi.c')
-||||||| merged common ancestors
-=======
     elif CONFIG['FFI_TARGET'] == 'ARM64_WIN64':
         ffi_srcs = ['ffi.c']
 
@@ -95,7 +90,6 @@ else:
         asm.script = 'preprocess_libffi_asm.py'
         asm.flags = ['$(DEFINES)', '$(LOCAL_INCLUDES)']
         SOURCES += ['!win64_aarch.asm']
->>>>>>> upstream-releases
     elif CONFIG['FFI_TARGET'] == 'X86':
         ffi_srcs = ('ffi.c', 'sysv.S', 'win32.S')
     elif CONFIG['FFI_TARGET'] == 'X86_64':

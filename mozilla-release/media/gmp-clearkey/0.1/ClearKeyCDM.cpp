@@ -4,37 +4,17 @@
 
 using namespace cdm;
 
-<<<<<<< HEAD
-ClearKeyCDM::ClearKeyCDM(Host_9* aHost) {
-||||||| merged common ancestors
-ClearKeyCDM::ClearKeyCDM(Host_9* aHost)
-{
-=======
 ClearKeyCDM::ClearKeyCDM(Host_10* aHost) {
->>>>>>> upstream-releases
   mHost = aHost;
   mSessionManager = new ClearKeySessionManager(mHost);
 }
 
-<<<<<<< HEAD
-void ClearKeyCDM::Initialize(bool aAllowDistinctiveIdentifier,
-                             bool aAllowPersistentState) {
-  mSessionManager->Init(aAllowDistinctiveIdentifier, aAllowPersistentState);
-||||||| merged common ancestors
-void
-ClearKeyCDM::Initialize(bool aAllowDistinctiveIdentifier,
-                        bool aAllowPersistentState)
-{
-  mSessionManager->Init(aAllowDistinctiveIdentifier,
-                        aAllowPersistentState);
-=======
 void ClearKeyCDM::Initialize(bool aAllowDistinctiveIdentifier,
                              bool aAllowPersistentState,
                              bool aUseHardwareSecureCodecs) {
   mSessionManager->Init(aAllowDistinctiveIdentifier, aAllowPersistentState);
   // We call mHost->OnInitialized() in the session manager once it has
   // initialized.
->>>>>>> upstream-releases
 }
 
 void ClearKeyCDM::GetStatusForPolicy(uint32_t aPromiseId,
@@ -89,51 +69,21 @@ void ClearKeyCDM::TimerExpired(void* aContext) {
   assert(false);
 }
 
-<<<<<<< HEAD
-Status ClearKeyCDM::Decrypt(const InputBuffer_1& aEncryptedBuffer,
-                            DecryptedBlock* aDecryptedBuffer) {
-||||||| merged common ancestors
-Status
-ClearKeyCDM::Decrypt(const InputBuffer_1& aEncryptedBuffer,
-                     DecryptedBlock* aDecryptedBuffer)
-{
-=======
 Status ClearKeyCDM::Decrypt(const InputBuffer_2& aEncryptedBuffer,
                             DecryptedBlock* aDecryptedBuffer) {
->>>>>>> upstream-releases
   return mSessionManager->Decrypt(aEncryptedBuffer, aDecryptedBuffer);
 }
 
-<<<<<<< HEAD
-Status ClearKeyCDM::InitializeAudioDecoder(
-    const AudioDecoderConfig_1& aAudioDecoderConfig) {
-||||||| merged common ancestors
-Status
-ClearKeyCDM::InitializeAudioDecoder(
-  const AudioDecoderConfig_1& aAudioDecoderConfig)
-{
-=======
 Status ClearKeyCDM::InitializeAudioDecoder(
     const AudioDecoderConfig_2& aAudioDecoderConfig) {
->>>>>>> upstream-releases
   // Audio decoding is not supported by Clearkey because Widevine doesn't
   // support it and Clearkey's raison d'etre is to provide test coverage
   // for paths that Widevine will exercise in the wild.
   return Status::kDecodeError;
 }
 
-<<<<<<< HEAD
-Status ClearKeyCDM::InitializeVideoDecoder(
-    const VideoDecoderConfig_1& aVideoDecoderConfig) {
-||||||| merged common ancestors
-Status
-ClearKeyCDM::InitializeVideoDecoder(
-  const VideoDecoderConfig_1& aVideoDecoderConfig)
-{
-=======
 Status ClearKeyCDM::InitializeVideoDecoder(
     const VideoDecoderConfig_2& aVideoDecoderConfig) {
->>>>>>> upstream-releases
 #ifdef ENABLE_WMF
   mVideoDecoder = new VideoDecoder(mHost);
   return mVideoDecoder->InitDecode(aVideoDecoderConfig);
@@ -159,18 +109,8 @@ void ClearKeyCDM::ResetDecoder(StreamType aDecoderType) {
 #endif
 }
 
-<<<<<<< HEAD
-Status ClearKeyCDM::DecryptAndDecodeFrame(const InputBuffer_1& aEncryptedBuffer,
-                                          VideoFrame* aVideoFrame) {
-||||||| merged common ancestors
-Status
-ClearKeyCDM::DecryptAndDecodeFrame(const InputBuffer_1& aEncryptedBuffer,
-                                   VideoFrame* aVideoFrame)
-{
-=======
 Status ClearKeyCDM::DecryptAndDecodeFrame(const InputBuffer_2& aEncryptedBuffer,
                                           VideoFrame* aVideoFrame) {
->>>>>>> upstream-releases
 #ifdef ENABLE_WMF
   return mVideoDecoder->Decode(aEncryptedBuffer, aVideoFrame);
 #else
@@ -178,18 +118,8 @@ Status ClearKeyCDM::DecryptAndDecodeFrame(const InputBuffer_2& aEncryptedBuffer,
 #endif
 }
 
-<<<<<<< HEAD
-Status ClearKeyCDM::DecryptAndDecodeSamples(
-    const InputBuffer_1& aEncryptedBuffer, AudioFrames* aAudioFrame) {
-||||||| merged common ancestors
-Status
-ClearKeyCDM::DecryptAndDecodeSamples(const InputBuffer_1& aEncryptedBuffer,
-                                     AudioFrames* aAudioFrame)
-{
-=======
 Status ClearKeyCDM::DecryptAndDecodeSamples(
     const InputBuffer_2& aEncryptedBuffer, AudioFrames* aAudioFrame) {
->>>>>>> upstream-releases
   // Audio decoding is not supported by Clearkey because Widevine doesn't
   // support it and Clearkey's raison d'etre is to provide test coverage
   // for paths that Widevine will exercise in the wild.

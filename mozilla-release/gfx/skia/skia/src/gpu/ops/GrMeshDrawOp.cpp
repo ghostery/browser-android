@@ -14,30 +14,6 @@ GrMeshDrawOp::GrMeshDrawOp(uint32_t classID) : INHERITED(classID) {}
 
 void GrMeshDrawOp::onPrepare(GrOpFlushState* state) { this->onPrepareDraws(state); }
 
-<<<<<<< HEAD
-void GrMeshDrawOp::onExecute(GrOpFlushState* state) {
-    state->executeDrawsAndUploadsForMeshDrawOp(this->uniqueID(), this->bounds());
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-GrMeshDrawOp::PatternHelper::PatternHelper(Target* target, GrPrimitiveType primitiveType,
-                                           size_t vertexStride, const GrBuffer* indexBuffer,
-                                           int verticesPerRepetition, int indicesPerRepetition,
-                                           int repeatCount) {
-    this->init(target, primitiveType, vertexStride, indexBuffer, verticesPerRepetition,
-               indicesPerRepetition, repeatCount);
-}
-
-void GrMeshDrawOp::PatternHelper::init(Target* target, GrPrimitiveType primitiveType,
-                                       size_t vertexStride, const GrBuffer* indexBuffer,
-                                       int verticesPerRepetition, int indicesPerRepetition,
-                                       int repeatCount) {
-||||||| merged common ancestors
-void* GrMeshDrawOp::PatternHelper::init(Target* target, size_t vertexStride,
-                                        const GrBuffer* indexBuffer, int verticesPerRepetition,
-                                        int indicesPerRepetition, int repeatCount) {
-=======
 //////////////////////////////////////////////////////////////////////////////
 
 GrMeshDrawOp::PatternHelper::PatternHelper(Target* target, GrPrimitiveType primitiveType,
@@ -52,7 +28,6 @@ void GrMeshDrawOp::PatternHelper::init(Target* target, GrPrimitiveType primitive
                                        size_t vertexStride, sk_sp<const GrBuffer> indexBuffer,
                                        int verticesPerRepetition, int indicesPerRepetition,
                                        int repeatCount) {
->>>>>>> upstream-releases
     SkASSERT(target);
     if (!indexBuffer) {
         return;
@@ -68,18 +43,6 @@ void GrMeshDrawOp::PatternHelper::init(Target* target, GrPrimitiveType primitive
     SkASSERT(vertexBuffer);
     size_t ibSize = indexBuffer->size();
     int maxRepetitions = static_cast<int>(ibSize / (sizeof(uint16_t) * indicesPerRepetition));
-<<<<<<< HEAD
-    fMesh = target->allocMesh(primitiveType);
-    fMesh->setIndexedPatterned(indexBuffer, indicesPerRepetition, verticesPerRepetition,
-                               repeatCount, maxRepetitions);
-    fMesh->setVertexData(vertexBuffer, firstVertex);
-||||||| merged common ancestors
-
-    fMesh.setIndexedPatterned(indexBuffer, indicesPerRepetition, verticesPerRepetition,
-                              repeatCount, maxRepetitions);
-    fMesh.setVertexData(vertexBuffer, firstVertex);
-    return vertices;
-=======
     fMesh = target->allocMesh(primitiveType);
     fMesh->setIndexedPatterned(std::move(indexBuffer), indicesPerRepetition, verticesPerRepetition,
                                repeatCount, maxRepetitions);
@@ -89,105 +52,26 @@ void GrMeshDrawOp::PatternHelper::init(Target* target, GrPrimitiveType primitive
 void GrMeshDrawOp::PatternHelper::recordDraw(
         Target* target, sk_sp<const GrGeometryProcessor> gp) const {
     target->recordDraw(std::move(gp), fMesh);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void GrMeshDrawOp::PatternHelper::recordDraw(
-        Target* target, sk_sp<const GrGeometryProcessor> gp, const GrPipeline* pipeline,
-        const GrPipeline::FixedDynamicState* fixedDynamicState) const {
-    target->draw(std::move(gp), pipeline, fixedDynamicState, fMesh);
-||||||| merged common ancestors
-void GrMeshDrawOp::PatternHelper::recordDraw(Target* target, const GrGeometryProcessor* gp,
-                                             const GrPipeline* pipeline) {
-    target->draw(gp, pipeline, fMesh);
-=======
 void GrMeshDrawOp::PatternHelper::recordDraw(
         Target* target, sk_sp<const GrGeometryProcessor> gp,
         const GrPipeline::FixedDynamicState* fixedDynamicState) const {
     target->recordDraw(std::move(gp), fMesh, 1, fixedDynamicState, nullptr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-//////////////////////////////////////////////////////////////////////////////
-
-GrMeshDrawOp::QuadHelper::QuadHelper(Target* target, size_t vertexStride, int quadsToDraw) {
-    sk_sp<const GrBuffer> quadIndexBuffer = target->resourceProvider()->refQuadIndexBuffer();
-||||||| merged common ancestors
-void* GrMeshDrawOp::QuadHelper::init(Target* target, size_t vertexStride, int quadsToDraw) {
-    sk_sp<const GrBuffer> quadIndexBuffer = target->resourceProvider()->refQuadIndexBuffer();
-=======
 //////////////////////////////////////////////////////////////////////////////
 
 GrMeshDrawOp::QuadHelper::QuadHelper(Target* target, size_t vertexStride, int quadsToDraw) {
     sk_sp<const GrGpuBuffer> quadIndexBuffer = target->resourceProvider()->refQuadIndexBuffer();
->>>>>>> upstream-releases
     if (!quadIndexBuffer) {
         SkDebugf("Could not get quad index buffer.");
         return;
     }
-<<<<<<< HEAD
-    this->init(target, GrPrimitiveType::kTriangles, vertexStride, quadIndexBuffer.get(),
-               kVerticesPerQuad, kIndicesPerQuad, quadsToDraw);
-||||||| merged common ancestors
-    return this->INHERITED::init(target, vertexStride, quadIndexBuffer.get(), kVerticesPerQuad,
-                                 kIndicesPerQuad, quadsToDraw);
-=======
     this->init(target, GrPrimitiveType::kTriangles, vertexStride, std::move(quadIndexBuffer),
                kVerticesPerQuad, kIndicesPerQuad, quadsToDraw);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-//////////////////////////////////////////////////////////////////////////////
-
-GrPipeline::FixedDynamicState* GrMeshDrawOp::Target::allocFixedDynamicState(
-        const SkIRect& rect, int numPrimitiveProcessorTextures) {
-    auto result = this->pipelineArena()->make<GrPipeline::FixedDynamicState>(rect);
-    if (numPrimitiveProcessorTextures) {
-        result->fPrimitiveProcessorTextures =
-                this->allocPrimitiveProcessorTextureArray(numPrimitiveProcessorTextures);
-    }
-    return result;
-}
-
-GrPipeline::DynamicStateArrays* GrMeshDrawOp::Target::allocDynamicStateArrays(
-        int numMeshes, int numPrimitiveProcessorTextures, bool allocScissors) {
-    auto result = this->pipelineArena()->make<GrPipeline::DynamicStateArrays>();
-    if (allocScissors) {
-        result->fScissorRects = this->pipelineArena()->makeArray<SkIRect>(numMeshes);
-    }
-    if (numPrimitiveProcessorTextures) {
-        result->fPrimitiveProcessorTextures = this->allocPrimitiveProcessorTextureArray(
-                numPrimitiveProcessorTextures * numMeshes);
-    }
-    return result;
-}
-
-GrMeshDrawOp::Target::PipelineAndFixedDynamicState GrMeshDrawOp::Target::makePipeline(
-        uint32_t pipelineFlags, GrProcessorSet&& processorSet, GrAppliedClip&& clip,
-        int numPrimProcTextures) {
-    GrPipeline::InitArgs pipelineArgs;
-    pipelineArgs.fFlags = pipelineFlags;
-    pipelineArgs.fProxy = this->proxy();
-    pipelineArgs.fDstProxy = this->dstProxy();
-    pipelineArgs.fCaps = &this->caps();
-    pipelineArgs.fResourceProvider = this->resourceProvider();
-    GrPipeline::FixedDynamicState* fixedDynamicState = nullptr;
-    if (clip.scissorState().enabled() || numPrimProcTextures) {
-        fixedDynamicState = this->allocFixedDynamicState(clip.scissorState().rect());
-        if (numPrimProcTextures) {
-            fixedDynamicState->fPrimitiveProcessorTextures =
-                    this->allocPrimitiveProcessorTextureArray(numPrimProcTextures);
-        }
-    }
-    return {this->allocPipeline(pipelineArgs, std::move(processorSet), std::move(clip)),
-            fixedDynamicState};
-||||||| merged common ancestors
-void GrMeshDrawOp::onExecute(GrOpFlushState* state) {
-    state->executeDrawsAndUploadsForMeshDrawOp(this->uniqueID(), this->bounds());
-=======
 //////////////////////////////////////////////////////////////////////////////
 
 GrPipeline::DynamicStateArrays* GrMeshDrawOp::Target::allocDynamicStateArrays(
@@ -218,5 +102,4 @@ GrPipeline::FixedDynamicState* GrMeshDrawOp::Target::makeFixedDynamicState(
         return fixedDynamicState;
     }
     return nullptr;
->>>>>>> upstream-releases
 }

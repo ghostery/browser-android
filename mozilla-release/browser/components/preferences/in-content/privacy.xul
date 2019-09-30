@@ -22,18 +22,9 @@
     <hbox align="start">
       <image id="trackingProtectionShield"/>
       <vbox flex="1">
-<<<<<<< HEAD
-        <description class="description-with-side-element">
-          <html:span id="contentBlockingDescription" class="tail-with-learn-more" data-l10n-id="content-blocking-description"></html:span>
-          <label id="contentBlockingLearnMore" class="learnMore text-link" data-l10n-id="content-blocking-learn-more"/>
-||||||| merged common ancestors
-        <description id="trackingProtectionDescription" class="description-with-side-element" hidden="true" data-l10n-id="tracking-desc">
-          <html:a id="trackingProtectionLearnMore" data-l10n-name="learn-more" target="_blank" class="learnMore text-link"/>
-=======
         <description class="description-with-side-element">
           <html:span id="contentBlockingDescription" class="tail-with-learn-more" data-l10n-id="content-blocking-section-description"></html:span>
           <label id="contentBlockingLearnMore" class="learnMore" data-l10n-id="content-blocking-learn-more" is="text-link"/>
->>>>>>> upstream-releases
         </description>
       </vbox>
       <vbox>
@@ -57,48 +48,6 @@
       </vbox>
     </hbox>
     <vbox id="contentBlockingCategories">
-<<<<<<< HEAD
-        <radiogroup id="contentBlockingCategoryRadio"
-                    preference="browser.contentblocking.category"
-                    aria-labelledby="trackingProtectionMenuDesc">
-          <vbox id="contentBlockingOptionStandard" class="content-blocking-category">
-            <hbox>
-              <radio id="standardRadio"
-                     value="standard"
-                     data-l10n-id="content-blocking-setting-standard"
-                     flex="1"/>
-              <button id="standardArrow" class="arrowhead default-content-blocking-ui"/>
-            </hbox>
-            <vbox class="indent default-content-blocking-ui">
-              <description data-l10n-id="content-blocking-standard-desc"></description>
-              <vbox class="content-blocking-extra-information">
-                <vbox class="indent">
-                  <hbox class="extra-information-label">
-                    <image class="content-blocking-trackers-image"/>
-                    <label data-l10n-id="content-blocking-private-trackers"/>
-                  </hbox>
-                  <hbox class="extra-information-label">
-                    <image class="content-blocking-cookies-image"/>
-                    <label data-l10n-id="content-blocking-third-party-cookies"/>
-                  </hbox>
-                </vbox>
-              </vbox>
-            </vbox>
-            <vbox class="indent fallback-content-blocking-ui">
-              <description data-l10n-id="content-blocking-standard-description"/>
-            </vbox>
-||||||| merged common ancestors
-      <label id="content-blocking-categories-label" data-l10n-id="content-blocking-category-label"/>
-      <hbox class="content-blocking-category fast-block-ui">
-        <vbox>
-          <checkbox id="contentBlockingFastBlockCheckbox"
-                    class="content-blocking-checkbox" flex="1"
-                    src="chrome://browser/skin/controlcenter/slowtrackers.svg"
-                    preference="browser.fastblock.enabled"
-                    data-l10n-id="content-blocking-fastblock-slow-loading-trackers-label"/>
-          <vbox class="content-blocking-category-labels" flex="1">
-            <description data-l10n-id="content-blocking-fastblock-new-description" class="content-blocking-category-description"/>
-=======
         <radiogroup id="contentBlockingCategoryRadio"
                     preference="browser.contentblocking.category"
                     aria-labelledby="trackingProtectionMenuDesc">
@@ -177,68 +126,7 @@
                 </vbox>
               </vbox>
             </vbox>
->>>>>>> upstream-releases
           </vbox>
-<<<<<<< HEAD
-          <vbox id="contentBlockingOptionStrict" class="content-blocking-category">
-            <hbox>
-              <radio id="strictRadio"
-                     value="strict"
-                     data-l10n-id="content-blocking-setting-strict"
-                     flex="1"/>
-              <button id="strictArrow" class="arrowhead"/>
-            </hbox>
-            <vbox class="indent">
-              <label data-l10n-id="content-blocking-strict-desc"></label>
-              <vbox class="content-blocking-extra-information">
-                <vbox class="indent">
-                  <hbox class="extra-information-label">
-                    <image class="content-blocking-trackers-image"/>
-                    <label data-l10n-id="content-blocking-all-windows-trackers"/>
-                  </hbox>
-                  <hbox class="extra-information-label">
-                    <image class="content-blocking-cookies-image"/>
-                    <label data-l10n-id="content-blocking-third-party-cookies"/>
-                  </hbox>
-                </vbox>
-                <vbox class="content-blocking-warning">
-                  <vbox class="indent">
-                    <hbox>
-                      <image class="content-blocking-warning-image"/>
-                      <label class="content-blocking-warning-title" data-l10n-id="content-blocking-warning-title"/>
-                    </hbox>
-                    <description class="indent">
-                      <html:span class="tail-with-learn-more" data-l10n-id="content-blocking-warning-desc"></html:span>
-                      <label class="text-link content-blocking-warning-learn-how" data-l10n-id="content-blocking-learn-how"/>
-                    </description>
-                  </vbox>
-                </vbox>
-              </vbox>
-            </vbox>
-          </vbox>
-        <vbox id="contentBlockingOptionCustom" class="tracking-protection-ui content-blocking-category">
-          <hbox>
-            <radio id="customRadio"
-                   value="custom"
-                   data-l10n-id="content-blocking-setting-custom"
-                   flex="1"/>
-            <button id="customArrow" class="arrowhead"/>
-          </hbox>
-          <vbox class="indent">
-            <description id="contentBlockingCustomDesc" data-l10n-id="content-blocking-custom-desc"></description>
-            <vbox class="content-blocking-extra-information">
-||||||| merged common ancestors
-        </vbox>
-      </hbox>
-      <vbox>
-        <hbox class="content-blocking-category tracking-protection-ui">
-          <vbox>
-            <checkbox id="contentBlockingTrackingProtectionCheckbox"
-                      class="content-blocking-checkbox" flex="1"
-                      src="chrome://browser/skin/controlcenter/trackers.svg"
-                      data-l10n-id="content-blocking-tracking-protection-trackers-label"/>
-            <vbox class="content-blocking-category-labels" flex="1">
-=======
           <vbox id="contentBlockingOptionStrict" class="content-blocking-category">
             <hbox>
               <radio id="strictRadio"
@@ -342,7 +230,6 @@
           <vbox class="indent">
             <description id="contentBlockingCustomDesc" data-l10n-id="content-blocking-custom-desc"></description>
             <vbox class="content-blocking-extra-information">
->>>>>>> upstream-releases
               <hbox id="contentBlockingTrackingProtectionExtensionContentLabel"
                     align="center" hidden="true" class="extension-controlled">
                 <description control="contentBlockingDisableTrackingProtectionExtension" flex="1"/>
@@ -365,64 +252,6 @@
                     </menulist>
                   </vbox>
                 </hbox>
-<<<<<<< HEAD
-                <label id="changeBlockListLink"
-                       data-l10n-id="content-blocking-tracking-protection-change-block-list"
-                       class="text-link"
-                       search-l10n-ids="blocklist-window.title, blocklist-desc, blocklist-button-cancel.label, blocklist-button-ok.label"/>
-                <hbox class="reject-trackers-ui custom-option">
-                  <checkbox id="contentBlockingBlockCookiesCheckbox"
-                            class="content-blocking-checkbox" flex="1"
-                            data-l10n-id="content-blocking-cookies-label"
-                            aria-describedby="contentBlockingCustomDesc"
-                            preference="network.cookie.cookieBehavior"
-                            onsyncfrompreference="return gPrivacyPane.readBlockCookies();"
-                            onsynctopreference="return gPrivacyPane.writeBlockCookies();"/>
-                  <vbox>
-                    <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
-                    <hbox>
-                      <menulist id="blockCookiesMenu"
-                                preference="network.cookie.cookieBehavior"
-                                onsyncfrompreference="return gPrivacyPane.readBlockCookiesFrom();"
-                                onsynctopreference="return gPrivacyPane.writeBlockCookiesFrom();">
-                        <menupopup>
-                          <menuitem data-l10n-id="sitedata-option-block-trackers" value="trackers"/>
-                          <menuitem data-l10n-id="sitedata-option-block-unvisited" value="unvisited"/>
-                          <menuitem data-l10n-id="sitedata-option-block-all-third-party" value="all-third-parties"/>
-                          <menuitem data-l10n-id="sitedata-option-block-all" value="always"/>
-                        </menupopup>
-                      </menulist>
-                    </hbox>
-                  </vbox>
-                </hbox>
-              <vbox class="content-blocking-warning">
-                <vbox class="indent">
-                  <hbox>
-                    <image class="content-blocking-warning-image"/>
-                    <label class="content-blocking-warning-title" data-l10n-id="content-blocking-warning-title"/>
-                  </hbox>
-                  <description class="indent">
-                    <html:span class="tail-with-learn-more" data-l10n-id="content-blocking-warning-desc"></html:span>
-                    <label class="text-link content-blocking-warning-learn-how" data-l10n-id="content-blocking-learn-how"/>
-                  </description>
-                </vbox>
-              </vbox>
-||||||| merged common ancestors
-              </hbox>
-              <radiogroup id="blockCookiesCB"
-                          aria-labelledby="blockCookiesCBDesc"
-                          preference="network.cookie.cookieBehavior"
-                          onsyncfrompreference="return gPrivacyPane.readBlockCookiesCB();"
-                          onsynctopreference="return gPrivacyPane.writeBlockCookiesCB();">
-                <radio value="trackers"
-                       id="blockCookiesFromTrackersCB"
-                       data-l10n-id="content-blocking-reject-trackers-block-trackers-option"
-                       flex="1" />
-                <radio value="all-third-parties"
-                       data-l10n-id="content-blocking-reject-trackers-all-third-parties-option"
-                       flex="1" />
-              </radiogroup>
-=======
                 <label id="changeBlockListLink"
                        data-l10n-id="content-blocking-tracking-protection-change-block-list"
                        is="text-link"
@@ -502,7 +331,6 @@
                   </description>
                 </vbox>
               </vbox>
->>>>>>> upstream-releases
             </vbox>
           </vbox>
         </vbox>
@@ -531,68 +359,6 @@
         <label id="siteDataLearnMoreLink"
           class="learnMore" is="text-link" data-l10n-id="sitedata-learn-more"/>
       </description>
-<<<<<<< HEAD
-      <hbox id="keepRow"
-            align="center">
-        <checkbox id="deleteOnClose"
-                  data-l10n-id="sitedata-delete-on-close"
-                  preference="network.cookie.lifetimePolicy"
-                  onsyncfrompreference="return gPrivacyPane.readDeleteOnClose();"
-                  onsynctopreference="return gPrivacyPane.writeDeleteOnClose();"
-                  flex="1" />
-      </hbox>
-||||||| merged common ancestors
-      <description class="description-with-side-element warning-description"
-                   flex="1" hidden="true" id="blockCookiesWarning"
-                   data-l10n-id="sitedata-warning-your-settings-prevent-changes"/>
-      <radiogroup id="blockCookies"
-                  preference="network.cookie.cookieBehavior"
-                  onsyncfrompreference="return gPrivacyPane.readBlockCookies();"
-                  onsynctopreference="return gPrivacyPane.writeBlockCookies();">
-        <radio value="allow"
-               data-l10n-id="sitedata-allow-cookies-option"
-               flex="1" />
-        <radio value="disallow"
-               data-l10n-id="sitedata-disallow-cookies-option"
-               flex="1" />
-        <hbox id="blockThirdPartyRow"
-              class="indent"
-              align="center">
-          <label id="blockCookiesLabel" control="blockCookiesMenu"
-                 data-l10n-id="sitedata-block-desc"/>
-          <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
-          <hbox>
-            <menulist id="blockCookiesMenu" preference="network.cookie.cookieBehavior"
-                      onsyncfrompreference="return gPrivacyPane.readBlockCookiesFrom();"
-                      onsynctopreference="return gPrivacyPane.writeBlockCookiesFrom();">
-              <menupopup>
-                <menuitem id="blockCookiesFromTrackers" data-l10n-id="sitedata-block-trackers-option" value="trackers"/>
-                <menuitem data-l10n-id="sitedata-block-unvisited-option" value="unvisited"/>
-                <menuitem data-l10n-id="sitedata-block-all-third-party-option" value="all-third-parties"/>
-                <menuitem data-l10n-id="sitedata-block-all-option" value="always"/>
-              </menupopup>
-            </menulist>
-          </hbox>
-        </hbox>
-        <hbox id="keepRow"
-              align="center">
-          <label id="keepUntil"
-                 control="keepCookiesUntil"
-                 data-l10n-id="sitedata-keep-until"/>
-          <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
-          <hbox>
-            <menulist id="keepCookiesUntil"
-                      onsyncfrompreference="return gPrivacyPane.readKeepCookiesUntil();"
-                      preference="network.cookie.lifetimePolicy">
-              <menupopup>
-                <menuitem data-l10n-id="sitedata-keep-until-expire" value="0"/>
-                <menuitem data-l10n-id="sitedata-keep-until-closed" value="2"/>
-              </menupopup>
-            </menulist>
-          </hbox>
-        </hbox>
-      </radiogroup>
-=======
       <hbox flex="1" id="deleteOnCloseNote" class="info-panel">
         <description flex="1" data-l10n-id="sitedata-delete-on-close-private-browsing" />
       </hbox>
@@ -605,7 +371,6 @@
                   onsynctopreference="return gPrivacyPane.writeDeleteOnClose();"
                   flex="1" />
       </hbox>
->>>>>>> upstream-releases
     </vbox>
     <vbox align="end">
       <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
@@ -653,16 +418,8 @@
 </groupbox>
 
 <!-- Passwords -->
-<<<<<<< HEAD
-<groupbox id="passwordsGroup" orient="vertical" data-category="panePrivacy" hidden="true">
-  <label><html:h2 data-l10n-id="logins-header"/></label>
-||||||| merged common ancestors
-<groupbox id="passwordsGroup" orient="vertical" data-category="panePrivacy" hidden="true">
-  <caption><label data-l10n-id="logins-header"/></caption>
-=======
 <groupbox id="passwordsGroup" orient="vertical" data-category="panePrivacy" data-subcategory="logins" hidden="true">
   <label><html:h2 data-l10n-id="logins-header"/></label>
->>>>>>> upstream-releases
 
   <vbox id="passwordSettings">
     <hbox>
@@ -856,71 +613,6 @@
 </hbox>
 
 <!-- Permissions -->
-<<<<<<< HEAD
-<groupbox id="permissionsGroup" data-category="panePrivacy" hidden="true" data-subcategory="permissions">
-  <label class="search-header" hidden="true"><html:h2 data-l10n-id="permissions-header"/></label>
-
-  <grid>
-    <columns>
-      <column flex="1"/>
-      <column/>
-    </columns>
-    <rows>
-      <row id="locationSettingsRow" align="center" role="group" aria-labelledby="locationPermissionsLabel">
-        <description flex="1">
-          <image class="geo-icon permission-icon" />
-          <separator orient="vertical" class="thin"/>
-          <label id="locationPermissionsLabel" data-l10n-id="permissions-location"/>
-        </description>
-        <hbox pack="end">
-          <button id="locationSettingsButton"
-                  class="accessory-button"
-                  data-l10n-id="permissions-location-settings"
-                  search-l10n-ids="
-                    permissions-remove.label,
-                    permissions-remove-all.label,
-                    permissions-button-cancel.label,
-                    permissions-button-ok.label,
-                    permissions-site-location-window.title,
-                    permissions-site-location-desc,
-                    permissions-site-location-disable-label,
-                    permissions-site-location-disable-desc,
-                  " />
-        </hbox>
-      </row>
-||||||| merged common ancestors
-<groupbox id="permissionsGroup" data-category="panePrivacy" hidden="true" data-subcategory="permissions" aria-labelledby="permissionsGroupLabel">
-  <caption class="search-header" hidden="true"><label data-l10n-id="permissions-header" id="permissionsGroupLabel"/></caption>
-
-  <grid>
-    <columns>
-      <column flex="1"/>
-      <column/>
-    </columns>
-    <rows>
-      <row id="locationSettingsRow" align="center" role="group" aria-labelledby="locationPermissionsLabel">
-        <description flex="1">
-          <image class="geo-icon permission-icon" />
-          <separator orient="vertical" class="thin"/>
-          <label id="locationPermissionsLabel" data-l10n-id="permissions-location"/>
-        </description>
-        <hbox pack="end">
-          <button id="locationSettingsButton"
-                  class="accessory-button"
-                  data-l10n-id="permissions-location-settings"
-                  search-l10n-ids="
-                    permissions-remove.label,
-                    permissions-remove-all.label,
-                    permissions-button-cancel.label,
-                    permissions-button-ok.label,
-                    permissions-site-location-window.title,
-                    permissions-site-location-desc,
-                    permissions-site-location-disable-label,
-                    permissions-site-location-disable-desc,
-                  " />
-        </hbox>
-      </row>
-=======
 <groupbox id="permissionsGroup" data-category="panePrivacy" hidden="true" data-subcategory="permissions">
   <label class="search-header" hidden="true"><html:h2 data-l10n-id="permissions-header"/></label>
 
@@ -949,7 +641,6 @@
                 " />
       </hbox>
     </hbox>
->>>>>>> upstream-releases
 
     <hbox id="cameraSettingsRow" align="center" role="group" aria-labelledby="cameraPermissionsLabel">
       <description flex="1">
@@ -1057,15 +748,9 @@
     </hbox>
   </vbox>
 
-<<<<<<< HEAD
-  <hbox data-subcategory="permissions-block-popups">
-||||||| merged common ancestors
-  <hbox>
-=======
   <separator flex="1"/>
 
   <hbox data-subcategory="permissions-block-popups">
->>>>>>> upstream-releases
     <checkbox id="popupPolicy" preference="dom.disable_open_during_load"
               data-l10n-id="permissions-block-popups"
               onsyncfrompreference="return gPrivacyPane.updateButtons('popupPolicyButton',
@@ -1161,18 +846,6 @@
                  class="learnMore" is="text-link"
                  data-l10n-id="collection-studies-link"/>
         </hbox>
-<<<<<<< HEAD
-
-        <hbox align="center">
-          <checkbox id="addonRecommendationEnabled"
-                    class="tail-with-learn-more"
-                    data-l10n-id="addon-recommendations"/>
-          <label id="addonRecommendationLearnMore"
-                 class="learnMore text-link"
-                 data-l10n-id="addon-recommendations-link"/>
-        </hbox>
-||||||| merged common ancestors
-=======
 
         <hbox align="center">
           <checkbox id="addonRecommendationEnabled"
@@ -1182,7 +855,6 @@
                  class="learnMore" is="text-link"
                  data-l10n-id="addon-recommendations-link"/>
         </hbox>
->>>>>>> upstream-releases
       </vbox>
     </description>
 #ifndef MOZ_TELEMETRY_REPORTING

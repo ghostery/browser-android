@@ -10,53 +10,15 @@
 #include "nsICommandLineHandler.h"
 #define ICOMMANDLINEHANDLER nsICommandLineHandler
 
-<<<<<<< HEAD
-#define NS_LAYOUTDEBUGCLH_CID                        \
-  {                                                  \
-    0xa8f52633, 0x5ecf, 0x424a, {                    \
-      0xa1, 0x47, 0x47, 0xc3, 0x22, 0xf7, 0xbc, 0xe2 \
-    }                                                \
-  }
-||||||| merged common ancestors
-#define NS_LAYOUTDEBUGCLH_CID \
- { 0xa8f52633, 0x5ecf, 0x424a, \
-   { 0xa1, 0x47, 0x47, 0xc3, 0x22, 0xf7, 0xbc, 0xe2 }}
-=======
 class nsLayoutDebugCLH : public ICOMMANDLINEHANDLER {
  public:
   nsLayoutDebugCLH();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsLayoutDebugCLH : public ICOMMANDLINEHANDLER {
- public:
-  nsLayoutDebugCLH();
-||||||| merged common ancestors
-class nsLayoutDebugCLH : public ICOMMANDLINEHANDLER
-{
-public:
-    nsLayoutDebugCLH();
-=======
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSICOMMANDLINEHANDLER
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   NS_DECL_ISUPPORTS
   NS_DECL_NSICOMMANDLINEHANDLER
 
  protected:
   virtual ~nsLayoutDebugCLH();
-||||||| merged common ancestors
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSICOMMANDLINEHANDLER
-
-protected:
-    virtual ~nsLayoutDebugCLH();
-=======
- protected:
-  virtual ~nsLayoutDebugCLH();
->>>>>>> upstream-releases
 };
 
 #endif /* !defined(nsLayoutDebugCLH_h_) */

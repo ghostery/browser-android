@@ -36,18 +36,8 @@ static LazyLogModule gCommandLog("nsXULCommandDispatcher");
 
 ////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-nsXULCommandDispatcher::nsXULCommandDispatcher(nsIDocument* aDocument)
-    : mDocument(aDocument), mUpdaters(nullptr), mLocked(false) {}
-||||||| merged common ancestors
-nsXULCommandDispatcher::nsXULCommandDispatcher(nsIDocument* aDocument)
-    : mDocument(aDocument), mUpdaters(nullptr), mLocked(false)
-{
-}
-=======
 nsXULCommandDispatcher::nsXULCommandDispatcher(Document* aDocument)
     : mDocument(aDocument), mUpdaters(nullptr), mLocked(false) {}
->>>>>>> upstream-releases
 
 nsXULCommandDispatcher::~nsXULCommandDispatcher() { Disconnect(); }
 

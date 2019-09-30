@@ -7,18 +7,12 @@ package org.mozilla.geckoview.test
 import android.app.ActivityManager
 import android.content.Context
 import android.app.assist.AssistStructure
-<<<<<<< HEAD
-import android.graphics.SurfaceTexture
-||||||| merged common ancestors
-=======
 import android.graphics.SurfaceTexture
 import android.net.Uri
->>>>>>> upstream-releases
 import android.os.Build
 import android.os.Process
 import org.mozilla.gecko.GeckoAppShell
 import org.mozilla.geckoview.AllowOrDeny
-import org.mozilla.geckoview.GeckoDisplay
 import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoSession.NavigationDelegate.LoadRequest
@@ -485,131 +479,6 @@ class ContentDelegateTest : BaseSessionTest() {
         assertThat("Should not have focused field",
                    countAutoFillNodes({ it.isFocused }), equalTo(0))
     }
-<<<<<<< HEAD
-
-    @WithDevToolsAPI
-    @Test fun autofill_userpass() {
-        if (Build.VERSION.SDK_INT < 26) {
-            return
-        }
-
-        mainSession.loadTestPath(FORMS2_HTML_PATH)
-        // Wait for the auto-fill nodes to populate.
-        sessionRule.waitUntilCalled(object : Callbacks.TextInputDelegate {
-            @AssertCalled(count = 2)
-            override fun notifyAutoFill(session: GeckoSession, notification: Int, virtualId: Int) {
-            }
-        })
-
-        mainSession.evaluateJS("$('#pass1').focus()")
-        sessionRule.waitUntilCalled(object : Callbacks.TextInputDelegate {
-            @AssertCalled(count = 1)
-            override fun notifyAutoFill(session: GeckoSession, notification: Int, virtualId: Int) {
-            }
-        })
-
-        val rootNode = ViewNode.newInstance()
-        val rootStructure = ViewNodeBuilder.newInstance(AssistStructure(), rootNode,
-                /* async */ false) as ViewStructure
-
-        // Perform auto-fill and return number of auto-fills performed.
-        fun checkAutoFillChild(child: AssistStructure.ViewNode): Int {
-            var sum = 0
-            // Seal the node info instance so we can perform actions on it.
-            if (child.childCount > 0) {
-                for (i in 0 until child.childCount) {
-                    sum += checkAutoFillChild(child.getChildAt(i))
-                }
-            }
-
-            if (child === rootNode) {
-                return sum
-            }
-
-            assertThat("ID should be valid", child.id, not(equalTo(View.NO_ID)))
-
-            if (EditText::class.java.name == child.className) {
-                val htmlInfo = child.htmlInfo
-                assertThat("Should have HTML tag", htmlInfo.tag, equalTo("input"))
-
-                if (child.autofillHints == null) {
-                    return sum
-                }
-                child.autofillHints.forEach {
-                    when (it) {
-                        View.AUTOFILL_HINT_USERNAME, View.AUTOFILL_HINT_PASSWORD -> {
-                            sum++
-                        }
-                    }
-                }
-            }
-            return sum
-        }
-
-        mainSession.textInput.onProvideAutofillVirtualStructure(rootStructure, 0)
-        // form and iframe have each 2 hints.
-        assertThat("autofill hint count",
-                   checkAutoFillChild(rootNode), equalTo(4))
-    }
-
-    private fun goFullscreen() {
-        sessionRule.setPrefsUntilTestEnd(mapOf("full-screen-api.allow-trusted-requests-only" to false))
-        mainSession.loadTestPath(FULLSCREEN_PATH)
-        mainSession.waitForPageStop()
-        mainSession.evaluateJS("$('#fullscreen').requestFullscreen()")
-        sessionRule.waitUntilCalled(object : Callbacks.ContentDelegate {
-            override  fun onFullScreen(session: GeckoSession, fullScreen: Boolean) {
-                assertThat("Div went fullscreen", fullScreen, equalTo(true))
-            }
-        })
-    }
-
-    private fun waitForFullscreenExit() {
-        sessionRule.waitUntilCalled(object : Callbacks.ContentDelegate {
-            override  fun onFullScreen(session: GeckoSession, fullScreen: Boolean) {
-                assertThat("Div went fullscreen", fullScreen, equalTo(false))
-            }
-        })
-    }
-
-    @WithDevToolsAPI
-    @Test fun fullscreen() {
-        goFullscreen()
-        mainSession.evaluateJS("document.exitFullscreen()")
-        waitForFullscreenExit()
-    }
-
-    @WithDevToolsAPI
-    @Test fun sessionExitFullscreen() {
-        goFullscreen()
-        mainSession.exitFullScreen()
-        waitForFullscreenExit()
-    }
-
-    @Test fun firstComposite() {
-        val display = mainSession.acquireDisplay()
-        val texture = SurfaceTexture(0)
-        texture.setDefaultBufferSize(100, 100)
-        val surface = Surface(texture)
-        display.surfaceChanged(surface, 100, 100)
-        mainSession.loadTestPath(HELLO_HTML_PATH)
-        sessionRule.waitUntilCalled(object : Callbacks.ContentDelegate {
-            @AssertCalled(count = 1)
-            override fun onFirstComposite(session: GeckoSession) {
-            }
-        })
-        display.surfaceDestroyed()
-        display.surfaceChanged(surface, 100, 100)
-        sessionRule.waitUntilCalled(object : Callbacks.ContentDelegate {
-            @AssertCalled(count = 1)
-            override fun onFirstComposite(session: GeckoSession) {
-            }
-        })
-        display.surfaceDestroyed()
-        mainSession.releaseDisplay(display)
-    }
-||||||| merged common ancestors
-=======
 
     @WithDisplay(height = 100, width = 100)
     @WithDevToolsAPI
@@ -766,5 +635,4 @@ class ContentDelegateTest : BaseSessionTest() {
             httpBin.stop()
         }
     }
->>>>>>> upstream-releases
 }

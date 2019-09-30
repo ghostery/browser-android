@@ -307,22 +307,6 @@ void CodeGenerator::visitWasmSelect(LWasmSelect* ins) {
 
   masm.test32(cond, cond);
 
-<<<<<<< HEAD
-  if (mirType == MIRType::Int32) {
-    Register out = ToRegister(ins->output());
-    MOZ_ASSERT(ToRegister(ins->trueExpr()) == out,
-               "true expr input is reused for output");
-    masm.cmovzl(falseExpr, out);
-    return;
-  }
-||||||| merged common ancestors
-    if (mirType == MIRType::Int32) {
-        Register out = ToRegister(ins->output());
-        MOZ_ASSERT(ToRegister(ins->trueExpr()) == out, "true expr input is reused for output");
-        masm.cmovzl(falseExpr, out);
-        return;
-    }
-=======
   if (mirType == MIRType::Int32 || mirType == MIRType::RefOrNull) {
     Register out = ToRegister(ins->output());
     MOZ_ASSERT(ToRegister(ins->trueExpr()) == out,
@@ -334,7 +318,6 @@ void CodeGenerator::visitWasmSelect(LWasmSelect* ins) {
     }
     return;
   }
->>>>>>> upstream-releases
 
   FloatRegister out = ToFloatRegister(ins->output());
   MOZ_ASSERT(ToFloatRegister(ins->trueExpr()) == out,
@@ -421,61 +404,6 @@ void CodeGenerator::visitAsmJSLoadHeap(LAsmJSLoadHeap* ins) {
 
   masm.wasmLoad(mir->access(), srcAddr, out);
 
-<<<<<<< HEAD
-  if (ool) {
-    masm.bind(ool->rejoin());
-  }
-}
-
-void CodeGeneratorX86Shared::visitOutOfLineLoadTypedArrayOutOfBounds(
-    OutOfLineLoadTypedArrayOutOfBounds* ool) {
-  switch (ool->viewType()) {
-    case Scalar::Int64:
-    case Scalar::MaxTypedArrayViewType:
-      MOZ_CRASH("unexpected array type");
-    case Scalar::Float32:
-      masm.loadConstantFloat32(float(GenericNaN()), ool->dest().fpu());
-      break;
-    case Scalar::Float64:
-      masm.loadConstantDouble(GenericNaN(), ool->dest().fpu());
-      break;
-    case Scalar::Int8:
-    case Scalar::Uint8:
-    case Scalar::Int16:
-    case Scalar::Uint16:
-    case Scalar::Int32:
-    case Scalar::Uint32:
-    case Scalar::Uint8Clamped:
-      Register destReg = ool->dest().gpr();
-      masm.mov(ImmWord(0), destReg);
-      break;
-  }
-  masm.jmp(ool->rejoin());
-}
-
-void CodeGenerator::visitAsmJSStoreHeap(LAsmJSStoreHeap* ins) {
-  const MAsmJSStoreHeap* mir = ins->mir();
-  MOZ_ASSERT(mir->offset() == 0);
-
-  const LAllocation* ptr = ins->ptr();
-  const LAllocation* value = ins->value();
-  const LAllocation* boundsCheckLimit = ins->boundsCheckLimit();
-
-  Scalar::Type accessType = mir->accessType();
-  canonicalizeIfDeterministic(accessType, value);
-
-  Label rejoin;
-  if (mir->needsBoundsCheck()) {
-    masm.wasmBoundsCheck(Assembler::AboveOrEqual, ToRegister(ptr),
-                         ToRegister(boundsCheckLimit), &rejoin);
-  }
-||||||| merged common ancestors
-    Label rejoin;
-    if (mir->needsBoundsCheck()) {
-        masm.wasmBoundsCheck(Assembler::AboveOrEqual, ToRegister(ptr), ToRegister(boundsCheckLimit),
-                             &rejoin);
-    }
-=======
   if (ool) {
     masm.bind(ool->rejoin());
   }
@@ -525,7 +453,6 @@ void CodeGenerator::visitAsmJSStoreHeap(LAsmJSStoreHeap* ins) {
     masm.wasmBoundsCheck(Assembler::AboveOrEqual, ToRegister(ptr),
                          ToRegister(boundsCheckLimit), &rejoin);
   }
->>>>>>> upstream-releases
 
 #ifdef JS_CODEGEN_X86
   const LAllocation* memoryBase = ins->memoryBase();
@@ -833,26 +760,6 @@ void CodeGenerator::visitPowHalfD(LPowHalfD* ins) {
     masm.bind(&sqrt);
   }
 
-<<<<<<< HEAD
-  if (!ins->mir()->operandIsNeverNegativeZero()) {
-    // Math.pow(-0, 0.5) == 0 == Math.pow(0, 0.5). Adding 0 converts any -0 to
-    // 0.
-    masm.zeroDouble(scratch);
-    masm.addDouble(input, scratch);
-    masm.vsqrtsd(scratch, output, output);
-  } else {
-    masm.vsqrtsd(input, output, output);
-  }
-||||||| merged common ancestors
-    if (!ins->mir()->operandIsNeverNegativeZero()) {
-        // Math.pow(-0, 0.5) == 0 == Math.pow(0, 0.5). Adding 0 converts any -0 to 0.
-        masm.zeroDouble(scratch);
-        masm.addDouble(input, scratch);
-        masm.vsqrtsd(scratch, output, output);
-    } else {
-        masm.vsqrtsd(input, output, output);
-    }
-=======
   if (!ins->mir()->operandIsNeverNegativeZero()) {
     // Math.pow(-0, 0.5) == 0 == Math.pow(0, 0.5).
     // Adding 0 converts any -0 to 0.
@@ -862,7 +769,6 @@ void CodeGenerator::visitPowHalfD(LPowHalfD* ins) {
   } else {
     masm.vsqrtsd(input, output, output);
   }
->>>>>>> upstream-releases
 
   masm.bind(&done);
 }
@@ -1295,42 +1201,6 @@ void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
       bailoutIf(Assembler::NonZero, ins->snapshot());
     }
 
-<<<<<<< HEAD
-    if (mir->isUnsigned()) {
-      masm.shrl(Imm32(shift), lhs);
-    } else {
-      // Adjust the value so that shifting produces a correctly
-      // rounded result when the numerator is negative. See 10-1
-      // "Signed Division by a Known Power of 2" in Henry
-      // S. Warren, Jr.'s Hacker's Delight.
-      if (mir->canBeNegativeDividend()) {
-        Register lhsCopy = ToRegister(ins->numeratorCopy());
-        MOZ_ASSERT(lhsCopy != lhs);
-        if (shift > 1) {
-          masm.sarl(Imm32(31), lhs);
-||||||| merged common ancestors
-        if (mir->isUnsigned()) {
-            masm.shrl(Imm32(shift), lhs);
-        } else {
-            // Adjust the value so that shifting produces a correctly
-            // rounded result when the numerator is negative. See 10-1
-            // "Signed Division by a Known Power of 2" in Henry
-            // S. Warren, Jr.'s Hacker's Delight.
-            if (mir->canBeNegativeDividend()) {
-                Register lhsCopy = ToRegister(ins->numeratorCopy());
-                MOZ_ASSERT(lhsCopy != lhs);
-                if (shift > 1) {
-                    masm.sarl(Imm32(31), lhs);
-                }
-                masm.shrl(Imm32(32 - shift), lhs);
-                masm.addl(lhsCopy, lhs);
-            }
-            masm.sarl(Imm32(shift), lhs);
-
-            if (negativeDivisor) {
-                masm.negl(lhs);
-            }
-=======
     if (mir->isUnsigned()) {
       masm.shrl(Imm32(shift), lhs);
     } else {
@@ -1347,17 +1217,7 @@ void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
         if (shift > 1) {
           // Copy the sign bit of the numerator. (= (2^32 - 1) or 0)
           masm.sarl(Imm32(31), lhs);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        masm.shrl(Imm32(32 - shift), lhs);
-        masm.addl(lhsCopy, lhs);
-      }
-      masm.sarl(Imm32(shift), lhs);
-||||||| merged common ancestors
-        return;
-    }
-=======
         // Divide by 2^(32 - shift)
         // i.e. (= (2^32 - 1) / 2^(32 - shift) or 0)
         // i.e. (= (2^shift - 1) or 0)
@@ -1367,7 +1227,6 @@ void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
         masm.addl(lhsCopy, lhs);
       }
       masm.sarl(Imm32(shift), lhs);
->>>>>>> upstream-releases
 
       if (negativeDivisor) {
         masm.negl(lhs);

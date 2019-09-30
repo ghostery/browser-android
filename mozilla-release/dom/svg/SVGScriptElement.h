@@ -12,23 +12,9 @@
 #include "mozilla/dom/ScriptElement.h"
 #include "mozilla/dom/SVGElement.h"
 
-<<<<<<< HEAD
-class nsIDocument;
-
 nsresult NS_NewSVGScriptElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     mozilla::dom::FromParser aFromParser);
-||||||| merged common ancestors
-class nsIDocument;
-
-nsresult NS_NewSVGScriptElement(nsIContent **aResult,
-                                already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                                mozilla::dom::FromParser aFromParser);
-=======
-nsresult NS_NewSVGScriptElement(
-    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-    mozilla::dom::FromParser aFromParser);
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -78,36 +64,14 @@ class SVGScriptElement final : public SVGScriptElementBase,
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  void GetType(nsAString& aType);
-  void SetType(const nsAString& aType, ErrorResult& rv);
-  void GetCrossOrigin(nsAString& aCrossOrigin);
-  void SetCrossOrigin(const nsAString& aCrossOrigin, ErrorResult& aError);
-  already_AddRefed<SVGAnimatedString> Href();
-||||||| merged common ancestors
-  void GetType(nsAString & aType);
-  void SetType(const nsAString & aType, ErrorResult& rv);
-  void GetCrossOrigin(nsAString & aCrossOrigin);
-  void SetCrossOrigin(const nsAString & aCrossOrigin, ErrorResult& aError);
-  already_AddRefed<SVGAnimatedString> Href();
-=======
   void GetType(nsAString& aType);
   void SetType(const nsAString& aType, ErrorResult& rv);
   void GetCrossOrigin(nsAString& aCrossOrigin);
   void SetCrossOrigin(const nsAString& aCrossOrigin, ErrorResult& aError);
   already_AddRefed<DOMSVGAnimatedString> Href();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  ~SVGScriptElement();
-||||||| merged common ancestors
-protected:
-  ~SVGScriptElement();
-=======
  protected:
   ~SVGScriptElement() = default;
->>>>>>> upstream-releases
 
   virtual StringAttributesInfo GetStringInfo() override;
 

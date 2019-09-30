@@ -71,18 +71,8 @@ void AssertMainThread() { MOZ_ASSERT(NS_IsMainThread()); }
 
 bool InSandbox() { return GeckoProcessType_Content == XRE_GetProcessType(); }
 
-<<<<<<< HEAD
-bool WindowIsActive(nsPIDOMWindowInner* aWindow) {
-  nsIDocument* document = aWindow->GetDoc();
-||||||| merged common ancestors
-bool
-WindowIsActive(nsPIDOMWindowInner* aWindow)
-{
-  nsIDocument* document = aWindow->GetDoc();
-=======
 bool WindowIsActive(nsPIDOMWindowInner* aWindow) {
   dom::Document* document = aWindow->GetDoc();
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(document, false);
   return !document->Hidden();
 }

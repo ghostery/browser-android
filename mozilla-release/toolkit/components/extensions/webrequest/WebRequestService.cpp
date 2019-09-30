@@ -43,19 +43,8 @@ UniquePtr<WebRequestChannelEntry> WebRequestService::RegisterChannel(
   return entry;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsITraceableChannel> WebRequestService::GetTraceableChannel(
-    uint64_t aChannelId, nsAtom* aAddonId, nsIContentParent* aContentParent) {
-||||||| merged common ancestors
-already_AddRefed<nsITraceableChannel>
-WebRequestService::GetTraceableChannel(uint64_t aChannelId,
-                                       nsAtom* aAddonId,
-                                       nsIContentParent* aContentParent)
-{
-=======
 already_AddRefed<nsITraceableChannel> WebRequestService::GetTraceableChannel(
     uint64_t aChannelId, nsAtom* aAddonId, ContentParent* aContentParent) {
->>>>>>> upstream-releases
   if (auto entry = mChannelEntries.Get(aChannelId)) {
     if (entry->mChannel) {
       return entry->mChannel->GetTraceableChannel(aAddonId, aContentParent);

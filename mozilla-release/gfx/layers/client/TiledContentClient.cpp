@@ -7,31 +7,6 @@
 #include "mozilla/layers/TiledContentClient.h"
 #include <math.h>  // for ceil, ceilf, floor
 #include <algorithm>
-<<<<<<< HEAD
-#include "ClientTiledPaintedLayer.h"  // for ClientTiledPaintedLayer
-#include "GeckoProfiler.h"            // for AUTO_PROFILER_LABEL
-#include "ClientLayerManager.h"       // for ClientLayerManager
-#include "gfxContext.h"               // for gfxContext, etc
-#include "gfxPlatform.h"              // for gfxPlatform
-#include "gfxPrefs.h"                 // for gfxPrefs
-#include "gfxRect.h"                  // for gfxRect
-#include "mozilla/MathAlgorithms.h"   // for Abs
-#include "mozilla/gfx/Point.h"        // for IntSize
-#include "mozilla/gfx/Rect.h"         // for Rect
-#include "mozilla/gfx/Tools.h"        // for BytesPerPixel
-||||||| merged common ancestors
-#include "ClientTiledPaintedLayer.h"     // for ClientTiledPaintedLayer
-#include "GeckoProfiler.h"              // for AUTO_PROFILER_LABEL
-#include "ClientLayerManager.h"         // for ClientLayerManager
-#include "gfxContext.h"                 // for gfxContext, etc
-#include "gfxPlatform.h"                // for gfxPlatform
-#include "gfxPrefs.h"                   // for gfxPrefs
-#include "gfxRect.h"                    // for gfxRect
-#include "mozilla/MathAlgorithms.h"     // for Abs
-#include "mozilla/gfx/Point.h"          // for IntSize
-#include "mozilla/gfx/Rect.h"           // for Rect
-#include "mozilla/gfx/Tools.h"          // for BytesPerPixel
-=======
 #include "ClientTiledPaintedLayer.h"  // for ClientTiledPaintedLayer
 #include "GeckoProfiler.h"            // for AUTO_PROFILER_LABEL
 #include "ClientLayerManager.h"       // for ClientLayerManager
@@ -42,54 +17,20 @@
 #include "mozilla/gfx/Point.h"        // for IntSize
 #include "mozilla/gfx/Rect.h"         // for Rect
 #include "mozilla/gfx/Tools.h"        // for BytesPerPixel
->>>>>>> upstream-releases
 #include "mozilla/layers/CompositableForwarder.h"
 #include "mozilla/layers/CompositorBridgeChild.h"  // for CompositorBridgeChild
 #include "mozilla/layers/LayerMetricsWrapper.h"
 #include "mozilla/layers/ShadowLayers.h"  // for ShadowLayerForwarder
 #include "mozilla/layers/PaintThread.h"   // for PaintThread
 #include "TextureClientPool.h"
-<<<<<<< HEAD
-#include "nsDebug.h"              // for NS_ASSERTION
 #include "nsISupportsImpl.h"      // for gfxContext::AddRef, etc
 #include "nsExpirationTracker.h"  // for nsExpirationTracker
 #include "nsMathUtils.h"          // for NS_lroundf
-||||||| merged common ancestors
-#include "nsDebug.h"                    // for NS_ASSERTION
-#include "nsISupportsImpl.h"            // for gfxContext::AddRef, etc
-#include "nsExpirationTracker.h"        // for nsExpirationTracker
-#include "nsMathUtils.h"               // for NS_lroundf
-=======
-#include "nsISupportsImpl.h"      // for gfxContext::AddRef, etc
-#include "nsExpirationTracker.h"  // for nsExpirationTracker
-#include "nsMathUtils.h"          // for NS_lroundf
->>>>>>> upstream-releases
 #include "LayersLogging.h"
-<<<<<<< HEAD
-#include "UnitTransforms.h"  // for TransformTo
-||||||| merged common ancestors
-#include "UnitTransforms.h"             // for TransformTo
-=======
 #include "UnitTransforms.h"  // for TransformTo
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/UniquePtr.h"
 
-<<<<<<< HEAD
-// This is the minimum area that we deem reasonable to copy from the front
-// buffer to the back buffer on tile updates. If the valid region is smaller
-// than this, we just redraw it and save on the copy (and requisite
-// surface-locking involved).
-#define MINIMUM_TILE_COPY_AREA (1.f / 16.f)
-
-||||||| merged common ancestors
-// This is the minimum area that we deem reasonable to copy from the front buffer to the
-// back buffer on tile updates. If the valid region is smaller than this, we just
-// redraw it and save on the copy (and requisite surface-locking involved).
-#define MINIMUM_TILE_COPY_AREA (1.f/16.f)
-
-=======
->>>>>>> upstream-releases
 #ifdef GFX_TILEDLAYER_DEBUG_OVERLAY
 #  include "cairo.h"
 #  include <sstream>
@@ -283,23 +224,6 @@ bool SharedFrameMetricsHelper::AboutToCheckerboard(
                     aContentMetrics.GetScrollOffset();
   painted.Inflate(CSSMargin::FromAppUnits(nsMargin(1, 1, 1, 1)));
 
-<<<<<<< HEAD
-  // Inflate the rect by the danger zone. See the description of the danger zone
-  // prefs in AsyncPanZoomController.cpp for an explanation of this.
-  CSSRect showing =
-      CSSRect(aCompositorMetrics.GetScrollOffset(),
-              aCompositorMetrics.CalculateBoundedCompositedSizeInCssPixels());
-  showing.Inflate(
-      LayerSize(gfxPrefs::APZDangerZoneX(), gfxPrefs::APZDangerZoneY()) /
-      aCompositorMetrics.LayersPixelsPerCSSPixel());
-||||||| merged common ancestors
-  // Inflate the rect by the danger zone. See the description of the danger zone prefs
-  // in AsyncPanZoomController.cpp for an explanation of this.
-  CSSRect showing = CSSRect(aCompositorMetrics.GetScrollOffset(),
-                            aCompositorMetrics.CalculateBoundedCompositedSizeInCssPixels());
-  showing.Inflate(LayerSize(gfxPrefs::APZDangerZoneX(), gfxPrefs::APZDangerZoneY())
-                  / aCompositorMetrics.LayersPixelsPerCSSPixel());
-=======
   // Inflate the rect by the danger zone. See the description of the danger zone
   // prefs in AsyncPanZoomController.cpp for an explanation of this.
   CSSRect showing =
@@ -308,7 +232,6 @@ bool SharedFrameMetricsHelper::AboutToCheckerboard(
   showing.Inflate(LayerSize(StaticPrefs::apz_danger_zone_x(),
                             StaticPrefs::apz_danger_zone_y()) /
                   aCompositorMetrics.LayersPixelsPerCSSPixel());
->>>>>>> upstream-releases
 
   // Clamp both rects to the scrollable rect, because having either of those
   // exceed the scrollable rect doesn't make sense, and could lead to false
@@ -376,7 +299,6 @@ gfxContentType ClientTiledLayerBuffer::GetContentType(
   return content;
 }
 
-<<<<<<< HEAD
 class TileExpiry final : public nsExpirationTracker<TileClient, 3> {
  public:
   TileExpiry() : nsExpirationTracker<TileClient, 3>(1000, "TileExpiry") {}
@@ -384,57 +306,16 @@ class TileExpiry final : public nsExpirationTracker<TileClient, 3> {
   static void AddTile(TileClient* aTile) {
     if (!sTileExpiry) {
       sTileExpiry = MakeUnique<TileExpiry>();
-||||||| merged common ancestors
-class TileExpiry final : public nsExpirationTracker<TileClient, 3>
-{
-  public:
-    TileExpiry() : nsExpirationTracker<TileClient, 3>(1000, "TileExpiry") {}
-
-    static void AddTile(TileClient* aTile)
-    {
-      if (!sTileExpiry) {
-        sTileExpiry = MakeUnique<TileExpiry>();
-      }
-
-      sTileExpiry->AddObject(aTile);
-=======
-class TileExpiry final : public nsExpirationTracker<TileClient, 3> {
- public:
-  TileExpiry() : nsExpirationTracker<TileClient, 3>(1000, "TileExpiry") {}
-
-  static void AddTile(TileClient* aTile) {
-    if (!sTileExpiry) {
-      sTileExpiry = MakeUnique<TileExpiry>();
->>>>>>> upstream-releases
     }
 
     sTileExpiry->AddObject(aTile);
   }
 
-<<<<<<< HEAD
-  static void RemoveTile(TileClient* aTile) {
-    MOZ_ASSERT(sTileExpiry);
-    sTileExpiry->RemoveObject(aTile);
-  }
-||||||| merged common ancestors
-    static void Shutdown() {
-      sTileExpiry = nullptr;
-    }
-  private:
-    virtual void NotifyExpired(TileClient* aTile) override
-    {
-      aTile->DiscardBackBuffer();
-    }
-=======
   static void RemoveTile(TileClient* aTile) {
     MOZ_ASSERT(sTileExpiry);
     sTileExpiry->RemoveObject(aTile);
   }
 
-  static void Shutdown() { sTileExpiry = nullptr; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   static void Shutdown() { sTileExpiry = nullptr; }
 
  private:
@@ -443,16 +324,6 @@ class TileExpiry final : public nsExpirationTracker<TileClient, 3> {
   }
 
   static UniquePtr<TileExpiry> sTileExpiry;
-||||||| merged common ancestors
-    static UniquePtr<TileExpiry> sTileExpiry;
-=======
- private:
-  virtual void NotifyExpired(TileClient* aTile) override {
-    aTile->DiscardBackBuffer();
-  }
-
-  static UniquePtr<TileExpiry> sTileExpiry;
->>>>>>> upstream-releases
 };
 UniquePtr<TileExpiry> TileExpiry::sTileExpiry;
 
@@ -696,27 +567,11 @@ void TileClient::GetSyncTextureSerials(SurfaceMode aMode,
   }
 }
 
-<<<<<<< HEAD
-Maybe<AcquiredBackBuffer> TileClient::AcquireBackBuffer(
-    CompositableClient& aCompositable, const nsIntRegion& aDirtyRegion,
-    const nsIntRegion& aVisibleRegion, gfxContentType aContent,
-    SurfaceMode aMode, TilePaintFlags aFlags) {
-||||||| merged common ancestors
-Maybe<AcquiredBackBuffer>
-TileClient::AcquireBackBuffer(CompositableClient& aCompositable,
-                              const nsIntRegion& aDirtyRegion,
-                              const nsIntRegion& aVisibleRegion,
-                              gfxContentType aContent,
-                              SurfaceMode aMode,
-                              TilePaintFlags aFlags)
-{
-=======
 Maybe<AcquiredBackBuffer> TileClient::AcquireBackBuffer(
     CompositableClient& aCompositable, const nsIntRegion& aDirtyRegion,
     const nsIntRegion& aVisibleRegion, gfxContentType aContent,
     SurfaceMode aMode, TilePaintFlags aFlags) {
   AUTO_PROFILER_LABEL("TileClient::AcquireBackBuffer", GRAPHICS_TileAllocation);
->>>>>>> upstream-releases
   if (!mAllocator) {
     gfxCriticalError() << "[TileClient] Missing TextureClientAllocator.";
     return Nothing();
@@ -822,15 +677,8 @@ Maybe<AcquiredBackBuffer> TileClient::AcquireBackBuffer(
   // Construct a capture draw target if necessary
   RefPtr<DrawTargetCapture> capture;
   if (aFlags & TilePaintFlags::Async) {
-<<<<<<< HEAD
-    capture = Factory::CreateCaptureDrawTargetForTarget(
-        target, gfxPrefs::LayersOMTPCaptureLimit());
-||||||| merged common ancestors
-    capture = Factory::CreateCaptureDrawTargetForTarget(target, gfxPrefs::LayersOMTPCaptureLimit());
-=======
     capture = Factory::CreateCaptureDrawTargetForTarget(
         target, StaticPrefs::layers_omtp_capture_limit());
->>>>>>> upstream-releases
     target = capture;
   }
 
@@ -870,25 +718,11 @@ TileDescriptor TileClient::GetTileDescriptor() {
     readLockedOnWhite = mFrontBufferOnWhite->OnForwardedToHost();
   }
 
-<<<<<<< HEAD
-  return TexturedTileDescriptor(
-      nullptr, mFrontBuffer->GetIPDLActor(),
-      mFrontBufferOnWhite ? MaybeTexture(mFrontBufferOnWhite->GetIPDLActor())
-                          : MaybeTexture(null_t()),
-      mUpdateRect, readLocked, readLockedOnWhite, wasPlaceholder);
-||||||| merged common ancestors
-  return TexturedTileDescriptor(nullptr, mFrontBuffer->GetIPDLActor(),
-                                mFrontBufferOnWhite ? MaybeTexture(mFrontBufferOnWhite->GetIPDLActor()) : MaybeTexture(null_t()),
-                                mUpdateRect,
-                                readLocked, readLockedOnWhite,
-                                wasPlaceholder);
-=======
   return TexturedTileDescriptor(
       nullptr, mFrontBuffer->GetIPDLActor(), Nothing(),
       mFrontBufferOnWhite ? Some(mFrontBufferOnWhite->GetIPDLActor())
                           : Nothing(),
       mUpdateRect, readLocked, readLockedOnWhite, wasPlaceholder);
->>>>>>> upstream-releases
 }
 
 void ClientTiledLayerBuffer::UnlockTile(TileClient& aTile) {

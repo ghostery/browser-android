@@ -55,19 +55,6 @@ NS_IMETHODIMP XPC_MAP_CLASSNAME::PreCreate(nsISupports* nativeObj,
 }
 #endif
 
-<<<<<<< HEAD
-#if !((XPC_MAP_FLAGS)&XPC_SCRIPTABLE_WANT_NEWENUMERATE)
-NS_IMETHODIMP XPC_MAP_CLASSNAME::NewEnumerate(
-    nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* obj,
-    JS::AutoIdVector& properties, bool enumerableOnly, bool* _retval) {
-  NS_ERROR("never called");
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-||||||| merged common ancestors
-#if !((XPC_MAP_FLAGS) & XPC_SCRIPTABLE_WANT_NEWENUMERATE)
-NS_IMETHODIMP XPC_MAP_CLASSNAME::NewEnumerate(nsIXPConnectWrappedNative* wrapper, JSContext * cx, JSObject * obj, JS::AutoIdVector& properties, bool* _retval)
-    {NS_ERROR("never called"); return NS_ERROR_NOT_IMPLEMENTED;}
-=======
 #if !((XPC_MAP_FLAGS)&XPC_SCRIPTABLE_WANT_NEWENUMERATE)
 NS_IMETHODIMP XPC_MAP_CLASSNAME::NewEnumerate(
     nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* obj,
@@ -75,7 +62,6 @@ NS_IMETHODIMP XPC_MAP_CLASSNAME::NewEnumerate(
   NS_ERROR("never called");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
->>>>>>> upstream-releases
 #endif
 
 #if !((XPC_MAP_FLAGS)&XPC_SCRIPTABLE_WANT_ENUMERATE)

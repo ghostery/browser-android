@@ -50,14 +50,7 @@ class ResourceQueue : private nsDeque {
 
   // Tries to evict at least aSizeToEvict from the queue up until
   // aOffset. Returns amount evicted.
-<<<<<<< HEAD
-  uint32_t Evict(uint64_t aOffset, uint32_t aSizeToEvict, ErrorResult& aRv);
-||||||| merged common ancestors
-  uint32_t Evict(uint64_t aOffset, uint32_t aSizeToEvict,
-                 ErrorResult& aRv);
-=======
   uint32_t Evict(uint64_t aOffset, uint32_t aSizeToEvict);
->>>>>>> upstream-releases
 
   uint32_t EvictBefore(uint64_t aOffset);
 
@@ -69,15 +62,9 @@ class ResourceQueue : private nsDeque {
   void Dump(const char* aPath);
 #endif
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   const uint8_t* GetContiguousAccess(int64_t aOffset, size_t aSize);
 
  private:
->>>>>>> upstream-releases
   ResourceItem* ResourceAt(uint32_t aIndex) const;
 
   // Returns the index of the resource that contains the given
@@ -85,13 +72,7 @@ private:
   // the resource at the given index returned if it is not null.  If
   // no such resource exists, returns GetSize() and aOffset is
   // untouched.
-<<<<<<< HEAD
-  uint32_t GetAtOffset(uint64_t aOffset, uint32_t* aResourceOffset);
-||||||| merged common ancestors
-  uint32_t GetAtOffset(uint64_t aOffset, uint32_t *aResourceOffset);
-=======
   uint32_t GetAtOffset(uint64_t aOffset, uint32_t* aResourceOffset) const;
->>>>>>> upstream-releases
 
   ResourceItem* PopFront();
 

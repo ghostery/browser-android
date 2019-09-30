@@ -24,16 +24,9 @@ class VariableLengthPrefixSet final : public nsIMemoryReporter {
   VariableLengthPrefixSet();
 
   nsresult Init(const nsACString& aName);
-<<<<<<< HEAD
-  nsresult SetPrefixes(
-      const mozilla::safebrowsing::PrefixStringMap& aPrefixMap);
-||||||| merged common ancestors
-  nsresult SetPrefixes(const mozilla::safebrowsing::PrefixStringMap& aPrefixMap);
-=======
   nsresult SetPrefixes(mozilla::safebrowsing::PrefixStringMap& aPrefixMap);
   nsresult SetPrefixes(AddPrefixArray& aAddPrefixes,
                        AddCompleteArray& aAddCompletes);
->>>>>>> upstream-releases
   nsresult GetPrefixes(mozilla::safebrowsing::PrefixStringMap& aPrefixMap);
   nsresult GetFixedLengthPrefixes(FallibleTArray<uint32_t>* aPrefixes,
                                   FallibleTArray<nsCString>* aCompletes);

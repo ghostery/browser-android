@@ -135,29 +135,9 @@ function infoMessages(target) {
 function warningMessages(target) {
   let messages = [];
 
-<<<<<<< HEAD
-  if (target.addonTargetFront.isLegacyTemporaryExtension()) {
-    messages.push(dom.li(
-      {
-        className: "addon-target-warning-message addon-target-message",
-      },
-      Strings.GetStringFromName("legacyExtensionWarning"),
-      " ",
-      dom.a(
-||||||| merged common ancestors
-  if (isLegacyTemporaryExtension(target.form)) {
-    messages.push(dom.li(
-      {
-        className: "addon-target-warning-message addon-target-message",
-      },
-      Strings.GetStringFromName("legacyExtensionWarning"),
-      " ",
-      dom.a(
-=======
   if (target.addonTargetFront.isLegacyTemporaryExtension()) {
     messages.push(
       dom.li(
->>>>>>> upstream-releases
         {
           className: "addon-target-warning-message addon-target-message",
         },

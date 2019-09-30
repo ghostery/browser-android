@@ -27,25 +27,7 @@ class SidebarFixedItem extends PureComponent {
   }
 
   render() {
-<<<<<<< HEAD
-    const {
-      icon,
-      isSelected,
-      name,
-      to,
-    } = this.props;
-||||||| merged common ancestors
-    const {
-      dispatch,
-      id,
-      icon,
-      isSelected,
-      name,
-      runtimeId,
-    } = this.props;
-=======
     const { icon, isSelected, name, to } = this.props;
->>>>>>> upstream-releases
 
     return SidebarItem(
       {
@@ -53,38 +35,6 @@ class SidebarFixedItem extends PureComponent {
         isSelected,
         to,
       },
-<<<<<<< HEAD
-      dom.div(
-        {
-          className: "sidebar-fixed-item__container",
-        },
-        dom.img(
-          {
-            className: "sidebar-fixed-item__icon",
-            src: icon,
-          }
-        ),
-        dom.span(
-          {
-            className: "ellipsis-text",
-            title: name,
-          },
-          name
-        )
-||||||| merged common ancestors
-      dom.img(
-        {
-          className: "sidebar-fixed-item__icon",
-          src: icon,
-        }
-      ),
-      dom.span(
-        {
-          className: "ellipsis-text",
-          title: name,
-        },
-        name
-=======
       dom.div(
         {
           className: "sidebar-fixed-item__container",
@@ -100,7 +50,6 @@ class SidebarFixedItem extends PureComponent {
           },
           name
         )
->>>>>>> upstream-releases
       )
     );
   }

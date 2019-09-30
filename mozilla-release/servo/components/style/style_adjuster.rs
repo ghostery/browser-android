@@ -13,26 +13,6 @@ use crate::properties::longhands::overflow_x::computed_value::T as Overflow;
 use crate::properties::longhands::position::computed_value::T as Position;
 use crate::properties::{self, ComputedValues, StyleBuilder};
 use app_units::Au;
-<<<<<<< HEAD
-use crate::dom::TElement;
-use crate::properties::computed_value_flags::ComputedValueFlags;
-use crate::properties::longhands::display::computed_value::T as Display;
-use crate::properties::longhands::float::computed_value::T as Float;
-use crate::properties::longhands::overflow_x::computed_value::T as Overflow;
-use crate::properties::longhands::position::computed_value::T as Position;
-use crate::properties::{self, ComputedValues, StyleBuilder};
-||||||| merged common ancestors
-use dom::TElement;
-use properties::{self, ComputedValues, StyleBuilder};
-use properties::computed_value_flags::ComputedValueFlags;
-use properties::longhands::_moz_appearance::computed_value::T as Appearance;
-use properties::longhands::display::computed_value::T as Display;
-use properties::longhands::float::computed_value::T as Float;
-use properties::longhands::line_height::computed_value::T as LineHeight;
-use properties::longhands::overflow_x::computed_value::T as Overflow;
-use properties::longhands::position::computed_value::T as Position;
-=======
->>>>>>> upstream-releases
 
 /// A struct that implements all the adjustment methods.
 ///

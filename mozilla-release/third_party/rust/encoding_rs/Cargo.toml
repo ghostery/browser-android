@@ -12,13 +12,7 @@
 
 [package]
 name = "encoding_rs"
-<<<<<<< HEAD
-version = "0.8.13"
-||||||| merged common ancestors
-version = "0.8.9"
-=======
 version = "0.8.17"
->>>>>>> upstream-releases
 authors = ["Henri Sivonen <hsivonen@hsivonen.fi>"]
 description = "A Gecko-oriented implementation of the Encoding Standard"
 homepage = "https://docs.rs/encoding_rs/"

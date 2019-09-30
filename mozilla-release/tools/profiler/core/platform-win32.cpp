@@ -36,17 +36,9 @@
 #include "mozilla/StackWalk_windows.h"
 #include "mozilla/WindowsVersion.h"
 
-<<<<<<< HEAD
-/* static */ int Thread::GetCurrentId() {
-||||||| merged common ancestors
-/* static */ int
-Thread::GetCurrentId()
-{
-=======
 int profiler_current_process_id() { return _getpid(); }
 
 int profiler_current_thread_id() {
->>>>>>> upstream-releases
   DWORD threadId = GetCurrentThreadId();
   MOZ_ASSERT(threadId <= INT32_MAX, "native thread ID is > INT32_MAX");
   return int(threadId);
@@ -71,13 +63,7 @@ static void PopulateRegsFromContext(Registers& aRegs, CONTEXT* aContext) {
   aRegs.mSP = reinterpret_cast<Address>(aContext->Sp);
   aRegs.mFP = reinterpret_cast<Address>(aContext->Fp);
 #else
-<<<<<<< HEAD
-#error "bad arch"
-||||||| merged common ancestors
- #error "bad arch"
-=======
 #  error "bad arch"
->>>>>>> upstream-releases
 #endif
   aRegs.mLR = 0;
 }
@@ -112,17 +98,8 @@ class PlatformData {
 
 #if defined(USE_MOZ_STACK_WALK)
 HANDLE
-<<<<<<< HEAD
-GetThreadHandle(PlatformData* aData) { return aData->ProfiledThread(); }
-||||||| merged common ancestors
-GetThreadHandle(PlatformData* aData)
-{
-  return aData->ProfiledThread();
-}
-=======
 GetThreadHandle(PlatformData* aData) { return aData->ProfiledThread(); }
 #endif
->>>>>>> upstream-releases
 
 static const HANDLE kNoThread = INVALID_HANDLE_VALUE;
 
@@ -335,12 +312,6 @@ void InitializeWin64ProfilerHooks() {
                                       &patched_LdrResolveDelayLoadedAPI);
   }
 }
-<<<<<<< HEAD
-#endif  // defined(GP_PLAT_amd64_windows)
-||||||| merged common ancestors
-#endif // defined(GP_PLAT_amd64_windows)
-
-=======
 
 #  else  // ndef MOZ_BASE_PROFILER
 // If MOZ_BASE_PROFILER is #defined, we just use InitializeWin64ProfilerHooks
@@ -356,4 +327,3 @@ using mozilla::baseprofiler::InitializeWin64ProfilerHooks;
 
 #  endif  // ndef MOZ_BASE_PROFILER else
 #endif    // defined(GP_PLAT_amd64_windows)
->>>>>>> upstream-releases

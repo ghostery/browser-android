@@ -22,17 +22,7 @@ using namespace mozilla;
 
 already_AddRefed<nsBoxLayout> NS_NewGridRowLeafLayout();
 
-<<<<<<< HEAD
-nsIFrame* NS_NewGridRowLeafFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-||||||| merged common ancestors
-nsIFrame*
-NS_NewGridRowLeafFrame(nsIPresShell* aPresShell,
-                       ComputedStyle* aStyle)
-{
-=======
 nsIFrame* NS_NewGridRowLeafFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
->>>>>>> upstream-releases
   nsCOMPtr<nsBoxLayout> layout = NS_NewGridRowLeafLayout();
   return new (aPresShell)
       nsGridRowLeafFrame(aStyle, aPresShell->GetPresContext(), false, layout);

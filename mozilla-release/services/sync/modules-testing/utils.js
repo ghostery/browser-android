@@ -294,20 +294,10 @@ function encryptPayload(cleartext) {
 }
 
 var sumHistogram = function(name, options = {}) {
-<<<<<<< HEAD
-  let histogram = options.key ? Services.telemetry.getKeyedHistogramById(name) :
-                  Services.telemetry.getHistogramById(name);
-  let snapshot = histogram.snapshot();
-||||||| merged common ancestors
-  let histogram = options.key ? Services.telemetry.getKeyedHistogramById(name) :
-                  Services.telemetry.getHistogramById(name);
-  let snapshot = histogram.snapshot(options.key);
-=======
   let histogram = options.key
     ? Services.telemetry.getKeyedHistogramById(name)
     : Services.telemetry.getHistogramById(name);
   let snapshot = histogram.snapshot();
->>>>>>> upstream-releases
   let sum = -Infinity;
   if (snapshot) {
     if (options.key && snapshot[options.key]) {
@@ -321,17 +311,8 @@ var sumHistogram = function(name, options = {}) {
 };
 
 var getLoginTelemetryScalar = function() {
-<<<<<<< HEAD
-  let snapshot = Services.telemetry.getSnapshotForKeyedScalars("main", true);
-  return snapshot.parent ? snapshot.parent["services.sync.sync_login_state_transitions"] : {};
-||||||| merged common ancestors
-  let dataset = Services.telemetry.DATASET_RELEASE_CHANNEL_OPTOUT;
-  let snapshot = Services.telemetry.snapshotKeyedScalars(dataset, true);
-  return snapshot.parent ? snapshot.parent["services.sync.sync_login_state_transitions"] : {};
-=======
   let snapshot = Services.telemetry.getSnapshotForKeyedScalars("main", true);
   return snapshot.parent
     ? snapshot.parent["services.sync.sync_login_state_transitions"]
     : {};
->>>>>>> upstream-releases
 };

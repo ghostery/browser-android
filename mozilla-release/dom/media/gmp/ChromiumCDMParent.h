@@ -29,23 +29,11 @@ namespace gmp {
 
 class GMPContentParent;
 
-<<<<<<< HEAD
-class ChromiumCDMParent final : public PChromiumCDMParent,
-                                public GMPCrashHelperHolder {
- public:
-||||||| merged common ancestors
-class ChromiumCDMParent final
-  : public PChromiumCDMParent
-  , public GMPCrashHelperHolder
-{
-public:
-=======
 class ChromiumCDMParent final : public PChromiumCDMParent,
                                 public GMPCrashHelperHolder {
   friend class PChromiumCDMParent;
 
  public:
->>>>>>> upstream-releases
   typedef MozPromise<bool, MediaResult, /* IsExclusive = */ true> InitPromise;
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(ChromiumCDMParent)
@@ -102,26 +90,6 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
   ~ChromiumCDMParent() {}
 
   ipc::IPCResult Recv__delete__() override;
-<<<<<<< HEAD
-  ipc::IPCResult RecvOnResolvePromiseWithKeyStatus(
-      const uint32_t& aPromiseId, const uint32_t& aKeyStatus) override;
-  ipc::IPCResult RecvOnResolveNewSessionPromise(
-      const uint32_t& aPromiseId, const nsCString& aSessionId) override;
-  ipc::IPCResult RecvResolveLoadSessionPromise(
-      const uint32_t& aPromiseId, const bool& aSuccessful) override;
-  ipc::IPCResult RecvOnResolvePromise(const uint32_t& aPromiseId) override;
-||||||| merged common ancestors
-  ipc::IPCResult RecvOnResolvePromiseWithKeyStatus(
-    const uint32_t& aPromiseId,
-    const uint32_t& aKeyStatus) override;
-  ipc::IPCResult RecvOnResolveNewSessionPromise(
-    const uint32_t& aPromiseId,
-    const nsCString& aSessionId) override;
-  ipc::IPCResult RecvResolveLoadSessionPromise(
-    const uint32_t& aPromiseId,
-    const bool& aSuccessful) override;
-  ipc::IPCResult RecvOnResolvePromise(const uint32_t& aPromiseId) override;
-=======
   ipc::IPCResult RecvOnResolvePromiseWithKeyStatus(const uint32_t& aPromiseId,
                                                    const uint32_t& aKeyStatus);
   ipc::IPCResult RecvOnResolveNewSessionPromise(const uint32_t& aPromiseId,
@@ -129,7 +97,6 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
   ipc::IPCResult RecvResolveLoadSessionPromise(const uint32_t& aPromiseId,
                                                const bool& aSuccessful);
   ipc::IPCResult RecvOnResolvePromise(const uint32_t& aPromiseId);
->>>>>>> upstream-releases
   ipc::IPCResult RecvOnRejectPromise(const uint32_t& aPromiseId,
                                      const uint32_t& aError,
                                      const uint32_t& aSystemCode,
@@ -138,32 +105,12 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
                                       const uint32_t& aMessageType,
                                       nsTArray<uint8_t>&& aMessage);
   ipc::IPCResult RecvOnSessionKeysChange(
-<<<<<<< HEAD
-      const nsCString& aSessionId,
-      nsTArray<CDMKeyInformation>&& aKeysInfo) override;
-  ipc::IPCResult RecvOnExpirationChange(
-      const nsCString& aSessionId, const double& aSecondsSinceEpoch) override;
-  ipc::IPCResult RecvOnSessionClosed(const nsCString& aSessionId) override;
-  ipc::IPCResult RecvDecrypted(const uint32_t& aId, const uint32_t& aStatus,
-                               ipc::Shmem&& aData) override;
-||||||| merged common ancestors
-    const nsCString& aSessionId,
-    nsTArray<CDMKeyInformation>&& aKeysInfo) override;
-  ipc::IPCResult RecvOnExpirationChange(
-    const nsCString& aSessionId,
-    const double& aSecondsSinceEpoch) override;
-  ipc::IPCResult RecvOnSessionClosed(const nsCString& aSessionId) override;
-  ipc::IPCResult RecvDecrypted(const uint32_t& aId,
-                               const uint32_t& aStatus,
-                               ipc::Shmem&& aData) override;
-=======
       const nsCString& aSessionId, nsTArray<CDMKeyInformation>&& aKeysInfo);
   ipc::IPCResult RecvOnExpirationChange(const nsCString& aSessionId,
                                         const double& aSecondsSinceEpoch);
   ipc::IPCResult RecvOnSessionClosed(const nsCString& aSessionId);
   ipc::IPCResult RecvDecrypted(const uint32_t& aId, const uint32_t& aStatus,
                                ipc::Shmem&& aData);
->>>>>>> upstream-releases
   ipc::IPCResult RecvDecryptFailed(const uint32_t& aId,
                                    const uint32_t& aStatus);
   ipc::IPCResult RecvOnDecoderInitDone(const uint32_t& aStatus);

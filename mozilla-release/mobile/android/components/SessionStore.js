@@ -18,13 +18,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
   SessionHistory: "resource://gre/modules/sessionstore/SessionHistory.jsm",
   SharedPreferences: "resource://gre/modules/SharedPreferences.jsm",
-<<<<<<< HEAD
-  Task: "resource://gre/modules/Task.jsm",
-||||||| merged common ancestors
-  Task: "resource://gre/modules/Task.jsm",
-  TelemetryStopwatch: "resource://gre/modules/TelemetryStopwatch.jsm",
-=======
->>>>>>> upstream-releases
   Utils: "resource://gre/modules/sessionstore/Utils.jsm",
 });
 
@@ -34,9 +27,6 @@ XPCOMUtils.defineLazyModuleGetter(
   "resource://gre/modules/AndroidLog.jsm",
   "AndroidLog"
 );
-
-const ssu = Cc["@mozilla.org/browser/sessionstore/utils;1"]
-              .getService(Ci.nsISessionStoreUtils);
 
 function dump(a) {
   Services.console.logStringMessage(a);
@@ -133,23 +123,10 @@ SessionStore.prototype = {
     this._loadState = STATE_STOPPED;
     this._startupRestoreFinished = false;
 
-<<<<<<< HEAD
-    /* Cliqz Start */
-    // !!! EXPERIMENTAL !!! Shortening this time down to mitigate unexpected
-    // tabs reopening after a task manager kill
-    // this._interval = Services.prefs.getIntPref("browser.sessionstore.interval");
-    this._interval = 2 * MINIMUM_SAVE_DELAY; // milliseconds
-    /* Cliqz End */
-    this._backupInterval = Services.prefs.getIntPref("browser.sessionstore.backupInterval");
-||||||| merged common ancestors
-    this._interval = Services.prefs.getIntPref("browser.sessionstore.interval");
-    this._backupInterval = Services.prefs.getIntPref("browser.sessionstore.backupInterval");
-=======
     this._interval = Services.prefs.getIntPref("browser.sessionstore.interval");
     this._backupInterval = Services.prefs.getIntPref(
       "browser.sessionstore.backupInterval"
     );
->>>>>>> upstream-releases
 
     this._updateMaxTabsUndo();
     Services.prefs.addObserver(PREFS_MAX_TABS_UNDO, () => {
@@ -1076,13 +1053,7 @@ SessionStore.prototype = {
 
     // Save the scroll position itself.
     let content = aBrowser.contentWindow;
-<<<<<<< HEAD
-    let [scrolldata] = Utils.mapFrameTree(content, ssu.collectScrollPosition.bind(ssu));
-||||||| merged common ancestors
-    let [scrolldata] = Utils.mapFrameTree(content, ScrollPosition.collect);
-=======
     let scrolldata = SessionStoreUtils.collectScrollPosition(content);
->>>>>>> upstream-releases
     scrolldata = scrolldata || {};
 
     // Save the current document resolution.
@@ -1590,16 +1561,6 @@ SessionStore.prototype = {
   _restoreTextData(aFormData, aBrowser) {
     if (aFormData) {
       log("_restoreTextData()");
-<<<<<<< HEAD
-      Utils.restoreFrameTreeData(aBrowser.contentWindow, aFormData, (frame, data) => {
-        // restore() will return false, and thus abort restoration for the
-        // current |frame| and its descendants, if |data.url| is given but
-        // doesn't match the loaded document's URL.
-        return FormData.restore(frame, data);
-      });
-||||||| merged common ancestors
-      FormData.restoreTree(aBrowser.contentWindow, aFormData);
-=======
       Utils.restoreFrameTreeData(
         aBrowser.contentWindow,
         aFormData,
@@ -1610,7 +1571,6 @@ SessionStore.prototype = {
           return SessionStoreUtils.restoreFormData(frame.document, data);
         }
       );
->>>>>>> upstream-releases
     }
   },
 
@@ -1643,15 +1603,6 @@ SessionStore.prototype = {
   _restoreScrollPosition(aScrollData, aBrowser) {
     if (aScrollData) {
       log("_restoreScrollPosition()");
-<<<<<<< HEAD
-      Utils.restoreFrameTreeData(aBrowser.contentWindow, aScrollData, (frame, data) => {
-        if (data.scroll) {
-          ssu.restoreScrollPosition(frame, data.scroll);
-        }
-      });
-||||||| merged common ancestors
-      ScrollPosition.restoreTree(aBrowser.contentWindow, aScrollData);
-=======
       Utils.restoreFrameTreeData(
         aBrowser.contentWindow,
         aScrollData,
@@ -1661,7 +1612,6 @@ SessionStore.prototype = {
           }
         }
       );
->>>>>>> upstream-releases
     }
   },
 

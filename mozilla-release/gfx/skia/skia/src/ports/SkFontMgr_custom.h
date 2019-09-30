@@ -49,15 +49,8 @@ public:
     SkTypeface_Empty() ;
 
 protected:
-<<<<<<< HEAD
-    SkStreamAsset* onOpenStream(int*) const override;
-    sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override;
-||||||| merged common ancestors
-    SkStreamAsset* onOpenStream(int*) const override;
-=======
     std::unique_ptr<SkStreamAsset> onOpenStream(int*) const override;
     sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override;
->>>>>>> upstream-releases
 
 private:
     typedef SkTypeface_Custom INHERITED;
@@ -88,15 +81,8 @@ public:
                     const SkString familyName, const char path[], int index);
 
 protected:
-<<<<<<< HEAD
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override;
-    sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override;
-||||||| merged common ancestors
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override;
-=======
     std::unique_ptr<SkStreamAsset> onOpenStream(int* ttcIndex) const override;
     sk_sp<SkTypeface> onMakeClone(const SkFontArguments& args) const override;
->>>>>>> upstream-releases
 
 private:
     SkString fPath;

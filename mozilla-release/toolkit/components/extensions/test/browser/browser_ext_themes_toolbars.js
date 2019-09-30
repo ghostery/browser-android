@@ -8,23 +8,6 @@ add_task(async function test_support_toolbar_property() {
   const TOOLBAR_TEXT_COLOR = "#9400ff";
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar": TOOLBAR_COLOR,
-          // NOTE: this property is going to be removed on Firefox 69
-          // (and bookmark_text is going to replace it).
-          "toolbar_text": TOOLBAR_TEXT_COLOR,
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar": TOOLBAR_COLOR,
-          "toolbar_text": TOOLBAR_TEXT_COLOR,
-=======
       theme: {
         colors: {
           frame: ACCENT_COLOR,
@@ -33,7 +16,6 @@ add_task(async function test_support_toolbar_property() {
           // NOTE: this property is going to be removed on Firefox 69
           // (and bookmark_text is going to replace it).
           toolbar_text: TOOLBAR_TEXT_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

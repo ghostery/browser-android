@@ -280,11 +280,6 @@ class TabsPanel extends TabsListBase {
     let button = row.firstElementChild;
     let image =
       this.doc.getAnonymousElementByAttribute(
-<<<<<<< HEAD
-        button, "class", "toolbarbutton-icon tab-throbber-tabslist");
-||||||| merged common ancestors
-        button, "class", "toolbarbutton-icon tab-throbber-fallback");
-=======
         button,
         "class",
         "toolbarbutton-icon"
@@ -294,7 +289,6 @@ class TabsPanel extends TabsListBase {
         "class",
         "toolbarbutton-icon tab-throbber-tabslist"
       );
->>>>>>> upstream-releases
 
     if (image) {
       let busy = tab.getAttribute("busy");

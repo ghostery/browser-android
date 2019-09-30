@@ -105,16 +105,6 @@ class nsWebBrowser final : public nsIWebBrowser,
   void FocusActivate();
   void FocusDeactivate();
 
-<<<<<<< HEAD
-  static already_AddRefed<nsWebBrowser> Create(
-      nsIWebBrowserChrome* aContainerWindow, nsIWidget* aParentWidget,
-      const mozilla::OriginAttributes& aOriginAttributes,
-      mozIDOMWindowProxy* aOpener, int aItemType);
-
- protected:
-||||||| merged common ancestors
-protected:
-=======
   static already_AddRefed<nsWebBrowser> Create(
       nsIWebBrowserChrome* aContainerWindow, nsIWidget* aParentWidget,
       const mozilla::OriginAttributes& aOriginAttributes,
@@ -122,7 +112,6 @@ protected:
       bool aDisableHistory = false);
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsWebBrowser();
   NS_IMETHOD InternalDestroy();
 

@@ -89,30 +89,12 @@ void ClearKeyPersistence::WriteIndex() {
   WriteData(mHost, filename, data, move(onIndexSuccess), move(onIndexFail));
 }
 
-<<<<<<< HEAD
-ClearKeyPersistence::ClearKeyPersistence(Host_9* aHost) { this->mHost = aHost; }
-
-void ClearKeyPersistence::EnsureInitialized(bool aPersistentStateAllowed,
-                                            function<void()>&& aOnInitialized) {
-||||||| merged common ancestors
-
-ClearKeyPersistence::ClearKeyPersistence(Host_9* aHost)
-{
-  this->mHost = aHost;
-}
-
-void
-ClearKeyPersistence::EnsureInitialized(bool aPersistentStateAllowed,
-                                       function<void()>&& aOnInitialized)
-{
-=======
 ClearKeyPersistence::ClearKeyPersistence(Host_10* aHost) {
   this->mHost = aHost;
 }
 
 void ClearKeyPersistence::EnsureInitialized(bool aPersistentStateAllowed,
                                             function<void()>&& aOnInitialized) {
->>>>>>> upstream-releases
   if (aPersistentStateAllowed &&
       mPersistentKeyState == PersistentKeyState::UNINITIALIZED) {
     mPersistentKeyState = LOADING;

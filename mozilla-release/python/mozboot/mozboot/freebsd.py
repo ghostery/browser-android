@@ -65,18 +65,10 @@ class FreeBSDBootstrapper(BaseBootstrapper):
         # TODO: Figure out what not to install for artifact mode
         self.pkg_install(*self.browser_packages)
 
-<<<<<<< HEAD
-    def ensure_clang_static_analysis_package(self, checkout_root):
-        # TODO: we don't ship clang base static analysis for this platform
-        pass
-
-||||||| merged common ancestors
-=======
     def ensure_clang_static_analysis_package(self, state_dir, checkout_root):
         # TODO: we don't ship clang base static analysis for this platform
         pass
 
->>>>>>> upstream-releases
     def ensure_stylo_packages(self, state_dir, checkout_root):
         # Clang / llvm already installed as browser package
         self.pkg_install('rust-cbindgen')

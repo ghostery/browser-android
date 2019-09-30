@@ -30,26 +30,8 @@ this.ActorChild = class ActorChild {
     return this.mm.docShell;
   }
 
-<<<<<<< HEAD
   addEventListener(event, options) {
     this._dispatcher.addEventListener(event, this.constructor.name, options);
-  }
-
-  addMessageListener(msg) {
-    this._dispatcher.addMessageListener(msg, this.constructor.name);
-  }
-
-  sendAsyncMessage(msg, data = {}) {
-    data.frameId = this._dispatcher.frameId;
-    data.browsingContextId = this._dispatcher.browsingContextId;
-    this.mm.sendAsyncMessage(msg, data);
-||||||| merged common ancestors
-  addEventListener(event, listener, options) {
-    this._dispatcher.addEventListener(event, listener, options);
-=======
-  addEventListener(event, options) {
-    this._dispatcher.addEventListener(event, this.constructor.name, options);
->>>>>>> upstream-releases
   }
 
   addMessageListener(msg) {

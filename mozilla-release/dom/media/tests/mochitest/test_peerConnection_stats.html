@@ -204,22 +204,6 @@ const statsExpectedByType = {
     deprecated: [],
   },
   "local-candidate": {
-<<<<<<< HEAD
-    expected: ["id", "timestamp", "type", "address",
-               "protocol", "port", "candidateType", "priority"],
-    optional: ["relayProtocol"],
-    unimplemented: ["networkType", "url", "transportId"],
-    deprecated: ["candidateId", "portNumber", "ipAddress", "componentId", "mozLocalTransport",
-      "transport"],
-||||||| merged common ancestors
-    expected: ["id", "timestamp", "type", "componentId", "ipAddress",
-               "transport", "mozLocalTransport", "portNumber",
-               "candidateType"],
-    optional: [],
-    unimplemented: ["address", "port", "networkType", "protocol",
-                    "relayProtocol", "priority", "url"],
-    deprecated: ["candidateId"],
-=======
     expected: [
       "id",
       "timestamp",
@@ -246,24 +230,8 @@ const statsExpectedByType = {
       "mozLocalTransport",
       "transport",
     ],
->>>>>>> upstream-releases
   },
   "remote-candidate": {
-<<<<<<< HEAD
-    expected: ["id", "timestamp", "type", "address",
-               "protocol", "port", "candidateType", "priority"],
-    optional: ["relayProtocol"],
-    unimplemented: ["networkType", "url", "transportId"],
-    deprecated: ["candidateId", "portNumber", "ipAddress", "componentId", "mozLocalTransport",
-                 "transport"],
-||||||| merged common ancestors
-    expected: ["id", "timestamp", "type", "componentId", "ipAddress",
-               "transport", "portNumber", "candidateType"],
-    optional: [],
-    unimplemented: ["address", "port", "networkType", "protocol",
-                    "relayProtocol", "priority", "url"],
-    deprecated: ["candidateId"],
-=======
     expected: [
       "id",
       "timestamp",
@@ -290,7 +258,6 @@ const statsExpectedByType = {
       "mozLocalTransport",
       "transport",
     ],
->>>>>>> upstream-releases
   },
   "certificate": { skip: true },
 };
@@ -784,33 +751,12 @@ var pedanticChecks = report => {
       // address
       ok(stat.address, `${stat.type} has address. value=${stat.address}`);
 
-<<<<<<< HEAD
       // protocol
       ok(stat.protocol, `${stat.type} has protocol. value=${stat.protocol}`);
 
       // port
       ok(stat.port >= 0, `${stat.type} has port >= 0. value=${stat.port}`);
       ok(stat.port <= 65535, `${stat.type} has port <= 65535. value=${stat.port}`);
-||||||| merged common ancestors
-      // transport
-      ok(stat.transport, `${stat.type} has transport. value=${stat.transport}`);
-
-      if (stat.type == "local-candidate") {
-        // mozLocalTransport
-        ok(stat.mozLocalTransport, `${stat.type} has mozLocalTransport. value=${stat.mozLocalTransport}`);
-      }
-
-      // portNumber
-      ok(stat.portNumber >= 0, `${stat.type} has portNumber >= 0. value=${stat.portNumber}`);
-      ok(stat.portNumber <= 65535, `${stat.type} has portNumber <= 65535. value=${stat.portNumber}`);
-=======
-      // protocol
-      ok(stat.protocol, `${stat.type} has protocol. value=${stat.protocol}`);
-
-      // port
-      ok(stat.port >= 0, `${stat.type} has port >= 0. value=${stat.port}`);
-      ok(stat.port <= 65535, `${stat.type} has port <= 65535. value=${stat.port}`);
->>>>>>> upstream-releases
 
       // candidateType
       ok(stat.candidateType, `${stat.type} has candidateType. value=${stat.candidateType}`);

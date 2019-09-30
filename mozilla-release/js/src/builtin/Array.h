@@ -55,21 +55,6 @@ extern ArrayObject* JS_FASTCALL NewDenseUnallocatedArray(
     JSContext* cx, uint32_t length, HandleObject proto = nullptr,
     NewObjectKind newKind = GenericObject);
 
-<<<<<<< HEAD
-// Create a dense array with length and capacity == |length|, initialized length
-// set to 0, but with only |EagerAllocationMaxLength| elements allocated.
-extern ArrayObject* JS_FASTCALL NewDensePartlyAllocatedArray(
-    JSContext* cx, uint32_t length, HandleObject proto = nullptr,
-    NewObjectKind newKind = GenericObject);
-||||||| merged common ancestors
-/*
- * Create a dense array with length and capacity == |length|, initialized length set to 0,
- * but with only |EagerAllocationMaxLength| elements allocated.
- */
-extern ArrayObject * JS_FASTCALL
-NewDensePartlyAllocatedArray(JSContext* cx, uint32_t length, HandleObject proto = nullptr,
-                             NewObjectKind newKind = GenericObject);
-=======
 // Create a dense array with length and capacity == |length|, initialized length
 // set to 0, but with only |EagerAllocationMaxLength| elements allocated.
 extern ArrayObject* JS_FASTCALL NewDensePartlyAllocatedArray(
@@ -81,181 +66,55 @@ extern ArrayObject* JS_FASTCALL NewDensePartlyAllocatedArray(
 extern ArrayObject* JS_FASTCALL NewDenseFullyAllocatedArray(
     JSContext* cx, uint32_t length, HandleObject proto = nullptr,
     NewObjectKind newKind = GenericObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Create a dense array with length and capacity == 'length', initialized length
-// set to 0.
-extern ArrayObject* JS_FASTCALL NewDenseFullyAllocatedArray(
-    JSContext* cx, uint32_t length, HandleObject proto = nullptr,
-    NewObjectKind newKind = GenericObject);
-||||||| merged common ancestors
-/* Create a dense array with length and capacity == 'length', initialized length set to 0. */
-extern ArrayObject * JS_FASTCALL
-NewDenseFullyAllocatedArray(JSContext* cx, uint32_t length, HandleObject proto = nullptr,
-                            NewObjectKind newKind = GenericObject);
-=======
 // Create a dense array from the given array values, which must be rooted.
 extern ArrayObject* NewDenseCopiedArray(JSContext* cx, uint32_t length,
                                         const Value* values,
                                         HandleObject proto = nullptr,
                                         NewObjectKind newKind = GenericObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Create a dense array from the given array values, which must be rooted.
-extern ArrayObject* NewDenseCopiedArray(JSContext* cx, uint32_t length,
-                                        const Value* values,
-                                        HandleObject proto = nullptr,
-                                        NewObjectKind newKind = GenericObject);
-||||||| merged common ancestors
-/* Create a dense array from the given array values, which must be rooted */
-extern ArrayObject*
-NewDenseCopiedArray(JSContext* cx, uint32_t length, const Value* values,
-                    HandleObject proto = nullptr, NewObjectKind newKind = GenericObject);
-=======
 // Create a dense array based on templateObject with the given length.
 extern ArrayObject* NewDenseFullyAllocatedArrayWithTemplate(
     JSContext* cx, uint32_t length, JSObject* templateObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Create a dense array based on templateObject with the given length.
-extern ArrayObject* NewDenseFullyAllocatedArrayWithTemplate(
-    JSContext* cx, uint32_t length, JSObject* templateObject);
-||||||| merged common ancestors
-/* Create a dense array based on templateObject with the given length. */
-extern ArrayObject*
-NewDenseFullyAllocatedArrayWithTemplate(JSContext* cx, uint32_t length, JSObject* templateObject);
-=======
 // Create a dense array with the same copy-on-write elements as another object.
 extern ArrayObject* NewDenseCopyOnWriteArray(JSContext* cx,
                                              HandleArrayObject templateObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Create a dense array with the same copy-on-write elements as another object.
-extern ArrayObject* NewDenseCopyOnWriteArray(JSContext* cx,
-                                             HandleArrayObject templateObject,
-                                             gc::InitialHeap heap);
-||||||| merged common ancestors
-/* Create a dense array with the same copy-on-write elements as another object. */
-extern ArrayObject*
-NewDenseCopyOnWriteArray(JSContext* cx, HandleArrayObject templateObject, gc::InitialHeap heap);
-=======
 extern ArrayObject* NewFullyAllocatedArrayTryUseGroup(
     JSContext* cx, HandleObjectGroup group, size_t length,
     NewObjectKind newKind = GenericObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewFullyAllocatedArrayTryUseGroup(
-    JSContext* cx, HandleObjectGroup group, size_t length,
-    NewObjectKind newKind = GenericObject);
-||||||| merged common ancestors
-extern ArrayObject*
-NewFullyAllocatedArrayTryUseGroup(JSContext* cx, HandleObjectGroup group, size_t length,
-                                  NewObjectKind newKind = GenericObject);
-=======
 extern ArrayObject* NewPartlyAllocatedArrayTryUseGroup(JSContext* cx,
                                                        HandleObjectGroup group,
                                                        size_t length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewPartlyAllocatedArrayTryUseGroup(JSContext* cx,
-                                                       HandleObjectGroup group,
-                                                       size_t length);
-||||||| merged common ancestors
-extern ArrayObject*
-NewPartlyAllocatedArrayTryUseGroup(JSContext* cx, HandleObjectGroup group, size_t length);
-=======
 extern ArrayObject* NewFullyAllocatedArrayTryReuseGroup(
     JSContext* cx, HandleObject obj, size_t length,
     NewObjectKind newKind = GenericObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewFullyAllocatedArrayTryReuseGroup(
-    JSContext* cx, HandleObject obj, size_t length,
-    NewObjectKind newKind = GenericObject);
-||||||| merged common ancestors
-extern ArrayObject*
-NewFullyAllocatedArrayTryReuseGroup(JSContext* cx, HandleObject obj, size_t length,
-                                    NewObjectKind newKind = GenericObject);
-=======
 extern ArrayObject* NewPartlyAllocatedArrayTryReuseGroup(JSContext* cx,
                                                          HandleObject obj,
                                                          size_t length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewPartlyAllocatedArrayTryReuseGroup(JSContext* cx,
-                                                         HandleObject obj,
-                                                         size_t length);
-||||||| merged common ancestors
-extern ArrayObject*
-NewPartlyAllocatedArrayTryReuseGroup(JSContext* cx, HandleObject obj, size_t length);
-=======
 extern ArrayObject* NewFullyAllocatedArrayForCallingAllocationSite(
     JSContext* cx, size_t length, NewObjectKind newKind = GenericObject);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewFullyAllocatedArrayForCallingAllocationSite(
-    JSContext* cx, size_t length, NewObjectKind newKind = GenericObject);
-||||||| merged common ancestors
-extern ArrayObject*
-NewFullyAllocatedArrayForCallingAllocationSite(JSContext* cx, size_t length,
-                                               NewObjectKind newKind = GenericObject);
-=======
 extern ArrayObject* NewPartlyAllocatedArrayForCallingAllocationSite(
     JSContext* cx, size_t length, HandleObject proto);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewPartlyAllocatedArrayForCallingAllocationSite(
-    JSContext* cx, size_t length, HandleObject proto);
-||||||| merged common ancestors
-extern ArrayObject*
-NewPartlyAllocatedArrayForCallingAllocationSite(JSContext* cx, size_t length, HandleObject proto);
-=======
 extern ArrayObject* NewCopiedArrayTryUseGroup(
     JSContext* cx, HandleObjectGroup group, const Value* vp, size_t length,
     NewObjectKind newKind = GenericObject,
     ShouldUpdateTypes updateTypes = ShouldUpdateTypes::Update);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewCopiedArrayTryUseGroup(
-    JSContext* cx, HandleObjectGroup group, const Value* vp, size_t length,
-    NewObjectKind newKind = GenericObject,
-    ShouldUpdateTypes updateTypes = ShouldUpdateTypes::Update);
-||||||| merged common ancestors
-extern ArrayObject*
-NewCopiedArrayTryUseGroup(JSContext* cx, HandleObjectGroup group,
-                          const Value* vp, size_t length,
-                          NewObjectKind newKind = GenericObject,
-                          ShouldUpdateTypes updateTypes = ShouldUpdateTypes::Update);
-=======
 extern ArrayObject* NewCopiedArrayForCallingAllocationSite(
     JSContext* cx, const Value* vp, size_t length,
     HandleObject proto = nullptr);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern ArrayObject* NewCopiedArrayForCallingAllocationSite(
-    JSContext* cx, const Value* vp, size_t length,
-    HandleObject proto = nullptr);
-||||||| merged common ancestors
-extern ArrayObject*
-NewCopiedArrayForCallingAllocationSite(JSContext* cx, const Value* vp, size_t length,
-                                       HandleObject proto = nullptr);
-=======
 extern ArrayObject* NewArrayWithGroup(JSContext* cx, uint32_t length,
                                       HandleObjectGroup group,
                                       bool convertDoubleElements);
->>>>>>> upstream-releases
 
 extern bool GetLengthProperty(JSContext* cx, HandleObject obj,
                               uint32_t* lengthp);
@@ -290,17 +149,8 @@ extern bool array_unshift(JSContext* cx, unsigned argc, js::Value* vp);
 
 extern bool array_slice(JSContext* cx, unsigned argc, js::Value* vp);
 
-<<<<<<< HEAD
-extern JSObject* array_slice_dense(JSContext* cx, HandleObject obj,
-                                   int32_t begin, int32_t end,
-                                   HandleObject result);
-||||||| merged common ancestors
-extern JSObject*
-array_slice_dense(JSContext* cx, HandleObject obj, int32_t begin, int32_t end, HandleObject result);
-=======
 extern JSObject* ArraySliceDense(JSContext* cx, HandleObject obj, int32_t begin,
                                  int32_t end, HandleObject result);
->>>>>>> upstream-releases
 
 extern bool array_reverse(JSContext* cx, unsigned argc, js::Value* vp);
 
@@ -329,93 +179,6 @@ extern bool ArrayInfo(JSContext* cx, unsigned argc, Value* vp);
 extern bool ArrayConstructor(JSContext* cx, unsigned argc, Value* vp);
 
 // Like Array constructor, but doesn't perform GetPrototypeFromConstructor.
-<<<<<<< HEAD
-extern bool array_construct(JSContext* cx, unsigned argc, Value* vp);
-
-extern bool IsCrossRealmArrayConstructor(JSContext* cx, const Value& v,
-                                         bool* result);
-
-extern bool ObjectMayHaveExtraIndexedProperties(JSObject* obj);
-
-class MOZ_NON_TEMPORARY_CLASS ArraySpeciesLookup final {
-  /*
-   * An ArraySpeciesLookup holds the following:
-   *
-   *  Array.prototype (arrayProto_)
-   *      To ensure that the incoming array has the standard proto.
-   *
-   *  Array.prototype's shape (arrayProtoShape_)
-   *      To ensure that Array.prototype has not been modified.
-   *
-   *  Array (arrayConstructor_)
-   *  Array's shape (arrayConstructorShape_)
-   *       To ensure that Array has not been modified.
-   *
-   *  Array.prototype's slot number for constructor (arrayProtoConstructorSlot_)
-   *      To quickly retrieve and ensure that the Array constructor
-   *      stored in the slot has not changed.
-   *
-   *  Array's shape for the @@species getter. (arraySpeciesShape_)
-   *  Array's canonical value for @@species (canonicalSpeciesFunc_)
-   *      To quickly retrieve and ensure that the @@species getter for Array
-   *      has not changed.
-   *
-   * MOZ_INIT_OUTSIDE_CTOR fields below are set in |initialize()|.  The
-   * constructor only initializes a |state_| field, that defines whether the
-   * other fields are accessible.
-   */
-
-  // Pointer to canonical Array.prototype and Array.
-  MOZ_INIT_OUTSIDE_CTOR NativeObject* arrayProto_;
-  MOZ_INIT_OUTSIDE_CTOR NativeObject* arrayConstructor_;
-
-  // Shape of matching Array, and slot containing the @@species
-  // property, and the canonical value.
-  MOZ_INIT_OUTSIDE_CTOR Shape* arrayConstructorShape_;
-||||||| merged common ancestors
-extern bool
-array_construct(JSContext* cx, unsigned argc, Value* vp);
-
-extern bool
-IsCrossRealmArrayConstructor(JSContext* cx, const Value& v, bool* result);
-
-class MOZ_NON_TEMPORARY_CLASS ArraySpeciesLookup final
-{
-    /*
-     * An ArraySpeciesLookup holds the following:
-     *
-     *  Array.prototype (arrayProto_)
-     *      To ensure that the incoming array has the standard proto.
-     *
-     *  Array.prototype's shape (arrayProtoShape_)
-     *      To ensure that Array.prototype has not been modified.
-     *
-     *  Array (arrayConstructor_)
-     *  Array's shape (arrayConstructorShape_)
-     *       To ensure that Array has not been modified.
-     *
-     *  Array.prototype's slot number for constructor (arrayProtoConstructorSlot_)
-     *      To quickly retrieve and ensure that the Array constructor
-     *      stored in the slot has not changed.
-     *
-     *  Array's shape for the @@species getter. (arraySpeciesShape_)
-     *  Array's canonical value for @@species (canonicalSpeciesFunc_)
-     *      To quickly retrieve and ensure that the @@species getter for Array
-     *      has not changed.
-     *
-     * MOZ_INIT_OUTSIDE_CTOR fields below are set in |initialize()|.  The
-     * constructor only initializes a |state_| field, that defines whether the
-     * other fields are accessible.
-     */
-
-    // Pointer to canonical Array.prototype and Array.
-    MOZ_INIT_OUTSIDE_CTOR NativeObject* arrayProto_;
-    MOZ_INIT_OUTSIDE_CTOR NativeObject* arrayConstructor_;
-
-    // Shape of matching Array, and slot containing the @@species
-    // property, and the canonical value.
-    MOZ_INIT_OUTSIDE_CTOR Shape* arrayConstructorShape_;
-=======
 extern bool array_construct(JSContext* cx, unsigned argc, Value* vp);
 
 extern bool IsCrossRealmArrayConstructor(JSContext* cx, const Value& v,
@@ -461,7 +224,6 @@ class MOZ_NON_TEMPORARY_CLASS ArraySpeciesLookup final {
   // Shape of matching Array, and slot containing the @@species
   // property, and the canonical value.
   MOZ_INIT_OUTSIDE_CTOR Shape* arrayConstructorShape_;
->>>>>>> upstream-releases
 #ifdef DEBUG
   MOZ_INIT_OUTSIDE_CTOR Shape* arraySpeciesShape_;
   MOZ_INIT_OUTSIDE_CTOR JSFunction* canonicalSpeciesFunc_;

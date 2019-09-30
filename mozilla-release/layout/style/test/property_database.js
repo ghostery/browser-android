@@ -259,15 +259,6 @@ var validGradientAndElementValues = [
   "radial-gradient(at left calc(100px + -25%), red, blue)",
   "radial-gradient(at calc(100px + -25px) top, red, blue)",
   "radial-gradient(at left calc(100px + -25px), red, blue)",
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-  "-webkit-linear-gradient(top, red, blue)",
-  "-moz-linear-gradient(top, red, blue)",
-  "-moz-linear-gradient(center 0%, red, blue)",
-  "-moz-linear-gradient(50% top, red, blue)",
-  "-moz-linear-gradient(50% 0%, red, blue)",
-=======
 
   // 2008 GRADIENTS: -webkit-gradient()
   // ----------------------------------
@@ -409,7 +400,6 @@ var validGradientAndElementValues = [
   "-webkit-repeating-radial-gradient(circle, red, blue 10%, red 20%)",
   "-webkit-repeating-radial-gradient(circle farthest-corner, gray 10px, yellow 20px)",
   "-webkit-repeating-radial-gradient(top left, circle, red, blue 4%, red 8%)",
->>>>>>> upstream-releases
 ];
 var invalidGradientAndElementValues = [
   "-moz-element(#a:1)",
@@ -857,627 +847,8 @@ var basicShapeUnbalancedValues = [
   "inset(1px 2px 3px 4px round 5px / 6px",
 ];
 
-<<<<<<< HEAD
-
-if (IsCSSPropertyPrefEnabled("layout.css.prefixes.webkit")) {
-  // Extend gradient lists with valid/invalid webkit-prefixed expressions:
-  validGradientAndElementValues.push(
-    // 2008 GRADIENTS: -webkit-gradient()
-    // ----------------------------------
-    // linear w/ no color stops (valid) and a variety of position values:
-    "-webkit-gradient(linear, 1 2, 3 4)",
-    "-webkit-gradient(linear,1 2,3 4)", // (no extra space)
-    "-webkit-gradient(linear  ,  1   2  ,  3   4  )", // (lots of extra space)
-    "-webkit-gradient(linear, 1 10% , 0% 4)", // percentages
-    "-webkit-gradient(linear, +1.0 -2%, +5.3% -0)", // (+/- & decimals are valid)
-    "-webkit-gradient(linear, left top, right bottom)", // keywords
-    "-webkit-gradient(linear, right center, center top)",
-    "-webkit-gradient(linear, center center, center center)",
-    "-webkit-gradient(linear, center 5%, 30 top)", // keywords mixed w/ nums
-
-    // linear w/ just 1 color stop:
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, to(lime))",
-    // * testing the various allowable stop values (<number> & <percent>):
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-0, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-30, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(+9999, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-.1, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(100%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(9999%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-.5%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(+0%, lime))",
-    // * testing the various color values:
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, transparent))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, rgb(1,2,3)))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, #00ff00))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, #00f))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, hsla(240, 30%, 50%, 0.8)))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, rgba(255, 230, 10, 0.5)))",
-
-    // linear w/ multiple color stops:
-    // * using from()/to() -- note that out-of-order is OK:
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), from(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, to(lime),   to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, to(lime),   from(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), to(blue), from(purple))",
-    // * using color-stop():
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, lime), color-stop(30%, blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, lime), color-stop(30%, blue), color-stop(100%, purple))",
-    // * using color-stop() intermixed with from()/to() functions:
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), color-stop(30%, blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(30%, blue), to(lime))",
-    // * overshooting endpoints (0 & 1.0)
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-30%, lime), color-stop(.4, blue), color-stop(1.5, purple))",
-    // * repeating a stop position (valid)
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(30%, lime), color-stop(30%, blue))",
-    // * stops out of order (valid)
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(70%, lime), color-stop(20%, blue), color-stop(40%, purple))",
-
-    // radial w/ no color stops (valid) and a several different radius values:
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9)",
-    "-webkit-gradient(radial, 0 0, 10, 0 0, 5)",
-    "-webkit-gradient(radial, 1 2, -1.5, center center, +99999.9999)",
-
-    // radial w/ color stops
-    // (mostly leaning on more-robust 'linear' tests above; just testing a few
-    // examples w/ radial as a sanity-check):
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, from(lime))",
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, to(blue))",
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, color-stop(0.5, #00f), color-stop(0.8, rgba(100, 200, 0, 0.5)))",
-
-    // 2011 GRADIENTS: -webkit-linear-gradient(), -webkit-radial -gradient()
-    // ---------------------------------------------------------------------
-    // Basic linear-gradient syntax (valid when prefixed or unprefixed):
-    "-webkit-linear-gradient(red, green, blue)",
-
-    // Angled linear-gradients (valid when prefixed or unprefixed):
-    "-webkit-linear-gradient(135deg, red, blue)",
-    "-webkit-linear-gradient( 135deg  , red  , blue )",
-    "-webkit-linear-gradient(280deg, red 60%, blue)",
-
-    // Linear-gradient with unitless-0 <angle> (normally invalid for <angle>
-    // but accepted here for better webkit emulation):
-    "-webkit-linear-gradient(0, red, blue)",
-
-    // Linear-gradient with calc expression (bug 1363349)
-    "-webkit-gradient(linear, calc(5 + 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(5 - 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(5 * 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(5 / 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, left calc(25% - 10%), right calc(75% + 10%), from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(1) 2, 3 4)",
-
-    // Radial-gradient with calc expression (bug 1363349)
-    "-webkit-gradient(radial, 1 2, 0, 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 + 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 - 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 * 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 / 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, calc(0 + 1) calc(1 + 1), calc(1 + 2), calc(1 + 2) 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(8), 3 4, 9)",
-
-    // Basic radial-gradient syntax (valid when prefixed or unprefixed):
-    "-webkit-radial-gradient(circle, white, black)",
-    "-webkit-radial-gradient(circle, white, black)",
-    "-webkit-radial-gradient(ellipse closest-side, white, black)",
-    "-webkit-radial-gradient(circle farthest-corner, white, black)",
-
-    // Contain/cover keywords (valid only for -moz/-webkit prefixed):
-    "-webkit-radial-gradient(cover, red, blue)",
-    "-webkit-radial-gradient(cover circle, red, blue)",
-    "-webkit-radial-gradient(contain, red, blue)",
-    "-webkit-radial-gradient(contain ellipse, red, blue)",
-
-    // Initial side/corner/point (valid only for -moz/-webkit prefixed):
-    "-webkit-linear-gradient(top, red, blue)",
-    "-webkit-linear-gradient(left, red, blue)",
-    "-webkit-linear-gradient(bottom, red, blue)",
-    "-webkit-linear-gradient(right top, red, blue)",
-    "-webkit-linear-gradient(top right, red, blue)",
-    "-webkit-radial-gradient(right, red, blue)",
-    "-webkit-radial-gradient(left bottom, red, blue)",
-    "-webkit-radial-gradient(bottom left, red, blue)",
-    "-webkit-radial-gradient(center, red, blue)",
-    "-webkit-radial-gradient(center right, red, blue)",
-    "-webkit-radial-gradient(center center, red, blue)",
-    "-webkit-radial-gradient(center top, red, blue)",
-    "-webkit-radial-gradient(left 50%, red, blue)",
-    "-webkit-radial-gradient(20px top, red, blue)",
-    "-webkit-radial-gradient(20em 30%, red, blue)",
-
-    // Point + keyword-sized shape (valid only for -moz/-webkit prefixed):
-    "-webkit-radial-gradient(center, circle closest-corner, red, blue)",
-    "-webkit-radial-gradient(10px 20px, cover circle, red, blue)",
-    "-webkit-radial-gradient(5em 50%, ellipse contain, red, blue)",
-
-    // Repeating examples:
-    "-webkit-repeating-linear-gradient(red 10%, blue 30%)",
-    "-webkit-repeating-linear-gradient(30deg, pink 20px, orange 70px)",
-    "-webkit-repeating-linear-gradient(left, red, blue)",
-    "-webkit-repeating-linear-gradient(left, red 10%, blue 30%)",
-    "-webkit-repeating-radial-gradient(circle, red, blue 10%, red 20%)",
-    "-webkit-repeating-radial-gradient(circle farthest-corner, gray 10px, yellow 20px)",
-    "-webkit-repeating-radial-gradient(top left, circle, red, blue 4%, red 8%)"
-  );
-
-  invalidGradientAndElementValues.push(
-    // 2008 GRADIENTS: -webkit-gradient()
-    // https://www.webkit.org/blog/175/introducing-css-gradients/
-    // ----------------------------------
-    // Mostly-empty expressions (missing most required pieces):
-    "-webkit-gradient()",
-    "-webkit-gradient( )",
-    "-webkit-gradient(,)",
-    "-webkit-gradient(bogus)",
-    "-webkit-gradient(linear)",
-    "-webkit-gradient(linear,)",
-    "-webkit-gradient(,linear)",
-    "-webkit-gradient(radial)",
-    "-webkit-gradient(radial,)",
-
-    // linear w/ partial/missing <point> expression(s)
-    "-webkit-gradient(linear, 1)", // Incomplete <point>
-    "-webkit-gradient(linear, left)", // Incomplete <point>
-    "-webkit-gradient(linear, center)", // Incomplete <point>
-    "-webkit-gradient(linear, top)", // Incomplete <point>
-    "-webkit-gradient(linear, 5%)", // Incomplete <point>
-    "-webkit-gradient(linear, 1 2)", // Missing 2nd <point>
-    "-webkit-gradient(linear, 1, 3)", // 2 incomplete <point>s
-    "-webkit-gradient(linear, 1, 3 4)", // Incomplete 1st <point>
-    "-webkit-gradient(linear, 1 2, 3)", // Incomplete 2nd <point>
-    "-webkit-gradient(linear, 1 2, 3, 4)", // Comma inside <point>
-    "-webkit-gradient(linear, 1, 2, 3 4)", // Comma inside <point>
-    "-webkit-gradient(linear, 1, 2, 3, 4)", // Comma inside <point>
-
-    // linear w/ invalid units in <point> expression
-    "-webkit-gradient(linear, 1px 2, 3 4)",
-    "-webkit-gradient(linear, 1 2, 3 4px)",
-    "-webkit-gradient(linear, 1px 2px, 3px 4px)",
-    "-webkit-gradient(linear, 1 2em, 3 4)",
-
-    // linear w/ <radius> (only valid for radial)
-    "-webkit-gradient(linear, 1 2, 8, 3 4, 9)",
-
-    // linear w/ out-of-order position keywords in <point> expression
-    // (horizontal keyword is supposed to come first, for "x" coord)
-    "-webkit-gradient(linear, 0 0, top right)",
-    "-webkit-gradient(linear, bottom center, 0 0)",
-    "-webkit-gradient(linear, top bottom, 0 0)",
-    "-webkit-gradient(linear, bottom top, 0 0)",
-    "-webkit-gradient(linear, bottom top, 0 0)",
-
-    // linear w/ trailing comma (which implies missing color-stops):
-    "-webkit-gradient(linear, 1 2, 3 4,)",
-
-    // linear w/ invalid color values:
-    "-webkit-gradient(linear, 1 2, 3 4, from(invalidcolorname))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(inherit))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(initial))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(currentColor))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(00ff00))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(##00ff00))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(#00fff))", // wrong num hex digits
-    "-webkit-gradient(linear, 1 2, 3 4, from(xyz(0,0,0)))", // bogus color func
-    // Mixing <number> and <percentage> is invalid.
-    "-webkit-gradient(linear, 1 2, 3 4, from(rgb(100, 100%, 30)))",
-
-    // linear w/ color stops that have comma issues
-    "-webkit-gradient(linear, 1 2, 3 4 from(lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime,))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime),)",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime) to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime),, to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(rbg(0, 0, 0,)))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0 lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0,, lime))",
-
-    // radial w/ broken <point>/radius expression(s)
-    "-webkit-gradient(radial, 1)", // Incomplete <point>
-    "-webkit-gradient(radial, 1 2)", // Missing radius + 2nd <point>
-    "-webkit-gradient(radial, 1 2, 8)", // Missing 2nd <point>
-    "-webkit-gradient(radial, 1 2, 8, 3)", // Incomplete 2nd <point>
-    "-webkit-gradient(radial, 1 2, 8, 3 4)", // Missing 2nd radius
-    "-webkit-gradient(radial, 1 2, 3 4, 9)", // Missing 1st radius
-
-    // radial w/ incorrect units on radius (invalid; expecting <number>)
-    "-webkit-gradient(radial, 1 2, 8%,      3 4, 9)",
-    "-webkit-gradient(radial, 1 2, 8px,     3 4, 9)",
-    "-webkit-gradient(radial, 1 2, 8em,     3 4, 9)",
-    "-webkit-gradient(radial, 1 2, top,     3 4, 9)",
-
-    // radial w/ trailing comma (which implies missing color-stops):
-    "-webkit-gradient(linear, 1 2, 8, 3 4, 9,)",
-
-    // radial w/ invalid color value (mostly leaning on 'linear' test above):
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, from(invalidcolorname))",
-
-    // 2011 GRADIENTS: -webkit-linear-gradient(), -webkit-radial -gradient()
-    // ---------------------------------------------------------------------
-    // Syntax that's invalid for all types of gradients:
-    // * empty gradient expressions:
-    "-webkit-linear-gradient()",
-    "-webkit-radial-gradient()",
-    "-webkit-repeating-linear-gradient()",
-    "-webkit-repeating-radial-gradient()",
-
-    // * missing comma between <legacy-gradient-line> and color list:
-    "-webkit-linear-gradient(0 red, blue)",
-    "-webkit-linear-gradient(30deg red, blue)",
-    "-webkit-linear-gradient(top right red, blue)",
-    "-webkit-linear-gradient(bottom red, blue)",
-
-    // Linear-gradient with calc expression containing mixed units or division
-    // by zero (bug 1363349)
-    "-webkit-gradient(linear, calc(5 + 5%) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, left calc(25 - 10%), right calc(75% + 10%), from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(1 / 0) 2, 3 4)",
-
-    // Radial-gradient with calc expression containing mixed units, division
-    // by zero, or a percentage in the radius (bug 1363349)
-    "-webkit-gradient(radial, 1 2, 0, 3 4, calc(1% + 5%), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 + 2), 3 4, calc(1 + 5%), from(blue), to(lime))",
-    "-webkit-gradient(radial, calc(0 + 1) calc(1 + 1), calc(1% + 2%), calc(1 + 2) 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(8 / 0), 3 4, 9)",
-
-    // Linear syntax that's invalid for both -webkit & unprefixed, but valid
-    // for -moz:
-    // * initial <legacy-gradient-line> which includes a length:
-    "-webkit-linear-gradient(10px, red, blue)",
-    "-webkit-linear-gradient(10px top, red, blue)",
-    // * initial <legacy-gradient-line> which includes a side *and* an angle:
-    "-webkit-linear-gradient(bottom 30deg, red, blue)",
-    "-webkit-linear-gradient(30deg bottom, red, blue)",
-    "-webkit-linear-gradient(10px top 50deg, red, blue)",
-    "-webkit-linear-gradient(50deg 10px top, red, blue)",
-    // * initial <legacy-gradient-line> which includes explicit "center":
-    "-webkit-linear-gradient(center, red, blue)",
-    "-webkit-linear-gradient(left center, red, blue)",
-    "-webkit-linear-gradient(top center, red, blue)",
-    "-webkit-linear-gradient(center top, red, blue)",
-
-    // Linear syntax that's invalid for -webkit, but valid for -moz & unprefixed:
-    // * "to" syntax:
-    "-webkit-linear-gradient(to top, red, blue)",
-
-    // * <shape> followed by angle:
-    "-webkit-radial-gradient(circle 10deg, red, blue)",
-
-    // Radial syntax that's invalid for both -webkit & -moz, but valid for
-    // unprefixed:
-    // * "<shape> at <position>" syntax:
-    "-webkit-radial-gradient(circle at left bottom, red, blue)",
-    // * explicitly-sized shape:
-    "-webkit-radial-gradient(circle 10px, red, blue)",
-    "-webkit-radial-gradient(ellipse 40px 20px, red, blue)",
-
-    // Radial syntax that's invalid for both -webkit & unprefixed, but valid
-    // for -moz:
-    // * initial angle
-    "-webkit-radial-gradient(30deg, red, blue)",
-    // * initial angle/position combo
-    "-webkit-radial-gradient(top 30deg, red, blue)",
-    "-webkit-radial-gradient(left top 30deg, red, blue)",
-    "-webkit-radial-gradient(10px 20px 30deg, red, blue)"
-  );
-}
-
-if (IsCSSPropertyPrefEnabled("layout.css.prefixes.gradients")) {
-||||||| merged common ancestors
-
-if (IsCSSPropertyPrefEnabled("layout.css.prefixes.webkit")) {
-  // Extend gradient lists with valid/invalid webkit-prefixed expressions:
-  validGradientAndElementValues.push(
-    // 2008 GRADIENTS: -webkit-gradient()
-    // ----------------------------------
-    // linear w/ no color stops (valid) and a variety of position values:
-    "-webkit-gradient(linear, 1 2, 3 4)",
-    "-webkit-gradient(linear,1 2,3 4)", // (no extra space)
-    "-webkit-gradient(linear  ,  1   2  ,  3   4  )", // (lots of extra space)
-    "-webkit-gradient(linear, 1 10% , 0% 4)", // percentages
-    "-webkit-gradient(linear, +1.0 -2%, +5.3% -0)", // (+/- & decimals are valid)
-    "-webkit-gradient(linear, left top, right bottom)", // keywords
-    "-webkit-gradient(linear, right center, center top)",
-    "-webkit-gradient(linear, center center, center center)",
-    "-webkit-gradient(linear, center 5%, 30 top)", // keywords mixed w/ nums
-
-    // linear w/ just 1 color stop:
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, to(lime))",
-    // * testing the various allowable stop values (<number> & <percent>):
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-0, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-30, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(+9999, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-.1, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(100%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(9999%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-.5%, lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(+0%, lime))",
-    // * testing the various color values:
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, transparent))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, rgb(1,2,3)))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, #00ff00))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, #00f))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, hsla(240, 30%, 50%, 0.8)))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, rgba(255, 230, 10, 0.5)))",
-
-    // linear w/ multiple color stops:
-    // * using from()/to() -- note that out-of-order is OK:
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), from(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, to(lime),   to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, to(lime),   from(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), to(blue), from(purple))",
-    // * using color-stop():
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, lime), color-stop(30%, blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0, lime), color-stop(30%, blue), color-stop(100%, purple))",
-    // * using color-stop() intermixed with from()/to() functions:
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime), color-stop(30%, blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(30%, blue), to(lime))",
-    // * overshooting endpoints (0 & 1.0)
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(-30%, lime), color-stop(.4, blue), color-stop(1.5, purple))",
-    // * repeating a stop position (valid)
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(30%, lime), color-stop(30%, blue))",
-    // * stops out of order (valid)
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(70%, lime), color-stop(20%, blue), color-stop(40%, purple))",
-
-    // radial w/ no color stops (valid) and a several different radius values:
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9)",
-    "-webkit-gradient(radial, 0 0, 10, 0 0, 5)",
-    "-webkit-gradient(radial, 1 2, -1.5, center center, +99999.9999)",
-
-    // radial w/ color stops
-    // (mostly leaning on more-robust 'linear' tests above; just testing a few
-    // examples w/ radial as a sanity-check):
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, from(lime))",
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, to(blue))",
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, color-stop(0.5, #00f), color-stop(0.8, rgba(100, 200, 0, 0.5)))",
-
-    // 2011 GRADIENTS: -webkit-linear-gradient(), -webkit-radial -gradient()
-    // ---------------------------------------------------------------------
-    // Basic linear-gradient syntax (valid when prefixed or unprefixed):
-    "-webkit-linear-gradient(red, green, blue)",
-
-    // Angled linear-gradients (valid when prefixed or unprefixed):
-    "-webkit-linear-gradient(135deg, red, blue)",
-    "-webkit-linear-gradient( 135deg  , red  , blue )",
-    "-webkit-linear-gradient(280deg, red 60%, blue)",
-
-    // Linear-gradient with unitless-0 <angle> (normally invalid for <angle>
-    // but accepted here for better webkit emulation):
-    "-webkit-linear-gradient(0, red, blue)",
-
-    // Linear-gradient with calc expression (bug 1363349)
-    "-webkit-gradient(linear, calc(5 + 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(5 - 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(5 * 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(5 / 5) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, left calc(25% - 10%), right calc(75% + 10%), from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(1) 2, 3 4)",
-
-    // Radial-gradient with calc expression (bug 1363349)
-    "-webkit-gradient(radial, 1 2, 0, 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 + 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 - 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 * 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 / 2), 3 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, calc(0 + 1) calc(1 + 1), calc(1 + 2), calc(1 + 2) 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(8), 3 4, 9)",
-
-    // Basic radial-gradient syntax (valid when prefixed or unprefixed):
-    "-webkit-radial-gradient(circle, white, black)",
-    "-webkit-radial-gradient(circle, white, black)",
-    "-webkit-radial-gradient(ellipse closest-side, white, black)",
-    "-webkit-radial-gradient(circle farthest-corner, white, black)",
-
-    // Contain/cover keywords (valid only for -moz/-webkit prefixed):
-    "-webkit-radial-gradient(cover, red, blue)",
-    "-webkit-radial-gradient(cover circle, red, blue)",
-    "-webkit-radial-gradient(contain, red, blue)",
-    "-webkit-radial-gradient(contain ellipse, red, blue)",
-
-    // Initial side/corner/point (valid only for -moz/-webkit prefixed):
-    "-webkit-linear-gradient(left, red, blue)",
-    "-webkit-linear-gradient(bottom, red, blue)",
-    "-webkit-linear-gradient(right top, red, blue)",
-    "-webkit-linear-gradient(top right, red, blue)",
-    "-webkit-radial-gradient(right, red, blue)",
-    "-webkit-radial-gradient(left bottom, red, blue)",
-    "-webkit-radial-gradient(bottom left, red, blue)",
-    "-webkit-radial-gradient(center, red, blue)",
-    "-webkit-radial-gradient(center right, red, blue)",
-    "-webkit-radial-gradient(center center, red, blue)",
-    "-webkit-radial-gradient(center top, red, blue)",
-    "-webkit-radial-gradient(left 50%, red, blue)",
-    "-webkit-radial-gradient(20px top, red, blue)",
-    "-webkit-radial-gradient(20em 30%, red, blue)",
-
-    // Point + keyword-sized shape (valid only for -moz/-webkit prefixed):
-    "-webkit-radial-gradient(center, circle closest-corner, red, blue)",
-    "-webkit-radial-gradient(10px 20px, cover circle, red, blue)",
-    "-webkit-radial-gradient(5em 50%, ellipse contain, red, blue)",
-
-    // Repeating examples:
-    "-webkit-repeating-linear-gradient(red 10%, blue 30%)",
-    "-webkit-repeating-linear-gradient(30deg, pink 20px, orange 70px)",
-    "-webkit-repeating-linear-gradient(left, red, blue)",
-    "-webkit-repeating-linear-gradient(left, red 10%, blue 30%)",
-    "-webkit-repeating-radial-gradient(circle, red, blue 10%, red 20%)",
-    "-webkit-repeating-radial-gradient(circle farthest-corner, gray 10px, yellow 20px)",
-    "-webkit-repeating-radial-gradient(top left, circle, red, blue 4%, red 8%)"
-  );
-
-  invalidGradientAndElementValues.push(
-    // 2008 GRADIENTS: -webkit-gradient()
-    // https://www.webkit.org/blog/175/introducing-css-gradients/
-    // ----------------------------------
-    // Mostly-empty expressions (missing most required pieces):
-    "-webkit-gradient()",
-    "-webkit-gradient( )",
-    "-webkit-gradient(,)",
-    "-webkit-gradient(bogus)",
-    "-webkit-gradient(linear)",
-    "-webkit-gradient(linear,)",
-    "-webkit-gradient(,linear)",
-    "-webkit-gradient(radial)",
-    "-webkit-gradient(radial,)",
-
-    // linear w/ partial/missing <point> expression(s)
-    "-webkit-gradient(linear, 1)", // Incomplete <point>
-    "-webkit-gradient(linear, left)", // Incomplete <point>
-    "-webkit-gradient(linear, center)", // Incomplete <point>
-    "-webkit-gradient(linear, top)", // Incomplete <point>
-    "-webkit-gradient(linear, 5%)", // Incomplete <point>
-    "-webkit-gradient(linear, 1 2)", // Missing 2nd <point>
-    "-webkit-gradient(linear, 1, 3)", // 2 incomplete <point>s
-    "-webkit-gradient(linear, 1, 3 4)", // Incomplete 1st <point>
-    "-webkit-gradient(linear, 1 2, 3)", // Incomplete 2nd <point>
-    "-webkit-gradient(linear, 1 2, 3, 4)", // Comma inside <point>
-    "-webkit-gradient(linear, 1, 2, 3 4)", // Comma inside <point>
-    "-webkit-gradient(linear, 1, 2, 3, 4)", // Comma inside <point>
-
-    // linear w/ invalid units in <point> expression
-    "-webkit-gradient(linear, 1px 2, 3 4)",
-    "-webkit-gradient(linear, 1 2, 3 4px)",
-    "-webkit-gradient(linear, 1px 2px, 3px 4px)",
-    "-webkit-gradient(linear, 1 2em, 3 4)",
-
-    // linear w/ <radius> (only valid for radial)
-    "-webkit-gradient(linear, 1 2, 8, 3 4, 9)",
-
-    // linear w/ out-of-order position keywords in <point> expression
-    // (horizontal keyword is supposed to come first, for "x" coord)
-    "-webkit-gradient(linear, 0 0, top right)",
-    "-webkit-gradient(linear, bottom center, 0 0)",
-    "-webkit-gradient(linear, top bottom, 0 0)",
-    "-webkit-gradient(linear, bottom top, 0 0)",
-    "-webkit-gradient(linear, bottom top, 0 0)",
-
-    // linear w/ trailing comma (which implies missing color-stops):
-    "-webkit-gradient(linear, 1 2, 3 4,)",
-
-    // linear w/ invalid color values:
-    "-webkit-gradient(linear, 1 2, 3 4, from(invalidcolorname))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(inherit))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(initial))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(currentColor))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(00ff00))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(##00ff00))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(#00fff))", // wrong num hex digits
-    "-webkit-gradient(linear, 1 2, 3 4, from(xyz(0,0,0)))", // bogus color func
-    // Mixing <number> and <percentage> is invalid.
-    "-webkit-gradient(linear, 1 2, 3 4, from(rgb(100, 100%, 30)))",
-
-    // linear w/ color stops that have comma issues
-    "-webkit-gradient(linear, 1 2, 3 4 from(lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime,))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime),)",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime) to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(lime),, to(blue))",
-    "-webkit-gradient(linear, 1 2, 3 4, from(rbg(0, 0, 0,)))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0 lime))",
-    "-webkit-gradient(linear, 1 2, 3 4, color-stop(0,, lime))",
-
-    // radial w/ broken <point>/radius expression(s)
-    "-webkit-gradient(radial, 1)", // Incomplete <point>
-    "-webkit-gradient(radial, 1 2)", // Missing radius + 2nd <point>
-    "-webkit-gradient(radial, 1 2, 8)", // Missing 2nd <point>
-    "-webkit-gradient(radial, 1 2, 8, 3)", // Incomplete 2nd <point>
-    "-webkit-gradient(radial, 1 2, 8, 3 4)", // Missing 2nd radius
-    "-webkit-gradient(radial, 1 2, 3 4, 9)", // Missing 1st radius
-
-    // radial w/ incorrect units on radius (invalid; expecting <number>)
-    "-webkit-gradient(radial, 1 2, 8%,      3 4, 9)",
-    "-webkit-gradient(radial, 1 2, 8px,     3 4, 9)",
-    "-webkit-gradient(radial, 1 2, 8em,     3 4, 9)",
-    "-webkit-gradient(radial, 1 2, top,     3 4, 9)",
-
-    // radial w/ trailing comma (which implies missing color-stops):
-    "-webkit-gradient(linear, 1 2, 8, 3 4, 9,)",
-
-    // radial w/ invalid color value (mostly leaning on 'linear' test above):
-    "-webkit-gradient(radial, 1 2, 8, 3 4, 9, from(invalidcolorname))",
-
-    // 2011 GRADIENTS: -webkit-linear-gradient(), -webkit-radial -gradient()
-    // ---------------------------------------------------------------------
-    // Syntax that's invalid for all types of gradients:
-    // * empty gradient expressions:
-    "-webkit-linear-gradient()",
-    "-webkit-radial-gradient()",
-    "-webkit-repeating-linear-gradient()",
-    "-webkit-repeating-radial-gradient()",
-
-    // * missing comma between <legacy-gradient-line> and color list:
-    "-webkit-linear-gradient(0 red, blue)",
-    "-webkit-linear-gradient(30deg red, blue)",
-    "-webkit-linear-gradient(top right red, blue)",
-    "-webkit-linear-gradient(bottom red, blue)",
-
-    // Linear-gradient with calc expression containing mixed units or division
-    // by zero (bug 1363349)
-    "-webkit-gradient(linear, calc(5 + 5%) top, calc(10 + 10) top, from(blue), to(lime))",
-    "-webkit-gradient(linear, left calc(25 - 10%), right calc(75% + 10%), from(blue), to(lime))",
-    "-webkit-gradient(linear, calc(1 / 0) 2, 3 4)",
-
-    // Radial-gradient with calc expression containing mixed units, division
-    // by zero, or a percentage in the radius (bug 1363349)
-    "-webkit-gradient(radial, 1 2, 0, 3 4, calc(1% + 5%), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(1 + 2), 3 4, calc(1 + 5%), from(blue), to(lime))",
-    "-webkit-gradient(radial, calc(0 + 1) calc(1 + 1), calc(1% + 2%), calc(1 + 2) 4, calc(1 + 5), from(blue), to(lime))",
-    "-webkit-gradient(radial, 1 2, calc(8 / 0), 3 4, 9)",
-
-    // Linear syntax that's invalid for both -webkit & unprefixed, but valid
-    // for -moz:
-    // * initial <legacy-gradient-line> which includes a length:
-    "-webkit-linear-gradient(10px, red, blue)",
-    "-webkit-linear-gradient(10px top, red, blue)",
-    // * initial <legacy-gradient-line> which includes a side *and* an angle:
-    "-webkit-linear-gradient(bottom 30deg, red, blue)",
-    "-webkit-linear-gradient(30deg bottom, red, blue)",
-    "-webkit-linear-gradient(10px top 50deg, red, blue)",
-    "-webkit-linear-gradient(50deg 10px top, red, blue)",
-    // * initial <legacy-gradient-line> which includes explicit "center":
-    "-webkit-linear-gradient(center, red, blue)",
-    "-webkit-linear-gradient(left center, red, blue)",
-    "-webkit-linear-gradient(top center, red, blue)",
-    "-webkit-linear-gradient(center top, red, blue)",
-
-    // Linear syntax that's invalid for -webkit, but valid for -moz & unprefixed:
-    // * "to" syntax:
-    "-webkit-linear-gradient(to top, red, blue)",
-
-    // * <shape> followed by angle:
-    "-webkit-radial-gradient(circle 10deg, red, blue)",
-
-    // Radial syntax that's invalid for both -webkit & -moz, but valid for
-    // unprefixed:
-    // * "<shape> at <position>" syntax:
-    "-webkit-radial-gradient(circle at left bottom, red, blue)",
-    // * explicitly-sized shape:
-    "-webkit-radial-gradient(circle 10px, red, blue)",
-    "-webkit-radial-gradient(ellipse 40px 20px, red, blue)",
-
-    // Radial syntax that's invalid for both -webkit & unprefixed, but valid
-    // for -moz:
-    // * initial angle
-    "-webkit-radial-gradient(30deg, red, blue)",
-    // * initial angle/position combo
-    "-webkit-radial-gradient(top 30deg, red, blue)",
-    "-webkit-radial-gradient(left top 30deg, red, blue)",
-    "-webkit-radial-gradient(10px 20px 30deg, red, blue)"
-  );
-}
-
-if (IsCSSPropertyPrefEnabled("layout.css.prefixes.gradients")) {
-=======
 if (/* mozGradientsEnabled */ true) {
   // Maybe one day :(
->>>>>>> upstream-releases
   // Extend gradient lists with valid/invalid moz-prefixed expressions:
   validGradientAndElementValues.push(
     "-moz-linear-gradient(red, blue)",
@@ -1489,17 +860,8 @@ if (/* mozGradientsEnabled */ true) {
     "-moz-linear-gradient(#ffff00, #ef3, rgba(10, 20, 30, 0.4))",
     "-moz-linear-gradient(rgba(10, 20, 30, 0.4), #ffff00, #ef3)",
 
-<<<<<<< HEAD
-    "-moz-linear-gradient(top, red, blue)",
-    "-moz-linear-gradient(center 0%, red, blue)",
-    "-moz-linear-gradient(50% top, red, blue)",
-    "-moz-linear-gradient(50% 0%, red, blue)",
-
-||||||| merged common ancestors
-=======
     "-moz-linear-gradient(top, red, blue)",
 
->>>>>>> upstream-releases
     "-moz-linear-gradient(to top, red, blue)",
     "-moz-linear-gradient(to bottom, red, blue)",
     "-moz-linear-gradient(to left, red, blue)",
@@ -4550,19 +3912,9 @@ var gCSSProperties = {
     domProp: "userSelect",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
-<<<<<<< HEAD
-    initial_values: [ "auto" ],
-    other_values: [ "none", "text", "all", "-moz-none" ],
-    invalid_values: []
-||||||| merged common ancestors
-    initial_values: [ "auto" ],
-    other_values: [ "none", "text", "element", "elements", "all", "toggle", "tri-state", "-moz-all", "-moz-none" ],
-    invalid_values: []
-=======
     initial_values: ["auto"],
     other_values: ["none", "text", "all", "-moz-none"],
     invalid_values: [],
->>>>>>> upstream-releases
   },
   background: {
     domProp: "background",
@@ -7666,22 +7018,6 @@ var gCSSProperties = {
   "page-break-after": {
     domProp: "pageBreakAfter",
     inherited: false,
-<<<<<<< HEAD
-    type: CSS_TYPE_LEGACY_SHORTHAND,
-    alias_for: "break-after",
-    subproperties: [ "break-after" ],
-    initial_values: [ "auto" ],
-    other_values: [ "always", "avoid", "left", "right" ],
-    legacy_mapping: {
-      always: "page",
-    },
-    invalid_values: [ "page", "column" ]
-||||||| merged common ancestors
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "always", "avoid", "left", "right" ],
-    invalid_values: []
-=======
     type: CSS_TYPE_LEGACY_SHORTHAND,
     alias_for: "break-after",
     subproperties: ["break-after"],
@@ -7691,27 +7027,10 @@ var gCSSProperties = {
       always: "page",
     },
     invalid_values: ["page", "column"],
->>>>>>> upstream-releases
   },
   "page-break-before": {
     domProp: "pageBreakBefore",
     inherited: false,
-<<<<<<< HEAD
-    type: CSS_TYPE_LEGACY_SHORTHAND,
-    alias_for: "break-before",
-    subproperties: [ "break-before" ],
-    initial_values: [ "auto" ],
-    other_values: [ "always", "avoid", "left", "right" ],
-    legacy_mapping: {
-      always: "page",
-    },
-    invalid_values: [ "page", "column" ]
-||||||| merged common ancestors
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "always", "avoid", "left", "right" ],
-    invalid_values: []
-=======
     type: CSS_TYPE_LEGACY_SHORTHAND,
     alias_for: "break-before",
     subproperties: ["break-before"],
@@ -7745,49 +7064,13 @@ var gCSSProperties = {
     initial_values: ["auto"],
     other_values: ["avoid"],
     invalid_values: ["left", "right", "always"],
->>>>>>> upstream-releases
-  },
-  "break-after": {
-    domProp: "breakAfter",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "always", "page", "avoid", "left", "right" ],
-    invalid_values: [ ]
-  },
-  "break-before": {
-    domProp: "breakBefore",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "always", "page", "avoid", "left", "right" ],
-    invalid_values: [ ]
-  },
-  "break-inside": {
-    domProp: "breakInside",
-    inherited: false,
-<<<<<<< HEAD
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "avoid" ],
-    invalid_values: [ "left", "right", "always" ]
   },
   "page-break-inside": {
     domProp: "pageBreakInside",
     inherited: false,
     type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
     alias_for: "break-inside",
-    subproperties: [ "break-inside" ],
-||||||| merged common ancestors
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "avoid" ],
-    invalid_values: [ "left", "right" ]
-=======
-    type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
-    alias_for: "break-inside",
     subproperties: ["break-inside"],
->>>>>>> upstream-releases
   },
   "paint-order": {
     domProp: "paintOrder",
@@ -7912,15 +7195,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_placeholder: true,
     // don't know whether left and right are same as start
-<<<<<<< HEAD
-    initial_values: [ "start" ],
-    other_values: [ "center", "justify", "end", "match-parent" ],
-    invalid_values: [ "true", "true true", "char", "-moz-center-or-inherit", "true left", "unsafe left" ]
-||||||| merged common ancestors
-    initial_values: [ "start" ],
-    other_values: [ "center", "justify", "end", "match-parent" ],
-    invalid_values: [ "true", "true true", "char", "-moz-center-or-inherit" ]
-=======
     initial_values: ["start"],
     other_values: ["center", "justify", "end", "match-parent"],
     invalid_values: [
@@ -7931,7 +7205,6 @@ var gCSSProperties = {
       "true left",
       "unsafe left",
     ],
->>>>>>> upstream-releases
   },
   "text-align-last": {
     domProp: "textAlignLast",
@@ -9274,75 +8547,9 @@ var gCSSProperties = {
     domProp: "markerStart",
     inherited: true,
     type: CSS_TYPE_LONGHAND,
-<<<<<<< HEAD
-    initial_values: [ "none" ],
-    other_values: [ "url(#mysym)" ],
-    invalid_values: []
-  },
-  "shape-image-threshold": {
-    domProp: "shapeImageThreshold",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    applies_to_first_letter: true,
-    initial_values: [ "0", "0.0000", "-3", ],
-    other_values: [ "0.4", "1", "17", "397.376", "3e1", "3e+1", "3e-1", "3e0", "3e+0", "3e-0" ],
-    invalid_values: [ "0px", "1px", "20%", "default", "auto" ]
-  },
-  "shape-margin": {
-    domProp: "shapeMargin",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    applies_to_first_letter: true,
-    initial_values: [ "0", ],
-    other_values: [ "2px", "2%", "1em", "calc(1px + 1em)", "calc(1%)" ],
-    invalid_values: [ "-1px", "auto", "none", "1px 1px", "-1%" ],
-  },
-  "shape-outside": {
-    domProp: "shapeOutside",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    applies_to_first_letter: true,
-    initial_values: [ "none" ],
-    other_values: [
-      "url(#my-shape-outside)",
-    ].concat(
-      basicShapeOtherValues,
-      validGradientAndElementValues
-    ),
-    invalid_values: [].concat(
-      basicShapeSVGBoxValues,
-      basicShapeInvalidValues,
-      invalidGradientAndElementValues
-    ),
-    unbalanced_values: [].concat(
-      basicShapeUnbalancedValues,
-      unbalancedGradientAndElementValues
-    )
-  },
-  "shape-rendering": {
-    domProp: "shapeRendering",
-    inherited: true,
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "optimizeSpeed", "crispEdges", "geometricPrecision" ],
-    invalid_values: []
-||||||| merged common ancestors
-    initial_values: [ "none" ],
-    other_values: [ "url(#mysym)" ],
-    invalid_values: []
-  },
-  "shape-rendering": {
-    domProp: "shapeRendering",
-    inherited: true,
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "auto" ],
-    other_values: [ "optimizeSpeed", "crispEdges", "geometricPrecision" ],
-    invalid_values: []
-=======
     initial_values: ["none"],
     other_values: ["url(#mysym)"],
     invalid_values: [],
->>>>>>> upstream-releases
   },
   "mix-blend-mode": {
     domProp: "mixBlendMode",
@@ -11229,45 +10436,6 @@ var gCSSProperties = {
   "-webkit-animation": {
     domProp: "webkitAnimation",
     inherited: false,
-<<<<<<< HEAD
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "none" ],
-    other_values: [ "45deg", "45grad", "72rad", "0.25turn", ".57rad",
-                    "0 0 0 0rad", "0 0 1 45deg", "0 0 1 0rad",
-                    "0rad 0 0 1", "10rad 10 20 30",
-                    "x 10rad", "y 10rad", "z 10rad",
-                    "10rad x", "10rad y", "10rad z",
-                    /* valid calc() values */
-                    "calc(1) 0 0 calc(45deg + 5rad)",
-                    "0 1 0 calc(400grad + 1rad)",
-                    "calc(0.5turn + 10deg)"],
-    invalid_values: [ "0", "7", "0, 0, 1, 45deg", "0 0 45deg", "0 0 20rad",
-                      "0 0 0 0", "x x 10rad", "x y 10rad", "0 0 1 10rad z",
-                      "0 0 1 z 10rad", "z 0 0 1 10rad", "0 0 z 1 10rad",
-                      /* invalid calc() values */
-                      "0.5 1 0 calc(45deg + 10)", "calc(0.5turn + 10%)"],
-  };
-
-  gCSSProperties.translate = {
-    domProp: "translate",
-||||||| merged common ancestors
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "none" ],
-    other_values: [ "45deg", "45grad", "72rad", "0.25turn", ".57rad",
-                    "0 0 0 0rad", "0 0 1 45deg", "0 0 1 0rad",
-                    /* valid calc() values */
-                    "calc(1) 0 0 calc(45deg + 5rad)",
-                    "0 1 0 calc(400grad + 1rad)",
-                    "calc(0.5turn + 10deg)"],
-    invalid_values: [ "0", "7", "0, 0, 1, 45deg", "0 0 45deg", "0 0 20rad",
-                      "0 0 0 0",
-                      /* invalid calc() values */
-                      "0.5 1 0 calc(45deg + 10)", "calc(0.5turn + 10%)"],
-  };
-
-  gCSSProperties.translate = {
-    domProp: "translate",
-=======
     type: CSS_TYPE_TRUE_SHORTHAND,
     alias_for: "animation",
     subproperties: [
@@ -11283,7 +10451,6 @@ var gCSSProperties = {
   },
   "-webkit-animation-delay": {
     domProp: "webkitAnimationDelay",
->>>>>>> upstream-releases
     inherited: false,
     type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
     alias_for: "animation-delay",
@@ -11419,41 +10586,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     applies_to_first_line: true,
     applies_to_placeholder: true,
-<<<<<<< HEAD
-    initial_values: [ "auto" ],
-    other_values: [ "none" ],
-    invalid_values: [ "on" ]
-  };
-  gCSSProperties["font"].subproperties.push("font-optical-sizing");
-  gCSSProperties["font-variation-settings"].other_values
-    .push("'vert' calc(2.5)");
-}
-
-if (IsCSSPropertyPrefEnabled("svg.transform-box.enabled")) {
-  gCSSProperties["transform-box"] = {
-    domProp: "transformBox",
-||||||| merged common ancestors
-    initial_values: [ "auto" ],
-    other_values: [ "none" ],
-    invalid_values: [ "on" ]
-  };
-  gCSSProperties["font"].subproperties.push("font-optical-sizing");
-  gCSSProperties["font-variation-settings"].other_values
-    .push("'vert' calc(2.5)");
-}
-
-if (IsCSSPropertyPrefEnabled("layout.css.frames-timing.enabled")) {
-  gCSSProperties["animation-timing-function"].other_values.push(
-    "frames(2)", "frames(1000)", "frames( 2 )");
-  gCSSProperties["animation-timing-function"].invalid_values.push(
-    "frames(1)", "frames(-2)", "frames", "frames()", "frames(,)",
-    "frames(a)", "frames(2.0)", "frames(2.5)", "frames(2 3)");
-}
-
-if (IsCSSPropertyPrefEnabled("svg.transform-box.enabled")) {
-  gCSSProperties["transform-box"] = {
-    domProp: "transformBox",
-=======
     initial_values: ["0", "0px", "0em", "0ex", "calc(0pt)", "calc(4px - 8px)"],
     other_values: [
       "thin",
@@ -11482,74 +10614,7 @@ if (IsCSSPropertyPrefEnabled("svg.transform-box.enabled")) {
   },
   "-webkit-transform": {
     domProp: "webkitTransform",
->>>>>>> upstream-releases
     inherited: false,
-<<<<<<< HEAD
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "border-box" ],
-    other_values: [ "fill-box", "view-box" ],
-    invalid_values: ["content-box", "padding-box", "stroke-box", "margin-box"]
-  };
-}
-
-var isGridTemplateSubgridValueEnabled =
-  IsCSSPropertyPrefEnabled("layout.css.grid-template-subgrid-value.enabled");
-||||||| merged common ancestors
-    type: CSS_TYPE_LONGHAND,
-    initial_values: [ "border-box" ],
-    other_values: [ "fill-box", "view-box" ],
-    invalid_values: ["content-box", "padding-box", "stroke-box", "margin-box"]
-  };
-}
-
-if (IsCSSPropertyPrefEnabled("layout.css.shape-outside.enabled")) {
-  gCSSProperties["shape-image-threshold"] = {
-    domProp: "shapeImageThreshold",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    applies_to_first_letter: true,
-    initial_values: [ "0", "0.0000", "-3", ],
-    other_values: [ "0.4", "1", "17", "397.376", "3e1", "3e+1", "3e-1", "3e0", "3e+0", "3e-0" ],
-    invalid_values: [ "0px", "1px", "20%", "default", "auto" ]
-  };
-
-  gCSSProperties["shape-margin"] = {
-    domProp: "shapeMargin",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    applies_to_first_letter: true,
-    initial_values: [ "0", ],
-    other_values: [ "2px", "2%", "1em", "calc(1px + 1em)", "calc(1%)" ],
-    invalid_values: [ "-1px", "auto", "none", "1px 1px", "-1%" ],
-  };
-
-  gCSSProperties["shape-outside"] = {
-    domProp: "shapeOutside",
-    inherited: false,
-    type: CSS_TYPE_LONGHAND,
-    applies_to_first_letter: true,
-    initial_values: [ "none" ],
-    other_values: [
-      "url(#my-shape-outside)",
-    ].concat(
-      basicShapeOtherValues,
-      validGradientAndElementValues
-    ),
-    invalid_values: [].concat(
-      basicShapeSVGBoxValues,
-      basicShapeInvalidValues,
-      invalidGradientAndElementValues
-    ),
-    unbalanced_values: [].concat(
-      basicShapeUnbalancedValues,
-      unbalancedGradientAndElementValues
-    )
-  };
-}
-
-var isGridTemplateSubgridValueEnabled =
-  IsCSSPropertyPrefEnabled("layout.css.grid-template-subgrid-value.enabled");
-=======
     type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
     alias_for: "transform",
     subproperties: ["transform"],
@@ -12235,7 +11300,6 @@ if (IsCSSPropertyPrefEnabled("svg.transform-box.enabled")) {
 var isGridTemplateSubgridValueEnabled = IsCSSPropertyPrefEnabled(
   "layout.css.grid-template-subgrid-value.enabled"
 );
->>>>>>> upstream-releases
 
 gCSSProperties["display"].other_values.push("grid", "inline-grid");
 gCSSProperties["grid-auto-flow"] = {
@@ -13387,15 +12451,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.offset-logical-properties.enabled")) {
     ],
   };
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-if (IsCSSPropertyPrefEnabled("layout.css.text-align-unsafe-value.enabled")) {
-  gCSSProperties["text-align"].other_values.push("true left");
-} else {
-  gCSSProperties["text-align"].invalid_values.push("true left");
-}
-
-=======
   for (const prop of ["background", "mask"]) {
     let i = 0;
     const p = patterns[prop];
@@ -13412,7 +12467,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.text-align-unsafe-value.enabled")) {
   }
 }
 
->>>>>>> upstream-releases
 gCSSProperties["display"].other_values.push("flow-root");
 
 if (IsCSSPropertyPrefEnabled("layout.css.column-span.enabled")) {
@@ -13763,55 +12817,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.clip-path-path.enabled")) {
   );
 }
 
-<<<<<<< HEAD
-if (IsCSSPropertyPrefEnabled("layout.css.step-position-jump.enabled")) {
-  gCSSProperties["animation-timing-function"].other_values.push(
-    "steps(1, jump-start)",
-    "steps(1, jump-end)",
-    "steps(2, jump-none)",
-    "steps(1, jump-both)",
-  );
-  gCSSProperties["animation-timing-function"].invalid_values.push(
-    "steps(0, jump-start)",
-    "steps(0, jump-end)",
-    "steps(1, jump-none)",
-    "steps(0, jump-both)",
-  );
-
-  gCSSProperties["transition-timing-function"].other_values.push(
-    "steps(1, jump-start)",
-    "steps(1, jump-end)",
-    "steps(2, jump-none)",
-    "steps(1, jump-both)",
-  );
-  gCSSProperties["transition-timing-function"].invalid_values.push(
-    "steps(0, jump-start)",
-    "steps(0, jump-end)",
-    "steps(1, jump-none)",
-    "steps(0, jump-both)",
-  );
-}
-
-const OVERFLOW_MOZKWS = [
-  "-moz-scrollbars-none",
-  "-moz-scrollbars-horizontal",
-  "-moz-scrollbars-vertical",
-];
-if (IsCSSPropertyPrefEnabled("layout.css.overflow.moz-scrollbars.enabled")) {
-  gCSSProperties["overflow"].other_values.push(...OVERFLOW_MOZKWS);
-} else {
-  gCSSProperties["overflow"].invalid_values.push(...OVERFLOW_MOZKWS);
-||||||| merged common ancestors
-const OVERFLOW_MOZKWS = [
-  "-moz-scrollbars-none",
-  "-moz-scrollbars-horizontal",
-  "-moz-scrollbars-vertical",
-];
-if (IsCSSPropertyPrefEnabled("layout.css.overflow.moz-scrollbars.enabled")) {
-  gCSSProperties["overflow"].other_values.push(...OVERFLOW_MOZKWS);
-} else {
-  gCSSProperties["overflow"].invalid_values.push(...OVERFLOW_MOZKWS);
-=======
 if (IsCSSPropertyPrefEnabled("layout.css.step-position-jump.enabled")) {
   gCSSProperties["animation-timing-function"].other_values.push(
     "steps(1, jump-start)",
@@ -13849,7 +12854,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.backdrop-filter.enabled")) {
     other_values: gCSSProperties["filter"].other_values,
     invalid_values: gCSSProperties["filter"].invalid_values,
   };
->>>>>>> upstream-releases
 }
 
 // Copy aliased properties' fields from their alias targets. Keep this logic

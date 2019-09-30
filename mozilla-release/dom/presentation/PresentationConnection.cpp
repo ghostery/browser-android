@@ -64,26 +64,10 @@ PresentationConnection::PresentationConnection(
 
 /* virtual */ PresentationConnection::~PresentationConnection() {}
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PresentationConnection>
-PresentationConnection::Create(nsPIDOMWindowInner* aWindow,
-                               const nsAString& aId, const nsAString& aUrl,
-                               const uint8_t aRole,
-                               PresentationConnectionList* aList) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PresentationConnection>
-PresentationConnection::Create(nsPIDOMWindowInner* aWindow,
-                               const nsAString& aId,
-                               const nsAString& aUrl,
-                               const uint8_t aRole,
-                               PresentationConnectionList* aList)
-{
-=======
 /* static */
 already_AddRefed<PresentationConnection> PresentationConnection::Create(
     nsPIDOMWindowInner* aWindow, const nsAString& aId, const nsAString& aUrl,
     const uint8_t aRole, PresentationConnectionList* aList) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRole == nsIPresentationService::ROLE_CONTROLLER ||
              aRole == nsIPresentationService::ROLE_RECEIVER);
   RefPtr<PresentationConnection> connection =
@@ -146,33 +130,15 @@ void PresentationConnection::Shutdown() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void PresentationConnection::DisconnectFromOwner() {
-||||||| merged common ancestors
-/* virtual */ void
-PresentationConnection::DisconnectFromOwner()
-{
-=======
 /* virtual */
 void PresentationConnection::DisconnectFromOwner() {
->>>>>>> upstream-releases
   Unused << NS_WARN_IF(NS_FAILED(ProcessConnectionWentAway()));
   DOMEventTargetHelper::DisconnectFromOwner();
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* PresentationConnection::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-PresentationConnection::WrapObject(JSContext* aCx,
-                                   JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* PresentationConnection::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return PresentationConnection_Binding::Wrap(aCx, this, aGivenProto);
 }
 

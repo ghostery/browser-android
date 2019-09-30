@@ -14,76 +14,19 @@ namespace gl {
 
 class GLContext;
 
-<<<<<<< HEAD
 enum class GLContextType { Unknown, WGL, CGL, GLX, EGL, EAGL };
 
 enum class OriginPos : uint8_t { TopLeft, BottomLeft };
 
-struct GLFormats {
-  // Constructs a zeroed object:
-  GLFormats();
-||||||| merged common ancestors
-enum class GLContextType {
-    Unknown,
-    WGL,
-    CGL,
-    GLX,
-    EGL,
-    EAGL
-};
-
-enum class OriginPos : uint8_t {
-  TopLeft,
-  BottomLeft
-};
-
-struct GLFormats
-{
-    // Constructs a zeroed object:
-    GLFormats();
-=======
-enum class GLContextType { Unknown, WGL, CGL, GLX, EGL, EAGL };
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  GLenum color_texInternalFormat;
-  GLenum color_texFormat;
-  GLenum color_texType;
-  GLenum color_rbFormat;
-||||||| merged common ancestors
-    GLenum color_texInternalFormat;
-    GLenum color_texFormat;
-    GLenum color_texType;
-    GLenum color_rbFormat;
-=======
-enum class OriginPos : uint8_t { TopLeft, BottomLeft };
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  GLenum depthStencil;
-  GLenum depth;
-  GLenum stencil;
-||||||| merged common ancestors
-    GLenum depthStencil;
-    GLenum depth;
-    GLenum stencil;
-=======
 struct GLFormats {
   GLenum color_texInternalFormat = 0;
   GLenum color_texFormat = 0;
   GLenum color_texType = 0;
   GLenum color_rbFormat = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  GLsizei samples;
-||||||| merged common ancestors
-    GLsizei samples;
-=======
   GLenum depthStencil = 0;
   GLenum depth = 0;
   GLenum stencil = 0;
->>>>>>> upstream-releases
 };
 
 enum class CreateContextFlags : uint8_t {

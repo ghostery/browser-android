@@ -322,10 +322,6 @@ pub mod platform {
 pub mod platform {
     use crate::path::{find_binary, is_binary};
     use dirs;
-<<<<<<< HEAD
-    use std::path::PathBuf;
-||||||| merged common ancestors
-=======
     use std::path::PathBuf;
     use plist::Value;
 
@@ -354,7 +350,6 @@ pub mod platform {
         }
         path
     }
->>>>>>> upstream-releases
 
     /// Searches the system path for `firefox-bin`, then looks for
     /// `Applications/Firefox.app/Contents/MacOS/firefox-bin` as well

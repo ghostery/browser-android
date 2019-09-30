@@ -64,27 +64,9 @@ class SVGDocumentWrapper final : public nsIStreamListener,
   nsIFrame* GetRootLayoutFrame();
 
   /**
-<<<<<<< HEAD
-   * Returns the nsIPresShell for the wrapped document.
-||||||| merged common ancestors
-   * Returns (by reference) the nsIPresShell for the wrapped document.
-   *
-   * @param[out] aPresShell On success, this will be populated with a pointer
-   *                        to the wrapped document's nsIPresShell.
-   *
-   * @return NS_OK on success, or an error code on failure.
-=======
    * Returns the mozilla::PresShell for the wrapped document.
->>>>>>> upstream-releases
    */
-<<<<<<< HEAD
-  inline nsIPresShell* GetPresShell() { return mViewer->GetPresShell(); }
-||||||| merged common ancestors
-  inline nsresult  GetPresShell(nsIPresShell** aPresShell)
-    { return mViewer->GetPresShell(aPresShell); }
-=======
   inline mozilla::PresShell* GetPresShell() { return mViewer->GetPresShell(); }
->>>>>>> upstream-releases
 
   /**
    * Modifier to update the viewport dimensions of the wrapped document. This

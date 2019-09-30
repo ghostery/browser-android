@@ -18,21 +18,12 @@ one time. So the can be flipped though like a deck of cards.
 #include "mozilla/Attributes.h"
 #include "nsBoxFrame.h"
 
-<<<<<<< HEAD
-class nsDeckFrame final : public nsBoxFrame {
- public:
-||||||| merged common ancestors
-class nsDeckFrame final : public nsBoxFrame
-{
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsDeckFrame final : public nsBoxFrame {
  public:
->>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsDeckFrame)
 
@@ -74,21 +65,8 @@ class nsDeckFrame final : public nsBoxFrame {
  private:
   int32_t mIndex;
 
-<<<<<<< HEAD
-};  // class nsDeckFrame
-||||||| merged common ancestors
-}; // class nsDeckFrame
-=======
   void Animate(nsIFrame*, bool);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-#endif
-
-=======
 };  // class nsDeckFrame
 
 #endif
->>>>>>> upstream-releases

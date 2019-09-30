@@ -145,17 +145,8 @@ class nsLineLayout {
   //----------------------------------------
   // Inform the line-layout about the presence of a floating frame
   // XXX get rid of this: use get-frame-type?
-<<<<<<< HEAD
-  bool AddFloat(nsIFrame* aFloat, nscoord aAvailableISize) {
-    // When reflowing ruby text frames, no block reflow state is
-||||||| merged common ancestors
-  bool AddFloat(nsIFrame* aFloat, nscoord aAvailableISize)
-  {
-    // When reflowing ruby text frames, no block reflow state is
-=======
   bool AddFloat(nsIFrame* aFloat, nscoord aAvailableISize) {
     // When reflowing ruby text frames, no block reflow input is
->>>>>>> upstream-releases
     // provided to the line layout. However, floats should never be
     // associated with ruby text containers, hence this method should
     // not be called in that case.
@@ -572,31 +563,6 @@ class nsLineLayout {
   bool mIsTopOfPage : 1;
   bool mImpactedByFloats : 1;
   bool mLastFloatWasLetterFrame : 1;
-<<<<<<< HEAD
-  bool mLineIsEmpty : 1;
-  bool mLineEndsInBR : 1;
-  bool mNeedBackup : 1;
-  bool mInFirstLine : 1;
-  bool mGotLineBox : 1;
-  bool mInFirstLetter : 1;
-  bool mHasBullet : 1;
-  bool mDirtyNextLine : 1;
-  bool mLineAtStart : 1;
-  bool mHasRuby : 1;
-  bool mSuppressLineWrap : 1;
-||||||| merged common ancestors
-  bool mLineIsEmpty             : 1;
-  bool mLineEndsInBR            : 1;
-  bool mNeedBackup              : 1;
-  bool mInFirstLine             : 1;
-  bool mGotLineBox              : 1;
-  bool mInFirstLetter           : 1;
-  bool mHasBullet               : 1;
-  bool mDirtyNextLine           : 1;
-  bool mLineAtStart             : 1;
-  bool mHasRuby                 : 1;
-  bool mSuppressLineWrap        : 1;
-=======
   bool mLineIsEmpty : 1;
   bool mLineEndsInBR : 1;
   bool mNeedBackup : 1;
@@ -608,7 +574,6 @@ class nsLineLayout {
   bool mLineAtStart : 1;
   bool mHasRuby : 1;
   bool mSuppressLineWrap : 1;
->>>>>>> upstream-releases
 
   int32_t mSpanDepth;
 #ifdef DEBUG

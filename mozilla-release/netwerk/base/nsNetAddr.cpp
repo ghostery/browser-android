@@ -13,38 +13,11 @@ using namespace mozilla::net;
 NS_IMPL_ISUPPORTS(nsNetAddr, nsINetAddr)
 
 /* Makes a copy of |addr| */
-<<<<<<< HEAD
-nsNetAddr::nsNetAddr(NetAddr *addr) {
-||||||| merged common ancestors
-nsNetAddr::nsNetAddr(NetAddr* addr)
-{
-=======
 nsNetAddr::nsNetAddr(NetAddr* addr) {
->>>>>>> upstream-releases
   NS_ASSERTION(addr, "null addr");
   mAddr = *addr;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsNetAddr::GetFamily(uint16_t *aFamily) {
-  switch (mAddr.raw.family) {
-    case AF_INET:
-      *aFamily = nsINetAddr::FAMILY_INET;
-      break;
-    case AF_INET6:
-      *aFamily = nsINetAddr::FAMILY_INET6;
-      break;
-||||||| merged common ancestors
-NS_IMETHODIMP nsNetAddr::GetFamily(uint16_t *aFamily)
-{
-  switch(mAddr.raw.family) {
-  case AF_INET:
-    *aFamily = nsINetAddr::FAMILY_INET;
-    break;
-  case AF_INET6:
-    *aFamily = nsINetAddr::FAMILY_INET6;
-    break;
-=======
 NS_IMETHODIMP nsNetAddr::GetFamily(uint16_t* aFamily) {
   switch (mAddr.raw.family) {
     case AF_INET:
@@ -53,7 +26,6 @@ NS_IMETHODIMP nsNetAddr::GetFamily(uint16_t* aFamily) {
     case AF_INET6:
       *aFamily = nsINetAddr::FAMILY_INET6;
       break;
->>>>>>> upstream-releases
 #if defined(XP_UNIX)
     case AF_LOCAL:
       *aFamily = nsINetAddr::FAMILY_LOCAL;
@@ -66,36 +38,6 @@ NS_IMETHODIMP nsNetAddr::GetFamily(uint16_t* aFamily) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsNetAddr::GetAddress(nsACString &aAddress) {
-  switch (mAddr.raw.family) {
-    /* PR_NetAddrToString can handle INET and INET6, but not LOCAL. */
-    case AF_INET:
-      aAddress.SetLength(kIPv4CStrBufSize);
-      NetAddrToString(&mAddr, aAddress.BeginWriting(), kIPv4CStrBufSize);
-      aAddress.SetLength(strlen(aAddress.BeginReading()));
-      break;
-    case AF_INET6:
-      aAddress.SetLength(kIPv6CStrBufSize);
-      NetAddrToString(&mAddr, aAddress.BeginWriting(), kIPv6CStrBufSize);
-      aAddress.SetLength(strlen(aAddress.BeginReading()));
-      break;
-||||||| merged common ancestors
-NS_IMETHODIMP nsNetAddr::GetAddress(nsACString & aAddress)
-{
-  switch(mAddr.raw.family) {
-  /* PR_NetAddrToString can handle INET and INET6, but not LOCAL. */
-  case AF_INET:
-    aAddress.SetLength(kIPv4CStrBufSize);
-    NetAddrToString(&mAddr, aAddress.BeginWriting(), kIPv4CStrBufSize);
-    aAddress.SetLength(strlen(aAddress.BeginReading()));
-    break;
-  case AF_INET6:
-    aAddress.SetLength(kIPv6CStrBufSize);
-    NetAddrToString(&mAddr, aAddress.BeginWriting(), kIPv6CStrBufSize);
-    aAddress.SetLength(strlen(aAddress.BeginReading()));
-    break;
-=======
 NS_IMETHODIMP nsNetAddr::GetAddress(nsACString& aAddress) {
   switch (mAddr.raw.family) {
     /* PR_NetAddrToString can handle INET and INET6, but not LOCAL. */
@@ -109,7 +51,6 @@ NS_IMETHODIMP nsNetAddr::GetAddress(nsACString& aAddress) {
       NetAddrToString(&mAddr, aAddress.BeginWriting(), kIPv6CStrBufSize);
       aAddress.SetLength(strlen(aAddress.BeginReading()));
       break;
->>>>>>> upstream-releases
 #if defined(XP_UNIX)
     case AF_LOCAL:
       aAddress.Assign(mAddr.local.path);
@@ -123,26 +64,6 @@ NS_IMETHODIMP nsNetAddr::GetAddress(nsACString& aAddress) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsNetAddr::GetPort(uint16_t *aPort) {
-  switch (mAddr.raw.family) {
-    case AF_INET:
-      *aPort = ntohs(mAddr.inet.port);
-      break;
-    case AF_INET6:
-      *aPort = ntohs(mAddr.inet6.port);
-      break;
-||||||| merged common ancestors
-NS_IMETHODIMP nsNetAddr::GetPort(uint16_t *aPort)
-{
-  switch(mAddr.raw.family) {
-  case AF_INET:
-    *aPort = ntohs(mAddr.inet.port);
-    break;
-  case AF_INET6:
-    *aPort = ntohs(mAddr.inet6.port);
-    break;
-=======
 NS_IMETHODIMP nsNetAddr::GetPort(uint16_t* aPort) {
   switch (mAddr.raw.family) {
     case AF_INET:
@@ -151,7 +72,6 @@ NS_IMETHODIMP nsNetAddr::GetPort(uint16_t* aPort) {
     case AF_INET6:
       *aPort = ntohs(mAddr.inet6.port);
       break;
->>>>>>> upstream-releases
 #if defined(XP_UNIX)
     case AF_LOCAL:
       // There is no port number for local / connections.
@@ -164,29 +84,12 @@ NS_IMETHODIMP nsNetAddr::GetPort(uint16_t* aPort) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsNetAddr::GetFlow(uint32_t *aFlow) {
-  switch (mAddr.raw.family) {
-    case AF_INET6:
-      *aFlow = ntohl(mAddr.inet6.flowinfo);
-      break;
-    case AF_INET:
-||||||| merged common ancestors
-NS_IMETHODIMP nsNetAddr::GetFlow(uint32_t *aFlow)
-{
-  switch(mAddr.raw.family) {
-  case AF_INET6:
-    *aFlow = ntohl(mAddr.inet6.flowinfo);
-    break;
-  case AF_INET:
-=======
 NS_IMETHODIMP nsNetAddr::GetFlow(uint32_t* aFlow) {
   switch (mAddr.raw.family) {
     case AF_INET6:
       *aFlow = ntohl(mAddr.inet6.flowinfo);
       break;
     case AF_INET:
->>>>>>> upstream-releases
 #if defined(XP_UNIX)
     case AF_LOCAL:
 #endif
@@ -199,29 +102,12 @@ NS_IMETHODIMP nsNetAddr::GetFlow(uint32_t* aFlow) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsNetAddr::GetScope(uint32_t *aScope) {
-  switch (mAddr.raw.family) {
-    case AF_INET6:
-      *aScope = ntohl(mAddr.inet6.scope_id);
-      break;
-    case AF_INET:
-||||||| merged common ancestors
-NS_IMETHODIMP nsNetAddr::GetScope(uint32_t *aScope)
-{
-  switch(mAddr.raw.family) {
-  case AF_INET6:
-    *aScope = ntohl(mAddr.inet6.scope_id);
-    break;
-  case AF_INET:
-=======
 NS_IMETHODIMP nsNetAddr::GetScope(uint32_t* aScope) {
   switch (mAddr.raw.family) {
     case AF_INET6:
       *aScope = ntohl(mAddr.inet6.scope_id);
       break;
     case AF_INET:
->>>>>>> upstream-releases
 #if defined(XP_UNIX)
     case AF_LOCAL:
 #endif
@@ -234,29 +120,12 @@ NS_IMETHODIMP nsNetAddr::GetScope(uint32_t* aScope) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsNetAddr::GetIsV4Mapped(bool *aIsV4Mapped) {
-  switch (mAddr.raw.family) {
-    case AF_INET6:
-      *aIsV4Mapped = IPv6ADDR_IS_V4MAPPED(&mAddr.inet6.ip);
-      break;
-    case AF_INET:
-||||||| merged common ancestors
-NS_IMETHODIMP nsNetAddr::GetIsV4Mapped(bool *aIsV4Mapped)
-{
-  switch(mAddr.raw.family) {
-  case AF_INET6:
-    *aIsV4Mapped = IPv6ADDR_IS_V4MAPPED(&mAddr.inet6.ip);
-    break;
-  case AF_INET:
-=======
 NS_IMETHODIMP nsNetAddr::GetIsV4Mapped(bool* aIsV4Mapped) {
   switch (mAddr.raw.family) {
     case AF_INET6:
       *aIsV4Mapped = IPv6ADDR_IS_V4MAPPED(&mAddr.inet6.ip);
       break;
     case AF_INET:
->>>>>>> upstream-releases
 #if defined(XP_UNIX)
     case AF_LOCAL:
 #endif

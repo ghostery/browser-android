@@ -90,15 +90,8 @@ static PVOID sVectoredExceptionHandler = nullptr;
 #  pragma intrinsic(_ReturnAddress)
 #  define RETURN_ADDRESS() _ReturnAddress()
 #elif defined(__GNUC__) || defined(__clang__)
-<<<<<<< HEAD
-#define RETURN_ADDRESS() \
-  __builtin_extract_return_addr(__builtin_return_address(0))
-||||||| merged common ancestors
-#define RETURN_ADDRESS() __builtin_extract_return_addr(__builtin_return_address(0))
-=======
 #  define RETURN_ADDRESS() \
     __builtin_extract_return_addr(__builtin_return_address(0))
->>>>>>> upstream-releases
 #endif
 
 static inline bool IsCurrentThreadInBlockingMessageSend(
@@ -173,16 +166,8 @@ uint32_t Compatibility::sConsumers = Compatibility::UNKNOWN;
 /**
  * This function is safe to call multiple times.
  */
-<<<<<<< HEAD
-/* static */ void Compatibility::InitConsumers() {
-||||||| merged common ancestors
-/* static */ void
-Compatibility::InitConsumers()
-{
-=======
 /* static */
 void Compatibility::InitConsumers() {
->>>>>>> upstream-releases
   HMODULE jawsHandle = ::GetModuleHandleW(L"jhook");
   if (jawsHandle) {
     sConsumers |=
@@ -219,16 +204,8 @@ void Compatibility::InitConsumers() {
     sConsumers &= ~Compatibility::UNKNOWN;
 }
 
-<<<<<<< HEAD
-/* static */ bool Compatibility::HasKnownNonUiaConsumer() {
-||||||| merged common ancestors
-/* static */ bool
-Compatibility::HasKnownNonUiaConsumer()
-{
-=======
 /* static */
 bool Compatibility::HasKnownNonUiaConsumer() {
->>>>>>> upstream-releases
   InitConsumers();
   return sConsumers & ~(Compatibility::UNKNOWN | UIAUTOMATION);
 }

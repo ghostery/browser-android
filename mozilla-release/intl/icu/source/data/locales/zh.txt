@@ -673,13 +673,7 @@ zh{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.76"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -3400,12 +3394,7 @@ zh{
                     "大正",
                     "昭和",
                     "平成",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "令和",
->>>>>>> upstream-releases
                 }
                 narrow{
                     "大化(645–650)",
@@ -3644,12 +3633,7 @@ zh{
                     "T",
                     "S",
                     "H",
-<<<<<<< HEAD
-                    "Q",
-||||||| merged common ancestors
-=======
                     "R",
->>>>>>> upstream-releases
                 }
                 wide{
                     "大化 (645–650)",
@@ -3888,10 +3872,6 @@ zh{
                     "大正",
                     "昭和",
                     "平成",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "令和",
                 }
             }
@@ -3942,7 +3922,6 @@ zh{
                     M{"GGGGG y-MM-dd – y-MM-dd"}
                     d{"GGGGG y-MM-dd – y-MM-dd"}
                     y{"GGGGG y-MM-dd – y-MM-dd"}
->>>>>>> upstream-releases
                 }
             }
         }

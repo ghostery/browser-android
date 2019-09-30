@@ -1703,18 +1703,6 @@ var Bookmarks = Object.freeze({
       throw new Error("Invalid GUID found in the sorted children array.");
     }
 
-<<<<<<< HEAD
-    options.source = "source" in options ?
-      PlacesUtils.BOOKMARK_VALIDATORS.source(options.source) :
-      Bookmarks.SOURCES.DEFAULT;
-    options.lastModified = "lastModified" in options ?
-      PlacesUtils.BOOKMARK_VALIDATORS.lastModified(options.lastModified) :
-      new Date();
-||||||| merged common ancestors
-    if (!("source" in options)) {
-      options.source = Bookmarks.SOURCES.DEFAULT;
-    }
-=======
     options.source =
       "source" in options
         ? PlacesUtils.BOOKMARK_VALIDATORS.source(options.source)
@@ -1723,7 +1711,6 @@ var Bookmarks = Object.freeze({
       "lastModified" in options
         ? PlacesUtils.BOOKMARK_VALIDATORS.lastModified(options.lastModified)
         : new Date();
->>>>>>> upstream-releases
 
     return (async () => {
       let parent = await fetchBookmark(info);
@@ -1741,22 +1728,6 @@ var Bookmarks = Object.freeze({
       // Note that child.index is the old index.
       for (let i = 0; i < sortedChildren.length; ++i) {
         let child = sortedChildren[i];
-<<<<<<< HEAD
-        notify(observers, "onItemMoved", [ child._id, child._parentId,
-                                           child.index, child._parentId,
-                                           i, child.type,
-                                           child.guid, child.parentGuid,
-                                           child.parentGuid,
-                                           options.source,
-                                           child.url && child.url.href ]);
-||||||| merged common ancestors
-        notify(observers, "onItemMoved", [ child._id, child._parentId,
-                                           child.index, child._parentId,
-                                           i, child.type,
-                                           child.guid, child.parentGuid,
-                                           child.parentGuid,
-                                           source, child.url && child.url.href ]);
-=======
         notify(observers, "onItemMoved", [
           child._id,
           child._parentId,
@@ -1770,7 +1741,6 @@ var Bookmarks = Object.freeze({
           options.source,
           child.url && child.url.href,
         ]);
->>>>>>> upstream-releases
       }
     })();
   },
@@ -2840,40 +2810,6 @@ function reorderChildren(parent, orderedChildrenGuids, options) {
              ),
              lastModified = :lastModified
            WHERE parent = :parentId
-<<<<<<< HEAD
-          `, { parentId: parent._id,
-               lastModified: PlacesUtils.toPRTime(options.lastModified) });
-
-        let syncChangeDelta =
-          PlacesSyncUtils.bookmarks.determineSyncChangeDelta(options.source);
-        await setAncestorsLastModified(db, parent.guid, options.lastModified,
-                                       syncChangeDelta);
-
-        // Update position of items that could have been inserted in the meanwhile.
-        // Since this can happen rarely and it's only done for schema coherence
-        // resonds, we won't notify about these changes.
-        await db.executeCached(
-          `CREATE TEMP TRIGGER moz_bookmarks_reorder_trigger
-||||||| merged common ancestors
-          `, { parentId: parent._id});
-
-        let syncChangeDelta =
-          PlacesSyncUtils.bookmarks.determineSyncChangeDelta(options.source);
-        if (syncChangeDelta) {
-          // Flag the parent as having a change.
-          await db.executeCached(`
-            UPDATE moz_bookmarks SET
-              syncChangeCounter = syncChangeCounter + :syncChangeDelta
-            WHERE id = :parentId`,
-            { parentId: parent._id, syncChangeDelta });
-        }
-
-        // Update position of items that could have been inserted in the meanwhile.
-        // Since this can happen rarely and it's only done for schema coherence
-        // resonds, we won't notify about these changes.
-        await db.executeCached(
-          `CREATE TEMP TRIGGER moz_bookmarks_reorder_trigger
-=======
           `,
             {
               parentId: parent._id,
@@ -2896,7 +2832,6 @@ function reorderChildren(parent, orderedChildrenGuids, options) {
           // resonds, we won't notify about these changes.
           await db.executeCached(
             `CREATE TEMP TRIGGER moz_bookmarks_reorder_trigger
->>>>>>> upstream-releases
              AFTER UPDATE OF position ON moz_bookmarks
              WHEN NEW.position = -1
            BEGIN

@@ -21,16 +21,8 @@ namespace mozilla {
 
 static DDMediaLogs* sMediaLogs;
 
-<<<<<<< HEAD
-/* static */ void DecoderDoctorLogger::Init() {
-||||||| merged common ancestors
-/* static */ void
-DecoderDoctorLogger::Init()
-{
-=======
 /* static */
 void DecoderDoctorLogger::Init() {
->>>>>>> upstream-releases
   MOZ_ASSERT(static_cast<LogState>(sLogState) == scDisabled);
   if (MOZ_LOG_TEST(sDecoderDoctorLoggerLog, LogLevel::Error) ||
       MOZ_LOG_TEST(sDecoderDoctorLoggerEndLog, LogLevel::Error)) {
@@ -62,17 +54,8 @@ struct DDLogDeleter {
 };
 static UniquePtr<DDLogDeleter> sDDLogDeleter;
 
-<<<<<<< HEAD
-/* static */ void DecoderDoctorLogger::PanicInternal(const char* aReason,
-                                                     bool aDontBlock) {
-||||||| merged common ancestors
-/* static */ void
-DecoderDoctorLogger::PanicInternal(const char* aReason, bool aDontBlock)
-{
-=======
 /* static */
 void DecoderDoctorLogger::PanicInternal(const char* aReason, bool aDontBlock) {
->>>>>>> upstream-releases
   for (;;) {
     const LogState state = static_cast<LogState>(sLogState);
     if (state == scEnabling && !aDontBlock) {
@@ -104,13 +87,6 @@ void DecoderDoctorLogger::PanicInternal(const char* aReason, bool aDontBlock) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool DecoderDoctorLogger::EnsureLogIsEnabled() {
-||||||| merged common ancestors
-/* static */ bool
-DecoderDoctorLogger::EnsureLogIsEnabled()
-{
-=======
 /* static */
 bool DecoderDoctorLogger::EnsureLogIsEnabled() {
 #ifdef RELEASE_OR_BETA
@@ -118,7 +94,6 @@ bool DecoderDoctorLogger::EnsureLogIsEnabled() {
   // to trigger an OOM. See bug 1571648.
   return false;
 #else
->>>>>>> upstream-releases
   for (;;) {
     LogState state = static_cast<LogState>(sLogState);
     switch (state) {
@@ -170,20 +145,8 @@ bool DecoderDoctorLogger::EnsureLogIsEnabled() {
 #endif
 }
 
-<<<<<<< HEAD
-/* static */ void DecoderDoctorLogger::EnableLogging() {
-  Unused << EnsureLogIsEnabled();
-}
-||||||| merged common ancestors
-/* static */ void
-DecoderDoctorLogger::EnableLogging()
-{
-  Unused << EnsureLogIsEnabled();
-}
-=======
 /* static */
 void DecoderDoctorLogger::EnableLogging() { Unused << EnsureLogIsEnabled(); }
->>>>>>> upstream-releases
 
 /* static */ RefPtr<DecoderDoctorLogger::LogMessagesPromise>
 DecoderDoctorLogger::RetrieveMessages(
@@ -196,27 +159,11 @@ DecoderDoctorLogger::RetrieveMessages(
   return sMediaLogs->RetrieveMessages(aMediaElement);
 }
 
-<<<<<<< HEAD
-/* static */ void DecoderDoctorLogger::Log(const char* aSubjectTypeName,
-                                           const void* aSubjectPointer,
-                                           DDLogCategory aCategory,
-                                           const char* aLabel,
-                                           DDLogValue&& aValue) {
-||||||| merged common ancestors
-/* static */ void
-DecoderDoctorLogger::Log(const char* aSubjectTypeName,
-                         const void* aSubjectPointer,
-                         DDLogCategory aCategory,
-                         const char* aLabel,
-                         DDLogValue&& aValue)
-{
-=======
 /* static */
 void DecoderDoctorLogger::Log(const char* aSubjectTypeName,
                               const void* aSubjectPointer,
                               DDLogCategory aCategory, const char* aLabel,
                               DDLogValue&& aValue) {
->>>>>>> upstream-releases
   if (IsDDLoggingEnabled()) {
     MOZ_ASSERT(sMediaLogs);
     sMediaLogs->Log(aSubjectTypeName, aSubjectPointer, aCategory, aLabel,

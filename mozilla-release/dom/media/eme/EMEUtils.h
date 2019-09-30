@@ -19,64 +19,24 @@ class ArrayBufferViewOrArrayBuffer;
 }
 
 #ifndef EME_LOG
-<<<<<<< HEAD
-LogModule* GetEMELog();
-#define EME_LOG(...) \
-  MOZ_LOG(GetEMELog(), mozilla::LogLevel::Debug, (__VA_ARGS__))
-#define EME_LOG_ENABLED() MOZ_LOG_TEST(GetEMELog(), mozilla::LogLevel::Debug)
-||||||| merged common ancestors
-  LogModule* GetEMELog();
-  #define EME_LOG(...) MOZ_LOG(GetEMELog(), mozilla::LogLevel::Debug, (__VA_ARGS__))
-  #define EME_LOG_ENABLED() MOZ_LOG_TEST(GetEMELog(), mozilla::LogLevel::Debug)
-=======
 LogModule* GetEMELog();
 #  define EME_LOG(...) \
     MOZ_LOG(GetEMELog(), mozilla::LogLevel::Debug, (__VA_ARGS__))
 #  define EME_LOG_ENABLED() MOZ_LOG_TEST(GetEMELog(), mozilla::LogLevel::Debug)
->>>>>>> upstream-releases
 #endif
 
 #ifndef EME_VERBOSE_LOG
-<<<<<<< HEAD
-LogModule* GetEMEVerboseLog();
-#define EME_VERBOSE_LOG(...) \
-  MOZ_LOG(GetEMEVerboseLog(), mozilla::LogLevel::Debug, (__VA_ARGS__))
-||||||| merged common ancestors
-  LogModule* GetEMEVerboseLog();
-  #define EME_VERBOSE_LOG(...) MOZ_LOG(GetEMEVerboseLog(), mozilla::LogLevel::Debug, (__VA_ARGS__))
-=======
 LogModule* GetEMEVerboseLog();
 #  define EME_VERBOSE_LOG(...) \
     MOZ_LOG(GetEMEVerboseLog(), mozilla::LogLevel::Debug, (__VA_ARGS__))
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#ifndef EME_LOG
-#define EME_LOG(...)
-#endif
-||||||| merged common ancestors
-  #ifndef EME_LOG
-    #define EME_LOG(...)
-  #endif
-=======
 #  ifndef EME_LOG
 #    define EME_LOG(...)
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifndef EME_VERBOSE_LOG
-#define EME_VERBOSE_LOG(...)
-#endif
-||||||| merged common ancestors
-  #ifndef EME_VERBOSE_LOG
-    #define EME_VERBOSE_LOG(...)
-  #endif
-=======
 #  ifndef EME_VERBOSE_LOG
 #    define EME_VERBOSE_LOG(...)
 #  endif
->>>>>>> upstream-releases
 #endif
 
 // Helper function to extract a copy of data coming in from JS in an

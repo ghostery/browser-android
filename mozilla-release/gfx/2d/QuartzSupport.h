@@ -49,22 +49,13 @@ class nsCARenderer : public mozilla::RefCounted<nsCARenderer> {
   // smallest fully addressable part of a display.  But in HiDPI modes each
   // "display pixel" corresponds to more than one device pixel.  Multiply
   // display pixels by aContentsScaleFactor to get device pixels.
-  nsresult SetupRenderer(void *aCALayer, int aWidth, int aHeight,
+  nsresult SetupRenderer(void* aCALayer, int aWidth, int aHeight,
                          double aContentsScaleFactor,
                          AllowOfflineRendererEnum aAllowOfflineRenderer);
   // aWidth and aHeight are in "display pixels".  Multiply by
   // aContentsScaleFactor to get device pixels.
-<<<<<<< HEAD
-  nsresult Render(int aWidth, int aHeight, double aContentsScaleFactor,
-                  CGImageRef *aOutCAImage);
-||||||| merged common ancestors
-  nsresult Render(int aWidth, int aHeight,
-                  double aContentsScaleFactor,
-                  CGImageRef *aOutCAImage);
-=======
   nsresult Render(int aWidth, int aHeight, double aContentsScaleFactor,
                   CGImageRef* aOutCAImage);
->>>>>>> upstream-releases
   bool isInit() { return mCARenderer != nullptr; }
   /*
    * Render the CALayer to an IOSurface. If no IOSurface
@@ -76,43 +67,18 @@ class nsCARenderer : public mozilla::RefCounted<nsCARenderer> {
   // aX, aY, aWidth and aHeight are in "display pixels".  Multiply by
   // surf->GetContentsScaleFactor() to get device pixels.
   static nsresult DrawSurfaceToCGContext(CGContextRef aContext,
-<<<<<<< HEAD
-                                         MacIOSurface *surf,
-                                         CGColorSpaceRef aColorSpace, int aX,
-                                         int aY, size_t aWidth, size_t aHeight);
-||||||| merged common ancestors
-                                         MacIOSurface *surf,
-                                         CGColorSpaceRef aColorSpace,
-                                         int aX, int aY,
-                                         size_t aWidth, size_t aHeight);
-=======
                                          MacIOSurface* surf,
                                          CGColorSpaceRef aColorSpace, int aX,
                                          int aY, size_t aWidth, size_t aHeight);
->>>>>>> upstream-releases
 
   // Remove & Add the layer without destroying
   // the renderer for fast back buffer swapping.
   void DetachCALayer();
-<<<<<<< HEAD
-  void AttachCALayer(void *aCALayer);
-#ifdef DEBUG
-  static void SaveToDisk(MacIOSurface *surf);
-#endif
- private:
-||||||| merged common ancestors
-  void AttachCALayer(void *aCALayer);
-#ifdef DEBUG
-  static void SaveToDisk(MacIOSurface *surf);
-#endif
-private:
-=======
   void AttachCALayer(void* aCALayer);
 #  ifdef DEBUG
   static void SaveToDisk(MacIOSurface* surf);
 #  endif
  private:
->>>>>>> upstream-releases
   // aWidth and aHeight are in "display pixels".  Multiply by
   // mContentsScaleFactor to get device pixels.
   void SetBounds(int aWidth, int aHeight);
@@ -121,28 +87,12 @@ private:
   void SetViewport(int aWidth, int aHeight);
   void Destroy();
 
-<<<<<<< HEAD
-  void *mCARenderer;
-  void *mWrapperCALayer;
-  GLuint mFBOTexture;
-  _CGLContextObject *mOpenGLContext;
-  CGImageRef mCGImage;
-  void *mCGData;
-||||||| merged common ancestors
-  void *mCARenderer;
-  void *mWrapperCALayer;
-  GLuint                    mFBOTexture;
-  _CGLContextObject        *mOpenGLContext;
-  CGImageRef                mCGImage;
-  void                     *mCGData;
-=======
   void* mCARenderer;
   void* mWrapperCALayer;
   GLuint mFBOTexture;
   _CGLContextObject* mOpenGLContext;
   CGImageRef mCGImage;
   void* mCGData;
->>>>>>> upstream-releases
   RefPtr<MacIOSurface> mIOSurface;
   uint32_t mFBO;
   uint32_t mIOTexture;

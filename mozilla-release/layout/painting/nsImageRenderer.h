@@ -18,16 +18,8 @@ namespace mozilla {
 namespace layers {
 class StackingContextHelper;
 class WebRenderParentCommand;
-<<<<<<< HEAD
-class WebRenderLayerManager;
-}  // namespace layers
-||||||| merged common ancestors
-class WebRenderLayerManager;
-} // namespace layers
-=======
 class RenderRootStateManager;
 }  // namespace layers
->>>>>>> upstream-releases
 
 namespace wr {
 class DisplayListBuilder;
@@ -40,39 +32,14 @@ class IpcResourceUpdateQueue;
 // of these then we can compute a concrete size, that is a width and height.
 struct CSSSizeOrRatio {
   CSSSizeOrRatio()
-<<<<<<< HEAD
-      : mRatio(0, 0),
-        mWidth(0),
-        mHeight(0),
-        mHasWidth(false),
-        mHasHeight(false) {}
-||||||| merged common ancestors
-    : mRatio(0, 0)
-    , mWidth(0)
-    , mHeight(0)
-    , mHasWidth(false)
-    , mHasHeight(false)
-  {
-  }
-=======
       : mWidth(0), mHeight(0), mHasWidth(false), mHasHeight(false) {}
->>>>>>> upstream-releases
 
   bool CanComputeConcreteSize() const {
     return mHasWidth + mHasHeight + HasRatio() >= 2;
   }
   bool IsConcrete() const { return mHasWidth && mHasHeight; }
-<<<<<<< HEAD
-  bool HasRatio() const { return mRatio.width > 0 && mRatio.height > 0; }
-  bool IsEmpty() const {
-||||||| merged common ancestors
-  bool HasRatio() const { return mRatio.width > 0 && mRatio.height > 0; }
-  bool IsEmpty() const
-  {
-=======
   bool HasRatio() const { return !!mRatio; }
   bool IsEmpty() const {
->>>>>>> upstream-releases
     return (mHasWidth && mWidth <= 0) || (mHasHeight && mHeight <= 0) ||
            !mRatio;
   }
@@ -102,14 +69,7 @@ struct CSSSizeOrRatio {
     mHasHeight = true;
     mRatio = AspectRatio::FromSize(mWidth, mHeight);
   }
-<<<<<<< HEAD
-  void SetRatio(const nsSize& aRatio) {
-||||||| merged common ancestors
-  void SetRatio(const nsSize& aRatio)
-  {
-=======
   void SetRatio(const AspectRatio& aRatio) {
->>>>>>> upstream-releases
     MOZ_ASSERT(
         !mHasWidth || !mHasHeight,
         "Probably shouldn't be setting a ratio if we have a concrete size");
@@ -232,34 +192,12 @@ class nsImageRenderer {
    * @see nsLayoutUtils::DrawImage() for parameters.
    */
   ImgDrawResult BuildWebRenderDisplayItemsForLayer(
-<<<<<<< HEAD
-      nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResource,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
-      const nsRect& aDest, const nsRect& aFill, const nsPoint& aAnchor,
-      const nsRect& aDirty, const nsSize& aRepeatSize, float aOpacity);
-||||||| merged common ancestors
-    nsPresContext* aPresContext,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResource,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayItem* aItem,
-    const nsRect& aDest,
-    const nsRect& aFill,
-    const nsPoint& aAnchor,
-    const nsRect& aDirty,
-    const nsSize& aRepeatSize,
-    float aOpacity);
-=======
       nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResource,
       const mozilla::layers::StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem,
       const nsRect& aDest, const nsRect& aFill, const nsPoint& aAnchor,
       const nsRect& aDirty, const nsSize& aRepeatSize, float aOpacity);
->>>>>>> upstream-releases
 
   /**
    * Draw the image to a single component of a border-image style rendering.
@@ -308,15 +246,8 @@ class nsImageRenderer {
   void SetExtendMode(mozilla::gfx::ExtendMode aMode) { mExtendMode = aMode; }
   void SetMaskOp(mozilla::StyleMaskMode aMaskOp) { mMaskOp = aMaskOp; }
   void PurgeCacheForViewportChange(
-<<<<<<< HEAD
-      const mozilla::Maybe<nsSize>& aSVGViewportSize, const bool aHasRatio);
-||||||| merged common ancestors
-    const mozilla::Maybe<nsSize>& aSVGViewportSize,
-    const bool aHasRatio);
-=======
       const mozilla::Maybe<nsSize>& aSVGViewportSize, const bool aHasRatio);
   const nsSize& GetSize() const { return mSize; }
->>>>>>> upstream-releases
   nsStyleImageType GetType() const { return mType; }
   const mozilla::StyleGradient* GetGradientData() const {
     return mGradientData;
@@ -344,29 +275,6 @@ class nsImageRenderer {
    * @see nsLayoutUtils::DrawImage() for other parameters.
    */
   ImgDrawResult BuildWebRenderDisplayItems(
-<<<<<<< HEAD
-      nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
-      const nsRect& aDirtyRect, const nsRect& aDest, const nsRect& aFill,
-      const nsPoint& aAnchor, const nsSize& aRepeatSize,
-      const mozilla::CSSIntRect& aSrc, float aOpacity = 1.0);
-||||||| merged common ancestors
-    nsPresContext* aPresContext,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayItem* aItem,
-    const nsRect& aDirtyRect,
-    const nsRect& aDest,
-    const nsRect& aFill,
-    const nsPoint& aAnchor,
-    const nsSize& aRepeatSize,
-    const mozilla::CSSIntRect& aSrc,
-    float aOpacity = 1.0);
-=======
       nsPresContext* aPresContext, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
@@ -374,7 +282,6 @@ class nsImageRenderer {
       const nsRect& aDirtyRect, const nsRect& aDest, const nsRect& aFill,
       const nsPoint& aAnchor, const nsSize& aRepeatSize,
       const mozilla::CSSIntRect& aSrc, float aOpacity = 1.0);
->>>>>>> upstream-releases
 
   /**
    * Helper method for creating a gfxDrawable from mPaintServerFrame or

@@ -1444,15 +1444,8 @@ class FetchEventRunnable : public ExtendableFunctionalEventWorkerRunnable,
     if (cic && !cic->PreferredAlternativeDataTypes().IsEmpty()) {
       // TODO: the internal request probably needs all the preferred types.
       nsAutoCString alternativeDataType;
-<<<<<<< HEAD
-      alternativeDataType.Assign(
-          mozilla::Get<0>(cic->PreferredAlternativeDataTypes()[0]));
-||||||| merged common ancestors
-      alternativeDataType.Assign(mozilla::Get<0>(cic->PreferredAlternativeDataTypes()[0]));
-=======
       alternativeDataType.Assign(
           cic->PreferredAlternativeDataTypes()[0].type());
->>>>>>> upstream-releases
       internalReq->SetPreferredAlternativeDataType(alternativeDataType);
     }
 
@@ -1718,44 +1711,9 @@ nsresult ServiceWorkerPrivate::SpawnWorkerIfNeeded(WakeUpReason aWhy,
   info.mCookieSettings = mozilla::net::CookieSettings::Create();
   MOZ_ASSERT(info.mCookieSettings);
 
-<<<<<<< HEAD
-  // Create a pristine codebase principal to avoid any possibility of inheriting
-  // CSP values.  The principal on the registration may be polluted with CSP
-  // from the registering page or other places the principal is passed.  If
-  // bug 965637 is ever fixed this can be removed.
-  info.mPrincipal =
-      BasePrincipal::CreateCodebasePrincipal(uri, mInfo->GetOriginAttributes());
-  if (NS_WARN_IF(!info.mPrincipal)) {
-    return NS_ERROR_FAILURE;
-  }
-  info.mLoadingPrincipal = info.mPrincipal;
-||||||| merged common ancestors
-  // Create a pristine codebase principal to avoid any possibility of inheriting
-  // CSP values.  The principal on the registration may be polluted with CSP
-  // from the registering page or other places the principal is passed.  If
-  // bug 965637 is ever fixed this can be removed.
-  info.mPrincipal =
-    BasePrincipal::CreateCodebasePrincipal(uri, mInfo->GetOriginAttributes());
-  if (NS_WARN_IF(!info.mPrincipal)) {
-    return NS_ERROR_FAILURE;
-  }
-  info.mLoadingPrincipal = info.mPrincipal;
-=======
   info.mStorageAccess =
       StorageAllowedForServiceWorker(info.mPrincipal, info.mCookieSettings);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess access =
-      nsContentUtils::StorageAllowedForPrincipal(info.mPrincipal);
-  info.mStorageAllowed =
-      access > nsContentUtils::StorageAccess::ePrivateBrowsing;
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess access =
-    nsContentUtils::StorageAllowedForPrincipal(info.mPrincipal);
-  info.mStorageAllowed = access > nsContentUtils::StorageAccess::ePrivateBrowsing;
-=======
->>>>>>> upstream-releases
   info.mOriginAttributes = mInfo->GetOriginAttributes();
 
   // Verify that we don't have any CSP on pristine client.

@@ -1250,36 +1250,6 @@ const char16_t* DecimalQuantity::checkHealth() const {
 }
 
 bool DecimalQuantity::operator==(const DecimalQuantity& other) const {
-<<<<<<< HEAD
-    bool basicEquals =
-            scale == other.scale
-            && precision == other.precision
-            && flags == other.flags
-            && lOptPos == other.lOptPos
-            && lReqPos == other.lReqPos
-            && rReqPos == other.rReqPos
-            && rOptPos == other.rOptPos
-            && isApproximate == other.isApproximate;
-    if (!basicEquals) {
-        return false;
-    }
-
-    if (precision == 0) {
-        return true;
-    } else if (isApproximate) {
-        return origDouble == other.origDouble && origDelta == other.origDelta;
-    } else {
-        for (int m = getUpperDisplayMagnitude(); m >= getLowerDisplayMagnitude(); m--) {
-            if (getDigit(m) != other.getDigit(m)) {
-                return false;
-            }
-        }
-        return true;
-    }
-||||||| merged common ancestors
-    // FIXME: Make a faster implementation.
-    return toString() == other.toString();
-=======
     bool basicEquals =
             scale == other.scale
             && precision == other.precision
@@ -1303,7 +1273,6 @@ bool DecimalQuantity::operator==(const DecimalQuantity& other) const {
         }
         return true;
     }
->>>>>>> upstream-releases
 }
 
 UnicodeString DecimalQuantity::toString() const {

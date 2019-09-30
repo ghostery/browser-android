@@ -156,16 +156,7 @@ HRESULT STDMETHODCALLTYPE DWriteFontFileLoader::CreateStreamFromKey(
 DWriteFontFileStream::DWriteFontFileStream(uint64_t aFontFileKey)
     : mRefCnt(0), mFontFileKey(aFontFileKey) {}
 
-<<<<<<< HEAD
 DWriteFontFileStream::~DWriteFontFileStream() {
-  StaticMutexAutoLock lock(sFontFileStreamsMutex);
-||||||| merged common ancestors
-DWriteFontFileStream::~DWriteFontFileStream()
-{
-  StaticMutexAutoLock lock(sFontFileStreamsMutex);
-=======
-DWriteFontFileStream::~DWriteFontFileStream() {
->>>>>>> upstream-releases
   sFontFileStreams.erase(mFontFileKey);
 }
 

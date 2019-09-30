@@ -3,27 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-if (AppConstants.platform == "android" && !Services.prefs.getBoolPref("network.mdns.use_js_fallback")) {
-  ChromeUtils.import("resource://gre/modules/MulticastDNSAndroid.jsm");
-} else {
-  ChromeUtils.import("resource://gre/modules/MulticastDNS.jsm");
-}
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import('resource://gre/modules/Services.jsm');
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-if (AppConstants.platform == "android" && !Services.prefs.getBoolPref("network.mdns.use_js_fallback")) {
-  ChromeUtils.import("resource://gre/modules/MulticastDNSAndroid.jsm");
-} else {
-  ChromeUtils.import("resource://gre/modules/MulticastDNS.jsm");
-}
-=======
 const { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -35,7 +14,6 @@ const { MulticastDNS } = ChromeUtils.import(
     ? "resource://gre/modules/MulticastDNSAndroid.jsm"
     : "resource://gre/modules/MulticastDNS.jsm"
 );
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
 
 const DNSSERVICEINFO_CONTRACT_ID =
   "@mozilla.org/toolkit/components/mdnsresponder/dns-info;1";
@@ -67,17 +45,6 @@ function ListenerWrapper(aListener, aMdns) {
 
 ListenerWrapper.prototype = {
   // Helper function for transforming an Object into nsIDNSServiceInfo.
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-  makeServiceInfo(aServiceInfo) {
-    let serviceInfo = Cc[DNSSERVICEINFO_CONTRACT_ID].createInstance(Ci.nsIDNSServiceInfo);
-
-    for (let name of ["host", "address", "port", "serviceName", "serviceType"]) {
-||||||| merged common ancestors
-  makeServiceInfo: function (aServiceInfo) {
-    let serviceInfo = Cc[DNSSERVICEINFO_CONTRACT_ID].createInstance(Ci.nsIDNSServiceInfo);
-
-    for (let name of ['host', 'address', 'port', 'serviceName', 'serviceType']) {
-=======
   makeServiceInfo(aServiceInfo) {
     let serviceInfo = Cc[DNSSERVICEINFO_CONTRACT_ID].createInstance(
       Ci.nsIDNSServiceInfo
@@ -90,7 +57,6 @@ ListenerWrapper.prototype = {
       "serviceName",
       "serviceType",
     ]) {
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
       try {
         serviceInfo[name] = aServiceInfo[name];
       } catch (e) {
@@ -102,23 +68,11 @@ ListenerWrapper.prototype = {
     try {
       attributes = _toPropertyBag2(aServiceInfo.attributes);
     } catch (err) {
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-        // Ignore unset attributes in object.
-        log("Caught unset attributes error: " + err + " - " + err.stack);
-        attributes = Cc["@mozilla.org/hash-property-bag;1"]
-                        .createInstance(Ci.nsIWritablePropertyBag2);
-||||||| merged common ancestors
-        // Ignore unset attributes in object.
-        log("Caught unset attributes error: " + err + " - " + err.stack);
-        attributes = Cc['@mozilla.org/hash-property-bag;1']
-                        .createInstance(Ci.nsIWritablePropertyBag2);
-=======
       // Ignore unset attributes in object.
       log("Caught unset attributes error: " + err + " - " + err.stack);
       attributes = Cc["@mozilla.org/hash-property-bag;1"].createInstance(
         Ci.nsIWritablePropertyBag2
       );
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
     }
     serviceInfo.attributes = attributes;
 
@@ -179,15 +133,6 @@ ListenerWrapper.prototype = {
       aErrorCode
     );
   },
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-  onUnregistrationFailed(aServiceInfo, aErrorCode) {
-    log("onUnregistrationFailed: (" + aErrorCode + ")");
-    this.listener.onUnregistrationFailed(this.makeServiceInfo(aServiceInfo), aErrorCode);
-||||||| merged common ancestors
-  onUnregistrationFailed: function(aServiceInfo, aErrorCode) {
-    log('onUnregistrationFailed: (' + aErrorCode + ')');
-    this.listener.onUnregistrationFailed(this.makeServiceInfo(aServiceInfo), aErrorCode);
-=======
   onUnregistrationFailed(aServiceInfo, aErrorCode) {
     log("onUnregistrationFailed: (" + aErrorCode + ")");
     this.listener.onUnregistrationFailed(
@@ -201,20 +146,7 @@ ListenerWrapper.prototype = {
       this.makeServiceInfo(aServiceInfo),
       aErrorCode
     );
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
   },
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-  onResolveFailed(aServiceInfo, aErrorCode) {
-    log("onResolveFailed: (" + aErrorCode + ")");
-    this.listener.onResolveFailed(this.makeServiceInfo(aServiceInfo), aErrorCode);
-  },
-||||||| merged common ancestors
-  onResolveFailed: function(aServiceInfo, aErrorCode) {
-    log('onResolveFailed: (' + aErrorCode + ')');
-    this.listener.onResolveFailed(this.makeServiceInfo(aServiceInfo), aErrorCode);
-  }
-=======
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
 };
 
 function nsDNSServiceDiscovery() {
@@ -242,13 +174,7 @@ nsDNSServiceDiscovery.prototype = {
           return;
         }
         this.mdns.stopDiscovery(aServiceType, listener);
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-      }).bind(listener),
-||||||| merged common ancestors
-      }).bind(listener)
-=======
       }.bind(listener),
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
     };
   },
 
@@ -266,13 +192,7 @@ nsDNSServiceDiscovery.prototype = {
           return;
         }
         this.mdns.unregisterService(aServiceInfo, listener);
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-      }).bind(listener),
-||||||| merged common ancestors
-      }).bind(listener)
-=======
       }.bind(listener),
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
     };
   },
 
@@ -289,17 +209,9 @@ function _toPropertyBag2(obj) {
     return obj.QueryInterface(Ci.nsIPropertyBag2);
   }
 
-<<<<<<< HEAD:mozilla-release/netwerk/dns/mdns/libmdns/nsDNSServiceDiscovery.js
-  let result = Cc["@mozilla.org/hash-property-bag;1"]
-                  .createInstance(Ci.nsIWritablePropertyBag2);
-||||||| merged common ancestors
-  let result = Cc['@mozilla.org/hash-property-bag;1']
-                  .createInstance(Ci.nsIWritablePropertyBag2);
-=======
   let result = Cc["@mozilla.org/hash-property-bag;1"].createInstance(
     Ci.nsIWritablePropertyBag2
   );
->>>>>>> upstream-releases:mozilla-release/netwerk/dns/mdns/libmdns/DNSServiceDiscovery.jsm
   for (let name in obj) {
     result.setPropertyAsAString(name, obj[name]);
   }

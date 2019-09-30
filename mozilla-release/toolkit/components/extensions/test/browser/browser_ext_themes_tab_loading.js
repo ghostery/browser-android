@@ -6,39 +6,15 @@ add_task(async function test_support_tab_loading_filling() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-=======
       theme: {
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": "#000",
-          "toolbar": "#124455",
-          "tab_background_text": TAB_TEXT_COLOR,
-          "tab_loading":  TAB_LOADING_COLOR,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": "#000",
-          "toolbar": "#124455",
-          "textcolor": TAB_TEXT_COLOR,
-          "tab_loading":  TAB_LOADING_COLOR,
-=======
         colors: {
           frame: "#000",
           toolbar: "#124455",
           tab_background_text: TAB_TEXT_COLOR,
           tab_loading: TAB_LOADING_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

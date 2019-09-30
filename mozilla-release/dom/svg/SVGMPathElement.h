@@ -12,20 +12,8 @@
 #include "nsStubMutationObserver.h"
 #include "SVGAnimatedString.h"
 
-<<<<<<< HEAD
 nsresult NS_NewSVGMPathElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-
-typedef nsSVGElement SVGMPathElementBase;
-||||||| merged common ancestors
-nsresult NS_NewSVGMPathElement(nsIContent **aResult,
-                               already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-
-typedef nsSVGElement SVGMPathElementBase;
-=======
-nsresult NS_NewSVGMPathElement(
-    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -121,16 +109,8 @@ class SVGMPathElement final : public SVGMPathElementBase,
   void NotifyParentOfMpathChange(nsIContent* aParent);
 
   enum { HREF, XLINK_HREF };
-<<<<<<< HEAD
-  nsSVGString mStringAttributes[2];
-  static StringInfo sStringInfo[2];
-||||||| merged common ancestors
-  nsSVGString        mStringAttributes[2];
-  static StringInfo  sStringInfo[2];
-=======
   SVGAnimatedString mStringAttributes[2];
   static StringInfo sStringInfo[2];
->>>>>>> upstream-releases
   PathElementTracker mPathTracker;
 };
 

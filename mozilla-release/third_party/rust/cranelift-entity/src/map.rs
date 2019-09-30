@@ -10,19 +10,9 @@ use std::vec::Vec;
 
 /// A mapping `K -> V` for densely indexed entity references.
 ///
-<<<<<<< HEAD
-/// The `SecondaryMap` data structure uses the dense index space to implement a map with a vector.
-/// Unlike `PrimaryMap`, an `SecondaryMap` can't be used to allocate entity references. It is used to
-/// associate secondary information with entities.
-||||||| merged common ancestors
-/// The `EntityMap` data structure uses the dense index space to implement a map with a vector.
-/// Unlike `PrimaryMap`, an `EntityMap` can't be used to allocate entity references. It is used to
-/// associate secondary information with entities.
-=======
 /// The `SecondaryMap` data structure uses the dense index space to implement a map with a vector.
 /// Unlike `PrimaryMap`, an `SecondaryMap` can't be used to allocate entity references. It is used
 /// to associate secondary information with entities.
->>>>>>> upstream-releases
 ///
 /// The map does not track if an entry for a key has been inserted or not. Instead it behaves as if
 /// all keys have a default entry from the beginning.

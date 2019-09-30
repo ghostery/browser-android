@@ -15,19 +15,9 @@
 //!
 //! - [`PrimaryMap`](struct.PrimaryMap.html) is used to keep track of a vector of entities,
 //!   assigning a unique entity reference to each.
-<<<<<<< HEAD
-//! - [`SecondaryMap`](struct.SecondaryMap.html) is used to associate secondary information to an entity.
-//!   The map is implemented as a simple vector, so it does not keep track of which entities have
-//!   been inserted. Instead, any unknown entities map to the default value.
-||||||| merged common ancestors
-//! - [`EntityMap`](struct.EntityMap.html) is used to associate secondary information to an entity.
-//!   The map is implemented as a simple vector, so it does not keep track of which entities have
-//!   been inserted. Instead, any unknown entities map to the default value.
-=======
 //! - [`SecondaryMap`](struct.SecondaryMap.html) is used to associate secondary information to an
 //!   entity. The map is implemented as a simple vector, so it does not keep track of which
 //!   entities have been inserted. Instead, any unknown entities map to the default value.
->>>>>>> upstream-releases
 //! - [`SparseMap`](struct.SparseMap.html) is used to associate secondary information to a small
 //!   number of entities. It tracks accurately which entities have been inserted. This is a
 //!   specialized data structure which can use a lot of memory, so read the documentation before
@@ -42,41 +32,14 @@
 #![deny(missing_docs, trivial_numeric_casts, unused_extern_crates)]
 #![warn(unused_import_braces)]
 #![cfg_attr(feature = "std", deny(unstable_features))]
-<<<<<<< HEAD
-#![cfg_attr(
-    feature = "clippy",
-    plugin(clippy(conf_file = "../../clippy.toml"))
-)]
-#![cfg_attr(
-    feature = "cargo-clippy",
-    allow(new_without_default, new_without_default_derive)
-)]
-||||||| merged common ancestors
-#![cfg_attr(feature = "clippy", plugin(clippy(conf_file = "../../clippy.toml")))]
-#![cfg_attr(feature = "cargo-clippy", allow(new_without_default, new_without_default_derive))]
-=======
 #![cfg_attr(feature = "clippy", plugin(clippy(conf_file = "../../clippy.toml")))]
 #![cfg_attr(
     feature = "cargo-clippy",
     allow(clippy::new_without_default, clippy::new_without_default_derive)
 )]
->>>>>>> upstream-releases
 #![cfg_attr(
     feature = "cargo-clippy",
     warn(
-<<<<<<< HEAD
-        float_arithmetic,
-        mut_mut,
-        nonminimal_bool,
-        option_map_unwrap_or,
-        option_map_unwrap_or_else,
-        print_stdout,
-        unicode_not_nfc,
-        use_self
-||||||| merged common ancestors
-        float_arithmetic, mut_mut, nonminimal_bool, option_map_unwrap_or, option_map_unwrap_or_else,
-        print_stdout, unicode_not_nfc, use_self
-=======
         clippy::float_arithmetic,
         clippy::mut_mut,
         clippy::nonminimal_bool,
@@ -85,7 +48,6 @@
         clippy::print_stdout,
         clippy::unicode_not_nfc,
         clippy::use_self
->>>>>>> upstream-releases
     )
 )]
 #![no_std]

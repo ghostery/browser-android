@@ -48,20 +48,11 @@ nsresult CentralizedAdminPrefManagerInit(bool aSandboxEnabled) {
   nsContentUtils::GetSecurityManager()->GetSystemPrincipal(
       getter_AddRefs(principal));
 
-<<<<<<< HEAD
-  // Create a sandbox.
-  AutoSafeJSContext cx;
-  JS::Rooted<JSObject *> sandbox(cx);
-  nsresult rv = xpc->CreateSandbox(cx, principal, sandbox.address());
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-=======
   // Create a sandbox.
   AutoSafeJSContext cx;
   JS::Rooted<JSObject*> sandbox(cx);
   nsresult rv = xpc->CreateSandbox(cx, principal, sandbox.address());
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   // Unwrap, store and root the sandbox.
   NS_ENSURE_STATE(sandbox);
@@ -111,50 +102,6 @@ nsresult EvaluateAdminConfigScript(const char* js_buffer, size_t length,
 }
 
 nsresult EvaluateAdminConfigScript(JS::HandleObject sandbox,
-<<<<<<< HEAD
-                                   const char *js_buffer, size_t length,
-                                   const char *filename, bool globalContext,
-                                   bool callbacks, bool skipFirstLine) {
-  if (skipFirstLine) {
-    /* In order to protect the privacy of the JavaScript preferences file
-     * from loading by the browser, we make the first line unparseable
-     * by JavaScript. We must skip that line here before executing
-     * the JavaScript code.
-     */
-    unsigned int i = 0;
-    while (i < length) {
-      char c = js_buffer[i++];
-      if (c == '\r') {
-        if (js_buffer[i] == '\n') i++;
-        break;
-      }
-      if (c == '\n') break;
-||||||| merged common ancestors
-                                   const char *js_buffer, size_t length,
-                                   const char *filename, bool globalContext,
-                                   bool callbacks, bool skipFirstLine)
-{
-    if (skipFirstLine) {
-        /* In order to protect the privacy of the JavaScript preferences file
-         * from loading by the browser, we make the first line unparseable
-         * by JavaScript. We must skip that line here before executing
-         * the JavaScript code.
-         */
-        unsigned int i = 0;
-        while (i < length) {
-            char c = js_buffer[i++];
-            if (c == '\r') {
-                if (js_buffer[i] == '\n')
-                    i++;
-                break;
-            }
-            if (c == '\n')
-                break;
-        }
-
-        length -= i;
-        js_buffer += i;
-=======
                                    const char* js_buffer, size_t length,
                                    const char* filename, bool globalContext,
                                    bool callbacks, bool skipFirstLine) {
@@ -172,77 +119,8 @@ nsresult EvaluateAdminConfigScript(JS::HandleObject sandbox,
         break;
       }
       if (c == '\n') break;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    length -= i;
-    js_buffer += i;
-  }
-
-  // Grab XPConnect.
-  nsCOMPtr<nsIXPConnect> xpc = nsIXPConnect::XPConnect();
-
-  AutoJSAPI jsapi;
-  if (!jsapi.Init(sandbox)) {
-    return NS_ERROR_UNEXPECTED;
-  }
-  JSContext *cx = jsapi.cx();
-
-  nsAutoCString script(js_buffer, length);
-  JS::RootedValue v(cx);
-
-  nsString convertedScript;
-  bool isUTF8 = IsUTF8(script);
-  if (isUTF8) {
-    convertedScript = NS_ConvertUTF8toUTF16(script);
-  } else {
-    nsContentUtils::ReportToConsoleNonLocalized(
-        NS_LITERAL_STRING(
-            "Your AutoConfig file is ASCII. Please convert it to UTF-8."),
-        nsIScriptError::warningFlag, NS_LITERAL_CSTRING("autoconfig"), nullptr);
-    /* If the length is 0, the conversion failed. Fallback to ASCII */
-    convertedScript = NS_ConvertASCIItoUTF16(script);
-  }
-  {
-    JSAutoRealm ar(cx, autoconfigSystemSb);
-    JS::Rooted<JS::Value> value(cx, JS::BooleanValue(isUTF8));
-    if (!JS_DefineProperty(cx, autoconfigSystemSb, "gIsUTF8", value,
-                           JSPROP_ENUMERATE)) {
-      return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-    // Grab XPConnect.
-    nsCOMPtr<nsIXPConnect> xpc = nsIXPConnect::XPConnect();
-
-    AutoJSAPI jsapi;
-    if (!jsapi.Init(sandbox)) {
-        return NS_ERROR_UNEXPECTED;
-    }
-    JSContext* cx = jsapi.cx();
-
-    nsAutoCString script(js_buffer, length);
-    JS::RootedValue v(cx);
-
-    nsString convertedScript;
-    bool isUTF8 = IsUTF8(script);
-    if (isUTF8) {
-        convertedScript = NS_ConvertUTF8toUTF16(script);
-    } else {
-        nsContentUtils::ReportToConsoleNonLocalized(
-            NS_LITERAL_STRING("Your AutoConfig file is ASCII. Please convert it to UTF-8."),
-            nsIScriptError::warningFlag,
-            NS_LITERAL_CSTRING("autoconfig"),
-            nullptr);
-        /* If the length is 0, the conversion failed. Fallback to ASCII */
-        convertedScript = NS_ConvertASCIItoUTF16(script);
-    }
-    {
-        JSAutoRealm ar(cx, autoconfigSystemSb);
-        JS::Rooted<JS::Value> value(cx, JS::BooleanValue(isUTF8));
-        if (!JS_DefineProperty(cx, autoconfigSystemSb, "gIsUTF8", value, JSPROP_ENUMERATE)) {
-            return NS_ERROR_UNEXPECTED;
-        }
-=======
     length -= i;
     js_buffer += i;
   }
@@ -277,7 +155,6 @@ nsresult EvaluateAdminConfigScript(JS::HandleObject sandbox,
     if (!JS_DefineProperty(cx, autoconfigSystemSb, "gIsUTF8", value,
                            JSPROP_ENUMERATE)) {
       return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
     }
   }
   nsresult rv =

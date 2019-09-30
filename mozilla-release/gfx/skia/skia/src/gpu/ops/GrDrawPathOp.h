@@ -30,20 +30,9 @@ protected:
         }
         return FixedFunctionFlags::kUsesStencil;
     }
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-        return this->doProcessorAnalysis(caps, clip).requiresDstTexture()
-                ? RequiresDstTexture::kYes : RequiresDstTexture::kNo;
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-        return this->doProcessorAnalysis(caps, clip, dstIsClamped).requiresDstTexture()
-                ? RequiresDstTexture::kYes : RequiresDstTexture::kNo;
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
         return this->doProcessorAnalysis(caps, clip, fsaaType);
->>>>>>> upstream-releases
     }
 
     void visitProxies(const VisitProxyFunc& func, VisitorType) const override {
@@ -57,27 +46,8 @@ protected:
     const GrProcessorSet& processors() const { return fProcessorSet; }
     GrProcessorSet detachProcessors() { return std::move(fProcessorSet); }
     inline GrPipeline::InitArgs pipelineInitArgs(const GrOpFlushState&);
-<<<<<<< HEAD
-    const GrProcessorSet::Analysis& doProcessorAnalysis(const GrCaps& caps,
-                                                        const GrAppliedClip* clip) {
-        bool isMixedSamples = GrAAType::kMixedSamples == fAAType;
-        fAnalysis = fProcessorSet.finalize(fInputColor, GrProcessorAnalysisCoverage::kNone, clip,
-                                           isMixedSamples, caps, &fInputColor);
-        return fAnalysis;
-    }
-||||||| merged common ancestors
-    const GrProcessorSet::Analysis& doProcessorAnalysis(const GrCaps& caps,
-                                                        const GrAppliedClip* clip,
-                                                        GrPixelConfigIsClamped dstIsClamped) {
-        bool isMixedSamples = GrAAType::kMixedSamples == fAAType;
-        fAnalysis = fProcessorSet.finalize(fInputColor, GrProcessorAnalysisCoverage::kNone, clip,
-                                           isMixedSamples, caps, dstIsClamped, &fInputColor);
-        return fAnalysis;
-    }
-=======
     const GrProcessorSet::Analysis& doProcessorAnalysis(
             const GrCaps&, const GrAppliedClip*, GrFSAAType);
->>>>>>> upstream-releases
     const GrProcessorSet::Analysis& processorAnalysis() const {
         SkASSERT(fAnalysis.isInitialized());
         return fAnalysis;
@@ -100,25 +70,11 @@ class GrDrawPathOp final : public GrDrawPathOpBase {
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext*,
-                                          const SkMatrix& viewMatrix,
-                                          GrPaint&&,
-                                          GrAAType,
-                                          GrPath*);
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(const SkMatrix& viewMatrix, GrPaint&& paint,
-                                          GrAAType aaType, GrPath* path) {
-        return std::unique_ptr<GrDrawOp>(
-                new GrDrawPathOp(viewMatrix, std::move(paint), aaType, path));
-    }
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext*,
                                           const SkMatrix& viewMatrix,
                                           GrPaint&&,
                                           GrAAType,
                                           GrPath*);
->>>>>>> upstream-releases
 
     const char* name() const override { return "DrawPath"; }
 
@@ -135,15 +91,7 @@ private:
         this->setTransformedBounds(path->getBounds(), viewMatrix, HasAABloat::kNo, IsZeroArea::kNo);
     }
 
-<<<<<<< HEAD
-    void onExecute(GrOpFlushState* state) override;
-||||||| merged common ancestors
-    bool onCombineIfPossible(GrOp* t, const GrCaps& caps) override { return false; }
-
-    void onExecute(GrOpFlushState* state) override;
-=======
     void onExecute(GrOpFlushState*, const SkRect& chainBounds) override;
->>>>>>> upstream-releases
 
     GrPendingIOResource<const GrPath, kRead_GrIOType> fPath;
 

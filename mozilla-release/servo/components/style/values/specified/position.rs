@@ -7,20 +7,6 @@
 //!
 //! [position]: https://drafts.csswg.org/css-backgrounds-3/#position
 
-<<<<<<< HEAD
-use crate::hash::FxHashMap;
-use crate::parser::{Parse, ParserContext};
-use crate::str::HTML_SPACE_CHARACTERS;
-use crate::values::computed::CalcLengthOrPercentage;
-use crate::values::computed::LengthOrPercentage as ComputedLengthOrPercentage;
-use crate::values::computed::{Context, Percentage, ToComputedValue};
-use crate::values::generics::position::Position as GenericPosition;
-use crate::values::generics::position::ZIndex as GenericZIndex;
-use crate::values::specified::transform::OriginComponent;
-use crate::values::specified::{AllowQuirks, Integer, LengthOrPercentage};
-use crate::values::{Either, None_};
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::selector_map::PrecomputedHashMap;
 use crate::str::HTML_SPACE_CHARACTERS;
@@ -31,18 +17,10 @@ use crate::values::generics::position::ZIndex as GenericZIndex;
 use crate::values::specified::{AllowQuirks, Integer, LengthPercentage};
 use crate::Atom;
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::Parser;
 use selectors::parser::SelectorParseErrorKind;
 use servo_arc::Arc;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use std::ops::Range;
-||||||| merged common ancestors
-use std::ops::Range;
-use str::HTML_SPACE_CHARACTERS;
-=======
->>>>>>> upstream-releases
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
 
 /// The specified value of a CSS `<position>`

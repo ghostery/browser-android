@@ -24,14 +24,6 @@
 #include "nsITimer.h"
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMenuFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle*);
-nsIFrame* NS_NewMenuItemFrame(nsIPresShell* aPresShell,
-                              mozilla::ComputedStyle*);
-||||||| merged common ancestors
-nsIFrame* NS_NewMenuFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle*);
-nsIFrame* NS_NewMenuItemFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle*);
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
@@ -40,7 +32,6 @@ nsIFrame* NS_NewMenuFrame(mozilla::PresShell* aPresShell,
                           mozilla::ComputedStyle*);
 nsIFrame* NS_NewMenuItemFrame(mozilla::PresShell* aPresShell,
                               mozilla::ComputedStyle*);
->>>>>>> upstream-releases
 
 class nsIContent;
 
@@ -89,21 +80,9 @@ class nsMenuTimerMediator final : public nsITimerCallback, public nsINamed {
   nsMenuFrame* mFrame;
 };
 
-<<<<<<< HEAD
-class nsMenuFrame final : public nsBoxFrame, public nsIReflowCallback {
- public:
-  explicit nsMenuFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-class nsMenuFrame final : public nsBoxFrame
-                        , public nsIReflowCallback
-{
-public:
-  explicit nsMenuFrame(ComputedStyle* aStyle);
-=======
 class nsMenuFrame final : public nsBoxFrame, public nsIReflowCallback {
  public:
   explicit nsMenuFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
->>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsMenuFrame)
@@ -144,22 +123,6 @@ class nsMenuFrame final : public nsBoxFrame, public nsIReflowCallback {
 
   virtual nsIScrollableFrame* GetScrollTargetFrame() override;
 
-<<<<<<< HEAD
-  // Retrieve the element that the menu should be anchored to. By default this
-  // is the menu itself. However, the anchor attribute may refer to the value of
-  // an anonid within the menu's binding, or, if not found, the id of an element
-  // in the document.
-  nsIContent* GetAnchor();
-
-||||||| merged common ancestors
-  // Retrieve the element that the menu should be anchored to. By default this is
-  // the menu itself. However, the anchor attribute may refer to the value of an
-  // anonid within the menu's binding, or, if not found, the id of an element in
-  // the document.
-  nsIContent* GetAnchor();
-
-=======
->>>>>>> upstream-releases
   /**
    * NOTE: OpenMenu will open the menu asynchronously.
    */

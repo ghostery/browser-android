@@ -158,13 +158,6 @@ es_419{
             "EUR",
             "euro",
         }
-<<<<<<< HEAD
-        MYR{
-            "MYR",
-            "ringgit malayo",
-        }
-||||||| merged common ancestors
-=======
         FJD{
             "FJD",
             "dólar fiyiano",
@@ -441,14 +434,8 @@ es_419{
             "SZL",
             "lilangeni",
         }
->>>>>>> upstream-releases
         THB{
             "THB",
-<<<<<<< HEAD
-            "baht tailandes",
-||||||| merged common ancestors
-            "bat",
-=======
             "baht tailandes",
         }
         TJS{
@@ -486,27 +473,11 @@ es_419{
         UGX{
             "UGX",
             "chelín ugandés",
->>>>>>> upstream-releases
         }
         USD{
             "USD",
             "dólar estadounidense",
         }
-<<<<<<< HEAD
-        UZS{
-            "UZS",
-            "som uzbeko",
-        }
-        VEF{
-            "VEF",
-            "bolívar venezolano",
-        }
-        VES{
-            "VES",
-            "VES",
-        }
-||||||| merged common ancestors
-=======
         UYU{
             "UYU",
             "peso uruguayo",
@@ -523,26 +494,10 @@ es_419{
             "VES",
             "VES",
         }
->>>>>>> upstream-releases
         VND{
             "VND",
             "dong",
         }
-<<<<<<< HEAD
-        XAF{
-            "XAF",
-            "franco CFA BEAC",
-        }
-        XOF{
-            "XOF",
-            "franco CFA BCEAO",
-        }
-        ZMW{
-            "ZMW",
-            "kuacha zambiano",
-        }
-||||||| merged common ancestors
-=======
         VUV{
             "VUV",
             "vatu",
@@ -575,7 +530,6 @@ es_419{
             "ZMW",
             "kuacha zambiano",
         }
->>>>>>> upstream-releases
     }
     Currencies%narrow{
         EGP{"E£"}
@@ -618,34 +572,6 @@ es_419{
             one{"franco CFA BCEAO"}
             other{"francos CFA BCEAO"}
         }
-        MYR{
-            one{"ringgit malayo"}
-            other{"ringgits malayos"}
-        }
-        THB{
-            one{"baht tailandes"}
-            other{"bahts tailandeses"}
-        }
-        UZS{
-            one{"som uzbeko"}
-            other{"soms uzbekos"}
-        }
-        VEF{
-            one{"bolívar venezolano"}
-            other{"bolívares venezolanos"}
-        }
-        VES{
-            one{"VES"}
-            other{"VES"}
-        }
-        XAF{
-            one{"franco CFA BEAC"}
-            other{"francos CFA BEAC"}
-        }
-        XOF{
-            one{"franco CFA BCEAO"}
-            other{"francos CFA BCEAO"}
-        }
         XXX{
             one{"(unidad de moneda desconocida)"}
             other{"(moneda desconocida)"}
@@ -655,11 +581,5 @@ es_419{
             other{"kuachas zambianos"}
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.39"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
 }

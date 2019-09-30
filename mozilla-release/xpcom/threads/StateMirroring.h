@@ -47,19 +47,9 @@ namespace mozilla {
 // Mirror<T> and Canonical<T> inherit WatchTarget, so we piggy-back on the
 // logging that WatchTarget already does. Given that, it makes sense to share
 // the same log module.
-<<<<<<< HEAD
-#define MIRROR_LOG(x, ...)       \
-  MOZ_ASSERT(gStateWatchingLog); \
-  MOZ_LOG(gStateWatchingLog, LogLevel::Debug, (x, ##__VA_ARGS__))
-||||||| merged common ancestors
-#define MIRROR_LOG(x, ...) \
-  MOZ_ASSERT(gStateWatchingLog); \
-  MOZ_LOG(gStateWatchingLog, LogLevel::Debug, (x, ##__VA_ARGS__))
-=======
 #  define MIRROR_LOG(x, ...)       \
     MOZ_ASSERT(gStateWatchingLog); \
     MOZ_LOG(gStateWatchingLog, LogLevel::Debug, (x, ##__VA_ARGS__))
->>>>>>> upstream-releases
 
 template <typename T>
 class AbstractMirror;

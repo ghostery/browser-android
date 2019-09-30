@@ -17,17 +17,6 @@ class LineBreaker {
  public:
   NS_INLINE_DECL_REFCOUNTING(LineBreaker)
 
-<<<<<<< HEAD
-  enum {
-    kWordBreak_Normal = 0,    // default
-    kWordBreak_BreakAll = 1,  // break all
-    kWordBreak_KeepAll = 2    // always keep
-||||||| merged common ancestors
-  enum {
-    kWordBreak_Normal   = 0, // default
-    kWordBreak_BreakAll = 1, // break all
-    kWordBreak_KeepAll  = 2  // always keep
-=======
   enum class WordBreak : uint8_t {
     Normal = 0,    // default
     BreakAll = 1,  // break all
@@ -40,7 +29,6 @@ class LineBreaker {
     Normal = 2,
     Strict = 3,
     Anywhere = 4
->>>>>>> upstream-releases
   };
 
   static already_AddRefed<LineBreaker> Create();
@@ -56,25 +44,11 @@ class LineBreaker {
   // aLength is the length of the aText array and also the length of the
   // aBreakBefore output array.
   void GetJISx4051Breaks(const char16_t* aText, uint32_t aLength,
-<<<<<<< HEAD
-                         uint8_t aWordBreak, uint8_t* aBreakBefore);
-||||||| merged common ancestors
-                         uint8_t aWordBreak,
-                         uint8_t* aBreakBefore);
-=======
                          WordBreak aWordBreak, Strictness aLevel,
                          bool aIsChineseOrJapanese, uint8_t* aBreakBefore);
->>>>>>> upstream-releases
   void GetJISx4051Breaks(const uint8_t* aText, uint32_t aLength,
-<<<<<<< HEAD
-                         uint8_t aWordBreak, uint8_t* aBreakBefore);
-||||||| merged common ancestors
-                         uint8_t aWordBreak,
-                         uint8_t* aBreakBefore);
-=======
                          WordBreak aWordBreak, Strictness aLevel,
                          bool aIsChineseOrJapanese, uint8_t* aBreakBefore);
->>>>>>> upstream-releases
 
  private:
   ~LineBreaker() {}

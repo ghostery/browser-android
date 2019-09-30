@@ -100,16 +100,7 @@ class HTMLBodyElement final : public nsGenericHTMLElement {
 
   virtual bool IsEventAttributeNameInternal(nsAtom* aName) override;
 
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-||||||| merged common ancestors
-
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
->>>>>>> upstream-releases
   /**
    * Called when an attribute has just been changed
    */

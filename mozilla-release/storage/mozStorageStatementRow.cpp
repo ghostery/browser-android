@@ -80,32 +80,6 @@ void StatementRow::NamedGetter(JSContext* aCx, const nsAString& aName,
       aResult.set(::JS_NumberValue(dval));
       break;
     }
-<<<<<<< HEAD
-    case mozIStorageValueArray::VALUE_TYPE_TEXT: {
-      uint32_t bytes;
-      const char16_t* sval = reinterpret_cast<const char16_t*>(
-          static_cast<mozIStorageStatement*>(mStatement)
-              ->AsSharedWString(idx, &bytes));
-      JSString* str = ::JS_NewUCStringCopyN(aCx, sval, bytes / 2);
-      if (!str) {
-        aRv.Throw(NS_ERROR_UNEXPECTED);
-        return;
-      }
-      aResult.setString(str);
-      break;
-||||||| merged common ancestors
-    aResult.setString(str);
-    break;
-  }
-  case mozIStorageValueArray::VALUE_TYPE_BLOB: {
-    uint32_t length;
-    const uint8_t *blob = static_cast<mozIStorageStatement *>(mStatement)->
-      AsSharedBlob(idx, &length);
-    JS::Rooted<JSObject*> obj(aCx, ::JS_NewArrayObject(aCx, length));
-    if (!obj) {
-      aRv.Throw(NS_ERROR_UNEXPECTED);
-      return;
-=======
     case mozIStorageValueArray::VALUE_TYPE_TEXT: {
       uint32_t bytes;
       const char16_t* sval = reinterpret_cast<const char16_t*>(
@@ -119,7 +93,6 @@ void StatementRow::NamedGetter(JSContext* aCx, const nsAString& aName,
       }
       aResult.setString(str);
       break;
->>>>>>> upstream-releases
     }
     case mozIStorageValueArray::VALUE_TYPE_BLOB: {
       uint32_t length;

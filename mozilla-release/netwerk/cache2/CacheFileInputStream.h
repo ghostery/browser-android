@@ -25,16 +25,8 @@ class CacheFileInputStream : public nsIAsyncInputStream,
   NS_DECL_NSISEEKABLESTREAM
   NS_DECL_NSITELLABLESTREAM
 
-<<<<<<< HEAD
- public:
-  explicit CacheFileInputStream(CacheFile *aFile, nsISupports *aEntry,
-||||||| merged common ancestors
-public:
-  explicit CacheFileInputStream(CacheFile *aFile, nsISupports *aEntry,
-=======
  public:
   explicit CacheFileInputStream(CacheFile* aFile, nsISupports* aEntry,
->>>>>>> upstream-releases
                                 bool aAlternativeData);
 
   NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk* aChunk) override;

@@ -236,21 +236,6 @@ static void walk_simple_edges(SkEdge* prevHead, SkBlitter* blitter, int start_y,
         SkASSERT(leftE->fFirstY <= stop_y);
         SkASSERT(riteE->fFirstY <= stop_y);
 
-<<<<<<< HEAD
-        if (leftE->fX > riteE->fX || (leftE->fX == riteE->fX &&
-                                      leftE->fDX > riteE->fDX)) {
-            using std::swap;
-            swap(leftE, riteE);
-        }
-
-||||||| merged common ancestors
-        if (leftE->fX > riteE->fX || (leftE->fX == riteE->fX &&
-                                      leftE->fDX > riteE->fDX)) {
-            SkTSwap(leftE, riteE);
-        }
-
-=======
->>>>>>> upstream-releases
         int local_bot = SkMin32(leftE->fLastY, riteE->fLastY);
         local_bot = SkMin32(local_bot, stop_y - 1);
         ASSERT_RETURN(local_top <= local_bot);

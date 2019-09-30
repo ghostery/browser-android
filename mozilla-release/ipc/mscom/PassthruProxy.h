@@ -11,19 +11,9 @@
 #include "mozilla/mscom/ProxyStream.h"
 #include "mozilla/mscom/Ptr.h"
 #include "mozilla/NotNull.h"
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX)
-#include "mozilla/SandboxSettings.h"
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#if defined(MOZ_CONTENT_SANDBOX)
-#include "mozilla/SandboxSettings.h"
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #if defined(MOZ_SANDBOX)
 #  include "mozilla/SandboxSettings.h"
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 
 #include <objbase.h>
 
@@ -67,13 +57,7 @@ class PassthruProxy final : public IMarshal, public IClientSecurity {
 #else
     // No wrapping required
     return aIn.get();
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   }
 
   static HRESULT Register();

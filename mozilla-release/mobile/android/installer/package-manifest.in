@@ -127,24 +127,6 @@
 #endif
 
 @BINPATH@/components/ProcessSingleton.manifest
-<<<<<<< HEAD
-@BINPATH@/components/MainProcessSingleton.js
-@BINPATH@/components/ContentProcessSingleton.js
-@BINPATH@/components/nsURLFormatter.manifest
-@BINPATH@/components/nsURLFormatter.js
-@BINPATH@/components/ContentPrefService2.manifest
-@BINPATH@/components/ContentPrefService2.js
-||||||| merged common ancestors
-@BINPATH@/components/MainProcessSingleton.js
-@BINPATH@/components/ContentProcessSingleton.js
-@BINPATH@/components/nsURLFormatter.manifest
-@BINPATH@/components/nsURLFormatter.js
-@BINPATH@/components/txEXSLTRegExFunctions.manifest
-@BINPATH@/components/txEXSLTRegExFunctions.js
-@BINPATH@/components/ContentPrefService2.manifest
-@BINPATH@/components/ContentPrefService2.js
-=======
->>>>>>> upstream-releases
 @BINPATH@/components/HandlerService.manifest
 @BINPATH@/components/HandlerService.js
 @BINPATH@/components/servicesComponents.manifest

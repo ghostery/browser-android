@@ -43,18 +43,10 @@ namespace layers {
 class Animatable;
 }  // namespace layers
 
-<<<<<<< HEAD
-struct AnimationValue {
-||||||| merged common ancestors
-
-struct AnimationValue
-{
-=======
 enum class PseudoStyleType : uint8_t;
 struct PropertyStyleAnimationValuePair;
 
 struct AnimationValue {
->>>>>>> upstream-releases
   explicit AnimationValue(const RefPtr<RawServoAnimationValue>& aValue)
       : mServo(aValue) {}
   AnimationValue() = default;
@@ -83,17 +75,6 @@ struct AnimationValue {
 
   float GetOpacity() const;
 
-<<<<<<< HEAD
-  // Returns nscolor value in this AnimationValue.
-  // Currently only background-color is supported.
-  nscolor GetColor(nscolor aForegroundColor) const;
-
-  // Return the transform list as a RefPtr.
-  already_AddRefed<const nsCSSValueSharedList> GetTransformList() const;
-||||||| merged common ancestors
-  // Return the transform list as a RefPtr.
-  already_AddRefed<const nsCSSValueSharedList> GetTransformList() const;
-=======
   // Returns nscolor value in this AnimationValue.
   // Currently only background-color is supported.
   nscolor GetColor(nscolor aForegroundColor) const;
@@ -103,7 +84,6 @@ struct AnimationValue {
   const mozilla::StyleScale& GetScaleProperty() const;
   const mozilla::StyleTranslate& GetTranslateProperty() const;
   const mozilla::StyleRotate& GetRotateProperty() const;
->>>>>>> upstream-releases
 
   // Return the scale for mServo, which is calculated with reference to aFrame.
   mozilla::gfx::Size GetScaleValue(const nsIFrame* aFrame) const;
@@ -130,24 +110,6 @@ struct AnimationValue {
                                    const nsAString& aValue,
                                    dom::Element* aElement);
 
-<<<<<<< HEAD
-  // Create an AnimationValue from an opacity value.
-  static AnimationValue Opacity(float aOpacity);
-  // Create an AnimationValue from a transform list.
-  static AnimationValue Transform(nsCSSValueSharedList& aList);
-
-  static already_AddRefed<nsCSSValue::Array> AppendTransformFunction(
-      nsCSSKeyword aTransformFunction, nsCSSValueList**& aListTail);
-||||||| merged common ancestors
-  // Create an AnimationValue from an opacity value.
-  static AnimationValue Opacity(float aOpacity);
-  // Create an AnimationValue from a transform list.
-  static AnimationValue Transform(nsCSSValueSharedList& aList);
-
-  static already_AddRefed<nsCSSValue::Array>
-  AppendTransformFunction(nsCSSKeyword aTransformFunction,
-                          nsCSSValueList**& aListTail);
-=======
   // Create an already_AddRefed<RawServoAnimationValue> from a
   // layers::Animatable. Basically, this function should return AnimationValue,
   // but it seems the caller, AnimationHelper, only needs
@@ -155,17 +117,10 @@ struct AnimationValue {
   // adding/removing a redundant ref-count.
   static already_AddRefed<RawServoAnimationValue> FromAnimatable(
       nsCSSPropertyID aProperty, const layers::Animatable& aAnimatable);
->>>>>>> upstream-releases
 
   RefPtr<RawServoAnimationValue> mServo;
 };
 
-<<<<<<< HEAD
-struct PropertyStyleAnimationValuePair {
-||||||| merged common ancestors
-struct PropertyStyleAnimationValuePair
-{
-=======
 inline std::ostream& operator<<(std::ostream& aOut,
                                 const AnimationValue& aValue) {
   MOZ_ASSERT(aValue.mServo);
@@ -175,7 +130,6 @@ inline std::ostream& operator<<(std::ostream& aOut,
 }
 
 struct PropertyStyleAnimationValuePair {
->>>>>>> upstream-releases
   nsCSSPropertyID mProperty;
   AnimationValue mValue;
 };

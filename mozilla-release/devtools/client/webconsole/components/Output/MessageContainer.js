@@ -73,15 +73,9 @@ class MessageContainer extends Component {
       indent: PropTypes.number,
       networkMessageUpdate: PropTypes.object,
       getMessage: PropTypes.func.isRequired,
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/MessageContainer.js
-      isPaused: PropTypes.bool.isRequired,
-      pausedExecutionPoint: PropTypes.any,
-||||||| merged common ancestors
-=======
       isPaused: PropTypes.bool.isRequired,
       pausedExecutionPoint: PropTypes.any,
       inWarningGroup: PropTypes.bool,
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/MessageContainer.js
     };
   }
 
@@ -91,44 +85,6 @@ class MessageContainer extends Component {
     };
   }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/MessageContainer.js
-  shouldComponentUpdate(nextProps, nextState) {
-    const repeatChanged = this.props.repeat !== nextProps.repeat;
-    const openChanged = this.props.open !== nextProps.open;
-    const tableDataChanged = this.props.tableData !== nextProps.tableData;
-    const timestampVisibleChanged =
-      this.props.timestampsVisible !== nextProps.timestampsVisible;
-    const networkMessageUpdateChanged =
-      this.props.networkMessageUpdate !== nextProps.networkMessageUpdate;
-    const pausedChanged = this.props.isPaused !== nextProps.isPaused;
-    const executionPointChanged =
-      this.props.pausedExecutionPoint !== nextProps.pausedExecutionPoint;
-
-    return repeatChanged
-      || openChanged
-      || tableDataChanged
-      || timestampVisibleChanged
-      || networkMessageUpdateChanged
-      || pausedChanged
-      || executionPointChanged;
-||||||| merged common ancestors
-  shouldComponentUpdate(nextProps, nextState) {
-    const repeatChanged = this.props.repeat !== nextProps.repeat;
-    const openChanged = this.props.open !== nextProps.open;
-    const tableDataChanged = this.props.tableData !== nextProps.tableData;
-    const timestampVisibleChanged =
-      this.props.timestampsVisible !== nextProps.timestampsVisible;
-    const networkMessageUpdateChanged =
-      this.props.networkMessageUpdate !== nextProps.networkMessageUpdate;
-    const pausedChanged = isPaused(this.props) !== isPaused(nextProps);
-
-    return repeatChanged
-      || openChanged
-      || tableDataChanged
-      || timestampVisibleChanged
-      || networkMessageUpdateChanged
-      || pausedChanged;
-=======
   shouldComponentUpdate(nextProps) {
     const triggeringUpdateProps = [
       "repeat",
@@ -145,22 +101,13 @@ class MessageContainer extends Component {
     return triggeringUpdateProps.some(
       prop => this.props[prop] !== nextProps[prop]
     );
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/MessageContainer.js
   }
 
   render() {
     const message = this.props.getMessage();
 
     const MessageComponent = getMessageComponent(message);
-<<<<<<< HEAD:mozilla-release/devtools/client/webconsole/components/MessageContainer.js
-    return MessageComponent(Object.assign({message}, this.props));
-||||||| merged common ancestors
-    return MessageComponent(Object.assign({message}, this.props, {
-      isPaused: isPaused(this.props),
-    }));
-=======
     return MessageComponent(Object.assign({ message }, this.props));
->>>>>>> upstream-releases:mozilla-release/devtools/client/webconsole/components/Output/MessageContainer.js
   }
 }
 

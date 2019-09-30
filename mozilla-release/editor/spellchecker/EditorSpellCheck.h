@@ -6,15 +6,8 @@
 #ifndef mozilla_EditorSpellCheck_h
 #define mozilla_EditorSpellCheck_h
 
-<<<<<<< HEAD
-#include "nsCOMPtr.h"  // for nsCOMPtr
-||||||| merged common ancestors
-
-#include "nsCOMPtr.h"                   // for nsCOMPtr
-=======
 #include "mozilla/mozSpellChecker.h"  // for mozilla::CheckWordPromise
 #include "nsCOMPtr.h"                 // for nsCOMPtr
->>>>>>> upstream-releases
 #include "nsCycleCollectionParticipant.h"
 #include "nsIEditorSpellCheck.h"  // for NS_DECL_NSIEDITORSPELLCHECK, etc
 #include "nsISupportsImpl.h"
@@ -50,11 +43,6 @@ class EditorSpellCheck final : public nsIEditorSpellCheck {
 
   mozSpellChecker* GetSpellChecker();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Like CheckCurrentWord, checks the word you give it, returning true via
    * promise if it's misspelled.
@@ -69,7 +57,6 @@ protected:
       const nsTArray<nsString>& aSuggestedWords);
 
  protected:
->>>>>>> upstream-releases
   virtual ~EditorSpellCheck();
 
   RefPtr<mozSpellChecker> mSpellChecker;

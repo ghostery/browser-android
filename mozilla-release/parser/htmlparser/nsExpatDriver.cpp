@@ -43,271 +43,97 @@ static mozilla::LazyLogModule gExpatDriverLog("expatdriver");
 /***************************** EXPAT CALL BACKS ******************************/
 // The callback handlers that get called from the expat parser.
 
-<<<<<<< HEAD
-static void Driver_HandleXMLDeclaration(void *aUserData,
-                                        const XML_Char *aVersion,
-                                        const XML_Char *aEncoding,
-                                        int aStandalone) {
-||||||| merged common ancestors
-static void
-Driver_HandleXMLDeclaration(void *aUserData,
-                            const XML_Char *aVersion,
-                            const XML_Char *aEncoding,
-                            int aStandalone)
-{
-=======
 static void Driver_HandleXMLDeclaration(void* aUserData,
                                         const XML_Char* aVersion,
                                         const XML_Char* aEncoding,
                                         int aStandalone) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    nsExpatDriver *driver = static_cast<nsExpatDriver *>(aUserData);
+    nsExpatDriver* driver = static_cast<nsExpatDriver*>(aUserData);
     driver->HandleXMLDeclaration(aVersion, aEncoding, aStandalone);
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleStartElement(void *aUserData, const XML_Char *aName,
-                                      const XML_Char **aAtts) {
-  NS_ASSERTION(aUserData, "expat driver should exist");
-  if (aUserData) {
-    static_cast<nsExpatDriver *>(aUserData)->HandleStartElement(aName, aAtts);
-  }
-}
-
-static void Driver_HandleEndElement(void *aUserData, const XML_Char *aName) {
-  NS_ASSERTION(aUserData, "expat driver should exist");
-  if (aUserData) {
-    static_cast<nsExpatDriver *>(aUserData)->HandleEndElement(aName);
-  }
-}
-
-static void Driver_HandleCharacterData(void *aUserData, const XML_Char *aData,
-                                       int aLength) {
-||||||| merged common ancestors
-static void
-Driver_HandleStartElement(void *aUserData,
-                          const XML_Char *aName,
-                          const XML_Char **aAtts)
-{
-  NS_ASSERTION(aUserData, "expat driver should exist");
-  if (aUserData) {
-    static_cast<nsExpatDriver*>(aUserData)->HandleStartElement(aName,
-                                                                  aAtts);
-  }
-}
-
-static void
-Driver_HandleEndElement(void *aUserData,
-                        const XML_Char *aName)
-{
-  NS_ASSERTION(aUserData, "expat driver should exist");
-  if (aUserData) {
-    static_cast<nsExpatDriver*>(aUserData)->HandleEndElement(aName);
-  }
-}
-
-static void
-Driver_HandleCharacterData(void *aUserData,
-                           const XML_Char *aData,
-                           int aLength)
-{
-=======
 static void Driver_HandleCharacterData(void* aUserData, const XML_Char* aData,
                                        int aLength) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    nsExpatDriver *driver = static_cast<nsExpatDriver *>(aUserData);
+    nsExpatDriver* driver = static_cast<nsExpatDriver*>(aUserData);
     driver->HandleCharacterData(aData, uint32_t(aLength));
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleComment(void *aUserData, const XML_Char *aName) {
-||||||| merged common ancestors
-static void
-Driver_HandleComment(void *aUserData,
-                     const XML_Char *aName)
-{
-=======
 static void Driver_HandleComment(void* aUserData, const XML_Char* aName) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
-<<<<<<< HEAD
-  if (aUserData) {
-    static_cast<nsExpatDriver *>(aUserData)->HandleComment(aName);
-||||||| merged common ancestors
-  if(aUserData) {
-    static_cast<nsExpatDriver*>(aUserData)->HandleComment(aName);
-=======
   if (aUserData) {
     static_cast<nsExpatDriver*>(aUserData)->HandleComment(aName);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleProcessingInstruction(void *aUserData,
-                                               const XML_Char *aTarget,
-                                               const XML_Char *aData) {
-||||||| merged common ancestors
-static void
-Driver_HandleProcessingInstruction(void *aUserData,
-                                   const XML_Char *aTarget,
-                                   const XML_Char *aData)
-{
-=======
 static void Driver_HandleProcessingInstruction(void* aUserData,
                                                const XML_Char* aTarget,
                                                const XML_Char* aData) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    nsExpatDriver *driver = static_cast<nsExpatDriver *>(aUserData);
+    nsExpatDriver* driver = static_cast<nsExpatDriver*>(aUserData);
     driver->HandleProcessingInstruction(aTarget, aData);
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleDefault(void *aUserData, const XML_Char *aData,
-                                 int aLength) {
-||||||| merged common ancestors
-static void
-Driver_HandleDefault(void *aUserData,
-                     const XML_Char *aData,
-                     int aLength)
-{
-=======
 static void Driver_HandleDefault(void* aUserData, const XML_Char* aData,
                                  int aLength) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    nsExpatDriver *driver = static_cast<nsExpatDriver *>(aUserData);
+    nsExpatDriver* driver = static_cast<nsExpatDriver*>(aUserData);
     driver->HandleDefault(aData, uint32_t(aLength));
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleStartCdataSection(void *aUserData) {
-||||||| merged common ancestors
-static void
-Driver_HandleStartCdataSection(void *aUserData)
-{
-=======
 static void Driver_HandleStartCdataSection(void* aUserData) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    static_cast<nsExpatDriver *>(aUserData)->HandleStartCdataSection();
+    static_cast<nsExpatDriver*>(aUserData)->HandleStartCdataSection();
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleEndCdataSection(void *aUserData) {
-||||||| merged common ancestors
-static void
-Driver_HandleEndCdataSection(void *aUserData)
-{
-=======
 static void Driver_HandleEndCdataSection(void* aUserData) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    static_cast<nsExpatDriver *>(aUserData)->HandleEndCdataSection();
+    static_cast<nsExpatDriver*>(aUserData)->HandleEndCdataSection();
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleStartDoctypeDecl(void *aUserData,
-                                          const XML_Char *aDoctypeName,
-                                          const XML_Char *aSysid,
-                                          const XML_Char *aPubid,
-                                          int aHasInternalSubset) {
-||||||| merged common ancestors
-static void
-Driver_HandleStartDoctypeDecl(void *aUserData,
-                              const XML_Char *aDoctypeName,
-                              const XML_Char *aSysid,
-                              const XML_Char *aPubid,
-                              int aHasInternalSubset)
-{
-=======
 static void Driver_HandleStartDoctypeDecl(void* aUserData,
                                           const XML_Char* aDoctypeName,
                                           const XML_Char* aSysid,
                                           const XML_Char* aPubid,
                                           int aHasInternalSubset) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-<<<<<<< HEAD
-    static_cast<nsExpatDriver *>(aUserData)->HandleStartDoctypeDecl(
-        aDoctypeName, aSysid, aPubid, !!aHasInternalSubset);
-||||||| merged common ancestors
-    static_cast<nsExpatDriver*>(aUserData)->
-      HandleStartDoctypeDecl(aDoctypeName, aSysid, aPubid, !!aHasInternalSubset);
-=======
     static_cast<nsExpatDriver*>(aUserData)->HandleStartDoctypeDecl(
         aDoctypeName, aSysid, aPubid, !!aHasInternalSubset);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-static void Driver_HandleEndDoctypeDecl(void *aUserData) {
-||||||| merged common ancestors
-static void
-Driver_HandleEndDoctypeDecl(void *aUserData)
-{
-=======
 static void Driver_HandleEndDoctypeDecl(void* aUserData) {
->>>>>>> upstream-releases
   NS_ASSERTION(aUserData, "expat driver should exist");
   if (aUserData) {
-    static_cast<nsExpatDriver *>(aUserData)->HandleEndDoctypeDecl();
+    static_cast<nsExpatDriver*>(aUserData)->HandleEndDoctypeDecl();
   }
 }
 
-<<<<<<< HEAD
-static int Driver_HandleExternalEntityRef(void *aExternalEntityRefHandler,
-                                          const XML_Char *aOpenEntityNames,
-                                          const XML_Char *aBase,
-                                          const XML_Char *aSystemId,
-                                          const XML_Char *aPublicId) {
-||||||| merged common ancestors
-static int
-Driver_HandleExternalEntityRef(void *aExternalEntityRefHandler,
-                               const XML_Char *aOpenEntityNames,
-                               const XML_Char *aBase,
-                               const XML_Char *aSystemId,
-                               const XML_Char *aPublicId)
-{
-=======
 static int Driver_HandleExternalEntityRef(void* aExternalEntityRefHandler,
                                           const XML_Char* aOpenEntityNames,
                                           const XML_Char* aBase,
                                           const XML_Char* aSystemId,
                                           const XML_Char* aPublicId) {
->>>>>>> upstream-releases
   NS_ASSERTION(aExternalEntityRefHandler, "expat driver should exist");
   if (!aExternalEntityRefHandler) {
     return 1;
   }
 
-<<<<<<< HEAD
-  nsExpatDriver *driver =
-      static_cast<nsExpatDriver *>(aExternalEntityRefHandler);
-||||||| merged common ancestors
-  nsExpatDriver* driver = static_cast<nsExpatDriver*>
-                                     (aExternalEntityRefHandler);
-=======
   nsExpatDriver* driver =
       static_cast<nsExpatDriver*>(aExternalEntityRefHandler);
->>>>>>> upstream-releases
 
   return driver->HandleExternalEntityRef(aOpenEntityNames, aBase, aSystemId,
                                          aPublicId);
@@ -324,44 +150,13 @@ static int Driver_HandleExternalEntityRef(void* aExternalEntityRefHandler,
 // XXX The cleanest solution here would be to fix Bug 98413: Implement XML
 // Catalogs.
 struct nsCatalogData {
-  const char *mPublicID;
-  const char *mLocalDTD;
-  const char *mAgentSheet;
+  const char* mPublicID;
+  const char* mLocalDTD;
+  const char* mAgentSheet;
 };
 
 // The order of this table is guestimated to be in the optimum order
 static const nsCatalogData kCatalogTable[] = {
-<<<<<<< HEAD
-    {"-//W3C//DTD XHTML 1.0 Transitional//EN", "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD XHTML 1.1//EN", "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD XHTML 1.0 Strict//EN", "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD XHTML 1.0 Frameset//EN", "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD XHTML Basic 1.0//EN", "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN", "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN",
-     "htmlmathml-f.ent", nullptr},
-    {"-//W3C//DTD MathML 2.0//EN", "htmlmathml-f.ent", nullptr},
-    {"-//WAPFORUM//DTD XHTML Mobile 1.0//EN", "htmlmathml-f.ent", nullptr},
-    {nullptr, nullptr, nullptr}};
-
-static const nsCatalogData *LookupCatalogData(const char16_t *aPublicID) {
-||||||| merged common ancestors
-  { "-//W3C//DTD XHTML 1.0 Transitional//EN",    "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD XHTML 1.1//EN",                 "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD XHTML 1.0 Strict//EN",          "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD XHTML 1.0 Frameset//EN",        "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD XHTML Basic 1.0//EN",           "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN", "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN", "htmlmathml-f.ent", nullptr },
-  { "-//W3C//DTD MathML 2.0//EN",                "htmlmathml-f.ent", nullptr },
-  { "-//WAPFORUM//DTD XHTML Mobile 1.0//EN",     "htmlmathml-f.ent", nullptr },
-  { nullptr, nullptr, nullptr }
-};
-
-static const nsCatalogData*
-LookupCatalogData(const char16_t* aPublicID)
-{
-=======
     {"-//W3C//DTD XHTML 1.0 Transitional//EN", "htmlmathml-f.ent", nullptr},
     {"-//W3C//DTD XHTML 1.1//EN", "htmlmathml-f.ent", nullptr},
     {"-//W3C//DTD XHTML 1.0 Strict//EN", "htmlmathml-f.ent", nullptr},
@@ -375,13 +170,12 @@ LookupCatalogData(const char16_t* aPublicID)
     {nullptr, nullptr, nullptr}};
 
 static const nsCatalogData* LookupCatalogData(const char16_t* aPublicID) {
->>>>>>> upstream-releases
   nsDependentString publicID(aPublicID);
 
   // linear search for now since the number of entries is going to
   // be negligible, and the fix for bug 98413 would get rid of this
   // code anyway
-  const nsCatalogData *data = kCatalogTable;
+  const nsCatalogData* data = kCatalogTable;
   while (data->mPublicID) {
     if (publicID.EqualsASCII(data->mPublicID)) {
       return data;
@@ -395,27 +189,11 @@ static const nsCatalogData* LookupCatalogData(const char16_t* aPublicID) {
 // This function provides a resource URI to a local DTD
 // in resource://gre/res/dtd/ which may or may not exist.
 // If aCatalogData is provided, it is used to remap the
-<<<<<<< HEAD
-// DTD instead of taking the filename from the URI.
-static void GetLocalDTDURI(const nsCatalogData *aCatalogData, nsIURI *aDTD,
-                           nsIURI **aResult) {
-  NS_ASSERTION(aDTD, "Null parameter.");
-
-||||||| merged common ancestors
-// DTD instead of taking the filename from the URI.
-static void
-GetLocalDTDURI(const nsCatalogData* aCatalogData, nsIURI* aDTD,
-              nsIURI** aResult)
-{
-  NS_ASSERTION(aDTD, "Null parameter.");
-
-=======
 // DTD instead of taking the filename from the URI.  aDTD
 // may be null in some cases that are relying on
 // aCatalogData working for them.
 static void GetLocalDTDURI(const nsCatalogData* aCatalogData, nsIURI* aDTD,
                            nsIURI** aResult) {
->>>>>>> upstream-releases
   nsAutoCString fileName;
   if (aCatalogData) {
     // remap the DTD to a known local DTD
@@ -476,65 +254,29 @@ nsExpatDriver::~nsExpatDriver() {
   }
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleStartElement(const char16_t *aValue,
-                                           const char16_t **aAtts) {
-  NS_ASSERTION(mSink, "content sink not found!");
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleStartElement(const char16_t *aValue,
-                                  const char16_t **aAtts)
-{
-  NS_ASSERTION(mSink, "content sink not found!");
-=======
 /* static */
 void nsExpatDriver::HandleStartElement(void* aUserData, const char16_t* aName,
                                        const char16_t** aAtts) {
   nsExpatDriver* self = static_cast<nsExpatDriver*>(aUserData);
 
   NS_ASSERTION(self->mSink, "content sink not found!");
->>>>>>> upstream-releases
 
   // Calculate the total number of elements in aAtts.
   // XML_GetSpecifiedAttributeCount will only give us the number of specified
   // attrs (twice that number, actually), so we have to check for default attrs
   // ourselves.
   uint32_t attrArrayLength;
-<<<<<<< HEAD
-  for (attrArrayLength = XML_GetSpecifiedAttributeCount(mExpatParser);
-       aAtts[attrArrayLength]; attrArrayLength += 2) {
-||||||| merged common ancestors
-  for (attrArrayLength = XML_GetSpecifiedAttributeCount(mExpatParser);
-       aAtts[attrArrayLength];
-       attrArrayLength += 2) {
-=======
   for (attrArrayLength = XML_GetSpecifiedAttributeCount(self->mExpatParser);
        aAtts[attrArrayLength]; attrArrayLength += 2) {
->>>>>>> upstream-releases
     // Just looping till we find out what the length is
   }
 
-<<<<<<< HEAD
-  if (mSink) {
-    nsresult rv = mSink->HandleStartElement(
-        aValue, aAtts, attrArrayLength, XML_GetCurrentLineNumber(mExpatParser),
-        XML_GetCurrentColumnNumber(mExpatParser));
-    MaybeStopParser(rv);
-||||||| merged common ancestors
-  if (mSink) {
-    nsresult rv = mSink->
-      HandleStartElement(aValue, aAtts, attrArrayLength,
-                         XML_GetCurrentLineNumber(mExpatParser),
-                         XML_GetCurrentColumnNumber(mExpatParser));
-    MaybeStopParser(rv);
-=======
   if (self->mSink) {
     nsresult rv = self->mSink->HandleStartElement(
         aName, aAtts, attrArrayLength,
         XML_GetCurrentLineNumber(self->mExpatParser),
         XML_GetCurrentColumnNumber(self->mExpatParser));
     self->MaybeStopParser(rv);
->>>>>>> upstream-releases
   }
 }
 
@@ -573,24 +315,12 @@ void nsExpatDriver::HandleStartElementForSystemPrincipal(
   }
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleEndElement(const char16_t *aValue) {
-  NS_ASSERTION(mSink, "content sink not found!");
-  NS_ASSERTION(mInternalState != NS_ERROR_HTMLPARSER_BLOCK,
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleEndElement(const char16_t *aValue)
-{
-  NS_ASSERTION(mSink, "content sink not found!");
-  NS_ASSERTION(mInternalState != NS_ERROR_HTMLPARSER_BLOCK,
-=======
 /* static */
 void nsExpatDriver::HandleEndElement(void* aUserData, const char16_t* aName) {
   nsExpatDriver* self = static_cast<nsExpatDriver*>(aUserData);
 
   NS_ASSERTION(self->mSink, "content sink not found!");
   NS_ASSERTION(self->mInternalState != NS_ERROR_HTMLPARSER_BLOCK,
->>>>>>> upstream-releases
                "Shouldn't block from HandleStartElement.");
 
   if (self->mSink && self->mInternalState != NS_ERROR_HTMLPARSER_STOPPARSING) {
@@ -609,18 +339,8 @@ void nsExpatDriver::HandleEndElementForSystemPrincipal(void* aUserData,
   }
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleCharacterData(const char16_t *aValue,
-                                            const uint32_t aLength) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleCharacterData(const char16_t *aValue,
-                                   const uint32_t aLength)
-{
-=======
 nsresult nsExpatDriver::HandleCharacterData(const char16_t* aValue,
                                             const uint32_t aLength) {
->>>>>>> upstream-releases
   NS_ASSERTION(mSink, "content sink not found!");
 
   if (mInCData) {
@@ -635,15 +355,7 @@ nsresult nsExpatDriver::HandleCharacterData(const char16_t* aValue,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleComment(const char16_t *aValue) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleComment(const char16_t *aValue)
-{
-=======
 nsresult nsExpatDriver::HandleComment(const char16_t* aValue) {
->>>>>>> upstream-releases
   NS_ASSERTION(mSink, "content sink not found!");
 
   if (mInExternalDTD) {
@@ -663,18 +375,8 @@ nsresult nsExpatDriver::HandleComment(const char16_t* aValue) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleProcessingInstruction(const char16_t *aTarget,
-                                                    const char16_t *aData) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleProcessingInstruction(const char16_t *aTarget,
-                                           const char16_t *aData)
-{
-=======
 nsresult nsExpatDriver::HandleProcessingInstruction(const char16_t* aTarget,
                                                     const char16_t* aData) {
->>>>>>> upstream-releases
   NS_ASSERTION(mSink, "content sink not found!");
 
   if (mInExternalDTD) {
@@ -697,21 +399,9 @@ nsresult nsExpatDriver::HandleProcessingInstruction(const char16_t* aTarget,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleXMLDeclaration(const char16_t *aVersion,
-                                             const char16_t *aEncoding,
-                                             int32_t aStandalone) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleXMLDeclaration(const char16_t *aVersion,
-                                    const char16_t *aEncoding,
-                                    int32_t aStandalone)
-{
-=======
 nsresult nsExpatDriver::HandleXMLDeclaration(const char16_t* aVersion,
                                              const char16_t* aEncoding,
                                              int32_t aStandalone) {
->>>>>>> upstream-releases
   if (mSink) {
     nsresult rv = mSink->HandleXMLDeclaration(aVersion, aEncoding, aStandalone);
     MaybeStopParser(rv);
@@ -720,18 +410,8 @@ nsresult nsExpatDriver::HandleXMLDeclaration(const char16_t* aVersion,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleDefault(const char16_t *aValue,
-                                      const uint32_t aLength) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleDefault(const char16_t *aValue,
-                             const uint32_t aLength)
-{
-=======
 nsresult nsExpatDriver::HandleDefault(const char16_t* aValue,
                                       const uint32_t aLength) {
->>>>>>> upstream-releases
   NS_ASSERTION(mSink, "content sink not found!");
 
   if (mInExternalDTD) {
@@ -775,24 +455,10 @@ nsresult nsExpatDriver::HandleEndCdataSection() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::HandleStartDoctypeDecl(const char16_t *aDoctypeName,
-                                               const char16_t *aSysid,
-                                               const char16_t *aPubid,
-                                               bool aHasInternalSubset) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::HandleStartDoctypeDecl(const char16_t* aDoctypeName,
-                                      const char16_t* aSysid,
-                                      const char16_t* aPubid,
-                                      bool aHasInternalSubset)
-{
-=======
 nsresult nsExpatDriver::HandleStartDoctypeDecl(const char16_t* aDoctypeName,
                                                const char16_t* aSysid,
                                                const char16_t* aPubid,
                                                bool aHasInternalSubset) {
->>>>>>> upstream-releases
   mDoctypeName = aDoctypeName;
   mSystemID = aSysid;
   mPublicID = aPubid;
@@ -843,28 +509,11 @@ nsresult nsExpatDriver::HandleEndDoctypeDecl() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static nsresult ExternalDTDStreamReaderFunc(nsIUnicharInputStream *aIn,
-                                            void *aClosure,
-                                            const char16_t *aFromSegment,
-                                            uint32_t aToOffset, uint32_t aCount,
-                                            uint32_t *aWriteCount) {
-||||||| merged common ancestors
-static nsresult
-ExternalDTDStreamReaderFunc(nsIUnicharInputStream* aIn,
-                            void* aClosure,
-                            const char16_t* aFromSegment,
-                            uint32_t aToOffset,
-                            uint32_t aCount,
-                            uint32_t *aWriteCount)
-{
-=======
 static nsresult ExternalDTDStreamReaderFunc(nsIUnicharInputStream* aIn,
                                             void* aClosure,
                                             const char16_t* aFromSegment,
                                             uint32_t aToOffset, uint32_t aCount,
                                             uint32_t* aWriteCount) {
->>>>>>> upstream-releases
   // Pass the buffer to expat for parsing.
   if (XML_Parse((XML_Parser)aClosure, (const char*)aFromSegment,
                 aCount * sizeof(char16_t), 0) == XML_STATUS_OK) {
@@ -878,24 +527,10 @@ static nsresult ExternalDTDStreamReaderFunc(nsIUnicharInputStream* aIn,
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-int nsExpatDriver::HandleExternalEntityRef(const char16_t *openEntityNames,
-                                           const char16_t *base,
-                                           const char16_t *systemId,
-                                           const char16_t *publicId) {
-||||||| merged common ancestors
-int
-nsExpatDriver::HandleExternalEntityRef(const char16_t *openEntityNames,
-                                       const char16_t *base,
-                                       const char16_t *systemId,
-                                       const char16_t *publicId)
-{
-=======
 int nsExpatDriver::HandleExternalEntityRef(const char16_t* openEntityNames,
                                            const char16_t* base,
                                            const char16_t* systemId,
                                            const char16_t* publicId) {
->>>>>>> upstream-releases
   if (mInInternalSubset && !mInExternalDTD && openEntityNames) {
     mInternalSubset.Append(char16_t('%'));
     mInternalSubset.Append(nsDependentString(openEntityNames));
@@ -953,27 +588,11 @@ int nsExpatDriver::HandleExternalEntityRef(const char16_t* openEntityNames,
   return result;
 }
 
-<<<<<<< HEAD
-nsresult nsExpatDriver::OpenInputStreamFromExternalDTD(const char16_t *aFPIStr,
-                                                       const char16_t *aURLStr,
-                                                       const char16_t *aBaseURL,
-                                                       nsIInputStream **aStream,
-                                                       nsAString &aAbsURL) {
-||||||| merged common ancestors
-nsresult
-nsExpatDriver::OpenInputStreamFromExternalDTD(const char16_t* aFPIStr,
-                                              const char16_t* aURLStr,
-                                              const char16_t* aBaseURL,
-                                              nsIInputStream** aStream,
-                                              nsAString& aAbsURL)
-{
-=======
 nsresult nsExpatDriver::OpenInputStreamFromExternalDTD(const char16_t* aFPIStr,
                                                        const char16_t* aURLStr,
                                                        const char16_t* aBaseURL,
                                                        nsIInputStream** aStream,
                                                        nsAString& aAbsURL) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> baseURI;
   nsresult rv =
       NS_NewURI(getter_AddRefs(baseURI), NS_ConvertUTF16toUTF8(aBaseURL));
@@ -1052,27 +671,11 @@ nsresult nsExpatDriver::OpenInputStreamFromExternalDTD(const char16_t* aFPIStr,
   return channel->Open(aStream);
 }
 
-<<<<<<< HEAD
-static nsresult CreateErrorText(const char16_t *aDescription,
-                                const char16_t *aSourceURL,
-                                const uint32_t aLineNumber,
-                                const uint32_t aColNumber,
-                                nsString &aErrorString) {
-||||||| merged common ancestors
-static nsresult
-CreateErrorText(const char16_t* aDescription,
-                const char16_t* aSourceURL,
-                const uint32_t aLineNumber,
-                const uint32_t aColNumber,
-                nsString& aErrorString)
-{
-=======
 static nsresult CreateErrorText(const char16_t* aDescription,
                                 const char16_t* aSourceURL,
                                 const uint32_t aLineNumber,
                                 const uint32_t aColNumber,
                                 nsString& aErrorString) {
->>>>>>> upstream-releases
   aErrorString.Truncate();
 
   nsAutoString msg;
@@ -1086,21 +689,9 @@ static nsresult CreateErrorText(const char16_t* aDescription,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static nsresult AppendErrorPointer(const int32_t aColNumber,
-                                   const char16_t *aSourceLine,
-                                   nsString &aSourceString) {
-||||||| merged common ancestors
-static nsresult
-AppendErrorPointer(const int32_t aColNumber,
-                   const char16_t *aSourceLine,
-                   nsString& aSourceString)
-{
-=======
 static nsresult AppendErrorPointer(const int32_t aColNumber,
                                    const char16_t* aSourceLine,
                                    nsString& aSourceString) {
->>>>>>> upstream-releases
   aSourceString.Append(char16_t('\n'));
 
   // Last character will be '^'.
@@ -1226,20 +817,8 @@ nsresult nsExpatDriver::HandleError() {
   return NS_ERROR_HTMLPARSER_STOPPARSING;
 }
 
-<<<<<<< HEAD
-void nsExpatDriver::ParseBuffer(const char16_t *aBuffer, uint32_t aLength,
-                                bool aIsFinal, uint32_t *aConsumed) {
-||||||| merged common ancestors
-void
-nsExpatDriver::ParseBuffer(const char16_t *aBuffer,
-                           uint32_t aLength,
-                           bool aIsFinal,
-                           uint32_t *aConsumed)
-{
-=======
 void nsExpatDriver::ParseBuffer(const char16_t* aBuffer, uint32_t aLength,
                                 bool aIsFinal, uint32_t* aConsumed) {
->>>>>>> upstream-releases
   NS_ASSERTION((aBuffer && aLength != 0) || (!aBuffer && aLength == 0), "?");
   NS_ASSERTION(mInternalState != NS_OK || aIsFinal || aBuffer,
                "Useless call, we won't call Expat");
@@ -1256,18 +835,8 @@ void nsExpatDriver::ParseBuffer(const char16_t* aBuffer, uint32_t aLength,
     if (BlockedOrInterrupted()) {
       mInternalState = NS_OK;  // Resume in case we're blocked.
       status = XML_ResumeParser(mExpatParser);
-<<<<<<< HEAD
-    } else {
-      status = XML_Parse(mExpatParser, reinterpret_cast<const char *>(aBuffer),
-||||||| merged common ancestors
-    }
-    else {
-      status = XML_Parse(mExpatParser,
-                         reinterpret_cast<const char*>(aBuffer),
-=======
     } else {
       status = XML_Parse(mExpatParser, reinterpret_cast<const char*>(aBuffer),
->>>>>>> upstream-releases
                          aLength * sizeof(char16_t), aIsFinal);
     }
 
@@ -1296,14 +865,7 @@ void nsExpatDriver::ParseBuffer(const char16_t* aBuffer, uint32_t aLength,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsExpatDriver::ConsumeToken(nsScanner &aScanner, bool &aFlushTokens) {
-||||||| merged common ancestors
-nsExpatDriver::ConsumeToken(nsScanner& aScanner, bool& aFlushTokens)
-{
-=======
 nsExpatDriver::ConsumeToken(nsScanner& aScanner, bool& aFlushTokens) {
->>>>>>> upstream-releases
   // We keep the scanner pointing to the position where Expat will start
   // parsing.
   nsScannerIterator currentExpatPosition;
@@ -1472,18 +1034,8 @@ nsExpatDriver::ConsumeToken(nsScanner& aScanner, bool& aFlushTokens) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsExpatDriver::WillBuildModel(const CParserContext &aParserContext,
-                              nsITokenizer *aTokenizer, nsIContentSink *aSink) {
-||||||| merged common ancestors
-nsExpatDriver::WillBuildModel(const CParserContext& aParserContext,
-                              nsITokenizer* aTokenizer,
-                              nsIContentSink* aSink)
-{
-=======
 nsExpatDriver::WillBuildModel(const CParserContext& aParserContext,
                               nsITokenizer* aTokenizer, nsIContentSink* aSink) {
->>>>>>> upstream-releases
   mSink = do_QueryInterface(aSink);
   if (!mSink) {
     NS_ERROR("nsExpatDriver didn't get an nsIExpatSink");
@@ -1519,16 +1071,8 @@ nsExpatDriver::WillBuildModel(const CParserContext& aParserContext,
       inner = win->GetCurrentInnerWindow();
     } else {
       bool aHasHadScriptHandlingObject;
-<<<<<<< HEAD
-      nsIScriptGlobalObject *global =
-          doc->GetScriptHandlingObject(aHasHadScriptHandlingObject);
-||||||| merged common ancestors
-      nsIScriptGlobalObject *global =
-        doc->GetScriptHandlingObject(aHasHadScriptHandlingObject);
-=======
       nsIScriptGlobalObject* global =
           doc->GetScriptHandlingObject(aHasHadScriptHandlingObject);
->>>>>>> upstream-releases
       if (global) {
         inner = do_QueryInterface(global);
       }
@@ -1539,15 +1083,6 @@ nsExpatDriver::WillBuildModel(const CParserContext& aParserContext,
   }
 
   // Set up the callbacks
-<<<<<<< HEAD
-  XML_SetXmlDeclHandler(mExpatParser, Driver_HandleXMLDeclaration);
-  XML_SetElementHandler(mExpatParser, Driver_HandleStartElement,
-                        Driver_HandleEndElement);
-||||||| merged common ancestors
-  XML_SetXmlDeclHandler(mExpatParser, Driver_HandleXMLDeclaration); 
-  XML_SetElementHandler(mExpatParser, Driver_HandleStartElement,
-                        Driver_HandleEndElement);
-=======
   XML_SetXmlDeclHandler(mExpatParser, Driver_HandleXMLDeclaration);
   if (doc && doc->NodePrincipal()->IsSystemPrincipal()) {
     XML_SetElementHandler(mExpatParser, HandleStartElementForSystemPrincipal,
@@ -1555,7 +1090,6 @@ nsExpatDriver::WillBuildModel(const CParserContext& aParserContext,
   } else {
     XML_SetElementHandler(mExpatParser, HandleStartElement, HandleEndElement);
   }
->>>>>>> upstream-releases
   XML_SetCharacterDataHandler(mExpatParser, Driver_HandleCharacterData);
   XML_SetProcessingInstructionHandler(mExpatParser,
                                       Driver_HandleProcessingInstruction);
@@ -1580,14 +1114,7 @@ nsExpatDriver::WillBuildModel(const CParserContext& aParserContext,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsExpatDriver::BuildModel(nsITokenizer *aTokenizer, nsIContentSink *aSink) {
-||||||| merged common ancestors
-nsExpatDriver::BuildModel(nsITokenizer* aTokenizer, nsIContentSink* aSink)
-{
-=======
 nsExpatDriver::BuildModel(nsITokenizer* aTokenizer, nsIContentSink* aSink) {
->>>>>>> upstream-releases
   return mInternalState;
 }
 

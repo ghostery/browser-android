@@ -54,63 +54,6 @@ You have GTK+ %d.%d.\nThis application requires GTK+ %d.%d or newer.\n\n\
 Please upgrade your GTK+ library if you wish to use this application."
 
 #if MOZ_X11
-<<<<<<< HEAD
-#undef IceSetIOErrorHandler
-#undef IceAddConnectionWatch
-#undef IceConnectionNumber
-#undef IceProcessMessages
-#undef IceGetConnectionContext
-#undef SmcInteractDone
-#undef SmcSaveYourselfDone
-#undef SmcInteractRequest
-#undef SmcCloseConnection
-#undef SmcOpenConnection
-#undef SmcSetProperties
-
-typedef IceIOErrorHandler (*IceSetIOErrorHandlerFn)(IceIOErrorHandler);
-typedef int (*IceAddConnectionWatchFn)(IceWatchProc, IcePointer);
-typedef int (*IceConnectionNumberFn)(IceConn);
-typedef IceProcessMessagesStatus (*IceProcessMessagesFn)(IceConn,
-                                                         IceReplyWaitInfo *,
-                                                         Bool *);
-typedef IcePointer (*IceGetConnectionContextFn)(IceConn);
-
-typedef void (*SmcInteractDoneFn)(SmcConn, Bool);
-typedef void (*SmcSaveYourselfDoneFn)(SmcConn, Bool);
-typedef int (*SmcInteractRequestFn)(SmcConn, int, SmcInteractProc, SmPointer);
-typedef SmcCloseStatus (*SmcCloseConnectionFn)(SmcConn, int, char **);
-typedef SmcConn (*SmcOpenConnectionFn)(char *, SmPointer, int, int,
-                                       unsigned long, SmcCallbacks *,
-                                       const char *, char **, int, char *);
-typedef void (*SmcSetPropertiesFn)(SmcConn, int, SmProp **);
-||||||| merged common ancestors
-#undef IceSetIOErrorHandler
-#undef IceAddConnectionWatch
-#undef IceConnectionNumber
-#undef IceProcessMessages
-#undef IceGetConnectionContext
-#undef SmcInteractDone
-#undef SmcSaveYourselfDone
-#undef SmcInteractRequest
-#undef SmcCloseConnection
-#undef SmcOpenConnection
-#undef SmcSetProperties
-
-typedef IceIOErrorHandler (*IceSetIOErrorHandlerFn) (IceIOErrorHandler);
-typedef int (*IceAddConnectionWatchFn) (IceWatchProc, IcePointer);
-typedef int (*IceConnectionNumberFn) (IceConn);
-typedef IceProcessMessagesStatus (*IceProcessMessagesFn) (IceConn, IceReplyWaitInfo*, Bool*);
-typedef IcePointer (*IceGetConnectionContextFn) (IceConn);
-
-typedef void (*SmcInteractDoneFn) (SmcConn, Bool);
-typedef void (*SmcSaveYourselfDoneFn) (SmcConn, Bool);
-typedef int (*SmcInteractRequestFn) (SmcConn, int, SmcInteractProc, SmPointer);
-typedef SmcCloseStatus (*SmcCloseConnectionFn) (SmcConn, int, char**);
-typedef SmcConn (*SmcOpenConnectionFn) (char*, SmPointer, int, int,
-                                        unsigned long, SmcCallbacks*,
-                                        const char*, char**, int, char*);
-typedef void (*SmcSetPropertiesFn) (SmcConn, int, SmProp**);
-=======
 #  undef IceSetIOErrorHandler
 #  undef IceAddConnectionWatch
 #  undef IceConnectionNumber
@@ -139,7 +82,6 @@ typedef SmcConn (*SmcOpenConnectionFn)(char*, SmPointer, int, int,
                                        unsigned long, SmcCallbacks*,
                                        const char*, char**, int, char*);
 typedef void (*SmcSetPropertiesFn)(SmcConn, int, SmProp**);
->>>>>>> upstream-releases
 
 static IceSetIOErrorHandlerFn IceSetIOErrorHandlerPtr;
 static IceAddConnectionWatchFn IceAddConnectionWatchPtr;
@@ -173,21 +115,8 @@ enum ClientState {
   STATE_SHUTDOWN_CANCELLED
 };
 
-<<<<<<< HEAD
-static const char *gClientStateTable[] = {"DISCONNECTED", "REGISTERING", "IDLE",
-                                          "INTERACTING", "SHUTDOWN_CANCELLED"};
-||||||| merged common ancestors
-static const char *gClientStateTable[] = {
-  "DISCONNECTED",
-  "REGISTERING",
-  "IDLE",
-  "INTERACTING",
-  "SHUTDOWN_CANCELLED"
-};
-=======
 static const char* gClientStateTable[] = {"DISCONNECTED", "REGISTERING", "IDLE",
                                           "INTERACTING", "SHUTDOWN_CANCELLED"};
->>>>>>> upstream-releases
 
 static LazyLogModule sMozSMLog("MozSM");
 #endif /* MOZ_X11 */
@@ -205,15 +134,7 @@ class nsNativeAppSupportUnix : public nsNativeAppSupportBase {
 
   void DisconnectFromSM();
 #endif
-<<<<<<< HEAD
-  NS_IMETHOD Start(bool *aRetVal) override;
-  NS_IMETHOD Stop(bool *aResult) override;
-||||||| merged common ancestors
   NS_IMETHOD Start(bool* aRetVal) override;
-  NS_IMETHOD Stop(bool *aResult) override;
-=======
-  NS_IMETHOD Start(bool* aRetVal) override;
->>>>>>> upstream-releases
   NS_IMETHOD Enable() override;
 
  private:
@@ -247,19 +168,9 @@ static gboolean process_ice_messages(IceConn connection) {
     case IceProcessMessagesSuccess:
       return TRUE;
 
-<<<<<<< HEAD
-    case IceProcessMessagesIOError: {
-      nsNativeAppSupportUnix *native = static_cast<nsNativeAppSupportUnix *>(
-          IceGetConnectionContext(connection));
-||||||| merged common ancestors
-  case IceProcessMessagesIOError: {
-      nsNativeAppSupportUnix *native =
-        static_cast<nsNativeAppSupportUnix *>(IceGetConnectionContext(connection));
-=======
     case IceProcessMessagesIOError: {
       nsNativeAppSupportUnix* native = static_cast<nsNativeAppSupportUnix*>(
           IceGetConnectionContext(connection));
->>>>>>> upstream-releases
       native->DisconnectFromSM();
     }
       return FALSE;
@@ -272,33 +183,13 @@ static gboolean process_ice_messages(IceConn connection) {
   }
 }
 
-<<<<<<< HEAD
-static gboolean ice_iochannel_watch(GIOChannel *channel, GIOCondition condition,
-                                    gpointer client_data) {
-||||||| merged common ancestors
-static gboolean
-ice_iochannel_watch(GIOChannel *channel, GIOCondition condition,
-                    gpointer client_data)
-{
-=======
 static gboolean ice_iochannel_watch(GIOChannel* channel, GIOCondition condition,
                                     gpointer client_data) {
->>>>>>> upstream-releases
   return process_ice_messages(static_cast<IceConn>(client_data));
 }
 
-<<<<<<< HEAD
-static void ice_connection_watch(IceConn connection, IcePointer client_data,
-                                 Bool opening, IcePointer *watch_data) {
-||||||| merged common ancestors
-static void
-ice_connection_watch(IceConn connection, IcePointer  client_data,
-                     Bool opening, IcePointer *watch_data)
-{
-=======
 static void ice_connection_watch(IceConn connection, IcePointer client_data,
                                  Bool opening, IcePointer* watch_data) {
->>>>>>> upstream-releases
   guint watch_id;
 
   if (opening) {
@@ -334,23 +225,10 @@ static void ice_init(void) {
   }
 }
 
-<<<<<<< HEAD
-void nsNativeAppSupportUnix::InteractCB(SmcConn smc_conn,
-                                        SmPointer client_data) {
-  nsNativeAppSupportUnix *self =
-      static_cast<nsNativeAppSupportUnix *>(client_data);
-||||||| merged common ancestors
-void
-nsNativeAppSupportUnix::InteractCB(SmcConn smc_conn, SmPointer client_data)
-{
-  nsNativeAppSupportUnix *self =
-    static_cast<nsNativeAppSupportUnix *>(client_data);
-=======
 void nsNativeAppSupportUnix::InteractCB(SmcConn smc_conn,
                                         SmPointer client_data) {
   nsNativeAppSupportUnix* self =
       static_cast<nsNativeAppSupportUnix*>(client_data);
->>>>>>> upstream-releases
 
   self->SetClientState(STATE_INTERACTING);
 
@@ -406,29 +284,12 @@ void nsNativeAppSupportUnix::DoInteract() {
   }
 }
 
-<<<<<<< HEAD
-void nsNativeAppSupportUnix::SaveYourselfCB(SmcConn smc_conn,
-                                            SmPointer client_data,
-                                            int save_style, Bool shutdown,
-                                            int interact_style, Bool fast) {
-  nsNativeAppSupportUnix *self =
-      static_cast<nsNativeAppSupportUnix *>(client_data);
-||||||| merged common ancestors
-void
-nsNativeAppSupportUnix::SaveYourselfCB(SmcConn smc_conn, SmPointer client_data,
-                                       int save_style, Bool shutdown,
-                                       int interact_style, Bool fast)
-{
-  nsNativeAppSupportUnix *self =
-    static_cast<nsNativeAppSupportUnix *>(client_data);
-=======
 void nsNativeAppSupportUnix::SaveYourselfCB(SmcConn smc_conn,
                                             SmPointer client_data,
                                             int save_style, Bool shutdown,
                                             int interact_style, Bool fast) {
   nsNativeAppSupportUnix* self =
       static_cast<nsNativeAppSupportUnix*>(client_data);
->>>>>>> upstream-releases
 
   // Expect a SaveYourselfCB if we're registering a new client.
   // All properties are already set in Start() so just reply with
@@ -506,24 +367,10 @@ void nsNativeAppSupportUnix::DieCB(SmcConn smc_conn, SmPointer client_data) {
   // so we can't DisconnectFromSM() yet
 }
 
-<<<<<<< HEAD
-void nsNativeAppSupportUnix::ShutdownCancelledCB(SmcConn smc_conn,
-                                                 SmPointer client_data) {
-  nsNativeAppSupportUnix *self =
-      static_cast<nsNativeAppSupportUnix *>(client_data);
-||||||| merged common ancestors
-void
-nsNativeAppSupportUnix::ShutdownCancelledCB(SmcConn smc_conn,
-                                            SmPointer client_data)
-{
-  nsNativeAppSupportUnix *self =
-    static_cast<nsNativeAppSupportUnix *>(client_data);
-=======
 void nsNativeAppSupportUnix::ShutdownCancelledCB(SmcConn smc_conn,
                                                  SmPointer client_data) {
   nsNativeAppSupportUnix* self =
       static_cast<nsNativeAppSupportUnix*>(client_data);
->>>>>>> upstream-releases
 
   // Interacting is the only time when we wouldn't already have called
   // SmcSaveYourselfDone. Do that now, then set the state to make sure we
@@ -547,52 +394,21 @@ void nsNativeAppSupportUnix::DisconnectFromSM() {
   }
 }
 
-<<<<<<< HEAD
-static void SetSMValue(SmPropValue &val, const nsCString &data) {
-  val.value = static_cast<SmPointer>(const_cast<char *>(data.get()));
-||||||| merged common ancestors
-static void
-SetSMValue(SmPropValue& val, const nsCString& data)
-{
-  val.value = static_cast<SmPointer>(const_cast<char*>(data.get()));
-=======
 static void SetSMValue(SmPropValue& val, const nsCString& data) {
   val.value = static_cast<SmPointer>(const_cast<char*>(data.get()));
->>>>>>> upstream-releases
   val.length = data.Length();
 }
 
-<<<<<<< HEAD
-static void SetSMProperty(SmProp &prop, const char *name, const char *type,
-                          int numVals, SmPropValue vals[]) {
-  prop.name = const_cast<char *>(name);
-  prop.type = const_cast<char *>(type);
-||||||| merged common ancestors
-static void
-SetSMProperty(SmProp& prop, const char* name, const char* type, int numVals,
-              SmPropValue vals[])
-{
-  prop.name = const_cast<char*>(name);
-  prop.type = const_cast<char*>(type);
-=======
 static void SetSMProperty(SmProp& prop, const char* name, const char* type,
                           int numVals, SmPropValue vals[]) {
   prop.name = const_cast<char*>(name);
   prop.type = const_cast<char*>(type);
->>>>>>> upstream-releases
   prop.num_vals = numVals;
   prop.vals = vals;
 }
 #endif /* MOZ_X11 */
 
-<<<<<<< HEAD
-static void RemoveArg(char **argv) {
-||||||| merged common ancestors
-static void RemoveArg(char **argv)
-{
-=======
 static void RemoveArg(char** argv) {
->>>>>>> upstream-releases
   do {
     *argv = *(argv + 1);
     ++argv;
@@ -602,14 +418,7 @@ static void RemoveArg(char** argv) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNativeAppSupportUnix::Start(bool *aRetVal) {
-||||||| merged common ancestors
-nsNativeAppSupportUnix::Start(bool *aRetVal)
-{
-=======
 nsNativeAppSupportUnix::Start(bool* aRetVal) {
->>>>>>> upstream-releases
   NS_ASSERTION(gAppData, "gAppData must not be null.");
 
 // The dbus library is used by both nsWifiScannerDBus and BluetoothDBusService,
@@ -819,7 +628,7 @@ nsNativeAppSupportUnix::Start(bool* aRetVal) {
   props[n++] = &propProgram;
 
   nsAutoCString userName;  // username that started the program
-  struct passwd *pw = getpwuid(getuid());
+  struct passwd* pw = getpwuid(getuid());
   if (pw && pw->pw_name) {
     userName = pw->pw_name;
   } else {
@@ -842,48 +651,11 @@ nsNativeAppSupportUnix::Start(bool* aRetVal) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNativeAppSupportUnix::Stop(bool *aResult) {
-  NS_ENSURE_ARG(aResult);
-  *aResult = true;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
 nsNativeAppSupportUnix::Enable() { return NS_OK; }
-||||||| merged common ancestors
-nsNativeAppSupportUnix::Stop(bool *aResult)
-{
-  NS_ENSURE_ARG(aResult);
-  *aResult = true;
-  return NS_OK;
-}
 
-NS_IMETHODIMP
-nsNativeAppSupportUnix::Enable()
-{
-  return NS_OK;
-}
-=======
-nsNativeAppSupportUnix::Enable() { return NS_OK; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-nsresult NS_CreateNativeAppSupport(nsINativeAppSupport **aResult) {
-  nsNativeAppSupportBase *native = new nsNativeAppSupportUnix();
-  if (!native) return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-nsresult
-NS_CreateNativeAppSupport(nsINativeAppSupport **aResult)
-{
-  nsNativeAppSupportBase* native = new nsNativeAppSupportUnix();
-  if (!native)
-    return NS_ERROR_OUT_OF_MEMORY;
-=======
 nsresult NS_CreateNativeAppSupport(nsINativeAppSupport** aResult) {
   nsNativeAppSupportBase* native = new nsNativeAppSupportUnix();
   if (!native) return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
 
   *aResult = native;
   NS_ADDREF(*aResult);

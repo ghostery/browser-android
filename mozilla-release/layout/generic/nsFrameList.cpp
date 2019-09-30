@@ -20,42 +20,16 @@ using namespace mozilla;
 namespace mozilla {
 namespace layout {
 namespace detail {
-<<<<<<< HEAD
-const AlignedFrameListBytes gEmptyFrameListBytes = {0};
-}  // namespace detail
-}  // namespace layout
-}  // namespace mozilla
-
-void* nsFrameList::operator new(size_t sz, nsIPresShell* aPresShell) {
-||||||| merged common ancestors
-const AlignedFrameListBytes gEmptyFrameListBytes = { 0 };
-} // namespace detail
-} // namespace layout
-} // namespace mozilla
-
-void*
-nsFrameList::operator new(size_t sz, nsIPresShell* aPresShell)
-{
-=======
 const AlignedFrameListBytes gEmptyFrameListBytes = {0};
 }  // namespace detail
 }  // namespace layout
 }  // namespace mozilla
 
 void* nsFrameList::operator new(size_t sz, mozilla::PresShell* aPresShell) {
->>>>>>> upstream-releases
   return aPresShell->AllocateByObjectID(eArenaObjectID_nsFrameList, sz);
 }
 
-<<<<<<< HEAD
-void nsFrameList::Delete(nsIPresShell* aPresShell) {
-||||||| merged common ancestors
-void
-nsFrameList::Delete(nsIPresShell* aPresShell)
-{
-=======
 void nsFrameList::Delete(mozilla::PresShell* aPresShell) {
->>>>>>> upstream-releases
   MOZ_ASSERT(this != &EmptyList(), "Shouldn't Delete() this list");
   NS_ASSERTION(IsEmpty(), "Shouldn't Delete() a non-empty list");
 
@@ -307,16 +281,8 @@ void nsFrameList::ApplySetParent(nsContainerFrame* aParent) const {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsFrameList::UnhookFrameFromSiblings(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ void
-nsFrameList::UnhookFrameFromSiblings(nsIFrame* aFrame)
-{
-=======
 /* static */
 void nsFrameList::UnhookFrameFromSiblings(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrame->GetPrevSibling() && aFrame->GetNextSibling());
   nsIFrame* const nextSibling = aFrame->GetNextSibling();
   nsIFrame* const prevSibling = aFrame->GetPrevSibling();

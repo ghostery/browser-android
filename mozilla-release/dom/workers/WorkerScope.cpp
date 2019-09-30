@@ -33,16 +33,9 @@
 #include "mozilla/dom/WorkerLocation.h"
 #include "mozilla/dom/WorkerNavigator.h"
 #include "mozilla/dom/cache/CacheStorage.h"
-<<<<<<< HEAD
-#include "mozilla/StaticPrefs.h"
-||||||| merged common ancestors
-#include "mozilla/Services.h"
-#include "mozilla/StaticPrefs.h"
-=======
 #include "mozilla/StorageAccess.h"
 #include "nsContentUtils.h"
 #include "nsJSUtils.h"
->>>>>>> upstream-releases
 #include "nsServiceManagerUtils.h"
 
 #include "mozilla/dom/Document.h"
@@ -66,33 +59,6 @@
 #  undef PostMessage
 #endif
 
-<<<<<<< HEAD
-extern already_AddRefed<nsIScriptTimeoutHandler> NS_CreateJSTimeoutHandler(
-    JSContext* aCx, mozilla::dom::WorkerPrivate* aWorkerPrivate,
-    mozilla::dom::Function& aFunction,
-    const mozilla::dom::Sequence<JS::Value>& aArguments,
-    mozilla::ErrorResult& aError);
-
-extern already_AddRefed<nsIScriptTimeoutHandler> NS_CreateJSTimeoutHandler(
-    JSContext* aCx, mozilla::dom::WorkerPrivate* aWorkerPrivate,
-    const nsAString& aExpression, mozilla::ErrorResult& aRv);
-
-||||||| merged common ancestors
-extern already_AddRefed<nsIScriptTimeoutHandler>
-NS_CreateJSTimeoutHandler(JSContext* aCx,
-                          mozilla::dom::WorkerPrivate* aWorkerPrivate,
-                          mozilla::dom::Function& aFunction,
-                          const mozilla::dom::Sequence<JS::Value>& aArguments,
-                          mozilla::ErrorResult& aError);
-
-extern already_AddRefed<nsIScriptTimeoutHandler>
-NS_CreateJSTimeoutHandler(JSContext* aCx,
-                          mozilla::dom::WorkerPrivate* aWorkerPrivate,
-                          const nsAString& aExpression,
-                          mozilla::ErrorResult& aRv);
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 
@@ -310,71 +276,20 @@ void WorkerGlobalScope::SetOnerror(OnErrorEventHandlerNonNull* aHandler) {
   }
 }
 
-<<<<<<< HEAD
-void WorkerGlobalScope::ImportScripts(const Sequence<nsString>& aScriptURLs,
-                                      ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-WorkerGlobalScope::ImportScripts(const Sequence<nsString>& aScriptURLs,
-                                 ErrorResult& aRv)
-{
-=======
 void WorkerGlobalScope::ImportScripts(JSContext* aCx,
                                       const Sequence<nsString>& aScriptURLs,
                                       ErrorResult& aRv) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
 
-<<<<<<< HEAD
-int32_t WorkerGlobalScope::SetTimeout(JSContext* aCx, Function& aHandler,
-                                      const int32_t aTimeout,
-                                      const Sequence<JS::Value>& aArguments,
-                                      ErrorResult& aRv) {
-  mWorkerPrivate->AssertIsOnWorkerThread();
-
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-      NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aArguments, aRv);
-  if (!handler) {
-    return 0;
-||||||| merged common ancestors
-int32_t
-WorkerGlobalScope::SetTimeout(JSContext* aCx,
-                              Function& aHandler,
-                              const int32_t aTimeout,
-                              const Sequence<JS::Value>& aArguments,
-                              ErrorResult& aRv)
-{
-  mWorkerPrivate->AssertIsOnWorkerThread();
-
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-    NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aArguments, aRv);
-  if (!handler) {
-    return 0;
-=======
   UniquePtr<SerializedStackHolder> stack;
   if (mWorkerPrivate->IsWatchedByDevtools()) {
     stack = GetCurrentStackForNetMonitor(aCx);
->>>>>>> upstream-releases
   }
 
   workerinternals::Load(mWorkerPrivate, std::move(stack), aScriptURLs,
                         WorkerScript, aRv);
 }
 
-<<<<<<< HEAD
-int32_t WorkerGlobalScope::SetTimeout(JSContext* aCx, const nsAString& aHandler,
-                                      const int32_t aTimeout,
-                                      const Sequence<JS::Value>& /* unused */,
-                                      ErrorResult& aRv) {
-||||||| merged common ancestors
-int32_t
-WorkerGlobalScope::SetTimeout(JSContext* aCx,
-                              const nsAString& aHandler,
-                              const int32_t aTimeout,
-                              const Sequence<JS::Value>& /* unused */,
-                              ErrorResult& aRv)
-{
-=======
 int32_t WorkerGlobalScope::SetTimeout(JSContext* aCx, Function& aHandler,
                                       const int32_t aTimeout,
                                       const Sequence<JS::Value>& aArguments,
@@ -390,22 +305,8 @@ int32_t WorkerGlobalScope::SetTimeout(JSContext* aCx, const nsAString& aHandler,
 }
 
 void WorkerGlobalScope::ClearTimeout(int32_t aHandle) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-      NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aRv);
-  if (!handler) {
-    return 0;
-  }
-||||||| merged common ancestors
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-    NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aRv);
-  if (!handler) {
-    return 0;
-  }
-=======
   DebuggerNotificationDispatch(this, DebuggerNotificationType::ClearTimeout);
 
   mWorkerPrivate->ClearTimeout(aHandle);
@@ -417,7 +318,6 @@ int32_t WorkerGlobalScope::SetInterval(JSContext* aCx, Function& aHandler,
                                        ErrorResult& aRv) {
   return SetTimeoutOrInterval(aCx, aHandler, aTimeout, aArguments, true, aRv);
 }
->>>>>>> upstream-releases
 
 int32_t WorkerGlobalScope::SetInterval(JSContext* aCx,
                                        const nsAString& aHandler,
@@ -427,15 +327,7 @@ int32_t WorkerGlobalScope::SetInterval(JSContext* aCx,
   return SetTimeoutOrInterval(aCx, aHandler, aTimeout, true, aRv);
 }
 
-<<<<<<< HEAD
-void WorkerGlobalScope::ClearTimeout(int32_t aHandle) {
-||||||| merged common ancestors
-void
-WorkerGlobalScope::ClearTimeout(int32_t aHandle)
-{
-=======
 void WorkerGlobalScope::ClearInterval(int32_t aHandle) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
 
   DebuggerNotificationDispatch(this, DebuggerNotificationType::ClearInterval);
@@ -443,35 +335,11 @@ void WorkerGlobalScope::ClearInterval(int32_t aHandle) {
   mWorkerPrivate->ClearTimeout(aHandle);
 }
 
-<<<<<<< HEAD
-int32_t WorkerGlobalScope::SetInterval(JSContext* aCx, Function& aHandler,
-                                       const int32_t aTimeout,
-                                       const Sequence<JS::Value>& aArguments,
-                                       ErrorResult& aRv) {
-||||||| merged common ancestors
-int32_t
-WorkerGlobalScope::SetInterval(JSContext* aCx,
-                               Function& aHandler,
-                               const int32_t aTimeout,
-                               const Sequence<JS::Value>& aArguments,
-                               ErrorResult& aRv)
-{
-=======
 int32_t WorkerGlobalScope::SetTimeoutOrInterval(
     JSContext* aCx, Function& aHandler, const int32_t aTimeout,
     const Sequence<JS::Value>& aArguments, bool aIsInterval, ErrorResult& aRv) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-      NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aArguments, aRv);
-  if (NS_WARN_IF(aRv.Failed())) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-    NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aArguments, aRv);
-  if (NS_WARN_IF(aRv.Failed())) {
-=======
   DebuggerNotificationDispatch(
       this, aIsInterval ? DebuggerNotificationType::SetInterval
                         : DebuggerNotificationType::SetTimeout);
@@ -479,82 +347,37 @@ int32_t WorkerGlobalScope::SetTimeoutOrInterval(
   nsTArray<JS::Heap<JS::Value>> args;
   if (!args.AppendElements(aArguments, fallible)) {
     aRv.Throw(NS_ERROR_OUT_OF_MEMORY);
->>>>>>> upstream-releases
     return 0;
   }
 
-<<<<<<< HEAD
-  return mWorkerPrivate->SetTimeout(aCx, handler, aTimeout, true, aRv);
-||||||| merged common ancestors
-  return mWorkerPrivate->SetTimeout(aCx, handler,  aTimeout, true, aRv);
-=======
   RefPtr<TimeoutHandler> handler =
       new CallbackTimeoutHandler(aCx, this, &aHandler, std::move(args));
 
   return mWorkerPrivate->SetTimeout(aCx, handler, aTimeout, aIsInterval, aRv);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-int32_t WorkerGlobalScope::SetInterval(JSContext* aCx,
-                                       const nsAString& aHandler,
-                                       const int32_t aTimeout,
-                                       const Sequence<JS::Value>& /* unused */,
-                                       ErrorResult& aRv) {
-||||||| merged common ancestors
-int32_t
-WorkerGlobalScope::SetInterval(JSContext* aCx,
-                               const nsAString& aHandler,
-                               const int32_t aTimeout,
-                               const Sequence<JS::Value>& /* unused */,
-                               ErrorResult& aRv)
-{
-=======
 int32_t WorkerGlobalScope::SetTimeoutOrInterval(JSContext* aCx,
                                                 const nsAString& aHandler,
                                                 const int32_t aTimeout,
                                                 bool aIsInterval,
                                                 ErrorResult& aRv) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
 
   DebuggerNotificationDispatch(
       this, aIsInterval ? DebuggerNotificationType::SetInterval
                         : DebuggerNotificationType::SetTimeout);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-      NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aRv);
-  if (NS_WARN_IF(aRv.Failed())) {
-||||||| merged common ancestors
-  nsCOMPtr<nsIScriptTimeoutHandler> handler =
-    NS_CreateJSTimeoutHandler(aCx, mWorkerPrivate, aHandler, aRv);
-  if (NS_WARN_IF(aRv.Failed())) {
-=======
   bool allowEval = false;
   aRv =
       CSPEvalChecker::CheckForWorker(aCx, mWorkerPrivate, aHandler, &allowEval);
   if (NS_WARN_IF(aRv.Failed()) || !allowEval) {
->>>>>>> upstream-releases
     return 0;
   }
 
   RefPtr<TimeoutHandler> handler =
       new WorkerScriptTimeoutHandler(aCx, this, aHandler);
 
-<<<<<<< HEAD
-void WorkerGlobalScope::ClearInterval(int32_t aHandle) {
-  mWorkerPrivate->AssertIsOnWorkerThread();
-  mWorkerPrivate->ClearTimeout(aHandle);
-||||||| merged common ancestors
-void
-WorkerGlobalScope::ClearInterval(int32_t aHandle)
-{
-  mWorkerPrivate->AssertIsOnWorkerThread();
-  mWorkerPrivate->ClearTimeout(aHandle);
-=======
   return mWorkerPrivate->SetTimeout(aCx, handler, aTimeout, aIsInterval, aRv);
->>>>>>> upstream-releases
 }
 
 void WorkerGlobalScope::GetOrigin(nsAString& aOrigin) const {
@@ -652,22 +475,9 @@ already_AddRefed<IDBFactory> WorkerGlobalScope::GetIndexedDB(
     const PrincipalInfo& principalInfo =
         mWorkerPrivate->GetEffectiveStoragePrincipalInfo();
 
-<<<<<<< HEAD
-    nsresult rv = IDBFactory::CreateForWorker(cx, owningObject, principalInfo,
-                                              mWorkerPrivate->WindowID(),
-                                              getter_AddRefs(indexedDB));
-||||||| merged common ancestors
-    nsresult rv =
-      IDBFactory::CreateForWorker(cx,
-                                  owningObject,
-                                  principalInfo,
-                                  mWorkerPrivate->WindowID(),
-                                  getter_AddRefs(indexedDB));
-=======
     nsresult rv = IDBFactory::CreateForWorker(this, principalInfo,
                                               mWorkerPrivate->WindowID(),
                                               getter_AddRefs(indexedDB));
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       aErrorResult = rv;
       return nullptr;
@@ -684,7 +494,6 @@ already_AddRefed<Promise> WorkerGlobalScope::CreateImageBitmap(
   return ImageBitmap::Create(this, aImage, Nothing(), aRv);
 }
 
-<<<<<<< HEAD
 already_AddRefed<Promise> WorkerGlobalScope::CreateImageBitmap(
     JSContext* aCx, const ImageBitmapSource& aImage, int32_t aSx, int32_t aSy,
     int32_t aSw, int32_t aSh, ErrorResult& aRv) {
@@ -694,58 +503,6 @@ already_AddRefed<Promise> WorkerGlobalScope::CreateImageBitmap(
 
 nsresult WorkerGlobalScope::Dispatch(
     TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-WorkerGlobalScope::CreateImageBitmap(JSContext* aCx,
-                                     const ImageBitmapSource& aImage,
-                                     int32_t aSx, int32_t aSy, int32_t aSw, int32_t aSh,
-                                     ErrorResult& aRv)
-{
-  if (aImage.IsArrayBuffer() || aImage.IsArrayBufferView()) {
-    aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);
-    return nullptr;
-  }
-
-  return ImageBitmap::Create(this, aImage, Some(gfx::IntRect(aSx, aSy, aSw, aSh)), aRv);
-}
-
-already_AddRefed<mozilla::dom::Promise>
-WorkerGlobalScope::CreateImageBitmap(JSContext* aCx,
-                                     const ImageBitmapSource& aImage,
-                                     int32_t aOffset, int32_t aLength,
-                                     ImageBitmapFormat aFormat,
-                                     const Sequence<ChannelPixelLayout>& aLayout,
-                                     ErrorResult& aRv)
-{
-  if (!StaticPrefs::canvas_imagebitmap_extensions_enabled()) {
-    aRv.Throw(NS_ERROR_TYPE_ERR);
-    return nullptr;
-  }
-
-  if (aImage.IsArrayBuffer() || aImage.IsArrayBufferView()) {
-    return ImageBitmap::Create(this, aImage, aOffset, aLength, aFormat, aLayout,
-                               aRv);
-  } else {
-    aRv.Throw(NS_ERROR_TYPE_ERR);
-    return nullptr;
-  }
-}
-
-nsresult
-WorkerGlobalScope::Dispatch(TaskCategory aCategory,
-                            already_AddRefed<nsIRunnable>&& aRunnable)
-{
-=======
-already_AddRefed<Promise> WorkerGlobalScope::CreateImageBitmap(
-    JSContext* aCx, const ImageBitmapSource& aImage, int32_t aSx, int32_t aSy,
-    int32_t aSw, int32_t aSh, ErrorResult& aRv) {
-  return ImageBitmap::Create(this, aImage,
-                             Some(gfx::IntRect(aSx, aSy, aSw, aSh)), aRv);
-}
-
-nsresult WorkerGlobalScope::Dispatch(
-    TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
->>>>>>> upstream-releases
   return EventTargetFor(aCategory)->Dispatch(std::move(aRunnable),
                                              NS_DISPATCH_NORMAL);
 }
@@ -760,13 +517,6 @@ AbstractThread* WorkerGlobalScope::AbstractMainThreadFor(
   MOZ_CRASH("AbstractMainThreadFor not supported for workers.");
 }
 
-<<<<<<< HEAD
-Maybe<ClientInfo> WorkerGlobalScope::GetClientInfo() const {
-||||||| merged common ancestors
-Maybe<ClientInfo>
-WorkerGlobalScope::GetClientInfo() const
-{
-=======
 mozilla::dom::DebuggerNotificationManager*
 WorkerGlobalScope::GetOrCreateDebuggerNotificationManager() {
   if (!mDebuggerNotificationManager) {
@@ -782,7 +532,6 @@ WorkerGlobalScope::GetExistingDebuggerNotificationManager() {
 }
 
 Maybe<ClientInfo> WorkerGlobalScope::GetClientInfo() const {
->>>>>>> upstream-releases
   return mWorkerPrivate->GetClientInfo();
 }
 
@@ -826,18 +575,6 @@ WorkerGlobalScope::GetOrCreateServiceWorkerRegistration(
   return ref.forget();
 }
 
-<<<<<<< HEAD
-DedicatedWorkerGlobalScope::DedicatedWorkerGlobalScope(
-    WorkerPrivate* aWorkerPrivate, const nsString& aName)
-    : WorkerGlobalScope(aWorkerPrivate), mName(aName) {}
-||||||| merged common ancestors
-DedicatedWorkerGlobalScope::DedicatedWorkerGlobalScope(WorkerPrivate* aWorkerPrivate,
-                                                       const nsString& aName)
-  : WorkerGlobalScope(aWorkerPrivate)
-  , mName(aName)
-{
-}
-=======
 void WorkerGlobalScope::FirstPartyStorageAccessGranted() {
   // Reset the IndexedDB factory.
   mIndexedDB = nullptr;
@@ -845,24 +582,13 @@ void WorkerGlobalScope::FirstPartyStorageAccessGranted() {
   // Reset DOM Cache
   mCacheStorage = nullptr;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool DedicatedWorkerGlobalScope::WrapGlobalObject(
-    JSContext* aCx, JS::MutableHandle<JSObject*> aReflector) {
-||||||| merged common ancestors
-bool
-DedicatedWorkerGlobalScope::WrapGlobalObject(JSContext* aCx,
-                                             JS::MutableHandle<JSObject*> aReflector)
-{
-=======
 DedicatedWorkerGlobalScope::DedicatedWorkerGlobalScope(
     WorkerPrivate* aWorkerPrivate, const nsString& aName)
     : WorkerGlobalScope(aWorkerPrivate), mName(aName) {}
 
 bool DedicatedWorkerGlobalScope::WrapGlobalObject(
     JSContext* aCx, JS::MutableHandle<JSObject*> aReflector) {
->>>>>>> upstream-releases
   mWorkerPrivate->AssertIsOnWorkerThread();
   MOZ_ASSERT(!mWorkerPrivate->IsSharedWorker());
 
@@ -1265,22 +991,12 @@ void WorkerDebuggerGlobalScope::LoadSubScript(
   workerinternals::Load(mWorkerPrivate, nullptr, urls, DebuggerScript, aRv);
 }
 
-<<<<<<< HEAD
-void WorkerDebuggerGlobalScope::EnterEventLoop() {
-  mWorkerPrivate->EnterDebuggerEventLoop();
-||||||| merged common ancestors
-void
-WorkerDebuggerGlobalScope::EnterEventLoop()
-{
-  mWorkerPrivate->EnterDebuggerEventLoop();
-=======
 void WorkerDebuggerGlobalScope::EnterEventLoop() {
   // We're on the worker thread here, and WorkerPrivate's refcounting is
   // non-threadsafe: you can only do it on the parent thread.  What that
   // means in practice is that we're relying on it being kept alive while
   // we run.  Hopefully.
   MOZ_KnownLive(mWorkerPrivate)->EnterDebuggerEventLoop();
->>>>>>> upstream-releases
 }
 
 void WorkerDebuggerGlobalScope::LeaveEventLoop() {
@@ -1362,15 +1078,6 @@ void WorkerDebuggerGlobalScope::Dump(JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-nsresult WorkerDebuggerGlobalScope::Dispatch(
-    TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
-||||||| merged common ancestors
-nsresult
-WorkerDebuggerGlobalScope::Dispatch(TaskCategory aCategory,
-                                    already_AddRefed<nsIRunnable>&& aRunnable)
-{
-=======
 void WorkerDebuggerGlobalScope::Atob(const nsAString& aAtob, nsAString& aOutput,
                                      ErrorResult& aRv) const {
   mWorkerPrivate->AssertIsOnWorkerThread();
@@ -1385,7 +1092,6 @@ void WorkerDebuggerGlobalScope::Btoa(const nsAString& aBtoa, nsAString& aOutput,
 
 nsresult WorkerDebuggerGlobalScope::Dispatch(
     TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
->>>>>>> upstream-releases
   return EventTargetFor(aCategory)->Dispatch(std::move(aRunnable),
                                              NS_DISPATCH_NORMAL);
 }

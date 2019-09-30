@@ -112,10 +112,6 @@ class MachRegistrar(object):
 
         return fail_conditions
 
-<<<<<<< HEAD
-        self.command_depth += 1
-||||||| merged common ancestors
-=======
     def _run_command_handler(self, handler, context=None, debug_command=False, **kwargs):
         instance = MachRegistrar._instance(handler, context, **kwargs)
         fail_conditions = MachRegistrar._fail_conditions(handler, instance)
@@ -124,7 +120,6 @@ class MachRegistrar(object):
             return 1
 
         self.command_depth += 1
->>>>>>> upstream-releases
         fn = getattr(instance, handler.method)
 
         start_time = time.time()

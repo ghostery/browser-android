@@ -29,27 +29,12 @@ class nsCocoaFeatures {
   static bool IsAtLeastVersion(int32_t aMajor, int32_t aMinor,
                                int32_t aBugFix = 0);
 
-<<<<<<< HEAD
-  // These are utilities that do not change or depend on the value of
-  // mOSXVersion and instead just encapsulate the encoding algorithm.  Note that
-  // GetVersion actually adjusts to the lowest supported OS, so it will always
-  // return a "supported" version.  GetSystemVersion does not make any
-  // modifications.
-  static void GetSystemVersion(int &aMajor, int &aMinor, int &aBugFix);
-||||||| merged common ancestors
-  // These are utilities that do not change or depend on the value of mOSXVersion
-  // and instead just encapsulate the encoding algorithm.  Note that GetVersion
-  // actually adjusts to the lowest supported OS, so it will always return
-  // a "supported" version.  GetSystemVersion does not make any modifications.
-  static void GetSystemVersion(int &aMajor, int &aMinor, int &aBugFix);
-=======
   // These are utilities that do not change or depend on the value of
   // mOSXVersion and instead just encapsulate the encoding algorithm.  Note that
   // GetVersion actually adjusts to the lowest supported OS, so it will always
   // return a "supported" version.  GetSystemVersion does not make any
   // modifications.
   static void GetSystemVersion(int& aMajor, int& aMinor, int& aBugFix);
->>>>>>> upstream-releases
   static int32_t GetVersion(int32_t aMajor, int32_t aMinor, int32_t aBugFix);
   static int32_t ExtractMajorVersion(int32_t aVersion);
   static int32_t ExtractMinorVersion(int32_t aVersion);

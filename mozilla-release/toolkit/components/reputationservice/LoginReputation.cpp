@@ -20,19 +20,7 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
 #define PREF_PP_ENABLED "browser.safebrowsing.passwords.enabled"
-#define PREF_PASSWORD_ALLOW_TABLE "urlclassifier.passwordAllowTable"
-
-static bool sPasswordProtectionEnabled = false;
-||||||| merged common ancestors
-#define PREF_PP_ENABLED               "browser.safebrowsing.passwords.enabled"
-#define PREF_PASSWORD_ALLOW_TABLE     "urlclassifier.passwordAllowTable"
-
-static bool sPasswordProtectionEnabled = false;
-=======
-#define PREF_PP_ENABLED "browser.safebrowsing.passwords.enabled"
->>>>>>> upstream-releases
 
 // MOZ_LOG=LoginReputation:5
 LazyLogModule gLoginReputationLogModule("LoginReputation");
@@ -43,20 +31,6 @@ LazyLogModule gLoginReputationLogModule("LoginReputation");
 
 static Atomic<bool> gShuttingDown(false);
 
-<<<<<<< HEAD
-static const char* kObservedPrefs[] = {
-    PREF_PASSWORD_ALLOW_TABLE,
-    nullptr,
-};
-
-||||||| merged common ancestors
-static const char* kObservedPrefs[] = {
-  PREF_PASSWORD_ALLOW_TABLE,
-  nullptr,
-};
-
-=======
->>>>>>> upstream-releases
 // -------------------------------------------------------------------------
 // ReputationQueryParam
 //
@@ -89,17 +63,8 @@ ReputationQueryParam::GetFormURI(nsIURI** aURI) {
 // This class is a wrapper that encapsulate asynchronous callback API provided
 // by DBService into a MozPromise callback.
 //
-<<<<<<< HEAD
-class LoginWhitelist final : public nsIURIClassifierCallback {
- public:
-||||||| merged common ancestors
-class LoginWhitelist final : public nsIURIClassifierCallback
-{
-public:
-=======
 class LoginWhitelist final : public nsIUrlClassifierFeatureCallback {
  public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIURLCLASSIFIERFEATURECALLBACK
 
@@ -118,37 +83,9 @@ class LoginWhitelist final : public nsIUrlClassifierFeatureCallback {
   nsTArray<UniquePtr<MozPromiseHolder<ReputationPromise>>> mQueryPromises;
 };
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(LoginWhitelist, nsIURIClassifierCallback)
-
-nsresult LoginWhitelist::Init() {
-  UpdateWhitelistTables();
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(LoginWhitelist, nsIURIClassifierCallback)
-
-nsresult
-LoginWhitelist::Init()
-{
-  UpdateWhitelistTables();
-=======
 NS_IMPL_ISUPPORTS(LoginWhitelist, nsIUrlClassifierFeatureCallback)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NS_OK;
-}
-
-nsresult LoginWhitelist::Uninit() {
-||||||| merged common ancestors
-  return NS_OK;
-}
-
-nsresult
-LoginWhitelist::Uninit()
-{
-=======
 nsresult LoginWhitelist::Shutdown() {
->>>>>>> upstream-releases
   // Reject all query promise before releasing.
   for (uint8_t i = 0; i < mQueryPromises.Length(); i++) {
     mQueryPromises[i]->Reject(NS_ERROR_ABORT, __func__);
@@ -177,13 +114,7 @@ RefPtr<ReputationPromise> LoginWhitelist::QueryLoginWhitelist(
   }
 
   nsCOMPtr<nsIURIClassifier> uriClassifier =
-<<<<<<< HEAD
-      do_GetService(NS_URLCLASSIFIERDBSERVICE_CONTRACTID, &rv);
-||||||| merged common ancestors
-    do_GetService(NS_URLCLASSIFIERDBSERVICE_CONTRACTID, &rv);
-=======
       mozilla::components::UrlClassifierDB::Service(&rv);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return p;
   }
@@ -191,15 +122,6 @@ RefPtr<ReputationPromise> LoginWhitelist::QueryLoginWhitelist(
   // AsyncClassifyLocalWithTables API won't trigger a gethash request on
   // a full-length match, so this API call should only include local operation.
   // We don't support prefs overwrite for this classification.
-<<<<<<< HEAD
-  rv = uriClassifier->AsyncClassifyLocalWithTables(
-      uri, mTables, nsTArray<nsCString>(), nsTArray<nsCString>(), this);
-||||||| merged common ancestors
-  rv = uriClassifier->AsyncClassifyLocalWithTables(uri, mTables,
-                                                   nsTArray<nsCString>(),
-                                                   nsTArray<nsCString>(),
-                                                   this);
-=======
 
   nsCOMPtr<nsIUrlClassifierFeature> feature =
       mozilla::net::UrlClassifierFeatureFactory::GetFeatureLoginReputation();
@@ -212,7 +134,6 @@ RefPtr<ReputationPromise> LoginWhitelist::QueryLoginWhitelist(
 
   rv = uriClassifier->AsyncClassifyLocalWithFeatures(
       uri, features, nsIUrlClassifierFeature::whitelist, this);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return p;
   }
@@ -222,22 +143,8 @@ RefPtr<ReputationPromise> LoginWhitelist::QueryLoginWhitelist(
   return p;
 }
 
-<<<<<<< HEAD
-nsresult LoginWhitelist::OnClassifyComplete(nsresult aErrorCode,
-                                            const nsACString& aLists,
-                                            const nsACString& aProvider,
-                                            const nsACString& aFullHash) {
-||||||| merged common ancestors
-nsresult
-LoginWhitelist::OnClassifyComplete(nsresult aErrorCode,
-                                   const nsACString& aLists,
-                                   const nsACString& aProvider,
-                                   const nsACString& aFullHash)
-{
-=======
 nsresult LoginWhitelist::OnClassifyComplete(
     const nsTArray<RefPtr<nsIUrlClassifierFeatureResult>>& aResults) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (gShuttingDown) {
@@ -261,20 +168,6 @@ nsresult LoginWhitelist::OnClassifyComplete(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void LoginWhitelist::UpdateWhitelistTables() {
-  Preferences::GetCString(PREF_PASSWORD_ALLOW_TABLE, mTables);
-}
-
-||||||| merged common ancestors
-void
-LoginWhitelist::UpdateWhitelistTables()
-{
-  Preferences::GetCString(PREF_PASSWORD_ALLOW_TABLE, mTables);
-}
-
-=======
->>>>>>> upstream-releases
 // -------------------------------------------------------------------------
 // LoginReputationService
 //
@@ -309,15 +202,6 @@ NS_IMETHODIMP
 LoginReputationService::Init() {
   MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-  Preferences::AddBoolVarCache(&sPasswordProtectionEnabled, PREF_PP_ENABLED,
-                               true);
-
-||||||| merged common ancestors
-  Preferences::AddBoolVarCache(&sPasswordProtectionEnabled, PREF_PP_ENABLED, true);
-
-=======
->>>>>>> upstream-releases
   switch (XRE_GetProcessType()) {
     case GeckoProcessType_Default:
       LR_LOG(("Init login reputation service in parent"));

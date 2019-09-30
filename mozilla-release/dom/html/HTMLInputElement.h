@@ -88,19 +88,9 @@ class UploadLastDir final : public nsIObserver, public nsSupportsWeakReference {
    * @param aFilePicker   the file picker to open
    * @param aFpCallback   the callback object to be run when the file is shown.
    */
-<<<<<<< HEAD
-  nsresult FetchDirectoryAndDisplayPicker(
-      nsIDocument* aDoc, nsIFilePicker* aFilePicker,
-      nsIFilePickerShownCallback* aFpCallback);
-||||||| merged common ancestors
-  nsresult FetchDirectoryAndDisplayPicker(nsIDocument* aDoc,
-                                          nsIFilePicker* aFilePicker,
-                                          nsIFilePickerShownCallback* aFpCallback);
-=======
   nsresult FetchDirectoryAndDisplayPicker(
       Document* aDoc, nsIFilePicker* aFilePicker,
       nsIFilePickerShownCallback* aFpCallback);
->>>>>>> upstream-releases
 
   /**
    * Store the last used directory for this location using the
@@ -253,14 +243,7 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   NS_IMETHOD_(bool) GetPlaceholderVisibility() override;
   NS_IMETHOD_(bool) GetPreviewVisibility() override;
   NS_IMETHOD_(void) InitializeKeyboardEventListeners() override;
-<<<<<<< HEAD
-  NS_IMETHOD_(void)
-  OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) override;
-||||||| merged common ancestors
-  NS_IMETHOD_(void) OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) override;
-=======
   NS_IMETHOD_(void) OnValueChanged(bool aNotify, ValueChangeKind) override;
->>>>>>> upstream-releases
   virtual void GetValueFromSetRangeText(nsAString& aValue) override;
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsresult SetValueFromSetRangeText(const nsAString& aValue) override;
@@ -360,11 +343,6 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   // Update all our validity states and then update our element state
   // as needed.  aNotify controls whether the element state update
   // needs to notify.
-<<<<<<< HEAD
-  void UpdateAllValidityStates(bool aNotify);
-||||||| merged common ancestors
-  void     UpdateAllValidityStates(bool aNotify);
-=======
   void UpdateAllValidityStates(bool aNotify);
   MOZ_CAN_RUN_SCRIPT
   void MaybeUpdateAllValidityStates(bool aNotify) {
@@ -375,7 +353,6 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
     }
   }
 
->>>>>>> upstream-releases
   // Update all our validity states without updating element state.
   // This should be called instead of UpdateAllValidityStates any time
   // we're guaranteed that element state will be updated anyway.
@@ -778,32 +755,12 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * know the current state of the picker or to update the input box on changes.
    */
   void GetDateTimeInputBoxValue(DateTimeValue& aValue);
-<<<<<<< HEAD
-
-  /*
-   * This locates the inner datetimebox UA Widget element and only the
-   * UA Widget
-   * element. This should fold into GetDateTimeBoxElement() when the XBL binding is removed.
-   */
-  Element* GetDateTimeBoxElementInUAWidget();
-
-  /*
-   * This allows chrome JavaScript to dispatch event to the inner datetimebox
-   * anonymous or UA Widget element and access nsIDateTimeInputArea
-   * implementation.
-   */
-  Element* GetDateTimeBoxElement();
-||||||| merged common ancestors
-  void UpdateDateTimeInputBox(const DateTimeValue& aValue);
-  void SetDateTimePickerState(bool aOpen);
-=======
 
   /*
    * This allows chrome JavaScript to dispatch event to the inner datetimebox
    * anonymous or UA Widget element.
    */
   Element* GetDateTimeBoxElement();
->>>>>>> upstream-releases
 
   /*
    * The following functions are called from datetime input box XBL to control
@@ -897,18 +854,9 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * that @required attribute applies and the attribute is set; in contrast,
    * Required() returns true whenever @required attribute is set.
    */
-<<<<<<< HEAD
-  bool IsRequired() const { return State().HasState(NS_EVENT_STATE_REQUIRED); }
-||||||| merged common ancestors
-  bool IsRequired() const
-  {
-    return State().HasState(NS_EVENT_STATE_REQUIRED);
-  }
-=======
   bool IsRequired() const { return State().HasState(NS_EVENT_STATE_REQUIRED); }
 
   bool HasBeenTypePassword() { return mHasBeenTypePassword; }
->>>>>>> upstream-releases
 
  protected:
   virtual ~HTMLInputElement();
@@ -1594,61 +1542,6 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
 
   nsContentUtils::AutocompleteAttrState mAutocompleteAttrState;
   nsContentUtils::AutocompleteAttrState mAutocompleteInfoState;
-<<<<<<< HEAD
-  bool mDisabledChanged : 1;
-  bool mValueChanged : 1;
-  bool mLastValueChangeWasInteractive : 1;
-  bool mCheckedChanged : 1;
-  bool mChecked : 1;
-  bool mHandlingSelectEvent : 1;
-  bool mShouldInitChecked : 1;
-  bool mDoneCreating : 1;
-  bool mInInternalActivate : 1;
-  bool mCheckedIsToggled : 1;
-  bool mIndeterminate : 1;
-  bool mInhibitRestoration : 1;
-  bool mCanShowValidUI : 1;
-  bool mCanShowInvalidUI : 1;
-  bool mHasRange : 1;
-  bool mIsDraggingRange : 1;
-  bool mNumberControlSpinnerIsSpinning : 1;
-  bool mNumberControlSpinnerSpinsUp : 1;
-  bool mPickerRunning : 1;
-  bool mSelectionCached : 1;
-  bool mIsPreviewEnabled : 1;
-  bool mHasPatternAttribute : 1;
-
- private:
-  static void ImageInputMapAttributesIntoRule(
-      const nsMappedAttributes* aAttributes, MappedDeclarations&);
-||||||| merged common ancestors
-  bool                     mDisabledChanged     : 1;
-  bool                     mValueChanged        : 1;
-  bool                     mLastValueChangeWasInteractive : 1;
-  bool                     mCheckedChanged      : 1;
-  bool                     mChecked             : 1;
-  bool                     mHandlingSelectEvent : 1;
-  bool                     mShouldInitChecked   : 1;
-  bool                     mDoneCreating        : 1;
-  bool                     mInInternalActivate  : 1;
-  bool                     mCheckedIsToggled    : 1;
-  bool                     mIndeterminate       : 1;
-  bool                     mInhibitRestoration  : 1;
-  bool                     mCanShowValidUI      : 1;
-  bool                     mCanShowInvalidUI    : 1;
-  bool                     mHasRange            : 1;
-  bool                     mIsDraggingRange     : 1;
-  bool                     mNumberControlSpinnerIsSpinning : 1;
-  bool                     mNumberControlSpinnerSpinsUp : 1;
-  bool                     mPickerRunning : 1;
-  bool                     mSelectionCached : 1;
-  bool                     mIsPreviewEnabled : 1;
-  bool                     mHasPatternAttribute : 1;
-
-private:
-  static void ImageInputMapAttributesIntoRule(const nsMappedAttributes* aAttributes,
-                                              MappedDeclarations&);
-=======
   bool mDisabledChanged : 1;
   bool mValueChanged : 1;
   bool mLastValueChangeWasInteractive : 1;
@@ -1676,7 +1569,6 @@ private:
  private:
   static void ImageInputMapAttributesIntoRule(
       const nsMappedAttributes* aAttributes, MappedDeclarations&);
->>>>>>> upstream-releases
 
   /**
    * Returns true if this input's type will fire a DOM "change" event when it
@@ -1700,77 +1592,16 @@ private:
   }
 
   /**
-<<<<<<< HEAD
    * Checks if aDateTimeInputType should be supported based on
    * "dom.forms.datetime", and "dom.experimental_forms".
    */
   static bool IsDateTimeTypeSupported(uint8_t aDateTimeInputType);
-
-  /**
-   * Checks preference "dom.webkitBlink.filesystem.enabled" to determine if
-   * webkitEntries should be supported.
-||||||| merged common ancestors
-   * Checks if aDateTimeInputType should be supported based on "dom.forms.datetime",
-   * and "dom.experimental_forms".
-   */
-  static bool
-  IsDateTimeTypeSupported(uint8_t aDateTimeInputType);
-
-  /**
-   * Checks preference "dom.webkitBlink.filesystem.enabled" to determine if
-   * webkitEntries should be supported.
-=======
-   * Checks if aDateTimeInputType should be supported based on
-   * "dom.forms.datetime", and "dom.experimental_forms".
->>>>>>> upstream-releases
-   */
-<<<<<<< HEAD
-  static bool IsWebkitFileSystemEnabled();
-
-  /**
-   * Checks preference "dom.input.dirpicker" to determine if file and directory
-   * entries API should be supported.
-   */
-  static bool IsDirPickerEnabled();
-||||||| merged common ancestors
-  static bool
-  IsWebkitFileSystemEnabled();
-
-  /**
-   * Checks preference "dom.input.dirpicker" to determine if file and directory
-   * entries API should be supported.
-   */
-  static bool
-  IsDirPickerEnabled();
-=======
-  static bool IsDateTimeTypeSupported(uint8_t aDateTimeInputType);
->>>>>>> upstream-releases
 
   /**
    * Checks preference "dom.experimental_forms" to determine if experimental
    * implementation of input element should be enabled.
    */
-<<<<<<< HEAD
   static bool IsExperimentalFormsEnabled();
-
-  /**
-   * Checks preference "dom.forms.datetime" to determine if input date and time
-   * should be supported.
-   */
-  static bool IsInputDateTimeEnabled();
-||||||| merged common ancestors
-  static bool
-  IsExperimentalFormsEnabled();
-
-  /**
-   * Checks preference "dom.forms.datetime" to determine if input date and time
-   * should be supported.
-   */
-  static bool
-  IsInputDateTimeEnabled();
-=======
-  static bool IsExperimentalFormsEnabled();
->>>>>>> upstream-releases
 
   /**
    * Checks preference "dom.forms.datetime.others" to determine if input week,

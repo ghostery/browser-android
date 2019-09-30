@@ -33,17 +33,8 @@
 using namespace std;
 using namespace cdm;
 
-<<<<<<< HEAD
-ClearKeySessionManager::ClearKeySessionManager(Host_9* aHost)
-    : mDecryptionManager(ClearKeyDecryptionManager::Get()) {
-||||||| merged common ancestors
-ClearKeySessionManager::ClearKeySessionManager(Host_9* aHost)
-  : mDecryptionManager(ClearKeyDecryptionManager::Get())
-{
-=======
 ClearKeySessionManager::ClearKeySessionManager(Host_10* aHost)
     : mDecryptionManager(ClearKeyDecryptionManager::Get()) {
->>>>>>> upstream-releases
   CK_LOGD("ClearKeySessionManager ctor %p", this);
   AddRef();
 
@@ -543,18 +534,8 @@ void ClearKeySessionManager::SetServerCertificate(uint32_t aPromiseId,
                          nullptr /* message */, 0 /* messageLen */);
 }
 
-<<<<<<< HEAD
-Status ClearKeySessionManager::Decrypt(const InputBuffer_1& aBuffer,
-                                       DecryptedBlock* aDecryptedBlock) {
-||||||| merged common ancestors
-Status
-ClearKeySessionManager::Decrypt(const InputBuffer_1& aBuffer,
-                                DecryptedBlock* aDecryptedBlock)
-{
-=======
 Status ClearKeySessionManager::Decrypt(const InputBuffer_2& aBuffer,
                                        DecryptedBlock* aDecryptedBlock) {
->>>>>>> upstream-releases
   CK_LOGD("ClearKeySessionManager::Decrypt");
 
   CK_LOGARRAY("Key: ", aBuffer.key_id, aBuffer.key_id_size);

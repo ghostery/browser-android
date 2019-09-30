@@ -27,16 +27,6 @@ use crate::dom::{OpaqueNode, SendNode, TElement};
 use crate::scoped_tls::ScopedTLS;
 use crate::traversal::{DomTraversal, PerLevelTraversalData};
 use arrayvec::ArrayVec;
-<<<<<<< HEAD
-use crate::context::{StyleContext, ThreadLocalStyleContext};
-use crate::dom::{OpaqueNode, SendNode, TElement};
-use crate::scoped_tls::ScopedTLS;
-use crate::traversal::{DomTraversal, PerLevelTraversalData};
-||||||| merged common ancestors
-use context::{StyleContext, ThreadLocalStyleContext};
-use dom::{OpaqueNode, SendNode, TElement};
-=======
->>>>>>> upstream-releases
 use itertools::Itertools;
 use rayon;
 use smallvec::SmallVec;

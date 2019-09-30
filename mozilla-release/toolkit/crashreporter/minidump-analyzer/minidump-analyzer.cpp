@@ -326,23 +326,10 @@ static void ConvertProcessStateToJSON(const ProcessState& aProcessState,
 // the node specified in |aStackTraces|. We also populate |aCertSubjects| with
 // information about the certificates used to sign modules, when present and
 // supported by the underlying OS.
-<<<<<<< HEAD
-static bool ProcessMinidump(Json::Value& aStackTraces,
-                            Json::Value& aCertSubjects, const string& aDumpFile,
-                            const bool aFullStacks) {
-#if XP_WIN && HAVE_64BIT_BUILD
-||||||| merged common ancestors
-static bool
-ProcessMinidump(Json::Value& aStackTraces, Json::Value& aCertSubjects,
-                const string& aDumpFile, const bool aFullStacks)
-{
-#if XP_WIN && HAVE_64BIT_BUILD
-=======
 static bool ProcessMinidump(Json::Value& aStackTraces,
                             Json::Value& aCertSubjects, const string& aDumpFile,
                             const bool aFullStacks) {
 #if XP_WIN && HAVE_64BIT_BUILD && defined(_M_X64)
->>>>>>> upstream-releases
   MozStackFrameSymbolizer symbolizer;
   MinidumpProcessor minidumpProcessor(&symbolizer, false);
 #else

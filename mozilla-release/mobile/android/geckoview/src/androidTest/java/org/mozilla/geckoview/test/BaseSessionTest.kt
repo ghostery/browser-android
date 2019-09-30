@@ -49,10 +49,6 @@ open class BaseSessionTest(noErrorCollector: Boolean = false) {
         const val VIDEO_WEBM_PATH = "/assets/www/webm.html"
         const val VIDEO_BAD_PATH = "/assets/www/badVideoPath.html"
         const val UNKNOWN_HOST_URI = "http://www.test.invalid/"
-<<<<<<< HEAD
-        const val FULLSCREEN_PATH = "/assets/www/fullscreen.html"
-||||||| merged common ancestors
-=======
         const val FULLSCREEN_PATH = "/assets/www/fullscreen.html"
         const val VIEWPORT_PATH = "/assets/www/viewport.html"
         const val IFRAME_REDIRECT_LOCAL = "/assets/www/iframe_redirect_local.html"
@@ -61,7 +57,6 @@ open class BaseSessionTest(noErrorCollector: Boolean = false) {
         const val SCROLL_TEST_PATH = "/assets/www/scroll.html"
         const val COLORS_HTML_PATH = "/assets/www/colors.html"
         const val FIXED_BOTTOM = "/assets/www/fixedbottom.html"
->>>>>>> upstream-releases
     }
 
     @get:Rule val sessionRule = GeckoSessionTestRule()

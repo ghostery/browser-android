@@ -41,20 +41,8 @@ void AndroidVelocityTracker::StartTracking(ParentLayerCoord aPos,
   mLastEventTime = aTimestampMs;
 }
 
-<<<<<<< HEAD
-Maybe<float> AndroidVelocityTracker::AddPosition(ParentLayerCoord aPos,
-                                                 uint32_t aTimestampMs,
-                                                 bool aIsAxisLocked) {
-||||||| merged common ancestors
-Maybe<float>
-AndroidVelocityTracker::AddPosition(ParentLayerCoord aPos,
-                                    uint32_t aTimestampMs,
-                                    bool aIsAxisLocked)
-{
-=======
 Maybe<float> AndroidVelocityTracker::AddPosition(ParentLayerCoord aPos,
                                                  uint32_t aTimestampMs) {
->>>>>>> upstream-releases
   if ((aTimestampMs - mLastEventTime) >= kAssumePointerMoveStoppedTimeMs) {
     Clear();
   }

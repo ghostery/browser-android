@@ -51,25 +51,11 @@ public:
                 fScaleVar.isValid() ? args.fUniformHandler->getUniformCStr(fScaleVar) : "float2(0)",
                 (int)_outer.edgeType());
         fragBuilder->codeAppendf(
-<<<<<<< HEAD
-                "  alpha = half(clamp(0.5 - approx_dist, 0.0, 1.0));\n        break;\n    case "
-                "2:\n        alpha = half(approx_dist > 0.0 ? 1.0 : 0.0);\n        break;\n    "
-                "case 3:\n        alpha = half(clamp(0.5 + approx_dist, 0.0, 1.0));\n        "
-                "break;\n    default:\n        discard;\n}\n%s = %s * alpha;\n",
-                args.fOutputColor, args.fInputColor);
-||||||| merged common ancestors
-                "  alpha = half(clamp(0.5 - approx_dist, 0.0, 1.0));\n        break;\n    case "
-                "2:\n        alpha = half(approx_dist > 0.0 ? 1.0 : 0.0);\n        break;\n    "
-                "case 3:\n        alpha = half(clamp(0.5 + approx_dist, 0.0, 1.0));\n        "
-                "break;\n    default:\n        discard;\n}\n%s = %s * alpha;\n",
-                args.fOutputColor, args.fInputColor ? args.fInputColor : "half4(1)");
-=======
                 "a = clamp(0.5 - half(approx_dist), 0.0, 1.0);\n        break;\n    case 2:\n      "
                 "  alpha = approx_dist > 0.0 ? 1.0 : 0.0;\n        break;\n    case 3:\n        "
                 "alpha = clamp(0.5 + half(approx_dist), 0.0, 1.0);\n        break;\n    default:\n "
                 "       discard;\n}\n%s = %s * alpha;\n",
                 args.fOutputColor, args.fInputColor);
->>>>>>> upstream-releases
     }
 
 private:

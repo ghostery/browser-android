@@ -11,16 +11,7 @@
 #include "SkMatrix.h"
 #include "SkPathEffect.h"
 #include "SkTypes.h"
-<<<<<<< HEAD
-#include "../private/GrAuditTrail.h"
-#include "../private/GrSingleOwner.h"
-#include "../private/GrSkSLFPFactoryCache.h"
-||||||| merged common ancestors
-#include "../private/GrAuditTrail.h"
-#include "../private/GrSingleOwner.h"
-=======
 #include "../private/GrRecordingContext.h"
->>>>>>> upstream-releases
 #include "GrContextOptions.h"
 
 // We shouldn't need this but currently Android is relying on this being include transitively.
@@ -32,25 +23,10 @@ class GrBackendSemaphore;
 class GrCaps;
 class GrContextPriv;
 class GrContextThreadSafeProxy;
-<<<<<<< HEAD
-class GrContextThreadSafeProxyPriv;
-class GrDrawingManager;
-||||||| merged common ancestors
-class GrDrawingManager;
-struct GrDrawOpAtlasConfig;
-=======
->>>>>>> upstream-releases
 class GrFragmentProcessor;
 struct GrGLInterface;
-class GrGlyphCache;
 class GrGpu;
 struct GrMockOptions;
-<<<<<<< HEAD
-class GrOpMemoryPool;
-||||||| merged common ancestors
-class GrOvalRenderer;
-=======
->>>>>>> upstream-releases
 class GrPath;
 class GrRenderTargetContext;
 class GrResourceCache;
@@ -111,27 +87,6 @@ public:
     void resetContext(uint32_t state = kAll_GrBackendState);
 
     /**
-<<<<<<< HEAD
-||||||| merged common ancestors
-     * Callback function to allow classes to cleanup on GrContext destruction.
-     * The 'info' field is filled in with the 'info' passed to addCleanUp.
-     */
-    typedef void (*PFCleanUpFunc)(const GrContext* context, void* info);
-
-    /**
-     * Add a function to be called from within GrContext's destructor.
-     * This gives classes a chance to free resources held on a per context basis.
-     * The 'info' parameter will be stored and passed to the callback function.
-     */
-    void addCleanUp(PFCleanUpFunc cleanUp, void* info) {
-        CleanUpData* entry = fCleanUpData.push();
-
-        entry->fFunc = cleanUp;
-        entry->fInfo = info;
-    }
-
-    /**
-=======
      * If the backend is GrBackendApi::kOpenGL, then all texture unit/target combinations for which
      * the GrContext has modified the bound texture will have texture id 0 bound. This does not
      * flush the GrContext. Calling resetContext() does not change the set that will be bound
@@ -143,7 +98,6 @@ public:
     void resetGLTextureBindings();
 
     /**
->>>>>>> upstream-releases
      * Abandons all GPU resources and assumes the underlying backend 3D API context is no longer
      * usable. Call this if you have lost the associated GPU context, and thus internal texture,
      * buffer, etc. references/IDs are now invalid. Calling this ensures that the destructors of the
@@ -154,23 +108,12 @@ public:
      * The typical use case for this function is that the underlying 3D context was lost and further
      * API calls may crash.
      */
-<<<<<<< HEAD
-    virtual void abandonContext();
-
-    /**
-     * Returns true if the context was abandoned.
-     */
-    bool abandoned() const;
-||||||| merged common ancestors
-    void abandonContext();
-=======
     void abandonContext() override;
 
     /**
      * Returns true if the context was abandoned.
      */
     using GrImageContext::abandoned;
->>>>>>> upstream-releases
 
     /**
      * This is similar to abandonContext() however the underlying 3D context is not yet lost and
@@ -328,53 +271,9 @@ public:
     GrSemaphoresSubmitted flushAndSignalSemaphores(int numSemaphores,
                                                    GrBackendSemaphore signalSemaphores[]);
 
-<<<<<<< HEAD
-    /**
-     * An ID associated with this context, guaranteed to be unique.
-     */
-    uint32_t uniqueID() { return fUniqueID; }
-
-    // Provides access to functions that aren't part of the public API.
-    GrContextPriv contextPriv();
-    const GrContextPriv contextPriv() const;
-||||||| merged common ancestors
-    /**
-     * An ID associated with this context, guaranteed to be unique.
-     */
-    uint32_t uniqueID() { return fUniqueID; }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Functions intended for internal use only.
-    bool abandoned() const;
-
-    /** Reset GPU stats */
-    void resetGpuStats() const ;
-
-    /** Prints cache stats to the string if GR_CACHE_STATS == 1. */
-    void dumpCacheStats(SkString*) const;
-    void dumpCacheStatsKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* values) const;
-    void printCacheStats() const;
-
-    /** Prints GPU stats to the string if GR_GPU_STATS == 1. */
-    void dumpGpuStats(SkString*) const;
-    void dumpGpuStatsKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* values) const;
-    void printGpuStats() const;
-
-    /** Returns a string with detailed information about the context & GPU, in JSON format. */
-    SkString dump() const;
-
-    /** Specify the TextBlob cache limit. If the current cache exceeds this limit it will purge.
-        this is for testing only */
-    void setTextBlobCacheLimit_ForTesting(size_t bytes);
-
-    /** Specify the sizes of the GrAtlasTextContext atlases.  The configs pointer below should be
-        to an array of 3 entries */
-    void setTextContextAtlasSizes_ForTesting(const GrDrawOpAtlasConfig* configs);
-=======
     // Provides access to functions that aren't part of the public API.
     GrContextPriv priv();
     const GrContextPriv priv() const;
->>>>>>> upstream-releases
 
     /** Enumerates all cached GPU resources and dumps their memory to traceMemoryDump. */
     // Chrome is using this!
@@ -382,54 +281,18 @@ public:
 
     bool supportsDistanceFieldText() const;
 
-<<<<<<< HEAD
-protected:
-    GrContext(GrBackend, int32_t id = SK_InvalidGenID);
-||||||| merged common ancestors
-    GrAuditTrail* getAuditTrail() { return &fAuditTrail; }
-
-    GrContextOptions::PersistentCache* getPersistentCache() { return fPersistentCache; }
-=======
     void storeVkPipelineCacheData();
 
 protected:
     GrContext(GrBackendApi, const GrContextOptions&, int32_t contextID = SK_InvalidGenID);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    bool initCommon(const GrContextOptions&);
-    virtual bool init(const GrContextOptions&) = 0; // must be called after the ctor!
-||||||| merged common ancestors
-    /** This is only useful for debug purposes */
-    SkDEBUGCODE(GrSingleOwner* debugSingleOwner() const { return &fSingleOwner; } )
-=======
     bool init(sk_sp<const GrCaps>, sk_sp<GrSkSLFPFactoryCache>) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    virtual GrAtlasManager* onGetAtlasManager() = 0;
-||||||| merged common ancestors
-    // Provides access to functions that aren't part of the public API.
-    GrContextPriv contextPriv();
-    const GrContextPriv contextPriv() const;
-=======
     GrContext* asDirectContext() override { return this; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    const GrBackend                         fBackend;
-    sk_sp<const GrCaps>                     fCaps;
-    sk_sp<GrContextThreadSafeProxy>         fThreadSafeProxy;
-    sk_sp<GrSkSLFPFactoryCache>             fFPFactoryCache;
-||||||| merged common ancestors
-protected:
-    GrContext(GrContextThreadSafeProxy*);
-    GrContext(GrBackend);
-=======
     virtual GrAtlasManager* onGetAtlasManager() = 0;
 
     sk_sp<GrContextThreadSafeProxy>         fThreadSafeProxy;
->>>>>>> upstream-releases
 
 private:
     // fTaskGroup must appear before anything that uses it (e.g. fGpu), so that it is destroyed
@@ -440,75 +303,11 @@ private:
     sk_sp<GrGpu>                            fGpu;
     GrResourceCache*                        fResourceCache;
     GrResourceProvider*                     fResourceProvider;
-<<<<<<< HEAD
-    GrProxyProvider*                        fProxyProvider;
 
-    // All the GrOp-derived classes use this pool.
-    sk_sp<GrOpMemoryPool>                   fOpMemoryPool;
-||||||| merged common ancestors
-    GrProxyProvider*                        fProxyProvider;
-
-    sk_sp<GrContextThreadSafeProxy>         fThreadSafeProxy;
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    GrGlyphCache*                           fGlyphCache;
-    std::unique_ptr<GrTextBlobCache>        fTextBlobCache;
-
-    bool                                    fDisableGpuYUVConversion;
-    bool                                    fSharpenMipmappedTextures;
-||||||| merged common ancestors
-    GrAtlasGlyphCache*                      fAtlasGlyphCache;
-    std::unique_ptr<GrTextBlobCache>        fTextBlobCache;
-
-    bool                                    fDisableGpuYUVConversion;
-    bool                                    fSharpenMipmappedTextures;
-=======
->>>>>>> upstream-releases
     bool                                    fDidTestPMConversions;
     // true if the PM/UPM conversion succeeded; false otherwise
     bool                                    fPMUPMConversionsRoundTrip;
 
-<<<<<<< HEAD
-    // In debug builds we guard against improper thread handling
-    // This guard is passed to the GrDrawingManager and, from there to all the
-    // GrRenderTargetContexts.  It is also passed to the GrResourceProvider and SkGpuDevice.
-    mutable GrSingleOwner                   fSingleOwner;
-
-    std::unique_ptr<SkTaskGroup>            fTaskGroup;
-
-    const uint32_t                          fUniqueID;
-
-    std::unique_ptr<GrDrawingManager>       fDrawingManager;
-
-    GrAuditTrail                            fAuditTrail;
-
-||||||| merged common ancestors
-    // In debug builds we guard against improper thread handling
-    // This guard is passed to the GrDrawingManager and, from there to all the
-    // GrRenderTargetContexts.  It is also passed to the GrResourceProvider and SkGpuDevice.
-    mutable GrSingleOwner                   fSingleOwner;
-
-    std::unique_ptr<SkTaskGroup>            fTaskGroup;
-
-    struct CleanUpData {
-        PFCleanUpFunc fFunc;
-        void*         fInfo;
-    };
-
-    SkTDArray<CleanUpData>                  fCleanUpData;
-
-    const uint32_t                          fUniqueID;
-
-    std::unique_ptr<GrDrawingManager>       fDrawingManager;
-
-    GrAuditTrail                            fAuditTrail;
-
-    const GrBackend                         fBackend;
-
-=======
->>>>>>> upstream-releases
     GrContextOptions::PersistentCache*      fPersistentCache;
 
     // TODO: have the GrClipStackClip use renderTargetContexts and rm this friending
@@ -527,171 +326,7 @@ private:
      */
     bool validPMUPMConversionExists();
 
-<<<<<<< HEAD
-    /**
-     * A callback similar to the above for use by the TextBlobCache
-     * TODO move textblob draw calls below context so we can use the call above.
-     */
-    static void TextBlobCacheOverBudgetCB(void* data);
-
-    typedef SkRefCnt INHERITED;
-};
-
-/**
- * Can be used to perform actions related to the generating GrContext in a thread safe manner. The
- * proxy does not access the 3D API (e.g. OpenGL) that backs the generating GrContext.
- */
-class SK_API GrContextThreadSafeProxy : public SkRefCnt {
-public:
-    ~GrContextThreadSafeProxy();
-
-    bool matches(GrContext* context) const { return context->uniqueID() == fContextUniqueID; }
-
-    /**
-     *  Create a surface characterization for a DDL that will be replayed into the GrContext
-     *  that created this proxy. On failure the resulting characterization will be invalid (i.e.,
-     *  "!c.isValid()").
-     *
-     *  @param cacheMaxResourceBytes The max resource bytes limit that will be in effect when the
-     *                               DDL created with this characterization is replayed.
-     *                               Note: the contract here is that the DDL will be created as
-     *                               if it had a full 'cacheMaxResourceBytes' to use. If replayed
-     *                               into a GrContext that already has locked GPU memory, the
-     *                               replay can exceed the budget. To rephrase, all resource
-     *                               allocation decisions are made at record time and at playback
-     *                               time the budget limits will be ignored.
-     *  @param ii                    The image info specifying properties of the SkSurface that
-     *                               the DDL created with this characterization will be replayed
-     *                               into.
-     *                               Note: Ganesh doesn't make use of the SkImageInfo's alphaType
-     *  @param backendFormat         Information about the format of the GPU surface that will
-     *                               back the SkSurface upon replay
-     *  @param sampleCount           The sample count of the SkSurface that the DDL created with
-     *                               this characterization will be replayed into
-     *  @param origin                The origin of the SkSurface that the DDL created with this
-     *                               characterization will be replayed into
-     *  @param surfaceProps          The surface properties of the SkSurface that the DDL created
-     *                               with this characterization will be replayed into
-     *  @param isMipMapped           Will the surface the DDL will be replayed into have space
-     *                               allocated for mipmaps?
-     *  @param willUseGLFBO0         Will the surface the DDL will be replayed into be backed by GL
-     *                               FBO 0. This flag is only valid if using an GL backend.
-     */
-    SkSurfaceCharacterization createCharacterization(
-                                  size_t cacheMaxResourceBytes,
-                                  const SkImageInfo& ii, const GrBackendFormat& backendFormat,
-                                  int sampleCount, GrSurfaceOrigin origin,
-                                  const SkSurfaceProps& surfaceProps,
-                                  bool isMipMapped, bool willUseGLFBO0 = false);
-
-    bool operator==(const GrContextThreadSafeProxy& that) const {
-        // Each GrContext should only ever have a single thread-safe proxy.
-        SkASSERT((this == &that) == (fContextUniqueID == that.fContextUniqueID));
-        return this == &that;
-    }
-
-    bool operator!=(const GrContextThreadSafeProxy& that) const { return !(*this == that); }
-
-    // Provides access to functions that aren't part of the public API.
-    GrContextThreadSafeProxyPriv priv();
-    const GrContextThreadSafeProxyPriv priv() const;
-
-private:
-    // DDL TODO: need to add unit tests for backend & maybe options
-    GrContextThreadSafeProxy(sk_sp<const GrCaps> caps,
-                             uint32_t uniqueID,
-                             GrBackend backend,
-                             const GrContextOptions& options,
-                             sk_sp<GrSkSLFPFactoryCache> cache);
-
-    sk_sp<const GrCaps>         fCaps;
-    const uint32_t              fContextUniqueID;
-    const GrBackend             fBackend;
-    const GrContextOptions      fOptions;
-    sk_sp<GrSkSLFPFactoryCache> fFPFactoryCache;
-
-    friend class GrDirectContext; // To construct this object
-    friend class GrContextThreadSafeProxyPriv;
-
-    typedef SkRefCnt INHERITED;
-||||||| merged common ancestors
-    /**
-     * A callback similar to the above for use by the TextBlobCache
-     * TODO move textblob draw calls below context so we can use the call above.
-     */
-    static void TextBlobCacheOverBudgetCB(void* data);
-
-    typedef SkRefCnt INHERITED;
-};
-
-/**
- * Can be used to perform actions related to the generating GrContext in a thread safe manner. The
- * proxy does not access the 3D API (e.g. OpenGL) that backs the generating GrContext.
- */
-class GrContextThreadSafeProxy : public SkRefCnt {
-public:
-    bool matches(GrContext* context) const { return context->uniqueID() == fContextUniqueID; }
-
-    /**
-     *  Create a surface characterization for a DDL that will be replayed into the GrContext
-     *  that created this proxy. On failure the resulting characterization will be invalid (i.e.,
-     *  "!c.isValid()").
-     *
-     *  @param cacheMaxResourceBytes The max resource bytes limit that will be in effect when the
-     *                               DDL created with this characterization is replayed.
-     *                               Note: the contract here is that the DDL will be created as
-     *                               if it had a full 'cacheMaxResourceBytes' to use. If replayed
-     *                               into a GrContext that already has locked GPU memory, the
-     *                               replay can exceed the budget. To rephrase, all resource
-     *                               allocation decisions are made at record time and at playback
-     *                               time the budget limits will be ignored.
-     *  @param ii                    The image info specifying properties of the SkSurface that
-     *                               the DDL created with this characterization will be replayed
-     *                               into.
-     *                               Note: Ganesh doesn't make use of the SkImageInfo's alphaType
-     *  @param backendFormat         Information about the format of the GPU surface that will
-     *                               back the SkSurface upon replay
-     *  @param sampleCount           The sample count of the SkSurface that the DDL created with
-     *                               this characterization will be replayed into
-     *  @param origin                The origin of the SkSurface that the DDL created with this
-     *                               characterization will be replayed into
-     *  @param surfaceProps          The surface properties of the SkSurface that the DDL created
-     *                               with this characterization will be replayed into
-     *  @param isMipMapped           Will the surface the DDL will be replayed into have space
-     *                               allocated for mipmaps?
-     */
-    SkSurfaceCharacterization createCharacterization(
-                                  size_t cacheMaxResourceBytes,
-                                  const SkImageInfo& ii, const GrBackendFormat& backendFormat,
-                                  int sampleCount, GrSurfaceOrigin origin,
-                                  const SkSurfaceProps& surfaceProps,
-                                  bool isMipMapped);
-
-private:
-    // DDL TODO: need to add unit tests for backend & maybe options
-    GrContextThreadSafeProxy(sk_sp<const GrCaps> caps,
-                             uint32_t uniqueID,
-                             GrBackend backend,
-                             const GrContextOptions& options)
-        : fCaps(std::move(caps))
-        , fContextUniqueID(uniqueID)
-        , fBackend(backend)
-        , fOptions(options) {
-    }
-
-    sk_sp<const GrCaps>    fCaps;
-    const uint32_t         fContextUniqueID;
-    const GrBackend        fBackend;
-    const GrContextOptions fOptions;
-
-    friend class GrContext;
-    friend class GrContextPriv;
-    friend class SkImage;
-
-    typedef SkRefCnt INHERITED;
-=======
     typedef GrRecordingContext INHERITED;
->>>>>>> upstream-releases
 };
 
 #endif

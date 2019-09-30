@@ -29,21 +29,12 @@ if __name__ == '__main__':
     runner_args = cli.runner_args()
 
     build = MozbuildObject.from_environment()
-<<<<<<< HEAD
-
-    binary = runner_args.get('binary')
-    if not binary:
-        binary = build.get_binary_path(where="staged-package")
-
-||||||| merged common ancestors
-=======
 
     binary = runner_args.get('binary')
     if not binary:
         binary = build.get_binary_path(where="staged-package")
     binary = os.path.normpath(os.path.abspath(binary))
 
->>>>>>> upstream-releases
     path_mappings = {
         k: os.path.join(build.topsrcdir, v)
         for k, v in PATH_MAPPINGS.items()

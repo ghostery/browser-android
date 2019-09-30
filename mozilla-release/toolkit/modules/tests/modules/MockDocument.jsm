@@ -6,19 +6,8 @@
 
 var EXPORTED_SYMBOLS = ["MockDocument"];
 
-<<<<<<< HEAD
-Cu.importGlobalProperties(["DOMParser", "URL"]);
-
-const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm", {});
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-||||||| merged common ancestors
-Cu.importGlobalProperties(["DOMParser", "URL"]);
-
-const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm", {});
-=======
 const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 const MockDocument = {
   /**
@@ -76,16 +65,6 @@ const MockDocument = {
     });
   },
 
-<<<<<<< HEAD
-  mockNodePrincipalProperty(aElement, aURL) {
-    Object.defineProperty(aElement, "nodePrincipal", {
-      value: Services.scriptSecurityManager.createCodebasePrincipal(
-               Services.io.newURI(aURL), {}),
-    });
-  },
-
-||||||| merged common ancestors
-=======
   mockNodePrincipalProperty(aElement, aURL) {
     Object.defineProperty(aElement, "nodePrincipal", {
       value: Services.scriptSecurityManager.createCodebasePrincipal(
@@ -95,7 +74,6 @@ const MockDocument = {
     });
   },
 
->>>>>>> upstream-releases
   createTestDocumentFromFile(aDocumentURL, aFile) {
     let fileStream = Cc[
       "@mozilla.org/network/file-input-stream;1"

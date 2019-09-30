@@ -20,17 +20,8 @@
 #include "SkScanPriv.h"
 #include "SkTSort.h"
 #include "SkTemplates.h"
-<<<<<<< HEAD
 #include "SkTo.h"
 #include "SkUTF.h"
-
-#include <utility>
-||||||| merged common ancestors
-#include "SkUtils.h"
-=======
-#include "SkTo.h"
-#include "SkUTF.h"
->>>>>>> upstream-releases
 
 #include <utility>
 

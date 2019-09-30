@@ -20,25 +20,6 @@
 #include "FunctionBrokerIPCUtils.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#define SECURITY_WIN32
-#include <security.h>
-#include <wininet.h>
-#include <schnlsp.h>
-#if defined(MOZ_SANDBOX)
-#include "sandboxPermissions.h"
-#endif
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#define SECURITY_WIN32
-#include <security.h>
-#include <wininet.h>
-#include <schnlsp.h>
-#if defined(MOZ_SANDBOX)
-#include "sandboxPermissions.h"
-#endif
-#endif // defined(XP_WIN)
-=======
 #  define SECURITY_WIN32
 #  include <security.h>
 #  include <wininet.h>
@@ -47,7 +28,6 @@
 #    include "sandboxPermissions.h"
 #  endif
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
 /**
  * This functionality supports automatic method hooking (FunctionHook) and
@@ -263,34 +243,16 @@ inline void LogParameterValue(int aIndex, const char* const& aParam) {
 
 #if defined(XP_WIN)
 template <>
-<<<<<<< HEAD
-inline void LogParameterValue(int aIndex, const SEC_GET_KEY_FN& aParam) {
-#ifdef DEBUG
-||||||| merged common ancestors
-inline void LogParameterValue(int aIndex, const SEC_GET_KEY_FN& aParam)
-{
-#ifdef DEBUG
-=======
 inline void LogParameterValue(int aIndex, const SEC_GET_KEY_FN& aParam) {
 #  ifdef DEBUG
->>>>>>> upstream-releases
   MOZ_ASSERT(aParam == nullptr);
   HOOK_LOG(LogLevel::Verbose, ("Parameter %d: null function.", aIndex));
 #  endif
 }
 
 template <>
-<<<<<<< HEAD
-inline void LogParameterValue(int aIndex, LPVOID* const& aParam) {
-#ifdef DEBUG
-||||||| merged common ancestors
-inline void LogParameterValue(int aIndex, LPVOID* const & aParam)
-{
-#ifdef DEBUG
-=======
 inline void LogParameterValue(int aIndex, LPVOID* const& aParam) {
 #  ifdef DEBUG
->>>>>>> upstream-releases
   MOZ_ASSERT(aParam == nullptr);
   HOOK_LOG(LogLevel::Verbose, ("Parameter %d: null void pointer.", aIndex));
 #  endif

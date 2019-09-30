@@ -1183,19 +1183,6 @@ describe("Top Stories Feed", () => {
       instance.dispatchRelevanceScore = () => {};
 
       const response = {
-<<<<<<< HEAD
-        "settings": {"spocsPerNewTabs": 0.5},
-        "recommendations": [{"guid": "rec1"}, {"guid": "rec2"}, {"guid": "rec3"}],
-        // Include spocs with a expiration in the very distant future
-        "spocs": [
-          {"id": "spoc1", "expiration_timestamp": 9999999999999},
-          {"id": "spoc2", "expiration_timestamp": 9999999999999},
-        ],
-||||||| merged common ancestors
-        "settings": {"spocsPerNewTabs": 0.5},
-        "recommendations": [{"guid": "rec1"}, {"guid": "rec2"}, {"guid": "rec3"}],
-        "spocs": [{"id": "spoc1"}, {"id": "spoc2"}],
-=======
         settings: { spocsPerNewTabs: 0.5 },
         recommendations: [{ guid: "rec1" }, { guid: "rec2" }, { guid: "rec3" }],
         // Include spocs with a expiration in the very distant future
@@ -1203,7 +1190,6 @@ describe("Top Stories Feed", () => {
           { id: "spoc1", expiration_timestamp: 9999999999999 },
           { id: "spoc2", expiration_timestamp: 9999999999999 },
         ],
->>>>>>> upstream-releases
       };
 
       instance.personalized = true;
@@ -1297,16 +1283,6 @@ describe("Top Stories Feed", () => {
       instance.dispatchPocketCta = () => {};
 
       const response = {
-<<<<<<< HEAD
-        "settings": {"spocsPerNewTabs": 0.5},
-        "recommendations": [{"id": "rec1"}, {"id": "rec2"}, {"id": "rec3"}],
-        // Include one spoc with a expiration in the very distant future
-        "spocs": [{"id": "spoc1", "expiration_timestamp": 9999999999999}, {"id": "spoc2"}],
-||||||| merged common ancestors
-        "settings": {"spocsPerNewTabs": 0.5},
-        "recommendations": [{"id": "rec1"}, {"id": "rec2"}, {"id": "rec3"}],
-        "spocs": [{"id": "spoc1"}, {"id": "spoc2"}],
-=======
         settings: { spocsPerNewTabs: 0.5 },
         recommendations: [{ id: "rec1" }, { id: "rec2" }, { id: "rec3" }],
         // Include one spoc with a expiration in the very distant future
@@ -1314,7 +1290,6 @@ describe("Top Stories Feed", () => {
           { id: "spoc1", expiration_timestamp: 9999999999999 },
           { id: "spoc2" },
         ],
->>>>>>> upstream-releases
       };
 
       instance.onAction({
@@ -1679,20 +1654,6 @@ describe("Top Stories Feed", () => {
       });
 
       const response = {
-<<<<<<< HEAD
-        "settings": {"spocsPerNewTabs": 1},
-        "recommendations": [{"guid": "rec1"}, {"guid": "rec2"}, {"guid": "rec3"}],
-        "spocs": [
-          // Set spoc `expiration_timestamp`s in the very distant future to ensure they show up
-          {"id": "spoc1", "campaign_id": 1, "caps": {"lifetime": 3, "campaign": {"count": 2, "period": 3600}}, "expiration_timestamp": 999999999999},
-          {"id": "spoc2", "campaign_id": 2, "caps": {"lifetime": 1}, "expiration_timestamp": 999999999999},
-||||||| merged common ancestors
-        "settings": {"spocsPerNewTabs": 1},
-        "recommendations": [{"guid": "rec1"}, {"guid": "rec2"}, {"guid": "rec3"}],
-        "spocs": [
-          {"id": "spoc1", "campaign_id": 1, "caps": {"lifetime": 3, "campaign": {"count": 2, "period": 3600}}},
-          {"id": "spoc2", "campaign_id": 2, "caps": {"lifetime": 1}},
-=======
         settings: { spocsPerNewTabs: 1 },
         recommendations: [{ guid: "rec1" }, { guid: "rec2" }, { guid: "rec3" }],
         spocs: [
@@ -1709,7 +1670,6 @@ describe("Top Stories Feed", () => {
             caps: { lifetime: 1 },
             expiration_timestamp: 999999999999,
           },
->>>>>>> upstream-releases
         ],
       };
 

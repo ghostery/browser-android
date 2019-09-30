@@ -39,50 +39,6 @@ inline ParseContext::Scope::BindingIter ParseContext::Scope::bindings(
                                 pc->functionScope_.ptrOr(nullptr) == this);
 }
 
-<<<<<<< HEAD
-inline ParseContext::Scope::Scope(ParserBase* parser)
-    : Nestable<Scope>(&parser->pc->innermostScope_),
-      declared_(parser->context->frontendCollectionPool()),
-      possibleAnnexBFunctionBoxes_(parser->context->frontendCollectionPool()),
-      id_(parser->usedNames.nextScopeId()) {}
-
-inline ParseContext::Scope::Scope(JSContext* cx, ParseContext* pc,
-                                  UsedNameTracker& usedNames)
-    : Nestable<Scope>(&pc->innermostScope_),
-      declared_(cx->frontendCollectionPool()),
-      possibleAnnexBFunctionBoxes_(cx->frontendCollectionPool()),
-      id_(usedNames.nextScopeId()) {}
-
-inline ParseContext::VarScope::VarScope(ParserBase* parser) : Scope(parser) {
-  useAsVarScope(parser->pc);
-}
-
-inline ParseContext::VarScope::VarScope(JSContext* cx, ParseContext* pc,
-                                        UsedNameTracker& usedNames)
-    : Scope(cx, pc, usedNames) {
-  useAsVarScope(pc);
-}
-
-inline JS::Result<Ok, ParseContext::BreakStatementError>
-ParseContext::checkBreakStatement(PropertyName* label) {
-  // Labeled 'break' statements target the nearest labeled statements (could
-  // be any kind) with the same label. Unlabeled 'break' statements target
-  // the innermost loop or switch statement.
-  if (label) {
-    auto hasSameLabel = [&label](ParseContext::LabelStatement* stmt) {
-      MOZ_ASSERT(stmt);
-      return stmt->label() == label;
-||||||| merged common ancestors
-inline JS::Result<Ok, ParseContext::ContinueStatementError>
-ParseContext::checkContinueStatement(PropertyName* label)
-{
-    // Labeled 'continue' statements target the nearest labeled loop
-    // statements with the same label. Unlabeled 'continue' statements target
-    // the innermost loop statement.
-    auto isLoop = [](ParseContext::Statement* stmt) {
-        MOZ_ASSERT(stmt);
-        return StatementKindIsLoop(stmt->kind());
-=======
 inline ParseContext::Scope::Scope(ParserBase* parser)
     : Nestable<Scope>(&parser->pc_->innermostScope_),
       declared_(parser->cx_->frontendCollectionPool()),
@@ -115,7 +71,6 @@ ParseContext::checkBreakStatement(PropertyName* label) {
     auto hasSameLabel = [&label](ParseContext::LabelStatement* stmt) {
       MOZ_ASSERT(stmt);
       return stmt->label() == label;
->>>>>>> upstream-releases
     };
 
     if (!findInnermostStatement<ParseContext::LabelStatement>(hasSameLabel)) {
@@ -182,13 +137,6 @@ ParseContext::checkContinueStatement(PropertyName* label) {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace frontend
-}  // namespace js
-||||||| merged common ancestors
-}
-}
-=======
 template <typename DeclaredNamePtrT>
 inline void RedeclareVar(DeclaredNamePtrT ptr, DeclarationKind kind) {
 #ifdef DEBUG
@@ -222,15 +170,8 @@ inline void RedeclareVar(DeclaredNamePtrT ptr, DeclarationKind kind) {
     ptr->value()->alterKind(kind);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // frontend_ParseContext_inl_h
-||||||| merged common ancestors
-#endif // frontend_ParseContext_inl_h
-=======
 }  // namespace frontend
 }  // namespace js
 
 #endif  // frontend_ParseContext_inl_h
->>>>>>> upstream-releases

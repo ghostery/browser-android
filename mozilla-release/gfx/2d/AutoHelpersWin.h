@@ -26,22 +26,9 @@ class AutoDC {
 };
 
 // Select a font into the given DC, and auto-restore.
-<<<<<<< HEAD
-class AutoSelectFont {
- public:
-  AutoSelectFont(HDC aDC, LOGFONTW *aLogFont) : mOwnsFont(false) {
-||||||| merged common ancestors
-class AutoSelectFont
-{
-public:
-  AutoSelectFont(HDC aDC, LOGFONTW *aLogFont)
-    : mOwnsFont(false)
-  {
-=======
 class AutoSelectFont {
  public:
   AutoSelectFont(HDC aDC, LOGFONTW* aLogFont) : mOwnsFont(false) {
->>>>>>> upstream-releases
     mFont = ::CreateFontIndirectW(aLogFont);
     if (mFont) {
       mOwnsFont = true;

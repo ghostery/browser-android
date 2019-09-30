@@ -53,23 +53,12 @@ void encoding_mem_convert_latin1_to_utf16(const char* src, size_t src_len,
 size_t encoding_mem_convert_utf16_to_utf8(const char16_t* src, size_t src_len,
                                           char* dst, size_t dst_len);
 
-<<<<<<< HEAD
-size_t encoding_mem_convert_utf8_to_utf16(const char* src, size_t src_len,
-                                          char16_t* dst, size_t dst_len);
-||||||| merged common ancestors
-  size_t
-  encoding_mem_convert_utf8_to_utf16(const char* src,
-                                     size_t src_len,
-                                     char16_t* dst,
-                                     size_t dst_len);
-=======
 void encoding_mem_convert_utf16_to_utf8_partial(const char16_t* src,
                                                 size_t* src_len, char* dst,
                                                 size_t* dst_len);
 
 size_t encoding_mem_convert_utf8_to_utf16(const char* src, size_t src_len,
                                           char16_t* dst, size_t dst_len);
->>>>>>> upstream-releases
 }
 
 // From the nsstring crate
@@ -152,11 +141,6 @@ inline void ConvertLatin1toUTF16(mozilla::Span<const char> aSource,
 inline size_t ConvertUTF16toUTF8(mozilla::Span<const char16_t> aSource,
                                  mozilla::Span<char> aDest) {
   return encoding_mem_convert_utf16_to_utf8(
-<<<<<<< HEAD
-      aSource.Elements(), aSource.Length(), aDest.Elements(), aDest.Length());
-||||||| merged common ancestors
-    aSource.Elements(), aSource.Length(), aDest.Elements(), aDest.Length());
-=======
       aSource.Elements(), aSource.Length(), aDest.Elements(), aDest.Length());
 }
 
@@ -179,7 +163,6 @@ inline mozilla::Tuple<size_t, size_t> ConvertUTF16toUTF8Partial(
   encoding_mem_convert_utf16_to_utf8_partial(aSource.Elements(), &srcLen,
                                              aDest.Elements(), &dstLen);
   return mozilla::MakeTuple(srcLen, dstLen);
->>>>>>> upstream-releases
 }
 
 /**
@@ -334,11 +317,6 @@ inline MOZ_MUST_USE bool LossyAppendUTF16toASCII(
 inline void LossyAppendUTF16toASCII(mozilla::Span<const char16_t> aSource,
                                     nsACString& aDest) {
   if (MOZ_UNLIKELY(
-<<<<<<< HEAD
-          !LossyAppendUTF16toASCII(aSource, aDest, mozilla::fallible))) {
-||||||| merged common ancestors
-        !LossyAppendUTF16toASCII(aSource, aDest, mozilla::fallible))) {
-=======
           !LossyAppendUTF16toASCII(aSource, aDest, mozilla::fallible))) {
     aDest.AllocFailed(aDest.Length() + aSource.Length());
   }
@@ -409,7 +387,6 @@ inline void LossyAppendUTF8toLatin1(const nsACString& aSource,
                                     nsACString& aDest) {
   if (MOZ_UNLIKELY(
           !LossyAppendUTF8toLatin1(aSource, aDest, mozilla::fallible))) {
->>>>>>> upstream-releases
     aDest.AllocFailed(aDest.Length() + aSource.Length());
   }
 }

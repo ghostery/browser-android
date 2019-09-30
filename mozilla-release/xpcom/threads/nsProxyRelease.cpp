@@ -16,11 +16,6 @@ namespace detail {
                                       aAlwaysProxy);
 }
 
-<<<<<<< HEAD
-}  // namespace detail
-||||||| merged common ancestors
-} // namespace detail
-=======
 }  // namespace detail
 
 extern "C" {
@@ -33,4 +28,3 @@ void NS_ProxyReleaseISupports(const char* aName, nsIEventTarget* aTarget,
 }
 
 }  // extern "C"
->>>>>>> upstream-releases

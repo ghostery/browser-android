@@ -73,16 +73,8 @@ void gfxVars::Shutdown() {
   gGfxVarInitUpdates = nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ void gfxVars::ApplyUpdate(const GfxVarUpdate& aUpdate) {
-||||||| merged common ancestors
-/* static */ void
-gfxVars::ApplyUpdate(const GfxVarUpdate& aUpdate)
-{
-=======
 /* static */
 void gfxVars::ApplyUpdate(const GfxVarUpdate& aUpdate) {
->>>>>>> upstream-releases
   // Only subprocesses receive updates and apply them locally.
   MOZ_ASSERT(!XRE_IsParentProcess());
   MOZ_DIAGNOSTIC_ASSERT(sVarList || gGfxVarInitUpdates);
@@ -95,16 +87,8 @@ void gfxVars::ApplyUpdate(const GfxVarUpdate& aUpdate) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void gfxVars::AddReceiver(gfxVarReceiver* aReceiver) {
-||||||| merged common ancestors
-/* static */ void
-gfxVars::AddReceiver(gfxVarReceiver* aReceiver)
-{
-=======
 /* static */
 void gfxVars::AddReceiver(gfxVarReceiver* aReceiver) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // Don't double-add receivers, in case a broken content process sends two
@@ -114,16 +98,8 @@ void gfxVars::AddReceiver(gfxVarReceiver* aReceiver) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void gfxVars::RemoveReceiver(gfxVarReceiver* aReceiver) {
-||||||| merged common ancestors
-/* static */ void
-gfxVars::RemoveReceiver(gfxVarReceiver* aReceiver)
-{
-=======
 /* static */
 void gfxVars::RemoveReceiver(gfxVarReceiver* aReceiver) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (sInstance) {
@@ -131,16 +107,8 @@ void gfxVars::RemoveReceiver(gfxVarReceiver* aReceiver) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ nsTArray<GfxVarUpdate> gfxVars::FetchNonDefaultVars() {
-||||||| merged common ancestors
-/* static */ nsTArray<GfxVarUpdate>
-gfxVars::FetchNonDefaultVars()
-{
-=======
 /* static */
 nsTArray<GfxVarUpdate> gfxVars::FetchNonDefaultVars() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(sVarList);
 

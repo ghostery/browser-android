@@ -190,22 +190,6 @@ class ChemspillPrio(Template):
             }
 
 
-<<<<<<< HEAD
-class GeckoProfile(Template):
-
-    def add_arguments(self, parser):
-        parser.add_argument('--gecko-profile', dest='profile', action='store_true', default=False,
-                            help='Create and upload a gecko profile during talos/raptor tasks.')
-        # For backwards compatibility
-        parser.add_argument('--talos-profile', dest='profile', action='store_true', default=False,
-                            help='Create and upload a gecko profile during talos tasks.')
-||||||| merged common ancestors
-class TalosProfile(Template):
-
-    def add_arguments(self, parser):
-        parser.add_argument('--talos-profile', dest='profile', action='store_true', default=False,
-                            help='Create and upload a gecko profile during talos tasks.')
-=======
 class GeckoProfile(Template):
     arguments = [
         [['--gecko-profile'],
@@ -221,7 +205,6 @@ class GeckoProfile(Template):
           'default': False,
           'help': SUPPRESS,
           }],
->>>>>>> upstream-releases
         # This is added for consistency with the 'syntax' selector
         [['--geckoProfile'],
          {'dest': 'profile',
@@ -234,11 +217,6 @@ class GeckoProfile(Template):
     def context(self, profile, **kwargs):
         if not profile:
             return
-<<<<<<< HEAD
-        return {'gecko-profile': profile}
-||||||| merged common ancestors
-        return {'talos-profile': profile}
-=======
         return {'gecko-profile': profile}
 
 
@@ -256,7 +234,6 @@ class DisablePgo(TryConfig):
             return {
                 'disable-pgo': True,
             }
->>>>>>> upstream-releases
 
 
 all_templates = {
@@ -265,12 +242,6 @@ all_templates = {
     'env': Environment,
     'rebuild': Rebuild,
     'chemspill-prio': ChemspillPrio,
-<<<<<<< HEAD
-    'gecko-profile': GeckoProfile,
-||||||| merged common ancestors
-    'talos-profile': TalosProfile,
-=======
     'gecko-profile': GeckoProfile,
     'disable-pgo': DisablePgo,
->>>>>>> upstream-releases
 }

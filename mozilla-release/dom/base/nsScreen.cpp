@@ -19,17 +19,8 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsScreen> nsScreen::Create(
-    nsPIDOMWindowInner* aWindow) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsScreen>
-nsScreen::Create(nsPIDOMWindowInner* aWindow)
-{
-=======
 /* static */
 already_AddRefed<nsScreen> nsScreen::Create(nsPIDOMWindowInner* aWindow) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWindow);
 
   if (!aWindow->GetDocShell()) {
@@ -122,11 +113,6 @@ nsresult nsScreen::GetAvailRect(nsRect& aRect) {
     return GetWindowInnerRect(aRect);
   }
 
-<<<<<<< HEAD
-  nsDeviceContext* context = GetDeviceContext();
-||||||| merged common ancestors
-  nsDeviceContext *context = GetDeviceContext();
-=======
   // Here we manipulate the value of aRect to represent the screen avail size,
   // if in RDM.
   if (IsInRDMPane()) {
@@ -134,7 +120,6 @@ nsresult nsScreen::GetAvailRect(nsRect& aRect) {
   }
 
   nsDeviceContext* context = GetDeviceContext();
->>>>>>> upstream-releases
 
   if (!context) {
     return NS_ERROR_FAILURE;
@@ -160,13 +145,6 @@ nsresult nsScreen::GetAvailRect(nsRect& aRect) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-mozilla::dom::ScreenOrientation* nsScreen::Orientation() const {
-||||||| merged common ancestors
-mozilla::dom::ScreenOrientation*
-nsScreen::Orientation() const
-{
-=======
 nsresult nsScreen::GetRDMScreenSize(nsRect& aRect) {
   GetWindowInnerRect(aRect);
 
@@ -191,7 +169,6 @@ nsresult nsScreen::GetRDMScreenSize(nsRect& aRect) {
 }
 
 mozilla::dom::ScreenOrientation* nsScreen::Orientation() const {
->>>>>>> upstream-releases
   return mScreenOrientation;
 }
 

@@ -33,17 +33,6 @@ const ConnectSteps = createFactory(require("./ConnectSteps"));
 const NetworkLocationsForm = createFactory(require("./NetworkLocationsForm"));
 const NetworkLocationsList = createFactory(require("./NetworkLocationsList"));
 
-<<<<<<< HEAD
-const { PREFERENCES, PAGE_TYPES } = require("../../constants");
-
-const USB_ICON_SRC = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-const WIFI_ICON_SRC = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-const GLOBE_ICON_SRC = "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
-||||||| merged common ancestors
-const USB_ICON_SRC = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-const WIFI_ICON_SRC = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-const GLOBE_ICON_SRC = "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
-=======
 const { PAGE_TYPES, RUNTIMES } = require("../../constants");
 const Types = require("../../types/index");
 
@@ -56,102 +45,20 @@ const TROUBLESHOOT_USB_URL =
   "https://developer.mozilla.org/docs/Tools/Remote_Debugging/Debugging_over_USB";
 const TROUBLESHOOT_NETWORK_URL =
   "https://developer.mozilla.org/docs/Tools/Remote_Debugging/Debugging_over_a_network";
->>>>>>> upstream-releases
 
 class ConnectPage extends PureComponent {
   static get propTypes() {
     return {
       adbAddonStatus: Types.adbAddonStatus,
       dispatch: PropTypes.func.isRequired,
-<<<<<<< HEAD
-      // Provided by wrapping the component with FluentReact.withLocalization.
-      getString: PropTypes.func.isRequired,
-      networkEnabled: PropTypes.bool.isRequired,
-      networkLocations: PropTypes.arrayOf(PropTypes.string).isRequired,
-      wifiEnabled: PropTypes.bool.isRequired,
-||||||| merged common ancestors
-      // Provided by wrapping the component with FluentReact.withLocalization.
-      getString: PropTypes.func.isRequired,
-      networkLocations: PropTypes.arrayOf(PropTypes.string).isRequired,
-=======
       networkLocations: PropTypes.arrayOf(Types.location).isRequired,
->>>>>>> upstream-releases
     };
   }
 
-<<<<<<< HEAD
   // TODO: avoid the use of this method
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1508688
   componentWillMount() {
     this.props.dispatch(Actions.selectPage(PAGE_TYPES.CONNECT));
-  }
-
-  renderWifi() {
-    const { getString, wifiEnabled } = this.props;
-
-    return Localized(
-      {
-        id: "about-debugging-connect-wifi",
-        attrs: { title: true },
-      },
-      ConnectSection(
-        {
-          icon: WIFI_ICON_SRC,
-          title: "Via WiFi",
-        },
-        wifiEnabled
-          ? ConnectSteps(
-            {
-              steps: [
-                getString("about-debugging-connect-wifi-step-same-network"),
-                getString("about-debugging-connect-wifi-step-open-firefox"),
-                getString("about-debugging-connect-wifi-step-open-options"),
-                getString("about-debugging-connect-wifi-step-enable-debug"),
-              ],
-            })
-          : Localized(
-            {
-              id: "about-debugging-connect-wifi-disabled",
-              $pref: PREFERENCES.WIFI_ENABLED,
-            },
-            dom.div(
-              {
-                className: "connect-page__disabled-section",
-              },
-              "about-debugging-connect-wifi-disabled"
-            )
-          )
-      )
-    );
-||||||| merged common ancestors
-  renderWifi() {
-    const { getString } = this.props;
-    return Localized(
-      {
-        id: "about-debugging-connect-wifi",
-        attrs: { title: true },
-      },
-      ConnectSection(
-        {
-          icon: WIFI_ICON_SRC,
-          title: "Via WiFi (Recommended)",
-        },
-        ConnectSteps({
-          steps: [
-            getString("about-debugging-connect-wifi-step-same-network"),
-            getString("about-debugging-connect-wifi-step-open-firefox"),
-            getString("about-debugging-connect-wifi-step-open-options"),
-            getString("about-debugging-connect-wifi-step-enable-debug"),
-          ],
-        })
-      )
-    );
-=======
-  // TODO: avoid the use of this method
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=1508688
-  componentWillMount() {
-    this.props.dispatch(Actions.selectPage(PAGE_TYPES.CONNECT));
->>>>>>> upstream-releases
   }
 
   onToggleUSBClick() {
@@ -214,18 +121,9 @@ class ConnectPage extends PureComponent {
       },
       dom.button(
         {
-<<<<<<< HEAD
-          className:
-            "default-button connect-page__usb__toggle-button " +
-            "js-connect-usb-toggle-button",
-||||||| merged common ancestors
-          className: "std-button connect-page__usb__toggle-button " +
-                     "js-connect-usb-toggle-button",
-=======
           className:
             "default-button connect-page__usb-section__heading__toggle " +
             "qa-connect-usb-toggle-button",
->>>>>>> upstream-releases
           disabled,
           onClick: () => this.onToggleUSBClick(),
         },
@@ -257,39 +155,6 @@ class ConnectPage extends PureComponent {
           this.renderUsbToggleButton()
         ),
       },
-<<<<<<< HEAD
-      ConnectSection(
-        {
-          icon: USB_ICON_SRC,
-          title: "Via USB",
-        },
-        isAddonInstalled
-          ? ConnectSteps(
-            {
-              steps: [
-                getString("about-debugging-connect-usb-step-enable-dev-menu"),
-                getString("about-debugging-connect-usb-step-enable-debug"),
-                getString("about-debugging-connect-usb-step-plug-device"),
-              ],
-            }
-          )
-          : Localized(
-||||||| merged common ancestors
-      ConnectSection(
-        {
-          icon: USB_ICON_SRC,
-          title: "Via USB",
-        },
-        (isAddonInstalled ?
-          ConnectSteps({
-            steps: [
-              getString("about-debugging-connect-usb-step-enable-dev-menu"),
-              getString("about-debugging-connect-usb-step-enable-debug"),
-              getString("about-debugging-connect-usb-step-plug-device"),
-            ],
-          }) :
-          Localized(
-=======
       isAddonInstalled
         ? ConnectSteps({
             steps: [
@@ -310,7 +175,6 @@ class ConnectPage extends PureComponent {
             ],
           })
         : Localized(
->>>>>>> upstream-releases
             {
               id: "about-debugging-setup-usb-disabled",
             },
@@ -321,32 +185,14 @@ class ConnectPage extends PureComponent {
               "Enabling this will download and add the required Android USB debugging " +
                 "components to Firefox."
             )
-<<<<<<< HEAD
-          ),
-        this.renderUsbToggleButton()
-      )
-||||||| merged common ancestors
-          )
-        ),
-        this.renderUsbToggleButton()
-      )
-=======
           ),
       this.renderTroubleshootText(RUNTIMES.USB)
->>>>>>> upstream-releases
     );
   }
 
   renderNetwork() {
-<<<<<<< HEAD
-    const { dispatch, networkEnabled, networkLocations } = this.props;
-
-||||||| merged common ancestors
-    const { dispatch, networkLocations } = this.props;
-=======
     const { dispatch, networkLocations } = this.props;
 
->>>>>>> upstream-releases
     return Localized(
       {
         id: "about-debugging-setup-network",
@@ -393,37 +239,7 @@ class ConnectPage extends PureComponent {
             target: "_blank",
           }),
         },
-<<<<<<< HEAD
-        ...(networkEnabled
-          ? [
-              NetworkLocationsList({ dispatch, networkLocations }),
-              dom.hr({ className: "separator separator--breathe" }),
-              NetworkLocationsForm({ dispatch }),
-          ]
-          : [
-              // We are using an array for this single element because of the spread
-              // operator (...). The spread operator avoids React warnings about missing
-              // keys.
-              Localized(
-                {
-                  id: "about-debugging-connect-network-disabled",
-                  $pref: PREFERENCES.NETWORK_ENABLED,
-                },
-                dom.div(
-                  {
-                    className: "connect-page__disabled-section",
-                  },
-                  "about-debugging-connect-network-disabled"
-                )
-              ),
-          ])
-||||||| merged common ancestors
-        NetworkLocationsList({ dispatch, networkLocations }),
-        dom.hr({ className: "separator" }),
-        NetworkLocationsForm({ dispatch }),
-=======
         dom.p({}, localizationId)
->>>>>>> upstream-releases
       )
     );
   }
@@ -439,26 +255,11 @@ class ConnectPage extends PureComponent {
         },
         dom.h1(
           {
-<<<<<<< HEAD
-            className: "alt-heading",
-||||||| merged common ancestors
-            className: "page__title",
-=======
             className: "alt-heading alt-heading--larger",
->>>>>>> upstream-releases
           },
           "Setup"
         )
       ),
-<<<<<<< HEAD
-      this.renderWifi(),
-      this.renderUsb(),
-      this.renderNetwork()
-||||||| merged common ancestors
-      this.renderWifi(),
-      this.renderUsb(),
-      this.renderNetwork(),
-=======
       Localized(
         {
           id: "about-debugging-setup-intro",
@@ -495,7 +296,6 @@ class ConnectPage extends PureComponent {
         this.renderUsb(),
         this.renderNetwork()
       )
->>>>>>> upstream-releases
     );
   }
 }

@@ -34,18 +34,9 @@ class nsGridRowGroupFrame final : public nsBoxFrame {
   }
 #endif
 
-<<<<<<< HEAD
-  nsGridRowGroupFrame(ComputedStyle* aStyle, nsBoxLayout* aLayoutManager)
-      : nsBoxFrame(aStyle, kClassID, false, aLayoutManager) {}
-||||||| merged common ancestors
-  nsGridRowGroupFrame(ComputedStyle* aStyle,
-                      nsBoxLayout* aLayoutManager):
-    nsBoxFrame(aStyle, kClassID, false, aLayoutManager) {}
-=======
   nsGridRowGroupFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                       nsBoxLayout* aLayoutManager)
       : nsBoxFrame(aStyle, aPresContext, kClassID, false, aLayoutManager) {}
->>>>>>> upstream-releases
 
   virtual nscoord GetXULFlex() override;
 

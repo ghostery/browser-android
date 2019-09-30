@@ -24,16 +24,8 @@
 #include "Units.h"                           // for ScreenIntRect
 #include "UnitTransforms.h"                  // for ViewAs
 #include "apz/src/AsyncPanZoomController.h"  // for AsyncPanZoomController
-<<<<<<< HEAD
-#include "gfxEnv.h"                          // for gfxEnv
-#include "gfxPrefs.h"                        // for gfxPrefs
-||||||| merged common ancestors
-#include "gfxEnv.h"                     // for gfxEnv
-#include "gfxPrefs.h"                   // for gfxPrefs
-=======
 #include "gfxEnv.h"                          // for gfxEnv
 
->>>>>>> upstream-releases
 #ifdef XP_MACOSX
 #  include "gfxPlatformMac.h"
 #endif
@@ -78,23 +70,11 @@
 #include "GeckoProfiler.h"
 #include "TextRenderer.h"  // for TextRenderer
 #include "mozilla/layers/CompositorBridgeParent.h"
-<<<<<<< HEAD
-#include "TreeTraversal.h"  // for ForEachNode
-||||||| merged common ancestors
-#include "TreeTraversal.h"              // for ForEachNode
-=======
 #include "TreeTraversal.h"  // for ForEachNode
 #include "CompositionRecorder.h"
->>>>>>> upstream-releases
 
 #ifdef USE_SKIA
-<<<<<<< HEAD
-#include "PaintCounter.h"  // For PaintCounter
-||||||| merged common ancestors
-#include "PaintCounter.h"               // For PaintCounter
-=======
 #  include "PaintCounter.h"  // For PaintCounter
->>>>>>> upstream-releases
 #endif
 
 class gfxContext;
@@ -171,25 +151,9 @@ LayerManagerComposite::LayerManagerComposite(Compositor* aCompositor)
 #endif
 }
 
-<<<<<<< HEAD
 LayerManagerComposite::~LayerManagerComposite() { Destroy(); }
 
 void LayerManagerComposite::Destroy() {
-||||||| merged common ancestors
-LayerManagerComposite::~LayerManagerComposite()
-{
-  Destroy();
-}
-
-
-void
-LayerManagerComposite::Destroy()
-{
-=======
-LayerManagerComposite::~LayerManagerComposite() { Destroy(); }
-
-void LayerManagerComposite::Destroy() {
->>>>>>> upstream-releases
   if (!mDestroyed) {
     mCompositor->GetWidget()->CleanupWindowEffects();
     if (mRoot) {
@@ -252,13 +216,6 @@ void LayerManagerComposite::BeginTransactionWithDrawTarget(
   mTargetBounds = aRect;
 }
 
-<<<<<<< HEAD
-void LayerManagerComposite::PostProcessLayers(nsIntRegion& aOpaqueRegion) {
-||||||| merged common ancestors
-void
-LayerManagerComposite::PostProcessLayers(nsIntRegion& aOpaqueRegion)
-{
-=======
 template <typename Units>
 static IntRectTyped<Units> TransformRect(const IntRectTyped<Units>& aRect,
                                          const Matrix& aTransform,
@@ -334,24 +291,7 @@ static void AddTransformedRegionRoundIn(IntRegionTyped<Units>& aDest,
 }
 
 void LayerManagerComposite::PostProcessLayers(nsIntRegion& aOpaqueRegion) {
->>>>>>> upstream-releases
   LayerIntRegion visible;
-<<<<<<< HEAD
-  LayerComposite* rootComposite =
-      static_cast<LayerComposite*>(mRoot->AsHostLayer());
-  PostProcessLayers(
-      mRoot, aOpaqueRegion, visible,
-      ViewAs<RenderTargetPixel>(
-          rootComposite->GetShadowClipRect(),
-          PixelCastJustification::RenderTargetIsParentLayerForRoot),
-      Nothing());
-||||||| merged common ancestors
-  LayerComposite* rootComposite = static_cast<LayerComposite*>(mRoot->AsHostLayer());
-  PostProcessLayers(mRoot, aOpaqueRegion, visible,
-                    ViewAs<RenderTargetPixel>(rootComposite->GetShadowClipRect(),
-                                              PixelCastJustification::RenderTargetIsParentLayerForRoot),
-                    Nothing());
-=======
   LayerComposite* rootComposite =
       static_cast<LayerComposite*>(mRoot->AsHostLayer());
   PostProcessLayers(
@@ -360,29 +300,13 @@ void LayerManagerComposite::PostProcessLayers(nsIntRegion& aOpaqueRegion) {
           rootComposite->GetShadowClipRect(),
           PixelCastJustification::RenderTargetIsParentLayerForRoot),
       Nothing(), true);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// We want to skip directly through ContainerLayers that don't have an
-// intermediate surface. We compute occlusions for leaves and intermediate
-// surfaces against the layer that they actually composite into so that we can
-// use the final (snapped) effective transform.
-bool ShouldProcessLayer(Layer* aLayer) {
-||||||| merged common ancestors
-// We want to skip directly through ContainerLayers that don't have an intermediate
-// surface. We compute occlusions for leaves and intermediate surfaces against
-// the layer that they actually composite into so that we can use the final (snapped)
-// effective transform.
-bool ShouldProcessLayer(Layer* aLayer)
-{
-=======
 // We want to skip directly through ContainerLayers that don't have an
 // intermediate surface. We compute occlusions for leaves and intermediate
 // surfaces against the layer that they actually composite into so that we can
 // use the final (snapped) effective transform.
 static bool ShouldProcessLayer(Layer* aLayer) {
->>>>>>> upstream-releases
   if (!aLayer->AsContainerLayer()) {
     return true;
   }
@@ -390,27 +314,11 @@ static bool ShouldProcessLayer(Layer* aLayer) {
   return aLayer->AsContainerLayer()->UseIntermediateSurface();
 }
 
-<<<<<<< HEAD
-void LayerManagerComposite::PostProcessLayers(
-    Layer* aLayer, nsIntRegion& aOpaqueRegion, LayerIntRegion& aVisibleRegion,
-    const Maybe<RenderTargetIntRect>& aRenderTargetClip,
-    const Maybe<ParentLayerIntRect>& aClipFromAncestors) {
-||||||| merged common ancestors
-void
-LayerManagerComposite::PostProcessLayers(Layer* aLayer,
-                                         nsIntRegion& aOpaqueRegion,
-                                         LayerIntRegion& aVisibleRegion,
-                                         const Maybe<RenderTargetIntRect>& aRenderTargetClip,
-                                         const Maybe<ParentLayerIntRect>& aClipFromAncestors)
-{
-
-=======
 void LayerManagerComposite::PostProcessLayers(
     Layer* aLayer, nsIntRegion& aOpaqueRegion, LayerIntRegion& aVisibleRegion,
     const Maybe<RenderTargetIntRect>& aRenderTargetClip,
     const Maybe<ParentLayerIntRect>& aClipFromAncestors,
     bool aCanContributeOpaque) {
->>>>>>> upstream-releases
   // Compute a clip that's the combination of our layer clip with the clip
   // from our ancestors.
   LayerComposite* composite =
@@ -481,19 +389,11 @@ void LayerManagerComposite::PostProcessLayers(
         renderTargetClip = IntersectMaybeRects(renderTargetClip, Some(clip));
       }
 
-<<<<<<< HEAD
-      PostProcessLayers(child, opaqueRegion, aVisibleRegion, renderTargetClip,
-                        ancestorClipForChildren);
-||||||| merged common ancestors
-      PostProcessLayers(child, opaqueRegion, aVisibleRegion,
-                        renderTargetClip, ancestorClipForChildren);
-=======
       PostProcessLayers(
           child, opaqueRegion, aVisibleRegion, renderTargetClip,
           ancestorClipForChildren,
           aCanContributeOpaque &
               !(aLayer->GetContentFlags() & Layer::CONTENT_BACKFACE_HIDDEN));
->>>>>>> upstream-releases
     }
     return;
   }
@@ -507,22 +407,6 @@ void LayerManagerComposite::PostProcessLayers(
   // If aLayer has a simple transform (only an integer translation) then we
   // can easily convert aOpaqueRegion into pre-transform coordinates and include
   // that region.
-<<<<<<< HEAD
-  if (transform.Is2D(&transform2d)) {
-    if (transform2d.IsIntegerTranslation()) {
-      integerTranslation =
-          Some(IntPoint::Truncate(transform2d.GetTranslation()));
-      localOpaque = opaqueRegion;
-      localOpaque.MoveBy(-*integerTranslation);
-    }
-||||||| merged common ancestors
-  if (transform.Is2D(&transform2d)) {
-    if (transform2d.IsIntegerTranslation()) {
-      integerTranslation = Some(IntPoint::Truncate(transform2d.GetTranslation()));
-      localOpaque = opaqueRegion;
-      localOpaque.MoveBy(-*integerTranslation);
-    }
-=======
   if (aCanContributeOpaque &&
       !(aLayer->GetContentFlags() & Layer::CONTENT_BACKFACE_HIDDEN) &&
       transform.Is2D(&transform2d) &&
@@ -531,7 +415,6 @@ void LayerManagerComposite::PostProcessLayers(
     inverse.Invert();
     AddTransformedRegionRoundIn(localOpaque, opaqueRegion, inverse);
     canTransformOpaqueRegion = true;
->>>>>>> upstream-releases
   }
 
   // Save the value of localOpaque, which currently stores the region obscured
@@ -548,22 +431,6 @@ void LayerManagerComposite::PostProcessLayers(
   for (Layer* child = aLayer->GetLastChild(); child;
        child = child->GetPrevSibling()) {
     MOZ_ASSERT(aLayer->AsContainerLayer()->UseIntermediateSurface());
-<<<<<<< HEAD
-    LayerComposite* childComposite =
-        static_cast<LayerComposite*>(child->AsHostLayer());
-    PostProcessLayers(
-        child, localOpaque, descendantsVisibleRegion,
-        ViewAs<RenderTargetPixel>(
-            childComposite->GetShadowClipRect(),
-            PixelCastJustification::RenderTargetIsParentLayerForRoot),
-        ancestorClipForChildren);
-||||||| merged common ancestors
-    LayerComposite* childComposite = static_cast<LayerComposite*>(child->AsHostLayer());
-    PostProcessLayers(child, localOpaque, descendantsVisibleRegion,
-                      ViewAs<RenderTargetPixel>(childComposite->GetShadowClipRect(),
-                                                PixelCastJustification::RenderTargetIsParentLayerForRoot),
-                      ancestorClipForChildren);
-=======
     LayerComposite* childComposite =
         static_cast<LayerComposite*>(child->AsHostLayer());
     PostProcessLayers(
@@ -572,7 +439,6 @@ void LayerManagerComposite::PostProcessLayers(
             childComposite->GetShadowClipRect(),
             PixelCastJustification::RenderTargetIsParentLayerForRoot),
         ancestorClipForChildren, true);
->>>>>>> upstream-releases
     if (child->Extend3DContext()) {
       hasPreserve3DChild = true;
     }
@@ -608,14 +474,7 @@ void LayerManagerComposite::PostProcessLayers(
 
   // If we have a simple transform, then we can add our opaque area into
   // aOpaqueRegion.
-<<<<<<< HEAD
-  if (integerTranslation && !aLayer->HasMaskLayers() &&
-||||||| merged common ancestors
-  if (integerTranslation &&
-      !aLayer->HasMaskLayers() &&
-=======
   if (canTransformOpaqueRegion && !aLayer->HasMaskLayers() &&
->>>>>>> upstream-releases
       aLayer->IsOpaqueForVisibility()) {
     if (aLayer->IsOpaque()) {
       localOpaque.OrWith(composite->GetFullyRenderedRegion());
@@ -761,23 +620,10 @@ LayerComposite* LayerManagerComposite::RootLayer() const {
   return ToLayerComposite(mRoot);
 }
 
-<<<<<<< HEAD
-void LayerManagerComposite::InvalidateDebugOverlay(nsIntRegion& aInvalidRegion,
-                                                   const IntRect& aBounds) {
-  bool drawFps = gfxPrefs::LayersDrawFPS();
-  bool drawFrameColorBars = gfxPrefs::CompositorDrawColorBars();
-||||||| merged common ancestors
-void
-LayerManagerComposite::InvalidateDebugOverlay(nsIntRegion& aInvalidRegion, const IntRect& aBounds)
-{
-  bool drawFps = gfxPrefs::LayersDrawFPS();
-  bool drawFrameColorBars = gfxPrefs::CompositorDrawColorBars();
-=======
 void LayerManagerComposite::InvalidateDebugOverlay(nsIntRegion& aInvalidRegion,
                                                    const IntRect& aBounds) {
   bool drawFps = StaticPrefs::layers_acceleration_draw_fps();
   bool drawFrameColorBars = StaticPrefs::gfx_draw_color_bars();
->>>>>>> upstream-releases
 
   if (drawFps) {
     aInvalidRegion.Or(aInvalidRegion, nsIntRect(0, 0, 650, 400));
@@ -806,21 +652,9 @@ void LayerManagerComposite::DrawPaintTimes(Compositor* aCompositor) {
 #endif
 
 static uint16_t sFrameCount = 0;
-<<<<<<< HEAD
-void LayerManagerComposite::RenderDebugOverlay(const IntRect& aBounds) {
-  bool drawFps = gfxPrefs::LayersDrawFPS();
-  bool drawFrameColorBars = gfxPrefs::CompositorDrawColorBars();
-||||||| merged common ancestors
-void
-LayerManagerComposite::RenderDebugOverlay(const IntRect& aBounds)
-{
-  bool drawFps = gfxPrefs::LayersDrawFPS();
-  bool drawFrameColorBars = gfxPrefs::CompositorDrawColorBars();
-=======
 void LayerManagerComposite::RenderDebugOverlay(const IntRect& aBounds) {
   bool drawFps = StaticPrefs::layers_acceleration_draw_fps();
   bool drawFrameColorBars = StaticPrefs::gfx_draw_color_bars();
->>>>>>> upstream-releases
 
   // Don't draw diagnostic overlays if we want to snapshot the output.
   if (mTarget) {
@@ -1079,20 +913,8 @@ void LayerManagerComposite::Render(const nsIntRegion& aInvalidRegion,
   // Set LayerScope begin/end frame
   LayerScopeAutoFrame frame(PR_Now());
 
-<<<<<<< HEAD
-  // Dump to console
-  if (gfxPrefs::LayersDump()) {
-    this->Dump(/* aSorted= */ true);
-  }
-||||||| merged common ancestors
-  // Dump to console
-  if (gfxPrefs::LayersDump()) {
-    this->Dump(/* aSorted= */true);
-  }
-=======
   // If you're looking for the code to dump the layer tree, it was moved
   // to CompositorBridgeParent::CompositeToTarget().
->>>>>>> upstream-releases
 
   // Dump to LayerScope Viewer
   if (LayerScope::CheckSendable()) {
@@ -1477,20 +1299,10 @@ void LayerManagerComposite::HandlePixelsTarget() {
   CompositorOGL* compositor = mCompositor->AsCompositorOGL();
   GLContext* gl = compositor->gl();
   MOZ_ASSERT(gl);
-<<<<<<< HEAD
-  gl->fReadPixels(0, 0, bufferWidth, bufferHeight, LOCAL_GL_RGBA,
-                  LOCAL_GL_UNSIGNED_BYTE, mem.get<uint8_t>());
-  Unused << mScreenPixelsTarget->SendScreenPixels(
-      mem, ScreenIntSize(bufferWidth, bufferHeight));
-||||||| merged common ancestors
-  gl->fReadPixels(0, 0, bufferWidth, bufferHeight, LOCAL_GL_RGBA, LOCAL_GL_UNSIGNED_BYTE, mem.get<uint8_t>());
-  Unused << mScreenPixelsTarget->SendScreenPixels(mem, ScreenIntSize(bufferWidth, bufferHeight));
-=======
   gl->fReadPixels(0, 0, bufferWidth, bufferHeight, LOCAL_GL_RGBA,
                   LOCAL_GL_UNSIGNED_BYTE, mem.get<uint8_t>());
   Unused << mScreenPixelsTarget->SendScreenPixels(
       std::move(mem), ScreenIntSize(bufferWidth, bufferHeight));
->>>>>>> upstream-releases
   mScreenPixelsTarget = nullptr;
 }
 #endif
@@ -1610,18 +1422,8 @@ bool LayerManagerComposite::CanUseCanvasLayerForSize(const IntSize& aSize) {
       gfx::IntSize(aSize.width, aSize.height));
 }
 
-<<<<<<< HEAD
-void LayerManagerComposite::NotifyShadowTreeTransaction() {
-  if (gfxPrefs::LayersDrawFPS()) {
-||||||| merged common ancestors
-void
-LayerManagerComposite::NotifyShadowTreeTransaction()
-{
-  if (gfxPrefs::LayersDrawFPS()) {
-=======
 void LayerManagerComposite::NotifyShadowTreeTransaction() {
   if (StaticPrefs::layers_acceleration_draw_fps()) {
->>>>>>> upstream-releases
     mDiagnostics->AddTxnFrame();
   }
 }
@@ -1672,83 +1474,11 @@ Matrix4x4 HostLayer::GetShadowTransform() {
   return transform;
 }
 
-<<<<<<< HEAD
-static LayerIntRect TransformRect(const LayerIntRect& aRect,
-                                  const Matrix4x4& aTransform) {
-  if (aRect.IsEmpty()) {
-    return LayerIntRect();
-  }
-
-  Rect rect(aRect.X(), aRect.Y(), aRect.Width(), aRect.Height());
-  rect = aTransform.TransformAndClipBounds(rect, Rect::MaxIntRect());
-  rect.RoundOut();
-
-  IntRect intRect;
-  if (!rect.ToIntRect(&intRect)) {
-    intRect = IntRect::MaxIntRect();
-  }
-
-  return ViewAs<LayerPixel>(intRect);
-}
-
-static void AddTransformedRegion(LayerIntRegion& aDest,
-                                 const LayerIntRegion& aSource,
-                                 const Matrix4x4& aTransform) {
-  for (auto iter = aSource.RectIter(); !iter.Done(); iter.Next()) {
-    aDest.Or(aDest, TransformRect(iter.Get(), aTransform));
-  }
-  aDest.SimplifyOutward(20);
-}
-
-||||||| merged common ancestors
-static LayerIntRect
-TransformRect(const LayerIntRect& aRect, const Matrix4x4& aTransform)
-{
-  if (aRect.IsEmpty()) {
-    return LayerIntRect();
-  }
-
-  Rect rect(aRect.X(), aRect.Y(), aRect.Width(), aRect.Height());
-  rect = aTransform.TransformAndClipBounds(rect, Rect::MaxIntRect());
-  rect.RoundOut();
-
-  IntRect intRect;
-  if (!rect.ToIntRect(&intRect)) {
-    intRect = IntRect::MaxIntRect();
-  }
-
-  return ViewAs<LayerPixel>(intRect);
-}
-
-static void
-AddTransformedRegion(LayerIntRegion& aDest, const LayerIntRegion& aSource, const Matrix4x4& aTransform)
-{
-  for (auto iter = aSource.RectIter(); !iter.Done(); iter.Next()) {
-    aDest.Or(aDest, TransformRect(iter.Get(), aTransform));
-  }
-  aDest.SimplifyOutward(20);
-}
-
-=======
->>>>>>> upstream-releases
 // Async animations can move child layers without updating our visible region.
-<<<<<<< HEAD
-// PostProcessLayers will recompute visible regions for layers with an
-// intermediate surface, but otherwise we need to do it now.
-void ComputeVisibleRegionForChildren(ContainerLayer* aContainer,
-                                     LayerIntRegion& aResult) {
-||||||| merged common ancestors
-// PostProcessLayers will recompute visible regions for layers with an intermediate
-// surface, but otherwise we need to do it now.
-void
-ComputeVisibleRegionForChildren(ContainerLayer* aContainer, LayerIntRegion& aResult)
-{
-=======
 // PostProcessLayers will recompute visible regions for layers with an
 // intermediate surface, but otherwise we need to do it now.
 static void ComputeVisibleRegionForChildren(ContainerLayer* aContainer,
                                             LayerIntRegion& aResult) {
->>>>>>> upstream-releases
   for (Layer* l = aContainer->GetFirstChild(); l; l = l->GetNextSibling()) {
     if (l->Extend3DContext()) {
       MOZ_ASSERT(l->AsContainerLayer());
@@ -1782,32 +1512,11 @@ bool LayerComposite::HasStaleCompositor() const {
 
 #ifndef MOZ_HAVE_PLATFORM_SPECIFIC_LAYER_BUFFERS
 
-<<<<<<< HEAD
-/*static*/ bool LayerManagerComposite::SupportsDirectTexturing() {
-  return false;
-}
-||||||| merged common ancestors
-/*static*/ bool
-LayerManagerComposite::SupportsDirectTexturing()
-{
-  return false;
-}
-=======
 /*static*/
 bool LayerManagerComposite::SupportsDirectTexturing() { return false; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ void LayerManagerComposite::PlatformSyncBeforeReplyUpdate() {}
-||||||| merged common ancestors
-/*static*/ void
-LayerManagerComposite::PlatformSyncBeforeReplyUpdate()
-{
-}
-=======
 /*static*/
 void LayerManagerComposite::PlatformSyncBeforeReplyUpdate() {}
->>>>>>> upstream-releases
 
 #endif  // !defined(MOZ_HAVE_PLATFORM_SPECIFIC_LAYER_BUFFERS)
 

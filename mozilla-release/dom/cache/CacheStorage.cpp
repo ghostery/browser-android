@@ -38,13 +38,8 @@ namespace dom {
 namespace cache {
 
 using mozilla::ErrorResult;
-<<<<<<< HEAD
-using mozilla::Unused;
-||||||| merged common ancestors
-=======
 using mozilla::Unused;
 using mozilla::dom::quota::QuotaManager;
->>>>>>> upstream-releases
 using mozilla::ipc::BackgroundChild;
 using mozilla::ipc::IProtocol;
 using mozilla::ipc::PBackgroundChild;
@@ -158,16 +153,6 @@ already_AddRefed<CacheStorage> CacheStorage::CreateOnMainThread(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  bool testingEnabled =
-      aForceTrustedOrigin ||
-      Preferences::GetBool("dom.caches.testing.enabled", false) ||
-      StaticPrefs::dom_serviceWorkers_testing_enabled();
-||||||| merged common ancestors
-  bool testingEnabled = aForceTrustedOrigin ||
-    Preferences::GetBool("dom.caches.testing.enabled", false) ||
-    StaticPrefs::dom_serviceWorkers_testing_enabled();
-=======
   if (NS_WARN_IF(!QuotaManager::IsPrincipalInfoValid(principalInfo))) {
     NS_WARNING("CacheStorage not supported on invalid origins.");
     RefPtr<CacheStorage> ref = new CacheStorage(NS_ERROR_DOM_SECURITY_ERR);
@@ -178,7 +163,6 @@ already_AddRefed<CacheStorage> CacheStorage::CreateOnMainThread(
       aForceTrustedOrigin ||
       Preferences::GetBool("dom.caches.testing.enabled", false) ||
       StaticPrefs::dom_serviceWorkers_testing_enabled();
->>>>>>> upstream-releases
 
   if (!IsTrusted(principalInfo, testingEnabled)) {
     NS_WARNING("CacheStorage not supported on untrusted origins.");
@@ -592,22 +576,10 @@ bool CacheStorage::HasStorageAccess() const {
       return true;
     }
 
-<<<<<<< HEAD
-    nsContentUtils::StorageAccess access =
-        nsContentUtils::StorageAllowedForWindow(window);
-    return access > nsContentUtils::StorageAccess::ePrivateBrowsing;
-  }
-||||||| merged common ancestors
-    nsContentUtils::StorageAccess access =
-      nsContentUtils::StorageAllowedForWindow(window);
-    return access > nsContentUtils::StorageAccess::ePrivateBrowsing;
-  }
-=======
     access = StorageAllowedForWindow(window);
   } else {
     WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
     MOZ_ASSERT(workerPrivate);
->>>>>>> upstream-releases
 
     access = workerPrivate->StorageAccess();
   }

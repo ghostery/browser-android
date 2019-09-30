@@ -10,8 +10,6 @@
 
 #include "SkTemplates.h"
 
-#include <vector>
-
 class SkBitSet {
 public:
     explicit SkBitSet(int numberOfBits) {
@@ -36,31 +34,6 @@ public:
         return chunk && SkToBool(*chunk & mask);
     }
 
-<<<<<<< HEAD
-    /** Export indices of set bits to T array. */
-    template<typename T>
-    void exportTo(std::vector<T>* array) const {
-        static_assert(std::is_integral<T>::value, "T is integral");
-        SkASSERT(array);
-        uint32_t* data = reinterpret_cast<uint32_t*>(fBitData.get());
-        for (unsigned int i = 0; i < fDwordCount; ++i) {
-            uint32_t value = data[i];
-            if (value) {  // There are set bits
-                unsigned int index = i * 32;
-                for (unsigned int j = 0; j < 32; ++j) {
-||||||| merged common ancestors
-    /** Export indices of set bits to T array. */
-    template<typename T>
-    void exportTo(SkTDArray<T>* array) const {
-        static_assert(std::is_integral<T>::value, "T is integral");
-        SkASSERT(array);
-        uint32_t* data = reinterpret_cast<uint32_t*>(fBitData.get());
-        for (unsigned int i = 0; i < fDwordCount; ++i) {
-            uint32_t value = data[i];
-            if (value) {  // There are set bits
-                unsigned int index = i * 32;
-                for (unsigned int j = 0; j < 32; ++j) {
-=======
     // Calls f(unsigned) for each set value.
     template<typename FN>
     void getSetValues(FN f) const {
@@ -69,15 +42,8 @@ public:
             if (uint32_t value = data[i]) {  // There are set bits
                 unsigned index = i * 32;
                 for (unsigned j = 0; j < 32; ++j) {
->>>>>>> upstream-releases
                     if (0x1 & (value >> j)) {
-<<<<<<< HEAD
-                        array->push_back(index + j);
-||||||| merged common ancestors
-                        array->push(index + j);
-=======
                         f(index | j);
->>>>>>> upstream-releases
                     }
                 }
             }

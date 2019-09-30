@@ -10,13 +10,7 @@ ar_SA{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.80"}
-=======
     Version{"2.1.49.36"}
->>>>>>> upstream-releases
     calendar{
         default{"islamic-umalqura"}
         gregorian{

@@ -47,19 +47,9 @@ bool HTMLSourceElement::MatchesCurrentMedia() {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool HTMLSourceElement::WouldMatchMediaForDocument(
-    const nsAString& aMedia, const nsIDocument* aDocument) {
-||||||| merged common ancestors
-/* static */ bool
-HTMLSourceElement::WouldMatchMediaForDocument(const nsAString& aMedia,
-                                              const nsIDocument *aDocument)
-{
-=======
 /* static */
 bool HTMLSourceElement::WouldMatchMediaForDocument(const nsAString& aMedia,
                                                    const Document* aDocument) {
->>>>>>> upstream-releases
   if (aMedia.IsEmpty()) {
     return true;
   }
@@ -102,18 +92,8 @@ nsresult HTMLSourceElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
     nsString strVal = aValue ? aValue->GetStringValue() : EmptyString();
     // Find all img siblings after this <source> and notify them of the change
     nsCOMPtr<nsIContent> sibling = AsContent();
-<<<<<<< HEAD
-    while ((sibling = sibling->GetNextSibling())) {
-      if (sibling->IsHTMLElement(nsGkAtoms::img)) {
-        HTMLImageElement* img = static_cast<HTMLImageElement*>(sibling.get());
-||||||| merged common ancestors
-    while ( (sibling = sibling->GetNextSibling()) ) {
-      if (sibling->IsHTMLElement(nsGkAtoms::img)) {
-        HTMLImageElement *img = static_cast<HTMLImageElement*>(sibling.get());
-=======
     while ((sibling = sibling->GetNextSibling())) {
       if (auto* img = HTMLImageElement::FromNode(sibling)) {
->>>>>>> upstream-releases
         if (aName == nsGkAtoms::srcset) {
           img->PictureSourceSrcsetChanged(this, strVal, aNotify);
         } else if (aName == nsGkAtoms::sizes) {
@@ -144,26 +124,9 @@ nsresult HTMLSourceElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
       aNameSpaceID, aName, aValue, aOldValue, aMaybeScriptedPrincipal, aNotify);
 }
 
-<<<<<<< HEAD
-nsresult HTMLSourceElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLSourceElement::BindToTree(nsIDocument *aDocument,
-                              nsIContent *aParent,
-                              nsIContent *aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument,
-                                                 aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLSourceElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (auto* media = HTMLMediaElement::FromNode(aParent)) {

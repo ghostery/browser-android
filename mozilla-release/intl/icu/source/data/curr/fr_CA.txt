@@ -14,13 +14,6 @@ fr_CA{
             "$ AU",
             "dollar australien",
         }
-<<<<<<< HEAD
-        AZN{
-            "AZN",
-            "manat azerbaïdjanais",
-        }
-||||||| merged common ancestors
-=======
         AZN{
             "AZN",
             "manat azerbaïdjanais",
@@ -37,7 +30,6 @@ fr_CA{
             "BHD",
             "dinar bahreïni",
         }
->>>>>>> upstream-releases
         BMD{
             "BMD",
             "dollar bermudien",
@@ -46,18 +38,10 @@ fr_CA{
             "BND",
             "dollar brunéien",
         }
-<<<<<<< HEAD
-||||||| merged common ancestors
-        BSD{
-            "BSD",
-            "dollar bahaméen",
-        }
-=======
         BYR{
             "BYR",
             "rouble biélorusse (2000–2016)",
         }
->>>>>>> upstream-releases
         BZD{
             "BZD",
             "dollar bélizéen",
@@ -82,13 +66,6 @@ fr_CA{
             "COP",
             "peso colombien",
         }
-<<<<<<< HEAD
-        CVE{
-            "CVE",
-            "escudo cap-verdien",
-        }
-||||||| merged common ancestors
-=======
         CUP{
             "CUP",
             "peso cubain",
@@ -113,7 +90,6 @@ fr_CA{
             "€",
             "euro",
         }
->>>>>>> upstream-releases
         FJD{
             "FJD",
             "dollar fidjien",
@@ -262,21 +238,6 @@ fr_CA{
             "OMR",
             "rial omanais",
         }
-<<<<<<< HEAD
-        PEN{
-            "PEN",
-            "nouveau sol péruvien",
-        }
-        PGK{
-            "PGK",
-            "kina papou-néo-guinéen",
-        }
-        QAR{
-            "QAR",
-            "riyal du Qatar",
-        }
-||||||| merged common ancestors
-=======
         PEN{
             "PEN",
             "nouveau sol péruvien",
@@ -293,7 +254,6 @@ fr_CA{
             "QAR",
             "riyal du Qatar",
         }
->>>>>>> upstream-releases
         SAR{
             "SAR",
             "rial saoudien",
@@ -324,11 +284,6 @@ fr_CA{
         }
         SRD{
             "SRD",
-<<<<<<< HEAD
-            "dollar du Suriname",
-||||||| merged common ancestors
-            "dollar surinamais",
-=======
             "dollar du Suriname",
         }
         SSP{
@@ -350,7 +305,6 @@ fr_CA{
         TND{
             "TND",
             "dinar tunisien",
->>>>>>> upstream-releases
         }
         TOP{
             "TOP",
@@ -484,11 +438,5 @@ fr_CA{
             other{"rials yéménites"}
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
 }

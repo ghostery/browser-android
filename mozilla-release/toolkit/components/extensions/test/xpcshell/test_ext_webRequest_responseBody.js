@@ -8,25 +8,9 @@ const { ExtensionTestCommon } = ChromeUtils.import(
   "resource://testing-common/ExtensionTestCommon.jsm"
 );
 
-<<<<<<< HEAD
-const HOSTS = new Set([
-  "example.com",
-]);
-
-const server = createHttpServer({hosts: HOSTS});
-||||||| merged common ancestors
-Cu.importGlobalProperties(["URL"]);
-
-const HOSTS = new Set([
-  "example.com",
-]);
-
-const server = createHttpServer({hosts: HOSTS});
-=======
 const HOSTS = new Set(["example.com"]);
 
 const server = createHttpServer({ hosts: HOSTS });
->>>>>>> upstream-releases
 
 const BASE_URL = "http://example.com";
 const FETCH_ORIGIN = "http://example.com/data/file_sample.html";

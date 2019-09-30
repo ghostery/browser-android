@@ -135,46 +135,21 @@ class FullscreenExit : public FullscreenChange {
  public:
   static const ChangeType kType = eExit;
 
-<<<<<<< HEAD
-  static UniquePtr<FullscreenExit> Create(nsIDocument* aDoc, ErrorResult& aRv) {
-||||||| merged common ancestors
-  static UniquePtr<FullscreenExit> Create(nsIDocument* aDoc, ErrorResult& aRv)
-  {
-=======
   static UniquePtr<FullscreenExit> Create(dom::Document* aDoc,
                                           ErrorResult& aRv) {
->>>>>>> upstream-releases
     RefPtr<Promise> promise = Promise::Create(aDoc->GetOwnerGlobal(), aRv);
     return WrapUnique(new FullscreenExit(aDoc, promise.forget()));
   }
 
-<<<<<<< HEAD
-  static UniquePtr<FullscreenExit> CreateForRemote(nsIDocument* aDoc) {
-||||||| merged common ancestors
-  static UniquePtr<FullscreenExit> CreateForRemote(nsIDocument* aDoc)
-  {
-=======
   static UniquePtr<FullscreenExit> CreateForRemote(dom::Document* aDoc) {
->>>>>>> upstream-releases
     return WrapUnique(new FullscreenExit(aDoc, nullptr));
   }
 
   ~FullscreenExit() { MOZ_COUNT_DTOR(FullscreenExit); }
 
-<<<<<<< HEAD
- private:
-  FullscreenExit(nsIDocument* aDoc, already_AddRefed<Promise> aPromise)
-      : FullscreenChange(kType, aDoc, std::move(aPromise)) {
-||||||| merged common ancestors
-private:
-  FullscreenExit(nsIDocument* aDoc, already_AddRefed<Promise> aPromise)
-    : FullscreenChange(kType, aDoc, std::move(aPromise))
-  {
-=======
  private:
   FullscreenExit(dom::Document* aDoc, already_AddRefed<Promise> aPromise)
       : FullscreenChange(kType, aDoc, std::move(aPromise)) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(FullscreenExit);
   }
 };

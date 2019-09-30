@@ -7,18 +7,9 @@ const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
 
-<<<<<<< HEAD
-const paymentSrv = Cc["@mozilla.org/dom/payments/payment-request-service;1"].getService(Ci.nsIPaymentRequestService);
-||||||| merged common ancestors
-const paymentSrv = Cc["@mozilla.org/dom/payments/payment-request-service;1"].getService(Ci.nsIPaymentRequestService);
-let expectedCompleteStatus = null;
-let expectedShowAction = "accept";
-let expectedUpdateAction = "accept";
-=======
 const paymentSrv = Cc[
   "@mozilla.org/dom/payments/payment-request-service;1"
 ].getService(Ci.nsIPaymentRequestService);
->>>>>>> upstream-releases
 
 function emitTestFail(message) {
   sendAsyncMessage("test-fail", `${DummyUIService.testName}: ${message}`);
@@ -101,28 +92,15 @@ function rejectShow(requestId) {
 function updateShow(requestId) {
   if (DummyUIService.expectedUpdateAction == "updateaddress") {
     paymentSrv.changeShippingAddress(requestId, shippingAddress);
-<<<<<<< HEAD
-  } else if (DummyUIService.expectedUpdateAction == "accept" ||
-             DummyUIService.expectedUpdateAction == "error"){
-||||||| merged common ancestors
-  } else if (expectedUpdateAction == "accept" || expectedUpdateAction == "error"){
-=======
   } else if (
     DummyUIService.expectedUpdateAction == "accept" ||
     DummyUIService.expectedUpdateAction == "error"
   ) {
->>>>>>> upstream-releases
     paymentSrv.changeShippingOption(requestId, "FastShipping");
   } else {
-<<<<<<< HEAD
-    emitTestFail("Unknown expected update action: " + DummyUIService.expectedUpdateAction);
-||||||| merged common ancestors
-    emitTestFail("Unknown expected update action: " + expectedUpdateAction);
-=======
     emitTestFail(
       "Unknown expected update action: " + DummyUIService.expectedUpdateAction
     );
->>>>>>> upstream-releases
   }
 }
 
@@ -138,15 +116,9 @@ function showRequest(requestId) {
   } else if (DummyUIService.expectedShowAction == "update") {
     updateShow(requestId);
   } else {
-<<<<<<< HEAD
-    emitTestFail("Unknown expected show action: " + DummyUIService.expectedShowAction);
-||||||| merged common ancestors
-    emitTestFail("Unknown expected show action: " + expectedShowAction);
-=======
     emitTestFail(
       "Unknown expected show action: " + DummyUIService.expectedShowAction
     );
->>>>>>> upstream-releases
   }
 }
 
@@ -159,19 +131,6 @@ function abortRequest(requestId) {
 }
 
 function completeRequest(requestId) {
-<<<<<<< HEAD
-  let request = paymentSrv.getPaymentRequestById(requestId);
-  if (DummyUIService.expectedCompleteStatus) {
-    if (request.completeStatus == DummyUIService.expectedCompleteStatus) {
-      emitTestPass("request.completeStatus matches expectation of " +
-                   DummyUIService.expectedCompleteStatus);
-||||||| merged common ancestors
-  let payRequest = paymentSrv.getPaymentRequestById(requestId);
-  if (expectedCompleteStatus) {
-    if (payRequest.completeStatus == expectedCompleteStatus) {
-      emitTestPass("request.completeStatus matches expectation of " +
-                   expectedCompleteStatus);
-=======
   let request = paymentSrv.getPaymentRequestById(requestId);
   if (DummyUIService.expectedCompleteStatus) {
     if (request.completeStatus == DummyUIService.expectedCompleteStatus) {
@@ -179,22 +138,13 @@ function completeRequest(requestId) {
         "request.completeStatus matches expectation of " +
           DummyUIService.expectedCompleteStatus
       );
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      emitTestFail("request.completeStatus incorrect. Expected " +
-                   DummyUIService.expectedCompleteStatus + ", got " + request.completeStatus);
-||||||| merged common ancestors
-      emitTestFail("request.completeStatus incorrect. Expected " +
-                   expectedCompleteStatus + ", got " + payRequest.completeStatus);
-=======
       emitTestFail(
         "request.completeStatus incorrect. Expected " +
           DummyUIService.expectedCompleteStatus +
           ", got " +
           request.completeStatus
       );
->>>>>>> upstream-releases
     }
   }
   let completeResponse = Cc[
@@ -211,14 +161,6 @@ function completeRequest(requestId) {
 
 function updateRequest(requestId) {
   let request = paymentSrv.getPaymentRequestById(requestId);
-<<<<<<< HEAD
-  if (request.completeStatus !== "") {
-    emitTestFail("request.completeStatus should be empty, but got '" + request.completeStatus + "'.");
-  }
-  if (DummyUIService.expectedUpdateAction == "accept") {
-||||||| merged common ancestors
-  if (expectedUpdateAction == "accept") {
-=======
   if (request.completeStatus !== "") {
     emitTestFail(
       "request.completeStatus should be empty, but got '" +
@@ -227,7 +169,6 @@ function updateRequest(requestId) {
     );
   }
   if (DummyUIService.expectedUpdateAction == "accept") {
->>>>>>> upstream-releases
     if (request.paymentDetails.error != "") {
       emitTestFail(
         "updatedDetails should not have errors(" +
@@ -271,15 +212,9 @@ function updateRequest(requestId) {
     DummyUIService.expectedUpdateAction = "accept";
     paymentSrv.changeShippingOption(requestId, "FastShipping");
   } else {
-<<<<<<< HEAD
-    emitTestFail("Unknown expected update aciton: " + DummyUIService.expectedUpdateAction);
-||||||| merged common ancestors
-    emitTestFail("Unknown expected update aciton: " + expectedUpdateAction);
-=======
     emitTestFail(
       "Unknown expected update aciton: " + DummyUIService.expectedUpdateAction
     );
->>>>>>> upstream-releases
   }
 }
 

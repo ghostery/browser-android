@@ -100,22 +100,8 @@ class VectorImage final : public ImageResource, public nsIStreamListener {
                                uint32_t aFlags);
 
   /// Create a gfxDrawable which callbacks into the SVG document.
-<<<<<<< HEAD
   already_AddRefed<gfxDrawable> CreateSVGDrawable(
       const SVGDrawingParameters& aParams);
-
-  /// Returns true if we use the surface cache to store rasterized copies.
-  bool UseSurfaceCacheForSize(const IntSize& aSize) const;
-||||||| merged common ancestors
-  already_AddRefed<gfxDrawable>
-    CreateSVGDrawable(const SVGDrawingParameters& aParams);
-
-  /// Returns true if we use the surface cache to store rasterized copies.
-  bool UseSurfaceCacheForSize(const IntSize& aSize) const;
-=======
-  already_AddRefed<gfxDrawable> CreateSVGDrawable(
-      const SVGDrawingParameters& aParams);
->>>>>>> upstream-releases
 
   /// Rasterize the SVG into a surface. aWillCache will be set to whether or
   /// not the new surface was put into the cache.

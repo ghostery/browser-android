@@ -135,41 +135,6 @@ class JsepSession {
   };
 
   // Basic JSEP operations.
-<<<<<<< HEAD
-  virtual nsresult CreateOffer(const JsepOfferOptions& options,
-                               std::string* offer) = 0;
-  virtual nsresult CreateAnswer(const JsepAnswerOptions& options,
-                                std::string* answer) = 0;
-  virtual std::string GetLocalDescription(
-      JsepDescriptionPendingOrCurrent type) const = 0;
-  virtual std::string GetRemoteDescription(
-      JsepDescriptionPendingOrCurrent type) const = 0;
-  virtual nsresult SetLocalDescription(JsepSdpType type,
-                                       const std::string& sdp) = 0;
-  virtual nsresult SetRemoteDescription(JsepSdpType type,
-                                        const std::string& sdp) = 0;
-  virtual nsresult AddRemoteIceCandidate(const std::string& candidate,
-                                         const std::string& mid,
-                                         const Maybe<uint16_t>& level,
-                                         std::string* transportId) = 0;
-||||||| merged common ancestors
-  virtual nsresult CreateOffer(const JsepOfferOptions& options,
-                               std::string* offer) = 0;
-  virtual nsresult CreateAnswer(const JsepAnswerOptions& options,
-                                std::string* answer) = 0;
-  virtual std::string GetLocalDescription(JsepDescriptionPendingOrCurrent type)
-                                          const = 0;
-  virtual std::string GetRemoteDescription(JsepDescriptionPendingOrCurrent type)
-                                           const = 0;
-  virtual nsresult SetLocalDescription(JsepSdpType type,
-                                       const std::string& sdp) = 0;
-  virtual nsresult SetRemoteDescription(JsepSdpType type,
-                                        const std::string& sdp) = 0;
-  virtual nsresult AddRemoteIceCandidate(const std::string& candidate,
-                                         const std::string& mid,
-                                         uint16_t level,
-                                         std::string* transportId) = 0;
-=======
   virtual Result CreateOffer(const JsepOfferOptions& options,
                              std::string* offer) = 0;
   virtual Result CreateAnswer(const JsepAnswerOptions& options,
@@ -187,32 +152,15 @@ class JsepSession {
                                        const Maybe<uint16_t>& level,
                                        const std::string& ufrag,
                                        std::string* transportId) = 0;
->>>>>>> upstream-releases
   virtual nsresult AddLocalIceCandidate(const std::string& candidate,
                                         const std::string& transportId,
-<<<<<<< HEAD
-                                        uint16_t* level, std::string* mid,
-||||||| merged common ancestors
-                                        uint16_t* level,
-                                        std::string* mid,
-=======
                                         const std::string& ufrag,
                                         uint16_t* level, std::string* mid,
->>>>>>> upstream-releases
                                         bool* skipped) = 0;
   virtual nsresult UpdateDefaultCandidate(
       const std::string& defaultCandidateAddr, uint16_t defaultCandidatePort,
       const std::string& defaultRtcpCandidateAddr,
-<<<<<<< HEAD
       uint16_t defaultRtcpCandidatePort, const std::string& transportId) = 0;
-  virtual nsresult EndOfLocalCandidates(const std::string& transportId) = 0;
-||||||| merged common ancestors
-      uint16_t defaultRtcpCandidatePort,
-      const std::string& transportId) = 0;
-  virtual nsresult EndOfLocalCandidates(const std::string& transportId) = 0;
-=======
-      uint16_t defaultRtcpCandidatePort, const std::string& transportId) = 0;
->>>>>>> upstream-releases
   virtual nsresult Close() = 0;
 
   // ICE controlling or controlled

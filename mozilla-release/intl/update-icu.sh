@@ -54,14 +54,6 @@ for patch in \
  suppress-warnings.diff \
  bug-1172609-timezone-recreateDefault.diff \
  bug-1198952-workaround-make-3.82-bug.diff \
-<<<<<<< HEAD
- bug-1504656-relativetimeformat-plural-other-fallback.diff \
- bug-1513934-timezone-detection-win7-part1.diff \
- bug-1513934-timezone-detection-win7-part2.diff \
-||||||| merged common ancestors
- bug-1466471-case-conversion-bugfix.diff \
-=======
->>>>>>> upstream-releases
 ; do
   echo "Applying local patch $patch"
   patch -d ${icu_dir}/../../ -p1 --no-backup-if-mismatch < ${icu_dir}/../icu-patches/$patch

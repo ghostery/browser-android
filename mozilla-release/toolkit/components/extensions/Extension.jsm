@@ -305,21 +305,6 @@ var UninstallObserver = {
 
       ExtensionStorageIDB.clearMigratedExtensionPref(addon.id);
 
-<<<<<<< HEAD
-      // If LSNG is not enabled, we need to clear localStorage explicitly using
-      // the old API.
-      if (!Services.lsm.nextGenLocalStorageEnabled) {
-        // Clear localStorage created by the extension
-        let storage = Services.domStorageManager.getStorage(null, principal);
-        if (storage) {
-          storage.clear();
-        }
-||||||| merged common ancestors
-      // Clear localStorage created by the extension
-      let storage = Services.domStorageManager.getStorage(null, principal);
-      if (storage) {
-        storage.clear();
-=======
       // If LSNG is not enabled, we need to clear localStorage explicitly using
       // the old API.
       if (!Services.lsm.nextGenLocalStorageEnabled) {
@@ -332,7 +317,6 @@ var UninstallObserver = {
         if (storage) {
           storage.clear();
         }
->>>>>>> upstream-releases
       }
 
       // Remove any permissions related to the unlimitedStorage permission
@@ -571,13 +555,7 @@ class ExtensionData {
 
     let permissions = new Set();
     let origins = new Set();
-<<<<<<< HEAD
-    let {restrictSchemes} = this;
-||||||| merged common ancestors
-    let restrictSchemes = !this.hasPermission("mozillaAddons");
-=======
     let { restrictSchemes, isPrivileged } = this;
->>>>>>> upstream-releases
     for (let perm of this.manifest.permissions || []) {
       let type = classifyPermission(perm, restrictSchemes, isPrivileged);
       if (type.origin) {
@@ -1041,15 +1019,6 @@ class ExtensionData {
     this.apiManager = this.getAPIManager();
     await this.apiManager.lazyInit();
 
-<<<<<<< HEAD
-    this.webAccessibleResources = manifestData.webAccessibleResources.map(res => new MatchGlob(res));
-    this.whiteListedHosts = new MatchPatternSet(manifestData.originPermissions, {
-      restrictSchemes: this.restrictSchemes,
-    });
-||||||| merged common ancestors
-    this.webAccessibleResources = manifestData.webAccessibleResources.map(res => new MatchGlob(res));
-    this.whiteListedHosts = new MatchPatternSet(manifestData.originPermissions, {restrictSchemes: !this.hasPermission("mozillaAddons")});
-=======
     this.webAccessibleResources = manifestData.webAccessibleResources.map(
       res => new MatchGlob(res)
     );
@@ -1059,7 +1028,6 @@ class ExtensionData {
         restrictSchemes: this.restrictSchemes,
       }
     );
->>>>>>> upstream-releases
 
     return this.manifest;
   }
@@ -1671,15 +1639,6 @@ class Extension extends ExtensionData {
       if (permissions.origins.length > 0) {
         let patterns = this.whiteListedHosts.patterns.map(host => host.pattern);
 
-<<<<<<< HEAD
-        this.whiteListedHosts = new MatchPatternSet(new Set([...patterns, ...permissions.origins]), {
-          restrictSchemes: this.restrictSchemes,
-          ignorePath: true,
-        });
-||||||| merged common ancestors
-        this.whiteListedHosts = new MatchPatternSet(new Set([...patterns, ...permissions.origins]),
-                                                    {restrictSchemes: !this.hasPermission("mozillaAddons"), ignorePath: true});
-=======
         this.whiteListedHosts = new MatchPatternSet(
           new Set([...patterns, ...permissions.origins]),
           {
@@ -1687,7 +1646,6 @@ class Extension extends ExtensionData {
             ignorePath: true,
           }
         );
->>>>>>> upstream-releases
       }
 
       this.policy.permissions = Array.from(this.permissions);
@@ -1719,13 +1677,6 @@ class Extension extends ExtensionData {
     /* eslint-enable mozilla/balanced-listeners */
   }
 
-<<<<<<< HEAD
-  get restrictSchemes() {
-    return !(this.isPrivileged && this.hasPermission("mozillaAddons"));
-  }
-
-||||||| merged common ancestors
-=======
   set state(startupState) {
     this.startupStates.clear();
     this.startupStates.add(startupState);
@@ -1748,7 +1699,6 @@ class Extension extends ExtensionData {
     return !(this.isPrivileged && this.hasPermission("mozillaAddons"));
   }
 
->>>>>>> upstream-releases
   // Some helpful properties added elsewhere:
   /**
    * An object used to map between extension-visible tab ids and
@@ -2445,15 +2395,6 @@ class Extension extends ExtensionData {
 
   get optionalOrigins() {
     if (this._optionalOrigins == null) {
-<<<<<<< HEAD
-      let {restrictSchemes} = this;
-      let origins = this.manifest.optional_permissions.filter(perm => classifyPermission(perm, restrictSchemes).origin);
-      this._optionalOrigins = new MatchPatternSet(origins, {restrictSchemes, ignorePath: true});
-||||||| merged common ancestors
-      let restrictSchemes = !this.hasPermission("mozillaAddons");
-      let origins = this.manifest.optional_permissions.filter(perm => classifyPermission(perm, restrictSchemes).origin);
-      this._optionalOrigins = new MatchPatternSet(origins, {restrictSchemes, ignorePath: true});
-=======
       let { restrictSchemes, isPrivileged } = this;
       let origins = this.manifest.optional_permissions.filter(
         perm => classifyPermission(perm, restrictSchemes, isPrivileged).origin
@@ -2462,7 +2403,6 @@ class Extension extends ExtensionData {
         restrictSchemes,
         ignorePath: true,
       });
->>>>>>> upstream-releases
     }
     return this._optionalOrigins;
   }

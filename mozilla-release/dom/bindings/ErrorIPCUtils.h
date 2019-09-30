@@ -34,21 +34,10 @@ struct ParamTraits<mozilla::ErrorResult> {
     if (aParam.IsJSException()
 #  ifdef DEBUG
         || aParam.mMightHaveUnreportedJSException
-<<<<<<< HEAD
-#endif
-    ) {
-      MOZ_CRASH(
-          "Cannot encode an ErrorResult representing a Javascript exception");
-||||||| merged common ancestors
-#endif
-        ) {
-      MOZ_CRASH("Cannot encode an ErrorResult representing a Javascript exception");
-=======
 #  endif
     ) {
       MOZ_CRASH(
           "Cannot encode an ErrorResult representing a Javascript exception");
->>>>>>> upstream-releases
     }
 
     WriteParam(aMsg, aParam.mResult);

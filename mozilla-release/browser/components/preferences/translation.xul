@@ -72,36 +72,6 @@
       </tree>
     </vbox>
   </vbox>
-<<<<<<< HEAD
-
-  <hbox class="actionButtons" align="end">
-    <button id="removeSite" disabled="true"
-            data-l10n-id="translation-sites-button-remove"
-            icon="remove"
-            oncommand="gTranslationExceptions.onSiteDeleted();"/>
-    <button id="removeAllSites"
-            data-l10n-id="translation-sites-button-remove-all"
-            icon="clear"
-            oncommand="gTranslationExceptions.onAllSitesDeleted();"/>
-    <spacer flex="1"/>
-    <button oncommand="close();" icon="close"
-            data-l10n-id="translation-button-close"/>
-||||||| merged common ancestors
-  <hbox align="end">
-    <hbox class="actionButtons" flex="1">
-      <button id="removeSite" disabled="true"
-              data-l10n-id="translation-sites-button-remove"
-              icon="remove"
-              oncommand="gTranslationExceptions.onSiteDeleted();"/>
-      <button id="removeAllSites"
-              data-l10n-id="translation-sites-button-remove-all"
-              icon="clear"
-              oncommand="gTranslationExceptions.onAllSitesDeleted();"/>
-      <spacer flex="1"/>
-      <button oncommand="close();" icon="close"
-              data-l10n-id="translation-button-close"/>
-    </hbox>
-=======
 
   <hbox class="actionButtons" align="end">
     <button id="removeSite" disabled="true"
@@ -115,6 +85,5 @@
     <spacer flex="1"/>
     <button oncommand="window.close();" icon="close"
             data-l10n-id="translation-button-close"/>
->>>>>>> upstream-releases
   </hbox>
 </window>

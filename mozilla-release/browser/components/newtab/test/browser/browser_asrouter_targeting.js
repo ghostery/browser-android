@@ -366,25 +366,6 @@ add_task(async function checksearchEngines() {
     .map(engine => engine.identifier)
     .sort()
     .join(",");
-<<<<<<< HEAD
-  ok(result.installed.length,
-    "searchEngines.installed should be a non-empty array");
-  is(result.installed.sort().join(","), expectedInstalled,
-    "searchEngines.installed should be an array of visible search engines");
-  ok(result.current && typeof result.current === "string",
-    "searchEngines.current should be a truthy string");
-  is(result.current, Services.search.defaultEngine.identifier,
-    "searchEngines.current should be the current engine name");
-||||||| merged common ancestors
-  ok(result.installed.length,
-    "searchEngines.installed should be a non-empty array");
-  is(result.installed.sort().join(","), expectedInstalled,
-    "searchEngines.installed should be an array of visible search engines");
-  ok(result.current && typeof result.current === "string",
-    "searchEngines.current should be a truthy string");
-  is(result.current, Services.search.currentEngine.identifier,
-    "searchEngines.current should be the current engine name");
-=======
   ok(
     result.installed.length,
     "searchEngines.installed should be a non-empty array"
@@ -403,17 +384,7 @@ add_task(async function checksearchEngines() {
     (await Services.search.getDefault()).identifier,
     "searchEngines.current should be the current engine name"
   );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const message = {id: "foo", targeting: `searchEngines[.current == ${Services.search.defaultEngine.identifier}]`};
-  is(await ASRouterTargeting.findMatchingMessage({messages: [message]}), message,
-    "should select correct item by searchEngines.current");
-||||||| merged common ancestors
-  const message = {id: "foo", targeting: `searchEngines[.current == ${Services.search.currentEngine.identifier}]`};
-  is(await ASRouterTargeting.findMatchingMessage({messages: [message]}), message,
-    "should select correct item by searchEngines.current");
-=======
   const message = {
     id: "foo",
     targeting: `searchEngines[.current == ${
@@ -425,7 +396,6 @@ add_task(async function checksearchEngines() {
     message,
     "should select correct item by searchEngines.current"
   );
->>>>>>> upstream-releases
 
   const message2 = {
     id: "foo",
@@ -671,18 +641,9 @@ add_task(async function checkFrecentSites() {
 add_task(async function check_pinned_sites() {
   const originalPin = JSON.stringify(NewTabUtils.pinnedLinks.links);
   const sitesToPin = [
-<<<<<<< HEAD
-    {url: "https://foo.com"},
-    {url: "https://bloo.com"},
-    {url: "https://floogle.com", searchTopSite: true},
-||||||| merged common ancestors
-    {url: "https://foo.com"},
-    {url: "https://floogle.com", searchTopSite: true},
-=======
     { url: "https://foo.com" },
     { url: "https://bloo.com" },
     { url: "https://floogle.com", searchTopSite: true },
->>>>>>> upstream-releases
   ];
   sitesToPin.forEach(site =>
     NewTabUtils.pinnedLinks.pin(site, NewTabUtils.pinnedLinks.links.length)
@@ -694,11 +655,6 @@ add_task(async function check_pinned_sites() {
     NewTabUtils.pinnedLinks.links.includes(null),
     "should have set an item in pinned links to null via unpinning for testing"
   );
-
-  // Unpinning adds null to the list of pinned sites, which we should test that we handle gracefully for our targeting
-  NewTabUtils.pinnedLinks.unpin(sitesToPin[1]);
-  ok(NewTabUtils.pinnedLinks.links.includes(null),
-    "should have set an item in pinned links to null via unpinning for testing");
 
   let message;
 
@@ -765,22 +721,11 @@ add_task(async function check_region() {
 });
 
 add_task(async function check_browserSettings() {
-<<<<<<< HEAD
-  is(await JSON.stringify(ASRouterTargeting.Environment.browserSettings.update), JSON.stringify(TelemetryEnvironment.currentEnvironment.settings.update),
-      "should return correct update info");
-||||||| merged common ancestors
-  is(await ASRouterTargeting.Environment.browserSettings.attribution, TelemetryEnvironment.currentEnvironment.settings.attribution,
-    "should return correct attribution info");
-
-  is(await JSON.stringify(ASRouterTargeting.Environment.browserSettings.update), JSON.stringify(TelemetryEnvironment.currentEnvironment.settings.update),
-      "should return correct update info");
-=======
   is(
     await JSON.stringify(ASRouterTargeting.Environment.browserSettings.update),
     JSON.stringify(TelemetryEnvironment.currentEnvironment.settings.update),
     "should return correct update info"
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function check_sync() {

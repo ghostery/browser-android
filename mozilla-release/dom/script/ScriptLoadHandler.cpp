@@ -155,146 +155,12 @@ ScriptLoadHandler::OnIncrementalData(nsIIncrementalStreamLoader* aLoader,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult ScriptLoadHandler::DecodeRawData(const uint8_t* aData,
-                                          uint32_t aDataLength,
-                                          bool aEndOfStream) {
-  CheckedInt<size_t> needed = mDecoder->MaxUTF16BufferLength(aDataLength);
-  if (!needed.isValid()) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  // Reference to the script source buffer which we will update.
-  ScriptLoadRequest::ScriptTextBuffer& scriptText = mRequest->ScriptText();
-
-  uint32_t haveRead = scriptText.length();
-
-  CheckedInt<uint32_t> capacity = haveRead;
-  capacity += needed.value();
-
-  if (!capacity.isValid() || !scriptText.resize(capacity.value())) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  uint32_t result;
-  size_t read;
-  size_t written;
-  bool hadErrors;
-  Tie(result, read, written, hadErrors) = mDecoder->DecodeToUTF16(
-      MakeSpan(aData, aDataLength),
-      MakeSpan(scriptText.begin() + haveRead, needed.value()), aEndOfStream);
-  MOZ_ASSERT(result == kInputEmpty);
-  MOZ_ASSERT(read == aDataLength);
-  MOZ_ASSERT(written <= needed.value());
-  Unused << hadErrors;
-
-  haveRead += written;
-  MOZ_ASSERT(haveRead <= capacity.value(),
-             "mDecoder produced more data than expected");
-  MOZ_ALWAYS_TRUE(scriptText.resize(haveRead));
-  mRequest->mScriptTextLength = scriptText.length();
-
-  return NS_OK;
-}
-
-bool ScriptLoadHandler::EnsureDecoder(nsIIncrementalStreamLoader* aLoader,
-                                      const uint8_t* aData,
-                                      uint32_t aDataLength, bool aEndOfStream) {
-  // Check if decoder has already been created.
-  if (mDecoder) {
-    return true;
-  }
-
-  nsAutoCString charset;
-  if (!EnsureDecoder(aLoader, aData, aDataLength, aEndOfStream, charset)) {
-    return false;
-  }
-  return true;
-}
-||||||| merged common ancestors
-nsresult
-ScriptLoadHandler::DecodeRawData(const uint8_t* aData,
-                                 uint32_t aDataLength,
-                                 bool aEndOfStream)
-{
-  CheckedInt<size_t> needed = mDecoder->MaxUTF16BufferLength(aDataLength);
-  if (!needed.isValid()) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  // Reference to the script source buffer which we will update.
-  ScriptLoadRequest::ScriptTextBuffer& scriptText = mRequest->ScriptText();
-
-  uint32_t haveRead = scriptText.length();
-
-  CheckedInt<uint32_t> capacity = haveRead;
-  capacity += needed.value();
-
-  if (!capacity.isValid() || !scriptText.resize(capacity.value())) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  uint32_t result;
-  size_t read;
-  size_t written;
-  bool hadErrors;
-  Tie(result, read, written, hadErrors) = mDecoder->DecodeToUTF16(
-    MakeSpan(aData, aDataLength),
-    MakeSpan(scriptText.begin() + haveRead, needed.value()),
-    aEndOfStream);
-  MOZ_ASSERT(result == kInputEmpty);
-  MOZ_ASSERT(read == aDataLength);
-  MOZ_ASSERT(written <= needed.value());
-  Unused << hadErrors;
-
-  haveRead += written;
-  MOZ_ASSERT(haveRead <= capacity.value(), "mDecoder produced more data than expected");
-  MOZ_ALWAYS_TRUE(scriptText.resize(haveRead));
-  mRequest->mScriptTextLength = scriptText.length();
-
-  return NS_OK;
-}
-
-bool
-ScriptLoadHandler::EnsureDecoder(nsIIncrementalStreamLoader* aLoader,
-                                 const uint8_t* aData,
-                                 uint32_t aDataLength,
-                                 bool aEndOfStream)
-{
-  // Check if decoder has already been created.
-  if (mDecoder) {
-    return true;
-  }
-
-  nsAutoCString charset;
-  if (!EnsureDecoder(aLoader, aData, aDataLength, aEndOfStream, charset)) {
-    return false;
-  }
-  return true;
-}
-=======
 bool ScriptLoadHandler::TrySetDecoder(nsIIncrementalStreamLoader* aLoader,
                                       const uint8_t* aData,
                                       uint32_t aDataLength, bool aEndOfStream) {
   MOZ_ASSERT(mDecoder == nullptr,
              "can't have a decoder already if we're trying to set one");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool ScriptLoadHandler::EnsureDecoder(nsIIncrementalStreamLoader* aLoader,
-                                      const uint8_t* aData,
-                                      uint32_t aDataLength, bool aEndOfStream,
-                                      nsCString& oCharset) {
-||||||| merged common ancestors
-bool
-ScriptLoadHandler::EnsureDecoder(nsIIncrementalStreamLoader* aLoader,
-                                 const uint8_t* aData,
-                                 uint32_t aDataLength,
-                                 bool aEndOfStream,
-                                 nsCString& oCharset)
-{
-=======
->>>>>>> upstream-releases
   // JavaScript modules are always UTF-8.
   if (mRequest->IsModuleRequest()) {
     mDecoder = UTF_8_ENCODING->NewDecoderWithBOMRemoval();
@@ -419,50 +285,11 @@ nsresult ScriptLoadHandler::EnsureKnownDataType(
     if (altDataType.Equals(nsContentUtils::JSBytecodeMimeType())) {
       mRequest->SetBytecode();
       TRACE_FOR_TEST(mRequest->Element(), "scriptloader_load_bytecode");
-<<<<<<< HEAD
       return NS_OK;
     }
     MOZ_ASSERT(altDataType.IsEmpty());
   }
 
-  if (ScriptLoader::BinASTEncodingEnabled()) {
-    nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(req);
-    if (httpChannel) {
-      nsAutoCString mimeType;
-      httpChannel->GetContentType(mimeType);
-      if (mimeType.LowerCaseEqualsASCII(APPLICATION_JAVASCRIPT_BINAST)) {
-        if (mRequest->ShouldAcceptBinASTEncoding()) {
-          mRequest->SetBinASTSource();
-          TRACE_FOR_TEST(mRequest->Element(), "scriptloader_load_source");
-          return NS_OK;
-        }
-        return NS_ERROR_FAILURE;
-      }
-||||||| merged common ancestors
-    } else {
-      MOZ_ASSERT(altDataType.IsEmpty());
-      mRequest->SetTextSource();
-      TRACE_FOR_TEST(mRequest->Element(), "scriptloader_load_source");
-=======
-      return NS_OK;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-||||||| merged common ancestors
-  } else {
-    mRequest->SetTextSource();
-    TRACE_FOR_TEST(mRequest->Element(), "scriptloader_load_source");
-=======
-    MOZ_ASSERT(altDataType.IsEmpty());
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  mRequest->SetTextSource();
-  TRACE_FOR_TEST(mRequest->Element(), "scriptloader_load_source");
-
-||||||| merged common ancestors
-=======
   if (nsJSUtils::BinASTEncodingEnabled()) {
     nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(req);
     if (httpChannel) {
@@ -487,7 +314,6 @@ nsresult ScriptLoadHandler::EnsureKnownDataType(
   mRequest->SetTextSource();
   TRACE_FOR_TEST(mRequest->Element(), "scriptloader_load_source");
 
->>>>>>> upstream-releases
   MOZ_ASSERT(!mRequest->IsUnknownDataType());
   MOZ_ASSERT(mRequest->IsLoading());
   return NS_OK;
@@ -522,16 +348,8 @@ ScriptLoadHandler::OnStreamComplete(nsIIncrementalStreamLoader* aLoader,
       rv = DecodeRawData(aData, aDataLength, /* aEndOfStream = */ true);
       NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-      LOG(("ScriptLoadRequest (%p): Source length = %u", mRequest.get(),
-           unsigned(mRequest->ScriptText().length())));
-||||||| merged common ancestors
-      LOG(("ScriptLoadRequest (%p): Source length = %u",
-           mRequest.get(), unsigned(mRequest->ScriptText().length())));
-=======
       LOG(("ScriptLoadRequest (%p): Source length in code units = %u",
            mRequest.get(), unsigned(mRequest->ScriptTextLength())));
->>>>>>> upstream-releases
 
       // If SRI is required for this load, appending new bytes to the hash.
       if (mSRIDataVerifier && NS_SUCCEEDED(mSRIStatus)) {

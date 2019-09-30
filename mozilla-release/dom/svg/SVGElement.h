@@ -33,32 +33,12 @@ nsresult NS_NewSVGElement(mozilla::dom::Element** aResult,
 namespace mozilla {
 class DeclarationBlock;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-namespace dom {
-class SVGSVGElement;
-class SVGViewportElement;
-
-}  // namespace dom
-
-class SVGAnimatedNumberList;
-class SVGNumberList;
-||||||| merged common ancestors
-namespace dom {
-class SVGSVGElement;
-class SVGViewportElement;
-
-} // namespace dom
-
-class SVGAnimatedNumberList;
-class SVGNumberList;
-=======
 class DOMSVGStringList;
 class SVGAnimatedBoolean;
 class SVGAnimatedEnumeration;
 class SVGAnimatedInteger;
 class SVGAnimatedIntegerPair;
 class SVGAnimatedLength;
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 class SVGAnimatedLengthList;
 class SVGAnimatedNumber;
 class SVGAnimatedNumberList;
@@ -74,13 +54,7 @@ class SVGNumberList;
 class SVGStringList;
 class SVGUserUnitList;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 struct SVGEnumMapping;
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
 namespace dom {
 class SVGSVGElement;
@@ -88,74 +62,19 @@ class SVGViewportElement;
 
 typedef nsStyledElement SVGElementBase;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-class nsSVGElement : public nsSVGElementBase  // nsIContent
-||||||| merged common ancestors
-class nsSVGElement : public nsSVGElementBase    // nsIContent
-=======
 class SVGElement : public SVGElementBase  // nsIContent
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 {
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
- protected:
-  explicit nsSVGElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  friend nsresult NS_NewSVGElement(
-      mozilla::dom::Element** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-||||||| merged common ancestors
-protected:
-  explicit nsSVGElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  friend nsresult NS_NewSVGElement(mozilla::dom::Element **aResult,
-                                   already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-=======
  protected:
   explicit SVGElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
   friend nsresult(
       ::NS_NewSVGElement(mozilla::dom::Element** aResult,
                          already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
   nsresult Init();
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  virtual ~nsSVGElement();
-
- public:
-  virtual nsresult Clone(mozilla::dom::NodeInfo*,
-                         nsINode** aResult) const MOZ_MUST_OVERRIDE override;
-
-  typedef mozilla::SVGNumberList SVGNumberList;
-  typedef mozilla::SVGAnimatedNumberList SVGAnimatedNumberList;
-  typedef mozilla::SVGUserUnitList SVGUserUnitList;
-  typedef mozilla::SVGAnimatedLengthList SVGAnimatedLengthList;
-  typedef mozilla::SVGAnimatedPointList SVGAnimatedPointList;
-  typedef mozilla::SVGAnimatedPathSegList SVGAnimatedPathSegList;
-  typedef mozilla::SVGAnimatedPreserveAspectRatio
-      SVGAnimatedPreserveAspectRatio;
-  typedef mozilla::nsSVGAnimatedTransformList nsSVGAnimatedTransformList;
-  typedef mozilla::SVGStringList SVGStringList;
-||||||| merged common ancestors
-  virtual ~nsSVGElement();
-
-public:
-
-  virtual nsresult Clone(mozilla::dom::NodeInfo*, nsINode** aResult) const
-    MOZ_MUST_OVERRIDE override;
-
-  typedef mozilla::SVGNumberList SVGNumberList;
-  typedef mozilla::SVGAnimatedNumberList SVGAnimatedNumberList;
-  typedef mozilla::SVGUserUnitList SVGUserUnitList;
-  typedef mozilla::SVGAnimatedLengthList SVGAnimatedLengthList;
-  typedef mozilla::SVGAnimatedPointList SVGAnimatedPointList;
-  typedef mozilla::SVGAnimatedPathSegList SVGAnimatedPathSegList;
-  typedef mozilla::SVGAnimatedPreserveAspectRatio SVGAnimatedPreserveAspectRatio;
-  typedef mozilla::nsSVGAnimatedTransformList nsSVGAnimatedTransformList;
-  typedef mozilla::SVGStringList SVGStringList;
-=======
   virtual ~SVGElement();
 
  public:
   virtual nsresult Clone(mozilla::dom::NodeInfo*,
                          nsINode** aResult) const MOZ_MUST_OVERRIDE override;
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
   // nsISupports
   NS_INLINE_DECL_REFCOUNTING_INHERITED(SVGElement, SVGElementBase)
@@ -166,16 +85,7 @@ public:
 
   // nsIContent interface methods
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument,
-                              nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
   virtual nsChangeHint GetAttributeChangeHint(const nsAtom* aAttribute,
                                               int32_t aModType) const override;
@@ -186,17 +96,8 @@ public:
    * We override the default to unschedule computation of Servo declaration
    * blocks when adopted across documents.
    */
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override;
-
-||||||| merged common ancestors
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override;
-
-
-=======
   virtual void NodeInfoChanged(Document* aOldDoc) override;
 
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
   static const MappedAttributeEntry sFillStrokeMap[];
@@ -262,15 +163,6 @@ public:
   bool NumberAttrAllowsPercentage(uint8_t aAttrEnum) {
     return GetNumberInfo().mNumberInfo[aAttrEnum].mPercentagesAllowed;
   }
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  virtual bool HasValidDimensions() const { return true; }
-  void SetLength(nsAtom* aName, const nsSVGLength2& aLength);
-||||||| merged common ancestors
-  virtual bool HasValidDimensions() const {
-    return true;
-  }
-  void SetLength(nsAtom* aName, const nsSVGLength2 &aLength);
-=======
   virtual bool HasValidDimensions() const { return true; }
   void SetLength(nsAtom* aName, const SVGAnimatedLength& aLength);
 
@@ -279,7 +171,6 @@ public:
                                                nsCSSPropertyID aPropId,
                                                const SVGAnimatedLength& aLength,
                                                ValToUse aValToUse);
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
   nsAttrValue WillChangeLength(uint8_t aAttrEnum);
   nsAttrValue WillChangeNumberPair(uint8_t aAttrEnum);
@@ -346,22 +237,10 @@ public:
     DO_ALLOCATE = 0x1
   };
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  nsSVGLength2* GetAnimatedLength(const nsAtom* aAttrName);
-  void GetAnimatedLengthValues(float* aFirst, ...);
-  void GetAnimatedNumberValues(float* aFirst, ...);
-  void GetAnimatedIntegerValues(int32_t* aFirst, ...);
-||||||| merged common ancestors
-  nsSVGLength2* GetAnimatedLength(const nsAtom *aAttrName);
-  void GetAnimatedLengthValues(float *aFirst, ...);
-  void GetAnimatedNumberValues(float *aFirst, ...);
-  void GetAnimatedIntegerValues(int32_t *aFirst, ...);
-=======
   SVGAnimatedLength* GetAnimatedLength(const nsAtom* aAttrName);
   void GetAnimatedLengthValues(float* aFirst, ...);
   void GetAnimatedNumberValues(float* aFirst, ...);
   void GetAnimatedIntegerValues(int32_t* aFirst, ...);
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
   SVGAnimatedNumberList* GetAnimatedNumberList(uint8_t aAttrEnum);
   SVGAnimatedNumberList* GetAnimatedNumberList(nsAtom* aAttrName);
   void GetAnimatedLengthListValues(SVGUserUnitList* aFirst, ...);
@@ -381,33 +260,13 @@ public:
    * attributes, no SVG element uses more than one.
    *
    * It's relatively uncommon for elements to have their transform attribute
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-   * set, so to save memory the nsSVGAnimatedTransformList is not allocated
-   * until the attribute is set/animated or its DOM wrapper is created. Callers
-   * that require the nsSVGAnimatedTransformList to be allocated and for this
-   * method to return non-null must pass the DO_ALLOCATE flag.
-||||||| merged common ancestors
-   * set, so to save memory the nsSVGAnimatedTransformList is not allocated until
-   * the attribute is set/animated or its DOM wrapper is created. Callers that
-   * require the nsSVGAnimatedTransformList to be allocated and for this method
-   * to return non-null must pass the DO_ALLOCATE flag.
-=======
    * set, so to save memory the SVGAnimatedTransformList is not allocated
    * until the attribute is set/animated or its DOM wrapper is created. Callers
    * that require the SVGAnimatedTransformList to be allocated and for this
    * method to return non-null must pass the DO_ALLOCATE flag.
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
    */
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  virtual nsSVGAnimatedTransformList* GetAnimatedTransformList(
-      uint32_t aFlags = 0) {
-||||||| merged common ancestors
-  virtual nsSVGAnimatedTransformList* GetAnimatedTransformList(
-                                                        uint32_t aFlags = 0) {
-=======
   virtual SVGAnimatedTransformList* GetAnimatedTransformList(
       uint32_t aFlags = 0) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
     return nullptr;
   }
 
@@ -436,23 +295,8 @@ public:
 
   // WebIDL
   mozilla::dom::SVGSVGElement* GetOwnerSVGElement();
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  nsSVGElement* GetViewportElement();
-  already_AddRefed<mozilla::dom::SVGAnimatedString> ClassName();
-
-  virtual bool IsSVGFocusable(bool* aIsFocusable, int32_t* aTabIndex);
-  virtual bool IsFocusableInternal(int32_t* aTabIndex,
-                                   bool aWithMouse) override;
-||||||| merged common ancestors
-  nsSVGElement* GetViewportElement();
-  already_AddRefed<mozilla::dom::SVGAnimatedString> ClassName();
-
-  virtual bool IsSVGFocusable(bool* aIsFocusable, int32_t* aTabIndex);
-  virtual bool IsFocusableInternal(int32_t* aTabIndex, bool aWithMouse) override;
-=======
   SVGElement* GetViewportElement();
   already_AddRefed<mozilla::dom::DOMSVGAnimatedString> ClassName();
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
   void UpdateContentDeclarationBlock();
   const mozilla::DeclarationBlock* GetContentDeclarationBlock() const;
@@ -474,22 +318,10 @@ public:
                                 nsIPrincipal* aSubjectPrincipal,
                                 bool aNotify) override;
   virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-                              const nsAString& aValue,
-                              nsIPrincipal* aMaybeScriptedPrincipal,
-                              nsAttrValue& aResult) override;
-  static nsresult ReportAttributeParseFailure(nsIDocument* aDocument,
-||||||| merged common ancestors
-                                const nsAString& aValue,
-                                nsIPrincipal* aMaybeScriptedPrincipal,
-                                nsAttrValue& aResult) override;
-  static nsresult ReportAttributeParseFailure(nsIDocument* aDocument,
-=======
                               const nsAString& aValue,
                               nsIPrincipal* aMaybeScriptedPrincipal,
                               nsAttrValue& aResult) override;
   static nsresult ReportAttributeParseFailure(Document* aDocument,
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
                                               nsAtom* aAttribute,
                                               const nsAString& aValue);
 
@@ -514,25 +346,11 @@ public:
     const LengthInfo* const mLengthInfo;
     const uint32_t mLengthCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    LengthAttributesInfo(nsSVGLength2* aLengths, LengthInfo* aLengthInfo,
-                         uint32_t aLengthCount)
-        : mLengths(aLengths),
-          mLengthInfo(aLengthInfo),
-          mLengthCount(aLengthCount) {}
-||||||| merged common ancestors
-    LengthAttributesInfo(nsSVGLength2 *aLengths,
-                         LengthInfo *aLengthInfo,
-                         uint32_t aLengthCount) :
-      mLengths(aLengths), mLengthInfo(aLengthInfo), mLengthCount(aLengthCount)
-      {}
-=======
     LengthAttributesInfo(SVGAnimatedLength* aLengths, LengthInfo* aLengthInfo,
                          uint32_t aLengthCount)
         : mLengths(aLengths),
           mLengthInfo(aLengthInfo),
           mLengthCount(aLengthCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -548,25 +366,11 @@ public:
     const NumberInfo* const mNumberInfo;
     const uint32_t mNumberCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    NumberAttributesInfo(nsSVGNumber2* aNumbers, NumberInfo* aNumberInfo,
-                         uint32_t aNumberCount)
-        : mNumbers(aNumbers),
-          mNumberInfo(aNumberInfo),
-          mNumberCount(aNumberCount) {}
-||||||| merged common ancestors
-    NumberAttributesInfo(nsSVGNumber2 *aNumbers,
-                         NumberInfo *aNumberInfo,
-                         uint32_t aNumberCount) :
-      mNumbers(aNumbers), mNumberInfo(aNumberInfo), mNumberCount(aNumberCount)
-      {}
-=======
     NumberAttributesInfo(SVGAnimatedNumber* aNumbers, NumberInfo* aNumberInfo,
                          uint32_t aNumberCount)
         : mNumbers(aNumbers),
           mNumberInfo(aNumberInfo),
           mNumberCount(aNumberCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -582,28 +386,12 @@ public:
     const NumberPairInfo* const mNumberPairInfo;
     const uint32_t mNumberPairCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    NumberPairAttributesInfo(nsSVGNumberPair* aNumberPairs,
-                             NumberPairInfo* aNumberPairInfo,
-                             uint32_t aNumberPairCount)
-        : mNumberPairs(aNumberPairs),
-          mNumberPairInfo(aNumberPairInfo),
-          mNumberPairCount(aNumberPairCount) {}
-||||||| merged common ancestors
-    NumberPairAttributesInfo(nsSVGNumberPair *aNumberPairs,
-                             NumberPairInfo *aNumberPairInfo,
-                             uint32_t aNumberPairCount) :
-      mNumberPairs(aNumberPairs), mNumberPairInfo(aNumberPairInfo),
-      mNumberPairCount(aNumberPairCount)
-      {}
-=======
     NumberPairAttributesInfo(SVGAnimatedNumberPair* aNumberPairs,
                              NumberPairInfo* aNumberPairInfo,
                              uint32_t aNumberPairCount)
         : mNumberPairs(aNumberPairs),
           mNumberPairInfo(aNumberPairInfo),
           mNumberPairCount(aNumberPairCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -618,25 +406,11 @@ public:
     const IntegerInfo* const mIntegerInfo;
     const uint32_t mIntegerCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    IntegerAttributesInfo(nsSVGInteger* aIntegers, IntegerInfo* aIntegerInfo,
-                          uint32_t aIntegerCount)
-        : mIntegers(aIntegers),
-          mIntegerInfo(aIntegerInfo),
-          mIntegerCount(aIntegerCount) {}
-||||||| merged common ancestors
-    IntegerAttributesInfo(nsSVGInteger *aIntegers,
-                          IntegerInfo *aIntegerInfo,
-                          uint32_t aIntegerCount) :
-      mIntegers(aIntegers), mIntegerInfo(aIntegerInfo), mIntegerCount(aIntegerCount)
-      {}
-=======
     IntegerAttributesInfo(SVGAnimatedInteger* aIntegers,
                           IntegerInfo* aIntegerInfo, uint32_t aIntegerCount)
         : mIntegers(aIntegers),
           mIntegerInfo(aIntegerInfo),
           mIntegerCount(aIntegerCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -652,66 +426,12 @@ public:
     const IntegerPairInfo* const mIntegerPairInfo;
     const uint32_t mIntegerPairCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    IntegerPairAttributesInfo(nsSVGIntegerPair* aIntegerPairs,
-                              IntegerPairInfo* aIntegerPairInfo,
-                              uint32_t aIntegerPairCount)
-        : mIntegerPairs(aIntegerPairs),
-          mIntegerPairInfo(aIntegerPairInfo),
-          mIntegerPairCount(aIntegerPairCount) {}
-
-    void Reset(uint8_t aAttrEnum);
-  };
-
-  struct AngleInfo {
-    nsStaticAtom* const mName;
-    const float mDefaultValue;
-    const uint8_t mDefaultUnitType;
-  };
-
-  struct AngleAttributesInfo {
-    nsSVGAngle* const mAngles;
-    const AngleInfo* const mAngleInfo;
-    const uint32_t mAngleCount;
-
-    AngleAttributesInfo(nsSVGAngle* aAngles, AngleInfo* aAngleInfo,
-                        uint32_t aAngleCount)
-        : mAngles(aAngles), mAngleInfo(aAngleInfo), mAngleCount(aAngleCount) {}
-||||||| merged common ancestors
-    IntegerPairAttributesInfo(nsSVGIntegerPair *aIntegerPairs,
-                              IntegerPairInfo *aIntegerPairInfo,
-                              uint32_t aIntegerPairCount) :
-      mIntegerPairs(aIntegerPairs), mIntegerPairInfo(aIntegerPairInfo),
-      mIntegerPairCount(aIntegerPairCount)
-      {}
-
-    void Reset(uint8_t aAttrEnum);
-  };
-
-  struct AngleInfo {
-    nsStaticAtom* const mName;
-    const float mDefaultValue;
-    const uint8_t mDefaultUnitType;
-  };
-
-  struct AngleAttributesInfo {
-    nsSVGAngle* const mAngles;
-    const AngleInfo* const mAngleInfo;
-    const uint32_t mAngleCount;
-
-    AngleAttributesInfo(nsSVGAngle *aAngles,
-                        AngleInfo *aAngleInfo,
-                        uint32_t aAngleCount) :
-      mAngles(aAngles), mAngleInfo(aAngleInfo), mAngleCount(aAngleCount)
-      {}
-=======
     IntegerPairAttributesInfo(SVGAnimatedIntegerPair* aIntegerPairs,
                               IntegerPairInfo* aIntegerPairInfo,
                               uint32_t aIntegerPairCount)
         : mIntegerPairs(aIntegerPairs),
           mIntegerPairInfo(aIntegerPairInfo),
           mIntegerPairCount(aIntegerPairCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -726,25 +446,11 @@ public:
     const BooleanInfo* const mBooleanInfo;
     const uint32_t mBooleanCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    BooleanAttributesInfo(nsSVGBoolean* aBooleans, BooleanInfo* aBooleanInfo,
-                          uint32_t aBooleanCount)
-        : mBooleans(aBooleans),
-          mBooleanInfo(aBooleanInfo),
-          mBooleanCount(aBooleanCount) {}
-||||||| merged common ancestors
-    BooleanAttributesInfo(nsSVGBoolean *aBooleans,
-                          BooleanInfo *aBooleanInfo,
-                          uint32_t aBooleanCount) :
-      mBooleans(aBooleans), mBooleanInfo(aBooleanInfo), mBooleanCount(aBooleanCount)
-      {}
-=======
     BooleanAttributesInfo(SVGAnimatedBoolean* aBooleans,
                           BooleanInfo* aBooleanInfo, uint32_t aBooleanCount)
         : mBooleans(aBooleans),
           mBooleanInfo(aBooleanInfo),
           mBooleanCount(aBooleanCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -762,21 +468,9 @@ public:
     const EnumInfo* const mEnumInfo;
     const uint32_t mEnumCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    EnumAttributesInfo(nsSVGEnum* aEnums, EnumInfo* aEnumInfo,
-                       uint32_t aEnumCount)
-        : mEnums(aEnums), mEnumInfo(aEnumInfo), mEnumCount(aEnumCount) {}
-||||||| merged common ancestors
-    EnumAttributesInfo(nsSVGEnum *aEnums,
-                       EnumInfo *aEnumInfo,
-                       uint32_t aEnumCount) :
-      mEnums(aEnums), mEnumInfo(aEnumInfo), mEnumCount(aEnumCount)
-      {}
-=======
     EnumAttributesInfo(SVGAnimatedEnumeration* aEnums, EnumInfo* aEnumInfo,
                        uint32_t aEnumCount)
         : mEnums(aEnums), mEnumInfo(aEnumInfo), mEnumCount(aEnumCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
     void SetUnknownValue(uint8_t aAttrEnum);
@@ -841,25 +535,11 @@ public:
     const StringInfo* const mStringInfo;
     const uint32_t mStringCount;
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-    StringAttributesInfo(nsSVGString* aStrings, StringInfo* aStringInfo,
-                         uint32_t aStringCount)
-        : mStrings(aStrings),
-          mStringInfo(aStringInfo),
-          mStringCount(aStringCount) {}
-||||||| merged common ancestors
-    StringAttributesInfo(nsSVGString *aStrings,
-                         StringInfo *aStringInfo,
-                         uint32_t aStringCount) :
-      mStrings(aStrings), mStringInfo(aStringInfo), mStringCount(aStringCount)
-      {}
-=======
     StringAttributesInfo(SVGAnimatedString* aStrings, StringInfo* aStringInfo,
                          uint32_t aStringCount)
         : mStrings(aStrings),
           mStringInfo(aStringInfo),
           mStringCount(aStringCount) {}
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
     void Reset(uint8_t aAttrEnum);
   };
@@ -894,17 +574,9 @@ public:
   virtual EnumAttributesInfo GetEnumInfo();
   // We assume all orients, viewboxes and preserveAspectRatios are alike
   // so we don't need to wrap the class
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-  virtual nsSVGViewBox* GetViewBox();
-  virtual SVGAnimatedPreserveAspectRatio* GetPreserveAspectRatio();
-||||||| merged common ancestors
-  virtual nsSVGViewBox *GetViewBox();
-  virtual SVGAnimatedPreserveAspectRatio *GetPreserveAspectRatio();
-=======
   virtual SVGAnimatedOrient* GetAnimatedOrient();
   virtual SVGAnimatedPreserveAspectRatio* GetAnimatedPreserveAspectRatio();
   virtual SVGAnimatedViewBox* GetAnimatedViewBox();
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
   virtual NumberListAttributesInfo GetNumberListInfo();
   virtual LengthListAttributesInfo GetLengthListInfo();
   virtual StringAttributesInfo GetStringInfo();
@@ -912,18 +584,8 @@ public:
 
   static SVGEnumMapping sSVGUnitTypesMap[];
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
- private:
-  void UnsetAttrInternal(int32_t aNameSpaceID, nsAtom* aAttribute,
-                         bool aNotify);
-||||||| merged common ancestors
-private:
-  void UnsetAttrInternal(int32_t aNameSpaceID, nsAtom* aAttribute,
-                         bool aNotify);
-=======
  private:
   void UnsetAttrInternal(int32_t aNameSpaceID, nsAtom* aName, bool aNotify);
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
   SVGAnimatedClass mClassAttribute;
   nsAutoPtr<nsAttrValue> mClassAnimAttr;
@@ -933,122 +595,6 @@ private:
 /**
  * A macro to implement the NS_NewSVGXXXElement() functions.
  */
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-#define NS_IMPL_NS_NEW_SVG_ELEMENT(_elementName)                \
-  nsresult NS_NewSVG##_elementName##Element(                    \
-      nsIContent** aResult,                                     \
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo) {   \
-    RefPtr<nsSVG##_elementName##Element> it =                   \
-        new nsSVG##_elementName##Element(std::move(aNodeInfo)); \
-                                                                \
-    nsresult rv = it->Init();                                   \
-                                                                \
-    if (NS_FAILED(rv)) {                                        \
-      return rv;                                                \
-    }                                                           \
-                                                                \
-    it.forget(aResult);                                         \
-                                                                \
-    return rv;                                                  \
-  }
-
-#define NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(_elementName)                 \
-  nsresult NS_NewSVG##_elementName##Element(                                \
-      nsIContent** aResult,                                                 \
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo) {               \
-    RefPtr<mozilla::dom::SVG##_elementName##Element> it =                   \
-        new mozilla::dom::SVG##_elementName##Element(std::move(aNodeInfo)); \
-                                                                            \
-    nsresult rv = it->Init();                                               \
-                                                                            \
-    if (NS_FAILED(rv)) {                                                    \
-      return rv;                                                            \
-    }                                                                       \
-                                                                            \
-    it.forget(aResult);                                                     \
-                                                                            \
-    return rv;                                                              \
-  }
-
-#define NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT_CHECK_PARSER(_elementName)   \
-  nsresult NS_NewSVG##_elementName##Element(                               \
-      nsIContent** aResult,                                                \
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,                \
-      mozilla::dom::FromParser aFromParser) {                              \
-    RefPtr<mozilla::dom::SVG##_elementName##Element> it =                  \
-        new mozilla::dom::SVG##_elementName##Element(std::move(aNodeInfo), \
-                                                     aFromParser);         \
-                                                                           \
-    nsresult rv = it->Init();                                              \
-                                                                           \
-    if (NS_FAILED(rv)) {                                                   \
-      return rv;                                                           \
-    }                                                                      \
-                                                                           \
-    it.forget(aResult);                                                    \
-                                                                           \
-    return rv;                                                             \
-  }
-||||||| merged common ancestors
-#define NS_IMPL_NS_NEW_SVG_ELEMENT(_elementName)                             \
-nsresult                                                                     \
-NS_NewSVG##_elementName##Element(nsIContent **aResult,                       \
-                                 already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)  \
-{                                                                            \
-  RefPtr<nsSVG##_elementName##Element> it =                                  \
-    new nsSVG##_elementName##Element(std::move(aNodeInfo));                  \
-                                                                             \
-  nsresult rv = it->Init();                                                  \
-                                                                             \
-  if (NS_FAILED(rv)) {                                                       \
-    return rv;                                                               \
-  }                                                                          \
-                                                                             \
-  it.forget(aResult);                                                        \
-                                                                             \
-  return rv;                                                                 \
-}
-
-#define NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(_elementName)                  \
-nsresult                                                                     \
-NS_NewSVG##_elementName##Element(nsIContent **aResult,                       \
-                                 already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)  \
-{                                                                            \
-  RefPtr<mozilla::dom::SVG##_elementName##Element> it =                      \
-    new mozilla::dom::SVG##_elementName##Element(std::move(aNodeInfo));      \
-                                                                             \
-  nsresult rv = it->Init();                                                  \
-                                                                             \
-  if (NS_FAILED(rv)) {                                                       \
-    return rv;                                                               \
-  }                                                                          \
-                                                                             \
-  it.forget(aResult);                                                        \
-                                                                             \
-  return rv;                                                                 \
-}
-
-#define NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT_CHECK_PARSER(_elementName)     \
-nsresult                                                                     \
-NS_NewSVG##_elementName##Element(nsIContent **aResult,                       \
-                                 already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,  \
-                                 mozilla::dom::FromParser aFromParser)       \
-{                                                                            \
-  RefPtr<mozilla::dom::SVG##_elementName##Element> it =                      \
-    new mozilla::dom::SVG##_elementName##Element(std::move(aNodeInfo),       \
-                                                 aFromParser);               \
-                                                                             \
-  nsresult rv = it->Init();                                                  \
-                                                                             \
-  if (NS_FAILED(rv)) {                                                       \
-    return rv;                                                               \
-  }                                                                          \
-                                                                             \
-  it.forget(aResult);                                                        \
-                                                                             \
-  return rv;                                                                 \
-}
-=======
 #define NS_IMPL_NS_NEW_SVG_ELEMENT(_elementName)                            \
   nsresult NS_NewSVG##_elementName##Element(                                \
       nsIContent** aResult,                                                 \
@@ -1086,53 +632,9 @@ NS_NewSVG##_elementName##Element(nsIContent **aResult,                       \
                                                                            \
     return rv;                                                             \
   }
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h
 
 // No unlinking, we'd need to null out the value pointer (the object it
 // points to is held by the element) and null-check it everywhere.
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGElement.h
-#define NS_SVG_VAL_IMPL_CYCLE_COLLECTION(_val, _element) \
-  NS_IMPL_CYCLE_COLLECTION_CLASS(_val)                   \
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(_val)          \
-    NS_IMPL_CYCLE_COLLECTION_TRAVERSE(_element)          \
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END                  \
-  NS_IMPL_CYCLE_COLLECTION_UNLINK_0(_val)
-
-#define NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(_val, _element) \
-  NS_IMPL_CYCLE_COLLECTION_CLASS(_val)                                 \
-  NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(_val)                          \
-    NS_IMPL_CYCLE_COLLECTION_UNLINK_PRESERVED_WRAPPER                  \
-  NS_IMPL_CYCLE_COLLECTION_UNLINK_END                                  \
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(_val)                        \
-    NS_IMPL_CYCLE_COLLECTION_TRAVERSE(_element)                        \
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END                                \
-  NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN(_val)                           \
-    NS_IMPL_CYCLE_COLLECTION_TRACE_PRESERVED_WRAPPER                   \
-  NS_IMPL_CYCLE_COLLECTION_TRACE_END
-
-#endif  // __NS_SVGELEMENT_H__
-||||||| merged common ancestors
-#define NS_SVG_VAL_IMPL_CYCLE_COLLECTION(_val, _element)                     \
-NS_IMPL_CYCLE_COLLECTION_CLASS(_val)                                         \
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(_val)                                \
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(_element) \
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END                                        \
-NS_IMPL_CYCLE_COLLECTION_UNLINK_0(_val)
-
-#define NS_SVG_VAL_IMPL_CYCLE_COLLECTION_WRAPPERCACHED(_val, _element)       \
-NS_IMPL_CYCLE_COLLECTION_CLASS(_val)                                         \
-NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(_val)                                  \
-NS_IMPL_CYCLE_COLLECTION_UNLINK_PRESERVED_WRAPPER                            \
-NS_IMPL_CYCLE_COLLECTION_UNLINK_END                                          \
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(_val)                                \
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(_element)                                \
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END                                        \
-NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN(_val)                                   \
-NS_IMPL_CYCLE_COLLECTION_TRACE_PRESERVED_WRAPPER                             \
-NS_IMPL_CYCLE_COLLECTION_TRACE_END
-
-#endif // __NS_SVGELEMENT_H__
-=======
 #define NS_SVG_VAL_IMPL_CYCLE_COLLECTION(_val, _element) \
   NS_IMPL_CYCLE_COLLECTION_CLASS(_val)                   \
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(_val)          \
@@ -1156,4 +658,3 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_END
 }  // namespace mozilla
 
 #endif  // __NS_SVGELEMENT_H__
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGElement.h

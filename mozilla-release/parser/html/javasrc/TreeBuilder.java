@@ -4779,13 +4779,7 @@ public abstract class TreeBuilder<T> implements TokenHandler,
                 assert node == listOfActiveFormattingElements[nodeListPos];
                 assert node == stack[nodePos];
                 T clone = createElement("http://www.w3.org/1999/xhtml",
-<<<<<<< HEAD
-                        node.name, node.attributes.cloneAttributes(), commonAncestor.node
-||||||| merged common ancestors
-                        node.name, node.attributes.cloneAttributes(null), commonAncestor.node
-=======
                         node.name, node.attributes.cloneAttributes(), insertionCommonAncestor
->>>>>>> upstream-releases
                         // CPPONLY: , htmlCreator(node.getHtmlCreator())
                         );
                 StackNode<T> newNode = createStackNode(node.getFlags(), node.ns,
@@ -5012,13 +5006,7 @@ public abstract class TreeBuilder<T> implements TokenHandler,
             } else {
                 T currentNode = nodeFromStackWithBlinkCompat(currentPtr);
                 clone = createElement("http://www.w3.org/1999/xhtml", entry.name,
-<<<<<<< HEAD
-                        entry.attributes.cloneAttributes(), currentNode.node
-||||||| merged common ancestors
-                        entry.attributes.cloneAttributes(null), currentNode.node
-=======
                         entry.attributes.cloneAttributes(), currentNode
->>>>>>> upstream-releases
                         // CPPONLY: , htmlCreator(entry.getHtmlCreator())
                         );
                 appendElement(clone, currentNode);

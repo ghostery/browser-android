@@ -64,34 +64,6 @@ void txUnionPattern::setSubPatternAt(uint32_t aPos, txPattern* aPattern) {
 }
 
 #ifdef TX_TO_STRING
-<<<<<<< HEAD
-void txUnionPattern::toString(nsAString& aDest) {
-#ifdef DEBUG
-  aDest.AppendLiteral("txUnionPattern{");
-#endif
-  for (uint32_t i = 0; i < mLocPathPatterns.Length(); ++i) {
-    if (i != 0) aDest.AppendLiteral(" | ");
-    mLocPathPatterns[i]->toString(aDest);
-  }
-#ifdef DEBUG
-  aDest.Append(char16_t('}'));
-#endif
-||||||| merged common ancestors
-void
-txUnionPattern::toString(nsAString& aDest)
-{
-#ifdef DEBUG
-    aDest.AppendLiteral("txUnionPattern{");
-#endif
-    for (uint32_t i = 0; i < mLocPathPatterns.Length(); ++i) {
-        if (i != 0)
-            aDest.AppendLiteral(" | ");
-        mLocPathPatterns[i]->toString(aDest);
-    }
-#ifdef DEBUG
-    aDest.Append(char16_t('}'));
-#endif
-=======
 void txUnionPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.AppendLiteral("txUnionPattern{");
@@ -103,7 +75,6 @@ void txUnionPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.Append(char16_t('}'));
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -166,7 +137,6 @@ nsresult txLocPathPattern::matches(const txXPathNode& aNode,
       return NS_OK;
     }
 
-<<<<<<< HEAD
     step = &mSteps[--pos];
     rv =
         step->pattern->matches(walker.getCurrentPosition(), aContext, aMatched);
@@ -176,33 +146,9 @@ nsresult txLocPathPattern::matches(const txXPathNode& aNode,
       // no match
       return NS_OK;
     }
-||||||| merged common ancestors
-            return NS_OK;
-        }
-=======
-    step = &mSteps[--pos];
-    rv =
-        step->pattern->matches(walker.getCurrentPosition(), aContext, aMatched);
-    NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    hasParent = walker.moveToParent();
-  }
-||||||| merged common ancestors
-        step = &mSteps[--pos];
-        rv = step->pattern->matches(walker.getCurrentPosition(), aContext,
-                                    aMatched);
-        NS_ENSURE_SUCCESS(rv, rv);
-=======
-    if (!aMatched) {
-      // no match
-      return NS_OK;
-    }
 
     hasParent = walker.moveToParent();
   }
->>>>>>> upstream-releases
 
   // We have at least one // path separator
   txXPathTreeWalker blockWalker(walker);
@@ -260,33 +206,6 @@ void txLocPathPattern::setSubPatternAt(uint32_t aPos, txPattern* aPattern) {
 }
 
 #ifdef TX_TO_STRING
-<<<<<<< HEAD
-void txLocPathPattern::toString(nsAString& aDest) {
-#ifdef DEBUG
-  aDest.AppendLiteral("txLocPathPattern{");
-#endif
-  for (uint32_t i = 0; i < mSteps.Length(); ++i) {
-    if (i != 0) {
-      if (mSteps[i].isChild)
-        aDest.Append(char16_t('/'));
-      else
-        aDest.AppendLiteral("//");
-||||||| merged common ancestors
-void
-txLocPathPattern::toString(nsAString& aDest)
-{
-#ifdef DEBUG
-    aDest.AppendLiteral("txLocPathPattern{");
-#endif
-    for (uint32_t i = 0; i < mSteps.Length(); ++i) {
-        if (i != 0) {
-            if (mSteps[i].isChild)
-                aDest.Append(char16_t('/'));
-            else
-                aDest.AppendLiteral("//");
-        }
-        mSteps[i].pattern->toString(aDest);
-=======
 void txLocPathPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.AppendLiteral("txLocPathPattern{");
@@ -297,25 +216,12 @@ void txLocPathPattern::toString(nsAString& aDest) {
         aDest.Append(char16_t('/'));
       else
         aDest.AppendLiteral("//");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    mSteps[i].pattern->toString(aDest);
-  }
-#ifdef DEBUG
-  aDest.Append(char16_t('}'));
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-    aDest.Append(char16_t('}'));
-#endif
-=======
     mSteps[i].pattern->toString(aDest);
   }
 #  ifdef DEBUG
   aDest.Append(char16_t('}'));
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -338,28 +244,6 @@ TX_IMPL_PATTERN_STUBS_NO_SUB_EXPR(txRootPattern)
 TX_IMPL_PATTERN_STUBS_NO_SUB_PATTERN(txRootPattern)
 
 #ifdef TX_TO_STRING
-<<<<<<< HEAD
-void txRootPattern::toString(nsAString& aDest) {
-#ifdef DEBUG
-  aDest.AppendLiteral("txRootPattern{");
-#endif
-  if (mSerialize) aDest.Append(char16_t('/'));
-#ifdef DEBUG
-  aDest.Append(char16_t('}'));
-#endif
-||||||| merged common ancestors
-void
-txRootPattern::toString(nsAString& aDest)
-{
-#ifdef DEBUG
-    aDest.AppendLiteral("txRootPattern{");
-#endif
-    if (mSerialize)
-        aDest.Append(char16_t('/'));
-#ifdef DEBUG
-    aDest.Append(char16_t('}'));
-#endif
-=======
 void txRootPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.AppendLiteral("txRootPattern{");
@@ -368,7 +252,6 @@ void txRootPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.Append(char16_t('}'));
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -413,30 +296,6 @@ TX_IMPL_PATTERN_STUBS_NO_SUB_EXPR(txIdPattern)
 TX_IMPL_PATTERN_STUBS_NO_SUB_PATTERN(txIdPattern)
 
 #ifdef TX_TO_STRING
-<<<<<<< HEAD
-void txIdPattern::toString(nsAString& aDest) {
-#ifdef DEBUG
-  aDest.AppendLiteral("txIdPattern{");
-#endif
-  aDest.AppendLiteral("id('");
-  uint32_t k, count = mIds.Length() - 1;
-  for (k = 0; k < count; ++k) {
-||||||| merged common ancestors
-void
-txIdPattern::toString(nsAString& aDest)
-{
-#ifdef DEBUG
-    aDest.AppendLiteral("txIdPattern{");
-#endif
-    aDest.AppendLiteral("id('");
-    uint32_t k, count = mIds.Length() - 1;
-    for (k = 0; k < count; ++k) {
-        nsAutoString str;
-        mIds[k]->ToString(str);
-        aDest.Append(str);
-        aDest.Append(char16_t(' '));
-    }
-=======
 void txIdPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.AppendLiteral("txIdPattern{");
@@ -444,26 +303,9 @@ void txIdPattern::toString(nsAString& aDest) {
   aDest.AppendLiteral("id('");
   uint32_t k, count = mIds.Length() - 1;
   for (k = 0; k < count; ++k) {
->>>>>>> upstream-releases
     nsAutoString str;
     mIds[k]->ToString(str);
     aDest.Append(str);
-<<<<<<< HEAD
-    aDest.Append(char16_t(' '));
-  }
-  nsAutoString str;
-  mIds[count]->ToString(str);
-  aDest.Append(str);
-  aDest.AppendLiteral("')");
-#ifdef DEBUG
-  aDest.Append(char16_t('}'));
-#endif
-||||||| merged common ancestors
-    aDest.AppendLiteral("')");
-#ifdef DEBUG
-    aDest.Append(char16_t('}'));
-#endif
-=======
     aDest.Append(char16_t(' '));
   }
   nsAutoString str;
@@ -473,7 +315,6 @@ void txIdPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.Append(char16_t('}'));
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -508,31 +349,6 @@ TX_IMPL_PATTERN_STUBS_NO_SUB_EXPR(txKeyPattern)
 TX_IMPL_PATTERN_STUBS_NO_SUB_PATTERN(txKeyPattern)
 
 #ifdef TX_TO_STRING
-<<<<<<< HEAD
-void txKeyPattern::toString(nsAString& aDest) {
-#ifdef DEBUG
-  aDest.AppendLiteral("txKeyPattern{");
-#endif
-  aDest.AppendLiteral("key('");
-  nsAutoString tmp;
-  if (mPrefix) {
-    mPrefix->ToString(tmp);
-||||||| merged common ancestors
-void
-txKeyPattern::toString(nsAString& aDest)
-{
-#ifdef DEBUG
-    aDest.AppendLiteral("txKeyPattern{");
-#endif
-    aDest.AppendLiteral("key('");
-    nsAutoString tmp;
-    if (mPrefix) {
-        mPrefix->ToString(tmp);
-        aDest.Append(tmp);
-        aDest.Append(char16_t(':'));
-    }
-    mName.mLocalName->ToString(tmp);
-=======
 void txKeyPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.AppendLiteral("txKeyPattern{");
@@ -541,27 +357,7 @@ void txKeyPattern::toString(nsAString& aDest) {
   nsAutoString tmp;
   if (mPrefix) {
     mPrefix->ToString(tmp);
->>>>>>> upstream-releases
     aDest.Append(tmp);
-<<<<<<< HEAD
-    aDest.Append(char16_t(':'));
-  }
-  mName.mLocalName->ToString(tmp);
-  aDest.Append(tmp);
-  aDest.AppendLiteral(", ");
-  aDest.Append(mValue);
-  aDest.AppendLiteral("')");
-#ifdef DEBUG
-  aDest.Append(char16_t('}'));
-#endif
-||||||| merged common ancestors
-    aDest.AppendLiteral(", ");
-    aDest.Append(mValue);
-    aDest.AppendLiteral("')");
-#ifdef DEBUG
-    aDest.Append(char16_t('}'));
-#endif
-=======
     aDest.Append(char16_t(':'));
   }
   mName.mLocalName->ToString(tmp);
@@ -572,7 +368,6 @@ void txKeyPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.Append(char16_t('}'));
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -586,34 +381,12 @@ nsresult txStepPattern::matches(const txXPathNode& aNode,
                                 txIMatchContext* aContext, bool& aMatched) {
   NS_ASSERTION(mNodeTest, "Internal error");
 
-<<<<<<< HEAD
   nsresult rv = mNodeTest->matches(aNode, aContext, aMatched);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (!aMatched) {
     return NS_OK;
   }
-||||||| merged common ancestors
-    nsresult rv = mNodeTest->matches(aNode, aContext, aMatched);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    if (!aMatched) {
-        return NS_OK;
-    }
-
-    txXPathTreeWalker walker(aNode);
-    if ((!mIsAttr &&
-         txXPathNodeUtils::isAttribute(walker.getCurrentPosition())) ||
-        !walker.moveToParent()) {
-        aMatched = false;
-=======
-  nsresult rv = mNodeTest->matches(aNode, aContext, aMatched);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (!aMatched) {
-    return NS_OK;
-  }
->>>>>>> upstream-releases
 
   txXPathTreeWalker walker(aNode);
   if ((!mIsAttr &&
@@ -743,35 +516,6 @@ void txStepPattern::setSubExprAt(uint32_t aPos, Expr* aExpr) {
 }
 
 #ifdef TX_TO_STRING
-<<<<<<< HEAD
-void txStepPattern::toString(nsAString& aDest) {
-#ifdef DEBUG
-  aDest.AppendLiteral("txStepPattern{");
-#endif
-  if (mIsAttr) aDest.Append(char16_t('@'));
-  if (mNodeTest) mNodeTest->toString(aDest);
-
-  PredicateList::toString(aDest);
-#ifdef DEBUG
-  aDest.Append(char16_t('}'));
-#endif
-||||||| merged common ancestors
-void
-txStepPattern::toString(nsAString& aDest)
-{
-#ifdef DEBUG
-    aDest.AppendLiteral("txStepPattern{");
-#endif
-    if (mIsAttr)
-        aDest.Append(char16_t('@'));
-    if (mNodeTest)
-        mNodeTest->toString(aDest);
-
-    PredicateList::toString(aDest);
-#ifdef DEBUG
-    aDest.Append(char16_t('}'));
-#endif
-=======
 void txStepPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.AppendLiteral("txStepPattern{");
@@ -783,6 +527,5 @@ void txStepPattern::toString(nsAString& aDest) {
 #  ifdef DEBUG
   aDest.Append(char16_t('}'));
 #  endif
->>>>>>> upstream-releases
 }
 #endif

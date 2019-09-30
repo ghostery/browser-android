@@ -68,58 +68,14 @@ class SandboxSettings final : public mozISandboxSettings {
 
 NS_IMPL_ISUPPORTS(SandboxSettings, mozISandboxSettings)
 
-<<<<<<< HEAD
-NS_IMETHODIMP SandboxSettings::GetEffectiveContentSandboxLevel(
-    int32_t *aRetVal) {
-||||||| merged common ancestors
-NS_IMETHODIMP SandboxSettings::GetEffectiveContentSandboxLevel(int32_t *aRetVal)
-{
-=======
 NS_IMETHODIMP SandboxSettings::GetEffectiveContentSandboxLevel(
     int32_t* aRetVal) {
->>>>>>> upstream-releases
   *aRetVal = mozilla::GetEffectiveContentSandboxLevel();
   return NS_OK;
 }
 
 }  // namespace mozilla
 
-<<<<<<< HEAD
-static const mozilla::Module::CIDEntry kSandboxSettingsCIDs[] = {
-    {&kMOZ_SANDBOX_SETTINGS_CID, false, nullptr, SandboxSettingsConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kSandboxSettingsContracts[] = {
-    {MOZ_SANDBOX_SETTINGS_CONTRACTID, &kMOZ_SANDBOX_SETTINGS_CID}, {nullptr}};
-
-static const mozilla::Module kSandboxSettingsModule = {
-    mozilla::Module::kVersion, kSandboxSettingsCIDs, kSandboxSettingsContracts};
-
-NSMODULE_DEFN(SandboxSettingsModule) = &kSandboxSettingsModule;
-
-}  // namespace mozilla
-||||||| merged common ancestors
-static const mozilla::Module::CIDEntry kSandboxSettingsCIDs[] = {
-  { &kMOZ_SANDBOX_SETTINGS_CID, false, nullptr, SandboxSettingsConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kSandboxSettingsContracts[] = {
-  { MOZ_SANDBOX_SETTINGS_CONTRACTID, &kMOZ_SANDBOX_SETTINGS_CID },
-  { nullptr }
-};
-
-static const mozilla::Module kSandboxSettingsModule = {
-  mozilla::Module::kVersion,
-  kSandboxSettingsCIDs,
-  kSandboxSettingsContracts
-};
-
-NSMODULE_DEFN(SandboxSettingsModule) = &kSandboxSettingsModule;
-
-} // namespace mozilla
-=======
 NS_IMPL_COMPONENT_FACTORY(mozISandboxSettings) {
   return MakeAndAddRef<SandboxSettings>().downcast<nsISupports>();
 }
->>>>>>> upstream-releases

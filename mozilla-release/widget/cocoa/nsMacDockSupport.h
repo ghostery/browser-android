@@ -10,19 +10,10 @@
 #include "nsCOMPtr.h"
 #include "nsString.h"
 
-<<<<<<< HEAD
-class nsMacDockSupport : public nsIMacDockSupport, public nsITaskbarProgress {
- public:
-||||||| merged common ancestors
-class nsMacDockSupport : public nsIMacDockSupport, public nsITaskbarProgress
-{
-public:
-=======
 @class MOZProgressDockOverlayView;
 
 class nsMacDockSupport : public nsIMacDockSupport, public nsITaskbarProgress {
  public:
->>>>>>> upstream-releases
   nsMacDockSupport();
 
   NS_DECL_ISUPPORTS

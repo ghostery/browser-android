@@ -10,23 +10,9 @@
 #include "SVGAnimatedEnumeration.h"
 #include "SVGViewportElement.h"
 
-<<<<<<< HEAD
 nsresult NS_NewSVGSVGElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     mozilla::dom::FromParser aFromParser);
-
-class nsSMILTimeContainer;
-||||||| merged common ancestors
-nsresult NS_NewSVGSVGElement(nsIContent **aResult,
-                             already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                             mozilla::dom::FromParser aFromParser);
-
-class nsSMILTimeContainer;
-=======
-nsresult NS_NewSVGSVGElement(
-    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-    mozilla::dom::FromParser aFromParser);
->>>>>>> upstream-releases
 
 namespace mozilla {
 class AutoSVGViewHandler;
@@ -47,22 +33,10 @@ class SVGView {
  public:
   SVGView();
 
-<<<<<<< HEAD
-  nsSVGEnum mZoomAndPan;
-  nsSVGViewBox mViewBox;
-  SVGAnimatedPreserveAspectRatio mPreserveAspectRatio;
-  nsAutoPtr<nsSVGAnimatedTransformList> mTransforms;
-||||||| merged common ancestors
-  nsSVGEnum                             mZoomAndPan;
-  nsSVGViewBox                          mViewBox;
-  SVGAnimatedPreserveAspectRatio        mPreserveAspectRatio;
-  nsAutoPtr<nsSVGAnimatedTransformList> mTransforms;
-=======
   SVGAnimatedEnumeration mZoomAndPan;
   SVGAnimatedViewBox mViewBox;
   SVGAnimatedPreserveAspectRatio mPreserveAspectRatio;
   nsAutoPtr<SVGAnimatedTransformList> mTransforms;
->>>>>>> upstream-releases
 };
 
 class DOMSVGTranslatePoint final : public nsISVGPoint {
@@ -90,16 +64,8 @@ class DOMSVGTranslatePoint final : public nsISVGPoint {
 
   RefPtr<SVGSVGElement> mElement;
 
-<<<<<<< HEAD
- private:
-  ~DOMSVGTranslatePoint() {}
-||||||| merged common ancestors
-private:
-  ~DOMSVGTranslatePoint() {}
-=======
  private:
   ~DOMSVGTranslatePoint() = default;
->>>>>>> upstream-releases
 };
 
 typedef SVGViewportElement SVGSVGElementBase;
@@ -171,47 +137,20 @@ class SVGSVGElement final : public SVGSVGElementBase {
   already_AddRefed<DOMSVGAngle> CreateSVGAngle();
   already_AddRefed<nsISVGPoint> CreateSVGPoint();
   already_AddRefed<SVGMatrix> CreateSVGMatrix();
-<<<<<<< HEAD
-  already_AddRefed<SVGIRect> CreateSVGRect();
-  already_AddRefed<SVGTransform> CreateSVGTransform();
-  already_AddRefed<SVGTransform> CreateSVGTransformFromMatrix(
-      SVGMatrix& matrix);
-  using nsINode::GetElementById;  // This does what we want
-||||||| merged common ancestors
-  already_AddRefed<SVGIRect> CreateSVGRect();
-  already_AddRefed<SVGTransform> CreateSVGTransform();
-  already_AddRefed<SVGTransform> CreateSVGTransformFromMatrix(SVGMatrix& matrix);
-  using nsINode::GetElementById; // This does what we want
-=======
   already_AddRefed<SVGRect> CreateSVGRect();
   already_AddRefed<DOMSVGTransform> CreateSVGTransform();
   already_AddRefed<DOMSVGTransform> CreateSVGTransformFromMatrix(
       SVGMatrix& matrix);
   using nsINode::GetElementById;  // This does what we want
->>>>>>> upstream-releases
   uint16_t ZoomAndPan();
   void SetZoomAndPan(uint16_t aZoomAndPan, ErrorResult& rv);
 
   // SVGElement overrides
 
-<<<<<<< HEAD
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
-  virtual nsSVGAnimatedTransformList* GetAnimatedTransformList(
-      uint32_t aFlags = 0) override;
-||||||| merged common ancestors
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
-  virtual nsSVGAnimatedTransformList*
-    GetAnimatedTransformList(uint32_t aFlags = 0) override;
-=======
   virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
   virtual void UnbindFromTree(bool aNullParent) override;
   virtual SVGAnimatedTransformList* GetAnimatedTransformList(
       uint32_t aFlags = 0) override;
->>>>>>> upstream-releases
 
   // SVGSVGElement methods:
 
@@ -320,20 +259,9 @@ class SVGSVGElement final : public SVGSVGElementBase {
 class MOZ_RAII AutoSVGTimeSetRestore {
  public:
   AutoSVGTimeSetRestore(dom::SVGSVGElement* aRootElem,
-<<<<<<< HEAD
-                        float aFrameTime MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-      : mRootElem(aRootElem), mOriginalTime(mRootElem->GetCurrentTime()) {
-||||||| merged common ancestors
-                        float aFrameTime
-                        MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    : mRootElem(aRootElem)
-    , mOriginalTime(mRootElem->GetCurrentTime())
-  {
-=======
                         float aFrameTime MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
       : mRootElem(aRootElem),
         mOriginalTime(mRootElem->GetCurrentTimeAsFloat()) {
->>>>>>> upstream-releases
     MOZ_GUARD_OBJECT_NOTIFIER_INIT;
     mRootElem->SetCurrentTime(
         aFrameTime);  // Does nothing if there's no change.

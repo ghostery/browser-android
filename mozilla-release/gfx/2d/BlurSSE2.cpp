@@ -35,27 +35,12 @@ __m128i Divide(__m128i aValues, __m128i aDivisor) {
 }
 
 MOZ_ALWAYS_INLINE
-<<<<<<< HEAD
-__m128i BlurFourPixels(const __m128i &aTopLeft, const __m128i &aTopRight,
-                       const __m128i &aBottomRight, const __m128i &aBottomLeft,
-                       const __m128i &aDivisor) {
-  __m128i values = _mm_add_epi32(
-      _mm_sub_epi32(_mm_sub_epi32(aBottomRight, aTopRight), aBottomLeft),
-      aTopLeft);
-||||||| merged common ancestors
-__m128i BlurFourPixels(const __m128i& aTopLeft, const __m128i& aTopRight,
-                       const __m128i& aBottomRight, const __m128i& aBottomLeft,
-                       const __m128i& aDivisor)
-{
-  __m128i values = _mm_add_epi32(_mm_sub_epi32(_mm_sub_epi32(aBottomRight, aTopRight), aBottomLeft), aTopLeft);
-=======
 __m128i BlurFourPixels(const __m128i& aTopLeft, const __m128i& aTopRight,
                        const __m128i& aBottomRight, const __m128i& aBottomLeft,
                        const __m128i& aDivisor) {
   __m128i values = _mm_add_epi32(
       _mm_sub_epi32(_mm_sub_epi32(aBottomRight, aTopRight), aBottomLeft),
       aTopLeft);
->>>>>>> upstream-releases
   return Divide(values, aDivisor);
 }
 
@@ -94,26 +79,11 @@ __m128i AccumulatePixelSums(__m128i aPixels) {
   return _mm_add_epi32(sumPixels, currentPixels);
 }
 
-<<<<<<< HEAD
-MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
-    int32_t aLeftInflation, int32_t aRightInflation, int32_t aTopInflation,
-    int32_t aBottomInflation, uint32_t *aIntegralImage,
-    size_t aIntegralImageStride, uint8_t *aSource, int32_t aSourceStride,
-    const IntSize &aSize) {
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE void
-GenerateIntegralImage_SSE2(int32_t aLeftInflation, int32_t aRightInflation,
-                           int32_t aTopInflation, int32_t aBottomInflation,
-                           uint32_t *aIntegralImage, size_t aIntegralImageStride,
-                           uint8_t *aSource, int32_t aSourceStride, const IntSize &aSize)
-{
-=======
 MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
     int32_t aLeftInflation, int32_t aRightInflation, int32_t aTopInflation,
     int32_t aBottomInflation, uint32_t* aIntegralImage,
     size_t aIntegralImageStride, uint8_t* aSource, int32_t aSourceStride,
     const IntSize& aSize) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!(aLeftInflation & 3));
 
   uint32_t stride32bit = aIntegralImageStride / 4;
@@ -130,21 +100,10 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
     uint32_t* intFirstRow = aIntegralImage;
 
     for (int x = 0; x < integralImageSize.width; x += 4) {
-<<<<<<< HEAD
-      __m128i firstRow = _mm_load_si128((__m128i *)(intFirstRow + x));
-      __m128i previousRow = _mm_load_si128((__m128i *)(intPrevRow + x));
-      _mm_store_si128((__m128i *)(intRow + x),
-                      _mm_add_epi32(firstRow, previousRow));
-||||||| merged common ancestors
-      __m128i firstRow = _mm_load_si128((__m128i*)(intFirstRow + x));
-      __m128i previousRow = _mm_load_si128((__m128i*)(intPrevRow + x));
-      _mm_store_si128((__m128i*)(intRow + x), _mm_add_epi32(firstRow, previousRow));
-=======
       __m128i firstRow = _mm_load_si128((__m128i*)(intFirstRow + x));
       __m128i previousRow = _mm_load_si128((__m128i*)(intPrevRow + x));
       _mm_store_si128((__m128i*)(intRow + x),
                       _mm_add_epi32(firstRow, previousRow));
->>>>>>> upstream-releases
     }
   }
 
@@ -163,21 +122,12 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
 
       currentRowSum = _mm_shuffle_epi32(sumPixels, _MM_SHUFFLE(3, 3, 3, 3));
 
-<<<<<<< HEAD
-      _mm_store_si128(
-          (__m128i *)(intRow + x),
-          _mm_add_epi32(sumPixels,
-                        _mm_load_si128((__m128i *)(intPrevRow + x))));
-||||||| merged common ancestors
-      _mm_store_si128((__m128i*)(intRow + x), _mm_add_epi32(sumPixels, _mm_load_si128((__m128i*)(intPrevRow + x))));
-=======
       _mm_store_si128(
           (__m128i*)(intRow + x),
           _mm_add_epi32(sumPixels, _mm_load_si128((__m128i*)(intPrevRow + x))));
->>>>>>> upstream-releases
     }
     for (int x = aLeftInflation; x < (aSize.width + aLeftInflation); x += 4) {
-      uint32_t pixels = *(uint32_t *)(sourceRow + (x - aLeftInflation));
+      uint32_t pixels = *(uint32_t*)(sourceRow + (x - aLeftInflation));
 
       // It's important to shuffle here. When we exit this loop currentRowSum
       // has to be set to sumPixels, so that the following loop can get the
@@ -192,18 +142,9 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
 
       currentRowSum = sumPixels;
 
-<<<<<<< HEAD
-      _mm_store_si128(
-          (__m128i *)(intRow + x),
-          _mm_add_epi32(sumPixels,
-                        _mm_load_si128((__m128i *)(intPrevRow + x))));
-||||||| merged common ancestors
-      _mm_store_si128((__m128i*)(intRow + x), _mm_add_epi32(sumPixels, _mm_load_si128((__m128i*)(intPrevRow + x))));
-=======
       _mm_store_si128(
           (__m128i*)(intRow + x),
           _mm_add_epi32(sumPixels, _mm_load_si128((__m128i*)(intPrevRow + x))));
->>>>>>> upstream-releases
     }
 
     pixel = sourceRow[aSize.width - 1];
@@ -211,15 +152,8 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
     if ((aSize.width & 3)) {
       // Deal with unaligned portion. Get the correct pixel from currentRowSum,
       // see explanation above.
-<<<<<<< HEAD
-      uint32_t intCurrentRowSum =
-          ((uint32_t *)&currentRowSum)[(aSize.width % 4) - 1];
-||||||| merged common ancestors
-      uint32_t intCurrentRowSum = ((uint32_t*)&currentRowSum)[(aSize.width % 4) - 1];
-=======
       uint32_t intCurrentRowSum =
           ((uint32_t*)&currentRowSum)[(aSize.width % 4) - 1];
->>>>>>> upstream-releases
       for (; x < integralImageSize.width; x++) {
         // We could be unaligned here!
         if (!(x & 3)) {
@@ -240,18 +174,9 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
 
       currentRowSum = _mm_shuffle_epi32(sumPixels, _MM_SHUFFLE(3, 3, 3, 3));
 
-<<<<<<< HEAD
-      _mm_store_si128(
-          (__m128i *)(intRow + x),
-          _mm_add_epi32(sumPixels,
-                        _mm_load_si128((__m128i *)(intPrevRow + x))));
-||||||| merged common ancestors
-      _mm_store_si128((__m128i*)(intRow + x), _mm_add_epi32(sumPixels, _mm_load_si128((__m128i*)(intPrevRow + x))));
-=======
       _mm_store_si128(
           (__m128i*)(intRow + x),
           _mm_add_epi32(sumPixels, _mm_load_si128((__m128i*)(intPrevRow + x))));
->>>>>>> upstream-releases
     }
   }
 
@@ -259,29 +184,6 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
     // Store the last valid row of our source image in the last row of
     // our integral image. This will be overwritten with the correct values
     // in the upcoming loop.
-<<<<<<< HEAD
-    LoadIntegralRowFromRow(
-        aIntegralImage + (integralImageSize.height - 1) * stride32bit,
-        aSource + (aSize.height - 1) * aSourceStride, aSize.width,
-        aLeftInflation, aRightInflation);
-
-    for (int y = aSize.height + aTopInflation; y < integralImageSize.height;
-         y++) {
-      __m128i *intRow = (__m128i *)(aIntegralImage + (y * stride32bit));
-      __m128i *intPrevRow = (__m128i *)(aIntegralImage + (y - 1) * stride32bit);
-      __m128i *intLastRow =
-          (__m128i *)(aIntegralImage +
-                      (integralImageSize.height - 1) * stride32bit);
-||||||| merged common ancestors
-    LoadIntegralRowFromRow(aIntegralImage + (integralImageSize.height - 1) * stride32bit,
-                           aSource + (aSize.height - 1) * aSourceStride, aSize.width, aLeftInflation, aRightInflation);
-
-
-    for (int y = aSize.height + aTopInflation; y < integralImageSize.height; y++) {
-      __m128i *intRow = (__m128i*)(aIntegralImage + (y * stride32bit));
-      __m128i *intPrevRow = (__m128i*)(aIntegralImage + (y - 1) * stride32bit);
-      __m128i *intLastRow = (__m128i*)(aIntegralImage + (integralImageSize.height - 1) * stride32bit);
-=======
     LoadIntegralRowFromRow(
         aIntegralImage + (integralImageSize.height - 1) * stride32bit,
         aSource + (aSize.height - 1) * aSourceStride, aSize.width,
@@ -294,7 +196,6 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
       __m128i* intLastRow =
           (__m128i*)(aIntegralImage +
                      (integralImageSize.height - 1) * stride32bit);
->>>>>>> upstream-releases
 
       for (int x = 0; x < integralImageSize.width; x += 4) {
         _mm_store_si128(intRow + (x / 4),
@@ -308,27 +209,10 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_SSE2(
 /**
  * Attempt to do an in-place box blur using an integral image.
  */
-<<<<<<< HEAD
-void AlphaBoxBlur::BoxBlur_SSE2(uint8_t *aData, int32_t aLeftLobe,
-                                int32_t aRightLobe, int32_t aTopLobe,
-                                int32_t aBottomLobe, uint32_t *aIntegralImage,
-                                size_t aIntegralImageStride) const {
-||||||| merged common ancestors
-void
-AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData,
-                           int32_t aLeftLobe,
-                           int32_t aRightLobe,
-                           int32_t aTopLobe,
-                           int32_t aBottomLobe,
-                           uint32_t *aIntegralImage,
-                           size_t aIntegralImageStride) const
-{
-=======
 void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
                                 int32_t aRightLobe, int32_t aTopLobe,
                                 int32_t aBottomLobe, uint32_t* aIntegralImage,
                                 size_t aIntegralImageStride) const {
->>>>>>> upstream-releases
   IntSize size = GetSize();
 
   MOZ_ASSERT(size.height > 0);
@@ -357,21 +241,10 @@ void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
 
   __m128i divisor = _mm_set1_epi32(reciprocal);
 
-<<<<<<< HEAD
-  // This points to the start of the rectangle within the IntegralImage that
-  // overlaps the surface being blurred.
-  uint32_t *innerIntegral =
-      aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
-||||||| merged common ancestors
-  // This points to the start of the rectangle within the IntegralImage that overlaps
-  // the surface being blurred.
-  uint32_t *innerIntegral = aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
-=======
   // This points to the start of the rectangle within the IntegralImage that
   // overlaps the surface being blurred.
   uint32_t* innerIntegral =
       aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
->>>>>>> upstream-releases
 
   IntRect skipRect = mSkipRect;
   int32_t stride = mStride;
@@ -381,23 +254,6 @@ void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
     // although that may not be done on purpose
     bool inSkipRectY = y > skipRect.Y() && y < skipRect.YMost();
 
-<<<<<<< HEAD
-    uint32_t *topLeftBase =
-        innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-    uint32_t *topRightBase =
-        innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomRightBase =
-        innerIntegral +
-        ((y + aBottomLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomLeftBase =
-        innerIntegral +
-        ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-||||||| merged common ancestors
-    uint32_t *topLeftBase = innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-    uint32_t *topRightBase = innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomRightBase = innerIntegral + ((y + aBottomLobe) * ptrdiff_t(stride32bit) + aRightLobe);
-    uint32_t *bottomLeftBase = innerIntegral + ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
-=======
     uint32_t* topLeftBase =
         innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
     uint32_t* topRightBase =
@@ -408,7 +264,6 @@ void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
     uint32_t* bottomLeftBase =
         innerIntegral +
         ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
->>>>>>> upstream-releases
 
     int32_t x = 0;
     // Process 16 pixels at a time for as long as possible.
@@ -428,68 +283,6 @@ void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
       __m128i bottomRight;
       __m128i bottomLeft;
 
-<<<<<<< HEAD
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x));
-      __m128i result1 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x + 4));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x + 4));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x + 4));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x + 4));
-      __m128i result2 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x + 8));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x + 8));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x + 8));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x + 8));
-      __m128i result3 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i *)(topLeftBase + x + 12));
-      topRight = loadUnaligned128((__m128i *)(topRightBase + x + 12));
-      bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x + 12));
-      bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x + 12));
-      __m128i result4 =
-          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      __m128i final = _mm_packus_epi16(_mm_packs_epi32(result1, result2),
-                                       _mm_packs_epi32(result3, result4));
-
-      _mm_storeu_si128((__m128i *)(data + stride * y + x), final);
-||||||| merged common ancestors
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x));
-      __m128i result1 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x + 4));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x + 4));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x + 4));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 4));
-      __m128i result2 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x + 8));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x + 8));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x + 8));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 8));
-      __m128i result3 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      topLeft = loadUnaligned128((__m128i*)(topLeftBase + x + 12));
-      topRight = loadUnaligned128((__m128i*)(topRightBase + x + 12));
-      bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x + 12));
-      bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x + 12));
-      __m128i result4 = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
-
-      __m128i final = _mm_packus_epi16(_mm_packs_epi32(result1, result2), _mm_packs_epi32(result3, result4));
-
-      _mm_storeu_si128((__m128i*)(data + stride * y + x), final);
-=======
       topLeft = loadUnaligned128((__m128i*)(topLeftBase + x));
       topRight = loadUnaligned128((__m128i*)(topRightBase + x));
       bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x));
@@ -522,7 +315,6 @@ void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
                                        _mm_packs_epi32(result3, result4));
 
       _mm_storeu_si128((__m128i*)(data + stride * y + x), final);
->>>>>>> upstream-releases
     }
 
     // Process the remaining pixels 4 bytes at a time.
@@ -536,17 +328,17 @@ void AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe,
         inSkipRectY = false;
         continue;
       }
-      __m128i topLeft = loadUnaligned128((__m128i *)(topLeftBase + x));
-      __m128i topRight = loadUnaligned128((__m128i *)(topRightBase + x));
-      __m128i bottomRight = loadUnaligned128((__m128i *)(bottomRightBase + x));
-      __m128i bottomLeft = loadUnaligned128((__m128i *)(bottomLeftBase + x));
+      __m128i topLeft = loadUnaligned128((__m128i*)(topLeftBase + x));
+      __m128i topRight = loadUnaligned128((__m128i*)(topRightBase + x));
+      __m128i bottomRight = loadUnaligned128((__m128i*)(bottomRightBase + x));
+      __m128i bottomLeft = loadUnaligned128((__m128i*)(bottomLeftBase + x));
 
       __m128i result =
           BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
       __m128i final = _mm_packus_epi16(
           _mm_packs_epi32(result, _mm_setzero_si128()), _mm_setzero_si128());
 
-      *(uint32_t *)(data + stride * y + x) = _mm_cvtsi128_si32(final);
+      *(uint32_t*)(data + stride * y + x) = _mm_cvtsi128_si32(final);
     }
   }
 }

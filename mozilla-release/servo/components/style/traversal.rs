@@ -307,14 +307,6 @@ pub fn resolve_style<E>(
 where
     E: TElement,
 {
-<<<<<<< HEAD
-    use crate::style_resolver::StyleResolverForElement;
-
-||||||| merged common ancestors
-    use style_resolver::StyleResolverForElement;
-
-=======
->>>>>>> upstream-releases
     debug_assert!(
         rule_inclusion == RuleInclusion::DefaultOnly ||
             pseudo.map_or(false, |p| p.is_before_or_after()) ||
@@ -412,7 +404,6 @@ pub fn recalc_style_at<E, D, F>(
     D: DomTraversal<E>,
     F: FnMut(E::ConcreteNode),
 {
-    use crate::traversal_flags::TraversalFlags;
     use std::cmp;
 
     let flags = context.shared.traversal_flags;
@@ -702,13 +693,7 @@ fn notify_paint_worklet<E>(context: &StyleContext<E>, data: &ElementData)
 where
     E: TElement,
 {
-<<<<<<< HEAD
-    use crate::values::generics::image::Image;
-    use crate::values::Either;
-||||||| merged common ancestors
-=======
     use crate::values::generics::image::{GenericImageLayer, Image};
->>>>>>> upstream-releases
     use style_traits::ToCss;
 
     // We speculatively evaluate any paint worklets during styling.

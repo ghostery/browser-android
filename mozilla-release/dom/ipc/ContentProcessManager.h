@@ -114,28 +114,14 @@ class ContentProcessManager final {
    * Get all BrowserParents' Ids managed by the givent content process.
    * Return empty array when BrowserParent couldn't be found via aChildCpId
    */
-<<<<<<< HEAD
-  nsTArray<TabId> GetTabParentsByProcessId(const ContentParentId& aChildCpId);
-||||||| merged common ancestors
-  nsTArray<TabId>
-  GetTabParentsByProcessId(const ContentParentId& aChildCpId);
-=======
   nsTArray<TabId> GetBrowserParentsByProcessId(
       const ContentParentId& aChildCpId);
->>>>>>> upstream-releases
 
   /**
    * Get the number of BrowserParents managed by the givent content process.
    * Return 0 when BrowserParent couldn't be found via aChildCpId.
    */
-<<<<<<< HEAD
-  uint32_t GetTabParentCountByProcessId(const ContentParentId& aChildCpId);
-||||||| merged common ancestors
-  uint32_t
-  GetTabParentCountByProcessId(const ContentParentId& aChildCpId);
-=======
   uint32_t GetBrowserParentCountByProcessId(const ContentParentId& aChildCpId);
->>>>>>> upstream-releases
 
   /**
    * Get the BrowserParent by the given content process and tab id.
@@ -143,17 +129,8 @@ class ContentProcessManager final {
    * and aChildTabId.
    * (or probably because the BrowserParent is not in the chrome process)
    */
-<<<<<<< HEAD
-  already_AddRefed<TabParent> GetTabParentByProcessAndTabId(
-      const ContentParentId& aChildCpId, const TabId& aChildTabId);
-||||||| merged common ancestors
-  already_AddRefed<TabParent>
-  GetTabParentByProcessAndTabId(const ContentParentId& aChildCpId,
-                                const TabId& aChildTabId);
-=======
   already_AddRefed<BrowserParent> GetBrowserParentByProcessAndTabId(
       const ContentParentId& aChildCpId, const TabId& aChildTabId);
->>>>>>> upstream-releases
 
   /**
    * Get the BrowserParent on top level by the given content process and tab id.
@@ -166,17 +143,8 @@ class ContentProcessManager final {
    *  will call GetBrowserParentByProcessAndTabId iteratively until the Tab
    * returned is belong to the chrome process.
    */
-<<<<<<< HEAD
-  already_AddRefed<TabParent> GetTopLevelTabParentByProcessAndTabId(
-      const ContentParentId& aChildCpId, const TabId& aChildTabId);
-||||||| merged common ancestors
-  already_AddRefed<TabParent>
-  GetTopLevelTabParentByProcessAndTabId(const ContentParentId& aChildCpId,
-                                        const TabId& aChildTabId);
-=======
   already_AddRefed<BrowserParent> GetTopLevelBrowserParentByProcessAndTabId(
       const ContentParentId& aChildCpId, const TabId& aChildTabId);
->>>>>>> upstream-releases
 
  private:
   static StaticAutoPtr<ContentProcessManager> sSingleton;

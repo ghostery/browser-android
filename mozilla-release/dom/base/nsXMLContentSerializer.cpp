@@ -1037,17 +1037,8 @@ nsXMLContentSerializer::AppendElementEnd(Element* aElement, nsAString& aStr) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXMLContentSerializer::AppendDocumentStart(nsIDocument* aDocument,
-                                            nsAString& aStr) {
-||||||| merged common ancestors
-nsXMLContentSerializer::AppendDocumentStart(nsIDocument *aDocument,
-                                            nsAString& aStr)
-{
-=======
 nsXMLContentSerializer::AppendDocumentStart(Document* aDocument,
                                             nsAString& aStr) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aDocument);
 
   nsAutoString version, encoding, standalone;

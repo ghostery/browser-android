@@ -32,21 +32,10 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewNumberControlFrame(nsIPresShell* aPresShell,
-                                   ComputedStyle* aStyle) {
-  return new (aPresShell) nsNumberControlFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewNumberControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsNumberControlFrame(aStyle);
-=======
 nsIFrame* NS_NewNumberControlFrame(PresShell* aPresShell,
                                    ComputedStyle* aStyle) {
   return new (aPresShell)
       nsNumberControlFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsNumberControlFrame)
@@ -57,30 +46,6 @@ NS_QUERYFRAME_HEAD(nsNumberControlFrame)
   NS_QUERYFRAME_ENTRY(nsIFormControlFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 
-<<<<<<< HEAD
-nsNumberControlFrame::nsNumberControlFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID), mHandlingInputEvent(false) {}
-
-void nsNumberControlFrame::DestroyFrom(nsIFrame* aDestructRoot,
-                                       PostDestroyData& aPostDestroyData) {
-  NS_ASSERTION(
-      !GetPrevContinuation() && !GetNextContinuation(),
-      "nsNumberControlFrame should not have continuations; if it does we "
-      "need to call RegUnregAccessKey only for the first");
-||||||| merged common ancestors
-nsNumberControlFrame::nsNumberControlFrame(ComputedStyle* aStyle)
-  : nsContainerFrame(aStyle, kClassID)
-  , mHandlingInputEvent(false)
-{
-}
-
-void
-nsNumberControlFrame::DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData)
-{
-  NS_ASSERTION(!GetPrevContinuation() && !GetNextContinuation(),
-               "nsNumberControlFrame should not have continuations; if it does we "
-               "need to call RegUnregAccessKey only for the first");
-=======
 nsNumberControlFrame::nsNumberControlFrame(ComputedStyle* aStyle,
                                            nsPresContext* aPresContext)
     : nsContainerFrame(aStyle, aPresContext, kClassID),
@@ -92,7 +57,6 @@ void nsNumberControlFrame::DestroyFrom(nsIFrame* aDestructRoot,
       !GetPrevContinuation() && !GetNextContinuation(),
       "nsNumberControlFrame should not have continuations; if it does we "
       "need to call RegUnregAccessKey only for the first");
->>>>>>> upstream-releases
   nsCheckboxRadioFrame::RegUnRegAccessKey(static_cast<nsIFrame*>(this), false);
   aPostDestroyData.AddAnonymousContent(mOuterWrapper.forget());
   nsContainerFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
@@ -165,37 +129,16 @@ void nsNumberControlFrame::Reflow(nsPresContext* aPresContext,
       aReflowInput.ComputedLogicalBorderPadding().IStartEnd(myWM);
 
   nscoord borderBoxBSize;
-<<<<<<< HEAD
-  if (contentBoxBSize != NS_INTRINSICSIZE) {
-    borderBoxBSize =
-        contentBoxBSize +
-        aReflowInput.ComputedLogicalBorderPadding().BStartEnd(myWM);
-  }  // else, we'll figure out borderBoxBSize after we resolve contentBoxBSize.
-||||||| merged common ancestors
-  if (contentBoxBSize != NS_INTRINSICSIZE) {
-    borderBoxBSize = contentBoxBSize +
-      aReflowInput.ComputedLogicalBorderPadding().BStartEnd(myWM);
-  } // else, we'll figure out borderBoxBSize after we resolve contentBoxBSize.
-=======
   if (contentBoxBSize != NS_UNCONSTRAINEDSIZE) {
     borderBoxBSize =
         contentBoxBSize +
         aReflowInput.ComputedLogicalBorderPadding().BStartEnd(myWM);
   }  // else, we'll figure out borderBoxBSize after we resolve contentBoxBSize.
->>>>>>> upstream-releases
 
   nsIFrame* outerWrapperFrame = mOuterWrapper->GetPrimaryFrame();
 
-<<<<<<< HEAD
-  if (!outerWrapperFrame) {  // display:none?
-    if (contentBoxBSize == NS_INTRINSICSIZE) {
-||||||| merged common ancestors
-  if (!outerWrapperFrame) { // display:none?
-    if (contentBoxBSize == NS_INTRINSICSIZE) {
-=======
   if (!outerWrapperFrame) {  // display:none?
     if (contentBoxBSize == NS_UNCONSTRAINEDSIZE) {
->>>>>>> upstream-releases
       contentBoxBSize = 0;
       borderBoxBSize =
           aReflowInput.ComputedLogicalBorderPadding().BStartEnd(myWM);
@@ -267,28 +210,6 @@ void nsNumberControlFrame::Reflow(nsPresContext* aPresContext,
 
     // Place the child
     FinishReflowChild(outerWrapperFrame, aPresContext, wrappersDesiredSize,
-<<<<<<< HEAD
-                      &wrapperReflowInput, myWM, wrapperOffset, borderBoxSize,
-                      0);
-
-    nsSize contentBoxSize = LogicalSize(myWM, contentBoxISize, contentBoxBSize)
-                                .GetPhysicalSize(myWM);
-    aDesiredSize.SetBlockStartAscent(
-        wrappersDesiredSize.BlockStartAscent() +
-        outerWrapperFrame->BStart(aReflowInput.GetWritingMode(),
-                                  contentBoxSize));
-||||||| merged common ancestors
-                      &wrapperReflowInput, myWM, wrapperOffset,
-                      borderBoxSize, 0);
-
-    nsSize contentBoxSize =
-      LogicalSize(myWM, contentBoxISize, contentBoxBSize).
-        GetPhysicalSize(myWM);
-    aDesiredSize.SetBlockStartAscent(
-       wrappersDesiredSize.BlockStartAscent() +
-       outerWrapperFrame->BStart(aReflowInput.GetWritingMode(),
-                                 contentBoxSize));
-=======
                       &wrapperReflowInput, myWM, wrapperOffset, borderBoxSize,
                       0);
 
@@ -301,7 +222,6 @@ void nsNumberControlFrame::Reflow(nsPresContext* aPresContext,
           outerWrapperFrame->BStart(aReflowInput.GetWritingMode(),
                                     contentBoxSize));
     }  // else: we're layout-contained, and so we have no baseline.
->>>>>>> upstream-releases
   }
 
   LogicalSize logicalDesiredSize(myWM, borderBoxISize, borderBoxBSize);
@@ -386,19 +306,8 @@ class FocusTextField : public Runnable {
   nsCOMPtr<nsIContent> mTextField;
 };
 
-<<<<<<< HEAD
-already_AddRefed<Element> nsNumberControlFrame::MakeAnonymousElement(
-    Element* aParent, nsAtom* aTagName, CSSPseudoElementType aPseudoType) {
-||||||| merged common ancestors
-already_AddRefed<Element>
-nsNumberControlFrame::MakeAnonymousElement(Element* aParent,
-                                           nsAtom* aTagName,
-                                           CSSPseudoElementType aPseudoType)
-{
-=======
 already_AddRefed<Element> nsNumberControlFrame::MakeAnonymousElement(
     Element* aParent, nsAtom* aTagName, PseudoStyleType aPseudoType) {
->>>>>>> upstream-releases
   // Get the NodeInfoManager and tag necessary to create the anonymous divs.
   Document* doc = mContent->GetComposedDoc();
   RefPtr<Element> resultElement = doc->CreateHTMLElement(aTagName);
@@ -433,32 +342,14 @@ nsresult nsNumberControlFrame::CreateAnonymousContent(
   // nsNumberControlFrame::DestroyFrom.
 
   // Create the anonymous outer wrapper:
-<<<<<<< HEAD
-  mOuterWrapper = MakeAnonymousElement(nullptr, nsGkAtoms::div,
-                                       CSSPseudoElementType::mozNumberWrapper);
-||||||| merged common ancestors
-  mOuterWrapper = MakeAnonymousElement(nullptr,
-                                       nsGkAtoms::div,
-                                       CSSPseudoElementType::mozNumberWrapper);
-=======
   mOuterWrapper = MakeAnonymousElement(nullptr, nsGkAtoms::div,
                                        PseudoStyleType::mozNumberWrapper);
->>>>>>> upstream-releases
 
   aElements.AppendElement(mOuterWrapper);
 
   // Create the ::-moz-number-text pseudo-element:
-<<<<<<< HEAD
-  mTextField = MakeAnonymousElement(mOuterWrapper, nsGkAtoms::input,
-                                    CSSPseudoElementType::mozNumberText);
-||||||| merged common ancestors
-  mTextField = MakeAnonymousElement(mOuterWrapper,
-                                    nsGkAtoms::input,
-                                    CSSPseudoElementType::mozNumberText);
-=======
   mTextField = MakeAnonymousElement(mOuterWrapper, nsGkAtoms::input,
                                     PseudoStyleType::mozNumberText);
->>>>>>> upstream-releases
 
   mTextField->SetAttr(kNameSpaceID_None, nsGkAtoms::type,
                       NS_LITERAL_STRING("text"), false);
@@ -505,43 +396,16 @@ nsresult nsNumberControlFrame::CreateAnonymousContent(
   }
 
   // Create the ::-moz-number-spin-box pseudo-element:
-<<<<<<< HEAD
-  mSpinBox = MakeAnonymousElement(mOuterWrapper, nsGkAtoms::div,
-                                  CSSPseudoElementType::mozNumberSpinBox);
-||||||| merged common ancestors
-  mSpinBox = MakeAnonymousElement(mOuterWrapper,
-                                  nsGkAtoms::div,
-                                  CSSPseudoElementType::mozNumberSpinBox);
-=======
   mSpinBox = MakeAnonymousElement(mOuterWrapper, nsGkAtoms::div,
                                   PseudoStyleType::mozNumberSpinBox);
->>>>>>> upstream-releases
 
   // Create the ::-moz-number-spin-up pseudo-element:
-<<<<<<< HEAD
-  mSpinUp = MakeAnonymousElement(mSpinBox, nsGkAtoms::div,
-                                 CSSPseudoElementType::mozNumberSpinUp);
-||||||| merged common ancestors
-  mSpinUp = MakeAnonymousElement(mSpinBox,
-                                 nsGkAtoms::div,
-                                 CSSPseudoElementType::mozNumberSpinUp);
-=======
   mSpinUp = MakeAnonymousElement(mSpinBox, nsGkAtoms::div,
                                  PseudoStyleType::mozNumberSpinUp);
->>>>>>> upstream-releases
 
   // Create the ::-moz-number-spin-down pseudo-element:
-<<<<<<< HEAD
-  mSpinDown = MakeAnonymousElement(mSpinBox, nsGkAtoms::div,
-                                   CSSPseudoElementType::mozNumberSpinDown);
-||||||| merged common ancestors
-  mSpinDown = MakeAnonymousElement(mSpinBox,
-                                   nsGkAtoms::div,
-                                   CSSPseudoElementType::mozNumberSpinDown);
-=======
   mSpinDown = MakeAnonymousElement(mSpinBox, nsGkAtoms::div,
                                    PseudoStyleType::mozNumberSpinDown);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -559,18 +423,9 @@ HTMLInputElement* nsNumberControlFrame::GetAnonTextControl() {
   return HTMLInputElement::FromNode(mTextField);
 }
 
-<<<<<<< HEAD
-/* static */ nsNumberControlFrame*
-nsNumberControlFrame::GetNumberControlFrameForTextField(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ nsNumberControlFrame*
-nsNumberControlFrame::GetNumberControlFrameForTextField(nsIFrame* aFrame)
-{
-=======
 /* static */
 nsNumberControlFrame* nsNumberControlFrame::GetNumberControlFrameForTextField(
     nsIFrame* aFrame) {
->>>>>>> upstream-releases
   // If aFrame is the anon text field for an <input type=number> then we expect
   // the frame of its mContent's grandparent to be that input's frame. We
   // have to check for this via the content tree because we don't know whether
@@ -590,18 +445,9 @@ nsNumberControlFrame* nsNumberControlFrame::GetNumberControlFrameForTextField(
   return nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ nsNumberControlFrame*
-nsNumberControlFrame::GetNumberControlFrameForSpinButton(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ nsNumberControlFrame*
-nsNumberControlFrame::GetNumberControlFrameForSpinButton(nsIFrame* aFrame)
-{
-=======
 /* static */
 nsNumberControlFrame* nsNumberControlFrame::GetNumberControlFrameForSpinButton(
     nsIFrame* aFrame) {
->>>>>>> upstream-releases
   // If aFrame is a spin button for an <input type=number> then we expect the
   // frame of its mContent's great-grandparent to be that input's frame. We
   // have to check for this via the content tree because we don't know whether

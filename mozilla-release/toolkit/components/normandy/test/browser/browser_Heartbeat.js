@@ -48,13 +48,7 @@ function closeAllNotifications(targetWindow, notificationBox) {
       }
     });
 
-<<<<<<< HEAD
-    observer.observe(notificationBox.stack, {childList: true});
-||||||| merged common ancestors
-    observer.observe(notificationBox, {childList: true});
-=======
     observer.observe(notificationBox.stack, { childList: true });
->>>>>>> upstream-releases
 
     for (const notification of notificationBox.allNotifications) {
       notification.close();
@@ -91,16 +85,8 @@ add_task(async function() {
   const targetWindow = Services.wm.getMostRecentWindow("navigator:browser");
   const notificationBox = targetWindow.gHighPriorityNotificationBox;
 
-<<<<<<< HEAD
-  const preCount = notificationBox.allNotifications.length;
-  const hb = new Heartbeat(targetWindow, sandboxManager, {
-||||||| merged common ancestors
-  const preCount = notificationBox.childElementCount;
-  const hb = new Heartbeat(targetWindow, sandboxManager, {
-=======
   const preCount = notificationBox.allNotifications.length;
   const hb = new Heartbeat(targetWindow, {
->>>>>>> upstream-releases
     testing: true,
     flowId: "test",
     message: "test",
@@ -111,18 +97,6 @@ add_task(async function() {
 
   // Check UI
   const learnMoreEl = hb.notice.querySelector(".text-link");
-<<<<<<< HEAD
-  Assert.equal(notificationBox.allNotifications.length, preCount + 1, "Correct number of notifications open");
-  Assert.equal(hb.notice.querySelectorAll(".star-x").length, 5, "Correct number of stars");
-  Assert.equal(hb.notice.querySelectorAll(".notification-button").length, 0, "Engagement button not shown");
-  Assert.equal(learnMoreEl.href, "https://example.org/learnmore", "Learn more url correct");
-||||||| merged common ancestors
-  const messageEl = targetWindow.document.getAnonymousElementByAttribute(hb.notice, "anonid", "messageText");
-  Assert.equal(notificationBox.childElementCount, preCount + 1, "Correct number of notifications open");
-  Assert.equal(hb.notice.querySelectorAll(".star-x").length, 5, "Correct number of stars");
-  Assert.equal(hb.notice.querySelectorAll(".notification-button").length, 0, "Engagement button not shown");
-  Assert.equal(learnMoreEl.href, "https://example.org/learnmore", "Learn more url correct");
-=======
   Assert.equal(
     notificationBox.allNotifications.length,
     preCount + 1,
@@ -143,7 +117,6 @@ add_task(async function() {
     "https://example.org/learnmore",
     "Learn more url correct"
   );
->>>>>>> upstream-releases
   Assert.equal(learnMoreEl.value, "Learn More", "Learn more label correct");
   Assert.equal(hb.notice.messageText.textContent, "test", "Message is correct");
 
@@ -188,16 +161,8 @@ add_task(async function() {
 // Batch #2 - Engagement buttons
 add_task(async function() {
   const targetWindow = Services.wm.getMostRecentWindow("navigator:browser");
-<<<<<<< HEAD
-  const notificationBox = targetWindow.gHighPriorityNotificationBox;
-  const hb = new Heartbeat(targetWindow, sandboxManager, {
-||||||| merged common ancestors
-  const notificationBox = targetWindow.document.querySelector("#high-priority-global-notificationbox");
-  const hb = new Heartbeat(targetWindow, sandboxManager, {
-=======
   const notificationBox = targetWindow.gHighPriorityNotificationBox;
   const hb = new Heartbeat(targetWindow, {
->>>>>>> upstream-releases
     testing: true,
     flowId: "test",
     message: "test",

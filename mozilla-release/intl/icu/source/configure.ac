@@ -199,16 +199,10 @@ fi
 #AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 #AC_CHECK_PROG(STRIP, strip, strip, true)
 
-<<<<<<< HEAD
-AC_CHECK_PROGS(PYTHON3, python3)
-
-||||||| merged common ancestors
-=======
 # TODO(ICU-20301): Remove fallback to Python 2.
 AC_CHECK_PROGS(PYTHON, python3 "py -3" python "py")
 AC_SUBST(PYTHON)
 
->>>>>>> upstream-releases
 # Check for the platform make
 AC_PATH_PROGS(U_MAKE, gmake gnumake, make)
 AC_SUBST(U_MAKE)
@@ -1509,26 +1503,9 @@ then
         echo "## Expect build failures in the 'data', 'test', and other directories."
 fi
 
-<<<<<<< HEAD
-if test -z "$PYTHON3";
-then
-    echo ""
-    echo "NOTICE: Unable to find Python 3. ICU versions 64 and later will require Python 3 to build."
-    echo "See ICU-10923 for more information: https://unicode-org.atlassian.net/browse/ICU-10923"
-    echo ""
-else
-    echo ""
-    echo "Found Python 3. You are all set for ICU 64, which will require Python 3 to build."
-    echo "For more info on Python 3 requirement, see: https://unicode-org.atlassian.net/browse/ICU-10923"
-    echo ""
-fi
-
-||||||| merged common ancestors
-=======
 if test -z "$PYTHON";
 then
     echo "** Note: Python not found. You will not be able to build data from source or run tests."
 fi
 
->>>>>>> upstream-releases
 $as_unset _CXX_CXXSUFFIX

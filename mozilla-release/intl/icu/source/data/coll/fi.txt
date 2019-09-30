@@ -8,13 +8,7 @@ fi{
                 "[import und-u-co-search]"
                 "[import fi-u-co-trad]"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -26,13 +20,7 @@ fi{
                 "&Z\u0335<<ʒ<<<Ʒ"
                 "&[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<ö<<<Ö<<ø<<<Ø"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         traditional{
             Sequence{
@@ -43,13 +31,7 @@ fi{
                 "&Y<<ü<<<Ü<<ű<<<Ű"
                 "&[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<õ<<<Õ<<œ<<<Œ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

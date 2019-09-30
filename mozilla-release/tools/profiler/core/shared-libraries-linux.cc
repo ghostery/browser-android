@@ -29,42 +29,15 @@
 #include <sys/types.h>
 
 #if defined(GP_OS_linux)
-<<<<<<< HEAD
-#include <link.h>  // dl_phdr_info
-||||||| merged common ancestors
-# include <link.h>      // dl_phdr_info
-=======
 #  include <link.h>  // dl_phdr_info
->>>>>>> upstream-releases
 #elif defined(GP_OS_android)
-<<<<<<< HEAD
-#include "AutoObjectMapper.h"
-#include "ElfLoader.h"  // dl_phdr_info
-extern "C" MOZ_EXPORT __attribute__((weak)) int dl_iterate_phdr(
-    int (*callback)(struct dl_phdr_info* info, size_t size, void* data),
-    void* data);
-||||||| merged common ancestors
-# include "AutoObjectMapper.h"
-# include "ElfLoader.h" // dl_phdr_info
-extern "C" MOZ_EXPORT __attribute__((weak))
-int dl_iterate_phdr(
-          int (*callback)(struct dl_phdr_info *info, size_t size, void *data),
-          void *data);
-=======
 #  include "AutoObjectMapper.h"
 #  include "ElfLoader.h"  // dl_phdr_info
 extern "C" MOZ_EXPORT __attribute__((weak)) int dl_iterate_phdr(
     int (*callback)(struct dl_phdr_info* info, size_t size, void* data),
     void* data);
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#error "Unexpected configuration"
-||||||| merged common ancestors
-# error "Unexpected configuration"
-=======
 #  error "Unexpected configuration"
->>>>>>> upstream-releases
 #endif
 
 struct LoadedLibraryInfo {

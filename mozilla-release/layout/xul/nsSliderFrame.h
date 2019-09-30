@@ -18,23 +18,12 @@
 class nsITimer;
 class nsSliderFrame;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSliderFrame(nsIPresShell* aPresShell,
-                            mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsIFrame* NS_NewSliderFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-
-class nsSliderMediator final : public nsIDOMEventListener
-{
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 nsIFrame* NS_NewSliderFrame(mozilla::PresShell* aPresShell,
                             mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
 class nsSliderMediator final : public nsIDOMEventListener {
  public:

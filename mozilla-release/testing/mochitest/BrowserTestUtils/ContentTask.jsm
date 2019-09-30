@@ -109,18 +109,12 @@ var ContentMessageListener = {
       }
     } else if (aMessage.name == "content-task:test-result") {
       let data = aMessage.data;
-<<<<<<< HEAD
-      ContentTask._testScope.record(data.condition, data.name, null, data.stack);
-||||||| merged common ancestors
-      ContentTask._testScope.ok(data.condition, data.name, null, data.stack);
-=======
       ContentTask._testScope.record(
         data.condition,
         data.name,
         null,
         data.stack
       );
->>>>>>> upstream-releases
     } else if (aMessage.name == "content-task:test-info") {
       ContentTask._testScope.info(aMessage.data.name);
     } else if (aMessage.name == "content-task:test-todo") {

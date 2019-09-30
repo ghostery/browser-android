@@ -112,33 +112,15 @@ class XMLComment(NodeMixin, Comment):
     def val(self):
         return self._val_literal
 
-<<<<<<< HEAD
     @property
     def key(self):
         return None
 
-||||||| merged common ancestors
-=======
-    @property
-    def key(self):
-        return None
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-# DocumentWrapper is sticky in serialization.
-# Always keep the one from the reference document.
-class DocumentWrapper(NodeMixin, StickyEntry):
-    def __init__(self, key, all):
-||||||| merged common ancestors
-class DocumentWrapper(NodeMixin, EntityBase):
-    def __init__(self, all):
-=======
 
 # DocumentWrapper is sticky in serialization.
 # Always keep the one from the reference document.
 class DocumentWrapper(NodeMixin, StickyEntry):
     def __init__(self, key, all):
->>>>>>> upstream-releases
         self._all_literal = all
         self._val_literal = all
         self._key_literal = key
@@ -205,37 +187,10 @@ class AndroidParser(Parser):
             return
         root_children = docElement.childNodes
         if not only_localizable:
-            attributes = ''.join(
-                ' {}="{}"'.format(attr_name, attr_value)
-                for attr_name, attr_value in
-                doc.documentElement.attributes.items()
-            )
             yield DocumentWrapper(
-<<<<<<< HEAD
-                '<?xml?><resources>',
-                '<?xml version="1.0" encoding="utf-8"?>\n<resources{}>'.format(
-                    attributes
-                )
-||||||| merged common ancestors
-                '<?xml version="1.0" encoding="utf-8"?>\n<resources>'
-=======
                 '<?xml?><resources>',
                 '<?xml version="1.0" encoding="utf-8"?>\n<resources'
->>>>>>> upstream-releases
             )
-<<<<<<< HEAD
-        child_num = 0
-        while child_num < len(root_children):
-            node = root_children[child_num]
-||||||| merged common ancestors
-        for node in root_children:
-            if node.nodeType == Node.ELEMENT_NODE:
-                yield self.handleElement(node)
-                self.last_comment = None
-            if node.nodeType in (Node.TEXT_NODE, Node.CDATA_SECTION_NODE):
-                if not only_localizable:
-                    yield XMLWhitespace(node.toxml(), node.nodeValue)
-=======
             for attr_name, attr_value in docElement.attributes.items():
                 yield DocumentWrapper(
                     attr_name,
@@ -245,7 +200,6 @@ class AndroidParser(Parser):
         child_num = 0
         while child_num < len(root_children):
             node = root_children[child_num]
->>>>>>> upstream-releases
             if node.nodeType == Node.COMMENT_NODE:
                 current_comment, child_num = self.handleComment(
                     node, root_children, child_num

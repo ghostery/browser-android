@@ -168,23 +168,7 @@ class DeinterlacingFilter final : public SurfaceFilter {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  bool IsValidPalettedPipe() const override {
-    return sizeof(PixelType) == 1 && mNext.IsValidPalettedPipe();
-  }
-
   Maybe<SurfaceInvalidRect> TakeInvalidRect() override {
-||||||| merged common ancestors
-  bool IsValidPalettedPipe() const override
-  {
-    return sizeof(PixelType) == 1 && mNext.IsValidPalettedPipe();
-  }
-
-  Maybe<SurfaceInvalidRect> TakeInvalidRect() override
-  {
-=======
-  Maybe<SurfaceInvalidRect> TakeInvalidRect() override {
->>>>>>> upstream-releases
     return mNext.TakeInvalidRect();
   }
 

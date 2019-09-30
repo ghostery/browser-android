@@ -21,25 +21,12 @@ namespace cache {
 
 class ReadStream;
 
-<<<<<<< HEAD
-class CacheStreamControlChild final : public PCacheStreamControlChild,
-                                      public StreamControl,
-                                      public ActorChild {
- public:
-||||||| merged common ancestors
-class CacheStreamControlChild final : public PCacheStreamControlChild
-                                    , public StreamControl
-                                    , public ActorChild
-{
-public:
-=======
 class CacheStreamControlChild final : public PCacheStreamControlChild,
                                       public StreamControl,
                                       public ActorChild {
   friend class PCacheStreamControlChild;
 
  public:
->>>>>>> upstream-releases
   CacheStreamControlChild();
   ~CacheStreamControlChild();
 

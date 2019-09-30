@@ -20,35 +20,6 @@ const { AppConstants } = ChromeUtils.import(
 
 const Utils = TelemetryUtils;
 
-<<<<<<< HEAD
-const { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm", {});
-
-ChromeUtils.defineModuleGetter(this, "AttributionCode",
-                               "resource:///modules/AttributionCode.jsm");
-ChromeUtils.defineModuleGetter(this, "ctypes",
-                               "resource://gre/modules/ctypes.jsm");
-ChromeUtils.defineModuleGetter(this, "LightweightThemeManager",
-                               "resource://gre/modules/LightweightThemeManager.jsm");
-ChromeUtils.defineModuleGetter(this, "ProfileAge",
-                               "resource://gre/modules/ProfileAge.jsm");
-ChromeUtils.defineModuleGetter(this, "WindowsRegistry",
-                               "resource://gre/modules/WindowsRegistry.jsm");
-ChromeUtils.defineModuleGetter(this, "UpdateUtils",
-                               "resource://gre/modules/UpdateUtils.jsm");
-||||||| merged common ancestors
-const { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm", {});
-
-ChromeUtils.defineModuleGetter(this, "AttributionCode",
-                               "resource:///modules/AttributionCode.jsm");
-ChromeUtils.defineModuleGetter(this, "ctypes",
-                               "resource://gre/modules/ctypes.jsm");
-ChromeUtils.defineModuleGetter(this, "LightweightThemeManager",
-                               "resource://gre/modules/LightweightThemeManager.jsm");
-ChromeUtils.defineModuleGetter(this, "ProfileAge",
-                               "resource://gre/modules/ProfileAge.jsm");
-ChromeUtils.defineModuleGetter(this, "WindowsRegistry",
-                               "resource://gre/modules/WindowsRegistry.jsm");
-=======
 const { AddonManager, AddonManagerPrivate } = ChromeUtils.import(
   "resource://gre/modules/AddonManager.jsm"
 );
@@ -78,7 +49,6 @@ ChromeUtils.defineModuleGetter(
   "UpdateUtils",
   "resource://gre/modules/UpdateUtils.jsm"
 );
->>>>>>> upstream-releases
 
 // The maximum length of a string (e.g. description) in the addons section.
 const MAX_ADDON_STRING_LENGTH = 100;
@@ -243,164 +213,6 @@ const RECORD_PREF_VALUE = TelemetryEnvironment.RECORD_PREF_VALUE;
 const RECORD_DEFAULTPREF_VALUE = TelemetryEnvironment.RECORD_DEFAULTPREF_VALUE;
 const RECORD_DEFAULTPREF_STATE = TelemetryEnvironment.RECORD_DEFAULTPREF_STATE;
 const DEFAULT_ENVIRONMENT_PREFS = new Map([
-<<<<<<< HEAD
-  ["app.feedback.baseURL", {what: RECORD_PREF_VALUE}],
-  ["app.support.baseURL", {what: RECORD_PREF_VALUE}],
-  ["accessibility.browsewithcaret", {what: RECORD_PREF_VALUE}],
-  ["accessibility.force_disabled", {what:  RECORD_PREF_VALUE}],
-  ["app.shield.optoutstudies.enabled", {what: RECORD_PREF_VALUE}],
-  ["app.update.interval", {what: RECORD_PREF_VALUE}],
-  ["app.update.service.enabled", {what: RECORD_PREF_VALUE}],
-  ["app.update.silent", {what: RECORD_PREF_VALUE}],
-  ["app.update.url", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.disk.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.disk.capacity", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.memory.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.offline.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.formfill.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.newtabpage.enabled", {what: RECORD_PREF_VALUE}],
-  ["browser.shell.checkDefaultBrowser", {what: RECORD_PREF_VALUE}],
-  ["browser.search.ignoredJAREngines", {what: RECORD_DEFAULTPREF_VALUE}],
-  ["browser.search.region", {what: RECORD_PREF_VALUE}],
-  ["browser.search.suggest.enabled", {what: RECORD_PREF_VALUE}],
-  ["browser.search.widget.inNavBar", {what: RECORD_DEFAULTPREF_VALUE}],
-  ["browser.startup.homepage", {what: RECORD_PREF_STATE}],
-  ["browser.startup.page", {what: RECORD_PREF_VALUE}],
-  ["toolkit.cosmeticAnimations.enabled", {what: RECORD_PREF_VALUE}],
-  ["browser.urlbar.suggest.searches", {what: RECORD_PREF_VALUE}],
-  ["browser.urlbar.userMadeSearchSuggestionsChoice", {what: RECORD_PREF_VALUE}],
-  ["devtools.chrome.enabled", {what: RECORD_PREF_VALUE}],
-  ["devtools.debugger.enabled", {what: RECORD_PREF_VALUE}],
-  ["devtools.debugger.remote-enabled", {what: RECORD_PREF_VALUE}],
-  ["dom.ipc.plugins.enabled", {what: RECORD_PREF_VALUE}],
-  ["dom.ipc.plugins.sandbox-level.flash", {what: RECORD_PREF_VALUE}],
-  ["dom.ipc.processCount", {what: RECORD_PREF_VALUE}],
-  ["dom.max_script_run_time", {what: RECORD_PREF_VALUE}],
-  ["extensions.autoDisableScopes", {what: RECORD_PREF_VALUE}],
-  ["extensions.enabledScopes", {what: RECORD_PREF_VALUE}],
-  ["extensions.blocklist.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.blocklist.url", {what: RECORD_PREF_VALUE}],
-  ["extensions.formautofill.addresses.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.formautofill.creditCards.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.legacy.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.strictCompatibility", {what: RECORD_PREF_VALUE}],
-  ["extensions.update.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.update.url", {what: RECORD_PREF_VALUE}],
-  ["extensions.update.background.url", {what: RECORD_PREF_VALUE}],
-  ["extensions.screenshots.disabled", {what: RECORD_PREF_VALUE}],
-  ["general.config.filename", {what: RECORD_DEFAULTPREF_STATE}],
-  ["general.smoothScroll", {what: RECORD_PREF_VALUE}],
-  ["gfx.direct2d.disabled", {what: RECORD_PREF_VALUE}],
-  ["gfx.direct2d.force-enabled", {what: RECORD_PREF_VALUE}],
-  ["gfx.webrender.all", {what: RECORD_PREF_VALUE}],
-  ["gfx.webrender.all.qualified", {what: RECORD_PREF_VALUE}],
-  ["gfx.webrender.force-disabled", {what: RECORD_PREF_VALUE}],
-  ["layers.acceleration.disabled", {what: RECORD_PREF_VALUE}],
-  ["layers.acceleration.force-enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.async-pan-zoom.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.async-video-oop.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.async-video.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.componentalpha.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.d3d11.disable-warp", {what: RECORD_PREF_VALUE}],
-  ["layers.d3d11.force-warp", {what: RECORD_PREF_VALUE}],
-  ["layers.offmainthreadcomposition.force-disabled", {what: RECORD_PREF_VALUE}],
-  ["layers.prefer-d3d9", {what: RECORD_PREF_VALUE}],
-  ["layers.prefer-opengl", {what: RECORD_PREF_VALUE}],
-  ["layout.css.devPixelsPerPx", {what: RECORD_PREF_VALUE}],
-  ["marionette.enabled", {what: RECORD_PREF_VALUE}],
-  ["network.proxy.autoconfig_url", {what: RECORD_PREF_STATE}],
-  ["network.proxy.http", {what: RECORD_PREF_STATE}],
-  ["network.proxy.ssl", {what: RECORD_PREF_STATE}],
-  ["pdfjs.disabled", {what: RECORD_PREF_VALUE}],
-  ["places.history.enabled", {what: RECORD_PREF_VALUE}],
-  ["plugins.show_infobar", {what: RECORD_PREF_VALUE}],
-  ["privacy.fuzzyfox.enabled", {what: RECORD_PREF_VALUE}],
-  ["privacy.trackingprotection.enabled", {what: RECORD_PREF_VALUE}],
-  ["privacy.donottrackheader.enabled", {what: RECORD_PREF_VALUE}],
-  ["security.mixed_content.block_active_content", {what: RECORD_PREF_VALUE}],
-  ["security.mixed_content.block_display_content", {what: RECORD_PREF_VALUE}],
-  ["xpinstall.signatures.required", {what: RECORD_PREF_VALUE}],
-||||||| merged common ancestors
-  ["app.feedback.baseURL", {what: RECORD_PREF_VALUE}],
-  ["app.support.baseURL", {what: RECORD_PREF_VALUE}],
-  ["accessibility.browsewithcaret", {what: RECORD_PREF_VALUE}],
-  ["accessibility.force_disabled", {what:  RECORD_PREF_VALUE}],
-  ["app.normandy.test.with_true_default", {what: RECORD_PREF_VALUE}],
-  ["app.normandy.test.with_false_default", {what: RECORD_PREF_VALUE}],
-  ["app.normandy.test.without_default", {what: RECORD_PREF_VALUE}],
-  ["app.shield.optoutstudies.enabled", {what: RECORD_PREF_VALUE}],
-  ["app.update.auto", {what: RECORD_PREF_VALUE}],
-  ["app.update.interval", {what: RECORD_PREF_VALUE}],
-  ["app.update.service.enabled", {what: RECORD_PREF_VALUE}],
-  ["app.update.silent", {what: RECORD_PREF_VALUE}],
-  ["app.update.url", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.disk.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.disk.capacity", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.memory.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.cache.offline.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.formfill.enable", {what: RECORD_PREF_VALUE}],
-  ["browser.newtabpage.enabled", {what: RECORD_PREF_VALUE}],
-  ["browser.shell.checkDefaultBrowser", {what: RECORD_PREF_VALUE}],
-  ["browser.search.ignoredJAREngines", {what: RECORD_DEFAULTPREF_VALUE}],
-  ["browser.search.region", {what: RECORD_PREF_VALUE}],
-  ["browser.search.suggest.enabled", {what: RECORD_PREF_VALUE}],
-  ["browser.search.widget.inNavBar", {what: RECORD_DEFAULTPREF_VALUE}],
-  ["browser.startup.homepage", {what: RECORD_PREF_STATE}],
-  ["browser.startup.page", {what: RECORD_PREF_VALUE}],
-  ["toolkit.cosmeticAnimations.enabled", {what: RECORD_PREF_VALUE}],
-  ["browser.urlbar.suggest.searches", {what: RECORD_PREF_VALUE}],
-  ["browser.urlbar.userMadeSearchSuggestionsChoice", {what: RECORD_PREF_VALUE}],
-  ["devtools.chrome.enabled", {what: RECORD_PREF_VALUE}],
-  ["devtools.debugger.enabled", {what: RECORD_PREF_VALUE}],
-  ["devtools.debugger.remote-enabled", {what: RECORD_PREF_VALUE}],
-  ["dom.ipc.plugins.enabled", {what: RECORD_PREF_VALUE}],
-  ["dom.ipc.plugins.sandbox-level.flash", {what: RECORD_PREF_VALUE}],
-  ["dom.ipc.processCount", {what: RECORD_PREF_VALUE}],
-  ["dom.max_script_run_time", {what: RECORD_PREF_VALUE}],
-  ["extensions.autoDisableScopes", {what: RECORD_PREF_VALUE}],
-  ["extensions.enabledScopes", {what: RECORD_PREF_VALUE}],
-  ["extensions.blocklist.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.blocklist.url", {what: RECORD_PREF_VALUE}],
-  ["extensions.formautofill.addresses.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.formautofill.creditCards.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.legacy.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.strictCompatibility", {what: RECORD_PREF_VALUE}],
-  ["extensions.update.enabled", {what: RECORD_PREF_VALUE}],
-  ["extensions.update.url", {what: RECORD_PREF_VALUE}],
-  ["extensions.update.background.url", {what: RECORD_PREF_VALUE}],
-  ["extensions.screenshots.disabled", {what: RECORD_PREF_VALUE}],
-  ["general.config.filename", {what: RECORD_DEFAULTPREF_STATE}],
-  ["general.smoothScroll", {what: RECORD_PREF_VALUE}],
-  ["gfx.direct2d.disabled", {what: RECORD_PREF_VALUE}],
-  ["gfx.direct2d.force-enabled", {what: RECORD_PREF_VALUE}],
-  ["gfx.webrender.all", {what: RECORD_PREF_VALUE}],
-  ["gfx.webrender.all.qualified", {what: RECORD_PREF_VALUE}],
-  ["gfx.webrender.force-disabled", {what: RECORD_PREF_VALUE}],
-  ["layers.acceleration.disabled", {what: RECORD_PREF_VALUE}],
-  ["layers.acceleration.force-enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.async-pan-zoom.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.async-video-oop.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.async-video.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.componentalpha.enabled", {what: RECORD_PREF_VALUE}],
-  ["layers.d3d11.disable-warp", {what: RECORD_PREF_VALUE}],
-  ["layers.d3d11.force-warp", {what: RECORD_PREF_VALUE}],
-  ["layers.offmainthreadcomposition.force-disabled", {what: RECORD_PREF_VALUE}],
-  ["layers.prefer-d3d9", {what: RECORD_PREF_VALUE}],
-  ["layers.prefer-opengl", {what: RECORD_PREF_VALUE}],
-  ["layout.css.devPixelsPerPx", {what: RECORD_PREF_VALUE}],
-  ["marionette.enabled", {what: RECORD_PREF_VALUE}],
-  ["network.proxy.autoconfig_url", {what: RECORD_PREF_STATE}],
-  ["network.proxy.http", {what: RECORD_PREF_STATE}],
-  ["network.proxy.ssl", {what: RECORD_PREF_STATE}],
-  ["pdfjs.disabled", {what: RECORD_PREF_VALUE}],
-  ["places.history.enabled", {what: RECORD_PREF_VALUE}],
-  ["plugins.show_infobar", {what: RECORD_PREF_VALUE}],
-  ["privacy.trackingprotection.enabled", {what: RECORD_PREF_VALUE}],
-  ["privacy.donottrackheader.enabled", {what: RECORD_PREF_VALUE}],
-  ["security.mixed_content.block_active_content", {what: RECORD_PREF_VALUE}],
-  ["security.mixed_content.block_display_content", {what: RECORD_PREF_VALUE}],
-  ["xpinstall.signatures.required", {what: RECORD_PREF_VALUE}],
-=======
   ["app.feedback.baseURL", { what: RECORD_PREF_VALUE }],
   ["app.support.baseURL", { what: RECORD_PREF_VALUE }],
   ["accessibility.browsewithcaret", { what: RECORD_PREF_VALUE }],
@@ -488,7 +300,6 @@ const DEFAULT_ENVIRONMENT_PREFS = new Map([
   ["security.mixed_content.block_active_content", { what: RECORD_PREF_VALUE }],
   ["security.mixed_content.block_display_content", { what: RECORD_PREF_VALUE }],
   ["xpinstall.signatures.required", { what: RECORD_PREF_VALUE }],
->>>>>>> upstream-releases
 ]);
 
 const LOGGER_NAME = "Toolkit.Telemetry";
@@ -511,15 +322,8 @@ const SEARCH_ENGINE_MODIFIED_TOPIC = "browser-search-engine-modified";
 const SEARCH_SERVICE_TOPIC = "browser-search-service";
 const SESSIONSTORE_WINDOWS_RESTORED_TOPIC = "sessionstore-windows-restored";
 const PREF_CHANGED_TOPIC = "nsPref:changed";
-<<<<<<< HEAD
-const BLOCKLIST_LOADED_TOPIC = "blocklist-loaded";
-const AUTO_UPDATE_PREF_CHANGE_TOPIC = "auto-update-config-change";
-||||||| merged common ancestors
-const BLOCKLIST_LOADED_TOPIC = "blocklist-loaded";
-=======
 const BLOCKLIST_LOADED_TOPIC = "plugin-blocklist-loaded";
 const AUTO_UPDATE_PREF_CHANGE_TOPIC = "auto-update-config-change";
->>>>>>> upstream-releases
 
 /**
  * Enforces the parameter to a boolean value.
@@ -1235,13 +1039,8 @@ function EnvironmentCache() {
   if (AppConstants.MOZ_BUILD_APP == "browser") {
     p.push(this._loadAttributionAsync());
   }
-<<<<<<< HEAD
-  p.push(this._loadAutoUpdateAsync());
-||||||| merged common ancestors
-=======
   p.push(this._loadAutoUpdateAsync());
   p.push(this._loadIntlData());
->>>>>>> upstream-releases
 
   for (const [
     id,
@@ -1600,16 +1399,9 @@ EnvironmentCache.prototype = {
           this._onPrefChanged(aData);
         }
         break;
-<<<<<<< HEAD
-      case AUTO_UPDATE_PREF_CHANGE_TOPIC:
-        this._currentEnvironment.settings.update.autoDownload = (aData == "true");
-        break;
-||||||| merged common ancestors
-=======
       case AUTO_UPDATE_PREF_CHANGE_TOPIC:
         this._currentEnvironment.settings.update.autoDownload = aData == "true";
         break;
->>>>>>> upstream-releases
     }
   },
 
@@ -1839,15 +1631,8 @@ EnvironmentCache.prototype = {
 
     this._updateAttribution();
     this._updateDefaultBrowser();
-<<<<<<< HEAD
-    this._updateSearchEngine();
-    this._updateAutoDownload();
-||||||| merged common ancestors
-    this._updateSearchEngine();
-=======
     await this._updateSearchEngine();
     this._updateAutoDownload();
->>>>>>> upstream-releases
   },
 
   _getSandboxData() {
@@ -1932,32 +1717,6 @@ EnvironmentCache.prototype = {
   },
 
   /**
-<<<<<<< HEAD
-   * Load the auto update pref and adds it to the environment
-   */
-  async _loadAutoUpdateAsync() {
-    if (AppConstants.MOZ_UPDATER) {
-      this._updateAutoDownloadCache = await UpdateUtils.getAppUpdateAutoEnabled();
-    } else {
-      this._updateAutoDownloadCache = false;
-    }
-    this._updateAutoDownload();
-  },
-
-  /**
-   * Update the environment with the cached value for whether updates can auto-
-   * download.
-   */
-  _updateAutoDownload() {
-    if (this._updateAutoDownloadCache === undefined) {
-      return;
-    }
-    this._currentEnvironment.settings.update.autoDownload = this._updateAutoDownloadCache;
-  },
-
-  /**
-||||||| merged common ancestors
-=======
    * Load the auto update pref and adds it to the environment
    */
   async _loadAutoUpdateAsync() {
@@ -1992,7 +1751,6 @@ EnvironmentCache.prototype = {
   },
 
   /**
->>>>>>> upstream-releases
    * Get the partner data in object form.
    * @return Object containing the partner data.
    */

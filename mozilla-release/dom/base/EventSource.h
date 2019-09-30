@@ -80,17 +80,9 @@ class EventSource final : public DOMEventTargetHelper {
 
   void Close();
 
-<<<<<<< HEAD
- private:
-  EventSource(nsPIDOMWindowInner* aOwnerWindow, bool aWithCredentials);
-||||||| merged common ancestors
-private:
-  EventSource(nsPIDOMWindowInner* aOwnerWindow, bool aWithCredentials);
-=======
  private:
   EventSource(nsIGlobalObject* aGlobal, nsICookieSettings* aCookieSettings,
               bool aWithCredentials);
->>>>>>> upstream-releases
   virtual ~EventSource();
   // prevent bad usage
   EventSource(const EventSource& x) = delete;

@@ -278,36 +278,6 @@ bool ToastNotificationHandler::ShowAlert() {
   }
 
   if (!mHostPort.IsEmpty()) {
-<<<<<<< HEAD
-    const char16_t* formatStrings[] = {mHostPort.get()};
-
-    ComPtr<IXmlNode> urlTextNodeRoot;
-    hr = toastTextElements->Item(2, &urlTextNodeRoot);
-    if (NS_WARN_IF(FAILED(hr))) {
-      return false;
-    }
-
-    nsAutoString urlReference;
-    bundle->FormatStringFromName("source.label", formatStrings,
-                                 ArrayLength(formatStrings), urlReference);
-
-    if (NS_WARN_IF(!SetNodeValueString(urlReference, urlTextNodeRoot.Get(),
-                                       toastXml.Get()))) {
-      return false;
-    }
-
-    if (IsWin10AnniversaryUpdateOrLater()) {
-      ComPtr<IXmlElement> placementText;
-      hr = urlTextNodeRoot.As(&placementText);
-      if (SUCCEEDED(hr)) {
-        // placement is supported on Windows 10 Anniversary Update or later
-        SetAttribute(placementText.Get(), HStringReference(L"placement").Get(),
-                     NS_LITERAL_STRING("attribution"));
-      }
-    }
-
-||||||| merged common ancestors
-=======
     AutoTArray<nsString, 1> formatStrings = {mHostPort};
 
     ComPtr<IXmlNode> urlTextNodeRoot;
@@ -334,19 +304,9 @@ bool ToastNotificationHandler::ShowAlert() {
       }
     }
 
->>>>>>> upstream-releases
     nsAutoString disableButtonTitle;
     bundle->FormatStringFromName("webActions.disableForOrigin.label",
-<<<<<<< HEAD
-                                 formatStrings, ArrayLength(formatStrings),
-                                 disableButtonTitle);
-||||||| merged common ancestors
-                                 formatStrings,
-                                 ArrayLength(formatStrings),
-                                 disableButtonTitle);
-=======
                                  formatStrings, disableButtonTitle);
->>>>>>> upstream-releases
 
     AddActionNode(toastXml.Get(), actionsNode.Get(), disableButtonTitle,
                   NS_LITERAL_STRING("snooze"));
@@ -385,79 +345,31 @@ bool ToastNotificationHandler::CreateWindowsNotificationFromXml(
   RefPtr<ToastNotificationHandler> self = this;
 
   hr = mNotification->add_Activated(
-<<<<<<< HEAD
-      Callback<ToastActivationHandler>([self](IToastNotification* aNotification,
-                                              IInspectable* aInspectable) {
-        return self->OnActivate(aNotification, aInspectable);
-      })
-          .Get(),
-      &mActivatedToken);
-||||||| merged common ancestors
-         Callback<ToastActivationHandler>(
-           [self](IToastNotification* aNotification,
-                  IInspectable* aInspectable) {
-             return self->OnActivate(aNotification, aInspectable);
-           }).Get(),
-         &mActivatedToken);
-=======
       Callback<ToastActivationHandler>([self](IToastNotification* aNotification,
                                               IInspectable* aInspectable) {
         return self->OnActivate(aNotification, aInspectable);
       }).Get(),
       &mActivatedToken);
->>>>>>> upstream-releases
   if (NS_WARN_IF(FAILED(hr))) {
     return false;
   }
 
   hr = mNotification->add_Dismissed(
-<<<<<<< HEAD
-      Callback<ToastDismissedHandler>([self](IToastNotification* aNotification,
-                                             IToastDismissedEventArgs* aArgs) {
-        return self->OnDismiss(aNotification, aArgs);
-      })
-          .Get(),
-      &mDismissedToken);
-||||||| merged common ancestors
-         Callback<ToastDismissedHandler>(
-           [self](IToastNotification* aNotification,
-                  IToastDismissedEventArgs* aArgs) {
-             return self->OnDismiss(aNotification, aArgs);
-           }).Get(),
-         &mDismissedToken);
-=======
       Callback<ToastDismissedHandler>([self](IToastNotification* aNotification,
                                              IToastDismissedEventArgs* aArgs) {
         return self->OnDismiss(aNotification, aArgs);
       }).Get(),
       &mDismissedToken);
->>>>>>> upstream-releases
   if (NS_WARN_IF(FAILED(hr))) {
     return false;
   }
 
   hr = mNotification->add_Failed(
-<<<<<<< HEAD
-      Callback<ToastFailedHandler>([self](IToastNotification* aNotification,
-                                          IToastFailedEventArgs* aArgs) {
-        return self->OnFail(aNotification, aArgs);
-      })
-          .Get(),
-      &mFailedToken);
-||||||| merged common ancestors
-         Callback<ToastFailedHandler>(
-           [self](IToastNotification* aNotification,
-                  IToastFailedEventArgs* aArgs) {
-             return self->OnFail(aNotification, aArgs);
-           }).Get(),
-         &mFailedToken);
-=======
       Callback<ToastFailedHandler>([self](IToastNotification* aNotification,
                                           IToastFailedEventArgs* aArgs) {
         return self->OnFail(aNotification, aArgs);
       }).Get(),
       &mFailedToken);
->>>>>>> upstream-releases
   if (NS_WARN_IF(FAILED(hr))) {
     return false;
   }

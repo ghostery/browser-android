@@ -18,17 +18,8 @@
 namespace {
 
 void UpdateListIndicesFromIndex(
-<<<<<<< HEAD
-    FallibleTArray<mozilla::dom::SVGTransform*>& aItemsArray,
-    uint32_t aStartingIndex) {
-||||||| merged common ancestors
-  FallibleTArray<mozilla::dom::SVGTransform*>& aItemsArray,
-  uint32_t aStartingIndex)
-{
-=======
     FallibleTArray<mozilla::dom::DOMSVGTransform*>& aItemsArray,
     uint32_t aStartingIndex) {
->>>>>>> upstream-releases
   uint32_t length = aItemsArray.Length();
 
   for (uint32_t i = aStartingIndex; i < length; ++i) {
@@ -147,25 +138,10 @@ void DOMSVGTransformList::InternalListLengthWillChange(uint32_t aNewLength) {
   }
 }
 
-<<<<<<< HEAD
-SVGTransformList& DOMSVGTransformList::InternalList() const {
-  nsSVGAnimatedTransformList* alist = Element()->GetAnimatedTransformList();
-  return IsAnimValList() && alist->mAnimVal ? *alist->mAnimVal
-                                            : alist->mBaseVal;
-||||||| merged common ancestors
-SVGTransformList&
-DOMSVGTransformList::InternalList() const
-{
-  nsSVGAnimatedTransformList *alist = Element()->GetAnimatedTransformList();
-  return IsAnimValList() && alist->mAnimVal ?
-    *alist->mAnimVal :
-    alist->mBaseVal;
-=======
 SVGTransformList& DOMSVGTransformList::InternalList() const {
   SVGAnimatedTransformList* alist = Element()->GetAnimatedTransformList();
   return IsAnimValList() && alist->mAnimVal ? *alist->mAnimVal
                                             : alist->mBaseVal;
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -187,17 +163,8 @@ void DOMSVGTransformList::Clear(ErrorResult& error) {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::Initialize(
-    SVGTransform& newItem, ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::Initialize(SVGTransform& newItem, ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::Initialize(
     DOMSVGTransform& newItem, ErrorResult& error) {
->>>>>>> upstream-releases
   if (IsAnimValList()) {
     error.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
     return nullptr;
@@ -221,17 +188,8 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::Initialize(
   return InsertItemBefore(*domItem, 0, error);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::GetItem(
-    uint32_t index, ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::GetItem(uint32_t index, ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::GetItem(
     uint32_t index, ErrorResult& error) {
->>>>>>> upstream-releases
   bool found;
   RefPtr<DOMSVGTransform> item = IndexedGetter(index, found, error);
   if (!found) {
@@ -240,18 +198,8 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::GetItem(
   return item.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::IndexedGetter(
-    uint32_t index, bool& found, ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::IndexedGetter(uint32_t index, bool& found,
-                                   ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::IndexedGetter(
     uint32_t index, bool& found, ErrorResult& error) {
->>>>>>> upstream-releases
   if (IsAnimValList()) {
     Element()->FlushAnimations();
   }
@@ -262,18 +210,8 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::IndexedGetter(
   return nullptr;
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::InsertItemBefore(
-    SVGTransform& newItem, uint32_t index, ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::InsertItemBefore(SVGTransform& newItem,
-                                      uint32_t index, ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::InsertItemBefore(
     DOMSVGTransform& newItem, uint32_t index, ErrorResult& error) {
->>>>>>> upstream-releases
   if (IsAnimValList()) {
     error.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
     return nullptr;
@@ -321,18 +259,8 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::InsertItemBefore(
   return domItem.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::ReplaceItem(
-    SVGTransform& newItem, uint32_t index, ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::ReplaceItem(SVGTransform& newItem,
-                                 uint32_t index, ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::ReplaceItem(
     DOMSVGTransform& newItem, uint32_t index, ErrorResult& error) {
->>>>>>> upstream-releases
   if (IsAnimValList()) {
     error.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
     return nullptr;
@@ -365,17 +293,8 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::ReplaceItem(
   return domItem.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::RemoveItem(
-    uint32_t index, ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::RemoveItem(uint32_t index, ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::RemoveItem(
     uint32_t index, ErrorResult& error) {
->>>>>>> upstream-releases
   if (IsAnimValList()) {
     error.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
     return nullptr;
@@ -407,34 +326,14 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::RemoveItem(
   return result.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::CreateSVGTransformFromMatrix(dom::SVGMatrix& matrix) {
-  RefPtr<SVGTransform> result = new SVGTransform(matrix.GetMatrix());
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::CreateSVGTransformFromMatrix(dom::SVGMatrix& matrix)
-{
-  RefPtr<SVGTransform> result = new SVGTransform(matrix.GetMatrix());
-=======
 already_AddRefed<DOMSVGTransform>
 DOMSVGTransformList::CreateSVGTransformFromMatrix(dom::SVGMatrix& matrix) {
   RefPtr<DOMSVGTransform> result = new DOMSVGTransform(matrix.GetMatrix());
->>>>>>> upstream-releases
   return result.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::Consolidate(
-    ErrorResult& error) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::Consolidate(ErrorResult& error)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::Consolidate(
     ErrorResult& error) {
->>>>>>> upstream-releases
   if (IsAnimValList()) {
     error.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
     return nullptr;
@@ -464,16 +363,8 @@ already_AddRefed<DOMSVGTransform> DOMSVGTransformList::Consolidate(
 //----------------------------------------------------------------------
 // Implementation helpers:
 
-<<<<<<< HEAD
-already_AddRefed<SVGTransform> DOMSVGTransformList::GetItemAt(uint32_t aIndex) {
-||||||| merged common ancestors
-already_AddRefed<SVGTransform>
-DOMSVGTransformList::GetItemAt(uint32_t aIndex)
-{
-=======
 already_AddRefed<DOMSVGTransform> DOMSVGTransformList::GetItemAt(
     uint32_t aIndex) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aIndex < mItems.Length());
 
   if (!mItems[aIndex]) {

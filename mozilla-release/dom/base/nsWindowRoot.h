@@ -57,20 +57,10 @@ class nsWindowRoot final : public nsPIWindowRoot {
   virtual void SetParentTarget(mozilla::dom::EventTarget* aTarget) override {
     mParent = aTarget;
   }
-<<<<<<< HEAD
-  virtual mozilla::dom::EventTarget* GetParentTarget() override {
-    return mParent;
-  }
-  virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindings() override;
-||||||| merged common ancestors
-  virtual mozilla::dom::EventTarget* GetParentTarget() override { return mParent; }
-  virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindings() override;
-=======
   virtual mozilla::dom::EventTarget* GetParentTarget() override {
     return mParent;
   }
   virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindingsInternal() override;
->>>>>>> upstream-releases
   virtual nsIGlobalObject* GetOwnerGlobal() const override;
 
   nsIGlobalObject* GetParentObject();
@@ -80,48 +70,12 @@ class nsWindowRoot final : public nsPIWindowRoot {
 
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(nsWindowRoot)
 
-<<<<<<< HEAD
-  virtual void AddBrowser(mozilla::dom::TabParent* aBrowser) override;
-  virtual void RemoveBrowser(mozilla::dom::TabParent* aBrowser) override;
-  virtual void EnumerateBrowsers(BrowserEnumerator aEnumFunc,
-                                 void* aArg) override;
-
-  virtual bool ShowAccelerators() override { return mShowAccelerators; }
-
-  virtual bool ShowFocusRings() override { return mShowFocusRings; }
-||||||| merged common ancestors
-  virtual void AddBrowser(mozilla::dom::TabParent* aBrowser) override;
-  virtual void RemoveBrowser(mozilla::dom::TabParent* aBrowser) override;
-  virtual void EnumerateBrowsers(BrowserEnumerator aEnumFunc, void *aArg) override;
-
-  virtual bool ShowAccelerators() override
-  {
-    return mShowAccelerators;
-  }
-
-  virtual bool ShowFocusRings() override
-  {
-    return mShowFocusRings;
-  }
-=======
   virtual void AddBrowser(nsIRemoteTab* aBrowser) override;
   virtual void RemoveBrowser(nsIRemoteTab* aBrowser) override;
   virtual void EnumerateBrowsers(BrowserEnumerator aEnumFunc,
                                  void* aArg) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void SetShowAccelerators(bool aEnable) override {
-    mShowAccelerators = aEnable;
-  }
-||||||| merged common ancestors
-  virtual void SetShowAccelerators(bool aEnable) override
-  {
-    mShowAccelerators = aEnable;
-  }
-=======
   virtual bool ShowFocusRings() override { return mShowFocusRings; }
->>>>>>> upstream-releases
 
   virtual void SetShowFocusRings(bool aEnable) override {
     mShowFocusRings = aEnable;
@@ -130,24 +84,11 @@ class nsWindowRoot final : public nsPIWindowRoot {
  protected:
   virtual ~nsWindowRoot();
 
-<<<<<<< HEAD
-  void GetEnabledDisabledCommandsForControllers(
-      nsIControllers* aControllers,
-      nsTHashtable<nsCharPtrHashKey>& aCommandsHandled,
-      nsTArray<nsCString>& aEnabledCommands,
-      nsTArray<nsCString>& aDisabledCommands);
-||||||| merged common ancestors
-  void GetEnabledDisabledCommandsForControllers(nsIControllers* aControllers,
-                                                nsTHashtable<nsCharPtrHashKey>& aCommandsHandled,
-                                                nsTArray<nsCString>& aEnabledCommands,
-                                                nsTArray<nsCString>& aDisabledCommands);
-=======
   void GetEnabledDisabledCommandsForControllers(
       nsIControllers* aControllers,
       nsTHashtable<nsCStringHashKey>& aCommandsHandled,
       nsTArray<nsCString>& aEnabledCommands,
       nsTArray<nsCString>& aDisabledCommands);
->>>>>>> upstream-releases
 
   // Members
   nsCOMPtr<nsPIDOMWindowOuter> mWindow;

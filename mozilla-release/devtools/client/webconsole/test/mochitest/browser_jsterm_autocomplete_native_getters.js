@@ -21,14 +21,8 @@ add_task(async function() {
 });
 
 async function performTests() {
-<<<<<<< HEAD
-  const { jsterm, ui } = await openNewTabAndConsole(TEST_URI);
-||||||| merged common ancestors
-  const { jsterm } = await openNewTabAndConsole(TEST_URI);
-=======
   const hud = await openNewTabAndConsole(TEST_URI);
   const { jsterm, ui } = hud;
->>>>>>> upstream-releases
 
   const { autocompletePopup: popup } = jsterm;
 
@@ -41,14 +35,8 @@ async function performTests() {
   await onPopupOpen;
 
   ok(popup.isOpen, "popup is open");
-<<<<<<< HEAD
-  const cacheMatches = ui.consoleOutput.getStore().getState().autocomplete.cache.matches;
-||||||| merged common ancestors
-  const cacheMatches = jsterm._autocompleteCache.matches;
-=======
   const cacheMatches = ui.wrapper.getStore().getState().autocomplete.cache
     .matches;
->>>>>>> upstream-releases
   is(popup.itemCount, cacheMatches.length, "popup.itemCount is correct");
   ok(
     cacheMatches.includes("addEventListener"),

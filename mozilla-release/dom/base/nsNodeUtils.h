@@ -56,19 +56,8 @@ class nsNodeUtils {
    * @see nsIMutationObserver::AttributeWillChange
    */
   static void AttributeWillChange(mozilla::dom::Element* aElement,
-<<<<<<< HEAD
-                                  int32_t aNameSpaceID, nsAtom* aAttribute,
-                                  int32_t aModType,
-                                  const nsAttrValue* aNewValue);
-||||||| merged common ancestors
-                                  int32_t aNameSpaceID,
-                                  nsAtom* aAttribute,
-                                  int32_t aModType,
-                                  const nsAttrValue* aNewValue);
-=======
                                   int32_t aNameSpaceID, nsAtom* aAttribute,
                                   int32_t aModType);
->>>>>>> upstream-releases
 
   /**
    * Send AttributeChanged notifications to nsIMutationObservers.

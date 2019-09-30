@@ -34,32 +34,12 @@ namespace layers {
 
 #ifdef MOZ_WIDGET_ANDROID
 
-<<<<<<< HEAD
-class AndroidSurfaceTextureData : public TextureData {
- public:
-  static already_AddRefed<TextureClient> CreateTextureClient(
-      AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
-      gl::OriginPos aOriginPos, LayersIPCChannel* aAllocator,
-      TextureFlags aFlags);
-||||||| merged common ancestors
-class AndroidSurfaceTextureData : public TextureData
-{
-public:
-  static already_AddRefed<TextureClient>
-  CreateTextureClient(AndroidSurfaceTextureHandle aHandle,
-                      gfx::IntSize aSize,
-                      bool aContinuous,
-                      gl::OriginPos aOriginPos,
-                      LayersIPCChannel* aAllocator,
-                      TextureFlags aFlags);
-=======
 class AndroidSurfaceTextureData : public TextureData {
  public:
   static already_AddRefed<TextureClient> CreateTextureClient(
       AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
       gl::OriginPos aOriginPos, bool aHasAlpha, LayersIPCChannel* aAllocator,
       TextureFlags aFlags);
->>>>>>> upstream-releases
 
   virtual ~AndroidSurfaceTextureData();
 
@@ -75,19 +55,10 @@ class AndroidSurfaceTextureData : public TextureData {
   // Our data is always owned externally.
   void Deallocate(LayersIPCChannel*) override {}
 
-<<<<<<< HEAD
- protected:
-  AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle,
-                            gfx::IntSize aSize, bool aContinuous);
-||||||| merged common ancestors
-protected:
-  AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous);
-=======
  protected:
   AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle,
                             gfx::IntSize aSize, bool aContinuous,
                             bool aHasAlpha);
->>>>>>> upstream-releases
 
   const AndroidSurfaceTextureHandle mHandle;
   const gfx::IntSize mSize;

@@ -200,26 +200,9 @@ class nsDocShell final : public nsDocLoader,
 
   NS_FORWARD_SAFE_NSIDOMSTORAGEMANAGER(TopSessionStorageManager())
 
-<<<<<<< HEAD
-  // Need to implement (and forward) nsISecurityEventSink, because
-  // nsIWebProgressListener has methods with identical names...
-  NS_FORWARD_NSISECURITYEVENTSINK(nsDocLoader::)
-
   // Create a new nsDocShell object, initializing it.
   static already_AddRefed<nsDocShell> Create(
       mozilla::dom::BrowsingContext* aBrowsingContext);
-||||||| merged common ancestors
-  // Need to implement (and forward) nsISecurityEventSink, because
-  // nsIWebProgressListener has methods with identical names...
-  NS_FORWARD_NSISECURITYEVENTSINK(nsDocLoader::)
-
-  nsDocShell();
-  virtual nsresult Init() override;
-=======
-  // Create a new nsDocShell object, initializing it.
-  static already_AddRefed<nsDocShell> Create(
-      mozilla::dom::BrowsingContext* aBrowsingContext);
->>>>>>> upstream-releases
 
   NS_IMETHOD Stop() override {
     // Need this here because otherwise nsIWebNavigation::Stop
@@ -233,37 +216,6 @@ class nsDocShell final : public nsDocLoader,
                          const nsAString& aFileName,
                          nsIInputStream* aPostDataStream,
                          nsIInputStream* aHeadersDataStream,
-<<<<<<< HEAD
-                         bool aIsUserTriggered, bool aIsTrusted,
-                         nsIPrincipal* aTriggeringPrincipal) override;
-  NS_IMETHOD OnLinkClickSync(
-      nsIContent* aContent, nsIURI* aURI, const nsAString& aTargetSpec,
-      const nsAString& aFileName, nsIInputStream* aPostDataStream = 0,
-      nsIInputStream* aHeadersDataStream = 0, bool aNoOpenerImplied = false,
-      nsIDocShell** aDocShell = 0, nsIRequest** aRequest = 0,
-      bool aIsUserTriggered = false,
-      nsIPrincipal* aTriggeringPrincipal = nullptr) override;
-  NS_IMETHOD OnOverLink(nsIContent* aContent, nsIURI* aURI,
-                        const nsAString& aTargetSpec) override;
-||||||| merged common ancestors
-                         bool aIsUserTriggered,
-                         bool aIsTrusted,
-                         nsIPrincipal* aTriggeringPrincipal) override;
-  NS_IMETHOD OnLinkClickSync(nsIContent* aContent,
-                             nsIURI* aURI,
-                             const char16_t* aTargetSpec,
-                             const nsAString& aFileName,
-                             nsIInputStream* aPostDataStream = 0,
-                             nsIInputStream* aHeadersDataStream = 0,
-                             bool aNoOpenerImplied = false,
-                             nsIDocShell** aDocShell = 0,
-                             nsIRequest** aRequest = 0,
-                             bool aIsUserTriggered = false,
-                             nsIPrincipal* aTriggeringPrincipal = nullptr) override;
-  NS_IMETHOD OnOverLink(nsIContent* aContent,
-                        nsIURI* aURI,
-                        const char16_t* aTargetSpec) override;
-=======
                          bool aIsUserTriggered, bool aIsTrusted,
                          nsIPrincipal* aTriggeringPrincipal,
                          nsIContentSecurityPolicy* aCsp) override;
@@ -277,7 +229,6 @@ class nsDocShell final : public nsDocLoader,
       nsIContentSecurityPolicy* aCsp = nullptr) override;
   NS_IMETHOD OnOverLink(nsIContent* aContent, nsIURI* aURI,
                         const nsAString& aTargetSpec) override;
->>>>>>> upstream-releases
   NS_IMETHOD OnLeaveLink() override;
 
   // Don't use NS_DECL_NSILOADCONTEXT because some of nsILoadContext's methods
@@ -292,23 +243,12 @@ class nsDocShell final : public nsDocLoader,
   NS_IMETHOD SetPrivateBrowsing(bool) override;
   NS_IMETHOD GetUseRemoteTabs(bool*) override;
   NS_IMETHOD SetRemoteTabs(bool) override;
-<<<<<<< HEAD
-  NS_IMETHOD GetScriptableOriginAttributes(
-      JSContext*, JS::MutableHandle<JS::Value>) override;
-  NS_IMETHOD_(void)
-  GetOriginAttributes(mozilla::OriginAttributes& aAttrs) override;
-||||||| merged common ancestors
-  NS_IMETHOD GetScriptableOriginAttributes(JSContext*,
-                                           JS::MutableHandle<JS::Value>) override;
-  NS_IMETHOD_(void) GetOriginAttributes(mozilla::OriginAttributes& aAttrs) override;
-=======
   NS_IMETHOD GetUseRemoteSubframes(bool*) override;
   NS_IMETHOD SetRemoteSubframes(bool) override;
   NS_IMETHOD GetScriptableOriginAttributes(
       JSContext*, JS::MutableHandle<JS::Value>) override;
   NS_IMETHOD_(void)
   GetOriginAttributes(mozilla::OriginAttributes& aAttrs) override;
->>>>>>> upstream-releases
 
   // Restores a cached presentation from history (mLSHE).
   // This method swaps out the content viewer and simulates loads for
@@ -456,15 +396,6 @@ class nsDocShell final : public nsDocLoader,
   // shift while triggering reload)
   bool IsForceReloading();
 
-<<<<<<< HEAD
-  /**
-   * Native getter for a DocShell's BrowsingContext.
-   */
-  mozilla::dom::BrowsingContext* GetBrowsingContext() const;
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::BrowsingContext>
-  GetBrowsingContext() const;
-=======
   mozilla::dom::BrowsingContext* GetBrowsingContext() const {
     return mBrowsingContext;
   }
@@ -472,13 +403,7 @@ class nsDocShell final : public nsDocLoader,
     EnsureScriptEnvironment();
     return mBrowsingContext;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:  // member functions
-||||||| merged common ancestors
-private: // member functions
-=======
   /**
    * Loads the given URI. See comments on nsDocShellLoadState members for more
    * information on information used. aDocShell and aRequest come from
@@ -496,17 +421,11 @@ private: // member functions
   }
 
  private:  // member functions
->>>>>>> upstream-releases
   friend class nsDSURIContentListener;
   friend class FramingChecker;
   friend class OnLinkClickEvent;
-<<<<<<< HEAD
-  friend class nsIDocShell;
-||||||| merged common ancestors
-=======
   friend class nsIDocShell;
   friend class mozilla::dom::BrowsingContext;
->>>>>>> upstream-releases
 
   // It is necessary to allow adding a timeline marker wherever a docshell
   // instance is available. This operation happens frequently and needs to
@@ -617,16 +536,9 @@ private: // member functions
   nsresult AddToSessionHistory(nsIURI* aURI, nsIChannel* aChannel,
                                nsIPrincipal* aTriggeringPrincipal,
                                nsIPrincipal* aPrincipalToInherit,
-<<<<<<< HEAD
-                               bool aCloneChildren, nsISHEntry** aNewEntry);
-||||||| merged common ancestors
-                               bool aCloneChildren,
-                               nsISHEntry** aNewEntry);
-=======
                                nsIPrincipal* aStoragePrincipalToInherit,
                                nsIContentSecurityPolicy* aCsp,
                                bool aCloneChildren, nsISHEntry** aNewEntry);
->>>>>>> upstream-releases
 
   nsresult AddChildSHEntryToParent(nsISHEntry* aNewEntry, int32_t aChildOffset,
                                    bool aCloneChildren);
@@ -645,71 +557,6 @@ private: // member functions
   //
 
   // Actually open a channel and perform a URI load. Callers need to pass a
-<<<<<<< HEAD
-  // non-null aTriggeringPrincipal which initiated the URI load. Please note
-  // that aTriggeringPrincipal will be used for performing security checks.
-  // If the argument aURI is provided by the web, then please do not pass a
-  // SystemPrincipal as the triggeringPrincipal. If principalToInherit is
-  // null, then no inheritance of any sort will happen and the load will
-  // get a principal based on the URI being loaded.
-  // If aSrcdoc is not void, the load will be considered as a srcdoc load,
-  // and the contents of aSrcdoc will be loaded instead of aURI.
-  // aOriginalURI will be set as the originalURI on the channel that does the
-  // load. If aOriginalURI is null, aURI will be set as the originalURI.
-  // If aLoadReplace is true, LOAD_REPLACE flag will be set to the nsIChannel.
-  nsresult DoURILoad(
-      nsIURI* aURI, nsIURI* aOriginalURI,
-      mozilla::Maybe<nsCOMPtr<nsIURI>> const& aResultPrincipalURI,
-      bool aKeepResultPrincipalURIIfSet, bool aLoadReplace,
-      bool aIsFromProcessingFrameAttributes, bool aLoadFromExternal,
-      bool aForceAllowDataURI, bool aOriginalFrameSrc, nsIURI* aReferrer,
-      bool aSendReferrer, uint32_t aReferrerPolicy,
-      nsIPrincipal* aTriggeringPrincipal, nsIPrincipal* aPrincipalToInherit,
-      const nsACString& aTypeHint, const nsAString& aFileName,
-      nsIInputStream* aPostData, nsIInputStream* aHeadersData, bool aFirstParty,
-      nsIDocShell** aDocShell, nsIRequest** aRequest, bool aIsNewWindowTarget,
-      bool aBypassClassifier, bool aForceAllowCookies, const nsAString& aSrcdoc,
-      nsIURI* aBaseURI, nsContentPolicyType aContentPolicyType);
-||||||| merged common ancestors
-  // non-null aTriggeringPrincipal which initiated the URI load. Please note
-  // that aTriggeringPrincipal will be used for performing security checks.
-  // If the argument aURI is provided by the web, then please do not pass a
-  // SystemPrincipal as the triggeringPrincipal. If principalToInherit is
-  // null, then no inheritance of any sort will happen and the load will
-  // get a principal based on the URI being loaded.
-  // If aSrcdoc is not void, the load will be considered as a srcdoc load,
-  // and the contents of aSrcdoc will be loaded instead of aURI.
-  // aOriginalURI will be set as the originalURI on the channel that does the
-  // load. If aOriginalURI is null, aURI will be set as the originalURI.
-  // If aLoadReplace is true, LOAD_REPLACE flag will be set to the nsIChannel.
-  nsresult DoURILoad(nsIURI* aURI,
-                     nsIURI* aOriginalURI,
-                     mozilla::Maybe<nsCOMPtr<nsIURI>> const& aResultPrincipalURI,
-                     bool aKeepResultPrincipalURIIfSet,
-                     bool aLoadReplace,
-                     bool aIsFromProcessingFrameAttributes,
-                     bool aLoadFromExternal,
-                     bool aForceAllowDataURI,
-                     bool aOriginalFrameSrc,
-                     nsIURI* aReferrer,
-                     bool aSendReferrer,
-                     uint32_t aReferrerPolicy,
-                     nsIPrincipal* aTriggeringPrincipal,
-                     nsIPrincipal* aPrincipalToInherit,
-                     const char* aTypeHint,
-                     const nsAString& aFileName,
-                     nsIInputStream* aPostData,
-                     nsIInputStream* aHeadersData,
-                     bool aFirstParty,
-                     nsIDocShell** aDocShell,
-                     nsIRequest** aRequest,
-                     bool aIsNewWindowTarget,
-                     bool aBypassClassifier,
-                     bool aForceAllowCookies,
-                     const nsAString& aSrcdoc,
-                     nsIURI* aBaseURI,
-                     nsContentPolicyType aContentPolicyType);
-=======
   // non-null aLoadState->TriggeringPrincipal() which initiated the URI load.
   // Please note that the TriggeringPrincipal will be used for performing
   // security checks. If aLoadState->URI() is provided by the web, then please
@@ -724,7 +571,6 @@ private: // member functions
   // will be set on the nsIChannel.
   nsresult DoURILoad(nsDocShellLoadState* aLoadState, bool aLoadFromExternal,
                      nsIDocShell** aDocShell, nsIRequest** aRequest);
->>>>>>> upstream-releases
 
   nsresult AddHeadersToChannel(nsIInputStream* aHeadersData,
                                nsIChannel* aChannel);
@@ -732,15 +578,6 @@ private: // member functions
   nsresult DoChannelLoad(nsIChannel* aChannel, nsIURILoader* aURILoader,
                          bool aBypassClassifier);
 
-<<<<<<< HEAD
-  nsresult ScrollToAnchor(bool aCurHasRef, bool aNewHasRef,
-                          nsACString& aNewHash, uint32_t aLoadType);
-||||||| merged common ancestors
-  nsresult ScrollToAnchor(bool aCurHasRef,
-                          bool aNewHasRef,
-                          nsACString& aNewHash,
-                          uint32_t aLoadType);
-=======
   nsresult OpenInitializedChannel(nsIChannel* aChannel,
                                   nsIURILoader* aURILoader,
                                   uint32_t aOpenFlags);
@@ -748,7 +585,6 @@ private: // member functions
   MOZ_CAN_RUN_SCRIPT
   nsresult ScrollToAnchor(bool aCurHasRef, bool aNewHasRef,
                           nsACString& aNewHash, uint32_t aLoadType);
->>>>>>> upstream-releases
 
   // Returns true if would have called FireOnLocationChange,
   // but did not because aFireOnLocationChange was false on entry.
@@ -774,34 +610,15 @@ private: // member functions
   // will be upgraded to HTTPS.
   bool OnNewURI(nsIURI* aURI, nsIChannel* aChannel,
                 nsIPrincipal* aTriggeringPrincipal,
-<<<<<<< HEAD
-                nsIPrincipal* aPrincipalToInherit, uint32_t aLoadType,
-                bool aFireOnLocationChange, bool aAddToGlobalHistory,
-                bool aCloneSHChildren);
-||||||| merged common ancestors
-                nsIPrincipal* aPrincipalToInherit,
-                uint32_t aLoadType,
-                bool aFireOnLocationChange,
-                bool aAddToGlobalHistory,
-                bool aCloneSHChildren);
-=======
                 nsIPrincipal* aPrincipalToInherit,
                 nsIPrincipal* aStoragePrincipalToInehrit, uint32_t aLoadType,
                 nsIContentSecurityPolicy* aCsp, bool aFireOnLocationChange,
                 bool aAddToGlobalHistory, bool aCloneSHChildren);
->>>>>>> upstream-releases
 
   // Helper method that is called when a new document (including any
   // sub-documents - ie. frames) has been completely loaded.
-<<<<<<< HEAD
-  nsresult EndPageLoad(nsIWebProgress* aProgress, nsIChannel* aChannel,
-||||||| merged common ancestors
-  nsresult EndPageLoad(nsIWebProgress* aProgress,
-                       nsIChannel* aChannel,
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   nsresult EndPageLoad(nsIWebProgress* aProgress, nsIChannel* aChannel,
->>>>>>> upstream-releases
                        nsresult aResult);
 
   // Builds an error page URI (e.g. about:neterror?etc) for the given aURI
@@ -834,22 +651,11 @@ private: // member functions
   // If that fails too, we force creation of a content viewer and use the
   // resulting principal. If aConsiderCurrentDocument is false, we just look
   // at the parent.
-<<<<<<< HEAD
-  nsIPrincipal* GetInheritedPrincipal(bool aConsiderCurrentDocument);
-
-||||||| merged common ancestors
-  nsIPrincipal* GetInheritedPrincipal(bool aConsiderCurrentDocument);
-
-  nsresult CreatePrincipalFromReferrer(nsIURI* aReferrer,
-                                       nsIPrincipal** aResult);
-
-=======
   // If aConsiderStoragePrincipal is true, we consider the storage principal
   // instead of the node principal.
   nsIPrincipal* GetInheritedPrincipal(bool aConsiderCurrentDocument,
                                       bool aConsiderStoragePrincipal = false);
 
->>>>>>> upstream-releases
   /**
    * Helper function that determines if channel is an HTTP POST.
    *
@@ -914,15 +720,7 @@ private: // member functions
    * @param aResponseStatus
    *        For HTTP channels, the response code (0 otherwise).
    */
-<<<<<<< HEAD
-  void AddURIVisit(nsIURI* aURI, nsIURI* aReferrerURI, nsIURI* aPreviousURI,
-||||||| merged common ancestors
-  void AddURIVisit(nsIURI* aURI,
-                   nsIURI* aReferrerURI,
-                   nsIURI* aPreviousURI,
-=======
   void AddURIVisit(nsIURI* aURI, nsIURI* aPreviousURI,
->>>>>>> upstream-releases
                    uint32_t aChannelRedirectFlags,
                    uint32_t aResponseStatus = 0);
 
@@ -973,14 +771,6 @@ private: // member functions
   // be loaded in place of the current document, or null if such a request
   // has not been created yet. |aNewDocument| should be the document that will
   // replace the current document.
-<<<<<<< HEAD
-  bool CanSavePresentation(uint32_t aLoadType, nsIRequest* aNewRequest,
-                           nsIDocument* aNewDocument);
-||||||| merged common ancestors
-  bool CanSavePresentation(uint32_t aLoadType,
-                           nsIRequest* aNewRequest,
-                           nsIDocument* aNewDocument);
-=======
   bool CanSavePresentation(uint32_t aLoadType, nsIRequest* aNewRequest,
                            mozilla::dom::Document* aNewDocument);
 
@@ -1014,7 +804,6 @@ private: // member functions
   };
 
   void ReportBFCacheComboTelemetry(uint16_t aCombo);
->>>>>>> upstream-releases
 
   // Captures the state of the supporting elements of the presentation
   // (the "window" object, docshell tree, meta-refresh loads, and security
@@ -1158,25 +947,6 @@ private: // member functions
     return (mObserveErrorPages ? sUseErrorPages : mUseErrorPages);
   }
 
-<<<<<<< HEAD
-  bool CSSErrorReportingEnabled() const { return mCSSErrorReportingEnabled; }
-
-  // Handles retrieval of subframe session history for nsDocShell::LoadURI. If a
-  // load is requested in a subframe of the current DocShell, the subframe
-  // loadType may need to reflect the loadType of the parent document, or in
-  // some cases (like reloads), the history load may need to be cancelled. See
-  // function comments for in-depth logic descriptions.
-  void MaybeHandleSubframeHistory(nsDocShellLoadState* aLoadState);
-
- private:  // data members
-||||||| merged common ancestors
-  bool CSSErrorReportingEnabled() const
-  {
-    return mCSSErrorReportingEnabled;
-  }
-
-private: // data members
-=======
   bool CSSErrorReportingEnabled() const { return mCSSErrorReportingEnabled; }
 
   // Handles retrieval of subframe session history for nsDocShell::LoadURI. If a
@@ -1212,7 +982,6 @@ private: // data members
                                              bool* aWasSameDocument);
 
  private:  // data members
->>>>>>> upstream-releases
   static nsIURIFixup* sURIFixup;
 
   // Cached value of the "browser.xul.error_pages.enabled" preference.
@@ -1251,16 +1020,9 @@ private: // data members
   RefPtr<nsCommandManager> mCommandManager;
   RefPtr<mozilla::dom::BrowsingContext> mBrowsingContext;
 
-<<<<<<< HEAD
-  // Weak reference to our TabChild actor.
-  nsWeakPtr mTabChild;
-
-||||||| merged common ancestors
-=======
   // Weak reference to our BrowserChild actor.
   nsWeakPtr mBrowserChild;
 
->>>>>>> upstream-releases
   // Dimensions of the docshell
   nsIntRect mBounds;
 
@@ -1337,25 +1099,11 @@ private: // data members
   // Note these are intentionally not addrefd. Doing so will create a cycle.
   // For that reasons don't use nsCOMPtr.
 
-<<<<<<< HEAD
-  nsIDocShellTreeOwner* mTreeOwner;                // Weak Reference
-  mozilla::dom::EventTarget* mChromeEventHandler;  // Weak Reference
-||||||| merged common ancestors
-  nsIDocShellTreeOwner* mTreeOwner; // Weak Reference
-  mozilla::dom::EventTarget* mChromeEventHandler; // Weak Reference
-=======
   nsIDocShellTreeOwner* mTreeOwner;  // Weak Reference
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsIntPoint mDefaultScrollbarPref;  // persistent across doc loads
-||||||| merged common ancestors
-  nsIntPoint mDefaultScrollbarPref; // persistent across doc loads
-=======
   RefPtr<mozilla::dom::EventTarget> mChromeEventHandler;
 
   nsIntPoint mDefaultScrollbarPref;  // persistent across doc loads
->>>>>>> upstream-releases
 
   eCharsetReloadState mCharsetReloadState;
 

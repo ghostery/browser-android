@@ -314,20 +314,6 @@ impl Builder {
             })
             .count();
 
-        self.options
-            .blacklisted_items
-            .get_items()
-            .iter()
-            .map(|item| {
-                output_vector.push("--blacklist-item".into());
-                output_vector.push(
-                    item.trim_left_matches("^")
-                        .trim_right_matches("$")
-                        .into(),
-                );
-            })
-            .count();
-
         if !self.options.layout_tests {
             output_vector.push("--no-layout-tests".into());
         }
@@ -1602,36 +1588,6 @@ impl ::std::panic::UnwindSafe for BindgenOptions {}
 
 impl BindgenOptions {
     fn build(&mut self) {
-<<<<<<< HEAD
-        self.whitelisted_vars.build();
-        self.whitelisted_types.build();
-        self.whitelisted_functions.build();
-        self.blacklisted_types.build();
-        self.blacklisted_functions.build();
-        self.blacklisted_items.build();
-        self.opaque_types.build();
-        self.bitfield_enums.build();
-        self.constified_enums.build();
-        self.constified_enum_modules.build();
-        self.rustified_enums.build();
-        self.no_partialeq_types.build();
-        self.no_copy_types.build();
-        self.no_hash_types.build();
-||||||| merged common ancestors
-        self.whitelisted_vars.build();
-        self.whitelisted_types.build();
-        self.whitelisted_functions.build();
-        self.blacklisted_types.build();
-        self.blacklisted_functions.build();
-        self.opaque_types.build();
-        self.bitfield_enums.build();
-        self.constified_enums.build();
-        self.constified_enum_modules.build();
-        self.rustified_enums.build();
-        self.no_partialeq_types.build();
-        self.no_copy_types.build();
-        self.no_hash_types.build();
-=======
         let mut regex_sets = [
             &mut self.whitelisted_vars,
             &mut self.whitelisted_types,
@@ -1652,7 +1608,6 @@ impl BindgenOptions {
         for regex_set in &mut regex_sets {
             regex_set.build(record_matches);
         }
->>>>>>> upstream-releases
     }
 
     /// Update rust target version

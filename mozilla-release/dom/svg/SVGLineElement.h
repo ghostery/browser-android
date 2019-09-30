@@ -37,13 +37,7 @@ class SVGLineElement final : public SVGLineElementBase {
 
   // SVGGeometryElement methods:
   virtual bool IsMarkable() override { return true; }
-<<<<<<< HEAD
-  virtual void GetMarkPoints(nsTArray<nsSVGMark>* aMarks) override;
-||||||| merged common ancestors
-  virtual void GetMarkPoints(nsTArray<nsSVGMark> *aMarks) override;
-=======
   virtual void GetMarkPoints(nsTArray<SVGMark>* aMarks) override;
->>>>>>> upstream-releases
   virtual void GetAsSimplePath(SimplePath* aSimplePath) override;
   virtual already_AddRefed<Path> BuildPath(PathBuilder* aBuilder) override;
   virtual bool GetGeometryBounds(
@@ -54,29 +48,12 @@ class SVGLineElement final : public SVGLineElementBase {
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedLength> X1();
-  already_AddRefed<SVGAnimatedLength> Y1();
-  already_AddRefed<SVGAnimatedLength> X2();
-  already_AddRefed<SVGAnimatedLength> Y2();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedLength> X1();
-  already_AddRefed<SVGAnimatedLength> Y1();
-  already_AddRefed<SVGAnimatedLength> X2();
-  already_AddRefed<SVGAnimatedLength> Y2();
-
-protected:
-
-=======
   already_AddRefed<DOMSVGAnimatedLength> X1();
   already_AddRefed<DOMSVGAnimatedLength> Y1();
   already_AddRefed<DOMSVGAnimatedLength> X2();
   already_AddRefed<DOMSVGAnimatedLength> Y2();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { ATTR_X1, ATTR_Y1, ATTR_X2, ATTR_Y2 };

@@ -60,16 +60,10 @@ typedef void* SockOptArg;
 
 #endif  // WEBRTC_POSIX
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
-#if defined(WEBRTC_POSIX) && !defined(WEBRTC_MAC) && !defined(WEBRTC_BSD) && !defined(__native_client__)
-||||||| merged common ancestors
-#if defined(WEBRTC_POSIX) && !defined(WEBRTC_MAC) && !defined(__native_client__)
-=======
 #if defined(WEBRTC_POSIX) && !defined(WEBRTC_MAC) && !defined(WEBRTC_BSD) && !defined(__native_client__)
 #if defined(WEBRTC_LINUX)
 #include <linux/sockios.h>
 #endif
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
 
 int64_t GetSocketRecvTimestamp(int socket) {
   struct timeval tv_ioctl;
@@ -1307,7 +1301,6 @@ void PhysicalSocketServer::Add(Dispatcher *pdispatcher) {
 
 void PhysicalSocketServer::Remove(Dispatcher *pdispatcher) {
   CritScope cs(&crit_);
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
   if (processing_dispatchers_) {
     // A dispatcher is being removed while a "Wait" call is processing the
     // list of socket events.
@@ -1343,39 +1336,8 @@ void PhysicalSocketServer::Update(Dispatcher* pdispatcher) {
 
   CritScope cs(&crit_);
   if (dispatchers_.find(pdispatcher) == dispatchers_.end()) {
-||||||| merged common ancestors
-  DispatcherList::iterator pos = std::find(dispatchers_.begin(),
-                                           dispatchers_.end(),
-                                           pdispatcher);
-  // We silently ignore duplicate calls to Add, so we should silently ignore
-  // the (expected) symmetric calls to Remove. Note that this may still hide
-  // a real issue, so we at least log a warning about it.
-  if (pos == dispatchers_.end()) {
-    LOG(LS_WARNING) << "PhysicalSocketServer asked to remove a unknown "
-                    << "dispatcher, potentially from a duplicate call to Add.";
-=======
-  if (processing_dispatchers_) {
-    // A dispatcher is being removed while a "Wait" call is processing the
-    // list of socket events.
-    // Defer removal from "dispatchers_" set until processing is done to avoid
-    // invalidating the iterator in "Wait".
-    if (!pending_add_dispatchers_.erase(pdispatcher) &&
-        dispatchers_.find(pdispatcher) == dispatchers_.end()) {
-      RTC_LOG(LS_WARNING) << "PhysicalSocketServer asked to remove a unknown "
-                          << "dispatcher, potentially from a duplicate call to "
-                          << "Add.";
-      return;
-    }
-
-    pending_remove_dispatchers_.insert(pdispatcher);
-  } else if (!dispatchers_.erase(pdispatcher)) {
-    RTC_LOG(LS_WARNING)
-        << "PhysicalSocketServer asked to remove a unknown "
-        << "dispatcher, potentially from a duplicate call to Add.";
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
     return;
   }
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
 
   UpdateEpoll(pdispatcher);
 #endif
@@ -1392,55 +1354,8 @@ void PhysicalSocketServer::AddRemovePendingDispatchers() {
   if (!pending_remove_dispatchers_.empty()) {
     for (Dispatcher* pdispatcher : pending_remove_dispatchers_) {
       dispatchers_.erase(pdispatcher);
-||||||| merged common ancestors
-  size_t index = pos - dispatchers_.begin();
-  dispatchers_.erase(pos);
-  for (IteratorList::iterator it = iterators_.begin(); it != iterators_.end();
-       ++it) {
-    if (index < **it) {
-      --**it;
-=======
-#if defined(WEBRTC_USE_EPOLL)
-  if (epoll_fd_ != INVALID_SOCKET) {
-    RemoveEpoll(pdispatcher);
-  }
-#endif  // WEBRTC_USE_EPOLL
-}
-
-void PhysicalSocketServer::Update(Dispatcher* pdispatcher) {
-#if defined(WEBRTC_USE_EPOLL)
-  if (epoll_fd_ == INVALID_SOCKET) {
-    return;
-  }
-
-  CritScope cs(&crit_);
-  if (dispatchers_.find(pdispatcher) == dispatchers_.end()) {
-    return;
-  }
-
-  UpdateEpoll(pdispatcher);
-#endif
-}
-
-void PhysicalSocketServer::AddRemovePendingDispatchers() {
-  if (!pending_add_dispatchers_.empty()) {
-    for (Dispatcher* pdispatcher : pending_add_dispatchers_) {
-      dispatchers_.insert(pdispatcher);
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
-    }
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
-    pending_remove_dispatchers_.clear();
-||||||| merged common ancestors
-=======
-    pending_add_dispatchers_.clear();
-  }
-
-  if (!pending_remove_dispatchers_.empty()) {
-    for (Dispatcher* pdispatcher : pending_remove_dispatchers_) {
-      dispatchers_.erase(pdispatcher);
     }
     pending_remove_dispatchers_.clear();
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/rtc_base/physicalsocketserver.cc
   }
 }
 

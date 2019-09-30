@@ -13,22 +13,6 @@
 //! The legalizer does not deal with register allocation constraints. These constraints are derived
 //! from the encoding recipes, and solved later by the register allocator.
 
-<<<<<<< HEAD
-use bitset::BitSet;
-use cursor::{Cursor, FuncCursor};
-use flowgraph::ControlFlowGraph;
-use ir::types::I32;
-use ir::{self, InstBuilder, MemFlags};
-use isa::TargetIsa;
-use timing;
-||||||| merged common ancestors
-use bitset::BitSet;
-use cursor::{Cursor, FuncCursor};
-use flowgraph::ControlFlowGraph;
-use ir::{self, InstBuilder, MemFlags};
-use isa::TargetIsa;
-use timing;
-=======
 use crate::bitset::BitSet;
 use crate::cursor::{Cursor, FuncCursor};
 use crate::flowgraph::ControlFlowGraph;
@@ -36,7 +20,6 @@ use crate::ir::types::I32;
 use crate::ir::{self, InstBuilder, MemFlags};
 use crate::isa::TargetIsa;
 use crate::timing;
->>>>>>> upstream-releases
 
 mod boundary;
 mod call;
@@ -196,71 +179,6 @@ fn expand_br_table(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-<<<<<<< HEAD
-    isa: &TargetIsa,
-) {
-    if isa.flags().jump_tables_enabled() {
-        expand_br_table_jt(inst, func, cfg, isa);
-    } else {
-        expand_br_table_conds(inst, func, cfg, isa);
-    }
-}
-
-/// Expand br_table to jump table.
-fn expand_br_table_jt(
-    inst: ir::Inst,
-    func: &mut ir::Function,
-    cfg: &mut ControlFlowGraph,
-    isa: &TargetIsa,
-) {
-    use ir::condcodes::IntCC;
-
-    let (arg, default_ebb, table) = match func.dfg[inst] {
-        ir::InstructionData::BranchTable {
-            opcode: ir::Opcode::BrTable,
-            arg,
-            destination,
-            table,
-        } => (arg, destination, table),
-        _ => panic!("Expected br_table: {}", func.dfg.display_inst(inst, None)),
-    };
-
-    let table_size = func.jump_tables[table].len();
-    let addr_ty = isa.pointer_type();
-    let entry_ty = I32;
-
-    let mut pos = FuncCursor::new(func).at_inst(inst);
-    pos.use_srcloc(inst);
-
-    // Bounds check
-    let oob = pos
-        .ins()
-        .icmp_imm(IntCC::UnsignedGreaterThanOrEqual, arg, table_size as i64);
-
-    pos.ins().brnz(oob, default_ebb, &[]);
-
-    let base_addr = pos.ins().jump_table_base(addr_ty, table);
-    let entry = pos
-        .ins()
-        .jump_table_entry(addr_ty, arg, base_addr, entry_ty.bytes() as u8, table);
-
-    let addr = pos.ins().iadd(base_addr, entry);
-    pos.ins().indirect_jump_table_br(addr, table);
-
-    let ebb = pos.current_ebb().unwrap();
-    pos.remove_inst();
-    cfg.recompute_ebb(pos.func, ebb);
-}
-
-/// Expand br_table to series of conditionals.
-fn expand_br_table_conds(
-    inst: ir::Inst,
-    func: &mut ir::Function,
-    cfg: &mut ControlFlowGraph,
-    _isa: &TargetIsa,
-||||||| merged common ancestors
-    _isa: &TargetIsa,
-=======
     isa: &dyn TargetIsa,
 ) {
     if isa.flags().jump_tables_enabled() {
@@ -322,7 +240,6 @@ fn expand_br_table_conds(
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
     _isa: &dyn TargetIsa,
->>>>>>> upstream-releases
 ) {
     use crate::ir::condcodes::IntCC;
 

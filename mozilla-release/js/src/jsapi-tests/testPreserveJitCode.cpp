@@ -33,110 +33,6 @@ unsigned countIonScripts(JSObject* global) {
   return count;
 }
 
-<<<<<<< HEAD
-bool testPreserveJitCode(bool preserveJitCode, unsigned remainingIonScripts) {
-  cx->options().setBaseline(true);
-  cx->options().setIon(true);
-  cx->runtime()->setOffthreadIonCompilationEnabled(false);
-
-  RootedObject global(cx, createTestGlobal(preserveJitCode));
-  CHECK(global);
-  JSAutoRealm ar(cx, global);
-
-  // The Ion JIT may be unavailable due to --disable-ion or lack of support
-  // for this platform.
-  if (!js::jit::IsIonEnabled(cx)) {
-    knownFail = true;
-  }
-
-  CHECK_EQUAL(countIonScripts(global), 0u);
-
-  static const char source[] =
-      "var i = 0;\n"
-      "var sum = 0;\n"
-      "while (i < 10) {\n"
-      "    sum += i;\n"
-      "    ++i;\n"
-      "}\n"
-      "return sum;\n";
-  unsigned length = strlen(source);
-
-  JS::CompileOptions options(cx);
-  options.setFileAndLine(__FILE__, 1);
-
-  JS::RootedFunction fun(cx);
-  JS::AutoObjectVector emptyScopeChain(cx);
-  CHECK(JS::CompileFunctionUtf8(cx, emptyScopeChain, options, "f", 0, nullptr,
-                                source, length, &fun));
-
-  RootedValue value(cx);
-  for (unsigned i = 0; i < 1500; ++i) {
-    CHECK(JS_CallFunction(cx, global, fun, JS::HandleValueArray::empty(),
-                          &value));
-  }
-  CHECK_EQUAL(value.toInt32(), 45);
-  CHECK_EQUAL(countIonScripts(global), 1u);
-
-  NonIncrementalGC(cx, GC_NORMAL, gcreason::API);
-  CHECK_EQUAL(countIonScripts(global), remainingIonScripts);
-
-  NonIncrementalGC(cx, GC_SHRINK, gcreason::API);
-  CHECK_EQUAL(countIonScripts(global), 0u);
-
-  return true;
-||||||| merged common ancestors
-bool
-testPreserveJitCode(bool preserveJitCode, unsigned remainingIonScripts)
-{
-    cx->options().setBaseline(true);
-    cx->options().setIon(true);
-    cx->runtime()->setOffthreadIonCompilationEnabled(false);
-
-    RootedObject global(cx, createTestGlobal(preserveJitCode));
-    CHECK(global);
-    JSAutoRealm ar(cx, global);
-
-    // The Ion JIT may be unavailable due to --disable-ion or lack of support
-    // for this platform.
-    if (!js::jit::IsIonEnabled(cx)) {
-        knownFail = true;
-    }
-
-    CHECK_EQUAL(countIonScripts(global), 0u);
-
-    static const char source[] =
-        "var i = 0;\n"
-        "var sum = 0;\n"
-        "while (i < 10) {\n"
-        "    sum += i;\n"
-        "    ++i;\n"
-        "}\n"
-        "return sum;\n";
-    unsigned length = strlen(source);
-
-    JS::CompileOptions options(cx);
-    options.setFileAndLine(__FILE__, 1);
-
-    JS::RootedFunction fun(cx);
-    JS::AutoObjectVector emptyScopeChain(cx);
-    CHECK(JS::CompileFunctionUtf8(cx, emptyScopeChain, options, "f", 0, nullptr,
-                      			      source, length, &fun));
-
-    RootedValue value(cx);
-    for (unsigned i = 0; i < 1500; ++i) {
-        CHECK(JS_CallFunction(cx, global, fun, JS::HandleValueArray::empty(), &value));
-    }
-    CHECK_EQUAL(value.toInt32(), 45);
-    CHECK_EQUAL(countIonScripts(global), 1u);
-
-    NonIncrementalGC(cx, GC_NORMAL, gcreason::API);
-    CHECK_EQUAL(countIonScripts(global), remainingIonScripts);
-
-    NonIncrementalGC(cx, GC_SHRINK, gcreason::API);
-    CHECK_EQUAL(countIonScripts(global), 0u);
-
-    return true;
-=======
 bool testPreserveJitCode(bool preserveJitCode, unsigned remainingIonScripts) {
   cx->options().setBaseline(true);
   cx->options().setIon(true);
@@ -191,7 +87,6 @@ bool testPreserveJitCode(bool preserveJitCode, unsigned remainingIonScripts) {
   CHECK_EQUAL(countIonScripts(global), 0u);
 
   return true;
->>>>>>> upstream-releases
 }
 
 JSObject* createTestGlobal(bool preserveJitCode) {

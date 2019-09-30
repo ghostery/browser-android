@@ -55,21 +55,8 @@ static bool XrayWrapperConstructor(JSContext* cx, unsigned argc, Value* vp) {
   return JS_WrapValue(cx, args.rval());
 }
 // static
-<<<<<<< HEAD
 bool AttachNewConstructorObject(JSContext* aCx,
                                 JS::HandleObject aGlobalObject) {
-  // Pushing a JSContext calls ActivateDebugger which calls this function, so
-  // we can't use an AutoJSContext here until JSD is gone.
-||||||| merged common ancestors
-bool
-AttachNewConstructorObject(JSContext* aCx, JS::HandleObject aGlobalObject)
-{
-  // Pushing a JSContext calls ActivateDebugger which calls this function, so
-  // we can't use an AutoJSContext here until JSD is gone.
-=======
-bool AttachNewConstructorObject(JSContext* aCx,
-                                JS::HandleObject aGlobalObject) {
->>>>>>> upstream-releases
   JSAutoRealm ar(aCx, aGlobalObject);
   JSFunction* xpcnativewrapper = JS_DefineFunction(
       aCx, aGlobalObject, "XPCNativeWrapper", XrayWrapperConstructor, 1,

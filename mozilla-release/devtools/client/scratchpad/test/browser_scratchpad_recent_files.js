@@ -183,23 +183,6 @@ async function testOpenDeletedFile() {
   );
   // The number of recent files stored, plus the separator and the
   // clearRecentMenuItems-item.
-<<<<<<< HEAD
-  is(popup.children.length, 3,
-     "The missing file was successfully removed from the menu.");
-  ok(gScratchpad.notificationBox.currentNotification,
-     "The notification was successfully displayed.");
-  is(gScratchpad.notificationBox.currentNotification.messageText.textContent,
-     gScratchpad.strings.GetStringFromName("fileNoLongerExists.notification"),
-     "The notification label is correct.");
-||||||| merged common ancestors
-  is(popup.children.length, 3,
-     "The missing file was successfully removed from the menu.");
-  ok(gScratchpad.notificationBox.currentNotification,
-     "The notification was successfully displayed.");
-  is(gScratchpad.notificationBox.currentNotification.label,
-     gScratchpad.strings.GetStringFromName("fileNoLongerExists.notification"),
-     "The notification label is correct.");
-=======
   is(
     popup.children.length,
     3,
@@ -215,7 +198,6 @@ async function testOpenDeletedFile() {
     "The notification label is correct."
   );
 }
->>>>>>> upstream-releases
 
 async function testClearAll() {
   gScratchpad.clearRecentFiles();

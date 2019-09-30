@@ -35,50 +35,6 @@ using FrameForPointOption = nsLayoutUtils::FrameForPointOption;
 // with the notable exception that we don't pass nsLayoutUtils::IGNORE_CROSS_DOC
 // to GetFrameForPoint(), so as to get the behaviour described above in the
 // presence of subdocuments.
-<<<<<<< HEAD
-static already_AddRefed<dom::Element> ElementFromPoint(
-    const nsCOMPtr<nsIPresShell>& aShell, const CSSPoint& aPoint) {
-  if (nsIFrame* rootFrame = aShell->GetRootFrame()) {
-    if (nsIFrame* frame = nsLayoutUtils::GetFrameForPoint(
-            rootFrame, CSSPoint::ToAppUnits(aPoint),
-            nsLayoutUtils::IGNORE_PAINT_SUPPRESSION |
-                nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME)) {
-      while (frame && (!frame->GetContent() ||
-                       frame->GetContent()->IsInAnonymousSubtree())) {
-        frame = nsLayoutUtils::GetParentOrPlaceholderFor(frame);
-      }
-      nsIContent* content = frame->GetContent();
-      if (content && !content->IsElement()) {
-        content = content->GetParent();
-      }
-      if (content) {
-        nsCOMPtr<dom::Element> result = content->AsElement();
-        return result.forget();
-      }
-    }
-||||||| merged common ancestors
-static already_AddRefed<dom::Element>
-ElementFromPoint(const nsCOMPtr<nsIPresShell>& aShell,
-                 const CSSPoint& aPoint)
-{
-  if (nsIFrame* rootFrame = aShell->GetRootFrame()) {
-    if (nsIFrame* frame = nsLayoutUtils::GetFrameForPoint(rootFrame,
-          CSSPoint::ToAppUnits(aPoint),
-          nsLayoutUtils::IGNORE_PAINT_SUPPRESSION |
-          nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME)) {
-      while (frame && (!frame->GetContent() || frame->GetContent()->IsInAnonymousSubtree())) {
-        frame = nsLayoutUtils::GetParentOrPlaceholderFor(frame);
-      }
-      nsIContent* content = frame->GetContent();
-      if (content && !content->IsElement()) {
-        content = content->GetParent();
-      }
-      if (content) {
-        nsCOMPtr<dom::Element> result = content->AsElement();
-        return result.forget();
-      }
-    }
-=======
 static already_AddRefed<dom::Element> ElementFromPoint(
     const RefPtr<PresShell>& aPresShell, const CSSPoint& aPoint) {
   nsIFrame* rootFrame = aPresShell->GetRootFrame();
@@ -105,7 +61,6 @@ static already_AddRefed<dom::Element> ElementFromPoint(
   if (content && content->IsElement()) {
     nsCOMPtr<dom::Element> result = content->AsElement();
     return result.forget();
->>>>>>> upstream-releases
   }
   return nullptr;
 }
@@ -139,20 +94,10 @@ static bool IsRectZoomedIn(const CSSRect& aRect,
   return showing > 0.9 && (ratioW > 0.9 || ratioH > 0.9);
 }
 
-<<<<<<< HEAD
-CSSRect CalculateRectToZoomTo(const nsCOMPtr<nsIDocument>& aRootContentDocument,
-                              const CSSPoint& aPoint) {
-||||||| merged common ancestors
-CSSRect
-CalculateRectToZoomTo(const nsCOMPtr<nsIDocument>& aRootContentDocument,
-                      const CSSPoint& aPoint)
-{
-=======
 }  // namespace
 
 CSSRect CalculateRectToZoomTo(const RefPtr<dom::Document>& aRootContentDocument,
                               const CSSPoint& aPoint) {
->>>>>>> upstream-releases
   // Ensure the layout information we get is up-to-date.
   aRootContentDocument->FlushPendingNotifications(FlushType::Layout);
 
@@ -183,23 +128,11 @@ CSSRect CalculateRectToZoomTo(const RefPtr<dom::Document>& aRootContentDocument,
     return zoomOut;
   }
 
-<<<<<<< HEAD
-  FrameMetrics metrics =
-      nsLayoutUtils::CalculateBasicFrameMetrics(rootScrollFrame);
-  CSSRect compositedArea(
-      CSSPoint::FromAppUnits(shell->GetVisualViewportOffset()),
-      metrics.CalculateCompositedSizeInCssPixels());
-||||||| merged common ancestors
-  FrameMetrics metrics = nsLayoutUtils::CalculateBasicFrameMetrics(rootScrollFrame);
-  CSSRect compositedArea(CSSPoint::FromAppUnits(shell->GetVisualViewportOffset()),
-                         metrics.CalculateCompositedSizeInCssPixels());
-=======
   FrameMetrics metrics =
       nsLayoutUtils::CalculateBasicFrameMetrics(rootScrollFrame);
   CSSRect compositedArea(
       CSSPoint::FromAppUnits(presShell->GetVisualViewportOffset()),
       metrics.CalculateCompositedSizeInCssPixels());
->>>>>>> upstream-releases
   const CSSCoord margin = 15;
   CSSRect rect =
       nsLayoutUtils::GetBoundingContentRect(element, rootScrollFrame);

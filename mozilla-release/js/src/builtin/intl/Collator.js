@@ -356,13 +356,7 @@ function $Intl_Collator_compare_get() {
 
     // Steps 2-3.
     if (!IsObject(collator) || (collator = GuardToCollator(collator)) === null)
-<<<<<<< HEAD
-        return callFunction(CallCollatorMethodIfWrapped, this, "Intl_Collator_compare_get");
-||||||| merged common ancestors
-        ThrowTypeError(JSMSG_INTL_OBJECT_NOT_INITED, "Collator", "compare", "Collator");
-=======
         return callFunction(CallCollatorMethodIfWrapped, this, "$Intl_Collator_compare_get");
->>>>>>> upstream-releases
 
     var internals = getCollatorInternals(collator);
 

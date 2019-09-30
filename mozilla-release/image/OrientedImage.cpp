@@ -67,27 +67,10 @@ OrientedImage::GetIntrinsicSize(nsSize* aSize) {
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-OrientedImage::GetIntrinsicRatio(nsSize* aRatio) {
-  nsresult rv = InnerImage()->GetIntrinsicRatio(aRatio);
-
-  if (mOrientation.SwapsWidthAndHeight()) {
-    swap(aRatio->width, aRatio->height);
-||||||| merged common ancestors
-NS_IMETHODIMP
-OrientedImage::GetIntrinsicRatio(nsSize* aRatio)
-{
-  nsresult rv = InnerImage()->GetIntrinsicRatio(aRatio);
-
-  if (mOrientation.SwapsWidthAndHeight()) {
-    swap(aRatio->width, aRatio->height);
-=======
 Maybe<AspectRatio> OrientedImage::GetIntrinsicRatio() {
   Maybe<AspectRatio> ratio = InnerImage()->GetIntrinsicRatio();
   if (ratio && mOrientation.SwapsWidthAndHeight()) {
     ratio = Some(ratio->Inverted());
->>>>>>> upstream-releases
   }
   return ratio;
 }

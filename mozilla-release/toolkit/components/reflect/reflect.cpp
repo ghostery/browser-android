@@ -10,25 +10,6 @@
 #include "nsNativeCharsetUtils.h"
 #include "xpc_make_class.h"
 
-<<<<<<< HEAD
-#define JSREFLECT_CONTRACTID "@mozilla.org/jsreflect;1"
-
-#define JSREFLECT_CID                                \
-  {                                                  \
-    0x1a817186, 0x357a, 0x47cd, {                    \
-      0x8a, 0xea, 0x28, 0x50, 0xd6, 0x0e, 0x95, 0x9e \
-    }                                                \
-  }
-
-||||||| merged common ancestors
-#define JSREFLECT_CONTRACTID \
-  "@mozilla.org/jsreflect;1"
-
-#define JSREFLECT_CID \
-{ 0x1a817186, 0x357a, 0x47cd, { 0x8a, 0xea, 0x28, 0x50, 0xd6, 0x0e, 0x95, 0x9e } }
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 namespace reflect {
 
@@ -44,74 +25,15 @@ Module::~Module() = default;
 #include "xpc_map_end.h"
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Module::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* obj,
-             const JS::CallArgs& args, bool* _retval) {
-  JS::Rooted<JSObject*> global(cx, JS::CurrentGlobalOrNull(cx));
-  if (!global) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-Module::Call(nsIXPConnectWrappedNative* wrapper,
-             JSContext* cx,
-             JSObject* obj,
-             const JS::CallArgs& args,
-             bool* _retval)
-{
-  JS::Rooted<JSObject*> global(cx, JS::CurrentGlobalOrNull(cx));
-  if (!global)
-    return NS_ERROR_NOT_AVAILABLE;
-=======
 Module::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* obj,
              const JS::CallArgs& args, bool* _retval) {
   JS::Rooted<JSObject*> global(cx, JS::GetScriptedCallerGlobal(cx));
   if (!global) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   JSAutoRealm ar(cx, global);
   *_retval = JS_InitReflectParse(cx, global);
   return NS_OK;
 }
 
-<<<<<<< HEAD
 }  // namespace reflect
 }  // namespace mozilla
-
-NS_DEFINE_NAMED_CID(JSREFLECT_CID);
-
-static const mozilla::Module::CIDEntry kReflectCIDs[] = {
-    {&kJSREFLECT_CID, false, nullptr, mozilla::reflect::ModuleConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kReflectContracts[] = {
-    {JSREFLECT_CONTRACTID, &kJSREFLECT_CID}, {nullptr}};
-
-static const mozilla::Module kReflectModule = {mozilla::Module::kVersion,
-                                               kReflectCIDs, kReflectContracts};
-
-NSMODULE_DEFN(jsreflect) = &kReflectModule;
-||||||| merged common ancestors
-} // namespace reflect
-} // namespace mozilla
-
-NS_DEFINE_NAMED_CID(JSREFLECT_CID);
-
-static const mozilla::Module::CIDEntry kReflectCIDs[] = {
-  { &kJSREFLECT_CID, false, nullptr, mozilla::reflect::ModuleConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kReflectContracts[] = {
-  { JSREFLECT_CONTRACTID, &kJSREFLECT_CID },
-  { nullptr }
-};
-
-static const mozilla::Module kReflectModule = {
-  mozilla::Module::kVersion,
-  kReflectCIDs,
-  kReflectContracts
-};
-
-NSMODULE_DEFN(jsreflect) = &kReflectModule;
-=======
-}  // namespace reflect
-}  // namespace mozilla
->>>>>>> upstream-releases

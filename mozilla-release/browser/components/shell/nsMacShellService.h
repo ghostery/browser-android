@@ -13,21 +13,10 @@
 #include "nsCOMPtr.h"
 
 class nsMacShellService : public nsIMacShellService,
-<<<<<<< HEAD
-                          public nsIWebProgressListener {
- public:
-  nsMacShellService(){};
-||||||| merged common ancestors
-                          public nsIWebProgressListener
-{
-public:
-  nsMacShellService() {};
-=======
                           public nsToolkitShellService,
                           public nsIWebProgressListener {
  public:
   nsMacShellService(){};
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSISHELLSERVICE

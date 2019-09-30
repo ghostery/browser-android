@@ -35,15 +35,8 @@ class Permissions final : public nsISupports, public nsWrapperCache {
                                   JS::Handle<JSObject*> aPermission,
                                   ErrorResult& aRv);
 
-<<<<<<< HEAD
-  static nsresult RemovePermission(nsIPrincipal* aPrincipal,
-                                   const char* aPermissionType);
-||||||| merged common ancestors
-  static nsresult RemovePermission(nsIPrincipal* aPrincipal, const char* aPermissionType);
-=======
   static nsresult RemovePermission(nsIPrincipal* aPrincipal,
                                    const nsACString& aPermissionType);
->>>>>>> upstream-releases
 
   already_AddRefed<Promise> Revoke(JSContext* aCx,
                                    JS::Handle<JSObject*> aPermission,

@@ -359,16 +359,8 @@ nsresult PresentationRequestParent::DoRequest(
 
   RefPtr<EventTarget> eventTarget;
   ContentProcessManager* cpm = ContentProcessManager::GetSingleton();
-<<<<<<< HEAD
-  RefPtr<TabParent> tp =
-      cpm->GetTopLevelTabParentByProcessAndTabId(mChildId, aRequest.tabId());
-||||||| merged common ancestors
-  RefPtr<TabParent> tp =
-    cpm->GetTopLevelTabParentByProcessAndTabId(mChildId, aRequest.tabId());
-=======
   RefPtr<BrowserParent> tp = cpm->GetTopLevelBrowserParentByProcessAndTabId(
       mChildId, aRequest.tabId());
->>>>>>> upstream-releases
   if (tp) {
     eventTarget = tp->GetOwnerElement();
   }

@@ -34,79 +34,30 @@ struct CycleCollectorResults;
 
 #define NS_MAJOR_FORGET_SKIPPABLE_CALLS 5
 
-<<<<<<< HEAD
-class nsJSContext : public nsIScriptContext {
- public:
-  nsJSContext(bool aGCOnDestruction, nsIScriptGlobalObject *aGlobalObject);
-||||||| merged common ancestors
-class nsJSContext : public nsIScriptContext
-{
-public:
-  nsJSContext(bool aGCOnDestruction, nsIScriptGlobalObject* aGlobalObject);
-=======
 class nsJSContext : public nsIScriptContext {
  public:
   nsJSContext(bool aGCOnDestruction, nsIScriptGlobalObject* aGlobalObject);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_AMBIGUOUS(nsJSContext,
                                                          nsIScriptContext)
 
-<<<<<<< HEAD
-  virtual nsIScriptGlobalObject *GetGlobalObject() override;
-  inline nsIScriptGlobalObject *GetGlobalObjectRef() {
-    return mGlobalObjectRef;
-  }
-
-  virtual nsresult InitContext() override;
-  virtual bool IsContextInitialized() override;
-||||||| merged common ancestors
-  virtual nsIScriptGlobalObject *GetGlobalObject() override;
-  inline nsIScriptGlobalObject *GetGlobalObjectRef() { return mGlobalObjectRef; }
-
-  virtual nsresult InitContext() override;
-  virtual bool IsContextInitialized() override;
-=======
   virtual nsIScriptGlobalObject* GetGlobalObject() override;
   inline nsIScriptGlobalObject* GetGlobalObjectRef() {
     return mGlobalObjectRef;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual nsresult SetProperty(JS::Handle<JSObject *> aTarget,
-                               const char *aPropName,
-                               nsISupports *aVal) override;
-||||||| merged common ancestors
-  virtual nsresult SetProperty(JS::Handle<JSObject*> aTarget, const char* aPropName, nsISupports* aVal) override;
-=======
   virtual nsresult SetProperty(JS::Handle<JSObject*> aTarget,
                                const char* aPropName,
                                nsISupports* aVal) override;
->>>>>>> upstream-releases
 
   virtual bool GetProcessingScriptTag() override;
   virtual void SetProcessingScriptTag(bool aResult) override;
 
-  virtual nsresult InitClasses(JS::Handle<JSObject *> aGlobalObj) override;
-
-<<<<<<< HEAD
-  virtual void WillInitializeContext() override;
-  virtual void DidInitializeContext() override;
-
-  virtual void SetWindowProxy(JS::Handle<JSObject *> aWindowProxy) override;
-  virtual JSObject *GetWindowProxy() override;
-||||||| merged common ancestors
-  virtual void WillInitializeContext() override;
-  virtual void DidInitializeContext() override;
+  virtual nsresult InitClasses(JS::Handle<JSObject*> aGlobalObj) override;
 
   virtual void SetWindowProxy(JS::Handle<JSObject*> aWindowProxy) override;
   virtual JSObject* GetWindowProxy() override;
-=======
-  virtual void SetWindowProxy(JS::Handle<JSObject*> aWindowProxy) override;
-  virtual JSObject* GetWindowProxy() override;
->>>>>>> upstream-releases
 
   enum IsShrinking { ShrinkingGC, NonShrinkingGC };
 
@@ -132,15 +83,8 @@ class nsJSContext : public nsIScriptContext {
   static void RunCycleCollectorWorkSlice(int64_t aWorkBudget);
 
   static void BeginCycleCollectionCallback();
-<<<<<<< HEAD
-  static void EndCycleCollectionCallback(
-      mozilla::CycleCollectorResults &aResults);
-||||||| merged common ancestors
-  static void EndCycleCollectionCallback(mozilla::CycleCollectorResults &aResults);
-=======
   static void EndCycleCollectionCallback(
       mozilla::CycleCollectorResults& aResults);
->>>>>>> upstream-releases
 
   // Return the longest CC slice time since ClearMaxCCSliceTime() was last
   // called.
@@ -148,41 +92,17 @@ class nsJSContext : public nsIScriptContext {
   static void ClearMaxCCSliceTime();
 
   // If there is some pending CC or GC timer/runner, this will run it.
-<<<<<<< HEAD
-  static void RunNextCollectorTimer(
-      JS::gcreason::Reason aReason,
-      mozilla::TimeStamp aDeadline = mozilla::TimeStamp());
-||||||| merged common ancestors
-  static void RunNextCollectorTimer(JS::gcreason::Reason aReason,
-                                    mozilla::TimeStamp aDeadline = mozilla::TimeStamp());
-=======
   static void RunNextCollectorTimer(
       JS::GCReason aReason,
       mozilla::TimeStamp aDeadline = mozilla::TimeStamp());
->>>>>>> upstream-releases
   // If user has been idle and aDocShell is for an iframe being loaded in an
   // already loaded top level docshell, this will run a CC or GC
   // timer/runner if there is such pending.
-<<<<<<< HEAD
-  static void MaybeRunNextCollectorSlice(nsIDocShell *aDocShell,
-                                         JS::gcreason::Reason aReason);
-||||||| merged common ancestors
-  static void MaybeRunNextCollectorSlice(nsIDocShell* aDocShell,
-                                         JS::gcreason::Reason aReason);
-=======
   static void MaybeRunNextCollectorSlice(nsIDocShell* aDocShell,
                                          JS::GCReason aReason);
->>>>>>> upstream-releases
 
   // The GC should probably run soon, in the zone of object aObj (if given).
-<<<<<<< HEAD
-  static void PokeGC(JS::gcreason::Reason aReason, JSObject *aObj,
-                     int aDelay = 0);
-||||||| merged common ancestors
-  static void PokeGC(JS::gcreason::Reason aReason, JSObject* aObj, int aDelay = 0);
-=======
   static void PokeGC(JS::GCReason aReason, JSObject* aObj, int aDelay = 0);
->>>>>>> upstream-releases
   static void KillGCTimer();
 
   static void PokeShrinkingGC();
@@ -199,17 +119,10 @@ class nsJSContext : public nsIScriptContext {
 
   static uint32_t CleanupsSinceLastGC();
 
-<<<<<<< HEAD
-  nsIScriptGlobalObject *GetCachedGlobalObject() {
-||||||| merged common ancestors
-  nsIScriptGlobalObject* GetCachedGlobalObject()
-  {
-=======
   nsIScriptGlobalObject* GetCachedGlobalObject() {
->>>>>>> upstream-releases
     // Verify that we have a global so that this
     // does always return a null when GetGlobalObject() is null.
-    JSObject *global = GetWindowProxy();
+    JSObject* global = GetWindowProxy();
     return global ? mGlobalObjectRef.get() : nullptr;
   }
 
@@ -217,19 +130,9 @@ class nsJSContext : public nsIScriptContext {
   virtual ~nsJSContext();
 
   // Helper to convert xpcom datatypes to jsvals.
-<<<<<<< HEAD
-  nsresult ConvertSupportsTojsvals(nsISupports *aArgs,
-                                   JS::Handle<JSObject *> aScope,
-                                   JS::AutoValueVector &aArgsOut);
-||||||| merged common ancestors
-  nsresult ConvertSupportsTojsvals(nsISupports *aArgs,
-                                   JS::Handle<JSObject*> aScope,
-                                   JS::AutoValueVector &aArgsOut);
-=======
   nsresult ConvertSupportsTojsvals(JSContext* aCx, nsISupports* aArgs,
                                    JS::Handle<JSObject*> aScope,
                                    JS::MutableHandleVector<JS::Value> aArgsOut);
->>>>>>> upstream-releases
 
   nsresult AddSupportsPrimitiveTojsvals(JSContext* aCx, nsISupports* aArg,
                                         JS::Value* aArgv);
@@ -237,7 +140,7 @@ class nsJSContext : public nsIScriptContext {
  private:
   void Destroy();
 
-  JS::Heap<JSObject *> mWindowProxy;
+  JS::Heap<JSObject*> mWindowProxy;
 
   bool mGCOnDestruction;
   bool mProcessingScriptTag;
@@ -259,18 +162,8 @@ void ShutdownJSEnvironment();
 class AsyncErrorReporter final : public mozilla::Runnable {
  public:
   // aWindow may be null if this error report is not associated with a window
-<<<<<<< HEAD
-  explicit AsyncErrorReporter(xpc::ErrorReport *aReport)
-      : Runnable("dom::AsyncErrorReporter"), mReport(aReport) {}
-||||||| merged common ancestors
-  explicit AsyncErrorReporter(xpc::ErrorReport* aReport)
-    : Runnable("dom::AsyncErrorReporter")
-    , mReport(aReport)
-  {}
-=======
   explicit AsyncErrorReporter(xpc::ErrorReport* aReport)
       : Runnable("dom::AsyncErrorReporter"), mReport(aReport) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     mReport->LogToConsole();

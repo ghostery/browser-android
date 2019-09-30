@@ -21,29 +21,6 @@ namespace dom {
 
 typedef SVGGeometryElement SVGCircleElementBase;
 
-<<<<<<< HEAD
-class SVGCircleElement final : public SVGCircleElementBase {
- protected:
-  explicit SVGCircleElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  virtual JSObject* WrapNode(JSContext* cx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-  friend nsresult(::NS_NewSVGCircleElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
- public:
-||||||| merged common ancestors
-class SVGCircleElement final : public SVGCircleElementBase
-{
-protected:
-  explicit SVGCircleElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
-  friend nsresult (::NS_NewSVGCircleElement(nsIContent **aResult,
-                                            already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
-public:
-=======
 class SVGCircleElement final : public SVGCircleElementBase {
  protected:
   explicit SVGCircleElement(
@@ -57,7 +34,6 @@ class SVGCircleElement final : public SVGCircleElementBase {
  public:
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
->>>>>>> upstream-releases
   // nsSVGSVGElement methods:
   virtual bool HasValidDimensions() const override;
 
@@ -74,19 +50,12 @@ class SVGCircleElement final : public SVGCircleElementBase {
                                     const ComputedStyle& aOldStyle);
   static nsCSSPropertyID GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-
-=======
   // WebIDL
   already_AddRefed<DOMSVGAnimatedLength> Cx();
   already_AddRefed<DOMSVGAnimatedLength> Cy();
   already_AddRefed<DOMSVGAnimatedLength> R();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { ATTR_CX, ATTR_CY, ATTR_R };

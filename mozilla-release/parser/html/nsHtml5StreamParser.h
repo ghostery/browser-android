@@ -27,20 +27,7 @@
 
 class nsHtml5Parser;
 
-<<<<<<< HEAD
-#define NS_HTML5_STREAM_PARSER_READ_BUFFER_SIZE 1024
-#define NS_HTML5_STREAM_PARSER_SNIFFING_BUFFER_SIZE 1024
-
 enum eParserMode {
-||||||| merged common ancestors
-#define NS_HTML5_STREAM_PARSER_READ_BUFFER_SIZE 1024
-#define NS_HTML5_STREAM_PARSER_SNIFFING_BUFFER_SIZE 1024
-
-enum eParserMode
-{
-=======
-enum eParserMode {
->>>>>>> upstream-releases
   /**
    * Parse a document normally as HTML.
    */
@@ -142,31 +129,10 @@ class nsHtml5StreamParser final : public nsICharsetDetectionObserver {
 
   nsresult OnStartRequest(nsIRequest* aRequest);
 
-<<<<<<< HEAD
-  nsresult OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                           nsIInputStream* aInStream, uint64_t aSourceOffset,
-                           uint32_t aLength);
-||||||| merged common ancestors
-  nsresult OnDataAvailable(nsIRequest* aRequest,
-                           nsISupports* aContext,
-                           nsIInputStream* aInStream,
-                           uint64_t aSourceOffset,
-                           uint32_t aLength);
-=======
   nsresult OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInStream,
                            uint64_t aSourceOffset, uint32_t aLength);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                         nsresult status);
-||||||| merged common ancestors
-  nsresult OnStopRequest(nsIRequest* aRequest,
-                         nsISupports* aContext,
-                         nsresult status);
-=======
   nsresult OnStopRequest(nsIRequest* aRequest, nsresult status);
->>>>>>> upstream-releases
 
   // nsICharsetDetectionObserver
   /**
@@ -288,15 +254,9 @@ class nsHtml5StreamParser final : public nsICharsetDetectionObserver {
 
   void DoStopRequest();
 
-<<<<<<< HEAD
-  void DoDataAvailable(mozilla::Span<const uint8_t> aBuffer);
-||||||| merged common ancestors
-  void DoDataAvailable(const uint8_t* aBuffer, uint32_t aLength);
-=======
   void DoDataAvailableBuffer(mozilla::Buffer<uint8_t>&& aBuffer);
 
   void DoDataAvailable(mozilla::Span<const uint8_t> aBuffer);
->>>>>>> upstream-releases
 
   static nsresult CopySegmentsToParser(nsIInputStream* aInStream,
                                        void* aClosure, const char* aFromSegment,
@@ -331,12 +291,6 @@ class nsHtml5StreamParser final : public nsICharsetDetectionObserver {
   /**
    * Check whether every other byte in the sniffing buffer is zero.
    */
-<<<<<<< HEAD
-  void SniffBOMlessUTF16BasicLatin(mozilla::Span<const uint8_t> aFromSegment);
-||||||| merged common ancestors
-  void SniffBOMlessUTF16BasicLatin(const uint8_t* aFromSegment,
-                                   uint32_t aCountToSniffingLimit);
-=======
   void SniffBOMlessUTF16BasicLatin(mozilla::Span<const uint8_t> aFromSegment);
 
   /**
@@ -344,7 +298,6 @@ class nsHtml5StreamParser final : public nsICharsetDetectionObserver {
    */
   void FinalizeSniffingWithDetector(mozilla::Span<const uint8_t> aFromSegment,
                                     uint32_t aCountToSniffingLimit, bool aEof);
->>>>>>> upstream-releases
 
   /**
    * <meta charset> scan failed. Try chardet if applicable. After this, the

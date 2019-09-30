@@ -41,106 +41,25 @@ const TEST_DATA = [
     },
     flashedNode: ".list li:nth-child(3)",
   },
-<<<<<<< HEAD
-  flashedNode: ".list li:nth-child(3)",
-}, {
-  desc: "Removing a node should flash its parent",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-||||||| merged common ancestors
-  flashedNode: ".list li:nth-child(3)"
-}, {
-  desc: "Removing a node should flash its parent",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-=======
   {
     desc: "Removing a node should flash its parent",
     mutate: async function(testActor) {
       await testActor.eval(`
->>>>>>> upstream-releases
       let root = document.querySelector(".list");
       root.removeChild(root.lastElementChild);
     `);
-<<<<<<< HEAD
-  },
-}, {
-  desc: "Re-appending an existing node should only flash this node",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-||||||| merged common ancestors
-  }
-}, {
-  desc: "Re-appending an existing node should only flash this node",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-=======
     },
   },
   {
     desc: "Re-appending an existing node should only flash this node",
     mutate: async function(testActor) {
       await testActor.eval(`
->>>>>>> upstream-releases
       let root = document.querySelector(".list");
       root.appendChild(root.firstElementChild);
     `);
     },
     flashedNode: ".list .item:last-child",
   },
-<<<<<<< HEAD
-  flashedNode: ".list .item:last-child",
-}, {
-  desc: "Adding an attribute should flash the attribute",
-  attribute: "test-name",
-  mutate: async function(testActor) {
-    await testActor.setAttribute(".list", "test-name", "value-" + Date.now());
-  },
-}, {
-  desc: "Adding an attribute with css reserved characters should flash the " +
-        "attribute",
-  attribute: "one:two",
-  mutate: async function(testActor) {
-    await testActor.setAttribute(".list", "one:two", "value-" + Date.now());
-  },
-}, {
-  desc: "Editing an attribute should flash the attribute",
-  attribute: "class",
-  mutate: async function(testActor) {
-    await testActor.setAttribute(".list", "class", "list value-" + Date.now());
-  },
-}, {
-  desc: "Multiple changes to an attribute should flash the attribute",
-  attribute: "class",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-||||||| merged common ancestors
-  flashedNode: ".list .item:last-child"
-}, {
-  desc: "Adding an attribute should flash the attribute",
-  attribute: "test-name",
-  mutate: async function(testActor) {
-    await testActor.setAttribute(".list", "test-name", "value-" + Date.now());
-  }
-}, {
-  desc: "Adding an attribute with css reserved characters should flash the " +
-        "attribute",
-  attribute: "one:two",
-  mutate: async function(testActor) {
-    await testActor.setAttribute(".list", "one:two", "value-" + Date.now());
-  }
-}, {
-  desc: "Editing an attribute should flash the attribute",
-  attribute: "class",
-  mutate: async function(testActor) {
-    await testActor.setAttribute(".list", "class", "list value-" + Date.now());
-  }
-}, {
-  desc: "Multiple changes to an attribute should flash the attribute",
-  attribute: "class",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-=======
   {
     desc: "Adding an attribute should flash the attribute",
     attribute: "test-name",
@@ -173,7 +92,6 @@ const TEST_DATA = [
     attribute: "class",
     mutate: async function(testActor) {
       await testActor.eval(`
->>>>>>> upstream-releases
       let root = document.querySelector(".list");
       root.removeAttribute("class");
       root.setAttribute("class", "list value-" + Date.now());
@@ -182,40 +100,18 @@ const TEST_DATA = [
       root.setAttribute("class", "list value-" + Date.now());
       root.setAttribute("class", "list value-" + Date.now());
     `);
-<<<<<<< HEAD
-  },
-}, {
-  desc: "Removing an attribute should flash the node",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-||||||| merged common ancestors
-  }
-}, {
-  desc: "Removing an attribute should flash the node",
-  mutate: async function(testActor) {
-    await testActor.eval(`
-=======
     },
   },
   {
     desc: "Removing an attribute should flash the node",
     mutate: async function(testActor) {
       await testActor.eval(`
->>>>>>> upstream-releases
       let root = document.querySelector(".list");
       root.removeAttribute("class");
     `);
-<<<<<<< HEAD
-  },
-}];
-||||||| merged common ancestors
-  }
-}];
-=======
     },
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   const timerPrecision = Preferences.get("privacy.reduceTimerPrecision");

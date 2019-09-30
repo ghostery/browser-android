@@ -121,27 +121,13 @@ class nsBlockFrame : public nsContainerFrame {
   void GetChildLists(nsTArray<ChildList>* aLists) const override;
   nscoord GetLogicalBaseline(mozilla::WritingMode aWritingMode) const override;
   bool GetVerticalAlignBaseline(mozilla::WritingMode aWM,
-<<<<<<< HEAD
-                                nscoord* aBaseline) const override {
-||||||| merged common ancestors
-                                nscoord* aBaseline) const override
-  {
-=======
                                 nscoord* aBaseline) const override {
     NS_ASSERTION(!aWM.IsOrthogonalTo(GetWritingMode()),
                  "You should only call this on frames with a WM that's "
                  "parallel to aWM");
->>>>>>> upstream-releases
     nscoord lastBaseline;
-<<<<<<< HEAD
-    if (GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eLast,
-                                  &lastBaseline)) {
-||||||| merged common ancestors
-    if (GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eLast, &lastBaseline)) {
-=======
     if (GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::Last,
                                   &lastBaseline)) {
->>>>>>> upstream-releases
       *aBaseline = BSize() - lastBaseline;
       return true;
     }
@@ -156,22 +142,9 @@ class nsBlockFrame : public nsContainerFrame {
   bool IsFloatContainingBlock() const override;
   void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                         const nsDisplayListSet& aLists) override;
-<<<<<<< HEAD
-  bool IsFrameOfType(uint32_t aFlags) const override {
-    return nsContainerFrame::IsFrameOfType(
-        aFlags &
-        ~(nsIFrame::eCanContainOverflowContainers | nsIFrame::eBlockFrame));
-||||||| merged common ancestors
-  bool IsFrameOfType(uint32_t aFlags) const override
-  {
-    return nsContainerFrame::IsFrameOfType(aFlags &
-             ~(nsIFrame::eCanContainOverflowContainers |
-               nsIFrame::eBlockFrame));
-=======
   bool IsFrameOfType(uint32_t aFlags) const override {
     return nsContainerFrame::IsFrameOfType(
         aFlags & ~(nsIFrame::eCanContainOverflowContainers));
->>>>>>> upstream-releases
   }
 
   void InvalidateFrame(uint32_t aDisplayItemKey = 0,
@@ -272,15 +245,7 @@ class nsBlockFrame : public nsContainerFrame {
   /**
    * Return true if this frame has a ::marker frame.
    */
-<<<<<<< HEAD
-  bool HasBullet() const { return HasOutsideBullet() || HasInsideBullet(); }
-||||||| merged common ancestors
-  bool HasBullet() const {
-    return HasOutsideBullet() || HasInsideBullet();
-  }
-=======
   bool HasMarker() const { return HasOutsideMarker() || HasInsideMarker(); }
->>>>>>> upstream-releases
 
   /**
    * @return true if this frame has an inside ::marker frame.
@@ -354,17 +319,6 @@ class nsBlockFrame : public nsContainerFrame {
               const ReflowInput& aReflowInput,
               nsReflowStatus& aStatus) override;
 
-<<<<<<< HEAD
-  nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
-                            int32_t aModType) override;
-
-||||||| merged common ancestors
-  nsresult AttributeChanged(int32_t aNameSpaceID,
-                            nsAtom* aAttribute,
-                            int32_t aModType) override;
-
-=======
->>>>>>> upstream-releases
   /**
    * Move any frames on our overflow list to the end of our principal list.
    * @return true if there were any overflow frames
@@ -453,25 +407,10 @@ class nsBlockFrame : public nsContainerFrame {
   // be done at a slightly different time than our other pseudo-elements.
   void UpdateFirstLetterStyle(mozilla::ServoRestyleState& aRestyleState);
 
-<<<<<<< HEAD
- protected:
-  explicit nsBlockFrame(ComputedStyle* aStyle, ClassID aID = kClassID)
-      : nsContainerFrame(aStyle, aID),
-        mMinWidth(NS_INTRINSIC_WIDTH_UNKNOWN),
-        mPrefWidth(NS_INTRINSIC_WIDTH_UNKNOWN) {
-||||||| merged common ancestors
-protected:
-  explicit nsBlockFrame(ComputedStyle* aStyle, ClassID aID = kClassID)
-    : nsContainerFrame(aStyle, aID)
-    , mMinWidth(NS_INTRINSIC_WIDTH_UNKNOWN)
-    , mPrefWidth(NS_INTRINSIC_WIDTH_UNKNOWN)
-  {
-=======
  protected:
   explicit nsBlockFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                         ClassID aID = kClassID)
       : nsContainerFrame(aStyle, aPresContext, aID) {
->>>>>>> upstream-releases
 #ifdef DEBUG
     InitDebugFlags();
 #endif
@@ -635,27 +574,9 @@ protected:
     return false;
   }
 
-<<<<<<< HEAD
-  virtual bool RenumberChildFrames(int32_t* aOrdinal, int32_t aDepth,
-                                   int32_t aIncrement,
-                                   bool aForCounting) override;
-
-||||||| merged common ancestors
-  virtual bool RenumberChildFrames(int32_t* aOrdinal,
-                                   int32_t aDepth,
-                                   int32_t aIncrement,
-                                   bool aForCounting) override;
-
-=======
->>>>>>> upstream-releases
   // @see nsIFrame::AddSizeOfExcludingThisForTree
   void AddSizeOfExcludingThisForTree(nsWindowSizes&) const override;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Clears any -webkit-line-clamp ellipsis on a line in this block or one
    * of its descendants.
@@ -663,7 +584,6 @@ protected:
   void ClearLineClampEllipsis();
 
  protected:
->>>>>>> upstream-releases
   /** @see DoRemoveFrame */
   void DoRemoveFrameInternal(nsIFrame* aDeletedFrame, uint32_t aFlags,
                              PostDestroyData& data);
@@ -756,21 +676,6 @@ protected:
   // Methods for line reflow
   /**
    * Reflow a line.
-<<<<<<< HEAD
-   *
-   * @param aState
-   *   the current reflow state
-   * @param aLine
-   *   the line to reflow.  can contain a single block frame or contain 1 or
-   *   more inline frames.
-   * @param aKeepReflowGoing [OUT]
-   *   indicates whether the caller should continue to reflow more lines
-||||||| merged common ancestors
-   * @param aState           the current reflow state
-   * @param aLine            the line to reflow.  can contain a single block frame
-   *                         or contain 1 or more inline frames.
-   * @param aKeepReflowGoing [OUT] indicates whether the caller should continue to reflow more lines
-=======
    *
    * @param aState
    *   the current reflow input
@@ -779,7 +684,6 @@ protected:
    *   more inline frames.
    * @param aKeepReflowGoing [OUT]
    *   indicates whether the caller should continue to reflow more lines
->>>>>>> upstream-releases
    */
   void ReflowLine(BlockReflowInput& aState, LineIterator aLine,
                   bool* aKeepReflowGoing);
@@ -922,18 +826,8 @@ protected:
   //----------------------------------------
   // List handling kludge
 
-<<<<<<< HEAD
-  void ReflowBullet(nsIFrame* aBulletFrame, BlockReflowInput& aState,
-                    ReflowOutput& aMetrics, nscoord aLineTop);
-||||||| merged common ancestors
-  void ReflowBullet(nsIFrame* aBulletFrame,
-                    BlockReflowInput& aState,
-                    ReflowOutput& aMetrics,
-                    nscoord aLineTop);
-=======
   void ReflowOutsideMarker(nsIFrame* aMarkerFrame, BlockReflowInput& aState,
                            ReflowOutput& aMetrics, nscoord aLineTop);
->>>>>>> upstream-releases
 
   //----------------------------------------
 
@@ -1008,23 +902,6 @@ protected:
   // Remove and return the pushed floats list.
   nsFrameList* RemovePushedFloats();
 
-<<<<<<< HEAD
-  // Resolve a ComputedStyle for our bullet frame.  aType should be
-  // mozListBullet or mozListNumber.  Passing in the style set is an
-  // optimization, because all callsites have it.
-  already_AddRefed<ComputedStyle> ResolveBulletStyle(
-      mozilla::CSSPseudoElementType aType, mozilla::ServoStyleSet* aStyleSet);
-
-||||||| merged common ancestors
-  // Resolve a ComputedStyle for our bullet frame.  aType should be
-  // mozListBullet or mozListNumber.  Passing in the style set is an
-  // optimization, because all callsites have it.
-  already_AddRefed<ComputedStyle> ResolveBulletStyle(
-    mozilla::CSSPseudoElementType aType,
-    mozilla::ServoStyleSet* aStyleSet);
-
-=======
->>>>>>> upstream-releases
 #ifdef DEBUG
   void VerifyLines(bool aFinalCheckOK);
   void VerifyOverflowSituation();

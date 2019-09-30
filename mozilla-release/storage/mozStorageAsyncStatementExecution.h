@@ -64,23 +64,10 @@ class AsyncExecuteStatements final : public nsIRunnable,
    * @param _stmt
    *        The handle to control the execution of the statements.
    */
-<<<<<<< HEAD
-  static nsresult execute(StatementDataArray &aStatements,
-                          Connection *aConnection, sqlite3 *aNativeConnection,
-                          mozIStorageStatementCallback *aCallback,
-                          mozIStoragePendingStatement **_stmt);
-||||||| merged common ancestors
-  static nsresult execute(StatementDataArray &aStatements,
-                          Connection *aConnection,
-                          sqlite3 *aNativeConnection,
-                          mozIStorageStatementCallback *aCallback,
-                          mozIStoragePendingStatement **_stmt);
-=======
   static nsresult execute(StatementDataArray& aStatements,
                           Connection* aConnection, sqlite3* aNativeConnection,
                           mozIStorageStatementCallback* aCallback,
                           mozIStoragePendingStatement** _stmt);
->>>>>>> upstream-releases
 
   /**
    * Indicates when events on the calling thread should run or not.  Certain
@@ -98,24 +85,6 @@ class AsyncExecuteStatements final : public nsIRunnable,
    * the calling thread.
    */
   nsresult notifyCompleteOnCallingThread();
-<<<<<<< HEAD
-  nsresult notifyErrorOnCallingThread(mozIStorageError *aError);
-  nsresult notifyResultsOnCallingThread(ResultSet *aResultSet);
-
- private:
-  AsyncExecuteStatements(StatementDataArray &aStatements,
-                         Connection *aConnection, sqlite3 *aNativeConnection,
-                         mozIStorageStatementCallback *aCallback);
-||||||| merged common ancestors
-  nsresult notifyErrorOnCallingThread(mozIStorageError *aError);
-  nsresult notifyResultsOnCallingThread(ResultSet *aResultSet);
-
-private:
-  AsyncExecuteStatements(StatementDataArray &aStatements,
-                         Connection *aConnection,
-                         sqlite3 *aNativeConnection,
-                         mozIStorageStatementCallback *aCallback);
-=======
   nsresult notifyErrorOnCallingThread(mozIStorageError* aError);
   nsresult notifyResultsOnCallingThread(ResultSet* aResultSet);
 
@@ -123,7 +92,6 @@ private:
   AsyncExecuteStatements(StatementDataArray& aStatements,
                          Connection* aConnection, sqlite3* aNativeConnection,
                          mozIStorageStatementCallback* aCallback);
->>>>>>> upstream-releases
   ~AsyncExecuteStatements();
 
   /**

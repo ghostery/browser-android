@@ -15,21 +15,6 @@
 #include "MediaSink.h"
 
 namespace mozilla {
-<<<<<<< HEAD
-class MediaData;
-template <class T>
-class MediaQueue;
-
-namespace media {
-
-||||||| merged common ancestors
-class MediaData;
-template <class T> class MediaQueue;
-
-namespace media {
-
-=======
->>>>>>> upstream-releases
 class AudioSink;
 class MediaData;
 template <class T>
@@ -59,29 +44,6 @@ class AudioSinkWrapper : public MediaSink {
 
  public:
   template <typename Function>
-<<<<<<< HEAD
-  AudioSinkWrapper(AbstractThread* aOwnerThread,
-                   const MediaQueue<AudioData>& aAudioQueue,
-                   const Function& aFunc)
-      : mOwnerThread(aOwnerThread),
-        mCreator(new CreatorImpl<Function>(aFunc)),
-        mIsStarted(false)
-        // Give an invalid value to facilitate debug if used before playback
-        // starts.
-        ,
-        mPlayDuration(TimeUnit::Invalid()),
-        mAudioEnded(true),
-        mAudioQueue(aAudioQueue) {}
-||||||| merged common ancestors
-  AudioSinkWrapper(AbstractThread* aOwnerThread, const Function& aFunc)
-    : mOwnerThread(aOwnerThread)
-    , mCreator(new CreatorImpl<Function>(aFunc))
-    , mIsStarted(false)
-    // Give an invalid value to facilitate debug if used before playback starts.
-    , mPlayDuration(TimeUnit::Invalid())
-    , mAudioEnded(true)
-  {}
-=======
   AudioSinkWrapper(AbstractThread* aOwnerThread,
                    const MediaQueue<AudioData>& aAudioQueue,
                    const Function& aFunc)
@@ -93,7 +55,6 @@ class AudioSinkWrapper : public MediaSink {
         mPlayDuration(media::TimeUnit::Invalid()),
         mAudioEnded(true),
         mAudioQueue(aAudioQueue) {}
->>>>>>> upstream-releases
 
   const PlaybackParams& GetPlaybackParams() const override;
   void SetPlaybackParams(const PlaybackParams& aParams) override;
@@ -134,15 +95,8 @@ class AudioSinkWrapper : public MediaSink {
   const RefPtr<AbstractThread> mOwnerThread;
   UniquePtr<Creator> mCreator;
   UniquePtr<AudioSink> mAudioSink;
-<<<<<<< HEAD
-  // Will only exist when media has an audio track.
-  RefPtr<GenericPromise> mEndPromise;
-||||||| merged common ancestors
-  RefPtr<GenericPromise> mEndPromise;
-=======
   // Will only exist when media has an audio track.
   RefPtr<EndedPromise> mEndedPromise;
->>>>>>> upstream-releases
 
   bool mIsStarted;
   PlaybackParams mParams;
@@ -151,25 +105,10 @@ class AudioSinkWrapper : public MediaSink {
   TimeUnit mPlayDuration;
 
   bool mAudioEnded;
-<<<<<<< HEAD
-  MozPromiseRequestHolder<GenericPromise> mAudioSinkPromise;
-  const MediaQueue<AudioData>& mAudioQueue;
-||||||| merged common ancestors
-  MozPromiseRequestHolder<GenericPromise> mAudioSinkPromise;
-=======
   MozPromiseRequestHolder<EndedPromise> mAudioSinkEndedPromise;
   const MediaQueue<AudioData>& mAudioQueue;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-}  // namespace media
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace media
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // AudioSinkWrapper_h_

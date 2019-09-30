@@ -121,23 +121,6 @@ async function testHexIncrements(view) {
   const hexColorPropEditor = idRuleEditor.rule.textProps[2].editor;
 
   await runIncrementTest(hexColorPropEditor, view, {
-<<<<<<< HEAD
-    1: {start: "#CCCCCC", end: "#CDCDCD", selectAll: true},
-    2: {shift: true, start: "#CCCCCC", end: "#DCDCDC", selectAll: true},
-    3: {start: "#CCCCCC", end: "#CDCCCC", selection: [1, 3]},
-    4: {shift: true, start: "#CCCCCC", end: "#DCCCCC", selection: [1, 3]},
-    5: {start: "#FFFFFF", end: "#FFFFFF", selectAll: true},
-    6: {down: true, shift: true, start: "#000000", end: "#000000",
-        selectAll: true},
-||||||| merged common ancestors
-    1: {start: "#CCCCCC", end: "#CDCDCD", selectAll: true},
-    2: {shift: true, start: "#CCCCCC", end: "#DCDCDC", selectAll: true},
-    3: {start: "#CCCCCC", end: "#CDCCCC", selection: [1, 3]},
-    4: {shift: true, start: "#CCCCCC", end: "#DCCCCC", selection: [1, 3]},
-    5: {start: "#FFFFFF", end: "#FFFFFF", selectAll: true},
-    6: {down: true, shift: true, start: "#000000", end: "#000000",
-        selectAll: true}
-=======
     1: { start: "#CCCCCC", end: "#CDCDCD", selectAll: true },
     2: { shift: true, start: "#CCCCCC", end: "#DCDCDC", selectAll: true },
     3: { start: "#CCCCCC", end: "#CDCCCC", selection: [1, 3] },
@@ -150,7 +133,6 @@ async function testHexIncrements(view) {
       end: "#000000",
       selectAll: true,
     },
->>>>>>> upstream-releases
   });
 }
 
@@ -161,23 +143,6 @@ async function testAlphaHexIncrements(view) {
   const hexColorPropEditor = idRuleEditor.rule.textProps[2].editor;
 
   await runIncrementTest(hexColorPropEditor, view, {
-<<<<<<< HEAD
-    1: {start: "#CCCCCCAA", end: "#CDCDCDAB", selectAll: true},
-    2: {shift: true, start: "#CCCCCCAA", end: "#DCDCDCBA", selectAll: true},
-    3: {start: "#CCCCCCAA", end: "#CDCCCCAA", selection: [1, 3]},
-    4: {shift: true, start: "#CCCCCCAA", end: "#DCCCCCAA", selection: [1, 3]},
-    5: {start: "#FFFFFFFF", end: "#FFFFFFFF", selectAll: true},
-    6: {down: true, shift: true, start: "#00000000", end: "#00000000",
-        selectAll: true},
-||||||| merged common ancestors
-    1: {start: "#CCCCCCAA", end: "#CDCDCDAB", selectAll: true},
-    2: {shift: true, start: "#CCCCCCAA", end: "#DCDCDCBA", selectAll: true},
-    3: {start: "#CCCCCCAA", end: "#CDCCCCAA", selection: [1, 3]},
-    4: {shift: true, start: "#CCCCCCAA", end: "#DCCCCCAA", selection: [1, 3]},
-    5: {start: "#FFFFFFFF", end: "#FFFFFFFF", selectAll: true},
-    6: {down: true, shift: true, start: "#00000000", end: "#00000000",
-        selectAll: true}
-=======
     1: { start: "#CCCCCCAA", end: "#CDCDCDAB", selectAll: true },
     2: { shift: true, start: "#CCCCCCAA", end: "#DCDCDCBA", selectAll: true },
     3: { start: "#CCCCCCAA", end: "#CDCCCCAA", selection: [1, 3] },
@@ -190,7 +155,6 @@ async function testAlphaHexIncrements(view) {
       end: "#00000000",
       selectAll: true,
     },
->>>>>>> upstream-releases
   });
 }
 
@@ -201,27 +165,6 @@ async function testRgbIncrements(view) {
   const rgbColorPropEditor = idRuleEditor.rule.textProps[3].editor;
 
   await runIncrementTest(rgbColorPropEditor, view, {
-<<<<<<< HEAD
-    1: {start: "rgb(0,0,0)", end: "rgb(0,1,0)", selection: [6, 7]},
-    2: {shift: true, start: "rgb(0,0,0)", end: "rgb(0,10,0)",
-        selection: [6, 7]},
-    3: {start: "rgb(0,255,0)", end: "rgb(0,255,0)", selection: [6, 9]},
-    4: {shift: true, start: "rgb(0,250,0)", end: "rgb(0,255,0)",
-        selection: [6, 9]},
-    5: {down: true, start: "rgb(0,0,0)", end: "rgb(0,0,0)", selection: [6, 7]},
-    6: {down: true, shift: true, start: "rgb(0,5,0)", end: "rgb(0,0,0)",
-        selection: [6, 7]},
-||||||| merged common ancestors
-    1: {start: "rgb(0,0,0)", end: "rgb(0,1,0)", selection: [6, 7]},
-    2: {shift: true, start: "rgb(0,0,0)", end: "rgb(0,10,0)",
-        selection: [6, 7]},
-    3: {start: "rgb(0,255,0)", end: "rgb(0,255,0)", selection: [6, 9]},
-    4: {shift: true, start: "rgb(0,250,0)", end: "rgb(0,255,0)",
-        selection: [6, 9]},
-    5: {down: true, start: "rgb(0,0,0)", end: "rgb(0,0,0)", selection: [6, 7]},
-    6: {down: true, shift: true, start: "rgb(0,5,0)", end: "rgb(0,0,0)",
-        selection: [6, 7]}
-=======
     1: { start: "rgb(0,0,0)", end: "rgb(0,1,0)", selection: [6, 7] },
     2: {
       shift: true,
@@ -249,7 +192,6 @@ async function testRgbIncrements(view) {
       end: "rgb(0,0,0)",
       selection: [6, 7],
     },
->>>>>>> upstream-releases
   });
 }
 
@@ -260,41 +202,6 @@ async function testShorthandIncrements(view) {
   const paddingPropEditor = idRuleEditor.rule.textProps[1].editor;
 
   await runIncrementTest(paddingPropEditor, view, {
-<<<<<<< HEAD
-    1: {start: "0px 0px 0px 0px", end: "0px 1px 0px 0px", selection: [4, 7]},
-    2: {shift: true, start: "0px 0px 0px 0px", end: "0px 10px 0px 0px",
-        selection: [4, 7]},
-    3: {start: "0px 0px 0px 0px", end: "1px 0px 0px 0px", selectAll: true},
-    4: {shift: true, start: "0px 0px 0px 0px", end: "10px 0px 0px 0px",
-        selectAll: true},
-    5: {down: true, start: "0px 0px 0px 0px", end: "0px 0px -1px 0px",
-        selection: [8, 11]},
-    6: {down: true, shift: true, start: "0px 0px 0px 0px",
-        end: "-10px 0px 0px 0px", selectAll: true},
-    7: {up: true, start: "0.1em .1em 0em 0em", end: "0.1em 1.1em 0em 0em",
-        selection: [6, 9]},
-    8: {up: true, ...getSmallIncrementKey(), start: "0.1em .9em 0em 0em",
-        end: "0.1em 1em 0em 0em", selection: [6, 9]},
-    9: {up: true, shift: true, start: "0.2em .2em 0em 0em",
-        end: "0.2em 10.2em 0em 0em", selection: [6, 9]},
-||||||| merged common ancestors
-    1: {start: "0px 0px 0px 0px", end: "0px 1px 0px 0px", selection: [4, 7]},
-    2: {shift: true, start: "0px 0px 0px 0px", end: "0px 10px 0px 0px",
-        selection: [4, 7]},
-    3: {start: "0px 0px 0px 0px", end: "1px 0px 0px 0px", selectAll: true},
-    4: {shift: true, start: "0px 0px 0px 0px", end: "10px 0px 0px 0px",
-        selectAll: true},
-    5: {down: true, start: "0px 0px 0px 0px", end: "0px 0px -1px 0px",
-        selection: [8, 11]},
-    6: {down: true, shift: true, start: "0px 0px 0px 0px",
-        end: "-10px 0px 0px 0px", selectAll: true},
-    7: {up: true, start: "0.1em .1em 0em 0em", end: "0.1em 1.1em 0em 0em",
-        selection: [6, 9]},
-    8: {up: true, ...getSmallIncrementKey(), start: "0.1em .9em 0em 0em",
-        end: "0.1em 1em 0em 0em", selection: [6, 9]},
-    9: {up: true, shift: true, start: "0.2em .2em 0em 0em",
-        end: "0.2em 10.2em 0em 0em", selection: [6, 9]}
-=======
     1: { start: "0px 0px 0px 0px", end: "0px 1px 0px 0px", selection: [4, 7] },
     2: {
       shift: true,
@@ -342,7 +249,6 @@ async function testShorthandIncrements(view) {
       end: "0.2em 10.2em 0em 0em",
       selection: [6, 9],
     },
->>>>>>> upstream-releases
   });
 }
 
@@ -353,49 +259,6 @@ async function testOddCases(view) {
   const marginPropEditor = idRuleEditor.rule.textProps[0].editor;
 
   await runIncrementTest(marginPropEditor, view, {
-<<<<<<< HEAD
-    1: {start: "98.7%", end: "99.7%", selection: [3, 3]},
-    2: {...getSmallIncrementKey(), start: "98.7%", end: "98.8%", selection: [3, 3]},
-    3: {start: "0", end: "1px"},
-    4: {down: true, start: "0", end: "-1px"},
-    5: {start: "'a=-1'", end: "'a=0'", selection: [4, 4]},
-    6: {start: "0 -1px", end: "0 0px", selection: [2, 2]},
-    7: {start: "url(-1)", end: "url(-1)", selection: [4, 4]},
-    8: {start: "url('test1.1.png')", end: "url('test1.2.png')",
-        selection: [11, 11]},
-    9: {start: "url('test1.png')", end: "url('test2.png')", selection: [9, 9]},
-    10: {shift: true, start: "url('test1.1.png')", end: "url('test11.1.png')",
-         selection: [9, 9]},
-    11: {down: true, start: "url('test-1.png')", end: "url('test-2.png')",
-         selection: [9, 11]},
-    12: {start: "url('test1.1.png')", end: "url('test1.2.png')",
-         selection: [11, 12]},
-    13: {down: true, ...getSmallIncrementKey(), start: "url('test-0.png')",
-         end: "url('test--0.1.png')", selection: [10, 11]},
-    14: {...getSmallIncrementKey(), start: "url('test--0.1.png')",
-         end: "url('test-0.png')", selection: [10, 14]},
-||||||| merged common ancestors
-    1: {start: "98.7%", end: "99.7%", selection: [3, 3]},
-    2: {...getSmallIncrementKey(), start: "98.7%", end: "98.8%", selection: [3, 3]},
-    3: {start: "0", end: "1px"},
-    4: {down: true, start: "0", end: "-1px"},
-    5: {start: "'a=-1'", end: "'a=0'", selection: [4, 4]},
-    6: {start: "0 -1px", end: "0 0px", selection: [2, 2]},
-    7: {start: "url(-1)", end: "url(-1)", selection: [4, 4]},
-    8: {start: "url('test1.1.png')", end: "url('test1.2.png')",
-        selection: [11, 11]},
-    9: {start: "url('test1.png')", end: "url('test2.png')", selection: [9, 9]},
-    10: {shift: true, start: "url('test1.1.png')", end: "url('test11.1.png')",
-         selection: [9, 9]},
-    11: {down: true, start: "url('test-1.png')", end: "url('test-2.png')",
-         selection: [9, 11]},
-    12: {start: "url('test1.1.png')", end: "url('test1.2.png')",
-         selection: [11, 12]},
-    13: {down: true, ...getSmallIncrementKey(), start: "url('test-0.png')",
-         end: "url('test--0.1.png')", selection: [10, 11]},
-    14: {...getSmallIncrementKey(), start: "url('test--0.1.png')",
-         end: "url('test-0.png')", selection: [10, 14]}
-=======
     1: { start: "98.7%", end: "99.7%", selection: [3, 3] },
     2: {
       ...getSmallIncrementKey(),
@@ -448,7 +311,6 @@ async function testOddCases(view) {
       end: "url('test-0.png')",
       selection: [10, 14],
     },
->>>>>>> upstream-releases
   });
 }
 

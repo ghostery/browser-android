@@ -102,18 +102,9 @@ void FocusState::Update(LayersId aRootLayerTreeId,
       FocusState& mFocusState;
       const uint64_t mSequenceNumber;
 
-<<<<<<< HEAD
-      bool match(const FocusTarget::NoFocusTarget& aNoFocusTarget) {
-        FS_LOG("Setting target to nil (reached a nil target) with seq=%" PRIu64
-               "\n",
-||||||| merged common ancestors
-      bool match(const FocusTarget::NoFocusTarget& aNoFocusTarget) {
-        FS_LOG("Setting target to nil (reached a nil target) with seq=%" PRIu64 "\n",
-=======
       bool operator()(const FocusTarget::NoFocusTarget& aNoFocusTarget) {
         FS_LOG("Setting target to nil (reached a nil target) with seq=%" PRIu64
                "\n",
->>>>>>> upstream-releases
                mSequenceNumber);
 
         // Mark what sequence number this target has for debugging purposes so
@@ -150,22 +141,10 @@ void FocusState::Update(LayersId aRootLayerTreeId,
         return false;
       }
 
-<<<<<<< HEAD
-      bool match(const FocusTarget::ScrollTargets& aScrollTargets) {
-        FS_LOG("Setting target to h=%" PRIu64 ", v=%" PRIu64
-               ", and seq=%" PRIu64 "\n",
-               aScrollTargets.mHorizontal, aScrollTargets.mVertical,
-||||||| merged common ancestors
-      bool match(const FocusTarget::ScrollTargets& aScrollTargets) {
-        FS_LOG("Setting target to h=%" PRIu64 ", v=%" PRIu64 ", and seq=%" PRIu64 "\n",
-               aScrollTargets.mHorizontal,
-               aScrollTargets.mVertical,
-=======
       bool operator()(const FocusTarget::ScrollTargets& aScrollTargets) {
         FS_LOG("Setting target to h=%" PRIu64 ", v=%" PRIu64
                ", and seq=%" PRIu64 "\n",
                aScrollTargets.mHorizontal, aScrollTargets.mVertical,
->>>>>>> upstream-releases
                mSequenceNumber);
 
         // This is the global focus target

@@ -15,14 +15,7 @@ class nsIRunnable;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-enum class EventPriority {
-||||||| merged common ancestors
-enum class EventPriority
-{
-=======
 enum class EventQueuePriority {
->>>>>>> upstream-releases
   High,
   Input,
   MediumHigh,
@@ -62,16 +55,8 @@ class AbstractEventQueue {
   // implementation supports priorities, then this should be the same priority
   // that the event was pushed with. aPriority may be null. This should return
   // null if the queue is non-empty but the event in front is not ready to run.
-<<<<<<< HEAD
-  virtual already_AddRefed<nsIRunnable> GetEvent(
-      EventPriority* aPriority, const MutexAutoLock& aProofOfLock) = 0;
-||||||| merged common ancestors
-  virtual already_AddRefed<nsIRunnable> GetEvent(EventPriority* aPriority,
-                                                 const MutexAutoLock& aProofOfLock) = 0;
-=======
   virtual already_AddRefed<nsIRunnable> GetEvent(
       EventQueuePriority* aPriority, const MutexAutoLock& aProofOfLock) = 0;
->>>>>>> upstream-releases
 
   // Returns true if the queue is empty. Implies !HasReadyEvent().
   virtual bool IsEmpty(const MutexAutoLock& aProofOfLock) = 0;

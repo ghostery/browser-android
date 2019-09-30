@@ -45,18 +45,8 @@
 
 #  include "nsString.h"
 
-<<<<<<< HEAD
-bool mozilla::fallocate(PRFileDesc* aFD, int64_t aLength) {
-#if defined(HAVE_POSIX_FALLOCATE)
-||||||| merged common ancestors
-bool
-mozilla::fallocate(PRFileDesc* aFD, int64_t aLength)
-{
-#if defined(HAVE_POSIX_FALLOCATE)
-=======
 bool mozilla::fallocate(PRFileDesc* aFD, int64_t aLength) {
 #  if defined(HAVE_POSIX_FALLOCATE)
->>>>>>> upstream-releases
   return posix_fallocate(PR_FileDesc2NativeHandle(aFD), 0, aLength) == 0;
 #  elif defined(XP_WIN)
   int64_t oldpos = PR_Seek64(aFD, 0, PR_SEEK_CUR);
@@ -139,18 +129,8 @@ bool mozilla::fallocate(PRFileDesc* aFD, int64_t aLength) {
   return false;
 }
 
-<<<<<<< HEAD
-void mozilla::ReadAheadLib(nsIFile* aFile) {
-#if defined(XP_WIN)
-||||||| merged common ancestors
-void
-mozilla::ReadAheadLib(nsIFile* aFile)
-{
-#if defined(XP_WIN)
-=======
 void mozilla::ReadAheadLib(nsIFile* aFile) {
 #  if defined(XP_WIN)
->>>>>>> upstream-releases
   nsAutoString path;
   if (!aFile || NS_FAILED(aFile->GetPath(path))) {
     return;
@@ -165,21 +145,9 @@ void mozilla::ReadAheadLib(nsIFile* aFile) {
 #  endif
 }
 
-<<<<<<< HEAD
-void mozilla::ReadAheadFile(nsIFile* aFile, const size_t aOffset,
-                            const size_t aCount, mozilla::filedesc_t* aOutFd) {
-#if defined(XP_WIN)
-||||||| merged common ancestors
-void
-mozilla::ReadAheadFile(nsIFile* aFile, const size_t aOffset,
-                       const size_t aCount, mozilla::filedesc_t* aOutFd)
-{
-#if defined(XP_WIN)
-=======
 void mozilla::ReadAheadFile(nsIFile* aFile, const size_t aOffset,
                             const size_t aCount, mozilla::filedesc_t* aOutFd) {
 #  if defined(XP_WIN)
->>>>>>> upstream-releases
   nsAutoString path;
   if (!aFile || NS_FAILED(aFile->GetPath(path))) {
     return;
@@ -194,20 +162,9 @@ void mozilla::ReadAheadFile(nsIFile* aFile, const size_t aOffset,
 #  endif
 }
 
-<<<<<<< HEAD
-mozilla::PathString mozilla::GetLibraryName(mozilla::pathstr_t aDirectory,
-                                            const char* aLib) {
-#ifdef XP_WIN
-||||||| merged common ancestors
-mozilla::PathString
-mozilla::GetLibraryName(mozilla::pathstr_t aDirectory, const char* aLib)
-{
-#ifdef XP_WIN
-=======
 mozilla::PathString mozilla::GetLibraryName(mozilla::pathstr_t aDirectory,
                                             const char* aLib) {
 #  ifdef XP_WIN
->>>>>>> upstream-releases
   nsAutoString fullName;
   if (aDirectory) {
     fullName.Assign(aDirectory);
@@ -229,20 +186,9 @@ mozilla::PathString mozilla::GetLibraryName(mozilla::pathstr_t aDirectory,
 #  endif
 }
 
-<<<<<<< HEAD
-mozilla::PathString mozilla::GetLibraryFilePathname(mozilla::pathstr_t aName,
-                                                    PRFuncPtr aAddr) {
-#ifdef XP_WIN
-||||||| merged common ancestors
-mozilla::PathString
-mozilla::GetLibraryFilePathname(mozilla::pathstr_t aName, PRFuncPtr aAddr)
-{
-#ifdef XP_WIN
-=======
 mozilla::PathString mozilla::GetLibraryFilePathname(mozilla::pathstr_t aName,
                                                     PRFuncPtr aAddr) {
 #  ifdef XP_WIN
->>>>>>> upstream-releases
   HMODULE handle = GetModuleHandleW(char16ptr_t(aName));
   if (!handle) {
     return EmptyString();
@@ -297,48 +243,6 @@ static const uint32_t CPU_TYPE = CPU_TYPE_X86_64;
 static const uint32_t CPU_TYPE = CPU_TYPE_POWERPC;
 #  elif defined(__ppc64__)
 static const uint32_t CPU_TYPE = CPU_TYPE_POWERPC64;
-<<<<<<< HEAD
-#else
-#error Unsupported CPU type
-#endif
-
-#ifdef __LP64__
-#undef LC_SEGMENT
-#define LC_SEGMENT LC_SEGMENT_64
-#undef MH_MAGIC
-#define MH_MAGIC MH_MAGIC_64
-#define cpu_mach_header mach_header_64
-#define segment_command segment_command_64
-#else
-#define cpu_mach_header mach_header
-#endif
-
-class ScopedMMap {
- public:
-  explicit ScopedMMap(const char* aFilePath) : buf(nullptr) {
-||||||| merged common ancestors
-#else
-#error Unsupported CPU type
-#endif
-
-#ifdef __LP64__
-#undef LC_SEGMENT
-#define LC_SEGMENT LC_SEGMENT_64
-#undef MH_MAGIC
-#define MH_MAGIC MH_MAGIC_64
-#define cpu_mach_header mach_header_64
-#define segment_command segment_command_64
-#else
-#define cpu_mach_header mach_header
-#endif
-
-class ScopedMMap
-{
-public:
-  explicit ScopedMMap(const char* aFilePath)
-    : buf(nullptr)
-  {
-=======
 #  else
 #    error Unsupported CPU type
 #  endif
@@ -357,7 +261,6 @@ public:
 class ScopedMMap {
  public:
   explicit ScopedMMap(const char* aFilePath) : buf(nullptr) {
->>>>>>> upstream-releases
     fd = open(aFilePath, O_RDONLY);
     if (fd < 0) {
       return;

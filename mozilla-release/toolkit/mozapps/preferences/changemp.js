@@ -37,15 +37,7 @@ function process() {
     let msgBox = document.getElementById("message");
     if ((token.needsLogin() && token.needsUserInit) || !token.needsLogin()) {
       oldpwbox.setAttribute("hidden", "true");
-<<<<<<< HEAD
-      document.l10n.setAttributes(msgBox, "password-not-set");
-      msgBox.setAttribute("hidden", "false");
-||||||| merged common ancestors
-      msgBox.setAttribute("value", bundle.getString("password_not_set"));
-      msgBox.setAttribute("hidden", "false");
-=======
       msgBox.removeAttribute("hidden");
->>>>>>> upstream-releases
 
       if (!token.needsLogin()) {
         oldpwbox.setAttribute("inited", "empty");
@@ -72,17 +64,6 @@ function process() {
   checkPasswords();
 }
 
-<<<<<<< HEAD
-async function createAlert(titleL10nId, messageL10nId) {
-  const [title, message] = await document.l10n.formatValues([
-    {id: titleL10nId},
-    {id: messageL10nId},
-  ]);
-  Services.prompt.alert(window, title, message);
-}
-
-||||||| merged common ancestors
-=======
 async function createAlert(titleL10nId, messageL10nId) {
   const [title, message] = await document.l10n.formatValues([
     { id: titleL10nId },
@@ -91,22 +72,12 @@ async function createAlert(titleL10nId, messageL10nId) {
   Services.prompt.alert(window, title, message);
 }
 
->>>>>>> upstream-releases
 function setPassword() {
   var pk11db = Cc[nsPK11TokenDB].getService(nsIPK11TokenDB);
   var token = pk11db.getInternalKeyToken();
 
   var oldpwbox = document.getElementById("oldpw");
   var initpw = oldpwbox.getAttribute("inited");
-<<<<<<< HEAD
-
-  var success = false;
-||||||| merged common ancestors
-  var bundle = document.getElementById("bundlePreferences");
-
-  var success = false;
-=======
->>>>>>> upstream-releases
 
   if (initpw == "false" || initpw == "empty") {
     try {
@@ -129,18 +100,10 @@ function setPassword() {
             var secmoddb = Cc[nsPKCS11ModuleDB].getService(nsIPKCS11ModuleDB);
             if (secmoddb.isFIPSEnabled) {
               // empty passwords are not allowed in FIPS mode
-<<<<<<< HEAD
-              createAlert("pw-change-failed-title", "pw-change2empty-in-fips-mode");
-||||||| merged common ancestors
-              Services.prompt.alert(window,
-                                    bundle.getString("pw_change_failed_title"),
-                                    bundle.getString("pw_change2empty_in_fips_mode"));
-=======
               createAlert(
                 "pw-change-failed-title",
                 "pw-change2empty-in-fips-mode"
               );
->>>>>>> upstream-releases
               passok = 0;
             }
           }
@@ -167,20 +130,6 @@ function setPassword() {
       createAlert("pw-change-success-title", "pw-not-wanted");
     }
   }
-<<<<<<< HEAD
-
-  // Terminate dialog
-  if (success)
-    window.close();
-
-  return success;
-||||||| merged common ancestors
-
-  // Terminate dialog
-  if (success)
-    window.close();
-=======
->>>>>>> upstream-releases
 }
 
 function setPasswordStrength() {

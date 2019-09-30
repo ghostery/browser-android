@@ -667,52 +667,15 @@ void nsParser::HandleParserContinueEvent(nsParserContinueEvent* ev) {
 
 bool nsParser::IsInsertionPointDefined() { return false; }
 
-<<<<<<< HEAD
-void nsParser::PushDefinedInsertionPoint() {}
-||||||| merged common ancestors
-void
-nsParser::PushDefinedInsertionPoint()
-{
-}
-=======
 void nsParser::IncrementScriptNestingLevel() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void nsParser::PopDefinedInsertionPoint() {}
-||||||| merged common ancestors
-void
-nsParser::PopDefinedInsertionPoint()
-{
-}
-=======
 void nsParser::DecrementScriptNestingLevel() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void nsParser::MarkAsNotScriptCreated(const char* aCommand) {}
-||||||| merged common ancestors
-void
-nsParser::MarkAsNotScriptCreated(const char* aCommand)
-{
-}
-=======
 bool nsParser::HasNonzeroScriptNestingLevel() const { return false; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool nsParser::IsScriptCreated() { return false; }
-||||||| merged common ancestors
-bool
-nsParser::IsScriptCreated()
-{
-  return false;
-}
-=======
 void nsParser::MarkAsNotScriptCreated(const char* aCommand) {}
 
 bool nsParser::IsScriptCreated() { return false; }
->>>>>>> upstream-releases
 
 /**
  *  This is the main controlling routine in the parsing process.
@@ -1108,15 +1071,7 @@ nsresult nsParser::BuildModel() {
   These methods are used to talk to the netlib system...
  *******************************************************************/
 
-<<<<<<< HEAD
-nsresult nsParser::OnStartRequest(nsIRequest* request, nsISupports* aContext) {
-||||||| merged common ancestors
-nsresult
-nsParser::OnStartRequest(nsIRequest *request, nsISupports* aContext)
-{
-=======
 nsresult nsParser::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   MOZ_ASSERT(eNone == mParserContext->mStreamListenerState,
              "Parser's nsIStreamListener API was not setup "
              "correctly in constructor.");
@@ -1306,21 +1261,9 @@ static nsresult ParserWriteFunc(nsIInputStream* in, void* closure,
   return result;
 }
 
-<<<<<<< HEAD
-nsresult nsParser::OnDataAvailable(nsIRequest* request, nsISupports* aContext,
-                                   nsIInputStream* pIStream,
-                                   uint64_t sourceOffset, uint32_t aLength) {
-||||||| merged common ancestors
-nsresult
-nsParser::OnDataAvailable(nsIRequest *request, nsISupports* aContext,
-                          nsIInputStream *pIStream, uint64_t sourceOffset,
-                          uint32_t aLength)
-{
-=======
 nsresult nsParser::OnDataAvailable(nsIRequest* request,
                                    nsIInputStream* pIStream,
                                    uint64_t sourceOffset, uint32_t aLength) {
->>>>>>> upstream-releases
   MOZ_ASSERT((eOnStart == mParserContext->mStreamListenerState ||
               eOnDataAvail == mParserContext->mStreamListenerState),
              "Error: OnStartRequest() must be called before OnDataAvailable()");
@@ -1389,17 +1332,7 @@ nsresult nsParser::OnDataAvailable(nsIRequest* request,
  *  This is called by the networking library once the last block of data
  *  has been collected from the net.
  */
-<<<<<<< HEAD
-nsresult nsParser::OnStopRequest(nsIRequest* request, nsISupports* aContext,
-                                 nsresult status) {
-||||||| merged common ancestors
-nsresult
-nsParser::OnStopRequest(nsIRequest *request, nsISupports* aContext,
-                        nsresult status)
-{
-=======
 nsresult nsParser::OnStopRequest(nsIRequest* request, nsresult status) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   CParserContext* pc = mParserContext;

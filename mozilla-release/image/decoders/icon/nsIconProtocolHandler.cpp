@@ -40,7 +40,6 @@ nsIconProtocolHandler::GetDefaultPort(int32_t* result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
 nsIconProtocolHandler::AllowPort(int32_t port, const char* scheme,
                                  bool* _retval) {
   // don't override anything.
@@ -52,68 +51,12 @@ NS_IMETHODIMP
 nsIconProtocolHandler::GetProtocolFlags(uint32_t* result) {
   *result =
       URI_NORELATIVE | URI_NOAUTH | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE;
-||||||| merged common ancestors
-nsIconProtocolHandler::AllowPort(int32_t port,
-                                 const char* scheme,
-                                 bool* _retval)
-{
-    // don't override anything.
-    *_retval = false;
-    return NS_OK;
-}
-
-NS_IMETHODIMP
-nsIconProtocolHandler::GetProtocolFlags(uint32_t* result)
-{
-  *result = URI_NORELATIVE | URI_NOAUTH | URI_IS_UI_RESOURCE |
-            URI_IS_LOCAL_RESOURCE;
-=======
-nsIconProtocolHandler::AllowPort(int32_t port, const char* scheme,
-                                 bool* _retval) {
-  // don't override anything.
-  *_retval = false;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIconProtocolHandler::NewURI(const nsACString& aSpec,
-                              const char* aOriginCharset,  // ignored
-                              nsIURI* aBaseURI, nsIURI** result) {
-  return NS_MutateURI(new nsMozIconURI::Mutator())
-      .SetSpec(aSpec)
-      .Finalize(result);
-||||||| merged common ancestors
-nsIconProtocolHandler::NewURI(const nsACString& aSpec,
-                              const char* aOriginCharset, // ignored
-                              nsIURI* aBaseURI,
-                              nsIURI** result)
-{
-  return NS_MutateURI(new nsMozIconURI::Mutator())
-    .SetSpec(aSpec)
-    .Finalize(result);
-=======
-nsIconProtocolHandler::GetProtocolFlags(uint32_t* result) {
-  *result =
-      URI_NORELATIVE | URI_NOAUTH | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE;
-  return NS_OK;
->>>>>>> upstream-releases
-}
-
-NS_IMETHODIMP
-<<<<<<< HEAD
-nsIconProtocolHandler::NewChannel2(nsIURI* url, nsILoadInfo* aLoadInfo,
-                                   nsIChannel** result) {
-||||||| merged common ancestors
-nsIconProtocolHandler::NewChannel2(nsIURI* url,
-                                   nsILoadInfo* aLoadInfo,
-                                   nsIChannel** result)
-{
-=======
 nsIconProtocolHandler::NewChannel(nsIURI* url, nsILoadInfo* aLoadInfo,
                                   nsIChannel** result) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(url);
   nsIconChannel* channel = new nsIconChannel;
   if (!channel) {
@@ -138,19 +81,4 @@ nsIconProtocolHandler::NewChannel(nsIURI* url, nsILoadInfo* aLoadInfo,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsIconProtocolHandler::NewChannel(nsIURI* url, nsIChannel** result) {
-  return NewChannel2(url, nullptr, result);
-}
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsIconProtocolHandler::NewChannel(nsIURI* url, nsIChannel** result)
-{
-  return NewChannel2(url, nullptr, result);
-}
-
-=======
->>>>>>> upstream-releases
 ////////////////////////////////////////////////////////////////////////////////

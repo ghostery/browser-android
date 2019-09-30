@@ -1,21 +1,4 @@
-<<<<<<< HEAD
 #[macro_use]
-extern crate cranelift_entity;
-
-pub mod error;
-pub mod gen_registers;
-pub mod gen_types;
-pub mod isa;
-
-mod base;
-||||||| merged common ancestors
-pub mod error;
-pub mod gen_types;
-
-mod base;
-=======
-#[macro_use]
->>>>>>> upstream-releases
 mod cdsl;
 mod srcgen;
 

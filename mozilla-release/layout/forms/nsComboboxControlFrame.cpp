@@ -94,14 +94,7 @@ class nsComboButtonListener final : public nsIDOMEventListener {
  public:
   NS_DECL_ISUPPORTS
 
-<<<<<<< HEAD
-  NS_IMETHOD HandleEvent(dom::Event*) override {
-||||||| merged common ancestors
-  NS_IMETHOD HandleEvent(dom::Event*) override
-  {
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD HandleEvent(dom::Event*) override {
->>>>>>> upstream-releases
     mComboBox->ShowDropDown(!mComboBox->IsDroppedDown());
     return NS_OK;
   }
@@ -118,23 +111,11 @@ NS_IMPL_ISUPPORTS(nsComboButtonListener, nsIDOMEventListener)
 // static class data member for Bug 32920
 nsComboboxControlFrame* nsComboboxControlFrame::sFocused = nullptr;
 
-<<<<<<< HEAD
-nsComboboxControlFrame* NS_NewComboboxControlFrame(nsIPresShell* aPresShell,
-                                                   ComputedStyle* aStyle,
-                                                   nsFrameState aStateFlags) {
-  nsComboboxControlFrame* it = new (aPresShell) nsComboboxControlFrame(aStyle);
-||||||| merged common ancestors
-nsComboboxControlFrame*
-NS_NewComboboxControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle, nsFrameState aStateFlags)
-{
-  nsComboboxControlFrame* it = new (aPresShell) nsComboboxControlFrame(aStyle);
-=======
 nsComboboxControlFrame* NS_NewComboboxControlFrame(PresShell* aPresShell,
                                                    ComputedStyle* aStyle,
                                                    nsFrameState aStateFlags) {
   nsComboboxControlFrame* it = new (aPresShell)
       nsComboboxControlFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 
   if (it) {
     // set the state flags (if any are provided)
@@ -152,88 +133,18 @@ NS_IMPL_FRAMEARENA_HELPERS(nsComboboxControlFrame)
 //-----------------------------------------------------------
 #ifdef DO_REFLOW_COUNTER
 
-<<<<<<< HEAD
-#define MAX_REFLOW_CNT 1024
-static int32_t gTotalReqs = 0;
-;
-static int32_t gTotalReflows = 0;
-;
-||||||| merged common ancestors
-#define MAX_REFLOW_CNT 1024
-static int32_t gTotalReqs    = 0;;
-static int32_t gTotalReflows = 0;;
-=======
 #  define MAX_REFLOW_CNT 1024
 static int32_t gTotalReqs = 0;
 ;
 static int32_t gTotalReflows = 0;
 ;
->>>>>>> upstream-releases
 static int32_t gReflowControlCntRQ[MAX_REFLOW_CNT];
 static int32_t gReflowControlCnt[MAX_REFLOW_CNT];
 static int32_t gReflowInx = -1;
 
-<<<<<<< HEAD
-#define REFLOW_COUNTER() \
-  if (mReflowId > -1) gReflowControlCnt[mReflowId]++;
-||||||| merged common ancestors
-#define REFLOW_COUNTER() \
-  if (mReflowId > -1) \
-    gReflowControlCnt[mReflowId]++;
-=======
 #  define REFLOW_COUNTER() \
     if (mReflowId > -1) gReflowControlCnt[mReflowId]++;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define REFLOW_COUNTER_REQUEST() \
-  if (mReflowId > -1) gReflowControlCntRQ[mReflowId]++;
-
-#define REFLOW_COUNTER_DUMP(__desc)                                            \
-  if (mReflowId > -1) {                                                        \
-    gTotalReqs += gReflowControlCntRQ[mReflowId];                              \
-    gTotalReflows += gReflowControlCnt[mReflowId];                             \
-    printf("** Id:%5d %s RF: %d RQ: %d   %d/%d  %5.2f\n", mReflowId, (__desc), \
-           gReflowControlCnt[mReflowId], gReflowControlCntRQ[mReflowId],       \
-           gTotalReflows, gTotalReqs,                                          \
-           float(gTotalReflows) / float(gTotalReqs) * 100.0f);                 \
-  }
-
-#define REFLOW_COUNTER_INIT()           \
-  if (gReflowInx < MAX_REFLOW_CNT) {    \
-    gReflowInx++;                       \
-    mReflowId = gReflowInx;             \
-    gReflowControlCnt[mReflowId] = 0;   \
-    gReflowControlCntRQ[mReflowId] = 0; \
-  } else {                              \
-    mReflowId = -1;                     \
-  }
-||||||| merged common ancestors
-#define REFLOW_COUNTER_REQUEST() \
-  if (mReflowId > -1) \
-    gReflowControlCntRQ[mReflowId]++;
-
-#define REFLOW_COUNTER_DUMP(__desc) \
-  if (mReflowId > -1) {\
-    gTotalReqs    += gReflowControlCntRQ[mReflowId];\
-    gTotalReflows += gReflowControlCnt[mReflowId];\
-    printf("** Id:%5d %s RF: %d RQ: %d   %d/%d  %5.2f\n", \
-           mReflowId, (__desc), \
-           gReflowControlCnt[mReflowId], \
-           gReflowControlCntRQ[mReflowId],\
-           gTotalReflows, gTotalReqs, float(gTotalReflows)/float(gTotalReqs)*100.0f);\
-  }
-
-#define REFLOW_COUNTER_INIT() \
-  if (gReflowInx < MAX_REFLOW_CNT) { \
-    gReflowInx++; \
-    mReflowId = gReflowInx; \
-    gReflowControlCnt[mReflowId] = 0; \
-    gReflowControlCntRQ[mReflowId] = 0; \
-  } else { \
-    mReflowId = -1; \
-  }
-=======
 #  define REFLOW_COUNTER_REQUEST() \
     if (mReflowId > -1) gReflowControlCntRQ[mReflowId]++;
 
@@ -256,28 +167,14 @@ static int32_t gReflowInx = -1;
     } else {                              \
       mReflowId = -1;                     \
     }
->>>>>>> upstream-releases
 
 // reflow messages
-<<<<<<< HEAD
-#define REFLOW_DEBUG_MSG(_msg1) printf((_msg1))
-#define REFLOW_DEBUG_MSG2(_msg1, _msg2) printf((_msg1), (_msg2))
-#define REFLOW_DEBUG_MSG3(_msg1, _msg2, _msg3) printf((_msg1), (_msg2), (_msg3))
-#define REFLOW_DEBUG_MSG4(_msg1, _msg2, _msg3, _msg4) \
-  printf((_msg1), (_msg2), (_msg3), (_msg4))
-||||||| merged common ancestors
-#define REFLOW_DEBUG_MSG(_msg1) printf((_msg1))
-#define REFLOW_DEBUG_MSG2(_msg1, _msg2) printf((_msg1), (_msg2))
-#define REFLOW_DEBUG_MSG3(_msg1, _msg2, _msg3) printf((_msg1), (_msg2), (_msg3))
-#define REFLOW_DEBUG_MSG4(_msg1, _msg2, _msg3, _msg4) printf((_msg1), (_msg2), (_msg3), (_msg4))
-=======
 #  define REFLOW_DEBUG_MSG(_msg1) printf((_msg1))
 #  define REFLOW_DEBUG_MSG2(_msg1, _msg2) printf((_msg1), (_msg2))
 #  define REFLOW_DEBUG_MSG3(_msg1, _msg2, _msg3) \
     printf((_msg1), (_msg2), (_msg3))
 #  define REFLOW_DEBUG_MSG4(_msg1, _msg2, _msg3, _msg4) \
     printf((_msg1), (_msg2), (_msg3), (_msg4))
->>>>>>> upstream-releases
 
 #else  //-------------
 
@@ -286,41 +183,23 @@ static int32_t gReflowInx = -1;
 #  define REFLOW_COUNTER_DUMP(__desc)
 #  define REFLOW_COUNTER_INIT()
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 #  define REFLOW_DEBUG_MSG(_msg)
 #  define REFLOW_DEBUG_MSG2(_msg1, _msg2)
 #  define REFLOW_DEBUG_MSG3(_msg1, _msg2, _msg3)
 #  define REFLOW_DEBUG_MSG4(_msg1, _msg2, _msg3, _msg4)
 
->>>>>>> upstream-releases
 #endif
 
 //------------------------------------------
 // This is for being VERY noisy
 //------------------------------------------
 #ifdef DO_VERY_NOISY
-<<<<<<< HEAD
-#define REFLOW_NOISY_MSG(_msg1) printf((_msg1))
-#define REFLOW_NOISY_MSG2(_msg1, _msg2) printf((_msg1), (_msg2))
-#define REFLOW_NOISY_MSG3(_msg1, _msg2, _msg3) printf((_msg1), (_msg2), (_msg3))
-#define REFLOW_NOISY_MSG4(_msg1, _msg2, _msg3, _msg4) \
-  printf((_msg1), (_msg2), (_msg3), (_msg4))
-||||||| merged common ancestors
-#define REFLOW_NOISY_MSG(_msg1) printf((_msg1))
-#define REFLOW_NOISY_MSG2(_msg1, _msg2) printf((_msg1), (_msg2))
-#define REFLOW_NOISY_MSG3(_msg1, _msg2, _msg3) printf((_msg1), (_msg2), (_msg3))
-#define REFLOW_NOISY_MSG4(_msg1, _msg2, _msg3, _msg4) printf((_msg1), (_msg2), (_msg3), (_msg4))
-=======
 #  define REFLOW_NOISY_MSG(_msg1) printf((_msg1))
 #  define REFLOW_NOISY_MSG2(_msg1, _msg2) printf((_msg1), (_msg2))
 #  define REFLOW_NOISY_MSG3(_msg1, _msg2, _msg3) \
     printf((_msg1), (_msg2), (_msg3))
 #  define REFLOW_NOISY_MSG4(_msg1, _msg2, _msg3, _msg4) \
     printf((_msg1), (_msg2), (_msg3), (_msg4))
->>>>>>> upstream-releases
 #else
 #  define REFLOW_NOISY_MSG(_msg)
 #  define REFLOW_NOISY_MSG2(_msg1, _msg2)
@@ -341,49 +220,6 @@ static int32_t gReflowInx = -1;
 //-- Done with macros
 //------------------------------------------------------
 
-<<<<<<< HEAD
-nsComboboxControlFrame::nsComboboxControlFrame(ComputedStyle* aStyle)
-    : nsBlockFrame(aStyle, kClassID),
-      mDisplayFrame(nullptr),
-      mButtonFrame(nullptr),
-      mDropdownFrame(nullptr),
-      mListControlFrame(nullptr),
-      mDisplayISize(0),
-      mRecentSelectedIndex(NS_SKIP_NOTIFY_INDEX),
-      mDisplayedIndex(-1),
-      mLastDropDownBeforeScreenBCoord(nscoord_MIN),
-      mLastDropDownAfterScreenBCoord(nscoord_MIN),
-      mDroppedDown(false),
-      mInRedisplayText(false),
-      mDelayedShowDropDown(false),
-      mIsOpenInParentProcess(false){REFLOW_COUNTER_INIT()}
-
-      //--------------------------------------------------------------
-      nsComboboxControlFrame::~nsComboboxControlFrame() {
-||||||| merged common ancestors
-nsComboboxControlFrame::nsComboboxControlFrame(ComputedStyle* aStyle)
-  : nsBlockFrame(aStyle, kClassID)
-  , mDisplayFrame(nullptr)
-  , mButtonFrame(nullptr)
-  , mDropdownFrame(nullptr)
-  , mListControlFrame(nullptr)
-  , mDisplayISize(0)
-  , mRecentSelectedIndex(NS_SKIP_NOTIFY_INDEX)
-  , mDisplayedIndex(-1)
-  , mLastDropDownBeforeScreenBCoord(nscoord_MIN)
-  , mLastDropDownAfterScreenBCoord(nscoord_MIN)
-  , mDroppedDown(false)
-  , mInRedisplayText(false)
-  , mDelayedShowDropDown(false)
-  , mIsOpenInParentProcess(false)
-{
-  REFLOW_COUNTER_INIT()
-}
-
-//--------------------------------------------------------------
-nsComboboxControlFrame::~nsComboboxControlFrame()
-{
-=======
 nsComboboxControlFrame::nsComboboxControlFrame(ComputedStyle* aStyle,
                                                nsPresContext* aPresContext)
     : nsBlockFrame(aStyle, aPresContext, kClassID),
@@ -404,7 +240,6 @@ nsComboboxControlFrame::nsComboboxControlFrame(ComputedStyle* aStyle,
 
       //--------------------------------------------------------------
       nsComboboxControlFrame::~nsComboboxControlFrame() {
->>>>>>> upstream-releases
   REFLOW_COUNTER_DUMP("nsCCF");
 }
 
@@ -458,19 +293,7 @@ void nsComboboxControlFrame::SetFocus(bool aOn, bool aRepaint) {
   InvalidateFrame();
 }
 
-<<<<<<< HEAD
 void nsComboboxControlFrame::ShowPopup(bool aShowPopup) {
-  // TODO(kuoe0) Remove this function when content-select is enabled.
-
-||||||| merged common ancestors
-void
-nsComboboxControlFrame::ShowPopup(bool aShowPopup)
-{
-  // TODO(kuoe0) Remove this function when content-select is enabled.
-
-=======
-void nsComboboxControlFrame::ShowPopup(bool aShowPopup) {
->>>>>>> upstream-releases
   nsView* view = mDropdownFrame->GetView();
   nsViewManager* viewManager = view->GetViewManager();
 
@@ -498,34 +321,7 @@ void nsComboboxControlFrame::ShowPopup(bool aShowPopup) {
   }
 }
 
-<<<<<<< HEAD
 bool nsComboboxControlFrame::ShowList(bool aShowList) {
-  // TODO(kuoe0) Remove this function when content-select is enabled.
-  //
-  // This function is used to handle the widget/view stuff, so we just return
-  // when content-select is enabled. And the following callee, ShowPopup(), will
-  // also be ignored, it is only used to show and hide the widget.
-  if (nsLayoutUtils::IsContentSelectEnabled()) {
-    return true;
-  }
-
-||||||| merged common ancestors
-bool
-nsComboboxControlFrame::ShowList(bool aShowList)
-{
-
-  // TODO(kuoe0) Remove this function when content-select is enabled.
-  //
-  // This function is used to handle the widget/view stuff, so we just return
-  // when content-select is enabled. And the following callee, ShowPopup(), will
-  // also be ignored, it is only used to show and hide the widget.
-  if (nsLayoutUtils::IsContentSelectEnabled()) {
-    return true;
-  }
-
-=======
-bool nsComboboxControlFrame::ShowList(bool aShowList) {
->>>>>>> upstream-releases
   nsView* view = mDropdownFrame->GetView();
   if (aShowList) {
     NS_ASSERTION(
@@ -632,15 +428,7 @@ void nsComboboxControlFrame::ReflowDropdown(nsPresContext* aPresContext,
       std::max(kidReflowInput.ComputedISize(), forcedISize));
 
   // ensure we start off hidden
-<<<<<<< HEAD
-  if (!nsLayoutUtils::IsContentSelectEnabled() && !mDroppedDown &&
-      GetStateBits() & NS_FRAME_FIRST_REFLOW) {
-||||||| merged common ancestors
-  if (!nsLayoutUtils::IsContentSelectEnabled() &&
-      !mDroppedDown && GetStateBits() & NS_FRAME_FIRST_REFLOW) {
-=======
   if (!mDroppedDown && GetStateBits() & NS_FRAME_FIRST_REFLOW) {
->>>>>>> upstream-releases
     nsView* view = mDropdownFrame->GetView();
     nsViewManager* viewManager = view->GetViewManager();
     viewManager->SetViewVisibility(view, nsViewVisibility_kHide);
@@ -708,20 +496,8 @@ nsPoint nsComboboxControlFrame::GetCSSTransformTranslation() {
 class nsAsyncRollup : public Runnable {
  public:
   explicit nsAsyncRollup(nsComboboxControlFrame* aFrame)
-<<<<<<< HEAD
-      : mozilla::Runnable("nsAsyncRollup"), mFrame(aFrame) {}
-  NS_IMETHOD Run() override {
-||||||| merged common ancestors
-    : mozilla::Runnable("nsAsyncRollup")
-    , mFrame(aFrame)
-  {
-  }
-  NS_IMETHOD Run() override
-  {
-=======
       : mozilla::Runnable("nsAsyncRollup"), mFrame(aFrame) {}
   MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override {
->>>>>>> upstream-releases
     if (mFrame.IsAlive()) {
       static_cast<nsComboboxControlFrame*>(mFrame.GetFrame())->RollupFromList();
     }
@@ -733,39 +509,10 @@ class nsAsyncRollup : public Runnable {
 class nsAsyncResize : public Runnable {
  public:
   explicit nsAsyncResize(nsComboboxControlFrame* aFrame)
-<<<<<<< HEAD
-      : mozilla::Runnable("nsAsyncResize"), mFrame(aFrame) {}
-  NS_IMETHOD Run() override {
-||||||| merged common ancestors
-    : mozilla::Runnable("nsAsyncResize")
-    , mFrame(aFrame)
-  {
-  }
-  NS_IMETHOD Run() override
-  {
-=======
       : mozilla::Runnable("nsAsyncResize"), mFrame(aFrame) {}
   MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override {
->>>>>>> upstream-releases
     if (mFrame.IsAlive()) {
       nsComboboxControlFrame* combo =
-<<<<<<< HEAD
-          static_cast<nsComboboxControlFrame*>(mFrame.GetFrame());
-      static_cast<nsListControlFrame*>(combo->mDropdownFrame)
-          ->SetSuppressScrollbarUpdate(true);
-      nsCOMPtr<nsIPresShell> shell = mFrame->PresShell();
-      shell->FrameNeedsReflow(combo->mDropdownFrame, nsIPresShell::eResize,
-                              NS_FRAME_IS_DIRTY);
-      shell->FlushPendingNotifications(FlushType::Layout);
-||||||| merged common ancestors
-        static_cast<nsComboboxControlFrame*>(mFrame.GetFrame());
-      static_cast<nsListControlFrame*>(combo->mDropdownFrame)->
-        SetSuppressScrollbarUpdate(true);
-      nsCOMPtr<nsIPresShell> shell = mFrame->PresShell();
-      shell->FrameNeedsReflow(combo->mDropdownFrame, nsIPresShell::eResize,
-                              NS_FRAME_IS_DIRTY);
-      shell->FlushPendingNotifications(FlushType::Layout);
-=======
           static_cast<nsComboboxControlFrame*>(mFrame.GetFrame());
       static_cast<nsListControlFrame*>(combo->mDropdownFrame)
           ->SetSuppressScrollbarUpdate(true);
@@ -773,7 +520,6 @@ class nsAsyncResize : public Runnable {
       presShell->FrameNeedsReflow(combo->mDropdownFrame, IntrinsicDirty::Resize,
                                   NS_FRAME_IS_DIRTY);
       presShell->FlushPendingNotifications(FlushType::Layout);
->>>>>>> upstream-releases
       if (mFrame.IsAlive()) {
         combo = static_cast<nsComboboxControlFrame*>(mFrame.GetFrame());
         static_cast<nsListControlFrame*>(combo->mDropdownFrame)
@@ -1046,15 +792,8 @@ void nsComboboxControlFrame::Reflow(nsPresContext* aPresContext,
     return;
   }
 
-<<<<<<< HEAD
-  // Make sure the displayed text is the same as the selected option, bug
-  // 297389.
-||||||| merged common ancestors
-  // Make sure the displayed text is the same as the selected option, bug 297389.
-=======
   // Make sure the displayed text is the same as the selected option,
   // bug 297389.
->>>>>>> upstream-releases
   if (!mDroppedDown) {
     mDisplayedIndex = mListControlFrame->GetSelectedIndex();
   }
@@ -1127,25 +866,8 @@ nsresult nsComboboxControlFrame::GetFrameName(nsAString& aResult) const {
 }
 #endif
 
-<<<<<<< HEAD
-void nsComboboxControlFrame::ShowDropDown(bool aDoDropDown) {
-  if (!nsLayoutUtils::IsContentSelectEnabled()) {
-    // TODO(kuoe0) remove this assertion after content-select is enabled
-    MOZ_ASSERT(!XRE_IsContentProcess());
-  }
-||||||| merged common ancestors
-
-void
-nsComboboxControlFrame::ShowDropDown(bool aDoDropDown)
-{
-  if (!nsLayoutUtils::IsContentSelectEnabled()) {
-    // TODO(kuoe0) remove this assertion after content-select is enabled
-    MOZ_ASSERT(!XRE_IsContentProcess());
-  }
-=======
 void nsComboboxControlFrame::ShowDropDown(bool aDoDropDown) {
   MOZ_ASSERT(!XRE_IsContentProcess());
->>>>>>> upstream-releases
   mDelayedShowDropDown = false;
   EventStates eventStates = mContent->AsElement()->State();
   if (aDoDropDown && eventStates.HasState(NS_EVENT_STATE_DISABLED)) {
@@ -1257,17 +979,8 @@ void nsComboboxControlFrame::HandleRedisplayTextEvent() {
   }
 
   // XXXbz This should perhaps be eResize.  Check.
-<<<<<<< HEAD
-  PresShell()->FrameNeedsReflow(mDisplayFrame, nsIPresShell::eStyleChange,
-                                NS_FRAME_IS_DIRTY);
-||||||| merged common ancestors
-  PresShell()->FrameNeedsReflow(mDisplayFrame,
-                                               nsIPresShell::eStyleChange,
-                                               NS_FRAME_IS_DIRTY);
-=======
   PresShell()->FrameNeedsReflow(mDisplayFrame, IntrinsicDirty::StyleChange,
                                 NS_FRAME_IS_DIRTY);
->>>>>>> upstream-releases
 
   mInRedisplayText = false;
 }
@@ -1331,19 +1044,9 @@ nsComboboxControlFrame::RemoveOption(int32_t aIndex) {
   return lcf->RemoveOption(aIndex);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsComboboxControlFrame::OnSetSelectedIndex(int32_t aOldIndex,
-                                           int32_t aNewIndex) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsComboboxControlFrame::OnSetSelectedIndex(int32_t aOldIndex, int32_t aNewIndex)
-{
-=======
 NS_IMETHODIMP_(void)
 nsComboboxControlFrame::OnSetSelectedIndex(int32_t aOldIndex,
                                            int32_t aNewIndex) {
->>>>>>> upstream-releases
   nsAutoScriptBlocker scriptBlocker;
   mDisplayedIndex = aNewIndex;
   RedisplayText();
@@ -1500,16 +1203,8 @@ class nsComboboxDisplayFrame final : public nsBlockFrame {
 
   nsComboboxDisplayFrame(ComputedStyle* aStyle,
                          nsComboboxControlFrame* aComboBox)
-<<<<<<< HEAD
-      : nsBlockFrame(aStyle, kClassID), mComboBox(aComboBox) {}
-||||||| merged common ancestors
-    : nsBlockFrame(aStyle, kClassID)
-    , mComboBox(aComboBox)
-  {}
-=======
       : nsBlockFrame(aStyle, aComboBox->PresContext(), kClassID),
         mComboBox(aComboBox) {}
->>>>>>> upstream-releases
 
 #ifdef DEBUG_FRAME_DUMP
   nsresult GetFrameName(nsAString& aResult) const override {
@@ -1554,21 +1249,6 @@ void nsComboboxDisplayFrame::Reflow(nsPresContext* aPresContext,
     state.SetComputedBSize(lh);
   }
   WritingMode wm = aReflowInput.GetWritingMode();
-<<<<<<< HEAD
-  nscoord computedISize = mComboBox->mDisplayISize -
-                          state.ComputedLogicalBorderPadding().IStartEnd(wm);
-  if (computedISize < 0) {
-    computedISize = 0;
-  }
-  state.SetComputedISize(computedISize);
-||||||| merged common ancestors
-  nscoord computedISize = mComboBox->mDisplayISize -
-    state.ComputedLogicalBorderPadding().IStartEnd(wm);
-  if (computedISize < 0) {
-    computedISize = 0;
-  }
-  state.SetComputedISize(computedISize);
-=======
   nscoord inlineBp = state.ComputedLogicalBorderPadding().IStartEnd(wm);
   nscoord computedISize = mComboBox->mDisplayISize - inlineBp;
 
@@ -1587,7 +1267,6 @@ void nsComboboxDisplayFrame::Reflow(nsPresContext* aPresContext,
   }
 
   state.SetComputedISize(std::max(0, computedISize));
->>>>>>> upstream-releases
   nsBlockFrame::Reflow(aPresContext, aDesiredSize, state, aStatus);
   aStatus.Reset();  // this type of frame can't be split
 }
@@ -1609,30 +1288,13 @@ nsIFrame* nsComboboxControlFrame::CreateFrameForDisplayNode() {
   MOZ_ASSERT(mDisplayContent);
 
   // Get PresShell
-<<<<<<< HEAD
-  nsIPresShell* shell = PresShell();
-  ServoStyleSet* styleSet = shell->StyleSet();
-||||||| merged common ancestors
-  nsIPresShell *shell = PresShell();
-  ServoStyleSet* styleSet = shell->StyleSet();
-=======
   mozilla::PresShell* presShell = PresShell();
   ServoStyleSet* styleSet = presShell->StyleSet();
->>>>>>> upstream-releases
 
   // create the ComputedStyle for the anonymous block frame and text frame
   RefPtr<ComputedStyle> computedStyle;
-<<<<<<< HEAD
-  computedStyle = styleSet->ResolveInheritingAnonymousBoxStyle(
-      nsCSSAnonBoxes::mozDisplayComboboxControlFrame(), mComputedStyle);
-||||||| merged common ancestors
-  computedStyle = styleSet->
-    ResolveInheritingAnonymousBoxStyle(nsCSSAnonBoxes::mozDisplayComboboxControlFrame(),
-                                       mComputedStyle);
-=======
   computedStyle = styleSet->ResolveInheritingAnonymousBoxStyle(
       PseudoStyleType::mozDisplayComboboxControlFrame, mComputedStyle);
->>>>>>> upstream-releases
 
   RefPtr<ComputedStyle> textComputedStyle;
   textComputedStyle =
@@ -1695,15 +1357,6 @@ void nsComboboxControlFrame::GetChildLists(nsTArray<ChildList>* aLists) const {
   mPopupFrames.AppendIfNonempty(aLists, kSelectPopupList);
 }
 
-<<<<<<< HEAD
-void nsComboboxControlFrame::SetInitialChildList(ChildListID aListID,
-                                                 nsFrameList& aChildList) {
-||||||| merged common ancestors
-void
-nsComboboxControlFrame::SetInitialChildList(ChildListID     aListID,
-                                            nsFrameList&    aChildList)
-{
-=======
 void nsComboboxControlFrame::SetInitialChildList(ChildListID aListID,
                                                  nsFrameList& aChildList) {
 #ifdef DEBUG
@@ -1711,7 +1364,6 @@ void nsComboboxControlFrame::SetInitialChildList(ChildListID aListID,
     MOZ_ASSERT(f->GetParent() == this, "Unexpected parent");
   }
 #endif
->>>>>>> upstream-releases
   if (kSelectPopupList == aListID) {
     mPopupFrames.SetFrames(aChildList);
   } else {
@@ -1753,28 +1405,12 @@ bool nsComboboxControlFrame::Rollup(uint32_t aCount, bool aFlush,
     mListControlFrame->CaptureMouseEvents(false);
   }
 
-<<<<<<< HEAD
-  if (!nsLayoutUtils::IsContentSelectEnabled() && aFlush &&
-      weakFrame.IsAlive()) {
-||||||| merged common ancestors
-  if (!nsLayoutUtils::IsContentSelectEnabled() &&
-      aFlush && weakFrame.IsAlive()) {
-=======
   if (aFlush && weakFrame.IsAlive()) {
->>>>>>> upstream-releases
     // The popup's visibility doesn't update until the minimize animation has
     // finished, so call UpdateWidgetGeometry to update it right away.
-<<<<<<< HEAD
-    nsViewManager* viewManager = mDropdownFrame->GetView()->GetViewManager();
-    viewManager->UpdateWidgetGeometry();  // might destroy us
-||||||| merged common ancestors
-    nsViewManager* viewManager = mDropdownFrame->GetView()->GetViewManager();
-    viewManager->UpdateWidgetGeometry(); // might destroy us
-=======
     RefPtr<nsViewManager> viewManager =
         mDropdownFrame->GetView()->GetViewManager();
     viewManager->UpdateWidgetGeometry();  // might destroy us
->>>>>>> upstream-releases
   }
 
   if (!weakFrame.IsAlive()) {
@@ -1787,23 +1423,7 @@ bool nsComboboxControlFrame::Rollup(uint32_t aCount, bool aFlush,
   return consume;
 }
 
-<<<<<<< HEAD
 nsIWidget* nsComboboxControlFrame::GetRollupWidget() {
-  if (nsLayoutUtils::IsContentSelectEnabled()) {
-    return nullptr;
-  }
-
-||||||| merged common ancestors
-nsIWidget*
-nsComboboxControlFrame::GetRollupWidget()
-{
-  if (nsLayoutUtils::IsContentSelectEnabled()) {
-    return nullptr;
-  }
-
-=======
-nsIWidget* nsComboboxControlFrame::GetRollupWidget() {
->>>>>>> upstream-releases
   nsView* view = mDropdownFrame->GetView();
   MOZ_ASSERT(view);
   return view->GetWidget();
@@ -1821,26 +1441,11 @@ int32_t nsComboboxControlFrame::UpdateRecentIndex(int32_t aIndex) {
   return index;
 }
 
-<<<<<<< HEAD
-class nsDisplayComboboxFocus : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayComboboxFocus : public nsDisplayItem
-{
-public:
-=======
 class nsDisplayComboboxFocus : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayComboboxFocus(nsDisplayListBuilder* aBuilder,
                          nsComboboxControlFrame* aFrame)
-<<<<<<< HEAD
-      : nsDisplayItem(aBuilder, aFrame) {
-||||||| merged common ancestors
-    : nsDisplayItem(aBuilder, aFrame) {
-=======
       : nsPaintedDisplayItem(aBuilder, aFrame) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayComboboxFocus);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -1876,24 +1481,11 @@ void nsComboboxControlFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
       nsPresContext* presContext = PresContext();
       const nsStyleDisplay* disp = StyleDisplay();
       if ((!IsThemed(disp) ||
-<<<<<<< HEAD
-           !presContext->GetTheme()->ThemeDrawsFocusForWidget(
-               disp->mAppearance)) &&
-          mDisplayFrame && IsVisibleForPainting()) {
-        aLists.Content()->AppendToTop(
-            MakeDisplayItem<nsDisplayComboboxFocus>(aBuilder, this));
-||||||| merged common ancestors
-           !presContext->GetTheme()->ThemeDrawsFocusForWidget(disp->mAppearance)) &&
-          mDisplayFrame && IsVisibleForPainting(aBuilder)) {
-        aLists.Content()->AppendToTop(
-          MakeDisplayItem<nsDisplayComboboxFocus>(aBuilder, this));
-=======
            !presContext->GetTheme()->ThemeDrawsFocusForWidget(
                disp->mAppearance)) &&
           mDisplayFrame && IsVisibleForPainting()) {
         aLists.Content()->AppendNewToTop<nsDisplayComboboxFocus>(aBuilder,
                                                                  this);
->>>>>>> upstream-releases
       }
     }
   }
@@ -1920,16 +1512,8 @@ void nsComboboxControlFrame::PaintFocus(DrawTarget& aDrawTarget, nsPoint aPt) {
   // draw focus
 
   StrokeOptions strokeOptions;
-<<<<<<< HEAD
-  nsLayoutUtils::InitDashPattern(strokeOptions, StyleBorderStyle::Dotted);
-  ColorPattern color(ToDeviceColor(StyleColor()->mColor));
-||||||| merged common ancestors
-  nsLayoutUtils::InitDashPattern(strokeOptions, NS_STYLE_BORDER_STYLE_DOTTED);
-  ColorPattern color(ToDeviceColor(StyleColor()->mColor));
-=======
   nsLayoutUtils::InitDashPattern(strokeOptions, StyleBorderStyle::Dotted);
   ColorPattern color(ToDeviceColor(StyleText()->mColor));
->>>>>>> upstream-releases
   nscoord onePixel = nsPresContext::CSSPixelsToAppUnits(1);
   clipRect.width -= onePixel;
   clipRect.height -= onePixel;
@@ -2001,31 +1585,12 @@ nsComboboxControlFrame::RestoreState(PresState* aState) {
 // Append a suffix so that the state key for the combobox is different
 // from the state key the list control uses to sometimes save the scroll
 // position for the same Element
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsComboboxControlFrame::GenerateStateKey(nsIContent* aContent,
-                                         nsIDocument* aDocument,
-                                         nsACString& aKey) {
-  nsresult rv = nsContentUtils::GenerateStateKey(aContent, aDocument, aKey);
-  if (NS_FAILED(rv) || aKey.IsEmpty()) {
-    return rv;
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsComboboxControlFrame::GenerateStateKey(nsIContent* aContent,
-                                        nsIDocument* aDocument,
-                                        nsACString& aKey)
-{
-  nsresult rv = nsContentUtils::GenerateStateKey(aContent, aDocument, aKey);
-  if (NS_FAILED(rv) || aKey.IsEmpty()) {
-    return rv;
-=======
 void nsComboboxControlFrame::GenerateStateKey(nsIContent* aContent,
                                               Document* aDocument,
                                               nsACString& aKey) {
   nsContentUtils::GenerateStateKey(aContent, aDocument, aKey);
   if (aKey.IsEmpty()) {
     return;
->>>>>>> upstream-releases
   }
   aKey.AppendLiteral("CCF");
 }

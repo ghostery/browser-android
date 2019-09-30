@@ -72,30 +72,14 @@ bool CrashReporterHost::GenerateCrashReport(base::ProcessId aPid) {
   return FinalizeCrashReport();
 }
 
-<<<<<<< HEAD
-RefPtr<nsIFile> CrashReporterHost::TakeCrashedChildMinidump(
-    base::ProcessId aPid, uint32_t* aOutSequence) {
-||||||| merged common ancestors
-RefPtr<nsIFile>
-CrashReporterHost::TakeCrashedChildMinidump(base::ProcessId aPid, uint32_t* aOutSequence)
-{
-=======
 RefPtr<nsIFile> CrashReporterHost::TakeCrashedChildMinidump(
     base::ProcessId aPid, uint32_t* aOutSequence) {
   CrashReporter::AnnotationTable annotations;
->>>>>>> upstream-releases
   MOZ_ASSERT(!HasMinidump());
 
   RefPtr<nsIFile> crashDump;
-<<<<<<< HEAD
-  if (!XRE_TakeMinidumpForChild(aPid, getter_AddRefs(crashDump),
-                                aOutSequence)) {
-||||||| merged common ancestors
-  if (!XRE_TakeMinidumpForChild(aPid, getter_AddRefs(crashDump), aOutSequence)) {
-=======
   if (!CrashReporter::TakeMinidumpForChild(aPid, getter_AddRefs(crashDump),
                                            annotations, aOutSequence)) {
->>>>>>> upstream-releases
     return nullptr;
   }
   if (!AdoptMinidump(crashDump, annotations)) {
@@ -104,15 +88,6 @@ RefPtr<nsIFile> CrashReporterHost::TakeCrashedChildMinidump(
   return crashDump;
 }
 
-<<<<<<< HEAD
-bool CrashReporterHost::AdoptMinidump(nsIFile* aFile) {
-  return CrashReporter::GetIDFromMinidump(aFile, mDumpID);
-||||||| merged common ancestors
-bool
-CrashReporterHost::AdoptMinidump(nsIFile* aFile)
-{
-  return CrashReporter::GetIDFromMinidump(aFile, mDumpID);
-=======
 bool CrashReporterHost::AdoptMinidump(nsIFile* aFile,
                                       const AnnotationTable& aAnnotations) {
   if (!CrashReporter::GetIDFromMinidump(aFile, mDumpID)) {
@@ -121,41 +96,16 @@ bool CrashReporterHost::AdoptMinidump(nsIFile* aFile,
 
   MergeCrashAnnotations(mExtraAnnotations, aAnnotations);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-int32_t CrashReporterHost::GetCrashType(
-    const CrashReporter::AnnotationTable& aAnnotations) {
-  // RecordReplayHang is set in the middleman content process, so check
-  // aAnnotations.
-  if (aAnnotations[CrashReporter::Annotation::RecordReplayHang].EqualsLiteral(
-          "1")) {
-||||||| merged common ancestors
-int32_t
-CrashReporterHost::GetCrashType(const CrashReporter::AnnotationTable& aAnnotations)
-{
-  // RecordReplayHang is set in the middleman content process, so check aAnnotations.
-  if (aAnnotations[CrashReporter::Annotation::RecordReplayHang].EqualsLiteral("1")) {
-=======
 int32_t CrashReporterHost::GetCrashType() {
   if (mExtraAnnotations[CrashReporter::Annotation::RecordReplayHang]
           .EqualsLiteral("1")) {
->>>>>>> upstream-releases
     return nsICrashService::CRASH_TYPE_HANG;
   }
 
-<<<<<<< HEAD
-  // PluginHang is set in the parent process, so check mExtraAnnotations.
   if (mExtraAnnotations[CrashReporter::Annotation::PluginHang].EqualsLiteral(
           "1")) {
-||||||| merged common ancestors
-  // PluginHang is set in the parent process, so check mExtraAnnotations.
-  if (mExtraAnnotations[CrashReporter::Annotation::PluginHang].EqualsLiteral("1")) {
-=======
-  if (mExtraAnnotations[CrashReporter::Annotation::PluginHang].EqualsLiteral(
-          "1")) {
->>>>>>> upstream-releases
     return nsICrashService::CRASH_TYPE_HANG;
   }
 
@@ -168,49 +118,8 @@ bool CrashReporterHost::FinalizeCrashReport() {
 
   CrashReporter::AnnotationTable annotations;
 
-<<<<<<< HEAD
-  nsAutoCString type;
-  switch (mProcessType) {
-    case GeckoProcessType_Content:
-      type = NS_LITERAL_CSTRING("content");
-      break;
-    case GeckoProcessType_Plugin:
-    case GeckoProcessType_GMPlugin:
-      type = NS_LITERAL_CSTRING("plugin");
-      break;
-    case GeckoProcessType_GPU:
-      type = NS_LITERAL_CSTRING("gpu");
-      break;
-    case GeckoProcessType_RDD:
-      type = NS_LITERAL_CSTRING("rdd");
-      break;
-    default:
-      NS_ERROR("unknown process type");
-      break;
-  }
-  annotations[CrashReporter::Annotation::ProcessType] = type;
-||||||| merged common ancestors
-  nsAutoCString type;
-  switch (mProcessType) {
-    case GeckoProcessType_Content:
-      type = NS_LITERAL_CSTRING("content");
-      break;
-    case GeckoProcessType_Plugin:
-    case GeckoProcessType_GMPlugin:
-      type = NS_LITERAL_CSTRING("plugin");
-      break;
-    case GeckoProcessType_GPU:
-      type = NS_LITERAL_CSTRING("gpu");
-      break;
-    default:
-      NS_ERROR("unknown process type");
-      break;
-  }
-  annotations[CrashReporter::Annotation::ProcessType] = type;
-=======
   annotations[CrashReporter::Annotation::ProcessType] =
       XRE_ChildProcessTypeToAnnotation(mProcessType);
->>>>>>> upstream-releases
 
   char startTime[32];
   SprintfLiteral(startTime, "%lld", static_cast<long long>(mStartTime));
@@ -232,22 +141,10 @@ bool CrashReporterHost::FinalizeCrashReport() {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void CrashReporterHost::NotifyCrashService(
-    GeckoProcessType aProcessType, int32_t aCrashType,
-    const nsString& aChildDumpID) {
-||||||| merged common ancestors
-/* static */ void
-CrashReporterHost::NotifyCrashService(GeckoProcessType aProcessType,
-                                      int32_t aCrashType,
-                                      const nsString& aChildDumpID)
-{
-=======
 /* static */
 void CrashReporterHost::NotifyCrashService(GeckoProcessType aProcessType,
                                            int32_t aCrashType,
                                            const nsString& aChildDumpID) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     RefPtr<Runnable> runnable = NS_NewRunnableFunction(
         "ipc::CrashReporterHost::NotifyCrashService", [&]() -> void {
@@ -271,58 +168,8 @@ void CrashReporterHost::NotifyCrashService(GeckoProcessType aProcessType,
   nsCString telemetryKey;
 
   switch (aProcessType) {
-<<<<<<< HEAD
-    case GeckoProcessType_Content:
-      processType = nsICrashService::PROCESS_TYPE_CONTENT;
-      telemetryKey.AssignLiteral("content");
-      break;
-    case GeckoProcessType_Plugin:
-      processType = nsICrashService::PROCESS_TYPE_PLUGIN;
-      if (aCrashType == nsICrashService::CRASH_TYPE_HANG) {
-        telemetryKey.AssignLiteral("pluginhang");
-      } else {
-        telemetryKey.AssignLiteral("plugin");
-      }
-      break;
-    case GeckoProcessType_GMPlugin:
-      processType = nsICrashService::PROCESS_TYPE_GMPLUGIN;
-      telemetryKey.AssignLiteral("gmplugin");
-      break;
-    case GeckoProcessType_GPU:
-      processType = nsICrashService::PROCESS_TYPE_GPU;
-      telemetryKey.AssignLiteral("gpu");
-      break;
-    case GeckoProcessType_RDD:
-      processType = nsICrashService::PROCESS_TYPE_RDD;
-      telemetryKey.AssignLiteral("rdd");
-      break;
-    default:
-||||||| merged common ancestors
-    case GeckoProcessType_Content:
-      processType = nsICrashService::PROCESS_TYPE_CONTENT;
-      telemetryKey.AssignLiteral("content");
-      break;
-    case GeckoProcessType_Plugin:
-      processType = nsICrashService::PROCESS_TYPE_PLUGIN;
-      if (aCrashType == nsICrashService::CRASH_TYPE_HANG) {
-        telemetryKey.AssignLiteral("pluginhang");
-      } else {
-        telemetryKey.AssignLiteral("plugin");
-      }
-      break;
-    case GeckoProcessType_GMPlugin:
-      processType = nsICrashService::PROCESS_TYPE_GMPLUGIN;
-      telemetryKey.AssignLiteral("gmplugin");
-      break;
-    case GeckoProcessType_GPU:
-      processType = nsICrashService::PROCESS_TYPE_GPU;
-      telemetryKey.AssignLiteral("gpu");
-      break;
-    default:
-=======
     case GeckoProcessType_IPDLUnitTest:
     case GeckoProcessType_Default:
->>>>>>> upstream-releases
       NS_ERROR("unknown process type");
       return;
     default:
@@ -376,18 +223,8 @@ void CrashReporterHost::AddAnnotation(CrashReporter::Annotation aKey,
   mExtraAnnotations[aKey] = valueString;
 }
 
-<<<<<<< HEAD
-void CrashReporterHost::AddAnnotation(CrashReporter::Annotation aKey,
-                                      const nsCString& aValue) {
-||||||| merged common ancestors
-void
-CrashReporterHost::AddAnnotation(CrashReporter::Annotation aKey,
-                                 const nsCString& aValue)
-{
-=======
 void CrashReporterHost::AddAnnotation(CrashReporter::Annotation aKey,
                                       const nsACString& aValue) {
->>>>>>> upstream-releases
   mExtraAnnotations[aKey] = aValue;
 }
 

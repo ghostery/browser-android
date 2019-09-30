@@ -27,14 +27,6 @@ const ChangesApp = createFactory(require("./components/ChangesApp"));
 const { getChangesStylesheet } = require("./selectors/changes");
 
 const {
-<<<<<<< HEAD
-  resetChanges,
-  trackChange,
-} = require("./actions/changes");
-||||||| merged common ancestors
-  resetChanges,
-} = require("./actions/changes");
-=======
   TELEMETRY_SCALAR_CONTEXTMENU,
   TELEMETRY_SCALAR_CONTEXTMENU_COPY,
   TELEMETRY_SCALAR_CONTEXTMENU_COPY_DECLARATION,
@@ -45,27 +37,15 @@ const {
 } = require("./constants");
 
 const { resetChanges, trackChange } = require("./actions/changes");
->>>>>>> upstream-releases
 
 class ChangesView {
   constructor(inspector, window) {
     this.document = window.document;
     this.inspector = inspector;
     this.store = this.inspector.store;
-<<<<<<< HEAD
-    this.toolbox = this.inspector.toolbox;
-||||||| merged common ancestors
-=======
     this.telemetry = this.inspector.telemetry;
     this.window = window;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    this.onAddChange = this.onAddChange.bind(this);
-    this.onClearChanges = this.onClearChanges.bind(this);
-    this.onChangesFront = this.onChangesFront.bind(this);
-||||||| merged common ancestors
-=======
     this.onAddChange = this.onAddChange.bind(this);
     this.onClearChanges = this.onClearChanges.bind(this);
     this.onChangesFront = this.onChangesFront.bind(this);
@@ -73,7 +53,6 @@ class ChangesView {
     this.onCopy = this.onCopy.bind(this);
     this.onCopyAllChanges = this.copyAllChanges.bind(this);
     this.onCopyRule = this.copyRule.bind(this);
->>>>>>> upstream-releases
     this.destroy = this.destroy.bind(this);
 
     this.init();
@@ -99,10 +78,6 @@ class ChangesView {
     // when it is ready
     this._getChangesFront();
 
-    // listen to the front for initialization, add listeners
-    // when it is ready
-    this._getChangesFront();
-
     // Expose the provider to let inspector.js use it in setupSidebar.
     this.provider = createElement(
       Provider,
@@ -114,53 +89,6 @@ class ChangesView {
       changesApp
     );
 
-<<<<<<< HEAD
-    this.inspector.target.on("will-navigate", this.onClearChanges);
-  }
-
-  _getChangesFront() {
-    if (this.changesFrontPromise) {
-      return this.changesFrontPromise;
-    }
-    this.changesFrontPromise = new Promise(async resolve => {
-      const target = this.inspector.target;
-      const front = target.getFront("changes");
-      this.onChangesFront(front);
-      resolve(front);
-    });
-    return this.changesFrontPromise;
-  }
-
-  async onChangesFront(changesFront) {
-    changesFront.on("add-change", this.onAddChange);
-    changesFront.on("clear-changes", this.onClearChanges);
-    try {
-      // Get all changes collected up to this point by the ChangesActor on the server,
-      // then push them to the Redux store here on the client.
-      const changes = await changesFront.allChanges();
-      changes.forEach(change => {
-        this.onAddChange(change);
-      });
-    } catch (e) {
-      // The connection to the server may have been cut, for
-      // example during test
-      // teardown. Here we just catch the error and silently
-      // ignore it.
-    }
-  }
-
-  onAddChange(change) {
-    // Turn data into a suitable change to send to the store.
-    this.store.dispatch(trackChange(change));
-  }
-
-  onClearChanges() {
-    this.store.dispatch(resetChanges());
-||||||| merged common ancestors
-    // TODO: save store and restore/replay on refresh.
-    // Bug 1478439 - https://bugzilla.mozilla.org/show_bug.cgi?id=1478439
-    this.inspector.target.once("will-navigate", this.destroy);
-=======
     this.inspector.target.on("will-navigate", this.onClearChanges);
   }
 
@@ -310,7 +238,6 @@ class ChangesView {
    */
   onCopy() {
     this.telemetry.scalarAdd(TELEMETRY_SCALAR_COPY, 1);
->>>>>>> upstream-releases
   }
 
   /**
@@ -327,16 +254,11 @@ class ChangesView {
     this.document = null;
     this.inspector = null;
     this.store = null;
-<<<<<<< HEAD
-    this.toolbox = null;
-||||||| merged common ancestors
-=======
 
     if (this._contextMenu) {
       this._contextMenu.destroy();
       this._contextMenu = null;
     }
->>>>>>> upstream-releases
   }
 }
 

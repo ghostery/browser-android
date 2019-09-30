@@ -56,33 +56,15 @@ class nsMathMLElement final : public nsMathMLElementBase,
   static bool ParseNamedSpaceValue(const nsString& aString,
                                    nsCSSValue& aCSSValue, uint32_t aFlags);
 
-<<<<<<< HEAD
-  static bool ParseNumericValue(const nsString& aString, nsCSSValue& aCSSValue,
-                                uint32_t aFlags, nsIDocument* aDocument);
-||||||| merged common ancestors
-  static bool ParseNumericValue(const nsString& aString,
-                                nsCSSValue&     aCSSValue,
-                                uint32_t        aFlags,
-                                nsIDocument*    aDocument);
-=======
   static bool ParseNumericValue(const nsString& aString, nsCSSValue& aCSSValue,
                                 uint32_t aFlags, Document* aDocument);
->>>>>>> upstream-releases
 
   static void MapMathMLAttributesInto(const nsMappedAttributes* aAttributes,
                                       mozilla::MappedDeclarations&);
 
   void GetEventTargetParent(mozilla::EventChainPreVisitor& aVisitor) override;
-<<<<<<< HEAD
-  virtual nsresult PostHandleEvent(
-      mozilla::EventChainPostVisitor& aVisitor) override;
-||||||| merged common ancestors
-  virtual nsresult PostHandleEvent(
-                     mozilla::EventChainPostVisitor& aVisitor) override;
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult PostHandleEvent(mozilla::EventChainPostVisitor& aVisitor) override;
->>>>>>> upstream-releases
   nsresult Clone(mozilla::dom::NodeInfo*, nsINode** aResult) const override;
   virtual mozilla::EventStates IntrinsicState() const override;
   virtual bool IsNodeOfType(uint32_t aFlags) const override;
@@ -98,14 +80,7 @@ class nsMathMLElement final : public nsMathMLElementBase,
   virtual void GetLinkTarget(nsAString& aTarget) override;
   virtual already_AddRefed<nsIURI> GetHrefURI() const override;
 
-<<<<<<< HEAD
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override {
-||||||| merged common ancestors
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override
-  {
-=======
   virtual void NodeInfoChanged(Document* aOldDoc) override {
->>>>>>> upstream-releases
     ClearHasPendingLinkUpdate();
     nsMathMLElementBase::NodeInfoChanged(aOldDoc);
   }

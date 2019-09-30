@@ -93,18 +93,6 @@ function run_test() {
   runChecks(null, dbgEnv, sandbox);
 }
 
-<<<<<<< HEAD
-function runChecks(dbgObject, environment, sandbox) {
-  const propertyProvider = (inputValue, options) => JSPropertyProvider({
-    dbgObject,
-    environment,
-    inputValue,
-    ...options,
-  });
-
-||||||| merged common ancestors
-function runChecks(dbgObject, dbgEnv, sandbox) {
-=======
 function runChecks(dbgObject, environment, sandbox) {
   const propertyProvider = (inputValue, options) =>
     JSPropertyProvider({
@@ -114,7 +102,6 @@ function runChecks(dbgObject, environment, sandbox) {
       ...options,
     });
 
->>>>>>> upstream-releases
   info("Test that suggestions are given for 'this'");
   let results = propertyProvider("t");
   test_has_result(results, "this");
@@ -194,21 +181,9 @@ function runChecks(dbgObject, environment, sandbox) {
   test_has_result(results, "charAt");
   results = propertyProvider("`foo doc`.");
   test_has_result(results, "charAt");
-<<<<<<< HEAD
-  results = propertyProvider("`foo \" doc`.");
-||||||| merged common ancestors
-  results = JSPropertyProvider(dbgObject, dbgEnv, "`foo \" doc`.");
-=======
   results = propertyProvider('`foo " doc`.');
->>>>>>> upstream-releases
   test_has_result(results, "charAt");
-<<<<<<< HEAD
-  results = propertyProvider("`foo \' doc`.");
-||||||| merged common ancestors
-  results = JSPropertyProvider(dbgObject, dbgEnv, "`foo \' doc`.");
-=======
   results = propertyProvider("`foo ' doc`.");
->>>>>>> upstream-releases
   test_has_result(results, "charAt");
   results = propertyProvider("'[1,2,3]'.");
   test_has_result(results, "charAt");
@@ -261,31 +236,6 @@ function runChecks(dbgObject, environment, sandbox) {
   results = propertyProvider("testArray[1].propC[0][");
   test_has_result(results, `"trim"`);
 
-<<<<<<< HEAD
-  results = propertyProvider("testArray[1].propC[0].");
-  test_has_result(results, "trim");
-
-  info("Test that suggestions are displayed when variable is wrapped in parens");
-  results = propertyProvider("(testObject)['propA'][0].");
-  test_has_result(results, "propB");
-
-  results = propertyProvider("(testArray)[1]['propC'].");
-  test_has_result(results, "shift");
-
-  results = propertyProvider("(testArray)[1].propC[0][");
-  test_has_result(results, `"trim"`);
-
-  results = propertyProvider("(testArray)[1].propC[0].");
-  test_has_result(results, "trim");
-
-  info("Test that suggestions are given if there is an hyphen in the chain.");
-  results = propertyProvider("testHyphenated['prop-A'].");
-  test_has_result(results, "trim");
-||||||| merged common ancestors
-  info("Test that suggestions are not given if there is an hyphen in the chain.");
-  results = JSPropertyProvider(dbgObject, dbgEnv, "testHyphenated['prop-A'].");
-  Assert.equal(null, results);
-=======
   results = propertyProvider("testArray[1].propC[0].");
   test_has_result(results, "trim");
 
@@ -307,7 +257,6 @@ function runChecks(dbgObject, environment, sandbox) {
   info("Test that suggestions are given if there is an hyphen in the chain.");
   results = propertyProvider("testHyphenated['prop-A'].");
   test_has_result(results, "trim");
->>>>>>> upstream-releases
 
   info("Test that we have suggestions for generators.");
   const gen1Result = Cu.evalInSandbox("gen1.next().value", sandbox);
@@ -323,118 +272,6 @@ function runChecks(dbgObject, environment, sandbox) {
   test_has_result(results, "next");
   const gen2NextResult = Cu.evalInSandbox("gen2.next().value", sandbox);
   Assert.equal(gen2Result + 1, gen2NextResult);
-<<<<<<< HEAD
-
-  info("Test that getters are not executed if invokeUnsafeGetter is undefined");
-  results = propertyProvider("testGetters.x.");
-  Assert.deepEqual(results, {isUnsafeGetter: true, getterName: "x"});
-
-  results = propertyProvider("testGetters.x[");
-  Assert.deepEqual(results, {isUnsafeGetter: true, getterName: "x"});
-
-  results = propertyProvider("testGetters.x.hell");
-  Assert.deepEqual(results, {isUnsafeGetter: true, getterName: "x"});
-
-  results = propertyProvider("testGetters.x['hell");
-  Assert.deepEqual(results, {isUnsafeGetter: true, getterName: "x"});
-
-  info("Test that deep getter property access does not return intermediate getters");
-  results = propertyProvider("testGetters.y.y.");
-  Assert.ok(results === null);
-
-  results = propertyProvider("testGetters['y'].y.");
-  Assert.ok(results === null);
-
-  results = propertyProvider("testGetters['y']['y'].");
-  Assert.ok(results === null);
-
-  results = propertyProvider("testGetters.y['y'].");
-  Assert.ok(results === null);
-
-  info("Test that getters are executed if invokeUnsafeGetter is true");
-  results = propertyProvider("testGetters.x.", {invokeUnsafeGetter: true});
-  test_has_exact_results(results, ["hello", "world"]);
-  Assert.ok(Object.keys(results).includes("isUnsafeGetter") === false);
-  Assert.ok(Object.keys(results).includes("getterName") === false);
-
-  info("Test that executing getters filters with provided string");
-  results = propertyProvider("testGetters.x.hell", {invokeUnsafeGetter: true});
-  test_has_exact_results(results, ["hello"]);
-
-  results = propertyProvider("testGetters.x['hell", {invokeUnsafeGetter: true});
-  test_has_exact_results(results, ["'hello'"]);
-
-  info("Test that children getters are executed if invokeUnsafeGetter is true");
-  results = propertyProvider("testGetters.y.y.", {invokeUnsafeGetter: true});
-  test_has_result(results, "trim");
-
-  info("Test with number literals");
-  results = propertyProvider("1.");
-  Assert.ok(results === null, "Does not complete on possible floating number");
-
-  results = propertyProvider("(1)..");
-  Assert.ok(results === null, "Does not complete on invalid syntax");
-
-  results = propertyProvider("(1.1.).");
-  Assert.ok(results === null, "Does not complete on invalid syntax");
-
-  results = propertyProvider("1..");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider("1 .");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider("1\n.");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider(".1.");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider("1[");
-  test_has_result(results, `"toFixed"`);
-
-  results = propertyProvider("1[toFixed");
-  test_has_exact_results(results, [`"toFixed"`]);
-
-  results = propertyProvider("1['toFixed");
-  test_has_exact_results(results, ["'toFixed'"]);
-
-  results = propertyProvider("1.1[");
-  test_has_result(results, `"toFixed"`);
-
-  results = propertyProvider("(1).");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider("(.1).");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider("(1.1).");
-  test_has_result(results, "toFixed");
-
-  results = propertyProvider("(1).toFixed");
-  test_has_exact_results(results, ["toFixed"]);
-
-  results = propertyProvider("(1)[");
-  test_has_result(results, `"toFixed"`);
-
-  results = propertyProvider("(1.1)[");
-  test_has_result(results, `"toFixed"`);
-
-  results = propertyProvider("(1)[toFixed");
-  test_has_exact_results(results, [`"toFixed"`]);
-
-  results = propertyProvider("(1)['toFixed");
-  test_has_exact_results(results, ["'toFixed'"]);
-
-  info("Test access on dot-notation invalid property name");
-  results = propertyProvider("testHyphenated.prop");
-  Assert.ok(!results.matches.has("prop-A"),
-    "Does not return invalid property name on dot access");
-
-  results = propertyProvider("testHyphenated['prop");
-  test_has_result(results, `'prop-A'`);
-||||||| merged common ancestors
-=======
 
   info(
     "Test that getters are not executed if authorizedEvaluations is undefined"
@@ -674,7 +511,6 @@ function runChecks(dbgObject, environment, sandbox) {
 
   results = propertyProvider("testHyphenated['prop");
   test_has_result(results, `'prop-A'`);
->>>>>>> upstream-releases
 }
 
 /**

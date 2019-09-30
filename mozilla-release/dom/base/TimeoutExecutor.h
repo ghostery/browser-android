@@ -66,26 +66,11 @@ class TimeoutExecutor final : public nsIRunnable,
   nsresult MaybeReschedule(const TimeStamp& aDeadline,
                            const TimeDuration& aMinDelay);
 
-<<<<<<< HEAD
-  void MaybeExecute();
-||||||| merged common ancestors
-  void
-  MaybeExecute();
-=======
   MOZ_CAN_RUN_SCRIPT void MaybeExecute();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  explicit TimeoutExecutor(TimeoutManager* aOwner);
-||||||| merged common ancestors
-public:
-  explicit TimeoutExecutor(TimeoutManager* aOwner);
-=======
  public:
   TimeoutExecutor(TimeoutManager* aOwner, bool aIsIdleQueue,
                   uint32_t aMaxIdleDeferMS);
->>>>>>> upstream-releases
 
   void Shutdown();
 

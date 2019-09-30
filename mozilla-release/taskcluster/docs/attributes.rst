@@ -266,18 +266,6 @@ cron
 Indicates that a task is meant to be run via cron tasks, and should not be run
 on push.
 
-<<<<<<< HEAD
-cached_task
-===========
-Some tasks generate artifacts that are cached between pushes. This is a
-dictionary with the type and name of the cache, and the unique string used to
-identify the current version of the artifacts. See :py:mod:`taskgraph.util.cached_task`.
-||||||| merged common ancestors
-cache_digest
-============
-Some tasks generate artifacts that are cached between pushes. This is the unique string used
-to identify the current version of the artifacts. See :py:mod:`taskgraph.util.cached_task`.
-=======
 cached_task
 ===========
 Some tasks generate artifacts that are cached between pushes. This is a
@@ -306,39 +294,14 @@ The update channel the build is configured to use.
 openh264_rev
 ============
 Only used for openh264 plugin builds, used to signify the revision (and thus inform artifact name) of the given build.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-.. code:: yaml
-
-   cached_task:
-       digest: 66dfc2204600b48d92a049b6a18b83972bb9a92f9504c06608a9c20eb4c9d8ae
-       name: debian7-base
-       type: docker-images.v2
-||||||| merged common ancestors
-cache_type
-==========
-Some tasks generate artifacts that are cached between pushes. This is the type of cache that is
-used for the this task. See :py:mod:`taskgraph.util.cached_task`.
-=======
 code-review
 ===========
 If a task set this boolean attribute to `true`, it will be processed by the code
 review bot, the task will ran for every new Phabricator diff.
 Any supported and detected issue will be automatically reported on the
 Phabricator revision.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-required_signoffs
-=================
-A list of release signoffs that this kind requires, should the release also
-require these signoffs. For example, ``mar-signing`` signoffs may be required
-by some releases in the future; for any releases that require ``mar-signing``
-signoffs, the kinds that also require that signoff are marked with this
-attribute.
-||||||| merged common ancestors
-=======
 retrigger
 =========
 Whether the task can be retriggered, or if it needs to be re-run.
@@ -353,4 +316,3 @@ disable-build-signing
 =====================
 Some GeckoView-only tasks produce APKs, but not APKs that should be
 signed.  Set this to ``true`` to disable APK signing.
->>>>>>> upstream-releases

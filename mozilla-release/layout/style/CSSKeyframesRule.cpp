@@ -67,26 +67,11 @@ class CSSKeyframeList : public dom::CSSRuleList {
     return GetRule(aIndex);
   }
 
-<<<<<<< HEAD
-  void AppendRule() { mRules.AppendObject(nullptr); }
-||||||| merged common ancestors
-  void AppendRule() {
-    mRules.AppendObject(nullptr);
-  }
-=======
   void AppendRule() {
     MOZ_ASSERT(!mParentRule->IsReadOnly());
     mRules.AppendObject(nullptr);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void RemoveRule(uint32_t aIndex) { mRules.RemoveObjectAt(aIndex); }
-||||||| merged common ancestors
-  void RemoveRule(uint32_t aIndex) {
-    mRules.RemoveObjectAt(aIndex);
-  }
-=======
   void RemoveRule(uint32_t aIndex) {
     MOZ_ASSERT(!mParentRule->IsReadOnly());
 
@@ -98,7 +83,6 @@ class CSSKeyframeList : public dom::CSSRuleList {
     }
     mRules.RemoveObjectAt(aIndex);
   }
->>>>>>> upstream-releases
 
   uint32_t Length() final { return mRules.Length(); }
 
@@ -201,31 +185,15 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(CSSKeyframesRule, Rule)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mKeyframeList)
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
-<<<<<<< HEAD
-/* virtual */ bool CSSKeyframesRule::IsCCLeaf() const {
-||||||| merged common ancestors
-/* virtual */ bool
-CSSKeyframesRule::IsCCLeaf() const
-{
-=======
 /* virtual */
 bool CSSKeyframesRule::IsCCLeaf() const {
->>>>>>> upstream-releases
   // If we don't have rule list constructed, we are a leaf.
   return Rule::IsCCLeaf() && !mKeyframeList;
 }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-/* virtual */ void CSSKeyframesRule::List(FILE* out, int32_t aIndent) const {
-||||||| merged common ancestors
-/* virtual */ void
-CSSKeyframesRule::List(FILE* out, int32_t aIndent) const
-{
-=======
 /* virtual */
 void CSSKeyframesRule::List(FILE* out, int32_t aIndent) const {
->>>>>>> upstream-releases
   nsAutoCString str;
   for (int32_t i = 0; i < aIndent; i++) {
     str.AppendLiteral("  ");
@@ -235,16 +203,8 @@ void CSSKeyframesRule::List(FILE* out, int32_t aIndent) const {
 }
 #endif
 
-<<<<<<< HEAD
-/* virtual */ void CSSKeyframesRule::DropSheetReference() {
-||||||| merged common ancestors
-/* virtual */ void
-CSSKeyframesRule::DropSheetReference()
-{
-=======
 /* virtual */
 void CSSKeyframesRule::DropSheetReference() {
->>>>>>> upstream-releases
   if (mKeyframeList) {
     mKeyframeList->DropSheetReference();
   }
@@ -258,22 +218,12 @@ uint32_t CSSKeyframesRule::FindRuleIndexForKey(const nsAString& aKey) {
   return Servo_KeyframesRule_FindRule(mRawRule, &key);
 }
 
-<<<<<<< HEAD
-template <typename Func>
-void CSSKeyframesRule::UpdateRule(Func aCallback) {
-||||||| merged common ancestors
-template<typename Func>
-void
-CSSKeyframesRule::UpdateRule(Func aCallback)
-{
-=======
 template <typename Func>
 nsresult CSSKeyframesRule::UpdateRule(Func aCallback) {
   if (IsReadOnly()) {
     return NS_OK;
   }
 
->>>>>>> upstream-releases
   aCallback();
   if (StyleSheet* sheet = GetStyleSheet()) {
     sheet->RuleChanged(this);
@@ -330,16 +280,8 @@ void CSSKeyframesRule::DeleteRule(const nsAString& aKey) {
   });
 }
 
-<<<<<<< HEAD
-/* virtual */ void CSSKeyframesRule::GetCssText(nsAString& aCssText) const {
-||||||| merged common ancestors
-/* virtual */ void
-CSSKeyframesRule::GetCssText(nsAString& aCssText) const
-{
-=======
 /* virtual */
 void CSSKeyframesRule::GetCssText(nsAString& aCssText) const {
->>>>>>> upstream-releases
   Servo_KeyframesRule_GetCssText(mRawRule, &aCssText);
 }
 
@@ -361,17 +303,8 @@ void CSSKeyframesRule::GetCssText(nsAString& aCssText) const {
   return nullptr;
 }
 
-<<<<<<< HEAD
-/* virtual */ size_t CSSKeyframesRule::SizeOfIncludingThis(
-    MallocSizeOf aMallocSizeOf) const {
-||||||| merged common ancestors
-/* virtual */ size_t
-CSSKeyframesRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
-{
-=======
 /* virtual */
 size_t CSSKeyframesRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
->>>>>>> upstream-releases
   size_t n = aMallocSizeOf(this);
   if (mKeyframeList) {
     n += mKeyframeList->SizeOfIncludingThis(aMallocSizeOf);
@@ -379,18 +312,9 @@ size_t CSSKeyframesRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
   return n;
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* CSSKeyframesRule::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-CSSKeyframesRule::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* CSSKeyframesRule::WrapObject(JSContext* aCx,
                                        JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return CSSKeyframesRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

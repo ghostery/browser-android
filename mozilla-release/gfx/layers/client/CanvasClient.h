@@ -62,25 +62,11 @@ class CanvasClient : public CompositableClient {
 
   virtual void Clear(){};
 
-<<<<<<< HEAD
-  virtual void Update(gfx::IntSize aSize,
-                      ShareableCanvasRenderer* aCanvasRenderer) = 0;
-||||||| merged common ancestors
-  virtual void Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer) = 0;
-=======
   virtual void Update(gfx::IntSize aSize,
                       ShareableCanvasRenderer* aCanvasRenderer,
                       wr::RenderRoot aRenderRoot) = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool AddTextureClient(TextureClient* aTexture) override {
-||||||| merged common ancestors
-  virtual bool AddTextureClient(TextureClient* aTexture) override
-  {
-=======
   bool AddTextureClient(TextureClient* aTexture) override {
->>>>>>> upstream-releases
     ++mFrameID;
     return CompositableClient::AddTextureClient(aTexture);
   }
@@ -90,13 +76,7 @@ class CanvasClient : public CompositableClient {
   virtual void UpdateFromTexture(TextureClient* aTexture,
                                  wr::RenderRoot aRenderRoot) {}
 
-<<<<<<< HEAD
-  virtual void Updated() {}
-||||||| merged common ancestors
-  virtual void Updated() { }
-=======
   virtual void Updated(wr::RenderRoot aRenderRoot) {}
->>>>>>> upstream-releases
 
  protected:
   int32_t mFrameID;
@@ -113,51 +93,21 @@ class CanvasClient2D : public CanvasClient {
     return TextureInfo(CompositableType::IMAGE, mTextureFlags);
   }
 
-<<<<<<< HEAD
-  virtual void Clear() override {
-||||||| merged common ancestors
-  virtual void Clear() override
-  {
-=======
   void Clear() override {
->>>>>>> upstream-releases
     mBackBuffer = mFrontBuffer = mBufferProviderTexture = nullptr;
   }
 
-<<<<<<< HEAD
-  virtual void Update(gfx::IntSize aSize,
-                      ShareableCanvasRenderer* aCanvasRenderer) override;
-||||||| merged common ancestors
-  virtual void Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer) override;
-=======
   void Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer,
               wr::RenderRoot aRenderRoot) override;
->>>>>>> upstream-releases
 
   void UpdateFromTexture(TextureClient* aBuffer,
                          wr::RenderRoot aRenderRoot) override;
 
-<<<<<<< HEAD
-  virtual bool AddTextureClient(TextureClient* aTexture) override {
-||||||| merged common ancestors
-  virtual bool AddTextureClient(TextureClient* aTexture) override
-  {
-=======
   bool AddTextureClient(TextureClient* aTexture) override {
->>>>>>> upstream-releases
     return CanvasClient::AddTextureClient(aTexture);
   }
 
-<<<<<<< HEAD
-  virtual void OnDetach() override { mBackBuffer = mFrontBuffer = nullptr; }
-||||||| merged common ancestors
-  virtual void OnDetach() override
-  {
-    mBackBuffer = mFrontBuffer = nullptr;
-  }
-=======
   void OnDetach() override { mBackBuffer = mFrontBuffer = nullptr; }
->>>>>>> upstream-releases
 
  private:
   already_AddRefed<TextureClient> CreateTextureClientForCanvas(
@@ -195,15 +145,7 @@ class CanvasClientSharedSurface : public CanvasClient {
     return TextureInfo(CompositableType::IMAGE);
   }
 
-<<<<<<< HEAD
-  virtual void Clear() override { ClearSurfaces(); }
-||||||| merged common ancestors
-  virtual void Clear() override {
-    ClearSurfaces();
-  }
-=======
   void Clear() override { ClearSurfaces(); }
->>>>>>> upstream-releases
 
   void Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer,
               wr::RenderRoot aRenderRoot) override;
@@ -231,17 +173,8 @@ class CanvasClientBridge final : public CanvasClient {
     return TextureInfo(CompositableType::IMAGE);
   }
 
-<<<<<<< HEAD
-  virtual void Update(gfx::IntSize aSize,
-                      ShareableCanvasRenderer* aCanvasRenderer) override {}
-||||||| merged common ancestors
-  virtual void Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer) override
-  {
-  }
-=======
   void Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer,
               wr::RenderRoot aRenderRoot) override {}
->>>>>>> upstream-releases
 
   void UpdateAsync(AsyncCanvasRenderer* aRenderer) override;
 

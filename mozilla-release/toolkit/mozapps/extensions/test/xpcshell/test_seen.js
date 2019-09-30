@@ -20,23 +20,6 @@ const XPIS = {};
 add_task(async function() {
   await promiseStartupManager();
 
-<<<<<<< HEAD
-  for (let n of [1, 2]) {
-    XPIS[n] = await createTempWebExtensionFile({
-      manifest: {
-        name: "Test",
-        version: `${n}.0`,
-        applications: {gecko: {id: ID}},
-      },
-    });
-  }
-
-  await promiseInstallFile(XPIS[1]);
-||||||| merged common ancestors
-  let install = await AddonTestUtils.promiseInstallXPI(ADDONS.test_bootstrap1_1);
-  Assert.equal(install.state, AddonManager.STATE_INSTALLED);
-  Assert.ok(!hasFlag(install.addon.pendingOperations, AddonManager.PENDING_INSTALL));
-=======
   for (let n of [1, 2]) {
     XPIS[n] = await createTempWebExtensionFile({
       manifest: {
@@ -48,7 +31,6 @@ add_task(async function() {
   }
 
   await promiseInstallFile(XPIS[1]);
->>>>>>> upstream-releases
 
   let addon = await promiseAddonByID(ID);
   Assert.equal(addon.version, "1.0");
@@ -288,4 +270,3 @@ add_task(async function() {
   await addon.uninstall();
   await promiseShutdownManager();
 });
-

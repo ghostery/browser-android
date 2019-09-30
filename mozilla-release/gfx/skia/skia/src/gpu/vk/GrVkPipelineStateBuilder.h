@@ -14,57 +14,14 @@
 #include "GrVkUniformHandler.h"
 #include "GrVkVaryingHandler.h"
 #include "SkSLCompiler.h"
-<<<<<<< HEAD
-#include "glsl/GrGLSLProgramBuilder.h"
-||||||| merged common ancestors
-=======
 #include "glsl/GrGLSLProgramBuilder.h"
 #include "vk/GrVkTypes.h"
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#include "vk/GrVkDefines.h"
-
-||||||| merged common ancestors
-#include "vk/GrVkDefines.h"
-
-class GrProgramDesc;
-=======
->>>>>>> upstream-releases
 class GrVkGpu;
 class GrVkRenderPass;
 
 class GrVkPipelineStateBuilder : public GrGLSLProgramBuilder {
 public:
-<<<<<<< HEAD
-    /**
-     * For Vulkan we want to cache the entire VkPipeline for reuse of draws. The Desc here holds all
-     * the information needed to differentiate one pipeline from another.
-     *
-     * The GrProgramDesc contains all the information need to create the actual shaders for the
-     * pipeline.
-     *
-     * For Vulkan we need to add to the GrProgramDesc to include the rest of the state on the
-     * pipline. This includes stencil settings, blending information, render pass format, draw face
-     * information, and primitive type. Note that some state is set dynamically on the pipeline for
-     * each draw  and thus is not included in this descriptor. This includes the viewport, scissor,
-     * and blend constant.
-     */
-    class Desc : public GrProgramDesc {
-    public:
-        static bool Build(Desc*,
-                          const GrPrimitiveProcessor&,
-                          const GrPipeline&,
-                          const GrStencilSettings&,
-                          GrPrimitiveType primitiveType,
-                          const GrShaderCaps&);
-
-    private:
-        typedef GrProgramDesc INHERITED;
-    };
-
-||||||| merged common ancestors
-=======
     /**
      * For Vulkan we want to cache the entire VkPipeline for reuse of draws. The Desc here holds all
      * the information needed to differentiate one pipeline from another.
@@ -96,7 +53,6 @@ public:
         typedef GrProgramDesc INHERITED;
     };
 
->>>>>>> upstream-releases
     /** Generates a pipeline state.
     *
     * The GrVkPipelineState implements what is specified in the GrPipeline and GrPrimitiveProcessor
@@ -106,14 +62,9 @@ public:
     * @return true if generation was successful.
     */
     static GrVkPipelineState* CreatePipelineState(GrVkGpu*,
-<<<<<<< HEAD
-                                                  const GrPrimitiveProcessor&,
-||||||| merged common ancestors
-=======
                                                   GrRenderTarget*, GrSurfaceOrigin,
                                                   const GrPrimitiveProcessor&,
                                                   const GrTextureProxy* const primProcProxies[],
->>>>>>> upstream-releases
                                                   const GrPipeline&,
                                                   const GrStencilSettings&,
                                                   GrPrimitiveType,
@@ -136,13 +87,6 @@ private:
 
     GrVkPipelineState* finalize(const GrStencilSettings&,
                                 GrPrimitiveType primitiveType,
-<<<<<<< HEAD
-                                VkRenderPass compatibleRenderPass,
-                                Desc*);
-||||||| merged common ancestors
-                                const GrVkRenderPass& renderPass,
-                                GrVkPipelineState::Desc*);
-=======
                                 VkRenderPass compatibleRenderPass,
                                 Desc*);
 
@@ -159,18 +103,12 @@ private:
                              const SkSL::Program::Inputs& fragInputs,
                              const SkSL::String& geom,
                              const SkSL::Program::Inputs& geomInputs);
->>>>>>> upstream-releases
 
     bool createVkShaderModule(VkShaderStageFlagBits stage,
                               const GrGLSLShaderBuilder& builder,
                               VkShaderModule* shaderModule,
                               VkPipelineShaderStageCreateInfo* stageInfo,
                               const SkSL::Program::Settings& settings,
-<<<<<<< HEAD
-                              Desc* desc);
-||||||| merged common ancestors
-                              GrVkPipelineState::Desc* desc);
-=======
                               Desc* desc,
                               SkSL::String* outSPIRV,
                               SkSL::Program::Inputs* outInputs);
@@ -181,7 +119,6 @@ private:
                                VkPipelineShaderStageCreateInfo* stageInfo,
                                SkSL::String spirv,
                                SkSL::Program::Inputs inputs);
->>>>>>> upstream-releases
 
     GrGLSLUniformHandler* uniformHandler() override { return &fUniformHandler; }
     const GrGLSLUniformHandler* uniformHandler() const override { return &fUniformHandler; }

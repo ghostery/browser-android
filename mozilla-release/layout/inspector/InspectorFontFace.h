@@ -22,44 +22,12 @@ namespace dom {
  * Information on font face usage by a given DOM Range, as returned by
  * InspectorUtils.getUsedFontFaces.
  */
-<<<<<<< HEAD
-class InspectorFontFace final : public NonRefcountedDOMObject {
- public:
-  InspectorFontFace(gfxFontEntry* aFontEntry, gfxFontGroup* aFontGroup,
-                    gfxTextRange::MatchType aMatchType)
-      : mFontEntry(aFontEntry), mFontGroup(aFontGroup), mMatchType(aMatchType) {
-    MOZ_COUNT_CTOR(InspectorFontFace);
-  }
-||||||| merged common ancestors
-class InspectorFontFace final : public NonRefcountedDOMObject
-{
-public:
-  InspectorFontFace(gfxFontEntry* aFontEntry,
-                    gfxFontGroup* aFontGroup,
-                    gfxTextRange::MatchType aMatchType)
-    : mFontEntry(aFontEntry)
-    , mFontGroup(aFontGroup)
-    , mMatchType(aMatchType)
-  {
-    MOZ_COUNT_CTOR(InspectorFontFace);
-  }
-=======
 class InspectorFontFace final : public NonRefcountedDOMObject {
  public:
   InspectorFontFace(gfxFontEntry* aFontEntry, gfxFontGroup* aFontGroup,
                     FontMatchType aMatchType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ~InspectorFontFace() { MOZ_COUNT_DTOR(InspectorFontFace); }
-||||||| merged common ancestors
-  ~InspectorFontFace()
-  {
-    MOZ_COUNT_DTOR(InspectorFontFace);
-  }
-=======
   ~InspectorFontFace();
->>>>>>> upstream-releases
 
   gfxFontEntry* GetFontEntry() const { return mFontEntry; }
   void AddMatchType(FontMatchType aMatchType) { mMatchType |= aMatchType; }

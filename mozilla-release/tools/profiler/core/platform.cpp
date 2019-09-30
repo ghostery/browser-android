@@ -76,142 +76,59 @@
 #include "nsXULAppAPI.h"
 #include "prdtoa.h"
 #include "prtime.h"
-#include "js/TraceLoggerAPI.h"
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-#include <processthreadsapi.h>  // for GetCurrentProcessId()
-#else
-#include <unistd.h>  // for getpid()
-#endif               // defined(XP_WIN)
-||||||| merged common ancestors
-#if defined(XP_WIN)
-#include <processthreadsapi.h>  // for GetCurrentProcessId()
-#else
-#include <unistd.h> // for getpid()
-#endif // defined(XP_WIN)
-=======
 #include <algorithm>
 #include <errno.h>
 #include <fstream>
 #include <ostream>
 #include <sstream>
->>>>>>> upstream-releases
 
 #ifdef MOZ_TASK_TRACER
 #  include "GeckoTaskTracer.h"
 #endif
 
 #if defined(GP_OS_android)
-<<<<<<< HEAD
-#include "FennecJNINatives.h"
-#include "FennecJNIWrappers.h"
-||||||| merged common ancestors
-# include "FennecJNINatives.h"
-# include "FennecJNIWrappers.h"
-=======
 #  include "GeneratedJNINatives.h"
 #  include "GeneratedJNIWrappers.h"
->>>>>>> upstream-releases
 #endif
 
 // Win32 builds always have frame pointers, so FramePointerStackWalk() always
 // works.
 #if defined(GP_PLAT_x86_windows)
-<<<<<<< HEAD
-#define HAVE_NATIVE_UNWIND
-#define USE_FRAME_POINTER_STACK_WALK
-||||||| merged common ancestors
-# define HAVE_NATIVE_UNWIND
-# define USE_FRAME_POINTER_STACK_WALK
-=======
 #  define HAVE_NATIVE_UNWIND
 #  define USE_FRAME_POINTER_STACK_WALK
->>>>>>> upstream-releases
 #endif
 
 // Win64 builds always omit frame pointers, so we use the slower
 // MozStackWalk(), which works in that case.
 #if defined(GP_PLAT_amd64_windows)
-<<<<<<< HEAD
-#define HAVE_NATIVE_UNWIND
-#define USE_MOZ_STACK_WALK
-||||||| merged common ancestors
-# define HAVE_NATIVE_UNWIND
-# define USE_MOZ_STACK_WALK
-=======
 #  define HAVE_NATIVE_UNWIND
 #  define USE_MOZ_STACK_WALK
->>>>>>> upstream-releases
 #endif
 
 // AArch64 Win64 doesn't seem to use frame pointers, so we use the slower
 // MozStackWalk().
 #if defined(GP_PLAT_arm64_windows)
-<<<<<<< HEAD
-#define HAVE_NATIVE_UNWIND
-#define USE_FRAME_POINTER_STACK_WALK
-||||||| merged common ancestors
-# define HAVE_NATIVE_UNWIND
-# define USE_FRAME_POINTER_STACK_WALK
-=======
 #  define HAVE_NATIVE_UNWIND
 #  define USE_MOZ_STACK_WALK
->>>>>>> upstream-releases
 #endif
 
 // Mac builds only have frame pointers when MOZ_PROFILING is specified, so
 // FramePointerStackWalk() only works in that case. We don't use MozStackWalk()
 // on Mac.
 #if defined(GP_OS_darwin) && defined(MOZ_PROFILING)
-<<<<<<< HEAD
-#define HAVE_NATIVE_UNWIND
-#define USE_FRAME_POINTER_STACK_WALK
-||||||| merged common ancestors
-# define HAVE_NATIVE_UNWIND
-# define USE_FRAME_POINTER_STACK_WALK
-=======
 #  define HAVE_NATIVE_UNWIND
 #  define USE_FRAME_POINTER_STACK_WALK
->>>>>>> upstream-releases
 #endif
 
 // Android builds use the ARM Exception Handling ABI to unwind.
 #if defined(GP_PLAT_arm_linux) || defined(GP_PLAT_arm_android)
-<<<<<<< HEAD
-#define HAVE_NATIVE_UNWIND
-#define USE_EHABI_STACKWALK
-#include "EHABIStackWalk.h"
-||||||| merged common ancestors
-# define HAVE_NATIVE_UNWIND
-# define USE_EHABI_STACKWALK
-# include "EHABIStackWalk.h"
-=======
 #  define HAVE_NATIVE_UNWIND
 #  define USE_EHABI_STACKWALK
 #  include "EHABIStackWalk.h"
->>>>>>> upstream-releases
 #endif
 
 // Linux builds use LUL, which uses DWARF info to unwind stacks.
-<<<<<<< HEAD
-#if defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux) ||    \
-    defined(GP_PLAT_x86_android) || defined(GP_PLAT_mips64_linux) || \
-    defined(GP_PLAT_arm64_linux) || defined(GP_PLAT_arm64_android)
-#define HAVE_NATIVE_UNWIND
-#define USE_LUL_STACKWALK
-#include "lul/LulMain.h"
-#include "lul/platform-linux-lul.h"
-||||||| merged common ancestors
-#if defined(GP_PLAT_amd64_linux) || \
-    defined(GP_PLAT_x86_linux) || defined(GP_PLAT_x86_android) || \
-    defined(GP_PLAT_mips64_linux) || \
-    defined(GP_PLAT_arm64_linux) || defined(GP_PLAT_arm64_android)
-# define HAVE_NATIVE_UNWIND
-# define USE_LUL_STACKWALK
-# include "lul/LulMain.h"
-# include "lul/platform-linux-lul.h"
-=======
 #if defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux) ||     \
     defined(GP_PLAT_amd64_android) || defined(GP_PLAT_x86_android) || \
     defined(GP_PLAT_mips64_linux) || defined(GP_PLAT_arm64_linux) ||  \
@@ -220,7 +137,6 @@
 #  define USE_LUL_STACKWALK
 #  include "lul/LulMain.h"
 #  include "lul/platform-linux-lul.h"
->>>>>>> upstream-releases
 
 // On linux we use LUL for periodic samples and synchronous samples, but we use
 // FramePointerStackWalk for backtrace samples when MOZ_PROFILING is enabled.
@@ -231,19 +147,9 @@
 // in a shared library without framepointers, however LUL can take a long time
 // to initialize, which is undesirable for consumers of
 // profiler_suspend_and_sample_thread like the Background Hang Reporter.
-<<<<<<< HEAD
-#if defined(MOZ_PROFILING)
-#define USE_FRAME_POINTER_STACK_WALK
-#endif
-||||||| merged common ancestors
-# if defined(MOZ_PROFILING)
-#  define USE_FRAME_POINTER_STACK_WALK
-# endif
-=======
 #  if defined(MOZ_PROFILING)
 #    define USE_FRAME_POINTER_STACK_WALK
 #  endif
->>>>>>> upstream-releases
 #endif
 
 // We can only stackwalk without expensive initialization on platforms which
@@ -251,31 +157,13 @@
 // initializing LUL, and EHABIStackWalk requires initializing EHABI, both of
 // which can be expensive.
 #if defined(USE_FRAME_POINTER_STACK_WALK) || defined(USE_MOZ_STACK_WALK)
-<<<<<<< HEAD
-#define HAVE_FASTINIT_NATIVE_UNWIND
-||||||| merged common ancestors
-# define HAVE_FASTINIT_NATIVE_UNWIND
-=======
 #  define HAVE_FASTINIT_NATIVE_UNWIND
->>>>>>> upstream-releases
 #endif
 
 #ifdef MOZ_VALGRIND
-<<<<<<< HEAD
-#include <valgrind/memcheck.h>
-||||||| merged common ancestors
-# include <valgrind/memcheck.h>
-=======
 #  include <valgrind/memcheck.h>
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define VALGRIND_MAKE_MEM_DEFINED(_addr, _len) ((void)0)
-||||||| merged common ancestors
-# define VALGRIND_MAKE_MEM_DEFINED(_addr,_len)   ((void)0)
-=======
 #  define VALGRIND_MAKE_MEM_DEFINED(_addr, _len) ((void)0)
->>>>>>> upstream-releases
 #endif
 
 #if defined(GP_OS_linux) || defined(GP_OS_android)
@@ -449,80 +337,25 @@ class CorePS {
 
   PS_GET(const Vector<UniquePtr<RegisteredThread>>&, RegisteredThreads)
 
-<<<<<<< HEAD
-  static void AppendRegisteredThread(
-      PSLockRef, UniquePtr<RegisteredThread>&& aRegisteredThread) {
-    sInstance->mRegisteredThreads.AppendElement(std::move(aRegisteredThread));
-||||||| merged common ancestors
-  static void AppendRegisteredThread(PSLockRef, UniquePtr<RegisteredThread>&& aRegisteredThread)
-  {
-    sInstance->mRegisteredThreads.AppendElement(std::move(aRegisteredThread));
-=======
   static void AppendRegisteredThread(
       PSLockRef, UniquePtr<RegisteredThread>&& aRegisteredThread) {
     MOZ_RELEASE_ASSERT(
         sInstance->mRegisteredThreads.append(std::move(aRegisteredThread)));
->>>>>>> upstream-releases
   }
 
   static void RemoveRegisteredThread(PSLockRef,
                                      RegisteredThread* aRegisteredThread) {
     // Remove aRegisteredThread from mRegisteredThreads.
-<<<<<<< HEAD
-    // Can't use RemoveElement() because we can't equality-compare a UniquePtr
-    // to a raw pointer.
-    sInstance->mRegisteredThreads.RemoveElementsBy(
-        [&](UniquePtr<RegisteredThread>& rt) {
-          return rt.get() == aRegisteredThread;
-        });
-  }
-
-  PS_GET(nsTArray<RefPtr<PageInformation>>&, RegisteredPages)
-
-  static void AppendRegisteredPage(PSLockRef,
-                                   RefPtr<PageInformation>&& aRegisteredPage) {
-#ifdef DEBUG
-    struct RegisteredPageComparator {
-      bool Equals(PageInformation* aA, PageInformation* aB) const {
-        return aA->Equals(aB);
-      }
-    };
-    MOZ_ASSERT(!sInstance->mRegisteredPages.Contains(
-        aRegisteredPage, RegisteredPageComparator()));
-#endif
-    sInstance->mRegisteredPages.AppendElement(std::move(aRegisteredPage));
-  }
-
-  static void RemoveRegisteredPages(PSLockRef,
-                                    const nsID& aRegisteredDocShellId) {
-    // Remove RegisteredPage from mRegisteredPages by given DocShell Id.
-    sInstance->mRegisteredPages.RemoveElementsBy(
-        [&](RefPtr<PageInformation>& rd) {
-          return rd->DocShellId().Equals(aRegisteredDocShellId);
-        });
-||||||| merged common ancestors
-    // Can't use RemoveElement() because we can't equality-compare a UniquePtr
-    // to a raw pointer.
-    sInstance->mRegisteredThreads.RemoveElementsBy(
-      [&](UniquePtr<RegisteredThread>& rt) { return rt.get() == aRegisteredThread; });
-=======
     for (UniquePtr<RegisteredThread>& rt : sInstance->mRegisteredThreads) {
       if (rt.get() == aRegisteredThread) {
         sInstance->mRegisteredThreads.erase(&rt);
         return;
       }
     }
->>>>>>> upstream-releases
   }
 
   PS_GET(Vector<RefPtr<PageInformation>>&, RegisteredPages)
 
-<<<<<<< HEAD
-  static void AppendCounter(PSLockRef, BaseProfilerCount* aCounter) {
-||||||| merged common ancestors
-  static void AppendCounter(PSLockRef, BaseProfilerCount* aCounter)
-  {
-=======
   static void AppendRegisteredPage(PSLockRef,
                                    RefPtr<PageInformation>&& aRegisteredPage) {
     // Disabling this assertion for now until we fix the same page registration
@@ -555,7 +388,6 @@ class CorePS {
   PS_GET(const Vector<BaseProfilerCount*>&, Counters)
 
   static void AppendCounter(PSLockRef, BaseProfilerCount* aCounter) {
->>>>>>> upstream-releases
     // we don't own the counter; they may be stored in static objects
     MOZ_RELEASE_ASSERT(sInstance->mCounters.append(aCounter));
   }
@@ -578,15 +410,9 @@ class CorePS {
   }
 #endif
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   PS_GET_AND_SET(const nsACString&, ProcessName)
 
  private:
->>>>>>> upstream-releases
   // The singleton instance
   static CorePS* sInstance;
 
@@ -600,10 +426,6 @@ private:
   // Info on all the registered pages.
   // DocShellId and DocShellHistoryId pairs in mRegisteredPages are unique.
   Vector<RefPtr<PageInformation>> mRegisteredPages;
-
-  // Info on all the registered pages.
-  // DocShellId and DocShellHistoryId pairs in mRegisteredPages are unique.
-  nsTArray<RefPtr<PageInformation>> mRegisteredPages;
 
   // Non-owning pointers to all active counters
   Vector<BaseProfilerCount*> mCounters;
@@ -651,40 +473,6 @@ class ActivePS {
     return aFeatures;
   }
 
-<<<<<<< HEAD
-  ActivePS(PSLockRef aLock, uint32_t aCapacity, double aInterval,
-           uint32_t aFeatures, const char** aFilters, uint32_t aFilterCount,
-           const Maybe<double>& aDuration)
-      : mGeneration(sNextGeneration++),
-        mCapacity(aCapacity),
-        mDuration(aDuration),
-        mInterval(aInterval),
-        mFeatures(AdjustFeatures(aFeatures, aFilterCount)),
-        mBuffer(MakeUnique<ProfileBuffer>(aCapacity))
-        // The new sampler thread doesn't start sampling immediately because the
-        // main loop within Run() is blocked until this function's caller
-        // unlocks gPSMutex.
-        ,
-        mSamplerThread(NewSamplerThread(aLock, mGeneration, aInterval)),
-        mInterposeObserver(ProfilerFeature::HasMainThreadIO(aFeatures)
-                               ? new ProfilerIOInterposeObserver()
-                               : nullptr)
-||||||| merged common ancestors
-  ActivePS(PSLockRef aLock, uint32_t aEntries, double aInterval,
-           uint32_t aFeatures, const char** aFilters, uint32_t aFilterCount)
-    : mGeneration(sNextGeneration++)
-    , mEntries(aEntries)
-    , mInterval(aInterval)
-    , mFeatures(AdjustFeatures(aFeatures, aFilterCount))
-    , mBuffer(MakeUnique<ProfileBuffer>(aEntries))
-      // The new sampler thread doesn't start sampling immediately because the
-      // main loop within Run() is blocked until this function's caller unlocks
-      // gPSMutex.
-    , mSamplerThread(NewSamplerThread(aLock, mGeneration, aInterval))
-    , mInterposeObserver(ProfilerFeature::HasMainThreadIO(aFeatures)
-                         ? new ProfilerIOInterposeObserver()
-                         : nullptr)
-=======
   ActivePS(PSLockRef aLock, PowerOfTwo32 aCapacity, double aInterval,
            uint32_t aFeatures, const char** aFilters, uint32_t aFilterCount,
            const Maybe<double>& aDuration)
@@ -702,7 +490,6 @@ class ActivePS {
         mInterposeObserver(ProfilerFeature::HasMainThreadIO(aFeatures)
                                ? new ProfilerIOInterposeObserver()
                                : nullptr)
->>>>>>> upstream-releases
 #undef HAS_FEATURE
         ,
         mIsPaused(false)
@@ -729,34 +516,17 @@ class ActivePS {
       } else {
         RefPtr<ProfilerIOInterposeObserver> observer = mInterposeObserver;
         NS_DispatchToMainThread(
-<<<<<<< HEAD
-            NS_NewRunnableFunction("ActivePS::ActivePS", [=]() {
-              IOInterposer::Register(IOInterposeObserver::OpAll, observer);
-            }));
-||||||| merged common ancestors
-          NS_NewRunnableFunction("ActivePS::ActivePS", [=]() {
-            IOInterposer::Register(IOInterposeObserver::OpAll, observer);
-          }));
-=======
             NS_NewRunnableFunction("ActivePS::ActivePS", [=]() {
               IOInterposer::Init();
               IOInterposer::Register(IOInterposeObserver::OpAll, observer);
             }));
->>>>>>> upstream-releases
       }
     }
 #endif
   }
 
-<<<<<<< HEAD
-  ~ActivePS() {
-||||||| merged common ancestors
-  ~ActivePS()
-  {
-=======
   ~ActivePS() {
 #if !defined(RELEASE_OR_BETA)
->>>>>>> upstream-releases
     if (mInterposeObserver) {
       // We need to unregister the observer on the main thread, because that's
       // where we've registered it.
@@ -795,25 +565,7 @@ class ActivePS {
 
       // If the filter starts with pid:, check for a pid match
       if (filter.find("pid:") == 0) {
-<<<<<<< HEAD
-        std::string mypid = std::to_string(
-#ifdef XP_WIN
-            GetCurrentProcessId()
-#else
-            getpid()
-#endif
-        );
-||||||| merged common ancestors
-        std::string mypid = std::to_string(
-#ifdef XP_WIN
-          GetCurrentProcessId()
-#else
-          getpid()
-#endif
-        );
-=======
         std::string mypid = std::to_string(profiler_current_process_id());
->>>>>>> upstream-releases
         if (filter.compare(4, std::string::npos, mypid) == 0) {
           return true;
         }
@@ -823,29 +575,12 @@ class ActivePS {
     return false;
   }
 
-<<<<<<< HEAD
- public:
-  static void Create(PSLockRef aLock, uint32_t aCapacity, double aInterval,
-                     uint32_t aFeatures, const char** aFilters,
-                     uint32_t aFilterCount, const Maybe<double>& aDuration) {
-    sInstance = new ActivePS(aLock, aCapacity, aInterval, aFeatures, aFilters,
-                             aFilterCount, aDuration);
-||||||| merged common ancestors
-public:
-  static void Create(PSLockRef aLock, uint32_t aEntries, double aInterval,
-                     uint32_t aFeatures,
-                     const char** aFilters, uint32_t aFilterCount)
-  {
-    sInstance = new ActivePS(aLock, aEntries, aInterval, aFeatures,
-                             aFilters, aFilterCount);
-=======
  public:
   static void Create(PSLockRef aLock, PowerOfTwo32 aCapacity, double aInterval,
                      uint32_t aFeatures, const char** aFilters,
                      uint32_t aFilterCount, const Maybe<double>& aDuration) {
     sInstance = new ActivePS(aLock, aCapacity, aInterval, aFeatures, aFilters,
                              aFilterCount, aDuration);
->>>>>>> upstream-releases
   }
 
   static MOZ_MUST_USE SamplerThread* Destroy(PSLockRef aLock) {
@@ -858,27 +593,12 @@ public:
 
   static bool Exists(PSLockRef) { return !!sInstance; }
 
-<<<<<<< HEAD
-  static bool Equals(PSLockRef, uint32_t aCapacity,
-                     const Maybe<double>& aDuration, double aInterval,
-                     uint32_t aFeatures, const char** aFilters,
-                     uint32_t aFilterCount) {
-    if (sInstance->mCapacity != aCapacity ||
-        sInstance->mDuration != aDuration ||
-||||||| merged common ancestors
-  static bool Equals(PSLockRef,
-                     uint32_t aEntries, double aInterval, uint32_t aFeatures,
-                     const char** aFilters, uint32_t aFilterCount)
-  {
-    if (sInstance->mEntries != aEntries ||
-=======
   static bool Equals(PSLockRef, PowerOfTwo32 aCapacity,
                      const Maybe<double>& aDuration, double aInterval,
                      uint32_t aFeatures, const char** aFilters,
                      uint32_t aFilterCount) {
     if (sInstance->mCapacity != aCapacity ||
         sInstance->mDuration != aDuration ||
->>>>>>> upstream-releases
         sInstance->mInterval != aInterval ||
         sInstance->mFeatures != aFeatures ||
         sInstance->mFilters.length() != aFilterCount) {
@@ -916,58 +636,21 @@ public:
 
   PS_GET(uint32_t, Generation)
 
-<<<<<<< HEAD
-  PS_GET(uint32_t, Capacity)
-
-  PS_GET(Maybe<double>, Duration)
-||||||| merged common ancestors
-  PS_GET(uint32_t, Entries)
-=======
   PS_GET(PowerOfTwo32, Capacity)
 
   PS_GET(Maybe<double>, Duration)
->>>>>>> upstream-releases
 
   PS_GET(double, Interval)
 
   PS_GET(uint32_t, Features)
 
-<<<<<<< HEAD
-#define PS_GET_FEATURE(n_, str_, Name_)                       \
-  static bool Feature##Name_(PSLockRef) {                     \
-    return ProfilerFeature::Has##Name_(sInstance->mFeatures); \
-  }
-||||||| merged common ancestors
-  #define PS_GET_FEATURE(n_, str_, Name_) \
-    static bool Feature##Name_(PSLockRef) \
-    { \
-      return ProfilerFeature::Has##Name_(sInstance->mFeatures); \
-    }
-=======
 #define PS_GET_FEATURE(n_, str_, Name_, desc_)                \
   static bool Feature##Name_(PSLockRef) {                     \
     return ProfilerFeature::Has##Name_(sInstance->mFeatures); \
   }
->>>>>>> upstream-releases
 
   PROFILER_FOR_EACH_FEATURE(PS_GET_FEATURE)
 
-<<<<<<< HEAD
-#undef PS_GET_FEATURE
-
-  static uint32_t JSFlags(PSLockRef aLock) {
-    uint32_t Flags = 0;
-    Flags |= FeatureJS(aLock) ? uint32_t(JSSamplingFlags::StackSampling) : 0;
-    Flags |= FeatureTrackOptimizations(aLock)
-                 ? uint32_t(JSSamplingFlags::TrackOptimizations)
-                 : 0;
-    Flags |=
-        FeatureJSTracer(aLock) ? uint32_t(JSSamplingFlags::TraceLogging) : 0;
-    return Flags;
-  }
-||||||| merged common ancestors
-  #undef PS_GET_FEATURE
-=======
 #undef PS_GET_FEATURE
 
   static uint32_t JSFlags(PSLockRef aLock) {
@@ -985,21 +668,12 @@ public:
                  : 0;
     return Flags;
   }
->>>>>>> upstream-releases
 
   PS_GET(const Vector<std::string>&, Filters)
 
   static ProfileBuffer& Buffer(PSLockRef) { return *sInstance->mBuffer.get(); }
 
-<<<<<<< HEAD
-  static const nsTArray<LiveProfiledThreadData>& LiveProfiledThreads(
-      PSLockRef) {
-||||||| merged common ancestors
-  static const nsTArray<LiveProfiledThreadData>& LiveProfiledThreads(PSLockRef)
-  {
-=======
   static const Vector<LiveProfiledThreadData>& LiveProfiledThreads(PSLockRef) {
->>>>>>> upstream-releases
     return sInstance->mLiveProfiledThreads;
   }
 
@@ -1012,55 +686,21 @@ public:
   // The returned array is sorted by thread register time.
   // Do not hold on to the return value across thread registration or profiler
   // restarts.
-<<<<<<< HEAD
-  static nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> ProfiledThreads(
-      PSLockRef) {
-    nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> array;
-||||||| merged common ancestors
-  static nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> ProfiledThreads(PSLockRef)
-  {
-    nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> array;
-=======
   static Vector<Pair<RegisteredThread*, ProfiledThreadData*>> ProfiledThreads(
       PSLockRef) {
     Vector<Pair<RegisteredThread*, ProfiledThreadData*>> array;
     MOZ_RELEASE_ASSERT(
         array.initCapacity(sInstance->mLiveProfiledThreads.length() +
                            sInstance->mDeadProfiledThreads.length()));
->>>>>>> upstream-releases
     for (auto& t : sInstance->mLiveProfiledThreads) {
-<<<<<<< HEAD
-      array.AppendElement(
-          MakePair(t.mRegisteredThread, t.mProfiledThreadData.get()));
-||||||| merged common ancestors
-      array.AppendElement(MakePair(t.mRegisteredThread, t.mProfiledThreadData.get()));
-=======
       MOZ_RELEASE_ASSERT(array.append(
           MakePair(t.mRegisteredThread, t.mProfiledThreadData.get())));
->>>>>>> upstream-releases
     }
     for (auto& t : sInstance->mDeadProfiledThreads) {
       MOZ_RELEASE_ASSERT(
           array.append(MakePair((RegisteredThread*)nullptr, t.get())));
     }
 
-<<<<<<< HEAD
-    class ThreadRegisterTimeComparator {
-     public:
-      bool Equals(const Pair<RegisteredThread*, ProfiledThreadData*>& a,
-                  const Pair<RegisteredThread*, ProfiledThreadData*>& b) const {
-        return a.second()->Info()->RegisterTime() ==
-               b.second()->Info()->RegisterTime();
-      }
-||||||| merged common ancestors
-    class ThreadRegisterTimeComparator {
-    public:
-      bool Equals(const Pair<RegisteredThread*, ProfiledThreadData*>& a,
-                  const Pair<RegisteredThread*, ProfiledThreadData*>& b) const
-      {
-        return a.second()->Info()->RegisterTime() == b.second()->Info()->RegisterTime();
-      }
-=======
     std::sort(array.begin(), array.end(),
               [](const Pair<RegisteredThread*, ProfiledThreadData*>& a,
                  const Pair<RegisteredThread*, ProfiledThreadData*>& b) {
@@ -1069,26 +709,7 @@ public:
               });
     return array;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      bool LessThan(
-          const Pair<RegisteredThread*, ProfiledThreadData*>& a,
-          const Pair<RegisteredThread*, ProfiledThreadData*>& b) const {
-        return a.second()->Info()->RegisterTime() <
-               b.second()->Info()->RegisterTime();
-      }
-    };
-    array.Sort(ThreadRegisterTimeComparator());
-||||||| merged common ancestors
-      bool LessThan(const Pair<RegisteredThread*, ProfiledThreadData*>& a,
-                    const Pair<RegisteredThread*, ProfiledThreadData*>& b) const
-      {
-        return a.second()->Info()->RegisterTime() < b.second()->Info()->RegisterTime();
-      }
-    };
-    array.Sort(ThreadRegisterTimeComparator());
-=======
   static Vector<RefPtr<PageInformation>> ProfiledPages(PSLockRef aLock) {
     Vector<RefPtr<PageInformation>> array;
     for (auto& d : CorePS::RegisteredPages(aLock)) {
@@ -1099,42 +720,15 @@ public:
     }
     // We don't need to sort the DocShells like threads since we won't show them
     // as a list.
->>>>>>> upstream-releases
-    return array;
-  }
-
-  static nsTArray<RefPtr<PageInformation>> ProfiledPages(PSLockRef aLock) {
-    nsTArray<RefPtr<PageInformation>> array;
-    for (auto& d : CorePS::RegisteredPages(aLock)) {
-      array.AppendElement(d);
-    }
-    for (auto& d : sInstance->mDeadProfiledPages) {
-      array.AppendElement(d);
-    }
-    // We don't need to sort the DocShells like threads since we won't show them
-    // as a list.
     return array;
   }
 
   // Do a linear search through mLiveProfiledThreads to find the
   // ProfiledThreadData object for a RegisteredThread.
-<<<<<<< HEAD
-  static ProfiledThreadData* GetProfiledThreadData(
-      PSLockRef, RegisteredThread* aRegisteredThread) {
-    for (size_t i = 0; i < sInstance->mLiveProfiledThreads.Length(); i++) {
-      LiveProfiledThreadData& thread = sInstance->mLiveProfiledThreads[i];
-||||||| merged common ancestors
-  static ProfiledThreadData* GetProfiledThreadData(PSLockRef,
-                                                   RegisteredThread* aRegisteredThread)
-  {
-    for (size_t i = 0; i < sInstance->mLiveProfiledThreads.Length(); i++) {
-      LiveProfiledThreadData& thread = sInstance->mLiveProfiledThreads[i];
-=======
   static ProfiledThreadData* GetProfiledThreadData(
       PSLockRef, RegisteredThread* aRegisteredThread) {
     for (const LiveProfiledThreadData& thread :
          sInstance->mLiveProfiledThreads) {
->>>>>>> upstream-releases
       if (thread.mRegisteredThread == aRegisteredThread) {
         return thread.mProfiledThreadData.get();
       }
@@ -1142,37 +736,15 @@ public:
     return nullptr;
   }
 
-<<<<<<< HEAD
-  static ProfiledThreadData* AddLiveProfiledThread(
-      PSLockRef, RegisteredThread* aRegisteredThread,
-      UniquePtr<ProfiledThreadData>&& aProfiledThreadData) {
-    sInstance->mLiveProfiledThreads.AppendElement(LiveProfiledThreadData{
-        aRegisteredThread, std::move(aProfiledThreadData)});
-||||||| merged common ancestors
-  static ProfiledThreadData*
-  AddLiveProfiledThread(PSLockRef, RegisteredThread* aRegisteredThread,
-                        UniquePtr<ProfiledThreadData>&& aProfiledThreadData)
-  {
-    sInstance->mLiveProfiledThreads.AppendElement(
-      LiveProfiledThreadData{ aRegisteredThread, std::move(aProfiledThreadData) });
-=======
   static ProfiledThreadData* AddLiveProfiledThread(
       PSLockRef, RegisteredThread* aRegisteredThread,
       UniquePtr<ProfiledThreadData>&& aProfiledThreadData) {
     MOZ_RELEASE_ASSERT(
         sInstance->mLiveProfiledThreads.append(LiveProfiledThreadData{
             aRegisteredThread, std::move(aProfiledThreadData)}));
->>>>>>> upstream-releases
 
     // Return a weak pointer to the ProfiledThreadData object.
-<<<<<<< HEAD
-    return sInstance->mLiveProfiledThreads.LastElement()
-        .mProfiledThreadData.get();
-||||||| merged common ancestors
-    return sInstance->mLiveProfiledThreads.LastElement().mProfiledThreadData.get();
-=======
     return sInstance->mLiveProfiledThreads.back().mProfiledThreadData.get();
->>>>>>> upstream-releases
   }
 
   static void UnregisterThread(PSLockRef aLockRef,
@@ -1186,24 +758,12 @@ public:
     for (size_t i = 0; i < sInstance->mLiveProfiledThreads.length(); i++) {
       LiveProfiledThreadData& thread = sInstance->mLiveProfiledThreads[i];
       if (thread.mRegisteredThread == aRegisteredThread) {
-<<<<<<< HEAD
-        thread.mProfiledThreadData->NotifyUnregistered(
-            sInstance->mBuffer->mRangeEnd);
-        sInstance->mDeadProfiledThreads.AppendElement(
-            std::move(thread.mProfiledThreadData));
-        sInstance->mLiveProfiledThreads.RemoveElementAt(i);
-||||||| merged common ancestors
-        thread.mProfiledThreadData->NotifyUnregistered(sInstance->mBuffer->mRangeEnd);
-        sInstance->mDeadProfiledThreads.AppendElement(std::move(thread.mProfiledThreadData));
-        sInstance->mLiveProfiledThreads.RemoveElementAt(i);
-=======
         thread.mProfiledThreadData->NotifyUnregistered(
             sInstance->mBuffer->mRangeEnd);
         MOZ_RELEASE_ASSERT(sInstance->mDeadProfiledThreads.append(
             std::move(thread.mProfiledThreadData)));
         sInstance->mLiveProfiledThreads.erase(
             &sInstance->mLiveProfiledThreads[i]);
->>>>>>> upstream-releases
         return;
       }
     }
@@ -1218,37 +778,6 @@ public:
   static void DiscardExpiredDeadProfiledThreads(PSLockRef) {
     uint64_t bufferRangeStart = sInstance->mBuffer->mRangeStart;
     // Discard any dead threads that were unregistered before bufferRangeStart.
-<<<<<<< HEAD
-    sInstance->mDeadProfiledThreads.RemoveElementsBy(
-        [bufferRangeStart](UniquePtr<ProfiledThreadData>& aProfiledThreadData) {
-          Maybe<uint64_t> bufferPosition =
-              aProfiledThreadData->BufferPositionWhenUnregistered();
-          MOZ_RELEASE_ASSERT(bufferPosition,
-                             "should have unregistered this thread");
-          return *bufferPosition < bufferRangeStart;
-        });
-  }
-
-  static void UnregisterPages(PSLockRef aLock,
-                              const nsID& aRegisteredDocShellId) {
-    auto& registeredPages = CorePS::RegisteredPages(aLock);
-    for (size_t i = 0; i < registeredPages.Length(); i++) {
-      RefPtr<PageInformation>& page = registeredPages[i];
-      if (page->DocShellId().Equals(aRegisteredDocShellId)) {
-        page->NotifyUnregistered(sInstance->mBuffer->mRangeEnd);
-        sInstance->mDeadProfiledPages.AppendElement(std::move(page));
-        registeredPages.RemoveElementAt(i--);
-      }
-    }
-||||||| merged common ancestors
-    sInstance->mDeadProfiledThreads.RemoveElementsBy(
-      [bufferRangeStart](UniquePtr<ProfiledThreadData>& aProfiledThreadData) {
-        Maybe<uint64_t> bufferPosition =
-          aProfiledThreadData->BufferPositionWhenUnregistered();
-        MOZ_RELEASE_ASSERT(bufferPosition, "should have unregistered this thread");
-        return *bufferPosition < bufferRangeStart;
-      });
-=======
     sInstance->mDeadProfiledThreads.eraseIf(
         [bufferRangeStart](
             const UniquePtr<ProfiledThreadData>& aProfiledThreadData) {
@@ -1368,30 +897,9 @@ public:
     }
     sInstance->mExitProfiles.clear();
     return profiles;
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  static void DiscardExpiredPages(PSLockRef) {
-    uint64_t bufferRangeStart = sInstance->mBuffer->mRangeStart;
-    // Discard any dead pages that were unregistered before
-    // bufferRangeStart.
-    sInstance->mDeadProfiledPages.RemoveElementsBy(
-        [bufferRangeStart](RefPtr<PageInformation>& aProfiledPage) {
-          Maybe<uint64_t> bufferPosition =
-              aProfiledPage->BufferPositionWhenUnregistered();
-          MOZ_RELEASE_ASSERT(bufferPosition,
-                             "should have unregistered this page");
-          return *bufferPosition < bufferRangeStart;
-        });
   }
 
  private:
-||||||| merged common ancestors
-private:
-=======
- private:
->>>>>>> upstream-releases
   // The singleton instance.
   static ActivePS* sInstance;
 
@@ -1415,22 +923,11 @@ private:
   const uint32_t mGeneration;
   static uint32_t sNextGeneration;
 
-<<<<<<< HEAD
-  // The maximum number of entries in mBuffer.
-  const uint32_t mCapacity;
-
-  // The maximum duration of entries in mBuffer.
-  const Maybe<double> mDuration;
-||||||| merged common ancestors
-  // The number of entries in mBuffer.
-  const uint32_t mEntries;
-=======
   // The maximum number of entries in mBuffer.
   const PowerOfTwo32 mCapacity;
 
   // The maximum duration of entries in mBuffer, in seconds.
   const Maybe<double> mDuration;
->>>>>>> upstream-releases
 
   // The interval between samples, measured in milliseconds.
   const double mInterval;
@@ -1458,12 +955,6 @@ private:
   // We are keeping them in case we need them in the profile data.
   // We are removing them when we ensure that we won't need them anymore.
   Vector<RefPtr<PageInformation>> mDeadProfiledPages;
-
-  // Info on all the dead pages.
-  // Registered pages are being moved to this array after unregistration.
-  // We are keeping them in case we need them in the profile data.
-  // We are removing them when we ensure that we won't need them anymore.
-  nsTArray<RefPtr<PageInformation>> mDeadProfiledPages;
 
   // The current sampler thread. This class is not responsible for destroying
   // the SamplerThread object; the Destroy() method returns it so the caller
@@ -2000,20 +1491,9 @@ static void DoEHABIBacktrace(PSLockRef aLock,
 #ifdef USE_LUL_STACKWALK
 
 // See the comment at the callsite for why this function is necessary.
-<<<<<<< HEAD
-#if defined(MOZ_HAVE_ASAN_BLACKLIST)
-MOZ_ASAN_BLACKLIST static void ASAN_memcpy(void* aDst, const void* aSrc,
-                                           size_t aLen) {
-||||||| merged common ancestors
-#if defined(MOZ_HAVE_ASAN_BLACKLIST)
-MOZ_ASAN_BLACKLIST static void
-ASAN_memcpy(void* aDst, const void* aSrc, size_t aLen)
-{
-=======
 #  if defined(MOZ_HAVE_ASAN_BLACKLIST)
 MOZ_ASAN_BLACKLIST static void ASAN_memcpy(void* aDst, const void* aSrc,
                                            size_t aLen) {
->>>>>>> upstream-releases
   // The obvious thing to do here is call memcpy(). However, although
   // ASAN_memcpy() is not instrumented by ASAN, memcpy() still is, and the
   // false positive still manifests! So we must implement memcpy() ourselves
@@ -2049,31 +1529,13 @@ static void DoLULBacktrace(PSLockRef aLock,
   startRegs.r13 = lul::TaggedUWord(mc->arm_sp);
   startRegs.r12 = lul::TaggedUWord(mc->arm_ip);
   startRegs.r11 = lul::TaggedUWord(mc->arm_fp);
-<<<<<<< HEAD
-  startRegs.r7 = lul::TaggedUWord(mc->arm_r7);
-#elif defined(GP_PLAT_arm64_linux) || defined(GP_PLAT_arm64_android)
-  startRegs.pc = lul::TaggedUWord(mc->pc);
-||||||| merged common ancestors
-  startRegs.r7  = lul::TaggedUWord(mc->arm_r7);
-#elif defined(GP_PLAT_arm64_linux) || defined(GP_PLAT_arm64_android)
-  startRegs.pc  = lul::TaggedUWord(mc->pc);
-=======
   startRegs.r7 = lul::TaggedUWord(mc->arm_r7);
 #  elif defined(GP_PLAT_arm64_linux) || defined(GP_PLAT_arm64_android)
   startRegs.pc = lul::TaggedUWord(mc->pc);
->>>>>>> upstream-releases
   startRegs.x29 = lul::TaggedUWord(mc->regs[29]);
   startRegs.x30 = lul::TaggedUWord(mc->regs[30]);
-<<<<<<< HEAD
-  startRegs.sp = lul::TaggedUWord(mc->sp);
-#elif defined(GP_PLAT_x86_linux) || defined(GP_PLAT_x86_android)
-||||||| merged common ancestors
-  startRegs.sp  = lul::TaggedUWord(mc->sp);
-#elif defined(GP_PLAT_x86_linux) || defined(GP_PLAT_x86_android)
-=======
   startRegs.sp = lul::TaggedUWord(mc->sp);
 #  elif defined(GP_PLAT_x86_linux) || defined(GP_PLAT_x86_android)
->>>>>>> upstream-releases
   startRegs.xip = lul::TaggedUWord(mc->gregs[REG_EIP]);
   startRegs.xsp = lul::TaggedUWord(mc->gregs[REG_ESP]);
   startRegs.xbp = lul::TaggedUWord(mc->gregs[REG_EBP]);
@@ -2081,19 +1543,9 @@ static void DoLULBacktrace(PSLockRef aLock,
   startRegs.pc = lul::TaggedUWord(mc->pc);
   startRegs.sp = lul::TaggedUWord(mc->gregs[29]);
   startRegs.fp = lul::TaggedUWord(mc->gregs[30]);
-<<<<<<< HEAD
-#else
-#error "Unknown plat"
-#endif
-||||||| merged common ancestors
-#else
-# error "Unknown plat"
-#endif
-=======
 #  else
 #    error "Unknown plat"
 #  endif
->>>>>>> upstream-releases
 
   // Copy up to N_STACK_BYTES from rsp-REDZONE upwards, but not going past the
   // stack's registered top point.  Do some basic sanity checks too.  This
@@ -2144,19 +1596,9 @@ static void DoLULBacktrace(PSLockRef aLock,
 #  elif defined(GP_PLAT_mips64_linux)
     uintptr_t rEDZONE_SIZE = 0;
     uintptr_t start = startRegs.sp.Value() - rEDZONE_SIZE;
-<<<<<<< HEAD
-#else
-#error "Unknown plat"
-#endif
-||||||| merged common ancestors
-#else
-#   error "Unknown plat"
-#endif
-=======
 #  else
 #    error "Unknown plat"
 #  endif
->>>>>>> upstream-releases
     uintptr_t end = reinterpret_cast<uintptr_t>(aRegisteredThread.StackTop());
     uintptr_t ws = sizeof(void*);
     start &= ~(ws - 1);
@@ -2222,19 +1664,9 @@ static void DoNativeBacktrace(PSLockRef aLock,
   DoFramePointerBacktrace(aLock, aRegisteredThread, aRegs, aNativeStack);
 #  elif defined(USE_MOZ_STACK_WALK)
   DoMozStackWalkBacktrace(aLock, aRegisteredThread, aRegs, aNativeStack);
-<<<<<<< HEAD
-#else
-#error "Invalid configuration"
-#endif
-||||||| merged common ancestors
-#else
-  #error "Invalid configuration"
-#endif
-=======
 #  else
 #    error "Invalid configuration"
 #  endif
->>>>>>> upstream-releases
 }
 #endif
 
@@ -2384,22 +1816,10 @@ static void StreamTaskTracer(PSLockRef aLock, SpliceableJSONWriter& aWriter) {
 
   aWriter.StartArrayProperty("data");
   {
-<<<<<<< HEAD
-    UniquePtr<nsTArray<nsCString>> data =
-        tasktracer::GetLoggedData(CorePS::ProcessStartTime());
-    for (uint32_t i = 0; i < data->Length(); ++i) {
-      aWriter.StringElement((data->ElementAt(i)).get());
-||||||| merged common ancestors
-    UniquePtr<nsTArray<nsCString>> data =
-      tasktracer::GetLoggedData(CorePS::ProcessStartTime());
-    for (uint32_t i = 0; i < data->Length(); ++i) {
-      aWriter.StringElement((data->ElementAt(i)).get());
-=======
     UniquePtr<Vector<nsCString>> data =
         tasktracer::GetLoggedData(CorePS::ProcessStartTime());
     for (const nsCString& dataString : *data) {
       aWriter.StringElement(dataString.get());
->>>>>>> upstream-releases
     }
   }
   aWriter.EndArray();
@@ -2407,16 +1827,8 @@ static void StreamTaskTracer(PSLockRef aLock, SpliceableJSONWriter& aWriter) {
   aWriter.StartArrayProperty("threads");
   {
     ActivePS::DiscardExpiredDeadProfiledThreads(aLock);
-<<<<<<< HEAD
-    nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> threads =
-        ActivePS::ProfiledThreads(aLock);
-||||||| merged common ancestors
-    nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> threads =
-      ActivePS::ProfiledThreads(aLock);
-=======
     Vector<Pair<RegisteredThread*, ProfiledThreadData*>> threads =
         ActivePS::ProfiledThreads(aLock);
->>>>>>> upstream-releases
     for (auto& thread : threads) {
       RefPtr<ThreadInfo> info = thread.second()->Info();
       StreamNameAndThreadId(aWriter, info->Name(), info->ThreadId());
@@ -2429,81 +1841,6 @@ static void StreamTaskTracer(PSLockRef aLock, SpliceableJSONWriter& aWriter) {
 #endif
 }
 
-<<<<<<< HEAD
-static void StreamCategories(SpliceableJSONWriter& aWriter) {
-  // Same order as ProfilingStackFrame::Category.
-  // The list of available color names is:
-  // transparent, grey, purple, yellow, orange, lightblue, green, blue, magenta
-  aWriter.Start();
-  aWriter.StringProperty("name", "Idle");
-  aWriter.StringProperty("color", "transparent");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Other");
-  aWriter.StringProperty("color", "grey");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Layout");
-  aWriter.StringProperty("color", "purple");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "JavaScript");
-  aWriter.StringProperty("color", "yellow");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "GC / CC");
-  aWriter.StringProperty("color", "orange");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Network");
-  aWriter.StringProperty("color", "lightblue");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Graphics");
-  aWriter.StringProperty("color", "green");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "DOM");
-  aWriter.StringProperty("color", "blue");
-||||||| merged common ancestors
-static void
-StreamCategories(SpliceableJSONWriter& aWriter)
-{
-  // Same order as ProfilingStackFrame::Category.
-  // The list of available color names is:
-  // transparent, grey, purple, yellow, orange, lightblue, green, blue, magenta
-  aWriter.Start();
-  aWriter.StringProperty("name", "Idle");
-  aWriter.StringProperty("color", "transparent");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Other");
-  aWriter.StringProperty("color", "grey");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Layout");
-  aWriter.StringProperty("color", "purple");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "JavaScript");
-  aWriter.StringProperty("color", "yellow");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "GC / CC");
-  aWriter.StringProperty("color", "orange");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Network");
-  aWriter.StringProperty("color", "lightblue");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "Graphics");
-  aWriter.StringProperty("color", "green");
-  aWriter.EndObject();
-  aWriter.Start();
-  aWriter.StringProperty("name", "DOM");
-  aWriter.StringProperty("color", "blue");
-=======
 static void StreamCategories(SpliceableJSONWriter& aWriter) {
   // Same order as ProfilingCategory. Format:
   // [
@@ -2533,7 +1870,6 @@ static void StreamCategories(SpliceableJSONWriter& aWriter) {
   aWriter.StringElement(labelAsString);
 #define CATEGORY_JSON_END_CATEGORY \
   aWriter.EndArray();              \
->>>>>>> upstream-releases
   aWriter.EndObject();
 
   PROFILING_CATEGORY_LIST(CATEGORY_JSON_BEGIN_CATEGORY,
@@ -2549,13 +1885,7 @@ static void StreamMetaJSCustomObject(PSLockRef aLock,
                                      bool aIsShuttingDown) {
   MOZ_RELEASE_ASSERT(CorePS::Exists() && ActivePS::Exists(aLock));
 
-<<<<<<< HEAD
-  aWriter.IntProperty("version", 14);
-||||||| merged common ancestors
-  aWriter.IntProperty("version", 13);
-=======
   aWriter.IntProperty("version", 16);
->>>>>>> upstream-releases
 
   // The "startTime" field holds the number of milliseconds since midnight
   // January 1, 1970 GMT. This grotty code computes (Now - (Now -
@@ -2747,37 +2077,18 @@ static UniquePtr<ProfileBuffer> CollectJavaThreadProfileData() {
       //  - IDLE for the wait function android.os.MessageQueue.nativePollOnce()
       //  - OTHER for any function that's directly called by that wait function
       //  - no category on everything else
-<<<<<<< HEAD
-      Maybe<js::ProfilingStackFrame::Category> category;
-      if (frameNameString.EqualsLiteral(
-              "android.os.MessageQueue.nativePollOnce()")) {
-        category = Some(js::ProfilingStackFrame::Category::IDLE);
-||||||| merged common ancestors
-      Maybe<js::ProfilingStackFrame::Category> category;
-      if (frameNameString.EqualsLiteral("android.os.MessageQueue.nativePollOnce()")) {
-        category = Some(js::ProfilingStackFrame::Category::IDLE);
-=======
       Maybe<JS::ProfilingCategoryPair> categoryPair;
       if (frameNameString.EqualsLiteral(
               "android.os.MessageQueue.nativePollOnce()")) {
         categoryPair = Some(JS::ProfilingCategoryPair::IDLE);
->>>>>>> upstream-releases
         parentFrameWasIdleFrame = true;
       } else if (parentFrameWasIdleFrame) {
         categoryPair = Some(JS::ProfilingCategoryPair::OTHER);
         parentFrameWasIdleFrame = false;
       }
 
-<<<<<<< HEAD
-      buffer->CollectCodeLocation("", frameNameString.get(), 0, Nothing(),
-                                  Nothing(), category);
-||||||| merged common ancestors
-      buffer->CollectCodeLocation("", frameNameString.get(), Nothing(),
-          Nothing(), category);
-=======
       buffer->CollectCodeLocation("", frameNameString.get(), 0, Nothing(),
                                   Nothing(), categoryPair);
->>>>>>> upstream-releases
     }
     sampleId++;
   }
@@ -2806,14 +2117,6 @@ static void locked_profiler_stream_json_for_this_process(
   { StreamMetaJSCustomObject(aLock, aWriter, aIsShuttingDown); }
   aWriter.EndObject();
 
-<<<<<<< HEAD
-  // Put page data
-  aWriter.StartArrayProperty("pages");
-  { StreamPages(aLock, aWriter); }
-  aWriter.EndArray();
-
-||||||| merged common ancestors
-=======
   // Put page data
   aWriter.StartArrayProperty("pages");
   { StreamPages(aLock, aWriter); }
@@ -2821,7 +2124,6 @@ static void locked_profiler_stream_json_for_this_process(
 
   buffer.StreamProfilerOverheadToJSON(aWriter, CorePS::ProcessStartTime(),
                                       aSinceTime);
->>>>>>> upstream-releases
   buffer.StreamCountersToJSON(aWriter, CorePS::ProcessStartTime(), aSinceTime);
   buffer.StreamMemoryToJSON(aWriter, CorePS::ProcessStartTime(), aSinceTime);
 
@@ -2836,71 +2138,20 @@ static void locked_profiler_stream_json_for_this_process(
   aWriter.StartArrayProperty("threads");
   {
     ActivePS::DiscardExpiredDeadProfiledThreads(aLock);
-<<<<<<< HEAD
-    nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> threads =
-        ActivePS::ProfiledThreads(aLock);
-||||||| merged common ancestors
-    nsTArray<Pair<RegisteredThread*, ProfiledThreadData*>> threads =
-      ActivePS::ProfiledThreads(aLock);
-=======
     Vector<Pair<RegisteredThread*, ProfiledThreadData*>> threads =
         ActivePS::ProfiledThreads(aLock);
->>>>>>> upstream-releases
     for (auto& thread : threads) {
       RegisteredThread* registeredThread = thread.first();
       JSContext* cx =
           registeredThread ? registeredThread->GetJSContext() : nullptr;
       ProfiledThreadData* profiledThreadData = thread.second();
       profiledThreadData->StreamJSON(buffer, cx, aWriter,
-<<<<<<< HEAD
-                                     CorePS::ProcessStartTime(), aSinceTime,
-                                     ActivePS::FeatureJSTracer(aLock));
-||||||| merged common ancestors
-                                     CorePS::ProcessStartTime(), aSinceTime);
-=======
                                      CorePS::ProcessName(aLock),
                                      CorePS::ProcessStartTime(), aSinceTime,
                                      ActivePS::FeatureJSTracer(aLock));
->>>>>>> upstream-releases
     }
 
 #if defined(GP_OS_android)
-<<<<<<< HEAD
-    if (ActivePS::FeatureJava(aLock)) {
-      java::GeckoJavaSampler::Pause();
-
-      UniquePtr<ProfileBuffer> javaBuffer = CollectJavaThreadProfileData();
-
-      // Thread id of java Main thread is 0, if we support profiling of other
-      // java thread, we have to get thread id and name via JNI.
-      RefPtr<ThreadInfo> threadInfo = new ThreadInfo(
-          "Java Main Thread", 0, false, CorePS::ProcessStartTime());
-      ProfiledThreadData profiledThreadData(
-          threadInfo, nullptr, ActivePS::FeatureResponsiveness(aLock));
-      profiledThreadData.StreamJSON(*javaBuffer.get(), nullptr, aWriter,
-                                    CorePS::ProcessStartTime(), aSinceTime,
-                                    ActivePS::FeatureJSTracer(aLock));
-
-      java::GeckoJavaSampler::Unpause();
-    }
-||||||| merged common ancestors
-  if (ActivePS::FeatureJava(aLock)) {
-     java::GeckoJavaSampler::Pause();
-
-     UniquePtr<ProfileBuffer> javaBuffer = CollectJavaThreadProfileData();
-
-     // Thread id of java Main thread is 0, if we support profiling of other
-     // java thread, we have to get thread id and name via JNI.
-     RefPtr<ThreadInfo> threadInfo =
-       new ThreadInfo("Java Main Thread", 0, false, CorePS::ProcessStartTime());
-     ProfiledThreadData profiledThreadData(threadInfo, nullptr,
-                                           ActivePS::FeatureResponsiveness(aLock));
-     profiledThreadData.StreamJSON(*javaBuffer.get(), nullptr, aWriter,
-                                   CorePS::ProcessStartTime(), aSinceTime);
-
-     java::GeckoJavaSampler::Unpause();
-  }
-=======
     if (ActivePS::FeatureJava(aLock)) {
       java::GeckoJavaSampler::Pause();
 
@@ -2919,12 +2170,7 @@ static void locked_profiler_stream_json_for_this_process(
 
       java::GeckoJavaSampler::Unpause();
     }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 
 #ifdef MOZ_BASE_PROFILER
     UniquePtr<char[]> baseProfileThreads =
@@ -2933,7 +2179,6 @@ static void locked_profiler_stream_json_for_this_process(
       aWriter.Splice(baseProfileThreads.get());
     }
 #endif
->>>>>>> upstream-releases
   }
   aWriter.EndArray();
 
@@ -2994,13 +2239,6 @@ bool profiler_stream_json_for_this_process(SpliceableJSONWriter& aWriter,
 // END saving/streaming code
 ////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-static void PrintUsageThenExit(int aExitCode) {
-||||||| merged common ancestors
-static void
-PrintUsageThenExit(int aExitCode)
-{
-=======
 static char FeatureCategory(uint32_t aFeature) {
   if (aFeature & DefaultFeatures()) {
     if (aFeature & AvailableFeatures()) {
@@ -3023,119 +2261,9 @@ static char FeatureCategory(uint32_t aFeature) {
 }
 
 static void PrintUsageThenExit(int aExitCode) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
 
   printf(
-<<<<<<< HEAD
-      "\n"
-      "Profiler environment variable usage:\n"
-      "\n"
-      "  MOZ_PROFILER_HELP\n"
-      "  If set to any value, prints this message.\n"
-      "\n"
-      "  MOZ_LOG\n"
-      "  Enables logging. The levels of logging available are\n"
-      "  'prof:3' (least verbose), 'prof:4', 'prof:5' (most verbose).\n"
-      "\n"
-      "  MOZ_PROFILER_STARTUP\n"
-      "  If set to any value, starts the profiler immediately on start-up.\n"
-      "  Useful if you want profile code that runs very early.\n"
-      "\n"
-      "  MOZ_PROFILER_STARTUP_ENTRIES=<1..>\n"
-      "  If MOZ_PROFILER_STARTUP is set, specifies the number of entries in\n"
-      "  the profiler's circular buffer when the profiler is first started.\n"
-      "  If unset, the platform default is used.\n"
-      "\n"
-      "  MOZ_PROFILER_STARTUP_DURATION=<1..>\n"
-      "  If MOZ_PROFILER_STARTUP is set, specifies the duration of entries in\n"
-      "  the profiler's circular buffer when the profiler is first started.\n"
-      "  If unset, duration of the entries will be restricted by.\n"
-      "  MOZ_PROFILER_STARTUP_ENTRIES or its default value instead of a time "
-      "duration."
-      "\n"
-      "  MOZ_PROFILER_STARTUP_INTERVAL=<1..1000>\n"
-      "  If MOZ_PROFILER_STARTUP is set, specifies the sample interval,\n"
-      "  measured in milliseconds, when the profiler is first started.\n"
-      "  If unset, the platform default is used.\n"
-      "\n"
-      "  MOZ_PROFILER_STARTUP_FEATURES_BITFIELD=<Number>\n"
-      "  If MOZ_PROFILER_STARTUP is set, specifies the profiling features, as\n"
-      "  the integer value of the features bitfield.\n"
-      "  If unset, the value from MOZ_PROFILER_STARTUP_FEATURES is used.\n"
-      "\n"
-      "  MOZ_PROFILER_STARTUP_FEATURES=<Features>\n"
-      "  If MOZ_PROFILER_STARTUP is set, specifies the profiling features, as\n"
-      "  a comma-separated list of strings.\n"
-      "  Ignored if  MOZ_PROFILER_STARTUP_FEATURES_BITFIELD is set.\n"
-      "  If unset, the platform default is used.\n"
-      "\n"
-      "  MOZ_PROFILER_STARTUP_FILTERS=<Filters>\n"
-      "  If MOZ_PROFILER_STARTUP is set, specifies the thread filters, as a\n"
-      "  comma-separated list of strings. A given thread will be sampled if "
-      "any\n"
-      "  of the filters is a case-insensitive substring of the thread name.\n"
-      "  If unset, a default is used.\n"
-      "\n"
-      "  MOZ_PROFILER_SHUTDOWN\n"
-      "  If set, the profiler saves a profile to the named file on shutdown.\n"
-      "\n"
-      "  MOZ_PROFILER_LUL_TEST\n"
-      "  If set to any value, runs LUL unit tests at startup.\n"
-      "\n"
-      "  This platform %s native unwinding.\n"
-      "\n",
-||||||| merged common ancestors
-    "\n"
-    "Profiler environment variable usage:\n"
-    "\n"
-    "  MOZ_PROFILER_HELP\n"
-    "  If set to any value, prints this message.\n"
-    "\n"
-    "  MOZ_LOG\n"
-    "  Enables logging. The levels of logging available are\n"
-    "  'prof:3' (least verbose), 'prof:4', 'prof:5' (most verbose).\n"
-    "\n"
-    "  MOZ_PROFILER_STARTUP\n"
-    "  If set to any value, starts the profiler immediately on start-up.\n"
-    "  Useful if you want profile code that runs very early.\n"
-    "\n"
-    "  MOZ_PROFILER_STARTUP_ENTRIES=<1..>\n"
-    "  If MOZ_PROFILER_STARTUP is set, specifies the number of entries in\n"
-    "  the profiler's circular buffer when the profiler is first started.\n"
-    "  If unset, the platform default is used.\n"
-    "\n"
-    "  MOZ_PROFILER_STARTUP_INTERVAL=<1..1000>\n"
-    "  If MOZ_PROFILER_STARTUP is set, specifies the sample interval,\n"
-    "  measured in milliseconds, when the profiler is first started.\n"
-    "  If unset, the platform default is used.\n"
-    "\n"
-    "  MOZ_PROFILER_STARTUP_FEATURES_BITFIELD=<Number>\n"
-    "  If MOZ_PROFILER_STARTUP is set, specifies the profiling features, as\n"
-    "  the integer value of the features bitfield.\n"
-    "  If unset, the value from MOZ_PROFILER_STARTUP_FEATURES is used.\n"
-    "\n"
-    "  MOZ_PROFILER_STARTUP_FEATURES=<Features>\n"
-    "  If MOZ_PROFILER_STARTUP is set, specifies the profiling features, as\n"
-    "  a comma-separated list of strings.\n"
-    "  Ignored if  MOZ_PROFILER_STARTUP_FEATURES_BITFIELD is set.\n"
-    "  If unset, the platform default is used.\n"
-    "\n"
-    "  MOZ_PROFILER_STARTUP_FILTERS=<Filters>\n"
-    "  If MOZ_PROFILER_STARTUP is set, specifies the thread filters, as a\n"
-    "  comma-separated list of strings. A given thread will be sampled if any\n"
-    "  of the filters is a case-insensitive substring of the thread name.\n"
-    "  If unset, a default is used.\n"
-    "\n"
-    "  MOZ_PROFILER_SHUTDOWN\n"
-    "  If set, the profiler saves a profile to the named file on shutdown.\n"
-    "\n"
-    "  MOZ_PROFILER_LUL_TEST\n"
-    "  If set to any value, runs LUL unit tests at startup.\n"
-    "\n"
-    "  This platform %s native unwinding.\n"
-    "\n",
-=======
       "\n"
       "Profiler environment variable usage:\n"
       "\n"
@@ -3223,7 +2351,6 @@ static void PrintUsageThenExit(int aExitCode) {
       "\n"
       "  This platform %s native unwinding.\n"
       "\n",
->>>>>>> upstream-releases
 #if defined(HAVE_NATIVE_UNWIND)
       "supports"
 #else
@@ -3380,16 +2507,8 @@ void SamplerThread::Run() {
       TimeStamp expiredMarkersCleaned = TimeStamp::NowUnfuzzed();
 
       if (!ActivePS::IsPaused(lock)) {
-<<<<<<< HEAD
-        const nsTArray<LiveProfiledThreadData>& liveThreads =
-            ActivePS::LiveProfiledThreads(lock);
-||||||| merged common ancestors
-        const nsTArray<LiveProfiledThreadData>& liveThreads =
-          ActivePS::LiveProfiledThreads(lock);
-=======
         const Vector<LiveProfiledThreadData>& liveThreads =
             ActivePS::LiveProfiledThreads(lock);
->>>>>>> upstream-releases
 
         TimeDuration delta = sampleStart - CorePS::ProcessStartTime();
         ProfileBuffer& buffer = ActivePS::Buffer(lock);
@@ -3412,17 +2531,8 @@ void SamplerThread::Run() {
         }
 
         // handle per-process generic counters
-<<<<<<< HEAD
-        const nsTArray<BaseProfilerCount*>& counters = CorePS::Counters(lock);
-        TimeStamp now = TimeStamp::Now();
-||||||| merged common ancestors
-        const nsTArray<BaseProfilerCount*>& counters =
-          CorePS::Counters(lock);
-        TimeStamp now = TimeStamp::Now();
-=======
         const Vector<BaseProfilerCount*>& counters = CorePS::Counters(lock);
         TimeStamp now = TimeStamp::NowUnfuzzed();
->>>>>>> upstream-releases
         for (auto& counter : counters) {
           // create Buffer entries for each counter
           buffer.AddEntry(ProfileBufferEntry::CounterId(counter));
@@ -3467,30 +2577,6 @@ void SamplerThread::Run() {
             resp->Update();
           }
 
-<<<<<<< HEAD
-          now = TimeStamp::Now();
-          SuspendAndSampleAndResumeThread(
-              lock, *registeredThread, [&](const Registers& aRegs) {
-                DoPeriodicSample(lock, *registeredThread, *profiledThreadData,
-                                 now, aRegs);
-                // only report these once per sample-time (if 0 we don't put
-                // them in the buffer, so for the rest of the threads we won't
-                // insert them)
-                rssMemory = 0;
-                ussMemory = 0;
-              });
-||||||| merged common ancestors
-          now = TimeStamp::Now();
-          SuspendAndSampleAndResumeThread(lock, *registeredThread,
-                                          [&](const Registers& aRegs) {
-            DoPeriodicSample(lock, *registeredThread, *profiledThreadData, now,
-                             aRegs);
-            // only report these once per sample-time (if 0 we don't put them in the buffer,
-            // so for the rest of the threads we won't insert them)
-            rssMemory = 0;
-            ussMemory = 0;
-          });
-=======
           now = TimeStamp::NowUnfuzzed();
           SuspendAndSampleAndResumeThread(
               lock, *registeredThread, [&](const Registers& aRegs) {
@@ -3502,7 +2588,6 @@ void SamplerThread::Run() {
                 rssMemory = 0;
                 ussMemory = 0;
               });
->>>>>>> upstream-releases
         }
 
 #if defined(USE_LUL_STACKWALK)
@@ -3534,14 +2619,6 @@ void SamplerThread::Run() {
              CorePS::ProcessStartTime())
                 .ToMilliseconds());
       }
-
-      Maybe<double> duration = ActivePS::Duration(lock);
-      if (duration) {
-        ActivePS::Buffer(lock).DiscardSamplesBeforeTime(
-            (TimeStamp::Now() - TimeDuration::FromSeconds(*duration) -
-             CorePS::ProcessStartTime())
-                .ToMilliseconds());
-      }
     }
     // gPSMutex is not held after this point.
 
@@ -3551,16 +2628,8 @@ void SamplerThread::Run() {
     // attempt to keep "to schedule" in the presence of inaccuracy of the
     // actual sleep intervals.
     TimeStamp targetSleepEndTime =
-<<<<<<< HEAD
-        sampleStart + TimeDuration::FromMicroseconds(mIntervalMicroseconds);
-    TimeStamp beforeSleep = TimeStamp::Now();
-||||||| merged common ancestors
-      sampleStart + TimeDuration::FromMicroseconds(mIntervalMicroseconds);
-    TimeStamp beforeSleep = TimeStamp::Now();
-=======
         sampleStart + TimeDuration::FromMicroseconds(mIntervalMicroseconds);
     TimeStamp beforeSleep = TimeStamp::NowUnfuzzed();
->>>>>>> upstream-releases
     TimeDuration targetSleepDuration = targetSleepEndTime - beforeSleep;
     double sleepTime = std::max(
         0.0, (targetSleepDuration - lastSleepOvershoot).ToMicroseconds());
@@ -3575,37 +2644,13 @@ void SamplerThread::Run() {
 // declarations from this file trivially.  These provide target-specific
 // implementations of all SamplerThread methods except Run().
 #if defined(GP_OS_windows)
-<<<<<<< HEAD
-#include "platform-win32.cpp"
-||||||| merged common ancestors
-# include "platform-win32.cpp"
-=======
 #  include "platform-win32.cpp"
->>>>>>> upstream-releases
 #elif defined(GP_OS_darwin)
-<<<<<<< HEAD
-#include "platform-macos.cpp"
-||||||| merged common ancestors
-# include "platform-macos.cpp"
-=======
 #  include "platform-macos.cpp"
->>>>>>> upstream-releases
 #elif defined(GP_OS_linux) || defined(GP_OS_android)
-<<<<<<< HEAD
-#include "platform-linux-android.cpp"
-||||||| merged common ancestors
-# include "platform-linux-android.cpp"
-=======
 #  include "platform-linux-android.cpp"
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#error "bad platform"
-||||||| merged common ancestors
-# error "bad platform"
-=======
 #  error "bad platform"
->>>>>>> upstream-releases
 #endif
 
 UniquePlatformData AllocPlatformData(int aThreadId) {
@@ -3658,61 +2703,21 @@ GeckoProfilerReporter::CollectReports(nsIHandleReportCallback* aHandleReport,
 
 NS_IMPL_ISUPPORTS(GeckoProfilerReporter, nsIMemoryReporter)
 
-<<<<<<< HEAD
-static bool HasFeature(const char** aFeatures, uint32_t aFeatureCount,
-                       const char* aFeature) {
-  for (size_t i = 0; i < aFeatureCount; i++) {
-    if (strcmp(aFeatures[i], aFeature) == 0) {
-      return true;
-    }
-||||||| merged common ancestors
-static bool
-HasFeature(const char** aFeatures, uint32_t aFeatureCount, const char* aFeature)
-{
-  for (size_t i = 0; i < aFeatureCount; i++) {
-    if (strcmp(aFeatures[i], aFeature) == 0) {
-      return true;
-    }
-=======
 static uint32_t ParseFeature(const char* aFeature, bool aIsStartup) {
   if (strcmp(aFeature, "default") == 0) {
     return (aIsStartup ? (DefaultFeatures() | StartupExtraDefaultFeatures())
                        : DefaultFeatures()) &
            AvailableFeatures();
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-uint32_t ParseFeaturesFromStringArray(const char** aFeatures,
-                                      uint32_t aFeatureCount) {
-#define ADD_FEATURE_BIT(n_, str_, Name_)            \
-  if (HasFeature(aFeatures, aFeatureCount, str_)) { \
-    features |= ProfilerFeature::Name_;             \
-  }
-||||||| merged common ancestors
-uint32_t
-ParseFeaturesFromStringArray(const char** aFeatures, uint32_t aFeatureCount)
-{
-  #define ADD_FEATURE_BIT(n_, str_, Name_) \
-    if (HasFeature(aFeatures, aFeatureCount, str_)) { \
-      features |= ProfilerFeature::Name_; \
-    }
-=======
 #define PARSE_FEATURE_BIT(n_, str_, Name_, desc_) \
   if (strcmp(aFeature, str_) == 0) {              \
     return ProfilerFeature::Name_;                \
   }
->>>>>>> upstream-releases
 
   PROFILER_FOR_EACH_FEATURE(PARSE_FEATURE_BIT)
 
-<<<<<<< HEAD
-#undef ADD_FEATURE_BIT
-||||||| merged common ancestors
-  #undef ADD_FEATURE_BIT
-=======
 #undef PARSE_FEATURE_BIT
->>>>>>> upstream-releases
 
   printf("\nUnrecognized feature \"%s\".\n\n", aFeature);
   PrintUsageThenExit(1);
@@ -3731,24 +2736,10 @@ uint32_t ParseFeaturesFromStringArray(const char** aFeatures,
 
 // Find the RegisteredThread for the current thread. This should only be called
 // in places where TLSRegisteredThread can't be used.
-<<<<<<< HEAD
-static RegisteredThread* FindCurrentThreadRegisteredThread(PSLockRef aLock) {
-  int id = Thread::GetCurrentId();
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-      CorePS::RegisteredThreads(aLock);
-||||||| merged common ancestors
-static RegisteredThread*
-FindCurrentThreadRegisteredThread(PSLockRef aLock)
-{
-  int id = Thread::GetCurrentId();
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-    CorePS::RegisteredThreads(aLock);
-=======
 static RegisteredThread* FindCurrentThreadRegisteredThread(PSLockRef aLock) {
   int id = profiler_current_thread_id();
   const Vector<UniquePtr<RegisteredThread>>& registeredThreads =
       CorePS::RegisteredThreads(aLock);
->>>>>>> upstream-releases
   for (auto& registeredThread : registeredThreads) {
     if (registeredThread->Info()->ThreadId() == id) {
       return registeredThread.get();
@@ -3772,20 +2763,9 @@ static ProfilingStack* locked_register_thread(PSLockRef aLock,
   }
 
   RefPtr<ThreadInfo> info =
-<<<<<<< HEAD
-      new ThreadInfo(aName, Thread::GetCurrentId(), NS_IsMainThread());
-  UniquePtr<RegisteredThread> registeredThread = MakeUnique<RegisteredThread>(
-      info, NS_GetCurrentThreadNoCreate(), aStackTop);
-||||||| merged common ancestors
-    new ThreadInfo(aName, Thread::GetCurrentId(), NS_IsMainThread());
-  UniquePtr<RegisteredThread> registeredThread =
-    MakeUnique<RegisteredThread>(info, NS_GetCurrentThreadNoCreate(),
-                                 aStackTop);
-=======
       new ThreadInfo(aName, profiler_current_thread_id(), NS_IsMainThread());
   UniquePtr<RegisteredThread> registeredThread = MakeUnique<RegisteredThread>(
       info, NS_GetCurrentThreadNoCreate(), aStackTop);
->>>>>>> upstream-releases
 
   TLSRegisteredThread::SetRegisteredThread(aLock, registeredThread.get());
 
@@ -3838,117 +2818,49 @@ static void NotifyObservers(const char* aTopic,
   }
 }
 
-<<<<<<< HEAD
-static void NotifyProfilerStarted(const int aCapacity,
-                                  const Maybe<double>& aDuration,
-                                  double aInterval, uint32_t aFeatures,
-                                  const char** aFilters,
-                                  uint32_t aFilterCount) {
-||||||| merged common ancestors
-static void
-NotifyProfilerStarted(const int aEntries, double aInterval, uint32_t aFeatures,
-                      const char** aFilters, uint32_t aFilterCount)
-{
-=======
 static void NotifyProfilerStarted(const PowerOfTwo32& aCapacity,
                                   const Maybe<double>& aDuration,
                                   double aInterval, uint32_t aFeatures,
                                   const char** aFilters,
                                   uint32_t aFilterCount) {
->>>>>>> upstream-releases
   nsTArray<nsCString> filtersArray;
   for (size_t i = 0; i < aFilterCount; ++i) {
     filtersArray.AppendElement(aFilters[i]);
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIProfilerStartParams> params = new nsProfilerStartParams(
-      aCapacity, aDuration, aInterval, aFeatures, filtersArray);
-||||||| merged common ancestors
-  nsCOMPtr<nsIProfilerStartParams> params =
-    new nsProfilerStartParams(aEntries, aInterval, aFeatures, filtersArray);
-=======
   nsCOMPtr<nsIProfilerStartParams> params =
       new nsProfilerStartParams(aCapacity.Value(), aDuration, aInterval,
                                 aFeatures, std::move(filtersArray));
->>>>>>> upstream-releases
 
   ProfilerParent::ProfilerStarted(params);
   NotifyObservers("profiler-started", params);
 }
 
-<<<<<<< HEAD
-static void locked_profiler_start(PSLockRef aLock, uint32_t aCapacity,
-                                  double aInterval, uint32_t aFeatures,
-                                  const char** aFilters, uint32_t aFilterCount,
-                                  const Maybe<double>& aDuration);
-||||||| merged common ancestors
-static void
-locked_profiler_start(PSLockRef aLock, uint32_t aEntries, double aInterval,
-                      uint32_t aFeatures,
-                      const char** aFilters, uint32_t aFilterCount);
-=======
 static void locked_profiler_start(PSLockRef aLock, PowerOfTwo32 aCapacity,
                                   double aInterval, uint32_t aFeatures,
                                   const char** aFilters, uint32_t aFilterCount,
                                   const Maybe<double>& aDuration);
->>>>>>> upstream-releases
 
 // This basically duplicates AutoProfilerLabel's constructor.
-<<<<<<< HEAD
-ProfilingStack* MozGlueLabelEnter(const char* aLabel,
-                                  const char* aDynamicString, void* aSp) {
-||||||| merged common ancestors
-ProfilingStack*
-MozGlueLabelEnter(const char* aLabel, const char* aDynamicString, void* aSp,
-                  uint32_t aLine)
-{
-=======
 static void* MozGlueLabelEnter(const char* aLabel, const char* aDynamicString,
                                void* aSp) {
->>>>>>> upstream-releases
   ProfilingStack* profilingStack = AutoProfilerLabel::sProfilingStack.get();
   if (profilingStack) {
-<<<<<<< HEAD
-    profilingStack->pushLabelFrame(aLabel, aDynamicString, aSp,
-                                   js::ProfilingStackFrame::Category::OTHER);
-||||||| merged common ancestors
-    profilingStack->pushLabelFrame(aLabel, aDynamicString, aSp, aLine,
-                                js::ProfilingStackFrame::Category::OTHER);
-=======
     profilingStack->pushLabelFrame(aLabel, aDynamicString, aSp,
                                    JS::ProfilingCategoryPair::OTHER);
->>>>>>> upstream-releases
   }
   return profilingStack;
 }
 
 // This basically duplicates AutoProfilerLabel's destructor.
-<<<<<<< HEAD
-void MozGlueLabelExit(ProfilingStack* sProfilingStack) {
-||||||| merged common ancestors
-void
-MozGlueLabelExit(ProfilingStack* sProfilingStack)
-{
-=======
 static void MozGlueLabelExit(void* sProfilingStack) {
->>>>>>> upstream-releases
   if (sProfilingStack) {
     reinterpret_cast<ProfilingStack*>(sProfilingStack)->pop();
   }
 }
 
-<<<<<<< HEAD
-static nsTArray<const char*> SplitAtCommas(const char* aString,
-                                           UniquePtr<char[]>& aStorage) {
-||||||| merged common ancestors
-static nsTArray<const char*>
-SplitAtCommas(const char* aString, UniquePtr<char[]>& aStorage)
-{
-=======
 static Vector<const char*> SplitAtCommas(const char* aString,
                                          UniquePtr<char[]>& aStorage) {
->>>>>>> upstream-releases
   size_t len = strlen(aString);
   aStorage = MakeUnique<char[]>(len + 1);
   PodCopy(aStorage.get(), aString, len + 1);
@@ -3982,32 +2894,7 @@ void profiler_init(void* aStackTop) {
 
   SharedLibraryInfo::Initialize();
 
-<<<<<<< HEAD
-  uint32_t features =
-#if defined(GP_OS_android)
-      ProfilerFeature::Java |
-#endif
-      ProfilerFeature::JS | ProfilerFeature::Leaf |
-#if defined(HAVE_NATIVE_UNWIND)
-      ProfilerFeature::StackWalk |
-#endif
-      ProfilerFeature::Threads | ProfilerFeature::Responsiveness | 0;
-||||||| merged common ancestors
-  uint32_t features =
-#if defined(GP_OS_android)
-                      ProfilerFeature::Java |
-#endif
-                      ProfilerFeature::JS |
-                      ProfilerFeature::Leaf |
-#if defined(HAVE_NATIVE_UNWIND)
-                      ProfilerFeature::StackWalk |
-#endif
-                      ProfilerFeature::Threads |
-                      ProfilerFeature::Responsiveness |
-                      0;
-=======
   uint32_t features = DefaultFeatures() & AvailableFeatures();
->>>>>>> upstream-releases
 
   UniquePtr<char[]> filterStorage;
 
@@ -4016,15 +2903,8 @@ void profiler_init(void* aStackTop) {
   MOZ_RELEASE_ASSERT(filters.append("Compositor"));
   MOZ_RELEASE_ASSERT(filters.append("DOM Worker"));
 
-<<<<<<< HEAD
-  int capacity = PROFILER_DEFAULT_ENTRIES;
-  Maybe<double> duration = Nothing();
-||||||| merged common ancestors
-  int entries = PROFILER_DEFAULT_ENTRIES;
-=======
   PowerOfTwo32 capacity = PROFILER_DEFAULT_ENTRIES;
   Maybe<double> duration = Nothing();
->>>>>>> upstream-releases
   double interval = PROFILER_DEFAULT_INTERVAL;
 
   {
@@ -4062,29 +2942,12 @@ void profiler_init(void* aStackTop) {
 
     LOG("- MOZ_PROFILER_STARTUP is set");
 
-<<<<<<< HEAD
-    const char* startupCapacity = getenv("MOZ_PROFILER_STARTUP_ENTRIES");
-    if (startupCapacity && startupCapacity[0] != '\0') {
-||||||| merged common ancestors
-    const char* startupEntries = getenv("MOZ_PROFILER_STARTUP_ENTRIES");
-    if (startupEntries && startupEntries[0] != '\0') {
-=======
     // Startup default capacity may be different.
     capacity = PROFILER_DEFAULT_STARTUP_ENTRIES;
 
     const char* startupCapacity = getenv("MOZ_PROFILER_STARTUP_ENTRIES");
     if (startupCapacity && startupCapacity[0] != '\0') {
->>>>>>> upstream-releases
       errno = 0;
-<<<<<<< HEAD
-      capacity = strtol(startupCapacity, nullptr, 10);
-      if (errno == 0 && capacity > 0) {
-        LOG("- MOZ_PROFILER_STARTUP_ENTRIES = %d", capacity);
-||||||| merged common ancestors
-      entries = strtol(startupEntries, nullptr, 10);
-      if (errno == 0 && entries > 0) {
-        LOG("- MOZ_PROFILER_STARTUP_ENTRIES = %d", entries);
-=======
       long capacityLong = strtol(startupCapacity, nullptr, 10);
       // `long` could be 32 or 64 bits, so we force a 64-bit comparison with
       // the maximum 32-bit signed number (as more than that is clamped down to
@@ -4094,7 +2957,6 @@ void profiler_init(void* aStackTop) {
               static_cast<uint64_t>(INT32_MAX)) {
         capacity = PowerOfTwo32(static_cast<uint32_t>(capacityLong));
         LOG("- MOZ_PROFILER_STARTUP_ENTRIES = %u", unsigned(capacity.Value()));
->>>>>>> upstream-releases
       } else {
         LOG("- MOZ_PROFILER_STARTUP_ENTRIES not a valid integer: %s",
             startupCapacity);
@@ -4151,23 +3013,11 @@ void profiler_init(void* aStackTop) {
         // Interpret startupFeatures as a list of feature strings, separated by
         // commas.
         UniquePtr<char[]> featureStringStorage;
-<<<<<<< HEAD
-        nsTArray<const char*> featureStringArray =
-            SplitAtCommas(startupFeatures, featureStringStorage);
-        features = ParseFeaturesFromStringArray(featureStringArray.Elements(),
-                                                featureStringArray.Length());
-||||||| merged common ancestors
-        nsTArray<const char*> featureStringArray =
-          SplitAtCommas(startupFeatures, featureStringStorage);
-        features = ParseFeaturesFromStringArray(featureStringArray.Elements(),
-                                                featureStringArray.Length());
-=======
         Vector<const char*> featureStringArray =
             SplitAtCommas(startupFeatures, featureStringStorage);
         features = ParseFeaturesFromStringArray(featureStringArray.begin(),
                                                 featureStringArray.length(),
                                                 /* aIsStartup */ true);
->>>>>>> upstream-releases
         LOG("- MOZ_PROFILER_STARTUP_FEATURES = %d", features);
       }
     }
@@ -4178,16 +3028,8 @@ void profiler_init(void* aStackTop) {
       LOG("- MOZ_PROFILER_STARTUP_FILTERS = %s", startupFilters);
     }
 
-<<<<<<< HEAD
-    locked_profiler_start(lock, capacity, interval, features,
-                          filters.Elements(), filters.Length(), duration);
-||||||| merged common ancestors
-    locked_profiler_start(lock, entries, interval, features,
-                          filters.Elements(), filters.Length());
-=======
     locked_profiler_start(lock, capacity, interval, features, filters.begin(),
                           filters.length(), duration);
->>>>>>> upstream-releases
   }
 
 #if defined(MOZ_REPLACE_MALLOC) && defined(MOZ_PROFILER_MEMORY)
@@ -4198,16 +3040,8 @@ void profiler_init(void* aStackTop) {
 
   // We do this with gPSMutex unlocked. The comment in profiler_stop() explains
   // why.
-<<<<<<< HEAD
-  NotifyProfilerStarted(capacity, duration, interval, features,
-                        filters.Elements(), filters.Length());
-||||||| merged common ancestors
-  NotifyProfilerStarted(entries, interval, features,
-                        filters.Elements(), filters.Length());
-=======
   NotifyProfilerStarted(capacity, duration, interval, features, filters.begin(),
                         filters.length());
->>>>>>> upstream-releases
 }
 
 static void locked_profiler_save_profile_to_file(PSLockRef aLock,
@@ -4288,14 +3122,6 @@ static bool WriteProfileToJSONWriter(SpliceableChunkedJSONWriter& aWriter,
   return true;
 }
 
-<<<<<<< HEAD
-UniquePtr<char[]> profiler_get_profile(double aSinceTime,
-                                       bool aIsShuttingDown) {
-||||||| merged common ancestors
-UniquePtr<char[]>
-profiler_get_profile(double aSinceTime, bool aIsShuttingDown)
-{
-=======
 void profiler_set_process_name(const nsACString& aProcessName) {
   LOG("profiler_set_process_name(\"%s\")", aProcessName.Data());
   PSAutoLock lock(gPSMutex);
@@ -4304,7 +3130,6 @@ void profiler_set_process_name(const nsACString& aProcessName) {
 
 UniquePtr<char[]> profiler_get_profile(double aSinceTime,
                                        bool aIsShuttingDown) {
->>>>>>> upstream-releases
   LOG("profiler_get_profile");
 
   SpliceableChunkedJSONWriter b;
@@ -4349,15 +3174,8 @@ void profiler_get_start_params(int* aCapacity, Maybe<double>* aDuration,
     return;
   }
 
-<<<<<<< HEAD
-  *aCapacity = ActivePS::Capacity(lock);
-  *aDuration = ActivePS::Duration(lock);
-||||||| merged common ancestors
-  *aEntries = ActivePS::Entries(lock);
-=======
   *aCapacity = ActivePS::Capacity(lock).Value();
   *aDuration = ActivePS::Duration(lock);
->>>>>>> upstream-releases
   *aInterval = ActivePS::Interval(lock);
   *aFeatures = ActivePS::Features(lock);
 
@@ -4368,23 +3186,7 @@ void profiler_get_start_params(int* aCapacity, Maybe<double>* aDuration,
   }
 }
 
-<<<<<<< HEAD
-AutoSetProfilerEnvVarsForChildProcess::AutoSetProfilerEnvVarsForChildProcess(
-    MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
-    : mSetCapacity(), mSetInterval(), mSetFeaturesBitfield(), mSetFilters() {
-  MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-||||||| merged common ancestors
-AutoSetProfilerEnvVarsForChildProcess::AutoSetProfilerEnvVarsForChildProcess(
-  MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM_IN_IMPL)
-  : mSetEntries()
-  , mSetInterval()
-  , mSetFeaturesBitfield()
-  , mSetFilters()
-{
-  MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-=======
 namespace mozilla {
->>>>>>> upstream-releases
 
 void GetProfilerEnvVarsForChildProcess(
     std::function<void(const char* key, const char* value)>&& aSetEnv) {
@@ -4397,22 +3199,10 @@ void GetProfilerEnvVarsForChildProcess(
     return;
   }
 
-<<<<<<< HEAD
-  PR_SetEnv("MOZ_PROFILER_STARTUP=1");
-  SprintfLiteral(mSetCapacity, "MOZ_PROFILER_STARTUP_ENTRIES=%d",
-                 ActivePS::Capacity(lock));
-  PR_SetEnv(mSetCapacity);
-||||||| merged common ancestors
-  PR_SetEnv("MOZ_PROFILER_STARTUP=1");
-  SprintfLiteral(mSetEntries, "MOZ_PROFILER_STARTUP_ENTRIES=%d",
-                 ActivePS::Entries(lock));
-  PR_SetEnv(mSetEntries);
-=======
   aSetEnv("MOZ_PROFILER_STARTUP", "1");
   auto capacityString =
       Smprintf("%u", unsigned(ActivePS::Capacity(lock).Value()));
   aSetEnv("MOZ_PROFILER_STARTUP_ENTRIES", capacityString.get());
->>>>>>> upstream-releases
 
   // Use AppendFloat instead of Smprintf with %f because the decimal
   // separator used by %f is locale-dependent. But the string we produce needs
@@ -4465,31 +3255,6 @@ void profiler_received_exit_profile(const nsCString& aExitProfile) {
   ActivePS::AddExitProfile(lock, aExitProfile);
 }
 
-<<<<<<< HEAD
-AutoSetProfilerEnvVarsForChildProcess::
-    ~AutoSetProfilerEnvVarsForChildProcess() {
-  // Our current process doesn't look at these variables after startup, so we
-  // can just unset all the variables. This allows us to use literal strings,
-  // which will be valid for the whole life time of the program and can be
-  // passed to PR_SetEnv without problems.
-  PR_SetEnv("MOZ_PROFILER_STARTUP=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_ENTRIES=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_INTERVAL=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_FEATURES_BITFIELD=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_FILTERS=");
-||||||| merged common ancestors
-AutoSetProfilerEnvVarsForChildProcess::~AutoSetProfilerEnvVarsForChildProcess()
-{
-  // Our current process doesn't look at these variables after startup, so we
-  // can just unset all the variables. This allows us to use literal strings,
-  // which will be valid for the whole life time of the program and can be
-  // passed to PR_SetEnv without problems.
-  PR_SetEnv("MOZ_PROFILER_STARTUP=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_ENTRIES=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_INTERVAL=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_FEATURES_BITFIELD=");
-  PR_SetEnv("MOZ_PROFILER_STARTUP_FILTERS=");
-=======
 Vector<nsCString> profiler_move_exit_profiles() {
   MOZ_RELEASE_ASSERT(CorePS::Exists());
   PSAutoLock lock(gPSMutex);
@@ -4498,7 +3263,6 @@ Vector<nsCString> profiler_move_exit_profiles() {
     profiles = ActivePS::MoveExitProfiles(lock);
   }
   return profiles;
->>>>>>> upstream-releases
 }
 
 static void locked_profiler_save_profile_to_file(PSLockRef aLock,
@@ -4548,55 +3312,7 @@ void profiler_save_profile_to_file(const char* aFilename) {
 
 uint32_t profiler_get_available_features() {
   MOZ_RELEASE_ASSERT(CorePS::Exists());
-<<<<<<< HEAD
-
-  uint32_t features = 0;
-
-#define ADD_FEATURE(n_, str_, Name_) ProfilerFeature::Set##Name_(features);
-
-  // Add all the possible features.
-  PROFILER_FOR_EACH_FEATURE(ADD_FEATURE)
-
-#undef ADD_FEATURE
-
-  // Now remove features not supported on this platform/configuration.
-#if !defined(GP_OS_android)
-  ProfilerFeature::ClearJava(features);
-#endif
-#if !defined(HAVE_NATIVE_UNWIND)
-  ProfilerFeature::ClearStackWalk(features);
-#endif
-#if !defined(MOZ_TASK_TRACER)
-  ProfilerFeature::ClearTaskTracer(features);
-#endif
-
-  return features;
-||||||| merged common ancestors
-
-  uint32_t features = 0;
-
-  #define ADD_FEATURE(n_, str_, Name_) ProfilerFeature::Set##Name_(features);
-
-  // Add all the possible features.
-  PROFILER_FOR_EACH_FEATURE(ADD_FEATURE)
-
-  #undef ADD_FEATURE
-
-  // Now remove features not supported on this platform/configuration.
-#if !defined(GP_OS_android)
-  ProfilerFeature::ClearJava(features);
-#endif
-#if !defined(HAVE_NATIVE_UNWIND)
-  ProfilerFeature::ClearStackWalk(features);
-#endif
-#if !defined(MOZ_TASK_TRACER)
-  ProfilerFeature::ClearTaskTracer(features);
-#endif
-
-  return features;
-=======
   return AvailableFeatures();
->>>>>>> upstream-releases
 }
 
 Maybe<ProfilerBufferInfo> profiler_get_buffer_info() {
@@ -4608,21 +3324,9 @@ Maybe<ProfilerBufferInfo> profiler_get_buffer_info() {
     return Nothing();
   }
 
-<<<<<<< HEAD
-  return Some(ProfilerBufferInfo{ActivePS::Buffer(lock).mRangeStart,
-                                 ActivePS::Buffer(lock).mRangeEnd,
-                                 ActivePS::Capacity(lock)});
-||||||| merged common ancestors
-  return Some(ProfilerBufferInfo {
-    ActivePS::Buffer(lock).mRangeStart,
-    ActivePS::Buffer(lock).mRangeEnd,
-    ActivePS::Entries(lock)
-  });
-=======
   return Some(ProfilerBufferInfo{ActivePS::Buffer(lock).mRangeStart,
                                  ActivePS::Buffer(lock).mRangeEnd,
                                  ActivePS::Capacity(lock).Value()});
->>>>>>> upstream-releases
 }
 
 static void PollJSSamplingForCurrentThread() {
@@ -4661,52 +3365,20 @@ static void TriggerPollJSSamplingOnMainThread() {
   }
 }
 
-<<<<<<< HEAD
-static void locked_profiler_start(PSLockRef aLock, uint32_t aCapacity,
-                                  double aInterval, uint32_t aFeatures,
-                                  const char** aFilters, uint32_t aFilterCount,
-                                  const Maybe<double>& aDuration) {
-||||||| merged common ancestors
-static void
-locked_profiler_start(PSLockRef aLock, uint32_t aEntries, double aInterval,
-                      uint32_t aFeatures,
-                      const char** aFilters, uint32_t aFilterCount)
-{
-=======
 static void locked_profiler_start(PSLockRef aLock, PowerOfTwo32 aCapacity,
                                   double aInterval, uint32_t aFeatures,
                                   const char** aFilters, uint32_t aFilterCount,
                                   const Maybe<double>& aDuration) {
->>>>>>> upstream-releases
   if (LOG_TEST) {
     LOG("locked_profiler_start");
-<<<<<<< HEAD
-    LOG("- capacity  = %d", aCapacity);
-    LOG("- duration  = %.2f", aDuration ? *aDuration : -1);
-||||||| merged common ancestors
-    LOG("- entries  = %d", aEntries);
-=======
     LOG("- capacity  = %u", unsigned(aCapacity.Value()));
     LOG("- duration  = %.2f", aDuration ? *aDuration : -1);
->>>>>>> upstream-releases
     LOG("- interval = %.2f", aInterval);
 
-<<<<<<< HEAD
-#define LOG_FEATURE(n_, str_, Name_)            \
-  if (ProfilerFeature::Has##Name_(aFeatures)) { \
-    LOG("- feature  = %s", str_);               \
-  }
-||||||| merged common ancestors
-    #define LOG_FEATURE(n_, str_, Name_) \
-      if (ProfilerFeature::Has##Name_(aFeatures)) { \
-        LOG("- feature  = %s", str_); \
-      }
-=======
 #define LOG_FEATURE(n_, str_, Name_, desc_)     \
   if (ProfilerFeature::Has##Name_(aFeatures)) { \
     LOG("- feature  = %s", str_);               \
   }
->>>>>>> upstream-releases
 
     PROFILER_FOR_EACH_FEATURE(LOG_FEATURE)
 
@@ -4724,16 +3396,6 @@ static void locked_profiler_start(PSLockRef aLock, PowerOfTwo32 aCapacity,
 #endif
 
   // Fall back to the default values if the passed-in values are unreasonable.
-<<<<<<< HEAD
-  uint32_t capacity = aCapacity > 0 ? aCapacity : PROFILER_DEFAULT_ENTRIES;
-  Maybe<double> duration = aDuration;
-
-  if (aDuration && *aDuration <= 0) {
-    duration = Nothing();
-  }
-||||||| merged common ancestors
-  uint32_t entries = aEntries > 0 ? aEntries : PROFILER_DEFAULT_ENTRIES;
-=======
   // Less than 1024 would not be enough for the most complex stack, so we should
   // be able to store at least one full stack. TODO: Review magic numbers.
   PowerOfTwo32 capacity =
@@ -4743,15 +3405,8 @@ static void locked_profiler_start(PSLockRef aLock, PowerOfTwo32 aCapacity,
   if (aDuration && *aDuration <= 0) {
     duration = Nothing();
   }
->>>>>>> upstream-releases
   double interval = aInterval > 0 ? aInterval : PROFILER_DEFAULT_INTERVAL;
 
-<<<<<<< HEAD
-  ActivePS::Create(aLock, capacity, interval, aFeatures, aFilters, aFilterCount,
-                   duration);
-||||||| merged common ancestors
-  ActivePS::Create(aLock, entries, interval, aFeatures, aFilters, aFilterCount);
-=======
   ActivePS::Create(aLock, capacity, interval, aFeatures, aFilters, aFilterCount,
                    duration);
 
@@ -4784,22 +3439,11 @@ static void locked_profiler_start(PSLockRef aLock, PowerOfTwo32 aCapacity,
     }
   }
 #endif
->>>>>>> upstream-releases
 
   // Set up profiling for each registered thread, if appropriate.
-<<<<<<< HEAD
-  int tid = Thread::GetCurrentId();
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-      CorePS::RegisteredThreads(aLock);
-||||||| merged common ancestors
-  int tid = Thread::GetCurrentId();
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-    CorePS::RegisteredThreads(aLock);
-=======
   int tid = profiler_current_thread_id();
   const Vector<UniquePtr<RegisteredThread>>& registeredThreads =
       CorePS::RegisteredThreads(aLock);
->>>>>>> upstream-releases
   for (auto& registeredThread : registeredThreads) {
     RefPtr<ThreadInfo> info = registeredThread->Info();
 
@@ -4854,20 +3498,9 @@ static void locked_profiler_start(PSLockRef aLock, PowerOfTwo32 aCapacity,
   RacyFeatures::SetActive(ActivePS::Features(aLock));
 }
 
-<<<<<<< HEAD
-void profiler_start(uint32_t aCapacity, double aInterval, uint32_t aFeatures,
-                    const char** aFilters, uint32_t aFilterCount,
-                    const Maybe<double>& aDuration) {
-||||||| merged common ancestors
-void
-profiler_start(uint32_t aEntries, double aInterval, uint32_t aFeatures,
-               const char** aFilters, uint32_t aFilterCount)
-{
-=======
 void profiler_start(PowerOfTwo32 aCapacity, double aInterval,
                     uint32_t aFeatures, const char** aFilters,
                     uint32_t aFilterCount, const Maybe<double>& aDuration) {
->>>>>>> upstream-releases
   LOG("profiler_start");
 
   SamplerThread* samplerThread = nullptr;
@@ -4905,22 +3538,10 @@ void profiler_start(PowerOfTwo32 aCapacity, double aInterval,
                         aFilterCount);
 }
 
-<<<<<<< HEAD
-void profiler_ensure_started(uint32_t aCapacity, double aInterval,
-                             uint32_t aFeatures, const char** aFilters,
-                             uint32_t aFilterCount,
-                             const Maybe<double>& aDuration) {
-||||||| merged common ancestors
-void
-profiler_ensure_started(uint32_t aEntries, double aInterval, uint32_t aFeatures,
-                        const char** aFilters, uint32_t aFilterCount)
-{
-=======
 void profiler_ensure_started(PowerOfTwo32 aCapacity, double aInterval,
                              uint32_t aFeatures, const char** aFilters,
                              uint32_t aFilterCount,
                              const Maybe<double>& aDuration) {
->>>>>>> upstream-releases
   LOG("profiler_ensure_started");
 
   bool startedProfiler = false;
@@ -5000,19 +3621,9 @@ static MOZ_MUST_USE SamplerThread* locked_profiler_stop(PSLockRef aLock) {
   RegisterProfilerLabelEnterExit(nullptr, nullptr);
 
   // Stop sampling live threads.
-<<<<<<< HEAD
-  int tid = Thread::GetCurrentId();
-  const nsTArray<LiveProfiledThreadData>& liveProfiledThreads =
-      ActivePS::LiveProfiledThreads(aLock);
-||||||| merged common ancestors
-  int tid = Thread::GetCurrentId();
-  const nsTArray<LiveProfiledThreadData>& liveProfiledThreads =
-    ActivePS::LiveProfiledThreads(aLock);
-=======
   int tid = profiler_current_thread_id();
   const Vector<LiveProfiledThreadData>& liveProfiledThreads =
       ActivePS::LiveProfiledThreads(aLock);
->>>>>>> upstream-releases
   for (auto& thread : liveProfiledThreads) {
     RegisteredThread* registeredThread = thread.mRegisteredThread;
     registeredThread->RacyRegisteredThread().SetIsBeingProfiled(false);
@@ -5172,19 +3783,7 @@ ProfilingStack* profiler_register_thread(const char* aName,
   return locked_register_thread(lock, aName, stackTop);
 }
 
-<<<<<<< HEAD
 void profiler_unregister_thread() {
-  MOZ_ASSERT_IF(NS_IsMainThread(), Scheduler::IsCooperativeThread());
-
-||||||| merged common ancestors
-void
-profiler_unregister_thread()
-{
-  MOZ_ASSERT_IF(NS_IsMainThread(), Scheduler::IsCooperativeThread());
-
-=======
-void profiler_unregister_thread() {
->>>>>>> upstream-releases
   if (!CorePS::Exists()) {
     // This function can be called after the main thread has already shut down.
     return;
@@ -5227,58 +3826,6 @@ void profiler_unregister_thread() {
   }
 }
 
-<<<<<<< HEAD
-void profiler_register_page(const nsID& aDocShellId, uint32_t aHistoryId,
-                            const nsCString& aUrl, bool aIsSubFrame) {
-  DEBUG_LOG("profiler_register_page(%s, %u, %s, %d)", aDocShellId.ToString(),
-            aHistoryId, aUrl.get(), aIsSubFrame);
-
-  MOZ_RELEASE_ASSERT(CorePS::Exists());
-
-  PSAutoLock lock(gPSMutex);
-
-  // If profiler is not active, delete all the previous page entries of the
-  // given DocShell since we won't need those.
-  if (!ActivePS::Exists(lock)) {
-    CorePS::RemoveRegisteredPages(lock, aDocShellId);
-  }
-
-  RefPtr<PageInformation> pageInfo =
-      new PageInformation(aDocShellId, aHistoryId, aUrl, aIsSubFrame);
-  CorePS::AppendRegisteredPage(lock, std::move(pageInfo));
-
-  // After appending the given page to CorePS, look for the expired
-  // pages and remove them if there are any.
-  if (ActivePS::Exists(lock)) {
-    ActivePS::DiscardExpiredPages(lock);
-  }
-}
-
-void profiler_unregister_pages(const nsID& aRegisteredDocShellId) {
-  if (!CorePS::Exists()) {
-    // This function can be called after the main thread has already shut down.
-    return;
-  }
-
-  PSAutoLock lock(gPSMutex);
-
-  // During unregistration, if the profiler is active, we have to keep the
-  // page information since there may be some markers associated with the given
-  // page. But if profiler is not active. we have no reason to keep the
-  // page information here because there can't be any marker associated with it.
-  if (ActivePS::Exists(lock)) {
-    ActivePS::UnregisterPages(lock, aRegisteredDocShellId);
-  } else {
-    CorePS::RemoveRegisteredPages(lock, aRegisteredDocShellId);
-  }
-}
-
-void profiler_thread_sleep() {
-||||||| merged common ancestors
-void
-profiler_thread_sleep()
-{
-=======
 void profiler_register_page(const nsID& aDocShellId, uint32_t aHistoryId,
                             const nsCString& aUrl, bool aIsSubFrame) {
   DEBUG_LOG("profiler_register_page(%s, %u, %s, %d)",
@@ -5344,7 +3891,6 @@ void profiler_clear_all_pages() {
 }
 
 void profiler_thread_sleep() {
->>>>>>> upstream-releases
   // This function runs both on and off the main thread.
 
   MOZ_RELEASE_ASSERT(CorePS::Exists());
@@ -5444,19 +3990,9 @@ void ProfilerBacktraceDestructor::operator()(ProfilerBacktrace* aBacktrace) {
   delete aBacktrace;
 }
 
-<<<<<<< HEAD
-static void racy_profiler_add_marker(
-    const char* aMarkerName, UniquePtr<ProfilerMarkerPayload> aPayload) {
-||||||| merged common ancestors
-static void
-racy_profiler_add_marker(const char* aMarkerName,
-                         UniquePtr<ProfilerMarkerPayload> aPayload)
-{
-=======
 static void racy_profiler_add_marker(
     const char* aMarkerName, JS::ProfilingCategoryPair aCategoryPair,
     UniquePtr<ProfilerMarkerPayload> aPayload) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CorePS::Exists());
 
   // We don't assert that RacyFeatures::IsActiveWithoutPrivacy() or
@@ -5473,34 +4009,16 @@ static void racy_profiler_add_marker(
   }
 
   TimeStamp origin = (aPayload && !aPayload->GetStartTime().IsNull())
-<<<<<<< HEAD
-                         ? aPayload->GetStartTime()
-                         : TimeStamp::Now();
-||||||| merged common ancestors
-                       ? aPayload->GetStartTime()
-                       : TimeStamp::Now();
-=======
                          ? aPayload->GetStartTime()
                          : TimeStamp::NowUnfuzzed();
->>>>>>> upstream-releases
   TimeDuration delta = origin - CorePS::ProcessStartTime();
   racyRegisteredThread->AddPendingMarker(
       aMarkerName, aCategoryPair, std::move(aPayload), delta.ToMilliseconds());
 }
 
-<<<<<<< HEAD
-void profiler_add_marker(const char* aMarkerName,
-                         UniquePtr<ProfilerMarkerPayload> aPayload) {
-||||||| merged common ancestors
-void
-profiler_add_marker(const char* aMarkerName,
-                    UniquePtr<ProfilerMarkerPayload> aPayload)
-{
-=======
 void profiler_add_marker(const char* aMarkerName,
                          JS::ProfilingCategoryPair aCategoryPair,
                          UniquePtr<ProfilerMarkerPayload> aPayload) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CorePS::Exists());
 
   // This function is hot enough that we use RacyFeatures, not ActivePS.
@@ -5516,41 +4034,12 @@ void profiler_add_marker(const char* aMarkerName,
   profiler_add_marker(aMarkerName, aCategoryPair, nullptr);
 }
 
-<<<<<<< HEAD
-void profiler_add_marker(const char* aMarkerName) {
-  profiler_add_marker(aMarkerName, nullptr);
-||||||| merged common ancestors
-void
-profiler_add_marker(const char* aMarkerName)
-{
-  profiler_add_marker(aMarkerName, nullptr);
-=======
 // This is a simplified version of profiler_add_marker that can be easily passed
 // into the JS engine.
 void profiler_add_js_marker(const char* aMarkerName) {
   profiler_add_marker(aMarkerName, JS::ProfilingCategoryPair::JS, nullptr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void profiler_add_network_marker(
-    nsIURI* aURI, int32_t aPriority, uint64_t aChannelId, NetworkLoadType aType,
-    mozilla::TimeStamp aStart, mozilla::TimeStamp aEnd, int64_t aCount,
-    mozilla::net::CacheDisposition aCacheDisposition,
-    const mozilla::net::TimingStruct* aTimings, nsIURI* aRedirectURI) {
-||||||| merged common ancestors
-void
-profiler_add_network_marker(nsIURI* aURI,
-                            int32_t aPriority,
-                            uint64_t aChannelId,
-                            NetworkLoadType aType,
-                            mozilla::TimeStamp aStart,
-                            mozilla::TimeStamp aEnd,
-                            int64_t aCount,
-                            const mozilla::net::TimingStruct* aTimings,
-                            nsIURI* aRedirectURI)
-{
-=======
 void profiler_add_js_allocation_marker(JS::RecordAllocationInfo&& info) {
   profiler_add_marker(
       "JS allocation", JS::ProfilingCategoryPair::JS,
@@ -5563,7 +4052,6 @@ void profiler_add_network_marker(
     mozilla::TimeStamp aStart, mozilla::TimeStamp aEnd, int64_t aCount,
     mozilla::net::CacheDisposition aCacheDisposition,
     const mozilla::net::TimingStruct* aTimings, nsIURI* aRedirectURI) {
->>>>>>> upstream-releases
   if (!profiler_is_active()) {
     return;
   }
@@ -5580,51 +4068,20 @@ void profiler_add_network_marker(
   uint32_t id = static_cast<uint32_t>(aChannelId & 0xFFFFFFFF);
   char name[2048];
   SprintfLiteral(name, "Load %d: %s", id, PromiseFlatCString(spec).get());
-<<<<<<< HEAD
-  profiler_add_marker(
-      name,
-      MakeUnique<NetworkMarkerPayload>(
-          static_cast<int64_t>(aChannelId), PromiseFlatCString(spec).get(),
-          aType, aStart, aEnd, aPriority, aCount, aCacheDisposition, aTimings,
-          PromiseFlatCString(redirect_spec).get()));
-||||||| merged common ancestors
-  profiler_add_marker(name,
-                      MakeUnique<NetworkMarkerPayload>(static_cast<int64_t>(aChannelId),
-                                                       PromiseFlatCString(spec).get(),
-                                                       aType,
-                                                       aStart,
-                                                       aEnd,
-                                                       aPriority,
-                                                       aCount,
-                                                       aTimings,
-                                                       PromiseFlatCString(redirect_spec).get()));
-=======
   profiler_add_marker(
       name, JS::ProfilingCategoryPair::NETWORK,
       MakeUnique<NetworkMarkerPayload>(
           static_cast<int64_t>(aChannelId), PromiseFlatCString(spec).get(),
           aType, aStart, aEnd, aPriority, aCount, aCacheDisposition, aTimings,
           PromiseFlatCString(redirect_spec).get()));
->>>>>>> upstream-releases
 }
 
 // This logic needs to add a marker for a different thread, so we actually need
 // to lock here.
-<<<<<<< HEAD
-void profiler_add_marker_for_thread(int aThreadId, const char* aMarkerName,
-                                    UniquePtr<ProfilerMarkerPayload> aPayload) {
-||||||| merged common ancestors
-void
-profiler_add_marker_for_thread(int aThreadId,
-                               const char* aMarkerName,
-                               UniquePtr<ProfilerMarkerPayload> aPayload)
-{
-=======
 void profiler_add_marker_for_thread(int aThreadId,
                                     JS::ProfilingCategoryPair aCategoryPair,
                                     const char* aMarkerName,
                                     UniquePtr<ProfilerMarkerPayload> aPayload) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CorePS::Exists());
 
   PSAutoLock lock(gPSMutex);
@@ -5634,43 +4091,18 @@ void profiler_add_marker_for_thread(int aThreadId,
 
   // Create the ProfilerMarker which we're going to store.
   TimeStamp origin = (aPayload && !aPayload->GetStartTime().IsNull())
-<<<<<<< HEAD
-                         ? aPayload->GetStartTime()
-                         : TimeStamp::Now();
-||||||| merged common ancestors
-                   ? aPayload->GetStartTime()
-                   : TimeStamp::Now();
-=======
                          ? aPayload->GetStartTime()
                          : TimeStamp::NowUnfuzzed();
->>>>>>> upstream-releases
   TimeDuration delta = origin - CorePS::ProcessStartTime();
-<<<<<<< HEAD
-  ProfilerMarker* marker = new ProfilerMarker(
-      aMarkerName, aThreadId, std::move(aPayload), delta.ToMilliseconds());
-||||||| merged common ancestors
-  ProfilerMarker* marker =
-    new ProfilerMarker(aMarkerName, aThreadId, std::move(aPayload),
-                       delta.ToMilliseconds());
-=======
   ProfilerMarker* marker =
       new ProfilerMarker(aMarkerName, aCategoryPair, aThreadId,
                          std::move(aPayload), delta.ToMilliseconds());
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // Assert that our thread ID makes sense
   bool realThread = false;
-<<<<<<< HEAD
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-      CorePS::RegisteredThreads(lock);
-||||||| merged common ancestors
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-    CorePS::RegisteredThreads(lock);
-=======
   const Vector<UniquePtr<RegisteredThread>>& registeredThreads =
       CorePS::RegisteredThreads(lock);
->>>>>>> upstream-releases
   for (auto& thread : registeredThreads) {
     RefPtr<ThreadInfo> info = thread->Info();
     if (info->ThreadId() == aThreadId) {
@@ -5687,21 +4119,10 @@ void profiler_add_marker_for_thread(int aThreadId,
   buffer.AddEntry(ProfileBufferEntry::Marker(marker));
 }
 
-<<<<<<< HEAD
-void profiler_tracing(const char* aCategory, const char* aMarkerName,
-                      TracingKind aKind, const Maybe<nsID>& aDocShellId,
-                      const Maybe<uint32_t>& aDocShellHistoryId) {
-||||||| merged common ancestors
-void
-profiler_tracing(const char* aCategory, const char* aMarkerName,
-                 TracingKind aKind)
-{
-=======
 void profiler_tracing(const char* aCategoryString, const char* aMarkerName,
                       JS::ProfilingCategoryPair aCategoryPair,
                       TracingKind aKind, const Maybe<nsID>& aDocShellId,
                       const Maybe<uint32_t>& aDocShellHistoryId) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CorePS::Exists());
 
   VTUNE_TRACING(aMarkerName, aKind);
@@ -5711,37 +4132,16 @@ void profiler_tracing(const char* aCategoryString, const char* aMarkerName,
     return;
   }
 
-<<<<<<< HEAD
-  auto payload = MakeUnique<TracingMarkerPayload>(aCategory, aKind, aDocShellId,
-                                                  aDocShellHistoryId);
-  racy_profiler_add_marker(aMarkerName, std::move(payload));
-||||||| merged common ancestors
-  auto payload = MakeUnique<TracingMarkerPayload>(aCategory, aKind);
-  racy_profiler_add_marker(aMarkerName, std::move(payload));
-=======
   auto payload = MakeUnique<TracingMarkerPayload>(
       aCategoryString, aKind, aDocShellId, aDocShellHistoryId);
   racy_profiler_add_marker(aMarkerName, aCategoryPair, std::move(payload));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void profiler_tracing(const char* aCategory, const char* aMarkerName,
-                      TracingKind aKind, UniqueProfilerBacktrace aCause,
-                      const Maybe<nsID>& aDocShellId,
-                      const Maybe<uint32_t>& aDocShellHistoryId) {
-||||||| merged common ancestors
-void
-profiler_tracing(const char* aCategory, const char* aMarkerName,
-                 TracingKind aKind, UniqueProfilerBacktrace aCause)
-{
-=======
 void profiler_tracing(const char* aCategoryString, const char* aMarkerName,
                       JS::ProfilingCategoryPair aCategoryPair,
                       TracingKind aKind, UniqueProfilerBacktrace aCause,
                       const Maybe<nsID>& aDocShellId,
                       const Maybe<uint32_t>& aDocShellHistoryId) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CorePS::Exists());
 
   VTUNE_TRACING(aMarkerName, aKind);
@@ -5751,15 +4151,6 @@ void profiler_tracing(const char* aCategoryString, const char* aMarkerName,
     return;
   }
 
-<<<<<<< HEAD
-  auto payload = MakeUnique<TracingMarkerPayload>(
-      aCategory, aKind, aDocShellId, aDocShellHistoryId, std::move(aCause));
-  racy_profiler_add_marker(aMarkerName, std::move(payload));
-||||||| merged common ancestors
-  auto payload =
-    MakeUnique<TracingMarkerPayload>(aCategory, aKind, std::move(aCause));
-  racy_profiler_add_marker(aMarkerName, std::move(payload));
-=======
   auto payload =
       MakeUnique<TracingMarkerPayload>(aCategoryString, aKind, aDocShellId,
                                        aDocShellHistoryId, std::move(aCause));
@@ -5777,7 +4168,6 @@ void profiler_add_text_marker(
       aMarkerName, aCategoryPair,
       MakeUnique<TextMarkerPayload>(aText, aStartTime, aEndTime, aDocShellId,
                                     aDocShellHistoryId, std::move(aCause)));
->>>>>>> upstream-releases
 }
 
 void profiler_set_js_context(JSContext* aCx) {
@@ -5848,18 +4238,6 @@ void profiler_clear_js_context() {
   registeredThread->ClearJSContext();
 }
 
-<<<<<<< HEAD
-int profiler_current_thread_id() { return Thread::GetCurrentId(); }
-
-||||||| merged common ancestors
-int
-profiler_current_thread_id()
-{
-  return Thread::GetCurrentId();
-}
-
-=======
->>>>>>> upstream-releases
 // NOTE: aCollector's methods will be called while the target thread is paused.
 // Doing things in those methods like allocating -- which may try to claim
 // locks -- is a surefire way to deadlock.
@@ -5869,16 +4247,8 @@ void profiler_suspend_and_sample_thread(int aThreadId, uint32_t aFeatures,
   // Lock the profiler mutex
   PSAutoLock lock(gPSMutex);
 
-<<<<<<< HEAD
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-      CorePS::RegisteredThreads(lock);
-||||||| merged common ancestors
-  const nsTArray<UniquePtr<RegisteredThread>>& registeredThreads =
-    CorePS::RegisteredThreads(lock);
-=======
   const Vector<UniquePtr<RegisteredThread>>& registeredThreads =
       CorePS::RegisteredThreads(lock);
->>>>>>> upstream-releases
   for (auto& thread : registeredThreads) {
     RefPtr<ThreadInfo> info = thread->Info();
     RegisteredThread& registeredThread = *thread.get();
@@ -5903,35 +4273,14 @@ void profiler_suspend_and_sample_thread(int aThreadId, uint32_t aFeatures,
           // We can only use FramePointerStackWalk or MozStackWalk from
           // suspend_and_sample_thread as other stackwalking methods may not be
           // initialized.
-<<<<<<< HEAD
-#if defined(USE_FRAME_POINTER_STACK_WALK)
-              DoFramePointerBacktrace(lock, registeredThread, aRegs,
-                                      nativeStack);
-#elif defined(USE_MOZ_STACK_WALK)
-||||||| merged common ancestors
-# if defined(USE_FRAME_POINTER_STACK_WALK)
-          DoFramePointerBacktrace(lock, registeredThread, aRegs, nativeStack);
-# elif defined(USE_MOZ_STACK_WALK)
-=======
 #  if defined(USE_FRAME_POINTER_STACK_WALK)
               DoFramePointerBacktrace(lock, registeredThread, aRegs,
                                       nativeStack);
 #  elif defined(USE_MOZ_STACK_WALK)
->>>>>>> upstream-releases
           DoMozStackWalkBacktrace(lock, registeredThread, aRegs, nativeStack);
-<<<<<<< HEAD
-#else
-#error "Invalid configuration"
-#endif
-||||||| merged common ancestors
-# else
-#  error "Invalid configuration"
-# endif
-=======
 #  else
 #    error "Invalid configuration"
 #  endif
->>>>>>> upstream-releases
 
               MergeStacks(aFeatures, isSynchronous, registeredThread, aRegs,
                           nativeStack, aCollector);

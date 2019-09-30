@@ -9,17 +9,6 @@
 </head>
 <body>
 <script>
-<<<<<<< HEAD
-  // TrustedHTML assignments do not throw.
-  test(t => {
-    let p = createHTML_policy(window, 1);
-    let html = p.createHTML(INPUTS.HTML);
-    document.write(html);
-    assert_equals(document.body.innerText, RESULTS.HTML);
-  }, "document.write with html assigned via policy (successful URL transformation).");
-
-||||||| merged common ancestors
-=======
   // TrustedURL assignments do not throw.
   let p = createHTML_policy(window, 1);
   test(t => {
@@ -37,7 +26,6 @@
     assert_equals(document.body.innerText, RESULTS.HTML);
   }, "document.writeln with html assigned via policy (successful URL transformation).");
 
->>>>>>> upstream-releases
   // String assignments throw.
   test(t => {
     const old = document.body.innerText;

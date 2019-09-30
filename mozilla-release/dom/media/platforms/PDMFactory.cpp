@@ -5,29 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "PDMFactory.h"
-<<<<<<< HEAD
-#include "AgnosticDecoderModule.h"
-#include "DecoderDoctorDiagnostics.h"
-#include "EMEDecoderModule.h"
-#include "GMPDecoderModule.h"
-#include "H264.h"
-#include "MP4Decoder.h"
-#include "MediaChangeMonitor.h"
-#include "MediaInfo.h"
-#include "VPXDecoder.h"
-#include "gfxPrefs.h"
-#include "mozilla/CDMProxy.h"
-#include "mozilla/ClearOnShutdown.h"
-#include "mozilla/GpuDecoderModule.h"
-#include "mozilla/RemoteDecoderModule.h"
-#include "mozilla/SharedThreadPool.h"
-#include "mozilla/StaticPrefs.h"
-#include "mozilla/StaticPtr.h"
-#include "mozilla/SyncRunnable.h"
-#include "mozilla/TaskQueue.h"
-#include "mozilla/gfx/gfxVars.h"
-||||||| merged common ancestors
-=======
 #include "AgnosticDecoderModule.h"
 #include "AudioTrimmer.h"
 #include "DecoderDoctorDiagnostics.h"
@@ -49,7 +26,6 @@
 #include "mozilla/SyncRunnable.h"
 #include "mozilla/TaskQueue.h"
 #include "mozilla/gfx/gfxVars.h"
->>>>>>> upstream-releases
 
 #ifdef XP_WIN
 #  include "WMFDecoderModule.h"
@@ -181,23 +157,14 @@ PDMFactory::PDMFactory() {
 
 PDMFactory::~PDMFactory() {}
 
-<<<<<<< HEAD
-void PDMFactory::EnsureInit() const {
-||||||| merged common ancestors
-void
-PDMFactory::EnsureInit() const
-{
-=======
 /* static */
 void PDMFactory::EnsureInit() {
->>>>>>> upstream-releases
   {
     StaticMutexAutoLock mon(sMonitor);
     if (sInstance) {
       // Quick exit if we already have an instance.
       return;
     }
-<<<<<<< HEAD
   }
 
   auto initalization = []() {
@@ -206,19 +173,6 @@ void PDMFactory::EnsureInit() {
     if (!sInstance) {
       // Ensure that all system variables are initialized.
       gfx::gfxVars::Initialize();
-      gfxPrefs::GetSingleton();
-||||||| merged common ancestors
-    if (NS_IsMainThread()) {
-=======
-  }
-
-  auto initalization = []() {
-    MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread());
-    StaticMutexAutoLock mon(sMonitor);
-    if (!sInstance) {
-      // Ensure that all system variables are initialized.
-      gfx::gfxVars::Initialize();
->>>>>>> upstream-releases
       // On the main thread and holding the lock -> Create instance.
       sInstance = new PDMFactoryImpl();
       ClearOnShutdown(&sInstance);
@@ -236,19 +190,10 @@ void PDMFactory::EnsureInit() {
   SyncRunnable::DispatchToThread(mainTarget, runnable);
 }
 
-<<<<<<< HEAD
-already_AddRefed<MediaDataDecoder> PDMFactory::CreateDecoder(
-    const CreateDecoderParams& aParams) {
-||||||| merged common ancestors
-already_AddRefed<MediaDataDecoder>
-PDMFactory::CreateDecoder(const CreateDecoderParams& aParams)
-{
-=======
 already_AddRefed<MediaDataDecoder> PDMFactory::CreateDecoder(
     const CreateDecoderParams& aParams) {
   RefPtr<MediaDataDecoder> decoder;
   const TrackInfo& config = aParams.mConfig;
->>>>>>> upstream-releases
   if (aParams.mUseNullDecoder.mUse) {
     MOZ_ASSERT(mNullPDM);
     decoder = CreateDecoderWithPDM(mNullPDM, aParams);
@@ -398,21 +343,12 @@ void PDMFactory::CreatePDMs() {
     return;
   }
 
-<<<<<<< HEAD
-  if (StaticPrefs::MediaRddProcessEnabled()) {
-    m = new RemoteDecoderModule;
-    StartupPDM(m);
-  }
-
-||||||| merged common ancestors
-=======
   if (StaticPrefs::media_rdd_process_enabled() &&
       BrowserTabsRemoteAutostart()) {
     m = new RemoteDecoderModule;
     StartupPDM(m);
   }
 
->>>>>>> upstream-releases
 #ifdef XP_WIN
   if (StaticPrefs::media_wmf_enabled() && !IsWin7AndPre2000Compatible()) {
     m = new WMFDecoderModule();
@@ -420,15 +356,8 @@ void PDMFactory::CreatePDMs() {
     StartupPDM(remote);
     mWMFFailedToLoad = !StartupPDM(m);
   } else {
-<<<<<<< HEAD
-    mWMFFailedToLoad = StaticPrefs::MediaDecoderDoctorWmfDisabledIsFailure();
-||||||| merged common ancestors
-    mWMFFailedToLoad =
-      StaticPrefs::MediaDecoderDoctorWmfDisabledIsFailure();
-=======
     mWMFFailedToLoad =
         StaticPrefs::media_decoder_doctor_wmf_disabled_is_failure();
->>>>>>> upstream-releases
   }
 #endif
 #ifdef MOZ_OMX

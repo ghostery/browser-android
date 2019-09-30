@@ -100,81 +100,6 @@
     ],
   ];
 
-<<<<<<< HEAD
-function _isTextColorDark(r, g, b) {
-  return (0.2125 * r + 0.7154 * g + 0.0721 * b) <= 110;
-}
-
-const inContentVariableMap = [
-  ["--newtab-background-color", {
-    lwtProperty: "ntp_background",
-  }],
-  ["--newtab-text-primary-color", {
-    lwtProperty: "ntp_text",
-    processColor(rgbaChannels, element) {
-      if (!rgbaChannels) {
-        element.removeAttribute("lwt-newtab");
-        element.removeAttribute("lwt-newtab-brighttext");
-        return null;
-      }
-
-      element.setAttribute("lwt-newtab", "true");
-      const {r, g, b, a} = rgbaChannels;
-      if (!_isTextColorDark(r, g, b)) {
-        element.setAttribute("lwt-newtab-brighttext", "true");
-      } else {
-        element.removeAttribute("lwt-newtab-brighttext");
-      }
-
-      return `rgba(${r}, ${g}, ${b}, ${a})`;
-    },
-  }],
-  ["--lwt-sidebar-background-color", {
-    lwtProperty: "sidebar",
-    processColor(rgbaChannels) {
-      if (!rgbaChannels) {
-        return null;
-      }
-      const {r, g, b} = rgbaChannels;
-      // Drop alpha channel
-      return `rgb(${r}, ${g}, ${b})`;
-||||||| merged common ancestors
-function _isTextColorDark(r, g, b) {
-  return (0.2125 * r + 0.7154 * g + 0.0721 * b) <= 110;
-}
-
-const inContentVariableMap = [
-  ["--newtab-background-color", {
-    lwtProperty: "ntp_background",
-  }],
-  ["--newtab-text-primary-color", {
-    lwtProperty: "ntp_text",
-    processColor(rgbaChannels, element) {
-      if (!rgbaChannels) {
-        element.removeAttribute("lwt-newtab");
-        element.removeAttribute("lwt-newtab-brighttext");
-        return null;
-      }
-
-      element.setAttribute("lwt-newtab", "true");
-      const {r, g, b, a} = rgbaChannels;
-      if (!_isTextColorDark(r, g, b)) {
-        element.setAttribute("lwt-newtab-brighttext", "true");
-      }
-
-      return `rgba(${r}, ${g}, ${b}, ${a})`;
-    },
-  }],
-  ["--lwt-sidebar-background-color", {
-    lwtProperty: "sidebar",
-    processColor(rgbaChannels) {
-      if (!rgbaChannels) {
-        return null;
-      }
-      const {r, g, b} = rgbaChannels;
-      // Drop alpha channel
-      return `rgb(${r}, ${g}, ${b})`;
-=======
   /**
    * ContentThemeController handles theme updates sent by the frame script.
    * To be able to use ContentThemeController, you must add your page to the whitelist
@@ -187,22 +112,8 @@ const inContentVariableMap = [
      */
     init() {
       addEventListener("LightweightTheme:Set", this);
->>>>>>> upstream-releases
     },
 
-<<<<<<< HEAD
-      element.setAttribute("lwt-sidebar", "true");
-      const {r, g, b, a} = rgbaChannels;
-      if (!_isTextColorDark(r, g, b)) {
-        element.setAttribute("lwt-sidebar-brighttext", "true");
-      } else {
-        element.removeAttribute("lwt-sidebar-brighttext");
-||||||| merged common ancestors
-      element.setAttribute("lwt-sidebar", "true");
-      const {r, g, b, a} = rgbaChannels;
-      if (!_isTextColorDark(r, g, b)) {
-        element.setAttribute("lwt-sidebar-brighttext", "true");
-=======
     /**
      * Handle theme updates from the frame script.
      * @param {Object} event object containing the theme update.
@@ -218,7 +129,6 @@ const inContentVariableMap = [
           ? document.body
           : document.documentElement;
         this._setProperties(element, data);
->>>>>>> upstream-releases
       }
     },
 

@@ -14,31 +14,7 @@ using mozilla::EqualOrBothNaN;
 using mozilla::IsNaN;
 
 // NaN() is a more convenient function name.
-<<<<<<< HEAD
 inline double NaN() { return mozilla::UnspecifiedNaN<double>(); }
-
-#ifdef DEBUG
-static bool EqualOrNaN(double a, double b) {
-  return (a == b) || (IsNaN(a) && IsNaN(b));
-}
-#endif
-||||||| merged common ancestors
-inline
-double NaN()
-{
-  return mozilla::UnspecifiedNaN<double>();
-}
-
-#ifdef DEBUG
-static
-bool EqualOrNaN(double a, double b)
-{
-  return (a == b) || (IsNaN(a) && IsNaN(b));
-}
-#endif
-=======
-inline double NaN() { return mozilla::UnspecifiedNaN<double>(); }
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////
 // nsGeoPositionCoords

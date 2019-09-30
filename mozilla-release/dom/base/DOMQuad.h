@@ -38,37 +38,6 @@ class DOMQuad final : public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(DOMQuad)
 
   nsISupports* GetParentObject() const { return mParent; }
-<<<<<<< HEAD
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-
-  static already_AddRefed<DOMQuad> Constructor(const GlobalObject& aGlobal,
-                                               const DOMPointInit& aP1,
-                                               const DOMPointInit& aP2,
-                                               const DOMPointInit& aP3,
-                                               const DOMPointInit& aP4,
-                                               ErrorResult& aRV);
-  static already_AddRefed<DOMQuad> Constructor(const GlobalObject& aGlobal,
-                                               const DOMRectReadOnly& aRect,
-                                               ErrorResult& aRV);
-
-  DOMRectReadOnly* Bounds();
-||||||| merged common ancestors
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-  static already_AddRefed<DOMQuad>
-  Constructor(const GlobalObject& aGlobal,
-              const DOMPointInit& aP1,
-              const DOMPointInit& aP2,
-              const DOMPointInit& aP3,
-              const DOMPointInit& aP4,
-              ErrorResult& aRV);
-  static already_AddRefed<DOMQuad>
-  Constructor(const GlobalObject& aGlobal, const DOMRectReadOnly& aRect,
-              ErrorResult& aRV);
-
-  DOMRectReadOnly* Bounds();
-=======
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
 
@@ -88,7 +57,6 @@ class DOMQuad final : public nsWrapperCache {
                                                const DOMRectReadOnly& aRect,
                                                ErrorResult& aRV);
 
->>>>>>> upstream-releases
   already_AddRefed<DOMRectReadOnly> GetBounds() const;
   DOMPoint* P1() const { return mPoints[0]; }
   DOMPoint* P2() const { return mPoints[1]; }

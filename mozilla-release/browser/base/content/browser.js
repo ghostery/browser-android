@@ -3,18 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-||||||| merged common ancestors
-/* eslint-env mozilla/browser-window */
-/* globals StatusPanel */
-
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-=======
 var { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
@@ -22,7 +10,6 @@ var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
->>>>>>> upstream-releases
 ChromeUtils.import("resource://gre/modules/NotificationDB.jsm");
 
 // lazy module getters
@@ -108,115 +95,6 @@ if (AppConstants.MOZ_CRASHREPORTER) {
   );
 }
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyScriptGetter(this, "PlacesTreeView",
-                                  "chrome://browser/content/places/treeView.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["PlacesInsertionPoint", "PlacesController",
-                                         "PlacesControllerDragHelper"],
-                                  "chrome://browser/content/places/controller.js");
-XPCOMUtils.defineLazyScriptGetter(this, "PrintUtils",
-                                  "chrome://global/content/printUtils.js");
-XPCOMUtils.defineLazyScriptGetter(this, "ZoomManager",
-                                  "chrome://global/content/viewZoomOverlay.js");
-XPCOMUtils.defineLazyScriptGetter(this, "FullZoom",
-                                  "chrome://browser/content/browser-fullZoom.js");
-XPCOMUtils.defineLazyScriptGetter(this, "PanelUI",
-                                  "chrome://browser/content/customizableui/panelUI.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gViewSourceUtils",
-                                  "chrome://global/content/viewSourceUtils.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gTabsPanel",
-                                  "chrome://browser/content/browser-allTabsMenu.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["LightWeightThemeWebInstaller",
-                                         "gExtensionsNotifications",
-                                         "gXPInstallObserver"],
-                                  "chrome://browser/content/browser-addons.js");
-XPCOMUtils.defineLazyScriptGetter(this, "ctrlTab",
-                                  "chrome://browser/content/browser-ctrlTab.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["CustomizationHandler", "AutoHideMenubar"],
-                                  "chrome://browser/content/browser-customization.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["PointerLock", "FullScreen"],
-                                  "chrome://browser/content/browser-fullScreenAndPointerLock.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gIdentityHandler",
-                                  "chrome://browser/content/browser-siteIdentity.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["gGestureSupport", "gHistorySwipeAnimation"],
-                                  "chrome://browser/content/browser-gestureSupport.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gSafeBrowsing",
-                                  "chrome://browser/content/browser-safebrowsing.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gSync",
-                                  "chrome://browser/content/browser-sync.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gBrowserThumbnails",
-                                  "chrome://browser/content/browser-thumbnails.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["setContextMenuContentData",
-                                         "openContextMenu", "nsContextMenu"],
-                                  "chrome://browser/content/nsContextMenu.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["DownloadsPanel",
-                                         "DownloadsOverlayLoader",
-                                         "DownloadsSubview",
-                                         "DownloadsView", "DownloadsViewUI",
-                                         "DownloadsViewController",
-                                         "DownloadsSummary", "DownloadsFooter",
-                                         "DownloadsBlockedSubview"],
-                                  "chrome://browser/content/downloads/downloads.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["DownloadsButton",
-                                         "DownloadsIndicatorView"],
-                                  "chrome://browser/content/downloads/indicator.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gEditItemOverlay",
-                                  "chrome://browser/content/places/editBookmark.js");
-XPCOMUtils.defineLazyScriptGetter(this, "SearchOneOffs",
-                                  "chrome://browser/content/search/search-one-offs.js");
-||||||| merged common ancestors
-XPCOMUtils.defineLazyScriptGetter(this, "PlacesTreeView",
-                                  "chrome://browser/content/places/treeView.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["PlacesInsertionPoint", "PlacesController",
-                                         "PlacesControllerDragHelper"],
-                                  "chrome://browser/content/places/controller.js");
-XPCOMUtils.defineLazyScriptGetter(this, "PrintUtils",
-                                  "chrome://global/content/printUtils.js");
-XPCOMUtils.defineLazyScriptGetter(this, "ZoomManager",
-                                  "chrome://global/content/viewZoomOverlay.js");
-XPCOMUtils.defineLazyScriptGetter(this, "FullZoom",
-                                  "chrome://browser/content/browser-fullZoom.js");
-XPCOMUtils.defineLazyScriptGetter(this, "PanelUI",
-                                  "chrome://browser/content/customizableui/panelUI.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gViewSourceUtils",
-                                  "chrome://global/content/viewSourceUtils.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gTabsPanel",
-                                  "chrome://browser/content/browser-allTabsMenu.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["LightWeightThemeWebInstaller",
-                                         "gExtensionsNotifications",
-                                         "gXPInstallObserver"],
-                                  "chrome://browser/content/browser-addons.js");
-XPCOMUtils.defineLazyScriptGetter(this, "ctrlTab",
-                                  "chrome://browser/content/browser-ctrlTab.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["CustomizationHandler", "AutoHideMenubar"],
-                                  "chrome://browser/content/browser-customization.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["PointerLock", "FullScreen"],
-                                  "chrome://browser/content/browser-fullScreenAndPointerLock.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["gGestureSupport", "gHistorySwipeAnimation"],
-                                  "chrome://browser/content/browser-gestureSupport.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gSafeBrowsing",
-                                  "chrome://browser/content/browser-safebrowsing.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gSync",
-                                  "chrome://browser/content/browser-sync.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gBrowserThumbnails",
-                                  "chrome://browser/content/browser-thumbnails.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["setContextMenuContentData",
-                                         "openContextMenu", "nsContextMenu"],
-                                  "chrome://browser/content/nsContextMenu.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["DownloadsPanel",
-                                         "DownloadsOverlayLoader",
-                                         "DownloadsSubview",
-                                         "DownloadsView", "DownloadsViewUI",
-                                         "DownloadsViewController",
-                                         "DownloadsSummary", "DownloadsFooter",
-                                         "DownloadsBlockedSubview"],
-                                  "chrome://browser/content/downloads/downloads.js");
-XPCOMUtils.defineLazyScriptGetter(this, ["DownloadsButton",
-                                         "DownloadsIndicatorView"],
-                                  "chrome://browser/content/downloads/indicator.js");
-XPCOMUtils.defineLazyScriptGetter(this, "gEditItemOverlay",
-                                  "chrome://browser/content/places/editBookmark.js");
-=======
 XPCOMUtils.defineLazyScriptGetter(
   this,
   "PlacesTreeView",
@@ -342,7 +220,6 @@ XPCOMUtils.defineLazyScriptGetter(
   "SearchOneOffs",
   "chrome://browser/content/search/search-one-offs.js"
 );
->>>>>>> upstream-releases
 if (AppConstants.NIGHTLY_BUILD) {
   XPCOMUtils.defineLazyScriptGetter(
     this,
@@ -365,15 +242,10 @@ XPCOMUtils.defineLazyScriptGetter(
 // lazy service getters
 
 XPCOMUtils.defineLazyServiceGetters(this, {
-<<<<<<< HEAD
-  classifierService: ["@mozilla.org/url-classifier/dbservice;1", "nsIURIClassifier"],
-||||||| merged common ancestors
-=======
   classifierService: [
     "@mozilla.org/url-classifier/dbservice;1",
     "nsIURIClassifier",
   ],
->>>>>>> upstream-releases
   Favicons: ["@mozilla.org/browser/favicon-service;1", "nsIFaviconService"],
   gAboutNewTabService: [
     "@mozilla.org/browser/aboutnewtab-service;1",
@@ -397,20 +269,8 @@ if (AppConstants.MOZ_CRASHREPORTER) {
   );
 }
 
-<<<<<<< HEAD
 XPCOMUtils.defineLazyGetter(this, "RTL_UI", () => {
   return Services.locale.isAppLocaleRTL;
-});
-
-XPCOMUtils.defineLazyGetter(this, "gBrowserBundle", function() {
-  return Services.strings.createBundle("chrome://browser/locale/browser.properties");
-||||||| merged common ancestors
-XPCOMUtils.defineLazyGetter(this, "gBrowserBundle", function() {
-  return Services.strings.createBundle("chrome://browser/locale/browser.properties");
-=======
-XPCOMUtils.defineLazyGetter(this, "RTL_UI", () => {
-  return Services.locale.isAppLocaleRTL;
->>>>>>> upstream-releases
 });
 
 XPCOMUtils.defineLazyGetter(this, "gBrowserBundle", () => {
@@ -645,14 +505,6 @@ XPCOMUtils.defineLazyGetter(this, "Win7Features", () => {
   return null;
 });
 
-<<<<<<< HEAD
-customElements.setElementCreationCallback("translation-notification", () => {
-  Services.scriptloader.loadSubScript(
-    "chrome://browser/content/translation-notification.js", window);
-});
-
-||||||| merged common ancestors
-=======
 XPCOMUtils.defineLazyPreferenceGetter(
   this,
   "gToolbarKeyNavEnabled",
@@ -708,7 +560,6 @@ customElements.setElementCreationCallback("translation-notification", () => {
   );
 });
 
->>>>>>> upstream-releases
 var gBrowser;
 var gLastValidURLStr = "";
 var gInPrintPreviewMode = false;
@@ -724,118 +575,6 @@ if (AppConstants.platform != "macosx") {
   var gEditUIVisible = true;
 }
 
-<<<<<<< HEAD
-Object.defineProperty(this, "gURLBar", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    delete this.gURLBar;
-
-    let element = document.getElementById("urlbar");
-
-    if (!Services.prefs.getBoolPref("browser.urlbar.quantumbar", false)) {
-      return this.gURLBar = element;
-    }
-
-    // Disable the legacy XBL binding.
-    element.setAttribute("quantumbar", "true");
-
-    // Re-focus the input field if it was focused before switching bindings.
-    if (element.hasAttribute("focused")) {
-      element.inputField.focus();
-    }
-
-    return this.gURLBar =
-      new UrlbarInput({
-        textbox: element,
-        panel: document.getElementById("urlbar-results"),
-      });
-  },
-});
-
-Object.defineProperty(this, "gNavToolbox", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    delete this.gNavToolbox;
-    return this.gNavToolbox = document.getElementById("navigator-toolbox");
-  },
-});
-
-// High priority notification bars shown at the top of the window.
-Object.defineProperty(this, "gHighPriorityNotificationBox", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    delete this.gHighPriorityNotificationBox;
-
-    let notificationbox = new MozElements.NotificationBox(element => {
-      element.classList.add("global-notificationbox");
-      element.setAttribute("notificationside", "top");
-      document.getElementById("appcontent").prepend(element);
-    });
-
-    return this.gHighPriorityNotificationBox = notificationbox;
-  },
-});
-
-// Regular notification bars shown at the bottom of the window.
-Object.defineProperty(this, "gNotificationBox", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    delete this.gNotificationBox;
-
-    let notificationbox = new MozElements.NotificationBox(element => {
-      element.classList.add("global-notificationbox");
-      element.setAttribute("notificationside", "bottom");
-      document.getElementById("browser-bottombox").appendChild(element);
-    });
-
-    return this.gNotificationBox = notificationbox;
-  },
-});
-
-||||||| merged common ancestors
-Object.defineProperty(this, "gURLBar", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    delete this.gURLBar;
-
-    let element = document.getElementById("urlbar");
-
-    if (!Services.prefs.getBoolPref("browser.urlbar.quantumbar", false)) {
-      return this.gURLBar = element;
-    }
-
-    // Disable the legacy XBL binding.
-    element.setAttribute("quantumbar", "true");
-
-    // Re-focus the input field if it was focused before switching bindings.
-    if (element.hasAttribute("focused")) {
-      element.inputField.focus();
-    }
-
-    return this.gURLBar =
-      new UrlbarInput({
-        textbox: element,
-        panel: document.getElementById("urlbar-results"),
-      });
-  },
-});
-
-Object.defineProperty(this, "gNavToolbox", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    delete this.gNavToolbox;
-    return this.gNavToolbox = document.getElementById("navigator-toolbox");
-  },
-});
-
-=======
->>>>>>> upstream-releases
 // Smart getter for the findbar.  If you don't wish to force the creation of
 // the findbar, check gFindBarInitialized first.
 
@@ -868,23 +607,6 @@ async function gLazyFindCommand(cmd, ...args) {
   }
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-Object.defineProperty(this, "AddonManager", {
-  configurable: true,
-  enumerable: true,
-  get() {
-    let tmp = {};
-    ChromeUtils.import("resource://gre/modules/AddonManager.jsm", tmp);
-    return this.AddonManager = tmp.AddonManager;
-  },
-  set(val) {
-    delete this.AddonManager;
-    return this.AddonManager = val;
-  },
-});
-
-=======
 var gPageIcons = {
   "about:home": "chrome://branding/content/icon32.png",
   "about:newtab": "chrome://branding/content/icon32.png",
@@ -892,7 +614,6 @@ var gPageIcons = {
   "about:newinstall": "chrome://branding/content/icon32.png",
   "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
 };
->>>>>>> upstream-releases
 
 var gInitialPages = [
   "about:blank",
@@ -1172,16 +893,9 @@ const gStoragePressureObserver = {
     }
 
     const NOTIFICATION_VALUE = "storage-pressure-notification";
-<<<<<<< HEAD
-    if (gHighPriorityNotificationBox.getNotificationWithValue(NOTIFICATION_VALUE)) {
-||||||| merged common ancestors
-    let notificationBox = document.getElementById("high-priority-global-notificationbox");
-    if (notificationBox.getNotificationWithValue(NOTIFICATION_VALUE)) {
-=======
     if (
       gHighPriorityNotificationBox.getNotificationWithValue(NOTIFICATION_VALUE)
     ) {
->>>>>>> upstream-releases
       // Do not display the 2nd notification when there is already one
       return;
     }
@@ -1227,15 +941,9 @@ const gStoragePressureObserver = {
       // This is because this usage is small and not the main cause for space issue.
       // In order to avoid the bad and wrong impression among users that
       // firefox eats disk space a lot, indicate users to clean up other disk space.
-<<<<<<< HEAD
-      [msg] = await document.l10n.formatValues([{id: "space-alert-under-5gb-message"}]);
-||||||| merged common ancestors
-      msg = prefStrBundle.getFormattedString("spaceAlert.under5GB.message", [brandShortName]);
-=======
       [msg] = await document.l10n.formatValues([
         { id: "space-alert-under-5gb-message" },
       ]);
->>>>>>> upstream-releases
       buttons.push({
         "l10n-id": "space-alert-under-5gb-ok-button",
         callback() {},
@@ -1243,52 +951,19 @@ const gStoragePressureObserver = {
     } else {
       // The firefox-used space >= 5GB, then guide users to about:preferences
       // to clear some data stored on firefox by websites.
-<<<<<<< HEAD
-      [msg] = await document.l10n.formatValues([{id: "space-alert-over-5gb-message"}]);
-||||||| merged common ancestors
-      let descriptionStringID = "spaceAlert.over5GB.message1";
-      let prefButtonLabelStringID = "spaceAlert.over5GB.prefButton.label";
-      let prefButtonAccesskeyStringID = "spaceAlert.over5GB.prefButton.accesskey";
-      if (AppConstants.platform == "win") {
-        descriptionStringID = "spaceAlert.over5GB.messageWin1";
-        prefButtonLabelStringID = "spaceAlert.over5GB.prefButtonWin.label";
-        prefButtonAccesskeyStringID = "spaceAlert.over5GB.prefButtonWin.accesskey";
-      }
-      msg = prefStrBundle.getFormattedString(descriptionStringID, [brandShortName]);
-=======
       [msg] = await document.l10n.formatValues([
         { id: "space-alert-over-5gb-message" },
       ]);
->>>>>>> upstream-releases
       buttons.push({
         "l10n-id": "space-alert-over-5gb-pref-button",
         callback(notificationBar, button) {
           // The advanced subpanes are only supported in the old organization, which will
           // be removed by bug 1349689.
-<<<<<<< HEAD
-          openPreferences("privacy-sitedata", { origin: "storagePressure" });
-||||||| merged common ancestors
-          let win = gBrowser.ownerGlobal;
-          win.openPreferences("privacy-sitedata", { origin: "storagePressure" });
-=======
           openPreferences("privacy-sitedata");
->>>>>>> upstream-releases
         },
       });
     }
 
-<<<<<<< HEAD
-    gHighPriorityNotificationBox.appendNotification(
-      msg, NOTIFICATION_VALUE, null,
-      gHighPriorityNotificationBox.PRIORITY_WARNING_HIGH, buttons, null);
-
-    // This seems to be necessary to get the buttons to display correctly
-    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1504216
-    document.l10n.translateFragment(gHighPriorityNotificationBox.currentNotification);
-||||||| merged common ancestors
-    notificationBox.appendNotification(
-      msg, NOTIFICATION_VALUE, null, notificationBox.PRIORITY_WARNING_HIGH, buttons, null);
-=======
     gHighPriorityNotificationBox.appendNotification(
       msg,
       NOTIFICATION_VALUE,
@@ -1303,7 +978,6 @@ const gStoragePressureObserver = {
     document.l10n.translateFragment(
       gHighPriorityNotificationBox.currentNotification
     );
->>>>>>> upstream-releases
   },
 };
 
@@ -1358,18 +1032,6 @@ var gPopupBlockerObserver = {
           );
         }
 
-<<<<<<< HEAD
-        let messageBase;
-        if (popupCount < this.maxReportedPopups) {
-          messageBase = gNavigatorBundle.getString("popupWarning.message");
-        } else {
-          messageBase = gNavigatorBundle.getString("popupWarning.exceeded.message");
-        }
-
-||||||| merged common ancestors
-        var messageBase = gNavigatorBundle.getString("popupWarning.message");
-=======
->>>>>>> upstream-releases
         var message = PluralForm.get(popupCount, messageBase)
           .replace("#1", brandShortName)
           .replace("#2", popupCount);
@@ -1585,19 +1247,12 @@ var gPopupBlockerObserver = {
   },
 };
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyPreferenceGetter(gPopupBlockerObserver, "maxReportedPopups",
-  "privacy.popups.maxReported");
-
-||||||| merged common ancestors
-=======
 XPCOMUtils.defineLazyPreferenceGetter(
   gPopupBlockerObserver,
   "maxReportedPopups",
   "privacy.popups.maxReported"
 );
 
->>>>>>> upstream-releases
 function gKeywordURIFixup({ target: browser, data: fixupInfo }) {
   let deserializeURI = spec => (spec ? makeURI(spec) : null);
 
@@ -2099,25 +1754,6 @@ var gBrowserInit = {
   },
 
   onDOMContentLoaded() {
-<<<<<<< HEAD
-    // This needs setting up before we create the first remote browser.
-    window.docShell.treeOwner
-          .QueryInterface(Ci.nsIInterfaceRequestor)
-          .getInterface(Ci.nsIXULWindow)
-          .XULBrowserWindow = window.XULBrowserWindow;
-    window.browserDOMWindow = new nsBrowserAccess();
-||||||| merged common ancestors
-    gBrowser = window._gBrowser;
-    delete window._gBrowser;
-    gBrowser.init();
-
-    window.docShell.treeOwner
-          .QueryInterface(Ci.nsIInterfaceRequestor)
-          .getInterface(Ci.nsIXULWindow)
-          .XULBrowserWindow = window.XULBrowserWindow;
-    window.browserDOMWindow = new nsBrowserAccess();
-    BrowserWindowTracker.track(window);
-=======
     // This needs setting up before we create the first remote browser.
     window.docShell.treeOwner
       .QueryInterface(Ci.nsIInterfaceRequestor)
@@ -2129,14 +1765,6 @@ var gBrowserInit = {
     gBrowser.init();
 
     BrowserWindowTracker.track(window);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    gBrowser = window._gBrowser;
-    delete window._gBrowser;
-    gBrowser.init();
-
-    BrowserWindowTracker.track(window);
 
     gNavToolbox.palette = document.getElementById("BrowserToolbarPalette");
     gNavToolbox.palette.remove();
@@ -2146,50 +1774,6 @@ var gBrowserInit = {
       let node = document.getElementById(area);
       CustomizableUI.registerToolbarNode(node);
     }
-||||||| merged common ancestors
-    let initBrowser = gBrowser.initialBrowser;
-
-    // remoteType and sameProcessAsFrameLoader are passed through to
-    // updateBrowserRemoteness as part of an options object, which itself defaults
-    // to an empty object. So defaulting them to undefined here will cause the
-    // default behavior in updateBrowserRemoteness if they don't get set.
-    let isRemote = gMultiProcessBrowser;
-    let remoteType;
-    let sameProcessAsFrameLoader;
-
-    let tabArgument = this.getTabToAdopt();
-    if (tabArgument) {
-      // The window's first argument is a tab if and only if we are swapping tabs.
-      // We must set the browser's usercontextid before updateBrowserRemoteness(),
-      // so that the newly created remote tab child has the correct usercontextid.
-      if (tabArgument.hasAttribute("usercontextid")) {
-        initBrowser.setAttribute("usercontextid",
-                                 tabArgument.getAttribute("usercontextid"));
-      }
-
-      let linkedBrowser = tabArgument.linkedBrowser;
-      if (linkedBrowser) {
-        remoteType = linkedBrowser.remoteType;
-        isRemote = remoteType != E10SUtils.NOT_REMOTE;
-        sameProcessAsFrameLoader = linkedBrowser.frameLoader;
-      }
-      initBrowser.removeAttribute("blank");
-    }
-
-    gBrowser.updateBrowserRemoteness(initBrowser, isRemote, {
-      remoteType, sameProcessAsFrameLoader,
-    });
-
-=======
-    gNavToolbox.palette = document.getElementById("BrowserToolbarPalette");
-    gNavToolbox.palette.remove();
-    let areas = CustomizableUI.areas;
-    areas.splice(areas.indexOf(CustomizableUI.AREA_FIXED_OVERFLOW_PANEL), 1);
-    for (let area of areas) {
-      let node = document.getElementById(area);
-      CustomizableUI.registerToolbarNode(node);
-    }
->>>>>>> upstream-releases
     BrowserSearch.initPlaceHolder();
 
     // Hack to ensure that the various initial pages favicon is loaded
@@ -2208,16 +1792,8 @@ var gBrowserInit = {
     });
 
     this._setInitialFocus();
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-    // Update the UI density before TabsInTitlebar lays out the titlbar.
-    gUIDensity.init();
-    TabsInTitlebar.whenWindowLayoutReady();
-=======
 
     showFxaToolbarMenu(gFxaToolbarEnabled);
->>>>>>> upstream-releases
   },
 
   onLoad() {
@@ -2598,16 +2174,8 @@ var gBrowserInit = {
 
   _handleURIToLoad() {
     this._callWithURIToLoad(uriToLoad => {
-<<<<<<< HEAD
-      if (!uriToLoad) {
-        // We don't check whether window.arguments[6] (userContextId) is set
-||||||| merged common ancestors
-      if (!uriToLoad || uriToLoad == "about:blank") {
-        // We don't check whether window.arguments[6] (userContextId) is set
-=======
       if (!uriToLoad) {
         // We don't check whether window.arguments[5] (userContextId) is set
->>>>>>> upstream-releases
         // because tabbrowser.js takes care of that for the initial tab.
         return;
       }
@@ -4303,15 +3871,6 @@ function BrowserReloadWithFlags(reloadFlags) {
         );
         gBrowser._insertBrowser(tab);
       }
-<<<<<<< HEAD
-    } else if (browser.hasAttribute("recordExecution")) {
-      // Recording tabs always use new content processes when reloading, to get
-      // a fresh recording.
-      gBrowser.updateBrowserRemoteness(browser, true,
-                                       { recordExecution: "*", newFrameloader: true });
-      loadBrowserURI(browser, url);
-||||||| merged common ancestors
-=======
     } else if (browser.hasAttribute("recordExecution")) {
       // Recording tabs always use new content processes when reloading, to get
       // a fresh recording.
@@ -4321,7 +3880,6 @@ function BrowserReloadWithFlags(reloadFlags) {
         remoteType: E10SUtils.DEFAULT_REMOTE_TYPE,
       });
       loadBrowserURI(browser, url);
->>>>>>> upstream-releases
     } else {
       unchangedRemoteness.push(tab);
     }
@@ -4517,28 +4075,10 @@ var PrintPreviewListener = {
     this._chromeState.findOpen = gFindBarInitialized && !gFindBar.hidden;
     if (gFindBarInitialized) {
       gFindBar.close();
-<<<<<<< HEAD
-
-    gBrowser.getNotificationBox().stack.hidden = true;
-    gNotificationBox.stack.hidden = true;
-||||||| merged common ancestors
-
-    var globalNotificationBox = document.getElementById("global-notificationbox");
-    this._chromeState.globalNotificationsOpen = !globalNotificationBox.notificationsHidden;
-    globalNotificationBox.notificationsHidden = true;
-
-    this._chromeState.syncNotificationsOpen = false;
-    var syncNotifications = document.getElementById("sync-notifications");
-    if (syncNotifications) {
-      this._chromeState.syncNotificationsOpen = !syncNotifications.notificationsHidden;
-      syncNotifications.notificationsHidden = true;
-    }
-=======
     }
 
     gBrowser.getNotificationBox().stack.hidden = true;
     gNotificationBox.stack.hidden = true;
->>>>>>> upstream-releases
   },
   _showChrome() {
     gNotificationBox.stack.hidden = false;
@@ -4868,29 +4408,11 @@ const BrowserSearch = {
   delayedStartupInit() {
     // Asynchronously initialize the search service if necessary, to get the
     // current engine for working out the placeholder.
-<<<<<<< HEAD
-    Services.search.init(rv => {
-      if (Components.isSuccessCode(rv)) {
-        // Delay the update for this until so that we don't change it while
-        // the user is looking at it / isn't expecting it.
-        this._updateURLBarPlaceholder(Services.search.defaultEngine, true);
-        this._searchInitComplete = true;
-      }
-||||||| merged common ancestors
-    Services.search.init(rv => {
-      if (Components.isSuccessCode(rv)) {
-        // Delay the update for this until so that we don't change it while
-        // the user is looking at it / isn't expecting it.
-        this._updateURLBarPlaceholder(Services.search.currentEngine, true);
-        this._searchInitComplete = true;
-      }
-=======
     Services.search.getDefault().then(defaultEngine => {
       // Delay the update for this until so that we don't change it while
       // the user is looking at it / isn't expecting it.
       this._updateURLBarPlaceholder(defaultEngine.name, true);
       this._searchInitComplete = true;
->>>>>>> upstream-releases
     });
   },
 
@@ -5174,22 +4696,12 @@ const BrowserSearch = {
     }
 
     let focusUrlBarIfSearchFieldIsNotActive = function(aSearchBar) {
-<<<<<<< HEAD
-      if (!aSearchBar || document.activeElement != aSearchBar.textbox.inputField) {
-        focusAndSelectUrlBar(true);
-        // Limit the results to search suggestions, like the search bar.
-        gURLBar.typeRestrictToken(UrlbarTokenizer.RESTRICT.SEARCH);
-||||||| merged common ancestors
-      if (!aSearchBar || document.activeElement != aSearchBar.textbox.inputField) {
-        focusAndSelectUrlBar(true);
-=======
       if (
         !aSearchBar ||
         document.activeElement != aSearchBar.textbox.inputField
       ) {
         // Limit the results to search suggestions, like the search bar.
         gURLBar.search(UrlbarTokenizer.RESTRICT.SEARCH);
->>>>>>> upstream-releases
       }
     };
 
@@ -5239,14 +4751,7 @@ const BrowserSearch = {
    * @return engine The search engine used to perform a search, or null if no
    *                search was performed.
    */
-<<<<<<< HEAD
-  _loadSearch(searchText, useNewTab, purpose, triggeringPrincipal) {
-||||||| merged common ancestors
-  _loadSearch(searchText, useNewTab, purpose, triggeringPrincipal) {
-    let engine;
-=======
   _loadSearch(searchText, useNewTab, purpose, triggeringPrincipal, csp) {
->>>>>>> upstream-releases
     if (!triggeringPrincipal) {
       throw new Error(
         "Required argument triggeringPrincipal missing within _loadSearch"
@@ -6262,14 +5767,6 @@ var XULBrowserWindow = {
   //  3. Called directly during this object's initializations.
   //  4. Due to the nsIWebProgressListener.onLocationChange notification.
   // aRequest will be null always in case 2 and 3, and sometimes in case 1 (for
-<<<<<<< HEAD
-  // instance, there won't be a request when STATE_BLOCKED_TRACKING_CONTENT is observed).
-  onSecurityChange(aWebProgress, aRequest, aState, aIsSimulated) {
-||||||| merged common ancestors
-  // instance, there won't be a request when STATE_BLOCKED_TRACKING_CONTENT is observed).
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState,
-                   aContentBlockingLogJSON, aIsSimulated) {
-=======
   // instance, there won't be a request when STATE_BLOCKED_TRACKING_CONTENT or
   // other blocking events are observed).
   onContentBlockingEvent(aWebProgress, aRequest, aEvent, aIsSimulated) {
@@ -6309,7 +5806,6 @@ var XULBrowserWindow = {
   //  3. Called directly during this object's initializations.
   // aRequest will be null always in case 2 and 3, and sometimes in case 1.
   onSecurityChange(aWebProgress, aRequest, aState, aIsSimulated) {
->>>>>>> upstream-releases
     // Don't need to do anything if the data we use to update the UI hasn't
     // changed
     let uri = gBrowser.currentURI;
@@ -6331,13 +5827,6 @@ var XULBrowserWindow = {
       uri = Services.uriFixup.createExposableURI(uri);
     } catch (e) {}
     gIdentityHandler.updateIdentity(this._state, uri);
-<<<<<<< HEAD
-    ContentBlocking.onSecurityChange(this._state, aWebProgress, aIsSimulated);
-||||||| merged common ancestors
-    ContentBlocking.onSecurityChange(aOldState, this._state, aWebProgress, aIsSimulated,
-                                     aContentBlockingLogJSON);
-=======
->>>>>>> upstream-releases
   },
 
   // simulate all change notifications after switching tabs
@@ -6846,13 +6335,6 @@ var TabsProgressListener = {
 
   onStateChange(aBrowser, aWebProgress, aRequest, aStateFlags, aStatus) {
     // Collect telemetry data about tab load times.
-<<<<<<< HEAD
-    if (aWebProgress.isTopLevel && (!aRequest.originalURI || aRequest.originalURI.scheme != "about")) {
-      let stopwatchRunning = TelemetryStopwatch.running("FX_PAGE_LOAD_MS_2", aBrowser);
-||||||| merged common ancestors
-    if (aWebProgress.isTopLevel && (!aRequest.originalURI || aRequest.originalURI.spec.scheme != "about")) {
-      let stopwatchRunning = TelemetryStopwatch.running("FX_PAGE_LOAD_MS", aBrowser);
-=======
     if (
       aWebProgress.isTopLevel &&
       (!aRequest.originalURI || aRequest.originalURI.scheme != "about")
@@ -6872,42 +6354,20 @@ var TabsProgressListener = {
           recordLoadTelemetry = false;
         }
       }
->>>>>>> upstream-releases
 
       let stopwatchRunning = TelemetryStopwatch.running(histogram, aBrowser);
       if (aStateFlags & Ci.nsIWebProgressListener.STATE_IS_WINDOW) {
         if (aStateFlags & Ci.nsIWebProgressListener.STATE_START) {
           if (stopwatchRunning) {
             // Oops, we're seeing another start without having noticed the previous stop.
-<<<<<<< HEAD
-            TelemetryStopwatch.cancel("FX_PAGE_LOAD_MS_2", aBrowser);
-||||||| merged common ancestors
-            TelemetryStopwatch.cancel("FX_PAGE_LOAD_MS", aBrowser);
-=======
             if (recordLoadTelemetry) {
               TelemetryStopwatch.cancel(histogram, aBrowser);
             }
           }
           if (recordLoadTelemetry) {
             TelemetryStopwatch.start(histogram, aBrowser);
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          TelemetryStopwatch.start("FX_PAGE_LOAD_MS_2", aBrowser);
-||||||| merged common ancestors
-          TelemetryStopwatch.start("FX_PAGE_LOAD_MS", aBrowser);
-=======
->>>>>>> upstream-releases
           Services.telemetry.getHistogramById("FX_TOTAL_TOP_VISITS").add(true);
-<<<<<<< HEAD
-        } else if (aStateFlags & Ci.nsIWebProgressListener.STATE_STOP &&
-                   stopwatchRunning /* we won't see STATE_START events for pre-rendered tabs */) {
-          TelemetryStopwatch.finish("FX_PAGE_LOAD_MS_2", aBrowser);
-||||||| merged common ancestors
-        } else if (aStateFlags & Ci.nsIWebProgressListener.STATE_STOP &&
-                   stopwatchRunning /* we won't see STATE_START events for pre-rendered tabs */) {
-          TelemetryStopwatch.finish("FX_PAGE_LOAD_MS", aBrowser);
-=======
         } else if (
           aStateFlags & Ci.nsIWebProgressListener.STATE_STOP &&
           stopwatchRunning /* we won't see STATE_START events for pre-rendered tabs */
@@ -6923,20 +6383,7 @@ var TabsProgressListener = {
       ) {
         if (recordLoadTelemetry) {
           TelemetryStopwatch.cancel(histogram, aBrowser);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      } else if (aStateFlags & Ci.nsIWebProgressListener.STATE_STOP &&
-                 aStatus == Cr.NS_BINDING_ABORTED &&
-                 stopwatchRunning /* we won't see STATE_START events for pre-rendered tabs */) {
-        TelemetryStopwatch.cancel("FX_PAGE_LOAD_MS_2", aBrowser);
-||||||| merged common ancestors
-      } else if (aStateFlags & Ci.nsIWebProgressListener.STATE_STOP &&
-                 aStatus == Cr.NS_BINDING_ABORTED &&
-                 stopwatchRunning /* we won't see STATE_START events for pre-rendered tabs */) {
-        TelemetryStopwatch.cancel("FX_PAGE_LOAD_MS", aBrowser);
-=======
->>>>>>> upstream-releases
       }
     }
   },
@@ -7736,16 +7183,6 @@ function GetDynamicShortcutTooltipText(nodeId) {
       gNavigatorBundle.getFormattedString(strId, args)
     );
   }
-<<<<<<< HEAD
-  return gDynamicTooltipCache.get(nodeId);
-}
-
-function UpdateDynamicShortcutTooltipText(aTooltip) {
-  let nodeId = aTooltip.triggerNode.id || aTooltip.triggerNode.getAttribute("anonid");
-  aTooltip.setAttribute("label", GetDynamicShortcutTooltipText(nodeId));
-||||||| merged common ancestors
-  aTooltip.setAttribute("label", gDynamicTooltipCache.get(nodeId));
-=======
   return gDynamicTooltipCache.get(nodeId);
 }
 
@@ -7753,9 +7190,7 @@ function UpdateDynamicShortcutTooltipText(aTooltip) {
   let nodeId =
     aTooltip.triggerNode.id || aTooltip.triggerNode.getAttribute("anonid");
   aTooltip.setAttribute("label", GetDynamicShortcutTooltipText(nodeId));
->>>>>>> upstream-releases
 }
-
 
 /*
  * - [ Dependencies ] ---------------------------------------------------------
@@ -8202,13 +7637,6 @@ function promptRemoveExtension(addon) {
 
 var ToolbarContextMenu = {
   updateDownloadsAutoHide(popup) {
-<<<<<<< HEAD
-    let checkbox = document.getElementById("toolbar-context-autohide-downloads-button");
-    let isDownloads = popup.triggerNode && ["downloads-button", "wrapper-downloads-button"].includes(popup.triggerNode.id);
-||||||| merged common ancestors
-    let checkbox = popup.querySelector(".customize-context-autoHide");
-    let isDownloads = popup.triggerNode && ["downloads-button", "wrapper-downloads-button"].includes(popup.triggerNode.id);
-=======
     let checkbox = document.getElementById(
       "toolbar-context-autohide-downloads-button"
     );
@@ -8217,7 +7645,6 @@ var ToolbarContextMenu = {
       ["downloads-button", "wrapper-downloads-button"].includes(
         popup.triggerNode.id
       );
->>>>>>> upstream-releases
     checkbox.hidden = !isDownloads;
     if (DownloadsButton.autoHideDownloadsButton) {
       checkbox.setAttribute("checked", "true");
@@ -9298,18 +8725,8 @@ function BrowserOpenAddonsMgr(aView) {
 
     // This must be a new load, else the ping/pong would have
     // found the window above.
-<<<<<<< HEAD
-    let whereToOpen = (window.gBrowser && gBrowser.selectedTab.isEmpty) ?
-                      "current" :
-                      "tab";
-||||||| merged common ancestors
-    let whereToOpen = (window.gBrowser && isTabEmpty(gBrowser.selectedTab)) ?
-                      "current" :
-                      "tab";
-=======
     let whereToOpen =
       window.gBrowser && gBrowser.selectedTab.isEmpty ? "current" : "tab";
->>>>>>> upstream-releases
     openTrustedLinkIn("about:addons", whereToOpen);
 
     Services.obs.addObserver(function observer(aSubject, aTopic, aData) {
@@ -9341,13 +8758,7 @@ function AddKeywordForSearchField() {
 function undoCloseTab(aIndex) {
   // wallpaper patch to prevent an unnecessary blank tab (bug 343895)
   var blankTabToRemove = null;
-<<<<<<< HEAD
-  if (gBrowser.tabs.length == 1 && gBrowser.selectedTab.isEmpty)
-||||||| merged common ancestors
-  if (gBrowser.tabs.length == 1 && isTabEmpty(gBrowser.selectedTab))
-=======
   if (gBrowser.tabs.length == 1 && gBrowser.selectedTab.isEmpty) {
->>>>>>> upstream-releases
     blankTabToRemove = gBrowser.selectedTab;
   }
 
@@ -9521,55 +8932,29 @@ const gAccessibilityServiceIndicator = {
       this._active = true;
       document.documentElement.setAttribute("accessibilitymode", "true");
       [...document.querySelectorAll(".accessibility-indicator")].forEach(
-<<<<<<< HEAD
-        indicator => ["click", "keypress"].forEach(type =>
-          indicator.addEventListener(type, this)));
-||||||| merged common ancestors
-        indicator => ["click", "keypress"].forEach(type =>
-          indicator.addEventListener(type, this)));
-      TabsInTitlebar.update();
-=======
         indicator =>
           ["click", "keypress"].forEach(type =>
             indicator.addEventListener(type, this)
           )
       );
->>>>>>> upstream-releases
     } else if (this._active) {
       this._active = false;
       document.documentElement.removeAttribute("accessibilitymode");
       [...document.querySelectorAll(".accessibility-indicator")].forEach(
-<<<<<<< HEAD
-        indicator => ["click", "keypress"].forEach(type =>
-          indicator.removeEventListener(type, this)));
-||||||| merged common ancestors
-        indicator => ["click", "keypress"].forEach(type =>
-          indicator.removeEventListener(type, this)));
-      TabsInTitlebar.update();
-=======
         indicator =>
           ["click", "keypress"].forEach(type =>
             indicator.removeEventListener(type, this)
           )
       );
->>>>>>> upstream-releases
     }
   },
 
   observe(subject, topic, data) {
-<<<<<<< HEAD
-    if (topic == "nsPref:changed" && data === "accessibility.indicator.enabled") {
-      this._update(Services.appinfo.accessibilityEnabled);
-||||||| merged common ancestors
-    if (topic == "nsPref:changed" && data === "accessibility.indicator.enabled") {
-      this.update(Services.appinfo.accessibilityEnabled);
-=======
     if (
       topic == "nsPref:changed" &&
       data === "accessibility.indicator.enabled"
     ) {
       this._update(Services.appinfo.accessibilityEnabled);
->>>>>>> upstream-releases
     } else if (topic === "a11y-init-or-shutdown") {
       // When "a11y-init-or-shutdown" event is fired, "1" indicates that
       // accessibility service is started and "0" that it is shut down.
@@ -9824,13 +9209,7 @@ function switchToTabHavingURI(aURI, aOpenNew, aOpenParams = {}) {
 
   // No opened tab has that url.
   if (aOpenNew) {
-<<<<<<< HEAD
-    if (isBrowserWindow && gBrowser.selectedTab.isEmpty)
-||||||| merged common ancestors
-    if (isBrowserWindow && isTabEmpty(gBrowser.selectedTab))
-=======
     if (isBrowserWindow && gBrowser.selectedTab.isEmpty) {
->>>>>>> upstream-releases
       openTrustedLinkIn(aURI.spec, "current", aOpenParams);
     } else {
       openTrustedLinkIn(aURI.spec, "tab", aOpenParams);
@@ -10000,47 +9379,11 @@ var MousePosTracker = {
   },
 
   handleEvent(event) {
-<<<<<<< HEAD
     let fullZoom = window.windowUtils.fullZoom;
     this._x = event.screenX / fullZoom - window.mozInnerScreenX;
     this._y = event.screenY / fullZoom - window.mozInnerScreenY;
 
     this._listeners.forEach(listener => {
-||||||| merged common ancestors
-    let firstEvent = !this._mostRecentEvent;
-    this._mostRecentEvent = event;
-
-    if (firstEvent) {
-      window.promiseDocumentFlushed(() => {
-        this.onDocumentFlushed();
-        this._mostRecentEvent = null;
-      });
-    }
-  },
-
-  onDocumentFlushed() {
-    let event = this._mostRecentEvent;
-
-    if (event) {
-      let fullZoom = window.windowUtils.fullZoom;
-      this._x = event.screenX / fullZoom - window.mozInnerScreenX;
-      this._y = event.screenY / fullZoom - window.mozInnerScreenY;
-
-      this._callListeners(this._listeners);
-    }
-  },
-
-  _callListeners(listeners) {
-    let functionsToCall = [];
-    for (let listener of listeners) {
-      let rect;
-=======
-    let fullZoom = window.windowUtils.fullZoom;
-    this._x = event.screenX / fullZoom - window.mozInnerScreenX;
-    this._y = event.screenY / fullZoom - window.mozInnerScreenY;
-
-    this._listeners.forEach(listener => {
->>>>>>> upstream-releases
       try {
         this._callListener(listener);
       } catch (e) {
@@ -10049,23 +9392,6 @@ var MousePosTracker = {
     });
   },
 
-<<<<<<< HEAD
-  _callListener(listener) {
-    let rect = listener.getMouseTargetRect();
-    let hover = this._x >= rect.left &&
-                this._x <= rect.right &&
-                this._y >= rect.top &&
-                this._y <= rect.bottom;
-||||||| merged common ancestors
-      let hover = this._x >= rect.left &&
-                  this._x <= rect.right &&
-                  this._y >= rect.top &&
-                  this._y <= rect.bottom;
-
-      if (hover == listener._hover) {
-        continue;
-      }
-=======
   _callListener(listener) {
     let rect = listener.getMouseTargetRect();
     let hover =
@@ -10073,7 +9399,6 @@ var MousePosTracker = {
       this._x <= rect.right &&
       this._y >= rect.top &&
       this._y <= rect.bottom;
->>>>>>> upstream-releases
 
     if (hover == listener._hover) {
       return;

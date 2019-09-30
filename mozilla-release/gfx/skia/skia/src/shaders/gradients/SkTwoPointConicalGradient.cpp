@@ -13,8 +13,6 @@
 
 #include <utility>
 
-#include <utility>
-
 // Please see https://skia.org/dev/design/conical for how our shader works.
 
 bool SkTwoPointConicalGradient::FocalData::set(SkScalar r0, SkScalar r1, SkMatrix* matrix) {
@@ -57,18 +55,11 @@ sk_sp<SkShader> SkTwoPointConicalGradient::Create(const SkPoint& c0, SkScalar r0
     Type     gradientType;
 
     if (SkScalarNearlyZero((c0 - c1).length())) {
-<<<<<<< HEAD
-        if (SkScalarNearlyZero(SkTMax(r0, r1))) {
-            return nullptr; // Degenerate case; avoid dividing by zero.
-        }
-||||||| merged common ancestors
-=======
         if (SkScalarNearlyZero(SkTMax(r0, r1)) || SkScalarNearlyEqual(r0, r1)) {
             // Degenerate case; avoid dividing by zero. Should have been caught by caller but
             // just in case, recheck here.
             return nullptr;
         }
->>>>>>> upstream-releases
         // Concentric case: we can pretend we're radial (with a tiny twist).
         const SkScalar scale = sk_ieee_float_divide(1, SkTMax(r0, r1));
         gradientMatrix = SkMatrix::MakeTrans(-c1.x(), -c1.y());

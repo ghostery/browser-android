@@ -17,20 +17,9 @@
 namespace mozilla {
 namespace gl {
 
-<<<<<<< HEAD
-class AndroidNativeWindow {
- public:
-  AndroidNativeWindow() : mNativeWindow(nullptr) {}
-||||||| merged common ancestors
-class AndroidNativeWindow {
-public:
-  AndroidNativeWindow() : mNativeWindow(nullptr) {
-  }
-=======
 class AndroidNativeWindow final {
  public:
   AndroidNativeWindow() : mNativeWindow(nullptr) {}
->>>>>>> upstream-releases
 
   explicit AndroidNativeWindow(java::sdk::Surface::Param aSurface) {
     mNativeWindow =

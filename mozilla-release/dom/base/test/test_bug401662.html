@@ -27,19 +27,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=401662
 SimpleTest.waitForExplicitFinish();
 
 window.onload = function() {
-<<<<<<< HEAD
   const Cu = SpecialPowers.Cu;
-
-  var encoder = Cu.createDocumentEncoder("text/html");
-||||||| merged common ancestors
-  const Cc = SpecialPowers.Cc;
-  const Ci = SpecialPowers.Ci;
-
-  var encoder = Cc["@mozilla.org/layout/documentEncoder;1?type=text/html"]
-                   .createInstance(Ci.nsIDocumentEncoder);
-=======
-  const Cu = SpecialPowers.Cu;
->>>>>>> upstream-releases
 
   var encoder = Cu.createDocumentEncoder("text/html");
   var doc = $("testframe").contentDocument;

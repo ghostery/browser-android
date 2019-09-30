@@ -11,37 +11,17 @@
 <dialog id="exceptiondialog"
         windowtype="mozilla:exceptiondialog"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-<<<<<<< HEAD
-        style="max-width: 40em"
-        data-l10n-id="exception-mgr"
-        buttonidextra1="exception-mgr-extra-button"
-||||||| merged common ancestors
-        title="&exceptionMgr.title;"
-=======
         xmlns:html="http://www.w3.org/1999/xhtml"
         data-l10n-id="exception-mgr"
         buttonidextra1="exception-mgr-extra-button"
->>>>>>> upstream-releases
         buttons="cancel,extra1,extra2"
         onload="initExceptionDialog();"
         defaultButton="extra2">
 
-<<<<<<< HEAD
-  <linkset>
-    <link rel="localization" href="security/certificates/certManager.ftl"/>
-    <link rel="localization" href="branding/brand.ftl"/>
-  </linkset>
-||||||| merged common ancestors
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="pippki_bundle" src="chrome://pippki/locale/pippki.properties"/>
-    <stringbundle id="brand_bundle" src="chrome://branding/locale/brand.properties"/>
-  </stringbundleset>
-=======
   <linkset>
     <html:link rel="localization" href="branding/brand.ftl"/>
     <html:link rel="localization" href="security/certificates/certManager.ftl"/>
   </linkset>
->>>>>>> upstream-releases
 
   <script src="chrome://global/content/globalOverlay.js"/>
   <script src="chrome://global/content/editMenuOverlay.js"/>
@@ -63,33 +43,11 @@
       the description tags -->
       <description id="warningText"/>
       <description id="warningSupplemental"
-<<<<<<< HEAD
-                   style="font-weight: bold; white-space: pre-wrap; width: calc(40em - 18px)"
-                   data-l10n-id="exception-mgr-supplemental-warning"></description>
-||||||| merged common ancestors
-                   style="font-weight: bold; white-space: pre-wrap;"
-                   >&exceptionMgr.supplementalWarning;</description>
-=======
                    data-l10n-id="exception-mgr-supplemental-warning"/>
->>>>>>> upstream-releases
     </vbox>
   </hbox>
 
   <hbox align="center">
-<<<<<<< HEAD
-    <label id="certLocationLabel" control="locationTextBox" data-l10n-id="exception-mgr-cert-location-url"/>
-    <textbox id="locationTextBox" flex="1" oninput="handleTextChange();"
-             value="https://" class="uri-element"/>
-    <button id="checkCertButton" disabled="true" dlgtype="extra2"
-            data-l10n-id="exception-mgr-cert-location-download"/>
-||||||| merged common ancestors
-    <label control="locationTextBox" value="&exceptionMgr.certlocation.url;"/>
-    <textbox id="locationTextBox" flex="1" oninput="handleTextChange();"
-             value="https://" class="uri-element"/>
-    <button id="checkCertButton" disabled="true" dlgtype="extra2"
-            accesskey="&exceptionMgr.certlocation.accesskey;"
-            label="&exceptionMgr.certlocation.download;"/>
-=======
     <label control="locationTextBox"
            id="certLocationLabel"
            data-l10n-id="exception-mgr-cert-location-url"/>
@@ -101,25 +59,15 @@
             disabled="true"
             dlgtype="extra2"
             data-l10n-id="exception-mgr-cert-location-download"/>
->>>>>>> upstream-releases
   </hbox>
 
   <hbox align="center">
     <description id="headerDescription"
                  flex="1"/>
-<<<<<<< HEAD
-    <button id="viewCertButton" data-l10n-id="exception-mgr-cert-status-view-cert"
-            disabled="true" oncommand="viewCertButtonClick();"/>
-||||||| merged common ancestors
-    <button id="viewCertButton" label="&exceptionMgr.certstatus.viewCert;"
-            accesskey="&exceptionMgr.certstatus.accesskey;"
-            disabled="true" oncommand="viewCertButtonClick();"/>
-=======
     <button id="viewCertButton"
             data-l10n-id="exception-mgr-cert-status-view-cert"
             disabled="true"
             oncommand="viewCertButtonClick();"/>
->>>>>>> upstream-releases
   </hbox>
   <description id="statusDescription"
                class="description"/>
@@ -130,25 +78,10 @@
   <description id="status2LongDescription"
                class="longDescription"/>
   <description id="status3Description"
-<<<<<<< HEAD
-               style="font-weight: bold; padding-bottom: 1em;"/>
-  <description id="status3LongDescription" style="white-space: pre-wrap;"/>
-  <spacer flex="1"/>
-  <checkbox id="permanent" disabled="true"
-            data-l10n-id="exception-mgr-permanent"/>
-||||||| merged common ancestors
-               style="font-weight: bold; padding-bottom: 1em;"/>
-  <description id="status3LongDescription" style="white-space: pre-wrap;"/>
-  <spacer flex="1"/>
-  <checkbox id="permanent" disabled="true"
-            label="&exceptionMgr.permanent.label;"
-            accesskey="&exceptionMgr.permanent.accesskey;"/>
-=======
                class="description"/>
   <description id="status3LongDescription"
                class="longDescription"/>
   <checkbox id="permanent"
             disabled="true"
             data-l10n-id="exception-mgr-permanent"/>
->>>>>>> upstream-releases
 </dialog>

@@ -238,7 +238,8 @@ typedef TestNodeReverse<ForEachNodeType> ForEachTestNodeReverse;
 typedef TestNodeForward<SearchNodeType> SearchTestNodeForward;
 typedef TestNodeForward<ForEachNodeType> ForEachTestNodeForward;
 
-TEST(TreeTraversal, DepthFirstSearchNull) {
+TEST(TreeTraversal, DepthFirstSearchNull)
+{
   RefPtr<SearchTestNodeReverse> nullNode;
   RefPtr<SearchTestNodeReverse> result =
       DepthFirstSearch<layers::ReverseIterator>(
@@ -249,7 +250,8 @@ TEST(TreeTraversal, DepthFirstSearchNull) {
       << "Null root did not return null search result.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchValueExists) {
+TEST(TreeTraversal, DepthFirstSearchValueExists)
+{
   int visitCount = 0;
   size_t expectedNeedleTraversalRank = 7;
   RefPtr<SearchTestNodeForward> needleNode;
@@ -297,7 +299,8 @@ TEST(TreeTraversal, DepthFirstSearchValueExists) {
          "happened).";
 }
 
-TEST(TreeTraversal, DepthFirstSearchValueExistsReverse) {
+TEST(TreeTraversal, DepthFirstSearchValueExistsReverse)
+{
   int visitCount = 0;
   size_t expectedNeedleTraversalRank = 7;
   RefPtr<SearchTestNodeReverse> needleNode;
@@ -345,21 +348,6 @@ TEST(TreeTraversal, DepthFirstSearchValueExistsReverse) {
          "happened).";
 }
 
-<<<<<<< HEAD
-TEST(TreeTraversal, DepthFirstSearchRootIsNeedle) {
-  RefPtr<SearchTestNodeReverse> root =
-      new SearchTestNodeReverse(SearchNodeType::Needle, 0);
-  RefPtr<SearchTestNodeReverse> childNode1 =
-      new SearchTestNodeReverse(SearchNodeType::Hay);
-  RefPtr<SearchTestNodeReverse> childNode2 =
-      new SearchTestNodeReverse(SearchNodeType::Hay);
-||||||| merged common ancestors
-TEST(TreeTraversal, DepthFirstSearchRootIsNeedle)
-{
-  RefPtr<SearchTestNodeReverse> root = new SearchTestNodeReverse(SearchNodeType::Needle, 0);
-  RefPtr<SearchTestNodeReverse> childNode1= new SearchTestNodeReverse(SearchNodeType::Hay);
-  RefPtr<SearchTestNodeReverse> childNode2 = new SearchTestNodeReverse(SearchNodeType::Hay);
-=======
 TEST(TreeTraversal, DepthFirstSearchRootIsNeedle)
 {
   RefPtr<SearchTestNodeReverse> root =
@@ -368,7 +356,6 @@ TEST(TreeTraversal, DepthFirstSearchRootIsNeedle)
       new SearchTestNodeReverse(SearchNodeType::Hay);
   RefPtr<SearchTestNodeReverse> childNode2 =
       new SearchTestNodeReverse(SearchNodeType::Hay);
->>>>>>> upstream-releases
   int visitCount = 0;
   RefPtr<SearchTestNodeReverse> result =
       DepthFirstSearch<layers::ReverseIterator>(
@@ -388,7 +375,8 @@ TEST(TreeTraversal, DepthFirstSearchRootIsNeedle)
       << "Search starting at needle continued past needle.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchValueDoesNotExist) {
+TEST(TreeTraversal, DepthFirstSearchValueDoesNotExist)
+{
   int visitCount = 0;
   std::vector<RefPtr<SearchTestNodeForward>> nodeList;
   nodeList.reserve(10);
@@ -425,7 +413,8 @@ TEST(TreeTraversal, DepthFirstSearchValueDoesNotExist) {
       << "Search found something that should not exist.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchValueDoesNotExistReverse) {
+TEST(TreeTraversal, DepthFirstSearchValueDoesNotExistReverse)
+{
   int visitCount = 0;
   std::vector<RefPtr<SearchTestNodeReverse>> nodeList;
   nodeList.reserve(10);
@@ -462,7 +451,8 @@ TEST(TreeTraversal, DepthFirstSearchValueDoesNotExistReverse) {
       << "Search found something that should not exist.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchPostOrderNull) {
+TEST(TreeTraversal, DepthFirstSearchPostOrderNull)
+{
   RefPtr<SearchTestNodeReverse> nullNode;
   RefPtr<SearchTestNodeReverse> result =
       DepthFirstSearchPostOrder<layers::ReverseIterator>(
@@ -473,7 +463,8 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderNull) {
       << "Null root did not return null search result.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchPostOrderValueExists) {
+TEST(TreeTraversal, DepthFirstSearchPostOrderValueExists)
+{
   int visitCount = 0;
   size_t expectedNeedleTraversalRank = 7;
   RefPtr<SearchTestNodeForward> needleNode;
@@ -520,7 +511,8 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderValueExists) {
          "happened).";
 }
 
-TEST(TreeTraversal, DepthFirstSearchPostOrderValueExistsReverse) {
+TEST(TreeTraversal, DepthFirstSearchPostOrderValueExistsReverse)
+{
   int visitCount = 0;
   size_t expectedNeedleTraversalRank = 7;
   RefPtr<SearchTestNodeReverse> needleNode;
@@ -567,21 +559,6 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderValueExistsReverse) {
          "happened).";
 }
 
-<<<<<<< HEAD
-TEST(TreeTraversal, DepthFirstSearchPostOrderRootIsNeedle) {
-  RefPtr<SearchTestNodeReverse> root =
-      new SearchTestNodeReverse(SearchNodeType::Needle, 0);
-  RefPtr<SearchTestNodeReverse> childNode1 =
-      new SearchTestNodeReverse(SearchNodeType::Hay);
-  RefPtr<SearchTestNodeReverse> childNode2 =
-      new SearchTestNodeReverse(SearchNodeType::Hay);
-||||||| merged common ancestors
-TEST(TreeTraversal, DepthFirstSearchPostOrderRootIsNeedle)
-{
-  RefPtr<SearchTestNodeReverse> root = new SearchTestNodeReverse(SearchNodeType::Needle, 0);
-  RefPtr<SearchTestNodeReverse> childNode1= new SearchTestNodeReverse(SearchNodeType::Hay);
-  RefPtr<SearchTestNodeReverse> childNode2 = new SearchTestNodeReverse(SearchNodeType::Hay);
-=======
 TEST(TreeTraversal, DepthFirstSearchPostOrderRootIsNeedle)
 {
   RefPtr<SearchTestNodeReverse> root =
@@ -590,7 +567,6 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderRootIsNeedle)
       new SearchTestNodeReverse(SearchNodeType::Hay);
   RefPtr<SearchTestNodeReverse> childNode2 =
       new SearchTestNodeReverse(SearchNodeType::Hay);
->>>>>>> upstream-releases
   int visitCount = 0;
   RefPtr<SearchTestNodeReverse> result =
       DepthFirstSearchPostOrder<layers::ReverseIterator>(
@@ -610,7 +586,8 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderRootIsNeedle)
       << "Search starting at needle continued past needle.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchPostOrderValueDoesNotExist) {
+TEST(TreeTraversal, DepthFirstSearchPostOrderValueDoesNotExist)
+{
   int visitCount = 0;
   std::vector<RefPtr<SearchTestNodeForward>> nodeList;
   nodeList.reserve(10);
@@ -647,7 +624,8 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderValueDoesNotExist) {
       << "Search found something that should not exist.";
 }
 
-TEST(TreeTraversal, DepthFirstSearchPostOrderValueDoesNotExistReverse) {
+TEST(TreeTraversal, DepthFirstSearchPostOrderValueDoesNotExistReverse)
+{
   int visitCount = 0;
   std::vector<RefPtr<SearchTestNodeReverse>> nodeList;
   nodeList.reserve(10);
@@ -684,40 +662,9 @@ TEST(TreeTraversal, DepthFirstSearchPostOrderValueDoesNotExistReverse) {
       << "Search found something that should not exist.";
 }
 
-TEST(TreeTraversal, BreadthFirstSearchNull) {
+TEST(TreeTraversal, BreadthFirstSearchNull)
+{
   RefPtr<SearchTestNodeReverse> nullNode;
-<<<<<<< HEAD
-  RefPtr<SearchTestNodeReverse> result =
-      BreadthFirstSearch<layers::ReverseIterator>(
-          nullNode.get(), [](SearchTestNodeReverse* aNode) {
-            return aNode->GetType() == SearchNodeType::Needle;
-          });
-  ASSERT_EQ(result.get(), nullptr)
-      << "Null root did not return null search result.";
-}
-
-TEST(TreeTraversal, BreadthFirstSearchRootIsNeedle) {
-  RefPtr<SearchTestNodeReverse> root =
-      new SearchTestNodeReverse(SearchNodeType::Needle, 0);
-  RefPtr<SearchTestNodeReverse> childNode1 =
-      new SearchTestNodeReverse(SearchNodeType::Hay);
-  RefPtr<SearchTestNodeReverse> childNode2 =
-      new SearchTestNodeReverse(SearchNodeType::Hay);
-||||||| merged common ancestors
-  RefPtr<SearchTestNodeReverse> result = BreadthFirstSearch<layers::ReverseIterator>(nullNode.get(),
-      [](SearchTestNodeReverse* aNode)
-      {
-        return aNode->GetType() == SearchNodeType::Needle;
-      });
-  ASSERT_EQ(result.get(), nullptr) << "Null root did not return null search result.";
-}
-
-TEST(TreeTraversal, BreadthFirstSearchRootIsNeedle)
-{
-  RefPtr<SearchTestNodeReverse> root = new SearchTestNodeReverse(SearchNodeType::Needle, 0);
-  RefPtr<SearchTestNodeReverse> childNode1= new SearchTestNodeReverse(SearchNodeType::Hay);
-  RefPtr<SearchTestNodeReverse> childNode2 = new SearchTestNodeReverse(SearchNodeType::Hay);
-=======
   RefPtr<SearchTestNodeReverse> result =
       BreadthFirstSearch<layers::ReverseIterator>(
           nullNode.get(), [](SearchTestNodeReverse* aNode) {
@@ -735,7 +682,6 @@ TEST(TreeTraversal, BreadthFirstSearchRootIsNeedle)
       new SearchTestNodeReverse(SearchNodeType::Hay);
   RefPtr<SearchTestNodeReverse> childNode2 =
       new SearchTestNodeReverse(SearchNodeType::Hay);
->>>>>>> upstream-releases
   int visitCount = 0;
   RefPtr<SearchTestNodeReverse> result =
       BreadthFirstSearch<layers::ReverseIterator>(
@@ -755,7 +701,8 @@ TEST(TreeTraversal, BreadthFirstSearchRootIsNeedle)
       << "Search starting at needle continued past needle.";
 }
 
-TEST(TreeTraversal, BreadthFirstSearchValueExists) {
+TEST(TreeTraversal, BreadthFirstSearchValueExists)
+{
   int visitCount = 0;
   size_t expectedNeedleTraversalRank = 7;
   RefPtr<SearchTestNodeForward> needleNode;
@@ -803,7 +750,8 @@ TEST(TreeTraversal, BreadthFirstSearchValueExists) {
          "happened).";
 }
 
-TEST(TreeTraversal, BreadthFirstSearchValueExistsReverse) {
+TEST(TreeTraversal, BreadthFirstSearchValueExistsReverse)
+{
   int visitCount = 0;
   size_t expectedNeedleTraversalRank = 7;
   RefPtr<SearchTestNodeReverse> needleNode;
@@ -851,7 +799,8 @@ TEST(TreeTraversal, BreadthFirstSearchValueExistsReverse) {
          "happened).";
 }
 
-TEST(TreeTraversal, BreadthFirstSearchValueDoesNotExist) {
+TEST(TreeTraversal, BreadthFirstSearchValueDoesNotExist)
+{
   int visitCount = 0;
   std::vector<RefPtr<SearchTestNodeForward>> nodeList;
   nodeList.reserve(10);
@@ -888,7 +837,8 @@ TEST(TreeTraversal, BreadthFirstSearchValueDoesNotExist) {
       << "Search found something that should not exist.";
 }
 
-TEST(TreeTraversal, BreadthFirstSearchValueDoesNotExistReverse) {
+TEST(TreeTraversal, BreadthFirstSearchValueDoesNotExistReverse)
+{
   int visitCount = 0;
   std::vector<RefPtr<SearchTestNodeReverse>> nodeList;
   nodeList.reserve(10);
@@ -925,14 +875,16 @@ TEST(TreeTraversal, BreadthFirstSearchValueDoesNotExistReverse) {
       << "Search found something that should not exist.";
 }
 
-TEST(TreeTraversal, ForEachNodeNullStillRuns) {
+TEST(TreeTraversal, ForEachNodeNullStillRuns)
+{
   RefPtr<ForEachTestNodeReverse> nullNode;
   ForEachNode<layers::ReverseIterator>(
       nullNode.get(),
       [](ForEachTestNodeReverse* aNode) { return TraversalFlag::Continue; });
 }
 
-TEST(TreeTraversal, ForEachNodeAllEligible) {
+TEST(TreeTraversal, ForEachNodeAllEligible)
+{
   std::vector<RefPtr<ForEachTestNodeForward>> nodeList;
   int visitCount = 0;
   nodeList.reserve(10);
@@ -968,7 +920,8 @@ TEST(TreeTraversal, ForEachNodeAllEligible) {
   }
 }
 
-TEST(TreeTraversal, ForEachNodeAllEligibleReverse) {
+TEST(TreeTraversal, ForEachNodeAllEligibleReverse)
+{
   std::vector<RefPtr<ForEachTestNodeReverse>> nodeList;
   int visitCount = 0;
   nodeList.reserve(10);
@@ -1004,7 +957,8 @@ TEST(TreeTraversal, ForEachNodeAllEligibleReverse) {
   }
 }
 
-TEST(TreeTraversal, ForEachNodeSomeIneligibleNodes) {
+TEST(TreeTraversal, ForEachNodeSomeIneligibleNodes)
+{
   std::vector<RefPtr<ForEachTestNodeForward>> expectedVisitedNodeList;
   std::vector<RefPtr<ForEachTestNodeForward>> expectedSkippedNodeList;
   int visitCount = 0;
@@ -1058,7 +1012,8 @@ TEST(TreeTraversal, ForEachNodeSomeIneligibleNodes) {
   }
 }
 
-TEST(TreeTraversal, ForEachNodeSomeIneligibleNodesReverse) {
+TEST(TreeTraversal, ForEachNodeSomeIneligibleNodesReverse)
+{
   std::vector<RefPtr<ForEachTestNodeReverse>> expectedVisitedNodeList;
   std::vector<RefPtr<ForEachTestNodeReverse>> expectedSkippedNodeList;
   int visitCount = 0;
@@ -1112,7 +1067,8 @@ TEST(TreeTraversal, ForEachNodeSomeIneligibleNodesReverse) {
   }
 }
 
-TEST(TreeTraversal, ForEachNodeIneligibleRoot) {
+TEST(TreeTraversal, ForEachNodeIneligibleRoot)
+{
   int visitCount = 0;
 
   RefPtr<ForEachTestNodeReverse> root =
@@ -1141,16 +1097,8 @@ TEST(TreeTraversal, ForEachNodeIneligibleRoot) {
       << "Ineligible child was still hit.";
 }
 
-<<<<<<< HEAD
-TEST(TreeTraversal, ForEachNodeLeavesIneligible) {
-||||||| merged common ancestors
 TEST(TreeTraversal, ForEachNodeLeavesIneligible)
 {
-
-=======
-TEST(TreeTraversal, ForEachNodeLeavesIneligible)
-{
->>>>>>> upstream-releases
   std::vector<RefPtr<ForEachTestNodeForward>> nodeList;
   nodeList.reserve(10);
   int visitCount = 0;
@@ -1190,16 +1138,8 @@ TEST(TreeTraversal, ForEachNodeLeavesIneligible)
   }
 }
 
-<<<<<<< HEAD
-TEST(TreeTraversal, ForEachNodeLeavesIneligibleReverse) {
-||||||| merged common ancestors
 TEST(TreeTraversal, ForEachNodeLeavesIneligibleReverse)
 {
-
-=======
-TEST(TreeTraversal, ForEachNodeLeavesIneligibleReverse)
-{
->>>>>>> upstream-releases
   std::vector<RefPtr<ForEachTestNodeReverse>> nodeList;
   nodeList.reserve(10);
   int visitCount = 0;
@@ -1239,7 +1179,8 @@ TEST(TreeTraversal, ForEachNodeLeavesIneligibleReverse)
   }
 }
 
-TEST(TreeTraversal, ForEachNodeLambdaReturnsVoid) {
+TEST(TreeTraversal, ForEachNodeLambdaReturnsVoid)
+{
   std::vector<RefPtr<ForEachTestNodeReverse>> nodeList;
   nodeList.reserve(10);
   int visitCount = 0;
@@ -1282,25 +1223,8 @@ struct AssignSearchNodeTypesWithLastLeafAsNeedle {
   }
 };
 
-<<<<<<< HEAD
-bool FindNeedle(SearchTestNode* aNode) {
-  return aNode->GetType() == SearchNodeType::Needle;
-}
-
 struct AssignSearchNodeTypesAllHay {
   void operator()(SearchTestNode* aNode) {
-||||||| merged common ancestors
-bool FindNeedle(SearchTestNode* aNode) {
-  return aNode->GetType() == SearchNodeType::Needle;
-}
-
-struct AssignSearchNodeTypesAllHay
-{
-  void operator()(SearchTestNode* aNode){
-=======
-struct AssignSearchNodeTypesAllHay {
-  void operator()(SearchTestNode* aNode) {
->>>>>>> upstream-releases
     aNode->SetType(SearchNodeType::Hay);
   }
 };

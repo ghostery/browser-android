@@ -20,17 +20,8 @@ PrintTargetWindows::PrintTargetWindows(cairo_surface_t* aCairoSurface,
   // 4 * mSize.width * mSize.height + sizeof(PrintTargetWindows) ?
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PrintTargetWindows>
-PrintTargetWindows::CreateOrNull(HDC aDC) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PrintTargetWindows>
-PrintTargetWindows::CreateOrNull(HDC aDC)
-{
-=======
 /* static */
 already_AddRefed<PrintTargetWindows> PrintTargetWindows::CreateOrNull(HDC aDC) {
->>>>>>> upstream-releases
   // Figure out the paper size, the actual surface size will be the printable
   // area which is likely smaller, but the size here is later used to create the
   // draw target where the full page size is needed.

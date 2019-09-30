@@ -98,36 +98,13 @@ case $cmd in
         ${TOPSRCDIR}/memory/mozalloc \
         ${tgtpath}/memory/
 
-<<<<<<< HEAD
-    ${MKDIR} -p ${tgtpath}/modules
-    cp -pPR \
-        ${TOPSRCDIR}/modules/fdlibm \
-        ${TOPSRCDIR}/modules/zlib \
-        ${tgtpath}/modules/
-||||||| merged common ancestors
-    # copy build and config directory.
-    cp -pPR ${TOPSRCDIR}/build ${TOPSRCDIR}/config ${tgtpath}
-=======
     ${MKDIR} -p ${tgtpath}/modules
     cp -pPR \
         ${TOPSRCDIR}/modules/brotli \
         ${TOPSRCDIR}/modules/fdlibm \
         ${TOPSRCDIR}/modules/zlib \
         ${tgtpath}/modules/
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ${MKDIR} -p ${tgtpath}/mozglue
-    cp -pPR \
-        ${TOPSRCDIR}/mozglue/build \
-        ${TOPSRCDIR}/mozglue/misc \
-        ${TOPSRCDIR}/mozglue/moz.build \
-        ${tgtpath}/mozglue/
-||||||| merged common ancestors
-    # copy cargo config
-    ${MKDIR} -p ${tgtpath}/.cargo
-    cp -pPR ${TOPSRCDIR}/.cargo/config.in ${tgtpath}/.cargo
-=======
     ${MKDIR} -p ${tgtpath}/mozglue
     cp -pPR \
         ${TOPSRCDIR}/mozglue/baseprofiler \
@@ -135,7 +112,6 @@ case $cmd in
         ${TOPSRCDIR}/mozglue/misc \
         ${TOPSRCDIR}/mozglue/moz.build \
         ${tgtpath}/mozglue/
->>>>>>> upstream-releases
 
     ${MKDIR} -p ${tgtpath}/tools/fuzzing
     cp -pPR \
@@ -208,23 +184,9 @@ case $cmd in
 
     ${MKDIR} -p ${tgtpath}/js/src
     cp -pPR \
-<<<<<<< HEAD
-        ${TOPSRCDIR}/js/app.mozbuild \
-        ${TOPSRCDIR}/js/ffi.configure \
-        ${TOPSRCDIR}/js/moz.configure \
-        ${tgtpath}/js/
-||||||| merged common ancestors
-        ${TOPSRCDIR}/memory/moz.build \
-        ${TOPSRCDIR}/memory/build \
-        ${TOPSRCDIR}/memory/fallible \
-        ${TOPSRCDIR}/memory/mozalloc \
-        ${tgtpath}/memory
-    ${MKDIR} -p ${tgtpath}/tools/fuzzing
-=======
         ${TOPSRCDIR}/js/app.mozbuild \
         ${TOPSRCDIR}/js/*.configure \
         ${tgtpath}/js/
->>>>>>> upstream-releases
     cp -pPR \
         ${TOPSRCDIR}/js/examples \
         ${TOPSRCDIR}/js/public \

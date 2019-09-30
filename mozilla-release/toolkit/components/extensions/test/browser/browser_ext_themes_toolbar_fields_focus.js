@@ -9,27 +9,6 @@ add_task(async function test_toolbar_field_hover() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": "#FF0000",
-          "tab_background_color": "#ffffff",
-          "toolbar_field": TOOLBAR_FIELD_BACKGROUND,
-          "toolbar_field_text": TOOLBAR_FIELD_COLOR,
-          "toolbar_field_focus": TOOLBAR_FOCUS_BACKGROUND,
-          "toolbar_field_text_focus": TOOLBAR_FOCUS_TEXT,
-          "toolbar_field_border_focus": TOOLBAR_FOCUS_BORDER,
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": "#FF0000",
-          "textcolor": "#ffffff",
-          "toolbar_field": TOOLBAR_FIELD_BACKGROUND,
-          "toolbar_field_text": TOOLBAR_FIELD_COLOR,
-          "toolbar_field_focus": TOOLBAR_FOCUS_BACKGROUND,
-          "toolbar_field_text_focus": TOOLBAR_FOCUS_TEXT,
-          "toolbar_field_border_focus": TOOLBAR_FOCUS_BORDER,
-=======
       theme: {
         colors: {
           frame: "#FF0000",
@@ -39,7 +18,6 @@ add_task(async function test_toolbar_field_hover() {
           toolbar_field_focus: TOOLBAR_FOCUS_BACKGROUND,
           toolbar_field_text_focus: TOOLBAR_FOCUS_TEXT,
           toolbar_field_border_focus: TOOLBAR_FOCUS_BORDER,
->>>>>>> upstream-releases
         },
       },
     },

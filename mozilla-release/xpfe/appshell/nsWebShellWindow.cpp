@@ -66,8 +66,6 @@
 #include "mozilla/dom/BrowsingContext.h"
 #include "mozilla/dom/LoadURIOptionsBinding.h"
 
-#include "mozilla/dom/BrowsingContext.h"
-
 #include "nsPIWindowRoot.h"
 
 #include "gfxPlatform.h"
@@ -99,30 +97,11 @@ NS_INTERFACE_MAP_BEGIN(nsWebShellWindow)
   NS_INTERFACE_MAP_ENTRY(nsIWebProgressListener)
 NS_INTERFACE_MAP_END_INHERITING(nsXULWindow)
 
-<<<<<<< HEAD
-nsresult nsWebShellWindow::Initialize(
-    nsIXULWindow* aParent, nsIXULWindow* aOpener, nsIURI* aUrl,
-    int32_t aInitialWidth, int32_t aInitialHeight, bool aIsHiddenWindow,
-    nsITabParent* aOpeningTab, mozIDOMWindowProxy* aOpenerWindow,
-    nsWidgetInitData& widgetInitData) {
-||||||| merged common ancestors
-nsresult nsWebShellWindow::Initialize(nsIXULWindow* aParent,
-                                      nsIXULWindow* aOpener,
-                                      nsIURI* aUrl,
-                                      int32_t aInitialWidth,
-                                      int32_t aInitialHeight,
-                                      bool aIsHiddenWindow,
-                                      nsITabParent *aOpeningTab,
-                                      mozIDOMWindowProxy *aOpenerWindow,
-                                      nsWidgetInitData& widgetInitData)
-{
-=======
 nsresult nsWebShellWindow::Initialize(
     nsIXULWindow* aParent, nsIXULWindow* aOpener, nsIURI* aUrl,
     int32_t aInitialWidth, int32_t aInitialHeight, bool aIsHiddenWindow,
     nsIRemoteTab* aOpeningTab, mozIDOMWindowProxy* aOpenerWindow,
     nsWidgetInitData& widgetInitData) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIWidget> parentWidget;
 
@@ -270,47 +249,21 @@ nsresult nsWebShellWindow::Initialize(
     NS_ConvertUTF8toUTF16 urlString(tmpStr);
     nsCOMPtr<nsIWebNavigation> webNav(do_QueryInterface(mDocShell));
     NS_ENSURE_TRUE(webNav, NS_ERROR_FAILURE);
-<<<<<<< HEAD
-    rv =
-        webNav->LoadURI(urlString, nsIWebNavigation::LOAD_FLAGS_NONE, nullptr,
-                        nullptr, nullptr, nsContentUtils::GetSystemPrincipal());
-||||||| merged common ancestors
-    rv = webNav->LoadURI(urlString,
-                         nsIWebNavigation::LOAD_FLAGS_NONE,
-                         nullptr,
-                         nullptr,
-                         nullptr,
-                         nsContentUtils::GetSystemPrincipal());
-=======
 
     LoadURIOptions loadURIOptions;
     loadURIOptions.mTriggeringPrincipal = nsContentUtils::GetSystemPrincipal();
 
     rv = webNav->LoadURI(urlString, loadURIOptions);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   return rv;
 }
 
-<<<<<<< HEAD
-nsIPresShell* nsWebShellWindow::GetPresShell() {
-  if (!mDocShell) return nullptr;
-
-||||||| merged common ancestors
-nsIPresShell*
-nsWebShellWindow::GetPresShell()
-{
-  if (!mDocShell)
-    return nullptr;
-
-=======
 PresShell* nsWebShellWindow::GetPresShell() {
   if (!mDocShell) {
     return nullptr;
   }
->>>>>>> upstream-releases
   return mDocShell->GetPresShell();
 }
 
@@ -521,14 +474,7 @@ void nsWebShellWindow::WindowDeactivated() {
 }
 
 #ifdef USE_NATIVE_MENUS
-<<<<<<< HEAD
-static void LoadNativeMenus(nsIDocument* aDoc, nsIWidget* aParentWindow) {
-||||||| merged common ancestors
-static void LoadNativeMenus(nsIDocument *aDoc, nsIWidget *aParentWindow)
-{
-=======
 static void LoadNativeMenus(Document* aDoc, nsIWidget* aParentWindow) {
->>>>>>> upstream-releases
   if (gfxPlatform::IsHeadless()) {
     return;
   }
@@ -662,17 +608,8 @@ nsWebShellWindow::OnStateChange(nsIWebProgress* aProgress, nsIRequest* aRequest,
   nsCOMPtr<nsIContentViewer> cv;
   mDocShell->GetContentViewer(getter_AddRefs(cv));
   if (cv) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIDocument> menubarDoc = cv->GetDocument();
-    if (menubarDoc) LoadNativeMenus(menubarDoc, mWindow);
-||||||| merged common ancestors
-    nsCOMPtr<nsIDocument> menubarDoc = cv->GetDocument();
-    if (menubarDoc)
-      LoadNativeMenus(menubarDoc, mWindow);
-=======
     RefPtr<Document> menubarDoc = cv->GetDocument();
     if (menubarDoc) LoadNativeMenus(menubarDoc, mWindow);
->>>>>>> upstream-releases
   }
 #endif  // USE_NATIVE_MENUS
 
@@ -698,28 +635,12 @@ nsWebShellWindow::OnStatusChange(nsIWebProgress* aWebProgress,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsWebShellWindow::OnSecurityChange(nsIWebProgress* aWebProgress,
-                                   nsIRequest* aRequest, uint32_t state) {
-||||||| merged common ancestors
-nsWebShellWindow::OnSecurityChange(nsIWebProgress *aWebProgress,
-                                   nsIRequest *aRequest,
-                                   uint32_t aOldState,
-                                   uint32_t aState,
-                                   const nsAString& aContentBlockingLogJSON)
-{
-=======
 nsWebShellWindow::OnSecurityChange(nsIWebProgress* aWebProgress,
                                    nsIRequest* aRequest, uint32_t aState) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 NS_IMETHODIMP
 nsWebShellWindow::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
                                          nsIRequest* aRequest,
@@ -728,7 +649,6 @@ nsWebShellWindow::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
   return NS_OK;
 }
 
->>>>>>> upstream-releases
 /**
  * ExecuteCloseHandler - Run the close handler, if any.
  * @return true iff we found a close handler to run.
@@ -817,15 +737,7 @@ nsIXULWindow* nsWebShellWindow::WidgetListenerDelegate::GetXULWindow() {
   return mWebShellWindow->GetXULWindow();
 }
 
-<<<<<<< HEAD
-nsIPresShell* nsWebShellWindow::WidgetListenerDelegate::GetPresShell() {
-||||||| merged common ancestors
-nsIPresShell*
-nsWebShellWindow::WidgetListenerDelegate::GetPresShell()
-{
-=======
 PresShell* nsWebShellWindow::WidgetListenerDelegate::GetPresShell() {
->>>>>>> upstream-releases
   return mWebShellWindow->GetPresShell();
 }
 

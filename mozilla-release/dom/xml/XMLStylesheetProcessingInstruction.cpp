@@ -33,24 +33,9 @@ XMLStylesheetProcessingInstruction::~XMLStylesheetProcessingInstruction() {}
 
 // nsIContent
 
-<<<<<<< HEAD
-nsresult XMLStylesheetProcessingInstruction::BindToTree(
-    nsIDocument* aDocument, nsIContent* aParent, nsIContent* aBindingParent) {
-  nsresult rv =
-      ProcessingInstruction::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-XMLStylesheetProcessingInstruction::BindToTree(nsIDocument* aDocument,
-                                               nsIContent* aParent,
-                                               nsIContent* aBindingParent)
-{
-  nsresult rv = ProcessingInstruction::BindToTree(aDocument, aParent,
-                                                  aBindingParent);
-=======
 nsresult XMLStylesheetProcessingInstruction::BindToTree(BindContext& aContext,
                                                         nsINode& aParent) {
   nsresult rv = ProcessingInstruction::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   void (XMLStylesheetProcessingInstruction::*update)() =
@@ -61,19 +46,8 @@ nsresult XMLStylesheetProcessingInstruction::BindToTree(BindContext& aContext,
   return rv;
 }
 
-<<<<<<< HEAD
-void XMLStylesheetProcessingInstruction::UnbindFromTree(bool aDeep,
-                                                        bool aNullParent) {
-  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
-||||||| merged common ancestors
-void
-XMLStylesheetProcessingInstruction::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
-=======
 void XMLStylesheetProcessingInstruction::UnbindFromTree(bool aNullParent) {
   nsCOMPtr<Document> oldDoc = GetUncomposedDoc();
->>>>>>> upstream-releases
 
   ProcessingInstruction::UnbindFromTree(aNullParent);
   Unused << UpdateStyleSheetInternal(oldDoc, nullptr);
@@ -97,17 +71,8 @@ void XMLStylesheetProcessingInstruction::GetCharset(nsAString& aCharset) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void XMLStylesheetProcessingInstruction::OverrideBaseURI(
-    nsIURI* aNewBaseURI) {
-||||||| merged common ancestors
-/* virtual */ void
-XMLStylesheetProcessingInstruction::OverrideBaseURI(nsIURI* aNewBaseURI)
-{
-=======
 /* virtual */
 void XMLStylesheetProcessingInstruction::OverrideBaseURI(nsIURI* aNewBaseURI) {
->>>>>>> upstream-releases
   mOverriddenBaseURI = aNewBaseURI;
 }
 
@@ -159,31 +124,6 @@ XMLStylesheetProcessingInstruction::GetStyleSheetInfo() {
   auto encoding = doc->GetDocumentCharacterSet();
   nsCOMPtr<nsIURI> uri;
   NS_NewURI(getter_AddRefs(uri), href, encoding, baseURL);
-<<<<<<< HEAD
-  return Some(SheetInfo{
-      *doc,
-      this,
-      uri.forget(),
-      nullptr,
-      net::RP_Unset,
-      CORS_NONE,
-      title,
-      media,
-      alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
-      IsInline::No,
-||||||| merged common ancestors
-  return Some(SheetInfo {
-    *doc,
-    this,
-    uri.forget(),
-    nullptr,
-    net::RP_Unset,
-    CORS_NONE,
-    title,
-    media,
-    alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
-    IsInline::No,
-=======
   return Some(SheetInfo{
       *doc,
       this,
@@ -196,7 +136,6 @@ XMLStylesheetProcessingInstruction::GetStyleSheetInfo() {
       alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
       IsInline::No,
       IsExplicitlyEnabled::No,
->>>>>>> upstream-releases
   });
 }
 

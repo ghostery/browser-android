@@ -47,14 +47,7 @@ class SMILValue;
 // +---------------------+---------------+-------------+------------------+
 //
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILType.h
-class nsISMILType {
-||||||| merged common ancestors
-class nsISMILType
-{
-=======
 class SMILType {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILType.h
   /**
    * Only give the SMILValue class access to this interface.
    */
@@ -111,16 +104,8 @@ class SMILType {
    *
    * @pre aDest.mType == aSrc.mType == this
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILType.h
-  virtual bool IsEqual(const nsSMILValue& aLeft,
-                       const nsSMILValue& aRight) const = 0;
-||||||| merged common ancestors
-  virtual bool IsEqual(const nsSMILValue& aLeft,
-                         const nsSMILValue& aRight) const = 0;
-=======
   virtual bool IsEqual(const SMILValue& aLeft,
                        const SMILValue& aRight) const = 0;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILType.h
 
   /**
    * Adds two values.
@@ -155,14 +140,7 @@ class SMILType {
    *
    * @pre aValueToAdd.mType == aDest.mType == this
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILType.h
-  virtual nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
-||||||| merged common ancestors
-  virtual nsresult Add(nsSMILValue& aDest,
-                       const nsSMILValue& aValueToAdd,
-=======
   virtual nsresult Add(SMILValue& aDest, const SMILValue& aValueToAdd,
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILType.h
                        uint32_t aCount) const = 0;
 
   /**
@@ -183,17 +161,8 @@ class SMILType {
    *
    * @pre aValueToAdd.mType == aDest.mType == this
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILType.h
-  virtual nsresult SandwichAdd(nsSMILValue& aDest,
-                               const nsSMILValue& aValueToAdd) const {
-||||||| merged common ancestors
-  virtual nsresult SandwichAdd(nsSMILValue& aDest,
-                               const nsSMILValue& aValueToAdd) const
-  {
-=======
   virtual nsresult SandwichAdd(SMILValue& aDest,
                                const SMILValue& aValueToAdd) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILType.h
     return Add(aDest, aValueToAdd, 1);
   }
 
@@ -233,28 +202,11 @@ class SMILType {
    *
    * @pre aStartVal.mType == aEndVal.mType == aResult.mType == this
    */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILType.h
-  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal, double aUnitDistance,
-                               nsSMILValue& aResult) const = 0;
-||||||| merged common ancestors
-  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
-                               const nsSMILValue& aEndVal,
-                               double aUnitDistance,
-                               nsSMILValue& aResult) const = 0;
-=======
   virtual nsresult Interpolate(const SMILValue& aStartVal,
                                const SMILValue& aEndVal, double aUnitDistance,
                                SMILValue& aResult) const = 0;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILType.h
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsISMILType.h
-#endif  // NS_ISMILTYPE_H_
-||||||| merged common ancestors
-#endif // NS_ISMILTYPE_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILType_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILType.h

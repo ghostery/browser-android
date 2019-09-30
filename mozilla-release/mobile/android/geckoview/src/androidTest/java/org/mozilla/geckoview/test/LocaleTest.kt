@@ -20,13 +20,7 @@ import org.junit.runner.RunWith
 class LocaleTest : BaseSessionTest() {
 
     @Test fun setLocale() {
-<<<<<<< HEAD
-        sessionRule.runtime.getSettings().setLocales(arrayOf("en-GB"));
-||||||| merged common ancestors
-        sessionRule.runtime.getSettings().setLocale("en-GB");
-=======
         sessionRule.runtime.settings.setLocales(arrayOf("en-GB"));
->>>>>>> upstream-releases
 
         val index = sessionRule.waitForChromeJS(String.format(
                 "(function() {" +

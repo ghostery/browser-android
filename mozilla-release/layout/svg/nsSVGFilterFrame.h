@@ -24,34 +24,6 @@ class SVGAnimatedLength;
 class PresShell;
 namespace dom {
 class SVGFilterElement;
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-
-class nsSVGFilterFrame final : public nsSVGContainerFrame {
-  friend nsIFrame* NS_NewSVGFilterFrame(nsIPresShell* aPresShell,
-                                        ComputedStyle* aStyle);
-
- protected:
-  explicit nsSVGFilterFrame(ComputedStyle* aStyle)
-      : nsSVGContainerFrame(aStyle, kClassID),
-        mLoopFlag(false),
-        mNoHRefURI(false) {
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-
-class nsSVGFilterFrame final : public nsSVGContainerFrame
-{
-  friend nsIFrame*
-  NS_NewSVGFilterFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit nsSVGFilterFrame(ComputedStyle* aStyle)
-    : nsSVGContainerFrame(aStyle, kClassID)
-    , mLoopFlag(false)
-    , mNoHRefURI(false)
-  {
-=======
 }  // namespace dom
 }  // namespace mozilla
 
@@ -64,7 +36,6 @@ class nsSVGFilterFrame final : public nsSVGContainerFrame {
       : nsSVGContainerFrame(aStyle, aPresContext, kClassID),
         mLoopFlag(false),
         mNoHRefURI(false) {
->>>>>>> upstream-releases
     AddStateBits(NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -97,18 +68,9 @@ class nsSVGFilterFrame final : public nsSVGContainerFrame {
   uint16_t GetEnumValue(uint32_t aIndex) {
     return GetEnumValue(aIndex, mContent);
   }
-<<<<<<< HEAD
-  const nsSVGLength2* GetLengthValue(uint32_t aIndex, nsIContent* aDefault);
-  const nsSVGLength2* GetLengthValue(uint32_t aIndex) {
-||||||| merged common ancestors
-  const nsSVGLength2 *GetLengthValue(uint32_t aIndex, nsIContent *aDefault);
-  const nsSVGLength2 *GetLengthValue(uint32_t aIndex)
-  {
-=======
   const mozilla::SVGAnimatedLength* GetLengthValue(uint32_t aIndex,
                                                    nsIContent* aDefault);
   const mozilla::SVGAnimatedLength* GetLengthValue(uint32_t aIndex) {
->>>>>>> upstream-releases
     return GetLengthValue(aIndex, mContent);
   }
   const mozilla::dom::SVGFilterElement* GetFilterContent(nsIContent* aDefault);

@@ -28,32 +28,16 @@ class CustomElf : public BaseElf, private ElfLoader::link_map {
    * currently, none are supported and the behaviour is more or less that of
    * RTLD_GLOBAL | RTLD_BIND_NOW.
    */
-<<<<<<< HEAD
-  static already_AddRefed<LibHandle> Load(Mappable *mappable, const char *path,
-                                          int flags);
-||||||| merged common ancestors
-  static already_AddRefed<LibHandle> Load(Mappable *mappable,
-                                               const char *path, int flags);
-=======
   static already_AddRefed<LibHandle> Load(Mappable* mappable, const char* path,
                                           int flags);
->>>>>>> upstream-releases
 
   /**
    * Inherited from LibHandle/BaseElf
    */
   virtual ~CustomElf();
 
-<<<<<<< HEAD
- protected:
-  virtual Mappable *GetMappable() const;
-||||||| merged common ancestors
-protected:
-  virtual Mappable *GetMappable() const;
-=======
  protected:
   virtual Mappable* GetMappable() const;
->>>>>>> upstream-releases
 
  public:
   /**
@@ -73,24 +57,6 @@ protected:
   /**
    * Private constructor
    */
-<<<<<<< HEAD
-  CustomElf(Mappable *mappable, const char *path)
-      : BaseElf(path, mappable),
-        link_map(),
-        init(0),
-        fini(0),
-        initialized(false),
-        has_text_relocs(false) {}
-||||||| merged common ancestors
-  CustomElf(Mappable *mappable, const char *path)
-  : BaseElf(path, mappable)
-  , link_map()
-  , init(0)
-  , fini(0)
-  , initialized(false)
-  , has_text_relocs(false)
-  { }
-=======
   CustomElf(Mappable* mappable, const char* path)
       : BaseElf(path, mappable),
         link_map(),
@@ -98,7 +64,6 @@ protected:
         fini(0),
         initialized(false),
         has_text_relocs(false) {}
->>>>>>> upstream-releases
 
   /**
    * Loads an Elf segment defined by the given PT_LOAD header.
@@ -140,14 +105,7 @@ protected:
   /**
    * Call a function given a pointer to its location.
    */
-<<<<<<< HEAD
-  void CallFunction(void *ptr) const {
-||||||| merged common ancestors
-  void CallFunction(void *ptr) const
-  {
-=======
   void CallFunction(void* ptr) const {
->>>>>>> upstream-releases
     /* C++ doesn't allow direct conversion between pointer-to-object
      * and pointer-to-function. */
     union {

@@ -200,27 +200,12 @@ class nsLineBox final : public nsLineLink {
 
  public:
   // Use these functions to allocate and destroy line boxes
-<<<<<<< HEAD
-  friend nsLineBox* NS_NewLineBox(nsIPresShell* aPresShell, nsIFrame* aFrame,
-                                  bool aIsBlock);
-  friend nsLineBox* NS_NewLineBox(nsIPresShell* aPresShell,
-                                  nsLineBox* aFromLine, nsIFrame* aFrame,
-                                  int32_t aCount);
-  void Destroy(nsIPresShell* aPresShell);
-||||||| merged common ancestors
-  friend nsLineBox* NS_NewLineBox(nsIPresShell* aPresShell, nsIFrame* aFrame,
-                                  bool aIsBlock);
-  friend nsLineBox* NS_NewLineBox(nsIPresShell* aPresShell, nsLineBox* aFromLine,
-                                  nsIFrame* aFrame, int32_t aCount);
-  void Destroy(nsIPresShell* aPresShell);
-=======
   friend nsLineBox* NS_NewLineBox(mozilla::PresShell* aPresShell,
                                   nsIFrame* aFrame, bool aIsBlock);
   friend nsLineBox* NS_NewLineBox(mozilla::PresShell* aPresShell,
                                   nsLineBox* aFromLine, nsIFrame* aFrame,
                                   int32_t aCount);
   void Destroy(mozilla::PresShell* aPresShell);
->>>>>>> upstream-releases
 
   // mBlock bit
   bool IsBlock() const { return mFlags.mBlock; }
@@ -275,32 +260,9 @@ class nsLineBox final : public nsLineLink {
     mFlags.mHasMarker = false;
     InvalidateCachedIsEmpty();
   }
-<<<<<<< HEAD
-  bool HasBullet() const { return mFlags.mHasBullet; }
-||||||| merged common ancestors
-  bool HasBullet() const {
-    return mFlags.mHasBullet;
-  }
-=======
   bool HasMarker() const { return mFlags.mHasMarker; }
->>>>>>> upstream-releases
 
   // mHadFloatPushed bit
-<<<<<<< HEAD
-  void SetHadFloatPushed() { mFlags.mHadFloatPushed = true; }
-  void ClearHadFloatPushed() { mFlags.mHadFloatPushed = false; }
-  bool HadFloatPushed() const { return mFlags.mHadFloatPushed; }
-||||||| merged common ancestors
-  void SetHadFloatPushed() {
-    mFlags.mHadFloatPushed = true;
-  }
-  void ClearHadFloatPushed() {
-    mFlags.mHadFloatPushed = false;
-  }
-  bool HadFloatPushed() const {
-    return mFlags.mHadFloatPushed;
-  }
-=======
   void SetHadFloatPushed() { mFlags.mHadFloatPushed = true; }
   void ClearHadFloatPushed() { mFlags.mHadFloatPushed = false; }
   bool HadFloatPushed() const { return mFlags.mHadFloatPushed; }
@@ -309,7 +271,6 @@ class nsLineBox final : public nsLineLink {
   void SetHasLineClampEllipsis() { mFlags.mHasLineClampEllipsis = true; }
   void ClearHasLineClampEllipsis() { mFlags.mHasLineClampEllipsis = false; }
   bool HasLineClampEllipsis() const { return mFlags.mHasLineClampEllipsis; }
->>>>>>> upstream-releases
 
  private:
   // Add a hash table for fast lookup when the line has more frames than this.
@@ -642,36 +603,15 @@ class nsLineBox final : public nsLineLink {
     bool mInvalidateTextRuns : 1;
     // default 0 = means that the opt potentially applies to this line.
     // 1 = never skip reflowing this line for a resize reflow
-<<<<<<< HEAD
-    bool mResizeReflowOptimizationDisabled : 1;
-    bool mEmptyCacheValid : 1;
-    bool mEmptyCacheState : 1;
-    // mHasBullet indicates that this is an inline line whose block's
-    // bullet is adjacent to this line and non-empty.
-    bool mHasBullet : 1;
-||||||| merged common ancestors
-    bool mResizeReflowOptimizationDisabled: 1;
-    bool mEmptyCacheValid: 1;
-    bool mEmptyCacheState: 1;
-    // mHasBullet indicates that this is an inline line whose block's
-    // bullet is adjacent to this line and non-empty.
-    bool mHasBullet : 1;
-=======
     bool mResizeReflowOptimizationDisabled : 1;
     bool mEmptyCacheValid : 1;
     bool mEmptyCacheState : 1;
     // mHasMarker indicates that this is an inline line whose block's
     // ::marker is adjacent to this line and non-empty.
     bool mHasMarker : 1;
->>>>>>> upstream-releases
     // Indicates that this line *may* have a placeholder for a float
     // that was pushed to a later column or page.
     bool mHadFloatPushed : 1;
-<<<<<<< HEAD
-    bool mHasHashedFrames : 1;
-||||||| merged common ancestors
-    bool mHasHashedFrames: 1;
-=======
     bool mHasHashedFrames : 1;
     // Indicates that this line is the one identified by an ancestor block
     // with -webkit-line-clamp on its legacy flex container, and that subsequent
@@ -680,7 +620,6 @@ class nsLineBox final : public nsLineLink {
     // line in the set of lines found by LineClampLineIterator for a given
     // block will have this flag set.
     bool mHasLineClampEllipsis : 1;
->>>>>>> upstream-releases
     StyleClear mBreakType;
   };
 
@@ -1587,44 +1526,18 @@ class nsLineList {
 
 #ifdef DEBUG
 
-<<<<<<< HEAD
-// NOTE: ASSIGN_FROM is meant to be used *only* as the entire body
-// of a function and therefore lacks PR_{BEGIN,END}_MACRO
-#define ASSIGN_FROM(other_)     \
-  mCurrent = other_.mCurrent;   \
-  mListLink = other_.mListLink; \
-  return *this;
-||||||| merged common ancestors
-  // NOTE: ASSIGN_FROM is meant to be used *only* as the entire body
-  // of a function and therefore lacks PR_{BEGIN,END}_MACRO
-#define ASSIGN_FROM(other_)          \
-  mCurrent = other_.mCurrent;        \
-  mListLink = other_.mListLink;      \
-  return *this;
-=======
 // NOTE: ASSIGN_FROM is meant to be used *only* as the entire body
 // of a function and therefore lacks PR_{BEGIN,END}_MACRO
 #  define ASSIGN_FROM(other_)     \
     mCurrent = other_.mCurrent;   \
     mListLink = other_.mListLink; \
     return *this;
->>>>>>> upstream-releases
 
 #else /* !NS_LINELIST_DEBUG_PASS_END */
 
-<<<<<<< HEAD
-#define ASSIGN_FROM(other_)   \
-  mCurrent = other_.mCurrent; \
-  return *this;
-||||||| merged common ancestors
-#define ASSIGN_FROM(other_)          \
-  mCurrent = other_.mCurrent;        \
-  return *this;
-=======
 #  define ASSIGN_FROM(other_)   \
     mCurrent = other_.mCurrent; \
     return *this;
->>>>>>> upstream-releases
 
 #endif /* !NS_LINELIST_DEBUG_PASS_END */
 

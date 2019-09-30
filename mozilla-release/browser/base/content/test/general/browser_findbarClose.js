@@ -36,15 +36,10 @@ add_task(async function findbar_test() {
     "the Find bar isn't hidden after the location of a subdocument changes"
   );
 
-<<<<<<< HEAD
-  let findBarClosePromise = promiseWaitForEvent(gBrowser, "findbarclose");
-||||||| merged common ancestors
-=======
   let findBarClosePromise = BrowserTestUtils.waitForEvent(
     gBrowser,
     "findbarclose"
   );
->>>>>>> upstream-releases
   gFindBar.close();
   await findBarClosePromise;
 

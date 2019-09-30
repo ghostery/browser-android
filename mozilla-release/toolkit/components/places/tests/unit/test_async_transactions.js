@@ -1193,22 +1193,11 @@ add_task(async function test_add_and_remove_bookmarks_with_additional_info() {
   // * Check that no-op tagging (the uri is already tagged with TAG_1) is
   //   also a no-op on undo.
   observer.reset();
-<<<<<<< HEAD
-  let b2_info = { parentGuid:  folder_info.guid,
-                  url:         testURI,
-                  tags:        [TAG_1, TAG_2] };
-||||||| merged common ancestors
-  let b2_info = { parentGuid:  folder_info.guid,
-                  url:         testURI,
-                  tags:        [TAG_1, TAG_2],
-                  annotations: [ANNO] };
-=======
   let b2_info = {
     parentGuid: folder_info.guid,
     url: testURI,
     tags: [TAG_1, TAG_2],
   };
->>>>>>> upstream-releases
   b2_info.guid = await PT.NewBookmark(b2_info).transact();
   ensureTags([TAG_1, TAG_2]);
 
@@ -1941,62 +1930,12 @@ add_task(async function test_array_input_for_batch() {
   await ensureChildCount(0);
 
   await PT.undo();
-<<<<<<< HEAD
-  Assert.equal((await PlacesUtils.promiseBookmarksTree(folderGuid)), null);
-
-  // Cleanup
-  await PT.clearTransactionsHistory();
-});
-
-||||||| merged common ancestors
-  Assert.equal((await PlacesUtils.promiseBookmarksTree(folderGuid)), null);
-
-  // Cleanup
-  await PT.clearTransactionsHistory();
-});
-
-add_task(async function test_copy_excluding_annotations() {
-  let folderInfo = createTestFolderInfo();
-  let anno = n => { return { name: n, value: 1 }; };
-  folderInfo.annotations = [anno("a"), anno("b"), anno("c")];
-  let folderGuid = await PT.NewFolder(folderInfo).transact();
-
-  let ensureAnnosSet = async function(guid, ...expectedAnnoNames) {
-    let tree = await PlacesUtils.promiseBookmarksTree(guid);
-    let annoNames = "annos" in tree ?
-                      tree.annos.map(a => a.name).sort() : [];
-    Assert.deepEqual(annoNames, expectedAnnoNames);
-  };
-
-  await ensureAnnosSet(folderGuid, "a", "b", "c");
-
-  let excluding_a_dupeGuid =
-    await PT.Copy({ guid: folderGuid,
-                    newParentGuid: PlacesUtils.bookmarks.unfiledGuid,
-                    excludingAnnotation: "a" }).transact();
-  await ensureAnnosSet(excluding_a_dupeGuid, "b", "c");
-
-  let excluding_ac_dupeGuid =
-    await PT.Copy({ guid: folderGuid,
-                    newParentGuid: PlacesUtils.bookmarks.unfiledGuid,
-                    excludingAnnotations: ["a", "c"] }).transact();
-  await ensureAnnosSet(excluding_ac_dupeGuid, "b");
-
-  // Cleanup
-  await PT.undo();
-  await PT.undo();
-  await PT.undo();
-  await PT.clearTransactionsHistory();
-});
-
-=======
   Assert.equal(await PlacesUtils.promiseBookmarksTree(folderGuid), null);
 
   // Cleanup
   await PT.clearTransactionsHistory();
 });
 
->>>>>>> upstream-releases
 add_task(async function test_invalid_uri_spec_throws() {
   Assert.throws(
     () =>

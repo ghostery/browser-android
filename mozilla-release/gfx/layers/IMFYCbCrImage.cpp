@@ -35,21 +35,9 @@ IMFYCbCrImage::~IMFYCbCrImage() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool IMFYCbCrImage::CopyDataToTexture(
-    const Data& aData, ID3D11Device* aDevice,
-    DXGIYCbCrTextureData* aTextureData) {
-||||||| merged common ancestors
-/* static */ bool
-IMFYCbCrImage::CopyDataToTexture(const Data& aData,
-                                 ID3D11Device* aDevice,
-                                 DXGIYCbCrTextureData* aTextureData)
-{
-=======
 /* static */
 bool IMFYCbCrImage::CopyDataToTexture(const Data& aData, ID3D11Device* aDevice,
                                       DXGIYCbCrTextureData* aTextureData) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aTextureData);
 
   HRESULT hr;
@@ -113,17 +101,8 @@ bool IMFYCbCrImage::CopyDataToTexture(const Data& aData, ID3D11Device* aDevice,
   return true;
 }
 
-<<<<<<< HEAD
-TextureClient* IMFYCbCrImage::GetD3D11TextureClient(
-    KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-TextureClient*
-IMFYCbCrImage::GetD3D11TextureClient(KnowsCompositor* aForwarder)
-{
-=======
 TextureClient* IMFYCbCrImage::GetD3D11TextureClient(
     KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
   if (!mAllocator) {
     return nullptr;
   }
@@ -155,16 +134,8 @@ TextureClient* IMFYCbCrImage::GetD3D11TextureClient(
   return mTextureClient;
 }
 
-<<<<<<< HEAD
-TextureClient* IMFYCbCrImage::GetTextureClient(KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-TextureClient*
-IMFYCbCrImage::GetTextureClient(KnowsCompositor* aForwarder)
-{
-=======
 TextureClient* IMFYCbCrImage::GetTextureClient(
     KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
   if (mTextureClient) {
     return mTextureClient;
   }

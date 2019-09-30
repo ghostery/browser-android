@@ -38,32 +38,10 @@ IPCResult VRParent::RecvNewGPUVRManager(Endpoint<PVRGPUParent>&& aEndpoint) {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-IPCResult VRParent::RecvInit(nsTArray<GfxPrefSetting>&& prefs,
-                             nsTArray<GfxVarUpdate>&& vars,
-                             const DevicePrefs& devicePrefs) {
-  const nsTArray<gfxPrefs::Pref*>& globalPrefs = gfxPrefs::all();
-  for (auto& setting : prefs) {
-    gfxPrefs::Pref* pref = globalPrefs[setting.index()];
-    pref->SetCachedValue(setting.value());
-  }
-||||||| merged common ancestors
-IPCResult
-VRParent::RecvInit(nsTArray<GfxPrefSetting>&& prefs,
-                   nsTArray<GfxVarUpdate>&& vars,
-                   const DevicePrefs& devicePrefs)
-{
-  const nsTArray<gfxPrefs::Pref*>& globalPrefs = gfxPrefs::all();
-  for (auto& setting : prefs) {
-    gfxPrefs::Pref* pref = globalPrefs[setting.index()];
-    pref->SetCachedValue(setting.value());
-  }
-=======
 IPCResult VRParent::RecvInit(nsTArray<GfxVarUpdate>&& vars,
                              const DevicePrefs& devicePrefs) {
   Unused << SendInitComplete();
 
->>>>>>> upstream-releases
   for (const auto& var : vars) {
     gfxVars::ApplyUpdate(var);
   }
@@ -90,17 +68,6 @@ IPCResult VRParent::RecvNotifyVsync(const TimeStamp& vsyncTimestamp) {
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-IPCResult VRParent::RecvUpdatePref(const GfxPrefSetting& setting) {
-  gfxPrefs::Pref* pref = gfxPrefs::all()[setting.index()];
-  pref->SetCachedValue(setting.value());
-||||||| merged common ancestors
-IPCResult
-VRParent::RecvUpdatePref(const GfxPrefSetting& setting)
-{
-  gfxPrefs::Pref* pref = gfxPrefs::all()[setting.index()];
-  pref->SetCachedValue(setting.value());
-=======
 IPCResult VRParent::RecvUpdateVar(const GfxVarUpdate& aUpdate) {
   gfxVars::ApplyUpdate(aUpdate);
   return IPC_OK();
@@ -108,33 +75,15 @@ IPCResult VRParent::RecvUpdateVar(const GfxVarUpdate& aUpdate) {
 
 mozilla::ipc::IPCResult VRParent::RecvPreferenceUpdate(const Pref& aPref) {
   Preferences::SetPreference(aPref);
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-IPCResult VRParent::RecvUpdateVar(const GfxVarUpdate& aUpdate) {
-  gfxVars::ApplyUpdate(aUpdate);
-||||||| merged common ancestors
-IPCResult
-VRParent::RecvUpdateVar(const GfxVarUpdate& aUpdate)
-{
-  gfxVars::ApplyUpdate(aUpdate);
-=======
 mozilla::ipc::IPCResult VRParent::RecvOpenVRControllerActionPathToVR(
     const nsCString& aPath) {
   mOpenVRControllerAction = aPath;
->>>>>>> upstream-releases
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-void VRParent::ActorDestroy(ActorDestroyReason aWhy) {
-||||||| merged common ancestors
-void
-VRParent::ActorDestroy(ActorDestroyReason aWhy)
-{
-=======
 mozilla::ipc::IPCResult VRParent::RecvOpenVRControllerManifestPathToVR(
     const OpenVRControllerType& aType, const nsCString& aPath) {
   mOpenVRControllerManifest.Put(static_cast<uint32_t>(aType), aPath);
@@ -159,7 +108,6 @@ mozilla::ipc::IPCResult VRParent::RecvRequestMemoryReport(
 }
 
 void VRParent::ActorDestroy(ActorDestroyReason aWhy) {
->>>>>>> upstream-releases
   if (AbnormalShutdown == aWhy) {
     NS_WARNING("Shutting down VR process early due to a crash!");
     ProcessChild::QuickExit();
@@ -220,29 +168,14 @@ bool VRParent::Init(base::ProcessId aParentPid, const char* aParentBuildID,
 #if defined(XP_WIN)
   DeviceManagerDx::Init();
 #endif
-<<<<<<< HEAD
-  if (NS_FAILED(NS_InitMinimalXPCOM())) {
-    return false;
-  }
-
-||||||| merged common ancestors
-=======
   if (NS_FAILED(NS_InitMinimalXPCOM())) {
     return false;
   }
 
   mozilla::ipc::SetThisProcessName("VR Process");
->>>>>>> upstream-releases
   return true;
 }
 
-<<<<<<< HEAD
-}  // namespace gfx
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
 bool VRParent::GetOpenVRControllerActionPath(nsCString* aPath) {
   if (!mOpenVRControllerAction.IsEmpty()) {
     *aPath = mOpenVRControllerAction;
@@ -259,4 +192,3 @@ bool VRParent::GetOpenVRControllerManifestPath(OpenVRControllerType aType,
 
 }  // namespace gfx
 }  // namespace mozilla
->>>>>>> upstream-releases

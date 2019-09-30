@@ -153,30 +153,11 @@ class ShadowRoot final : public DocumentFragment,
   void AddSlot(HTMLSlotElement* aSlot);
   void RemoveSlot(HTMLSlotElement* aSlot);
   bool HasSlots() const { return !mSlotMap.IsEmpty(); };
-<<<<<<< HEAD
-
-  const RawServoAuthorStyles* GetServoStyles() const {
-    return mServoStyles.get();
-||||||| merged common ancestors
-
-  const RawServoAuthorStyles* GetServoStyles() const
-  {
-    return mServoStyles.get();
-=======
   HTMLSlotElement* GetDefaultSlot() const {
     SlotArray* list = mSlotMap.Get(NS_LITERAL_STRING(""));
     return list ? (*list)->ElementAt(0) : nullptr;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  RawServoAuthorStyles* GetServoStyles() { return mServoStyles.get(); }
-||||||| merged common ancestors
-  RawServoAuthorStyles* GetServoStyles()
-  {
-    return mServoStyles.get();
-  }
-=======
   void PartAdded(const Element&);
   void PartRemoved(const Element&);
 
@@ -185,7 +166,6 @@ class ShadowRoot final : public DocumentFragment,
   const RawServoAuthorStyles* GetServoStyles() const {
     return mServoStyles.get();
   }
->>>>>>> upstream-releases
 
   RawServoAuthorStyles* GetServoStyles() { return mServoStyles.get(); }
 
@@ -218,18 +198,9 @@ class ShadowRoot final : public DocumentFragment,
 
   bool IsUAWidget() const { return mIsUAWidget; }
 
-<<<<<<< HEAD
-  void SetIsUAWidget() {
-    MOZ_ASSERT(!HasChildren());
-    SetFlags(NODE_IS_ROOT_OF_CHROME_ONLY_ACCESS | NODE_CHROME_ONLY_ACCESS);
-||||||| merged common ancestors
-  void SetIsUAWidget()
-  {
-=======
   void SetIsUAWidget() {
     MOZ_ASSERT(!HasChildren());
     SetFlags(NODE_HAS_BEEN_IN_UA_WIDGET);
->>>>>>> upstream-releases
     mIsUAWidget = true;
   }
 

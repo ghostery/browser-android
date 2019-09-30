@@ -7,41 +7,10 @@
  * own scope.
  */
 
-<<<<<<< HEAD
 /* exported paymentDialogWrapper */
 
 "use strict";
 
-const paymentSrv = Cc["@mozilla.org/dom/payments/payment-request-service;1"]
-                     .getService(Ci.nsIPaymentRequestService);
-||||||| merged common ancestors
-"use strict";
-
-const paymentSrv = Cc["@mozilla.org/dom/payments/payment-request-service;1"]
-                     .getService(Ci.nsIPaymentRequestService);
-=======
-/* exported paymentDialogWrapper */
->>>>>>> upstream-releases
-
-"use strict";
-
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "BrowserWindowTracker",
-                               "resource:///modules/BrowserWindowTracker.jsm");
-ChromeUtils.defineModuleGetter(this, "FormAutofillUtils",
-                               "resource://formautofill/FormAutofillUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "OSKeyStore",
-                               "resource://formautofill/OSKeyStore.jsm");
-ChromeUtils.defineModuleGetter(this, "PrivateBrowsingUtils",
-                               "resource://gre/modules/PrivateBrowsingUtils.jsm");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "BrowserWindowTracker",
-                               "resource:///modules/BrowserWindowTracker.jsm");
-ChromeUtils.defineModuleGetter(this, "MasterPassword",
-                               "resource://formautofill/MasterPassword.jsm");
-ChromeUtils.defineModuleGetter(this, "PrivateBrowsingUtils",
-                               "resource://gre/modules/PrivateBrowsingUtils.jsm");
-=======
 const paymentSrv = Cc[
   "@mozilla.org/dom/payments/payment-request-service;1"
 ].getService(Ci.nsIPaymentRequestService);
@@ -78,7 +47,6 @@ ChromeUtils.defineModuleGetter(
   "PrivateBrowsingUtils",
   "resource://gre/modules/PrivateBrowsingUtils.jsm"
 );
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGetter(this, "formAutofillStorage", () => {
   let storage;
@@ -96,15 +64,6 @@ XPCOMUtils.defineLazyGetter(this, "formAutofillStorage", () => {
   return storage;
 });
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyGetter(this, "reauthPasswordPromptMessage", () => {
-  const brandShortName = FormAutofillUtils.brandBundle.GetStringFromName("brandShortName");
-  return FormAutofillUtils.stringBundle.formatStringFromName(
-    `useCreditCardPasswordPrompt.${AppConstants.platform}`, [brandShortName], 1);
-});
-
-||||||| merged common ancestors
-=======
 XPCOMUtils.defineLazyGetter(this, "reauthPasswordPromptMessage", () => {
   const brandShortName = FormAutofillUtils.brandBundle.GetStringFromName(
     "brandShortName"
@@ -115,7 +74,6 @@ XPCOMUtils.defineLazyGetter(this, "reauthPasswordPromptMessage", () => {
   );
 });
 
->>>>>>> upstream-releases
 /**
  * Temporary/transient storage for address and credit card records
  *
@@ -261,17 +219,10 @@ var paymentDialogWrapper = {
 
     let cardNumber;
     try {
-<<<<<<< HEAD
-      cardNumber = await OSKeyStore.decrypt(
-        cardData["cc-number-encrypted"], reauthPasswordPromptMessage);
-||||||| merged common ancestors
-      cardNumber = await MasterPassword.decrypt(cardData["cc-number-encrypted"], true);
-=======
       cardNumber = await OSKeyStore.decrypt(
         cardData["cc-number-encrypted"],
         reauthPasswordPromptMessage
       );
->>>>>>> upstream-releases
     } catch (ex) {
       if (ex.result != Cr.NS_ERROR_ABORT) {
         throw ex;
@@ -315,21 +266,11 @@ var paymentDialogWrapper = {
       throw new Error(`PaymentRequest not found: ${requestId}`);
     }
 
-<<<<<<< HEAD
-    this._attachToFrame(frame);
-    this.mm.loadFrameScript("chrome://payments/content/paymentDialogFrameScript.js", true);
-||||||| merged common ancestors
-    this.frame = frame;
-    this.mm = frame.frameLoader.messageManager;
-    this.mm.addMessageListener("paymentContentToChrome", this);
-    this.mm.loadFrameScript("chrome://payments/content/paymentDialogFrameScript.js", true);
-=======
     this._attachToFrame(frame);
     this.mm.loadFrameScript(
       "chrome://payments/content/paymentDialogFrameScript.js",
       true
     );
->>>>>>> upstream-releases
     // Until we have bug 1446164 and bug 1407418 we use form autofill's temporary
     // shim for data-localization* attributes.
     this.mm.loadFrameScript("chrome://formautofill/content/l10n.js", true);
@@ -696,21 +637,6 @@ var paymentDialogWrapper = {
     selectedPaymentCardSecurityCode: cardSecurityCode,
     selectedShippingAddressGUID: shippingGUID,
   }) {
-<<<<<<< HEAD
-    let methodData;
-    try {
-      methodData = await this._convertProfileBasicCardToPaymentMethodData(paymentCardGUID,
-                                                                          cardSecurityCode);
-    } catch (ex) {
-      // TODO (Bug 1498403): Some kind of "credit card storage error" here, perhaps asking user
-      // to re-enter credit card # from management UI.
-      Cu.reportError(ex);
-      return;
-    }
-||||||| merged common ancestors
-    let methodData = await this._convertProfileBasicCardToPaymentMethodData(paymentCardGUID,
-                                                                            cardSecurityCode);
-=======
     let methodData;
     try {
       methodData = await this._convertProfileBasicCardToPaymentMethodData(
@@ -723,7 +649,6 @@ var paymentDialogWrapper = {
       Cu.reportError(ex);
       return;
     }
->>>>>>> upstream-releases
 
     if (!methodData) {
       // TODO (Bug 1429265/Bug 1429205): Handle when a user hits cancel on the
@@ -897,37 +822,6 @@ var paymentDialogWrapper = {
       responseMessage.error = true;
       Cu.reportError(ex);
     } finally {
-<<<<<<< HEAD
-      this.sendMessageToContent("updateAutofillRecord:Response", responseMessage);
-    }
-  },
-
-  /**
-||||||| merged common ancestors
-      this.sendMessageToContent("updateAutofillRecord:Response", responseMessage);
-    }
-  },
-
-  /**
-   * @implement {nsIDOMEventListener}
-   * @param {Event} event
-   */
-  handleEvent(event) {
-    switch (event.type) {
-      case "unload": {
-        // Remove the observer to avoid message manager errors while the dialog
-        // is closing and tests are cleaning up autofill storage.
-        Services.obs.removeObserver(this, "formautofill-storage-changed");
-        break;
-      }
-      default: {
-        throw new Error("Unexpected event handled");
-      }
-    }
-  },
-
-  /**
-=======
       this.sendMessageToContent(
         "updateAutofillRecord:Response",
         responseMessage
@@ -936,7 +830,6 @@ var paymentDialogWrapper = {
   },
 
   /**
->>>>>>> upstream-releases
    * @implements {nsIObserver}
    * @param {nsISupports} subject
    * @param {string} topic
@@ -1003,21 +896,11 @@ var paymentDialogWrapper = {
         break;
       }
       case "paymentDialogReady": {
-<<<<<<< HEAD
-        this.frameWeakRef.get().dispatchEvent(new Event("tabmodaldialogready", {
-          bubbles: true,
-        }));
-||||||| merged common ancestors
-        window.dispatchEvent(new Event("tabmodaldialogready", {
-          bubbles: true,
-        }));
-=======
         this.frameWeakRef.get().dispatchEvent(
           new Event("tabmodaldialogready", {
             bubbles: true,
           })
         );
->>>>>>> upstream-releases
         break;
       }
       case "pay": {

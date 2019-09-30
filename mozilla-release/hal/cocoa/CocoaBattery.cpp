@@ -20,22 +20,10 @@
 #define IOKIT_FRAMEWORK_PATH "/System/Library/Frameworks/IOKit.framework/IOKit"
 
 #ifndef kIOPSTimeRemainingUnknown
-<<<<<<< HEAD
-#define kIOPSTimeRemainingUnknown ((CFTimeInterval)-1.0)
-||||||| merged common ancestors
-  #define kIOPSTimeRemainingUnknown ((CFTimeInterval)-1.0)
-=======
 #  define kIOPSTimeRemainingUnknown ((CFTimeInterval)-1.0)
->>>>>>> upstream-releases
 #endif
 #ifndef kIOPSTimeRemainingUnlimited
-<<<<<<< HEAD
-#define kIOPSTimeRemainingUnlimited ((CFTimeInterval)-2.0)
-||||||| merged common ancestors
-  #define kIOPSTimeRemainingUnlimited ((CFTimeInterval)-2.0)
-=======
 #  define kIOPSTimeRemainingUnlimited ((CFTimeInterval)-2.0)
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla::dom::battery;
@@ -137,17 +125,8 @@ SingletonDestroyer::Observe(nsISupports*, const char* aTopic, const char16_t*) {
 }
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ MacPowerInformationService*
-MacPowerInformationService::GetInstance() {
-||||||| merged common ancestors
-/* static */ MacPowerInformationService*
-MacPowerInformationService::GetInstance()
-{
-=======
 /* static */
 MacPowerInformationService* MacPowerInformationService::GetInstance() {
->>>>>>> upstream-releases
   if (sInstance) {
     return sInstance;
   }

@@ -51,27 +51,6 @@ typedef struct OSVR_Quaternion {
   double data[4];
 } OSVR_Quaternion;
 
-<<<<<<< HEAD
-#define OSVR_QUAT_MEMBER(COMPONENT, INDEX)                                  \
-  /** @brief Accessor for quaternion component COMPONENT */                 \
-  OSVR_INLINE double osvrQuatGet##COMPONENT(OSVR_Quaternion const *q) {     \
-    return q->data[INDEX];                                                  \
-  }                                                                         \
-  /** @brief Setter for quaternion component COMPONENT */                   \
-  OSVR_INLINE void osvrQuatSet##COMPONENT(OSVR_Quaternion *q, double val) { \
-    q->data[INDEX] = val;                                                   \
-  }
-||||||| merged common ancestors
-#define OSVR_QUAT_MEMBER(COMPONENT, INDEX)                                     \
-    /** @brief Accessor for quaternion component COMPONENT */                  \
-    OSVR_INLINE double osvrQuatGet##COMPONENT(OSVR_Quaternion const *q) {      \
-        return q->data[INDEX];                                                 \
-    }                                                                          \
-    /** @brief Setter for quaternion component COMPONENT */                    \
-    OSVR_INLINE void osvrQuatSet##COMPONENT(OSVR_Quaternion *q, double val) {  \
-        q->data[INDEX] = val;                                                  \
-    }
-=======
 #define OSVR_QUAT_MEMBER(COMPONENT, INDEX)                                  \
   /** @brief Accessor for quaternion component COMPONENT */                 \
   OSVR_INLINE double osvrQuatGet##COMPONENT(OSVR_Quaternion const* q) {     \
@@ -81,7 +60,6 @@ typedef struct OSVR_Quaternion {
   OSVR_INLINE void osvrQuatSet##COMPONENT(OSVR_Quaternion* q, double val) { \
     q->data[INDEX] = val;                                                   \
   }
->>>>>>> upstream-releases
 
 OSVR_QUAT_MEMBER(W, 0)
 OSVR_QUAT_MEMBER(X, 1)
@@ -91,25 +69,11 @@ OSVR_QUAT_MEMBER(Z, 3)
 #undef OSVR_QUAT_MEMBER
 
 /** @brief Set a quaternion to the identity rotation */
-<<<<<<< HEAD
-OSVR_INLINE void osvrQuatSetIdentity(OSVR_Quaternion *q) {
-  osvrQuatSetW(q, 1);
-  osvrQuatSetX(q, 0);
-  osvrQuatSetY(q, 0);
-  osvrQuatSetZ(q, 0);
-||||||| merged common ancestors
-OSVR_INLINE void osvrQuatSetIdentity(OSVR_Quaternion *q) {
-    osvrQuatSetW(q, 1);
-    osvrQuatSetX(q, 0);
-    osvrQuatSetY(q, 0);
-    osvrQuatSetZ(q, 0);
-=======
 OSVR_INLINE void osvrQuatSetIdentity(OSVR_Quaternion* q) {
   osvrQuatSetW(q, 1);
   osvrQuatSetX(q, 0);
   osvrQuatSetY(q, 0);
   osvrQuatSetZ(q, 0);
->>>>>>> upstream-releases
 }
 
 /** @} */
@@ -118,22 +82,10 @@ OSVR_EXTERN_C_END
 
 #ifdef __cplusplus
 template <typename StreamType>
-<<<<<<< HEAD
-inline StreamType &operator<<(StreamType &os, OSVR_Quaternion const &quat) {
-  os << "(" << osvrQuatGetW(&quat) << ", (" << osvrQuatGetX(&quat) << ", "
-     << osvrQuatGetY(&quat) << ", " << osvrQuatGetZ(&quat) << "))";
-  return os;
-||||||| merged common ancestors
-inline StreamType &operator<<(StreamType &os, OSVR_Quaternion const &quat) {
-    os << "(" << osvrQuatGetW(&quat) << ", (" << osvrQuatGetX(&quat) << ", "
-       << osvrQuatGetY(&quat) << ", " << osvrQuatGetZ(&quat) << "))";
-    return os;
-=======
 inline StreamType& operator<<(StreamType& os, OSVR_Quaternion const& quat) {
   os << "(" << osvrQuatGetW(&quat) << ", (" << osvrQuatGetX(&quat) << ", "
      << osvrQuatGetY(&quat) << ", " << osvrQuatGetZ(&quat) << "))";
   return os;
->>>>>>> upstream-releases
 }
 #endif
 

@@ -203,22 +203,6 @@ function createPerfComponent() {
   }
 
   function mountComponent() {
-<<<<<<< HEAD
-    store.dispatch(actions.initializeStore({
-      perfFront: perfFrontMock,
-      receiveProfile: receiveProfileMock,
-      actorVersion: 1,
-      recordingSettingsFromPreferences: selectors.getRecordingSettings(store.getState()),
-      setRecordingPreferences: recordingPreferencesMock,
-    }));
-||||||| merged common ancestors
-    store.dispatch(actions.initializeStore({
-      perfFront: perfFrontMock,
-      receiveProfile: receiveProfileMock,
-      recordingSettingsFromPreferences: selectors.getRecordingSettings(store.getState()),
-      setRecordingPreferences: recordingPreferencesMock,
-    }));
-=======
     store.dispatch(
       actions.initializeStore({
         perfFront: perfFrontMock,
@@ -229,7 +213,6 @@ function createPerfComponent() {
         setRecordingPreferences: recordingPreferencesMock,
       })
     );
->>>>>>> upstream-releases
 
     return ReactDOM.render(
       React.createElement(

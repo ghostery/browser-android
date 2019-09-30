@@ -35,10 +35,6 @@ XPCOMUtils.defineLazyGetter(this, "CryptoHash", () => {
   );
 });
 
-XPCOMUtils.defineLazyGetter(this, "CryptoHash", () => {
-  return Components.Constructor("@mozilla.org/security/hash;1", "nsICryptoHash", "initWithString");
-});
-
 XPCOMUtils.defineLazyGetter(this, "gDatareportingPath", () => {
   return OS.Path.join(OS.Constants.Path.profileDir, "datareporting");
 });

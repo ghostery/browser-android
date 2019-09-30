@@ -84,44 +84,6 @@ class txXPathNodeUtils {
   }
 };
 
-<<<<<<< HEAD
-class txXPathNativeNode {
- public:
-  static txXPathNode* createXPathNode(nsINode* aNode,
-                                      bool aKeepRootAlive = false);
-  static txXPathNode* createXPathNode(nsIContent* aContent,
-                                      bool aKeepRootAlive = false);
-  static txXPathNode* createXPathNode(nsIDocument* aDocument);
-  static nsINode* getNode(const txXPathNode& aNode);
-  static nsIContent* getContent(const txXPathNode& aNode);
-  static nsIDocument* getDocument(const txXPathNode& aNode);
-  static void addRef(const txXPathNode& aNode) { NS_ADDREF(aNode.mNode); }
-  static void release(const txXPathNode& aNode) {
-    nsINode* node = aNode.mNode;
-    NS_RELEASE(node);
-  }
-||||||| merged common ancestors
-class txXPathNativeNode
-{
-public:
-    static txXPathNode* createXPathNode(nsINode* aNode,
-                                        bool aKeepRootAlive = false);
-    static txXPathNode* createXPathNode(nsIContent* aContent,
-                                        bool aKeepRootAlive = false);
-    static txXPathNode* createXPathNode(nsIDocument* aDocument);
-    static nsINode* getNode(const txXPathNode& aNode);
-    static nsIContent* getContent(const txXPathNode& aNode);
-    static nsIDocument* getDocument(const txXPathNode& aNode);
-    static void addRef(const txXPathNode& aNode)
-    {
-        NS_ADDREF(aNode.mNode);
-    }
-    static void release(const txXPathNode& aNode)
-    {
-        nsINode *node = aNode.mNode;
-        NS_RELEASE(node);
-    }
-=======
 class txXPathNativeNode {
  public:
   static txXPathNode* createXPathNode(nsINode* aNode,
@@ -137,7 +99,6 @@ class txXPathNativeNode {
     nsINode* node = aNode.mNode;
     NS_RELEASE(node);
   }
->>>>>>> upstream-releases
 };
 
 inline const txXPathNode& txXPathTreeWalker::getCurrentPosition() const {

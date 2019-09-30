@@ -99,20 +99,6 @@ fn check_identifier(cx: &Ctxt, cont: &Container) {
             variant.attrs.other(),
             cont.attrs.tag(),
         ) {
-<<<<<<< HEAD
-            // The `other` attribute may not be used in a variant_identifier.
-            (_, Identifier::Variant, true, _) => {
-                cx.error("#[serde(other)] may not be used on a variant_identifier");
-            }
-
-            // Variant with `other` attribute cannot appear in untagged enum
-            (_, Identifier::No, true, &EnumTag::None) => {
-                cx.error("#[serde(other)] cannot appear on untagged enum");
-||||||| merged common ancestors
-            // The `other` attribute may only be used in a field_identifier.
-            (_, Identifier::Variant, true) | (_, Identifier::No, true) => {
-                cx.error("#[serde(other)] may only be used inside a field_identifier");
-=======
             // The `other` attribute may not be used in a variant_identifier.
             (_, Identifier::Variant, true, _) => {
                 cx.error_spanned_by(
@@ -127,7 +113,6 @@ fn check_identifier(cx: &Ctxt, cont: &Container) {
                     variant.original,
                     "#[serde(other)] cannot appear on untagged enum",
                 );
->>>>>>> upstream-releases
             }
 
             // Variant with `other` attribute must be the last one.
@@ -141,19 +126,11 @@ fn check_identifier(cx: &Ctxt, cont: &Container) {
             }
 
             // Variant with `other` attribute must be a unit variant.
-<<<<<<< HEAD
-            (_, Identifier::Field, true, _) | (_, Identifier::No, true, _) => {
-                cx.error("#[serde(other)] must be on a unit variant");
-||||||| merged common ancestors
-            (_, Identifier::Field, true) => {
-                cx.error("#[serde(other)] must be on a unit variant");
-=======
             (_, Identifier::Field, true, _) | (_, Identifier::No, true, _) => {
                 cx.error_spanned_by(
                     variant.original,
                     "#[serde(other)] must be on a unit variant",
                 );
->>>>>>> upstream-releases
             }
 
             // Any sort of variant is allowed if this is not an identifier.
@@ -172,34 +149,18 @@ fn check_identifier(cx: &Ctxt, cont: &Container) {
                 }
             }
 
-<<<<<<< HEAD
-            (_, Identifier::Field, false, _) => {
-                cx.error("field_identifier may only contain unit variants");
-||||||| merged common ancestors
-            (_, Identifier::Field, false) => {
-                cx.error("field_identifier may only contain unit variants");
-=======
             (_, Identifier::Field, false, _) => {
                 cx.error_spanned_by(
                     variant.original,
                     "#[serde(field_identifier)] may only contain unit variants",
                 );
->>>>>>> upstream-releases
             }
 
-<<<<<<< HEAD
-            (_, Identifier::Variant, false, _) => {
-                cx.error("variant_identifier may only contain unit variants");
-||||||| merged common ancestors
-            (_, Identifier::Variant, false) => {
-                cx.error("variant_identifier may only contain unit variants");
-=======
             (_, Identifier::Variant, false, _) => {
                 cx.error_spanned_by(
                     variant.original,
                     "#[serde(variant_identifier)] may only contain unit variants",
                 );
->>>>>>> upstream-releases
             }
         }
     }

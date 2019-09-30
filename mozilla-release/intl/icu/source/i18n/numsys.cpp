@@ -260,33 +260,15 @@ void NumberingSystem::setName(const char *n) {
     if ( n == nullptr ) {
         name[0] = (char) 0;
     } else {
-<<<<<<< HEAD
-        uprv_strncpy(name,n,NUMSYS_NAME_CAPACITY);
-        name[NUMSYS_NAME_CAPACITY] = '\0'; // Make sure it is null terminated.
-||||||| merged common ancestors
-        uprv_strncpy(name,n,NUMSYS_NAME_CAPACITY);
-        name[NUMSYS_NAME_CAPACITY] = (char)0; // Make sure it is null terminated.
-=======
         uprv_strncpy(name,n,kInternalNumSysNameCapacity);
         name[kInternalNumSysNameCapacity] = '\0'; // Make sure it is null terminated.
->>>>>>> upstream-releases
     }
 }
 UBool NumberingSystem::isAlgorithmic() const {
     return ( algorithmic );
 }
 
-<<<<<<< HEAD
-StringEnumeration* NumberingSystem::getAvailableNames(UErrorCode &status) {
-    // TODO(ticket #11908): Init-once static cache, with u_cleanup() callback.
-    static StringEnumeration* availableNames = nullptr;
-||||||| merged common ancestors
-StringEnumeration* NumberingSystem::getAvailableNames(UErrorCode &status) {
-    // TODO(ticket #11908): Init-once static cache, with u_cleanup() callback.
-    static StringEnumeration* availableNames = NULL;
-=======
 namespace {
->>>>>>> upstream-releases
 
 UVector* gNumsysNames = nullptr;
 UInitOnce gNumSysInitOnce = U_INITONCE_INITIALIZER;
@@ -305,74 +287,9 @@ U_CFUNC void initNumsysNames(UErrorCode &status) {
     // TODO: Simple array of UnicodeString objects, based on length of table resource?
     LocalPointer<UVector> numsysNames(new UVector(uprv_deleteUObject, nullptr, status), status);
     if (U_FAILURE(status)) {
-<<<<<<< HEAD
-        return nullptr;
-||||||| merged common ancestors
-        return NULL;
-=======
         return;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if ( availableNames == nullptr ) {
-        // TODO: Simple array of UnicodeString objects, based on length of table resource?
-        LocalPointer<UVector> numsysNames(new UVector(uprv_deleteUObject, nullptr, status), status);
-        if (U_FAILURE(status)) {
-            return nullptr;
-        }
-        
-        UErrorCode rbstatus = U_ZERO_ERROR;
-        UResourceBundle *numberingSystemsInfo = ures_openDirect(nullptr, "numberingSystems", &rbstatus);
-        numberingSystemsInfo = ures_getByKey(numberingSystemsInfo, "numberingSystems", numberingSystemsInfo, &rbstatus);
-        if (U_FAILURE(rbstatus)) {
-            // Don't stomp on the catastrophic failure of OOM.
-            if (rbstatus == U_MEMORY_ALLOCATION_ERROR) {
-                status = rbstatus;
-            } else {
-                status = U_MISSING_RESOURCE_ERROR;
-            }
-            ures_close(numberingSystemsInfo);
-            return nullptr;
-        }
-
-        while ( ures_hasNext(numberingSystemsInfo) && U_SUCCESS(status) ) {
-            LocalUResourceBundlePointer nsCurrent(ures_getNextResource(numberingSystemsInfo, nullptr, &rbstatus));
-            if (rbstatus == U_MEMORY_ALLOCATION_ERROR) {
-                status = rbstatus; // we want to report OOM failure back to the caller.
-                break;
-            }
-            const char *nsName = ures_getKey(nsCurrent.getAlias());
-            LocalPointer<UnicodeString> newElem(new UnicodeString(nsName, -1, US_INV), status);
-            if (U_SUCCESS(status)) {
-                numsysNames->addElement(newElem.getAlias(), status);
-                if (U_SUCCESS(status)) {
-                    newElem.orphan(); // on success, the numsysNames vector owns newElem.
-                }
-            }
-||||||| merged common ancestors
-    if ( availableNames == NULL ) {
-        // TODO: Simple array of UnicodeString objects, based on length of table resource?
-        LocalPointer<UVector> numsysNames(new UVector(uprv_deleteUObject, NULL, status), status);
-        if (U_FAILURE(status)) {
-            return NULL;
-        }
-        
-        UErrorCode rbstatus = U_ZERO_ERROR;
-        UResourceBundle *numberingSystemsInfo = ures_openDirect(NULL, "numberingSystems", &rbstatus);
-        numberingSystemsInfo = ures_getByKey(numberingSystemsInfo,"numberingSystems",numberingSystemsInfo,&rbstatus);
-        if(U_FAILURE(rbstatus)) {
-            status = U_MISSING_RESOURCE_ERROR;
-            ures_close(numberingSystemsInfo);
-            return NULL;
-        }
-
-        while ( ures_hasNext(numberingSystemsInfo) ) {
-            UResourceBundle *nsCurrent = ures_getNextResource(numberingSystemsInfo,NULL,&rbstatus);
-            const char *nsName = ures_getKey(nsCurrent);
-            numsysNames->addElement(new UnicodeString(nsName, -1, US_INV),status);
-            ures_close(nsCurrent);
-=======
     UErrorCode rbstatus = U_ZERO_ERROR;
     UResourceBundle *numberingSystemsInfo = ures_openDirect(nullptr, "numberingSystems", &rbstatus);
     numberingSystemsInfo =
@@ -383,16 +300,8 @@ U_CFUNC void initNumsysNames(UErrorCode &status) {
             status = rbstatus;
         } else {
             status = U_MISSING_RESOURCE_ERROR;
->>>>>>> upstream-releases
         }
         ures_close(numberingSystemsInfo);
-<<<<<<< HEAD
-        if (U_FAILURE(status)) {
-            return nullptr;
-||||||| merged common ancestors
-        if (U_FAILURE(status)) {
-            return NULL;
-=======
         return;
     }
 
@@ -401,19 +310,7 @@ U_CFUNC void initNumsysNames(UErrorCode &status) {
         if (rbstatus == U_MEMORY_ALLOCATION_ERROR) {
             status = rbstatus; // we want to report OOM failure back to the caller.
             break;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        availableNames = new NumsysNameEnumeration(numsysNames.getAlias(), status);
-        if (availableNames == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
-||||||| merged common ancestors
-        availableNames = new NumsysNameEnumeration(numsysNames.getAlias(), status);
-        if (availableNames == NULL) {
-            status = U_MEMORY_ALLOCATION_ERROR;
-            return NULL;
-=======
         const char *nsName = ures_getKey(nsCurrent.getAlias());
         LocalPointer<UnicodeString> newElem(new UnicodeString(nsName, -1, US_INV), status);
         if (U_SUCCESS(status)) {
@@ -421,7 +318,6 @@ U_CFUNC void initNumsysNames(UErrorCode &status) {
             if (U_SUCCESS(status)) {
                 newElem.orphan(); // on success, the numsysNames vector owns newElem.
             }
->>>>>>> upstream-releases
         }
     }
 
@@ -446,16 +342,8 @@ NumsysNameEnumeration::NumsysNameEnumeration(UErrorCode& status) : pos(0) {
 
 const UnicodeString*
 NumsysNameEnumeration::snext(UErrorCode& status) {
-<<<<<<< HEAD
-    if (U_SUCCESS(status) && (fNumsysNames != nullptr) && (pos < fNumsysNames->size())) {
-        return (const UnicodeString*)fNumsysNames->elementAt(pos++);
-||||||| merged common ancestors
-    if (U_SUCCESS(status) && pos < fNumsysNames->size()) {
-        return (const UnicodeString*)fNumsysNames->elementAt(pos++);
-=======
     if (U_SUCCESS(status) && (gNumsysNames != nullptr) && (pos < gNumsysNames->size())) {
         return (const UnicodeString*)gNumsysNames->elementAt(pos++);
->>>>>>> upstream-releases
     }
     return nullptr;
 }
@@ -467,13 +355,7 @@ NumsysNameEnumeration::reset(UErrorCode& /*status*/) {
 
 int32_t
 NumsysNameEnumeration::count(UErrorCode& /*status*/) const {
-<<<<<<< HEAD
-    return (fNumsysNames==nullptr) ? 0 : fNumsysNames->size();
-||||||| merged common ancestors
-    return (fNumsysNames==NULL) ? 0 : fNumsysNames->size();
-=======
     return (gNumsysNames==nullptr) ? 0 : gNumsysNames->size();
->>>>>>> upstream-releases
 }
 
 NumsysNameEnumeration::~NumsysNameEnumeration() {

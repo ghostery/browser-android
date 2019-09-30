@@ -19,16 +19,6 @@ const AuditFilter = createFactory(require("./AuditFilter"));
 const AuditController = createFactory(require("./AuditController"));
 
 // Utils
-<<<<<<< HEAD
-const {flashElementOn, flashElementOff} =
-  require("devtools/client/inspector/markup/utils");
-const { openDocLink } = require("devtools/client/shared/link");
-const { VALUE_FLASHING_DURATION, VALUE_HIGHLIGHT_DURATION } = require("../constants");
-||||||| merged common ancestors
-const {flashElementOn, flashElementOff} =
-  require("devtools/client/inspector/markup/utils");
-const { VALUE_FLASHING_DURATION, VALUE_HIGHLIGHT_DURATION } = require("../constants");
-=======
 const {
   flashElementOn,
   flashElementOff,
@@ -38,27 +28,11 @@ const {
   VALUE_FLASHING_DURATION,
   VALUE_HIGHLIGHT_DURATION,
 } = require("../constants");
->>>>>>> upstream-releases
 
 // Actions
 const { updateDetails } = require("../actions/details");
 const { unhighlight } = require("../actions/accessibles");
 
-<<<<<<< HEAD
-const { L10N } = require("../utils/l10n");
-
-loader.lazyRequireGetter(this, "Menu", "devtools/client/framework/menu");
-loader.lazyRequireGetter(this, "MenuItem", "devtools/client/framework/menu-item");
-
-const JSON_URL_PREFIX = "data:application/json;charset=UTF-8,";
-
-const TELEMETRY_ACCESSIBLE_CONTEXT_MENU_OPENED =
-  "devtools.accessibility.accessible_context_menu_opened";
-const TELEMETRY_ACCESSIBLE_CONTEXT_MENU_ITEM_ACTIVATED =
-  "devtools.accessibility.accessible_context_menu_item_activated";
-
-||||||| merged common ancestors
-=======
 const { L10N } = require("../utils/l10n");
 
 loader.lazyRequireGetter(this, "Menu", "devtools/client/framework/menu");
@@ -77,7 +51,6 @@ const TELEMETRY_ACCESSIBLE_CONTEXT_MENU_OPENED =
 const TELEMETRY_ACCESSIBLE_CONTEXT_MENU_ITEM_ACTIVATED =
   "devtools.accessibility.accessible_context_menu_item_activated";
 
->>>>>>> upstream-releases
 class HighlightableTreeRowClass extends TreeRow {
   shouldComponentUpdate(nextProps) {
     const shouldTreeRowUpdate = super.shouldComponentUpdate(nextProps);
@@ -214,56 +187,6 @@ class AccessibilityRow extends Component {
     walker.unhighlight().catch(error => console.warn(error));
   }
 
-<<<<<<< HEAD
-  async printToJSON() {
-    const { member, supports } = this.props;
-    if (!supports.snapshot) {
-      // Debugger server does not support Accessible actor snapshots.
-      return;
-    }
-
-    if (gTelemetry) {
-      gTelemetry.keyedScalarAdd(TELEMETRY_ACCESSIBLE_CONTEXT_MENU_ITEM_ACTIVATED,
-                                "print-to-json", 1);
-    }
-
-    const snapshot = await member.object.snapshot();
-    openDocLink(`${JSON_URL_PREFIX}${encodeURIComponent(JSON.stringify(snapshot))}`);
-  }
-
-  onContextMenu(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    if (!gToolbox) {
-      return;
-    }
-
-    const menu = new Menu({ id: "accessibility-row-contextmenu" });
-    const { supports } = this.props;
-
-    if (supports.snapshot) {
-      menu.append(new MenuItem({
-        id: "menu-printtojson",
-        label: L10N.getStr("accessibility.tree.menu.printToJSON"),
-        click: () => this.printToJSON(),
-      }));
-    }
-
-    menu.popup(e.screenX, e.screenY, gToolbox);
-
-    if (gTelemetry) {
-      gTelemetry.scalarAdd(TELEMETRY_ACCESSIBLE_CONTEXT_MENU_OPENED, 1);
-    }
-  }
-
-  get hasContextMenu() {
-    const { supports } = this.props;
-    return supports.snapshot;
-  }
-
-||||||| merged common ancestors
-=======
   async printToJSON() {
     const { member, supports } = this.props;
     if (!supports.snapshot) {
@@ -313,28 +236,16 @@ class AccessibilityRow extends Component {
     }
   }
 
->>>>>>> upstream-releases
   /**
    * Render accessible row component.
    * @returns acecssible-row React component.
    */
   render() {
-<<<<<<< HEAD
-    const { object } = this.props.member;
-    const props = Object.assign({}, this.props, {
-      onContextMenu: this.hasContextMenu && (e => this.onContextMenu(e)),
-      onMouseOver: () => this.highlight(object),
-||||||| merged common ancestors
-    const { object } = this.props.member;
-    const props = Object.assign({}, this.props, {
-      onMouseOver: () => this.highlight(object),
-=======
     const { member } = this.props;
     const props = {
       ...this.props,
       onContextMenu: this.props.hasContextMenu && (e => this.onContextMenu(e)),
       onMouseOver: () => this.highlight(member.object),
->>>>>>> upstream-releases
       onMouseOut: () => this.unhighlight(),
       key: `${member.path}-${member.active ? "active" : "inactive"}`,
     };

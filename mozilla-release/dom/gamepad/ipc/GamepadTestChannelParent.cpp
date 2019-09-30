@@ -24,23 +24,10 @@ mozilla::ipc::IPCResult GamepadTestChannelParent::RecvGamepadTestEvent(
     const GamepadAdded& a = body.get_GamepadAdded();
     nsCString gamepadID;
     LossyCopyUTF16toASCII(a.id(), gamepadID);
-<<<<<<< HEAD
-    uint32_t index = service->AddGamepad(
-        gamepadID.get(), static_cast<GamepadMappingType>(a.mapping()), a.hand(),
-        a.num_buttons(), a.num_axes(), a.num_haptics());
-||||||| merged common ancestors
-    uint32_t index = service->AddGamepad(gamepadID.get(),
-                                         static_cast<GamepadMappingType>(a.mapping()),
-                                         a.hand(),
-                                         a.num_buttons(),
-                                         a.num_axes(),
-                                         a.num_haptics());
-=======
     uint32_t index = service->AddGamepad(
         gamepadID.get(), static_cast<GamepadMappingType>(a.mapping()), a.hand(),
         a.num_buttons(), a.num_axes(), a.num_haptics(), a.num_lights(),
         a.num_touches());
->>>>>>> upstream-releases
     if (!mShuttingdown) {
       Unused << SendReplyGamepadIndex(aID, index);
     }

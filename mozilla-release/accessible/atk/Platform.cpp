@@ -308,23 +308,6 @@ dbus_done:
   if (dbusSuccess) return sShouldEnable;
 #endif
 
-<<<<<<< HEAD
-    // check gconf-2 setting
-#define GCONF_A11Y_KEY "/desktop/gnome/interface/accessibility"
-  nsresult rv = NS_OK;
-  nsCOMPtr<nsIGConfService> gconf =
-      do_GetService(NS_GCONFSERVICE_CONTRACTID, &rv);
-  if (NS_SUCCEEDED(rv) && gconf)
-    gconf->GetBool(NS_LITERAL_CSTRING(GCONF_A11Y_KEY), &sShouldEnable);
-||||||| merged common ancestors
-  //check gconf-2 setting
-#define GCONF_A11Y_KEY "/desktop/gnome/interface/accessibility"
-  nsresult rv = NS_OK;
-  nsCOMPtr<nsIGConfService> gconf =
-    do_GetService(NS_GCONFSERVICE_CONTRACTID, &rv);
-  if (NS_SUCCEEDED(rv) && gconf)
-    gconf->GetBool(NS_LITERAL_CSTRING(GCONF_A11Y_KEY), &sShouldEnable);
-=======
 // check GSettings
 #define GSETINGS_A11Y_INTERFACE "org.gnome.desktop.interface"
 #define GSETINGS_A11Y_KEY "toolkit-accessibility"
@@ -341,7 +324,6 @@ dbus_done:
                                 &sShouldEnable);
     }
   }
->>>>>>> upstream-releases
 
   return sShouldEnable;
 }

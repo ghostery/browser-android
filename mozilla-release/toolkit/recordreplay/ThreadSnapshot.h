@@ -72,29 +72,11 @@ struct SavedThreadStack {
   }
 };
 
-<<<<<<< HEAD
-struct SavedCheckpoint {
-  CheckpointId mCheckpoint;
-||||||| merged common ancestors
-struct SavedCheckpoint
-{
-  CheckpointId mCheckpoint;
-=======
 struct SavedCheckpoint {
   size_t mCheckpoint;
->>>>>>> upstream-releases
   SavedThreadStack mStacks[MaxRecordedThreadId];
 
-<<<<<<< HEAD
-  explicit SavedCheckpoint(CheckpointId aCheckpoint)
-      : mCheckpoint(aCheckpoint) {}
-||||||| merged common ancestors
-  explicit SavedCheckpoint(CheckpointId aCheckpoint)
-    : mCheckpoint(aCheckpoint)
-  {}
-=======
   explicit SavedCheckpoint(size_t aCheckpoint) : mCheckpoint(aCheckpoint) {}
->>>>>>> upstream-releases
 
   void ReleaseContents() {
     for (SavedThreadStack& stack : mStacks) {

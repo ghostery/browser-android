@@ -341,32 +341,12 @@ ToolSidebar.prototype = {
       previousToolId = this.getTelemetryPanelNameOrOther(previousToolId);
       this._telemetry.toolClosed(previousToolId, sessionId, this);
 
-<<<<<<< HEAD
-      this._telemetry.recordEvent("sidepanel_changed", "inspector", null,
-        {
-          "oldpanel": previousToolId,
-          "newpanel": currentToolId,
-          "os": this._telemetry.osNameAndVersion,
-          "session_id": sessionId,
-        }
-      );
-||||||| merged common ancestors
-      this._telemetry.recordEvent("sidepanel_changed", "inspector", null,
-        {
-          "oldpanel": previousToolId,
-          "newpanel": currentToolId,
-          "os": this._telemetry.osNameAndVersion,
-          "session_id": sessionId
-        }
-      );
-=======
       this._telemetry.recordEvent("sidepanel_changed", "inspector", null, {
         oldpanel: previousToolId,
         newpanel: currentToolId,
         os: this._telemetry.osNameAndVersion,
         session_id: sessionId,
       });
->>>>>>> upstream-releases
     }
     this._telemetry.toolOpened(currentToolId, sessionId, this);
   },

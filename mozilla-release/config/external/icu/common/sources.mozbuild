@@ -21,15 +21,6 @@ SOURCES += [
    '/intl/icu/source/common/errorcode.cpp',
    '/intl/icu/source/common/filteredbrk.cpp',
    '/intl/icu/source/common/filterednormalizer2.cpp',
-<<<<<<< HEAD
-   '/intl/icu/source/common/icudataver.cpp',
-   '/intl/icu/source/common/icuplug.cpp',
-||||||| merged common ancestors
-   '/intl/icu/source/common/icudataver.cpp',
-   '/intl/icu/source/common/icuplug.cpp',
-   '/intl/icu/source/common/listformatter.cpp',
-=======
->>>>>>> upstream-releases
    '/intl/icu/source/common/loadednormalizer2impl.cpp',
    '/intl/icu/source/common/localebuilder.cpp',
    '/intl/icu/source/common/locavailable.cpp',
@@ -194,12 +185,7 @@ EXPORTS.unicode += [
    '/intl/icu/source/common/unicode/icudataver.h',
    '/intl/icu/source/common/unicode/icuplug.h',
    '/intl/icu/source/common/unicode/idna.h',
-<<<<<<< HEAD
-||||||| merged common ancestors
-   '/intl/icu/source/common/unicode/listformatter.h',
-=======
    '/intl/icu/source/common/unicode/localebuilder.h',
->>>>>>> upstream-releases
    '/intl/icu/source/common/unicode/localpointer.h',
    '/intl/icu/source/common/unicode/locdspnm.h',
    '/intl/icu/source/common/unicode/locid.h',

@@ -60,10 +60,6 @@ class ToolboxTabsOrderManager {
     return this.toolbox.direction === "rtl";
   }
 
-  isRTL() {
-    return this.toolbox.direction === "rtl";
-  }
-
   async saveOrderPreference() {
     const tabs = [...this.toolboxTabsElement.querySelectorAll(".devtools-tab")];
     const tabIds = tabs.map(tab => tab.dataset.extensionId || tab.dataset.id);
@@ -122,25 +118,6 @@ class ToolboxTabsOrderManager {
       this.dragTarget.offsetLeft + diffPageX + this.dragTarget.clientWidth / 2;
     let isDragTargetPreviousSibling = false;
 
-<<<<<<< HEAD
-    const tabElements = this.toolboxTabsElement.querySelectorAll(".devtools-tab");
-
-    // Calculate the minimum and maximum X-offset that can be valid for the drag target.
-    const firstElement = tabElements[0];
-    const firstElementCenterX = firstElement.offsetLeft + firstElement.clientWidth / 2;
-    const lastElement = tabElements[tabElements.length - 1];
-    const lastElementCenterX = lastElement.offsetLeft + lastElement.clientWidth / 2;
-    const max = Math.max(firstElementCenterX, lastElementCenterX);
-    const min = Math.min(firstElementCenterX, lastElementCenterX);
-
-    // Normalize the target center X so to remain between the first and last tab.
-    dragTargetCenterX = Math.min(max, dragTargetCenterX);
-    dragTargetCenterX = Math.max(min, dragTargetCenterX);
-
-    for (const tabElement of tabElements) {
-||||||| merged common ancestors
-    for (const tabElement of this.toolboxTabsElement.querySelectorAll(".devtools-tab")) {
-=======
     const tabElements = this.toolboxTabsElement.querySelectorAll(
       ".devtools-tab"
     );
@@ -160,7 +137,6 @@ class ToolboxTabsOrderManager {
     dragTargetCenterX = Math.max(min, dragTargetCenterX);
 
     for (const tabElement of tabElements) {
->>>>>>> upstream-releases
       if (tabElement === this.dragTarget) {
         isDragTargetPreviousSibling = true;
         continue;
@@ -168,25 +144,10 @@ class ToolboxTabsOrderManager {
 
       // Is the dragTarget near the center of the other tab?
       const anotherCenterX = tabElement.offsetLeft + tabElement.clientWidth / 2;
-<<<<<<< HEAD
-      const distanceWithDragTarget = Math.abs(dragTargetCenterX - anotherCenterX);
-      const isReplaceable = distanceWithDragTarget < tabElement.clientWidth / 3;
-||||||| merged common ancestors
-      const isReplaceable =
-        // Is the dragTarget near the center of the other tab?
-        Math.abs(dragTargetCenterX - anotherCenterX) < tabElement.clientWidth / 3 ||
-        // Has the dragTarget moved before the first tab
-        // (mouse moved too fast between two events)
-        (this.isFirstTab(tabElement) && dragTargetCenterX < anotherCenterX) ||
-        // Has the dragTarget moved after the last tab
-        // (mouse moved too fast between two events)
-        (this.isLastTab(tabElement) && anotherCenterX < dragTargetCenterX);
-=======
       const distanceWithDragTarget = Math.abs(
         dragTargetCenterX - anotherCenterX
       );
       const isReplaceable = distanceWithDragTarget < tabElement.clientWidth / 3;
->>>>>>> upstream-releases
 
       if (isReplaceable) {
         const replaceableElement = isDragTargetPreviousSibling

@@ -234,10 +234,7 @@ pub fn utf8_valid_up_to(src: &[u8]) -> usize {
     read
 }
 
-#[cfg_attr(
-    feature = "cargo-clippy",
-    allow(never_loop, cyclomatic_complexity)
-)]
+#[cfg_attr(feature = "cargo-clippy", allow(never_loop, cyclomatic_complexity))]
 pub fn convert_utf8_to_utf16_up_to_invalid(src: &[u8], dst: &mut [u16]) -> (usize, usize) {
     // This algorithm differs from the UTF-8 validation algorithm, but making
     // this one consistent with that one makes this slower for reasons I don't
@@ -418,74 +415,12 @@ pub fn convert_utf8_to_utf16_up_to_invalid(src: &[u8], dst: &mut [u16]) -> (usiz
                     break 'outer;
                 }
                 let second = src[read + 1];
-<<<<<<< HEAD
-                if !in_inclusive_range8(second, 0x80, 0xBF) {
-||||||| merged common ancestors
-                if (UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL) != 0 {
-                    break 'outer;
-                }
-                let point = (((byte as u32) & 0x1Fu32) << 6) | (second as u32 & 0x3Fu32);
-                dst[written] = point as u16;
-                read = new_read;
-                written += 1;
-            }
-            0xE1...0xEC | 0xEE...0xEF => {
-                // Three-byte normal
-                let new_read = read + 3;
-                if new_read > src.len() {
-                    break 'outer;
-                }
-                let second = src[read + 1];
-                let third = src[read + 2];
-                if ((UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL)
-                    | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                    != 0
-                {
-=======
                 if !in_inclusive_range8(second, 0x80, 0xBF) {
                     break 'outer;
                 }
                 dst[written] = ((u16::from(byte) & 0x1F) << 6) | (u16::from(second) & 0x3F);
                 read += 2;
                 written += 1;
-                continue 'tail;
-            }
-            // We need to exclude valid four byte lead bytes, because
-            // `UTF8_DATA.second_mask` covers
-            if byte < 0xF0 {
-                // Three-byte
-                let new_read = read + 3;
-                if new_read > src.len() {
-                    break 'outer;
-                }
-                let second = src[read + 1];
-                let third = src[read + 2];
-                if ((UTF8_DATA.table[usize::from(second)]
-                    & unsafe { *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80)) })
-                    | (third >> 6))
-                    != 2
-                {
->>>>>>> upstream-releases
-                    break 'outer;
-                }
-<<<<<<< HEAD
-                dst[written] = ((u16::from(byte) & 0x1F) << 6) | (u16::from(second) & 0x3F);
-                read += 2;
-||||||| merged common ancestors
-                let point = (((byte as u32) & 0xFu32) << 12)
-                    | ((second as u32 & 0x3Fu32) << 6)
-                    | (third as u32 & 0x3Fu32);
-                dst[written] = point as u16;
-                read = new_read;
-=======
-                let point = ((u16::from(byte) & 0xF) << 12)
-                    | ((u16::from(second) & 0x3F) << 6)
-                    | (u16::from(third) & 0x3F);
-                dst[written] = point;
-                read += 3;
->>>>>>> upstream-releases
-                written += 1;
-<<<<<<< HEAD
                 continue 'tail;
             }
             // We need to exclude valid four byte lead bytes, because
@@ -513,58 +448,6 @@ pub fn convert_utf8_to_utf16_up_to_invalid(src: &[u8], dst: &mut [u16]) -> (usiz
                 written += 1;
                 // `'tail` handles sequences shorter than 4, so
                 // there can't be another sequence after this one.
-||||||| merged common ancestors
-            }
-            0xE0 => {
-                // Three-byte special lower bound
-                let new_read = read + 3;
-                if new_read > src.len() {
-                    break 'outer;
-                }
-                let second = src[read + 1];
-                let third = src[read + 2];
-                if ((UTF8_TRAIL_INVALID[second as usize]
-                    & UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL)
-                    | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                    != 0
-                {
-                    break 'outer;
-                }
-                let point = (((byte as u32) & 0xFu32) << 12)
-                    | ((second as u32 & 0x3Fu32) << 6)
-                    | (third as u32 & 0x3Fu32);
-                dst[written] = point as u16;
-                read = new_read;
-                written += 1;
-            }
-            0xED => {
-                // Three-byte special upper bound
-                let new_read = read + 3;
-                if new_read > src.len() {
-                    break 'outer;
-                }
-                let second = src[read + 1];
-                let third = src[read + 2];
-                if ((UTF8_TRAIL_INVALID[second as usize]
-                    & UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL)
-                    | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
-                    != 0
-                {
-                    break 'outer;
-                }
-                let point = (((byte as u32) & 0xFu32) << 12)
-                    | ((second as u32 & 0x3Fu32) << 6)
-                    | (third as u32 & 0x3Fu32);
-                dst[written] = point as u16;
-                read = new_read;
-                written += 1;
-            }
-            _ => {
-                // Invalid lead or 4-byte lead
-=======
-                // `'tail` handles sequences shorter than 4, so
-                // there can't be another sequence after this one.
->>>>>>> upstream-releases
                 break 'outer;
             }
             break 'outer;
@@ -971,279 +854,6 @@ impl Utf8Encoder {
         dst: &mut [u8],
         _last: bool,
     ) -> (EncoderResult, usize, usize) {
-<<<<<<< HEAD
-        let mut read = 0;
-        let mut written = 0;
-        'outer: loop {
-            let mut unit = {
-                let src_remaining = &src[read..];
-                let dst_remaining = &mut dst[written..];
-                let (pending, length) = if dst_remaining.len() < src_remaining.len() {
-                    (EncoderResult::OutputFull, dst_remaining.len())
-                } else {
-                    (EncoderResult::InputEmpty, src_remaining.len())
-                };
-                match unsafe {
-                    basic_latin_to_ascii(src_remaining.as_ptr(), dst_remaining.as_mut_ptr(), length)
-                } {
-                    None => {
-                        read += length;
-                        written += length;
-                        return (pending, read, written);
-                    }
-                    Some((non_ascii, consumed)) => {
-                        read += consumed;
-                        written += consumed;
-                        non_ascii
-                    }
-                }
-            };
-            'inner: loop {
-                // The following loop is only broken out of as a goto forward.
-                loop {
-                    // Unfortunately, this check isn't enough for the compiler to elide
-                    // the bound checks on writes to dst, which is why they are manually
-                    // elided, which makes a measurable difference.
-                    if written.checked_add(4).unwrap() > dst.len() {
-                        return (EncoderResult::OutputFull, read, written);
-                    }
-                    read += 1;
-                    if unit < 0x800 {
-                        unsafe {
-                            *(dst.get_unchecked_mut(written)) = (unit >> 6) as u8 | 0xC0u8;
-                            written += 1;
-                            *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
-                            written += 1;
-                        }
-                        break;
-                    }
-                    let unit_minus_surrogate_start = unit.wrapping_sub(0xD800);
-                    if unsafe { likely(unit_minus_surrogate_start > (0xDFFF - 0xD800)) } {
-                        unsafe {
-                            *(dst.get_unchecked_mut(written)) = (unit >> 12) as u8 | 0xE0u8;
-                            written += 1;
-                            *(dst.get_unchecked_mut(written)) =
-                                ((unit & 0xFC0) >> 6) as u8 | 0x80u8;
-                            written += 1;
-                            *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
-                            written += 1;
-                        }
-                        break;
-                    }
-                    if unsafe { likely(unit_minus_surrogate_start <= (0xDBFF - 0xD800)) } {
-                        // high surrogate
-                        // read > src.len() is impossible, but using
-                        // >= instead of == allows the compiler to elide a bound check.
-                        if read >= src.len() {
-                            debug_assert_eq!(read, src.len());
-                            // Unpaired surrogate at the end of the buffer.
-                            unsafe {
-                                *(dst.get_unchecked_mut(written)) = 0xEFu8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = 0xBFu8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = 0xBDu8;
-                                written += 1;
-                            }
-                            return (EncoderResult::InputEmpty, read, written);
-                        }
-                        let second = src[read];
-                        let second_minus_low_surrogate_start = second.wrapping_sub(0xDC00);
-                        if unsafe { likely(second_minus_low_surrogate_start <= (0xDFFF - 0xDC00)) }
-                        {
-                            // The next code unit is a low surrogate. Advance position.
-                            read += 1;
-                            let astral = (u32::from(unit) << 10) + u32::from(second)
-                                - (((0xD800u32 << 10) - 0x10000u32) + 0xDC00u32);
-                            unsafe {
-                                *(dst.get_unchecked_mut(written)) = (astral >> 18) as u8 | 0xF0u8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) =
-                                    ((astral & 0x3F000u32) >> 12) as u8 | 0x80u8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) =
-                                    ((astral & 0xFC0u32) >> 6) as u8 | 0x80u8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = (astral & 0x3F) as u8 | 0x80u8;
-                                written += 1;
-                            }
-                            break;
-                        }
-                        // The next code unit is not a low surrogate. Don't advance
-                        // position and treat the high surrogate as unpaired.
-                        // Fall through
-                    }
-                    // Unpaired low surrogate
-                    unsafe {
-                        *(dst.get_unchecked_mut(written)) = 0xEFu8;
-                        written += 1;
-                        *(dst.get_unchecked_mut(written)) = 0xBFu8;
-                        written += 1;
-                        *(dst.get_unchecked_mut(written)) = 0xBDu8;
-                        written += 1;
-                    }
-                    break;
-                }
-                // Now see if the next unit is Basic Latin
-                // read > src.len() is impossible, but using
-                // >= instead of == allows the compiler to elide a bound check.
-                if read >= src.len() {
-                    debug_assert_eq!(read, src.len());
-                    return (EncoderResult::InputEmpty, read, written);
-                }
-                unit = src[read];
-                if unsafe { unlikely(unit < 0x80) } {
-                    // written > dst.len() is impossible, but using
-                    // >= instead of == allows the compiler to elide a bound check.
-                    if written >= dst.len() {
-                        debug_assert_eq!(written, dst.len());
-                        return (EncoderResult::OutputFull, read, written);
-                    }
-                    dst[written] = unit as u8;
-                    read += 1;
-                    written += 1;
-                    // Mysteriously, adding a punctuation check here makes
-                    // the expected benificiary cases *slower*!
-                    continue 'outer;
-                }
-                continue 'inner;
-            }
-        }
-||||||| merged common ancestors
-        let mut read = 0;
-        let mut written = 0;
-        'outer: loop {
-            let mut unit = {
-                let src_remaining = &src[read..];
-                let dst_remaining = &mut dst[written..];
-                let (pending, length) = if dst_remaining.len() < src_remaining.len() {
-                    (EncoderResult::OutputFull, dst_remaining.len())
-                } else {
-                    (EncoderResult::InputEmpty, src_remaining.len())
-                };
-                match unsafe {
-                    basic_latin_to_ascii(src_remaining.as_ptr(), dst_remaining.as_mut_ptr(), length)
-                } {
-                    None => {
-                        read += length;
-                        written += length;
-                        return (pending, read, written);
-                    }
-                    Some((non_ascii, consumed)) => {
-                        read += consumed;
-                        written += consumed;
-                        non_ascii
-                    }
-                }
-            };
-            'inner: loop {
-                // The following loop is only broken out of as a goto forward.
-                loop {
-                    // Unfortunately, this check isn't enough for the compiler to elide
-                    // the bound checks on writes to dst, which is why they are manually
-                    // elided, which makes a measurable difference.
-                    if written.checked_add(4).unwrap() > dst.len() {
-                        return (EncoderResult::OutputFull, read, written);
-                    }
-                    read += 1;
-                    if unit < 0x800 {
-                        unsafe {
-                            *(dst.get_unchecked_mut(written)) = (unit >> 6) as u8 | 0xC0u8;
-                            written += 1;
-                            *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
-                            written += 1;
-                        }
-                        break;
-                    }
-                    let unit_minus_surrogate_start = unit.wrapping_sub(0xD800);
-                    if unsafe { likely(unit_minus_surrogate_start > (0xDFFF - 0xD800)) } {
-                        unsafe {
-                            *(dst.get_unchecked_mut(written)) = (unit >> 12) as u8 | 0xE0u8;
-                            written += 1;
-                            *(dst.get_unchecked_mut(written)) = ((unit & 0xFC0) >> 6) as u8 | 0x80u8;
-                            written += 1;
-                            *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
-                            written += 1;
-                        }
-                        break;
-                    }
-                    if unsafe { likely(unit_minus_surrogate_start <= (0xDBFF - 0xD800)) } {
-                        // high surrogate
-                        // read > src.len() is impossible, but using
-                        // >= instead of == allows the compiler to elide a bound check.
-                        if read >= src.len() {
-                            debug_assert_eq!(read, src.len());
-                            // Unpaired surrogate at the end of the buffer.
-                            unsafe {
-                                *(dst.get_unchecked_mut(written)) = 0xEFu8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = 0xBFu8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = 0xBDu8;
-                                written += 1;
-                            }
-                            return (EncoderResult::InputEmpty, read, written);
-                        }
-                        let second = src[read];
-                        let second_minus_low_surrogate_start = second.wrapping_sub(0xDC00);
-                        if unsafe { likely(second_minus_low_surrogate_start <= (0xDFFF - 0xDC00)) } {
-                            // The next code unit is a low surrogate. Advance position.
-                            read += 1;
-                            let astral = ((unit as u32) << 10) + second as u32
-                                - (((0xD800u32 << 10) - 0x10000u32) + 0xDC00u32);
-                            unsafe {
-                                *(dst.get_unchecked_mut(written)) = (astral >> 18) as u8 | 0xF0u8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = ((astral & 0x3F000u32) >> 12) as u8 | 0x80u8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = ((astral & 0xFC0u32) >> 6) as u8 | 0x80u8;
-                                written += 1;
-                                *(dst.get_unchecked_mut(written)) = (astral & 0x3Fu32) as u8 | 0x80u8;
-                                written += 1;
-                            }
-                            break;
-                        }
-                        // The next code unit is not a low surrogate. Don't advance
-                        // position and treat the high surrogate as unpaired.
-                        // Fall through
-                    }
-                    // Unpaired low surrogate
-                    unsafe {
-                        *(dst.get_unchecked_mut(written)) = 0xEFu8;
-                        written += 1;
-                        *(dst.get_unchecked_mut(written)) = 0xBFu8;
-                        written += 1;
-                        *(dst.get_unchecked_mut(written)) = 0xBDu8;
-                        written += 1;
-                    }
-                    break;
-                }
-                // Now see if the next unit is Basic Latin
-                // read > src.len() is impossible, but using
-                // >= instead of == allows the compiler to elide a bound check.
-                if read >= src.len() {
-                    debug_assert_eq!(read, src.len());
-                    return (EncoderResult::InputEmpty, read, written);
-                }
-                unit = src[read];
-                if unsafe { unlikely(unit < 0x80) } {
-                    // written > dst.len() is impossible, but using
-                    // >= instead of == allows the compiler to elide a bound check.
-                    if written >= dst.len() {
-                        debug_assert_eq!(written, dst.len());
-                        return (EncoderResult::OutputFull, read, written);
-                    }
-                    dst[written] = unit as u8;
-                    read += 1;
-                    written += 1;
-                    // Mysteriously, adding a punctuation check here makes
-                    // the expected benificiary cases *slower*!
-                    continue 'outer;
-                }
-                continue 'inner;
-            }
-        }
-=======
         let (read, written) = convert_utf16_to_utf8_partial(src, dst);
         (
             if read == src.len() {
@@ -1254,7 +864,6 @@ impl Utf8Encoder {
             read,
             written,
         )
->>>>>>> upstream-releases
     }
 
     pub fn encode_from_utf8_raw(
@@ -2010,25 +1619,6 @@ mod tests {
         }
     }
 
-<<<<<<< HEAD
-    #[test]
-    fn test_tail() {
-        let mut output = [0u16; 1];
-        let mut decoder = UTF_8.new_decoder_without_bom_handling();
-        {
-            let (result, read, written, had_errors) =
-                decoder.decode_to_utf16("\u{E4}a".as_bytes(), &mut output[..], false);
-            assert_eq!(result, CoderResult::OutputFull);
-            assert_eq!(read, 2);
-            assert_eq!(written, 1);
-            assert!(!had_errors);
-            assert_eq!(output[0], 0x00E4);
-        }
-
-    }
-
-||||||| merged common ancestors
-=======
     #[test]
     fn test_tail() {
         let mut output = [0u16; 1];
@@ -2044,5 +1634,4 @@ mod tests {
         }
     }
 
->>>>>>> upstream-releases
 }

@@ -80,22 +80,12 @@ async function toggleJS(toolbox) {
     info("Checking checkbox to disable JS");
   }
 
-<<<<<<< HEAD
-  let { javascriptEnabled } = toolbox.target.activeTab.configureOptions;
-  is(javascriptEnabled, !cbx.checked,
-    "BrowsingContextTargetFront's configureOptions is correct before the toggle");
-||||||| merged common ancestors
-  let { javascriptEnabled } = toolbox.target.activeTab.configureOptions;
-  is(javascriptEnabled, !cbx.checked,
-    "BrowsingContextFront's configureOptions is correct before the toggle");
-=======
   let { javascriptEnabled } = toolbox.target.configureOptions;
   is(
     javascriptEnabled,
     !cbx.checked,
     "BrowsingContextTargetFront's configureOptions is correct before the toggle"
   );
->>>>>>> upstream-releases
 
   const browserLoaded = BrowserTestUtils.browserLoaded(
     gBrowser.selectedBrowser
@@ -103,22 +93,12 @@ async function toggleJS(toolbox) {
   cbx.click();
   await browserLoaded;
 
-<<<<<<< HEAD
-  ({ javascriptEnabled } = toolbox.target.activeTab.configureOptions);
-  is(javascriptEnabled, !cbx.checked,
-    "BrowsingContextTargetFront's configureOptions is correctly updated");
-||||||| merged common ancestors
-  ({ javascriptEnabled } = toolbox.target.activeTab.configureOptions);
-  is(javascriptEnabled, !cbx.checked,
-    "BrowsingContextFront's configureOptions is correctly updated");
-=======
   ({ javascriptEnabled } = toolbox.target.configureOptions);
   is(
     javascriptEnabled,
     !cbx.checked,
     "BrowsingContextTargetFront's configureOptions is correctly updated"
   );
->>>>>>> upstream-releases
 }
 
 async function testJSDisabled() {

@@ -21,22 +21,6 @@ class nsControllerCommandTable final : public nsIControllerCommandTable,
   NS_DECL_ISUPPORTS
   NS_DECL_NSICONTROLLERCOMMANDTABLE
 
-<<<<<<< HEAD
-  static already_AddRefed<nsIControllerCommandTable> CreateEditorCommandTable();
-  static already_AddRefed<nsIControllerCommandTable>
-  CreateEditingCommandTable();
-  static already_AddRefed<nsIControllerCommandTable>
-  CreateHTMLEditorCommandTable();
-  static already_AddRefed<nsIControllerCommandTable>
-  CreateHTMLEditorDocStateCommandTable();
-  static already_AddRefed<nsIControllerCommandTable> CreateWindowCommandTable();
-||||||| merged common ancestors
-  static already_AddRefed<nsIControllerCommandTable> CreateEditorCommandTable();
-  static already_AddRefed<nsIControllerCommandTable> CreateEditingCommandTable();
-  static already_AddRefed<nsIControllerCommandTable> CreateHTMLEditorCommandTable();
-  static already_AddRefed<nsIControllerCommandTable> CreateHTMLEditorDocStateCommandTable();
-  static already_AddRefed<nsIControllerCommandTable> CreateWindowCommandTable();
-=======
   static already_AddRefed<nsControllerCommandTable> CreateEditorCommandTable();
   static already_AddRefed<nsControllerCommandTable> CreateEditingCommandTable();
   static already_AddRefed<nsControllerCommandTable>
@@ -44,7 +28,6 @@ class nsControllerCommandTable final : public nsIControllerCommandTable,
   static already_AddRefed<nsControllerCommandTable>
   CreateHTMLEditorDocStateCommandTable();
   static already_AddRefed<nsControllerCommandTable> CreateWindowCommandTable();
->>>>>>> upstream-releases
 
  protected:
   virtual ~nsControllerCommandTable();
@@ -56,11 +39,6 @@ class nsControllerCommandTable final : public nsIControllerCommandTable,
   bool mMutable;
 };
 
-<<<<<<< HEAD
-#endif  // nsControllerCommandTable_h_
-||||||| merged common ancestors
-#endif // nsControllerCommandTable_h_
-=======
 nsControllerCommandTable*
 nsIControllerCommandTable::AsControllerCommandTable() {
   return static_cast<nsControllerCommandTable*>(this);
@@ -72,4 +50,3 @@ nsIControllerCommandTable::AsControllerCommandTable() const {
 }
 
 #endif  // nsControllerCommandTable_h_
->>>>>>> upstream-releases

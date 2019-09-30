@@ -2,26 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 /* global window */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/utils/middleware/log.js
-
-import { isTesting } from "devtools-environment";
-
-const blacklist = [
-  "SET_POPUP_OBJECT_PROPERTIES",
-  "SET_PAUSE_POINTS",
-  "SET_SYMBOLS",
-  "OUT_OF_SCOPE_LOCATIONS",
-  "MAP_SCOPES",
-  "MAP_FRAMES",
-  "ADD_SCOPES",
-  "IN_SCOPE_LINES",
-  "REMOVE_BREAKPOINT",
-  "NODE_PROPERTIES_LOADED"
-];
-||||||| merged common ancestors
-const blacklist = ["SET_POPUP_OBJECT_PROPERTIES", "SET_PAUSE_POINTS", "SET_SYMBOLS", "OUT_OF_SCOPE_LOCATIONS", "MAP_SCOPES", "MAP_FRAMES", "ADD_SCOPES", "IN_SCOPE_LINES", "REMOVE_BREAKPOINT", "NODE_PROPERTIES_LOADED"];
-=======
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/utils/middleware/log.js
 
 // @flow
 
@@ -113,36 +93,10 @@ function serializeAction(action) {
  * A middleware that logs all actions coming through the system
  * to the console.
  */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/utils/middleware/log.js
-export function log({ dispatch, getState }) {
-  return next => action => {
-||||||| merged common ancestors
-
-
-function log({
-  dispatch,
-  getState
-}) {
-  return next => action => {
-=======
 export function log({ dispatch, getState }: ThunkArgs) {
   return (next: any) => (action: any) => {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/utils/middleware/log.js
     const asyncMsg = !action.status ? "" : `[${action.status}]`;
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/utils/middleware/log.js
-    if (isTesting()) {
-      dump(
-        `[ACTION] ${action.type} ${asyncMsg} - ${serializeAction(action)}\n`
-      );
-    } else {
-      console.log(action, asyncMsg);
-||||||| merged common ancestors
-    if ((0, _devtoolsEnvironment.isTesting)()) {
-      dump(`[ACTION] ${action.type} ${asyncMsg} - ${serializeAction(action)}\n`);
-    } else {
-      console.log(action, asyncMsg);
-=======
     if (prefs.logActions) {
       if (isTesting()) {
         // $FlowIgnore
@@ -152,7 +106,6 @@ export function log({ dispatch, getState }: ThunkArgs) {
       } else {
         console.log(action, asyncMsg);
       }
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/utils/middleware/log.js
     }
 
     next(action);

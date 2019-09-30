@@ -27,16 +27,9 @@ class PriorityQueue {
   PriorityQueue(const PriorityQueue&) = delete;
   PriorityQueue& operator=(const PriorityQueue&) = delete;
 
-<<<<<<< HEAD
- public:
-  explicit PriorityQueue(AllocPolicy ap = AllocPolicy()) : heap(ap) {}
-||||||| merged common ancestors
-  public:
-=======
  public:
   explicit PriorityQueue(AllocPolicy ap = AllocPolicy())
       : heap(std::move(ap)) {}
->>>>>>> upstream-releases
 
   MOZ_MUST_USE bool reserve(size_t capacity) { return heap.reserve(capacity); }
 

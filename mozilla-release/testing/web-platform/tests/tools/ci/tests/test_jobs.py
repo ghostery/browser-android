@@ -1,23 +1,5 @@
 from tools.ci import jobs
 
-<<<<<<< HEAD
-all_jobs = set([
-    "build_css",
-    "lint",
-    "manifest_upload",
-    "resources_unittest",
-    "stability",
-    "tools_unittest",
-    "update_built",
-    "wpt_integration",
-    "wptrunner_infrastructure",
-    "wptrunner_unittest",
-])
-
-default_jobs = set(["lint", "manifest_upload"])
-||||||| merged common ancestors
-default_jobs = set(["lint", "manifest_upload"])
-=======
 all_jobs = {
     "build_css",
     "lint",
@@ -40,27 +22,11 @@ def test_all():
 
 def test_default():
     assert jobs.get_jobs(["README.md"]) == default_jobs
->>>>>>> upstream-releases
-
-
-def test_all():
-    assert jobs.get_jobs(["README.md"], all=True) == all_jobs
-
-
-def test_default():
-    assert jobs.get_jobs(["README.md"]) == default_jobs
 
 
 def test_testharness():
-<<<<<<< HEAD
-    assert jobs.get_jobs(["resources/testharness.js"]) == default_jobs | set(["resources_unittest",
-                                                                              "wptrunner_infrastructure"])
-||||||| merged common ancestors
-    assert jobs.get_jobs(["resources/testharness.js"]) == default_jobs | set(["resources_unittest"])
-=======
     assert jobs.get_jobs(["resources/testharness.js"]) == default_jobs | {"resources_unittest",
                                                                           "wptrunner_infrastructure"}
->>>>>>> upstream-releases
     assert jobs.get_jobs(["resources/testharness.js"],
                          includes=["resources_unittest"]) == {"resources_unittest"}
     assert jobs.get_jobs(["tools/wptserve/wptserve/config.py"],
@@ -92,23 +58,9 @@ def test_stability():
                          includes=["stability"]) == {"stability"}
     assert jobs.get_jobs(["css/build-css-testsuite.sh",
                           "css/CSS21/test-001.html"],
-<<<<<<< HEAD
-                         includes=["stability"]) == set(["stability"])
-
-
-||||||| merged common ancestors
-                         includes=["stability"]) == set(["stability"])
-
-
-def test_default():
-    assert jobs.get_jobs(["README.md"]) == default_jobs
-
-
-=======
                          includes=["stability"]) == {"stability"}
 
 
->>>>>>> upstream-releases
 def test_tools_unittest():
     assert jobs.get_jobs(["tools/ci/test/test_jobs.py"],
                          includes=["tools_unittest"]) == {"tools_unittest"}
@@ -148,7 +100,6 @@ def test_wpt_integration():
                          includes=["wpt_integration"]) == {"wpt_integration"}
     assert jobs.get_jobs(["tools/wptrunner/wptrunner/wptrunner.py"],
                          includes=["wpt_integration"]) == {"wpt_integration"}
-
 
 
 def test_wpt_infrastructure():

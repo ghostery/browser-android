@@ -49,20 +49,10 @@ fn compute_impl_bounds(bound: Path, mut generics: Generics, applies_to: &IdentSe
     });
 
     for mut param in generics.params.iter_mut() {
-<<<<<<< HEAD
-        if let &mut GenericParam::Type(ref mut typ) = param {
-            if applies_to.contains(&typ.ident) {
-                typ.bounds.push(added_bound.clone());
-            }
-||||||| merged common ancestors
-        if let &mut GenericParam::Type(ref mut typ) = param {
-            typ.bounds.push(added_bound.clone());
-=======
         if let GenericParam::Type(ref mut typ) = *param {
             if applies_to.contains(&typ.ident) {
                 typ.bounds.push(added_bound.clone());
             }
->>>>>>> upstream-releases
         }
     }
 

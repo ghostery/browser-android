@@ -70,22 +70,9 @@ class CrashReporterHost {
 #endif
 
     nsCOMPtr<nsIFile> targetDump;
-<<<<<<< HEAD
-    if (!CrashReporter::CreateMinidumpsAndPair(childHandle, mThreadId,
-                                               aPairName, aMinidumpToPair,
-                                               getter_AddRefs(targetDump))) {
-||||||| merged common ancestors
-    if (!CrashReporter::CreateMinidumpsAndPair(childHandle,
-                                               mThreadId,
-                                               aPairName,
-                                               aMinidumpToPair,
-                                               getter_AddRefs(targetDump)))
-    {
-=======
     if (!CrashReporter::CreateMinidumpsAndPair(
             childHandle, mThreadId, aPairName, aMinidumpToPair,
             mExtraAnnotations, getter_AddRefs(targetDump))) {
->>>>>>> upstream-releases
       return false;
     }
 

@@ -38,103 +38,31 @@ NS_IMPL_ISUPPORTS(nsChromeProtocolHandler, nsIProtocolHandler,
 // nsIProtocolHandler methods:
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeProtocolHandler::GetScheme(nsACString &result) {
-  result.AssignLiteral("chrome");
-  return NS_OK;
-||||||| merged common ancestors
-nsChromeProtocolHandler::GetScheme(nsACString &result)
-{
-    result.AssignLiteral("chrome");
-    return NS_OK;
-=======
 nsChromeProtocolHandler::GetScheme(nsACString& result) {
   result.AssignLiteral("chrome");
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeProtocolHandler::GetDefaultPort(int32_t *result) {
-  *result = -1;  // no port for chrome: URLs
-  return NS_OK;
-||||||| merged common ancestors
-nsChromeProtocolHandler::GetDefaultPort(int32_t *result)
-{
-    *result = -1;        // no port for chrome: URLs
-    return NS_OK;
-=======
 nsChromeProtocolHandler::GetDefaultPort(int32_t* result) {
   *result = -1;  // no port for chrome: URLs
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeProtocolHandler::AllowPort(int32_t port, const char *scheme,
-                                   bool *_retval) {
-  // don't override anything.
-  *_retval = false;
-  return NS_OK;
-||||||| merged common ancestors
-nsChromeProtocolHandler::AllowPort(int32_t port, const char *scheme, bool *_retval)
-{
-    // don't override anything.
-    *_retval = false;
-    return NS_OK;
-=======
 nsChromeProtocolHandler::AllowPort(int32_t port, const char* scheme,
                                    bool* _retval) {
   // don't override anything.
   *_retval = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeProtocolHandler::GetProtocolFlags(uint32_t *result) {
-  *result = URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE;
-  return NS_OK;
-||||||| merged common ancestors
-nsChromeProtocolHandler::GetProtocolFlags(uint32_t *result)
-{
-    *result = URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE;
-    return NS_OK;
-=======
 nsChromeProtocolHandler::GetProtocolFlags(uint32_t* result) {
   *result = URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsChromeProtocolHandler::NewURI(const nsACString &aSpec, const char *aCharset,
-                                nsIURI *aBaseURI, nsIURI **result) {
-  // Chrome: URLs (currently) have no additional structure beyond that provided
-  // by standard URLs, so there is no "outer" given to CreateInstance
-  nsresult rv;
-  nsCOMPtr<nsIURI> surl;
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  rv = NS_MutateURI(new mozilla::net::nsStandardURL::Mutator())
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsChromeProtocolHandler::NewURI(const nsACString &aSpec,
-                                const char *aCharset,
-                                nsIURI *aBaseURI,
-                                nsIURI **result)
-{
-
-    // Chrome: URLs (currently) have no additional structure beyond that provided
-    // by standard URLs, so there is no "outer" given to CreateInstance
-    nsresult rv;
-    nsCOMPtr<nsIURI> surl;
-    nsCOMPtr<nsIURI> base(aBaseURI);
-    rv = NS_MutateURI(new mozilla::net::nsStandardURL::Mutator())
-=======
 /* static */ nsresult nsChromeProtocolHandler::CreateNewURI(
     const nsACString& aSpec, const char* aCharset, nsIURI* aBaseURI,
     nsIURI** result) {
@@ -144,7 +72,6 @@ nsChromeProtocolHandler::NewURI(const nsACString &aSpec,
   nsCOMPtr<nsIURI> surl;
   nsCOMPtr<nsIURI> base(aBaseURI);
   rv = NS_MutateURI(new mozilla::net::nsStandardURL::Mutator())
->>>>>>> upstream-releases
            .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
                                    nsIStandardURL::URLTYPE_STANDARD, -1,
                                    nsCString(aSpec), aCharset, base, nullptr))
@@ -165,21 +92,9 @@ nsChromeProtocolHandler::NewURI(const nsACString &aSpec,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeProtocolHandler::NewChannel2(nsIURI *aURI, nsILoadInfo *aLoadInfo,
-                                     nsIChannel **aResult) {
-  nsresult rv;
-||||||| merged common ancestors
-nsChromeProtocolHandler::NewChannel2(nsIURI* aURI,
-                                     nsILoadInfo* aLoadInfo,
-                                     nsIChannel** aResult)
-{
-    nsresult rv;
-=======
 nsChromeProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
                                     nsIChannel** aResult) {
   nsresult rv;
->>>>>>> upstream-releases
 
   NS_ENSURE_ARG_POINTER(aURI);
   NS_ENSURE_ARG_POINTER(aLoadInfo);
@@ -248,7 +163,6 @@ nsChromeProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
   }
 #endif
 
-<<<<<<< HEAD
   // Make sure that the channel remembers where it was
   // originally loaded from.
   rv = aLoadInfo->SetResultPrincipalURI(savedResultPrincipalURI);
@@ -275,73 +189,6 @@ nsChromeProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
   *aResult = result;
   NS_ADDREF(*aResult);
   return NS_OK;
-}
-
-NS_IMETHODIMP
-nsChromeProtocolHandler::NewChannel(nsIURI *aURI, nsIChannel **aResult) {
-  return NewChannel2(aURI, nullptr, aResult);
-||||||| merged common ancestors
-    // Make sure that the channel remembers where it was
-    // originally loaded from.
-    rv = aLoadInfo->SetResultPrincipalURI(savedResultPrincipalURI);
-    NS_ENSURE_SUCCESS(rv, rv);
-    rv = result->SetOriginalURI(aURI);
-    if (NS_FAILED(rv)) return rv;
-
-    // Get a system principal for content files and set the owner
-    // property of the result
-    nsCOMPtr<nsIURL> url = do_QueryInterface(aURI);
-    nsAutoCString path;
-    rv = url->GetPathQueryRef(path);
-    if (StringBeginsWith(path, NS_LITERAL_CSTRING("/content/"))) {
-        result->SetOwner(nsContentUtils::GetSystemPrincipal());
-    }
-
-    // XXX Removed dependency-tracking code from here, because we're not
-    // tracking them anyways (with fastload we checked only in DEBUG
-    // and with startupcache not at all), but this is where we would start
-    // if we need to re-add.
-    // See bug 531886, bug 533038.
-    result->SetContentCharset(NS_LITERAL_CSTRING("UTF-8"));
-
-    *aResult = result;
-    NS_ADDREF(*aResult);
-    return NS_OK;
-}
-
-NS_IMETHODIMP
-nsChromeProtocolHandler::NewChannel(nsIURI* aURI,
-                                    nsIChannel* *aResult)
-{
-  return NewChannel2(aURI, nullptr, aResult);
-=======
-  // Make sure that the channel remembers where it was
-  // originally loaded from.
-  rv = aLoadInfo->SetResultPrincipalURI(savedResultPrincipalURI);
-  NS_ENSURE_SUCCESS(rv, rv);
-  rv = result->SetOriginalURI(aURI);
-  if (NS_FAILED(rv)) return rv;
-
-  // Get a system principal for content files and set the owner
-  // property of the result
-  nsCOMPtr<nsIURL> url = do_QueryInterface(aURI);
-  nsAutoCString path;
-  rv = url->GetPathQueryRef(path);
-  if (StringBeginsWith(path, NS_LITERAL_CSTRING("/content/"))) {
-    result->SetOwner(nsContentUtils::GetSystemPrincipal());
-  }
-
-  // XXX Removed dependency-tracking code from here, because we're not
-  // tracking them anyways (with fastload we checked only in DEBUG
-  // and with startupcache not at all), but this is where we would start
-  // if we need to re-add.
-  // See bug 531886, bug 533038.
-  result->SetContentCharset(NS_LITERAL_CSTRING("UTF-8"));
-
-  *aResult = result;
-  NS_ADDREF(*aResult);
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////

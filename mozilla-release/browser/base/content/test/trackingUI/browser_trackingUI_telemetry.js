@@ -37,17 +37,9 @@ add_task(async function setup() {
   ok(TrackingProtection, "TP is attached to the browser window");
   ok(!TrackingProtection.enabled, "TP is not enabled");
 
-<<<<<<< HEAD
-  let enabledCounts =
-    Services.telemetry.getHistogramById("TRACKING_PROTECTION_ENABLED").snapshot().values;
-||||||| merged common ancestors
-  let enabledCounts =
-    Services.telemetry.getHistogramById("TRACKING_PROTECTION_ENABLED").snapshot().counts;
-=======
   let enabledCounts = Services.telemetry
     .getHistogramById("TRACKING_PROTECTION_ENABLED")
     .snapshot().values;
->>>>>>> upstream-releases
   is(enabledCounts[0], 1, "TP was not enabled on start up");
 
   let scalars = Services.telemetry.getSnapshotForScalars("main", false).parent;

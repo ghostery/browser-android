@@ -15,13 +15,6 @@ else
   . $topsrcdir/build/win32/mozconfig.vs-latest
 fi
 
-<<<<<<< HEAD
-mk_export_correct_style CC
-mk_export_correct_style CXX
-mk_export_correct_style LINKER
-
-||||||| merged common ancestors
-=======
 mk_export_correct_style CC
 mk_export_correct_style CXX
 mk_export_correct_style LINKER
@@ -29,7 +22,6 @@ mk_export_correct_style WINDOWSSDKDIR
 mk_export_correct_style DIA_SDK_PATH
 mk_export_correct_style VC_PATH
 
->>>>>>> upstream-releases
 # PATH also needs to point to mozmake.exe, which can come from either
 # newer mozilla-build or tooltool.
 if ! which mozmake 2>/dev/null; then

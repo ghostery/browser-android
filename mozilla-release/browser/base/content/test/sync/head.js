@@ -7,13 +7,6 @@ function promiseSyncReady() {
   return service.whenLoaded();
 }
 
-<<<<<<< HEAD
-function setupSendTabMocks({ syncReady, clientsSynced, targets, state, isSendableURI }) {
-  const sandbox = sinon.sandbox.create();
-||||||| merged common ancestors
-function setupSendTabMocks({ syncReady, clientsSynced, remoteClients, state, isSendableURI }) {
-  const sandbox = sinon.sandbox.create();
-=======
 function setupSendTabMocks({
   syncReady = true,
   fxaDevices = null,
@@ -21,15 +14,7 @@ function setupSendTabMocks({
   isSendableURI = true,
 }) {
   const sandbox = sinon.createSandbox();
->>>>>>> upstream-releases
   sandbox.stub(gSync, "syncReady").get(() => syncReady);
-<<<<<<< HEAD
-  sandbox.stub(Weave.Service.clientsEngine, "isFirstSync").get(() => !clientsSynced);
-  sandbox.stub(gSync, "sendTabTargets").get(() => targets);
-||||||| merged common ancestors
-  sandbox.stub(Weave.Service.clientsEngine, "isFirstSync").get(() => !clientsSynced);
-  sandbox.stub(gSync, "remoteClients").get(() => remoteClients);
-=======
   if (fxaDevices) {
     // Clone fxaDevices because it gets sorted in-place.
     sandbox
@@ -39,7 +24,6 @@ function setupSendTabMocks({
   sandbox
     .stub(Weave.Service.clientsEngine, "hasSyncedThisSession")
     .get(() => !!fxaDevices);
->>>>>>> upstream-releases
   sandbox.stub(UIState, "get").returns({ status: state });
   sandbox.stub(gSync, "isSendableURI").returns(isSendableURI);
   return sandbox;

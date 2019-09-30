@@ -981,15 +981,9 @@ class Accessible : public nsISupports {
    */
   void SetHideEventTarget(bool aTarget) { mHideEventTarget = aTarget; }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   void Announce(const nsAString& aAnnouncement, uint16_t aPriority);
 
  protected:
->>>>>>> upstream-releases
   virtual ~Accessible();
 
   /**
@@ -1111,14 +1105,8 @@ protected:
   /**
    * Dispatch click event.
    */
-<<<<<<< HEAD
-  virtual void DispatchClickEvent(nsIContent* aContent,
-||||||| merged common ancestors
-  virtual void DispatchClickEvent(nsIContent *aContent,
-=======
   MOZ_CAN_RUN_SCRIPT
   virtual void DispatchClickEvent(nsIContent* aContent,
->>>>>>> upstream-releases
                                   uint32_t aActionIndex) const;
 
   //////////////////////////////////////////////////////////////////////////////

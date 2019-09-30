@@ -20,21 +20,10 @@ using namespace mozilla::dom;
 using namespace mozilla::gfx;
 using namespace mozilla::image;
 
-<<<<<<< HEAD
-nsContainerFrame* NS_NewSVGMarkerFrame(nsIPresShell* aPresShell,
-                                       ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGMarkerFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewSVGMarkerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGMarkerFrame(aStyle);
-=======
 nsContainerFrame* NS_NewSVGMarkerFrame(PresShell* aPresShell,
                                        ComputedStyle* aStyle) {
   return new (aPresShell)
       nsSVGMarkerFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGMarkerFrame)
@@ -98,27 +87,11 @@ static nsIFrame* GetAnonymousChildFrame(nsIFrame* aFrame) {
   return kid;
 }
 
-<<<<<<< HEAD
-void nsSVGMarkerFrame::PaintMark(gfxContext& aContext,
-                                 const gfxMatrix& aToMarkedFrameUserSpace,
-                                 SVGGeometryFrame* aMarkedFrame,
-                                 const nsSVGMark& aMark, float aStrokeWidth,
-                                 imgDrawingParams& aImgParams) {
-||||||| merged common ancestors
-void
-nsSVGMarkerFrame::PaintMark(gfxContext& aContext,
-                            const gfxMatrix& aToMarkedFrameUserSpace,
-                            SVGGeometryFrame* aMarkedFrame,
-                            const nsSVGMark& aMark, float aStrokeWidth,
-                            imgDrawingParams& aImgParams)
-{
-=======
 void nsSVGMarkerFrame::PaintMark(gfxContext& aContext,
                                  const gfxMatrix& aToMarkedFrameUserSpace,
                                  SVGGeometryFrame* aMarkedFrame,
                                  const SVGMark& aMark, float aStrokeWidth,
                                  imgDrawingParams& aImgParams) {
->>>>>>> upstream-releases
   // If the flag is set when we get here, it means this marker frame
   // has already been used painting the current mark, and the document
   // has a marker reference loop.
@@ -163,39 +136,17 @@ void nsSVGMarkerFrame::PaintMark(gfxContext& aContext,
   if (StyleDisplay()->IsScrollableOverflow()) aContext.Restore();
 }
 
-<<<<<<< HEAD
-SVGBBox nsSVGMarkerFrame::GetMarkBBoxContribution(
-    const Matrix& aToBBoxUserspace, uint32_t aFlags,
-    SVGGeometryFrame* aMarkedFrame, const nsSVGMark& aMark,
-    float aStrokeWidth) {
-||||||| merged common ancestors
-SVGBBox
-nsSVGMarkerFrame::GetMarkBBoxContribution(const Matrix& aToBBoxUserspace,
-                                          uint32_t aFlags,
-                                          SVGGeometryFrame* aMarkedFrame,
-                                          const nsSVGMark& aMark,
-                                          float aStrokeWidth)
-{
-=======
 SVGBBox nsSVGMarkerFrame::GetMarkBBoxContribution(
     const Matrix& aToBBoxUserspace, uint32_t aFlags,
     SVGGeometryFrame* aMarkedFrame, const SVGMark& aMark, float aStrokeWidth) {
->>>>>>> upstream-releases
   SVGBBox bbox;
 
   // If the flag is set when we get here, it means this marker frame
   // has already been used in calculating the current mark bbox, and
   // the document has a marker reference loop.
-<<<<<<< HEAD
-  if (mInUse) return bbox;
-||||||| merged common ancestors
-  if (mInUse)
-    return bbox;
-=======
   if (mInUse) {
     return bbox;
   }
->>>>>>> upstream-releases
 
   AutoMarkerReferencer markerRef(this, aMarkedFrame);
 
@@ -248,16 +199,8 @@ nsSVGMarkerFrame::AutoMarkerReferencer::AutoMarkerReferencer(
   mFrame->mInUse = true;
   mFrame->mMarkedFrame = aMarkedFrame;
 
-<<<<<<< HEAD
-  SVGViewportElement* ctx =
-      static_cast<nsSVGElement*>(aMarkedFrame->GetContent())->GetCtx();
-||||||| merged common ancestors
-  SVGViewportElement *ctx =
-    static_cast<nsSVGElement*>(aMarkedFrame->GetContent())->GetCtx();
-=======
   SVGViewportElement* ctx =
       static_cast<SVGElement*>(aMarkedFrame->GetContent())->GetCtx();
->>>>>>> upstream-releases
   mFrame->SetParentCoordCtxProvider(ctx);
 }
 
@@ -271,22 +214,10 @@ nsSVGMarkerFrame::AutoMarkerReferencer::~AutoMarkerReferencer() {
 //----------------------------------------------------------------------
 // Implementation of nsSVGMarkerAnonChildFrame
 
-<<<<<<< HEAD
-nsContainerFrame* NS_NewSVGMarkerAnonChildFrame(nsIPresShell* aPresShell,
-                                                ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGMarkerAnonChildFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewSVGMarkerAnonChildFrame(nsIPresShell* aPresShell,
-                              ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGMarkerAnonChildFrame(aStyle);
-=======
 nsContainerFrame* NS_NewSVGMarkerAnonChildFrame(PresShell* aPresShell,
                                                 ComputedStyle* aStyle) {
   return new (aPresShell)
       nsSVGMarkerAnonChildFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGMarkerAnonChildFrame)

@@ -5340,56 +5340,6 @@ exports.CSS_PROPERTIES = {
       "unset"
     ]
   },
-  "break-after": {
-    "isInherited": false,
-    "subproperties": [
-      "break-after"
-    ],
-    "supports": [],
-    "values": [
-      "always",
-      "auto",
-      "avoid",
-      "inherit",
-      "initial",
-      "left",
-      "page",
-      "right",
-      "unset"
-    ]
-  },
-  "break-before": {
-    "isInherited": false,
-    "subproperties": [
-      "break-before"
-    ],
-    "supports": [],
-    "values": [
-      "always",
-      "auto",
-      "avoid",
-      "inherit",
-      "initial",
-      "left",
-      "page",
-      "right",
-      "unset"
-    ]
-  },
-  "break-inside": {
-    "isInherited": false,
-    "subproperties": [
-      "break-inside"
-    ],
-    "supports": [],
-    "values": [
-      "auto",
-      "avoid",
-      "inherit",
-      "initial",
-      "unset"
-    ]
-  },
   "caption-side": {
     "isInherited": true,
     "subproperties": [
@@ -8844,13 +8794,8 @@ exports.CSS_PROPERTIES = {
       "inherit",
       "initial",
       "left",
-<<<<<<< HEAD
-      "page",
-||||||| merged common ancestors
-=======
       "page",
       "revert",
->>>>>>> upstream-releases
       "right",
       "unset"
     ]
@@ -8868,13 +8813,8 @@ exports.CSS_PROPERTIES = {
       "inherit",
       "initial",
       "left",
-<<<<<<< HEAD
-      "page",
-||||||| merged common ancestors
-=======
       "page",
       "revert",
->>>>>>> upstream-releases
       "right",
       "unset"
     ]
@@ -10823,24 +10763,12 @@ exports.PREFERENCES = [
     "layout.css.overflow-logical.enabled"
   ],
   [
-<<<<<<< HEAD
-    "background-blend-mode",
-    "layout.css.background-blend-mode.enabled"
-||||||| merged common ancestors
-    "shape-image-threshold",
-    "layout.css.shape-outside.enabled"
-  ],
-  [
-    "background-blend-mode",
-    "layout.css.background-blend-mode.enabled"
-=======
     "overflow-inline",
     "layout.css.overflow-logical.enabled"
   ],
   [
     "backdrop-filter",
     "layout.css.backdrop-filter.enabled"
->>>>>>> upstream-releases
   ],
   [
     "font-variation-settings",
@@ -10879,24 +10807,12 @@ exports.PREFERENCES = [
     "layout.css.moz-binding.content.enabled"
   ],
   [
-<<<<<<< HEAD
-    "-webkit-text-stroke-width",
-    "layout.css.prefixes.webkit"
-||||||| merged common ancestors
-    "shape-margin",
-    "layout.css.shape-outside.enabled"
-  ],
-  [
-    "-webkit-text-stroke-width",
-    "layout.css.prefixes.webkit"
-=======
     "offset-distance",
     "layout.css.motion-path.enabled"
   ],
   [
     "scroll-margin-block-end",
     "layout.css.scroll-snap-v1.enabled"
->>>>>>> upstream-releases
   ],
   [
     "scroll-margin-block-start",

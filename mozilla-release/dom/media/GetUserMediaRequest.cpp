@@ -17,45 +17,6 @@ GetUserMediaRequest::GetUserMediaRequest(
     nsPIDOMWindowInner* aInnerWindow, const nsAString& aCallID,
     const MediaStreamConstraints& aConstraints, bool aIsSecure,
     bool aIsHandlingUserInput)
-<<<<<<< HEAD
-    : mInnerWindowID(aInnerWindow->WindowID()),
-      mOuterWindowID(aInnerWindow->GetOuterWindow()->WindowID()),
-      mCallID(aCallID),
-      mConstraints(new MediaStreamConstraints(aConstraints)),
-      mIsSecure(aIsSecure),
-      mIsHandlingUserInput(aIsHandlingUserInput) {}
-
-GetUserMediaRequest::GetUserMediaRequest(nsPIDOMWindowInner* aInnerWindow,
-                                         const nsAString& aRawId,
-                                         const nsAString& aMediaSource)
-    : mInnerWindowID(0),
-      mOuterWindowID(0),
-      mRawID(aRawId),
-      mMediaSource(aMediaSource),
-      mIsSecure(false),
-      mIsHandlingUserInput(false) {
-||||||| merged common ancestors
-  : mInnerWindowID(aInnerWindow->WindowID())
-  , mOuterWindowID(aInnerWindow->GetOuterWindow()->WindowID())
-  , mCallID(aCallID)
-  , mConstraints(new MediaStreamConstraints(aConstraints))
-  , mIsSecure(aIsSecure)
-  , mIsHandlingUserInput(aIsHandlingUserInput)
-{
-}
-
-GetUserMediaRequest::GetUserMediaRequest(
-    nsPIDOMWindowInner* aInnerWindow,
-    const nsAString& aRawId,
-    const nsAString& aMediaSource)
-  : mInnerWindowID(0)
-  , mOuterWindowID(0)
-  , mRawID(aRawId)
-  , mMediaSource(aMediaSource)
-  , mIsSecure(false)
-  , mIsHandlingUserInput(false)
-{
-=======
     : mInnerWindowID(aInnerWindow->WindowID()),
       mOuterWindowID(aInnerWindow->GetOuterWindow()->WindowID()),
       mCallID(aCallID),
@@ -73,7 +34,6 @@ GetUserMediaRequest::GetUserMediaRequest(nsPIDOMWindowInner* aInnerWindow,
       mMediaSource(aMediaSource),
       mIsSecure(false),
       mIsHandlingUserInput(aIsHandlingUserInput) {
->>>>>>> upstream-releases
   if (aInnerWindow && aInnerWindow->GetOuterWindow()) {
     mOuterWindowID = aInnerWindow->GetOuterWindow()->WindowID();
   }

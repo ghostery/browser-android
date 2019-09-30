@@ -195,18 +195,8 @@ class FailDelayManager {
     }
   }
 
-<<<<<<< HEAD
-  void Add(nsCString &address, int32_t port) {
-    if (mDelaysDisabled) return;
-||||||| merged common ancestors
-  void Add(nsCString &address, int32_t port)
-  {
-    if (mDelaysDisabled)
-      return;
-=======
   void Add(nsCString& address, int32_t port) {
     if (mDelaysDisabled) return;
->>>>>>> upstream-releases
 
     FailDelay* record = new FailDelay(address, port);
     mEntries.AppendElement(record);
@@ -214,21 +204,9 @@ class FailDelayManager {
 
   // Element returned may not be valid after next main thread event: don't keep
   // pointer to it around
-<<<<<<< HEAD
-  FailDelay *Lookup(nsCString &address, int32_t port,
-                    uint32_t *outIndex = nullptr) {
-    if (mDelaysDisabled) return nullptr;
-||||||| merged common ancestors
-  FailDelay* Lookup(nsCString &address, int32_t port,
-                    uint32_t *outIndex = nullptr)
-  {
-    if (mDelaysDisabled)
-      return nullptr;
-=======
   FailDelay* Lookup(nsCString& address, int32_t port,
                     uint32_t* outIndex = nullptr) {
     if (mDelaysDisabled) return nullptr;
->>>>>>> upstream-releases
 
     FailDelay* result = nullptr;
     TimeStamp rightNow = TimeStamp::Now();
@@ -253,14 +231,7 @@ class FailDelayManager {
   }
 
   // returns true if channel connects immediately, or false if it's delayed
-<<<<<<< HEAD
-  void DelayOrBegin(WebSocketChannel *ws) {
-||||||| merged common ancestors
-  void DelayOrBegin(WebSocketChannel *ws)
-  {
-=======
   void DelayOrBegin(WebSocketChannel* ws) {
->>>>>>> upstream-releases
     if (!mDelaysDisabled) {
       uint32_t failIndex = 0;
       FailDelay* fail = Lookup(ws->mAddress, ws->mPort, &failIndex);
@@ -299,14 +270,7 @@ class FailDelayManager {
 
   // Remove() also deletes all expired entries as it iterates: better for
   // battery life than using a periodic timer.
-<<<<<<< HEAD
-  void Remove(nsCString &address, int32_t port) {
-||||||| merged common ancestors
-  void Remove(nsCString &address, int32_t port)
-  {
-=======
   void Remove(nsCString& address, int32_t port) {
->>>>>>> upstream-releases
     TimeStamp rightNow = TimeStamp::Now();
 
     // iterate from end, to make deletion indexing easier
@@ -320,19 +284,9 @@ class FailDelayManager {
     }
   }
 
-<<<<<<< HEAD
- private:
-  nsTArray<FailDelay *> mEntries;
-  bool mDelaysDisabled;
-||||||| merged common ancestors
-private:
-  nsTArray<FailDelay *> mEntries;
-  bool                  mDelaysDisabled;
-=======
  private:
   nsTArray<FailDelay*> mEntries;
   bool mDelaysDisabled;
->>>>>>> upstream-releases
 };
 
 //-----------------------------------------------------------------------------
@@ -360,14 +314,7 @@ class nsWSAdmissionManager {
 
   // Determine if we will open connection immediately (returns true), or
   // delay/queue the connection (returns false)
-<<<<<<< HEAD
-  static void ConditionallyConnect(WebSocketChannel *ws) {
-||||||| merged common ancestors
-  static void ConditionallyConnect(WebSocketChannel *ws)
-  {
-=======
   static void ConditionallyConnect(WebSocketChannel* ws) {
->>>>>>> upstream-releases
     LOG(("Websocket: ConditionallyConnect: [this=%p]", ws));
     MOZ_ASSERT(NS_IsMainThread(), "not main thread");
     MOZ_ASSERT(ws->mConnecting == NOT_CONNECTING, "opening state");
@@ -396,14 +343,7 @@ class nsWSAdmissionManager {
     }
   }
 
-<<<<<<< HEAD
-  static void OnConnected(WebSocketChannel *aChannel) {
-||||||| merged common ancestors
-  static void OnConnected(WebSocketChannel *aChannel)
-  {
-=======
   static void OnConnected(WebSocketChannel* aChannel) {
->>>>>>> upstream-releases
     LOG(("Websocket: OnConnected: [this=%p]", aChannel));
 
     MOZ_ASSERT(NS_IsMainThread(), "not main thread");
@@ -430,26 +370,11 @@ class nsWSAdmissionManager {
     sManager->ConnectNext(aChannel->mAddress);
   }
 
-<<<<<<< HEAD
-  // Called every time a websocket channel ends its session (including going
-  // away w/o ever successfully creating a connection)
-  static void OnStopSession(WebSocketChannel *aChannel, nsresult aReason) {
-    LOG(("Websocket: OnStopSession: [this=%p, reason=0x%08" PRIx32 "]",
-         aChannel, static_cast<uint32_t>(aReason)));
-||||||| merged common ancestors
-  // Called every time a websocket channel ends its session (including going away
-  // w/o ever successfully creating a connection)
-  static void OnStopSession(WebSocketChannel *aChannel, nsresult aReason)
-  {
-    LOG(("Websocket: OnStopSession: [this=%p, reason=0x%08" PRIx32 "]", aChannel,
-         static_cast<uint32_t>(aReason)));
-=======
   // Called every time a websocket channel ends its session (including going
   // away w/o ever successfully creating a connection)
   static void OnStopSession(WebSocketChannel* aChannel, nsresult aReason) {
     LOG(("Websocket: OnStopSession: [this=%p, reason=0x%08" PRIx32 "]",
          aChannel, static_cast<uint32_t>(aReason)));
->>>>>>> upstream-releases
 
     StaticMutexAutoLock lock(sLock);
     if (!sManager) {
@@ -458,16 +383,8 @@ class nsWSAdmissionManager {
 
     if (NS_FAILED(aReason)) {
       // Have we seen this failure before?
-<<<<<<< HEAD
-      FailDelay *knownFailure =
-          sManager->mFailures.Lookup(aChannel->mAddress, aChannel->mPort);
-||||||| merged common ancestors
-      FailDelay *knownFailure = sManager->mFailures.Lookup(aChannel->mAddress,
-                                                           aChannel->mPort);
-=======
       FailDelay* knownFailure =
           sManager->mFailures.Lookup(aChannel->mAddress, aChannel->mPort);
->>>>>>> upstream-releases
       if (knownFailure) {
         if (aReason == NS_ERROR_NOT_CONNECTED) {
           // Don't count close() before connection as a network error
@@ -523,14 +440,7 @@ class nsWSAdmissionManager {
     sManager->mSessionCount--;
   }
 
-<<<<<<< HEAD
-  static void GetSessionCount(int32_t &aSessionCount) {
-||||||| merged common ancestors
-  static void GetSessionCount(int32_t &aSessionCount)
-  {
-=======
   static void GetSessionCount(int32_t& aSessionCount) {
->>>>>>> upstream-releases
     StaticMutexAutoLock lock(sLock);
     if (!sManager) {
       return;
@@ -548,41 +458,19 @@ class nsWSAdmissionManager {
     for (uint32_t i = 0; i < mQueue.Length(); i++) delete mQueue[i];
   }
 
-<<<<<<< HEAD
-  class nsOpenConn {
-   public:
-    nsOpenConn(nsCString &addr, WebSocketChannel *channel)
-        : mAddress(addr), mChannel(channel) {
-      MOZ_COUNT_CTOR(nsOpenConn);
-    }
-||||||| merged common ancestors
-  class nsOpenConn
-  {
-  public:
-    nsOpenConn(nsCString &addr, WebSocketChannel *channel)
-      : mAddress(addr), mChannel(channel) { MOZ_COUNT_CTOR(nsOpenConn); }
-=======
   class nsOpenConn {
    public:
     nsOpenConn(nsCString& addr, WebSocketChannel* channel)
         : mAddress(addr), mChannel(channel) {
       MOZ_COUNT_CTOR(nsOpenConn);
     }
->>>>>>> upstream-releases
     ~nsOpenConn() { MOZ_COUNT_DTOR(nsOpenConn); }
 
     nsCString mAddress;
     WebSocketChannel* mChannel;
   };
 
-<<<<<<< HEAD
-  void ConnectNext(nsCString &hostName) {
-||||||| merged common ancestors
-  void ConnectNext(nsCString &hostName)
-  {
-=======
   void ConnectNext(nsCString& hostName) {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread(), "not main thread");
 
     int32_t index = IndexOf(hostName);
@@ -597,14 +485,7 @@ class nsWSAdmissionManager {
     }
   }
 
-<<<<<<< HEAD
-  void RemoveFromQueue(WebSocketChannel *aChannel) {
-||||||| merged common ancestors
-  void RemoveFromQueue(WebSocketChannel *aChannel)
-  {
-=======
   void RemoveFromQueue(WebSocketChannel* aChannel) {
->>>>>>> upstream-releases
     LOG(("Websocket: RemoveFromQueue: [this=%p]", aChannel));
     int32_t index = IndexOf(aChannel);
     MOZ_ASSERT(index >= 0, "connection to remove not in queue");
@@ -616,27 +497,13 @@ class nsWSAdmissionManager {
     }
   }
 
-<<<<<<< HEAD
-  int32_t IndexOf(nsCString &aStr) {
-||||||| merged common ancestors
-  int32_t IndexOf(nsCString &aStr)
-  {
-=======
   int32_t IndexOf(nsCString& aStr) {
->>>>>>> upstream-releases
     for (uint32_t i = 0; i < mQueue.Length(); i++)
       if (aStr == (mQueue[i])->mAddress) return i;
     return -1;
   }
 
-<<<<<<< HEAD
-  int32_t IndexOf(WebSocketChannel *aChannel) {
-||||||| merged common ancestors
-  int32_t IndexOf(WebSocketChannel *aChannel)
-  {
-=======
   int32_t IndexOf(WebSocketChannel* aChannel) {
->>>>>>> upstream-releases
     for (uint32_t i = 0; i < mQueue.Length(); i++)
       if (aChannel == (mQueue[i])->mChannel) return i;
     return -1;
@@ -657,28 +524,12 @@ class nsWSAdmissionManager {
 
   FailDelayManager mFailures;
 
-<<<<<<< HEAD
-  static nsWSAdmissionManager *sManager;
-  static StaticMutex sLock;
-||||||| merged common ancestors
-  static nsWSAdmissionManager *sManager;
-  static StaticMutex           sLock;
-=======
   static nsWSAdmissionManager* sManager;
   static StaticMutex sLock;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-nsWSAdmissionManager *nsWSAdmissionManager::sManager;
-StaticMutex nsWSAdmissionManager::sLock;
-||||||| merged common ancestors
-nsWSAdmissionManager *nsWSAdmissionManager::sManager;
-StaticMutex           nsWSAdmissionManager::sLock;
-=======
 nsWSAdmissionManager* nsWSAdmissionManager::sManager;
 StaticMutex nsWSAdmissionManager::sLock;
->>>>>>> upstream-releases
 
 //-----------------------------------------------------------------------------
 // CallOnMessageAvailable
@@ -688,14 +539,7 @@ class CallOnMessageAvailable final : public nsIRunnable {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  CallOnMessageAvailable(WebSocketChannel *aChannel, nsACString &aData,
-||||||| merged common ancestors
-  CallOnMessageAvailable(WebSocketChannel* aChannel,
-                         nsACString& aData,
-=======
   CallOnMessageAvailable(WebSocketChannel* aChannel, nsACString& aData,
->>>>>>> upstream-releases
                          int32_t aLen)
       : mChannel(aChannel),
         mListenerMT(aChannel->mListenerMT),
@@ -743,24 +587,10 @@ class CallOnStop final : public nsIRunnable {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  CallOnStop(WebSocketChannel *aChannel, nsresult aReason)
-      : mChannel(aChannel),
-        mListenerMT(mChannel->mListenerMT),
-        mReason(aReason) {}
-||||||| merged common ancestors
-  CallOnStop(WebSocketChannel* aChannel,
-             nsresult aReason)
-    : mChannel(aChannel),
-      mListenerMT(mChannel->mListenerMT),
-      mReason(aReason)
-  {}
-=======
   CallOnStop(WebSocketChannel* aChannel, nsresult aReason)
       : mChannel(aChannel),
         mListenerMT(mChannel->mListenerMT),
         mReason(aReason) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(mChannel->IsOnTargetThread());
@@ -797,29 +627,12 @@ class CallOnServerClose final : public nsIRunnable {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  CallOnServerClose(WebSocketChannel *aChannel, uint16_t aCode,
-                    nsACString &aReason)
-      : mChannel(aChannel),
-        mListenerMT(mChannel->mListenerMT),
-        mCode(aCode),
-        mReason(aReason) {}
-||||||| merged common ancestors
-  CallOnServerClose(WebSocketChannel* aChannel,
-                    uint16_t aCode,
-                    nsACString& aReason)
-    : mChannel(aChannel),
-      mListenerMT(mChannel->mListenerMT),
-      mCode(aCode),
-      mReason(aReason) {}
-=======
   CallOnServerClose(WebSocketChannel* aChannel, uint16_t aCode,
                     nsACString& aReason)
       : mChannel(aChannel),
         mListenerMT(mChannel->mListenerMT),
         mCode(aCode),
         mReason(aReason) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(mChannel->IsOnTargetThread());
@@ -851,26 +664,6 @@ NS_IMPL_ISUPPORTS(CallOnServerClose, nsIRunnable)
 // CallAcknowledge
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-class CallAcknowledge final : public CancelableRunnable {
- public:
-  CallAcknowledge(WebSocketChannel *aChannel, uint32_t aSize)
-      : CancelableRunnable("net::CallAcknowledge"),
-        mChannel(aChannel),
-        mListenerMT(mChannel->mListenerMT),
-        mSize(aSize) {}
-||||||| merged common ancestors
-class CallAcknowledge final : public CancelableRunnable
-{
-public:
-  CallAcknowledge(WebSocketChannel* aChannel, uint32_t aSize)
-    : CancelableRunnable("net::CallAcknowledge")
-    , mChannel(aChannel)
-    , mListenerMT(mChannel->mListenerMT)
-    , mSize(aSize)
-  {
-  }
-=======
 class CallAcknowledge final : public CancelableRunnable {
  public:
   CallAcknowledge(WebSocketChannel* aChannel, uint32_t aSize)
@@ -878,7 +671,6 @@ class CallAcknowledge final : public CancelableRunnable {
         mChannel(aChannel),
         mListenerMT(mChannel->mListenerMT),
         mSize(aSize) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(mChannel->IsOnTargetThread());
@@ -912,25 +704,6 @@ class CallOnTransportAvailable final : public nsIRunnable {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  CallOnTransportAvailable(WebSocketChannel *aChannel,
-                           nsISocketTransport *aTransport,
-                           nsIAsyncInputStream *aSocketIn,
-                           nsIAsyncOutputStream *aSocketOut)
-      : mChannel(aChannel),
-        mTransport(aTransport),
-        mSocketIn(aSocketIn),
-        mSocketOut(aSocketOut) {}
-||||||| merged common ancestors
-  CallOnTransportAvailable(WebSocketChannel *aChannel,
-                           nsISocketTransport *aTransport,
-                           nsIAsyncInputStream *aSocketIn,
-                           nsIAsyncOutputStream *aSocketOut)
-    : mChannel(aChannel),
-      mTransport(aTransport),
-      mSocketIn(aSocketIn),
-      mSocketOut(aSocketOut) {}
-=======
   CallOnTransportAvailable(WebSocketChannel* aChannel,
                            nsISocketTransport* aTransport,
                            nsIAsyncInputStream* aSocketIn,
@@ -939,7 +712,6 @@ class CallOnTransportAvailable final : public nsIRunnable {
         mTransport(aTransport),
         mSocketIn(aSocketIn),
         mSocketOut(aSocketOut) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     LOG(("WebSocketChannel::CallOnTransportAvailable %p\n", this));
@@ -1025,14 +797,7 @@ class PMCECompression {
 
   bool UsingContextTakeover() { return !mNoContextTakeover; }
 
-<<<<<<< HEAD
-  nsresult Deflate(uint8_t *data, uint32_t dataLen, nsACString &_retval) {
-||||||| merged common ancestors
-  nsresult Deflate(uint8_t *data, uint32_t dataLen, nsACString &_retval)
-  {
-=======
   nsresult Deflate(uint8_t* data, uint32_t dataLen, nsACString& _retval) {
->>>>>>> upstream-releases
     if (mResetDeflater || mNoContextTakeover) {
       if (deflateReset(&mDeflater) != Z_OK) {
         return NS_ERROR_UNEXPECTED;
@@ -1083,14 +848,7 @@ class PMCECompression {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsresult Inflate(uint8_t *data, uint32_t dataLen, nsACString &_retval) {
-||||||| merged common ancestors
-  nsresult Inflate(uint8_t *data, uint32_t dataLen, nsACString &_retval)
-  {
-=======
   nsresult Inflate(uint8_t* data, uint32_t dataLen, nsACString& _retval) {
->>>>>>> upstream-releases
     mMessageDeflated = false;
 
     Bytef trailingData[] = {0x00, 0x00, 0xFF, 0xFF};
@@ -1171,65 +929,24 @@ enum WsMsgType {
   kMsgTypeFin
 };
 
-<<<<<<< HEAD
-static const char *msgNames[] = {"text", "binaryString", "binaryStream",
-                                 "ping", "pong",         "close"};
-||||||| merged common ancestors
-static const char* msgNames[] = {
-  "text",
-  "binaryString",
-  "binaryStream",
-  "ping",
-  "pong",
-  "close"
-};
-=======
 static const char* msgNames[] = {"text", "binaryString", "binaryStream",
                                  "ping", "pong",         "close"};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class OutboundMessage {
- public:
-  OutboundMessage(WsMsgType type, nsCString *str)
-      : mMsgType(type), mDeflated(false), mOrigLength(0) {
-||||||| merged common ancestors
-class OutboundMessage
-{
-public:
-  OutboundMessage(WsMsgType type, nsCString *str)
-    : mMsgType(type), mDeflated(false), mOrigLength(0)
-  {
-=======
 class OutboundMessage {
  public:
   OutboundMessage(WsMsgType type, nsCString* str)
       : mMsgType(type), mDeflated(false), mOrigLength(0) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(OutboundMessage);
     mMsg.pString.mValue = str;
     mMsg.pString.mOrigValue = nullptr;
     mLength = str ? str->Length() : 0;
   }
 
-<<<<<<< HEAD
-  OutboundMessage(nsIInputStream *stream, uint32_t length)
-      : mMsgType(kMsgTypeStream),
-        mLength(length),
-        mDeflated(false),
-        mOrigLength(0) {
-||||||| merged common ancestors
-  OutboundMessage(nsIInputStream *stream, uint32_t length)
-    : mMsgType(kMsgTypeStream), mLength(length), mDeflated(false)
-    , mOrigLength(0)
-  {
-=======
   OutboundMessage(nsIInputStream* stream, uint32_t length)
       : mMsgType(kMsgTypeStream),
         mLength(length),
         mDeflated(false),
         mOrigLength(0) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(OutboundMessage);
     mMsg.pStream = stream;
     mMsg.pStream->AddRef();
@@ -1261,52 +978,27 @@ class OutboundMessage {
   int32_t Length() const { return mLength; }
   int32_t OrigLength() const { return mDeflated ? mOrigLength : mLength; }
 
-  uint8_t *BeginWriting() {
+  uint8_t* BeginWriting() {
     MOZ_ASSERT(mMsgType != kMsgTypeStream,
                "Stream should have been converted to string by now");
-<<<<<<< HEAD
-    return (uint8_t *)(mMsg.pString.mValue ? mMsg.pString.mValue->BeginWriting()
-                                           : nullptr);
-||||||| merged common ancestors
-    return (uint8_t *)(mMsg.pString.mValue ? mMsg.pString.mValue->BeginWriting() : nullptr);
-=======
     return (uint8_t*)(mMsg.pString.mValue ? mMsg.pString.mValue->BeginWriting()
                                           : nullptr);
->>>>>>> upstream-releases
   }
 
-  uint8_t *BeginReading() {
+  uint8_t* BeginReading() {
     MOZ_ASSERT(mMsgType != kMsgTypeStream,
                "Stream should have been converted to string by now");
-<<<<<<< HEAD
-    return (uint8_t *)(mMsg.pString.mValue ? mMsg.pString.mValue->BeginReading()
-                                           : nullptr);
-||||||| merged common ancestors
-    return (uint8_t *)(mMsg.pString.mValue ? mMsg.pString.mValue->BeginReading() : nullptr);
-=======
     return (uint8_t*)(mMsg.pString.mValue ? mMsg.pString.mValue->BeginReading()
                                           : nullptr);
->>>>>>> upstream-releases
   }
 
-  uint8_t *BeginOrigReading() {
+  uint8_t* BeginOrigReading() {
     MOZ_ASSERT(mMsgType != kMsgTypeStream,
                "Stream should have been converted to string by now");
-<<<<<<< HEAD
-    if (!mDeflated) return BeginReading();
-    return (uint8_t *)(mMsg.pString.mOrigValue
-                           ? mMsg.pString.mOrigValue->BeginReading()
-                           : nullptr);
-||||||| merged common ancestors
-    if (!mDeflated)
-      return BeginReading();
-    return (uint8_t *)(mMsg.pString.mOrigValue ? mMsg.pString.mOrigValue->BeginReading() : nullptr);
-=======
     if (!mDeflated) return BeginReading();
     return (uint8_t*)(mMsg.pString.mOrigValue
                           ? mMsg.pString.mOrigValue->BeginReading()
                           : nullptr);
->>>>>>> upstream-releases
   }
 
   nsresult ConvertStreamToString() {
@@ -1329,14 +1021,7 @@ class OutboundMessage {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  bool DeflatePayload(PMCECompression *aCompressor) {
-||||||| merged common ancestors
-  bool DeflatePayload(PMCECompression *aCompressor)
-  {
-=======
   bool DeflatePayload(PMCECompression* aCompressor) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mMsgType != kMsgTypeStream,
                "Stream should have been converted to string by now");
     MOZ_ASSERT(!mDeflated);
@@ -1387,28 +1072,12 @@ class OutboundMessage {
       nsCString* mValue;
       nsCString* mOrigValue;
     } pString;
-<<<<<<< HEAD
-    nsIInputStream *pStream;
-  } mMsg;
-  WsMsgType mMsgType;
-  uint32_t mLength;
-  bool mDeflated;
-  uint32_t mOrigLength;
-||||||| merged common ancestors
-    nsIInputStream *pStream;
-  }                           mMsg;
-  WsMsgType                   mMsgType;
-  uint32_t                    mLength;
-  bool                        mDeflated;
-  uint32_t                    mOrigLength;
-=======
     nsIInputStream* pStream;
   } mMsg;
   WsMsgType mMsgType;
   uint32_t mLength;
   bool mDeflated;
   uint32_t mOrigLength;
->>>>>>> upstream-releases
 };
 
 //-----------------------------------------------------------------------------
@@ -1419,16 +1088,8 @@ class OutboundEnqueuer final : public nsIRunnable {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  OutboundEnqueuer(WebSocketChannel *aChannel, OutboundMessage *aMsg)
-      : mChannel(aChannel), mMessage(aMsg) {}
-||||||| merged common ancestors
-  OutboundEnqueuer(WebSocketChannel *aChannel, OutboundMessage *aMsg)
-    : mChannel(aChannel), mMessage(aMsg) {}
-=======
   OutboundEnqueuer(WebSocketChannel* aChannel, OutboundMessage* aMsg)
       : mChannel(aChannel), mMessage(aMsg) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     mChannel->EnqueueOutgoingMessage(mChannel->mOutgoingMessages, mMessage);
@@ -1438,16 +1099,8 @@ class OutboundEnqueuer final : public nsIRunnable {
  private:
   ~OutboundEnqueuer() = default;
 
-<<<<<<< HEAD
-  RefPtr<WebSocketChannel> mChannel;
-  OutboundMessage *mMessage;
-||||||| merged common ancestors
-  RefPtr<WebSocketChannel>  mChannel;
-  OutboundMessage            *mMessage;
-=======
   RefPtr<WebSocketChannel> mChannel;
   OutboundMessage* mMessage;
->>>>>>> upstream-releases
 };
 NS_IMPL_ISUPPORTS(OutboundEnqueuer, nsIRunnable)
 
@@ -1525,29 +1178,11 @@ WebSocketChannel::~WebSocketChannel() {
   free(mDynamicOutput);
   delete mCurrentOut;
 
-<<<<<<< HEAD
-  while ((mCurrentOut = (OutboundMessage *)mOutgoingPingMessages.PopFront()))
-||||||| merged common ancestors
-  while ((mCurrentOut = (OutboundMessage *) mOutgoingPingMessages.PopFront()))
-=======
   while ((mCurrentOut = (OutboundMessage*)mOutgoingPingMessages.PopFront()))
->>>>>>> upstream-releases
     delete mCurrentOut;
-<<<<<<< HEAD
-  while ((mCurrentOut = (OutboundMessage *)mOutgoingPongMessages.PopFront()))
-||||||| merged common ancestors
-  while ((mCurrentOut = (OutboundMessage *) mOutgoingPongMessages.PopFront()))
-=======
   while ((mCurrentOut = (OutboundMessage*)mOutgoingPongMessages.PopFront()))
->>>>>>> upstream-releases
     delete mCurrentOut;
-<<<<<<< HEAD
-  while ((mCurrentOut = (OutboundMessage *)mOutgoingMessages.PopFront()))
-||||||| merged common ancestors
-  while ((mCurrentOut = (OutboundMessage *) mOutgoingMessages.PopFront()))
-=======
   while ((mCurrentOut = (OutboundMessage*)mOutgoingMessages.PopFront()))
->>>>>>> upstream-releases
     delete mCurrentOut;
 
   NS_ReleaseOnMainThreadSystemGroup("WebSocketChannel::mURI", mURI.forget());
@@ -1565,18 +1200,8 @@ WebSocketChannel::~WebSocketChannel() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::Observe(nsISupports *subject, const char *topic,
-                          const char16_t *data) {
-||||||| merged common ancestors
-WebSocketChannel::Observe(nsISupports *subject,
-                          const char *topic,
-                          const char16_t *data)
-{
-=======
 WebSocketChannel::Observe(nsISupports* subject, const char* topic,
                           const char16_t* data) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::Observe [topic=\"%s\"]\n", topic));
 
   if (strcmp(topic, NS_NETWORK_LINK_TOPIC) == 0) {
@@ -1673,15 +1298,7 @@ bool WebSocketChannel::IsOnTargetThread() {
   return NS_FAILED(rv) ? false : isOnTargetThread;
 }
 
-<<<<<<< HEAD
-void WebSocketChannel::GetEffectiveURL(nsAString &aEffectiveURL) const {
-||||||| merged common ancestors
-void
-WebSocketChannel::GetEffectiveURL(nsAString& aEffectiveURL) const
-{
-=======
 void WebSocketChannel::GetEffectiveURL(nsAString& aEffectiveURL) const {
->>>>>>> upstream-releases
   aEffectiveURL = mEffectiveURL;
 }
 
@@ -1760,27 +1377,11 @@ bool WebSocketChannel::IsPersistentFramePtr() {
 // variable beacuse when transitioning from the stack to the persistent
 // read buffer we want to explicitly include them in the buffer instead
 // of as already existing data.
-<<<<<<< HEAD
-bool WebSocketChannel::UpdateReadBuffer(uint8_t *buffer, uint32_t count,
-                                        uint32_t accumulatedFragments,
-                                        uint32_t *available) {
-  LOG(("WebSocketChannel::UpdateReadBuffer() %p [%p %u]\n", this, buffer,
-       count));
-||||||| merged common ancestors
-bool
-WebSocketChannel::UpdateReadBuffer(uint8_t *buffer, uint32_t count,
-                                   uint32_t accumulatedFragments,
-                                   uint32_t *available)
-{
-  LOG(("WebSocketChannel::UpdateReadBuffer() %p [%p %u]\n",
-         this, buffer, count));
-=======
 bool WebSocketChannel::UpdateReadBuffer(uint8_t* buffer, uint32_t count,
                                         uint32_t accumulatedFragments,
                                         uint32_t* available) {
   LOG(("WebSocketChannel::UpdateReadBuffer() %p [%p %u]\n", this, buffer,
        count));
->>>>>>> upstream-releases
 
   if (!mBuffered) mFramePtr = mBuffer;
 
@@ -1819,15 +1420,7 @@ bool WebSocketChannel::UpdateReadBuffer(uint8_t* buffer, uint32_t count,
   return true;
 }
 
-<<<<<<< HEAD
-nsresult WebSocketChannel::ProcessInput(uint8_t *buffer, uint32_t count) {
-||||||| merged common ancestors
-nsresult
-WebSocketChannel::ProcessInput(uint8_t *buffer, uint32_t count)
-{
-=======
 nsresult WebSocketChannel::ProcessInput(uint8_t* buffer, uint32_t count) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::ProcessInput %p [%d %d]\n", this, count, mBuffered));
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
@@ -2103,16 +1696,8 @@ nsresult WebSocketChannel::ProcessInput(uint8_t* buffer, uint32_t count) {
           uint16_t msglen = static_cast<uint16_t>(payloadLength - 2);
           if (msglen > 0) {
             mServerCloseReason.SetLength(msglen);
-<<<<<<< HEAD
-            memcpy(mServerCloseReason.BeginWriting(), (const char *)payload + 2,
-                   msglen);
-||||||| merged common ancestors
-            memcpy(mServerCloseReason.BeginWriting(),
-                   (const char *)payload + 2, msglen);
-=======
             memcpy(mServerCloseReason.BeginWriting(), (const char*)payload + 2,
                    msglen);
->>>>>>> upstream-releases
 
             // section 8.1 says to replace received non utf-8 sequences
             // (which are non-conformant to send) with u+fffd,
@@ -2267,21 +1852,9 @@ nsresult WebSocketChannel::ProcessInput(uint8_t* buffer, uint32_t count) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void WebSocketChannel::ApplyMask(uint32_t mask, uint8_t *data,
-                                              uint64_t len) {
-  if (!data || len == 0) return;
-||||||| merged common ancestors
-/* static */ void
-WebSocketChannel::ApplyMask(uint32_t mask, uint8_t *data, uint64_t len)
-{
-  if (!data || len == 0)
-    return;
-=======
 /* static */
 void WebSocketChannel::ApplyMask(uint32_t mask, uint8_t* data, uint64_t len) {
   if (!data || len == 0) return;
->>>>>>> upstream-releases
 
   // Optimally we want to apply the mask 32 bits at a time,
   // but the buffer might not be alligned. So we first deal with
@@ -2296,29 +1869,13 @@ void WebSocketChannel::ApplyMask(uint32_t mask, uint8_t* data, uint64_t len) {
 
   // perform mask on full words of data
 
-<<<<<<< HEAD
-  uint32_t *iData = (uint32_t *)data;
-  uint32_t *end = iData + (len / 4);
-||||||| merged common ancestors
-  uint32_t *iData = (uint32_t *) data;
-  uint32_t *end = iData + (len / 4);
-=======
   uint32_t* iData = (uint32_t*)data;
   uint32_t* end = iData + (len / 4);
->>>>>>> upstream-releases
   NetworkEndian::writeUint32(&mask, mask);
   for (; iData < end; iData++) *iData ^= mask;
   mask = NetworkEndian::readUint32(&mask);
-<<<<<<< HEAD
-  data = (uint8_t *)iData;
-  len = len % 4;
-||||||| merged common ancestors
-  data = (uint8_t *)iData;
-  len  = len % 4;
-=======
   data = (uint8_t*)iData;
   len = len % 4;
->>>>>>> upstream-releases
 
   // There maybe up to 3 trailing bytes that need to be dealt with
   // individually
@@ -2331,35 +1888,15 @@ void WebSocketChannel::ApplyMask(uint32_t mask, uint8_t* data, uint64_t len) {
   }
 }
 
-<<<<<<< HEAD
-void WebSocketChannel::GeneratePing() {
-  nsCString *buf = new nsCString();
-||||||| merged common ancestors
-void
-WebSocketChannel::GeneratePing()
-{
-  nsCString *buf = new nsCString();
-=======
 void WebSocketChannel::GeneratePing() {
   nsCString* buf = new nsCString();
->>>>>>> upstream-releases
   buf->AssignLiteral("PING");
   EnqueueOutgoingMessage(mOutgoingPingMessages,
                          new OutboundMessage(kMsgTypePing, buf));
 }
 
-<<<<<<< HEAD
-void WebSocketChannel::GeneratePong(uint8_t *payload, uint32_t len) {
-  nsCString *buf = new nsCString();
-||||||| merged common ancestors
-void
-WebSocketChannel::GeneratePong(uint8_t *payload, uint32_t len)
-{
-  nsCString *buf = new nsCString();
-=======
 void WebSocketChannel::GeneratePong(uint8_t* payload, uint32_t len) {
   nsCString* buf = new nsCString();
->>>>>>> upstream-releases
   buf->SetLength(len);
   if (buf->Length() < len) {
     LOG(("WebSocketChannel::GeneratePong Allocation Failure\n"));
@@ -2372,18 +1909,8 @@ void WebSocketChannel::GeneratePong(uint8_t* payload, uint32_t len) {
                          new OutboundMessage(kMsgTypePong, buf));
 }
 
-<<<<<<< HEAD
-void WebSocketChannel::EnqueueOutgoingMessage(nsDeque &aQueue,
-                                              OutboundMessage *aMsg) {
-||||||| merged common ancestors
-void
-WebSocketChannel::EnqueueOutgoingMessage(nsDeque &aQueue,
-                                         OutboundMessage *aMsg)
-{
-=======
 void WebSocketChannel::EnqueueOutgoingMessage(nsDeque& aQueue,
                                               OutboundMessage* aMsg) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
   LOG(
@@ -2658,15 +2185,7 @@ void WebSocketChannel::EnsureHdrOut(uint32_t size) {
 
   if (mDynamicOutputSize < size) {
     mDynamicOutputSize = size;
-<<<<<<< HEAD
-    mDynamicOutput =
-        (uint8_t *)moz_xrealloc(mDynamicOutput, mDynamicOutputSize);
-||||||| merged common ancestors
-    mDynamicOutput =
-      (uint8_t *) moz_xrealloc(mDynamicOutput, mDynamicOutputSize);
-=======
     mDynamicOutput = (uint8_t*)moz_xrealloc(mDynamicOutput, mDynamicOutputSize);
->>>>>>> upstream-releases
   }
 
   mHdrOut = mDynamicOutput;
@@ -2677,21 +2196,9 @@ namespace {
 class RemoveObserverRunnable : public Runnable {
   RefPtr<WebSocketChannel> mChannel;
 
-<<<<<<< HEAD
- public:
-  explicit RemoveObserverRunnable(WebSocketChannel *aChannel)
-      : Runnable("net::RemoveObserverRunnable"), mChannel(aChannel) {}
-||||||| merged common ancestors
-public:
-  explicit RemoveObserverRunnable(WebSocketChannel* aChannel)
-    : Runnable("net::RemoveObserverRunnable")
-    , mChannel(aChannel)
-  {}
-=======
  public:
   explicit RemoveObserverRunnable(WebSocketChannel* aChannel)
       : Runnable("net::RemoveObserverRunnable"), mChannel(aChannel) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     nsCOMPtr<nsIObserverService> observerService =
@@ -2940,30 +2447,12 @@ namespace {
 enum ExtensionParseMode { eParseServerSide, eParseClientSide };
 }
 
-<<<<<<< HEAD
-static nsresult ParseWebSocketExtension(const nsACString &aExtension,
-                                        ExtensionParseMode aMode,
-                                        bool &aClientNoContextTakeover,
-                                        bool &aServerNoContextTakeover,
-                                        int32_t &aClientMaxWindowBits,
-                                        int32_t &aServerMaxWindowBits) {
-||||||| merged common ancestors
-static nsresult
-ParseWebSocketExtension(const nsACString& aExtension,
-                        ExtensionParseMode aMode,
-                        bool& aClientNoContextTakeover,
-                        bool& aServerNoContextTakeover,
-                        int32_t& aClientMaxWindowBits,
-                        int32_t& aServerMaxWindowBits)
-{
-=======
 static nsresult ParseWebSocketExtension(const nsACString& aExtension,
                                         ExtensionParseMode aMode,
                                         bool& aClientNoContextTakeover,
                                         bool& aServerNoContextTakeover,
                                         int32_t& aClientMaxWindowBits,
                                         int32_t& aServerMaxWindowBits) {
->>>>>>> upstream-releases
   nsCCharSeparatedTokenizer tokens(aExtension, ';');
 
   if (!tokens.hasMoreTokens() ||
@@ -3154,18 +2643,8 @@ nsresult WebSocketChannel::HandleExtensions() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void ProcessServerWebSocketExtensions(const nsACString &aExtensions,
-                                      nsACString &aNegotiatedExtensions) {
-||||||| merged common ancestors
-void
-ProcessServerWebSocketExtensions(const nsACString& aExtensions,
-                                 nsACString& aNegotiatedExtensions)
-{
-=======
 void ProcessServerWebSocketExtensions(const nsACString& aExtensions,
                                       nsACString& aNegotiatedExtensions) {
->>>>>>> upstream-releases
   aNegotiatedExtensions.Truncate();
 
   nsCOMPtr<nsIPrefBranch> prefService =
@@ -3214,17 +2693,8 @@ void ProcessServerWebSocketExtensions(const nsACString& aExtensions,
   }
 }
 
-<<<<<<< HEAD
-nsresult CalculateWebSocketHashedSecret(const nsACString &aKey,
-                                        nsACString &aHash) {
-||||||| merged common ancestors
-nsresult
-CalculateWebSocketHashedSecret(const nsACString& aKey, nsACString& aHash)
-{
-=======
 nsresult CalculateWebSocketHashedSecret(const nsACString& aKey,
                                         nsACString& aHash) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCString key =
       aKey + NS_LITERAL_CSTRING("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
@@ -3290,24 +2760,12 @@ nsresult WebSocketChannel::SetupRequest() {
     MOZ_ASSERT(NS_SUCCEEDED(rv));
   }
 
-<<<<<<< HEAD
-  uint8_t *secKey;
-||||||| merged common ancestors
-  uint8_t      *secKey;
-=======
   uint8_t* secKey;
->>>>>>> upstream-releases
   nsAutoCString secKeyString;
 
   rv = mRandomGenerator->GenerateRandomBytes(16, &secKey);
   NS_ENSURE_SUCCESS(rv, rv);
-<<<<<<< HEAD
-  char *b64 = PL_Base64Encode((const char *)secKey, 16, nullptr);
-||||||| merged common ancestors
-  char* b64 = PL_Base64Encode((const char *)secKey, 16, nullptr);
-=======
   char* b64 = PL_Base64Encode((const char*)secKey, 16, nullptr);
->>>>>>> upstream-releases
   free(secKey);
   if (!b64) return NS_ERROR_OUT_OF_MEMORY;
   secKeyString.Assign(b64);
@@ -3382,15 +2840,6 @@ nsresult WebSocketChannel::ApplyForAdmission() {
 // Called after both OnStartRequest and OnTransportAvailable have
 // executed. This essentially ends the handshake and starts the websockets
 // protocol state machine.
-<<<<<<< HEAD
-nsresult WebSocketChannel::StartWebsocketData() {
-  nsresult rv;
-||||||| merged common ancestors
-nsresult
-WebSocketChannel::StartWebsocketData()
-{
-  nsresult rv;
-=======
 nsresult WebSocketChannel::CallStartWebsocketData() {
   LOG(("WebSocketChannel::CallStartWebsocketData() %p", this));
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
@@ -3399,7 +2848,6 @@ nsresult WebSocketChannel::CallStartWebsocketData() {
     mOpenTimer->Cancel();
     mOpenTimer = nullptr;
   }
->>>>>>> upstream-releases
 
   if (!IsOnTargetThread()) {
     return mTargetThread->Dispatch(
@@ -3490,16 +2938,7 @@ nsresult WebSocketChannel::StartPinging() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void WebSocketChannel::ReportConnectionTelemetry() {
-||||||| merged common ancestors
-
-void
-WebSocketChannel::ReportConnectionTelemetry()
-{
-=======
 void WebSocketChannel::ReportConnectionTelemetry(nsresult aStatusCode) {
->>>>>>> upstream-releases
   // 3 bits are used. high bit is for wss, middle bit for failed,
   // and low bit for proxy..
   // 0 - 7 : ws-ok-plain, ws-ok-proxy, ws-failed-plain, ws-failed-proxy,
@@ -3517,19 +2956,10 @@ void WebSocketChannel::ReportConnectionTelemetry(nsresult aStatusCode) {
       didProxy = true;
   }
 
-<<<<<<< HEAD
-  uint8_t value = (mEncrypted ? (1 << 2) : 0) |
-                  (!mGotUpgradeOK ? (1 << 1) : 0) | (didProxy ? (1 << 0) : 0);
-||||||| merged common ancestors
-  uint8_t value = (mEncrypted ? (1 << 2) : 0) |
-    (!mGotUpgradeOK ? (1 << 1) : 0) |
-    (didProxy ? (1 << 0) : 0);
-=======
   uint8_t value =
       (mEncrypted ? (1 << 2) : 0) |
       (!(mGotUpgradeOK && NS_SUCCEEDED(aStatusCode)) ? (1 << 1) : 0) |
       (didProxy ? (1 << 0) : 0);
->>>>>>> upstream-releases
 
   LOG(("WebSocketChannel::ReportConnectionTelemetry() %p %d", this, value));
   Telemetry::Accumulate(Telemetry::WEBSOCKETS_HANDSHAKE_TYPE, value);
@@ -3538,24 +2968,10 @@ void WebSocketChannel::ReportConnectionTelemetry(nsresult aStatusCode) {
 // nsIDNSListener
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnLookupComplete(nsICancelable *aRequest,
-                                   nsIDNSRecord *aRecord, nsresult aStatus) {
-  LOG(("WebSocketChannel::OnLookupComplete() %p [%p %p %" PRIx32 "]\n", this,
-       aRequest, aRecord, static_cast<uint32_t>(aStatus)));
-||||||| merged common ancestors
-WebSocketChannel::OnLookupComplete(nsICancelable *aRequest,
-                                   nsIDNSRecord *aRecord,
-                                   nsresult aStatus)
-{
-  LOG(("WebSocketChannel::OnLookupComplete() %p [%p %p %" PRIx32 "]\n",
-       this, aRequest, aRecord, static_cast<uint32_t>(aStatus)));
-=======
 WebSocketChannel::OnLookupComplete(nsICancelable* aRequest,
                                    nsIDNSRecord* aRecord, nsresult aStatus) {
   LOG(("WebSocketChannel::OnLookupComplete() %p [%p %p %" PRIx32 "]\n", this,
        aRequest, aRecord, static_cast<uint32_t>(aStatus)));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
 
@@ -3586,38 +3002,17 @@ WebSocketChannel::OnLookupComplete(nsICancelable* aRequest,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnLookupByTypeComplete(nsICancelable *aRequest,
-                                         nsIDNSByTypeRecord *aRes,
-                                         nsresult aStatus) {
-||||||| merged common ancestors
-WebSocketChannel::OnLookupByTypeComplete(nsICancelable      *aRequest,
-                                         nsIDNSByTypeRecord *aRes,
-                                         nsresult            aStatus)
-{
-=======
 WebSocketChannel::OnLookupByTypeComplete(nsICancelable* aRequest,
                                          nsIDNSByTypeRecord* aRes,
                                          nsresult aStatus) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 // nsIProtocolProxyCallback
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnProxyAvailable(nsICancelable *aRequest,
-                                   nsIChannel *aChannel, nsIProxyInfo *pi,
-                                   nsresult status) {
-||||||| merged common ancestors
-WebSocketChannel::OnProxyAvailable(nsICancelable *aRequest, nsIChannel *aChannel,
-                                   nsIProxyInfo *pi, nsresult status)
-{
-=======
 WebSocketChannel::OnProxyAvailable(nsICancelable* aRequest,
                                    nsIChannel* aChannel, nsIProxyInfo* pi,
                                    nsresult status) {
->>>>>>> upstream-releases
   if (mStopped) {
     LOG(("WebSocketChannel::OnProxyAvailable: [%p] Request Already Stopped\n",
          this));
@@ -3652,14 +3047,7 @@ WebSocketChannel::OnProxyAvailable(nsICancelable* aRequest,
 // nsIInterfaceRequestor
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::GetInterface(const nsIID &iid, void **result) {
-||||||| merged common ancestors
-WebSocketChannel::GetInterface(const nsIID & iid, void **result)
-{
-=======
 WebSocketChannel::GetInterface(const nsIID& iid, void** result) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::GetInterface() %p\n", this));
 
   if (iid.Equals(NS_GET_IID(nsIChannelEventSink)))
@@ -3674,19 +3062,8 @@ WebSocketChannel::GetInterface(const nsIID& iid, void** result) {
 
 NS_IMETHODIMP
 WebSocketChannel::AsyncOnChannelRedirect(
-<<<<<<< HEAD
-    nsIChannel *oldChannel, nsIChannel *newChannel, uint32_t flags,
-    nsIAsyncVerifyRedirectCallback *callback) {
-||||||| merged common ancestors
-                    nsIChannel *oldChannel,
-                    nsIChannel *newChannel,
-                    uint32_t flags,
-                    nsIAsyncVerifyRedirectCallback *callback)
-{
-=======
     nsIChannel* oldChannel, nsIChannel* newChannel, uint32_t flags,
     nsIAsyncVerifyRedirectCallback* callback) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::AsyncOnChannelRedirect() %p\n", this));
 
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
@@ -3789,14 +3166,7 @@ WebSocketChannel::AsyncOnChannelRedirect(
 // nsITimerCallback
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::Notify(nsITimer *timer) {
-||||||| merged common ancestors
-WebSocketChannel::Notify(nsITimer *timer)
-{
-=======
 WebSocketChannel::Notify(nsITimer* timer) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::Notify() %p [%p]\n", this, timer));
 
   if (timer == mCloseTimer) {
@@ -3810,13 +3180,6 @@ WebSocketChannel::Notify(nsITimer* timer) {
     LOG(("WebSocketChannel:: Expecting Server Close - Timed Out\n"));
     AbortSession(NS_ERROR_NET_TIMEOUT);
   } else if (timer == mOpenTimer) {
-<<<<<<< HEAD
-    MOZ_ASSERT(!mGotUpgradeOK, "Open Timer after open complete");
-||||||| merged common ancestors
-    MOZ_ASSERT(!mGotUpgradeOK,
-               "Open Timer after open complete");
-=======
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread(), "not main thread");
 
     mOpenTimer = nullptr;
@@ -3869,14 +3232,7 @@ WebSocketChannel::Notify(nsITimer* timer) {
 // nsINamed
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::GetName(nsACString &aName) {
-||||||| merged common ancestors
-WebSocketChannel::GetName(nsACString& aName)
-{
-=======
 WebSocketChannel::GetName(nsACString& aName) {
->>>>>>> upstream-releases
   aName.AssignLiteral("WebSocketChannel");
   return NS_OK;
 }
@@ -3884,14 +3240,7 @@ WebSocketChannel::GetName(nsACString& aName) {
 // nsIWebSocketChannel
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::GetSecurityInfo(nsISupports **aSecurityInfo) {
-||||||| merged common ancestors
-WebSocketChannel::GetSecurityInfo(nsISupports **aSecurityInfo)
-{
-=======
 WebSocketChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::GetSecurityInfo() %p\n", this));
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
 
@@ -3903,26 +3252,10 @@ WebSocketChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::AsyncOpen(nsIURI *aURI, const nsACString &aOrigin,
-||||||| merged common ancestors
-WebSocketChannel::AsyncOpen(nsIURI *aURI,
-                            const nsACString &aOrigin,
-=======
 WebSocketChannel::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
->>>>>>> upstream-releases
                             uint64_t aInnerWindowID,
-<<<<<<< HEAD
-                            nsIWebSocketListener *aListener,
-                            nsISupports *aContext) {
-||||||| merged common ancestors
-                            nsIWebSocketListener *aListener,
-                            nsISupports *aContext)
-{
-=======
                             nsIWebSocketListener* aListener,
                             nsISupports* aContext) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::AsyncOpen() %p\n", this));
 
   if (!NS_IsMainThread()) {
@@ -4055,27 +3388,6 @@ WebSocketChannel::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
 
   // Ideally we'd call newChannelFromURIWithLoadInfo here, but that doesn't
   // allow setting proxy uri/flags
-<<<<<<< HEAD
-  rv = ioService->NewChannelFromURIWithProxyFlags2(
-      localURI, mURI,
-      nsIProtocolProxyService::RESOLVE_PREFER_HTTPS_PROXY |
-          nsIProtocolProxyService::RESOLVE_ALWAYS_TUNNEL,
-      mLoadInfo->LoadingNode(), mLoadInfo->LoadingPrincipal(),
-      mLoadInfo->TriggeringPrincipal(), mLoadInfo->GetSecurityFlags(),
-      mLoadInfo->InternalContentPolicyType(), getter_AddRefs(localChannel));
-||||||| merged common ancestors
-  rv = ioService->NewChannelFromURIWithProxyFlags2(
-              localURI,
-              mURI,
-              nsIProtocolProxyService::RESOLVE_PREFER_HTTPS_PROXY |
-              nsIProtocolProxyService::RESOLVE_ALWAYS_TUNNEL,
-              mLoadInfo->LoadingNode(),
-              mLoadInfo->LoadingPrincipal(),
-              mLoadInfo->TriggeringPrincipal(),
-              mLoadInfo->GetSecurityFlags(),
-              mLoadInfo->InternalContentPolicyType(),
-              getter_AddRefs(localChannel));
-=======
   rv = ioService->NewChannelFromURIWithProxyFlags(
       localURI, mURI,
       nsIProtocolProxyService::RESOLVE_PREFER_HTTPS_PROXY |
@@ -4083,7 +3395,6 @@ WebSocketChannel::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
       mLoadInfo->LoadingNode(), mLoadInfo->LoadingPrincipal(),
       mLoadInfo->TriggeringPrincipal(), mLoadInfo->GetSecurityFlags(),
       mLoadInfo->InternalContentPolicyType(), getter_AddRefs(localChannel));
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Please note that we still call SetLoadInfo on the channel because
@@ -4095,24 +3406,10 @@ WebSocketChannel::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
   // nsIChannelEventSink in this object in order to deal with redirects
   localChannel->SetNotificationCallbacks(this);
 
-<<<<<<< HEAD
-  class MOZ_STACK_CLASS CleanUpOnFailure {
-   public:
-    explicit CleanUpOnFailure(WebSocketChannel *aWebSocketChannel)
-        : mWebSocketChannel(aWebSocketChannel) {}
-||||||| merged common ancestors
-  class MOZ_STACK_CLASS CleanUpOnFailure
-  {
-  public:
-    explicit CleanUpOnFailure(WebSocketChannel* aWebSocketChannel)
-      : mWebSocketChannel(aWebSocketChannel)
-    {}
-=======
   class MOZ_STACK_CLASS CleanUpOnFailure {
    public:
     explicit CleanUpOnFailure(WebSocketChannel* aWebSocketChannel)
         : mWebSocketChannel(aWebSocketChannel) {}
->>>>>>> upstream-releases
 
     ~CleanUpOnFailure() {
       if (!mWebSocketChannel->mWasOpened) {
@@ -4168,14 +3465,7 @@ WebSocketChannel::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::Close(uint16_t code, const nsACString &reason) {
-||||||| merged common ancestors
-WebSocketChannel::Close(uint16_t code, const nsACString & reason)
-{
-=======
 WebSocketChannel::Close(uint16_t code, const nsACString& reason) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::Close() %p\n", this));
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
 
@@ -4221,60 +3511,28 @@ WebSocketChannel::Close(uint16_t code, const nsACString& reason) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::SendMsg(const nsACString &aMsg) {
-||||||| merged common ancestors
-WebSocketChannel::SendMsg(const nsACString &aMsg)
-{
-=======
 WebSocketChannel::SendMsg(const nsACString& aMsg) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::SendMsg() %p\n", this));
 
   return SendMsgCommon(&aMsg, false, aMsg.Length());
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::SendBinaryMsg(const nsACString &aMsg) {
-||||||| merged common ancestors
-WebSocketChannel::SendBinaryMsg(const nsACString &aMsg)
-{
-=======
 WebSocketChannel::SendBinaryMsg(const nsACString& aMsg) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::SendBinaryMsg() %p len=%d\n", this, aMsg.Length()));
   return SendMsgCommon(&aMsg, true, aMsg.Length());
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::SendBinaryStream(nsIInputStream *aStream, uint32_t aLength) {
-||||||| merged common ancestors
-WebSocketChannel::SendBinaryStream(nsIInputStream *aStream, uint32_t aLength)
-{
-=======
 WebSocketChannel::SendBinaryStream(nsIInputStream* aStream, uint32_t aLength) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::SendBinaryStream() %p\n", this));
 
   return SendMsgCommon(nullptr, true, aLength, aStream);
 }
 
-<<<<<<< HEAD
-nsresult WebSocketChannel::SendMsgCommon(const nsACString *aMsg, bool aIsBinary,
-                                         uint32_t aLength,
-                                         nsIInputStream *aStream) {
-||||||| merged common ancestors
-nsresult
-WebSocketChannel::SendMsgCommon(const nsACString *aMsg, bool aIsBinary,
-                                uint32_t aLength, nsIInputStream *aStream)
-{
-=======
 nsresult WebSocketChannel::SendMsgCommon(const nsACString* aMsg, bool aIsBinary,
                                          uint32_t aLength,
                                          nsIInputStream* aStream) {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsOnTargetThread(), "not target thread");
 
   if (!mDataStarted) {
@@ -4316,20 +3574,9 @@ nsresult WebSocketChannel::SendMsgCommon(const nsACString* aMsg, bool aIsBinary,
 // nsIHttpUpgradeListener
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnTransportAvailable(nsISocketTransport *aTransport,
-                                       nsIAsyncInputStream *aSocketIn,
-                                       nsIAsyncOutputStream *aSocketOut) {
-||||||| merged common ancestors
-WebSocketChannel::OnTransportAvailable(nsISocketTransport *aTransport,
-                                       nsIAsyncInputStream *aSocketIn,
-                                       nsIAsyncOutputStream *aSocketOut)
-{
-=======
 WebSocketChannel::OnTransportAvailable(nsISocketTransport* aTransport,
                                        nsIAsyncInputStream* aSocketIn,
                                        nsIAsyncOutputStream* aSocketOut) {
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return NS_DispatchToMainThread(
         new CallOnTransportAvailable(this, aTransport, aSocketIn, aSocketOut));
@@ -4416,15 +3663,7 @@ WebSocketChannel::OnTransportAvailable(nsISocketTransport* aTransport,
 // nsIRequestObserver (from nsIStreamListener)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnStartRequest(nsIRequest *aRequest, nsISupports *aContext) {
-||||||| merged common ancestors
-WebSocketChannel::OnStartRequest(nsIRequest *aRequest,
-                                 nsISupports *aContext)
-{
-=======
 WebSocketChannel::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::OnStartRequest(): %p [%p %p] recvdhttpupgrade=%d\n",
        this, aRequest, mHttpChannel.get(), mRecvdHttpUpgradeTransport));
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
@@ -4465,17 +3704,6 @@ WebSocketChannel::OnStartRequest(nsIRequest* aRequest) {
   }
 
   LOG(("WebSocketChannel::OnStartRequest: HTTP status %d\n", status));
-<<<<<<< HEAD
-  nsCOMPtr<nsIHttpChannelInternal> internalChannel =
-      do_QueryInterface(mHttpChannel);
-  uint32_t versionMajor, versionMinor;
-  rv = internalChannel->GetResponseVersion(&versionMajor, &versionMinor);
-  if (NS_FAILED(rv) || (versionMajor != 1 && versionMajor != 2) ||
-      (versionMajor == 1 && status != 101) ||
-      (versionMajor == 2 && status != 200)) {
-||||||| merged common ancestors
-  if (status != 101) {
-=======
   nsCOMPtr<nsIHttpChannelInternal> internalChannel =
       do_QueryInterface(mHttpChannel);
   uint32_t versionMajor, versionMinor;
@@ -4484,7 +3712,6 @@ WebSocketChannel::OnStartRequest(nsIRequest* aRequest) {
       !((versionMajor == 1 && versionMinor != 0) || versionMajor == 2) ||
       (versionMajor == 1 && status != 101) ||
       (versionMajor == 2 && status != 200)) {
->>>>>>> upstream-releases
     AbortSession(NS_ERROR_CONNECTION_REFUSED);
     return NS_ERROR_CONNECTION_REFUSED;
   }
@@ -4532,57 +3759,7 @@ WebSocketChannel::OnStartRequest(nsIRequest* aRequest) {
         }
       }
     }
-<<<<<<< HEAD
 
-    if (NS_FAILED(rv)) {
-      LOG(
-          ("WebSocketChannel::OnStartRequest: "
-           "HTTP response header 'Connection: Upgrade' not found\n"));
-      AbortSession(NS_ERROR_ILLEGAL_VALUE);
-      return rv;
-    }
-||||||| merged common ancestors
-  }
-
-  if (NS_FAILED(rv)) {
-    LOG(("WebSocketChannel::OnStartRequest: "
-         "HTTP response header 'Connection: Upgrade' not found\n"));
-    AbortSession(NS_ERROR_ILLEGAL_VALUE);
-    return rv;
-  }
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    nsAutoCString respAccept;
-    rv = mHttpChannel->GetResponseHeader(
-        NS_LITERAL_CSTRING("Sec-WebSocket-Accept"), respAccept);
-
-    if (NS_FAILED(rv) || respAccept.IsEmpty() ||
-        !respAccept.Equals(mHashedSecret)) {
-      LOG(
-          ("WebSocketChannel::OnStartRequest: "
-           "HTTP response header Sec-WebSocket-Accept check failed\n"));
-      LOG(("WebSocketChannel::OnStartRequest: Expected %s received %s\n",
-           mHashedSecret.get(), respAccept.get()));
-      AbortSession(NS_ERROR_ILLEGAL_VALUE);
-      return NS_ERROR_ILLEGAL_VALUE;
-    }
-||||||| merged common ancestors
-  nsAutoCString respAccept;
-  rv = mHttpChannel->GetResponseHeader(
-                       NS_LITERAL_CSTRING("Sec-WebSocket-Accept"),
-                       respAccept);
-
-  if (NS_FAILED(rv) ||
-    respAccept.IsEmpty() || !respAccept.Equals(mHashedSecret)) {
-    LOG(("WebSocketChannel::OnStartRequest: "
-         "HTTP response header Sec-WebSocket-Accept check failed\n"));
-    LOG(("WebSocketChannel::OnStartRequest: Expected %s received %s\n",
-         mHashedSecret.get(), respAccept.get()));
-    AbortSession(NS_ERROR_ILLEGAL_VALUE);
-    return NS_ERROR_ILLEGAL_VALUE;
-=======
     if (NS_FAILED(rv)) {
       LOG(
           ("WebSocketChannel::OnStartRequest: "
@@ -4605,7 +3782,6 @@ WebSocketChannel::OnStartRequest(nsIRequest* aRequest) {
       AbortSession(NS_ERROR_ILLEGAL_VALUE);
       return NS_ERROR_ILLEGAL_VALUE;
     }
->>>>>>> upstream-releases
   }
 
   // If we sent a sub protocol header, verify the response matches.
@@ -4672,23 +3848,9 @@ WebSocketChannel::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext,
-                                nsresult aStatusCode) {
-  LOG(("WebSocketChannel::OnStopRequest() %p [%p %p %" PRIx32 "]\n", this,
-       aRequest, mHttpChannel.get(), static_cast<uint32_t>(aStatusCode)));
-||||||| merged common ancestors
-WebSocketChannel::OnStopRequest(nsIRequest *aRequest,
-                                nsISupports *aContext,
-                                nsresult aStatusCode)
-{
-  LOG(("WebSocketChannel::OnStopRequest() %p [%p %p %" PRIx32 "]\n",
-       this, aRequest, mHttpChannel.get(), static_cast<uint32_t>(aStatusCode)));
-=======
 WebSocketChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
   LOG(("WebSocketChannel::OnStopRequest() %p [%p %p %" PRIx32 "]\n", this,
        aRequest, mHttpChannel.get(), static_cast<uint32_t>(aStatusCode)));
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "not main thread");
 
   // OnTransportAvailable won't be called if the request is stopped with
@@ -4713,14 +3875,7 @@ WebSocketChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
 // nsIInputStreamCallback
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnInputStreamReady(nsIAsyncInputStream *aStream) {
-||||||| merged common ancestors
-WebSocketChannel::OnInputStreamReady(nsIAsyncInputStream *aStream)
-{
-=======
 WebSocketChannel::OnInputStreamReady(nsIAsyncInputStream* aStream) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::OnInputStreamReady() %p\n", this));
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
@@ -4769,14 +3924,7 @@ WebSocketChannel::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 // nsIOutputStreamCallback
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnOutputStreamReady(nsIAsyncOutputStream *aStream) {
-||||||| merged common ancestors
-WebSocketChannel::OnOutputStreamReady(nsIAsyncOutputStream *aStream)
-{
-=======
 WebSocketChannel::OnOutputStreamReady(nsIAsyncOutputStream* aStream) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::OnOutputStreamReady() %p\n", this));
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
   nsresult rv;
@@ -4796,13 +3944,7 @@ WebSocketChannel::OnOutputStreamReady(nsIAsyncOutputStream* aStream) {
            "Try to send %u of hdr/copybreak\n",
            toSend));
     } else {
-<<<<<<< HEAD
-      sndBuf = (char *)mCurrentOut->BeginReading() + mCurrentOutSent;
-||||||| merged common ancestors
-      sndBuf = (char *) mCurrentOut->BeginReading() + mCurrentOutSent;
-=======
       sndBuf = (char*)mCurrentOut->BeginReading() + mCurrentOutSent;
->>>>>>> upstream-releases
       toSend = mCurrentOut->Length() - mCurrentOutSent;
       if (toSend > 0) {
         LOG(
@@ -4862,22 +4004,9 @@ WebSocketChannel::OnOutputStreamReady(nsIAsyncOutputStream* aStream) {
 // nsIStreamListener
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebSocketChannel::OnDataAvailable(nsIRequest *aRequest, nsISupports *aContext,
-                                  nsIInputStream *aInputStream,
-                                  uint64_t aOffset, uint32_t aCount) {
-||||||| merged common ancestors
-WebSocketChannel::OnDataAvailable(nsIRequest *aRequest,
-                                    nsISupports *aContext,
-                                    nsIInputStream *aInputStream,
-                                    uint64_t aOffset,
-                                    uint32_t aCount)
-{
-=======
 WebSocketChannel::OnDataAvailable(nsIRequest* aRequest,
                                   nsIInputStream* aInputStream,
                                   uint64_t aOffset, uint32_t aCount) {
->>>>>>> upstream-releases
   LOG(("WebSocketChannel::OnDataAvailable() %p [%p %p %p %" PRIu64 " %u]\n",
        this, aRequest, mHttpChannel.get(), aInputStream, aOffset, aCount));
 

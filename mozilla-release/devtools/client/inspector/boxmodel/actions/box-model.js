@@ -42,13 +42,5 @@ module.exports = {
       type: UPDATE_OFFSET_PARENT,
       offsetParent,
     };
-<<<<<<< HEAD
   },
-
-||||||| merged common ancestors
-  }
-
-=======
-  },
->>>>>>> upstream-releases
 };

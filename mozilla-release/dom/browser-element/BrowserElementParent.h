@@ -19,25 +19,9 @@ class nsIURI;
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class TabParent;
-}  // namespace dom
-||||||| merged common ancestors
-class TabParent;
-} // namespace dom
-
-namespace layers {
-struct TextureFactoryIdentifier;
-} // namespace layers
-
-namespace layout {
-class PRenderFrameParent;
-} // namespace layout
-=======
 class BrowsingContext;
 class BrowserParent;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * BrowserElementParent implements a portion of the parent-process side of
@@ -103,29 +87,11 @@ class BrowserElementParent {
    *         frame to a document and whether it called preventDefault to prevent
    *         the platform from handling the open request.
    */
-<<<<<<< HEAD
-  static OpenWindowResult OpenWindowOOP(dom::TabParent* aOpenerTabParent,
-                                        dom::TabParent* aPopupTabParent,
-                                        const nsAString& aURL,
-                                        const nsAString& aName,
-                                        const nsAString& aFeatures);
-||||||| merged common ancestors
-  static OpenWindowResult
-  OpenWindowOOP(dom::TabParent* aOpenerTabParent,
-                dom::TabParent* aPopupTabParent,
-                layout::PRenderFrameParent* aRenderFrame,
-                const nsAString& aURL,
-                const nsAString& aName,
-                const nsAString& aFeatures,
-                layers::TextureFactoryIdentifier* aTextureFactoryIdentifier,
-                layers::LayersId* aLayersId);
-=======
   static OpenWindowResult OpenWindowOOP(
       dom::BrowserParent* aOpenerBrowserParent,
       dom::BrowserParent* aPopupBrowserParent, const nsAString& aURL,
       const nsAString& aName, bool aForceNoReferrer,
       const nsAString& aFeatures);
->>>>>>> upstream-releases
 
   /**
    * Handle a window.open call from an in-process <iframe mozbrowser>.
@@ -138,47 +104,16 @@ class BrowserElementParent {
    *         frame to a document or whether they called preventDefault to
    * prevent the platform from handling the open request
    */
-<<<<<<< HEAD
-  static OpenWindowResult OpenWindowInProcess(
-      nsPIDOMWindowOuter* aOpenerWindow, nsIURI* aURI, const nsAString& aName,
-      const nsACString& aFeatures, bool aForceNoOpener,
-      mozIDOMWindowProxy** aReturnWindow);
-||||||| merged common ancestors
-  static OpenWindowResult
-  OpenWindowInProcess(nsPIDOMWindowOuter* aOpenerWindow,
-                      nsIURI* aURI,
-                      const nsAString& aName,
-                      const nsACString& aFeatures,
-                      bool aForceNoOpener,
-                      mozIDOMWindowProxy** aReturnWindow);
-=======
   static OpenWindowResult OpenWindowInProcess(
       mozilla::dom::BrowsingContext* aOpenerWindow, nsIURI* aURI,
       const nsAString& aName, const nsACString& aFeatures, bool aForceNoOpener,
       mozIDOMWindowProxy** aReturnWindow);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  static OpenWindowResult DispatchOpenWindowEvent(
-      dom::Element* aOpenerFrameElement, dom::Element* aPopupFrameElement,
-      const nsAString& aURL, const nsAString& aName,
-      const nsAString& aFeatures);
-||||||| merged common ancestors
-private:
-  static OpenWindowResult
-  DispatchOpenWindowEvent(dom::Element* aOpenerFrameElement,
-                          dom::Element* aPopupFrameElement,
-                          const nsAString& aURL,
-                          const nsAString& aName,
-                          const nsAString& aFeatures);
-=======
  private:
   static OpenWindowResult DispatchOpenWindowEvent(
       dom::Element* aOpenerFrameElement, dom::Element* aPopupFrameElement,
       const nsAString& aURL, const nsAString& aName, bool aForceNoReferrer,
       const nsAString& aFeatures);
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

@@ -14,40 +14,17 @@
 #include "mozilla/StaticMutex.h"
 #include "mozilla/StaticPtr.h"
 
-<<<<<<< HEAD
-class nsMacUtilsImpl final : public nsIMacUtils {
- public:
-||||||| merged common ancestors
-class nsMacUtilsImpl final : public nsIMacUtils
-{
-public:
-=======
 using mozilla::Atomic;
 using mozilla::StaticAutoPtr;
 using mozilla::StaticMutex;
 
 class nsMacUtilsImpl final : public nsIMacUtils {
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_DECL_NSIMACUTILS
 
   nsMacUtilsImpl() {}
 
-<<<<<<< HEAD
-#if defined(MOZ_CONTENT_SANDBOX)
-  static bool GetAppPath(nsCString &aAppPath);
-
-#ifdef DEBUG
-  static nsAutoCString GetDirectoryPath(const char *aPath);
-#endif /* DEBUG */
-#endif /* MOZ_CONTENT_SANDBOX */
-||||||| merged common ancestors
-private:
-  ~nsMacUtilsImpl()
-  {
-  }
-=======
   // Return the repo directory and the repo object directory respectively.
   // These should only be used on Mac developer builds to determine the path
   // to the repo or object directory.
@@ -69,12 +46,8 @@ private:
 
  private:
   ~nsMacUtilsImpl() {}
->>>>>>> upstream-releases
 
- private:
-  ~nsMacUtilsImpl() {}
-
-  nsresult GetArchString(nsAString &aArchString);
+  nsresult GetArchString(nsAString& aArchString);
 
   // A string containing a "-" delimited list of architectures
   // in our binary.

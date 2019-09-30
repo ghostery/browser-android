@@ -42,21 +42,8 @@ const GrDrawingManager* GrSurfaceContext::drawingManager() const {
 }
 
 #ifdef SK_DEBUG
-<<<<<<< HEAD
-        , fSingleOwner(singleOwner)
-#endif
-{
-||||||| merged common ancestors
-        , fSingleOwner(singleOwner)
-#endif
-{
-    // We never should have a sRGB pixel config with a non-SRGB gamma color space.
-    SkASSERT(!GrPixelConfigIsSRGB(config) ||
-             (fColorSpaceInfo.colorSpace() && fColorSpaceInfo.colorSpace()->gammaCloseToSRGB()));
-=======
 GrSingleOwner* GrSurfaceContext::singleOwner() {
     return fContext->priv().singleOwner();
->>>>>>> upstream-releases
 }
 #endif
 
@@ -116,23 +103,12 @@ bool GrSurfaceContext::copy(GrSurfaceProxy* src, const SkIRect& srcRect, const S
     ASSERT_SINGLE_OWNER
     RETURN_FALSE_IF_ABANDONED
     SkDEBUGCODE(this->validate();)
-<<<<<<< HEAD
-    GR_AUDIT_TRAIL_AUTO_FRAME(fAuditTrail, "GrSurfaceContext::copy");
-
-    if (!fContext->contextPriv().caps()->canCopySurface(this->asSurfaceProxy(), src, srcRect,
-                                                        dstPoint)) {
-        return false;
-    }
-||||||| merged common ancestors
-    GR_AUDIT_TRAIL_AUTO_FRAME(fAuditTrail, "GrSurfaceContext::onCopy");
-=======
     GR_AUDIT_TRAIL_AUTO_FRAME(this->auditTrail(), "GrSurfaceContext::copy");
 
     if (!fContext->priv().caps()->canCopySurface(this->asSurfaceProxy(), src, srcRect,
                                                         dstPoint)) {
         return false;
     }
->>>>>>> upstream-releases
 
     return this->getOpList()->copySurface(fContext, this->asSurfaceProxy(),
                                           src, srcRect, dstPoint);

@@ -31,14 +31,6 @@ class WebRenderFallbackData;
 class WebRenderParentCommand;
 class WebRenderUserData;
 
-<<<<<<< HEAD
-class WebRenderCommandBuilder {
-  typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>>
-      WebRenderUserDataRefTable;
-||||||| merged common ancestors
-class WebRenderCommandBuilder {
-  typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>> WebRenderUserDataRefTable;
-=======
 class WebRenderScrollDataCollection {
  public:
   WebRenderScrollDataCollection() : mSeenRenderRoot{} {}
@@ -87,27 +79,10 @@ class WebRenderScrollDataCollection {
 class WebRenderCommandBuilder final {
   typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>>
       WebRenderUserDataRefTable;
->>>>>>> upstream-releases
   typedef nsTHashtable<nsRefPtrHashKey<WebRenderCanvasData>> CanvasDataSet;
 
  public:
   explicit WebRenderCommandBuilder(WebRenderLayerManager* aManager)
-<<<<<<< HEAD
-      : mManager(aManager),
-        mLastAsr(nullptr),
-        mBuilderDumpIndex(0),
-        mDumpIndent(0),
-        mDoGrouping(false),
-        mContainsSVGGroup(false) {}
-||||||| merged common ancestors
-  : mManager(aManager)
-  , mLastAsr(nullptr)
-  , mBuilderDumpIndex(0)
-  , mDumpIndent(0)
-  , mDoGrouping(false)
-  , mContainsSVGGroup(false)
-  {}
-=======
       : mManager(aManager),
         mRootStackingContexts(nullptr),
         mCurrentClipManager(nullptr),
@@ -116,7 +91,6 @@ class WebRenderCommandBuilder final {
         mDumpIndent(0),
         mDoGrouping(false),
         mContainsSVGGroup(false) {}
->>>>>>> upstream-releases
 
   void Destroy();
 
@@ -132,13 +106,7 @@ class WebRenderCommandBuilder final {
       WrFiltersHolder&& aFilters);
 
   void PushOverrideForASR(const ActiveScrolledRoot* aASR,
-<<<<<<< HEAD
-                          const wr::WrClipId& aClipId);
-||||||| merged common ancestors
-                          const Maybe<wr::WrClipId>& aClipId);
-=======
                           const wr::WrSpatialId& aSpatialId);
->>>>>>> upstream-releases
   void PopOverrideForASR(const ActiveScrolledRoot* aASR);
 
   Maybe<wr::ImageKey> CreateImageKey(
@@ -158,52 +126,22 @@ class WebRenderCommandBuilder final {
                  const StackingContextHelper& aSc,
                  const LayoutDeviceRect& aRect, const LayoutDeviceRect& aClip);
 
-<<<<<<< HEAD
-  Maybe<wr::WrImageMask> BuildWrMaskImage(
-      nsDisplayItem* aItem, wr::DisplayListBuilder& aBuilder,
-      wr::IpcResourceUpdateQueue& aResources, const StackingContextHelper& aSc,
-      nsDisplayListBuilder* aDisplayListBuilder,
-      const LayoutDeviceRect& aBounds);
-||||||| merged common ancestors
-  Maybe<wr::WrImageMask> BuildWrMaskImage(nsDisplayItem* aItem,
-                                          wr::DisplayListBuilder& aBuilder,
-                                          wr::IpcResourceUpdateQueue& aResources,
-                                          const StackingContextHelper& aSc,
-                                          nsDisplayListBuilder* aDisplayListBuilder,
-                                          const LayoutDeviceRect& aBounds);
-=======
   Maybe<wr::ImageMask> BuildWrMaskImage(
       nsDisplayMasksAndClipPaths* aMaskItem, wr::DisplayListBuilder& aBuilder,
       wr::IpcResourceUpdateQueue& aResources, const StackingContextHelper& aSc,
       nsDisplayListBuilder* aDisplayListBuilder,
       const LayoutDeviceRect& aBounds);
->>>>>>> upstream-releases
 
   bool PushItemAsImage(nsDisplayItem* aItem, wr::DisplayListBuilder& aBuilder,
                        wr::IpcResourceUpdateQueue& aResources,
                        const StackingContextHelper& aSc,
                        nsDisplayListBuilder* aDisplayListBuilder);
 
-<<<<<<< HEAD
-  void CreateWebRenderCommandsFromDisplayList(
-      nsDisplayList* aDisplayList, nsDisplayItem* aOuterItem,
-      nsDisplayListBuilder* aDisplayListBuilder,
-      const StackingContextHelper& aSc, wr::DisplayListBuilder& aBuilder,
-      wr::IpcResourceUpdateQueue& aResources);
-||||||| merged common ancestors
-  void CreateWebRenderCommandsFromDisplayList(nsDisplayList* aDisplayList,
-                                              nsDisplayItem* aOuterItem,
-                                              nsDisplayListBuilder* aDisplayListBuilder,
-                                              const StackingContextHelper& aSc,
-                                              wr::DisplayListBuilder& aBuilder,
-                                              wr::IpcResourceUpdateQueue& aResources);
-=======
   void CreateWebRenderCommandsFromDisplayList(
       nsDisplayList* aDisplayList, nsDisplayItem* aWrappingItem,
       nsDisplayListBuilder* aDisplayListBuilder,
       const StackingContextHelper& aSc, wr::DisplayListBuilder& aBuilder,
       wr::IpcResourceUpdateQueue& aResources);
->>>>>>> upstream-releases
 
   // aWrappingItem has to be non-null.
   void DoGroupingForDisplayList(nsDisplayList* aDisplayList,
@@ -235,21 +173,10 @@ class WebRenderCommandBuilder final {
   // data in the layer. But in layers free mode, we don't have layer which
   // means we need some other place to cached the data between transaction.
   // We store the data in frame's property.
-<<<<<<< HEAD
-  template <class T>
-  already_AddRefed<T> CreateOrRecycleWebRenderUserData(
-      nsDisplayItem* aItem, bool* aOutIsRecycled = nullptr) {
-||||||| merged common ancestors
-  template<class T> already_AddRefed<T>
-  CreateOrRecycleWebRenderUserData(nsDisplayItem* aItem,
-                                   bool* aOutIsRecycled = nullptr)
-  {
-=======
   template <class T>
   already_AddRefed<T> CreateOrRecycleWebRenderUserData(
       nsDisplayItem* aItem, wr::RenderRoot aRenderRoot,
       bool* aOutIsRecycled = nullptr) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aItem);
     nsIFrame* frame = aItem->Frame();
     if (aOutIsRecycled) {
@@ -267,22 +194,7 @@ class WebRenderCommandBuilder final {
     RefPtr<WebRenderUserData>& data = userDataTable->GetOrInsert(
         WebRenderUserDataKey(aItem->GetPerFrameKey(), T::Type()));
     if (!data) {
-<<<<<<< HEAD
-      // To recreate a new user data, we should remove the data from the table
-      // first.
-      if (data) {
-        data->RemoveFromTable();
-      }
-      data = new T(mManager, aItem);
-||||||| merged common ancestors
-      // To recreate a new user data, we should remove the data from the table first.
-      if (data) {
-        data->RemoveFromTable();
-      }
-      data = new T(mManager, aItem);
-=======
       data = new T(GetRenderRootStateManager(aRenderRoot), aItem);
->>>>>>> upstream-releases
       mWebRenderUserDatas.PutEntry(data);
       if (aOutIsRecycled) {
         *aOutIsRecycled = false;
@@ -305,13 +217,6 @@ class WebRenderCommandBuilder final {
 
   WebRenderLayerManager* mManager;
 
-<<<<<<< HEAD
- private:
-  ClipManager mClipManager;
-||||||| merged common ancestors
-private:
-  ClipManager mClipManager;
-=======
   class MOZ_RAII ScrollDataBoundaryWrapper {
    public:
     ScrollDataBoundaryWrapper(WebRenderCommandBuilder& aBuilder,
@@ -331,7 +236,6 @@ private:
   wr::RenderRootArray<Maybe<StackingContextHelper>>* mRootStackingContexts;
   wr::RenderRootArray<ClipManager> mClipManagers;
   ClipManager* mCurrentClipManager;
->>>>>>> upstream-releases
 
   // We use this as a temporary data structure while building the mScrollData
   // inside a layers-free transaction.
@@ -350,19 +254,8 @@ private:
 
   wr::usize mBuilderDumpIndex;
   wr::usize mDumpIndent;
-<<<<<<< HEAD
-
-  // When zooming is enabled, this stores the animation property that we use
-  // to manipulate the zoom from APZ.
-  Maybe<wr::WrAnimationProperty> mZoomProp;
 
  public:
-||||||| merged common ancestors
-public:
-=======
-
- public:
->>>>>>> upstream-releases
   // Whether consecutive inactive display items should be grouped into one
   // blob image.
   bool mDoGrouping;

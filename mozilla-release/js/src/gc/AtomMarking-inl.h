@@ -56,34 +56,6 @@ MOZ_ALWAYS_INLINE bool AtomMarkingRuntime::inlinedMarkAtomInternal(
     if (!cx->zone()->markedAtoms().setBitFallible(bit)) {
       return false;
     }
-<<<<<<< HEAD
-  } else {
-    cx->zone()->markedAtoms().setBit(bit);
-  }
-
-  if (!cx->helperThread()) {
-    // Trigger a read barrier on the atom, in case there is an incremental
-    // GC in progress. This is necessary if the atom is being marked
-    // because a reference to it was obtained from another zone which is
-    // not being collected by the incremental GC.
-    T::readBarrier(thing);
-  }
-
-  // Children of the thing also need to be marked in the context's zone.
-  // We don't have a JSTracer for this so manually handle the cases in which
-  // an atom can reference other atoms.
-  markChildren(cx, thing);
-
-  return true;
-||||||| merged common ancestors
-
-    // Children of the thing also need to be marked in the context's zone.
-    // We don't have a JSTracer for this so manually handle the cases in which
-    // an atom can reference other atoms.
-    markChildren(cx, thing);
-
-    return true;
-=======
   } else {
     cx->zone()->markedAtoms().setBit(bit);
   }
@@ -102,7 +74,6 @@ MOZ_ALWAYS_INLINE bool AtomMarkingRuntime::inlinedMarkAtomInternal(
   markChildren(cx, thing);
 
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename T>

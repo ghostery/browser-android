@@ -23,7 +23,7 @@
 #endif
 
 #ifdef XP_UNIX
-#include <sys/stat.h>
+#  include <sys/stat.h>
 #endif
 
 namespace mozilla {
@@ -52,18 +52,6 @@ Result<Ok, nsresult> MemMapSnapshot::Finalize(AutoMemMap& aMem) {
 
 #if defined(XP_WIN)
 
-<<<<<<< HEAD
-Result<Ok, nsresult> MemMapSnapshot::Create(size_t aSize) {
-  HANDLE handle = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr,
-                                    PAGE_READWRITE, 0, DWORD(aSize), nullptr);
-||||||| merged common ancestors
-Result<Ok, nsresult>
-MemMapSnapshot::Create(size_t aSize)
-{
-  HANDLE handle = CreateFileMapping(
-      INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE,
-      0, DWORD(aSize), nullptr);
-=======
 Result<Ok, nsresult> MemMapSnapshot::Create(size_t aSize) {
   SECURITY_ATTRIBUTES sa;
   SECURITY_DESCRIPTOR sd;
@@ -95,7 +83,6 @@ Result<Ok, nsresult> MemMapSnapshot::Create(size_t aSize) {
   HANDLE handle =
       CreateFileMapping(INVALID_HANDLE_VALUE, &sa, PAGE_READWRITE, 0,
                         DWORD(aSize), name.IsEmpty() ? nullptr : name.get());
->>>>>>> upstream-releases
 
   if (!handle) {
     return Err(NS_ERROR_FAILURE);
@@ -157,7 +144,7 @@ Result<Ok, nsresult> MemMapSnapshot::Freeze(AutoMemMap& aMem) {
 }
 
 #else
-#error "Unsupported build configuration"
+#  error "Unsupported build configuration"
 #endif
 
 }  // namespace ipc

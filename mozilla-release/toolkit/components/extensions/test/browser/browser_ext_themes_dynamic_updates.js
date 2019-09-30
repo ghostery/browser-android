@@ -78,30 +78,12 @@ add_task(async function test_dynamic_theme_updates() {
   await extension.startup();
 
   extension.sendMessage("update-theme", {
-<<<<<<< HEAD
-    "images": {
-      "theme_frame": "image1.png",
-||||||| merged common ancestors
-    "images": {
-      "headerURL": "image1.png",
-=======
     images: {
       theme_frame: "image1.png",
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-    "colors": {
-      "frame": ACCENT_COLOR_1,
-      "tab_background_text": TEXT_COLOR_1,
-||||||| merged common ancestors
-    "colors": {
-      "accentcolor": ACCENT_COLOR_1,
-      "textcolor": TEXT_COLOR_1,
-=======
     colors: {
       frame: ACCENT_COLOR_1,
       tab_background_text: TEXT_COLOR_1,
->>>>>>> upstream-releases
     },
   });
 
@@ -112,30 +94,12 @@ add_task(async function test_dynamic_theme_updates() {
   // Check with the LWT aliases (to update on Firefox 69, because the
   // LWT aliases are going to be removed).
   extension.sendMessage("update-theme", {
-<<<<<<< HEAD
-    "images": {
-      "theme_frame": "image2.png",
-||||||| merged common ancestors
-    "images": {
-      "headerURL": "image2.png",
-=======
     images: {
       theme_frame: "image2.png",
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-    "colors": {
-      "frame": ACCENT_COLOR_2,
-      "tab_background_text": TEXT_COLOR_2,
-||||||| merged common ancestors
-    "colors": {
-      "accentcolor": ACCENT_COLOR_2,
-      "textcolor": TEXT_COLOR_2,
-=======
     colors: {
       frame: ACCENT_COLOR_2,
       tab_background_text: TEXT_COLOR_2,
->>>>>>> upstream-releases
     },
   });
 
@@ -180,30 +144,12 @@ add_task(async function test_dynamic_theme_updates_with_data_url() {
   await extension.startup();
 
   extension.sendMessage("update-theme", {
-<<<<<<< HEAD
-    "images": {
-      "theme_frame": BACKGROUND_1,
-||||||| merged common ancestors
-    "images": {
-      "headerURL": BACKGROUND_1,
-=======
     images: {
       theme_frame: BACKGROUND_1,
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-    "colors": {
-      "frame": ACCENT_COLOR_1,
-      "tab_background_text": TEXT_COLOR_1,
-||||||| merged common ancestors
-    "colors": {
-      "accentcolor": ACCENT_COLOR_1,
-      "textcolor": TEXT_COLOR_1,
-=======
     colors: {
       frame: ACCENT_COLOR_1,
       tab_background_text: TEXT_COLOR_1,
->>>>>>> upstream-releases
     },
   });
 
@@ -212,30 +158,12 @@ add_task(async function test_dynamic_theme_updates_with_data_url() {
   validateTheme(BACKGROUND_1, ACCENT_COLOR_1, TEXT_COLOR_1, true);
 
   extension.sendMessage("update-theme", {
-<<<<<<< HEAD
-    "images": {
-      "theme_frame": BACKGROUND_2,
-||||||| merged common ancestors
-    "images": {
-      "headerURL": BACKGROUND_2,
-=======
     images: {
       theme_frame: BACKGROUND_2,
->>>>>>> upstream-releases
     },
-<<<<<<< HEAD
-    "colors": {
-      "frame": ACCENT_COLOR_2,
-      "tab_background_text": TEXT_COLOR_2,
-||||||| merged common ancestors
-    "colors": {
-      "accentcolor": ACCENT_COLOR_2,
-      "textcolor": TEXT_COLOR_2,
-=======
     colors: {
       frame: ACCENT_COLOR_2,
       tab_background_text: TEXT_COLOR_2,
->>>>>>> upstream-releases
     },
   });
 

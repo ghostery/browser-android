@@ -74,21 +74,12 @@ class ToolboxTabs extends Component {
     this._resizeTimerId = null;
     this.resizeHandler = this.resizeHandler.bind(this);
 
-<<<<<<< HEAD
-    const { toolbox, onTabsOrderUpdated, panelDefinitions } = props;
-    this._tabsOrderManager =
-      new ToolboxTabsOrderManager(toolbox, onTabsOrderUpdated, panelDefinitions);
-||||||| merged common ancestors
-    this._tabsOrderManager =
-      new ToolboxTabsOrderManager(props.onTabsOrderUpdated, props.panelDefinitions);
-=======
     const { toolbox, onTabsOrderUpdated, panelDefinitions } = props;
     this._tabsOrderManager = new ToolboxTabsOrderManager(
       toolbox,
       onTabsOrderUpdated,
       panelDefinitions
     );
->>>>>>> upstream-releases
   }
 
   componentDidMount() {

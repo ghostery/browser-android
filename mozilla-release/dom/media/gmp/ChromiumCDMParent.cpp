@@ -30,20 +30,9 @@ using namespace eme;
 
 ChromiumCDMParent::ChromiumCDMParent(GMPContentParent* aContentParent,
                                      uint32_t aPluginId)
-<<<<<<< HEAD
-    : mPluginId(aPluginId),
-      mContentParent(aContentParent),
-      mVideoShmemLimit(StaticPrefs::MediaEmeChromiumApiVideoShmems()) {
-||||||| merged common ancestors
-  : mPluginId(aPluginId)
-  , mContentParent(aContentParent)
-  , mVideoShmemLimit(StaticPrefs::MediaEmeChromiumApiVideoShmems())
-{
-=======
     : mPluginId(aPluginId),
       mContentParent(aContentParent),
       mVideoShmemLimit(StaticPrefs::media_eme_chromium_api_video_shmems()) {
->>>>>>> upstream-releases
   GMP_LOG(
       "ChromiumCDMParent::ChromiumCDMParent(this=%p, contentParent=%p, id=%u)",
       this, aContentParent, aPluginId);
@@ -77,98 +66,6 @@ RefPtr<ChromiumCDMParent::InitPromise> ChromiumCDMParent::Init(
       mInitPromise.Ensure(__func__);
   RefPtr<ChromiumCDMParent> self = this;
   SendInit(aAllowDistinctiveIdentifier, aAllowPersistentState)
-<<<<<<< HEAD
-      ->Then(
-          AbstractThread::GetCurrent(), __func__,
-          [self](bool aSuccess) {
-            if (!aSuccess) {
-              GMP_LOG(
-                  "ChromiumCDMParent::Init() failed with callback from "
-                  "child indicating CDM failed init");
-              self->mInitPromise.RejectIfExists(
-                  MediaResult(NS_ERROR_FAILURE,
-                              "ChromiumCDMParent::Init() failed with callback "
-                              "from child indicating CDM failed init"),
-                  __func__);
-              return;
-            }
-            GMP_LOG(
-                "ChromiumCDMParent::Init() succeeded with callback from child");
-            self->mInitPromise.ResolveIfExists(true /* unused */, __func__);
-          },
-          [self](ResponseRejectReason aReason) {
-            RefPtr<gmp::GeckoMediaPluginService> service =
-                gmp::GeckoMediaPluginService::GetGeckoMediaPluginService();
-            bool xpcomWillShutdown =
-                service && service->XPCOMWillShutdownReceived();
-            GMP_LOG(
-                "ChromiumCDMParent::Init(this=%p) failed "
-                "shutdown=%s cdmCrash=%s actorDestroyed=%s "
-                "browserShutdown=%s promiseRejectReason=%d",
-                self.get(), self->mIsShutdown ? "true" : "false",
-                self->mAbnormalShutdown ? "true" : "false",
-                self->mActorDestroyed ? "true" : "false",
-                xpcomWillShutdown ? "true" : "false",
-                static_cast<int>(aReason));
-            self->mInitPromise.RejectIfExists(
-                MediaResult(
-                    NS_ERROR_FAILURE,
-                    nsPrintfCString("ChromiumCDMParent::Init() failed "
-                                    "shutdown=%s cdmCrash=%s actorDestroyed=%s "
-                                    "browserShutdown=%s promiseRejectReason=%d",
-                                    self->mIsShutdown ? "true" : "false",
-                                    self->mAbnormalShutdown ? "true" : "false",
-                                    self->mActorDestroyed ? "true" : "false",
-                                    xpcomWillShutdown ? "true" : "false",
-                                    static_cast<int>(aReason))),
-                __func__);
-          });
-||||||| merged common ancestors
-    ->Then(AbstractThread::GetCurrent(),
-           __func__,
-           [self](bool aSuccess) {
-             if (!aSuccess) {
-               GMP_LOG("ChromiumCDMParent::Init() failed with callback from "
-                       "child indicating CDM failed init");
-               self->mInitPromise.RejectIfExists(
-                 MediaResult(NS_ERROR_FAILURE,
-                             "ChromiumCDMParent::Init() failed with callback "
-                             "from child indicating CDM failed init"),
-                 __func__);
-               return;
-             }
-             GMP_LOG(
-               "ChromiumCDMParent::Init() succeeded with callback from child");
-             self->mInitPromise.ResolveIfExists(true /* unused */, __func__);
-           },
-           [self](ResponseRejectReason aReason) {
-             RefPtr<gmp::GeckoMediaPluginService> service =
-               gmp::GeckoMediaPluginService::GetGeckoMediaPluginService();
-             bool xpcomWillShutdown =
-               service && service->XPCOMWillShutdownReceived();
-             GMP_LOG("ChromiumCDMParent::Init(this=%p) failed "
-                     "shutdown=%s cdmCrash=%s actorDestroyed=%s "
-                     "browserShutdown=%s promiseRejectReason=%d",
-                     self.get(),
-                     self->mIsShutdown ? "true" : "false",
-                     self->mAbnormalShutdown ? "true" : "false",
-                     self->mActorDestroyed ? "true" : "false",
-                     xpcomWillShutdown ? "true" : "false",
-                     static_cast<int>(aReason));
-             self->mInitPromise.RejectIfExists(
-               MediaResult(
-                 NS_ERROR_FAILURE,
-                 nsPrintfCString("ChromiumCDMParent::Init() failed "
-                                 "shutdown=%s cdmCrash=%s actorDestroyed=%s "
-                                 "browserShutdown=%s promiseRejectReason=%d",
-                                 self->mIsShutdown ? "true" : "false",
-                                 self->mAbnormalShutdown ? "true" : "false",
-                                 self->mActorDestroyed ? "true" : "false",
-                                 xpcomWillShutdown ? "true" : "false",
-                                 static_cast<int>(aReason))),
-               __func__);
-           });
-=======
       ->Then(
           AbstractThread::GetCurrent(), __func__,
           [self, aCDMCallback](bool aSuccess) {
@@ -215,7 +112,6 @@ RefPtr<ChromiumCDMParent::InitPromise> ChromiumCDMParent::Init(
                                     static_cast<int>(aReason))),
                 __func__);
           });
->>>>>>> upstream-releases
   return promise;
 }
 
@@ -368,25 +264,6 @@ bool ChromiumCDMParent::InitCDMInputBuffer(gmp::CDMInputBuffer& aBuffer,
       break;
   }
 
-<<<<<<< HEAD
-  aBuffer = gmp::CDMInputBuffer(
-      shmem, crypto.mKeyId, crypto.mIV, aSample->mTime.ToMicroseconds(),
-      aSample->mDuration.ToMicroseconds(), crypto.mPlainSizes,
-      crypto.mEncryptedSizes,
-      crypto.mValid ? GMPEncryptionScheme::kGMPEncryptionCenc
-                    : GMPEncryptionScheme::kGMPEncryptionNone);
-||||||| merged common ancestors
-  aBuffer = gmp::CDMInputBuffer(shmem,
-                                crypto.mKeyId,
-                                crypto.mIV,
-                                aSample->mTime.ToMicroseconds(),
-                                aSample->mDuration.ToMicroseconds(),
-                                crypto.mPlainSizes,
-                                crypto.mEncryptedSizes,
-                                crypto.mValid
-                                  ? GMPEncryptionScheme::kGMPEncryptionCenc
-                                  : GMPEncryptionScheme::kGMPEncryptionNone);
-=======
   const nsTArray<uint8_t>& iv =
       encryptionScheme != GMPEncryptionScheme::kGMPEncryptionCbcs
           ? crypto.mIV
@@ -396,21 +273,7 @@ bool ChromiumCDMParent::InitCDMInputBuffer(gmp::CDMInputBuffer& aBuffer,
       aSample->mDuration.ToMicroseconds(), crypto.mPlainSizes,
       crypto.mEncryptedSizes, crypto.mCryptByteBlock, crypto.mSkipByteBlock,
       encryptionScheme);
->>>>>>> upstream-releases
   MOZ_ASSERT(
-<<<<<<< HEAD
-      aBuffer.mEncryptionScheme() == GMPEncryptionScheme::kGMPEncryptionNone ||
-          aBuffer.mEncryptionScheme() ==
-              GMPEncryptionScheme::kGMPEncryptionCenc,
-      "aBuffer should use either no encryption or cenc, other kinds are not "
-      "yet "
-      "supported");
-||||||| merged common ancestors
-    aBuffer.mEncryptionScheme() == GMPEncryptionScheme::kGMPEncryptionNone ||
-      aBuffer.mEncryptionScheme() == GMPEncryptionScheme::kGMPEncryptionCenc,
-    "aBuffer should use either no encryption or cenc, other kinds are not yet "
-    "supported");
-=======
       aBuffer.mEncryptionScheme() == GMPEncryptionScheme::kGMPEncryptionNone ||
           aBuffer.mEncryptionScheme() ==
               GMPEncryptionScheme::kGMPEncryptionCenc ||
@@ -418,7 +281,6 @@ bool ChromiumCDMParent::InitCDMInputBuffer(gmp::CDMInputBuffer& aBuffer,
               GMPEncryptionScheme::kGMPEncryptionCbcs,
       "aBuffer should use no encryption, cenc, or cbcs, other kinds are not "
       "yet supported");
->>>>>>> upstream-releases
   return true;
 }
 

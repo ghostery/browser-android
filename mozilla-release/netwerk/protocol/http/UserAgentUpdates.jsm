@@ -37,28 +37,10 @@ ChromeUtils.defineModuleGetter(
 );
 
 XPCOMUtils.defineLazyServiceGetter(
-<<<<<<< HEAD
-  this, "gUpdateTimer", "@mozilla.org/updates/timer-manager;1", "nsIUpdateTimerManager");
-
-XPCOMUtils.defineLazyGetter(this, "gDecoder",
-  function() { return new TextDecoder(); }
-||||||| merged common ancestors
-  this, "gUpdateTimer", "@mozilla.org/updates/timer-manager;1", "nsIUpdateTimerManager");
-
-XPCOMUtils.defineLazyGetter(this, "gApp",
-  function() {
-    return Cc["@mozilla.org/xre/app-info;1"].getService(Ci.nsIXULAppInfo)
-                                            .QueryInterface(Ci.nsIXULRuntime);
-  });
-
-XPCOMUtils.defineLazyGetter(this, "gDecoder",
-  function() { return new TextDecoder(); }
-=======
   this,
   "gUpdateTimer",
   "@mozilla.org/updates/timer-manager;1",
   "nsIUpdateTimerManager"
->>>>>>> upstream-releases
 );
 
 XPCOMUtils.defineLazyGetter(this, "gDecoder", function() {
@@ -229,27 +211,6 @@ var UserAgentUpdates = {
 
   _getParameters() {
     return {
-<<<<<<< HEAD
-      "%DATE%": function() { return Date.now().toString(); },
-      "%PRODUCT%": function() { return Services.appinfo.name; },
-      "%APP_ID%": function() { return Services.appinfo.ID; },
-      "%APP_VERSION%": function() { return Services.appinfo.version; },
-      "%BUILD_ID%": function() { return Services.appinfo.appBuildID; },
-      "%OS%": function() { return Services.appinfo.OS; },
-      "%CHANNEL%": function() { return UpdateUtils.UpdateChannel; },
-      "%DISTRIBUTION%": function() { return this._getPref(PREF_APP_DISTRIBUTION, ""); },
-      "%DISTRIBUTION_VERSION%": function() { return this._getPref(PREF_APP_DISTRIBUTION_VERSION, ""); },
-||||||| merged common ancestors
-      "%DATE%": function() { return Date.now().toString(); },
-      "%PRODUCT%": function() { return gApp.name; },
-      "%APP_ID%": function() { return gApp.ID; },
-      "%APP_VERSION%": function() { return gApp.version; },
-      "%BUILD_ID%": function() { return gApp.appBuildID; },
-      "%OS%": function() { return gApp.OS; },
-      "%CHANNEL%": function() { return UpdateUtils.UpdateChannel; },
-      "%DISTRIBUTION%": function() { return this._getPref(PREF_APP_DISTRIBUTION, ""); },
-      "%DISTRIBUTION_VERSION%": function() { return this._getPref(PREF_APP_DISTRIBUTION_VERSION, ""); },
-=======
       "%DATE%": function() {
         return Date.now().toString();
       },
@@ -277,7 +238,6 @@ var UserAgentUpdates = {
       "%DISTRIBUTION_VERSION%": function() {
         return this._getPref(PREF_APP_DISTRIBUTION_VERSION, "");
       },
->>>>>>> upstream-releases
     };
   },
 
@@ -328,15 +288,9 @@ var UserAgentUpdates = {
 
   _scheduleUpdate(retry) {
     // only schedule updates in the main process
-<<<<<<< HEAD
-    if (Services.appinfo.processType !== Ci.nsIXULRuntime.PROCESS_TYPE_DEFAULT) {
-||||||| merged common ancestors
-    if (gApp.processType !== Ci.nsIXULRuntime.PROCESS_TYPE_DEFAULT) {
-=======
     if (
       Services.appinfo.processType !== Ci.nsIXULRuntime.PROCESS_TYPE_DEFAULT
     ) {
->>>>>>> upstream-releases
       return;
     }
     let interval = this._getPref(PREF_UPDATES_INTERVAL, 604800 /* 1 week */);

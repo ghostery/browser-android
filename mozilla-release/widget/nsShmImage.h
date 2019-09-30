@@ -8,7 +8,7 @@
 #define __mozilla_widget_nsShmImage_h__
 
 #if defined(MOZ_X11)
-#define MOZ_HAVE_SHMIMAGE
+#  define MOZ_HAVE_SHMIMAGE
 #endif
 
 #ifdef MOZ_HAVE_SHMIMAGE

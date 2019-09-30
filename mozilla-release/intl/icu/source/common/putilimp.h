@@ -204,21 +204,10 @@ typedef size_t uintptr_t;
 
 /**
  * \def U_HAVE_STD_ATOMICS
-<<<<<<< HEAD
- * Defines whether to use the standard C++11 <atomic> functions
- * If false, ICU will fall back to compiler or platform specific alternatives.
- * Note: support for these fall back options for atomics will be removed in a future version
- *       of ICU, and the use of C++ 11 atomics will be required.
-||||||| merged common ancestors
- * Defines whether the standard C++11 <atomic> is available.
- * ICU will use this when available,
- * otherwise will fall back to compiler or platform specific alternatives.
-=======
  * Defines whether to use the C++11 std::atomic functions.
  * If false, ICU will fall back to compiler or platform specific alternatives.
  * Note: support for these fall back options for atomics will be removed in a future version
  *       of ICU, and the use of C++ 11 atomics will be required.
->>>>>>> upstream-releases
  * @internal
  */
 #ifdef U_HAVE_STD_ATOMICS

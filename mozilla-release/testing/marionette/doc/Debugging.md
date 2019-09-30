@@ -44,30 +44,6 @@ To automatically open the JS debugger for `Mn` tests:
 
 	% ./mach marionette-test --jsdebugger
 
-<<<<<<< HEAD
-It will prompt you when to start to allow you time to set your
-breakpoints.  It will also prompt you between each test.
-
-You can also use the `debugger;` statement anywhere in chrome code
-to add a breakpoint.  In this example, a breakpoint will be added
-whenever the `WebDriver:GetPageSource` command is called:
-
-	GeckoDriver.prototype.getPageSource = async function() {
-	  debugger;
-	  const win = assert.open(this.getCurrentWindow());
-	  await this._handleUserPrompts();
-	  …
-	}
-
-To not be prompted at the start of the test run or between tests,
-you can set the `marionette.debugging.clicktostart` preference to
-false this way:
-
-	% ./mach marionette test --pref 'marionette.debugging.clicktostart:false' --jsdebugger
-||||||| merged common ancestors
-It will prompt you when to start the test run to allow you time to
-set your breakpoints.  It will also prompt you between each test.
-=======
 It will prompt you when to start to allow you time to set your
 breakpoints.  It will also prompt you between each test.
 
@@ -87,7 +63,6 @@ you can set the `marionette.debugging.clicktostart` preference to
 false this way:
 
 	% ./mach marionette-test --pref 'marionette.debugging.clicktostart:false' --jsdebugger
->>>>>>> upstream-releases
 
 For reference, below is the list of preferences that enables the
 chrome debugger for Marionette.  These are all set implicitly when

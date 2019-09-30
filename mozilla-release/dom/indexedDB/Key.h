@@ -47,39 +47,9 @@ class Key {
   static const uint8_t kMaxArrayCollapse = uint8_t(3);
   static const uint8_t kMaxRecursionDepth = uint8_t(64);
 
-<<<<<<< HEAD
   Key() { Unset(); }
 
   explicit Key(const nsACString& aBuffer) : mBuffer(aBuffer) {}
-||||||| merged common ancestors
-  Key()
-  {
-    Unset();
-  }
-
-  explicit
-  Key(const nsACString& aBuffer)
-    : mBuffer(aBuffer)
-  { }
-=======
-  Key() { Unset(); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  Key& operator=(const nsAString& aString) {
-    SetFromString(aString);
-    return *this;
-  }
-||||||| merged common ancestors
-  Key&
-  operator=(const nsAString& aString)
-  {
-    SetFromString(aString);
-    return *this;
-  }
-=======
-  explicit Key(const nsACString& aBuffer) : mBuffer(aBuffer) {}
->>>>>>> upstream-releases
 
   Key& operator=(int64_t aInt) {
     SetFromInteger(aInt);
@@ -159,24 +129,8 @@ class Key {
     Assert(pos >= BufferEnd());
   }
 
-<<<<<<< HEAD
-  void SetFromString(const nsAString& aString) {
-    mBuffer.Truncate();
-    EncodeString(aString, 0);
-    TrimBuffer();
-  }
-||||||| merged common ancestors
-  void
-  SetFromString(const nsAString& aString)
-  {
-    mBuffer.Truncate();
-    EncodeString(aString, 0);
-    TrimBuffer();
-  }
-=======
   IDBResult<void, IDBSpecialValue::Invalid> SetFromString(
       const nsAString& aString, ErrorResult& aRv);
->>>>>>> upstream-releases
 
   void SetFromInteger(int64_t aInt) {
     mBuffer.Truncate();
@@ -184,45 +138,23 @@ class Key {
     TrimBuffer();
   }
 
-<<<<<<< HEAD
-  nsresult SetFromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal);
-||||||| merged common ancestors
-  nsresult
-  SetFromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal);
-=======
   // This function implements the standard algorithm "convert a value to a key".
   // A key return value is indicated by returning `true` whereas `false` means
   // either invalid (if `aRv.Failed()` is `false`) or an exception (otherwise).
   IDBResult<void, IDBSpecialValue::Invalid> SetFromJSVal(
       JSContext* aCx, JS::Handle<JS::Value> aVal, ErrorResult& aRv);
->>>>>>> upstream-releases
 
   nsresult ToJSVal(JSContext* aCx, JS::MutableHandle<JS::Value> aVal) const;
 
   nsresult ToJSVal(JSContext* aCx, JS::Heap<JS::Value>& aVal) const;
 
-<<<<<<< HEAD
-  nsresult AppendItem(JSContext* aCx, bool aFirstOfArray,
-                      JS::Handle<JS::Value> aVal);
-||||||| merged common ancestors
-  nsresult
-  AppendItem(JSContext* aCx, bool aFirstOfArray, JS::Handle<JS::Value> aVal);
-=======
   // See SetFromJSVal() for the meaning of values returned by this function.
   IDBResult<void, IDBSpecialValue::Invalid> AppendItem(
       JSContext* aCx, bool aFirstOfArray, JS::Handle<JS::Value> aVal,
       ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult ToLocaleBasedKey(Key& aTarget, const nsCString& aLocale) const;
-||||||| merged common ancestors
-  nsresult
-  ToLocaleBasedKey(Key& aTarget, const nsCString& aLocale) const;
-=======
   IDBResult<void, IDBSpecialValue::Invalid> ToLocaleBasedKey(
       Key& aTarget, const nsCString& aLocale, ErrorResult& aRv) const;
->>>>>>> upstream-releases
 
   void FinishArray() { TrimBuffer(); }
 
@@ -249,15 +181,6 @@ class Key {
     return 0;
   }
 
-<<<<<<< HEAD
- private:
-  const unsigned char* BufferStart() const {
-||||||| merged common ancestors
-private:
-  const unsigned char*
-  BufferStart() const
-  {
-=======
   // Implementation of the array branch of step 3 of
   // https://w3c.github.io/IndexedDB/#convert-value-to-key
   template <typename ArrayConversionPolicy>
@@ -330,7 +253,6 @@ private:
   class MOZ_STACK_CLASS ArrayValueEncoder;
 
   const unsigned char* BufferStart() const {
->>>>>>> upstream-releases
     return reinterpret_cast<const unsigned char*>(mBuffer.BeginReading());
   }
 
@@ -350,140 +272,38 @@ private:
   }
 
   // Encoding functions. These append the encoded value to the end of mBuffer
-<<<<<<< HEAD
-  nsresult EncodeJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
-                       uint8_t aTypeOffset);
-||||||| merged common ancestors
-  nsresult
-  EncodeJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal, uint8_t aTypeOffset);
-=======
   IDBResult<void, IDBSpecialValue::Invalid> EncodeJSVal(
       JSContext* aCx, JS::Handle<JS::Value> aVal, uint8_t aTypeOffset,
       ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult EncodeString(const nsAString& aString, uint8_t aTypeOffset);
-||||||| merged common ancestors
-  nsresult
-  EncodeString(const nsAString& aString, uint8_t aTypeOffset);
-=======
   IDBResult<void, IDBSpecialValue::Invalid> EncodeString(
       const nsAString& aString, uint8_t aTypeOffset, ErrorResult& aRv);
->>>>>>> upstream-releases
 
   template <typename T>
-<<<<<<< HEAD
-  nsresult EncodeString(const T* aStart, const T* aEnd, uint8_t aTypeOffset);
-||||||| merged common ancestors
-  nsresult
-  EncodeString(const T* aStart, const T* aEnd, uint8_t aTypeOffset);
-=======
   IDBResult<void, IDBSpecialValue::Invalid> EncodeString(const T* aStart,
                                                          const T* aEnd,
                                                          uint8_t aTypeOffset,
                                                          ErrorResult& aRv);
->>>>>>> upstream-releases
 
   template <typename T>
-<<<<<<< HEAD
-  nsresult EncodeAsString(const T* aStart, const T* aEnd, uint8_t aType);
-||||||| merged common ancestors
-  nsresult
-  EncodeAsString(const T* aStart, const T* aEnd, uint8_t aType);
-=======
   IDBResult<void, IDBSpecialValue::Invalid> EncodeAsString(const T* aStart,
                                                            const T* aEnd,
                                                            uint8_t aType,
                                                            ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult EncodeLocaleString(const nsDependentString& aString,
-                              uint8_t aTypeOffset, const nsCString& aLocale);
-||||||| merged common ancestors
-  nsresult
-  EncodeLocaleString(const nsDependentString& aString, uint8_t aTypeOffset,
-                     const nsCString& aLocale);
-=======
   IDBResult<void, IDBSpecialValue::Invalid> EncodeLocaleString(
       const nsDependentString& aString, uint8_t aTypeOffset,
       const nsCString& aLocale, ErrorResult& aRv);
->>>>>>> upstream-releases
 
   void EncodeNumber(double aFloat, uint8_t aType);
 
-<<<<<<< HEAD
-  nsresult EncodeBinary(JSObject* aObject, bool aIsViewObject,
-                        uint8_t aTypeOffset);
-||||||| merged common ancestors
-  nsresult
-  EncodeBinary(JSObject* aObject, bool aIsViewObject, uint8_t aTypeOffset);
-=======
   IDBResult<void, IDBSpecialValue::Invalid> EncodeBinary(JSObject* aObject,
                                                          bool aIsViewObject,
                                                          uint8_t aTypeOffset,
                                                          ErrorResult& aRv);
->>>>>>> upstream-releases
 
   // Decoding functions. aPos points into mBuffer and is adjusted to point
   // past the consumed value.
-<<<<<<< HEAD
-  static nsresult DecodeJSVal(const unsigned char*& aPos,
-                              const unsigned char* aEnd, JSContext* aCx,
-                              JS::MutableHandle<JS::Value> aVal);
-
-  static void DecodeString(const unsigned char*& aPos,
-                           const unsigned char* aEnd, nsString& aString);
-
-  static double DecodeNumber(const unsigned char*& aPos,
-                             const unsigned char* aEnd);
-
-  static JSObject* DecodeBinary(const unsigned char*& aPos,
-                                const unsigned char* aEnd, JSContext* aCx);
-
-  nsresult EncodeJSValInternal(JSContext* aCx, JS::Handle<JS::Value> aVal,
-                               uint8_t aTypeOffset, uint16_t aRecursionDepth);
-
-  static nsresult DecodeJSValInternal(const unsigned char*& aPos,
-                                      const unsigned char* aEnd, JSContext* aCx,
-                                      uint8_t aTypeOffset,
-                                      JS::MutableHandle<JS::Value> aVal,
-                                      uint16_t aRecursionDepth);
-||||||| merged common ancestors
-  static nsresult
-  DecodeJSVal(const unsigned char*& aPos,
-              const unsigned char* aEnd,
-              JSContext* aCx,
-              JS::MutableHandle<JS::Value> aVal);
-
-  static void
-  DecodeString(const unsigned char*& aPos,
-               const unsigned char* aEnd,
-               nsString& aString);
-
-  static double
-  DecodeNumber(const unsigned char*& aPos, const unsigned char* aEnd);
-
-  static JSObject*
-  DecodeBinary(const unsigned char*& aPos,
-               const unsigned char* aEnd,
-               JSContext* aCx);
-
-  nsresult
-  EncodeJSValInternal(JSContext* aCx,
-                      JS::Handle<JS::Value> aVal,
-                      uint8_t aTypeOffset,
-                      uint16_t aRecursionDepth);
-
-  static nsresult
-  DecodeJSValInternal(const unsigned char*& aPos,
-                      const unsigned char* aEnd,
-                      JSContext* aCx,
-                      uint8_t aTypeOffset,
-                      JS::MutableHandle<JS::Value> aVal,
-                      uint16_t aRecursionDepth);
-=======
   static nsresult DecodeJSVal(const unsigned char*& aPos,
                               const unsigned char* aEnd, JSContext* aCx,
                               JS::MutableHandle<JS::Value> aVal);
@@ -506,7 +326,6 @@ private:
                                       uint8_t aTypeOffset,
                                       JS::MutableHandle<JS::Value> aVal,
                                       uint16_t aRecursionDepth);
->>>>>>> upstream-releases
 
   template <typename T>
   nsresult SetFromSource(T* aSource, uint32_t aIndex);

@@ -63,16 +63,9 @@
 #include "nsITelemetry.h"
 #include "nsIXPConnect.h"
 #include "nsIXULAppInfo.h"
-<<<<<<< HEAD
-#if defined(XP_WIN) && defined(NIGHTLY_BUILD)
-#include "other/UntrustedModules.h"
-#endif
-||||||| merged common ancestors
-=======
 #if defined(XP_WIN) && defined(NIGHTLY_BUILD)
 #  include "other/UntrustedModules.h"
 #endif
->>>>>>> upstream-releases
 #include "nsJSUtils.h"
 #include "nsLocalFile.h"
 #include "nsNativeCharsetUtils.h"
@@ -96,19 +89,9 @@
 #include "other/WebrtcTelemetry.h"
 #include "plstr.h"
 #if defined(MOZ_GECKO_PROFILER)
-<<<<<<< HEAD
-#include "shared-libraries.h"
-#include "other/KeyedStackCapturer.h"
-#endif  // MOZ_GECKO_PROFILER
-||||||| merged common ancestors
-#include "shared-libraries.h"
-#include "other/KeyedStackCapturer.h"
-#endif // MOZ_GECKO_PROFILER
-=======
 #  include "shared-libraries.h"
 #  include "other/KeyedStackCapturer.h"
 #endif  // MOZ_GECKO_PROFILER
->>>>>>> upstream-releases
 #include "TelemetryCommon.h"
 #include "TelemetryEvent.h"
 #include "TelemetryHistogram.h"
@@ -118,19 +101,11 @@
 namespace {
 
 using namespace mozilla;
-<<<<<<< HEAD
-using mozilla::dom::AutoJSAPI;
-using mozilla::dom::Promise;
-using mozilla::Telemetry::CombinedStacks;
-using mozilla::Telemetry::TelemetryIOInterposeObserver;
-||||||| merged common ancestors
-=======
 using mozilla::dom::AutoJSAPI;
 using mozilla::dom::Promise;
 using mozilla::Telemetry::CombinedStacks;
 using mozilla::Telemetry::EventExtraEntry;
 using mozilla::Telemetry::TelemetryIOInterposeObserver;
->>>>>>> upstream-releases
 using Telemetry::Common::AutoHashtable;
 using Telemetry::Common::GetCurrentProduct;
 using Telemetry::Common::SetCurrentProduct;
@@ -302,20 +277,12 @@ TelemetryImpl::CollectReports(nsIHandleReportCallback* aHandleReport,
                  "Memory used by Telemetry Scalar data");
 
   COLLECT_REPORT("explicit/telemetry/event/data",
-<<<<<<< HEAD
-                 TelemetryEvent::SizeOfIncludingThis(aMallocSizeOf),
-                 "Memory used by Telemetry Event data");
-||||||| merged common ancestors
-      TelemetryEvent::SizeOfIncludingThis(aMallocSizeOf),
-      "Memory used by Telemetry Event data");
-=======
                  TelemetryEvent::SizeOfIncludingThis(aMallocSizeOf),
                  "Memory used by Telemetry Event data");
 
   COLLECT_REPORT("explicit/telemetry/origin/data",
                  TelemetryOrigin::SizeOfIncludingThis(aMallocSizeOf),
                  "Memory used by Telemetry Origin data");
->>>>>>> upstream-releases
 
 #undef COLLECT_REPORT
 
@@ -630,24 +597,6 @@ TelemetryImpl::SetHistogramRecordingEnabled(const nsACString& id,
 
 NS_IMETHODIMP
 TelemetryImpl::GetSnapshotForHistograms(const nsACString& aStoreName,
-<<<<<<< HEAD
-                                        bool aClearStore, bool aFilterTest,
-                                        JSContext* aCx,
-                                        JS::MutableHandleValue aResult) {
-  unsigned int dataset = mCanRecordExtended
-                             ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN
-                             : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryHistogram::CreateHistogramSnapshots(
-      aCx, aResult, aStoreName, dataset, aClearStore, aFilterTest);
-||||||| merged common ancestors
-                                        bool aClearStore, JSContext* aCx,
-                                        JS::MutableHandleValue aResult)
-{
-  unsigned int dataset = mCanRecordExtended ?
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN :
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryHistogram::CreateHistogramSnapshots(aCx, aResult, dataset, aClearStore);
-=======
                                         bool aClearStore, bool aFilterTest,
                                         JSContext* aCx,
                                         JS::MutableHandleValue aResult) {
@@ -658,29 +607,10 @@ TelemetryImpl::GetSnapshotForHistograms(const nsACString& aStoreName,
   return TelemetryHistogram::CreateHistogramSnapshots(
       aCx, aResult, aStoreName.IsVoid() ? defaultStore : aStoreName, dataset,
       aClearStore, aFilterTest);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
 TelemetryImpl::GetSnapshotForKeyedHistograms(const nsACString& aStoreName,
-<<<<<<< HEAD
-                                             bool aClearStore, bool aFilterTest,
-                                             JSContext* aCx,
-                                             JS::MutableHandleValue aResult) {
-  unsigned int dataset = mCanRecordExtended
-                             ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN
-                             : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryHistogram::GetKeyedHistogramSnapshots(
-      aCx, aResult, aStoreName, dataset, aClearStore, aFilterTest);
-||||||| merged common ancestors
-                                             bool aClearStore, JSContext* aCx,
-                                             JS::MutableHandleValue aResult)
-{
-  unsigned int dataset = mCanRecordExtended ?
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN :
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryHistogram::GetKeyedHistogramSnapshots(aCx, aResult, dataset, aClearStore);
-=======
                                              bool aClearStore, bool aFilterTest,
                                              JSContext* aCx,
                                              JS::MutableHandleValue aResult) {
@@ -691,29 +621,10 @@ TelemetryImpl::GetSnapshotForKeyedHistograms(const nsACString& aStoreName,
   return TelemetryHistogram::GetKeyedHistogramSnapshots(
       aCx, aResult, aStoreName.IsVoid() ? defaultStore : aStoreName, dataset,
       aClearStore, aFilterTest);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
 TelemetryImpl::GetSnapshotForScalars(const nsACString& aStoreName,
-<<<<<<< HEAD
-                                     bool aClearStore, bool aFilterTest,
-                                     JSContext* aCx,
-                                     JS::MutableHandleValue aResult) {
-  unsigned int dataset = mCanRecordExtended
-                             ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN
-                             : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryScalar::CreateSnapshots(dataset, aClearStore, aCx, 1, aResult,
-                                          aFilterTest, aStoreName);
-||||||| merged common ancestors
-                                     bool aClearStore, JSContext* aCx,
-                                     JS::MutableHandleValue aResult)
-{
-  unsigned int dataset = mCanRecordExtended ?
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN :
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryScalar::CreateSnapshots(dataset, aClearStore, aCx, 1, aResult);
-=======
                                      bool aClearStore, bool aFilterTest,
                                      JSContext* aCx,
                                      JS::MutableHandleValue aResult) {
@@ -724,56 +635,10 @@ TelemetryImpl::GetSnapshotForScalars(const nsACString& aStoreName,
   return TelemetryScalar::CreateSnapshots(
       dataset, aClearStore, aCx, 1, aResult, aFilterTest,
       aStoreName.IsVoid() ? defaultStore : aStoreName);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
 TelemetryImpl::GetSnapshotForKeyedScalars(const nsACString& aStoreName,
-<<<<<<< HEAD
-                                          bool aClearStore, bool aFilterTest,
-                                          JSContext* aCx,
-                                          JS::MutableHandleValue aResult) {
-  unsigned int dataset = mCanRecordExtended
-                             ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN
-                             : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryScalar::CreateKeyedSnapshots(
-      dataset, aClearStore, aCx, 1, aResult, aFilterTest, aStoreName);
-}
-
-bool TelemetryImpl::GetSQLStats(JSContext* cx, JS::MutableHandle<JS::Value> ret,
-                                bool includePrivateSql) {
-||||||| merged common ancestors
-                                          bool aClearStore, JSContext* aCx,
-                                          JS::MutableHandleValue aResult)
-{
-  unsigned int dataset = mCanRecordExtended ?
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN :
-    nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-  return TelemetryScalar::CreateKeyedSnapshots(dataset, aClearStore, aCx, 1, aResult);
-}
-
-NS_IMETHODIMP
-TelemetryImpl::SnapshotHistograms(unsigned int aDataset,
-                                  bool aClearHistograms, JSContext* aCx,
-                                  JS::MutableHandleValue aResult)
-{
-  return TelemetryHistogram::CreateHistogramSnapshots(aCx, aResult, aDataset,
-                                                      aClearHistograms);
-}
-
-NS_IMETHODIMP
-TelemetryImpl::SnapshotKeyedHistograms(unsigned int aDataset,
-                                       bool aClearHistograms, JSContext* aCx,
-                                       JS::MutableHandleValue aResult)
-{
-  return TelemetryHistogram::GetKeyedHistogramSnapshots(aCx, aResult, aDataset,
-                                                        aClearHistograms);
-}
-
-bool
-TelemetryImpl::GetSQLStats(JSContext *cx, JS::MutableHandle<JS::Value> ret, bool includePrivateSql)
-{
-=======
                                           bool aClearStore, bool aFilterTest,
                                           JSContext* aCx,
                                           JS::MutableHandleValue aResult) {
@@ -788,7 +653,6 @@ TelemetryImpl::GetSQLStats(JSContext *cx, JS::MutableHandle<JS::Value> ret, bool
 
 bool TelemetryImpl::GetSQLStats(JSContext* cx, JS::MutableHandle<JS::Value> ret,
                                 bool includePrivateSql) {
->>>>>>> upstream-releases
   JS::Rooted<JSObject*> root_obj(cx, JS_NewPlainObject(cx));
   if (!root_obj) return false;
   ret.setObject(*root_obj);
@@ -859,13 +723,7 @@ class GetLoadedModulesResultRunnable final : public Runnable {
   nsCOMPtr<nsIThread> mWorkerThread;
 #  if defined(XP_WIN)
   nsDataHashtable<nsStringHashKey, nsString> mCertSubjects;
-<<<<<<< HEAD
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#endif // defined(XP_WIN)
-=======
 #  endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
  public:
   GetLoadedModulesResultRunnable(const nsMainThreadPtrHandle<Promise>& aPromise,
@@ -877,13 +735,7 @@ class GetLoadedModulesResultRunnable final : public Runnable {
     MOZ_ASSERT(!NS_IsMainThread());
 #  if defined(XP_WIN)
     ObtainCertSubjects();
-<<<<<<< HEAD
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#endif // defined(XP_WIN)
-=======
 #  endif  // defined(XP_WIN)
->>>>>>> upstream-releases
   }
 
   NS_IMETHOD
@@ -1005,13 +857,7 @@ class GetLoadedModulesResultRunnable final : public Runnable {
           return NS_OK;
         }
       }
-<<<<<<< HEAD
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#endif // defined(XP_WIN)
-=======
 #  endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
       if (!JS_DefineElement(cx, moduleArray, i, moduleObj, JSPROP_ENUMERATE)) {
         mPromise->MaybeReject(NS_ERROR_FAILURE);
@@ -1023,20 +869,9 @@ class GetLoadedModulesResultRunnable final : public Runnable {
     return NS_OK;
   }
 
-<<<<<<< HEAD
- private:
-#if defined(XP_WIN)
-  void ObtainCertSubjects() {
-||||||| merged common ancestors
-private:
-#if defined(XP_WIN)
-  void ObtainCertSubjects()
-  {
-=======
  private:
 #  if defined(XP_WIN)
   void ObtainCertSubjects() {
->>>>>>> upstream-releases
     MOZ_ASSERT(!NS_IsMainThread());
 
     // NB: Currently we cannot lower this down to the profiler layer due to
@@ -1053,13 +888,7 @@ private:
       }
     }
   }
-<<<<<<< HEAD
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#endif // defined(XP_WIN)
-=======
 #  endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 };
 
 class GetLoadedModulesRunnable final : public Runnable {
@@ -1352,17 +1181,9 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
       "CreateTelemetryInstance may only be called once, via GetService()");
 
   bool useTelemetry = false;
-<<<<<<< HEAD
-  if ((XRE_IsParentProcess() || XRE_IsContentProcess() || XRE_IsGPUProcess()) &&
-||||||| merged common ancestors
-  if ((XRE_IsParentProcess() ||
-       XRE_IsContentProcess() ||
-       XRE_IsGPUProcess()) &&
-=======
 #ifndef FUZZING
   if ((XRE_IsParentProcess() || XRE_IsContentProcess() || XRE_IsGPUProcess() ||
        XRE_IsSocketProcess()) &&
->>>>>>> upstream-releases
       // Telemetry is never accumulated when recording or replaying, both
       // because the resulting measurements might be biased and because
       // measurements might occur at non-deterministic points in execution
@@ -1380,16 +1201,9 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
   TelemetryScalar::InitializeGlobalState(useTelemetry, useTelemetry);
 
   // Only record events from the parent process.
-<<<<<<< HEAD
-  TelemetryEvent::InitializeGlobalState(XRE_IsParentProcess(),
-                                        XRE_IsParentProcess());
-||||||| merged common ancestors
-  TelemetryEvent::InitializeGlobalState(XRE_IsParentProcess(), XRE_IsParentProcess());
-=======
   TelemetryEvent::InitializeGlobalState(XRE_IsParentProcess(),
                                         XRE_IsParentProcess());
   TelemetryOrigin::InitializeGlobalState();
->>>>>>> upstream-releases
 
   // Now, create and initialize the Telemetry global state.
   sTelemetry = new TelemetryImpl();
@@ -1739,65 +1553,6 @@ bool TelemetryImpl::CanRecordReleaseData() { return CanRecordBase(); }
 bool TelemetryImpl::CanRecordPrereleaseData() { return CanRecordExtended(); }
 
 NS_IMPL_ISUPPORTS(TelemetryImpl, nsITelemetry, nsIMemoryReporter)
-<<<<<<< HEAD
-NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsITelemetry,
-                                         TelemetryImpl::CreateTelemetryInstance)
-
-#define NS_TELEMETRY_CID                             \
-  {                                                  \
-    0xaea477f2, 0xb3a2, 0x469c, {                    \
-      0xaa, 0x29, 0x0a, 0x82, 0xd1, 0x32, 0xb8, 0x29 \
-    }                                                \
-  }
-NS_DEFINE_NAMED_CID(NS_TELEMETRY_CID);
-
-const Module::CIDEntry kTelemetryCIDs[] = {
-    {&kNS_TELEMETRY_CID, false, nullptr, nsITelemetryConstructor,
-     Module::ALLOW_IN_GPU_AND_VR_PROCESS},
-    {nullptr}};
-
-const Module::ContractIDEntry kTelemetryContracts[] = {
-    {"@mozilla.org/base/telemetry;1", &kNS_TELEMETRY_CID,
-     Module::ALLOW_IN_GPU_AND_VR_PROCESS},
-    {nullptr}};
-
-const Module kTelemetryModule = {Module::kVersion,
-                                 kTelemetryCIDs,
-                                 kTelemetryContracts,
-                                 nullptr,
-                                 nullptr,
-                                 nullptr,
-                                 TelemetryImpl::ShutdownTelemetry,
-                                 Module::ALLOW_IN_GPU_AND_VR_PROCESS};
-||||||| merged common ancestors
-NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsITelemetry, TelemetryImpl::CreateTelemetryInstance)
-
-#define NS_TELEMETRY_CID \
-  {0xaea477f2, 0xb3a2, 0x469c, {0xaa, 0x29, 0x0a, 0x82, 0xd1, 0x32, 0xb8, 0x29}}
-NS_DEFINE_NAMED_CID(NS_TELEMETRY_CID);
-
-const Module::CIDEntry kTelemetryCIDs[] = {
-  { &kNS_TELEMETRY_CID, false, nullptr, nsITelemetryConstructor, Module::ALLOW_IN_GPU_PROCESS },
-  { nullptr }
-};
-
-const Module::ContractIDEntry kTelemetryContracts[] = {
-  { "@mozilla.org/base/telemetry;1", &kNS_TELEMETRY_CID, Module::ALLOW_IN_GPU_PROCESS },
-  { nullptr }
-};
-
-const Module kTelemetryModule = {
-  Module::kVersion,
-  kTelemetryCIDs,
-  kTelemetryContracts,
-  nullptr,
-  nullptr,
-  nullptr,
-  TelemetryImpl::ShutdownTelemetry,
-  Module::ALLOW_IN_GPU_PROCESS
-};
-=======
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 TelemetryImpl::GetFileIOReports(JSContext* cx, JS::MutableHandleValue ret) {
@@ -1973,12 +1728,6 @@ TelemetryImpl::SetEventRecordingEnabled(const nsACString& aCategory,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-TelemetryImpl::FlushBatchedChildTelemetry() {
-||||||| merged common ancestors
-TelemetryImpl::FlushBatchedChildTelemetry()
-{
-=======
 TelemetryImpl::GetOriginSnapshot(bool aClear, JSContext* aCx,
                                  JS::MutableHandleValue aResult) {
   return TelemetryOrigin::GetOriginSnapshot(aClear, aCx, aResult);
@@ -2022,17 +1771,10 @@ TelemetryImpl::ClearOrigins() {
 
 NS_IMETHODIMP
 TelemetryImpl::FlushBatchedChildTelemetry() {
->>>>>>> upstream-releases
   TelemetryIPCAccumulator::IPCTimerFired(nullptr, nullptr);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-}  // namespace
-||||||| merged common ancestors
-} // namespace
-
-=======
 NS_IMETHODIMP
 TelemetryImpl::EarlyInit() {
   Unused << MemoryTelemetry::Get();
@@ -2105,7 +1847,6 @@ TelemetryImpl::GetAllStores(JSContext* aCx, JS::MutableHandleValue aResult) {
 }
 
 }  // namespace
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -2411,13 +2152,6 @@ void ScalarSetMaximum(mozilla::Telemetry::ScalarID aId, const nsAString& aKey,
   TelemetryScalar::SetMaximum(aId, aKey, aVal);
 }
 
-<<<<<<< HEAD
-}  // namespace Telemetry
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace Telemetry
-} // namespace mozilla
-=======
 void RecordEvent(mozilla::Telemetry::EventID aId,
                  const mozilla::Maybe<nsCString>& aValue,
                  const mozilla::Maybe<nsTArray<EventExtraEntry>>& aExtra) {
@@ -2441,4 +2175,3 @@ void ShutdownTelemetry() { TelemetryImpl::ShutdownTelemetry(); }
 NS_IMPL_COMPONENT_FACTORY(nsITelemetry) {
   return TelemetryImpl::CreateTelemetryInstance().downcast<nsISupports>();
 }
->>>>>>> upstream-releases

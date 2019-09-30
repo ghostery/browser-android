@@ -6,16 +6,8 @@
 
 #include "mozilla/dom/TabGroup.h"
 
-<<<<<<< HEAD
-#include "mozilla/dom/nsIContentChild.h"
-#include "mozilla/dom/TabChild.h"
-||||||| merged common ancestors
-#include "mozilla/dom/ContentChild.h"
-#include "mozilla/dom/TabChild.h"
-=======
 #include "mozilla/dom/ContentChild.h"
 #include "mozilla/dom/BrowserChild.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/DocGroup.h"
 #include "mozilla/dom/TimeoutManager.h"
 #include "mozilla/AbstractThread.h"
@@ -98,16 +90,8 @@ void TabGroup::EnsureThrottledEventQueues() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ TabGroup* TabGroup::GetChromeTabGroup() {
-||||||| merged common ancestors
-/* static */ TabGroup*
-TabGroup::GetChromeTabGroup()
-{
-=======
 /* static */
 TabGroup* TabGroup::GetChromeTabGroup() {
->>>>>>> upstream-releases
   if (!sChromeTabGroup) {
     sChromeTabGroup = new TabGroup(true /* chrome tab group */);
     ClearOnShutdown(&sChromeTabGroup);
@@ -115,37 +99,17 @@ TabGroup* TabGroup::GetChromeTabGroup() {
   return sChromeTabGroup;
 }
 
-<<<<<<< HEAD
-/* static */ TabGroup* TabGroup::GetFromWindow(mozIDOMWindowProxy* aWindow) {
-  if (TabChild* tabChild = TabChild::GetFrom(aWindow)) {
-    return tabChild->TabGroup();
-||||||| merged common ancestors
-/* static */ TabGroup*
-TabGroup::GetFromWindow(mozIDOMWindowProxy* aWindow)
-{
-  if (TabChild* tabChild = TabChild::GetFrom(aWindow)) {
-    return tabChild->TabGroup();
-=======
 /* static */
 TabGroup* TabGroup::GetFromWindow(mozIDOMWindowProxy* aWindow) {
   if (BrowserChild* browserChild = BrowserChild::GetFrom(aWindow)) {
     return browserChild->TabGroup();
->>>>>>> upstream-releases
   }
 
   return nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ TabGroup* TabGroup::GetFromActor(TabChild* aTabChild) {
-||||||| merged common ancestors
-/* static */ TabGroup*
-TabGroup::GetFromActor(TabChild* aTabChild)
-{
-=======
 /* static */
 TabGroup* TabGroup::GetFromActor(BrowserChild* aBrowserChild) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
 
   // Middleman processes do not assign event targets to their tab children.
@@ -153,15 +117,8 @@ TabGroup* TabGroup::GetFromActor(BrowserChild* aBrowserChild) {
     return GetChromeTabGroup();
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIEventTarget> target =
-      aTabChild->Manager()->GetEventTargetFor(aTabChild);
-||||||| merged common ancestors
-  nsCOMPtr<nsIEventTarget> target = aTabChild->Manager()->GetEventTargetFor(aTabChild);
-=======
   nsCOMPtr<nsIEventTarget> target =
       aBrowserChild->Manager()->GetEventTargetFor(aBrowserChild);
->>>>>>> upstream-releases
   if (!target) {
     return nullptr;
   }
@@ -185,17 +142,8 @@ already_AddRefed<DocGroup> TabGroup::GetDocGroup(const nsACString& aKey) {
   return docGroup.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DocGroup> TabGroup::AddDocument(const nsACString& aKey,
-                                                 nsIDocument* aDocument) {
-||||||| merged common ancestors
-already_AddRefed<DocGroup>
-TabGroup::AddDocument(const nsACString& aKey, nsIDocument* aDocument)
-{
-=======
 already_AddRefed<DocGroup> TabGroup::AddDocument(const nsACString& aKey,
                                                  Document* aDocument) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   HashEntry* entry = mDocGroups.PutEntry(aKey);
   RefPtr<DocGroup> docGroup;
@@ -214,18 +162,9 @@ already_AddRefed<DocGroup> TabGroup::AddDocument(const nsACString& aKey,
   return docGroup.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<TabGroup> TabGroup::Join(
-    nsPIDOMWindowOuter* aWindow, TabGroup* aTabGroup) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<TabGroup>
-TabGroup::Join(nsPIDOMWindowOuter* aWindow, TabGroup* aTabGroup)
-{
-=======
 /* static */
 already_AddRefed<TabGroup> TabGroup::Join(nsPIDOMWindowOuter* aWindow,
                                           TabGroup* aTabGroup) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   RefPtr<TabGroup> tabGroup = aTabGroup;
   if (!tabGroup) {
@@ -363,13 +302,6 @@ bool TabGroup::IsBackground() const {
   return mForegroundCount == 0;
 }
 
-<<<<<<< HEAD
-uint32_t TabGroup::Count(bool aActiveOnly) const {
-||||||| merged common ancestors
-uint32_t
-TabGroup::Count(bool aActiveOnly) const
-{
-=======
 nsresult TabGroup::QueuePostMessageEvent(
     already_AddRefed<nsIRunnable>&& aRunnable) {
   if (StaticPrefs::dom_separate_event_queue_for_post_message_enabled()) {
@@ -411,7 +343,6 @@ void TabGroup::FlushPostMessageEvents() {
 }
 
 uint32_t TabGroup::Count(bool aActiveOnly) const {
->>>>>>> upstream-releases
   if (!aActiveOnly) {
     return mDocGroups.Count();
   }
@@ -426,16 +357,8 @@ uint32_t TabGroup::Count(bool aActiveOnly) const {
   return count;
 }
 
-<<<<<<< HEAD
-/*static*/ bool TabGroup::HasOnlyThrottableTabs() {
-||||||| merged common ancestors
-/*static*/ bool
-TabGroup::HasOnlyThrottableTabs()
-{
-=======
 /*static*/
 bool TabGroup::HasOnlyThrottableTabs() {
->>>>>>> upstream-releases
   if (!sTabGroups) {
     return false;
   }

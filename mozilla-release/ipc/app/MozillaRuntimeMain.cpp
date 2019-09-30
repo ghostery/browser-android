@@ -11,15 +11,7 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-int main(int argc, char *argv[]) {
-||||||| merged common ancestors
-int
-main(int argc, char *argv[])
-{
-=======
 int main(int argc, char* argv[]) {
->>>>>>> upstream-releases
 #ifdef HAS_DLL_BLOCKLIST
   DllBlocklist_Initialize(eDllBlocklistInitFlagIsChildProcess);
 #endif

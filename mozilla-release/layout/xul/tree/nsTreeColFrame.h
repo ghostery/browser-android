@@ -15,31 +15,15 @@ class XULTreeElement;
 }
 }  // namespace mozilla
 
-<<<<<<< HEAD
-nsIFrame* NS_NewTreeColFrame(nsIPresShell* aPresShell,
-                             mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsIFrame* NS_NewTreeColFrame(nsIPresShell* aPresShell,
-                             ComputedStyle* aStyle);
-=======
 nsIFrame* NS_NewTreeColFrame(mozilla::PresShell* aPresShell,
                              mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
 class nsTreeColFrame final : public nsBoxFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsTreeColFrame)
 
-<<<<<<< HEAD
-  explicit nsTreeColFrame(ComputedStyle* aStyle)
-      : nsBoxFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-  explicit nsTreeColFrame(ComputedStyle* aStyle):
-    nsBoxFrame(aStyle, kClassID) {}
-=======
   explicit nsTreeColFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsBoxFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* aPrevInFlow) override;

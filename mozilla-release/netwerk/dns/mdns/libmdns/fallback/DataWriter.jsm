@@ -64,19 +64,9 @@ class DataWriter {
 
   putLabel(label) {
     // Eliminate any trailing '.'s in the label (valid in text representation).
-<<<<<<< HEAD
-    label = label.replace(/\.$/, "");
-    let parts = label.split(".");
-    parts.forEach((part) => {
-||||||| merged common ancestors
-    label = label.replace(/\.$/, '');
-    let parts = label.split('.');
-    parts.forEach((part) => {
-=======
     label = label.replace(/\.$/, "");
     let parts = label.split(".");
     parts.forEach(part => {
->>>>>>> upstream-releases
       this.putLengthString(part);
     });
     this.putValue(0);

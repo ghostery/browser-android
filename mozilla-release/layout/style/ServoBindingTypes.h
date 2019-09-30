@@ -138,111 +138,6 @@ namespace dom {
 class StyleChildrenIterator;
 class Document;
 class Element;
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-
-#define DECL_BORROWED_REF_TYPE_FOR(type_) typedef type_ const* type_##Borrowed;
-#define DECL_NULLABLE_BORROWED_REF_TYPE_FOR(type_) \
-  typedef type_ const* type_##BorrowedOrNull;
-#define DECL_BORROWED_MUT_REF_TYPE_FOR(type_) typedef type_* type_##BorrowedMut;
-#define DECL_NULLABLE_BORROWED_MUT_REF_TYPE_FOR(type_) \
-  typedef type_* type_##BorrowedMutOrNull;
-
-#define DECL_OWNED_REF_TYPE_FOR(type_) \
-  typedef type_* type_##Owned;         \
-  DECL_BORROWED_REF_TYPE_FOR(type_)    \
-  DECL_BORROWED_MUT_REF_TYPE_FOR(type_)
-
-#define DECL_NULLABLE_OWNED_REF_TYPE_FOR(type_) \
-  typedef type_* type_##OwnedOrNull;            \
-  DECL_NULLABLE_BORROWED_REF_TYPE_FOR(type_)    \
-  DECL_NULLABLE_BORROWED_MUT_REF_TYPE_FOR(type_)
-
-#define GECKO_BORROWED_TYPE(geckotype_, ffitype_) \
-  using ffitype_ = geckotype_;                    \
-  using ffitype_##Borrowed = const ffitype_*;     \
-  using ffitype_##BorrowedOrNull = const ffitype_*;
-#define GECKO_BORROWED_TYPE_MUT(geckotype_, ffitype_) \
-  GECKO_BORROWED_TYPE(geckotype_, ffitype_)           \
-  using ffitype_##BorrowedMut = ffitype_*;            \
-  using ffitype_##BorrowedMutOrNull = ffitype_*;
-#include "mozilla/BorrowedTypeList.h"
-#undef GECKO_BORROWED_TYPE_MUT
-#undef GECKO_BORROWED_TYPE
-
-#define SERVO_ARC_TYPE(name_, type_)                                    \
-  DECL_NULLABLE_BORROWED_REF_TYPE_FOR(type_)                            \
-  DECL_BORROWED_REF_TYPE_FOR(type_)                                     \
-  DECL_BORROWED_MUT_REF_TYPE_FOR(type_)                                 \
-  struct MOZ_MUST_USE_TYPE type_##Strong {                              \
-    type_* mPtr;                                                        \
-    already_AddRefed<type_> Consume();                                  \
-  };                                                                    \
-  extern "C" {                                                          \
-  void Servo_##name_##_AddRef(type_##Borrowed ptr);                     \
-  void Servo_##name_##_Release(type_##Borrowed ptr);                    \
-  }                                                                     \
-  namespace mozilla {                                                   \
-  template <>                                                           \
-  struct RefPtrTraits<type_> {                                          \
-    static void AddRef(type_* aPtr) { Servo_##name_##_AddRef(aPtr); }   \
-    static void Release(type_* aPtr) { Servo_##name_##_Release(aPtr); } \
-  };                                                                    \
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-
-#define DECL_BORROWED_REF_TYPE_FOR(type_) typedef type_ const* type_##Borrowed;
-#define DECL_NULLABLE_BORROWED_REF_TYPE_FOR(type_) typedef type_ const* type_##BorrowedOrNull;
-#define DECL_BORROWED_MUT_REF_TYPE_FOR(type_) typedef type_* type_##BorrowedMut;
-#define DECL_NULLABLE_BORROWED_MUT_REF_TYPE_FOR(type_) typedef type_* type_##BorrowedMutOrNull;
-
-#define DECL_OWNED_REF_TYPE_FOR(type_)    \
-  typedef type_* type_##Owned;            \
-  DECL_BORROWED_REF_TYPE_FOR(type_)       \
-  DECL_BORROWED_MUT_REF_TYPE_FOR(type_)
-
-#define DECL_NULLABLE_OWNED_REF_TYPE_FOR(type_)    \
-  typedef type_* type_##OwnedOrNull;               \
-  DECL_NULLABLE_BORROWED_REF_TYPE_FOR(type_)       \
-  DECL_NULLABLE_BORROWED_MUT_REF_TYPE_FOR(type_)
-
-#define GECKO_BORROWED_TYPE(geckotype_, ffitype_)      \
-  using ffitype_ = geckotype_;                         \
-  using ffitype_##Borrowed = const ffitype_*;          \
-  using ffitype_##BorrowedOrNull = const ffitype_*;
-#define GECKO_BORROWED_TYPE_MUT(geckotype_, ffitype_)  \
-  GECKO_BORROWED_TYPE(geckotype_, ffitype_)            \
-  using ffitype_##BorrowedMut = ffitype_*;             \
-  using ffitype_##BorrowedMutOrNull = ffitype_*;
-#include "mozilla/BorrowedTypeList.h"
-#undef GECKO_BORROWED_TYPE_MUT
-#undef GECKO_BORROWED_TYPE
-
-#define SERVO_ARC_TYPE(name_, type_)                 \
-  DECL_NULLABLE_BORROWED_REF_TYPE_FOR(type_)         \
-  DECL_BORROWED_REF_TYPE_FOR(type_)                  \
-  DECL_BORROWED_MUT_REF_TYPE_FOR(type_)              \
-  struct MOZ_MUST_USE_TYPE type_##Strong             \
-  {                                                  \
-    type_* mPtr;                                     \
-    already_AddRefed<type_> Consume();               \
-  };                                                 \
-  extern "C" {                                       \
-  void Servo_##name_##_AddRef(type_##Borrowed ptr);  \
-  void Servo_##name_##_Release(type_##Borrowed ptr); \
-  }                                                  \
-  namespace mozilla {                                \
-  template<> struct RefPtrTraits<type_> {            \
-    static void AddRef(type_* aPtr) {                \
-      Servo_##name_##_AddRef(aPtr);                  \
-    }                                                \
-    static void Release(type_* aPtr) {               \
-      Servo_##name_##_Release(aPtr);                 \
-    }                                                \
-  };                                                 \
-=======
 }  // namespace dom
 
 }  // namespace mozilla
@@ -258,39 +153,11 @@ class Element;
     static void AddRef(type_* aPtr) { Servo_##name_##_AddRef(aPtr); }   \
     static void Release(type_* aPtr) { Servo_##name_##_Release(aPtr); } \
   };                                                                    \
->>>>>>> upstream-releases
   }
 #include "mozilla/ServoArcTypeList.h"
 SERVO_ARC_TYPE(ComputedStyle, mozilla::ComputedStyle)
 #undef SERVO_ARC_TYPE
 
-<<<<<<< HEAD
-#define SERVO_BOXED_TYPE(name_, type_)                                 \
-  DECL_OWNED_REF_TYPE_FOR(type_)                                       \
-  DECL_NULLABLE_OWNED_REF_TYPE_FOR(type_)                              \
-  extern "C" void Servo_##name_##_Drop(type_##Owned ptr);              \
-  namespace mozilla {                                                  \
-  template <>                                                          \
-  class DefaultDelete<type_> {                                         \
-   public:                                                             \
-    void operator()(type_* aPtr) const { Servo_##name_##_Drop(aPtr); } \
-  };                                                                   \
-||||||| merged common ancestors
-#define SERVO_BOXED_TYPE(name_, type_)                      \
-  DECL_OWNED_REF_TYPE_FOR(type_)                            \
-  DECL_NULLABLE_OWNED_REF_TYPE_FOR(type_)                   \
-  extern "C" void Servo_##name_##_Drop(type_##Owned ptr);   \
-  namespace mozilla {                                       \
-  template<>                                                \
-  class DefaultDelete<type_>                                \
-  {                                                         \
-  public:                                                   \
-    void operator()(type_* aPtr) const                      \
-    {                                                       \
-      Servo_##name_##_Drop(aPtr);                           \
-    }                                                       \
-  };                                                        \
-=======
 #define SERVO_BOXED_TYPE(name_, type_)                                 \
   struct type_;                                                        \
   extern "C" void Servo_##name_##_Drop(type_*);                        \
@@ -300,97 +167,12 @@ SERVO_ARC_TYPE(ComputedStyle, mozilla::ComputedStyle)
    public:                                                             \
     void operator()(type_* aPtr) const { Servo_##name_##_Drop(aPtr); } \
   };                                                                   \
->>>>>>> upstream-releases
   }
 #include "mozilla/ServoBoxedTypeList.h"
 #undef SERVO_BOXED_TYPE
 
-<<<<<<< HEAD
-#define DEFINE_ARRAY_TYPE_FOR(type_)                               \
-  struct nsTArrayBorrowed_##type_ {                                \
-    nsTArray<type_>* mArray;                                       \
-    MOZ_IMPLICIT nsTArrayBorrowed_##type_(nsTArray<type_>* aArray) \
-        : mArray(aArray) {}                                        \
-  }
-DEFINE_ARRAY_TYPE_FOR(uintptr_t);
-#undef DEFINE_ARRAY_TYPE_FOR
-
-||||||| merged common ancestors
-#define DEFINE_ARRAY_TYPE_FOR(type_)                                \
-  struct nsTArrayBorrowed_##type_ {                                 \
-    nsTArray<type_>* mArray;                                        \
-    MOZ_IMPLICIT nsTArrayBorrowed_##type_(nsTArray<type_>* aArray)  \
-      : mArray(aArray) {}                                           \
-  }
-DEFINE_ARRAY_TYPE_FOR(uintptr_t);
-#undef DEFINE_ARRAY_TYPE_FOR
-
-
-=======
->>>>>>> upstream-releases
 // Other special cases.
 
-<<<<<<< HEAD
-typedef void* RawServoAnimationValueTableBorrowed;
-
-// TODO(heycam): Handle these elsewhere.
-struct RawServoAnimationValueMap;
-DECL_NULLABLE_BORROWED_REF_TYPE_FOR(RawServoAnimationValueMap)
-DECL_BORROWED_REF_TYPE_FOR(RawServoAnimationValueMap)
-DECL_BORROWED_MUT_REF_TYPE_FOR(RawServoAnimationValueMap)
-
-typedef mozilla::ComputedStyle const* ComputedStyleBorrowed;
-typedef mozilla::ComputedStyle const* ComputedStyleBorrowedOrNull;
-typedef ServoComputedData const* ServoComputedDataBorrowed;
-
-struct MOZ_MUST_USE_TYPE ComputedStyleStrong {
-  mozilla::ComputedStyle* mPtr;
-  already_AddRefed<mozilla::ComputedStyle> Consume();
-};
-
-// This is a reference to a reference of RawServoDeclarationBlock, which
-// corresponds to Option<&Arc<Locked<RawServoDeclarationBlock>>> in Servo side.
-DECL_NULLABLE_BORROWED_REF_TYPE_FOR(RawServoDeclarationBlockStrong)
-
-#undef DECL_ARC_REF_TYPE_FOR
-#undef DECL_OWNED_REF_TYPE_FOR
-#undef DECL_NULLABLE_OWNED_REF_TYPE_FOR
-#undef DECL_BORROWED_REF_TYPE_FOR
-#undef DECL_NULLABLE_BORROWED_REF_TYPE_FOR
-#undef DECL_BORROWED_MUT_REF_TYPE_FOR
-#undef DECL_NULLABLE_BORROWED_MUT_REF_TYPE_FOR
-||||||| merged common ancestors
-typedef void* RawServoAnimationValueTableBorrowed;
-
-// TODO(heycam): Handle these elsewhere.
-struct RawServoAnimationValueMap;
-DECL_NULLABLE_BORROWED_REF_TYPE_FOR(RawServoAnimationValueMap)
-DECL_BORROWED_REF_TYPE_FOR(RawServoAnimationValueMap)
-DECL_BORROWED_MUT_REF_TYPE_FOR(RawServoAnimationValueMap)
-
-typedef mozilla::ComputedStyle const* ComputedStyleBorrowed;
-typedef mozilla::ComputedStyle const* ComputedStyleBorrowedOrNull;
-typedef ServoComputedData const* ServoComputedDataBorrowed;
-
-struct MOZ_MUST_USE_TYPE ComputedStyleStrong
-{
-  mozilla::ComputedStyle* mPtr;
-  already_AddRefed<mozilla::ComputedStyle> Consume();
-};
-
-// This is a reference to a reference of RawServoDeclarationBlock, which
-// corresponds to Option<&Arc<Locked<RawServoDeclarationBlock>>> in Servo side.
-DECL_NULLABLE_BORROWED_REF_TYPE_FOR(RawServoDeclarationBlockStrong)
-
-#undef DECL_ARC_REF_TYPE_FOR
-#undef DECL_OWNED_REF_TYPE_FOR
-#undef DECL_NULLABLE_OWNED_REF_TYPE_FOR
-#undef DECL_BORROWED_REF_TYPE_FOR
-#undef DECL_NULLABLE_BORROWED_REF_TYPE_FOR
-#undef DECL_BORROWED_MUT_REF_TYPE_FOR
-#undef DECL_NULLABLE_BORROWED_MUT_REF_TYPE_FOR
-=======
 struct RawServoAnimationValueTable;
->>>>>>> upstream-releases
 
 #endif  // mozilla_ServoBindingTypes_h

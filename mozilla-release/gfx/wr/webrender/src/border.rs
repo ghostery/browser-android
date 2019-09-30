@@ -2,32 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-use api::{BorderRadius, BorderSide, BorderStyle, ColorF, ColorU, DeviceRect, DeviceSize};
-use api::{LayoutSideOffsets, LayoutSizeAu, LayoutPrimitiveInfo, LayoutToDeviceScale};
-use api::{DeviceVector2D, DevicePoint, LayoutRect, LayoutSize, NormalBorder, DeviceIntSize};
-use api::{AuHelpers, LayoutPoint, RepeatMode, TexelRect};
-use ellipse::Ellipse;
-use euclid::vec2;
-use display_list_flattener::DisplayListFlattener;
-use gpu_types::{BorderInstance, BorderSegment, BrushFlags};
-use prim_store::{BorderSegmentInfo, BrushSegment, NinePatchDescriptor};
-use prim_store::{EdgeAaSegmentMask, ScrollNodeAndClipChain, PrimitiveKeyKind};
-use util::{lerp, RectHelpers};
-||||||| merged common ancestors
-use api::{BorderRadius, BorderSide, BorderStyle, ColorF, ColorU, DeviceRect, DeviceSize};
-use api::{LayoutSideOffsets, LayoutSizeAu, LayoutPrimitiveInfo, LayoutToDeviceScale};
-use api::{DeviceVector2D, DevicePoint, LayoutRect, LayoutSize, NormalBorder, DeviceIntSize};
-use api::{AuHelpers};
-use ellipse::Ellipse;
-use display_list_flattener::DisplayListFlattener;
-use gpu_types::{BorderInstance, BorderSegment, BrushFlags};
-use prim_store::{BorderSegmentInfo, BrushKind, BrushPrimitive, BrushSegment, BrushSegmentVec};
-use prim_store::{EdgeAaSegmentMask, PrimitiveContainer, ScrollNodeAndClipChain, BrushSegmentDescriptor};
-use render_task::{RenderTaskCacheKey, RenderTaskCacheKeyKind};
-use smallvec::SmallVec;
-use util::{lerp, RectHelpers};
-=======
 use api::{BorderRadius, BorderSide, BorderStyle, ColorF, ColorU};
 use api::{NormalBorder as ApiNormalBorder, RepeatMode};
 use api::units::*;
@@ -40,7 +14,6 @@ use crate::prim_store::{EdgeAaSegmentMask, ScrollNodeAndClipChain};
 use crate::prim_store::borders::{NormalBorderPrim, NormalBorderData};
 use crate::util::{lerp, RectHelpers};
 use crate::internal_types::LayoutPrimitiveInfo;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
 
 // Using 2048 as the maximum radius in device space before which we
 // start stretching is up for debate.
@@ -120,23 +93,6 @@ impl From<BorderSideAu> for BorderSide {
 
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-#[derive(Debug, Clone, Hash, Eq, PartialEq)]
-pub struct NormalBorderAu {
-    pub left: BorderSideAu,
-    pub right: BorderSideAu,
-    pub top: BorderSideAu,
-    pub bottom: BorderSideAu,
-    pub radius: BorderRadiusAu,
-    /// Whether to apply anti-aliasing on the border corners.
-    ///
-    /// Note that for this to be `false` and work, this requires the borders to
-    /// be solid, and no border-radius.
-||||||| merged common ancestors
-pub struct BorderEdgeCacheKey {
-    pub side: BorderSideAu,
-    pub size: LayoutSizeAu,
-=======
 #[derive(Debug, Clone, Hash, Eq, MallocSizeOf, PartialEq)]
 pub struct NormalBorderAu {
     pub left: BorderSideAu,
@@ -148,50 +104,7 @@ pub struct NormalBorderAu {
     ///
     /// Note that for this to be `false` and work, this requires the borders to
     /// be solid, and no border-radius.
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
     pub do_aa: bool,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-}
-
-impl NormalBorderAu {
-    // Construct a border based upon self with color
-    pub fn with_color(&self, color: ColorU) -> Self {
-        let mut b = self.clone();
-        b.left.color = color;
-        b.right.color = color;
-        b.top.color = color;
-        b.bottom.color = color;
-        b
-    }
-}
-
-impl From<NormalBorder> for NormalBorderAu {
-    fn from(border: NormalBorder) -> Self {
-        NormalBorderAu {
-            left: border.left.into(),
-            right: border.right.into(),
-            top: border.top.into(),
-            bottom: border.bottom.into(),
-            radius: border.radius.into(),
-            do_aa: border.do_aa,
-        }
-    }
-}
-
-impl From<NormalBorderAu> for NormalBorder {
-    fn from(border: NormalBorderAu) -> Self {
-        NormalBorder {
-            left: border.left.into(),
-            right: border.right.into(),
-            top: border.top.into(),
-            bottom: border.bottom.into(),
-            radius: border.radius.into(),
-            do_aa: border.do_aa,
-        }
-    }
-||||||| merged common ancestors
-    pub segment: BorderSegment,
-=======
 }
 
 impl NormalBorderAu {
@@ -230,20 +143,11 @@ impl From<NormalBorderAu> for ApiNormalBorder {
             do_aa: border.do_aa,
         }
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
 }
 
 /// Cache key that uniquely identifies a border
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-/// segment in the render task cache.
-#[derive(Clone, Debug, Hash, PartialEq, Eq)]
-||||||| merged common ancestors
-/// corner in the render task cache.
-#[derive(Clone, Debug, Hash, PartialEq, Eq)]
-=======
 /// segment in the render task cache.
 #[derive(Clone, Debug, Hash, MallocSizeOf, PartialEq, Eq)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct BorderSegmentCacheKey {
@@ -319,19 +223,10 @@ impl<'a> DisplayListFlattener<'a> {
             clip_and_scroll,
             info,
             Vec::new(),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-            PrimitiveKeyKind::NormalBorder {
-                border: border.into(),
-                widths: widths.to_au(),
-            },
-||||||| merged common ancestors
-            PrimitiveContainer::Brush(prim),
-=======
             NormalBorderPrim {
                 border: border.into(),
                 widths: widths.to_au(),
             },
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
         );
     }
 }
@@ -747,31 +642,13 @@ fn get_edge_info(
 
 /// Create the set of border segments and render task
 /// cache keys for a given CSS border.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-pub fn create_border_segments(
-    size: LayoutSize,
-    border: &NormalBorder,
-||||||| merged common ancestors
-fn create_border_segments(
-    rect: &LayoutRect,
-    border: &NormalBorder,
-=======
 pub fn create_border_segments(
     size: LayoutSize,
     border: &ApiNormalBorder,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
     widths: &LayoutSideOffsets,
     border_segments: &mut Vec<BorderSegmentInfo>,
     brush_segments: &mut Vec<BrushSegment>,
 ) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-    let rect = LayoutRect::new(
-        LayoutPoint::zero(),
-        size,
-    );
-
-||||||| merged common ancestors
-=======
     let rect = LayoutRect::new(
         LayoutPoint::zero(),
         size,
@@ -788,7 +665,6 @@ pub fn create_border_segments(
         widths.left - overlap.width / 2.0,
     );
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
     let local_size_tl = LayoutSize::new(
         border.radius.top_left.width.max(widths.left),
         border.radius.top_left.height.max(widths.top),
@@ -1168,20 +1044,12 @@ fn add_corner_segment(
     radius: LayoutSize,
     segment: BorderSegment,
     edge_flags: EdgeAaSegmentMask,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-    brush_segments: &mut Vec<BrushSegment>,
-    border_segments: &mut Vec<BorderSegmentInfo>,
-||||||| merged common ancestors
-    brush_segments: &mut BrushSegmentVec,
-    border_segments: &mut SmallVec<[BorderSegmentInfo; 8]>,
-=======
     h_adjacent_corner_outer: LayoutPoint,
     h_adjacent_corner_radius: LayoutSize,
     v_adjacent_corner_outer: LayoutPoint,
     v_adjacent_corner_radius: LayoutSize,
     brush_segments: &mut Vec<BrushSegment>,
     border_segments: &mut Vec<BorderSegmentInfo>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
     do_aa: bool,
 ) {
     if side0.color.a <= 0.0 && side1.color.a <= 0.0 {
@@ -1203,20 +1071,10 @@ fn add_corner_segment(
         return;
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-||||||| merged common ancestors
-    let is_opaque =
-        side0.is_opaque() &&
-        side1.is_opaque() &&
-        radius.width <= 0.0 &&
-        radius.height <= 0.0;
-
-=======
     let texture_rect = segment_rect
         .translate(&-image_rect.origin.to_vector())
         .scale(1.0 / image_rect.size.width, 1.0 / image_rect.size.height);
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
     brush_segments.push(
         BrushSegment::new(
             segment_rect,
@@ -1297,29 +1155,6 @@ fn add_corner_segment(
 
     border_segments.push(BorderSegmentInfo {
         local_task_size: image_rect.size,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-        cache_key: BorderSegmentCacheKey {
-            do_aa,
-            side0: side0.into(),
-            side1: side1.into(),
-            segment,
-            radius: radius.to_au(),
-            size: widths.to_au(),
-||||||| merged common ancestors
-        is_opaque,
-        cache_key: RenderTaskCacheKey {
-            size: DeviceIntSize::zero(),
-            kind: RenderTaskCacheKeyKind::BorderCorner(
-                BorderCornerCacheKey {
-                    do_aa,
-                    side0: side0.into(),
-                    side1: side1.into(),
-                    segment,
-                    radius: radius.to_au(),
-                    widths: widths.to_au(),
-                }
-            ),
-=======
         cache_key: BorderSegmentCacheKey {
             do_aa,
             side0: side0.into(),
@@ -1331,7 +1166,6 @@ fn add_corner_segment(
             h_adjacent_corner_radius: h_corner_radius.to_au(),
             v_adjacent_corner_outer: (v_corner_outer - image_rect.origin).to_point().to_au(),
             v_adjacent_corner_radius: v_corner_radius.to_au(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
         },
     });
 }
@@ -1385,27 +1219,6 @@ fn add_edge_segment(
 
     border_segments.push(BorderSegmentInfo {
         local_task_size: size,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-        cache_key: BorderSegmentCacheKey {
-            do_aa,
-            side0: side.into(),
-            side1: side.into(),
-            radius: LayoutSizeAu::zero(),
-            size: size.to_au(),
-            segment,
-||||||| merged common ancestors
-        is_opaque,
-        cache_key: RenderTaskCacheKey {
-            size: DeviceIntSize::zero(),
-            kind: RenderTaskCacheKeyKind::BorderEdge(
-                BorderEdgeCacheKey {
-                    do_aa,
-                    side: side.into(),
-                    size: size.to_au(),
-                    segment,
-                },
-            ),
-=======
         cache_key: BorderSegmentCacheKey {
             do_aa,
             side0: side.into(),
@@ -1417,7 +1230,6 @@ fn add_edge_segment(
             h_adjacent_corner_radius: LayoutSizeAu::zero(),
             v_adjacent_corner_outer: LayoutPointAu::zero(),
             v_adjacent_corner_radius: LayoutSizeAu::zero(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
         },
     });
 }
@@ -1425,18 +1237,9 @@ fn add_edge_segment(
 /// Build the set of border instances needed to draw a border
 /// segment into the render task cache.
 pub fn build_border_instances(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-    cache_key: &BorderSegmentCacheKey,
-    cache_size: DeviceIntSize,
-    border: &NormalBorder,
-||||||| merged common ancestors
-    cache_key: &RenderTaskCacheKey,
-    border: &NormalBorder,
-=======
     cache_key: &BorderSegmentCacheKey,
     cache_size: DeviceIntSize,
     border: &ApiNormalBorder,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
     scale: LayoutToDeviceScale,
 ) -> Vec<BorderInstance> {
     let mut instances = Vec::new();
@@ -1466,13 +1269,6 @@ pub fn build_border_instances(
     let color0 = side0.border_color(flip0);
     let color1 = side1.border_color(flip1);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-    let widths = (LayoutSize::from_au(cache_key.size) * scale).ceil();
-    let radius = (LayoutSize::from_au(cache_key.radius) * scale).ceil();
-||||||| merged common ancestors
-    let widths = (widths * scale).ceil();
-    let radius = (radius * scale).ceil();
-=======
     let widths = (LayoutSize::from_au(cache_key.size) * scale).ceil();
     let radius = (LayoutSize::from_au(cache_key.radius) * scale).ceil();
 
@@ -1480,7 +1276,6 @@ pub fn build_border_instances(
     let h_corner_radius = (LayoutSize::from_au(cache_key.h_adjacent_corner_radius) * scale).ceil();
     let v_corner_outer = (LayoutPoint::from_au(cache_key.v_adjacent_corner_outer) * scale).round();
     let v_corner_radius = (LayoutSize::from_au(cache_key.v_adjacent_corner_radius) * scale).ceil();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
 
     add_segment(
         DeviceRect::new(DevicePoint::zero(), cache_size.to_f32()),
@@ -1512,181 +1307,6 @@ impl NinePatchDescriptor {
             size,
         );
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/border.rs
-        // Calculate the modified rect as specific by border-image-outset
-        let origin = LayoutPoint::new(
-            rect.origin.x - self.outset.left,
-            rect.origin.y - self.outset.top,
-        );
-        let size = LayoutSize::new(
-            rect.size.width + self.outset.left + self.outset.right,
-            rect.size.height + self.outset.top + self.outset.bottom,
-        );
-        let rect = LayoutRect::new(origin, size);
-
-        // Calculate the local texel coords of the slices.
-        let px0 = 0.0;
-        let px1 = self.slice.left as f32;
-        let px2 = self.width as f32 - self.slice.right as f32;
-        let px3 = self.width as f32;
-
-        let py0 = 0.0;
-        let py1 = self.slice.top as f32;
-        let py2 = self.height as f32 - self.slice.bottom as f32;
-        let py3 = self.height as f32;
-
-        let tl_outer = LayoutPoint::new(rect.origin.x, rect.origin.y);
-        let tl_inner = tl_outer + vec2(self.widths.left, self.widths.top);
-
-        let tr_outer = LayoutPoint::new(rect.origin.x + rect.size.width, rect.origin.y);
-        let tr_inner = tr_outer + vec2(-self.widths.right, self.widths.top);
-
-        let bl_outer = LayoutPoint::new(rect.origin.x, rect.origin.y + rect.size.height);
-        let bl_inner = bl_outer + vec2(self.widths.left, -self.widths.bottom);
-
-        let br_outer = LayoutPoint::new(
-            rect.origin.x + rect.size.width,
-            rect.origin.y + rect.size.height,
-        );
-        let br_inner = br_outer - vec2(self.widths.right, self.widths.bottom);
-
-        fn add_segment(
-            segments: &mut Vec<BrushSegment>,
-            rect: LayoutRect,
-            uv_rect: TexelRect,
-            repeat_horizontal: RepeatMode,
-            repeat_vertical: RepeatMode
-        ) {
-            if uv_rect.uv1.x > uv_rect.uv0.x &&
-               uv_rect.uv1.y > uv_rect.uv0.y {
-
-                // Use segment relative interpolation for all
-                // instances in this primitive.
-                let mut brush_flags =
-                    BrushFlags::SEGMENT_RELATIVE |
-                    BrushFlags::SEGMENT_TEXEL_RECT;
-
-                // Enable repeat modes on the segment.
-                if repeat_horizontal == RepeatMode::Repeat {
-                    brush_flags |= BrushFlags::SEGMENT_REPEAT_X;
-                }
-                if repeat_vertical == RepeatMode::Repeat {
-                    brush_flags |= BrushFlags::SEGMENT_REPEAT_Y;
-                }
-
-                let segment = BrushSegment::new(
-                    rect,
-                    true,
-                    EdgeAaSegmentMask::empty(),
-                    [
-                        uv_rect.uv0.x,
-                        uv_rect.uv0.y,
-                        uv_rect.uv1.x,
-                        uv_rect.uv1.y,
-                    ],
-                    brush_flags,
-                );
-
-                segments.push(segment);
-            }
-        }
-
-        // Build the list of image segments
-        let mut segments = Vec::new();
-
-        // Top left
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(tl_outer.x, tl_outer.y, tl_inner.x, tl_inner.y),
-            TexelRect::new(px0, py0, px1, py1),
-            RepeatMode::Stretch,
-            RepeatMode::Stretch
-        );
-        // Top right
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(tr_inner.x, tr_outer.y, tr_outer.x, tr_inner.y),
-            TexelRect::new(px2, py0, px3, py1),
-            RepeatMode::Stretch,
-            RepeatMode::Stretch
-        );
-        // Bottom right
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(br_inner.x, br_inner.y, br_outer.x, br_outer.y),
-            TexelRect::new(px2, py2, px3, py3),
-            RepeatMode::Stretch,
-            RepeatMode::Stretch
-        );
-        // Bottom left
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(bl_outer.x, bl_inner.y, bl_inner.x, bl_outer.y),
-            TexelRect::new(px0, py2, px1, py3),
-            RepeatMode::Stretch,
-            RepeatMode::Stretch
-        );
-
-        // Center
-        if self.fill {
-            add_segment(
-                &mut segments,
-                LayoutRect::from_floats(tl_inner.x, tl_inner.y, tr_inner.x, bl_inner.y),
-                TexelRect::new(px1, py1, px2, py2),
-                self.repeat_horizontal,
-                self.repeat_vertical
-            );
-        }
-
-        // Add edge segments.
-
-        // Top
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(tl_inner.x, tl_outer.y, tr_inner.x, tl_inner.y),
-            TexelRect::new(px1, py0, px2, py1),
-            self.repeat_horizontal,
-            RepeatMode::Stretch,
-        );
-        // Bottom
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(bl_inner.x, bl_inner.y, br_inner.x, bl_outer.y),
-            TexelRect::new(px1, py2, px2, py3),
-            self.repeat_horizontal,
-            RepeatMode::Stretch,
-        );
-        // Left
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(tl_outer.x, tl_inner.y, tl_inner.x, bl_inner.y),
-            TexelRect::new(px0, py1, px1, py2),
-            RepeatMode::Stretch,
-            self.repeat_vertical,
-        );
-        // Right
-        add_segment(
-            &mut segments,
-            LayoutRect::from_floats(tr_inner.x, tr_inner.y, br_outer.x, br_inner.y),
-            TexelRect::new(px2, py1, px3, py2),
-            RepeatMode::Stretch,
-            self.repeat_vertical,
-        );
-
-        segments
-    }
-||||||| merged common ancestors
-    BrushPrimitive::new(
-        BrushKind::new_border(
-            border,
-            widths,
-            border_segments,
-        ),
-        Some(BrushSegmentDescriptor {
-            segments: brush_segments,
-        }),
-    )
-=======
         // Calculate the modified rect as specific by border-image-outset
         let origin = LayoutPoint::new(
             rect.origin.x - self.outset.left,
@@ -1849,5 +1469,4 @@ impl NinePatchDescriptor {
 
         segments
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/border.rs
 }

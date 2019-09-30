@@ -20,32 +20,7 @@ from taskgraph.util.scriptworker import (generate_beetmover_artifact_map,
 from taskgraph.transforms.task import task_description_schema
 from voluptuous import Required, Optional
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
 beetmover_checksums_description_schema = schema.extend({
-||||||| merged common ancestors
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-transforms = TransformSequence()
-
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
-beetmover_checksums_description_schema = Schema({
-    Required('dependent-task'): object,
-=======
-beetmover_checksums_description_schema = schema.extend({
->>>>>>> upstream-releases
     Required('depname', default='build'): basestring,
     Optional('label'): basestring,
     Optional('treeherder'): task_description_schema['treeherder'],
@@ -162,39 +137,22 @@ def make_beetmover_checksums_worker(config, jobs):
             raise NotImplementedError(
                 "Beetmover checksums must have a beetmover and signing dependency!")
 
-<<<<<<< HEAD
-        if should_use_artifact_map(platform, config.params['project']):
-            upstream_artifacts = generate_beetmover_upstream_artifacts(job, platform, locale)
-        else:
-            upstream_artifacts = generate_upstream_artifacts(refs, platform, locale)
-
-||||||| merged common ancestors
-=======
         if should_use_artifact_map(platform):
             upstream_artifacts = generate_beetmover_upstream_artifacts(config,
                                                                        job, platform, locale)
         else:
             upstream_artifacts = generate_upstream_artifacts(refs, platform, locale)
 
->>>>>>> upstream-releases
         worker = {
             'implementation': 'beetmover',
             'release-properties': craft_release_properties(config, job),
             'upstream-artifacts': upstream_artifacts,
         }
 
-<<<<<<< HEAD
-        if should_use_artifact_map(platform, config.params['project']):
-            worker['artifact-map'] = generate_beetmover_artifact_map(
-                config, job, platform=platform)
-
-||||||| merged common ancestors
-=======
         if should_use_artifact_map(platform):
             worker['artifact-map'] = generate_beetmover_artifact_map(
                 config, job, platform=platform)
 
->>>>>>> upstream-releases
         if locale:
             worker["locale"] = locale
         job["worker"] = worker

@@ -69,19 +69,10 @@ class nsMixedContentBlocker : public nsIContentPolicy,
                              const nsACString& aMimeGuess,
                              nsIPrincipal* aRequestPrincipal,
                              int16_t* aDecision);
-<<<<<<< HEAD
-  static void AccumulateMixedContentHSTS(
-      nsIURI* aURI, bool aActive, const OriginAttributes& aOriginAttributes);
-||||||| merged common ancestors
-  static void AccumulateMixedContentHSTS(nsIURI* aURI,
-                                         bool aActive,
-                                         const OriginAttributes& aOriginAttributes);
-=======
   static void AccumulateMixedContentHSTS(
       nsIURI* aURI, bool aActive, const OriginAttributes& aOriginAttributes);
 
   static bool URISafeToBeLoadedInSecureContext(nsIURI* aURI);
->>>>>>> upstream-releases
 
   static bool ShouldUpgradeMixedDisplayContent();
 

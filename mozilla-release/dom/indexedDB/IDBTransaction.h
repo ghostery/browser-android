@@ -42,16 +42,7 @@ class OpenCursorParams;
 class RequestParams;
 }  // namespace indexedDB
 
-<<<<<<< HEAD
-class IDBTransaction final : public IDBWrapperCache, public nsIRunnable {
-||||||| merged common ancestors
-class IDBTransaction final
-  : public IDBWrapperCache
-  , public nsIRunnable
-{
-=======
 class IDBTransaction final : public DOMEventTargetHelper, public nsIRunnable {
->>>>>>> upstream-releases
   friend class indexedDB::BackgroundCursorChild;
   friend class indexedDB::BackgroundRequestChild;
 
@@ -237,14 +228,7 @@ class IDBTransaction final : public DOMEventTargetHelper, public nsIRunnable {
     return mLoggingSerialNumber;
   }
 
-<<<<<<< HEAD
-  nsPIDOMWindowInner* GetParentObject() const;
-||||||| merged common ancestors
-  nsPIDOMWindowInner*
-  GetParentObject() const;
-=======
   nsIGlobalObject* GetParentObject() const;
->>>>>>> upstream-releases
 
   IDBTransactionMode GetMode(ErrorResult& aRv) const;
 

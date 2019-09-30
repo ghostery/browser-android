@@ -14,42 +14,9 @@
 
 using namespace JS;
 
-<<<<<<< HEAD
-static const JSClassOps global_classOps = {nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           nullptr,
-                                           JS_GlobalObjectTraceHook};
-
-||||||| merged common ancestors
-static const JSClassOps global_classOps = {
-    nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr,
-    JS_GlobalObjectTraceHook
-};
-
-=======
->>>>>>> upstream-releases
 /* The class of the global object. */
-<<<<<<< HEAD
-static const JSClass global_class = {"global", JSCLASS_GLOBAL_FLAGS,
-                                     &global_classOps};
-||||||| merged common ancestors
-static const JSClass global_class = {
-    "global", JSCLASS_GLOBAL_FLAGS,
-    &global_classOps
-};
-=======
 static const JSClass global_class = {"global", JSCLASS_GLOBAL_FLAGS,
                                      &DefaultGlobalClassOps};
->>>>>>> upstream-releases
 
 static volatile int dontOptimizeMeAway = 0;
 
@@ -88,80 +55,6 @@ void breakpoint() {
 
 GDBFragment* GDBFragment::allFragments = nullptr;
 
-<<<<<<< HEAD
-int main(int argc, const char** argv) {
-  if (!JS_Init()) return 1;
-  JSContext* cx = checkPtr(JS_NewContext(1024 * 1024));
-
-  JS_SetGCParameter(cx, JSGC_MAX_BYTES, 0xffffffff);
-  JS_SetNativeStackQuota(cx, 5000000);
-
-  checkBool(JS::InitSelfHostedCode(cx));
-  JS::SetWarningReporter(cx, reportWarning);
-
-  /* Create the global object. */
-  JS::RealmOptions options;
-  RootedObject global(
-      cx, checkPtr(JS_NewGlobalObject(cx, &global_class, nullptr,
-                                      JS::FireOnNewGlobalHook, options)));
-  JSAutoRealm ar(cx, global);
-
-  /* Populate the global object with the standard globals,
-     like Object and Array. */
-  checkBool(JS::InitRealmStandardClasses(cx));
-
-  argv++;
-  while (*argv) {
-    const char* name = *argv++;
-    GDBFragment* fragment;
-    for (fragment = GDBFragment::allFragments; fragment;
-         fragment = fragment->next) {
-      if (strcmp(fragment->name(), name) == 0) {
-        fragment->run(cx, argv);
-        break;
-      }
-    }
-    if (!fragment) {
-      fprintf(stderr, "Unrecognized fragment name: %s\n", name);
-      exit(1);
-||||||| merged common ancestors
-int
-main(int argc, const char** argv)
-{
-    if (!JS_Init()) return 1;
-    JSContext* cx = checkPtr(JS_NewContext(1024 * 1024));
-
-    JS_SetGCParameter(cx, JSGC_MAX_BYTES, 0xffffffff);
-    JS_SetNativeStackQuota(cx, 5000000);
-
-    checkBool(JS::InitSelfHostedCode(cx));
-    JS::SetWarningReporter(cx, reportWarning);
-
-    /* Create the global object. */
-    JS::RealmOptions options;
-    RootedObject global(cx, checkPtr(JS_NewGlobalObject(cx, &global_class,
-                        nullptr, JS::FireOnNewGlobalHook, options)));
-    JSAutoRealm ar(cx, global);
-
-    /* Populate the global object with the standard globals,
-       like Object and Array. */
-    checkBool(JS::InitRealmStandardClasses(cx));
-
-    argv++;
-    while (*argv) {
-        const char* name = *argv++;
-        GDBFragment* fragment;
-        for (fragment = GDBFragment::allFragments; fragment; fragment = fragment->next) {
-            if (strcmp(fragment->name(), name) == 0) {
-                fragment->run(cx, argv);
-                break;
-            }
-        }
-        if (!fragment) {
-            fprintf(stderr, "Unrecognized fragment name: %s\n", name);
-            exit(1);
-        }
-=======
 int main(int argc, const char** argv) {
   if (!JS_Init()) return 1;
   JSContext* cx = checkPtr(JS_NewContext(1024 * 1024));
@@ -189,18 +82,12 @@ int main(int argc, const char** argv) {
         fragment->run(cx, argv);
         break;
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
     if (!fragment) {
       fprintf(stderr, "Unrecognized fragment name: %s\n", name);
       exit(1);
     }
   }
->>>>>>> upstream-releases
 
   return 0;
 }

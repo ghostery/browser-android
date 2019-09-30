@@ -97,27 +97,6 @@
 
     txt.focus();
     // InsertText
-<<<<<<< HEAD
-    testExecCommandInputType('insertText', 'a', 'insertText');
-    testExecCommandInputType('insertText', 'bc', 'insertText');
-    assert_equals(txt.innerHTML, 'abc');
-    testExecCommandInputType('insertOrderedList', null, 'insertOrderedList');
-    assert_equals(txt.innerHTML, '<ol><li>abc</li></ol>');
-    testExecCommandInputType('insertUnorderedList', null, 'insertUnorderedList');
-    assert_equals(txt.innerHTML, '<ul><li>abc</li></ul>');
-    testExecCommandInputType('insertLineBreak', null, 'insertLineBreak');
-    testExecCommandInputType('insertParagraph', null, 'insertParagraph');
-||||||| merged common ancestors
-    testExecCommandInputType('insertText', 'a', 'insertText');
-    testExecCommandInputType('insertText', 'bc', 'insertText');
-    assert_equals(txt.innerHTML, 'abc');
-    testExecCommandInputType('insertOrderedList', null, 'insertOrderedList');
-    assert_equals(txt.innerHTML, '<ol><li>abc<br></li></ol>');
-    testExecCommandInputType('insertUnorderedList', null, 'insertUnorderedList');
-    assert_equals(txt.innerHTML, '<ul><li>abc<br></li></ul>');
-    testExecCommandInputType('insertLineBreak', null, 'insertLineBreak');
-    testExecCommandInputType('insertParagraph', null, 'insertParagraph');
-=======
     testExecCommandInputType('insertText', 'a', 'insertText', 'a', null);
     testExecCommandInputType('insertText', 'bc', 'insertText', 'bc', null);
     test(function() {
@@ -135,7 +114,6 @@
     testExecCommandInputType('insertParagraph', null, 'insertParagraph', null, null);
     txt.innerHTML = '';
     testExecCommandInputType('insertHorizontalRule', null, 'insertHorizontalRule', null, null);
->>>>>>> upstream-releases
 
     // Styling
     txt.innerHTML = 'abc';

@@ -29,16 +29,8 @@ interface URI;
  *      the path, and will match any string of characters. If no "*" appears,
  *      the URL path must exactly match the pattern path.
  */
-<<<<<<< HEAD
-[Constructor(DOMString pattern, optional MatchPatternOptions options),
- ChromeOnly, Exposed=Window]
-||||||| merged common ancestors
-[Constructor(DOMString pattern, optional MatchPatternOptions options),
- ChromeOnly, Exposed=(Window,System)]
-=======
 [Constructor(DOMString pattern, optional MatchPatternOptions options = {}),
  ChromeOnly, Exposed=Window]
->>>>>>> upstream-releases
 interface MatchPattern {
   /**
    * Returns true if the given URI matches the pattern.
@@ -87,16 +79,8 @@ interface MatchPattern {
  * A set of MatchPattern objects, which implements the MatchPattern API and
  * matches when any of its sub-patterns matches.
  */
-<<<<<<< HEAD
-[Constructor(sequence<(DOMString or MatchPattern)> patterns, optional MatchPatternOptions options),
- ChromeOnly, Exposed=Window]
-||||||| merged common ancestors
-[Constructor(sequence<(DOMString or MatchPattern)> patterns, optional MatchPatternOptions options),
- ChromeOnly, Exposed=(Window,System)]
-=======
 [Constructor(sequence<(DOMString or MatchPattern)> patterns, optional MatchPatternOptions options = {}),
  ChromeOnly, Exposed=Window]
->>>>>>> upstream-releases
 interface MatchPatternSet {
   /**
    * Returns true if the given URI matches any sub-pattern.

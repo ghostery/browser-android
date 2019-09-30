@@ -286,24 +286,12 @@ nsresult nsClipboard::TransferableFromPasteboard(nsITransferable* aTransferable,
       if (successfullyConverted) {
         // Put the converted data in a form Gecko can understand
         nsCOMPtr<nsIInputStream> byteStream;
-<<<<<<< HEAD
-        NS_NewByteInputStream(getter_AddRefs(byteStream), (const char*)[encodedData bytes],
-                                   [encodedData length], NS_ASSIGNMENT_COPY);
-  
-        aTransferable->SetTransferData(flavorStr.get(), byteStream);
-||||||| merged common ancestors
-        NS_NewByteInputStream(getter_AddRefs(byteStream), (const char*)[encodedData bytes],
-                                   [encodedData length], NS_ASSIGNMENT_COPY);
-  
-        aTransferable->SetTransferData(flavorStr.get(), byteStream, sizeof(nsIInputStream*));
-=======
         NS_NewByteInputStream(
             getter_AddRefs(byteStream),
             mozilla::MakeSpan((const char*)[encodedData bytes], [encodedData length]),
             NS_ASSIGNMENT_COPY);
 
         aTransferable->SetTransferData(flavorStr.get(), byteStream);
->>>>>>> upstream-releases
       }
 
       if (dest) CFRelease(dest);
@@ -353,16 +341,8 @@ nsClipboard::GetNativeClipboardData(nsITransferable* aTransferable, int32_t aWhi
         nsCOMPtr<nsISupports> dataSupports;
         rv = mTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(dataSupports));
         if (NS_SUCCEEDED(rv)) {
-<<<<<<< HEAD
-          aTransferable->SetTransferData(flavorStr.get(), dataSupports);
-          return NS_OK; // maybe try to fill in more types? Is there a point?
-||||||| merged common ancestors
-          aTransferable->SetTransferData(flavorStr.get(), dataSupports, dataSize);
-          return NS_OK; // maybe try to fill in more types? Is there a point?
-=======
           aTransferable->SetTransferData(flavorStr.get(), dataSupports);
           return NS_OK;  // maybe try to fill in more types? Is there a point?
->>>>>>> upstream-releases
         }
       }
     }
@@ -488,17 +468,9 @@ NSDictionary* nsClipboard::PasteboardDictFromTransferable(nsITransferable* aTran
       }
 
       NSString* nativeString;
-<<<<<<< HEAD
-      if (!data.IsEmpty())
-        nativeString = [NSString stringWithCharacters:(const unichar*)data.get() length:data.Length()];
-||||||| merged common ancestors
-      if (data)
-        nativeString = [NSString stringWithCharacters:(const unichar*)data length:(dataSize / sizeof(char16_t))];
-=======
       if (!data.IsEmpty())
         nativeString = [NSString stringWithCharacters:(const unichar*)data.get()
                                                length:data.Length()];
->>>>>>> upstream-releases
       else
         nativeString = [NSString string];
 
@@ -506,51 +478,13 @@ NSDictionary* nsClipboard::PasteboardDictFromTransferable(nsITransferable* aTran
       nativeString = [nativeString precomposedStringWithCanonicalMapping];
 
       [pasteboardOutputDict setObject:nativeString forKey:pboardType];
-<<<<<<< HEAD
-    }
-    else if (flavorStr.EqualsLiteral(kCustomTypesMime)) {
-||||||| merged common ancestors
-      
-      free(data);
-    }
-    else if (flavorStr.EqualsLiteral(kCustomTypesMime)) {
-      void* data = nullptr;
-      uint32_t dataSize = 0;
-=======
     } else if (flavorStr.EqualsLiteral(kCustomTypesMime)) {
->>>>>>> upstream-releases
       nsCOMPtr<nsISupports> genericDataWrapper;
-<<<<<<< HEAD
       rv = aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(genericDataWrapper));
       if (NS_FAILED(rv)) {
         continue;
       }
 
-      nsAutoCString data;
-      if (nsCOMPtr<nsISupportsCString> text = do_QueryInterface(genericDataWrapper)) {
-        text->GetData(data);
-      }
-||||||| merged common ancestors
-      rv = aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(genericDataWrapper), &dataSize);
-      nsPrimitiveHelpers::CreateDataFromPrimitive(flavorStr, genericDataWrapper, &data, dataSize);
-=======
-      rv = aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(genericDataWrapper));
-      if (NS_FAILED(rv)) {
-        continue;
-      }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      if (!data.IsEmpty()) {
-        NSData* nativeData = [NSData dataWithBytes:data.get() length:data.Length()];
-        NSString* customType =
-          [UTIHelper stringFromPboardType:kMozCustomTypesPboardType];
-||||||| merged common ancestors
-      if (data) {
-        NSData* nativeData = [NSData dataWithBytes:data length:dataSize];
-        NSString* customType =
-          [UTIHelper stringFromPboardType:kMozCustomTypesPboardType];
-=======
       nsAutoCString data;
       if (nsCOMPtr<nsISupportsCString> text = do_QueryInterface(genericDataWrapper)) {
         text->GetData(data);
@@ -559,36 +493,16 @@ NSDictionary* nsClipboard::PasteboardDictFromTransferable(nsITransferable* aTran
       if (!data.IsEmpty()) {
         NSData* nativeData = [NSData dataWithBytes:data.get() length:data.Length()];
         NSString* customType = [UTIHelper stringFromPboardType:kMozCustomTypesPboardType];
->>>>>>> upstream-releases
         [pasteboardOutputDict setObject:nativeData forKey:customType];
       }
-<<<<<<< HEAD
-    }
-    else if (flavorStr.EqualsLiteral(kPNGImageMime) || flavorStr.EqualsLiteral(kJPEGImageMime) ||
-             flavorStr.EqualsLiteral(kJPGImageMime) || flavorStr.EqualsLiteral(kGIFImageMime) ||
-             flavorStr.EqualsLiteral(kNativeImageMime)) {
-||||||| merged common ancestors
-    }
-    else if (flavorStr.EqualsLiteral(kPNGImageMime) || flavorStr.EqualsLiteral(kJPEGImageMime) ||
-             flavorStr.EqualsLiteral(kJPGImageMime) || flavorStr.EqualsLiteral(kGIFImageMime) ||
-             flavorStr.EqualsLiteral(kNativeImageMime)) {
-      uint32_t dataSize = 0;
-=======
     } else if (flavorStr.EqualsLiteral(kPNGImageMime) || flavorStr.EqualsLiteral(kJPEGImageMime) ||
                flavorStr.EqualsLiteral(kJPGImageMime) || flavorStr.EqualsLiteral(kGIFImageMime) ||
                flavorStr.EqualsLiteral(kNativeImageMime)) {
->>>>>>> upstream-releases
       nsCOMPtr<nsISupports> transferSupports;
-<<<<<<< HEAD
-      aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(transferSupports));
-||||||| merged common ancestors
-      aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(transferSupports), &dataSize);
-=======
       rv = aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(transferSupports));
       if (NS_FAILED(rv)) {
         continue;
       }
->>>>>>> upstream-releases
 
       nsCOMPtr<imgIContainer> image(do_QueryInterface(transferSupports));
       if (!image) {
@@ -622,31 +536,10 @@ NSDictionary* nsClipboard::PasteboardDictFromTransferable(nsITransferable* aTran
         continue;
       }
 
-<<<<<<< HEAD
-      NSString* tiffType =
-        [UTIHelper stringFromPboardType:NSPasteboardTypeTIFF];
-      [pasteboardOutputDict setObject:(NSMutableData*)tiffData
-                               forKey:tiffType];
-      if (tiffData)
-        CFRelease(tiffData);
-    }
-    else if (flavorStr.EqualsLiteral(kFileMime)) {
-||||||| merged common ancestors
-      NSString* tiffType =
-        [UTIHelper stringFromPboardType:NSPasteboardTypeTIFF];
-      [pasteboardOutputDict setObject:(NSMutableData*)tiffData
-                               forKey:tiffType];
-      if (tiffData)
-        CFRelease(tiffData);
-    }
-    else if (flavorStr.EqualsLiteral(kFileMime)) {
-      uint32_t len = 0;
-=======
       NSString* tiffType = [UTIHelper stringFromPboardType:NSPasteboardTypeTIFF];
       [pasteboardOutputDict setObject:(NSMutableData*)tiffData forKey:tiffType];
       if (tiffData) CFRelease(tiffData);
     } else if (flavorStr.EqualsLiteral(kFileMime)) {
->>>>>>> upstream-releases
       nsCOMPtr<nsISupports> genericFile;
       rv = aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(genericFile));
       if (NS_FAILED(rv)) {
@@ -672,31 +565,10 @@ NSDictionary* nsClipboard::PasteboardDictFromTransferable(nsITransferable* aTran
       NSString* urlPromise =
           [UTIHelper stringFromPboardType:(NSString*)kPasteboardTypeFileURLPromise];
       NSString* urlPromiseContent =
-<<<<<<< HEAD
-        [UTIHelper stringFromPboardType:
-          (NSString*)kPasteboardTypeFilePromiseContent];
-      [pasteboardOutputDict setObject:[NSArray arrayWithObject:@""]
-                               forKey:urlPromise];
-      [pasteboardOutputDict setObject:[NSArray arrayWithObject:@""]
-                               forKey:urlPromiseContent];
-    }
-    else if (flavorStr.EqualsLiteral(kURLMime)) {
-||||||| merged common ancestors
-        [UTIHelper stringFromPboardType:
-          (NSString*)kPasteboardTypeFilePromiseContent];
-      [pasteboardOutputDict setObject:[NSArray arrayWithObject:@""]
-                               forKey:urlPromise];
-      [pasteboardOutputDict setObject:[NSArray arrayWithObject:@""]
-                               forKey:urlPromiseContent];
-    }
-    else if (flavorStr.EqualsLiteral(kURLMime)) {
-      uint32_t len = 0;
-=======
           [UTIHelper stringFromPboardType:(NSString*)kPasteboardTypeFilePromiseContent];
       [pasteboardOutputDict setObject:[NSArray arrayWithObject:@""] forKey:urlPromise];
       [pasteboardOutputDict setObject:[NSArray arrayWithObject:@""] forKey:urlPromiseContent];
     } else if (flavorStr.EqualsLiteral(kURLMime)) {
->>>>>>> upstream-releases
       nsCOMPtr<nsISupports> genericURL;
       rv = aTransferable->GetTransferData(flavorStr.get(), getter_AddRefs(genericURL));
       nsCOMPtr<nsISupportsString> urlObject(do_QueryInterface(genericURL));

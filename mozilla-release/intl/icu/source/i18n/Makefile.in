@@ -111,15 +111,8 @@ double-conversion-fast-dtoa.o double-conversion-strtod.o \
 numparse_stringsegment.o numparse_parsednumber.o numparse_impl.o \
 numparse_symbols.o numparse_decimal.o numparse_scientific.o numparse_currency.o \
 numparse_affixes.o numparse_compositions.o numparse_validators.o \
-<<<<<<< HEAD
-numrange_fluent.o numrange_impl.o \
-erarules.o
-||||||| merged common ancestors
-
-=======
 numrange_fluent.o numrange_impl.o \
 erarules.o formattedvalue.o formattedval_iterimpl.o formattedval_sbimpl.o
->>>>>>> upstream-releases
 
 ## Header files to install
 HEADERS = $(srcdir)/unicode/*.h

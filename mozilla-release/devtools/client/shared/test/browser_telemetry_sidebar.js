@@ -159,25 +159,6 @@ function testSidebar(toolbox) {
 function checkResults() {
   // For help generating these tests use generateTelemetryTests("DEVTOOLS_")
   // here.
-<<<<<<< HEAD
-  checkTelemetry("DEVTOOLS_INSPECTOR_OPENED_COUNT", "", {0: 1, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_RULEVIEW_OPENED_COUNT", "", {0: 1, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_COMPUTEDVIEW_OPENED_COUNT", "", {0: 2, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_LAYOUTVIEW_OPENED_COUNT", "", {0: 3, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_FONTINSPECTOR_OPENED_COUNT", "", {0: 2, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_COMPUTEDVIEW_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-  checkTelemetry("DEVTOOLS_LAYOUTVIEW_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-  checkTelemetry("DEVTOOLS_FONTINSPECTOR_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-||||||| merged common ancestors
-  checkTelemetry("DEVTOOLS_INSPECTOR_OPENED_COUNT", "", [1, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_RULEVIEW_OPENED_COUNT", "", [1, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_COMPUTEDVIEW_OPENED_COUNT", "", [2, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_LAYOUTVIEW_OPENED_COUNT", "", [3, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_FONTINSPECTOR_OPENED_COUNT", "", [2, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_COMPUTEDVIEW_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-  checkTelemetry("DEVTOOLS_LAYOUTVIEW_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-  checkTelemetry("DEVTOOLS_FONTINSPECTOR_TIME_ACTIVE_SECONDS", "", null, "hasentries");
-=======
   checkTelemetry(
     "DEVTOOLS_INSPECTOR_OPENED_COUNT",
     "",
@@ -221,7 +202,6 @@ function checkResults() {
     null,
     "hasentries"
   );
->>>>>>> upstream-releases
 }
 
 function checkEventTelemetry() {

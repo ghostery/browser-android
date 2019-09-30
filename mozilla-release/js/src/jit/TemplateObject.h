@@ -27,75 +27,6 @@ class TemplateObject {
   explicit TemplateObject(JSObject* obj)
       : obj_(obj),
         denseElementsAreCopyOnWrite_(false),
-<<<<<<< HEAD
-        convertDoubleElements_(false) {}
-  void setDenseElementsAreCopyOnWrite() { denseElementsAreCopyOnWrite_ = true; }
-  void setConvertDoubleElements() { convertDoubleElements_ = true; }
-
-  inline gc::AllocKind getAllocKind() const;
-
-  // The following methods rely on the object's group->clasp. This is safe
-  // to read off-thread for template objects.
-  inline bool isNative() const;
-  inline const NativeTemplateObject& asNativeTemplateObject() const;
-  inline bool isArrayObject() const;
-  inline bool isArgumentsObject() const;
-  inline bool isTypedArrayObject() const;
-  inline bool isRegExpObject() const;
-  inline bool isInlineTypedObject() const;
-  inline bool isUnboxedPlainObject() const;
-  inline bool isCallObject() const;
-  inline bool isPlainObject() const;
-
-  // The group and shape should not change. This is true for template objects
-  // because they're never exposed to arbitrary script.
-  inline gc::Cell* group() const;
-  inline gc::Cell* maybeShape() const;
-
-  // Some TypedObject and UnboxedPlainObject methods that can be called
-  // off-thread.
-  inline uint32_t getInlineTypedObjectSize() const;
-  inline uint8_t* getInlineTypedObjectMem(
-      const JS::AutoRequireNoGC& nogc) const;
-  inline const UnboxedLayout& unboxedObjectLayout() const;
-#ifdef DEBUG
-  inline bool unboxedObjectHasExpando() const;
-#endif
-||||||| merged common ancestors
-        convertDoubleElements_(false)
-    {}
-    void setDenseElementsAreCopyOnWrite() { denseElementsAreCopyOnWrite_ = true; }
-    void setConvertDoubleElements() { convertDoubleElements_ = true; }
-
-    inline gc::AllocKind getAllocKind() const;
-
-    // The following methods rely on the object's group->clasp. This is safe
-    // to read off-thread for template objects.
-    inline bool isNative() const;
-    inline const NativeTemplateObject& asNativeTemplateObject() const;
-    inline bool isArrayObject() const;
-    inline bool isArgumentsObject() const;
-    inline bool isTypedArrayObject() const;
-    inline bool isRegExpObject() const;
-    inline bool isInlineTypedObject() const;
-    inline bool isUnboxedPlainObject() const;
-    inline bool isCallObject() const;
-    inline bool isPlainObject() const;
-
-    // The group and shape should not change. This is true for template objects
-    // because they're never exposed to arbitrary script.
-    inline gc::Cell* group() const;
-    inline gc::Cell* maybeShape() const;
-
-    // Some TypedObject and UnboxedPlainObject methods that can be called
-    // off-thread.
-    inline uint32_t getInlineTypedObjectSize() const;
-    inline uint8_t* getInlineTypedObjectMem(const JS::AutoRequireNoGC& nogc) const;
-    inline const UnboxedLayout& unboxedObjectLayout() const;
-#ifdef DEBUG
-    inline bool unboxedObjectHasExpando() const;
-#endif
-=======
         convertDoubleElements_(false) {}
   void setDenseElementsAreCopyOnWrite() { denseElementsAreCopyOnWrite_ = true; }
   void setConvertDoubleElements() { convertDoubleElements_ = true; }
@@ -123,7 +54,6 @@ class TemplateObject {
   inline uint32_t getInlineTypedObjectSize() const;
   inline uint8_t* getInlineTypedObjectMem(
       const JS::AutoRequireNoGC& nogc) const;
->>>>>>> upstream-releases
 };
 
 class NativeTemplateObject : public TemplateObject {

@@ -53,15 +53,8 @@ void CancelVibrate(const WindowIdentifier& id) {
 
   WindowIdentifier newID(id);
   newID.AppendProcessID();
-<<<<<<< HEAD
-  Hal()->SendCancelVibrate(newID.AsArray(),
-                           TabChild::GetFrom(newID.GetWindow()));
-||||||| merged common ancestors
-  Hal()->SendCancelVibrate(newID.AsArray(), TabChild::GetFrom(newID.GetWindow()));
-=======
   Hal()->SendCancelVibrate(newID.AsArray(),
                            BrowserChild::GetFrom(newID.GetWindow()));
->>>>>>> upstream-releases
 }
 
 void EnableBatteryNotifications() { Hal()->SendEnableBatteryNotifications(); }
@@ -92,15 +85,7 @@ void GetCurrentScreenConfiguration(ScreenConfiguration* aScreenConfiguration) {
   fallback::GetCurrentScreenConfiguration(aScreenConfiguration);
 }
 
-<<<<<<< HEAD
-bool LockScreenOrientation(const ScreenOrientation& aOrientation) {
-||||||| merged common ancestors
-bool
-LockScreenOrientation(const ScreenOrientation& aOrientation)
-{
-=======
 bool LockScreenOrientation(const hal::ScreenOrientation& aOrientation) {
->>>>>>> upstream-releases
   bool allowed;
   Hal()->SendLockScreenOrientation(aOrientation, &allowed);
   return allowed;
@@ -192,21 +177,9 @@ class HalParent : public PHalParent,
     return IPC_OK();
   }
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvCancelVibrate(
-      InfallibleTArray<uint64_t>&& id, PBrowserParent* browserParent) override {
-    // TabParent *tabParent = TabParent::GetFrom(browserParent);
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvCancelVibrate(InfallibleTArray<uint64_t> &&id,
-                    PBrowserParent *browserParent) override
-  {
-    //TabParent *tabParent = TabParent::GetFrom(browserParent);
-=======
   virtual mozilla::ipc::IPCResult RecvCancelVibrate(
       InfallibleTArray<uint64_t>&& id, PBrowserParent* browserParent) override {
     // BrowserParent *browserParent = BrowserParent::GetFrom(browserParent);
->>>>>>> upstream-releases
     /* XXXkhuey wtf
     nsCOMPtr<nsIDOMWindow> window =
       browserParent->GetBrowserDOMWindow();

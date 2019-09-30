@@ -60,21 +60,10 @@ void AudioNodeStream::DestroyImpl() {
   ProcessedMediaStream::DestroyImpl();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioNodeStream> AudioNodeStream::Create(
-    AudioContext* aCtx, AudioNodeEngine* aEngine, Flags aFlags,
-    MediaStreamGraph* aGraph) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioNodeStream>
-AudioNodeStream::Create(AudioContext* aCtx, AudioNodeEngine* aEngine,
-                        Flags aFlags, MediaStreamGraph* aGraph)
-{
-=======
 /* static */
 already_AddRefed<AudioNodeStream> AudioNodeStream::Create(
     AudioContext* aCtx, AudioNodeEngine* aEngine, Flags aFlags,
     MediaStreamGraph* aGraph) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_RELEASE_ASSERT(aGraph);
 
@@ -300,17 +289,6 @@ void AudioNodeStream::SetPassThrough(bool aPassThrough) {
   GraphImpl()->AppendMessage(MakeUnique<Message>(this, aPassThrough));
 }
 
-<<<<<<< HEAD
-void AudioNodeStream::SetChannelMixingParametersImpl(
-    uint32_t aNumberOfChannels, ChannelCountMode aChannelCountMode,
-    ChannelInterpretation aChannelInterpretation) {
-||||||| merged common ancestors
-void
-AudioNodeStream::SetChannelMixingParametersImpl(uint32_t aNumberOfChannels,
-                                                ChannelCountMode aChannelCountMode,
-                                                ChannelInterpretation aChannelInterpretation)
-{
-=======
 void AudioNodeStream::SendRunnable(already_AddRefed<nsIRunnable> aRunnable) {
   class Message final : public ControlMessage {
    public:
@@ -328,7 +306,6 @@ void AudioNodeStream::SendRunnable(already_AddRefed<nsIRunnable> aRunnable) {
 void AudioNodeStream::SetChannelMixingParametersImpl(
     uint32_t aNumberOfChannels, ChannelCountMode aChannelCountMode,
     ChannelInterpretation aChannelInterpretation) {
->>>>>>> upstream-releases
   mNumberOfInputChannels = aNumberOfChannels;
   mChannelCountMode = aChannelCountMode;
   mChannelInterpretation = aChannelInterpretation;

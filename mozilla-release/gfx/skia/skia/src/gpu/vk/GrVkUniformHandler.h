@@ -70,23 +70,10 @@ private:
                                           int arrayCount,
                                           const char** outName) override;
 
-<<<<<<< HEAD
-    SamplerHandle addSampler(GrSwizzle swizzle,
-                             GrTextureType type,
-                             GrSLPrecision precision,
-                             const char* name) override;
-||||||| merged common ancestors
-    SamplerHandle addSampler(uint32_t visibility,
-                             GrSwizzle swizzle,
-                             GrSLType type,
-                             GrSLPrecision precision,
-                             const char* name) override;
-=======
     SamplerHandle addSampler(const GrTexture* texture,
                              const GrSamplerState&,
                              const char* name,
                              const GrShaderCaps*) override;
->>>>>>> upstream-releases
 
     int numSamplers() const { return fSamplers.count(); }
     const GrShaderVar& samplerVariable(SamplerHandle handle) const override {
@@ -99,25 +86,10 @@ private:
         return fSamplers[handle.toIndex()].fVisibility;
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    TexelBufferHandle addTexelBuffer(uint32_t visibility, GrSLPrecision,
-                                     const char* name) override;
-
-    int numTexelBuffers() const { return fTexelBuffers.count(); }
-    const GrShaderVar& texelBufferVariable(TexelBufferHandle handle) const override {
-        return fTexelBuffers[handle.toIndex()].fVariable;
-    }
-    uint32_t texelBufferVisibility(TexelBufferHandle handle) const {
-        return fTexelBuffers[handle.toIndex()].fVisibility;
-    }
-
-=======
     const GrVkSampler* immutableSampler(UniformHandle u) const {
         return fSamplers[u.toIndex()].fImmutableSampler;
     }
 
->>>>>>> upstream-releases
     void appendUniformDecls(GrShaderFlags, SkString*) const override;
 
     bool hasGeometryUniforms() const { return fCurrentGeometryUBOOffset > 0; }

@@ -229,19 +229,9 @@ static void IncrementMutationCount(uint8_t* aCount) {
   *aCount = uint8_t(std::min(0xFF, *aCount + 1));
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::TransferActivityToContent(
-    nsIFrame* aFrame, nsIContent* aContent) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::TransferActivityToContent(nsIFrame* aFrame,
-                                              nsIContent* aContent)
-{
-=======
 /* static */
 void ActiveLayerTracker::TransferActivityToContent(nsIFrame* aFrame,
                                                    nsIContent* aContent) {
->>>>>>> upstream-releases
   if (!aFrame->HasAnyStateBits(NS_FRAME_HAS_LAYER_ACTIVITY_PROPERTY)) {
     return;
   }
@@ -257,19 +247,9 @@ void ActiveLayerTracker::TransferActivityToContent(nsIFrame* aFrame,
                         nsINode::DeleteProperty<LayerActivity>, true);
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::TransferActivityToFrame(
-    nsIContent* aContent, nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::TransferActivityToFrame(nsIContent* aContent,
-                                            nsIFrame* aFrame)
-{
-=======
 /* static */
 void ActiveLayerTracker::TransferActivityToFrame(nsIContent* aContent,
                                                  nsIFrame* aFrame) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = static_cast<LayerActivity*>(
       aContent->UnsetProperty(nsGkAtoms::LayerActivity));
   if (!layerActivity) {
@@ -296,27 +276,9 @@ static void IncrementScaleRestyleCountIfNeeded(nsIFrame* aFrame,
   // Compute the new scale due to the CSS transform property.
   nsStyleTransformMatrix::TransformReferenceBox refBox(aFrame);
   Matrix4x4 transform = nsStyleTransformMatrix::ReadTransforms(
-<<<<<<< HEAD
-      display->mIndividualTransform ? display->mIndividualTransform->mHead
-                                    : nullptr,
-      nsLayoutUtils::ResolveMotionPath(aFrame),
-      display->mSpecifiedTransform ? display->mSpecifiedTransform->mHead
-                                   : nullptr,
-      refBox, AppUnitsPerCSSPixel());
-||||||| merged common ancestors
-    display->mIndividualTransform ? display->mIndividualTransform->mHead
-                                  : nullptr,
-    nsLayoutUtils::ResolveMotionPath(aFrame),
-    display->mSpecifiedTransform ? display->mSpecifiedTransform->mHead
-                                 : nullptr,
-    refBox,
-    AppUnitsPerCSSPixel(),
-    &dummyBool);
-=======
       display->mTranslate, display->mRotate, display->mScale,
       nsLayoutUtils::ResolveMotionPath(aFrame), display->mTransform, refBox,
       AppUnitsPerCSSPixel());
->>>>>>> upstream-releases
   Matrix transform2D;
   if (!transform.Is2D(&transform2D)) {
     // We don't attempt to handle 3D transforms; just assume the scale changed.
@@ -336,18 +298,9 @@ static void IncrementScaleRestyleCountIfNeeded(nsIFrame* aFrame,
       &aActivity->mRestyleCounts[LayerActivity::ACTIVITY_SCALE]);
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyRestyle(nsIFrame* aFrame,
-                                                    nsCSSPropertyID aProperty) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyRestyle(nsIFrame* aFrame, nsCSSPropertyID aProperty)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyRestyle(nsIFrame* aFrame,
                                        nsCSSPropertyID aProperty) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivityForUpdate(aFrame);
   uint8_t& mutationCount = layerActivity->RestyleCountForProperty(aProperty);
   IncrementMutationCount(&mutationCount);
@@ -357,16 +310,8 @@ void ActiveLayerTracker::NotifyRestyle(nsIFrame* aFrame,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyOffsetRestyle(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyOffsetRestyle(nsIFrame* aFrame)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyOffsetRestyle(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivityForUpdate(aFrame);
   IncrementMutationCount(
       &layerActivity->mRestyleCounts[LayerActivity::ACTIVITY_LEFT]);
@@ -378,24 +323,11 @@ void ActiveLayerTracker::NotifyOffsetRestyle(nsIFrame* aFrame) {
       &layerActivity->mRestyleCounts[LayerActivity::ACTIVITY_BOTTOM]);
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyAnimated(
-    nsIFrame* aFrame, nsCSSPropertyID aProperty, const nsAString& aNewValue,
-    nsDOMCSSDeclaration* aDOMCSSDecl) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyAnimated(nsIFrame* aFrame,
-                                   nsCSSPropertyID aProperty,
-                                   const nsAString& aNewValue,
-                                   nsDOMCSSDeclaration* aDOMCSSDecl)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyAnimated(nsIFrame* aFrame,
                                         nsCSSPropertyID aProperty,
                                         const nsAString& aNewValue,
                                         nsDOMCSSDeclaration* aDOMCSSDecl) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivityForUpdate(aFrame);
   uint8_t& mutationCount = layerActivity->RestyleCountForProperty(aProperty);
   if (mutationCount != 0xFF) {
@@ -408,20 +340,9 @@ void ActiveLayerTracker::NotifyAnimated(nsIFrame* aFrame,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyAnimatedFromScrollHandler(
-    nsIFrame* aFrame, nsCSSPropertyID aProperty, nsIFrame* aScrollFrame) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyAnimatedFromScrollHandler(nsIFrame* aFrame,
-                                                    nsCSSPropertyID aProperty,
-                                                    nsIFrame* aScrollFrame)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyAnimatedFromScrollHandler(
     nsIFrame* aFrame, nsCSSPropertyID aProperty, nsIFrame* aScrollFrame) {
->>>>>>> upstream-releases
   if (aFrame->PresContext() != aScrollFrame->PresContext()) {
     // Don't allow cross-document dependencies.
     return;
@@ -451,24 +372,10 @@ static bool IsPresContextInScriptAnimationCallback(
   return win && win->IsRunningTimeout();
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyInlineStyleRuleModified(
-    nsIFrame* aFrame, nsCSSPropertyID aProperty, const nsAString& aNewValue,
-    nsDOMCSSDeclaration* aDOMCSSDecl) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyInlineStyleRuleModified(
-  nsIFrame* aFrame,
-  nsCSSPropertyID aProperty,
-  const nsAString& aNewValue,
-  nsDOMCSSDeclaration* aDOMCSSDecl)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyInlineStyleRuleModified(
     nsIFrame* aFrame, nsCSSPropertyID aProperty, const nsAString& aNewValue,
     nsDOMCSSDeclaration* aDOMCSSDecl) {
->>>>>>> upstream-releases
   if (IsPresContextInScriptAnimationCallback(aFrame->PresContext())) {
     NotifyAnimated(aFrame, aProperty, aNewValue, aDOMCSSDecl);
   }
@@ -480,16 +387,8 @@ void ActiveLayerTracker::NotifyInlineStyleRuleModified(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyNeedsRepaint(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyNeedsRepaint(nsIFrame* aFrame)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyNeedsRepaint(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivityForUpdate(aFrame);
   if (IsPresContextInScriptAnimationCallback(aFrame->PresContext())) {
     // This is mirroring NotifyInlineStyleRuleModified's NotifyAnimated logic.
@@ -503,49 +402,9 @@ void ActiveLayerTracker::NotifyNeedsRepaint(nsIFrame* aFrame) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool ActiveLayerTracker::IsStyleMaybeAnimated(
-    nsIFrame* aFrame, nsCSSPropertyID aProperty) {
-  return IsStyleAnimated(nullptr, aFrame, aProperty);
-}
-
-/* static */ bool ActiveLayerTracker::IsBackgroundPositionAnimated(
-    nsDisplayListBuilder* aBuilder, nsIFrame* aFrame) {
-  return IsStyleAnimated(aBuilder, aFrame,
-                         eCSSProperty_background_position_x) ||
-         IsStyleAnimated(aBuilder, aFrame, eCSSProperty_background_position_y);
-}
-
 static bool CheckScrollInducedActivity(
     LayerActivity* aLayerActivity, LayerActivity::ActivityIndex aActivityIndex,
     nsDisplayListBuilder* aBuilder) {
-||||||| merged common ancestors
-/* static */ bool
-ActiveLayerTracker::IsStyleMaybeAnimated(nsIFrame* aFrame,
-                                         nsCSSPropertyID aProperty)
-{
-  return IsStyleAnimated(nullptr, aFrame, aProperty);
-}
-
-/* static */ bool
-ActiveLayerTracker::IsBackgroundPositionAnimated(nsDisplayListBuilder* aBuilder,
-                                                 nsIFrame* aFrame)
-{
-  return IsStyleAnimated(
-           aBuilder, aFrame, eCSSProperty_background_position_x) ||
-         IsStyleAnimated(aBuilder, aFrame, eCSSProperty_background_position_y);
-}
-
-static bool
-CheckScrollInducedActivity(LayerActivity* aLayerActivity,
-                           LayerActivity::ActivityIndex aActivityIndex,
-                           nsDisplayListBuilder* aBuilder)
-{
-=======
-static bool CheckScrollInducedActivity(
-    LayerActivity* aLayerActivity, LayerActivity::ActivityIndex aActivityIndex,
-    nsDisplayListBuilder* aBuilder) {
->>>>>>> upstream-releases
   if (!aLayerActivity->mScrollHandlerInducedActivity.contains(aActivityIndex) ||
       !aLayerActivity->mAnimatingScrollHandlerFrame.IsAlive()) {
     return false;
@@ -564,25 +423,6 @@ static bool CheckScrollInducedActivity(
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ bool ActiveLayerTracker::IsStyleAnimated(
-    nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-    nsCSSPropertyID aProperty) {
-  // TODO: Add some abuse restrictions
-  if ((aFrame->StyleDisplay()->mWillChangeBitField &
-       NS_STYLE_WILL_CHANGE_TRANSFORM) &&
-      aProperty == eCSSProperty_transform &&
-||||||| merged common ancestors
-/* static */ bool
-ActiveLayerTracker::IsStyleAnimated(nsDisplayListBuilder* aBuilder,
-                                    nsIFrame* aFrame,
-                                    nsCSSPropertyID aProperty)
-{
-  // TODO: Add some abuse restrictions
-  if ((aFrame->StyleDisplay()->mWillChangeBitField &
-       NS_STYLE_WILL_CHANGE_TRANSFORM) &&
-      aProperty == eCSSProperty_transform &&
-=======
 /* static */
 bool ActiveLayerTracker::IsBackgroundPositionAnimated(
     nsDisplayListBuilder* aBuilder, nsIFrame* aFrame) {
@@ -643,7 +483,6 @@ bool ActiveLayerTracker::IsStyleAnimated(
   if ((styleFrame && (styleFrame->StyleDisplay()->mWillChange.bits &
                       StyleWillChangeBits_TRANSFORM)) &&
       aPropertySet.Intersects(transformSet) &&
->>>>>>> upstream-releases
       (!aBuilder ||
        aBuilder->IsInWillChangeBudget(aFrame, aFrame->GetSize()))) {
     return true;
@@ -659,13 +498,7 @@ bool ActiveLayerTracker::IsStyleAnimated(
   LayerActivity* layerActivity = GetLayerActivity(aFrame);
   if (layerActivity) {
     LayerActivity::ActivityIndex activityIndex =
-<<<<<<< HEAD
-        LayerActivity::GetActivityIndexForProperty(aProperty);
-||||||| merged common ancestors
-      LayerActivity::GetActivityIndexForProperty(aProperty);
-=======
         LayerActivity::GetActivityIndexForPropertySet(aPropertySet);
->>>>>>> upstream-releases
     if (layerActivity->mRestyleCounts[activityIndex] >= 2) {
       // If the frame needs to be repainted frequently, we probably don't get
       // much from treating the property as animated, *unless* this frame's
@@ -673,18 +506,9 @@ bool ActiveLayerTracker::IsStyleAnimated(
       // Marking a scaling transform as animating allows us to avoid resizing
       // the texture, even if we have to repaint the contents of that texture.
       if (layerActivity
-<<<<<<< HEAD
-                  ->mRestyleCounts[LayerActivity::ACTIVITY_TRIGGERED_REPAINT] <
-              2 ||
-          (aProperty == eCSSProperty_transform &&
-||||||| merged common ancestors
-              ->mRestyleCounts[LayerActivity::ACTIVITY_TRIGGERED_REPAINT] < 2 ||
-          (aProperty == eCSSProperty_transform &&
-=======
                   ->mRestyleCounts[LayerActivity::ACTIVITY_TRIGGERED_REPAINT] <
               2 ||
           (aPropertySet.Intersects(transformSet) &&
->>>>>>> upstream-releases
            IsScaleSubjectToAnimation(aFrame))) {
         return true;
       }
@@ -700,16 +524,8 @@ bool ActiveLayerTracker::IsStyleAnimated(
   return nsLayoutUtils::HasEffectiveAnimation(aFrame, aPropertySet);
 }
 
-<<<<<<< HEAD
-/* static */ bool ActiveLayerTracker::IsOffsetStyleAnimated(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ bool
-ActiveLayerTracker::IsOffsetStyleAnimated(nsIFrame* aFrame)
-{
-=======
 /* static */
 bool ActiveLayerTracker::IsOffsetStyleAnimated(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivity(aFrame);
   if (layerActivity) {
     if (layerActivity->mRestyleCounts[LayerActivity::ACTIVITY_LEFT] >= 2 ||
@@ -727,17 +543,8 @@ bool ActiveLayerTracker::IsOffsetStyleAnimated(nsIFrame* aFrame) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ bool ActiveLayerTracker::IsScaleSubjectToAnimation(
-    nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ bool
-ActiveLayerTracker::IsScaleSubjectToAnimation(nsIFrame* aFrame)
-{
-=======
 /* static */
 bool ActiveLayerTracker::IsScaleSubjectToAnimation(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   // Check whether JavaScript is animating this frame's scale.
   LayerActivity* layerActivity = GetLayerActivity(aFrame);
   if (layerActivity &&
@@ -748,45 +555,20 @@ bool ActiveLayerTracker::IsScaleSubjectToAnimation(nsIFrame* aFrame) {
   return AnimationUtils::FrameHasAnimatedScale(aFrame);
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::NotifyContentChange(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::NotifyContentChange(nsIFrame* aFrame)
-{
-=======
 /* static */
 void ActiveLayerTracker::NotifyContentChange(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivityForUpdate(aFrame);
   layerActivity->mContentActive = true;
 }
 
-<<<<<<< HEAD
-/* static */ bool ActiveLayerTracker::IsContentActive(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ bool
-ActiveLayerTracker::IsContentActive(nsIFrame* aFrame)
-{
-=======
 /* static */
 bool ActiveLayerTracker::IsContentActive(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   LayerActivity* layerActivity = GetLayerActivity(aFrame);
   return layerActivity && layerActivity->mContentActive;
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::SetCurrentScrollHandlerFrame(
-    nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::SetCurrentScrollHandlerFrame(nsIFrame* aFrame)
-{
-=======
 /* static */
 void ActiveLayerTracker::SetCurrentScrollHandlerFrame(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   if (!gLayerActivityTracker) {
     gLayerActivityTracker = new LayerActivityTracker(
         SystemGroup::EventTargetFor(TaskCategory::Other));
@@ -794,16 +576,8 @@ void ActiveLayerTracker::SetCurrentScrollHandlerFrame(nsIFrame* aFrame) {
   gLayerActivityTracker->mCurrentScrollHandlerFrame = aFrame;
 }
 
-<<<<<<< HEAD
-/* static */ void ActiveLayerTracker::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-ActiveLayerTracker::Shutdown()
-{
-=======
 /* static */
 void ActiveLayerTracker::Shutdown() {
->>>>>>> upstream-releases
   delete gLayerActivityTracker;
   gLayerActivityTracker = nullptr;
 }

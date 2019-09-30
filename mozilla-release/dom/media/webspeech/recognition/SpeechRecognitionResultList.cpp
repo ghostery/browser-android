@@ -26,15 +26,7 @@ SpeechRecognitionResultList::SpeechRecognitionResultList(
     SpeechRecognition* aParent)
     : mParent(aParent) {}
 
-<<<<<<< HEAD
-SpeechRecognitionResultList::~SpeechRecognitionResultList() {}
-||||||| merged common ancestors
-SpeechRecognitionResultList::~SpeechRecognitionResultList()
-{
-}
-=======
 SpeechRecognitionResultList::~SpeechRecognitionResultList() = default;
->>>>>>> upstream-releases
 
 nsISupports* SpeechRecognitionResultList::GetParentObject() const {
   return static_cast<DOMEventTargetHelper*>(mParent.get());

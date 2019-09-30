@@ -18,16 +18,6 @@ class nsImageBoxFrame;
 
 class nsDisplayXULImage;
 
-<<<<<<< HEAD
-class nsImageBoxListener final : public imgINotificationObserver {
- public:
-  explicit nsImageBoxListener(nsImageBoxFrame* frame);
-||||||| merged common ancestors
-class nsImageBoxListener final : public imgINotificationObserver
-{
-public:
-  explicit nsImageBoxListener(nsImageBoxFrame *frame);
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
@@ -35,7 +25,6 @@ class PresShell;
 class nsImageBoxListener final : public imgINotificationObserver {
  public:
   explicit nsImageBoxListener(nsImageBoxFrame* frame);
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_IMGINOTIFICATIONOBSERVER
@@ -65,15 +54,8 @@ class nsImageBoxFrame final : public nsLeafBoxFrame {
 
   nsresult Notify(imgIRequest* aRequest, int32_t aType, const nsIntRect* aData);
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewImageBoxFrame(nsIPresShell* aPresShell,
-                                       ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewImageBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewImageBoxFrame(mozilla::PresShell* aPresShell,
                                        ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* asPrevInFlow) override;
@@ -103,16 +85,10 @@ class nsImageBoxFrame final : public nsLeafBoxFrame {
    */
   void UpdateLoadFlags();
 
-<<<<<<< HEAD
-  virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
-||||||| merged common ancestors
-  virtual void BuildDisplayList(nsDisplayListBuilder*   aBuilder,
-=======
   void RestartAnimation();
   void StopAnimation();
 
   virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
->>>>>>> upstream-releases
                                 const nsDisplayListSet& aLists) override;
 
   virtual ~nsImageBoxFrame();
@@ -125,44 +101,19 @@ class nsImageBoxFrame final : public nsLeafBoxFrame {
                            const nsRect& aDirtyRect, nsPoint aPt,
                            uint32_t aFlags);
 
-<<<<<<< HEAD
-  ImgDrawResult CreateWebRenderCommands(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
-      nsPoint aPt, uint32_t aFlags);
-||||||| merged common ancestors
-  ImgDrawResult CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                        mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                        const mozilla::layers::StackingContextHelper& aSc,
-                                        mozilla::layers::WebRenderLayerManager* aManager,
-                                        nsDisplayItem* aItem,
-                                        nsPoint aPt,
-                                        uint32_t aFlags);
-=======
   ImgDrawResult CreateWebRenderCommands(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem,
       nsPoint aPt, uint32_t aFlags);
->>>>>>> upstream-releases
 
   bool CanOptimizeToImageLayer();
 
   nsRect GetDestRect(const nsPoint& aOffset, Maybe<nsPoint>& aAnchorPoint);
 
-<<<<<<< HEAD
- protected:
-  explicit nsImageBoxFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-protected:
-  explicit nsImageBoxFrame(ComputedStyle* aStyle);
-=======
  protected:
   explicit nsImageBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
->>>>>>> upstream-releases
 
   virtual void GetImageSize();
 
@@ -221,25 +172,6 @@ class nsDisplayXULImage final : public nsDisplayImageContainer {
       nsRegion* aInvalidRegion) const override;
   // Doesn't handle HitTest because nsLeafBoxFrame already creates an
   // event receiver for us
-<<<<<<< HEAD
-  virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
-
-  virtual bool CreateWebRenderCommands(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder) override;
-||||||| merged common ancestors
-  virtual void Paint(nsDisplayListBuilder* aBuilder,
-                     gfxContext* aCtx) override;
-
-  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                       const StackingContextHelper& aSc,
-                                       mozilla::layers::WebRenderLayerManager* aManager,
-                                       nsDisplayListBuilder* aDisplayListBuilder) override;
-=======
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
 
   virtual bool CreateWebRenderCommands(
@@ -248,7 +180,6 @@ class nsDisplayXULImage final : public nsDisplayImageContainer {
       const StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override;
->>>>>>> upstream-releases
 
   NS_DISPLAY_DECL_NAME("XULImage", TYPE_XUL_IMAGE)
 };

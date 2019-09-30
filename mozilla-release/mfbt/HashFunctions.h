@@ -227,19 +227,6 @@ MOZ_MUST_USE inline HashNumber HashGeneric(Args... aArgs) {
   return AddToHash(0, aArgs...);
 }
 
-<<<<<<< HEAD
-namespace detail {
-
-template <typename T>
-constexpr HashNumber HashUntilZero(const T* aStr) {
-||||||| merged common ancestors
-namespace detail {
-
-template<typename T>
-constexpr HashNumber
-HashUntilZero(const T* aStr)
-{
-=======
 /**
  * Hash successive |*aIter| until |!*aIter|, i.e. til null-termination.
  *
@@ -254,7 +241,6 @@ HashUntilZero(const T* aStr)
  */
 template <typename Iterator>
 MOZ_MUST_USE constexpr HashNumber HashStringUntilZero(Iterator aIter) {
->>>>>>> upstream-releases
   HashNumber hash = 0;
   for (; auto c = *aIter; ++aIter) {
     hash = AddToHash(hash, c);
@@ -262,22 +248,12 @@ MOZ_MUST_USE constexpr HashNumber HashStringUntilZero(Iterator aIter) {
   return hash;
 }
 
-<<<<<<< HEAD
-template <typename T>
-HashNumber HashKnownLength(const T* aStr, size_t aLength) {
-||||||| merged common ancestors
-template<typename T>
-HashNumber
-HashKnownLength(const T* aStr, size_t aLength)
-{
-=======
 /**
  * Hash successive |aIter[i]| up to |i == aLength|.
  */
 template <typename Iterator>
 MOZ_MUST_USE constexpr HashNumber HashStringKnownLength(Iterator aIter,
                                                         size_t aLength) {
->>>>>>> upstream-releases
   HashNumber hash = 0;
   for (size_t i = 0; i < aLength; i++) {
     hash = AddToHash(hash, aIter[i]);
@@ -291,125 +267,51 @@ MOZ_MUST_USE constexpr HashNumber HashStringKnownLength(Iterator aIter,
  * These functions are non-template functions so that users can 1) overload them
  * with their own types 2) in a way that allows implicit conversions to happen.
  */
-<<<<<<< HEAD
-MOZ_MUST_USE inline HashNumber HashString(const char* aStr) {
-  return detail::HashUntilZero(reinterpret_cast<const unsigned char*>(aStr));
-||||||| merged common ancestors
-MOZ_MUST_USE inline HashNumber
-HashString(const char* aStr)
-{
-  return detail::HashUntilZero(reinterpret_cast<const unsigned char*>(aStr));
-=======
 MOZ_MUST_USE inline HashNumber HashString(const char* aStr) {
   // Use the |const unsigned char*| version of the above so that all ordinary
   // character data hashes identically.
   return HashStringUntilZero(reinterpret_cast<const unsigned char*>(aStr));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MOZ_MUST_USE inline HashNumber HashString(const char* aStr, size_t aLength) {
-  return detail::HashKnownLength(reinterpret_cast<const unsigned char*>(aStr),
-                                 aLength);
-||||||| merged common ancestors
-MOZ_MUST_USE inline HashNumber
-HashString(const char* aStr, size_t aLength)
-{
-  return detail::HashKnownLength(reinterpret_cast<const unsigned char*>(aStr), aLength);
-=======
 MOZ_MUST_USE inline HashNumber HashString(const char* aStr, size_t aLength) {
   // Delegate to the |const unsigned char*| version of the above to share
   // template instantiations.
   return HashStringKnownLength(reinterpret_cast<const unsigned char*>(aStr),
                                aLength);
->>>>>>> upstream-releases
 }
 
 MOZ_MUST_USE
-<<<<<<< HEAD
-inline HashNumber HashString(const unsigned char* aStr, size_t aLength) {
-  return detail::HashKnownLength(aStr, aLength);
-||||||| merged common ancestors
-inline HashNumber
-HashString(const unsigned char* aStr, size_t aLength)
-{
-  return detail::HashKnownLength(aStr, aLength);
-=======
 inline HashNumber HashString(const unsigned char* aStr, size_t aLength) {
   return HashStringKnownLength(aStr, aLength);
->>>>>>> upstream-releases
 }
 
 // You may need to use the
 // MOZ_{PUSH,POP}_DISABLE_INTEGRAL_CONSTANT_OVERFLOW_WARNING macros if you use
 // this function. See the comment on those macros' definitions for more detail.
-<<<<<<< HEAD
-MOZ_MUST_USE constexpr HashNumber HashString(const char16_t* aStr) {
-  return detail::HashUntilZero(aStr);
-||||||| merged common ancestors
-MOZ_MUST_USE constexpr HashNumber
-HashString(const char16_t* aStr)
-{
-  return detail::HashUntilZero(aStr);
-=======
 MOZ_MUST_USE constexpr HashNumber HashString(const char16_t* aStr) {
   return HashStringUntilZero(aStr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MOZ_MUST_USE inline HashNumber HashString(const char16_t* aStr,
-                                          size_t aLength) {
-  return detail::HashKnownLength(aStr, aLength);
-||||||| merged common ancestors
-MOZ_MUST_USE inline HashNumber
-HashString(const char16_t* aStr, size_t aLength)
-{
-  return detail::HashKnownLength(aStr, aLength);
-=======
 MOZ_MUST_USE inline HashNumber HashString(const char16_t* aStr,
                                           size_t aLength) {
   return HashStringKnownLength(aStr, aLength);
->>>>>>> upstream-releases
 }
 
 /**
  * HashString overloads for |wchar_t| on platforms where it isn't |char16_t|.
  */
-<<<<<<< HEAD
-#ifdef WIN32
-MOZ_MUST_USE inline HashNumber HashString(const wchar_t* aStr) {
-  return detail::HashUntilZero(aStr);
-||||||| merged common ancestors
-#ifdef WIN32
-MOZ_MUST_USE inline HashNumber
-HashString(const wchar_t* aStr)
-{
-  return detail::HashUntilZero(aStr);
-=======
 template <typename WCharT, typename = typename std::enable_if<
                                std::is_same<WCharT, wchar_t>::value &&
                                !std::is_same<wchar_t, char16_t>::value>::type>
 MOZ_MUST_USE inline HashNumber HashString(const WCharT* aStr) {
   return HashStringUntilZero(aStr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-MOZ_MUST_USE inline HashNumber HashString(const wchar_t* aStr, size_t aLength) {
-  return detail::HashKnownLength(aStr, aLength);
-||||||| merged common ancestors
-MOZ_MUST_USE inline HashNumber
-HashString(const wchar_t* aStr, size_t aLength)
-{
-  return detail::HashKnownLength(aStr, aLength);
-=======
 template <typename WCharT, typename = typename std::enable_if<
                                std::is_same<WCharT, wchar_t>::value &&
                                !std::is_same<wchar_t, char16_t>::value>::type>
 MOZ_MUST_USE inline HashNumber HashString(const WCharT* aStr, size_t aLength) {
   return HashStringKnownLength(aStr, aLength);
->>>>>>> upstream-releases
 }
 
 /**

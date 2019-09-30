@@ -28,23 +28,12 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Storage)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-Storage::Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal)
-    : mWindow(aWindow), mPrincipal(aPrincipal), mIsSessionOnly(false) {
-||||||| merged common ancestors
-Storage::Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal)
-  : mWindow(aWindow)
-  , mPrincipal(aPrincipal)
-  , mIsSessionOnly(false)
-{
-=======
 Storage::Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal,
                  nsIPrincipal* aStoragePrincipal)
     : mWindow(aWindow),
       mPrincipal(aPrincipal),
       mStoragePrincipal(aStoragePrincipal),
       mIsSessionOnly(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aPrincipal);
 
   if (nsContentUtils::IsSystemPrincipal(mPrincipal)) {
@@ -61,80 +50,24 @@ Storage::Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal,
   }
 }
 
-<<<<<<< HEAD
-Storage::~Storage() {}
-||||||| merged common ancestors
-Storage::~Storage()
-{}
-=======
 Storage::~Storage() = default;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ bool Storage::StoragePrefIsEnabled() {
-||||||| merged common ancestors
-/* static */ bool
-Storage::StoragePrefIsEnabled()
-{
-=======
 /* static */
 bool Storage::StoragePrefIsEnabled() {
->>>>>>> upstream-releases
   return mozilla::Preferences::GetBool(kStorageEnabled);
 }
 
-<<<<<<< HEAD
 bool Storage::CanUseStorage(nsIPrincipal& aSubjectPrincipal) {
-  // This method is responsible for correct setting of mIsSessionOnly.
-||||||| merged common ancestors
-bool
-Storage::CanUseStorage(nsIPrincipal& aSubjectPrincipal)
-{
-  // This method is responsible for correct setting of mIsSessionOnly.
-=======
-bool Storage::CanUseStorage(nsIPrincipal& aSubjectPrincipal) {
->>>>>>> upstream-releases
   if (!StoragePrefIsEnabled()) {
     return false;
   }
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess access =
-      nsContentUtils::StorageAllowedForPrincipal(Principal());
-
-  if (access <= nsContentUtils::StorageAccess::eDeny) {
-    return false;
-  }
-
-  mIsSessionOnly = access <= nsContentUtils::StorageAccess::eSessionScoped;
-
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess access =
-    nsContentUtils::StorageAllowedForPrincipal(Principal());
-
-  if (access == nsContentUtils::StorageAccess::eDeny) {
-    return false;
-  }
-
-  mIsSessionOnly = access <= nsContentUtils::StorageAccess::eSessionScoped;
-
-=======
->>>>>>> upstream-releases
   return aSubjectPrincipal.Subsumes(mPrincipal);
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* Storage::WrapObject(JSContext* aCx,
-                                            JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-Storage::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* Storage::WrapObject(JSContext* aCx,
                               JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return Storage_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -171,22 +104,6 @@ class StorageNotifierRunnable : public Runnable {
 
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ void Storage::NotifyChange(
-    Storage* aStorage, nsIPrincipal* aPrincipal, const nsAString& aKey,
-    const nsAString& aOldValue, const nsAString& aNewValue,
-    const char16_t* aStorageType, const nsAString& aDocumentURI,
-    bool aIsPrivate, bool aImmediateDispatch) {
-||||||| merged common ancestors
-/* static */ void
-Storage::NotifyChange(Storage* aStorage, nsIPrincipal* aPrincipal,
-                      const nsAString& aKey,
-                      const nsAString& aOldValue, const nsAString& aNewValue,
-                      const char16_t* aStorageType,
-                      const nsAString& aDocumentURI, bool aIsPrivate,
-                      bool aImmediateDispatch)
-{
-=======
 /* static */
 void Storage::NotifyChange(Storage* aStorage, nsIPrincipal* aPrincipal,
                            const nsAString& aKey, const nsAString& aOldValue,
@@ -194,7 +111,6 @@ void Storage::NotifyChange(Storage* aStorage, nsIPrincipal* aPrincipal,
                            const char16_t* aStorageType,
                            const nsAString& aDocumentURI, bool aIsPrivate,
                            bool aImmediateDispatch) {
->>>>>>> upstream-releases
   StorageEventInit dict;
   dict.mBubbles = false;
   dict.mCancelable = false;

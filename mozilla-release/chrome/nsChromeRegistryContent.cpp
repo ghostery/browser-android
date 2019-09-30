@@ -160,46 +160,11 @@ nsChromeRegistryContent::GetLocalesForPackage(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsChromeRegistryContent::CheckForOSAccessibility() {
-  CONTENT_NOT_IMPLEMENTED();
-}
-
-NS_IMETHODIMP
 nsChromeRegistryContent::CheckForNewChrome() { CONTENT_NOT_IMPLEMENTED(); }
-||||||| merged common ancestors
-nsChromeRegistryContent::CheckForOSAccessibility()
-{
-  CONTENT_NOT_IMPLEMENTED();
-}
-
-NS_IMETHODIMP
-nsChromeRegistryContent::CheckForNewChrome()
-{
-  CONTENT_NOT_IMPLEMENTED();
-}
-=======
-nsChromeRegistryContent::CheckForNewChrome() { CONTENT_NOT_IMPLEMENTED(); }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 nsChromeRegistryContent::IsLocaleRTL(const nsACString& aPackage,
-<<<<<<< HEAD
                                      bool* aResult) {
-  if (aPackage != nsDependentCString("global")) {
-    NS_ERROR("Packages other than global unavailable");
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-||||||| merged common ancestors
-                                     bool *aResult)
-{
-  if (aPackage != nsDependentCString("global")) {
-    NS_ERROR("Packages other than global unavailable");
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-=======
-                                     bool* aResult) {
->>>>>>> upstream-releases
   *aResult = GetDirectionForLocale(mLocale);
   return NS_OK;
 }

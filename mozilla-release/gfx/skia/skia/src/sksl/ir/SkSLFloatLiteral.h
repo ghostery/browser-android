@@ -17,25 +17,12 @@ namespace SkSL {
  * A literal floating point number.
  */
 struct FloatLiteral : public Expression {
-<<<<<<< HEAD
-    FloatLiteral(const Context& context, int offset, double value)
-    : INHERITED(offset, kFloatLiteral_Kind, *context.fFloat_Type)
-    , fValue(value) {}
-
-    FloatLiteral(int offset, double value, const Type* type)
-    : INHERITED(offset, kFloatLiteral_Kind, *type)
-||||||| merged common ancestors
-    FloatLiteral(const Context& context, int offset, double value,
-                 const Type* type = nullptr)
-    : INHERITED(offset, kFloatLiteral_Kind, type ? *type : *context.fFloat_Type)
-=======
     FloatLiteral(const Context& context, int offset, double value)
     : INHERITED(offset, kFloatLiteral_Kind, *context.fFloatLiteral_Type)
     , fValue(value) {}
 
     FloatLiteral(int offset, double value, const Type* type)
     : INHERITED(offset, kFloatLiteral_Kind, *type)
->>>>>>> upstream-releases
     , fValue(value) {}
 
     String description() const override {

@@ -22,203 +22,17 @@ class DrawingCommand;
 class SourceSurfaceCapture;
 class AlphaBoxBlur;
 
-<<<<<<< HEAD
-class DrawTargetCaptureImpl : public DrawTargetCapture {
-||||||| merged common ancestors
-class DrawTargetCaptureImpl : public DrawTargetCapture
-{
-=======
 class DrawTargetCaptureImpl final : public DrawTargetCapture {
->>>>>>> upstream-releases
   friend class SourceSurfaceCapture;
 
-<<<<<<< HEAD
- public:
-  DrawTargetCaptureImpl(gfx::DrawTarget *aTarget, size_t aFlushBytes);
-  DrawTargetCaptureImpl(BackendType aBackend, const IntSize &aSize,
-                        SurfaceFormat aFormat);
-||||||| merged common ancestors
-public:
-  DrawTargetCaptureImpl(gfx::DrawTarget* aTarget, size_t aFlushBytes);
-  DrawTargetCaptureImpl(BackendType aBackend, const IntSize& aSize, SurfaceFormat aFormat);
-=======
  public:
   DrawTargetCaptureImpl(gfx::DrawTarget* aTarget, size_t aFlushBytes);
   DrawTargetCaptureImpl(BackendType aBackend, const IntSize& aSize,
                         SurfaceFormat aFormat);
->>>>>>> upstream-releases
 
-  bool Init(const IntSize &aSize, DrawTarget *aRefDT);
+  bool Init(const IntSize& aSize, DrawTarget* aRefDT);
   void InitForData(int32_t aStride, size_t aSurfaceAllocationSize);
 
-<<<<<<< HEAD
-  virtual BackendType GetBackendType() const override {
-    return mRefDT->GetBackendType();
-  }
-  virtual DrawTargetType GetType() const override { return mRefDT->GetType(); }
-  virtual bool IsCaptureDT() const override { return true; }
-  virtual already_AddRefed<SourceSurface> Snapshot() override;
-  virtual already_AddRefed<SourceSurface> IntoLuminanceSource(
-      LuminanceType aLuminanceType, float aOpacity) override;
-  virtual void SetPermitSubpixelAA(bool aPermitSubpixelAA) override;
-  virtual void DetachAllSnapshots() override;
-  virtual IntSize GetSize() const override { return mSize; }
-  virtual void Flush() override {}
-  virtual void DrawSurface(SourceSurface *aSurface, const Rect &aDest,
-                           const Rect &aSource,
-                           const DrawSurfaceOptions &aSurfOptions,
-                           const DrawOptions &aOptions) override;
-  virtual void DrawFilter(FilterNode *aNode, const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest, const Color &aColor,
-                                     const Point &aOffset, Float aSigma,
-                                     CompositionOp aOperator) override;
-
-  virtual void ClearRect(const Rect &aRect) override;
-  virtual void MaskSurface(
-      const Pattern &aSource, SourceSurface *aMask, Point aOffset,
-      const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void CopySurface(SourceSurface *aSurface, const IntRect &aSourceRect,
-                           const IntPoint &aDestination) override;
-  virtual void CopyRect(const IntRect &aSourceRect,
-                        const IntPoint &aDestination) override;
-
-  virtual void FillRect(const Rect &aRect, const Pattern &aPattern,
-                        const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeRect(const Rect &aRect, const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeLine(const Point &aStart, const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void Stroke(const Path *aPath, const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                      const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void Fill(const Path *aPath, const Pattern &aPattern,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeGlyphs(
-      ScaledFont *aFont, const GlyphBuffer &aBuffer, const Pattern &aPattern,
-      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-      const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void Mask(const Pattern &aSource, const Pattern &aMask,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void PushClip(const Path *aPath) override;
-  virtual void PushClipRect(const Rect &aRect) override;
-  virtual void PopClip() override;
-  virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface *aMask,
-                         const Matrix &aMaskTransform, const IntRect &aBounds,
-                         bool aCopyBackground) override;
-  virtual void PopLayer() override;
-  virtual void Blur(const AlphaBoxBlur &aBlur) override;
-  virtual void PadEdges(const IntRegion &aRegion) override;
-
-  virtual void SetTransform(const Matrix &aTransform) override;
-
-  virtual bool SupportsRegionClipping() const override {
-    return mRefDT->SupportsRegionClipping();
-  }
-
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
-      unsigned char *aData, const IntSize &aSize, int32_t aStride,
-      SurfaceFormat aFormat) const override {
-||||||| merged common ancestors
-  virtual BackendType GetBackendType() const override { return mRefDT->GetBackendType(); }
-  virtual DrawTargetType GetType() const override { return mRefDT->GetType(); }
-  virtual bool IsCaptureDT() const override { return true; }
-  virtual already_AddRefed<SourceSurface> Snapshot() override;
-  virtual already_AddRefed<SourceSurface> IntoLuminanceSource(LuminanceType aLuminanceType,
-                                                              float aOpacity) override;
-  virtual void SetPermitSubpixelAA(bool aPermitSubpixelAA) override;
-  virtual void DetachAllSnapshots() override;
-  virtual IntSize GetSize() const override { return mSize; }
-  virtual void Flush() override {}
-  virtual void DrawSurface(SourceSurface *aSurface,
-                           const Rect &aDest,
-                           const Rect &aSource,
-                           const DrawSurfaceOptions &aSurfOptions,
-                           const DrawOptions &aOptions) override;
-  virtual void DrawFilter(FilterNode *aNode,
-                          const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest,
-                                     const Color &aColor,
-                                     const Point &aOffset,
-                                     Float aSigma,
-                                     CompositionOp aOperator) override;
-
-  virtual void ClearRect(const Rect &aRect) override;
-  virtual void MaskSurface(const Pattern &aSource,
-                           SourceSurface *aMask,
-                           Point aOffset,
-                           const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void CopySurface(SourceSurface *aSurface,
-                           const IntRect &aSourceRect,
-                           const IntPoint &aDestination) override;
-  virtual void CopyRect(const IntRect &aSourceRect,
-                        const IntPoint &aDestination) override;
-
-  virtual void FillRect(const Rect &aRect,
-                        const Pattern &aPattern,
-                        const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeRect(const Rect &aRect,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeLine(const Point &aStart,
-                          const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void Stroke(const Path *aPath,
-                      const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                      const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void Fill(const Path *aPath,
-                    const Pattern &aPattern,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void FillGlyphs(ScaledFont *aFont,
-                          const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void StrokeGlyphs(ScaledFont* aFont,
-                            const GlyphBuffer& aBuffer,
-                            const Pattern& aPattern,
-                            const StrokeOptions& aStrokeOptions = StrokeOptions(),
-                            const DrawOptions& aOptions = DrawOptions()) override;
-  virtual void Mask(const Pattern &aSource,
-                    const Pattern &aMask,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-  virtual void PushClip(const Path *aPath) override;
-  virtual void PushClipRect(const Rect &aRect) override;
-  virtual void PopClip() override;
-  virtual void PushLayer(bool aOpaque,
-                         Float aOpacity,
-                         SourceSurface* aMask,
-                         const Matrix& aMaskTransform,
-                         const IntRect& aBounds,
-                         bool aCopyBackground) override;
-  virtual void PopLayer() override;
-  virtual void Blur(const AlphaBoxBlur& aBlur) override;
-  virtual void PadEdges(const IntRegion& aRegion) override;
-
-  virtual void SetTransform(const Matrix &aTransform) override;
-
-  virtual bool SupportsRegionClipping() const override { return mRefDT->SupportsRegionClipping(); }
-
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(unsigned char *aData,
-                                                                  const IntSize &aSize,
-                                                                  int32_t aStride,
-                                                                  SurfaceFormat aFormat) const override
-  {
-=======
   BackendType GetBackendType() const override {
     return mRefDT->GetBackendType();
   }
@@ -293,87 +107,34 @@ public:
   already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
       unsigned char* aData, const IntSize& aSize, int32_t aStride,
       SurfaceFormat aFormat) const override {
->>>>>>> upstream-releases
     return mRefDT->CreateSourceSurfaceFromData(aData, aSize, aStride, aFormat);
   }
-<<<<<<< HEAD
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
-      SourceSurface *aSurface) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(SourceSurface *aSurface) const override;
-=======
   already_AddRefed<SourceSurface> OptimizeSourceSurface(
       SourceSurface* aSurface) const override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
-      const NativeSurface &aSurface) const override {
-||||||| merged common ancestors
-  virtual already_AddRefed<SourceSurface>
-    CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const override
-  {
-=======
   already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
       const NativeSurface& aSurface) const override {
->>>>>>> upstream-releases
     return mRefDT->CreateSourceSurfaceFromNativeSurface(aSurface);
   }
 
-<<<<<<< HEAD
-  virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
-      const IntSize &aSize, SurfaceFormat aFormat) const override;
-  virtual RefPtr<DrawTarget> CreateSimilarRasterTarget(
-      const IntSize &aSize, SurfaceFormat aFormat) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<DrawTarget>
-    CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const override;
-  virtual RefPtr<DrawTarget>
-    CreateSimilarRasterTarget(const IntSize& aSize, SurfaceFormat aFormat) const override;
-=======
   already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
       const IntSize& aSize, SurfaceFormat aFormat) const override;
   RefPtr<DrawTarget> CreateSimilarRasterTarget(
       const IntSize& aSize, SurfaceFormat aFormat) const override;
   RefPtr<DrawTarget> CreateClippedDrawTarget(const Rect& aBounds,
                                              SurfaceFormat aFormat) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<PathBuilder> CreatePathBuilder(
-      FillRule aFillRule = FillRule::FILL_WINDING) const override {
-    return mRefDT->CreatePathBuilder(aFillRule);
-  }
-||||||| merged common ancestors
-  virtual already_AddRefed<PathBuilder> CreatePathBuilder(FillRule aFillRule = FillRule::FILL_WINDING) const override
-  {
-    return mRefDT->CreatePathBuilder(aFillRule);
-  }
-=======
   already_AddRefed<PathBuilder> CreatePathBuilder(
       FillRule aFillRule = FillRule::FILL_WINDING) const override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual already_AddRefed<GradientStops> CreateGradientStops(
-      GradientStop *aStops, uint32_t aNumStops,
-      ExtendMode aExtendMode = ExtendMode::CLAMP) const override {
-||||||| merged common ancestors
-  virtual already_AddRefed<GradientStops>
-    CreateGradientStops(GradientStop *aStops,
-                        uint32_t aNumStops,
-                        ExtendMode aExtendMode = ExtendMode::CLAMP) const override
-  {
-=======
   already_AddRefed<GradientStops> CreateGradientStops(
       GradientStop* aStops, uint32_t aNumStops,
       ExtendMode aExtendMode = ExtendMode::CLAMP) const override {
->>>>>>> upstream-releases
     return mRefDT->CreateGradientStops(aStops, aNumStops, aExtendMode);
   }
   already_AddRefed<FilterNode> CreateFilter(FilterType aType) override;
 
-  void ReplayToDrawTarget(DrawTarget *aDT, const Matrix &aTransform);
+  void ReplayToDrawTarget(DrawTarget* aDT, const Matrix& aTransform);
 
   bool IsEmpty() const override;
   void Dump() override;
@@ -392,16 +153,8 @@ public:
   // This storage system was used to minimize the amount of heap allocations
   // that are required while recording. It should be noted there's no
   // guarantees on the alignments of DrawingCommands allocated in this array.
-<<<<<<< HEAD
-  template <typename T>
-  T *AppendToCommandList() {
-||||||| merged common ancestors
-  template<typename T>
-  T* AppendToCommandList() {
-=======
   template <typename T>
   T* AppendToCommandList() {
->>>>>>> upstream-releases
     if (T::AffectsSnapshot) {
       MarkChanged();
     }
@@ -411,16 +164,8 @@ public:
     }
     return mCommands.Append<T>();
   }
-<<<<<<< HEAD
-  template <typename T>
-  T *ReuseOrAppendToCommandList() {
-||||||| merged common ancestors
-  template<typename T>
-  T* ReuseOrAppendToCommandList() {
-=======
   template <typename T>
   T* ReuseOrAppendToCommandList() {
->>>>>>> upstream-releases
     if (T::AffectsSnapshot) {
       MarkChanged();
     }

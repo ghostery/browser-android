@@ -21,24 +21,11 @@
 #include <vector>
 #include <memory>
 
-#include <new>
-#include <type_traits>
-#include <utility>
-#include <vector>
-
 class SkData;
-<<<<<<< HEAD
-class SkPDFCanon;
-class SkPDFDocument;
-class SkPDFObjNumMap;
-||||||| merged common ancestors
-class SkPDFObjNumMap;
-=======
 class SkPDFArray;
 
 class SkPDFDict;
 class SkPDFDocument;
->>>>>>> upstream-releases
 class SkPDFObject;
 class SkPDFUnion;
 class SkStreamAsset;
@@ -46,15 +33,6 @@ class SkString;
 class SkWStream;
 struct SkPDFObjectSerializer;
 
-<<<<<<< HEAD
-#ifdef SK_PDF_IMAGE_STATS
-    #include <atomic>
-#endif
-||||||| merged common ancestors
-#ifdef SK_PDF_IMAGE_STATS
-#include "SkAtomics.h"
-#endif
-=======
 struct SkPDFIndirectReference {
     int fValue = -1;
     explicit operator bool() { return fValue != -1; }
@@ -67,7 +45,6 @@ inline static bool operator==(SkPDFIndirectReference u, SkPDFIndirectReference v
 inline static bool operator!=(SkPDFIndirectReference u, SkPDFIndirectReference v) {
     return u.fValue != v.fValue;
 }
->>>>>>> upstream-releases
 
 /** \class SkPDFObject
 
@@ -98,257 +75,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-template <class T>
-class SkStorageFor {
-public:
-    const T& get() const { return *reinterpret_cast<const T*>(&fStore); }
-    T& get() { return *reinterpret_cast<T*>(&fStore); }
-    // Up to caller to keep track of status.
-    template<class... Args> void init(Args&&... args) {
-        new (&this->get()) T(std::forward<Args>(args)...);
-    }
-    void destroy() { this->get().~T(); }
-private:
-    typename std::aligned_storage<sizeof(T), alignof(T)>::type fStore;
-};
-
-/**
-   A SkPDFUnion is a non-virtualized implementation of the
-   non-compound, non-specialized PDF Object types: Name, String,
-   Number, Boolean.
- */
-class SkPDFUnion {
-public:
-    // Move contstructor and assignemnt operator destroy the argument
-    // and steal their references (if needed).
-    SkPDFUnion(SkPDFUnion&& other);
-    SkPDFUnion& operator=(SkPDFUnion&& other);
-
-    ~SkPDFUnion();
-
-    /** The following nine functions are the standard way of creating
-        SkPDFUnion objects. */
-
-    static SkPDFUnion Int(int32_t);
-
-    static SkPDFUnion Int(size_t v) { return SkPDFUnion::Int(SkToS32(v)); }
-
-    static SkPDFUnion Bool(bool);
-
-    static SkPDFUnion Scalar(SkScalar);
-
-    static SkPDFUnion ColorComponent(uint8_t);
-
-    /** These two functions do NOT take ownership of char*, and do NOT
-        copy the string.  Suitable for passing in static const
-        strings. For example:
-          SkPDFUnion n = SkPDFUnion::Name("Length");
-          SkPDFUnion u = SkPDFUnion::String("Identity"); */
-
-    /** SkPDFUnion::Name(const char*) assumes that the passed string
-        is already a valid name (that is: it has no control or
-        whitespace characters).  This will not copy the name. */
-    static SkPDFUnion Name(const char*);
-
-    /** SkPDFUnion::String will encode the passed string.  This will
-        not copy the name. */
-    static SkPDFUnion String(const char*);
-
-    /** SkPDFUnion::Name(const SkString&) does not assume that the
-        passed string is already a valid name and it will escape the
-        string. */
-    static SkPDFUnion Name(const SkString&);
-
-    /** SkPDFUnion::String will encode the passed string. */
-    static SkPDFUnion String(const SkString&);
-
-    static SkPDFUnion Object(sk_sp<SkPDFObject>);
-    static SkPDFUnion ObjRef(sk_sp<SkPDFObject>);
-
-    /** These two non-virtual methods mirror SkPDFObject's
-        corresponding virtuals. */
-    void emitObject(SkWStream*, const SkPDFObjNumMap&) const;
-    void addResources(SkPDFObjNumMap*) const;
-
-    bool isName() const;
-
-private:
-    union {
-        int32_t fIntValue;
-        bool fBoolValue;
-        SkScalar fScalarValue;
-        const char* fStaticString;
-        SkStorageFor<SkString> fSkString;
-        SkPDFObject* fObject;
-    };
-    enum class Type : char {
-        /** It is an error to call emitObject() or addResources() on an
-            kDestroyed object. */
-        kDestroyed = 0,
-        kInt,
-        kColorComponent,
-        kBool,
-        kScalar,
-        kName,
-        kString,
-        kNameSkS,
-        kStringSkS,
-        kObjRef,
-        kObject,
-    };
-    Type fType;
-
-    SkPDFUnion(Type);
-    // We do not now need copy constructor and copy assignment, so we
-    // will disable this functionality.
-    SkPDFUnion& operator=(const SkPDFUnion&) = delete;
-    SkPDFUnion(const SkPDFUnion&) = delete;
-};
-static_assert(sizeof(SkString) == sizeof(void*), "SkString_size");
-
-// Exposed for unit testing.
-void SkPDFWriteString(SkWStream* wStream, const char* cin, size_t len);
-
-////////////////////////////////////////////////////////////////////////////////
-
-#if 0  // Enable if needed.
-/** This class is a SkPDFUnion with SkPDFObject virtuals attached.
-    The only use case of this is when a non-compound PDF object is
-    referenced indirectly. */
-class SkPDFAtom final : public SkPDFObject {
-public:
-    void emitObject(SkWStream* stream,
-                    const SkPDFObjNumMap& objNumMap) final;
-    void addResources(SkPDFObjNumMap* const final;
-    SkPDFAtom(SkPDFUnion&& v) : fValue(std::move(v) {}
-
-private:
-    const SkPDFUnion fValue;
-    typedef SkPDFObject INHERITED;
-};
-#endif  // 0
-
-////////////////////////////////////////////////////////////////////////////////
-
-||||||| merged common ancestors
-/**
-   A SkPDFUnion is a non-virtualized implementation of the
-   non-compound, non-specialized PDF Object types: Name, String,
-   Number, Boolean.
- */
-class SkPDFUnion {
-public:
-    // Move contstructor and assignemnt operator destroy the argument
-    // and steal their references (if needed).
-    SkPDFUnion(SkPDFUnion&& other);
-    SkPDFUnion& operator=(SkPDFUnion&& other);
-
-    ~SkPDFUnion();
-
-    /** The following nine functions are the standard way of creating
-        SkPDFUnion objects. */
-
-    static SkPDFUnion Int(int32_t);
-
-    static SkPDFUnion Int(size_t v) { return SkPDFUnion::Int(SkToS32(v)); }
-
-    static SkPDFUnion Bool(bool);
-
-    static SkPDFUnion Scalar(SkScalar);
-
-    static SkPDFUnion ColorComponent(uint8_t);
-
-    /** These two functions do NOT take ownership of char*, and do NOT
-        copy the string.  Suitable for passing in static const
-        strings. For example:
-          SkPDFUnion n = SkPDFUnion::Name("Length");
-          SkPDFUnion u = SkPDFUnion::String("Identity"); */
-
-    /** SkPDFUnion::Name(const char*) assumes that the passed string
-        is already a valid name (that is: it has no control or
-        whitespace characters).  This will not copy the name. */
-    static SkPDFUnion Name(const char*);
-
-    /** SkPDFUnion::String will encode the passed string.  This will
-        not copy the name. */
-    static SkPDFUnion String(const char*);
-
-    /** SkPDFUnion::Name(const SkString&) does not assume that the
-        passed string is already a valid name and it will escape the
-        string. */
-    static SkPDFUnion Name(const SkString&);
-
-    /** SkPDFUnion::String will encode the passed string. */
-    static SkPDFUnion String(const SkString&);
-
-    static SkPDFUnion Object(sk_sp<SkPDFObject>);
-    static SkPDFUnion ObjRef(sk_sp<SkPDFObject>);
-
-    /** These two non-virtual methods mirror SkPDFObject's
-        corresponding virtuals. */
-    void emitObject(SkWStream*, const SkPDFObjNumMap&) const;
-    void addResources(SkPDFObjNumMap*) const;
-
-    bool isName() const;
-
-private:
-    union {
-        int32_t fIntValue;
-        bool fBoolValue;
-        SkScalar fScalarValue;
-        const char* fStaticString;
-        char fSkString[sizeof(SkString)];
-        SkPDFObject* fObject;
-    };
-    enum class Type : char {
-        /** It is an error to call emitObject() or addResources() on an
-            kDestroyed object. */
-        kDestroyed = 0,
-        kInt,
-        kColorComponent,
-        kBool,
-        kScalar,
-        kName,
-        kString,
-        kNameSkS,
-        kStringSkS,
-        kObjRef,
-        kObject,
-    };
-    Type fType;
-
-    SkPDFUnion(Type);
-    // We do not now need copy constructor and copy assignment, so we
-    // will disable this functionality.
-    SkPDFUnion& operator=(const SkPDFUnion&) = delete;
-    SkPDFUnion(const SkPDFUnion&) = delete;
-};
-static_assert(sizeof(SkString) == sizeof(void*), "SkString_size");
-
-////////////////////////////////////////////////////////////////////////////////
-
-#if 0  // Enable if needed.
-/** This class is a SkPDFUnion with SkPDFObject virtuals attached.
-    The only use case of this is when a non-compound PDF object is
-    referenced indirectly. */
-class SkPDFAtom final : public SkPDFObject {
-public:
-    void emitObject(SkWStream* stream,
-                    const SkPDFObjNumMap& objNumMap) final;
-    void addResources(SkPDFObjNumMap* const final;
-    SkPDFAtom(SkPDFUnion&& v) : fValue(std::move(v) {}
-
-private:
-    const SkPDFUnion fValue;
-    typedef SkPDFObject INHERITED;
-};
-#endif  // 0
-
-////////////////////////////////////////////////////////////////////////////////
-
-=======
->>>>>>> upstream-releases
 /** \class SkPDFArray
 
     An array object in a PDF.
@@ -391,27 +117,6 @@ private:
     void append(SkPDFUnion&& value);
 };
 
-<<<<<<< HEAD
-static inline void SkPDFArray_Append(SkPDFArray* a, int v) { a->appendInt(v); }
-
-static inline void SkPDFArray_Append(SkPDFArray* a, SkScalar v) { a->appendScalar(v); }
-
-template <typename T, typename... Args>
-inline void SkPDFArray_Append(SkPDFArray* a, T v, Args... args) {
-    SkPDFArray_Append(a, v);
-    SkPDFArray_Append(a, args...);
-}
-
-template <typename... Args>
-inline sk_sp<SkPDFArray> SkPDFMakeArray(Args... args) {
-    auto ret = sk_make_sp<SkPDFArray>();
-    ret->reserve(sizeof...(Args));
-    SkPDFArray_Append(ret.get(), args...);
-    return ret;
-}
-
-||||||| merged common ancestors
-=======
 static inline void SkPDFArray_Append(SkPDFArray* a, int v) { a->appendInt(v); }
 
 static inline void SkPDFArray_Append(SkPDFArray* a, SkScalar v) { a->appendScalar(v); }
@@ -432,7 +137,6 @@ static inline std::unique_ptr<SkPDFArray> SkPDFMakeArray(Args... args) {
     return ret;
 }
 
->>>>>>> upstream-releases
 /** \class SkPDFDict
 
     A dictionary object in a PDF.
@@ -477,155 +181,7 @@ public:
     void insertName(const char key[], const char nameValue[]);
     void insertName(const char key[], SkString nameValue);
     void insertString(const char key[], const char value[]);
-<<<<<<< HEAD
-    void insertString(const char key[], const SkString& value);
-
-    /** Emit the dictionary, without the "<<" and ">>".
-     */
-    void emitAll(SkWStream* stream,
-                 const SkPDFObjNumMap& objNumMap) const;
-
-private:
-    struct Record {
-        SkPDFUnion fKey;
-        SkPDFUnion fValue;
-    };
-    std::vector<Record> fRecords;
-    SkDEBUGCODE(bool fDumped;)
-};
-
-/** \class SkPDFSharedStream
-
-    This class takes an asset and assumes that it is backed by
-    long-lived shared data (for example, an open file
-    descriptor). That is: no memory savings can be made by holding on
-    to a compressed version instead.
- */
-class SkPDFSharedStream final : public SkPDFObject {
-public:
-    SkPDFSharedStream(std::unique_ptr<SkStreamAsset> data);
-    ~SkPDFSharedStream() override;
-    SkPDFDict* dict() { return &fDict; }
-    void emitObject(SkWStream*,
-                    const SkPDFObjNumMap&) const override;
-    void addResources(SkPDFObjNumMap*) const override;
-    void drop() override;
-
-private:
-    std::unique_ptr<SkStreamAsset> fAsset;
-    SkPDFDict fDict;
-    typedef SkPDFObject INHERITED;
-};
-
-/** \class SkPDFStream
-
-    This class takes an asset and assumes that it is the only owner of
-    the asset's data.  It immediately compresses the asset to save
-    memory.
- */
-
-class SkPDFStream final : public SkPDFObject {
-
-public:
-    /** Create a PDF stream. A Length entry is automatically added to the
-     *  stream dictionary.
-     *  @param data   The data part of the stream.
-     *  @param stream The data part of the stream. */
-    explicit SkPDFStream(sk_sp<SkData> data);
-    explicit SkPDFStream(std::unique_ptr<SkStreamAsset> stream);
-    ~SkPDFStream() override;
-
-    SkPDFDict* dict() { return &fDict; }
-
-    // The SkPDFObject interface.
-    void emitObject(SkWStream* stream,
-                    const SkPDFObjNumMap& objNumMap) const override;
-    void addResources(SkPDFObjNumMap*) const final;
-    void drop() override;
-
-protected:
-    /* Create a PDF stream with no data.  The setData method must be called to
-     * set the data. */
-    SkPDFStream();
-
-    /** Only call this function once. */
-    void setData(std::unique_ptr<SkStreamAsset> stream);
-||||||| merged common ancestors
-    void insertString(const char key[], const SkString& value);
-
-    /** Emit the dictionary, without the "<<" and ">>".
-     */
-    void emitAll(SkWStream* stream,
-                 const SkPDFObjNumMap& objNumMap) const;
-
-private:
-    struct Record {
-        SkPDFUnion fKey;
-        SkPDFUnion fValue;
-    };
-    SkTArray<Record> fRecords;
-    SkDEBUGCODE(bool fDumped;)
-};
-
-/** \class SkPDFSharedStream
-
-    This class takes an asset and assumes that it is backed by
-    long-lived shared data (for example, an open file
-    descriptor). That is: no memory savings can be made by holding on
-    to a compressed version instead.
- */
-class SkPDFSharedStream final : public SkPDFObject {
-public:
-    SkPDFSharedStream(std::unique_ptr<SkStreamAsset> data);
-    ~SkPDFSharedStream() override;
-    SkPDFDict* dict() { return &fDict; }
-    void emitObject(SkWStream*,
-                    const SkPDFObjNumMap&) const override;
-    void addResources(SkPDFObjNumMap*) const override;
-    void drop() override;
-
-private:
-    std::unique_ptr<SkStreamAsset> fAsset;
-    SkPDFDict fDict;
-    typedef SkPDFObject INHERITED;
-};
-
-/** \class SkPDFStream
-
-    This class takes an asset and assumes that it is the only owner of
-    the asset's data.  It immediately compresses the asset to save
-    memory.
- */
-
-class SkPDFStream final : public SkPDFObject {
-
-public:
-    /** Create a PDF stream. A Length entry is automatically added to the
-     *  stream dictionary.
-     *  @param data   The data part of the stream.
-     *  @param stream The data part of the stream. */
-    explicit SkPDFStream(sk_sp<SkData> data);
-    explicit SkPDFStream(std::unique_ptr<SkStreamAsset> stream);
-    ~SkPDFStream() override;
-
-    SkPDFDict* dict() { return &fDict; }
-
-    // The SkPDFObject interface.
-    void emitObject(SkWStream* stream,
-                    const SkPDFObjNumMap& objNumMap) const override;
-    void addResources(SkPDFObjNumMap*) const final;
-    void drop() override;
-
-protected:
-    /* Create a PDF stream with no data.  The setData method must be called to
-     * set the data. */
-    SkPDFStream();
-
-    /** Only call this function once. */
-    void setData(std::unique_ptr<SkStreamAsset> stream);
-=======
     void insertString(const char key[], SkString value);
->>>>>>> upstream-releases
 
 private:
     std::vector<std::pair<SkPDFUnion, SkPDFUnion>> fRecords;
@@ -635,75 +191,11 @@ static inline std::unique_ptr<SkPDFDict> SkPDFMakeDict(const char* type = nullpt
     return std::unique_ptr<SkPDFDict>(new SkPDFDict(type));
 }
 
-<<<<<<< HEAD
-    The PDF Object Number Map manages object numbers.  It is used to
-    create the PDF cross reference table.
-*/
-class SkPDFObjNumMap : SkNoncopyable {
-public:
-    /** Add the passed object to the catalog, as well as all its dependencies.
-     *  @param obj   The object to add.  If nullptr, this is a noop.
-     */
-    void addObjectRecursively(SkPDFObject* obj);
-
-    /** Get the object number for the passed object.
-     *  @param obj         The object of interest.
-     */
-    int32_t getObjectNumber(SkPDFObject* obj) const;
-
-    const std::vector<sk_sp<SkPDFObject>>& objects() const { return fObjects; }
-
-private:
-    std::vector<sk_sp<SkPDFObject>> fObjects;
-    SkTHashMap<SkPDFObject*, int32_t> fObjectNumbers;
-};
-
-////////////////////////////////////////////////////////////////////////////////
-
-#ifdef SK_PDF_IMAGE_STATS
-extern std::atomic<int> gDrawImageCalls;
-extern std::atomic<int> gJpegImageObjects;
-extern std::atomic<int> gRegularImageObjects;
-extern void SkPDFImageDumpStats();
-#endif // SK_PDF_IMAGE_STATS
-||||||| merged common ancestors
-    The PDF Object Number Map manages object numbers.  It is used to
-    create the PDF cross reference table.
-*/
-class SkPDFObjNumMap : SkNoncopyable {
-public:
-    /** Add the passed object to the catalog, as well as all its dependencies.
-     *  @param obj   The object to add.  If nullptr, this is a noop.
-     */
-    void addObjectRecursively(SkPDFObject* obj);
-
-    /** Get the object number for the passed object.
-     *  @param obj         The object of interest.
-     */
-    int32_t getObjectNumber(SkPDFObject* obj) const;
-
-    const SkTArray<sk_sp<SkPDFObject>>& objects() const { return fObjects; }
-
-private:
-    SkTArray<sk_sp<SkPDFObject>> fObjects;
-    SkTHashMap<SkPDFObject*, int32_t> fObjectNumbers;
-};
-
-////////////////////////////////////////////////////////////////////////////////
-
-#ifdef SK_PDF_IMAGE_STATS
-extern SkAtomic<int> gDrawImageCalls;
-extern SkAtomic<int> gJpegImageObjects;
-extern SkAtomic<int> gRegularImageObjects;
-extern void SkPDFImageDumpStats();
-#endif // SK_PDF_IMAGE_STATS
-=======
 #ifdef SK_PDF_LESS_COMPRESSION
     static constexpr bool kSkPDFDefaultDoDeflate = false;
 #else
     static constexpr bool kSkPDFDefaultDoDeflate = true;
 #endif
->>>>>>> upstream-releases
 
 SkPDFIndirectReference SkPDFStreamOut(std::unique_ptr<SkPDFDict> dict,
                                       std::unique_ptr<SkStreamAsset> stream,

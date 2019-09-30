@@ -16,51 +16,12 @@
 #include <glib/gmessages.h>
 
 #undef g_new
-<<<<<<< HEAD
-#define g_new(type, num) ((type *)g_malloc_n((num), sizeof(type)))
-||||||| merged common ancestors
-#define g_new(type, num) \
-    ((type *) g_malloc_n((num), sizeof(type)))
-=======
 #define g_new(type, num) ((type*)g_malloc_n((num), sizeof(type)))
->>>>>>> upstream-releases
 
 #undef g_new0
-<<<<<<< HEAD
-#define g_new0(type, num) ((type *)g_malloc0_n((num), sizeof(type)))
-||||||| merged common ancestors
-#define g_new0(type, num) \
-    ((type *) g_malloc0_n((num), sizeof(type)))
-=======
 #define g_new0(type, num) ((type*)g_malloc0_n((num), sizeof(type)))
->>>>>>> upstream-releases
 
 #undef g_renew
-<<<<<<< HEAD
-#define g_renew(type, ptr, num) ((type *)g_realloc_n(ptr, (num), sizeof(type)))
-
-#define _CHECK_OVERFLOW(num, type_size)                                    \
-  if (G_UNLIKELY(type_size > 0 && num > G_MAXSIZE / type_size)) {          \
-    g_error("%s: overflow allocating %" G_GSIZE_FORMAT "*%" G_GSIZE_FORMAT \
-            " bytes",                                                      \
-            G_STRLOC, num, type_size);                                     \
-  }
-
-static inline gpointer g_malloc_n(gsize num, gsize type_size) {
-||||||| merged common ancestors
-#define g_renew(type, ptr, num) \
-    ((type *) g_realloc_n(ptr, (num), sizeof(type)))
-
-#define _CHECK_OVERFLOW(num, type_size) \
-    if (G_UNLIKELY(type_size > 0 && num > G_MAXSIZE / type_size)) { \
-      g_error("%s: overflow allocating %" G_GSIZE_FORMAT "*%" G_GSIZE_FORMAT " bytes", \
-              G_STRLOC, num, type_size); \
-    }
-
-static inline gpointer
-g_malloc_n(gsize num, gsize type_size)
-{
-=======
 #define g_renew(type, ptr, num) ((type*)g_realloc_n(ptr, (num), sizeof(type)))
 
 #define _CHECK_OVERFLOW(num, type_size)                                    \
@@ -71,7 +32,6 @@ g_malloc_n(gsize num, gsize type_size)
   }
 
 static inline gpointer g_malloc_n(gsize num, gsize type_size) {
->>>>>>> upstream-releases
   _CHECK_OVERFLOW(num, type_size)
   return g_malloc(num * type_size);
 }

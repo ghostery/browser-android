@@ -67,17 +67,9 @@ static bool CanCreateMFTDecoder(const GUID& aGuid) {
 }
 
 /* static */
-<<<<<<< HEAD
-void WMFDecoderModule::Init() {
-||||||| merged common ancestors
-void
-WMFDecoderModule::Init()
-{
-=======
 void WMFDecoderModule::Init() {
   MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread());
   bool testForVPx;
->>>>>>> upstream-releases
   if (XRE_IsContentProcess()) {
     // If we're in the content process and the UseGPUDecoder pref is set, it
     // means that we've given up on the GPU process (it's been crashing) so we
@@ -123,14 +115,6 @@ nsresult WMFDecoderModule::Startup() {
   return mWMFInitialized ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-already_AddRefed<MediaDataDecoder> WMFDecoderModule::CreateVideoDecoder(
-    const CreateDecoderParams& aParams) {
-||||||| merged common ancestors
-already_AddRefed<MediaDataDecoder>
-WMFDecoderModule::CreateVideoDecoder(const CreateDecoderParams& aParams)
-{
-=======
 already_AddRefed<MediaDataDecoder> WMFDecoderModule::CreateVideoDecoder(
     const CreateDecoderParams& aParams) {
   // Temporary - forces use of VPXDecoder when alpha is present.
@@ -141,7 +125,6 @@ already_AddRefed<MediaDataDecoder> WMFDecoderModule::CreateVideoDecoder(
     return nullptr;
   }
 
->>>>>>> upstream-releases
   nsAutoPtr<WMFVideoMFTManager> manager(new WMFVideoMFTManager(
       aParams.VideoConfig(), aParams.mKnowsCompositor, aParams.mImageContainer,
       aParams.mRate.mValue, aParams.mOptions, sDXVAEnabled));
@@ -174,58 +157,8 @@ already_AddRefed<MediaDataDecoder> WMFDecoderModule::CreateAudioDecoder(
   return decoder.forget();
 }
 
-<<<<<<< HEAD
-static bool CanCreateMFTDecoder(const GUID& aGuid) {
-  // The IMFTransform interface used by MFTDecoder is documented to require to
-  // run on an MTA thread.
-  // https://msdn.microsoft.com/en-us/library/windows/desktop/ee892371(v=vs.85).aspx#components
-  // Note: our normal SharedThreadPool task queues are initialized to MTA, but
-  // the main thread (which calls in here from our CanPlayType implementation)
-  // is not.
-  bool canCreateDecoder = false;
-  mozilla::mscom::EnsureMTA([&]() -> void {
-    if (FAILED(wmf::MFStartup())) {
-      return;
-    }
-    RefPtr<MFTDecoder> decoder(new MFTDecoder());
-    canCreateDecoder = SUCCEEDED(decoder->Create(aGuid));
-    wmf::MFShutdown();
-  });
-  return canCreateDecoder;
-}
-
 template <const GUID& aGuid>
 static bool CanCreateWMFDecoder() {
-||||||| merged common ancestors
-static bool
-CanCreateMFTDecoder(const GUID& aGuid)
-{
-  // The IMFTransform interface used by MFTDecoder is documented to require to
-  // run on an MTA thread.
-  // https://msdn.microsoft.com/en-us/library/windows/desktop/ee892371(v=vs.85).aspx#components
-  // Note: our normal SharedThreadPool task queues are initialized to MTA, but
-  // the main thread (which calls in here from our CanPlayType implementation)
-  // is not.
-  bool canCreateDecoder = false;
-  mozilla::mscom::EnsureMTA([&]() -> void {
-    if (FAILED(wmf::MFStartup())) {
-      return;
-    }
-    RefPtr<MFTDecoder> decoder(new MFTDecoder());
-    canCreateDecoder = SUCCEEDED(decoder->Create(aGuid));
-    wmf::MFShutdown();
-  });
-  return canCreateDecoder;
-}
-
-template<const GUID& aGuid>
-static bool
-CanCreateWMFDecoder()
-{
-=======
-template <const GUID& aGuid>
-static bool CanCreateWMFDecoder() {
->>>>>>> upstream-releases
   static StaticMutex sMutex;
   StaticMutexAutoLock lock(sMutex);
   static Maybe<bool> result;
@@ -235,29 +168,13 @@ static bool CanCreateWMFDecoder() {
   return result.value();
 }
 
-<<<<<<< HEAD
-/* static */ bool WMFDecoderModule::HasH264() {
-||||||| merged common ancestors
-/* static */ bool
-WMFDecoderModule::HasH264()
-{
-=======
 /* static */
 bool WMFDecoderModule::HasH264() {
->>>>>>> upstream-releases
   return CanCreateWMFDecoder<CLSID_CMSH264DecoderMFT>();
 }
 
-<<<<<<< HEAD
-/* static */ bool WMFDecoderModule::HasAAC() {
-||||||| merged common ancestors
-/* static */ bool
-WMFDecoderModule::HasAAC()
-{
-=======
 /* static */
 bool WMFDecoderModule::HasAAC() {
->>>>>>> upstream-releases
   return CanCreateWMFDecoder<CLSID_CMSAACDecMFT>();
 }
 

@@ -10,13 +10,7 @@ uz{
                 "<sh<<<Sh<<<SH"
                 "<ch<<<Ch<<<CH"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

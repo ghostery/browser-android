@@ -385,78 +385,6 @@ class OpenH264Build(TransferMixin, VCSScript, TooltoolMixin):
         if retval != 0:
             self.fatal("test failures")
 
-<<<<<<< HEAD
-    def copy_to_upload_dir(self, target, dest=None, short_desc="unknown",
-                           long_desc="unknown", log_level=DEBUG,
-                           error_level=ERROR, max_backups=None,
-                           compress=False, upload_dir=None):
-        """Copy target file to upload_dir/dest.
-
-        Potentially update a manifest in the future if we go that route.
-
-        Currently only copies a single file; would be nice to allow for
-        recursive copying; that would probably done by creating a helper
-        _copy_file_to_upload_dir().
-
-        short_desc and long_desc are placeholders for if/when we add
-        upload_dir manifests.
-        """
-        dest_filename_given = dest is not None
-        if upload_dir is None:
-            upload_dir = self.query_abs_dirs()['abs_upload_dir']
-        if dest is None:
-            dest = os.path.basename(target)
-        if dest.endswith('/'):
-            dest_file = os.path.basename(target)
-            dest_dir = os.path.join(upload_dir, dest)
-            dest_filename_given = False
-        else:
-            dest_file = os.path.basename(dest)
-            dest_dir = os.path.join(upload_dir, os.path.dirname(dest))
-        if compress and not dest_filename_given:
-            dest_file += ".gz"
-        dest = os.path.join(dest_dir, dest_file)
-        if not os.path.exists(target):
-            self.log("%s doesn't exist!" % target, level=error_level)
-            return None
-        self.mkdir_p(dest_dir)
-        if os.path.exists(dest):
-            if os.path.isdir(dest):
-                self.log("%s exists and is a directory!" % dest, level=error_level)
-                return -1
-            if max_backups:
-                # Probably a better way to do this
-                oldest_backup = 0
-                backup_regex = re.compile("^%s\.(\d+)$" % dest_file)
-                for filename in os.listdir(dest_dir):
-                    r = backup_regex.match(filename)
-                    if r and int(r.groups()[0]) > oldest_backup:
-                        oldest_backup = int(r.groups()[0])
-                for backup_num in range(oldest_backup, 0, -1):
-                    # TODO more error checking?
-                    if backup_num >= max_backups:
-                        self.rmtree(os.path.join(dest_dir, "%s.%d" % (dest_file, backup_num)),
-                                    log_level=log_level)
-                    else:
-                        self.move(os.path.join(dest_dir, "%s.%d" % (dest_file, backup_num)),
-                                  os.path.join(dest_dir, "%s.%d" % (dest_file, backup_num + 1)),
-                                  log_level=log_level)
-                if self.move(dest, "%s.1" % dest, log_level=log_level):
-                    self.log("Unable to move %s!" % dest, level=error_level)
-                    return -1
-            else:
-                if self.rmtree(dest, log_level=log_level):
-                    self.log("Unable to remove %s!" % dest, level=error_level)
-                    return -1
-        self.copyfile(target, dest, log_level=log_level, compress=compress)
-        if os.path.exists(dest):
-            return dest
-        else:
-            self.log("%s doesn't exist after copy!" % dest, level=error_level)
-            return None
-
-||||||| merged common ancestors
-=======
     def copy_to_upload_dir(self, target, dest=None, log_level=DEBUG,
                            error_level=ERROR, compress=False, upload_dir=None):
         """Copy target file to upload_dir/dest.
@@ -493,7 +421,6 @@ class OpenH264Build(TransferMixin, VCSScript, TooltoolMixin):
             self.log("%s doesn't exist after copy!" % dest, level=error_level)
             return None
 
->>>>>>> upstream-releases
 
 # main {{{1
 if __name__ == '__main__':

@@ -51,20 +51,8 @@ public:
      *  instance is always returned.
      */
     template <typename... Args> T* init(Args&&... args) {
-<<<<<<< HEAD
-        if (this->isValid()) {
-            fPtr->~T();
-        }
-        fPtr = new (reinterpret_cast<T*>(fStorage.get())) T(std::forward<Args>(args)...);
-||||||| merged common ancestors
-        if (this->isValid()) {
-            fPtr->~T();
-        }
-        fPtr = new (SkTCast<T*>(fStorage.get())) T(std::forward<Args>(args)...);
-=======
         this->reset();
         fPtr = new (&fStorage) T(std::forward<Args>(args)...);
->>>>>>> upstream-releases
         return fPtr;
     }
 
@@ -78,13 +66,7 @@ public:
         if (this->isValid()) {
             *fPtr = src;
         } else {
-<<<<<<< HEAD
-            fPtr = new (reinterpret_cast<T*>(fStorage.get())) T(src);
-||||||| merged common ancestors
-            fPtr = new (SkTCast<T*>(fStorage.get())) T(src);
-=======
             fPtr = new (&fStorage) T(src);
->>>>>>> upstream-releases
         }
         return fPtr;
     }
@@ -93,13 +75,7 @@ public:
         if (this->isValid()) {
             *fPtr = std::move(src);
         } else {
-<<<<<<< HEAD
-            fPtr = new (reinterpret_cast<T*>(fStorage.get())) T(std::move(src));
-||||||| merged common ancestors
-            fPtr = new (SkTCast<T*>(fStorage.get())) T(std::move(src));
-=======
             fPtr = new (&fStorage) T(std::move(src));
->>>>>>> upstream-releases
         }
         return fPtr;
     }

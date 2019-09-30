@@ -7,13 +7,7 @@ DIRS += [
     'styles',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/shared/Button/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/shared/Button/moz.build
     'CloseButton.js',
     'CommandBarButton.js',
     'index.js',

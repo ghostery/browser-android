@@ -19,13 +19,6 @@
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-VRChild::VRChild(VRProcessParent* aHost) : mHost(aHost) {
-||||||| merged common ancestors
-VRChild::VRChild(VRProcessParent* aHost)
- : mHost(aHost)
-{
-=======
 class OpenVRControllerManifestManager {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(OpenVRControllerManifestManager)
  public:
@@ -76,23 +69,9 @@ class OpenVRControllerManifestManager {
 StaticRefPtr<OpenVRControllerManifestManager> sOpenVRControllerManifestManager;
 
 VRChild::VRChild(VRProcessParent* aHost) : mHost(aHost), mVRReady(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 }
 
-<<<<<<< HEAD
-void VRChild::ActorDestroy(ActorDestroyReason aWhy) {
-  gfxVars::RemoveReceiver(this);
-  mHost->OnChannelClosed();
-  XRE_ShutdownChildProcess();
-||||||| merged common ancestors
-void
-VRChild::ActorDestroy(ActorDestroyReason aWhy)
-{
-  gfxVars::RemoveReceiver(this);
-  mHost->OnChannelClosed();
-  XRE_ShutdownChildProcess();
-=======
 mozilla::ipc::IPCResult VRChild::RecvAddMemoryReport(
     const MemoryReport& aReport) {
   if (mMemoryReportRequest) {
@@ -108,37 +87,8 @@ mozilla::ipc::IPCResult VRChild::RecvFinishMemoryReport(
     mMemoryReportRequest = nullptr;
   }
   return IPC_OK();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void VRChild::Init() {
-  // Build a list of prefs the VR process will need. Note that because we
-  // limit the VR process to prefs contained in gfxPrefs, we can simplify
-  // the message in two ways: one, we only need to send its index in gfxPrefs
-  // rather than its name, and two, we only need to send prefs that don't
-  // have their default value.
-  // Todo: Consider to make our own vrPrefs that we are interested in VR
-  // process.
-  nsTArray<GfxPrefSetting> prefs;
-  for (auto pref : gfxPrefs::all()) {
-    if (pref->HasDefaultValue()) {
-      continue;
-||||||| merged common ancestors
-void
-VRChild::Init()
-{
-  // Build a list of prefs the VR process will need. Note that because we
-  // limit the VR process to prefs contained in gfxPrefs, we can simplify
-  // the message in two ways: one, we only need to send its index in gfxPrefs
-  // rather than its name, and two, we only need to send prefs that don't
-  // have their default value.
-  // Todo: Consider to make our own vrPrefs that we are interested in VR process.
-  nsTArray<GfxPrefSetting> prefs;
-  for (auto pref : gfxPrefs::all()) {
-    if (pref->HasDefaultValue()) {
-      continue;
-=======
 void VRChild::ActorDestroy(ActorDestroyReason aWhy) {
   if (aWhy == AbnormalShutdown) {
     if (mCrashReporter) {
@@ -146,7 +96,6 @@ void VRChild::ActorDestroy(ActorDestroyReason aWhy) {
       mCrashReporter = nullptr;
     } else {
       CrashReporter::FinalizeOrphanedMinidump(OtherPid(), GeckoProcessType_VR);
->>>>>>> upstream-releases
     }
 
     Telemetry::Accumulate(
@@ -199,15 +148,6 @@ void VRChild::Init() {
   gfxVars::AddReceiver(this);
 }
 
-<<<<<<< HEAD
-void VRChild::OnVarChanged(const GfxVarUpdate& aVar) { SendUpdateVar(aVar); }
-||||||| merged common ancestors
-void
-VRChild::OnVarChanged(const GfxVarUpdate& aVar)
-{
-  SendUpdateVar(aVar);
-}
-=======
 bool VRChild::EnsureVRReady() {
   if (!mVRReady) {
     return false;
@@ -221,16 +161,7 @@ mozilla::ipc::IPCResult VRChild::RecvOpenVRControllerActionPathToParent(
   sOpenVRControllerManifestManager->SetOpenVRControllerActionPath(aPath);
   return IPC_OK();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class DeferredDeleteVRChild : public Runnable {
- public:
-||||||| merged common ancestors
-class DeferredDeleteVRChild : public Runnable
-{
-public:
-=======
 mozilla::ipc::IPCResult VRChild::RecvOpenVRControllerManifestPathToParent(
     const OpenVRControllerType& aType, const nsCString& aPath) {
   sOpenVRControllerManifestManager->SetOpenVRControllerManifestPath(aType,
@@ -266,7 +197,6 @@ void VRChild::OnVarChanged(const GfxVarUpdate& aVar) { SendUpdateVar(aVar); }
 
 class DeferredDeleteVRChild : public Runnable {
  public:
->>>>>>> upstream-releases
   explicit DeferredDeleteVRChild(UniquePtr<VRChild>&& aChild)
       : Runnable("gfx::DeferredDeleteVRChild"), mChild(std::move(aChild)) {}
 
@@ -276,26 +206,10 @@ class DeferredDeleteVRChild : public Runnable {
   UniquePtr<VRChild> mChild;
 };
 
-<<<<<<< HEAD
-/* static */ void VRChild::Destroy(UniquePtr<VRChild>&& aChild) {
-||||||| merged common ancestors
-/* static */ void
-VRChild::Destroy(UniquePtr<VRChild>&& aChild)
-{
-=======
 /* static */
 void VRChild::Destroy(UniquePtr<VRChild>&& aChild) {
->>>>>>> upstream-releases
   NS_DispatchToMainThread(new DeferredDeleteVRChild(std::move(aChild)));
 }
 
-<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
-}  // namespace gfx
-}  // namespace mozilla
->>>>>>> upstream-releases

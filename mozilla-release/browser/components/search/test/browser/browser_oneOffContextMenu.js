@@ -4,25 +4,6 @@ const TEST_ENGINE_NAME = "Foo";
 const TEST_ENGINE_BASENAME = "testEngine.xml";
 
 const searchPopup = document.getElementById("PopupSearchAutoComplete");
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_oneOffContextMenu.js
-const oneOffInstance = searchPopup.oneOffButtons;
-const contextMenu = oneOffInstance.querySelector(".search-one-offs-context-menu");
-const oneOffButtons = oneOffInstance.buttons;
-const searchInNewTabMenuItem = oneOffInstance.querySelector(".search-one-offs-context-open-in-new-tab");
-||||||| merged common ancestors
-const oneOffBinding = document.getAnonymousElementByAttribute(
-  searchPopup, "anonid", "search-one-off-buttons"
-);
-const contextMenu = document.getAnonymousElementByAttribute(
-  oneOffBinding, "anonid", "search-one-offs-context-menu"
-);
-const oneOffButtons = document.getAnonymousElementByAttribute(
-  oneOffBinding, "anonid", "search-panel-one-offs"
-);
-const searchInNewTabMenuItem = document.getAnonymousElementByAttribute(
-  oneOffBinding, "anonid", "search-one-offs-context-open-in-new-tab"
-);
-=======
 const oneOffInstance = searchPopup.oneOffButtons;
 const contextMenu = oneOffInstance.querySelector(
   ".search-one-offs-context-menu"
@@ -31,7 +12,6 @@ const oneOffButtons = oneOffInstance.buttons;
 const searchInNewTabMenuItem = oneOffInstance.querySelector(
   ".search-one-offs-context-open-in-new-tab"
 );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_oneOffContextMenu.js
 
 let searchbar;
 let searchIcon;
@@ -89,21 +69,11 @@ add_task(async function telemetry() {
   await promise;
 
   // Check the loaded tab.
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_oneOffContextMenu.js
-  Assert.equal(tab.linkedBrowser.currentURI.spec,
-               "http://mochi.test:8888/browser/browser/components/search/test/browser/",
-               "Expected search tab should have loaded");
-||||||| merged common ancestors
-  Assert.equal(tab.linkedBrowser.currentURI.spec,
-               "http://mochi.test:8888/browser/browser/components/search/test/",
-               "Expected search tab should have loaded");
-=======
   Assert.equal(
     tab.linkedBrowser.currentURI.spec,
     "http://mochi.test:8888/browser/browser/components/search/test/browser/",
     "Expected search tab should have loaded"
   );
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_oneOffContextMenu.js
 
   BrowserTestUtils.removeTab(tab);
 

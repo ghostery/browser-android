@@ -48,9 +48,7 @@ pa{
         }
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}–{1}"}
             }
             patterns{
@@ -235,13 +233,7 @@ pa{
         minimumGroupingDigits{"1"}
         native{"guru"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.20"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -269,9 +261,6 @@ pa{
                 wide{
                     "ਈਸਵੀ ਪੂਰਵ",
                 }
-            }
-            intervalFormats{
-                fallback{"{0} – {1}"}
             }
         }
         coptic{
@@ -438,19 +427,6 @@ pa{
                 }
             }
         }
-        ethiopic-amete-alem{
-            eras{
-                abbreviated{
-                    "ERA0",
-                }
-                narrow{
-                    "ERA0",
-                }
-                wide{
-                    "ERA0",
-                }
-            }
-        }
         generic{
             DateTimePatterns{
                 "h:mm:ss a zzzz",
@@ -513,23 +489,6 @@ pa{
                 yyyyQQQQ{"QQQQ y G"}
             }
             intervalFormats{
-<<<<<<< HEAD
-                H{
-                    H{"HH–HH"}
-                }
-                Hm{
-                    H{"HH:mm–HH:mm"}
-                    m{"HH:mm–HH:mm"}
-                }
-                Hmv{
-                    H{"HH:mm–HH:mm v"}
-                    m{"HH:mm–HH:mm v"}
-                }
-                Hv{
-                    H{"HH–HH v"}
-                }
-||||||| merged common ancestors
-=======
                 Bh{
                     B{"h B – h B"}
                     h{"h–h B"}
@@ -577,7 +536,6 @@ pa{
                     d{"GGGGG y-MM-dd – y-MM-dd"}
                     y{"GGGGG y-MM-dd – y-MM-dd"}
                 }
->>>>>>> upstream-releases
                 M{
                     M{"MM–MM"}
                 }
@@ -604,24 +562,6 @@ pa{
                     d{"d – d"}
                 }
                 fallback{"{0} – {1}"}
-                h{
-                    a{"h a – h a"}
-                    h{"h–h a"}
-                }
-                hm{
-                    a{"h:mm a – h:mm a"}
-                    h{"h:mm–h:mm a"}
-                    m{"h:mm–h:mm a"}
-                }
-                hmv{
-                    a{"h:mm a – h:mm a v"}
-                    h{"h:mm–h:mm a v"}
-                    m{"h:mm–h:mm a v"}
-                }
-                hv{
-                    a{"h a – h a v"}
-                    h{"h–h a v"}
-                }
                 y{
                     y{"y – y G"}
                 }

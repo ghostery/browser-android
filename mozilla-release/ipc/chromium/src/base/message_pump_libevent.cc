@@ -23,33 +23,13 @@
 // This macro checks that the _EVENT_SIZEOF_* constants defined in
 // ipc/chromiume/src/third_party/<platform>/event2/event-config.h are correct.
 #if defined(_EVENT_SIZEOF_SHORT)
-<<<<<<< HEAD
-#define CHECK_EVENT_SIZEOF(TYPE, type)                \
-  static_assert(_EVENT_SIZEOF_##TYPE == sizeof(type), \
-                "bad _EVENT_SIZEOF_" #TYPE);
-||||||| merged common ancestors
-#define CHECK_EVENT_SIZEOF(TYPE, type) \
-    static_assert(_EVENT_SIZEOF_##TYPE == sizeof(type), \
-    "bad _EVENT_SIZEOF_"#TYPE);
-=======
 #  define CHECK_EVENT_SIZEOF(TYPE, type)                \
     static_assert(_EVENT_SIZEOF_##TYPE == sizeof(type), \
                   "bad _EVENT_SIZEOF_" #TYPE);
->>>>>>> upstream-releases
 #elif defined(EVENT__SIZEOF_SHORT)
-<<<<<<< HEAD
-#define CHECK_EVENT_SIZEOF(TYPE, type)                \
-  static_assert(EVENT__SIZEOF_##TYPE == sizeof(type), \
-                "bad EVENT__SIZEOF_" #TYPE);
-||||||| merged common ancestors
-#define CHECK_EVENT_SIZEOF(TYPE, type) \
-    static_assert(EVENT__SIZEOF_##TYPE == sizeof(type), \
-    "bad EVENT__SIZEOF_"#TYPE);
-=======
 #  define CHECK_EVENT_SIZEOF(TYPE, type)                \
     static_assert(EVENT__SIZEOF_##TYPE == sizeof(type), \
                   "bad EVENT__SIZEOF_" #TYPE);
->>>>>>> upstream-releases
 #else
 #  error Cannot find libevent type sizes
 #endif

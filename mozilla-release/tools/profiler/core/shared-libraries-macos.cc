@@ -40,45 +40,19 @@ typedef segment_command_64 mach_segment_command_type;
 #  define seg_size uint64_t
 #endif
 
-<<<<<<< HEAD
-struct NativeSharedLibrary {
-  const platform_mach_header *header;
-||||||| merged common ancestors
-struct NativeSharedLibrary
-{
-  const platform_mach_header* header;
-=======
 struct NativeSharedLibrary {
   const platform_mach_header* header;
->>>>>>> upstream-releases
   std::string path;
 };
-<<<<<<< HEAD
-static std::vector<NativeSharedLibrary> *sSharedLibrariesList = nullptr;
-static StaticMutex sSharedLibrariesMutex;
-||||||| merged common ancestors
-static std::vector<NativeSharedLibrary>* sSharedLibrariesList = nullptr;
-static StaticMutex sSharedLibrariesMutex;
-=======
 static std::vector<NativeSharedLibrary>* sSharedLibrariesList = nullptr;
 static mozilla::StaticMutex sSharedLibrariesMutex;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void SharedLibraryAddImage(const struct mach_header *mh,
-                                  intptr_t vmaddr_slide) {
-||||||| merged common ancestors
-static void
-SharedLibraryAddImage(const struct mach_header* mh, intptr_t vmaddr_slide)
-{
-=======
 static void SharedLibraryAddImage(const struct mach_header* mh,
                                   intptr_t vmaddr_slide) {
->>>>>>> upstream-releases
   // NOTE: Presumably for backwards-compatibility reasons, this function accepts
   // a mach_header even on 64-bit where it ought to be a mach_header_64. We cast
   // it to the right type here.
-  auto header = reinterpret_cast<const platform_mach_header *>(mh);
+  auto header = reinterpret_cast<const platform_mach_header*>(mh);
 
   Dl_info info;
   if (!dladdr(header, &info)) {
@@ -94,21 +68,12 @@ static void SharedLibraryAddImage(const struct mach_header* mh,
   sSharedLibrariesList->push_back(lib);
 }
 
-<<<<<<< HEAD
-static void SharedLibraryRemoveImage(const struct mach_header *mh,
-                                     intptr_t vmaddr_slide) {
-||||||| merged common ancestors
-static void
-SharedLibraryRemoveImage(const struct mach_header* mh, intptr_t vmaddr_slide)
-{
-=======
 static void SharedLibraryRemoveImage(const struct mach_header* mh,
                                      intptr_t vmaddr_slide) {
->>>>>>> upstream-releases
   // NOTE: Presumably for backwards-compatibility reasons, this function accepts
   // a mach_header even on 64-bit where it ought to be a mach_header_64. We cast
   // it to the right type here.
-  auto header = reinterpret_cast<const platform_mach_header *>(mh);
+  auto header = reinterpret_cast<const platform_mach_header*>(mh);
 
   mozilla::StaticMutexAutoLock lock(sSharedLibrariesMutex);
   if (!sSharedLibrariesList) {
@@ -133,51 +98,22 @@ void SharedLibraryInfo::Initialize() {
   _dyld_register_func_for_remove_image(SharedLibraryRemoveImage);
 }
 
-<<<<<<< HEAD
-static void addSharedLibrary(const platform_mach_header *header,
-                             const char *path, SharedLibraryInfo &info) {
-  const struct load_command *cmd =
-      reinterpret_cast<const struct load_command *>(header + 1);
-||||||| merged common ancestors
-static
-void addSharedLibrary(const platform_mach_header* header, const char *path, SharedLibraryInfo &info) {
-  const struct load_command *cmd =
-    reinterpret_cast<const struct load_command *>(header + 1);
-=======
 static void addSharedLibrary(const platform_mach_header* header,
                              const char* path, SharedLibraryInfo& info) {
   const struct load_command* cmd =
       reinterpret_cast<const struct load_command*>(header + 1);
->>>>>>> upstream-releases
 
   seg_size size = 0;
   unsigned long long start = reinterpret_cast<unsigned long long>(header);
-<<<<<<< HEAD
-  // Find the cmd segment in the macho image. It will contain the offset we care
-  // about.
-  const uint8_t *uuid_bytes = nullptr;
-||||||| merged common ancestors
-  // Find the cmd segment in the macho image. It will contain the offset we care about.
-  const uint8_t *uuid_bytes = nullptr;
-=======
   // Find the cmd segment in the macho image. It will contain the offset we care
   // about.
   const uint8_t* uuid_bytes = nullptr;
->>>>>>> upstream-releases
   for (unsigned int i = 0;
        cmd && (i < header->ncmds) && (uuid_bytes == nullptr || size == 0);
        ++i) {
     if (cmd->cmd == CMD_SEGMENT) {
-<<<<<<< HEAD
-      const mach_segment_command_type *seg =
-          reinterpret_cast<const mach_segment_command_type *>(cmd);
-||||||| merged common ancestors
-      const mach_segment_command_type *seg =
-        reinterpret_cast<const mach_segment_command_type *>(cmd);
-=======
       const mach_segment_command_type* seg =
           reinterpret_cast<const mach_segment_command_type*>(cmd);
->>>>>>> upstream-releases
 
       if (!strcmp(seg->segname, "__TEXT")) {
         size = seg->vmsize;
@@ -187,16 +123,8 @@ static void addSharedLibrary(const platform_mach_header* header,
       uuid_bytes = ucmd->uuid;
     }
 
-<<<<<<< HEAD
-    cmd = reinterpret_cast<const struct load_command *>(
-        reinterpret_cast<const char *>(cmd) + cmd->cmdsize);
-||||||| merged common ancestors
-    cmd = reinterpret_cast<const struct load_command *>
-      (reinterpret_cast<const char *>(cmd) + cmd->cmdsize);
-=======
     cmd = reinterpret_cast<const struct load_command*>(
         reinterpret_cast<const char*>(cmd) + cmd->cmdsize);
->>>>>>> upstream-releases
   }
 
   nsAutoCString uuid;
@@ -235,16 +163,8 @@ static void addSharedLibrary(const platform_mach_header* header,
     nameStr.Cut(0, pos + 1);
   }
 
-<<<<<<< HEAD
-  const NXArchInfo *archInfo =
-      NXGetArchInfoFromCpuType(header->cputype, header->cpusubtype);
-||||||| merged common ancestors
-  const NXArchInfo* archInfo =
-    NXGetArchInfoFromCpuType(header->cputype, header->cpusubtype);
-=======
   const NXArchInfo* archInfo =
       NXGetArchInfoFromCpuType(header->cputype, header->cpusubtype);
->>>>>>> upstream-releases
 
   info.AddSharedLibrary(SharedLibrary(start, start + size, 0, uuid, nameStr,
                                       pathStr, nameStr, pathStr, EmptyCString(),
@@ -253,21 +173,11 @@ static void addSharedLibrary(const platform_mach_header* header,
 
 // Translate the statically stored sSharedLibrariesList information into a
 // SharedLibraryInfo object.
-<<<<<<< HEAD
-SharedLibraryInfo SharedLibraryInfo::GetInfoForSelf() {
-  StaticMutexAutoLock lock(sSharedLibrariesMutex);
-||||||| merged common ancestors
-SharedLibraryInfo
-SharedLibraryInfo::GetInfoForSelf()
-{
-  StaticMutexAutoLock lock(sSharedLibrariesMutex);
-=======
 SharedLibraryInfo SharedLibraryInfo::GetInfoForSelf() {
   mozilla::StaticMutexAutoLock lock(sSharedLibrariesMutex);
->>>>>>> upstream-releases
   SharedLibraryInfo sharedLibraryInfo;
 
-  for (auto &info : *sSharedLibrariesList) {
+  for (auto& info : *sSharedLibrariesList) {
     addSharedLibrary(info.header, info.path.c_str(), sharedLibraryInfo);
   }
 

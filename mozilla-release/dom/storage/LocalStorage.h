@@ -24,44 +24,6 @@ class LocalStorage final : public Storage, public nsSupportsWeakReference {
 
   StorageType Type() const override { return eLocalStorage; }
 
-<<<<<<< HEAD
-  LocalStorageManager* GetManager() const { return mManager; }
-
-  LocalStorageCache const* GetCache() const { return mCache; }
-
-  const nsString& DocumentURI() const { return mDocumentURI; }
-
-  bool PrincipalEquals(nsIPrincipal* aPrincipal);
-
-  LocalStorage(nsPIDOMWindowInner* aWindow, LocalStorageManager* aManager,
-               LocalStorageCache* aCache, const nsAString& aDocumentURI,
-               nsIPrincipal* aPrincipal, bool aIsPrivate);
-||||||| merged common ancestors
-  LocalStorageManager* GetManager() const
-  {
-    return mManager;
-  }
-
-  LocalStorageCache const* GetCache() const
-  {
-    return mCache;
-  }
-
-  const nsString&
-  DocumentURI() const
-  {
-    return mDocumentURI;
-  }
-
-  bool PrincipalEquals(nsIPrincipal* aPrincipal);
-
-  LocalStorage(nsPIDOMWindowInner* aWindow,
-               LocalStorageManager* aManager,
-               LocalStorageCache* aCache,
-               const nsAString& aDocumentURI,
-               nsIPrincipal* aPrincipal,
-               bool aIsPrivate);
-=======
   LocalStorageManager* GetManager() const { return mManager; }
 
   LocalStorageCache const* GetCache() const { return mCache; }
@@ -72,7 +34,6 @@ class LocalStorage final : public Storage, public nsSupportsWeakReference {
                LocalStorageCache* aCache, const nsAString& aDocumentURI,
                nsIPrincipal* aPrincipal, nsIPrincipal* aStoragePrincipal,
                bool aIsPrivate);
->>>>>>> upstream-releases
 
   bool IsForkOf(const Storage* aOther) const override;
 

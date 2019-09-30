@@ -1,20 +1,5 @@
 //! All the runtime support necessary for the wasm to cranelift translation is formalized by the
 //! traits `FunctionEnvironment` and `ModuleEnvironment`.
-<<<<<<< HEAD
-use cranelift_codegen::cursor::FuncCursor;
-use cranelift_codegen::ir::{self, InstBuilder};
-use cranelift_codegen::isa::TargetFrontendConfig;
-use std::convert::From;
-use std::vec::Vec;
-use translation_utils::{
-||||||| merged common ancestors
-use cranelift_codegen::cursor::FuncCursor;
-use cranelift_codegen::ir::{self, InstBuilder};
-use cranelift_codegen::settings::Flags;
-use std::vec::Vec;
-use target_lexicon::Triple;
-use translation_utils::{
-=======
 //!
 //! There are skeleton implementations of these traits in the `dummy` module, and complete
 //! implementations in [Wasmtime].
@@ -22,7 +7,6 @@ use translation_utils::{
 //! [Wasmtime]: https://github.com/CraneStation/wasmtime
 
 use crate::translation_utils::{
->>>>>>> upstream-releases
     FuncIndex, Global, GlobalIndex, Memory, MemoryIndex, SignatureIndex, Table, TableIndex,
 };
 use core::convert::From;
@@ -61,11 +45,7 @@ pub enum WasmError {
     ///
     /// This error code is used by a WebAssembly translator when it encounters invalid WebAssembly
     /// code. This should never happen for validated WebAssembly code.
-    #[fail(
-        display = "Invalid input WebAssembly code at offset {}: {}",
-        _1,
-        _0
-    )]
+    #[fail(display = "Invalid input WebAssembly code at offset {}: {}", _1, _0)]
     InvalidWebAssembly {
         /// A string describing the validation error.
         message: &'static str,
@@ -131,11 +111,6 @@ pub trait FuncEnvironment {
 
     /// Get the size of a native pointer, in bytes.
     fn pointer_bytes(&self) -> u8 {
-<<<<<<< HEAD
-        self.target_config().pointer_bytes()
-||||||| merged common ancestors
-        self.triple().pointer_width().unwrap().bytes()
-=======
         self.target_config().pointer_bytes()
     }
 
@@ -144,7 +119,6 @@ pub trait FuncEnvironment {
     /// to append custom epilogues.
     fn return_mode(&self) -> ReturnMode {
         ReturnMode::NormalReturns
->>>>>>> upstream-releases
     }
 
     /// Set up the necessary preamble definitions in `func` to access the global variable
@@ -213,12 +187,7 @@ pub trait FuncEnvironment {
     /// The signature `sig_ref` was previously created by `make_indirect_sig()`.
     ///
     /// Return the call instruction whose results are the WebAssembly return values.
-<<<<<<< HEAD
-    #[cfg_attr(feature = "cargo-clippy", allow(too_many_arguments))]
-||||||| merged common ancestors
-=======
     #[cfg_attr(feature = "cargo-clippy", allow(clippy::too_many_arguments))]
->>>>>>> upstream-releases
     fn translate_call_indirect(
         &mut self,
         pos: FuncCursor,
@@ -283,13 +252,6 @@ pub trait FuncEnvironment {
     fn translate_loop_header(&mut self, _pos: FuncCursor) -> WasmResult<()> {
         // By default, don't emit anything.
         Ok(())
-    }
-
-    /// Should the code be structured to use a single `fallthrough_return` instruction at the end
-    /// of the function body, rather than `return` instructions as needed? This is used by VMs
-    /// to append custom epilogues.
-    fn return_mode(&self) -> ReturnMode {
-        ReturnMode::NormalReturns
     }
 }
 
@@ -359,16 +321,6 @@ pub trait ModuleEnvironment<'data> {
     /// Declares a global to the environment.
     fn declare_global(&mut self, global: Global);
 
-<<<<<<< HEAD
-    /// Declares a global import to the environment.
-    fn declare_global_import(&mut self, global: Global, module: &'data str, field: &'data str);
-
-    /// Return the global for the given global index.
-    fn get_global(&self, global_index: GlobalIndex) -> &Global;
-||||||| merged common ancestors
-    /// Return the global for the given global index.
-    fn get_global(&self, global_index: GlobalIndex) -> &Global;
-=======
     /// Provides the number of exports up front. By default this does nothing, but
     /// implementations can use this to preallocate memory if desired.
     fn reserve_exports(&mut self, _num: u32) {}
@@ -394,20 +346,7 @@ pub trait ModuleEnvironment<'data> {
     /// Provides the number of element initializers up front. By default this does nothing, but
     /// implementations can use this to preallocate memory if desired.
     fn reserve_table_elements(&mut self, _num: u32) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    /// Declares a table to the environment.
-    fn declare_table(&mut self, table: Table);
-
-    /// Declares a table import to the environment.
-    fn declare_table_import(&mut self, table: Table, module: &'data str, field: &'data str);
-
-||||||| merged common ancestors
-    /// Declares a table to the environment.
-    fn declare_table(&mut self, table: Table);
-=======
->>>>>>> upstream-releases
     /// Fills a declared table with references to functions in the module.
     fn declare_table_elements(
         &mut self,
@@ -416,17 +355,6 @@ pub trait ModuleEnvironment<'data> {
         offset: usize,
         elements: Box<[FuncIndex]>,
     );
-<<<<<<< HEAD
-    /// Declares a memory to the environment
-    fn declare_memory(&mut self, memory: Memory);
-
-    /// Declares a memory import to the environment.
-    fn declare_memory_import(&mut self, memory: Memory, module: &'data str, field: &'data str);
-
-||||||| merged common ancestors
-    /// Declares a memory to the environment
-    fn declare_memory(&mut self, memory: Memory);
-=======
 
     /// Provides the contents of a function body.
     ///
@@ -442,7 +370,6 @@ pub trait ModuleEnvironment<'data> {
     /// implementations can use this to preallocate memory if desired.
     fn reserve_data_initializers(&mut self, _num: u32) {}
 
->>>>>>> upstream-releases
     /// Fills a declared memory with bytes at module instantiation.
     fn declare_data_initialization(
         &mut self,

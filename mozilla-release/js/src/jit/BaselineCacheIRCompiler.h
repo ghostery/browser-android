@@ -25,13 +25,6 @@ ICStub* AttachBaselineCacheIRStub(JSContext* cx, const CacheIRWriter& writer,
                                   JSScript* outerScript, ICFallbackStub* stub,
                                   bool* attached);
 
-<<<<<<< HEAD
-}  // namespace jit
-}  // namespace js
-||||||| merged common ancestors
-} // namespace jit
-} // namespace js
-=======
 // BaselineCacheIRCompiler compiles CacheIR to BaselineIC native code.
 class MOZ_RAII BaselineCacheIRCompiler : public CacheIRCompiler {
   bool makesGCCalls_;
@@ -104,6 +97,5 @@ class MOZ_RAII BaselineCacheIRCompiler : public CacheIRCompiler {
 
 }  // namespace jit
 }  // namespace js
->>>>>>> upstream-releases
 
 #endif /* jit_BaselineCacheIRCompiler_h */

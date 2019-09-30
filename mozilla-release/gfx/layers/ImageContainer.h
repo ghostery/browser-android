@@ -160,17 +160,8 @@ class D3D11YCbCrRecycleAllocator;
 #endif
 class SurfaceDescriptorBuffer;
 
-<<<<<<< HEAD
-struct ImageBackendData {
-  virtual ~ImageBackendData() {}
-||||||| merged common ancestors
-struct ImageBackendData
-{
-  virtual ~ImageBackendData() {}
-=======
 struct ImageBackendData {
   virtual ~ImageBackendData() = default;
->>>>>>> upstream-releases
 
  protected:
   ImageBackendData() {}
@@ -230,14 +221,7 @@ class Image {
    * For use with the TextureForwarder only (so that the later can
    * synchronize the TextureClient with the TextureHost).
    */
-<<<<<<< HEAD
-  virtual TextureClient* GetTextureClient(KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-  virtual TextureClient* GetTextureClient(KnowsCompositor* aForwarder)
-  {
-=======
   virtual TextureClient* GetTextureClient(KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -756,32 +740,6 @@ struct PlanarYCbCrData {
   }
 
   PlanarYCbCrData()
-<<<<<<< HEAD
-      : mYChannel(nullptr),
-        mYStride(0),
-        mYSize(0, 0),
-        mYSkip(0),
-        mCbChannel(nullptr),
-        mCrChannel(nullptr),
-        mCbCrStride(0),
-        mCbCrSize(0, 0),
-        mCbSkip(0),
-        mCrSkip(0),
-        mPicX(0),
-        mPicY(0),
-        mPicSize(0, 0),
-        mStereoMode(StereoMode::MONO),
-        mYUVColorSpace(YUVColorSpace::BT601),
-        mColorDepth(gfx::ColorDepth::COLOR_8) {}
-||||||| merged common ancestors
-    : mYChannel(nullptr), mYStride(0), mYSize(0, 0), mYSkip(0)
-    , mCbChannel(nullptr), mCrChannel(nullptr)
-    , mCbCrStride(0), mCbCrSize(0, 0) , mCbSkip(0), mCrSkip(0)
-    , mPicX(0), mPicY(0), mPicSize(0, 0), mStereoMode(StereoMode::MONO)
-    , mYUVColorSpace(YUVColorSpace::BT601)
-    , mColorDepth(gfx::ColorDepth::COLOR_8)
-  {}
-=======
       : mYChannel(nullptr),
         mYStride(0),
         mYSize(0, 0),
@@ -798,7 +756,6 @@ struct PlanarYCbCrData {
         mStereoMode(StereoMode::MONO),
         mYUVColorSpace(gfx::YUVColorSpace::BT601),
         mColorDepth(gfx::ColorDepth::COLOR_8) {}
->>>>>>> upstream-releases
 };
 
 /****** Image subtypes for the different formats ******/
@@ -984,20 +941,10 @@ class SourceSurfaceImage final : public Image {
     return surface.forget();
   }
 
-<<<<<<< HEAD
-  void SetTextureFlags(TextureFlags aTextureFlags) {
-    mTextureFlags = aTextureFlags;
-  }
-  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override;
-||||||| merged common ancestors
-  void SetTextureFlags(TextureFlags aTextureFlags) { mTextureFlags = aTextureFlags; }
-  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override;
-=======
   void SetTextureFlags(TextureFlags aTextureFlags) {
     mTextureFlags = aTextureFlags;
   }
   TextureClient* GetTextureClient(KnowsCompositor* aKnowsCompositor) override;
->>>>>>> upstream-releases
 
   gfx::IntSize GetSize() const override { return mSize; }
 

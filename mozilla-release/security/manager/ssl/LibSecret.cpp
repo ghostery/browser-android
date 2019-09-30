@@ -201,25 +201,6 @@ LibSecret::~LibSecret() {
 }
 
 static const SecretSchema kSchema = {
-<<<<<<< HEAD
-    "mozilla.firefox",
-    SECRET_SCHEMA_NONE,
-    {{"string", SECRET_SCHEMA_ATTRIBUTE_STRING}, /* the label */
-     {"NULL", SECRET_SCHEMA_ATTRIBUTE_STRING}}};
-
-nsresult GetScopedServices(ScopedSecretService& aSs,
-                           ScopedSecretCollection& aSc) {
-||||||| merged common ancestors
-  "mozilla.firefox",
-  SECRET_SCHEMA_NONE,
-  { { "string", SECRET_SCHEMA_ATTRIBUTE_STRING }, /* the label */
-    { "NULL", SECRET_SCHEMA_ATTRIBUTE_STRING } }
-};
-
-nsresult
-GetScopedServices(ScopedSecretService& aSs, ScopedSecretCollection& aSc)
-{
-=======
     "mozilla.firefox",
     SECRET_SCHEMA_NONE,
     {{"string", SECRET_SCHEMA_ATTRIBUTE_STRING}, /* the label */
@@ -231,7 +212,6 @@ nsresult GetScopedServices(ScopedSecretService& aSs,
   if (!secret_service_get_sync || !secret_collection_for_alias_sync) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
   GError* raw_error = nullptr;
   aSs = ScopedSecretService(secret_service_get_sync(
       static_cast<SecretServiceFlags>(
@@ -257,19 +237,11 @@ nsresult GetScopedServices(ScopedSecretService& aSs,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LibSecret::Lock() {
-||||||| merged common ancestors
-nsresult
-LibSecret::Lock()
-{
-=======
 nsresult LibSecret::Lock() {
   MOZ_ASSERT(secret_service_lock_sync);
   if (!secret_service_lock_sync) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
   ScopedSecretService ss;
   ScopedSecretCollection sc;
   if (NS_FAILED(GetScopedServices(ss, sc))) {
@@ -292,24 +264,12 @@ nsresult LibSecret::Lock() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LibSecret::Unlock() {
-  // Accessing the secret service unlocks it. So calling this separately isn't
-  // actually necessary.
-||||||| merged common ancestors
-nsresult
-LibSecret::Unlock()
-{
-  // Accessing the secret service unlocks it. So calling this separately isn't
-  // actually necessary.
-=======
 nsresult LibSecret::Unlock() {
   MOZ_ASSERT(secret_service_unlock_sync);
   if (!secret_service_unlock_sync) {
     return NS_ERROR_FAILURE;
   }
   // Accessing the secret service might unlock it.
->>>>>>> upstream-releases
   ScopedSecretService ss;
   ScopedSecretCollection sc;
   if (NS_FAILED(GetScopedServices(ss, sc))) {
@@ -331,14 +291,6 @@ nsresult LibSecret::Unlock() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LibSecret::StoreSecret(const nsACString& aSecret,
-                                const nsACString& aLabel) {
-||||||| merged common ancestors
-nsresult
-LibSecret::StoreSecret(const nsACString& aSecret, const nsACString& aLabel)
-{
-=======
 nsresult LibSecret::StoreSecret(const nsACString& aSecret,
                                 const nsACString& aLabel) {
   MOZ_ASSERT(secret_password_store_sync);
@@ -353,31 +305,12 @@ nsresult LibSecret::StoreSecret(const nsACString& aSecret,
     MOZ_LOG(gLibSecretLog, LogLevel::Debug, ("Error base64-encoding secret"));
     return rv;
   }
->>>>>>> upstream-releases
   GError* raw_error = nullptr;
-<<<<<<< HEAD
-  bool stored = secret_password_store_sync(
-      &kSchema, SECRET_COLLECTION_DEFAULT, PromiseFlatCString(aLabel).get(),
-      PromiseFlatCString(aSecret).get(),
-      nullptr,  // GCancellable
-      &raw_error, "string", PromiseFlatCString(aLabel).get(), nullptr);
-||||||| merged common ancestors
-  bool stored = secret_password_store_sync(&kSchema,
-                                           SECRET_COLLECTION_DEFAULT,
-                                           PromiseFlatCString(aLabel).get(),
-                                           PromiseFlatCString(aSecret).get(),
-                                           nullptr, // GCancellable
-                                           &raw_error,
-                                           "string",
-                                           PromiseFlatCString(aLabel).get(),
-                                           nullptr);
-=======
   bool stored = secret_password_store_sync(
       &kSchema, SECRET_COLLECTION_DEFAULT, PromiseFlatCString(aLabel).get(),
       PromiseFlatCString(base64).get(),
       nullptr,  // GCancellable
       &raw_error, "string", PromiseFlatCString(aLabel).get(), nullptr);
->>>>>>> upstream-releases
   ScopedGError error(raw_error);
   if (raw_error) {
     MOZ_LOG(gLibSecretLog, LogLevel::Debug, ("Error storing secret"));
@@ -387,38 +320,16 @@ nsresult LibSecret::StoreSecret(const nsACString& aSecret,
   return stored ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-nsresult LibSecret::DeleteSecret(const nsACString& aLabel) {
-||||||| merged common ancestors
-nsresult
-LibSecret::DeleteSecret(const nsACString& aLabel)
-{
-=======
 nsresult LibSecret::DeleteSecret(const nsACString& aLabel) {
   MOZ_ASSERT(secret_password_clear_sync && secret_error_get_quark);
   if (!secret_password_clear_sync || !secret_error_get_quark) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
   GError* raw_error = nullptr;
-<<<<<<< HEAD
-  bool r = secret_password_clear_sync(
-      &kSchema,
-      nullptr,  // GCancellable
-      &raw_error, "string", PromiseFlatCString(aLabel).get(), nullptr);
-||||||| merged common ancestors
-  bool r = secret_password_clear_sync(&kSchema,
-                                      nullptr, // GCancellable
-                                      &raw_error,
-                                      "string",
-                                      PromiseFlatCString(aLabel).get(),
-                                      nullptr);
-=======
   Unused << secret_password_clear_sync(
       &kSchema,
       nullptr,  // GCancellable
       &raw_error, "string", PromiseFlatCString(aLabel).get(), nullptr);
->>>>>>> upstream-releases
   ScopedGError error(raw_error);
   if (raw_error && !(raw_error->domain == secret_error_get_quark() &&
                      raw_error->code == SECRET_ERROR_NO_SUCH_OBJECT)) {
@@ -429,22 +340,12 @@ nsresult LibSecret::DeleteSecret(const nsACString& aLabel) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult LibSecret::RetrieveSecret(const nsACString& aLabel,
-                                   /* out */ nsACString& aSecret) {
-||||||| merged common ancestors
-nsresult
-LibSecret::RetrieveSecret(const nsACString& aLabel,
-                          /* out */ nsACString& aSecret)
-{
-=======
 nsresult LibSecret::RetrieveSecret(const nsACString& aLabel,
                                    /* out */ nsACString& aSecret) {
   MOZ_ASSERT(secret_password_lookup_sync && secret_password_free);
   if (!secret_password_lookup_sync || !secret_password_free) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
   GError* raw_error = nullptr;
   aSecret.Truncate();
   ScopedPassword s(secret_password_lookup_sync(

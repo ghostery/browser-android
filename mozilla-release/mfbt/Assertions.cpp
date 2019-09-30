@@ -27,29 +27,8 @@ static mozilla::Atomic<bool, mozilla::SequentiallyConsistent,
                        mozilla::recordreplay::Behavior::DontPreserve>
     sCrashing(false);
 
-<<<<<<< HEAD
-#ifndef DEBUG
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(
-    2, 3) void MOZ_CrashPrintf(int aLine, const char* aFormat, ...)
-#else
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE
-MOZ_FORMAT_PRINTF(3, 4) void MOZ_CrashPrintf(const char* aFilename, int aLine,
-                                             const char* aFormat, ...)
-#endif
-{
-||||||| merged common ancestors
-#ifndef DEBUG
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(2, 3) void
-MOZ_CrashPrintf(int aLine, const char* aFormat, ...)
-#else
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(3, 4) void
-MOZ_CrashPrintf(const char* aFilename, int aLine, const char* aFormat, ...)
-#endif
-{
-=======
 MFBT_API MOZ_COLD MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(1, 2) const
     char* MOZ_CrashPrintf(const char* aFormat, ...) {
->>>>>>> upstream-releases
   if (!sCrashing.compareExchange(false, true)) {
     // In the unlikely event of a race condition, skip
     // setting the crash reason and just crash safely.
@@ -60,29 +39,10 @@ MFBT_API MOZ_COLD MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(1, 2) const
   int ret =
       vsnprintf(sPrintfCrashReason, sPrintfCrashReasonSize, aFormat, aArgs);
   va_end(aArgs);
-<<<<<<< HEAD
-  MOZ_RELEASE_ASSERT(
-      ret >= 0 && size_t(ret) < sPrintfCrashReasonSize,
-      "Could not write the explanation string to the supplied buffer!");
-#ifdef DEBUG
-  MOZ_CrashOOL(aFilename, aLine, sPrintfCrashReason);
-#else
-  MOZ_CrashOOL(nullptr, aLine, sPrintfCrashReason);
-#endif
-||||||| merged common ancestors
-  MOZ_RELEASE_ASSERT(ret >= 0 && size_t(ret) < sPrintfCrashReasonSize,
-    "Could not write the explanation string to the supplied buffer!");
-#ifdef DEBUG
-  MOZ_ReportCrash(sPrintfCrashReason, aFilename, aLine);
-#endif
-  gMozCrashReason = sPrintfCrashReason;
-  MOZ_REALLY_CRASH(aLine);
-=======
   MOZ_RELEASE_ASSERT(
       ret >= 0 && size_t(ret) < sPrintfCrashReasonSize,
       "Could not write the explanation string to the supplied buffer!");
   return sPrintfCrashReason;
->>>>>>> upstream-releases
 }
 
 MOZ_END_EXTERN_C

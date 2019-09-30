@@ -61,13 +61,6 @@ bool ToJSValue(JSContext* aCx, Promise& aArgument,
   return MaybeWrapObjectValue(aCx, aValue);
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 bool ToJSValue(JSContext* aCx, const WindowProxyHolder& aArgument,
                JS::MutableHandle<JS::Value> aValue) {
   BrowsingContext* bc = aArgument.get();
@@ -102,4 +95,3 @@ bool ToJSValue(JSContext* aCx, const WindowProxyHolder& aArgument,
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

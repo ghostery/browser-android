@@ -34,13 +34,6 @@ nsresult TimeoutExecutor::ScheduleImmediate(const TimeStamp& aDeadline,
   MOZ_DIAGNOSTIC_ASSERT(mMode == Mode::None);
   MOZ_DIAGNOSTIC_ASSERT(aDeadline <= (aNow + mAllowedEarlyFiringTime));
 
-<<<<<<< HEAD
-  nsresult rv =
-      mOwner->EventTarget()->Dispatch(this, nsIEventTarget::DISPATCH_NORMAL);
-||||||| merged common ancestors
-  nsresult rv =
-    mOwner->EventTarget()->Dispatch(this, nsIEventTarget::DISPATCH_NORMAL);
-=======
   nsresult rv;
   if (mIsIdleQueue) {
     RefPtr<TimeoutExecutor> runnable(this);
@@ -50,7 +43,6 @@ nsresult TimeoutExecutor::ScheduleImmediate(const TimeStamp& aDeadline,
   } else {
     rv = mOwner->EventTarget()->Dispatch(this, nsIEventTarget::DISPATCH_NORMAL);
   }
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   mMode = Mode::Immediate;
@@ -187,22 +179,12 @@ void TimeoutExecutor::MaybeExecute() {
   mOwner->RunTimeout(now, deadline, mIsIdleQueue);
 }
 
-<<<<<<< HEAD
-TimeoutExecutor::TimeoutExecutor(TimeoutManager* aOwner)
-    : mOwner(aOwner), mMode(Mode::None) {
-||||||| merged common ancestors
-TimeoutExecutor::TimeoutExecutor(TimeoutManager* aOwner)
-  : mOwner(aOwner)
-  , mMode(Mode::None)
-{
-=======
 TimeoutExecutor::TimeoutExecutor(TimeoutManager* aOwner, bool aIsIdleQueue,
                                  uint32_t aMaxIdleDeferMS)
     : mOwner(aOwner),
       mIsIdleQueue(aIsIdleQueue),
       mMaxIdleDeferMS(aMaxIdleDeferMS),
       mMode(Mode::None) {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(mOwner);
 }
 
@@ -241,18 +223,9 @@ void TimeoutExecutor::Cancel() {
   mDeadline = TimeStamp();
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TimeoutExecutor::Run() {
-||||||| merged common ancestors
-NS_IMETHODIMP
-TimeoutExecutor::Run()
-{
-=======
 // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is MOZ_CAN_RUN_SCRIPT.  See
 // bug 1535398.
 MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHODIMP TimeoutExecutor::Run() {
->>>>>>> upstream-releases
   // If the executor is canceled and then rescheduled its possible to get
   // spurious executions here.  Ignore these unless our current mode matches.
   MOZ_LOG(gTimeoutLog, LogLevel::Debug,
@@ -263,19 +236,10 @@ MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHODIMP TimeoutExecutor::Run() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-TimeoutExecutor::Notify(nsITimer* aTimer) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-TimeoutExecutor::Notify(nsITimer* aTimer)
-{
-=======
 // MOZ_CAN_RUN_SCRIPT_BOUNDARY until nsITimerCallback::Notify is
 // MOZ_CAN_RUN_SCRIPT.
 MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHODIMP
 TimeoutExecutor::Notify(nsITimer* aTimer) {
->>>>>>> upstream-releases
   // If the executor is canceled and then rescheduled its possible to get
   // spurious executions here.  Ignore these unless our current mode matches.
   if (mMode == Mode::Delayed) {

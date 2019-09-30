@@ -86,30 +86,11 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(HTMLObjectElement,
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mValidity)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(
-    HTMLObjectElement, nsGenericHTMLFormElement, imgINotificationObserver,
-    nsIRequestObserver, nsIStreamListener, nsIFrameLoaderOwner,
-    nsIObjectLoadingContent, nsIImageLoadingContent, nsIChannelEventSink,
-    nsIConstraintValidation)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLObjectElement,
-                                             nsGenericHTMLFormElement,
-                                             imgINotificationObserver,
-                                             nsIRequestObserver,
-                                             nsIStreamListener,
-                                             nsIFrameLoaderOwner,
-                                             nsIObjectLoadingContent,
-                                             nsIImageLoadingContent,
-                                             nsIChannelEventSink,
-                                             nsIConstraintValidation)
-=======
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(
     HTMLObjectElement, nsGenericHTMLFormElement, imgINotificationObserver,
     nsIRequestObserver, nsIStreamListener, nsFrameLoaderOwner,
     nsIObjectLoadingContent, nsIImageLoadingContent, nsIChannelEventSink,
     nsIConstraintValidation)
->>>>>>> upstream-releases
 
 NS_IMPL_ELEMENT_CLONE(HTMLObjectElement)
 
@@ -216,57 +197,17 @@ HTMLObjectElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
 
 #endif  // #ifdef XP_MACOSX
 
-<<<<<<< HEAD
-nsresult HTMLObjectElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLFormElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLObjectElement::BindToTree(nsIDocument *aDocument,
-                              nsIContent *aParent,
-                              nsIContent *aBindingParent)
-{
-  nsresult rv = nsGenericHTMLFormElement::BindToTree(aDocument, aParent,
-                                                     aBindingParent);
-=======
 nsresult HTMLObjectElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = nsGenericHTMLFormElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  rv = nsObjectLoadingContent::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  rv = nsObjectLoadingContent::BindToTree(aDocument, aParent,
-                                          aBindingParent);
-=======
   rv = nsObjectLoadingContent::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Don't kick off load from being bound to a plugin document - the plugin
   // document will call nsObjectLoadingContent::InitializeFromChannel() for the
   // initial load.
-<<<<<<< HEAD
-  nsCOMPtr<nsIPluginDocument> pluginDoc = do_QueryInterface(aDocument);
-
-  // If we already have all the children, start the load.
-  if (mIsDoneAddingChildren && !pluginDoc) {
-    void (HTMLObjectElement::*start)() = &HTMLObjectElement::StartObjectLoad;
-    nsContentUtils::AddScriptRunner(
-        NewRunnableMethod("dom::HTMLObjectElement::BindToTree", this, start));
-||||||| merged common ancestors
-  nsCOMPtr<nsIPluginDocument> pluginDoc = do_QueryInterface(aDocument);
-
-  // If we already have all the children, start the load.
-  if (mIsDoneAddingChildren && !pluginDoc) {
-    void (HTMLObjectElement::*start)() = &HTMLObjectElement::StartObjectLoad;
-    nsContentUtils::AddScriptRunner(
-      NewRunnableMethod("dom::HTMLObjectElement::BindToTree", this, start));
-=======
   if (IsInComposedDoc()) {
     nsCOMPtr<nsIPluginDocument> pluginDoc =
         do_QueryInterface(&aContext.OwnerDoc());
@@ -276,22 +217,12 @@ nsresult HTMLObjectElement::BindToTree(BindContext& aContext,
       nsContentUtils::AddScriptRunner(
           NewRunnableMethod("dom::HTMLObjectElement::BindToTree", this, start));
     }
->>>>>>> upstream-releases
   }
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLObjectElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLObjectElement::UnbindFromTree(bool aDeep,
-                                  bool aNullParent)
-{
-=======
 void HTMLObjectElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
 #ifdef XP_MACOSX
   // When a page is reloaded (when an Document's content is removed), the
   // focused element isn't necessarily sent an eBlur event. See
@@ -345,18 +276,8 @@ nsresult HTMLObjectElement::AfterMaybeChangeAttr(int32_t aNamespaceID,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool HTMLObjectElement::IsFocusableForTabIndex() {
-  nsIDocument* doc = GetComposedDoc();
-||||||| merged common ancestors
-bool
-HTMLObjectElement::IsFocusableForTabIndex()
-{
-  nsIDocument* doc = GetComposedDoc();
-=======
 bool HTMLObjectElement::IsFocusableForTabIndex() {
   Document* doc = GetComposedDoc();
->>>>>>> upstream-releases
   if (!doc || doc->HasFlag(NODE_IS_EDITABLE)) {
     return false;
   }
@@ -370,13 +291,7 @@ bool HTMLObjectElement::IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
                                         int32_t* aTabIndex) {
   // TODO: this should probably be managed directly by IsHTMLFocusable.
   // See bug 597242.
-<<<<<<< HEAD
-  nsIDocument* doc = GetComposedDoc();
-||||||| merged common ancestors
-  nsIDocument *doc = GetComposedDoc();
-=======
   Document* doc = GetComposedDoc();
->>>>>>> upstream-releases
   if (!doc || doc->HasFlag(NODE_IS_EDITABLE)) {
     if (aTabIndex) {
       *aTabIndex = TabIndex();
@@ -461,20 +376,9 @@ int32_t HTMLObjectElement::TabIndexDefault() {
   return IsFocusableForTabIndex() ? 0 : -1;
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowOuter* HTMLObjectElement::GetContentWindow(
-    nsIPrincipal& aSubjectPrincipal) {
-  nsIDocument* doc = GetContentDocument(aSubjectPrincipal);
-||||||| merged common ancestors
-nsPIDOMWindowOuter*
-HTMLObjectElement::GetContentWindow(nsIPrincipal& aSubjectPrincipal)
-{
-  nsIDocument* doc = GetContentDocument(aSubjectPrincipal);
-=======
 Nullable<WindowProxyHolder> HTMLObjectElement::GetContentWindow(
     nsIPrincipal& aSubjectPrincipal) {
   Document* doc = GetContentDocument(aSubjectPrincipal);
->>>>>>> upstream-releases
   if (doc) {
     nsPIDOMWindowOuter* win = doc->GetWindow();
     if (win) {

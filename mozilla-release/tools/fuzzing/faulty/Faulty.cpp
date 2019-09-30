@@ -38,163 +38,16 @@
 #include "nsXULAppAPI.h"
 #include "prenv.h"
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 #ifdef IsLoggingEnabled
 // This is defined in the Windows SDK urlmon.h
 #  undef IsLoggingEnabled
 #endif
 
->>>>>>> upstream-releases
 namespace mozilla {
 namespace ipc {
 
 using namespace mozilla::fuzzing;
 
-<<<<<<< HEAD
-const unsigned int Faulty::sDefaultProbability = Faulty::DefaultProbability();
-const bool Faulty::sIsLoggingEnabled = Faulty::Logging();
-
-/**
- * RandomNumericValue generates negative and positive integrals.
- */
-template <typename T>
-T RandomIntegral() {
-  static_assert(mozilla::IsIntegral<T>::value == true,
-                "T must be an integral type");
-  double r = static_cast<double>(random() % ((sizeof(T) * CHAR_BIT) + 1));
-  T x = static_cast<T>(pow(2.0, r)) - 1;
-  if (std::numeric_limits<T>::is_signed && random() % 2 == 0) {
-    return (x * -1) - 1;
-  }
-  return x;
-}
-
-/**
- * RandomNumericLimit returns either the min or max limit of an arithmetic
- * data type.
- */
-template <typename T>
-T RandomNumericLimit() {
-  static_assert(mozilla::IsArithmetic<T>::value == true,
-                "T must be an arithmetic type");
-  return random() % 2 == 0 ? std::numeric_limits<T>::min()
-                           : std::numeric_limits<T>::max();
-}
-
-/**
- * RandomIntegerRange returns a random integral within a user defined range.
- */
-template <typename T>
-T RandomIntegerRange(T min, T max) {
-  static_assert(mozilla::IsIntegral<T>::value == true,
-                "T must be an integral type");
-  MOZ_ASSERT(min < max);
-  return static_cast<T>((random() % (max - min + 1)) + min);
-}
-
-/**
- * RandomFloatingPointRange returns a random floating-point number within a
- * user defined range.
- */
-template <typename T>
-T RandomFloatingPointRange(T min, T max) {
-  static_assert(mozilla::IsFloatingPoint<T>::value == true,
-                "T must be a floating point type");
-  MOZ_ASSERT(min < max);
-  T x = static_cast<T>(random()) / static_cast<T>(RAND_MAX);
-  return min + x * (max - min);
-}
-
-/**
- * RandomFloatingPoint returns a random floating-point number.
- */
-template <typename T>
-T RandomFloatingPoint() {
-  static_assert(mozilla::IsFloatingPoint<T>::value == true,
-                "T must be a floating point type");
-  int radix = RandomIntegerRange<int>(std::numeric_limits<T>::min_exponent,
-                                      std::numeric_limits<T>::max_exponent);
-  T x = static_cast<T>(pow(2.0, static_cast<double>(radix)));
-  return x * RandomFloatingPointRange<T>(0.0, 10.0);
-}
-
-||||||| merged common ancestors
-const unsigned int Faulty::sDefaultProbability = Faulty::DefaultProbability();
-const bool Faulty::sIsLoggingEnabled = Faulty::Logging();
-
-/**
- * RandomNumericValue generates negative and positive integrals.
- */
-template <typename T>
-T RandomIntegral()
-{
-  static_assert(mozilla::IsIntegral<T>::value == true,
-                "T must be an integral type");
-  double r = static_cast<double>(random() % ((sizeof(T) * CHAR_BIT) + 1));
-  T x = static_cast<T>(pow(2.0, r)) - 1;
-  if (std::numeric_limits<T>::is_signed && random() % 2 == 0) {
-    return (x * -1) - 1;
-  }
-  return x;
-}
-
-/**
- * RandomNumericLimit returns either the min or max limit of an arithmetic
- * data type.
- */
-template <typename T>
-T RandomNumericLimit() {
-  static_assert(mozilla::IsArithmetic<T>::value == true,
-                "T must be an arithmetic type");
-  return random() % 2 == 0 ? std::numeric_limits<T>::min()
-                           : std::numeric_limits<T>::max();
-}
-
-/**
- * RandomIntegerRange returns a random integral within a user defined range.
- */
-template <typename T>
-T RandomIntegerRange(T min, T max)
-{
-  static_assert(mozilla::IsIntegral<T>::value == true,
-                "T must be an integral type");
-  MOZ_ASSERT(min < max);
-  return static_cast<T>((random() % (max - min + 1)) + min);
-}
-
-/**
- * RandomFloatingPointRange returns a random floating-point number within a
- * user defined range.
- */
-template <typename T>
-T RandomFloatingPointRange(T min, T max)
-{
-  static_assert(mozilla::IsFloatingPoint<T>::value == true,
-                "T must be a floating point type");
-  MOZ_ASSERT(min < max);
-  T x = static_cast<T>(random()) / static_cast<T>(RAND_MAX);
-  return min + x * (max - min);
-}
-
-/**
- * RandomFloatingPoint returns a random floating-point number.
- */
-template <typename T>
-T RandomFloatingPoint()
-{
-  static_assert(mozilla::IsFloatingPoint<T>::value == true,
-                "T must be a floating point type");
-  int radix = RandomIntegerRange<int>(std::numeric_limits<T>::min_exponent,
-                                      std::numeric_limits<T>::max_exponent);
-  T x = static_cast<T>(pow(2.0, static_cast<double>(radix)));
-  return x * RandomFloatingPointRange<T>(0.0, 10.0);
-}
-
-=======
->>>>>>> upstream-releases
 /**
  * FuzzIntegralType mutates an incercepted integral type of a pickled message.
  */
@@ -223,13 +76,7 @@ void FuzzIntegralType(T* v, bool largeValues) {
       }
       MOZ_FALLTHROUGH;
     default:
-<<<<<<< HEAD
-      switch (random() % 2) {
-||||||| merged common ancestors
-      switch(random() % 2) {
-=======
       switch (FuzzingTraits::Random(2)) {
->>>>>>> upstream-releases
         case 0:
           // Prevent underflow
           if (*v != std::numeric_limits<T>::min()) {
@@ -278,17 +125,8 @@ void FuzzFloatingPointType(T* v, bool largeValues) {
  * FuzzStringType mutates an incercepted string type of a pickled message.
  */
 template <typename T>
-<<<<<<< HEAD
-void FuzzStringType(T& v, const T& literal1, const T& literal2) {
-  switch (random() % 5) {
-||||||| merged common ancestors
-void FuzzStringType(T& v, const T& literal1, const T& literal2)
-{
-  switch (random() % 5) {
-=======
 void FuzzStringType(T& v, const T& literal1, const T& literal2) {
   switch (FuzzingTraits::Random(5)) {
->>>>>>> upstream-releases
     case 4:
       v = v + v;
       MOZ_FALLTHROUGH;
@@ -355,20 +193,6 @@ Faulty::Faulty()
       FAULTY_LOG("* Using message blacklist    = %s", mBlacklistPath);
     }
 
-<<<<<<< HEAD
-    FAULTY_LOG("* Fuzzing strategy: messages = %s",
-               mFuzzMessages ? "enabled" : "disabled");
-    FAULTY_LOG("* Fuzzing strategy: pickle   = %s",
-               mFuzzPickle ? "enabled" : "disabled");
-    FAULTY_LOG("* Fuzzing strategy: pipe     = %s",
-               mFuzzPipes ? "enabled" : "disabled");
-    FAULTY_LOG("* Fuzzing probability        = %u", sDefaultProbability);
-||||||| merged common ancestors
-    FAULTY_LOG("* Fuzzing strategy: messages = %s", mFuzzMessages ? "enabled" : "disabled");
-    FAULTY_LOG("* Fuzzing strategy: pickle   = %s", mFuzzPickle ? "enabled" : "disabled");
-    FAULTY_LOG("* Fuzzing strategy: pipe     = %s", mFuzzPipes ? "enabled" : "disabled");
-    FAULTY_LOG("* Fuzzing probability        = %u", sDefaultProbability);
-=======
     FAULTY_LOG("* Fuzzing strategy: messages = %s",
                mFuzzMessages ? "enabled" : "disabled");
     FAULTY_LOG("* Fuzzing strategy: pickle   = %s",
@@ -376,7 +200,6 @@ Faulty::Faulty()
     FAULTY_LOG("* Fuzzing strategy: pipe     = %s",
                mFuzzPipes ? "enabled" : "disabled");
     FAULTY_LOG("* Fuzzing probability        = %u", DefaultProbability());
->>>>>>> upstream-releases
     FAULTY_LOG("* Fuzzing mutation factor    = %u", MutationFactor());
     FAULTY_LOG("* RNG seed                   = %lu", randomSeed);
 
@@ -393,27 +216,8 @@ bool Faulty::IsValidProcessType(void) {
 
   if (targetChildren && !targetParent) {
     // Fuzz every child process type but not the parent process.
-<<<<<<< HEAD
-    isValidProcessType = currentProcessType == GeckoProcessType_Default;
-  } else if (!targetChildren && targetParent &&
-             (currentProcessType == GeckoProcessType_Plugin ||
-              currentProcessType == GeckoProcessType_Content ||
-              currentProcessType == GeckoProcessType_GMPlugin ||
-              currentProcessType == GeckoProcessType_GPU ||
-              currentProcessType == GeckoProcessType_VR)) {
-||||||| merged common ancestors
-    isValidProcessType = currentProcessType == GeckoProcessType_Default;
-  } else if (!targetChildren && targetParent
-          && (currentProcessType == GeckoProcessType_Plugin
-          || currentProcessType == GeckoProcessType_Content
-          || currentProcessType == GeckoProcessType_GMPlugin
-          || currentProcessType == GeckoProcessType_GPU
-          || currentProcessType == GeckoProcessType_PDFium
-          || currentProcessType == GeckoProcessType_VR)) {
-=======
     isValidProcessType = isParent;
   } else if (!targetChildren && targetParent && !isParent) {
->>>>>>> upstream-releases
     // Fuzz inside any of the above child process only.
     isValidProcessType = true;
   } else if (targetChildren && targetParent) {
@@ -433,25 +237,6 @@ bool Faulty::IsValidProcessType(void) {
 }
 
 // static
-<<<<<<< HEAD
-unsigned int Faulty::DefaultProbability(void) {
-  // Defines the likelihood of fuzzing a message.
-  const char* probability = PR_GetEnv("FAULTY_PROBABILITY");
-  if (probability) {
-    long n = std::strtol(probability, nullptr, 10);
-    if (n != 0) {
-      return n;
-||||||| merged common ancestors
-unsigned int
-Faulty::DefaultProbability(void)
-{
-  // Defines the likelihood of fuzzing a message.
-  const char* probability = PR_GetEnv("FAULTY_PROBABILITY");
-  if (probability) {
-    long n = std::strtol(probability, nullptr, 10);
-    if (n != 0) {
-      return n;
-=======
 unsigned int Faulty::DefaultProbability() {
   static std::once_flag flag;
   static unsigned probability;
@@ -464,7 +249,6 @@ unsigned int Faulty::DefaultProbability() {
       if (n != 0) {
         probability = n;
       }
->>>>>>> upstream-releases
     }
   });
 
@@ -472,23 +256,11 @@ unsigned int Faulty::DefaultProbability() {
 }
 
 // static
-<<<<<<< HEAD
-bool Faulty::Logging(void) {
-  // Enables logging of sendmsg() calls even in optimized builds.
-  return !!PR_GetEnv("FAULTY_ENABLE_LOGGING");
-||||||| merged common ancestors
-bool
-Faulty::Logging(void)
-{
-  // Enables logging of sendmsg() calls even in optimized builds.
-  return !!PR_GetEnv("FAULTY_ENABLE_LOGGING");
-=======
 bool Faulty::IsLoggingEnabled(void) {
   static bool enabled;
   static std::once_flag flag;
   std::call_once(flag, [&] { enabled = !!PR_GetEnv("FAULTY_ENABLE_LOGGING"); });
   return enabled;
->>>>>>> upstream-releases
 }
 
 // static
@@ -522,16 +294,8 @@ Faulty& Faulty::instance() {
 // Strategy: Pipes
 //
 
-<<<<<<< HEAD
-void Faulty::MaybeCollectAndClosePipe(int aPipe, unsigned int aProbability) {
-||||||| merged common ancestors
-void
-Faulty::MaybeCollectAndClosePipe(int aPipe, unsigned int aProbability)
-{
-=======
 void Faulty::MaybeCollectAndClosePipe(int aPipe, unsigned int aProbability) {
 #ifndef _WINDOWS
->>>>>>> upstream-releases
   if (!mFuzzPipes) {
     return;
   }
@@ -691,49 +455,7 @@ void Faulty::FuzzULong(unsigned long* aValue, unsigned int aProbability) {
   }
 }
 
-<<<<<<< HEAD
-void Faulty::MutateSize(size_t* aValue) {
-  FuzzIntegralType<size_t>(aValue, mUseLargeValues);
-}
-
-void Faulty::FuzzSize(size_t* aValue, unsigned int aProbability) {
-  if (mIsValidProcessType) {
-    if (mFuzzPickle && FuzzingTraits::Sometimes(aProbability)) {
-      size_t oldValue = *aValue;
-      MutateSize(aValue);
-      FAULTY_LOG("Message field |size_t| of value: %zu mutated to: %zu",
-                 oldValue, *aValue);
-    }
-  }
-}
-
 void Faulty::MutateUInt64(uint64_t* aValue) {
-||||||| merged common ancestors
-void
-Faulty::MutateSize(size_t* aValue)
-{
-  FuzzIntegralType<size_t>(aValue, mUseLargeValues);
-}
-
-void
-Faulty::FuzzSize(size_t* aValue, unsigned int aProbability)
-{
-  if (mIsValidProcessType) {
-    if (mFuzzPickle && FuzzingTraits::Sometimes(aProbability)) {
-      size_t oldValue = *aValue;
-      MutateSize(aValue);
-      FAULTY_LOG("Message field |size_t| of value: %zu mutated to: %zu",
-                 oldValue, *aValue);
-    }
-  }
-}
-
-void
-Faulty::MutateUInt64(uint64_t* aValue)
-{
-=======
-void Faulty::MutateUInt64(uint64_t* aValue) {
->>>>>>> upstream-releases
   FuzzIntegralType<uint64_t>(aValue, mUseLargeValues);
 }
 
@@ -937,24 +659,6 @@ std::vector<uint8_t> Faulty::GetDataFromIPCMessage(IPC::Message* aMsg) {
 }
 
 // static
-<<<<<<< HEAD
-void Faulty::CopyFDs(IPC::Message* aDstMsg, IPC::Message* aSrcMsg) {
-  FileDescriptorSet* dstFdSet = aDstMsg->file_descriptor_set();
-  FileDescriptorSet* srcFdSet = aSrcMsg->file_descriptor_set();
-  for (size_t i = 0; i < srcFdSet->size(); i++) {
-    int fd = srcFdSet->GetDescriptorAt(i);
-    dstFdSet->Add(fd);
-  }
-||||||| merged common ancestors
-void
-Faulty::CopyFDs(IPC::Message* aDstMsg, IPC::Message* aSrcMsg) {
-    FileDescriptorSet* dstFdSet = aDstMsg->file_descriptor_set();
-    FileDescriptorSet* srcFdSet = aSrcMsg->file_descriptor_set();
-    for (size_t i = 0; i < srcFdSet->size(); i++) {
-        int fd = srcFdSet->GetDescriptorAt(i);
-        dstFdSet->Add(fd);
-    }
-=======
 void Faulty::CopyFDs(IPC::Message* aDstMsg, IPC::Message* aSrcMsg) {
 #ifndef _WINDOWS
   FileDescriptorSet* dstFdSet = aDstMsg->file_descriptor_set();
@@ -964,7 +668,6 @@ void Faulty::CopyFDs(IPC::Message* aDstMsg, IPC::Message* aSrcMsg) {
     dstFdSet->Add(fd);
   }
 #endif
->>>>>>> upstream-releases
 }
 
 IPC::Message* Faulty::MutateIPCMessage(const char* aChannel, IPC::Message* aMsg,

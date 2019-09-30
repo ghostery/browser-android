@@ -39,40 +39,17 @@ function assertValidHeader(fieldName, fieldValue, headers) {
 function assertInvalidHeader(fieldName, fieldValue, headers) {
   try {
     headers.setHeader(fieldName, fieldValue, false);
-<<<<<<< HEAD
-    throw "Setting (" + fieldName + ", " +
-          fieldValue + ") as header succeeded!";
-  } catch (e) {
-    if (e.result !== Cr.NS_ERROR_INVALID_ARG)
-||||||| merged common ancestors
-    throw "Setting (" + fieldName + ", " +
-          fieldValue + ") as header succeeded!";
-  }
-  catch (e)
-  {
-    if (e.result !== Cr.NS_ERROR_INVALID_ARG)
-=======
     throw new Error(
       `Setting (${fieldName}, ${fieldValue}) as header succeeded!`
     );
   } catch (e) {
     if (e.result !== Cr.NS_ERROR_INVALID_ARG) {
->>>>>>> upstream-releases
       do_throw("Unexpected exception thrown: " + e);
     }
   }
 }
 
-<<<<<<< HEAD
-
 function run_test() {
-||||||| merged common ancestors
-
-function run_test()
-{
-=======
-function run_test() {
->>>>>>> upstream-releases
   testHeaderValidity();
   testGetHeader();
   testHeaderEnumerator();
@@ -128,42 +105,18 @@ function testGetHeader() {
 
   try {
     headers.getHeader(":");
-<<<<<<< HEAD
-    throw "Failed to throw for invalid header";
-  } catch (e) {
-    if (e.result !== Cr.NS_ERROR_INVALID_ARG)
-||||||| merged common ancestors
-    throw "Failed to throw for invalid header";
-  }
-  catch (e)
-  {
-    if (e.result !== Cr.NS_ERROR_INVALID_ARG)
-=======
     throw new Error("Failed to throw for invalid header");
   } catch (e) {
     if (e.result !== Cr.NS_ERROR_INVALID_ARG) {
->>>>>>> upstream-releases
       do_throw("headers.getHeader(':') must throw invalid arg");
     }
   }
 
   try {
     headers.getHeader("valid");
-<<<<<<< HEAD
-    throw "header doesn't exist";
-  } catch (e) {
-    if (e.result !== Cr.NS_ERROR_NOT_AVAILABLE)
-||||||| merged common ancestors
-    throw 'header doesn\'t exist';
-  }
-  catch (e)
-  {
-    if (e.result !== Cr.NS_ERROR_NOT_AVAILABLE)
-=======
     throw new Error("header doesn't exist");
   } catch (e) {
     if (e.result !== Cr.NS_ERROR_NOT_AVAILABLE) {
->>>>>>> upstream-releases
       do_throw("shouldn't be a header named 'valid' in headers!");
     }
   }
@@ -172,27 +125,11 @@ function testGetHeader() {
 function testHeaderEnumerator() {
   var headers = new nsHttpHeaders();
 
-<<<<<<< HEAD
-  var heads =
-    {
-      "foo": "17",
-      "baz": "two six niner",
-      "decaf": "class Program { int .7; int main(){ .7 = 5; return 7 - .7; } }",
-    };
-||||||| merged common ancestors
-  var heads =
-    {
-      "foo": "17",
-      "baz": "two six niner",
-      "decaf": "class Program { int .7; int main(){ .7 = 5; return 7 - .7; } }"
-    };
-=======
   var heads = {
     foo: "17",
     baz: "two six niner",
     decaf: "class Program { int .7; int main(){ .7 = 5; return 7 - .7; } }",
   };
->>>>>>> upstream-releases
 
   for (var i in heads) {
     headers.setHeader(i, heads[i], false);
@@ -223,21 +160,9 @@ function testHasHeader() {
 
   try {
     headers.hasHeader(":");
-<<<<<<< HEAD
-    throw "failed to throw";
-  } catch (e) {
-    if (e.result !== Cr.NS_ERROR_INVALID_ARG)
-||||||| merged common ancestors
-    throw "failed to throw";
-  }
-  catch (e)
-  {
-    if (e.result !== Cr.NS_ERROR_INVALID_ARG)
-=======
     throw new Error("failed to throw");
   } catch (e) {
     if (e.result !== Cr.NS_ERROR_INVALID_ARG) {
->>>>>>> upstream-releases
       do_throw(".hasHeader for an invalid name should throw");
     }
   }

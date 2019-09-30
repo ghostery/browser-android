@@ -4,43 +4,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-// Run test_unsafe_grips twice, one against a system principal debuggee
-// and another time with a null principal debuggee
-||||||| merged common ancestors
-var gDebuggee;
-var gThreadClient;
-
-function run_test() {
-  run_test_with_server(DebuggerServer, function() {
-    run_test_with_server(WorkerDebuggerServer, do_test_finished);
-  });
-  do_test_pending();
-}
-
-async function run_test_with_server(server, callback) {
-  initTestDebuggerServer(server);
-  const principals = [
-    ["test-grips-system-principal", systemPrincipal, systemPrincipalTests],
-    ["test-grips-null-principal", null, nullPrincipalTests],
-  ];
-  for (const [title, principal, tests] of principals) {
-    gDebuggee = Cu.Sandbox(principal);
-    gDebuggee.__name = title;
-    server.addTestGlobal(gDebuggee);
-    gDebuggee.eval(function stopMe(arg1, arg2) {
-      debugger;
-    }.toString());
-    const client = new DebuggerClient(server.connectPipe());
-    await client.connect();
-    const [,, threadClient] = await attachTestTabAndResume(client, title);
-    gThreadClient = threadClient;
-    await test_unsafe_grips(principal, tests);
-    await client.close();
-  }
-  callback();
-}
-=======
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 
 registerCleanupFunction(() => {
@@ -49,7 +12,6 @@ registerCleanupFunction(() => {
 
 // Run test_unsafe_grips twice, one against a system principal debuggee
 // and another time with a null principal debuggee
->>>>>>> upstream-releases
 
 // The following tests work like this:
 // - The specified code is evaluated in a system principal.
@@ -249,14 +211,6 @@ function descriptor(descr) {
   );
 }
 
-<<<<<<< HEAD
-async function test_unsafe_grips({ threadClient, debuggee, client }, tests, principal) {
-  debuggee.eval(function stopMe(arg1, arg2) {
-    debugger;
-  }.toString());
-||||||| merged common ancestors
-async function test_unsafe_grips(principal, tests) {
-=======
 async function test_unsafe_grips(
   { threadClient, debuggee, client },
   tests,
@@ -267,16 +221,9 @@ async function test_unsafe_grips(
       debugger;
     }.toString()
   );
->>>>>>> upstream-releases
   for (let data of tests) {
     await new Promise(function(resolve) {
-<<<<<<< HEAD
-      threadClient.addOneTimeListener("paused", async function(event, packet) {
-||||||| merged common ancestors
-      gThreadClient.addOneTimeListener("paused", async function(event, packet) {
-=======
       threadClient.once("paused", async function(packet) {
->>>>>>> upstream-releases
         const [objGrip, inheritsGrip] = packet.frame.arguments;
         for (const grip of [objGrip, inheritsGrip]) {
           const isUnsafe = grip === objGrip;
@@ -460,19 +407,6 @@ function check_display_string(str, data, isUnsafe) {
     strictEqual(str, "[object Object]", "The object stringifies correctly.");
   }
 }
-<<<<<<< HEAD
-
-// threadClientTest uses systemPrincipal by default, but let's be explicit here.
-add_task(threadClientTest(options => {
-  return test_unsafe_grips(options, systemPrincipalTests, "system");
-}, { principal: systemPrincipal }));
-
-const nullPrincipal = Cc["@mozilla.org/nullprincipal;1"].createInstance(Ci.nsIPrincipal);
-add_task(threadClientTest(options => {
-  return test_unsafe_grips(options, nullPrincipalTests, "null");
-}, { principal: nullPrincipal }));
-||||||| merged common ancestors
-=======
 
 // threadClientTest uses systemPrincipal by default, but let's be explicit here.
 add_task(
@@ -495,4 +429,3 @@ add_task(
     { principal: nullPrincipal }
   )
 );
->>>>>>> upstream-releases

@@ -88,25 +88,9 @@ class AsyncCanvasRenderer final {
   // Readback current WebGL's content and convert it to InputStream. This
   // function called GetSurface implicitly and GetSurface handles only get
   // called in the main thread. So this function can be called in main thread.
-<<<<<<< HEAD
-  nsresult GetInputStream(const char* aMimeType,
-                          const char16_t* aEncoderOptions,
-                          nsIInputStream** aStream);
-||||||| merged common ancestors
-  nsresult
-  GetInputStream(const char *aMimeType,
-                 const char16_t *aEncoderOptions,
-                 nsIInputStream **aStream);
-
-  gfx::IntSize GetSize() const
-  {
-    return gfx::IntSize(mWidth, mHeight);
-  }
-=======
   nsresult GetInputStream(const char* aMimeType,
                           const nsAString& aEncoderOptions,
                           nsIInputStream** aStream);
->>>>>>> upstream-releases
 
   gfx::IntSize GetSize() const { return gfx::IntSize(mWidth, mHeight); }
 

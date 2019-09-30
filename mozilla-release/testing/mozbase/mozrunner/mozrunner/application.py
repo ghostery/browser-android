@@ -107,23 +107,6 @@ class FennecContext(RemoteContext):
         self.avd_home = avd_home
         self.remote_process = app
         self.device_serial = device_serial
-<<<<<<< HEAD
-        self.device = self.get_device(self.adb, device_serial)
-
-    def get_device(self, adb_path, device_serial):
-        # Create a mozdevice.ADBAndroid object for the specified device_serial
-        # and cache it for future use. If the same device_serial is subsequently
-        # requested, retrieve it from the cache to avoid costly re-initialization.
-        global devices
-        if device_serial in devices:
-            device = devices[device_serial]
-        else:
-            device = ADBAndroid(adb=adb_path, device=device_serial)
-            devices[device_serial] = device
-        return device
-||||||| merged common ancestors
-        self.device = ADBAndroid(adb=self.adb, device=device_serial)
-=======
         self.device = self.get_device(self.adb, device_serial)
 
     def get_device(self, adb_path, device_serial):
@@ -137,7 +120,6 @@ class FennecContext(RemoteContext):
             device = ADBDevice(adb=adb_path, device=device_serial)
             devices[device_serial] = device
         return device
->>>>>>> upstream-releases
 
     def stop_application(self):
         self.device.stop_application(self.remote_process)

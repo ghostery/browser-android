@@ -182,22 +182,10 @@ using namespace mozilla;
 // depending on kernel configuration, so they are opted out by default.
 // Debug builds are opted out too, for test coverage.
 #ifndef MOZ_DEBUG
-<<<<<<< HEAD
-#if !defined(__ia64__) && !defined(__sparc__) && !defined(__mips__) && \
-    !defined(__aarch64__)
-#define MALLOC_STATIC_PAGESIZE 1
-#endif
-||||||| merged common ancestors
-#if !defined(__ia64__) && !defined(__sparc__) && !defined(__mips__) &&         \
-  !defined(__aarch64__)
-#define MALLOC_STATIC_PAGESIZE 1
-#endif
-=======
 #  if !defined(__ia64__) && !defined(__sparc__) && !defined(__mips__) && \
       !defined(__aarch64__) && !defined(__powerpc__)
 #    define MALLOC_STATIC_PAGESIZE 1
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #ifdef XP_WIN
@@ -206,25 +194,10 @@ using namespace mozilla;
 // Implement getenv without using malloc.
 static char mozillaMallocOptionsBuf[64];
 
-<<<<<<< HEAD
-#define getenv xgetenv
-static char* getenv(const char* name) {
-  if (GetEnvironmentVariableA(name, mozillaMallocOptionsBuf,
-                              sizeof(mozillaMallocOptionsBuf)) > 0) {
-||||||| merged common ancestors
-#define getenv xgetenv
-static char*
-getenv(const char* name)
-{
-
-  if (GetEnvironmentVariableA(
-        name, mozillaMallocOptionsBuf, sizeof(mozillaMallocOptionsBuf)) > 0) {
-=======
 #  define getenv xgetenv
 static char* getenv(const char* name) {
   if (GetEnvironmentVariableA(name, mozillaMallocOptionsBuf,
                               sizeof(mozillaMallocOptionsBuf)) > 0) {
->>>>>>> upstream-releases
     return mozillaMallocOptionsBuf;
   }
 
@@ -254,42 +227,16 @@ static char* getenv(const char* name) {
 //
 // On Alpha, glibc has a bug that prevents syscall() to work for system
 // calls with 6 arguments.
-<<<<<<< HEAD
-#if (defined(XP_LINUX) && !defined(__alpha__)) || \
-    (defined(__FreeBSD_kernel__) && defined(__GLIBC__))
-#include <sys/syscall.h>
-#if defined(SYS_mmap) || defined(SYS_mmap2)
-static inline void* _mmap(void* addr, size_t length, int prot, int flags,
-                          int fd, off_t offset) {
-||||||| merged common ancestors
-#if (defined(XP_LINUX) && !defined(__alpha__)) ||                              \
-  (defined(__FreeBSD_kernel__) && defined(__GLIBC__))
-#include <sys/syscall.h>
-#if defined(SYS_mmap) || defined(SYS_mmap2)
-static inline void*
-_mmap(void* addr, size_t length, int prot, int flags, int fd, off_t offset)
-{
-=======
 #if (defined(XP_LINUX) && !defined(__alpha__)) || \
     (defined(__FreeBSD_kernel__) && defined(__GLIBC__))
 #  include <sys/syscall.h>
 #  if defined(SYS_mmap) || defined(SYS_mmap2)
 static inline void* _mmap(void* addr, size_t length, int prot, int flags,
                           int fd, off_t offset) {
->>>>>>> upstream-releases
 // S390 only passes one argument to the mmap system call, which is a
 // pointer to a structure containing the arguments.
-<<<<<<< HEAD
-#ifdef __s390__
-  struct {
-||||||| merged common ancestors
-#ifdef __s390__
-  struct
-  {
-=======
 #    ifdef __s390__
   struct {
->>>>>>> upstream-releases
     void* addr;
     size_t length;
     long prot;
@@ -474,19 +421,7 @@ static const size_t kChunkSizeMask = kChunkSize - 1;
 // VM page size. It must divide the runtime CPU page size or the code
 // will abort.
 // Platform specific page size conditions copied from js/public/HeapAPI.h
-<<<<<<< HEAD
-#if (defined(SOLARIS) || defined(__FreeBSD__)) && \
-    (defined(__sparc) || defined(__sparcv9) || defined(__ia64))
-static const size_t gPageSize = 8_KiB;
-#elif defined(__powerpc64__)
-||||||| merged common ancestors
-#if (defined(SOLARIS) || defined(__FreeBSD__)) &&                              \
-  (defined(__sparc) || defined(__sparcv9) || defined(__ia64))
-static const size_t gPageSize = 8_KiB;
-#elif defined(__powerpc64__)
-=======
 #  if defined(__powerpc64__)
->>>>>>> upstream-releases
 static const size_t gPageSize = 64_KiB;
 #  else
 static const size_t gPageSize = 4_KiB;
@@ -497,31 +432,6 @@ static size_t gPageSize;
 #endif
 
 #ifdef MALLOC_STATIC_PAGESIZE
-<<<<<<< HEAD
-#define DECLARE_GLOBAL(type, name)
-#define DEFINE_GLOBALS
-#define END_GLOBALS
-#define DEFINE_GLOBAL(type) static const type
-#define GLOBAL_LOG2 LOG2
-#define GLOBAL_ASSERT_HELPER1(x) static_assert(x, #x)
-#define GLOBAL_ASSERT_HELPER2(x, y) static_assert(x, y)
-#define GLOBAL_ASSERT(...)                                               \
-  MACRO_CALL(                                                            \
-      MOZ_PASTE_PREFIX_AND_ARG_COUNT(GLOBAL_ASSERT_HELPER, __VA_ARGS__), \
-      (__VA_ARGS__))
-||||||| merged common ancestors
-#define DECLARE_GLOBAL(type, name)
-#define DEFINE_GLOBALS
-#define END_GLOBALS
-#define DEFINE_GLOBAL(type) static const type
-#define GLOBAL_LOG2 LOG2
-#define GLOBAL_ASSERT_HELPER1(x) static_assert(x, #x)
-#define GLOBAL_ASSERT_HELPER2(x, y) static_assert(x, y)
-#define GLOBAL_ASSERT(...)                                                     \
-  MACRO_CALL(                                                                  \
-    MOZ_PASTE_PREFIX_AND_ARG_COUNT(GLOBAL_ASSERT_HELPER, __VA_ARGS__),         \
-    (__VA_ARGS__))
-=======
 #  define DECLARE_GLOBAL(type, name)
 #  define DEFINE_GLOBALS
 #  define END_GLOBALS
@@ -533,32 +443,13 @@ static size_t gPageSize;
     MACRO_CALL(                                                            \
         MOZ_PASTE_PREFIX_AND_ARG_COUNT(GLOBAL_ASSERT_HELPER, __VA_ARGS__), \
         (__VA_ARGS__))
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define DECLARE_GLOBAL(type, name) static type name;
-#define DEFINE_GLOBALS static void DefineGlobals() {
-#define END_GLOBALS }
-#define DEFINE_GLOBAL(type)
-#define GLOBAL_LOG2 FloorLog2
-#define GLOBAL_ASSERT MOZ_RELEASE_ASSERT
-||||||| merged common ancestors
-#define DECLARE_GLOBAL(type, name) static type name;
-#define DEFINE_GLOBALS                                                         \
-  static void DefineGlobals()                                                  \
-  {
-#define END_GLOBALS }
-#define DEFINE_GLOBAL(type)
-#define GLOBAL_LOG2 FloorLog2
-#define GLOBAL_ASSERT MOZ_RELEASE_ASSERT
-=======
 #  define DECLARE_GLOBAL(type, name) static type name;
 #  define DEFINE_GLOBALS static void DefineGlobals() {
 #  define END_GLOBALS }
 #  define DEFINE_GLOBAL(type)
 #  define GLOBAL_LOG2 FloorLog2
 #  define GLOBAL_ASSERT MOZ_RELEASE_ASSERT
->>>>>>> upstream-releases
 #endif
 
 DECLARE_GLOBAL(size_t, gMaxSubPageClass)
@@ -1018,11 +909,6 @@ struct arena_t {
   // a single spare inadequate.
   arena_chunk_t* mSpare;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   // A per-arena opt-in to randomize the offset of small allocations
   bool mRandomizeSmallAllocations;
 
@@ -1032,7 +918,6 @@ public:
   mozilla::non_crypto::XorShift128PlusRNG* mPRNG;
 
  public:
->>>>>>> upstream-releases
   // Current count of pages within unused runs that are potentially
   // dirty, and for which madvise(... MADV_FREE) has not been called.  By
   // tracking this, we can institute a limit on how much dirty unused
@@ -1486,21 +1371,9 @@ static void* base_alloc(size_t aSize) {
   if ((uintptr_t)base_next_addr > (uintptr_t)base_next_decommitted) {
     void* pbase_next_addr = (void*)(PAGE_CEILING((uintptr_t)base_next_addr));
 
-<<<<<<< HEAD
-#ifdef MALLOC_DECOMMIT
     if (!pages_commit(
             base_next_decommitted,
             (uintptr_t)pbase_next_addr - (uintptr_t)base_next_decommitted)) {
-||||||| merged common ancestors
-#ifdef MALLOC_DECOMMIT
-    if (!pages_commit(base_next_decommitted,
-                      (uintptr_t)pbase_next_addr -
-                        (uintptr_t)base_next_decommitted)) {
-=======
-    if (!pages_commit(
-            base_next_decommitted,
-            (uintptr_t)pbase_next_addr - (uintptr_t)base_next_decommitted)) {
->>>>>>> upstream-releases
       return nullptr;
     }
 
@@ -1580,16 +1453,8 @@ static void pages_unmap(void* aAddr, size_t aSize) {
 
 static void* pages_map(void* aAddr, size_t aSize) {
   void* ret;
-<<<<<<< HEAD
-#if defined(__ia64__) || \
-    (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-||||||| merged common ancestors
-#if defined(__ia64__) ||                                                       \
-  (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-=======
 #  if defined(__ia64__) || \
       (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
->>>>>>> upstream-releases
   // The JS engine assumes that all allocated pointers have their high 17 bits
   // clear, which ia64's mmap doesn't support directly. However, we can emulate
   // it by passing mmap an "addr" parameter with those bits clear. The mmap will
@@ -1639,16 +1504,8 @@ static void* pages_map(void* aAddr, size_t aSize) {
   if (ret == MAP_FAILED) {
     ret = nullptr;
   }
-<<<<<<< HEAD
-#if defined(__ia64__) || \
-    (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-||||||| merged common ancestors
-#if defined(__ia64__) ||                                                       \
-  (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-=======
 #  if defined(__ia64__) || \
       (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
->>>>>>> upstream-releases
   // If the allocated memory doesn't have its upper 17 bits clear, consider it
   // as out of memory.
   else if ((long long)ret & 0xffff800000000000) {
@@ -1669,16 +1526,8 @@ static void* pages_map(void* aAddr, size_t aSize) {
     MozTagAnonymousMemory(ret, aSize, "jemalloc");
   }
 
-<<<<<<< HEAD
-#if defined(__ia64__) || \
-    (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-||||||| merged common ancestors
-#if defined(__ia64__) ||                                                       \
-  (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-=======
 #  if defined(__ia64__) || \
       (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
->>>>>>> upstream-releases
   MOZ_ASSERT(!ret || (!check_placement && ret) ||
              (check_placement && ret == aAddr));
 #  else
@@ -1689,19 +1538,8 @@ static void* pages_map(void* aAddr, size_t aSize) {
 #endif
 
 #ifdef XP_DARWIN
-<<<<<<< HEAD
-#define VM_COPY_MIN (gPageSize * 32)
-static inline void pages_copy(void* dest, const void* src, size_t n) {
-||||||| merged common ancestors
-#define VM_COPY_MIN (gPageSize * 32)
-static inline void
-pages_copy(void* dest, const void* src, size_t n)
-{
-
-=======
 #  define VM_COPY_MIN (gPageSize * 32)
 static inline void pages_copy(void* dest, const void* src, size_t n) {
->>>>>>> upstream-releases
   MOZ_ASSERT((void*)((uintptr_t)dest & ~gPageSizeMask) == dest);
   MOZ_ASSERT(n >= VM_COPY_MIN);
   MOZ_ASSERT((void*)((uintptr_t)src & ~gPageSizeMask) == src);
@@ -1899,89 +1737,9 @@ static void* chunk_alloc_mmap(size_t size, size_t alignment) {
 // function returns.
 // The force_zero argument explicitly requests that the memory is guaranteed
 // to be full of zeroes when the function returns.
-<<<<<<< HEAD
 static bool pages_purge(void* addr, size_t length, bool force_zero) {
-#ifdef MALLOC_DECOMMIT
-||||||| merged common ancestors
-static bool
-pages_purge(void* addr, size_t length, bool force_zero)
-{
-#ifdef MALLOC_DECOMMIT
-=======
-static bool pages_purge(void* addr, size_t length, bool force_zero) {
->>>>>>> upstream-releases
   pages_decommit(addr, length);
   return true;
-<<<<<<< HEAD
-#else
-#ifndef XP_LINUX
-  if (force_zero) {
-    memset(addr, 0, length);
-  }
-#endif
-#ifdef XP_WIN
-  // The region starting at addr may have been allocated in multiple calls
-  // to VirtualAlloc and recycled, so resetting the entire region in one
-  // go may not be valid. However, since we allocate at least a chunk at a
-  // time, we may touch any region in chunksized increments.
-  size_t pages_size = std::min(length, kChunkSize - GetChunkOffsetForPtr(addr));
-  while (length > 0) {
-    VirtualAlloc(addr, pages_size, MEM_RESET, PAGE_READWRITE);
-    addr = (void*)((uintptr_t)addr + pages_size);
-    length -= pages_size;
-    pages_size = std::min(length, kChunkSize);
-  }
-  return force_zero;
-#else
-#ifdef XP_LINUX
-#define JEMALLOC_MADV_PURGE MADV_DONTNEED
-#define JEMALLOC_MADV_ZEROS true
-#else  // FreeBSD and Darwin.
-#define JEMALLOC_MADV_PURGE MADV_FREE
-#define JEMALLOC_MADV_ZEROS force_zero
-#endif
-  int err = madvise(addr, length, JEMALLOC_MADV_PURGE);
-  return JEMALLOC_MADV_ZEROS && err == 0;
-#undef JEMALLOC_MADV_PURGE
-#undef JEMALLOC_MADV_ZEROS
-#endif
-#endif
-||||||| merged common ancestors
-#else
-#ifndef XP_LINUX
-  if (force_zero) {
-    memset(addr, 0, length);
-  }
-#endif
-#ifdef XP_WIN
-  // The region starting at addr may have been allocated in multiple calls
-  // to VirtualAlloc and recycled, so resetting the entire region in one
-  // go may not be valid. However, since we allocate at least a chunk at a
-  // time, we may touch any region in chunksized increments.
-  size_t pages_size = std::min(length, kChunkSize - GetChunkOffsetForPtr(addr));
-  while (length > 0) {
-    VirtualAlloc(addr, pages_size, MEM_RESET, PAGE_READWRITE);
-    addr = (void*)((uintptr_t)addr + pages_size);
-    length -= pages_size;
-    pages_size = std::min(length, kChunkSize);
-  }
-  return force_zero;
-#else
-#ifdef XP_LINUX
-#define JEMALLOC_MADV_PURGE MADV_DONTNEED
-#define JEMALLOC_MADV_ZEROS true
-#else // FreeBSD and Darwin.
-#define JEMALLOC_MADV_PURGE MADV_FREE
-#define JEMALLOC_MADV_ZEROS force_zero
-#endif
-  int err = madvise(addr, length, JEMALLOC_MADV_PURGE);
-  return JEMALLOC_MADV_ZEROS && err == 0;
-#undef JEMALLOC_MADV_PURGE
-#undef JEMALLOC_MADV_ZEROS
-#endif
-#endif
-=======
->>>>>>> upstream-releases
 }
 
 static void* chunk_recycle(size_t aSize, size_t aAlignment, bool* aZeroed) {
@@ -2281,13 +2039,6 @@ static inline arena_t* choose_arena(size_t size) {
   return ret;
 }
 
-<<<<<<< HEAD
-static inline void* arena_run_reg_alloc(arena_run_t* run, arena_bin_t* bin) {
-||||||| merged common ancestors
-static inline void*
-arena_run_reg_alloc(arena_run_t* run, arena_bin_t* bin)
-{
-=======
 inline uint8_t arena_t::FindFreeBitInMask(uint32_t aMask, uint32_t& aRng) {
   if (mPRNG != nullptr) {
     if (aRng == UINT_MAX) {
@@ -2304,7 +2055,6 @@ inline uint8_t arena_t::FindFreeBitInMask(uint32_t aMask, uint32_t& aRng) {
 }
 
 inline void* arena_t::ArenaRunRegAlloc(arena_run_t* aRun, arena_bin_t* aBin) {
->>>>>>> upstream-releases
   void* ret;
   unsigned i, mask, bit, regind;
   uint32_t rndPos = UINT_MAX;
@@ -2348,13 +2098,7 @@ inline void* arena_t::ArenaRunRegAlloc(arena_run_t* aRun, arena_bin_t* aBin) {
 
       // Make a note that nothing before this element
       // contains a free region.
-<<<<<<< HEAD
-      run->mRegionsMinElement = i;  // Low payoff: + (mask == 0);
-||||||| merged common ancestors
-      run->mRegionsMinElement = i; // Low payoff: + (mask == 0);
-=======
       aRun->mRegionsMinElement = i;  // Low payoff: + (mask == 0);
->>>>>>> upstream-releases
 
       return ret;
     }
@@ -2724,18 +2468,9 @@ void arena_t::Purge(bool aAll) {
                       (npages << gPageSize2Pow), MADV_FREE);
 #  else
         madvise((void*)(uintptr_t(chunk) + (i << gPageSize2Pow)),
-<<<<<<< HEAD
-                (npages << gPageSize2Pow), MADV_FREE);
-#ifdef MALLOC_DOUBLE_PURGE
-||||||| merged common ancestors
-                (npages << gPageSize2Pow),
-                MADV_FREE);
-#ifdef MALLOC_DOUBLE_PURGE
-=======
                 (npages << gPageSize2Pow), MADV_FREE);
 #  endif
 #  ifdef MALLOC_DOUBLE_PURGE
->>>>>>> upstream-releases
         madvised = true;
 #  endif
 #endif
@@ -3373,13 +3108,7 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
   // Alternatively, if the allocator is not initialized yet, the pointer
   // can't be known.
   if (!chunk || !malloc_initialized) {
-<<<<<<< HEAD
-    *aInfo = {TagUnknown, nullptr, 0};
-||||||| merged common ancestors
-    *aInfo = { TagUnknown, nullptr, 0 };
-=======
     *aInfo = {TagUnknown, nullptr, 0, 0};
->>>>>>> upstream-releases
     return;
   }
 
@@ -3396,26 +3125,14 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
             &huge)
             ->Search(&key);
     if (node) {
-<<<<<<< HEAD
-      *aInfo = {TagLiveHuge, node->mAddr, node->mSize};
-||||||| merged common ancestors
-      *aInfo = { TagLiveHuge, node->mAddr, node->mSize };
-=======
       *aInfo = {TagLiveAlloc, node->mAddr, node->mSize, node->mArena->mId};
->>>>>>> upstream-releases
       return;
     }
   }
 
   // It's not a huge allocation. Check if we have a known chunk.
   if (!gChunkRTree.Get(chunk)) {
-<<<<<<< HEAD
-    *aInfo = {TagUnknown, nullptr, 0};
-||||||| merged common ancestors
-    *aInfo = { TagUnknown, nullptr, 0 };
-=======
     *aInfo = {TagUnknown, nullptr, 0, 0};
->>>>>>> upstream-releases
     return;
   }
 
@@ -3425,13 +3142,7 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
   size_t pageind = (((uintptr_t)aPtr - (uintptr_t)chunk) >> gPageSize2Pow);
   if (pageind < gChunkHeaderNumPages) {
     // Within the chunk header.
-<<<<<<< HEAD
-    *aInfo = {TagUnknown, nullptr, 0};
-||||||| merged common ancestors
-    *aInfo = { TagUnknown, nullptr, 0 };
-=======
     *aInfo = {TagUnknown, nullptr, 0, 0};
->>>>>>> upstream-releases
     return;
   }
 
@@ -3439,13 +3150,7 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
 
   if (!(mapbits & CHUNK_MAP_ALLOCATED)) {
     void* pageaddr = (void*)(uintptr_t(aPtr) & ~gPageSizeMask);
-<<<<<<< HEAD
-    *aInfo = {tag, pageaddr, gPageSize};
-||||||| merged common ancestors
-    *aInfo = { tag, pageaddr, gPageSize };
-=======
     *aInfo = {TagFreedPage, pageaddr, gPageSize, chunk->arena->mId};
->>>>>>> upstream-releases
     return;
   }
 
@@ -3465,38 +3170,20 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
       pageind--;
       MOZ_DIAGNOSTIC_ASSERT(pageind >= gChunkHeaderNumPages);
       if (pageind < gChunkHeaderNumPages) {
-<<<<<<< HEAD
-        *aInfo = {TagUnknown, nullptr, 0};
-||||||| merged common ancestors
-        *aInfo = { TagUnknown, nullptr, 0 };
-=======
         *aInfo = {TagUnknown, nullptr, 0, 0};
->>>>>>> upstream-releases
         return;
       }
 
       mapbits = chunk->map[pageind].bits;
       MOZ_DIAGNOSTIC_ASSERT(mapbits & CHUNK_MAP_LARGE);
       if (!(mapbits & CHUNK_MAP_LARGE)) {
-<<<<<<< HEAD
-        *aInfo = {TagUnknown, nullptr, 0};
-||||||| merged common ancestors
-        *aInfo = { TagUnknown, nullptr, 0 };
-=======
         *aInfo = {TagUnknown, nullptr, 0, 0};
->>>>>>> upstream-releases
         return;
       }
     }
 
     void* addr = ((char*)chunk) + (pageind << gPageSize2Pow);
-<<<<<<< HEAD
-    *aInfo = {TagLiveLarge, addr, size};
-||||||| merged common ancestors
-    *aInfo = { TagLiveLarge, addr, size };
-=======
     *aInfo = {TagLiveAlloc, addr, size, chunk->arena->mId};
->>>>>>> upstream-releases
     return;
   }
 
@@ -3511,13 +3198,7 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
   uintptr_t reg0_addr = (uintptr_t)run + run->mBin->mRunFirstRegionOffset;
   if (aPtr < (void*)reg0_addr) {
     // In the run header.
-<<<<<<< HEAD
-    *aInfo = {TagUnknown, nullptr, 0};
-||||||| merged common ancestors
-    *aInfo = { TagUnknown, nullptr, 0 };
-=======
     *aInfo = {TagUnknown, nullptr, 0, 0};
->>>>>>> upstream-releases
     return;
   }
 
@@ -3531,21 +3212,9 @@ inline void MozJemalloc::jemalloc_ptr_info(const void* aPtr,
   unsigned elm = regind >> (LOG2(sizeof(int)) + 3);
   unsigned bit = regind - (elm << (LOG2(sizeof(int)) + 3));
   PtrInfoTag tag =
-<<<<<<< HEAD
-      ((run->mRegionsMask[elm] & (1U << bit))) ? TagFreedSmall : TagLiveSmall;
-||||||| merged common ancestors
-    ((run->mRegionsMask[elm] & (1U << bit))) ? TagFreedSmall : TagLiveSmall;
-=======
       ((run->mRegionsMask[elm] & (1U << bit))) ? TagFreedAlloc : TagLiveAlloc;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *aInfo = {tag, addr, size};
-||||||| merged common ancestors
-  *aInfo = { tag, addr, size };
-=======
   *aInfo = {tag, addr, size, chunk->arena->mId};
->>>>>>> upstream-releases
 }
 
 namespace Debug {
@@ -4697,20 +4366,9 @@ inline void MozJemalloc::moz_dispose_arena(arena_id_t aArenaId) {
 // is threaded here.
 #  ifndef XP_DARWIN
 static
-<<<<<<< HEAD
-#endif
-    void
-    _malloc_prefork(void) {
-||||||| merged common ancestors
-#endif
-  void
-  _malloc_prefork(void)
-{
-=======
 #  endif
     void
     _malloc_prefork(void) {
->>>>>>> upstream-releases
   // Acquire all mutexes in a safe order.
   gArenas.mLock.Lock();
 
@@ -4725,20 +4383,9 @@ static
 
 #  ifndef XP_DARWIN
 static
-<<<<<<< HEAD
-#endif
-    void
-    _malloc_postfork_parent(void) {
-||||||| merged common ancestors
-#endif
-  void
-  _malloc_postfork_parent(void)
-{
-=======
 #  endif
     void
     _malloc_postfork_parent(void) {
->>>>>>> upstream-releases
   // Release all mutexes, now that fork() has completed.
   huge_mtx.Unlock();
 
@@ -4753,20 +4400,9 @@ static
 
 #  ifndef XP_DARWIN
 static
-<<<<<<< HEAD
-#endif
-    void
-    _malloc_postfork_child(void) {
-||||||| merged common ancestors
-#endif
-  void
-  _malloc_postfork_child(void)
-{
-=======
 #  endif
     void
     _malloc_postfork_child(void) {
->>>>>>> upstream-releases
   // Reinitialize all mutexes, now that fork() has completed.
   huge_mtx.Init();
 
@@ -4816,47 +4452,19 @@ static const malloc_table_t gDefaultMallocTable = {
 static malloc_table_t gOriginalMallocTable = {
 #  include "malloc_decls.h"
 };
-<<<<<<< HEAD
-static malloc_table_t gReplaceMallocTables[2] = {
-    {
-#include "malloc_decls.h"
-    },
-    {
-#include "malloc_decls.h"
-    },
-||||||| merged common ancestors
-static malloc_table_t gReplaceMallocTables[2] = {
-  {
-#include "malloc_decls.h"
-  },
-  {
-#include "malloc_decls.h"
-  },
-=======
 
 // The malloc table installed by jemalloc_replace_dynamic(). (Read the
 // comments above that function for more details.)
 static malloc_table_t gDynamicMallocTable = {
 #  include "malloc_decls.h"
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-// Avoid races when swapping malloc impls dynamically
-static Atomic<malloc_table_t const*, mozilla::MemoryOrdering::Relaxed,
-              recordreplay::Behavior::DontPreserve>
-    gReplaceMallocTable;
-||||||| merged common ancestors
-// Avoid races when swapping malloc impls dynamically
-static Atomic<malloc_table_t const*, mozilla::MemoryOrdering::Relaxed, recordreplay::Behavior::DontPreserve> gReplaceMallocTable;
-=======
 // This briefly points to gDefaultMallocTable at startup. After that, it points
 // to either gOriginalMallocTable or gDynamicMallocTable. It's atomic to avoid
 // races when switching between tables.
 static Atomic<malloc_table_t const*, mozilla::MemoryOrdering::Relaxed,
               recordreplay::Behavior::DontPreserve>
     gMallocTablePtr;
->>>>>>> upstream-releases
 
 #  ifdef MOZ_DYNAMIC_REPLACE_INIT
 #    undef replace_init
@@ -4876,16 +4484,8 @@ static replace_malloc_handle_t replace_malloc_handle() {
   return nullptr;
 }
 
-<<<<<<< HEAD
-#define REPLACE_MALLOC_GET_INIT_FUNC(handle) \
-  (replace_init_impl_t*)GetProcAddress(handle, "replace_init")
-||||||| merged common ancestors
-#define REPLACE_MALLOC_GET_INIT_FUNC(handle)                                   \
-  (replace_init_impl_t*)GetProcAddress(handle, "replace_init")
-=======
 #    define REPLACE_MALLOC_GET_INIT_FUNC(handle) \
       (replace_init_impl_t*)GetProcAddress(handle, "replace_init")
->>>>>>> upstream-releases
 
 #  elif defined(ANDROID)
 #    include <dlfcn.h>
@@ -4900,44 +4500,18 @@ static replace_malloc_handle_t replace_malloc_handle() {
   return nullptr;
 }
 
-<<<<<<< HEAD
-#define REPLACE_MALLOC_GET_INIT_FUNC(handle) \
-  (replace_init_impl_t*)dlsym(handle, "replace_init")
-||||||| merged common ancestors
-#define REPLACE_MALLOC_GET_INIT_FUNC(handle)                                   \
-  (replace_init_impl_t*)dlsym(handle, "replace_init")
-=======
 #    define REPLACE_MALLOC_GET_INIT_FUNC(handle) \
       (replace_init_impl_t*)dlsym(handle, "replace_init")
->>>>>>> upstream-releases
 
 #  endif
 
 static void replace_malloc_init_funcs(malloc_table_t*);
 
-<<<<<<< HEAD
-#ifdef MOZ_REPLACE_MALLOC_STATIC
-extern "C" void logalloc_init(malloc_table_t*, ReplaceMallocBridge**);
-||||||| merged common ancestors
-#ifdef MOZ_REPLACE_MALLOC_STATIC
-extern "C" void
-logalloc_init(malloc_table_t*, ReplaceMallocBridge**);
-=======
 #  ifdef MOZ_REPLACE_MALLOC_STATIC
 extern "C" void logalloc_init(malloc_table_t*, ReplaceMallocBridge**);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern "C" void dmd_init(malloc_table_t*, ReplaceMallocBridge**);
-#endif
-||||||| merged common ancestors
-extern "C" void
-dmd_init(malloc_table_t*, ReplaceMallocBridge**);
-#endif
-=======
 extern "C" void dmd_init(malloc_table_t*, ReplaceMallocBridge**);
 #  endif
->>>>>>> upstream-releases
 
 bool Equals(const malloc_table_t& aTable1, const malloc_table_t& aTable2) {
   return memcmp(&aTable1, &aTable2, sizeof(malloc_table_t)) == 0;
@@ -4946,18 +4520,8 @@ bool Equals(const malloc_table_t& aTable1, const malloc_table_t& aTable2) {
 // Below is the malloc implementation overriding jemalloc and calling the
 // replacement functions if they exist.
 static ReplaceMallocBridge* gReplaceMallocBridge = nullptr;
-<<<<<<< HEAD
-static void init() {
-  malloc_table_t tempTable = gReplaceMallocTableDefault;
-||||||| merged common ancestors
-static void
-init()
-{
-  malloc_table_t tempTable = gReplaceMallocTableDefault;
-=======
 static void init() {
   malloc_table_t tempTable = gDefaultMallocTable;
->>>>>>> upstream-releases
 
 #  ifdef MOZ_DYNAMIC_REPLACE_INIT
   replace_malloc_handle_t handle = replace_malloc_handle();
@@ -4998,20 +4562,6 @@ static void init() {
 // tools/profiler/core/memory_hooks.cpp for counting allocations and probably
 // should not be used for any other purpose.
 //
-<<<<<<< HEAD
-// This means that simple replacements that don't modify much about the
-// allocations or just record information about it are fine.
-MOZ_JEMALLOC_API void jemalloc_replace_dynamic(
-    jemalloc_init_func replace_init_func) {
-  malloc_table_t tempTable = gReplaceMallocTableDefault;
-||||||| merged common ancestors
-// This means that simple replacements that don't modify much about the
-// allocations or just record information about it are fine.
-MOZ_JEMALLOC_API void
-jemalloc_replace_dynamic(jemalloc_init_func replace_init_func)
-{
-  malloc_table_t tempTable = gReplaceMallocTableDefault;
-=======
 // This function allows the original malloc table to be temporarily replaced by
 // a different malloc table. Or, if the argument is nullptr, it switches back to
 // the original malloc table.
@@ -5032,7 +4582,6 @@ jemalloc_replace_dynamic(jemalloc_init_func replace_init_func)
 //
 MOZ_JEMALLOC_API void jemalloc_replace_dynamic(
     jemalloc_init_func replace_init_func) {
->>>>>>> upstream-releases
   if (replace_init_func) {
     malloc_table_t tempTable = gOriginalMallocTable;
     (*replace_init_func)(&tempTable, &gReplaceMallocBridge);
@@ -5058,30 +4607,6 @@ MOZ_JEMALLOC_API void jemalloc_replace_dynamic(
   }
 }
 
-<<<<<<< HEAD
-#define MALLOC_DECL(name, return_type, ...)                               \
-  template <>                                                             \
-  inline return_type ReplaceMalloc::name(                                 \
-      ARGS_HELPER(TYPED_ARGS, ##__VA_ARGS__)) {                           \
-    if (MOZ_UNLIKELY(!gReplaceMallocTable)) {                             \
-      init();                                                             \
-    }                                                                     \
-    return (*gReplaceMallocTable).name(ARGS_HELPER(ARGS, ##__VA_ARGS__)); \
-  }
-#include "malloc_decls.h"
-||||||| merged common ancestors
-#define MALLOC_DECL(name, return_type, ...)                             \
-  template<>                                                                   \
-  inline return_type ReplaceMalloc::name(                                      \
-    ARGS_HELPER(TYPED_ARGS, ##__VA_ARGS__))                                    \
-  {                                                                            \
-    if (MOZ_UNLIKELY(!gReplaceMallocTable)) {                            \
-      init();                                                                  \
-    }                                                                          \
-    return (*gReplaceMallocTable).name(ARGS_HELPER(ARGS, ##__VA_ARGS__)); \
-  }
-#include "malloc_decls.h"
-=======
 #  define MALLOC_DECL(name, return_type, ...)                           \
     template <>                                                         \
     inline return_type ReplaceMalloc::name(                             \
@@ -5092,20 +4617,9 @@ MOZ_JEMALLOC_API void jemalloc_replace_dynamic(
       return (*gMallocTablePtr).name(ARGS_HELPER(ARGS, ##__VA_ARGS__)); \
     }
 #  include "malloc_decls.h"
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MOZ_JEMALLOC_API struct ReplaceMallocBridge* get_bridge(void) {
-  if (MOZ_UNLIKELY(!gReplaceMallocTable)) {
-||||||| merged common ancestors
-MOZ_JEMALLOC_API struct ReplaceMallocBridge*
-get_bridge(void)
-{
-  if (MOZ_UNLIKELY(!gReplaceMallocTable)) {
-=======
 MOZ_JEMALLOC_API struct ReplaceMallocBridge* get_bridge(void) {
   if (MOZ_UNLIKELY(!gMallocTablePtr)) {
->>>>>>> upstream-releases
     init();
   }
   return gReplaceMallocBridge;
@@ -5134,41 +4648,17 @@ static void replace_malloc_init_funcs(malloc_table_t* table) {
   if (table->moz_create_arena_with_params ==
           MozJemalloc::moz_create_arena_with_params &&
       table->malloc != MozJemalloc::malloc) {
-<<<<<<< HEAD
-#define MALLOC_DECL(name, ...) \
-  table->name = DummyArenaAllocator<ReplaceMalloc>::name;
-#define MALLOC_FUNCS MALLOC_FUNCS_ARENA_BASE
-#include "malloc_decls.h"
-||||||| merged common ancestors
-#define MALLOC_DECL(name, ...)                                                 \
-  table->name = DummyArenaAllocator<ReplaceMalloc>::name;
-#define MALLOC_FUNCS MALLOC_FUNCS_ARENA_BASE
-#include "malloc_decls.h"
-=======
 #  define MALLOC_DECL(name, ...) \
     table->name = DummyArenaAllocator<ReplaceMalloc>::name;
 #  define MALLOC_FUNCS MALLOC_FUNCS_ARENA_BASE
 #  include "malloc_decls.h"
->>>>>>> upstream-releases
   }
   if (table->moz_arena_malloc == MozJemalloc::moz_arena_malloc &&
       table->malloc != MozJemalloc::malloc) {
-<<<<<<< HEAD
-#define MALLOC_DECL(name, ...) \
-  table->name = DummyArenaAllocator<ReplaceMalloc>::name;
-#define MALLOC_FUNCS MALLOC_FUNCS_ARENA_ALLOC
-#include "malloc_decls.h"
-||||||| merged common ancestors
-#define MALLOC_DECL(name, ...)                                                 \
-  table->name = DummyArenaAllocator<ReplaceMalloc>::name;
-#define MALLOC_FUNCS MALLOC_FUNCS_ARENA_ALLOC
-#include "malloc_decls.h"
-=======
 #  define MALLOC_DECL(name, ...) \
     table->name = DummyArenaAllocator<ReplaceMalloc>::name;
 #  define MALLOC_FUNCS MALLOC_FUNCS_ARENA_ALLOC
 #  include "malloc_decls.h"
->>>>>>> upstream-releases
   }
 }
 

@@ -13,14 +13,8 @@
 #include "GrFixedClip.h"
 #include "GrGpuResourcePriv.h"
 #include "GrProxyProvider.h"
-<<<<<<< HEAD
-#include "GrRenderTargetContextPriv.h"
-||||||| merged common ancestors
-#include "GrStencilAttachment.h"
-=======
 #include "GrRecordingContextPriv.h"
 #include "GrRenderTargetContextPriv.h"
->>>>>>> upstream-releases
 #include "GrSWMaskHelper.h"
 #include "GrShape.h"
 #include "GrStencilAttachment.h"
@@ -126,28 +120,16 @@ bool GrClipStackClip::PathNeedsSWRenderer(GrRecordingContext* context,
 
         GrShape shape(path, GrStyle::SimpleFill());
         GrPathRenderer::CanDrawPathArgs canDrawArgs;
-<<<<<<< HEAD
-        canDrawArgs.fCaps = context->contextPriv().caps();
-||||||| merged common ancestors
-        canDrawArgs.fCaps = context->caps();
-=======
         canDrawArgs.fCaps = context->priv().caps();
->>>>>>> upstream-releases
         canDrawArgs.fClipConservativeBounds = &scissorRect;
         canDrawArgs.fViewMatrix = &viewMatrix;
         canDrawArgs.fShape = &shape;
         canDrawArgs.fAAType = GrChooseAAType(GrAA(element->isAA()),
                                              renderTargetContext->fsaaType(),
                                              GrAllowMixedSamples::kYes,
-<<<<<<< HEAD
-                                             *context->contextPriv().caps());
-||||||| merged common ancestors
-                                             *context->caps());
-=======
                                              *context->priv().caps());
         SkASSERT(!renderTargetContext->wrapsVkSecondaryCB());
         canDrawArgs.fTargetIsWrappedVkSecondaryCB = false;
->>>>>>> upstream-releases
         canDrawArgs.fHasUserStencilSettings = hasUserStencilSettings;
 
         // the 'false' parameter disallows use of the SW path renderer
@@ -177,18 +159,10 @@ bool GrClipStackClip::UseSWOnlyPath(GrRecordingContext* context,
     // a clip gets complex enough it can just be done in SW regardless
     // of whether it would invoke the GrSoftwarePathRenderer.
 
-<<<<<<< HEAD
-    // If we're avoiding stencils, always use SW:
-    if (context->contextPriv().caps()->avoidStencilBuffers()) {
-||||||| merged common ancestors
-    // If we're avoiding stencils, always use SW:
-    if (context->caps()->avoidStencilBuffers())
-=======
     // If we're avoiding stencils, always use SW. This includes drawing into a wrapped vulkan
     // secondary command buffer which can't handle stencils.
     if (context->priv().caps()->avoidStencilBuffers() ||
         renderTargetContext->wrapsVkSecondaryCB()) {
->>>>>>> upstream-releases
         return true;
     }
 
@@ -229,13 +203,7 @@ bool GrClipStackClip::apply(GrRecordingContext* context, GrRenderTargetContext* 
     }
 
     int maxWindowRectangles = renderTargetContext->priv().maxWindowRectangles();
-<<<<<<< HEAD
-    int maxAnalyticFPs = context->contextPriv().caps()->maxClipAnalyticFPs();
-||||||| merged common ancestors
-    int maxAnalyticFPs = context->caps()->maxClipAnalyticFPs();
-=======
     int maxAnalyticFPs = context->priv().caps()->maxClipAnalyticFPs();
->>>>>>> upstream-releases
     if (GrFSAAType::kNone != renderTargetContext->fsaaType()) {
         // With mixed samples (non-msaa color buffer), any coverage info is lost from color once it
         // hits the color buffer anyway, so we may as well use coverage AA if nothing else in the
@@ -243,27 +211,13 @@ bool GrClipStackClip::apply(GrRecordingContext* context, GrRenderTargetContext* 
         if (renderTargetContext->numColorSamples() > 1 || useHWAA || hasUserStencilSettings) {
             maxAnalyticFPs = 0;
         }
-<<<<<<< HEAD
-        // We disable MSAA when avoiding stencil.
-        SkASSERT(!context->contextPriv().caps()->avoidStencilBuffers());
-||||||| merged common ancestors
-        SkASSERT(!context->caps()->avoidStencilBuffers()); // We disable MSAA when avoiding stencil.
-=======
         // We disable MSAA when avoiding stencil.
         SkASSERT(!context->priv().caps()->avoidStencilBuffers());
->>>>>>> upstream-releases
     }
     auto* ccpr = context->priv().drawingManager()->getCoverageCountingPathRenderer();
 
-<<<<<<< HEAD
-    GrReducedClip reducedClip(*fStack, devBounds, context->contextPriv().caps(),
-                              maxWindowRectangles, maxAnalyticFPs, ccpr ? maxAnalyticFPs : 0);
-||||||| merged common ancestors
-    GrReducedClip reducedClip(*fStack, devBounds, caps, maxWindowRectangles, maxAnalyticFPs, ccpr);
-=======
     GrReducedClip reducedClip(*fStack, devBounds, context->priv().caps(),
                               maxWindowRectangles, maxAnalyticFPs, ccpr ? maxAnalyticFPs : 0);
->>>>>>> upstream-releases
     if (InitialState::kAllOut == reducedClip.initialState() &&
         reducedClip.maskElements().isEmpty()) {
         return false;
@@ -310,14 +264,8 @@ bool GrClipStackClip::applyClipMask(GrRecordingContext* context,
 
     // If the stencil buffer is multisampled we can use it to do everything.
     if ((GrFSAAType::kNone == renderTargetContext->fsaaType() && reducedClip.maskRequiresAA()) ||
-<<<<<<< HEAD
-        context->contextPriv().caps()->avoidStencilBuffers()) {
-||||||| merged common ancestors
-        context->caps()->avoidStencilBuffers()) {
-=======
         context->priv().caps()->avoidStencilBuffers() ||
         renderTargetContext->wrapsVkSecondaryCB()) {
->>>>>>> upstream-releases
         sk_sp<GrTextureProxy> result;
         if (UseSWOnlyPath(context, hasUserStencilSettings, renderTargetContext, reducedClip)) {
             // The clip geometry is complex enough that it will be more efficient to create it
@@ -336,14 +284,8 @@ bool GrClipStackClip::applyClipMask(GrRecordingContext* context,
 
         // If alpha or software clip mask creation fails, fall through to the stencil code paths,
         // unless stencils are disallowed.
-<<<<<<< HEAD
-        if (context->contextPriv().caps()->avoidStencilBuffers()) {
-||||||| merged common ancestors
-        if (context->caps()->avoidStencilBuffers()) {
-=======
         if (context->priv().caps()->avoidStencilBuffers() ||
             renderTargetContext->wrapsVkSecondaryCB()) {
->>>>>>> upstream-releases
             SkDebugf("WARNING: Clip mask requires stencil, but stencil unavailable. "
                      "Clip will be ignored.\n");
             return false;
@@ -382,34 +324,15 @@ static void create_clip_mask_key(uint32_t clipGenID, const SkIRect& bounds, int 
     builder[3] = numAnalyticFPs;
 }
 
-<<<<<<< HEAD
-static void add_invalidate_on_pop_message(const SkClipStack& stack, uint32_t clipGenID,
-                                          const GrUniqueKey& clipMaskKey,
-                                          uint32_t contextUniqueID) {
-||||||| merged common ancestors
-static void add_invalidate_on_pop_message(const SkClipStack& stack, uint32_t clipGenID,
-                                          const GrUniqueKey& clipMaskKey) {
-=======
 static void add_invalidate_on_pop_message(GrRecordingContext* context,
                                           const SkClipStack& stack, uint32_t clipGenID,
                                           const GrUniqueKey& clipMaskKey) {
     GrProxyProvider* proxyProvider = context->priv().proxyProvider();
 
->>>>>>> upstream-releases
     SkClipStack::Iter iter(stack, SkClipStack::Iter::kTop_IterStart);
     while (const Element* element = iter.prev()) {
         if (element->getGenID() == clipGenID) {
-<<<<<<< HEAD
-            std::unique_ptr<GrUniqueKeyInvalidatedMessage> msg(
-                    new GrUniqueKeyInvalidatedMessage(clipMaskKey, contextUniqueID));
-            element->addResourceInvalidationMessage(std::move(msg));
-||||||| merged common ancestors
-            std::unique_ptr<GrUniqueKeyInvalidatedMessage> msg(
-                    new GrUniqueKeyInvalidatedMessage(clipMaskKey));
-            element->addResourceInvalidationMessage(std::move(msg));
-=======
             element->addResourceInvalidationMessage(proxyProvider, clipMaskKey);
->>>>>>> upstream-releases
             return;
         }
     }
@@ -429,24 +352,6 @@ sk_sp<GrTextureProxy> GrClipStackClip::createAlphaClipMask(GrRecordingContext* c
         return proxy;
     }
 
-<<<<<<< HEAD
-    sk_sp<GrRenderTargetContext> rtc(
-        context->contextPriv().makeDeferredRenderTargetContextWithFallback(
-                                                                        SkBackingFit::kApprox,
-                                                                        reducedClip.width(),
-                                                                        reducedClip.height(),
-                                                                        kAlpha_8_GrPixelConfig,
-                                                                        nullptr, 1,
-                                                                        GrMipMapped::kNo,
-                                                                        kTopLeft_GrSurfaceOrigin));
-||||||| merged common ancestors
-    sk_sp<GrRenderTargetContext> rtc(context->makeDeferredRenderTargetContextWithFallback(
-                                                                             SkBackingFit::kApprox,
-                                                                             reducedClip.width(),
-                                                                             reducedClip.height(),
-                                                                             kAlpha_8_GrPixelConfig,
-                                                                             nullptr));
-=======
     GrBackendFormat format =
             context->priv().caps()->getBackendFormatFromColorType(kAlpha_8_SkColorType);
     sk_sp<GrRenderTargetContext> rtc(
@@ -459,7 +364,6 @@ sk_sp<GrTextureProxy> GrClipStackClip::createAlphaClipMask(GrRecordingContext* c
                                                                         nullptr, 1,
                                                                         GrMipMapped::kNo,
                                                                         kTopLeft_GrSurfaceOrigin));
->>>>>>> upstream-releases
     if (!rtc) {
         return nullptr;
     }
@@ -475,13 +379,7 @@ sk_sp<GrTextureProxy> GrClipStackClip::createAlphaClipMask(GrRecordingContext* c
 
     SkASSERT(result->origin() == kTopLeft_GrSurfaceOrigin);
     proxyProvider->assignUniqueKeyToProxy(key, result.get());
-<<<<<<< HEAD
-    add_invalidate_on_pop_message(*fStack, reducedClip.maskGenID(), key, context->uniqueID());
-||||||| merged common ancestors
-    add_invalidate_on_pop_message(*fStack, reducedClip.maskGenID(), key);
-=======
     add_invalidate_on_pop_message(context, *fStack, reducedClip.maskGenID(), key);
->>>>>>> upstream-releases
 
     return result;
 }
@@ -596,17 +494,9 @@ sk_sp<GrTextureProxy> GrClipStackClip::createSoftwareClipMask(
 
         // MDB TODO: We're going to fill this proxy with an ASAP upload (which is out of order wrt
         // to ops), so it can't have any pending IO.
-<<<<<<< HEAD
-        proxy = proxyProvider->createProxy(desc, kTopLeft_GrSurfaceOrigin, SkBackingFit::kApprox,
-                                           SkBudgeted::kYes, GrInternalSurfaceFlags::kNoPendingIO);
-||||||| merged common ancestors
-        proxy = proxyProvider->createProxy(desc, SkBackingFit::kApprox, SkBudgeted::kYes,
-                                           GrResourceProvider::kNoPendingIO_Flag);
-=======
         proxy = proxyProvider->createProxy(format, desc, kTopLeft_GrSurfaceOrigin,
                                            SkBackingFit::kApprox, SkBudgeted::kYes,
                                            GrInternalSurfaceFlags::kNoPendingIO);
->>>>>>> upstream-releases
 
         auto uploader = skstd::make_unique<GrTDeferredProxyUploader<ClipMaskData>>(reducedClip);
         GrTDeferredProxyUploader<ClipMaskData>* uploaderRaw = uploader.get();
@@ -639,12 +529,6 @@ sk_sp<GrTextureProxy> GrClipStackClip::createSoftwareClipMask(
 
     SkASSERT(proxy->origin() == kTopLeft_GrSurfaceOrigin);
     proxyProvider->assignUniqueKeyToProxy(key, proxy.get());
-<<<<<<< HEAD
-    add_invalidate_on_pop_message(*fStack, reducedClip.maskGenID(), key, context->uniqueID());
-||||||| merged common ancestors
-    add_invalidate_on_pop_message(*fStack, reducedClip.maskGenID(), key);
-=======
     add_invalidate_on_pop_message(context, *fStack, reducedClip.maskGenID(), key);
->>>>>>> upstream-releases
     return proxy;
 }

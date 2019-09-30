@@ -44,20 +44,12 @@ function _updateCurrentContentOuterWindowID(browser) {
     return;
   }
 
-<<<<<<< HEAD
-  debug("Current window uri=" + (browser.currentURI && browser.currentURI.spec) +
-        " id=" + browser.outerWindowID);
-||||||| merged common ancestors
-  debug("Current window uri=" + browser.currentURI.spec +
-        " id=" + browser.outerWindowID);
-=======
   debug(
     "Current window uri=" +
       (browser.currentURI && browser.currentURI.spec) +
       " id=" +
       browser.outerWindowID
   );
->>>>>>> upstream-releases
 
   _lastTopLevelWindowID = browser.outerWindowID;
   let windowIDWrapper = Cc["@mozilla.org/supports-PRUint64;1"].createInstance(

@@ -22,17 +22,6 @@ using mozilla::ipc::PBackgroundParent;
 using mozilla::ipc::PrincipalInfo;
 
 // declared in ActorUtils.h
-<<<<<<< HEAD
-PCacheStorageParent* AllocPCacheStorageParent(
-    PBackgroundParent* aManagingActor, Namespace aNamespace,
-    const mozilla::ipc::PrincipalInfo& aPrincipalInfo) {
-||||||| merged common ancestors
-PCacheStorageParent*
-AllocPCacheStorageParent(PBackgroundParent* aManagingActor,
-                         Namespace aNamespace,
-                         const mozilla::ipc::PrincipalInfo& aPrincipalInfo)
-{
-=======
 PCacheStorageParent* AllocPCacheStorageParent(
     PBackgroundParent* aManagingActor, Namespace aNamespace,
     const mozilla::ipc::PrincipalInfo& aPrincipalInfo) {
@@ -41,7 +30,6 @@ PCacheStorageParent* AllocPCacheStorageParent(
     return nullptr;
   }
 
->>>>>>> upstream-releases
   return new CacheStorageParent(aManagingActor, aNamespace, aPrincipalInfo);
 }
 

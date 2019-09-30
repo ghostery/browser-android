@@ -59,36 +59,16 @@ void MacroAssembler::move32To64SignExtend(Register src, Register64 dest) {
 // ===============================================================
 // Load instructions
 
-<<<<<<< HEAD
-void MacroAssembler::andPtr(Register src, Register dest) { ma_and(dest, src); }
-||||||| merged common ancestors
-void
-MacroAssembler::andPtr(Register src, Register dest)
-{
-    ma_and(dest, src);
-}
-=======
 void MacroAssembler::load32SignExtendToPtr(const Address& src, Register dest) {
   loadPtr(src, dest);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void MacroAssembler::andPtr(Imm32 imm, Register dest) { ma_and(dest, imm); }
-||||||| merged common ancestors
-void
-MacroAssembler::andPtr(Imm32 imm, Register dest)
-{
-    ma_and(dest, imm);
-}
-=======
 // ===============================================================
 // Logical instructions
 
 void MacroAssembler::andPtr(Register src, Register dest) { ma_and(dest, src); }
 
 void MacroAssembler::andPtr(Imm32 imm, Register dest) { ma_and(dest, imm); }
->>>>>>> upstream-releases
 
 void MacroAssembler::and64(Imm64 imm, Register64 dest) {
   ma_li(ScratchRegister, ImmWord(imm.value));
@@ -287,19 +267,9 @@ void MacroAssembler::inc64(AbsoluteAddress dest) {
   as_sd(SecondScratchReg, ScratchRegister, 0);
 }
 
-<<<<<<< HEAD
-void MacroAssembler::neg64(Register64 reg) { as_dsubu(reg.reg, zero, reg.reg); }
-||||||| merged common ancestors
-void
-MacroAssembler::neg64(Register64 reg)
-{
-    as_dsubu(reg.reg, zero, reg.reg);
-}
-=======
 void MacroAssembler::neg64(Register64 reg) { as_dsubu(reg.reg, zero, reg.reg); }
 
 void MacroAssembler::negPtr(Register reg) { as_dsubu(reg, zero, reg); }
->>>>>>> upstream-releases
 
 // ===============================================================
 // Shift functions
@@ -502,17 +472,6 @@ void MacroAssembler::branchPrivatePtr(Condition cond, const Address& lhs,
 }
 
 template <class L>
-<<<<<<< HEAD
-void MacroAssembler::branchTest64(Condition cond, Register64 lhs,
-                                  Register64 rhs, Register temp, L label) {
-  branchTestPtr(cond, lhs.reg, rhs.reg, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTest64(Condition cond, Register64 lhs, Register64 rhs, Register temp,
-                             L label)
-{
-    branchTestPtr(cond, lhs.reg, rhs.reg, label);
-=======
 void MacroAssembler::branchTest64(Condition cond, Register64 lhs,
                                   Register64 rhs, Register temp, L label) {
   branchTestPtr(cond, lhs.reg, rhs.reg, label);
@@ -545,249 +504,80 @@ void MacroAssembler::branchTestDouble(Condition cond, Register tag,
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   Condition actual = (cond == Equal) ? BelowOrEqual : Above;
   ma_b(tag, ImmTag(JSVAL_TAG_MAX_DOUBLE), label, actual);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestUndefined(Condition cond,
-                                         const ValueOperand& value,
-                                         Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestUndefined(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestUndefined(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestUndefined(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestDouble(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestInt32(Condition cond, const ValueOperand& value,
-                                     Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestInt32(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestInt32(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestInt32(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestNumber(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestInt32Truthy(bool b, const ValueOperand& value,
-                                           Label* label) {
-  ScratchRegisterScope scratch(*this);
-  ma_dext(scratch, value.valueReg(), Imm32(0), Imm32(32));
-  ma_b(scratch, scratch, label, b ? NonZero : Zero);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestInt32Truthy(bool b, const ValueOperand& value, Label* label)
-{
-    ScratchRegisterScope scratch(*this);
-    ma_dext(scratch, value.valueReg(), Imm32(0), Imm32(32));
-    ma_b(scratch, scratch, label, b ? NonZero : Zero);
-=======
 void MacroAssembler::branchTestBoolean(Condition cond,
                                        const ValueOperand& value,
                                        Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestBoolean(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestDouble(Condition cond, Register tag,
-                                      Label* label) {
-  MOZ_ASSERT(cond == Equal || cond == NotEqual);
-  Condition actual = (cond == Equal) ? BelowOrEqual : Above;
-  ma_b(tag, ImmTag(JSVAL_TAG_MAX_DOUBLE), label, actual);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestDouble(Condition cond, Register tag, Label* label)
-{
-    MOZ_ASSERT(cond == Equal || cond == NotEqual);
-    Condition actual = (cond == Equal) ? BelowOrEqual : Above;
-    ma_b(tag, ImmTag(JSVAL_TAG_MAX_DOUBLE), label, actual);
-=======
 void MacroAssembler::branchTestBooleanTruthy(bool b, const ValueOperand& value,
                                              Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   unboxBoolean(value, scratch2);
   ma_b(scratch2, scratch2, label, b ? NonZero : Zero);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestDouble(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestDouble(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestString(Condition cond, const ValueOperand& value,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestString(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestNumber(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestNumber(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestStringTruthy(bool b, const ValueOperand& value,
                                             Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   unboxString(value, scratch2);
   load32(Address(scratch2, JSString::offsetOfLength()), scratch2);
   ma_b(scratch2, Imm32(0), label, b ? NotEqual : Equal);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestBoolean(Condition cond,
-                                       const ValueOperand& value,
-                                       Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestBoolean(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestBoolean(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestBoolean(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestSymbol(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestBooleanTruthy(bool b, const ValueOperand& value,
-                                             Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  unboxBoolean(value, scratch2);
-  ma_b(scratch2, scratch2, label, b ? NonZero : Zero);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestBooleanTruthy(bool b, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    unboxBoolean(value, scratch2);
-    ma_b(scratch2, scratch2, label, b ? NonZero : Zero);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, Register tag,
                                       Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_TAG_BIGINT), label, cond);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestString(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestString(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestString(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestString(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, const BaseIndex& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   computeEffectiveAddress(address, scratch2);
   splitTag(scratch2, scratch2);
   branchTestBigInt(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestStringTruthy(bool b, const ValueOperand& value,
-                                            Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  unboxString(value, scratch2);
-  load32(Address(scratch2, JSString::offsetOfLength()), scratch2);
-  ma_b(scratch2, Imm32(0), label, b ? NotEqual : Equal);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestStringTruthy(bool b, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    unboxString(value, scratch2);
-    load32(Address(scratch2, JSString::offsetOfLength()), scratch2);
-    ma_b(scratch2, Imm32(0), label, b ? NotEqual : Equal);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, const ValueOperand& value,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestBigInt(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  SecondScratchRegisterScope scratch2(*this);
-  splitTag(value, scratch2);
-  branchTestSymbol(cond, scratch2, label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value, Label* label)
-{
-    SecondScratchRegisterScope scratch2(*this);
-    splitTag(value, scratch2);
-    branchTestSymbol(cond, scratch2, label);
-=======
 void MacroAssembler::branchTestBigIntTruthy(bool b, const ValueOperand& value,
                                             Label* label) {
   SecondScratchRegisterScope scratch2(*this);
@@ -795,7 +585,6 @@ void MacroAssembler::branchTestBigIntTruthy(bool b, const ValueOperand& value,
   loadPtr(Address(scratch2, BigInt::offsetOfLengthSignAndReservedBits()),
           scratch2);
   ma_b(scratch2, ImmWord(0), label, b ? NotEqual : Equal);
->>>>>>> upstream-releases
 }
 
 void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,

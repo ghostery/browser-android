@@ -108,46 +108,6 @@ SafeOptionListMutation::~SafeOptionListMutation() {
 
 // construction, destruction
 
-<<<<<<< HEAD
-HTMLSelectElement::HTMLSelectElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-    FromParser aFromParser)
-    : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), NS_FORM_SELECT),
-      mOptions(new HTMLOptionsCollection(this)),
-      mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
-      mAutocompleteInfoState(nsContentUtils::eAutocompleteAttrState_Unknown),
-      mIsDoneAddingChildren(!aFromParser),
-      mDisabledChanged(false),
-      mMutating(false),
-      mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)),
-      mSelectionHasChanged(false),
-      mDefaultSelectionSet(false),
-      mCanShowInvalidUI(true),
-      mCanShowValidUI(true),
-      mNonOptionChildren(0),
-      mOptGroupCount(0),
-      mSelectedIndex(-1) {
-||||||| merged common ancestors
-
-HTMLSelectElement::HTMLSelectElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
-                                     FromParser aFromParser)
-  : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), NS_FORM_SELECT),
-    mOptions(new HTMLOptionsCollection(this)),
-    mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
-    mAutocompleteInfoState(nsContentUtils::eAutocompleteAttrState_Unknown),
-    mIsDoneAddingChildren(!aFromParser),
-    mDisabledChanged(false),
-    mMutating(false),
-    mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)),
-    mSelectionHasChanged(false),
-    mDefaultSelectionSet(false),
-    mCanShowInvalidUI(true),
-    mCanShowValidUI(true),
-    mNonOptionChildren(0),
-    mOptGroupCount(0),
-    mSelectedIndex(-1)
-{
-=======
 HTMLSelectElement::HTMLSelectElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     FromParser aFromParser)
@@ -167,7 +127,6 @@ HTMLSelectElement::HTMLSelectElement(
       mNonOptionChildren(0),
       mOptGroupCount(0),
       mSelectedIndex(-1) {
->>>>>>> upstream-releases
   SetHasWeirdParserInsertionMode();
 
   // DoneAddingChildren() will be called later if it's from the parser,
@@ -663,16 +622,7 @@ nsIHTMLCollection* HTMLSelectElement::SelectedOptions() {
   return mSelectedOptions;
 }
 
-<<<<<<< HEAD
-nsresult HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex,
-                                                     bool aNotify) {
-||||||| merged common ancestors
-nsresult
-HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex, bool aNotify)
-{
-=======
 void HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex, bool aNotify) {
->>>>>>> upstream-releases
   int32_t oldSelectedIndex = mSelectedIndex;
   uint32_t mask = IS_SELECTED | CLEAR_ALL | SET_DISABLED;
   if (aNotify) {
@@ -1053,25 +1003,10 @@ bool HTMLSelectElement::SelectSomething(bool aNotify) {
   return false;
 }
 
-<<<<<<< HEAD
-nsresult HTMLSelectElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(
-      aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLSelectElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(aDocument, aParent,
-                                                              aBindingParent);
-=======
 nsresult HTMLSelectElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv =
       nsGenericHTMLFormElementWithState::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // If there is a disabled fieldset in the parent chain, the element is now
@@ -1086,18 +1021,8 @@ nsresult HTMLSelectElement::BindToTree(BindContext& aContext,
   return rv;
 }
 
-<<<<<<< HEAD
-void HTMLSelectElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-void
-HTMLSelectElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
-=======
 void HTMLSelectElement::UnbindFromTree(bool aNullParent) {
   nsGenericHTMLFormElementWithState::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 
   // We might be no longer disabled because our parent chain changed.
   // XXXbz is this still needed now that fieldset changes always call

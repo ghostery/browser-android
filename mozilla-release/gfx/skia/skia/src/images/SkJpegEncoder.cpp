@@ -68,37 +68,11 @@ private:
 bool SkJpegEncoderMgr::setParams(const SkImageInfo& srcInfo, const SkJpegEncoder::Options& options)
 {
     auto chooseProc8888 = [&]() {
-<<<<<<< HEAD
-        if (kUnpremul_SkAlphaType != srcInfo.alphaType() ||
-            SkJpegEncoder::AlphaOption::kIgnore == options.fAlphaOption)
-        {
-            return (transform_scanline_proc) nullptr;
-        }
-
-        return transform_scanline_to_premul_legacy;
-||||||| merged common ancestors
-        if (kUnpremul_SkAlphaType != srcInfo.alphaType() ||
-            SkJpegEncoder::AlphaOption::kIgnore == options.fAlphaOption)
-        {
-            return (transform_scanline_proc) nullptr;
-        }
-
-        // Note that kRespect mode is only supported with sRGB or linear transfer functions.
-        // The legacy code path is incidentally correct when the transfer function is linear.
-        const bool isSRGBTransferFn = srcInfo.gammaCloseToSRGB() &&
-                (SkTransferFunctionBehavior::kRespect == options.fBlendBehavior);
-        if (isSRGBTransferFn) {
-            return transform_scanline_to_premul_linear;
-        } else {
-            return transform_scanline_to_premul_legacy;
-        }
-=======
         if (kUnpremul_SkAlphaType == srcInfo.alphaType() &&
                 options.fAlphaOption == SkJpegEncoder::AlphaOption::kBlendOnBlack) {
             return transform_scanline_to_premul_legacy;
         }
         return (transform_scanline_proc) nullptr;
->>>>>>> upstream-releases
     };
 
     J_COLOR_SPACE jpegColorType = JCS_EXT_RGBA;
@@ -134,27 +108,8 @@ bool SkJpegEncoderMgr::setParams(const SkImageInfo& srcInfo, const SkJpegEncoder
             numComponents = 1;
             break;
         case kRGBA_F16_SkColorType:
-<<<<<<< HEAD
-            if (kUnpremul_SkAlphaType != srcInfo.alphaType() ||
-                SkJpegEncoder::AlphaOption::kIgnore == options.fAlphaOption)
-            {
-                fProc = transform_scanline_F16_to_8888;
-            } else {
-||||||| merged common ancestors
-            if (!srcInfo.colorSpace() || !srcInfo.colorSpace()->gammaIsLinear() ||
-                    SkTransferFunctionBehavior::kRespect != options.fBlendBehavior) {
-                return false;
-            }
-
-            if (kUnpremul_SkAlphaType != srcInfo.alphaType() ||
-                SkJpegEncoder::AlphaOption::kIgnore == options.fAlphaOption)
-            {
-                fProc = transform_scanline_F16_to_8888;
-            } else {
-=======
             if (kUnpremul_SkAlphaType == srcInfo.alphaType() &&
                     options.fAlphaOption == SkJpegEncoder::AlphaOption::kBlendOnBlack) {
->>>>>>> upstream-releases
                 fProc = transform_scanline_F16_to_premul_8888;
             } else {
                 fProc = transform_scanline_F16_to_8888;

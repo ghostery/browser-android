@@ -61,18 +61,8 @@
   display: -moz-box;
   -moz-appearance: toolbox;
   height: 1px;
-<<<<<<< HEAD
-  /* use inset box-shadow instead of border because -moz-appearance hides the border */
-  border: none;
-  box-shadow: inset 0 -1px var(--chrome-content-separator-color);
-||||||| merged common ancestors
-  /* use inset box-shadow instead of border because -moz-appearance hides the border */
-  border: none;
-  box-shadow: inset 0 -1px var(--toolbox-border-bottom-color);
-=======
   margin-top: -1px;
   opacity: 0.001;
->>>>>>> upstream-releases
 }
 
 #tabbrowser-tabs {
@@ -96,18 +86,7 @@
   -moz-box-pack: center;
 }
 
-<<<<<<< HEAD
-#titlebar-buttonbox > .titlebar-button {
-||||||| merged common ancestors
-#titlebar-content {
-  /* Ensure the the content part of the titlebar does not shrink. */
-  min-height: inherit;
-}
-
-#titlebar-buttonbox > .titlebar-button {
-=======
 .titlebar-button {
->>>>>>> upstream-releases
   display: none;
 }
 
@@ -152,22 +131,10 @@
 
 /* Draw the bottom border of the tabs toolbar when it's not using
    -moz-appearance: toolbar. */
-<<<<<<< HEAD
-#main-window:-moz-any([sizemode="fullscreen"],[customize-entered]) #nav-bar:not([tabs-hidden="true"]),
-#main-window:not([tabsintitlebar]) #nav-bar:not([tabs-hidden="true"]),
-#nav-bar:not([tabs-hidden="true"]):-moz-lwtheme {
-  box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
-||||||| merged common ancestors
-#main-window:-moz-any([sizemode="fullscreen"],[customize-entered]) #TabsToolbar:not([collapsed="true"]) + #nav-bar,
-#main-window:not([tabsintitlebar]) #TabsToolbar:not([collapsed="true"]) + #nav-bar,
-#TabsToolbar:not([collapsed="true"]) + #nav-bar:-moz-lwtheme {
-  box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
-=======
 :root:-moz-any([sizemode="fullscreen"],[customize-entered]) #nav-bar:not([tabs-hidden="true"]),
 :root:not([tabsintitlebar]) #nav-bar:not([tabs-hidden="true"]),
 #nav-bar:not([tabs-hidden="true"]):-moz-lwtheme {
   box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
->>>>>>> upstream-releases
 }
 
 /* Always draw a border on Yosemite to ensure the border is well-defined there
@@ -180,16 +147,8 @@
     --tabs-border-color: rgba(0,0,0,.05);
   }
 
-<<<<<<< HEAD
-  #main-window[tabsintitlebar] #nav-bar:not([tabs-hidden="true"]):not(:-moz-lwtheme) {
-    box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
-||||||| merged common ancestors
-  #main-window[tabsintitlebar] #TabsToolbar:not([collapsed="true"]) + #nav-bar:not(:-moz-lwtheme) {
-    box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
-=======
   :root[tabsintitlebar] #nav-bar:not([tabs-hidden="true"]):not(:-moz-lwtheme) {
     box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
->>>>>>> upstream-releases
   }
 }
 
@@ -605,24 +564,11 @@ html|input.urlbar-input {
   text-shadow: none;
 }
 
-<<<<<<< HEAD
-.browserContainer > findbar:-moz-lwtheme {
-  background-color: var(--lwt-accent-color);
-  background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
-  border-top-color: var(--chrome-content-separator-color);
-  color: var(--toolbar-color);
-||||||| merged common ancestors
-.browserContainer > findbar:-moz-lwtheme {
-  background-color: var(--toolbar-bgcolor);
-  background-image: none;
-  color: var(--toolbar-color, -moz-DialogText);
-=======
 :root:not([lwtheme-image]) .browserContainer > findbar:-moz-lwtheme {
   background-color: var(--lwt-accent-color);
   background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
   border-top-color: var(--chrome-content-separator-color);
   color: var(--toolbar-color);
->>>>>>> upstream-releases
 }
 
 .openintabs-menuitem {
@@ -834,41 +780,11 @@ button.translate-infobar-element.options-menu-button {
 
 button.translate-infobar-element.options-menu-button > .button-box > .button-menu-dropmarker {
   display: -moz-box;
-<<<<<<< HEAD
-  list-style-image: url("chrome://global/skin/icons/glyph-dropdown.png");
-  padding: 0;
-  margin: 0;
-}
-
-@media (min-resolution: 2dppx) {
-  button.translate-infobar-element.options-menu-button > .button-box > .button-menu-dropmarker {
-    list-style-image: url("chrome://global/skin/icons/glyph-dropdown@2x.png");
-  }
-
-  button.translate-infobar-element.options-menu-button > .button-box > .button-menu-dropmarker > .dropmarker-icon {
-    width: 8px;
-  }
-||||||| merged common ancestors
-  list-style-image: url("chrome://global/skin/icons/glyph-dropdown.png");
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-@media (min-resolution: 2dppx) {
-  button.translate-infobar-element.options-menu-button > .button-box > .button-menu-dropmarker {
-    list-style-image: url("chrome://global/skin/icons/glyph-dropdown@2x.png");
-  }
-
-  button.translate-infobar-element.options-menu-button > .button-box > .button-menu-dropmarker > .dropmarker-icon {
-    width: 8px;
-  }
-=======
   -moz-context-properties: fill;
   fill: currentColor;
   list-style-image: url("chrome://global/skin/icons/arrow-dropdown-12.svg");
   padding: 0;
   margin: 0;
->>>>>>> upstream-releases
 }
 
 menulist.translate-infobar-element {

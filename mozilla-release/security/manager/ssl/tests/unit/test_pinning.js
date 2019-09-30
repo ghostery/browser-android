@@ -274,25 +274,6 @@ function check_pinning_telemetry() {
     .snapshot();
   // Because all of our test domains are pinned to user-specified trust
   // anchors, effectively only strict mode and enforce test-mode get evaluated
-<<<<<<< HEAD
-  equal(prod_histogram.values[0], 4,
-        "Actual and expected prod (non-Mozilla) failure count should match");
-  equal(prod_histogram.values[1], 4,
-        "Actual and expected prod (non-Mozilla) success count should match");
-  equal(test_histogram.values[0], 2,
-        "Actual and expected test (non-Mozilla) failure count should match");
-  equal(test_histogram.values[1] || 0, 0,
-        "Actual and expected test (non-Mozilla) success count should match");
-||||||| merged common ancestors
-  equal(prod_histogram.counts[0], 4,
-        "Actual and expected prod (non-Mozilla) failure count should match");
-  equal(prod_histogram.counts[1], 4,
-        "Actual and expected prod (non-Mozilla) success count should match");
-  equal(test_histogram.counts[0], 2,
-        "Actual and expected test (non-Mozilla) failure count should match");
-  equal(test_histogram.counts[1], 0,
-        "Actual and expected test (non-Mozilla) success count should match");
-=======
   equal(
     prod_histogram.values[0],
     4,
@@ -313,50 +294,7 @@ function check_pinning_telemetry() {
     0,
     "Actual and expected test (non-Mozilla) success count should match"
   );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  let moz_prod_histogram = Services.telemetry.getHistogramById("CERT_PINNING_MOZ_RESULTS")
-                             .snapshot();
-  let moz_test_histogram =
-    Services.telemetry.getHistogramById("CERT_PINNING_MOZ_TEST_RESULTS").snapshot();
-  equal(moz_prod_histogram.values[0] || 0, 0,
-        "Actual and expected prod (Mozilla) failure count should match");
-  equal(moz_prod_histogram.values[1] || 0, 0,
-        "Actual and expected prod (Mozilla) success count should match");
-  equal(moz_test_histogram.values[0] || 0, 0,
-        "Actual and expected test (Mozilla) failure count should match");
-  equal(moz_test_histogram.values[1] || 0, 0,
-        "Actual and expected test (Mozilla) success count should match");
-
-  let per_host_histogram =
-    Services.telemetry.getHistogramById("CERT_PINNING_MOZ_RESULTS_BY_HOST").snapshot();
-  equal(per_host_histogram.values[0] || 0, 0,
-        "Actual and expected per host (Mozilla) failure count should match");
-  equal(per_host_histogram.values[1], 2,
-        "Actual and expected per host (Mozilla) success count should match");
-||||||| merged common ancestors
-  let moz_prod_histogram = Services.telemetry.getHistogramById("CERT_PINNING_MOZ_RESULTS")
-                             .snapshot();
-  let moz_test_histogram =
-    Services.telemetry.getHistogramById("CERT_PINNING_MOZ_TEST_RESULTS").snapshot();
-  equal(moz_prod_histogram.counts[0], 0,
-        "Actual and expected prod (Mozilla) failure count should match");
-  equal(moz_prod_histogram.counts[1], 0,
-        "Actual and expected prod (Mozilla) success count should match");
-  equal(moz_test_histogram.counts[0], 0,
-        "Actual and expected test (Mozilla) failure count should match");
-  equal(moz_test_histogram.counts[1], 0,
-        "Actual and expected test (Mozilla) success count should match");
-
-  let per_host_histogram =
-    Services.telemetry.getHistogramById("CERT_PINNING_MOZ_RESULTS_BY_HOST").snapshot();
-  equal(per_host_histogram.counts[0], 0,
-        "Actual and expected per host (Mozilla) failure count should match");
-  equal(per_host_histogram.counts[1], 2,
-        "Actual and expected per host (Mozilla) success count should match");
-=======
->>>>>>> upstream-releases
   run_next_test();
 }
 

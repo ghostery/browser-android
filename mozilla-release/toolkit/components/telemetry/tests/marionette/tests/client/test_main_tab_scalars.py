@@ -33,16 +33,6 @@ class TestMainTabScalars(TelemetryTestCase):
         self.assertEqual(ping["clientId"], self.client_id)
 
         scalars = ping["payload"]["processes"]["parent"]["scalars"]
-<<<<<<< HEAD
-
-        self.assertEqual(scalars["browser.engagement.max_concurrent_tab_count"], 3)
-        self.assertEqual(scalars["browser.engagement.tab_open_event_count"], 2)
-        self.assertEqual(scalars["browser.engagement.max_concurrent_window_count"], 1)
-||||||| merged common ancestors
-        assert scalars["browser.engagement.max_concurrent_tab_count"] == 3
-        assert scalars["browser.engagement.tab_open_event_count"] == 2
-        assert scalars["browser.engagement.max_concurrent_window_count"] == 1
-=======
 
         self.assertEqual(
             scalars["browser.engagement.max_concurrent_tab_count"], 3
@@ -51,4 +41,3 @@ class TestMainTabScalars(TelemetryTestCase):
         self.assertEqual(
             scalars["browser.engagement.max_concurrent_window_count"], 1
         )
->>>>>>> upstream-releases

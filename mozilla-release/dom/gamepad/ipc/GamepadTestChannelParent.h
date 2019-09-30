@@ -17,23 +17,10 @@ class GamepadTestChannelParent final : public PGamepadTestChannelParent {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GamepadTestChannelParent)
   GamepadTestChannelParent() : mShuttingdown(false) {}
   virtual void ActorDestroy(ActorDestroyReason aWhy) override {}
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvGamepadTestEvent(
-      const uint32_t& aID, const GamepadChangeEvent& aGamepadEvent) override;
-  virtual mozilla::ipc::IPCResult RecvShutdownChannel() override;
-
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvGamepadTestEvent(const uint32_t& aID,
-                       const GamepadChangeEvent& aGamepadEvent) override;
-  virtual mozilla::ipc::IPCResult
-  RecvShutdownChannel() override;
-=======
   mozilla::ipc::IPCResult RecvGamepadTestEvent(
       const uint32_t& aID, const GamepadChangeEvent& aGamepadEvent);
   mozilla::ipc::IPCResult RecvShutdownChannel();
 
->>>>>>> upstream-releases
  private:
   ~GamepadTestChannelParent() {}
   bool mShuttingdown;

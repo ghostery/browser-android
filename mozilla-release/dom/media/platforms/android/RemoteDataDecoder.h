@@ -50,18 +50,9 @@ class RemoteDataDecoder : public MediaDataDecoder,
   void ReturnDecodedData();
   void DrainComplete();
   void Error(const MediaResult& aError);
-<<<<<<< HEAD
-  void AssertOnTaskQueue() { MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn()); }
-||||||| merged common ancestors
-  void AssertOnTaskQueue()
-  {
-    MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn());
-  }
-=======
   void AssertOnTaskQueue() const {
     MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn());
   }
->>>>>>> upstream-releases
 
   enum class State { DRAINED, DRAINABLE, DRAINING, SHUTDOWN };
   void SetState(State aState) {
@@ -106,23 +97,6 @@ class RemoteDataDecoder : public MediaDataDecoder,
   // The following members must only be accessed on mTaskqueue.
   MozPromiseHolder<DecodePromise> mDecodePromise;
   MozPromiseHolder<DecodePromise> mDrainPromise;
-<<<<<<< HEAD
-  enum class DrainStatus {
-    DRAINED,
-    DRAINABLE,
-    DRAINING,
-  };
-  DrainStatus mDrainStatus = DrainStatus::DRAINED;
-||||||| merged common ancestors
-  enum class DrainStatus
-  {
-    DRAINED,
-    DRAINABLE,
-    DRAINING,
-  };
-  DrainStatus mDrainStatus = DrainStatus::DRAINED;
-=======
->>>>>>> upstream-releases
   DecodedData mDecodedData;
   State mState = State::DRAINED;
   size_t mNumPendingInputs;

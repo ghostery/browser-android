@@ -49,32 +49,6 @@ menuitem.subviewbutton[disabled]:not(.menuitem-iconic) {
   min-height: 22px;
 }
 
-<<<<<<< HEAD
-/* Win8 and beyond. */
-@media not (-moz-os-version: windows-win7) {
-  #BMB_bookmarksPopup menupopup[placespopup=true] > hbox,
-  #edit-controls@inAnyPanel@,
-  #zoom-controls@inAnyPanel@,
-  #edit-controls@inAnyPanel@ > toolbarbutton,
-  #zoom-controls@inAnyPanel@ > toolbarbutton {
-    border-radius: 0;
-  }
-}
-
-||||||| merged common ancestors
-/* Win8 and beyond. */
-@media not all and (-moz-os-version: windows-win7) {
-  #BMB_bookmarksPopup menupopup[placespopup=true] > hbox,
-  #edit-controls@inAnyPanel@,
-  #zoom-controls@inAnyPanel@,
-  #edit-controls@inAnyPanel@ > toolbarbutton,
-  #zoom-controls@inAnyPanel@ > toolbarbutton {
-    border-radius: 0;
-  }
-}
-
-=======
->>>>>>> upstream-releases
 /* Anchor the bookmark menu drop down panel at the same height as other
    panels when in the #toolbar-menubar */
 #toolbar-menubar #BMB_bookmarksPopup {

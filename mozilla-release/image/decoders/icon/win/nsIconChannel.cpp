@@ -62,16 +62,6 @@ struct ICONENTRY {
 };
 
 // Match stock icons with names
-<<<<<<< HEAD
-static SHSTOCKICONID GetStockIconIDForName(const nsACString& aStockName) {
-  return aStockName.EqualsLiteral("uac-shield") ? SIID_SHIELD : SIID_INVALID;
-||||||| merged common ancestors
-static SHSTOCKICONID
-GetStockIconIDForName(const nsACString& aStockName)
-{
-  return aStockName.EqualsLiteral("uac-shield") ? SIID_SHIELD :
-                                                  SIID_INVALID;
-=======
 static SHSTOCKICONID GetStockIconIDForName(const nsACString& aStockName) {
   return aStockName.EqualsLiteral("uac-shield") ? SIID_SHIELD : SIID_INVALID;
 }
@@ -111,18 +101,8 @@ NS_IMETHODIMP nsIconChannel::IconAsyncOpenTask::Run() {
       &nsIconChannel::FinishAsyncOpen, hIcon, rv);
   mTarget->Dispatch(task.forget(), NS_DISPATCH_NORMAL);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// nsIconChannel methods
-nsIconChannel::nsIconChannel() {}
-||||||| merged common ancestors
-// nsIconChannel methods
-nsIconChannel::nsIconChannel()
-{
-}
-=======
 class nsIconChannel::IconSyncOpenTask final : public Runnable {
  public:
   IconSyncOpenTask(nsIconChannel* aChannel, nsIEventTarget* aTarget,
@@ -181,34 +161,18 @@ nsIconChannel::IconSyncOpenTask::Run() {
   NS_ProxyRelease("IconSyncOpenTask::mChannel", mTarget, channel.forget());
   return NS_OK;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsIconChannel::~nsIconChannel() {
-||||||| merged common ancestors
-nsIconChannel::~nsIconChannel()
-{
-=======
 // nsIconChannel methods
 nsIconChannel::nsIconChannel() {}
 
 nsIconChannel::~nsIconChannel() {
->>>>>>> upstream-releases
   if (mLoadInfo) {
-<<<<<<< HEAD
-    NS_ReleaseOnMainThreadSystemGroup("nsIconChannel::mLoadInfo",
-                                      mLoadInfo.forget());
-||||||| merged common ancestors
-    NS_ReleaseOnMainThreadSystemGroup(
-      "nsIconChannel::mLoadInfo", mLoadInfo.forget());
-=======
     NS_ReleaseOnMainThreadSystemGroup("nsIconChannel::mLoadInfo",
                                       mLoadInfo.forget());
   }
   if (mLoadGroup) {
     NS_ReleaseOnMainThreadSystemGroup("nsIconChannel::mLoadGroup",
                                       mLoadGroup.forget());
->>>>>>> upstream-releases
   }
 }
 
@@ -297,25 +261,7 @@ nsIconChannel::GetURI(nsIURI** aURI) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIconChannel::Open(nsIInputStream** _retval) {
-  return MakeInputStream(_retval, false);
-}
-
-NS_IMETHODIMP
-nsIconChannel::Open2(nsIInputStream** aStream) {
-||||||| merged common ancestors
-nsIconChannel::Open(nsIInputStream** _retval)
-{
-  return MakeInputStream(_retval, false);
-}
-
-NS_IMETHODIMP
-nsIconChannel::Open2(nsIInputStream** aStream)
-{
-=======
 nsIconChannel::Open(nsIInputStream** aStream) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIStreamListener> listener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
@@ -356,28 +302,6 @@ nsresult nsIconChannel::ExtractIconInfoFromUrl(nsIFile** aLocalFile,
   return file->Clone(aLocalFile);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsIconChannel::AsyncOpen(nsIStreamListener* aListener, nsISupports* ctxt) {
-  MOZ_ASSERT(
-      !mLoadInfo || mLoadInfo->GetSecurityMode() == 0 ||
-          mLoadInfo->GetInitialSecurityCheckDone() ||
-          (mLoadInfo->GetSecurityMode() ==
-               nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
-           nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
-      "security flags in loadInfo but asyncOpen2() not called");
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsIconChannel::AsyncOpen(nsIStreamListener* aListener,
-                                       nsISupports* ctxt)
-{
-  MOZ_ASSERT(!mLoadInfo ||
-             mLoadInfo->GetSecurityMode() == 0 ||
-             mLoadInfo->GetInitialSecurityCheckDone() ||
-             (mLoadInfo->GetSecurityMode() == nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL &&
-              nsContentUtils::IsSystemPrincipal(mLoadInfo->LoadingPrincipal())),
-             "security flags in loadInfo but asyncOpen2() not called");
-=======
 void nsIconChannel::OnAsyncError(nsresult aStatus) {
   OnStartRequest(this);
   OnStopRequest(this, aStatus);
@@ -390,7 +314,6 @@ void nsIconChannel::FinishAsyncOpen(HICON aIcon, nsresult aStatus) {
     OnAsyncError(aStatus);
     return;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIInputStream> inStream;
   nsresult rv = MakeInputStream(getter_AddRefs(inStream),
@@ -412,24 +335,11 @@ void nsIconChannel::FinishAsyncOpen(HICON aIcon, nsresult aStatus) {
   }
 }
 
-<<<<<<< HEAD
-  // Init our streampump
-  nsCOMPtr<nsIEventTarget> target = nsContentUtils::GetEventTargetByLoadInfo(
-      mLoadInfo, mozilla::TaskCategory::Other);
-  rv = mPump->Init(inStream, 0, 0, false, target);
-||||||| merged common ancestors
-  // Init our streampump
-  nsCOMPtr<nsIEventTarget> target =
-    nsContentUtils::GetEventTargetByLoadInfo(mLoadInfo,
-                                             mozilla::TaskCategory::Other);
-  rv = mPump->Init(inStream, 0, 0, false, target);
-=======
 NS_IMETHODIMP
 nsIconChannel::AsyncOpen(nsIStreamListener* aListener) {
   nsCOMPtr<nsIStreamListener> listener = aListener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     mCallbacks = nullptr;
     return rv;
@@ -456,24 +366,10 @@ nsIconChannel::AsyncOpen(nsIStreamListener* aListener) {
     mListenerTarget = do_GetMainThread();
   }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsIconChannel::AsyncOpen2(nsIStreamListener* aListener) {
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv =
-      nsContentSecurityManager::doContentSecurityCheck(this, listener);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsIconChannel::AsyncOpen2(nsIStreamListener* aListener)
-{
-  nsCOMPtr<nsIStreamListener> listener = aListener;
-  nsresult rv = nsContentSecurityManager::doContentSecurityCheck(this, listener);
-=======
   // If we pass aNonBlocking as true, GetHIcon will always have dispatched
   // upon success.
   HICON hIcon = nullptr;
   rv = GetHIcon(/* aNonBlocking */ true, &hIcon);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     mCallbacks = nullptr;
     mInputStream = nullptr;
@@ -531,15 +427,7 @@ static UINT GetSizeInfoFlag(uint32_t aDesiredImageSize) {
   return (UINT)(aDesiredImageSize > 16 ? SHGFI_SHELLICONSIZE : SHGFI_SMALLICON);
 }
 
-<<<<<<< HEAD
-nsresult nsIconChannel::GetHIconFromFile(HICON* hIcon) {
-||||||| merged common ancestors
-nsresult
-nsIconChannel::GetHIconFromFile(HICON* hIcon)
-{
-=======
 nsresult nsIconChannel::GetHIconFromFile(bool aNonBlocking, HICON* hIcon) {
->>>>>>> upstream-releases
   nsCString contentType;
   nsCString fileExt;
   nsCOMPtr<nsIFile> localFile;  // file we want an icon for
@@ -550,12 +438,6 @@ nsresult nsIconChannel::GetHIconFromFile(bool aNonBlocking, HICON* hIcon) {
 
   // if the file exists, we are going to use it's real attributes...
   // otherwise we only want to use it for it's extension...
-<<<<<<< HEAD
-  SHFILEINFOW sfi;
-||||||| merged common ancestors
-  SHFILEINFOW      sfi;
-=======
->>>>>>> upstream-releases
   UINT infoFlags = SHGFI_ICON;
 
   bool fileExists = false;
@@ -631,28 +513,12 @@ nsresult nsIconChannel::GetHIconFromFile(nsIFile* aLocalFile,
   SHFILEINFOW sfi;
 
   // Is this the "Desktop" folder?
-<<<<<<< HEAD
-  DWORD shellResult =
-      GetSpecialFolderIcon(localFile, CSIDL_DESKTOP, &sfi, infoFlags);
-||||||| merged common ancestors
-  DWORD shellResult = GetSpecialFolderIcon(localFile, CSIDL_DESKTOP,
-                                           &sfi, infoFlags);
-=======
   DWORD shellResult =
       GetSpecialFolderIcon(aLocalFile, CSIDL_DESKTOP, &sfi, aInfoFlags);
->>>>>>> upstream-releases
   if (!shellResult) {
     // Is this the "My Documents" folder?
-<<<<<<< HEAD
-    shellResult =
-        GetSpecialFolderIcon(localFile, CSIDL_PERSONAL, &sfi, infoFlags);
-||||||| merged common ancestors
-    shellResult = GetSpecialFolderIcon(localFile, CSIDL_PERSONAL,
-                                       &sfi, infoFlags);
-=======
     shellResult =
         GetSpecialFolderIcon(aLocalFile, CSIDL_PERSONAL, &sfi, aInfoFlags);
->>>>>>> upstream-releases
   }
 
   // There are other "Special Folders" and Namespace entities that we
@@ -663,17 +529,8 @@ nsresult nsIconChannel::GetHIconFromFile(nsIFile* aLocalFile,
 
   // Not a special folder, or something else failed above.
   if (!shellResult) {
-<<<<<<< HEAD
-    shellResult = ::SHGetFileInfoW(filePath.get(), FILE_ATTRIBUTE_ARCHIVE, &sfi,
-                                   sizeof(sfi), infoFlags);
-||||||| merged common ancestors
-    shellResult = ::SHGetFileInfoW(filePath.get(),
-                                   FILE_ATTRIBUTE_ARCHIVE,
-                                   &sfi, sizeof(sfi), infoFlags);
-=======
     shellResult = ::SHGetFileInfoW(aPath.get(), FILE_ATTRIBUTE_ARCHIVE, &sfi,
                                    sizeof(sfi), aInfoFlags);
->>>>>>> upstream-releases
   }
 
   if (!shellResult || !sfi.hIcon) {
@@ -774,14 +631,6 @@ static BITMAPINFO* CreateBitmapInfo(BITMAPINFOHEADER* aHeader,
   return bmi;
 }
 
-<<<<<<< HEAD
-nsresult nsIconChannel::MakeInputStream(nsIInputStream** _retval,
-                                        bool aNonBlocking) {
-||||||| merged common ancestors
-nsresult
-nsIconChannel::MakeInputStream(nsIInputStream** _retval, bool aNonBlocking)
-{
-=======
 nsresult nsIconChannel::EnsurePipeCreated(uint32_t aIconSize,
                                           bool aNonBlocking) {
   if (mInputStream || mOutputStream) {
@@ -794,7 +643,6 @@ nsresult nsIconChannel::EnsurePipeCreated(uint32_t aIconSize,
 }
 
 nsresult nsIconChannel::GetHIcon(bool aNonBlocking, HICON* aIcon) {
->>>>>>> upstream-releases
   // Check whether the icon requested's a file icon or a stock icon
   nsresult rv = NS_ERROR_NOT_AVAILABLE;
 
@@ -900,21 +748,7 @@ nsresult nsIconChannel::MakeInputStream(nsIInputStream** _retval,
                 GetDIBits(hDC, iconInfo.hbmMask, 0, maskHeader.biHeight,
                           whereTo, maskInfo, DIB_RGB_COLORS)) {
               // Now, create a pipe and stuff our data into it
-<<<<<<< HEAD
-              nsCOMPtr<nsIInputStream> inStream;
-              nsCOMPtr<nsIOutputStream> outStream;
-              rv = NS_NewPipe(getter_AddRefs(inStream),
-                              getter_AddRefs(outStream), iconSize, iconSize,
-                              aNonBlocking);
-||||||| merged common ancestors
-              nsCOMPtr<nsIInputStream> inStream;
-              nsCOMPtr<nsIOutputStream> outStream;
-              rv = NS_NewPipe(getter_AddRefs(inStream),
-                              getter_AddRefs(outStream),
-                              iconSize, iconSize, aNonBlocking);
-=======
               rv = EnsurePipeCreated(iconSize, aNonBlocking);
->>>>>>> upstream-releases
               if (NS_SUCCEEDED(rv)) {
                 uint32_t written;
                 rv = mOutputStream->Write(buffer.get(), iconSize, &written);
@@ -933,19 +767,9 @@ nsresult nsIconChannel::MakeInputStream(nsIInputStream** _retval,
       DeleteDC(hDC);
       DeleteObject(iconInfo.hbmColor);
       DeleteObject(iconInfo.hbmMask);
-<<<<<<< HEAD
-    }  // if we got icon info
-    DestroyIcon(hIcon);
-  }  // if we got an hIcon
-||||||| merged common ancestors
-    } // if we got icon info
-    DestroyIcon(hIcon);
-  } // if we got an hIcon
-=======
     }  // if we got icon info
     DestroyIcon(aIcon);
   }  // if we got an hIcon
->>>>>>> upstream-releases
 
   // If we didn't make a stream, then fail.
   if (!*_retval && NS_SUCCEEDED(rv)) {
@@ -1042,15 +866,8 @@ nsIconChannel::GetLoadInfo(nsILoadInfo** aLoadInfo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIconChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
-||||||| merged common ancestors
-nsIconChannel::SetLoadInfo(nsILoadInfo* aLoadInfo)
-{
-=======
 nsIconChannel::SetLoadInfo(nsILoadInfo* aLoadInfo) {
   MOZ_RELEASE_ASSERT(aLoadInfo, "loadinfo can't be null");
->>>>>>> upstream-releases
   mLoadInfo = aLoadInfo;
   return NS_OK;
 }
@@ -1077,16 +894,7 @@ nsIconChannel::GetSecurityInfo(nsISupports** aSecurityInfo) {
 }
 
 // nsIRequestObserver methods
-<<<<<<< HEAD
-NS_IMETHODIMP nsIconChannel::OnStartRequest(nsIRequest* aRequest,
-                                            nsISupports* aContext) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsIconChannel::OnStartRequest(nsIRequest* aRequest,
-                                            nsISupports* aContext)
-{
-=======
 NS_IMETHODIMP nsIconChannel::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   if (mListener) {
     return mListener->OnStartRequest(this);
   }
@@ -1094,17 +902,7 @@ NS_IMETHODIMP nsIconChannel::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIconChannel::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                             nsresult aStatus) {
-||||||| merged common ancestors
-nsIconChannel::OnStopRequest(nsIRequest* aRequest,
-                             nsISupports* aContext,
-                             nsresult aStatus)
-{
-=======
 nsIconChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
->>>>>>> upstream-releases
   if (mListener) {
     mListener->OnStopRequest(this, aStatus);
     mListener = nullptr;
@@ -1124,21 +922,8 @@ nsIconChannel::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
 
 // nsIStreamListener methods
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsIconChannel::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                               nsIInputStream* aStream, uint64_t aOffset,
-                               uint32_t aCount) {
-||||||| merged common ancestors
-nsIconChannel::OnDataAvailable(nsIRequest* aRequest,
-                               nsISupports* aContext,
-                               nsIInputStream* aStream,
-                               uint64_t aOffset,
-                               uint32_t aCount)
-{
-=======
 nsIconChannel::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
                                uint64_t aOffset, uint32_t aCount) {
->>>>>>> upstream-releases
   if (mListener) {
     return mListener->OnDataAvailable(this, aStream, aOffset, aCount);
   }

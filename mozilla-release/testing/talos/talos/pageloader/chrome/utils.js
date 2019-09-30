@@ -16,15 +16,6 @@ function setIdleCallback() {
 function contentLoadHandlerCallback(cb) {
   function _handler(e) {
     if (e.originalTarget.defaultView == content) {
-<<<<<<< HEAD
-      content.wrappedJSObject.tpRecordTime = Cu.exportFunction((t, s, n) => {
-        sendAsyncMessage("PageLoader:RecordTime", {time: t, startTime: s, testName: n});
-      }, content);
-||||||| merged common ancestors
-      content.wrappedJSObject.tpRecordTime = function(t, s, n) {
-        sendAsyncMessage("PageLoader:RecordTime", {time: t, startTime: s, testName: n});
-      };
-=======
       content.wrappedJSObject.tpRecordTime = Cu.exportFunction((t, s, n) => {
         sendAsyncMessage("PageLoader:RecordTime", {
           time: t,
@@ -32,7 +23,6 @@ function contentLoadHandlerCallback(cb) {
           testName: n,
         });
       }, content);
->>>>>>> upstream-releases
       content.setTimeout(cb, 0);
       content.setTimeout(setIdleCallback, 0);
     }

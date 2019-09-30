@@ -12,141 +12,6 @@
 #include "js/AllocPolicy.h"
 
 // Tree items, meaning they have a start and stop and form a nested tree.
-<<<<<<< HEAD
-#define TRACELOGGER_TREE_ITEMS(_)              \
-  _(AnnotateScripts)                           \
-  _(Baseline)                                  \
-  _(BaselineCompilation)                       \
-  _(Engine)                                    \
-  _(GC)                                        \
-  _(GCAllocation)                              \
-  _(GCSweeping)                                \
-  _(Interpreter)                               \
-  _(InlinedScripts)                            \
-  _(IonAnalysis)                               \
-  _(IonCompilation)                            \
-  _(IonLinking)                                \
-  _(IonMonkey)                                 \
-  _(IrregexpCompile)                           \
-  _(IrregexpExecute)                           \
-  _(MinorGC)                                   \
-  _(Frontend)                                  \
-  _(ParsingFull)                               \
-  _(ParsingSyntax)                             \
-  _(BytecodeEmission)                          \
-  _(BytecodeFoldConstants)                     \
-  _(BytecodeNameFunctions)                     \
-  _(DecodeScript)                              \
-  _(DecodeFunction)                            \
-  _(EncodeScript)                              \
-  _(EncodeFunction)                            \
-  _(Scripts)                                   \
-  _(VM)                                        \
-  _(CompressSource)                            \
-  _(WasmCompilation)                           \
-  _(Call)                                      \
-                                               \
-  /* Specific passes during ion compilation */ \
-  _(PruneUnusedBranches)                       \
-  _(FoldTests)                                 \
-  _(FoldEmptyBlocks)                           \
-  _(SplitCriticalEdges)                        \
-  _(RenumberBlocks)                            \
-  _(ScalarReplacement)                         \
-  _(DominatorTree)                             \
-  _(PhiAnalysis)                               \
-  _(MakeLoopsContiguous)                       \
-  _(ApplyTypes)                                \
-  _(EagerSimdUnbox)                            \
-  _(AliasAnalysis)                             \
-  _(GVN)                                       \
-  _(LICM)                                      \
-  _(Sincos)                                    \
-  _(RangeAnalysis)                             \
-  _(LoopUnrolling)                             \
-  _(Sink)                                      \
-  _(RemoveUnnecessaryBitops)                   \
-  _(FoldLinearArithConstants)                  \
-  _(EffectiveAddressAnalysis)                  \
-  _(AlignmentMaskAnalysis)                     \
-  _(EliminateDeadCode)                         \
-  _(ReorderInstructions)                       \
-  _(EdgeCaseAnalysis)                          \
-  _(EliminateRedundantChecks)                  \
-  _(AddKeepAliveInstructions)                  \
-  _(GenerateLIR)                               \
-  _(RegisterAllocation)                        \
-  _(GenerateCode)                              \
-  _(IonBuilderRestartLoop)                     \
-  _(VMSpecific)
-||||||| merged common ancestors
-#define TRACELOGGER_TREE_ITEMS(_)                     \
-    _(AnnotateScripts)                                \
-    _(Baseline)                                       \
-    _(BaselineCompilation)                            \
-    _(Engine)                                         \
-    _(GC)                                             \
-    _(GCAllocation)                                   \
-    _(GCSweeping)                                     \
-    _(Interpreter)                                    \
-    _(InlinedScripts)                                 \
-    _(IonAnalysis)                                    \
-    _(IonCompilation)                                 \
-    _(IonLinking)                                     \
-    _(IonMonkey)                                      \
-    _(IrregexpCompile)                                \
-    _(IrregexpExecute)                                \
-    _(MinorGC)                                        \
-    _(Frontend)                                       \
-    _(ParsingFull)                                    \
-    _(ParsingSyntax)                                  \
-    _(BytecodeEmission)                               \
-    _(BytecodeFoldConstants)                          \
-    _(BytecodeNameFunctions)                          \
-    _(DecodeScript)                                   \
-    _(DecodeFunction)                                 \
-    _(EncodeScript)                                   \
-    _(EncodeFunction)                                 \
-    _(Scripts)                                        \
-    _(VM)                                             \
-    _(CompressSource)                                 \
-    _(WasmCompilation)                                \
-    _(Call)                                           \
-                                                      \
-    /* Specific passes during ion compilation */      \
-    _(PruneUnusedBranches)                            \
-    _(FoldTests)                                      \
-    _(FoldEmptyBlocks)                                \
-    _(SplitCriticalEdges)                             \
-    _(RenumberBlocks)                                 \
-    _(ScalarReplacement)                              \
-    _(DominatorTree)                                  \
-    _(PhiAnalysis)                                    \
-    _(MakeLoopsContiguous)                            \
-    _(ApplyTypes)                                     \
-    _(EagerSimdUnbox)                                 \
-    _(AliasAnalysis)                                  \
-    _(GVN)                                            \
-    _(LICM)                                           \
-    _(Sincos)                                         \
-    _(RangeAnalysis)                                  \
-    _(LoopUnrolling)                                  \
-    _(Sink)                                           \
-    _(RemoveUnnecessaryBitops)                        \
-    _(FoldLinearArithConstants)                       \
-    _(EffectiveAddressAnalysis)                       \
-    _(AlignmentMaskAnalysis)                          \
-    _(EliminateDeadCode)                              \
-    _(ReorderInstructions)                            \
-    _(EdgeCaseAnalysis)                               \
-    _(EliminateRedundantChecks)                       \
-    _(AddKeepAliveInstructions)                       \
-    _(GenerateLIR)                                    \
-    _(RegisterAllocation)                             \
-    _(GenerateCode)                                   \
-    _(IonBuilderRestartLoop)                          \
-    _(VMSpecific)
-=======
 #define TRACELOGGER_TREE_ITEMS(_)              \
   _(AnnotateScripts)                           \
   _(Baseline)                                  \
@@ -213,7 +78,6 @@
   _(GenerateCode)                              \
   _(IonBuilderRestartLoop)                     \
   _(VMSpecific)
->>>>>>> upstream-releases
 
 // Log items, with timestamp only.
 #define TRACELOGGER_LOG_ITEMS(_) \
@@ -282,64 +146,19 @@ inline bool TLTextIdIsTogglable(uint32_t id) {
   return true;
 }
 
-<<<<<<< HEAD
-inline bool TLTextIdIsTreeEvent(uint32_t id) {
-  // Everything between TraceLogger_Error and TraceLogger_TreeItemEnd are tree
-  // events and atm also every custom event.
-  return (id > TraceLogger_Error && id < TraceLogger_TreeItemEnd) ||
-         id >= TraceLogger_Last;
-||||||| merged common ancestors
-inline bool
-TLTextIdIsTreeEvent(uint32_t id)
-{
-    // Everything between TraceLogger_Error and TraceLogger_TreeItemEnd are tree events and
-    // atm also every custom event.
-    return (id > TraceLogger_Error && id < TraceLogger_TreeItemEnd) ||
-           id >= TraceLogger_Last;
-=======
 inline bool TLTextIdIsEnumEvent(uint32_t id) { return id < TraceLogger_Last; }
 
 inline bool TLTextIdIsScriptEvent(uint32_t id) {
   return !TLTextIdIsEnumEvent(id);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline bool TLTextIdIsLogEvent(uint32_t id) {
-  // These id's do not have start & stop events.
-  return (id > TraceLogger_TreeItemEnd && id < TraceLogger_Last);
-||||||| merged common ancestors
-inline bool
-TLTextIdIsLogEvent(uint32_t id)
-{
-    // These id's do not have start & stop events.
-    return (id > TraceLogger_TreeItemEnd && id < TraceLogger_Last);
-=======
 inline bool TLTextIdIsTreeEvent(uint32_t id) {
   // Everything between TraceLogger_Error and TraceLogger_TreeItemEnd are tree
   // events and atm also every custom event.
   return (id > TraceLogger_Error && id < TraceLogger_TreeItemEnd) ||
          id >= TraceLogger_Last;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline bool TLTextIdIsInternalEvent(uint32_t id) {
-  // Id's used for bookkeeping.  Does not correspond to real events.
-  return (id == TraceLogger_Error || id == TraceLogger_Last ||
-          id == TraceLogger_TreeItemEnd || id == TraceLogger_Internal ||
-          id == TraceLogger_Stop);
-||||||| merged common ancestors
-inline bool
-TLTextIdIsInternalEvent(uint32_t id)
-{
-    // Id's used for bookkeeping.  Does not correspond to real events.
-    return (id == TraceLogger_Error       ||
-            id == TraceLogger_Last        ||
-            id == TraceLogger_TreeItemEnd ||
-            id == TraceLogger_Internal    ||
-            id == TraceLogger_Stop);
-=======
 inline bool TLTextIdIsLogEvent(uint32_t id) {
   // These id's do not have start & stop events.
   return (id > TraceLogger_TreeItemEnd && id < TraceLogger_Last);
@@ -350,12 +169,10 @@ inline bool TLTextIdIsInternalEvent(uint32_t id) {
   return (id == TraceLogger_Error || id == TraceLogger_Last ||
           id == TraceLogger_TreeItemEnd || id == TraceLogger_Internal ||
           id == TraceLogger_Stop);
->>>>>>> upstream-releases
 }
 
 template <class T>
 class ContinuousSpace {
-<<<<<<< HEAD
   T* data_;
   uint32_t size_;
   uint32_t capacity_;
@@ -376,79 +193,6 @@ class ContinuousSpace {
 
     return true;
   }
-||||||| merged common ancestors
-    T* data_;
-    uint32_t size_;
-    uint32_t capacity_;
-
-    // The maximum number of bytes of RAM a continuous space structure can take.
-    static const uint32_t LIMIT = 200 * 1024 * 1024;
-
-  public:
-    ContinuousSpace ()
-     : data_(nullptr),
-       size_(0),
-       capacity_(0)
-    { }
-
-    bool init() {
-        capacity_ = 64;
-        size_ = 0;
-        data_ = js_pod_malloc<T>(capacity_);
-        if (!data_) {
-            return false;
-        }
-
-        return true;
-    }
-
-    ~ContinuousSpace()
-    {
-        js_free(data_);
-        data_ = nullptr;
-    }
-
-    static uint32_t maxSize() {
-        return LIMIT / sizeof(T);
-    }
-
-    T* data() {
-        return data_;
-    }
-
-    uint32_t capacity() const {
-        return capacity_;
-    }
-
-    uint32_t size() const {
-        return size_;
-    }
-
-    bool empty() const {
-        return size_ == 0;
-    }
-=======
-  T* data_;
-  uint32_t size_;
-  uint32_t capacity_;
-
-  // The maximum number of bytes of RAM a continuous space structure can take.
-  static const uint32_t LIMIT = 200 * 1024 * 1024;
-
- public:
-  ContinuousSpace() : data_(nullptr), size_(0), capacity_(0) {}
-
-  bool init() {
-    capacity_ = 64;
-    size_ = 0;
-    data_ = js_pod_malloc<T>(capacity_);
-    if (!data_) {
-      return false;
-    }
-
-    return true;
-  }
->>>>>>> upstream-releases
 
   ~ContinuousSpace() {
     js_free(data_);
@@ -490,83 +234,9 @@ class ContinuousSpace {
       return false;
     }
 
-<<<<<<< HEAD
     uint32_t nCapacity = capacity_ * 2;
     nCapacity = (nCapacity < maxSize()) ? nCapacity : maxSize();
 
-    T* entries = js_pod_realloc<T>(data_, capacity_, nCapacity);
-    if (!entries) {
-      return false;
-    }
-||||||| merged common ancestors
-    T& pushUninitialized() {
-        MOZ_ASSERT(size_ < capacity_);
-        return data()[size_++];
-    }
-
-    void pop() {
-        MOZ_ASSERT(!empty());
-        size_--;
-    }
-=======
-    uint32_t nCapacity = capacity_ * 2;
-    nCapacity = (nCapacity < maxSize()) ? nCapacity : maxSize();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    data_ = entries;
-    capacity_ = nCapacity;
-
-    return true;
-  }
-
-  T& operator[](size_t i) {
-    MOZ_ASSERT(i < size_);
-    return data()[i];
-  }
-
-  void push(T& data) {
-    MOZ_ASSERT(size_ < capacity_);
-    data()[size_++] = data;
-  }
-
-  T& pushUninitialized() {
-    MOZ_ASSERT(size_ < capacity_);
-    return data()[size_++];
-  }
-
-  void pop() {
-    MOZ_ASSERT(!empty());
-    size_--;
-  }
-
-  void clear() { size_ = 0; }
-
-  bool reset() {
-    size_t oldCapacity = data_ ? capacity_ : 0;
-    capacity_ = 64;
-    size_ = 0;
-    data_ = js_pod_realloc<T>(data_, oldCapacity, capacity_);
-
-    if (!data_) {
-      return false;
-||||||| merged common ancestors
-    void clear() {
-        size_ = 0;
-    }
-
-    bool reset() {
-        size_t oldCapacity = data_ ? capacity_ : 0;
-        capacity_ = 64;
-        size_ = 0;
-        data_ = js_pod_realloc<T>(data_, oldCapacity, capacity_);
-
-        if (!data_) {
-            return false;
-        }
-
-        return true;
-=======
     T* entries = js_pod_realloc<T>(data_, capacity_, nCapacity);
     if (!entries) {
       return false;
@@ -608,7 +278,6 @@ class ContinuousSpace {
 
     if (!data_) {
       return false;
->>>>>>> upstream-releases
     }
 
     return true;

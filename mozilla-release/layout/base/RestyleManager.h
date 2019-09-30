@@ -40,29 +40,6 @@ class Element;
  * comfortable way than a bunch of individual arguments, and that also checks
  * that the change hint used for optimization is correctly used in debug mode.
  */
-<<<<<<< HEAD
-class ServoRestyleState {
- public:
-  ServoRestyleState(ServoStyleSet& aStyleSet, nsStyleChangeList& aChangeList,
-                    nsTArray<nsIFrame*>& aPendingWrapperRestyles)
-      : mStyleSet(aStyleSet),
-        mChangeList(aChangeList),
-        mPendingWrapperRestyles(aPendingWrapperRestyles),
-        mPendingWrapperRestyleOffset(aPendingWrapperRestyles.Length()),
-        mChangesHandled(nsChangeHint(0))
-||||||| merged common ancestors
-class ServoRestyleState
-{
-public:
-  ServoRestyleState(ServoStyleSet& aStyleSet,
-                    nsStyleChangeList& aChangeList,
-                    nsTArray<nsIFrame*>& aPendingWrapperRestyles)
-    : mStyleSet(aStyleSet)
-    , mChangeList(aChangeList)
-    , mPendingWrapperRestyles(aPendingWrapperRestyles)
-    , mPendingWrapperRestyleOffset(aPendingWrapperRestyles.Length())
-    , mChangesHandled(nsChangeHint(0))
-=======
 class ServoRestyleState {
  public:
   ServoRestyleState(ServoStyleSet& aStyleSet, nsStyleChangeList& aChangeList,
@@ -74,7 +51,6 @@ class ServoRestyleState {
         mPendingScrollAnchorSuppressions(aPendingScrollAnchorSuppressions),
         mPendingWrapperRestyleOffset(aPendingWrapperRestyles.Length()),
         mChangesHandled(nsChangeHint(0))
->>>>>>> upstream-releases
 #ifdef DEBUG
         // If !mOwner, then we wouldn't have processed our wrapper restyles,
         // because we only process those when handling an element with a frame.
@@ -100,25 +76,6 @@ class ServoRestyleState {
   ServoRestyleState(const nsIFrame& aOwner, ServoRestyleState& aParentState,
                     nsChangeHint aHintForThisFrame, Type aType,
                     bool aAssertWrapperRestyleLength = true)
-<<<<<<< HEAD
-      : mStyleSet(aParentState.mStyleSet),
-        mChangeList(aParentState.mChangeList),
-        mPendingWrapperRestyles(aParentState.mPendingWrapperRestyles),
-        mPendingWrapperRestyleOffset(
-            aParentState.mPendingWrapperRestyles.Length()),
-        mChangesHandled(aType == Type::InFlow
-                            ? aParentState.mChangesHandled | aHintForThisFrame
-                            : aHintForThisFrame)
-||||||| merged common ancestors
-    : mStyleSet(aParentState.mStyleSet)
-    , mChangeList(aParentState.mChangeList)
-    , mPendingWrapperRestyles(aParentState.mPendingWrapperRestyles)
-    , mPendingWrapperRestyleOffset(aParentState.mPendingWrapperRestyles.Length())
-    , mChangesHandled(
-        aType == Type::InFlow
-          ? aParentState.mChangesHandled | aHintForThisFrame
-          : aHintForThisFrame)
-=======
       : mStyleSet(aParentState.mStyleSet),
         mChangeList(aParentState.mChangeList),
         mPendingWrapperRestyles(aParentState.mPendingWrapperRestyles),
@@ -129,7 +86,6 @@ class ServoRestyleState {
         mChangesHandled(aType == Type::InFlow
                             ? aParentState.mChangesHandled | aHintForThisFrame
                             : aHintForThisFrame)
->>>>>>> upstream-releases
 #ifdef DEBUG
         ,
         mOwner(&aOwner),
@@ -174,11 +130,6 @@ class ServoRestyleState {
   // outer table and cellcontent frames.
   static nsIFrame* TableAwareParentFor(const nsIFrame* aChild);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // When the value of the position property changes such as we stop or start
   // being absolutely or fixed positioned, we need to suppress scroll anchoring
   // adjustments to avoid breaking websites.
@@ -194,7 +145,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   // Process a wrapper restyle at the given index, and restyles for any
   // wrappers nested in it.  Returns the number of entries from
   // mPendingWrapperRestyles that we processed.  The return value is always at
@@ -389,15 +339,8 @@ class RestyleManager {
   // affect :empty / :-moz-only-whitespace / :-moz-first-node / :-moz-last-node.
   void CharacterDataChanged(nsIContent*, const CharacterDataChangeInfo&);
 
-<<<<<<< HEAD
-  void PostRestyleEvent(dom::Element*, nsRestyleHint,
-                        nsChangeHint aMinChangeHint);
-||||||| merged common ancestors
-  void PostRestyleEvent(dom::Element*, nsRestyleHint, nsChangeHint aMinChangeHint);
-=======
   void PostRestyleEvent(dom::Element*, RestyleHint,
                         nsChangeHint aMinChangeHint);
->>>>>>> upstream-releases
 
   /**
    * Posts restyle hints for animations.
@@ -408,17 +351,8 @@ class RestyleManager {
    * restyling process and this restyle event will be processed in the second
    * traversal of the same restyling process.
    */
-<<<<<<< HEAD
-  void PostRestyleEventForAnimations(dom::Element*, CSSPseudoElementType,
-                                     nsRestyleHint);
-||||||| merged common ancestors
-  void PostRestyleEventForAnimations(dom::Element*,
-                                     CSSPseudoElementType,
-                                     nsRestyleHint);
-=======
   void PostRestyleEventForAnimations(dom::Element*, PseudoStyleType,
                                      RestyleHint);
->>>>>>> upstream-releases
 
   void NextRestyleIsForCSSRuleChanges() { mRestyleForCSSRuleChanges = true; }
 
@@ -429,20 +363,8 @@ class RestyleManager {
   void ProcessAllPendingAttributeAndStateInvalidations();
 
   void ContentStateChanged(nsIContent* aContent, EventStates aStateMask);
-<<<<<<< HEAD
-  void AttributeWillChange(Element* aElement, int32_t aNameSpaceID,
-                           nsAtom* aAttribute, int32_t aModType,
-                           const nsAttrValue* aNewValue);
-||||||| merged common ancestors
-  void AttributeWillChange(Element* aElement,
-                           int32_t aNameSpaceID,
-                           nsAtom* aAttribute,
-                           int32_t aModType,
-                           const nsAttrValue* aNewValue);
-=======
   void AttributeWillChange(Element* aElement, int32_t aNameSpaceID,
                            nsAtom* aAttribute, int32_t aModType);
->>>>>>> upstream-releases
   void ClassAttributeWillBeChangedBySMIL(dom::Element* aElement);
   void AttributeChanged(dom::Element* aElement, int32_t aNameSpaceID,
                         nsAtom* aAttribute, int32_t aModType,
@@ -556,26 +478,8 @@ class RestyleManager {
   ServoStyleSet* StyleSet() const { return PresContext()->StyleSet(); }
 
   void RestyleForEmptyChange(Element* aContainer);
-<<<<<<< HEAD
   void MaybeRestyleForEdgeChildChange(Element* aContainer,
                                       nsIContent* aChangedChild);
-
-  // TODO(emilio): there's no good reason this isn't part of ContentStateChanged
-  // now, or the change hint isn't returned instead of via an out-param, really.
-  void ContentStateChangedInternal(const Element&, EventStates aStateMask,
-                                   nsChangeHint* aOutChangeHint);
-||||||| merged common ancestors
-  void MaybeRestyleForEdgeChildChange(Element* aContainer, nsIContent* aChangedChild);
-
-  // TODO(emilio): there's no good reason this isn't part of ContentStateChanged
-  // now, or the change hint isn't returned instead of via an out-param, really.
-  void ContentStateChangedInternal(const Element&,
-                                   EventStates aStateMask,
-                                   nsChangeHint* aOutChangeHint);
-=======
-  void MaybeRestyleForEdgeChildChange(Element* aContainer,
-                                      nsIContent* aChangedChild);
->>>>>>> upstream-releases
 
   bool IsDisconnected() const { return !mPresContext; }
 

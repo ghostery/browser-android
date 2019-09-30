@@ -41,10 +41,6 @@ class ColumnSetWrapperFrame final : public nsBlockFrame {
 
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
-  nsContainerFrame* GetContentInsertionFrame() override;
-
-  void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
-
 #ifdef DEBUG_FRAME_DUMP
   nsresult GetFrameName(nsAString& aResult) const override;
 #endif
@@ -56,13 +52,6 @@ class ColumnSetWrapperFrame final : public nsBlockFrame {
 
   void RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) override;
 
-<<<<<<< HEAD
- private:
-  explicit ColumnSetWrapperFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-private:
-  explicit ColumnSetWrapperFrame(ComputedStyle* aStyle);
-=======
   void MarkIntrinsicISizesDirty() override;
 
   nscoord GetMinISize(gfxContext* aRenderingContext) override;
@@ -72,7 +61,6 @@ private:
  private:
   explicit ColumnSetWrapperFrame(ComputedStyle* aStyle,
                                  nsPresContext* aPresContext);
->>>>>>> upstream-releases
   ~ColumnSetWrapperFrame() override = default;
 
 #ifdef DEBUG

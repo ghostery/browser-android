@@ -212,13 +212,7 @@ var clickOnInspectMenuItem = async function(testActor, selector) {
   await testActor.synthesizeMouse({
     selector: selector,
     center: true,
-<<<<<<< HEAD
-    options: {type: "contextmenu", button: 2},
-||||||| merged common ancestors
-    options: {type: "contextmenu", button: 2}
-=======
     options: { type: "contextmenu", button: 2 },
->>>>>>> upstream-releases
   });
 
   await contextOpened;
@@ -250,34 +244,6 @@ var getNodeFrontInFrame = async function(selector, frameSelector, inspector) {
   return inspector.walker.querySelector(nodes[0], selector);
 };
 
-<<<<<<< HEAD
-/**
- * Get the NodeFront for a node that matches a given css selector inside a shadow root.
- *
- * @param {String} selector
- *        CSS selector of the node inside the shadow root.
- * @param {String|NodeFront} hostSelector
- *        Selector or front of the element to which the shadow root is attached.
- * @param {InspectorPanel} inspector
- *        The instance of InspectorPanel currently loaded in the toolbox
- * @return {Promise} Resolves the node front when the inspector is updated with the new
- *         node.
- */
-var getNodeFrontInShadowDom = async function(selector, hostSelector, inspector) {
-  const hostFront = await getNodeFront(hostSelector, inspector);
-  const {nodes} = await inspector.walker.children(hostFront);
-
-  // Find the shadow root in the children of the host element.
-  const shadowRoot = nodes.filter(node => node.isShadowRoot)[0];
-  if (!shadowRoot) {
-    throw new Error("Could not find a shadow root under selector: " + hostSelector);
-  }
-
-  return inspector.walker.querySelector(shadowRoot, selector);
-};
-
-||||||| merged common ancestors
-=======
 /**
  * Get the NodeFront for a node that matches a given css selector inside a shadow root.
  *
@@ -309,7 +275,6 @@ var getNodeFrontInShadowDom = async function(
   return inspector.walker.querySelector(shadowRoot, selector);
 };
 
->>>>>>> upstream-releases
 var focusSearchBoxUsingShortcut = async function(panelWin, callback) {
   info("Focusing search box");
   const searchBox = panelWin.document.getElementById("inspector-searchbox");
@@ -380,22 +345,12 @@ var hoverContainer = async function(selector, inspector) {
   const nodeFront = await getNodeFront(selector, inspector);
   const container = getContainerForNodeFront(nodeFront, inspector);
 
-<<<<<<< HEAD
-  const highlit = inspector.highlighter.once("node-highlight");
-  EventUtils.synthesizeMouseAtCenter(container.tagLine, {type: "mousemove"},
-    inspector.markup.doc.defaultView);
-||||||| merged common ancestors
-  const highlit = inspector.toolbox.once("node-highlight");
-  EventUtils.synthesizeMouseAtCenter(container.tagLine, {type: "mousemove"},
-    inspector.markup.doc.defaultView);
-=======
   const highlit = inspector.highlighter.once("node-highlight");
   EventUtils.synthesizeMouseAtCenter(
     container.tagLine,
     { type: "mousemove" },
     inspector.markup.doc.defaultView
   );
->>>>>>> upstream-releases
   return highlit;
 };
 
@@ -565,38 +520,10 @@ const getHighlighterHelperFor = type =>
         prefix = value;
       },
 
-<<<<<<< HEAD
-    get highlightedNode() {
-      if (!highlightedNode) {
-        return null;
-      }
-
-      return {
-        getComputedStyle: async function(options = {}) {
-          return inspector.pageStyle.getComputed(
-            highlightedNode, options);
-        },
-      };
-    },
-||||||| merged common ancestors
-    get highlightedNode() {
-      if (!highlightedNode) {
-        return null;
-      }
-
-      return {
-        getComputedStyle: async function(options = {}) {
-          return inspector.pageStyle.getComputed(
-            highlightedNode, options);
-        }
-      };
-    },
-=======
       get highlightedNode() {
         if (!highlightedNode) {
           return null;
         }
->>>>>>> upstream-releases
 
         return {
           getComputedStyle: async function(options = {}) {
@@ -610,143 +537,6 @@ const getHighlighterHelperFor = type =>
           return null;
         }
 
-<<<<<<< HEAD
-    show: async function(selector = ":root", options, frameSelector = null) {
-      if (frameSelector) {
-        highlightedNode = await getNodeFrontInFrame(selector, frameSelector, inspector);
-      } else {
-        highlightedNode = await getNodeFront(selector, inspector);
-      }
-      return highlighter.show(highlightedNode, options);
-    },
-
-    hide: async function() {
-      await highlighter.hide();
-    },
-
-    isElementHidden: async function(id) {
-      return (await testActor.getHighlighterNodeAttribute(
-        prefix + id, "hidden", highlighter)) === "true";
-    },
-
-    getElementTextContent: async function(id) {
-      return testActor.getHighlighterNodeTextContent(
-        prefix + id, highlighter);
-    },
-
-    getElementAttribute: async function(id, name) {
-      return testActor.getHighlighterNodeAttribute(
-        prefix + id, name, highlighter);
-    },
-
-    waitForElementAttributeSet: async function(id, name) {
-      await poll(async function() {
-        const value = await testActor.getHighlighterNodeAttribute(
-          prefix + id, name, highlighter);
-        return !!value;
-      }, `Waiting for element ${id} to have attribute ${name} set`);
-    },
-
-    waitForElementAttributeRemoved: async function(id, name) {
-      await poll(async function() {
-        const value = await testActor.getHighlighterNodeAttribute(
-          prefix + id, name, highlighter);
-        return !value;
-      }, `Waiting for element ${id} to have attribute ${name} removed`);
-    },
-
-    synthesizeMouse: async function(options) {
-      options = Object.assign({selector: ":root"}, options);
-      await testActor.synthesizeMouse(options);
-    },
-
-    // This object will synthesize any "mouse" prefixed event to the
-    // `testActor`, using the name of method called as suffix for the
-    // event's name.
-    // If no x, y coords are given, the previous ones are used.
-    //
-    // For example:
-    //   mouse.down(10, 20); // synthesize "mousedown" at 10,20
-    //   mouse.move(20, 30); // synthesize "mousemove" at 20,30
-    //   mouse.up();         // synthesize "mouseup" at 20,30
-    mouse: new Proxy({}, {
-      get: (target, name) =>
-        async function(x = prevX, y = prevY, selector = ":root") {
-          prevX = x;
-          prevY = y;
-          await testActor.synthesizeMouse({
-            selector, x, y, options: {type: "mouse" + name}});
-        },
-    }),
-||||||| merged common ancestors
-    show: async function(selector = ":root", options, frameSelector = null) {
-      if (frameSelector) {
-        highlightedNode = await getNodeFrontInFrame(selector, frameSelector, inspector);
-      } else {
-        highlightedNode = await getNodeFront(selector, inspector);
-      }
-      return highlighter.show(highlightedNode, options);
-    },
-
-    hide: async function() {
-      await highlighter.hide();
-    },
-
-    isElementHidden: async function(id) {
-      return (await testActor.getHighlighterNodeAttribute(
-        prefix + id, "hidden", highlighter)) === "true";
-    },
-
-    getElementTextContent: async function(id) {
-      return testActor.getHighlighterNodeTextContent(
-        prefix + id, highlighter);
-    },
-
-    getElementAttribute: async function(id, name) {
-      return testActor.getHighlighterNodeAttribute(
-        prefix + id, name, highlighter);
-    },
-
-    waitForElementAttributeSet: async function(id, name) {
-      await poll(async function() {
-        const value = await testActor.getHighlighterNodeAttribute(
-          prefix + id, name, highlighter);
-        return !!value;
-      }, `Waiting for element ${id} to have attribute ${name} set`);
-    },
-
-    waitForElementAttributeRemoved: async function(id, name) {
-      await poll(async function() {
-        const value = await testActor.getHighlighterNodeAttribute(
-          prefix + id, name, highlighter);
-        return !value;
-      }, `Waiting for element ${id} to have attribute ${name} removed`);
-    },
-
-    synthesizeMouse: async function(options) {
-      options = Object.assign({selector: ":root"}, options);
-      await testActor.synthesizeMouse(options);
-    },
-
-    // This object will synthesize any "mouse" prefixed event to the
-    // `testActor`, using the name of method called as suffix for the
-    // event's name.
-    // If no x, y coords are given, the previous ones are used.
-    //
-    // For example:
-    //   mouse.down(10, 20); // synthesize "mousedown" at 10,20
-    //   mouse.move(20, 30); // synthesize "mousemove" at 20,30
-    //   mouse.up();         // synthesize "mouseup" at 20,30
-    mouse: new Proxy({}, {
-      get: (target, name) =>
-        async function(x = prevX, y = prevY, selector = ":root") {
-          prevX = x;
-          prevY = y;
-          await testActor.synthesizeMouse({
-            selector, x, y, options: {type: "mouse" + name}});
-        }
-    }),
-=======
         return highlighter.actorID;
       },
 
@@ -844,29 +634,16 @@ const getHighlighterHelperFor = type =>
             },
         }
       ),
->>>>>>> upstream-releases
 
       reflow: async function() {
         await testActor.reflow();
       },
 
-<<<<<<< HEAD
-    finalize: async function() {
-      highlightedNode = null;
-      await highlighter.finalize();
-    },
-||||||| merged common ancestors
-    finalize: async function() {
-      highlightedNode = null;
-      await highlighter.finalize();
-    }
-=======
       finalize: async function() {
         highlightedNode = null;
         await highlighter.finalize();
       },
     };
->>>>>>> upstream-releases
   };
 
 // The expand all operation of the markup-view calls itself recursively and
@@ -1087,17 +864,6 @@ async function assertShowPreviewTooltip(view, target) {
  */
 async function assertTooltipHiddenOnMouseOut(tooltip, target) {
   // The tooltip actually relies on mousemove events to check if it sould be hidden.
-<<<<<<< HEAD
-  const mouseEvent = new target.ownerDocument.defaultView.MouseEvent("mousemove", {
-    bubbles: true,
-    relatedTarget: target,
-  });
-||||||| merged common ancestors
-  const mouseEvent = new target.ownerDocument.defaultView.MouseEvent("mousemove", {
-    bubbles: true,
-    relatedTarget: target
-  });
-=======
   const mouseEvent = new target.ownerDocument.defaultView.MouseEvent(
     "mousemove",
     {
@@ -1105,7 +871,6 @@ async function assertTooltipHiddenOnMouseOut(tooltip, target) {
       relatedTarget: target,
     }
   );
->>>>>>> upstream-releases
   target.parentNode.dispatchEvent(mouseEvent);
 
   await tooltip.once("hidden");

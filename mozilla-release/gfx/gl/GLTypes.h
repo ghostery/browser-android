@@ -9,25 +9,6 @@
 #include <stdint.h>
 
 #ifndef GLAPIENTRY
-<<<<<<< HEAD
-#ifdef WIN32
-#include <windef.h>
-#define GLAPIENTRY APIENTRY
-#define GLAPI
-#else
-#define GLAPIENTRY
-#define GLAPI
-#endif
-||||||| merged common ancestors
-# ifdef WIN32
-#  include <windef.h>
-#  define GLAPIENTRY APIENTRY
-#  define GLAPI
-# else
-#  define GLAPIENTRY
-#  define GLAPI
-# endif
-=======
 #  ifdef WIN32
 #    include <windef.h>
 #    define GLAPIENTRY APIENTRY
@@ -36,7 +17,6 @@
 #    define GLAPIENTRY
 #    define GLAPI
 #  endif
->>>>>>> upstream-releases
 #endif
 
 typedef uint8_t realGLboolean;
@@ -117,27 +97,11 @@ typedef uint64_t EGLTime;
 #define EGL_NO_IMAGE ((EGLImage)0)
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN 1
-#endif
-||||||| merged common ancestors
-    #ifndef WIN32_LEAN_AND_MEAN
-        #define WIN32_LEAN_AND_MEAN 1
-    #endif
-=======
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN 1
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#include <windef.h>
-||||||| merged common ancestors
-    #include <windef.h>
-=======
 #  include <windef.h>
->>>>>>> upstream-releases
 
 typedef HDC EGLNativeDisplayType;
 typedef HBITMAP EGLNativePixmapType;

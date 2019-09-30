@@ -154,32 +154,16 @@ OSVR_EXTERN_C_END
  * type) */
 inline OSVR_ReturnCode osvrPose3ToMatrix(OSVR_Pose3 const* pose,
                                          OSVR_MatrixConventions flags,
-<<<<<<< HEAD
-                                         double *mat) {
-  return osvrPose3ToMatrixd(pose, flags, mat);
-||||||| merged common ancestors
-                                         double *mat) {
-    return osvrPose3ToMatrixd(pose, flags, mat);
-=======
                                          double* mat) {
   return osvrPose3ToMatrixd(pose, flags, mat);
->>>>>>> upstream-releases
 }
 
 /** @brief Set a matrix based on a Pose3. (C++-only overload - detecting scalar
  * type) */
 inline OSVR_ReturnCode osvrPose3ToMatrix(OSVR_Pose3 const* pose,
                                          OSVR_MatrixConventions flags,
-<<<<<<< HEAD
-                                         float *mat) {
-  return osvrPose3ToMatrixf(pose, flags, mat);
-||||||| merged common ancestors
-                                         float *mat) {
-    return osvrPose3ToMatrixf(pose, flags, mat);
-=======
                                          float* mat) {
   return osvrPose3ToMatrixf(pose, flags, mat);
->>>>>>> upstream-releases
 }
 
 /** @brief Set a matrix based on a Pose3. (C++-only overload - detects scalar

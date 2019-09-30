@@ -698,16 +698,6 @@ function compareFocusResults() {
     is(matchWindow.document.hasFocus(), true, currentTestName + " hasFocus");
     var expectedActive = _expectedElement;
     if (!expectedActive) {
-<<<<<<< HEAD
-      // Documents that have a XUL document element currently have a different
-      // active element behavior than regular HTML documents. This test will
-      // need to be updated when bug 1492582 is fixed.
-      expectedActive = matchWindow.document.documentElement instanceof XULElement ?
-                       "main-window" : getId(matchWindow.document.body);
-||||||| merged common ancestors
-      expectedActive = matchWindow.document instanceof XULDocument ?
-                       "main-window" : getId(matchWindow.document.body);
-=======
       // Documents that have a XUL document element currently have a different
       // active element behavior than regular HTML documents. This test will
       // need to be updated when bug 1492582 is fixed.
@@ -715,7 +705,6 @@ function compareFocusResults() {
         matchWindow.document.documentElement instanceof XULElement
           ? "main-window"
           : getId(matchWindow.document.body);
->>>>>>> upstream-releases
     }
     is(
       getId(matchWindow.document.activeElement),

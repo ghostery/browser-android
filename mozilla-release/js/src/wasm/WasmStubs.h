@@ -24,44 +24,6 @@
 namespace js {
 namespace wasm {
 
-<<<<<<< HEAD
-extern bool GenerateBuiltinThunk(jit::MacroAssembler& masm,
-                                 jit::ABIFunctionType abiType,
-                                 ExitReason exitReason, void* funcPtr,
-                                 CallableOffsets* offsets);
-
-extern bool GenerateImportFunctions(const ModuleEnvironment& env,
-                                    const FuncImportVector& imports,
-                                    CompiledCode* code);
-
-extern bool GenerateStubs(const ModuleEnvironment& env,
-                          const FuncImportVector& imports,
-                          const FuncExportVector& exports, CompiledCode* code);
-
-extern bool GenerateEntryStubs(jit::MacroAssembler& masm,
-                               size_t funcExportIndex,
-                               const FuncExport& funcExport,
-                               const Maybe<jit::ImmPtr>& callee, bool isAsmJS,
-                               HasGcTypes gcTypesConfigured,
-                               CodeRangeVector* codeRanges);
-||||||| merged common ancestors
-extern bool
-GenerateBuiltinThunk(jit::MacroAssembler& masm, jit::ABIFunctionType abiType, ExitReason exitReason,
-                     void* funcPtr, CallableOffsets* offsets);
-
-extern bool
-GenerateImportFunctions(const ModuleEnvironment& env, const FuncImportVector& imports,
-                        CompiledCode* code);
-
-extern bool
-GenerateStubs(const ModuleEnvironment& env, const FuncImportVector& imports,
-              const FuncExportVector& exports, CompiledCode* code);
-
-extern bool
-GenerateEntryStubs(jit::MacroAssembler& masm, size_t funcExportIndex,
-                   const FuncExport& funcExport, const Maybe<jit::ImmPtr>& callee,
-                   bool isAsmJS, HasGcTypes gcTypesConfigured, CodeRangeVector* codeRanges);
-=======
 extern bool GenerateBuiltinThunk(jit::MacroAssembler& masm,
                                  jit::ABIFunctionType abiType,
                                  ExitReason exitReason, void* funcPtr,
@@ -97,7 +59,6 @@ static constexpr size_t TrapExitDummyValueOffsetFromTop = 1;
 #else
 static constexpr size_t TrapExitDummyValueOffsetFromTop = 0;
 #endif
->>>>>>> upstream-releases
 
 // An argument that will end up on the stack according to the system ABI, to be
 // passed to GenerateDirectCallFromJit. Since the direct JIT call creates its
@@ -171,27 +132,10 @@ using JitCallStackArgVector = Vector<JitCallStackArg, 4, SystemAllocPolicy>;
 // - all arguments passed on stack slot are alive as defined by a corresponding
 //   JitCallStackArg.
 
-<<<<<<< HEAD
-extern void GenerateDirectCallFromJit(
-    jit::MacroAssembler& masm, const FuncExport& fe, const Instance& inst,
-    const JitCallStackArgVector& stackArgs, bool profilingEnabled,
-    bool wasmGcEnabled, jit::Register scratch, uint32_t* callOffset);
-||||||| merged common ancestors
-extern void
-GenerateDirectCallFromJit(jit::MacroAssembler& masm,
-                          const FuncExport& fe,
-                          const Instance& inst,
-                          const JitCallStackArgVector& stackArgs,
-                          bool profilingEnabled,
-                          bool wasmGcEnabled,
-                          jit::Register scratch,
-                          uint32_t* callOffset);
-=======
 extern void GenerateDirectCallFromJit(
     jit::MacroAssembler& masm, const FuncExport& fe, const Instance& inst,
     const JitCallStackArgVector& stackArgs, bool profilingEnabled,
     jit::Register scratch, uint32_t* callOffset);
->>>>>>> upstream-releases
 
 }  // namespace wasm
 }  // namespace js

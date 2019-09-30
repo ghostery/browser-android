@@ -36,18 +36,8 @@ JSObject* MIDIInput::WrapObject(JSContext* aCx,
   return MIDIInput_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-void MIDIInput::Receive(const nsTArray<MIDIMessage>& aMsgs) {
-  nsCOMPtr<nsIDocument> doc = GetOwner() ? GetOwner()->GetDoc() : nullptr;
-||||||| merged common ancestors
-void
-MIDIInput::Receive(const nsTArray<MIDIMessage>& aMsgs)
-{
-  nsCOMPtr<nsIDocument> doc = GetOwner() ? GetOwner()->GetDoc() : nullptr;
-=======
 void MIDIInput::Receive(const nsTArray<MIDIMessage>& aMsgs) {
   nsCOMPtr<Document> doc = GetOwner() ? GetOwner()->GetDoc() : nullptr;
->>>>>>> upstream-releases
   if (!doc) {
     NS_WARNING("No document available to send MIDIMessageEvent to!");
     return;

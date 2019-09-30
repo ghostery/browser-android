@@ -46,18 +46,8 @@ void TestDrawTargetBase::RefreshSnapshot() {
   mDataSnapshot = snapshot->GetDataSurface();
 }
 
-<<<<<<< HEAD
-void TestDrawTargetBase::VerifyAllPixels(const Color &aColor) {
-  uint32_t *colVal = (uint32_t *)mDataSnapshot->GetData();
-||||||| merged common ancestors
-void
-TestDrawTargetBase::VerifyAllPixels(const Color &aColor)
-{
-  uint32_t *colVal = (uint32_t*)mDataSnapshot->GetData();
-=======
 void TestDrawTargetBase::VerifyAllPixels(const Color& aColor) {
   uint32_t* colVal = (uint32_t*)mDataSnapshot->GetData();
->>>>>>> upstream-releases
 
   uint32_t expected = RGBAPixelFromColor(aColor);
 
@@ -72,20 +62,9 @@ void TestDrawTargetBase::VerifyAllPixels(const Color& aColor) {
   }
 }
 
-<<<<<<< HEAD
-void TestDrawTargetBase::VerifyPixel(const IntPoint &aPoint,
-                                     mozilla::gfx::Color &aColor) {
-  uint32_t *colVal = (uint32_t *)mDataSnapshot->GetData();
-||||||| merged common ancestors
-void
-TestDrawTargetBase::VerifyPixel(const IntPoint &aPoint, mozilla::gfx::Color &aColor)
-{
-  uint32_t *colVal = (uint32_t*)mDataSnapshot->GetData();
-=======
 void TestDrawTargetBase::VerifyPixel(const IntPoint& aPoint,
                                      mozilla::gfx::Color& aColor) {
   uint32_t* colVal = (uint32_t*)mDataSnapshot->GetData();
->>>>>>> upstream-releases
 
   uint32_t expected = RGBAPixelFromColor(aColor);
   uint32_t rawActual =
@@ -116,23 +95,9 @@ void TestDrawTargetBase::VerifyPixel(const IntPoint& aPoint,
   }
 }
 
-<<<<<<< HEAD
-uint32_t TestDrawTargetBase::RGBAPixelFromColor(const Color &aColor) {
-  return uint8_t((aColor.b * 255) + 0.5f) |
-         uint8_t((aColor.g * 255) + 0.5f) << 8 |
-         uint8_t((aColor.r * 255) + 0.5f) << 16 |
-         uint8_t((aColor.a * 255) + 0.5f) << 24;
-||||||| merged common ancestors
-uint32_t
-TestDrawTargetBase::RGBAPixelFromColor(const Color &aColor)
-{
-  return uint8_t((aColor.b * 255) + 0.5f) | uint8_t((aColor.g * 255) + 0.5f) << 8 |
-         uint8_t((aColor.r * 255) + 0.5f) << 16 | uint8_t((aColor.a * 255) + 0.5f) << 24;
-=======
 uint32_t TestDrawTargetBase::RGBAPixelFromColor(const Color& aColor) {
   return uint8_t((aColor.b * 255) + 0.5f) |
          uint8_t((aColor.g * 255) + 0.5f) << 8 |
          uint8_t((aColor.r * 255) + 0.5f) << 16 |
          uint8_t((aColor.a * 255) + 0.5f) << 24;
->>>>>>> upstream-releases
 }

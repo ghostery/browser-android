@@ -37,25 +37,8 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(WebVTTListener)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(WebVTTListener)
 
-<<<<<<< HEAD
-LazyLogModule gTextTrackLog("TextTrack");
-#define VTT_LOG(...) MOZ_LOG(gTextTrackLog, LogLevel::Debug, (__VA_ARGS__))
-
-||||||| merged common ancestors
-LazyLogModule gTextTrackLog("TextTrack");
-# define VTT_LOG(...) MOZ_LOG(gTextTrackLog, LogLevel::Debug, (__VA_ARGS__))
-
-=======
->>>>>>> upstream-releases
 WebVTTListener::WebVTTListener(HTMLTrackElement* aElement)
-<<<<<<< HEAD
-    : mElement(aElement) {
-||||||| merged common ancestors
-  : mElement(aElement)
-{
-=======
     : mElement(aElement), mParserWrapperError(NS_OK) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mElement, "Must pass an element to the callback");
   LOG("Created listener for track element %p", aElement);
   MOZ_DIAGNOSTIC_ASSERT(
@@ -72,56 +55,19 @@ WebVTTListener::WebVTTListener(HTMLTrackElement* aElement)
   }
 }
 
-<<<<<<< HEAD
-WebVTTListener::~WebVTTListener() { VTT_LOG("WebVTTListener destroyed."); }
-||||||| merged common ancestors
-WebVTTListener::~WebVTTListener()
-{
-  VTT_LOG("WebVTTListener destroyed.");
-}
-=======
 WebVTTListener::~WebVTTListener() { LOG("destroyed."); }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 WebVTTListener::GetInterface(const nsIID& aIID, void** aResult) {
   return QueryInterface(aIID, aResult);
 }
 
-<<<<<<< HEAD
-nsresult WebVTTListener::LoadResource() {
-  nsresult rv;
-  mParserWrapper = do_CreateInstance(NS_WEBVTTPARSERWRAPPER_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsPIDOMWindowInner* window = mElement->OwnerDoc()->GetInnerWindow();
-  rv = mParserWrapper->LoadParser(window);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = mParserWrapper->Watch(this);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsresult
-WebVTTListener::LoadResource()
-{
-  nsresult rv;
-  mParserWrapper = do_CreateInstance(NS_WEBVTTPARSERWRAPPER_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsPIDOMWindowInner* window = mElement->OwnerDoc()->GetInnerWindow();
-  rv = mParserWrapper->LoadParser(window);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = mParserWrapper->Watch(this);
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsresult WebVTTListener::LoadResource() {
   if (IsCanceled()) {
     return NS_OK;
   }
   // Exit if we failed to create the WebVTTParserWrapper (vtt.jsm)
   NS_ENSURE_SUCCESS(mParserWrapperError, mParserWrapperError);
->>>>>>> upstream-releases
 
   mElement->SetReadyState(TextTrackReadyState::Loading);
   return NS_OK;
@@ -129,21 +75,11 @@ nsresult WebVTTListener::LoadResource() {
 
 NS_IMETHODIMP
 WebVTTListener::AsyncOnChannelRedirect(nsIChannel* aOldChannel,
-<<<<<<< HEAD
-                                       nsIChannel* aNewChannel, uint32_t aFlags,
-                                       nsIAsyncVerifyRedirectCallback* cb) {
-||||||| merged common ancestors
-                                       nsIChannel* aNewChannel,
-                                       uint32_t aFlags,
-                                       nsIAsyncVerifyRedirectCallback* cb)
-{
-=======
                                        nsIChannel* aNewChannel, uint32_t aFlags,
                                        nsIAsyncVerifyRedirectCallback* cb) {
   if (IsCanceled()) {
     return NS_OK;
   }
->>>>>>> upstream-releases
   if (mElement) {
     mElement->OnChannelRedirect(aOldChannel, aNewChannel, aFlags);
   }
@@ -152,15 +88,6 @@ WebVTTListener::AsyncOnChannelRedirect(nsIChannel* aOldChannel,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebVTTListener::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  VTT_LOG("WebVTTListener::OnStartRequest\n");
-||||||| merged common ancestors
-WebVTTListener::OnStartRequest(nsIRequest* aRequest,
-                               nsISupports* aContext)
-{
-  VTT_LOG("WebVTTListener::OnStartRequest\n");
-=======
 WebVTTListener::OnStartRequest(nsIRequest* aRequest) {
   if (IsCanceled()) {
     return NS_OK;
@@ -168,29 +95,16 @@ WebVTTListener::OnStartRequest(nsIRequest* aRequest) {
 
   LOG("OnStartRequest");
   mElement->DispatchTestEvent(NS_LITERAL_STRING("mozStartedLoadingTextTrack"));
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebVTTListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                              nsresult aStatus) {
-  VTT_LOG("WebVTTListener::OnStopRequest\n");
-||||||| merged common ancestors
-WebVTTListener::OnStopRequest(nsIRequest* aRequest,
-                              nsISupports* aContext,
-                              nsresult aStatus)
-{
-  VTT_LOG("WebVTTListener::OnStopRequest\n");
-=======
 WebVTTListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
   if (IsCanceled()) {
     return NS_OK;
   }
 
   LOG("OnStopRequest");
->>>>>>> upstream-releases
   if (NS_FAILED(aStatus)) {
     LOG("Got error status");
     mElement->SetReadyState(TextTrackReadyState::FailedToLoad);
@@ -227,20 +141,6 @@ nsresult WebVTTListener::ParseChunk(nsIInputStream* aInStream, void* aClosure,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebVTTListener::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                                nsIInputStream* aStream, uint64_t aOffset,
-                                uint32_t aCount) {
-  VTT_LOG("WebVTTListener::OnDataAvailable\n");
-||||||| merged common ancestors
-WebVTTListener::OnDataAvailable(nsIRequest* aRequest,
-                                nsISupports* aContext,
-                                nsIInputStream* aStream,
-                                uint64_t aOffset,
-                                uint32_t aCount)
-{
-  VTT_LOG("WebVTTListener::OnDataAvailable\n");
-=======
 WebVTTListener::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
                                 uint64_t aOffset, uint32_t aCount) {
   if (IsCanceled()) {
@@ -248,7 +148,6 @@ WebVTTListener::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
   }
 
   LOG("OnDataAvailable");
->>>>>>> upstream-releases
   uint32_t count = aCount;
   while (count > 0) {
     uint32_t read;
@@ -264,15 +163,8 @@ WebVTTListener::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebVTTListener::OnCue(JS::Handle<JS::Value> aCue, JSContext* aCx) {
-||||||| merged common ancestors
-WebVTTListener::OnCue(JS::Handle<JS::Value> aCue, JSContext* aCx)
-{
-=======
 WebVTTListener::OnCue(JS::Handle<JS::Value> aCue, JSContext* aCx) {
   MOZ_ASSERT(!IsCanceled());
->>>>>>> upstream-releases
   if (!aCue.isObject()) {
     return NS_ERROR_FAILURE;
   }
@@ -289,29 +181,15 @@ WebVTTListener::OnCue(JS::Handle<JS::Value> aCue, JSContext* aCx) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebVTTListener::OnRegion(JS::Handle<JS::Value> aRegion, JSContext* aCx) {
-||||||| merged common ancestors
-WebVTTListener::OnRegion(JS::Handle<JS::Value> aRegion, JSContext* aCx)
-{
-=======
 WebVTTListener::OnRegion(JS::Handle<JS::Value> aRegion, JSContext* aCx) {
   MOZ_ASSERT(!IsCanceled());
->>>>>>> upstream-releases
   // Nothing for this callback to do.
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WebVTTListener::OnParsingError(int32_t errorCode, JSContext* cx) {
-||||||| merged common ancestors
-WebVTTListener::OnParsingError(int32_t errorCode, JSContext* cx)
-{
-=======
 WebVTTListener::OnParsingError(int32_t errorCode, JSContext* cx) {
   MOZ_ASSERT(!IsCanceled());
->>>>>>> upstream-releases
   // We only care about files that have a bad WebVTT file signature right now
   // as that means the file failed to load.
   if (errorCode == ErrorCodes::BadSignature) {
@@ -321,13 +199,6 @@ WebVTTListener::OnParsingError(int32_t errorCode, JSContext* cx) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 bool WebVTTListener::IsCanceled() const { return mCancel; }
 
 void WebVTTListener::Cancel() {
@@ -341,4 +212,3 @@ void WebVTTListener::Cancel() {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

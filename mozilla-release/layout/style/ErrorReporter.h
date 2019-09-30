@@ -43,17 +43,8 @@ class MOZ_STACK_CLASS ErrorReporter final {
   static bool ShouldReportErrors(const StyleSheet* aSheet,
                                  const Loader* aLoader);
 
-<<<<<<< HEAD
-  void OutputError(uint32_t aLineNumber, uint32_t aLineOffset,
-                   const nsACString& aSource);
-||||||| merged common ancestors
-  void OutputError(uint32_t aLineNumber,
-                   uint32_t aLineOffset,
-                   const nsACString& aSource);
-=======
   void OutputError(uint32_t aLineNumber, uint32_t aLineOffset,
                    const nsACString& aSource, const nsACString& aSelectors);
->>>>>>> upstream-releases
   void ClearError();
 
   // In all overloads of ReportUnexpected, aMessage is a stringbundle

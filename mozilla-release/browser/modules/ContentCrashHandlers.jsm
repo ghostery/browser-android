@@ -916,17 +916,9 @@ var UnsubmittedCrashHandler = {
       return null;
     }
 
-<<<<<<< HEAD
-    let notification = chromeWin.gNotificationBox
-                                .getNotificationWithValue(notificationID);
-||||||| merged common ancestors
-    let nb =  chromeWin.document.getElementById("global-notificationbox");
-    let notification = nb.getNotificationWithValue(notificationID);
-=======
     let notification = chromeWin.gNotificationBox.getNotificationWithValue(
       notificationID
     );
->>>>>>> upstream-releases
     if (notification) {
       return null;
     }
@@ -979,16 +971,6 @@ var UnsubmittedCrashHandler = {
       }
     };
 
-<<<<<<< HEAD
-    return chromeWin.gNotificationBox.appendNotification(message,
-      notificationID, "chrome://browser/skin/tab-crashed.svg",
-      chromeWin.gNotificationBox.PRIORITY_INFO_HIGH, buttons, eventCallback);
-||||||| merged common ancestors
-    return nb.appendNotification(message, notificationID,
-                                 "chrome://browser/skin/tab-crashed.svg",
-                                 nb.PRIORITY_INFO_HIGH, buttons,
-                                 eventCallback);
-=======
     return chromeWin.gNotificationBox.appendNotification(
       message,
       notificationID,
@@ -997,7 +979,6 @@ var UnsubmittedCrashHandler = {
       buttons,
       eventCallback
     );
->>>>>>> upstream-releases
   },
 
   get autoSubmit() {

@@ -48,27 +48,6 @@ NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 AudioNode::AudioNode(AudioContext* aContext, uint32_t aChannelCount,
                      ChannelCountMode aChannelCountMode,
                      ChannelInterpretation aChannelInterpretation)
-<<<<<<< HEAD
-    : DOMEventTargetHelper(aContext->GetParentObject()),
-      mContext(aContext),
-      mChannelCount(aChannelCount),
-      mChannelCountMode(aChannelCountMode),
-      mChannelInterpretation(aChannelInterpretation),
-      mId(gId++),
-      mPassThrough(false),
-      mAbstractMainThread(aContext->GetOwnerGlobal()->AbstractMainThreadFor(
-          TaskCategory::Other)) {
-||||||| merged common ancestors
-  : DOMEventTargetHelper(aContext->GetParentObject())
-  , mContext(aContext)
-  , mChannelCount(aChannelCount)
-  , mChannelCountMode(aChannelCountMode)
-  , mChannelInterpretation(aChannelInterpretation)
-  , mId(gId++)
-  , mPassThrough(false)
-  , mAbstractMainThread(aContext->GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other))
-{
-=======
     : DOMEventTargetHelper(aContext->GetParentObject()),
       mContext(aContext),
       mChannelCount(aChannelCount),
@@ -81,7 +60,6 @@ AudioNode::AudioNode(AudioContext* aContext, uint32_t aChannelCount,
               ? aContext->GetOwnerGlobal()->AbstractMainThreadFor(
                     TaskCategory::Other)
               : nullptr) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aContext);
   aContext->RegisterNode(this);
 }
@@ -619,13 +597,6 @@ void AudioNode::SetPassThrough(bool aPassThrough) {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 void AudioNode::CreateAudioParam(RefPtr<AudioParam>& aParam, uint32_t aIndex,
                                  const char* aName, float aDefaultValue,
                                  float aMinValue, float aMaxValue) {
@@ -636,4 +607,3 @@ void AudioNode::CreateAudioParam(RefPtr<AudioParam>& aParam, uint32_t aIndex,
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

@@ -51,18 +51,9 @@ class MOZ_NON_TEMPORARY_CLASS StructToStream {
       return;
     }
 
-<<<<<<< HEAD
-    MOZ_SEH_TRY { aEncodeFnPtr(mHandle, &aSrcStruct); }
-    MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
-||||||| merged common ancestors
-    MOZ_SEH_TRY {
-      aEncodeFnPtr(mHandle, &aSrcStruct);
-    } MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
-=======
     MOZ_SEH_TRY { aEncodeFnPtr(mHandle, &aSrcStruct); }
 #ifdef HAVE_SEH_EXCEPTIONS
     MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
->>>>>>> upstream-releases
       mStatus = ::RpcExceptionCode();
       return;
     }
@@ -220,18 +211,9 @@ class MOZ_NON_TEMPORARY_CLASS StructFromStream {
     //     is zeroed out!
     ZeroMemory(aDestStruct, sizeof(StructT));
 
-<<<<<<< HEAD
-    MOZ_SEH_TRY { aDecodeFnPtr(mHandle, aDestStruct); }
-    MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
-||||||| merged common ancestors
-    MOZ_SEH_TRY {
-      aDecodeFnPtr(mHandle, aDestStruct);
-    } MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
-=======
     MOZ_SEH_TRY { aDecodeFnPtr(mHandle, aDestStruct); }
 #ifdef HAVE_SEH_EXCEPTIONS
     MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
->>>>>>> upstream-releases
       mStatus = ::RpcExceptionCode();
       return false;
     }

@@ -26,23 +26,10 @@ using namespace mozilla::dom::indexedDB;
 
 IDBFileRequest::IDBFileRequest(IDBFileHandle* aFileHandle,
                                bool aWrapAsDOMRequest)
-<<<<<<< HEAD
-    : DOMRequest(aFileHandle->GetOwner()),
-      mFileHandle(aFileHandle),
-      mWrapAsDOMRequest(aWrapAsDOMRequest),
-      mHasEncoding(false) {
-||||||| merged common ancestors
-  : DOMRequest(aFileHandle->GetOwner())
-  , mFileHandle(aFileHandle)
-  , mWrapAsDOMRequest(aWrapAsDOMRequest)
-  , mHasEncoding(false)
-{
-=======
     : DOMRequest(aFileHandle->GetOwnerGlobal()),
       mFileHandle(aFileHandle),
       mWrapAsDOMRequest(aWrapAsDOMRequest),
       mHasEncoding(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFileHandle);
   aFileHandle->AssertIsOnOwningThread();
 }

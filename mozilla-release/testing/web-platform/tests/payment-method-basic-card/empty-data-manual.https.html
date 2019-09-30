@@ -117,23 +117,12 @@ function runPromiseTest(button, data, expectedCard = visaCredit, expectedAddress
   </li>
   <li>
     <button onclick="runPromiseTest(this, { supportedNetworks: [] });">
-<<<<<<< HEAD
-      Returns a card on any network, because zero length supportedNetworks.
-||||||| merged common ancestors
-      Returns any card type on any network, because supportedNetworks is missing and supportedTypes is empty.
-    </button>
-  </li>
-  <li>
-    <button onclick="runPromiseTest(this, { supportedTypes: [] });">
-      Returns any card type on any network missing supportedTypes, and empty supportedNetwork.
-=======
       Returns a card on any network, because zero length supportedNetworks.
     </button>
   </li>
   <li>
     <button onclick="done();">
       Done!
->>>>>>> upstream-releases
     </button>
   </li>
 </ol>

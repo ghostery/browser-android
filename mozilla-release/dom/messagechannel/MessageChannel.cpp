@@ -39,34 +39,16 @@ JSObject* MessageChannel::WrapObject(JSContext* aCx,
   return MessageChannel_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MessageChannel> MessageChannel::Constructor(
-    const GlobalObject& aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MessageChannel>
-MessageChannel::Constructor(const GlobalObject& aGlobal, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MessageChannel> MessageChannel::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   return Constructor(global, aRv);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MessageChannel> MessageChannel::Constructor(
-    nsIGlobalObject* aGlobal, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MessageChannel>
-MessageChannel::Constructor(nsIGlobalObject* aGlobal, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MessageChannel> MessageChannel::Constructor(
     nsIGlobalObject* aGlobal, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
 
   nsID portUUID1;

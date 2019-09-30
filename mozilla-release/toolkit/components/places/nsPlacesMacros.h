@@ -15,33 +15,6 @@
   }                                                    \
   PR_END_MACRO;
 
-<<<<<<< HEAD
-#define NOTIFY_BOOKMARKS_OBSERVERS(canFire, array, skipIf, method) \
-  PR_BEGIN_MACRO                                                   \
-  if (canFire) {                                                   \
-    for (uint32_t idx = 0; idx < array.Length(); ++idx) {          \
-      const nsCOMPtr<nsINavBookmarkObserver> &e =                  \
-          array.ElementAt(idx).GetValue();                         \
-      if (e) {                                                     \
-        if (skipIf(e)) continue;                                   \
-        e->method;                                                 \
-      }                                                            \
-    }                                                              \
-  }                                                                \
-||||||| merged common ancestors
-#define NOTIFY_BOOKMARKS_OBSERVERS(canFire, array, skipIf, method)             \
-  PR_BEGIN_MACRO                                                               \
-  if (canFire) {                                                               \
-    for (uint32_t idx = 0; idx < array.Length(); ++idx) {                      \
-      const nsCOMPtr<nsINavBookmarkObserver> &e = array.ElementAt(idx).GetValue(); \
-      if (e) {                                                                 \
-        if (skipIf(e))                                                         \
-            continue;                                                          \
-        e->method;                                                             \
-      }                                                                        \
-    }                                                                          \
-  }                                                                            \
-=======
 #define NOTIFY_BOOKMARKS_OBSERVERS(canFire, array, skipIf, method) \
   PR_BEGIN_MACRO                                                   \
   if (canFire) {                                                   \
@@ -54,48 +27,8 @@
       }                                                            \
     }                                                              \
   }                                                                \
->>>>>>> upstream-releases
   PR_END_MACRO;
 
-<<<<<<< HEAD
-#define PLACES_FACTORY_SINGLETON_IMPLEMENTATION(_className, _sInstance)     \
-  _className *_className::_sInstance = nullptr;                             \
-                                                                            \
-  already_AddRefed<_className> _className::GetSingleton() {                 \
-    if (_sInstance) {                                                       \
-      RefPtr<_className> ret = _sInstance;                                  \
-      return ret.forget();                                                  \
-    }                                                                       \
-    _sInstance = new _className();                                          \
-    RefPtr<_className> ret = _sInstance;                                    \
-    if (NS_FAILED(_sInstance->Init())) {                                    \
-      /* Null out ret before _sInstance so the destructor doesn't assert */ \
-      ret = nullptr;                                                        \
-      _sInstance = nullptr;                                                 \
-      return nullptr;                                                       \
-    }                                                                       \
-    return ret.forget();                                                    \
-||||||| merged common ancestors
-#define PLACES_FACTORY_SINGLETON_IMPLEMENTATION(_className, _sInstance)        \
-  _className * _className::_sInstance = nullptr;                                \
-                                                                               \
-  already_AddRefed<_className>                                                 \
-  _className::GetSingleton()                                                   \
-  {                                                                            \
-    if (_sInstance) {                                                          \
-      RefPtr<_className> ret = _sInstance;                                   \
-      return ret.forget();                                                     \
-    }                                                                          \
-    _sInstance = new _className();                                             \
-    RefPtr<_className> ret = _sInstance;                                     \
-    if (NS_FAILED(_sInstance->Init())) {                                       \
-      /* Null out ret before _sInstance so the destructor doesn't assert */    \
-      ret = nullptr;                                                           \
-      _sInstance = nullptr;                                                    \
-      return nullptr;                                                          \
-    }                                                                          \
-    return ret.forget();                                                       \
-=======
 #define PLACES_FACTORY_SINGLETON_IMPLEMENTATION(_className, _sInstance)     \
   _className* _className::_sInstance = nullptr;                             \
                                                                             \
@@ -113,5 +46,4 @@
       return nullptr;                                                       \
     }                                                                       \
     return ret.forget();                                                    \
->>>>>>> upstream-releases
   }

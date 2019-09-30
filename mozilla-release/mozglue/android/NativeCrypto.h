@@ -12,90 +12,45 @@ extern "C" {
  * Method:    pbkdf2SHA256
  * Signature: ([B[BII)[B
  */
-<<<<<<< HEAD
-JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_gecko_background_nativecode_NativeCrypto_pbkdf2SHA256(
-    JNIEnv *, jclass, jbyteArray, jbyteArray, jint, jint);
-||||||| merged common ancestors
-JNIEXPORT jbyteArray JNICALL Java_org_mozilla_gecko_background_nativecode_NativeCrypto_pbkdf2SHA256
-  (JNIEnv *, jclass, jbyteArray, jbyteArray, jint, jint);
-=======
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_gecko_background_nativecode_NativeCrypto_pbkdf2SHA256(
     JNIEnv*, jclass, jbyteArray, jbyteArray, jint, jint);
->>>>>>> upstream-releases
 
 /*
  * Class:     org_mozilla_gecko_background_nativecode_NativeCrypto
  * Method:    sha1
  * Signature: ([B)[B
  */
-<<<<<<< HEAD
-JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha1(JNIEnv *, jclass,
-                                                               jbyteArray);
-||||||| merged common ancestors
-JNIEXPORT jbyteArray JNICALL Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha1
-  (JNIEnv *, jclass, jbyteArray);
-=======
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha1(JNIEnv*, jclass,
                                                                jbyteArray);
->>>>>>> upstream-releases
 
 /*
  * Class:     org_mozilla_gecko_background_nativecode_NativeCrypto
  * Method:    sha256init
  * Signature: ()[B
  */
-<<<<<<< HEAD
-JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256init(JNIEnv *,
-                                                                     jclass);
-||||||| merged common ancestors
-JNIEXPORT jbyteArray JNICALL Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256init
-  (JNIEnv *, jclass);
-=======
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256init(JNIEnv*,
                                                                      jclass);
->>>>>>> upstream-releases
 
 /*
  * Class:     org_mozilla_gecko_background_nativecode_NativeCrypto
  * Method:    sha256update
  * Signature: ([B[B)V
  */
-<<<<<<< HEAD
-JNIEXPORT void JNICALL
-Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256update(
-    JNIEnv *, jclass, jbyteArray, jbyteArray, jint);
-||||||| merged common ancestors
-JNIEXPORT void JNICALL Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256update
-  (JNIEnv *, jclass, jbyteArray, jbyteArray, jint);
-=======
 JNIEXPORT void JNICALL
 Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256update(
     JNIEnv*, jclass, jbyteArray, jbyteArray, jint);
->>>>>>> upstream-releases
 
 /*
  * Class:     org_mozilla_gecko_background_nativecode_NativeCrypto
  * Method:    sha256finalize
  * Signature: ([B)[B
  */
-<<<<<<< HEAD
-JNIEXPORT jbyteArray JNICALL
-Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256finalize(
-    JNIEnv *, jclass, jbyteArray);
-||||||| merged common ancestors
-JNIEXPORT jbyteArray JNICALL Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256finalize
-  (JNIEnv *, jclass, jbyteArray);
-=======
 JNIEXPORT jbyteArray JNICALL
 Java_org_mozilla_gecko_background_nativecode_NativeCrypto_sha256finalize(
     JNIEnv*, jclass, jbyteArray);
->>>>>>> upstream-releases
 
 #  ifdef __cplusplus
 }

@@ -68,53 +68,6 @@ public:
 
     void onDrawDRRect(const SkRRect&, const SkRRect&, const SkPaint&) override;
     void onDrawDrawable(SkDrawable*, const SkMatrix*) override;
-<<<<<<< HEAD
-    void onDrawText(const void* text,
-                    size_t byteLength,
-                    SkScalar x,
-                    SkScalar y,
-                    const SkPaint& paint) override;
-    void onDrawPosText(const void* text,
-                       size_t byteLength,
-                       const SkPoint pos[],
-                       const SkPaint& paint) override;
-    void onDrawPosTextH(const void* text,
-                        size_t byteLength,
-                        const SkScalar xpos[],
-                        SkScalar constY,
-                        const SkPaint& paint) override;
-    void onDrawTextRSXform(const void* text,
-                           size_t byteLength,
-                           const SkRSXform[],
-                           const SkRect* cull,
-                           const SkPaint& paint) override;
-||||||| merged common ancestors
-    void onDrawText(const void* text,
-                    size_t byteLength,
-                    SkScalar x,
-                    SkScalar y,
-                    const SkPaint& paint) override;
-    void onDrawPosText(const void* text,
-                       size_t byteLength,
-                       const SkPoint pos[],
-                       const SkPaint& paint) override;
-    void onDrawPosTextH(const void* text,
-                        size_t byteLength,
-                        const SkScalar xpos[],
-                        SkScalar constY,
-                        const SkPaint& paint) override;
-    void onDrawTextOnPath(const void* text,
-                          size_t byteLength,
-                          const SkPath& path,
-                          const SkMatrix* matrix,
-                          const SkPaint& paint) override;
-    void onDrawTextRSXform(const void* text,
-                           size_t byteLength,
-                           const SkRSXform[],
-                           const SkRect* cull,
-                           const SkPaint& paint) override;
-=======
->>>>>>> upstream-releases
     void onDrawTextBlob(const SkTextBlob* blob,
                         SkScalar x,
                         SkScalar y,
@@ -146,17 +99,10 @@ public:
                             const SkPaint*) override;
     void onDrawBitmapLattice(const SkBitmap&, const Lattice& lattice, const SkRect& dst,
                              const SkPaint*) override;
-<<<<<<< HEAD
-    void onDrawVerticesObject(const SkVertices*, const SkVertices::Bone bones[], int boneCount,
-                              SkBlendMode, const SkPaint&) override;
-||||||| merged common ancestors
-    void onDrawVerticesObject(const SkVertices*, SkBlendMode, const SkPaint&) override;
-=======
     void onDrawImageSet(const SkCanvas::ImageSetEntry[], int count, SkFilterQuality,
                         SkBlendMode) override;
     void onDrawVerticesObject(const SkVertices*, const SkVertices::Bone bones[], int boneCount,
                               SkBlendMode, const SkPaint&) override;
->>>>>>> upstream-releases
     void onDrawAtlas(const SkImage*, const SkRSXform[], const SkRect[], const SkColor[],
                      int count, SkBlendMode, const SkRect* cull, const SkPaint*) override;
     void onDrawShadowRec(const SkPath&, const SkDrawShadowRec&) override;
